@@ -61,7 +61,7 @@ EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
     QObject::connect(&timer_, SIGNAL(timeout()),
         this, SLOT(s_timerBeeped()));
     
-    timer_.start(30000, true); // 30 seconds ok ? Hard coded for now.
+//    timer_.start(30000, true); // 30 seconds ok ? Hard coded for now.
 }
 
 EmpathMaildir::~EmpathMaildir()
@@ -72,7 +72,6 @@ EmpathMaildir::~EmpathMaildir()
     void
 EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 {
-    empathDebug("sync(" + url.asString() + ") called");
     empath->s_infoMessage(
         i18n("Reading mailbox") + " " + url_.asString());
     
@@ -87,10 +86,6 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
         return;
     }
     
-    if (f->messageList().count() == 0) {
-        _readIndex();
-    }
-
     if (!ignoreMtime) {
     
         // Check the mtime of cur. If it's not changed, we can return now.
@@ -128,43 +123,32 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
     
     t->setMax(fileList.count());
     
-    QString s;
+    QCString s;
     QRegExp re_flags(":2,[A-Za-z]*$");
-    
-    QTime begin(QTime::currentTime());
     
     for (; it != fileList.end(); ++it) {
         
-        QTime now(QTime::currentTime());
-        
-        if (begin.msecsTo(now) > 100) {
-            kapp->processEvents();
-            begin = now;
-        }
-        
-        s = *it;
+        s = (*it).ascii();
     
         RMM::MessageStatus status(RMM::MessageStatus(0));
         
         int i = s.find(re_flags);
-        QString flags;
+        QCString flags;
         
         if (i != -1) {
             
             flags = s.right(s.length() - i - 3);
             
-            empathDebug("FLAGS: " + flags);
-            
             status = (RMM::MessageStatus)
-                (    (flags.contains('S') ? RMM::Read    : 0)    |
-                    (flags.contains('R') ? RMM::Replied    : 0)    |
-                    (flags.contains('F') ? RMM::Marked    : 0));
+                (   (flags.contains('S') ? RMM::Read    : 0)    |
+                    (flags.contains('R') ? RMM::Replied : 0)    |
+                    (flags.contains('F') ? RMM::Marked  : 0));
         }
         
         // Remove the flags from the end of the filename.
         s.replace(re_flags, QString::null);
         
-        EmpathIndexRecord * rec = f->messageList()[s];
+        EmpathIndexRecord * rec = f->index().record(s);
         
         // If the record exists, we tag it to say it's still here. Later, we'll
         // look for all untagged records. In this way, we'll be able to
@@ -178,62 +162,45 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
         
         } else {    
             
-            // New file to add.
-            
-            // Read the file to an RMessage
             RMM::RMessage m(_messageData(s));
             
-            // Create an index record.
-            EmpathIndexRecord * ir =
-                new(f->indexAllocator()) EmpathIndexRecord(s, m);
+            EmpathIndexRecord ir(s, m);
             
-            CHECK_PTR(ir);
+            ir.tag(true);
+            ir.setStatus(status);
             
-            ir->tag(true);
-            ir->setStatus(status);
-            
-            f->messageList().insert(s, ir);
-            
+            f->index().insert(s, ir);
             f->itemCome(s);
-            
-            empathDebug("New message in index with id \"" + s + "\"");
         }
         
         t->doneOne();
     }
     
-//    kapp->processEvents();
-    
     // Now go through the index, looking for untagged records.
     // Anything that wasn't tagged is no longer in the dir, and has been
     // deleted or moved. We therefore remove it from the index.
     
-    EmpathIndexIterator iit(f->messageList());
+    QStrList l(f->index().allKeys());
+    QStrListIterator iit(l);
     
-    for (; iit.current(); ++iit)
-        if (!iit.current()->isTagged()) {
+    for (; iit.current(); ++iit) {
+        
+        EmpathIndexRecord * i = f->index().record(iit.current());
+        
+        if (i == 0)
+            continue;
+
+        if (!i->isTagged()) {
             
-            empathDebug("Message with id \"" +
-                iit.currentKey() + "\" has gone.");
-            
-            f->itemGone(iit.currentKey());
-            
-            if (!f->messageList().remove(iit.currentKey())) {
-                empathDebug("Duh.. couldn't remove index item \"" +
-                    iit.currentKey() + "\"");
-            }
-        } else {
-            empathDebug("Message with id \"" +
-                iit.currentKey() + "\" seems to still exist");
+            f->itemGone(iit.current());
+            f->index().remove(iit.current());
         }
-    
+    }
     
     t->done();
     
     empath->s_infoMessage(
         i18n("Finished reading mailbox") + " " + url_.asString());
-    
-    _writeIndex();
 }
 
     bool
@@ -250,10 +217,10 @@ EmpathMaildir::mark(const QString & id, RMM::MessageStatus msgStat)
     QString filename(d[0]);
     
     QString statusFlags;
-    statusFlags +=    (msgStat & RMM::Read    ? "S" : "");
-    statusFlags    +=    (msgStat & RMM::Marked    ? "F" : "");
-    statusFlags    +=    (msgStat & RMM::Trashed    ? "T" : "");
-    statusFlags    +=    (msgStat & RMM::Replied    ? "R" : "");
+    statusFlags +=  (msgStat & RMM::Read    ? "S" : "");
+    statusFlags +=  (msgStat & RMM::Marked  ? "F" : "");
+    statusFlags +=  (msgStat & RMM::Trashed ? "T" : "");
+    statusFlags +=  (msgStat & RMM::Replied ? "R" : "");
     
     QString newFilename(filename);
     
@@ -300,34 +267,6 @@ EmpathMaildir::writeMessage(RMM::RMessage & m)
     return _write(m);
 }
 
-    Q_UINT32
-EmpathMaildir::sizeOfMessage(const QString & id)
-{
-    QDir d(path_ + "/cur/", id + "*");
-    if (d.count() != 1) return 0;
-    QFileInfo fi(path_ + "/cur/" + d[0]);    
-    return fi.size();
-}
-
-    QString
-EmpathMaildir::plainBodyOfMessage(const QString &)
-{
-    return QString::null;
-}
-
-    RMM::REnvelope *
-EmpathMaildir::envelopeOfMessage(const QString &)
-{
-    RMM::REnvelope * e = 0;
-    return e;
-}
-
-    RMM::RBodyPart::PartType
-EmpathMaildir::typeOfMessage(const QString &)
-{
-    return RMM::RBodyPart::Basic;
-}
-
     RMM::RMessage *
 EmpathMaildir::message(const QString & id)
 {
@@ -344,7 +283,7 @@ EmpathMaildir::message(const QString & id)
 }
 
     bool
-EmpathMaildir::removeMessage(const QString & id, bool writeIndex = false)
+EmpathMaildir::removeMessage(const QString & id)
 {
     empathDebug("Removing message with id \"" + id + "\"");
     
@@ -359,10 +298,8 @@ EmpathMaildir::removeMessage(const QString & id, bool writeIndex = false)
     if (!f.remove())
         return false;
     
-    folder->messageList().remove(id);
+    folder->index().remove(id.ascii());
 
-    if (writeIndex) _writeIndex();
-    
     return true;
 }
 
@@ -378,13 +315,12 @@ EmpathMaildir::removeMessage(const QStringList & l)
     QStringList::ConstIterator it(l.begin());
     
     for (; it != l.end(); ++it) {
-        if (!removeMessage(*it, false))
+        if (!removeMessage(*it))
             retval = false;
         t->doneOne();
     }
     
     t->done();
-    _writeIndex();
 
     return retval;
 }
@@ -396,8 +332,6 @@ EmpathMaildir::removeMessage(const QStringList & l)
     QCString
 EmpathMaildir::_messageData(const QString & filename)
 {
-    empathDebug("_messageData (" + filename + ") called"); 
-    
     if (filename.length() == 0) {
         empathDebug("WARNING: Must supply filename !");
         return "";
@@ -485,9 +419,6 @@ EmpathMaildir::init()
     // Last op may have taken some time.
     kapp->processEvents();
     
-    // Quickly read the index in.
-    //_readIndex();
-    
     // Tell the index to sync up with what's stored.
     sync(url_);
 }
@@ -508,9 +439,7 @@ EmpathMaildir::_markNewMailAsSeen()
     empathDebug("There are " +
         QString().setNum(l.count()) + " messages to rename");
     
-    QValueListConstIterator<QString> it = l.begin();
-
-    for (; it != l.end(); ++it)
+    for (QStringList::ConstIterator it = l.begin(); it != l.end(); ++it)
         _markAsSeen(*it);
 }
 
@@ -761,129 +690,14 @@ EmpathMaildir::_generateFlagsString(RMM::MessageStatus s)
 {
     QString flags;
     
-    flags += s & RMM::Read        ? "S" : "";
+    flags += s & RMM::Read      ? "S" : "";
     flags += s & RMM::Marked    ? "F" : "";
-    flags += s & RMM::Trashed    ? "T" : "";
-    flags += s & RMM::Replied    ? "R" : "";
+    flags += s & RMM::Trashed   ? "T" : "";
+    flags += s & RMM::Replied   ? "R" : "";
     
     return flags;
 }
     
-    void
-EmpathMaildir::_readIndex()
-{
-    empathDebug("_readIndex() called");
-    QTime begin(QTime::currentTime());
-    QTime now;
-
-    QFile indexFile(path_ + "/.empathIndex");
-    
-    if (!indexFile.open(IO_ReadOnly)) {
-        empathDebug("Couldn't read index file \"" + indexFile.name() + "\"");
-        return;
-    }
-    
-    QFileInfo fi(indexFile);
-    mtime_ = fi.lastModified();
-        
-    // Get a pointer to the folder related to us.
-    EmpathFolder * f(empath->folder(url_));
-    
-    if (f == 0) {
-        empathDebug("_readIndex: Couldn't find folder !");
-        return;
-    }
-    
-    QRegExp re_flags(":2,[A-Za-z]*$");
-
-    QDataStream indexStream(&indexFile);
-    
-    EmpathIndexRecord * r;
-    
-    while (!indexStream.eof()) {
-        
-        now = QTime::currentTime();
-        if (begin.msecsTo(now) > 100) {
-            begin = now;
-            kapp->processEvents();
-        }
-
-        r = new(f->indexAllocator()) EmpathIndexRecord;
-
-        CHECK_PTR(r);
-        indexStream >> *r;
-#if 0    
-        int flagsStart = r->id().find(re_flags);
-
-        if (!flagsStart) flagsStart = r->id().length();
-
-        QString flags = r->id().right(r->id().length() - flagsStart + 3);
-    
-        r->setStatus(
-            (RMM::MessageStatus)
-            (    (flags.contains('S') ? RMM::Read    : 0)    |
-                (flags.contains('R') ? RMM::Replied    : 0)    |
-                (flags.contains('F') ? RMM::Marked    : 0)    ));
-#endif
-        
-        if (r->id().isEmpty()) {
-            empathDebug("Not inserting index record - no filename !");
-            delete r;
-            continue;
-        }
-
-        f->messageList().insert(r->id(), r);
-    }
-
-    indexFile.close();
-}
-
-    void
-EmpathMaildir::_writeIndex()
-{
-    empathDebug("_writeIndex() called");
-    
-    EmpathTask * t(empath->addTask(i18n("Writing index")));
-
-    // Get a pointer to the folder related to us.
-    EmpathFolder * f(empath->folder(url_));
-    
-    if (f == 0) {
-        empathDebug("writeIndex: Couldn't find folder !");
-        t->done();
-        return;
-    }
-    
-    QFile indexFile(path_  + "/.empathIndex");
-    
-    if (!indexFile.open(IO_WriteOnly)) {
-        empathDebug("Couldn't write to index \"" + indexFile.name() + "\"");
-        t->done();
-        return;
-    }
-    
-    QDataStream indexStream(&indexFile);
-    
-    empathDebug("Writing " +
-        QString().setNum(f->messageList().count()) + " entries");
-    
-    t->setMax(f->messageList().count());
-
-    EmpathIndexIterator it(f->messageList());
-    
-    for (; it.current(); ++it) {
-
-        indexStream << *it.current();
-        t->doneOne();
-    }
-    
-    indexFile.close();
-    
-    mtime_ = QDateTime::currentDateTime();
-    
-    t->done();
-}
-
     void
 EmpathMaildir::s_timerBeeped()
 {

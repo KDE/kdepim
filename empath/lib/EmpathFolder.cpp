@@ -18,9 +18,9 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathFolder.h"
-#endif
+// KDE includes
+#include <kglobal.h>
+#include <kstddirs.h>
 
 // Local includes
 #include "Empath.h"
@@ -38,21 +38,39 @@ EmpathFolder::EmpathFolder()
         unreadMessageCount_(0)
 {
     empathDebug("default ctor !");
-    indexAllocator_ = new EmpathIndexAllocator;
     pixmapName_ = "mini-folder-grey.png";
 }
 
 EmpathFolder::EmpathFolder(const EmpathURL & url)
-    :    QObject(),
+    :   QObject(),
         messageCount_(0),
         unreadMessageCount_(0),
         url_(url)
 {
-    indexAllocator_ = new EmpathIndexAllocator;
     empathDebug("ctor with url == \"" + url_.asString() + "\"");
-    messageList_.setFolder(this);
+    
+    index_.setFolder(url_);
+    
+    QString resDir =
+        KGlobal::dirs()->getSaveLocation("indices", url.mailboxName(), true);
+    
+    empathDebug("saveLocation: " + resDir);
+
+    if (resDir.isEmpty()) {
+        empathDebug("Serious problem with local indices dir");
+    }
+    
+    QString legalName = url.folderPath().replace(QRegExp("/"), "_");
+    
+    QString fileName = resDir + "/" + legalName;
+    
+    empathDebug("fileName: " + fileName);
+
+    index_.setFilename(fileName);
+    
     QObject::connect(this, SIGNAL(countUpdated(int, int)),
         empath->mailbox(url_), SLOT(s_countUpdated(int, int)));
+    
     pixmapName_ = "mini-folder-grey.png";
 }
 
@@ -75,47 +93,35 @@ EmpathFolder::setPixmap(const QString & p)
 }
 
     const EmpathIndexRecord *
-EmpathFolder::messageDescription(RMM::RMessageID & id) const
+EmpathFolder::record(const QCString & key)
 {
-    empathDebug("messageWithID(" + id.asString() + ") called");
-    return messageList_.messageDescription(id);
-}
-
-    void
-EmpathFolder::dropIndex()
-{
-    messageList_.clear();
-    
-    delete indexAllocator_;
-    indexAllocator_ = new EmpathIndexAllocator;
+    return index_.record(key);
 }
 
     void
 EmpathFolder::update()
 {
-    empathDebug("update() called");
     EmpathMailbox * m = empath->mailbox(url_);
     if (m == 0) return;
-    empathDebug("mailbox name = " + m->name());
     m->sync(url_);
-    empathDebug("emitting(" + QString().setNum(messageList_.countUnread()) +
-       ", " + QString().setNum(messageList_.count()) + ")");
-    emit(countUpdated(messageList_.countUnread(), messageList_.count()));
+    emit(countUpdated(index_.countUnread(), index_.count()));
 }
 
     EmpathFolder *
 EmpathFolder::parent() const
 {
-    empathDebug("parent() called");
     QString f = url_.folderPath();
     QString m = url_.mailboxName();
-    empathDebug("My folder path is \"" + f + "\"");
+    
     if (f.right(1) == "/")
         f.remove(f.length() - 1, 1);
-    if (!f.contains("/")) return 0;
+    
+    if (!f.contains("/"))
+        return 0;
+    
     f = f.left(f.findRev("/"));
     f += "/";
-    empathDebug("Parent folder path is \"" + f + "\"");
+    
     EmpathURL u(url_.mailboxName(), f, QString::null);
     return empath->folder(u);
 }

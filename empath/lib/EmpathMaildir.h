@@ -66,24 +66,19 @@ class EmpathMaildir : public QObject
         
         void init();
         
-        const QString &        basePath()    const { return basePath_; }
-        const EmpathURL &    url()        const { return url_; }
-        const QString &        path()        const { return path_; }
+        const QString & basePath() const { return basePath_; }
+        const EmpathURL & url() const { return url_; }
+        const QString & path() const { return path_; }
         
         bool mark(const QString &, RMM::MessageStatus);
         bool mark(const QStringList &, RMM::MessageStatus);
         
-        QString        writeMessage(RMM::RMessage &);
+        QString writeMessage(RMM::RMessage &);
         
-        Q_UINT32                    sizeOfMessage        (const QString &);
-        QString                        plainBodyOfMessage    (const QString &);
-        RMM::REnvelope *            envelopeOfMessage    (const QString &);
-        RMM::RMessage *                message                (const QString &);
+        RMM::RMessage * message (const QString &);
         
-        bool                removeMessage    (const QString &, bool = false);
-        bool                removeMessage    (const QStringList &);
-        
-        RMM::RBodyPart::PartType    typeOfMessage        (const QString &);
+        bool removeMessage (const QString &);
+        bool removeMessage (const QStringList &);
         
         void sync(const EmpathURL & url, bool ignoreMtime = false);
         
@@ -100,9 +95,7 @@ class EmpathMaildir : public QObject
         void        _clearTmp();
         bool        _setupDirs();
         QString     _generateFlagsString(RMM::MessageStatus);
-        void        _readIndex();
-        void        _writeIndex();
-        
+       
         // Order dependency
         QString      path_;
         EmpathURL    url_;

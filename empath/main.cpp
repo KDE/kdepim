@@ -26,6 +26,7 @@
 // KDE includes
 #include <kapp.h>
 #include <kglobal.h>
+#include <kstddirs.h>
 #include <kconfig.h>
 #include <kstartparams.h>
 
@@ -34,7 +35,7 @@
 #include "EmpathDefines.h"
 #include "EmpathUI.h"
 
-void EmpathMain(int, char **, bool = false);
+void empathMain(int, char **, bool = false);
 
     int
 main(int argc, char ** argv)
@@ -61,21 +62,23 @@ main(int argc, char ** argv)
         return 0;
     }
     
-    EmpathMain(argc, argv, (opts.check("--server", "-s", true)));
+    empathMain(argc, argv, (opts.check("--server", "-s", true)));
 
     umask(prev_umask);
     
-    return 0;
+    exit(0);
 }
 
     void
-EmpathMain(int argc, char ** argv, bool server)
+empathMain(int argc, char ** argv, bool server)
 {
     if (server && fork() != 0) return;
 
     // Create a KApplication.
     KApplication * app = new KApplication(argc, argv, "empath");
     CHECK_PTR(app);
+    
+    KGlobal::dirs()->addResourceType("indices", "/share/apps/empath/indices");
     
     // Don't do dollar expansion by default.
     KGlobal::config()->setDollarExpansion(false);    

@@ -22,9 +22,6 @@
 # pragma implementation "EmpathMailboxMaildir.h"
 #endif
 
-// FIXME: The writeNewMail method needs to find a way of telling the
-// caller whether message write was successful.
-
 // Qt includes
 #include <qfile.h>
 #include <qdatastream.h>

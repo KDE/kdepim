@@ -109,7 +109,6 @@ EmpathTaskWidget::s_addTask(EmpathTask * t)
     resize(width(), itemList_.count() * itemHeight_);
     show();
     kapp->processEvents();
-    empathDebug("arse");
 }
 
     void
@@ -168,7 +167,6 @@ EmpathTaskItem::s_done()
     void
 EmpathTaskItem::s_inc()
 {
-    empathDebug("s_inc() called");
     progressMeter_->setProgress(++pos_);
     kapp->processEvents();
 }
@@ -184,7 +182,6 @@ EmpathTaskItem::s_setMax(int max)
     void
 EmpathTaskItem::s_setPos(int pos)
 {
-    empathDebug("s_setPos() called");
     pos_ = pos;
     progressMeter_->setProgress(pos_);
     kapp->processEvents();

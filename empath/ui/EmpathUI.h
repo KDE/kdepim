@@ -43,6 +43,7 @@ class EmpathUI : public QObject
         
     protected slots:
     
+        void s_setupWizard();
         void s_setupDisplay();
         void s_setupIdentity();
         void s_setupSending();

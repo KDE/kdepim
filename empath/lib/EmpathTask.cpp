@@ -35,19 +35,18 @@ EmpathTask::EmpathTask(const QString & name)
         pos_(0),
         done_(false)
 {
-    empathDebug("ctor");
+    empathDebug("");
 }
 
 EmpathTask::~EmpathTask()
 {
-    empathDebug("dtor");
+    empathDebug("");
     emit(finished());
 }
 
     void
 EmpathTask::setMax(int i)
 {
-    empathDebug("setMax() called");
     max_ = i;
     emit(maxChanged(i));
 }
@@ -55,7 +54,6 @@ EmpathTask::setMax(int i)
     void
 EmpathTask::setPos(int i)
 {
-    empathDebug("setPos() called");
     pos_ = i;
     emit(posChanged(i));
 }
@@ -63,7 +61,6 @@ EmpathTask::setPos(int i)
     void
 EmpathTask::doneOne()
 {
-    empathDebug("doneOne() called");
     emit(addOne());
     kapp->processEvents();
 }
@@ -71,7 +68,6 @@ EmpathTask::doneOne()
     void
 EmpathTask::done()
 {
-    empathDebug("done() called");
     done_ = true;
     emit(finished());
 }

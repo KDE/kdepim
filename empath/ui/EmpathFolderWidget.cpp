@@ -237,8 +237,8 @@ EmpathFolderWidget::s_currentChanged(QListViewItem * item)
     
         empathDebug("folder " + i->url().folderPath() + " selected");
 
-        if (waitForShown_)
-        {
+        if (waitForShown_) {
+
             setEnabled(false);
             setCursor(waitCursor);
             emit(showFolder(i->url()));

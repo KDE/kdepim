@@ -21,7 +21,7 @@
 #ifndef RMM_DEFINES_H
 #define RMM_DEFINES_H
 
-#ifdef DEBUG
+#ifdef RMM_DEBUG
 # include <qcstring.h>
 # include <iostream.h>
 # define rmmDebug(a)    cerr << className() << ": " << \

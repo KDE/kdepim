@@ -436,7 +436,6 @@ EmpathMailboxPOP3::readConfig()
     useAPOP_                = CRBE(KEY_POP3_APOP, true);
     passwordSavePolicy_     = (SavePolicy) CRUNE(KEY_POP3_SAVE_POLICY, Never);
     logging_                = CRBE(KEY_POP3_LOGGING_POLICY,    false);
-    // FIXME: Use KStdDirs to get apps/empath/ and append log.
     logFilePath_            = CRE(KEY_POP3_LOG_FILE_PATH, "");
     logFileDisposalPolicy_  = CRBE(KEY_POP3_LOG_FILE_DISPOSAL_POLICY, false);
     maxLogFileSize_         = CRUNE(KEY_POP3_MAX_LOG_FILE_SIZE,    10);

@@ -51,6 +51,7 @@
 #include "EmpathSendingSettingsDialog.h"
 #include "EmpathAccountsSettingsDialog.h"
 #include "EmpathFilterManagerDialog.h"
+#include "EmpathSetupWizard.h"
 #include "EmpathConfig.h"
 
 EmpathUI::EmpathUI()
@@ -76,6 +77,8 @@ EmpathUI::EmpathUI()
         empath, SIGNAL(newComposer(const QString &)),
         this,   SLOT(s_newComposer(const QString &)));
     
+    QObject::connect(
+        empath, SIGNAL(setupWizard()),      this, SLOT(s_setupWizard()));
     QObject::connect(
         empath, SIGNAL(setupDisplay()),     this, SLOT(s_setupDisplay()));
     QObject::connect(
@@ -205,6 +208,12 @@ EmpathUI::s_infoMessage(const QString & s)
 EmpathUI::s_sendEmail(const QString & name, const QString & email)
 {
     empath->compose(name + " " + email);
+}
+
+    void
+EmpathUI::s_setupWizard()
+{
+    EmpathSetupWizard::create();
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -18,10 +18,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathFolder.h"
-#endif
-
 #ifndef EMPATHFOLDER_H
 #define EMPATHFOLDER_H
 
@@ -66,12 +62,6 @@ class EmpathFolder : public QObject
          */
         EmpathFolder(const EmpathURL & url);
         
-        /**
-         * Use this to allocate index records.
-         * @see KZoneAllocator
-         */
-        EmpathIndexAllocator * indexAllocator() { return indexAllocator_; }
-
         virtual ~EmpathFolder();
 
         /**
@@ -102,14 +92,14 @@ class EmpathFolder : public QObject
         /**
          * How many messages in total are stored here ?
          */
-        Q_UINT32    messageCount()            const
-        { return messageList_.count(); }
+        Q_UINT32    messageCount()
+        { return index_.count(); }
 
         /**
          * How many messages stored are unread ?
          */
-        Q_UINT32    unreadMessageCount()    const
-        { return messageList_.countUnread(); }
+        Q_UINT32    unreadMessageCount()
+        { return index_.countUnread(); }
 
         /**
          * @internal
@@ -120,14 +110,13 @@ class EmpathFolder : public QObject
         /**
          * The index.
          */
-        EmpathIndex & messageList() { return messageList_; }
+        EmpathIndex & index() { return index_; }
 
         /**
          * Get an index record given an ID.
          * @return 0 if couldn't be found.
          */ 
-        const EmpathIndexRecord *
-            messageDescription(RMM::RMessageID & messageID) const;
+        const EmpathIndexRecord * record(const QCString & key);
 
         /**
          * Call this when you want to sync with the mailbox and update any
@@ -135,11 +124,6 @@ class EmpathFolder : public QObject
          */
         void update();
 
-        /**
-         * Drop the index. Why ? Dunno.
-         */
-        void dropIndex();
-        
         /**
          * Call this when an item has disappeared from the index.
          */
@@ -178,17 +162,12 @@ class EmpathFolder : public QObject
 
         EmpathFolder(const EmpathFolder &) : QObject() {}
 
-        Q_UINT32 id_;
-
-        Q_UINT32 messageCount_;
-        Q_UINT32 unreadMessageCount_;
-
-        QString pixmapName_;
-        EmpathIndex    messageList_;
-
-        EmpathURL url_;
-        
-        EmpathIndexAllocator * indexAllocator_;
+        Q_UINT32    id_;
+        Q_UINT32    messageCount_;
+        Q_UINT32    unreadMessageCount_;
+        QString     pixmapName_;
+        EmpathIndex index_;
+        EmpathURL   url_;
 };
 
 #endif

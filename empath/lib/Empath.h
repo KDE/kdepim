@@ -52,8 +52,9 @@ typedef QCache<RMM::RMessage> EmpathMessageDataCache;
 
 /**
  * Empath is the controller class for Empath's kernel.
- * Create one instance only.
  *
+ * You can't construct this. Use the static method Empath::create() instead.
+*
  * @short Controller class
  * @author Rikkus
  */
@@ -70,56 +71,82 @@ class Empath : public QObject
             ComposeNormal,
             ComposeBounce
         };
-        
+       
+        /** 
+         * This MUST be called, and it must be after Empath::start(),
+         * and before the empath object is used. Mailboxes, filters, etc
+         * are initialised by this method.
+         *
+         * This is separate from Empath::start to allow the UI to start up
+         * faster. On construction, the standard KDE UI loads its
+         * configuration, connects some signals to slots, and gets some
+         * windows onto the display. The empath object's initialisation may
+         * take some time, so this is done once the UI is already up but
+         * before the event loop begins. kapp->processEvents() is used
+         * to allow events to be processed even though the event loop has
+         * not yet been entered.
+         *
+         * Example: (see full implementation in main.cpp)
+         *
+         * new KApplication(argc, argv, "empath");
+         * Empath::start();
+         * new EmpathUI;
+         * empath->init();
+         * kapp->exec();
+         */
         static void start();
         
+        /**
+         * Use this to kill off Empath. You should delete the UI first. This
+         * allows you to bring down the UI quickly, before Empath dies.
+         * Once this method returns, everything should have been cleaned
+         * up, synced, and destructed. You may delete your KApplication.
+         */
         void shutdown();
         
         /**
          * This must be called after the constructor. You can construct
          * a ui first, but don't try to access any mailboxes or filters
-         * as they're not initialised until you call this.
+         * as they're not initialised until you call this. @see start
          */
         void init();
 
         /**
          * In the style of KApplication and QApplication, this
          * saves you having to pass a pointer to the (single) object of
-         * this controller class to every object in the system
+         * this controller class to every object in the system.
          *
-         * i.e. if you want to read the mailbox list, you can do something
-         * like empath->mailboxList() for brevity
+         * There is a macro 'empath' defined that makes this even easier.
          *
-         * @short quick ref to controller class
-         * @return pointer to the controller class' single object
+         * @short Pointer to controller class.
+         * @return Pointer to controller class.
          */
         static Empath * getEmpath() { return EMPATH; }
         
         /**
          * @internal
-         * This is used by EmpathMailboxMaildir and should go into that class.
+         * This is used by generateUnique.
          */
         Q_UINT32    startTime()    const { return startupSeconds_; }
         /**
          * @internal
-         * This is used by EmpathMailboxMaildir and should go into that class.
+         * This is used by generateUnique.
          */
         pid_t        processID()    const { return processID_; }
         /**
          * @internal
-         * This is used by EmpathMailboxMaildir and should go into that class.
+         * This is used by generateUnique.
          */
         QString        hostName()    const { return hostName_; }
         
         /**
-         * Filter the message referred to in the URL.
-         * Once you've put a message somewhere, you can call empath->filter()
-         * to trigger filtering. Each filter will be applied in turn.
+         * Pass the message referred to in the URL through the filtering
+         * mechanism.
          */
         void filter(const EmpathURL &);
         
         /**
-         * Pointer to the system-wide mailbox list
+         * Pointer to the system-wide mailbox list.
          *
          * @short A shortcut to the mailbox list
          * @return A reference to the mailbox list
@@ -133,7 +160,7 @@ class Empath : public QObject
          * sendQueued() instead, so this is being marked internal.
          */
         EmpathMailSender & mailSender() const
-        { ASSERT(mailSender_); return *mailSender_; }
+        { return *mailSender_; }
 
         /**
          * The filter list.
@@ -152,7 +179,7 @@ class Empath : public QObject
          * @return A pointer to an RMM::RMessage, unless the message can't
          * be found, when it returns 0.
          */
-        RMM::RMessage     * message(const EmpathURL &);
+        RMM::RMessage   * message(const EmpathURL &);
         
         /**
          * Gets a pointer to the folder specified in the url, or 0.
@@ -162,7 +189,7 @@ class Empath : public QObject
         /**
          * Gets a pointer to the mailbox specified in the url, or 0.
          */
-        EmpathMailbox    * mailbox(const EmpathURL &);
+        EmpathMailbox   * mailbox(const EmpathURL &);
         
         /**
          * Create a new task with the given name and pass back the pointer.
@@ -174,7 +201,7 @@ class Empath : public QObject
          * how to let the user know what's happening. A progress meter will
          * show up on the display if your task is taking a long time.
          */
-        EmpathTask        * addTask(const QString & name);
+        EmpathTask      * addTask(const QString & name);
         
         /**
          * Compose a message.
@@ -465,51 +492,100 @@ class Empath : public QObject
             QString xinfo);
  
     signals:
+        
+        /**
+         * Please ask the user to enter their information !
+         */
+        void setupWizard();
  
+        /**
+         * A request for a message to be retrieved from a mailbox
+         * has been completed. The string xinfo can be used to check if it
+         * was you who made this request.
+         */
         void retrieveComplete(
             bool status,
             const EmpathURL & from,
             const EmpathURL & to,
             QString xinfo);
 
-   
+        /**
+         * A request for a message to be retrieved from a mailbox
+         * has been completed. The string xinfo can be used to check if it
+         * was you who made this request.
+         */
         void retrieveComplete(
             bool status,
             const EmpathURL & url,
             QString xinfo);
 
+        /**
+         * A request for a message to be moved from one folder to another
+         * has been completed. The string xinfo can be used to check if it
+         * was you who made this request.
+         */
         void moveComplete(
             bool status,
             const EmpathURL & from,
             const EmpathURL & to,
             QString xinfo);
         
+        /**
+         * A request for a message to be copied from one folder to another
+         * has been completed. The string xinfo can be used to check if it
+         * was you who made this request.
+         */
         void copyComplete(
             bool status,
             const EmpathURL & from,
             const EmpathURL & to,
             QString xinfo);
 
+        /**
+         * A request for a message to be removed from a mailbox
+         * has been completed. The string xinfo can be used to check if it
+         * was you who made this request.
+         */
         void removeComplete(
             bool status,
             const EmpathURL & url,
             QString xinfo);
 
+        /**
+         * A request for a message to be marked with the given status
+         * has been completed. The string xinfo can be used to check if it
+         * was you who made this request.
+         */
         void markComplete(
             bool status,
             const EmpathURL & url,
             QString xinfo);
 
+        /**
+         * A request for a message to be written to a mailbox
+         * has been completed. The string xinfo can be used to check if it
+         * was you who made this request.
+         */
         void writeComplete(
             bool status,
             const EmpathURL & url,
             QString xinfo);
 
+        /**
+         * A request for a new folder to be created
+         * has been completed. The string xinfo can be used to check if it
+         * was you who made this request.
+         */
         void createFolderComplete(
             bool status,
             const EmpathURL & url,
             QString xinfo);
 
+        /**
+         * A request for a folder to be removed
+         * has been completed. The string xinfo can be used to check if it
+         * was you who made this request.
+         */
         void removeFolderComplete(
             bool status,
             const EmpathURL & url,

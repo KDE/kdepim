@@ -18,12 +18,11 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathIndex.h"
-#endif
-
 #ifndef EMPATHMESSAGEDESCRIPTIONLIST
 #define EMPATHMESSAGEDESCRIPTIONLIST
+
+// System includes
+#include <gdbm.h>
 
 // Qt includes
 #include <qdict.h>
@@ -31,17 +30,16 @@
 // Local includes
 #include "RMM_MessageID.h"
 #include "EmpathIndexRecord.h"
+#include "EmpathURL.h"
 
 class EmpathFolder;
 class EmpathMessageList;
-
-typedef QDictIterator<EmpathIndexRecord> EmpathIndexIterator;
 
 /**
  * Dictionary of index records
  * @author Rikkus
  */
-class EmpathIndex : public QDict<EmpathIndexRecord>
+class EmpathIndex
 {
     public:
         
@@ -51,37 +49,67 @@ class EmpathIndex : public QDict<EmpathIndexRecord>
         /**
          * Get the index record using the given RMM::RMessageID.
          */
-        EmpathIndexRecord * messageDescription(RMM::RMessageID & id) const;
+        EmpathIndexRecord * record(const QCString & key);
         
         /**
          * Set the index to talk to the given folder.
          */
-        void setFolder(EmpathFolder * parent) { folder_ = parent; }
+        void setFolder(const EmpathURL & folder);
+ 
+        /**
+         * Set the index to use the given filename.
+         */
+        void setFilename(const QString &);
+        
+        /**
+         * Clear out.
+         */
+        void clear();
 
         /**
          * Count the number of messages stored.
          */
-        Q_UINT32 countUnread() const;
+        Q_UINT32 count();
+
+        /**
+         * Count the number of unread messages stored.
+         */
+        Q_UINT32 countUnread();
 
         /**
          * Sync up the message list with the mailbox.
          */
         void sync();
+        
+        /**
+         * Insert entry. Will overwrite any existing.
+         */
+        bool insert(const QCString &, EmpathIndexRecord &);
+        /**
+         * Remove entry.
+         */
+        bool remove(const QCString &);
 
         /**
-         * @return Pointer to the related folder.
+         * @return URL of the related folder.
          */
-        EmpathFolder * folder() { return folder_; }
+        const EmpathURL & folder() { return folder_; }
+        
+        QStrList allKeys();
 
-        const char * className() const { return "EmpathMessageList"; }
+        const char * className() const { return "EmpathIndex"; }
 
     protected:
         
-        virtual int compareItems(void *, void *);
+        void _open();
+        void _close();
         
-        EmpathFolder * folder_;
-        
+        EmpathURL folder_;
         QDateTime mtime_;
+        int blockSize_;
+        int mode_;
+        QString filename_;
+        GDBM_FILE dbf_;
 };
 
 #endif

@@ -30,7 +30,6 @@
 #include <qlist.h>
 
 // Local includes
-#include "EmpathIndexAllocator.h"
 #include "EmpathDefines.h"
 #include <RMM_Enum.h>
 #include <RMM_Message.h>
@@ -47,17 +46,6 @@
 class EmpathIndexRecord
 {
     public:
-        
-        /**
-         * @internal
-         */
-        static void * operator new(size_t _size, EmpathIndexAllocator *a)
-        { return a->allocate(_size); }
-        
-        /**
-         * @internal
-         */
-        static void operator delete(void *) { /* nothing */ }
         
         /**
          * @internal
@@ -168,14 +156,14 @@ class EmpathIndexRecord
     private:
         
         // Order dependency
-        QString                id_;
+        QString             id_;
         QString             subject_;
-        RMM::RMailbox         sender_;
-        RMM::RDateTime        date_;
-        RMM::MessageStatus    status_;
+        RMM::RMailbox       sender_;
+        RMM::RDateTime      date_;
+        RMM::MessageStatus  status_;
         Q_UINT32            size_;
-        RMM::RMessageID        messageId_;
-        RMM::RMessageID        parentMessageId_;
+        RMM::RMessageID     messageId_;
+        RMM::RMessageID     parentMessageId_;
         
         bool                tagged_;
 };

@@ -102,6 +102,10 @@ Empath::init()
     _setStartTime();
     mailboxList_.init();
     filterList_.load();
+
+    QString userName = KGlobal::config()->readEntry(EmpathConfig::KEY_NAME);
+    if (!userName)
+        emit(setupWizard());
 }
 
 Empath::~Empath()

@@ -6,6 +6,7 @@ libempathui_a_METASOURCES = USE_AUTOMOC
 
 libempathui_a_SOURCES = \
 EmpathAccountsSettingsDialog.cpp \
+EmpathAccountsSettingsWidget.cpp \
 EmpathAddressSelectionWidget.cpp \
 EmpathAttachmentEditDialog.cpp \
 EmpathAttachmentListWidget.cpp \
@@ -51,6 +52,7 @@ EmpathMessageStructureItem.cpp \
 EmpathMessageViewWidget.cpp \
 EmpathMessageViewWindow.cpp \
 EmpathMessageWidget.cpp \
+EmpathSetupWizard.cpp \
 EmpathSendingSettingsDialog.cpp \
 EmpathServerTypeDialog.cpp \
 EmpathSubjectSpecWidget.cpp \

@@ -536,14 +536,12 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
     
     if (oldFolder != 0) {
         
-        oldFolder->dropIndex();
-        
         QObject::disconnect(
-            oldFolder,    SIGNAL(itemLeft(const QString &)),
+            oldFolder,   SIGNAL(itemLeft(const QString &)),
             this,        SLOT(s_itemGone(const QString &)));
         
         QObject::disconnect(
-            oldFolder,    SIGNAL(itemArrived    (const QString &)),
+            oldFolder,   SIGNAL(itemArrived    (const QString &)),
             this,        SLOT(s_itemCome        (const QString &)));
     }
     
@@ -552,28 +550,26 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
     EmpathFolder * f = empath->folder(url_);
     
     QObject::connect(
-        f,        SIGNAL(itemLeft(const QString &)),
+        f,       SIGNAL(itemLeft(const QString &)),
         this,    SLOT(s_itemGone(const QString &)));
     
     QObject::connect(
-        f,        SIGNAL(itemArrived    (const QString &)),
+        f,       SIGNAL(itemArrived    (const QString &)),
         this,    SLOT(s_itemCome        (const QString &)));
     
     if (f == 0) {
     
-        // Can't find folder !
-    
+        empathDebug("Can't find folder !");
         emit(showing());
-           return;
+        return;
     }
     
     clear();
     masterList_.clear();
     
-    f->messageList().sync();
+    f->index().sync();
     
     _fillDisplay(f);
-    
 }
     void
 EmpathMessageListWidget::s_headerClicked(int i)
@@ -1063,7 +1059,7 @@ EmpathMessageListWidget::s_itemCome(const QString & s)
     if (f == 0)
         return;
         
-    EmpathIndexRecord * i(f->messageList()[s]);
+    EmpathIndexRecord * i(f->index().record(s.ascii()));
 
     if (i == 0) {
         empathDebug("Can't find index record for \"" + s + "\"");
@@ -1114,12 +1110,23 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
 
     t->setMax(f->messageCount());
     
-    EmpathIndexIterator it(f->messageList());
+    QStrList l(f->index().allKeys());
+
+    QStrListIterator it(l);
 
     for (; it.current(); ++it) {
+        
+        EmpathIndexRecord * rec = f->index().record(it.current());
 
-        EmpathMessageListItem * newItem = _addItem(this, *it.current());
-        setStatus(newItem, it.current()->status());
+        if (rec == 0) {
+            empathDebug("Can't find index record.");
+            continue;
+        }
+        
+        EmpathMessageListItem * newItem = _addItem(this, *rec);
+        
+        setStatus(newItem, rec->status());
+        
         t->doneOne();
     }
     
@@ -1148,10 +1155,20 @@ EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
 
     t->setMax(f->messageCount());
     
-    EmpathIndexIterator it(f->messageList());
+    QStrList l(f->index().allKeys());
     
-    for (; it.current(); ++it)
-        masterList_.inSort(it.current());
+    QStrListIterator it(l);
+    
+    for (; it.current(); ++it) {
+        
+        EmpathIndexRecord * rec = f->index().record(it.current());
+        
+        if (rec == 0) {
+            continue;
+        }
+        
+        masterList_.inSort(rec);
+    }
     
     QListIterator<EmpathIndexRecord> mit(masterList_);
     
