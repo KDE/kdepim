@@ -36,7 +36,7 @@
 
 #include <kapplication.h>
 #include <kstandarddirs.h>
-#include <kconfig.h>
+#include <kglobalsettings.h>
 
 #include "ksync_splash.h"
 
@@ -48,22 +48,8 @@ Splash::Splash()
   QPixmap splash;
   splash.load(locate("appdata", "pics/startlogo.png") );
   setBackgroundPixmap(splash  );
-  // find the correct screen and geometry
-    QDesktopWidget *dw = QApplication::desktop();
-    QRect desk;
-    KConfig gc("kdeglobals", false, false);
-    gc.setGroup("Windows");
-    int scr = gc.readNumEntry("Unmanaged", -3);
-    if (dw->isVirtualDesktop() &&
-        gc.readBoolEntry("XineramaEnabled", true) &&
-        scr != -2) {
-        if (scr == -3)
-            scr = dw->screenNumber(QCursor::pos());
-        desk = dw->screenGeometry(scr);
-    } else {
-        desk = dw->geometry();
-    }
 
+  QRect desk = KGlobalSettings::splashScreenDesktopGeometry();
   setGeometry(desk.center().x()-splash.width()/2,
 	      desk.center().y()-splash.height()/2,
 	      splash.width(),
