@@ -187,12 +187,13 @@ class KolabPropagator : public KConfigPropagator
 
         changes.append( c );
 
+        freeBusyBaseUrl.addPath( "%NAME%.vfb" );
       } else {
           // Kolab2: only need FreeBusyRetrieveUrl
           // "Uploading" is done by triggering a server-side script with an HTTP GET
           // (done by kmail)
           freeBusyBaseUrl = "https://" + KolabConfig::self()->server() +
-                            "/freebusy/";
+                            "/freebusy/%EMAIL%.ifb";
       }
 
       ChangeConfig *c = new ChangeConfig;
