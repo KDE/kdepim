@@ -7,20 +7,29 @@ associated with it. The primary user interaction for karm is to start and stop t
 
 \section map Road Map to the Classes
 
-The core of the functionality is within Karm. Start there to learn the program. 
+MainWindow is the outermost layer and initializes the menus and actions, sets
+up the status bar, and handles many of the signal-to-slot connections.  It
+holds a pointer to the TaskView and Preferences objects and implements the
+%Karm's DCOP interface (defined in KarmDCOPIface).
 
-KarmWindow has the overall application functionality. This is where the menus and actions are initialized. This is where
-many of the connections are made. The status bar logic is contained here.
+TaskView does most of the work in the application.  This KListView subclass
+sets up the columns in the list, the idle detection timer, the auto save
+timer, and the desktop tracker.  It starts and stops timers, handles importing
+and exporting and displays the edit task dialog in response to user action.
+TaskView holds a private pointer to Preferences and KarmStorage objects.
 
-If you want to change the configuration options, look at Preferences. If you want to store more information about a task,
-look at Task. Look at \see sig_slot_index for information on the signals and slots used in the program which may be useful
-in understanding the overall flow of the program. See \see connections to get an index of what signal is connected to which slot.
+A Task is a QListViewItem subclass stores state such as the timer totals, if a
+timer is currently running for the task.  It also defines the list view sort
+order and can return a pointer to a KCal::Todo object that holds the same
+information.
 
-\section related Related Pages and Design Documents
+Preferences is a singleton that stores configuration options.  It raises
+signals when options change (for example, the location where the karm data is
+stored) so the application can react and adjust.
 
-\see sig_slot_index
-\see connections
-\see integration
+KarmStorage is a singleton that creates an interface for storing KArm data.
+Currently, it uses KDE Resource framework and stores data in the iCalendar
+format.
 
 */
 
