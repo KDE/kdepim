@@ -1,9 +1,7 @@
 ## kdebase/Makefile.am
 ## (C) 1997 Stephan Kulow
 
-COMPILE_FIRST =
-COMPILE_LAST = abbrowser
-SUBDIRS = $(COMPILE_FIRST) $(TOPSUBDIRS) $(COMPILE_LAST)
+SUBDIRS = abbrowser korganizer kpilot
 
 AUTOMAKE_OPTIONS = foreign 1.4
 DISTCLEANFILES = inst-apps
