@@ -163,6 +163,10 @@ static const char *kpilot_id="$Id$";
 #include "pilotDaemon.h"
 #endif
 
+#ifndef __PILOTDAEMONDCOP_STUB__
+#include "pilotDaemonDCOP_stub.h"
+#endif
+
 #include "kpilot.moc"
 
 // This is an XPM disguised as an include file.
@@ -174,7 +178,9 @@ KPilotInstaller::KPilotInstaller() :
 	KMainWindow(0), 
 	DCOPObject("KPilotIface"),
 	fMenuBar(0L), fStatusBar(0L), fToolBar(0L),
-    fQuitAfterCopyComplete(false), fManagingWidget(0L), fPilotLink(0L),
+	fQuitAfterCopyComplete(false), 
+	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon","KPilotDaemonIface")),
+	fManagingWidget(0L), 
     fPilotCommandSocket(0L), fPilotStatusSocket(0L), fKillDaemonOnExit(false),
     fStatus(Startup),
 	fFileInstallWidget(0L)
@@ -338,6 +344,12 @@ void KPilotInstaller::slotShowTitlePage()
 	showTitlePage();
 }
 
+void KPilotInstaller::slotSelectComponent(PilotComponent *p)
+{
+	fManagingWidget->raiseWidget(static_cast<QWidget *>(p));
+}
+
+
 void KPilotInstaller::showTitlePage(const QString& msg,bool)
 {
 	FUNCTIONSETUP;
@@ -359,6 +371,7 @@ KPilotInstaller::initPilotLink()
 {
 	FUNCTIONSETUP;
 
+#if 0
 	if(fPilotLink)
 	{
 		kdWarning() << __FUNCTION__ << ": Pilot Link already created?\n" ;
@@ -374,6 +387,7 @@ KPilotInstaller::initPilotLink()
 				   i18n("Cannot create link to Daemon"));
 		return;
 	}
+#endif
 
 
 	if(fPilotCommandSocket == NULL)
@@ -419,8 +433,10 @@ void KPilotInstaller::initCommandSocket()
 				   i18n("Allocating fPilotCommandSocket failed."),
 				   i18n("Cannot create link to Daemon"));
 
+#if 0
 		delete fPilotLink;
 		fPilotLink=NULL;
+#endif
 		return;
 	}
 
@@ -660,14 +676,14 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
 			//
 			if (c.readBoolEntry("PreferFastSync",false))
 			{
-				getPilotLink()->setFastSyncRequired(true);
+				getDaemon().requestFastSyncNext();
 				componentPreSync();
 				fStatusBar->changeItem(
 					i18n("FastSync in progress..."), 0);
 			}
 			else
 			{
-				getPilotLink()->setFastSyncRequired(false);
+				getDaemon().requestRegularSyncNext();
 				componentPreSync();
 				fStatusBar->changeItem(
 					i18n("HotSync in progress..."), 0);
@@ -766,8 +782,10 @@ void KPilotInstaller::componentPreSync(bool expectEmptyLinkCommand)
 		fPilotComponentList.current(); 
 		fPilotComponentList.next())
 	{
-			kdDebug() << fname << ": Pre-sync for builtins."
-				<< endl;
+		kdDebug() << fname 
+			<< ": Pre-sync for builtin "
+			<< fPilotComponentList.current()->name()
+			<< endl;
 		fPilotComponentList.current()->preHotSync(fLinkCommand);
 	}
 }
@@ -941,9 +959,8 @@ KPilotInstaller::addComponentPage(PilotComponent *p, const QString &name)
 	pt->setExclusiveGroup("view_menu");
 
 	connect(p,SIGNAL(showComponent(PilotComponent *)),
-		fManagingWidget,SLOT(raiseWidget(QWidget *)));
+		this,SLOT(slotSelectComponent(PilotComponent *)));
 }
-
 
 
 void KPilotInstaller::optionsShowStatusbar()
@@ -1031,7 +1048,8 @@ KPilotInstaller::slotConfigureKPilot()
 		// Update the link to reflect new settings.
 		//
 		//
-		destroyPilotLink(); // Get rid of the old one
+		// destroyPilotLink(); // Get rid of the old one
+		// TODO: Use DCOP to update
 		initPilotLink(); // make a new one..
 
 		// Update each installed component.
@@ -1260,6 +1278,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.53  2001/06/13 21:32:35  adridg
+// Dead code removal and replacing complicated stuff w/ QWidgetStack
+//
 // Revision 1.52  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //

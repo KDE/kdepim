@@ -4,7 +4,7 @@
 ### executables and one library from the sources in this dir.
 ###
 ###
-### $Id:$
+### $Id$
 ###
 
 ### Fairly large changes to allow enable final and make life easier for
@@ -28,9 +28,10 @@ INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH)
 ###
 
 kpilot_SOURCES	= kpilot.cc \
-	kpilotConfig.cc kpilotlink.cc \
+	kpilotConfig.cc \
 	messageDialog.cc gsetupDialog.cc \
 	kpilotOptions.cc \
+	pilotDaemonDCOP.stub \
 	listItems.cc kpilotDCOP.skel \
 	strToken.cc \
 	conduitSetup.cc listCat.cc \

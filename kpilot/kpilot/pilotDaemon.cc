@@ -616,7 +616,22 @@ void PilotDaemon::quitImmediately()
 	kapp->quit();
 } 
  
-void
+/* DCOP ASYNC */ void
+PilotDaemon::requestRegularSyncNext()
+{
+	// TODO: do something sensible here.
+	startHotSync(1);
+}
+
+/* DCOP ASYNC */ void
+PilotDaemon::requestFastSyncNext()
+{
+	// TODO: do something sensible here.
+	startHotSync(2);
+}
+
+
+/* DCOP ASYNC */ void
 PilotDaemon::startHotSync(int mode)
 {
 	FUNCTIONSETUP;
@@ -1337,6 +1352,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.40  2001/08/01 20:20:57  adridg
+// Fix for bug #29764
+//
 // Revision 1.39  2001/06/11 07:36:10  adridg
 // Cleanup char constant in <<
 //

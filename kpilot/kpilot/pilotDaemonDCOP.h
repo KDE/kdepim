@@ -44,11 +44,14 @@ k_dcop:
 	* Start a HotSync. What kind of HotSync is determined
 	* by the int parameter:
 	*
+	* 0 default -> use whatever form of HotSync has most recently been requested
 	* 1 regular HotSync -> backup databases and run conduits
 	* 2 FastSync -> only backup databases with conduits
 	* 3 FullBackup -> backup, no conduits
 	*/
 	virtual ASYNC startHotSync(int) = 0;
+	virtual ASYNC requestFastSyncNext() = 0;
+	virtual ASYNC requestRegularSyncNext() = 0;
 } ;
 
 #else
@@ -59,6 +62,9 @@ k_dcop:
 
 
 // $Log$
+// Revision 1.5  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.4  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

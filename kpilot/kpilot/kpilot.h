@@ -82,6 +82,7 @@ class KProcess;
 class KAction;
 class KToggleAction;
 
+class PilotDaemonDCOP_stub;
 class PilotComponent;
 class FileInstallWidget;
 
@@ -147,8 +148,17 @@ public:
       void initCommandSocket();
 
       void initStatusLink(); // Seperate so the components can be initialized
-      KPilotLink* getPilotLink() { return fPilotLink; }
-      void destroyPilotLink() { if (fPilotLink) {delete fPilotLink; fPilotLink = 0L; /* delete fLinkProcess; fLinkProcess = 0L; */ } }
+      // KPilotLink* getPilotLink() { return fPilotLink; }
+      // void destroyPilotLink() { if (fPilotLink) {delete fPilotLink; fPilotLink = 0L; /* delete fLinkProcess; fLinkProcess = 0L; */ } }
+
+      /**
+       * Provide access to the daemon's DCOP interface
+       * through an object of the stub class.
+       */
+protected:
+      PilotDaemonDCOP_stub &getDaemon() { return *fDaemonStub; } ;
+private:
+      PilotDaemonDCOP_stub *fDaemonStub;
 
 public slots:
 	void slotRestoreRequested();
@@ -210,7 +220,7 @@ private:
       bool            fQuitAfterCopyComplete; // Used for GUI-less interface
       QWidgetStack    *fManagingWidget;
       QList<PilotComponent>  fPilotComponentList; // Has the widgets/components...
-      KPilotLink*     fPilotLink;
+      // KPilotLink*     fPilotLink;
       KSocket*        fPilotCommandSocket;
       KSocket*        fPilotStatusSocket;
       bool            fKillDaemonOnExit;
@@ -236,6 +246,17 @@ private:
       void slotSyncDone(KProcess* which);
       void slotDaemonStatus(KSocket*);
 
+	/**
+	 * Indicate that a particular component has been selected (through
+	 * whatever mechanism). This will make that component visible and
+	 * adjust any other user-visible state to indicate that that component
+	 * is now active.
+	 *
+	 * This should be called (possibly by the component itself!) or activated
+	 * through the signal mechanism.
+	 * */
+	void slotSelectComponent(PilotComponent *);
+
     signals:
     void modeSelected(int selected);
     };
@@ -253,6 +274,9 @@ private:
 
 
 // $Log$
+// Revision 1.26  2001/06/13 21:32:35  adridg
+// Dead code removal and replacing complicated stuff w/ QWidgetStack
+//
 // Revision 1.25  2001/04/23 06:30:38  adridg
 // XML UI updates
 //

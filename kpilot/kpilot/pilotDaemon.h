@@ -149,6 +149,8 @@ public:
 	//
 	//
 	virtual ASYNC startHotSync(int);
+	virtual ASYNC requestFastSyncNext();
+	virtual ASYNC requestRegularSyncNext();
 
 protected:
 	DaemonStatus fStatus;
@@ -223,6 +225,9 @@ protected slots:
 #endif
 
 // $Log$
+// Revision 1.21  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.20  2001/04/01 17:32:51  adridg
 // I really don't remember
 //
