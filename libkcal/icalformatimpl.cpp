@@ -1588,6 +1588,7 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime, bool u
   t.second = datetime.time().second();
 
   t.is_date = 0;
+  t.is_neg = 0;
 
   if (utc) {
     t = icaltime_as_utc(t,mCalendar->timeZoneId().local8Bit());
