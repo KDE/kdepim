@@ -308,10 +308,11 @@ class Recurrence
 
   protected:
     enum PeriodFunc { END_DATE_AND_COUNT, COUNT_TO_DATE, NEXT_AFTER_DATE };
-    struct MonthlyData;     friend struct MonthlyData;
-    struct YearlyMonthData; friend struct YearlyMonthData;
-    struct YearlyPosData;   friend struct YearlyPosData;
-    struct YearlyDayData;   friend struct YearlyDayData;
+
+    class MonthlyData;
+    class YearlyMonthData;
+    class YearlyPosData;
+    class YearlyDayData;
 
     bool recursSecondly(const QDate &, int secondFreq) const;
     bool recursMinutelyAt(const QDateTime &dt, int minuteFreq) const;

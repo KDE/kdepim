@@ -1755,15 +1755,19 @@ ex:
  * If 'func' = END_DATE_AND_COUNT or NEXT_AFTER_DATE, 'enddate' is updated to the
  * recurrence end date.
  */
-struct Recurrence::MonthlyData {
+class Recurrence::MonthlyData
+{
+  public:
     const Recurrence *recurrence;
     int               year;          // current year
     int               month;         // current month 0..11
     int               day;           // current day of month 1..31
     bool              varies;        // true if recurring days vary between different months
+
   private:
     QValueList<int>   days28, days29, days30, days31;   // recurring days in months of each length
     QValueList<int>  *recurDays[4];
+
   public:
     MonthlyData(const Recurrence* r, const QDate &date)
              : recurrence(r), year(date.year()), month(date.month()-1), day(date.day())
@@ -2016,16 +2020,20 @@ ex:
  * WARNING: These methods currently do not cater for day of month < -28
  *          (which would need different months to be treated differently).
  */
-struct Recurrence::YearlyMonthData {
+class Recurrence::YearlyMonthData
+{
+  public:
     const Recurrence *recurrence;
     int               year;          // current year
     int               month;         // current month 1..12
     int               day;           // current day of month 1..31
     bool              leapyear;      // true if February 29th recurs and current year is a leap year
     bool              feb29;         // true if February 29th recurs
+
   private:
     QValueList<int>   months;        // recurring months in non-leap years  1..12
     QValueList<int>   leapMonths;    // recurring months in leap years  1..12
+
   public:
     YearlyMonthData(const Recurrence* r, const QDate &date, int d)
           : recurrence(r), year(date.year()), month(date.month()), day(d ? d : date.day())
@@ -2373,7 +2381,9 @@ ex:
  * If 'func' = END_DATE_AND_COUNT or NEXT_AFTER_DATE, 'enddate' is updated to the
  * recurrence end date.
  */
-struct Recurrence::YearlyPosData {
+class Recurrence::YearlyPosData
+{
+  public:
     const Recurrence *recurrence;
     int               year;          // current year
     int               month;         // current month 1..12
@@ -2381,8 +2391,10 @@ struct Recurrence::YearlyPosData {
     int               daysPerMonth;  // number of days which recur each month, or -1 if variable
     int               count;         // number of days which recur each year, or -1 if variable
     bool              varies;        // true if number of days varies from year to year
+
   private:
     mutable QValueList<int> days;
+
   public:
     YearlyPosData(const Recurrence* r, const QDate &date)
           : recurrence(r), year(date.year()), month(date.month()), day(date.day()), count(-1)
@@ -2760,12 +2772,16 @@ ex:
  * If 'func' = END_DATE_AND_COUNT or NEXT_AFTER_DATE, 'enddate' is updated to the
  * recurrence end date.
  */
-struct Recurrence::YearlyDayData {
+class Recurrence::YearlyDayData
+{
+  public:
     int    year;       // current year
     int    day;        // current day of year 1..366
     bool   varies;     // true if day 366 recurs
+
   private:
     int    daycount;
+
   public:
     YearlyDayData(const Recurrence* r, const QDate &date)
              : year(date.year()), day(date.dayOfYear()), varies(*r->rYearNums.getLast() == 366),
