@@ -7,7 +7,7 @@ Terminal=0
 Type=Application
 
 GenericName=Popup Notes
-GenericName[af]=opspring notas
+GenericName[af]=Opspring Notas
 GenericName[ar]=ملاحظات قافزة
 GenericName[bg]=Подскачащи Бележки
 GenericName[bs]=Popup bilješke
@@ -51,7 +51,7 @@ GenericName[zh_TW]=彈出式筆記本
 GenericName[zu]=Amapheshana Abhaliwe Aziphumelayo
 
 Name=KNotes
-Name[af]=knotas
+Name[af]=Knotas
 Name[ar]=كنوتس
 Name[eo]=Notoj
 Name[lv]=KPiezīmes

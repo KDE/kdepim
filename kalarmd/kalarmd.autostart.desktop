@@ -2,7 +2,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Alarm Daemon
-Name[af]=alarm bediener
+Name[af]=Alarm Bediener
 Name[ar]=مراقب Alarm
 Name[bg]=Alarm Демон
 Name[bs]=Alarm demon
@@ -45,6 +45,7 @@ Exec=kalarmd --login
 Icon=kalarmd
 Type=Application
 Comment=KOrganizer/KAlarm alarm daemon autostart at login
+Comment[af]=Korganizer/K-alarm alarm bediener outomatiese begin na aanteken
 Comment[ar]=مراقب تنبيهات KOrganizer/KAlarm يبدؤون آليا عند بدء التشغيل
 Comment[az]=KOrganizer/KAlarm alarm demonunun başlanğıcda avtomatik dövrəyə girməsi
 Comment[bs]=Automatsko pokretanje KOrganizer/KAlarm alarm demona prilikom logina

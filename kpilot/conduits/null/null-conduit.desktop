@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=KPilot NULL Conduit
-Name[af]=kpilot null pad
+Name[af]=Kpilot Null Pad
 Name[ar]=أنبوب KPilot NULL
 Name[cs]=Nulové propojení KPilotu
 Name[de]=NULL-Leitung für KPilot
@@ -36,7 +36,7 @@ Name[xx]=xx
 Name[zh_CN]=KPilot NULL 管道
 Name[zu]=KUmshayeli webhanoyi NULL Conduit
 Comment=This conduit does nothing. You can attach it to databases to prevent them from being synced.
-Comment[af]=hierdie pad doen niks. jy kan aanheg dit na databasise na verhoed hulle van te wees gesinkroniseer.
+Comment[af]=Hierdie pad doen niks. Jy kan aanheg dit na databasise na verhoed hulle van te wees gesinkroniseer.
 Comment[ar]=هذا الأنبوب لا يقعل شيئا, يمكنك ربطه بقواعد بيانات لتمنعه من أن ينسخ.
 Comment[az]=Bu əlavə heç bir şey etmir. Bunu verilənlər bazanıza əlavə edərək onları sinxronlaşdırmadan qoruya bilərsiniz.
 Comment[cs]=Toto propojení nic nevykonává. Můžete ho připojit k databázím, u kterých chcete zabránit synchronizaci.

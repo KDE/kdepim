@@ -2,6 +2,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KAlarm
+Name[af]=K-alarm
 Name[eo]=Alarmilo
 Name[ko]=KDE 알람
 Name[pl]=Alarm
@@ -14,7 +15,7 @@ Exec=kalarm -caption "%c" %i
 Icon=kalarm
 DocPath=kalarm/index.html
 GenericName=Reminder Message Scheduler
-GenericName[af]=herhindering boodskap skeduleerder
+GenericName[af]=Herhindering Boodskap Skeduleerder
 GenericName[ar]=مجدول ومذكر رسائل
 GenericName[bs]=Zakazivanje podsjetnika
 GenericName[cs]=Plánovač alarmů a připomenutí

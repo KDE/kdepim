@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=KOrganizer Calendar Conduit
-Name[af]=korganizer kalender pad
+Name[af]=Korganizer Kalender Pad
 Name[ar]=أنبوب تقويم KOrganizer
 Name[az]=KOrganizer Vaxt Cədvəli
 Name[ca]=Conducte de calendari KOrganizer
@@ -48,6 +48,7 @@ Name[zh_CN]=KOrganizer 日历管道
 Name[zh_TW]=KOrganizer 行事曆 Conduit
 Name[zu]=KUMgqugquzeli Wekhalenda Conduit
 Comment=This conduit synchronizes your Pilot with the KOrganizer datebook.
+Comment[af]=Hierdie pad sinkroniseer jou Pilot met die Korganizer datumboek.
 Comment[ar]=هذا الأنبوب يزامن جهاز Pilot الخاص بك مع أجندة تقويم المنظم
 Comment[az]=Bu əlavə sizin Pilot-u KOrganizer kitabcığı ilə sinxronlaşdırır.
 Comment[cs]=Toto propojení synchronizuje vašeho Pilota s kalendářem KOrganizéru

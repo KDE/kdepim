@@ -10,7 +10,7 @@ X-KDE-Library=alarmdaemonctrl
 X-KDE-FactoryName=alarmdaemonctrl
 
 Name=Alarm Daemon
-Name[af]=alarm bediener
+Name[af]=Alarm Bediener
 Name[ar]=مراقب Alarm
 Name[bg]=Alarm Демон
 Name[bs]=Alarm demon
@@ -51,7 +51,7 @@ Name[zh_TW]=警示服務程式
 Name[zu]=Alarm daemon
 
 Comment=Alarm Daemon Settings
-Comment[af]=alarm bediener instellings
+Comment[af]=Alarm Bediener Instellings
 Comment[ar]=إعدادات مراقب Alarm
 Comment[az]=Alarm Demon Qurğuları
 Comment[bg]=Настройки на Alarm Демона
@@ -62,7 +62,6 @@ Comment[de]=Einstellungen für den Alarm-Dämon
 Comment[el]=Ρυθμίσεις του Δαίμονα Προειδοποίησης
 Comment[eo]=Agordo de Alarmodemono
 Comment[es]=Opciones del demonio Alarma
-Comment[eu]=Alarma Demonioaren Ezarpenak
 Comment[fi]=Hälytyspalvelimen asetukset
 Comment[fr]=Configuration du démon d'alarme
 Comment[he]=שינוי הגדרות תהליך שירות התזכורות

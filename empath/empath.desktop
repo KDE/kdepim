@@ -1,7 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Empath
-Name[af]=empath
 Name[eo]=Empath-rigardo
 Name[pt_BR]=Visualizador Empath
 Name[ven]=U pfela vhutungu
@@ -11,7 +10,7 @@ Name[zu]=Fakela uzwelo
 Exec=empath
 Icon=empath
 GenericName=Mail Client
-GenericName[af]=pos kliënt
+GenericName[af]=Pos Kliënt
 GenericName[ar]=البريد الألكتروني
 GenericName[az]=Poçt Alıcısı
 GenericName[be]=Паштовы кліент

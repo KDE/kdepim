@@ -2,6 +2,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KAlarm
+Name[af]=K-alarm
 Name[eo]=Alarmilo
 Name[ko]=KDE 알람
 Name[pl]=Alarm
@@ -15,7 +16,7 @@ Icon=kalarm
 Type=Application
 DocPath=kalarm/index.html
 Comment=Alarm/reminder message scheduler: start as system tray icon
-Comment[af]=alarm/herhindering boodskap skeduleerder: begin as stelsel laai ikoon
+Comment[af]=Alarm/herhindering boodskap skeduleerder: begin as stelsel laai ikoon
 Comment[ar]=Alarm/مذكر مجدول لرسائل: تشغيل كإيقونة صينية النظام
 Comment[bs]=Zakazivanje alarma i podsjetnika: pokreće se kao ikona u system trayu
 Comment[cs]=Plánovač alarmů a připomenutí: spustit v systémové liště

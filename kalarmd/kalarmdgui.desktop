@@ -2,7 +2,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Alarm Daemon GUI
-Name[af]=alarm bediener gui
+Name[af]=Alarm Bediener Gui
 Name[ar]=واجهة مراقب Alarm الرسومية
 Name[bg]=Alarm Демон GUI
 Name[bs]=Alarm demon GUI
@@ -45,6 +45,7 @@ Exec=kalarmdgui
 Icon=kalarmd
 Type=Application
 Comment=KOrganizer/KAlarm alarm daemon GUI
+Comment[af]=Korganizer/K-alarm alarm bediener Gui
 Comment[ar]=واجهة مراقب تنبيهات KOrganizer/KAlarm الرسومية
 Comment[az]=KOrganizer/KAlarm alarm demonu ara üzü
 Comment[bs]=GUI za KOrganizer/KAlarm alarm demon

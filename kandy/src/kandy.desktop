@@ -1,14 +1,13 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Kandy
-Name[af]=kandy
 Name[eo]=Poŝtelefonilo
 Name[xx]=xx
 Exec=kandy %i %m -caption "%c"
 Icon=kandy
 Type=Application
 GenericName=Mobile Phone Tool
-GenericName[af]=mobiele foon program
+GenericName[af]=Mobiele Foon Program
 GenericName[ar]=أداة هاتف الموبايل
 GenericName[bs]=Alat za mobilne telefone
 GenericName[cs]=Nástroj pro mobilní telefony
