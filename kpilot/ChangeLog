@@ -1,6 +1,17 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-01-25  Adriaan de Groot
+* Fixed up copyright notices here and there. Dan is listed as copyright
+  holder in lots of files he's never worked on; since copyright cannot
+  be assigned except in writing, I'm going to have to take responsibility
+  for my parts.
+* Fixed up conduit modes in kpilotTest.
+* Removed compile warnings in the vcal conduit.
+* Moved 72342 to top of list, since now I got HHtoPC copy
+  working in kpilotTest I can actually _see_ the bug. It seems to be in
+  PilotMemo
+
 2004-01-20  Adriaan de Groot
 * Added experimental A-A-P build system.
 * Cleanups in conduit config, added stub buttons for wizards.
