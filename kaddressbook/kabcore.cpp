@@ -210,6 +210,26 @@ QStringList KABCore::selectedUIDs() const
   return mViewManager->selectedUids();
 }
 
+KABC::Resource *KABCore::requestResource( QWidget *parent )
+{
+  QPtrList<KABC::Resource> kabcResources = addressBook()->resources();
+
+  QPtrList<KRES::Resource> kresResources;
+  QPtrListIterator<KABC::Resource> resIt( kabcResources );
+  KABC::Resource *resource;
+  while ( ( resource = resIt.current() ) != 0 ) {
+    ++resIt;
+    if ( !resource->readOnly() ) {
+      KRES::Resource *res = static_cast<KRES::Resource*>( resource );
+      if ( res )
+        kresResources.append( res );
+    }
+  }
+
+  KRES::Resource *res = KRES::ResourceSelectDialog::getResource( kresResources, parent );
+  return static_cast<KABC::Resource*>( res );
+}
+
 void KABCore::setContactSelected( const QString &uid )
 {
   KABC::Addressee addr = mAddressBook->findByUid( uid );
@@ -361,6 +381,15 @@ void KABCore::pasteContacts()
   QClipboard *cb = QApplication::clipboard();
 
   KABC::Addressee::List list = AddresseeUtil::clipboardToAddressees( cb->text() );
+
+  QStringList uids;
+
+  KABC::Resource *resource = requestResource( this );
+  KABC::Addressee::List::Iterator it;
+  for ( it = list.begin(); it != list.end(); ++it ) {
+    (*it).setResource( resource );
+    uids.append( (*it).assembledName() );
+  }
 
   PwPasteCommand *command = new PwPasteCommand( this, list );
   UndoStack::instance()->push( command );

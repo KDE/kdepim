@@ -46,16 +46,15 @@ QString AddresseeUtil::addresseesToClipboard( const KABC::Addressee::List &list 
 
 KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString &data )
 {
-  KABC::VCardConverter converter;
-
   uint numVCards = data.contains( "BEGIN:VCARD", false );
   QStringList dataList = QStringList::split( "\r\n\r\n", data );
 
   KABC::Addressee::List addrList;
   for ( uint i = 0; i < numVCards && i < dataList.count(); ++i ) {
+    KABC::VCardConverter converter;
     KABC::Addressee addr;
 
-    if ( !converter.vCardToAddressee( dataList[ i ], addr ) ) {
+    if ( !converter.vCardToAddressee( dataList[ i ].stripWhiteSpace(), addr ) ) {
       KMessageBox::error( 0, i18n( "Invalid vcard format in clipboard" ) );
       continue;
     }

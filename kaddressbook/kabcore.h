@@ -96,6 +96,13 @@ class KABCore : public QWidget
      */
     QStringList selectedUIDs() const;
 
+    /**
+      Displays the ResourceSelectDialog and returns the selected
+      resource or a null pointer if no resource was selected by
+      the user.
+     */
+    KABC::Resource *requestResource( QWidget *parent );
+
   public slots:
     /**
       Is called whenever a contact is selected in the view.

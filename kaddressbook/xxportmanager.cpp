@@ -69,23 +69,7 @@ void XXPortManager::slotImport( const QString &identifier, const QString &data )
     return;
   }
 
-  QPtrList<KABC::Resource> kabcResources = mCore->addressBook()->resources();
-
-  QPtrList<KRES::Resource> kresResources;
-  QPtrListIterator<KABC::Resource> resIt( kabcResources );
-  KABC::Resource *resource;
-  while ( ( resource = resIt.current() ) != 0 ) {
-    ++resIt;
-    if ( !resource->readOnly() ) {
-      KRES::Resource *res = static_cast<KRES::Resource*>( resource );
-      if ( res )
-        kresResources.append( res );
-    }
-  }
-
-  KRES::Resource *res = KRES::ResourceSelectDialog::getResource( kresResources, mCore );
-  resource = static_cast<KABC::Resource*>( res );
-
+  KABC::Resource *resource = mCore->requestResource( mCore );
   if ( !resource )
     return;
 
