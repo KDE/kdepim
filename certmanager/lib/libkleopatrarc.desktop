@@ -6,7 +6,10 @@ Name[es]=Clave no validada
 Name[et]=Võtme ehtsus kontrollimatu
 Name[fr]=Clé non validée
 Name[nl]=Geen gevalideerde sleutel
+Name[sl]=Nepotrjen ključ
 Name[sv]=Nyckeln har inte validerats
+Name[ta]=செல்லுபடியாகாத விசை
+Name[xx]=xxNot validated keyxx
 
 [Key Filter #1]
 was-validated=true
@@ -19,7 +22,10 @@ Name[es]=Clave caducada
 Name[et]=Aegunud võti
 Name[fr]=Clé expirée
 Name[nl]=Verlopen sleutel
+Name[sl]=Pretečen ključ
 Name[sv]=Utgången nyckel
+Name[ta]=காலம் கடந்த விசை
+Name[xx]=xxExpired keyxx
 
 [Key Filter #2]
 was-validated=true
@@ -30,7 +36,10 @@ Name[es]=Clave revocada
 Name[et]=Tühistatud võti
 Name[fr]=Clé révoquée
 Name[nl]=Ingetrokken sleutel
+Name[sl]=Preklican ključ
 Name[sv]=Återkallad nyckel
+Name[ta]=நீக்கிய விசை
+Name[xx]=xxRevoked keyxx
 
 [Key Filter #3]
 was-validated=true
@@ -41,5 +50,8 @@ Name[es]=Otras claves
 Name[et]=Muud võtmed
 Name[fr]=Autres clés
 Name[nl]=Andere sleutels
+Name[sl]=Drugi ključi
 Name[sv]=Andra nycklar
+Name[ta]=மற்ற விசைகள்
+Name[xx]=xxOther keysxx
 
