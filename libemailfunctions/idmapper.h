@@ -101,6 +101,17 @@ class IdMapper
      */
     QString localId( const QString &remoteId ) const;
 
+
+    /**
+     * Stores a fingerprint for an id which can be used to detect if 
+     * the locally held version differs from what is on the server.
+     * This can be a sequence number of an md5 hash depending on what
+     * the server provides
+     */
+    void setFingerprint( const QString &localId, const QString &fingerprint );
+
+    const QString &fingerprint( const QString &localId ) const;
+
     /**
       Returns a string representation of the id pairs, that's usefull
       for debugging.
@@ -112,6 +123,7 @@ class IdMapper
 
   private:
     QMap<QString, QVariant> mIdMap;
+    QMap<QString, QString> mFingerprintMap;
 
     QString mPath;
     QString mIdentifier;

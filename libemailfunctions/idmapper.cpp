@@ -108,6 +108,7 @@ bool IdMapper::save()
 void IdMapper::clear()
 {
   mIdMap.clear();
+  mFingerprintMap.clear();
 }
 
 void IdMapper::setRemoteId( const QString &localId, const QString &remoteId )
@@ -121,6 +122,7 @@ void IdMapper::removeRemoteId( const QString &remoteId )
   for ( it = mIdMap.begin(); it != mIdMap.end(); ++it )
     if ( it.data().toString() == remoteId ) {
       mIdMap.remove( it );
+      mFingerprintMap.remove( it.key() );
       return;
     }
 }
@@ -156,4 +158,17 @@ QString IdMapper::asString() const
   }
 
   return content;
+}
+
+void IdMapper::setFingerprint( const QString &localId, const QString &fingerprint )
+{
+  mFingerprintMap.replace( localId, fingerprint );
+}
+
+const QString& IdMapper::fingerprint( const QString &localId ) const
+{
+  if ( mFingerprintMap.contains( localId ) )
+    return mFingerprintMap[ localId ];
+  else 
+    return QString::null;
 }
