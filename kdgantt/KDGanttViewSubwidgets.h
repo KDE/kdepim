@@ -477,6 +477,9 @@ protected:
     QCanvasLine *linkLine;
     int fromArea;
     bool autoScrollEnabled;
+    int getItemArea(KDGanttViewItem *item, int x);
+    int getLinkType(int from, int to);
+
 signals:
   void heightResized( int );
   void widthResized( int );

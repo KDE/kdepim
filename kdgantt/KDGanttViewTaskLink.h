@@ -48,6 +48,8 @@ class KDCanvasLine;
 class KDGanttViewTaskLink
 {
 public:
+    enum LinkType { None, FinishStart, StartStart, FinishFinish, StartFinish };
+    
     KDGanttViewTaskLink( QPtrList<KDGanttViewItem> from,
                          QPtrList<KDGanttViewItem> to );
     KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
@@ -86,6 +88,9 @@ public:
                      QDomElement& parentElement );
     static KDGanttViewTaskLink* createFromDomElement( QDomElement& );
 
+    int linkType();
+    void setLinkType(int type);
+    
 private:
     friend class KDGanttViewTaskLinkGroup;
     friend class KDTimeTableWidget;
@@ -93,6 +98,14 @@ private:
     QPtrList<KDCanvasLine>* horLineList;
     QPtrList<KDCanvasLine>* verLineList;
     QPtrList<KDCanvasPolygon>* topList;
+
+    // also used when linkType != None    
+    QPtrList<KDCanvasLine>* horLineList2;
+    QPtrList<KDCanvasLine>* verLineList2;
+    QPtrList<KDCanvasLine>* horLineList3;
+    QPtrList<KDCanvasPolygon>* topLeftList;
+    QPtrList<KDCanvasPolygon>* topRightList;
+    
     KDGanttViewTaskLinkGroup* myGroup;
     bool isvisible,ishighlighted;
     QColor myColor, myColorHL;
@@ -100,6 +113,13 @@ private:
     KDTimeTableWidget*  myTimeTable;
     void initTaskLink();
     void showMe( bool );
+    void showMeType( bool );
+    void hide();    
+    int xOffset(KDGanttViewItem *item);
+    
+    LinkType myLinkType;
+    static QString linkTypeToString( LinkType type );
+    static LinkType stringToLinkType( const QString type );
 };
 
 #endif

@@ -3304,9 +3304,12 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
                 if (! currentItem->enabled() ) {
                     currentItem = 0;
                 } else if (linkItemsEnabled) {
-                    fromItem = currentItem;
-                    linkLine->setPoints(e->pos().x(), e->pos().y(), e->pos().x(), e->pos().y());
-                    linkLine->show();
+                    fromArea = getItemArea(currentItem, e->pos().x());
+                    if (fromArea > 0) {
+                        fromItem = currentItem;
+                        linkLine->setPoints(e->pos().x(), e->pos().y(), e->pos().x(), e->pos().y());
+                        linkLine->show();
+                    }
                 }
                 break;
             case Type_is_KDGanttTaskLink:
@@ -3384,8 +3387,9 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
                 for ( it = il.begin(); it != il.end(); ++it ) {
                     if (getType(*it) == Type_is_KDGanttViewItem) {
                         KDGanttViewItem *toItem = getItem(*it);
-                        if (toItem && (fromItem != toItem)) {
-                            mySignalSender->linkItems(fromItem, toItem, 0);
+                        int toArea = getItemArea(toItem, e->pos().x());
+                        if (toArea > 0 && toItem && fromItem != toItem) {
+                            mySignalSender->linkItems(fromItem, toItem, getLinkType(fromArea, toArea));
                         }
                         break;
                     }
@@ -3580,4 +3584,47 @@ void KDGanttCanvasView::slotScrollTimer() {
         dy = 5;
     if (dx != 0 || dy != 0)
         scrollBy(dx, dy);
+}
+
+int KDGanttCanvasView::getItemArea(KDGanttViewItem *item, int x) {
+    // area can be: no area = 0, Start = 1, Finish = 2
+    // TODO: middle (move, dnd), front, back (resize)
+    KDTimeTableWidget *tt = dynamic_cast<KDTimeTableWidget *>(canvas());
+    if (!tt) {
+        qWarning("Cannot cast canvas to KDTimeTableWidget");
+        return 0;
+    }
+    if (x > tt->getCoordX(item->endTime())) {
+        return 0;
+    }
+    int area = 0;
+    int start = tt->getCoordX(item->startTime());
+    int end = start;
+    if (item->type() == KDGanttViewItem::Event) {
+        x > start ? area = 2 : area = 1;
+    } else {
+        end = tt->getCoordX(item->endTime());
+        if ((end - start)/2 > (x - start))
+            area = 1;
+        else
+            area = 2;
+    }
+    return area;
+}
+
+int KDGanttCanvasView::getLinkType(int from, int to) {
+    // from, to should be Start = 1 or Finish = 2
+    if ((from == 1) && (to == 1)) {
+        return KDGanttViewTaskLink::StartStart;
+    }
+    if ((from == 1) && (to == 2)) {
+        return KDGanttViewTaskLink::StartFinish;
+    }
+    if ((from == 2) && (to == 1)) {
+        return KDGanttViewTaskLink::FinishStart;
+    }
+    if ((from == 2) && (to == 2)) {
+        return KDGanttViewTaskLink::FinishFinish;
+    }
+    return KDGanttViewTaskLink::None;
 }

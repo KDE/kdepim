@@ -2445,3 +2445,26 @@ bool KDGanttViewItem::isCalendar( ) const
   this instance variable is true if the item is visible in the Gantt
   view
 */
+
+
+/*!
+  Returns the coordinate of this items middle left point
+*/
+QPoint KDGanttViewItem::middleLeft()
+{
+    return QPoint(myGanttView->myTimeHeader->getCoordX(myStartTime), itemPos()+height()/2);
+}
+/*!
+  Returns the coordinate of this items middle right point
+*/
+QPoint KDGanttViewItem::middleRight()
+{
+    return QPoint(myGanttView->myTimeHeader->getCoordX(myEndTime), itemPos()+height()/2);
+}
+/*!
+  Moves this items text
+*/
+void KDGanttViewItem::moveTextCanvas(QPoint p) 
+{
+    textCanvas->move(p.x()+myGanttView->myTimeHeader->getCoordX(myEndTime)+myItemSize, p.y() + itemPos() + height()/2-myItemSize/2);
+}

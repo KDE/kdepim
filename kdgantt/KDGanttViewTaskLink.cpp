@@ -143,38 +143,81 @@ KDGanttViewTaskLink::~KDGanttViewTaskLink( )
   myTimeTable->myTaskLinkList.remove(this);
   delete horLineList;
   delete verLineList;
+  delete horLineList2;
+  delete verLineList2;
+  delete horLineList3;
   delete topList;
+  delete topLeftList;
+  delete topRightList;
 }
 
 
 void KDGanttViewTaskLink::initTaskLink()
 {
+  setLinkType(None);
   horLineList = new QPtrList<KDCanvasLine>;
   verLineList = new QPtrList<KDCanvasLine>;
+  horLineList2 = new QPtrList<KDCanvasLine>;
+  verLineList2 = new QPtrList<KDCanvasLine>;
+  horLineList3 = new QPtrList<KDCanvasLine>;
   topList = new QPtrList<KDCanvasPolygon>;
+  topLeftList = new QPtrList<KDCanvasPolygon>;
+  topRightList = new QPtrList<KDCanvasPolygon>;
   horLineList->setAutoDelete( true );
   verLineList->setAutoDelete( true );
+  horLineList2->setAutoDelete( true );
+  verLineList2->setAutoDelete( true );
+  horLineList3->setAutoDelete( true );
   topList->setAutoDelete( true );
+  topLeftList->setAutoDelete( true );
+  topRightList->setAutoDelete( true );
   myTimeTable = fromList.getFirst()->myGanttView->myTimeTable;
   KDCanvasLine* horLine,*verLine;
+  KDCanvasLine* horLine2,*verLine2;
+  KDCanvasLine* horLine3;
   KDCanvasPolygon* top;
+  KDCanvasPolygon* topLeft;
+  KDCanvasPolygon* topRight;
   unsigned int i, j;
   for ( i = 0;i < fromList.count();++i) {
     for ( j = 0;j < toList.count();++j) {
       horLine = new KDCanvasLine(myTimeTable,this,Type_is_KDGanttTaskLink);
       verLine = new KDCanvasLine(myTimeTable,this,Type_is_KDGanttTaskLink);
+      horLine2 = new KDCanvasLine(myTimeTable,this,Type_is_KDGanttTaskLink);
+      verLine2 = new KDCanvasLine(myTimeTable,this,Type_is_KDGanttTaskLink);
+      horLine3 = new KDCanvasLine(myTimeTable,this,Type_is_KDGanttTaskLink);
       top = new KDCanvasPolygon(myTimeTable,this,Type_is_KDGanttTaskLink);
+      topLeft = new KDCanvasPolygon(myTimeTable,this,Type_is_KDGanttTaskLink);
+      topRight = new KDCanvasPolygon(myTimeTable,this,Type_is_KDGanttTaskLink);
       QPointArray arr = QPointArray(3);
       arr.setPoint(0,-4,-5);
       arr.setPoint(1,4,-5);
       arr.setPoint(2,0,0);
       top->setPoints(arr);
+      arr.setPoint(0,5,-4);
+      arr.setPoint(1,5,4);
+      arr.setPoint(2,0,0);
+      topLeft->setPoints(arr);
+      arr.setPoint(0,-5,-4);
+      arr.setPoint(1,-5,4);
+      arr.setPoint(2,0,0);
+      topRight->setPoints(arr);
       horLineList->append(horLine);
       verLineList->append(verLine);
+      horLineList2->append(horLine2);
+      verLineList2->append(verLine2);
+      horLineList3->append(horLine3);
       topList->append(top);
+      topLeftList->append(topLeft);
+      topRightList->append(topRight);
       horLine->setZ(1);
       verLine->setZ(1);
+      horLine2->setZ(1);
+      verLine2->setZ(1);
+      horLine3->setZ(1);
       top->setZ(1);
+      topLeft->setZ(1);
+      topRight->setZ(1);
     }
   }
 
@@ -203,6 +246,11 @@ void KDGanttViewTaskLink::setVisible( bool visible )
 }
 void KDGanttViewTaskLink::showMe( bool visible )
 {
+    if (linkType() != None) {
+        showMeType(visible);
+        return;
+    }
+    hide();
 
     isvisible = visible;
     int wid = 1;
@@ -263,6 +311,190 @@ void KDGanttViewTaskLink::showMe( bool visible )
     }
 }
 
+void KDGanttViewTaskLink::showMeType( bool visible )
+{
+    //qDebug("KDGanttViewTaskLink::showMeType %d",linkType());
+    hide();
+    isvisible = visible;
+    int wid = 1;
+    QPen p;
+    QBrush b;
+    p.setWidth(wid);
+    b.setStyle(Qt::SolidPattern);
+    if (ishighlighted) {
+        b.setColor(myColorHL);
+        p.setColor(myColorHL);
+
+    } else {
+        b.setColor(myColor);
+        p.setColor(myColor);
+    }
+    QPoint start, end;
+    QPtrListIterator<KDCanvasLine> horIt(*horLineList);
+    QPtrListIterator<KDCanvasLine> verIt(*verLineList);
+    QPtrListIterator<KDCanvasLine> horIt2(*horLineList2);
+    QPtrListIterator<KDCanvasLine> verIt2(*verLineList2);
+    QPtrListIterator<KDCanvasLine> horIt3(*horLineList3);
+    QPtrListIterator<KDCanvasPolygon> topIt(*topList);
+    QPtrListIterator<KDCanvasPolygon> topLeftIt(*topLeftList);
+    QPtrListIterator<KDCanvasPolygon> topRightIt(*topRightList);
+    QPtrListIterator<KDGanttViewItem> fromIt(fromList);
+    QPtrListIterator<KDGanttViewItem> toIt(toList);
+    for ( ; fromIt.current(); ++fromIt ) {
+        toIt.toFirst();
+        for ( ; toIt.current(); ++toIt ) {
+            if (isvisible || (*fromIt)->isVisibleInGanttView || 
+               (*toIt)->isVisibleInGanttView || myTimeTable->taskLinksVisible) {
+                (*horIt)->setPen(p);
+                (*verIt)->setPen(p);
+                (*horIt2)->setPen(p);
+                (*verIt2)->setPen(p);
+                (*horIt3)->setPen(p);
+                (*topIt)->setBrush(b);
+                (*topLeftIt)->setBrush(b);
+                (*topRightIt)->setBrush(b);
+                switch (linkType()) {
+                    case StartStart: {
+                        start = (*fromIt)->middleLeft()-QPoint(xOffset((*fromIt)),0);
+                        end = (*toIt)->middleLeft()-QPoint(12,0);
+                        (*toIt)->moveTextCanvas(QPoint(20,0));
+                        bool down = start.y() < end.y();
+                        (*horIt)->setPoints(start.x(),start.y(),
+                                            start.x()-4, start.y());
+                        (*verIt)->setPoints(
+                            (*horIt)->endPoint().x(),
+                            (*horIt)->endPoint().y(),
+                            (*horIt)->endPoint().x(),
+                            (down ? (*toIt)->itemPos()+1
+                                  : (*toIt)->itemPos()+(*toIt)->height()-1));
+                        (*horIt2)->setPoints((*verIt)->endPoint().x(),
+                                            (*verIt)->endPoint().y(),
+                                            end.x()-12,
+                                            (*verIt)->endPoint().y());
+                        (*verIt2)->setPoints((*horIt2)->endPoint().x(),
+                                            (*horIt2)->endPoint().y(),
+                                            (*horIt2)->endPoint().x(),
+                                            end.y());
+                        (*horIt3)->setPoints((*verIt2)->endPoint().x(),
+                                            (*verIt2)->endPoint().y(),
+                                            end.x(),
+                                            end.y());
+                        (*topRightIt)->move(end.x(),end.y());
+                        (*topRightIt)->show();
+                        break;
+                    }
+                    case FinishFinish: {
+                        start = (*fromIt)->middleRight()+QPoint(xOffset((*fromIt)),0);
+                        end = (*toIt)->middleRight()+QPoint(12,0);
+                        (*fromIt)->moveTextCanvas(QPoint(10,0));
+                        (*toIt)->moveTextCanvas(QPoint(20,0));
+                        bool down = start.y() < end.y();
+                        (*horIt)->setPoints(start.x(),start.y(),
+                                            start.x()+4, start.y());
+                        (*verIt)->setPoints(
+                            (*horIt)->endPoint().x(),
+                            (*horIt)->endPoint().y(),
+                            (*horIt)->endPoint().x(),
+                            (down ? (*toIt)->itemPos()+1
+                                  : (*toIt)->itemPos()+(*toIt)->height()-1));
+                        (*horIt2)->setPoints((*verIt)->endPoint().x(),
+                                            (*verIt)->endPoint().y(),
+                                            end.x()+12,
+                                            (*verIt)->endPoint().y());
+                        (*verIt2)->setPoints((*horIt2)->endPoint().x(),
+                                            (*horIt2)->endPoint().y(),
+                                            (*horIt2)->endPoint().x(),
+                                            end.y());
+                        (*horIt3)->setPoints((*verIt2)->endPoint().x(),
+                                            (*verIt2)->endPoint().y(),
+                                            end.x(),
+                                            end.y());
+                        (*topLeftIt)->move(end.x(),end.y());
+                        (*topLeftIt)->show();
+                        break;
+                    }
+                    case FinishStart: {
+                        start = (*fromIt)->middleRight()+QPoint(xOffset((*fromIt)),0);
+                        end = (*toIt)->middleLeft() - QPoint(12,0);
+                        (*fromIt)->moveTextCanvas(QPoint(10,0));
+                        bool down = start.y() < end.y();                        
+                        (*horIt)->setPoints(start.x(),start.y(),
+                                            start.x()+4,start.y());
+                        (*verIt)->setPoints(
+                            (*horIt)->endPoint().x(),
+                            (*horIt)->endPoint().y(),
+                            (*horIt)->endPoint().x(),
+                            (down ? (*toIt)->itemPos()+1
+                                  : (*toIt)->itemPos()+(*toIt)->height()-1));
+                        (*horIt2)->setPoints((*verIt)->endPoint().x(),
+                                            (*verIt)->endPoint().y(),
+                                            end.x()-12,
+                                            (*verIt)->endPoint().y());
+                        (*verIt2)->setPoints((*horIt2)->endPoint().x(),
+                                            (*horIt2)->endPoint().y(),
+                                            (*horIt2)->endPoint().x(),
+                                            end.y());
+                        (*horIt3)->setPoints((*verIt2)->endPoint().x(),
+                                            (*verIt2)->endPoint().y(),
+                                            end.x(),
+                                            end.y());
+                        (*topRightIt)->move(end.x(),end.y());
+                        
+                        (*topRightIt)->show();
+    
+                        break;
+                    }
+                    case StartFinish: {
+                        start = (*fromIt)->middleRight()+QPoint(xOffset((*fromIt)),0);
+                        end = (*toIt)->middleRight()+QPoint(12,0);
+                        (*fromIt)->moveTextCanvas(QPoint(10,0));
+                        (*toIt)->moveTextCanvas(QPoint(20,0));
+                        bool down = start.y() < end.y();
+                        (*horIt)->setPoints(start.x(),start.y(),
+                                            start.x()+4, start.y());
+                        (*verIt)->setPoints(
+                            (*horIt)->endPoint().x(),
+                            (*horIt)->endPoint().y(),
+                            (*horIt)->endPoint().x(),
+                            (down ? (*toIt)->itemPos()+1
+                                  : (*toIt)->itemPos()+(*toIt)->height()-1));
+                        (*horIt2)->setPoints((*verIt)->endPoint().x(),
+                                            (*verIt)->endPoint().y(),
+                                            end.x()-12,
+                                            (*verIt)->endPoint().y());
+                        (*verIt2)->setPoints((*horIt2)->endPoint().x(),
+                                            (*horIt2)->endPoint().y(),
+                                            (*horIt2)->endPoint().x(),
+                                            end.y());
+                        (*horIt3)->setPoints((*verIt2)->endPoint().x(),
+                                            (*verIt2)->endPoint().y(),
+                                            end.x(),
+                                            end.y());
+                        (*topRightIt)->move(end.x(),end.y());
+                        (*topRightIt)->show();
+                        break;
+                    }
+                    default:
+                        qWarning("KDGanttViewTaskLink: Unknown link type");
+                        break;
+                }
+                (*horIt)->show();
+                (*verIt)->show();
+                (*horIt2)->show();
+                (*verIt2)->show();
+                (*horIt3)->show();
+            }
+            ++horIt;
+            ++verIt;
+            ++horIt2;
+            ++verIt2;
+            ++horIt3;
+            ++topIt;
+            ++topLeftIt;
+            ++topRightIt;
+        }
+    }
+}
 
 /*!
   Returns whether this task link should be visible or not.
@@ -525,6 +757,8 @@ void KDGanttViewTaskLink::createNode( QDomDocument& doc,
                                  group()->name() );
     KDGanttXML::createBoolNode( doc, taskLinkElement, "Visible",
                            isVisible() );
+    KDGanttXML::createStringNode( doc, taskLinkElement, "None",
+                             linkTypeToString( myLinkType ) );
 }
 
 
@@ -542,6 +776,7 @@ KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& ele
     bool highlight = false, visible = false;
     QColor color, highlightColor;
     QString tooltipText, whatsThisText, group;
+    LinkType linktype=None;
     while( !node.isNull() ) {
         QDomElement element = node.toElement();
         if( !element.isNull() ) { // was really an element
@@ -608,6 +843,10 @@ KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& ele
                 QString value;
                 if( KDGanttXML::readStringNode( element, value ) )
                     group = value;
+            } else if( tagName == "Linktype" ) {
+                QString value;
+                if( KDGanttXML::readStringNode( element, value ) )
+                    linktype = stringToLinkType( value );
             } else {
                 qDebug( "Unrecognized tag name: %s", tagName.latin1() );
                 Q_ASSERT( false );
@@ -641,6 +880,7 @@ KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& ele
     }
     KDGanttViewTaskLink* tl = new KDGanttViewTaskLink( fromItemList,
                                                        toItemList );
+    tl->setLinkType( linktype );
     tl->setVisible( visible );
     tl->setHighlight( highlight );
     tl->setColor( color );
@@ -652,4 +892,105 @@ KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& ele
         tl->setGroup( gr );
 
     return tl;
+}
+
+int KDGanttViewTaskLink::linkType()
+{
+    return myLinkType;
+}
+
+void KDGanttViewTaskLink::setLinkType(int type)
+{
+    myLinkType = static_cast<LinkType>(type);
+}
+
+int KDGanttViewTaskLink::xOffset(KDGanttViewItem *item)
+{
+    switch (item->type()) {
+        case KDGanttViewItem::Task:
+            return 0;
+            break;
+        case KDGanttViewItem::Event:
+            return 4;
+            break;
+        case KDGanttViewItem::Summary:
+            return 4;
+            break;
+        default:
+            break;
+    }
+    return 0;
+}
+
+void KDGanttViewTaskLink::hide()
+{
+    QPtrListIterator<KDCanvasLine> horIt(*horLineList);
+    QPtrListIterator<KDCanvasLine> verIt(*verLineList);
+    QPtrListIterator<KDCanvasLine> horIt2(*horLineList2);
+    QPtrListIterator<KDCanvasLine> verIt2(*verLineList2);
+    QPtrListIterator<KDCanvasLine> horIt3(*horLineList3);
+    QPtrListIterator<KDCanvasPolygon> topIt(*topList);
+    QPtrListIterator<KDCanvasPolygon> topLeftIt(*topLeftList);
+    QPtrListIterator<KDCanvasPolygon> topRightIt(*topRightList);
+    QPtrListIterator<KDGanttViewItem> fromIt(fromList);
+    QPtrListIterator<KDGanttViewItem> toIt(toList);
+    for ( ; fromIt.current(); ++fromIt ) {
+        toIt.toFirst();
+        for ( ; toIt.current(); ++toIt ) {
+            (*horIt)->hide();
+            (*verIt)->hide();
+            (*horIt2)->hide();
+            (*verIt2)->hide();
+            (*horIt3)->hide();
+            (*topIt)->hide();
+            (*topLeftIt)->hide();
+            (*topRightIt)->hide();
+            ++horIt;
+            ++verIt;
+            ++horIt2;
+            ++verIt2;
+            ++horIt3;
+            ++topIt;
+            ++topLeftIt;
+            ++topRightIt;
+        }
+    }
+}
+
+QString KDGanttViewTaskLink::linkTypeToString( LinkType type )
+{
+    switch( type ) {
+    case None:
+        return "None";
+        break;
+    case FinishStart:
+        return "FinishStart";
+        break;
+    case FinishFinish:
+        return "FinishFinish";
+        break;
+    case StartStart:
+        return "StartStart";
+        break;
+    case StartFinish:
+        return "StartFinish";
+        break;
+    default:
+        break;
+    }
+    return "";
+}
+
+KDGanttViewTaskLink::LinkType KDGanttViewTaskLink::stringToLinkType( const QString type )
+{
+    if (type == "FinishStart")
+        return FinishStart;
+    if (type == "FinishFinish")
+        return FinishFinish;
+    if (type == "StartStart")
+        return StartStart;
+    if (type == "StartFinish")
+        return StartFinish;
+        
+    return None;
 }

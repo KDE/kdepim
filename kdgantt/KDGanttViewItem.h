@@ -219,6 +219,9 @@ private:
     bool colorDefined,colorHLDefined;
     QPoint getTaskLinkStartCoord(QPoint);
     QPoint getTaskLinkEndCoord();
+    QPoint middleLeft();
+    QPoint middleRight();
+    void moveTextCanvas(QPoint p);    
     QString _name;
     bool shapeDefined;
     int _priority;
