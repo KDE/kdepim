@@ -91,13 +91,13 @@ void FilterOpera::import(FilterInfo *info)
             
 	    while ( !operaArchiv.atEnd() ) {
 		KTempFile tmp;
-		/* comment by Danny:
-		* Don't use QTextStream to read from mbox. QTextStream only support
-		* Unicode/UTF. So you lost informations from emails with charset!=utf/unicode 
-		* (e.g. KOI8-R) and Content-Transfer-Encoding != base64 (e.g. 8Bit).
-		* It also not help to convert the QTextStream to UTF/Unicode. By this you
-		* get UTF-email but KMail can't detect the correct charset.
-		*/
+                /* comment by Danny:
+                * Don't use QTextStream to read from mbox, etter use QDataStream. QTextStream only 
+                * support Unicode/Latin1/Locale. So you lost information from emails with 
+                * charset!=Unicode/Latin1/Locale (e.g. KOI8-R) and Content-Transfer-Encoding != base64 
+                * (e.g. 8Bit). It also not help to convert the QTextStream to Unicode. By this you
+                * get Unicode/UTF-email but KMail can't detect the correct charset.
+                */
 		QByteArray input(MAX_LINE);
 		QCString seperate;
 		operaArchiv.readLine(input.data(),MAX_LINE);
