@@ -17,6 +17,9 @@ have mail delivered to this spool in future.
 	an mbox format file to a Maildir folder.
 
 	The utility is provided in 'empath/import/'.
+
+  Note: As well as the C++ program 'mbox2maildir', there's a perl alternative
+  called 'mbox2maildir.pl'. The usage is the same.
 	
 	To do the conversion, first make sure that the mbox file is not
 	going to be written to while you're using it. That means if your
