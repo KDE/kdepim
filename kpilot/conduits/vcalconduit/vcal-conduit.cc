@@ -69,11 +69,12 @@ static const char *id=
 // globals
 bool first = TRUE;
 
+
 int main(int argc, char* argv[])
 {
   ConduitApp a(argc, argv, "vcal_conduit",
   	"Calendar / Organizer conduit",
-	"4.0");
+	"4.0b2");
   a.addAuthor("Preston Brown",I18N_NOOP("Organizer author"));
 	a.addAuthor("Adriaan de Groot",I18N_NOOP("Maintainer"));
   VCalConduit conduit(a.getMode());
@@ -83,6 +84,9 @@ int main(int argc, char* argv[])
 	/* NOTREACHED */
 	(void) id;
 }
+
+
+
 
 VCalConduit::VCalConduit(BaseConduit::eConduitMode mode)
   : BaseConduit(mode)
@@ -101,10 +105,6 @@ VCalConduit::~VCalConduit()
   }
 }
 
-/* static */ const char *VCalConduit::version()
-{
-	return "VCal Conduit v2.1a1";
-}
 
 void VCalConduit::getCalendar()
 {
@@ -1788,7 +1788,23 @@ int VCalConduit::numFromDay(const QString &day)
   return -1; // something bad happened. :)
 } 
 
+/* virtual */ void VCalConduit::doTest()
+{
+	FUNCTIONSETUP;
+
+	QString message("This is a test. This is only a test.\n"
+		"If this had been a real error message\n"
+		"you would also have had an 18Mb core file\n"
+		"on your hands.");
+
+	KMessageBox::error(0, "Testing vCalendar Conduit", message);
+}
+
+
 // $Log$
+// Revision 1.19  2001/01/03 00:05:13  adridg
+// Administrative
+//
 // Revision 1.18  2000/12/31 16:44:00  adridg
 // Patched up the debugging stuff again
 //

@@ -48,16 +48,10 @@ public:
   virtual void doSync();
   virtual void doBackup();
   virtual QWidget* aboutAndSetup();
+  virtual void doTest();
 
   virtual const char* dbInfo() { return "DatebookDB"; }
   
-	/**
-	* Returns a string - internationalized already -
-	* describing the conduit. This is used in window
-	* captions and other version identifiers.
-	*/
-	static const char *version();
-
 public:
 	/**
 	* There are a whole bunch of methods that set particular
