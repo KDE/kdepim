@@ -17,16 +17,16 @@
 #    Boston, MA 02111-1307, USA.
 
 INCLUDES= -I$(top_srcdir)/kitchensync/klockfile $(all_includes)
-LDADD = $(top_builddir)/kitchensync/klockfile/libksharedfile.la
-LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 check_PROGRAMS = ksharedtest kshareddevicetest
 
 ksharedtest_LDADD = ../libksharedfile.la $(LIB_KDEUI) $(LIB_QT)
+ksharedtest_LDFLAGS = $(all_libraries)
 ksharedtest_SOURCES = main.cpp ksharedtest.ui
 
 kshareddevicetest_LDADD = ../libksharedfile.la $(LIB_KDEUI) $(LIB_QT)
 kshareddevicetest_SOURCES =  kshareddevicetest.cpp
+kshareddevicetest_LDFLAGS = $(all_libraries)
 
 METASOURCES = AUTO
 

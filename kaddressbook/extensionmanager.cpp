@@ -131,7 +131,7 @@ void ExtensionManager::createExtensionWidgets()
     if ( !(*it)->hasServiceType( "KAddressBook/Extension" ) )
       continue;
 
-    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library() );
+    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().latin1() );
     if ( !factory ) {
       kdDebug(5720) << "ExtensionManager::loadExtensions(): Factory creation failed" << endl;
       continue;

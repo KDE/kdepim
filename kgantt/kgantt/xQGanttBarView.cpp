@@ -119,7 +119,7 @@ xQGanttBarView::drawHeader()
 
   if(a<0) a = 0;
   p.drawText(a+5, top + height + skip + (0.8*height), 
-	     t.monthName(t.month()) + " " + QString::number(t.year()) );  
+	     t.shortMonthName(t.month()) + " " + QString::number(t.year()) );  
 
 
   //  draw snapgrid for first month
@@ -162,7 +162,7 @@ xQGanttBarView::drawHeader()
 
       if(a<0) a = 0;
 
-      QString str = t.dayName(t.dayOfWeek()) + " " + QString::number(t.day());
+      QString str = t.shortDayName(t.dayOfWeek()) + " " + QString::number(t.day());
       QRect rect = p.boundingRect(a+5, (0.8 * height), 
 				  (int) dayWidth, height, AlignLeft, str );
 
@@ -193,7 +193,7 @@ xQGanttBarView::drawHeader()
       
       p.drawText(a+5, 
 		 top + (1.8 * height) + skip, 
-		 t.monthName(t.month()) + " " + QString::number(t.year()) );  
+		 t.shortMonthName(t.month()) + " " + QString::number(t.year()) );  
 
       //  draw snapgrid
 

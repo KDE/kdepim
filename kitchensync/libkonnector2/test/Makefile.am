@@ -17,13 +17,12 @@
 #    Boston, MA 02111-1307, USA.
 
 INCLUDES= -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/kitchensync/lib $(all_includes)
-LDADD = $(top_builddir)/kitchensync/libkonnector2/libkonnector.la
-LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 check_PROGRAMS = konnectortest
 
 konnectortest_LDADD = ../libkonnector.la $(LIB_KDEUI) $(LIB_QT)
 konnectortest_SOURCES =  konnectortest.cpp
+konnectortest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 METASOURCES = AUTO
 

@@ -194,7 +194,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
                   mCalendars.append(cal);
                   kdDebug(5900) << "ADConfigDataBase::readConfigData(): calendar " << cal->urlString() << endl;
                 }
-                newCalendars.append(calname);
+                newCalendars.append(calname.latin1());
               }
             }
           }
@@ -211,7 +211,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
         kdDebug(5900) << "tick..." << endl;
         if (cal->appName() == client)
         {
-          if (newCalendars.find(cal->urlString()) == -1) {
+          if (newCalendars.find(cal->urlString().latin1()) == -1) {
             deletedCalendars = true;
             mCalendars.remove();
             cal = mCalendars.current();

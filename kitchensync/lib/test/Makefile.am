@@ -17,19 +17,19 @@
 #    Boston, MA 02111-1307, USA.
 
 INCLUDES=  -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/libkcal $(all_includes)
-LDADD = $(top_builddir)/kitchensync/lib/libksync.la
-LDFLAGS = $(all_libraries) $(KDE_RPATH)
-
 check_PROGRAMS = todotest eventtest abtest
 
 todotest_LDADD = ../libksync.la $(top_builddir)/libkcal/libkcal.la $(LIB_KDEUI) $(LIB_QT)
 todotest_SOURCES =  todomain.cpp
+todotest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 eventtest_LDADD = ../libksync.la $(top_builddir)/libkcal/libkcal.la $(LIB_KDEUI) $(LIB_QT)
 eventtest_SOURCES =  eventmain.cpp
+eventtest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 abtest_LDADD = ../libksync.la -lkabc $(LIB_KDEUI) $(LIB_QT)
 abtest_SOURCES =  abmain.cpp
+abtest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 METASOURCES = AUTO
 

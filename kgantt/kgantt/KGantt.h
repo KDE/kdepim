@@ -211,7 +211,7 @@ public:
   /*!
    *   All selected KGanttItems will be added to the passed list. 
    */
-  void getSelectedItems(QList<KGanttItem>& list) {
+  void getSelectedItems(QPtrList<KGanttItem>& list) {
     _ganttbar->viewport()->getSelectedItems(list);
   }
 

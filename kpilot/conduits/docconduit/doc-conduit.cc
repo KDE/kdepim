@@ -589,7 +589,7 @@ void DOCConduit::checkDeletedDocs()
 
 			DBInfo dbinfo;
 			memset(&dbinfo.name[0], 0, 33);
-			strncpy(&dbinfo.name[0], dbname, 30);
+			strncpy(&dbinfo.name[0], dbname.latin1(), 30);
 			syncInfo.dbinfo=dbinfo;
 
 			fSyncInfoList.append(syncInfo);

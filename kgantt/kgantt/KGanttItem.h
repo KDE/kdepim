@@ -416,7 +416,7 @@ public:
   /*!
    *
    */
-  QList<KGanttItem>& getSubItems() {
+  QPtrList<KGanttItem>& getSubItems() {
     return _subitems;
   }
 
@@ -426,7 +426,7 @@ public:
   /*!
    *
    */
-  QList<KGanttRelation>& getRelations() {
+  QPtrList<KGanttRelation>& getRelations() {
     return _relations;
   }
 
@@ -525,8 +525,8 @@ private:
 
 
   KGanttItem*            _parentItem;
-  QList<KGanttItem>      _subitems;  
-  QList<KGanttRelation>  _relations;
+  QPtrList<KGanttItem>      _subitems;  
+  QPtrList<KGanttRelation>  _relations;
 
 
   // start/end date. 

@@ -163,7 +163,7 @@ public:
   void zoom(double sfactor);
 
 
-  void getSelectedItems(QList<KGanttItem>& list) {
+  void getSelectedItems(QPtrList<KGanttItem>& list) {
     getSelectedItems(_toplevelitem, list);
   }
 
@@ -276,9 +276,9 @@ private:
 
   QPoint* _startPoint, *_endPoint;
 
-  QList<QDate> _holidays;
+  QPtrList<QDate> _holidays;
 
-  QList<KGanttItem> *_observedList;
+  QPtrList<KGanttItem> *_observedList;
 
 
   /// 
@@ -296,11 +296,11 @@ private:
 
   void selectItem(KGanttItem*,bool);
 
-  void getSelectedItems(KGanttItem*, QList<KGanttItem>&);
+  void getSelectedItems(KGanttItem*, QPtrList<KGanttItem>&);
 
   void adjustSize();
 
-  void observeList(QList<KGanttItem>*);
+  void observeList(QPtrList<KGanttItem>*);
 
   Position check(KGanttItem** founditem, int x, int y);
 

@@ -338,7 +338,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
     finishUp( ExchangeClient::IllegalAppointmentError, "WebDAV server response:\n" + response.toString() );
     return;
   }
-  event->setUid( QString::fromUtf8( uidElement.text() ) );
+  event->setUid( uidElement.text() );
   // kdDebug() << "Got UID: " << uidElement.text() << endl;
 
   QString timezoneid = prop.namedItem( "timezoneid" ).toElement().text();
@@ -362,18 +362,18 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   event->setLastModified( dt );
   // kdDebug() << "Got lastModified:" << lastModified << ", " << dt.toString() << endl;
 
-  QString organizer = QString::fromUtf8( prop.namedItem( "organizer" ).toElement().text() );
+  QString organizer = prop.namedItem( "organizer" ).toElement().text();
   event->setOrganizer( organizer );
   // kdDebug() << "Got organizer: " << organizer << endl;
 
   // Trying to find attendees, not working yet
-  QString contact = QString::fromUtf8( prop.namedItem( "contact" ).toElement().text() );
+  QString contact = prop.namedItem( "contact" ).toElement().text();
 //  event->setOrganizer( organizer );
   // kdDebug() << "DEBUG: Got contact: " << contact << endl;
 
   // This looks promising for finding attendees
   // FIXME: get this to work
-  QString to = QString::fromUtf8( prop.namedItem( "to" ).toElement().text() );
+  QString to = prop.namedItem( "to" ).toElement().text();
   // kdDebug() << "DEBUG: Got to: " << to << endl;
   QStringList attn = QStringList::split( ",", to ); // This doesn't work: there can be commas between ""
   QStringList::iterator it;
@@ -416,15 +416,15 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
 			  : KCal::Event::Opaque );
   // kdDebug() << "Got transparent: " << transparent << endl;
 
-  QString description = QString::fromUtf8( prop.namedItem( "textdescription" ).toElement().text() );
+  QString description = prop.namedItem( "textdescription" ).toElement().text();
   event->setDescription( description );
   // kdDebug() << "Got description: " << description << endl;
 
-  QString subject = QString::fromUtf8( prop.namedItem( "subject" ).toElement().text() );
+  QString subject = prop.namedItem( "subject" ).toElement().text();
   event->setSummary( subject );
   // kdDebug() << "Got summary: " << subject << endl;
 
-  QString location = QString::fromUtf8( prop.namedItem( "location" ).toElement().text() );
+  QString location =  prop.namedItem( "location" ).toElement().text();
   event->setLocation( location );
   // kdDebug() << "Got location: " << location << endl;
 
@@ -443,7 +443,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   QDomNodeList list = keywords.elementsByTagNameNS( "xml:", "v" );
   for( uint i=0; i < list.count(); i++ ) {
     QDomElement item = list.item(i).toElement();
-    categories.append( QString::fromUtf8( item.text() ) );
+    categories.append( item.text() );
   }
   event->setCategories( categories );
   // kdDebug() << "Got categories: " << categories.join( ", " ) << endl;

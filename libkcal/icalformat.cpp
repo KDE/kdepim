@@ -247,7 +247,7 @@ bool ICalFormat::fromString( Recurrence * recurrence, const QString& rrule )
 {
   bool success = true;
   icalerror_clear_errno();
-  struct icalrecurrencetype recur = icalrecurrencetype_from_string( rrule );
+  struct icalrecurrencetype recur = icalrecurrencetype_from_string( rrule.latin1() );
   if ( icalerrno != ICAL_NO_ERROR ) {
     kdDebug() << "Recurrence parsing error: " << icalerror_strerror( icalerrno ) << endl;
     success = false;

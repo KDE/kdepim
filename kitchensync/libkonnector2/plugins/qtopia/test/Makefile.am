@@ -17,29 +17,32 @@
 #    Boston, MA 02111-1307, USA.
 
 INCLUDES= -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/kitchensync/lib $(all_includes)
-#LDADD = $(top_builddir)/kitchensync/libkonnector/libkonnector.la
-LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 check_PROGRAMS = kdetest todometa contactmeta datebookmeta maintest
 
 kdetest_LDADD =  $(LIB_KDEUI) $(LIB_QT)
 kdetest_SOURCES =  kdetest.cpp
+kdetest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 todometa_LDADD = $(LIB_KDEUI) $(LIB_QT)
 todometa_SOURCES = todometa.cpp
+todometa_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 contactmeta_LDADD = $(top_builddir)/kitchensync/lib/libksync.la \
 	$(top_builddir)/kitchensync/libkonnector2/plugins/qtopia/libqtopiakonnector.la \
 	$(top_builddir)/kitchensync/libkonnector2/libkonnector.la
 contactmeta_SOURCES = contactmeta.cpp
+contactmeta_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 datebookmeta_LDADD = $(LIB_KDEUI) $(LIB_QT)
 datebookmeta_SOURCES = datebookmeta.cpp
+datebookmeta_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 maintest_LDADD = $(LIB_KDEUI) $(LIB_QT) $(top_builddir)/kitchensync/lib/libksync.la \
 	$(top_builddir)/kitchensync/libkonnector2/plugins/qtopia/libqtopiakonnector.la \
 	$(top_builddir)/kitchensync/libkonnector2/libkonnector.la
 maintest_SOURCES = main.cpp
+maintest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 METASOURCES = AUTO
 

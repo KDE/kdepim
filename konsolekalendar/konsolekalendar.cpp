@@ -95,7 +95,7 @@ void KonsoleKalendar::showDate( QDate date )
 {
   Event *singleEvent;
 
-  QList<Event> eventList(m_Calendar->events( date, TRUE));
+  QPtrList<Event> eventList(m_Calendar->events( date, TRUE));
   QString tempString;
   QDate current = QDate::currentDate();
       
@@ -121,7 +121,7 @@ void KonsoleKalendar::showDate( QDate date )
       } else {      
         if(current.daysTo( date ) == 0) {
           if( m_variables.isVerbose() ) {
-            cout << i18n("Today: ") <<  isHappened(singleEvent) << endl;
+            cout << i18n("Today: ").local8Bit() <<  isHappened(singleEvent) << endl;
           }  
         
           if( isHappened(singleEvent) == false) {
@@ -130,7 +130,7 @@ void KonsoleKalendar::showDate( QDate date )
           }
         } else {
           if( m_variables.isVerbose() ){
-            cout << i18n("Not today: ") <<  isHappened(singleEvent) << endl;
+            cout << i18n("Not today: ").local8Bit() <<  isHappened(singleEvent) << endl;
           }
     
           printEventTime( singleEvent );
@@ -154,14 +154,14 @@ void KonsoleKalendar::showNext()
   int len = 50;
 
   while(!loop) {
-    QList<Event> eventList(m_Calendar->events(m_variables.getDate(), TRUE));
+    QPtrList<Event> eventList(m_Calendar->events(m_variables.getDate(), TRUE));
   
     if( eventList.count() ) {
       len = 80;
       tempString = m_variables.getDate().toString();
       len -= tempString.length();
   
-      cout << endl << tempString << " ";
+      cout << endl << tempString.local8Bit() << " ";
 
       for( len = len; len < 80; len ++) {
         cout << "-";
@@ -211,19 +211,21 @@ bool KonsoleKalendar::isHappened( Event *event )
   sMinute = temp2.remove( 0, ( temp2.find(':', 0, false) + 1 ));
 
   if( m_variables.isVerbose() ) {
-    cout << i18n("hours: ") << sHour << i18n(" minutes: ") << sMinute << endl;
+    cout << i18n("hours: ").local8Bit() << sHour.latin1() 
+         << i18n(" minutes: ").local8Bit() << sMinute.latin1() << endl;
   }
     
   hour = sHour.toInt();
   minute = sMinute.toInt();
     
   if( m_variables.isVerbose() ) {
-    cout << i18n("hours: ") << hour << i18n(" minutes: ") << minute << endl;
+    cout << i18n("hours: ").local8Bit() << hour 
+        << i18n(" minutes: ").local8Bit() << minute << endl;
   }
     
   if( hour >= time.hour() && minute >= time.minute()) {
     if( m_variables.isVerbose() ) {
-      cout << i18n("This is valid!");
+      cout << i18n("This is valid!").local8Bit();
     }
     return false;
   } 
@@ -240,8 +242,8 @@ void KonsoleKalendar::printEventTime(Event *event)
       
     // Cut out info only leave times
     //
-    cout <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) );
+    cout <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
     cout << " - ";  
-    cout << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) );
+    cout << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
   }
 }

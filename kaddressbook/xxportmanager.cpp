@@ -116,7 +116,7 @@ void XXPortManager::loadPlugins()
     if ( !(*it)->hasServiceType( "KAddressBook/XXPort" ) )
       continue;
 
-    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library() );
+    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().latin1() );
     if ( !factory ) {
       kdDebug(5720) << "XXPortManager::loadExtensions(): Factory creation failed" << endl;
       continue;

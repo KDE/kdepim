@@ -375,7 +375,7 @@ void GeoDialog::loadCityList()
     QString line, country;
     QRegExp coord( "[+-]\\d+[+-]\\d+" );
     QRegExp name( "[^\\s]+/[^\\s]+" );
-    int len, pos;
+    int pos;
 
     while ( !s.eof() ) {
       line = s.readLine().stripWhiteSpace();
@@ -384,13 +384,13 @@ void GeoDialog::loadCityList()
 
       country = line.left( 2 );
       QString c, n;
-      pos = coord.match( line, 0, &len );
+      pos = coord.search( line, 0 );
       if ( pos >= 0 )
-        c = line.mid( pos, len );
+        c = line.mid( pos, coord.matchedLength() );
 
-      pos = name.match(line, pos, &len);
+      pos = name.search(line, pos);
       if ( pos > 0 )
-        n = line.mid( pos, len ).stripWhiteSpace();
+        n = line.mid( pos, coord.matchedLength() ).stripWhiteSpace();
 
       if ( !c.isEmpty() && !n.isEmpty() ) {
         pos = c.find( "+", 1 );

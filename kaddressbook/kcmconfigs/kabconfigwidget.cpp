@@ -239,7 +239,7 @@ void ExtensionItem::setService( const KService::Ptr &ptr )
 
 bool ExtensionItem::configWidgetAvailable() const
 {
-  KLibFactory *factory = KLibLoader::self()->factory( mPtr->library() );
+  KLibFactory *factory = KLibLoader::self()->factory( mPtr->library().latin1() );
   if ( !factory )
     return false;
 
@@ -252,7 +252,7 @@ bool ExtensionItem::configWidgetAvailable() const
 
 ExtensionFactory *ExtensionItem::factory() const
 {
-  KLibFactory *factory = KLibLoader::self()->factory( mPtr->library() );
+  KLibFactory *factory = KLibLoader::self()->factory( mPtr->library().latin1() );
   if ( !factory )
     return 0;
 

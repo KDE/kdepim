@@ -158,10 +158,10 @@ int main(int argc, char *argv[])
       variables.setCalendarFile(KalendarFile);
 	
       if(variables.isVerbose()){
-        cout << "main.cpp::int main(int argc, char *argv[]) | Calendar file currently is " << variables.getCalendarFile() << endl;
+        cout << "main.cpp::int main(int argc, char *argv[]) | Calendar file currently is " << variables.getCalendarFile().local8Bit() << endl;
       }
     } else {
-      cout << i18n("Remote files are not supported yet.") << endl;
+      cout << i18n("Remote files are not supported yet.").local8Bit() << endl;
     }
   }
 

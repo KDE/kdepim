@@ -210,7 +210,7 @@ QString Task::getDesktopStr() const
 
   QString desktopstr;
   for ( DesktopListType::const_iterator iter = _desktops.begin(); iter != _desktops.end(); ++iter ) {
-    desktopstr += QString::number( *iter ) + ",";
+    desktopstr += QString::number( *iter ) + QString::fromLatin1( "," );
   }
   desktopstr.remove( desktopstr.length() - 1, 1 );
   return desktopstr;

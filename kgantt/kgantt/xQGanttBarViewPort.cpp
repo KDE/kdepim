@@ -107,7 +107,7 @@ xQGanttBarViewPort::toolbar(QMainWindow* mw)
 {
   if(_toolbar || mw == 0) return _toolbar;
 
-  _toolbar = new KToolBar(mw,QMainWindow::Top);
+  _toolbar = new KToolBar(mw,QMainWindow::DockTop);
 
   mw->addToolBar(_toolbar);
 
@@ -687,7 +687,7 @@ xQGanttBarViewPort::drawHeader(QPainter* p, int x1, int y1, int x2, int y2)
     }
 
     if(drawDays) {
-      p->drawText(a+5, 15, t.dayName(t.dayOfWeek()) + " " + QString::number(t.day()) );
+      p->drawText(a+5, 15, t.shortDayName(t.dayOfWeek()) + " " + QString::number(t.day()) );
     }
 
     if(t.day()==1) {
@@ -698,7 +698,7 @@ xQGanttBarViewPort::drawHeader(QPainter* p, int x1, int y1, int x2, int y2)
       p->drawRect(a, 21, 1440*e*_scaleX, 20 );
 
       if(a<0) a = 0;
-      p->drawText(a+5, 36, t.monthName(t.month()) );        
+      p->drawText(a+5, 36, t.shortMonthName(t.month()) );        
 
     }
 
@@ -1006,7 +1006,7 @@ xQGanttBarViewPort::deleteSelectedItems()
   printf("-> xQGanttBarViewPort::deleteSelectedItems()\n");
 #endif
 
-  QList<KGanttItem> list;
+  QPtrList<KGanttItem> list;
   observeList(&list);
   
   getSelectedItems(_toplevelitem,list);
@@ -1036,7 +1036,7 @@ xQGanttBarViewPort::deleteSelectedItems()
 
 
 void
-xQGanttBarViewPort::observeList(QList<KGanttItem> *list)
+xQGanttBarViewPort::observeList(QPtrList<KGanttItem> *list)
 {
   _observedList = list;
 }
@@ -1053,7 +1053,7 @@ xQGanttBarViewPort::itemDestroyed(KGanttItem* item)
 
 void
 xQGanttBarViewPort::getSelectedItems (KGanttItem* item, 
-				      QList<KGanttItem>& list)
+				      QPtrList<KGanttItem>& list)
 {
   if(item->isSelected()) list.append(item);
 
@@ -1071,7 +1071,7 @@ xQGanttBarViewPort::getSelectedItems (KGanttItem* item,
 void 
 xQGanttBarViewPort::insertIntoSelectedItem()
 {
-  QList<KGanttItem> list;
+  QPtrList<KGanttItem> list;
 
   getSelectedItems(_toplevelitem,list);
 

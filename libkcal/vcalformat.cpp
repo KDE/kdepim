@@ -95,7 +95,7 @@ bool VCalFormat::save(Calendar *calendar, const QString &fileName)
   vcal = newVObject(VCCalProp);
 
   //  addPropValue(vcal,VCLocationProp, "0.0");
-  addPropValue(vcal,VCProdIdProp, productId());
+  addPropValue(vcal,VCProdIdProp, productId().latin1());
   tmpStr = mCalendar->getTimeZoneStr();
   addPropValue(vcal,VCTimeZoneProp, tmpStr.local8Bit());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
@@ -170,7 +170,7 @@ QString VCalFormat::toString( Calendar *calendar )
 
   VObject *vcal = newVObject(VCCalProp);
 
-  addPropValue( vcal, VCProdIdProp, CalFormat::productId() );
+  addPropValue( vcal, VCProdIdProp, CalFormat::productId().latin1() );
   QString tmpStr = mCalendar->getTimeZoneStr();
   addPropValue( vcal, VCTimeZoneProp, tmpStr.local8Bit() );
   addPropValue( vcal, VCVersionProp, _VCAL_VERSION );
@@ -1375,7 +1375,7 @@ QString VCalFormat::qDateToISO(const QDate &qd)
 {
   QString tmpStr;
 
-  ASSERT(qd.isValid());
+  Q_ASSERT(qd.isValid());
 
   tmpStr.sprintf("%.2d%.2d%.2d",
 		 qd.year(), qd.month(), qd.day());
@@ -1387,8 +1387,8 @@ QString VCalFormat::qDateTimeToISO(const QDateTime &qdt, bool zulu)
 {
   QString tmpStr;
 
-  ASSERT(qdt.date().isValid());
-  ASSERT(qdt.time().isValid());
+  Q_ASSERT(qdt.date().isValid());
+  Q_ASSERT(qdt.time().isValid());
   if (zulu) {
     QDateTime tmpDT(qdt);
     tmpDT = tmpDT.addSecs(60*(-mCalendar->getTimeZone())); // correct to GMT.
@@ -1422,8 +1422,8 @@ QDateTime VCalFormat::ISOToQDateTime(const QString & dtStr)
   tmpDate.setYMD(year, month, day);
   tmpTime.setHMS(hour, minute, second);
 
-  ASSERT(tmpDate.isValid());
-  ASSERT(tmpTime.isValid());
+  Q_ASSERT(tmpDate.isValid());
+  Q_ASSERT(tmpTime.isValid());
   QDateTime tmpDT(tmpDate, tmpTime);
   // correct for GMT if string is in Zulu format
   if (dtStr.at(dtStr.length()-1) == 'Z')

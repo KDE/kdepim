@@ -1806,7 +1806,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
     mCalendarVersion = 0;
   } else {
     mLoadedProductId = QString::fromUtf8(icalproperty_get_prodid(p));
-    mCalendarVersion = CalFormat::calendarVersion(mLoadedProductId);
+    mCalendarVersion = CalFormat::calendarVersion(mLoadedProductId.latin1());
     kdDebug(5800) << "VCALENDAR prodid: '" << mLoadedProductId << "'" << endl;
 
     delete mCompat;

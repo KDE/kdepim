@@ -82,7 +82,7 @@ Modem::Modem(QObject *parent, const char *name) : QObject(parent, name)
   mOpen = false;
 
 	timer = new QTimer(this, "modemtimer");
-	CHECK_PTR(timer);
+	Q_CHECK_PTR(timer);
 	connect(timer, SIGNAL(timeout()), SLOT(timerDone()));
 
 	init();
@@ -235,7 +235,7 @@ bool Modem::open()
 	}
 
 	sn = new QSocketNotifier(fd, QSocketNotifier::Read, this, "modemsocketnotifier");
-	CHECK_PTR(sn);
+	Q_CHECK_PTR(sn);
 	connect(sn, SIGNAL(activated(int)), SLOT(readChar(int)));
 
         mOpen = true;

@@ -330,7 +330,7 @@ void CardViewItem::paintCard(QPainter *p, QColorGroup &cg)
     for (cln=0; cln <= maxLines; cln++)
     {
       tmp = value.section('\n',cln,cln);
-      if ( tmp ) p->drawText( valueXPos, yPos + cln*fh, trimString( tmp, valueWidth, fm ) );
+      if ( !tmp.isEmpty() ) p->drawText( valueXPos, yPos + cln*fh, trimString( tmp, valueWidth, fm ) );
       else break;
     }
 

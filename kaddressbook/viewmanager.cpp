@@ -346,7 +346,7 @@ void ViewManager::createViewFactories()
     if ( !(*it)->hasServiceType( "KAddressBook/View" ) )
       continue;
 
-    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library() );
+    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().latin1() );
 
     if ( !factory ) {
       kdDebug(5720) << "ViewManager::createViewFactories(): Factory creation failed" << endl;

@@ -143,7 +143,7 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg, DesktopListType* des
 	
   lay1->addLayout(lay6);
   for (int i=0; i<desktopCount; i++) {
-    _deskBox.push_back(new QCheckBox(groupBox,QString::number(i)));
+    _deskBox.push_back(new QCheckBox(groupBox,QString::number(i).latin1()));
     _deskBox[i]->setText(QString::number(i+1));
     _deskBox[i]->setChecked(false);
 

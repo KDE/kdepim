@@ -11,3 +11,5 @@ if test "$x_includes" != "NONE"; then
 fi
 
 KDE_INIT_DOXYGEN([The KDE-PIM API Reference], [Version $VERSION])
+
+CXXFLAGS="$CXXFLAGS $KDE_DEFAULT_CXXFLAGS"
