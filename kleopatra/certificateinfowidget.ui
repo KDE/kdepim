@@ -185,7 +185,7 @@
                         <cstring>importButton</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Import to local</string>
+                        <string>&amp;Import to Local</string>
                     </property>
                 </widget>
             </hbox>
