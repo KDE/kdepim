@@ -122,7 +122,7 @@ protected:
   void loadRecurrence( const QDomElement& element );
   void saveRecurrence( QDomElement& element ) const;
 
-  QString producerID() const;
+  QString productID() const;
 
   QString mSummary;
   QString mLocation;

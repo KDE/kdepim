@@ -263,6 +263,8 @@ bool KolabBase::loadAttribute( QDomElement& element )
     setLastModified( stringToDateTime( element.text() ) );
   else if ( tagName == "sensitivity" )
     setSensitivity( stringToSensitivity( element.text() ) );
+  else if ( tagName == "product-id" )
+    return true; // ignore this field
   else
     return false;
 
@@ -272,7 +274,7 @@ bool KolabBase::loadAttribute( QDomElement& element )
 
 bool KolabBase::saveAttributes( QDomElement& element ) const
 {
-  writeString( element, "producer-id", producerID() );
+  writeString( element, "product-id", productID() );
   writeString( element, "uid", uid() );
   writeString( element, "body", body() );
   writeString( element, "categories", categories() );

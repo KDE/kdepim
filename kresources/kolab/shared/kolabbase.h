@@ -141,8 +141,8 @@ protected:
   // Save the attributes of this class
   virtual bool saveAttributes( QDomElement& ) const;
 
-  // Return the producer ID
-  virtual QString producerID() const = 0;
+  // Return the product ID
+  virtual QString productID() const = 0;
 
   // Write a string tag
   static void writeString( QDomElement&, const QString&, const QString& );

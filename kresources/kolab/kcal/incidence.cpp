@@ -164,7 +164,7 @@ bool Incidence::loadAttendeeAttribute( QDomElement& element,
         // This sets reqResp to false, if the text is "false". Otherwise it
         // sets it to true. This means the default setting is true.
         attendee.requestResponse = ( e.text().lower() != "false" );
-      else if ( tagName == "invitationSent" )
+      else if ( tagName == "invitation-sent" )
         // Like above, only this defaults to false
         attendee.invitationSent = ( e.text().lower() != "true" );
       else if ( tagName == "role" )
@@ -189,7 +189,7 @@ void Incidence::saveAttendeeAttribute( QDomElement& element,
   writeString( e, "status", attendee.status );
   writeString( e, "request-response",
                ( attendee.requestResponse ? "true" : "false" ) );
-  writeString( e, "invitationSent",
+  writeString( e, "invitation-sent",
                ( attendee.invitationSent ? "true" : "false" ) );
   writeString( e, "role", attendee.role );
 }
@@ -623,7 +623,7 @@ void Incidence::saveTo( KCal::Incidence* incidence )
   }
 }
 
-QString Incidence::producerID() const
+QString Incidence::productID() const
 {
   return QString( "KOrganizer " ) + korgVersion + ", Kolab resource";
 }

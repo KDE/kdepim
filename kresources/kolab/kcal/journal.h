@@ -91,7 +91,7 @@ protected:
   // Read all known fields from this ical journal
   void setFields( const KCal::Journal* );
 
-  QString producerID() const;
+  QString productID() const;
 
   QString mSummary;
   QDateTime mStartDate;

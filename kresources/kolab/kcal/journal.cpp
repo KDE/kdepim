@@ -177,7 +177,7 @@ void Journal::setFields( const KCal::Journal* journal )
   setStartDate( localToUTC( journal->dtStart() ) );
 }
 
-QString Journal::producerID() const
+QString Journal::productID() const
 {
   return QString( "KOrganizer " ) + korgVersion + ", Kolab resource";
 }
