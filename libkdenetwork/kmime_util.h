@@ -168,6 +168,8 @@ namespace KMime {
 
 
   /**
+   * @short class abstracting date formatting
+   *
    * DateFormatter deals with different kinds of date
    * display formats. The formats supported by the class include:
    * <ul>
@@ -180,16 +182,15 @@ namespace KMime {
    * </ul>
    *
    *
-   * @short class abstracting date formatting
    */
   class DateFormatter {
   public:
     enum FormatType {
-      CTime,
-      Localized,
-      Fancy,
-      Iso,
-      Custom
+      CTime,      //< ctime "Sun Mar 31 02:08:35 2002"
+      Localized,  //< localized "2002-03-31 02:08"
+      Fancy,      //< fancy "Today 02:08:35"
+      Iso,        //< iso  "2002-03-31 02:08:35"
+      Custom      //< custom "whatever you like"
     };
 
     /**
@@ -250,20 +251,29 @@ namespace KMime {
 
     //statics
     /** convenience function @see dateString
+     * @param t specifies the FormatType to use
+     * @param time time to format
      * @param data is either the format when FormatType is Custom, or language
      * when FormatType is Localized
+     * @param shortFormat used <em>only</em> by the Localized format, is passed to KLocale::formatDateTime
+     * @param includeSecs used <em>only</em> by the Localized format, is passed to KLocale::formatDateTime
      */
     static QString  formatDate( DateFormatter::FormatType t, time_t time,
 				const QString& data = QString::null,
 				bool shortFormat = true, bool includeSecs=false);
+
     /** convenience function, same as @ref #formatDate
      * but returns the current time formatted
+     * @param t specifies the FormatType to use
      * @param data is either the format when FormatType is Custom, or language
      * when FormatType is Localized
+     * @param shortFormat used <em>only</em> by the Localized format, is passed to KLocale::formatDateTime
+     * @param includeSecs used <em>only</em> by the Localized format, is passed to KLocale::formatDateTime
      */
     static QString  formatCurrentDate( DateFormatter::FormatType t,
 				       const QString& data = QString::null,
 				       bool shortFormat = true, bool includeSecs=false);
+
     /** convenience function, same as @ref #rfc2822 */
     static QCString rfc2822FormatDate( time_t time );
     static bool     isDaylight();
