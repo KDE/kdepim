@@ -9,7 +9,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>413</width>
+            <width>596</width>
             <height>404</height>
         </rect>
     </property>
@@ -57,7 +57,7 @@
                             <cstring>fkeepPDBLocally</cstring>
                         </property>
                         <property name="text">
-                            <string>keep local copy of &amp;PDB files:</string>
+                            <string>Keep local copy of &amp;PDB files:</string>
                         </property>
                         <property name="checked">
                             <bool>true</bool>
@@ -115,7 +115,7 @@
                             <cstring>fSyncDirection</cstring>
                         </property>
                         <property name="title">
-                            <string>Synchronization direction</string>
+                            <string>Synchronization Direction</string>
                         </property>
                         <grid>
                             <property name="name">
@@ -132,7 +132,7 @@
                                     <cstring>RadioButton3</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>sync only P&amp;C to PDA</string>
+                                    <string>Sync only P&amp;C to PDA</string>
                                 </property>
                                 <property name="buttonGroupId">
                                     <number>2</number>
@@ -146,7 +146,7 @@
                                     <cstring>RadioButton2</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>sync only P&amp;DA to PC</string>
+                                    <string>Sync only P&amp;DA to PC</string>
                                 </property>
                                 <property name="toolTip" stdset="0">
                                     <string>Only sync changes made on the handheld to the PC. Changes to the text files on the PC will not be committed to the handheld.</string>
@@ -157,7 +157,7 @@
                                     <cstring>RadioButton1</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>sync &amp;all</string>
+                                    <string>Sync &amp;all</string>
                                 </property>
                                 <property name="checked">
                                     <bool>true</bool>
@@ -274,7 +274,7 @@
                             <cstring>fBookmarksInline</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;inline tags in text</string>
+                            <string>&amp;Inline tags in text</string>
                         </property>
                         <property name="checked">
                             <bool>true</bool>
@@ -288,7 +288,7 @@
                             <cstring>fBookmarksEndtags</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;tags at end of text</string>
+                            <string>&amp;Tags at end of text</string>
                         </property>
                         <property name="toolTip" stdset="0">
                             <string>Tags of the form &lt;bookmarkname&gt; at the end of the text will be used to search the text for the pattern between the &lt; and &gt;. Whenever "bookmarkname" appears in the text, a bookmark will be set there. The endtags &lt;...&gt; will then be removed from the end of the text.</string>
@@ -299,7 +299,7 @@
                             <cstring>fCompress</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;compress</string>
+                            <string>&amp;Compress</string>
                         </property>
                         <property name="checked">
                             <bool>true</bool>
@@ -316,7 +316,7 @@
                             <cstring>fConvertBookmarks</cstring>
                         </property>
                         <property name="text">
-                            <string>convert &amp;bookmarks</string>
+                            <string>Convert &amp;bookmarks</string>
                         </property>
                         <property name="checked">
                             <bool>true</bool>
@@ -330,7 +330,7 @@
                             <cstring>fBookmarksBmk</cstring>
                         </property>
                         <property name="text">
-                            <string>regular &amp;expressions in .bmk file</string>
+                            <string>Regular &amp;expressions in .bmk file</string>
                         </property>
                         <property name="toolTip" stdset="0">
                             <string>Use regular expressions in a file textname.bmk (textname.txt is the filename of the text) to search the text for bookmarks.See the documentation for a description of the format of the bmk file.</string>
@@ -449,7 +449,7 @@
                     <cstring>tab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>conflicts</string>
+                    <string>Conflicts</string>
                 </attribute>
                 <vbox>
                     <property name="name">
@@ -460,7 +460,7 @@
                             <cstring>fConflictResolution</cstring>
                         </property>
                         <property name="title">
-                            <string>Conflict resolution</string>
+                            <string>Conflict Resolution</string>
                         </property>
                         <property name="toolTip" stdset="0">
                             <string>If the same text was changed on the PC and the handheld, which of the two versions should be used as the new version?</string>
@@ -502,7 +502,7 @@
                                     <cstring>RadioButton7</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;ask the user</string>
+                                    <string>&amp;Ask the user</string>
                                 </property>
                                 <property name="checked">
                                     <bool>true</bool>

@@ -1,4 +1,4 @@
-/*                                                                      
+/*
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
                                                                         
@@ -204,27 +204,27 @@ void CardViewLookNFeelPage::initGUI()
   
   QGroupBox *gbGeneral = new QGroupBox( 1, Qt::Horizontal, i18n("General"), loTab );
   
-  cbDrawSeps = new QCheckBox( i18n("Draw &Separators"), gbGeneral );
+  cbDrawSeps = new QCheckBox( i18n("Draw &separators"), gbGeneral );
 
-  QHBox *hbSW = new QHBox( gbGeneral );  
-  QLabel *lSW = new QLabel( i18n("Separator &Width:"), hbSW );
+  QHBox *hbSW = new QHBox( gbGeneral );
+  QLabel *lSW = new QLabel( i18n("Separator &width:"), hbSW );
   sbSepWidth = new QSpinBox( 1, 50, 1, hbSW );
   lSW->setBuddy( sbSepWidth);
-  
+
   QHBox *hbPadding = new QHBox( gbGeneral );
   QLabel *lSpacing = new QLabel( i18n("&Padding:"), hbPadding );
   sbSpacing = new QSpinBox( 0, 100, 1, hbPadding );
   lSpacing->setBuddy( sbSpacing );
-  
+
   QGroupBox *gbCards = new QGroupBox( 1, Qt::Horizontal, i18n("Cards"), loTab );
-  
+
   QHBox *hbMargin = new QHBox( gbCards );
   QLabel *lMargin = new QLabel( i18n("&Margin:"), hbMargin );
   sbMargin = new QSpinBox( 0, 100, 1, hbMargin );
   lMargin->setBuddy( sbMargin );
-  
-  cbDrawBorders = new QCheckBox( i18n("Draw &Borders"), gbCards );
-  
+
+  cbDrawBorders = new QCheckBox( i18n("Draw &borders"), gbCards );
+
   loTab->setStretchFactor( new QWidget( loTab ), 1 );
   
   QWhatsThis::add( sbMargin, i18n(
@@ -302,12 +302,12 @@ void CardViewLookNFeelPage::initGUI()
   behaviourTab->setMargin( margin );
   behaviourTab->setSpacing( spacing );
   
-  cbShowEmptyFields = new QCheckBox( i18n("Show &Empty Fields"), behaviourTab );
-  cbShowFieldLabels = new QCheckBox( i18n("Show Field &Labels"), behaviourTab );
-  
+  cbShowEmptyFields = new QCheckBox( i18n("Show &empty fields"), behaviourTab );
+  cbShowFieldLabels = new QCheckBox( i18n("Show field &labels"), behaviourTab );
+
   behaviourTab->setStretchFactor( new QWidget( behaviourTab ), 1 );
-  
-  tabs->addTab( behaviourTab, i18n("Be&haviour") );
+
+  tabs->addTab( behaviourTab, i18n("Be&havior") );
     
 }
 

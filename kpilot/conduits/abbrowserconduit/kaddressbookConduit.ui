@@ -9,7 +9,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>491</width>
+            <width>609</width>
             <height>364</height>
         </rect>
     </property>
@@ -128,32 +128,32 @@
                     <widget class="QComboBox" row="1" column="1">
                         <item>
                             <property name="text">
-                                <string>User choose</string>
+                                <string>User Choose</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Do nothing</string>
+                                <string>Do Nothing</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Handheld overrides</string>
+                                <string>Handheld Overrides</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>KAddressbook overrides</string>
+                                <string>KAddressbook Overrides</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Revert to last sync</string>
+                                <string>Revert to Last Sync</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Use both entries</string>
+                                <string>Use Both Entries</string>
                             </property>
                         </item>
                         <property name="name">
@@ -343,7 +343,7 @@
                             <cstring>textLabel1</cstring>
                         </property>
                         <property name="text">
-                            <string>Handheld custom field 1</string>
+                            <string>Handheld custom field 1:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="1" column="0">
@@ -351,7 +351,7 @@
                             <cstring>textLabel1_2</cstring>
                         </property>
                         <property name="text">
-                            <string>Handheld custom field 2</string>
+                            <string>Handheld custom field 2:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="2" column="0">
@@ -359,7 +359,7 @@
                             <cstring>textLabel1_3</cstring>
                         </property>
                         <property name="text">
-                            <string>Handheld custom field 3</string>
+                            <string>Handheld custom field 3:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="3" column="0">
@@ -367,7 +367,7 @@
                             <cstring>textLabel1_4</cstring>
                         </property>
                         <property name="text">
-                            <string>Handheld custom field 4</string>
+                            <string>Handheld custom field 4:</string>
                         </property>
                     </widget>
                     <spacer row="4" column="2">
@@ -390,7 +390,7 @@
                     <widget class="QComboBox" row="0" column="1" rowspan="1" colspan="2">
                         <item>
                             <property name="text">
-                                <string>Store as custom field</string>
+                                <string>Store as Custom Field</string>
                             </property>
                         </item>
                         <item>
@@ -405,7 +405,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>IM address (ICQ, MS,...)</string>
+                                <string>IM Address (ICQ, MS, ...)</string>
                             </property>
                         </item>
                         <property name="name">
@@ -415,7 +415,7 @@
                     <widget class="QComboBox" row="1" column="1" rowspan="1" colspan="2">
                         <item>
                             <property name="text">
-                                <string>Store as custom field</string>
+                                <string>Store as Custom Field</string>
                             </property>
                         </item>
                         <item>
@@ -430,7 +430,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>IM address (ICQ, MSN,...)</string>
+                                <string>IM Address (ICQ, MSN, ...)</string>
                             </property>
                         </item>
                         <property name="name">
@@ -440,7 +440,7 @@
                     <widget class="QComboBox" row="2" column="1" rowspan="1" colspan="2">
                         <item>
                             <property name="text">
-                                <string>Store as custom field</string>
+                                <string>Store as Custom Field</string>
                             </property>
                         </item>
                         <item>
@@ -455,7 +455,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>IM address (ICQ, MSN,...)</string>
+                                <string>IM Address (ICQ, MSN, ...)</string>
                             </property>
                         </item>
                         <property name="name">
@@ -465,7 +465,7 @@
                     <widget class="QComboBox" row="3" column="1" rowspan="1" colspan="2">
                         <item>
                             <property name="text">
-                                <string>Store as custom field</string>
+                                <string>Store as Custom Field</string>
                             </property>
                         </item>
                         <item>
@@ -480,7 +480,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>IM address (ICQ, MSN,...)</string>
+                                <string>IM Address (ICQ, MSN, ...)</string>
                             </property>
                         </item>
                         <property name="name">
@@ -490,7 +490,7 @@
                     <widget class="QComboBox" row="0" column="3">
                         <item>
                             <property name="text">
-                                <string>locale Settings</string>
+                                <string>Locale Settings</string>
                             </property>
                         </item>
                         <item>
@@ -523,7 +523,7 @@
                     <widget class="QComboBox" row="1" column="3">
                         <item>
                             <property name="text">
-                                <string>locale Settings</string>
+                                <string>Locale Settings</string>
                             </property>
                         </item>
                         <item>
@@ -556,7 +556,7 @@
                     <widget class="QComboBox" row="2" column="3">
                         <item>
                             <property name="text">
-                                <string>locale Settings</string>
+                                <string>Locale Settings</string>
                             </property>
                         </item>
                         <item>
@@ -589,7 +589,7 @@
                     <widget class="QComboBox" row="3" column="3">
                         <item>
                             <property name="text">
-                                <string>locale Settings</string>
+                                <string>Locale Settings</string>
                             </property>
                         </item>
                         <item>

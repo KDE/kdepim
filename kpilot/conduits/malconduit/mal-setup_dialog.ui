@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
 <class>MALWidget</class>
 <author>Reinhold Kainhofer</author>
 <widget class="QWidget">
@@ -125,6 +125,12 @@
                         <property name="sizeType">
                             <enum>Expanding</enum>
                         </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
                     </spacer>
                 </grid>
             </widget>
@@ -204,6 +210,12 @@
                         <property name="sizeType">
                             <enum>Expanding</enum>
                         </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
                     </spacer>
                     <widget class="QGroupBox" row="1" column="0">
                         <property name="name">
@@ -213,7 +225,7 @@
                             <bool>false</bool>
                         </property>
                         <property name="title">
-                            <string>Server information</string>
+                            <string>Server Information</string>
                         </property>
                         <grid>
                             <property name="name">
@@ -245,6 +257,12 @@
                                 </property>
                                 <property name="sizeType">
                                     <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                    </size>
                                 </property>
                             </spacer>
                             <widget class="KHistoryCombo" row="0" column="2" rowspan="1" colspan="2">
@@ -340,7 +358,7 @@
                                             <cstring>TextLabel2</cstring>
                                         </property>
                                         <property name="text">
-                                            <string>&amp;Username:</string>
+                                            <string>&amp;User name:</string>
                                         </property>
                                         <property name="buddy" stdset="0">
                                             <cstring>proxyUserName</cstring>
@@ -377,7 +395,7 @@
                             <bool>false</bool>
                         </property>
                         <property name="title">
-                            <string>MAL Server information</string>
+                            <string>MAL Server Information</string>
                         </property>
                         <grid>
                             <property name="name">
@@ -435,6 +453,12 @@
                                 <property name="sizeType">
                                     <enum>Expanding</enum>
                                 </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
                             </spacer>
                             <widget class="KHistoryCombo" row="0" column="2" rowspan="1" colspan="2">
                                 <property name="name">
@@ -462,7 +486,7 @@
                                     <cstring>textLabel</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Username:</string>
+                                    <string>&amp;User name:</string>
                                 </property>
                                 <property name="buddy" stdset="0">
                                     <cstring>malUserName</cstring>
@@ -498,6 +522,12 @@
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
                         </property>
                     </spacer>
                     <widget class="QLabel" row="0" column="0">
@@ -573,4 +603,16 @@
     <tabstop>tabWidget</tabstop>
 </tabstops>
 <layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kcombobox.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>knuminput.h</includehint>
+    <includehint>knuminput.h</includehint>
+    <includehint>kpassdlg.h</includehint>
+    <includehint>knuminput.h</includehint>
+    <includehint>knuminput.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpassdlg.h</includehint>
+</includehints>
 </UI>

@@ -47,7 +47,7 @@
  * of the columns, for example:
  * <PRE>
  * ListCategorizer *lc = new ListCategorizer(this,colors);
- * lc->setColumnText(0,i18n("Colour"));
+ * lc->setColumnText(0,i18n("Color"));
  * lc->setColumnText(1,i18n("HTML"));
  * QListViewItem *stdKDE = lc->addCategory(i18n("Standard KDE"));
  * (void) new QListViewItem(stdKDE,i18n("red"),"#FF0000");

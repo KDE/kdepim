@@ -45,7 +45,7 @@
                             <cstring>fSyncDestination</cstring>
                         </property>
                         <property name="title">
-                            <string>Sync destination</string>
+                            <string>Sync Destination</string>
                         </property>
                         <grid>
                             <property name="name">

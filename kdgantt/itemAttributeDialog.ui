@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
 <class>itemAttributeDialog</class>
 <widget class="QDialog">
     <property name="name">
@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>644</width>
-            <height>319</height>
+            <width>814</width>
+            <height>345</height>
         </rect>
     </property>
     <property name="caption">
@@ -44,7 +44,7 @@
                         <cstring>TextLabel1_2</cstring>
                     </property>
                     <property name="text">
-                        <string>Item Name</string>
+                        <string>Item name:</string>
                     </property>
                 </widget>
                 <widget class="QLineEdit">
@@ -90,7 +90,7 @@
                         <cstring>TextLabel4</cstring>
                     </property>
                     <property name="text">
-                        <string>ShapeType:</string>
+                        <string>Shape type:</string>
                     </property>
                 </widget>
                 <widget class="QLabel" row="5" column="0">
@@ -98,7 +98,7 @@
                         <cstring>TextLabel8</cstring>
                     </property>
                     <property name="text">
-                        <string>Highlight Color:</string>
+                        <string>Highlight color:</string>
                     </property>
                 </widget>
                 <widget class="QTimeEdit" row="4" column="5">
@@ -119,7 +119,7 @@
                         <cstring>TextLabel5</cstring>
                     </property>
                     <property name="text">
-                        <string>ShapeColor:</string>
+                        <string>Shape color:</string>
                     </property>
                 </widget>
                 <widget class="QDateEdit" row="3" column="2">
@@ -423,7 +423,7 @@
                                 <cstring>TextLabel7</cstring>
                             </property>
                             <property name="text">
-                                <string>Displayed Text:</string>
+                                <string>Displayed text:</string>
                             </property>
                         </widget>
                         <widget class="QLineEdit">
@@ -460,7 +460,7 @@
                                 <cstring>TextLabel9</cstring>
                             </property>
                             <property name="text">
-                                <string>Text Color:</string>
+                                <string>Text color:</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignRight</set>

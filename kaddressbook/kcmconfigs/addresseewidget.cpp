@@ -1,4 +1,4 @@
-/*                                                                      
+/*
     This file is part of KAddressBook.                                  
     Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
                                                                         
@@ -131,7 +131,7 @@ AddresseeWidget::AddresseeWidget( QWidget *parent, const char *name )
   mSuffix = new NamePartWidget( i18n( "Suffixes" ), this );
   layout->addWidget( mSuffix, 0, 2 );
 
-  QLabel *label = new QLabel( i18n( "Default Formatted Name" ), this );
+  QLabel *label = new QLabel( i18n( "Default formatted name:" ), this );
   layout->addWidget( label, 1, 0 );
 
   mFormattedNameCombo = new KComboBox( this );
