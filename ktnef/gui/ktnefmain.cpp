@@ -206,7 +206,7 @@ QString KTNEFMain::extractTemp(KTNEFAttach *att)
 void KTNEFMain::viewFileAs()
 {
 	KURL::List	list;
-	list.append(extractTemp(view_->getSelection()->first()));
+	list.append(KURL::fromPathOrURL( extractTemp(view_->getSelection()->first()) ));
 
   KRun::displayOpenWithDialog(list);
 //speleoalex KOpenWithHandler::getOpenWithHandler()->displayOpenWithDialog(list);
@@ -381,7 +381,7 @@ void KTNEFMain::slotShowMessageText()
 	*( tmpFile.textStream() ) << rtf;
 	tmpFile.close();
 
-	KRun::runURL( tmpFile.name(), "text/rtf", true );
+	KRun::runURL( KURL::fromPathOrURL( tmpFile.name() ), "text/rtf", true );
 }
 
 void KTNEFMain::slotSaveMessageText()
