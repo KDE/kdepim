@@ -59,8 +59,8 @@ k_dcop:
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& xml );
   void fromKMailRefresh( const QString& type, const QString& resource );
-  void fromKMailAddSubresource( const QString& type, const QString& resource, 
-                                const QString& label, bool writable, 
+  void fromKMailAddSubresource( const QString& type, const QString& resource,
+                                const QString& label, bool writable,
                                 bool alarmRelevant );
   void fromKMailDelSubresource( const QString& type, const QString& resource );
   void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map, const QString& type,
@@ -86,6 +86,8 @@ public:
   bool kmailUpdate( const QString& resource,
                     Q_UINT32& sernum,
                     const QString& subject,
+                    const QString& plainTextBody,
+                    const QMap<QCString, QString>& customHeaders,
                     const QStringList& attachmentURLs,
                     const QStringList& attachmentMimetypes,
                     const QStringList& attachmentNames,

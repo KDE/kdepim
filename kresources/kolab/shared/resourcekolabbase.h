@@ -126,12 +126,15 @@ protected:
   /// Delete an incidence.
   bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
 
+  typedef QMap<QCString, QString> CustomHeaderMap;
+
   /// Update an incidence. The list of attachments are URLs.
   /// The parameter sernum is updated with the right KMail serial number
   bool kmailUpdate( const QString& resource, Q_UINT32& sernum,
                     const QString& xml,
                     const QString& mimetype,
                     const QString& subject,
+                    const CustomHeaderMap& customHeaders = CustomHeaderMap(),
                     const QStringList& attachmentURLs = QStringList(),
                     const QStringList& attachmentMimetypes = QStringList(),
                     const QStringList& attachmentNames = QStringList(),

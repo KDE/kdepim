@@ -97,7 +97,7 @@ bool ResourceKolab::openResource( KConfig& config, const char* contentType,
   map.clear();
   QValueList<KMailICalIface::SubResource>::ConstIterator it;
   for ( it = subResources.begin(); it != subResources.end(); ++it )
-    loadSubResourceConfig( config, (*it).location, (*it).label, (*it).writable, 
+    loadSubResourceConfig( config, (*it).location, (*it).label, (*it).writable,
                            (*it).alarmRelevant, map );
   return true;
 }
@@ -341,7 +341,12 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
 
 //  kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
 
-  return kmailUpdate( subresource, sernum, xml, mimetype, incidencebase->uid() );
+  KCal::Incidence* incidence = static_cast<KCal::Incidence *>( incidencebase );
+  CustomHeaderMap customHeaders;
+  if ( incidence->schedulingID() != incidence->uid() )
+    customHeaders.insert( "X-Kolab-SchedulingID", incidence->schedulingID() );
+
+  return kmailUpdate( subresource, sernum, xml, mimetype, incidencebase->uid(), customHeaders );
 }
 
 bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _subresource,
@@ -708,7 +713,7 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
   config.setGroup( subResource );
 
   bool active = config.readBoolEntry( subResource, true );
-  (*map)[ subResource ] = Kolab::SubResource( active, writable, 
+  (*map)[ subResource ] = Kolab::SubResource( active, writable,
                                               alarmRelevant, label );
   loadSubResource( subResource, mimetype );
   emit signalSubresourceAdded( this, type, subResource, label );

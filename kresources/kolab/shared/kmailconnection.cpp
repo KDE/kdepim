@@ -149,7 +149,7 @@ void KMailConnection::fromKMailAddSubresource( const QString& type,
 {
 //   kdDebug(5650) << "KMailConnection::fromKMailAddSubresource( " << type << ", "
 //                 << resource << " )\n";
-  mResource->fromKMailAddSubresource( type, resource, label, 
+  mResource->fromKMailAddSubresource( type, resource, label,
                                       writable, alarmRelevant );
 }
 
@@ -219,13 +219,15 @@ bool KMailConnection::kmailDeleteIncidence( const QString& resource,
 bool KMailConnection::kmailUpdate( const QString& resource,
                                    Q_UINT32& sernum,
                                    const QString& subject,
+                                   const QString& plainTextBody,
+                                   const QMap<QCString, QString>& customHeaders,
                                    const QStringList& attachmentURLs,
                                    const QStringList& attachmentMimetypes,
                                    const QStringList& attachmentNames,
                                    const QStringList& deletedAttachments )
 {
   if ( connectToKMail() ) {
-    sernum = mKMailIcalIfaceStub->update( resource, sernum, subject,
+    sernum = mKMailIcalIfaceStub->update( resource, sernum, subject, plainTextBody, customHeaders,
                                           attachmentURLs, attachmentMimetypes, attachmentNames,
                                           deletedAttachments );
     return sernum && mKMailIcalIfaceStub->ok();
