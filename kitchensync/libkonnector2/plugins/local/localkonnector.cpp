@@ -23,15 +23,11 @@
 
 #include "localkonnectorconfig.h"
 
-#include <qtimer.h>
-
 #include <calendarsyncee.h>
 #include <addressbooksyncee.h>
 #include <bookmarksyncee.h>
 
-#include <kabc/resource.h>
 #include <kabc/resourcefile.h>
-#include <kabc/stdaddressbook.h>
 
 #include <konnectorinfo.h>
 #include <kapabilities.h>
@@ -51,23 +47,15 @@ extern "C"
 
 
 LocalKonnector::LocalKonnector( const KConfig *config )
-    : Konnector( config ), mConfigWidget( 0 ), mUseStdAddressBook( false ),
-      mAddressBookLoaded( false ), mCalendarLoaded( false )
+    : Konnector( config ), mConfigWidget( 0 )
 {
   if ( config ) {
     mCalendarFile = config->readPathEntry( "CalendarFile" );
     mAddressBookFile = config->readPathEntry( "AddressBookFile" );
     mBookmarkFile = config->readPathEntry( "BookmarkFile" );
-    mUseStdAddressBook = config->readBoolEntry( "UseStdAddressBook", false );
   }
 
-  if ( mUseStdAddressBook ) {
-    mAddressBookSyncee = new AddressBookSyncee( KABC::StdAddressBook::self( true ) );
-    connect( KABC::StdAddressBook::self( true ), SIGNAL( addressBookChanged( AddressBook* ) ),
-             SLOT( loadingAddressBookFinished() ) );
-  } else
     mAddressBookSyncee = new AddressBookSyncee( &mAddressBook );
-
   mAddressBookSyncee->setSource( i18n( "Local" ) );
   mCalendarSyncee = new CalendarSyncee( &mCalendar );
   mCalendarSyncee->setSource( i18n( "Local" ) );
@@ -91,7 +79,6 @@ void LocalKonnector::writeConfig( KConfig *config )
   config->writePathEntry( "CalendarFile", mCalendarFile );
   config->writeEntry( "AddressBookFile", mAddressBookFile );
   config->writeEntry( "BookmarkFile", mAddressBookFile );
-  config->writeEntry( "UseStdAddressBook", mUseStdAddressBook );
 }
 
 KSync::Kapabilities LocalKonnector::capabilities()
@@ -135,9 +122,6 @@ bool LocalKonnector::readSyncees()
     }
   }
 
-  if ( mUseStdAddressBook ) {
-    mAddressBookSyncee->setIdentifier( KABC::StdAddressBook::self()->identifier() );
-  } else {
     if ( !mAddressBookFile.isEmpty() ) {
       kdDebug() << "LocalKonnector::readSyncee(): addressbook: "
                 << mAddressBookFile << endl;
@@ -159,13 +143,10 @@ bool LocalKonnector::readSyncees()
         mAddressBookSyncee->addEntry( &entry );
       }
     }
-  }
 
   // TODO: Read Bookmarks
 
-  mCalendarLoaded = true;
-
-  QTimer::singleShot( 1000, this, SLOT( checkLoaded() ) );
+  emit synceesRead( this );
 
   return true;
 }
@@ -198,28 +179,9 @@ void LocalKonnector::download( const QString& )
 bool LocalKonnector::writeSyncees()
 {
   if ( !mCalendarFile.isEmpty() ) {
-    if ( !mCalendar.save( mCalendarFile ) )
-      return false;
+    if ( !mCalendar.save( mCalendarFile ) ) return false;
   }
 
-  if ( mUseStdAddressBook ) {
-    QPtrList<KABC::Resource> resources = KABC::StdAddressBook::self()->resources();
-    KABC::Resource *resource;
-    for ( resource = resources.first(); resource; resource = resources.next() ) {
-      if ( resource->readOnly() )
-        continue;
-
-      KABC::Ticket *ticket;
-      ticket = KABC::StdAddressBook::self()->requestSaveTicket( resource );
-      if ( !ticket ) {
-        kdWarning() << "LocalKonnector::writeSyncees(). Couldn't get ticket for "
-                    << "addressbook." << endl;
-        continue;
-      }
-
-      ((KABC::AddressBook*)KABC::StdAddressBook::self())->save( ticket );
-    }
-  } else {
     if ( !mAddressBookFile.isEmpty() ) {
       KABC::Ticket *ticket;
       ticket = mAddressBook.requestSaveTicket( mAddressBookResourceFile );
@@ -230,7 +192,6 @@ bool LocalKonnector::writeSyncees()
       }
       if ( !mAddressBook.save( ticket ) ) return false;
     }
-  }
 
   // TODO: Write Bookmarks
 
@@ -239,26 +200,5 @@ bool LocalKonnector::writeSyncees()
   return true;
 }
 
-void LocalKonnector::loadingAddressBookFinished()
-{
-  mAddressBookLoaded = true;
-
-  mAddressBookSyncee->reset();
-  
-  KABC::AddressBook *ab = KABC::StdAddressBook::self( true );
-  KABC::AddressBook::Iterator it;
-  for ( it = ab->begin(); it != ab->end(); ++it ) {
-    KSync::AddressBookSyncEntry entry( *it, mAddressBookSyncee );
-    mAddressBookSyncee->addEntry( &entry );
-  }
-}
-
-void LocalKonnector::checkLoaded()
-{
-  if ( mAddressBookLoaded && mCalendarLoaded )
-    emit synceesRead( this );
-  else
-    QTimer::singleShot( 1000, this, SLOT( checkLoaded() ) );
-}
 
 #include "localkonnector.moc"
