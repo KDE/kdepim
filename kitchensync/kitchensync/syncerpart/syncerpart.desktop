@@ -1,6 +1,26 @@
 [Desktop Entry]
 Type=Service
 Name=Synchronizer Part
+Name[ca]=Part del sincronitzador
+Name[cs]=Komponenta synchronizace
+Name[da]=Synkronisator-part
+Name[de]=Synchronizer-Komponente
+Name[en_GB]=Synchroniser Part
+Name[es]=Parte Synchronizer
+Name[et]=Sünkroniseerija komponent
+Name[fr]=Composant de synchronisation
+Name[hu]=Szinkronizáló objektum
+Name[it]=Parte Synchronizer
+Name[nl]=Synchronizer-part
+Name[nn]=Synkroniseringsdel
+Name[pt]=Componente de Sincronização
+Name[pt_BR]=Componente do Sincronizador
+Name[ru]=Компонент синхронизации
+Name[sr]=Део Synchronizer
+Name[sv]=Synkroniseringsdel
+Name[uk]=Складова синхронізації
+Name[xx]=xxSynchronizer Partxx
+Name[zh_CN]=同步部件
 Icon=
 ServiceTypes=KitchenSync/Manipulator
 X-KDE-Library=libksync_syncerpart

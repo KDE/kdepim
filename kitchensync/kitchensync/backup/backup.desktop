@@ -1,6 +1,25 @@
 [Desktop Entry]
 Type=Service
 Name=Konnector Backup
+Name[ca]=Còpia de seguretat Konnector
+Name[cs]=Záloha Konektoru
+Name[da]=Konnector sikkerhedskopi
+Name[de]=Konnector-Sicherung
+Name[es]=Copia de seguridad de Konnector
+Name[et]=Konnectori varukoopia
+Name[fr]=Sauvegarde Konnector
+Name[hu]=Konnector biztonsági mentés
+Name[nl]=Konnector-reservekopie
+Name[nn]=Konnector tryggingskopi
+Name[pt]=Salvaguarda do Konnector
+Name[pt_BR]=Backup do Konnector
+Name[ru]=Резервная копия Konnector
+Name[sr]=Konnector-ова резервна копија
+Name[sv]=Konnector-säkerhetskopia
+Name[tr]=Konnector Yedeği
+Name[uk]=Резервна копія Konnector
+Name[xx]=xxKonnector Backupxx
+Name[zh_CN]=Konnector 备份
 Icon=
 ServiceTypes=KitchenSync/Manipulator
 X-KDE-Library=libksync_backup

@@ -1,6 +1,27 @@
 [Desktop Entry]
 Type=Service
 Name=Konnector Debugger
+Name[ca]=Depurador Konnector
+Name[cs]=Ladění Konektoru
+Name[da]=Konnector-fejlretter
+Name[de]=Konnector-Debugger
+Name[es]=Depurador de Konnector
+Name[et]=Konnectori siluja
+Name[fr]=Débogueur Konnector
+Name[hu]=Konnector nyomkövető
+Name[ms]=Nyah-ralat Konnector
+Name[nl]=Konnector-debugger
+Name[nn]=Konnector avlusar
+Name[pt]=Depurador do Konnector
+Name[pt_BR]=Depurador Konnector
+Name[ru]=Отладчик Konnector
+Name[sl]=Razhroščevalnik Konnectorja
+Name[sr]=Konnector-ов исправљач грешака
+Name[sv]=Konnector-felsökare
+Name[tr]=Konnector Hata Ayıklayıcı
+Name[uk]=Зневадник Konnector
+Name[xx]=xxKonnector Debuggerxx
+Name[zh_CN]=Konnector 调试程序
 Icon=
 ServiceTypes=KitchenSync/Manipulator
 X-KDE-Library=libksync_debugger
