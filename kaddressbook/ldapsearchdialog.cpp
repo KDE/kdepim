@@ -281,21 +281,28 @@ void LDAPSearchDialog::slotSetScope( bool rec )
 
 QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr )
 {
-  QString result( "%1=%2*" );
-
   if ( attr == i18n( "Name" ) ) {
-    result = QString( "|(cn=%1*)(sn=%2*)" ).arg( query ).arg( query );
-  } else if ( attr == i18n( "Email" ) ) {
-    result = result.arg( "mail" ).arg( query );
-  } else if ( attr == i18n( "Home Number" ) ) {
-    result = result.arg( "homePhone" ).arg( query );
-  } else if ( attr == i18n( "Work Number" ) ) {
-    result = result.arg( "telephoneNumber" ).arg( query );
+    QString result( "|(cn=%1*)(sn=%2*)" );
+
+    result = result.arg( query ).arg( query );
+
+    return result;
   } else {
-    // Error?
-    result = QString::null;
+    QString result( "%1=%2*" );
+
+    if ( attr == i18n( "Email" ) ) {
+      result = result.arg( "mail" ).arg( query );
+    } else if ( attr == i18n( "Home Number" ) ) {
+      result = result.arg( "homePhone" ).arg( query );
+    } else if ( attr == i18n( "Work Number" ) ) {
+      result = result.arg( "telephoneNumber" ).arg( query );
+    } else {
+      // Error?
+      result = QString::null;
+    }
+
+    return result;
   }
-  return result;
 }
 
 void LDAPSearchDialog::slotStartSearch()
