@@ -1,7 +1,7 @@
 /*
     This file is part of KAddressbook.
-    Copyright (c) 2000 - 2003 Oliver Strutynski <olistrut@gmx.de>
-                              Helge Deller <deller@kde.org>
+    Copyright (c) 2000 - 2002 Oliver Strutynski <olistrut@gmx.de>
+    Copyright (c) 2002 - 2003 Helge Deller <deller@kde.org>
                               Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
@@ -29,8 +29,8 @@
     Internet interchange format. Most programs allow you to export data in
     LDIF format and e.g. Netscape and Mozilla store by default their
     Personal Address Book files in this format.
-    This import filter reads any LDIF version 1 file and imports the
-    entries into your KDE Addressbook.
+    This import and export filter reads and writes any LDIF version 1 files
+    from your KDE Addressbook.
 */
 
 #include <qfile.h>
@@ -77,18 +77,18 @@ LDIFXXPort::LDIFXXPort( KABCore *core, QObject *parent, const char *name )
 
 KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
 {
+  KABC::AddresseeList addrList;
+
   QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(), "*.ldif *.LDIF", 0 );
   if ( fileName.isEmpty() )
-    return KABC::AddresseeList();
+    return addrList;
 
   QFile file( fileName );
   if ( !file.open( IO_ReadOnly ) ) {
     QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>" );
     KMessageBox::error( core(), msg.arg( fileName ) );
-    return KABC::AddresseeList();
+    return addrList;
   }
-
-  KABC::AddresseeList addrList;
 
   kdWarning() << "LDIF import filter started.\n";
 
@@ -99,7 +99,6 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
   QString s, completeline, fieldname;
 
   bool lastWasComment = false;
-  int numEntries = 0;
 
   KABC::Addressee *a = new KABC::Addressee();
   KABC::Address *homeAddr, *workAddr; 
@@ -113,7 +112,6 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
 		// Newline: Write data
 writeData:
 		if (!a->formattedName().isEmpty()) {
-			numEntries++;
 			if (!homeAddr->isEmpty())
 				a->insertAddress(*homeAddr);
 			if (!workAddr->isEmpty())
@@ -377,9 +375,9 @@ void LDIFXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
     const KABC::Address homeAddr = addr->address(KABC::Address::Home);
     const KABC::Address workAddr = addr->address(KABC::Address::Work);
  
-    ldif_out(&t, "dn: cn=%1,mail=", addr->formattedName());
-    ldif_out(&t, "%1", addr->preferredEmail());
-    t << "\n";
+    ldif_out(&t, "%1", QString("dn: cn=%1,mail=%2\n")
+		.arg(addr->formattedName())
+		.arg(addr->preferredEmail()) );
     ldif_out(&t, "givenname: %1\n", addr->givenName());
     ldif_out(&t, "sn: %1\n", addr->familyName());
     ldif_out(&t, "cn: %1\n", addr->formattedName());
