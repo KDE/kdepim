@@ -102,10 +102,10 @@ class TaskView : public KListView
 
      /** Used to refresh (e.g. after import) */
     void refresh();
-   
+
    /** Used to import a legacy file format. */
     void loadFromFlatFile();
-    
+
     /** used to import tasks from imendio planner */
     void importPlanner();
 
@@ -119,6 +119,7 @@ class TaskView : public KListView
     void newSubTask();
 
     void editTask();
+    KarmStorage* storage();
 
     /**
      * Delete task (and children) from view.
@@ -128,7 +129,6 @@ class TaskView : public KListView
      * percent complete to 100 and removes task and all it's children from the
      * list view.
      */
-    KarmStorage* storage();
     void deleteTask(bool markingascomplete=false);
 //    void addCommentToTask();
     void markTaskAsComplete();
