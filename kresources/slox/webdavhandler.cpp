@@ -18,11 +18,17 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include <config.h>
-
 #include "webdavhandler.h"
 
-#include <limits.h>
+#ifdef HAVE_VALUES_H
+#include <values.h>
+#else
+#ifdef HAVE_SYS_LIMITS_H
+#include <sys/limits.h>
+#endif
+#endif
+
+#include <libkcal/incidence.h>
 
 #include <libkdepim/kpimprefs.h>
 
@@ -30,7 +36,6 @@
 #include <kconfig.h>
 
 #include <qfile.h>
-
 
 SloxItem::SloxItem()
   : status( Invalid )
@@ -47,6 +52,17 @@ WebdavHandler::WebdavHandler()
 
   kdDebug() << "LOG FILE: " << mLogFile << endl;
 }
+
+void WebdavHandler::setUserId( const QString &id )
+{
+  mUserId = id;
+}
+
+QString WebdavHandler::userId() const
+{
+  return mUserId;
+}
+
 
 void WebdavHandler::log( const QString &text )
 {
@@ -200,4 +216,41 @@ QDomElement WebdavHandler::addSloxElement( QDomDocument &doc, QDomNode &node,
   }
   node.appendChild( el );
   return el;
+}
+
+void WebdavHandler::parseSloxAttribute( const QDomElement &e )
+{
+//  kdDebug() << "parseSloxAttribute" << endl;
+
+  QString tag = e.tagName();
+  QString text = QString::fromUtf8( e.text().latin1() );
+  if ( text.isEmpty() ) return;
+
+  if ( tag == "owner" ) {
+    if ( text == mUserId ) mWritable = true;
+  } else if ( tag == "writerights" ) {
+    QDomNode n;
+    for( n = e.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+      QDomElement e2 = n.toElement();
+      if ( e2.tagName() == "member" ) {
+        if ( e2.text() == mUserId ) mWritable = true;
+      }
+      // TODO: Process group write rights
+    }
+  }
+}
+
+void WebdavHandler::clearSloxAttributeStatus()
+{
+  mWritable = false;
+}
+
+void WebdavHandler::setSloxAttributes( KCal::Incidence *i )
+{
+  i->setReadOnly( !mWritable );
+}
+
+void WebdavHandler::setSloxAttributes( KABC::Addressee & )
+{
+  // FIXME: libkabc doesn't allow to set an individual addressee to read-only
 }

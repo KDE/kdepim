@@ -51,6 +51,8 @@ namespace KPIM {
 class ProgressItem;
 }
 
+class SloxAccounts;
+
 /**
   This class provides a calendar stored as a remote file.
 */
@@ -115,6 +117,7 @@ class KCalResourceSlox : public KCal::ResourceCached
                                   KCal::Incidence *incidence );
     void parseTodoAttribute( const QDomElement &e, KCal::Todo *todo );
     void parseEventAttribute( const QDomElement &e, KCal::Event *event );
+    void parseRecurrence( const QDomNode &n, KCal::Event *event );
 
     void createIncidenceAttributes( QDomDocument &doc,
                                     QDomElement &parent,
@@ -150,6 +153,8 @@ class KCalResourceSlox : public KCal::ResourceCached
     KABC::Lock *mLock;
 
     WebdavHandler mWebdavHandler;
+
+    SloxAccounts *mAccounts;
 };
 
 #endif

@@ -32,11 +32,8 @@ class SloxAccounts : public QObject
 {
     Q_OBJECT
   public:
-    static SloxAccounts *self();
-
+    SloxAccounts( const KURL &baseUrl );
     ~SloxAccounts();
-
-    static void setServer( const QString & );
 
     void insertUser( const QString &id, const KABC::Addressee &a );
   
@@ -54,16 +51,13 @@ class SloxAccounts : public QObject
     void slotResult( KIO::Job * );
   
   private:
-    SloxAccounts();
-  
-    static SloxAccounts *mSelf;
-
-    static QString mServer;
-    static QString mDomain;
+    QString mDomain;
 
     KIO::Job *mDownloadJob;
 
     QMap<QString, KABC::Addressee> mUsers; // map users ids to addressees.
+
+    KURL mBaseUrl;
 };
 
 #endif

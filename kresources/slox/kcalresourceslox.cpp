@@ -31,6 +31,7 @@
 #include <kio/job.h>
 #include <kio/davjob.h>
 #include <klocale.h>
+#include <kstandarddirs.h>
 
 #include <libkdepim/progressmanager.h>
 
@@ -109,6 +110,8 @@ void KCalResourceSlox::init()
   mLoadEventsProgress = 0;
   mLoadTodosProgress = 0;
 
+  mAccounts = 0;
+
   setType( "slox" );
 
   mLock = new KABC::LockNull( true );
@@ -120,7 +123,16 @@ void KCalResourceSlox::readConfig( const KConfig *config )
 {
   mPrefs->readConfig();
 
+  mWebdavHandler.setUserId( mPrefs->user() );
+
   ResourceCached::readConfig( config );
+
+  KURL url = mPrefs->url();
+  url.setUser( mPrefs->user() );
+  url.setPass( mPrefs->password() );
+
+  delete mAccounts;
+  mAccounts = new SloxAccounts( url ); 
 }
 
 void KCalResourceSlox::writeConfig( KConfig *config )
@@ -141,11 +153,13 @@ bool KCalResourceSlox::doLoad()
   if ( mLoadEventsJob || mLoadTodosJob ) {
     kdWarning() << "KCalResourceSlox::load(): download still in progress."
                 << endl;
+    loadError( "Download still in progress." );
     return false;
   }
   if ( mUploadJob ) {
     kdWarning() << "KCalResourceSlox::load(): upload still in progress."
                 << endl;
+    loadError( "Upload still in progress." );
     return false;
   }
 
@@ -287,6 +301,15 @@ void KCalResourceSlox::uploadIncidences()
     return;
   }
 
+  // Don't try to upload recurring incidences as long as the resource doesn't
+  // correctly write them in order to avoid corrupting data on the server.
+  // FIXME: Remove when recurrences are correctly written.
+  if ( mUploadedIncidence->doesRecur() ) {
+    clearChange( mUploadedIncidence );
+    uploadIncidences();
+    return;
+  }
+
   KURL url = mPrefs->url();
 
   QString sloxId = mUploadedIncidence->customProperty( "SLOX", "ID" );
@@ -369,8 +392,12 @@ void KCalResourceSlox::createIncidenceAttributes( QDomDocument &doc,
     Attendee::List attendees = incidence->attendees();
     Attendee::List::ConstIterator it;
     for( it = attendees.begin(); it != attendees.end(); ++it ) {
-      QString userId = SloxAccounts::self()->lookupId( (*it)->email() );
-      WebdavHandler::addSloxElement( doc, members, "S:member", userId );
+      if ( mAccounts ) {
+        QString userId = mAccounts->lookupId( (*it)->email() );
+        WebdavHandler::addSloxElement( doc, members, "S:member", userId );
+      } else {
+        kdError() << "KCalResourceSlox: No accounts set." << endl;
+      }
     }
   }
 
@@ -391,6 +418,8 @@ void KCalResourceSlox::createEventAttributes( QDomDocument &doc,
 
   if ( event->doesFloat() ) {
     WebdavHandler::addSloxElement( doc, parent, "S:full_time", "yes" );
+  } else {
+    WebdavHandler::addSloxElement( doc, parent, "S:full_time", "no" );
   }
 }
 
@@ -440,7 +469,9 @@ void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
     QDomElement memberElement = n.toElement();
     if ( memberElement.tagName() == "member" ) {
       QString member = memberElement.text();
-      KABC::Addressee account = SloxAccounts::self()->lookupUser( member );
+      KABC::Addressee account;
+      if ( mAccounts ) account = mAccounts->lookupUser( member );
+      else kdError() << "KCalResourceSlox: no accounts set" << endl;
       QString name;
       QString email;
       Attendee *a = incidence->attendeeByUid( member );
@@ -472,7 +503,7 @@ void KCalResourceSlox::parseIncidenceAttribute( const QDomElement &e,
                                                 Incidence *incidence )
 {
   QString tag = e.tagName();
-  QString text = e.text();
+  QString text = QString::fromUtf8( e.text().latin1() );
   if ( text.isEmpty() ) return;
 
   if ( tag == "title" ) {
@@ -503,7 +534,7 @@ void KCalResourceSlox::parseEventAttribute( const QDomElement &e,
                                             Event *event )
 {
   QString tag = e.tagName();
-  QString text = e.text();
+  QString text = QString::fromUtf8( e.text().latin1() );
   if ( text.isEmpty() ) return;
 
   if ( tag == "begins" ) {
@@ -524,11 +555,102 @@ void KCalResourceSlox::parseEventAttribute( const QDomElement &e,
   }
 }
 
+void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
+{
+  QString type;
+
+  int dailyValue = -1;
+  QDateTime end;
+
+  int weeklyValue = -1;
+  QBitArray days( 7 ); // days, starting with monday
+ 
+  int monthlyValueDay = -1;
+  int monthlyValueMonth = -1;
+
+  int yearlyValueDay = -1;
+  int yearlyMonth = -1;
+  
+  int monthly2Recurrency = 0;
+  int monthly2Day = 0;
+  int monthly2ValueMonth = -1;
+  
+  int yearly2Recurrency = 0;
+  int yearly2Day = 0;
+  int yearly2Month = -1;
+
+  QDomNode n;
+  
+  for( n = node.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    QDomElement e = n.toElement();
+    QString tag = e.tagName();
+    QString text = QString::fromUtf8( e.text().latin1() );
+    
+    if ( tag == "date_sequence" ) {
+      type = text;
+    } else if ( tag == "daily_value" ) {
+      dailyValue = text.toInt();
+    } else if ( tag == "ds_ends" ) {
+      end = WebdavHandler::sloxToQDateTime( text );
+    } else if ( tag == "weekly_value" ) {
+      weeklyValue = text.toInt();
+    } else if ( tag.left( 11 ) == "weekly_day_" ) {
+      int day = tag.mid( 11, 1 ).toInt();
+      int index;
+      if ( day == 1 ) index = 0;
+      else index = day - 2;
+      days.setBit( index );
+    } else if ( tag == "monthly_value_day" ) {
+      monthlyValueDay = text.toInt();
+    } else if ( tag == "monthly_value_month" ) {
+      monthlyValueMonth = text.toInt();
+    } else if ( tag == "yearly_value_day" ) {
+      yearlyValueDay = text.toInt();
+    } else if ( tag == "yearly_month" ) {
+      yearlyMonth = text.toInt();
+    } else if ( tag == "monthly2_recurrency" ) {
+      monthly2Recurrency = text.toInt();
+    } else if ( tag == "monthly2_day" ) {
+      monthly2Day = text.toInt();
+    } else if ( tag == "monthly2_value_month" ) {
+      monthly2ValueMonth = text.toInt();
+    } else if ( tag == "yearly2_recurrency" ) {
+      yearly2Recurrency = text.toInt();
+    } else if ( tag == "yearly2_day" ) {
+      yearly2Day = text.toInt();
+    } else if ( tag == "yearly2_month" ) {
+      yearly2Month = text.toInt();
+    }
+  }
+  
+  Recurrence *r = event->recurrence();
+  
+  if ( type == "daily" ) {
+    r->setDaily( dailyValue, end.date() );
+  } else if ( type == "weekly" ) {
+    r->setWeekly( weeklyValue, days, end.date() );
+  } else if ( type == "monthly" ) {
+    r->setMonthly( Recurrence::rMonthlyDay, monthlyValueMonth, end.date() );
+    r->addMonthlyDay( monthlyValueDay );
+  } else if ( type == "yearly" ) {
+    r->setYearlyByDate( yearlyValueDay, Recurrence::rMar1, 1, end.date() );
+    r->addYearlyNum( yearlyMonth );
+  } else if ( type == "monthly2" ) {
+    r->setMonthly( Recurrence::rMonthlyPos, monthly2ValueMonth, end.date() );
+    QBitArray days( 7 );
+    days.setBit( event->dtStart().date().dayOfWeek() );
+    r->addMonthlyPos( monthly2Recurrency, days );
+  } else if ( type == "yearly2" ) {
+    r->setYearlyByDate( yearly2Day, Recurrence::rMar1, 1, end.date() );
+    r->addYearlyNum( yearly2Month );
+  }
+}
+
 void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,
                                            Todo *todo )
 {
   QString tag = e.tagName();
-  QString text = e.text();
+  QString text = QString::fromUtf8( e.text().latin1() );
   if ( text.isEmpty() ) return;
 
   if ( tag == "startdate" ) {
@@ -609,12 +731,17 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
 
         todo->setCustomProperty( "SLOX", "ID", item.sloxId );
 
+        mWebdavHandler.clearSloxAttributeStatus();
+
         QDomNode n;
         for( n = item.domNode.firstChild(); !n.isNull(); n = n.nextSibling() ) {
           QDomElement e = n.toElement();
+          mWebdavHandler.parseSloxAttribute( e );
           parseIncidenceAttribute( e, todo );
           parseTodoAttribute( e, todo );
         }
+
+        mWebdavHandler.setSloxAttributes( todo );
 
         if ( newTodo ) mCalendar.addTodo( todo );
 
@@ -680,11 +807,23 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
         QDomNode n = item.domNode.namedItem( "full_time" );
         event->setFloats( n.toElement().text() == "yes" );
 
+        bool doesRecur = false;
+
+        mWebdavHandler.clearSloxAttributeStatus();
+
         for( n = item.domNode.firstChild(); !n.isNull(); n = n.nextSibling() ) {
           QDomElement e = n.toElement();
+          mWebdavHandler.parseSloxAttribute( e );
           parseIncidenceAttribute( e, event );
           parseEventAttribute( e, event );
+          if ( e.tagName() == "date_sequence" && e.text() != "no" ) {
+            doesRecur = true;
+          }
         }
+
+        if ( doesRecur ) parseRecurrence( item.domNode, event );
+
+        mWebdavHandler.setSloxAttributes( event );
 
 //        kdDebug() << "EVENT " << item.uid << " " << event->summary() << endl;
 
@@ -695,6 +834,8 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
     }
 
     enableChangeNotification();
+
+    saveCache();
 
     clearChanges();
 
@@ -735,6 +876,21 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
           kdError() << "Unable to find propstat tag." << endl;
           continue;
         }
+        
+        QDomNode status = propstat.namedItem( "status" );
+        if ( !status.isNull() ) {
+          QDomElement statusElement = status.toElement();
+          QString response = statusElement.text();
+          if ( response != "HTTP/1.1 200 OK" ) {
+            QString error = "'" + mUploadedIncidence->summary() + "'\n";
+            error += response;
+            QDomNode dn = propstat.namedItem( "responsedescription" );
+            QString d = dn.toElement().text();
+            if ( !d.isEmpty() ) error += "\n" + d;
+            saveError( error );
+            continue;
+          }
+        }
 
         QDomNode prop = propstat.namedItem( "prop" );
         if ( prop.isNull() ) {
@@ -773,13 +929,15 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
                       << i->type() << endl;
           }
           i->setUid( uid );
-          i->setCustomProperty( "SLOX", "ID", uid );
+          i->setCustomProperty( "SLOX", "ID", sloxId );
 
           disableChangeNotification();
           mCalendar.deleteIncidence( mUploadedIncidence );
           mCalendar.addIncidence( i );
           saveCache();
           enableChangeNotification();
+
+          emit resourceChanged( this );
         }
       }
     }
@@ -887,7 +1045,7 @@ void KCalResourceSlox::doClose()
   if ( mUploadJob ) {
     kdError() << "KCalResourceSlox::doClose() Still saving" << endl;
   } else {
-    ResourceCached::doClose();
+    mCalendar.close();
   }
 }
 

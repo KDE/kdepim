@@ -75,7 +75,6 @@ class ResourceSlox : public Resource
 
   protected:
     void init();
-    void initSlox();
 
     void parseContactAttribute( const QDomElement &e, Addressee &a );
 
