@@ -29,6 +29,8 @@
 
 #include "kpgp.h"
 
+#include <kdepimmacros.h>
+
 class QString;
 class QRegExp;
 class QCString;
