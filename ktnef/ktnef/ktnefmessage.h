@@ -33,6 +33,7 @@ public:
 	KTNEFAttach* attachment( const QString& filename ) const;
 	void addAttachment( KTNEFAttach* attach );
 	void clearAttachments();
+	QString rtfString();
 
 private:
 	class MessagePrivate;

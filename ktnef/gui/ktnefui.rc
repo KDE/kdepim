@@ -29,5 +29,6 @@
   <Action name="extract_all_files" />
   <Separator name="separator_5" />
   <Action name="msg_properties" />
+  <Action name="msg_text" />
 </ToolBar>
 </kpartgui>
