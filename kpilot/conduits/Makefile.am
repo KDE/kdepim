@@ -6,6 +6,9 @@
 ### installed on user systems.
 ###
 
+if include_malconduit
+MAL_SUBDIR = malconduit
+endif
 
 SUBDIRS = expense \
 	abbrowserconduit \

@@ -113,13 +113,11 @@ NOTFOUND) AC_MSG_RESULT(searched but not found)
     MAL_INCS=
     MAL_LIBS=
     MAL_RPATH=
-    MAL_SUBDIR=
     AC_MSG_RESULT(no (but first try gave $msg))
     AC_MSG_WARN([KPILOT: MAL headers or library not found. AvantGo conduit will not be compiled.])
     AC_MSG_WARN([KPILOT: Download libmal>=0.20 from http://jasonday.home.att.net/code/libmal/])
   else
     AC_DEFINE_UNQUOTED(HAVE_LIBMAL, 1, [Define if you have MAL libraries])
-    MAL_SUBDIR="malconduit"
     AC_MSG_RESULT($msg)
   fi
   ;;
@@ -128,9 +126,8 @@ esac
 AC_SUBST(MAL_INCS)
 AC_SUBST(MAL_LIBS)
 AC_SUBST(MAL_RPATH)
-AC_SUBST(MAL_SUBDIR)
 
-dnl AM_CONDITIONAL(include_malconduit, test "$HAVE_LIBMAL" = 1)
+AM_CONDITIONAL(include_malconduit, test "$HAVE_LIBMAL" = 1)
 
 ])
 KPILOT_CHECK_MAL
