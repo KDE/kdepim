@@ -145,7 +145,9 @@ static const char *id="$Id$";
 
 PilotDaemonTray::PilotDaemonTray(PilotDaemon *p) :
 	KSystemTray(0,"pilotDaemon"), 
-	daemon(p)
+	daemon(p),
+	kap(0L),
+	fInstaller(0L)
 {
 	FUNCTIONSETUP;
 	setupWidget();
@@ -1335,6 +1337,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.39  2001/06/11 07:36:10  adridg
+// Cleanup char constant in <<
+//
 // Revision 1.38  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //
