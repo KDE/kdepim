@@ -650,11 +650,20 @@ int VCalConduitBase::resolveConflict(KCal::Incidence*e, PilotAppCategory*de) {
 	if (getConflictResolution()==SyncAction::eAskUser)
 	{
 		// TODO: This is messed up!!!
-		return KMessageBox::warningYesNo(NULL,
-			i18n("The following item was modified both on the Pilot and on your PC:\nPC entry:\n\t")+e->summary()+i18n("\nPilot entry:\n\t")+getTitle(de)+
-				i18n("\n\nShould the Pilot entry overwrite the PC entry? If you select \"No\", the PC entry will overwrite the Pilot entry."),
-			i18n("Conflicting Entries")
-		)==KMessageBox::No;
+		QString query = i18n("The following item was modified "
+			"both on the Pilot and on your PC:\nPC entry:\n\t");
+		query += e->summary();
+		query += i18n("\nPilot entry:\n\t");
+		query += getTitle(de);
+		query += i18n("\n\nShould the Pilot entry overwrite the "
+			"PC entry? If you select \"No\", the PC entry will "
+			"overwrite the Pilot entry.");
+
+		return KMessageBox::No == questionYesNo(
+			query,
+			i18n("Conflicting Entries"),
+			QString::null,
+			0 /* Never timeout */);
 	}
 	return getConflictResolution();
 }
