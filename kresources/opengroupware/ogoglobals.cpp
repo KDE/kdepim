@@ -135,7 +135,7 @@ KIO::Job *OGoGlobals::createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor, cons
 {
   QStringList urls;
   KPIM::GroupwareUploadItem::List::const_iterator it;
-  kdDebug(5800) << " OGoGlobals::createRemoveJob: , BaseURL="<<uploadurl.url()<<endl;
+  kdDebug(5800) << " OGoGlobals::createRemoveJob, BaseURL="<<uploadurl.url()<<endl;
   for ( it = deletedItems.constBegin(); it != deletedItems.constEnd(); ++it ) {
     //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
     KURL url( (*it)->url() );
