@@ -11,7 +11,7 @@ X-KDE-HasReadOnlyMode=false
 X-KDE-ParentApp=kpilot
 X-KDE-ParentComponents=kpilot,kpilotDaemon,kontact_kpilotplugin
 
-Name=KPilot configuration
+Name=KPilot Configuration
 Name[be]=Канфігурацыя KPilot
 Name[da]=KPilot indstilling
 Name[el]=Ρύθμιση KPilot
