@@ -103,6 +103,9 @@ QString KAddressBookView::selectedEmails()
 
 KABC::Addressee::List KAddressBookView::addressees()
 {
+  if ( mFilter.isEmpty() )
+    return mCore->searchManager()->contacts();
+
   KABC::Addressee::List addresseeList;
   KABC::Addressee::List contacts = mCore->searchManager()->contacts();
 

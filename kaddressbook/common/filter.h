@@ -138,9 +138,15 @@ class Filter
      */
     void setMatchRule( MatchRule rule );
 
-    /** @return The current match rule.
-    */
+    /**
+      @return The current match rule.
+     */
     MatchRule matchRule() const;
+
+    /**
+      @return true if the category list is empty.
+     */
+    bool isEmpty() const;
 
   private:
     QString mName;

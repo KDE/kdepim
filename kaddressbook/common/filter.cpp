@@ -193,3 +193,8 @@ Filter::MatchRule Filter::matchRule() const
 {
   return mMatchRule;
 }
+
+bool Filter::isEmpty() const
+{
+  return mCategoryList.isEmpty();
+}
