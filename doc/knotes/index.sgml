@@ -1,0 +1,330 @@
+<!doctype linuxdoc system>
+
+<!-- The KNotes Handbook.
+
+ -->
+
+<article>
+
+<!-- Title information -->
+
+<title>The KNotes Handbook
+<author>Bernd Johannes Wuebben, <tt/wuebben@kde.org/
+<date>Version 0.3, 1 June 1997
+<abstract>This Handbook describes KNotes Version 0.3
+
+<!-- Table of contents -->
+<toc>
+
+<!-- Begin the document -->
+
+
+<sect>Introduction
+
+<p>
+
+
+KNotes is my attempt to write a really usable and good looking 
+notes application for the KDE project.
+
+The first stage of the KNotes project has been completed. Most, if not all 
+basic functionality has been implemented. The second phase of this project will
+consist of attempting to closely integrate KNotes with the KDE desktop in
+particular 
+kwm and kpanel. Currently this integration has only been achieved in a 
+rudimentary fashion. The reason for this is that I have reached the 
+boundaries of what can currently be done with the kwm communication protocol. 
+
+This brings me to mention the second and more serious reason for implementing
+KNotes: to test and extend the kwm communications protocol. It is at present
+for example not possible for a KNotes note to remember its position AND virtual 
+desktop on exit and place itself exactly on the same position the next time
+it is maped onto the desktop. I am currently working with Matthias on this and 
+similar problems.
+
+KNotes can:
+<itemize>
+<item>accept drag and drop (even from a remote ftp site)
+<item>mail your note
+<item>print your note ( try it, it looks great )
+<item>insert the date or a calendar of the current month
+<item>associate an alarm timer to a note and notify you when the timer expires.
+<item>have arbitrary colors for background and text
+<item>have arbitrary sized note
+<item>use an arbitrary font for a note.
+<item>do auto-indentation
+<item>do two different frame styles
+</itemize>
+<p>
+
+and remembers all this on a per note basis on exit.
+<p>
+For optimal usage, place the KNotes icon on the kpanel.
+To get started, point the mouse pointer on a KNotes note and use the right mouse 
+button to bring up the KNotes pop-up menu.
+<p>
+What is your opinion, should KNotes have a simpler window title-bar?
+<p>
+
+Best Regards
+Bernd 
+wuebben@kde.org
+
+
+
+<p>
+I hope you will enjoy KNotes
+<p>
+<tt>Bernd Johannes Wuebben</tt>
+<p>
+<htmlurl url="mailto:wuebben@kde.org" name="wuebben@kde.org">
+<p>
+
+<sect>Installation
+<p>
+<sect1>How to obtain KNotes
+<p>
+KNotes is a  KDE application  <url url="http://www.kde.org">.
+KNotes can be found on <url url="ftp://ftp.kde.org/pub/kde/">, the main ftp site
+of the KDE project.
+
+<sect1>Requirements
+<p>
+In order to successfully compile KNotes, you need the latest versions of <tt> libkdecore</tt>
+and <tt> libkfm</tt>. All required libraries as well as KNotes itself can be found
+on <url url="ftp://ftp.kde.org/pub/kde/">. 
+
+You need to have sendmail up and running in order to be able
+to mail you notes. Once kmail is finished this might change.
+
+<p>
+You need a2ps for printing. If you don't have it -- get it. 
+<url url="http://www.enst.fr/~demaille/a2ps.html">
+
+<descrip>
+<tag/Tip/ a2ps together with GNU enscript are the most essential printing utilities in 
+the UNIX world. Make sure you know them well.
+
+</descrip>
+<p>
+
+<sect1>Compilation and installation
+<p>
+
+In order to compile and install KNotes on your system, type the following in the base 
+directory of the KNotes distribution:
+<tscreen><verb>
+% ./configure
+% make
+% make install
+</verb></tscreen>
+
+
+Since KNotes uses <tt>autoconf</tt> you should have not trouble compiling it.
+Should you run into problems please report them to the <sf/KDE/ mailing lists.
+
+<descrip>
+<tag/Note/
+In order to most productively use KNotes, place KNotes on the kpanel.
+</descrip>
+
+<p>
+<sect>Onscreen Fundamentals
+<p>
+
+KNotes is very simply to use. I am sure that will have no problems with KNotes. 
+
+<p>
+<sect1>Drag and Drop
+<p>
+KNotes makes use of the KDE Drag and Drop protocol. This means that you can darg
+and drop files form the Desktop or kfm or some remote ftp site that you have
+open in one of kfm's windows on to KNotes. 
+
+<sect1> Printing
+<p>
+KNotes supports printing. You can
+specify the printing command of your choice in the "Set Defaults" tab dialog. 
+There exist a number of
+printing utilities in the Unix world  which are excellent. It would
+make little sense to try re-implement their efforts. Explicitly let me
+mention to you the following two printing utilities.
+<p>
+
+<descrip>
+<tag/GNU enscript./ Markku Rossi has written a powerful reincarnation
+of Adobe's enscript ascii to postscript utility. My favorite usage is
+enscript -2rG text.txt, but GNU enscript goes far beyond that. Make
+sure you have the latest version from <url
+url="http://www.hut.fi/~mtr/genscript/">, or any GNU mirror.
+
+<tag/a2ps/ Akim Demaille and Miguel Santana have written a powerful
+ascii to Postscript conversion utility which will format your output
+depending on the document type. Whether you want to print out C++
+sources or a email message, the default styles are very nice. Get
+it from:
+<url url="http://www-inf.enst.fr/~demaille/a2ps.html">
+</descrip>
+
+<p>
+The above two utilities are an absolute must. If you don't have them,
+get them and become familiar with their usage. Learning how to use
+them is no longer a problem due to our great html/texinfo/man viewer
+<tt>kdehelp</tt>. These utilities are your friends when it comes to printing
+in the UNIX world. Due to their power and many options once you know how to use 
+them properly, you will always miss them should they ever not be available 
+to you, even under Windows95.
+<p>
+
+Make sure your system is set up for printing PostScript documents. If you
+don't have a native PostScript printer ( who does?) get yourself
+ghostscript/ghostview version 4.03 or higher  from
+<url url="http://www.cs.wisc.edu/%7Eghost/">. Note, that there are now
+commercial grade ps fonts available that come with the ghostview/ghostscript
+package. These fonts are a must for any quality printing of Postscript documents
+on a non-postscript printer. If you were dissapointed by the results you got
+from ghostscript on your printer so far - get the new fonts, this
+will give you the best possible results. 
+
+<p>
+
+<sect>The Menu Entries
+<p>
+All popup menu operations are local to the KNotes on which you pressed the
+right mouse button and apply only to that particular KNotes note. This
+KNotes note will be referred to as "current KNotes" in the following.
+The only exception is the "Set Defaults" menu entry. "Set Defaults" will let you 
+specify the global defaults which will apply to all KNotes notes.
+
+<p>
+<sect1>Insert Date
+<p>
+Insert the current Date and Time into the current KNotes not.
+
+<p>
+<sect1>Clear
+<p>
+Clears the current KNotes note.
+
+<p>
+<sect1>New KNote
+<P>
+Creates a new KNotes
+
+<p>
+<sect1>Quit
+<p>
+Quits the KNotes application. All notes, alarms, and options are saved.
+<p>
+<sect1>Delete KNote
+<P>
+Deletes the current KNotes note permanently and cancels any associated alarm.
+If you just want to close a KNotes note, use the close button on the window bar.
+<p>
+
+<sect1>Rename KNote
+<p>
+Rename the current KNotes note. You need to choose a unique new name.
+<p>
+
+<sect1>Alarm ...
+<p>
+Brings up the Alarm Timer dialog corresponding to the current KNotes note. 
+You can set or unset an alarm for the current KNotes.
+<p>
+
+<sect1>Calendar
+<p>
+Exectutes the command <tt>cal</tt> on you system and inserts the output into
+the current KNotes. This should result in a calendar of the current month in
+your current note.
+
+<p>
+<sect1>Mail Note
+<p>
+This will bring up a dialog which will allow you to mail the content of the 
+current KNotes note. You can specify the command used by KNotes to mail
+the current note, on the Defaults Tab dialog under "Set Defaults".
+
+<p>
+<sect1>Print Note
+<p>
+This will print the current note using the print command, which you can
+specify in the Defaults Tab dialog under "Set Defaults". The default
+is a2ps. I recommend you install a2ps if you don't have it on your system
+yet.
+
+<p>
+<sect1>3D Frame
+<p>
+Toggles the current note between a note with a 3D frame and one with a 
+plain frame. This options is local to the current note and will be 
+saved on exit.
+<p>
+
+<sect1>Auto Indent
+<p>
+Toggles between auto indent mode and no auto indent mode in the current KNotes
+note. In auto indent mode, the cursor will be place underneath the first non
+character on the first nonempty line above the current line.
+The mode will be saved on exit.
+<p>
+
+<sect1>Font
+<p>
+Brings up the font dialog, which lets you choose the font of the current 
+KNotes  This option is local to the current note and will be saved on exit.
+<p>
+
+<sect1>Colors
+<p>
+Allows you to change the text and background color of the current KNotes.
+This option is local to the current note and will be saved on exit.
+
+<sect1>Set Defaults
+<p>
+Allows you to set the defaults for all options. All newly created KNotes
+notes will will obsereve the defaults set here.
+All options should be self explanatory. KNotes uses "%s" place holders
+to supply the argument to the mail and print commands. 
+
+
+<p>
+<sect1> Key Bindings
+<p>
+KNotes honors the following key bindings.
+
+<itemize>
+<item><tt/Left Arrow/ Move the cursor one character leftwards 
+<item><tt/Right Arrow/ Move the cursor one character rightwards 
+<item><tt/Up Arrow/ Move the cursor one line upwards 
+<item><tt/Down Arrow/ Move the cursor one line downwards 
+<item><tt/Page Up/ Move the cursor one page upwards 
+<item><tt/Page Down/ Move the cursor one page downwards 
+<item><tt/Backspace/ Delete the character to the left of the cursor 
+<item><tt/Home/ Move the cursor to the beginning of the line 
+<item><tt/End/ Move the cursor to the end of the line 
+<item><tt/Delete/ Delete the character to the right of the cursor 
+<item><tt/Shift - Left Arrow/ Mark text one character leftwards 
+<item><tt/Shift - Right Arrow/ Mark text one character rightwards 
+<item><tt/Control-A/ Move the cursor to the beginning of the line 
+<item><tt/Control-B/ Move the cursor one character leftwards 
+<item><tt/Control-C/ Copy the marked text to the clipboard. 
+<item><tt/Control-D/ Delete the character to the right of the cursor 
+<item><tt/Control-E/ Move the cursor to the end of the line 
+<item><tt/Control-F/ Move the cursor one character rightwards 
+<item><tt/Control-H/ Delete the character to the left of the cursor 
+<item><tt/Control-K/ Delete to end of line 
+<item><tt/Control-N/ Move the cursor one line downwards 
+<item><tt/Control-P/ Move the cursor one line upwards 
+<item><tt/Control-V/ Paste the clipboard text into line edit. 
+<item><tt/Control-X/ Cut the marked text, copy to clipboard. 
+</itemize>
+
+
+<sect>Questions and answers
+
+
+
+<p>
+</article>
