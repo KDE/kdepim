@@ -1,0 +1,504 @@
+Network Working Group                                       
+Internet Draft: Sieve -- IMAP flag Extension                 A. Melnikov
+Document: draft-melnikov-sieve-imapflags-05.txt            Isode Limited
+Expires: December 2003                                         June 2003
+
+
+                      Sieve -- IMAP flag Extension
+
+
+Status of this memo
+
+   This document is an Internet-Draft and is in full conformance with
+   all provisions of Section 10 of RFC2026.  Internet-Drafts are
+   working documents of the Internet Engineering Task Force (IETF), its
+   areas, and its working groups.  Note that other groups may also
+   distribute working documents as Internet-Drafts.
+
+   Internet-Drafts are draft documents valid for a maximum of six
+   months and may be updated, replaced, or obsoleted by other documents
+   at any time.  It is inappropriate to use Internet- Drafts as
+   reference material or to cite them other than as "work in progress."
+
+   To learn the current status of any Internet-Draft, please check the
+   ``1id-abstracts.txt''  listing  contained  in  the  Internet-Drafts
+   Shadow   Directories   on   ftp.is.co.za   (Africa),  ftp.nordu.net
+   (Europe),  munnari.oz.au (Pacific Rim),  ds.internic.net  (US  East
+   Coast), or ftp.isi.edu (US West Coast).
+
+   The protocol discussed in this document is experimental and subject
+   to change.  Persons planning on either implementing or  using  this
+   protocol  are STRONGLY URGED to get in touch with the author before
+   embarking on such a project.
+
+Copyright
+
+   Copyright (C) The Internet Society 2000-2003.  All Rights Reserved.
+
+Abstract
+
+   Recent discussions have shown that it is desirable to set different
+   [IMAP] flags on message delivery.  This can be done, for example,
+   by a Sieve interpreter that works as a part of a Mail Delivery
+   Agent.
+
+   This document describes an extension to the Sieve mail filtering
+   language for setting [IMAP] flags. The extension allows to set both
+   [IMAP] system flags and [IMAP] keywords.
+
+
+0. Meta-information on this draft
+
+   This information is intended to facilitate discussion.  It will be
+   removed when this document leaves the Internet-Draft stage.
+
+   Editorial comments are marked with << and >>.
+
+
+0.1. Discussion
+
+   This draft defines an extension to the Sieve mail filtering
+   language (RFC 3028) being  discussed  on the MTA Filters
+   mailing list at <ietf-mta-filters@imc.org>.  Subscription  requests
+   can  be  sent  to <ietf-mta-filters-request@imc.org> (send an email
+   message with the word "subscribe" in the body). More information on
+   the  mailing  list  along  with  a  WWW archive of back messages is
+   available at <http://www.imc.org/ietf-mta-filters/>.
+
+
+0.2. Open issues
+
+   1. There is no way to specify which flags to set on implicit keep.
+      Is this an issue?
+
+
+0.3. Changes from the version submitted to the Sieve mailing list
+
+   1. Added addflag and removeflag actions
+
+   2. Changed the semantics of setflag (setflag is not additive any
+      more)
+
+   3. Corrected section "Interaction with Other Sieve Actions".
+      Removed incorrect reference to the forward action as to an
+      action that prohibits setflag.
+
+   4. Added paragraph about the mutual order of "fileinto"/"keep" and
+      "setflag"/"addflag"/"removeflag" actions.
+
+
+0.4. Changes from the revision 00
+
+   1. Corrected Capability Identifier section (Section 2)
+
+   2. Corrected "Interaction with Other Sieve Actions" section
+      (Section 4)
+
+   3. Examples were updated to be compatible with Sieve-07 draft
+
+   4. Added "mark" and "unmark" actions
+
+
+0.5. Changes from the revision 01
+
+   1. Some language fixes based on Tony Hansen comments
+
+   2. Clarified that the extension allows to set both IMAP System
+      Flags and Keywords
+
+
+0.6. Changes from the revision 02
+
+   1. BugFix: all backslashes must be escaped
+
+   2. Added extended example and more detailed description of
+      "addflag"/"removeflag" additivity.
+
+   3. Minor example bugfixes
+
+
+0.7. Changes from the revision 03
+
+   1. Added second way to specify flags to be set (via optional tagged
+      arguments). [Tim Showalter]
+
+   2. Rules for using Reject with imapflags relaxed. [Randall Gellens]
+ 
+   3. Removed ABNF section completely, added syntax description to
+      action definition. [Tim Showalter]
+
+   4. Cleaned up the example. [Ken Murchison]
+
+   5. Added FM (Flag Manupulation) acronym.
+
+   6. Clarified "mark"/"unmark" bahavior. [Randall Gellens]
+
+
+0.8. Changes from the revision 04
+
+   1. "Interaction with Other Sieve Actions" was simplified based on
+      comments from Tim Showalter.  Added sentence saying that
+      imapflags doesn't change an implicit keep.
+
+   2. Several editorial comments from Tim Showalter.
+
+0.9. Changes from the revision 05
+
+   1. Updated copyright, author address, section numbers and references.
+
+   2. Several editorial comments from Matthew Elvey.
+
+   3. Removed "mark" and "unmark" actions.
+
+   4. Removed "setflag" action.
+
+   5. Added "hasflag" test.
+
+
+1. Introduction
+
+   This is an extension to the Sieve language defined by [SIEVE] for
+   setting [IMAP] flags. It adds a new tagged argument to "keep" and
+   "fileinto" that describes the list of flags that have to be set
+   when the message is delivered to the specified mailbox. It also
+   adds several actions to help manipulate list of flags and a test
+   to check if a flag belongs to a list.
+
+   This extension depends on the presence of "variables" extension
+   [Variables].
+
+   Sieve interpreters that don't support integration with IMAP SHOULD
+   ignore this extension.
+
+   The capability string associated with extension defined in this
+   document is "imapflags".
+
+<<Change extension name?>>
+
+
+2. Conventions used.
+
+   Conventions for notations are as in [SIEVE] section 1.1, including
+   use of [KEYWORDS] and "Syntax:" label for the definition of action
+   and tagged arguments syntax.
+
+
+3. Actions
+
+   All actions described in this specification (addflag, removeflag)
+   operate on string variables that contain a set of [IMAP] flags.
+   On variable substitution a set of flags is represented as a string
+   containing space separated list of flag names.
+   The "addflag" action adds flags to an existing set. The "removeflag"
+   action removes flags from an existing set. The "set" action defined in
+   [Variables] can be used to replaces an existing set of flags with a
+   new set. The :flags tagged argument is used to associate a set of flags
+   referenced by a variable with the current message.
+
+<<Keep setflags as list to string converter operation?>>
+
+3.1. Addflag action
+
+   Syntax:   addflag <variablename: string> <list-of-flags: string-list>
+
+   Addflag is used to add flags to a list of [IMAP] flags. It doesn't
+   replace any previously set flags. This means that multiple occurrences
+   of addflag are treated additively. The order of the flags MAY NOT
+   be preserved and duplicates are allowed.
+
+   Addflag SHOULD check the list of flags for validity as described by
+   [IMAP] ABNF. In particular non-ASCII characters are not allowed in
+   flag names. However spaces MUST be always allowed and multiple spaces
+   between flag names MUST be treated as a single space character. The
+   last requirement is to simplify amalgamation of multiple flag lists.
+
+   For example, the following two actions
+
+      addflag "flagvar" "\\Deleted";
+      addflag "flagvar" "\\Answered";
+
+   produce the same result as the single action
+
+      addflag "flagvar" ["\\Deleted", "\\Answered"];
+
+   or
+
+      addflag "flagvar" "\\Deleted \\Answered";
+
+   or
+
+      addflag "flagvar" "\\Answered   \\Deleted";
+
+
+3.2. Removeflag Action
+
+   Syntax:   removeflag <variablename: string> <list-of-flags: string-list>
+
+   Removeflag is used to remove flags from a list of [IMAP] flags.
+   Removeflag clears flags previously set by "set"/"addflag". Calling
+   removeflag with a flag that wasn't set before is not an error and
+   is ignored. Multiple occurrences of removeflag are treated additively.
+
+   Removeflag SHOULD check the list of flags for validity as described by
+   [IMAP] ABNF. In particular non-ASCII characters are not allowed in
+   flag names. However spaces MUST be always allowed and multiple spaces
+   between flag names MUST be treated as a single space character.
+
+      Example:
+        if header :contains "Disposition-Notification-To" "mel@example.com" {
+            addflag "flagvar" "$MDNRequired";
+        }
+        if header :contains "from" "imap@cac.washington.edu" {
+            removeflag "flagvar" "$MDNRequired";
+            fileinto :globalflags "INBOX.imap-list";
+        }
+
+
+4.  Test hasflag
+
+   Syntax: hasflag [MATCH-TYPE]
+           <variable-list: string-list> <flag-list: string-list>
+
+   The "hasflag" test evaluates to true if any of the variables matches any
+   flag name.  The type of match defaults to ":is".
+
+   Flagname comparisons is always done with the "i;ascii-casemap" operator,
+   i.e., case-insensitive comparisons, as defined in [IMAP].
+
+   Note, that if an implementation automatically performs flags reordering
+   and/or duplicate elimination, it MUST perform it on both variable-list
+   values and flag-list values. This is required so that, when the variable
+   "flags" has the value "A B", the following test
+
+    hasflag :is "flags" "b A"
+
+   evaluates to true as expected.
+
+
+5. Tagged argument - :flags
+
+   This specification adds a new optional tagged argument ":flags" that
+   alter the behavior of actions "keep" and "fileinto".
+
+   The :flags tagged argument specifies that the flags provided in the
+   subsequent argument should be set when fileinto/keep deliver the message
+   to the target mailbox/user's main mailbox. If the :flags tagged argument
+   is not specified, "keep" or "fileinto" will not set any flag when they
+   deliver the message to the mailbox.
+
+   Syntax:   ":flags" <list-of-flags: string-list>
+
+   The copy of the message filed into mailbox will have only flags
+   listed after ":flags".
+
+   The Sieve interpreter MUST check that all flag names are valid [IMAP] flag
+   names and MUST signal a script execution error if they are not. The Sieve
+   interpreter MUST ignore all flags that it can't store
+   permanently. This means that the interpreter must not treat failure
+   to store any flag as a runtime failure to execute the Sieve
+   script. For example, if the mailbox "INBOX.From Boss" can't store any
+   flags, then
+
+     fileinto :flags "\\Deleted" "INBOX.From Boss";
+
+   and
+
+     fileinto "INBOX.From Boss";
+
+   are equivalent.
+
+   This document doesn't dictate how the Sieve interpreter will set
+   the [IMAP] flags. In particular, the Sieve interpreter may work as
+   an IMAP client, or may have direct access to the mailstore.
+
+<<If we propose using a string list, we have to tell that "" are ignored.
+Also, deprecate spaces in flag names? However, if we change the
+parameter to be a space separated string of flags, we don't have
+these issues.>>
+
+
+6. Implementation Notes
+
+   "Addflag <variable> <flaglist>" can be implemented as several actions
+   "set <variable> "${variable} <flag>", where <flag> is a flag in flaglist.
+
+   A script interpreter MAY reorder flags and remove duplicates from the list.
+   A SIEVE script write MUST NOT assume that the order or duplicates will be
+   preserved.
+
+<<Describe how removeflag and hasflag can be implemented using [Variables]>>
+
+
+7. Interaction with Other Sieve Actions
+
+   This extension work only on the message that is currently being
+   processed by Sieve, it doesn't affect another message generated
+   as a side affect of any action.
+
+   The extension decribed in this document doesn't change an implicit
+   keep (see section 2.10.2 of [SIEVE]).
+
+
+8. Other Considerations
+
+   This extension intentionally doesn't allow setting [IMAP] flags on
+   an arbitrary message in the [IMAP] message store.
+
+
+9. Security Considerations
+
+   Security considerations are discussed in the [IMAP] and [SIEVE].
+   It is belived that this extension doesn't introduce any additional
+   security concerns.
+
+
+10. Extended example
+
+   #
+   # Example Sieve Filter
+   # Declare any optional features or extension used by the script
+   #
+   require ["fileinto", "imapflags", "variables"];
+
+   #
+   # Move large messages to special mailbox
+   #
+   if size :over 1M
+           {
+           add "flags" "Big";
+           if header :is "From" "boss@company.com"
+                      {
+   # The message will be marked as "\Flagged Big" when filed into 
+   # mailbox "Big messages"
+                      add "flags" "\\Flagged";
+                      }
+           fileinto :flags "${flags}" "Big messages";
+           }
+
+   if header :is "From" "grandma@example.net"
+           {
+           add "flags" ["\\Answered", "$MDNSent"];
+   # If the message is bigger than 1Mb it will be marked as 
+   # "Big \Answered $MDNSent" when filed into mailbox "grandma". 
+   # If the message is shorter than 1Mb it will be marked as
+   # "\Answered $MDNSent"
+           fileinto :flags "${flags}" "GrandMa";  # move to "GrandMa" folder
+           }
+
+   #
+   # Handle messages from known mailing lists
+   # Move messages from IETF filter discussion list to filter folder
+   #
+   if header :is "Sender" "owner-ietf-mta-filters@imc.org"
+           {
+           set "flags" "\\Flagged $Work";
+   # Message will have both "\Flagged" and $Work flags
+           keep :flags "${flags}";
+           }
+
+   #
+   # Keep all messages to or from people in my company
+   #
+   elsif anyof address :domain :is ["From", "To"] "company.com"
+           {
+           keep :flags "${flags}";               # keep in "Inbox" folder
+           }
+   #
+   # Try and catch unsolicited email.  If a message is not to me,
+   # or it contains a subject known to be spam, file it away.
+   #
+   elsif anyof (not address :all :contains
+                  ["To", "Cc"] "me@company.com",
+                header :matches "subject"
+                  ["*make*money*fast*", "*university*dipl*mas*"])
+           {
+           remove "flags" "\\Flagged";
+           # If message header does not contain my address,
+           # it's from a list.
+           fileinto :flags "${flags}" "spam";   # move to "spam" folder
+           }
+   else
+           {
+           # Move all other (non-company) mail to "personal"
+           # folder.
+           fileinto :flags "${flags}" "personal";
+           }
+
+
+11.  Acknowledgments
+
+    This document has been revised in part based on comments and
+    discussions which took place on and off the Sieve mailing list.
+ 
+    The help of those who took the time to review the draft and make
+    suggestions is appreciated, especially that of Tim Showalter,
+    Barry Leiba, Randall Gellens, Ken Murchison, Cyrus Daboo,
+    Matthew Elvey, Jutta Degener, Ned Freed, Marc Mutz and
+    Kjetil Torgrim Homme.
+
+    Special thanks to Tony Hansen, David Lamb and
+    Roman Migal for helping me explain better the concept.
+
+
+12. Author's Address
+
+    Alexey Melnikov
+    Isode
+    28 Gloucester Road,
+    Teddington, Middlesex
+    United Kingdom, TW11 0NU
+
+    Email: mel@isode.com
+
+
+13.  Normative References
+
+    [SIEVE] Showalter, T.,  "Sieve: A Mail Filtering Language", Mirapoint,
+    RFC 3028, January 2001.
+
+    [ABNF] Crocker, D.,  "Augmented BNF for Syntax Specifications: ABNF",
+    Internet Mail Consortium, RFC 2234, November, 1997.
+
+    [KEYWORDS] Bradner, S., "Key  words  for  use  in  RFCs  to  Indicate
+    Requirement Levels", Harvard University, RFC 2119, March 1997.
+
+    [IMAP] Crispin, M., "INTERNET MESSAGE ACCESS PROTOCOL - VERSION 4rev1",
+    University of Washington, RFC 3501, March 2003.
+
+    [Variables] Homme, K. T., "Sieve -- Variables Extension", University of
+    Oslo, work in progress, draft-homme-sieve-variables-XX.txt
+
+
+14.  Full Copyright Statement
+
+    Copyright (C) The Internet Society 2000-2003. All Rights Reserved.
+
+    This document and translations of it may be copied and furnished to
+    others, and derivative works that comment on or otherwise explain it
+    or assist in its implementation may be prepared, copied, published
+    and distributed, in whole or in part, without restriction of any
+    kind, provided that the above copyright notice and this paragraph
+    are included on all such copies and derivative works.  However, this
+    document itself may not be modified in any way, such as by removing
+    the copyright notice or references to the Internet Society or other
+    Internet organizations, except as needed for the purpose of
+    developing Internet standards in which case the procedures for
+    copyrights defined in the Internet Standards process must be
+    followed, or as required to translate it into languages other than
+    English.
+
+    The limited permissions granted above are perpetual and will not be
+    revoked by the Internet Society or its successors or assigns.
+
+    This document and the information contained herein is provided on an
+    "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+    TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
+    BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
+    HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF
+    MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+Acknowledgement
+
+   Funding for the RFC Editor function is currently provided by the
+   Internet Society.
+
