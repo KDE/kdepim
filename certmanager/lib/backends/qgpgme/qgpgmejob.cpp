@@ -69,7 +69,11 @@ Kleo::QGpgMEJob::QGpgMEJob( Kleo::Job * _this, GpgME::Context * context )
   QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(aboutToDestroy()),
 		    _this, SLOT(slotCancel()) );
   context->setProgressProvider( this );
-  context->setPassphraseProvider( this );
+  // (mmutz) work around a gpgme bug in versions at least <= 0.9.0.
+  //         These versions will return GPG_ERR_NOT_IMPLEMENTED from
+  //         a CMS sign operation when a passphrase callback is set.
+  if ( context->protocol() == GpgME::Context::OpenPGP )
+    context->setPassphraseProvider( this );
 }
 
 Kleo::QGpgMEJob::~QGpgMEJob() {
