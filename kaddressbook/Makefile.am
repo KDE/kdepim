@@ -84,7 +84,7 @@ servicetype_DATA = kaddressbook_view.desktop dcopaddressbook.desktop
 KDE_ICON = kaddressbook
 
 messages: rc.cpp
-	$(EXTRACTRC) */*.ui >> rc.cpp
+	$(EXTRACTRC) */*.ui */*.kcfg >> rc.cpp
 	$(XGETTEXT) *.h *.cpp common/*.cpp editors/*.cpp features/*.cpp printing/*.cpp views/*.cpp xxport/*.cpp interfaces/*.h -o $(podir)/kaddressbook.pot
 
 srcdoc:
