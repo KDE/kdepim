@@ -15,9 +15,15 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include <qstring.h>
 #include <qclipboard.h>
 #include <qpopupmenu.h>
+#include <qfileinfo.h>
+#include <qdir.h>
 
 #include <kcursor.h>
 #include <khtml_part.h>
@@ -28,6 +34,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kstdaction.h>
+#include <kprocess.h>
 
 #include "knfetcharticlemanager.h"
 #include "resource.h"
@@ -457,30 +464,17 @@ void KNArticleWidget::openURL(const QString &url)
   if(browser==BTkonqueror)
 	  kapp->invokeBrowser(url);
 	else {
-    // patch by Ian Nendesl - BEGIN
-		FILE *fp;
-		char lockfile[5];
-		int netscape;
-		QCString cmdline;
-		fp=popen("ls ~/.netscape/lock | sed -e 's,.*cape/,,'", "r");
- 		fgets( lockfile, sizeof lockfile, fp);
- 		pclose(fp);
-    netscape=strcmp(lockfile, "lock");
-    if(netscape==0) {
-      cmdline = "netscape -remote 'openURL(";
-      cmdline += url.latin1();
-      cmdline += ")'&";
-    }
- 		else {
- 			cmdline = "netscape ";
-      cmdline += url.latin1();
-      cmdline +="&";
-    }
+  	KProcess proc;
+    proc << "netscape";
+	
+    struct stat info;      // QFileInfo is unable to handle netscape's broken symlink
+	  if (lstat((QDir::homeDirPath()+"/.netscape/lock").local8Bit(),&info)==0)
+	    proc << "-remote" << QString("openURL(%1)").arg(url);
+	  else
+	    proc << url;	
 
-    system(cmdline.data());
- 		// Patch by Ian Nendesl - END
+	  proc.start(KProcess::DontCare);
  	}
-
 }
 
 
@@ -500,7 +494,7 @@ void KNArticleWidget::openAttachement(const QString &id)
 {
  int pos = id.findRev('.');
  if(pos!=-1)
-  KNArticleManager::openContent(att->at(id.mid(++pos, id.length()-pos).toInt()));
+   KNArticleManager::openContent(att->at(id.mid(++pos, id.length()-pos).toInt()));
  else KMessageBox::error(0, i18n("Internal error: Malformed identifier !!"));
 }
 

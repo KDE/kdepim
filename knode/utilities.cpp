@@ -130,7 +130,7 @@ QString decryptStr(const QString& aStr)
 
 void displayInternalFileError()
 {
-	KMessageBox::error(0, i18n("Unable to load/save configuration!\nWrong permissions on home directory?\n!\nYou should close this application now,\nto avoid data loss!"));
+	KMessageBox::error(0, i18n("Unable to load/save configuration!\nWrong permissions on home directory?\nYou should close KNode now, to avoid data loss!"));
 }
 
 

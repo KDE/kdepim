@@ -15,19 +15,16 @@
  *                                                                         *
  ***************************************************************************/
 
-
-#include "knarticle.h"
 #include "mimelib/datetime.h"
-#include "knhdrviewitem.h"
-#include <stdio.h>
 #include <qdatetime.h>
 
+#include "knhdrviewitem.h"
+#include "knarticle.h"
+
+
 KNArticle::KNArticle()
+  : t_imeString(0), i_d(-1), t_imeT(0), i_tem(0)
 {
-	i_d=-1;
-	t_imeT=0;
-	i_tem=0;
-	t_imeString=0;
 }
 
 
@@ -35,7 +32,7 @@ KNArticle::KNArticle()
 KNArticle::~KNArticle()
 {
 	delete i_tem;
-	delete[] t_imeString;
+	delete t_imeString;
 }
 
 
@@ -159,17 +156,15 @@ void KNArticle::setTimeT(time_t t)
 
 
 
-const char* KNArticle::timeString()
+const QString& KNArticle::timeString()
 {
 	if(!t_imeString) {
-		t_imeString=new char[18];
 		DwDateTime dt;
 	  dt.FromUnixTime(t_imeT);
-		sprintf(t_imeString,"%.2d.%.2d.%.2d (%.2d:%.2d)",dt.Day(),dt.Month(),(dt.Year()%100),
- 				dt.Hour(),dt.Minute());
-	}
-	
-	return t_imeString;
+		t_imeString = new QString;
+		t_imeString->sprintf("%.2d.%.2d.%.2d (%.2d:%.2d)",dt.Day(),dt.Month(),(dt.Year()%100),dt.Hour(),dt.Minute());
+	}	
+	return *t_imeString;
 }
 
 

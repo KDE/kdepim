@@ -97,18 +97,16 @@ KNReadAppSettings::~KNReadAppSettings()
 
 void KNReadAppSettings::init()
 {
-	char col[10];
 	KConfig *c=KGlobal::config();
 	QColor w(white), b(black), g(gray);
 	QColor *dflt;	
 	
 	c->setGroup("FONTS-COLORS");
 	for(int i=0; i<7; i++) {
-		sprintf(col,"color%d", i+1);
-		if(i==2) dflt=&w;
-		else if(i==3) dflt=&g;
+		if (i==2) dflt=&w;
+		else if (i==3) dflt=&g;
 		else dflt=&b;
-		colors[i]=c->readColorEntry(col, dflt);
+		colors[i]=c->readColorEntry(QString("color%1").arg(i+1), dflt);
 	}
 	
 	QString s=c->readEntry("family","helvetica");
@@ -126,13 +124,11 @@ void KNReadAppSettings::init()
 void KNReadAppSettings::apply()
 {
 	KConfig *c=KGlobal::config();
-	char col[10];
 	
 	c->setGroup("FONTS-COLORS");
-	for(int i=0; i<7; i++) {
-		sprintf(col,"color%d", i+1);
-		c->writeEntry(col, colors[i]);
-	}
+	for(int i=0; i<7; i++)
+		c->writeEntry(QString("color%1").arg(i+1), colors[i]);
+	
 	c->writeEntry("family", fntFam->currentText());
 	c->writeEntry("size", fntSize->currentText().toInt());
 }

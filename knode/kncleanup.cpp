@@ -19,6 +19,7 @@
 
 #include <qdatetime.h>
 #include <qtextstream.h>
+#include <qdir.h>
 
 #include <kmessagebox.h>
 #include <kglobal.h>
@@ -134,28 +135,26 @@ void KNCleanUp::group(KNGroup *g, bool withGUI)
 void KNCleanUp::folder(KNFolder *f)
 {
   KNSavedArticle *art;
-	QTextStream ts;
   if(!f->loadHdrs()) return;
 		
-	QString dir(f->path());
-	if (dir == QString::null)
+	QDir dir(f->path());
+	if (!dir.exists())
 		return;	
 	
-  QString oldName(dir+QString("folder%1.mbox").arg(f->id()));
-  KNFile oldFile(oldName);
-	QString newName(dir+QString("folder%1.mbox.new").arg(f->id()));
-	KNFile newFile(newName);	
+  QString oldName(QString("folder%1.mbox").arg(f->id()));
+  KNFile oldFile(f->path()+oldName);
+	QString newName(QString("folder%1.mbox.new").arg(f->id()));
+	KNFile newFile(f->path()+newName);	
 
   if( (oldFile.open(IO_ReadOnly)) && (newFile.open(IO_WriteOnly)) ) {
+    QTextStream ts(&newFile);
   	for(int idx=0; idx<f->length(); idx++) {
   		art=f->at(idx);
   		if(oldFile.at(art->startOffset())) {
-  			ts.setDevice(&newFile);
   			ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
   			art->setStartOffset(newFile.at());
   			while(oldFile.at() < art->endOffset())
-  			  ts << oldFile.readLineWnewLine();
-  			
+  			  ts << oldFile.readLineWnewLine();			
   			art->setEndOffset(newFile.at());
   			newFile.putch('\n');
   		}
@@ -164,11 +163,9 @@ void KNCleanUp::folder(KNFolder *f)
  		oldFile.close();
  		f->syncDynamicData(true);
  		f->saveInfo();
-  		
- 		QString cmd("rm -f "+oldName);
- 		system(cmd.local8Bit().data());
- 		cmd="mv "+newName+" "+oldName;
- 		system(cmd.local8Bit().data());
+  	
+ 		dir.remove(oldName);	
+ 		dir.rename(newName,oldName);
   }
 }
 

@@ -236,23 +236,32 @@ void KNAccountManager::removeAccount(KNNntpAccount *a)
 		    return;
 		  }
 		}
-		
 		for(KNGroup *g=lst->first(); g; g=lst->next())
 		  gManager->unsubscribeGroup(g);
-		
 		delete lst;
-		set->removeItem(a);
-		QString dir(a->path());
-		if (dir != QString::null) {
-			QString cmd = "rm -rf "+a->path();
-			system(cmd.local8Bit().data());
-		}
-		accList->removeRef(a);
 		
-		if(c_urrentAccount==a) setCurrentAccount(0);
+		if (set) set->removeItem(a);    // remove entry in the settings dialog
+		
+  	QDir dir(a->path());
+  	if (dir.exists()) {
+      const QFileInfoList *list = dir.entryInfoList();  // get list of matching files and delete all
+      if (list) {
+        QFileInfoListIterator it( *list );
+        while (it.current()) {
+          dir.remove(it.current()->fileName());
+          ++it;
+        }
+      }
+      dir.cdUp();                                       // directory should now be empty, deleting it
+      dir.rmdir(QString("nntp.%1/").arg(a->id()));
+    }
+		
+  	if(c_urrentAccount==a) setCurrentAccount(0);
+		
+		accList->removeRef(a);		
 	}			
 }
-
+	
 
 
 void KNAccountManager::endConfig()

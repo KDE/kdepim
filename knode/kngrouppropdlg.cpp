@@ -84,8 +84,6 @@ void KNGroupPropDlg::apply()
 KNGroupPropDlg::statistics::statistics(QWidget *parent, const char *name, int *values)
 	: QWidget(parent, name)
 {
-	char tmp[12];
-	
 	gb1=new QGroupBox(i18n("articles"), this);
 	
 	QLabel *l1=new QLabel(i18n("total :"), gb1);
@@ -94,24 +92,19 @@ KNGroupPropDlg::statistics::statistics(QWidget *parent, const char *name, int *v
 	QLabel *l4=new QLabel(i18n("threads with unread :"), gb1);
 	QLabel *l5=new QLabel(i18n("threads with new :"), gb1);
 		
-	sprintf(tmp, "%d", values[0]);
-	t_otal=new QLabel(tmp, gb1);
+	t_otal=new QLabel(QString::number(values[0]), gb1);
 	t_otal->setMinimumSize(t_otal->sizeHint());	
 	
-	sprintf(tmp, "%d", values[1]);
-	u_nread=new QLabel(tmp, gb1);
+	u_nread=new QLabel(QString::number(values[1]), gb1);
 	u_nread->setMinimumSize(u_nread->sizeHint());
 
-	sprintf(tmp, "%d", values[2]);
-	n_ew=new QLabel(tmp, gb1);
+	n_ew=new QLabel(QString::number(values[2]), gb1);
   n_ew->setMinimumSize(n_ew->sizeHint());	
 		
-	sprintf(tmp, "%d", values[3]);
-	u_nrThr=new QLabel(tmp, gb1);
+	u_nrThr=new QLabel(QString::number(values[3]), gb1);
 	u_nrThr->setMinimumSize(u_nrThr->sizeHint());
 		
-	sprintf(tmp, "%d", values[4]);
-	n_ewThr=new QLabel(tmp, gb1);
+	n_ewThr=new QLabel(QString::number(values[4]), gb1);
 	n_ewThr->setMinimumSize(n_ewThr->sizeHint());
 			
 	QGridLayout *topL=new QGridLayout(gb1, 5,2, 20,10);

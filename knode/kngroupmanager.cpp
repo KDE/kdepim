@@ -238,10 +238,7 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a)
 	if(dir==QString::null)
 		return;
 		
-	//check if grouplist file exists
-	QString fName(dir+"groups");
-		
-	if(!QFile(fName).exists()) {
+	if(!QFileInfo(dir+"groups").exists()) {
 		if (KMessageBox::Yes==KMessageBox::questionYesNo(0,i18n("You don´t have any groups for this account.\n Fetch now?")))
 	 	 	slotDialogNewList(a);
 	 	else return;
@@ -300,18 +297,24 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
 	}
 	
 	acc=g->account();
-	QString dir(acc->path());
-	if (dir == QString::null)
-		return;
-	QString cmd(QString("rm -f %1%2.*").arg(dir).arg(g->name()));	
-	if(gList->removeRef(g)) {
-		system(cmd.local8Bit().data());
+	
+	QDir dir(acc->path(),g->name()+"*");
+	if (dir.exists()) {
+    const QFileInfoList *list = dir.entryInfoList();  // get list of matching files and delete all
+    if (list) {
+      QFileInfoListIterator it( *list );
+      while (it.current()) {
+        dir.remove(it.current()->fileName());
+        ++it;
+      }
+    }
 		qDebug("Files deleted!\n");
-
+		
 		if(c_urrentGroup==g) setCurrentGroup(0);
+		
+		gList->removeRef(g);
 	}
 }
-
 
 
 

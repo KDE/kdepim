@@ -49,7 +49,7 @@ class KNArticle : public KNMimeContent  {
 		virtual const QCString& fromEmail();
 		const QCString& replyToEmail();
 		ReferenceLine& references()             { return r_eferences; }
-		const char* timeString();
+		const QString& timeString();
 		bool hasSubject()												{ return (!s_ubject.isEmpty()); }
 		virtual bool isNew()										{ return false; }	
 		KNHdrViewItem* listItem()								{ return i_tem; }
@@ -63,7 +63,7 @@ class KNArticle : public KNMimeContent  {
 	protected:
 		QCString s_ubject;
 		ReferenceLine r_eferences;
-		char* t_imeString;
+		QString* t_imeString;
 		
 		int i_d;
 		time_t t_imeT;

@@ -15,8 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <stdio.h>
-
 #include "knhdrviewitem.h"
 #include "knfetcharticle.h"
 
@@ -139,9 +137,7 @@ void KNFetchArticle::updateListItem()
 	if(s_core==100) i_tem->setPixmap(2, KNLVItemBase::icon(KNLVItemBase::PTeyes));
 	else i_tem->setPixmap(2, KNLVItemBase::icon(KNLVItemBase::PTnull));
 	
-	char tmp[5];
-	sprintf(tmp,"%3d", s_core);
-	i_tem->setText(2, tmp);
+	i_tem->setText(2, QString("%1").arg(s_core,3));
 }
 
 

@@ -225,10 +225,11 @@ const QCString& KNFile::readLine()
   filePos=at();
   readBytes=QFile::readLine(dataPtr, buffer.size()-1);
   if(readBytes!=-1) {
-   while(dataPtr[readBytes-1]!='\n') {
+    while ((dataPtr[readBytes-1]!='\n')&&(readBytes==buffer.size()-2)) {  // don't get tricked by files without newline
+      qDebug("resize, %i %i",buffer.size(),readBytes);
       at(filePos);
-      if(!increaseBuffer() ||
-        (readBytes=QFile::readLine(dataPtr, buffer.size()-1))==-1) {
+      if (!increaseBuffer() ||
+         (readBytes=QFile::readLine(dataPtr, buffer.size()-1))==-1) {
         readBytes=1;
         break;
       }
@@ -241,16 +242,15 @@ const QCString& KNFile::readLine()
 }
 
 
-
 const QCString& KNFile::readLineWnewLine()
 {
   filePos=at();
   readBytes=QFile::readLine(dataPtr, buffer.size()-1);
   if(readBytes!=-1) {
-    while(dataPtr[readBytes-1]!='\n') {
+    while ((dataPtr[readBytes-1]!='\n')&&(readBytes==buffer.size()-2)) {  // don't get tricked by files without newline
       at(filePos);
-      if(!increaseBuffer() ||
-        (readBytes=QFile::readLine(dataPtr, buffer.size()-1))==-1) {
+      if (!increaseBuffer() ||
+         (readBytes=QFile::readLine(dataPtr, buffer.size()-1))==-1) {
         dataPtr[0] = '\0';
         break;
       }

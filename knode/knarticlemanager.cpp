@@ -21,6 +21,8 @@
 #include <krun.h>
 #include <kio/netaccess.h>
 #include <ktempfile.h>
+#include <kuserprofile.h>
+#include <kopenwith.h>
 
 #include "knarticlewidget.h"
 #include "knarticle.h"
@@ -178,11 +180,17 @@ QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
 void KNArticleManager::openContent(KNMimeContent *c)
 {
   QString path=saveContentToTemp(c);
-  KURL url;
-  KRun *run;
   if(path.isNull()) return;
-  url.setPath(KURL::encode_string(path));
-  run=new KRun(url, 0, true, true); //auto-deletion enabled
+
+  KService::Ptr offer = KServiceTypeProfile::preferredService(c->ctMimeType(), true);
+  KURL::List  lst(path);
+
+  if (offer)
+    KRun::run(*offer, lst);
+  else {
+    KFileOpenWithHandler *openhandler = new KFileOpenWithHandler();
+    openhandler->displayOpenWithDialog(lst);
+  }
 }
 
 

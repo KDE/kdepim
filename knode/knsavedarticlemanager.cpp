@@ -649,7 +649,7 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
 	else art->removeHeader("Organization");
 	
 	//Lines
-	tmp.sprintf("%d", c->lines());
+	tmp.setNum(c->lines());
 	art->setHeader(KNArticleBase::HTlines, tmp);
 		
 	//Fup2
@@ -846,7 +846,7 @@ bool KNSavedArticleManager::cancelAllowed(KNSavedArticle *a)
 		return false;
   }		
 	if(a->headerLine("Message-ID").isEmpty()) {
-		KMessageBox::information(0, i18n("This article cannot be canceled or superseded,\nbecause it's message-id has not been created by KNode!\nBut you can look for your article\nin the newsgroup and cancel (or supersede) it there."));
+		KMessageBox::information(0, i18n("This article cannot be canceled or superseded,\nbecause it's message-id has not been created by KNode!\nBut you can look for your article in the newsgroup\nand cancel (or supersede) it there."));
 		return false;
 	}
 	return true;
