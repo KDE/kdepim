@@ -93,6 +93,7 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
 
    KABC::Addressee *a = new KABC::Addressee();
    KABC::Address *addr = new KABC::Address();
+   addr->setType(KABC::Address::Home);
    while ( !t.eof() ) {
 	s = t.readLine();
 	completeline = s;
@@ -120,6 +121,7 @@ writeData:
 		delete addr;
 		a = new KABC::Addressee();
 		addr = new KABC::Address();
+ 		addr->setType(KABC::Address::Home);
 
 		isGroup = false;
 		lastWasComment = false;
