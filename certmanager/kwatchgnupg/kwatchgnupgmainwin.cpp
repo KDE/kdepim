@@ -45,6 +45,7 @@
 #include <kstdaction.h>
 #include <kprocio.h>
 #include <kconfig.h>
+#include <kfiledialog.h>
 
 #include <qtextedit.h>
 #include <qdir.h>
@@ -94,6 +95,7 @@ void KWatchGnuPGMainWindow::createActions()
 					 CTRL+Key_L,
 					 this, SLOT( slotClear() ), 
 					 actionCollection(), "clear_log" );
+  (void)KStdAction::saveAs( this, SLOT(slotSaveAs()), actionCollection() );
   (void)KStdAction::close( this, SLOT(close()), actionCollection() );
   (void)KStdAction::quit( this, SLOT(slotQuit()), actionCollection() );  
   (void)new KAction( i18n("Configure KWatchGnuPG..."), QString::fromLatin1("configure"),
@@ -193,6 +195,28 @@ void KWatchGnuPGMainWindow::show()
 {
   mSysTray->setAttention(false);
   KMainWindow::show();
+}
+
+void KWatchGnuPGMainWindow::slotSaveAs()
+{
+  QString filename = KFileDialog::getSaveFileName( QString::null, QString::null, 
+												   this, i18n("Save log to file") );
+  if( filename.isEmpty() ) return;
+  QFile file(filename);
+  if( file.exists() ) {
+	if( KMessageBox::Yes != 
+		KMessageBox::warningYesNo( this, i18n("The file named \"%1\" already "
+											  "exists. Are you sure you want "
+											  "to overwrite it?").arg(filename), 
+								   i18n("Overwrite File") ) ) {
+	  return;
+	}
+  }
+  if( file.open( IO_WriteOnly ) ) {
+	QTextStream st(&file);
+	st << mCentralWidget->text();
+	file.close();
+  }
 }
 
 void KWatchGnuPGMainWindow::slotQuit()

@@ -3,6 +3,7 @@
 	<Menu name="file" >
 		<text>&amp;File</text>
 		<Action name="clear_log"/>
+		<Action name="saveas"/>
 		<Action name="print"/>
 		<Separator/>
 		<Action name="close"/>
