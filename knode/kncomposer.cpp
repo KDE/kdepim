@@ -257,12 +257,11 @@ void KNComposer::setConfig()
 
   QFont fnt=knGlobals.cfgManager->appearance()->composerFont();
   KGlobal::charsets()->setQFont(fnt, c_harset);
-  v_iew->e_dit->setFont(fnt);
-
-  fnt=font();
-  KGlobal::charsets()->setQFont(fnt, c_harset);
   v_iew->s_ubject->setFont(fnt);
   v_iew->t_o->setFont(fnt);
+  v_iew->g_roups->setFont(fnt);
+  v_iew->f_up2->setFont(fnt);
+  v_iew->e_dit->setFont(fnt);
 
   slotUpdateStatusBar();
 }

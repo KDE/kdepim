@@ -2,6 +2,7 @@ changes between 0.3.3 and 0.4
 - full support for non iso-8859-x charsets
 - Followup and reply at same time now possible
 - selection of multiple articles/groups in the listview
+- the moderation status of newsgroups is detected and displayed
 - rot13 decoding
 - improved keyboard handling in the configuration dialog
 - the interpretation of text format tags can now be disabled
