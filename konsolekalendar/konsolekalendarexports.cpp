@@ -32,7 +32,6 @@
 #include <libkcal/calendarlocal.h>
 #include <libkcal/calendar.h>
 #include <libkcal/event.h>
-#include <libkcal/htmlexport.h>
 
 
 #include "konsolekalendarexports.h"

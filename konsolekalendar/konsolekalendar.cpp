@@ -198,35 +198,44 @@ bool KonsoleKalendar::showInstance()
 	  lastdate = m_variables->getEndDateTime().date();
 	}
 
-	KCal::HtmlExport Export( m_variables->getCalendarResources() );
+        KCal::HtmlExport *Export;
+        if ( !m_variables->isCalendarResources() ) {
+          Export = new HtmlExport( m_variables->getCalendar() );
+        } else {
+          Export = new HtmlExport( m_variables->getCalendarResources() );
+        }
 
-	Export.setTitle( title );
-	Export.setEmail( "" );
-	Export.setFullName( "" );
-	Export.setCredit( "KonsoleKalendar", "http://pim.kde.org/components/konsolekalendar.php" );
+	title = "Appointments for " + firstdate.toString(Qt::TextDate);
+	if( firstdate != lastdate ) {
+	  title += " - " + lastdate.toString(Qt::TextDate);
+	}
+	Export->setTitle( title );
+	Export->setEmail( "" );
+	Export->setFullName( "" );
+	Export->setCredit( "KonsoleKalendar", "http://pim.kde.org/components/konsolekalendar.php" );
 
-	Export.setMonthViewEnabled( false );  // month view would be another export mode, no?
-	Export.setEventsEnabled( true );
-	Export.setCategoriesEventEnabled( true );
-	Export.setAttendeesEventEnabled( true );
-	Export.setExcludePrivateEventEnabled( true );
-	Export.setExcludeConfidentialEventEnabled( true );
+	Export->setMonthViewEnabled( false );  // month view would be another export mode, no?
+	Export->setEventsEnabled( true );
+	Export->setCategoriesEventEnabled( true );
+	Export->setAttendeesEventEnabled( true );
+	Export->setExcludePrivateEventEnabled( true );
+	Export->setExcludeConfidentialEventEnabled( true );
 // Not supporting Todos yet
 	title = "To-Do List for " + firstdate.toString(Qt::TextDate);
 	if( firstdate != lastdate ) {
 	  title += " - " + lastdate.toString(Qt::TextDate);
 	}
-	Export.setTitleTodo( title );
-	Export.setTodosEnabled( false );
-	Export.setCategoriesTodoEnabled( false );
-	Export.setAttendeesTodoEnabled( false );
-	Export.setExcludePrivateTodoEnabled( false );
-	Export.setExcludeConfidentialTodoEnabled( false );
-	Export.setDueDateEnabled( false );
+	Export->setTitleTodo( title );
+	Export->setTodosEnabled( false );
+	Export->setCategoriesTodoEnabled( false );
+	Export->setAttendeesTodoEnabled( false );
+	Export->setExcludePrivateTodoEnabled( false );
+	Export->setExcludeConfidentialTodoEnabled( false );
+	Export->setDueDateEnabled( false );
 
-	Export.setDateRange( firstdate, lastdate );
+	Export->setDateRange( firstdate, lastdate );
 
-	status = Export.save( &ts );
+	status = Export->save( &ts );
       }
 
       f.close();
