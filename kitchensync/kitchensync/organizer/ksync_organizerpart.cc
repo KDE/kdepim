@@ -127,6 +127,7 @@ void OrganizerPart::sync( const Syncee::PtrList& in,
     KConfig conf("korganizerrc");
     conf.setGroup("Time & Date");
     QString timeZoneId = conf.readEntry("TimeZoneId", QString::fromLatin1("UTC") );
+    kdDebug(5222) << " Time & Date " << timeZoneId << endl;
 
     /* 1. is fairly easy */
     Profile prof = core()->currentProfile();
@@ -238,7 +239,7 @@ EventSyncee* OrganizerPart::loadEvents(const QString& pa,  const QString& timeZo
     for ( event = events.first(); event; event = events.next() ) {
         entry = new EventSyncEntry( (KCal::Event*)event->clone() );
         syncee->addEntry( entry );
-        kdDebug() << "Start Date of loaded " <<  entry->incidence()->dtStart().toString() << " " << entry->incidence()->uid() << endl;
+        kdDebug(5222) << "Start Date of loaded " <<  entry->incidence()->dtStart().toString() << " " << entry->incidence()->uid() << endl;
     }
     return syncee;
 }
@@ -339,7 +340,7 @@ void OrganizerPart::doMetaIntern( Syncee* syncee,
                     EventSyncEntry* entry = new EventSyncEntry( ev );
                     syncee->addEntry( entry );
                     entry->setState( SyncEntry::Removed );
-                    kdDebug() << "Removed " << entry->id() << endl;
+                    kdDebug(5222) << "Removed " << entry->id() << endl;
                 }
             }
         }

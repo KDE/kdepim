@@ -129,6 +129,9 @@ void KonnectorProfile::saveKaps( KConfig* conf ) const{
         conf->writeEntry("Pass", m_caps.password() );
     }
     conf->writeEntry("Model", m_caps.currentModel() );
+    if ( m_caps.needsModelName() ) {
+        conf->writeEntry("ModelName", m_caps.modelName() );
+    }
     conf->writeEntry("ConMode", m_caps.currentConnectionMode() );
     QMap<QString, QString> map = m_caps.extras();
     QMap<QString, QString>::Iterator it;
@@ -183,6 +186,13 @@ Kapabilities KonnectorProfile::readKaps( KConfig* conf) {
         caps.setPassword( conf->readEntry("Pass") );
     }
     caps.setCurrentModel( conf->readEntry("Model")  );
+    QString  str = conf->readEntry("ModelName");
+    if (!str.isEmpty() ) {
+        caps.setNeedsModelName( true );
+        caps.setModelName( str );
+    }
+
+
     caps.setCurrentConnectionMode( conf->readEntry("ConMode") );
 
     // extras
