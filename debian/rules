@@ -58,13 +58,30 @@ binary-arch: build
 		rm $$i ;\
 		ln -s ../common $$i ;\
 	done
+	dh_undocumented
 	list=`cd debian/tmp && find ./ -type l -name "lib*.so" | sed -e 's#^./##'` ;\
 	dh_movefiles -pkdepim-dev $$list $(kde_libdir)/*.a $(kde_libdir)/*.la
-	abbrowserlist=`cd debian/tmp && find ./ -type l -name "*abbrowser*" | sed -e 's#^./##'` ;\
-	dh_movefiles -pabbrowser $$abbrowserlist
-	dh_undocumented 
+	dh_movefiles -pabbrowser usr/share/apps/abbrowser/* \
+		usr/share/icons/hicolor/32x32/apps/abbrowser.png \
+		usr/share/icons/locolor/16x16/apps/abbrowser.png \
+		usr/share/applnk/Utilities/abbrowser.desktop \
+		usr/share/man/man1/abbrowser* \
+		usr/bin/abbrowser
+	dh_movefiles -pkorganizer usr/bin/* usr/share/apps/korganizer/* \
+		usr/share/icons/hicolor/32x32/apps/korganizer.png \
+		usr/share/icons/hicolor/48x48/apps/korganizer.png \
+		usr/share/icons/locolor/16x16/apps/korganizer.png \
+		usr/share/icons/locolor/32x32/apps/korganizer.png \
+		usr/share/applnk/Applications/korganizer.desktop \
+		usr/share/doc/korganizer/* etc/kde2/korganizerrc \
+		usr/share/man/man1/korganizer* usr/lib/*korganizer* \
+		usr/share/man/man1/alarmd* \
+		usr/share/man/man1/ical2vcal*
+	install -d  debian/korganizer/usr/lib/mime/packages/
+	-mv debian/tmp/usr/lib/mime/packages/kdepim debian/korganizer/usr/lib/mime/packages/korganizer
 	dh_installdocs
 	dh_installmenu
+	dh_installmime
 	dh_installchangelogs
 	dh_strip
 	dh_compress
@@ -75,8 +92,8 @@ binary-arch: build
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol
-	cd debian/tmp && find ./$(kde_confdir) -type f -print | sed -e 's#^./#/#' > DEBIAN/conffiles
-	chmod 644 debian/tmp/DEBIAN/conffiles
+	cd debian/korganizer && find ./$(kde_confdir) -type f -print | sed -e 's#^./#/#' > DEBIAN/conffiles
+	chmod 644 debian/korganizer/DEBIAN/conffiles
 	dh_md5sums
 	perl -w admin/debianrules update
 	dh_builddeb       	
