@@ -315,7 +315,7 @@ error:
 					"object for ResourceCalendar"<<endl;
 				return false;
 			}
-#if LIBKCAL_VERSION >= 0x030300
+#if LIBKCAL_VERSION >= 0x010100
 			rescal->readConfig();
 			rescal->load();
 #endif
