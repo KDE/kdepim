@@ -271,7 +271,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   mCountryCombo = new KComboBox( page );
   mCountryCombo->setEditable( true );
   mCountryCombo->setDuplicatesEnabled( false );
-  mCountryCombo->setAutoCompletion( true );
+
   fillCountryCombo();
   label->setBuddy( mCountryCombo );
   topLayout->addWidget( mCountryCombo, 6, 1 );
@@ -526,6 +526,8 @@ void AddressEditDialog::fillCountryCombo()
   countries.sort();
 
   mCountryCombo->insertStringList( countries );
+  mCountryCombo->completionObject()->setItems( countries );
+  mCountryCombo->setAutoCompletion( true );
 }
 
 
