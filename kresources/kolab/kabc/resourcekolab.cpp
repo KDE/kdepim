@@ -360,7 +360,8 @@ bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
                                                  const QString& contactXML )
 {
   // Check if this is a contact
-  if( type != s_kmailContentsType ) return false;
+  if( type != s_kmailContentsType || !subresourceActive( subResource ) ) 
+    return false;
 
   // Load contact to find the UID
   const QString uid = loadContact( contactXML, subResource, sernum );
@@ -380,11 +381,12 @@ bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
 }
 
 void KABC::ResourceKolab::fromKMailDelIncidence( const QString& type,
-                                                 const QString& /*subResource*/,
+                                                 const QString& subResource,
                                                  const QString& uid )
 {
   // Check if this is a contact
-  if( type != s_kmailContentsType ) return;
+  if( type != s_kmailContentsType || !subresourceActive( subResource ) )
+    return;
 
   //kdDebug(5650) << k_funcinfo << uid << endl;
 
