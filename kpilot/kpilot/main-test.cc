@@ -46,6 +46,7 @@ static const char *test_id="$Id$";
 #include "kpilotConfig.h"
 
 #include "hotSync.h"
+#include "interactiveSync.h"
 
 
 static KCmdLineOptions kpilotoptions[] =
@@ -73,10 +74,10 @@ int main(int argc, char **argv)
 		"http://www.cs.kun.nl/~adridg/kpilot/");
 	
 	KCmdLineArgs::init(argc,argv,&about);
-	KCmdLineArgs::addCmdLineOptions(kpilotoptions,"test","test");
 #ifdef DEBUG
-	KCmdLineArgs::addCmdLineOptions(debug_options,"debug","debug","test");
+	KCmdLineArgs::addCmdLineOptions(debug_options,"debug","debug");
 #endif
+	KCmdLineArgs::addCmdLineOptions(kpilotoptions,"kpilottest",0L,"debug");
 	KApplication::addCmdLineOptions();
 
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
@@ -101,19 +102,27 @@ int main(int argc, char **argv)
 	a.setMainWidget(w);
 
 	KPilotDeviceLink *t = KPilotDeviceLink::init(0,"deviceLink");
-	SyncAction *l = 0L;
+	SyncAction *head = 0L;
+	SyncAction *tail = 0L;
 
 	if (p->isSet("backup"))
 	{
-		l = new BackupAction(t);
+		head = tail = new BackupAction(t);
 	}
 	else if (p->isSet("restore"))
 	{
-		l = new RestoreAction(t);
+		head = new CheckUser(t,w);
+		SyncAction *l = new RestoreAction(t,w);
+		tail = new CleanupAction(t);
+
+		QObject::connect(head,SIGNAL(syncDone(SyncAction *)),
+			l,SLOT(exec()));
+		QObject::connect(l,SIGNAL(syncDone(SyncAction *)),
+			tail,SLOT(exec()));
 	}
 	else
 	{
-		l = new TestLink(t);
+		head = tail = new TestLink(t);
 	}
 
 	QObject::connect(t,SIGNAL(logError(const QString &)),
@@ -121,10 +130,10 @@ int main(int argc, char **argv)
 	QObject::connect(t,SIGNAL(logMessage(const QString &)),
 		w,SLOT(addMessage(const QString &)));
 	QObject::connect(t,SIGNAL(deviceReady()),
-		l,SLOT(exec()));
-	QObject::connect(l,SIGNAL(syncDone(SyncAction *)),
+		head,SLOT(exec()));
+	QObject::connect(tail,SIGNAL(syncDone(SyncAction *)),
 		w,SLOT(syncDone()));
-	QObject::connect(l,SIGNAL(syncDone(SyncAction *)),
+	QObject::connect(tail,SIGNAL(syncDone(SyncAction *)),
 		t,SLOT(close()));
 
 	t->reset(deviceType,devicePath);
@@ -136,6 +145,9 @@ int main(int argc, char **argv)
 }
 
 // $Log$
+// Revision 1.6  2001/09/24 10:43:19  cschumac
+// Compile fixes.
+//
 // Revision 1.5  2001/09/23 21:42:35  adridg
 // Factored out debugging options
 //
