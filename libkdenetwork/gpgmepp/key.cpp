@@ -193,6 +193,11 @@ namespace GpgME {
     return d->key && d->key->secret;
   }
 
+  bool Key::isRoot() const {
+    return d->key && d->key->subkeys && d->key->subkeys->fpr && d->key->chain_id &&
+      strcasecmp( d->key->subkeys->fpr, d->key->chain_id ) == 0;
+  }
+
   bool Key::canEncrypt() const {
     return d->key && d->key->can_encrypt;
   }

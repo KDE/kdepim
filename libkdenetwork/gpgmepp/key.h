@@ -71,6 +71,13 @@ namespace GpgME {
     bool hasSecret() const;
     bool isSecret() const { return hasSecret(); }
 
+    /*!
+      @return true if this is a X.509 root certificate (currently
+      equivalent to something like
+      strcmp( chainID(), subkey(0).fingerprint() ) == 0 )
+    */
+    bool isRoot() const;
+
     enum OwnerTrust { Unknown=0, Undefined=1, Never=2,
 		    Marginal=3, Full=4, Ultimate=5 };
 
