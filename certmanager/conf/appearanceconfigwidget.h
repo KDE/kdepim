@@ -67,9 +67,6 @@ namespace Kleo {
     virtual void slotItalicClicked();
     virtual void slotBoldClicked();
     virtual void slotStrikeoutClicked();
-
-  private:
-    QStringList createDefaultCategories( KConfig* config );
   };
 }
 

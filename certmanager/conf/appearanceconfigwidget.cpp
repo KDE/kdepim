@@ -68,7 +68,7 @@ public:
   CategoryListViewItem( QListView* lv, QListViewItem* prev, const KConfigBase& config )
     : QListViewItem( lv, prev ) {
 
-    setName( config.readEntry( "name", i18n("<unnamed>") ) );
+    setName( config.readEntry( "Name", i18n("<unnamed>") ) );
     mForegroundColor = config.readColorEntry( "foreground-color" );
     mBackgroundColor = config.readColorEntry( "background-color" );
     mHasFont = config.hasKey( "font" );
@@ -81,10 +81,11 @@ public:
     }
     mStrikeOut = config.readBoolEntry( "font-strikeout", false );
     mIsExpired = config.readBoolEntry( "is-expired", false );
+    mDirty = false;
   }
 
   void save( KConfigBase& config ) {
-    config.writeEntry( "name", text( 0 ) );
+    config.writeEntry( "Name", text( 0 ) );
     config.writeEntry( "foreground-color", mForegroundColor );
     config.writeEntry( "background-color", mBackgroundColor );
     if ( mHasFont )
@@ -97,13 +98,14 @@ public:
     config.writeEntry( "font-strikeout", mStrikeOut );
   }
 
-  void setForegroundColor( const QColor& foreground ) { mForegroundColor = foreground; }
-  void setBackgroundColor( const QColor& background ) { mBackgroundColor = background; }
+  void setForegroundColor( const QColor& foreground ) { mForegroundColor = foreground; mDirty = true; }
+  void setBackgroundColor( const QColor& background ) { mBackgroundColor = background; mDirty = true; }
   void setFont( const QFont& font ) {
     mFont = font;
     mHasFont = true;
     mItalic = font.italic();
     mBold = font.bold();
+    mDirty = true;
   }
 
   QColor foregroundColor() const { return mForegroundColor; }
@@ -118,16 +120,18 @@ public:
     mBold = false;
     mItalic = false;
     mStrikeOut = false;
+    mDirty = true;
   }
 
+  bool isDirty() const { return mDirty; }
   bool isItalic() const { return mItalic; }
   bool isBold() const { return mBold; }
   bool isStrikeout() const { return mStrikeOut; }
   bool hasFont() const { return mHasFont; }
 
-  void toggleItalic() { mItalic = !mItalic; if ( mHasFont ) mFont.setItalic( mItalic ); }
-  void toggleBold() { mBold = !mBold; if ( mHasFont ) mFont.setBold( mBold ); }
-  void toggleStrikeout() { mStrikeOut = !mStrikeOut; }
+  void toggleItalic() { mItalic = !mItalic; if ( mHasFont ) mFont.setItalic( mItalic ); mDirty = true; }
+  void toggleBold() { mBold = !mBold; if ( mHasFont ) mFont.setBold( mBold ); mDirty = true; }
+  void toggleStrikeout() { mStrikeOut = !mStrikeOut; mDirty = true; }
 
 private:
   void setName( const QString& name ) {
@@ -144,6 +148,7 @@ private:
   bool mItalic;
   bool mBold;
   bool mStrikeOut;
+  bool mDirty;
 };
 
 void CategoryListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment ) {
@@ -221,36 +226,6 @@ void AppearanceConfigWidget::slotDefaultClicked()
   emit changed();
 }
 
-static const struct {
-  const char* categoryName;
-  // This is limited to one key (with its value)
-  const char* configKey;
-  const char* value;
-} defaultCategoriesList[] = {
-  { I18N_NOOP( "Revoked key" ), "is-revoked", "true" },
-  { I18N_NOOP( "Expired key" ), "is-expired", "true" },
-  { I18N_NOOP( "Disabled key" ), "is-disabled", "true" },
-  { I18N_NOOP( "Can encrypt" ), "can-encrypt", "true" },
-  { I18N_NOOP( "Can sign" ), "can-sign", "true" },
-  { I18N_NOOP( "Can authenticate" ), "can-authenticate", "true" },
-  { I18N_NOOP( "Has secret key" ), "has-secret-key", "true" },
-  { I18N_NOOP( "OpenPGP key" ), "is-openpgp-key", "true" },
-  { I18N_NOOP( "Key was validated" ), "was-validated", "true" }
-};
-
-QStringList AppearanceConfigWidget::createDefaultCategories( KConfig* config )
-{
-  QStringList groups;
-  for( unsigned int i = 0; i < sizeof defaultCategoriesList / sizeof *defaultCategoriesList; ++i ) {
-    const QString name = QString::fromLatin1( "Key Filter #" ) + QString::number( i );
-    KConfigGroup group( config, name );
-    group.writeEntry( "name", i18n( defaultCategoriesList[i].categoryName ) );
-    group.writeEntry( defaultCategoriesList[i].configKey, defaultCategoriesList[i].value );
-    groups << name;
-  }
-  return groups;
-}
-
 void AppearanceConfigWidget::load()
 {
   categoriesLV->clear();
@@ -258,16 +233,10 @@ void AppearanceConfigWidget::load()
   if ( !config )
     return;
   QStringList groups = config->groupList().grep( QRegExp( "^Key Filter #\\d+$" ) );
-  bool setDefaults = groups.isEmpty();
-  if ( setDefaults )
-    groups = createDefaultCategories( config );
-
   for ( QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it ) {
     KConfigGroup cfg( config, *it );
     (void) new CategoryListViewItem( categoriesLV, categoriesLV->lastItem(), cfg );
   }
-  if ( setDefaults )
-    defaults(); // set the default colors for the default categories
 }
 
 void AppearanceConfigWidget::save()
