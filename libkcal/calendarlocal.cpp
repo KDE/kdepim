@@ -301,21 +301,16 @@ QPtrList<Event> CalendarLocal::rawEventsForDate( const QDate &qd, bool sorted )
   //  kdDebug(5800) << "Sorting events for date\n" << endl;
   // now, we have to sort it based on dtStart.time()
   QPtrList<Event> eventListSorted;
+  Event *sortEvent;
   for ( event = eventList.first(); event; event = eventList.next() ) {
-    if ( !eventListSorted.isEmpty() &&
-         event->dtStart().time() < eventListSorted.first()->dtStart().time() ) {
-      eventListSorted.prepend( event );
-      continue;
+    sortEvent = eventListSorted.first();
+    int i = 0;
+    while ( sortEvent && event->dtStart().time()>=sortEvent->dtStart().time() )
+    {
+      i++;
+      sortEvent = eventListSorted.next();
     }
-    uint j;
-    for ( j = 0; j + 1 < eventListSorted.count(); j++ ) {
-      if ( event->dtStart().time() > eventListSorted.at( j )->dtStart().time() &&
-           event->dtStart().time() <= eventListSorted.at( j + 1 )->dtStart().time() ) {
-	eventListSorted.insert( j + 1, event );
-	continue;
-      }
-    }
-    eventListSorted.append( event );
+    eventListSorted.insert( i, event );
   }
   return eventListSorted;
 }
