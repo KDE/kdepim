@@ -242,7 +242,7 @@ bool MemofileConduit::getAppInfo()
 	}
 
 	unpack_MemoAppInfo(&fMemoAppInfo,buffer,appInfoSize);
-	PilotDatabase::listAppInfo(&fMemoAppInfo.category);
+	PilotAppCategory::dumpCategories(fMemoAppInfo.category);
 	return true;
 }
 
