@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>566</width>
-            <height>325</height>
+            <width>350</width>
+            <height>328</height>
         </rect>
     </property>
     <property name="caption">
@@ -149,6 +149,9 @@
                                 </property>
                                 <property name="text">
                                     <string>&amp;Hot Sync (fast)</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="1" column="0">
@@ -470,6 +473,14 @@
                         <property name="name">
                             <cstring>textLabel1</cstring>
                         </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>5</hsizetype>
+                                <vsizetype>5</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
                         <property name="text">
                             <string>Handheld custom field 1:</string>
                         </property>
@@ -498,24 +509,7 @@
                             <string>Handheld custom field 4:</string>
                         </property>
                     </widget>
-                    <spacer row="4" column="2">
-                        <property name="name">
-                            <cstring>spacer5</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>31</width>
-                                <height>181</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QComboBox" row="0" column="1" rowspan="1" colspan="2">
+                    <widget class="QComboBox" row="0" column="1">
                         <item>
                             <property name="text">
                                 <string>Store as Custom Field</string>
@@ -539,8 +533,16 @@
                         <property name="name">
                             <cstring>fCustom0</cstring>
                         </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>3</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
                     </widget>
-                    <widget class="QComboBox" row="1" column="1" rowspan="1" colspan="2">
+                    <widget class="QComboBox" row="1" column="1">
                         <item>
                             <property name="text">
                                 <string>Store as Custom Field</string>
@@ -564,8 +566,16 @@
                         <property name="name">
                             <cstring>fCustom1</cstring>
                         </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>3</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
                     </widget>
-                    <widget class="QComboBox" row="2" column="1" rowspan="1" colspan="2">
+                    <widget class="QComboBox" row="2" column="1">
                         <item>
                             <property name="text">
                                 <string>Store as Custom Field</string>
@@ -589,8 +599,16 @@
                         <property name="name">
                             <cstring>fCustom2</cstring>
                         </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>3</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
                     </widget>
-                    <widget class="QComboBox" row="3" column="1" rowspan="1" colspan="2">
+                    <widget class="QComboBox" row="3" column="1">
                         <item>
                             <property name="text">
                                 <string>Store as Custom Field</string>
@@ -614,8 +632,41 @@
                         <property name="name">
                             <cstring>fCustom3</cstring>
                         </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>3</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
                     </widget>
-                    <widget class="QComboBox" row="0" column="3">
+                    <widget class="Line" row="4" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>line1</cstring>
+                        </property>
+                        <property name="frameShape">
+                            <enum>HLine</enum>
+                        </property>
+                        <property name="frameShadow">
+                            <enum>Sunken</enum>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="5" column="0" rowspan="2" colspan="1">
+                        <property name="name">
+                            <cstring>textLabel1_5</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Date &amp;format:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>fCustomDate</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="6" column="1">
                         <item>
                             <property name="text">
                                 <string>Locale Settings</string>
@@ -642,109 +693,46 @@
                             </property>
                         </item>
                         <property name="name">
-                            <cstring>fCustomDate0</cstring>
+                            <cstring>fCustomDate</cstring>
                         </property>
                         <property name="enabled">
                             <bool>false</bool>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>3</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
                         </property>
                     </widget>
-                    <widget class="QComboBox" row="1" column="3">
-                        <item>
-                            <property name="text">
-                                <string>Locale Settings</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>dd/mm/yy</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>dd/mm/yyyy</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>dd.MMMM. yyy</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>mm/dd/yyyy</string>
-                            </property>
-                        </item>
+                    <spacer row="8" column="1">
                         <property name="name">
-                            <cstring>fCustomDate1</cstring>
+                            <cstring>spacer5</cstring>
                         </property>
-                        <property name="enabled">
-                            <bool>false</bool>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
                         </property>
-                    </widget>
-                    <widget class="QComboBox" row="2" column="3">
-                        <item>
-                            <property name="text">
-                                <string>Locale Settings</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>dd/mm/yy</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>dd/mm/yyyy</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>dd.MMMM. yyy</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>mm/dd/yyyy</string>
-                            </property>
-                        </item>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>31</width>
+                                <height>30</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLabel" row="7" column="0" rowspan="1" colspan="2">
                         <property name="name">
-                            <cstring>fCustomDate2</cstring>
+                            <cstring>textLabel1_6</cstring>
                         </property>
-                        <property name="enabled">
-                            <bool>false</bool>
+                        <property name="text">
+                            <string>Currently, custom fields cannot be synced with the birthdate. Instead, the "Store as Custom Field" setting will be use.</string>
                         </property>
-                    </widget>
-                    <widget class="QComboBox" row="3" column="3">
-                        <item>
-                            <property name="text">
-                                <string>Locale Settings</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>dd/mm/yy</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>dd/mm/yyyy</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>dd.MMMM. yyy</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>mm/dd/yyyy</string>
-                            </property>
-                        </item>
-                        <property name="name">
-                            <cstring>fCustomDate3</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
+                        <property name="alignment">
+                            <set>WordBreak|AlignVCenter</set>
                         </property>
                     </widget>
                 </grid>

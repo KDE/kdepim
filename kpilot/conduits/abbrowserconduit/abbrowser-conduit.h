@@ -56,8 +56,8 @@
 #define CHANGED_NORES 0x200
 #define CHANGED_DUPLICATE CHANGED_ADD|CHANGED_NORES|CHANGED_BOTH
 
-
 using namespace KABC;
+
 
 class AbbrowserConduit : public ConduitAction
 {

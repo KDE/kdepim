@@ -39,6 +39,8 @@
 #include <qvbuttongroup.h>
 #include <qcheckbox.h>
 #include <qtextcodec.h>
+#include <time.h>
+
 
 #include <kglobal.h>
 #include <kdebug.h>
@@ -60,6 +62,8 @@
 //
 //
 const char *abbrowser_conduit_id="$Id$";
+
+using namespace KABC;
 
 const QString AbbrowserConduit::flagString=CSL1("Flag");
 const QString AbbrowserConduit::appString=CSL1("KPILOT");
@@ -192,14 +196,12 @@ void AbbrowserConduit::readConfig()
 		AbbrowserConduitFactory::fOtherField, eOtherPhone));
 
 	// Custom fields page
-	eCustom[0]=(eCustomEnum)(fConfig->readNumEntry(
-		AbbrowserConduitFactory::custom(0), eCustomField) );
-	eCustom[1]=(eCustomEnum)(fConfig->readNumEntry(
-		AbbrowserConduitFactory::custom(1), eCustomField) );
-	eCustom[2]=(eCustomEnum)(fConfig->readNumEntry(
-		AbbrowserConduitFactory::custom(2), eCustomField) );
-	eCustom[3]=(eCustomEnum)(fConfig->readNumEntry(
-		AbbrowserConduitFactory::custom(3), eCustomField) );
+	for (int i=0; i<4; i++)
+	{
+		eCustom[i]=(eCustomEnum)(fConfig->readNumEntry(
+			AbbrowserConduitFactory::custom(i), eCustomField) );
+		if (eCustom[i]==eCustomBirthdate) eCustom[i]=eCustomField;
+	}
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -252,9 +254,10 @@ bool AbbrowserConduit::_loadAddressBook()
 					kdWarning()<<k_funcinfo<<": Unable to lock addressbook resource "
 						<<"for file "<<fAbookFile<<endl;
 					aBook->cleanUp();
+					// TODO: Do I need to  delete the ticket manually?
+					KPILOT_DELETE(ticket);
 					KPILOT_DELETE(rawres);
 					KPILOT_DELETE(aBook);
-//					KPILOT_DELETE(ticket);
 					return false;
 				}
 			}
@@ -293,27 +296,31 @@ bool AbbrowserConduit::_saveAddressBook()
 {
 	FUNCTIONSETUP;
 
-	if(!abChanged) return true;
+	bool res=false;
+
 	switch (fAbookType)
 	{
 		case eAbookResource:
-			return StdAddressBook::save();
+			if (abChanged) res==StdAddressBook::save();
+//			if (aBook) aBook->cleanUp();
 			break;
 		case eAbookLocal: // initialize the abook with the given file
 			if (ticket)
 			{
-				return aBook->save(ticket);
+				if (abChanged && aBook) res=aBook->save(ticket);
 			}
 			else
 			{
 				kdWarning()<<k_funcinfo<<": No ticket available to save the "
-					<<"addressbook."<<endl;
-				return false;
+				<<"addressbook."<<endl;
 			}
-			break;
+			// Don't break, let the default cleanUp and delete the addressbook
 		default:
+			if (aBook) aBook->cleanUp();
+			KPILOT_DELETE(aBook);
 			break;
 	}
+
 	return false;
 }
 
@@ -346,19 +353,26 @@ void AbbrowserConduit::_setAppInfo()
 
 QString AbbrowserConduit::getCustomField(const KABC::Addressee &abEntry, const int index)
 {
-	FUNCTIONSETUP;
-	return abEntry.custom(appString, CSL1("CUSTOM")+QString::number(index));
+//	FUNCTIONSETUP;
+//	return abEntry.custom(appString, CSL1("CUSTOM")+QString::number(index));
 
-	// TODO: The date things do  not work yet, so disable this for now...
 	switch (eCustom[index]) {
 		case eCustomBirthdate: {
-			QDate bdate(abEntry.birthday().date());
-#ifdef DEBUG
-			DEBUGCONDUIT<<bdate.toString()<<endl;
-			DEBUGCONDUIT<<bdate.toString(CSL1("d.M.yyyy"))<<endl;;
-#endif
-			if (bdate.isValid() ) return bdate.toString(CSL1("d.M.yyyy"));
-			else return QString::null;
+			// TODO: The date things do  not work yet, so disable this for now...
+			return abEntry.custom(appString, CSL1("CUSTOM")+QString::number(index));
+
+
+			QDateTime bdate(abEntry.birthday().date());
+			if (!bdate.isValid()) {
+				// TODO
+				return QString::null;
+			}
+
+			time_t btime=bdate.toTime_t();
+			struct tm*btmtime=localtime(&btime);
+			char datestr[500];
+			size_t len=strftime(&datestr[0], 500, "%x", btmtime);
+			return QString(&datestr[0]);
 			break;
 		}
 		case eCustomURL:
@@ -378,17 +392,17 @@ QString AbbrowserConduit::getCustomField(const KABC::Addressee &abEntry, const i
 void AbbrowserConduit::setCustomField(KABC::Addressee &abEntry,  int index, QString cust)
 {
 	FUNCTIONSETUP;
-	return abEntry.insertCustom(appString, CSL1("CUSTOM")+QString::number(index), cust);
+//	return abEntry.insertCustom(appString, CSL1("CUSTOM")+QString::number(index), cust);
 
 	// TODO: The date things do  not work yet, so disable this for now...
 	switch (eCustom[index]) {
 		case eCustomBirthdate: {
-			QDate bdate=KGlobal::locale()->readDate(cust, CSL1("d.m.y"));
+			return abEntry.insertCustom(appString, CSL1("CUSTOM")+QString::number(index), cust);
+			QDate bdate=QDate::fromString(cust);
 #ifdef DEBUG
 			DEBUGCONDUIT<<bdate.toString()<<endl;
 			DEBUGCONDUIT<<"Is Valid: "<<bdate.isValid()<<endl;
 #endif
-//			QDate bdate=QDate::fromString(cust);
 			if (bdate.isValid()) return abEntry.setBirthday(QDateTime(bdate));
 			break;}
 		case eCustomURL: {
@@ -856,8 +870,8 @@ void AbbrowserConduit::cleanup()
 	KPILOT_DELETE(fLocalDatabase);
 	_saveAddressBook();
 	// TODO: Do I need to free the addressbook?????
-	aBook->cleanUp();
-	KPILOT_DELETE(aBook);
+//	aBook->cleanUp();
+//	KPILOT_DELETE(aBook);
 	emit syncDone(this);
 }
 
