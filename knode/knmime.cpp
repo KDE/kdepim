@@ -954,7 +954,7 @@ void KNMimeContent::attachments(KNMimeContent::List *dst, bool incAlternatives)
 
   if(!c_ontents && type()==ATmimeContent)
     dst->append(this);
-  else {
+  else if(c_ontents) {
     KNMimeContent *text=textContent();
 
     for(KNMimeContent *c=c_ontents->first(); c; c=c_ontents->next()) {

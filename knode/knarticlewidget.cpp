@@ -659,6 +659,12 @@ void KNArticleWidget::createHtmlPage()
              article as a text-file and reassemble it by hand.</b></bodyblock></qt>");
     setText(html);
     h_tmlDone=true;
+
+    //enable actions
+    a_ctSave->setEnabled(true);
+    a_ctPrint->setEnabled(true);
+    a_ctSelAll->setEnabled(true);
+    a_ctToggleFullHdrs->setEnabled(true);
     return;
   }
 
