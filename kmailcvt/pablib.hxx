@@ -33,7 +33,7 @@
 
 class pab
 {
-  friend pabrec;
+  friend class pabrec;
 
   private:
     FILE *in;
