@@ -79,11 +79,6 @@ KNCollectionView::KNCollectionView(QWidget *parent, const char* name) :
   connect(fm, SIGNAL(folderRemoved(KNFolder*)), SLOT(removeFolder(KNFolder*)));
   connect(fm, SIGNAL(folderActivated(KNFolder*)), SLOT(activateFolder(KNFolder*)));
 
-  // we need to repaint if the column size has been changed due to our
-  // special group name squeezing
-  disconnect(header(), SIGNAL(sizeChange(int,int,int)));
-  connect(header(), SIGNAL(sizeChange(int,int,int)), SLOT(slotSizeChanged(int,int,int)));
-
   installEventFilter(this);
 }
 
@@ -423,13 +418,6 @@ void KNCollectionView::updatePopup() const
   mPopup->setItemChecked( mTotalPop, isTotalActive() );
 }
 
-
-
-void KNCollectionView::slotSizeChanged(int section, int, int newSize)
-{
-  viewport()->repaint(
-      header()->sectionPos(section), 0, newSize, visibleHeight(), false );
-}
 
 
 bool KNCollectionView::eventFilter(QObject *o, QEvent *e)

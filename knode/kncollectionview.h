@@ -88,9 +88,6 @@ class KNCollectionView : public KFolderTree {
     KPopupMenu *mPopup;
     int mUnreadPop, mTotalPop;
 
-  private slots:
-    void slotSizeChanged(int section, int, int newSize);
-
 };
 
 #endif

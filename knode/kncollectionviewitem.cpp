@@ -22,6 +22,7 @@
 #include <qpainter.h>
 
 #include <kiconloader.h>
+#include <kstringhandler.h>
 
 #include "kncollectionviewitem.h"
 #include "kncollectionview.h"
@@ -114,8 +115,14 @@ bool KNCollectionViewItem::acceptDrag(QDropEvent* event) const
 
 void KNCollectionViewItem::paintCell( QPainter * p, const QColorGroup & cg,int column, int width, int align )
 {
-  KFolderTree *ft = static_cast<KFolderTree*>(listView());
-  QString curText = text(column);
+  KFolderTree *ft = static_cast<KFolderTree*>( listView() );
+
+  // we only need to deal with the case where we paint the folder/group name
+  // and the unread count is displayed in a separate column
+  if ( !ft->isUnreadActive() || column != 0 ) {
+    KFolderTreeItem::paintCell( p, cg, column, width, align );
+    return;
+  }
 
   // find out if we will use bold font, necessary for the text squeezing
   if ( (column == 0 || column == ft->unreadIndex()) && ( mUnread > 0 ) ) {
@@ -131,19 +138,25 @@ void KNCollectionViewItem::paintCell( QPainter * p, const QColorGroup & cg,int c
     pxWidth += px->width();
 
   // temporary set the squeezed text and use the parent class to paint it
-  setText( column, shortString(curText, column, width - pxWidth, p->fontMetrics()));
-  KFolderTreeItem::paintCell( p, cg, column, width, align );
-  setText( column, curText );
+  QString curText = text( column );
+  if ( p->fontMetrics().width( curText ) > width - pxWidth ) {
+    setText( column, squeezeFolderName( curText, p->fontMetrics(), width - pxWidth ) );
+    KFolderTreeItem::paintCell( p, cg, column, width, align );
+    setText( column, curText );
+  } else
+    KFolderTreeItem::paintCell( p, cg, column, width, align );
 }
 
 
-QString KNCollectionViewItem::shortString( const QString &text, int /*col*/, int width, QFontMetrics fm )
+QString KNCollectionViewItem::squeezeFolderName( const QString &text,
+                                                 const QFontMetrics &fm,
+                                                 uint width ) const
 {
   if (protocol() == KFolderTreeItem::News && type() == KFolderTreeItem::Other) {
     QString t(text);
     int curPos = 0, nextPos = 0;
     QString temp;
-    while ( (fm.width(t) > width) && (nextPos != -1) ) {
+    while ( (uint)fm.width(t) > width && nextPos != -1 ) {
       nextPos = t.find('.', curPos);
       if ( nextPos != -1 ) {
         temp = t[curPos];
@@ -151,7 +164,9 @@ QString KNCollectionViewItem::shortString( const QString &text, int /*col*/, int
         curPos += 2;
       }
     }
+    if ( (uint)fm.width( t ) > width )
+      t = KStringHandler::rPixelSqueeze( t, fm, width );
     return t;
   } else
-    return text;
+    return KFolderTreeItem::squeezeFolderName( text, fm, width );
 }

@@ -43,9 +43,13 @@ class KNCollectionViewItem : public KFolderTreeItem  {
 
     KNCollection *coll;
 
+  protected:
+    virtual QString squeezeFolderName( const QString &text,
+                                       const QFontMetrics &fm,
+                                       uint width ) const;
+
   private:
     void setIcon();
-    QString shortString(const QString &text, int col, int width, QFontMetrics fm);
 
 };
 
