@@ -23,6 +23,9 @@ namespace KSync {
 
         KonnectorInfo info()const;
         void download( const QString& );
+
+        ConfigWidget* configWidget( const Kapabilities&, QWidget* parent, const char* name );
+        ConfigWidget* configWidget( QWidget* parent, const char* name );
     protected:
         QString metaId()const;
         QIconSet iconSet()const;

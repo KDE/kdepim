@@ -10,7 +10,7 @@
 #include <konnectorinfo.h>
 #include <kapabilities.h>
 
-
+#include "qtopiaconfig.h"
 #include "socket.h"
 #include "konnector.h"
 
@@ -64,6 +64,12 @@ Kapabilities QtopiaPlugin::capabilities() {
     QStringList ips;
     ips << "1.1.1.1";
     caps.setIpProposals( ips );
+
+    // Model Stuff
+    QStringList models;
+    models << "Opie and Qtopia 1.6" << "Sharp Zaurus ROM";
+    caps.setModels( models );
+    caps.setNeedsModelName( true );
 
     return caps;
 }
@@ -129,5 +135,11 @@ KonnectorInfo QtopiaPlugin::info()const {
 }
 void QtopiaPlugin::download( const QString& res) {
     d->socket->download( res );
+}
+ConfigWidget* QtopiaPlugin::configWidget( const Kapabilities& cap, QWidget* parent, const char* name ) {
+    return new OpieHelper::QtopiaConfig( cap, parent, name );
+}
+ConfigWidget* QtopiaPlugin::configWidget( QWidget* parent, const char* name ) {
+    return new OpieHelper::QtopiaConfig( parent, name );
 }
 #include "konnector.moc"

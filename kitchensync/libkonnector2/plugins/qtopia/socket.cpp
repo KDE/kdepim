@@ -260,6 +260,7 @@ QString QtopiaSocket::metaId()const {
 void QtopiaSocket::slotError(int err) {
     d->isSyncing = false;
     d->isConnecting = false;
+    kdDebug(5225) << "Error " << err << " for ip = " << d->dest << endl;
 
     emit error( StdError::connectionLost() );
 }
@@ -674,7 +675,7 @@ void QtopiaSocket::readTimeZones() {
     KConfig conf("korganizerrc");
     conf.setGroup("Time & Date");
     d->tz = conf.readEntry("TimeZoneId", QString::fromLatin1("UTC") );
-    kdDebug(5229) << "TimeZone of Korg is " << d->tz << endl;
+    kdDebug(5225) << "TimeZone of Korg is " << d->tz << endl;
 }
 bool QtopiaSocket::downloadFile( const QString& str, QString& dest ) {
     KURL uri = url( d->path + str );
