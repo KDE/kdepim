@@ -134,6 +134,7 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   mContactView->addColumn( i18n( "Use Preferred" ) );
   mContactView->setEnabled( false );
   mContactView->setAllColumnsShowFocus( true );
+  mContactView->setFullWidth( true );
   topLayout->addMultiCellWidget( mContactView, 1, 1, 0, 3 );
   connect( mContactView, SIGNAL( selectionChanged() ),
            SLOT( selectionContactViewChanged() ) );
