@@ -1212,6 +1212,11 @@ void KNArticleWidget::createHtmlPage()
     //enable actions
     a_ctReply->setEnabled(a_rticle->type()==KMime::Base::ATremote);
     a_ctRemail->setEnabled(a_rticle->type()==KMime::Base::ATremote);
+    a_ctForward->setEnabled(true);
+    a_ctCancel->setEnabled( (a_rticle->type()==KMime::Base::ATremote) ||
+                            (a_rticle->collection()==knGlobals.folManager->sent()));
+    a_ctSupersede->setEnabled( (a_rticle->type()==KMime::Base::ATremote) ||
+                               (a_rticle->collection()==knGlobals.folManager->sent()));
     a_ctSave->setEnabled(true);
     a_ctPrint->setEnabled(true);
     a_ctSelAll->setEnabled(true);
@@ -1219,6 +1224,10 @@ void KNArticleWidget::createHtmlPage()
     a_ctSetCharset->setEnabled(true);
     a_ctSetCharsetKeyb->setEnabled(true);
     a_ctViewSource->setEnabled(true);
+        
+    //start automark-timer
+    if(a_rticle->type()==KMime::Base::ATremote && knGlobals.cfgManager->readNewsGeneral()->autoMark())
+      t_imer->start( (knGlobals.cfgManager->readNewsGeneral()->autoMarkSeconds()*1000), true);
     return;
   }
 
@@ -1340,9 +1349,7 @@ void KNArticleWidget::createHtmlPage()
   //----------------------------------  </Attachments> ---------------------------------
 
   //display html
-  html+="</qt>";
-
-  setText(QString::null);
+  html+="</qt>";  
   setText(html);
   h_tmlDone=true;
 
