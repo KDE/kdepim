@@ -766,7 +766,7 @@ void CertManager::slotDeleteCertificate() {
 
   if ( KMessageBox::warningContinueCancelList(
          this,
-         i18n( "Do you really want to delete this cerificate?", "Do you really want to delete these %n certificates?", keyDisplayNames.count()),
+         i18n( "Do you really want to delete this certificate?", "Do you really want to delete these %n certificates?", keyDisplayNames.count()),
          keyDisplayNames,
          i18n( "Delete Certificates" ),
          KGuiItem( i18n( "Delete" ), "editdelete" ),
