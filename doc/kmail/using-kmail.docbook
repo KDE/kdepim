@@ -504,29 +504,65 @@ the missing information manually. To do this first select the
 <guilabel>Address type</guilabel> for which you want to add an address.
 You can choose between:</para>
 
-<itemizedlist>
-<listitem>
-<para><guilabel>Post to List</guilabel> - This address is used for sending messages
-to the mailing list. This is usually an email address.</para>
-</listitem>
-<listitem>
-<para><guilabel>Subscribe to List</guilabel> - This address is used for subscribing
-to the mailing list. This can be an email address or the address of a webpage.</para>
-</listitem>
-<listitem>
-<para><guilabel>Unsubscribe from List</guilabel> - This address is used for
-unsubscribing from the mailing list. This can be an email address or the
-address of a webpage.</para>
-</listitem>
-<listitem>
-<para><guilabel>List Archives</guilabel> - This is the address of the archive of
-the mailing list. This is usually the address of a webpage.</para>
-</listitem>
-<listitem>
-<para><guilabel>List Help</guilabel> - This address is used for requesting help
-for this mailing list. This is usually an email address.</para>
-</listitem>
-</itemizedlist>
+	<variablelist>
+	  <varlistentry id="folders-properties-mailinglist-post">
+	    <term>
+	      <guilabel>Post to List</guilabel>
+	    </term>
+	    <listitem>
+	      <para>
+		This address is used for sending messages to the
+		mailing list. This is usually an email address.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry id="folders-properties-mailinglist-subscribe">
+	    <term>
+	      <guilabel>Subscribe to List</guilabel>
+	    </term>
+	    <listitem>
+	      <para>
+		This address is used for subscribing to the mailing
+		list. This can be an email address or the address of a
+		webpage.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry id="folders-properties-mailinglist-unsubscribe">
+	    <term>
+	      <guilabel>Unsubscribe from List</guilabel>
+	    </term>
+	    <listitem>
+	      <para>
+		This address is used for unsubscribing from the
+		mailing list. This can be an email address or the
+		address of a webpage.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry id="folders-properties-mailinglist-archive">
+	    <term>
+	      <guilabel>List Archives</guilabel>
+	    </term>
+	    <listitem>
+	      <para>
+		This is the address of the archive of the mailing
+		list. This is usually the address of a webpage.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry id="folders-properties-mailinglist-help">
+	    <term>
+	      <guilabel>List Help</guilabel>
+	    </term>
+	    <listitem>
+	      <para>
+		This address is used for requesting help for this
+		mailing list. This is usually an email address.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
 
 <para>After selecting the appropriate <guilabel>Address type</guilabel> you
 enter the email address or the address of the webpage and then click on
