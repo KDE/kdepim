@@ -1742,7 +1742,9 @@ will prefer GPG. Here is no way to force &kmail; to use PGP.</para>
 <qandaentry>
  <question><para>Can I use encryption with my normal (non-SSL) POP3 account?</para></question>
  <answer><para>If your POP3 server runs an ssh daemon, you can use ssh to tunnel your POP3 connection
-using this command:</para>
+using the following command. (You need to be root to execute it. Alternatively, change the first
+port number, i.e. the first occurence of <userinput>110</userinput>, to something above 1024 and configure
+&kmail; to use that port):</para>
 
 <para><userinput>ssh -L 110:127.0.0.1:110 user@host</userinput></para>
 
