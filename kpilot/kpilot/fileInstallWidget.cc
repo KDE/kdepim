@@ -45,6 +45,7 @@ static const char *fileinstallwidget_id =
 #include <qwhatsthis.h>
 #include <qmultilineedit.h>
 #include <qpixmap.h>
+#include <qpopupmenu.h>
 
 #include <kfiledialog.h>
 #include <kurldrag.h>
@@ -75,7 +76,7 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 
 	QPushButton *abutton;
 
-	abutton = addButton = new QPushButton(i18n("Add File..."), this);
+    abutton = addButton = new QPushButton(i18n("Add File..."), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
 	grid->addWidget(abutton, 3, 1);
 	QWhatsThis::add(abutton,
@@ -95,6 +96,7 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 		i18n
 		("<qt>This lists files that will be installed on the Pilot during the next HotSync. Drag files here or use the Add button.</qt>"));
 	fIconView->setAcceptDrops(true);
+    fIconView->setSelectionMode(QIconView::Extended);
 	fIconView->viewport()->installEventFilter(this);
 
 	grid->setRowStretch(2, 100);
@@ -146,15 +148,23 @@ bool FileInstallWidget::eventFilter(QObject *watched, QEvent *event)
 {
 	FUNCTIONSETUP;
 
-	if((watched == fIconView->viewport()) && (event->type() == QEvent::DragEnter)) {
-		dragEnterEvent(static_cast<QDragEnterEvent*>(event));
-		return true;
-	}
-	// We have to skip the DragMove event, because it seems to override the accept state,
-	// when it is set to false by dragEnterEvent() (event->accept(false);)
-	if((watched == fIconView->viewport()) && (event->type() == QEvent::DragMove)) {
-		return true;
-	}
+    if(watched == fIconView->viewport())
+    {
+        if(event->type() == QEvent::DragEnter) {
+    		dragEnterEvent(static_cast<QDragEnterEvent*>(event));
+            return true;
+        }
+    
+        // We have to skip the DragMove event, because it seems to override the 
+        // accept state, when it is set to false by dragEnterEvent() (event->accept(false);)
+        if(event->type() == QEvent::DragMove) {
+            return true;
+        }
+
+        if(event->type() == QEvent::MouseButtonPress) {
+            contextMenu(static_cast<QMouseEvent*>(event));
+        }
+    }
 
 	return false;
 }
@@ -261,3 +271,37 @@ void FileInstallWidget::refreshFileInstallList()
 	}
 }
 
+void FileInstallWidget::contextMenu(QMouseEvent *event)
+{
+    FUNCTIONSETUP;
+
+    if(event->button() == Qt::LeftButton)
+        return;
+
+    QIconViewItem *item;
+    QStringList files;
+    for(item = fIconView->firstItem(); item; item = item->nextItem())
+    {
+        if(item->isSelected())
+            files.append(item->text());            
+    }
+
+    QPopupMenu popup(fIconView);
+    
+    item = fIconView->findItem(event->pos());
+    if(item) {
+        // Popup for the right clicked item
+        popup.insertItem(i18n("Delete"), 10);
+    }
+
+    popup.insertItem(i18n("Delete selected files"), 11);
+    if(files.empty())
+        popup.setItemEnabled(11, false);
+
+    int id = popup.exec(fIconView->viewport()->mapToGlobal(event->pos()));
+    if(id == 10)
+        fInstaller->deleteFile(item->text());
+    else if(id == 11)
+        fInstaller->deleteFiles(files);        
+
+}

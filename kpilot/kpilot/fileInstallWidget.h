@@ -67,6 +67,8 @@ protected:
 	/* virtual */ void dropEvent(QDropEvent* drop);
 	/* virtual */ bool eventFilter (QObject *watched, QEvent *event );
 
+    void contextMenu(QMouseEvent *event);
+
 	KPilotInstaller* getPilotInstallerApp() { return fKPilotInstaller; }
 
 private:
