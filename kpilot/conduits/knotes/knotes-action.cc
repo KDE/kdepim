@@ -447,8 +447,17 @@ bool KNotesAction::modifyNoteOnPilot()
 
 		if (nm.valid())
 		{
-			QString text = fP->fIndex.data() + CSL1("\n") ;
-			text.append(fP->fKNotes->text(fP->fIndex.key()));
+			QString text,title,body;
+			title = fP->fIndex.data();
+			body = fP->fKNotes->text(fP->fIndex.key());
+			if (body.startsWith(title))
+			{
+				text = body;
+			}
+			else
+			{
+				text = title + CSL1("\n") + body;
+			}
 
 			PilotMemo *a = new PilotMemo(text);
 			PilotRecord *r = a->pack();
