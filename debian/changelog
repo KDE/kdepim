@@ -4,6 +4,7 @@ kdepim (4:2.2.1-1) unstable; urgency=low
   * Change maintainer
   * Lintian fixes
   * Break out libical packages again
+  * Provide undocumented link (Closes: #110361)
  
  -- Ivan E. Moore II <rkrusty@debian.org>  Fri, 07 Sep 2001 12:07:00 -0700
 
