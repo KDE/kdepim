@@ -1,4 +1,4 @@
-/* libplugin.h
+/* APIEmulation.h
  *
  * Copyright (C) 1999 by Judd Montgomery
  *

@@ -1,3 +1,5 @@
+#ifndef _KPILOT_PILOTDATEENTRY_H
+#define _KPILOT_PILOTDATEENTRY_H
 /* pilotDateEntry.h	-*- C++ -*-	KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -23,10 +25,8 @@
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#ifndef _KPILOT_PILOTDATEENTRY_H
-#define _KPILOT_PILOTDATEENTRY_H
 
 #include <time.h>
 #include <string.h>
