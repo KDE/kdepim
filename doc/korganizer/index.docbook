@@ -2298,7 +2298,7 @@ url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</u
 </sect1>
 
 <sect1 id="compilation">
-<title>Compilation and installation</title>
+<title>Compilation and Installation</title>
 
 <para>If &korganizer; is not installed and if you are the administrator of your system,
 your best bet is to use a precompiled binary file. </para>
