@@ -30,17 +30,17 @@ class KNConfigManager : QObject {
     KNConfigManager(QObject *p=0, const char *n=0);
     ~KNConfigManager();
 
-    KNConfig::Identity*             identity()            { return i_dentity; }
-    KNConfig::Appearance*           appearance()          { return a_ppearance; }
-    KNConfig::ReadNewsGeneral*      readNewsGeneral()     { return r_eadNewsGeneral; }
-    KNConfig::ReadNewsNavigation*   readNewsNavigation()  { return r_eadNewsNavigation; }
-    KNConfig::ReadNewsViewer*       readNewsViewer()      { return r_eadNewsViewer; }
-    KNConfig::DisplayedHeaders*     displayedHeaders()    { return d_isplayedHeaders; }
-    KNConfig::Scoring*              scoring()             { return s_coring; }
-    KNConfig::PostNewsTechnical*    postNewsTechnical()   { return p_ostNewsTechnical; }
-    KNConfig::PostNewsComposer*     postNewsComposer()    { return p_ostNewsCompose; }
-    KNConfig::Cleanup*              cleanup()             { return c_leanup; }
-    //KNConfig::Cache*                cache()               { return c_ache; }
+    KNConfig::Identity*             identity() const           { return i_dentity; }
+    KNConfig::Appearance*           appearance()const          { return a_ppearance; }
+    KNConfig::ReadNewsGeneral*      readNewsGeneral()const     { return r_eadNewsGeneral; }
+    KNConfig::ReadNewsNavigation*   readNewsNavigation()const  { return r_eadNewsNavigation; }
+    KNConfig::ReadNewsViewer*       readNewsViewer()const      { return r_eadNewsViewer; }
+    KNConfig::DisplayedHeaders*     displayedHeaders()const    { return d_isplayedHeaders; }
+    KNConfig::Scoring*              scoring()const             { return s_coring; }
+    KNConfig::PostNewsTechnical*    postNewsTechnical()const   { return p_ostNewsTechnical; }
+    KNConfig::PostNewsComposer*     postNewsComposer() const   { return p_ostNewsCompose; }
+    KNConfig::Cleanup*              cleanup()const             { return c_leanup; }
+    //KNConfig::Cache*                cache()const               { return c_ache; }
 
     void configure();
     void syncConfig();

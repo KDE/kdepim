@@ -29,7 +29,8 @@
 #include "knode.h"
 
 
-KNConfigManager::KNConfigManager(QObject *p, const char *n) : QObject(p, n), d_ialog(0)
+KNConfigManager::KNConfigManager(QObject *p, const char *n)
+    : QObject(p, n), d_ialog(0)
 {
   i_dentity           = new KNConfig::Identity();
   a_ppearance         = new KNConfig::Appearance();
