@@ -335,6 +335,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
   QString mimetype;
   AttachmentList att;
   bool isXMLStorageFormat = kmailStorageFormat( subResource ) == KMailICalIface::StorageXML;
+  QString subject = uid; // as per kolab2 spec
   if ( isXMLStorageFormat ) {
     Contact contact( &addr );
     // The addressee is converted to: 1) the xml  2) the optional picture 3) the optional logo 4) the optional sound
@@ -349,8 +350,9 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     mimetype = s_inlineMimeType;
     KABC::VCardConverter converter;
     data = converter.createVCard( addr );
+    subject.prepend( "vCard " ); // as per kolab1 spec
   }
-  bool rc = kmailUpdate( subResource, sernum, data, mimetype, uid /*subject*/,
+  bool rc = kmailUpdate( subResource, sernum, data, mimetype, subject,
                          CustomHeaderMap(),
                          att.attachmentURLs, att.attachmentMimeTypes, att.attachmentNames,
                          att.deletedAttachments );
