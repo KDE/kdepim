@@ -755,11 +755,11 @@ void KMMainWidget::slotMailChecked(bool newMail, bool sendOnCheck)
 
   if(kmkernel->xmlGuiInstance()) {
     KNotifyClient::Instance instance(kmkernel->xmlGuiInstance());
-    KNotifyClient::event(topLevelWidget()->winId(), "new-mail-arrived", 
+    KNotifyClient::event(topLevelWidget()->winId(), "new-mail-arrived",
       i18n("New mail arrived"));
   }
   else
-    KNotifyClient::event(topLevelWidget()->winId(), "new-mail-arrived", 
+    KNotifyClient::event(topLevelWidget()->winId(), "new-mail-arrived",
       i18n("New mail arrived"));
   if (mBeepOnNew) {
     KNotifyClient::beep();
@@ -1084,7 +1084,7 @@ void KMMainWidget::slotOverrideHtml()
         "\"spam\" and may increase the likelihood that your system will be "
         "compromised by other present and anticipated security exploits." ),
       i18n( "Security Warning" ),
-      i18n( "Continue" ),
+      KStdGuiItem::cont(),
       "OverrideHtmlWarning", false);
     if( result == KMessageBox::Cancel ) {
       mPreferHtmlAction->setChecked( false );

@@ -70,6 +70,7 @@ using KRecentAddress::RecentAddresses;
 #include <kaction.h>
 #include <kdirwatch.h>
 #include <kstdguiitem.h>
+#include <kiconloader.h>
 
 #include <kspell.h>
 #include <kspelldlg.h>
@@ -3023,7 +3024,7 @@ QCString KMComposeWin::breakLinesAndApplyCodec()
                                                i18n("<qt>Not all characters fit into the chosen"
                                                     " encoding.<br><br>Send the message anyway?</qt>"),
                                                i18n("Some characters will be lost"),
-                                               i18n("Yes"), i18n("No, let me change the encoding") ) == KMessageBox::Yes);
+                                               KStdGuiItem::yes(), i18n("No, let me change the encoding") ) == KMessageBox::Yes);
       if (!anyway)
       {
         mEditor->setText(oldText);
@@ -4343,7 +4344,7 @@ void KMComposeWin::slotAttachPopupMenu(QListViewItem *, const QPoint &, int)
      mAttachMenu->insertItem(i18n("to view", "View"), this,
                              SLOT(slotAttachView()));
      mAttachMenu->insertItem(i18n("Remove"), this, SLOT(slotAttachRemove()));
-     mSaveAsId = mAttachMenu->insertItem( i18n("Save As..."), this,
+     mSaveAsId = mAttachMenu->insertItem( SmallIcon("filesaveas"), i18n("Save As..."), this,
                                           SLOT( slotAttachSave() ) );
      mPropertiesId = mAttachMenu->insertItem( i18n("Properties"), this,
                                               SLOT( slotAttachProperties() ) );

@@ -382,7 +382,7 @@ bool KornShell::firstTimeInit()
 		i18n( "You do not appear to have used KOrn before.\n"
 		"Would you like a basic configuration created for you?" ),
 		i18n("Welcome to KOrn"),
-		i18n("Yes"), i18n( "No, Exit" ));
+		KStdGuiItem::yes(), i18n( "No, Exit" ));
 
 	if( status != 0 ) {
 		return false;

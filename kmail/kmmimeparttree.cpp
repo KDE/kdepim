@@ -96,7 +96,7 @@ void KMMimePartTree::itemRightClicked( QListViewItem* item,
         kdDebug(5006) << "\n**\n** KMMimePartTree::itemRightClicked() **\n**" << endl;
 
         QPopupMenu* popup = new QPopupMenu;
-        popup->insertItem( i18n( "Save &As..." ), this, SLOT( slotSaveAs() ) );
+        popup->insertItem( SmallIcon("filesaveas"),i18n( "Save &As..." ), this, SLOT( slotSaveAs() ) );
         popup->insertItem( i18n( "Save as &Encoded..." ), this,
                            SLOT( slotSaveAsEncoded() ) );
         popup->insertItem( i18n( "Save All Attachments..." ), this,
@@ -152,7 +152,7 @@ void KMMimePartTree::saveOneFile( QListViewItem* item, bool encoded )
     QPtrList<partNode> parts;
     parts.append( static_cast<KMMimePartTreeItem *>(item)->node() );
     mReaderWin->setUpdateAttachment();
-    KMSaveAttachmentsCommand *command = new KMSaveAttachmentsCommand( this, parts, 
+    KMSaveAttachmentsCommand *command = new KMSaveAttachmentsCommand( this, parts,
             mReaderWin->message(), encoded );
     command->start();
 }
@@ -167,7 +167,7 @@ void KMMimePartTree::saveMultipleFiles( const QPtrList<QListViewItem>& selected,
         ++it;
     }
     mReaderWin->setUpdateAttachment();
-    KMSaveAttachmentsCommand *command = new KMSaveAttachmentsCommand( this, parts, 
+    KMSaveAttachmentsCommand *command = new KMSaveAttachmentsCommand( this, parts,
             mReaderWin->message(), encoded );
     command->start();
 }
@@ -203,7 +203,7 @@ void KMMimePartTree::correctSize( QListViewItem * item )
 
   KIO::filesize_t totalSize = 0;
   QListViewItem * myChild = item->firstChild();
-  while ( myChild ) 
+  while ( myChild )
   {
     totalSize += static_cast<KMMimePartTreeItem*>(myChild)->origSize();
     myChild = myChild->nextSibling();
@@ -230,7 +230,7 @@ KMMimePartTreeItem::KMMimePartTreeItem( KMMimePartTree * parent,
   if( node )
     node->setMimePartTreeItem( this );
   setIconAndTextForType( mimetype );
-  if ( parent ) 
+  if ( parent )
     parent->correctSize(this);
 }
 
@@ -256,7 +256,7 @@ KMMimePartTreeItem::KMMimePartTreeItem( KMMimePartTreeItem * parent,
   if( node )
     node->setMimePartTreeItem( this );
   setIconAndTextForType( mimetype );
-  if ( listView() ) 
+  if ( listView() )
     static_cast<KMMimePartTree*>(listView())->correctSize(this);
 }
 
