@@ -29,6 +29,7 @@
 #include <qwhatsthis.h>
 
 #include <kdialog.h>
+#include <kiconloader.h>
 #include <klineedit.h>
 #include <klocale.h>
 
@@ -48,11 +49,15 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   label->setBuddy( mSearchText );
   layout->addWidget( mSearchText );
 
+  QPushButton *button = new QPushButton( this );
+  button->setAutoDefault( false );
+  button->setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum ) );
+  button->setPixmap( SmallIcon( "clear_left" ) );
+  QToolTip::add( button, i18n( "Reset" ) );
+  layout->addWidget( button );
+
   mFieldCombo = new QComboBox( false, this );
   layout->addWidget( mFieldCombo );
-
-  QPushButton *button = new QPushButton( i18n( "Reset" ), this );
-  layout->addWidget( button );
 
   QToolTip::add( mFieldCombo, i18n( "Select incremental search field" ) );
   QWhatsThis::add( mFieldCombo, i18n( "Here you can choose the field, which shall be used for incremental search." ) );
