@@ -110,7 +110,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   // Accounts / Mail
   list.clear();
   list << QString(" ")+i18n("Accounts") << i18n(" Mail");
-  frame = addHBoxPage(list, i18n("Mail Server (SMTP)"), BarIcon("mail_send"));
+  frame = addHBoxPage(list, i18n("Mail Server (SMTP)"), BarIcon("mail_generic"));
   w_idgets.append(new KNConfig::SmtpAccountWidget(frame));
 
   // Appearance

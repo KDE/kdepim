@@ -75,7 +75,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   sb->setItemAlignment (5,AlignCenter | AlignVCenter);
   sb->insertItem(QString::null, 5,0);                 // line
   sb->setItemAlignment (6,AlignCenter | AlignVCenter);
-  connect(v_iew->e_dit, SIGNAL(CursorPositionChanged()), SLOT(slotUpdateStatusBar()));
+  connect(v_iew->e_dit, SIGNAL(CursorPositionChanged()), SLOT(slotUpdateCursorPos()));
   connect(v_iew->e_dit, SIGNAL(toggle_overwrite_signal()), SLOT(slotUpdateStatusBar()));
 
   //------------------------------- <Actions> --------------------------------------
@@ -1004,6 +1004,13 @@ void KNComposer::slotUpdateStatusBar()
   statusBar()->changeItem(i18n(" Type: %1 ").arg(typeDesc), 1);
   statusBar()->changeItem(i18n(" Charset: %1 ").arg(c_harset), 2);
   statusBar()->changeItem(overwriteDesc, 3);
+  statusBar()->changeItem(i18n(" Column: %1 ").arg(v_iew->e_dit->currentColumn()), 4);
+  statusBar()->changeItem(i18n(" Line: %1 ").arg(v_iew->e_dit->currentLine()), 5);
+}
+
+
+void KNComposer::slotUpdateCursorPos()
+{
   statusBar()->changeItem(i18n(" Column: %1 ").arg(v_iew->e_dit->currentColumn()), 4);
   statusBar()->changeItem(i18n(" Line: %1 ").arg(v_iew->e_dit->currentLine()), 5);
 }

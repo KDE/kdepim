@@ -134,6 +134,7 @@ class KNComposer : public KMainWindow  {
     void slotToggleToolBar();
     void slotToggleStatusBar();
     void slotUpdateStatusBar();
+    void slotUpdateCursorPos();
     void slotConfKeys();
     void slotConfToolbar();
 

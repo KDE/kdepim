@@ -26,6 +26,7 @@
 #include <qpaintdevicemetrics.h>
 #include <qstylesheet.h>
 
+#include <kiconloader.h>
 #include <kpopupmenu.h>
 #include <kdebug.h>
 #include <kcursor.h>
@@ -82,11 +83,11 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
 
   //popups
   u_rlPopup=new KPopupMenu();
-  u_rlPopup->insertItem(i18n("Open URL"), PUP_OPEN);
-  u_rlPopup->insertItem(i18n("Copy to clipboard"), PUP_COPYURL);
+  u_rlPopup->insertItem(SmallIcon("fileopen"),i18n("&Open Link"), PUP_OPEN);
+  u_rlPopup->insertItem(SmallIcon("editcopy"),i18n("&Copy Link Location"), PUP_COPYURL);
   a_ttPopup=new KPopupMenu();
-  a_ttPopup->insertItem(i18n("Open"), PUP_OPEN);
-  a_ttPopup->insertItem(i18n("Save"), PUP_SAVE);
+  a_ttPopup->insertItem(SmallIcon("fileopen"),i18n("&Open Attachment"), PUP_OPEN);
+  a_ttPopup->insertItem(SmallIcon("filesave"),i18n("&Save Attachment"), PUP_SAVE);
 
   //actions
   a_ctSave              = KStdAction::save(this, SLOT(slotSave()), a_ctions);
@@ -94,7 +95,6 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   a_ctPrint             = KStdAction::print(this, SLOT(slotPrint()), a_ctions);
   a_ctSelAll            = KStdAction::selectAll(this, SLOT(slotSelectAll()), a_ctions);
   a_ctCopy              = KStdAction::copy(this, SLOT(copy()), a_ctions);
-
 
   a_ctReply             = new KAction(i18n("&Followup to Newsgroup..."),"message_reply", Key_R , this,
                           SLOT(slotReply()), a_ctions, "article_postReply");
