@@ -2,7 +2,7 @@
    This file is part of Kontact
 
    Copyright (c) 2001 Matthias Hoelzer-Kluepfel <mhk@kde.org>
-   Copyright (c) 2002 Daniel Molkentin <molkentin@kde.org>
+   Copyright (c) 2002-2003 Daniel Molkentin <molkentin@kde.org>
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public

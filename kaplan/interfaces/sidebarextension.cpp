@@ -1,5 +1,5 @@
 /* This file is part of the KDE project
-   Copyright (C) 2002 Daniel Molkentin <molkentin@kde.org>
+   Copyright (C) 2003 Daniel Molkentin <molkentin@kde.org>
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
@@ -25,11 +25,14 @@
 using namespace KParts;
 
 SideBarExtension::SideBarExtension(KParts::ReadOnlyPart *parent, const char* name)
-	: QObject(parent, name), m_child(0), d(0)
+: QObject(parent, name), m_child(0), d(0)
 {
 }
 
 SideBarExtension::~SideBarExtension()
 {
 };
+
 #include "sidebarextension.moc"
+
+// vim: ts=2 sw=2 et

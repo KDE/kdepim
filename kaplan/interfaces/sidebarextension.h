@@ -1,5 +1,5 @@
 /* This file is part of the KDE project
-   Copyright (C) 2002 Daniel Molkentin <molkentin@kde.org>
+   Copyright (C) 2003 Daniel Molkentin <molkentin@kde.org>
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
@@ -27,57 +27,57 @@ class QWidget;
 namespace KParts
 {
 
-	class ReadOnlyPart;
+  class ReadOnlyPart;
 
-	/**
-	 * Provides a way to export a widget which will be displayed in Kontacts
-	 * stackview at the left
-	 **/
-	class SideBarExtension : public QObject
-	{
-		Q_OBJECT
+  /**
+   * Provides a way to export a widget which will be displayed in Kontacts
+   * stackview at the left
+   **/
+  class SideBarExtension : public QObject
+  {
+    Q_OBJECT
 
-		public:
-			SideBarExtension(KParts::ReadOnlyPart *parent, const char* name);
-			~SideBarExtension();
+    public:
+      SideBarExtension(KParts::ReadOnlyPart *parent, const char* name);
+      ~SideBarExtension();
 
-			/**
-			 * Pass the sidebar widget here. It will be reparented by kontact
-			 **/
-			void setWidget(QWidget *widget) { m_child = widget; };
-			/**
-			 * Set the display name of the Service your part is to provide
-			 **/
-			void setDisplayName(const QString& name) { m_name = name; };
-			/**
-			 * Set the name of the icon. 
-			 **/
-			void setIcon(const QString& icon) { m_icon = icon; };
+      /**
+       * Pass the sidebar widget here. It will be reparented by kontact
+       **/
+      void setWidget(QWidget *widget) { m_child = widget; };
+      /**
+       * Set the display name of the Service your part is to provide
+       **/
+      void setDisplayName(const QString& name) { m_name = name; };
+      /**
+       * Set the name of the icon. 
+       **/
+      void setIcon(const QString& icon) { m_icon = icon; };
 
-			/**
-			 * Retrieve a pointer to the widget
-			 **/
-			QWidget* widget() const { return m_child; };
+      /**
+       * Retrieve a pointer to the widget
+       **/
+      QWidget* widget() const { return m_child; };
 
-			/**
-			 * Retrieve the display name
-			 **/
-			QString displayName() const { return m_name; };
+      /**
+       * Retrieve the display name
+       **/
+      QString displayName() const { return m_name; };
 
-			/**
-			 * Retrieve the name of the icon
-			 **/
-			QString icon() const { return m_icon; };
+      /**
+       * Retrieve the name of the icon
+       **/
+      QString icon() const { return m_icon; };
 
-		private:
-			QWidget* m_child;
-			QString  m_name;
-			QString  m_icon;
+    private:
+      QWidget* m_child;
+      QString  m_name;
+      QString  m_icon;
 
-			class SideBarExtensionPrivate;
-			SideBarExtensionPrivate *d;
-	};
+      class SideBarExtensionPrivate;
+      SideBarExtensionPrivate *d;
+  };
 };
 #endif // SIDEBAREXTENSION_H 
 
-//vim: ts=4 tw=4 et
+// vim: ts=2 sw=2 et
