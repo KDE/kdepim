@@ -1,7 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2002,2003 Holger Freyther <freyther@kde.org>
+    Copyright (c) 2002,2003,2005 Holger Freyther <freyther@kde.org>
     Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -155,23 +155,23 @@ class Konnector : public KRES::Resource
       Emitted when Syncee list becomes available as response to
       requestSyncees().
     */
-    void synceesRead( Konnector * );
+    void synceesRead( KSync::Konnector * );
 
     /**
       Emitted when an error occurs during read.
     */
-    void synceeReadError( Konnector * );
+    void synceeReadError( KSync::Konnector * );
 
     /**
       Emitted when Syncee list was successfully written back to connected
       entity.
     */
-    void synceesWritten( Konnector * );
+    void synceesWritten( KSync::Konnector * );
 
     /**
       Emitted when an error occurs during write.
     */
-    void synceeWriteError( Konnector * );
+    void synceeWriteError( KSync::Konnector * );
 
     /**
      * Emitted when the sourcePath was changed

@@ -90,8 +90,8 @@ KPIM::ProgressItem* Konnector::progressItem( const QString &msg )
   ProgressItem *item = ProgressManager::instance()->createProgressItem(
                        ProgressManager::getUniqueID(), msg );
 
-  connect( item, SIGNAL( progressItemCanceled( ProgressItem* ) ),
-           SLOT( progressItemCanceled( ProgressItem* ) ) );
+  connect( item, SIGNAL( progressItemCanceled(KPIM::ProgressItem* ) ),
+           SLOT( progressItemCanceled( KPIM::ProgressItem* ) ) );
 
   return item;
 }
