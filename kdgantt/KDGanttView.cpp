@@ -638,7 +638,7 @@ void KDGanttView::slotHeaderSizeChanged()
 
   \return the pointer to the legend dock window
           0 is returned, if the legend is no dock window
-	  DO NOT DELETE THIS POINTER!
+          DO NOT DELETE THIS POINTER!
   \sa setShowLegend(), setLegendIsDockwindow(),legendIsDockwindow()
 */
 QDockWindow* KDGanttView::legendDockwindow() const
@@ -808,14 +808,14 @@ bool KDGanttView::loadProject( QIODevice* device )
         device->close();
     if( device->open( IO_ReadOnly ) ) {
         QDomDocument doc( "GanttView" );
-	QString err;
-	int errline, errcol;
-	if ( !doc.setContent( device, &err, &errline, &errcol ) ) {
-	  qDebug("KDGantt::Error parsing XML data at line %d. Message is:", errline );
-	  qDebug("%s ", err.latin1());
-	  device->close();
-	  return false;
-	}
+        QString err;
+        int errline, errcol;
+        if ( !doc.setContent( device, &err, &errline, &errcol ) ) {
+          qDebug("KDGantt::Error parsing XML data at line %d. Message is:", errline );
+          qDebug("%s ", err.latin1());
+          device->close();
+          return false;
+        }
         device->close();
         return loadXML( doc );
     } else
@@ -934,7 +934,7 @@ void KDGanttView::print( QPrinter* printer ,
   \sa print()
 */
 QSize KDGanttView::drawContents( QPainter* p,
-		      bool drawListView , bool drawTimeLine, bool drawLegend )
+                      bool drawListView , bool drawTimeLine, bool drawLegend )
 {
   QSize size;
   int lvX, lvY, thX, thY, tlX, tlY, lwX, lwY, allX, allY;
@@ -966,7 +966,7 @@ QSize KDGanttView::drawContents( QPainter* p,
   if ( p ) {
     if ( drawListView ) {
       if ( drawTimeLine )
-	temp =  thY;
+        temp =  thY;
       p->translate( 0, temp );
       myListView->drawToPainter( p );
       p->translate( lvX, -temp);
@@ -977,12 +977,12 @@ QSize KDGanttView::drawContents( QPainter* p,
       p->translate( -myCanvasView->frameWidth(), thY);
       myCanvasView->drawToPainter( p );
       if ( drawListView )
-	p->translate( -lvX, tlY);
+        p->translate( -lvX, tlY);
       else
-	p->translate( 0, tlY);
+        p->translate( 0, tlY);
     } else {
       if ( drawListView )
-	p->translate( -lvX, 0 );
+        p->translate( -lvX, 0 );
     }
     if ( drawLegend ) {
        myLegend->drawToPainter( p );
@@ -1319,7 +1319,7 @@ void KDGanttView::setShapes( KDGanttViewItem::Type type,
       QListViewItemIterator it(myListView);
       for ( ; it.current(); ++it ) {
         if ( ((KDGanttViewItem*)it.current())->type() == type)
-	  ((KDGanttViewItem*)it.current())->setShapes(start,middle, end );
+          ((KDGanttViewItem*)it.current())->setShapes(start,middle, end );
       }
     }
     int index = getIndex( type );
@@ -1381,7 +1381,7 @@ void KDGanttView::setColors( KDGanttViewItem::Type type,
       QListViewItemIterator it(myListView);
       for ( ; it.current(); ++it ) {
         if ( ((KDGanttViewItem*)it.current())->type() == type)
-	  ((KDGanttViewItem*)it.current())->setColors(start,middle, end );
+          ((KDGanttViewItem*)it.current())->setColors(start,middle, end );
       }
     }
     int index = getIndex( type );
@@ -1444,7 +1444,7 @@ void KDGanttView::setHighlightColors( KDGanttViewItem::Type type,
       QListViewItemIterator it(myListView);
       for ( ; it.current(); ++it ) {
         if ( ((KDGanttViewItem*)it.current())->type() == type)
-	  ((KDGanttViewItem*)it.current())->setHighlightColors(start,middle, end );
+          ((KDGanttViewItem*)it.current())->setHighlightColors(start,middle, end );
       }
     }
     int index = getIndex( type );
@@ -1493,7 +1493,7 @@ void KDGanttView::setTextColor( const QColor& color )
 {
     QListViewItemIterator it(myListView);
     for ( ; it.current(); ++it ) {
-	((KDGanttViewItem*)it.current())->setTextColor(color);
+        ((KDGanttViewItem*)it.current())->setTextColor(color);
     }
     myTextColor = color;
 }
@@ -1940,12 +1940,12 @@ void KDGanttView::setIntervalBackgroundColor( const QDateTime& start,
   weekendBackgroundColor()
 */
 bool KDGanttView::changeBackgroundInterval( const QDateTime& oldstart,
-				   const QDateTime& oldend,
-				   const QDateTime& newstart,
-				   const QDateTime& newend )
+                                   const QDateTime& oldend,
+                                   const QDateTime& newstart,
+                                   const QDateTime& newend )
 {
   return myTimeHeader->changeBackgroundInterval( oldstart, oldend,
-						 newstart, newend );
+                                                 newstart, newend );
 }
 
 /*!
@@ -1958,7 +1958,7 @@ bool KDGanttView::changeBackgroundInterval( const QDateTime& oldstart,
   \sa changeBackgroundInterval(),  columnBackgroundColor()
 */
 bool KDGanttView::deleteBackgroundInterval( const QDateTime& start,
-						   const QDateTime& end)
+                                            const QDateTime& end)
 {
   return myTimeHeader->deleteBackgroundInterval( start, end );
 }
@@ -2240,7 +2240,7 @@ void KDGanttView::setDefaultColor( KDGanttViewItem::Type type,
       QListViewItemIterator it(myListView);
       for ( ; it.current(); ++it ) {
         if ( ((KDGanttViewItem*)it.current())->type() == type)
-	  ((KDGanttViewItem*)it.current())->setDefaultColor(color );
+          ((KDGanttViewItem*)it.current())->setDefaultColor(color );
       }
     }
     int index = getIndex( type );
@@ -2286,7 +2286,7 @@ void KDGanttView::setDefaultHighlightColor( KDGanttViewItem::Type type,
       QListViewItemIterator it(myListView);
       for ( ; it.current(); ++it ) {
         if ( ((KDGanttViewItem*)it.current())->type() == type)
-	  ((KDGanttViewItem*)it.current())->setDefaultHighlightColor(color );
+          ((KDGanttViewItem*)it.current())->setDefaultHighlightColor(color );
       }
     }
     int index = getIndex( type );
@@ -2518,10 +2518,10 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                 bool value;
                 if( KDGanttXML::readBoolNode( element, value ) )
                     setShowListView( value );
-	    } else if( tagName == "ShowHeader" ) {
-	      bool value;
-	      if( KDGanttXML::readBoolNode( element, value ) )
-		setHeaderVisible( value );
+            } else if( tagName == "ShowHeader" ) {
+              bool value;
+              if( KDGanttXML::readBoolNode( element, value ) )
+                setHeaderVisible( value );
             } else if( tagName == "ShowTaskLinks" ) {
                 bool value;
                 if( KDGanttXML::readBoolNode( element, value ) )
@@ -2530,10 +2530,10 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                 bool value;
                 if( KDGanttXML::readBoolNode( element, value ) )
                     setEditorEnabled( value );
-	    } else if( tagName == "DisplayEmptyTasksAsLine" ) {
-	      bool value;
-	      if( KDGanttXML::readBoolNode( element, value ) )
-		setDisplayEmptyTasksAsLine( value );
+            } else if( tagName == "DisplayEmptyTasksAsLine" ) {
+              bool value;
+              if( KDGanttXML::readBoolNode( element, value ) )
+                setDisplayEmptyTasksAsLine( value );
             } else if( tagName == "GlobalFont" ) {
                 QFont font;
                 if( KDGanttXML::readFontNode( element, font ) )
@@ -2614,10 +2614,10 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                 int value;
                 if( KDGanttXML::readIntNode( element, value ) )
                     setGanttMaximumWidth( value );
-	    } else if( tagName == "NoInformationBrush" ) {
-	      QBrush value;
-	      if( KDGanttXML::readBrushNode( element, value ) )
-		setNoInformationBrush( value );
+            } else if( tagName == "NoInformationBrush" ) {
+              QBrush value;
+              if( KDGanttXML::readBrushNode( element, value ) )
+                setNoInformationBrush( value );
             } else if( tagName == "GanttViewBackgroundColor" ) {
                 QColor value;
                 if( KDGanttXML::readColorNode( element, value ) )
@@ -2639,14 +2639,14 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                 if( KDGanttXML::readColorNode( element, value ) )
                     setWeekendBackgroundColor( value );
             } else if( tagName == "WeekdayBackgroundColor" ) {
-		QDomNode node = element.firstChild();
+                QDomNode node = element.firstChild();
                 int day = 0;
                 QColor color;
-		while( !node.isNull() ) {
-		    QDomElement element = node.toElement();
-		    if( !element.isNull() ) { // was really an elemente
-			QString tagName = element.tagName();
-			if( tagName == "Day" ) {
+                while( !node.isNull() ) {
+                    QDomElement element = node.toElement();
+                    if( !element.isNull() ) { // was really an elemente
+                        QString tagName = element.tagName();
+                        if( tagName == "Day" ) {
                             int value;
                             if( KDGanttXML::readIntNode( element, value ) )
                                 day = value;
@@ -2685,17 +2685,17 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                 if( KDGanttXML::readBoolNode( element, value ) )
                     setShowTimeTablePopupMenu( value );
             } else if( tagName == "Shapes" ) {
-		QDomNode node = element.firstChild();
-		bool undefinedShape = false;
-		while( !node.isNull() ) {
-		    QDomElement element = node.toElement();
-		    if( !element.isNull() ) { // was really an elemente
-			QString tagName = element.tagName();
-			if( tagName == "Event" ) {
+                QDomNode node = element.firstChild();
+                bool undefinedShape = false;
+                while( !node.isNull() ) {
+                    QDomElement element = node.toElement();
+                    if( !element.isNull() ) { // was really an elemente
+                        QString tagName = element.tagName();
+                        if( tagName == "Event" ) {
                             KDGanttViewItem::Shape startShape, middleShape, endShape;
-			    startShape = KDGanttViewItem::TriangleDown;
-			    middleShape = KDGanttViewItem::TriangleDown;
-			    endShape = KDGanttViewItem::TriangleDown;
+                            startShape = KDGanttViewItem::TriangleDown;
+                            middleShape = KDGanttViewItem::TriangleDown;
+                            endShape = KDGanttViewItem::TriangleDown;
                             QDomNode node = element.firstChild();
                             while( !node.isNull() ) {
                                 QDomElement element = node.toElement();
@@ -2705,20 +2705,20 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         QString value;
                                         if( KDGanttXML::readStringNode( element, value ) )
                                             startShape = KDGanttViewItem::stringToShape( value );
-					if ( value == "Undefined" )
-					  undefinedShape = true;
-				    } else if( tagName == "Middle" ) {
+                                        if ( value == "Undefined" )
+                                          undefinedShape = true;
+                                    } else if( tagName == "Middle" ) {
                                         QString value;
                                         if( KDGanttXML::readStringNode( element, value ) )
                                             middleShape = KDGanttViewItem::stringToShape( value );
-					if ( value == "Undefined" )
-					  undefinedShape = true;
+                                        if ( value == "Undefined" )
+                                          undefinedShape = true;
                                     } else if( tagName == "End" ) {
                                         QString value;
                                         if( KDGanttXML::readStringNode( element, value ) )
                                             endShape = KDGanttViewItem::stringToShape( value );
-					if ( value == "Undefined" )
-					  undefinedShape = true;
+                                        if ( value == "Undefined" )
+                                          undefinedShape = true;
                                     } else {
                                         qDebug( "Unrecognized tag name: %s", tagName.latin1() );
                                         Q_ASSERT( false );
@@ -2726,15 +2726,15 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                 }
                                 node = node.nextSibling();
                             }
-			    if ( ! undefinedShape )
-			      setShapes( KDGanttViewItem::Event, startShape,
+                            if ( ! undefinedShape )
+                              setShapes( KDGanttViewItem::Event, startShape,
                                        middleShape, endShape, false );
-			    undefinedShape = false;
+                            undefinedShape = false;
                         } else if( tagName == "Task" ) {
                             KDGanttViewItem::Shape startShape, middleShape, endShape;
-			    startShape = KDGanttViewItem::TriangleDown;
-			    middleShape = KDGanttViewItem::TriangleDown;
-			    endShape = KDGanttViewItem::TriangleDown;
+                            startShape = KDGanttViewItem::TriangleDown;
+                            middleShape = KDGanttViewItem::TriangleDown;
+                            endShape = KDGanttViewItem::TriangleDown;
                             QDomNode node = element.firstChild();
                             while( !node.isNull()) {
                                 QDomElement element = node.toElement();
@@ -2744,20 +2744,20 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         QString value;
                                         if( KDGanttXML::readStringNode( element, value ) )
                                             startShape = KDGanttViewItem::stringToShape( value );
-					if ( value == "Undefined" )
-					  undefinedShape = true;
+                                        if ( value == "Undefined" )
+                                          undefinedShape = true;
                                     } else if( tagName == "Middle" ) {
                                         QString value;
                                         if( KDGanttXML::readStringNode( element, value ) )
                                             middleShape = KDGanttViewItem::stringToShape( value );
-					if ( value == "Undefined" )
-					  undefinedShape = true;
+                                        if ( value == "Undefined" )
+                                          undefinedShape = true;
                                     } else if( tagName == "End" ) {
                                         QString value;
                                         if( KDGanttXML::readStringNode( element, value ) )
                                             endShape = KDGanttViewItem::stringToShape( value );
-					if ( value == "Undefined" )
-					  undefinedShape = true;
+                                        if ( value == "Undefined" )
+                                          undefinedShape = true;
                                     } else {
                                         qDebug( "Unrecognized tag name: %s", tagName.latin1() );
                                         Q_ASSERT( false );
@@ -2765,14 +2765,14 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                 }
                                 node = node.nextSibling();
                             }
-			    if ( ! undefinedShape )
-			      setShapes( KDGanttViewItem::Task, startShape, middleShape, endShape, false );
-			    undefinedShape = false;
+                            if ( ! undefinedShape )
+                              setShapes( KDGanttViewItem::Task, startShape, middleShape, endShape, false );
+                            undefinedShape = false;
                         } else if( tagName == "Summary" ) {
-			    KDGanttViewItem::Shape startShape, middleShape, endShape;
-			    startShape = KDGanttViewItem::TriangleDown;
-			    middleShape = KDGanttViewItem::TriangleDown;
-			    endShape = KDGanttViewItem::TriangleDown;
+                            KDGanttViewItem::Shape startShape, middleShape, endShape;
+                            startShape = KDGanttViewItem::TriangleDown;
+                            middleShape = KDGanttViewItem::TriangleDown;
+                            endShape = KDGanttViewItem::TriangleDown;
                             QDomNode node = element.firstChild();
                             while( !node.isNull() ) {
                                 QDomElement element = node.toElement();
@@ -2782,20 +2782,20 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         QString value;
                                         if( KDGanttXML::readStringNode( element, value ) )
                                             startShape = KDGanttViewItem::stringToShape( value );
-					if ( value == "Undefined" )
-					  undefinedShape = true;
+                                        if ( value == "Undefined" )
+                                          undefinedShape = true;
                                     } else if( tagName == "Middle" ) {
                                         QString value;
                                         if( KDGanttXML::readStringNode( element, value ) )
                                             middleShape = KDGanttViewItem::stringToShape( value );
-					if ( value == "Undefined" )
-					  undefinedShape = true;
+                                        if ( value == "Undefined" )
+                                          undefinedShape = true;
                                     } else if( tagName == "End" ) {
                                         QString value;
                                         if( KDGanttXML::readStringNode( element, value ) )
                                             endShape = KDGanttViewItem::stringToShape( value );
-					if ( value == "Undefined" )
-					  undefinedShape = true;
+                                        if ( value == "Undefined" )
+                                          undefinedShape = true;
                                     } else {
                                         qDebug( "Unrecognized tag name: %s", tagName.latin1() );
                                         Q_ASSERT( false );
@@ -2803,10 +2803,10 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                 }
                                 node = node.nextSibling();
                             }
-			    if ( ! undefinedShape )
-			      setShapes( KDGanttViewItem::Summary, startShape,
+                            if ( ! undefinedShape )
+                              setShapes( KDGanttViewItem::Summary, startShape,
                                        middleShape, endShape, false );
-			    undefinedShape = false;
+                            undefinedShape = false;
                         } else {
                             qDebug( "Unrecognized tag name: %s", tagName.latin1() );
                             Q_ASSERT( false );
@@ -2815,12 +2815,12 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                     node = node.nextSibling();
                 }
             } else if( tagName == "Colors" ) {
-		QDomNode node = element.firstChild();
-		while( !node.isNull()) {
-		    QDomElement element = node.toElement();
-		    if( !element.isNull() ) { // was really an elemente
-			QString tagName = element.tagName();
-			if( tagName == "Event" ) {
+                QDomNode node = element.firstChild();
+                while( !node.isNull()) {
+                    QDomElement element = node.toElement();
+                    if( !element.isNull() ) { // was really an elemente
+                        QString tagName = element.tagName();
+                        if( tagName == "Event" ) {
                             QColor startColor, middleColor, endColor;
                             QDomNode node = element.firstChild();
                             while( !node.isNull() ) {
@@ -2941,12 +2941,12 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                     node = node.nextSibling();
                 }
             } else if( tagName == "HighlightColors" ) {
-		QDomNode node = element.firstChild();
-		while( !node.isNull() ) {
-		    QDomElement element = node.toElement();
-		    if( !element.isNull() ) { // was really an elemente
-			QString tagName = element.tagName();
-			if( tagName == "Event" ) {
+                QDomNode node = element.firstChild();
+                while( !node.isNull() ) {
+                    QDomElement element = node.toElement();
+                    if( !element.isNull() ) { // was really an elemente
+                        QString tagName = element.tagName();
+                        if( tagName == "Event" ) {
                             QColor startColor, middleColor, endColor;
                             QDomNode node = element.firstChild();
                             while( !node.isNull() ) {
@@ -3176,7 +3176,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                         QString tagName = element.tagName();
                         if( tagName == "LegendItem" ) {
                             KDGanttViewItem::Shape tempLegendShape;
-			    tempLegendShape = KDGanttViewItem::TriangleDown;
+                            tempLegendShape = KDGanttViewItem::TriangleDown;
                             QColor tempLegendColor;
                             QString tempLegendString;
                             bool ok = true;
@@ -3231,7 +3231,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
 
         node = node.nextSibling();
     } // while
-	return true; /* FIXME: Do real error-reporting. The ASSERT's should be "return false" stmnts */
+        return true; /* FIXME: Do real error-reporting. The ASSERT's should be "return false" stmnts */
 } // method
 
 
@@ -3265,11 +3265,11 @@ QDomDocument KDGanttView::saveXML( bool withPI ) const
 
     // the ShowLegendButton element
     KDGanttXML::createBoolNode( doc, docRoot, "ShowLegendButton",
-			   showLegendButton() );
+                           showLegendButton() );
 
     // the LegendIsDockWindow element
     KDGanttXML::createBoolNode( doc, docRoot, "LegendIsDockWindow",
-			   legendIsDockwindow() );
+                           legendIsDockwindow() );
 
     // the ShowListView element
     KDGanttXML::createBoolNode( doc, docRoot, "ShowListView", showListView() );
@@ -3288,7 +3288,7 @@ QDomDocument KDGanttView::saveXML( bool withPI ) const
 
     // the DisplayEmptyTasksAsLine element
     KDGanttXML::createBoolNode( doc, docRoot, "DisplayEmptyTasksAsLine",
-			   displayEmptyTasksAsLine() );
+                           displayEmptyTasksAsLine() );
 
     // the HorizonStart element
     KDGanttXML::createDateTimeNode( doc, docRoot, "HorizonStart", horizonStart() );
@@ -3331,7 +3331,7 @@ QDomDocument KDGanttView::saveXML( bool withPI ) const
 
     // the AutoScaleMinorTickCount element
     KDGanttXML::createIntNode( doc, docRoot, "AutoScaleMinorTickCount",
-			  autoScaleMinorTickCount() );
+                          autoScaleMinorTickCount() );
 
     // the MinimumColumnWidth element
     KDGanttXML::createIntNode( doc, docRoot, "MinimumColumnWidth",
@@ -3343,23 +3343,23 @@ QDomDocument KDGanttView::saveXML( bool withPI ) const
 
     // the NoInformationBrush element
     KDGanttXML::createBrushNode( doc, docRoot, "NoInformationBrush",
-			    noInformationBrush() );
+                            noInformationBrush() );
 
     // the GanttViewBackgroundColor element
     KDGanttXML::createColorNode( doc, docRoot, "GanttViewBackgroundColor",
-			    gvBackgroundColor() );
+                            gvBackgroundColor() );
 
     // the ListViewBackgroundColor element
     KDGanttXML::createColorNode( doc, docRoot, "ListViewBackgroundColor",
-			    lvBackgroundColor() );
+                            lvBackgroundColor() );
 
     // the TimeHeaderBackgroundColor element
     KDGanttXML::createColorNode( doc, docRoot, "TimeHeaderBackgroundColor",
-			    timeHeaderBackgroundColor() );
+                            timeHeaderBackgroundColor() );
 
     // the LegendHeaderBackgroundColor element
     KDGanttXML::createColorNode( doc, docRoot, "LegendHeaderBackgroundColor",
-			    legendHeaderBackgroundColor() );
+                            legendHeaderBackgroundColor() );
 
     // the WeekendBackgroundColor element
     KDGanttXML::createColorNode( doc, docRoot, "WeekendBackgroundColor",
@@ -3924,7 +3924,7 @@ KDGanttViewItem* KDGanttView::getItemByName( const QString& name ) const
     KDGanttViewItem* temp =  firstChild(),* ret;
     while (temp != 0) {
       if ( (ret = temp->getChildByName( name ) ) )
-	return ret;
+        return ret;
       temp = temp->nextSibling();
     }
     return 0;
@@ -3971,9 +3971,9 @@ KDGanttViewItem* KDGanttView::getItemByGanttViewPos( const QPoint& pos ) const
     QCanvasItemList::Iterator it;
     for ( it = il.begin(); it != il.end(); ++it ) {
       if ( myCanvasView->getType(*it) == Type_is_KDGanttViewItem) {
-	item = myCanvasView->getItem(*it);
-	if ( item->enabled() )
-	  return item;
+        item = myCanvasView->getItem(*it);
+        if ( item->enabled() )
+          return item;
       }
     }
     return 0;
@@ -4359,8 +4359,8 @@ bool KDGanttView::dropEnabled() const
   \sa lvDropEvent(), lvStartDrag()
 */
 bool  KDGanttView::lvDropEvent ( QDropEvent* e,
-				 KDGanttViewItem* droppedItem,
-				 KDGanttViewItem* itemBelowMouse )
+                                 KDGanttViewItem* droppedItem,
+                                 KDGanttViewItem* itemBelowMouse )
 {
     Q_UNUSED( e );
     Q_UNUSED( droppedItem );
@@ -4385,17 +4385,17 @@ bool  KDGanttView::lvDropEvent ( QDropEvent* e,
     info.setFile( str ) ;
     if ( info.isFile() ) {
       if (!QMessageBox::information( this, "KDGantt Drag&Drop test",
-				     "Try to insert file: "+ str + " ?",
-				     "&Okay", "&Cancel",0,1  ) ) {
-	QFile file( str );
-	// store current updating status
-	bool uen = myTimeTable->blockUpdating();
-	// block updating while insertion of items
-	myTimeTable->setBlockUpdating();
-	loadProject( &file ) ;
-	// restore updating status and execute an update via setUpdateEnabled( true );
-	if ( !uen )
-	  setUpdateEnabled( true );
+                                     "Try to insert file: "+ str + " ?",
+                                     "&Okay", "&Cancel",0,1  ) ) {
+        QFile file( str );
+        // store current updating status
+        bool uen = myTimeTable->blockUpdating();
+        // block updating while insertion of items
+        myTimeTable->setBlockUpdating();
+        loadProject( &file ) ;
+        // restore updating status and execute an update via setUpdateEnabled( true );
+        if ( !uen )
+          setUpdateEnabled( true );
       }
     }
     return true;
@@ -4418,7 +4418,7 @@ bool  KDGanttView::lvDropEvent ( QDropEvent* e,
 
   \param e           The QDragMoveEvent
                      Note: e->source() is a pointer to the KDGanttView, the drag started from.
-		     I.e., if e->source() == this, this drag is an internal drag.
+                     I.e., if e->source() == this, this drag is an internal drag.
 
   \sa lvDropEvent(), lvStartDrag(), lvDragMoveEvent()
 */
@@ -4460,7 +4460,7 @@ void  KDGanttView::lvDragEnterEvent ( QDragEnterEvent * e)
 
   \param e           The QDragMoveEvent
                      Note: e->source() is a pointer to the KDGanttView, the drag started from.
-		     I.e. if e->source() == this, this drag is an internal drag.
+                     I.e. if e->source() == this, this drag is an internal drag.
          draggedItem 0, if this is a drag operation from another KDGanttView instance.
          If this drag is an internal drag (i.e., within the KDGanttView),
          this parameter points to the dragged item.
@@ -4477,8 +4477,8 @@ void  KDGanttView::lvDragEnterEvent ( QDragEnterEvent * e)
   \sa lvDropEvent(), lvStartDrag()
 */
 bool  KDGanttView::lvDragMoveEvent ( QDragMoveEvent* /*e*/,
-				     KDGanttViewItem* /* draggedItem*/,
-				     KDGanttViewItem* /*itemBelowMouse*/)
+                                     KDGanttViewItem* /* draggedItem*/,
+                                     KDGanttViewItem* /*itemBelowMouse*/)
 {
 
   // Example code 1:
@@ -4595,9 +4595,9 @@ void  KDGanttView::setGvVScrollBarMode( QScrollView::ScrollBarMode m )
     {
       myCanvasView->setVScrollBarMode ( m );
       if ( m == QScrollView::AlwaysOn )
-	timeHeaderSpacerWidget->setFixedWidth(myCanvasView->verticalScrollBar()->width() );
+        timeHeaderSpacerWidget->setFixedWidth(myCanvasView->verticalScrollBar()->width() );
       else
-	timeHeaderSpacerWidget->setFixedWidth( 0 );
+        timeHeaderSpacerWidget->setFixedWidth( 0 );
     }
 }
 
