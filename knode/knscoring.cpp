@@ -127,7 +127,7 @@ QStringList KNScoringManager::getDefaultHeaders() const
 {
   QStringList l = KScoringManager::getDefaultHeaders();
   l << "Lines";
-  l << "Newsgroups";
+  l << "References";
   return l;
 }
 
