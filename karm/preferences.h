@@ -6,8 +6,7 @@
 class QCheckBox;
 class QLabel;
 class QSpinBox;
-class QLineEdit;
-
+class KURLRequester;
 
 class Preferences :public KDialogBase 
 {
@@ -56,7 +55,7 @@ private:
   QCheckBox *_doIdleDetectionW, *_doAutoSaveW;
   QLabel    *_idleDetectLabelW, *_autoSaveLabelW;
   QSpinBox  *_idleDetectValueW, *_autoSaveValueW;
-  QLineEdit *_saveFileW;
+  KURLRequester *_saveFileW;
   QVBox *idleMenu;
   
   // Values for the preferences. (All variables in in V to indicate they are Values)
