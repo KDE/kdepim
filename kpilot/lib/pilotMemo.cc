@@ -36,7 +36,7 @@ static const char *pilotMemo_id =
 
 
 
-PilotMemo::PilotMemo(PilotRecord * rec) : PilotAppCategory(rec)
+PilotMemo::PilotMemo(const PilotRecord * rec) : PilotAppCategory(rec)
 {
 	FUNCTIONSETUP;
 	fText = codec()->toUnicode((const char *)(rec->getData()),rec->getLen());

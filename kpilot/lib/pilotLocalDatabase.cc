@@ -237,6 +237,7 @@ int PilotLocalDatabase::writeAppBlock(unsigned char *buffer, int len)
 int PilotLocalDatabase::recordCount()
 {
 #ifdef SHADOW_LOCAL_DB
+	DEBUGKPILOT << fNumRecords << " vs " << fRecordList.count() << endl;
 	assert( (unsigned) fNumRecords == fRecordList.count() );
 #endif
 	return fNumRecords;
@@ -303,7 +304,7 @@ PilotRecord *PilotLocalDatabase::readRecordById(recordid_t id)
 		{
 #ifdef SHADOW_LOCAL_DB
 			assert( shadowcount == i );
-			assert( fRecords[i] == (fRecordIndex) );
+			assert( fRecords[i] == (*fRecordIndex) );
 #endif
 			PilotRecord *newRecord = new PilotRecord(fRecords[i]);
 			return newRecord;
@@ -380,7 +381,52 @@ PilotRecord *PilotLocalDatabase::readNextRecInCategory(int category)
 	return newRecord;
 }
 
-// Reads the next record from database that has the dirty flag set.
+const PilotRecord *PilotLocalDatabase::findNextNewRecord()
+{
+	FUNCTIONSETUP;
+
+	if (isDBOpen() == false)
+	{
+		kdError() << k_funcinfo << ": DB not open!" << endl;
+		return 0L;
+	}
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": looking for new record from " << fCurrentRecord << endl;
+#endif
+#ifdef SHADOW_LOCAL_DB
+	while ( (fRecordIndex != fRecordList.end() ) &&
+		((*fRecordIndex)->id() != 0) )
+	{
+		++fRecordIndex;
+	}
+#endif
+	// Should this also check for deleted?
+	while ((fCurrentRecord < fNumRecords)
+		&& (fRecords[fCurrentRecord]->id() != 0 ))
+	{
+		fCurrentRecord++;
+	}
+#ifdef SHADOW_LOCAL_DB
+	if (fCurrentRecord == fNumRecords)
+	{
+		assert(fRecordIndex == fRecordList.end());
+	}
+	else
+	{
+		assert((*fRecordIndex) == fRecords[fCurrentRecord]);
+	}
+#endif
+	if (fCurrentRecord == fNumRecords)
+		return 0L;
+
+	fPendingRec = fCurrentRecord;	// Record which one needs the new id
+	fCurrentRecord++;	// so we skip it next time
+#ifdef SHADOW_LOCAL_DB
+	++fRecordIndex;
+#endif
+	return fRecords[fPendingRec];
+}
+
 PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 {
 	FUNCTIONSETUP;
@@ -400,7 +446,7 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 #endif
 	// Should this also check for deleted?
 	while ((fCurrentRecord < fNumRecords)
-		&& !(fRecords[fCurrentRecord]->getAttrib() & dlpRecAttrDirty)  && (fRecords[fCurrentRecord]->id()>0 ))
+		&& !(fRecords[fCurrentRecord]->isDirty())  && (fRecords[fCurrentRecord]->id()>0 ))
 	{
 		fCurrentRecord++;
 	}
@@ -571,6 +617,9 @@ int PilotLocalDatabase::resetDBIndex()
 		return -1;
 	}
 	fCurrentRecord = 0;
+#ifdef SHADOW_LOCAL_DB
+	fRecordIndex = fRecordList.begin();
+#endif
 	return 0;
 }
 
@@ -628,10 +677,13 @@ void PilotLocalDatabase::openDatabase()
 	int attr, cat;
 	pi_uid_t id;
 
+	setDBOpen(false);
 	QString tempName = dbPathName();
 	QCString fileName = QFile::encodeName(tempName);
-	dbFile = pi_file_open(const_cast < char *>((const char *) fileName));
+	char buffer[PATH_MAX];
+	strlcpy(buffer,(const char *)fileName,PATH_MAX);
 
+	dbFile = pi_file_open(buffer);
 	if (dbFile == 0L)
 	{
 		kdError() << k_funcinfo
@@ -648,6 +700,9 @@ void PilotLocalDatabase::openDatabase()
 	{
 		fRecords[fCurrentRecord] =
 			new PilotRecord(tmpBuffer, size, attr, cat, id);
+#ifdef SHADOW_LOCAL_DB
+		fRecordList.append(fRecords[fCurrentRecord]);
+#endif
 		fCurrentRecord++;
 	}
 	pi_file_close(dbFile);	// We done with it once we've read it in.

@@ -32,6 +32,8 @@
 
 #include "pilotDatabase.h"
 
+#define SHADOW_LOCAL_DB (1)
+
 class PilotLocalDatabase : public PilotDatabase
 {
 public:
@@ -92,11 +94,22 @@ public:
 	// Reads the next record from database in category 'category'
 	virtual PilotRecord* readNextRecInCategory(int category);
 	/**
+	* Returns the next "new" record, ie. the next record
+	* that has not been synced yet. These records all have ID=0, so are
+	* not easy to find with the other methods. The record is the one
+	* contained in the database, not a copy like the read*() functions
+	* give you -- so be careful with it. Don't delete it, in any case.
+	* Casting it to non-const and marking it deleted is OK, though,
+	* which is mostly its intended use.
+	*/
+	const PilotRecord *findNextNewRecord();
+
+	/**
 	* Reads the next record from database that has the dirty flag set.
 	* ind (if a valid pointer is given) will receive the index of the
 	* returned record.
 	*/
-	virtual PilotRecord* readNextModifiedRec(int *ind=NULL);
+	virtual PilotRecord* readNextModifiedRec(int *ind=0L);
 	// Writes a new record to database (if 'id' == 0, none is assigned, either)
 	virtual recordid_t writeRecord(PilotRecord* newRecord);
 	/**

@@ -81,7 +81,7 @@ public:
 		fCategory(c)
 	{} ;
 
-	PilotAppCategory(PilotRecord* rec) :
+	PilotAppCategory(const PilotRecord* rec) :
 		fAttrs((rec)?rec->getAttrib():0),
 		fId((rec)?rec->id():0),
 		fCategory((rec)?rec->category():0)

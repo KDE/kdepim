@@ -81,6 +81,7 @@ public:
 	inline bool isDeleted() const { return fAttrib & dlpRecAttrDeleted; };
 	inline bool isSecret() const { return fAttrib & dlpRecAttrSecret; } ;
 	inline bool isArchived() const { return fAttrib & dlpRecAttrArchived; } ;
+	inline bool isDirty() const { return fAttrib & dlpRecAttrDirty; } ;
 	inline void setDeleted(bool d=true) {
 		if (d) { fAttrib |= dlpRecAttrDeleted; }
 		else   { fAttrib &= ~dlpRecAttrDeleted; } }
