@@ -1,14 +1,18 @@
 [Desktop Entry]
 Type=Service
 Name=Instant Messaging
+Name[es]=Mensajería instantánea
 Name[et]=Kiirsuhtlus
+Name[it]=Messaggistica istantanea
 Name[sl]=Takojšno sporočanje
 Name[sv]=Direktmeddelanden
 Name[ta]=உடனடி செய்தி பரிமாற்றம்
 Name[xx]=xxInstant Messagingxx
 Comment=Instant Messaging Address Editor
 Comment[da]=Instant Messaging adresseeditor
+Comment[es]=Editor de direcciones de mensajería instantánea
 Comment[et]=Kiirsuhtluse aadresside redaktor
+Comment[it]=Editor degli indirizzi per messaggi istantanei
 Comment[nl]=Instant Messaging Adresbewerker
 Comment[pt]=Editor de Endereços do Mensageiro Instantâneo
 Comment[pt_BR]=Editor de Endereços do Mensageiro Instantâneo

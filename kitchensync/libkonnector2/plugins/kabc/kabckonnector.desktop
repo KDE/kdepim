@@ -5,7 +5,10 @@ ServiceTypes=KResources/Plugin
 X-KDE-Library=libkabckonnector
 
 Name=AddressBook Konnector
+Name[es]=Konnector para libreta de direcciones
 Name[et]=Aadressiraamatu Konnector
+Name[it]=Konnector AddressBook
+Name[nl]=Adresboek Konnector
 Name[sv]=Adressbok Konnector
 Name[ta]=முகவரிப்புத்தக இணைப்புகள்
 Group=Test

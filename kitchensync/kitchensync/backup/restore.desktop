@@ -2,8 +2,9 @@
 Type=Service
 Name=Konnector Restore
 Name[da]=Konnector genopret
-Name[es]=Restaurar Konnector
+Name[es]=Konnector para restauración
 Name[et]=Konnectori taastaja
+Name[it]=Ripristina Konnector
 Name[nl]=Konnector-herstel
 Name[sl]=Povrnitev Konnectorja
 Name[sv]=Konnector återställning
