@@ -390,27 +390,6 @@ KNArticleCollection* KNArticleManager::collection()
 }
 
 
-void KNArticleManager::verifyPGPSignature(KNArticle* a)
-{
-  //create a PGP object and check if the posting is signed
-  Kpgp *pgp = Kpgp::getKpgp();
-  pgp->setMessage(a->body());
-  if (!pgp->isSigned()) {
-    KMessageBox::sorry(knGlobals.topWidget,i18n("Cannot find a signature in this message!"));
-    return;
-  }
-  kdDebug(5003) << "KNArticleFactory::createVerify() found signed article, check it now" << endl;
-  if (pgp->goodSignature()) {
-    QString signer = pgp->signedBy();
-    QString key = pgp->signedByKey();
-    KMessageBox::information(knGlobals.topWidget,i18n("The signature is valid.\nThe message was signed by %1.").arg(signer));
-  }
-  else {
-    KMessageBox::error(knGlobals.topWidget,i18n("This signature is invalid!"));
-  }
-}
-
-
 bool KNArticleManager::loadArticle(KNArticle *a)
 {
   if (!a)

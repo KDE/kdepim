@@ -1625,6 +1625,7 @@ void KNArticle::setForceDefaultCS(bool b)
 KNRemoteArticle::KNRemoteArticle(KNGroup *g)
  : KNArticle(g), a_rticleNumber(-1), i_dRef(-1), d_ref(0), t_hrLevel(0), s_core(0),
    c_olor(knGlobals.cfgManager->appearance()->unreadThreadColor()),
+   pgp_signed(false),
    u_nreadFups(0), n_ewFups(0)
 {
   m_essageID.setParent(this);

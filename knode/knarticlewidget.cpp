@@ -54,6 +54,7 @@
 #include "knstringsplitter.h"
 #include "utilities.h"
 #include "knscoring.h"
+#include "knpgp.h"
 #include "knode.h"
 
 #define PUP_OPEN    1000
@@ -946,6 +947,45 @@ void KNArticleWidget::createHtmlPage()
 
   //------------------------------------- <Body> ---------------------------------------
 
+  // if the article is pgp signed and the user asked for verifying the
+  // signature, we show a nice header:
+  if (a_rticle->type() == KNMimeBase::ATremote) {
+    KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rticle);
+    if (ra->isPgpSigned()) {
+      Kpgp *pgp = Kpgp::getKpgp();
+      pgp->setMessage(ra->body());
+      html += "<p>";
+      if (!pgp->isSigned()) {
+        html += "<b>" + i18n("Cannot find a signature in this message!") + "</b>";
+      }
+      else {
+        QString sig;
+        if (pgp->goodSignature())
+          sig = i18n("Message was signed by");
+        else
+          sig = i18n("Warning: Bad signature from");
+
+        /* HTMLize signedBy data */
+        QString sdata=pgp->signedBy();
+        QString signer = sdata;
+        sdata.replace(QRegExp("\""), "&quot;");
+        sdata.replace(QRegExp("<"), "&lt;");
+        sdata.replace(QRegExp(">"), "&gt;");
+
+        if (sdata.contains(QRegExp("unknown key ID")))
+        {
+          sdata.replace(QRegExp("unknown key ID"), i18n("unknown key ID"));
+          html += QString("<b>%1 %2</b><br>").arg(sig).arg(sdata);
+        }
+        else {
+          html += QString("<b>%1 <a href=\"mailto:%2\">%3</a></b><br>")
+                     .arg(sig).arg(signer).arg(sdata);
+        }
+      }
+      html += "</p>";
+    }
+  }
+
   KNHeaders::ContentType *ct=a_rticle->contentType();
 
   //Attachments
@@ -1142,7 +1182,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     target=a.mid(13, a.length()-13);
     type=ATattachment;
   }
-  else if(a.left(7).lower()=="http://" || a.left(8).lower() == "https://" || 
+  else if(a.left(7).lower()=="http://" || a.left(8).lower() == "https://" ||
           a.left(6).lower()=="ftp://") {
     target=a;
     type=ATurl;
@@ -1481,7 +1521,13 @@ void KNArticleWidget::slotTimeout()
 
 void KNArticleWidget::slotVerify()
 {
-  knGlobals.artManager->verifyPGPSignature(a_rticle);
+  //  knGlobals.artManager->verifyPGPSignature(a_rticle);
+  //create a PGP object and check if the posting is signed
+  if (a_rticle->type() == KNMimeBase::ATremote) {
+    KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rticle);
+    ra->setPgpSigned(true);
+    updateContents();
+  }
 }
 
 

@@ -398,6 +398,9 @@ class KNRemoteArticle : public KNArticle {
 
     QColor color() const { return c_olor; }
     void setColor(const QColor& c) { c_olor = c; }
+    void setPgpSigned(bool f) { pgp_signed = f; }
+    bool isPgpSigned() const { return pgp_signed; }
+
 
   protected:
     // hardcoded headers
@@ -411,6 +414,7 @@ class KNRemoteArticle : public KNArticle {
     unsigned char t_hrLevel;         // quality of threading
     short s_core;                    // guess what ;-)
     QColor c_olor;                   // color for the header list
+    bool pgp_signed;                 // true if the user asks to check the pgp signature
     unsigned short u_nreadFups,      // number of the article's unread follow-ups
                    n_ewFups;         // number of the article's new follow-ups
 

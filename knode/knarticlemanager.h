@@ -73,9 +73,6 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     void setFolder(KNFolder *f);
     KNArticleCollection* collection();
 
-    //pgp signature check
-    void verifyPGPSignature(KNArticle* a);
-
     //article loading
     bool loadArticle(KNArticle *a);
     bool unloadArticle(KNArticle *a, bool force=true);
@@ -94,7 +91,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
 
     void rescoreArticles(KNRemoteArticle::List &l);
 
-  protected:  
+  protected:
     void processJob(KNJobData *j);
     void createHdrItem(KNRemoteArticle *a);
     void createThread(KNRemoteArticle *a);
