@@ -60,6 +60,7 @@ class KFolderTreeItem : public KListViewItem
       Imap, 
       Local, 
       News,
+      CachedImap,
       NONE
     };
   

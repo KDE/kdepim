@@ -39,12 +39,14 @@ QString KFolderTreeItem::key(int column, bool) const
    */
   if (mProtocol == Local)
     thiskey = "\t1";
-  else if (mProtocol == Imap)
+  else if (mProtocol == CachedImap)
     thiskey = "\t2";
-  else if (mProtocol == News)
+  else if (mProtocol == Imap)
     thiskey = "\t3";
-  else
+  else if (mProtocol == News)
     thiskey = "\t4";
+  else
+    thiskey = "\t5";
 
   // make sure system folders come first when sorting
   if (mType == Inbox)
