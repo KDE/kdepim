@@ -468,7 +468,7 @@ QString KNHelper::rewrapStringList(QStringList text, int wrapAt, QChar quoteChar
 
 void KNHelper::displayInternalFileError(QWidget *w)
 {
-  KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to load/save configuration!\nWrong permissions on home directory?\nYou should close KNode now, to avoid data loss!"));
+  KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to load/save configuration!\nWrong permissions on home directory?\nYou should close KNode now to avoid data loss!"));
 }
 
 

@@ -138,7 +138,7 @@ void KNGroupDialog::toSubscribe(QSortedList<KNGroupInfo> *l)
       moderated=true;
   }
   if (moderated)   // warn the user
-     KMessageBox::information(knGlobals.topWidget,i18n("You have subscribed to a moderated newsgroup.\nYour articles will not appear in the group immediatly,\nthey have to go through a moderation process."),
+     KMessageBox::information(knGlobals.topWidget,i18n("You have subscribed to a moderated newsgroup.\nYour articles will not appear in the group immediately.\nThey have to go through a moderation process."),
                               QString::null,"subscribeModeratedWarning");
 }
 

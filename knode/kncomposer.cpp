@@ -1167,14 +1167,14 @@ void KNComposer::slotToBtnClicked()
 
   kab=new KabAPI(this);
   if(kab->init()!=AddressBook::NoError) {
-    KMessageBox::error(this, i18n("Cannot initialize the adressbook"));
+    KMessageBox::error(this, i18n("Cannot initialize the addressbook"));
     delete kab;
     return;
   }
 
   if(kab->exec()) {
     if(kab->getEntry(entry, key)!=AddressBook::NoError) {
-      KMessageBox::error(this, i18n("Cannot read adressbook-entry"));
+      KMessageBox::error(this, i18n("Cannot read addressbook entry"));
     }
     else {
       QString to=v_iew->t_o->text();
@@ -1199,7 +1199,7 @@ void KNComposer::slotGroupsBtnClicked()
     nntp=knGlobals.accManager->first();
 
   if(!nntp) {
-    KMessageBox::error(this, i18n("You have no valid news-account configured!"));
+    KMessageBox::error(this, i18n("You have no valid news accounts configured!"));
     v_iew->g_roups->clear();
     return;
   }

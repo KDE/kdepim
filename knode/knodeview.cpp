@@ -1392,11 +1392,11 @@ void KNodeView::slotFolDelete()
     KMessageBox::sorry(knGlobals.topWidget, i18n("You cannot delete a standard folder."));
 
   else if( KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,
-      i18n("Do you really want to delete this folder and all its children ?")) ) {
+      i18n("Do you really want to delete this folder and all its children?")) ) {
 
     if(!f_olManager->deleteFolder(f_olManager->currentFolder()))
       KMessageBox::sorry(knGlobals.topWidget,
-      i18n("This Folder cannot be deleted because some of\n its articles are currently in use.") );
+      i18n("This folder cannot be deleted because some of\n its articles are currently in use.") );
     else
       slotCollectionSelected(0);
   }
