@@ -4,13 +4,15 @@ YFLAGS =-d -v -p ss
 LFLAGS = -Pss 
 LEX_OUTPUT_ROOT = lex.ss
 
-all: icalss.h icalssyacc.c
+# just to get it built
+icalgauge.c: icalss.h icalssyacc.c
 
 INCLUDES =			\
 	-I$(top_builddir)	\
 	-I$(top_srcdir)/src	\
 	-I$(top_builddir)/src	\
 	-I$(top_srcdir)/src/libical	\
+	-I$(top_builddir)/src/libical	\
 	-I$(srcdir)/libical
 
 libicalss_la_LDFLAGS = -version-info 0:0:0
