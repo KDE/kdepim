@@ -42,9 +42,6 @@ void IncSearchWidget::incSearchComboActivated(const QString&)
 
 void IncSearchWidget::announce()
 {
-    kdDebug() << "IncSearchWidget::announce: looking up "
-              << leIncSearch->text() << " in "
-              << cbIncSearch->currentItem() << endl;
     emit(incSearch(leIncSearch->text(), cbIncSearch->currentItem()));
 }
 

@@ -108,7 +108,6 @@ void KAddressBook::slotDistributionList()
 
 void KAddressBook::addEmail( QString aStr )
 {
-  kdDebug() << "KAddressBook::addEmail(): " << aStr << endl;
 
   QString fullName, email;
 
@@ -180,7 +179,6 @@ void KAddressBook::editAddressee(QString uid)
 
 void KAddressBook::newAddressee()
 {
-  kdDebug() << "KAddressBook::newAddressee()" << endl;
   AddresseeEditorDialog *dialog = 0;
 
   KABC::Resource *resource = KABC::ResourceSelectDialog::getResource( mDocument,
@@ -214,7 +212,6 @@ AddresseeEditorDialog *KAddressBook::createAddresseeEditorDialog( QWidget *paren
 
 void KAddressBook::slotEditorDestroyed( const QString &uid )
 {
-  kdDebug() << "KAddressBook::slotEditorDestroyed()" << endl;
 
   mEditorDict.remove( uid );
 }
@@ -257,7 +254,6 @@ KAddressBook::~KAddressBook()
 
 void KAddressBook::undo()
 {
-  kdDebug() << "KAddressBook::undo()" << endl;
   UndoStack::instance()->undo();
 
   // Refresh the view
@@ -304,7 +300,6 @@ void KAddressBook::importKDE2()
 
 void KAddressBook::importCSV()
 {
-  kdDebug() << "KAddressBook::importCSV()" << endl;
 
   ContactImportDialog *dialog = new ContactImportDialog(mDocument, this);
 
@@ -494,16 +489,12 @@ void KAddressBook::addresseeSelected(const QString &uid)
 
 void KAddressBook::addresseeExecuted(const QString &uid)
 {
-  // Display the editor dialog.
-  kdDebug() << "KAddressBook::addresseeExecuted: editing contact" << endl;
-
   if ( uid != QString::null && !mViewManager->isQuickEditVisible() )
     editAddressee(uid);
 }
 
 void KAddressBook::addresseeModified(const KABC::Addressee &a)
 {
-//  kdDebug() << "KAddressBook::addresseeModified()" << endl;
 
   Command *command = 0;
   QString uid;
@@ -586,7 +577,6 @@ void KAddressBook::configChanged()
 
 void KAddressBook::slotAddressBookChanged()
 {
-  kdDebug() << "KAddressBook::slotAddressBookChanged()" << endl;
 
   QDictIterator<AddresseeEditorDialog> it( mEditorDict );
   while ( it.current() ) {

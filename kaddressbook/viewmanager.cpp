@@ -146,7 +146,6 @@ void ViewManager::sendMail()
 
 void ViewManager::deleteAddressee()
 {
-  kdDebug()<< "ViewManager::deleteAddressee\n";
 
   KABC::Addressee a;
 
@@ -492,9 +491,6 @@ void ViewManager::refreshIncrementalSearchCombo()
 
 void ViewManager::incSearch(const QString& text, int field)
 {
-    // run the search
-    kdDebug() << "ViewManager::incSearch: looking up "
-              << text << " in " << field << endl;
     mCurrentIncSearchField=mIncrementalSearchFields[field];
     mActiveView->incrementalSearch(text, mCurrentIncSearchField);
 }
