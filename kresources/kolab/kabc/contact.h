@@ -66,6 +66,9 @@ public:
 
   QString type() const { return "Contact"; }
 
+  void setGivenName( const QString& name );
+  QString givenName() const;
+
   void setMiddleNames( const QString& names );
   QString middleNames() const;
 
@@ -160,6 +163,7 @@ public:
   QString preferredAddress() const;
 
 private:
+  QString mGivenName;
   QString mMiddleNames;
   QString mLastName;
   QString mFullName;
