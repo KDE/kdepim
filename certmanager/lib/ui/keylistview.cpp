@@ -170,6 +170,7 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
 }
 
 Kleo::KeyListView::~KeyListView() {
+  d->updateTimer->stop();
   delete d->itemToolTip; d->itemToolTip = 0;
   delete d; d = 0;
   delete mColumnStrategy; mColumnStrategy = 0;
@@ -213,6 +214,13 @@ void Kleo::KeyListView::slotUpdateTimeout() {
   if ( wasUpdatesEnabled )
     viewport()->setUpdatesEnabled( true );
   d->keyBuffer.clear();
+}
+
+void Kleo::KeyListView::clear() {
+  d->updateTimer->stop();
+  d->itemMap.clear();
+  d->keyBuffer.clear();
+  KListView::clear();
 }
 
 void Kleo::KeyListView::doHierarchicalInsert( const GpgME::Key & key ) {

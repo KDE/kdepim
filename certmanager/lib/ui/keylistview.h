@@ -227,6 +227,8 @@ namespace Kleo {
     QPtrList<KeyListViewItem> selectedItems() const;
     /*! \reimp for covariant return */
     KeyListViewItem * firstChild() const;
+    /*! \reimp */
+    void clear();
 
   private:
     void doHierarchicalInsert( const GpgME::Key & );
