@@ -39,9 +39,6 @@ Mark - 3.2
 
   * 2003-09-26: Add totals table across entire date range.
 
-  * 2003-09-26: Don't print hours for days that are not in range.  Right now,
-    I print for all days in every week.  If just one day, print totals.
-
   * 2003-09-26: Don't print rows for tasks with zero hours???  How to keep
     hierary?
 

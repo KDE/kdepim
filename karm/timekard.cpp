@@ -184,20 +184,36 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
 
   // header
   retval += i18n("Task History") + cr;
-  retval += KGlobal::locale()->formatDateTime(QDateTime::currentDateTime());
+  retval += i18n("From %1 to %2")
+    .arg(KGlobal::locale()->formatDate(from))
+    .arg(KGlobal::locale()->formatDate(to));
+  retval += cr;
+  retval += i18n("Printed on: %1")
+    .arg(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
 
   // output one time card table for each week in the date range
   QValueList<Week> weeks = Week::weeksFromDateRange(from, to);
   for (week = weeks.begin(); week != weeks.end(); ++week)
   {
 
-    events = taskview->getHistory((*week).start(), (*week).end());
+    if ( (*week).start() < from )
+    {
+      events = taskview->getHistory( from, (*week).end());
+    }
+    else if ( (*week).end() > to)
+    {
+      events = taskview->getHistory((*week).start(), to);
+    }
+    else
+    {
+      events = taskview->getHistory((*week).start(), (*week).end());
+    }
 
     // Build lookup dictionary used to output data in table cells.  keys are
-    // QStrings in this format: YYYYMMDD_NNNNNN, where Y = year, M = month, d
-    // = day and NNNNN = the VTODO uid.  The value is the total seconds logged
-    // against that task on that day.  Note the UID is the todo id, not the
-    // event id, so times are accumulated for each task.
+    // in this format: YYYYMMDD_NNNNNN, where Y = year, M = month, d = day and
+    // NNNNN = the VTODO uid.  The value is the total seconds logged against
+    // that task on that day.  Note the UID is the todo id, not the event id,
+    // so times are accumulated for each task.
     datamap.clear();
     for (event = events.begin(); event != events.end(); ++event)
     {
@@ -227,7 +243,7 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
     // the tasks
     if (events.empty())
     {
-      retval += i18n("  No hours logged this week.");
+      retval += i18n("  No hours logged.");
     }
     else
     {
