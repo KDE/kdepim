@@ -21,6 +21,9 @@ const bool true = 1;
 #endif
 
 #ifdef __osf__
+#ifndef __FUNCTION__
+#define __FUNCTION__ ""
+#endif
 #ifndef HAVE_USLEEP                 /* usleep not defined in Tru64  */ 
 #ifdef __cplusplus  
 extern "C" void usleep(unsigned int);
