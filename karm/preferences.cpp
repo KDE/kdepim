@@ -42,9 +42,7 @@ Preferences *Preferences::instance()
 
 void Preferences::makeBehaviorPage()
 {
-  QPixmap icon = KGlobal::iconLoader()->loadIcon(
-      QString::fromLatin1("kcmsystem"), KIcon::Toolbar,
-      KIcon::SizeMedium);
+  QPixmap icon = SmallIcon( "kcmsystem", KIcon::SizeMedium);
   QFrame* behaviorPage = addPage( i18n("Behavior"), i18n("Behavior Settings"),
       icon );
 
@@ -56,7 +54,7 @@ void Preferences::makeBehaviorPage()
     ( i18n("Detect desktop as idle after"), behaviorPage, "_doIdleDetectionW");
   _idleDetectValueW = new QSpinBox
     (1,60*24, 1, behaviorPage, "_idleDetectValueW");
-  _idleDetectValueW->setSuffix(i18n(" minutes"));
+  _idleDetectValueW->setSuffix(i18n(" min"));
   _promptDeleteW = new QCheckBox
     ( i18n( "Prompt before deleting tasks" ), behaviorPage, "_promptDeleteW" );
 
@@ -64,14 +62,15 @@ void Preferences::makeBehaviorPage()
   layout->addWidget(_idleDetectValueW, 0, 1 );
   layout->addWidget(_promptDeleteW, 1, 0 );
 
+  topLevel->addStretch();
+
   connect( _doIdleDetectionW, SIGNAL( clicked() ), this,
       SLOT( idleDetectCheckBoxChanged() ));
 }
 
 void Preferences::makeDisplayPage()
 {
-  QPixmap icon = KGlobal::iconLoader()->loadIcon(
-      QString::fromLatin1("viewmag"), KIcon::Toolbar, KIcon::SizeMedium );
+  QPixmap icon = SmallIcon( "viewmag", KIcon::SizeMedium );
   QFrame* displayPage = addPage( i18n("Display"), i18n("Display Settings"),
       icon );
 
@@ -95,12 +94,13 @@ void Preferences::makeDisplayPage()
   layout->addWidget(_displayTimeW, 2, 1 );
   layout->addWidget(_displayTotalSessionW, 3, 1 );
   layout->addWidget(_displayTotalTimeW, 4, 1 );
+
+  topLevel->addStretch();
 }
 
 void Preferences::makeStoragePage()
 {
-  QPixmap icon = KGlobal::iconLoader()->loadIcon(QString::fromLatin1("kfm"),
-      KIcon::Toolbar, KIcon::SizeMedium );
+  QPixmap icon = SmallIcon( "kfm", KIcon::SizeMedium );
   QFrame* storagePage = addPage( i18n("Storage"), i18n("Storage Settings"),
       icon );
 
@@ -112,7 +112,7 @@ void Preferences::makeStoragePage()
   _doAutoSaveW = new QCheckBox
     ( i18n("Save tasks every"), storagePage, "_doAutoSaveW" );
   _autoSaveValueW = new QSpinBox(1, 60*24, 1, storagePage, "_autoSaveValueW");
-  _autoSaveValueW->setSuffix(i18n(" minutes"));
+  _autoSaveValueW->setSuffix(i18n(" min"));
 
   // iCalendar
   QLabel* _iCalFileLabel = new QLabel( i18n("iCalendar file:"), storagePage);
@@ -129,6 +129,8 @@ void Preferences::makeStoragePage()
   layout->addWidget(_iCalFileLabel, 1, 0 );
   layout->addWidget(_iCalFileW, 1, 1 );
   layout->addWidget(_loggingW, 2, 0 );
+
+  topLevel->addStretch();
 
   // checkboxes disable file selection controls
   connect( _doAutoSaveW, SIGNAL( clicked() ),

@@ -40,11 +40,12 @@ CSVExportDialog::CSVExportDialog( ReportCriteria::REPORTTYPE rt,
 {
   switch ( rt ) {
     case ReportCriteria::CSVTotalsExport:
-      grpDateRange->setEnabled( false );      
+      grpDateRange->setEnabled( false );
+      grpDateRange->hide();
       rc.reportType = rt;
       break;
     case ReportCriteria::CSVHistoryExport:
-      grpDateRange->setEnabled( true );      
+      grpDateRange->setEnabled( true );
       rc.reportType = rt;
       break;
     default:
