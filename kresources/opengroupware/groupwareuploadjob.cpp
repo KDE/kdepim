@@ -132,6 +132,7 @@ void GroupwareUploadJob::uploadItem()
     KURL url( mBaseUrl );
     url.setPath( remote );
     adaptor()->setUserPassword( url );
+kdDebug()<<"uploading to url="<<url.url()<<endl;
     mUploadJob = adaptor()->createUploadJob( url, item );
     connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
       SLOT( slotUploadJobResult( KIO::Job * ) ) );
