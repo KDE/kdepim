@@ -327,6 +327,12 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 {
 	FUNCTIONSETUP;
 
+	// Set the catalogue file before creating the KApplication
+	// object to make sure that it reads from the correct file.
+	//
+	//
+	KLocale::setMainCatalogue("kpilot");
+
 	QWidget *widget = 0L;
 
 	(void) getMode();
@@ -428,6 +434,9 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.24  2001/04/23 21:08:14  adridg
+// Removed an unnecessary connection to pilot database
+//
 // Revision 1.23  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //
