@@ -121,7 +121,7 @@ void ActionManager::initReadOnlyActions()
     mActionSave = new KAction(i18n("&Save"), "filesave", CTRL+Key_S, mWidget,
                               SLOT(save()), mACollection,"file_sync");
 
-    new KAction(i18n("&New Contact"), "filenew", CTRL+Key_N, mWidget,
+    new KAction(i18n("&New Contact..."), "filenew", CTRL+Key_N, mWidget,
                 SLOT(newAddressee()),mACollection,"file_new_contact");
 
     new KAction(i18n("&Distribution List..."), 0, mWidget,
@@ -203,7 +203,7 @@ void ActionManager::initReadOnlyActions()
                                          0, this, SLOT(quickToolsAction()),
                                          mACollection,
                                          "options_show_quick_edit");
-    (void) new KAction(i18n("Edit &Filters"), "filter",
+    (void) new KAction(i18n("Edit &Filters..."), "filter",
                        0, mWidget, SLOT(configureFilters()),
                        mACollection, "options_edit_filters");
     mActionSelectFilter = new KSelectAction(i18n("Select Filter"), "select_filter",
