@@ -455,13 +455,12 @@ void KNMainWindow::openURL(const KURL &url)
   }
 
   if (acc) {
-    QString groupname=url.path(-1);
-    while(groupname.startsWith("/"))
-      groupname.remove(0,1);
-
-    bool isMID=(groupname.contains('@')>0);
+    bool isMID=(url.url().contains('@')==1);
 
     if (!isMID) {
+      QString groupname=url.path(-1);
+      while(groupname.startsWith("/"))
+        groupname.remove(0,1);
       QListViewItem *item=0;
       if(groupname.isEmpty())
         item=acc->listItem();
@@ -484,6 +483,7 @@ void KNMainWindow::openURL(const KURL &url)
         c_olView->setActive(item, true);
       }
     } else {
+      QString groupname = groupname.mid( url.protocol().length()+1 );
       KNGroup *g = g_rpManager->currentGroup();
       if (g == 0)
         g = g_rpManager->firstGroupOfAccount(acc);
