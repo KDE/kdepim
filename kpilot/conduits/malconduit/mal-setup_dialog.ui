@@ -57,6 +57,9 @@
                         <property name="title">
                             <string>Sync</string>
                         </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>Select how often AvantGo should be synchronised</string>
+                        </property>
                         <grid>
                             <property name="name">
                                 <cstring>unnamed</cstring>
@@ -77,8 +80,14 @@
                                 <property name="text">
                                     <string>&amp;Every sync</string>
                                 </property>
+                                <property name="accel">
+                                    <string>Alt+E</string>
+                                </property>
                                 <property name="checked">
                                     <bool>true</bool>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>KPilot will try to synchronise with the MAL servers every time you sync.</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="1" column="0">
@@ -88,6 +97,15 @@
                                 <property name="text">
                                     <string>Once per &amp;hour</string>
                                 </property>
+                                <property name="accel">
+                                    <string>Alt+H</string>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string></string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>KPilot will only try to synchronise with the MAL servers if it is more than an hour since the last MAL sync.</string>
+                                </property>
                             </widget>
                             <widget class="QRadioButton" row="2" column="0">
                                 <property name="name">
@@ -95,6 +113,12 @@
                                 </property>
                                 <property name="text">
                                     <string>Once a &amp;day</string>
+                                </property>
+                                <property name="accel">
+                                    <string>Alt+D</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>KPilot will only try to synchronise with the MAL servers if it is more than a day since the last MAL sync.</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="3" column="0">
@@ -104,6 +128,12 @@
                                 <property name="text">
                                     <string>Once a &amp;week</string>
                                 </property>
+                                <property name="accel">
+                                    <string>Alt+W</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>KPilot will only try to synchronise with the MAL servers if it is more than a week since the last MAL sync.</string>
+                                </property>
                             </widget>
                             <widget class="QRadioButton" row="4" column="0">
                                 <property name="name">
@@ -111,6 +141,12 @@
                                 </property>
                                 <property name="text">
                                     <string>Once a &amp;month</string>
+                                </property>
+                                <property name="accel">
+                                    <string>Alt+M</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>KPilot will only try to synchronise with the MAL servers if it is more than a month since the last MAL sync.</string>
                                 </property>
                             </widget>
                         </grid>
@@ -141,17 +177,11 @@
                 <attribute name="title">
                     <string>Proxy</string>
                 </attribute>
-                <grid>
+                <vbox>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <widget class="QButtonGroup" row="0" column="0">
+                    <widget class="QButtonGroup">
                         <property name="name">
                             <cstring>proxyType</cstring>
                         </property>
@@ -178,8 +208,14 @@
                                 <property name="text">
                                     <string>&amp;No proxy</string>
                                 </property>
+                                <property name="accel">
+                                    <string>Alt+N</string>
+                                </property>
                                 <property name="checked">
                                     <bool>true</bool>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>Select this option if you don't want KPilot to use a proxy server.</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton">
@@ -192,6 +228,9 @@
                                 <property name="accel">
                                     <string>Alt+H</string>
                                 </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>Select this option if you want KPilot to use a HTTP proxy.</string>
+                                </property>
                             </widget>
                             <widget class="QRadioButton">
                                 <property name="name">
@@ -200,27 +239,16 @@
                                 <property name="text">
                                     <string>&amp;SOCKS proxy</string>
                                 </property>
+                                <property name="accel">
+                                    <string>Alt+S</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>Select this option if you want KPilot to use a SOCKS proxy.</string>
+                                </property>
                             </widget>
                         </hbox>
                     </widget>
-                    <spacer row="2" column="0">
-                        <property name="name">
-                            <cstring>Spacer3_2</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QGroupBox" row="1" column="0">
+                    <widget class="QGroupBox">
                         <property name="name">
                             <cstring>proxyServerInformation</cstring>
                         </property>
@@ -257,20 +285,6 @@
                                     </size>
                                 </property>
                             </spacer>
-                            <widget class="Line" row="2" column="0" rowspan="1" colspan="3">
-                                <property name="name">
-                                    <cstring>Line1</cstring>
-                                </property>
-                                <property name="frameShape">
-                                    <enum>HLine</enum>
-                                </property>
-                                <property name="frameShadow">
-                                    <enum>Sunken</enum>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                            </widget>
                             <widget class="QCheckBox" row="1" column="0">
                                 <property name="name">
                                     <cstring>proxyCustomPortCheck</cstring>
@@ -281,16 +295,8 @@
                                 <property name="accel">
                                     <string>Alt+P</string>
                                 </property>
-                            </widget>
-                            <widget class="QLabel" row="3" column="0">
-                                <property name="name">
-                                    <cstring>TextLabel2</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;User name:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>proxyUserName</cstring>
+                                <property name="whatsThis" stdset="0">
+                                    <string>Tells KPilot that your proxy operates on a non-standard port.</string>
                                 </property>
                             </widget>
                             <widget class="QLabel" row="0" column="0">
@@ -308,29 +314,11 @@
                                 <property name="name">
                                     <cstring>proxyServerName</cstring>
                                 </property>
-                            </widget>
-                            <widget class="KPasswordEdit" row="4" column="1" rowspan="1" colspan="2">
-                                <property name="name">
-                                    <cstring>proxyPassword</cstring>
-                                </property>
-                                <property name="echoMode">
-                                    <enum>Normal</enum>
-                                </property>
-                            </widget>
-                            <widget class="QLabel" row="4" column="0">
-                                <property name="name">
-                                    <cstring>TextLabel2_2</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Password:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>proxyPassword</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QLineEdit" row="3" column="1" rowspan="1" colspan="2">
-                                <property name="name">
-                                    <cstring>proxyUserName</cstring>
+                                <property name="whatsThis" stdset="0">
+                                    <string>This is the address of the proxy server to use, eg:
+&lt;u&gt;&lt;i&gt;foo.bar.com&lt;/i&gt;&lt;/u&gt;
+&lt;b&gt;not&lt;/b&gt;
+&lt;i&gt;http://foo.bar.com&lt;/i&gt; or &lt;i&gt;http://foo.bar.com:8080&lt;/i&gt;</string>
                                 </property>
                             </widget>
                             <widget class="KIntNumInput" row="1" column="1">
@@ -349,10 +337,105 @@
                                 <property name="maxValue">
                                     <number>65535</number>
                                 </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>Enter the port you want KPilot to use to connect to your proxy server here.</string>
+                                </property>
+                            </widget>
+                            <widget class="KPasswordEdit" row="5" column="1" rowspan="1" colspan="2">
+                                <property name="name">
+                                    <cstring>proxyPassword</cstring>
+                                </property>
+                                <property name="echoMode">
+                                    <enum>Normal</enum>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>If your proxy requires authentication, enter your password here.</string>
+                                </property>
+                            </widget>
+                            <widget class="QLineEdit" row="4" column="1" rowspan="1" colspan="2">
+                                <property name="name">
+                                    <cstring>proxyUserName</cstring>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>If your proxy requires authentication, enter your username here.</string>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="5" column="0">
+                                <property name="name">
+                                    <cstring>TextLabel2_2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Password:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>proxyPassword</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="4" column="0">
+                                <property name="name">
+                                    <cstring>TextLabel2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;User name:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>proxyUserName</cstring>
+                                </property>
+                            </widget>
+                            <widget class="Line" row="3" column="0" rowspan="1" colspan="3">
+                                <property name="name">
+                                    <cstring>Line1</cstring>
+                                </property>
+                                <property name="frameShape">
+                                    <enum>HLine</enum>
+                                </property>
+                                <property name="frameShadow">
+                                    <enum>Sunken</enum>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                            </widget>
+                            <widget class="QLineEdit" row="2" column="1" rowspan="1" colspan="2">
+                                <property name="name">
+                                    <cstring>proxyExclude</cstring>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>Enter a list of MAL servers that don't need the use a proxy here, seperated with commas. eg: &lt;br&gt;
+&lt;i&gt;localhost,127.0.0.1,.lan&lt;/i&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="2" column="0">
+                                <property name="name">
+                                    <cstring>textLabel1</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>N&amp;o proxy for:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>proxyExclude</cstring>
+                                </property>
                             </widget>
                         </grid>
                     </widget>
-                </grid>
+                    <spacer>
+                        <property name="name">
+                            <cstring>Spacer3_2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>70</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </vbox>
             </widget>
             <widget class="QWidget">
                 <property name="name">
@@ -578,15 +661,7 @@
 </tabstops>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
-    <includehint>kcombobox.h</includehint>
     <includehint>klineedit.h</includehint>
-    <includehint>kpassdlg.h</includehint>
     <includehint>knuminput.h</includehint>
-    <includehint>knuminput.h</includehint>
-    <includehint>knuminput.h</includehint>
-    <includehint>knuminput.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>klineedit.h</includehint>
-    <includehint>kpassdlg.h</includehint>
 </includehints>
 </UI>
