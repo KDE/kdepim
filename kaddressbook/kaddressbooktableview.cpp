@@ -204,6 +204,11 @@ void KAddressBookTableView::setSelected(QString uid, bool selected)
 void KAddressBookTableView::incrementalSearch(const QString &value, 
                                               KABC::Field *field)
 {
+    if ( value.isEmpty() ) {
+      mListView->clearSelection();
+      return;
+    }
+
     KABC::Field::List fieldList = fields();
     KABC::Field::List::ConstIterator it;
     int column = 0;
@@ -215,6 +220,7 @@ void KAddressBookTableView::incrementalSearch(const QString &value,
     if ( it == fieldList.end() ) column = 0;
 
     // Now do the inc search
+    mListView->setCurrentItem( mListView->firstChild() );
     QListViewItem *item = mListView->findItem(value, column, Qt::BeginsWith);
     
     if (item)
