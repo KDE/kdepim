@@ -30,6 +30,8 @@ public:
 	     DesktopListType desktops, QListView *parent = 0);
 	Task(const QString& taskame, long minutes, long sessionTime, 
 	     DesktopListType desktops, QListViewItem *parent = 0);
+  Task( KCal::Event* event, QListView* parent );
+
 	void init(const QString& taskame, long minutes, long sessionTime, 
 		  DesktopListType desktops);
 
@@ -89,11 +91,9 @@ public:
 	void setRunning(bool on);
 	bool isRunning() const;
 
-  KCal::Todo* asTodo( int level );
   KCal::Event* asEvent( int level );
 
   static bool parseEvent( KCal::Event*, long&, QString&, int&, DesktopListType& );
-  static bool parseTodo( KCal::Todo*, long&, QString&, int&, DesktopListType& );
 
 protected slots:
   void updateActiveIcon();
@@ -114,7 +114,6 @@ private:
   int _i;
   static QPtrVector<QPixmap> *icons;
   Logging *_logging;
-
 };
 
 #endif

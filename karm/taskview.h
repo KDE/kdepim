@@ -4,7 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <qptrstack.h>
 #include <qsplitter.h>
+#include <qdict.h>
 #include <klistview.h>
 #include <qptrlist.h>
 #include <qtextstream.h>
@@ -66,6 +68,8 @@ private:
     void saveToFileFormat();
     void loadFromKCalFormat();
     void saveToKCalFormat();
+    void buildTask( KCal::Event* event, QDict<Task>& map );
+    void positionTask( const KCal::Event* event, const QDict<Task>& map );
 
 public slots:
     /*
@@ -79,7 +83,7 @@ public slots:
     void load();
     void save();
     void writeTaskToFile(QTextStream *, QListViewItem *, int);
-    void writeTaskToCalendar(KCal::CalendarLocal&, Task*, int);
+    void writeTaskToCalendar(KCal::CalendarLocal&, Task*, int, QPtrStack< KCal::Event >&);
     void startCurrentTimer();
     void stopCurrentTimer();
     void stopAllTimers();

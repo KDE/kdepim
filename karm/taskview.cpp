@@ -13,6 +13,7 @@
 #include <qtextstream.h>
 #include <qfile.h>
 #include <qtimer.h>
+#include <qdict.h>
 
 #include <kapplication.h>
 #include <kconfig.h>
@@ -126,47 +127,59 @@ void TaskView::loadFromKCalFormat()
   kdDebug() << "Loading karm calendar data from " << _preferences->loadFile() << endl;
 
   QPtrList<KCal::Event> eventList = cal.rawEvents();
+  kdDebug() << "There are " << eventList.count() << " events in the calendar." << endl;
 
-  QPtrStack<Task> stack;
-  Task *task;
+  QDict< Task > uid_task_map;
+  for ( QPtrListIterator<KCal::Event> eventIter ( eventList ); eventIter.current(); ++eventIter ) {
+    buildTask( *eventIter, uid_task_map );
+  }
 
   for ( QPtrListIterator<KCal::Event> eventIter ( eventList ); eventIter.current(); ++eventIter ) {
-    long minutes;
-    int level;
-    QString name;
-    DesktopListType desktops;
-    if ( !Task::parseEvent( *eventIter, minutes, name, level, desktops ) )
-      continue;
-
-    unsigned int stackLevel = stack.count();
-    for (unsigned int i = level; i<=stackLevel ; i++) {
-      stack.pop();
-    }
-
-    if (level == 1) {
-      task = new Task(name, minutes, 0, desktops, this);
-      emit( sessionTimeChanged( 0, minutes ) );
-    }
-    else {
-      Task *parent = stack.top();
-      task = new Task(name, minutes, 0, desktops, parent);
-      emit( sessionTimeChanged( 0, minutes ) );
-      setRootIsDecorated(true);
-      parent->setOpen(true);
-    }
-
-    // update desktop trackers
-    updateTrackers(task, desktops);
-
-    stack.push(task);
+    positionTask( *eventIter, uid_task_map );
   }
 
   setSelected(firstChild(), true);
   setCurrentItem(firstChild());
 
   applyTrackers();
+}
 
-  //emit( sessionTimeChanged() );
+void TaskView::buildTask( KCal::Event* event, QDict<Task>& map )
+{
+  Task* task = new Task( event, this );
+  map.insert( event->uid(), task );
+  emit( sessionTimeChanged( 0, task->totalTime() ) );
+  setRootIsDecorated(true);
+  task->setOpen(true);
+  updateTrackers( task, task->getDesktops() );
+}
+
+void TaskView::positionTask( const KCal::Event* event, const QDict<Task>& map )
+{
+  QString eventName = event->summary();
+  if ( !event->relatedTo() ) {
+    kdDebug() << eventName << ", has no relations" << endl;
+    return;
+  }
+
+  Task* newParent = map.find( event->relatedToUid() );
+  if ( !newParent ) {
+    kdDebug() << "ERROR: Can't find the parent for " << eventName << endl;
+    return;
+  }
+  QString parentName = newParent->name();
+
+  Task* task = map.find( event->uid() );
+  if ( !task ) {
+    kdDebug() << "ERROR: Can't find the task " << eventName << endl;
+    return;
+  }
+  QString taskName = task->name();
+
+  kdDebug() << "Moving (" << taskName << ") under (" << parentName << ")" << endl;
+
+  takeItem( task );
+  newParent->insertItem( task );
 }
 
 void TaskView::loadFromFileFormat()
@@ -380,8 +393,10 @@ void TaskView::saveToKCalFormat()
   cal.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
   cal.setOwner( settings.getSetting( KEMailSettings::RealName ) );
 
+  QPtrStack< KCal::Event > parents;
+
   for ( QListViewItem* child = firstChild(); child; child = child->nextSibling() ) {
-    writeTaskToCalendar( cal, static_cast<Task*>( child ), 1 );
+    writeTaskToCalendar( cal, static_cast<Task*>( child ), 1, parents );
   }
 
   cal.save( _preferences->saveFile() );
@@ -411,15 +426,22 @@ void TaskView::saveToFileFormat()
   kdDebug() << "Saved data to file " << f.name() << endl;
 }
 
-void TaskView::writeTaskToCalendar( KCal::CalendarLocal& cal, Task* task, int level )
+void TaskView::writeTaskToCalendar( KCal::CalendarLocal& cal, Task* task, int level, QPtrStack< KCal::Event >& parents )
 {
   KCal::Event* event = task->asEvent( level );
+  if ( !parents.isEmpty() ) {
+    event->setRelatedTo( parents.top() );
+  }
+
+  parents.push( event );
 
   cal.addEvent( event );
 
   for ( QListViewItem* nextTask = task->firstChild(); nextTask; nextTask = nextTask->nextSibling() ) {
-    writeTaskToCalendar( cal, static_cast<Task*>( nextTask ), level+1 );
+    writeTaskToCalendar( cal, static_cast<Task*>( nextTask ), level+1, parents );
   }
+
+  parents.pop();
 }
 
 void TaskView::writeTaskToFile(QTextStream *strm, QListViewItem *item, int level)

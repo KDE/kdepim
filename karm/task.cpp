@@ -28,6 +28,18 @@ Task::Task(const QString& taskName, long minutes, long sessionTime, DesktopListT
   init(taskName, minutes, sessionTime, desktops);
 }
 
+Task::Task( KCal::Event* event, QListView* parent )
+  : QObject(), QListViewItem( parent )
+{
+  long minutes = 0;
+  QString name;
+  int level = 0;
+  long sessionTime = 0;
+  DesktopListType desktops;
+  parseEvent( event, minutes, name, level, desktops );
+  init( name, minutes, sessionTime, desktops );
+}
+
 void Task::init(const QString& taskName, long minutes, long sessionTime, DesktopListType desktops)
 {
   if (icons == 0) {
