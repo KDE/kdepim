@@ -39,7 +39,7 @@ ADCalendarBase::ADCalendarBase(const QString& url, const QCString& appname, Type
     loaded_(false),
     mUnregistered(false)
 {
-  if (appName_ == "korganizer")
+  if (appName_ == "korgac")
   {
     KConfig cfg( locate( "config", "korganizerrc" ) );
     cfg.setGroup( "Time & Date" );
