@@ -515,7 +515,13 @@ bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
   return  rx.exactMatch( aStr ) && !tooManyAtsFlag;
 }
 
-
+//-----------------------------------------------------------------------------
+QString KPIM::simpleEmailAddressErrorMsg()
+{
+      return i18n("The email address you entered is not valid because it "
+                  "does not seem to contain an actual email address, i.e. "
+                  "something of the form joe@kde.org.");
+}
 //-----------------------------------------------------------------------------
 QCString KPIM::getEmailAddress( const QCString & address )
 {

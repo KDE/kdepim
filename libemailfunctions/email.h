@@ -105,6 +105,11 @@ KDE_EXPORT QString emailParseResultToString( EmailParseResult errorCode );
  * is allowed, i,e emails in form xxx@yyy.tld */
 KDE_EXPORT bool isValidSimpleEmailAddress( const QString& aStr );
 
+/** Returns a i18n string to be used in msgboxes 
+ * this allows for error messages to be the same
+ * across the board. */
+KDE_EXPORT QString simpleEmailAddressErrorMsg(); 
+
 /** Returns the pure email address (addr-spec in RFC2822) of the given address
     (mailbox in RFC2822).
 
