@@ -61,6 +61,8 @@ class PageItem : public QCheckListItem
 
       QWidget *wdg = QWidgetFactory::create( mPath, 0, 0 );
       if ( wdg ) {
+        setText( 0, wdg->caption() );
+
         QPixmap pm = QPixmap::grabWidget( wdg );
         QImage img = pm.convertToImage().smoothScale( 300, 300, QImage::ScaleMin );
         mPreview = img;
@@ -95,15 +97,6 @@ class PageItem : public QCheckListItem
         delete list;
       } else
         delete wdg;
-    }
-
-
-    virtual QString text( int column ) const
-    {
-      if ( column == 0 )
-        return mName;
-      else
-        return QString::null;
     }
 
     QString name() const { return mName; }
@@ -196,7 +189,7 @@ void KCMKabCustomFields::initGUI()
   QHBoxLayout *hbox = new QHBoxLayout( layout, KDialog::spacingHint() );
 
   mPageView = new KListView( this );
-  mPageView->addColumn( i18n( "UI Files" ) );
+  mPageView->addColumn( i18n( "Available Pages" ) );
   mPageView->setRootIsDecorated( true );
   mPageView->setAllColumnsShowFocus( true );
   mPageView->setFullWidth( true );
