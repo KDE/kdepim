@@ -42,6 +42,7 @@
 #include <kconfig.h>
 #include <kprogress.h>
 #include <kapplication.h>
+#include <kwin.h>
 
 #include "kpgp.h"
 #include "kpgpui.h"
@@ -242,6 +243,8 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
     mAllowedKeys( allowedKeys ),
     mCurrentContextMenuItem( 0 )
 {
+  if ( kapp )
+    KWin::setIcons( winId(), kapp->icon(), kapp->miniIcon() );
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();
   KConfig *config = pgp->getConfig();
   KConfigGroup dialogConfig( config, "Key Selection Dialog" );
