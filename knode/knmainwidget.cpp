@@ -1061,6 +1061,9 @@ void KNMainWidget::slotCollectionSelected(QListViewItem *i)
   h_drView->clear();
   slotArticleSelected(0);
 
+  // mark all articles in current group as not new
+  a_rtManager->setAllNotNew();
+
   if(i) {
     c=(static_cast<KNCollectionViewItem*>(i))->coll;
     switch(c->type()) {

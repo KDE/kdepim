@@ -758,6 +758,24 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
 }
 
 
+void KNArticleManager::setAllNotNew()
+{
+  if ( !g_roup )
+    return;
+  kdDebug(5003) << k_funcinfo << "begin" << endl;
+  KNRemoteArticle *a;
+  for ( int i = 0; i < g_roup->length(); ++i) {
+    a = g_roup->at(i);
+    if ( a->isNew() ) {
+      a->setNew( false );
+      a->setChanged( true );
+    }
+  }
+  g_roup->setFirstNewIndex( -1 );
+  g_roup->setNewCount( 0 );
+  g_roup->updateThreadInfo();
+}
+
 
 bool KNArticleManager::toggleWatched(KNRemoteArticle::List &l)
 {
