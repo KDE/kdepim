@@ -1,7 +1,7 @@
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook $(all_includes) 
 
 kde_module_LTLIBRARIES = libkaddrbk_csv_xxport.la libkaddrbk_vcard_xxport.la \
-libkaddrbk_kde2_xxport.la
+libkaddrbk_kde2_xxport.la libkaddrbk_bookmark_xxport.la
 
 noinst_HEADERS = importdialog.h
 
@@ -23,5 +23,10 @@ libkaddrbk_kde2_xxport_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_lib
 libkaddrbk_kde2_xxport_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbookpart.la
 libkaddrbk_kde2_xxport_la_METASOURCES = AUTO
 
-rc_DATA = csv_xxportui.rc vcard_xxportui.rc kde2_xxportui.rc
+libkaddrbk_bookmark_xxport_la_SOURCES = bookmark_xxport.cpp
+libkaddrbk_bookmark_xxport_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
+libkaddrbk_bookmark_xxport_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbookpart.la
+libkaddrbk_bookmark_xxport_la_METASOURCES = AUTO
+
+rc_DATA = csv_xxportui.rc vcard_xxportui.rc kde2_xxportui.rc bookmark_xxportui.rc
 rcdir = $(kde_datadir)/kaddressbook
