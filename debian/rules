@@ -16,9 +16,8 @@ build-stamp:
 	dh_testdir
 	if test ! -f configure; then \
 	  $(MAKE) -f admin/Makefile.common ;\
-	fi 
-	./configure $(configkde) --with-extra-includes=/usr/include/libpisock \
-		--enable-shared
+	fi
+	./configure $(configkdepim)
 	make
 	touch build-stamp
 

@@ -1,9 +1,9 @@
 Source: kdepim
-Build-Depends: automake, libtool, kdelibs3-dev (>= 4:2.1-20010101-0), debhelper, libjpeg62-dev, libpng2-dev, libqt2.2-dev (>= 2:2.2.3-0), zlib1g-dev, xlib6g-dev | xlibs-dev, jade, sgml-base, docbook, gettext, flex, bison | byacc, libgl-dev, docbook-stylesheets, libpisock-dev
+Build-Depends: automake, libtool, kdelibs3-dev (>= 4:2.1-20010101-0), debhelper (>> 2.0.0), libjpeg62-dev, libpng2-dev, libqt2.2-dev (>= 2:2.2.3-0), zlib1g-dev, xlib6g-dev | xlibs-dev, jade, sgml-base, docbook, gettext, bison | byacc, libgl-dev, docbook-stylesheets, libpisock-dev, flex
 Section: x11
 Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
-Standards-Version: 3.1.1
+Standards-Version: 3.2.1
 
 Package: korganizer
 Architecture: any
@@ -62,7 +62,30 @@ Package: kdepim-dev
 Architecture: any
 Section: devel
 Replaces: korganizer (<< 4:2.1-20010101-0)
-Depends: kdepim-libs (= ${Source-Version}), libqt2.2-dev, kdelibs3-dev, xlibs-dev | xlib6g-dev, libc6-dev
+Depends: kdepim-libs (= ${Source-Version}), libqt2.2-dev, kdelibs3-dev, xlibs-dev | xlib6g-dev, libc6-dev, libical-dev
 Description: KDE PIM applications (development files)
  KDE PIM application development files
  You need these files to compile some PIM related KDE apps.
+
+Package: libical
+Architecture: any
+Section: libs
+Depends: ${shlibs:Depends}
+Description: An implementation of basic iCAL protocols
+ An implementation of basic iCAL protocols
+ .
+ Libical is an Open Source implementation of the iCalendar protocols
+ and protocol data units. The iCalendar specification describes how
+ calendar clients can communicate with calendar servers for users can
+ store their calendar data and arrange meetings with other users.
+ .
+ Libical implements RFC2445 and RFC2446. Eventually, it will also implement
+ iRIP and CAP.
+
+Package: libical-dev
+Architecture: any
+Section: devel
+Depends: libical (= ${Source-Version}), libc6-dev
+Description: An implementation of basic iCAL protocols (development files)
+ An implementation of basic iCAL protocols.  Header files and static libs
+ needed to build applications that require libical

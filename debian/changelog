@@ -2,6 +2,8 @@ kdepim (4:2.1-20010101-1) unstable; urgency=low
  
   * New upstream cvs version
   * korganizer is now 2.1beta1 as well
+  * Breaking out libical into it's own lib/lib-dev packages
+  * Updating build-depends
         
  -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 01 Jan 2001 15:30:00 -0700
 
