@@ -500,7 +500,7 @@ labeling articles.</para>
 <listitem> 
 <para><inlinemediaobject> 
 <imageobject> 
-<imagedata fileref="greyball.png" format="PNG"/> </imageobject> 
+<imagedata fileref="greyball.png" format="PNG"/> </imageobject>
 </inlinemediaobject> 
 Already read articles are labeled with this symbol.</para> 
 </listitem> 
@@ -508,7 +508,7 @@ Already read articles are labeled with this symbol.</para>
 <para> 
 <inlinemediaobject> 
 <imageobject> 
-<imagedata fileref="greyballchk.png" format="PNG"/> </imageobject> 
+<imagedata fileref="greyballchk.png" format="PNG"/> </imageobject>
 </inlinemediaobject> 
 Articles labeled with this symbol are read and the body was fetched
 from the server.</para> 
@@ -563,7 +563,7 @@ connection with the server.</para>
 </listitem> 
 </varlistentry> 
 <varlistentry> 
-<term>The article subject is printed in grey.</term> 
+<term>The article subject is printed in gray.</term> 
 <listitem> 
 <para>There are no unread follow-up articles.</para> 
 </listitem> 

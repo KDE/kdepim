@@ -70,7 +70,7 @@ deletion. You can also optionally view expired alarms.</para>
 <para>When setting up or modifying an alarm, you may either type in
 the alarm message text, specify a text or image file to display,
 specify a command to execute, or enter an email to send. You can also
-choose the colour of the alarm message, whether it should repeat,
+choose the color of the alarm message, whether it should repeat,
 whether to play a sound, and whether the alarm should be cancelled if
 it can't be triggered at its scheduled time.</para>
 
@@ -134,7 +134,7 @@ buttons.</para></tip>
 <title>Alarm list</title>
 
 <para>The main &kalarm; window displays the current list of pending
-alarms, showing their times, repetition intervals, colours, and
+alarms, showing their times, repetition intervals, colors, and
 message texts, names of files to display, commands to execute or email
 subjects. (For a recurring alarm or an alarm with a reminder, the time
 shown is its next scheduled trigger time.) An icon at the left of each
@@ -159,7 +159,7 @@ a daily recurrence, <quote>3 Weeks</quote> for a recurrence which
 triggers on Monday and Wednesday every third week,
 <quote>Login</quote> for a repeat-at-login alarm).</para>
 
-<para>The alarms may be ordered by date/time, repeat interval, colour
+<para>The alarms may be ordered by date/time, repeat interval, color
 or text by clicking on the title bar for the appropriate column.
 To reverse the sort order, click the column title bar again.</para>
 
@@ -302,10 +302,10 @@ options:</para>
 
 <itemizedlist>
 <listitem>
-<para>The <guilabel>Confirm acknowledgement</guilabel> checkbox lets
+<para>The <guilabel>Confirm acknowledgment</guilabel> checkbox lets
 you specify whether you will be prompted for confirmation when you
 close the alarm message window. This may be used as a safeguard
-against accidental acknowledgement of alarms.</para>
+against accidental acknowledgment of alarms.</para>
 </listitem>
 
 <listitem>
@@ -325,15 +325,15 @@ controls beside the checkbox.</para>
 </listitem>
 
 <listitem>
-<para>Select the background colour for the alarm message window.
+<para>Select the background color for the alarm message window.
 (The color selection list can be configured in the
 <link linkend="preferences">Preferences dialog</link>.) </para>
 </listitem>
 
 <listitem>
-<para>Use the <guibutton>Font &amp; Colour...</guibutton> button to
+<para>Use the <guibutton>Font &amp; Color...</guibutton> button to
 select a font or background color for the alarm message. In the
-<guilabel>Choose Alarm Font &amp; Colour</guilabel> dialog, check
+<guilabel>Choose Alarm Font &amp; Color</guilabel> dialog, check
 <guilabel>Use default font</guilabel> to display the message in
 whatever font is configured as the default at the time the message is
 displayed. (The default font can be set in the
@@ -377,7 +377,7 @@ button.</para>
 <para>You can set your email address from which the email is sent, in
 the <link linkend="preferences">Preferences dialog</link>, the
 default being your email address set in the &kde; Control
-Centre.</para>
+Center.</para>
 
 <para>Set the following option:</para>
 
@@ -388,7 +388,7 @@ send a blind copy of the email to yourself when the alarm is
 triggered. The email address to which the copy will be sent may be
 set in the <link linkend="preferences">Preferences dialog</link>, the
 default being your email address set in the &kde; Control
-Centre.</para>
+Center.</para>
 </listitem>
 </itemizedlist>
 </listitem>
@@ -830,7 +830,7 @@ following:</para>
 <listitem>
 <para>Acknowledge it by clicking the <guibutton>Close</guibutton>
 button. This closes the window (after a prompt for confirmation, if
-you selected <guilabel>Confirm acknowledgement</guilabel>).</para>
+you selected <guilabel>Confirm acknowledgment</guilabel>).</para>
 </listitem>
 
 <listitem>
@@ -884,7 +884,7 @@ title bar, so you cannot move it.</para>
 <para>&kalarm; may be run as an icon in the &kde; system tray. This
 icon allows one-click activation of &kalarm;, and provides both
 control and status indication of alarm monitoring. A normal &kalarm;
-icon indicates that alarms are being monitored, while a grey icon
+icon indicates that alarms are being monitored, while a gray icon
 indicates that alarms are not being monitored.</para>
 
 <para>If you hover the mouse cursor over the system tray icon, a
@@ -1038,10 +1038,10 @@ time.</para>
   <option>--mail</option> must be specified with this option.</entry>
 </row>
 <row>
-  <entry><option>-c</option>, <option>--color</option>, <option>--colour
-  <replaceable>colour</replaceable></option></entry>
-  <entry>Set the message background colour to the specified &Qt;
-  colour name or hex code 0xRRGGBB.</entry>
+  <entry><option>-c</option>, <option>--color</option>, <option>--color
+  <replaceable>color</replaceable></option></entry>
+  <entry>Set the message background color to the specified &Qt;
+  color name or hex code 0xRRGGBB.</entry>
 </row>
 <row>
   <entry><option>-e</option>, <option>--exec <replaceable>commandline</replaceable></option></entry>
@@ -1271,7 +1271,7 @@ programs:</para>
 </row>
 <row>
   <entry><option>--license</option></entry>
-  <entry>Show licence information.</entry>
+  <entry>Show license information.</entry>
 </row>
 </tbody>
 </tgroup>
@@ -1408,7 +1408,7 @@ daemon</application> will affect any other applications which use the
 <para>The Service Manager dialog can be accessed either via the menu
 option <menuchoice><guimenu>Settings</guimenu> <guimenuitem>Control
 Alarm Daemon...</guimenuitem></menuchoice>, or via the &kde; Control
-Centre.</para>
+Center.</para>
 
 </sect2>
 </sect1>
@@ -1423,7 +1423,7 @@ personal preferences, select <menuchoice><guimenu>Settings</guimenu>
 This displays the configuration dialog.</para>
 
 <para>The <guilabel>General</guilabel> section lets you control
-&kalarm;'s overall behaviour:</para>
+&kalarm;'s overall behavior:</para>
 
 <itemizedlist>
 <listitem><para><guilabel>Run Mode</guilabel> group box: These options
@@ -1556,7 +1556,7 @@ agent such as <application>postfix</application> or
 address to be used as the sender's address in email alarms.
 Select <guilabel>Use address from Control Center</guilabel> to use
 the email address which is configured in the &kde; Control
-Centre.</para>
+Center.</para>
 </listitem>
 
 <listitem>
@@ -1568,7 +1568,7 @@ computer which &kalarm; runs on, you could simply enter your user
 login name here.
 Select <guilabel>Use address from Control Center</guilabel> to use
 the email address which is configured in the &kde; Control
-Centre.</para>
+Center.</para>
 </listitem>
 
 <listitem>
@@ -1672,22 +1672,22 @@ running.</para>
 default appearance of alarm messages:</para>
 <itemizedlist>
 
-<listitem><para>Select the default font and background colour to use
+<listitem><para>Select the default font and background color to use
 for alarm message display.</para>
 </listitem>
 
-<listitem><para>Edit the colour selection list which is displayed when
-you click on the background colour combo box:</para>
+<listitem><para>Edit the color selection list which is displayed when
+you click on the background color combo box:</para>
 <itemizedlist>
 
-<listitem><para><guilabel>New color</guilabel>: Displays a colour
-selection dialog which lets you choose a colour to add to the
+<listitem><para><guilabel>New color</guilabel>: Displays a color
+selection dialog which lets you choose a color to add to the
 list.</para>
 </listitem>
 
-<listitem><para><guilabel>Remove color</guilabel>: Removes the colour
+<listitem><para><guilabel>Remove color</guilabel>: Removes the color
 currently displayed in the <guilabel>Background color</guilabel>
-combo box from the list. The Custom colour item cannot be removed from
+combo box from the list. The Custom color item cannot be removed from
 the list, and when it is displayed, this button is disabled.</para>
 </listitem>
 
@@ -1700,12 +1700,12 @@ the list, and when it is displayed, this button is disabled.</para>
 default values for the options in the alarm edit dialog:</para>
 <itemizedlist>
 
-<listitem><para>Set the text colour used to show expired alarms in the
+<listitem><para>Set the text color used to show expired alarms in the
 alarm list.</para>
 </listitem>
 
 <listitem><para>Set the default states for the <guilabel>Cancel if
-late</guilabel>, <guilabel>Confirm acknowledgement</guilabel> and
+late</guilabel>, <guilabel>Confirm acknowledgment</guilabel> and
 <guilabel>Copy email to self</guilabel> checkboxes.</para>
 </listitem>
 
@@ -1969,7 +1969,7 @@ should be displayed.</para>
 <varlistentry>
 <term><parameter>bg</parameter></term>
 <listitem>
-<para>Specifies the background colour for displaying the message.</para>
+<para>Specifies the background color for displaying the message.</para>
 </listitem>
 </varlistentry>
 
@@ -2070,7 +2070,7 @@ recurrence:</para>
 <screen>
 QString message, audioFile, recurrence;
 QDateTime dateTime;
-QColor bgColour;
+QColor bgColor;
 Q_UINT32 flags;
 Q_INT32 reminder;
 . . .
@@ -2078,7 +2078,7 @@ QByteArray data;
 QDataStream arg(data, IO_WriteOnly);
 arg &lt;&lt; message;
 arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
-arg.writeRawBytes((char*)&amp;bgColour, sizeof(QColor));
+arg.writeRawBytes((char*)&amp;bgColor, sizeof(QColor));
 arg &lt;&lt; flags &lt;&lt; audioFile &lt;&lt; reminder &lt;&lt; recurrence;
 </screen>
 
@@ -2090,7 +2090,7 @@ without using iCalendar syntax:</para>
 <screen>
 QString message, audioFile;
 QDateTime dateTime;
-QColor bgColour;
+QColor bgColor;
 Q_UINT32 flags;
 Q_INT32 reminder, repeatType, repeatCount, repeatInterval;
 . . .
@@ -2098,7 +2098,7 @@ QByteArray data;
 QDataStream arg(data, IO_WriteOnly);
 arg &lt;&lt; message;
 arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
-arg.writeRawBytes((char*)&amp;bgColour, sizeof(QColor));
+arg.writeRawBytes((char*)&amp;bgColor, sizeof(QColor));
 arg &lt;&lt; flags &lt;&lt; audioFile &lt;&lt; reminder &lt;&lt; repeatType &lt;&lt; repeatCount &lt;&lt; repeatInterval;
 </screen>
 </refsect1>
@@ -2146,7 +2146,7 @@ should be displayed.</para>
 <varlistentry>
 <term><parameter>bg</parameter></term>
 <listitem>
-<para>Specifies the background colour for displaying the file.</para>
+<para>Specifies the background color for displaying the file.</para>
 </listitem>
 </varlistentry>
 
@@ -2324,7 +2324,7 @@ Specify -1 to repeat the alarm indefinitely.</para>
 <para><function>scheduleCommand()</function> is a &DCOP; call to
 schedule the specified shell command line for execution at the
 specified date and time. Apart from specifying a command line and
-omitting the message colour and audio file parameters, its usage is
+omitting the message color and audio file parameters, its usage is
 identical to
 <link linkend="scheduleMessage-descrip"><function>scheduleMessage</function></link>
 - see the description of that function for further details.</para>
@@ -2607,7 +2607,7 @@ previous to 3.1, there is a small application
 
 <chapter id="credits">
 
-<title>Credits and Licence</title>
+<title>Credits and License</title>
 
 <para>
 &kalarm;

@@ -919,7 +919,7 @@ can add and remove toolbuttons for &kaddressbook;'s commands with this option.</
 <chapter id="command-line">
 <title>Command Line Options</title>
 <para>&kaddressbook; supports some command line arguments, which can be
-used influence the starting behaviour:</para>
+used influence the starting behavior:</para>
 
 <variablelist>
 <varlistentry>

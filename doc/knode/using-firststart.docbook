@@ -1185,7 +1185,7 @@ text format tags are an unofficial standard.</para>
 <sect3> 
 <title><guilabel>Recognized quote characters</guilabel></title> 
 
-<para>To display the quoted text in another size or colour, &knode;
+<para>To display the quoted text in another size or color, &knode;
 needs to recognize that it's quoted text. Quoted text is normally
 marked with a <quote>&gt;</quote> at the beginning of the line, but
 sometimes there are other characters. In this field you can enter all
@@ -1818,7 +1818,7 @@ the dicussion is ended.</para>
 <para>&knode; can not predict, if there is a reply, after the set
 conditions are fulfilled. You have to find your own settings for
 this. Some newsgroups have days between replies others only hours. Use
-your own judgement.</para> 
+your own judgment.</para> 
 </caution> 
 </sect3> 
 

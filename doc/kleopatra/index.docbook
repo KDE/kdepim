@@ -123,11 +123,11 @@ for the certificate. The fields to fill out are:
 <para><guilabel>Location:</guilabel>The town or city you live in.</para>
 </listitem>
 <listitem>
-<para><guilabel>Organisation:</guilabel>The organisation you represent
+<para><guilabel>Organization:</guilabel>The organization you represent
 (for example the company you work for)</para>
 </listitem>
 <listitem>
-<para><guilabel>Department:</guilabel>The organisational unit you're
+<para><guilabel>Department:</guilabel>The organizational unit you're
 in. For example "Logistics".</para> 
 </listitem>
 <listitem>
