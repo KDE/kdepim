@@ -4,7 +4,7 @@
 <chapter id="commands">
 <title>Command reference</title>
 
-<para>The following keybinding assume you did not change the default
+<para>The following keybindings assume you did not change the default
 settings.</para>
 
 <sect1 id="knode-mainwindow">
@@ -60,7 +60,7 @@ File</guimenu>
 <listitem>
 <para>
 <action>
-The messages in the folder Outbox are send.</action>
+The messages in the Outbox folder are sent.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -119,7 +119,7 @@ The <guimenu>Edit</guimenu> menu</title>
 <listitem>
 <para>
 <action>
-Copy the selected text in the clipboard.</action>
+Copy the selected text to the clipboard.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -198,7 +198,7 @@ When this is activated, &knode; shows discussions as a tree view in the article 
 </term>
 <listitem>
 <para>
-When this is activated, &knode; shows the complete threads. This is
+When this is activated, &knode; shows the complete threads; this is
 only functional when <guilabel>Show threads</guilabel>
 is active.</para>
 </listitem>
@@ -212,7 +212,7 @@ is active.</para>
 </term>
 <listitem>
 <para>
-When this is activated, &knode; shows no threads. This is only
+When this is activated, &knode; shows no threads; this is only
 functional when <guilabel>Show threads</guilabel> is active.</para>
 </listitem>
 </varlistentry>
@@ -326,7 +326,7 @@ When this setting is activated, &knode; shows all characters of the complete art
 <listitem>
 <para>
 <action>
-Activates the configured fixed font for the viewer.</action>
+Activates the configured fixed-width font for the viewer.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -395,7 +395,7 @@ Jumps to next article in the article view.</action>
 <listitem>
 <para>
 <action>
-Jumps to the next unread article and to the first unread article of the next newsgroup if necessary.</action>
+Jumps to the next unread article, and to the first unread article of the next newsgroup if necessary.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -410,7 +410,7 @@ Jumps to the next unread article and to the first unread article of the next new
 <listitem>
 <para>
 <action>
-Jumps to the next unread thread and to the next unread thread in the next newsgroup, if necessary.</action>
+Jumps to the next unread thread, and to the next unread thread in the next newsgroup if necessary.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -464,7 +464,7 @@ Jumps to the next newsgroup in the folder view</action>
 <listitem>
 <para>
 <action>
-Connects with the active account and fetches the new messages.</action>
+Connects with the active account and fetches any new messages.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -522,7 +522,7 @@ Opens the properties dialog for the active account.</action>
 <listitem>
 <para>
 <action>
-Deletes the active account and all subscribed newsgroups within.</action>
+Deletes the active account and all subscribed newsgroups therein.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -545,7 +545,7 @@ The <guimenu>Group</guimenu> menu</title>
 <listitem>
 <para>
 <action>
-Connects with the active account and fetches the new messages.</action>
+Connects with the active account and fetches any new messages.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -559,7 +559,7 @@ Connects with the active account and fetches the new messages.</action>
 <listitem>
 <para>
 <action>
-Checks if there are any old articles and deletes them.</action>
+Checks if there are any old articles and, if so, deletes them.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -709,7 +709,7 @@ With this function it is possible to import an MBox folder into the active folde
 <listitem>
 <para>
 <action>
-With this function you can export the active folder as a MBox folder.</action>
+With this function you can export the active folder as an MBox folder.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -789,7 +789,7 @@ The <guimenu>Article</guimenu> menu</title>
 <listitem>
 <para>
 <action>
-Opens the Composer with the settings for writing new articles of the active newsgroup.</action>
+Opens the Composer, with the settings for writing new articles set to those of the active newsgroup.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -804,7 +804,7 @@ Opens the Composer with the settings for writing new articles of the active news
 <listitem>
 <para>
 <action>
-Opens the Composer for writing a followup with the content of the active article.</action>
+Opens the Composer for writing a followup, with the content of the active article.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -908,7 +908,7 @@ unread</quote>
 <listitem>
 <para>
 <action>
-Generate a message which deletes the active Article in Usenet. You can
+Generate a message which deletes the active Article in Usenet; you can
 only use this with your own articles.</action>
 </para>
 </listitem>
@@ -923,7 +923,7 @@ only use this with your own articles.</action>
 <listitem>
 <para>
 <action>
-Opens the Composer with the content of the active article. When this article is posted, it overwrites the original article. You can only use this with your own articles.</action>
+Opens the Composer with the content of the active article; when this article is posted it overwrites the original article. You can only use this with your own articles.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -952,7 +952,7 @@ The active article is opened in a new window.</action>
 <listitem>
 <para>
 <action>
-The sourcecode of the active article is opened in a new window.</action>
+The source code of the active article is opened in a new window.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -967,12 +967,12 @@ The sourcecode of the active article is opened in a new window.</action>
 <listitem>
 <para>
 <action>
-Opens the Composer, for editing the active article.</action>
-You can only use this in the folders<guilabel>
-Outbox</guilabel>
-and<guilabel>
-Drafts</guilabel>
-.</para>
+Opens the Composer for editing the active article;</action>
+you can only use this in the <guilabel>
+Outbox</guilabel> 
+and <guilabel>
+Drafts</guilabel> 
+folders.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -987,11 +987,11 @@ Drafts</guilabel>
 <para>
 <action>
 Deletes the active article.</action>
-You can only use this in the folders<guilabel>
-Outbox</guilabel>
-and<guilabel>
-Drafts</guilabel>
-.</para>
+You can only use this in the <guilabel>
+Outbox</guilabel> 
+and <guilabel>
+Drafts</guilabel> 
+ folders.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -1005,11 +1005,11 @@ Drafts</guilabel>
 <para>
 <action>
 Sends the active article.</action>
-You can only use this in the folders<guilabel>
-Outbox</guilabel>
-and<guilabel>
-Drafts</guilabel>
-.</para>
+You can only use this in the <guilabel>
+Outbox</guilabel> 
+and <guilabel>
+Drafts</guilabel> 
+folders.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -1062,7 +1062,7 @@ The scores will be reset and recalculated.</action>
 <listitem>
 <para>
 <action>
-Creates a rule for lowering the score of all articles from the author of the active article.</action>
+Creates a rule for lowering the score of all articles posted by the author of the active article.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1077,7 +1077,7 @@ Creates a rule for lowering the score of all articles from the author of the act
 <listitem> 
 <para> 
 <action> 
-Creates a rule for raising the score of all articles from the author of the active article.</action> 
+Creates a rule for raising the score of all articles posted by the author of the active article.</action> 
 </para> 
 </listitem> 
 </varlistentry> 
@@ -1129,7 +1129,7 @@ The <guimenu>Settings</guimenu> menu</title>
 <listitem>
 <para>
 <action>
-This option toggles if the toolbar is shown or not.</action>
+This option toggles whether the toolbar is shown or not.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1143,7 +1143,7 @@ This option toggles if the toolbar is shown or not.</action>
 <listitem>
 <para>
 <action>
-This option toggles if the statusbar is shown or not.</action>
+This option toggles whether the statusbar is shown or not.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1158,7 +1158,7 @@ This option toggles if the statusbar is shown or not.</action>
 <listitem>
 <para>
 <action>
-This option toggles if the group list is shown or not.</action>
+This option toggles whether the group list is shown or not.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1172,7 +1172,7 @@ This option toggles if the group list is shown or not.</action>
 <listitem>
 <para>
 <action>
-This option toggles if the header view is shown or not.</action>
+This option toggles whether the header view is shown or not.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1186,7 +1186,7 @@ This option toggles if the header view is shown or not.</action>
 <listitem>
 <para>
 <action>
-This option toggles if the article is shown or not.</action>
+This option toggles whether the article is shown or not.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1266,7 +1266,7 @@ The <guimenu>File</guimenu> menu</title>
 <listitem>
 <para>
 <action>
-Send the current article immediately.</action>
+Sends the current article immediately.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1279,7 +1279,7 @@ Send the current article immediately.</action>
 </term> 
 <listitem> 
 <para> 
-Store the current article in the<guilabel> 
+Stores the current article in the <guilabel> 
 Outbox</guilabel> 
 to be sent later.</para> 
 </listitem> 
@@ -1293,8 +1293,8 @@ to be sent later.</para>
 </term>
 <listitem>
 <para>
-Save the current article in the<guilabel>
-Drafts</guilabel>
+Saves the current article in the <guilabel>
+Drafts</guilabel> 
 folder, so you can finish editing it another time.</para>
 </listitem>
 </varlistentry>
@@ -1308,7 +1308,7 @@ folder, so you can finish editing it another time.</para>
 <listitem>
 <para>
 <action>
-Delete the current article, closing the editor.</action>
+Deletes the current article, closing the editor.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1323,7 +1323,7 @@ Delete the current article, closing the editor.</action>
 <listitem>
 <para>
 <action>
-Close the editor window</action>
+Closes the editor window</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1361,8 +1361,8 @@ Undo the last edit.</action>
 </term>
 <listitem>
 <para>
-Redo the last action undone with the<guimenuitem>
-Undo</guimenuitem>
+Redo the last action undone with the <guimenuitem>
+Undo</guimenuitem> 
 menu entry.</para>
 </listitem>
 </varlistentry>
@@ -1377,7 +1377,7 @@ menu entry.</para>
 <listitem>
 <para>
 <action>
-Cut the currently selected text to the clipboard, deleting it from the editor window.</action>
+Cuts the currently-selected text to the clipboard, deleting it from the editor window.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1392,7 +1392,7 @@ Cut the currently selected text to the clipboard, deleting it from the editor wi
 <listitem>
 <para>
 <action>
-Copy the selected text in the clipboard.</action>
+Copies the selected text to the clipboard.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1407,7 +1407,7 @@ Copy the selected text in the clipboard.</action>
 <listitem> 
 <para> 
 <action>
-Paste the current contents of the clipboard to the editor window.</action> 
+Pastes the current contents of the clipboard into the editor window.</action> 
 </para> 
 </listitem> 
 </varlistentry> 
@@ -1421,8 +1421,8 @@ Paste the current contents of the clipboard to the editor window.</action>
 <listitem>
 <para>
 <action>
-Paste the current contents of the clipboard to the editor window with
-a quote char</action> (<quote>&gt;</quote>) at the beginning of the
+Pastes the current contents of the clipboard into the editor window with
+a quote character </action> (<quote>&gt;</quote>) at the beginning of each
 line. 
 </para>
 </listitem>
@@ -1437,7 +1437,7 @@ line.
 <listitem>
 <para>
 <action>
-Select all the text in the editor window.</action>
+Selects all the text in the editor window.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1452,7 +1452,7 @@ Select all the text in the editor window.</action>
 <listitem>
 <para>
 <action>
-Open the Find dialog.</action>
+Opens the Find dialog.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1467,7 +1467,7 @@ Open the Find dialog.</action>
 <listitem>
 <para>
 <action>
-Open the replace dialog.</action> 
+Opens the Replace dialog.</action> 
 </para> 
 </listitem> 
 </varlistentry> 
@@ -1490,7 +1490,7 @@ The <guimenu>Attach</guimenu> menu</title>
 <listitem>
 <para>
 <action>
-Insert your signature at the end of the article you are editing.</action>
+Inserts your signature at the end of the article you are editing.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1504,7 +1504,7 @@ Insert your signature at the end of the article you are editing.</action>
 <listitem>
 <para>
 <action>
-Insert the contents of a file into the editor window.</action>
+Inserts the contents of a file into the editor window.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1519,7 +1519,7 @@ Insert the contents of a file into the editor window.</action>
 <listitem>
 <para>
 <action>
-Insert the contents of a file into the editor window and puts a box around of it.</action>
+Inserts the contents of a file into the editor window and puts a box around of it.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1535,7 +1535,7 @@ Insert the contents of a file into the editor window and puts a box around of it
 <listitem>
 <para>
 <action>
-Insert a file as an attachment.</action>
+Inserts a file as an attachment.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1558,7 +1558,7 @@ The <guimenu>Options</guimenu> menu</title>
 <listitem>
 <para>
 <action>
-Toggles the sending of the message as an article on/off</action>
+Toggles whether the message is to be sent as an article or not.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1572,7 +1572,7 @@ Toggles the sending of the message as an article on/off</action>
 <listitem>
 <para>
 <action>
-Toggles the sending of the message as an article on/off. If it's configured, an external editor will be activated.</action>
+Toggles whether the message is to be sent as an email or not; if it's configured, an external editor will be activated.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1586,7 +1586,7 @@ Toggles the sending of the message as an article on/off. If it's configured, an 
 <listitem>
 <para>
 <action>
-Here you can configure the charset used for this article. Normally you use us-ASCII for the English speaking area.</action>
+Here you can configure the charset used for this article; normally you use us-ascii for English-speaking areas.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1600,7 +1600,7 @@ Here you can configure the charset used for this article. Normally you use us-AS
 <listitem>
 <para>
 <action>
-Toggles the word wrapping in the editor on/off.</action>
+Toggles the word wrapping in the editor on or off.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1721,7 +1721,7 @@ Encrypts the marked text by rotating every character 13 characters of the alphab
 <listitem>
 <para>
 <action>
-Start the external editor (if one is configured), with the current contents of the editor window.</action>
+Start the external editor (if one is configured) with the current contents of the editor window.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1759,7 +1759,7 @@ The <guimenu>Settings</guimenu> menu</title>
 <listitem>
 <para>
 <action>
-Toggles on and off the toolbar.</action>
+Toggles whether the toolbar should be shown or not.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -1773,7 +1773,7 @@ Toggles on and off the toolbar.</action>
 <listitem>
 <para>
 <action>
-This option toggles if the statusbar is shown or not.</action>
+Toggles whether the statusbar should be shown or not.</action>
 </para>
 </listitem>
 </varlistentry>
