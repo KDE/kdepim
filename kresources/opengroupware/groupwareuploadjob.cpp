@@ -39,7 +39,7 @@
 using namespace KPIM;
 
 GroupwareUploadJob::GroupwareUploadJob( GroupwareDataAdaptor *adaptor )
-  : GroupwareJob( adaptor ), mUploadJob(0), 
+  : GroupwareJob( adaptor ), mUploadJob(0),
     mDeletionJob(0), mUploadProgress(0)
 {
 }
@@ -70,7 +70,7 @@ void GroupwareUploadJob::deleteItem()
 
     KURL url( mBaseUrl );
     url = WebdavHandler::toDAV( url );
-    
+
     // TODO: What to do with servers that don't allow you to remove all incidences at once?
     mDeletionJob = adaptor()->createRemoveItemsJob( url, mDeletedItems );
     connect( mDeletionJob, SIGNAL( result( KIO::Job* ) ),
@@ -86,7 +86,7 @@ void GroupwareUploadJob::slotDeletionResult( KIO::Job *job )
     error( job->errorString() );
   } else if ( deljob ) {
     kdDebug(5006) << "slotDeletionResult successfull " << endl;
-    
+
     KURL::List urls( deljob->urls() );
     for ( KURL::List::Iterator it = urls.begin(); it != urls.end(); ++it ) {
       const QString &remote = (*it).path();
@@ -98,7 +98,7 @@ void GroupwareUploadJob::slotDeletionResult( KIO::Job *job )
   }
   KPIM::GroupwareUploadItem::List::Iterator it = mDeletedItems.begin();
   for ( ; it != mDeletedItems.end(); ++it ) {
-    delete (*it);  
+    delete (*it);
   }
   mDeletedItems.clear();
   if ( mUploadProgress ) {
@@ -114,7 +114,7 @@ void GroupwareUploadJob::uploadItem()
   if ( mChangedItems.isEmpty() ) {
     QTimer::singleShot( 0, this, SLOT( uploadNewItem() ) );
   } else {
-    kdDebug(5800)<<"We still have "<<mAddedItems.count()<<" changed items to upload"<<endl;
+    kdDebug(5800)<<"We still have "<<mChangedItems.count()<<" changed items to upload"<<endl;
     GroupwareUploadItem *item = mChangedItems.front();
     if ( !item ) {
       mChangedItems.pop_front();
@@ -125,6 +125,7 @@ void GroupwareUploadJob::uploadItem()
     const QString remote = adaptor()->idMapper()->remoteId( uid );
     if ( remote.isEmpty() ) {
       mAddedItems.append( item );
+      mChangedItems.pop_front();
       emit QTimer::singleShot( 0, this, SLOT( uploadItem() ) );
       return;
     }
@@ -167,20 +168,19 @@ void GroupwareUploadJob::uploadNewItem()
     kdDebug(5800)<<"We still have "<<mAddedItems.count()<<" new items to upload"<<endl;
     GroupwareUploadItem *item = mAddedItems.front();
     if ( !item ) {
-      delete mAddedItems.front();
       mAddedItems.pop_front();
       emit QTimer::singleShot( 0, this, SLOT( uploadNewItem() ) );
       return;
     }
     QString uid = item->uid();
-    
+
     KURL url( adaptor()->folderLister()->writeDestinationId() );
     adaptor()->setUserPassword( url );
     adaptor()->adaptUploadUrl( url );
     kdDebug(5800) << "Put new URL: " << url.url() << endl;
-    
+
     mUploadJob = adaptor()->createUploadNewJob( url, item );
-    
+
     connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
       SLOT( slotUploadNewJobResult( KIO::Job * ) ) );
   } else {
