@@ -156,11 +156,12 @@ void CalendarLocal::close()
 void CalendarLocal::addEvent(Event *anEvent)
 {
   insertEvent(anEvent);
-  // set event's read/write status  
-  if (anEvent->organizer() != getEmail())
-    anEvent->setReadOnly(TRUE);
-  connect(anEvent, SIGNAL(eventUpdated(Incidence *)), this,
-	  SLOT(updateEvent(Incidence *)));
+  if (anEvent->organizer() != getEmail()) {
+    kdDebug() << "Event " << anEvent->summary() << " Organizer: " << anEvent->organizer()
+              << " Email: " << getEmail() << endl;
+    anEvent->setReadOnly(true);
+  }
+  connect(anEvent,SIGNAL(eventUpdated(Incidence *)),this,SLOT(updateEvent(Incidence *)));
   emit calUpdated(anEvent);
 }
 
