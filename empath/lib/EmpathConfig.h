@@ -56,8 +56,6 @@ class EmpathConfig
 		static const QString		KEY_TEXT_COLOUR;
 		static const QString		KEY_LINK_COLOUR;
 		static const QString		KEY_VISITED_LINK_COLOUR;
-		static const QString		KEY_USE_DEFAULT_FONTS;
-		static const QString		KEY_USE_DEFAULT_COLOURS;
 		static const QString		KEY_ICON_SET;
 		static const QString		KEY_NAME;
 		static const QString		KEY_EMAIL;

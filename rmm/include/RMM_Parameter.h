@@ -26,6 +26,10 @@
 #include <RMM_MessageComponent.h>
 #include <RMM_Defines.h>
 
+/**
+ * An RParameter consists of an attribute, value pair.
+ * It is used in RParameterList, for example when looking at an RCte field.
+ */
 class RParameter : public RMessageComponent {
 
 	public:

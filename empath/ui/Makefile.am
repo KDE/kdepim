@@ -55,8 +55,6 @@ EmpathNewsSettingsDialog.cpp \
 EmpathSendingSettingsDialog.cpp \
 EmpathServerSettingsDialog.cpp \
 EmpathServerTypeDialog.cpp \
-EmpathSettingsDialog.cpp \
-EmpathSettingsWidget.cpp \
 EmpathStatusWidget.cpp \
 EmpathSubjectSpecWidget.cpp \
 EmpathTaskWidget.cpp \

@@ -115,10 +115,15 @@ EmpathMailbox::folder(const EmpathURL & url)
 {
 	empathDebug("folder(" + url.folderPath() + ") called");
 	EmpathFolderListIterator it(folderList_);
+	QString fp(url.folderPath());
+	while (fp.find("//") != -1)
+	fp.replace(QRegExp("//"), "/");
+	if (fp.at(0) == '/') fp.remove(0, 1);
+	if (fp.at(fp.length() - 1) == '/') fp.remove(fp.length() - 1, 1);
 	
 	for (; it.current(); ++it) {
-		empathDebug("Looking at \"" + it.current()->url().asString() + "\"");
-		if (it.current()->url().folderPath() == url.folderPath()) {
+		empathDebug("Looking at \"" + it.current()->url().folderPath() + "\"");
+		if (it.current()->url().folderPath() == fp) {
 			empathDebug("... found !");
 			return it.current();
 		}

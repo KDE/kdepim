@@ -29,6 +29,10 @@
 #include <RMM_HeaderBody.h>
 #include <RMM_Enum.h>
 
+/**
+ * An RDateTime encapsulates a time value. It is basically a QDateTime with an
+ * added 'asUnixTime()' method and knowledge of time zones.
+ */ 
 class RDateTime : public QDateTime, public RHeaderBody {
 
 	public:

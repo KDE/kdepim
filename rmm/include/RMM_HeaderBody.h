@@ -26,6 +26,9 @@
 #include <RMM_MessageComponent.h>
 #include <RMM_Defines.h>
 
+/**
+ * Base class for RAddress, RContentType, RMailboxList etc.
+ */
 class RHeaderBody : public RMessageComponent {
 
 	public:

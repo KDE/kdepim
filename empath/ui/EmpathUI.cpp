@@ -26,6 +26,12 @@
 #include "EmpathUI.h"
 #include "EmpathMainWindow.h"
 #include "EmpathComposeWindow.h"
+#include "EmpathDisplaySettingsDialog.h"
+#include "EmpathIdentitySettingsDialog.h"
+#include "EmpathComposeSettingsDialog.h"
+#include "EmpathSendingSettingsDialog.h"
+#include "EmpathAccountsSettingsDialog.h"
+#include "EmpathFilterManagerDialog.h"
 #include "RMM_Message.h"
 #include "EmpathConfig.h"
 #include "EmpathTipOfTheDay.h"
@@ -35,8 +41,33 @@ EmpathUI::EmpathUI()
 {
 	empathDebug("ctor");
 	
-	connect(empath,	SIGNAL(newComposer(ComposeType, const EmpathURL &)),
-			this,	SLOT(s_newComposer(ComposeType, const EmpathURL &)));
+	QObject::connect(
+		empath,	SIGNAL(newComposer(ComposeType, const EmpathURL &)),
+		this,	SLOT(s_newComposer(ComposeType, const EmpathURL &)));
+	
+	QObject::connect(
+		empath,	SIGNAL(setupDisplay()),
+		this,	SLOT(s_setupDisplay()));
+	
+	QObject::connect(
+		empath,	SIGNAL(setupIdentity()),
+		this,	SLOT(s_setupIdentity()));
+	
+	QObject::connect(
+		empath,	SIGNAL(setupSending()),
+		this,	SLOT(s_setupSending()));
+	
+	QObject::connect(
+		empath,	SIGNAL(setupComposing()),
+		this,	SLOT(s_setupComposing()));
+	
+	QObject::connect(
+		empath,	SIGNAL(setupAccounts()),
+		this,	SLOT(s_setupAccounts()));
+	
+	QObject::connect(
+		empath,	SIGNAL(setupFilters()),
+		this,	SLOT(s_setupFilters()));
 	
 	EmpathMainWindow * mainWindow = new EmpathMainWindow("mainWindow");
 	kapp->setMainWidget(mainWindow);
@@ -75,4 +106,40 @@ EmpathUI::_showTipOfTheDay() const
 			0);
 	totd.exec();
 }
+
+	void
+EmpathUI::s_setupDisplay()
+{
+	EmpathDisplaySettingsDialog::create();
+}
+	void
+EmpathUI::s_setupIdentity()
+{
+	EmpathIdentitySettingsDialog::create();
+}
+
+	void
+EmpathUI::s_setupSending()
+{
+	EmpathComposeSettingsDialog::create();
+}
+
+	void
+EmpathUI::s_setupComposing()
+{
+	EmpathSendingSettingsDialog::create();
+}
+
+	void
+EmpathUI::s_setupAccounts()
+{
+	EmpathAccountsSettingsDialog::create();
+}
+
+	void
+EmpathUI::s_setupFilters()
+{
+	EmpathFilterManagerDialog::create();
+}
+
 

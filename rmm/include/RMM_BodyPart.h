@@ -22,6 +22,7 @@
 #define RMM_BODY_PART_H
 
 #include <qstring.h>
+#include <qlist.h>
 
 #include <RMM_Entity.h>
 #include <RMM_Enum.h>
@@ -71,6 +72,9 @@ class RBodyPart : public REntity {
 		RMM::DispType disposition_;
 
 };
+
+typedef QList<RBodyPart>			RBodyPartList;
+typedef QListIterator<RBodyPart>	RBodyPartListIterator;
 
 #endif
 

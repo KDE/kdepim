@@ -71,10 +71,7 @@ class EmpathMessageViewWindow : public KTMainWindow
 		
 		EmpathMessageViewWidget * messageView_;
 		
-		KStdAccel		* accel;
-		KMenuBar		* menu;
-		KToolBar		* tool;
-		KStatusBar		* status;
+//		KStdAccel		* accel;
 
 		KConfig			* config_;
 		QPopupMenu		* fileMenu_;

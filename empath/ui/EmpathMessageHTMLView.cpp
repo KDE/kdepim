@@ -125,13 +125,10 @@ EmpathMessageHTMLWidget::go()
 	KConfig * c = kapp->getConfig();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
-	if (!c->readBoolEntry(EmpathConfig::KEY_USE_DEFAULT_COLOURS)) {
-		setDefaultTextColors(
-				c->readColorEntry(EmpathConfig::KEY_TEXT_COLOUR),
-				c->readColorEntry(EmpathConfig::KEY_LINK_COLOUR),
-				c->readColorEntry(EmpathConfig::KEY_VISITED_LINK_COLOUR));
-	} else
-		setDefaultTextColors(empathTextColour(), Qt::blue, Qt::darkCyan);
+	setDefaultTextColors(
+		c->readColorEntry(EmpathConfig::KEY_TEXT_COLOUR),
+		c->readColorEntry(EmpathConfig::KEY_LINK_COLOUR),
+		c->readColorEntry(EmpathConfig::KEY_VISITED_LINK_COLOUR));
 	
 	setUnderlineLinks(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS));
 	
@@ -244,18 +241,9 @@ EmpathMessageHTMLWidget::markupBackgroundColour(QCString & html)
 	KConfig * c = kapp->getConfig();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
-	if (c->readBoolEntry(EmpathConfig::KEY_USE_DEFAULT_COLOURS)) {
-	
-		bgcol = "BGCOLOR=\"#" +
-		QColorToHTML(empathWindowColour()) +
-		"\"";
-	
-	} else {
-	
-		bgcol = "BGCOLOR=\"#" +
+	bgcol = "BGCOLOR=\"#" +
 		QColorToHTML(c->readColorEntry(EmpathConfig::KEY_BACKGROUND_COLOUR)) +
 		"\"";
-	}
 	
 	html.replace(QRegExp("@_BODY_BACKGROUND_"), bgcol);
 	empathDebug("end markupBk");
@@ -270,18 +258,10 @@ EmpathMessageHTMLWidget::markupTextColour(QCString & html)
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	QCString textcol;
-	if (c->readBoolEntry(EmpathConfig::KEY_USE_DEFAULT_COLOURS)) {
-	
-		textcol = "\"#" +
-		QColorToHTML(empathTextColour()) +
-		"\"";
-	
-	} else {
-	
-		textcol = "\"#" +
+
+	textcol = "\"#" +
 		QColorToHTML(c->readColorEntry(EmpathConfig::KEY_TEXT_COLOUR)) +
 		"\"";
-	}
 	
 	html.replace(QRegExp("@_NORMAL_TEXT_"), textcol);
 	empathDebug("end markupTcol");

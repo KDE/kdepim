@@ -20,6 +20,8 @@
 
 // KDE includes
 #include <klocale.h>
+#include <kapp.h>
+#include <kconfig.h>
 
 // Local includes
 #include "Empath.h"
@@ -28,15 +30,29 @@
 #include "EmpathFilterManagerDialog.h"
 #include "EmpathFilterEditDialog.h"
 #include "EmpathFilterList.h"
+#include "EmpathUtilities.h"
 #include "EmpathFilter.h"
+
+bool EmpathFilterManagerDialog::exists_ = false;
+
+	void
+EmpathFilterManagerDialog::create()
+{
+	if (exists_) return;
+	exists_ = true;
+	EmpathFilterManagerDialog * d = new EmpathFilterManagerDialog(0, 0);
+	CHECK_PTR(d);
+	d->show();
+	kapp->processEvents();
+}
 
 EmpathFilterManagerDialog::EmpathFilterManagerDialog(
 		QWidget * parent, const char * name)
-	:	QWidget(parent, name)
+	:	QDialog(parent, name, false)
 {
 	empathDebug("ctor");
 
-	mainLayout_ = new QGridLayout(this, 1, 1, 10, 10);
+	mainLayout_ = new QGridLayout(this, 2, 1, 10, 10);
 	CHECK_PTR(mainLayout_);
 	
 	QPushButton	tempButton((QWidget *)0);
@@ -107,6 +123,39 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(
 	rgb_filters_->setMinimumHeight(h * 4);  
 	rgb_filters_->setMinimumWidth(filtersButtonBox_->sizeHint().width() + 40);
 
+///////////////////////////////////////////////////////////////////////////////
+// Button box
+
+	buttonBox_	= new KButtonBox(this);
+	CHECK_PTR(buttonBox_);
+
+	buttonBox_->setFixedHeight(h);
+	
+	pb_help_	= buttonBox_->addButton(i18n("&Help"));	
+	CHECK_PTR(pb_help_);
+	
+	buttonBox_->addStretch();
+	
+	pb_OK_		= buttonBox_->addButton(i18n("&OK"));
+	CHECK_PTR(pb_OK_);
+	
+	pb_OK_->setDefault(true);
+	
+	pb_apply_	= buttonBox_->addButton(i18n("&Apply"));
+	CHECK_PTR(pb_apply_);
+	
+	pb_cancel_	= buttonBox_->addButton(i18n("&Cancel"));
+	CHECK_PTR(pb_cancel_);
+	
+	buttonBox_->layout();
+	
+	QObject::connect(pb_OK_,		SIGNAL(clicked()),	SLOT(s_OK()));
+	QObject::connect(pb_apply_,		SIGNAL(clicked()),	SLOT(s_apply()));
+	QObject::connect(pb_cancel_,	SIGNAL(clicked()),	SLOT(s_cancel()));
+	QObject::connect(pb_help_,		SIGNAL(clicked()),	SLOT(s_help()));
+/////////////////////////////////////////////////////////////////////////////
+
+
 	filtersLayout_ = new QGridLayout(w_filters_, 2, 2, 10, 10);
 	CHECK_PTR(filtersLayout_);
 
@@ -116,16 +165,12 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(
 	
 	filtersLayout_->activate();
 	
-	mainLayout_->addWidget(rgb_filters_, 0, 0);
+	mainLayout_->addWidget(rgb_filters_,	0, 0);
+	mainLayout_->addWidget(buttonBox_,		1, 0);
 	mainLayout_->activate();
 	update();
 }
 
-EmpathFilterManagerDialog::~EmpathFilterManagerDialog()
-{
-	empathDebug("dtor");
-}
-		
 	void
 EmpathFilterManagerDialog::s_addFilter()
 {
@@ -203,5 +248,44 @@ EmpathFilterManagerDialog::saveData()
 {
 	empathDebug("saveData() called");
 	empath->filterList().save();
+}
+
+	void
+EmpathFilterManagerDialog::s_OK()
+{
+	if (!applied_)
+		kapp->getConfig()->rollback(true);
+	
+	kapp->getConfig()->sync();
+	delete this;
+}
+
+	void
+EmpathFilterManagerDialog::s_help()
+{
+	empathInvokeHelp(QString::null, QString::null);
+}
+
+	void
+EmpathFilterManagerDialog::s_apply()
+{
+	if (applied_) {
+		pb_apply_->setText(i18n("&Apply"));
+		kapp->getConfig()->rollback(true);
+		kapp->getConfig()->reparseConfiguration();
+		applied_ = false;
+	} else {
+		pb_apply_->setText(i18n("&Revert"));
+		pb_cancel_->setText(i18n("&Close"));
+		applied_ = true;
+	}
+}
+
+	void
+EmpathFilterManagerDialog::s_cancel()
+{
+	if (!applied_)
+		kapp->getConfig()->rollback(true);
+	delete this;
 }
 

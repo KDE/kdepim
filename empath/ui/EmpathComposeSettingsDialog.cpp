@@ -27,14 +27,30 @@
 #include "EmpathComposeSettingsDialog.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
+#include "EmpathUtilities.h"
 #include "RikGroupBox.h"
-		
+
+bool EmpathComposeSettingsDialog::exists_ = false;
+
+	void
+EmpathComposeSettingsDialog::create()
+{
+	if (exists_) return;
+	exists_ = true;
+	EmpathComposeSettingsDialog * d = new EmpathComposeSettingsDialog(0, 0);
+	CHECK_PTR(d);
+	d->show();
+	kapp->processEvents();
+	d->loadData();
+}
+
 EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 		QWidget * parent,
 		const char * name)
-	:	QWidget(parent, name)
+	:	QDialog(parent, name, false)
 {
 	empathDebug("ctor");
+	setCaption(i18n("Compose Settings - ") + kapp->getCaption());
 
 	QLineEdit	tempLineEdit((QWidget *)0);
 	Q_UINT32 h	= tempLineEdit.sizeHint().height();
@@ -177,10 +193,47 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 	
 	le_externalEditor_ = new QLineEdit(this, "le_externalEditor");
 	le_externalEditor_->setFixedHeight(h);
+
+///////////////////////////////////////////////////////////////////////////////
+// Button box
+
+	buttonBox_	= new KButtonBox(this);
+	CHECK_PTR(buttonBox_);
+
+	buttonBox_->setFixedHeight(h);
 	
+	pb_help_	= buttonBox_->addButton(i18n("&Help"));	
+	CHECK_PTR(pb_help_);
+	
+	pb_default_	= buttonBox_->addButton(i18n("&Default"));	
+	CHECK_PTR(pb_default_);
+	
+	buttonBox_->addStretch();
+	
+	pb_OK_		= buttonBox_->addButton(i18n("&OK"));
+	CHECK_PTR(pb_OK_);
+	
+	pb_OK_->setDefault(true);
+	
+	pb_apply_	= buttonBox_->addButton(i18n("&Apply"));
+	CHECK_PTR(pb_apply_);
+	
+	pb_cancel_	= buttonBox_->addButton(i18n("&Cancel"));
+	CHECK_PTR(pb_cancel_);
+	
+	buttonBox_->layout();
+	
+	QObject::connect(pb_OK_,		SIGNAL(clicked()),	SLOT(s_OK()));
+	QObject::connect(pb_default_,	SIGNAL(clicked()),	SLOT(s_default()));
+	QObject::connect(pb_apply_,		SIGNAL(clicked()),	SLOT(s_apply()));
+	QObject::connect(pb_cancel_,	SIGNAL(clicked()),	SLOT(s_cancel()));
+	QObject::connect(pb_help_,		SIGNAL(clicked()),	SLOT(s_help()));
+/////////////////////////////////////////////////////////////////////////////
+
+
 	// Layouts
 	
-	topLevelLayout_				= new QGridLayout(this, 4, 1, 10, 10);
+	topLevelLayout_				= new QGridLayout(this, 5, 1, 10, 10);
 	CHECK_PTR(topLevelLayout_);
 
 	topLevelLayout_->setRowStretch(0, 3);
@@ -208,6 +261,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 	topLevelLayout_->addWidget(rgb_msg_,		1, 0);
 	topLevelLayout_->addWidget(rgb_when_,		2, 0);
 	topLevelLayout_->addLayout(externalLayout_,	3, 0);
+	topLevelLayout_->addWidget(buttonBox_,		4, 0);
 
 	phrasesGroupLayout_->addWidget(l_reply_,	0, 0);
 	phrasesGroupLayout_->addWidget(l_replyAll_,	1, 0);
@@ -287,5 +341,51 @@ EmpathComposeSettingsDialog::loadData()
 		c->readBoolEntry(EmpathConfig::KEY_USE_EXTERNAL_EDITOR, false));
 	
 	le_externalEditor_->setText(c->readEntry(EmpathConfig::KEY_EXTERNAL_EDITOR, "gvim"));
+}
+
+	void
+EmpathComposeSettingsDialog::s_OK()
+{
+	if (!applied_)
+		kapp->getConfig()->rollback(true);
+	
+	kapp->getConfig()->sync();
+	delete this;
+}
+
+	void
+EmpathComposeSettingsDialog::s_help()
+{
+	empathInvokeHelp(QString::null, QString::null);
+}
+
+	void
+EmpathComposeSettingsDialog::s_apply()
+{
+	if (applied_) {
+		pb_apply_->setText(i18n("&Apply"));
+		kapp->getConfig()->rollback(true);
+		kapp->getConfig()->reparseConfiguration();
+		loadData();
+		applied_ = false;
+	} else {
+		pb_apply_->setText(i18n("&Revert"));
+		pb_cancel_->setText(i18n("&Close"));
+		applied_ = true;
+	}
+	saveData();
+}
+
+	void
+EmpathComposeSettingsDialog::s_default()
+{
+}
+	
+	void
+EmpathComposeSettingsDialog::s_cancel()
+{
+	if (!applied_)
+		kapp->getConfig()->rollback(true);
+	delete this;
 }
 

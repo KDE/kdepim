@@ -34,6 +34,7 @@
 
 // KDE includes
 #include <kspinbox.h>
+#include <kbuttonbox.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -48,15 +49,24 @@ class EmpathSendingSettingsDialog : public QWidget
 
 	public:
 		
-		EmpathSendingSettingsDialog(
-			QWidget * parent = 0, const char * name = 0);
+		static void create();
 
-		~EmpathSendingSettingsDialog() { empathDebug("dtor"); }
+		~EmpathSendingSettingsDialog() { empathDebug("dtor"); exists_ = false; }
 
 		void saveData();
 		void loadData();
+		
+	protected slots:
+
+		void s_OK();
+		void s_cancel();
+		void s_help();
+		void s_default();
+		void s_apply();
 
 	private:
+
+		EmpathSendingSettingsDialog(QWidget * parent = 0, const char * name = 0);
 
 		QButtonGroup		* serverButtonGroup_;
 		
@@ -98,6 +108,17 @@ class EmpathSendingSettingsDialog : public QWidget
 		
 		EmpathAddressSelectionWidget	* asw_copyOther_;
 		EmpathFolderChooserWidget		* fcw_copyFolder_;
+
+		KButtonBox		* buttonBox_;
+		QPushButton		* pb_help_;
+		QPushButton		* pb_default_;
+		QPushButton		* pb_apply_;
+		QPushButton		* pb_OK_;
+		QPushButton		* pb_cancel_;
+		
+		static bool		exists_;
+		bool			applied_;
+
 };
 
 #endif

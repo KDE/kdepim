@@ -41,7 +41,6 @@
 #include "EmpathMessageWidget.h"
 #include "EmpathMessageList.h"
 #include "EmpathFolderWidget.h"
-#include "EmpathSettingsDialog.h"
 #include "EmpathAboutBox.h"
 #include "EmpathStatusWidget.h"
 #include "EmpathMessageSourceView.h"
@@ -51,9 +50,7 @@
 #include "EmpathFolderChooserDialog.h"
 #include "Empath.h"
 #include "EmpathMenuMaker.h"
-#ifndef NDEBUG
 #include "EmpathDebugDialog.h"
-#endif
 
 EmpathMainWindow::EmpathMainWindow(const char * name)
 	:	KTMainWindow(name)
@@ -675,54 +672,6 @@ EmpathMainWindow::statusWidget()
 EmpathMainWindow::messageListWidget()
 {
 	return messageListWidget_;
-}
-
-	void
-EmpathMainWindow::s_optionsSettingsDisplay()
-{
-	EmpathSettingsDialog settingsDialog(DisplaySettings,
-			(QWidget *)0L, "settingsDialog");
-	settingsDialog.exec();
-}
-
-	void
-EmpathMainWindow::s_optionsSettingsIdentity()
-{
-	EmpathSettingsDialog settingsDialog(IdentitySettings,
-			(QWidget *)0L, "settingsDialog");
-	settingsDialog.exec();
-}
-
-	void
-EmpathMainWindow::s_optionsSettingsCompose()
-{
-	EmpathSettingsDialog settingsDialog(ComposeSettings,
-			(QWidget *)0L, "settingsDialog");
-	settingsDialog.exec();
-}
-
-	void
-EmpathMainWindow::s_optionsSettingsSending()
-{
-	EmpathSettingsDialog settingsDialog(SendingSettings,
-			(QWidget *)0L, "settingsDialog");
-	settingsDialog.exec();
-}
-
-	void
-EmpathMainWindow::s_optionsSettingsAccounts()
-{
-	EmpathSettingsDialog settingsDialog(AccountsSettings,
-			(QWidget *)0L, "settingsDialog");
-	settingsDialog.exec();
-}
-
-	void
-EmpathMainWindow::s_optionsSettingsFilters()
-{
-	EmpathSettingsDialog settingsDialog(FilterSettings,
-			(QWidget *)0L, "settingsDialog");
-	settingsDialog.exec();
 }
 
 	void

@@ -28,6 +28,10 @@
 
 typedef QListIterator<RMailbox> RMailboxListIterator;
 
+/**
+ * @short Simple encapsulation of a list of RMailbox, which is also an RHeaderBody.
+ * Simple encapsulation of a list of RMailbox, which is also an RHeaderBody.
+ */
 class RMailboxList : public QList<RMailbox>, public RHeaderBody {
 
 	public:

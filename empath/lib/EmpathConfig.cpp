@@ -88,12 +88,6 @@ EmpathConfig::KEY_LINK_COLOUR = "LinkColour";
 EmpathConfig::KEY_VISITED_LINK_COLOUR = "VisitedLinkColour";
 
 	const QString
-EmpathConfig::KEY_USE_DEFAULT_FONTS = "UseDefaultFonts";
-
-	const QString
-EmpathConfig::KEY_USE_DEFAULT_COLOURS = "UseDefaultColours";
-
-	const QString
 EmpathConfig::KEY_ICON_SET = "IconSet";
 
 	const QString

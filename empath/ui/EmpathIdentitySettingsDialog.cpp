@@ -31,15 +31,32 @@
 // Local includes
 #include "EmpathIdentitySettingsDialog.h"
 #include "EmpathConfig.h"
+#include "EmpathUtilities.h"
+#include "EmpathUIUtils.h"
 #include "Empath.h"
 #include "RikGroupBox.h"
 		
+bool EmpathIdentitySettingsDialog::exists_ = false;
+
+	void
+EmpathIdentitySettingsDialog::create()
+{
+	if (exists_) return;
+	exists_ = true;
+	EmpathIdentitySettingsDialog * d = new EmpathIdentitySettingsDialog(0, 0);
+	CHECK_PTR(d);
+	d->show();
+	kapp->processEvents();
+	d->loadData();
+}
+	
 EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 		QWidget * parent,
 		const char * name)
-	:	QWidget(parent, name)
+	:	QDialog(parent, name, false)
 {
 	empathDebug("ctor");
+	setCaption(i18n("Identity Settings - ") + kapp->getCaption());
 	
 	rgb_main_	= new RikGroupBox(QString::null, 8, this, "rgb_font");
 	CHECK_PTR(rgb_main_);
@@ -148,14 +165,50 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 	CHECK_PTR(mle_sigPreview_);
 
 	mle_sigPreview_->setReadOnly(true);
-	QFont f("TypeWriter");
-	f.setStyleHint(QFont::TypeWriter);
-	mle_sigPreview_->setFont(f);
+	mle_sigPreview_->setFont(empathFixedFont());
 	mle_sigPreview_->setText(i18n("No signature set"));
 	
+	mle_sigPreview_->setMinimumHeight(h * 3);
+
+///////////////////////////////////////////////////////////////////////////////
+// Button box
+
+	buttonBox_	= new KButtonBox(this);
+	CHECK_PTR(buttonBox_);
+
+	buttonBox_->setFixedHeight(h);
+	
+	pb_help_	= buttonBox_->addButton(i18n("&Help"));	
+	CHECK_PTR(pb_help_);
+	
+	pb_default_	= buttonBox_->addButton(i18n("&Default"));	
+	CHECK_PTR(pb_default_);
+	
+	buttonBox_->addStretch();
+	
+	pb_OK_		= buttonBox_->addButton(i18n("&OK"));
+	CHECK_PTR(pb_OK_);
+	
+	pb_OK_->setDefault(true);
+	
+	pb_apply_	= buttonBox_->addButton(i18n("&Apply"));
+	CHECK_PTR(pb_apply_);
+	
+	pb_cancel_	= buttonBox_->addButton(i18n("&Cancel"));
+	CHECK_PTR(pb_cancel_);
+	
+	buttonBox_->layout();
+	
+	QObject::connect(pb_OK_,		SIGNAL(clicked()),	SLOT(s_OK()));
+	QObject::connect(pb_default_,	SIGNAL(clicked()),	SLOT(s_default()));
+	QObject::connect(pb_apply_,		SIGNAL(clicked()),	SLOT(s_apply()));
+	QObject::connect(pb_cancel_,	SIGNAL(clicked()),	SLOT(s_cancel()));
+	QObject::connect(pb_help_,		SIGNAL(clicked()),	SLOT(s_help()));
+/////////////////////////////////////////////////////////////////////////////
+
 	// Layouts
 	
-	topLevelLayout_		= new QGridLayout(this, 1, 1, 10, 10);
+	topLevelLayout_		= new QGridLayout(this, 2, 1, 10, 10);
 	CHECK_PTR(topLevelLayout_);
 
 	mainGroupLayout_	= new QGridLayout(w_main_, 11, 3, 0, 10);
@@ -168,6 +221,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 	sigPreviewGroupLayout_->activate();
 
 	topLevelLayout_->addWidget(rgb_main_, 0, 0);
+	topLevelLayout_->addWidget(buttonBox_, 1, 0);
 	
 	mainGroupLayout_->setColStretch(0, 9);
 	mainGroupLayout_->setColStretch(1, 0);
@@ -277,4 +331,57 @@ EmpathIdentitySettingsDialog::s_editSig()
 {
 }
 
+
+	void
+EmpathIdentitySettingsDialog::s_OK()
+{
+	if (!applied_)
+		kapp->getConfig()->rollback(true);
+	
+	kapp->getConfig()->sync();
+	delete this;
+}
+
+	void
+EmpathIdentitySettingsDialog::s_help()
+{
+	empathInvokeHelp(QString::null, QString::null);
+}
+
+	void
+EmpathIdentitySettingsDialog::s_apply()
+{
+	if (applied_) {
+		pb_apply_->setText(i18n("&Apply"));
+		kapp->getConfig()->rollback(true);
+		kapp->getConfig()->reparseConfiguration();
+		loadData();
+		applied_ = false;
+	} else {
+		pb_apply_->setText(i18n("&Revert"));
+		pb_cancel_->setText(i18n("&Close"));
+		applied_ = true;
+	}
+	saveData();
+}
+
+	void
+EmpathIdentitySettingsDialog::s_default()
+{
+	le_chooseName_->setText(i18n("Empath user"));
+	le_chooseEmail_->setText(QString::null);
+	le_chooseReplyTo_->setText(QString::null);
+	le_chooseOrg_->setText(QString::null);
+	le_chooseSig_->setText(QString::null);
+	mle_sigPreview_->setText(QString::null);
+	saveData();
+}
+	
+	void
+EmpathIdentitySettingsDialog::s_cancel()
+{
+	if (!applied_)
+		kapp->getConfig()->rollback(true);
+	delete this;
+}
 

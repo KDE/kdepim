@@ -107,14 +107,6 @@ class EmpathMainWindow : public KTMainWindow
 		void s_messageView();
 		void s_messageViewSource();
 
-		// Options menu slots
-		void s_optionsSettingsDisplay();
-		void s_optionsSettingsIdentity();
-		void s_optionsSettingsCompose();
-		void s_optionsSettingsSending();
-		void s_optionsSettingsAccounts();
-		void s_optionsSettingsFilters();
-
 		// Help menu slots
 		void s_help();
 		void s_aboutEmpath();

@@ -18,29 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-/*
-	RMailMessages -	Class library for Internet Mail Messages.
-					This library relies on the Qt toolkit (http://www.troll.no).
-					Compliant with various RFCs. See docs for details.
-	
-	Copyright (C) 1998 Rik Hemsley <rik@kde.org>
-	
-	This library is free software; you can redistribute it and/or
-	modify it under the terms of the GNU Library General Public
-	License as published by the Free Software Foundation; either
-	version 2 of the License, or (at your option) any later version.
- 
-	This library is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	Library General Public License for more details.
- 
-	You should have received a copy of the GNU General Public License
-	along with this library; see the file COPYING.  If not, write to
-	the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-	Boston, MA 02111-1307, USA. 
-*/
-
 // Qt includes
 #include <qstring.h>
 
@@ -59,8 +36,7 @@ RBody::RBody()
 
 
 RBody::RBody(const RBody & body)
-	:	RBodyPartList(),
-		RMessageComponent()
+	:	RMessageComponent()
 {
 	rmmDebug("ctor");
 	partList_.setAutoDelete(true);
@@ -76,7 +52,7 @@ RBody::operator = (const RBody & body)
 {
 	rmmDebug("operator =");
 	partList_.clear();
-	QListIterator<RBodyPart> it(partList_);
+	RBodyPartListIterator it(partList_);
 
 	for (;it.current(); ++it)
 		partList_.append(it.current());
@@ -90,17 +66,63 @@ RBody::operator = (const RBody & body)
 RBody::parse()
 {
 	rmmDebug("parse() called");
+	partList_.clear();
 	
-	// If we're not a multipart message, leave here.
-	if (!isMultiPart_) return;
+	if (!isMultiPart_) {
+		
+		RBodyPart * newPart = new RBodyPart(strRep_);
+		CHECK_PTR(newPart);
+/*		newPart->setEncoding(cte_);
+		newPart->setMimeType(mimeType_);
+		newPart->setMimeSubType(mimeSubType_);
+		newPart->setDescription(description_);
+		newPart->setDisposition(disposition_);
+		newPart->parse();
+*/		
+		return;
+	}
 	
 	// So, dear message, you are of multiple parts. Let's see what you're made
 	// of.
 	
-	partList_.clear();
+	// Start by looking for the first boundary. If there's data before it, then
+	// that's the preamble.
 	
+	int i(strRep_.find(boundary_));
 	
+	if (i == -1) {
+		// Argh ! This is supposed to be a multipart message, but there's not
+		// even one boundary !
+		// Let's just call it a plain text message.
+		// 
+		return;
+	}
 	
+	preamble_ = strRep_.left(i);
+	
+	int oldi(i + boundary_.length());
+	// Now do the rest of the parts.
+	i = strRep_.find(boundary_, i + boundary_.length());
+	
+	while (i != -1) {
+	
+		// Looks like there's only one body part.
+		RBodyPart * newPart = new RBodyPart(strRep_.mid(oldi, i));
+		CHECK_PTR(newPart);
+/*		newPart->setEncoding(cte_);
+		newPart->setMimeType(mimeType_);
+		newPart->setMimeSubType(mimeSubType_);
+		newPart->setDescription(description_);
+		newPart->setDisposition(disposition_);
+*/
+		oldi = i + boundary_.length();
+		i = strRep_.find(boundary_, i + boundary_.length());
+	}
+	
+	// No more body parts. Anything that's left is the epilogue.
+	
+	epilogue_ = strRep_.right(strRep_.length() - i + boundary_.length());
+		
 }
 
 	void

@@ -29,39 +29,44 @@
 #include <qbuttongroup.h>
 #include <qstring.h>
 #include <qpushbutton.h>
+#include <qdialog.h>
+
+// KDE includes
+#include <kbuttonbox.h>
 
 // Local includes
 #include "EmpathDefines.h"
 
-class EmpathMailboxList;
-class EmpathMailboxLocal;
-class EmpathMailboxPOP3;
-class EmpathMailboxIMAP4;
 class RikGroupBox;
 
 /**
  * Dialog used to configure settings for each account.
  * User can add, remove and edit accounts and see some vital info.
  */
-class EmpathAccountsSettingsDialog : public QWidget
+class EmpathAccountsSettingsDialog : public QDialog
 {
 	Q_OBJECT
 
 	public:
 		
-		EmpathAccountsSettingsDialog(QWidget * parent, const char * name);
+		static void create();
 
-		~EmpathAccountsSettingsDialog() { empathDebug("dtor"); }
-
-		void saveData();
+		~EmpathAccountsSettingsDialog() { empathDebug("dtor"); exists_ = false;}
 
 	protected slots:
 
 		void s_newAccount();
 		void s_editAccount();
 		void s_removeAccount();
+		
+		void s_OK();
+		void s_cancel();
+		void s_help();
+		void s_apply();
 
 	private:
+		
+		EmpathAccountsSettingsDialog(QWidget * parent, const char * name);
 
 		void updateMailboxList();
 
@@ -79,6 +84,16 @@ class EmpathAccountsSettingsDialog : public QWidget
 		QPushButton				* pb_removeAccount_;
 	
 		QGridLayout				* topLevelLayout_;
+
+		KButtonBox		* buttonBox_;
+		QPushButton		* pb_help_;
+		QPushButton		* pb_apply_;
+		QPushButton		* pb_OK_;
+		QPushButton		* pb_cancel_;
+		
+		static bool		exists_;
+		bool			applied_;
+
 
 };
 

@@ -33,14 +33,30 @@
 #include "EmpathConfig.h"
 #include "Empath.h"
 #include "RikGroupBox.h"
+
+bool EmpathDisplaySettingsDialog::exists_ = false;
+
+	void
+EmpathDisplaySettingsDialog::create()
+{
+	if (exists_) return;
+	exists_ = true;
+	EmpathDisplaySettingsDialog * d = new EmpathDisplaySettingsDialog(0, 0);
+	CHECK_PTR(d);
+	d->show();
+	kapp->processEvents();
+	d->loadData();
+}
 		
 EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 		QWidget * parent,
 		const char * name)
-	:	QWidget(parent, name)
+	:	QDialog(parent, name, false),
+		applied_(false)
 {
 	empathDebug("ctor");
-
+	setCaption(i18n("Display Settings - ") + kapp->getCaption());
+	
 	QLineEdit	tempLineEdit((QWidget *)0);
 	Q_UINT32 h	= tempLineEdit.sizeHint().height();
 	
@@ -70,7 +86,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	rgb_style_->setWidget(w_style_);
 	rgb_colour_->setWidget(w_colour_);
 
-	rgb_font_->setMinimumHeight(h * 7);
+	rgb_font_->setMinimumHeight(h * 6);
 	rgb_style_->setMinimumHeight(h * 5);
 	rgb_colour_->setMinimumHeight(h * 8);
 	
@@ -116,25 +132,6 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	QObject::connect(pb_chooseFixedFont_, SIGNAL(clicked()),
 			this, SLOT(s_chooseFixedFont()));
 
-	// Quoted font
-	
-	l_quotedFont_	=
-		new QLabel(i18n("Quoted text font"), w_font_, "l_quotedFont");
-	CHECK_PTR(l_quotedFont_);
-	
-	l_quotedFont_->setFixedHeight(h);
-	
-	l_sampleQuoted_		=
-		new QLabel(i18n("Sample"), w_font_, "l_sampleQuoted");
-	CHECK_PTR(l_sampleQuoted_);
-
-	pb_chooseQuotedFont_	=
-		new QPushButton(i18n("Choose..."), w_font_, "pb_chooseQuotedFont");
-	CHECK_PTR(pb_chooseQuotedFont_);
-
-	QObject::connect(pb_chooseQuotedFont_, SIGNAL(clicked()),
-			this, SLOT(s_chooseQuotedFont()));
-
 	// underline links
 	
 	cb_underlineLinks_	=
@@ -143,14 +140,6 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	
 	cb_underlineLinks_->setFixedHeight(h);
 	
-	// use default
-	cb_useDefaultFonts_		=
-		new QCheckBox(i18n("Use Defaults"), w_font_, "cb_useDefaultFonts");
-	CHECK_PTR(cb_useDefaultFonts_);
-	
-	QObject::connect(cb_useDefaultFonts_, SIGNAL(toggled(bool)),
-			this, SLOT(s_useDefaultFonts(bool)));
-
 	// Message font style
 	
 	buttonGroup_			=
@@ -229,15 +218,6 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	
 	// use defaults
 	
-	cb_useDefaultColours_	=
-		new QCheckBox(i18n("Use Defaults"), w_colour_, "cb_useDefaultColours");
-	CHECK_PTR(cb_useDefaultColours_);
-	
-	cb_useDefaultColours_->setFixedHeight(h);
-	
-	QObject::connect(cb_useDefaultColours_, SIGNAL(toggled(bool)),
-			this, SLOT(s_useDefaultColours(bool)));
-	
 	l_iconSet_ = new QLabel(i18n("Icon set"), this, "l_iconSet");
 	CHECK_PTR(l_iconSet_);
 	
@@ -248,22 +228,58 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	
 	cb_iconSet_->setFixedHeight(h);
 	
+///////////////////////////////////////////////////////////////////////////////
+// Button box
+
+	buttonBox_	= new KButtonBox(this);
+	CHECK_PTR(buttonBox_);
+
+	buttonBox_->setFixedHeight(h);
+	
+	pb_help_	= buttonBox_->addButton(i18n("&Help"));	
+	CHECK_PTR(pb_help_);
+	
+	pb_default_	= buttonBox_->addButton(i18n("&Default"));	
+	CHECK_PTR(pb_default_);
+	
+	buttonBox_->addStretch();
+	
+	pb_OK_		= buttonBox_->addButton(i18n("&OK"));
+	CHECK_PTR(pb_OK_);
+	
+	pb_OK_->setDefault(true);
+	
+	pb_apply_	= buttonBox_->addButton(i18n("&Apply"));
+	CHECK_PTR(pb_apply_);
+	
+	pb_cancel_	= buttonBox_->addButton(i18n("&Cancel"));
+	CHECK_PTR(pb_cancel_);
+	
+	buttonBox_->layout();
+	
+	QObject::connect(pb_OK_,		SIGNAL(clicked()),	SLOT(s_OK()));
+	QObject::connect(pb_default_,	SIGNAL(clicked()),	SLOT(s_default()));
+	QObject::connect(pb_apply_,		SIGNAL(clicked()),	SLOT(s_apply()));
+	QObject::connect(pb_cancel_,	SIGNAL(clicked()),	SLOT(s_cancel()));
+	QObject::connect(pb_help_,		SIGNAL(clicked()),	SLOT(s_help()));
+/////////////////////////////////////////////////////////////////////////////
+
 	// Layouts
 	
-	topLevelLayout_				= new QGridLayout(this, 4, 2, 10, 10);
+	topLevelLayout_				= new QGridLayout(this, 5, 2, 10, 10);
 	CHECK_PTR(topLevelLayout_);
 
 	topLevelLayout_->setRowStretch(0, 4);
 	topLevelLayout_->setRowStretch(1, 2);
 	topLevelLayout_->setRowStretch(2, 5);
 
-	fontGroupLayout_			= new QGridLayout(w_font_, 4, 3, 0, 10);
+	fontGroupLayout_			= new QGridLayout(w_font_, 3, 3, 0, 10);
 	CHECK_PTR(fontGroupLayout_);
 
 	messageFontsGroupLayout_	= new QGridLayout(w_style_, 2, 1, 0, 10);
 	CHECK_PTR(messageFontsGroupLayout_);
 
-	colourGroupLayout_			= new QGridLayout(w_colour_, 5, 2, 0, 10);
+	colourGroupLayout_			= new QGridLayout(w_colour_, 4, 2, 0, 10);
 	CHECK_PTR(colourGroupLayout_);
 
 	colourGroupLayout_->setColStretch(0, 4);
@@ -278,21 +294,18 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	topLevelLayout_->addMultiCellWidget(rgb_colour_, 2, 2, 0, 1);
 	topLevelLayout_->addWidget(l_iconSet_, 3, 0);
 	topLevelLayout_->addWidget(cb_iconSet_, 3, 1);
-
+	topLevelLayout_->addMultiCellWidget(buttonBox_, 4, 4, 0, 1);
+	
 	fontGroupLayout_->addWidget(l_variableFont_,	0, 0);
 	fontGroupLayout_->addWidget(l_fixedFont_,		1, 0);
-	fontGroupLayout_->addWidget(l_quotedFont_,		2, 0);
 	
 	fontGroupLayout_->addWidget(l_sampleVariable_,	0, 1);
 	fontGroupLayout_->addWidget(l_sampleFixed_,		1, 1);
-	fontGroupLayout_->addWidget(l_sampleQuoted_,	2, 1);
 	
 	fontGroupLayout_->addWidget(pb_chooseVariableFont_,	0, 2);
 	fontGroupLayout_->addWidget(pb_chooseFixedFont_,	1, 2);
-	fontGroupLayout_->addWidget(pb_chooseQuotedFont_,	2, 2);
 	
 	fontGroupLayout_->addMultiCellWidget(cb_underlineLinks_,	3, 3, 0, 1);
-	fontGroupLayout_->addWidget(cb_useDefaultFonts_,	3, 2);
 
 	fontGroupLayout_->activate();
 	
@@ -311,8 +324,6 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	colourGroupLayout_->addWidget(kcb_linkColour_,			2, 1);
 	colourGroupLayout_->addWidget(kcb_visitedLinkColour_,	3, 1);
 	
-	colourGroupLayout_->addWidget(cb_useDefaultColours_,		4, 1);
-
 	colourGroupLayout_->activate();
 
 	topLevelLayout_->activate();
@@ -337,54 +348,22 @@ EmpathDisplaySettingsDialog::s_chooseFixedFont()
 }
 
 	void
-EmpathDisplaySettingsDialog::s_chooseQuotedFont()
-{
-	QFont fnt = l_sampleQuoted_->font();
-	fontDialog_->setFont(fnt);
-	if (fontDialog_->getFont(fnt) == QDialog::Accepted)
-		l_sampleQuoted_->setFont(fnt);
-}
-
-	void
-EmpathDisplaySettingsDialog::s_useDefaultColours(bool yn)
-{
-	kcb_textColour_->setEnabled(!yn);
-	kcb_backgroundColour_->setEnabled(!yn);
-	kcb_linkColour_->setEnabled(!yn);
-	kcb_visitedLinkColour_->setEnabled(!yn);
-}
-
-	void
-EmpathDisplaySettingsDialog::s_useDefaultFonts(bool yn)
-{
-	l_sampleVariable_->setEnabled(!yn);
-	l_sampleFixed_->setEnabled(!yn);
-	l_sampleQuoted_->setEnabled(!yn);
-	
-	pb_chooseVariableFont_->setEnabled(!yn);
-	pb_chooseFixedFont_->setEnabled(!yn);
-	pb_chooseQuotedFont_->setEnabled(!yn);
-}
-
-	void
 EmpathDisplaySettingsDialog::saveData()
 {
-	KConfig * c = kapp->getConfig();
+	KConfig * c(kapp->getConfig());
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 #define CWE c->writeEntry
-	CWE( EmpathConfig::KEY_VARIABLE_FONT,			l_sampleVariable_->font()			);
-	CWE( EmpathConfig::KEY_FIXED_FONT,			l_sampleFixed_->font()				);
-	CWE( EmpathConfig::KEY_QUOTED_FONT,			l_sampleQuoted_->font()				);
-	CWE( EmpathConfig::KEY_UNDERLINE_LINKS,		cb_underlineLinks_->isChecked()		);
+	CWE( EmpathConfig::KEY_VARIABLE_FONT,		l_sampleVariable_->font());
+	CWE( EmpathConfig::KEY_FIXED_FONT,			l_sampleFixed_->font());
+	CWE( EmpathConfig::KEY_UNDERLINE_LINKS,		cb_underlineLinks_->isChecked());
 	CWE( EmpathConfig::KEY_FONT_STYLE,
 		(unsigned long)(rb_messageFontFixed_->isChecked() ? Fixed : Variable));
-	CWE( EmpathConfig::KEY_USE_DEFAULT_FONTS,		cb_useDefaultFonts_->isChecked()	);
-	CWE( EmpathConfig::KEY_USE_DEFAULT_COLOURS,	cb_useDefaultColours_->isChecked()	);
-	CWE( EmpathConfig::KEY_BACKGROUND_COLOUR,		kcb_backgroundColour_->color()		);
-	CWE( EmpathConfig::KEY_TEXT_COLOUR,			kcb_textColour_->color()			);
-	CWE( EmpathConfig::KEY_LINK_COLOUR,			kcb_linkColour_->color()			);
-	CWE( EmpathConfig::KEY_VISITED_LINK_COLOUR,	kcb_visitedLinkColour_->color()		);
-	CWE( EmpathConfig::KEY_ICON_SET,				cb_iconSet_->currentText()			);
+
+	CWE( EmpathConfig::KEY_BACKGROUND_COLOUR,	kcb_backgroundColour_->color());
+	CWE( EmpathConfig::KEY_TEXT_COLOUR,			kcb_textColour_->color());
+	CWE( EmpathConfig::KEY_LINK_COLOUR,			kcb_linkColour_->color());
+	CWE( EmpathConfig::KEY_VISITED_LINK_COLOUR,	kcb_visitedLinkColour_->color());
+	CWE( EmpathConfig::KEY_ICON_SET,			cb_iconSet_->currentText());
 #undef CWE
 }
 
@@ -406,9 +385,6 @@ EmpathDisplaySettingsDialog::loadData()
 	l_sampleFixed_->setFont(
 		c->readFontEntry(EmpathConfig::KEY_FIXED_FONT, &font));
 	
-	l_sampleQuoted_->setFont(
-		c->readFontEntry(EmpathConfig::KEY_QUOTED_FONT, &font));
-	
 	cb_underlineLinks_->setChecked(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS, true));
 	
 	rb_messageFontVariable_->setChecked(
@@ -416,15 +392,6 @@ EmpathDisplaySettingsDialog::loadData()
 
 	rb_messageFontFixed_->setChecked(!rb_messageFontVariable_->isChecked());
 	
-	cb_useDefaultFonts_->setChecked(
-		c->readBoolEntry(EmpathConfig::KEY_USE_DEFAULT_FONTS, true));
-	
-	cb_useDefaultColours_->setChecked(
-		c->readBoolEntry(EmpathConfig::KEY_USE_DEFAULT_COLOURS, true));
-
-	s_useDefaultFonts(		cb_useDefaultFonts_->isChecked());
-	s_useDefaultColours(	cb_useDefaultColours_->isChecked());
-
 	col = empathWindowColour();
 	
 	kcb_backgroundColour_->setColor(
@@ -474,4 +441,61 @@ EmpathDisplaySettingsDialog::loadData()
 	
 	if (found) cb_iconSet_->insertItem(s);
 	cb_iconSet_->setCurrentItem(cb_iconSet_->count() - 1);
-}	
+}
+
+	void
+EmpathDisplaySettingsDialog::s_OK()
+{
+	if (!applied_)
+		kapp->getConfig()->rollback(true);
+	
+	kapp->getConfig()->sync();
+	delete this;
+}
+
+	void
+EmpathDisplaySettingsDialog::s_help()
+{
+	empathInvokeHelp(QString::null, QString::null);
+}
+
+	void
+EmpathDisplaySettingsDialog::s_apply()
+{
+	if (applied_) {
+		pb_apply_->setText(i18n("&Apply"));
+		kapp->getConfig()->rollback(true);
+		kapp->getConfig()->reparseConfiguration();
+		loadData();
+		applied_ = false;
+	} else {
+		pb_apply_->setText(i18n("&Revert"));
+		pb_cancel_->setText(i18n("&Close"));
+		applied_ = true;
+	}
+	saveData();
+}
+
+	void
+EmpathDisplaySettingsDialog::s_default()
+{
+	l_sampleVariable_->setFont(empathGeneralFont());
+	l_sampleFixed_->setFont(empathFixedFont());
+	cb_underlineLinks_->setChecked(true);
+	rb_messageFontFixed_->setChecked(true);
+	rb_messageFontVariable_->setChecked(false);
+	kcb_backgroundColour_->setColor(empathWindowColour());
+	kcb_textColour_->setColor(empathTextColour());
+	kcb_linkColour_->setColor(Qt::blue);
+	kcb_visitedLinkColour_->setColor(Qt::darkCyan);
+	saveData();
+}
+	
+	void
+EmpathDisplaySettingsDialog::s_cancel()
+{
+	if (!applied_)
+		kapp->getConfig()->rollback(true);
+	delete this;
+}
+

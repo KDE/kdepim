@@ -24,6 +24,9 @@
 #include <RMM_Defines.h>
 #include <RMM_HeaderBody.h>
 
+/**
+ * A simple encapsulation of a text header field.
+ */
 class RText : public RHeaderBody {
 
 	public:

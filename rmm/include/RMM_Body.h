@@ -31,12 +31,17 @@
 #include <RMM_ContentType.h>
 #include <RMM_Cte.h>
 
-typedef QList<RBodyPart> RBodyPartList;
-
 class RMessage;
 class REntity;
 
-class RBody : public QList<RBodyPart>, public RMessageComponent {
+/**
+ * @short Container for one or more RBodyPart(s).
+ * The RBody class contains one or more RBodyPart(s). Asking an RBody to parse
+ * itself will result in the string representation being used to create these
+ * RBodyPart(s). Assembling will recreate the string representation and where
+ * necessary boundaries will be added, together with the preamble and epilogue.
+ */
+class RBody : public RMessageComponent {
 
 	public:
 
@@ -58,7 +63,7 @@ class RBody : public QList<RBodyPart>, public RMessageComponent {
 		void		removePart(RBodyPart * part);
 		RBodyPart	* part(int index);
 		
-		void		setBoundary(const QString & s)			{ boundary_ = s; }
+		void		setBoundary(const QCString & s)			{ boundary_ = s; }
 		void		setContentType(const RContentType & t)	{ contentType_ = t;}
 		void		setCTE(const RCte & t)					{ cte_ = t; }
 		void 		setMultiPart(bool b)					{ isMultiPart_ = b;}
@@ -69,7 +74,7 @@ class RBody : public QList<RBodyPart>, public RMessageComponent {
 
 		bool				isMultiPart_;
 
-		QList<RBodyPart>	partList_;
+		RBodyPartList		partList_;
 		
 		QCString 			strRep_;
 

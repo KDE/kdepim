@@ -32,7 +32,6 @@
 #include "EmpathFolderWidget.h"
 #include "EmpathMailboxList.h"
 #include "EmpathFolderList.h"
-#include "EmpathSettingsDialog.h"
 
 #include "EmpathMailboxMaildir.h"
 #include "EmpathMailboxMMDF.h"
@@ -107,6 +106,7 @@ EmpathFolderWidget::update()
 	empathDebug("update() called");
 	setUpdatesEnabled(false);
 	empathDebug("set updates to disabled");
+	itemList_.clear();
 	clear();
 	empathDebug("cleared");
 	
@@ -155,10 +155,10 @@ EmpathFolderWidget::_addChildren(const EmpathFolder & item)
 	
 	// Add this item first.
 
-	EmpathFolderListItem * newItem = 0;
+	EmpathFolderListItem * newItem(0);
 
-	EmpathFolderListItem * parentFolderListFolder =
-		_parentFolderListFolder(item);
+	EmpathFolderListItem *
+		parentFolderListFolder(_parentFolderListFolder(item));
 	
 	if (parentFolderListFolder == 0) {
 		
@@ -212,6 +212,8 @@ EmpathFolderWidget::_parentFolderListFolder(const EmpathFolder & folder)
 		folder.url().folderPath() + " called");
 	
 	EmpathFolderListItemIterator it(itemList_);
+	
+	empathDebug("List of folder items count == " + QString().setNum(itemList_.count()));
 
 	for (; it.current(); ++it) {
 
@@ -401,7 +403,7 @@ EmpathFolderWidget::s_newFolder()
 	EmpathMailbox * m = empath->mailbox(popupMenuOverURL);
 	if (m == 0) return;
 	
-	m->addFolder(EmpathURL(popupMenuOverURL.asString() + "/" + name));
+	m->addFolder(EmpathURL(popupMenuOverURL.asString() + "/" + name + "/"));
 
 }
 
@@ -413,8 +415,5 @@ EmpathFolderWidget::s_removeFolder()
 	void
 EmpathFolderWidget::s_setUpAccounts()
 {
-	EmpathSettingsDialog settingsDialog(AccountsSettings,
-			(QWidget *)0L, "settingsDialog");
-	settingsDialog.exec();
 }
 

@@ -119,12 +119,12 @@ EmpathFolder::parent() const
 	QString m = url_.mailboxName();
 	empathDebug("My folder path is \"" + f + "\"");
 	if (f.right(1) == "/")
-		f = f.remove(f.length(), 1);
+		f.remove(f.length() - 1, 1);
 	if (!f.contains("/")) return 0;
-	f = f.left(f.length() - f.findRev("/") + 1);
+	f = f.left(f.findRev("/"));
 	f += "/";
 	empathDebug("Parent folder path is \"" + f + "\"");
-	EmpathURL u(m, f, QString::null);
+	EmpathURL u(url_.mailboxName(), f, QString::null);
 	return empath->folder(u);
 }
 

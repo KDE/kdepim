@@ -188,6 +188,13 @@ class Empath : public QObject
 		 * Mark a message with a given status.
 		 */
 		void s_mark(const EmpathURL &, RMM::MessageStatus);
+		
+		void s_setupDisplay();
+		void s_setupIdentity();
+		void s_setupSending();
+		void s_setupComposing();
+		void s_setupAccounts();
+		void s_setupFilters();
 	
 	signals:
 	
@@ -198,6 +205,13 @@ class Empath : public QObject
 		void updateFolderLists();
 		void newMailArrived();
 		void newComposer(ComposeType, const EmpathURL &);
+		
+		void setupDisplay();
+		void setupIdentity();
+		void setupSending();
+		void setupComposing();
+		void setupAccounts();
+		void setupFilters();
 		
 	private:
 	

@@ -107,7 +107,7 @@ EmpathMessageListItem::_init()
 		if (s.left(1) == "\"") {
 			s.remove(0, 1);
 			if (s.right(1)	== "\"")
-				s.remove(s.length(), 1);
+				s.remove(s.length() - 1, 1);
 		}
 		setText(1, s);
 	}

@@ -142,7 +142,6 @@ RMailboxList::assemble()
 		strRep_ += it.current()->asString();
 	}
 	
-	isModified_ = false;
 	rmmDebug("assembled to: \"" + strRep_ + "\"");
 }
 

@@ -26,6 +26,12 @@
 #include <RMM_Address.h>
 #include <RMM_Defines.h>
 
+/**
+ * An RMailbox holds either a (phrase route-addr) or (localpart domain).
+ * (localpart domain) is called an addr-spec by RFC822.
+ * You can see which type this is by calling phrase().isEmpty(). If it's empty,
+ * you have an addr-spec.
+ */
 class RMailbox : public RAddress {
 
 	public:

@@ -26,6 +26,15 @@
 #include <qstring.h>
 #include <RMM_Defines.h>
 
+/**
+ * @short Base class of all message components.
+ * An RMessageComponent is the base class of all parts of a message.
+ * It provides some abstract methods, which need to be implemented by all
+ * derived classes.
+ * It encapsulates a string representation, which all derived components have.
+ * This representation is parsed to create the subcomponents of a component,
+ * and assembled from the subcomponents.
+ */
 class RMessageComponent {
 
 	public:
@@ -62,7 +71,6 @@ class RMessageComponent {
 		RMessageComponent(const QCString & s) : strRep_(s.data()) { }
 
 		QCString strRep_;
-		bool 				isModified_;
 		RMessageComponent	* parent_;
 		bool				dirty_;
 };

@@ -22,7 +22,7 @@
 #define EMPATHURL_H
 
 // Qt includes
-#include <qstringlist.h>
+#include <qstrlist.h>
 
 // Local includes
 #include "EmpathIndexRecord.h"
@@ -116,10 +116,11 @@ class EmpathURL
 		 * Returns the folder path, by creating a string list using each folder
 		 * and subfolder name.
 		 */
-		QStringList folderPathList();
+		QStrList folderPathList();
 
 	private:
 
+		void _cleanUp(QString &);
 		void _parse();
 		void _assemble();
 

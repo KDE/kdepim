@@ -32,6 +32,10 @@
 #include <qpushbutton.h>
 #include <qbuttongroup.h>
 #include <qspinbox.h>
+#include <qdialog.h>
+
+// KDE includes
+#include <kbuttonbox.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -42,23 +46,30 @@ class Empath;
 /**
  * Used to configure the settings for composing messages.
  */
-class EmpathComposeSettingsDialog : public QWidget
+class EmpathComposeSettingsDialog : public QDialog
 {
 	Q_OBJECT
 
 	public:
 		
-		EmpathComposeSettingsDialog(QWidget * parent = 0, const char * name = 0);
+		static void create();
 
-		~EmpathComposeSettingsDialog() { empathDebug("dtor"); }
+		~EmpathComposeSettingsDialog() { empathDebug("dtor"); exists_ = false; }
 
 		void saveData();
 		void loadData();
 
-	protected:
+	protected slots:
 
+		void s_OK();
+		void s_cancel();
+		void s_help();
+		void s_default();
+		void s_apply();
 
 	private:
+
+		EmpathComposeSettingsDialog(QWidget * parent = 0, const char * name = 0);
 
 		QButtonGroup		* buttonGroup_;
 		
@@ -97,6 +108,17 @@ class EmpathComposeSettingsDialog : public QWidget
 		
 		QCheckBox			* cb_externalEditor_;
 		QLineEdit			* le_externalEditor_;
+
+		KButtonBox		* buttonBox_;
+		QPushButton		* pb_help_;
+		QPushButton		* pb_default_;
+		QPushButton		* pb_apply_;
+		QPushButton		* pb_OK_;
+		QPushButton		* pb_cancel_;
+		
+		static bool		exists_;
+		bool			applied_;
+
 };
 
 #endif

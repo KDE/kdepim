@@ -28,6 +28,12 @@
 #include <RMM_Parameter.h>
 #include <RMM_HeaderBody.h>
 
+/**
+ * An RCte holds a Content-Transfer-Encoding header body. It contains a
+ * mechanism. This is likely to be "7bit, "quoted-printable", "base64", "8bit",
+ * "binary" or an 'x-token'. An x-token is an extension token and is prefixed
+ * by 'X-'.
+ */
 class RCte : public RHeaderBody {
 
 	public:

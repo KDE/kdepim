@@ -28,9 +28,25 @@
 #include "EmpathAddressSelectionWidget.h"
 #include "EmpathFolderChooserWidget.h"
 #include "EmpathConfig.h"
+#include "EmpathUtilities.h"
 #include "Empath.h"
 #include "RikGroupBox.h"
-		
+	
+bool EmpathSendingSettingsDialog::exists_ = false;
+
+	void
+EmpathSendingSettingsDialog::create()
+{
+	if (exists_) return;
+	exists_ = true;
+	EmpathSendingSettingsDialog * d = new EmpathSendingSettingsDialog(0, 0);
+	CHECK_PTR(d);
+	d->show();
+	kapp->processEvents();
+	d->loadData();
+}
+
+	
 EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 		QWidget * parent,
 		const char * name)
@@ -256,10 +272,47 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 			fcw_copyFolder_, SLOT(setEnabled(bool)));
 
 	fcw_copyFolder_->setEnabled(false);
+
+///////////////////////////////////////////////////////////////////////////////
+// Button box
+
+	buttonBox_	= new KButtonBox(this);
+	CHECK_PTR(buttonBox_);
+
+	buttonBox_->setFixedHeight(h);
 	
+	pb_help_	= buttonBox_->addButton(i18n("&Help"));	
+	CHECK_PTR(pb_help_);
+	
+	pb_default_	= buttonBox_->addButton(i18n("&Default"));	
+	CHECK_PTR(pb_default_);
+	
+	buttonBox_->addStretch();
+	
+	pb_OK_		= buttonBox_->addButton(i18n("&OK"));
+	CHECK_PTR(pb_OK_);
+	
+	pb_OK_->setDefault(true);
+	
+	pb_apply_	= buttonBox_->addButton(i18n("&Apply"));
+	CHECK_PTR(pb_apply_);
+	
+	pb_cancel_	= buttonBox_->addButton(i18n("&Cancel"));
+	CHECK_PTR(pb_cancel_);
+	
+	buttonBox_->layout();
+	
+	QObject::connect(pb_OK_,		SIGNAL(clicked()),	SLOT(s_OK()));
+	QObject::connect(pb_default_,	SIGNAL(clicked()),	SLOT(s_default()));
+	QObject::connect(pb_apply_,		SIGNAL(clicked()),	SLOT(s_apply()));
+	QObject::connect(pb_cancel_,	SIGNAL(clicked()),	SLOT(s_cancel()));
+	QObject::connect(pb_help_,		SIGNAL(clicked()),	SLOT(s_help()));
+/////////////////////////////////////////////////////////////////////////////
+
+
 	// Layouts
 	
-	topLevelLayout_				= new QGridLayout(this, 2, 1, 10, 10);
+	topLevelLayout_				= new QGridLayout(this, 3, 1, 10, 10);
 	CHECK_PTR(topLevelLayout_);
 
 	topLevelLayout_->setRowStretch(0, 4);
@@ -283,6 +336,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 
 	topLevelLayout_->addWidget(rgb_server_,		0, 0);
 	topLevelLayout_->addWidget(rgb_copies_,		1, 0);
+	topLevelLayout_->addWidget(buttonBox_,		2, 0);
 
 	serverGroupLayout_->addWidget(rb_sendmail_,		0, 0);
 	serverGroupLayout_->addWidget(rb_qmail_,		1, 0);
@@ -386,5 +440,51 @@ EmpathSendingSettingsDialog::loadData()
 	fcw_copyFolder_->setURL(	c->readEntry(EmpathConfig::KEY_COPY_FOLDER_NAME));
 	
 	empath->updateOutgoingServer();
+}
+
+	void
+EmpathSendingSettingsDialog::s_OK()
+{
+	if (!applied_)
+		kapp->getConfig()->rollback(true);
+	
+	kapp->getConfig()->sync();
+	delete this;
+}
+
+	void
+EmpathSendingSettingsDialog::s_help()
+{
+	empathInvokeHelp(QString::null, QString::null);
+}
+
+	void
+EmpathSendingSettingsDialog::s_apply()
+{
+	if (applied_) {
+		pb_apply_->setText(i18n("&Apply"));
+		kapp->getConfig()->rollback(true);
+		kapp->getConfig()->reparseConfiguration();
+		loadData();
+		applied_ = false;
+	} else {
+		pb_apply_->setText(i18n("&Revert"));
+		pb_cancel_->setText(i18n("&Close"));
+		applied_ = true;
+	}
+	saveData();
+}
+
+	void
+EmpathSendingSettingsDialog::s_default()
+{
+}
+	
+	void
+EmpathSendingSettingsDialog::s_cancel()
+{
+	if (!applied_)
+		kapp->getConfig()->rollback(true);
+	delete this;
 }
 

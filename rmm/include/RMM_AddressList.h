@@ -28,6 +28,10 @@
 
 typedef QListIterator<RAddress> RAddressListIterator;
 
+/**
+ * @short Simple encapsulation of a list of RAddress, which is also an
+ * RHeaderBody.
+ */
 class RAddressList : public QList<RAddress>, public RHeaderBody {
 
 	public:

@@ -20,6 +20,7 @@
 
 // KDE includes
 #include <klocale.h>
+#include <kapp.h>
 
 // Local includes
 #include <RMM_Message.h>
@@ -27,7 +28,6 @@
 #include "EmpathUIUtils.h"
 #include "EmpathMessageViewWidget.h"
 #include "EmpathMessageViewWindow.h"
-#include "EmpathSettingsDialog.h"
 #include "EmpathMenuMaker.h"
 
 EmpathMessageViewWindow::EmpathMessageViewWindow(
@@ -39,15 +39,8 @@ EmpathMessageViewWindow::EmpathMessageViewWindow(
 	messageView_ = new EmpathMessageViewWidget(url, this, "messageView");
 	CHECK_PTR(messageView_);
 	
-	menu = menuBar();
-	CHECK_PTR(menu);
-	
-	status = statusBar();
-	CHECK_PTR(status);
-	
 	setupMenuBar();
 	setupToolBar();
-	setupStatusBar();
 	
 	empathDebug("Finished setup");
 	
@@ -58,9 +51,9 @@ EmpathMessageViewWindow::EmpathMessageViewWindow(
 	setView(messageView_, false);
 	
 	updateRects();
-	qApp->processEvents();
+	kapp->processEvents();
 	messageView_->go();
-	qApp->processEvents();
+	kapp->processEvents();
 	show();
 	empathDebug("ctor finished");
 }
@@ -83,6 +76,9 @@ EmpathMessageViewWindow::setupMenuBar()
 
 	messageMenu_	= new QPopupMenu();
 	CHECK_PTR(messageMenu_);
+	
+	helpMenu_	= new QPopupMenu();
+	CHECK_PTR(helpMenu_);
 
 	// File menu
 	empathDebug("setting up file menu");
@@ -133,11 +129,11 @@ EmpathMessageViewWindow::setupMenuBar()
 
 	setupHelpMenu(this, 0, helpMenu_);
 
-	menu->insertItem(i18n("&File"), fileMenu_);
-	menu->insertItem(i18n("&Edit"), editMenu_);
-	menu->insertItem(i18n("&Message"), messageMenu_);
-	menu->insertSeparator();
-	menu->insertItem(i18n("&Help"), helpMenu_);
+	menuBar()->insertItem(i18n("&File"), fileMenu_);
+	menuBar()->insertItem(i18n("&Edit"), editMenu_);
+	menuBar()->insertItem(i18n("&Message"), messageMenu_);
+	menuBar()->insertSeparator();
+	menuBar()->insertItem(i18n("&Help"), helpMenu_);
 }
 
 	void
@@ -151,29 +147,25 @@ EmpathMessageViewWindow::setupToolBar()
 	this->addToolBar(tb, 0);
 
 	tb->insertButton(empathIcon("compose.xpm"), 0, SIGNAL(clicked()),
-			this, SLOT(s_fileNewMessage()), true, i18n("Compose message"));
+			this, SLOT(s_fileNewMessage()), true, i18n("Compose"));
 	
 	tb->insertButton(empathIcon("reply.xpm"), 0, SIGNAL(clicked()),
-			this, SLOT(s_messageReply()), true, i18n("Reply to message"));
+			this, SLOT(s_messageReply()), true, i18n("Reply"));
 	
 	tb->insertButton(empathIcon("forward.xpm"), 0, SIGNAL(clicked()),
-			this, SLOT(s_messageForward()), true, i18n("Forward message"));
+			this, SLOT(s_messageForward()), true, i18n("Forward"));
 	
 	tb->insertButton(empathIcon("delete.xpm"), 0, SIGNAL(clicked()),
-			this, SLOT(s_messageDelete()), true, i18n("Delete message"));
+			this, SLOT(s_messageDelete()), true, i18n("Delete"));
 	
 	tb->insertButton(empathIcon("save.xpm"), 0, SIGNAL(clicked()),
-			this, SLOT(s_messageSaveAs()), true, i18n("Save message"));
-	
-	tb->insertButton(empathIcon("bounce.xpm"), 0, SIGNAL(clicked()),
-			this, SLOT(s_messageBounce()), true, i18n("Bounce message"));
+			this, SLOT(s_messageSaveAs()), true, i18n("Save"));
 }
 
 	void
 EmpathMessageViewWindow::setupStatusBar()
 {
 	empathDebug("setting up status bar");
-	status->message(i18n("Empath Message View Window"));
 }
 
 	void
@@ -198,9 +190,6 @@ EmpathMessageViewWindow::s_filePrint()
 EmpathMessageViewWindow::s_fileSettings()
 {
 	empathDebug("s_fileSettings called");
-	EmpathSettingsDialog settingsDialog(AllSettings,
-			(QWidget *)0L, "settingsDialog");
-	settingsDialog.exec();
 }
 
 	void
@@ -208,6 +197,7 @@ EmpathMessageViewWindow::s_fileClose()
 {
 	empathDebug("s_fileClose called");
 	// FIXME: Check if the user wants to save changes
+	delete this;
 }
 
 // Edit menu slots

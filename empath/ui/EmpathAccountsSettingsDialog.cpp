@@ -21,6 +21,8 @@
 // KDE includes
 #include <klocale.h>
 #include <klineeditdlg.h>
+#include <kapp.h>
+#include <kconfig.h>
 
 // Local includes
 #include "EmpathAccountsSettingsDialog.h"
@@ -38,12 +40,27 @@
 #include "EmpathMailboxMMDF.h"
 #include "EmpathMailboxPOP3.h"
 #include "EmpathMailboxIMAP4.h"
+#include "EmpathUtilities.h"
 #include "Empath.h"
+	
+bool EmpathAccountsSettingsDialog::exists_ = false;
+
+	void
+EmpathAccountsSettingsDialog::create()
+{
+	if (exists_) return;
+	exists_ = true;
+	EmpathAccountsSettingsDialog * d = new EmpathAccountsSettingsDialog(0, 0);
+	CHECK_PTR(d);
+	d->show();
+	kapp->processEvents();
+}
+
 
 EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(
 		QWidget * parent,
 		const char * name)
-	:	QWidget(parent, name)
+	:	QDialog(parent, name, false)
 {
 	empathDebug("ctor");
 
@@ -96,9 +113,42 @@ EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(
 	QObject::connect(pb_removeAccount_, SIGNAL(clicked()),
 			this, SLOT(s_removeAccount()));
 
+///////////////////////////////////////////////////////////////////////////////
+// Button box
+
+	buttonBox_	= new KButtonBox(this);
+	CHECK_PTR(buttonBox_);
+
+	buttonBox_->setFixedHeight(h);
+	
+	pb_help_	= buttonBox_->addButton(i18n("&Help"));	
+	CHECK_PTR(pb_help_);
+	
+	buttonBox_->addStretch();
+	
+	pb_OK_		= buttonBox_->addButton(i18n("&OK"));
+	CHECK_PTR(pb_OK_);
+	
+	pb_OK_->setDefault(true);
+	
+	pb_apply_	= buttonBox_->addButton(i18n("&Apply"));
+	CHECK_PTR(pb_apply_);
+	
+	pb_cancel_	= buttonBox_->addButton(i18n("&Cancel"));
+	CHECK_PTR(pb_cancel_);
+	
+	buttonBox_->layout();
+	
+	QObject::connect(pb_OK_,		SIGNAL(clicked()),	SLOT(s_OK()));
+	QObject::connect(pb_apply_,		SIGNAL(clicked()),	SLOT(s_apply()));
+	QObject::connect(pb_cancel_,	SIGNAL(clicked()),	SLOT(s_cancel()));
+	QObject::connect(pb_help_,		SIGNAL(clicked()),	SLOT(s_help()));
+/////////////////////////////////////////////////////////////////////////////
+
+
 	// Layouts
 
-	topLevelLayout_			= new QGridLayout(this, 1, 1, 10, 10);
+	topLevelLayout_			= new QGridLayout(this, 2, 1, 10, 10);
 	CHECK_PTR(topLevelLayout_);
 
 	accountGroupLayout_		= new QGridLayout(w_account_,	4, 2, 0, 10);
@@ -108,6 +158,7 @@ EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(
 	accountGroupLayout_->setColStretch(1, 1);
 
 	topLevelLayout_->addWidget(rgb_account_,	0, 0);
+	topLevelLayout_->addWidget(buttonBox_,		1, 0);
 
 	accountGroupLayout_->addMultiCellWidget(lv_accts_,	0, 3, 0, 0);
 	accountGroupLayout_->addWidget(pb_newAccount_,		0, 1);
@@ -419,7 +470,41 @@ EmpathAccountsSettingsDialog::s_removeAccount()
 }
 
 	void
-EmpathAccountsSettingsDialog::saveData()
+EmpathAccountsSettingsDialog::s_OK()
 {
-	// Nothing to save ?
+	if (!applied_)
+		kapp->getConfig()->rollback(true);
+	
+	kapp->getConfig()->sync();
+	delete this;
 }
+
+	void
+EmpathAccountsSettingsDialog::s_help()
+{
+	empathInvokeHelp(QString::null, QString::null);
+}
+
+	void
+EmpathAccountsSettingsDialog::s_apply()
+{
+	if (applied_) {
+		pb_apply_->setText(i18n("&Apply"));
+		kapp->getConfig()->rollback(true);
+		kapp->getConfig()->reparseConfiguration();
+		applied_ = false;
+	} else {
+		pb_apply_->setText(i18n("&Revert"));
+		pb_cancel_->setText(i18n("&Close"));
+		applied_ = true;
+	}
+}
+
+	void
+EmpathAccountsSettingsDialog::s_cancel()
+{
+	if (!applied_)
+		kapp->getConfig()->rollback(true);
+	delete this;
+}
+

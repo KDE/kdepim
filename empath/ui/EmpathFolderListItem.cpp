@@ -78,6 +78,7 @@ EmpathFolderListItem::EmpathFolderListItem(
 	s = s.left(s.length() - s.findRev("/") + 1);
 	
 	setText(0, s);
+	empathDebug("ABOUT TO ACCESS F");
 	setText(1, QString().setNum(f->unreadMessageCount()));
 	setText(2, QString().setNum(f->messageCount()));
 	setPixmap(0, empathIcon(f->pixmapName()));

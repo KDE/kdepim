@@ -64,5 +64,5 @@ empathTextColour()
 	QColor
 empathWindowColour()
 {
-	return qApp->palette()->color(QPalette::Normal, QColorGroup::Background);
+	return qApp->palette()->color(QPalette::Normal, QColorGroup::Base);
 }

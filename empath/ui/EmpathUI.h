@@ -41,6 +41,13 @@ class EmpathUI : public QObject
 		~EmpathUI();
 		
 	protected slots:
+	
+		void s_setupDisplay();
+		void s_setupIdentity();
+		void s_setupSending();
+		void s_setupComposing();
+		void s_setupAccounts();
+		void s_setupFilters();
 		
 		void s_newComposer(ComposeType, const EmpathURL &);
 	

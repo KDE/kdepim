@@ -25,36 +25,50 @@
 #include <qwidget.h>
 #include <qlabel.h>
 #include <qlineedit.h>
-#include <qmlined.h>		// should be multilineedit.h ?
-							// c'mon Trolls no-one uses short filenames anymore
+#include <qmultilineedit.h>
 #include <qfont.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
+#include <qdialog.h>
+
+// KDE includes
+#include <kbuttonbox.h>
 
 // Local includes
 #include "EmpathDefines.h"
 
 class RikGroupBox;
 
-class EmpathIdentitySettingsDialog : public QWidget
+class EmpathIdentitySettingsDialog : public QDialog
 {
 	Q_OBJECT
 
 	public:
 		
-		EmpathIdentitySettingsDialog(QWidget * parent = 0, const char * name = 0);
-
-		~EmpathIdentitySettingsDialog() { empathDebug("dtor"); }
+		static void create();
+		~EmpathIdentitySettingsDialog() { empathDebug("dtor"); exists_ = false;}
 
 		void saveData();
 		void loadData();
+	
+	protected:
+		void hideEvent(QHideEvent *) { delete this; }
 
 	protected slots:
 
 		void s_chooseSig();
 		void s_editSig();
 
+		void s_OK();
+		void s_cancel();
+		void s_help();
+		void s_default();
+		void s_apply();
+
 	private:
+		
+		EmpathIdentitySettingsDialog(
+			QWidget * parent = 0, const char * name = 0);
 	
 		QGridLayout	* topLevelLayout_;
 		QGridLayout	* mainGroupLayout_;
@@ -83,11 +97,20 @@ class EmpathIdentitySettingsDialog : public QWidget
 		QPushButton	* pb_chooseSig_;
 		QPushButton	* pb_editSig_;
 
-		QString		name_;
-		QString		email_;
-		QString		replyTo_;
-		QString		org_;
-		QString 	sig_;
+		QString			name_;
+		QString			email_;
+		QString			replyTo_;
+		QString			org_;
+		QString 		sig_;
+		KButtonBox		* buttonBox_;
+		QPushButton		* pb_help_;
+		QPushButton		* pb_default_;
+		QPushButton		* pb_apply_;
+		QPushButton		* pb_OK_;
+		QPushButton		* pb_cancel_;
+		
+		static bool		exists_;
+		bool			applied_;
 };
 
 #endif

@@ -40,7 +40,7 @@ class EmpathFolderListItem : public QObject, public QListViewItem
 		
 		virtual void setup();
 		
-		const EmpathURL & url () const { return url_; }
+		const EmpathURL & url() const { return url_; }
 
 		QString key(int, bool) const;
 		

@@ -26,6 +26,9 @@
 #include <RMM_HeaderBody.h>
 #include <RMM_ParameterList.h>
 
+/**
+ * An RContentType has a mime type, a mime subtype, and a parameter list.
+ */
 class RContentType : public RHeaderBody {
 
 	public:

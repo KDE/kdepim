@@ -31,7 +31,6 @@
 #include "EmpathComposeWindow.h"
 #include "EmpathComposeWidget.h"
 #include "EmpathMessageWidget.h"
-#include "EmpathSettingsDialog.h"
 #include "EmpathMailSender.h"
 #include "EmpathMenuMaker.h"
 #include "EmpathAboutBox.h"
@@ -271,9 +270,6 @@ EmpathComposeWindow::s_filePrint()
 EmpathComposeWindow::s_fileSettings()
 {
 	empathDebug("s_fileSettings called");
-	EmpathSettingsDialog settingsDialog(AllSettings,
-			(QWidget *)0L, "settingsDialog");
-	settingsDialog.exec();
 }
 
 	void

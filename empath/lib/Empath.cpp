@@ -190,7 +190,7 @@ Empath::message(const EmpathURL & source)
 	empathDebug("message(" + source.asString() + ") called");
 	// Try and get the message from the cache.
 	RMessage * message(cache_[source.messageID()]);
-	if (message) {
+	if (message != 0) {
 		empathDebug("message \"" + source.asString() + "\" found in cache");
 		return message;
 	}
@@ -251,5 +251,41 @@ Empath::s_mark(const EmpathURL & url, RMM::MessageStatus s)
 	EmpathMailbox * m = mailbox(url.mailboxName());
 	if (m == 0) return;
 //	m->mark(url, s);
+}
+
+	void
+Empath::s_setupDisplay()
+{
+	emit(setupDisplay());
+	empathDebug("setupDisplay() called");
+}
+	void
+Empath::s_setupIdentity()
+{
+	emit(setupIdentity());
+}
+
+	void
+Empath::s_setupSending()
+{
+	emit(setupSending());
+}
+
+	void
+Empath::s_setupComposing()
+{
+	emit(setupComposing());
+}
+
+	void
+Empath::s_setupAccounts()
+{
+	emit(setupAccounts());
+}
+
+	void
+Empath::s_setupFilters()
+{
+	emit(setupFilters());
 }
 

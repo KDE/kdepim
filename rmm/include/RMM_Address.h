@@ -28,6 +28,10 @@
 class RGroup;
 class RMailbox;
 
+/**
+ * An RAddress is schizophrenic. It's either an RGroup or an RMailbox. Don't
+ * worry about it.
+ */
 class RAddress : public RHeaderBody {
 
 	public:

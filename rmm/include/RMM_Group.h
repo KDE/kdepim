@@ -28,6 +28,9 @@
 #include <RMM_Address.h>
 #include <RMM_Defines.h>
 
+/**
+ * An RGroup holds a name and a phrase, as per RFC822.
+ */
 class RGroup : public RAddress {
 
 	public:

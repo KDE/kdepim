@@ -43,6 +43,13 @@
 #include <RMM_ContentType.h>
 #include <RMM_Cte.h>
 
+/**
+ * @short An REnvelope encapsulates the envelope of an RFC822 message.
+ * An REnvelope encapsulates the envelope of an RFC822 message.
+ * The envelope consists of one or more RHeader(s).
+ * An REnvelope provides many convenience methods for referencing various
+ * common headers.
+ */
 class REnvelope : public RMessageComponent
 {
 	public:
@@ -57,7 +64,13 @@ class REnvelope : public RMessageComponent
 		void parse();
 		void assemble();
 
+		/**
+		 * Find out if this header exists in the envelope.
+		 */
 		bool has(RMM::HeaderType t) const;
+		/**
+		 * Find out if this header exists in the envelope.
+		 */
 		bool has(const QCString & headerName) const;
 
 		void set(const QCString & s)
@@ -66,17 +79,46 @@ class REnvelope : public RMessageComponent
 		const QCString & asString() const
 		{ return RMessageComponent::asString(); }
 		
+		/**
+		 * Set the specified header to the string value.
+		 */
 		void set(RMM::HeaderType t, const QCString & s);
 		void _createDefault(RMM::HeaderType t);
 		void createDefault();
 		
+		/**
+		 * @short Provides the 'default' sender.
+		 * Provides the 'default' sender. That is, if there's a 'From' header,
+		 * then you get the first RAddress in that header body. If there is no
+		 * 'From' header, then you get what's in 'Sender'.
+		 */
 		const RMailbox & firstSender();
+		
+		/**
+		 * @short The ID of the 'parent' message.
+		 * Looks at the 'In-Reply-To' and the 'References' headers.
+		 * If there's a 'References' header, the last reference in that header
+		 * is used, i.e. the last message that is referred to.
+		 * If there's no 'References' header, then the 'In-Reply-To' header is
+		 * used instead to get the id.
+		 */
 		RMessageID parentMessageId();
 
+		/**
+		 * Gets the specified header.
+		 */
 		RText &				get(const QCString & headerName);
 
 		template <class T> T get(RMM::HeaderType h, T t);
 
+		/**
+		 * This applies to all similar methods:
+		 * Returns an reference to an object of the given return type.
+		 * If there is no object available, one will be created using sensible
+		 * defaults, and returned, so you won't get a hanging reference.
+		 * Note that you can accidentally create a header you didn't want by
+		 * calling one of these. Use has() instead before you try.
+		 */
 		RText &				approved();
 		RAddressList &		bcc();
 		RMailboxList &		cc();

@@ -68,7 +68,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 	px_read_unmarked	= empathIcon("tree-read.xpm");
 	px_unread_unmarked	= empathIcon("tree-unread.xpm");
 
-	empathDebug("Restoring column sizes and positions");
+	empathDebug("Restoring column sizes");
 	
 	KConfig * c = kapp->getConfig();
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
@@ -78,6 +78,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 				c->readUnsignedNumEntry(
 					EmpathConfig::KEY_MESSAGE_LIST_SIZE_COLUMN +
 					QString().setNum(i), 10));
+		setColumnWidthMode(i, QListView::Manual);
 	}
 
 	_setupMessageMenu();
@@ -454,6 +455,9 @@ EmpathMessageListWidget::s_currentChanged(QListViewItem *)
 {
 	empathDebug("Current message changed - updating message widget");
 	
+	// Make sure we highlight the current item.
+	kapp->processEvents();
+	
 	if (wantScreenUpdates_)
 		emit(changeView(firstSelectedMessage()));
 }
@@ -516,20 +520,41 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	
 	QListIterator<EmpathIndexRecord> mit(masterList_);
 	
+	// What we doing here ?
+	// Well, we keep the time we started.
+	// When the time since 'begin' is too long (100ms) we do a
+	// kapp->processEvents(). This prevents the UI from stalling.
+	// We could then have done an update, but this takes a long time, so we
+	// don't want to do it so often. Therefore we do it every 10 times that
+	// we've had to do a processEvents().
+	
 	setUpdatesEnabled(false);
+	
 	QTime begin(QTime::currentTime());
 	QTime now;
+	
+	unsigned int count(0);
+	
 	for (; mit.current(); ++mit) {
+		
+		addItem(*mit.current());
+		
 		now = QTime::currentTime();
 		if (begin.msecsTo(now) > 100) {
-			setUpdatesEnabled(true);
-			update();
-			begin = now;
 			kapp->processEvents();
-			setUpdatesEnabled(false);
+			++count;
+			begin = now;
 		}
-		addItem(*mit.current());
+	
+		if (count > 10) {
+			setUpdatesEnabled(true);
+			triggerUpdate();
+			setUpdatesEnabled(false);
+			count = 0;
+			begin = now;
+		}
 	}
+	
 	setUpdatesEnabled(true);
 }
 

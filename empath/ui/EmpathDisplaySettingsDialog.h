@@ -34,21 +34,24 @@
 // KDE includes
 #include <kfontdialog.h>
 #include <kcolorbtn.h>
+#include <kbuttonbox.h>
 
 // Local includes
 #include "EmpathDefines.h"
 
 class RikGroupBox;
 
-class EmpathDisplaySettingsDialog : public QWidget
+/**
+ * Configure the appearance of various stuff.
+ */
+class EmpathDisplaySettingsDialog : public QDialog
 {
 	Q_OBJECT
 
 	public:
 		
-		EmpathDisplaySettingsDialog(QWidget * parent = 0, const char * name = 0);
-
-		~EmpathDisplaySettingsDialog() { empathDebug("dtor"); }
+		static void create();
+		~EmpathDisplaySettingsDialog() { empathDebug("dtor"); exists_ = false; }
 
 		void saveData();
 		void loadData();
@@ -57,12 +60,16 @@ class EmpathDisplaySettingsDialog : public QWidget
 		
 		void s_chooseFixedFont();
 		void s_chooseVariableFont();
-		void s_chooseQuotedFont();
 
-		void s_useDefaultFonts(bool yn);
-		void s_useDefaultColours(bool yn);
+		void s_OK();
+		void s_cancel();
+		void s_help();
+		void s_default();
+		void s_apply();
 
 	private:
+
+		EmpathDisplaySettingsDialog(QWidget * parent = 0, const char * name = 0);
 
 		KFontDialog		* fontDialog_;
 
@@ -83,19 +90,13 @@ class EmpathDisplaySettingsDialog : public QWidget
 		
 		QLabel			* l_variableFont_;
 		QLabel			* l_fixedFont_;
-		QLabel			* l_quotedFont_;
 		
 		QLabel			* l_sampleVariable_;
 		QLabel			* l_sampleFixed_;
-		QLabel			* l_sampleQuoted_;
 		
 		QPushButton		* pb_chooseVariableFont_;
 		QPushButton		* pb_chooseFixedFont_;
-		QPushButton		* pb_chooseQuotedFont_;
 		
-		QCheckBox		* cb_useDefaultFonts_;
-		QCheckBox		* cb_useDefaultColours_;
-
 		QLabel			* l_textColour_;
 		QLabel			* l_backgroundColour_;
 		QLabel			* l_linkColour_;
@@ -113,6 +114,16 @@ class EmpathDisplaySettingsDialog : public QWidget
 		
 		QLabel			* l_iconSet_;
 		QComboBox		* cb_iconSet_;
+		
+		KButtonBox		* buttonBox_;
+		QPushButton		* pb_help_;
+		QPushButton		* pb_default_;
+		QPushButton		* pb_apply_;
+		QPushButton		* pb_OK_;
+		QPushButton		* pb_cancel_;
+		
+		static bool		exists_;
+		bool			applied_;
 };
 
 #endif

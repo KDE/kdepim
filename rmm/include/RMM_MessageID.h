@@ -25,6 +25,10 @@
 #include <RMM_HeaderBody.h>
 #include <RMM_Defines.h>
 
+/**
+ * An RMessageID encapsulates the body of a Message-Id header field as defined
+ * by RFC822. This means it has two strings, a local-part and a domain.
+ */
 class RMessageID : public RHeaderBody {
 
 	public:

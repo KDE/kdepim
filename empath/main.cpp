@@ -19,6 +19,7 @@
 */
 
 // System includes
+#include <unistd.h>
 #include <signal.h>
 #include <iostream.h>
 
@@ -42,18 +43,21 @@ void myMessageHandler(QtMsgType type, const char * msg);
 	int
 EmpathMain(int argc, char * argv[])
 {
+	if (getuid() == 0 || geteuid() == 0) {
+		cerr << "Please don't run Empath as root, or suid root." << endl;
+		exit(1);
+	}
+
 	KApplication app(argc, argv, "empath");
 	
 	app.getConfig()->setDollarExpansion(false);
 	
 	Empath		e;
 	EmpathUI	ui;
-	
-	QObject::connect(
-		&e, SIGNAL(newComposer(ComposeType, RMessage *)),
-		&ui, SLOT(s_newComposer(ComposeType, RMessage *)));
 
-	cerr << "Entering event loop";
+	cerr << "=========================================================" << endl;
+	cerr << "Entering event loop" << endl;
+	cerr << "=========================================================" << endl;
 	return app.exec();
 }
 

@@ -27,6 +27,9 @@
 #include <RMM_HeaderBody.h>
 #include <RMM_Defines.h>
 
+/**
+ * An RHeader encapsulates an header name and an RHeaderBody.
+ */
 class RHeader : public RMessageComponent
 {
 	public:

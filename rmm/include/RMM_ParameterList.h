@@ -29,6 +29,10 @@
 
 typedef QListIterator<RParameter> RParameterListIterator;
 
+/**
+ * @short Simple encapsulation of a list of RParameter, which is also an
+ * RHeaderBody.
+ */
 class RParameterList : public QList<RParameter> {
 
 	public:

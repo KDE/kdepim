@@ -25,6 +25,12 @@
 #include <RMM_MessageComponent.h>
 #include <RMM_Defines.h>
 
+/**
+ * @short An REntity is the base class of an RBodyPart and an RMessage.
+ * An REntity is the base class of an RBodyPart and an RMessage. Note that the
+ * RFC822 specification is recursive. That means that an RBodyPart can also be
+ * an RMessage, which then in turn contains an RBodyPart !
+ */
 class REntity : public RMessageComponent
 {
 	public:
