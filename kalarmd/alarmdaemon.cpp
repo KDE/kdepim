@@ -55,7 +55,7 @@ const int LOGIN_DELAY( 5 );
 #endif
 
 AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
-  : QObject(parent, name), DCOPObject(name)
+  : DCOPObject(name), QObject(parent, name)
 #ifdef CHECK_IF_SESSION_STARTED
     , mSessionStartTimer(0)
 #endif

@@ -36,8 +36,8 @@
 #include "koalarmclient.moc"
 
 KOAlarmClient::KOAlarmClient(QObject *parent, const char *name)
-  : QObject(parent, name),
-    DCOPObject("ac"),
+  : DCOPObject("ac"),
+    QObject(parent, name),
     mSuspendTimer(this)
 {
   kdDebug(5900) << "KOAlarmClient::KOAlarmClient()" << endl;
