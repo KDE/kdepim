@@ -1,3 +1,49 @@
+KPilot Developer's notes for august 2nd 2001
+============================================
+
+Vacation good. Bugs bad. Received a wonderful patch in the mail from
+Martin Junius, which proves once again that he's really dedicated to
+making KPilot look good and work well. Martin's patch "pushes the envelope"
+udirng the freeze, so it may not get in into KDE 2.2.
+
+2001-08-01  Adriaan de Groot
+
+* kpilot/pilotDaemon.cc
+  (PilotSystemTray) Fix for bug #29764 -- I'd forgotten to initialize some 
+  pointers in the constuctor again.
+* conduits/abbrowser/abbrowser-conduit.cc
+  (main) Workaround for bug #28104 allowing abbrowser to start from the conduit.
+* conduits/abbrowser/Makefile.am
+  Minuscule change enabling --enable-final builds here.
+
+2001-07-23  Martin Junius  <mj@m-j-s.net>
+
+* kpilot/addressEditor.cc (MakeField, MakeFieldL): removed i18n(),
+  now done in initLayout().
+  (initLayout): use i18n() for label strings passed to
+  MakeField. This is IMHO a cleaner approach than using I18N_NOOP()
+  as before.
+  (phoneLabelText): new function, get text for phone label,
+  basically fAppInfo->phoneLabels[] featuring some sanity checking.
+  (fillFields): use phoneLabelText().
+  (initLayout): dito.
+  (initLayout): argument addressInfo removed, no longer needed.
+
+2001-07-21  Martin Junius  <mj@m-j-s.net>
+
+* kpilot/addressEditor.cc (initLayout): use m_phoneLabel[] for
+  display phone labels because this change from entry to entry and
+  cannot be set to fixed texts.
+  (fillFields): update phone labels for editor dialog.
+  (initLayout): reworked and hopefully ;-) improved spacing.
+
+* kpilot/addressWidget.cc (setupWidget): replaced QMultiLineEdit
+  with QTextView for address info widget.
+  (slotShowAddress): function totally rewritten to use QTextView
+  and the Qt pseudo-XHTML code for formatted display of the
+  address entry. The sequence and formatting is more or less what
+  my Palm IIIxe does.
+
 KPilot Developer's notes for june 15th 2001
 ===========================================
 
