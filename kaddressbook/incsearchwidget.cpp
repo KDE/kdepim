@@ -24,8 +24,8 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qtooltip.h>
+#include <qcombobox.h>
 
-#include <kabc/field.h>
 #include <kdialog.h>
 #include <klineedit.h>
 #include <klocale.h>

@@ -24,14 +24,12 @@
 #ifndef INCSEARCHWIDGET_H
 #define INCSEARCHWIDGET_H
 
-#include <qcombobox.h>
 #include <qwidget.h>
 
-#include <klineedit.h>
+#include <kabc/field.h>
 
-namespace KABC {
-class Field;
-}
+class QComboBox;
+class KLineEdit;
 
 class IncSearchWidget : public QWidget
 {

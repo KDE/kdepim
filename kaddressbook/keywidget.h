@@ -25,10 +25,7 @@
 #define KEYWIDGET_H
 
 #include <qwidget.h>
-
-namespace KABC {
-class Key;
-}
+#include <kabc/key.h>
 
 class KComboBox;
 

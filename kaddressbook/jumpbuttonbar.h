@@ -26,10 +26,13 @@
 
 #include <qsizepolicy.h>
 #include <qwidget.h>
+#include <qptrlist.h>
+#include <qstringlist.h>
 
 class QChar;
 class QGridLayout;
 class QResizeEvent;
+class QPushButton;
 
 namespace KABC {
 class Field;

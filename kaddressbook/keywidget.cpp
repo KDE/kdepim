@@ -27,7 +27,6 @@
 #include <qlayout.h>
 #include <qpushbutton.h>
 
-#include <kabc/key.h>
 #include <kaccelmanager.h>
 #include <kapplication.h>
 #include <kcombobox.h>
