@@ -1154,15 +1154,15 @@ void KNComposer::slotUpdateStatusBar()
   statusBar()->changeItem(i18n(" Type: %1 ").arg(typeDesc), 1);
   statusBar()->changeItem(i18n(" Charset: %1 ").arg(c_harset), 2);
   statusBar()->changeItem(overwriteDesc, 3);
-  statusBar()->changeItem(i18n(" Column: %1 ").arg(v_iew->e_dit->currentColumn()), 4);
-  statusBar()->changeItem(i18n(" Line: %1 ").arg(v_iew->e_dit->currentLine()), 5);
+  statusBar()->changeItem(i18n(" Column: %1 ").arg(v_iew->e_dit->currentColumn() + 1), 4);
+  statusBar()->changeItem(i18n(" Line: %1 ").arg(v_iew->e_dit->currentLine() + 1), 5);
 }
 
 
 void KNComposer::slotUpdateCursorPos()
 {
-  statusBar()->changeItem(i18n(" Column: %1 ").arg(v_iew->e_dit->currentColumn()), 4);
-  statusBar()->changeItem(i18n(" Line: %1 ").arg(v_iew->e_dit->currentLine()), 5);
+  statusBar()->changeItem(i18n(" Column: %1 ").arg(v_iew->e_dit->currentColumn() + 1), 4);
+  statusBar()->changeItem(i18n(" Line: %1 ").arg(v_iew->e_dit->currentLine() + 1), 5);
 }
 
 
