@@ -419,7 +419,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
           // move backwards to the begin of the address, stop when
           // the end of the last replacement is reached. (
 
-          while ((startIdx>0) && (startIdx>lastReplacement) && (text[startIdx-1]!=' ') && (text[startIdx-1]!='\t')
+          while ((startIdx>0) && (startIdx>lastReplacement+1) && (text[startIdx-1]!=' ') && (text[startIdx-1]!='\t')
                                                             && (text[startIdx-1]!=',') && (text[startIdx-1]!='<')
                                                             && (text[startIdx-1]!='>') && (text[startIdx-1]!='(')
                                                             && (text[startIdx-1]!=')') && (text[startIdx-1]!='[')
@@ -440,8 +440,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
               result+=text[idx];
             else {
               result.remove(result.length()-(idx-startIdx), idx-startIdx);
-              result+=QString::fromLatin1("<a href=\"addrOrId://") + text.mid(startIdx,matchLen) +
-                    QString::fromLatin1("\">") + text.mid(startIdx,matchLen) + QString::fromLatin1("</a>");
+              result+=QString::fromLatin1("<a href=\"addrOrId://") + toHtmlString(text.mid(startIdx,matchLen),false,false,false) +
+                    QString::fromLatin1("\">") + toHtmlString(text.mid(startIdx,matchLen),false,false,false) + QString::fromLatin1("</a>");
               idx=startIdx+matchLen-1;
               lastReplacement=idx;
             }
@@ -950,15 +950,18 @@ void KNArticleWidget::createHtmlPage()
 
   QString html;
 
-  if (rnv->showHeaderDecoration())
-    html=QString("<qt><table width=\"100%\" cellpadding=\"0\" cellspacing=\"1\"><tr><td width=\"40\" bgcolor=\"%1\" rowspan=\"%2\"></td>"+headerHtml)
-         .arg(app->headerDecoHexcode()).arg(headerLines);
-  else
-    html="<qt><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr>"+headerHtml;
+  if (rnv->showHeaderDecoration()) {
+    html=QString("<qt><table width=\"100%\" cellpadding=\"0\" cellspacing=\"1\">");
 
-  if (rnv->showHeaderDecoration()) {    // no decorations <=> no references
-    html+=QString("<tr><td colspan=\"3\" bgcolor=\"%1\"><articlefont>")
+    if (headerLines > 0) {
+      html+=QString("<tr><td width=\"40\" bgcolor=\"%1\" rowspan=\"%2\"></td>"+headerHtml)
+           .arg(app->headerDecoHexcode()).arg(headerLines);
+      html+=QString("<tr><td colspan=\"3\" bgcolor=\"%1\"><articlefont>")
+            .arg(app->headerDecoHexcode());
+    } else {
+      html+=QString("<tr><td bgcolor=\"%1\"><articlefont>")
           .arg(app->headerDecoHexcode());
+    }
 
     //References
     KMime::Headers::References *refs=a_rticle->references(false);
@@ -977,25 +980,20 @@ void KNArticleWidget::createHtmlPage()
     }
     else html+=i18n("no references");
 
-    html+="</articlefont></td></tr>";
+    html+="</articlefont></td></tr></table>";
+  } else {   // !rnv->showHeaderDecoration()
+    if (headerLines > 0)
+      html="<qt><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr>"+headerHtml+"</table>";
+    else
+      html="<qt>";
   }
 
   KMime::Content *text=a_rticle->textContent();
   if(text && !canDecode8BitText(text->contentType()->charset())) {
-      if (rnv->showHeaderDecoration())
-      html+=QString("<tr><td colspan=\"3\" bgcolor=\"red\"><articlefont><font color=\"black\">%1</font></articlefont></td></tr>")
-              .arg(i18n("Unknown charset! Default charset is used instead."));
-      else
-      html+=QString("<tr><td colspan=\"2\" bgcolor=\"red\"><articlefont><font color=\"black\">%1</font></articlefont></td></tr>")
-              .arg(i18n("Unknown charset! Default charset is used instead."));
-
-      kdDebug(5003) << "KNArticleWidget::createHtmlPage() : unknown charset = " << text->contentType()->charset() << " not available!" << endl;
-    }
-
-  if (rnv->showHeaderDecoration())
-    html+="</table>";
-  else
-    html+="</table></tr></td></table>";
+    html+=QString("<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td bgcolor=\"red\"><articlefont><font color=\"black\">%1</font></articlefont></td></tr></table>")
+          .arg(i18n("Unknown charset! Default charset is used instead."));
+    kdDebug(5003) << "KNArticleWidget::createHtmlPage() : unknown charset = " << text->contentType()->charset() << " not available!" << endl;
+  }
 
   //----------------------------------- </Header> --------------------------------------
 
