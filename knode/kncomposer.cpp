@@ -2421,6 +2421,7 @@ void KNComposer::AttachmentPropertiesDlg::accept()
 
 void KNComposer::AttachmentPropertiesDlg::slotMimeTypeTextChanged(const QString &text)
 {
+    enableButtonOK( !text.isEmpty() );
   if(text.left(5)!="text/") {
     n_onTextAsText=a_ttachment->isFixedBase64();
     e_ncoding->setCurrentItem(3);
