@@ -288,7 +288,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
       } else if ( result == 0 ) { // take both
           localIncidence = local->clone();
           localIncidence->recreate();
-          localIncidence->setSummary( i18n("Copy of: ") +localIncidence->summary());
+          localIncidence->setSummary( i18n("Copy of: %1").arg(localIncidence->summary()) );
           addedIncidence = inc;
       }
       bool silent = mSilent;
