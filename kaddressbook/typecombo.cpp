@@ -21,6 +21,9 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#include <klocale.h>
+#include <kdebug.h>
+
 #include "typecombo.h"
 
 TypeCombo::TypeCombo( KABC::PhoneNumber::List &list, QWidget *parent,
@@ -34,9 +37,21 @@ void TypeCombo::updateTypes()
 {
   clear();
 
+  QMap<QString,int> labelCount;
+
   uint i;
   for( i = 0; i < mTypeList.count(); ++i ) {
-    insertItem( mTypeList[ i ].label() );
+    QString label = mTypeList[ i ].label();
+    int count = 1;
+    if ( labelCount.contains( label ) ) {
+      count = labelCount[ label ] + 1;
+    }
+    labelCount[ label ] = count;
+    if ( count > 1 ) {
+      label = i18n("label (number)", "%1 (%2)").arg( label )
+                                           .arg( QString::number( count ) );
+    }
+    insertItem( label );
   }
 }
 

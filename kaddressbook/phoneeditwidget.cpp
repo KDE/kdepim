@@ -47,36 +47,6 @@
 
 #include "phoneeditwidget.h"
 
-
-class PhoneItem : public QListBoxText
-{
-public:
-  PhoneItem( QListBox *parent, const KABC::PhoneNumber::List &list, const KABC::PhoneNumber &number )
-    : QListBoxText( parent, QString::null ), mNumber( number )
-  {
-    KABC::PhoneNumber::List::ConstIterator it;
-    int occurances = 0;
-    for ( it = list.begin(); it != list.end(); ++it ) {
-      if ( (*it).id() == mNumber.id() ) {
-        QString text = mNumber.typeLabel();
-        if ( occurances > 0 )
-          text += " " + QString::number( occurances + 1 );
-        setText( text );
-        break;
-      }
-
-      if ( ( (*it).type() & ~KABC::PhoneNumber::Pref ) == ( mNumber.type() & ~KABC::PhoneNumber::Pref ) )
-        occurances++;
-    }
-  }
-
-  KABC::PhoneNumber phoneNumber() const { return mNumber; }
-
-
-private:
-  KABC::PhoneNumber mNumber;
-};
-
 PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
