@@ -206,7 +206,7 @@ void KarmWindow::makeMenus()
   actionStart = new KAction( i18n("&Start"),
                              QString::fromLatin1("1rightarrow"), Key_S,
                              _karm,
-                             SLOT( changeTimer() ), actionCollection(),
+                             SLOT( startCurrentTimer() ), actionCollection(),
                              "start");
   actionStop = new KAction( i18n("S&top"),
                             QString::fromLatin1("stop"), Key_Escape,
