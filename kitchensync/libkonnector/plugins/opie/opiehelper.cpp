@@ -106,9 +106,13 @@ void OpieHelper::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *e
     entry->append( entr );
 }
 
- void OpieHelper::toCalendar(const QString &fileName, QPtrList<KSyncEntry> *list,const QValueList<OpieCategories> & )
+ void OpieHelper::toCalendar(const QString &todo, const QString &calendar, QPtrList<KSyncEntry> *list,const QValueList<OpieCategories> & )
 {
-    QPtrList<KAlendarSyncEntry> entry;
+  KAlendarSyncEntry *entry = new KAlendarSyncEntry();
+  list->append( entry );
+  KCal::CalendarLocal *cal = new KCal::CalendarLocal();
+  entry->setCalendar( cal );
+  // now parese the files :(
     //return entry;
 }
 void OpieHelper::toAddressbook(const QString &fileName, QPtrList<KSyncEntry> *list,const QValueList<OpieCategories> &vals)

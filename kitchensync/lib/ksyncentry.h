@@ -54,7 +54,7 @@ class KSyncEntry
     virtual QString name() = 0;
     virtual void setName(const QString & ) = 0;
     /**
-      Return a unique id. This is used to uniquely identify the entry. Two
+      Returns a unique id. This is used to uniquely identify the entry. Two
       entries having the same id are considered to be two variants of the same
       entry. No two entries of the same @ref KSyncee data set must have the same
       id.
@@ -78,8 +78,9 @@ class KSyncEntry
       equal, if they contain exactly the same information, including the same id
       and timestamp.
     */
+    // FIXME
     //virtual bool equals(KSyncEntry *) = 0;
-
+    //virtual KSyncEntry* clone() /*= 0*/;
 
 };
 
