@@ -277,7 +277,7 @@ PilotDaemon::PilotDaemon() :
 	fPostSyncAction(None),
 	fPilotLink(0L),
 	fPilotDevice(QString::null),
-	fNextSyncType(0),
+	fNextSyncType(PilotDaemonDCOP::HotSync),
 	fSyncStack(0L),
 	fTray(0L),
 	fInstaller(0L),
@@ -865,6 +865,13 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.59.2.1  2002/04/04 20:28:28  adridg
+// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
+// when using PILOT_VERSION. kpilotTest defaults to list, like the options
+// promise. Always do old-style USB sync (also works with serial devices)
+// and runs conduits only for HotSync. KPilot now as it should have been
+// for the 3.0 release.
+//
 // Revision 1.59  2002/02/02 11:46:02  adridg
 // Abstracting away pilot-link stuff
 //
