@@ -22,28 +22,28 @@ libkaddrbk_csv_xxport_la_SOURCES = csv_xxport.cpp csvimportdialog.cpp
 libkaddrbk_csv_xxport_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_vcard_xxport_la_SOURCES = vcard_xxport.cpp
-libkaddrbk_vcard_xxport_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
+libkaddrbk_vcard_xxport_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_kde2_xxport_la_SOURCES = kde2_xxport.cpp
-libkaddrbk_kde2_xxport_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
+libkaddrbk_kde2_xxport_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_bookmark_xxport_la_SOURCES = bookmark_xxport.cpp
-libkaddrbk_bookmark_xxport_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
+libkaddrbk_bookmark_xxport_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_eudora_xxport_la_SOURCES = eudora_xxport.cpp
-libkaddrbk_eudora_xxport_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
+libkaddrbk_eudora_xxport_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_ldif_xxport_la_SOURCES = ldif_xxport.cpp
-libkaddrbk_ldif_xxport_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
+libkaddrbk_ldif_xxport_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_gnokii_xxport_la_SOURCES = gnokii_xxport.cpp
-libkaddrbk_gnokii_xxport_la_LIBADD = $(XPMLIB) $(LIB_GNOKII) $(top_builddir)/kaddressbook/libkaddressbook.la
+libkaddrbk_gnokii_xxport_la_LIBADD = $(XPMLIB) $(LIB_GNOKII) $(XXLIBS)
 
 libkaddrbk_opera_xxport_la_SOURCES = opera_xxport.cpp
-libkaddrbk_opera_xxport_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
+libkaddrbk_opera_xxport_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_pab_xxport_la_SOURCES = pab_xxport.cpp pab_mapihd.cpp pab_pablib.cpp
-libkaddrbk_pab_xxport_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
+libkaddrbk_pab_xxport_la_LIBADD = $(XXLIBS)
 
 rc_DATA = csv_xxportui.rc vcard_xxportui.rc kde2_xxportui.rc \
 	bookmark_xxportui.rc eudora_xxportui.rc ldif_xxportui.rc \
