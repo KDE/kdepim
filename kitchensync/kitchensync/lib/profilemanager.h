@@ -61,6 +61,16 @@ namespace KSync {
          */
         Profile::ValueList byName2( const QString& name );
 
+        /*
+         * profile at index
+         */
+        Profile profile( int index )const;
+
+        /**
+         * the count of elements
+         */
+        int count()const;
+
         /**
          * loads a Profile List
          */

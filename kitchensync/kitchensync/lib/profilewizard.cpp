@@ -38,6 +38,7 @@ void ProfileWizard::init( const ManPartService::ValueList& lst ) {
     m_choo->init(lst);
 }
 void ProfileWizard::initProf( const ManPartService::ValueList& lst ) {
+    m_intro->lneName->setText( m_prof.name() );
     m_choo->init( lst,  m_prof.manParts() );
 }
 Profile ProfileWizard::profile() const {

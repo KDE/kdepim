@@ -142,8 +142,15 @@ void KSyncMainWindow::initActions()
   (void)new KAction( i18n("Configure current Profile"),  "configure", 0,
                      this, SLOT(slotConfigCur() ),
                      actionCollection(), "config_current" );
-  (void)new KSelectAction( this, "select_kon");
-  (void)new KSelectAction( this, "select_prof");
+  m_konAct = new KSelectAction( i18n("Konnector"),
+                                KShortcut(),this,
+                                SLOT(slotKonnectorProfile() ),
+                                actionCollection(),
+                                "select_kon");
+
+  m_profAct = new KSelectAction( i18n("Profile"),  KShortcut(), this,
+                                 SLOT(slotProfile() ),
+                                 actionCollection(), "select_prof");
 }
 /*
  * we search for all installed plugins here
@@ -326,10 +333,12 @@ void KSyncMainWindow::initProfiles() {
         newL.append( prof);
     }
     m_konprof->setList( newL );
+    initKonnectorList();
     /* end the hack */
 
     m_prof = new ProfileManager();
     m_prof->load();
+    initProfileList();
 }
 Profile KSyncMainWindow::currentProfile()const {
     return m_prof->currentProfile();
@@ -420,6 +429,7 @@ void KSyncMainWindow::slotConfigProf() {
     }
 }
 void KSyncMainWindow::switchProfile( const Profile& prof ) {
+    kdDebug() << "switch profile" << endl;
     m_bar->clear();
     m_parts.setAutoDelete( true );
     m_parts.clear();
@@ -438,6 +448,37 @@ void KSyncMainWindow::addPart( const ManPartService& service ) {
         addModPart( part );
 }
 void KSyncMainWindow::switchProfile( const KonnectorProfile& prof ) {
+
+}
+/*
+ * configure current loaded
+ */
+void KSyncMainWindow::slotConfigCur() {
+
+}
+
+void KSyncMainWindow::slotKonnectorProfile() {
+
+}
+/*
+ * the Profile was changed in the Profile KSelectAction
+ */
+void KSyncMainWindow::slotProfile() {
+    kdDebug() << "Changing profile " << m_profAct->currentItem() << endl;
+    Profile cur = m_prof->profile( m_profAct->currentItem() );
+    switchProfile( cur );
+    m_prof->setCurrentProfile( cur );
+}
+void KSyncMainWindow::initProfileList() {
+    Profile::ValueList list = m_prof->profiles();
+    Profile::ValueList::Iterator it;
+    QStringList lst;
+    for (it = list.begin(); it != list.end(); ++it ) {
+        lst << (*it).name();
+    }
+    m_profAct->setItems( lst);
+}
+void KSyncMainWindow::initKonnectorList() {
 
 }
 #include "ksync_mainwindow.moc"

@@ -50,7 +50,7 @@
 class PartBar;
 class QHBox;
 class QWidgetStack;
-
+class KSelectAction;
 
 namespace KSync {
     class KonnectorManager;
@@ -98,7 +98,9 @@ namespace KSync {
         KSyncSystemTray *m_tray;
 
         KonnectorManager *m_konnector;
-        KonnectorProfileManager* m_konprof        ;
+        KonnectorProfileManager* m_konprof;
+        KSelectAction* m_konAct;
+        KSelectAction* m_profAct;
         ProfileManager* m_prof;
         QString m_currentId;
         // udi + Identify
@@ -110,9 +112,14 @@ namespace KSync {
         void konnectorChanged( const KonnectorProfile& oldProf );
         void konnectorStateChanged( const QString &,  int mode );
    private slots:
+        void slotKonnectorProfile();
+        void slotProfile();
+        void initProfileList();
+        void initKonnectorList();
         void switchProfile( const Profile& prof );
         void switchProfile( const KonnectorProfile& prof );
         void slotConfigProf();
+        void slotConfigCur();
         void initKonnector();
         void initPlugins();
         void initProfiles();

@@ -74,3 +74,9 @@ void ProfileManager::replaceProfile( const Profile& prod ) {
 void ProfileManager::removeProfile( const Profile& prof ) {
     m_list.remove( prof );
 }
+Profile ProfileManager::profile( int i)const {
+    return m_list[i];
+}
+int ProfileManager::count() const {
+    return m_list.count();
+}
