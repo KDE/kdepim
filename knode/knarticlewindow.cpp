@@ -81,7 +81,6 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col)
 
   // settings menu
   actShowToolbar = KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
-  KStdAction::saveOptions(this, SLOT(slotSaveOptions()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
@@ -100,6 +99,9 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col)
 KNArticleWindow::~KNArticleWindow()
 {
   instances.removeRef(this);
+  KConfig *conf = KGlobal::config();
+  conf->setGroup("articleWindow_options");
+  saveMainWindowSettings(conf);
 }
 
 
@@ -163,15 +165,6 @@ void KNArticleWindow::slotToggleToolBar()
     toolBar()->hide();
   else
     toolBar()->show();
-}
-
-
-
-void KNArticleWindow::slotSaveOptions()
-{
-  KConfig *conf = KGlobal::config();
-  conf->setGroup("articleWindow_options");
-  saveMainWindowSettings(conf);
 }
 
 

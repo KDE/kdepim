@@ -429,7 +429,6 @@ void KNodeApp::initActions()
 
   actShowToolbar = KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
   actShowStatusbar = KStdAction::showStatusbar(this, SLOT(slotToggleStatusBar()), actionCollection());
-  KStdAction::saveOptions(this, SLOT(slotSaveOptions()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(this, SLOT(slotSettings()), actionCollection());
@@ -457,12 +456,16 @@ void KNodeApp::initPopups()
 
 void KNodeApp::saveSettings()
 {
+  KConfig *conf = KGlobal::config();
+  conf->setGroup("mainWindow_options");
+  saveMainWindowSettings(conf);
+
+  view->saveOptions();
   FiManager->saveOptions();
   FAManager->saveOptions();
   KNArticleWidget::saveOptions();
   AppManager->saveOptions();
 
-  KConfig *conf=KGlobal::config();
   conf->setGroup("GENERAL");
   conf->writeEntry("Version",KNODE_VERSION);
 }
@@ -530,6 +533,7 @@ void KNodeApp::slotSupersede()
 }
 
 
+
 void KNodeApp::slotToggleToolBar()
 {
   if(toolBar()->isVisible())
@@ -537,6 +541,7 @@ void KNodeApp::slotToggleToolBar()
   else
     toolBar()->show();
 }
+
 
 
 void KNodeApp::slotToggleStatusBar()
@@ -548,20 +553,11 @@ void KNodeApp::slotToggleStatusBar()
 }
 
 
-void KNodeApp::slotSaveOptions()
-{
-  KConfig *conf = KGlobal::config();
-  conf->setGroup("mainWindow_options");
-  saveMainWindowSettings(conf);
-  view->saveOptions();
-}
-
 
 void KNodeApp::slotConfKeys()
 {
   KKeyDialog::configureKeys(actionCollection(), xmlFile(), true, this);
 }
-
 
 
 void KNodeApp::slotConfToolbar()

@@ -144,7 +144,6 @@ class KNodeApp : public KMainWindow
     void slotSupersede();
     void slotToggleToolBar();
     void slotToggleStatusBar();
-    void slotSaveOptions();
     void slotConfKeys();
     void slotConfToolbar();
     void slotSettingsFinished();

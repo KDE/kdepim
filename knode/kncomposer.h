@@ -154,7 +154,6 @@ class KNComposer : public KMainWindow  {
     void slotRemoveAttachment();
     void slotAttachmentProperties();    
     void slotToggleToolBar();
-    void slotSaveOptions();
     void slotConfKeys();
     void slotConfToolbar();
     

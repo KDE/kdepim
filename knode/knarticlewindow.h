@@ -53,7 +53,6 @@ class KNArticleWindow : public KMainWindow  {
     void slotArtCancel();
     void slotArtSupersede();
     void slotToggleToolBar();
-    void slotSaveOptions();
     void slotConfKeys();
     void slotConfToolbar();
 };

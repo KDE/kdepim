@@ -122,7 +122,6 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, bool firstEdit, K
 
   // settings menu
   actShowToolbar = KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
-  KStdAction::saveOptions(this, SLOT(slotSaveOptions()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
@@ -168,6 +167,9 @@ KNComposer::~KNComposer()
     editorTempfile->unlink();
     delete editorTempfile;
   }
+  KConfig *conf = KGlobal::config();
+  conf->setGroup("composerWindow_options");
+  saveMainWindowSettings(conf);
 }
 
 
@@ -714,15 +716,6 @@ void KNComposer::slotToggleToolBar()
 }
 
 
-void KNComposer::slotSaveOptions()
-{
-  KConfig *conf = KGlobal::config();
-  conf->setGroup("composerWindow_options");
-  saveMainWindowSettings(conf);
-  view->saveOptions();
-}
-
-
 void KNComposer::slotConfKeys()
 {
   KKeyDialog::configureKeys(actionCollection(), xmlFile(), true, this);
@@ -920,6 +913,18 @@ KNComposer::ComposerView::ComposerView(QWidget *parent, bool mail)
 
 KNComposer::ComposerView::~ComposerView()
 {
+  if (viewOpen) {
+    KConfig *conf=KGlobal::config();
+    conf->setGroup("POSTNEWS");
+
+    conf->writeEntry("Att_Splitter",sizes());   // save splitter pos
+
+    QValueList<int> lst;                        // save header sizes
+    QHeader *h=attView->header();
+    for (int i=0; i<5; i++)
+      lst << h->sectionSize(i);
+    conf->writeEntry("Att_Headers",lst);
+  }
 }
 
 
@@ -990,6 +995,17 @@ void KNComposer::ComposerView::showAttachmentView()
 void KNComposer::ComposerView::hideAttachmentView()
 {
   if (viewOpen) {
+    KConfig *conf=KGlobal::config();
+    conf->setGroup("POSTNEWS");
+
+    conf->writeEntry("Att_Splitter",sizes());   // save splitter pos
+
+    QValueList<int> lst;                        // save header sizes
+    QHeader *h=attView->header();
+    for (int i=0; i<5; i++)
+      lst << h->sectionSize(i);
+    conf->writeEntry("Att_Headers",lst);
+
     attWidget->hide();
     viewOpen = false;
   }
@@ -1011,23 +1027,6 @@ void KNComposer::ComposerView::hideExternalNotification()
   notification->hide();
 }
 
-
-
-void KNComposer::ComposerView::saveOptions()
-{
-  if (viewOpen) {
-    KConfig *conf=KGlobal::config();
-    conf->setGroup("POSTNEWS");
-
-    conf->writeEntry("Att_Splitter",sizes());   // save splitter pos
-
-    QValueList<int> lst;                        // save header sizes
-    QHeader *h=attView->header();
-    for (int i=0; i<5; i++)
-      lst << h->sectionSize(i);
-    conf->writeEntry("Att_Headers",lst);
-  }
-}
 
 
 //===============================================================
