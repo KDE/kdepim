@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
   KAboutData aboutData(
       "konsolekalendar",               // internal program name
       I18N_NOOP( "KonsoleKalendar" ),  // displayable program name.
-      "0.9.6",                           // version string
+      "0.9.7",                           // version string
       description,                     // short porgram description
       KAboutData::License_GPL,         // license type
       "(c) 2002-2003, Tuukka Pasanen and Allen Winter", // copyright statement

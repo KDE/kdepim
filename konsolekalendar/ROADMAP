@@ -1,27 +1,27 @@
-Inner Version|                                       | KDE VERSION
+Inner Version|                                       | From KDE version
 -------------+---------------------------------------+-------------
-0.5	         |  Re-Organization		         [In CVS]  |    
-0.6	         |  Adding and changing        [In CVS]  |   
+0.5	     |  Re-Organization		   [In CVS]  |    
+0.6	     |  Adding and changing        [In CVS]  |   
 0.6.1        |  creating calendar file.    [In CVS]  |   
-0.7	         |  Deleting                   [In CVS]  |   
-0.8	         |  Exports                    [In CVS]  |       
-0.8.1	       |  Text                       [In CVS]  |   CVS
-0.8.2	       |  HTML           [Needs to be tested]  |   CVS
-0.8.3	       |  CSV                        [In CVS]  |   CVS
-0.9	         |  Man, info, dockbook      [Progress]  |   CVS	
-0.9.1	       |  Dockbook                 [Progress]  |   CVS
-0.9.2	       |  Man (from dockbook)      [Progress]  |   CVS
-0.9.5        |  Test adding,changing, deleting[CVS]  |   CVS
-0.9.6        |  Make public testing annoucement[HERE]|   CVS
-0.9.7        |  Bugs and Command line stuff          |   CVS
+0.7	     |  Deleting                   [In CVS]  |   
+0.8	     |  Exports                    [In CVS]  |       
+0.8.1	     |  Text                       [In CVS]  |   CVS
+0.8.2	     |  HTML           [Needs to be tested]  |   CVS
+0.8.3	     |  CSV                        [In CVS]  |   CVS
+0.9	     |  Man, info, dockbook      [Progress]  |   3.2 Alpha 2	
+0.9.1	     |  Dockbook                 [Progress]  |   3.2 Alpha 2
+0.9.2	     |  Man (from dockbook)      [Progress]  |   3.2 Alpha 2
+0.9.5        |  Test adding,changing, deleting[CVS]  |   3.2 Alpha 2
+0.9.6        |  Make public testing annoucement[HERE]|   3.2 Alpha 2
+0.9.7        |  Bugs and Command line stuff          |   3.2 Alpha 2
 0.9.8        |  Bugs and Documentation is in order   |   CVS
 0.9.9        |  Trackig down last bugs               |   CVS
-1.0	         |  Everything working now               |   3.2
+1.0          |  Everything working now               |   3.2
 1.1          |  Todo's                               |   3.2.1
 1.1.1        |  Linking, attachments, Emails etc     |   3.2.1
 1.2          |  All the other Calendar stuff we      |   3.2.2
              |  Don't support now on.                |
-1.5?	       |  Possiblity to use Ncurses interface  |   3.3
+1.5?         |  Possiblity to use Ncurses interface  |   3.3
 1.5.1?       |  Adding/changing with Ncurses         |   3.3.x
 1.5.2?       |  Deleting with Ncurses                |   3.3.x
 
