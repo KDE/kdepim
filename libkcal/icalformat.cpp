@@ -388,6 +388,8 @@ ScheduleMessage *ICalFormat::parseScheduleMessage(const QString &messageText)
 {
   clearException();
 
+  if (messageText.isEmpty()) return 0;
+
   icalcomponent *message;
   message = icalparser_parse_string(messageText.latin1());
   
