@@ -57,6 +57,8 @@
 
 #include <libkcal/icalformat.h>
 #include <libkcal/icalformatimpl.h>
+#include <libkcal/calendarlocal.h>
+
 extern "C" {
   #include <ical.h>
 }
@@ -67,21 +69,56 @@ extern "C" {
 
 using namespace KPIM;
 
-ExchangeDownload::ExchangeDownload(KCal::Calendar* calendar, ExchangeAccount* account, QDate& start, QDate& end, bool showProgress) 
+ExchangeDownload::ExchangeDownload( ExchangeAccount* account )
+{
+  mAccount = account;
+  mMode = Asynchronous;
+  mDownloadsBusy = 0;
+  mProgress = 0L;
+  mCalendar = 0L;
+}
+
+ExchangeDownload::~ExchangeDownload()
+{
+  kdDebug() << "ExchangeDownload destructor" << endl;
+}
+
+// Asynchronous functions
+
+void ExchangeDownload::download(KCal::Calendar* calendar, const QDate& start, const QDate& end, bool showProgress)
 {
   mCalendar = calendar;
-  mAccount = account;
+  mMode = Asynchronous;
+  initiateDownload( start, end, showProgress );
+}
 
-  account->authenticate();
+void ExchangeDownload::initiateDownload( const QDate& start, const QDate& end, bool showProgress ) 
+{
+  // mAccount->authenticate();
 
   if( showProgress ) {
-    ExchangeProgress *progress = new ExchangeProgress();
+    kdDebug() << "Creating progress dialog" << endl;
+    mProgress = new ExchangeProgress();
   
-    connect( this, SIGNAL(startDownload()), progress, SLOT(slotTransferStarted()) );
-    connect( this, SIGNAL(finishDownload()), progress, SLOT(slotTransferFinished()) );
-    connect( progress, SIGNAL(complete( ExchangeProgress* )), this, SLOT(slotComplete( ExchangeProgress* )) );
+    connect( this, SIGNAL(startDownload()), mProgress, SLOT(slotTransferStarted()) );
+    connect( this, SIGNAL(finishDownload()), mProgress, SLOT(slotTransferFinished()) );
+    // connect( mProgress, SIGNAL(complete( ExchangeProgress* )), this, SLOT(slotComplete( ExchangeProgress* )) );
   }
-   
+
+  kdDebug() << "Makeing date select query" << endl;
+
+  QString sql = dateSelectQuery( start, end );
+ 
+  kdDebug() << "Exchange download query: " << endl << sql << endl;
+
+  increaseDownloads();
+
+  KIO::DavJob *job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", sql, false );
+  connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotSearchResult(KIO::Job *)));
+}
+
+QString ExchangeDownload::dateSelectQuery( const QDate& start, const QDate& end )
+{
   QString startString;
   startString.sprintf("%04i/%02i/%02i",start.year(),start.month(),start.day());
   QString endString;
@@ -91,26 +128,15 @@ ExchangeDownload::ExchangeDownload(KCal::Calendar* calendar, ExchangeAccount* ac
         "FROM Scope('shallow traversal of \"\"')\r\n"
         "WHERE \"urn:schemas:calendar:dtend\" > '" + startString + "'\r\n"
         "AND \"urn:schemas:calendar:dtstart\" < '" + endString + "'";
-  
-  kdDebug() << "Exchange download query: " << endl << sql << endl;
-
-  emit startDownload();
-
-  KIO::DavJob *job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", sql, false );
-  connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotSearchResult(KIO::Job *)));
+  return sql;
 }
 
-
-ExchangeDownload::~ExchangeDownload()
-{
-  kdDebug() << "ExchangeDownload destructor" << endl;
-}
 
 void ExchangeDownload::slotSearchResult( KIO::Job *job )
 {
   if ( job->error() ) {
     job->showErrorDialog( 0L );
-    emit finishDownload();
+    decreaseDownloads();
     return;
   }
   QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
@@ -119,14 +145,14 @@ void ExchangeDownload::slotSearchResult( KIO::Job *job )
 
   handleAppointments( response, true );
   
-  emit finishDownload();
+  decreaseDownloads();
 }
 
 void ExchangeDownload::slotMasterResult( KIO::Job *job )
 {
   if ( job->error() ) {
     job->showErrorDialog( 0L );
-    emit finishDownload();
+    decreaseDownloads();
     return;
   }
   QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
@@ -135,7 +161,7 @@ void ExchangeDownload::slotMasterResult( KIO::Job *job )
 
   handleAppointments( response, false );
   
-  emit finishDownload();
+  decreaseDownloads();
 }
 
 void ExchangeDownload::handleAppointments( const QDomDocument& response, bool recurrence ) {
@@ -180,7 +206,7 @@ void ExchangeDownload::handleAppointments( const QDomDocument& response, bool re
       }
 
       QDomElement hrefElement = prop.namedItem( "href" ).toElement();
-      if ( instancetypeElement.isNull() ) {
+      if ( hrefElement.isNull() ) {
         kdDebug() << "Error: no href in Exchange server reply" << endl;
         continue;
       }
@@ -190,7 +216,7 @@ void ExchangeDownload::handleAppointments( const QDomDocument& response, bool re
       
       kdDebug() << "GET url: " << url.prettyURL() << endl;
     
-      emit startDownload();
+      increaseDownloads();
       KIO::TransferJob *job2 = KIO::get(url, false, false);
       KIO::Scheduler::scheduleJob(job2);
       job2->addMetaData("davHeader", "Translate: f\r\n");
@@ -211,7 +237,7 @@ void ExchangeDownload::handleRecurrence(QString uid) {
 
   kdDebug() << "Exchange master query: " << endl << query << endl;
 
-  emit startDownload();
+  increaseDownloads();
  
   KIO::DavJob* job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", query, false );
   KIO::Scheduler::scheduleJob(job);
@@ -250,14 +276,14 @@ void ExchangeDownload::slotTransferResult(KIO::Job *job) {
       delete m_transferJobs[url.url()];
       m_transferJobs.remove( url.url() );
     }
-    emit finishDownload();
+    decreaseDownloads();
     return;
   }
 
   // kdDebug() << "Message: " << messageData->c_str() << endl;
   if ( !m_transferJobs.contains( url.url() ) ) {
     kdDebug() << "WARNING: no data!" << endl;
-    emit finishDownload();
+    decreaseDownloads();
     return;
   }
   
@@ -272,7 +298,7 @@ void ExchangeDownload::slotTransferResult(KIO::Job *job) {
   }
   m_transferJobs.remove( url.url() );
   delete messageData;
-  emit finishDownload();
+  decreaseDownloads();
   kdDebug() << "Finished slotTransferREsult" << endl;
 }
 
@@ -291,6 +317,7 @@ void ExchangeDownload::handlePart( DwEntity *part ) {
   }
 }
 
+/*
 void ExchangeDownload::slotComplete( ExchangeProgress *progress )
 {
   kdDebug() << "Entering slotComplete()" << endl;
@@ -301,4 +328,97 @@ void ExchangeDownload::slotComplete( ExchangeProgress *progress )
 
   emit downloadFinished( this );
 }
+*/
 
+void ExchangeDownload::increaseDownloads()
+{
+  mDownloadsBusy++;
+  emit startDownload();
+}
+
+void ExchangeDownload::decreaseDownloads()
+{
+  mDownloadsBusy--;
+  emit finishDownload();
+  if ( mDownloadsBusy == 0 ) {
+    kdDebug() << "All downloads finished" << endl;
+    mCalendar->setModified( true );
+    if ( mProgress ) {
+      disconnect( this, 0, mProgress, 0 );
+      disconnect( mProgress, 0, this, 0 );
+      mProgress->delayedDestruct();
+    }
+    emit downloadFinished( this );
+  }
+}
+
+// Synchronous functions
+
+QPtrList<KCal::Event> ExchangeDownload::eventsForDate( const QDate &qd )
+{
+  kdDebug() << "Entering ExchangeDownload::eventsForDate()" << endl;
+  kdDebug() << "Account : " << mAccount << endl;
+  kdDebug() << "Host    : " << mAccount->host() << endl;
+  kdDebug() << "Account : " << mAccount->account() << endl;
+  kdDebug() << "Password: " << mAccount->password() << endl;
+
+  mState = WaitingForResult;
+  mMode = Synchronous;
+  kdDebug() << "Creating CalendarLocal" << endl;
+  mCalendar = new KCal::CalendarLocal();
+
+  kdDebug() << "Initiating download..." << endl;
+  QDate end = qd;
+  end.addDays(1);
+  initiateDownload( qd, end, false );
+
+  connect(this, SIGNAL(downloadFinished( ExchangeDownload * )), 
+		  this, SLOT(slotDownloadFinished( ExchangeDownload *)));
+  do {
+    qApp->processEvents();
+  } while ( mState==WaitingForResult );
+
+  // This leaks: the calendarLocal we allocated is now lost
+  return mCalendar->rawEvents();
+
+  /*
+  mAccount->authenticate();
+  kdDebug() << "Authenticated" << endl;
+  mMode = Synchronous;
+
+  kdDebug() << "Constructing query..." << endl;
+  QString sql = dateSelectQuery( qd, qd );
+ 
+  kdDebug() << "Exchange download query: " << endl << sql << endl;
+
+  mState = WaitingForResult;
+  KIO::DavJob *job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", sql, false );
+  connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotSyncResult(KIO::Job *)));
+  do {
+    qApp->processEvents();
+  } while ( mState==WaitingForResult );
+
+  // QDomDocument& response = job->response();
+
+  kdDebug() << "Search result: " << endl << mResponse.toString() << endl;
+  QPtrList<KCal::Event> list;
+  return list;
+  */
+}
+
+void ExchangeDownload::slotDownloadFinished( ExchangeDownload *download )
+{
+  kdDebug() << "slotDownloadFinished" << endl;
+  mState = HaveResult;
+}
+
+void ExchangeDownload::slotSyncResult( KIO::Job * job )
+{
+  kdDebug() << "slotSyncResult(): error=" << job->error() << endl;
+  if ( job->error() ) {
+    job->showErrorDialog( 0L );
+  }
+
+  mState = HaveResult;
+  mResponse = static_cast< KIO::DavJob * >(job)->response();
+}

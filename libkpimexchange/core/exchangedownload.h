@@ -37,22 +37,34 @@ namespace KPIM {
 class ExchangeProgress;
 class ExchangeAccount;
 
+enum DownloadMode { Synchronous, Asynchronous };
+enum DownloadState { WaitingForResult, HaveResult };
+
 class ExchangeDownload : public QObject {
     Q_OBJECT
   public:
-    ExchangeDownload( KCal::Calendar* calendar, ExchangeAccount* account, 
-         QDate& start, QDate& end, bool showProgress);
-    ~ExchangeDownload();
+    ExchangeDownload( ExchangeAccount* account );
+   ~ExchangeDownload();
 
+    // Synchronous functions
+    QPtrList<KCal::Event> eventsForDate( const QDate &qd );
+
+    // Asynchronous functions
+    void download( KCal::Calendar* calendar, 
+         const QDate& start, const QDate& end, bool showProgress);
+ 
   private slots:
     // void slotPatchResult( KIO::Job * );
     // void slotPropFindResult( KIO::Job * );
-    void slotComplete( ExchangeProgress * );
+    // void slotComplete( ExchangeProgress * );
  
     void slotSearchResult( KIO::Job *job );
     void slotMasterResult( KIO::Job* job );
     void slotData( KIO::Job *job, const QByteArray &data );
     void slotTransferResult( KIO::Job *job );
+
+    void slotDownloadFinished( ExchangeDownload * );
+    void slotSyncResult( KIO::Job * job );
 
   signals:
     void startDownload();
@@ -64,9 +76,21 @@ class ExchangeDownload : public QObject {
     void handleAppointments( const QDomDocument &, bool recurrence );
     void handleRecurrence( QString uid );
     void handlePart( DwEntity *part );
+
+    void initiateDownload( const QDate& start, const QDate& end, bool showProgress );
+
+    void increaseDownloads();
+    void decreaseDownloads();
+
+    QString dateSelectQuery( const QDate& start, const QDate& end );
     
     KCal::Calendar *mCalendar;
     ExchangeAccount *mAccount;
+    ExchangeProgress *mProgress;
+    int mDownloadsBusy;
+    DownloadMode mMode;
+    DownloadState mState;
+    QDomDocument mResponse;
 
     QMap<QString,int> m_uids; // This keeps track of uids we already covered. Especially useful for
     	// recurring events.

@@ -127,12 +127,20 @@ void ExchangeClient::slotTestResult( KIO::Job * job )
 void ExchangeClient::test2()
 {
   kdDebug() << "Entering test2()" << endl;
+}
 
+QPtrList<KCal::Event> ExchangeClient::events( const QDate &qd )
+{
+   // QString query = dateSelectQuery( qd, qd, true /* inclusive */ );
+  ExchangeDownload download( mAccount );
+  return download.eventsForDate( qd );
+   // QDomDocument response = NetDavAccess::davSearch( mAccount->calendarURL(), "DAV:", "sql", query );  
 }
 
 void ExchangeClient::download( KCal::Calendar* calendar, QDate& start, QDate& end, bool showProgress )
 {
-  ExchangeDownload* worker = new ExchangeDownload( calendar, mAccount, start, end, showProgress );
+  ExchangeDownload* worker = new ExchangeDownload( mAccount );
+  worker->download( calendar, start, end, showProgress );
   connect( worker, SIGNAL( finished( ExchangeDownload* ) ), this, SLOT( slotDownloadFinished( ExchangeDownload* ) ) );
 }
 

@@ -42,6 +42,9 @@ class ExchangeClient : public QObject {
     ExchangeClient( ExchangeAccount* account );
     ~ExchangeClient();
 
+  // synchronous functions
+  QPtrList<KCal::Event> events( const QDate &qd );
+
   public slots:
     void download( KCal::Calendar* calendar, QDate& start, QDate& end, bool showProgress);
     void upload( KCal::Event* event );

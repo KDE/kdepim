@@ -24,6 +24,7 @@
 
 #include <kurl.h>
 #include <kapplication.h>
+#include <kdebug.h>
 #include <kconfig.h>
 #include <dcopclient.h>
 #include <kio/authinfo.h>
@@ -101,20 +102,30 @@ KURL ExchangeAccount::calendarURL()
 
 void ExchangeAccount::authenticate()
 {
-    KIO::AuthInfo info;
-    info.url = baseURL();
-    info.username = mAccount;
-    info.password = mPassword;
+  kdDebug() << "Entering ExchangeAccount::authenticate()" << endl;
 
-    QByteArray params;
-    long windowId = QApplication::topLevelWidgets()->first()->winId();
+  KIO::AuthInfo info;
+  info.url = baseURL();
+  info.username = mAccount;
+  info.password = mPassword;
 
-    DCOPClient *dcopClient = new DCOPClient();
-    dcopClient->attach();
+  long windowId;
+  QWidgetList* widgets = QApplication::topLevelWidgets();
+  if ( widgets->isEmpty() )
+    windowId = 0;
+  else
+    windowId = widgets->first()->winId();
+  delete widgets;
 
-    QDataStream stream(params, IO_WriteOnly);
-    stream << info << windowId;
+  kdDebug() << "window ID: " << windowId << endl;
 
-    dcopClient->send( "kded", "kpasswdserver", "addAuthInfo(KIO::AuthInfo, long int)", params );
+  DCOPClient *dcopClient = new DCOPClient();
+  dcopClient->attach();
+
+  QByteArray params;
+  QDataStream stream(params, IO_WriteOnly);
+  stream << info << windowId;
+
+  dcopClient->send( "kded", "kpasswdserver", "addAuthInfo(KIO::AuthInfo, long int)", params );
 }
 

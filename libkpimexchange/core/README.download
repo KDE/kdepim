@@ -1,0 +1,63 @@
+$Id$
+This document describes what happens during the download of
+appointments from an exchange server in exchangedownload.cpp.
+Error handling, user interface ignored for clarity
+
+Author: Jan-Pascal van Best, janpascal@vanbest.org
+
+NOTES:
+- You can only use an ExchangeDownload object for a single download
+  It uses internal state member variables and such.
+
+DATA STRUCTURES:
+QMap<QString,int> m_uids is in fact a set of known uids telling us
+whether we're already busy or finished reading the Master event
+for this UID. The map contains the UID as key, with a value of 1, 
+if UID is either being or finished downloading. 
+
+QMap<QString,DwString *> m_transferJobs maps URLs being downloaded
+to strings of data already received. A URL is removed from the map
+if all data has been received
+
+METHODS:
+download()
+- Provides authentication info to the KDE authentication service
+- Creates an SQL query using dateSelectQuery()
+- Starts a SEARCH job, connects the result() signal 
+  to the slotSearchResult() slot
+
+slotSearchResult()
+- Calls handleAppointments() with recurrence enabled
+
+handleAppointments()
+- Examines all events returned by the SEARCH
+- If recurrence is enabled, for Master, Instance or Exception events, 
+  and if we havent't handled this particular UID yet, call 
+  handleRecurrence() with the UID of the event
+- If recurrence is disabled, or for Single events, start a TransferJob. 
+  Connect the data() signal to the slotData() slot and the result() 
+  signal to the slotTransferResult() slot.
+- Note that this method may start many new jobs for transferring 
+  appointments and for finding recurrent events!
+
+handleRecurrence()
+- Start a new SEARCH job, looking for the Master event of the UID
+- Connect the result() signal to the slotMasterResult() slot
+
+slotMasterResult()
+- Call handleAppointment() with recurrence disabled
+	
+slotData()
+- If the URL of the data we're receiving is already in m_transferJobs,
+  append the data to the string related to this URL. Else, create a new
+  string, and place a new URL,string pair in m_transferJobs
+ 
+slotTransferResult()
+- Parse the data received for this URL as a MIME message
+- call handlePart() for every MIME part in the message
+- Remove the URL from m_transferJobs and free the string
+
+handlePart()
+- If this is a text/calendar part, read iCalendar data from the part and 
+  insert it into the calendar.
+
