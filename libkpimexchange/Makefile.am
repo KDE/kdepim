@@ -16,3 +16,5 @@ libkpimexchange_la_LIBADD = core/libkpimexchangecore.la calendar/libkpimexchange
 dummy.cpp:
 	echo >dummy.cpp
 
+messages:
+	$(XGETTEXT) calendar/*.cpp core/*.cpp -o $(podir)/libkpimexchange.pot
