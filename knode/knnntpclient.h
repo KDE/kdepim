@@ -41,6 +41,7 @@ class KNNntpClient : public KNProtocolClient  {
     void doFetchNewHeaders();
     void doFetchArticle();
     void doPostArticle();
+    void doFetchSource();
   
     virtual bool openConnection();     // connect, handshake
     virtual bool sendCommand(const QCString &cmd, int &rep);  // authentication on demand

@@ -26,6 +26,7 @@
 #include <qtimer.h>
 #include <qstring.h>
 #include <qbitarray.h>
+#include <qvbox.h>
 
 #include <kaction.h>
 #include <kpopupmenu.h>
@@ -36,6 +37,19 @@
 class KNArticle;
 class KNArticleCollection;
 class KNMimeContent;
+
+
+class KNSourceViewWindow : public QVBox {
+
+  Q_OBJECT
+
+  public:
+    KNSourceViewWindow(const QString &htmlCode);
+    ~KNSourceViewWindow();
+
+};
+
+//=============================================================================================================
 
 class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
 
@@ -111,7 +125,8 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
             *a_ctCancel,
             *a_ctVerify,
             *a_ctSupersede,
-            *a_ctSetCharsetKeyb;
+            *a_ctSetCharsetKeyb,
+            *a_ctViewSource;
     KToggleAction *a_ctToggleFullHdrs,
                   *a_ctToggleRot13;
     KSelectAction *a_ctSetCharset;
@@ -130,6 +145,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     void slotToggleRot13();
     void slotSetCharset(const QString&);
     void slotSetCharsetKeyboard();
+    void slotViewSource();
 
   //-------------------------- </Actions> --------------------------
 

@@ -60,6 +60,9 @@ void KNNntpClient::processJob()
     case KNJobData::JTpostArticle :
       doPostArticle();
       break;
+   case KNJobData::JTfetchSource :
+      doFetchSource();
+      break;
     default:
 #ifndef NDEBUG
       qDebug("knode: KNNntpClient::processJob(): mismatched job");
@@ -458,6 +461,31 @@ void KNNntpClient::doPostArticle()
     
   if(!checkNextResponse(240))            // 240 article posted ok
     return;
+}
+
+
+void KNNntpClient::doFetchSource()
+{
+  KNRemoteArticle *target = static_cast<KNRemoteArticle*>(job->data());
+
+  sendSignal(TSdownloadArticle);
+  errorPrefix = i18n("Article could not been retrieved.\nThe following error occured:\n");
+
+  progressValue = 100;
+  predictedLines = target->lines()->numberOfLines()+10;
+
+  QCString cmd = "ARTICLE " + target->messageID()->as7BitString(false);
+  if (!sendCommandWCheck(cmd,220))      // 220 n <a> article retrieved - head and body follow
+    return;
+
+  QStrList msg;
+  if (!getMsg(msg))
+    return;
+
+  progressValue = 1000;
+  sendSignal(TSprogressUpdate);
+
+  target->setContent(&msg);
 }
 
 

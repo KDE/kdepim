@@ -72,7 +72,8 @@ class KNJobData {
                     JTfetchNewHeaders,
                     JTfetchArticle,
                     JTpostArticle,
-                    JTmail };                   
+                    JTmail,
+                    JTfetchSource };
     
     KNJobData(jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem *i);
     ~KNJobData();

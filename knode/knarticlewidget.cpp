@@ -66,6 +66,35 @@
 #define QCOL_3    3
 
 
+KNSourceViewWindow::KNSourceViewWindow(const QString &htmlCode)
+  : QVBox(0, 0, WType_TopLevel | WDestructiveClose)
+{
+  KTextBrowser *browser = new KTextBrowser(this);
+  KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
+
+  setCaption(kapp->makeStdCaption(i18n("Article Source")));
+  QColorGroup pcg(browser->paperColorGroup());
+  pcg.setColor(QColorGroup::Base, app->backgroundColor());
+  pcg.setColor(QColorGroup::Text, app->textColor());
+  browser->setPaperColorGroup(pcg);
+  browser->setLinkColor(app->linkColor());
+  browser->setFont(knGlobals.cfgManager->appearance()->articleFont());
+
+  browser->setText(htmlCode);
+  restoreWindowSize("sourceWindow", this, QSize(500,300));
+  show();
+}
+
+
+KNSourceViewWindow::~KNSourceViewWindow()
+{
+  saveWindowSize("sourceWindow",size());
+}
+
+
+//=============================================================================================================
+
+
 KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, const char *name )
     : KTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false), a_ctions(actColl)
 {
@@ -115,6 +144,9 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
                           SLOT(slotToggleFullHdrs()), a_ctions, "view_showAllHdrs");
   a_ctToggleRot13       = new KToggleAction(i18n("&Unscramble (Rot 13)"), "decrypted", 0 , this,
                           SLOT(slotToggleRot13()), a_ctions, "view_rot13");
+  a_ctViewSource        = new KAction(i18n("&View Source..."),  0 , this,
+                          SLOT(slotViewSource()), a_ctions, "article_viewSource");
+
 
   a_ctSetCharset = new KSelectAction(i18n("Chars&et"), 0, a_ctions, "set_charset");
   QStringList cs=KGlobal::charsets()->availableEncodingNames();
@@ -125,6 +157,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
           this, SLOT(slotSetCharset(const QString&)));
   a_ctSetCharsetKeyb = new KAction(i18n("Charset"), Key_C, this,
                                    SLOT(slotSetCharsetKeyboard()), a_ctions, "set_charset_keyboard");
+
 
   o_verrideCS=KNHeaders::Latin1;
   f_orceCS=false;
@@ -155,6 +188,7 @@ KNArticleWidget::~KNArticleWidget()
 }
 
 
+
 bool KNArticleWidget::scrollingDownPossible()
 {
   return ((contentsY()+visibleHeight())<contentsHeight());
@@ -167,6 +201,7 @@ void KNArticleWidget::scrollDown()
   int offs = (visibleHeight() < 30) ? visibleHeight() : 30;
   scrollBy( 0, visibleHeight()-offs);
 }
+
 
 
 void KNArticleWidget::focusInEvent(QFocusEvent *e)
@@ -291,8 +326,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case '\t':  result+="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; break;   // tab == 8 spaces
       
       case 32 :
-        if(text[idx+1].isSpace())  {
-          while(text[idx].isSpace()) {
+        if(text[idx+1].latin1()==32)  {
+          while(text[idx].latin1()==32) {
             result+="&nbsp;";
             idx++;
 
@@ -551,6 +586,7 @@ void KNArticleWidget::showBlankPage()
   a_ctToggleRot13->setEnabled(false);
   a_ctSetCharset->setEnabled(false);
   a_ctSetCharsetKeyb->setEnabled(false);
+  a_ctViewSource->setEnabled(false);
 }
 
 
@@ -581,6 +617,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   a_ctToggleRot13->setEnabled(false);
   a_ctSetCharset->setEnabled(false);
   a_ctSetCharsetKeyb->setEnabled(false);
+  a_ctViewSource->setEnabled(false);
 }
 
 
@@ -634,18 +671,31 @@ void KNArticleWidget::setArticle(KNArticle *a)
 void KNArticleWidget::processJob(KNJobData *j)
 {
   KNRemoteArticle *a=static_cast<KNRemoteArticle*>(j->data());
-  
-  if(j->canceled()) {
-    articleChanged(a);  
-  }
-  else {
-    if(j->success()) {
-      a->updateListItem();
+
+  if (j->type()==KNJobData::JTfetchSource) {
+    if (!j->canceled()) {
+      QString html;
+      if (!j->success())
+        html= "<qt>"+i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>")+j->errorString()+"</qt>";
+      else
+        html= QString("<qt>%1<br>%2</qt>").arg(toHtmlString(a->head(),false,false)).arg(toHtmlString(a->body(),false,false));
+
+      new KNSourceViewWindow(html);
+    }
+    delete a;
+  } else {
+    if(j->canceled()) {
       articleChanged(a);
     }
-    else if(a_rticle==a)
-      showErrorMessage(j->errorString());
-  } 
+    else {
+      if(j->success()) {
+        a->updateListItem();
+        articleChanged(a);
+      }
+      else if(a_rticle==a)
+        showErrorMessage(j->errorString());
+    }
+  }
   
   delete j;
 }
@@ -812,6 +862,7 @@ void KNArticleWidget::createHtmlPage()
     a_ctToggleFullHdrs->setEnabled(true);
     a_ctSetCharset->setEnabled(true);
     a_ctSetCharsetKeyb->setEnabled(true);
+    a_ctViewSource->setEnabled(true);
     return;
   }
 
@@ -950,6 +1001,7 @@ void KNArticleWidget::createHtmlPage()
   a_ctToggleRot13->setEnabled(true);
   a_ctSetCharset->setEnabled(true);
   a_ctSetCharsetKeyb->setEnabled(true);
+  a_ctViewSource->setEnabled(true);
 
   //start automark-timer
   if(a_rticle->type()==KNMimeBase::ATremote && knGlobals.cfgManager->readNewsGeneral()->autoMark())
@@ -957,13 +1009,11 @@ void KNArticleWidget::createHtmlPage()
 }
 
 
-
 void KNArticleWidget::setSource(const QString &s)
 {
   if(!s.isEmpty())
     anchorClicked(s);
 }
-
 
 
 void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const QPoint *p)
@@ -1266,6 +1316,22 @@ void KNArticleWidget::slotSetCharsetKeyboard()
 }
 
 
+void KNArticleWidget::slotViewSource()
+{
+  kdDebug(5003) << "KNArticleWidget::slotViewSource()" << endl;
+  if (a_rticle && a_rticle->type()==KNMimeBase::ATlocal && a_rticle->hasContent()) {
+    new KNSourceViewWindow(QString("<qt>%1</qt>").arg(toHtmlString(a_rticle->encodedContent(false),false,false)));
+  } else {
+    if (a_rticle && a_rticle->type()==KNMimeBase::ATremote) {
+      KNGroup *g=static_cast<KNGroup*>(a_rticle->collection());
+      KNRemoteArticle *a=new KNRemoteArticle(g); //we need "g" to access the nntp-account
+      a->messageID()->from7BitString(a_rticle->messageID()->as7BitString(false));
+      emitJob( new KNJobData(KNJobData::JTfetchSource, this, g->account(), a));
+    }
+  }
+}
+
+
 void KNArticleWidget::slotTimeout()
 {
   if(a_rticle && a_rticle->type()==KNMimeBase::ATremote && !a_rticle->isOrphant()) {
@@ -1280,7 +1346,6 @@ void KNArticleWidget::slotVerify()
 {
   knGlobals.artManager->verifyPGPSignature(a_rticle);
 }                                                                                                                                    
-
 
 //--------------------------------------------------------------------------------------
 
