@@ -622,6 +622,7 @@ void KNotesAction::updateNote(const NoteAndMemo &m, const PilotMemo *memo)
 
 void KNotesAction::addNote(const PilotMemo *memo)
 {
+  FUNCTIONSETUP;
 	// This note is new to KNotes
 	KNoteID_t i = fP->fKNotes->newNote(memo->shortTitle(), memo->text());
 	fP->fIdList.append(NoteAndMemo(i,memo->id()));

@@ -167,7 +167,7 @@ void AbbrowserConduit::readConfig()
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Settings "
-		<< " fConflictResolution=" << fConflictResolution
+		<< " fConflictResolution=" << getConflictResolution()
 		<< " fPilotStreetHome=" << AbbrowserSettings::pilotStreet()
 		<< " fPilotFaxHome=" << AbbrowserSettings::pilotFax()
 		<< " fArchive=" << AbbrowserSettings::archiveDeleted()
@@ -655,7 +655,7 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 	DEBUGCONDUIT << fname << ": "
 		<< "syncDirection=" << getSyncDirection() << ", "
 		<< "archive = " << AbbrowserSettings::archiveDeleted() << endl;
-	DEBUGCONDUIT << fname << ": conflictRes="<< fConflictResolution << endl;
+	DEBUGCONDUIT << fname << ": conflictRes="<< getConflictResolution() << endl;
 	DEBUGCONDUIT << fname << ": PilotStreetHome=" << AbbrowserSettings::pilotStreet() << ", PilotFaxHOme" << AbbrowserSettings::pilotFax() << endl;
 #endif
 

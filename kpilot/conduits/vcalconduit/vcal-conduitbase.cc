@@ -179,7 +179,7 @@ there are two special cases: a full and a first sync.
 #ifdef DEBUG
 	DEBUGCONDUIT<<fname<<": fullsync="<<isFullSync()<<", firstSync="<<isFirstSync()<<endl;
 	DEBUGCONDUIT<<fname<<": syncAction="<<getSyncDirection()<<
-		", conflictResolution = "<<fConflictResolution<<", archive = "<<config()->syncArchived()<<endl;
+		", conflictResolution = "<<getConflictResolution()<<", archive = "<<config()->syncArchived()<<endl;
 #endif
 
 	addSyncLogEntry(i18n("Syncing with file \"%1\"").arg(config()->calendarFile()));
