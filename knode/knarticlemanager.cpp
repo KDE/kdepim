@@ -216,15 +216,15 @@ void KNArticleManager::showHdrs(bool clear)
 
     if(f_ilter)
       f_ilter->doFilter(g_roup);
-    else
+    else    
       for(int i=0; i<g_roup->length(); i++) {
         art=g_roup->at(i);
         art->setFilterResult(true);
         art->setFiltered(true);
-        ref=(art->idRef()!=0) ? g_roup->byId(art->idRef()) : 0;
+        ref=(art->idRef()!=0) ? g_roup->byId(art->idRef()) : 0;        
         art->setDisplayedReference(ref);
         if(ref)
-          ref->setVisibleFollowUps(true);
+          ref->setVisibleFollowUps(true); 
       }
 
     d_isableExpander=true;
@@ -936,7 +936,7 @@ void KNArticleManager::createThread(KNRemoteArticle *a)
 {
   KNRemoteArticle *ref=a->displayedReference();
 
-  if(ref && a != ref) {
+  if(ref) {
     if(!ref->listItem())
       createThread(ref);
     a->setListItem(new KNHdrViewItem(ref->listItem()));

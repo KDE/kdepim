@@ -753,32 +753,31 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
     }
   }
 
-#ifdef CHECKLOOPS
   //check for loops in threads
   int startId;
   bool isLoop;
+  int iterationCount;
   for (int idx=start; idx<end; idx++){
-    en=hList[idx];
-    startId=en->id;
-    idRef=en->idRef;
+    art=at(idx);
+    startId=art->id();    
     isLoop=false;
-    while(idRef!=0 && !isLoop) {
-      en=hList.byID(idRef);
-      idRef=en->idRef;
-      isLoop=(idRef==startId);
+    iterationCount=0;
+    while(art->idRef()!=0 && !isLoop && (iterationCount < end)) {
+      art=byId(art->idRef());
+      isLoop=(art->id()==startId);
+      iterationCount++;
     }
 
-    if(isLoop) {
+    if(isLoop) {      
       // this method is called from the nntp-thread!!!
       #ifndef NDEBUG
-      qDebug("knode: Sorting : loop in %d",hList[idx]->id);
+      qDebug("knode: Sorting : loop in %d",startId);
       #endif
-      hList[idx]->idRef=0;
-      hList[idx]->thrLevel=0;
+      art=at(idx);
+      art->setIdRef(0);
+      art->setThreadingLevel(0);      
     }
-
   }
-#endif
 
   // propagate ignored/watched flags to new headers
   for(int idx=start; idx<end; idx++) {

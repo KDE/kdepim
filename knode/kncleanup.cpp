@@ -122,8 +122,7 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
         idRef=art->idRef();
         while(idRef!=0) {
           ref=g->byId(idRef);
-          ref->setExpired(false);
-          if ( idRef==ref->idRef() ) break; // otherwise we end up in an infinite loop
+          ref->setExpired(false);          
           idRef=ref->idRef();
         }
       }
@@ -138,8 +137,7 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
       foundId=0;
       while(foundId==0 && idRef!=0) {
         ref=g->byId(idRef);
-        if(!ref->isExpired()) foundId=ref->id();
-        if ( idRef==ref->idRef() ) break; // otherwise we end up in an infinite loop
+        if(!ref->isExpired()) foundId=ref->id();        
         idRef=ref->idRef();
       }
       art->setIdRef(foundId);

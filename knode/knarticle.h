@@ -134,7 +134,10 @@ class KNRemoteArticle : public KNArticle {
 
     // thread info
     int idRef()                                     { return i_dRef; }
-    void setIdRef(int i)                            { i_dRef=i; }
+    void setIdRef(int i)                            { if (i != id()) 
+                                                        i_dRef=i; 
+                                                      else
+                                                        i_dRef=0; }
     KNRemoteArticle* displayedReference()           { return d_ref; }
     void setDisplayedReference(KNRemoteArticle *dr) { d_ref=dr; }
     bool threadMode()                             { return f_lags.get(9); }
