@@ -557,7 +557,8 @@ for a description of run modes.)</para>
 <varlistentry>
 <term><menuchoice><guimenuitem>Quit</guimenuitem></menuchoice></term>
 <listitem><para><action>Closes the &kalarm; system tray
-icon.</action></para> <para>In <quote>continuous</quote> run mode
+icon.</action></para>
+<para>In <quote>continuous</quote> run mode
 only, it also closes all &kalarm; main windows. It has no effect on
 the monitoring of alarms by the alarm daemon (unless you have selected
 <guilabel>Disable alarms while not running</guilabel> in the
