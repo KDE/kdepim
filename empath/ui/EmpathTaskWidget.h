@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -32,42 +32,43 @@
 #include <qpushbutton.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qlist.h>
 #include <qprogressbar.h>
 
 // Local includes
-#include "EmpathTask.h" 
+#include "EmpathTask.h"
 
 class EmpathTaskItem : public QWidget
 {
     Q_OBJECT
-        
+
     public:
-        
+
         EmpathTaskItem(
             const QString & title,
             QWidget * parent, const char * name);
-        
+
         virtual ~EmpathTaskItem();
-        
+
         QSize minimumSizeHint() const;
-        
+
     public slots:
-        
+
         void s_done();
         void s_inc();
         void s_setMax(int);
         void s_setPos(int);
-        
+
     signals:
-        
+
         void done(EmpathTaskItem *);
-        
+
     private:
-        
+
         QString title_;
         int pos_;
         int max_;
-        
+
         QProgressBar* progressMeter_;
         QLabel        * label_;
         QGridLayout * layout_;
@@ -77,21 +78,21 @@ class EmpathTaskItem : public QWidget
 class EmpathTaskWidget : public QWidget
 {
     Q_OBJECT
-        
+
     public:
-        
+
         EmpathTaskWidget(QWidget * parent = 0, const char * name = 0);
         virtual    ~EmpathTaskWidget();
-        
+
         void    resizeEvent(QResizeEvent *);
-        
+
     protected slots:
-            
+
         void s_done(EmpathTaskItem *);
         void s_addTask(EmpathTask *);
 
     private:
-        
+
         QList<EmpathTaskItem> itemList_;
         int    itemHeight_;
 };
