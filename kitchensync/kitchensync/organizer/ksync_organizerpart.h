@@ -11,9 +11,12 @@
 
 class KAboutData;
 class KConfig;
+class KSimpleConfig;
 //class OrganizerDialogBase;
 namespace KSync {
-
+    class Syncee;
+    class EventSyncee;
+    class TodoSyncee;
   class OrganizerPart : public ManipulatorPart {
   Q_OBJECT
   public:
@@ -39,10 +42,12 @@ namespace KSync {
     QPixmap m_pixmap;
     QWidget *m_widget;
     OrganizerDialogBase *m_config;
-    bool m_evo:1;
-    bool m_configured:1;
-    QString m_path;
-    KConfig *m_conf;
+    TodoSyncee* loadTodos(const QString& path );
+    EventSyncee* loadEvents( const QString& path );
+    void doMeta( EventSyncee*, TodoSyncee*,  const QString& path);
+    void doMetaIntern( Syncee*, KSimpleConfig*, const QString& key);
+    void writeMeta( EventSyncee*, TodoSyncee*, const QString& path );
+    void save( EventSyncee*, TodoSyncee*, const QString& path );
   };
 };
 

@@ -8,6 +8,7 @@
 
 #include <kapplication.h>
 #include <kconfig.h>
+#include <ksimpleconfig.h>
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kiconloader.h>
@@ -70,7 +71,7 @@ QWidget* OrganizerPart::configWidget()
     if ( path == QString::fromLatin1("evolution") )
         m_config->ckbEvo->setChecked( true );
     else
-        m_config->urlReq->setURL( m_path );
+        m_config->urlReq->setURL( path );
 
   return (QWidget*) m_config;
 };
@@ -109,20 +110,22 @@ void OrganizerPart::slotConfigOk()
 void OrganizerPart::processEntry( const Syncee::PtrList& in,
                                   Syncee::PtrList& out )
 {
-/*    /* 1. is fairly easy */
+    /* 1. is fairly easy */
     Profile prof = core()->currentProfile();
     KonnectorProfile kon = core()->konnectorProfile();
 
     /* 2. too */
-    QString path = prof.path( realPath( kon.path("OrganizerPart") ) );
-    QString meta = prof.uid() + kon.uid() + "organizer.rc";
+    QString path = prof.path( "OrganizerPart"  );
+    QString meta =  kon.uid()+"/"+prof.uid() + "organizer.rc";
     bool met = kon.kapabilities().isMetaSyncingEnabled();
 
     /* 3. */
-    Syncee* syncee;
+    Syncee* syncee=0l;
     EventSyncee* evSyncee = 0l;
     TodoSyncee* toSyncee = 0l;
-    for ( syncee = in.first(); syncee; syncee = in.next() ) {
+    QPtrListIterator<Syncee> syncIt( in );
+    for ( ; syncIt.current(); ++syncIt ) {
+        syncee = syncIt.current();
         if ( syncee->type() == QString::fromLatin1("EventSyncee") )
             evSyncee = (EventSyncee*)syncee;
         else if ( syncee->type() == QString::fromLatin1("TodoSyncee") )
@@ -139,8 +142,162 @@ void OrganizerPart::processEntry( const Syncee::PtrList& in,
        events = loadEvents( path );
     if (toSyncee )
         todos = loadTodos( path );
-    */
-}
-//AddressBookSyncee* ANY
 
+    /* 5. meta data */
+    if ( met )
+        doMeta( events, todos, meta );
+    //else {
+    // set the sync MODE FIXME
+    //}
+    /* 6.  sync */
+
+
+    /* 7. write back meta */
+    if ( met )
+        writeMeta( events, todos, meta );
+
+    /* 8. write back data */
+    save( events, todos, path );
+
+    /* 9. */
+    out.append( events );
+    out.append( todos );
+}
+
+//AddressBookSyncee* ANY
+TodoSyncee* OrganizerPart::loadTodos( const QString& path ) {
+    TodoSyncee* syncee = new TodoSyncee();
+    KCal::CalendarLocal cal;
+    cal.load(path);
+    QPtrList<KCal::Todo> todos = cal.rawTodos();
+    if ( todos.isEmpty() ) {
+        return syncee;
+    }
+
+    KCal::Todo *todo;
+    TodoSyncEntry* entry =0 ;
+    for ( todo = todos.first(); todo; todo = todos.next() ) {
+        entry = new TodoSyncEntry((KCal::Todo*)todo->clone()) ;
+        syncee->addEntry( entry );
+    }
+    return syncee;
+}
+EventSyncee* OrganizerPart::loadEvents(const QString& path) {
+    EventSyncee* syncee = new EventSyncee();
+    KCal::CalendarLocal cal;
+    cal.load( path );
+    QPtrList<KCal::Event> events = cal.rawEvents();
+    if ( events.isEmpty() ) {
+        return syncee;
+    }
+
+    KCal::Event *event;
+    EventSyncEntry* entry;
+    for ( event = events.first(); event; event = events.next() ) {
+        entry = new EventSyncEntry( (KCal::Event*)event->clone() );
+        syncee->addEntry( entry );
+    }
+    return syncee;
+}
+/*
+ * For meta informations we're using a KConfig file
+ * we've one Group for each id
+ * and we save the timestamp
+ * First we try to find modified
+ * then added and removed
+ * Modified is quite easy to find
+ * if there hasGroup(uid) and timestamp differs it was
+ * modified.
+ * added: if not hasGroup(uid) added
+ * removed: if it's inside the Config file but not in
+ * the current set of data
+ */
+void OrganizerPart::doMeta( EventSyncee* evSyncee,
+                            TodoSyncee* toSyncee,
+                            const QString& path ) {
+    QString str = QDir::homeDirPath();
+    str += "/.kitchensync/meta/konnector-" + path;
+    if (!QFile::exists( str ) ) {
+        evSyncee->setFirstSync( true );
+        toSyncee->setFirstSync( true );
+        evSyncee->setSyncMode( Syncee::MetaMode );
+        toSyncee->setSyncMode( Syncee::MetaMode );
+        return;
+    }
+    KSimpleConfig conf( str );
+    doMetaIntern(evSyncee, &conf, "events-" );
+    doMetaIntern(toSyncee, &conf, "todos-" );
+}
+void OrganizerPart::doMetaIntern( Syncee* syncee,
+                                  KSimpleConfig* conf,
+                                  const QString& key) {
+    syncee->setSyncMode( Syncee::MetaMode );
+    SyncEntry* entry;
+    QStringList ids;
+    QString timestmp;
+
+    /* mod + added */
+    for ( entry = syncee->firstEntry(); entry; entry = syncee->nextEntry() ) {
+        ids << entry->id();
+        /* has group see if modified */
+        if ( conf->hasGroup( key + entry->id() ) ) {
+            conf->setGroup( key + entry->id() );
+            timestmp = conf->readEntry( "time");
+
+            /* timestamp mismatch */
+            if ( timestmp != entry->timestamp() )
+                entry->setState(SyncEntry::Modified );
+
+        }else { // added
+            entry->setState( SyncEntry::Added );
+        }
+
+    }
+    /* now let's find the removed items */
+    QStringList  groups = conf->groupList();
+    QStringList::Iterator it;
+    // first find the groups for our key
+    for ( it = groups.begin(); it != groups.end(); ++it ) {
+        /* if group starts with the key */
+        if ( (*it).startsWith(key ) ) { // right group
+            QString id = (*it).mid( key.length() );
+            kdDebug() << "OrganizerPart Meta Gathering: "
+                      << id << endl;
+
+            /* the previous saved list of ids
+             *  does not contain this id
+             * ->REMOVED
+             * items were removed we need to create an item
+             * with just a uid......
+             * let's find out which item to create or have
+             * 2 methods sharing 95% of code
+             */
+            if (!ids.contains( id )) {
+                if ( syncee->type() == "TodoSyncee" ) {
+                    KCal::Todo *todo = new KCal::Todo();
+                    todo->setUid( id );
+                    TodoSyncEntry* entry = new TodoSyncEntry( todo );
+                    entry->setState( SyncEntry::Removed );
+                    syncee->addEntry( entry );
+                }else { // organizer
+                    KCal::Event* ev = new KCal::Event();
+                    ev->setUid( id );
+                    EventSyncEntry* entry = new EventSyncEntry( ev );
+                    entry->setState( SyncEntry::Removed );
+                    syncee->addEntry( entry );
+                }
+            }
+        }
+    }
+};
+void OrganizerPart::writeMeta( EventSyncee*,
+                               TodoSyncee*,
+                               const QString& ) {
+
+}
+void OrganizerPart::save( EventSyncee*,
+                          TodoSyncee*,
+                          const QString& ) {
+
+}
 #include "ksync_organizerpart.moc"
