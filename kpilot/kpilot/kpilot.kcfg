@@ -76,7 +76,7 @@
     <entry name="SyncType" type="UInt">
         <label>
         </label>
-        <default>0</default>
+        <default>1</default>
     </entry>
     <entry name="FullSyncOnPCChange" type="Bool">
         <label>
