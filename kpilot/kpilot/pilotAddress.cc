@@ -41,7 +41,7 @@ static const char *pilotadress_id="$Id$";
 
 const int PilotAddress::APP_BUFFER_SIZE = 0xffff;
 
-PilotAddress::PilotAddress(const struct AddressAppInfo &appInfo,
+PilotAddress::PilotAddress(struct AddressAppInfo &appInfo,
 			   PilotRecord* rec)
       : PilotAppCategory(rec), fAppInfo(appInfo), fAddressInfo()
     {
@@ -49,11 +49,43 @@ PilotAddress::PilotAddress(const struct AddressAppInfo &appInfo,
     (void)pilotadress_id;
     }
 
-PilotAddress::PilotAddress(const struct AddressAppInfo &appInfo) :
+PilotAddress::PilotAddress(struct AddressAppInfo &appInfo) :
       PilotAppCategory(), fAppInfo(appInfo)
     {
     reset();
     }
+
+PilotAddress::PilotAddress(const PilotAddress &copyFrom) :
+      PilotAppCategory(copyFrom), fAppInfo(copyFrom.fAppInfo),
+      fAddressInfo()
+    {
+    _copyAddressInfo(copyFrom.fAddressInfo);
+    }
+
+PilotAddress& PilotAddress::operator=( const PilotAddress &copyFrom )
+    {
+    PilotAppCategory::operator=(copyFrom);
+    _copyAddressInfo(copyFrom.fAddressInfo);
+    return *this;
+    }
+
+void PilotAddress::_copyAddressInfo(const struct Address &copyFrom)
+    {
+    fAddressInfo.showPhone = copyFrom.showPhone;
+    for (int labelLp=0;labelLp < 5;labelLp++)
+	fAddressInfo.phoneLabel[labelLp] =
+	    copyFrom.phoneLabel[labelLp];
+    for (int entryLp=0;entryLp < 19;entryLp++)
+	{
+	if (copyFrom.entry[entryLp])
+	    fAddressInfo.entry[entryLp] =
+		qstrdup(copyFrom.entry[entryLp]);
+	else
+	    fAddressInfo.entry[entryLp] = 0L;
+	}
+    return *this;
+    }
+
 
 PilotAddress::~PilotAddress()
     {
@@ -76,6 +108,29 @@ QString PilotAddress::_typeToStr(EPhoneType type) const
 	default : s = "Main"; break;
 	}
     return s;
+    }
+
+bool PilotAddress::setCategory(const char *label)
+    {
+    for (int catId;catId < 16;catId++)
+	{
+	QString aCat = fAppInfo.category.name[catId]; 
+	if (label == aCat)
+	    {
+	    setCat(catId);
+	    return true;
+	    }
+	else
+	    // if empty, then no more labels; add it 
+	    if (aCat.isEmpty())
+		{
+		qstrncpy(fAppInfo.category.name[catId], label, 16);
+		setCat(catId);
+		return true;
+		}
+	}
+    // if got here, the category slots were full
+    return false;
     }
 
 int PilotAddress::_getNextEmptyPhoneSlot() const
@@ -197,6 +252,9 @@ PilotAddress::pack(void *buf, int *len)
     }
 
 // $Log$
+// Revision 1.13  2001/04/02 21:56:22  stern
+// Fixed bugs in getPhoneField and setPhoneField methods
+//
 // Revision 1.12  2001/03/29 21:40:55  stern
 // Added APP_BUFFER_SIZE to pilotAddress
 //

@@ -68,8 +68,11 @@
 class PilotAddress : public PilotAppCategory
     {
     public:
-      PilotAddress(const struct AddressAppInfo &appInfo);
-      PilotAddress(const struct AddressAppInfo &appInfo, PilotRecord* rec);
+      PilotAddress(struct AddressAppInfo &appInfo);
+      PilotAddress(struct AddressAppInfo &appInfo, PilotRecord* rec);
+      PilotAddress(const PilotAddress &copyFrom);
+      PilotAddress& operator=( const PilotAddress &r );
+      
       ~PilotAddress();
 
       /** Zeros the internal address info structure, in effect clearing
@@ -89,7 +92,15 @@ class PilotAddress : public PilotAppCategory
       void setField(int field, const char* text);
       const char* getField(int field) const
 		{ return fAddressInfo.entry[field]; }
-      
+
+      const char *getCategoryLabel() const
+		{ return fAppInfo.category.name[getCat()]; }
+      /** If the label already exists, uses the id; if not, adds the label
+       *  to the category list
+       *  @return false if category labels are full
+       */
+      bool setCategory(const char *label);
+					    
       enum EPhoneType { eWork=0, eHome, eFax, eOther, ePager, eMobile, eEmail,
 			eMain };
       /** @param checkCustom4 flag if true, checks the entryCustom4 field
@@ -123,6 +134,7 @@ class PilotAddress : public PilotAppCategory
       static const int APP_BUFFER_SIZE;
       
     private:
+      void _copyAddressInfo(const struct Address &copyFrom);
       QString _typeToStr(EPhoneType type) const;
       int _getNextEmptyPhoneSlot() const;
       /** @return the phone label number (0 through 8) that corresponds
@@ -135,7 +147,7 @@ class PilotAddress : public PilotAppCategory
       int _findPhoneFieldSlot(int appTypeNum) const;
       
 //     int fSize;
-      const struct AddressAppInfo &fAppInfo;
+      struct AddressAppInfo &fAppInfo;
     struct Address fAddressInfo;
     //    void *internalPack(unsigned char *);
     };
@@ -148,6 +160,9 @@ class PilotAddress : public PilotAppCategory
 
 
 // $Log$
+// Revision 1.10  2001/04/02 21:56:22  stern
+// Fixed bugs in getPhoneField and setPhoneField methods
+//
 // Revision 1.9  2001/03/29 21:40:55  stern
 // Added APP_BUFFER_SIZE to pilotAddress
 //

@@ -40,7 +40,7 @@ static const char *addressEditor_id =
 	"$Id$";
 
 AddressEditor::AddressEditor(PilotAddress *p,
-	const struct AddressAppInfo *appInfo,
+	struct AddressAppInfo *appInfo,
 	QWidget *parent,
 	const char *name) :
 	KDialogBase(KDialogBase::Plain,
@@ -90,7 +90,7 @@ void AddressEditor::fillFields()
 
 	if(fAddress == 0L)
 	{
-		fAddress = new PilotAddress(*fAppInfo);
+	        fAddress = new PilotAddress(*fAppInfo);
 		fDeleteOnCancel = true;
 	}
 
@@ -223,6 +223,15 @@ void AddressEditor::initLayout(const struct AddressAppInfo *addressInfo)
 }
 
 // $Log$
+// Revision 1.5  2001/03/19 23:12:39  stern
+// Made changes necessary for upcoming abbrowser conduit.
+//
+// Mainly, I added two public methods to PilotAddress that allow for easier
+// setting and getting of phone fields.
+//
+// I also have added some documentation throughout as I have tried to figure
+// out how everything works.
+//
 // Revision 1.4  2001/03/11 10:50:40  adridg
 // Make address editor reflect real field names
 //
