@@ -1,8 +1,8 @@
 /*
 	Empath - Mailer for KDE
-	
+
 	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -23,11 +23,37 @@
 #include <iostream>
 #include <RMM_Enum.h>
 
+static char * dayNames[] = {
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+};
+
+
+static char * monthNames[] = {
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+};
+
 	Month
 strToMonth(const QCString & s)
 {
 	if (s.isEmpty()) return MonthJan;
-	
+
 	for (int i = 1; i <= 12; i++)
 		if (stricmp(s, monthNames[i-1])) return (Month)i;
 
@@ -42,7 +68,7 @@ strToDayOfWeek(const QCString & s)
 
 	for (int i = 0; i < 7; i++)
 		if (stricmp(s, dayNames[i])) return (DayOfWeek)++i;
-	
+
 	return DayNone;
 }
 
@@ -50,18 +76,18 @@ strToDayOfWeek(const QCString & s)
 mimeTypeStr2Enum(const QCString & s)
 {
 	if (s.isEmpty()) return MimeTypeNone;
-	
+
 	MimeType t = MimeTypeUnknown;
 
 	switch (s[0]) {
 
 		case 0:
-			
+
 			t = MimeTypeNone;
 
 		case 'a':
 		case 'A':
-		
+
 			if (stricmp(s, "application") == 0)
 				t = MimeTypeApplication;
 
@@ -69,7 +95,7 @@ mimeTypeStr2Enum(const QCString & s)
 				t = MimeTypeAudio;
 
 			break;
-			
+
 		case 'i':
 		case 'I':
 
@@ -77,7 +103,7 @@ mimeTypeStr2Enum(const QCString & s)
 				t = MimeTypeImage;
 
 			break;
-			
+
 		case 'm':
 		case 'M':
 
@@ -86,7 +112,7 @@ mimeTypeStr2Enum(const QCString & s)
 
 			else if (stricmp(s, "multipart") == 0)
 				t = MimeTypeMultiPart;
-			
+
 			break;
 
 		case 't':
@@ -94,7 +120,7 @@ mimeTypeStr2Enum(const QCString & s)
 
 			if (stricmp(s, "text") == 0)
 				t = MimeTypeText;
-			
+
 			break;
 
 		case 'v':
@@ -117,45 +143,45 @@ mimeTypeStr2Enum(const QCString & s)
 mimeTypeEnum2Str(MimeType m)
 {
 	QCString s;
-	
+
 	switch (m) {
 
 		case MimeTypeNone:
 			s = "";
 			break;
-			
+
 		case MimeTypeUnknown:
 			s = "Unknown";
 			break;
-			
+
 		case MimeTypeText:
 			s =  "Text";
 			break;
-			
+
 		case MimeTypeMultiPart:
 			s =  "Multipart";
 			break;
-			
+
 		case MimeTypeMessage:
 			s =  "Message";
 			break;
-			
+
 		case MimeTypeImage:
 			s =  "Image";
 			break;
-			
+
 		case MimeTypeApplication:
 			s =  "Application";
 			break;
-			
+
 		case MimeTypeAudio:
 			s =  "Audio";
 			break;
-			
+
 		case MimeTypeVideo:
 			s =  "Video";
 			break;
-			
+
 		case MimeTypeModel:
 			s =  "Model";
 			break;
@@ -170,36 +196,36 @@ mimeSubTypeStr2Enum(const QCString & s)
 	if (s.isEmpty()) return MimeSubTypeNone;
 
 	MimeSubType st = MimeSubTypeNone;
-	
+
 	switch (s[0]) {
 
 		case 'a':
 		case 'A':
-		
+
 			if (stricmp(s, "alternative") == 0)
 				st = MimeSubTypeAlternative;
-		
+
 			break;
-		
+
 		case 'b':
 		case 'B':
-		
+
 			if (stricmp(s, "basic") == 0)
 				st = MimeSubTypeBasic;
-				
+
 			break;
-			
+
 		case 'd':
 		case 'D':
-		
+
 			if (stricmp(s, "digest") == 0)
 				st = MimeSubTypeDigest;
 
 			break;
-		
+
 		case 'e':
 		case 'E':
-		
+
 			if (stricmp(s, "enriched") == 0)
 				st = MimeSubTypeEnriched;
 
@@ -210,15 +236,15 @@ mimeSubTypeStr2Enum(const QCString & s)
 
 		case 'g':
 		case 'G':
-		
+
 			if (stricmp(s, "gif") == 0)
 				st = MimeSubTypeGIF;
 
 			break;
-			
+
 		case 'h':
 		case 'H':
-		
+
 			if (stricmp(s, "html") == 0)
 				st = MimeSubTypeHTML;
 
@@ -226,7 +252,7 @@ mimeSubTypeStr2Enum(const QCString & s)
 
 		case 'j':
 		case 'J':
-		
+
 			if (stricmp(s, "jpeg") == 0)
 				st = MimeSubTypeJpeg;
 
@@ -245,18 +271,18 @@ mimeSubTypeStr2Enum(const QCString & s)
 
 		case 'o':
 		case 'O':
-		
+
 			if (stricmp(s, "octet-stream") == 0)
 				st = MimeSubTypeOctetStream;
 
 			break;
-			
+
 		case 'p':
 		case 'P':
 
 			if (stricmp(s, "plain") == 0)
 				st = MimeSubTypePlain;
-			
+
 			else if (stricmp(s, "postscript") == 0)
 				st = MimeSubTypePostScript;
 
@@ -270,10 +296,10 @@ mimeSubTypeStr2Enum(const QCString & s)
 
 		case 'r':
 		case 'R':
-		
+
 			if (stricmp(s, "rfc822") == 0)
 				st = MimeSubTypeRFC822;
-				
+
 			else if (stricmp(s, "richtext") == 0)
 				st = MimeSubTypeRichtext;
 
@@ -291,14 +317,14 @@ mimeSubTypeStr2Enum(const QCString & s)
 mimeSubTypeEnum2Str(MimeSubType t)
 {
 	QCString s;
-	
+
 	switch (t) {
-		
+
 		case MimeSubTypeNone:
 			s = "";
 			break;
-		
-			
+
+
 		case MimeSubTypePlain:
 			s = "Plain";
 			break;
@@ -380,40 +406,40 @@ mimeSubTypeEnum2Str(MimeSubType t)
 RCteStr2Enum(const QCString & s)
 {
 	CteType cte = CteType7bit;
-	
+
 	switch (s[0]) {
-	
+
 		case '7':
-			
+
 			if (stricmp(s, "7bit") == 0)
 				cte = CteType7bit;
-			
+
 			break;
-			
+
 		case '8':
-			
+
 			if (stricmp(s, "8bit") == 0)
 				cte = CteType8bit;
-			
+
 			break;
-			
+
 		case 'b':
 		case 'B':
-		
+
 			if (stricmp(s, "binary") == 0)
 				cte = CteTypeBinary;
-		
+
 			else if (stricmp(s, "base64") == 0)
 				cte = CteTypeBase64;
-			
+
 			break;
-			
+
 		case 'q':
 		case 'Q':
-		
+
 			if (stricmp(s, "quoted-printable") == 0)
 				cte = CteTypeQuotedPrintable;
-			
+
 			break;
 
 		default:
@@ -430,23 +456,23 @@ cteTypeEnumToStr(CteType t)
 	QCString s;
 
 	switch (t) {
-		
+
 		case CteType7bit:
 			s = "7bit";
 			break;
-			
+
 		case CteType8bit:
 			s = "8bit";
 			break;
-			
+
 		case CteTypeBinary:
 			s = "binary";
 			break;
-			
+
 		case CteTypeBase64:
 			s = "base64";
 			break;
-			
+
 		case CteTypeQuotedPrintable:
 			s = "quoted-printable";
 			break;

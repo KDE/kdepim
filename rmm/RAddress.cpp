@@ -1,8 +1,8 @@
 /*
 	Empath - Mailer for KDE
-	
+
 	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -51,9 +51,10 @@ RAddress::RAddress(const QCString & addr)
 RAddress::~RAddress()
 {
 	rmmDebug("dtor");
-	
-	delete mailbox_, group_;
-	
+
+        delete mailbox_;
+        delete group_;
+
 	mailbox_	= 0;
 	group_		= 0;
 }
@@ -63,16 +64,18 @@ RAddress::operator = (const RAddress & addr)
 {
 	rmmDebug("operator =");
     if (this == &addr) return *this; // Don't do a = a.
-	
-	delete mailbox_, group_;
+
+        delete mailbox_;
+        delete group_;
+
 	mailbox_	= 0;
 	group_		= 0;
-	
+
 	if (addr.mailbox_ != 0)
 		mailbox_ = new RMailbox(*(addr.mailbox_));
 	else
 		group_ = new RGroup(*(addr.group_));
-    
+
 	RHeaderBody::operator = (addr);
 
 	return *this;
@@ -100,33 +103,35 @@ RAddress::mailbox()
 RAddress::parse()
 {
 	rmmDebug("parse() called");
-	
-	delete mailbox_, group_;
+
+        delete mailbox_;
+        delete group_;
+
 	mailbox_	= 0;
 	group_		= 0;
 
 	rmmDebug("Done my deletions. Should be safe if ctors work");
-	
+
 	QCString s = strRep_.stripWhiteSpace();
 
 	// RFC822: group: phrase ":" [#mailbox] ";"
 	// -> If a group, MUST end in ";".
-	
+
 	if (s.right(1) == ";") { // This is a group !
 
 		rmmDebug("I'm a group.");
-		
+
 		group_ = new RGroup;
 		CHECK_PTR(group_);
 		if (!group_) rmmDebug("!mailbox!");
 		group_->set(s);
 		group_->parse();
 		dirty_ = group_->isDirty() ? true : dirty_;
-	
+
 	} else {
-		
+
 		rmmDebug("I'm a mailbox.");
-	
+
 		mailbox_ = new RMailbox;
 		CHECK_PTR(mailbox_);
 		if (!mailbox_) rmmDebug("!mailbox!");
@@ -144,10 +149,10 @@ RAddress::assemble()
 	rmmDebug("assemble() called");
 
 	if (mailbox_ != 0) {
-	
+
 		mailbox_->assemble();
 		strRep_ = mailbox_->asString();
-	
+
 	} else if (group_ != 0) {
 
 		group_->assemble();
@@ -164,7 +169,7 @@ RAddress::createDefault()
 	rmmDebug("createDefault() called");
 	if (mailbox_ == 0 && group_ == 0) {
 		rmmDebug("I have no mailbox or group yet");
-		mailbox_ = new RMailbox;	
+		mailbox_ = new RMailbox;
 		mailbox_->createDefault();
 	}
 	else if (mailbox_ == 0) {

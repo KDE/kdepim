@@ -1,8 +1,8 @@
 /*
 	Empath - Mailer for KDE
-	
+
 	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -29,6 +29,54 @@
 #include <RMM_Mechanism.h>
 #include <RMM_MessageID.h>
 #include <RMM_Text.h>
+
+HeaderDataType
+headerTypesTable[] = {
+        Text,                   // HeaderApproved
+        AddressList,    // HeaderBcc
+        MailboxList,    // HeaderCc
+        Text,                   // HeaderComments
+        Text,                   // HeaderContentDescription
+        DispositionType,// HeaderContentDisposition
+        MessageID,              // HeaderContentID
+        Text,                   // HeaderContentMD5
+        Text,                   // HeaderContentType
+        Text,                   // HeaderControl
+        Text,                   // HeaderContentTransferEncoding
+        DateTime,               // HeaderDate
+        Text,                   // HeaderDistribution
+        Text,                   // HeaderEncrypted
+        DateTime,               // HeaderExpires
+        Text,                   // HeaderFollowupTo
+        MailboxList,    // HeaderFrom
+        Text,                   // HeaderInReplyTo
+        Text,                   // HeaderKeywords
+        Text,                   // HeaderLines
+        MessageID,              // HeaderMessageID
+        Text,                   // HeaderMimeVersion
+        Text,                   // HeaderNewsgroups
+        Text,                   // HeaderOrganization
+        Text,                   // HeaderPath
+        Text,                   // HeaderReceived
+        Text,                   // HeaderReferences
+        AddressList,    // HeaderReplyTo
+        AddressList,    // HeaderResentBcc
+        AddressList,    // HeaderResentCc
+        DateTime,               // HeaderResentDate
+        MailboxList,    // HeaderResentFrom
+        MessageID,              // HeaderResentMessageID
+        AddressList,    // HeaderResentReplyTo
+        Mailbox,                // HeaderResentSender
+        AddressList,    // HeaderResentTo
+        Text,                   // HeaderReturnPath
+        Mailbox,                // HeaderSender
+        Text,                   // HeaderSubject
+        Text,                   // HeaderSummary
+        AddressList,    // HeaderTo
+        Text,                   // HeaderXref
+        Text                    // HeaderUnknown
+};
+
 
 RHeader::RHeader()
 	:	headerType_(HeaderUnknown),
@@ -58,13 +106,13 @@ RHeader::operator = (const RHeader & h)
 {
 	rmmDebug("operator =");
 	if (this == &h) return *this;
-	
+
 	headerName_ = h.headerName_;
 	headerType_ = h.headerType_;
 
 	if (headerBody_ != 0) delete headerBody_;
 	headerBody_ = new RHeaderBody(*h.headerBody_);
-	
+
 	RMessageComponent::operator = (h);
 	return *this;
 }
@@ -110,10 +158,10 @@ RHeader::parse()
 {
 	rmmDebug("parse() called");
 	int split = strRep_.find(':');
-	
+
 	if (headerBody_ != 0) delete headerBody_;
 	headerType_ = HeaderUnknown;
-	
+
 	if (split == -1) return;
 
 	headerName_ = strRep_.left(split);
@@ -132,13 +180,13 @@ RHeader::parse()
 
 	RHeaderBody * b;
 	switch (headerTypesTable[headerType_]) {
-		
+
 		case Address:
 			rmmDebug("b = new RAddress");
 			b = new RAddress;
 			break;
-		
-		case AddressList: 
+
+		case AddressList:
 			b = new RAddressList;
 			break;
 
@@ -186,14 +234,14 @@ RHeader::parse()
 RHeader::assemble()
 {
 	rmmDebug("assemble() called");
-	
+
 	if (headerType_ != HeaderUnknown)
 		headerName_ = headerNames[headerType_];
 
 	strRep_ = headerName_;
 	strRep_ += ':';
 	strRep_ += ' ';
-	
+
 	if (headerBody_ != 0) {
 		headerBody_->assemble();
 		strRep_ += headerBody_->asString();

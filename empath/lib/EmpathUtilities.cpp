@@ -1,8 +1,8 @@
 /*
 	Empath - Mailer for KDE
-	
+
 	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -39,7 +39,7 @@ token(const char * str, const char * delim, Q_UINT32 pos)
 
 	char * s = new char[strlen(str)];
 	CHECK_PTR(s);
-	
+
 	strcpy(s, str);
 
 	QString ret = strtok(s, delim);
@@ -51,7 +51,7 @@ token(const char * str, const char * delim, Q_UINT32 pos)
 	}
 
 	delete [] s;
-	
+
 	return ret ? ret : QString("");
 }
 
@@ -63,7 +63,6 @@ QString baseName(const QString & filename)
 	bool
 EmpathLockMailFile(QFile & f, LockType ltype)
 {
-	int locked = 0;
 #ifdef HAVE_FLOCK
 	return (flock(
 				f.handle(),
@@ -80,15 +79,11 @@ EmpathLockMailFile(QFile & f, LockType ltype)
 	QString
 QColorToHTML(const QColor & col)
 {
-	int r = col.red();
-	int g = col.green();
-	int b = col.blue();
-	
 	char colourAsString[6];
-	
+
 	sprintf(colourAsString, "%02X%02X%02X",
-			col.red(), col.green(), col.blue()); 
-	
+			col.red(), col.green(), col.blue());
+
 	return colourAsString;
 }
 
@@ -96,10 +91,10 @@ QColorToHTML(const QColor & col)
 quoteSeparators(const QString & s, char separator)
 {
 	QString tempString(s);
-	
+
 	QString quoted = "\\";
 	quoted += separator;
-	
+
 	tempString.replace(QRegExp(&separator), quoted);
 	return tempString;
 }

@@ -1,8 +1,8 @@
 /*
 	Empath - Mailer for KDE
-	
+
 	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -60,11 +60,11 @@ EmpathComposeWidget::EmpathComposeWidget(
 	CHECK_PTR(l_priority_);
 
 	l_priority_->setFixedWidth(l_priority_->sizeHint().width());
-	
+
 	cmb_priority_		=
 		new QComboBox(this, "cmb_priority_");
 	CHECK_PTR(cmb_priority_);
-	
+
 	cmb_priority_->insertItem("Highest");
 	cmb_priority_->insertItem("High");
 	cmb_priority_->insertItem("Normal");
@@ -77,7 +77,7 @@ EmpathComposeWidget::EmpathComposeWidget(
 	editorWidget_			=
 		new QMultiLineEdit(this, "editorWidget");
 	CHECK_PTR(editorWidget_);
-	
+
 	layout_	= new QGridLayout(this, 3, 1, 2, 0, "layout_");
 	CHECK_PTR(layout_);
 
@@ -91,7 +91,7 @@ EmpathComposeWidget::EmpathComposeWidget(
 	midLayout_ = new QGridLayout(1, 3, 10);
 	CHECK_PTR(midLayout_);
 	layout_->addLayout(midLayout_, 1, 0);
-	
+
 	midLayout_->setColStretch(0, 1);
 	midLayout_->addWidget(subjectSpecWidget_,	0, 0);
 	midLayout_->addWidget(l_priority_,			0, 1);
@@ -104,17 +104,17 @@ EmpathComposeWidget::EmpathComposeWidget(
 	layout_->addWidget(editorWidget_,		2, 0);
 
 	layout_->activate();
-	
+
 	headerEditWidget_->setFocus();
-	
+
 	switch (t) {
-	
+
 	// If we're just composing a new message, we drop out here.
 		case ComposeNormal:
 			break;
-			
+
 		case ComposeReply:
-			{		
+			{
 				KConfig * config = kapp->getConfig();
 				config->setGroup(GROUP_COMPOSE);
 				if (!config->readBoolEntry(KEY_USE_EXTERNAL_EDITOR)) {
@@ -123,19 +123,19 @@ EmpathComposeWidget::EmpathComposeWidget(
 				}
 			}
 			break;
-	
+
 		case ComposeReplyAll:
 			break;
-	
+
 		case ComposeForward:
-			{	
+			{
 				QCString s = message->envelope().to().asString();
 				headerEditWidget_->setToText(s);
 				if (!s.isEmpty())
 					subjectSpecWidget_->setFocus();
 			}
 			break;
-			
+
 		default:
 			break;
 	}
@@ -180,20 +180,20 @@ EmpathComposeWidget::messageAttachments()
 EmpathComposeWidget::spawnExternalEditor(const QCString & text)
 {
 	empathDebug("spawnExternalEditor() called");
-	
+
 	char * tn = new char[strlen(TEMP_COMPOSE_FILENAME)];
 	strcpy(tn, TEMP_COMPOSE_FILENAME);
 
 	empathDebug("tempName = \"" + QCString(tn) + "\"");
 	empathDebug("running mkstemp");
-	
+
 	int fd = mkstemp(tn);
 	QCString tempName(tn);
 	delete [] tn;
-	
+
 	empathDebug("Opening file " + QString(tempName));
 	QFile f;
-	
+
 	if (!f.open(IO_WriteOnly, fd)) {
 		empathDebug("Couldn't open a temporary file for the external editor");
 		return;
@@ -212,26 +212,26 @@ EmpathComposeWidget::spawnExternalEditor(const QCString & text)
 	// FIXME: Will this work over NFS ?
 	struct stat statbuf;
 	fstat(fd, &statbuf);
-	
+
 	KConfig * config = kapp->getConfig();
 	config->setGroup(GROUP_COMPOSE);
 	QString externalEditor = config->readEntry(KEY_EXTERNAL_EDITOR);
-	
+
 	KProcess * p = new KProcess;
 	empathDebug("p << " + externalEditor);
 	*p << externalEditor;
 	empathDebug("p << " + QString(tempName));
 	*p << tempName;
-	
+
 	QObject::connect(p, SIGNAL(receivedStdout(KProcess *, char *, int)),
 			this, SLOT(s_debugExternalEditorOutput(KProcess *, char *, int)));
-	
+
 	QObject::connect(p, SIGNAL(receivedStderr(KProcess *, char *, int)),
 			this, SLOT(s_debugExternalEditorOutput(KProcess *, char *, int)));
-	
+
 	QObject::connect(p, SIGNAL(processExited(KProcess *)),
 		this, SLOT(s_composeFinished(KProcess *)));
-	
+
 	empathDebug("Starting external editor process");
 	if (!p->start(KProcess::NotifyOnExit, KProcess::All)) {
 		empathDebug("Couldn't start external editor process");
@@ -244,13 +244,13 @@ EmpathComposeWidget::spawnExternalEditor(const QCString & text)
 
 	QCString ss;
 	ss.setNum(statbuf.st_mtime);
-	
+
 	char * sc = new char[ss.length()];
 	strcpy(sc, ss.data());
 
 	empathDebug("externEditModified_.insert(" + QString(tempName) +
 		", \"" + QString(sc) + "\")");
-	
+
 	externEditModified_.insert(QString(tempName), sc);
 	empathDebug("Arse !");
 	delete [] sc;
@@ -266,35 +266,35 @@ EmpathComposeWidget::s_composeFinished(KProcess * p)
 	// modified too. If not, we'll just remove it.
 
 	// First find the process' filename.
-	
+
 	QCString fileName;
-	
+
 	QDictIterator<KProcess> it(processTable_);
-	
+
 	for (; it.current(); ++it) {
-		
+
 		if (it.current() == p) {
 			fileName = it.currentKey();
 			break;
 		}
 	}
-	
+
 	if (fileName.isEmpty()) {
 		empathDebug("Couldn't find the filename that the process was using.");
 		return;
 	}
-	
+
 	empathDebug("The process was using filename \"" + fileName + "\"");
-	
+
 	// Ok we have the filename.
 	// Now find out when the file was last modified.
-			
+
 	QFileInfo finfo(fileName);
-	
+
 	QDateTime modTime = finfo.lastModified();
-	
+
 	QDateTime myModTime;
-	
+
 	// Now we know when the temporary file was modified, we compare that timestamp
 	// to the one we held. We held it in a dict based on the filename.
 
@@ -302,14 +302,14 @@ EmpathComposeWidget::s_composeFinished(KProcess * p)
 
 	bool found = false;
 	for (; modit.current(); ++modit) {
-			
+
 		empathDebug("Checking timestamp for filename \"" +
 			QString(modit.currentKey()) + "\"");
-		
+
 		if (strcmp(modit.currentKey(), fileName) == 0) {
-		
+
 			// Found the timestamp.
-			
+
 			empathDebug("Found timestamp. It's \"" +
 				QString(modit.current()) + "\"");
 
@@ -318,40 +318,40 @@ EmpathComposeWidget::s_composeFinished(KProcess * p)
 			break;
 		}
 	}
-	
+
 	if (!found) {
-	
+
 		empathDebug("Couldn't find the timestamp for the temporary file");
 		return;
 	}
-	
+
 	empathDebug("modification time on file == " + modTime.toString());
 	empathDebug("modification time I held  == " + myModTime.toString());
-	
+
 	if (myModTime == modTime) {
 
 		// File was NOT modified.
 		empathDebug("The temporary file was NOT modified by the external editor");
-		return;			
+		return;
 	}
-					
+
 	// File was modified.
 	empathDebug("The temporary file WAS modified by the external editor");
-	
+
 	// Create a new message and send it via the mail sender.
-	
+
 	QFile f(fileName);
-	
+
 	if (!f.open(IO_ReadOnly)) {
-		
+
 		empathDebug("Couldn't reopen the temporary file");
 		return;
 	}
-	
+
 	QCString msgBuf;
-	
+
 	char buf[1024];
-	
+
 	while (!f.atEnd()) {
 		f.readBlock(buf, 1024);
 		msgBuf += buf;

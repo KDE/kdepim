@@ -1,8 +1,8 @@
 /*
 	Empath - Mailer for KDE
-	
+
 	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -30,76 +30,7 @@ enum MessageStatus {
 	Replied		= 1 << 3
 };
 
-static char * dayNames[] = {
-	"Mon",
-	"Tue",
-	"Wed",
-	"Thu",
-	"Fri",
-	"Sat",
-	"Sun"
-};
-
-static char * monthNames[] = {
-	"Jan",
-	"Feb",
-	"Mar",
-	"Apr",
-	"May",
-	"Jun",
-	"Jul",
-	"Aug",
-	"Sep",
-	"Oct",
-	"Nov",
-	"Dec"
-};
-
-static char * headerNames[] = {
-	"Approved",
-	"Bcc",
-	"Cc",
-	"Comments",
-	"Content-Description",
-	"Content-Disposition",
-	"Content-ID",
-	"Content-MD5",
-	"Content-Type",
-	"Control",
-	"Content-Transfer-Encoding",
-	"Date",
-	"Distribution",
-	"Encrypted",
-	"Expires",
-	"Followup-To",
-	"From",
-	"In-Reply-To",
-	"Keywords",
-	"Lines",
-	"Message-ID",
-	"Mime-Version",
-	"Newsgroups",
-	"Organization",
-	"Path",
-	"Received",
-	"References",
-	"Reply-To",
-	"Resent-Bcc",
-	"Resent-Cc",
-	"Resent-Date",
-	"Resent-From",
-	"Resent-MessageID",
-	"Resent-ReplyTo",
-	"Resent-Sender",
-	"Resent-To",
-	"Return-Path",
-	"Sender",
-	"Subject",
-	"Summary",
-	"To",
-	"Xref",
-	"" // HeaderUnknown
-};
+extern char* headerNames[];
 
 enum HeaderType {
 	HeaderApproved,
@@ -159,52 +90,7 @@ enum HeaderDataType {
 	Text
 };
 
-	static HeaderDataType
-headerTypesTable[] = {
-	Text,			// HeaderApproved
-	AddressList,	// HeaderBcc
-	MailboxList,	// HeaderCc
-	Text,			// HeaderComments
-	Text,			// HeaderContentDescription
-	DispositionType,// HeaderContentDisposition
-	MessageID,		// HeaderContentID
-	Text,			// HeaderContentMD5
-	Text,			// HeaderContentType
-	Text,			// HeaderControl
-	Text,			// HeaderContentTransferEncoding
-	DateTime,		// HeaderDate
-	Text,			// HeaderDistribution
-	Text,			// HeaderEncrypted
-	DateTime,		// HeaderExpires
-	Text,			// HeaderFollowupTo
-	MailboxList,	// HeaderFrom
-	Text,			// HeaderInReplyTo
-	Text,			// HeaderKeywords
-	Text,			// HeaderLines
-	MessageID,		// HeaderMessageID
-	Text,			// HeaderMimeVersion
-	Text,			// HeaderNewsgroups
-	Text,			// HeaderOrganization
-	Text,			// HeaderPath
-	Text,			// HeaderReceived
-	Text,			// HeaderReferences
-	AddressList,	// HeaderReplyTo
-	AddressList,	// HeaderResentBcc
-	AddressList,	// HeaderResentCc
-	DateTime,		// HeaderResentDate
-	MailboxList,	// HeaderResentFrom
-	MessageID,		// HeaderResentMessageID
-	AddressList,	// HeaderResentReplyTo
-	Mailbox,		// HeaderResentSender
-	AddressList,	// HeaderResentTo
-	Text,			// HeaderReturnPath
-	Mailbox,		// HeaderSender
-	Text,			// HeaderSubject
-	Text,			// HeaderSummary
-	AddressList,	// HeaderTo
-	Text,			// HeaderXref
-	Text			// HeaderUnknown
-};
+extern HeaderDataType headerTypesTable[];
 
 enum CteType {
 	CteType7bit,

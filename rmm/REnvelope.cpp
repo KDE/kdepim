@@ -1,8 +1,8 @@
 /*
 	Empath - Mailer for KDE
-	
+
 	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -23,6 +23,54 @@
 #include <RMM_HeaderList.h>
 #include <RMM_Envelope.h>
 #include <RMM_Enum.h>
+
+
+char * headerNames[] = {
+        "Approved",
+        "Bcc",
+        "Cc",
+        "Comments",
+        "Content-Description",
+        "Content-Disposition",
+        "Content-ID",
+        "Content-MD5",
+        "Content-Type",
+        "Control",
+        "Content-Transfer-Encoding",
+        "Date",
+        "Distribution",
+        "Encrypted",
+        "Expires",
+        "Followup-To",
+        "From",
+        "In-Reply-To",
+        "Keywords",
+        "Lines",
+        "Message-ID",
+        "Mime-Version",
+        "Newsgroups",
+        "Organization",
+        "Path",
+        "Received",
+        "References",
+        "Reply-To",
+        "Resent-Bcc",
+        "Resent-Cc",
+        "Resent-Date",
+        "Resent-From",
+        "Resent-MessageID",
+        "Resent-ReplyTo",
+        "Resent-Sender",
+        "Resent-To",
+        "Return-Path",
+        "Sender",
+        "Subject",
+        "Summary",
+        "To",
+        "Xref",
+        "" // HeaderUnknown
+};
+
 
 REnvelope::REnvelope()
 {
@@ -64,14 +112,14 @@ REnvelope::parse()
 	const char * end = (char *)(c + strlen(c));
 	char * r = new char[1024]; // rfc821 -> max length 1000 ? Can't remember.
 	char * rstart = r;
-	
+
 	while (c < end) {
-		
+
 		// We don't want non-printable chars, apart from \n and \t.
 		// The header's supposed to be 7 bit us-ascii. I'm not going to handle
 		// backspaces, no matter what rfc822 says. That's just crazy. If you want
 		// to do fancy chars in a header, you must quote them.
-		 
+
 		if ((*c != '\n' && *c != '\t' && *c < 32) || *c == 127) {
 			rmmDebug("Invalid char in header");
 			++c;
@@ -86,32 +134,32 @@ REnvelope::parse()
 		if ((*c == '\n' && (c != end - 1) && (c[1] != ' ') && (c[1] != '\t')) ||
 			(c == end - 1) ||
 			r - start == 1024) {
-			
+
 			if (c == end - 1) *r++ = *c++;
 			*r = '\0'; // NUL-terminate buffer.
-			
+
 			if (r != rstart) { // Only use buffer if it's not empty.
-			
+
 				QCString s(rstart);
-				
+
 				rmmDebug("New header: \"" + s + "\"");
 				RHeader * h = new RHeader(s);
 				headerList_.append(h);
 				rmmDebug(".");
 			}
-				
+
 			r = rstart;
 			++c;
 			continue;
 		}
-		
+
 		*r++ = *c++;
 	}
-	
+
 	delete rstart;
-	
+
 	RHeaderListIterator it(headerList_);
-	
+
 	for (; it.current(); ++it)
 		it.current()->parse();
 }
@@ -148,12 +196,12 @@ REnvelope::_createDefault(HeaderType t)
 
 	RHeaderBody * b;
 	switch (headerTypesTable[t]) {
-		
+
 		case Address:
 			b = new RAddress;
 			break;
-		
-		case AddressList: 
+
+		case AddressList:
 			b = new RAddressList;
 			break;
 
@@ -233,18 +281,18 @@ REnvelope::get(HeaderType h, T t)
 {
 	rmmDebug("get " + QCString(headerNames[h]));
 	// See if we can find this header in the list.
-	
+
 	RHeaderListIterator it(headerList_);
-	
+
 	for (; it.current(); ++it)
 		if (it.current()->headerType() == h) {
 			rmmDebug("The header you asked for exists.");
 			rmmDebug("headerbody: \"" + QCString(it.current()->asString()) + "\"");
 			return (T)(it.current()->headerBody());
 		}
-	
+
 	// else make a new one, set it to default values, and return that.
-	
+
 	rmmDebug("Creating a new item as there wasn't one existing.");
 	HeaderDataType hdt = headerTypesTable[h];
 
@@ -280,19 +328,19 @@ REnvelope::get(HeaderType h, T t)
 			d = new RText;
 			break;
 	}
-	
+
 	CHECK_PTR(d);
 
 	rmmDebug("Making that item a default item");
 	d->createDefault();
-	
+
 	RHeader * hdr = new RHeader;
-	
+
 	hdr->setType(h);
 	hdr->setBody(d);
-	
+
 	headerList_.append(hdr);
-	
+
 	rmmDebug("..done creating new item");
 	return (T)d;
 
@@ -313,112 +361,112 @@ REnvelope::bcc()
 }
 
 	RMailboxList &
-REnvelope::cc() 
+REnvelope::cc()
 {
 	RMailboxList * t = 0;
 	return *get(HeaderCc, t);
 }
 
 	RText &
-REnvelope::comments() 
+REnvelope::comments()
 {
 	RText * t = 0;
 	return *get(HeaderComments, t);
 }
 
 	RText &
-REnvelope::contentDescription() 
+REnvelope::contentDescription()
 {
 	RText * t = 0;
 	return *get(HeaderContentDescription, t);
 }
 
 	RDispositionType &
-REnvelope::contentDisposition() 
+REnvelope::contentDisposition()
 {
 	RDispositionType * t = 0;
 	return *get(HeaderContentDisposition, t);
 }
 
 	RMessageID &
-REnvelope::contentID() 
+REnvelope::contentID()
 {
 	RMessageID * t = 0;
 	return *get(HeaderContentID, t);
 }
 
 	RText &
-REnvelope::contentMD5() 
+REnvelope::contentMD5()
 {
 	RText * t = 0;
 	return *get(HeaderContentMD5, t);
 }
 
 	RText &
-REnvelope::contentType() 
+REnvelope::contentType()
 {
 	RText * t = 0;
 	return *get(HeaderContentType, t);
 }
 
 	RText &
-REnvelope::control() 
+REnvelope::control()
 {
 	RText * t = 0;
 	return *get(HeaderControl, t);
 }
 
 	RText &
-REnvelope::contentTransferEncoding() 
+REnvelope::contentTransferEncoding()
 {
 	RText * t = 0;
 	return *get(HeaderContentTransferEncoding, t);
 }
 
 	RDateTime &
-REnvelope::date() 
+REnvelope::date()
 {
 	RDateTime * t = 0;
 	return *get(HeaderDate, t);
 }
 
 	RText &
-REnvelope::distribution() 
+REnvelope::distribution()
 {
 	RText * t = 0;
 	return *get(HeaderDistribution, t);
 }
 
 	RText &
-REnvelope::encrypted() 
+REnvelope::encrypted()
 {
 	RText * t = 0;
 	return *get(HeaderEncrypted, t);
 }
 
 	RDateTime &
-REnvelope::expires() 
+REnvelope::expires()
 {
 	RDateTime * t = 0;
 	return *get(HeaderExpires, t);
 }
 
 	RText &
-REnvelope::followupTo() 
+REnvelope::followupTo()
 {
 	RText * t = 0;
 	return *get(HeaderFollowupTo, t);
 }
 
 	RMailboxList &
-REnvelope::from() 
+REnvelope::from()
 {
 	RMailboxList * t = 0;
 	return *get(HeaderFrom, t);
 }
 
 	RText &
-REnvelope::inReplyTo() 
+REnvelope::inReplyTo()
 {
 	rmmDebug("inReplyTo() called");
 	RText * t = 0;
@@ -428,168 +476,168 @@ REnvelope::inReplyTo()
 }
 
 	RText &
-REnvelope::keywords() 
+REnvelope::keywords()
 {
 	RText * t = 0;
 	return *get(HeaderKeywords, t);
 }
 
 	RText &
-REnvelope::lines() 
+REnvelope::lines()
 {
 	RText * t = 0;
 	return *get(HeaderLines, t);
 }
 
 	RMessageID &
-REnvelope::messageID() 
+REnvelope::messageID()
 {
 	RMessageID * t = 0;
 	return *get(HeaderMessageID, t);
 }
 
 	RText &
-REnvelope::mimeVersion() 
+REnvelope::mimeVersion()
 {
 	RText * t = 0;
 	return *get(HeaderMimeVersion, t);
 }
 
 	RText &
-REnvelope::newsgroups() 
+REnvelope::newsgroups()
 {
 	RText * t = 0;
 	return *get(HeaderNewsgroups, t);
 }
 
 	RText &
-REnvelope::organization() 
+REnvelope::organization()
 {
 	RText * t = 0;
 	return *get(HeaderOrganization, t);
 }
 
 	RText &
-REnvelope::path() 
+REnvelope::path()
 {
 	RText * t = 0;
 	return *get(HeaderPath, t);
 }
 
 	RText &
-REnvelope::received() 
+REnvelope::received()
 {
 	RText * t = 0;
 	return *get(HeaderReceived, t);
 }
 
 	RText &
-REnvelope::references() 
+REnvelope::references()
 {
 	RText * t = 0;
 	return *get(HeaderReferences, t);
 }
 
 	RAddressList &
-REnvelope::replyTo() 
+REnvelope::replyTo()
 {
 	RAddressList * t = 0;
 	return *get(HeaderReplyTo, t);
 }
 
 	RAddressList &
-REnvelope::resentBcc() 
+REnvelope::resentBcc()
 {
 	RAddressList * t = 0;
 	return *get(HeaderResentBcc, t);
 }
 
 	RAddressList &
-REnvelope::resentCc() 
+REnvelope::resentCc()
 {
 	RAddressList * t = 0;
 	return *get(HeaderResentCc, t);
 }
 
 	RDateTime &
-REnvelope::resentDate() 
+REnvelope::resentDate()
 {
 	RDateTime * t = 0;
 	return *get(HeaderResentDate, t);
 }
 
 	RMailboxList &
-REnvelope::resentFrom() 
+REnvelope::resentFrom()
 {
 	RMailboxList * t = 0;
 	return *get(HeaderResentFrom, t);
 }
 
 	RMessageID &
-REnvelope::resentMessageID() 
+REnvelope::resentMessageID()
 {
 	RMessageID * t = 0;
 	return *get(HeaderResentMessageID, t);
 }
 
 	RAddressList &
-REnvelope::resentReplyTo() 
+REnvelope::resentReplyTo()
 {
 	RAddressList * t = 0;
 	return *get(HeaderResentReplyTo, t);
 }
 
 	RMailbox &
-REnvelope::resentSender() 
+REnvelope::resentSender()
 {
 	RMailbox * t = 0;
 	return *get(HeaderResentSender, t);
 }
 
 	RAddressList &
-REnvelope::resentTo() 
+REnvelope::resentTo()
 {
 	RAddressList * t = 0;
 	return *get(HeaderResentTo, t);
 }
 
 	RText &
-REnvelope::returnPath() 
+REnvelope::returnPath()
 {
 	RText * t = 0;
 	return *get(HeaderReturnPath, t);
 }
 
 	RMailbox &
-REnvelope::sender() 
+REnvelope::sender()
 {
 	RMailbox * t = 0;
 	return *get(HeaderSender, t);
 }
 
 	RText &
-REnvelope::subject() 
+REnvelope::subject()
 {
 	RText * t = 0;
 	return *get(HeaderSubject, t);
 }
 
 	RText &
-REnvelope::summary() 
+REnvelope::summary()
 {
 	RText * t = 0;
 	return *get(HeaderSummary, t);
 }
 
 	RAddressList &
-REnvelope::to() 
+REnvelope::to()
 {
 	RAddressList * t = 0;
 	return *get(HeaderTo, t);
 }
 
 	RText &
-REnvelope::xref() 
+REnvelope::xref()
 {
 	RText * t = 0;
 	return *get(HeaderXref, t);
@@ -599,7 +647,7 @@ REnvelope::xref()
 REnvelope::get(const QCString & headerName)
 {
 	RHeaderListIterator it(headerList_);
-	
+
 	for (; it.current(); ++it) {
 		if (stricmp(it.current()->headerName(),headerName))
 			return *((RText *)(it.current()->headerBody()));
@@ -607,14 +655,14 @@ REnvelope::get(const QCString & headerName)
 
 	RText * d = new RText;
 	d->createDefault();
-	
+
 	RHeader * hdr = new RHeader;
-	
+
 	hdr->setName(headerName);
 	hdr->setBody(d);
-	
+
 	headerList_.append(hdr);
-	
+
 	return *d;
 }
 
@@ -622,25 +670,25 @@ REnvelope::get(const QCString & headerName)
 REnvelope::firstSender()
 {
 	rmmDebug("firstSender() called");
-	
+
 	if (has(HeaderFrom)) {
-	
+
 		RMailboxList & m = from();
 		rmmDebug("Number of mailboxes in from field : " +
 			QCString().setNum(m.count()));
 
 		if (m.count() == 0) {
-			
+
 			rmmDebug("Asking the mailbox list to create a default mailbox");
 			m.createDefault();
-			
+
 		}
-			
+
 		rmmDebug(QCString("Returning ") + m.at(0)->asString());
 		m.at(0)->assemble();
 		return *(m.at(0));
-	
-	
+
+
 	} else {
 
 		sender().assemble();
@@ -653,35 +701,35 @@ REnvelope::parentMessageId()
 {
 	// XXX If there's a references field, we use this over the InReplyTo: field.
 	// This is a temporary policy decision and may change.
-	
+
 	rmmDebug("parentMessageId() called");
-	
+
 	RMessageID m;
 
 	if (has(HeaderReferences)) {
-		
+
 		rmmDebug("Has header references");
-				
+
 		/// FIXME have to do set() as operator = seems to think operand is
 		//RMessageID !
 		QCString s = references().asString();
 		s = s.right(s.length() - s.findRev('<'));
 		m.set(s);
-		
+
 	} else if (has(HeaderInReplyTo)) {
-		
+
 		rmmDebug("Has header in reply to");
-	
+
 		RText t = inReplyTo();
 		rmmDebug("..");
 		m.set(t.asString());
-		
+
 	} else {
-		
+
 		m.setLocalPart("");
 		m.setDomain("");
 	}
-	
+
 	rmmDebug("DOING PARSE");
 	m.parse();
 
