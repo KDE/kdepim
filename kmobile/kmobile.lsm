@@ -1,0 +1,16 @@
+Begin3
+Title:          kmobile -- KDE Mobile Devices Manager
+Version:        0.1
+Entered-date:   
+Description:    
+Keywords:       KDE Qt
+Author:         Helge Deller <deller@kde.org>
+Maintained-by:  Helge Deller <deller@kde.org>
+Home-page:      
+Alternate-site: 
+Primary-site:   ftp://ftp.kde.org/pub/kde/unstable/apps/utils
+                xxxxxx  kmobile-0.1.tar.gz
+                xxx     kmobile-0.1.lsm
+Platform:       Linux. Needs KDE
+Copying-policy: GPL/LGPL
+End

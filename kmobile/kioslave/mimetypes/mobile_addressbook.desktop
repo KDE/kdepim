@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Comment=Contacts in Mobile Device
+Icon=kaddressbook
+Type=MimeType
+MimeType=kmobile/addressbook
+Patterns=
+
+X-KDE-AutoEmbed=true

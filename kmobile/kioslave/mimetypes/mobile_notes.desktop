@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Comment=Notes in Mobile Device
+Icon=knotes
+Type=MimeType
+MimeType=kmobile/notes
+Patterns=
+
+X-KDE-AutoEmbed=true

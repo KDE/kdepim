@@ -1,0 +1,24 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="kmobile" version="1">
+ <MenuBar>
+  <Menu name="Device">
+    <text>&amp;Device</text>
+    <Action name="device_add" />
+    <Action name="device_remove" />
+    <Separator/>
+    <Action name="device_rename" />
+    <Action name="device_changeicon" />
+    <Separator/>
+    <Action name="device_configure" />
+  </Menu>
+ </MenuBar>
+ <ToolBar noMerge="1" name="mainToolBar" fullWidth="true" >
+  <text>Main Toolbar</text>
+  <Action name="file_save" />
+  <Separator/>
+  <Action name="device_add" />
+  <Action name="device_remove" />
+  <Separator/>
+  <Action name="device_configure"/>
+ </ToolBar>
+</kpartgui>

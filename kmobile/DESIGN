@@ -1,0 +1,70 @@
+
+                   KMOBILE
+
+(C) Copyright 2003, Helge Deller <deller@kde.org>
+
+
+
+"kmobile" is suite to easily access "Mobile Devices",
+which means, that you have one single interface to access
+any type of mobile device (e.g. cellular phone, PDAs, 
+MP3-Players, Digital Cameras and a lot more).
+
+Each of this devices have different types of information,
+(capatibilities) which can be:
+  - An addressbook
+  - A collection of notes
+  - calendar entries,
+  - a file storage section (e.g. pictures in digital cameras)
+  - and more
+ 
+The whole interface is pretty extendable. Each device has
+a device driver, which reports the capatibilities of the 
+connected device to the higher level.
+So, if you once write a device driver, you can access it's 
+contents from any KDE application later.
+
+Currently the whole interface is divided into 3 sections:
+
+a) The low-level device driver
+b) A mid-layer, which is realized in the "kmobile" application
+c) A userland library, to which KDE applications should link.
+
+
+Here is some background info:
+
+a) The low-level device driver (libkmobile_xxxx.so)
+
+The low-level driver has to be derived from the KMobileDevice class
+(#include <kmobiledevice.h>). The drivers should be located below the
+directory /device, and you can find a sample implementation in
+/device/skeleton-directory. 
+
+
+b) The mid-layer (kmobile)
+
+The mid-layer handles the main functionality, which is entirely
+implemented in the kmobile application. All low-level drivers
+are loaded by kmobile only, and then all low-level functions
+to any device is made available to other applications
+with a DCOP interface. Normal KDE applications should prefer the 
+userland library (see below) instead of using direct DCOP calls.
+Nevertheless, the DCOP interface might be very interesting to write
+standalone command line tools.
+
+
+c) The userland library (libkmobileclient.so)
+
+Any KDE application which wants to access mobile devices
+should #include <kmobileclient.h> and link to the libkmobileclient.la
+library. libkmobileclient translates all calls to DCOP calls and
+makes accessing mobile devices completely transparent to the
+application.
+
+One sample program which uses the client library is the kmobile
+kioslave. In Konqueror you might access any mobile device directly
+by giving "mobile:/" as the URL.
+
+
+
+

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Comment=Calendar in Mobile Device
+Icon=korganizer
+Type=MimeType
+MimeType=kmobile/calendar
+Patterns=
+
+X-KDE-AutoEmbed=true
