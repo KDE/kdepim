@@ -77,7 +77,7 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
   layout->addMultiCellWidget( frame, 6, 6, 0, 3 );
 
-  QPushButton *cancelButton = new KPushButton( KStdGuiItem::cancel(), this );
+  QPushButton *cancelButton = new KPushButton( KStdGuiItem::close(), this );
   layout->addWidget( cancelButton, 8, 3 );
 
   connect( cancelButton, SIGNAL( clicked() ), this, SIGNAL( cancel() ) );
