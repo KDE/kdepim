@@ -60,8 +60,6 @@ static const char *memofile_conduit_id=
 #include "memofile-factory.h"
 #include "memofile-conduit.h"
 #include "memofileSettings.h"
-
-
 /**
  * Our workhorse.  This is the main driver for the conduit.
  */
@@ -112,7 +110,7 @@ MemofileConduit::~MemofileConduit()
 	if (SyncAction::eCopyHHToPC == getSyncDirection() || fFirstSync) {
 		addSyncLogEntry(" Copying Pilot to PC...");
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": copying Pilot to PC." << endl;
+		DEBUGCONDUIT << _funcame_ << ": copying Pilot to PC." << endl;
 #endif
 		copyHHToPC();
 	} else if (SyncAction::eCopyPCToHH == getSyncDirection()) {
@@ -384,13 +382,14 @@ void MemofileConduit::listPilotMemos()
 	PilotMemo *memo;
 	for ( memo = fMemoList.first(); memo; memo = fMemoList.next() ) {
 		QString _category_name = fCategories[memo->getCat()];
-
+#ifdef DEBUG
 		DEBUGCONDUIT << fname
 		<< ": listing record id: [" << memo->id()
 		<< "] category id: [" << memo->getCat()
 		<< "] category name: [" << _category_name
 		<< "] title: [" << memo->getTitle()
 		<< "]" << endl;
+#endif
 	}
 
 }
