@@ -152,6 +152,7 @@ bool ResourceKABC::doLoad()
       summary = i18n("%1's birthday").arg( name );
 
       Event *ev = new Event();
+      ev->setUid( (*it).uid()+"_KABC_Birthday");
 
       ev->setDtStart(birthdate);
       ev->setDtEnd(birthdate);
@@ -187,9 +188,9 @@ bool ResourceKABC::doLoad()
       kdDebug(5800) << "imported " << birthdate.toString() << endl;
     }
 
-		QString anniversary_string = (*it).custom( "KADDRESSBOOK", "X-Anniversary" );
-		if (anniversary_string.isEmpty() )
-			continue;
+    QString anniversary_string = (*it).custom( "KADDRESSBOOK", "X-Anniversary" );
+    if (anniversary_string.isEmpty() )
+      continue;
     QDateTime anniversary = QDate::fromString( anniversary_string, Qt::ISODate );
     if ( !anniversary.isValid() )
       continue;
@@ -231,6 +232,7 @@ bool ResourceKABC::doLoad()
     summary = i18n("%1's anniversary").arg( name );
 
     Event *ev = new Event();
+      ev->setUid( (*it).uid()+"_KABC_Anniversary");
 
     ev->setDtStart(anniversary);
     ev->setDtEnd(anniversary);
