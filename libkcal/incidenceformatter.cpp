@@ -447,12 +447,12 @@ QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
 
 static void string2HTML( QString& str )
 {
-  str.replace( QChar( '&' ), "&amp;" );
-  str.replace( QChar( '<' ), "&lt;" );
-  str.replace( QChar( '>' ), "&gt;" );
-  str.replace( QChar( '\"' ), "&quot;" );
-  str.replace( "\\n", "<br>" );
-  str.replace( "\\,", "," );
+  str.replace( QChar( '&' ), QString::fromLatin1("&amp;") );
+  str.replace( QChar( '<' ), QString::fromLatin1("&lt;") );
+  str.replace( QChar( '>' ), QString::fromLatin1("&gt;") );
+  str.replace( QChar( '"' ), QString::fromLatin1("&quot;") );
+  str.replace( QChar( '\n'), QString::fromLatin1("<br>") );
+  // additionally ä, ö, ß, .... could be encoded as well...
 }
 
 static QString invitationRow( QString cell1, QString cell2 )
