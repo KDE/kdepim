@@ -105,8 +105,10 @@ public slots:
     */
 	bool postSyncAction(PilotDatabase * dbinfo, docSyncInfo &sinfo, bool res = true);
 
-	bool textChanged(QString docfn);
-	/** Opens the databse with name dbname. For a local sync, this will be a 
+	bool pcTextChanged(QString docfn);
+	bool hhTextChanged(PilotDatabase*docdb);
+	
+	/** Opens the database with name dbname. For a local sync, this will be a 
 	 *  PilotLocalDatabase, otherwise it will be a database on the serial device 
 	 *  (i.e. an object of class PilotSerialDatabase) */
 	PilotDatabase*openDOCDatabase(QString dbname);

@@ -54,7 +54,7 @@ const char *doc_converter_id = "$Id$";
 
 
 /****************************************************************************************************
- *  various bookmark classes. Most important is the bmkList  findMatches(QString) function, 
+ *  various bookmark classes. Most important is the bmkList  findMatches(QString) function,
  *  which needs to return a list of all bookmarks found for the given bookmark expression.
  *  A bookmark usually consists of a bookmark text and an offset into the text document.
  ****************************************************************************************************/
@@ -114,7 +114,12 @@ int docRegExpBookmark::findMatches(QString doctext, bmkList &fBookmarks) {
 					fBookmarks.append(new docBookmark(/*bmkName.left(16)*/rx.cap(capSubexpression), pos));
 				} else {
 					// TODO: use the subexpressions from the regexp for the bmk name ($1..$9) (given as separate regexp)
-					fBookmarks.append(new docBookmark(bmkName.left(16), pos));
+					QString bmkText(bmkName);
+					for (int i=0; i<=rx.numCaptures(); i++) {
+						bmkText.replace(QString("$%1").arg(i), rx.cap(i));
+						bmkText.replace(QString("\\%1").arg(i), rx.cap(i));
+					}
+					fBookmarks.append(new docBookmark(bmkText.left(16), pos));
 				}
 				nr++;
 			}
@@ -123,7 +128,6 @@ int docRegExpBookmark::findMatches(QString doctext, bmkList &fBookmarks) {
 	}
 	return nr;
 };
-
 
 
 
@@ -553,7 +557,7 @@ bool DOCConverter::convertPDBtoDOC()
 	}
 
 	// After the document records possibly come a few bookmark records, so read them in and put them in a separate bookmark file.
-	// TODO: for the ztxt conduit there might be annotations after the bookmarks, so the upper bound needs to be adapted.
+	// for the ztxt conduit there might be annotations after the bookmarks, so the upper bound needs to be adapted.
 	int upperBmkRec=docdb->recordCount();
 	QString bmkfilename = docfile.name();
 	if (bmkfilename.endsWith(CSL1(".txt"))){
