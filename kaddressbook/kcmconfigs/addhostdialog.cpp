@@ -39,7 +39,7 @@ AddHostDialog::AddHostDialog( QWidget* parent,  const char* name )
 {
   QWidget *page = plainPage();
 
-  QGridLayout *layout = new QGridLayout( page, 3, 5, marginHint(), spacingHint() );
+  QGridLayout *layout = new QGridLayout( page, 3, 5, 0, spacingHint() );
 
   mHostEdit = new KLineEdit( page );
   layout->addMultiCellWidget( mHostEdit, 0, 0, 1, 2 );

@@ -47,7 +47,7 @@
 
 FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
   : KDialogBase( Plain, i18n( "Edit Address Book Filter" ),
-                 Help | Ok | Cancel, Ok, parent, name, false )
+                 Help | Ok | Cancel, Ok, parent, name, false, true )
 {
   initGUI();
 
@@ -117,9 +117,7 @@ void FilterEditDialog::initGUI()
   QWidget *page = plainPage();
   QLabel *label;
 
-  QGridLayout *topLayout = new QGridLayout( page, 3, 2 );
-  topLayout->setSpacing( spacingHint() );
-  topLayout->setMargin( marginHint() );
+  QGridLayout *topLayout = new QGridLayout( page, 3, 2, 0, spacingHint() );
 
   label = new QLabel( i18n( "Name" ), page );
   mNameEdit = new KLineEdit( page );
@@ -164,7 +162,7 @@ void FilterEditDialog::slotHelp()
 
 FilterDialog::FilterDialog( QWidget *parent, const char *name )
   : KDialogBase( Plain, i18n( "Edit Address Book Filters" ),
-                 Ok | Cancel, Ok, parent, name, false )
+                 Ok | Cancel, Ok, parent, name, false, true )
 {
   initGUI();
 }
@@ -248,9 +246,7 @@ void FilterDialog::initGUI()
 
   QWidget *page = plainPage();
 
-  QGridLayout *topLayout = new QGridLayout( page, 1, 2 );
-  topLayout->setSpacing( spacingHint() );
-  topLayout->setMargin( marginHint() );
+  QGridLayout *topLayout = new QGridLayout( page, 1, 2, 0, spacingHint() );
 
   mFilterListBox = new KListBox( page );
   topLayout->addWidget( mFilterListBox, 0, 0 );

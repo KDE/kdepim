@@ -47,16 +47,17 @@ ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent
   topLayout->addWidget( mMainWidget );
 
   // Add the first page, the attributes
-  QVBox *page = addPage( i18n( "Select Fields" ), QString::null,
+  QVBox *page = addPage( i18n( "Fields" ), QString::null,
                          KGlobal::iconLoader()->loadIcon( "view_detailed",
-                         KIcon::Desktop ) );
+                         KIcon::Panel ) );
 
   // Add the select fields page 
   mFieldsPage = new ViewConfigureFieldsPage( addressBook(), page );
 
   // Add the second page, the filter selection
-  page = addPage( i18n( "Default Filter" ), QString::null, KGlobal::iconLoader()
-                  ->loadIcon( "filter", KIcon::Desktop ) );
+  page = addPage( i18n( "Default Filter" ), QString::null, 
+                  KGlobal::iconLoader()->loadIcon( "filter", 
+                  KIcon::Panel ) );
 
   mFilterPage = new ViewConfigureFilterPage( page );
 }

@@ -61,7 +61,7 @@ class ExtensionItem : public QCheckListItem
 KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( this, KDialog::marginHint(),
+  QVBoxLayout *topLayout = new QVBoxLayout( this, 0,
                                             KDialog::spacingHint() );
 
   QTabWidget *tabWidget = new QTabWidget( this );

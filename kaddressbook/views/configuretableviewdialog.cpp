@@ -45,7 +45,7 @@ ConfigureTableViewWidget::ConfigureTableViewWidget( KABC::AddressBook *ab,
 {
   QWidget *page = addPage( i18n( "Look & Feel" ), QString::null,
                            KGlobal::iconLoader()->loadIcon( "looknfeel",
-                           KIcon::Desktop ) );
+                           KIcon::Panel ) );
   
   mPage = new LookAndFeelPage( page );
 }
@@ -103,9 +103,7 @@ void LookAndFeelPage::saveSettings( KConfig *config )
     
 void LookAndFeelPage::initGUI()
 {
-  QVBoxLayout *layout = new QVBoxLayout(this);
-  layout->setSpacing(KDialog::spacingHint());
-  layout->setMargin(KDialog::marginHint());
+  QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialogBase::spacingHint());
       
   QButtonGroup *group = new QButtonGroup(1, Qt::Horizontal, 
                                          i18n("Row Separator"), this);

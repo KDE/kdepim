@@ -38,7 +38,7 @@ ViewConfigureFilterPage::ViewConfigureFilterPage( QWidget *parent,
                                                   const char *name )
   : QWidget( parent, name )
 {
-  QBoxLayout *topLayout = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  QBoxLayout *topLayout = new QVBoxLayout( this, 0, KDialog::spacingHint() );
   
   mFilterGroup = new QButtonGroup();
   connect( mFilterGroup, SIGNAL( clicked( int ) ), SLOT( buttonClicked( int ) ) );
