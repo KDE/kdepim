@@ -1,21 +1,24 @@
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
  <!ENTITY kjots "<application>kjots</application>">
 ]>
+
 <book lang="en">
 <bookinfo>
-<title>The KJots  Handbook</title>
+<title>The KJots Handbook</title>
 <authorgroup>
 <author>
 <firstname>Christoph</firstname>
 <surname>Neerfeld</surname>
-<affiliation><address><email><ulink url="mailto:chris@kde.org">chris@kde.org</ulink></email></address></affiliation>
+<affiliation>
+<address><email>chris@kde.org</email></address>
+</affiliation>
 </author>
 </authorgroup>
-<date>Version 0.3.0, Jun 18 1998</date>
-<releaseinfo><!-- information about this particular version --></releaseinfo>
+<date>18/06/1998</date>
+<releaseinfo>0.03.00</releaseinfo>
 <abstract>
 <para>This Handbook describes KJots Version 0.3</para>
-<para>The KJots Handbook</para><!-- Merge this with the previous paragraph; it comes from <META NAME="description" CONTENT="..."> --></abstract>
+</abstract>
 <keywordset>
 <keyword>KDE</keyword>
 <keyword>KJots</keyword>
