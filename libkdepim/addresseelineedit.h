@@ -106,6 +106,7 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     void stopLDAPLookup();
 
     void setCompletedItems( const QStringList& items, bool autoSuggest );
+    QString completionSearchText( QString& );
 
     QString m_previousAddresses;
     bool m_useCompletion;
