@@ -24,6 +24,22 @@ UI Changes:
   it reminds us that we should move towards a more modern method
   of setting up the UI -- or not?
 
+Internal Changes:
+
+* Conduits that crash no longer hang KPilot and the entire sync.
+* Made a lot of static const int members of various classes 
+  enum values instead, and added a function write() to CStatusMessages
+  for a clean way to write status messages to the link.
+* Replaced several if else if ... constructions with switch() 
+
+Wishlist:
+
+* More and better information in the progress bar
+* The PilotMemo class is butt-ugly and filled with weird C-string
+  manipulations.
+* KPilot should display the sync log as well, just like th Pilot
+  does. This is useful for reporting the result of a sync to the
+  user (who then doesn't need to look at the Pilot)
 
 KPilot Developer's notes for november 25th 2000
 ===============================================

@@ -580,11 +580,9 @@ void KPilotInstaller::initCommandSocket()
 			
 		if(!fPilotCommandSocket)
 		{
-			if (debug_level)
-			{
-				cerr << fname << ": Can't connect to daemon"
-					<< endl ;
-			}
+			kdDebug() << fname 
+				<< ": Can't connect to daemon"
+				<< endl ;
 
 			KMessageBox::error(this, 
 					   i18n("Cannot start KPilot Daemon. "
@@ -595,12 +593,14 @@ void KPilotInstaller::initCommandSocket()
 
 			KPilotOptions* options = new KPilotOptions(this);
 			options->show(); // It's modal..
+#ifdef DEBUG
 			if (debug_level & UI_TEDIOUS)
 			{
 				cerr << fname << ": User said "
 					<< options->result()
 					<< endl;
 			}
+#endif
 			delete options;
 		}
 
@@ -679,40 +679,65 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
 {
 	FUNCTIONSETUP;
 
-  ifstream in(daemon->socket());
-  int status;
-  
-  in.read(&status, sizeof(int));
-  if(status == CStatusMessages::SYNC_STARTING)
-    {
-//       fLastWidgetSelected = fToolBar->getCombo(KPilotInstaller::ID_COMBO)->currentItem();
-//       fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setCurrentItem(0);
-//       slotModeSelected(0);
-//       fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setEnabled(false);
-	if(fLinkCommand[0] == 0L)
+	ifstream in(daemon->socket());
+	int status;
+	in.read(&status, sizeof(int));
+
+	switch(status)
 	{
-		doHotSync();
+	case CStatusMessages::SYNC_STARTING :
+		if(fLinkCommand[0] == 0L)
+		{
+			// This only happens when the daemon tells
+			// us to sync based on a button push.
+			//
+			//
+			KConfig& c = KPilotLink::getConfig();
+			if (c.readBoolEntry("PreferFastSync",false))
+			{
+				doFastSync();
+			}
+			else
+			{
+				doHotSync();
+			}
+		}
+		fStatusBar->changeItem(i18n("Hot-Sync in progress..."), 0);
+
+		// This block writes some stuff to the link and
+		// therefore requires its own ofstream object.
+		//
+		//
+		{
+		ofstream out(fPilotCommandSocket->socket());
+		out << fLinkCommand << flush;
+		}
+		break;
+	case CStatusMessages::SYNC_COMPLETED :
+		fStatusBar->changeItem(i18n("Hot-Sync complete."), 0);
+		fLinkCommand[0] = 0L;
+		for(fPilotComponentList.first(); 
+			fPilotComponentList.current(); 
+			fPilotComponentList.next())
+		{
+			fPilotComponentList.current()->initialize();
+		}
+		break;
+	case CStatusMessages::FILE_INSTALL_REQUEST :
+		for(fPilotComponentList.first(); 
+			fPilotComponentList.current(); 
+			fPilotComponentList.next())
+		{
+			fPilotComponentList.current()->initialize();
+		}
+		break;
+	default :
+		kdDebug() << fname
+			<< ": Unknown command "
+			<< status
+			<< " received."
+			<< endl;
 	}
-      fStatusBar->changeItem(i18n("Hot-Sync in progress..."), 0);
-      ofstream out(fPilotCommandSocket->socket());
-      out << fLinkCommand << flush;
-    }
-  else if(status == CStatusMessages::SYNC_COMPLETED)
-    {
-//       fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setEnabled(true);
-//       fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setCurrentItem(fLastWidgetSelected);
-//       slotModeSelected(fLastWidgetSelected);
-      fStatusBar->changeItem(i18n("Hot-Sync complete."), 0);
-      fLinkCommand[0] = 0L;
-      for(fPilotComponentList.first(); fPilotComponentList.current(); fPilotComponentList.next())
-	//fPilotComponentList.current()->postHotSync();
-	fPilotComponentList.current()->initialize();
-    }
-  else if(status == CStatusMessages::FILE_INSTALL_REQUEST)
-    {
-      for(fPilotComponentList.first(); fPilotComponentList.current(); fPilotComponentList.next())
-	fPilotComponentList.current()->initialize();
-    }
 }
 
 void
@@ -999,8 +1024,7 @@ void KPilotInstaller::menuCallback(int item)
 		break;
 	case KPilotInstaller::ID_FILE_FASTSYNC :
 		showTitlePage();
-		fStatusBar->changeItem(i18n("Sorry, Fast-Sync isn't "
-			"implemented yet."),0);
+		doFastSync();
 		break;
 	case KPilotInstaller::ID_CONDUITS_SETUP:
 		showTitlePage();

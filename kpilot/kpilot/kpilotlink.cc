@@ -67,6 +67,7 @@ KPilotLink* KPilotLink::fKPilotLink = 0L;
 
 const QString KPilotLink::BACKUP_DIR = "/share/apps/kpilot/DBBackup/";
 
+#if 0
 // I know this is a bad place for them, but the only source file guaranteed
 // to be in every program that needs statusMessages
 const int CStatusMessages::CONDUIT_READY = 0;
@@ -87,6 +88,8 @@ const int CStatusMessages::READ_REC_BY_ID = 13;
 const int CStatusMessages::NEXT_REC_IN_CAT = 14;
 
 const int CStatusMessages::LOG_MESSAGE = 17;
+#endif
+
 
 // This is a number indicating what configuration version
 // we're dealing with. Whenever new configuration options are
@@ -172,7 +175,9 @@ void KPilotLink::readConfig()
 }
 
 KPilotLink::KPilotLink()
-  : fConnected(false), fCurrentPilotSocket(-1), fSlowSyncRequired(false),
+  : 
+	fConduitRunStatus(None),
+	fConnected(false), fCurrentPilotSocket(-1), fSlowSyncRequired(false),
     fOwningWidget(0L), fStatusBar(0L), fProgressDialog(0L), fConduitSocket(0L),
     fCurrentDB(0L), fNextDBIndex(0), fConduitProcess(0L), fMessageDialog(0L)
 {
@@ -182,8 +187,9 @@ KPilotLink::KPilotLink()
 
 
 KPilotLink::KPilotLink(QWidget* owner, KStatusBar* statusBar,
-		       const QString &devicePath)
-  : fConnected(false), fCurrentPilotSocket(-1), fSlowSyncRequired(false),
+		       const QString &devicePath) :
+	fConduitRunStatus(None),
+  fConnected(false), fCurrentPilotSocket(-1), fSlowSyncRequired(false),
     fOwningWidget(owner), fStatusBar(statusBar), fProgressDialog(0L),
     fConduitSocket(0L), fCurrentDB(0L), fNextDBIndex(0), fConduitProcess(0L),
     fMessageDialog(0L)
@@ -355,7 +361,7 @@ KPilotLink::writeRecord(KSocket* theSocket, PilotRecord* rec)
   recordid_t uid = rec->getID();
   char* data = rec->getData();
   
-  write(theSocket->socket(), &CStatusMessages::REC_DATA, sizeof(int));
+  CStatusMessages::write(theSocket->socket(), CStatusMessages::REC_DATA);
   write(theSocket->socket(), &len, sizeof(int));
   write(theSocket->socket(), &attrib, sizeof(int));
   write(theSocket->socket(), &cat, sizeof(int));
@@ -374,6 +380,51 @@ int KPilotLink::writeResponse(KSocket *k,int m)
 	int i=m;
 
 	return write(k->socket(), &i, sizeof(int));
+}
+
+void KPilotLink::slotConduitDone(KProcess *p)
+{
+	FUNCTIONSETUP;
+
+	if (!p || !fConduitProcess)
+	{
+		kdDebug() << fname
+			<< ": Called without a running conduit and process!"
+			<< endl;
+		return;
+	}
+
+	if (p != fConduitProcess)
+	{
+		kdDebug() << fname 
+			<< ": Process with id "
+			<< p->pid()
+			<< " exited while waiting on "
+			<< fConduitProcess->pid()
+			<< endl;
+	}
+	else
+	{
+#ifdef DEBUG
+		kdDebug() << fname
+			<< ": Conduit process with pid "
+			<< p->pid()
+			<< " exited"
+			<< endl;
+#endif
+	}
+
+	if (fConduitRunStatus != Done)
+	{
+		kdDebug() << fname
+			<< ": It seems that a conduit has crashed."
+			<< endl;
+
+		// Force a resume even though the conduit never ran.
+		//
+		//
+		resumeDB();
+	}
 }
 
 void
@@ -420,89 +471,95 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 		return;
 	}
 
-	// This whole nested-if thing should become
-	// a switch() statement, that tends to be clearer.
-	//
-	//
-  if(message ==  CStatusMessages::WRITE_RECORD)
-    {
-      //       cout <<"Writing Record..." << endl;
-      tmpRec = readRecord(cSocket);
-      //       cout << "\tRecord ID: " << tmpRec->getID();
-      //       cout << "\tLen: " << tmpRec->getLen();
-      fCurrentDB->writeRecord(tmpRec);
-      //       cout << "\tRecord ID: " << tmpRec->getID();
-      //       cout << "\tLen: " << tmpRec->getLen();
-      write(cSocket->socket(), &CStatusMessages::NEW_RECORD_ID, sizeof(int));
-      recordid_t tmpID = tmpRec->getID();
-      write(cSocket->socket(), &tmpID, sizeof(recordid_t));
-      delete tmpRec;
-    }
-  else if(message == CStatusMessages::NEXT_MODIFIED_REC)
-    {
-      //       cout << "Looking for MOD_REC..." << endl;
-      tmpRec = fCurrentDB->readNextModifiedRec();
-      if(tmpRec)
+	switch(message)
 	{
-	  // 	  cout << "KPilotLink::NEXT_MODIFIED_RECORD - Found a record." << endl;
-	  writeRecord(cSocket, tmpRec);
-	  delete tmpRec;
-	}
-      else
-	{
+	case CStatusMessages::WRITE_RECORD :
+		{
+		//       cout <<"Writing Record..." << endl;
+		tmpRec = readRecord(cSocket);
+		//       cout << "\tRecord ID: " << tmpRec->getID();
+		//       cout << "\tLen: " << tmpRec->getLen();
+		fCurrentDB->writeRecord(tmpRec);
+		//       cout << "\tRecord ID: " << tmpRec->getID();
+		//       cout << "\tLen: " << tmpRec->getLen();
+		CStatusMessages::write(cSocket->socket(), CStatusMessages::NEW_RECORD_ID);
+		recordid_t tmpID = tmpRec->getID();
+		write(cSocket->socket(), &tmpID, sizeof(recordid_t));
+		delete tmpRec;
+		}
+		break;
+	case CStatusMessages::NEXT_MODIFIED_REC :
+		{
+		//       cout << "Looking for MOD_REC..." << endl;
+		tmpRec = fCurrentDB->readNextModifiedRec();
+		if(tmpRec)
+		{
+		// 	  cout << "KPilotLink::NEXT_MODIFIED_RECORD - Found a record." << endl;
+		writeRecord(cSocket, tmpRec);
+		delete tmpRec;
+		}
+		else
+		{
 		writeResponse(cSocket,CStatusMessages::NO_SUCH_RECORD);
-	  write(cSocket->socket(), &CStatusMessages::NO_SUCH_RECORD, sizeof(int));
-	  // 	cout << "KPilotLink::NEXT_MODIFIED_RECORD - No more modified records." << endl;
+		CStatusMessages::write(cSocket->socket(), 
+		CStatusMessages::NO_SUCH_RECORD);
+		// 	cout << "KPilotLink::NEXT_MODIFIED_RECORD - No more modified records." << endl;
+		}
+		}
+		break;
+	case CStatusMessages::NEXT_REC_IN_CAT :
+		{
+		//       cout << "Looking for next record in category..." << endl;
+		int cat;
+		read(cSocket->socket(), &cat, sizeof(int));
+		tmpRec = fCurrentDB->readNextRecInCategory(cat);
+		if(tmpRec)
+		{
+		writeRecord(cSocket, tmpRec);
+		delete tmpRec;
+		}
+		else
+		CStatusMessages::write(cSocket->socket(), 
+		CStatusMessages::NO_SUCH_RECORD);
+		}
+		break;
+	case CStatusMessages::READ_REC_BY_INDEX :
+		{
+		//       cout <<"Reading record by index..." << endl;
+		int index;
+		read(cSocket->socket(), &index, sizeof(int));
+		tmpRec = fCurrentDB->readRecordByIndex(index);
+		if(tmpRec)
+		{
+		writeRecord(cSocket, tmpRec);
+		delete tmpRec;
+		}
+		else
+		CStatusMessages::write(cSocket->socket(), 
+		CStatusMessages::NO_SUCH_RECORD);
+		}
+		break;
+	case CStatusMessages::READ_REC_BY_ID :
+		{
+		//       cout <<"Reading record by id..." << endl;
+		recordid_t id;
+		read(cSocket->socket(), &id, sizeof(recordid_t));
+		tmpRec = fCurrentDB->readRecordById(id);
+		if(tmpRec)
+		{
+		writeRecord(cSocket, tmpRec);
+		delete tmpRec;
+		}
+		else
+		CStatusMessages::write(cSocket->socket(), 
+		CStatusMessages::NO_SUCH_RECORD);
+		}
+		break;
+	default :
+		kdDebug() << fname << ": Unknown status message " 
+			<< message
+			<< endl;
 	}
-    }
-  else if(message == CStatusMessages::NEXT_REC_IN_CAT)
-    {
-      //       cout << "Looking for next record in category..." << endl;
-      int cat;
-      read(cSocket->socket(), &cat, sizeof(int));
-      tmpRec = fCurrentDB->readNextRecInCategory(cat);
-      if(tmpRec)
-	{
-	  writeRecord(cSocket, tmpRec);
-	  delete tmpRec;
-	}
-      else
-	write(cSocket->socket(), &CStatusMessages::NO_SUCH_RECORD, sizeof(int));
-    }
-  else if(message ==  CStatusMessages::READ_REC_BY_INDEX)
-    {
-      //       cout <<"Reading record by index..." << endl;
-      int index;
-      read(cSocket->socket(), &index, sizeof(int));
-      tmpRec = fCurrentDB->readRecordByIndex(index);
-      if(tmpRec)
-	{
-	  writeRecord(cSocket, tmpRec);
-	  delete tmpRec;
-	}
-      else
-	write(cSocket->socket(), &CStatusMessages::NO_SUCH_RECORD, sizeof(int));
-    }
-  else if (message == CStatusMessages::READ_REC_BY_ID)
-    {
-      //       cout <<"Reading record by id..." << endl;
-      recordid_t id;
-      read(cSocket->socket(), &id, sizeof(recordid_t));
-      tmpRec = fCurrentDB->readRecordById(id);
-      if(tmpRec)
-	{
-	  writeRecord(cSocket, tmpRec);
-	  delete tmpRec;
-	}
-      else
-	write(cSocket->socket(), &CStatusMessages::NO_SUCH_RECORD, sizeof(int));
-    }
-  else
-    {
-      kdDebug() << fname << ": Unknown status message " 
-	   << message
-	   << endl;
-    }
 }
 
 void
@@ -510,12 +567,25 @@ KPilotLink::slotConduitClosed(KSocket* theSocket)
 {
   FUNCTIONSETUP;
 
+	if (fConduitRunStatus != Connected)
+	{
+		kdDebug() << fname
+			<< ": Strange -- unconnected conduit closed"
+			<< endl;
+	}
+
   disconnect(theSocket, SIGNAL(readEvent(KSocket*)),
 	     this, SLOT(slotConduitRead(KSocket*)));
   disconnect(theSocket, SIGNAL(closeEvent(KSocket*)),
 	     this, SLOT(slotConduitClosed(KSocket*)));
   delete theSocket;
 
+	fConduitRunStatus = Done ;
+	resumeDB();
+}
+
+void KPilotLink::resumeDB()
+{
   closeDatabase(fCurrentDB);
 
   // Get our backup copy.
@@ -538,19 +608,23 @@ KPilotLink::registeredConduit(const QString &dbName)
 
 	KConfig& config = getConfig("Database Names");
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname << ": Looking for "
 			<< dbName << endl;
 	}
+#endif
 
 	QString result = config.readEntry(dbName);
 	if (result.isNull())
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_MINOR)
 		{
 			kdDebug() << fname << ": Not found." << endl;
 		}
+#endif
 
 		return result;
 	}
@@ -558,50 +632,53 @@ KPilotLink::registeredConduit(const QString &dbName)
 	config.setGroup("Conduit Names");
 	QStringList installed = config.readListEntry("InstalledConduits");
 
+#ifdef DEBUG
 	if (debug_level & SYNC_TEDIOUS)
 	{
-		QStringList::Iterator i;
+		kdbgstream s = kdDebug();
 		kdDebug() << fname << ": Found conduit "
 			<< result << endl
 			<< fname << ": Installed Conduits are"
 			<< endl;
 
-		for (i=installed.begin(); i!=installed.end(); ++i)
-		{
-			kdDebug() << fname << ": * "
-				<< (*i)
-				<< endl;
-		}
+		listStrList(s,installed);
 	}
+#endif
 
 	if (!installed.contains(result))
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_MINOR)
 		{
 			kdDebug() << fname << ": Conduit not installed."
 				<< endl;
 		}
+#endif
 		return QString::null;
 	}
 
 	KService::Ptr conduit = KService::serviceByDesktopName(result);
 	if (!conduit)
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_MINOR)
 		{
 			kdDebug() << fname << ": No service for this conduit"
 				<< endl;
 		}
+#endif
 		return QString::null;
 	}
 	else
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_MINOR)
 		{
 			kdDebug() << fname << ": Found service with exec="
 				<< conduit->exec()
 				<< endl;
 		}
+#endif
 		return conduit->exec();
 	}
 }
@@ -616,6 +693,8 @@ KPilotLink::slotConduitConnected(KSocket* theSocket)
   connect(theSocket, SIGNAL(closeEvent(KSocket*)),
 	  this, SLOT(slotConduitClosed(KSocket*)));
   theSocket->enableRead(true);
+
+	fConduitRunStatus = Connected ;
 }
 
 // Requires the text is displayed in item 0
@@ -1190,7 +1269,10 @@ KPilotLink::doConduitBackup()
       *fConduitProcess << "--debug";
       *fConduitProcess << QString::number(debug_level);
     }
-  fConduitProcess->start(KProcess::DontCare);
+	connect(fConduitProcess,SIGNAL(processExited(KProcess *)),
+		this,SLOT(slotConduitDone(KProcess *)));
+	fConduitRunStatus = Running ;
+	fConduitProcess->start(KProcess::NotifyOnExit);
 }
 
 int KPilotLink::findNextDB(DBInfo *info)
@@ -1367,7 +1449,11 @@ KPilotLink::syncNextDB()
 		*fConduitProcess << "--debug" ;
 		*fConduitProcess << QString::number(debug_level);
 	}
-  fConduitProcess->start(KProcess::DontCare);
+	connect(fConduitProcess,SIGNAL(processExited(KProcess *)),
+		this,SLOT(slotConduitDone(KProcess *)));
+	fConduitRunStatus = Running ;
+	fConduitProcess->start(KProcess::NotifyOnExit);
+
 }
 
 bool 
@@ -1475,6 +1561,7 @@ void KPilotLink::endHotSync()
   fCurrentPilotSocket = -1;
   setConnected(false);
   showMessage("Hot-Sync completed");
+	fConduitRunStatus = None;
 }
 
 void KPilotLink::checkPilotUser()
@@ -1568,6 +1655,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.21  2000/11/26 01:44:54  adridg
+// Last of Heiko's patches
+//
 // Revision 1.20  2000/11/17 08:37:43  adridg
 // Config changes; kill-daemon-on-exit
 //

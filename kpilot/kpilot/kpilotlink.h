@@ -217,12 +217,27 @@ private:
 	int findNextDB(struct DBInfo *);
   void syncNextDB();
   void doConduitBackup();
+	/**
+	* This function is called by slotConduitCLosed and
+	* some other places to resume processing of databases
+	* for a backup or sync.
+	*/
+	void resumeDB();
 
 public slots:
   void slotConduitRead(KSocket*);
   void slotConduitClosed(KSocket*);
   void slotConduitConnected(KSocket*);
+	void slotConduitDone(KProcess *);
  /* END CONDUIT SYNCING SUPPORT */
+
+private:
+	/**
+	* This is en enum listing the states that a running conduit
+	* may be in. This is used to detect conduits that crash or
+	* otherwise misbehave.
+	*/
+	enum { None = 0 , Running, Connected, Done } fConduitRunStatus ;
 
 public:
   /**

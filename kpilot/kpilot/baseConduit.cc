@@ -152,7 +152,8 @@ BaseConduit::readNextModifiedRecord()
 {
   int result = 0;
 
-  write(fDaemonSocket->socket(), &CStatusMessages::NEXT_MODIFIED_REC, sizeof(int));
+  CStatusMessages::write(fDaemonSocket->socket(), 
+  	CStatusMessages::NEXT_MODIFIED_REC);
   if(read(fDaemonSocket->socket(), &result, sizeof(int)))
     {
       if(result == CStatusMessages::NO_SUCH_RECORD)
@@ -176,7 +177,8 @@ PilotRecord*
 BaseConduit::readNextRecordInCategory(int category)
 {
   int result = 0;
-  write(fDaemonSocket->socket(), &CStatusMessages::NEXT_REC_IN_CAT, sizeof(int));
+	CStatusMessages::write(fDaemonSocket->socket(), 
+		CStatusMessages::NEXT_REC_IN_CAT);
   write(fDaemonSocket->socket(), &category, sizeof(int));
   read(fDaemonSocket->socket(), &result, sizeof(int));
   if(result == CStatusMessages::NO_SUCH_RECORD)
@@ -191,7 +193,8 @@ BaseConduit::readRecordById(recordid_t id)
 {
   int result = 0;
 
-  write(fDaemonSocket->socket(), &CStatusMessages::READ_REC_BY_ID, sizeof(int));
+  CStatusMessages::write(fDaemonSocket->socket(), 
+  	CStatusMessages::READ_REC_BY_ID);
   write(fDaemonSocket->socket(), &id, sizeof(recordid_t));
   read(fDaemonSocket->socket(), &result, sizeof(int));
   if(result == CStatusMessages::NO_SUCH_RECORD)
@@ -206,7 +209,8 @@ BaseConduit::readRecordByIndex(int index)
 {
   int result = 0;
 
-  write(fDaemonSocket->socket(), &CStatusMessages::READ_REC_BY_INDEX, sizeof(int));
+  CStatusMessages::write(fDaemonSocket->socket(), 
+  	CStatusMessages::READ_REC_BY_INDEX);
   write(fDaemonSocket->socket(), &index, sizeof(int));
   read(fDaemonSocket->socket(), &result, sizeof(int));
   if(result == CStatusMessages::NO_SUCH_RECORD)
@@ -223,7 +227,8 @@ BaseConduit::writeRecord(PilotRecord* rec)
   int result = 0;
   recordid_t id = 0;
 
-  write(fDaemonSocket->socket(), &CStatusMessages::WRITE_RECORD, sizeof(int));
+  CStatusMessages::write(fDaemonSocket->socket(), 
+  	CStatusMessages::WRITE_RECORD);
   writeRecord(fDaemonSocket, rec);
   read(fDaemonSocket->socket(), &result, sizeof(int));
   read(fDaemonSocket->socket(), &id, sizeof(recordid_t));
@@ -240,7 +245,8 @@ BaseConduit::writeRecord(KSocket* theSocket, PilotRecord* rec)
   recordid_t uid = rec->getID();
   char* data = rec->getData();
   
-  write(theSocket->socket(), &CStatusMessages::REC_DATA, sizeof(int));
+  CStatusMessages::write(theSocket->socket(), 
+  	CStatusMessages::REC_DATA);
   write(theSocket->socket(), &len, sizeof(int));
   write(theSocket->socket(), &attrib, sizeof(int));
   write(theSocket->socket(), &cat, sizeof(int));
@@ -301,6 +307,9 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.9  2000/11/17 08:31:59  adridg
+// Minor changes
+//
 // Revision 1.8  2000/11/14 23:01:51  adridg
 // Proper first-time handling
 //
