@@ -1,9 +1,8 @@
 /***************************************************************************
                           kmailcvt.cpp  -  description
                              -------------------
-    begin                : Wed Aug  2 11:23:04 CEST 2000
-    copyright            : (C) 2000 by Hans Dijkema
-    email                : kmailcvt@hum.org
+    copyright            : (C) 2003 by Laurence Anderson
+    email                : l.d.anderson@warwick.ac.uk
  ***************************************************************************/
 
 /***************************************************************************
@@ -18,12 +17,6 @@
 #include "kmailcvt.h"
 #include <kaboutapplication.h>
 #include <qpushbutton.h>
-
-//////////////////////////////////////////////////////////////////////////////
-//
-// Add filters here
-//
-//////////////////////////////////////////////////////////////////////////////
 
 #include "filters.hxx"
 
@@ -54,8 +47,7 @@ void KMailCVT::next() {
 		Filter *selectedFilter = selfilterpage->getSelectedFilter();
 		// Goto next page
 		QWizard::next();
-		// Disable cancel & back
-		QWizard::cancelButton()->setEnabled(false);
+		// Disable back
 		setBackEnabled(QWizard::currentPage(), false);
 		// Start import
 		FilterInfo *info = new FilterInfo(importpage, _parent);
@@ -73,9 +65,9 @@ void KMailCVT::next() {
 	QWizard::next();
 }
 
-void KMailCVT::back() {
-	QWizard::cancelButton()->setEnabled(true); // Re-enable cancel
-	QWizard::back();
+void KMailCVT::reject() {
+	if ( currentPage() == importpage ) FilterInfo::terminateASAP();
+        else KWizard::reject();
 }
 
 void KMailCVT::help()

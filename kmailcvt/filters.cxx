@@ -33,10 +33,13 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
+bool FilterInfo::s_terminateASAP = false;
+
 FilterInfo::FilterInfo( KImportPageDlg* dlg, QWidget* parent )
   : m_dlg( dlg ),
     m_parent( parent )
 {
+  s_terminateASAP = false;
 }
 
 FilterInfo::~FilterInfo()
@@ -66,7 +69,7 @@ void FilterInfo::setCurrent( const QString& current )
 void  FilterInfo::setCurrent( int percent )
 {
   m_dlg->_done_current->setProgress( percent );
-  kapp->processEvents();
+  kapp->processEvents(); // Be careful - back & finish buttons disabled, so only user event that can happen is cancel/close button
 }
 
 void  FilterInfo::setOverall( int percent )
@@ -94,6 +97,16 @@ void FilterInfo::clear()
 void FilterInfo::alert( const QString& message )
 {
   KMessageBox::information( m_parent, message );
+}
+
+void FilterInfo::terminateASAP()
+{
+  s_terminateASAP = true;
+}
+
+bool FilterInfo::shouldTerminate()
+{
+  return s_terminateASAP;
 }
 
 //////////////////////////////////////////////////////////////////////////////////

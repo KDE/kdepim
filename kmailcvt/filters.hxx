@@ -43,6 +43,8 @@ class FilterInfo
     void addLog( const QString& log );
     void clear();
     void alert( const QString& message );
+    static void terminateASAP();
+    bool shouldTerminate();
 
     QWidget *parent() { return m_parent; }
 
@@ -50,6 +52,7 @@ class FilterInfo
   private:
     KImportPageDlg *m_dlg;
     QWidget      *m_parent;
+    static bool s_terminateASAP;
 };
 
 class Filter

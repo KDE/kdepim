@@ -1,9 +1,5 @@
 /***************************************************************************
                           kmailcvt.h  -  description
-                             -------------------
-    begin                : Wed Aug  2 11:23:04 CEST 2000
-    copyright            : (C) 2000 by Hans Dijkema
-    email                : kmailcvt@hum.org
  ***************************************************************************/
 
 /***************************************************************************
@@ -40,7 +36,7 @@ public:
 	~KMailCVT();
 
 	virtual void next();
-	virtual void back();
+	virtual void reject();
 public slots:
 	void help();
 private:

@@ -40,11 +40,11 @@ FilterMBox::~FilterMBox()
 
 void FilterMBox::import(FilterInfo *info)
 {
-  int currentFile = 0;
-  QStringList filenames = KFileDialog::getOpenFileNames( QDir::homeDirPath(), "*", info->parent() );
+  int currentFile = 1;
+  QStringList filenames = KFileDialog::getOpenFileNames( QDir::homeDirPath(), "*|" + i18n("mbox files (*)"), info->parent() );
   info->setOverall(0);
 
-  for ( QStringList::Iterator filename = filenames.begin(); filename != filenames.end(); ++filename) {
+  for ( QStringList::Iterator filename = filenames.begin(); filename != filenames.end(); ++filename, ++currentFile) {
     QFile mbox( *filename );
     if (! mbox.open( IO_ReadOnly ) ) {
       info->alert( i18n("Couldn't open %1, skipping").arg( *filename ) );
@@ -68,14 +68,14 @@ void FilterMBox::import(FilterInfo *info)
       tmp.close();
       addMessage( info, folderName, tmp.name() );
       tmp.unlink();
-      info->setCurrent( (int) (((float) mbox.at() / filenameInfo.size()) * 100) );
+      int currentPercentage = (int) ( ( (float) mbox.at() / filenameInfo.size() ) * 100 );
+      info->setCurrent( currentPercentage );
+      info->setOverall( (int) ( currentPercentage * ( (float) currentFile / filenames.count() ) ) );
+      if ( info->shouldTerminate() ) return;
     }
   
-    info->setCurrent(100);
-    info->setOverall( (int) ( (float) ++currentFile / filenames.count() ) );
     info->addLog( i18n("Finished importing emails from %1").arg( *filename ) );
   }
-  info->setOverall(100);
 }
 
 // vim: ts=2 sw=2 et
