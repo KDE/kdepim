@@ -76,7 +76,7 @@ void Engine::go()
 
   mKonnectors.clear();
 
-  KRES::Manager<Konnector> *manager = KonnectorManager::self();  
+  KRES::Manager<Konnector> *manager = KonnectorManager::self();
   KRES::Manager<Konnector>::ActiveIterator it;
   for( it = manager->activeBegin(); it != manager->activeEnd(); ++it ) {
     kdDebug() << "  Engine::go(): Konnector: id: " << (*it)->identifier()
@@ -178,7 +178,7 @@ void Engine::slotSynceeReadError( Konnector *k )
 {
   logMessage( i18n("Error reading Syncees from '%1'")
               .arg( k->resourceName() ) );
-  
+
   --mKonnectorCount;
 
   tryExecuteActions();
@@ -224,6 +224,7 @@ void Engine::tryFinish()
 void Engine::finish()
 {
   logMessage( i18n("Synchronization finished.") );
+  emit doneSync();
 }
 
 #include "engine.moc"

@@ -48,12 +48,12 @@ class Engine : public QObject
     /**
       Calling this function triggers the flow of actions specified for the
       current profile. The following sequence of actions takes place:
-      
+
       1) It is determined which Konnectors are selected by calling
          ActionPart::selectKonnectors(). No Konnectors are selected by default.
-         
+
       2) All selected Konnectors are read.
-      
+
       3) The actions represented by the ActionParts are tiggered in the sequence
          of the ActionPart list by executing ActionPart::executeAction().
 
@@ -69,7 +69,7 @@ class Engine : public QObject
 
     void tryFinish();
     void finish();
-    
+
     void disconnectDevice( Konnector *k );
 
   protected slots:
@@ -80,6 +80,8 @@ class Engine : public QObject
 
     void slotProgress( Konnector *, const Progress & );
     void slotError( Konnector *, const Error & );
+  signals:
+    void doneSync();
 
   private:
     QMap<QString,Konnector *> mKonnectorMap;
