@@ -89,6 +89,15 @@ NullConduit::~NullConduit()
 	}
 
 	fConfig->setGroup(NullConduitFactory::group);
+	
+	bool r = fConfig->readBoolEntry(NullConduitFactory::failImmediately);
+	if (r)
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": Config says to fail now." << endl;
+#endif
+		return false;
+	}
 
 	QString m=fConfig->readEntry(NullConduitFactory::message);
 	addSyncLogEntry(m);
@@ -107,6 +116,9 @@ NullConduit::~NullConduit()
 
 
 // $Log$
+// Revision 1.27  2002/08/23 22:03:20  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.26  2002/08/21 19:24:50  adridg
 // Tail end of the license change: fixup wording and LGPL the NULL conduit.
 //

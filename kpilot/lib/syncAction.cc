@@ -81,7 +81,20 @@ SyncAction::SyncAction(KPilotDeviceLink  *p,
 
 /* slot */ void SyncAction::execConduit()
 {
-	if (!this->exec())
+	FUNCTIONSETUP;
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname 
+		<< ": Running conduit " << name() << endl;
+#endif
+
+	bool r = this->exec();
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Exec returned " << r << endl;
+#endif
+
+	if (!r)
 	{
 		emit logError(i18n("The conduit %1 could not be executed.")
 			.arg(name()));
@@ -269,6 +282,9 @@ int InteractiveAction::questionYesNo(const QString & text,
 }
 
 // $Log$
+// Revision 1.7  2002/08/24 21:27:32  adridg
+// Lots of small stuff to remove warnings
+//
 // Revision 1.6  2002/08/23 22:03:21  adridg
 // See ChangeLog - exec() becomes bool, debugging added
 //

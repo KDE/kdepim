@@ -5,13 +5,16 @@
   config dialog. Some of them might make sense.
 
 2002-08-24  Adriaan de Groot
+* Add a "Fail Now" mode to the NULL conduit to help debugging.
+
+2002-08-24  Adriaan de Groot
 * (syncAction.cc) Whoops, forgot to implement the timeout feature
   in interactive questionYesNo.
 * One more go through all the sources removing warnings.
 
 2002-08-23  Adriaan de Groot
-* (addressWidget.cc) Added more debugging output in response to bug #45977. 
-  Gosh, it's even a FreeBSD user. This basically means that the database 
+* (addressWidget.cc) Added more debugging output in response to bug #45977.
+  Gosh, it's even a FreeBSD user. This basically means that the database
   can't be opened, and I have no idea why.
 * (kpilotlink.cc) Added more debugging output in KPilotLink::acceptDevice() 
   to deal with problems from Chris Cowell and Beat Straehl.

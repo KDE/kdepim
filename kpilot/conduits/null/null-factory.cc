@@ -21,7 +21,7 @@
 ** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -30,6 +30,7 @@
 
 #include <qtabwidget.h>
 #include <qlineedit.h>
+#include <qcheckbox.h>
 
 #include <kconfig.h>
 #include <kinstance.h>
@@ -54,6 +55,7 @@ void *init_libnullconduit()
 /* static */ const char * const NullConduitFactory::group = "Null-conduit";
 const char * const NullConduitFactory::databases = "Databases" ;
 const char * const NullConduitFactory::message = "LogMessage";
+const char * const NullConduitFactory::failImmediately = "FailNow";
 
 KAboutData *NullConduitFactory::fAbout = 0L;
 NullConduitFactory::NullConduitFactory(QObject *p, const char *n) :
@@ -174,6 +176,8 @@ NullWidgetSetup::~NullWidgetSetup()
 
 	fConfig->writeEntry(NullConduitFactory::message,fConfigWidget->fLogMessage->text());
 	fConfig->writeEntry(NullConduitFactory::databases,fConfigWidget->fDatabases->text());
+	fConfig->writeEntry(NullConduitFactory::failImmediately,
+		fConfigWidget->fFailImmediately->isChecked());
 }
 
 /* virtual */ void NullWidgetSetup::readSettings()
@@ -203,6 +207,9 @@ NullWidgetSetup::~NullWidgetSetup()
 
 
 // $Log$
+// Revision 1.6  2002/08/21 19:24:50  adridg
+// Tail end of the license change: fixup wording and LGPL the NULL conduit.
+//
 // Revision 1.5  2001/12/29 15:43:46  adridg
 // Various config buglets
 //

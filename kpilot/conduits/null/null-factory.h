@@ -66,7 +66,8 @@ public:
 	// Configuration keys
 	static const char * const group;
 	static const char * const databases,
-		* const message;
+		* const message,
+		* const failImmediately;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
@@ -86,6 +87,9 @@ void *init_libnullconduit();
 } ;
 
 // $Log$
+// Revision 1.5  2002/08/21 19:24:50  adridg
+// Tail end of the license change: fixup wording and LGPL the NULL conduit.
+//
 // Revision 1.4  2001/12/29 15:43:46  adridg
 // Various config buglets
 //
