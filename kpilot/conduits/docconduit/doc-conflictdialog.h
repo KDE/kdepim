@@ -1,55 +1,54 @@
-/****************************************************************************
-** Form interface generated from reading ui file './doc-conflictdialog.ui'
-**
-** Created: Son Dez 29 17:51:44 2002
-**      by: The User Interface Compiler ()
-**
-** WARNING! All changes made in this file will be lost!
-****************************************************************************/
-
 #ifndef FORM1_H
 #define FORM1_H
 
-#include <qvariant.h>
-#include <qpixmap.h>
-#include <qdialog.h>
-class QVBoxLayout;
-class QHBoxLayout;
-class QGridLayout;
-class QComboBox;
-class QGroupBox;
+//#include <qvariant.h>
+//#include <qdialog.h>
+#include <kdialogbase.h>
+#include "doc-conduit.h"
+
 class QLabel;
+class QComboBox;
 class QPushButton;
+class QGridLayout;
+class QGroupBox;
+class QTimer;
+
+typedef struct conflictEntry {
+	QLabel*dbname;
+	QComboBox*resolution;
+	QPushButton*info;
+	int index;
+	bool conflict;
+};
 
 class ResolutionDialog : public KDialogBase
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    ResolutionDialog( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
-    ~ResolutionDialog();
-
-    QGroupBox* groupBox1;
-    QLabel* textLabel2;
-    QComboBox* fDBResolution_1;
-    QComboBox* fDBResolution_2;
-    QLabel* textLabel2_2;
-    QPushButton* pushButton1_2;
-    QPushButton* pushButton1;
-    QLabel* textLabel1;
-    QLabel* textLabel1_2;
+	ResolutionDialog( QWidget* parent=0, const QString& caption=i18n("Resolution Dialog"), syncInfoList*sinfo=0L, KPilotDeviceLink*lnk=0L);
+	~ResolutionDialog();
+	
+	bool hasConflicts;
+public slots:
+	void _tickle();
+protected:
+	QTimer* tickleTimer;
+	KPilotDeviceLink* fHandle;
 
 protected:
-    QGridLayout* Form1Layout;
-    QGridLayout* groupBox1Layout;
+	QGridLayout* Form1Layout;
+	QGridLayout* resolutionGroupBoxLayout;
+	syncInfoList*syncInfo;
+	
+	QValueList<conflictEntry> conflictEntries;
+	QGroupBox* resolutionGroupBox;
+	QLabel* textLabel1;
+	QLabel* textLabel2;
 
 protected slots:
-    virtual void languageChange();
-private:
-    QPixmap image0;
-    QPixmap image1;
-    QPixmap image2;
-    QPixmap image3;
+	virtual void slotOk();
+	void slotInfo(int index);
 
 };
 

@@ -35,7 +35,7 @@ typedef QValueList<docSyncInfo> syncInfoList;
 
 typedef enum eSyncDirectionEnum {
 		eSyncNone,
-		eSyncAll,
+//		eSyncAll,
 		eSyncPDAToPC,
 		eSyncPCToPDA,
 		eSyncDelete,
@@ -117,18 +117,17 @@ public slots:
 	 *  (i.e. an object of class PilotSerialDatabase) */
 	PilotDatabase*openDOCDatabase(QString dbname);
 
+	QString constructPDBFileName(QString name);
+	QString constructDOCFileName(QString name);
+
+
+
 
 	QString fDOCDir, fPDBDir;
 	bool fKeepPDBLocally;
-	enum eConflictResolutionEnum {
-		eResNone,
-		ePDAOverride,
-		ePCOverride,
-//		ePCOverrideOnBookmarkChange,
-		eResAsk
-	} eConflictResolution;
+	eSyncDirectionEnum  eConflictResolution;
 	int fBookmarks;
-	bool fCompress, fIgnoreBmkChangesOnly, fLocalSync;
+	bool fCompress, fIgnoreBmkChangesOnly, fLocalSync, fAlwaysUseResolution;
 	QStringList fDBListSynced;
 	QStringList fDBNames;
 	syncInfoList fSyncInfoList;
@@ -155,6 +154,9 @@ public:
 
 
 // $Log$
+// Revision 1.2  2002/12/31 00:22:10  kainhofe
+// Currently restructuring everything. Not yet finished.
+//
 // Revision 1.1  2002/12/13 16:29:53  kainhofe
 // New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
 //

@@ -451,11 +451,11 @@
                 <attribute name="title">
                     <string>conflicts</string>
                 </attribute>
-                <grid>
+                <vbox>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QButtonGroup" row="0" column="0">
+                    <widget class="QButtonGroup">
                         <property name="name">
                             <cstring>fConflictResolution</cstring>
                         </property>
@@ -480,7 +480,10 @@
                                     <cstring>RadioButton5</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>P&amp;C overrides</string>
+                                    <string>P&amp;DA overrides</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>1</number>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="2" column="0" rowspan="1" colspan="2">
@@ -488,7 +491,10 @@
                                     <cstring>RadioButton4</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>P&amp;DA overrides</string>
+                                    <string>P&amp;C overrides</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>2</number>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="3" column="0" rowspan="1" colspan="2">
@@ -501,6 +507,9 @@
                                 <property name="checked">
                                     <bool>true</bool>
                                 </property>
+                                <property name="buttonGroupId">
+                                    <number>4</number>
+                                </property>
                             </widget>
                             <widget class="QRadioButton" row="0" column="0">
                                 <property name="name">
@@ -509,10 +518,21 @@
                                 <property name="text">
                                     <string>&amp;No resolution</string>
                                 </property>
+                                <property name="buttonGroupId">
+                                    <number>0</number>
+                                </property>
                             </widget>
                         </grid>
                     </widget>
-                    <spacer row="1" column="0">
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>fAlwaysUseResolution</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Always show resolution dialog, even when there are no conflicts.</string>
+                        </property>
+                    </widget>
+                    <spacer>
                         <property name="name">
                             <cstring>Spacer8</cstring>
                         </property>
@@ -524,12 +544,12 @@
                         </property>
                         <property name="sizeHint">
                             <size>
-                                <width>16</width>
-                                <height>213</height>
+                                <width>20</width>
+                                <height>170</height>
                             </size>
                         </property>
                     </spacer>
-                </grid>
+                </vbox>
             </widget>
         </widget>
     </grid>
@@ -567,7 +587,21 @@
     </connection>
 </connections>
 <tabstops>
+    <tabstop>fDOCDir</tabstop>
+    <tabstop>fkeepPDBLocally</tabstop>
+    <tabstop>fPDBDir</tabstop>
+    <tabstop>fLocalSync</tabstop>
+    <tabstop>fCompress</tabstop>
+    <tabstop>fConvertBookmarks</tabstop>
+    <tabstop>fBookmarksInline</tabstop>
+    <tabstop>fBookmarksEndtags</tabstop>
+    <tabstop>fBookmarksBmk</tabstop>
+    <tabstop>radioButton11</tabstop>
+    <tabstop>fNoConversionOfBmksOnly</tabstop>
+    <tabstop>RadioButton7</tabstop>
+    <tabstop>fAlwaysUseResolution</tabstop>
     <tabstop>tabWidget</tabstop>
+    <tabstop>RadioButton1</tabstop>
 </tabstops>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>

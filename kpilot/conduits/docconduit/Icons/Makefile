@@ -53,13 +53,13 @@ AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc
 CFLAGS = -ansi -W -Wall -pedantic -Wshadow -Wpointer-arith -Wmissing-prototypes -Wwrite-strings -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -O2  
-CONF_FILES =  $(top_srcdir)/./admin/configure.in.min $(top_srcdir)/configure.in.in $(top_srcdir)/./kalarm/configure.in.in $(top_srcdir)/./kaplan/configure.in.in $(top_srcdir)/./karm/configure.in.in $(top_srcdir)/./kitchensync/configure.in.in $(top_srcdir)/./korganizer/configure.in.in $(top_srcdir)/./kpilot/conduits/configure.in.in $(top_srcdir)/./kpilot/conduits/JPilotPluginProxy/configure.in.in $(top_srcdir)/./kpilot/configure.in.in $(top_srcdir)/./ksync/configure.in.in $(top_srcdir)/./libkpimexchange/configure.in.in
+CONF_FILES =  $(top_srcdir)/./admin/configure.in.min $(top_srcdir)/configure.in.in $(top_srcdir)/./kalarm/configure.in.in $(top_srcdir)/./karm/configure.in.in $(top_srcdir)/./kitchensync/configure.in.in $(top_srcdir)/./korganizer/configure.in.in $(top_srcdir)/./kpilot/conduits/configure.in.in $(top_srcdir)/./kpilot/conduits/JPilotPluginProxy/configure.in.in $(top_srcdir)/./kpilot/configure.in.in $(top_srcdir)/./ksync/configure.in.in $(top_srcdir)/./libkpimexchange/configure.in.in
 CPP = gcc -E
 CPPFLAGS =  -DQT_THREAD_SUPPORT  -D_REENTRANT
 CXX = g++
 CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc
-CXXFLAGS = -Wnon-virtual-dtor -Wno-long-long -Wundef -Wall -pedantic -W -Wpointer-arith -Wmissing-prototypes -Wwrite-strings -ansi -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -Wcast-align -Wconversion -O2 -fno-exceptions -fno-check-new
+CXXFLAGS = -Wnon-virtual-dtor -Wno-long-long -Wundef -Wall -pedantic -W -Wpointer-arith -Wmissing-prototypes -Wwrite-strings -ansi -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -Wcast-align -Wconversion -O2 -fno-exceptions -fno-check-new -fno-common
 CYGPATH_W = echo
 DCOPIDL = /opt/kde3/bin/dcopidl
 DCOPIDL2CPP = /opt/kde3/bin/dcopidl2cpp
@@ -94,7 +94,7 @@ KDE_LDFLAGS = -L/opt/kde3/lib
 KDE_MT_LDFLAGS = 
 KDE_MT_LIBS = -lpthread
 KDE_PLUGIN = -avoid-version -module -no-undefined $(KDE_RPATH) $(KDE_MT_LDFLAGS)
-KDE_RPATH = -R $(kde_libraries) -R $(x_libraries)
+KDE_RPATH = -R $(kde_libraries) -R $(qt_libraries) -R $(x_libraries)
 KDE_USE_CLOSURE_FALSE = #
 KDE_USE_CLOSURE_TRUE = 
 KDE_USE_FINAL_FALSE = 
@@ -148,8 +148,7 @@ MEINPROC = /opt/kde3/bin/meinproc
 MOC = /opt/qt-copy/bin/moc
 MSGFMT = /usr/bin/msgfmt
 NOOPT_CFLAGS = -O0
-NOOPT_CXXFLAGS =  -Wnon-virtual-dtor -Wno-long-long -Wundef -Wall -pedantic -W -Wpointer-arith -Wmissing-prototypes -Wwrite-strings -ansi -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -Wcast-align -Wconversion  -fno-exceptions -fno-check-new
-NOREPO = -fno-repo
+NOOPT_CXXFLAGS =  -Wnon-virtual-dtor -Wno-long-long -Wundef -Wall -pedantic -W -Wpointer-arith -Wmissing-prototypes -Wwrite-strings -ansi -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -Wcast-align -Wconversion  -fno-exceptions -fno-check-new -fno-common
 OBJEXT = o
 PACKAGE = kdepim
 PACKAGE_BUGREPORT = 
@@ -164,13 +163,12 @@ PISOCK_LIB = -lpisock
 QTDOCDIR = /opt/qt-copy/doc/html
 QTE_NORTTI = 
 QT_INCLUDES = -I/opt/qt-copy/include
-QT_LDFLAGS = 
+QT_LDFLAGS = -L/opt/qt-copy/lib
 RANLIB = ranlib
-REPO = -frepo
 SET_MAKE = 
 SHELL = /bin/sh
 STRIP = strip
-TOPSUBDIRS =  calendarsystem doc kabc karm kdgantt kfile-plugins kgantt knotes libical libkcal libkdepim kpilot ksync kalarmd kandy kaddressbook libkpimexchange kalarm korganizer konsolekalendar
+TOPSUBDIRS =  calendarsystem doc kabc karm kdgantt kfile-plugins kgantt knotes libical libkcal libkdepim kpilot ksync kalarmd kandy kaddressbook libkpimexchange kalarm korganizer konsolekalendar kaplan
 UIC = /opt/qt-copy/bin/uic -L $(kde_widgetdir) -nounload
 UIC_TR = tr2i18n
 USER_INCLUDES = 
@@ -190,7 +188,7 @@ ac_ct_CXX = g++
 ac_ct_RANLIB = ranlib
 ac_ct_STRIP = strip
 all_includes = -I/opt/kde3/include -I/opt/qt-copy/include -I/usr/X11R6/include 
-all_libraries = -L/usr/X11R6/lib -L/opt/kde3/lib 
+all_libraries = -L/usr/X11R6/lib -L/opt/qt-copy/lib -L/opt/kde3/lib 
 am__fastdepCC_FALSE = 
 am__fastdepCC_TRUE = #
 am__fastdepCXX_FALSE = 
@@ -214,8 +212,8 @@ host_alias =
 host_cpu = i686
 host_os = linux-gnu
 host_vendor = pc
-include_exchange_SUBDIR_FALSE = #
-include_exchange_SUBDIR_TRUE = 
+include_exchange_SUBDIR_FALSE = 
+include_exchange_SUBDIR_TRUE = #
 include_malconduit_FALSE = #
 include_malconduit_TRUE = 
 includedir = ${prefix}/include
@@ -231,8 +229,8 @@ kalarmd_SUBDIR_included_FALSE = #
 kalarmd_SUBDIR_included_TRUE = 
 kandy_SUBDIR_included_FALSE = #
 kandy_SUBDIR_included_TRUE = 
-kaplan_SUBDIR_included_FALSE = 
-kaplan_SUBDIR_included_TRUE = #
+kaplan_SUBDIR_included_FALSE = #
+kaplan_SUBDIR_included_TRUE = 
 karm_SUBDIR_included_FALSE = #
 karm_SUBDIR_included_TRUE = 
 kde_appsdir = ${prefix}/share/applnk
@@ -290,7 +288,7 @@ oldincludedir = /usr/include
 prefix = /opt/kde3
 program_transform_name = s,x,x,
 qt_includes = /opt/qt-copy/include
-qt_libraries = 
+qt_libraries = /opt/qt-copy/lib
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 subdirs =  libical
@@ -344,7 +342,12 @@ TAGS:
 ctags: CTAGS
 CTAGS:
 
-DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+#>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+#>+ 4
+KDE_DIST=cr22-app-kpalmdoc.png cr16-app-kpalmdoc.png cr32-app-kpalmdoc.png cr48-app-kpalmdoc.png 
+
+DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
+
 
 top_distdir = ../../../..
 distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
@@ -424,7 +427,9 @@ info: info-am
 
 info-am:
 
-install-data-am:
+#>- install-data-am:
+#>+ 1
+install-data-am: install-kde-icons 
 
 install-exec-am:
 
@@ -450,7 +455,9 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-info-am
+#>- uninstall-am: uninstall-info-am
+#>+ 1
+uninstall-am: uninstall-kde-icons  uninstall-info-am
 
 .PHONY: all all-am check check-am clean clean-generic clean-libtool \
 	distclean distclean-generic distclean-libtool distdir dvi \
@@ -475,6 +482,35 @@ uninstall-am: uninstall-info-am
 
 #>+ 2
 docs-am:
+
+#>+ 28
+install-kde-icons:
+	$(mkinstalldirs) $(DESTDIR)$(kpalmdocicondir)/crystalsvg/32x32/apps
+	$(INSTALL_DATA) $(srcdir)/cr32-app-kpalmdoc.png $(DESTDIR)$(kpalmdocicondir)/crystalsvg/32x32/apps/kpalmdoc.png
+	$(mkinstalldirs) $(DESTDIR)$(kpalmdocicondir)/crystalsvg/48x48/apps
+	$(INSTALL_DATA) $(srcdir)/cr48-app-kpalmdoc.png $(DESTDIR)$(kpalmdocicondir)/crystalsvg/48x48/apps/kpalmdoc.png
+	$(mkinstalldirs) $(DESTDIR)$(kpalmdocicondir)/crystalsvg/16x16/apps
+	$(INSTALL_DATA) $(srcdir)/cr16-app-kpalmdoc.png $(DESTDIR)$(kpalmdocicondir)/crystalsvg/16x16/apps/kpalmdoc.png
+	$(mkinstalldirs) $(DESTDIR)$(kpalmdocicondir)/crystalsvg/22x22/apps
+	$(INSTALL_DATA) $(srcdir)/cr22-app-kpalmdoc.png $(DESTDIR)$(kpalmdocicondir)/crystalsvg/22x22/apps/kpalmdoc.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/crystalsvg/32x32/apps
+	$(INSTALL_DATA) $(srcdir)/cr32-app-kpalmdoc.png $(DESTDIR)$(kde_icondir)/crystalsvg/32x32/apps/kpalmdoc.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/crystalsvg/48x48/apps
+	$(INSTALL_DATA) $(srcdir)/cr48-app-kpalmdoc.png $(DESTDIR)$(kde_icondir)/crystalsvg/48x48/apps/kpalmdoc.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/crystalsvg/16x16/apps
+	$(INSTALL_DATA) $(srcdir)/cr16-app-kpalmdoc.png $(DESTDIR)$(kde_icondir)/crystalsvg/16x16/apps/kpalmdoc.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/crystalsvg/22x22/apps
+	$(INSTALL_DATA) $(srcdir)/cr22-app-kpalmdoc.png $(DESTDIR)$(kde_icondir)/crystalsvg/22x22/apps/kpalmdoc.png
+
+uninstall-kde-icons:
+	-rm -f $(DESTDIR)$(kpalmdocicondir)/crystalsvg/32x32/apps/kpalmdoc.png
+	-rm -f $(DESTDIR)$(kpalmdocicondir)/crystalsvg/48x48/apps/kpalmdoc.png
+	-rm -f $(DESTDIR)$(kpalmdocicondir)/crystalsvg/16x16/apps/kpalmdoc.png
+	-rm -f $(DESTDIR)$(kpalmdocicondir)/crystalsvg/22x22/apps/kpalmdoc.png
+	-rm -f $(DESTDIR)$(kde_icondir)/crystalsvg/32x32/apps/kpalmdoc.png
+	-rm -f $(DESTDIR)$(kde_icondir)/crystalsvg/48x48/apps/kpalmdoc.png
+	-rm -f $(DESTDIR)$(kde_icondir)/crystalsvg/16x16/apps/kpalmdoc.png
+	-rm -f $(DESTDIR)$(kde_icondir)/crystalsvg/22x22/apps/kpalmdoc.png
 
 #>+ 6
 force-reedit:

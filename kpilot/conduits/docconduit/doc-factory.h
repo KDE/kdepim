@@ -55,7 +55,7 @@ public:
 		*fConflictResolution, 
 		*fConvertBookmarks, *fBookmarksBmk, *fBookmarksInline, *fBookmarksEndtags, 
 		*fCompress, 
-		*fSyncDirection, *fDOCList, *fDBListSynced, *fIgnoreBmkChanges, *fLocalSync;
+		*fSyncDirection, *fDOCList, *fDBListSynced, *fIgnoreBmkChanges, *fLocalSync, *fAlwaysUseResolution;
 	static const char *dbDOCtype;
 	static const char *dbDOCcreator;
  
@@ -79,6 +79,9 @@ extern "C" {
 
 
 // $Log$
+// Revision 1.2  2002/12/31 00:22:10  kainhofe
+// Currently restructuring everything. Not yet finished.
+//
 // Revision 1.1  2002/12/13 16:29:53  kainhofe
 // New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
 //

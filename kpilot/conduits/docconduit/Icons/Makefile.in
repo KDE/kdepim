@@ -148,7 +148,6 @@ MOC = @MOC@
 MSGFMT = @MSGFMT@
 NOOPT_CFLAGS = @NOOPT_CFLAGS@
 NOOPT_CXXFLAGS = @NOOPT_CXXFLAGS@
-NOREPO = @NOREPO@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -165,7 +164,6 @@ QTE_NORTTI = @QTE_NORTTI@
 QT_INCLUDES = @QT_INCLUDES@
 QT_LDFLAGS = @QT_LDFLAGS@
 RANLIB = @RANLIB@
-REPO = @REPO@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
@@ -343,7 +341,12 @@ TAGS:
 ctags: CTAGS
 CTAGS:
 
-DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+#>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+#>+ 4
+KDE_DIST=cr22-app-kpalmdoc.png cr16-app-kpalmdoc.png cr32-app-kpalmdoc.png cr48-app-kpalmdoc.png 
+
+DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
+
 
 top_distdir = ../../../..
 distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
@@ -423,7 +426,9 @@ info: info-am
 
 info-am:
 
-install-data-am:
+#>- install-data-am:
+#>+ 1
+install-data-am: install-kde-icons 
 
 install-exec-am:
 
@@ -449,7 +454,9 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-info-am
+#>- uninstall-am: uninstall-info-am
+#>+ 1
+uninstall-am: uninstall-kde-icons  uninstall-info-am
 
 .PHONY: all all-am check check-am clean clean-generic clean-libtool \
 	distclean distclean-generic distclean-libtool distdir dvi \
@@ -474,6 +481,35 @@ uninstall-am: uninstall-info-am
 
 #>+ 2
 docs-am:
+
+#>+ 28
+install-kde-icons:
+	$(mkinstalldirs) $(DESTDIR)$(kpalmdocicondir)/crystalsvg/32x32/apps
+	$(INSTALL_DATA) $(srcdir)/cr32-app-kpalmdoc.png $(DESTDIR)$(kpalmdocicondir)/crystalsvg/32x32/apps/kpalmdoc.png
+	$(mkinstalldirs) $(DESTDIR)$(kpalmdocicondir)/crystalsvg/48x48/apps
+	$(INSTALL_DATA) $(srcdir)/cr48-app-kpalmdoc.png $(DESTDIR)$(kpalmdocicondir)/crystalsvg/48x48/apps/kpalmdoc.png
+	$(mkinstalldirs) $(DESTDIR)$(kpalmdocicondir)/crystalsvg/16x16/apps
+	$(INSTALL_DATA) $(srcdir)/cr16-app-kpalmdoc.png $(DESTDIR)$(kpalmdocicondir)/crystalsvg/16x16/apps/kpalmdoc.png
+	$(mkinstalldirs) $(DESTDIR)$(kpalmdocicondir)/crystalsvg/22x22/apps
+	$(INSTALL_DATA) $(srcdir)/cr22-app-kpalmdoc.png $(DESTDIR)$(kpalmdocicondir)/crystalsvg/22x22/apps/kpalmdoc.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/crystalsvg/32x32/apps
+	$(INSTALL_DATA) $(srcdir)/cr32-app-kpalmdoc.png $(DESTDIR)$(kde_icondir)/crystalsvg/32x32/apps/kpalmdoc.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/crystalsvg/48x48/apps
+	$(INSTALL_DATA) $(srcdir)/cr48-app-kpalmdoc.png $(DESTDIR)$(kde_icondir)/crystalsvg/48x48/apps/kpalmdoc.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/crystalsvg/16x16/apps
+	$(INSTALL_DATA) $(srcdir)/cr16-app-kpalmdoc.png $(DESTDIR)$(kde_icondir)/crystalsvg/16x16/apps/kpalmdoc.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_icondir)/crystalsvg/22x22/apps
+	$(INSTALL_DATA) $(srcdir)/cr22-app-kpalmdoc.png $(DESTDIR)$(kde_icondir)/crystalsvg/22x22/apps/kpalmdoc.png
+
+uninstall-kde-icons:
+	-rm -f $(DESTDIR)$(kpalmdocicondir)/crystalsvg/32x32/apps/kpalmdoc.png
+	-rm -f $(DESTDIR)$(kpalmdocicondir)/crystalsvg/48x48/apps/kpalmdoc.png
+	-rm -f $(DESTDIR)$(kpalmdocicondir)/crystalsvg/16x16/apps/kpalmdoc.png
+	-rm -f $(DESTDIR)$(kpalmdocicondir)/crystalsvg/22x22/apps/kpalmdoc.png
+	-rm -f $(DESTDIR)$(kde_icondir)/crystalsvg/32x32/apps/kpalmdoc.png
+	-rm -f $(DESTDIR)$(kde_icondir)/crystalsvg/48x48/apps/kpalmdoc.png
+	-rm -f $(DESTDIR)$(kde_icondir)/crystalsvg/16x16/apps/kpalmdoc.png
+	-rm -f $(DESTDIR)$(kde_icondir)/crystalsvg/22x22/apps/kpalmdoc.png
 
 #>+ 6
 force-reedit:

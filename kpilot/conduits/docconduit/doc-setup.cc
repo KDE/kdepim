@@ -100,6 +100,8 @@ DOCWidgetSetup::~DOCWidgetSetup()
 		fConfigWidget->fNoConversionOfBmksOnly->isChecked());
 	fConfig->writeEntry(DOCConduitFactory::fLocalSync, 
 		fConfigWidget->fLocalSync->isChecked());
+	fConfig->writeEntry(DOCConduitFactory::fAlwaysUseResolution,
+		fConfigWidget->fAlwaysUseResolution->isChecked());
 	
 	fConfig->sync();
 }
@@ -138,10 +140,15 @@ DOCWidgetSetup::~DOCWidgetSetup()
 		fConfig->readBoolEntry(DOCConduitFactory::fIgnoreBmkChanges, false));
 	fConfigWidget->fLocalSync->setChecked(
 		fConfig->readBoolEntry(DOCConduitFactory::fLocalSync, false));
+	fConfigWidget->fAlwaysUseResolution->setChecked(
+		fConfig->readBoolEntry(DOCConduitFactory::fAlwaysUseResolution, false));
 }
 
 
 // $Log$
+// Revision 1.2  2002/12/31 00:22:10  kainhofe
+// Currently restructuring everything. Not yet finished.
+//
 // Revision 1.1  2002/12/13 16:29:53  kainhofe
 // New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
 //

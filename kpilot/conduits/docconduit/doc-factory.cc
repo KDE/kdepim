@@ -68,6 +68,7 @@ const char *DOCConduitFactory::fSyncDirection = "Sync Direction";
 const char *DOCConduitFactory::fDOCList = "Converted PalmDOCs";
 const char *DOCConduitFactory::fIgnoreBmkChanges = "Ignore only bookmark changes";
 const char *DOCConduitFactory::fLocalSync = "Only sync dirs";
+const char *DOCConduitFactory::fAlwaysUseResolution = "Always show resolution dialog";
 
 const char *DOCConduitFactory::dbDOCtype = "TEXt";
 const char *DOCConduitFactory::dbDOCcreator = "REAd";
@@ -140,6 +141,9 @@ DOCConduitFactory::~DOCConduitFactory()
 
 
 // $Log$
+// Revision 1.2  2002/12/31 00:22:10  kainhofe
+// Currently restructuring everything. Not yet finished.
+//
 // Revision 1.1  2002/12/13 16:29:53  kainhofe
 // New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
 //
