@@ -55,16 +55,17 @@ void KNSmtpClient::doMail()
   
   sendSignal(TSsendMail); 
   
-  QCString cmd = "MAIL FROM:";
-  //cmd += art->headerLine("From");
+  QCString cmd = "MAIL FROM:<";
   cmd += art->fromEmail();
+  cmd += ">";
   if (!sendCommandWCheck(cmd,250))
     return;
     
   progressValue = 80;
 
-  cmd = "RCPT TO:";
+  cmd = "RCPT TO:<";
   cmd += art->headerLine("To");
+  cmd += ">";
   if (!sendCommandWCheck(cmd,250))
     return;
     
