@@ -103,16 +103,15 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
   // Write backup file
   KSaveFile::backupFile( fileName );
 
-  QFile file( fileName );
-  if (!file.open( IO_WriteOnly ) ) {
+  KSaveFile file( fileName );
+  if (file.status() != 0) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
                  i18n("Could not open file '%1'").arg(fileName)));
     return false;
   }
-  QTextStream ts( &file );
-  ts.setEncoding( QTextStream::UnicodeUTF8 );
-  ts << text;
-  file.close();
+  QTextStream* ts = file.textStream();
+  ts->setEncoding( QTextStream::UnicodeUTF8 );
+  (*ts) << text;
 
   return true;
 }
