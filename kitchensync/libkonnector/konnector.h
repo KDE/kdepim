@@ -26,11 +26,11 @@
 #include <qstring.h>
 #include <qcstring.h>
 #include <ksyncentry.h>
+#include "koperations.h"
 
 
 class Kapabilities;
 class KDevice;
-class KOperations;
 class KonnectorPlugin;
 
 

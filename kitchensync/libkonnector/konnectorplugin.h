@@ -25,10 +25,10 @@
 #include <qstringlist.h>
 #include <ksyncentry.h>
 #include <qptrlist.h>
+#include "koperations.h"
 
 class Kapabilities;
 class KSyncEntry;
-class KOperations;
 class KonnectorPlugin : public QObject
 {
 Q_OBJECT
