@@ -196,7 +196,7 @@ Sender: kde-core-devel-admin@master.kde.org
             EmpathIndexRecord * rec =
                 _createIndexRecordFromFetchReply(fetchReply);
 
-            if (0 != i) {
+            if (0 != rec) {
                 i->insert(rec->id(), *rec);
             } else {
                 empathDebug("Couldn't create index record from fetch reply");
