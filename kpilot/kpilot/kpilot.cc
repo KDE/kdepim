@@ -35,16 +35,14 @@ static const char *kpilot_id =
 #include "options.h"
 #endif
 
-
+#if 0
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <dirent.h>
-#include <fstream.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <errno.h>
-
+#endif
 
 #ifndef QFILE_H
 #include <qfile.h>
