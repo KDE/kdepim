@@ -401,7 +401,10 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 	if (!keepRunning) return 0;
 
 	// init the conduit after DCOP is setup
-	fConduit->init();
+	if (fMode != BaseConduit::Test)
+	{
+		fConduit->init();
+	}
 	// the mode could have changed to error if init didn't run
 	// properly
         fMode = fConduit->getMode();
@@ -436,6 +439,10 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.29  2001/06/18 19:51:40  cschumac
+// Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
+// They use libkcal now.
+//
 // Revision 1.28  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //
