@@ -116,7 +116,8 @@ class AddressEditDialog : public KDialogBase
   Q_OBJECT
 
   public:
-    AddressEditDialog( const KABC::Address &addr, QWidget *parent, const char *name = 0 );
+    AddressEditDialog( const KABC::Address::List &list, const KABC::Address &addr,
+                       QWidget *parent, const char *name = 0 );
     ~AddressEditDialog();
     
     const KABC::Address &address();
@@ -126,12 +127,15 @@ class AddressEditDialog : public KDialogBase
 
   private:
     void fillCombo(KComboBox *combo);
+    void updateTypeCombo();
     
     KABC::Address mAddress;
+    QValueList<int> mTypeList;
     
     QCheckBox *mPreferredCheckBox;
     QTextEdit *mStreetTextEdit;
     KComboBox *mCountryCombo;
+    KComboBox *mTypeCombo;
     KLineEdit *mRegionEdit;
     KLineEdit *mLocalityEdit;
     KLineEdit *mPostalCodeEdit;

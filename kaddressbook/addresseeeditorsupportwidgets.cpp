@@ -438,7 +438,7 @@ void AddressEditWidget::addressChanged()
 void AddressEditWidget::addAddress()
 {
   KABC::Address a;
-  AddressEditDialog dialog( a, this );
+  AddressEditDialog dialog( mAddressList, a, this );
   if ( dialog.exec() ) {
     mAddressList.append( dialog.address() );
     updateTypeCombo( mAddressList, mTypeCombo );
@@ -450,7 +450,7 @@ void AddressEditWidget::addAddress()
 
 void AddressEditWidget::editAddress()
 {
-  AddressEditDialog dialog( currentAddress( mTypeCombo, mTypeCombo->currentItem() ) , this );
+  AddressEditDialog dialog( mAddressList, currentAddress( mTypeCombo, mTypeCombo->currentItem() ) , this );
   if ( dialog.exec() ) {
     KABC::Address addr = dialog.address();
 
@@ -956,7 +956,7 @@ KABC::PhoneNumber PhoneTypeDialog::phoneNumber()
 
 ///////////////////////////////////////////
 // AddressEditDialog
-AddressEditDialog::AddressEditDialog( const KABC::Address &addr, QWidget *parent, const char *name )
+AddressEditDialog::AddressEditDialog( const KABC::Address::List &list, const KABC::Address &addr, QWidget *parent, const char *name )
   : KDialogBase( KDialogBase::Plain, i18n( "Edit Address" ),
                  KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
                  parent, name )
@@ -968,10 +968,11 @@ AddressEditDialog::AddressEditDialog( const KABC::Address &addr, QWidget *parent
   QGridLayout *topLayout = new QGridLayout(page, 8, 2);
   topLayout->setSpacing(spacingHint());
 
-  QPushButton *editTypeButton = new QPushButton( i18n( "&Edit Type..." ), page );
+  mTypeCombo = new KComboBox( page );
+  topLayout->addWidget( mTypeCombo, 0, 0 );
+  QPushButton *editTypeButton = new QPushButton( i18n( "&Other Type..." ), page );
   connect( editTypeButton, SIGNAL( clicked() ), SLOT( editType() ) );
-
-  topLayout->addMultiCellWidget( editTypeButton, 0, 0, 0, 1 );
+  topLayout->addWidget( editTypeButton, 0, 1 );
 
   QLabel *label = new QLabel(i18n("Street:"), page);
   label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -1011,7 +1012,22 @@ AddressEditDialog::AddressEditDialog( const KABC::Address &addr, QWidget *parent
   topLayout->addMultiCellWidget( mPreferredCheckBox, 7, 7, 0, 1 );
   
   fillCombo(mCountryCombo);
-  
+
+  // fill the type list
+  KABC::Address::List::ConstIterator it;
+  for ( it = list.begin(); it != list.end(); ++it ) {
+    int type = ( (*it).type() & ~KABC::Address::Pref );
+    if ( !mTypeList.contains( type ) )
+      mTypeList.append( type );
+  }
+  if ( !mTypeList.contains( KABC::Address::Home ) )
+    mTypeList.append( KABC::Address::Home );
+  if ( !mTypeList.contains( KABC::Address::Work ) )
+    mTypeList.append( KABC::Address::Work );
+
+  updateTypeCombo();
+  mTypeCombo->setCurrentItem( mTypeList.findIndex( mAddress.type() & ~KABC::Address::Pref ) );
+
   // Fill in the values
   mStreetTextEdit->setText(mAddress.street());
   mStreetTextEdit->setFocus();
@@ -1024,10 +1040,6 @@ AddressEditDialog::AddressEditDialog( const KABC::Address &addr, QWidget *parent
 
   // initialize the layout
   topLayout->activate();
-
-  // set default type
-  if ( mAddress.type() == 0 )
-    mAddress.setType( KABC::Address::Home );
 }
 
 AddressEditDialog::~AddressEditDialog()
@@ -1036,6 +1048,7 @@ AddressEditDialog::~AddressEditDialog()
     
 const KABC::Address &AddressEditDialog::address()
 {
+  mAddress.setType( mTypeList[ mTypeCombo->currentItem() ] );
   mAddress.setLocality(mLocalityEdit->text());
   mAddress.setRegion(mRegionEdit->text());
   mAddress.setPostalCode(mPostalCodeEdit->text());
@@ -1054,8 +1067,27 @@ const KABC::Address &AddressEditDialog::address()
 void AddressEditDialog::editType()
 {
   AddressTypeDialog dlg( mAddress.type(), this );
-  if ( dlg.exec() )
-    mAddress.setType( dlg.type() );
+  if ( dlg.exec() ) {
+    if ( !mTypeList.contains( dlg.type() ) )
+      mTypeList.append( dlg.type() );
+
+    updateTypeCombo();
+    mTypeCombo->setCurrentItem( mTypeList.findIndex( dlg.type() ) );
+  }
+}
+
+void AddressEditDialog::updateTypeCombo()
+{
+  int pos = mTypeCombo->currentItem();
+  mTypeCombo->clear();
+  
+  QValueList<int>::Iterator it;
+  for ( it = mTypeList.begin(); it != mTypeList.end(); ++it ) {
+    KABC::Address addr( *it );
+    mTypeCombo->insertItem( addr.typeLabel() );
+  }
+
+  mTypeCombo->setCurrentItem( pos );
 }
 
 void AddressEditDialog::fillCombo(KComboBox *combo)
