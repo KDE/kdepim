@@ -3,8 +3,6 @@
   <!ENTITY kappname "&kandy;">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
-  
-  
 ]>
 
 <book lang="&language;">
@@ -20,88 +18,425 @@
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2001-04-11</date>
-<releaseinfo>0.01.00</releaseinfo>
+<date>2001-08-13</date>
+<releaseinfo>0.02.00</releaseinfo>
 <abstract>
-<para>Kandy is an application for synchronizing data on a mobile phone with the
-data on the desktop.</para>
+<para>&kandy; is an application for synchronizing data on a mobile phone
+with the data on the desktop.</para>
 </abstract>
 <keywordset>
 <keyword>KDE</keyword>
+<keyword>kdepim</keyword>
 <keyword>kandy</keyword>
+<keyword>synchronizing</keyword>
+<keyword>phone</keyword>
 </keywordset>
 </bookinfo>
 
 <chapter id="using-kandy">
-<title>Using Kandy</title>
+<title>Using &kandy;</title>
 
 <sect1 id="terminal">
 <title>The Terminal Window</title>
 
-<para>The terminal window provides a low level interface for controlling the mobile
-phone via AT modem commands. You can type in commands in the upper middle field.
-The lower middle fields shows the direct response of the mobile phone. In the
-right side of the main window the processed output is shown.</para>
+<para>The terminal window provides a low level interface for controlling
+the mobile phone via <command>AT</command> modem commands. You can type
+in commands in the upper middle field.  The lower middle fields shows
+the direct response of the mobile phone. In the right side of the main
+window the processed output is shown.</para>
 
-<para> On the left side you have
-the list of available commands. You can execute them by double-clicking or
-pressing the "Execute" button. The modem response output fields show what happens.
-If you have typed in a new command you can add it to the list of available
-commands by pressing the "Add Command" button. A dialog pops up, which lets you
-select name and parameters for the command.</para>
+<para> On the left side you have the list of available commands. You can
+execute them by double-clicking or pressing the
+<guibutton>Execute</guibutton> button. The modem response output fields
+show what happens.  If you have typed in a new command you can add it to
+the list of available commands by pressing the <guibutton>Add
+Command</guibutton> button. A dialog pops up, which lets you select name
+and parameters for the command.</para> 
 
-<para>The command list is saved to an XML
-file by selecting "Save" from the menu or pressing the corresponding toolbar
-button. You can load an existing file by selecting "Open" from the menu.</para>
+<para>The command list is saved to an &XML; file by selecting
+<guimenuitem>Save</guimenuitem> from the menu or pressing the
+corresponding toolbar button. You can load an existing file by selecting
+<guimenuitem>Open</guimenuitem> from the menu.</para> 
 
 </sect1>
 
 <sect1 id="mobilegui">
 <title>Mobile Interface Window</title>
 
-<para>By choosing "Mobile GUI" from the "Show" menu of the terminal window you
-open the Interface Window for your mobile phone. This shows a comprehensive view
-of the status and data present on the phone including the phonebook. There are
-two list of phonebook data, one representing the KDE address book and the other
-representing the data on the phone.</para>
+<para>By choosing <guimenuitem>Mobile GUI</guimenuitem> from the
+<guimenu>Show</guimenu> menu of the terminal window you open the
+Interface Window for your mobile phone. This shows a comprehensive view
+of the status and data present on the phone including the
+phonebook. There are two list of phonebook data, one representing the
+&kde; address book and the other representing the data on the
+phone.</para>
 
-<para>You can read the phone books by pressing the "Read" button right under the
-corresponding list. By pressing the "Write" button you write back the data shown in
-the list to the corresponding phonebook. By pressing
-"Save to File" you can store the mobile phonebook as list of comma-seperated values to disk.
-After loading the phonebook data using the "Read" buttons, you can merge the phonebooks
-by pressing the "Merge" button. This will put data only present in one of the phonebooks
-into the other and vice versa. If conflicts occur during this process, a dialog pops up.
-</para>
+<para>You can read the phone books by pressing the
+<guibutton>Read</guibutton> button right under the corresponding
+list. By pressing the <guibutton>Write</guibutton> button you write back
+the data shown in the list to the corresponding phonebook. By pressing
+<guibutton>Save to File</guibutton> you can store the mobile phonebook
+as list of comma-seperated values to disk.  After loading the phonebook
+data using the <guibutton>Read</guibutton> buttons, you can merge the
+phonebooks by pressing the <guibutton>Merge</guibutton> button. This
+will put data only present in one of the phonebooks into the other and
+vice versa. If conflicts occur during this process, a dialog pops
+up.</para>
 
-<para>The "Sync" button combines all the actions needed for syncing the phonebooks. It reads
-the data from the KDE addressbook and the mobile phone, does the merge and writes it back.
-</para>
+<para>The <guibutton>Sync</guibutton> button combines all the actions
+needed for syncing the phonebooks. It reads the data from the &kde;
+addressbook and the mobile phone, does the merge and writes it
+back.</para>
 
 </sect1>
 
 <sect1 id="configuring">
-<title>Configuring Kandy</title>
+<title>Configuring &kandy;</title>
 
-<para>By selecting the entry "Configure Kandy" from the menu you get the
-preferences dialog of Kandy. You can set the name of the serial device, where
-your mobile is connected in this dialog. Examples for the name of the serial
-device under Linux are /dev/ttyS0 for the first and /dev/ttyS1 for the second
-serial interface of your computer. You can also set, which windows are opened
-per default, when starting Kandy.</para>
-
-</sect1>
-
-<sect1 id="dcop">
-<title>DCOP Interface</title>
-
-<para>Kandy provides an DCOP interface KandyIface with the following functions:
-syncPhonebook() syncs the mobile phone book book with the KDE address book. This is equivalent
-to pressing the "Sync" button in the Mobile Interface Window. exit() closes Kandy.
-</para>
+<para>By selecting the entry <guimenuitem>Configure Kandy</guimenuitem>
+from the menu you get the preferences dialog of &kandy;. You can set the
+name of the serial device, where your mobile is connected in this
+dialog. Examples for the name of the serial device under &Linux; are
+<filename class="devicefile">/dev/ttyS0</filename> for the first and
+<filename class="devicefile">/dev/ttyS1</filename> for the second serial
+interface of your computer. You can also set, which windows are opened
+per default, when starting &kandy;.</para>
 
 </sect1>
 
 </chapter>
 
+<chapter id="menu-ref">
+<title>Menu Reference</title>
+
+<sect1>
+<title><guimenu>File</guimenu> menu</title>
+
+<variablelist>
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut>
+<keycombo action="simul">
+&Ctrl;<keycap>Q</keycap>
+</keycombo>
+</shortcut>
+<guimenu><accel>F</accel>ile</guimenu>
+<guimenuitem><accel>Q</accel>uit</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para><action>Exit</action> &kandy;.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect1>
+
+<sect1>
+<title><guimenu>Show</guimenu> Menu</title>
+
+<variablelist>
+<varlistentry>
+<term><menuchoice>
+<guimenu><accel>S</accel>how</guimenu>
+<guimenuitem>Terminal</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para><action>Open the terminal window</action>, where you can interact
+with your phone via <command>AT</command> commands.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect1>
+
+<sect1>
+<title><guimenu>Modem</guimenu> menu</title>
+
+<variablelist>
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu><accel>M</accel>odem</guimenu>
+<guimenuitem>Connect</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para><action>Connect to your phone.</action></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu><accel>M</accel>odem</guimenu>
+<guimenuitem>Disconnect</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para><action>Disconnect from your phone.</action></para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect1>
+
+<sect1>
+<title><guimenu>Settings</guimenu> menu</title>
+
+<variablelist>
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu><accel>S</accel>ettings</guimenu>
+<guimenuitem>Show <accel>T</accel>oolbar</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para><action>Toggle on or off the display of the toolbar</action></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu><accel>S</accel>ettings</guimenu>
+<guimenu>Show St<accel>a</accel>tusbar</guimenu>
+</menuchoice>
+</term>
+<listitem>
+<para><action>Toggle on or off the display of the
+statusbar.</action></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu><accel>S</accel>ettings</guimenu>
+<guimenuitem>Configure <accel>K</accel>eybindings...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para><action>Open a standard dialog to modify shortcut
+keybindings.</action></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu><accel>S</accel>ettings</guimenu>
+<guimenuitem>Configure Tool<accel>b</accel>ars...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para><action>Open a standard dialog to modify the icons on the
+toolbar.</action></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu><accel>S</accel>ettings</guimenu>
+<guimenuitem><accel>C</accel>onfigure Kandy...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para><action>Opens a dialog where you can customize the
+application.</action>.  This is described further in the section <xref
+linkend="configuring"/>.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect1>
+
+<sect1>
+<title><guimenu>Help</guimenu> menu</title>
+
+<variablelist>
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut>
+<keycap>F1</keycap>
+</shortcut>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem><accel>C</accel>ontents</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para><action>Opens the manual at the Contents page.</action> (This
+document).</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut>
+<keycombo action="simul">&Shift;<keycap>F1</keycap></keycombo>
+</shortcut>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem>What's <accel>T</accel>his?</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Changes the cursor to a question mark (<quote>?</quote>), allowing
+you to <action>click on items in the interface, and see a short help
+message explaining the use of that item</action>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem>Report Bug...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para><action>Opens a standard dialog where you can report a bug or make
+a wishlist request.</action></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem><accel>A</accel>bout Kandy</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para><action>Displays some information</action> about &kandy;,
+including it's authors and licensing.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu><accel>H</accel>elp</guimenu>
+<guimenuitem>About <accel>K</accel>DE</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para><action>Displays some information</action> about the &kde;
+project.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect1>
+
+</chapter>
+
+<chapter id="credits">
+<title>Credits and Licences</title>
+
+<para>&kandy; copyright 2001 Cornelius Schumacher
+<email>schumacher@kde.org</email>.</para>
+
+<para>Documentation by Cornelius Schumacher, with additions by Lauri
+Watts <email>lauri@kde.org</email>.</para>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
+
+&underGPL;
+&underFDL;
+
+</chapter>
+
+<appendix id="installation">
+<title>Installation</title>
+
+<sect1 id="getting-kandy">
+<title>How to obtain &kandy;</title>
+
+<para>&kandy; is part of the <ulink
+url="http://www.kde.org/">&kde;</ulink> Project.  &kandy; can be found
+in the kdepim package on the <ulink
+url="ftp://ftp.kde.org/pub/kde/">main &FTP; site</ulink> of the &kde;
+project, or one of its many <ulink
+url="http://www.kde.org/mirrors.html">mirrors</ulink>.</para>
+
+</sect1>
+
+<sect1 id="amor-requirements">
+<title>Requirements</title>
+
+<para>You will need to have the kdelibs package installed in order to
+successfully compile the kdepim package that contains &kandy;.  The
+kdepim package may be found at the same location as the kdepim
+package.</para>
+
+<para>The &kaddressbook; is part of the kdebase package.  This can also
+be found at the same location as the kdepim package.</para>
+
+</sect1>
+
+<sect1 id="compilation">
+<title>Compilation and Installation</title>
+
+<para>In order to compile and install &kandy; on your system, type the
+following in the top-level kdepim directory in the kdepim
+distribution:</para>
+
+<screen width="40"><prompt>%</prompt> <userinput><command>./configure</command></userinput>
+<prompt>%</prompt> <userinput><command>make</command></userinput></screen>
+
+<para>At this point, you can either install the entire kdepim package,
+or just install &kandy;.  To install only &kandy;, first change to the
+<filename class="directory">kandy</filename> directory.  To install the
+entire package, remain in the kdepim directory.</para>
+
+<para>In either case, you will likely need to become <systemitem
+class="username">root</systemitem> before installing.  Once you have
+become <systemitem class="username">root</systemitem>, type the
+following:</para>
+
+<screen width="40"><prompt>#</prompt> <userinput><command>make</command> <option>install</option></userinput></screen>
+
+<para>Compiling and installing the required kdelibs package follows the
+same process.  If you encounter any problems compiling or installing
+&amor;, help may be obtained from the <ulink
+url="http://www.kde.org/mailinglists.html">&kde; mailing lists </ulink>
+or from the Usenet newsgroup: comp.windows.x.kde.</para>
+</sect1>
+</appendix>
+
+<appendix id="developer-info">
+<title>Developer Information</title>
+
+<sect1 id="dcop">
+<title><acronym>DCOP</acronym> Interface</title>
+
+<para>&kandy; provides an <acronym>DCOP</acronym> interface
+<interfacename>KandyIface</interfacename> with the following functions:
+<function>syncPhonebook()</function> syncs the mobile phone book book
+with the &kde; address book. This is equivalent to pressing the
+<guibutton>Sync</guibutton> button in the Mobile <function>Interface
+Window. exit()</function> closes &kandy;.</para>
+
+</sect1>
+
+</appendix>
+
 </book>
+
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+// vim:ts=0:sw=2:tw=78:noet
+-->
