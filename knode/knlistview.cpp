@@ -14,6 +14,7 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
+#include <qcursor.h>
 #include <qheader.h>
 #include <qtimer.h>
 #include <qpainter.h>
