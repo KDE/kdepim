@@ -70,7 +70,7 @@
             <property stdset="1">
                 <name>text</name>
                 <string>Available conduits are on
-the left.  Active conduits
+the left. Active conduits
 are on the right. Only
 active conduits can be
 configured.</string>

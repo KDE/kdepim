@@ -1128,7 +1128,7 @@ bool KPilotDeviceLink::syncDatabase(DBInfo * database)
 	{
 		// Must be a new Database...
 		showMessage(i18n
-			("No previous copy.  Copying data from pilot..."));
+			("No previous copy. Copying data from pilot..."));
 
 		delete firstDB;
 		delete secondDB;
@@ -1248,6 +1248,9 @@ void CleanupAction::exec()
 
 
 // $Log$
+// Revision 1.11  2001/12/29 15:45:02  adridg
+// Lots of little changes for the syncstack
+//
 // Revision 1.10  2001/10/08 22:20:18  adridg
 // Changeover to libkpilot, prepare for lib-based conduits
 //
