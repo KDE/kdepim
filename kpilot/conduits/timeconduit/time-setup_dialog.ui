@@ -80,7 +80,7 @@
                                     <cstring>RadioButton1</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Set time on &amp;handheld from time on PC</string>
+                                    <string>Set the &amp;handheld time from the time on the PC</string>
                                 </property>
                                 <property name="checked">
                                     <bool>true</bool>
@@ -94,7 +94,7 @@
                                     <bool>false</bool>
                                 </property>
                                 <property name="text">
-                                    <string>Set time on &amp;PC from time on the handheld</string>
+                                    <string>Set the &amp;PC time from the time on the handheld</string>
                                 </property>
                             </widget>
                         </grid>
