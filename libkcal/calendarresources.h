@@ -153,7 +153,6 @@ class CalendarResources : public Calendar
   private:
     void init();
 
-    ResourceCalendar* mStandard;
     bool mOpen;
 
     KRES::ResourceManager<ResourceCalendar>* mManager;

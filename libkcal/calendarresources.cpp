@@ -65,6 +65,9 @@ void CalendarResources::init()
 
   if ( mManager->isEmpty() ) {
     QString fileName = locateLocal( "data", "kcal/std.ics" );
+
+    kdDebug() << "DEFAULT: " << fileName << endl;
+    
     ResourceCalendar *defaultResource = new ResourceLocal( fileName );
     defaultResource->setResourceName( i18n("Default calendar resource") );
     
@@ -131,8 +134,8 @@ void CalendarResources::addEvent(Event *anEvent)
 {
   kdDebug(5800) << "CalendarResources::addEvent" << endl;
 
-  if ( mStandard ) {
-    mStandard->addEvent( anEvent );
+  if ( mManager->standardResource() ) {
+    mManager->standardResource()->addEvent( anEvent );
   } else {
     kdDebug() << "FIXME: We don't have a standard resource. Adding events isn't going to work" << endl;
   }
@@ -171,8 +174,8 @@ void CalendarResources::addTodo(Todo *todo)
 {
   kdDebug(5800) << "CalendarResources::addTodo" << endl;
 
-  if ( mStandard ) {
-    mStandard->addTodo( todo );
+  if ( mManager->standardResource() ) {
+    mManager->standardResource()->addTodo( todo );
   } else {
     kdDebug() << "FIXME: We don't have a standard resource. Adding todos isn't going to work" << endl;
   }
@@ -373,8 +376,8 @@ void CalendarResources::addJournal(Journal *journal)
 {
   kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
 
-  if ( mStandard ) {
-    mStandard->addJournal( journal );
+  if ( mManager->standardResource() ) {
+    mManager->standardResource()->addJournal( journal );
   } else {
     kdDebug() << "FIXME: We don't have a standard resource. Adding journals isn't going to work" << endl;
   }
@@ -391,8 +394,8 @@ Journal *CalendarResources::journal(const QDate &date)
   // Else, first see if the standard resource has a journal for this date. If it has, return that journal.
   // If not, check all resources for a journal for this date.
 
-  if ( mStandard ) {
-    Journal* journal = mStandard->journal( date );
+  if ( mManager->standardResource() ) {
+    Journal* journal = mManager->standardResource()->journal( date );
     if ( journal ) return journal;
   } 
   KRES::ResourceManager<ResourceCalendar>::Iterator it;
