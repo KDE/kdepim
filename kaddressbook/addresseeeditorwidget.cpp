@@ -327,6 +327,7 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel(i18n("Birthday:"), tab2);
   layout->addWidget(label, 4, 3);
   mBirthdayPicker = new KDateEdit(tab2, "mBirthdayPicker");
+  mBirthdayPicker->setHandleInvalid(true);
   connect(mBirthdayPicker, SIGNAL(dateChanged(QDate)),
           SLOT(dateChanged(QDate)));
   layout->addWidget(mBirthdayPicker, 4, 4);
@@ -334,6 +335,7 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel(i18n("Anniversary:"), tab2);
   layout->addWidget(label, 5, 3);
   mAnniversaryPicker = new KDateEdit(tab2, "mAnniversaryPicker");
+  mAnniversaryPicker->setHandleInvalid(true);
   connect(mAnniversaryPicker, SIGNAL(dateChanged(QDate)),
           SLOT(dateChanged(QDate)));
   layout->addWidget(mAnniversaryPicker, 5, 4);
@@ -379,6 +381,7 @@ void AddresseeEditorWidget::load()
   mPhoneEditWidget->setPhoneNumbers(mAddressee.phoneNumbers());
   mAddressEditWidget->setAddresses(mAddressee.addresses());
   mBirthdayPicker->setDate(mAddressee.birthday().date());
+  mAnniversaryPicker->setDate(QDate());
   mNicknameEdit->setText(mAddressee.nickName());
   mCategoryEdit->setText(mAddressee.categories().join(","));
   
