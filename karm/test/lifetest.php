@@ -61,10 +61,10 @@ function simkey($s)
 {
   for ($i=0; $i<strlen($s); $i++)
   {
-    usleep(10000);            # this is heuristic, its need is related to X.org bug #2710
+    usleep(10000);            # this is just for the user to see what happens
     if ($s[$i]=="/") system("xte 'key KP_Divide'");
     else system("xte 'key ".$s[$i]."'");
-    usleep(10000);            # this is heuristic, its need is related to X.org bug #2710
+    usleep(10000);            
   }
 }
 
@@ -79,9 +79,9 @@ function funkeysim($s, $count=1)
 {
   for ($i=1; $i<=$count; $i++) 
   {
-    usleep(10000);            # this is heuristic, its need is related to X.org bug #2710
+    usleep(10000);            
     $rc=exec("xte 'key $s'");
-    usleep(10000);            # this is heuristic, its need is related to X.org bug #2710
+    usleep(10000);            
   }
   return $rc;
 }
@@ -119,23 +119,17 @@ else
       $err.="you do not have XAutomation installed, get it from http://hoopajoo.net/projects/xautomation.html\n";
     break;
   }
-  unlink ("/tmp/karmtest.ics");
-  unlink ("/tmp/example.planner");
+  // the following is the same as 'if file_exist(...) unlink(...)', but atomic
+  @unlink ("/tmp/karmtest.ics");
+  @unlink ("/tmp/example.planner");
   if ($err=="")
-  {
-    echo "\nCalling karm...";
-    
-    $descriptorspec = array(
-    0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-    1 => array("file", "/tmp/error-output.txt", "a"), 
-    2 => array("pipe", "w")
-    );
-    $process = proc_open("karm", $descriptorspec, $pipes);
-     
-    while ((strpos($line,"karm: KarmStorage::save : wrote 0 tasks to") === false) and ($line<>"libkcal: ResourceLocal::reload()\n")) $line=fgets($pipes[2]);
-    echo "karm is saving, we can start\n";
-    
-    
+  { 
+    // start and wait till mainwindow is up
+    echo "\nStarting karm";
+    $process=popen("karm", 'w');
+    $rc=1;
+    while ($rc==1) system("dcop `dcop 2>/dev/null | grep karm` KarmDCOPIface version",$rc);
+    echo "mainwindow is ready";
     sleep (1);
     # the mouse can be in the way, so, move it out!
     system("xte 'mousemove 1 1'");
@@ -179,8 +173,7 @@ else
     keysim("/tmp/example.planner");
     sleep (1);
     funkeysim("Return");
-    sleep (2);
-    while ($line=fgetc($pipes[2]));
+    sleep (1);
     
     # export to CSV file
     funkeysim("Alt_L");
@@ -215,9 +208,9 @@ else
     $content=file_get_contents("/tmp/exporttest.csv");
     $lines=explode("\n",$content);
     if (!preg_match("/\"example 1\",,0[,|.]00,0[,|.]00,0[,|.]00,0[,|.]00/", $lines[0])) $err.="csv export is wrong";
-    unlink ("/tmp/karmtest.ics");
-    unlink ("/tmp/example.planner");
-    unlink ("/tmp/exporttest.csv");
+    @unlink ("/tmp/karmtest.ics");
+    @unlink ("/tmp/example.planner");
+    @unlink ("/tmp/exporttest.csv");
   }
 }
   echo $err;
