@@ -15,7 +15,7 @@ class PabContactDialog : public ContactDialog
   Q_OBJECT
 
 public:
-  PabContactDialog( QWidget *parent, 
+  PabContactDialog( const QString & title, QWidget *parent, 
 		    const char *name,
 		    QString entryKey,
 		    ContactEntry* entry,
@@ -37,7 +37,7 @@ class PabNewContactDialog : public ContactDialog
   Q_OBJECT
 
 public:
-  PabNewContactDialog( QWidget *parent, 
+  PabNewContactDialog( const QString & title, QWidget *parent, 
 		       const char *name, 
 		       bool modal = FALSE );
   virtual ~PabNewContactDialog();

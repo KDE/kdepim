@@ -36,7 +36,7 @@ public:
  * then that ContactEntry object will be updated otherwise a new 
  * ContactEntry object will be created
  */
-    ContactDialog( QWidget *parent, const char *name, ContactEntry* ce = 0, bool modal = false );
+    ContactDialog( const QString & title, QWidget *parent, const char *name, ContactEntry* ce = 0, bool modal = false );
 
 /**
  * Returns the ContactEntry associated with this dialog.

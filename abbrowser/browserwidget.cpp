@@ -29,12 +29,12 @@
 #include <qclipboard.h>
 #include <qcheckbox.h>
 #include <qradiobutton.h>
-
 #include <qdragobject.h>
 #include <qevent.h>
 #include <qurl.h>
-#include <kurl.h>
 
+#include <kurl.h>
+#include <kdebug.h>
 #include <klocale.h>
 #include <kconfig.h>
 #include <kapp.h>
@@ -105,7 +105,7 @@ PwPasteCommand::PwPasteCommand( PabWidget *pw, QString clipboard )
 
 QString PwPasteCommand::name()
 {
-  return i18n( i18n( "Paste" ));
+  return i18n( "Paste" );
 }
 
 void PwPasteCommand::undo()
@@ -150,7 +150,7 @@ PwNewCommand::PwNewCommand( PabWidget *pw, ContactEntry *ce )
 
 QString PwNewCommand::name()
 {
-  return i18n( i18n( "New Entry" ));
+  return i18n( "New Entry" );
 }
 
 void PwNewCommand::undo()
@@ -158,8 +158,8 @@ void PwNewCommand::undo()
   ContactEntryList *cel = pw->contactEntryList();
   ContactEntry *tempce = cel->find( entryKey );
   if (!tempce) { // Another process deleted it already(!)
-    debug( "PwNewCommand::undo() Associated ContactEntry not found." );
-    debug( "Unable to undo insert" );
+    qDebug( "PwNewCommand::undo() Associated ContactEntry not found." );
+    qDebug( "Unable to undo insert" );
   }
   else
     ce = new ContactEntry( *tempce );
@@ -167,7 +167,7 @@ void PwNewCommand::undo()
   if (plvi)
     delete plvi;
   else // Should never happen
-    debug( "PwNewCommand::undo() missing PabListViewItem." );
+    qDebug( "PwNewCommand::undo() missing PabListViewItem." );
   cel->remove( entryKey );
 }
 
@@ -204,7 +204,7 @@ PwEditCommand::~PwEditCommand()
 
 QString PwEditCommand::name()
 {
-  return i18n( i18n( "Entry Edit" ));
+  return i18n( "Entry Edit" );
 }
 
 void PwEditCommand::undo()
@@ -409,7 +409,7 @@ ContactEntry *PabListViewItem::getEntry()
   ContactEntryList *cel = parent()->getPabWidget()->contactEntryList();
   ContactEntry *ce = cel->find( entryKey_ );
   if (!ce)  // can only happen to shared address book
-    debug( "PabListViewItem::getEntry() Associated ContactEntry not found" );
+    qDebug( "PabListViewItem::getEntry() Associated ContactEntry not found" );
   return ce;
 }
 
@@ -634,7 +634,7 @@ PabWidget::PabWidget( ContactEntryList *cel,
 
 PabWidget::~PabWidget()
 {
-  debug( "Destroying PabWidget" );
+  qDebug( "Destroying PabWidget" );
 }
 
 void PabWidget::setupListView()
@@ -750,7 +750,7 @@ void PabWidget::updateContact( QString addr, QString name )
 	if (!name.isEmpty())
 	  ce->replace( "N", new QString( name ) );
 	QString title = i18n( "Address Book Entry Editor" );
-	PabContactDialog *cd = new PabContactDialog( this, title, *it, ce );
+	PabContactDialog *cd = new PabContactDialog( title, this, 0, *it, ce );
 	QObject::connect( cd, SIGNAL( change( QString, ContactEntry* ) ), 
 			  this, SLOT( change( QString, ContactEntry* ) ));
 	cd->show();
@@ -758,7 +758,7 @@ void PabWidget::updateContact( QString addr, QString name )
       }
   }
   
-  ContactDialog *cd = new PabNewContactDialog( this, i18n( "Address Book Entry Editor" ));
+  ContactDialog *cd = new PabNewContactDialog( i18n( "Address Book Entry Editor" ), this, 0);
   ContactEntry *ce = cd->entry();
   if (!name.isEmpty())
     ce->replace( ".AUXCONTACT-N", new QString(name) );
@@ -822,10 +822,10 @@ void PabWidget::itemSelected( QListViewItem *item )
     QString entryKey = plvi->entryKey();
     ContactEntry *ce = cel->find( entryKey );
     if (!ce) { // Another process deleted it(!)
-      debug( "PabWidget::itemSelected Associated entry not found" );
+      qDebug( "PabWidget::itemSelected Associated entry not found" );
       return;
     }
-    PabContactDialog *cd = new PabContactDialog( this, title, entryKey, ce );
+    PabContactDialog *cd = new PabContactDialog( title, this, 0, entryKey, ce );
     QObject::connect( cd, SIGNAL( change( QString, ContactEntry* ) ), 
 		      this, SLOT( change( QString, ContactEntry* ) ));
     cd->show();
@@ -886,7 +886,7 @@ void PabWidget::paste()
 
 void PabWidget::clear()
 {
-  debug( "clear" );
+  qDebug( "clear" );
   QListViewItem *item = listView->currentItem();
   PabListViewItem *lvi = dynamic_cast< PabListViewItem* >(item);
   QString entryKey = lvi->entryKey();
@@ -930,7 +930,7 @@ void PabWidget::readConfig()
   fieldWidth.clear();
   QStringList::Iterator it;
   for(it = fieldWidthStr.begin(); it != fieldWidthStr.end(); ++it)
-    fieldWidth += atoi( *it );
+    fieldWidth += atoi( (*it).ascii() );
   while (fieldWidth.count() < field.count())
     fieldWidth += 120;
 }
@@ -1001,7 +1001,7 @@ PabListViewItem *PabListView::getItem( QString entryKey )
 
 void PabListView::loadBackground()
 {
-  debug( QString ("Image format ") + QPixmap::imageFormat( backPixmap ) );
+  kdDebug() << "Image format " << QPixmap::imageFormat( backPixmap ) << endl;
   if (backPixmapOn && QPixmap::imageFormat( backPixmap )) {
     background = QPixmap( backPixmap );
     QImage invertedBackground( backPixmap );
@@ -1117,7 +1117,7 @@ void PabListView::incSearch( const QString &value )
     while (ib && (citem->key( column, ascending ).find( value ) != 0) &&
 	   ((ib->key( column, ascending ) < value) ||
 	    (ib->key( column, ascending ).find( value ) == 0))) {
-      debug( ib->key( column, ascending ));
+      kdDebug() << ib->key( column, ascending ) << endl;
       citem = ib;
       ib = ib->itemBelow();
     }
@@ -1140,7 +1140,7 @@ void PabListView::incSearch( const QString &value )
     while (ib && (citem->key( column, ascending ).find( value ) != 0) &&
 	   ((ib->key( column, ascending ) > value) ||
 	    (ib->key( column, ascending ).find( value ) == 0))) {
-      debug( ib->key( column, ascending ));
+      kdDebug() << ib->key( column, ascending ) << endl;
       citem = ib;
       ib = ib->itemBelow();
     }    
@@ -1212,7 +1212,7 @@ void PabListView::contentsMouseMoveEvent( QMouseEvent *e )
 
 void PabListView::contentsDragEnterEvent( QDragEnterEvent *e )
 {
-  if ( !QUrlDrag::canDecode(e) ) {
+  if ( !QUriDrag::canDecode(e) ) {
     e->ignore();
     return;
   }
@@ -1222,7 +1222,7 @@ void PabListView::contentsDragEnterEvent( QDragEnterEvent *e )
 void PabListView::contentsDropEvent( QDropEvent *e )
 {
   QStrList strings;
-  if ( QUrlDrag::decode( e, strings ) ) {
+  if ( QUriDrag::decode( e, strings ) ) {
     QString m("Full URLs:\n");
     for (const char* u=strings.first(); u; u=strings.next())
       if (u && (KURL::decode_string(u).find( "mailto:" ) == 0)) {

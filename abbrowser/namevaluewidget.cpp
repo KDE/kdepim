@@ -9,7 +9,9 @@
 #include <qstringlist.h>
 #include <qcombobox.h>
 #include "entry.h"
+
 #include <klocale.h>
+#include <kdebug.h>
 
 NameValueSheet::NameValueSheet( QWidget *parent, 
 				int rows, 
@@ -37,7 +39,7 @@ NameValueSheet::NameValueSheet( QWidget *parent,
     lCell->setFrameStyle( QFrame::Box | QFrame::Plain );
     lCell->updateGeometry();
     minWidth = fontMetrics().width( name[i] ) + 8;
-    debug( QString( "minWidth %1" ).arg( minWidth ));
+    kdDebug() << "minWidth " << minWidth << endl;
     //    minWidth = lCell->sizeHint().width();
     if (minWidth > minNameWidth)
       minNameWidth = minWidth;
@@ -49,7 +51,7 @@ NameValueSheet::NameValueSheet( QWidget *parent,
     leFrame->setMargin( 0 );
     leFrame->setFrameStyle( QFrame::Box | QFrame::Plain );
     QBoxLayout *leBox = new QBoxLayout( leFrame, QBoxLayout::LeftToRight, 2, 0 );
-    QLineEdit *leCell = new ContactLineEdit( leFrame, entryField[i], ce );
+    QLineEdit *leCell = new ContactLineEdit( leFrame, entryField[i].ascii(), ce );
     leFrame->setBackgroundColor( leCell->backgroundColor() );
     leCell->setFrame( false );
     leBox->addWidget( leCell );
@@ -60,7 +62,7 @@ NameValueSheet::NameValueSheet( QWidget *parent,
     lay2->addWidget( filler, 0, 1 );
   }
   setMaximumHeight( (lCell->height() - verticalTrim*2) * rows );
-  debug( QString( "minNameWidth %1" ).arg( minNameWidth ));
+  kdDebug() << "minNameWidth " << minNameWidth << endl;
 }
 
 NameValueSheet::~NameValueSheet()
@@ -70,7 +72,7 @@ NameValueSheet::~NameValueSheet()
 
 QSize NameValueSheet::cellSize()
 {
-  debug( QString( "cellSize %1 ").arg( minNameWidth ) );
+  kdDebug() << "cellSize " << minNameWidth << endl;
   if (rows == 0)
     return QSize( minNameWidth, minNameHeight - verticalTrim );
   //  return QSize( lCell->size().width(), lCell->size().height() - verticalTrim );
@@ -104,8 +106,8 @@ void NameValueFrame::setSheet( NameValueSheet* vs )
   addChild( vs );
   showChild( vs, true );
   kapp->processEvents(1);
-  debug( QString( "XvisibleWidth %1" ).arg( visibleWidth() ));
-  debug( QString( "XvisibleWidth %1" ).arg( visibleWidth() ));
+  kdDebug() << "XvisibleWidth " << visibleWidth() << endl;
+  kdDebug() << "XvisibleWidth " << visibleWidth() << endl;
   resizeContents( vs->width(), vs->height() );
   lName->setMinimumSize( vs->cellSize().width(), lName->height() );
   lName->resize( vs->cellSize().width(), lName->height() );
@@ -116,8 +118,8 @@ void NameValueFrame::setSheet( NameValueSheet* vs )
   lValue->move( lName->width() + 2, 2 );
   vs->resize( visibleWidth(), vs->height() );
   
-  debug( QString( "cellWidth %1" ).arg( vs->cellSize().width() ));
-  debug( QString( "visibleWidth %1" ).arg( visibleWidth() ));
+  kdDebug() << "cellWidth " << vs->cellSize().width() << endl;
+  kdDebug() << "visibleWidth " << visibleWidth() << endl;
 }
 
 void NameValueFrame::resizeEvent(QResizeEvent* e) 
@@ -196,8 +198,8 @@ FileAsComboBox::FileAsComboBox( QWidget * parent,
 
 void FileAsComboBox::updateContact()
 {	
-  debug( "FileAsComboBox::focusOutEvent" );
-  debug( currentText() );
+  kdDebug() << "FileAsComboBox::focusOutEvent" << endl;
+  kdDebug() << currentText() << endl;
   ce->replace( QString( name()), new QString( currentText()) );
 }
 
@@ -235,7 +237,7 @@ void ContactComboBox::updateBuddy( int index )
 {
   if (index < (int)vlEntryField.count())
     if (buddy)
-      buddy->setName( vlEntryField[index] );
+      buddy->setName( vlEntryField[index].ascii() );
 };
 
 QString ContactComboBox::currentEntryField()

@@ -21,7 +21,7 @@ SelectFields::SelectFields( QStringList oldFields,
 			    bool modal )
   : QDialog( parent, name, modal )
 {
-  setCaption( "Select fields to display" );
+  setCaption( i18n("Select fields to display") );
 
   QGridLayout *gl = new QGridLayout( this, 6, 3, 10 );
   gl->setSpacing( 10 );
@@ -32,7 +32,7 @@ SelectFields::SelectFields( QStringList oldFields,
   for (int i = 0; 
        tmp = Attributes::instance()->fieldListName( i ), tmp != "";
        ++i )
-    cbUnselected->insertItem( i18n(tmp) );
+    cbUnselected->insertItem( i18n(tmp.utf8()) );
   cbUnselected->setCurrentItem( 1 );
   
   gl->addWidget( cbUnselected, 0, 0 );

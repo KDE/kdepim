@@ -24,14 +24,15 @@
 #include <klocale.h>
 #include <kapp.h> // for kapp->palette()
 #include <kglobal.h>
+#include <kdebug.h>
 
-ContactDialog::ContactDialog( QWidget *parent, const char *name, ContactEntry *ce, bool modal )
+ContactDialog::ContactDialog( const QString & title, QWidget *parent, const char *name, ContactEntry *ce, bool modal )
   : QDialog( parent, name, modal ), vs( 0 ), vp( 0 )
 {
     ce ? this->ce = ce : this->ce = new ContactEntry();
     if (ce->find( "N" ))
       curName = *ce->find( "N");
-    setCaption( name );
+    setCaption( title );
 
     QVBoxLayout *vb = new QVBoxLayout( this, 5 );
     tabs = new QTabWidget( this );
@@ -244,7 +245,7 @@ void ContactDialog::setupTab1()
     cbPhone->setMinimumSize( cbPhone->sizeHint() );
     layhGrid->addWidget( cbPhone, row, 0 );
 
-    QLineEdit *ed = new ContactLineEdit( hGrid, fieldPhone[iPhone[row]], ce ); 
+    QLineEdit *ed = new ContactLineEdit( hGrid, fieldPhone[iPhone[row]].ascii(), ce ); 
     ed->setMinimumSize( ed->sizeHint());
     cbPhone->setBuddy( ed );
     layhGrid->addWidget( ed, row ,1 );
@@ -308,7 +309,7 @@ void ContactDialog::setupTab2()
     hGrid->setSpacing( 10 );
     label[row] = new QLabel( sLabel[row], hGrid );
     size = size.expandedTo( label[row]->sizeHint() );
-    QLineEdit *ed = new ContactLineEdit( hGrid, entryField[row], ce ); 
+    QLineEdit *ed = new ContactLineEdit( hGrid, entryField[row].ascii(), ce ); 
     label[row]->setBuddy( ed );
     lay2->addWidget( hGrid, 0 );
   }
@@ -326,7 +327,7 @@ void ContactDialog::setupTab2()
     label[row] = new QLabel( sLabel[row], v3 );
     lay3->addWidget( label[row] );
     size = size.expandedTo( label[row]->sizeHint() );
-    QLineEdit *ed = new ContactLineEdit( v3, entryField[row], ce ); 
+    QLineEdit *ed = new ContactLineEdit( v3, entryField[row].ascii(), ce ); 
     ed->setMaximumSize( ed->sizeHint() );
     lay3->addWidget( ed, 0 );
     label[row]->setBuddy( ed );
@@ -349,7 +350,7 @@ void ContactDialog::setupTab2()
     hGrid->setSpacing( 10 );
     label[row] = new QLabel( sLabel[row], hGrid );
     size = size.expandedTo( label[row]->sizeHint() );
-    QLineEdit *ed = new ContactLineEdit( hGrid, entryField[row], ce ); 
+    QLineEdit *ed = new ContactLineEdit( hGrid, entryField[row].ascii(), ce ); 
     label[row]->setBuddy( ed );
     lay2->addWidget( hGrid, 0 );
   }
@@ -387,7 +388,7 @@ void ContactDialog::setupTab3()
     for (int i = 0; 
 	 tmp = Attributes::instance()->fieldListName( i ), tmp != "";
 	 ++i )
-      cbSelectFrom->insertItem( i18n(tmp) );
+      cbSelectFrom->insertItem( tmp );
     cbSelectFrom->insertItem( i18n( "User-defined fields in folder" )); 
 
     cbSelectFrom->setCurrentItem( cbSelectFrom->count() - 1 );
@@ -453,7 +454,7 @@ void ContactDialog::newFieldDialog()
 // with parseName
 void ContactDialog::newNameDialog()
 {
-  debug( "newNameDialog " + leFullName->text() );
+  kdDebug() << "newNameDialog " << leFullName->text() << endl;
   if (((ce->find( ".AUXCONTACT-N" ))
        && (leFullName->text() != *ce->find( ".AUXCONTACT-N" ))) ||
       (!ce->find( ".AUXCONTACT-N" )))
@@ -487,7 +488,7 @@ void ContactDialog::monitorCompany()
 
 void ContactDialog::updateFileAs()
 {
-  debug( "updateFileAs" );
+  qDebug( "updateFileAs" );
   cbFileAs->clear();
   QString surnameFirst;
   if (ce->find( "N" )) {
@@ -523,14 +524,14 @@ void ContactDialog::updateFileAs()
 // has been used to enter the name 
 void ContactDialog::parseName()
 {
-  debug( "parseName()" );
+  qDebug( "parseName()" );
   if (!ce->find( ".AUXCONTACT-N" ))
     return;
-  //  debug( ".AUX" + *ce->find( ".AUXCONTACT-N" ) + " curname " + curName);
+  //  qDebug( ".AUX" + *ce->find( ".AUXCONTACT-N" ) + " curname " + curName);
   if (*ce->find( ".AUXCONTACT-N" ) == curName)
     return;
   curName = (*ce->find( ".AUXCONTACT-N" )).simplifyWhiteSpace();
-  //  debug( "curName " + curName );
+  //  qDebug( "curName " + curName );
   ce->replace( ".AUXCONTACT-N", new QString( curName ));
   QString name = curName;
   QString prefix;
@@ -750,7 +751,7 @@ AddressDialog::AddressDialog( QWidget *parent,
     "sv", "tr", "zh_CN.GB2312", "zh_TW.Big5", "et", 
     ""
   };
-  QString GuessCountry[] = {
+  QCString GuessCountry[] = {
     "United States", "United States", "Australia", "United Kingdom",
     "New Zealand", "South Africa", "Denmark",
     "Germany", "Greece", "Spain", "Finland", "French", "Israel",
@@ -911,7 +912,7 @@ void NameDialog::NameOk()
     leMiddle->text() + " " + 
     leLast->text() + " " 
     + cbSuffix->currentText();
-  debug( "NameOk " + name );
+  kdDebug() << "NameOk " << name << endl;
   ce->replace( "N", new QString( name.simplifyWhiteSpace() ));
   ce->replace( "X-Title", new QString( cbTitle->currentText() ));
   ce->replace( "X-FirstName", new QString( leFirst->text() ));

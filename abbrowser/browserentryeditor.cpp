@@ -4,12 +4,12 @@
 ////////////////////////////
 // PabContactDialog Methods
 
-PabContactDialog::PabContactDialog( QWidget *parent, 
+PabContactDialog::PabContactDialog( const QString & title, QWidget *parent, 
 				    const char *name, 
 				    QString entryKey,
 				    ContactEntry *entry,
 				    bool modal )
-  : ContactDialog( parent, name, new ContactEntry( *entry ) , modal ),
+  : ContactDialog( title, parent, name, new ContactEntry( *entry ) , modal ),
     entryKey_( entryKey )
 {
 }
@@ -28,10 +28,10 @@ void PabContactDialog::accept()
 ////////////////////////////
 // PabNewContactDialog Methods
 
-PabNewContactDialog::PabNewContactDialog( QWidget *parent, 
+PabNewContactDialog::PabNewContactDialog( const QString & title, QWidget *parent, 
 					  const char *name, 
 					  bool modal )
-  : ContactDialog( parent, name, new ContactEntry(), modal )
+  : ContactDialog( title, parent, name, new ContactEntry(), modal )
 {}
 
 PabNewContactDialog::~PabNewContactDialog()

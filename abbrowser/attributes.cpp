@@ -21,7 +21,7 @@ QString Attributes::fieldToName( const QString &field )
 {
   // just temporary
   if (field.find( "X-CUSTOM-", 0 ) == 0)
-    return( i18n( field.mid( 9 ) ));
+    return( i18n(field.mid( 9 ).utf8()) );
 
   if (fieldToName_.contains( field ))
     return fieldToName_[field];

@@ -8,13 +8,13 @@
 
 #include <qkeycode.h>
 
-//#include <kfm.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kmenubar.h>
 #include <kconfig.h>
 #include <kaccel.h>
+#include <kdebug.h>
 
 #include "undo.h"
 #include "browserwidget.h"
@@ -81,23 +81,23 @@ Pab::Pab()
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  this, SLOT(newContact()), // result
-			  i18n("Add a new entry"));      // tooltip text
+			  true, i18n("Add a new entry"));      // tooltip text
   toolBar()->insertButton(BarIcon("pencil"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(properties()), // result
-			  i18n("Change this entry"));      // tooltip text
+			  true, i18n("Change this entry"));      // tooltip text
   toolBar()->insertButton(BarIcon("eraser"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(clear()), // result
-			  i18n("Remove this entry"));      // tooltip text
+			  true, i18n("Remove this entry"));      // tooltip text
   toolBar()->insertSeparator();
   toolBar()->insertButton(BarIcon("filemail"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(sendMail()), // result
-			  i18n("Send email"));      // tooltip text
+			  true, i18n("Send email"));      // tooltip text
   toolBar()->setFullSize(true);
   
   // we do want a status bar
@@ -109,7 +109,7 @@ Pab::Pab()
 
 void Pab::newContact()
 {
-  ContactDialog *cd = new PabNewContactDialog( this, i18n( "Address Book Entry Editor" ));
+  ContactDialog *cd = new PabNewContactDialog( i18n( "Address Book Entry Editor" ), this, 0 );
   connect( cd, SIGNAL( add( ContactEntry* ) ), 
 	   view, SLOT( addNewEntry( ContactEntry* ) ));
   cd->show();
@@ -138,12 +138,9 @@ void Pab::readConfig()
   KConfig *config = kapp->config();
   int w, h;
   config->setGroup("Geometry");
-  QString str = config->readEntry("Browser", "");
-  if (!str.isEmpty() && str.find(',')>=0)
-  {
-    sscanf(str,"%d,%d",&w,&h);
-    resize(w,h);
-  }
+  QSize size = config->readSizeEntry("Browser");
+  if (size.isEmpty())
+    resize(size);
 }
 
 void Pab::saveConfig()
@@ -166,7 +163,7 @@ Pab::~Pab()
 }
 
 void Pab::saveCe() {
-  debug( "saveCe()" );
+  kdDebug() << "saveCe()" << endl;
   //xxx  ce->save( "entry.txt" );
 }
 
@@ -197,7 +194,7 @@ void Pab::readProperties(KConfig *)
 
 void Pab::undo()
 {
-  debug( "Pab::undo()" );
+  kdDebug() << "Pab::undo()" << endl;
   UndoStack::instance()->undo();
 }
 
@@ -208,7 +205,7 @@ void Pab::redo()
 
 void Pab::updateEditMenu()
 {
-  debug( "UpdateEditMenu()" );
+  kdDebug() << "UpdateEditMenu()" << endl;
   UndoStack *undo = UndoStack::instance();
   RedoStack *redo = RedoStack::instance();
 

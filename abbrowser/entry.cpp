@@ -8,8 +8,10 @@
 #include <qdict.h>
 #include <qfile.h>
 #include <qregexp.h>
+
 #include <klocale.h>
 #include <kabapi.h>
+#include <kdebug.h>
 
 ////////////////////////////
 // ContactEntryList methods
@@ -37,11 +39,11 @@ void ContactEntryList::refresh()
   ceDict.clear();
   if(addrBook->init()!=AddressBook::NoError)
   { // this connects to the default address book and opens it:
-    debug( "Error initializing the connection to your KAB address book." );
+    kdDebug() << "Error initializing the connection to your KAB address book." << endl;
     addrBook = 0;
   } 
   else {
-    debug ("KMKernel::init: KabApi initialized.");
+    qDebug("KMKernel::init: KabApi initialized.");
   }
 
   int num = addrBook->addressbook()->noOfEntries();
@@ -67,7 +69,7 @@ void ContactEntryList::commit()
     addrBook->addressbook()->remove( key ); // check rc
   }
   if (addrBook->addressbook()->save("", true)!=AddressBook::NoError)
-    debug( "Error occurred trying to update database" );
+    qDebug( "Error occurred trying to update database" );
   addrBook->addressbook()->close();
 }
 
@@ -77,11 +79,11 @@ QString ContactEntryList::insert( ContactEntry *item )
   AddressBook::Entry empty;
   AddressBook::Entry entry = ContactEntryToKabEntry( item, empty );  
   if (AddressBook::NoError != addrBook->addressbook()->add( entry, key, true )) {
-    debug( "Error occurred trying to insert entry" );
+    qDebug( "Error occurred trying to insert entry" );
     // TODO show a message box here
   }
   if (addrBook->addressbook()->save("", true)!=AddressBook::NoError)
-    debug( "Error occurred trying to update database" );
+    qDebug( "Error occurred trying to update database" );
 
   ceDict.insert( key.getKey(), item );
   return key.getKey();
@@ -111,7 +113,7 @@ void ContactEntryList::replace( const QString &key, ContactEntry *item )
   KabKey kabKey;
   kabKey.setKey( key.local8Bit() );
   if (AddressBook::NoError != addrBook->addressbook()->getEntry( kabKey, old )) {
-    debug( "Error occurred trying to update entry" );
+    qDebug( "Error occurred trying to update entry" );
     // TODO show a message box here
     return;
   }
@@ -121,7 +123,7 @@ void ContactEntryList::replace( const QString &key, ContactEntry *item )
   ceDict.replace( key, item );
 
   if (addrBook->addressbook()->save("", true)!=AddressBook::NoError)
-    debug( "Error occurred trying to update database" );
+    qDebug( "Error occurred trying to update database" );
 }
 
 ContactEntry* ContactEntryList::KabEntryToContactEntry( AddressBook::Entry entry )
@@ -564,9 +566,7 @@ void ContactEntry::replace( const QString key, const QString *item )
     }
   }
   else
-    debug( QString( "Error:" ) + 
-	   " ContactEntry::replace( const QString, const QString* ) " +
-	   "passed null item" );
+    qDebug("ContactEntry::replace( const QString, const QString* ) passed null item");
   /*
   if (item && (*item == ""))
     dict.remove( key );
