@@ -205,12 +205,43 @@ void TestResource::testEventAddRemove()
 
 void TestResource::testTodoAddRemove()
 {
+  ICalFormat f;
   kdDebug() << k_funcinfo << endl;
+  
+  int oldcount = m_res->rawIncidences().count();
+  Todo *todo = makeTestTodo();
+  const QString origString = f.toString( todo );
+  m_res->addTodo( todo );
+  Todo *fromRes = m_res->todo( todo->uid() );
+  assert( fromRes == todo );
+  const QString fromResString = f.toString( fromRes );
+  check( "add", origString, fromResString );
+  m_res->deleteTodo( todo );
+  assert( !m_res->todo( todo->uid() ) );
+  int newcount = m_res->rawIncidences().count();
+  assert( oldcount == newcount );
+  delete todo;
 }
 
 void TestResource::testJournalAddRemove()
 {
+  ICalFormat f;
   kdDebug() << k_funcinfo << endl;
+  
+  int oldcount = m_res->rawIncidences().count();
+  Journal *journal = makeTestJournal();
+  const QString origString = f.toString( journal );
+  m_res->addJournal( journal );
+  Journal *fromRes = m_res->journal( journal->uid() );
+  assert( fromRes == journal );
+  const QString fromResString = f.toString( fromRes );
+  check( "add", origString, fromResString );
+  m_res->deleteJournal( journal );
+  assert( !m_res->journal( journal->uid() ) );
+  int newcount = m_res->rawIncidences().count();
+  assert( oldcount == newcount );
+  delete journal;
+}
 }
 
 void TestResource::cleanup()
@@ -219,9 +250,5 @@ void TestResource::cleanup()
 }
 
 }
-
-
-
-
 
 #include "testresource.moc"
