@@ -40,8 +40,6 @@ class ProgressItem;
 namespace KSync {
 
 class KonnectorInfo;
-class Kapabilities;
-class ConfigWidget;
 
 /**
   This class provides the interface for a Konnector. A Konnector is a class

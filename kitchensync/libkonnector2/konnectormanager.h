@@ -36,7 +36,6 @@
 namespace KSync
 {
 
-class Kapabilities;
 class Konnector;
 class KonnectorInfo;
 
