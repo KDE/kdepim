@@ -94,7 +94,7 @@ void TimeConduit::readConfig()
 			syncPalmToPC();
 			break;
 		default:
-			emit logError(i18n("Unknown setting for time syncronization."));
+			emit logError(i18n("Unknown setting for time synchronization."));
 			kdWarning() << k_funcinfo << ": unknown sync direction "<<fDirection<<endl;
 			emit syncDone(this);
 			return;
@@ -131,3 +131,6 @@ void TimeConduit::syncPCToPalm()
 }
 
 // $Log$
+// Revision 1.2  2002/07/25 21:58:11  kainhofe
+// compile error
+//

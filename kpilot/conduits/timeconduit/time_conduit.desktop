@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=Service
-Name=Time Syncronization Conduit
+Name=Time Synchronization Conduit
 Implemented=file
 ServiceTypes=KPilotConduit
 X-KDE-Library=libtimeconduit

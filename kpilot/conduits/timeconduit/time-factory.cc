@@ -66,9 +66,9 @@ TimeConduitFactory::TimeConduitFactory(QObject *p, const char *n) :
 
 	fInstance = new KInstance("Timeconduit");
 	fAbout = new KAboutData("Timeconduit",
-		I18N_NOOP("Time Syncronization Conduit for KPilot"),
+		I18N_NOOP("Time Synchronization Conduit for KPilot"),
 		KPILOT_VERSION,
-		I18N_NOOP("Syncronizes the Time on the Handheld and the PC"),
+		I18N_NOOP("Synchronizes the Time on the Handheld and the PC"),
 		KAboutData::License_GPL,
 		"(C) 2002, Reinhold Kainhofer");
 	fAbout->addAuthor("Reinhold Kainhofer",
@@ -136,3 +136,6 @@ TimeConduitFactory::~TimeConduitFactory()
 
 
 // $Log$
+// Revision 1.1  2002/07/25 21:15:20  kainhofe
+// Added a conduit to sync the PC time to the handheld
+//
