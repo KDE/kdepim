@@ -118,8 +118,8 @@ void KroupwareSync::start_syncCal_TodosWithKMail( bool cal, bool todos )
 		     reply_type,
 		     reply_data)) {
     logMessage( CSL1("Calling KMail over DCOP failed!" ));
-    logMessage(CSL1("Not syncing Calendars with KMail"));
-    logMessage(CSL1("Not syncing Todos with KMail"));
+    logMessage(CSL1("Not syncing calendars with KMail"));
+    logMessage(CSL1("Not syncing to-dos with KMail"));
   }
   else {
     logMessage(CSL1("Calling Cal/Todo over DCOP succeeded"));
