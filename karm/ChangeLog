@@ -1,15 +1,14 @@
-KArm 1.3
+KArm 1.3 (Jan, 2004 -- KDE 3.2 Release)
 --------
-- reengineering
-- each task now has its own time
-- tracking of desktops
-- better logging
-- comments can be added to log
+- desktop tracking added
 - active task indication in the system tray
+- uses iCalendar format for data storage
+- stores start/stop history
+- settings dialog converted to icon format
 - "Reset Session Times" re-reversed and renamed to
   "Start New Session" for clarity
-- fixed a few bugs
-- times are now saved in iCal format
+- new timecard report
+- ability to mark tasks as complete
 
 KArm 1.2
 --------
