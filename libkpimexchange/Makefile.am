@@ -1,6 +1,6 @@
 # $Id$
 
-SUBDIRS=core . resources
+SUBDIRS=core
 
 METASOURCES = AUTO
 
