@@ -2,7 +2,7 @@
 
 lib_LTLIBRARIES= libkonnector.la
 
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kitchensync/libksync $(all_includes)
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kitchensync/libksync -I$(top_builddir)/libkdepim $(all_includes)
 
 libkonnector_la_LDFLAGS = $(all_libraries) $(KDE_EXTRA_RPATH) $(KDE_RPATH) \
                           -version-info 0:0 -no-undefined
