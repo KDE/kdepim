@@ -241,7 +241,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status sta
       }
     }
   }
-  deleteTransaction(incidence);
+  if (ret) deleteTransaction(incidence);
   return ret;
 }
 
