@@ -91,7 +91,7 @@ void FilterOE::importMailBox(const QString& fileName)
   inf->setTo(folderName);
 
   if (!mailfile.open(IO_ReadOnly)) {
-    inf->addLog(i18n("Couldn't open mailbox %1").arg(fileName));
+    inf->addLog(i18n("Unable to open mailbox %1").arg(fileName));
     return;
   }
   QDataStream mailbox(&mailfile);

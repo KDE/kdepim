@@ -25,11 +25,11 @@
 #include "filter_mbox.hxx"
 
 FilterMBox::FilterMBox() :
-Filter(	i18n("Import mbox Files (Unix, Evolution)"),
+Filter(	i18n("Import mbox Files (UNIX, Evolution)"),
     "Laurence Anderson",
     i18n("<p><b>mbox import filter</b></p>"
-      "<p>This filter will import mbox files into kmail. Use this filter "
-      "if you want to import mails from Ximian Evolution or other mailers that use this traditional Unix format.</p>"
+      "<p>This filter will import mbox files into KMail. Use this filter "
+      "if you want to import mails from Ximian Evolution or other mailers that use this traditional UNIX format.</p>"
       "<p><b>Note:</b> Emails will be imported into folders named after the file they came from, prefixed with MBOX-</p>"
       ))
 {
@@ -48,7 +48,7 @@ void FilterMBox::import(FilterInfo *info)
   for ( QStringList::Iterator filename = filenames.begin(); filename != filenames.end(); ++filename, ++currentFile) {
     QFile mbox( *filename );
     if (! mbox.open( IO_ReadOnly ) ) {
-      info->alert( i18n("Couldn't open %1, skipping").arg( *filename ) );
+      info->alert( i18n("Unable to open %1, skipping").arg( *filename ) );
     }
 
     QFileInfo filenameInfo( *filename );
