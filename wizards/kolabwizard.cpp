@@ -221,7 +221,7 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
   setupRulesPage();
   setupChangesPage();
 
-  resize( 400, 300 );
+  setInitialSize( QSize( 600, 300 ) );
 }
 
 KolabWizard::~KolabWizard()

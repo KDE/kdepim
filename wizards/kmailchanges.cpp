@@ -53,7 +53,7 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
       c.writeEntry( "accounts", accCnt+1 );
       uint transCnt = c.readNumEntry( "transports", 0 );
       c.writeEntry( "transports", transCnt+1 );
-      
+
       c.setGroup( QString("Account %1").arg(accCnt+1) );
       int uid = kapp->random();
       c.writeEntry( "Folder", uid );
@@ -130,13 +130,6 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   c->group = "Groupware";
   c->name = "LegacyMangleFromToHeaders";
   c->value = "false";
-  changes.append( c );
-
-  c = new KConfigPropagator::ChangeConfig;
-  c->file = "kmailrc";
-  c->group = "IMAP Resource";
-  c->name = "Enabled";
-  c->value = "true";
   changes.append( c );
 
   c = new KConfigPropagator::ChangeConfig;
