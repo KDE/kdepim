@@ -226,3 +226,4 @@ int JPilotProxyConduitFactory::loadPlugins(KConfig*fC) {
 	}*/
 	
 }
+

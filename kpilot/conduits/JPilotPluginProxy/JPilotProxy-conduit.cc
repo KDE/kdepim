@@ -59,9 +59,7 @@ JPilotProxyConduit::JPilotProxyConduit(KPilotDeviceLink *d, const char *n, const
 
 /* virtual */ bool JPilotProxyConduit::exec() {
 	FUNCTIONSETUP;
-	#ifdef DEBUG
-	DEBUGCONDUIT<<"Starting JPilotPlugin sync"<<endl;
-	#endif
+	DEBUGCONDUIT<<JPilotProxy_conduit_id<<endl;
 
 	if (!fConfig) return false;
 
@@ -92,3 +90,4 @@ JPilotProxyConduit::JPilotProxyConduit(KPilotDeviceLink *d, const char *n, const
 //	emit syncDone(this);
 	return;
 }
+

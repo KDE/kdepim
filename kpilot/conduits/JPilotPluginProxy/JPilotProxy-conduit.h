@@ -47,4 +47,5 @@ public:
 	virtual const QString conduitSettingsGroup() { return QString("JPilotPluginProxy");};
 };
 
+
 #endif

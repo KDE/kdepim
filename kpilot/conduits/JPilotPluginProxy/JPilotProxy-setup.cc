@@ -226,3 +226,4 @@ void JPilotProxyWidgetSetup::slotUpdatePluginPath(const QString &newpath) {
 		addConduit(*it, fConfig->readBoolEntry(*it));
 	}
 }
+

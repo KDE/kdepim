@@ -79,6 +79,7 @@ NullConduit::~NullConduit()
 /* virtual */ bool NullConduit::exec()
 {
 	FUNCTIONSETUP;
+	DEBUGCONDUIT<<null_conduit_id<<endl;
 
 	if (!fConfig)
 	{
