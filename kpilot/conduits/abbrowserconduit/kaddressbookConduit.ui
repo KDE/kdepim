@@ -630,27 +630,32 @@
                         </item>
                         <item>
                             <property name="text">
+                                <string>%d.%m.%Y</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>%d.%m.%y</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>%d/%m/%Y</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
                                 <string>%d/%m/%y</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>%d/%m/%Y%y</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>%d. %m. %Y%y</string>
+                                <string>%m/%d/%Y</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
                                 <string>%m/%d/%y</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>%m/%d/%y%Y</string>
                             </property>
                         </item>
                         <property name="name">
@@ -669,7 +674,7 @@
                         </property>
                         <property name="whatsThis" stdset="0">
                             <string>&lt;qt&gt;Select the date format use if you selected "birthdate" for any of the custom fields above. Possible placeholders are:&lt;br&gt;
-%d for the day, %m for the month, %Y for the centry, %y for the year in the centry
+%d for the day, %m for the month, %y for the two-digit year, %Y for the four-digit year. For  example, %d.%m.%Y would generate a date like 27.3.1952, while %m/%d/%y would write the same date as 03/27/52.
 &lt;/qt&gt;</string>
                         </property>
                     </widget>
