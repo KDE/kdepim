@@ -52,6 +52,7 @@
 #include "knfolder.h"
 #include "kncleanup.h"
 #include "utilities.h"
+#include "knscoring.h"
 
 
 KNodeView::KNodeView(KNMainWindow *w, const char * name)
@@ -170,6 +171,14 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   a_rtFactory=new KNArticleFactory(f_olManager, g_rpManager);
   knGlobals.artFactory=a_rtFactory;
 
+  // Score Manager
+  s_coreManager = new KNScoringManager();
+  knGlobals.scoreManager = s_coreManager;
+
+  //-------------------------------- <GUI again> -------------------------------
+  connect(s_coreManager, SIGNAL(changedRules()), SLOT(slotGrpReorganize()));
+  //-------------------------------- </GUI again> ------------------------------
+
   //-------------------------------- </CORE> -----------------------------------
 
   //apply saved options
@@ -214,6 +223,9 @@ KNodeView::~KNodeView()
 
   delete c_fgManager;
   kdDebug(5003) << "KNodeView::~KNodeView() : Config deleted" << endl;
+
+  delete s_coreManager;
+  kdDebug(5003) << "KNodeView::~KNodeView() : Score Manager deleted" << endl;
 }
 
 

@@ -31,10 +31,13 @@
 #include "kncollectionviewitem.h"
 #include "kngrouppropdlg.h"
 #include "knnntpaccount.h"
+#include "knaccountmanager.h"
 #include "utilities.h"
 #include "kngroup.h"
 #include "knconfigmanager.h"
-
+#include "knodeview.h"
+#include "knode.h"
+#include "knscoring.h"
 
 #define SORT_DEPTH 5
 
@@ -302,7 +305,6 @@ bool KNGroup::loadHdrs()
       return false;
     }
           
-    
     kdDebug(5003) << cnt << " articles read from file" << endl;
     c_ount=len;
     
@@ -530,13 +532,12 @@ void KNGroup::syncDynamicData()
 }
 
 
-
 void KNGroup::sortHdrs(int cnt, KNProtocolClient *client)
 {
   int end=len,
       start=len-cnt,
       foundCnt_1=0, foundCnt_2=0, bySubCnt=0, refCnt=0,
-      resortCnt=0, idx, oldRef, idRef;
+      resortCnt=0, idx, oldRef; // idRef;
   KNRemoteArticle *art;
   QTime timer;
 
@@ -687,7 +688,7 @@ void KNGroup::sortHdrs(int cnt, KNProtocolClient *client)
   
 
   //set score for new Headers
-  for(int idx=start; idx<end; idx++) {
+  /*for(int idx=start; idx<end; idx++) {
     art=at(idx);
     idRef=art->idRef();
     
@@ -698,7 +699,7 @@ void KNGroup::sortHdrs(int cnt, KNProtocolClient *client)
       }
       if(art) at(idx)->setScore(art->score());
     }
-  }
+  }*/
   
   // this method is called from the nntp-thread!!!
 #ifndef NDEBUG
@@ -709,7 +710,6 @@ void KNGroup::sortHdrs(int cnt, KNProtocolClient *client)
 #endif
     
 }
-
 
 
 int KNGroup::findRef(KNRemoteArticle *a, int from, int to, bool reverse)
@@ -754,20 +754,62 @@ int KNGroup::findRef(KNRemoteArticle *a, int from, int to, bool reverse)
   return foundID;
 }
 
+void KNGroup::scoreArticles(bool onlynew)
+{
+  kdDebug(5003) << "KNGroup::scoreArticles()" << endl;
+  if (onlynew) {
+    if (newCount() > 0) {
+      int cnt = newCount();
+      kdDebug(5003) << "scoring " << newCount() << " articles" << endl;
+      kdDebug(5003) << "(total " << len << " article in group)" << endl;
+      knGlobals.top->setCursorBusy(true);
+      knGlobals.top->setStatusMsg(i18n("Scoring..."));
+      KScoringManager *sm = knGlobals.scoreManager;
+      sm->initCache(name());
+      for(int idx=0; idx<newCount(); idx++) {
+	KNRemoteArticle *a = at(len-idx-1);
+	ASSERT( a );
+	KNScorableArticle sa(a);
+	sm->applyRules( sa );
+	if (idx % 10 == 0 ) {
+	  kdDebug(5003) << "still " << cnt-idx << " articles to score..." << endl;
+	}
+      }
+      knGlobals.top->setStatusMsg(QString::null);
+      knGlobals.top->setCursorBusy(false);
+    }
+  }
+}
 
 void KNGroup::reorganize()
 {
   kdDebug(5003) << "KNGroup::reorganize()" << endl;
 
+  knGlobals.top->setCursorBusy(true);
+  knGlobals.top->setStatusMsg(i18n("Reorganizing headers..."));
+
+  KScoringManager *sm = knGlobals.scoreManager;
+  sm->initCache(name());
   for(int idx=0; idx<len; idx++) {
-    at(idx)->setId(idx+1); //new ids
-    at(idx)->setIdRef(-1);
-    at(idx)->setThreadingLevel(0);
+    KNRemoteArticle *a = at(idx);
+    ASSERT( a );
+    a->setScore(50);
+    KNScorableArticle sa(a);
+    sm->applyRules( sa );
+    if (a->score() != 50) {
+      kdDebug(5003) << "score of Article " << idx << " changed" << endl;
+    }
+    a->setId(idx+1); //new ids
+    a->setIdRef(-1);
+    a->setThreadingLevel(0);
   }
 
   sortHdrs(len);
   saveStaticData(len, true);
   saveDynamicData(len, true);
+  knGlobals.view->headerView()->repaint();
+  knGlobals.top->setStatusMsg(QString::null);
+  knGlobals.top->setCursorBusy(false);
 }
 
 

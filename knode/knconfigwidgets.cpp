@@ -34,6 +34,8 @@
 #include <kopenwith.h>
 #include <kcharsets.h>
 #include <kdebug.h>
+#include <kscoring.h>
+#include <kscoringeditor.h>
 
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"
@@ -44,7 +46,9 @@
 #include "knfiltermanager.h"
 #include "knarticlefilter.h"
 #include "knmime.h"
+#include "knscoring.h"
 #include "knconfigmanager.h"
+
 
 
 KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n) : BaseWidget(p, n), d_ata(d)
@@ -1311,6 +1315,28 @@ void KNConfig::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
   for(int i=0; i<4; i++)
     n_ameCB[i]->setEnabled(!str.isEmpty());
 }
+
+//=============================================================================================
+
+KNConfig::ScoreListWidget::ScoreListWidget(QWidget *p, const char *n)
+  : BaseWidget(p,n)
+{
+  QGridLayout *topL = new QGridLayout(this,1,1);
+  ksc = new KScoringRulesConfig(knGlobals.scoreManager,this);
+  topL->addWidget(ksc,0,0);
+}
+
+
+KNConfig::ScoreListWidget::~ScoreListWidget()
+{
+}
+
+void KNConfig::ScoreListWidget::apply()
+{
+  if(d_irty)
+    knGlobals.scoreManager->save();
+}
+
 
 
 //=============================================================================================

@@ -50,6 +50,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     void syncDynamicData();
     void updateThreadInfo();
     void reorganize();
+    void scoreArticles(bool onlynew=true);
 
     //get
     collectionType type()               { return CTgroup; }

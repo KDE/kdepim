@@ -29,6 +29,7 @@ class QWidget;
 class KNFilterManager;
 class KNMainWindow;
 class KNodeView;
+class KNScoringManager;
 
 // idea: Previously the manager classes were available
 //       via KNodeApp. Now they can be accessed directly,
@@ -50,7 +51,7 @@ class KNGlobals {
     KNFolderManager       *folManager;
     KNFilterManager       *filManager;
     KNodeView             *view;
-
+    KNScoringManager      *scoreManager;
 };
 
 

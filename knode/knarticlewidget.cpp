@@ -37,6 +37,7 @@
 #include <kstdaction.h>
 #include <kprocess.h>
 #include <kcharsets.h>
+#include <kscoringeditor.h>
 
 #include "resource.h"
 #include "knmime.h"
@@ -52,6 +53,7 @@
 #include "knnntpaccount.h"
 #include "knstringsplitter.h"
 #include "utilities.h"
+#include "knscoring.h"
 #include "knode.h"
 
 #define PUP_OPEN    1000
@@ -194,6 +196,20 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   a_ctViewSource        = new KAction(i18n("&View Source..."),  0 , this,
                           SLOT(slotViewSource()), a_ctions, "article_viewSource");
 
+    // scoring
+  a_ctScoresEdit            = new KAction(i18n("&Edit Scores..."), "scoreedit",CTRL+Key_E,this,
+                                          SLOT(slotScoreEdit()), a_ctions, "scoreedit");
+  a_ctScoreLower            = new KAction(i18n("&Lower Score..."), "scorelower",CTRL+Key_L,this,
+                                          SLOT(slotScoreLower()), a_ctions, "scorelower");
+  a_ctScoreLower->setEnabled(false);
+  a_ctScoreRaise            = new KAction(i18n("&Raise Score..."), "scoreraise",CTRL+Key_I,
+					  this, SLOT(slotScoreRaise()),a_ctions,"scoreraise");
+  a_ctScoreRaise->setEnabled(false);
+
+  a_ctReScore            = new KAction(i18n("Re&Score..."), "rescore",0,
+				       this, SLOT(slotReScore()),a_ctions,"rescore");
+
+
 
   a_ctSetCharset = new KSelectAction(i18n("Chars&et"), 0, a_ctions, "set_charset");
   QStringList cs=KGlobal::charsets()->availableEncodingNames();
@@ -222,7 +238,6 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
 }
 
 
-
 KNArticleWidget::~KNArticleWidget()
 {
   if(a_rticle && a_rticle->isOrphant())
@@ -236,12 +251,10 @@ KNArticleWidget::~KNArticleWidget()
 }
 
 
-
 bool KNArticleWidget::scrollingDownPossible()
 {
   return ((contentsY()+visibleHeight())<contentsHeight());
 }
-
 
 
 void KNArticleWidget::scrollDown()
@@ -249,7 +262,6 @@ void KNArticleWidget::scrollDown()
   int offs = (visibleHeight() < 30) ? visibleHeight() : 30;
   scrollBy( 0, visibleHeight()-offs);
 }
-
 
 
 void KNArticleWidget::focusInEvent(QFocusEvent *e)
@@ -260,13 +272,11 @@ void KNArticleWidget::focusInEvent(QFocusEvent *e)
 }
 
 
-
 void KNArticleWidget::focusOutEvent(QFocusEvent *e)
 {
   emit focusChanged(e);
   QTextBrowser::focusOutEvent(e);
 }
-
 
 
 void KNArticleWidget::keyPressEvent(QKeyEvent *e)
@@ -288,7 +298,6 @@ void KNArticleWidget::keyPressEvent(QKeyEvent *e)
 }
 
 
-
 void KNArticleWidget::viewportMousePressEvent(QMouseEvent *e)
 {
   QString a=QTextBrowser::anchorAt(e->pos());
@@ -300,7 +309,6 @@ void KNArticleWidget::viewportMousePressEvent(QMouseEvent *e)
 
   QTextBrowser::viewportMousePressEvent(e);
 }
-
 
 
 void KNArticleWidget::viewportMouseReleaseEvent(QMouseEvent *e)
@@ -342,7 +350,6 @@ void KNArticleWidget::applyConfig()
 
   updateContents();
 }
-
 
 
 QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool beautification, bool allowRot13)
@@ -570,7 +577,6 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
 }
 
 
-
 void KNArticleWidget::openURL(const QString &url)
 {
   if(url.isEmpty()) return;
@@ -622,7 +628,6 @@ void KNArticleWidget::openURL(const QString &url)
 }
 
 
-
 void KNArticleWidget::saveAttachment(int id)
 {
   KNMimeContent *a=a_tt->at(id);
@@ -631,8 +636,6 @@ void KNArticleWidget::saveAttachment(int id)
     knGlobals.artManager->saveContentToFile(a,this);
   else KMessageBox::error(this, i18n("Internal error: Malformed identifier!"));
 }
-
-
 
 
 void KNArticleWidget::openAttachment(int id)
@@ -645,13 +648,11 @@ void KNArticleWidget::openAttachment(int id)
 }
 
 
-
 bool KNArticleWidget::inlinePossible(KNMimeContent *c)
 {
   KNHeaders::ContentType *ct=c->contentType();
   return ( ct->isText() || ct->isImage() );
 }
-
 
 
 void KNArticleWidget::showBlankPage()
@@ -687,8 +688,9 @@ void KNArticleWidget::showBlankPage()
   a_ctSetCharset->setEnabled(false);
   a_ctSetCharsetKeyb->setEnabled(false);
   a_ctViewSource->setEnabled(false);
+  a_ctScoreLower->setEnabled(false);
+  a_ctScoreRaise->setEnabled(false);
 }
-
 
 
 void KNArticleWidget::showErrorMessage(const QString &s)
@@ -731,8 +733,9 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   a_ctSetCharset->setEnabled(false);
   a_ctSetCharsetKeyb->setEnabled(false);
   a_ctViewSource->setEnabled(false);
+  a_ctScoreLower->setEnabled(false);
+  a_ctScoreRaise->setEnabled(false);
 }
-
 
 
 void KNArticleWidget::updateContents()
@@ -742,7 +745,6 @@ void KNArticleWidget::updateContents()
   else
     showBlankPage();
 }
-
 
 
 void KNArticleWidget::setArticle(KNArticle *a)
@@ -837,9 +839,9 @@ void KNArticleWidget::createHtmlPage()
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
   KNConfig::ReadNewsViewer *rnv=knGlobals.cfgManager->readNewsViewer();
 
-//  delete f_actory;                          // purge old image data
-//  f_actory = new QMimeSourceFactory();
-//  setMimeSourceFactory(f_actory);
+  delete f_actory;                          // purge old image data
+  f_actory = new QMimeSourceFactory();
+  setMimeSourceFactory(f_actory);
 
   //----------------------------------- <Header> ---------------------------------------
 
@@ -1069,7 +1071,6 @@ void KNArticleWidget::createHtmlPage()
               .arg(ct->mimeType())
               .arg(toHtmlString(var->contentDescription()->asUnicodeString()));
 
-
         if(rnv->showAttachmentsInline() && inlinePossible(var)) {
           html+="<tr><td colspan=3>";
           if(ct->isImage()) { //image
@@ -1094,7 +1095,6 @@ void KNArticleWidget::createHtmlPage()
 
   //----------------------------------  </Attachments> ---------------------------------
 
-
   //display html
   html+="</qt>";
   setText(html);
@@ -1118,6 +1118,8 @@ void KNArticleWidget::createHtmlPage()
   a_ctSetCharset->setEnabled(true);
   a_ctSetCharsetKeyb->setEnabled(true);
   a_ctViewSource->setEnabled(true);
+  a_ctScoreLower->setEnabled(true);
+  a_ctScoreRaise->setEnabled(true);
 
   //start automark-timer
   if(a_rticle->type()==KNMimeBase::ATremote && knGlobals.cfgManager->readNewsGeneral()->autoMark())
@@ -1483,6 +1485,47 @@ void KNArticleWidget::slotVerify()
 {
   knGlobals.artManager->verifyPGPSignature(a_rticle);
 }
+
+
+void KNArticleWidget::slotScoreEdit()
+{
+  kdDebug(5003) << "KNArticleWidget::slotScoreEdit()" << endl;
+  KDialogBase *dlg = new KDialogBase("Edit Scores",KDialogBase::Close);
+  KScoringRulesConfig *c = new KScoringRulesConfig(knGlobals.scoreManager,dlg);
+  dlg->setMainWidget(c);
+  dlg->exec();
+}
+
+
+void KNArticleWidget::slotReScore()
+{
+  kdDebug(5003) << "KNArticleWidget::slotReScore()" << endl;
+  if (a_rticle) {
+    KNGroup *g=static_cast<KNGroup*>(a_rticle->collection());
+    g->reorganize();
+  }
+}
+
+
+void KNArticleWidget::slotScoreLower()
+{
+  kdDebug(5003) << "KNArticleWidget::slotScoreLower() start" << endl;
+  KNGroup *g=static_cast<KNGroup*>(a_rticle->collection());
+  KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rticle);
+  knGlobals.scoreManager->addRule(KNScorableArticle(ra), g->groupname() , -10 );
+  kdDebug(5003) << "KNArticleWidget::slotScoreLower() end" << endl;
+}
+
+
+void KNArticleWidget::slotScoreRaise()
+{
+  kdDebug(5003) << "KNArticleWidget::slotScoreRaise() start" << endl;
+  KNGroup *g=static_cast<KNGroup*>(a_rticle->collection());
+  KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rticle);
+  knGlobals.scoreManager->addRule(KNScorableArticle(ra), g->groupname() , +10 );
+  kdDebug(5003) << "KNArticleWidget::slotScoreRaise() end" << endl;
+}
+
 
 //--------------------------------------------------------------------------------------
 

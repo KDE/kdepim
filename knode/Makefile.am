@@ -1,5 +1,5 @@
 KDE_CXXFLAGS = $(USE_THREADS)
-INCLUDES= $(all_includes)
+INCLUDES= -I$(top_srcdir)/libkdenetwork $(all_includes)
 SUBDIRS = pics filters
 
 bin_PROGRAMS = knode
@@ -58,6 +58,8 @@ knode_SOURCES =   knconfigmanager.cpp \
                   \
                   knpgp.cpp \
                   knpgpbase.cpp \
+                  \
+                  knscoring.cpp \
                   \
                   knlistbox.cpp \
                   knlistview.cpp \
@@ -124,6 +126,8 @@ noinst_HEADERS =  knconfigmanager.h \
                   knpgp.h \
                   knpgpbase.h \
                   \
+                  knscoring.h \
+                  \
                   knlistbox.h \
                   knlistview.h \
                   kndnd.h \
@@ -137,8 +141,8 @@ noinst_HEADERS =  knconfigmanager.h \
 
 
 
-knode_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-knode_LDADD   = -lkspell -lmimelib $(LIB_KAB) $(LIB_KFILE) $(LIBPTHREAD) $(LIBRESOLV)
+knode_LDFLAGS = -L../libkdenetwork $(all_libraries) $(KDE_RPATH)
+knode_LDADD   = -lkdenetwork -lkspell -lmimelib $(LIB_KAB) $(LIB_KFILE) $(LIBPTHREAD) $(LIBRESOLV) 
 knode_METASOURCES = AUTO
 
 appsdir = $(kde_appsdir)/Internet

@@ -556,6 +556,7 @@ void KNGroupManager::processJob(KNJobData *j)
     if (!j->canceled()) {
       if (j->success()) {
         if(group->newCount()>0) {
+          group->scoreArticles();
           group->updateListItem();
           group->saveInfo();
         }

@@ -43,7 +43,9 @@ class KNArticleFilter;
 class KNFilterManager;
 class KNDisplayedHeader;
 class KNServerInfo;
-
+class KNScoringManager;
+class KScoringRule;
+class KScoringRulesConfig;
 
 namespace KNConfig {
 
@@ -653,6 +655,20 @@ class DisplayedHeaderConfDialog : public KDialogBase {
     void slotOk();
     void slotActivated(int);
     void slotNameChanged(const QString&);
+};
+
+
+class ScoreListWidget : public BaseWidget {
+
+  Q_OBJECT
+
+  public:
+    ScoreListWidget(QWidget *p=0, const char *n=0);
+    ~ScoreListWidget();
+
+    void apply();
+ private:
+    KScoringRulesConfig *ksc;
 };
 
 

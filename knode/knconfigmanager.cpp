@@ -126,6 +126,12 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   frame = addHBoxPage(list, i18n("General Options"), BarIcon("misc"));
   w_idgets.append(new KNConfig::ReadNewsGeneralWidget(m->readNewsGeneral(), frame));
 
+  // Read News / Scores
+  list.clear();
+  list << QString(" ")+i18n("Reading News") << QString(" ")+i18n("Scoring");
+  frame = addHBoxPage(list,i18n("Scoring Rules"),BarIcon("misc"));
+  w_idgets.append(new KNConfig::ScoreListWidget(frame));
+
   // Read News / Filters
   list.clear();
   list << QString(" ")+i18n("Reading News") << i18n(" Filters");

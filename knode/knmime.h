@@ -345,8 +345,9 @@ class KNRemoteArticle : public KNArticle {
     void setThreadMode(bool b=true)               { f_lags.set(6, b); }
     unsigned char threadingLevel()                { return t_hrLevel; }
     void setThreadingLevel(unsigned char l)       { t_hrLevel=l; }
-    unsigned char score()                         { return s_core; }
-    void setScore(unsigned char s)                { s_core=s; }
+    short score()                                 { return s_core; }
+    void setScore(short s)                        { s_core=s; }
+    void addScore(short s)                        { s_core+=s; setChanged(true); }
     unsigned short newFollowUps()                 { return n_ewFups; }
     bool hasNewFollowUps()                        { return (n_ewFups>0); }
     void setNewFollowUps(unsigned short s)        { n_ewFups=s; }
@@ -378,9 +379,9 @@ class KNRemoteArticle : public KNArticle {
     KNHeaders::MessageID m_essageID;
     KNHeaders::From f_rom;
 
-    int i_dRef; // id of a reference-article
-    unsigned char t_hrLevel, // quality of threading
-                  s_core; // guess what ;-)
+    int i_dRef; // id of a possible reference-article
+    unsigned char t_hrLevel; // quality of threading
+    short         s_core; // guess what ;-)
     unsigned short u_nreadFups, // number of the article's unread follow-ups
                    n_ewFups; // number of the article's new follow-ups
 

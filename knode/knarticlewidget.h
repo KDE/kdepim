@@ -150,6 +150,12 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
             *a_ctSupersede,
             *a_ctSetCharsetKeyb,
             *a_ctViewSource;
+    // scoring
+    KAction *a_ctScoresEdit,
+            *a_ctScoreLower,
+            *a_ctReScore,
+            *a_ctScoreRaise;
+
     KToggleAction *a_ctToggleFullHdrs,
                   *a_ctToggleRot13;
     KSelectAction *a_ctSetCharset;
@@ -169,6 +175,10 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     void slotSetCharset(const QString&);
     void slotSetCharsetKeyboard();
     void slotViewSource();
+    void slotScoreRaise();
+    void slotScoreLower();
+    void slotScoreEdit();
+    void slotReScore();
 
   //-------------------------- </Actions> --------------------------
 
