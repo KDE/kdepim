@@ -12,16 +12,16 @@ class QTimer;
 #endif // HAVE_LIBXSS
 
 // Seconds per minutes - usefull for speeding debugging up!
-const int secsPerMinutes = 60;
+const int secsPerMinute = 60;
 
 // Minutes between each idle overrun test.
-const int testInterval= secsPerMinutes * 1000;
+const int testInterval= secsPerMinute * 1000;
 
 /**
  * Keep track of how long the computer has been idle.
  */
 
-class IdleTimer :public QObject
+class IdleTimeDetector :public QObject
 {
 Q_OBJECT
 
@@ -30,7 +30,7 @@ public:
      Initializes and idle test timer
      @param maxIdle minutes before the idle timer will go off.
   **/
-  IdleTimer(int maxIdle);
+  IdleTimeDetector(int maxIdle);
 
   /**
      Returns true if it is possible to do idle detection.
