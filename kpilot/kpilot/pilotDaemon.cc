@@ -1269,6 +1269,8 @@ static KCmdLineOptions daemonoptions[] = {
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif
+	{"fail-silently", /* TODO_I18N */ ("Exit instead of complaining "
+		"about bad configuration files."), 0},
 	KCmdLineLastOption
 } ;
 
@@ -1326,7 +1328,10 @@ int main(int argc, char **argv)
 			kdError() << k_funcinfo
 				<< ": Is still not configured for use."
 				<< endl;
-			KPilotConfig::sorryVersionOutdated(KPilotSettings::configVersion());
+			if (!p->isSet("fail-silently"))
+			{
+				KPilotConfig::sorryVersionOutdated(KPilotSettings::configVersion());
+			}
 			return 1;
 		}
 
