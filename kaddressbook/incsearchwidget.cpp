@@ -45,7 +45,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   QToolButton *button = new QToolButton( this );
   button->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
   button->setPixmap( SmallIcon( QApplication::reverseLayout() ? "clear_left" : "locationbar_erase" ) );
-  button->setAccel( QKeySequence( CTRL+Key_S ) );
+  button->setAccel( QKeySequence( CTRL+ALT+Key_S ) );
   button->setAutoRaise( true );
   QToolTip::add( button, i18n( "Reset" ) );
   layout->addWidget( button );
