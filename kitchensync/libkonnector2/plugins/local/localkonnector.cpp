@@ -56,7 +56,9 @@ LocalKonnector::LocalKonnector( const KConfig *config )
   }
 
   mAddressBookSyncee =	new AddressBookSyncee( &mAddressBook );
+  mAddressBookSyncee->setSource( i18n( "Local" ) );
   mCalendarSyncee = new CalendarSyncee( &mCalendar );
+  mCalendarSyncee->setSource( i18n( "Local" ) );
   
   mSyncees.append( mCalendarSyncee );
   mSyncees.append( mAddressBookSyncee );
