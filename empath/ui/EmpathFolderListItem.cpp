@@ -178,7 +178,7 @@ EmpathFolderListItem::paintCell(
         KConfig * c(KGlobal::config());
         using namespace EmpathConfig;
         c->setGroup(GROUP_DISPLAY);
-        QColor col = c->readColorEntry(UI_NEW, &DFLT_NEW);
+        QColor col = c->readColorEntry(UI_NEW, DFLT_NEW);
         QColorGroup modified(cg);
         modified.setColor(QColorGroup::Text, col);
         QListViewItem::paintCell(p, modified, column, width, align);

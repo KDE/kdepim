@@ -25,14 +25,6 @@
 
 #include <qstring.h>
 
-static const QString    EMPATH_MAINTAINER       = "Rik Hemsley";
-static const QString    EMPATH_MAINTAINER_EMAIL = "rik@kde.org";
-
-static const QString    EMPATH_VERSION_STRING   = "1.0 Pre-alpha";
-static const int        EMPATH_VERSION_MAJOR    = 0;
-static const int        EMPATH_VERSION_MINOR    = 8;
-static const int        EMPATH_VERSION_RELEASE  = 1;
-
 #if (!defined NDEBUG) && (defined __GNUG__)
 
 #   include <stdio.h>

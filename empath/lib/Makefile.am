@@ -11,7 +11,6 @@ METASOURCES = AUTO
 
 libempathkernel_la_SOURCES = \
 Empath.cpp \
-EmpathViewFactory.cpp \
 EmpathInterface.cpp \
 EmpathJobInfo.cpp \
 EmpathCachedMessage.cpp \
@@ -37,8 +36,9 @@ EmpathMailboxPOP3.cpp \
 EmpathMaildir.cpp \
 EmpathMatcher.cpp \
 EmpathQuotedText.cpp \
-EmpathSecurityProcess.cpp \
 EmpathTask.cpp \
 EmpathTaskTimer.cpp \
 EmpathURL.cpp \
-EmpathUtilities.cpp
+EmpathUtilities.cpp \
+EmpathViewFactory.cpp \
+EmpathSecurityProcess.cpp

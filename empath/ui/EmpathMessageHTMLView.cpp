@@ -89,7 +89,7 @@ EmpathMessageHTMLWidget::show(const QString & xml)
     QFont f = c->readFontEntry(UI_FIXED_FONT, &defaultFixed);
 
     setFont(f, true);
-    setLinkColor(c->readColorEntry(UI_LINK, &DFLT_LINK));
+    setLinkColor(c->readColorEntry(UI_LINK, DFLT_LINK));
     setLinkUnderline(c->readBoolEntry(UI_UNDERLINE_LINKS, DFLT_UNDER_LINKS));
 
     setText(xml);

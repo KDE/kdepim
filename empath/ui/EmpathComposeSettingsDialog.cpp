@@ -287,10 +287,10 @@ EmpathComposeSettingsDialog::loadData()
         c->readNumEntry(C_SEND_POLICY, EmpathMailSender::SendLater);
 
     le_extra_->setText(c->readEntry(C_EXTRA_HEADERS));
-    le_reply_->setText(c->readEntry(C_PHRASE_REPLY_SENDER, i18n(DFLT_REPLY.ascii())));
-    le_replyAll_->setText(c->readEntry(C_PHRASE_REPLY_ALL, i18n(DFLT_REPLY_ALL.ascii())));
+    le_reply_->setText(c->readEntry(C_PHRASE_REPLY_SENDER, i18n(DFLT_REPLY)));
+    le_replyAll_->setText(c->readEntry(C_PHRASE_REPLY_ALL, i18n(DFLT_REPLY_ALL)));
     
-    le_forward_->setText(c->readEntry(C_PHRASE_FORWARD, i18n(DFLT_FORWARD.ascii())));
+    le_forward_->setText(c->readEntry(C_PHRASE_FORWARD, i18n(DFLT_FORWARD)));
 
     cb_quote_->setChecked   (c->readBoolEntry(C_AUTO_QUOTE,   true));
     cb_addSig_->setChecked  (c->readBoolEntry(C_ADD_SIG,      true));

@@ -266,10 +266,10 @@ EmpathDisplaySettingsDialog::loadData()
     pb_chooseFixedFont_->setText(savedFont.family());
     cb_underlineLinks_->setChecked
         (c->readBoolEntry(UI_UNDERLINE_LINKS, DFLT_UNDER_LINKS));
-    kcb_quoteColorOne_->setColor(c->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
-    kcb_quoteColorTwo_->setColor(c->readColorEntry(UI_QUOTE_TWO, &DFLT_Q_2));
-    kcb_linkColor_->setColor(c->readColorEntry(UI_LINK, &DFLT_LINK));
-    kcb_newMessageColor_->setColor(c->readColorEntry(UI_NEW, &DFLT_NEW));
+    kcb_quoteColorOne_->setColor(c->readColorEntry(UI_QUOTE_ONE, DFLT_Q_1));
+    kcb_quoteColorTwo_->setColor(c->readColorEntry(UI_QUOTE_TWO, DFLT_Q_2));
+    kcb_linkColor_->setColor(c->readColorEntry(UI_LINK, DFLT_LINK));
+    kcb_newMessageColor_->setColor(c->readColorEntry(UI_NEW, DFLT_NEW));
     cb_threadMessages_->setChecked(c->readBoolEntry(UI_THREAD, DFLT_THREAD));
     le_displayHeaders_->setText(c->readEntry(UI_SHOW_HEADERS, DFLT_HEADERS));
     cb_timer_->setChecked(c->readBoolEntry(UI_MARK_READ, DFLT_MARK));
@@ -317,10 +317,10 @@ EmpathDisplaySettingsDialog::s_default()
     pb_chooseFixedFont_->setFont(KGlobal::fixedFont());
     pb_chooseFixedFont_->setText(KGlobal::fixedFont().family());
     cb_underlineLinks_->setChecked(DFLT_UNDER_LINKS);
-    kcb_quoteColorOne_->setColor(DFLT_Q_1);
-    kcb_quoteColorTwo_->setColor(DFLT_Q_2);
-    kcb_linkColor_->setColor(DFLT_LINK);
-    kcb_newMessageColor_->setColor(DFLT_NEW);
+    kcb_quoteColorOne_->setColor(*DFLT_Q_1);
+    kcb_quoteColorTwo_->setColor(*DFLT_Q_2);
+    kcb_linkColor_->setColor(*DFLT_LINK);
+    kcb_newMessageColor_->setColor(*DFLT_NEW);
     cb_threadMessages_->setChecked(DFLT_THREAD);
     le_displayHeaders_->setText(DFLT_HEADERS);
     cb_timer_->setChecked(DFLT_MARK);

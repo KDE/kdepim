@@ -169,8 +169,8 @@ EmpathXMLMessage::_encode()
 
     config->setGroup(GROUP_DISPLAY);
 
-    QColor quote1(config->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
-    QColor quote2(config->readColorEntry(UI_QUOTE_TWO, &DFLT_Q_2));
+    QColor quote1(config->readColorEntry(UI_QUOTE_ONE, DFLT_Q_1));
+    QColor quote2(config->readColorEntry(UI_QUOTE_TWO, DFLT_Q_2));
 
     QString col;
 

@@ -174,6 +174,9 @@ EmpathComposer::bugReport()
     EmpathComposeForm composeForm;
 
     composeForm.setComposeType(ComposeNormal);
+    composeForm.setHeader("To", "KDE-PIM Mailing list <kde-pim@kde.org>"); 
+
+#if 0
     composeForm.setHeader("To", 
         (EMPATH_MAINTAINER + " <" + EMPATH_MAINTAINER_EMAIL +">").local8Bit()); 
 
@@ -185,6 +188,7 @@ EmpathComposer::bugReport()
         " KDE Version: "    + KDE_VERSION_STRING + "\n"
         " Qt Version: "     + QT_VERSION_STR + "\n",
         Visible);
+#endif
 
     QString body =
     "- " +

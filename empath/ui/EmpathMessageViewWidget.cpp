@@ -116,8 +116,8 @@ EmpathMessageViewWidget::s_jobComplete(EmpathJobInfo ji)
 
     config->setGroup(GROUP_DISPLAY);
 
-    QColor quote1(config->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
-    QColor quote2(config->readColorEntry(UI_QUOTE_TWO, &DFLT_Q_2));
+    QColor quote1(config->readColorEntry(UI_QUOTE_ONE, DFLT_Q_1));
+    QColor quote2(config->readColorEntry(UI_QUOTE_TWO, DFLT_Q_2));
 
     RMM::RBodyPart message(m);
 
@@ -269,8 +269,8 @@ EmpathMessageViewWidget::s_partChanged(RMM::RBodyPart part)
 
     config->setGroup(GROUP_DISPLAY);
 
-    QColor quote1(config->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
-    QColor quote2(config->readColorEntry(UI_QUOTE_TWO, &DFLT_Q_2));
+    QColor quote1(config->readColorEntry(UI_QUOTE_ONE, DFLT_Q_1));
+    QColor quote2(config->readColorEntry(UI_QUOTE_TWO, DFLT_Q_2));
 
     RMM::RContentType t = part.envelope().contentType();
 

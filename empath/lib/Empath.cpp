@@ -37,6 +37,7 @@
 #include <qdatetime.h>
 #include <qfile.h>
 #include <qfileinfo.h>
+#include <qcolor.h>
 
 // KDE includes
 #include <kglobal.h>
@@ -82,6 +83,13 @@ Empath::Empath()
         seq_(0)
 {
     EMPATH = this;
+    
+    using namespace EmpathConfig;
+
+    DFLT_Q_1   = new QColor(Qt::darkBlue);
+    DFLT_Q_2   = new QColor(Qt::darkCyan);
+    DFLT_LINK  = new QColor(Qt::blue);
+    DFLT_NEW   = new QColor(Qt::darkRed);
 
     // Don't do dollar expansion by default.
     // Possible security hole.
@@ -136,6 +144,14 @@ Empath::init()
 
 Empath::~Empath()
 {
+    using namespace EmpathConfig;
+
+    delete DFLT_Q_1;
+    delete DFLT_Q_2;
+    delete DFLT_LINK;
+    delete DFLT_NEW;
+
+    DFLT_Q_1 = DFLT_Q_2 = DFLT_LINK = DFLT_NEW = 0;
 }
 
     void
