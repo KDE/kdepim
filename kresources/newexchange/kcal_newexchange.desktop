@@ -1,12 +1,17 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Calendar on an Exchange Server
+Name=Calendar on an Exchange Server (experimental)
 Name[bg]=Календар на сървър Exchange
+Name[br]=Deiziadur en ur servijer Exchange
+Name[ca]=Calendari a un servidor Exchange
 Name[da]=Kalender på en Exchange-server
 Name[es]=Calendario en un servidor Exchange
 Name[nl]=Agenda op een Exchange-server
 Name[pt]=Calendário em servidor Exchange
 Name[pt_BR]=Calendário em servidor Exchange
+Name[ru]=Календарь на сервере Exchange
+Name[sr]=Календар на Exchange серверу
+Name[sr@Latn]=Календар на Exchange серверу
 Name[sv]=Kalender på en Exchange-server
 Name[uk]=Календар на сервері Exchange
 X-KDE-Library=kcal_newexchange
