@@ -41,7 +41,14 @@ class UIDialog : public KDialogBase
 {
 Q_OBJECT
 public:
-	UIDialog(QWidget *parent=0L, const char *name=0L,bool modal=false);
+	/**
+	* Create a UIDialog with the given parent and object name.
+	* The dialog can be made modal if you wish. The buttons
+	* can be specified using the second constructor, but you should
+	* always include an OK button for the purpose of committing
+	* whatever changes need to be made.
+	*/
+	UIDialog(QWidget *parent=0L, const char *name=0L, bool modal=false);
 	UIDialog(QWidget *parent=0L, const char *name=0L,
 		int buttonmask=Ok|Cancel, bool modal=false);
 	virtual ~UIDialog();
@@ -54,7 +61,13 @@ protected:
 	* data instead of the global KInstance about data.
 	*/
 	void addAboutPage(bool aboutbutton=false,KAboutData *data=0L);
+
 public:
+	/**
+	* This is the function that does the work of adding an about
+	* page to a tabwidget. It is made public and static so that
+	* it can be used elsewhere wherever tabwidgets appear.
+	*/
 	static QPushButton *addAboutPage(QTabWidget *,
 		KAboutData *data=0L,
 		bool aboutbutton=false);
