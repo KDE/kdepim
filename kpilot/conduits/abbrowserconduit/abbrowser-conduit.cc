@@ -324,19 +324,24 @@ bool AbbrowserConduit::_saveAddressBook()
 
 	if (ticket)
 	{
-		if (abChanged) {
+		if (abChanged) 
+		{
 			res=aBook->save(ticket);
-      ticket = 0;
-/*
-      Activate in KDE 4.0
 
-			if (res) { 
+			if (res) 
+			{ 
+#if 0
+				// XXX: Reenable for KDE 4
 				aBook->releaseSaveTicket(ticket);
 				ticket=0;
-      }
-*/
-      if (!res )
-			  aBook->cleanUp();
+#endif
+				/* EMPTY */
+			}
+			else
+			{
+				aBook->cleanUp();
+			}
+			ticket = 0L;
 		}
 		else
 		{
