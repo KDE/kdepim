@@ -22,7 +22,9 @@
 #define WEBDAVHANDLER_H
 
 #include <qstring.h>
+#include <qstringlist.h>
 #include <qdom.h>
+#include <qdatetime.h>
 #include <kurl.h>
 
 class WebdavHandler
@@ -34,23 +36,26 @@ class WebdavHandler
 
 
     static QDomElement addElementNS( QDomDocument &doc, QDomNode &node,
-                                   const QString &ns, const QString &tag,
-                                   const QString &value = QString::null );
+                                     const QString &ns, const QString &tag,
+                                     const QString &value = QString::null );
     static QDomElement addElement( QDomDocument &, QDomNode &,
-                                   const QString &tag, const QString &value = QString::null );
+                         const QString &tag, const QString &value = QString::null );
     static QDomElement addDavElement( QDomDocument &, QDomNode &,
-                                      const QString &tag, const QString &value = QString::null );
+                         const QString &tag, const QString &value = QString::null );
+
+    static bool extractBool( const QDomElement &node, 
+                         const QString &entry, bool &value );
+    static bool extractLong( const QDomElement &node, 
+                         const QString &entry, long &value );
+    static bool extractFloat( const QDomElement &node, 
+                         const QString &entry, float &value );
+    static bool extractDateTime( const QDomElement &node, 
+                         const QString &entry, QDateTime &value );
+    static bool extractString( const QDomElement &node, 
+                         const QString &entry, QString &value );
+    static bool extractStringList( const QDomElement &node, 
+                         const QString &entry, QStringList &value );
     
-    /** 
-     * Creates a request body which asks for the standard properties. Used as a stat.
-     * */
-    static QDomDocument createAllPropsRequest();
-    /**
-     * Creates a request body which asks only for the file name and the sequence 
-     * number, which is what OGo uses to track revisions. */
-    static QDomDocument createItemsAndVersionsPropsRequest();
-
-
     /**
      * Returns the value of the "etag" header if it can be found in the headers.
      */

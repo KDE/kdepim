@@ -70,29 +70,71 @@ QDomElement WebdavHandler::addDavElement( QDomDocument &doc, QDomNode &node,
   return addElementNS( doc, node, "DAV:", tag, value );
 }
 
-
-QDomDocument WebdavHandler::createItemsAndVersionsPropsRequest()
+bool WebdavHandler::extractBool( const QDomElement &node, const QString &entry, bool &value )
 {
-  QDomDocument doc;
-  QDomElement root = WebdavHandler::addDavElement(  doc, doc, "propfind" );
-  QDomElement prop = WebdavHandler::addDavElement(  doc, root, "prop" );
-  WebdavHandler::addDavElement( doc, prop, "getetag" );
-  WebdavHandler::addDavElement( doc, prop, "contentclass" );
-  return doc;
+  QDomElement element = node.namedItem( entry ).toElement();
+  if ( !element.isNull() ) {
+    value = (element.text() != "0");
+    return true;
+  } 
+  return false;
 }
 
-QDomDocument WebdavHandler::createAllPropsRequest()
+bool WebdavHandler::extractLong( const QDomElement &node, const QString &entry, long &value )
 {
-  QDomDocument doc;
-  QDomElement root = WebdavHandler::addDavElement(  doc, doc, "propfind" );
-  QDomElement prop = WebdavHandler::addDavElement(  doc, root, "prop" );
-  WebdavHandler::addDavElement(  doc, prop, "getcontentlength");
-  WebdavHandler::addDavElement(  doc, prop, "getlastmodified" );
-  WebdavHandler::addDavElement(  doc, prop, "displayname" );
-  WebdavHandler::addDavElement(  doc, prop, "resourcetype" );
-  prop.appendChild( doc.createElementNS( "http://apache.org/dav/props/", "executable" ) );
-  return doc;
+  QDomElement element = node.namedItem( entry ).toElement();
+  if ( !element.isNull() ) {
+    value = element.text().toLong();
+    return true;
+  } 
+  return false;
 }
+
+bool WebdavHandler::extractFloat( const QDomElement &node, const QString &entry, float &value )
+{
+  QDomElement element = node.namedItem( entry ).toElement();
+  if ( !element.isNull() ) {
+    value = element.text().toFloat();
+    return true;
+  } 
+  return false;
+}
+
+bool WebdavHandler::extractDateTime( const QDomElement &node, const QString &entry, QDateTime &value )
+{
+  QDomElement element = node.namedItem( entry ).toElement();
+  if ( !element.isNull() && !element.text().isEmpty() ) {
+    value = QDateTime::fromString( element.text(), Qt::ISODate  );
+    return true;
+  } 
+  return false;
+}
+
+bool WebdavHandler::extractString( const QDomElement &node, const QString &entry, QString &value )
+{
+  QDomElement element = node.namedItem( entry ).toElement();
+  if ( !element.isNull() ) {
+    value = element.text();
+    return true;
+  } 
+  return false;
+}
+
+bool WebdavHandler::extractStringList( const QDomElement &node, const QString &entry, QStringList &value )
+{
+  QDomElement element = node.namedItem( entry ).toElement();
+  if ( !element.isNull() ) {
+    value.clear();
+    QDomNodeList list = element.elementsByTagNameNS( "xml:", "v" );
+    for( uint i=0; i < list.count(); i++ ) {
+      QDomElement item = list.item(i).toElement();
+      value.append( item.text() );
+    }
+    return true;
+  } 
+  return false;
+}
+
 
 const QString WebdavHandler::getEtagFromHeaders( const QString& headers )
 {
