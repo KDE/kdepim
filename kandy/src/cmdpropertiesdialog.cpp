@@ -4,7 +4,7 @@
 #include <qlineedit.h>
 #include <qcheckbox.h>
 
-#include <klineeditdlg.h>
+#include <kinputdialog.h>
 #include <klocale.h>
 
 #include "atcommand.h"
@@ -83,8 +83,8 @@ void CmdPropertiesDialog::editParameterName(QListViewItem *item)
 {
   bool ok = false;
 
-  QString newName = KLineEditDlg::getText(i18n("Enter parameter name"),
-                                          item->text(0),&ok,this);
+  QString newName = KInputDialog::getText(QString::null,
+                        i18n("Enter parameter name:"),item->text(0),&ok,this);
 
   if (ok) {
     item->setText(0,newName);

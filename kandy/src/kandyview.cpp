@@ -22,7 +22,7 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfig.h>
-#include <klineeditdlg.h>
+#include <kinputdialog.h>
 #include <kdialog.h>
 
 #include "modem.h"
@@ -227,13 +227,11 @@ void KandyView::executeCommand()
       ATParameter *p = paraList.at(i);
       if (p->userInput()) {
         bool ok = false;
-        QString value = KLineEditDlg::getText(i18n("Enter Value for %1").arg(p->name()),
-                                              "",&ok,this);
-        if (ok) {
-          p->setValue(value);
-        } else {
+        QString value = KInputDialog::getText(QString::null,
+            i18n("Enter Value for %1").arg(p->name()),QString::null,&ok,this);
+        if (!ok)
           return;
-        }
+        p->setValue(value);
       }
     }
     kdDebug() << "KandyView::executeCommand(): " << cmd->cmd() << endl;
