@@ -1,4 +1,5 @@
 ### Makefile for the avantgo conduit
+### 	conduits/malconduit
 ###
 ### The mal conduit is Copyright (C) 2002 by Reinhold Kainhofer
 
@@ -19,6 +20,6 @@ libmalconduit_la_SOURCES = \
 	mal-setup.cc \
 	mal-conduit.cc \
 	mal-setup_dialog.ui
-libmalconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib 
-libmalconduit_la_LIBADD = -lkpilot $(MAL_LIB)
+libmalconduit_la_LDFLAGS = $(KDE_RPATH) $(KDE_PLUGIN) $(all_libraries)
+libmalconduit_la_LIBADD = ../../lib/libkpilot.la $(MAL_LIB)
 
