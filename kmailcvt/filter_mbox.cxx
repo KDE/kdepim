@@ -25,10 +25,11 @@
 #include "filter_mbox.hxx"
 
 FilterMBox::FilterMBox() :
-Filter(	i18n("Import unix mbox files"),
+Filter(	i18n("Import mbox Files (Unix, Evolution)"),
     "Laurence Anderson",
     i18n("<p><b>mbox import filter</b></p>"
-      "<p>This filter will import mbox files into kmail</p>"
+      "<p>This filter will import mbox files into kmail. Use this filter "
+      "if you want to import mails from Ximian Evolution or other mailers that use this traditional Unix format.</p>"
       "<p><b>Note:</b> Emails will be imported into folders named after the file they came from, prefixed with MBOX-</p>"
       ))
 {
