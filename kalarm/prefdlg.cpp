@@ -58,9 +58,7 @@ void KAlarmPrefDlg::slotDefault()
 
 void KAlarmPrefDlg::slotHelp()
 {
-	// show some help...
-	// figure out the current active page
-	// and give help for that page
+	KDialogBase::slotHelp();
 }
 
 // Apply the settings that are currently selected
