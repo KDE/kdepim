@@ -66,10 +66,6 @@ int main( int argc, char **argv )
 
   CalendarLocal cal;
 
-  // Force save() to save in sorted order
-//  extern bool KCal_CalendarLocal_saveOrdered;
-//  KCal_CalendarLocal_saveOrdered = true;
-
   if ( !cal.load( input ) ) return 1;
   if ( !cal.save( output ) ) return 1;
 
