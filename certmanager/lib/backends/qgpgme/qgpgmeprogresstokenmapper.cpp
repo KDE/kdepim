@@ -50,9 +50,25 @@ struct Desc {
   bool useTot : 1;
 };
 
+static const struct Desc pk_dsa[] = {
+  { 0, I18N_NOOP("Generating DSA key..."), false, false }
+};
+
+static const struct Desc pk_elg[] = {
+  { 0, I18N_NOOP("Generating ElGamal key..."), false, false }
+};
+
 static const struct Desc primegen[] = {
   // FIXME: add all type's?
   { 0, I18N_NOOP("Searching a large prime number..."), false, false }
+};
+
+static const struct Desc need_entropy[] = {
+  { 0, I18N_NOOP("Waiting for new entropy from random number generator (you might want to excercise the harddisks or move the mouse)..."), false, false }
+};
+
+static const struct Desc tick[] = {
+  { 0, I18N_NOOP("Please wait..."), false, false }
 };
 
 static const struct Desc starting_agent[] = {
@@ -65,7 +81,11 @@ static const struct {
   unsigned int numDesc;
 } tokens[] = {
 #define make_token(x) { #x, x, sizeof(x) / sizeof(*x) }
+  make_token(pk_dsa),
+  make_token(pk_elg),
   make_token(primegen),
+  make_token(need_entropy),
+  make_token(tick),
   make_token(starting_agent)
 #undef make_token
 };
@@ -104,16 +124,24 @@ static const Map & makeMap() { // return a reference to a static to avoid copyin
   return map;
 }
 
+QString Kleo::QGpgMEProgressTokenMapper::map( const char * tokenUtf8, int subtoken, int cur, int tot ) const {
+  if ( !tokenUtf8 || !*tokenUtf8 )
+    return QString::null;
+
+  return map( QString::fromUtf8( tokenUtf8 ), subtoken, cur, tot );
+}
+
 QString Kleo::QGpgMEProgressTokenMapper::map( const QString & token, int subtoken, int cur, int tot ) const {
   static const Map & tokenMap = makeMap();
+
   const Map::const_iterator it1 = tokenMap.find( token.lower() );
   if ( it1 == tokenMap.end() )
-    return QString::null;
+    return token;
   std::map<int,Desc>::const_iterator it2 = it1->second.find( subtoken );
   if ( it2 == it1->second.end() )
     it2 = it1->second.find( 0 );
   if ( it2 == it1->second.end() )
-    return QString::null;
+    return token;
   const Desc & desc = it2->second;
   QString result = i18n( desc.display );
   if ( desc.useCur )
