@@ -268,7 +268,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
     VObject *d = addPropValue(vtodo, VCDescriptionProp,
                               anEvent->description().local8Bit());
     if (anEvent->description().find('\n') != -1)
-      addProp(d, VCQuotedPrintableProp);
+      addPropValue(d, VCEncodingProp, VCQuotedPrintableProp);
   }
 
   // summary
@@ -536,7 +536,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     VObject *d = addPropValue(vevent, VCDescriptionProp,
                               anEvent->description().local8Bit());
     if (anEvent->description().find('\n') != -1)
-      addProp(d, VCQuotedPrintableProp);
+      addPropValue(d, VCEncodingProp, VCQuotedPrintableProp);
   }
 
   // summary
