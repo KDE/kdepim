@@ -40,21 +40,19 @@ class PilotDaemonDCOP : virtual public DCOPObject
 {
 	K_DCOP
 public:
+	/**
+	* You can pass values of this type to requestSync; since
+	* you pass an int, all the values are explicitly defined here.
+	*/
 	enum HotSyncTypes { Test=0,
-		HotSync,
-		FastSync,
-		Backup,
-		Restore } ;
+		HotSync=1,
+		FastSync=2,
+		Backup=3,
+		Restore=4 } ;
 k_dcop:
 	/**
 	* Start a HotSync. What kind of HotSync is determined
 	* by the int parameter (use the enum above!):
-	*
-	* 0 default -> use whatever form of HotSync has most recently been requested
-	* 1 regular HotSync -> backup databases and run conduits
-	* 2 FastSync -> only backup databases with conduits
-	* 3 FullBackup -> backup, no conduits
-	* 4 FullRestore -> restore from local databases
 	*/
 	virtual ASYNC requestSync(int) = 0;
 	virtual ASYNC requestFastSyncNext() = 0;
@@ -76,6 +74,16 @@ k_dcop:
 
 
 // $Log$
+// Revision 1.11.2.1  2002/04/04 20:28:28  adridg
+// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
+// when using PILOT_VERSION. kpilotTest defaults to list, like the options
+// promise. Always do old-style USB sync (also works with serial devices)
+// and runs conduits only for HotSync. KPilot now as it should have been
+// for the 3.0 release.
+//
+// Revision 1.11  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.10  2001/09/23 18:24:59  adridg
 // New syncing architecture
 //

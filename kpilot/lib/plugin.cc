@@ -38,13 +38,17 @@
 
 #include <dcopclient.h>
 
+#include "pilotSerialDatabase.h"
+#include "pilotLocalDatabase.h"
+
 #include "plugin.moc"
+
 
 
 
 ConduitConfig::ConduitConfig(QWidget *parent,
 	const char *name,
-	const QStringList &args) : 
+	const QStringList &args) :
 	UIDialog(parent,name,PluginUtility::isModal(args)),
 	fConfig(0L)
 {
@@ -63,15 +67,62 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	SyncAction(p,name),
 	fConfig(0L),
 	fTest(args.contains("test")),
-	fBackup(args.contains("backup"))
+	fBackup(args.contains("backup")),
+	fDatabase(0L),
+	fLocalDatabase(0L)
 {
 	FUNCTIONSETUP;
+
+#ifdef DEBUG
+	for (QStringList::ConstIterator it = args.begin();
+		it != args.end();
+		++it)
+	{
+		DEBUGCONDUIT << fname << ": " << *it << endl;
+	}
+#endif
 }
 
 /* virtual */ ConduitAction::~ConduitAction()
 {
 	FUNCTIONSETUP;
 }
+
+bool ConduitAction::openDatabases(const char *name)
+{
+	FUNCTIONSETUP;
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Trying to open database "
+		<< name << endl;
+#endif
+
+	fDatabase = new PilotSerialDatabase(pilotSocket(),
+		name,this,name);
+
+	if (!fDatabase)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Could not open database \""
+			<< name
+			<< "\" on the pilot."
+			<< endl;
+	}
+
+	fLocalDatabase = new PilotLocalDatabase(name);
+
+	if (!fLocalDatabase)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Could not open local copy of database \""
+			<< name
+			<< "\"" << endl;
+	}
+
+	return (fDatabase && fLocalDatabase);
+}
+
 
 int PluginUtility::findHandle(const QStringList &a)
 {
@@ -121,6 +172,15 @@ bool PluginUtility::isModal(const QStringList &a)
 }
 
 // $Log$
+// Revision 1.6.2.2  2002/05/09 22:29:33  adridg
+// Various small things not important for the release
+//
+// Revision 1.6.2.1  2002/04/09 21:51:50  adridg
+// Extra debugging, pilot-link 0.10.1 still needs workaround
+//
+// Revision 1.6  2002/02/02 20:53:53  leitner
+// removed re-definition of default arg.
+//
 // Revision 1.5  2002/01/21 23:14:03  adridg
 // Old code removed; extra abstractions added; utility extended
 //

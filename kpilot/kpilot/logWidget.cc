@@ -61,7 +61,7 @@ static const char *logw_id =
 LogWidget::LogWidget(QWidget * parent) :
 	PilotComponent(parent, "component_log", QString::null),
 	DCOPObject("KPilotIface"),
-	fLog(0L), 
+	fLog(0L),
 	fShowTime(false),
 	fSplash(0L),
 	fLabel(0L),
@@ -87,21 +87,17 @@ LogWidget::LogWidget(QWidget * parent) :
 
 	QString initialText ;
 
-	// TODO: disable once the beta-stage has been left.
-	//
-	//
-	initialText.append(
-		i18n("<qt>KPilot %1 is an <B>alpha</B> version of the software "
-		"and should be used with even more caution than usual. "
-		"There is no point in sending in bug reports unless you "
-		"include a backtrace and the debugging output.<BR/>"
-		"</qt>").arg(KPILOT_VERSION));
 	initialText.append(QString("<b>Version:</b> KPilot %1<br/>").arg(KPILOT_VERSION));
-	initialText.append(QString("<b>Version:</b> pilot-link %1.%2.%3%4")
+	initialText.append(QString("<b>Version:</b> pilot-link %1.%2.%3%4<br><br>")
 		.arg(PILOT_LINK_VERSION)
 		.arg(PILOT_LINK_MAJOR)
 		.arg(PILOT_LINK_MINOR)
-		.arg(PILOT_LINK_PATCH));
+#ifdef PILOT_LINK_PATCH
+		.arg(PILOT_LINK_PATCH)
+#else
+		.arg(QString())
+#endif
+		);
 
 	initialText.append(i18n("<qt><B>HotSync Log</B></qt>"));
 
@@ -167,8 +163,13 @@ LogWidget::LogWidget(QWidget * parent) :
 			KPILOT_VERSION);
 		fSplash = new QLabel(this);
 		fSplash->setPixmap(splash);
+		fSplash->setAlignment(AlignCenter);
 		QTimer::singleShot(3000,this,SLOT(hideSplash()));
 		grid->addMultiCellWidget(fSplash,1,3,1,2);
+		grid->addColSpacing(0,10);
+		grid->setColStretch(1,50);
+		grid->setColStretch(2,50);
+		grid->addColSpacing(3,10);
 	}
 
 	(void) logw_id;
@@ -179,25 +180,40 @@ void LogWidget::addMessage(const QString & s)
 	FUNCTIONSETUP;
 
 	if (s.isEmpty()) return;
+	if (!fLog) return;
+
+	QString t;
+
+#ifdef KDE2
+	t = fLog->text();
+#endif
 
 	if (fShowTime)
 	{
-		QString t;
+		t.append("<b>");
 
-		t = QTime::currentTime().toString();
-		t.append("  ");
-		t.append(s);
-		fLog->append(t);
+		t.append(QTime::currentTime().toString());
+		t.append("</b>  ");
 	}
-	else
-	{
-		fLog->append(s);
-	}
+
+	t.append(s);
+	t.append("<br/>");
+
+#ifdef KDE2
+	fLog->setText(t);
+#else
+	fLog->append(t);
+#endif
 }
 
 void LogWidget::addError(const QString & s)
 {
 	FUNCTIONSETUP;
+
+	kdWarning() << "KPilot error: " << s << endl;
+
+	if (s.isEmpty()) return;
+	if (!fLog) return;
 
 	QString t("<qt><b>");
 
@@ -208,16 +224,17 @@ void LogWidget::addError(const QString & s)
 		t.append("  ");
 	}
 
+	QString t("<i>");
 	t.append(s);
-	t.append("</b></qt>");
+	t.append("</i>");
 
-	fLog->append(s);
+	addMessage(t);
 }
 
 void LogWidget::addProgress(const QString &s,int i)
 {
 	FUNCTIONSETUP;
-	
+
 	logMessage(s);
 
 	if ((i >= 0) && (i <= 100))
@@ -264,18 +281,7 @@ void LogWidget::hideSplash()
 
 /* DCOP */ ASYNC LogWidget::logMessage(QString s)
 {
-	FUNCTIONSETUP;
-
-	if (fLog)
-	{
-		QTime t = QTime::currentTime();
-		QString s1 = "<b>";
-		s1.append(t.toString());
-		s1.append(":</b>  ");
-		s1.append(s);
-		s1.append("<br />");
-		fLog->append(s1);
-	}
+	addMessage(s);
 }
 
 /* DCOP */ ASYNC LogWidget::logProgress(QString s, int i)
@@ -357,8 +363,24 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.20  2002/04/10 20:09:03  cschumac
+// Make it compile.
+//
 // Revision 1.19  2002/04/10 06:13:34  adridg
 // Show version of pilot-link in about
+//
+// Revision 1.18.2.3  2002/04/14 22:26:12  adridg
+// New TODO's for HEAD; cosmetic bugfix in logWidget; rectify misleading debug output when KPilot starts the daemon itself.
+//
+// Revision 1.18.2.2  2002/04/13 11:40:24  adridg
+// Simplification of logging code, display pilot-link version on startup
+//
+// Revision 1.18.2.1  2002/04/04 20:28:28  adridg
+// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
+// when using PILOT_VERSION. kpilotTest defaults to list, like the options
+// promise. Always do old-style USB sync (also works with serial devices)
+// and runs conduits only for HotSync. KPilot now as it should have been
+// for the 3.0 release.
 //
 // Revision 1.18  2002/02/10 22:21:33  adridg
 // Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?

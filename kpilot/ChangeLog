@@ -1,3 +1,115 @@
+KPilot Developer's notes for may 18th 2002
+==========================================
+
+2002-05-15  Adriaan de Groot
+* Updated the version number.
+* Removed the device type combobox, since it's not needed.
+* Updated the what's this text for the speed combobox.
+* Removed the "alpha" warning from the log widget.
+
+TODO
+
+* Really need to do something about all the disabled options in the
+  config dialog. Some of them might make sense.
+
+
+KPilot Developer's notes for april 28st 2002
+============================================
+
+Hopefully we'll have merged the HEAD version of the vcal conduit --
+by Reinhold K. -- with branch so that it actually works.
+
+
+
+KPilot Developer's notes for april 21st 2002
+============================================
+
+A week when I should have been working on KPilot, and I've been
+working on the build system instead. Reinhold K. has hinted that
+he's making tremendous progress on the vcal conduit, which is a good thing.
+
+2002-04-20  Adriaan de Groot
+* Closed a few bugs that I could verify are resolved. Other conduit-
+  related bugs remain open even if I suspect they're done, since I
+  haven't actually physically tested them.
+
+2002-04-16  Adriaan de Groot
+* Finally committed all of David B's patches and things. [HEAD]
+* More modification of configure.in.in and the Makefile.am's to
+  make pilot-link more easily found (I hope). [BRANCH]
+
+2002-04-15  Adriaan de Groot
+* Cosmetic fix: center splash image under KDE3 as well.
+* Fixed misleading debug statement when KPilot starts the daemon.
+
+KPilot Developer's notes for mid-april 2002
+===========================================
+
+2002-04-13  Adriaan de Groot
+* Received a patch from Carlo Perassi for handling cases where there
+  is no user name set in the Pilot.
+* Worked on configure changes to detect pilot-link automatically and
+  properly. [BRANCH]
+
+2002-04-09  Adriaan de Groot
+* Did some minor debugging in setting flags for the conduits.
+
+2002-04-07  Adriaan de Groot
+* There are now two real branches of development for KPilot. KDE_3_0_BRANCH
+  gets bugfixes to the existing code, while HEAD gets new features. I imagine
+  I'll merge BRANCH back to HEAD sometime when I feel that the main bugs
+  are out (like next week, I hope). I'll be showing where patches go until
+  we merge again.
+* Added a message (no i18n) showing KPilot and pilot-link versions.
+* Still need a workaround for dlp_addSyncLogEntry() for pilot-link 0.10.1
+  [BRANCH - should go in HEAD as well]
+* Fixed Makefile.am bug in popmailconduit. [BRANCH]
+- --test mode wasn't working with kpilotTest (when running conduits) [BRANCH]
+
+2002-04-06  Adriaan de Groot
+* Applied patch to avoid crash with undefined symbol. I forget who sent
+  it in, though. Thanks to you, anonymous! Wrote a script to catch this 
+  kind of situation in the future.
+
+
+
+KPilot Developer's notes for sometime in march 2002
+===================================================
+
+2002-03-09  Adriaan de Groot
+* Sanitized syncStack so that nextAction isn't so ambiguous.
+* Fixed missing default (--list) in kpilotTest.
+* Some neatness fixes in pilotDaemon.cc and pilotDaemonDCOP.h.
+* Test syncs shouldn't run conduits or install files. Fixed in pilotDaemon.
+* The daemon leaked 2 FD's on every sync, which is bad. Added some extra
+  ::close() calls, which fixes this (under p-l 0.9.5 and 0.10.1).
+* Mucked about with USB devices some more, but it looks like the m500
+  is going to be unusable under FBSD for some time. This isn't bad, since
+  I can then concentrate on getting things working with the serial PalmV.
+* It might be a good idea to start using the daemon to do just device tests
+  instead of kpilotTest -- though it doens't make a big difference.
+
+2002-03-08  Adriaan de Groot
+* Fiddled around w/ getting a broadband connection, for whatever
+  reason. I guess effortless connectivity is the goal. Fiddled with
+  my new m500 USB and discovered that pilot-link 0.10.1pre works
+  perfectly with it under Linux (well, pilot-xfer -l works). Under
+  FreeBSD, though, it seems that there's nothing available for this
+  kind of device. Hmph. So now I need to spend some time to figure
+  out how to get KDE up and running on my somewhat deprecated Linux
+  install. Serve the source by NFS?
+
+2002-03-07  Adriaan de Groot
+* Finally picked up where I left off, adding yet another message to
+  the startup log window (again, I think this is temporary). The versions
+  of relevant items now appear there.
+* Messed around with crashes while deleting CleanupActions.
+
+2002-03-06  David Bishop
+* Lots of work on exporting memos in XML format. It looks like the
+  whole memo viewer widget is going to be reworked, slightly.
+* Finished off the kdDebug() repairs someone else started.
+
 KPilot Developer's notes for february 11th 2002
 ===============================================
 

@@ -24,8 +24,7 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-static const char *kpilotlink_id =
-	"$Id$";
+static const char *kpilotlink_id = "$Id$";
 
 #include "options.h"
 
@@ -98,14 +97,25 @@ void KPilotDeviceLink::close()
 
 	KPILOT_DELETE(fOpenTimer);
 	KPILOT_DELETE(fSocketNotifier);
-
+#ifdef DEBUG
+	DEBUGDAEMON << fname
+		<< ": Closing sockets "
+		<< fCurrentPilotSocket
+		<< " and "
+		<< fPilotMasterSocket
+		<< endl;
+#endif
 	if (fCurrentPilotSocket != -1)
 	{
 		pi_close(fCurrentPilotSocket);
+		// It seems that pi_close doesn't release
+		// the file descriptor, so do that forcibly.
+		::close(fCurrentPilotSocket);
 	}
 	if (fPilotMasterSocket != -1)
 	{
 		pi_close(fPilotMasterSocket);
+		::close(fPilotMasterSocket);
 	}
 	fPilotMasterSocket = (-1);
 	fCurrentPilotSocket = (-1);
@@ -202,7 +212,11 @@ bool KPilotDeviceLink::open()
 	QString msg;
 
 	if (fCurrentPilotSocket != -1)
+	{
+		// See note in KPilotDeviceLink::close()
 		pi_close(fCurrentPilotSocket);
+		::close(fCurrentPilotSocket);
+	}
 	fCurrentPilotSocket = (-1);
 
 	if (fPilotMasterSocket == -1)
@@ -253,6 +267,7 @@ bool KPilotDeviceLink::open()
 #endif
 	strcpy(addr.pi_device, QFile::encodeName(fPilotPath));
 
+
 	ret = pi_bind(fPilotMasterSocket,
 		(struct sockaddr *) &addr, sizeof(addr));
 
@@ -269,6 +284,15 @@ bool KPilotDeviceLink::open()
 	}
 	else
 	{
+#ifdef DEBUG
+		DEBUGDAEMON << fname
+			<< ": Tried "
+			<< addr.pi_device
+			<< " and got "
+			<< strerror(errno)
+			<< endl;
+#endif
+
 		if (isTransient() && (fRetries < 5))
 		{
 			return false;
@@ -290,7 +314,7 @@ bool KPilotDeviceLink::open()
 errInit:
 	if (fPilotMasterSocket != -1)
 	{
-		pi_close(fPilotMasterSocket);
+		close();
 	}
 
 	fPilotMasterSocket = -1;
@@ -322,7 +346,7 @@ errInit:
 		msg += i18n(" Check Pilot path and permissions.");
 	}
 
-	// OK, so we may have to deal with a translated 
+	// OK, so we may have to deal with a translated
 	// error message here. Big deal -- we have the line
 	// number as well, right?
 	//
@@ -497,7 +521,7 @@ void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool suppress)
 	QString t(entry);
 
 #if defined(PILOT_LINK_VERSION) && defined(PILOT_LINK_MAJOR) && defined(PILOT_LINK_MINOR)
-#if (PILOT_LINK_VERSION * 100 + PILOT_LINK_MAJOR * 10 + PILOT_LINK_MINOR) < 100
+#if (PILOT_LINK_VERSION * 1000 + PILOT_LINK_MAJOR * 10 + PILOT_LINK_MINOR) < 110
 	t.append("X");
 #endif
 #else
@@ -654,8 +678,24 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.10  2002/05/03 17:21:51  kainhofe
+// Added a method findDatabase to KPilotDeviceLink to look up a single db on the palm
+//
 // Revision 1.9  2002/04/20 13:03:31  binner
 // CVS_SILENT Capitalisation fixes.
+//
+// Revision 1.8.2.3  2002/05/01 21:37:30  kainhofe
+// Added a function findDatabase to get the DBInfo for a given database
+//
+// Revision 1.8.2.2  2002/04/09 21:51:50  adridg
+// Extra debugging, pilot-link 0.10.1 still needs workaround
+//
+// Revision 1.8.2.1  2002/04/04 20:28:28  adridg
+// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
+// when using PILOT_VERSION. kpilotTest defaults to list, like the options
+// promise. Always do old-style USB sync (also works with serial devices)
+// and runs conduits only for HotSync. KPilot now as it should have been
+// for the 3.0 release.
 //
 // Revision 1.8  2002/02/10 22:21:33  adridg
 // Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?

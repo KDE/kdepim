@@ -151,6 +151,12 @@ private:
 
 
 // $Log$
+// Revision 1.4  2002/04/16 23:42:27  kainhofe
+// setExceptions now deletes the old exceptions array to prevent memory leaks
+//
+// Revision 1.3.2.1  2002/04/28 16:10:15  kainhofe
+// Checks for null pointer before accessing it. Exceptions are deleted before the new are set.
+//
 // Revision 1.3  2002/01/21 23:14:03  adridg
 // Old code removed; extra abstractions added; utility extended
 //

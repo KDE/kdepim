@@ -38,8 +38,7 @@
 
 #include "pilotDateEntry.h"
 
-static const char *pilotDateEntry_id =
-	"$Id$";
+static const char *pilotDateEntry_id = "$Id$";
 
 
 PilotDateEntry::PilotDateEntry(void):PilotAppCategory()
@@ -221,6 +220,9 @@ void PilotDateEntry::setNote(const char *note)
 
 
 // $Log$
+// Revision 1.4  2002/04/16 23:42:27  kainhofe
+// setExceptions now deletes the old exceptions array to prevent memory leaks
+//
 // Revision 1.3  2002/04/14 22:19:31  kainhofe
 // Added checks for ==NULL in the constructor
 //

@@ -456,6 +456,15 @@ CleanupAction::CleanupAction(KPilotDeviceLink *p)  : SyncAction(p,"cleanupAction
 	FUNCTIONSETUP;
 }
 
+CleanupAction::~CleanupAction()
+{
+#ifdef DEBUG
+	FUNCTIONSETUP;
+	DEBUGDAEMON << fname
+		<< ": Deleting @" << (int)this << endl;
+#endif
+}
+
 void CleanupAction::exec()
 {
 	FUNCTIONSETUP;
@@ -466,6 +475,16 @@ void CleanupAction::exec()
 
 
 // $Log$
+// Revision 1.14.2.1  2002/04/04 20:28:28  adridg
+// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
+// when using PILOT_VERSION. kpilotTest defaults to list, like the options
+// promise. Always do old-style USB sync (also works with serial devices)
+// and runs conduits only for HotSync. KPilot now as it should have been
+// for the 3.0 release.
+//
+// Revision 1.14  2002/02/02 11:46:02  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.13  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //

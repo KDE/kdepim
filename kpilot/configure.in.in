@@ -103,7 +103,7 @@ for i in /usr/local/pilot/lib /usr/local/lib /vol/kde/support/lib ; do
 		unset ac_cv_lib_pisock_pi_accept
 		AC_CHECK_LIB(pisock,pi_accept,
 			[PISOCK_LIB="-L$i -R$i -lpisock"
-			HAVE_PISOCK=1])
+			HAVE_PISOCK=1],[],[])
 	fi
 done
 

@@ -141,41 +141,6 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <string>&lt;qt&gt;Enter the port the Pilot is attached to, serial or USB.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
-                            <widget row="0"  column="2" >
-                                <class>QComboBox</class>
-                                <item>
-                                    <property>
-                                        <name>text</name>
-                                        <string>Serial</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property>
-                                        <name>text</name>
-                                        <string>USB-old</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property>
-                                        <name>text</name>
-                                        <string>USB-devfs</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property>
-                                        <name>text</name>
-                                        <string>USB-m505</string>
-                                    </property>
-                                </item>
-                                <property stdset="1">
-                                    <name>name</name>
-                                    <cstring>fPortType</cstring>
-                                </property>
-                                <property>
-                                    <name>whatsThis</name>
-                                    <string>&lt;qt&gt;Choose what kind of connection you use to the Pilot.&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
                             <widget row="0"  column="3" >
                                 <class>QLabel</class>
                                 <property stdset="1">
@@ -225,7 +190,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 </property>
                                 <property>
                                     <name>whatsThis</name>
-                                    <string>&lt;qt&gt;Sets the speed of the connection to your Pilot.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Sets the speed of the connection to your Pilot. This is only important for serial devices.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget row="1"  column="0" >
@@ -782,7 +747,6 @@ KPilot's settings. Use Qt2 designer only!</comment>
 <tabstops>
     <tabstop>tabWidget</tabstop>
     <tabstop>fPilotDevice</tabstop>
-    <tabstop>fPortType</tabstop>
     <tabstop>fPilotSpeed</tabstop>
     <tabstop>fUserName</tabstop>
     <tabstop>fStartDaemonAtLogin</tabstop>

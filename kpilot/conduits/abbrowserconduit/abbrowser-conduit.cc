@@ -420,6 +420,15 @@ void AbbrowserConduit::_addToAbbrowser(const PilotAddress & address)
 {
 	ContactEntry entry;
 
+// If a record has been deleted on pda without archiving option,
+// flags modify and deleted will be set but the contents are empty.
+// We shouldn't add such zombies to database:
+	if (   (address.isModified() && address.isDeleted())
+	    && (address.getField(entryLastname) == 0)
+	    && (address.getField(entryFirstname) == 0)
+           )
+	 return;
+
 	_copy(entry, address);
 	_saveAbEntry(entry, QString::null);
 }
@@ -1431,6 +1440,16 @@ void AbbrowserConduit::_removeFromSync(const QString & key,
 		PilotAddress pilotAddress(fAddressAppInfo, record);
 		QString abKey = QString::null;
 
+#ifdef DEBUG
+		DEBUGCONDUIT << "ID: " << pilotAddress.id()
+			     << " Nachname: " << pilotAddress.getField(entryLastname)
+			     << " Vorname: " << pilotAddress.getField(entryFirstname)
+			     << " delFlag: " << pilotAddress.isDeleted()
+			     << " modFlag: " << pilotAddress.isModified()
+			     << " arcFlag: " << record->isArchived()
+			     << endl;
+#endif
+
 		//   if record not in abbrowser
 		if (!idContactMap.contains(pilotAddress.id()))
 		{
@@ -1549,6 +1568,9 @@ void AbbrowserConduit::_removeFromSync(const QString & key,
 	_stopAbbrowser(abAlreadyRunning);
 
 	fDatabase->resetSyncFlags();
+
+	fDatabase->cleanUpDatabase();
+
 	KPILOT_DELETE(fDatabase);
 	emit syncDone(this);
 }

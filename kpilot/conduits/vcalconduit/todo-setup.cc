@@ -134,9 +134,6 @@ void ToDoWidgetSetup::slotBrowseCalendar()
 }
 
 // $Log$
-// Revision 1.5.2.1  2002/05/01 21:11:49  kainhofe
-// Reworked the settings dialog, added various different sync options
-//
 // Revision 1.5  2002/01/01 02:30:26  molnarc
 //
 // include <qpushbutton.h>

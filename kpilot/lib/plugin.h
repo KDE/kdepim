@@ -38,6 +38,7 @@
 #include "syncAction.h"
 
 class KConfig;
+class PilotDatabase;
 
 /**
 * Dialogs that are created by the factory take a stringlist of
@@ -70,7 +71,7 @@ protected:
 * The SyncActions created by the factory should obey at least
 * the argument test, indicating a dry run. The device link is
 * the link where the sync should run -- don't get the pilotPort()
-* until the sync runs! 
+* until the sync runs!
 *
 * setConfig() will be called before the sync starts so that the
 * conduit can read/write metadata and local settings.
@@ -91,8 +92,15 @@ protected:
 	bool isTest() const { return fTest; } ;
 	bool isBackup() const { return fBackup; } ;
 
-	KConfig *fConfig;
+	/**
+	* Open both the local copy of database @p dbName
+	* and the version on the Pilot. Return true only
+	* if both opens succeed.
+	*/
+	bool openDatabases(const char *dbName);
 
+	KConfig *fConfig;
+	PilotDatabase *fDatabase,*fLocalDatabase;
 
 private:
 	bool fTest;
@@ -164,6 +172,12 @@ public:
 */
 
 // $Log$
+// Revision 1.4.2.1  2002/05/09 22:29:33  adridg
+// Various small things not important for the release
+//
+// Revision 1.4  2002/01/21 23:14:03  adridg
+// Old code removed; extra abstractions added; utility extended
+//
 // Revision 1.3  2001/12/28 12:55:24  adridg
 // Fixed email addresses; added isBackup() to interface
 //

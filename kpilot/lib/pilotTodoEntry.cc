@@ -37,12 +37,12 @@
 
 #include "pilotTodoEntry.h"
 
-static const char *pilotTodoEntry_id =
-	"$Id$";
+static const char *pilotTodoEntry_id = "$Id$";
 
 
 PilotTodoEntry::PilotTodoEntry(void):PilotAppCategory()
 {
+	FUNCTIONSETUP;
 	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
 }
 
@@ -63,6 +63,7 @@ PilotTodoEntry::PilotTodoEntry(PilotRecord * rec):PilotAppCategory(rec)
 
 PilotTodoEntry::PilotTodoEntry(const PilotTodoEntry & e):PilotAppCategory(e)
 {
+	FUNCTIONSETUP;
 	::memcpy(&fTodoInfo, &e.fTodoInfo, sizeof(fTodoInfo));
 	// See PilotDateEntry::operator = for details
 	fTodoInfo.description = 0L;
@@ -157,6 +158,9 @@ void PilotTodoEntry::setNote(const char *note)
 
 
 // $Log$
+// Revision 1.3  2002/04/14 22:19:31  kainhofe
+// Added checks for ==NULL in the constructor
+//
 // Revision 1.2  2001/12/28 12:55:24  adridg
 // Fixed email addresses; added isBackup() to interface
 //

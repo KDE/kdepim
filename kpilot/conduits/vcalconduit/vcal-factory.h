@@ -65,15 +65,6 @@ void *init_libvcalconduit();
 } ;
 
 // $Log$
-// Revision 1.4.2.1  2002/04/28 12:58:54  kainhofe
-// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
-//
-// Revision 1.6  2002/04/20 14:21:26  kainhofe
-// Alarms are now written to the palm. Some bug fixes, extensive testing. Exceptions still crash the palm ;-(((
-//
-// Revision 1.5  2002/04/19 19:34:11  kainhofe
-// didn't compile
-//
 // Revision 1.4  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //

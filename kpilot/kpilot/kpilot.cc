@@ -225,7 +225,9 @@ void KPilotInstaller::startDaemonIfNeeded()
 	if ((s.isNull()) || (!getDaemon().ok()))
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Daemon not responding." << endl;
+		DEBUGKPILOT << fname 
+			<< ": Daemon not responding, trying to start it." 
+			<< endl;
 #endif
 		fDaemonWasRunning = false;
 	}
@@ -244,6 +246,13 @@ void KPilotInstaller::startDaemonIfNeeded()
 		))
 	{
 		kdError() << k_funcinfo << ": Can't start daemon : " << daemonError << endl;
+	}
+	else
+	{
+#ifdef DEBUG
+		s = getDaemon().statusString();
+		DEBUGKPILOT << fname << ": Daemon status is " << s << endl;
+#endif
 	}
 }
 
@@ -861,6 +870,12 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.74.2.1  2002/04/14 22:26:12  adridg
+// New TODO's for HEAD; cosmetic bugfix in logWidget; rectify misleading debug output when KPilot starts the daemon itself.
+//
+// Revision 1.74  2002/02/02 11:46:02  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.73  2002/01/31 16:25:28  hollomon
 //
 // If we can't start the daemon. tell the user why not.

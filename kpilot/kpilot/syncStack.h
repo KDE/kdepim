@@ -114,16 +114,27 @@ public:
 		Backup=1,
 		Restore=2,
 		HotSync=4,
-		// These are optional
+		// These are optional (mixins)
 		//
 		//
 		WithUserCheck=32,
 		WithInstaller=64,
 		WithConduits=128,
+		// These are misc. flags you can set
+		FlagTest=16384,
+		// These are masks you can use to select
+		// the bits coding the action, mixins (With*)
+		// and misc. flags.
+		//
+		//
+		ActionMask=0xf,
+		MixinMask=0xf0,
+		FlagMask=0xf000,
 		// These are derived values for convenience.
 		// Note that a HotSync doesn't install files by default.
 		//
 		//
+		TestMode = Test | WithUserCheck | WithConduits,
 		BackupMode = Backup | WithUserCheck | WithConduits,
 		RestoreMode = Restore | WithUserCheck,
 		HotSyncMode = HotSync | WithUserCheck | WithConduits
@@ -149,7 +160,7 @@ protected slots:
 	/**
 	* When one action finishes, start the next one.
 	*/
-	void nextAction(SyncAction *);
+	void actionCompleted(SyncAction *);
 };
 
 /**
@@ -196,6 +207,19 @@ protected:
 
 
 // $Log$
+// Revision 1.2.2.2  2002/04/13 11:33:38  adridg
+// Make test mode for conduits independent of test mode for hotsync (needed to make kpilotTest sane)
+//
+// Revision 1.2.2.1  2002/04/04 20:28:28  adridg
+// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
+// when using PILOT_VERSION. kpilotTest defaults to list, like the options
+// promise. Always do old-style USB sync (also works with serial devices)
+// and runs conduits only for HotSync. KPilot now as it should have been
+// for the 3.0 release.
+//
+// Revision 1.2  2002/01/20 13:53:52  adridg
+// Added new sync types
+//
 // Revision 1.1  2001/12/29 15:41:36  adridg
 // Added unified sync-action handling for kpilotTest and daemon
 //

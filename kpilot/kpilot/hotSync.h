@@ -114,11 +114,22 @@ class CleanupAction : public SyncAction
 {
 public:
 	CleanupAction(KPilotDeviceLink * p);
-
+	virtual ~CleanupAction();
+	
 	virtual void exec();
 } ;
 
 // $Log$
+// Revision 1.7.2.1  2002/04/04 20:28:28  adridg
+// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
+// when using PILOT_VERSION. kpilotTest defaults to list, like the options
+// promise. Always do old-style USB sync (also works with serial devices)
+// and runs conduits only for HotSync. KPilot now as it should have been
+// for the 3.0 release.
+//
+// Revision 1.7  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.6  2001/12/29 15:45:02  adridg
 // Lots of little changes for the syncstack
 //

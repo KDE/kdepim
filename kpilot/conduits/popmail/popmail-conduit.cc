@@ -98,7 +98,7 @@ void showMessage(const QString &message)
 
 #define BADPOP	(-333)
 
-// This is a convenience function, that displays 
+// This is a convenience function, that displays
 // a message with either
 //
 //	* an error text describing the error if ret < 0,
@@ -990,7 +990,7 @@ int PopMailConduit::sendViaKMail()
 			kdWarning() << k_funcinfo
 				<< ": Can't open temp file."
 				<< endl;
-			KMessageBox::error(0L, 
+			KMessageBox::error(0L,
 				i18n("Cannot open temporary file to store "
 					"mail from Pilot in."),
 				i18n("Error Sending Mail"));
@@ -1166,7 +1166,7 @@ PopMailConduit::getpopchar(int socket)
 	if (ret < 0)
 	    return ret;
 	} while ((ret==0) || (buf == '\r'));
-    
+
     return buf;
     }
 
@@ -1198,7 +1198,7 @@ PopMailConduit::getpopresult(int socket, char * buf)
 	return 1;
     }
 
-/* static */ void 
+/* static */ void
 PopMailConduit::header(struct Mail * m, char * t)
 {
 	FUNCTIONSETUP;
@@ -1214,7 +1214,7 @@ PopMailConduit::header(struct Mail * m, char * t)
 	strcat(holding, t+1);
 	return;
 	}
-    
+
     /* Decide on what we do with m->sendTo */
     
     if (strncmp(holding, "From:", 5)==0)
@@ -1358,7 +1358,7 @@ void PopMailConduit::retrievePOPMessages(KSocket *popSocket,int const msgcount,
 		}
 
 		// Well, we've now got the message. 
-		// I bet _you_ feel happy with yourself. 
+		// I bet _you_ feel happy with yourself.
 
 		if (h) 
 		{
@@ -1694,7 +1694,7 @@ int PopMailConduit::doPopQuery()
 		{
 #ifdef DEBUG
 			{
-				DEBUGCONDUIT << fname << ": Found end-of-headers" 
+				DEBUGCONDUIT << fname << ": Found end-of-headers"
 					<< endl;
 			}
 #endif
@@ -1742,7 +1742,7 @@ int PopMailConduit::doPopQuery()
 
 #ifdef DEBUG
 		{
-			DEBUGCONDUIT << fname << ": Got line ["  
+			DEBUGCONDUIT << fname << ": Got line ["
 				<< (int) buf[0] << ',' << (int) buf[1] 
 				<< ']'
 				<< buf;
@@ -1961,13 +1961,13 @@ int PopMailConduit::doUnixStyle()
 	if (!fDatabase || !fDatabase->isDBOpen())
 	{
 		kdWarning() << k_funcinfo
-			<< ": Couldn't open database"
+			<< ": Couldn't open database MailDB on Pilot"
 			<< endl;
 		KPILOT_DELETE(fDatabase);
 		emit syncDone(this);
 		return;
 	}
-	
+
 	if (isTest())
 	{
 		doTest();
@@ -1987,6 +1987,12 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.38.2.1  2002/04/13 22:16:56  adridg
+// Administrative, better config checking, use PISOCK_INCLUDE and PISOCK_LIB in compiles, minor code cleanup in popmail
+//
+// Revision 1.38  2002/02/23 20:57:40  adridg
+// #ifdef DEBUG stuff
+//
 // Revision 1.37  2002/02/10 22:21:33  adridg
 // Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
 //

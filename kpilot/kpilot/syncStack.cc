@@ -29,6 +29,7 @@
 #include "options.h"
 
 static const char *syncStack_id = "$Id$";
+static const char *syncStack_id = "$Id$";
 
 #include <qtimer.h>
 
@@ -111,16 +112,17 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 
 	QStringList l;
-	switch(fMode)
+	switch(fMode && SyncStack::ActionMask)
 	{
-	case SyncStack::Test :
-		l.append("test");
-		break;
 	case SyncStack::Backup :
 		l.append("backup");
 		break;
 	default:
 		;
+	}
+	if (fMode & SyncStack::FlagTest)
+	{
+		l.append("test");
 	}
 
 
@@ -213,6 +215,12 @@ void SyncStack::prepare(int m)
 {
 	FUNCTIONSETUP;
 
+#ifdef DEBUG
+	DEBUGDAEMON << fname
+		<< ": Using sync mode " << m
+		<< endl;
+#endif
+
 	switch ( m & (Test | Backup | Restore | HotSync))
 	{
 	case Test:
@@ -276,10 +284,10 @@ void SyncStack::prepare(int m)
 
 void SyncStack::exec()
 {
-	nextAction(0L);
+	actionCompleted(0L);
 }
 
-void SyncStack::nextAction(SyncAction *b)
+void SyncStack::actionCompleted(SyncAction *b)
 {
 	FUNCTIONSETUP;
 
@@ -324,12 +332,25 @@ void SyncStack::nextAction(SyncAction *b)
 	QObject::connect(a, SIGNAL(logProgress(const QString &, int)),
 		this, SIGNAL(logProgress(const QString &, int)));
 	QObject::connect(a, SIGNAL(syncDone(SyncAction *)),
-		this, SLOT(nextAction(SyncAction *)));
+		this, SLOT(actionCompleted(SyncAction *)));
 
 	QTimer::singleShot(0,a,SLOT(exec()));
 }
 
 // $Log$
+// Revision 1.4  2002/04/20 13:03:31  binner
+// CVS_SILENT Capitalisation fixes.
+//
+// Revision 1.3.2.2  2002/04/13 11:33:38  adridg
+// Make test mode for conduits independent of test mode for hotsync (needed to make kpilotTest sane)
+//
+// Revision 1.3.2.1  2002/04/04 20:28:28  adridg
+// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
+// when using PILOT_VERSION. kpilotTest defaults to list, like the options
+// promise. Always do old-style USB sync (also works with serial devices)
+// and runs conduits only for HotSync. KPilot now as it should have been
+// for the 3.0 release.
+//
 // Revision 1.3  2002/02/02 11:46:02  adridg
 // Abstracting away pilot-link stuff
 //

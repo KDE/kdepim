@@ -6,6 +6,8 @@ issues are periodically purged from this list.
 General TODO
 ============
 
+* Add tool-tip showing daemon status.
+* Fix WhatsThis for Kill daemon on exit.
 * Adjust the time of events to allow for the timezone KOrganizer is in.
 * Make the FileInstallWidget use a KDirWatcher.
 * Handle real devfs better (regular USB support seems OK now).
@@ -21,15 +23,16 @@ General TODO
 * add BrainForest conduit
 * add JPilot plugin proxy to use JPilog plugins with KPilot
 * Update the Conduit howto
-+ Make daemon able to sync more than once in a run.
-+ Close device at end of sync.
+- Make daemon able to sync more than once in a run.
+- Close device at end of sync.
 + Port conduits to new setup.
-o Make the kpilotTest program able to do more than one sync in a run.
+- Make the kpilotTest program able to do more than one sync in a run. [NOT
+  DONE, but I've decided it's pointless.]
 o Make pi_install_file amenable to use in a GUI program. [Move to a thread
   in KDE3 and leave unsolved in KDE2]
 - Add conduit-sync in the daemon as well.
 - Look into possible buffer overflows in pi_socket structure.
-- Add a validator ensuring path lengths are kept < 14 chars for 
+- Add a validator ensuring path lengths are kept < 14 chars for
   pilot-link <= 0.9.5
 - Use KJanusWidget for main window area, to make various views
   more apparent.
@@ -40,32 +43,32 @@ o Make pi_install_file amenable to use in a GUI program. [Move to a thread
 Specific JOBS
 =============
 
-*** 
+***
 *** Memo Export
-*** 
+***
 
-Part I. Make a widget (using Qt designer) for exporting memos. It should have 
-at least: (1) The possibility to choose "all" or "currently selected" memos 
-to export (2) The possibility to set the filename, using a Browse button at 
-the very least (3) Chosing XML or plain text for export. (That's 4 readio 
-buttons, 3 labels, a groupbox or two and a pushbutton and a QLineEdit in 
-total, I think.) Base your widget on a Qt Widget -- *NOT* a dialog. Then it 
+*** Mostly done by David Bishop
+
+Part I. Make a widget (using Qt designer) for exporting memos. It should have
+at least: (1) The possibility to choose "all" or "currently selected" memos
+to export (2) The possibility to set the filename, using a Browse button at
+the very least (3) Chosing XML or plain text for export. (That's 4 readio
+buttons, 3 labels, a groupbox or two and a pushbutton and a QLineEdit in
+total, I think.) Base your widget on a Qt Widget -- *NOT* a dialog. Then it
 fits into KPilot better.
 
-Part II. (Optional) Add a "Always save only selected memo" option to the 
-KPilot configuration dialog 
-(kdepim/kpilot/kpilot/kpilotConfigDialog_base..ui) and make sure it gets 
-saved to the config file (KPilotConfigDialog::commitChanges and also some 
+Part II. (Optional) Add a "Always save only selected memo" option to the
+KPilot configuration dialog
+(kdepim/kpilot/kpilot/kpilotConfigDialog_base..ui) and make sure it gets
+saved to the config file (KPilotConfigDialog::commitChanges and also some
 work on ..../kpilotConfig.{h,cc})
 
-Part III. Write a function saveAsXML(const QString &fileName,const char 
+Part III. Write a function saveAsXML(const QString &fileName,const char
 *memoData) that writes said memo text to a file with the given name.
 
 ***
 *** PilotLocalDatabase fixups
 ***
-
-*** DONE! By, um, I forget ...
 
 The PilotLocalDatabase class is really ugly and clunky -- and far worse,
 it has a hard-coded limit of 10000 records per database. This may have hurt
@@ -80,6 +83,8 @@ as the current fCurrentRecord member, since conduits may depend on it.
 ***
 *** Debug cleanup
 ***
+
+*** DONE! By, um, I forget ...
 
 - kdDebug() everywhere needs to change into DEBUGCONDUIT, DEBUGKPILOT,
   or one of the other DEBUG* macros defined in kpilot/lib/options.h.
@@ -100,8 +105,9 @@ as the current fCurrentRecord member, since conduits may depend on it.
 ***
 
 The popmail conduit duplicates a lot of code found elsewhere -- it does
-SMTP sending and POP3 retrieval of mail messages. That should really be 
-left to IOSlaves, which are better debugged. Using tickle() will be 
+SMTP sending and POP3 retrieval of mail messages. That should really be
+left to IOSlaves, which are better debugged. Using tickle() will be
 necessary while waiting for responses from the slaves, since you must keep
 the pilot awake. (This opens the door to multi-threading conduits, with
 possibly an asynchronous "pre-sync" action).
+
