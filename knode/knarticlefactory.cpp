@@ -62,7 +62,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
 
   KNLocalArticle *art=newArticle();
   if(!art)
-    return
+    return;
 
   art->setServerId(g->account()->id());
   art->setDoPost(true);

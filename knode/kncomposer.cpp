@@ -197,7 +197,7 @@ bool KNComposer::hasValidData()
     return true;
 
   if( v_iew->s_ubject->text().isEmpty() ||
-      v_iew->g_roups->text().isEmpty() ||
+      v_iew->g_roups->text().isEmpty() &&
       v_iew->t_o->text().isEmpty() ) {
     KMessageBox::sorry(this, i18n("Please enter a subject and at least one\nnewsgroup or mail-address!"));
     return false;
