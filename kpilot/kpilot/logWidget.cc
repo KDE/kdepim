@@ -161,6 +161,18 @@ void LogWidget::addError(const QString & s)
 	fLog->append(s);
 }
 
+void LogWidget::addProgress(const QString &s,int i)
+{
+	FUNCTIONSETUP;
+	
+	logMessage(s);
+
+	if ((i >= 0) && (i <= 100))
+	{
+		fProgress->setValue(i);
+	}
+}
+
 void LogWidget::syncDone()
 {
 	FUNCTIONSETUP;
@@ -208,12 +220,7 @@ void LogWidget::hideSplash()
 {
 	FUNCTIONSETUP;
 
-	logMessage(s);
-
-	if ((i >= 0) && (i <= 100))
-	{
-		fProgress->setValue(i);
-	}
+	addProgress(s,i);
 }
 
 /* slot */ void LogWidget::clearLog()
@@ -288,6 +295,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.8  2001/11/25 22:02:57  adridg
+// Save/clear the sync log
+//
 // Revision 1.7  2001/11/18 16:59:55  adridg
 // New icons, DCOP changes
 //

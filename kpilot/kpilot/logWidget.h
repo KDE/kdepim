@@ -60,6 +60,7 @@ public:
 public slots:
 	void addMessage(const QString &);
 	void addError(const QString &);
+	void addProgress(const QString &,int);
 	void syncDone();
 
 private slots:
@@ -79,6 +80,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.6  2001/11/25 22:02:57  adridg
+// Save/clear the sync log
+//
 // Revision 1.5  2001/11/18 16:59:55  adridg
 // New icons, DCOP changes
 //
