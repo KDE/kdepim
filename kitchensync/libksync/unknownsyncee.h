@@ -125,8 +125,8 @@ class UnknownSyncee : public Syncee
     UnknownSyncee( Merger* m = 0);
     ~UnknownSyncee();
 
-    SyncEntry* firstEntry();
-    SyncEntry* nextEntry();
+    UnknownSyncEntry* firstEntry();
+    UnknownSyncEntry* nextEntry();
     QString type()const;
     void addEntry( SyncEntry*  );
     void removeEntry( SyncEntry* );

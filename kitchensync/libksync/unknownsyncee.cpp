@@ -153,12 +153,12 @@ UnknownSyncee::~UnknownSyncee()
 {
 }
 
-SyncEntry *UnknownSyncee::firstEntry()
+UnknownSyncEntry *UnknownSyncee::firstEntry()
 {
     return mList.first();
 }
 
-SyncEntry *UnknownSyncee::nextEntry()
+UnknownSyncEntry *UnknownSyncee::nextEntry()
 {
     return mList.next();
 }

@@ -30,6 +30,7 @@ namespace KSync {
 class CalendarSyncee;
 class AddressBookSyncee;
 class BookmarkSyncee;
+class UnknownSyncee;
 
 /**
   This class provides a list of Syncees.
@@ -41,8 +42,14 @@ class SynceeList : public QValueList<Syncee *>
     ~SynceeList();
 
     CalendarSyncee *calendarSyncee() const;
-    AddressBookSyncee *addressBookSyncee() const;    
+    AddressBookSyncee *addressBookSyncee() const;
     BookmarkSyncee *bookmarkSyncee() const;
+    UnknownSyncee  *unknownSyncee()const;
+
+    template<class T>
+    T              *templateSyncee()const;
+
+    void deleteAndClear();
 };
 
 }

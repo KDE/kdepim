@@ -24,6 +24,7 @@
 #include "calendarsyncee.h"
 #include "addressbooksyncee.h"
 #include "bookmarksyncee.h"
+#include "unknownsyncee.h"
 
 using namespace KSync;
 
@@ -37,39 +38,46 @@ SynceeList::~SynceeList()
 
 CalendarSyncee *SynceeList::calendarSyncee() const
 {
-  CalendarSyncee *syncee;
-
-  ConstIterator it;
-  for( it = begin(); it != end(); ++it ) {
-    syncee = dynamic_cast<CalendarSyncee *>( *it );
-    if ( syncee ) return syncee;
-  }
-
-  return 0;
+  return templateSyncee<CalendarSyncee>();
 }
 
 AddressBookSyncee *SynceeList::addressBookSyncee() const
 {
-  AddressBookSyncee *syncee;
-
-  ConstIterator it;
-  for( it = begin(); it != end(); ++it ) {
-    syncee = dynamic_cast<AddressBookSyncee *>( *it );
-    if ( syncee ) return syncee;
-  }
-
-  return 0;
+  return templateSyncee<AddressBookSyncee>();
 }
 
 BookmarkSyncee *SynceeList::bookmarkSyncee() const
 {
-  BookmarkSyncee *syncee;
+  return templateSyncee<BookmarkSyncee>();
+}
+
+UnknownSyncee *SynceeList::unknownSyncee()const
+{
+  return templateSyncee<UnknownSyncee>();
+}
+
+template<class T>
+T  *SynceeList::templateSyncee()const
+{
+  T *syncee;
 
   ConstIterator it;
   for( it = begin(); it != end(); ++it ) {
-    syncee = dynamic_cast<BookmarkSyncee *>( *it );
+    syncee = dynamic_cast<T*>( *it );
     if ( syncee ) return syncee;
   }
 
   return 0;
 }
+
+/**
+ * This method will call \sa clear but also
+ * delete the contained Syncees.
+ */
+void SynceeList::deleteAndClear()
+{
+  for ( Iterator it = begin(); it != end(); ++it )
+    delete *it;
+  clear();
+}
+
