@@ -78,14 +78,15 @@ SingleConditionWidget::SingleConditionWidget(KScoringManager *m,QWidget *p, cons
   QToolTip::add(matches,i18n("Select the type of match"));
   firstRow->addWidget(matches,1);
   connect( matches, SIGNAL( activated( int ) ), SLOT( toggleRegExpButton( int ) ) );
-  QHBox *secondRow = new QHBox(this);
+  QHBoxLayout *secondRow = new QHBoxLayout( topL );
   secondRow->setSpacing( 1 );
-  topL->addWidget( secondRow );
-  expr = new KLineEdit(secondRow);
+  expr = new KLineEdit( this );
   QToolTip::add(expr,i18n("The condition for the match"));
   // reserve space for at least 20 characters
   expr->setMinimumWidth(fontMetrics().maxWidth()*20);
-  regExpButton = new QPushButton( i18n("Edit..."), secondRow );
+  secondRow->addWidget( expr );
+  regExpButton = new QPushButton( i18n("Edit..."), this );
+  secondRow->addWidget( regExpButton );
   connect( regExpButton, SIGNAL( clicked() ), SLOT( showRegExpDialog() ) );
 
   // occupy at much width as possible
