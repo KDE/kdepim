@@ -35,6 +35,11 @@ TypeCombo::TypeCombo( KABC::PhoneNumber::List &list, QWidget *parent,
 
 void TypeCombo::updateTypes()
 {
+  // Remeber current item
+  QString currentId;
+  int current = currentItem();  
+  if ( current >= 0 ) currentId = mTypeList[ current ].id();
+
   clear();
 
   QMap<QString,int> labelCount;
@@ -52,6 +57,16 @@ void TypeCombo::updateTypes()
                                            .arg( QString::number( count ) );
     }
     insertItem( label );
+  }
+
+  // Restore previous current item
+  if ( !currentId.isEmpty() ) {
+    for( i = 0; i < mTypeList.count(); ++i ) {
+      if ( mTypeList[ i ].id() == currentId ) {
+        setCurrentItem( i );
+        break;
+      }
+    }
   }
 }
 
