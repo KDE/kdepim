@@ -3,6 +3,7 @@ Encoding=UTF-8
 Icon=looknfeel
 Type=Service
 ServiceTypes=KCModule
+DocPath=kleopatra/configuration-dn-order.html
 
 X-KDE-ModuleType=Library
 X-KDE-Library=kleopatra
