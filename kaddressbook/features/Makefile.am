@@ -13,7 +13,7 @@ libkaddrbk_distributionlist_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_location_la_SOURCES = locationwidget.cpp locationconfig.cpp
 libkaddrbk_location_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) -no-undefined
-libkaddrbk_location_la_LIBADD = $(XXLIBS) $(LIB_KHTML)
+libkaddrbk_location_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_merge_la_SOURCES = mergewidget.cpp
 libkaddrbk_merge_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) -no-undefined

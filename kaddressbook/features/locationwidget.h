@@ -28,7 +28,6 @@
 #include "extensionwidget.h"
 
 class KComboBox;
-class KHTMLPart;
 
 namespace KAB {
 class Core;
@@ -63,7 +62,6 @@ class LocationWidget : public KAB::ExtensionWidget
     KABC::Address::List mAddressList;
     KComboBox *mAddressTypeCombo;
     KComboBox *mURLTypeCombo;
-    KHTMLPart *mHTMLPart;
 
     QPushButton *mLoadButton;
 };

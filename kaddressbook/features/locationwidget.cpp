@@ -28,12 +28,11 @@
 
 #include <kabc/addressbook.h>
 #include <kaccelmanager.h>
+#include <kapplication.h>
 #include <kcombobox.h>
 #include <kdebug.h>
 #include <kdeversion.h>
 #include <kdialog.h>
-#include <khtml_part.h>
-#include <khtmlview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 
@@ -94,8 +93,6 @@ LocationWidget::LocationWidget( KAB::Core *core, QWidget *parent, const char *na
   QVBox *panel = new QVBox( this );
   topLayout->addMultiCellWidget( panel, 1, 1, 0, 3 );
 
-  mHTMLPart = new KHTMLPart( panel );
-
   KAcceleratorManager::manage( this );
 
   KConfig config( "kaddressbookrc" );
@@ -127,11 +124,6 @@ void LocationWidget::contactsSelectionChanged()
   mAddressTypeCombo->setCurrentItem( pos );
 
   mLoadButton->setEnabled( mAddressList.count() > 0 );
-  if ( mAddressList.count() == 0 ) { // clear html view
-    mHTMLPart->begin();
-    mHTMLPart->write( "" );
-    mHTMLPart->end();
-  }
 }
 
 QString LocationWidget::title() const
@@ -152,7 +144,7 @@ void LocationWidget::loadLocationPage()
   }
 
   KURL url = createUrl( mAddressList[ mAddressTypeCombo->currentItem() ] );
-  mHTMLPart->openURL( url );
+  kapp->invokeBrowser( url.url() );
 }
 
 QString LocationWidget::createUrl( const KABC::Address &addr )
