@@ -6,17 +6,6 @@
 
 #include "bookmarksyncee.h"
 
-class MyBookmarkManager : public KBookmarkManager
-{
-  public:
-    MyBookmarkManager(const QString &filename) :
-      KBookmarkManager(filename)
-    {
-      s_pSelf = 0;
-    }
-};
-
-
 BookmarkSyncEntry::BookmarkSyncEntry(KBookmark bm) :
   mBookmark(bm)
 {
@@ -73,7 +62,7 @@ BookmarkSyncee::~BookmarkSyncee()
 bool BookmarkSyncee::read()
 {
   delete mBookmarkManager;
-  mBookmarkManager = new MyBookmarkManager(filename());
+  mBookmarkManager = KBookmarkManager::managerForFile( filename() );
   
   mBookmarks.clear();
   
@@ -141,7 +130,8 @@ void BookmarkSyncee::addEntry(KSyncEntry *entry)
   } else {
     KBookmark bm = bmEntry->bookmark();
     KBookmarkGroup bmGroup = findGroup(bm.parentGroup());
-    KBookmark newBookmark = bmGroup.addBookmark(bm.fullText(),bm.url());
+    KBookmark newBookmark = bmGroup.addBookmark( mBookmarkManager,
+                                                 bm.fullText(), bm.url() );
     mBookmarks.append(newBookmark.internalElement());
   }
 }
@@ -176,7 +166,8 @@ KBookmarkGroup BookmarkSyncee::findGroup(KBookmarkGroup group)
     ++bmIt;
   }
   KBookmarkGroup newGroup =
-      mBookmarkManager->root().createNewFolder(group.fullText());
+      mBookmarkManager->root().createNewFolder( mBookmarkManager, 
+                                                group.fullText() );
   mBookmarks.append(newGroup.internalElement());
 
   return newGroup;
