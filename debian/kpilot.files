@@ -13,6 +13,8 @@ usr/bin/vcalconduit
 usr/bin/todoconduit
 usr/bin/popmail_conduit
 usr/bin/conduitKNotes
+usr/bin/null_conduit
+usr/share/man/man1/null_conduit*
 usr/share/man/man1/kpilot*
 usr/share/man/man1/pilot*
 usr/share/man/man1/vcalconduit*
