@@ -11,7 +11,7 @@ IncSearchWidget::IncSearchWidget(QWidget *parent, const char* /*name*/)
 {
     setName("kde toolbar widget");
     labelIncSearch->setName("kde toolbar widget");
-    layout()->setMargin(0);
+    layout()->setMargin(2);
     layout()->setSpacing(KDialog::spacingHint());
     connect(leIncSearch, SIGNAL(textChanged(const QString&)),
             SLOT(incSearchTextChanged(const QString&)));
