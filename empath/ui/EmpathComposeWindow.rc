@@ -1,0 +1,10 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="EmpathComposeWindow" version="1">
+<MenuBar>
+
+    <Merge />
+
+</MenuBar>
+
+</kpartgui>
+
