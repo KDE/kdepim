@@ -2,8 +2,6 @@
 ############ Autoconf-generated variables  ###################
 AM_CPPFLAGS = -DQT_NO_CAST_ASCII
 INCLUDES = $(all_includes)
-LDFLAGS	= $(all_libraries) $(KDE_RPATH)
-LDADD =  -lkdeprint $(LIBXSS)
 
 
 bin_PROGRAMS = karm
@@ -15,6 +13,8 @@ karm_SOURCES =  adddlg.cpp main.cpp \
 		task.cpp top.cpp kaccelmenuwatch.cpp print.cpp \
 		preferences.cpp ktimewidget.cpp karm.cpp idle.cpp loging.cpp karmutility.cpp tray.cpp
 
+karm_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+karm_LDADD = -lkdeprint $(LIBXSS)
 noinst_HEADERS = adddlg.h karm.h task.h toolicons.h top.h kaccelmenuwatch.h \
 		version.h print.h idle.h preferences.h ktimewidget.h loging.h karmutility.h \
 		listviewiterator.h listviewiterator_tpl.h subtreeiterator.h subtreeiterator_tpl.h tray.h
