@@ -241,33 +241,7 @@ QString PilotAddress::getTextRepresentation(bool richText)
 
 bool PilotAddress::setCategory(const QString &label)
 {
-	FUNCTIONSETUPL(4);
-	if (label.isEmpty())
-	{
-		setCat(0);
-		return true;
-	}
-	for (int catId = 1; catId < 16; catId++)
-	{
-		QString aCat = codec()->toUnicode(fAppInfo.category.name[catId]);
-
-		if (label == aCat)
-		{
-			setCat(catId);
-			return true;
-		}
-		else
-			// if empty, then no more labels; add it
-		if (aCat.isEmpty())
-		{
-			qstrncpy(fAppInfo.category.name[catId],
-				codec()->fromUnicode(label), 16);
-			setCat(catId);
-			return true;
-		}
-	}
-	// if got here, the category slots were full
-	return false;
+	PILOTAPPCATEGORY_SETCATEGORY(fAppInfo,label)
 }
 
 QString PilotAddress::getCategoryLabel() const
