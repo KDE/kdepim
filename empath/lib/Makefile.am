@@ -28,8 +28,9 @@ EmpathMailboxMaildir.cpp \
 EmpathMailboxPOP3.cpp \
 EmpathMaildir.cpp \
 EmpathMatcher.cpp \
-EmpathURL.cpp \
+EmpathQuotedText.cpp \
 EmpathSecurityProcess.cpp \
 EmpathTask.cpp \
+EmpathURL.cpp \
 EmpathUtilities.cpp \
 md5.cpp

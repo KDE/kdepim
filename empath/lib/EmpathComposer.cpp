@@ -36,6 +36,7 @@
 #include "EmpathComposer.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
+#include "EmpathQuotedText.h"
 #include <RMM_DateTime.h>
 #include <RMM_Token.h>
 #include <RMM_AddressList.h>
@@ -496,9 +497,10 @@ EmpathComposer::_signature()
     void
 EmpathComposer::_quote(QCString & s)
 {
-    // Quoting. hack ? Naah :)
-    s.replace(QRegExp("\\n"), "\n> ");
-    s.prepend("> ");
+    EmpathQuotedText quoted(QString::fromLocal8Bit(s));
+    quoted.rewrap(70);
+    quoted.quote();
+    s = quoted.asString().local8Bit();
 }
 
 // vim:ts=4:sw=4:tw=78
