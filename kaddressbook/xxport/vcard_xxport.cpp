@@ -204,14 +204,19 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
 
         QFile file( fileName );
 
-        file.open( IO_ReadOnly );
-        QByteArray rawData = file.readAll();
-        file.close();
+        if(file.open( IO_ReadOnly )) {
+	        QByteArray rawData = file.readAll();
+	        file.close();
+		if(rawData.size() > 0) {
+		        QString data = QString::fromUtf8( rawData.data(), rawData.size() );
+		        addrList += parseVCard( data );
+		}
 
-        QString data = QString::fromUtf8( rawData.data(), rawData.size() + 1 );
-        addrList += parseVCard( data );
-
-        KIO::NetAccess::removeTempFile( fileName );
+	        KIO::NetAccess::removeTempFile( fileName );
+	} else {
+        	QString text = i18n( "<qt>Unable to open the file <b>%1</b>.</qt>" );
+	        KMessageBox::error( parentWidget(), text.arg( (*it).url() ), caption );
+	}
       } else {
         QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>" );
         KMessageBox::error( parentWidget(), text.arg( (*it).url() ), caption );
