@@ -929,6 +929,8 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
 
   // Setup input data
   ns1__FreeBusyUser user;
+  user.displayName = 0;
+  user.uuid = 0;
   user.email = conv.qStringToString( email );
 
   std::vector<class ns1__FreeBusyUser * > users;
@@ -964,38 +966,52 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
 
   mSoap->header->session = mSession;
 
-  result = soap_call___ns1__getFreeBusyRequest( mSoap,
-    mUrl.latin1(), NULL, &getFreeBusyRequest, &getFreeBusyResponse );
-  if ( !checkResponse( result, getFreeBusyResponse.status ) ) {
-    return false;
-  }
- 
-  std::vector<class ns1__FreeBusyInfo *> *infos = 0;
-  if ( getFreeBusyResponse.freeBusyInfo ) infos =
-    getFreeBusyResponse.freeBusyInfo->user;
+  bool done = false;
 
-  if ( infos ) {
-    std::vector<class ns1__FreeBusyInfo *>::const_iterator it;
-    for( it = infos->begin(); it != infos->end(); ++it ) {
-      std::vector<class ns1__FreeBusyBlock *> *blocks = 0;
-      if ( (*it)->blocks ) blocks = (*it)->blocks->block;
-      if ( blocks ) {
-        std::vector<class ns1__FreeBusyBlock *>::const_iterator it2;
-        for( it2 = blocks->begin(); it2 != blocks->end(); ++it2 ) {
-          QDateTime blockStart = conv.charToQDateTime( (*it2)->startDate );
-          QDateTime blockEnd = conv.charToQDateTime( (*it2)->endDate );
-          ns1__AcceptLevel acceptLevel = (*it2)->acceptLevel;
+  do {
+    result = soap_call___ns1__getFreeBusyRequest( mSoap,
+      mUrl.latin1(), NULL, &getFreeBusyRequest, &getFreeBusyResponse );
+    if ( !checkResponse( result, getFreeBusyResponse.status ) ) {
+      return false;
+    }
 
-          std::string subject = (*it2)->subject;
-//          kdDebug() << "BLOCK Subject: " << subject.c_str() << endl;
+    ns1__FreeBusyStats *stats = getFreeBusyResponse.freeBusyStats;
+    if ( !stats || stats->outstanding == 0 ) done = true;
 
-          if ( acceptLevel == Busy || acceptLevel == OutOfOffice ) {
-            freeBusy->addPeriod( blockStart, blockEnd );
+    if ( !stats ) {
+      kdDebug() << "NO STATS!" << endl;
+    } else {
+      kdDebug() << "COUNT: " << stats->responded << " " << stats->outstanding
+        << " " << stats->total << endl; 
+    }
+
+    std::vector<class ns1__FreeBusyInfo *> *infos = 0;
+    if ( getFreeBusyResponse.freeBusyInfo ) infos =
+      getFreeBusyResponse.freeBusyInfo->user;
+
+    if ( infos ) {
+      std::vector<class ns1__FreeBusyInfo *>::const_iterator it;
+      for( it = infos->begin(); it != infos->end(); ++it ) {
+        std::vector<class ns1__FreeBusyBlock *> *blocks = 0;
+        if ( (*it)->blocks ) blocks = (*it)->blocks->block;
+        if ( blocks ) {
+          std::vector<class ns1__FreeBusyBlock *>::const_iterator it2;
+          for( it2 = blocks->begin(); it2 != blocks->end(); ++it2 ) {
+            QDateTime blockStart = conv.charToQDateTime( (*it2)->startDate );
+            QDateTime blockEnd = conv.charToQDateTime( (*it2)->endDate );
+            ns1__AcceptLevel acceptLevel = (*it2)->acceptLevel;
+
+            std::string subject = (*it2)->subject;
+  //          kdDebug() << "BLOCK Subject: " << subject.c_str() << endl;
+
+            if ( acceptLevel == Busy || acceptLevel == OutOfOffice ) {
+              freeBusy->addPeriod( blockStart, blockEnd );
+            }
           }
         }
       }
     }
-  }
+  } while ( !done );
 
   // Close session
   _ns1__closeFreeBusySessionRequest closeSessionRequest;
