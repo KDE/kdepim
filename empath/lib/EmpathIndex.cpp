@@ -170,7 +170,6 @@ EmpathIndex::_close()
 
     } else {
 
-        empathDebug("Index written successfully (` " + filename_ + "')");
         dirty_ = false;
 
     }

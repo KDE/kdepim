@@ -82,6 +82,7 @@ EmpathUI::~EmpathUI()
     void    
 EmpathUI::s_newComposer(EmpathComposeForm composeForm)
 {
+    empathDebug("");
     (new EmpathComposeWindow(composeForm))->show();
 }
 

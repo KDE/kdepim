@@ -191,8 +191,7 @@ EmpathComposeWindow::s_fileSendMessage()
         return;
     }
 
-    EmpathComposer c;
-    RMM::RMessage outMessage = c.message(f);
+    RMM::RMessage outMessage = EmpathComposer::instance()->message(f);
 
     hide();
     empath->send(outMessage);
@@ -216,8 +215,7 @@ EmpathComposeWindow::s_fileSendLater()
         return;
     }
 
-    EmpathComposer c;
-    RMM::RMessage outMessage = c.message(f);
+    RMM::RMessage outMessage = EmpathComposer::instance()->message(f);
 
     hide();
     empath->queue(outMessage);

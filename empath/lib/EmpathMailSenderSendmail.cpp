@@ -66,8 +66,6 @@ EmpathMailSenderSendmail::setSendmailLocation(const QString & location)
     void
 EmpathMailSenderSendmail::sendOne(RMM::RMessage message, const QString & id)
 {
-    empathDebug("sendOne() called");
-
     currentID_ = id;
     
     error_ = false;
@@ -87,28 +85,21 @@ EmpathMailSenderSendmail::sendOne(RMM::RMessage message, const QString & id)
     QString sendmailLocation = c->readEntry(S_SENDMAIL);
     
     if (sendmailLocation.isEmpty()) {
-        empathDebug("No location configured for sendmail");
-        return;
+        empathDebug("No location configured for sendmail. Using default");
+        sendmailLocation = "/usr/sbin/sendmail";
+        c->writeEntry(S_SENDMAIL, sendmailLocation);
     }
 
-    empathDebug("sendmail location is" + sendmailLocation);
-
-    sendmailProcess_ << QString(c->readEntry(S_SENDMAIL));
+    sendmailProcess_ << sendmailLocation;
     sendmailProcess_ << "-t";
     sendmailProcess_ << "-oem";
     sendmailProcess_ << "-oi";
 
-//  Not necessary with -t flag to sendmail
-//    sendmailProcess_ << message.recipientListAsPlainString();
-
-    empathDebug("Starting sendmail process");
     if (!sendmailProcess_.start(KProcess::NotifyOnExit, KProcess::All)) {
         empathDebug("Couldn't start sendmail process");
         return;
     }
 
-    empathDebug("Starting piping message to sendmail process");
-    
     // Start at first byte of message
     messagePos_ = 0;
     wroteStdin(&sendmailProcess_);
@@ -117,16 +108,11 @@ EmpathMailSenderSendmail::sendOne(RMM::RMessage message, const QString & id)
     void
 EmpathMailSenderSendmail::wroteStdin(KProcess *)
 {
-    empathDebug("wroteStdin() called");
-
     if (messagePos_ >=  messageAsString_.length()) {
-        empathDebug("messagePos has reached message length");
         sendmailProcess_.closeStdin();
         written_ = true;
         return;
     }
-
-    empathDebug("message pos = " + QString().setNum(messagePos_));
 
     int blockSize =
         messagePos_ + 1024 > messageAsString_.length() ?
@@ -135,8 +121,6 @@ EmpathMailSenderSendmail::wroteStdin(KProcess *)
     QCString s = messageAsString_.mid(messagePos_, blockSize);
 
     kapp->processEvents();
-
-    empathDebug("Writing \"" + s + "\" to process");
 
     // Remember the current pos in the message string
     messagePos_ += blockSize;
@@ -147,8 +131,6 @@ EmpathMailSenderSendmail::wroteStdin(KProcess *)
     void
 EmpathMailSenderSendmail::sendmailExited(KProcess *)
 {
-    empathDebug("Sendmail exited");
-
     error_ = (  !sendmailProcess_.normalExit() ||
                 sendmailProcess_.exitStatus() != 0);
     

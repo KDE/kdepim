@@ -37,6 +37,7 @@
 #include "EmpathDefines.h"
 #include "EmpathEnum.h"
 #include "EmpathURL.h"
+#include "EmpathJob.h"
 #include <RMM_Message.h>
 
 class EmpathMailSenderImpl;
@@ -102,13 +103,14 @@ class EmpathMailSender : public QObject
     
     protected slots:
             
-        void operationComplete(ActionType, bool, const EmpathURL &, QString);
+        void s_writtenNowSend(EmpathWriteJob);
+        void s_writtenNowQueue(EmpathWriteJob);
+        void s_movedToSent(EmpathMoveJob);
     
     private:
 
         void _startNextSend();
         void _emergencyBackup(RMM::RMessage);
-        void _addPendingSend(const QString & id);
 
         QQueue<QString> sendQueue_;
 

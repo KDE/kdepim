@@ -57,17 +57,14 @@ class EmpathComposer : public QObject
 
         enum HeaderStyle { Visible, Invisible };
 
+        static EmpathComposer * instance()
+        {
+            if (0 == THIS)
+                THIS = new EmpathComposer;
 
-        /**
-         * ctor
-         */
-        EmpathComposer();
-
-        /**
-         * dtor
-         */
-        ~EmpathComposer();
-       
+            return THIS;
+        }
+      
         /**
          * Create a new composeform with the given parameters 
          */
@@ -77,7 +74,14 @@ class EmpathComposer : public QObject
         /**
          * Convert a composeform to a message, so that it can be sent.
          */
-        static RMM::RMessage message(EmpathComposeForm);
+        RMM::RMessage message(EmpathComposeForm);
+        
+        static EmpathComposer * THIS;
+ 
+    protected:
+
+        EmpathComposer();
+        ~EmpathComposer();
  
     signals:
 

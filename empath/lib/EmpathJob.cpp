@@ -36,8 +36,10 @@ EmpathJob::EmpathJob(ActionType t)
 #endif
     id_(ID_++),
     type_(t),
-    success_(false)
+    success_(false),
+    finished_(false)
 {
+    // Empty.
 }
 
 EmpathJob::EmpathJob(const EmpathJob & other)
@@ -50,6 +52,7 @@ EmpathJob::EmpathJob(const EmpathJob & other)
     success_(other.success_),
     successMap_(other.successMap_)
 {
+    // Empty.
 }
 
 // ------------------------------------------------------------------------
@@ -297,13 +300,13 @@ void EmpathWriteJob::run()
     if (!f) {
         empathDebug("Couldn't find folder to save write message to");
         setSuccess(false);
-        emit(done(*this));
+        _done();
         return;
     }
 
     messageID_ = f->writeMessage(message_);
     setSuccess(!messageID_.isNull());
-    emit(done(*this));
+    _done();
 }
 
 void EmpathCopyJob::run()
@@ -313,7 +316,7 @@ void EmpathCopyJob::run()
 
     if (!retrieve.success()) {
         setSuccess(false);
-        emit(done(*this));
+        _done();
         return;
     }
 
@@ -322,7 +325,7 @@ void EmpathCopyJob::run()
     write.run();
 
     setSuccess(write.success());
-    emit(done(*this));
+    _done();
 }
 
 void EmpathMoveJob::run()
@@ -332,7 +335,7 @@ void EmpathMoveJob::run()
 
     if (!retrieve.success()) {
         setSuccess(false);
-        emit(done(*this));
+        _done();
         return;
     }
 
@@ -343,7 +346,7 @@ void EmpathMoveJob::run()
 
     if (!write.success()) {
         setSuccess(false);
-        emit(done(*this));
+        _done();
         return;
     }
 
@@ -351,7 +354,7 @@ void EmpathMoveJob::run()
     remove.run();
 
     setSuccess(remove.success());
-    emit(done(*this));
+    _done();
 }
 
 void EmpathRemoveJob::run()
@@ -367,18 +370,19 @@ void EmpathRemoveJob::run()
         setSuccessMap(f->removeMessage(IDList_));
     }
 
-    emit(done(*this));
+    _done();
 }
 
 void EmpathRetrieveJob::run()
 {
+    empathDebug("");
     RMM::RMessage cached = empath->message(url_);
 
     if (!cached.isNull()) {
 
         message_ = cached;
         setSuccess(true);
-        emit(done(*this));
+        _done();
         return;
     }
 
@@ -390,7 +394,8 @@ void EmpathRetrieveJob::run()
         empath->cacheMessage(url_, message_);
 
     setSuccess(!message_.isNull());
-    emit(done(*this));
+    _done();
+    empathDebug("done");
 }
 
 void EmpathMarkJob::run()
@@ -406,7 +411,7 @@ void EmpathMarkJob::run()
         setSuccessMap(f->markMessage(IDList_, flags_));
     }
     
-    emit(done(*this));
+    _done();
 }
 
 void EmpathCreateFolderJob::run()
@@ -415,12 +420,12 @@ void EmpathCreateFolderJob::run()
 
     if (!m) {
         setSuccess(false);
-        emit(done(*this));
+        _done();
         return;
     }
 
     setSuccess(m->createFolder(folder_));
-    emit(done(*this));
+    _done();
 }
 
 void EmpathRemoveFolderJob::run()
@@ -429,12 +434,12 @@ void EmpathRemoveFolderJob::run()
 
     if (!m) {
         setSuccess(false);
-        emit(done(*this));
+        _done();
         return;
     }
 
     setSuccess(m->removeFolder(folder_));
-    emit(done(*this));
+    _done();
 }
 
 // ------------------------------------------------------------------------

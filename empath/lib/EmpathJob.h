@@ -69,6 +69,8 @@ class EmpathJob : public QObject
 
         EmpathJobID id() const { return id_; }
 
+        bool finished() const { return finished_; }
+
     protected:
 
         EmpathJob();
@@ -78,6 +80,10 @@ class EmpathJob : public QObject
         void setSuccess(bool ok) { success_ = ok; }
         void setSuccessMap(EmpathSuccessMap map) { successMap_ = map; }
 
+        virtual void _done() = 0;
+
+        void setFinished() { finished_ = true; }
+
     private:
 
         static EmpathJobID ID_;
@@ -86,6 +92,8 @@ class EmpathJob : public QObject
         ActionType type_;
         bool success_;
         EmpathSuccessMap successMap_;
+
+        bool finished_;
 };
 
 class EmpathSingleJob : public EmpathJob
@@ -137,12 +145,14 @@ class EmpathWriteJob : public EmpathSingleJob
         EmpathURL folder() const { return folder_; }
 
         QString messageID() const { return messageID_; }
-    
+
     signals:
 
         void done(EmpathWriteJob);
 
     private:
+        
+        virtual void _done() { emit(done(*this)); setFinished(); }
 
         RMM::RMessage message_;
         EmpathURL folder_;
@@ -174,6 +184,8 @@ class EmpathCopyJob : public EmpathMultiJob
         void done(EmpathCopyJob);
 
     private:
+        
+        virtual void _done() { emit(done(*this));  setFinished(); }
 
         EmpathURL source_;
         EmpathURL destination_;
@@ -204,6 +216,8 @@ class EmpathMoveJob : public EmpathMultiJob
         void done(EmpathMoveJob);
 
     private:
+        
+        virtual void _done() { emit(done(*this));  setFinished(); }
         
         EmpathURL source_;
         EmpathURL destination_;
@@ -238,6 +252,8 @@ class EmpathRemoveJob : public EmpathSingleJob
         void done(EmpathRemoveJob);
 
     private:
+        
+        virtual void _done() { emit(done(*this));  setFinished(); }
 
         QMap<QString, bool> successMap_;
         EmpathURL url_;
@@ -268,6 +284,8 @@ class EmpathRetrieveJob : public EmpathSingleJob
         void done(EmpathRetrieveJob);
 
     private:
+        
+        virtual void _done() { emit(done(*this));  setFinished(); }
 
         EmpathURL url_;
         RMM::RMessage message_;
@@ -307,6 +325,8 @@ class EmpathMarkJob : public EmpathSingleJob
         void done(EmpathMarkJob);
 
     private:
+        
+        virtual void _done() { emit(done(*this));  setFinished(); }
 
         QMap<QString, bool> successMap_;
         EmpathURL url_;
@@ -336,6 +356,8 @@ class EmpathCreateFolderJob : public EmpathSingleJob
         void done(EmpathCreateFolderJob);
 
     private:
+        
+        virtual void _done() { emit(done(*this));  setFinished(); }
 
         EmpathURL folder_;
 };
@@ -361,6 +383,8 @@ class EmpathRemoveFolderJob : public EmpathSingleJob
         void done(EmpathRemoveFolderJob);
 
     private:
+        
+        virtual void _done() { emit(done(*this));  setFinished(); }
 
         EmpathURL folder_;
 };

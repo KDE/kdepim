@@ -33,7 +33,7 @@ Work through the following steps:
 2. Stop deliveries to your mbox spool
 
 3. Run the following command, replacing mbox_spool with your spool filename:
-   mbox2maildir mbox_spool ~/.empath
+   mbox2maildir mbox_spool ~/.empath/Inbox
 
 4. Restart deliveries to your mbox spool
 

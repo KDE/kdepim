@@ -54,9 +54,9 @@ EmpathEnvelopeWidget::EmpathEnvelopeWidget(
     RMM::RHeaderList headerList = envelope.headerList();
 
     empathDebug("Adding " + QString().setNum(headerList.count()) + " headers");
-    RMM::RHeaderListIterator it(headerList);
-    for (; it.current(); ++it) 
-        _addHeader(*it.current());
+    RMM::RHeaderListIterator it(headerList.begin());
+    for (; it != headerList.end(); ++it) 
+        _addHeader(*it);
 
     _lineUpHeaders();
 
@@ -122,6 +122,7 @@ EmpathEnvelopeWidget::_addHeader(RMM::RHeader header)
     
     headerSpecList_.append(newHsw); 
     maxSizeColOne_ = QMAX(newHsw->sizeOfColumnOne(), maxSizeColOne_);
+    newHsw->show();
 }
  
     void
@@ -129,10 +130,8 @@ EmpathEnvelopeWidget::_lineUpHeaders()
 {
     QListIterator<EmpathHeaderSpecWidget> hit(headerSpecList_);
     
-    for (; hit.current(); ++hit) {
+    for (; hit.current(); ++hit)
         hit.current()->setColumnOneSize(maxSizeColOne_);
-        hit.current()->show();
-    }
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -43,58 +43,68 @@ class EmpathJobScheduler
         EmpathJobID newWriteJob(
             RMM::RMessage &,
             const EmpathURL &,
-            QObject *
+            QObject *,
+            const char *
         );
 
         EmpathJobID newRetrieveJob(
             const EmpathURL &,
-            QObject *
+            QObject *,
+            const char *
         );
 
         EmpathJobID newCopyJob(
             const EmpathURL &,
             const EmpathURL &,
-            QObject *
+            QObject *,
+            const char *
         );
 
         EmpathJobID newMoveJob(
             const EmpathURL &,
             const EmpathURL &,
-            QObject *
+            QObject *,
+            const char *
         );
 
         EmpathJobID newRemoveJob(
             const EmpathURL &,
-            QObject *
+            QObject *,
+            const char *
         );
 
         EmpathJobID newRemoveJob(
             const EmpathURL &,
             const QStringList &,
-            QObject *
+            QObject *,
+            const char *
         );
 
         EmpathJobID newMarkJob(
             const EmpathURL &,
             EmpathIndexRecord::Status,
-            QObject *
+            QObject *,
+            const char *
         );
 
         EmpathJobID newMarkJob(
             const EmpathURL &,
             const QStringList &,
             EmpathIndexRecord::Status,
-            QObject *
+            QObject *,
+            const char *
         );
 
         EmpathJobID newCreateFolderJob(
             const EmpathURL &,
-            QObject *
+            QObject *,
+            const char *
         );
 
         EmpathJobID newRemoveFolderJob(
             const EmpathURL &,
-            QObject *
+            QObject *,
+            const char *
         );
 
     private:

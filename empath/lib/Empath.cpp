@@ -71,6 +71,7 @@ Empath::start()
     void
 Empath::shutdown()
 {
+    s_saveConfig();
     delete this;
 }
 
@@ -79,7 +80,6 @@ Empath::Empath()
         mailboxList_    (0L),
         filterList_     (0L),
         sender_         (0L),
-        composer_       (0L),
         jobScheduler_   (0L),
         seq_            (0)
 {
@@ -150,9 +150,6 @@ Empath::~Empath()
     delete jobScheduler_;
     jobScheduler_ = 0L;
 
-    delete composer_;
-    composer_   = 0L;
-    
     using namespace EmpathConfig;
 
     delete DFLT_Q_1;
@@ -238,15 +235,6 @@ Empath::_jobScheduler()
     return jobScheduler_;
 }
 
-    EmpathComposer *
-Empath::_composer()
-{
-    if (0 == composer_)
-        composer_ = new EmpathComposer;
-
-    return composer_;
-}
-
     EmpathFilterList *
 Empath::filterList()
 {
@@ -267,49 +255,50 @@ Empath::folder(const EmpathURL & url)
 { EmpathMailbox * m = mailbox(url); return (m == 0 ? 0 : m->folder(url)); }
 
    EmpathJobID
-Empath::copy(const EmpathURL & from, const EmpathURL & to, QObject * o)
-{ return _jobScheduler()->newCopyJob(from, to, o); }
+Empath::copy(const EmpathURL & from, const EmpathURL & to, QObject * o, const char * slot)
+{ return _jobScheduler()->newCopyJob(from, to, o, slot); }
 
     EmpathJobID
-Empath::move(const EmpathURL & from, const EmpathURL & to, QObject * o)
-{ return _jobScheduler()->newMoveJob(from, to, o); }
+Empath::move(const EmpathURL & from, const EmpathURL & to, QObject * o, const char * slot)
+{ return _jobScheduler()->newMoveJob(from, to, o, slot); }
 
     EmpathJobID
-Empath::retrieve(const EmpathURL & url, QObject * o)
-{ return _jobScheduler()->newRetrieveJob(url, o); }
+Empath::retrieve(const EmpathURL & url, QObject * o, const char * slot)
+{ return _jobScheduler()->newRetrieveJob(url, o, slot); }
 
     EmpathJobID
-Empath::write(RMM::RMessage & msg, const EmpathURL & folder, QObject * o)
-{ return _jobScheduler()->newWriteJob(msg, folder, o); } 
+Empath::write(RMM::RMessage & msg, const EmpathURL & folder, QObject * o, const char * slot)
+{ return _jobScheduler()->newWriteJob(msg, folder, o, slot); } 
 
     EmpathJobID
-Empath::remove(const EmpathURL & url, QObject * o)
-{ return _jobScheduler()->newRemoveJob(url, o); }
+Empath::remove(const EmpathURL & url, QObject * o, const char * slot)
+{ return _jobScheduler()->newRemoveJob(url, o, slot); }
 
     EmpathJobID
-Empath::remove(const EmpathURL & f, const QStringList & IDList, QObject * o)
-{ return _jobScheduler()->newRemoveJob(f, IDList, o); }
+Empath::remove(const EmpathURL & f, const QStringList & IDList, QObject * o, const char * slot)
+{ return _jobScheduler()->newRemoveJob(f, IDList, o, slot); }
 
     EmpathJobID
-Empath::mark(const EmpathURL & url, EmpathIndexRecord::Status s, QObject * o)
-{ return _jobScheduler()->newMarkJob(url, s, o); }
+Empath::mark(const EmpathURL & url, EmpathIndexRecord::Status s, QObject * o, const char * slot)
+{ return _jobScheduler()->newMarkJob(url, s, o, slot); }
 
     EmpathJobID
 Empath::mark(
     const EmpathURL & f,
     const QStringList & l,
     EmpathIndexRecord::Status s,
-    QObject * o
+    QObject * o,
+    const char * slot
 )
-{ return _jobScheduler()->newMarkJob(f, l, s, o); }
+{ return _jobScheduler()->newMarkJob(f, l, s, o, slot); }
 
     EmpathJobID
-Empath::createFolder(const EmpathURL & url, QObject * o) 
-{ return _jobScheduler()->newCreateFolderJob(url, o); }
+Empath::createFolder(const EmpathURL & url, QObject * o, const char * slot) 
+{ return _jobScheduler()->newCreateFolderJob(url, o, slot); }
 
     EmpathJobID
-Empath::removeFolder(const EmpathURL & url, QObject * o)
-{ return _jobScheduler()->newRemoveFolderJob(url, o); }
+Empath::removeFolder(const EmpathURL & url, QObject * o, const char * slot)
+{ return _jobScheduler()->newRemoveFolderJob(url, o, slot); }
 
     void
 Empath::send(RMM::RMessage & m)
@@ -345,27 +334,27 @@ Empath::s_newTask(EmpathTask * t)
 
     void 
 Empath::s_compose()
-{ _composer()->newComposeForm(QString::null); }
+{ EmpathComposer::instance()->newComposeForm(QString::null); }
 
     void 
 Empath::s_composeTo(const QString & recipient)
-{ _composer()->newComposeForm(recipient); }
+{ EmpathComposer::instance()->newComposeForm(recipient); }
 
     void
 Empath::s_reply(const EmpathURL & url)
-{ _composer()->newComposeForm(ComposeReply, url); }
+{ EmpathComposer::instance()->newComposeForm(ComposeReply, url); }
 
     void
 Empath::s_replyAll(const EmpathURL & url)
-{ _composer()->newComposeForm(ComposeReplyAll, url); }
+{ EmpathComposer::instance()->newComposeForm(ComposeReplyAll, url); }
 
     void
 Empath::s_forward(const EmpathURL & url)
-{ _composer()->newComposeForm(ComposeForward, url); }
+{ EmpathComposer::instance()->newComposeForm(ComposeForward, url); }
 
     void
 Empath::s_bounce(const EmpathURL & url)
-{ _composer()->newComposeForm(ComposeBounce, url); }
+{ EmpathComposer::instance()->newComposeForm(ComposeBounce, url); }
 
     void
 Empath::saveMessage(const EmpathURL & url, QWidget * parent)

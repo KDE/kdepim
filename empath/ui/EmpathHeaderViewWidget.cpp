@@ -82,17 +82,24 @@ EmpathHeaderViewWidget::useEnvelope(RMM::REnvelope & e)
         QCString s = it.current();
         s = s.stripWhiteSpace();
     
-        RMM::RHeader * h(e.get(s));
-        if (h == 0) continue;
+        RMM::RHeader h(e.get(s));
+
+        if (!h)
+            continue;
             
-        headerList_.append(h->headerName() + ":");
+        headerList_.append(h.headerName() + ":");
     
-        if (RMM::headerTypesTable[h->headerType()] == RMM::DateTime) {
-            RMM::RDateTime * date = (RMM::RDateTime *)(h->headerBody());
+        if (RMM::headerTypesTable[h.headerType()] == RMM::DateTime) {
+
+            RMM::RDateTime * date =
+                static_cast<RMM::RDateTime *>(h.headerBody());
+
             headerList_.append(
-                KGlobal::locale()->formatDateTime(date->qdt()).ascii());
+                KGlobal::locale()->formatDateTime(date->qdt()).ascii()
+            );
+
         } else
-            headerList_.append(h->headerBody()->asString());
+            headerList_.append(h.headerBody()->asString());
     }
     
     int th = QFontMetrics(KGlobal::generalFont()).height();

@@ -90,6 +90,7 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
     void
 EmpathMessageViewWidget::s_retrieveJobFinished(EmpathRetrieveJob j)
 {
+    empathDebug("");
     if (!j.success())
         return;
 
