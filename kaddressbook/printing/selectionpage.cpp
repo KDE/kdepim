@@ -70,7 +70,7 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
 
   mUseFilters = new QRadioButton( i18n( "Contacts matching &filter" ), mButtonGroup );
   QWhatsThis::add( mUseFilters, i18n( "Only print contacts matching the selected filter.\n"
-                                     "This option is disabled if you have not defined any filters" ) );
+                                     "This option is disabled if you have not defined any filters." ) );
   groupLayout->addWidget( mUseFilters, 2, 0 );
 
   mUseCategories = new QRadioButton( i18n( "Category &members" ), mButtonGroup );
