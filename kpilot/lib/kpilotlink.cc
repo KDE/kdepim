@@ -708,12 +708,30 @@ QDateTime KPilotDeviceLink::getTime()
 	return time;
 }
 
-
 bool KPilotDeviceLink::setTime(const time_t &pctime)
 {
 //	struct tm time_tm=writeTm(time);
 //	time_t pctime=mktime(&time_tm);
 	return dlp_SetSysDateTime(pilotSocket(), pctime);
+}
+
+
+
+long int KPilotDeviceLink::ROMversion() const
+{
+	long int rom;
+	dlp_ReadFeature(pilotSocket(), makelong("psys"), 1, &rom);
+	return rom;
+}
+long int KPilotDeviceLink::majorVersion() const
+{
+	long int rom=ROMversion();
+	return (((rom >> 28) & 0xf) * 10)+ ((rom >> 24) & 0xf);
+}
+long int KPilotDeviceLink::minorVersion() const
+{
+	long int rom=ROMversion();
+	return (((rom >> 20) & 0xf) * 10)+ ((rom >> 16) & 0xf);
 }
 
 
@@ -733,6 +751,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.17  2002/07/25 22:11:22  kainhofe
+// time sync conduit
+//
 // Revision 1.16  2002/07/25 19:02:20  kainhofe
 // Added functions to get/set the time on the handheld
 //

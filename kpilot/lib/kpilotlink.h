@@ -337,7 +337,20 @@ public:
 	 * Set the time on the handheld to the give QDateTime
 	 */
 	bool setTime(const time_t &pctime);
-//	bool setTime(const QDateTime&time);
+	
+	/**
+	 * Get the version number from the handheld
+	 */
+	long int ROMversion() const;
+	/**
+	 * Get the major PalmOS version number
+	 */
+	long int majorVersion() const;
+	/**
+	 * Get the minor PalmOS version number
+	 */
+	long int minorVersion() const;
+	 
 	
 } ;
 
@@ -345,6 +358,9 @@ bool operator < ( const struct db &, const struct db &) ;
 
 
 // $Log$
+// Revision 1.8  2002/07/25 22:11:22  kainhofe
+// time sync conduit
+//
 // Revision 1.7  2002/07/25 19:02:20  kainhofe
 // Added functions to get/set the time on the handheld
 //
