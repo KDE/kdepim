@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Kaplan
+Name[mk]=Каплан
 Exec=kaplan
 Type=Application
 Icon=kaplan
@@ -12,6 +13,7 @@ GenericName[da]=Personlig Informationshåndtering
 GenericName[de]=Persönlicher Informationsmanager
 GenericName[el]=Προσωπικός διαχειριστής πληροφοριών
 GenericName[es]=Gestor de información personal
+GenericName[et]=Personaalse info haldur
 GenericName[fi]=Henkilötietojen hallinta
 GenericName[fr]=Gestionnaire d'informations personnelles
 GenericName[he]=מנהל מידע אישי
@@ -19,6 +21,8 @@ GenericName[hu]=határidőnapló
 GenericName[is]=PIM Dagbók, geyma persónuupplýsingar
 GenericName[it]=Gestione informazioni personali 
 GenericName[ja]=個人情報マネージャ
+GenericName[lt]=Asmeninės informacijos tvarkyklė
+GenericName[mk]=Менаџер за лични информации
 GenericName[nb]=Personlig informasjonsbehandler
 GenericName[nn]=Personleg informasjonshandtering
 GenericName[nso]=Molaodi wa tshedimoso ya botho
