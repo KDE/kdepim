@@ -460,7 +460,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
     Incidence* icalToString( const QString& iCal, ICalFormat& format ) const
     {
-      CalendarLocal calendar;
+      CalendarLocal calendar( KPimPrefs::timezone() );
       ScheduleMessage *message =
         format.parseScheduleMessage( &calendar, iCal );
       if ( !message )
