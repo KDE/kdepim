@@ -20,3 +20,4 @@ fi
 
 
 AC_CHECK_FUNCS(memrchr)
+AC_CHECK_FUNCS(putc_unlocked)
