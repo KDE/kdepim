@@ -2594,7 +2594,8 @@ kdDebug(5006) << "KMComposeWin::encryptMessage() : set top level Content-Type fr
       }
       //msg->headers().Assemble();
       //kdDebug(5006) << "\n\n\nKMComposeWin::composeMessage():\n      D.:\n\n" << msg->headerAsString() << "|||\n\n\n\n\n" << endl;
-      msg->setCharset( ourFineBodyPart.charset() );
+      if ( !ourFineBodyPart.charset().isEmpty() )
+        msg->setCharset( ourFineBodyPart.charset() );
       //msg->headers().Assemble();
       //kdDebug(5006) << "\n\n\nKMComposeWin::composeMessage():\n      E.:\n\n" << msg->headerAsString() << "|||\n\n\n\n\n" << endl;
       msg->setHeaderField( "Content-Transfer-Encoding",
