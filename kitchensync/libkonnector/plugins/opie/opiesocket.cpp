@@ -257,7 +257,7 @@ void OpieSocket::manageCall(const QString &line )
 	return;
     }
     if( line.startsWith("CALL QPE/Desktop docLinks(QString)" ) ){
-	kdDebug( ) << "desktop entry" << endl;
+	kdDebug( ) << "CALL docLinks desktop entry" << endl;
 	OpieHelper::toOpieDesktopEntry( line, &d->m_sync, d->m_categories  );   
 	return;
     }
@@ -283,8 +283,13 @@ void OpieSocket::manageCall(const QString &line )
 	    url.setPath(d->path + "/Settings/Categories.xml " );
 	    //tmpFileName = QString::fromLatin1("/home/ich/categories.xml") ;
 	    KIO::NetAccess::download( url, tmpFileName );
-	    //KIO::NetAccess::removeTempFile( tmpFileName );
 	    parseCategory(tmpFileName);
+	    KIO::NetAccess::removeTempFile( tmpFileName );
+	    url.setPath(d->path + "/Applications/addressbook/addressbook.xml" );
+	    tmpFileName = QString::null;
+	    tmpFileName = "/home/ich/addressbook.xml";
+	    KIO::NetAccess::download( url, tmpFileName );
+	    OpieHelper::toAddressbook( tmpFileName, &d->m_sync, d->m_categories  );
 	    break;
 	}
 	case d->DESKTOPS:{

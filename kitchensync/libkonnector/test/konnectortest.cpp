@@ -45,7 +45,7 @@ int main(int argc, char *argv[] )
     caps.setUser("ich" );
     caps.setPassword("doesntmatter");
     QHostAddress adr;
-    adr.setAddress("127.0.0.1" );
+    adr.setAddress("192.168.0.10" );
     caps.setDestIP(adr );
     konnector->setCapabilities( outp, caps ); 
     konnector->startSync( outp );
