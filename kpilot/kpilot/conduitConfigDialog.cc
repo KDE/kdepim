@@ -372,10 +372,14 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 		}
 		else
 		{
-			fStack->adjustSize();
+			fStack->erase();
 			fStack->raiseWidget(NEW_CONDUIT);
 			d->widget()->show();
+			d->widget()->adjustSize();
 			fCurrentConfig=d;
+			fStack->resize(d->widget()->size());
+			fStack->setMinimumSize(d->widget()->size());
+			fStack->adjustSize();
 			adjustSize();
 		}
 	}
@@ -418,6 +422,8 @@ void ConduitConfigWidget::selected(QListViewItem *p)
 	}
 	fCurrentConduit=p;
 	loadAndConfigure(p);
+	// Workaround for repaint problems
+	p->repaint();
 }
 
 void ConduitConfigWidget::configure()
