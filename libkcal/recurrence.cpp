@@ -42,7 +42,6 @@ Recurrence::Recurrence(Incidence *parent, int compatVersion)
   mUseCachedEndDT(false),
   mFloats(parent ? parent->doesFloat() : false),
   mRecurReadOnly(false),
-  mRecurExDatesCount(0),
   mFeb29YearlyType(mFeb29YearlyDefaultType),
   mCompatVersion(compatVersion ? compatVersion : INT_MAX),
   mCompatRecurs(rNone),
@@ -66,7 +65,6 @@ Recurrence::Recurrence(const Recurrence &r, Incidence *parent)
   mRecurStart(r.mRecurStart),
   mFloats(r.mFloats),
   mRecurReadOnly(r.mRecurReadOnly),
-  mRecurExDatesCount(r.mRecurExDatesCount),
   mFeb29YearlyType(r.mFeb29YearlyType),
   mCompatVersion(r.mCompatVersion),
   mCompatRecurs(r.mCompatRecurs),
@@ -110,8 +108,7 @@ bool Recurrence::operator==( const Recurrence& r2 ) const
   ||   !rDuration && rEndDateTime != r2.rEndDateTime
   ||   mRecurStart != r2.mRecurStart
   ||   mFloats != r2.mFloats
-  ||   mRecurReadOnly != r2.mRecurReadOnly
-  ||   mRecurExDatesCount != r2.mRecurExDatesCount )
+  ||   mRecurReadOnly != r2.mRecurReadOnly )
     return false;
   // no need to compare mCompat* and mParent
   // OK to compare the pointers
@@ -243,13 +240,13 @@ QDateTime Recurrence::endDateTime(bool *result) const
     switch (recurs)
     {
     case rMinutely:
-      mCachedEndDT = mRecurStart.addSecs((rDuration-1+mRecurExDatesCount)*rFreq*60);
+      mCachedEndDT = mRecurStart.addSecs((rDuration-1)*rFreq*60);
       return mCachedEndDT;
     case rHourly:
-      mCachedEndDT = mRecurStart.addSecs((rDuration-1+mRecurExDatesCount)*rFreq*3600);
+      mCachedEndDT = mRecurStart.addSecs((rDuration-1)*rFreq*3600);
       return mCachedEndDT;
     case rDaily:
-      mCachedEndDT = mRecurStart.addDays((rDuration-1+mRecurExDatesCount)*rFreq);
+      mCachedEndDT = mRecurStart.addDays((rDuration-1)*rFreq);
       return mCachedEndDT;
 
     case rWeekly:
@@ -489,7 +486,7 @@ void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
     // with week start always on a Monday.
     // Convert this to the number of occurrences.
     mCompatDuration = _rDuration;
-    int weeks = ((mCompatDuration-1+mRecurExDatesCount)*7) + (7 - mRecurStart.date().dayOfWeek());
+    int weeks = ((mCompatDuration-1)*7) + (7 - mRecurStart.date().dayOfWeek());
     QDate end(mRecurStart.date().addDays(weeks * rFreq));
     rDuration = INT_MAX;    // ensure that weeklyCalc() does its job correctly
     rDuration = weeklyCalc(COUNT_TO_DATE, end);
@@ -592,7 +589,7 @@ void Recurrence::addMonthlyPos_(short _rPos, const QBitArray &_rDays)
     // Backwards compatibility for KDE < 3.1.
     // rDuration was set to the number of time periods to recur.
     // Convert this to the number of occurrences.
-    int monthsAhead = (mCompatDuration-1+mRecurExDatesCount) * rFreq;
+    int monthsAhead = (mCompatDuration-1) * rFreq;
     int month = mRecurStart.date().month() - 1 + monthsAhead;
     QDate end(mRecurStart.date().year() + month/12, month%12 + 1, 31);
     rDuration = INT_MAX;    // ensure that recurCalc() does its job correctly
@@ -621,7 +618,7 @@ void Recurrence::addMonthlyDay(short _rDay)
     // Backwards compatibility for KDE < 3.1.
     // rDuration was set to the number of time periods to recur.
     // Convert this to the number of occurrences.
-    int monthsAhead = (mCompatDuration-1+mRecurExDatesCount) * rFreq;
+    int monthsAhead = (mCompatDuration-1) * rFreq;
     int month = mRecurStart.date().month() - 1 + monthsAhead;
     QDate end(mRecurStart.date().year() + month/12, month%12 + 1, 31);
     rDuration = INT_MAX;    // ensure that recurCalc() does its job correctly
@@ -727,7 +724,7 @@ void Recurrence::addYearlyNum(short _rNum)
     // Backwards compatibility for KDE < 3.1.
     // rDuration was set to the number of time periods to recur.
     // Convert this to the number of occurrences.
-    QDate end(mRecurStart.date().year() + (mCompatDuration-1+mRecurExDatesCount)*rFreq, 12, 31);
+    QDate end(mRecurStart.date().year() + (mCompatDuration-1)*rFreq, 12, 31);
     rDuration = INT_MAX;    // ensure that recurCalc() does its job correctly
     rDuration = recurCalc(COUNT_TO_DATE, end);
   }
@@ -1487,12 +1484,12 @@ int Recurrence::secondlyCalc(PeriodFunc func, QDateTime &endtime, int freq) cons
 {
   switch (func) {
     case END_DATE_AND_COUNT:
-      endtime = mRecurStart.addSecs((rDuration + mRecurExDatesCount - 1) * freq);
-      return rDuration + mRecurExDatesCount;
+      endtime = mRecurStart.addSecs((rDuration - 1) * freq);
+      return rDuration;
     case COUNT_TO_DATE: {
       int n = mRecurStart.secsTo(endtime)/freq + 1;
-      if (rDuration > 0 && n > rDuration + mRecurExDatesCount)
-        return rDuration + mRecurExDatesCount;
+      if (rDuration > 0 && n > rDuration)
+        return rDuration;
       return n;
     }
     case NEXT_AFTER_DATE: {
@@ -1516,12 +1513,12 @@ int Recurrence::dailyCalc(PeriodFunc func, QDate &enddate) const
   QDate dStart = mRecurStart.date();
   switch (func) {
     case END_DATE_AND_COUNT:
-      enddate = dStart.addDays((rDuration + mRecurExDatesCount - 1) * rFreq);
-      return rDuration + mRecurExDatesCount;
+      enddate = dStart.addDays((rDuration - 1) * rFreq);
+      return rDuration;
     case COUNT_TO_DATE: {
       int n = dStart.daysTo(enddate)/rFreq + 1;
-      if (rDuration > 0 && n > rDuration + mRecurExDatesCount)
-        return rDuration + mRecurExDatesCount;
+      if (rDuration > 0 && n > rDuration)
+        return rDuration;
       return n;
     }
     case NEXT_AFTER_DATE: {
@@ -1566,7 +1563,7 @@ int Recurrence::weeklyCalcEndDate(QDate &enddate, int daysPerWeek) const
   int startDayOfWeek = mRecurStart.date().dayOfWeek();     // 1..7
   int countGone = 0;
   int daysGone = 0;
-  uint countTogo = rDuration + mRecurExDatesCount;
+  uint countTogo = rDuration;
   if (startDayOfWeek != rWeekStart) {
     // Check what remains of the start week
     for (int i = startDayOfWeek - 1;  i != rWeekStart - 1;  i = (i + 1) % 7) {
@@ -1607,7 +1604,7 @@ int Recurrence::weeklyCalcToDate(const QDate &enddate, int daysPerWeek) const
   int countGone = 0;
   int daysGone  = 0;
   int totalDays = dStart.daysTo(enddate) + 1;
-  int countMax  = (rDuration > 0) ? rDuration + mRecurExDatesCount : INT_MAX;
+  int countMax  = (rDuration > 0) ? rDuration : INT_MAX;
 
   if (startDayOfWeek != rWeekStart) {
     // Check what remains of the start week
@@ -1650,7 +1647,7 @@ int Recurrence::weeklyCalcNextAfter(QDate &enddate, int daysPerWeek) const
   QDate dStart = mRecurStart.date();
   int  startDayOfWeek = dStart.dayOfWeek();     // 1..7
   int  totalDays = dStart.daysTo(enddate) + 1;
-  uint countTogo = (rDuration > 0) ? rDuration + mRecurExDatesCount : UINT_MAX;
+  uint countTogo = (rDuration > 0) ? rDuration : UINT_MAX;
   int  countGone = 0;
   int  daysGone = 0;
   int recurWeeks;
@@ -1761,7 +1758,7 @@ int Recurrence::monthlyCalc(PeriodFunc func, QDate &enddate) const
 
 int Recurrence::monthlyCalcEndDate(QDate &enddate, MonthlyData &data) const
 {
-  uint countTogo = rDuration + mRecurExDatesCount;
+  uint countTogo = rDuration;
   int  countGone = 0;
   QValueList<int>::ConstIterator it;
   const QValueList<int>* days = data.dayList();
@@ -1824,7 +1821,7 @@ int Recurrence::monthlyCalcEndDate(QDate &enddate, MonthlyData &data) const
 int Recurrence::monthlyCalcToDate(const QDate &enddate, MonthlyData &data) const
 {
   int countGone = 0;
-  int countMax  = (rDuration > 0) ? rDuration + mRecurExDatesCount : INT_MAX;
+  int countMax  = (rDuration > 0) ? rDuration : INT_MAX;
   int endYear  = enddate.year();
   int endMonth = enddate.month() - 1;     // zero-based
   int endDay   = enddate.day();
@@ -1883,7 +1880,7 @@ int Recurrence::monthlyCalcToDate(const QDate &enddate, MonthlyData &data) const
 
 int Recurrence::monthlyCalcNextAfter(QDate &enddate, MonthlyData &data) const
 {
-  uint countTogo = (rDuration > 0) ? rDuration + mRecurExDatesCount : UINT_MAX;
+  uint countTogo = (rDuration > 0) ? rDuration : UINT_MAX;
   int countGone = 0;
   int endYear = enddate.year();
   int endDay  = enddate.day();
@@ -2010,7 +2007,7 @@ int Recurrence::yearlyMonthCalc(PeriodFunc func, QDate &enddate) const
 // Reply = total number of occurrences.
 int Recurrence::yearlyMonthCalcEndDate(QDate &enddate, YearlyMonthData &data) const
 {
-  uint countTogo = rDuration + mRecurExDatesCount;
+  uint countTogo = rDuration;
   int  countGone = 0;
   QValueList<int>::ConstIterator it;
   const QValueList<int>* mons = data.monthList();   // get recurring months for this year
@@ -2103,7 +2100,7 @@ int Recurrence::yearlyMonthCalcEndDate(QDate &enddate, YearlyMonthData &data) co
 int Recurrence::yearlyMonthCalcToDate(const QDate &enddate, YearlyMonthData &data) const
 {
   int countGone = 0;
-  int countMax  = (rDuration > 0) ? rDuration + mRecurExDatesCount : INT_MAX;
+  int countMax  = (rDuration > 0) ? rDuration : INT_MAX;
   int endYear  = enddate.year();
   int endMonth = enddate.month();
   int endDay   = enddate.day();
@@ -2186,7 +2183,7 @@ int Recurrence::yearlyMonthCalcToDate(const QDate &enddate, YearlyMonthData &dat
 // Reply = total number of occurrences up to 'enddate'.
 int Recurrence::yearlyMonthCalcNextAfter(QDate &enddate, YearlyMonthData &data) const
 {
-  uint countTogo = (rDuration > 0) ? rDuration + mRecurExDatesCount : UINT_MAX;
+  uint countTogo = (rDuration > 0) ? rDuration : UINT_MAX;
   int  countGone = 0;
   int endYear  = enddate.year();
   int endMonth = enddate.month();
@@ -2368,7 +2365,7 @@ int Recurrence::yearlyPosCalc(PeriodFunc func, QDate &enddate) const
 
 int Recurrence::yearlyPosCalcEndDate(QDate &enddate, YearlyPosData &data) const
 {
-  uint countTogo = rDuration + mRecurExDatesCount;
+  uint countTogo = rDuration;
   int  countGone = 0;
   QValueList<int>::ConstIterator id;
   const QValueList<int>* days;
@@ -2464,7 +2461,7 @@ ex:
 int Recurrence::yearlyPosCalcToDate(const QDate &enddate, YearlyPosData &data) const
 {
   int countGone = 0;
-  int countMax  = (rDuration > 0) ? rDuration + mRecurExDatesCount : INT_MAX;
+  int countMax  = (rDuration > 0) ? rDuration : INT_MAX;
   int endYear  = enddate.year();
   int endMonth = enddate.month();
   int endDay   = enddate.day();
@@ -2578,7 +2575,7 @@ int Recurrence::yearlyPosCalcToDate(const QDate &enddate, YearlyPosData &data) c
 
 int Recurrence::yearlyPosCalcNextAfter(QDate &enddate, YearlyPosData &data) const
 {
-  uint countTogo = (rDuration > 0) ? rDuration + mRecurExDatesCount : UINT_MAX;
+  uint countTogo = (rDuration > 0) ? rDuration : UINT_MAX;
   int  countGone = 0;
   int endYear  = enddate.year();
   int endMonth = enddate.month();
@@ -2744,7 +2741,7 @@ int Recurrence::yearlyDayCalc(PeriodFunc func, QDate &enddate) const
 
 int Recurrence::yearlyDayCalcEndDate(QDate &enddate, YearlyDayData &data) const
 {
-  uint countTogo = rDuration + mRecurExDatesCount;
+  uint countTogo = rDuration;
   int countGone = 0;
 
   if (data.day > 1) {
@@ -2804,7 +2801,7 @@ ex:
 int Recurrence::yearlyDayCalcToDate(const QDate &enddate, YearlyDayData &data) const
 {
   int countGone = 0;
-  int countMax  = (rDuration > 0) ? rDuration + mRecurExDatesCount : INT_MAX;
+  int countMax  = (rDuration > 0) ? rDuration : INT_MAX;
   int endYear = enddate.year();
   int endDay  = enddate.dayOfYear();
 
@@ -2862,7 +2859,7 @@ int Recurrence::yearlyDayCalcToDate(const QDate &enddate, YearlyDayData &data) c
 
 int Recurrence::yearlyDayCalcNextAfter(QDate &enddate, YearlyDayData &data) const
 {
-  uint countTogo = (rDuration > 0) ? rDuration + mRecurExDatesCount : UINT_MAX;
+  uint countTogo = (rDuration > 0) ? rDuration : UINT_MAX;
   int  countGone = 0;
   int  endYear = enddate.year();
   int  endDay  = enddate.dayOfYear();

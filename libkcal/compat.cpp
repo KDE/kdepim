@@ -24,6 +24,8 @@
 
 #include <qregexp.h>
 
+#include "incidence.h"
+
 using namespace KCal;
 
 Compat *CompatFactory::createCompat( const QString &productId )
@@ -52,6 +54,9 @@ Compat *CompatFactory::createCompat( const QString &productId )
         if ( versionNum < 30100 ) {
           compat = new CompatPre31;
         }
+        else if ( versionNum < 30200 ) {
+          compat = new CompatPre32;
+        }
       }
     }
   }
@@ -59,6 +64,24 @@ Compat *CompatFactory::createCompat( const QString &productId )
   if ( !compat ) compat = new Compat;
 
   return compat;
+}
+
+void Compat::fixRecurrence( Incidence *incidence )
+{
+  // Prevent use of compatibility mode during subsequent changes by the application
+  incidence->recurrence()->setCompatVersion();
+}
+
+void CompatPre32::fixRecurrence( Incidence *incidence )
+{
+  Recurrence* recurrence = incidence->recurrence();
+  if ( recurrence->doesRecur() != Recurrence::rNone  &&  recurrence->duration() > 0 ) {
+    // The recurrence has a specified number of repetitions.
+    // Pre-3.2, this was extended by the number of exception dates.
+    recurrence->setDuration( recurrence->duration() + incidence->exDates().count() );
+  }
+  // Call base class method now that everything else is done
+  Compat::fixRecurrence( incidence );
 }
 
 void CompatPre31::fixFloatingEnd( QDate &endDate )

@@ -25,6 +25,7 @@
 
 namespace KCal {
 
+class Incidence;
 class Compat;
 
 class CompatFactory
@@ -39,13 +40,20 @@ class Compat
     Compat() {};
     virtual ~Compat() {};
 
+    virtual void fixRecurrence( Incidence * );
     virtual void fixFloatingEnd( QDate & ) {}
 };
 
-class CompatPre31 : public Compat
+class CompatPre32 : public Compat
 {
   public:
-    void fixFloatingEnd( QDate & );
+    virtual void fixRecurrence( Incidence * );
+};
+
+class CompatPre31 : public CompatPre32
+{
+  public:
+    virtual void fixFloatingEnd( QDate & );
 };
 
 }

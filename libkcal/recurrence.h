@@ -67,8 +67,6 @@ class Recurrence
 
     /** Return the start of the recurrence */
     QDateTime recurStart() const   { return mRecurStart; }
-    /** Returns the number of exception dates for the recurrence */
-    int recurExDatesCount() const  { return mRecurExDatesCount; }
     /** Set start of recurrence, as a date and time. */
     void setRecurStart(const QDateTime &start);
     /** Set start of recurrence, as a date with no time.
@@ -93,8 +91,6 @@ class Recurrence
     /** Returns true if the recurrence is read-only, or false if it can be changed. */
     bool recurReadOnly() const  { return mRecurReadOnly; }
 
-    /** Set number of exception dates. */
-    void setRecurExDatesCount(int count) { if (count >= 0) mRecurExDatesCount = count; }
     /** Set the calendar file version for backwards compatibility.
      * @var version is the KOrganizer/libkcal version, e.g. 220 for KDE 2.2.0.
      * Specify version = 0 to cancel compatibility mode.
@@ -395,7 +391,6 @@ class Recurrence
     QDateTime mRecurStart;               // date/time of first recurrence
     bool mFloats;                        // the recurrence has no time, just a date
     bool mRecurReadOnly;
-    int  mRecurExDatesCount;             // number of recurrences (in addition to rDuration) which are excluded
     Feb29Type mFeb29YearlyType;          // how to handle yearly recurrences of February 29th
     static Feb29Type mFeb29YearlyDefaultType;  // default value for mFeb29YearlyType
 

@@ -286,9 +286,6 @@ void Incidence::setExDates(const DateList &exDates)
 {
   if (mReadOnly) return;
   mExDates = exDates;
-
-  recurrence()->setRecurExDatesCount(mExDates.count());
-
   updated();
 }
 
@@ -296,9 +293,6 @@ void Incidence::addExDate(const QDate &date)
 {
   if (mReadOnly) return;
   mExDates.append(date);
-
-  recurrence()->setRecurExDatesCount(mExDates.count());
-
   updated();
 }
 

@@ -1271,8 +1271,9 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
     incidence->setSyncStatus(kp.toInt());
   }
 
-  // Cancel backwards compatibility mode for subsequent changes by the application
-  incidence->recurrence()->setCompatVersion();
+  // Now that recurrence and exception stuff is completely set up,
+  // do any backwards compatibility adjustments.
+  mCompat->fixRecurrence( incidence );
 
   // add categories
   incidence->setCategories(categories);
