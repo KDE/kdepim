@@ -120,7 +120,7 @@ class Konnector : public QObject
       initiated. As response to this function a list of Syncees is delivered by
       the sync() signal.
 
-      @return False, if error occured while trying to start syncing, otherwise
+      @return False, if error occurred while trying to start syncing, otherwise
               true.
     */
 //    virtual bool startSync() = 0;

@@ -115,7 +115,7 @@ void DBRecordEditor::slotOk()
 		setFlag(fArchived, dlpRecAttrArchived);
 		rec->setAttrib(att);
 #undef setFlag
-		const CHexBuffer*buff=fRecordData->hexBuffer();
+		const CHexBuffer* buff=fRecordData->hexBuffer();
 		if (buff) rec->setData(buff->data(), buff->size());
 		KDialogBase::slotOk();
 	}

@@ -235,7 +235,7 @@ class CryptPlugWrapper;
   is NULL or holding a zero-length string it is up to you whether you want
   to add the relevant MIME header yourself, but since it in in the
   responsibility of the plugin implementors to provide you with all
-  neccessary 'Content-[..]' header information you should <b>not need</b>
+  necessary 'Content-[..]' header information you should <b>not need</b>
   to define them if they are not returned by the signing or encrypting
   function - otherwise this may be considered as a bug in the plugin and
   you could report the missing MIME header information to the address
@@ -381,7 +381,7 @@ class CryptPlugWrapper;
         // based on the values returned in structInf.
         // Note: We do _not_ insert line breaks between the parts since
         //       it is the plugin job to provide us with ready-to-use
-        //       texts containing all neccessary line breaks.
+        //       texts containing all necessary line breaks.
         strcpy( myMessageBody, structInf.data.plainTextPrefix );
         if( structInf.data.includeCleartext ) {
           strcat( myMessageBody, cleartext );
@@ -484,7 +484,7 @@ public:
         SigStatus_BAD_POLICY  = SigStat_BAD_POLICY,
         SigStatus_SYS_ERROR   = SigStat_SYS_ERROR,
 
-        SigStatus_NUMERICAL_CODE = 0x8000 /* An other error occured. */
+        SigStatus_NUMERICAL_CODE = 0x8000 /* An other error occurred. */
     };
     typedef unsigned long SigStatusFlags;
 
@@ -501,7 +501,7 @@ public:
         but just stores some information for later use.
 
         \note Since more than one crypto plug-in might be specified (using
-              multiple instances of the warpper class) it is neccessary to
+              multiple instances of the warpper class) it is necessary to
               set \c active at least one them. Only wrappers that have been
               activated may be initialized or configured or used to perform
               crypto actions.
@@ -530,7 +530,7 @@ public:
         \brief Destructor of CRYPTPLUG wrapper class.
 
         This destructor <b>does</b> call the deinitialize() method in case
-        this was not done by explicitely calling it before.
+        this was not done by explicitly calling it before.
 
         \sa deinitialize, initialize, CryptPlugWrapper(), setActive, active
         \sa
@@ -541,7 +541,7 @@ public:
         \brief Set this CRYPTPLUG wrapper's internal \c active flag.
 
         Since more than one crypto plug-in might be specified (using
-        multiple instances of the warpper class) it is neccessary to
+        multiple instances of the warpper class) it is necessary to
         set \c active at least one them. Only wrappers that have been
         activated may be initialized or configured or used to perform
         crypto actions.

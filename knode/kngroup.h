@@ -171,7 +171,6 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
 
       public:
         dynDataVer1()     { id=-1; idRef=-1; read=0; thrLevel=0; score=0, ignoredWatched=0; }
-        ~dynDataVer1()    {}
         void setData(KNRemoteArticle *a);
         void getData(KNRemoteArticle *a);
 

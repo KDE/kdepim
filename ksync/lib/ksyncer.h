@@ -145,13 +145,13 @@ class KSyncee
     /**
       Load the data set from the file with them name @ref filename().
       
-      @return true, if loading is successfull, otherwise false.
+      @return true, if loading is successful, otherwise false.
     */
     bool load();
     /**
       Save the data set to the file with them name @ref filename().
       
-      @return true, if loading is successfull, otherwise false.
+      @return true, if loading is successful, otherwise false.
     */
     bool save();
 
@@ -160,7 +160,7 @@ class KSyncee
       This function has to be reimplemented by concrete subclasses to provide
       the actual reading from disk.
 
-      @return true, if reading is successfull, otherwise false.
+      @return true, if reading is successful, otherwise false.
     */
     virtual bool read() = 0;
     /**
@@ -168,7 +168,7 @@ class KSyncee
       This function has to be reimplemented by concrete subclasses to provide
       the actual writing to disk.
 
-      @return true, if writing is successfull, otherwise false.
+      @return true, if writing is successful, otherwise false.
     */
     virtual bool write() = 0;
 

@@ -31,7 +31,7 @@ class SyncEntry;
   The SyncUiKDEPlugin is similiar to the
   plugin(s) found in RenameDlg of KDE
   in KIO::RenameDlg the mimetype get's determined
-  and an approriate Plugin gets loaded.
+  and an appropriate Plugin gets loaded.
   SyncUIKDE differs because it loads for each
   source and destination a plugin.
 */

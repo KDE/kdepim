@@ -533,7 +533,7 @@ void kio_sieveProtocol::put(const KURL& url, int /*permissions*/, bool /*overwri
 	else {
 		/* The managesieve server parses received scripts and rejects
 		 * scripts which are not syntactically correct. Here we expect
-		 * to recieve a message detailing the error (only the first
+		 * to receive a message detailing the error (only the first
 		 * error is reported. */
 		if (r.getAction().length() > 3) {
 			// make a copy of the extra info

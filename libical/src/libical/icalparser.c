@@ -339,7 +339,7 @@ char* icalparser_get_next_value(char* line, char **end, icalvalue_kind kind)
 	    } 
 	}
 
-	/* If the comma is preceeded by a '\', then it is a literal and
+	/* If the comma is preceded by a '\', then it is a literal and
 	   not a value seperator*/  
       
 	if ( (next!=0 && *(next-1) == '\\') ||

@@ -29,7 +29,7 @@
 /*
  
   icaldirset manages a database of ical components and offers
-  interfaces for reading, writting and searching for components.
+  interfaces for reading, writing and searching for components.
 
   icaldirset groups components in to clusters based on their DTSTAMP
   time -- all components that start in the same month are grouped

@@ -93,7 +93,7 @@ public:
     ///  Item has been unselected.
     Unselected      = 4096,
     
-    ///  Changes may occured but the types are unknown
+    ///  Changes may occurred but the types are unknown
     Unknown         = 8192,
 
     ///  Relation between two subitems has been added

@@ -37,7 +37,7 @@ public:
 	int getId() const {return _id;}
 
 	/**
-	 * Return a string representation of this (for debuging purposes only)
+	 * Return a string representation of this (for debugging purposes only)
 	 * @return a string representation
 	 */
 	virtual QString toString() const;

@@ -86,7 +86,7 @@ MainWindow::MainWindow()
   connect( _taskView, SIGNAL( tasksChanged( QPtrList<Task> ) ),
                       _tray, SLOT( updateToolTip( QPtrList<Task> ) ));
 
-  // FIXME: this shouldnt stay. We need to check whether the
+  // FIXME: this shouldn't stay. We need to check whether the
   // file exists and if not, create a blank one and ask whether
   // we want to add a task.
   _taskView->load();

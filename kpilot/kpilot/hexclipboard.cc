@@ -52,9 +52,9 @@ static const uchar *base64DecodeTable( void )
     for( i = 'A'; i <= 'Z'; i++ ) { table[i] = 0 + (i - 'A'); }
     for( i = 'a'; i <= 'z'; i++ ) { table[i] = 26 + (i - 'a'); }
     for( i = '0'; i <= '9'; i++ ) { table[i] = 52 + (i - '0'); }
-    table['+'] = 62;
-    table['/'] = 63;
-    table['='] = 0;
+    table[(unsigned char) '+'] = 62;
+    table[(unsigned char) '/'] = 63;
+    table[(unsigned char) '='] = 0;
     init  = true;
   } 
   return( table );

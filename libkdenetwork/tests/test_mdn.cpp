@@ -127,7 +127,7 @@ int main( int argc, char * argv[] ) {
       break;
 
     default:
-      usage( "unkown option encountered!" );
+      usage( "unknown option encountered!" );
     }
   }
 

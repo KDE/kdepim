@@ -62,7 +62,7 @@ KShareFileModule::~KShareFileModule()
 }
 /*
  * We want to manage a new file
- * Check if allready have it our cache
+ * Check if already have it our cache
  * and if not insert it
  */
 void KShareFileModule::interestedIn(const QString &fileName )

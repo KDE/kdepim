@@ -48,7 +48,7 @@ icalvalue_kind icalparameter_value_to_value_kind(icalparameter_value value);
 struct icalparameter_impl* icalparameter_new_impl(icalparameter_kind kind);
 
 /* This map associates each of the parameters with the string
-   representation of the paramter's name */
+   representation of the parameter's name */
 struct icalparameter_kind_map {
     icalparameter_kind kind;
     char *name;

@@ -290,9 +290,9 @@ enum {
     SigStat_CRL_MISSING = 0x0100,   /* CRL not available. */
     SigStat_CRL_TOO_OLD = 0x0200,   /* Available CRL is too old. */
     SigStat_BAD_POLICY  = 0x0400,   /* A policy was not met. */
-    SigStat_SYS_ERROR   = 0x0800,   /* A system error occured. */
+    SigStat_SYS_ERROR   = 0x0800,   /* A system error occurred. */
 
-    SigStat_NUMERICAL_CODE = 0x8000 /* An other error occured. */
+    SigStat_NUMERICAL_CODE = 0x8000 /* An other error occurred. */
 };
 typedef unsigned long SigStatusFlags;
 
@@ -1134,7 +1134,7 @@ bool certificateValidity( const char* certificate, int* level );
    is NULL or holding a zero-length string it is up to you whether you want
    to add the relevant MIME header yourself, but since it in in the
    responsibility of the plugin implementors to provide you with all
-   neccessary 'Content-[..]' header information you should <b>not need</b>
+   necessary 'Content-[..]' header information you should <b>not need</b>
    to define them if they are not returned by the signing or encrypting
    function - otherwise this may be considered as a bug in the plugin and
    you could report the missing MIME header information to the address
@@ -1280,7 +1280,7 @@ bool certificateValidity( const char* certificate, int* level );
         // based on the values returned in structInf.
         // Note: We do _not_ insert line breaks between the parts since
         //       it is the plugin job to provide us with ready-to-use
-        //       texts containing all neccessary line breaks.
+        //       texts containing all necessary line breaks.
         strcpy( myMessageBody, structInf.plainTextPrefix );
         if( structInf.includeCleartext ) {
           strcat( myMessageBody, cleartext );
@@ -1349,7 +1349,7 @@ struct StructuringInfo {
                                   \c makeMimeObject or \c makeMultiMime
                                   is FALSE) */
   char* contentDispVersion;  /*!< 'Content-Disposition' of the additional
-                                  preceeding the code part (only valid if
+                                  preceding the code part (only valid if
                                   \c contentTypeVersion holds a
                                   non-zero-length string)<br>
                                   (ignore this parameter if either

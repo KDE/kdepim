@@ -920,7 +920,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
   }
 #endif
 
-      case ICAL_RELATEDTO_PROPERTY:  // releated event (parent)
+      case ICAL_RELATEDTO_PROPERTY:  // related event (parent)
         event->setRelatedToUid(QString::fromUtf8(icalproperty_get_relatedto(p)));
         mEventsRelate.append(event);
         break;

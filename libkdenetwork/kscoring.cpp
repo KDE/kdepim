@@ -158,7 +158,7 @@ ActionBase* ActionBase::factory(int type, QString value)
     case NOTIFY:   return new ActionNotify(value);
     case COLOR:    return new ActionColor(value);
   default:
-    kdWarning(5100) << "unkown type " << type << " in ActionBase::factory()" << endl;
+    kdWarning(5100) << "unknown type " << type << " in ActionBase::factory()" << endl;
     return 0;
   }
 }
@@ -170,7 +170,7 @@ QString ActionBase::userName(int type)
     case NOTIFY:   return i18n("Display Message");
     case COLOR:    return i18n("Colorize Header");
   default:
-    kdWarning(5100) << "unkown type " << type << " in ActionBase::userName()" << endl;
+    kdWarning(5100) << "unknown type " << type << " in ActionBase::userName()" << endl;
     return 0;
   }
 }
@@ -193,7 +193,7 @@ int ActionBase::getTypeForUserName(const QString& name)
   else if (name == userName(NOTIFY)) return NOTIFY;
   else if (name == userName(COLOR)) return COLOR;
   else {
-    kdWarning(5100) << "unkown type string " << name
+    kdWarning(5100) << "unknown type string " << name
                     << " in ActionBase::getTypeForUserName()" << endl;
     return -1;
   }
@@ -400,7 +400,7 @@ int KScoringExpression::getConditionForName(const QString& s)
   else if (s == getNameForCondition(SMALLER)) return SMALLER;
   else if (s == getNameForCondition(GREATER)) return GREATER;
   else {
-    kdWarning(5100) << "unkown condition name " << s
+    kdWarning(5100) << "unknown condition name " << s
                     << " in KScoringExpression::getConditionForName()" << endl;
     return -1;
   }

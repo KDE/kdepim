@@ -22,7 +22,7 @@
 
 /*
  since it is not clear yet, how the connection notification is done,
- not really usefull yet and these part are not yet in.
+ not really useful yet and these part are not yet in.
 */
 
 #ifndef KSYNC_SYSTEMTRAY_H

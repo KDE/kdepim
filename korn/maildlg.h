@@ -42,7 +42,7 @@ public:
 	KornMailDlg( QWidget *parent=0 );
 
 	/**
-	 * Set the mail details to show. The mails body is transfered to the edit controll
+	 * Set the mail details to show. The mails body is transfered to the edit control
 	 * and the "Full Message" button is enabled, if the mail body is not available and
 	 * if the mailbox can load the mail fully.
 	 * @param mailDrop maibox which can load the mesage fully

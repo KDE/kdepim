@@ -161,7 +161,7 @@ void FilterPMail::importMailFolder(const QString& file)
          tempfile = new KTempFile;
          state = 1;
          inf->setCurrent(i18n("Message %1").arg(n++));
-         // fall throught
+         // fall through
 
       // inside a message state
       case 1:

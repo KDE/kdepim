@@ -37,7 +37,7 @@ k_dcop:
      * @param name the name (title) of the new note, if it is empty,
      *        KNotes will choose an appropriate name
      * @param text the body of the new note
-     * @return the new notes' id or -1 if an error occured
+     * @return the new notes' id or -1 if an error occurred
      */
     virtual int newNote( QString name = QString::null,
                          const QString& text = QString::null ) = 0;

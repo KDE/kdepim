@@ -25,7 +25,7 @@ libdocconduit_la_LIBADD = ../../lib/libkpilot.la libpalmdoc_shared.la
 ##libpalmdoc_shared.la
 
 kpalmdoc_SOURCES = kpalmdoc_dlgbase.ui kpalmdoc_dlg.cc kpalmdoc.cpp
-kpalmdoc_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../../lib 
+kpalmdoc_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kpalmdoc_LDADD = $(LIB_KFILE) $(PISOCK_LIB) ../../lib/libkpilot.la libpalmdoc_shared.la
 
 appsdir = $(kde_appsdir)/Utilities

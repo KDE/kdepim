@@ -102,18 +102,31 @@ bool TodoSyncEntry::equals(SyncEntry* entry )
     return true;
 }
 
-/* merging hell! */
-namespace {
-    typedef MergeBase<Todo, TodoSyncee> MergeTodo;
-    static MergeTodo* mergeMap = 0l;
-    static KStaticDeleter<MergeTodo> deleter;
+typedef MergeBase<Todo, TodoSyncee> MergeTodo;
+static MergeTodo* mergeMap = 0l;
+static KStaticDeleter<MergeTodo> deleter;
 
-    void mergeDue( Todo* const, const Todo* const );
-    void mergeStart( Todo* const, const Todo* const );
-    void mergeComp( Todo* const, const Todo* const );
-    void mergePer( Todo* const, const Todo* const );
+static void mergeDue( Todo* const dest, const Todo* const src)
+{
+     dest->setDtDue( src->dtDue() );
+}
 
-    MergeTodo* mapTo() {
+static void mergeStart( Todo* const dest, const Todo* const src)
+{
+     dest->setHasStartDate( src->hasStartDate() );
+}
+
+static void mergeComp( Todo* const dest, const Todo* const src)
+{
+     dest->setCompleted( src->isCompleted() );
+}
+
+static void mergePer( Todo* const dest, const Todo* const src)
+{
+     dest->setPercentComplete( src->percentComplete() );
+}
+
+static MergeTodo* mapTo() {
         if (!mergeMap ) {
             deleter.setObject( mergeMap, new MergeTodo );
 
@@ -123,8 +136,6 @@ namespace {
             mergeMap->add( TodoSyncee::Percent, mergePer );
         }
         return mergeMap;
-    }
-
 }
 
 bool TodoSyncEntry::mergeWith( SyncEntry* entry )
@@ -174,24 +185,4 @@ QString TodoSyncee::newId() const
     return KCal::CalFormat::createUniqueId();
 }
 
-namespace {
-    void mergeDue( Todo* const dest, const Todo* const src)
-    {
-        dest->setDtDue( src->dtDue() );
-    }
-    
-    void mergeStart( Todo* const dest, const Todo* const src)
-    {
-        dest->setHasStartDate( src->hasStartDate() );
-    }
 
-    void mergeComp( Todo* const dest, const Todo* const src)
-    {
-        dest->setCompleted( src->isCompleted() );
-    }
-    
-    void mergePer( Todo* const dest, const Todo* const src)
-    {
-        dest->setPercentComplete( src->percentComplete() );
-    }
-}

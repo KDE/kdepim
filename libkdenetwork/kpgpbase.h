@@ -78,7 +78,7 @@ public:
   virtual int signKey(const KeyID& , const char *) { return OK; };
 
 
-  /** Returns an error message if an error occured during the last
+  /** Returns an error message if an error occurred during the last
       operation. */
   virtual QString lastErrorMessage() const;
 

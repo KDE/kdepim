@@ -47,14 +47,14 @@ class CalendarLocal : public Calendar
     /**
       Loads a calendar on disk in vCalendar or iCalendar format into the current
       calendar. Any information already present is lost.
-      @return true, if successfull, false on error.
+      @return true, if successful, false on error.
       @param fileName the name of the calendar on disk.
     */
     bool load( const QString &fileName );
     /**
       Writes out the calendar to disk in the specified \a format.
       CalendarLocal takes ownership of the CalFormat object.
-      @return true, if successfull, false on error.
+      @return true, if successful, false on error.
       @param fileName the name of the file
     */
     bool save( const QString &fileName, CalFormat *format = 0 );

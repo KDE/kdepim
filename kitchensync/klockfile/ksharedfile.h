@@ -57,7 +57,7 @@ class KSharedFile : public QObject, public DCOPObject
   
   /** 
    * this function is for convience 
-   * it does the same a above but takes a file as paramter
+   * it does the same a above but takes a file as parameter
    * @param file The file to be shared.
    */
   KSharedFile( const QFile &file );

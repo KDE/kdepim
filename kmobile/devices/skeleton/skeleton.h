@@ -45,7 +45,7 @@ public:
     bool isReadOnly() const;
 
     // you may provide your own icon() implementation to display
-    // an appropiate Pixmap (e.g. a Palm Pilot or a Zaurus image).
+    // an appropriate Pixmap (e.g. a Palm Pilot or a Zaurus image).
     QString iconFileName() const;
 
     QString deviceUniqueID();

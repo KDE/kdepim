@@ -323,7 +323,7 @@ void ExchangeUpload::slotPatchResult( KIO::Job* job )
 
   // Either we have a "201 Created" (if a new event has been created) or 
   // we have a "200 OK" (if an existing event has been altered), 
-  // or else an error has occured ;)
+  // or else an error has occurred ;)
   QDomElement status = response.documentElement().namedItem( "response" ).namedItem( "status" ).toElement();
   QDomElement propstat = response.documentElement().namedItem( "response" ).namedItem( "propstat" ).namedItem( "status" ).toElement();
   kdDebug() << "status: " << status.text() << endl;

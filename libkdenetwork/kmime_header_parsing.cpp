@@ -376,7 +376,7 @@ bool parseGenericQuotedString( const char* & scursor, const char * const send,
       // not part of Unix Line-ending conventions.
       // But I see a problem if we are given Unix-native
       // line-ending-mails, where we cannot determine anymore
-      // whether a given '\n' was part of a CRLF or was occuring
+      // whether a given '\n' was part of a CRLF or was occurring
       // on it's own.
       READ_ch_OR_FAIL;
       if ( ch != '\n' ) {

@@ -81,7 +81,7 @@ public:
 
     /** registers a konnector to with a Device
      *  @param Device will load the Device
-     *  @return returns a unique id or QString::null if a failure occured
+     *  @return returns a unique id or QString::null if a failure occurred
      */
     QString registerKonnector(const Device &device );
 

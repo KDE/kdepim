@@ -12,7 +12,7 @@ class QTimer;
  #include <X11/extensions/scrnsaver.h>
 #endif // HAVE_LIBXSS
 
-// Seconds per minutes - usefull for speeding debugging up!
+// Seconds per minutes - useful for speeding debugging up!
 const int secsPerMinute = 60;
 
 // Minutes between each idle overrun test.
@@ -36,7 +36,7 @@ public:
   /**
      Returns true if it is possible to do idle detection.
      Idle detection relys on a feature in the X server, which might not
-     allways be present.
+     always be present.
   **/
   bool isIdleDetectionPossible();
 

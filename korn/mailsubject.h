@@ -126,7 +126,7 @@ public:
 	const int getDate() const {return _date;}
 
 	/**
-	 * Return a string representation of this (for debuging purposes only)
+	 * Return a string representation of this (for debugging purposes only)
 	 * @return a string representation
 	 */
 	QString toString() const;

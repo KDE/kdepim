@@ -124,8 +124,8 @@ class Content : public Base {
     bool forceDefaultCS()         {  return f_orceDefaultCS; }
 
     // enables/disables the force mode, housekeeping.
-    // works correctly only when the article is completly empty or
-    // completly loaded
+    // works correctly only when the article is completely empty or
+    // completely loaded
     virtual void setForceDefaultCS(bool b);
 
 

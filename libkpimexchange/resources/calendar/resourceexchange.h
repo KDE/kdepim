@@ -79,7 +79,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     /**
       Writes out the calendar to disk in the specified \a format.
       ExchangeCalendar takes ownership of the CalFormat object.
-      @return true, if successfull, false on error.
+      @return true, if successful, false on error.
       @param fileName the name of the file
     */
 //    bool save( const QString &fileName, CalFormat *format = 0 );

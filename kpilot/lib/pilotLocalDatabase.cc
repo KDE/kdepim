@@ -181,7 +181,7 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 	fCurrentRecord=0;
 	fPendingRec=0;
 
-	// TODO: Do I have to open it explicitely???
+	// TODO: Do I have to open it explicitly???
 	setDBOpen(true);
 	return true;
 }

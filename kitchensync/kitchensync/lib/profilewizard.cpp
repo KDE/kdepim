@@ -80,7 +80,7 @@ Profile ProfileWizard::profile() const
         prof = m_prof;
 
     prof.setName( m_intro->lneName->text() );
-    prof.setManParts( m_choo->choosen() );
+    prof.setManParts( m_choo->chosen() );
     return prof;
 }
 

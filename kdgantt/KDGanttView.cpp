@@ -2885,7 +2885,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
 */
 QDomDocument KDGanttView::saveXML( bool withPI ) const
 {
-    // Create an inital DOM document
+    // Create an initial DOM document
     QString docstart = "<GanttView/>";
 
  QDomDocument doc( "GanttView" );

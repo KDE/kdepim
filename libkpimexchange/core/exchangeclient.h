@@ -74,7 +74,7 @@ class ExchangeClient : public QObject {
                                 means that a SEARCH did not result in anything like an appointment */
       IllegalAppointmentError, /** Reading appointment data from server response failed */
       NonEventError, /** The Incidence that is to be uplaoded to the server is not an Event */
-      EventWriteError, /** When writing an event to the server, an error occured */
+      EventWriteError, /** When writing an event to the server, an error occurred */
       DeleteUnknownEventError /** The event to be deleted does not exist on the server */
     };
 

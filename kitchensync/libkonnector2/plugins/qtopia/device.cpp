@@ -88,7 +88,7 @@ QBitArray Device::opieAddr() const{
     ar[AddressBookSyncee::HomeNumbers] = true;
     ar[AddressBookSyncee::OfficeNumbers] = true;
     ar[AddressBookSyncee::Messenger ] = false;
-    ar[AddressBookSyncee::PreferedNumber ] = false;
+    ar[AddressBookSyncee::PreferredNumber ] = false;
     ar[AddressBookSyncee::Voice ] = false;
     ar[AddressBookSyncee::Fax ] = false;
     ar[AddressBookSyncee::Cell ] = false;

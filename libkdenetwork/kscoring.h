@@ -293,7 +293,7 @@ class KScoringManager : public QObject
   KScoringManager();
   virtual ~KScoringManager();
 
-  //* returns a list of all available groups, must be overriden
+  //* returns a list of all available groups, must be overridden
   virtual QStringList getGroups() const =0;
 
   //! returns a list of common (or available) headers

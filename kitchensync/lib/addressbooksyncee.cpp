@@ -139,7 +139,7 @@ namespace {
     void mergeHomeTel   ( KABC::Addressee&, const KABC::Addressee& );
     void mergeOffTel    ( KABC::Addressee&, const KABC::Addressee& );
     void mergeMessenger ( KABC::Addressee&, const KABC::Addressee& );
-    void mergePreferedNumber( KABC::Addressee&, const KABC::Addressee& );
+    void mergePreferredNumber( KABC::Addressee&, const KABC::Addressee& );
     void mergeVoice     ( KABC::Addressee&, const KABC::Addressee& );
     void mergeFax       ( KABC::Addressee&, const KABC::Addressee& );
     void mergeCell      ( KABC::Addressee&, const KABC::Addressee& );
@@ -187,7 +187,7 @@ namespace {
             mergeMap->insert(AddressBookSyncee::HomeNumbers, mergeHomeTel );
             mergeMap->insert(AddressBookSyncee::OfficeNumbers, mergeOffTel );
             mergeMap->insert(AddressBookSyncee::Messenger, mergeMessenger );
-            mergeMap->insert(AddressBookSyncee::PreferedNumber, mergePreferedNumber );
+            mergeMap->insert(AddressBookSyncee::PreferredNumber, mergePreferredNumber );
             mergeMap->insert(AddressBookSyncee::Voice, mergeVoice );
             mergeMap->insert(AddressBookSyncee::Fax, mergeFax );
             mergeMap->insert(AddressBookSyncee::Cell, mergeCell );
@@ -473,7 +473,7 @@ namespace {
     void mergeMessenger ( KABC::Addressee& entry, const KABC::Addressee& other) {
         entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Msg ) );
     }
-    void mergePreferedNumber( KABC::Addressee& entry, const KABC::Addressee& other) {
+    void mergePreferredNumber( KABC::Addressee& entry, const KABC::Addressee& other) {
         entry.insertPhoneNumber( other.phoneNumber( KABC::PhoneNumber::Pref ) );
     }
     void mergeVoice     ( KABC::Addressee& entry, const KABC::Addressee& other) {

@@ -98,7 +98,7 @@ public:
 	     from the end of @p str.
       @param global If @p TRUE, requests to replace all occurences
              of the regexp with @p replacementStr; if @p FALSE,
-	     only the first occurence will be replaced.
+	     only the first occurrence will be replaced.
 	     Equivalent to the /g switch to perl's s/// operator.
       @return The modified string.
   */

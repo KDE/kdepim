@@ -32,7 +32,7 @@
 
 /********************** Server (Reciever) Interfaces *************************/
 
-/* On the server side, the caller will recieve data from the incoming
+/* On the server side, the caller will receive data from the incoming
    socket and pass it to icalcstps_next_input. The caller then takes
    the return from icalcstps_next_outpu and sends it out through the
    socket. This gives the caller a point of control. If the cstp code

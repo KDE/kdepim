@@ -103,7 +103,7 @@ KonnectorProfile KonnectorWizard::profile() const
 /*
  * let's add some pages
  * and make the Configure widget be kewl
- * basicly we need to recreate it on
+ * basically we need to recreate it on
  *
  */
 void KonnectorWizard::initUI()

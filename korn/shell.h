@@ -61,12 +61,12 @@ public slots:
         void optionDlg();
 
 	/**
-	 * Called if the menu item "Re-Check" was choosen.
+	 * Called if the menu item "Re-Check" was chosen.
 	 */
         void reCheck();
 
 	/**
-	 * Called if the menu item "Read Subjects" was choosen.
+	 * Called if the menu item "Read Subjects" was chosen.
 	 */
         void readSubjects();
         void help();

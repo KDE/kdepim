@@ -232,7 +232,7 @@ public:
   /** clears everything from memory */
   void clear(const bool erasePassPhrase = FALSE);
 
-  /** returns the last error that occured */
+  /** returns the last error that occurred */
   const QString lastErrorMsg(void) const;
 
   // what version of PGP/GPG should we use

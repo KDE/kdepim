@@ -70,7 +70,7 @@ void ProfileWizardChooserImpl::init( const ManPartService::ValueList& lst,
     }
 }
 
-ManPartService::ValueList ProfileWizardChooserImpl::choosen()const {
+ManPartService::ValueList ProfileWizardChooserImpl::chosen()const {
     ManPartService::ValueList list;
     QListViewItemIterator it( KListView3 );
     ProfileCheckItem* item;

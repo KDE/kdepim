@@ -88,7 +88,7 @@ class AddressBookSyncee : public Syncee
         HomeNumbers,
         OfficeNumbers,
         Messenger,
-        PreferedNumber,
+        PreferredNumber,
         Voice,
         Fax,
         Cell,

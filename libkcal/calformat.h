@@ -70,7 +70,7 @@ class CalFormat {
     void clearException();
     /**
       Return exception, if there is any, containing information about the last
-      error that occured.
+      error that occurred.
     */
     ErrorFormat *exception();
 

@@ -496,7 +496,7 @@ Key*
 BaseG::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
 // This function parses the data for a single key which is output by GnuPG
 // with the following command line arguments:
-//   --batch --list-public-keys --with-fingerprint --with-colons \
+//   --batch --list-public-keys --with-fingerprint --with-colons
 //   --fixed-list-mode [--no-expensive-trust-checks]
 // It expects the key data to start at offset and returns the start of
 // the next key's data in offset.

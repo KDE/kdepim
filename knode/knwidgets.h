@@ -48,7 +48,7 @@ class KNListBoxItem : public QListBoxItem  {
 //====================================================================================
 
 
-/** a list box which ignores Enter, usefull for dialogs */
+/** a list box which ignores Enter, useful for dialogs */
 class KNDialogListBox : public QListBox
 {
    public:

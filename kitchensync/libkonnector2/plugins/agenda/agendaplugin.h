@@ -20,7 +20,7 @@ namespace KSync {
         /**
          * @param parent the Parent Object
          * @param name the name
-         * @param strlist a QStringList which is not used but neccessary for KGenericFactory
+         * @param strlist a QStringList which is not used but necessary for KGenericFactory
          */
         AgendaPlugin( QObject*, const char*, const QStringList = QStringList() );
         ~AgendaPlugin();

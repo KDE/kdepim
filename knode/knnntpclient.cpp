@@ -489,7 +489,7 @@ void KNNntpClient::doPostArticle()
 
     if (rep==223) {   // 223 n <a> article retrieved - request text separately
       #ifndef NDEBUG
-      qDebug("knode: STAT successfull, we have probably already sent this article.");
+      qDebug("knode: STAT successful, we have probably already sent this article.");
       #endif
       return;       // the article is already on the server, lets put it silently into the send folder
     }

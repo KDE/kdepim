@@ -509,7 +509,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
       ts << art->id() << ' ';
       ts << art->lines()->numberOfLines() << ' ';
       ts << art->date()->unixTime() << ' ';
-      ts << "1\n";       // version number to achieve backward compability easily
+      ts << "1\n";       // version number to achieve backward compatibility easily
 
       ts << art->articleNumber() << '\n';
 

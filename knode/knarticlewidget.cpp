@@ -368,7 +368,7 @@ bool KNArticleWidget::eventFilter(QObject *o, QEvent *e)
 {
   if ((e->type() == QEvent::KeyPress) && (static_cast<QKeyEvent*>(e)->key() == Key_Tab)) {
     emit(focusChangeRequest(this));
-    if (!hasFocus())  // focusChangeRequest was successfull
+    if (!hasFocus())  // focusChangeRequest was successful
       return true;
   }
   return KTextBrowser::eventFilter(o, e);

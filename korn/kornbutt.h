@@ -77,7 +77,7 @@ class KornButton: public QToolButton
 
 /** this class sets a head on top the buttons
  * which display the box monitors
- * This is usefull, if the last monitor is erased
+ * This is useful, if the last monitor is erased
  * to provide a clickable widget and a describing relation
  * to the buttons below
  */

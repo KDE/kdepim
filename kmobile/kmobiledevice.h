@@ -147,7 +147,7 @@ public:
     enum ClassType classType() const;
 
     // you may provide your own icon() implementation to display
-    // an appropiate Pixmap (e.g. a Palm Pilot or a Zaurus image).
+    // an appropriate Pixmap (e.g. a Palm Pilot or a Zaurus image).
     virtual QString iconFileName() const;
 
     // the default Icon set

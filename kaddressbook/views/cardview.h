@@ -317,7 +317,7 @@ class CardView : public QScrollView
     * which is 80. It is currently not checked, so setting a value greater than 40
     * will probably mean a crash in the items painting routine.
     * @private Note: I looked for a value in QStyle::PixelMetric to use, but I could
-    * not see a usefull one. One may turn up in a future version of Qt.
+    * not see a useful one. One may turn up in a future version of Qt.
     */
     uint itemMargin();
 
@@ -330,7 +330,7 @@ class CardView : public QScrollView
     * column, between the items and column separators if drawn, and between
     * the items and the borders of the widget. The default value is set to
     * 10.
-    * @private Note: There is no usefull QStyle::PixelMetric to use for this atm.
+    * @private Note: There is no useful QStyle::PixelMetric to use for this atm.
     * An option would be using KDialog::spacingHint().
     */
     uint itemSpacing();

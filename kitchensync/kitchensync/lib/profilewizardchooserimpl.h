@@ -39,7 +39,7 @@ namespace KSync {
         void init( const ManPartService::ValueList& lst );
         void init( const ManPartService::ValueList& lst,
                    const ManPartService::ValueList& lst2 );
-        ManPartService::ValueList choosen()const;
+        ManPartService::ValueList chosen() const;
     private:
         void initListView( const ManPartService::ValueList& );
     };

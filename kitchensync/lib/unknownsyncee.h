@@ -32,7 +32,7 @@ namespace KSync {
 /**
   UnknownSyncEntry is if a Konnector was requested
   to download a file and is unable to convert.
-  Basicly the UnknownSyncEntry either holds the
+  Basically the UnknownSyncEntry either holds the
   fileName and the tempName or the ByteArray.
 */
 class UnknownSyncEntry : public SyncEntry
