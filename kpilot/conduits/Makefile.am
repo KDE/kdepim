@@ -13,6 +13,7 @@ endif
 
 SUBDIRS = expense \
 	abbrowserconduit \
+	docconduit \
 	knotes \
 	null \
 	popmail \
