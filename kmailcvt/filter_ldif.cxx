@@ -78,6 +78,7 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
    QString empty;
 
    QTextStream t( &f );
+   t.setEncoding(QTextStream::Latin1);
    QString s, completeline, fieldname;
 
    // We need this for calculating progress
@@ -109,14 +110,16 @@ writeData:
 				numEntries++;
 				a->insertAddress(*addr);
 				addContact(*a);
-				delete a;
-				delete addr;
-				a = new KABC::Addressee();
-				addr = new KABC::Address();
 			}
    		} else {
 			info->addLog(i18n("Warning: List data is being ignored."));
    		}
+
+		// delete old and create a new empty entry
+		delete a;
+		delete addr;
+		a = new KABC::Addressee();
+		addr = new KABC::Address();
 
 		isGroup = false;
 		lastWasComment = false;
@@ -160,7 +163,7 @@ writeData:
 	lastWasComment = false;
 
 	if (fieldname == "givenname")
-		{ a->setFormattedName(s); continue; }
+		{ a->setGivenName(s); continue; }
 
 	if (fieldname == "xmozillanickname")
 		{ a->setNickName(s); continue; }
@@ -189,7 +192,10 @@ writeData:
 	if (fieldname == "homeurl")
 		{ a->setUrl(s); continue; }
 
-	if (fieldname == "homephone" || fieldname == "telephonenumber")
+	if (fieldname == "homephone")
+		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Home ) ); continue; }
+	
+	if (fieldname == "telephonenumber")
 		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Voice ) ); continue; }
 
 	if (fieldname == "postalcode")
