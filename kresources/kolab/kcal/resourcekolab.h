@@ -34,6 +34,8 @@
 #ifndef KCAL_RESOURCEKOLAB_H
 #define KCAL_RESOURCEKOLAB_H
 
+#include <qtimer.h>
+
 #include <libkcal/calendarlocal.h>
 #include <libkcal/resourcecalendar.h>
 #include "../shared/resourcekolabbase.h"
@@ -118,6 +120,9 @@ public:
   
   KABC::Lock* lock();
 
+protected slots:
+   void slotEmitResourceChanged();
+
 private:
   void addIncidence( const char* mimetype, const QString& xml,
                      const QString& subResource, Q_UINT32 sernum );
@@ -164,6 +169,8 @@ private:
   Kolab::ResourceMap mEventSubResources, mTodoSubResources, mJournalSubResources;
 
   bool mOpen; // If the resource is open, this is true
+  QDict<KCal::IncidenceBase> mPendingUpdates;
+  QTimer mResourceChangedTimer;
 };
 
 }
