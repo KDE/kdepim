@@ -43,7 +43,7 @@
 #include <kmessagebox.h>
 #include <kprinter.h>
 #include <kprotocolinfo.h>
-#include <kresources/resourceselectdialog.h>
+#include <kresources/selectdialog.h>
 #include <kstandarddirs.h>
 #include <ktempfile.h>
 #include <kxmlguiclient.h>
@@ -223,7 +223,7 @@ KABC::Resource *KABCore::requestResource( QWidget *parent )
     }
   }
 
-  KRES::Resource *res = KRES::ResourceSelectDialog::getResource( kresResources, parent );
+  KRES::Resource *res = KRES::SelectDialog::getResource( kresResources, parent );
   return static_cast<KABC::Resource*>( res );
 }
 
@@ -590,7 +590,7 @@ void KABCore::newContact()
     }
   }
 
-  KRES::Resource *res = KRES::ResourceSelectDialog::getResource( kresResources, this );
+  KRES::Resource *res = KRES::SelectDialog::getResource( kresResources, this );
   resource = static_cast<KABC::Resource*>( res );
 
   if ( resource ) {

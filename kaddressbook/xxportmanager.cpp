@@ -26,7 +26,6 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kresources/resourceselectdialog.h>
 #include <ktrader.h>
 
 #include "kabcore.h"
