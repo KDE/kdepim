@@ -56,8 +56,6 @@ Kleo::ProgressDialog::ProgressDialog( Job * job, const QString & baseText,
   setLabelText( baseText );
   setProgress( 0, 0 ); // activate busy indicator
 
-  connect( job, SIGNAL(progress(const QString&,int,int,int)),
-	   SLOT(slotProgress(const QString&,int,int,int)) );
   connect( job, SIGNAL(progress(const QString&,int,int)),
 	   SLOT(slotProgress(const QString&,int,int)) );
   connect( job, SIGNAL(done()), SLOT(slotDone()) );
@@ -75,10 +73,6 @@ void Kleo::ProgressDialog::setMinimumDuration( int ms ) {
   if ( 0 < ms && ms < minimumDuration() )
     QTimer::singleShot( ms, this, SLOT(forceShow()) );
   QProgressDialog::setMinimumDuration( ms );
-}
-
-void Kleo::ProgressDialog::slotProgress( const QString & what, int, int current, int total ) {
-  slotProgress( what, current, total );
 }
 
 void Kleo::ProgressDialog::slotProgress( const QString & what, int current, int total ) {

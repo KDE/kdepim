@@ -71,7 +71,6 @@ namespace Kleo {
 
   signals:
     void progress( const QString & what, int current, int total );
-    void progress( const QString & what, int type, int current, int total );
     void done();
   };
 

@@ -56,7 +56,6 @@ namespace Kleo {
 
   private slots:
     void slotProgress( const QString & what, int current, int total );
-    void slotProgress( const QString & what, int type, int current, int total );
     void slotDone();
   private:
     QString mBaseText;
