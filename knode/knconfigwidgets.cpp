@@ -2014,7 +2014,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   connect(e_ditBtn, SIGNAL(clicked()), SLOT(slotEditBtnClicked()));
   xgbL->addWidget(e_ditBtn, 3,1);
 
-  QLabel *placeHolders = new QLabel("<qt>Placeholders: %NAME=name, %EMAIL=email address</qt>", xgb);
+  QLabel *placeHolders = new QLabel(i18n("<qt>Placeholders: %NAME=name, %EMAIL=email address</qt>"), xgb);
   xgbL->addMultiCellWidget(placeHolders, 5, 5, 0, 1);
 
   i_ncUaCB=new QCheckBox(i18n("Do not add the \"&User-Agent\" identification header"), xgb);
