@@ -217,7 +217,7 @@ int execConduit(KCmdLineArgs *p)
 
 	syncStack = new ActionQueue(deviceLink);
 	syncStack->queueInit();
-	syncStack->queueConduits(l,syncMode, p->isSet("local"));
+	syncStack->queueConduits(l,syncMode,false);
 	syncStack->queueCleanup();
 
 	connectStack();
