@@ -26,8 +26,8 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _PILOTDAEMON_H
-#define _PILOTDAEMON_H
+#ifndef _KPILOT_PILOTDAEMON_H
+#define _KPILOT_PILOTDAEMON_H
 
 #include <qpixmap.h>
 #include <ktmainwindow.h>
@@ -221,6 +221,9 @@ protected slots:
 #endif
 
 // $Log$
+// Revision 1.19  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.18  2001/03/04 21:24:37  adridg
 // Added drag 'n drop file install to daemon
 //

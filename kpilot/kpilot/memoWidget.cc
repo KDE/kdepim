@@ -49,8 +49,6 @@ static const char *memowidget_id="$Id$";
 #include "listItems.h"
 #include "memoWidget.moc"
 
-// QADE: Is this a Pilot limitation, or is it a KPilot limitation?
-int MemoWidget::MAX_MEMO_LEN = 8192;
 
 // This constant (0xffff) appears all over the place (mostly in
 // ::initialize(), but elsewhere as well. It seems to be inherited 
@@ -543,6 +541,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.27  2001/03/24 15:59:22  adridg
+// Some populateCategories changes for bug #22112
+//
 // Revision 1.26  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

@@ -238,7 +238,7 @@ void PilotDaemonTray::changeIcon(IconShape i)
 static KCmdLineOptions kpilotoptions[] =
 {
 #ifdef DEBUG
-	{ "debug <level>", I18N_NOOP(""),"0" },
+	{ "debug <level>", I18N_NOOP("Set debugging level"),"0" },
 #endif
 	{ 0,0,0 }
 } ;
@@ -1203,7 +1203,8 @@ int main(int argc, char* argv[])
 {
 	FUNCTIONSETUP;
 
-        KAboutData about("kpilotDaemon", I18N_NOOP("KPilot"),
+        KAboutData about("kpilotDaemon", 
+			I18N_NOOP("KPilot"),
 			 KPILOT_VERSION,
                          "KPilot - Hot-sync software for unix\n\n",
                          KAboutData::License_GPL,
@@ -1220,9 +1221,9 @@ int main(int argc, char* argv[])
         KCmdLineArgs::init(argc, argv, &about);
 	KCmdLineArgs::addCmdLineOptions(kpilotoptions);
 	KUniqueApplication::addCmdLineOptions();
+#ifdef DEBUG
 	KCmdLineArgs *p=KCmdLineArgs::parsedArgs();
 
-#ifdef DEBUG
 	debug_level=atoi(p->getOption("debug"));
 	if (debug_level)
 	{
@@ -1231,6 +1232,8 @@ int main(int argc, char* argv[])
 			<< debug_level
 			<< endl;
 	}
+#else
+	(void) KCmdLineArgs::parsedArgs();
 #endif
 
 	if (!KUniqueApplication::start())
@@ -1297,6 +1300,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.35  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.34  2001/03/05 23:44:39  adridg
 // KPILOT_VERSION added. Fixed double-sync (maybe). Extra monitor debugging.
 //
