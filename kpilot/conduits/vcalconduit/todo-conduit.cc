@@ -183,9 +183,11 @@ TodoConduit::TodoConduit(KPilotDeviceLink *d,
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT<<TodoConduit_id<<endl;
+	DEBUGCONDUIT << TodoConduit_id << endl;
 #endif
 	fConduitName=i18n("To-do");
+        
+        (void) TodoConduit_id;
 }
 
 

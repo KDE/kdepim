@@ -99,7 +99,8 @@ VCalWidgetSetupBase::~VCalWidgetSetupBase()
 	fConfigWidget->fSyncDestination->setButton(
 		fConfig->readNumEntry(VCalConduitFactoryBase::calendarType, 0));
 	fConfigWidget->fCalendarFile->setURL( fConfig->readPathEntry(
-		VCalConduitFactoryBase::calendarFile));
+		VCalConduitFactoryBase::calendarFile,
+                CSL1("$HOME/.kde/share/apps/korganizer/calendar.ics")));
 
 	fConfigWidget->fArchive->setChecked(
 		fConfig->readBoolEntry(VCalConduitFactoryBase::archive, true));
