@@ -23,7 +23,7 @@
 #include <qstring.h>
 #include <qstrlist.h>
 
-#include <kdemacros.h>
+#include <kdepimmacros.h>
 
 //#include <qstringlist.h>
 class QStringList;

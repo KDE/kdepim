@@ -26,8 +26,6 @@
 #include <qobject.h>
 #include <kdepimmacros.h>
 
-#include <kdemacros.h>
-
 namespace GpgME {
   class Context;
   class Error;

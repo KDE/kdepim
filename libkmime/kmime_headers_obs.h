@@ -20,7 +20,7 @@
 #error You cannot use this file with the new header classes!
 #endif
 
-#include <kdemacros.h>
+#include <kdepimmacros.h>
 
 /** Represents a "Message-Id" header */
 class KDE_EXPORT MessageID : public Base {

@@ -46,8 +46,6 @@
 
                                                                           *
                                                                           */
-#include <kdemacros.h>
-
 #include "kleo/cryptobackend.h"
 
 #include <qdatetime.h>

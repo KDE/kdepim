@@ -33,7 +33,7 @@
 #ifndef __KLEO_ENUM_H__
 #define __KLEO_ENUM_H__
 
-#include <kdemacros.h>
+#include <kdepimmacros.h>
 
 class QString;
 class QStringList;

@@ -39,8 +39,6 @@
 #include <kdepimmacros.h>
 #include <qguardedptr.h>
 
-#include <kdemacros.h>
-
 #include <vector>
 
 namespace GpgME {

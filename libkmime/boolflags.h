@@ -17,7 +17,7 @@
 #ifndef __KMIME_BOOLFLAGS_H__
 #define __KMIME_BOOLFLAGS_H__
 
-#include <kdemacros.h>
+#include <kdepimmacros.h>
 
 /** This class stores boolean values in single bytes.
     It provides a similar functionality as QBitArray

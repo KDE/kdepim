@@ -37,8 +37,6 @@
 #include <qvaluevector.h>
 #include <kdepimmacros.h>
 
-#include <kdemacros.h>
-
 class QStringList;
 class QWidget;
 

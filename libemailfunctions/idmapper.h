@@ -25,7 +25,7 @@
 #include <qmap.h>
 #include <qvariant.h>
 
-#include <kdemacros.h>
+#include <kdepimmacros.h>
 
 namespace KPIM {
 

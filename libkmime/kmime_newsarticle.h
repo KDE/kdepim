@@ -18,7 +18,7 @@
 
 #include "kmime_message.h"
 
-#include <kdemacros.h>
+#include <kdepimmacros.h>
 
 namespace KMime {
 

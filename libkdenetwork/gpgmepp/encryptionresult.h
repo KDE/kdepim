@@ -27,8 +27,6 @@
 #include <vector>
 #include <kdepimmacros.h>
 
-#include <kdemacros.h>
-
 namespace GpgME {
 
   class Error;

@@ -9,7 +9,7 @@
 
 #include <kleo/enum.h>
 
-#include <kdemacros.h>
+#include <kdepimmacros.h>
 
 #include <qstring.h>
 #include <qcstring.h>

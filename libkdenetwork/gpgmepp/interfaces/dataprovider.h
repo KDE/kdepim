@@ -23,7 +23,7 @@
 
 #include <sys/types.h>
 
-#include <kdemacros.h>
+#include <kdepimmacros.h>
 
 namespace GpgME {
 

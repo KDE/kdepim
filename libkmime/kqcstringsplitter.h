@@ -19,7 +19,7 @@
 
 #include <qcstring.h>
 
-#include <kdemacros.h>
+#include <kdepimmacros.h>
 
 class KDE_EXPORT KQCStringSplitter {
   

@@ -35,7 +35,7 @@
 
 #include <time.h>
 
-#include <kdemacros.h>
+#include <kdepimmacros.h>
 
 namespace KMime {
 

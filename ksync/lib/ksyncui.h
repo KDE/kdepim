@@ -23,7 +23,7 @@
 
 class KSyncEntry;
 
-#include <kdemacros.h>
+#include <kdepimmacros.h>
 
 /**
   @short Syncing conflict resolution user interface.
