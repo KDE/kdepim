@@ -66,6 +66,7 @@ void FilterInfo::setCurrent( const QString& current )
 void  FilterInfo::setCurrent( int percent )
 {
   m_dlg->_done_current->setProgress( percent );
+  kapp->processEvents();
 }
 
 void  FilterInfo::setOverall( int percent )
