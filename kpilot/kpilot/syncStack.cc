@@ -101,6 +101,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 
 /* static */ QStringList ConduitProxy::flagsForMode(SyncAction::SyncMode m)
 {
+	FUNCTIONSETUP;
 	QStringList l;
 	switch(m)
 	{
@@ -128,6 +129,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		l.append(CSL1("--test"));
 		break;
 	}
+	return l;
 }
 
 /* virtual */ bool ConduitProxy::exec()
