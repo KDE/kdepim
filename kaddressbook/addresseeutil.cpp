@@ -55,7 +55,7 @@ KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString &data 
     KABC::Addressee addr;
 
     if ( !converter.vCardToAddressee( dataList[ i ].stripWhiteSpace(), addr ) ) {
-      KMessageBox::error( 0, i18n( "Invalid vcard format in clipboard" ) );
+      KMessageBox::error( 0, i18n( "Invalid vCard format in clipboard" ) );
       continue;
     }
 
