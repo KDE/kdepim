@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=DCOP/AddressBook
 Comment=Address Book with a DCOP interface
+Comment[ar]=دفتر عناوين مع واجهة DCOP
 Comment[be]=Адрасная кніга з DCOP інтэрфэйсам
 Comment[bg]=Адресник с интерфейс DCOP
 Comment[bs]=Adresar sa DCOP interfejsom

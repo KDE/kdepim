@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_location
 Name=KAB Location Plugin
+Name[ar]=ملحق موقع KAB
 Name[be]=Дапаўненьне KAB "Месцазнаходжаньне"
 Name[bs]=KAB dodatak za lokaciju
 Name[ca]=Connector KAB de localització
@@ -41,6 +42,7 @@ Name[uk]=Втулок місцезнаходження KAB
 Name[xx]=xxKAB Location Pluginxx
 Name[zh_CN]=KAB 位置插件
 Comment=Plugin for displaying the location of a postal address
+Comment[ar]=ملحق لمربع حوار إعادة التسمية
 Comment[bg]=Приставка за показване на местоположението на пощенския адрес
 Comment[bs]=Dodatak za prikazivanje lokacije poštanske adrese
 Comment[ca]=Connector per a mostrar la localització d'una adreça postal
