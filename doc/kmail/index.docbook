@@ -2302,6 +2302,8 @@ not to delete old messages at all).</para>
 
 </sect2>
 
+<!-- fixme in kmail: address book vs addressbook -->
+<!-- fixme in KDE3.1: this has been removed short before KDE3.0
 <sect2 id="configure-misc-addressbook">
 <title>Addressbook</title>
 
@@ -2311,7 +2313,6 @@ addresses. You can call up the address book via
 the <guiicon>Address Book</guiicon> button in the main window, 
 or the <guiicon>Address Book</guiicon> button in the
 composer window.</para>
-<!-- fixme in kmail: address book vs addressbook -->
 
 <para>You can choose between two different address books:</para>
 
@@ -2337,7 +2338,7 @@ url="/kab/">&kab; documentation</ulink>.</para>
 </variablelist>
 
 </sect2>
-
+-->
 </sect1>
 
 </chapter>
@@ -2455,6 +2456,7 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 </listitem>
 </varlistentry>
 
+<!-- fixme in KDE3.1: this has been removed short before KDE3.0
 <varlistentry>
 <term>
 <menuchoice>
@@ -2466,6 +2468,7 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 <para>Opens up the <link linkend="configure-misc-addressbook">Address Book</link>.</para>
 </listitem>
 </varlistentry>
+-->
 
 <varlistentry>
 <term>
