@@ -42,7 +42,10 @@ KNFolder::KNFolder(int id, const QString &name, KNCollection *parent)
   m_boxFile.setName(fname+"mbox");
   i_ndexFile.setName(fname+"idx");
 
-  c_ount=i_ndexFile.size()/sizeof(DynData);
+  if(i_ndexFile.exists())
+    c_ount=i_ndexFile.size()/sizeof(DynData);
+  else
+    c_ount=0;
 }
 
 
@@ -54,7 +57,10 @@ KNFolder::KNFolder(int id, const QString &name, const QString &prefix, KNCollect
   m_boxFile.setName(fname+"mbox");
   i_ndexFile.setName(fname+"idx");
 
-  c_ount=i_ndexFile.size()/sizeof(DynData);
+  if(i_ndexFile.exists())
+    c_ount=i_ndexFile.size()/sizeof(DynData);
+  else
+    c_ount=0;
 }
 
 
