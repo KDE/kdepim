@@ -3,7 +3,7 @@
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
-      <Action name="file_mail_vcard" append="mail_merge">
+      <Action name="file_mail_vcard" append="mail_merge"/>
 
       <Action name="file_new_contact"/>
       <Action name="file_properties"/>
