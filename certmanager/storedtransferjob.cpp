@@ -31,10 +31,10 @@ StoredTransferJob::StoredTransferJob(const KURL& url, int command,
     : TransferJob( url, command, packedArgs, _staticData, showProgressInfo ),
       m_uploadOffset( 0 )
 {
-    connect( this, SIGNAL( data( KIO::Job *job, const QByteArray &data ) ),
-             SLOT( slotData( KIO::Job *job, const QByteArray &data ) ) );
-    connect( this, SIGNAL( dataReq( KIO::Job *job, QByteArray &data ) ),
-             SLOT( slotDataReq( KIO::Job *job, QByteArray &data ) ) );
+    connect( this, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+             SLOT( slotData( KIO::Job *, const QByteArray & ) ) );
+    connect( this, SIGNAL( dataReq( KIO::Job *, QByteArray & ) ),
+             SLOT( slotDataReq( KIO::Job *, QByteArray & ) ) );
 }
 
 void StoredTransferJob::setData( const QByteArray& arr )

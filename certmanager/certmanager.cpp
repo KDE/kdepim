@@ -79,6 +79,7 @@
 #include <kkeydialog.h>
 #include <ktempfile.h>
 #include <kio/job.h>
+#include <kio/netaccess.h>
 
 // Qt
 #include <qfontmetrics.h>
@@ -704,7 +705,7 @@ void CertManager::slotExportCertificate() {
 
   QStringList fingerprints;
   for ( QPtrListIterator<Kleo::KeyListViewItem> it( items ) ; it.current() ; ++it )
-    if ( it.current()->key().isNull() )
+    if ( !it.current()->key().isNull() )
       if ( const char * fpr = it.current()->key().subkey(0).fingerprint() )
 	fingerprints.push_back( fpr );
 
@@ -738,6 +739,23 @@ void CertManager::startCertificateExport( const QStringList & fingerprints ) {
     (void)new Kleo::ProgressDialog( job, i18n("Exporting certificate"), this );
 }
 
+// return true if we should proceed, false if we should abort
+static bool checkOverwrite( const KURL& url, bool& overwrite, QWidget* w )
+{
+  if ( KIO::NetAccess::exists( url, false /*dest*/, w ) ) {
+    if ( KMessageBox::Cancel ==
+         KMessageBox::warningContinueCancel(
+                                            w,
+                                            i18n( "A file named \"%1\" already exists. "
+                                                  "Are you sure you want to overwrite it?" ).arg( url.prettyURL() ),
+                                            i18n( "Overwrite File?" ),
+                                            i18n( "&Overwrite" ) ) )
+      return false;
+    overwrite = true;
+  }
+  return true;
+}
+
 void CertManager::slotCertificateExportResult( const GpgME::Error & err, const QByteArray & data ) {
   if ( err ) {
     showCertificateExportError( this, err );
@@ -745,7 +763,23 @@ void CertManager::slotCertificateExportResult( const GpgME::Error & err, const Q
   }
 
   kdDebug() << "CertManager::slotCertificateExportResult(): got " << data.size() << " bytes" << endl;
-  // FIXME: upload
+
+  QString filter = QString("*.p7c|") + i18n("PKCS#7 Certificate Bundles (*.p7c)");
+  KURL url = KFileDialog::getOpenURL( QString::null,
+                                      filter,
+                                      this,
+                                      i18n( "Save Certificate" ) );
+  if ( !url.isValid() )
+    return;
+
+  bool overwrite = false;
+  if ( !checkOverwrite( url, overwrite, this ) )
+    return;
+
+  KIO::Job* uploadJob = KIOext::put( data, url, -1, overwrite, false /*resume*/ );
+  uploadJob->setWindow( this );
+  connect( uploadJob, SIGNAL( result( KIO::Job* ) ),
+           this, SLOT( slotUploadResult( KIO::Job* ) ) );
 }
 
 
@@ -802,7 +836,28 @@ void CertManager::slotSecretKeyExportResult( const GpgME::Error & err, const QBy
   }
 
   kdDebug() << "CertManager::slotSecretKeyExportResult(): got " << data.size() << " bytes" << endl;
-  // FIXME: upload
+  QString filter = QString("*.p12|") + i18n("PKCS#12 Key Bundle (*.p12)");
+  KURL url = KFileDialog::getOpenURL( QString::null,
+                                      filter,
+                                      this,
+                                      i18n( "Save Certificate" ) );
+  if ( !url.isValid() )
+    return;
+
+  bool overwrite = false;
+  if ( !checkOverwrite( url, overwrite, this ) )
+    return;
+
+  KIO::Job* uploadJob = KIOext::put( data, url, -1, overwrite, false /*resume*/ );
+  uploadJob->setWindow( this );
+  connect( uploadJob, SIGNAL( result( KIO::Job* ) ),
+           this, SLOT( slotUploadResult( KIO::Job* ) ) );
+}
+
+void CertManager::slotUploadResult( KIO::Job* job )
+{
+  if ( job->error() )
+    job->showErrorDialog();
 }
 
 #include "certmanager.moc"

@@ -90,6 +90,7 @@ private slots:
     void slotDeleteCertificate();
     void slotExportSecretKey();
     void slotExportCertificate();
+    void slotUploadResult( KIO::Job* job );
 
     void slotImportCertFromFile();
     void slotImportCertFromFile( const KURL & filename );
