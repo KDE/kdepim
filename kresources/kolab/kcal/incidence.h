@@ -59,7 +59,6 @@ public:
     int interval;
     QStringList days; // list of days-of-the-week
     QString dayNumber;
-    QString date;
     QString month;
     QString rangeType;
     QString range; // date or number or nothing
