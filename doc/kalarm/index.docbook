@@ -35,8 +35,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2002-06-15</date>
-<releaseinfo>0.07.00</releaseinfo>
+<date>2002-06-29</date>
+<releaseinfo>0.07.01</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm/reminder message, and command, scheduler for &kde;.</para>
@@ -79,10 +79,9 @@ calls from programs.</para>
 
 <para>When an alarm message is due, it is displayed on each &kde;
 desktop to ensure that you don't miss it. The message window shows the
-time for which the alarm was scheduled, which could be useful to know
-if it was displayed late or if you were away from the computer when it
-popped up. It usually has a defer option to ask for the alarm to be
-displayed again later. An example of an alarm message:</para>
+time for which the alarm was scheduled. It usually has a defer option
+to ask for the alarm to be displayed again later. An example of an
+alarm message:</para>
 
 <screenshot>
 <screeninfo>Screenshot of the &kalarm; message window</screeninfo>
@@ -348,37 +347,8 @@ from the context menu.</para>
 <sect2>
 <title>Acknowledging an alarm</title>
 
-<para>When an alarm message window is displayed, do one of the
-following:</para>
-
-<itemizedlist>
-<listitem>
-<para>Acknowledge it by clicking the <guibutton>Close</guibutton>
-button.</para>
-</listitem>
-
-<listitem>
-<para>Display options to defer the alarm by clicking the
-<guibutton>Defer...</guibutton> button. Then select
-<guilabel>Defer to date/time:</guilabel> to enter the date and time
-when the message is to be redisplayed, or select <guilabel>Defer for
-time interval:</guilabel> to enter how long after now (in hours and
-minutes) the message should be redisplayed. Then click
-<guibutton>Defer</guibutton> to defer the alarm message.</para>
-
-<note><para>If the alarm recurs regularly, the time it is deferred to
-must be earlier than its next scheduled repetition.</para></note>
-
-<note><para>The <guibutton>Defer...</guibutton> button is not
-available for alarms which are displayed at login due to the
-<guilabel>Repeat at login</guilabel> option having been
-selected.</para></note>
-</listitem>
-</itemizedlist>
-
-<para>The button with the <guiicon>&kalarm;</guiicon> icon provides a
-convenient way to activate &kalarm;. Clicking it has no effect on the
-alarm message window.</para>
+<para>See <link linkend="message-window">Alarm message window</link>
+for how to acknowledge alarms.</para>
 
 </sect2>
 
@@ -600,6 +570,56 @@ scheduled alarms and request their display when they become due
 running</guilabel> in the Preferences dialog).</para></tip>
 
 </sect2>
+</sect1>
+
+<sect1 id="message-window">
+<title>Alarm message window</title>
+
+<para>When an alarm message is due, it is displayed on each &kde;
+desktop and cannot be covered by ordinary windows, to ensure that
+you see it. The message window shows the time for which the alarm was
+scheduled, so that you can see when it popped up if you were away from
+the computer at the time.</para>
+
+<para>In the case of a repeated alarm, if an unacknowledged message
+window remains from a previous occurrence of the alarm, the existing
+window is simply popped up when the alarm recurs. This avoids having
+to acknowledge multiple copies of the same message should you not
+wish, or be unable, to acknowledge a message at the time it
+appears.</para>
+
+<para>When an alarm message window is displayed, do one of the
+following:</para>
+
+<itemizedlist>
+<listitem>
+<para>Acknowledge it by clicking the <guibutton>Close</guibutton>
+button.</para>
+</listitem>
+
+<listitem>
+<para>Display options to defer the alarm by clicking the
+<guibutton>Defer...</guibutton> button. Then select
+<guilabel>Defer to date/time:</guilabel> to enter the date and time
+when the message is to be redisplayed, or select <guilabel>Defer for
+time interval:</guilabel> to enter how long after now (in hours and
+minutes) the message should be redisplayed. Then click
+<guibutton>Defer</guibutton> to defer the alarm message.</para>
+
+<note><para>If the alarm recurs regularly, the time it is deferred to
+must be earlier than its next scheduled repetition.</para></note>
+
+<note><para>The <guibutton>Defer...</guibutton> button is not
+available for alarms which are displayed at login due to the
+<guilabel>Repeat at login</guilabel> option having been
+selected.</para></note>
+</listitem>
+</itemizedlist>
+
+<para>The button with the <guiicon>&kalarm;</guiicon> icon provides a
+convenient way to activate &kalarm;. Clicking it has no effect on the
+alarm message window.</para>
+
 </sect1>
 
 <sect1 id="system-tray">
