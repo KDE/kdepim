@@ -9,7 +9,7 @@ LIBPISOCK_PATH=""
 
 dnl A list of dirs to try for include files and the library
 dnl
-include_dirs="/usr/include /usr/include/libpisock /usr/local/include/libpisock"
+include_dirs="/usr/include /usr/include/libpisock /usr/local/include/libpisock /usr/local/include"
 
 
 AC_MSG_CHECKING(for pilot-link headers)
@@ -57,6 +57,9 @@ if test "$HAVE_PISOCK" = "0" ; then
   AC_MSG_WARN([KPILOT: pisock library not found])
   DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
 else
+  if test "$LIBPISOCK_PATH" = "" ; then
+	LIBPISOCK_PATH="/usr/include";
+  fi
   AC_MSG_RESULT([found])
   AC_SUBST(LIBPISOCK)
   AC_SUBST(LIBPISOCK_PATH)
