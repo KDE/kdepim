@@ -2,10 +2,10 @@
 ## (C) 1997 Stephan Kulow
 
 if include_exchange_SUBDIR
-libkpimexchange_SUBDIR=libkpimexchange
+COMPILE_FIRST = libical libkcal libkdepim libkpimexchange kgantt kalarmd
+else
+COMPILE_FIRST = libical libkcal libkdepim kgantt kalarmd
 endif
-
-COMPILE_FIRST = libical libkcal libkdepim $(libkpimexchange_SUBDIR) kgantt kalarmd
 
 AUTOMAKE_OPTIONS = foreign 1.4
 DISTCLEANFILES = inst-apps
