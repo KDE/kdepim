@@ -44,16 +44,14 @@ ResourceRemoteConfig::ResourceRemoteConfig( QWidget* parent,  const char* name )
   resize( 245, 115 ); 
   QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
 
-  // FIXME: Post 3.2: i18n("Download from:") ( bug 67330 )
-  QLabel *label = new QLabel( i18n( "Download URL:" ), this );
+  QLabel *label = new QLabel( i18n( "Download from:" ), this );
 
   mDownloadUrl = new KURLRequester( this );
   mDownloadUrl->setMode( KFile::File );
   mainLayout->addWidget( label, 1, 0 );
   mainLayout->addWidget( mDownloadUrl, 1, 1 );
 
-  // FIXME: Post 3.2: i18n("Upload to:") ( bug 67330 )
-  label = new QLabel( i18n( "Upload URL:" ), this );
+  label = new QLabel( i18n( "Upload to:" ), this );
   mUploadUrl = new KURLRequester( this );
   mUploadUrl->setMode( KFile::File );
   mainLayout->addWidget( label, 2, 0 );

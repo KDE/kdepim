@@ -85,9 +85,29 @@ void CalendarResources::init()
   kdDebug(5800) << "CalendarResources::init" << endl;
 
   mManager = new CalendarResourceManager( "calendar" );
-  mManager->readConfig( 0 );
   mManager->addObserver( this );
 
+  mStandardPolicy = new StandardDestinationPolicy( mManager );
+  mAskPolicy = new AskDestinationPolicy( mManager );
+  mDestinationPolicy = mStandardPolicy;
+}
+
+CalendarResources::~CalendarResources()
+{
+  kdDebug(5800) << "CalendarResources::destructor" << endl;
+
+  close();
+
+  delete mManager;
+}
+
+void CalendarResources::readConfig( KConfig *config )
+{
+  mManager->readConfig( config );
+}
+
+void CalendarResources::load()
+{
   if ( !mManager->standardResource() ) {
     kdDebug(5800) << "Warning! No standard resource yet." << endl;
   }
@@ -108,21 +128,7 @@ void CalendarResources::init()
     connectResource( *it );
   }
 
-  mStandardPolicy = new StandardDestinationPolicy( mManager );
-  mAskPolicy = new AskDestinationPolicy( mManager );
-  mDestinationPolicy = mStandardPolicy;
-
   mOpen = true;
-}
-
-
-CalendarResources::~CalendarResources()
-{
-  kdDebug(5800) << "CalendarResources::destructor" << endl;
-
-  close();
-
-  delete mManager;
 }
 
 void CalendarResources::setStandardDestinationPolicy()

@@ -263,9 +263,9 @@ int IncidenceBase::duration() const
   return mDuration;
 }
 
-void IncidenceBase::setHasDuration(bool)
+void IncidenceBase::setHasDuration(bool hasDuration)
 {
-  mHasDuration = true;
+  mHasDuration = hasDuration;
 }
 
 bool IncidenceBase::hasDuration() const

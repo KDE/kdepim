@@ -1,4 +1,4 @@
-SUBDIRS = versit tests . calendarimap
+SUBDIRS = versit tests
 
 INCLUDES = -I$(top_srcdir)/libical/src/libical \
   -I$(top_srcdir)/libical/src/libicalss -I$(top_builddir)/libical/src/libical \

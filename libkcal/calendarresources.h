@@ -109,6 +109,22 @@ class CalendarResources : public Calendar,
     ~CalendarResources();
 
     /**
+      Read the resources settings from a config file. You have to call this
+      method before load().
+
+      @param config The KConfig object which points to the config file.
+                    If no object is given (null pointer) the standard config
+                    file is used.
+     */
+    void readConfig( KConfig *config = 0 );
+
+    /**
+      Loads all events from the resources. You have to add the resources first
+      or call readConfig() to load the system resources.
+     */
+    void load();
+
+    /**
       Return ResourceManager used by this calendar.
     */
     CalendarResourceManager *resourceManager() const
