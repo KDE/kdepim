@@ -273,7 +273,10 @@ bool GroupwiseServer::login()
 
   kdDebug() << "GroupwiseServer::login() URL: " << mUrl << endl;
 
-  int result = soap_call___ns2__loginRequest(mSoap, mUrl.latin1(), NULL, &loginReq, &loginResp );
+  int result = 1, maxTries = 3;
+
+  while ( --maxTries && result )
+    result = soap_call___ns2__loginRequest(mSoap, mUrl.latin1(), NULL, &loginReq, &loginResp );
 
   if ( result != 0 ) {
     soap_print_fault( mSoap, stderr );
