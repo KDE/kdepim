@@ -2190,6 +2190,30 @@
     <part name="removeitem" element="tns:removeItemResponse"/>
 </message>
 
+<message name="startFreeBusySessionRequestMessage">
+    <part name="startfreebusysession" element="tns:startFreeBusySessionRequest"/>
+</message>
+
+<message name="startFreeBusySessionResponseMessage">
+    <part name="startfreebusysession" element="tns:startFreeBusySessionResponse"/>
+</message>
+
+<message name="closeFreeBusySessionRequestMessage">
+    <part name="closefreebusysession" element="tns:closeFreeBusySessionRequest"/>
+</message>
+
+<message name="closeFreeBusySessionResponseMessage">
+    <part name="closefreebusysession" element="tns:closeFreeBusySessionResponse"/>
+</message>
+
+<message name="getFreeBusyRequestMessage">
+    <part name="getFreeBusy" element="tns:getFreeBusyRequest"/>
+</message>
+
+<message name="getFreeBusyResponseMessage">
+    <part name="getFreeBusy" element="tns:getFreeBusyResponse"/>
+</message>
+
 <portType name="loginRequest_portType">
   <operation name="loginRequest">
     <input message="tns:loginRequestMessage"/>
@@ -2264,6 +2288,27 @@
   <operation name="removeItemRequest">
     <input message="tns:removeItemRequestMessage"/>
     <output message="tns:removeItemResponseMessage"/>
+  </operation>
+</portType>
+
+<portType name="startFreeBusySessionRequest_portType">
+  <operation name="startFreeBusySessionRequest">
+    <input message="tns:startFreeBusySessionRequestMessage"/>
+    <output message="tns:startFreeBusySessionResponseMessage"/>
+  </operation>
+</portType>
+
+<portType name="closeFreeBusySessionRequest_portType">
+  <operation name="closeFreeBusySessionRequest">
+    <input message="tns:closeFreeBusySessionRequestMessage"/>
+    <output message="tns:closeFreeBusySessionResponseMessage"/>
+  </operation>
+</portType>
+
+<portType name="getFreeBusyRequest_portType">
+  <operation name="getFreeBusyRequest">
+    <input message="tns:getFreeBusyRequestMessage"/>
+    <output message="tns:getFreeBusyResponseMessage"/>
   </operation>
 </portType>
 
@@ -2399,6 +2444,42 @@
       </output>
     </operation>
   </binding>
+  <binding name="startFreeBusySessionRequestSoapBinding" type="tns:startFreeBusySessionRequest_portType">
+    <operation name="startFreeBusySessionRequest">
+      <soap:operation soapAction="startFreeBusySessionRequest" style="document" />
+      <input>
+        <soap:header message="tns:header" part="session" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <binding name="closeFreeBusySessionRequestSoapBinding" type="tns:closeFreeBusySessionRequest_portType">
+    <operation name="closeFreeBusySessionRequest">
+      <soap:operation soapAction="closeFreeBusySessionRequest" style="document" />
+      <input>
+        <soap:header message="tns:header" part="session" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <binding name="getFreeBusyRequestSoapBinding" type="tns:getFreeBusyRequest_portType">
+    <operation name="getFreeBusyRequest">
+      <soap:operation soapAction="getFreeBusyRequest" style="document" />
+      <input>
+        <soap:header message="tns:header" part="session" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
 
   <service name="GroupwiseSOAP">
         <port binding="tns:loginRequestSoapBinding" name="GroupwiseSOAPPort" bindings="loginRequestSoapBinding">
@@ -2422,6 +2503,12 @@
         <port binding="tns:purgeItemRequestSoapBinding" name="GroupwiseSOAPPort10" bindings="purgeItemRequestSoapBinding">
         </port>
         <port binding="tns:removeItemRequestSoapBinding" name="GroupwiseSOAPPort11" bindings="removeItemRequestSoapBinding">
+        </port>
+        <port binding="tns:startFreeBusySessionRequestSoapBinding" name="GroupwiseSOAPPort12" bindings="startFreeBusySessionRequestSoapBinding">
+        </port>
+        <port binding="tns:closeFreeBusySessionRequestSoapBinding" name="GroupwiseSOAPPort13" bindings="closeFreeBusySessionRequestSoapBinding">
+        </port>
+        <port binding="tns:getFreeBusyRequestSoapBinding" name="GroupwiseSOAPPort14" bindings="getFreeBusyRequestSoapBinding">
         </port>
   </service>
 </definitions>
