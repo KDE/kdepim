@@ -9,14 +9,14 @@ SUBDIRS = support pics
 
 METASOURCES = AUTO
 
-karm_SOURCES =  adddlg.cpp main.cpp \
-		task.cpp top.cpp kaccelmenuwatch.cpp print.cpp \
-		preferences.cpp ktimewidget.cpp karm.cpp idle.cpp loging.cpp karmutility.cpp tray.cpp
+karm_SOURCES =  addtaskdialog.cpp main.cpp \
+		task.cpp mainwindow.cpp kaccelmenuwatch.cpp print.cpp \
+		preferences.cpp ktimewidget.cpp taskview.cpp idletimedetector.cpp logging.cpp karmutility.cpp tray.cpp
 
 karm_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 karm_LDADD = -lkdeprint $(LIBXSS)
-noinst_HEADERS = adddlg.h karm.h task.h toolicons.h top.h kaccelmenuwatch.h \
-		version.h print.h idle.h preferences.h ktimewidget.h loging.h karmutility.h \
+noinst_HEADERS = addtaskdialog.h taskview.h task.h toolicons.h mainwindow.h kaccelmenuwatch.h \
+		version.h print.h idletimedetector.h preferences.h ktimewidget.h logging.h karmutility.h \
 		listviewiterator.h listviewiterator_tpl.h subtreeiterator.h subtreeiterator_tpl.h tray.h
 
 KDE_ICON = karm
