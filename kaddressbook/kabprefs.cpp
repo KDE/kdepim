@@ -34,10 +34,10 @@ KABPrefs::KABPrefs()
   : KPimPrefs("kaddressbookrc")
 {
   KPrefs::setCurrentGroup( "Views" );
-  addItemBool( "HonorSingleClick", &mHonorSingleClick, false );
+  addItemBool( "HonorSingleClick", mHonorSingleClick, false );
 
   KPrefs::setCurrentGroup( "General" );
-  addItemBool( "AutomaticNameParsing", &mAutomaticNameParsing, true );
+  addItemBool( "AutomaticNameParsing", mAutomaticNameParsing, true );
 }
 
 KABPrefs::~KABPrefs()

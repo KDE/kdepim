@@ -18,13 +18,13 @@ KandyPrefs::KandyPrefs() :
 {
   KPrefs::setCurrentGroup("Serial Port");
   
-  addItemString( "Serial Device", &mSerialDevice, "/dev/ttyS1");
-  addItemBool( "StartupModem", &mStartupModem, false );
+  addItemString( "Serial Device", mSerialDevice, "/dev/ttyS1");
+  addItemBool( "StartupModem", mStartupModem, false );
                                   
   KPrefs::setCurrentGroup("Windows");
                                   
-  addItemBool( "StartupTerminalWin", &mStartupTerminalWin, false );
-  addItemBool( "StartupMobileWin", &mStartupMobileWin, true );
+  addItemBool( "StartupTerminalWin", mStartupTerminalWin, false );
+  addItemBool( "StartupMobileWin", mStartupMobileWin, true );
 }
 
 KandyPrefs::~KandyPrefs()
