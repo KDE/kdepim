@@ -1,6 +1,17 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-05-10  Adriaan de Groot
+* Much delay in getting back to work on KPilot, even after a new mobo
+  arrived for my primary devel system. Useful patches were received
+  in the meantime, and commited by Joern. Olivier D. has started 
+  improving the MAL conduit, wrt. proxy and password support.
+
+2004-05-30  Adriaan de Groot
+* Handle first-time startups more gracefully by just running configure or
+  the config wizard. Better reporting of non-running daemon. Fix some
+  copyright headers. Add icons to next-sync menu in daemon.
+
 2004-05-28  Adriaan de Groot
 * Make the tarballs available on the site; still no resolution for
   memo bug, or timezone bug. Change strings in the applications to
