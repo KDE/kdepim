@@ -36,7 +36,7 @@ if [ x$1 != "x--batch" ]; then read answer; fi
 if [ x$answer != x ]; then echo "Test not run because user aborted" >&2; exit 2; fi
 
 # 1. call this program in the background
-if [ x$1 != xbackgrounding ]; then $0 backgrounding $@ & exit; fi
+if [ x$1 != xbackgrounding ]; then bash $0 backgrounding $@ & exit; fi
 
 # 1. test if Xautomation is useable
 xte 'key Return'
@@ -80,7 +80,10 @@ xte 'str tmp'
 xte 'keydown Shift_L'
 xte 'key /'
 xte 'keyup Shift_L'
-xte 'str karmtes'
+xte 'str karmt'
+sleep 1
+xte 'str es'
+sleep 1
 xte 'str t.ics'
 sleep 1
 xte 'key Return'
