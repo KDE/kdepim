@@ -58,4 +58,7 @@ void Bin_MD5Transform (uint32 buf[4], uint32 const in[16]);
 #endif /* !MD5_H */
 
 
-// $Log:$
+/* $Log$
+ * Revision 1.2  2001/02/07 15:46:31  adridg
+ * Updated copyright headers for source release. Added CVS log. No code change.
+ */
