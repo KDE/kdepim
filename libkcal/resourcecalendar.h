@@ -78,7 +78,7 @@ class ResourceCalendar : public KRES::Resource
     virtual bool load() = 0;
 
     /**
-      Save resource data. After calling this function it is save to close the
+      Save resource data. After calling this function it is safe to close the
       resource without losing data.
 
       If data is actually saved within this function or saving is delayed
