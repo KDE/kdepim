@@ -197,12 +197,12 @@ void KCMKabCustomFields::initGUI()
 
   QFrame *box = new QFrame( this );
   box->setFrameStyle( QFrame::Box | QFrame::Sunken );
-  box->setMinimumWidth( 300 );
 
   QVBoxLayout *boxLayout = new QVBoxLayout( box, KDialog::marginHint(), 
                                             KDialog::spacingHint() );
 
   mPagePreview = new QLabel( box );
+  mPagePreview->setMinimumWidth( 300 );
   boxLayout->addWidget( mPagePreview );
 
   mPageDetails = new QLabel( box );
@@ -226,12 +226,12 @@ void KCMKabCustomFields::updatePreview( QListViewItem *item )
 {
   if ( item ) {
     if ( item->parent() ) {
-      QString details = QString( "<qt><ul>"
-                                 "<li><b>%1:</b> %2</li>"
-                                 "<li><b>%3:</b> %4</li>"
-                                 "<li><b>%5:</b> %6</li>"
-                                 "<li><b>%7:</b> %8</li>"
-                                 "</ul></qt>" )
+      QString details = QString( "<qt><table>"
+                                 "<tr><td align=\"right\"><b>%1:</b></td><td>%2</td></tr>"
+                                 "<tr><td align=\"right\"><b>%3:</b></td><td>%4</td></tr>"
+                                 "<tr><td align=\"right\"><b>%5:</b></td><td>%6</td></tr>"
+                                 "<tr><td align=\"right\"><b>%7:</b></td><td>%8</td></tr>"
+                                 "</table></qt>" )
                                 .arg( i18n( "vCard Key" ) )
                                 .arg( item->text( 0 ) )
                                 .arg( i18n( "Type" ) )
@@ -251,8 +251,10 @@ void KCMKabCustomFields::updatePreview( QListViewItem *item )
       PageItem *pageItem = static_cast<PageItem*>( item );
       mPagePreview->setPixmap( pageItem->preview() );
     }
+    mPagePreview->setFrameStyle( QFrame::Box | QFrame::Sunken );
   } else {
     mPagePreview->setPixmap( QPixmap() );
+    mPagePreview->setFrameStyle( 0 );
   }
 }
 
