@@ -33,8 +33,8 @@ class KNServerInfo {
     void saveConf(KConfig *conf);
 
     //get
-    serverType type()         { return t_ype; }
-    int id()                  { return i_d; }
+    serverType type()const         { return t_ype; }
+    int id()const                  { return i_d; }
     const QString& server()   { return s_erver; }
     const QString& user()     { return u_ser; }
     const QString& pass()     { return p_ass; }
