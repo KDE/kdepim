@@ -270,7 +270,7 @@ void KAddressBookDetailedView::addresseeExecuted( QListViewItem *item )
 
 void KAddressBookDetailedView::initGUI()
 {
-  setCaption( i18n( "Detailled View" ) );
+  setCaption( i18n( "Detailed View" ) );
   QGridLayout* mainLayout = new QGridLayout( viewWidget(), 1, 1, 3, 3 ); 
 
   splitter = new QSplitter( viewWidget() );
