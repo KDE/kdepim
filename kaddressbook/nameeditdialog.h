@@ -73,6 +73,8 @@ class NameEditDialog : public KDialogBase
 
   private slots:
     void parseBoxChanged( bool );
+    void formattedNameTypeChanged();
+    void formattedNameChanged( const QString& );
     void typeChanged( int );
     void initTypeCombo();
     void modified();
@@ -88,6 +90,8 @@ class NameEditDialog : public KDialogBase
     QCheckBox *mParseBox;
 
     AddresseeConfig mAddresseeConfig;
+    KABC::Addressee mAddressee;
+    QString mCustomFormattedName;
     bool mChanged;
 };
 

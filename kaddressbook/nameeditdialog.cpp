@@ -29,6 +29,7 @@
 #include <qpushbutton.h>
 #include <qcheckbox.h>
 #include <qstring.h>
+#include <qwhatsthis.h>
 
 #include <kaccelmanager.h>
 #include <kapplication.h>
@@ -47,7 +48,7 @@
 NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
                                 bool readOnly, QWidget *parent, const char *name )
   : KDialogBase( Plain, i18n( "Edit Contact Name" ), Help | Ok | Cancel,
-                 Ok, parent, name, true )
+                 Ok, parent, name, true ), mAddressee( addr )
 {
   QWidget *page = plainPage();
   QGridLayout *layout = new QGridLayout( page );
@@ -63,6 +64,8 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   mPrefixCombo->setEnabled( !readOnly );
   label->setBuddy( mPrefixCombo );
   layout->addMultiCellWidget( mPrefixCombo, 0, 0, 1, 2 );
+
+  QWhatsThis::add( mPrefixCombo, i18n( "The predefined honoric prefixes can be extended in the settings dialog." ) );
 
   label = new QLabel( i18n( "Given name:" ), page );
   layout->addWidget( label, 1, 0 );
@@ -94,14 +97,19 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   label->setBuddy( mSuffixCombo );
   layout->addMultiCellWidget( mSuffixCombo, 4, 4, 1, 2 );
 
+  QWhatsThis::add( mSuffixCombo, i18n( "The predefined honoric suffixes can be extended in the settings dialog." ) );
+
+  label = new QLabel( i18n( "Formatted name:" ), page );
+  layout->addWidget( label, 5, 0 );
+
   mFormattedNameCombo = new KComboBox( page );
   mFormattedNameCombo->setEnabled( !readOnly );
-  layout->addWidget( mFormattedNameCombo, 5, 0 );
+  layout->addWidget( mFormattedNameCombo, 5, 1 );
   connect( mFormattedNameCombo, SIGNAL( activated( int ) ), SLOT( typeChanged( int ) ) );
 
   mFormattedNameEdit = new KLineEdit( page );
   mFormattedNameEdit->setEnabled( type == CustomName && !readOnly );
-  layout->addWidget( mFormattedNameEdit, 5, 1 );
+  layout->addWidget( mFormattedNameEdit, 5, 2 );
 
   mParseBox = new QCheckBox( i18n( "Parse name automatically" ), page );
   mParseBox->setEnabled( !readOnly );
@@ -149,13 +157,24 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
 
   KAcceleratorManager::manage( this );
 
-  connect( mPrefixCombo, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mGivenNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mAdditionalNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mFamilyNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mSuffixCombo, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mFormattedNameCombo, SIGNAL( activated( int ) ), SLOT( modified() ) );
-  connect( mFormattedNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mPrefixCombo, SIGNAL( textChanged( const QString& ) ),
+           this, SLOT( modified() ) );
+  connect( mGivenNameEdit, SIGNAL( textChanged( const QString& ) ),
+           this, SLOT( modified() ) );
+  connect( mAdditionalNameEdit, SIGNAL( textChanged( const QString& ) ),
+           this, SLOT( modified() ) );
+  connect( mFamilyNameEdit, SIGNAL( textChanged( const QString& ) ),
+           this, SLOT( modified() ) );
+  connect( mSuffixCombo, SIGNAL( textChanged( const QString& ) ),
+           this, SLOT( modified() ) );
+  connect( mFormattedNameCombo, SIGNAL( activated( int ) ),
+           this, SLOT( modified() ) );
+  connect( mFormattedNameCombo, SIGNAL( activated( int ) ),
+           this, SLOT( formattedNameTypeChanged() ) );
+  connect( mFormattedNameEdit, SIGNAL( textChanged( const QString& ) ),
+           this, SLOT( modified() ) );
+  connect( mFormattedNameEdit, SIGNAL( textChanged( const QString& ) ),
+           this, SLOT( formattedNameChanged( const QString& ) ) );
 
   initTypeCombo();
   mFormattedNameCombo->setCurrentItem( type );
@@ -207,6 +226,27 @@ bool NameEditDialog::changed() const
   return mChanged;
 }
 
+void NameEditDialog::formattedNameTypeChanged()
+{
+  QString name;
+
+  if ( formattedNameType() == CustomName )
+    name = mCustomFormattedName;
+  else {
+    KABC::Addressee addr;
+    addr.setPrefix( prefix() );
+    addr.setFamilyName( familyName() );
+    addr.setAdditionalName( additionalName() );
+    addr.setGivenName( givenName() );
+    addr.setSuffix( suffix() );
+    addr.setOrganization( mAddressee.organization() );
+
+    name = formattedName( addr, formattedNameType() );
+  }
+
+  mFormattedNameEdit->setText( name );
+}
+
 QString NameEditDialog::formattedName( const KABC::Addressee &addr, int type )
 {
   QString name;
@@ -243,6 +283,12 @@ void NameEditDialog::parseBoxChanged( bool value )
 void NameEditDialog::typeChanged( int pos )
 {
   mFormattedNameEdit->setEnabled( pos == 0 );
+}
+
+void NameEditDialog::formattedNameChanged( const QString &name )
+{
+  if ( formattedNameType() == CustomName )
+    mCustomFormattedName = name;
 }
 
 void NameEditDialog::modified()
