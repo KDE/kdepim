@@ -265,6 +265,7 @@ class KNComposer::Editor : public KEdit {
   public slots:
     void slotPasteAsQuotation();
     void slotFind();
+    void slotSearchAgain();
     void slotReplace();
     void slotAddQuotes();
     void slotRemoveQuotes();

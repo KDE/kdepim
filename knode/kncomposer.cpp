@@ -240,6 +240,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   KStdAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
 
   KStdAction::find(v_iew->e_dit, SLOT(slotFind()), actionCollection());
+  KStdAction::findNext(v_iew->e_dit, SLOT(slotSearchAgain()), actionCollection());
 
   KStdAction::replace(v_iew->e_dit, SLOT(slotReplace()), actionCollection());
 
@@ -2152,6 +2153,10 @@ void KNComposer::Editor::slotFind()
   search();
 }
 
+void KNComposer::Editor::slotSearchAgain()
+{
+    repeatSearch();
+}
 
 void KNComposer::Editor::slotReplace()
 {
