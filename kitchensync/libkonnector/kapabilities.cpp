@@ -1,6 +1,6 @@
 /* This file is part of the KDE librariesand KitchenSync Projects
     Copyright (C) 2002 Holger Freyther <freyher@kde.org>
-		  
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License version 2 as published by the Free Software Foundation.
@@ -20,7 +20,7 @@
 #include <qglobal.h>
 #include "kapabilities.h"
 
-class Kapabilities::KapabilitiesPrivate 
+class Kapabilities::KapabilitiesPrivate
 {
 public:
   KapabilitiesPrivate(){
@@ -39,17 +39,35 @@ Kapabilities::Kapabilities()
     m_needsDestIp = false;
     m_canHandle = false;
     m_needsAuthent=false;
+    m_meta = false;
+    m_supMeta = false;
 }
 Kapabilities::Kapabilities(const Kapabilities &kap )
     //: //d( 0 )
 {
     //d = new KapabilitiesPrivate;
-    //d = kap.d;  
+    //d = kap.d;
     (*this) = kap;
 }
 Kapabilities::~Kapabilities()
 {
     //delete d;
+}
+bool Kapabilities::supportsMetaSyncing() const
+{
+    return m_supMeta;
+}
+void Kapabilities::setSupportMetaSyncing( bool meta )
+{
+    m_supMeta = meta;
+}
+void Kapabilities::setMetaSyncingEnabled( bool enable )
+{
+    m_meta = enable;
+}
+bool Kapabilities::isMetaSyncingEnabled() const
+{
+    return m_meta;
 }
 bool Kapabilities::supportsPushSync() const
 {
@@ -67,7 +85,7 @@ void Kapabilities::setNeedsConnection(bool connection)
 {
   m_needConnection = connection;
 }
-bool Kapabilities::supportsListDir() const 
+bool Kapabilities::supportsListDir() const
 {
   return m_listdir;
 }
@@ -203,8 +221,9 @@ Kapabilities &Kapabilities::operator=(const Kapabilities &rhs )
     m_user = rhs.m_user;
     m_pass = rhs.m_pass;
     m_extras = rhs.m_extras;
-
-    return (*this );   
+    m_meta = rhs.m_meta;
+    m_supMeta = rhs.m_supMeta;
+    return (*this );
 }
 
 

@@ -254,7 +254,8 @@ void OpieSocket::slotStartSync()
 void OpieSocket::manageCall(const QString &line )
 {
     QTextStream stream( d->socket );
-    if( line.contains("200 Command okay" ) && d->getMode == d->HANDSHAKE ){
+    // if command okay && not handshake or getAllDocLinks( ABOOK ) return
+    if( line.contains("200 Command okay" ) && ( d->getMode == d->HANDSHAKE || d->getMode == d->ABOOK ) ) {
 	return;
     }
     if( line.startsWith("CALL QPE/Desktop docLinks(QString)" ) ){

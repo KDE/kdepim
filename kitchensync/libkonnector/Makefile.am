@@ -9,8 +9,8 @@ libkonnector_la_LIBADD = $(top_builddir)/kitchensync/lib/libksyncentries.la  $(L
 libkonnector_la_SOURCES = konnectorplugin.cpp kapabilities.cpp kdevice.cpp konnector.cpp koperations.cpp
 
 
-#servicesdir = $(kde_servicesdir)/kded
-#services_DATA = ksharedfile.desktop
+servicetype_DATA = konnector.desktop
+servicetypedir = $(kde_servicetypesdir)
 
 METASOURCES = AUTO
 SUBDIRS = . plugins test

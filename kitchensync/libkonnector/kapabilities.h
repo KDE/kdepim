@@ -51,6 +51,17 @@ public:
     ~Kapabilities();
 
     /**
+     *  If the Konnector supports metasyncing
+     */
+    bool supportsMetaSyncing() const;
+    void setSupportMetaSyncing( bool meta );
+    /**
+     *
+     */
+    void setMetaSyncingEnabled( bool  enable);
+    bool isMetaSyncingEnabled() const;
+
+    /**
      * If the device is capable of initializing the sync itself
      * @return bool
      */
@@ -245,6 +256,8 @@ private:
     bool m_needsSrcIp:1;
     bool m_needsDestIp:1;
     bool m_needsAuthent:1;
+    bool m_supMeta:1; // supports Meta
+    bool m_meta:1;
     QHostAddress m_src;
     QHostAddress m_dest;
     QValueList< QPair<QHostAddress,QHostAddress> > m_propsIPs;

@@ -234,7 +234,8 @@ void Konnector::slotSync(const QString &udi,  QPtrList<KSyncEntry> entry)
   emit wantsToSync(udi, entry );
 }
 
-void Konnector::slotError(const QString &udi, int mode, const QString &info)
+void Konnector::slotError(const QString &udi, int mode, const QString &
+                          info)
 {
   emit konnectorError(udi, mode, info );
 
