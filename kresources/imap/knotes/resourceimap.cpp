@@ -113,7 +113,8 @@ bool KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* journal )
 
   if ( mSilent ) return true;
 
-  QString note = mFormat->toString( journal );
+  KCal::ICalFormat format;
+  QString note = format.toString( journal );
   if( !kmailAddIncidence( "Note", journal->uid(), note ) ) {
     kdError() << "Communication problem in ResourceIMAP::addNote()\n";
     return false;
@@ -136,7 +137,8 @@ bool KNotesIMAP::ResourceIMAP::deleteNote( KCal::Journal* journal )
 
 void KNotesIMAP::ResourceIMAP::incidenceUpdated( KCal::IncidenceBase* i )
 {
-  QString note = mFormat->toString( static_cast<KCal::Journal*>( i ) );
+  KCal::ICalFormat format;
+  QString note = format.toString( static_cast<KCal::Journal*>( i ) );
   if( !kmailUpdate( "Note", i->uid(), note ) )
     kdError() << "Communication problem in ResourceIMAP::addNote()\n";
 }
@@ -187,7 +189,8 @@ void KNotesIMAP::ResourceIMAP::slotRefresh( const QString& type )
 
 KCal::Journal* KNotesIMAP::ResourceIMAP::parseJournal( const QString& str )
 {
-  KCal::Incidence* i = mFormat->fromString( str );
+  KCal::ICalFormat format;
+  KCal::Incidence* i = format.fromString( str );
   if ( i ) {
     if ( i->type() == "Journal" )
       return static_cast<KCal::Journal*>( i );
