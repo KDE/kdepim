@@ -76,6 +76,7 @@ class OpenGroupware : public ResourceCached
     void slotListJobResult( KIO::Job * );
     void slotJobResult( KIO::Job * );
     void slotJobData( KIO::Job *, const QByteArray & );
+    void slotDownloadNextIncidence();
 
     void cancelLoad();
 
@@ -87,6 +88,8 @@ class OpenGroupware : public ResourceCached
     KIO::DavJob *mListEventsJob;
     KPIM::ProgressItem *mProgress;
     QString mJobData;
+
+    QStringList mEventsForDownload;
 
     bool mIsShowingError;
 };

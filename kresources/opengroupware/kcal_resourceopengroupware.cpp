@@ -168,8 +168,6 @@ bool OpenGroupware::doLoad()
 
   connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotListJobResult( KIO::Job * ) ) );
-  connect( mListEventsJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-           SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Downloading calendar") );
@@ -188,66 +186,73 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
     mIsShowingError = true;
     loadError( job->errorString() );
     mIsShowingError = false;
+    if ( mProgress ) {
+      mProgress->setComplete();
+      mProgress = 0;
+    }
   } else {
-
+    mEventsForDownload.clear();
     QDomDocument doc = mListEventsJob->response();
 
-    kdDebug(7000) << " Doc: " << doc.toString() << endl;
+//    kdDebug(7000) << " Doc: " << doc.toString() << endl;
 
-   
-#if 0
-    disableChangeNotification();
-
-    clearCache();
-
-    CalendarLocal calendar;
-    ICalFormat ical;
-    if ( !ical.fromString( &calendar, mJobData ) ) {
-      loadError( i18n("Error parsing calendar data.") );
-    } else {
-      Incidence::List incidences = calendar.incidences();
-      Incidence::List::ConstIterator it;
-      for( it = incidences.begin(); it != incidences.end(); ++it ) {
-//        kdDebug() << "INCIDENCE: " << (*it)->summary() << endl;
-        Incidence *i = (*it)->clone();
-        QString remote = (*it)->customProperty( "GWRESOURCE", "UID" );
-        QString local = idMapper().localId( remote );
-        if ( local.isEmpty() ) {
-          idMapper().setRemoteId( i->uid(), remote );
-        } else {
-          i->setUid( local );
-        }
-        addIncidence( i );
-      }
+    QDomNodeList entries = doc.elementsByTagNameNS( "DAV:", "href" );
+    int c = entries.count();
+    int i = 0;
+    while ( i < c ) {
+      QDomNode node = entries.item( i );
+      QDomElement e = node.toElement();
+      mEventsForDownload << e.text();
+      i++;
     }
+
+    if ( mProgress ) {
+      mProgress->setTotalItems( mEventsForDownload.count() );
+      mProgress->setCompletedItems(1);
+      mProgress->updateProgress();
+    }
+  }
+  mListEventsJob = 0;
+  slotDownloadNextIncidence();
+}
+
+
+void OpenGroupware::slotDownloadNextIncidence()
+{
+  if ( !mEventsForDownload.isEmpty() ) {
+    const QString entry = mEventsForDownload.front();
+    mEventsForDownload.pop_front();
+    KURL url( entry );
+    url.setUser( prefs()->user() );
+    url.setPass( prefs()->password() );
+    mDownloadJob = KIO::get( url, false, false );
+    connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
+        SLOT( slotJobResult( KIO::Job * ) ) );
+    connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+        SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
+  } else {
+
+    if ( mProgress ) mProgress->setComplete();
+    mProgress = 0;
+
     saveCache();
     enableChangeNotification();
-
     clearChanges();
 
     emit resourceChanged( this );
     emit resourceLoaded( this );
-#endif
   }
-  mListEventsJob = 0;
-  if ( mProgress ) mProgress->setComplete();
-  mProgress = 0;
 }
-
 
 void OpenGroupware::slotJobResult( KIO::Job *job )
 {
-  kdDebug() << "OpenGroupware::slotJobResult(): " << endl;
+//  kdDebug() << "OpenGroupware::slotJobResult(): " << endl;
 
   if ( job->error() ) {
     mIsShowingError = true;
     loadError( job->errorString() );
     mIsShowingError = false;
   } else {
-    disableChangeNotification();
-
-    clearCache();
-
     CalendarLocal calendar;
     ICalFormat ical;
     if ( !ical.fromString( &calendar, mJobData ) ) {
@@ -258,7 +263,8 @@ void OpenGroupware::slotJobResult( KIO::Job *job )
       for( it = incidences.begin(); it != incidences.end(); ++it ) {
 //        kdDebug() << "INCIDENCE: " << (*it)->summary() << endl;
         Incidence *i = (*it)->clone();
-        QString remote = (*it)->customProperty( "GWRESOURCE", "UID" );
+        //QString remote = (*it)->customProperty( "GWRESOURCE", "UID" );
+        QString remote = (*it)->uid();
         QString local = idMapper().localId( remote );
         if ( local.isEmpty() ) {
           idMapper().setRemoteId( i->uid(), remote );
@@ -268,18 +274,15 @@ void OpenGroupware::slotJobResult( KIO::Job *job )
         addIncidence( i );
       }
     }
-    saveCache();
-    enableChangeNotification();
-
-    clearChanges();
-
-    emit resourceChanged( this );
-    emit resourceLoaded( this );
   }
 
+  if ( mProgress ) {
+    mProgress->incCompletedItems();
+    mProgress->updateProgress();
+  }
+  mJobData = QString::null;
   mDownloadJob = 0;
-  if ( mProgress ) mProgress->setComplete();
-  mProgress = 0;
+  slotDownloadNextIncidence();
 }
 
 void OpenGroupware::slotJobData( KIO::Job *, const QByteArray &data )
@@ -358,6 +361,8 @@ void OpenGroupware::cancelLoad()
 {
   if ( mDownloadJob ) mDownloadJob->kill();
   mDownloadJob = 0;
+  if ( mListEventsJob ) mListEventsJob->kill();
+  mListEventsJob = 0;
   if ( mProgress ) mProgress->setComplete();
   mProgress = 0;
 }
