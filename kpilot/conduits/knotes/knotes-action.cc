@@ -179,7 +179,6 @@ void KNotesAction::listNotes()
 	QMap<int,QString>::ConstIterator i = fP->fNotes.begin();
 	while (i != fP->fNotes.end())
 	{
-#ifdef DEBUG
 		DEBUGCONDUIT << fname
 			<< ": "
 			<< i.key()
@@ -188,7 +187,6 @@ void KNotesAction::listNotes()
 			<< (fP->fKNotes->isNew("kpilot",i.key()) ?
 				" (new)" : "" )
 			<< endl;
-#endif
 		i++;
 	}
 
@@ -445,6 +443,9 @@ bool KNotesAction::knotesRunning() const
 
 
 // $Log$
+// Revision 1.3  2001/10/31 23:46:51  adridg
+// CVS_SILENT: Ongoing conduits ports
+//
 // Revision 1.2  2001/10/29 09:45:19  cschumac
 // Make it compile.
 //
