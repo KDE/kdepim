@@ -1,5 +1,3 @@
-#ifndef TYPECOMBO_H
-#define TYPECOMBO_H
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>                   
@@ -23,10 +21,11 @@
     without including the source code for Qt in the source distribution.
 */
 
+#ifndef TYPECOMBO_H
+#define TYPECOMBO_H
+
 #include <kabc/phonenumber.h>
-
 #include <kcombobox.h>
-
 
 /**
   Combo box for type information of Addresses and Phone numbers.
