@@ -443,7 +443,7 @@ FileInstallAction::~FileInstallAction()
 	if (!fList.count())
 	{
 		emit logMessage(i18n("No Files to install"));
-		return delayDone();
+		return false;
 	}
 
 	fTimer = new QTimer(this);
@@ -479,7 +479,7 @@ FileInstallAction::~FileInstallAction()
 		KPILOT_DELETE(fTimer);
 		fDBIndex = (-1);
 		emit logProgress(i18n("Done Installing Files"), 100);
-		emit syncDone(this);
+		delayDone();
 		return;
 	}
 
@@ -495,8 +495,7 @@ FileInstallAction::~FileInstallAction()
 	QString m = i18n("Installing %1").arg(fileName);
 	emit logProgress(m,(100 * fDBIndex) / (fList.count()+1));
 	m+=QString::fromLatin1("\n");
-	emit addSyncLogEntry(m,true /* Don't print in KPilot's log. */ );
-
+	emit addSyncLogEntry(m,false /* Don't print in KPilot's log. */ );
 
 	struct pi_file *f = 0L;
 
