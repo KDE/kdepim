@@ -524,7 +524,7 @@ void VCalConduitBase::cleanup()
 				if(!kurl.isLocalFile())
 				{
 					if(!KIO::NetAccess::upload(fCalendarFile, config()->calendarFile(), 0L)) {
-						emit logError(i18n("An error occured while uploading \"%1\". You can try to upload "
+						emit logError(i18n("An error occurred while uploading \"%1\". You can try to upload "
 							"the temporary local file \"%2\" manually.")
 							.arg(config()->calendarFile()).arg(fCalendarFile));
 					}

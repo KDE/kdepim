@@ -313,7 +313,7 @@ bool AbbrowserConduit::_saveAddressBook()
 			DEBUGCONDUIT << "Deleting local addressbook tempfile" << endl;
 #endif
 			if(!KIO::NetAccess::upload(fABookFile, AbbrowserSettings::fileName(), 0L)) {
-				emit logError(i18n("An error occured while uploading \"%1\". You can try to upload "
+				emit logError(i18n("An error occurred while uploading \"%1\". You can try to upload "
 					"the temporary local file \"%2\" manually")
 					.arg(AbbrowserSettings::fileName()).arg(fABookFile));
 			}

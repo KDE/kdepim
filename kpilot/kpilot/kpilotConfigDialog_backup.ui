@@ -62,7 +62,7 @@
                         <cstring>fBackupOnly</cstring>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;&lt;p&gt;Databases listed here are not backed up. Use this setting if backing up some databases crash the handheld, or if you don't want a backup of some databases (like AvantGo pages).&lt;/p&gt;&lt;p&gt;Entries with square brackets [] are &lt;i&gt;creator codes&lt;/i&gt; like &lt;tt&gt;[lnch]&lt;/tt&gt; and can exclude a whole range of databases. Entries without the brackets list database names, and may include shell-style wildcards, like &lt;tt&gt;*_a68k&lt;/tt&gt;.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;&lt;p&gt;Databases listed here are not backed up. Use this setting if backing up some databases crashes the handheld, or if you do not want a backup of some databases (like AvantGo pages).&lt;/p&gt;&lt;p&gt;Entries with square brackets [] are &lt;i&gt;creator codes&lt;/i&gt; like &lt;tt&gt;[lnch]&lt;/tt&gt; and can exclude a whole range of databases. Entries without the brackets list database names, and may include shell-style wildcards, like &lt;tt&gt;*_a68k&lt;/tt&gt;.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QLineEdit" row="1" column="1">

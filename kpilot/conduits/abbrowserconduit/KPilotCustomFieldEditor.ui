@@ -32,7 +32,7 @@
                 <string>KPilot custom fields</string>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>On your handheld, each address also provides four custom fields for your personal use. KPilot can sync these either to birthdate, URL, IM address, or just store them as a custom field on your PC with no special meaning. In the last case, you can change the values here. Note, however, that for all other settings the values entered here will have no effect!</string>
+                <string>On your handheld, each address also provides four custom fields for your personal use. KPilot can sync these either to birthdate, URL, IM address, or just store them as a custom field on your PC with no special meaning. In the last case, you can change the values here. Note, however, that for all other settings the values entered here will have no effect.</string>
             </property>
             <grid>
                 <property name="name">
@@ -115,7 +115,7 @@
                         <cstring>mCustomFieldsExplanation</cstring>
                     </property>
                     <property name="text">
-                        <string>If you let KPilot sync the handheld's custom fields as custom fields on the PC, you can change the values here. Note, however, that for all other settings the values entered here will have no effect!</string>
+                        <string>If you let KPilot sync the handheld's custom fields as custom fields on the PC, you can change the values here. Note, however, that for all other settings the values entered here will have no effect.</string>
                     </property>
                     <property name="alignment">
                         <set>WordBreak|AlignVCenter</set>
@@ -131,7 +131,7 @@
                 <bool>true</bool>
             </property>
             <property name="title">
-                <string>KPilot' private (meta-sync) settings</string>
+                <string>KPilot's private (meta-sync) settings</string>
             </property>
             <grid>
                 <property name="name">
@@ -199,7 +199,7 @@
                     </property>
                     <property name="text">
                         <string>These values indicate the state of the record for KPilot, and connect an entry on the handheld with an entry on the PC. 
-DO NOT MESS WITH THESE VALUES, or you can be pretty sure to lose some data when you next do a sync.</string>
+Do NOT change these values: doing so will almost certainly result in data loss when you next do a sync.</string>
                     </property>
                     <property name="alignment">
                         <set>WordBreak|AlignVCenter</set>

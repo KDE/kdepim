@@ -161,7 +161,7 @@
                 <bool>true</bool>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>Check this box to prevent KPilot from syncing your handheld while the screensaver is active. This is a security measure to prevent others from syncing &lt;i&gt;their&lt;/i&gt; handhelds with your data. This option must be disabled when you use a different desktop, since KPilot does not know about other screensavers than KDE's.</string>
+                <string>Check this box to prevent KPilot from syncing your handheld while the screensaver is active: this is a security measure to prevent others from syncing &lt;i&gt;their&lt;/i&gt; handhelds with your data.  This option must be disabled when you use a different desktop, since KPilot is not aware of screensavers other than KDE's.</string>
             </property>
         </widget>
     </grid>

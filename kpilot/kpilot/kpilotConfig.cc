@@ -185,7 +185,7 @@ void KPilotConfig::addFlagsChangedDatabase(QString db)
 	}
 	if (fileversion < 443)
 	{
-		s += i18n("Changed format of no backup databases.");
+		s += i18n("Changed format of no-backup databases.");
 		s += ' ';
 	}
 	// Insert more recent additions here
