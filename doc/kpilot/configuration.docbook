@@ -66,30 +66,15 @@ start for new users, and you can always fine tune your preferences later.
 </para>
 
 <para>
-After starting the wizard, you are prompted to select how your &PalmPilot;
-will connect to the <acronym>PC</acronym>. The connection can be trough serial
-port, USB port, infrared, Bluetooth, network or the generic
-<filename class="devicefile">/dev/pilot</filename> device. Selecting the correct
-connection method is essential if you want the wizard to probe for the correct
-device.
-</para>
-
-<screenshot>
-<screeninfo>The First Configuring Wizard Dialog</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="wizard-connection.png" format="PNG"/></imageobject>
-<textobject><phrase>Configuring Wizard: The Connection Type Dialog</phrase></textobject>
-<caption><para>Configuring Wizard: The Connection Type Dialog</para></caption>
-</mediaobject>
-</screenshot>
-
-<para>
-In the pilot info dialog, please type your <guilabel>User Name</guilabel>. It
-should match the one from the &PalmPilot;. Next, you can type the file name of
-the <guilabel>Device</guilabel> you will use to connect the &PalmPilot; (for
-instance, <quote><filename class="devicefile">/dev/pilot</filename></quote>.)
-Alternatively, you can &HotSync; and click the <guibutton>Probe</guibutton>
-button. The Wizard will try to match the correct <guilabel>Device</guilabel> and
+In the pilot info dialog, type your <guilabel>User Name</guilabel>. It
+should match the one from the &PalmPilot;. Next, type the file name of
+the <guilabel>Device</guilabel> you will use to connect the &PalmPilot; (The
+connection can be trough serial port, USB port, infrared, Bluetooth, network
+or the generic <filename class="devicefile">/dev/pilot</filename> device.)
+Alternatively, click the
+<guibutton>Automatically detect handheld and user name...</guibutton>
+button and press the &HotSync; button on your &handheld;. The Wizard will try
+to find the correct <guilabel>Device</guilabel> and 
 <guilabel>User Name</guilabel>.
 </para>
 
@@ -102,12 +87,28 @@ linkend="faq-connection"><quote>&kpilot; says <errorname>Can't connect to pilot<
 &FAQ; entry</link>, or contact your system administrator.
 </para>
 
+
 <screenshot>
-<screeninfo>The Second Configuring Wizard Dialog</screeninfo>
+<screeninfo>The First Configuring Wizard Dialog</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="wizard-general.png" format="PNG"/></imageobject>
 <textobject><phrase>Configuring Wizard: The Pilot Info Dialog</phrase></textobject>
 <caption><para>Configuring Wizard: The Pilot Info Dialog</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+Press the &HotSync; button of your &handheld; to let &kpilot; probe for the
+correct <guilabel>Device</guilabel> and <guilabel>User Name</guilabel>.
+</para>
+
+
+<screenshot>
+<screeninfo>The Second Configuring Wizard Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="wizard-connection.png" format="PNG"/></imageobject>
+<textobject><phrase>Configuring Wizard: The Autodetection Dialog</phrase></textobject>
+<caption><para>Configuring Wizard: The Autodetection Dialog</para></caption>
 </mediaobject>
 </screenshot>
 
@@ -290,6 +291,19 @@ A conflict happens when both the desktop application and the &handheld; applicat
 change the same data.
 </para>
 
+<para>
+&kpilot; interfaces with your &handheld; in two ways: using the
+the conduits and the internal viewers. Conduits are plugin programs which extend
+the syncing capabilities of &kpilot;. &kpilot; stores separate copies of the
+databases and records for conduits, while the internal viewers and backup
+operation share the same copy. This distinction is important to choose your
+update method depending on your usage. If you use mainly the conduits to sync
+your &handheld; with external programs, you may choose as default synchronization
+method any option that runs the conduits. However, if you use mainly the internal
+viewers, you need to sync the backup copy of the databases as well in order to
+retrieve the information in your &handheld;.
+</para>
+
 <screenshot>
 <screeninfo>HotSync Page</screeninfo>
 <mediaobject>
@@ -303,17 +317,22 @@ change the same data.
 <variablelist>
 <varlistentry>
 
-<term><guilabel>Sync Mode</guilabel></term>
+<term><guilabel>Default Sync</guilabel></term>
 
 <listitem><para>
-Select the type of HotSync that will be performed by default.
+Select the type of synchronization that will be performed by default.
 </para>
-
 
 <itemizedlist>
 
 <listitem><para>
-<guilabel>Fast Sync (if possible), no backup</guilabel>: Only synchronize those
+<guilabel>Hot Sync</guilabel>: run all selected conduits and sync the databases
+with a modified flag set, updating the modified records only. This option offers
+a nice balance between speed and data safety.
+</para></listitem>
+
+<listitem><para>
+<guilabel>Fast Sync</guilabel>: Only synchronize those
 databases that have conduits, and perform no backup of the data
 on the &PalmPilot;, reducing greatly the time required for the sync
 operation. This also means that if something goes wrong with your &PalmPilot;,
@@ -322,21 +341,23 @@ trade-off between speed and safety.
 </para></listitem>
 
 <listitem><para>
-<guilabel>Normal sync, do a backup</guilabel>: sync all new or modified
-records, and &kpilot; does a  back up on every &HotSync;, resulting
-in more data safety, but longer backup operation time.
+<guilabel>Full Sync</guilabel>: run all selected conduits, and sync all databases,
+reading all records, performing a full backup, . It is the safest option, but
+takes the longest time to update.
 </para></listitem>
 
 <listitem><para>
-<guilabel>Special sync:</guilabel>
-
-<itemizedlist>
-<listitem><para>
-<guilabel>Full Sync (slow), backup</guilabel>: sync all databases, and performs
-a full backup. It is the safest option, but takes the longest time.
+<guilabel>Copy PC to handheld</guilabel>: run all conduits and sync all databases,
+but instead of merging the information from both sources, copy the PC data to the
+handheld. <emphasis>Use with care, as this option erases the changes you made in
+your handheld since the last sync</emphasis>.
 </para></listitem>
-</itemizedlist>
 
+<listitem><para>
+<guilabel>Copy handheld to PC</guilabel>: run all conduits and sync all databases,
+but instead of merging the information from both sources, copy the handheld data
+to the PC. <emphasis>Use with care, as this option erases the changes you made
+in your PC since the last sync</emphasis>.
 </para></listitem>
 
 </itemizedlist>
@@ -349,7 +370,7 @@ a full backup. It is the safest option, but takes the longest time.
 <listitem>
 <para>
 If you &HotSync; your &handheld; with multiple <acronym>PC</acronym>s,
-the information on the &handheld; that records which
+the flag on the &handheld; that stores which
 records have changed since the last &HotSync; may be
 inaccurate. It is recommended to do a full sync when
 changing <acronym>PC</acronym>s.
@@ -371,36 +392,39 @@ that both the &handheld; and the <acronym>PC</acronym> are in sync again.
 Choices for conflict resolution are:
 </para>
 <itemizedlist>
-<listitem><para><emphasis>Ask User</emphasis>
-&mdash; pop up a dialog for the user to
+<listitem><para><guilabel>Ask User</guilabel>:
+pop up a dialog for the user to
 choose how the conflict is to be resolved for
 every conflict.
 </para></listitem>
-<listitem><para><emphasis>Do Nothing</emphasis>
-&mdash; leave the entries in an inconsistent state.
-Future syncs will not notice the discrepancy.
+<listitem><para><guilabel>Do Nothing</guilabel>:
+ leave the entries in an inconsistent state.
+Future syncs may not notice the discrepancy.
 </para></listitem>
-<listitem><para><emphasis>Handheld Overrides</emphasis>
-&mdash; copy the values from the &handheld; to the PC,
-discarding the changes on the PC.
+<listitem><para><guilabel>Handheld Overrides</guilabel>:
+copy the values from the &handheld; to the <acronym>PC</acronym>,
+discarding the changes on the <acronym>PC</acronym>.
 </para></listitem>
-<listitem><para><emphasis><acronym>PC</acronym> Overrides</emphasis>
-&mdash; copy the values from the <acronym>PC</acronym> to the &handheld;,
+<listitem><para><guilabel>PC Overrides</guilabel>:
+copy the values from the <acronym>PC</acronym> to the &handheld;,
 discarding changes on the &handheld;.
 </para></listitem>
-<listitem><para><emphasis>Values From Last Sync</emphasis>
-<!-- TODO: I have no idea what this means -->
+<listitem><para><guilabel>Values From Last Sync (if possible)</guilabel>:
+&kpilot; stores a backup copy of the information on your &handheld; depending on
+the syncing method you selected. If this information is available, use neither
+the values from the &handheld; or the PC, but the values from
+the last sync.
 </para></listitem>
-<listitem><para><emphasis>Use Both Entries</emphasis>
-<!-- TODO: I have no idea what this means -->
+<listitem><para><guilabel>Use Both Entries</guilabel>:
+Create duplicate entries of the conflicting records on both the <acronym>PC</acronym> and
+&handheld;, one with the value from the <acronym>PC</acronym>, the other with the value
+from the &handheld;.
 </para></listitem>
 </itemizedlist>
 </listitem>
 </varlistentry>
 
-
 </variablelist>
-
 
 </sect2>
 
@@ -438,44 +462,42 @@ database, which tend to be static (for instance the applications).</para>
 <listitem>
 <para>
 List databases that should not be synced or backed up.
-Note that you have to fill in the database creator,
-not the name of the product, so for Handbase
-databases you fill in <userinput>PmDB</userinput>.
-Multiple databases should be separated by commas.
+</para>
+
+<para>
+The values can be either database creator values, which are 4-letter strings
+surrounded by square brackets (so for Handbase databases you fill in
+<userinput>&#91;PmDB&#93;</userinput>), or database names,
+which are strings without square brackets that may contain shell-style
+wildcards.
 See the <link linkend="dbskip">FAQ</link>
 for a list of databases that should be listed
 here (the default should be OK though).
+<!-- [ade] TODO need examples -->
 
 <itemizedlist>
-<listitem><para>
-<guilabel>No backup:</guilabel> Databases that will be excluded from the backup
-operation. Some databases do not follow the standard database layout, and trying
-to backup them will result in errors.
-<!-- CW TODO: should this be "No Sync?" as it was before? This makes no sense to me-->
-<!-- [ade] Current GUI label is "No Backup", and it now matches the description. -->
-</para>
+<listitem>
 <para>
-The <guilabel>no backup</guilabel> field contains a list of values, separated by commas.
-The values can be either database creator values, which are 4-letter strings
-surrounded by square brackets, or database names,
-which are strings without square brackets that may contain shell-style
-wildcards.
+<guilabel>No backup</guilabel> List here databases that should be excluded from
+the backup operation. Some databases do not follow the standard database layout,
+and trying to backup and restore them will result in information loss.You may
+include databases with volatile information, such as news or web pages, that
+often do not require to be backed up.
 </para>
-<!-- [ade] TODO need examples -->
 </listitem>
 
 <listitem><para>
-<guilabel>Not restored:</guilabel> Databases with volatile information, such as
-news or web pages, often do not need to be restored. Add here the databases
-you do not need to restore, in order to speed up the backup operation.
-<!-- CW TODO: should this be "No Backup?" -->
+<guilabel>Not restored</guilabel> List here databases that should be excluded
+from the restore operation, even if they were previously backed up. Databases
+included here can be installed manually later, using the
+<guilabel>File Installer</guilabel>.
 </para></listitem>
 </itemizedlist>
 
 <warning>
 <para>
-Changing the contents of the <guilabel>No backup:</guilabel>
-or <guilabel>Not restored:</guilabel> fields, in particular removing
+Changing the contents of the <guilabel>No backup</guilabel>
+or <guilabel>Not restored</guilabel> fields, in particular removing
 the databases already listed there, can damage those databases
 when you perform a &HotSync;.
 </para>
@@ -485,7 +507,7 @@ when you perform a &HotSync;.
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Run conduits during a backup:</guilabel></term>
+<term><guilabel>Run conduits during a backup</guilabel></term>
 <listitem>
 <para>
 The backup typically updates the copy of the &handheld; databases.
@@ -501,7 +523,6 @@ every backup.
 </variablelist>
 
 </sect2>
-
 
 
 <sect2 id="page-viewers">
