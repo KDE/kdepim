@@ -186,20 +186,31 @@ void ProfileWizard::removePart()
 void ProfileWizard::raisePart()
 {
   ProfileCheckItem *item = selectedItem();
+
+  if ( !item )
+    return;
+
   ProfileCheckItem *above;
   above = static_cast<ProfileCheckItem *>( item->itemAbove() );
-  if ( above ) {
+
+  if ( above )
     above = static_cast<ProfileCheckItem *>( above->itemAbove() );
-  }
+
   item->moveItem( above );
 }
 
 void ProfileWizard::lowerPart()
 {
   ProfileCheckItem *item = selectedItem();
+
+  if ( !item )
+    return;
+
   ProfileCheckItem *below;
   below = static_cast<ProfileCheckItem *>( item->nextSibling() );
-  if ( below ) item->moveItem( below );
+
+  if ( below )
+    item->moveItem( below );
 }
 
 #include "profilewizard.moc"
