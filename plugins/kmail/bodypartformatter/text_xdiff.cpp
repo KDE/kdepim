@@ -63,6 +63,9 @@ namespace {
 
       if ( !writer ) return Ok;
 
+      if (  bodyPart->defaultDisplay() == KMail::Interface::BodyPart::AsIcon ) 
+        return AsIcon;
+
       const QString diff = bodyPart->asText();
       if ( diff.isEmpty() ) return AsIcon;
 
