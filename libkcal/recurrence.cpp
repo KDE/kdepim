@@ -19,7 +19,9 @@
     Boston, MA 02111-1307, USA.
 */
 
-// $Id$	
+// $Id$
+
+#include <limits.h>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -31,18 +33,66 @@
 
 using namespace KCal;
 
-Recurrence::Recurrence(Incidence *parent)
-{
-  mParent = parent;
+static QDate infiniteEndDate(7000,1,1);   // end date for infinite recurrences - a little bit in the future...
 
-  recurs = rNone; // by default, it's not a recurring event.
-  //  rDays.resize(7); // can't initialize in the header
+
+Recurrence::Recurrence(Incidence *parent, int compatVersion)
+: recurs(rNone),   // by default, it's not a recurring event
+  rWeekStart(1),   // default is Monday
+  rDays(7),
+  mFloats(parent ? parent->doesFloat() : false),
+  mRecurReadOnly(false),
+  mRecurExDatesCount(0),
+#ifdef LIBKCAL_BACK_COMPAT
+  mCompatVersion(static_cast<uint>(compatVersion)),
+  mCompatRecurs(rNone),
+  mCompatDuration(0),
+#endif
+  mParent(parent)
+{
   rMonthDays.setAutoDelete(TRUE);
   rMonthPositions.setAutoDelete(TRUE);
   rYearNums.setAutoDelete(TRUE);
+}
 
-  mRecurReadOnly = false;
-  mRecurExDatesCount = 0;
+Recurrence::Recurrence(const Recurrence &r, Incidence *parent)
+: recurs(r.recurs),
+  rWeekStart(r.rWeekStart),
+  rDays(r.rDays.copy()),
+  rFreq(r.rFreq),
+  rDuration(r.rDuration),
+  rEndDateTime(r.rEndDateTime),
+  mRecurStart(r.mRecurStart),
+  mFloats(r.mFloats),
+  mRecurReadOnly(r.mRecurReadOnly),
+  mRecurExDatesCount(r.mRecurExDatesCount),
+#ifdef LIBKCAL_BACK_COMPAT
+  mCompatVersion(r.mCompatVersion),
+  mCompatRecurs(r.mCompatRecurs),
+  mCompatDuration(r.mCompatDuration),
+#endif
+  mParent(parent)
+{
+  for (QPtrListIterator<rMonthPos> mp(r.rMonthPositions);  mp.current();  ++mp) {
+    rMonthPos *tmp = new rMonthPos;
+    tmp->rPos     = mp.current()->rPos;
+    tmp->negative = mp.current()->negative;
+    tmp->rDays    = mp.current()->rDays.copy();
+    rMonthPositions.append(tmp);
+  }
+  for (QPtrListIterator<int> md(r.rMonthDays);  md.current();  ++md) {
+    int *tmp = new int;
+    *tmp = *md.current();
+    rMonthDays.append(tmp);
+  }
+  for (QPtrListIterator<int> yn(r.rYearNums);  yn.current();  ++yn) {
+    int *tmp = new int;
+    *tmp = *yn.current();
+    rYearNums.append(tmp);
+  }
+  rMonthDays.setAutoDelete(TRUE);
+  rMonthPositions.setAutoDelete(TRUE);
+  rYearNums.setAutoDelete(TRUE);
 }
 
 Recurrence::~Recurrence()
@@ -56,258 +106,171 @@ ushort Recurrence::doesRecur() const
 
 bool Recurrence::recursOnPure(const QDate &qd) const
 {
-  // first off, check to see if the flag is even set
-  if (recurs == rNone)
-    return FALSE;
-
-  // it recurs, let's check to see if this date is valid
   switch(recurs) {
-  case rDaily:
-    return recursDaily(qd);
-    break;
-  case rWeekly:
-    return recursWeekly(qd);
-    break;
-  case rMonthlyPos:
-    return recursMonthlyByPos(qd);
-    break;
-  case rMonthlyDay:
-    return recursMonthlyByDay(qd);
-    break;
-  case rYearlyMonth:
-    return recursYearlyByMonth(qd);
-    break;
-  case rYearlyDay:
-    return recursYearlyByDay(qd);
-    break;
-  default:
-    // catch-all.  Should never get here.
-    kdDebug(5800) << "Control should never reach here in recursOn()!" << endl;
-    return FALSE;
-    break;
+    case rMinutely:
+      return recursSecondly(qd, rFreq*60);
+    case rHourly:
+      return recursSecondly(qd, rFreq*3600);
+    case rDaily:
+      return recursDaily(qd);
+    case rWeekly:
+      return recursWeekly(qd);
+    case rMonthlyPos:
+    case rMonthlyDay:
+      return recursMonthly(qd);
+    case rYearlyMonth:
+      return recursYearlyByMonth(qd);
+    case rYearlyDay:
+      return recursYearlyByDay(qd);
+    case rYearlyPos:
+      return recursYearlyByPos(qd);
+    default:
+      // catch-all.  Should never get here.
+      kdDebug(5800) << "Control should never reach here in recursOnPure()!" << endl;
+    case rNone:
+      return false;
   } // case
 }
 
-bool Recurrence::recursDaily(const QDate &qd) const
+bool Recurrence::recursAtPure(const QDateTime &dt) const
 {
-  QDate dStart = mRecurStart.date();
-  int i;
-
-  if ((qd >= dStart) && 
-      (((qd <= dStart.addDays((rDuration-1+mRecurExDatesCount)*rFreq)) && (rDuration > 0)) ||
-       (rDuration == -1) ||
-       ((rDuration == 0) && (qd <= rEndDate)))) {
-    i = dStart.daysTo(qd);
-    // here's the real check...
-    if ((i % rFreq) == 0) {
-      return TRUE;
+  switch(recurs) {
+  case rMinutely:
+    return recursMinutelyAt(dt, rFreq);
+  case rHourly:
+    return recursMinutelyAt(dt, rFreq*60);
+  default:
+    if (dt.time() != mRecurStart.time())
+      return false;
+    switch(recurs) {
+      case rDaily:
+        return recursDaily(dt.date());
+      case rWeekly:
+        return recursWeekly(dt.date());
+      case rMonthlyPos:
+      case rMonthlyDay:
+        return recursMonthly(dt.date());
+      case rYearlyMonth:
+        return recursYearlyByMonth(dt.date());
+      case rYearlyDay:
+        return recursYearlyByDay(dt.date());
+      case rYearlyPos:
+        return recursYearlyByPos(dt.date());
+      default:
+        // catch-all.  Should never get here.
+        kdDebug(5800) << "Control should never reach here in recursAtPure()!" << endl;
+      case rNone:
+        return false;
     }
-    else // frequency didn't match
-      return FALSE;
-  } 
-  // the date queried fell outside the range of the event
-  return FALSE;
+  } // case
 }
 
-bool Recurrence::recursWeekly(const QDate &qd) const
+QDate Recurrence::endDate() const
 {
-  QDate dStart = mRecurStart.date();
-  int i;
+  int count = 0;
+  QDate end;
+  if (recurs != rNone) {
+    if (rDuration < 0)
+      return infiniteEndDate;
+    if (rDuration == 0)
+      return rEndDateTime.date();
 
-  
-  i = ((rDuration-1+mRecurExDatesCount)*7) + (7 - dStart.dayOfWeek());
-  if ((qd >= dStart) &&
-      (((qd <= dStart.addDays(i*rFreq)) && (rDuration > 0)) ||
-       (rDuration == -1) ||
-       ((rDuration == 0) && (qd <= rEndDate)))) {
-    // do frequency check.
-    i = dStart.daysTo(qd)/7;
-    if ((i % rFreq) == 0) {
-      // check if the bits set match today.
-      i = qd.dayOfWeek()-1;
-      if (rDays.testBit((uint) i))
-	return TRUE;
-      else 
-	return FALSE;
-    } else // frequency didn't match
-      return FALSE;
+    // The end date is determined by the recurrence count
+    QDate dStart = mRecurStart.date();
+    switch (recurs)
+    {
+    case rMinutely:
+      return mRecurStart.addSecs((rDuration-1+mRecurExDatesCount)*rFreq*60).date();
+    case rHourly:
+      return mRecurStart.addSecs((rDuration-1+mRecurExDatesCount)*rFreq*3600).date();
+    case rDaily:
+      return dStart.addDays((rDuration-1+mRecurExDatesCount)*rFreq);
+
+    case rWeekly:
+      count = weeklyCalc(END_DATE_AND_COUNT, end);
+      break;
+    case rMonthlyPos:
+    case rMonthlyDay:
+      count = monthlyCalc(END_DATE_AND_COUNT, end);
+      break;
+    case rYearlyMonth:
+      count = yearlyMonthCalc(END_DATE_AND_COUNT, end);
+      break;
+    case rYearlyDay:
+      count = yearlyDayCalc(END_DATE_AND_COUNT, end);
+      break;
+    case rYearlyPos:
+      count = yearlyPosCalc(END_DATE_AND_COUNT, end);
+      break;
+    default:
+      // catch-all.  Should never get here.
+      kdDebug(5800) << "Control should never reach here in endDate()!" << endl;
+      break;
+    }
   }
-  // the date queried fell outside the range of the event
-  return FALSE;
+  if (!count)
+    return QDate();     // error - there is no recurrence
+  return end;
 }
 
-bool Recurrence::recursMonthlyByDay(const QDate &qd) const
+QDateTime Recurrence::endDateTime() const
 {
-  QDate dStart = mRecurStart.date();
-  int monthsAhead = 0;
-  int i = 0;
-  QPtrListIterator<int> qlid(rMonthDays);
-  // calculate how many months ahead this date is from the original
-  // event's date
-  
-  // calculate year's months first
-  monthsAhead = (qd.year() - dStart.year()) * 12;
-  
-  // calculate month offset within the year.
-  i = qd.month() - dStart.month(); // may be positive or negative
-  
-  monthsAhead += i; // add the month offset in
-  
-  // check to see if the date is in the proper range
-  if ((qd >= dStart) &&
-      (((monthsAhead <= (rDuration-1+mRecurExDatesCount)*rFreq) && (rDuration > 0)) || 
-       (rDuration == -1) ||
-       ((rDuration == 0) && (qd <= rEndDate)))) {
-    // do frequency check
-    if ((monthsAhead % rFreq) == 0) {
-      i = qd.day();
-      for (; qlid.current(); ++qlid) {
-	if (*qlid.current() < 0) {
-	  if (i == (qd.daysInMonth()+*qlid.current()+1))
-	    return TRUE;
-	} else { 
-	  if (i == *qlid.current())
-	    return TRUE;
-	}
-      } // for loop
-      // no dates matched, return false
-      return FALSE;
-    } else // frequency didn't match
-      return FALSE;
-  } 
-  // outsize proper date range
-  return FALSE;
-}
+  int count = 0;
+  QDate end;
+  if (recurs != rNone) {
+    if (rDuration < 0)
+      return infiniteEndDate;
+    if (rDuration == 0)
+      return rEndDateTime;
 
-bool Recurrence::recursMonthlyByPos(const QDate &qd) const
-{
-  QDate dStart = mRecurStart.date();
-  int monthsAhead = 0;
-  int i = 0;
-  QPtrListIterator<rMonthPos> qlip(rMonthPositions);
+    // The end date is determined by the recurrence count
+    QDate dStart = mRecurStart.date();
+    switch (recurs)
+    {
+    case rMinutely:
+      return mRecurStart.addSecs((rDuration-1+mRecurExDatesCount)*rFreq*60);
+    case rHourly:
+      return mRecurStart.addSecs((rDuration-1+mRecurExDatesCount)*rFreq*3600);
+    case rDaily:
+      return dStart.addDays((rDuration-1+mRecurExDatesCount)*rFreq);
 
-  // calculate how many months ahead this date is from the original
-  // event's date
-  
-  // calculate year's months first
-  monthsAhead = (qd.year() - dStart.year()) * 12;
-  
-  // calculate month offset within the year.
-  i = qd.month() - dStart.month(); // may be positive or negative
-  
-  monthsAhead += i; // add the month offset in
-  
-  // check to see if the date is in the proper range
-  if ((qd >= dStart) &&
-      (((monthsAhead <= (rDuration-1+mRecurExDatesCount)*rFreq) && (rDuration > 0)) || 
-       (rDuration == -1) ||
-       ((rDuration == 0) && (qd <= rEndDate)))) {
-    // do frequency check
-    if ((monthsAhead % rFreq) == 0) {
-      i = weekOfMonth(qd);
-      // check to see if this day of the week isn't found in the first
-      // week of the month.
-      QDate first(qd.year(), qd.month(), 1);
-      if (qd.dayOfWeek() < first.dayOfWeek())
-	--i;
-
-      // now loop through the list of modifiers, and check them
-      // all against the day of the month
-      for (; qlip.current(); ++qlip) {
-	if (qlip.current()->negative) {
-	  i = 5 - i; // convert to negative offset format
-	}
-	// check position offset
-	if (i == qlip.current()->rPos) {
-	  // check day(s)
-	  if (qlip.current()->rDays.testBit((uint) qd.dayOfWeek()-1))
-	    return TRUE;
-	} // if position test
-      } // for loop 
-      // no dates matched as true, must be false.
-      return FALSE;
-    } else // frequency didn't match
-      return FALSE;
+    case rWeekly:
+      count = weeklyCalc(END_DATE_AND_COUNT, end);
+      break;
+    case rMonthlyPos:
+    case rMonthlyDay:
+      count = monthlyCalc(END_DATE_AND_COUNT, end);
+      break;
+    case rYearlyMonth:
+      count = yearlyMonthCalc(END_DATE_AND_COUNT, end);
+      break;
+    case rYearlyDay:
+      count = yearlyDayCalc(END_DATE_AND_COUNT, end);
+      break;
+    case rYearlyPos:
+      count = yearlyPosCalc(END_DATE_AND_COUNT, end);
+      break;
+    default:
+      // catch-all.  Should never get here.
+      kdDebug(5800) << "Control should never reach here in endDate()!" << endl;
+      break;
+    }
   }
-  // the date queried fell outside the range of the event
-  return FALSE;
+  if (!count)
+    return QDateTime();     // error - there is no recurrence
+  return QDateTime(end, mRecurStart.time());
 }
 
-bool Recurrence::recursYearlyByMonth(const QDate &qd) const 
+int Recurrence::durationTo(const QDate &date) const
 {
-  QDate dStart = mRecurStart.date();
-  int yearsAhead = 0;
-  int  i = 0;
-  QPtrListIterator<int> qlin(rYearNums);
-
-  // calculate how many years ahead this date is from the original
-  // event's date
-  
-  yearsAhead = (qd.year() - dStart.year());
-  
-  // check to see if the date is in the proper range
-  if ((qd >= dStart) &&
-      (((yearsAhead <= (rDuration-1+mRecurExDatesCount)*rFreq) && (rDuration > 0)) || 
-       (rDuration == -1) ||
-       ((rDuration == 0) && (qd <= rEndDate)))) {
-    // do frequency check
-    if ((yearsAhead % rFreq) == 0) {
-      i = qd.month();
-      for (; qlin.current(); ++qlin) {
-	if (i == *qlin.current())
-	  if (qd.day() == dStart.day())
-	    return TRUE;
-      }
-      // no dates matched, return false
-      return FALSE;
-    } else
-      // frequency didn't match
-      return FALSE;
-  } // outside proper date range
-  return FALSE;
+  QDate d = date;
+  return recurCalc(COUNT_TO_DATE, d);
 }
 
-bool Recurrence::recursYearlyByDay(const QDate &qd) const
+int Recurrence::durationTo(const QDateTime &datetime) const
 {
-  QDate dStart = mRecurStart.date();
-  int yearsAhead = 0;
-  int i = 0;
-  QPtrListIterator<int> qlin(rYearNums);
-
-  // calculate how many years ahead this date is from the original
-  // event's date
-  
-  yearsAhead = (qd.year() - dStart.year());
-  
-  // check to see if date is in the proper range
-  if ((qd >= dStart) &&
-      (((yearsAhead <= (rDuration-1+mRecurExDatesCount)*rFreq) && (rDuration > 0)) ||
-       (rDuration == -1) ||
-       ((rDuration == 0) && (qd <= rEndDate)))) {
-    // do frequency check
-    if ((yearsAhead % rFreq) == 0) {
-      i = qd.dayOfYear();
-      // correct for leapYears
-      if (!QDate::leapYear(dStart.year()) &&
-	  QDate::leapYear(qd.year()) &&
-	  qd > QDate(qd.year(), 2, 28))
-	--i;
-      if (QDate::leapYear(dStart.year()) &&
-	  !QDate::leapYear(qd.year()) &&
-	  qd > QDate(qd.year(), 2, 28))
-	++i;
-
-      for (; qlin.current(); ++qlin) {
-	if (i == *qlin.current())
-	  return TRUE;
-      }
-      // no dates matched, return false
-      return FALSE;
-    } else 
-      // frequency didn't match
-      return FALSE;
-  } // outside allowable date range
-  return FALSE;
+  QDateTime dt = datetime;
+  return recurCalc(COUNT_TO_DATE, dt);
 }
 
 void Recurrence::unsetRecurs()
@@ -319,31 +282,57 @@ void Recurrence::unsetRecurs()
   rYearNums.clear();
 }
 
-void Recurrence::setDaily(int _rFreq, int _rDuration)
+void Recurrence::setRecurStart(const QDateTime &start)
 {
-  if (mRecurReadOnly) return;
-  recurs = rDaily;
-
-  rFreq = _rFreq;
-  rDuration = _rDuration;
-  rMonthPositions.clear();
-  rMonthDays.clear();
-  rYearNums.clear();
-  if (mParent) mParent->updated();
+  mRecurStart = start;
+  mFloats = false;
+  switch (recurs)
+  {
+    case rMinutely:
+    case rHourly:
+      break;
+    case rDaily:
+    case rWeekly:
+    case rMonthlyPos:
+    case rMonthlyDay:
+    case rYearlyMonth:
+    case rYearlyDay:
+    case rYearlyPos:
+    default:
+      rEndDateTime.setTime(start.time());
+      break;
+  }
 }
 
-void Recurrence::setDaily(int _rFreq, const QDate &_rEndDate)
+void Recurrence::setRecurStart(const QDate &start)
 {
-  if (mRecurReadOnly) return;
-  recurs = rDaily;
+  mRecurStart.setDate(start);
+  setFloats(true);
+}
 
-  rFreq = _rFreq;
-  rEndDate = _rEndDate;
-  rDuration = 0; // set to 0 because there is an end date
-  rMonthPositions.clear();
-  rMonthDays.clear();
-  rYearNums.clear();
-  if (mParent) mParent->updated();
+void Recurrence::setFloats(bool f)
+{
+  mFloats = f;
+  if (f) {
+    mRecurStart.setTime(QTime(0,0,0));
+    mFloats = true;
+    switch (recurs)
+    {
+      case rMinutely:
+      case rHourly:
+        break;
+      case rDaily:
+      case rWeekly:
+      case rMonthlyPos:
+      case rMonthlyDay:
+      case rYearlyMonth:
+      case rYearlyDay:
+      case rYearlyPos:
+      default:
+        rEndDateTime.setTime(QTime(0,0,0));
+        break;
+    }
+  }
 }
 
 int Recurrence::frequency() const
@@ -356,14 +345,20 @@ int Recurrence::duration() const
   return rDuration;
 }
 
-const QDate &Recurrence::endDate() const
+void Recurrence::setDuration(int _rDuration)
 {
-  return rEndDate;
+  if (mRecurReadOnly) return;
+  if (_rDuration > 0) {
+    rDuration = _rDuration;
+#ifdef LIBKCAL_BACK_COMPAT
+    mCompatVersion = ~0;
+#endif
+  }
 }
 
 QString Recurrence::endDateStr(bool shortfmt) const
 {
-  return KGlobal::locale()->formatDate(rEndDate,shortfmt);
+  return KGlobal::locale()->formatDate(rEndDateTime.date(),shortfmt);
 }
 
 const QBitArray &Recurrence::days() const
@@ -381,30 +376,89 @@ const QPtrList<int> &Recurrence::monthDays() const
   return rMonthDays;
 }
 
-void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays, 
-			       int _rDuration)
+void Recurrence::setMinutely(int _rFreq, int _rDuration)
+{
+  if (mRecurReadOnly) return;
+  setDailySub(rMinutely, _rFreq, _rDuration);
+}
+
+void Recurrence::setMinutely(int _rFreq, const QDateTime &_rEndDateTime)
+{
+  if (mRecurReadOnly) return;
+  rEndDateTime = _rEndDateTime;
+  setDailySub(rMinutely, _rFreq, 0);
+}
+
+void Recurrence::setHourly(int _rFreq, int _rDuration)
+{
+  if (mRecurReadOnly) return;
+  setDailySub(rHourly, _rFreq, _rDuration);
+}
+
+void Recurrence::setHourly(int _rFreq, const QDateTime &_rEndDateTime)
+{
+  if (mRecurReadOnly) return;
+  rEndDateTime = _rEndDateTime;
+  setDailySub(rHourly, _rFreq, 0);
+}
+
+void Recurrence::setDaily(int _rFreq, int _rDuration)
+{
+  if (mRecurReadOnly) return;
+  setDailySub(rDaily, _rFreq, _rDuration);
+}
+
+void Recurrence::setDaily(int _rFreq, const QDate &_rEndDate)
+{
+  if (mRecurReadOnly) return;
+  rEndDateTime.setDate(_rEndDate);
+  rEndDateTime.setTime(mRecurStart.time());
+  setDailySub(rDaily, _rFreq, 0);
+}
+
+void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
+                               int _rDuration, int _rWeekStart)
 {
   if (mRecurReadOnly) return;
   recurs = rWeekly;
 
   rFreq = _rFreq;
   rDays = _rDays;
+  rWeekStart = _rWeekStart;
   rDuration = _rDuration;
+#ifdef LIBKCAL_BACK_COMPAT
+  if (mCompatVersion < 310 && _rDuration > 0) {
+    // Backwards compatibility for KDE < 3.1.
+    // rDuration was set to the number of time periods to recur,
+    // with week start always on a Monday.
+    // Convert this to the number of occurrences.
+    mCompatDuration = _rDuration;
+    int weeks = ((mCompatDuration-1+mRecurExDatesCount)*7) + (7 - mRecurStart.date().dayOfWeek());
+    QDate end(mRecurStart.date().addDays(weeks * rFreq));
+    rDuration = weeklyCalc(COUNT_TO_DATE, end);
+  } else
+    mCompatDuration = 0;
+#endif
   rMonthPositions.clear();
   rMonthDays.clear();
   if (mParent) mParent->updated();
 }
 
-void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays, 
-			       const QDate &_rEndDate)
+void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
+                               const QDate &_rEndDate, int _rWeekStart)
 {
   if (mRecurReadOnly) return;
   recurs = rWeekly;
 
   rFreq = _rFreq;
   rDays = _rDays;
-  rEndDate = _rEndDate;
+  rWeekStart = _rWeekStart;
+  rEndDateTime.setDate(_rEndDate);
+  rEndDateTime.setTime(mRecurStart.time());
   rDuration = 0; // set to 0 because there is an end date
+#ifdef LIBKCAL_BACK_COMPAT
+  mCompatDuration = 0;
+#endif
   rMonthPositions.clear();
   rMonthDays.clear();
   rYearNums.clear();
@@ -418,70 +472,133 @@ void Recurrence::setMonthly(short type, int _rFreq, int _rDuration)
 
   rFreq = _rFreq;
   rDuration = _rDuration;
+#ifdef LIBKCAL_BACK_COMPAT
+  if (mCompatVersion < 310)
+    mCompatDuration = (_rDuration > 0) ? _rDuration : 0;
+#endif
   rYearNums.clear();
   if (mParent) mParent->updated();
 }
 
-void Recurrence::setMonthly(short type, int _rFreq, 
-				const QDate &_rEndDate)
+void Recurrence::setMonthly(short type, int _rFreq,
+                                const QDate &_rEndDate)
 {
   if (mRecurReadOnly) return;
   recurs = type;
 
   rFreq = _rFreq;
-  rEndDate = _rEndDate;
+  rEndDateTime.setDate(_rEndDate);
+  rEndDateTime.setTime(mRecurStart.time());
   rDuration = 0; // set to 0 because there is an end date
+#ifdef LIBKCAL_BACK_COMPAT
+  mCompatDuration = 0;
+#endif
   rYearNums.clear();
   if (mParent) mParent->updated();
 }
 
 void Recurrence::addMonthlyPos(short _rPos, const QBitArray &_rDays)
 {
-  if (mRecurReadOnly) return;
-  rMonthPos *tmpPos = new rMonthPos;
-  tmpPos->negative = FALSE;
-  if (_rPos < 0) {
-    _rPos = 0 - _rPos; // take abs()
-    tmpPos->negative = TRUE;
+  if (recurs == rMonthlyPos)
+    addMonthlyPos_(_rPos, _rDays);
+}
+
+void Recurrence::addMonthlyPos_(short _rPos, const QBitArray &_rDays)
+{
+  if (mRecurReadOnly
+  ||  _rPos == 0 || _rPos > 5 || _rPos < -5)    // invalid week number
+    return;
+
+  for (rMonthPos* it = rMonthPositions.first();  it;  it = rMonthPositions.next()) {
+    int itPos = it->negative ? -it->rPos : it->rPos;
+    if (_rPos == itPos) {
+      // This week is already in the list.
+      // Combine the specified days with those in the list.
+      it->rDays |= _rDays;
+      if (mParent) mParent->updated();
+      return;
+    }
   }
-  tmpPos->rPos = _rPos;
+  // Add the new position to the list
+  rMonthPos *tmpPos = new rMonthPos;
+  if (_rPos > 0) {
+    tmpPos->rPos = _rPos;
+    tmpPos->negative = false;
+  } else {
+    tmpPos->rPos = -_rPos; // take abs()
+    tmpPos->negative = true;
+  }
   tmpPos->rDays = _rDays;
   rMonthPositions.append(tmpPos);
+
+#ifdef LIBKCAL_BACK_COMPAT
+  if (mCompatVersion < 310 && mCompatDuration > 0) {
+    // Backwards compatibility for KDE < 3.1.
+    // rDuration was set to the number of time periods to recur.
+    // Convert this to the number of occurrences.
+    int monthsAhead = (mCompatDuration-1+mRecurExDatesCount) * rFreq;
+    int month = mRecurStart.date().month() - 1 + monthsAhead;
+    QDate end(mRecurStart.date().year() + month/12, month%12 + 1, 31);
+    rDuration = recurCalc(COUNT_TO_DATE, end);
+  }
+#endif
+
   if (mParent) mParent->updated();
 }
 
 void Recurrence::addMonthlyDay(short _rDay)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly || recurs != rMonthlyDay
+  ||  _rDay == 0 || _rDay > 31 || _rDay < -31)   // invalid day number
+    return;
+  for (int* it = rMonthDays.first();  it;  it = rMonthDays.next()) {
+    if (_rDay == *it)
+      return;        // this day is already in the list - avoid duplication
+  }
   int *tmpDay = new int;
   *tmpDay = _rDay;
   rMonthDays.append(tmpDay);
+
+#ifdef LIBKCAL_BACK_COMPAT
+  if (mCompatVersion < 310 && mCompatDuration > 0) {
+    // Backwards compatibility for KDE < 3.1.
+    // rDuration was set to the number of time periods to recur.
+    // Convert this to the number of occurrences.
+    int monthsAhead = (mCompatDuration-1+mRecurExDatesCount) * rFreq;
+    int month = mRecurStart.date().month() - 1 + monthsAhead;
+    QDate end(mRecurStart.date().year() + month/12, month%12 + 1, 31);
+    rDuration = recurCalc(COUNT_TO_DATE, end);
+  }
+#endif
+
   if (mParent) mParent->updated();
 }
 
 void Recurrence::setYearly(int type, int _rFreq, int _rDuration)
 {
   if (mRecurReadOnly) return;
-  recurs = type;
-  
-  rFreq = _rFreq;
-  rDuration = _rDuration;
-  rMonthPositions.clear();
-  rMonthDays.clear();
-  if (mParent) mParent->updated();
+#ifdef LIBKCAL_BACK_COMPAT
+  if (mCompatVersion < 310)
+    mCompatDuration = (_rDuration > 0) ? _rDuration : 0;
+#endif
+  setYearly_(type, _rFreq, _rDuration);
 }
 
 void Recurrence::setYearly(int type, int _rFreq, const QDate &_rEndDate)
 {
   if (mRecurReadOnly) return;
-  recurs = type;
+  rEndDateTime.setDate(_rEndDate);
+  rEndDateTime.setTime(mRecurStart.time());
+#ifdef LIBKCAL_BACK_COMPAT
+  mCompatDuration = 0;
+#endif
+  setYearly_(type, _rFreq, 0);
+}
 
-  rFreq = _rFreq;
-  rEndDate = _rEndDate;
-  rDuration = 0;
-  rMonthPositions.clear();
-  rMonthDays.clear();
-  if (mParent) mParent->updated();
+void Recurrence::addYearlyMonthPos(short _rPos, const QBitArray &_rDays)
+{
+  if (recurs == rYearlyPos)
+    addMonthlyPos_(_rPos, _rDays);
 }
 
 const QPtrList<int> &Recurrence::yearNums() const
@@ -491,23 +608,1802 @@ const QPtrList<int> &Recurrence::yearNums() const
 
 void Recurrence::addYearlyNum(short _rNum)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly
+  ||  (recurs != rYearlyMonth && recurs != rYearlyDay && recurs != rYearlyPos)
+  ||  _rNum <= 0)    // invalid day/month number
+    return;
+
+#ifdef LIBKCAL_BACK_COMPAT
+  if (mCompatVersion < 310 && mCompatRecurs == rYearlyDay) {
+    // Backwards compatibility for KDE < 3.1.
+    // Dates were stored as day numbers, with a fiddle to take account of leap years.
+    // Convert the day number to a month.
+    if (_rNum <= 0 || _rNum > 366 || (_rNum == 366 && mRecurStart.date().daysInYear() < 366))
+      return;     // invalid day number
+    _rNum = QDate(mRecurStart.date().year(), 1, 1).addDays(_rNum - 1).month();
+  } else
+#endif
+  if ((recurs == rYearlyMonth || recurs == rYearlyPos) && _rNum > 12
+  ||  recurs == rYearlyDay && _rNum > 366)
+    return;     // invalid day number
+
+  uint i = 0;
+  for (int* it = rYearNums.first();  it && _rNum >= *it;  it = rYearNums.next()) {
+    if (_rNum == *it)
+      return;        // this day/month is already in the list - avoid duplication
+    ++i;
+  }
 
   int *tmpNum = new int;
   *tmpNum = _rNum;
-  rYearNums.append(tmpNum);
-  
+  rYearNums.insert(i, tmpNum);   // insert the day/month in a sorted position
+
+#ifdef LIBKCAL_BACK_COMPAT
+  if (mCompatVersion < 310 && mCompatDuration > 0) {
+    // Backwards compatibility for KDE < 3.1.
+    // rDuration was set to the number of time periods to recur.
+    // Convert this to the number of occurrences.
+    QDate end(mRecurStart.date().year() + (mCompatDuration-1+mRecurExDatesCount)*rFreq, 12, 31);
+    rDuration = recurCalc(COUNT_TO_DATE, end);
+  }
+#endif
+
   if (mParent) mParent->updated();
 }
 
 /***************************** PROTECTED FUNCTIONS ***************************/
 
-// this should return the week of the month for the date
-int Recurrence::weekOfMonth(const QDate &qd) const
+bool Recurrence::recursSecondly(const QDate &qd, int secondFreq) const
 {
-  QDate firstDate(qd.year(), qd.month(), 1);
-  // I don't really know what formulas I'm using here.  :)
-  int firstWeekNum(1 +(firstDate.dayOfYear() - firstDate.dayOfWeek() + 6)/7);
-  int thisWeekNum(1 +(qd.dayOfYear() - qd.dayOfWeek() + 6)/7);
-  return (thisWeekNum - firstWeekNum + 1);
+  if ((qd >= mRecurStart.date()) &&
+      ((rDuration > 0) && (qd <= endDate()) ||
+       ((rDuration == 0) && (qd <= rEndDateTime.date())) ||
+       (rDuration == -1))) {
+    // The date queried falls within the range of the event.
+    if (secondFreq < 24*3600)
+      return true;      // the event recurs at least once each day
+    int after = mRecurStart.secsTo(QDateTime(qd));
+    if (after / secondFreq != (after + 24*3600) / secondFreq)
+      return true;
+  }
+  return false;
+}
+
+bool Recurrence::recursMinutelyAt(const QDateTime &dt, int minuteFreq) const
+{
+  if ((dt >= mRecurStart) &&
+      ((rDuration > 0) && (dt <= endDateTime()) ||
+       ((rDuration == 0) && (dt <= rEndDateTime)) ||
+       (rDuration == -1))) {
+    // The time queried falls within the range of the event.
+    if (((mRecurStart.secsTo(dt) / 60) % minuteFreq) == 0)
+      return true;
+  }
+  return false;
+}
+
+bool Recurrence::recursDaily(const QDate &qd) const
+{
+  QDate dStart = mRecurStart.date();
+  if ((dStart.daysTo(qd) % rFreq) == 0) {
+    // The date is a day which recurs
+    if (qd >= dStart
+    &&  ((rDuration > 0 && qd <= endDate()) ||
+         (rDuration == 0 && qd <= rEndDateTime.date()) ||
+         rDuration == -1)) {
+      // The date queried falls within the range of the event.
+      return true;
+    }
+  }
+  return false;
+}
+
+bool Recurrence::recursWeekly(const QDate &qd) const
+{
+  QDate dStart = mRecurStart.date();
+  if ((dStart.daysTo(qd)/7) % rFreq == 0) {
+    // The date is in a week which recurs
+    if (qd >= dStart
+    && ((rDuration > 0 && qd <= endDate()) ||
+        (rDuration == 0 && qd <= rEndDateTime.date()) ||
+        rDuration == -1)) {
+      // The date queried falls within the range of the event.
+      // check if the bits set match today.
+      int i = qd.dayOfWeek()-1;
+      if (rDays.testBit((uint) i))
+        return true;
+    }
+  }
+  return false;
+}
+
+bool Recurrence::recursMonthly(const QDate &qd) const
+{
+  QDate dStart = mRecurStart.date();
+  int year  = qd.year();
+  int month = qd.month();
+  int day   = qd.day();
+  // calculate how many months ahead this date is from the original
+  // event's date
+  int monthsAhead = (year - dStart.year()) * 12 + (month - dStart.month());
+  if ((monthsAhead % rFreq) == 0) {
+    // The date is in a month which recurs
+    if (qd >= dStart
+    &&  ((rDuration > 0 && qd <= endDate()) ||
+         (rDuration == 0 && qd <= rEndDateTime.date()) ||
+         rDuration == -1)) {
+      // The date queried falls within the range of the event.
+      QValueList<int> days;
+      int daysInMonth = qd.daysInMonth();
+      if (recurs == rMonthlyDay)
+        getMonthlyDayDays(days, daysInMonth);
+      else if (recurs == rMonthlyPos)
+        getMonthlyPosDays(days, daysInMonth, QDate(year, month, 1).dayOfWeek());
+      for (QValueList<int>::Iterator it = days.begin();  it != days.end();  ++it) {
+        if (*it == day)
+          return true;
+      }
+      // no dates matched
+    }
+  }
+  return false;
+}
+
+bool Recurrence::recursYearlyByMonth(const QDate &qd) const
+{
+  QDate dStart = mRecurStart.date();
+  if (qd.day() == dStart.day()) {
+    // calculate how many years ahead this date is from the original
+    // event's date
+    int yearsAhead = (qd.year() - dStart.year());
+    if (yearsAhead % rFreq == 0) {
+      // The date is in a year which recurs
+      if (qd >= dStart
+      &&  ((rDuration > 0 && qd <= endDate()) ||
+           (rDuration == 0 && qd <= rEndDateTime.date()) ||
+           rDuration == -1)) {
+        // The date queried falls within the range of the event.
+        int i = qd.month();
+        for (QPtrListIterator<int> qlin(rYearNums); qlin.current(); ++qlin) {
+          if (i == *qlin.current())
+            return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+bool Recurrence::recursYearlyByPos(const QDate &qd) const
+{
+  QDate dStart = mRecurStart.date();
+  int year  = qd.year();
+  int month = qd.month();
+  int day   = qd.day();
+  // calculate how many years ahead this date is from the original
+  // event's date
+  int yearsAhead = (year - dStart.year());
+  if (yearsAhead % rFreq == 0) {
+    // The date is in a year which recurs
+    if (qd >= dStart
+    &&  ((rDuration > 0 && qd <= endDate()) ||
+         (rDuration == 0 && qd <= rEndDateTime.date()) ||
+         rDuration == -1)) {
+      // The date queried falls within the range of the event.
+      for (QPtrListIterator<int> qlin(rYearNums); qlin.current(); ++qlin) {
+        if (month == *qlin.current()) {
+          // The month recurs
+          QValueList<int> days;
+          getMonthlyPosDays(days, qd.daysInMonth(), QDate(year, month, 1).dayOfWeek());
+          for (QValueList<int>::Iterator it = days.begin();  it != days.end();  ++it) {
+            if (*it == day)
+              return true;
+          }
+        }
+      }
+    }
+  }
+  return false;
+}
+
+bool Recurrence::recursYearlyByDay(const QDate &qd) const
+{
+  QDate dStart = mRecurStart.date();
+  // calculate how many years ahead this date is from the original
+  // event's date
+  int yearsAhead = (qd.year() - dStart.year());
+  if (yearsAhead % rFreq == 0) {
+    // The date is in a year which recurs
+    if (qd >= dStart
+    &&  ((rDuration > 0 && qd <= endDate()) ||
+         (rDuration == 0 && qd <= rEndDateTime.date()) ||
+         rDuration == -1)) {
+      // The date queried falls within the range of the event.
+      int i = qd.dayOfYear();
+      for (QPtrListIterator<int> qlin(rYearNums); qlin.current(); ++qlin) {
+        if (i == *qlin.current())
+          return true;
+      }
+    }
+  }
+  return false;
+}
+
+void Recurrence::setDailySub(short type, int freq, int duration)
+{
+  recurs = type;
+  rFreq = freq;
+  rDuration = duration;
+  rMonthPositions.clear();
+  rMonthDays.clear();
+  rYearNums.clear();
+  if (mParent) mParent->updated();
+}
+
+void Recurrence::setYearly_(short type, int freq, int duration)
+{
+  recurs = type;
+#ifdef LIBKCAL_BACK_COMPAT
+  if (mCompatVersion < 310 && type == rYearlyDay) {
+    mCompatRecurs = rYearlyDay;
+    recurs = rYearlyMonth;      // convert old yearly-by-day to yearly-by-month
+  }
+#endif
+
+  rFreq = freq;
+  rDuration = duration;
+  if (type != rYearlyPos)
+    rMonthPositions.clear();
+  rMonthDays.clear();
+  if (mParent) mParent->updated();
+}
+
+int Recurrence::recurCalc(PeriodFunc func, QDateTime& endtime) const
+{
+  QDate enddate = endtime.date();
+  switch (func) {
+    case END_DATE_AND_COUNT:
+      if (rDuration < 0) {
+        endtime = QDateTime();
+        return 0;    // infinite recurrence
+      }
+      if (rDuration == 0) {
+        endtime = rEndDateTime;
+        func = COUNT_TO_DATE;
+      }
+      break;
+    case COUNT_TO_DATE:
+      // Count recurrences up to and including the specified date/time.
+      // If the specified date/time is after the configured end of the recurrence,
+      // the recurrence end is ignored and counting continues past it.
+      if (endtime < mRecurStart)
+        return 0;
+      if (!mFloats && mRecurStart.time() > endtime.time())
+        enddate.addDays(-1);
+      break;
+    case NEXT_AFTER_DATE:
+      if (endtime < mRecurStart) {
+        endtime = mRecurStart;
+        return 1;
+      }
+      if (rDuration == 0 && endtime >= rEndDateTime) {
+        endtime = QDateTime();
+        return 0;
+      }
+      if (!mFloats && mRecurStart.time() > endtime.time())
+        enddate.addDays(-1);
+      break;
+    default:
+      endtime = QDateTime();
+      return 0;
+  }
+
+  int count = 0;     // default = error
+  bool timed = false;
+  switch (recurs) {
+    case rMinutely:
+      timed = true;
+      count = secondlyCalc(func, endtime, rFreq*60);
+      break;
+    case rHourly:
+      timed = true;
+      count = secondlyCalc(func, endtime, rFreq*3600);
+      break;
+    case rDaily:
+      count = dailyCalc(func, enddate);
+      break;
+    case rWeekly:
+      count = weeklyCalc(func, enddate);
+      break;
+    case rMonthlyPos:
+    case rMonthlyDay:
+      count = monthlyCalc(func, enddate);
+      break;
+    case rYearlyMonth:
+      count = yearlyMonthCalc(func, enddate);
+      break;
+    case rYearlyPos:
+      count = yearlyPosCalc(func, enddate);
+      break;
+    case rYearlyDay:
+      count = yearlyDayCalc(func, enddate);
+      break;
+    default:
+      break;
+  }
+
+  switch (func) {
+    case END_DATE_AND_COUNT:
+    case NEXT_AFTER_DATE:
+      if (count == 0)
+        endtime = QDateTime();
+      else if (!timed) {
+        endtime.setDate(enddate);
+        endtime.setTime(mRecurStart.time());
+      }
+      break;
+    case COUNT_TO_DATE:
+      break;
+  }
+  return count;
+}
+
+int Recurrence::recurCalc(PeriodFunc func, QDate& enddate) const
+{
+  QDateTime endtime(enddate, QTime(23,59,59));
+  switch (func) {
+    case END_DATE_AND_COUNT:
+      if (rDuration < 0) {
+        enddate = QDate();
+        return 0;    // infinite recurrence
+      }
+      if (rDuration == 0) {
+        enddate = rEndDateTime.date();
+        func = COUNT_TO_DATE;
+      }
+      break;
+    case COUNT_TO_DATE:
+      // Count recurrences up to and including the specified date.
+      // If the specified date is after the configured end of the recurrence,
+      // the recurrence end is ignored and counting continues past it.
+      if (enddate < mRecurStart.date())
+        return 0;
+      break;
+    case NEXT_AFTER_DATE:
+      if (enddate < mRecurStart.date()) {
+        enddate = mRecurStart.date();
+        return 1;
+      }
+      if (rDuration == 0 && enddate >= rEndDateTime.date()) {
+        enddate = QDate();
+        return 0;
+      }
+      break;
+    default:
+      enddate = QDate();
+      return 0;
+  }
+
+  int count = 0;     // default = error
+  bool timed = false;
+  switch (recurs) {
+    case rMinutely:
+      timed = true;
+      count = secondlyCalc(func, endtime, rFreq*60);
+      break;
+    case rHourly:
+      timed = true;
+      count = secondlyCalc(func, endtime, rFreq*3600);
+      break;
+    case rDaily:
+      count = dailyCalc(func, enddate);
+      break;
+    case rWeekly:
+      count = weeklyCalc(func, enddate);
+      break;
+    case rMonthlyPos:
+    case rMonthlyDay:
+      count = monthlyCalc(func, enddate);
+      break;
+    case rYearlyMonth:
+      count = yearlyMonthCalc(func, enddate);
+      break;
+    case rYearlyPos:
+      count = yearlyPosCalc(func, enddate);
+      break;
+    case rYearlyDay:
+      count = yearlyDayCalc(func, enddate);
+      break;
+    default:
+      break;
+  }
+
+  switch (func) {
+    case END_DATE_AND_COUNT:
+    case NEXT_AFTER_DATE:
+      if (count == 0)
+        endtime = QDate();
+      else if (timed)
+        enddate = endtime.date();
+      break;
+    case COUNT_TO_DATE:
+      break;
+  }
+  return count;
+}
+
+/* Find count and, depending on 'func', the end date/time of a secondly recurrence.
+ * Reply = total number of occurrences up to 'endtime', or 0 if error.
+ * If 'func' = END_DATE_AND_COUNT or NEXT_AFTER_DATE, 'endtime' is updated to the
+ * recurrence end date/time.
+ */
+int Recurrence::secondlyCalc(PeriodFunc func, QDateTime& endtime, int freq) const
+{
+  switch (func) {
+    case END_DATE_AND_COUNT:
+      endtime = mRecurStart.addSecs((rDuration + mRecurExDatesCount - 1) * freq);
+      return rDuration + mRecurExDatesCount;
+    case COUNT_TO_DATE:
+      return mRecurStart.secsTo(endtime)/freq + 1;
+    case NEXT_AFTER_DATE: {
+      int count = mRecurStart.secsTo(endtime) / freq + 2;
+      if (rDuration > 0 && count > rDuration)
+        return 0;
+      endtime = mRecurStart.addSecs((count - 1)*freq);
+      return count;
+    }
+  }
+  return 0;
+}
+
+/* Find count and, depending on 'func', the end date of a daily recurrence.
+ * Reply = total number of occurrences up to 'enddate', or 0 if error.
+ * If 'func' = END_DATE_AND_COUNT or NEXT_AFTER_DATE, 'enddate' is updated to the
+ * recurrence end date.
+ */
+int Recurrence::dailyCalc(PeriodFunc func, QDate& enddate) const
+{
+  QDate dStart = mRecurStart.date();
+  switch (func) {
+    case END_DATE_AND_COUNT:
+      enddate = dStart.addDays((rDuration + mRecurExDatesCount - 1) * rFreq);
+      return rDuration + mRecurExDatesCount;
+    case COUNT_TO_DATE:
+      return dStart.daysTo(enddate)/rFreq + 1;
+    case NEXT_AFTER_DATE: {
+      int count = dStart.daysTo(enddate) / rFreq + 2;
+      if (rDuration > 0 && count > rDuration)
+        return 0;
+      enddate = dStart.addDays((count - 1)*rFreq);
+      return count;
+    }
+  }
+  return 0;
+}
+
+/* Find count and, depending on 'func', the end date of a weekly recurrence.
+ * Reply = total number of occurrences up to 'enddate', or 0 if error.
+ * If 'func' = END_DATE_AND_COUNT or NEXT_AFTER_DATE, 'enddate' is updated to the
+ * recurrence end date.
+ */
+int Recurrence::weeklyCalc(PeriodFunc func, QDate& enddate) const
+{
+  int daysPerWeek = 0;
+  for (int i = 0;  i < 7;  ++i) {
+    if (rDays.testBit((uint)i))
+      ++daysPerWeek;
+  }
+  if (!daysPerWeek)
+    return 0;     // there are no days to recur on
+
+  switch (func) {
+    case END_DATE_AND_COUNT:
+      return weeklyCalcEndDate(enddate, daysPerWeek);
+    case COUNT_TO_DATE:
+      return weeklyCalcToDate(enddate, daysPerWeek);
+    case NEXT_AFTER_DATE:
+      return weeklyCalcNextAfter(enddate, daysPerWeek);
+  }
+  return 0;
+}
+
+int Recurrence::weeklyCalcEndDate(QDate& enddate, int daysPerWeek) const
+{
+  int startDayOfWeek = mRecurStart.date().dayOfWeek();     // 1..7
+  int countGone = 0;
+  int daysGone = 0;
+  uint countTogo = rDuration + mRecurExDatesCount;
+  if (startDayOfWeek != rWeekStart) {
+    // Check what remains of the start week
+    for (int i = startDayOfWeek - 1;  i != rWeekStart - 1;  i = (i + 1) % 7) {
+      if (rDays.testBit((uint)i)) {
+        ++countGone;
+        if (--countTogo == 0)
+          break;
+      }
+    }
+    daysGone += 7 * (rFreq - 1);
+  }
+  if (countTogo) {
+    // Skip the remaining whole weeks
+    // Leave at least 1 recurrence remaining, in order to get its date
+    int wholeWeeks = (countTogo - 1) / daysPerWeek;
+    daysGone += wholeWeeks * 7 * rFreq;
+    countGone += wholeWeeks * daysPerWeek;
+    countTogo -= wholeWeeks * daysPerWeek;
+    // Check the last week in the recurrence
+    for (int i = rWeekStart - 1;  ;  i = (i + 1) % 7) {
+      if (rDays.testBit((uint)i)) {
+        ++countGone;
+        if (--countTogo == 0)
+          break;
+      }
+    }
+  }
+  enddate = mRecurStart.date().addDays(daysGone);
+  return countGone;
+}
+
+int Recurrence::weeklyCalcToDate(QDate& enddate, int daysPerWeek) const
+{
+  QDate dStart = mRecurStart.date();
+  int startDayOfWeek = dStart.dayOfWeek();     // 1..7
+  int countGone = 0;
+  int daysGone  = 0;
+  int totalDays = dStart.daysTo(enddate) + 1;
+
+  if (startDayOfWeek != rWeekStart) {
+    // Check what remains of the start week
+    for (int i = startDayOfWeek - 1;  i != rWeekStart - 1;  i = (i + 1) % 7) {
+      if (rDays.testBit((uint)i))
+        ++countGone;
+      if (++daysGone == totalDays)
+        return countGone;
+    }
+    daysGone += 7 * (rFreq - 1);
+    if (daysGone >= totalDays)
+      return countGone;
+  }
+  // Skip the remaining whole weeks
+  int wholeWeeks = (totalDays - daysGone) / 7;
+  countGone += (wholeWeeks / rFreq) * daysPerWeek;
+  daysGone += wholeWeeks * 7;
+  if (daysGone >= totalDays     // have we reached the end date?
+  ||  wholeWeeks % rFreq)       // is end week a recurrence week?
+    return countGone;
+
+  // Check the last week in the recurrence
+  for (int i = rWeekStart - 1;  ;  i = (i + 1) % 7) {
+    if (rDays.testBit((uint)i)) {
+      ++countGone;
+    }
+    if (++daysGone == totalDays)
+      return countGone;
+  }
+  enddate = dStart.addDays(daysGone);
+  return countGone;
+}
+
+int Recurrence::weeklyCalcNextAfter(QDate& enddate, int daysPerWeek) const
+{
+  QDate dStart = mRecurStart.date();
+  int  startDayOfWeek = dStart.dayOfWeek();     // 1..7
+  int  totalDays = dStart.daysTo(enddate) + 1;
+  uint countTogo = (rDuration > 0) ? rDuration + mRecurExDatesCount : UINT_MAX;
+  int  countGone = 0;
+  int  daysGone = 0;
+  int recurWeeks;
+
+  if (startDayOfWeek != rWeekStart) {
+    // Check what remains of the start week
+    for (int i = startDayOfWeek - 1;  i != rWeekStart - 1;  i = (i + 1) % 7) {
+      ++daysGone;
+      if (rDays.testBit((uint)i)) {
+        ++countGone;
+        if (daysGone > totalDays)
+          goto ex;
+        if (--countTogo == 0)
+          return 0;
+      }
+    }
+    daysGone += 7 * (rFreq - 1);
+  }
+
+  // Skip the remaining whole weeks
+  recurWeeks = (totalDays - daysGone) / (7 * rFreq);
+  if (recurWeeks) {
+    int n = recurWeeks * daysPerWeek;
+    if (static_cast<uint>(n) > countTogo)
+        return 0;     // reached end of recurrence
+    countGone += n;
+    countTogo -= n;
+   daysGone += recurWeeks * 7 * rFreq;
+  }
+
+  // Check the last week or two in the recurrence
+  for ( ; ; ) {
+    for (int i = rWeekStart - 1;  ;  i = (i + 1) % 7) {
+      ++daysGone;
+      if (rDays.testBit((uint)i)) {
+        ++countGone;
+        if (daysGone > totalDays)
+          goto ex;
+        if (--countTogo == 0)
+          return 0;
+      }
+    }
+    daysGone += 7 * (rFreq - 1);
+  }
+ex:
+  enddate = dStart.addDays(daysGone);
+  return countGone;
+}
+
+/* Find count and, depending on 'func', the end date of a monthly recurrence.
+ * Reply = total number of occurrences up to 'enddate', or 0 if error.
+ * If 'func' = END_DATE_AND_COUNT or NEXT_AFTER_DATE, 'enddate' is updated to the
+ * recurrence end date.
+ */
+struct Recurrence::MonthlyData {
+    const Recurrence *recurrence;
+    int               year;          // current year
+    int               month;         // current month 0..11
+    int               day;           // current day of month 1..31
+    bool              varies;        // true if recurring days vary between different months
+  private:
+    QValueList<int>   days28, days29, days30, days31;   // recurring days in months of each length
+    QValueList<int>  *recurDays[4];
+  public:
+    MonthlyData(const Recurrence* r, const QDate &date)
+             : recurrence(r), year(date.year()), month(date.month()-1), day(date.day())
+             { recurDays[0] = &days28;
+               recurDays[1] = &days29;
+               recurDays[2] = &days30;
+               recurDays[3] = &days31;
+               varies = (recurrence->recurs == rMonthlyPos) ? true : recurrence->getMonthlyDayDays(days31, 31);
+             }
+    const QValueList<int>* dayList() const {
+            if (!varies)
+              return &days31;
+            QDate startOfMonth(year, month + 1, 1);
+            int daysInMonth = startOfMonth.daysInMonth();
+            QValueList<int>* days = recurDays[daysInMonth - 28];
+            if (recurrence->recurs == rMonthlyPos)
+              recurrence->getMonthlyPosDays(*days, daysInMonth, startOfMonth.dayOfWeek());
+            else if (days->isEmpty())
+              recurrence->getMonthlyDayDays(*days, daysInMonth, &days31);
+            return days;
+    }
+    int    yearMonth() const       { return year*12 + month; }
+    void   addMonths(int diff)     { month += diff;  year += month / 12;  month %= 12; }
+    QDate  date() const            { return QDate(year, month + 1, day); }
+};
+
+int Recurrence::monthlyCalc(PeriodFunc func, QDate& enddate) const
+{
+  if (recurs == rMonthlyPos && rMonthPositions.isEmpty()
+  ||  recurs == rMonthlyDay && rMonthDays.isEmpty())
+    return 0;
+
+  MonthlyData data(this, mRecurStart.date());
+  switch (func) {
+    case END_DATE_AND_COUNT:
+      return monthlyCalcEndDate(enddate, data);
+    case COUNT_TO_DATE:
+      return monthlyCalcToDate(enddate, data);
+    case NEXT_AFTER_DATE:
+      return monthlyCalcNextAfter(enddate, data);
+  }
+  return 0;
+}
+
+int Recurrence::monthlyCalcEndDate(QDate& enddate, MonthlyData& data) const
+{
+  uint countTogo = rDuration + mRecurExDatesCount;
+  int  countGone = 0;
+  QValueList<int>::ConstIterator it;
+  const QValueList<int>* days = data.dayList();
+
+  if (data.day > 1) {
+    // Check what remains of the start month
+    for (it = days->begin();  it != days->end();  ++it) {
+      if (*it >= data.day) {
+        ++countGone;
+        if (--countTogo == 0) {
+          data.day = *it;
+          break;
+        }
+      }
+    }
+    if (countTogo) {
+      data.day = 1;
+      data.addMonths(rFreq);
+    }
+  }
+  if (countTogo) {
+    if (data.varies) {
+      // The number of recurrence days varies from month to month,
+      // so we need to check month by month.
+      for ( ; ; ) {
+        days = data.dayList();
+        uint n = days->count();    // number of recurrence days in this month
+        if (n >= countTogo)
+          break;
+        countTogo -= n;
+        countGone += n;
+        data.addMonths(rFreq);
+      }
+    } else {
+      // The number of recurrences is the same every month,
+      // so skip the month-by-month check.
+      // Skip the remaining whole months, but leave at least
+      // 1 recurrence remaining, in order to get its date.
+      int daysPerMonth = days->count();
+      int wholeMonths = (countTogo - 1) / daysPerMonth;
+      data.addMonths(wholeMonths * rFreq);
+      countGone += wholeMonths * daysPerMonth;
+      countTogo -= wholeMonths * daysPerMonth;
+    }
+    if (countTogo) {
+      // Check the last month in the recurrence
+      for (it = days->begin();  it != days->end();  ++it) {
+        ++countGone;
+        if (--countTogo == 0) {
+          data.day = *it;
+          break;
+        }
+      }
+    }
+  }
+  enddate = data.date();
+  return countGone;
+}
+
+int Recurrence::monthlyCalcToDate(const QDate& enddate, MonthlyData& data) const
+{
+  int countGone = 0;
+  int endYear  = enddate.year();
+  int endMonth = enddate.month() - 1;     // zero-based
+  int endDay   = enddate.day();
+  int endYearMonth = endYear*12 + endMonth;
+  QValueList<int>::ConstIterator it;
+  const QValueList<int>* days = data.dayList();
+
+  if (data.day > 1) {
+    // Check what remains of the start month
+    for (it = days->begin();  it != days->end();  ++it) {
+      if (*it >= data.day) {
+        if (data.yearMonth() == endYearMonth && *it > endDay)
+          return countGone;
+        ++countGone;
+      }
+    }
+    data.day = 1;
+    data.addMonths(rFreq);
+  }
+
+  if (data.varies) {
+    // The number of recurrence days varies from month to month,
+    // so we need to check month by month.
+    while (data.yearMonth() < endYearMonth) {
+      countGone += data.dayList()->count();
+      data.addMonths(rFreq);
+    }
+    days = data.dayList();
+  } else {
+    // The number of recurrences is the same every month,
+    // so skip the month-by-month check.
+    // Skip the remaining whole months.
+    int daysPerMonth = days->count();
+    int wholeMonths = endYearMonth - data.yearMonth();
+    countGone += (wholeMonths / rFreq) * daysPerMonth;
+    if (wholeMonths % rFreq)
+      return countGone;      // end year isn't a recurrence year
+    data.year  = endYear;
+    data.month = endMonth;
+  }
+
+  // Check the last month in the recurrence
+  for (it = days->begin();  it != days->end();  ++it) {
+    if (*it > endDay)
+      return countGone;
+    ++countGone;
+  }
+  return countGone;
+}
+
+int Recurrence::monthlyCalcNextAfter(QDate& enddate, MonthlyData& data) const
+{
+  uint countTogo = (rDuration > 0) ? rDuration + mRecurExDatesCount : UINT_MAX;
+  int countGone = 0;
+  int endYear  = enddate.year();
+  int endMonth = enddate.month() - 1;
+  int endDay   = enddate.day();
+  int endYearMonth = endYear*12 + endMonth;
+  QValueList<int>::ConstIterator it;
+  const QValueList<int>* days = data.dayList();
+
+  if (data.day > 1) {
+    // Check what remains of the start month
+    for (it = days->begin();  it != days->end();  ++it) {
+      if (*it >= data.day) {
+        ++countGone;
+        if (data.yearMonth() == endYearMonth && *it > endDay) {
+          data.day = *it;
+          goto ex;
+        }
+        if (--countTogo == 0)
+          return 0;
+      }
+    }
+    data.day = 1;
+    data.addMonths(rFreq);
+  }
+
+  if (data.varies) {
+    // The number of recurrence days varies from month to month,
+    // so we need to check month by month.
+    while (data.yearMonth() <= endYearMonth) {
+      days = data.dayList();
+      uint n = days->count();    // number of recurrence days in this month
+      if (data.yearMonth() == endYearMonth && days->last() > endDay)
+        break;
+      if (n >= countTogo)
+        return 0;
+      countGone += n;
+      countTogo -= n;
+      data.addMonths(rFreq);
+    }
+    days = data.dayList();
+  } else {
+    // The number of recurrences is the same every month,
+    // so skip the month-by-month check.
+    // Skip the remaining whole months to at least end year/month.
+    int daysPerMonth = days->count();
+    int elapsed = endYearMonth - data.yearMonth();
+    int recurMonths = (elapsed + rFreq - 1) / rFreq;
+    if (elapsed % rFreq == 0  &&  days->last() <= endDay)
+      ++recurMonths;    // required month is after endYearMonth
+    if (recurMonths) {
+      int n = recurMonths * daysPerMonth;
+      if (static_cast<uint>(n) > countTogo)
+        return 0;     // reached end of recurrence
+      countTogo -= n;
+      countGone += n;
+      data.addMonths(recurMonths * rFreq);
+    }
+  }
+
+  // Check the last month in the recurrence
+  for (it = days->begin();  it != days->end();  ++it) {
+    ++countGone;
+    if (data.yearMonth() > endYearMonth  ||  *it > endDay) {
+      data.day = *it;
+      break;
+    }
+    if (--countTogo == 0)
+      return 0;
+  }
+ex:
+  enddate = data.date();
+  return countGone;
+}
+
+
+/* Find count and, depending on 'func', the end date of an annual recurrence by date.
+ * Reply = total number of occurrences up to 'enddate', or 0 if error.
+ * If 'func' = END_DATE_AND_COUNT or NEXT_AFTER_DATE, 'enddate' is updated to the
+ * recurrence end date.
+ */
+struct Recurrence::YearlyMonthData {
+    const Recurrence *recurrence;
+    int               year;          // current year
+    int               month;         // current month 1..12
+    int               day;           // current day of month 1..31
+    bool              varies;        // true if February 29th recurs
+  private:
+    QValueList<int>   months;        // recurring months in non-leap years  1..12
+    QValueList<int>   leapMonths;    // recurring months in leap years  1..12
+  public:
+    YearlyMonthData(const Recurrence* r, const QDate &date)
+          : recurrence(r), year(date.year()), month(date.month()), day(date.day())
+          { varies = recurrence->getYearlyMonthMonths(day, months, leapMonths); }
+    const QValueList<int>* monthList() const
+                         { return (varies && QDate::leapYear(year)) ? &leapMonths : &months; }
+    QDate            date() const  { return QDate(year, month, day); }
+};
+
+int Recurrence::yearlyMonthCalc(PeriodFunc func, QDate& enddate) const
+{
+  if (rYearNums.isEmpty())
+    return 0;
+  YearlyMonthData data(this, mRecurStart.date());
+  switch (func) {
+    case END_DATE_AND_COUNT:
+      return yearlyMonthCalcEndDate(enddate, data);
+    case COUNT_TO_DATE:
+      return yearlyMonthCalcToDate(enddate, data);
+    case NEXT_AFTER_DATE:
+      return yearlyMonthCalcNextAfter(enddate, data);
+  }
+  return 0;
+}
+
+int Recurrence::yearlyMonthCalcEndDate(QDate& enddate, YearlyMonthData& data) const
+{
+  uint countTogo = rDuration + mRecurExDatesCount;
+  int  countGone = 0;
+  QValueList<int>::ConstIterator it;
+  const QValueList<int>* mons = data.monthList();   // get recurring months for this year
+
+  if (data.month > 1) {
+    // Check what remains of the start year
+    for (it = mons->begin();  it != mons->end();  ++it) {
+      if (*it >= data.month) {
+        ++countGone;
+        if (--countTogo == 0) {
+          data.month = *it;
+          break;
+        }
+      }
+    }
+    if (countTogo) {
+      data.month = 1;
+      data.year += rFreq;
+    }
+  }
+  if (countTogo) {
+    if (data.varies) {
+      // The number of recurrences is different on leap years,
+      // so check year-by-year.
+      for ( ; ; ) {
+        mons = data.monthList();
+        uint n = mons->count();
+        if (n >= countTogo)
+          break;
+        countTogo -= n;
+        countGone += n;
+        data.year += rFreq;
+      }
+    } else {
+      // The number of recurrences is the same every year,
+      // so skip the year-by-year check.
+      // Skip the remaining whole years, but leave at least
+      // 1 recurrence remaining, in order to get its date.
+      int monthsPerYear = mons->count();
+      int wholeYears = (countTogo - 1) / monthsPerYear;
+      data.year += wholeYears * rFreq;
+      countGone += wholeYears * monthsPerYear;
+      countTogo -= wholeYears * monthsPerYear;
+    }
+    if (countTogo) {
+      // Check the last year in the recurrence
+      for (it = mons->begin();  it != mons->end();  ++it) {
+        ++countGone;
+        if (--countTogo == 0) {
+          data.month = *it;
+          break;
+        }
+      }
+    }
+  }
+  enddate = data.date();
+  return countGone;
+}
+
+int Recurrence::yearlyMonthCalcToDate(const QDate& enddate, YearlyMonthData& data) const
+{
+  int countGone = 0;
+  int endYear  = enddate.year();
+  int endMonth = enddate.month();
+  if (enddate.day() < data.day && --endMonth == 0) {
+    endMonth = 12;
+    --endYear;
+  }
+  QValueList<int>::ConstIterator it;
+  const QValueList<int>* mons = data.monthList();
+
+  if (data.month > 1) {
+    // Check what remains of the start year
+    for (it = mons->begin();  it != mons->end();  ++it) {
+      if (*it >= data.month) {
+        if (data.year == endYear && *it > endMonth)
+          return countGone;
+        ++countGone;
+      }
+    }
+    data.month = 1;
+    data.year += rFreq;
+  }
+  if (data.varies) {
+    // The number of recurrences is different on leap years,
+    // so check year-by-year.
+    while (data.year < endYear) {
+      countGone += data.monthList()->count();
+      data.year += rFreq;
+    }
+    mons = data.monthList();
+  } else {
+    // The number of recurrences is the same every year,
+    // so skip the year-by-year check.
+    // Skip the remaining whole years.
+    int monthsPerYear = mons->count();
+    int wholeYears = endYear - data.year;
+    countGone += (wholeYears / rFreq) * monthsPerYear;
+    if (wholeYears % rFreq)
+      return countGone;      // end year isn't a recurrence year
+    data.year = endYear;
+  }
+
+  // Check the last year in the recurrence
+  for (it = mons->begin();  it != mons->end();  ++it) {
+    if (*it > endMonth)
+      return countGone;
+    ++countGone;
+  }
+  return countGone;
+}
+
+int Recurrence::yearlyMonthCalcNextAfter(QDate& enddate, YearlyMonthData& data) const
+{
+  uint countTogo = (rDuration > 0) ? rDuration + mRecurExDatesCount : UINT_MAX;
+  int  countGone = 0;
+  int endYear  = enddate.year();
+  int endMonth = enddate.month();
+  if (enddate.day() < data.day && --endMonth == 0) {
+    endMonth = 12;
+    --endYear;
+  }
+  QValueList<int>::ConstIterator it;
+  const QValueList<int>* mons = data.monthList();
+
+  if (data.month > 1) {
+    // Check what remains of the start year
+    for (it = mons->begin();  it != mons->end();  ++it) {
+      if (*it >= data.month) {
+        ++countGone;
+        if (data.year == endYear && *it > endMonth) {
+          data.month = *it;
+          goto ex;
+        }
+        if (--countTogo == 0)
+          return 0;
+      }
+    }
+    data.month = 1;
+    data.year += rFreq;
+  }
+
+  if (data.varies) {
+    // The number of recurrences is different on leap years,
+    // so check year-by-year.
+    while (data.year <= endYear) {
+      mons = data.monthList();
+      if (data.year == endYear && mons->last() > endMonth)
+        break;
+      uint n = mons->count();
+      if (n >= countTogo)
+        break;
+      countTogo -= n;
+      countGone += n;
+      data.year += rFreq;
+    }
+    mons = data.monthList();
+  } else {
+    // The number of recurrences is the same every year,
+    // so skip the year-by-year check.
+    // Skip the remaining whole years to at least endYear.
+    int monthsPerYear = mons->count();
+    int recurYears = (endYear - data.year + rFreq - 1) / rFreq;
+    if ((endYear - data.year)%rFreq == 0
+    &&  mons->last() <= endMonth)
+      ++recurYears;    // required year is after endYear
+    if (recurYears) {
+      int n = recurYears * monthsPerYear;
+      if (static_cast<uint>(n) > countTogo)
+        return 0;     // reached end of recurrence
+      countTogo -= n;
+      countGone += n;
+      data.year += recurYears * rFreq;
+    }
+  }
+
+  // Check the last year in the recurrence
+  for (it = mons->begin();  it != mons->end();  ++it) {
+    ++countGone;
+    if (data.year > endYear || *it > endMonth) {
+      data.month = *it;
+      break;
+    }
+    if (--countTogo == 0)
+      return 0;
+  }
+ex:
+  enddate = data.date();
+  return countGone;
+}
+
+
+/* Find count and, depending on 'func', the end date of an annual recurrence by date.
+ * Reply = total number of occurrences up to 'enddate', or 0 if error.
+ * If 'func' = END_DATE_AND_COUNT or NEXT_AFTER_DATE, 'enddate' is updated to the
+ * recurrence end date.
+ */
+struct Recurrence::YearlyPosData {
+    const Recurrence *recurrence;
+    int               year;          // current year
+    int               month;         // current month 0..11
+    int               day;           // current day of month 1..31
+    int               daysPerMonth;  // number of days which recur each month, or -1 if variable
+    int               count;         // number of days which recur each year, or -1 if variable
+    bool              varies;        // true if number of days varies from year to year
+  private:
+    mutable QValueList<int> days;
+  public:
+    YearlyPosData(const Recurrence* r, const QDate &date)
+          : recurrence(r), year(date.year()), month(date.month()), day(date.day()), count(-1)
+            { if ((daysPerMonth = r->countMonthlyPosDays()) > 0)
+                count = daysPerMonth * r->rYearNums.count();
+              varies = (daysPerMonth < 0);
+            }
+    const QValueList<int>* dayList() const {
+            QDate startOfMonth(year, month + 1, 1);
+            recurrence->getMonthlyPosDays(days, startOfMonth.daysInMonth(), startOfMonth.dayOfWeek());
+            return &days;
+    }
+    int    yearMonth() const       { return year*12 + month; }
+    void   addMonths(int diff)     { month += diff;  year += month / 12;  month %= 12; }
+    QDate  date() const            { return QDate(year, month, day); }
+};
+
+int Recurrence::yearlyPosCalc(PeriodFunc func, QDate& enddate) const
+{
+  if (rYearNums.isEmpty() || rMonthPositions.isEmpty())
+    return 0;
+  YearlyPosData data(this, mRecurStart.date());
+  switch (func) {
+    case END_DATE_AND_COUNT:
+      return yearlyPosCalcEndDate(enddate, data);
+    case COUNT_TO_DATE:
+      return yearlyPosCalcToDate(enddate, data);
+    case NEXT_AFTER_DATE:
+      return yearlyPosCalcNextAfter(enddate, data);
+  }
+  return 0;
+}
+
+int Recurrence::yearlyPosCalcEndDate(QDate& enddate, YearlyPosData& data) const
+{
+  uint countTogo = rDuration + mRecurExDatesCount;
+  int  countGone = 0;
+  QValueList<int>::ConstIterator id;
+  const QValueList<int>* days;
+
+  if (data.month > 1 || data.day > 1) {
+    // Check what remains of the start year
+    for (QPtrListIterator<int> im(rYearNums); im.current(); ++im) {
+      if (*im.current() >= data.month) {
+        // Check what remains of the start month
+        if (data.day > 1 || data.varies
+        ||  static_cast<uint>(data.daysPerMonth) >= countTogo) {
+          data.month = *im.current();
+          days = data.dayList();
+          for (id = days->begin();  id != days->end();  ++id) {
+            if (*id >= data.day) {
+              ++countGone;
+              if (--countTogo == 0) {
+                data.month = *im.current();
+                data.day = *id;
+                goto ex;
+              }
+            }
+          }
+          data.day = 1;
+        } else {
+          // The number of days per month is constant, so skip
+          // the whole month.
+          countTogo -= data.daysPerMonth;
+          countGone += data.daysPerMonth;
+        }
+      }
+    }
+    data.month = 1;
+    data.year += rFreq;
+  }
+
+  if (data.varies) {
+    // The number of recurrences varies from year to year.
+    for ( ; ; ) {
+      for (QPtrListIterator<int> im(rYearNums); im.current(); ++im) {
+        data.month = *im.current();
+        days = data.dayList();
+        int n = days->count();
+        if (static_cast<uint>(n) >= countTogo) {
+          // Check the last month in the recurrence
+          for (id = days->begin();  id != days->end();  ++id) {
+            ++countGone;
+            if (--countTogo == 0) {
+              data.day = *id;
+              goto ex;
+            }
+          }
+        }
+        countTogo -= n;
+        countGone += n;
+      }
+      data.year += rFreq;
+    }
+  } else {
+    // The number of recurrences is the same every year,
+    // so skip the year-by-year check.
+    // Skip the remaining whole years, but leave at least
+    // 1 recurrence remaining, in order to get its date.
+    int wholeYears = (countTogo - 1) / data.count;
+    data.year += wholeYears * rFreq;
+    countGone += wholeYears * data.count;
+    countTogo -= wholeYears * data.count;
+
+    // Check the last year in the recurrence.
+    for (QPtrListIterator<int> im(rYearNums); im.current(); ++im) {
+      if (static_cast<uint>(data.daysPerMonth) >= countTogo) {
+        // Check the last month in the recurrence
+        data.month = *im.current();
+        days = data.dayList();
+        for (id = days->begin();  id != days->end();  ++id) {
+          ++countGone;
+          if (--countTogo == 0) {
+            data.day = *id;
+            goto ex;
+          }
+        }
+      }
+      countTogo -= data.daysPerMonth;
+      countGone += data.daysPerMonth;
+    }
+    data.year += rFreq;
+  }
+ex:
+  enddate = data.date();
+  return countGone;
+}
+
+int Recurrence::yearlyPosCalcToDate(const QDate& enddate, YearlyPosData& data) const
+{
+  int countGone = 0;
+  int endYear  = enddate.year();
+  int endMonth = enddate.month();
+  int endDay   = enddate.day();
+  if (endDay < data.day && --endMonth == 0) {
+    endMonth = 12;
+    --endYear;
+  }
+  int endYearMonth = endYear*12 + endMonth;
+  QValueList<int>::ConstIterator id;
+  const QValueList<int>* days;
+
+  if (data.month > 1 || data.day > 1) {
+    // Check what remains of the start year
+    for (QPtrListIterator<int> im(rYearNums); im.current(); ++im) {
+      if (*im.current() >= data.month) {
+        if (data.yearMonth() > endYearMonth)
+          return countGone;
+        // Check what remains of the start month
+        bool lastMonth = (data.yearMonth() == endYearMonth);
+        if (lastMonth || data.day > 1 || data.varies) {
+          data.month = *im.current();
+          days = data.dayList();
+          if (lastMonth || data.day > 1) {
+            for (id = days->begin();  id != days->end();  ++id) {
+              if (*id >= data.day) {
+                if (lastMonth && *id > endDay)
+                  return countGone;
+                ++countGone;
+              }
+            }
+          } else
+            countGone += days->count();
+          data.day = 1;
+        } else {
+          // The number of days per month is constant, so skip
+          // the whole month.
+          countGone += data.daysPerMonth;
+        }
+      }
+    }
+    data.month = 1;
+    data.year += rFreq;
+  }
+
+  if (data.varies) {
+    // The number of recurrences varies from year to year.
+    for ( ; ; ) {
+      for (QPtrListIterator<int> im(rYearNums); im.current(); ++im) {
+        data.month = *im.current();
+        days = data.dayList();
+        if (data.yearMonth() >= endYearMonth) {
+          if (data.yearMonth() > endYearMonth)
+            return countGone;
+          // Check the last month in the recurrence
+          for (id = days->begin();  id != days->end();  ++id) {
+            if (*id > endDay)
+              return countGone;
+            ++countGone;
+          }
+        } else
+          countGone += days->count();
+      }
+      data.year += rFreq;
+    }
+  } else {
+    // The number of recurrences is the same every year,
+    // so skip the year-by-year check.
+    // Skip the remaining whole years, but leave at least
+    // 1 recurrence remaining, in order to get its date.
+    int wholeYears = endYear - data.year;
+    countGone += (wholeYears / rFreq) * data.count;
+    if (wholeYears % rFreq)
+      return countGone;      // end year isn't a recurrence year
+    data.year = endYear;
+
+    // Check the last year in the recurrence.
+    for (QPtrListIterator<int> im(rYearNums); im.current(); ++im) {
+      data.month = *im.current();
+      if (data.month >= endMonth) {
+        if (data.month > endMonth)
+          return countGone;
+        // Check the last month in the recurrence
+        days = data.dayList();
+        for (id = days->begin();  id != days->end();  ++id) {
+          if (*id > endDay)
+            return countGone;
+          ++countGone;
+        }
+      } else
+        countGone += data.daysPerMonth;
+    }
+  }
+  return countGone;
+}
+
+int Recurrence::yearlyPosCalcNextAfter(QDate& enddate, YearlyPosData& data) const
+{
+  uint countTogo = (rDuration > 0) ? rDuration + mRecurExDatesCount : UINT_MAX;
+  int  countGone = 0;
+  int endYear  = enddate.year();
+  int endMonth = enddate.month();
+  if (enddate.day() < data.day && --endMonth == 0) {
+    endMonth = 12;
+    --endYear;
+  }
+  QValueList<int>::ConstIterator id;
+  const QValueList<int>* days;
+// TODO: complete this
+/*
+  if (data.month > 1) {
+    // Check what remains of the start year
+    for (im = mons->begin();  im != mons->end();  ++im) {
+      if (*im >= data.month) {
+        ++countGone;
+        if (data.year == endYear && *im > endMonth) {
+          data.month = *im;
+          goto ex;
+        }
+        if (--countTogo == 0)
+          return 0;
+      }
+    }
+    data.month = 1;
+    data.year += rFreq;
+  }
+
+  if (data.varies) {
+    // The number of recurrences is different on leap years,
+    // so check year-by-year.
+    while (data.year <= endYear) {
+      mons = data.monthList();
+      if (data.year == endYear && mons->last() > endMonth)
+        break;
+      uint n = mons->count();
+      if (n >= countTogo)
+        break;
+      countTogo -= n;
+      countGone += n;
+      data.year += rFreq;
+    }
+    mons = data.monthList();
+  } else {
+    // The number of recurrences is the same every year,
+    // so skip the year-by-year check.
+    // Skip the remaining whole years to at least endYear.
+    int monthsPerYear = mons->count();
+    int recurYears = (endYear - data.year + rFreq - 1) / rFreq;
+    if ((endYear - data.year)%rFreq == 0
+    &&  mons->last() <= endMonth)
+      ++recurYears;    // required year is after endYear
+    if (recurYears) {
+      int n = recurYears * monthsPerYear;
+      if (static_cast<uint>(n) > countTogo)
+        return 0;     // reached end of recurrence
+      countTogo -= n;
+      countGone += n;
+      data.year += recurYears * rFreq;
+    }
+  }
+
+  // Check the last year in the recurrence
+  for (im = mons->begin();  im != mons->end();  ++im) {
+    ++countGone;
+    if (data.year > endYear || *im > endMonth) {
+      data.month = *im;
+      break;
+    }
+    if (--countTogo == 0)
+      return 0;
+  }
+ex:*/
+  enddate = data.date();
+  return countGone;
+}
+
+
+/* Find count and, depending on 'func', the end date of an annual recurrence by day.
+ * Reply = total number of occurrences up to 'enddate', or 0 if error.
+ * If 'func' = END_DATE_AND_COUNT or NEXT_AFTER_DATE, 'enddate' is updated to the
+ * recurrence end date.
+ */
+struct Recurrence::YearlyDayData {
+    int    year;       // current year
+    int    day;        // current day of year 1..366
+    bool   varies;     // true if day 366 recurs
+  private:
+    int    daycount;
+  public:
+    YearlyDayData(const Recurrence* r, const QDate &date)
+             : year(date.year()), day(date.dayOfYear()), varies(*r->rYearNums.getLast() == 366),
+               daycount(r->rYearNums.count()) { }
+    bool  leapYear() const       { return QDate::leapYear(year); }
+    int   dayCount() const       { return daycount - (varies && !QDate::leapYear(year) ? 1 : 0); }
+    bool  isMaxDayCount() const  { return !varies || QDate::leapYear(year); }
+    QDate date() const           { return QDate(year, 1, 1).addDays(day - 1); }
+};
+
+int Recurrence::yearlyDayCalc(PeriodFunc func, QDate& enddate) const
+{
+  if (rYearNums.isEmpty())
+    return 0;
+  YearlyDayData data(this, mRecurStart.date());
+  switch (func) {
+    case END_DATE_AND_COUNT:
+      return yearlyDayCalcEndDate(enddate, data);
+    case COUNT_TO_DATE:
+      return yearlyDayCalcToDate(enddate, data);
+    case NEXT_AFTER_DATE:
+      return yearlyDayCalcNextAfter(enddate, data);
+  }
+  return 0;
+}
+
+int Recurrence::yearlyDayCalcEndDate(QDate& enddate, YearlyDayData& data) const
+{
+  uint countTogo = rDuration + mRecurExDatesCount;
+  int countGone = 0;
+
+  if (data.day > 1) {
+    // Check what remains of the start year
+    bool leapOK = data.isMaxDayCount();
+    for (QPtrListIterator<int> it(rYearNums); it.current(); ++it) {
+      int d = *it.current();
+      if (d >= data.day && (leapOK || d < 366)) {
+        ++countGone;
+        if (--countTogo == 0) {
+          data.day = d;
+          goto ex;
+        }
+      }
+    }
+    data.day = 1;
+    data.year += rFreq;
+  }
+
+  if (data.varies) {
+    // The number of recurrences is different in leap years,
+    // so check year-by-year.
+    for ( ; ; ) {
+      uint n = data.dayCount();
+      if (n >= countTogo)
+        break;
+      countTogo -= n;
+      countGone += n;
+      data.year += rFreq;
+    }
+  } else {
+    // The number of recurrences is the same every year,
+    // so skip the year-by-year check.
+    // Skip the remaining whole years, but leave at least
+    // 1 recurrence remaining, in order to get its date.
+    int daysPerYear = rYearNums.count();
+    int wholeYears = (countTogo - 1) / daysPerYear;
+    data.year += wholeYears * rFreq;
+    countGone += wholeYears * daysPerYear;
+    countTogo -= wholeYears * daysPerYear;
+  }
+  if (countTogo) {
+    // Check the last year in the recurrence
+    for (QPtrListIterator<int> it(rYearNums); it.current(); ++it) {
+      ++countGone;
+      if (--countTogo == 0) {
+        data.day = *it.current();
+        break;
+      }
+    }
+  }
+ex:
+  enddate = data.date();
+  return countGone;
+}
+
+int Recurrence::yearlyDayCalcToDate(const QDate& enddate, YearlyDayData& data) const
+{
+  int countGone = 0;
+  int endYear = enddate.year();
+  int endDay  = enddate.dayOfYear();
+
+  if (data.day > 1) {
+    // Check what remains of the start year
+    bool leapOK = data.isMaxDayCount();
+    for (QPtrListIterator<int> it(rYearNums); it.current(); ++it) {
+      int d = *it.current();
+      if (d >= data.day && (leapOK || d < 366)) {
+        if (data.year == endYear && d > endDay)
+          return countGone;
+        ++countGone;
+      }
+    }
+    data.day = 1;
+    data.year += rFreq;
+  }
+
+  if (data.varies) {
+    // The number of recurrences is different in leap years,
+    // so check year-by-year.
+    while (data.year < endYear) {
+      uint n = data.dayCount();
+      countGone += n;
+      data.year += rFreq;
+    }
+    if (data.year > endYear)
+      return countGone;
+  } else {
+    // The number of recurrences is the same every year.
+    // Skip the remaining whole years.
+    int wholeYears = endYear - data.year;
+    countGone += (wholeYears / rFreq) * rYearNums.count();
+    if (wholeYears % rFreq)
+      return countGone;      // end year isn't a recurrence year
+    data.year = endYear;
+  }
+
+  if (data.year <= endYear) {
+    // Check the last year in the recurrence
+    for (QPtrListIterator<int> it(rYearNums); it.current(); ++it) {
+      if (*it.current() > endDay)
+        return countGone;
+      ++countGone;
+    }
+  }
+  return countGone;
+}
+
+int Recurrence::yearlyDayCalcNextAfter(QDate& enddate, YearlyDayData& data) const
+{
+  uint countTogo = (rDuration > 0) ? rDuration + mRecurExDatesCount : UINT_MAX;
+  int  countGone = 0;
+  int  endYear = enddate.year();
+  int  endDay  = enddate.dayOfYear();
+
+  if (data.day > 1) {
+    // Check what remains of the start year
+    bool leapOK = data.isMaxDayCount();
+    for (QPtrListIterator<int> it(rYearNums); it.current(); ++it) {
+      int d = *it.current();
+      if (d >= data.day && (leapOK || d < 366)) {
+        ++countGone;
+        if (data.year == endYear && d > endDay) {
+          data.day = d;
+          goto ex;
+        }
+        if (--countTogo == 0)
+          return 0;
+      }
+    }
+    data.day = 1;
+    data.year += rFreq;
+  }
+
+  if (data.varies) {
+    // The number of recurrences is different in leap years,
+    // so check year-by-year.
+    while (data.year <= endYear) {
+      uint n = data.dayCount();
+      if (data.year == endYear && *rYearNums.getLast() > endDay)
+        break;
+      if (n >= countTogo)
+        break;
+      countTogo -= n;
+      countGone += n;
+      data.year += rFreq;
+    }
+  } else {
+    // The number of recurrences is the same every year,
+    // so skip the year-by-year check.
+    // Skip the remaining whole years to at least endYear.
+    int daysPerYear = rYearNums.count();
+    int recurYears = (endYear - data.year + rFreq - 1) / rFreq;
+    if ((endYear - data.year)%rFreq == 0
+    &&  *rYearNums.getLast() <= endDay)
+      ++recurYears;    // required year is after endYear
+    if (recurYears) {
+      int n = recurYears * daysPerYear;
+      if (static_cast<uint>(n) > countTogo)
+        return 0;     // reached end of recurrence
+      countTogo -= n;
+      countGone += n;
+      data.year += recurYears * rFreq;
+    }
+  }
+
+  // Check the last year in the recurrence
+  for (QPtrListIterator<int> it(rYearNums); it.current(); ++it) {
+    ++countGone;
+    int d = *it.current();
+    if (data.year > endYear || d > endDay) {
+      data.day = d;
+      break;
+    }
+    if (--countTogo == 0)
+      return 0;
+  }
+ex:
+  enddate = data.date();
+  return countGone;
+}
+
+// Get the days in this month which recur, in numerical order.
+// Parameters: daysInMonth = number of days in this month
+//             startDayOfWeek = day of week for first day of month.
+void Recurrence::getMonthlyPosDays(QValueList<int>& list, int daysInMonth, int startDayOfWeek) const
+{
+  list.clear();
+  int endDayOfWeek = (startDayOfWeek + daysInMonth - 2) % 7 + 1;
+  // Go through the list, compiling a bit list of actual day numbers
+  Q_UINT32 days = 0;
+  for (QPtrListIterator<rMonthPos> pos(rMonthPositions); pos.current(); ++pos) {
+    int weeknum = pos.current()->rPos;
+    QBitArray& rdays = pos.current()->rDays;
+    if (pos.current()->negative) {
+      // nth days before the end of the month
+      ++weeknum;         // change to 0-based
+      for (uint i = 1; i <= 7; ++i) {
+        if (rdays.testBit(i - 1)) {
+          int day = daysInMonth + weeknum*7 - (endDayOfWeek - i + 7) % 7;
+          if (day > 0)
+            days |= 1 << (day - 1);
+        }
+      }
+    } else {
+      // nth days after the start of the month
+      --weeknum;         // change to 0-based
+      for (uint i = 1; i <= 7; ++i) {
+        if (rdays.testBit(i - 1)) {
+          int day = 1 + weeknum*7 + (i - startDayOfWeek + 7) % 7;
+          if (day <= daysInMonth)
+            days |= 1 << (day - 1);
+        }
+      }
+    }
+  }
+  // Compile the ordered list
+  Q_UINT32 mask = 1;
+  for (int i = 0; i < daysInMonth; mask <<= 1, ++i) {
+    if (days & mask)
+      list.append(i + 1);
+  }
+}
+
+// Get the number of days in the month which recur.
+// Reply = -1 if the number varies from month to month.
+int Recurrence::countMonthlyPosDays() const
+{
+  int count = 0;
+  Q_UINT8 positive[5] = { 0, 0, 0, 0, 0 };
+  Q_UINT8 negative[4] = { 0, 0, 0, 0 };
+  for (QPtrListIterator<rMonthPos> pos(rMonthPositions); pos.current(); ++pos) {
+    int n = 0;
+    int weeknum = pos.current()->rPos;
+    Q_UINT8* wk;
+    if (pos.current()->negative) {
+      // nth days before the end of the month
+      if (weeknum < -4)
+        return -1;       // days in 5th week are often missing
+      wk = &negative[weeknum + 4];
+    } else {
+      // nth days after the start of the month
+      if (weeknum > 4)
+        return -1;       // days in 5th week are often missing
+      wk = &positive[weeknum - 1];
+    }
+    QBitArray& rdays = pos.current()->rDays;
+    for (uint i = 0; i < 7; ++i) {
+      if (rdays.testBit(i)) {
+        ++count;
+        *wk |= (1 << i);
+      }
+    }
+  }
+  // Check for any possible days which could be duplicated by
+  // a positive and a negative position.
+  for (int i = 0; i < 4; ++i) {
+    if (negative[i] & (positive[i] | positive[i+1]))
+      return -1;
+  }
+  return count;
+}
+
+// Get the days in this month which recur, in numerical order.
+// Reply = true if day numbers varies from month to month.
+bool Recurrence::getMonthlyDayDays(QValueList<int>& list, int daysInMonth, const QValueList<int>* days31) const
+{
+  list.clear();
+  bool variable = false;
+  Q_UINT32 days = 0;
+  for (QPtrListIterator<int> it(rMonthDays); it.current(); ++it) {
+    int day = *it.current();
+    if (day > 0) {
+      // date in the month
+      if (day <= daysInMonth)
+        days |= 1 << (day - 1);
+      if (day > 28 && day <= 31)
+        variable = true;     // this date does not appear in some months
+    } else if (day < 0) {
+      // days before the end of the month
+      variable = true;       // this date varies depending on the month length
+      day = daysInMonth + day;    // zero-based day of month
+      if (day >= 0)
+        days |= 1 << day;
+    }
+  }
+  // Compile the ordered list
+  Q_UINT32 mask = 1;
+  for (int i = 0; i < daysInMonth; mask <<= 1, ++i) {
+    if (days & mask)
+      list.append(i + 1);
+  }
+  return variable;
+}
+
+// Get the months which recur, in numerical order.
+// Reply = true if February 29th also recurs.
+bool Recurrence::getYearlyMonthMonths(int day, QValueList<int>& list, QValueList<int>& leaplist) const
+{
+  list.clear();
+  leaplist.clear();
+  bool feb29 = false;
+  for (QPtrListIterator<int> it(rYearNums); it.current(); ++it) {
+    int month = *it.current();
+    if (month == 2) {
+      if (day <= 28) {
+        list.append(month);     // date appears in February
+        leaplist.append(month);
+      }
+      else if (day == 29) {
+        leaplist.append(month);
+        feb29 = true;
+      }
+    }
+    else if (day <= 30 || QDate(2000, month, 1).daysInMonth() == 31) {
+      list.append(month);       // date appears in every month
+      leaplist.append(month);
+    }
+  }
+  return feb29;
 }
