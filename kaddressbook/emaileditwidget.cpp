@@ -209,7 +209,7 @@ void EmailEditDialog::remove()
 {
   QString address = mEmailListBox->currentText();
 
-  QString text = i18n( "Are you sure that you want to remove the email address \"%1\"?" ).arg( address );
+  QString text = i18n( "Are you sure that you want to remove the email address <b>%1</b>?" ).arg( address );
   QString caption = i18n( "Confirm Remove" );
   
   if ( KMessageBox::questionYesNo( this, text, caption ) == KMessageBox::Yes ) {
