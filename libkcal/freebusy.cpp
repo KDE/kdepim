@@ -28,7 +28,7 @@ FreeBusy::FreeBusy()
 {
 }
 
-FreeBusy::FreeBusy(QDateTime start, QDateTime end)
+FreeBusy::FreeBusy(const QDateTime &start, const QDateTime &end)
 {
   setDtStart(start);
   setDtEnd(end);
@@ -95,12 +95,12 @@ FreeBusy::~FreeBusy()
 {
 }
 
-bool FreeBusy::setDtEnd(QDateTime end) {
+bool FreeBusy::setDtEnd(const QDateTime &end) {
   mDtEnd = end;
   return true;
 }
 
-QDateTime FreeBusy::dtEnd() {
+QDateTime FreeBusy::dtEnd() const {
   return mDtEnd;
 }
 
@@ -109,7 +109,7 @@ QValueList<Period> FreeBusy::busyPeriods() const
   return mBusyPeriods;
 }
 
-bool FreeBusy::addLocalPeriod( QDateTime eventStart, QDateTime eventEnd ) {
+bool FreeBusy::addLocalPeriod(const QDateTime &eventStart, const QDateTime &eventEnd ) {
   QDateTime tmpStart;
   QDateTime tmpEnd;
 
@@ -166,7 +166,7 @@ void FreeBusy::sortList()
   mBusyPeriods=sortedList;
 }
 
-void FreeBusy::addPeriod(QDateTime start, QDateTime end)
+void FreeBusy::addPeriod(const QDateTime &start, const QDateTime &end)
 {
   Period p(start, end);
   mBusyPeriods.append( p );

@@ -41,7 +41,7 @@ class FreeBusy : public IncidenceBase
 {
   public:
     FreeBusy();
-    FreeBusy(QDateTime start, QDateTime end);
+    FreeBusy(const QDateTime &start, const QDateTime &end);
     FreeBusy(Calendar *calendar, const QDateTime &start, const QDateTime &end);
     FreeBusy(QValueList<Period> busyPeriods);
 
@@ -49,18 +49,18 @@ class FreeBusy : public IncidenceBase
     
     QCString type() const { return "FreeBusy"; }
 
-    QDateTime dtEnd();
-    bool setDtEnd(QDateTime end);
+    virtual QDateTime dtEnd() const;
+    bool setDtEnd(const QDateTime &end);
 
     QValueList<Period> busyPeriods() const;
 
-    void addPeriod(QDateTime start, QDateTime end);
+    void addPeriod(const QDateTime &start, const QDateTime &end);
     void sortList();
     
   private:
 
     //This is used for creating a freebusy object for the current user
-    bool addLocalPeriod(QDateTime start, QDateTime end);
+    bool addLocalPeriod(const QDateTime &start, const QDateTime &end);
 
     QDateTime mDtEnd;
     QValueList<Period> mBusyPeriods;
