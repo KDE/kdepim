@@ -1,0 +1,230 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+  <!ENTITY kgpgcertmanager "<application>KgpgCertManager</application>">
+  <!ENTITY kappname "&kgpgcertmanager;">
+  <!ENTITY package "kdenetwork">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % English "INCLUDE">
+]>
+
+<book lang="&language;">
+
+<bookinfo>
+<title>The &kgpgcertmanager; Handbook</title>
+
+<authorgroup>
+<author>
+<firstname>Steffen</firstname>
+<othername></othername>
+<surname>Hansen</surname>
+<affiliation>
+<address><email>steffen@klaralvdalens-datakonsult.se</email></address>
+</affiliation>
+</author>
+
+<othercredit role="developer">
+<firstname>Kalle</firstname>
+<surname>Dalheimer</surname>
+<contrib>Developer</contrib>
+</othercredit>
+
+<othercredit role="developer">
+<firstname>Jesper</firstname>
+<surname>Pedersen</surname>
+<affiliation>
+<address><email>blackie@kde.org</email></address>
+</affiliation>
+<contrib>Developer</contrib>
+</othercredit>
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<legalnotice>&FDLNotice;</legalnotice>
+
+<date>2002-08-22</date>
+<releaseinfo>0.00.00</releaseinfo>
+
+<abstract>
+<para>
+&kgpgcertmanager; is a tool for managing X509 certificates.
+</para>
+</abstract>
+
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>Kapp</keyword>
+<keyword>X509</keyword>
+<keyword>LDAP</keyword>
+<keyword>gpg</keyword>
+<keyword>gpgsm</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="introduction"> <title>Introduction</title> 
+
+<para>&kgpgcertmanager; is a tool for managing X509 certificates in
+the gpgsm keybox and for retrieving certificates from
+<acronym>LDAP</acronym> servers.</para>
+
+</chapter>
+
+<chapter id="functions"><title>Functions</title>
+
+<sect1 id="search"><title>Searching</title>
+<para>When &kgpgcertmanager; starts, it is ready to search for certificates
+in the local keybox. Just type in part of the name of a certificate
+owner, press the find-button and the results will display.</para>
+<para>When double-clicking on the results, a dialog with information
+about the certificate will be displayed.</para> 
+<para>The combobox in the toolbar can be switched from "in local
+certificated" to "in external certificates" to search the LDAP servers
+for certificates. When the results are displayed, each certificate can
+be double-clicked to show an informational dialog. This dialog has a
+button "Import to Local" that allows the certificate to imported into
+the local keybox.</para>
+</sect1>
+
+<sect1 id="quit"><title>File/Quit</title>
+<para>The menuitem
+<menuchoice><guimenu>File</guimenu><guimenuitem>Quit</guimenuitem></menuchoice>
+exits the application.
+</para></sect1>
+
+<sect1 id="redisplay"><title>View/Redisplay</title>
+<para>The menuitem <menuchoice><guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem></menuchoice>
+performs the current query again and displays the retults.
+</para></sect1>
+
+<sect1 id="newcert"><title>Certificates/New Certificate</title>
+<para>The menuitem
+<menuchoice><guimenu>Certificates</guimenu><guimenuitem>New
+Certificate</guimenuitem></menuchoice> starts the certificate 
+request creating wizard. It will giude you through a number of steps
+to create a certificate request. This request can, at the end of the
+wizard, either be sent to a certificate authority (CA) to be signed or
+saved to a file (for example a floppy, so it can be shipped to the
+CA).</para>
+<para>Whenever you are done with a step in the wizard, press
+<guibutton>Next</guibutton> to go to the next step (or
+<guibutton>Back</guibutton> to review steps that are already
+completed). The certificate request creation can be cancelled at any
+point by pressing the <guibutton>Cancel</guibutton> button.
+</para>
+<para>The first step in the wizard is to type in your personal data
+for the certificate. The fields to fill out are:
+<itemizedlist>
+<listitem>
+<para><guilabel>Name:</guilabel> Your name :)</para>
+</listitem>
+<listitem>
+<para><guilabel>Location:</guilabel>The town or city you live in.</para>
+</listitem>
+<listitem>
+<para><guilabel>Organisation:</guilabel>The organisation you represent
+(for example the company you work for)</para>
+</listitem>
+<listitem>
+<para><guilabel>Department:</guilabel>The organisational unit you're
+in. For example "Logistics".</para> 
+</listitem>
+<listitem>
+<para><guilabel>Country code:</guilabel>The two letter code for the
+country you're living in. For example "US".</para>
+</listitem>
+<listitem>
+<para><guilabel>Email address:</guilabel>Your email address. Be sure
+to get that one right -- this will be the address people will be
+sending mail to when they use your certificate.</para>
+</listitem>
+</itemizedlist>
+</para><para>
+The next step in the wizard is to select whether to store the
+certificate in a file or send it directly to a CA. You'll have to
+specify the filename or email address to send the certificate request to.
+</para></sect1>
+
+
+<sect1 id="import"><title>Import/Certificate</title>
+<para>The <menuchoice><guimenu>Import</guimenu><guimenuitem>Certificate...</guimenuitem></menuchoice>
+ menuitem allows you to import a certificate from a
+file into the local keybox</para><para>The format of the certificate
+file should be one understood be the gpg-backend. Please refer to the
+gpg and gpgsm manuals for specifics about this.
+</para>
+</sect1>
+
+<sect1 id="crl"><title>Import/CRL</title>
+<para>Normally, Certificate Revocation Lists (CRLs) are handled
+transparently by the backend, but it might sometimes by useful to
+import a CRL manually into the local CRL cache.</para>
+<para>This can be done from the
+<menuchoice><guimenu>Import</guimenu><guimenuitem>CRL...</guimenuitem></menuchoice>
+menuitem.</para>
+<para>NOTE: For CRL import to work, the "dirmngr" tool must be in the
+search PATH. If the <guimenuitem>From File...</guimenuitem> menuitem
+is disabled, you should contact the system administrator and ask
+him/her to install dirmngr.
+</para>
+<para>
+You can view the contents of the local CRL cache from the menuitem
+<menuchoice><guimenu>View</guimenu><guimenuitem>CRL
+cache...</guimenuitem></menuchoice>. This will display a dialog with
+information about the CRLs in the cache and the fingerprints of the
+certificates in each CRL.
+</para>
+</sect1>
+
+<sect1 id="help"><title>Help</title>
+
+
+<para>The <guimenu>Help</guimenu> menu contains the standard &kde;
+help menu.</para>
+
+&help.menu.documentation;
+
+</sect1>
+
+</chapter>
+
+<chapter id="credits-and-license">
+<title>Credits and License</title>
+
+<para>&kgpgcertmanager; copyright 2002 Steffen Hansen, Kalle Dalheimer
+and Jesper Pedersen.</para>
+
+<para>Documentation copyright 2002 Steffen Hansen</para>
+
+<itemizedlist>
+<title>Contributors</title>
+<listitem>
+<para>Steffen Hansen <email>hansen@kde.org</email></para>
+</listitem>
+<listitem>
+<para>Kalle Dalheimer <email>kalle@kde.org</email></para>
+</listitem>
+<listitem>
+<para>Jesper Pedersen <email>blackie@kde.org</email></para>
+</listitem>
+</itemizedlist>
+
+&underGPL;
+&underFDL;
+</chapter>
+
+&documentation.index; 
+</book>
+
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+// vim:ts=2:sw=2:tw=78:noet
+-->

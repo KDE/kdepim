@@ -1,0 +1,236 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+ <!ENTITY appname "&korn;" >
+ <!ENTITY package "kdenetwork">
+ <!ENTITY % English "INCLUDE">
+ <!ENTITY % addindex "IGNORE">
+]>
+
+<book lang="&language;">
+<bookinfo>
+<title>The &korn; Documentation</title>
+
+<authorgroup>
+<author>
+<firstname>Nick</firstname>
+<surname>Betcher</surname>
+<affiliation>
+<address><email>nbetcher@uswest.net</email></address></affiliation>
+</author>
+
+<othercredit role="developer">
+<firstname>Sirtaj</firstname>
+<surname>Kang</surname>
+<affiliation>
+<address><email>taj@kde.org</email></address>
+</affiliation>
+<contrib>Developer</contrib>
+</othercredit>
+
+<othercredit role="developer">
+<firstname>Cristian</firstname>
+<surname>Tibirna</surname>
+<affiliation>
+<address><email>tibirna@kde.org</email></address>
+</affiliation>
+<contrib>Developer</contrib>
+</othercredit>
+
+<othercredit role="developer">
+<firstname>Kurt</firstname>
+<surname>Granroth</surname>
+<affiliation>
+<address><email>granroth@kde.org</email></address>
+</affiliation>
+<contrib>Developer</contrib>
+</othercredit>
+
+<othercredit role="developer">
+<firstname>Rik</firstname>
+<surname>Hemsley</surname>
+<affiliation>
+<address><email>rik@kde.org</email></address>
+</affiliation>
+<contrib>Developer</contrib>
+</othercredit>
+
+<othercredit role="reviewer">
+<firstname>Lauri</firstname>
+<surname>Watts</surname>
+<affiliation><address><email>lauri@kde.org</email></address></affiliation>
+<contrib>Reviewer</contrib>
+</othercredit>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<date>2002-02-05</date>
+<releaseinfo>0.03.00</releaseinfo>
+
+<copyright>
+<year>2000</year>
+<holder>Nick Betcher</holder>
+</copyright>
+
+<legalnotice>&FDLNotice;</legalnotice>
+
+<abstract><para>This Documentation describes &korn; Version
+0.0.1</para></abstract>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>KOrn</keyword>
+<keyword>File searching</keyword>
+</keywordset>
+</bookinfo>
+
+<chapter id="introduction">
+<title>Introduction</title>
+
+<para>&korn; is a KDE Mail Checker that has the capabilities to dock itself to
+<application>Kicker</application>. &korn; can check the following types of
+mailboxes:</para>
+
+<itemizedlist>
+<listitem><para>mbox type
+(<abbrev>i.e.</abbrev>:<filename>/var/spool/mail/root</filename>)</para></listitem>
+<listitem><para>qmail</para></listitem>
+<listitem><para>POP3</para></listitem>
+<listitem><para>Imap4</para></listitem>
+<listitem><para>nntp</para></listitem>
+<listitem><para>and the ability to check on a process</para></listitem>
+</itemizedlist>
+
+<para>&korn;, checks your mail on an interval that is user specified for each
+separate account.  Once mail is received you can have &korn; run a 3rd party
+program of your wishes or change the color/icon of &korn; while docked in
+&kicker;. In addition to this you can have &korn; run a program once you click
+on the docked icon in &kicker;.</para>
+
+<para>The rest of this chapter relies on the user to &RMB; click on the &korn;
+icon in the &kicker; panel to access the appropriate menus.</para>
+</chapter>
+
+<chapter id="the-preferences-dialog">
+<title>The Preferences Dialog</title>
+
+<sect1 id="the-buttons">
+
+<title>The buttons</title>
+
+<para>The <guilabel>Preferences</guilabel> window is the most powerful part of
+&korn;. At a first glimpse you may underestimate its capabilities, but further
+under-the-hood you will find many ways to use &korn;.</para>
+
+<para>The first tab lists your current mailboxes. As default &korn; installs
+<quote>Inbox</quote> as the default mailbox. The default <quote>Inbox</quote>
+may not fit most users needs. With this default mailbox in place &korn; will
+check the path <filename
+class="directory">/var/spool/mail/<replaceable>user</replaceable></filename> for
+new mail.</para>
+
+<para>The <link linkend="the-new-dialog"><guibutton>New...</guibutton></link>
+button will be covered in the next section. Please jump ahead if that is the
+section you need assistance with.</para>
+
+<para>If you would like to remove the selected mailbox, click the
+<guibutton>Remove</guibutton> button on the right. You can also copy the
+selected mailbox if you don't wish to create two similar mailboxes twice.</para>
+
+<para>Finally, after you have created a mailbox (see the next section), you can
+modify it by selecting the mailbox you wish to edit and then clicking
+<guibutton>Modify...</guibutton>. This dialog contains the same options as
+when you click <guibutton>New...</guibutton>.</para>
+
+</sect1>
+
+<sect1 id="the-display-tab">
+
+<title>The <guilabel>Display</guilabel> Tab</title>
+
+<para>The display tab contains the options to change where &korn; will show
+itself.</para>
+
+<para>The first option, <guilabel>Horizontal</guilabel>, will create a window
+and the contents of the window will contain the options you specified in the
+<guilabel>View</guilabel> tab (which you can get to by selecting your mailbox
+and clicking <guimenuitem>Modify...</guimenuitem>). On the other hand, selecting
+<guilabel>Docked</guilabel> will dock &korn; into the &kicker; panel.</para>
+
+<para>The option <guilabel>Vertical</guilabel> is not yet implemented.</para>
+
+</sect1>
+<sect1 id="the-new-dialog">
+<title>The <guilabel>New...</guilabel> Dialog</title>
+
+<para>The <guibutton>New...</guibutton> button will load a window showing you
+what mailboxes can be created for checking on a interval. Select your
+appropriate mailbox type. If you don't know what type you should use, and you
+currently use <application>Netscape</application> to check your mail, use
+POP3.</para>
+
+<para>Following that window the modify options appear, allowing you to change
+all aspects of the mail checking, including interval.</para>
+
+<para>Each mailbox type (&ie;: Pop3, nntp, imap) has different server options,
+but the rest of the options (including Poll, Commands, and View) are the same
+(excluding mailbox type <quote>process</quote>). In these server options dialogs
+you need to enter the appropriate information to fit your situation. Keep in
+mind the default ports that are entered some of the server options tabs are the
+normal ones used by the majority of the Internet.</para>
+
+<para>The commands <guilabel>Poll</guilabel> tab contains one option that
+changes the time interval between each check. Keep in mind this is in seconds,
+not minutes.</para>
+
+<para>Next, the <guilabel>view</guilabel> tab has options for changing the icon
+or icon color while &korn; is docked in &kicker;. There are two options:
+<guilabel>Use color</guilabel> or <guilabel>Use icon</guilabel>. Selecting
+<guilabel>Use color</guilabel> will allow you to modify the colors. Selecting
+<guilabel>Use icon</guilabel> will allow you to change which icon is used for
+both <quote>Normal</quote> and <quote>New mail</quote>. Keep in mind that &korn;
+can only use a icon or color, not both.</para>
+
+<para>In the commands tab you can specify a command to be run once you receive
+new mail in the <guilabel>New mail</guilabel> line. Also, the
+<guilabel>Click</guilabel> line can contain a command to be run when you
+<mousebutton>left</mousebutton> click on &korn;.</para>
+
+</sect1>
+
+</chapter>
+<chapter id="licenses-and-credits">
+<title>Credits and License</title>
+
+<para>&korn;.  Program copyright 2000:</para>
+
+<itemizedlist>
+<listitem><para>Sirtaj Singh Kang <email>taj@kde.org</email></para></listitem>
+<listitem><para>Cristian Tibirna <email>tibirna@kde.org</email></para></listitem>
+<listitem><para>Kurt Granoth <email>granroth@kde.org</email></para></listitem>
+<listitem><para>Rik Hemsley <email>rik@kde.org</email></para></listitem>
+</itemizedlist>
+
+<para>Documentation copyright 2000 Nick Betcher
+<email>nbetcher@uswest.net</email></para>
+
+<para>We hope this documentation helped you. If you need to contact me, the
+document writer, you can at nbetcher@uswest.net. If you wish to contact the
+developers of &korn;, you can find their names in the <guimenuitem>About
+Korn...</guimenuitem> option or above.</para>
+
+&underFDL;
+&underGPL;
+
+</chapter>
+
+
+
+</book>
+<!--
+Local Variables:
+mode: sgml
+sgml-omittag: nil
+sgml-shorttag: t
+End:
+-->
+
