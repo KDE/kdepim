@@ -202,7 +202,10 @@ EmpathMailboxMaildir::loadConfig()
     
             folderList_.insert(url.folderPath(), f);
 
-            boxList_.append(new EmpathMaildir(path_, url));
+            if (QDir(path + "/cur").exists())
+                boxList_.append(new EmpathMaildir(path_, url));
+            else
+                f->setContainer(true);
         }
     }
     
