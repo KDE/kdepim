@@ -75,14 +75,6 @@ LDIFXXPort::LDIFXXPort( KABCore *core, QObject *parent, const char *name )
 
 /* import */
 
-static bool AddressEmpty( KABC::Address *addr )
-{
-  return addr->street().isEmpty() &&
-         addr->locality().isEmpty() &&
-         addr->region().isEmpty() &&
-         addr->country().isEmpty();
-}
-
 KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
 {
   QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(), "*.ldif *.LDIF", 0 );
@@ -114,10 +106,8 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
 
   KABC::Addressee *a = new KABC::Addressee();
   KABC::Address *homeAddr, *workAddr; 
-  homeAddr = new KABC::Address();
-  homeAddr->setType(KABC::Address::Home);
-  workAddr = new KABC::Address();
-  workAddr->setType(KABC::Address::Work);
+  homeAddr = new KABC::Address(KABC::Address::Home);
+  workAddr = new KABC::Address(KABC::Address::Work);
   while ( !t.eof() ) {
 	s = t.readLine();
 	completeline = s;
@@ -128,9 +118,9 @@ writeData:
 		if (!isGroup) {
 			if (!a->formattedName().isEmpty()) {
 				numEntries++;
-				if (!AddressEmpty(homeAddr))
+				if (!homeAddr->isEmpty())
 					a->insertAddress(*homeAddr);
-				if (!AddressEmpty(workAddr))
+				if (!workAddr->isEmpty())
 					a->insertAddress(*workAddr);
 				addrList.append(*a);
 			}
@@ -370,6 +360,9 @@ void LDIFXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
     if (addr->isEmpty())
 	continue;
 
+    const KABC::Address homeAddr = addr->address(KABC::Address::Home);
+    const KABC::Address workAddr = addr->address(KABC::Address::Work);
+ 
     ldif_out(&t, "dn: cn=%1,mail=", addr->formattedName());
     ldif_out(&t, "%1", addr->preferredEmail());
     t << "\n";
@@ -377,12 +370,38 @@ void LDIFXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
     ldif_out(&t, "sn: %1\n", addr->familyName());
     ldif_out(&t, "cn: %1\n", addr->formattedName());
     ldif_out(&t, "xmozillanickname: %1\n", addr->nickName());
+
     ldif_out(&t, "mail: %1\n", addr->preferredEmail());
     if (addr->emails().count() > 1)
        ldif_out(&t, "mozillaSecondEmail: %1\n", *(addr->emails().at(1)));
 //    ldif_out(&t, "mozilla_AimScreenName: %1\n", "screen_name");
-//    ldif_out(&t, "telephoneNumber: %1\n", "111");
-//    ldif_out(&t, "facsimileTelephoneNumber: %1\n", "111");
+
+    ldif_out(&t, "telephoneNumber: %1\n", addr->phoneNumber(KABC::PhoneNumber::Work).number());
+    ldif_out(&t, "facsimileTelephoneNumber: %1\n", addr->phoneNumber(KABC::PhoneNumber::Fax).number());
+    ldif_out(&t, "homephone: %1\n", addr->phoneNumber(KABC::PhoneNumber::Home).number());
+    ldif_out(&t, "mobile: %1\n", addr->phoneNumber(KABC::PhoneNumber::Cell).number());
+    ldif_out(&t, "cellphone: %1\n", addr->phoneNumber(KABC::PhoneNumber::Cell).number());
+    ldif_out(&t, "pager: %1\n", addr->phoneNumber(KABC::PhoneNumber::Pager).number());
+
+    ldif_out(&t, "streethomeaddress: %1\n", homeAddr.street());
+    ldif_out(&t, "postaladdress: %1\n", homeAddr.street());
+    ldif_out(&t, "mozillapostaladdress2: %1\n", workAddr.street());
+    ldif_out(&t, "postalcode: %1\n", workAddr.postalCode());
+    QStringList streets = QStringList::split('\n', homeAddr.street());
+    streets.append("");
+    streets.append("");
+    ldif_out(&t, "homepostaladdress: %1\n", streets[0]);
+    ldif_out(&t, "mozillahomepostaladdress2: %1\n", streets[1]);
+    ldif_out(&t, "mozillahomelocalityname: %1\n", homeAddr.locality());
+    ldif_out(&t, "mozillahomestate: %1\n", homeAddr.region());
+    ldif_out(&t, "mozillahomepostalcode: %1\n", homeAddr.postalCode());
+    ldif_out(&t, "mozillahomecountryname: %1\n", homeAddr.country());
+    ldif_out(&t, "locality: %1\n", workAddr.locality());
+    ldif_out(&t, "streetaddress: %1\n", workAddr.street());
+    ldif_out(&t, "countryname: %1\n", workAddr.country());
+    ldif_out(&t, "l: %1\n", workAddr.locality());
+    ldif_out(&t, "c: %1\n", workAddr.country());
+    ldif_out(&t, "st: %1\n", workAddr.region());
 
     ldif_out(&t, "title: %1\n", addr->title());
     ldif_out(&t, "ou: %1\n", addr->role());
