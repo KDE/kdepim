@@ -271,18 +271,18 @@ void KIncidenceFormatter::formatAttendees(Incidence *event)
 #ifndef KORG_NOKABC
     KABC::AddressBook *add_book = KABC::StdAddressBook::self();
     KABC::Addressee::List addressList;
-    addressList = add_book->findByEmail( event->organizer() );
+    addressList = add_book->findByEmail( event->organizer().email() );
     KABC::Addressee o = addressList.first();
     if ( !o.isEmpty() && addressList.size() < 2 ) {
       addLink( "uid" + o.uid(), o.formattedName() );
     } else {
-      mText.append( event->organizer() );
+      mText.append( event->organizer().fullName() );
     }
 #else
-    mText.append( event->organizer() );
+    mText.append( event->organizer().fullName() );
 #endif
     if ( !iconPath.isNull() ) {
-      addLink( "mailto:" + event->organizer(),
+      addLink( "mailto:" + event->organizer().email(), // fullName would look nicer, but needs escaping
                "<img src=\"" + iconPath + "\">" );
     }
     mText.append( "</li></ul>" );
