@@ -1350,6 +1350,7 @@ void KNArticleWidget::createHtmlPage()
 
   //display html
   html+="</qt>";  
+  clear();
   setText(html);
   h_tmlDone=true;
 
