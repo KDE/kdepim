@@ -38,28 +38,6 @@
 #include <kdebug.h>
 #include <kglobal.h>
 
-class IMAPFactory : public KRES::PluginFactoryBase
-{
-  public:
-    KRES::Resource *resource( const KConfig *config )
-    {
-      return new KNotesIMAP::ResourceIMAP( config );
-    }
-
-    KRES::ConfigWidget *configWidget( QWidget* )
-    {
-      return 0;
-    }
-};
-
-extern "C"
-{
-  void *init_knotes_imap()
-  {
-    return ( new IMAPFactory() );
-  }
-}
-
 
 KNotesIMAP::ResourceIMAP::ResourceIMAP( const KConfig *config )
   : ResourceNotes( config ),

@@ -42,29 +42,6 @@
 #include <kmessagebox.h>
 
 
-class IMAPFactory : public KRES::PluginFactoryBase
-{
-  public:
-    KRES::Resource *resource( const KConfig *config )
-    {
-      return new KABC::ResourceIMAP( config );
-    }
-
-    KRES::ConfigWidget *configWidget( QWidget* )
-    {
-      return 0;
-    }
-};
-
-extern "C"
-{
-  void *init_kabc_imap()
-  {
-    return ( new IMAPFactory() );
-  }
-}
-
-
 KABC::ResourceIMAP::ResourceIMAP( const KConfig *config )
   : KPIM::ResourceABC( config ),
     ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-KABC" )
