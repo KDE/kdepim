@@ -74,7 +74,7 @@ or the generic <filename class="devicefile">/dev/pilot</filename> device.)
 Alternatively, click the
 <guibutton>Automatically detect handheld and user name...</guibutton>
 button and press the &HotSync; button on your &handheld;. The Wizard will try
-to find the correct <guilabel>Device</guilabel> and 
+to find the correct <guilabel>Device</guilabel> and
 <guilabel>User Name</guilabel>.
 </para>
 
@@ -375,6 +375,19 @@ records have changed since the last &HotSync; may be
 inaccurate. It is recommended to do a full sync when
 changing <acronym>PC</acronym>s.
 You can disable the full sync by unchecking this box.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Do not sync when screensaver is active</guilabel></term>
+<listitem>
+<para>
+This is a security feature that prevents the &handheld; from syncing
+while the PC screensaver is active. This prevents other people from
+stealing your data through the &handheld; cradle while your PC is
+unattended. The feature only works with the KDE screensavers, though,
+and you will need to disable it to use &kpilot; in non-KDE environments.
 </para>
 </listitem>
 </varlistentry>

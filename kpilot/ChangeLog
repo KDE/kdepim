@@ -1,6 +1,12 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-04-28  Adriaan de Groot
+* [kpilotConfigDialog] Added UI for screenlockSecure option. Docs, too.
+* [kpilot] Changed hotSync button to one with a little dropdown
+  menu, thanks to Jörn. [kpilotConfig] String fix for outdated config.
+  [probeDialog] Fixed up comments.
+
 2004-04-26  Adriaan de Groot
 * [kpilot.kcfg] Added [a68k] as default skip in the database list.
 * [pilotDaemon] Use standard names for sync actions. Queue sorry

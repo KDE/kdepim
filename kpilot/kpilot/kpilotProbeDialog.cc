@@ -54,20 +54,35 @@
 #endif
 
 /*
-We can't connect to /dev/ttyUSB0 and /dev/ttyUSB1 at the same time, because that will lock up kpilot completely. In particular, it gets a connection on /dev/ttyUSB0, which it processes, and while processing, a connection on USB1 is also detected. However, when kpilot gets 'round to process it, the link is already closed, and pi_connect hangs forever.
+We can't connect to /dev/ttyUSB0 and /dev/ttyUSB1 at the same time, because that
+will lock up kpilot completely. In particular, it gets a connection on /dev/ttyUSB0,
+which it processes, and while processing, a connection on USB1 is also detected.
+However, when kpilot gets 'round to process it, the link is already closed, and
+pi_connect hangs forever.
 
-Now, I split up the list of devices to probe into three list, one holding /dev/pilot, the second holding all /dev/*0 and /dev/*2 (e.g. /dev/ttyUSB0 and /dev/ttyUSB2), and finally a third holding the remaining /dev/*1 and /dev/*3 devices. Each of these three sets of devices is activated for a few seconds, and then the next set is probed. This way, I ensure that kpilot never listens on /dev/ttyUSB0 and /dev/ttyUSB1 at the same time.
+Now, I split up the list of devices to probe into three list, one holding /dev/pilot,
+the second holding all /dev/xxx0 and /dev/xxx2 (e.g. /dev/ttyUSB0 and /dev/ttyUSB2),
+and finally a third holding the remaining /dev/xxx1 and /dev/xxx3 devices. Each of
+these three sets of devices is activated for a few seconds, and then the next set is
+probed. This way, I ensure that kpilot never listens on /dev/ttyUSB0 and /dev/ttyUSB1
+at the same time.
 
-Now the first detection works fine. However, it seems the Linux kernel has another problem with /dev/ttyUSB0. I have a Clie, which uses ttyUSB0, and as soon as the wizard tries to listen on ttyUSB1 (after it detected the handheld on ttyUSB0 already), the kernel writes a warning message to the syslog:
+Now the first detection works fine. However, it seems the Linux kernel has another
+problem with /dev/ttyUSB0. I have a Clie, which uses ttyUSB0, and as soon as the
+wizard tries to listen on ttyUSB1 (after it detected the handheld on ttyUSB0 already),
+the kernel writes a warning message to the syslog:
 visor ttyUSB1: Device lied about number of ports, please use a lower one.
 
-If I continue autodetection once again afterwards, the visor module kind of crashes. lsmod shows an impossible usage count for the module:
+If I continue autodetection once again afterwards, the visor module kind of crashes.
+lsmod shows an impossible usage count for the module:
+
 reinhold@einstein:/kde/builddir$ lsmod
 Module                  Size  Used by
 visor                  17164  4294967294
 usbserial              30704  1 visor
 
-After that, the kernel doesn't detect the device ever again (until the computer is rebootet), and the module can't be unloaded.
+After that, the kernel doesn't detect the device ever again (until the computer is rebooted),
+and the module can't be unloaded.
 */
 
 
@@ -187,7 +202,7 @@ void ProbeDialog::startDetection()
 	if (!fProgressTimer->start( 300, false) ) kdDebug()<<"Could not start Progress timer"<<endl;
 
 	KPilotDeviceLink*link;
-	for (int i=0; i<3; i++) 
+	for (int i=0; i<3; i++)
 	{
 		QStringList::iterator end(mDevicesToProbe[i].end());
 		for (QStringList::iterator it=mDevicesToProbe[i].begin(); it!=end; ++it)
@@ -206,7 +221,7 @@ void ProbeDialog::startDetection()
 	}
 	fStatus->setText( i18n("Waiting for handheld to connect...") );
 	mProbeDevicesIndex=0;
-	
+
 	detect();
 	if (!fRotateLinksTimer->start( 3000, false) ) kdDebug()<<"Could not start Device link rotation timer"<<endl;
 }
@@ -216,19 +231,19 @@ void ProbeDialog::detect(int i)
 {
 	FUNCTIONSETUP;
 	PilotLinkList::iterator end(mDeviceLinks[mProbeDevicesIndex].end());
-	for (PilotLinkList::iterator it=mDeviceLinks[mProbeDevicesIndex].begin(); it!=end; ++it) 
+	for (PilotLinkList::iterator it=mDeviceLinks[mProbeDevicesIndex].begin(); it!=end; ++it)
 	{
 		if (*it) (*it)->close();
 	}
 	mProbeDevicesIndex = i;
 	end=mDeviceLinks[mProbeDevicesIndex].end();
-	for (PilotLinkList::iterator it=mDeviceLinks[mProbeDevicesIndex].begin(); it!=end; ++it) 
+	for (PilotLinkList::iterator it=mDeviceLinks[mProbeDevicesIndex].begin(); it!=end; ++it)
 	{
 		if (*it) (*it)->reset();
 	}
 }
 
-void ProbeDialog::detect() 
+void ProbeDialog::detect()
 {
 	detect( (mProbeDevicesIndex+1)%3 );
 }
@@ -271,7 +286,7 @@ void ProbeDialog::disconnectDevices()
 	fProgressTimer->stop();
 	fRotateLinksTimer->stop();
 	fProgress->setProgress(fProgress->maxValue());
-	for (int i=0; i<3; ++i) 
+	for (int i=0; i<3; ++i)
 	{
 		PilotLinkList::iterator end(mDeviceLinks[i].end());
 		for (PilotLinkList::iterator it=mDeviceLinks[i].begin(); it!=end; ++it)

@@ -162,7 +162,7 @@ void KPilotConfig::addFlagsChangedDatabase(QString db)
 {
 	FUNCTIONSETUP;
 	QString s = CSL1("<qt><p>");
-	s = i18n("The configuration file is outdated.");
+	s += i18n("The configuration file is outdated.");
 	s += ' ';
 	s += i18n("The configuration file has version %1, while KPilot "
 		"needs version %2.").arg(fileversion).arg(ConfigurationVersion);
