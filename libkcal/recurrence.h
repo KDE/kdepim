@@ -2,6 +2,7 @@
     This file is part of libkcal.
     Copyright (c) 1998 Preston Brown
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2002 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -57,9 +58,13 @@ class Recurrence
     int recurExDatesCount() const  { return mRecurExDatesCount; }
     /** Set start of recurrence, as a date and time. */
     void setRecurStart(const QDateTime &start);
-    /** Set start of recurrence, as a date with no time. */
+    /** Set start of recurrence, as a date with no time.
+     * Recurrence types which are sub-daily (e.g. rHourly) always have a time;
+     * the time is set to 00:00:00 in these cases. */
     void setRecurStart(const QDate &start);
     /** Set whether the recurrence has no time, just a date.
+     * Recurrence types which are sub-daily (e.g. rHourly) always have a time
+     * and cannot be set to float.
      * N.B. This property is derived by default from the parent incidence,
      * or according to whether a time is specified in setRecurStart(). */
     void setFloats(bool f);
@@ -138,7 +143,7 @@ class Recurrence
 
     /** Sets an event to recur minutely.
      * @var _rFreq the frequency to recur, e.g. 2 is every other minute
-     * @var duration the number of times the event is to occur.
+     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
      */
     void setMinutely(int _rFreq, int duration);
     /** Sets an event to recur minutely.
@@ -149,7 +154,7 @@ class Recurrence
 
     /** Sets an event to recur hourly.
      * @var _rFreq the frequency to recur, e.g. 2 is every other hour
-     * @var duration the number of times the event is to occur.
+     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
      */
     void setHourly(int _rFreq, int duration);
     /** Sets an event to recur hourly.
@@ -160,7 +165,7 @@ class Recurrence
 
     /** Sets an event to recur daily.
      * @var _rFreq the frequency to recur, e.g. 2 is every other day
-     * @var duration the number of times the event is to occur.
+     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
      */
     void setDaily(int _rFreq, int duration);
     /** Sets an event to recur daily.
@@ -172,26 +177,26 @@ class Recurrence
     /** Sets an event to recur weekly.
      * @var _rFreq the frequency to recur, e.g. every other week etc.
      * @var _rDays a 7 bit array indicating which days on which to recur.
-     * @var duration the number of times the event is to occur.
-     * @var weekStart the first day of the week (default = 1, Monday).
+     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
+     * @var weekStart the first day of the week (Monday=1 .. Sunday=7, default is Monday).
      */
     void setWeekly(int _rFreq, const QBitArray &_rDays, int duration, int weekStart = 1);
     /** Sets an event to recur weekly.
      * @var _rFreq the frequency to recur, e.g. every other week etc.
      * @var _rDays a 7 bit array indicating which days on which to recur.
      * @var endDate the date on which to stop recurring.
-     * @var weekStart the first day of the week (default = 1, Monday).
+     * @var weekStart the first day of the week (Monday=1 .. Sunday=7, default is Monday).
      */
     void setWeekly(int _rFreq, const QBitArray &_rDays, const QDate &endDate, int weekStart = 1);
-    /** Returns the first day of the week. 1 = Monday, ..., 7 = Sunday. */
+    /** Returns the first day of the week. Monday=1 .. Sunday=7. */
     int weekStart() const        { return rWeekStart; }
     /** Returns week day mask (bit 0 = Monday). */
     const QBitArray &days() const;
 
     /** Sets an event to recur monthly.
      * @var type rMonthlyPos or rMonthlyDay
-     * @var _rFreq the frequency to recur, e.g. every third month etc.
-     * @var duration the number of times the event is to occur.
+     * @var _rFreq the frequency to recur, e.g. 3 for every third month.
+     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
      */
     void setMonthly(short type, int _rFreq, int duration);
     /** same as above, but with ending date not number of recurrences */
@@ -212,7 +217,11 @@ class Recurrence
     /** Returns list of day numbers of a  month. */
     const QPtrList<int> &monthDays() const;
 
-    /** Sets an event to recur yearly ending after \a duration recurrences. */
+    /** Sets an event to recur yearly.
+     * @var type rYearlyMonth, rYearlyPos or rYearlyDay
+     * @var freq the frequency to recur, e.g. 3 for every third year.
+     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
+     */
     void setYearly(int type, int freq, int duration);
     /** Sets an event to recur yearly ending at \a endDate. */
     void setYearly(int type, int freq, const QDate &endDate);
