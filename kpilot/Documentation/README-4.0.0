@@ -66,6 +66,16 @@ CURRENT FEATURES
 (* = new in this release)
 
 
+KNOWN BUGS
+==========
+	All the known bugs in KPilot can be found in the KDE bugs database
+
+	http://bugs.kde.org/db/pa/lkpilot.html
+
+Please check with that database before reporting bugs.
+
+
+
 
 STANDARD DISCLAIMER, WARNINGS, ETC..
 ====================================
@@ -90,4 +100,4 @@ contributions are welcome.  :)
 	Adriaan de Groot
 	adridg@cs.kun.nl
 	http://www.cs.kun.nl/~adridg/kpilot-bugs.html
-	February 4, 2001
+	February 24, 2001

@@ -1,3 +1,13 @@
+KPilot Developer's notes for march 3rd 2001
+===========================================
+
+So after "the big cleanup" I've continued doing cleanup code in smaller
+chunks with more commits, mostly for reasons of bug-tracking.
+
+* Removed a really stupid crash from KPilotConfig::fixed().
+* The internal conduits' names weren't reported properly anymore. This
+  is a binary and source incompatible change.
+
 KPilot Developer's notes for february 19th 2001
 ===============================================
 
