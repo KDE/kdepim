@@ -499,7 +499,7 @@ void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
 }
 
 void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
-                               const QDate &_rEndDate, int _rWeekStart)
+                           const QDate &_rEndDate, int _rWeekStart)
 {
   if (mRecurReadOnly) return;
   mUseCachedEndDT = false;
@@ -1140,7 +1140,7 @@ QDate Recurrence::getNextDateNoTime(const QDate &preDate, bool *last) const
       break;
 
     case rWeekly: {
-      QDate start = dStart.addDays(1 - dStart.dayOfWeek());   // start of week for dStart
+      QDate start = dStart.addDays(-((dStart.dayOfWeek() - rWeekStart + 7)%7));  // start of week for dStart
       int earliestDayOfWeek = earliestDate.dayOfWeek();
       int weeksAhead = start.daysTo(earliestDate) / 7;
       int notThisWeek = weeksAhead % rFreq;    // zero if this week is a recurring week
@@ -1150,9 +1150,10 @@ QDate Recurrence::getNextDateNoTime(const QDate &preDate, bool *last) const
       if (!notThisWeek)
         weekday = getFirstDayInWeek(earliestDayOfWeek);
       // Check for a day in the next scheduled week
-      if (!weekday  &&  earliestDayOfWeek >= 1)
+      if (!weekday)
         weekday = getFirstDayInWeek(rWeekStart) + rFreq*7;
-      nextDate = start.addDays(weeksAhead*7 + weekday - 1);
+      if (weekday)
+        nextDate = start.addDays(weeksAhead*7 + weekday - 1);
       break;
     }
     case rMonthlyDay:
@@ -1235,7 +1236,7 @@ QDate Recurrence::getPreviousDateNoTime(const QDate &afterDate, bool *last) cons
       break;
 
     case rWeekly: {
-      QDate start = dStart.addDays(1 - dStart.dayOfWeek());   // start of week for dStart
+      QDate start = dStart.addDays(-((dStart.dayOfWeek() - rWeekStart + 7)%7));  // start of week for dStart
       int latestDayOfWeek = latestDate.dayOfWeek();
       int weeksAhead = start.daysTo(latestDate) / 7;
       int notThisWeek = weeksAhead % rFreq;    // zero if this week is a recurring week
@@ -1246,12 +1247,10 @@ QDate Recurrence::getPreviousDateNoTime(const QDate &afterDate, bool *last) cons
         weekday = getLastDayInWeek(latestDayOfWeek);
       // Check for a day in the previous scheduled week
       if (!weekday) {
+        if (!notThisWeek)
+          weeksAhead -= rFreq;
         int weekEnd = (rWeekStart + 5)%7 + 1;
-        if (latestDayOfWeek < weekEnd) {
-          if (!notThisWeek)
-            weeksAhead -= rFreq;
-          weekday = getLastDayInWeek(weekEnd);
-        }
+        weekday = getLastDayInWeek(weekEnd);
       }
       if (weekday)
         prevDate = start.addDays(weeksAhead*7 + weekday - 1);
