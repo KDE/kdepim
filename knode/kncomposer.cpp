@@ -1453,7 +1453,7 @@ KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
   notL->addStretch(1);
   n_otification=new QGroupBox(2, Qt::Horizontal, e_dit);
   l=new QLabel(i18n("You are currently editing the article body\nin an external editor. To continue, you have\nto close the external editor."), n_otification);
-  c_ancelEditorBtn=new QPushButton(i18n("&Kill external editor"), n_otification);
+  c_ancelEditorBtn=new QPushButton(i18n("&Kill External Editor"), n_otification);
   n_otification->setFrameStyle(QFrame::Panel | QFrame::Raised);
   n_otification->setLineWidth(2);
   n_otification->hide();

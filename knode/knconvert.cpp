@@ -56,7 +56,7 @@ KNConvert::KNConvert(const QString &version)
   topL->addWidget(new KSeparator(this));
 
   QHBoxLayout *btnL=new QHBoxLayout(topL, 5);
-  s_tartBtn=new QPushButton(i18n("Start conversion ..."), this);
+  s_tartBtn=new QPushButton(i18n("Start Conversion ..."), this);
   s_tartBtn->setDefault(true);
   btnL->addStretch(1);
   btnL->addWidget(s_tartBtn);
