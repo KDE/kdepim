@@ -41,7 +41,9 @@ void KNSmtpClient::processJob()
       doMail();
       break;
     default:
+#ifndef NDEBUG
       qDebug("knode: KNSmtpClient::processJob(): mismatched job");
+#endif
   }
 }
   

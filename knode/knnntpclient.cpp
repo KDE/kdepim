@@ -61,7 +61,9 @@ void KNNntpClient::processJob()
       doPostArticle();
       break;
     default:
+#ifndef NDEBUG
       qDebug("knode: KNNntpClient::processJob(): mismatched job");
+#endif
   }   
 }
   
@@ -102,9 +104,11 @@ void KNNntpClient::doFetchGroups()
           break;   // message complete
     }
     s = strchr(line,' ');
-    if(!s)
+    if(!s) {
+#ifndef NDEBUG
       qDebug("knode: retrieved broken group-line - ignoring");
-    else {
+#endif
+    } else {
       s[0] = 0;    // cut string
       tmpList.append(line);
     }
@@ -137,7 +141,9 @@ void KNNntpClient::doFetchGroups()
       s = line;
       while (*s != '\0' && *s != '\t' && *s != ' ') s++;
       if (*s == '\0') {
+#ifndef NDEBUG
         qDebug("knode: retrieved broken group-description - ignoring");
+#endif
       } else {
         s[0] = 0;         // terminate groupname
         s++;
@@ -209,9 +215,11 @@ void KNNntpClient::doCheckNewGroups()
           break;   // message complete
     }
     s = strchr(line,' ');
-    if(!s)
+    if(!s) {
+#ifndef NDEBUG
       qDebug("knode: retrieved broken group-line - ignoring");
-    else {
+#endif
+    } else {
       s[0] = 0;    // cut string
       tmpList.append(line);
     }
@@ -247,7 +255,9 @@ void KNNntpClient::doCheckNewGroups()
         s = desList.first();
         while (*s != '\0' && *s != '\t' && *s != ' ') s++;
         if (*s == '\0') {
+#ifndef NDEBUG
           qDebug("knode: retrieved broken group-description - ignoring");
+#endif
           tempList.append(new KNGroupInfo(group,"",true));
         } else {
           while (*s == ' ' || *s == '\t') s++;    // go on to the description
@@ -354,10 +364,16 @@ void KNNntpClient::doFetchNewHeaders()
   if (0==pthread_mutex_lock(mutex)) {
     target->insortNewHeaders(&headers);
     target->setLastNr(last);
-    if (0!=pthread_mutex_unlock(mutex))
+    if (0!=pthread_mutex_unlock(mutex)) {
+#ifndef NDEBUG
       qDebug("knode: failed to unlock nntp mutex");
-  } else
+#endif
+    }
+  } else {
+#ifndef NDEBUG
     qDebug("knode: failed to lock nntp mutex");
+#endif
+  }
 }
 
 
@@ -429,7 +445,9 @@ bool KNNntpClient::openConnection()
     return false;
 
   if (rep==500) {
+#ifndef NDEBUG
     qDebug("knode: \"MODE READER\" command not recognized.");
+#endif
   } else
     if ((rep!=200)&&(rep!=201)) { // 200 Hello, you can post
       handleErrors();             // 201 Hello, you can't post

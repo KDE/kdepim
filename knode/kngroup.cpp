@@ -374,7 +374,9 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
   
   sortHdrs(cnt);
   int count = saveStaticData(cnt);
+#ifndef NDEBUG
   qDebug("knode: %d headers wrote to file",count);
+#endif
   saveDynamicData(cnt);
   updateThreadInfo();
   c_ount=len;

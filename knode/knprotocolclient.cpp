@@ -101,11 +101,15 @@ void KNProtocolClient::waitForWork()
       tv.tv_usec = 0;
       selectRet = select(FD_SETSIZE, &fdsR, NULL, &fdsE, &tv);
       if (selectRet == 0) {
+#ifndef NDEBUG
         qDebug("knode: KNProtocolClient::waitForWork(): hold time elapsed, closing connection.");
+#endif
         closeConnection();               // nothing happend...
       } else {
         if (((selectRet > 0)&&(!FD_ISSET(fdPipeIn,&fdsR)))||(selectRet == -1)) {
+#ifndef NDEBUG
           qDebug("knode: KNProtocolClient::waitForWork(): connection broken, closing it");
+#endif
           closeSocket();
         }
       }
@@ -164,7 +168,9 @@ bool KNProtocolClient::openConnection()
 {
   sendSignal(TSconnect);
 
+#ifndef NDEBUG
   qDebug("knode: KNProtocolClient::openConnection(): opening connection");
+#endif
 
   if (account.server().isEmpty()) {
     job->setErrorString(i18n("Unable to resolve hostname"));
@@ -229,7 +235,9 @@ void KNProtocolClient::closeConnection()
   fd_set fdsW;
   timeval tv;
 
+#ifndef NDEBUG
   qDebug("knode: KNProtocolClient::closeConnection(): closing connection");
+#endif
 
   FD_ZERO(&fdsW);
   FD_SET(tcpSocket, &fdsW);
@@ -467,7 +475,9 @@ bool KNProtocolClient::waitForRead()
   }
   if (ret > 0) {
     if (FD_ISSET(fdPipeIn,&fdsR)) {  // stop signal
+#ifndef NDEBUG
       qDebug("knode: KNProtocolClient::waitForRead(): got stop signal");
+#endif
       closeConnection();
       return false;
     }
@@ -527,7 +537,9 @@ bool KNProtocolClient::waitForWrite()
   }
   if (ret > 0) {
     if (FD_ISSET(fdPipeIn,&fdsR)) {  // stop signal
+#ifndef NDEBUG
       qDebug("knode: KNProtocolClient::waitForWrite(): got stop signal");
+#endif
       closeConnection();
       return false;
     }

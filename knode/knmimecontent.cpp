@@ -173,7 +173,9 @@ void KNMimeContent::parse()
     }
   }
   else if(b_ody && mInfo->ctMediaType()==MTtext && b_ody->count()>200) {
+#ifndef NDEBUG
     qDebug("knode: KNMimeContent::parse() : uuencoded binary assumed");
+#endif
     UUParser uup(b_ody, headerLine("Subject"));
     uup.parse();
     
@@ -190,7 +192,9 @@ void KNMimeContent::parse()
     }
     
     else if(uup.isUUencoded()) {
+#ifndef NDEBUG
       qDebug("knode: KNMimeContent::parse() : is uuencoded");
+#endif
       if(!ct_List) {
         ct_List=new QList<KNMimeContent>;
         ct_List->setAutoDelete(true);
