@@ -1,4 +1,5 @@
 #include <qfile.h>
+#include <qclipboard.h>
 #include <qlayout.h>
 #include <qlistbox.h>
 #include <qptrlist.h>
@@ -7,11 +8,11 @@
 #include <qlistview.h>
 #include <qtimer.h>
 
+#include "kapplication.h"       // kapp
 #include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>            // i18n
 #include <kfiledialog.h>
-#include <kmessagebox.h>
 #include <klineeditdlg.h>
 #include <kmessagebox.h>
 
@@ -21,7 +22,9 @@
 #include "preferences.h"
 #include "task.h"
 #include "taskview.h"
+#include "timekard.h"
 #include "karmstorage.h"
+#include "printdialog.h"
 
 #define T_LINESIZE 1023
 #define HIDDEN_COLUMN -10
@@ -544,5 +547,47 @@ void TaskView::iCalFileChanged(QString file)
 {
   kdDebug() << "TaskView:iCalFileChanged: " << file << endl;
   load();
+}
+
+QValueList<HistoryEvent> TaskView::getHistory(const QDate& from,
+    const QDate& to) const
+{
+  return _storage->getHistory(from, to);
+}
+
+void TaskView::clipTotals()
+{
+  TimeKard *t = new TimeKard();
+  if (current_item()->isRoot())
+  {
+    int response = KMessageBox::questionYesNo( 0,
+        i18n("Copy totals for just this task and it's subtasks?"
+          "  (Click No to copy totals for all tasks.)"));
+    if (response == KMessageBox::Yes)
+    {
+      KApplication::clipboard()->setText(t->totalsAsText(this));
+    }
+    else
+    {
+      KApplication::clipboard()->setText(t->totalsAsText(this, false));
+    }
+  }
+  else
+  {
+    KApplication::clipboard()->setText(t->totalsAsText(this));
+  }
+}
+
+void TaskView::clipHistory()
+{
+
+  PrintDialog *dialog = new PrintDialog();
+  if (dialog->exec()== QDialog::Accepted) 
+  {
+    kdDebug() << "MainWindow::print: new style" << endl;
+    TimeKard *t = new TimeKard();
+    KApplication::clipboard()->
+      setText(t->historyAsText(this, dialog->from(), dialog->to()));
+  }
 }
 #include "taskview.moc"

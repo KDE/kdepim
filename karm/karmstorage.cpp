@@ -59,7 +59,8 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
   // that libkcal presents when asked to load a non-existent file.  We make it
   // user and group read/write, others read.  This is masked by the users
   // umask.  (See man creat)
-  handle = open(QFile::encodeName(preferences->iCalFile()), O_CREAT|O_EXCL|O_WRONLY,
+  handle = open(QFile::encodeName(preferences->iCalFile()),
+      O_CREAT|O_EXCL|O_WRONLY,
       S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
 
   kdDebug() << "KarmStorage::load: handle = " << handle << endl;
@@ -509,7 +510,42 @@ KCal::Event* KarmStorage::baseEvent(const Task * task)
   return e;
 }
 
+HistoryEvent::HistoryEvent(QString uid, QString name, long duration, 
+        QDateTime start, QDateTime stop)
+{
+  _uid = uid;
+  _name = name;
+  _duration = duration;
+  _start = start;
+  _stop = stop;
+}
 
+
+QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
+    const QDate& to)
+{
+  QValueList<HistoryEvent> retval;
+  KCal::Event::List events;
+  KCal::Event::List::iterator event;
+
+  for(QDate d = from; d <= to; d = d.addDays(1))
+  {
+    events = _calendar.rawEventsForDate(d);
+    for (event = events.begin(); event != events.end(); event++)
+    {
+      retval.append(
+          HistoryEvent(
+            (*event)->uid(),
+            (*event)->summary(), 
+            (*event)->customProperty(kapp->instanceName(), 
+                                    QCString("duration")).toLong(),
+            (*event)->dtStart(),
+            (*event)->dtEnd()));
+    }
+  }
+
+  return retval;
+}
 
 /*
  * Obsolete methods for writing to flat file format.  

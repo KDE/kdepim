@@ -28,6 +28,7 @@
 #include "mainwindow.h"
 #include "preferences.h"
 #include "print.h"
+#include "timekard.h"
 #include "task.h"
 #include "taskview.h"
 #include "tray.h"
@@ -80,9 +81,6 @@ MainWindow::MainWindow()
   connect( _taskView, SIGNAL( tasksChanged( QPtrList<Task> ) ),
                       _tray, SLOT( updateToolTip( QPtrList<Task> ) ));
 
-  // FIXME: this shouldn't stay. We need to check whether the
-  // file exists and if not, create a blank one and ask whether
-  // we want to add a task.
   _taskView->load();
 
   // Everything that uses Preferences has been created now, we can let it
@@ -198,66 +196,81 @@ void MainWindow::makeMenus()
   (void) KStdAction::quit(  this, SLOT( quit() ),  actionCollection());
   (void) KStdAction::print( this, SLOT( print() ), actionCollection());
   actionKeyBindings = KStdAction::keyBindings( this, SLOT( keyBindings() ),
-                                               actionCollection() );
-  actionPreferences = KStdAction::preferences(_preferences, SLOT(showDialog()),
-                                               actionCollection() );
+      actionCollection() );
+  actionPreferences = KStdAction::preferences(_preferences,
+      SLOT(showDialog()),
+      actionCollection() );
   (void) KStdAction::save( this, SLOT( save() ), actionCollection() );
   KAction* actionStartNewSession = new KAction( i18n("&Start New Session"),
-                                                CTRL + Key_N,
-                                                this,
-                                                SLOT( startNewSession() ),
-                                                actionCollection(),
-                                                "start_new_session");
+      0,
+      this,
+      SLOT( startNewSession() ),
+      actionCollection(),
+      "start_new_session");
   KAction* actionResetAll = new KAction( i18n("&Reset All Times"),
-                                         0,
-                                         this,
-                                         SLOT( resetAllTimes() ),
-                                         actionCollection(),
-                                         "reset_all_times");
+      0,
+      this,
+      SLOT( resetAllTimes() ),
+      actionCollection(),
+      "reset_all_times");
   actionStart = new KAction( i18n("&Start"),
-                             QString::fromLatin1("1rightarrow"), Key_S,
-                             _taskView,
-                             SLOT( startCurrentTimer() ), actionCollection(),
-                             "start");
+      QString::fromLatin1("1rightarrow"), Key_S,
+      _taskView,
+      SLOT( startCurrentTimer() ), actionCollection(),
+      "start");
   actionStop = new KAction( i18n("S&top"),
-                            QString::fromLatin1("stop"), Key_Escape,
-                            _taskView,
-                            SLOT( stopCurrentTimer() ), actionCollection(),
-                            "stop");
+      QString::fromLatin1("stop"), Key_Escape,
+      _taskView,
+      SLOT( stopCurrentTimer() ), actionCollection(),
+      "stop");
   actionStopAll = new KAction( i18n("Stop &All Timers"),
-                               0,
-                               _taskView,
-                               SLOT( stopAllTimers() ), actionCollection(),
-                               "stopAll");
+      0,
+      _taskView,
+      SLOT( stopAllTimers() ), actionCollection(),
+      "stopAll");
   actionStopAll->setEnabled(false);
 
   actionNew = new KAction( i18n("&New..."),
-                           QString::fromLatin1("filenew"), CTRL+Key_N,
-                           _taskView,
-                           SLOT( newTask() ), actionCollection(),
-                           "new_task");
+      QString::fromLatin1("filenew"), CTRL+Key_N,
+      _taskView,
+      SLOT( newTask() ), actionCollection(),
+      "new_task");
   actionNewSub = new KAction( i18n("New &Subtask..."),
-                              QString::fromLatin1("kmultiple"), CTRL+ALT+Key_N,
-                              _taskView,
-                              SLOT( newSubTask() ), actionCollection(),
-                              "new_sub_task");
+      QString::fromLatin1("kmultiple"), CTRL+ALT+Key_N,
+      _taskView,
+      SLOT( newSubTask() ), actionCollection(),
+      "new_sub_task");
   actionDelete = new KAction( i18n("&Delete..."),
-                              QString::fromLatin1("editdelete"), Key_Delete,
-                              _taskView,
-                              SLOT( deleteTask() ), actionCollection(),
-                              "delete_task");
+      QString::fromLatin1("editdelete"), Key_Delete,
+      _taskView,
+      SLOT( deleteTask() ), actionCollection(),
+      "delete_task");
   actionEdit = new KAction( i18n("&Edit..."),
-                            QString::fromLatin1("edit"), CTRL + Key_E,
-                            _taskView,
-                            SLOT( editTask() ), actionCollection(),
-                            "edit_task");
+      QString::fromLatin1("edit"), CTRL + Key_E,
+      _taskView,
+      SLOT( editTask() ), actionCollection(),
+      "edit_task");
   actionAddComment = new KAction( i18n("&Add Comment..."),
-                                  QString::fromLatin1("document"),
-                                  CTRL+ALT+Key_C,
-                                  _taskView,
-                                  SLOT( addCommentToTask() ),
-                                  actionCollection(),
-                                  "add_comment_to_task");
+      QString::fromLatin1("document"),
+      CTRL+ALT+Key_C,
+      _taskView,
+      SLOT( addCommentToTask() ),
+      actionCollection(),
+      "add_comment_to_task");
+  actionAddComment = new KAction( i18n("&Copy totals to clipboard"),
+      QString::fromLatin1("klipper"),
+      CTRL+ALT+Key_P,
+      _taskView,
+      SLOT( clipTotals() ),
+      actionCollection(),
+      "clip_totals");
+  actionAddComment = new KAction( i18n("&Copy history to clipboard"),
+      QString::fromLatin1("klipper"),
+      CTRL+ALT+Key_H,
+      _taskView,
+      SLOT( clipHistory() ),
+      actionCollection(),
+      "clip_history");
 
   new KAction( i18n("Import &Legacy Flat File"), 0,
       _taskView, SLOT(loadFromFlatFile()), actionCollection(),

@@ -39,11 +39,11 @@ void MyPrinter::print()
     // totals are increased together with its children.
     int totalTotal = 0;
     int sessionTotal = 0;
-    for (Task* task = static_cast<Task *>(_taskView->first_child());
+    for (Task* task = _taskView->first_child();
                task;
                task = static_cast<Task *>(task->nextSibling())) {
-      totalTotal += task->time();
-      sessionTotal += task->sessionTime();
+      totalTotal += task->totalTime();
+      sessionTotal += task->totalSessionTime();
     }
 
     // Calculate the needed width for each of the fields
@@ -56,7 +56,7 @@ void MyPrinter::print()
     
     int maxReqNameFieldWidth= metrics.width(i18n("Task Name "));
     
-    for ( Task* task = static_cast<Task *>(_taskView->first_child());
+    for ( Task* task = _taskView->first_child();
           task;
           task = static_cast<Task *>(task->nextSibling()))
     {
@@ -92,7 +92,7 @@ void MyPrinter::print()
     yoff += 2;
     
     // Now print the actual content
-    for ( Task* task = static_cast<Task *>(_taskView->first_child());
+    for ( Task* task = _taskView->first_child();
                 task;
                 task = static_cast<Task *>(task->nextSibling()) )
     {
@@ -127,8 +127,8 @@ int MyPrinter::calculateReqNameWidth( Task* task,
 
 void MyPrinter::printTask(Task *task, QPainter &painter, int level)
 {
-  QString time = formatTime(task->time());
-  QString sessionTime = formatTime(task->sessionTime());
+  QString time = formatTime(task->totalTime());
+  QString sessionTime = formatTime(task->totalSessionTime());
   QString name = task->name();
   printLine(time, sessionTime, name, painter, level);
 

@@ -13,6 +13,7 @@
 class Preferences;
 class Task;
 class TaskView;
+class HistoryEvent;
 
 /**
  * Singleton to store/retrieve KArm data to/from persistent storage.
@@ -226,6 +227,9 @@ class KarmStorage
      */
     bool isNewStorage(const Preferences* preferences) const;
 
+    /** Return a list of start/stop events for the given date range. */
+    QValueList<HistoryEvent> getHistory(const QDate& from, const QDate& to);
+
   private:
     static KarmStorage *_instance;
     KCal::CalendarLocal _calendar;
@@ -240,6 +244,35 @@ class KarmStorage
 
     KCal::Event* baseEvent(const Task*);
 
+};
+
+/**
+ * One start/stop event that has been logged.
+ *
+ * When a task is running and the user stops it, KArm logs this event and
+ * saves it in the history.  This class represents such an event read from
+ * storage, and abstracts it from the specific storage used.
+ */
+class HistoryEvent
+{
+  public:
+    /** Needed to be used in a value list. */
+    HistoryEvent() {};
+    HistoryEvent(QString uid, QString name, long duration, 
+        QDateTime start, QDateTime stop);
+    QString uid();
+    QString name();
+    /** In seconds. */
+    long duration();
+    QDateTime start();
+    QDateTime stop();
+  
+  private:
+    QString _uid;
+    QString _name;
+    long _duration;
+    QDateTime _start;
+    QDateTime _stop;
 };
 
 #endif // KARM_STORAGE_H

@@ -121,8 +121,10 @@ class Task : public QObject, public QListViewItem
       /*@{ returns the times accumulated by the task
        * @return total time in minutes
        */
-      long time() const        { return _time; };
+      long time() const { return _time; };
+      long totalTime() const { return _totalTime; };
       long sessionTime() const { return _sessionTime; };
+      long totalSessionTime() const { return _totalSessionTime; };
 
       /**
        * Return time the task was started.

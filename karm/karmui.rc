@@ -6,6 +6,8 @@
 		<Action name="reset_all_times" />
 		<Separator />
 		<Action name="import_flatfile" />
+                <Action name="clip_totals" />
+                <Action name="clip_history" />
 	</Menu>
 	<Menu name="clock" >
 		<text>&amp;Clock</text>
@@ -42,5 +44,8 @@
 	<Action name="delete_task" />
 	<Action name="edit_task" />
 	<Action name="add_comment_to_task" />
+	<Separator />
+	<Action name="clip_totals" />
+	<Action name="clip_history" />
 </Menu>
 </kpartgui>

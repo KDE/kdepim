@@ -13,6 +13,7 @@ class KAccelMenuWatch;
 class KarmTray;
 class Preferences;
 class TaskView;
+class PrintDialog;
 
 /**
  * Main window to tie the application together.

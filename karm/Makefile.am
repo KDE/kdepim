@@ -1,21 +1,23 @@
 
 ############ Autoconf-generated variables  ###################
 AM_CPPFLAGS = -DQT_NO_CAST_ASCII
-INCLUDES = -I$(top_srcdir)/libkcal $(all_includes)
+INCLUDES = -I$(top_srcdir)/libkcal -I$(top_srcdir)/libkdepim $(all_includes)
 
 bin_PROGRAMS = karm
 SUBDIRS = support pics
 
 METASOURCES = AUTO
 
-karm_SOURCES =  kaccelmenuwatch.cpp main.cpp desktoptracker.cpp edittaskdialog.cpp idletimedetector.cpp \
-		karmutility.cpp ktimewidget.cpp karmstorage.cpp \
-		mainwindow.cpp preferences.cpp print.cpp task.cpp \
-		taskview.cpp tray.cpp
-karm_LDADD = -lkdeprint $(top_builddir)/libkcal/libkcal.la $(LIBXSS)
+karm_SOURCES =  kaccelmenuwatch.cpp main.cpp desktoptracker.cpp \
+                edittaskdialog.cpp idletimedetector.cpp \
+                printdialog.cpp timekard.cpp karmutility.cpp ktimewidget.cpp \
+                karmstorage.cpp mainwindow.cpp preferences.cpp print.cpp \
+                task.cpp taskview.cpp tray.cpp
+karm_LDADD = -lkdeprint $(top_builddir)/libkcal/libkcal.la \
+             $(top_builddir)/libkdepim/libkdepim.la $(LIBXSS)
 karm_LDFLAGS = $(all_libraries)
-noinst_HEADERS = desktoptracker.h edittaskdialog.h \
-                 idletimedetector.h kaccelmenuwatch.h \
+noinst_HEADERS = desktoptracker.h edittaskdialog.h printdialog.h \
+                 idletimedetector.h kaccelmenuwatch.h timekard.h \
 		 karmutility.h ktimewidget.h karmstorage.h mainwindow.h \
 		 preferences.h print.h task.h taskview.h toolicons.h \
 		 tray.h version.h

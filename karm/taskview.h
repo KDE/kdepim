@@ -26,6 +26,7 @@ class IdleTimeDetector;
 class Preferences;
 class Task;
 class KarmStorage;
+class HistoryEvent;
 
 /**
  * Container and interface for the tasks.
@@ -39,13 +40,13 @@ class TaskView : public KListView
     TaskView( QWidget *parent = 0, const char *name = 0 );
     virtual ~TaskView();
 
-    /**  Return the first item in the view, casted to a Task pointer.  */
+    /**  Return the first item in the view, cast to a Task pointer.  */
     Task* first_child() const;
 
-    /**  Return the current item in the view, casted to a Task pointer.  */
+    /**  Return the current item in the view, cast to a Task pointer.  */
     Task* current_item() const;
 
-    /**  Return the i'th item (zero-based), casted to a Task pointer.  */
+    /**  Return the i'th item (zero-based), cast to a Task pointer.  */
     Task* item_at_index(int i);
 
     /** Load the view from storage.  */
@@ -59,6 +60,10 @@ class TaskView : public KListView
 
     /** Return the total number if items in the view.  */
     long count();
+
+    /** Return list of start/stop events for given date range. */
+    QValueList<HistoryEvent> getHistory(const QDate& from, const QDate& to)
+      const;
 
   public slots:
     /** Save to persistent storage. */
@@ -103,6 +108,12 @@ class TaskView : public KListView
 
     /** User has picked a new iCalendar file on preferences screen. */
     void iCalFileChanged(QString file);
+
+    /** Copy totals for current and all sub tasks to clipboard. */
+    void clipTotals();
+
+    /** Copy history for current and all sub tasks to clipboard. */
+    void clipHistory();
 
   signals:
     void totalTimesChanged( long session, long total );
