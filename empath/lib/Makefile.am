@@ -4,7 +4,9 @@ INCLUDES = -I$(top_srcdir)/rmm/ $(all_includes)
 
 lib_LTLIBRARIES = libempathkernel.la
 
-libempathkernel_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module
+libempathkernel_la_LDFLAGS = $(all_libraries) $(LIBQPTHREAD) $(LIBPTHREAD) \
+	-version-info 1:0:0 -module 
+	
 #	Define this for testing.
 #	-no-undefined
 
