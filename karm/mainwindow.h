@@ -1,18 +1,18 @@
-#ifndef MAIN_WINDOW_H
-#define MAIN_WINDOW_H
+#ifndef KARM_MAIN_WINDOW_H
+#define KARM_MAIN_WINDOW_H
 
 #include <kmainwindow.h>
 
 class QListViewItem;
 class QPoint;
 
+class KAccel;
 class KDialogBase;
 
-class TaskView;
-class KAccel;
 class KAccelMenuWatch;
-class Preferences;
 class KarmTray;
+class Preferences;
+class TaskView;
 
 /**
  * Main window to tie the application together.
@@ -38,7 +38,7 @@ class MainWindow : public KMainWindow
 
   protected slots:
     void keyBindings();
-    void resetSessionTime();
+    void startNewSession();
     void resetAllTimes();
     void updateTime( long, long );
     void updateStatusBar();
@@ -74,6 +74,4 @@ class MainWindow : public KMainWindow
     friend class KarmTray;
 };
 
-#endif
-
-
+#endif // KARM_MAIN_WINDOW_H

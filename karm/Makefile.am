@@ -8,14 +8,18 @@ SUBDIRS = support pics
 
 METASOURCES = AUTO
 
-karm_SOURCES =  addtaskdialog.cpp main.cpp \
-		task.cpp mainwindow.cpp kaccelmenuwatch.cpp print.cpp \
-		preferences.cpp ktimewidget.cpp taskview.cpp idletimedetector.cpp logging.cpp karmutility.cpp tray.cpp
+karm_SOURCES =  desktoptracker.cpp edittaskdialog.cpp idletimedetector.cpp \
+		kaccelmenuwatch.cpp karmutility.cpp ktimewidget.cpp \
+		logging.cpp main.cpp \
+		mainwindow.cpp preferences.cpp print.cpp task.cpp \
+		taskview.cpp tray.cpp
 karm_LDADD = -lkdeprint $(top_builddir)/libkcal/libkcal.la $(LIBXSS)
 karm_LDFLAGS = $(all_libraries)
-noinst_HEADERS = addtaskdialog.h taskview.h task.h toolicons.h mainwindow.h kaccelmenuwatch.h \
-		version.h print.h idletimedetector.h preferences.h ktimewidget.h logging.h karmutility.h \
-		tray.h
+noinst_HEADERS = desktoptracker.h edittaskdialog.h \
+                 idletimedetector.h kaccelmenuwatch.h \
+		 karmutility.h ktimewidget.h logging.h mainwindow.h \
+		 preferences.h print.h task.h taskview.h toolicons.h \
+		 tray.h version.h
 
 KDE_ICON = karm
 

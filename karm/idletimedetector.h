@@ -1,7 +1,8 @@
-#ifndef __IDLETIMER
-#define __IDLETIMER
+#ifndef KARM_IDLE_TIME_DETECTOR_H
+#define KARM_IDLE_TIME_DETECTOR_H
+
 #include <qobject.h>
-#include "config.h"
+#include "config.h"     // HAVE_LIBXSS
 
 class QTimer;
 
@@ -96,4 +97,4 @@ private:
   QTimer *_timer;
 };
 
-#endif // __IDLETIMER
+#endif // KARM_IDLE_TIME_DETECTOR_H

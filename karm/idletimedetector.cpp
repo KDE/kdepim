@@ -5,7 +5,7 @@
 #include <qtimer.h>
 
 #include <kglobal.h>
-#include <klocale.h>
+#include <klocale.h>    // i18n
 
 IdleTimeDetector::IdleTimeDetector(int maxIdle) 
 {

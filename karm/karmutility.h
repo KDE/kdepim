@@ -1,9 +1,8 @@
 #ifndef KARMUTILITY_H
 #define KARMUTILITY_H
 
-class Task;
+#include <qstring.h>
 
-long addTaskTotalTime( long value, Task* task );
-long addTaskSessionTime( long value, Task* task );
+QString formatTime( long minutes );
 
 #endif

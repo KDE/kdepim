@@ -10,36 +10,30 @@
 
 #include <numeric>
 
-#include "mainwindow.h"
-#include <qstring.h>
 #include <qkeycode.h>
-#include <qlayout.h>
 #include <qpopupmenu.h>
-#include <kconfig.h>
-#include <kaccel.h>
-#include <kapplication.h>
-#include <kglobal.h>
-#include <klocale.h>
-#include <kmenubar.h>
-#include <kaction.h>
-#include <kstdaction.h>
-#include <kstatusbar.h>
-#include <qvbox.h>
-#include <qtimer.h>
-#include <qtooltip.h>
 #include <qptrlist.h>
-#include <qevent.h>
-#include <qapplication.h>
-#include <kkeydialog.h>
+#include <qstring.h>
+
+#include <kaccel.h>
+#include <kaction.h>
+#include <kapplication.h>       // kapp
+#include <kconfig.h>
 #include <kdebug.h>
+#include <kglobal.h>
+#include <kkeydialog.h>
+#include <klocale.h>            // i18n
+#include <kstatusbar.h>         // statusBar()
+#include <kstdaction.h>
 
 #include "kaccelmenuwatch.h"
-#include "taskview.h"
+#include "karmutility.h"
+#include "mainwindow.h"
+#include "preferences.h"
 #include "print.h"
 #include "task.h"
-#include "preferences.h"
+#include "taskview.h"
 #include "tray.h"
-#include "karmutility.h"
 
 MainWindow::MainWindow()
   : KMainWindow(0),
@@ -64,7 +58,7 @@ MainWindow::MainWindow()
   _watcher->updateMenus();
 
   // connections
-  connect( _taskView, SIGNAL( sessionTimeChanged( long, long ) ),
+  connect( _taskView, SIGNAL( totalTimesChanged( long, long ) ),
            this, SLOT( updateTime( long, long ) ) );
   connect( _taskView, SIGNAL( selectionChanged ( QListViewItem * )),
            this, SLOT(slotSelectionChanged()));
@@ -76,10 +70,11 @@ MainWindow::MainWindow()
   _preferences->load();
   loadGeometry();
 
-
-  connect( _taskView, SIGNAL( contextMenuRequested( QListViewItem*,
-           const QPoint&, int )),
-           this,  SLOT( contextMenuRequest( QListViewItem*, const QPoint&, int )));
+  // Setup context menu request handling
+  connect( _taskView,
+           SIGNAL( contextMenuRequested( QListViewItem*, const QPoint&, int )),
+           this,
+           SLOT( contextMenuRequest( QListViewItem*, const QPoint&, int )));
 
   _tray = new KarmTray( this );
 
@@ -160,14 +155,14 @@ void MainWindow::updateTime( long sessionDiff, long totalDiff )
   updateStatusBar();
 }
 
-void MainWindow::updateStatusBar()
+void MainWindow::updateStatusBar( )
 {
   QString time;
 
-  time = TaskView::formatTime( _sessionSum );
+  time = formatTime( _sessionSum );
   statusBar()->changeItem( i18n("Session: %1").arg(time), 0 );
 
-  time = TaskView::formatTime( _totalSum );
+  time = formatTime( _totalSum );
   statusBar()->changeItem( i18n("Total: %1" ).arg(time), 1);
 }
 
@@ -188,14 +183,15 @@ void MainWindow::keyBindings()
   KKeyDialog::configureKeys( actionCollection(), xmlFile());
 }
 
-void MainWindow::resetSessionTime()
+void MainWindow::startNewSession()
 {
-  _taskView->resetSessionTimeForAllTasks();
+  _taskView->startNewSession();
 }
 
 void MainWindow::resetAllTimes()
 {
-  _taskView->resetTimeForAllTasks();
+  // TODO:
+  // _taskView->resetTimeForAllTasks();
 }
 
 void MainWindow::makeMenus()
@@ -212,16 +208,18 @@ void MainWindow::makeMenus()
   actionPreferences = KStdAction::preferences( _preferences, SLOT(showDialog()),
                                                actionCollection() );
   (void) KStdAction::save( this, SLOT( save() ), actionCollection() );
-  KAction* actionResetSession = new KAction( i18n("&Reset Session Times"),
-                                    CTRL + Key_R,
-                                    this,
-                                    SLOT(resetSessionTime()),actionCollection(),
-                                    "reset_session_time");
+  KAction* actionStartNewSession = new KAction( i18n("&Start New Session"),
+                                                CTRL + Key_N,
+                                                this,
+                                                SLOT( startNewSession() ),
+                                                actionCollection(),
+                                                "start_new_session");
   KAction* actionResetAll = new KAction( i18n("&Reset All Times"),
-                                    0,
-                                    this,
-                                    SLOT( resetAllTimes() ), actionCollection(),
-                                    "reset_all_times");
+                                         0,
+                                         this,
+                                         SLOT( resetAllTimes() ),
+                                         actionCollection(),
+                                         "reset_all_times");
   actionStart = new KAction( i18n("&Start"),
                              QString::fromLatin1("1rightarrow"), Key_S,
                              _taskView,
@@ -282,11 +280,11 @@ void MainWindow::makeMenus()
   actionKeyBindings->setWhatsThis( i18n("This will let you configure key"
                                         "bindings which is specific to karm") );
 
-  actionResetSession->setToolTip( i18n("Reset session time") );
-  actionResetSession->setWhatsThis( i18n("This will reset the session time to "
-                                         "0 for all tasks, to start a new "
-                                         "session, without affecting the "
-                                         "totals.") );
+  actionStartNewSession->setToolTip( i18n("Start a new session") );
+  actionStartNewSession->setWhatsThis( i18n("This will reset the session time "
+                                            "to 0 for all tasks, to start a "
+                                            "new session, without affecting "
+                                            "the totals.") );
   actionResetAll->setToolTip( i18n("Reset all times") );
   actionResetAll->setWhatsThis( i18n("This will reset the session and total "
                                      "time to 0 for all tasks, to restart from "
@@ -368,7 +366,7 @@ bool MainWindow::queryClose()
 void MainWindow::contextMenuRequest( QListViewItem*, const QPoint& point, int )
 {
     QPopupMenu* pop = dynamic_cast<QPopupMenu*>(
-                                   factory()->container( i18n( "task_popup" ), this ) );
+                          factory()->container( i18n( "task_popup" ), this ) );
     if ( pop )
       pop->popup( point );
 }

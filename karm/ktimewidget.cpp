@@ -1,10 +1,13 @@
+#include <stdlib.h>             // abs()
+
+#include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
-#include <qlabel.h>
-#include "ktimewidget.h"
+#include <qstring.h>
 #include <qvalidator.h>
-#include <kdebug.h>
-#include <stdlib.h>
+#include <qwidget.h>
+
+#include "ktimewidget.h"
 
 enum ValidatorType { HOUR, MINUTE };
 

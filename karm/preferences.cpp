@@ -1,18 +1,18 @@
 #undef Unsorted // for --enable-final
-#include "preferences.h"
 #include <qcheckbox.h>
-#include <klineedit.h>
 #include <qlabel.h>
-#include <qlayout.h>
 #include <qspinbox.h>
-#include <klocale.h>
 #include <qvbox.h>
-#include <qframe.h>
+
+#include <kapplication.h>       // kapp
 #include <kconfig.h>
-#include <kapplication.h>
 #include <kglobal.h>
+#include <klineedit.h>          // lineEdit()
+#include <klocale.h>            // i18n
 #include <kstandarddirs.h>
 #include <kurlrequester.h>
+
+#include "preferences.h"
 
 Preferences *Preferences::_instance = 0;
 
@@ -65,6 +65,19 @@ Preferences::Preferences()
     _promptDeleteW = new QCheckBox( i18n( "Prompt before deleting tasks" ),
                                     hbox, "_promptDeleteW" );
     }
+  {
+    QVBox* vbox                =  new QVBox(tab);
+    _displayColumnsLabelW      = new QLabel( i18n("The following columns should"
+                                                  " be displayed:"), vbox);
+    _displaySessionW           = new QCheckBox ( i18n("Session time"),
+                                                 vbox, "_displaySessionW");
+    _displayTimeW              = new QCheckBox ( i18n("Cumulated task time"),
+                                               vbox, "_displayTimeW");
+    _displayTotalSessionW      = new QCheckBox( i18n("Total session time"),
+                                                vbox, "_displayTotalSessionW");
+    _displayTotalTimeW         = new QCheckBox ( i18n("Total task time"),
+                                                 vbox, "_displayTotalTimeW");
+  }
 
     connect( _doAutoSaveW, SIGNAL( clicked() ), this,
              SLOT( autoSaveCheckBoxChanged() ));
@@ -114,6 +127,11 @@ void Preferences::showDialog()
   _hideOnCloseW->setChecked(_hideOnCloseV);
   _promptDeleteW->setChecked(_promptDeleteV);
 
+  _displaySessionW->setChecked(_displayColumnV[0]);
+  _displayTimeW->setChecked(_displayColumnV[1]);
+  _displayTotalSessionW->setChecked(_displayColumnV[2]);
+  _displayTotalTimeW->setChecked(_displayColumnV[3]);
+
   // adapt visibility of preference items according
   // to settings
   idleDetectCheckBoxChanged();
@@ -134,6 +152,11 @@ void Preferences::slotOk()
   _autoSaveValueV = _autoSaveValueW->value();
   _hideOnCloseV = _hideOnCloseW->isChecked();
   _promptDeleteV = _promptDeleteW->isChecked();
+
+  _displayColumnV[0] = _displaySessionW->isChecked();
+  _displayColumnV[1]=_displayTimeW->isChecked();
+  _displayColumnV[2]=_displayTotalSessionW->isChecked();
+  _displayColumnV[3]=_displayTotalTimeW->isChecked();
 
   emitSignals();
   save();
@@ -174,15 +197,15 @@ void Preferences::hideOnCloseCheckBoxChanged()
 
 void Preferences::emitSignals()
 {
-  emit(saveFile(_saveFileV));
-  emit(timeLogging(_doTimeLoggingV));
-  emit(timeLog(_timeLogV));
-  emit(detectIdleness(_doIdleDetectionV));
-  emit(idlenessTimeout(_idleDetectValueV));
-  emit(autoSave(_doAutoSaveV));
-  emit(autoSavePeriod(_autoSaveValueV));
-  emit(setupChanged());
-  emit(hideOnClose(_hideOnCloseV));
+  emit saveFile( _saveFileV );
+  emit timeLogging( _doTimeLoggingV );
+  emit timeLog( _timeLogV );
+  emit detectIdleness( _doIdleDetectionV );
+  emit idlenessTimeout( _idleDetectValueV );
+  emit autoSave( _doAutoSaveV );
+  emit autoSavePeriod( _autoSaveValueV );
+  emit setupChanged(  );
+  emit hideOnClose( _hideOnCloseV );
 }
 
 QString Preferences::saveFile()
@@ -254,6 +277,8 @@ bool Preferences::useLegacyFileFormat()
   return fileFormat() == QString::fromLatin1( "karmdata" );
 }
 
+bool Preferences::displayColumn(int n)  { return _displayColumnV[n]; }
+
 QString Preferences::fileFormat()
 {
   return _fileFormat;
@@ -289,6 +314,11 @@ void Preferences::load()
   _hideOnCloseV   = config.readBoolEntry( QString::fromLatin1("hide on close"), true);
   _promptDeleteV  = config.readBoolEntry( QString::fromLatin1("prompt delete"), true);
 
+  _displayColumnV[0] = config.readBoolEntry( QString::fromLatin1("display session time"), true);
+  _displayColumnV[1] = config.readBoolEntry( QString::fromLatin1("display time"), true);
+  _displayColumnV[2] = config.readBoolEntry( QString::fromLatin1("display total session time"), true);
+  _displayColumnV[3] = config.readBoolEntry( QString::fromLatin1("display total time"), true);
+
   emitSignals();
 }
 
@@ -301,7 +331,7 @@ void Preferences::save()
   config.writeEntry( QString::fromLatin1("period"), _idleDetectValueV);
 
   config.setGroup( QString::fromLatin1("Saving"));
-  config.writeEntry( QString::fromLatin1("file format"), QString::fromLatin1("karm_kcal_1"));
+  config.writeEntry( QString::fromLatin1("file format"), QString::fromLatin1("karm_kcal_2"));
   config.writeEntry( QString::fromLatin1("file"), _legacySaveFileV);
   config.writeEntry( QString::fromLatin1("kcal file"), _saveFileV);
   config.writeEntry( QString::fromLatin1("time logging"), _doTimeLoggingV);
@@ -310,6 +340,11 @@ void Preferences::save()
   config.writeEntry( QString::fromLatin1("auto save period"), _autoSaveValueV);
   config.writeEntry( QString::fromLatin1("hide on close"), _hideOnCloseV);
   config.writeEntry( QString::fromLatin1("prompt delete"), _promptDeleteV);
+
+  config.writeEntry( QString::fromLatin1("display session time"), _displayColumnV[0]);
+  config.writeEntry( QString::fromLatin1("display time"), _displayColumnV[1]);
+  config.writeEntry( QString::fromLatin1("display total session time"), _displayColumnV[2]);
+  config.writeEntry( QString::fromLatin1("display total time"), _displayColumnV[3]);
 
   config.sync();
 

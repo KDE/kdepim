@@ -1,8 +1,9 @@
-
-#ifndef KTIMEWIDGET_H_
-#define KTIMEWIDGET_H_
+#ifndef KARM_K_TIME_WIDGET_H
+#define KARM_K_TIME_WIDGET_H
 
 class QLineEdit;
+class QWidget;
+
 class KarmLineEdit;
 
 /**
@@ -21,4 +22,4 @@ class KArmTimeWidget : public QWidget
     KarmLineEdit *_minuteLE;
 };
 
-#endif
+#endif // KARM_K_TIME_WIDGET_H

@@ -1,5 +1,5 @@
-#ifndef __preferences_h
-#define __preferences_h
+#ifndef KARM_PREFERENCES_H
+#define KARM_PREFERENCES_H
 
 #include <kdialogbase.h>
 
@@ -34,6 +34,7 @@ class Preferences :public KDialogBase
     bool promptDelete();
     QString fileFormat();
     bool useLegacyFileFormat();
+    bool displayColumn(int n);
 
   public slots:
     void showDialog();
@@ -72,8 +73,10 @@ class Preferences :public KDialogBase
     // (All variables ends in W to indicate that they are Widgets)
     QCheckBox *_doIdleDetectionW, *_doAutoSaveW, *_doTimeLoggingW,
               *_hideOnCloseW, *_promptDeleteW;
+    QCheckBox *_displayTimeW, *_displaySessionW,
+              *_displayTotalTimeW, *_displayTotalSessionW;
     QLabel    *_idleDetectLabelW, *_autoSaveLabelW, *_saveFileLabelW,
-              *_timeLoggingLabelW;
+              *_timeLoggingLabelW, *_displayColumnsLabelW;
     QSpinBox  *_idleDetectValueW, *_autoSaveValueW;
     KURLRequester *_saveFileW, *_timeLogW;
   
@@ -81,10 +84,12 @@ class Preferences :public KDialogBase
     // (All variables in in V to indicate they are Values)
     bool _doIdleDetectionV, _doAutoSaveV, _doTimeLoggingV,
          _hideOnCloseV, _promptDeleteV;
+    /// should columns be displayed
+    bool _displayColumnV[4];
     int  _idleDetectValueV, _autoSaveValueV;
     QString _saveFileV, _legacySaveFileV, _timeLogV;
     QString _fileFormat;
 };
 
-#endif
+#endif // KARM_PREFERENCES_H
 

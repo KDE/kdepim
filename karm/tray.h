@@ -4,13 +4,15 @@
 #include <qptrvector.h>
 #include <qpixmap.h>
 #include <qptrlist.h>
-#include "task.h"
 // experiement
 // #include <kpopupmenu.h>
 #include <ksystemtray.h>
 
+#include "task.h"
+
 class QPopupMenu;
 class QTimer;
+
 class KSystemTray;
 class MainWindow;
 // experiment
@@ -49,6 +51,4 @@ class KarmTray : public KSystemTray
     */
 };
 
-#endif
-
-
+#endif // KARM_TRAY_H

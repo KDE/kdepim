@@ -1,17 +1,13 @@
-#include "task.h"
+#ifndef KARM_UTILITY_H
+#define KARM_UTILITY_H
 
 #include "karmutility.h"
 
-long addTaskTotalTime( long value, Task* task )
+QString formatTime( long minutes )
 {
-  if ( task )
-    return value + task->totalTime();
-  return value;
+  QString time;
+  time.sprintf("%ld:%02ld", minutes / 60, labs(minutes % 60));
+  return time;
 }
 
-long addTaskSessionTime( long value, Task* task )
-{
-  if ( task )
-    return value + task->sessionTime();
-  return value;
-}
+#endif // KARM_UTILITY_H

@@ -1,11 +1,15 @@
-#ifndef ___print_h
-#define ___print_h
+#ifndef KARM_PRINT_H
+#define KARM_PRINT_H
 
 #undef Color // X11 headers
 #undef GrayScale // X11 headers
 #include <kprinter.h>
-#include <qpainter.h>
-#include "taskview.h"
+
+class QPainter;
+class QString;
+
+class Task;
+class TaskView;
 
 /**
  * Provide printing capabilities.
@@ -18,8 +22,8 @@ class MyPrinter : public KPrinter
     void print();
     void printLine( QString total, QString session, QString name, QPainter &,
                     int );
-    void printTask( QListViewItem *item, QPainter &, int level );  
-    int calculateReqNameWidth( QListViewItem *item, QFontMetrics &metrics,
+    void printTask( Task *task, QPainter &, int level );  
+    int calculateReqNameWidth( Task *task, QFontMetrics &metrics,
                                int level);
   
   private:
@@ -27,12 +31,11 @@ class MyPrinter : public KPrinter
 
     int xMargin, yMargin;
     int yoff;
-    int totalTimeWidth;
+    int timeWidth;
     int sessionTimeWidth;
     int nameFieldWidth;
     int lineHeight;
-   int pageHeight;  
+    int pageHeight;  
 };
 
-#endif
-
+#endif // KARM_PRINT_H

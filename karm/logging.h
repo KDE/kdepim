@@ -1,14 +1,15 @@
-#ifndef _LOGGING_H_
-#define _LOGGING_H_
+#ifndef KARM_LOGGING_H
+#define KARM_LOGGING_H
 
-#include "preferences.h"
-#include <qstring.h>
-#include <qdatetime.h>
+class QDateTime;
+class QString;
 
+class Preferences;
 class Task;
 
 #define DONT_LOG false
 
+/** base class for specific log events */
 class KarmLogEvent
 {
  protected:
@@ -27,61 +28,75 @@ class KarmLogEvent
    virtual ~KarmLogEvent () {};
 };
 
-class StartLogEvent: public KarmLogEvent
-{
- public:
-   StartLogEvent( Task *task);
-   QString toXML();
-};
+//@{ class for loggin of specific events
+  class StartLogEvent: public KarmLogEvent
+  {
+   public:
+     StartLogEvent( Task *task);
+     QString toXML();
+  };
 
-class StopLogEvent: public KarmLogEvent
-{
- public:
-   StopLogEvent ( Task *task);
-   QString toXML();
-};
+  class StopLogEvent: public KarmLogEvent
+  {
+   public:
+     StopLogEvent ( Task *task);
+     QString toXML();
+  };
 
-class RenameLogEvent: public KarmLogEvent
-{
- private:
-   QString oldName;
- public:
-   RenameLogEvent( Task *task, QString& old);
-   QString toXML();
-};
+  class RenameLogEvent: public KarmLogEvent
+  {
+   private:
+     QString oldName;
+   public:
+     RenameLogEvent( Task *task, QString& old);
+     QString toXML();
+  };
 
-class SessionTimeLogEvent: public KarmLogEvent
-{
- private:
-   long newTotal, delta;
- public:
-   SessionTimeLogEvent( Task *task, long newTotal, long delta);
-   QString toXML();
-};
+  class TimechangeLogEvent: public KarmLogEvent
+  {
+   private:
+     long newSession, deltaSession;
+     long newTime, deltaTime;
+   public:
+     TimechangeLogEvent( Task *task, long deltaSession, long deltaTime);
+     QString toXML();
+  };
 
-class TotalTimeLogEvent: public KarmLogEvent
-{
- private:
-   long newTotal, delta;
- public:
-   TotalTimeLogEvent( Task *task, long newTotal, long delta );
-   QString toXML();
-};
+  class CommentLogEvent: public KarmLogEvent
+  {
+   private:
+     QString comment;
+   public:
+     CommentLogEvent( Task *task, QString& comment);
+     QString toXML();
+  };
 
+  class RemoveLogEvent: public KarmLogEvent
+  {
+   public:
+     RemoveLogEvent( Task *task);
+     QString toXML();
+  };
 
-class CommentLogEvent: public KarmLogEvent
-{
- private:
-   QString comment;
- public:
-   CommentLogEvent( Task *task, QString& comment);
-   QString toXML();
-};
+  class StartSessionLogEvent: public KarmLogEvent
+  {
+   public:
+     StartSessionLogEvent();
+     QString toXML();
+  };
+
+  class StopSessionLogEvent: public KarmLogEvent
+  {
+   public:
+     StopSessionLogEvent();
+     QString toXML();
+  };
+//@}
 
 class Logging
 {
  private:
-   Preferences *_preferences;
+   Preferences* _preferences;
    static Logging *_instance;
    void log( KarmLogEvent* event );
 
@@ -89,12 +104,14 @@ class Logging
    static Logging *instance();
    Logging();
    ~Logging();
-   void start( Task *task);
-   void stop( Task *task);
-   void rename( Task *task, QString& oldName);
-   void newTotalTime( Task *task, long minutes, long change);
-   void newSessionTime( Task *task, long minutes, long change);
-   void comment( Task *task, QString& comment);
+   void start( Task *task );
+   void stop( Task *task );
+   void rename( Task *task, QString& oldName );
+   void changeTimes( Task *task, long deltaSession, long deltaTotal);
+   void comment( Task *task, QString& comment );
+   void remove( Task *task );
+   void startSession();
+   void stopSession();
 };
 
-#endif
+#endif // KARM_LOGGING_H

@@ -6,6 +6,8 @@
 */
 
 #include <assert.h>
+#include <qpopupmenu.h>
+
 #include "kaccelmenuwatch.h"
 
 KAccelMenuWatch::KAccelMenuWatch( KAccel *accel, QObject *parent )

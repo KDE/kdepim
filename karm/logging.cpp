@@ -1,14 +1,14 @@
-#include "logging.h"
-#include "task.h"
-#include "preferences.h"
-
 #include <qdatetime.h>
-#include <qstring.h>
 #include <qfile.h>
-#include <qtextstream.h>
+#include <qstring.h>
 #include <qstylesheet.h>
+#include <qtextstream.h>
 
-#include <kdebug.h>
+#include "kdebug.h"             // kdWarning
+
+#include "logging.h"
+#include "preferences.h"
+#include "task.h"
 
 #define QSl1(c) QString::fromLatin1(c)
 
@@ -26,21 +26,20 @@ QString KarmLogEvent::escapeXML(const QString& string )
   return result;
 }
 
-// Common LogEvent stuff
+//------------------------ Common LogEvent stuff ------------------------
 //
 void KarmLogEvent::loadCommonFields( Task *task)
 {
   eventTime =  QDateTime::currentDateTime();
   
-  QListViewItem *item = task;
   fullName = escapeXML(task->name());
-  while( ( item = item->parent() ) )
+  while( ( task = task->parent() ) )
   {
-    fullName = escapeXML(((Task *)item)->name()) + fullName.prepend('/');
+    fullName = escapeXML(task->name()) + fullName.prepend('/');
   }
 }
 
-// Start LogEvent
+//------------------------- Start Task LogEvent ----------------------------
 //
 StartLogEvent::StartLogEvent( Task *task )
 {
@@ -49,14 +48,14 @@ StartLogEvent::StartLogEvent( Task *task )
 
 QString StartLogEvent::toXML()
 {
-  return QSl1("<starting        "
+  return QSl1("<starting     "
               " date=\"%1\""
               " task=\"%2\" />\n"
-              ).arg( eventTime.toString() ).arg(
-                       fullName );
+             ).arg( eventTime.toString() ).arg(
+                    fullName );
 }
 
-// Stop LogEvent
+//------------------------- Stop Task LogEvent ---------------------------
 //
 StopLogEvent::StopLogEvent( Task *task )
 {
@@ -65,14 +64,14 @@ StopLogEvent::StopLogEvent( Task *task )
 
 QString StopLogEvent::toXML()
 {
-  return QSl1("<stopping        "
+  return QSl1("<stopping     "
               " date=\"%1\""
               " task=\"%2\" />\n"
              ).arg( eventTime.toString() ).arg(
-                       fullName );
+                    fullName );
 }
 
-// Rename LogEvent
+//------------------------ Rename Task LogEvent ---------------------------
 //
 RenameLogEvent::RenameLogEvent( Task *task, QString& old )
 {
@@ -82,60 +81,45 @@ RenameLogEvent::RenameLogEvent( Task *task, QString& old )
 
 QString RenameLogEvent::toXML()
 {
-  return QSl1("<renaming        "
+  return QSl1("<renaming     "
               " date=\"%1\""
               " task=\"%2\""
               " old_name=\"%3\" />\n"
              ).arg( eventTime.toString() ).arg(
-                       fullName ).arg(
-                       oldName );
+                    fullName ).arg(
+                    oldName );
 }
 
-// Set Session Time LogEvent
+//---------------------- Change Times LogEvent ---------------------------
 // 
-SessionTimeLogEvent::SessionTimeLogEvent( Task *task, long total, long change)
+TimechangeLogEvent::TimechangeLogEvent( Task *task, long changeSession,
+                                                    long changeTime)
 {
   loadCommonFields(task);
-  delta = change;
-  newTotal = total;
+  deltaSession = changeSession;
+  deltaTime    = changeTime;
+  newSession = task->sessionTime();
+  newTime    = task->time();
 }
 
-QString SessionTimeLogEvent::toXML()
+QString TimechangeLogEvent::toXML()
 {
-  return QSl1("<new_session_time"
+  return QSl1("<timechange   "
               " date=\"%1\""
               " task=\"%2\""
-              " new_total=\"%3\""
-              " change=\"%4\" />\n"
+              " new_session=\"%3\""
+              " change_session=\"%4\""
+              " new_time=\"%5\""
+              " change=\"%6\" />\n"
              ).arg( eventTime.toString() ).arg(
-                       fullName ).arg(
-                       newTotal ).arg(
-                       delta );
+                    fullName     ).arg(
+                    newSession   ).arg(
+                    deltaSession ).arg(
+                    newTime      ).arg(
+                    deltaTime    );
 }
 
-// Set Total Time LogEvent
-// 
-TotalTimeLogEvent::TotalTimeLogEvent( Task *task, long total, long change)
-{
-  loadCommonFields(task);
-  delta = change;
-  newTotal = total;
-}
-
-QString TotalTimeLogEvent::toXML()
-{
-  return QSl1("<new_total_time  "
-              " date=\"%1\""
-              " task=\"%2\""
-              " new_total=\"%3\""
-              " change=\"%4\" />\n"
-             ).arg( eventTime.toString() ).arg(
-                       fullName ).arg(
-                       newTotal ).arg(
-                       delta );
-}
-
-// Add Comment LogEvent
+//------------------- Add Comment to Task LogEvent ----------------------
 // 
 CommentLogEvent::CommentLogEvent( Task *task, QString& newComment)
 {
@@ -145,13 +129,55 @@ CommentLogEvent::CommentLogEvent( Task *task, QString& newComment)
 
 QString CommentLogEvent::toXML()
 {
-  return QSl1("<comment         "
+  return QSl1("<comment      "
               " date=\"%1\""
               " task=\"%2\""
               " text=\"%3\" />\n"
              ).arg( eventTime.toString() ).arg(
-                       fullName ).arg(
-                       comment );
+                    fullName ).arg(
+                    comment );
+}
+
+//--------------------- Remove Task LogEvent ---------------------------
+// 
+RemoveLogEvent::RemoveLogEvent( Task *task )
+{
+  loadCommonFields(task);
+}
+
+QString RemoveLogEvent::toXML()
+{
+  return QSl1("<deleted      "
+              " date=\"%1\""
+              " task=\"%2\" />\n"
+             ).arg( eventTime.toString() ).arg(
+                    fullName );
+}
+
+//--------------------- Start Session LogEvent ---------------------------
+// 
+StartSessionLogEvent::StartSessionLogEvent( )
+{
+}
+
+QString StartSessionLogEvent::toXML()
+{
+  return QSl1("<start_session"
+              " date=\"%1\" />\n"
+             ).arg( eventTime.toString() );
+}
+
+//--------------------- Stop Session LogEvent ---------------------------
+// 
+StopSessionLogEvent::StopSessionLogEvent( )
+{
+}
+
+QString StopSessionLogEvent::toXML()
+{
+  return QSl1("<stop_session "
+              " date=\"%1\" />\n"
+             ).arg( eventTime.toString() );
 }
 
 //
@@ -176,15 +202,9 @@ void Logging::stop( Task *task)
   log(event);
 }
 
-void Logging::newTotalTime( Task *task, long minutes, long change)
+void Logging::changeTimes( Task *task, long deltaSession, long deltaTime)
 {
-  KarmLogEvent* event = new TotalTimeLogEvent(task, minutes, change);
-  log(event);
-}
-
-void Logging::newSessionTime( Task *task, long minutes, long change)
-{
-  KarmLogEvent* event = new SessionTimeLogEvent(task, minutes, change);
+  KarmLogEvent* event = new TimechangeLogEvent(task, deltaSession, deltaTime);
   log(event);
 }
 
@@ -197,6 +217,24 @@ void Logging::rename( Task *task, QString& oldName)
 void Logging::comment( Task *task, QString& comment)
 {
   KarmLogEvent* event = new CommentLogEvent(task, comment);
+  log(event);
+}
+
+void Logging::remove( Task *task )
+{
+  KarmLogEvent* event = new RemoveLogEvent(task);
+  log(event);
+}
+
+void Logging::startSession()
+{
+  KarmLogEvent* event = new StartSessionLogEvent();
+  log(event);
+}
+
+void Logging::stopSession()
+{
+  KarmLogEvent* event = new StopSessionLogEvent();
   log(event);
 }
 

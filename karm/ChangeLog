@@ -1,7 +1,15 @@
 KArm 1.3
 --------
 - reengineering
+- each task now has its own time
 - tracking of desktops
+- better logging
+- comments can be added to log
+- active task indication in the system tray
+- "Reset Session Times" re-reversed and renamed to
+  "Start New Session" for clarity
+- fixed a few bugs
+- times are now saved in iCal format
 
 KArm 1.2
 --------

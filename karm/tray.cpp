@@ -12,27 +12,21 @@
  * $Id$
  */
 
-#include <qstring.h>
-#include <qkeycode.h>
-#include <qlayout.h>
+// #include <qkeycode.h>
+// #include <qlayout.h>
 #include <qpixmap.h>
-#include <qpopupmenu.h>
-#include <kapplication.h>
-#include <kglobalsettings.h>
-#include <kconfig.h>
-#include <ksystemtray.h>
-#include <kglobal.h>
-#include <kiconloader.h>
-#include <klocale.h>
-#include <kstatusbar.h>
-#include <kstdaction.h>
-#include <kpopupmenu.h>
-#include <qpopupmenu.h>
-#include <qvbox.h>
+#include <qptrlist.h>
+#include <qstring.h>
 #include <qtimer.h>
 #include <qtooltip.h>
-#include <qptrlist.h>
-#include <kaction.h>
+
+#include <kaction.h>            // actionPreferences()
+#include <kglobal.h>
+#include <kglobalsettings.h>
+#include <kiconloader.h>        // UserIcon
+#include <klocale.h>            // i18n
+#include <kpopupmenu.h>         // plug()
+#include <ksystemtray.h>
 
 #include "mainwindow.h"
 #include "task.h"
@@ -161,6 +155,5 @@ void KarmTray::updateToolTip(QPtrList<Task> activeTasks)
 
   QToolTip::add( this, qTip );
 }
-
 
 #include "tray.moc"

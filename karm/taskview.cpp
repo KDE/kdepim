@@ -1,45 +1,38 @@
-#include <numeric>
-#include <functional>
-#include <algorithm>
-#include <qptrstack.h>
-#include <qptrlist.h>
-#include <sys/types.h>
-#include <dirent.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-
-#include <qlistbox.h>
-#include <qlayout.h>
-#include <qtextstream.h>
-#include <qfile.h>
-#include <qtimer.h>
 #include <qdict.h>
+#include <qfile.h>
+#include <qlayout.h>
+#include <qlistbox.h>
+#include <qptrlist.h>
+#include <qptrstack.h>
+#include <qtextstream.h>
+#include <qtimer.h>
 
-#include <kapplication.h>
 #include <kconfig.h>
-#include <klocale.h>
-#include <kmenubar.h>
-#include <ktoolbar.h>
+#include <kdebug.h>
+#include <klocale.h>            // i18n
 #include <kmessagebox.h>
 #include <kemailsettings.h>
-#include <kstandarddirs.h>
 #include <klineeditdlg.h>
 
-#include "event.h"
 #include "calendarlocal.h"
+#include "event.h"
+#include "todo.h"
 
-#include "task.h"
-#include "taskview.h"
-#include "addtaskdialog.h"
+#include "desktoptracker.h"
+#include "edittaskdialog.h"
 #include "idletimedetector.h"
 #include "preferences.h"
-#include "kdebug.h"
-#include "karmutility.h"
+#include "task.h"
+#include "taskview.h"
 
 #define T_LINESIZE 1023
+#define HIDDEN_COLUMN -10
+
+class DesktopTracker;
 
 TaskView::TaskView( QWidget *parent, const char *name )
-  : KListView( parent, name ), _calendar()
+  : KListView( parent, name ),
+    _calendar()
 {
   _preferences = Preferences::instance();
 
@@ -52,7 +45,13 @@ TaskView::TaskView( QWidget *parent, const char *name )
 
   addColumn( i18n("Task Name") );
   addColumn( i18n("Session Time") );
+  addColumn( i18n("Time") );
+  addColumn( i18n("Total Session Time") );
   addColumn( i18n("Total Time") );
+  // setColumnAlignment( 1, Qt::AlignRight );
+  // setColumnAlignment( 2, Qt::AlignRight );
+  // setColumnAlignment( 3, Qt::AlignRight );
+  adaptColumns();
   setAllColumnsShowFocus( true );
 
   // set up the minuteTimer
@@ -60,6 +59,10 @@ TaskView::TaskView( QWidget *parent, const char *name )
   connect( _minuteTimer, SIGNAL( timeout() ), this, SLOT( minuteUpdate() ));
   _minuteTimer->start(1000 * secsPerMinute);
 
+  // resize columns when config is changed
+  connect( _preferences, SIGNAL( setupChanged() ), this,SLOT( adaptColumns() ));
+
+  _minuteTimer->start(1000 * secsPerMinute);
   // Set up the idle detection.
   _idleTimeDetector = new IdleTimeDetector( _preferences->idlenessTimeout() );
   connect( _idleTimeDetector, SIGNAL( extractTime(int) ),
@@ -81,40 +84,21 @@ TaskView::TaskView( QWidget *parent, const char *name )
            this, SLOT( autoSavePeriodChanged(int) ));
   connect( _autoSaveTimer, SIGNAL( timeout() ), this, SLOT( save() ));
 
-  connect( &kWinModule, SIGNAL( currentDesktopChanged(int) ),
-           this, SLOT( handleDesktopChange(int) ));
+  // setup default values
+  previousColumnWidths[0] = previousColumnWidths[1]
+  = previousColumnWidths[2] = previousColumnWidths[3] = HIDDEN_COLUMN;
 
-  desktopCount = kWinModule.numberOfDesktops();
-  lastDesktop = kWinModule.currentDesktop()-1;
-  // currentDesktop will return 0 if no window manager is started
-  if( lastDesktop < 0 ) lastDesktop = 0;
+  // Connect desktop tracker events to task starting/stopping
+  _desktopTracker = new DesktopTracker();
+  connect( _desktopTracker, SIGNAL( reachedtActiveDesktop( Task* ) ),
+           this, SLOT( startTimerFor(Task*) ));
+  connect( _desktopTracker, SIGNAL( leftActiveDesktop( Task* ) ),
+           this, SLOT( stopTimerFor(Task*) ));
 }
 
 TaskView::~TaskView()
 {
   _preferences->save();
-}
-
-void TaskView::handleDesktopChange(int desktop)
-{
-  desktop--; // desktopTracker starts with 0 for desktop 1
-  // start all tasks setup for running on desktop
-  TaskVector::iterator it;
-
-  // stop trackers for lastDesktop
-  TaskVector tv = desktopTracker[lastDesktop];
-  for (it = tv.begin(); it != tv.end(); it++) {
-    stopTimerFor(*it);
-  }
-
-  // start trackers for desktop
-  tv = desktopTracker[desktop];
-  for (it = tv.begin(); it != tv.end(); it++) {
-    startTimerFor(*it);
-  }
-  lastDesktop = desktop;
-
-  emit updateButtons();
 }
 
 void TaskView::load()
@@ -149,16 +133,12 @@ void TaskView::loadFromKCalFormat( const QString& file, int loadMask )
     buildAndPositionTasks( todoList );
   }
 
-  // Calculate totals for the statusbar (from toplevel tasks only)
-  for ( QListViewItem* child = firstChild();
-        child;
-        child = child->nextSibling() )
-    emit sessionTimeChanged( 0, static_cast<Task *>(child)->totalTime() );
+  adjustFromLegacyFileFormat();
 
   setSelected(firstChild(), true);
   setCurrentItem(firstChild());
 
-  applyTrackers();
+  _desktopTracker->startTracking();
 }
 
 void TaskView::loadFromKCalFormat()
@@ -211,7 +191,7 @@ void TaskView::buildTask( KCal::Incidence* event, QDict<Task>& map )
   map.insert( event->uid(), task );
   setRootIsDecorated(true);
   task->setOpen(true);
-  updateTrackers( task, task->getDesktops() );
+  _desktopTracker->registerForDesktops( task, task->getDesktops() );
 }
 
 void TaskView::positionTask( const KCal::Incidence* event,
@@ -228,20 +208,19 @@ void TaskView::positionTask( const KCal::Incidence* event,
     kdDebug() << "ERROR: Can't find the parent for " << eventName << endl;
     return;
   }
-  QString parentName = newParent->name();
 
   Task* task = map.find( event->uid() );
   if ( !task ) {
     kdDebug() << "ERROR: Can't find the task " << eventName << endl;
     return;
   }
-  QString taskName = task->name();
 
+  QString parentName = newParent->name();
+  QString taskName = task->name();
   kdDebug() << "Moving (" << taskName << ") under ("
             << parentName << ")" << endl;
 
-  takeItem( task );
-  newParent->insertItem( task );
+  task->move( newParent);
 }
 
 void TaskView::loadFromFileFormat()
@@ -268,6 +247,7 @@ void TaskView::loadFromFileFormat()
     //   break;
 
     line = stream.readLine();
+    kdDebug() << "DEBUG: line: " << line << "\n";
 
     if (line.isNull())
       break;
@@ -275,8 +255,8 @@ void TaskView::loadFromFileFormat()
     long minutes;
     int level;
     QString name;
-    DesktopListType desktops;
-    if (!parseLine(line, &minutes, &name, &level, &desktops))
+    DesktopList desktopList;
+    if (!parseLine(line, &minutes, &name, &level, &desktopList))
       continue;
 
     unsigned int stackLevel = stack.count();
@@ -285,94 +265,70 @@ void TaskView::loadFromFileFormat()
     }
 
     if (level == 1) {
-      task = new Task(name, minutes, 0, desktops, this);
-      emit( sessionTimeChanged( 0, minutes ) );
+      kdDebug() << "DEBUG: toplevel task: " << name
+                << " min: " << minutes << "\n";
+      task = new Task(name, minutes, 0, desktopList, this);
     }
     else {
       Task *parent = stack.top();
-      task = new Task(name, minutes, 0, desktops, parent);
-      //emit( sessionTimeChanged( 0, minutes ) );
+      kdDebug() << "DEBUG:          task: " << name
+                << " min: " << minutes << " parent" << parent->name() << "\n";
+      task = new Task(name, minutes, 0, desktopList, parent);
+      // Legacy File Format (!):
+      parent->changeTimes(0, -minutes, false);
       setRootIsDecorated(true);
       parent->setOpen(true);
     }
 
-    // update desktop trackers
-    updateTrackers(task, desktops);
+    _desktopTracker->registerForDesktops(task, desktopList);
 
     stack.push(task);
   }
+
+  // adjustFromLegacyFileFormat();
+
   f.close();
 
   setSelected(firstChild(), true);
   setCurrentItem(firstChild());
 
-  applyTrackers();
+  _desktopTracker->startTracking();
 }
 
-void TaskView::applyTrackers()
+void TaskView::adjustFromLegacyFileFormat()
 {
-  int currentDesktop = kWinModule.currentDesktop() -1;
-  // currentDesktop will return 0 if no window manager is started
-  if ( currentDesktop < 0 ) currentDesktop = 0;
-
-  TaskVector &tv = desktopTracker[ currentDesktop ];
-  TaskVector::iterator tit = tv.begin();
-  while(tit!=tv.end()) {
-    startTimerFor(*tit);
-    tit++;
-  }
+  // This is code to read legacy file formats!
+  //
+  // Previously a task would save the cummulated (totalTime) in it's "time"
+  // So if we are reading from an old File format we need to substract the
+  // children's times from the parents' times
+  if (    _preferences->fileFormat().isEmpty()
+       || _preferences->fileFormat() == QString::fromLatin1("karm_kcal_1"))
+    for ( Task* task = firstChild();
+                task;
+                task = task->nextSibling() ) {
+       adjustFromLegacyFileFormat(task);
+    }
 }
 
-void TaskView::updateTrackers(Task *task, DesktopListType desktopList)
+void TaskView::adjustFromLegacyFileFormat(Task* task)
 {
-  // if no desktop is marked, disable auto tracking for this task
-  if (desktopList.size()==0) {
-    for (int i=0; i<16; i++) {
-      TaskVector *v = &(desktopTracker[i]);
-      TaskVector::iterator tit = std::find(v->begin(), v->end(), task);
-      if (tit != v->end())
-        desktopTracker[i].erase(tit);
-    }
+  // unless the parent is the listView
+  if ( task->parent() )
+    task->parent()->changeTimes( -task->sessionTime(), -task->time(), false);
 
-    return;
-  }
-
-  // If desktop contains entries then configure desktopTracker
-  // If a desktop was disabled, it will not be stopped automatically.
-  // If enabled: Start it now.
-  if (desktopList.size()>0) {
-    for (int i=0; i<16; i++) {
-      TaskVector& v = desktopTracker[i];
-      TaskVector::iterator tit = std::find(v.begin(), v.end(), task);
-      // Is desktop i in the desktop list?
-      if ( std::find( desktopList.begin(), desktopList.end(), i)
-           != desktopList.end()) {
-        if (tit == v.end())  // not yet in start vector
-          v.push_back(task); // track in desk i
-      }
-      else { // delete it
-        if (tit != v.end())  // not in start vector any more
-          v.erase(tit); // so we delete it from desktopTracker
-      }
-    }
-    // printTrackers();
-    applyTrackers();
-  }
-}
-
-void TaskView::printTrackers() {
-  TaskVector::iterator it;
-  for (int i=0; i<16; i++) {
-    TaskVector& start = desktopTracker[i];
-    it = start.begin();
-    while (it != start.end()) {
-      it++;
-    }
-  }
+  // traverse depth first -
+  // as soon as we're in a leaf, we'll substract it's time from the parent
+  // then, while descending back we'll do the same for each node untill
+  // we reach the root
+  for ( Task* subtask = task->firstChild();
+              subtask;
+              subtask = subtask->nextSibling() )
+    adjustFromLegacyFileFormat(subtask);
 }
 
 bool TaskView::parseLine( QString line, long *time, QString *name, int *level,
-                          DesktopListType* desktops)
+                          DesktopList* desktopList)
 {
   if (line.find('#') == 0) {
     // A comment line
@@ -405,7 +361,7 @@ bool TaskView::parseLine( QString line, long *time, QString *name, int *level,
     QString deskLine = rest.remove(0,index+1);
 
     // now transform the ds string (e.g. "3", or "1,4,5") into
-    // an DesktopListType
+    // an DesktopList
     QString ds;
     int d;
     int commaIdx = deskLine.find(',');
@@ -415,7 +371,7 @@ bool TaskView::parseLine( QString line, long *time, QString *name, int *level,
       if (!ok)
         return false;
 
-      desktops->push_back(d);
+      desktopList->push_back(d);
       deskLine.remove(0,commaIdx+1);
       commaIdx = deskLine.find(',');
     }
@@ -425,7 +381,7 @@ bool TaskView::parseLine( QString line, long *time, QString *name, int *level,
     if (!ok)
       return false;
 
-    desktops->push_back(d);
+    desktopList->push_back(d);
   }
   else {
     *name = rest.remove(0,index+1);
@@ -461,8 +417,10 @@ void TaskView::saveToKCalFormat()
 
   QPtrStack< KCal::Event > parents;
 
-  for ( QListViewItem* child = firstChild(); child; child = child->nextSibling() ) {
-    writeTaskToCalendar( cal, static_cast<Task*>( child ), 1, parents );
+  for ( Task* child = firstChild();
+              child;
+              child = child->nextSibling() ) {
+    writeTaskToCalendar( cal, child, 1, parents );
   }
 
   cal.save( _preferences->saveFile() );
@@ -485,7 +443,9 @@ void TaskView::saveToFileFormat()
   f.flush();
 
   QTextStream stream(&f);
-  for (QListViewItem *child =firstChild(); child; child = child->nextSibling())
+  for (Task* child = firstChild();
+             child;
+             child = child->nextSibling())
     writeTaskToFile(&stream, child, 1);
 
   f.close();
@@ -505,23 +465,23 @@ void TaskView::writeTaskToCalendar( KCal::CalendarLocal& cal, Task* task,
 
   cal.addEvent( event );
 
-  for ( QListViewItem* nextTask = task->firstChild();
+  for ( Task* nextTask = task->firstChild();
         nextTask;
         nextTask = nextTask->nextSibling() ) {
-    writeTaskToCalendar( cal, static_cast<Task*>( nextTask ), level+1, parents );
+    writeTaskToCalendar( cal, nextTask, level+1, parents );
   }
 
   parents.pop();
 }
 
-void TaskView::writeTaskToFile(QTextStream *strm, QListViewItem *item, int level)
+void TaskView::writeTaskToFile( QTextStream *strm, Task *task,
+                                int level)
 {
-  Task * task = (Task *) item;
   //lukas: correct version for non-latin1 users
   QString _line = QString::fromLatin1("%1\t%2\t%3").arg(level).
-          arg(task->totalTime()).arg(task->name());
+          arg(task->time()).arg(task->name());
 
-  DesktopListType d = task->getDesktops();
+  DesktopList d = task->getDesktops();
   int dsize = d.size();
   if (dsize>0) {
     _line += '\t';
@@ -533,23 +493,24 @@ void TaskView::writeTaskToFile(QTextStream *strm, QListViewItem *item, int level
   }
   *strm << _line << "\n";
 
-  QListViewItem * child;
-  for (child=item->firstChild(); child; child=child->nextSibling()) {
+  for ( Task* child= task->firstChild();
+              child;
+              child=child->nextSibling()) {
     writeTaskToFile(strm, child, level+1);
   }
 }
 
 void TaskView::startCurrentTimer()
 {
-  startTimerFor((Task *) currentItem());
+  startTimerFor( currentItem() );
 }
 
-void TaskView::startTimerFor(Task* item)
+void TaskView::startTimerFor(Task* task)
 {
-  if (item != 0 && activeTasks.findRef(item) == -1) {
+  if (task != 0 && activeTasks.findRef(task) == -1) {
     _idleTimeDetector->startIdleDetection();
-    item->setRunning(true);
-    activeTasks.append(item);
+    task->setRunning(true);
+    activeTasks.append(task);
     emit updateButtons();
     if ( activeTasks.count() == 1 )
         emit timersActive();
@@ -570,56 +531,39 @@ void TaskView::stopAllTimers()
   emit tasksChanged( activeTasks);
 }
 
-void TaskView::resetSessionTimeForAllTasks()
+void TaskView::startNewSession()
 {
   QListViewItemIterator item( firstChild());
   for ( ; item.current(); ++item ) {
     Task * task = (Task *) item.current();
-    long sessionTime = task->sessionTime();
-    task->setSessionTime(0);
-    if ( !item.current()->parent() )
-      sessionTimeChanged( -sessionTime, 0 );
+    task->startNewSession();
   }
 }
 
-void TaskView::resetTimeForAllTasks()
+void TaskView::stopTimerFor(Task* task)
 {
-  QListViewItemIterator item( firstChild());
-  for ( ; item.current(); ++item ) {
-    Task * task = (Task *) item.current();
-    long sessionTime = task->sessionTime();
-    long totalTime   = task->totalTime();
-    task->setSessionTime(0);
-    task->setTotalTime(0);
-    if ( !item.current()->parent() )
-      sessionTimeChanged( -sessionTime, -totalTime );
-  }
-}
-
-void TaskView::stopTimerFor(Task* item)
-{
-  if (item != 0 && activeTasks.findRef(item) != -1) {
-    activeTasks.removeRef(item);
-    item->setRunning(false);
+  if (task != 0 && activeTasks.findRef(task) != -1) {
+    activeTasks.removeRef(task);
+    task->setRunning(false);
     if (activeTasks.count()== 0) {
       _idleTimeDetector->stopIdleDetection();
       emit timersInactive();
     }
     emit updateButtons();
   }
-    emit tasksChanged( activeTasks);
+  emit tasksChanged( activeTasks);
 }
 
 void TaskView::stopCurrentTimer()
 {
-  stopTimerFor((Task *) currentItem());
+  stopTimerFor( currentItem());
 }
 
 
 void TaskView::changeTimer(QListViewItem *)
 {
-  Task *item = ((Task *) currentItem());
-  if (item != 0 && activeTasks.findRef(item) == -1) {
+  Task *task = currentItem();
+  if (task != 0 && activeTasks.findRef(task) == -1) {
     // Stop all the other timers.
     for (unsigned int i=0; i<activeTasks.count();i++) {
       (activeTasks.at(i))->setRunning(false);
@@ -636,20 +580,13 @@ void TaskView::changeTimer(QListViewItem *)
 
 void TaskView::minuteUpdate()
 {
-  addTimeToActiveTasks(1);
+  addTimeToActiveTasks(1, false);
 }
 
-void TaskView::addTimeToActiveTasks(int minutes)
+void TaskView::addTimeToActiveTasks(int minutes, bool do_logging)
 {
-  for(unsigned int i=0; i<activeTasks.count();i++) {
-    Task *task = activeTasks.at(i);
-    QListViewItem *item = task;
-    while (item) {
-      ((Task *) item)->incrementTime(minutes);
-      item = item->parent();
-    }
-    emit( sessionTimeChanged( minutes, minutes ) );
-  }
+  for(unsigned int i=0; i<activeTasks.count();i++)
+    activeTasks.at(i)->changeTime(minutes, do_logging);
 }
 
 void TaskView::newTask()
@@ -657,9 +594,9 @@ void TaskView::newTask()
   newTask(i18n("New Task"), 0);
 }
 
-void TaskView::newTask(QString caption, QListViewItem *parent)
+void TaskView::newTask(QString caption, Task *parent)
 {
-  AddTaskDialog *dialog = new AddTaskDialog(caption, false);
+  EditTaskDialog *dialog = new EditTaskDialog(caption, false);
   int result = dialog->exec();
 
   if (result == QDialog::Accepted) {
@@ -670,43 +607,48 @@ void TaskView::newTask(QString caption, QListViewItem *parent)
 
     long total, totalDiff, session, sessionDiff;
     total = totalDiff = session = sessionDiff = 0;
-    DesktopListType desktopList;
+    DesktopList desktopList;
     dialog->status( &total, &totalDiff, &session, &sessionDiff, &desktopList);
     Task *task;
+
+    // If all available desktops are checked, disable auto tracking,
+    // since it makes no sense to track for every desktop.
+    if (desktopList.size() == (unsigned int)_desktopTracker->desktopCount())
+      desktopList.clear();
+
     if (parent == 0)
       task = new Task(taskName, total, session, desktopList, this);
     else
       task = new Task(taskName, total, session, desktopList, parent);
 
-    updateParents( (QListViewItem *) task, totalDiff, sessionDiff );
-    setCurrentItem(task);
-    setSelected(task, true);
-    // done by updateParents: emit( sessionTimeChanged( sessionDiff, totalDiff ) );
+    _desktopTracker->registerForDesktops( task, desktopList );
+
+    setCurrentItem( task );
+    setSelected( task, true );
   }
   delete dialog;
 }
 
 void TaskView::newSubTask()
 {
-  QListViewItem *item = currentItem();
-  if(!item)
+  Task* task = currentItem();
+  if(!task)
     return;
-  newTask(i18n("New Sub Task"), item);
-  // newTask will emit( sessionTimeChanged() ).
-  item->setOpen(true);
+  newTask(i18n("New Sub Task"), task);
+  task->setOpen(true);
   setRootIsDecorated(true);
 }
 
 void TaskView::editTask()
 {
-  Task *task = (Task *) currentItem();
+  Task *task = currentItem();
   if (!task)
     return;
 
-  DesktopListType desktops = task->getDesktops();
-  AddTaskDialog *dialog = new AddTaskDialog(i18n("Edit Task"), true, &desktops);
+  DesktopList desktopList = task->getDesktops();
+  EditTaskDialog *dialog = new EditTaskDialog(i18n("Edit Task"), true, &desktopList);
   dialog->setTask( task->name(),
-                   task->totalTime(),
+                   task->time(),
                    task->sessionTime() );
   int result = dialog->exec();
   if (result == QDialog::Accepted) {
@@ -719,27 +661,20 @@ void TaskView::editTask()
     // update session time as well if the time was changed
     long total, session, totalDiff, sessionDiff;
     total = totalDiff = session = sessionDiff = 0;
-    DesktopListType desktopList;
+    DesktopList desktopList;
     dialog->status( &total, &totalDiff, &session, &sessionDiff, &desktopList);
 
-    task->setTotalTime( total);
-    task->setSessionTime( session );
+    if( totalDiff != 0 || sessionDiff != 0)
+      task->changeTimes( sessionDiff ,totalDiff, true );
 
     // If all available desktops are checked, disable auto tracking,
     // since it makes no sense to track for every desktop.
-    if (desktopList.size() == (unsigned int)desktopCount)
+    if (desktopList.size() == (unsigned int)_desktopTracker->desktopCount())
       desktopList.clear();
 
     task->setDesktopList(desktopList);
 
-    // done by updateParents
-    //if( sessionDiff || totalDiff ) {
-    //  emit sessionTimeChanged( sessionDiff, totalDiff );
-    //}
-
-    // Update the parents for this task.
-    updateParents( (QListViewItem *) task, totalDiff, sessionDiff );
-    updateTrackers(task, desktopList);
+    _desktopTracker->registerForDesktops( task, desktopList );
 
     emit updateButtons();
   }
@@ -748,7 +683,7 @@ void TaskView::editTask()
 
 void TaskView::addCommentToTask()
 {
-  Task *task = (Task *) currentItem();
+  Task *task = currentItem();
   if (!task)
     return;
 
@@ -760,25 +695,9 @@ void TaskView::addCommentToTask()
     task->addComment( comment );
 }
 
-void TaskView::updateParents( QListViewItem* task, long totalDiff,
-                              long sessionDiff )
-{
-  QListViewItem *item = task->parent();
-  while (item) {
-    Task *parentTask = (Task *) item;
-    parentTask->setTotalTime( parentTask->totalTime() + totalDiff, DONT_LOG );
-    parentTask->setSessionTime( parentTask->sessionTime() + sessionDiff,
-                                DONT_LOG );
-    item = item->parent();
-  }
-  // only toplevel tasks directly contribute to the statusbar
-  // (otherwise subtasks would contribute twice)
-  sessionTimeChanged( sessionDiff, totalDiff );
-}
-
 void TaskView::deleteTask()
 {
-  Task *task = ((Task *) currentItem());
+  Task *task = currentItem();
   if (task == 0) {
     KMessageBox::information(0,i18n("No task selected"));
     return;
@@ -803,28 +722,13 @@ void TaskView::deleteTask()
 
   if (response == KMessageBox::Yes) {
 
-    deleteChildTasks(task);
-    stopTimerFor(task);
-
-    // Stop idle detection if no more counters are running
-    if (activeTasks.count() == 0) {
-      _idleTimeDetector->stopIdleDetection();
-      emit timersInactive();
-    }
-    emit tasksChanged( activeTasks );
-
-    long sessionTime = task->sessionTime();
-    long totalTime   = task->totalTime();
-    updateParents( task, -totalTime, -sessionTime );
-
-    DesktopListType desktopList;
-    updateTrackers(task, desktopList); // remove from tracker list
-
-    delete task;
-
+    task->remove( activeTasks);
+    
     // remove root decoration if there is no more children.
     bool anyChilds = false;
-    for(QListViewItem *child=firstChild(); child; child=child->nextSibling()) {
+    for(Task* child = firstChild();
+              child;
+              child = child->nextSibling()) {
       if (child->childCount() != 0) {
         anyChilds = true;
         break;
@@ -833,27 +737,19 @@ void TaskView::deleteTask()
     if (!anyChilds) {
       setRootIsDecorated(false);
     }
+
+    // Stop idle detection if no more counters are running
+    if (activeTasks.count() == 0) {
+      _idleTimeDetector->stopIdleDetection();
+      emit timersInactive();
+    }
+    emit tasksChanged( activeTasks );
   }
 }
-
-/** Removes all children tasks from the list of active Tasks
- *  and delete them.
- */
-void TaskView::deleteChildTasks(Task *item)
-{
-  for ( QListViewItem *child=item->firstChild();
-        child;
-        child=child->nextSibling()) {
-    deleteChildTasks((Task *)child);
-    activeTasks.removeRef((Task *)child);
-    delete (Task*)child;
-  }
-}
-
 
 void TaskView::extractTime(int minutes)
 {
-  addTimeToActiveTasks(-minutes);
+  addTimeToActiveTasks(-minutes, true);
 }
 
 void TaskView::autoSaveChanged(bool on)
@@ -875,4 +771,46 @@ void TaskView::autoSavePeriodChanged(int /*minutes*/)
   autoSaveChanged(_preferences->autoSave());
 }
 
+void TaskView::adaptColumns()
+{
+  // to hide a column X we set it's width to 0
+  // at that moment we'll remember the original column within
+  // previousColumnWidths[X]
+  //
+  // When unhiding a previously hidden column
+  // (previousColumnWidths[X] != HIDDEN_COLUMN !)
+  // we restore it's width from the saved value and set
+  // previousColumnWidths[X] to HIDDEN_COLUMN
+
+  for( int x=1; x <= 4; x++) {
+    // the column was invisible before and were switching it on now
+    if(   _preferences->displayColumn(x-1)
+       && previousColumnWidths[x-1] != HIDDEN_COLUMN )
+    {
+      setColumnWidth( x, previousColumnWidths[x-1] );
+      previousColumnWidths[x-1] = HIDDEN_COLUMN;
+      setColumnWidthMode( x, QListView::Maximum );
+    }
+    // the column was visible before and were switching it off now
+    else
+    if( ! _preferences->displayColumn(x-1)
+       && previousColumnWidths[x-1] == HIDDEN_COLUMN )
+    {
+      setColumnWidthMode( x, QListView::Manual ); // we don't want update()
+                                                  // to resize/unhide the col
+      previousColumnWidths[x-1] = columnWidth( x );
+      setColumnWidth( x, 0 );
+    }
+  }
+}
+
+void TaskView::deletingTask(Task* deletedTask)
+{
+  DesktopList desktopList;
+
+  _desktopTracker->registerForDesktops( deletedTask, desktopList );
+  activeTasks.removeRef( deletedTask );
+
+  emit tasksChanged( activeTasks);
+}
 #include "taskview.moc"
