@@ -103,35 +103,65 @@ class NameEditDialog : public KDialogBase
     KLineEdit *mAdditionalNameEdit;
 };
 
-/////////////////////////////////////////
+////////////////////////////////////
+// AddressEditDialog
+class AddressEditDialog : public KDialogBase
+{
+  public:
+    AddressEditDialog(const KABC::Address &a, QWidget *parent, 
+                      const char *name = 0);
+    ~AddressEditDialog();
+    
+    const KABC::Address &address();
+    
+  private:
+    void fillCombo(KComboBox *combo);
+    
+    KABC::Address mAddress;
+    KABC::Address::TypeList mTypeList;
+    
+    QButtonGroup *mGroup;
+    QTextEdit *mStreetTextEdit;
+    KLineEdit *mRegionEdit;
+    KLineEdit *mLocalityEdit;
+    KLineEdit *mPostalCodeEdit;
+    KLineEdit *mPOBoxEdit;
+    KComboBox *mCountryCombo;
+};
+
+////////////////////////////////////
 // AddressEditWidget
+
 class AddressEditWidget : public QWidget
 {
   Q_OBJECT
   
   public:
-    AddressEditWidget(QWidget *parent, const char *name = 0);
+    AddressEditWidget( QWidget *parent, const char *name = 0 );
     ~AddressEditWidget();
     
+    void setAddresses( const KABC::Address::List &list );
     const KABC::Address::List &addresses();
-    void setAddresses(const KABC::Address::List &list);
     
   signals:
     void modified();
-    
+
   protected slots:
-    void textChanged();
-    void addressButtonClicked();
-    void typeHighlighted(int);
-    void preferredToggled(bool state);
-    
+    void slotAddAddress();
+    void slotRemoveAddress();
+    void slotEditAddress();
+    void slotSelectionChanged();
+    void slotTypeChanged( int pos );
+
   private:
-    QTextEdit *mAddressTextEdit;
-    QCheckBox *mPreferredCheckBox;
-    KComboBox *mTypeCombo;
     KABC::Address::List mAddressList;
-    QMap<int, int> mTypeMap; 
-    int mIndex;
+    KABC::Address::TypeList mTypeList;
+    KComboBox *mTypeBox;
+    KListView *mListView;
+
+    QPushButton *mAddButton;
+    QPushButton *mRemoveButton;
+    QPushButton *mEditButton;
 };
 
 ////////////////////////////////
@@ -147,7 +177,7 @@ public:
 
 private:
   KABC::PhoneNumber mPhoneNumber;
-  QMap<int,int> mTypeMap;
+  KABC::PhoneNumber::TypeList mTypeList;
 
   KLineEdit *mNumber;
   QButtonGroup *mGroup;
@@ -186,30 +216,6 @@ class PhoneEditWidget : public QWidget
     QPushButton *mAddButton;
     QPushButton *mRemoveButton;
     QPushButton *mEditButton;
-};
-
-////////////////////////////////////
-// AddressEditDialog
-class AddressEditDialog : public KDialogBase
-{
-  public:
-    AddressEditDialog(const KABC::Address &a, QWidget *parent, 
-                      const char *name = 0);
-    ~AddressEditDialog();
-    
-    const KABC::Address &address();
-    
-  private:
-    void fillCombo(KComboBox *combo);
-    
-    KABC::Address mAddress;
-    
-    QTextEdit *mStreetTextEdit;
-    KLineEdit *mRegionEdit;
-    KLineEdit *mLocalityEdit;
-    KLineEdit *mPostalCodeEdit;
-    KLineEdit *mPOBoxEdit;
-    KComboBox *mCountryCombo;
 };
 
 #endif
