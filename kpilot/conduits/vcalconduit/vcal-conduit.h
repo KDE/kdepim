@@ -13,7 +13,7 @@ class PilotRecord;
 class VCalConduit : public BaseConduit
 {
 public:
-  VCalConduit(eConduitMode mode);
+  VCalConduit(BaseConduit::eConduitMode mode);
   virtual ~VCalConduit();
   
   virtual void doSync();

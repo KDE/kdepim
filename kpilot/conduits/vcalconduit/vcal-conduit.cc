@@ -45,17 +45,27 @@ int main(int argc, char* argv[])
   	"Calendar / Organizer conduit",
 	"4.0");
   a.addAuthor("Preston Brown",I18N_NOOP("Organizer author"));
+	a.addAuthor("Adriaan de Groot",I18N_NOOP("Maintainer"));
   VCalConduit conduit(a.getMode());
   a.setConduit(&conduit);
   return a.exec();
 }
 
-VCalConduit::VCalConduit(eConduitMode mode)
+VCalConduit::VCalConduit(BaseConduit::eConduitMode mode)
   : BaseConduit(mode)
 {
 	FUNCTIONSETUP;
 
 	fCalendar = 0L;
+
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		kdDebug() << fname << ": Request Mode="
+			<< (int) mode
+			<< " Actual Mode="
+			<< (int) getMode()
+			<< endl;
+	}
 }
 
 
@@ -85,13 +95,37 @@ void VCalConduit::getCalendar()
 	}
 
 	KConfig* config = KPilotLink::getConfig(VCalSetup::VCalGroup);
+	(void) getDebugLevel(config);
 	QString calName = config->readEntry("CalFile");
 	first = config->readBoolEntry("FirstTime", TRUE);
 
-	if ((fMode == BaseConduit::HotSync) || 
-		(fMode == BaseConduit::Backup)) 
+	if (debug_level & SYNC_TEDIOUS)
 	{
-		fCalendar = Parse_MIME_FromFileName((char*)calName.latin1());
+		kdDebug() << fname
+			<< ": Got calendar file " << calName
+			<< ( first ? " (first time!)" : "" )
+			<< endl;
+	}
+
+	kdDebug() << fname << ": Mode = "
+		<< getMode() 
+		<< " (Sync=" << (int) BaseConduit::HotSync << ")"
+		<< " (Backup=" << (int) BaseConduit::Backup << ")"
+		<< endl;
+
+	if ((getMode() == BaseConduit::HotSync) || 
+		(getMode() == BaseConduit::Backup)) 
+	{
+		char *s=calName.ascii();
+		fCalendar = Parse_MIME_FromFileName(s);
+
+		if (debug_level & SYNC_MINOR)
+		{
+			kdDebug() << fname
+				<< ": Got calendar!"
+				<< endl;
+		}
+
 
 		if(fCalendar == 0L) 
 		{
@@ -133,13 +167,22 @@ void VCalConduit::doSync()
 	FUNCTIONSETUP;
 
    PilotRecord* rec;
+	int recordcount=0;
 
 	getCalendar();
+	if (fCalendar==0L)
+	{
+		kdDebug() << fname << ": No calendar to sync with."
+			<< endl;
+		return;
+	}
+
    rec = readNextModifiedRecord();
 
    // get only MODIFIED entries from Pilot, compared with the above (doBackup),
    // which gets ALL entries
    while (rec) {
+		recordcount++;
      if(rec->getAttrib() & dlpRecAttrDeleted) {
        deleteVObject(rec);
      } else {
@@ -156,6 +199,15 @@ void VCalConduit::doSync()
      rec = readNextModifiedRecord();
    }
    
+	if (debug_level & SYNC_MINOR)
+	{
+		kdDebug() << fname
+			<< ": Read a total of "
+			<< recordcount
+			<< " record from the pilot."
+			<< endl;
+	}
+
    // now, all the stuff that was modified/new on the pilot should be
    // added to the vCalendar.  We now need to add stuff to the pilot
    // that is modified/new in the vCalendar (the opposite).	  
@@ -594,7 +646,17 @@ void VCalConduit::doLocalSync()
 		delete config;
 	}
 
+	if (debug_level & SYNC_MAJOR)
+	{
+		kdDebug() << fname << ": Performing local sync."
+			<< endl;
+	}
   
+	if (debug_level & SYNC_MINOR)
+	{
+		kdDebug() << fname << ": Getting timezone."
+			<< endl;
+	}
   vo = isAPropertyOf(fCalendar, VCTimeZoneProp);
   
   // deal with time zone offset
@@ -618,13 +680,21 @@ void VCalConduit::doLocalSync()
       timeZone = -timeZone;
   }
   
+	if (debug_level & SYNC_MINOR)
+	{
+		kdDebug() << fname << ": Initializing iterator."
+			<< endl;
+	}
   initPropIterator(&i, fCalendar);
   
+	int recordcount=0;
+
   // go through the whole vCalendar.  If the event has the dirty (modified)
   // flag set, make a new pilot record and add it.
   // we only take events that have KPilotStatusProp as a property.  If
   // this property isn't present, ignore the event.
   while (moreIteration(&i)) {
+	recordcount++;
     vevent = nextVObject(&i);
     vo = isAPropertyOf(vevent, KPilotStatusProp);
     
@@ -1030,7 +1100,8 @@ void VCalConduit::doLocalSync()
 	  deleteStr(s3);
 
 	// write the id we got from writeRecord back to the vObject
-	if (id > 0) {
+	if (id > 0) 
+	{
 	  QString tmpStr;
 	  tmpStr.setNum(id);
 	  vo = isAPropertyOf(vevent, KPilotIdProp);
@@ -1039,13 +1110,23 @@ void VCalConduit::doLocalSync()
 	  vo = isAPropertyOf(vevent, KPilotStatusProp);
 	  tmpStr = "0"; // no longer a modified event.
 	  setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
-
-
-	} else {
+	} 
+	else 
+	{
 	}
       }
     }
   }
+
+	if (debug_level & SYNC_MAJOR)
+	{
+		kdDebug() << fname
+			<< ": Read "
+			<< recordcount
+			<< " records total."
+			<< endl;
+	}
+
   // anything that is left on the pilot but that is not found in the
   // vCalendar has to be deleted.  We know this because we have added
   // everything to the vCalendar from the pilot that had the modified

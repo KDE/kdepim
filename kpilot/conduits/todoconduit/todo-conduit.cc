@@ -79,8 +79,8 @@ void TodoConduit::getCalendar()
 
 	delete config;
 
-	if ((fMode == BaseConduit::HotSync) || 
-		(fMode == BaseConduit::Backup)) 
+	if ((getMode() == BaseConduit::HotSync) || 
+		(getMode() == BaseConduit::Backup)) 
 	{
 		fCalendar = Parse_MIME_FromFileName((char*)calName.latin1());
 
@@ -101,7 +101,7 @@ void TodoConduit::getCalendar()
 	{
 		kdDebug() << fname
 			<< ": Called in mode "
-			<< (int) fMode
+			<< (int) getMode()
 			<< " where it makes no sense."
 			<< endl;
 	}
