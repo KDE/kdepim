@@ -64,7 +64,6 @@ class EmpathFolderWidget : public EmpathListView
         void s_mailboxCheck();
         void s_mailboxProperties();
         void s_update();
-        void s_sync();
         void s_newFolder();
         void s_removeFolder();
         void s_setUpAccounts();

@@ -76,7 +76,7 @@ class EmpathMaildir : public QObject
         
         EmpathSuccessMap removeMessage (const QStringList &);
         
-        void sync(bool force = false);
+        void sync();
         
     protected slots:
         
@@ -86,22 +86,25 @@ class EmpathMaildir : public QObject
         
         EmpathMaildir();
 
-        bool        _removeMessage(const QString & id);
+        void        _markNewMailAsSeen();
+        void        _tagAsDisappearedOrAddToIndex();
+        void        _removeDisappeared();
+
         bool        _mark(const QString & id, EmpathIndexRecord::Status);
+        void        _markAsSeen(const QString &);
+
+        bool        _removeMessage(const QString & id);
         QString     _write(RMM::RMessage);
         QCString    _messageData(const QString &, bool isFullName = false);
-        void        _markNewMailAsSeen();
-        void        _markAsSeen(const QString &);
-        void        _clearTmp();
-        bool        _checkDirs();
         QString     _generateFlagsString(EmpathIndexRecord::Status);
-        bool        _touched(EmpathFolder *);
-        void        _tagOrAdd(EmpathFolder *);
-        void        _removeUntagged(EmpathFolder *);
-        void        _recalculateCounters(EmpathFolder *);
+
+        void        _clearTmp();
+
+        bool        _checkDirs();
+        bool        _touched();
        
         QDateTime    mtime_;
-        QDict<bool>  tagList_;
+        QDict<bool>  disappeared_;
         
         QTimer       timer_;
 

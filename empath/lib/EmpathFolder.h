@@ -155,6 +155,10 @@ class EmpathFolder : public QObject
          */
         void s_update() { update(); }
 
+        void s_itemGone(const QString & key) { itemGone(key); }
+
+        void s_statusChange(const QString & key, EmpathIndexRecord::Status);
+
     signals:
 
         /**

@@ -80,9 +80,6 @@ EmpathFolderWidget::EmpathFolderWidget(QWidget * parent)
     QObject::connect(
         empath, SIGNAL(updateFolderLists()), this, SLOT(s_update()));
     
-    QObject::connect(
-        empath, SIGNAL(syncFolderLists()), this, SLOT(s_sync()));
-
     QObject::connect(autoOpenTimer, SIGNAL(timeout()),
             this, SLOT(s_openCurrent()));
 
@@ -140,20 +137,6 @@ EmpathFolderWidget::s_update()
     for (; it.current(); ++it) {
         it.current()->init();
         kapp->processEvents();
-    }
-}
-
-    void
-EmpathFolderWidget::s_sync()
-{
-    QListIterator<EmpathFolderListItem> it(itemList_);
-
-    for (; it.current(); ++it) {
-
-        if (kapp->closingDown())
-            break;
-
-        it.current()->s_update();
     }
 }
 

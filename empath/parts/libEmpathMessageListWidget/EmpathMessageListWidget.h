@@ -178,6 +178,9 @@ class EmpathMessageListWidget : public EmpathListView
 
                 QList<ThreadNode> childList_; 
         };
+
+        void _saveColumnSizes();
+        void _restoreColumnSizes();
          
         void _fillDisplay();
         void _fillNormal();

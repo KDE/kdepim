@@ -36,7 +36,6 @@
 #include <qdatastream.h>
 #include <qregexp.h>
 #include <qdatetime.h>
-#include <qapplication.h>
 #include <qstringlist.h>
 
 // KDE includes
@@ -44,16 +43,13 @@
 #include <klocale.h>
 
 // Local includes
-#include "RMM_Envelope.h"
 #include "EmpathMaildir.h"
 #include "EmpathUtilities.h"
 #include "EmpathFolder.h"
-#include "EmpathFolderList.h"
 #include "EmpathIndex.h"
 #include "EmpathIndexRecord.h"
 #include "EmpathTask.h"
 #include "Empath.h"
-#include "EmpathMailbox.h"
 
 EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
     :   QObject(),
@@ -61,10 +57,8 @@ EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
         basePath_(basePath)
 {
     path_ = basePath + "/" + url.folderPath();
-    tagList_.setAutoDelete(true);
+    disappeared_.setAutoDelete(true);
    
-//    createdOK_ = _checkDirs();
-    
     QObject::connect(
         &timer_,    SIGNAL(timeout()),
         this,       SLOT(s_timerBeeped()));
@@ -93,8 +87,9 @@ EmpathMaildir::init()
         sync();
     }
 }
+
     void
-EmpathMaildir::sync(bool force)
+EmpathMaildir::sync()
 {
     EmpathFolder * f(empath->folder(url_));
 
@@ -103,18 +98,36 @@ EmpathMaildir::sync(bool force)
         return;
     }
 
-    if (!force && !_touched(f))
+    if (!_touched())
         return;
 
-    tagList_.clear();
+    disappeared_.clear();
     
     _markNewMailAsSeen();
-    _tagOrAdd(f);
-    _removeUntagged(f);
-    _recalculateCounters(f);
+    _tagAsDisappearedOrAddToIndex();
+    _removeDisappeared();
+}
+
+    QString
+EmpathMaildir::writeMessage(RMM::RMessage m)
+{
+    return _write(m);
+}
+
+    RMM::RMessage
+EmpathMaildir::message(const QString & id)
+{
+    RMM::RMessage retval;
+
+    QCString s = _messageData(id);
     
-    f->index()->setInitialised(true);
-    f->index()->setLastSync(QDateTime::currentDateTime());
+    if (s.isEmpty()) {
+        empathDebug("Cannot load data for \"" + id + "\"");
+        return retval;
+    }
+    
+    retval = RMM::RMessage(s);
+    return retval;
 }
 
     EmpathSuccessMap
@@ -135,28 +148,6 @@ EmpathMaildir::mark(const QStringList & l, EmpathIndexRecord::Status msgStat)
 
     t->done();
     return successMap;
-}
-
-    QString
-EmpathMaildir::writeMessage(RMM::RMessage m)
-{
-    return _write(m);
-}
-
-    RMM::RMessage
-EmpathMaildir::message(const QString & id)
-{
-    RMM::RMessage retval;
-
-    QCString s = _messageData(id);
-    
-    if (s.isEmpty()) {
-        empathDebug("Couldn't load data for \"" + id + "\"");
-        return retval;
-    }
-    
-    retval = RMM::RMessage(s);
-    return retval;
 }
 
     EmpathSuccessMap
@@ -235,15 +226,6 @@ EmpathMaildir::_mark(const QString & id, EmpathIndexRecord::Status msgStat)
         empathDebug("Failed");
         return false;
     }
- 
-    EmpathFolder * f(empath->folder(url_));
-
-    if (f == 0) {
-        empathDebug("Cannot access my folder !");
-        return renameOK;
-    }
-
-    f->update();
    
     return renameOK;
 }
@@ -251,8 +233,9 @@ EmpathMaildir::_mark(const QString & id, EmpathIndexRecord::Status msgStat)
     QCString
 EmpathMaildir::_messageData(const QString & filename, bool isFullName)
 {
-    if (filename.length() == 0) {
-        empathDebug("Must supply filename !");
+    if (filename.isEmpty()) {
+
+        empathDebug("No filename supplied !");
         return "";
     }
 
@@ -267,7 +250,7 @@ EmpathMaildir::_messageData(const QString & filename, bool isFullName)
         QStringList matchingEntries = _entryList().grep(filename);
         
         if (matchingEntries.count() != 1) {
-            empathDebug("Can't find exactly one message using `" + filename + "'");
+            empathDebug("Cannot match `" + filename + "'");
             return "";
         }
         
@@ -277,59 +260,16 @@ EmpathMaildir::_messageData(const QString & filename, bool isFullName)
     QFile f(path_ + "/cur/" + filename_);
 
     if (!f.open(IO_ReadOnly)) {
-        empathDebug("Couldn't open mail file " + filename_ + " for reading.");
+
+        empathDebug("Cannot open file " + filename_ + " for reading");
         return "";
     }
 
-    Q_UINT32 buflen = 32768;
-    char * buf = new char[buflen];
-    QCString messageBuffer;
-    
-    while (!f.atEnd()) {
-        
-        int bytesRead = f.readBlock(buf, buflen);
+    QCString messageBuffer(f.readAll());
 
-        if (bytesRead == -1) {
-            empathDebug("A serious error occurred while reading the file.");
-            delete [] buf;
-            buf = 0;
-            f.close();
-            return "";
-        }
-        
-        messageBuffer += QCString(buf).left(bytesRead);
-    }
-
-    delete [] buf;
-    buf = 0;
     f.close();
+
     return messageBuffer;
-}
-
-    void
-EmpathMaildir::_recalculateCounters(EmpathFolder * f)
-{
-    QRegExp re_flags(":2,[A-Z]*$");
-    QString s;
-    unsigned int unread(0);
-
-    QStringList & l(_entryList());
-    
-    for (QStringList::ConstIterator it = l.begin(); it != l.end(); ++it) {
-
-        s = *it;
-
-        if (s[0] != '.') { // Ignore dotfiles.
-            
-            int i = s.find(re_flags);
-            
-            // If no flags or 'S' not in flags, then unread.
-            if ((i == -1) || !(s.right(s.length() - i - 3).contains('S')))
-                ++unread;
-        }
-    }
-
-//    f->index()->setUnread(unread);
 }
 
     void
@@ -413,8 +353,11 @@ EmpathMaildir::_write(RMM::RMessage msg)
     // I can't be bothered to maintain the comments.
 
     QString canonName   = empath->generateUnique();
-    QString flags       = _generateFlagsString(EmpathIndexRecord::Status(msg.status()));
-    QString path        = path_ + "/tmp/" + canonName;
+
+    QString flags =
+        _generateFlagsString(EmpathIndexRecord::Status(msg.status()));
+
+    QString path   = path_ + "/tmp/" + canonName;
 
     QFile f(path);
     
@@ -438,21 +381,13 @@ EmpathMaildir::_write(RMM::RMessage msg)
 
     QDataStream outputStream(&f);
 
-    outputStream.writeRawBytes(msg.asString(), msg.asString().length());
+    outputStream << msg.asString();
 
     f.flush();
-
-    if (f.status() != IO_Ok) {
-        empathDebug("Couldn't flush() file");
-        f.close();
-        f.remove();
-        return QString::null;
-    }
-
     f.close();
    
     if (f.status() != IO_Ok) {
-        empathDebug("Couldn't close() file");
+        empathDebug("Couldn't flush/close file");
         f.close();
         f.remove();
         return QString::null;
@@ -463,8 +398,8 @@ EmpathMaildir::_write(RMM::RMessage msg)
     QString linkPath(path_ + "/new/" + linkName);
     
     if (::link(QFile::encodeName(path), QFile::encodeName(linkPath)) != 0) {
-        empathDebug("Couldn't successfully link `" + path + "' to `" +
-            linkPath + "' - giving up");
+
+        empathDebug("Couldn't link `" + path + "' to `" + linkPath + "'");
         perror("link");
         f.close();
         f.remove();
@@ -493,25 +428,20 @@ EmpathMaildir::_generateFlagsString(EmpathIndexRecord::Status s)
 EmpathMaildir::s_timerBeeped()
 {
     timer_.stop();
-    
-    EmpathFolder * f(empath->folder(url_));
-
-    if (f == 0) {
-        empathDebug("Cannot access my folder !");
-        return;
-    }
-
-    f->update();
-
+    sync();
     timer_.start(10000, true);
 }
 
     bool
-EmpathMaildir::_touched(EmpathFolder * f)
+EmpathMaildir::_touched()
 {
-    if (!(f->index()->initialised()))
-        return true;
-    
+    EmpathFolder * f(empath->folder(url_));
+
+    if (f == 0) {
+        empathDebug("Cannot access my folder !");
+        return false;
+    }
+
     QFileInfo fiDir(path_ + "/cur/");
     
     if (fiDir.lastModified() > f->index()->lastSync()) {
@@ -530,9 +460,21 @@ EmpathMaildir::_touched(EmpathFolder * f)
 }
 
     void
-EmpathMaildir::_tagOrAdd(EmpathFolder * f)
+EmpathMaildir::_tagAsDisappearedOrAddToIndex()
 {
+    EmpathFolder * f(empath->folder(url_));
+
+    if (f == 0) {
+        empathDebug("Cannot access my folder !");
+        return;
+    }
+
     QStringList & fileList(_entryList());
+    
+    QString readingFolder = i18n("Reading folder %1");
+    QString taskMessage = readingFolder.arg(url_.folderPath());
+    EmpathTask * t = new EmpathTask(taskMessage);
+    t->setMax(fileList.count());
 
     QStringList::ConstIterator it(fileList.begin());
     
@@ -541,9 +483,6 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
 
     for (; it != fileList.end(); ++it) {
         
-        if (kapp->closingDown())
-            return;
-
         s = *it;
 
         EmpathIndexRecord::Status status(EmpathIndexRecord::Status(0));
@@ -563,14 +502,16 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
         
         s.replace(re_flags, QString::null);
         
-        tagList_.insert(s, new bool(true));
+        disappeared_.insert(s, new bool(true));
 
         if (f->index()->contains(s)) {
         
             EmpathIndexRecord rec = f->index()->record(s);
 
-            if (rec.isNull())
+            if (rec.isNull()) {
+                t->doneOne();
                 continue;
+            }
             
             if (rec.status() != status) {
                 rec.setStatus(status);
@@ -583,6 +524,7 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
 
             if (messageData.isEmpty()) {
                 empathDebug("Message data not retrieved !");
+                t->doneOne();
                 continue;
             }
 
@@ -596,22 +538,33 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
         }
 
         kapp->processEvents();
+
+        if (f == 0) {
+            empathDebug("My folder has been deleted during last processEvents");
+            return;
+        }
+
+        t->doneOne();
     }
+
+    t->done();
 }
 
     void
-EmpathMaildir::_removeUntagged(EmpathFolder * f)
+EmpathMaildir::_removeDisappeared()
 {
+    EmpathFolder * f(empath->folder(url_));
+
+    if (f == 0) {
+        empathDebug("Cannot access my folder !");
+        return;
+    }
+
     QStringList l(f->index()->allKeys());
 
     for (QStringList::ConstIterator it = l.begin(); it != l.end(); ++it)
-
-        if (tagList_.find(*it) == 0) {
-            empathDebug("Item `" + *it + "' has gone away - is this correct ?");
-
+        if (0 == disappeared_.find(*it))
             f->index()->remove(*it);
-            f->itemGone(*it);
-        }
 }
 
     QStringList &
@@ -624,8 +577,11 @@ EmpathMaildir::_entryList()
         QDir d(path_ + "/cur", QString::null, QDir::Unsorted, QDir::Files);
 
         cachedEntryList_ = d.entryList();
-        // Finished reading dir. Get the UI going again quick ! :)
+
+        // That might have taken a significant amount of time.
+
         kapp->processEvents();
+
         mtime_ = currentMtime;
     }
 

@@ -82,11 +82,11 @@ EmpathHeaderViewWidget::useEnvelope(RMM::REnvelope & e)
         QCString s = it.current();
         s = s.stripWhiteSpace();
     
+        if (!e.has(s))
+            continue;
+
         RMM::RHeader h(e.get(s));
 
-        if (!h)
-            continue;
-            
         headerList_.append(h.headerName() + ":");
     
         if (RMM::headerTypesTable[h.headerType()] == RMM::DateTime) {

@@ -35,6 +35,7 @@
 #include <qstring.h>
 
 // KDE includes
+#include <kconfig.h>
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kglobal.h>
@@ -71,14 +72,16 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
     addColumn(i18n("Size"));
     
     _initActions();
-//    _setupMessageMenu();
-//    _setupThreadMenu();
+    _setupMessageMenu();
+    _setupThreadMenu();
     _connectUp();
+
+    _restoreColumnSizes();
 }
 
 EmpathMessageListWidget::~EmpathMessageListWidget()
 {
-    // Empty.
+    _saveColumnSizes();
 }
 
     void
@@ -122,7 +125,36 @@ EmpathMessageListWidget::_connectUp()
     QObject::connect(
         header(),   SIGNAL(sectionClicked(int)),
         this,       SLOT(s_headerClicked(int)));
-}    
+}
+
+    void
+EmpathMessageListWidget::_saveColumnSizes()
+{
+    KConfig * c = KGlobal::config();
+    
+    c->setGroup("EmpathMessageListWidget");
+    
+    for (int i = 0 ; i < header()->count() ; i++)
+        c->writeEntry("ColumnSize" + QString::number(i), header()->cellSize(i));
+}
+ 
+    void
+EmpathMessageListWidget::_restoreColumnSizes()
+{
+    KConfig * c = KGlobal::config();
+
+    c->setGroup("EmpathMessageListWidget");
+    
+    for (int i = 0 ; i < header()->count() ; i++) {
+
+        unsigned int sz =
+            c->readUnsignedNumEntry("ColumnSize" + QString::number(i), 80);
+
+        header()->setCellSize(i, sz);
+
+        setColumnWidthMode(i, QListView::Manual);
+    }
+}
 
     EmpathMessageListItem *
 EmpathMessageListWidget::_threadItem(const EmpathIndexRecord & rec)
@@ -426,18 +458,46 @@ CTA(i18n("Mark as replied"), "messageMarkReplied", 0, SLOT(s_messageMarkReplied(
     void
 EmpathMessageListWidget::_setupMessageMenu()
 {
+#define PLUGMM(a) actionCollection()->action(a)->plug(&messageMenu_)
+PLUGMM("messageView");
+PLUGMM("messageCompose");
+PLUGMM("messageReply");
+PLUGMM("messageReplyAll");
+PLUGMM("messageForward");
+PLUGMM("messageDelete");
+PLUGMM("messageBounce");
+PLUGMM("messageSaveAs");
+PLUGMM("messageCopyTo");
+PLUGMM("messageMoveTo");
+PLUGMM("messagePrint");
+PLUGMM("messageFilter");
+PLUGMM("messageTag");
+PLUGMM("messageMarkRead");
+PLUGMM("messageMarkReplied");
+#undef PLUGMM
 
-    actionCollection()->action("messageMarkMany")->plug(&multipleMessageMenu_);
-    actionCollection()->action("messageForward")->plug(&multipleMessageMenu_);
-    actionCollection()->action("messageDelete")->plug(&multipleMessageMenu_);
-    actionCollection()->action("messageSaveAs")->plug(&multipleMessageMenu_);
+#define PLUGMMM(a) actionCollection()->action(a)->plug(&multipleMessageMenu_)
+PLUGMMM("messageView");
+PLUGMMM("messageCompose");
+PLUGMMM("messageForward");
+PLUGMMM("messageDelete");
+PLUGMMM("messageBounce");
+PLUGMMM("messageSaveAs");
+PLUGMMM("messageCopyTo");
+PLUGMMM("messageMoveTo");
+PLUGMMM("messagePrint");
+PLUGMMM("messageFilter");
+PLUGMMM("messageMarkMany");
+#undef PLUGMMM
 }
 
     void
 EmpathMessageListWidget::_setupThreadMenu()
 {
-    actionCollection()->action("threadExpand")->plug(&threadMenu_);
-    actionCollection()->action("threadCollapse")->plug(&threadMenu_);
+#define PLUGTM(a) actionCollection()->action(a)->plug(&threadMenu_)
+PLUGTM("threadExpand");
+PLUGTM("threadCollapse");
+#undef PLUGTM
 }
 
     void 

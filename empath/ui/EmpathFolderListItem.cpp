@@ -61,10 +61,8 @@ EmpathFolderListItem::EmpathFolderListItem(
     
     QStringList l = c->readListEntry(UI_FOLDERS_OPEN, ',');
     
-    QStringList::ConstIterator it(l.begin());
-    for (; it != l.end(); it++)
-        if (*it == url_.asString())
-            setOpen(true);
+    if (l.find(url_.asString()) != l.end())
+        setOpen(true);
 
     EmpathMailbox * m(empath->mailbox(url_));
     
@@ -73,8 +71,9 @@ EmpathFolderListItem::EmpathFolderListItem(
         return;
     }
 
-    QObject::connect(m, SIGNAL(countUpdated(unsigned int, unsigned int)),
-        this, SLOT(s_setCount(unsigned int, unsigned int)));
+    QObject::connect(
+        m,      SIGNAL(countUpdated(unsigned int, unsigned int)),
+        this,   SLOT(s_setCount(unsigned int, unsigned int)));
     
     setText(0, m->name());
     setText(1, "...");
@@ -96,12 +95,10 @@ EmpathFolderListItem::EmpathFolderListItem(
     
     c->setGroup(GROUP_DISPLAY);
 
-    QStringList l = c->readListEntry(UI_FOLDERS_OPEN);
+    QStringList l = c->readListEntry(UI_FOLDERS_OPEN, ',');
     
-    QStringList::ConstIterator it(l.begin());
-    for (; it != l.end(); it++)
-        if (*it == url_.asString())
-            setOpen(true);
+    if (l.find(url_.asString()) != l.end())
+        setOpen(true);
 
     EmpathFolder * f(empath->folder(url_));
     
@@ -114,10 +111,6 @@ EmpathFolderListItem::EmpathFolderListItem(
         f,      SIGNAL(countUpdated(unsigned int, unsigned int)),
         this,   SLOT(s_setCount(unsigned int, unsigned int)));
     
-    QObject::connect(
-        this,   SIGNAL(update()),
-        f,      SLOT(s_update()));
-    
     QString s = url_.folderPath();
 
     if (s.right(1) == "/")
@@ -126,12 +119,8 @@ EmpathFolderListItem::EmpathFolderListItem(
     s = s.right(s.length() - s.findRev("/") - 1);
     
     setText(0, s);
+
     setPixmap(0, empathIcon(f->pixmapName()));
-    
-    if (!f->isContainer()) {
-        setText(1, "...");
-        setText(2, "...");
-    }
 }
     
 EmpathFolderListItem::~EmpathFolderListItem()
@@ -188,8 +177,8 @@ EmpathFolderListItem::paintCell(
     void
 EmpathFolderListItem::s_setCount(unsigned int unread, unsigned int read)
 {
-    setText(1, QString().setNum(unread));
-    setText(2, QString().setNum(read));
+    setText(1, QString::number(unread));
+    setText(2, QString::number(read));
 }
 
     void
@@ -230,11 +219,5 @@ EmpathFolderListItem::init()
         setText(2, QString().setNum(m->messageCount()));
     }
 } 
-
-    void
-EmpathFolderListItem::s_update()
-{
-    emit(update());
-}
 
 // vim:ts=4:sw=4:tw=78

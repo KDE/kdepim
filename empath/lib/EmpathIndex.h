@@ -30,6 +30,7 @@
 // Qt includes
 #include <qdict.h>
 #include <qdatetime.h>
+#include <qobject.h>
 
 // Local includes
 #include "EmpathIndexRecord.h"
@@ -39,8 +40,10 @@
  * Dictionary of index records
  * @author Rikkus
  */
-class EmpathIndex
+class EmpathIndex : public QObject
 {
+    Q_OBJECT
+
     public:
         
         EmpathIndex(const EmpathURL & folder);
@@ -50,15 +53,12 @@ class EmpathIndex
         /**
          * Get the index record using the given key.
          */
-        EmpathIndexRecord record(const QString & key) const;
+        EmpathIndexRecord record(const QString & key);
 
         /**
          * Find out if the record exists
          */
-        bool contains(const QString & key) const
-        {
-            return (0 != dict_.find(key));
-        }
+        bool contains(const QString & key);
 
         /**
          * Set the index to talk to the given folder.
@@ -78,21 +78,13 @@ class EmpathIndex
         /**
          * Count the number of messages stored.
          */
-        unsigned int count() const
-        {
-            return dict_.count();
-        }
+        unsigned int count();
 
         /**
          * Count the number of unread messages stored.
          */
-        unsigned int countUnread() const;
+        unsigned int countUnread();
 
-        /**
-         * Sync up the message list with the mailbox.
-         */
-        void sync();
-        
         /**
          * Insert entry.
          */
@@ -115,35 +107,44 @@ class EmpathIndex
 		
         QString indexFileName() const { return filename_; }
 		
-        QStringList allKeys() const;
-        QDict<EmpathIndexRecord> dict() const { return dict_; }
+        QStringList allKeys();
+        QDict<EmpathIndexRecord> dict();
 
-        bool initialised() const { return initialised_; }
-        void setInitialised(bool i) { initialised_ = i; }
+        bool setStatus(const QString & id, EmpathIndexRecord::Status);
 
-        void setStatus(const QString & id, EmpathIndexRecord::Status);
+        QDateTime lastSync() const;
 
-        QDateTime lastSync() const { return lastSync_; }
-        QDateTime setLastSync(QDateTime dt) { lastSync_ = dt; }
+    protected:
 
-        const char * className() const { return "EmpathIndex"; }
+        void timerEvent(QTimerEvent *);
+
+    signals:
+
+        void itemGone(const QString &);
+        void statusChange(const QString &, EmpathIndexRecord::Status);
 
     private:
         
         EmpathIndex();
         
-        bool _open();
-        void _close();
+        bool _read();
+        bool _write();
+        void _flush();
+        void _resetIdleTimer();
         void _setDirty();
         
         QString filename_;
         QDict<EmpathIndexRecord> dict_;
-        QDateTime lastSync_;
 
         // Order dependency
         EmpathURL folder_;
         bool initialised_;
         bool dirty_;
+        bool read_;
+        unsigned int count_;
+        unsigned int unreadCount_;
+        bool countCached_;
+        bool unreadCountCached_;
         // End order dependency
 };
 

@@ -60,7 +60,6 @@ class EmpathFolderListItem : public QObject, public QListViewItem
     signals:
         
         void opened();
-        void update();
         
     protected slots:
 
@@ -69,10 +68,6 @@ class EmpathFolderListItem : public QObject, public QListViewItem
     protected:
 
         virtual void paintCell(QPainter * p, const QColorGroup &, int, int, int);
-    
-    public slots:
-
-        void s_update();    
     
     private:
     

@@ -236,5 +236,9 @@ EmpathFolder::markMessage(
     return retval;
 }
 
+    void
+EmpathFolder::s_statusChange(const QString &, EmpathIndexRecord::Status)
+{
+}
 
 // vim:ts=4:sw=4:tw=78
