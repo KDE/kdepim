@@ -28,9 +28,6 @@
 #include "kpilotOptions.moc"
 #include "kpilot.h"
 
-#define SAFEDELETE(p)	if (p!=NULL) { delete p; } p=NULL;
-#define SPACING 10
-
 // --------------------------------------------------
 //
 // KPilotOptionsPage
@@ -191,10 +188,6 @@ KPilotOptionsAddress::~KPilotOptionsAddress()
 {
 	FUNCTIONSETUP;
 
-	SAFEDELETE(fNormalDisplay);
-	SAFEDELETE(fCompanyDisplay);
-	SAFEDELETE(displayGroup);
-	SAFEDELETE(formatGroup);
 }
 
 const char *KPilotOptionsAddress::theGroupName()
@@ -335,7 +328,11 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(QTabDialog *w,KConfig *config,
 		{
 			fStartDaemonAtLogin->setEnabled(false);
 		}
-		SAFEDELETE(fKFM);
+		if (fKFM!=NULL)
+		{
+			delete fKFM;
+			fKFM=NULL;
+		}
 	}
 	connect(fStartDaemonAtLogin, SIGNAL(clicked()), 
 		this, SLOT(slotSetupDaemon()));
@@ -374,9 +371,6 @@ KPilotOptionsGeneral::~KPilotOptionsGeneral()
 {
 	FUNCTIONSETUP;
 
-	SAFEDELETE(fStartDaemonAtLogin);
-	SAFEDELETE(fStartKPilotAtHotSync);
-	SAFEDELETE(fDockDaemon);
 }
 
 
@@ -442,7 +436,11 @@ void KPilotOptionsGeneral::slotKFMFinished()
 {
 	FUNCTIONSETUP;
 
-	SAFEDELETE(fKFM);
+	if (fKFM!=NULL)
+	{
+		delete fKFM;
+		fKFM=NULL;
+	}
 }
 
 // ----------------------------------------------------

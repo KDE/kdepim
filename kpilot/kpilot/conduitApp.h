@@ -13,6 +13,12 @@
 #include <kapp.h>
 #include "baseConduit.h"
 
+// Debug level is set -- among other things --
+// by the constructor for conduit apps.
+//
+//
+extern int debug_level;
+
 class ConduitApp : protected KApplication
 {
   Q_OBJECT
@@ -26,6 +32,10 @@ public:
   int exec();
 
   BaseConduit::eConduitMode getMode() { return fMode; }
+
+protected:
+	BaseConduit::eConduitMode handleOptions(int&,char**);
+	void usage();
 
 private:
   BaseConduit* fConduit;

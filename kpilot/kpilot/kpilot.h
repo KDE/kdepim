@@ -46,6 +46,25 @@ extern int debug_level;
 				": Entered\t(" << __FILE__ << ':' << \
 				__LINE__ << ")\n"; } 
 
+// Some layout macros
+//
+// SPACING is a generic distance between visual elements;
+// 10 seems reasonably good even at high resolutions.
+//
+// Give RIGHT and BELOW a QWidget. In all likelihood
+// these will disappear soon with a new layout style in
+// KPilot 3.2.
+//
+#define SPACING		(10)
+#define BELOW(a)	a->y()+a->height()+SPACING
+#define RIGHT(a)	a->x()+a->width()+SPACING
+
+
+
+
+
+
+
 class KPilotInstaller : public KTopLevelWidget
     {
     Q_OBJECT
