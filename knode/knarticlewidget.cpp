@@ -746,7 +746,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
 
   QString errMsg=s;
   errMsg.replace(QRegExp("\n"),QString("<br>"));  // error messages can contain html-links, but are plain text otherwise
-  QString msg="<qt>"+i18n("<bodyblock><b><font size=+1 color=red>An error occured!</font></b><hr><br>")+errMsg+"</bodyblock></qt>";
+  QString msg="<qt>"+i18n("<bodyblock><b><font size=+1 color=red>An error occurred!</font></b><hr><br>")+errMsg+"</bodyblock></qt>";
   setText(msg);
 
   // mark article as read, typically the article is expired on the server, so its
