@@ -1,6 +1,10 @@
-/* vcal-conduit.cc                      KPilot
+/* vcal-conduitbase.cc                      KPilot
 **
+** Copyright (C) 2002 by Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
+** 
+** Contributions:
+**    Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
 **
 ** This file defines the vcal-conduit plugin.
 */
@@ -40,6 +44,8 @@ static const char *vcalconduitbase_id = "$Id$";
 #include <calendar.h>
 #include <calendarlocal.h>
 #include <incidence.h>
+#include <kstandarddirs.h>
+#include <ksimpleconfig.h>
 
 
 /*
@@ -202,6 +208,14 @@ there are two special cases: a full and a first sync.
 
 //	bool loadSuccesful = true;
 	KPilotUser*usr;
+	KConfig korgcfg( locate( "config", "korganizerrc" ) );
+	QString tz;
+	// this part taken from adcalendarbase.cpp:
+	korgcfg.setGroup( "Time & Date" );
+	tz = korgcfg.readEntry( "TimeZoneId" );
+#ifdef DEBUG
+	DEBUGCONDUIT << fname<<": KOrganizer's time zone = "<<tz<<endl;
+#endif
 
 	if (!fConfig)
 	{
@@ -250,7 +264,7 @@ there are two special cases: a full and a first sync.
 
 	fCurrentDatabase = new PilotSerialDatabase(pilotSocket(), dbname(), this, dbname());
 	fBackupDatabase = new PilotLocalDatabase(dbname());
-	fCalendar = new KCal::CalendarLocal();
+	fCalendar = new KCal::CalendarLocal(tz);
 	if (!fCurrentDatabase || !fBackupDatabase || !fCalendar) goto error;
 
 	// if there is no backup db yet, fetch it from the palm, open it and set the full sync flag.
@@ -644,6 +658,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.1.2.4  2002/05/03 19:08:52  kainhofe
+// Local timezone from KOrganizer is now used for the sync
+//
 // Revision 1.1.2.3  2002/05/01 21:11:49  kainhofe
 // Reworked the settings dialog, added various different sync options
 //
