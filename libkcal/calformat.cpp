@@ -29,7 +29,7 @@
 using namespace KCal;
 
 QString CalFormat::mApplication = QString::fromLatin1("libkcal");
-QString CalFormat::mProductId = QString::fromLatin1("-//K Desktop Environment//NONSGML libkcal n.n//EN");
+QString CalFormat::mProductId = QString::fromLatin1("-//K Desktop Environment//NONSGML libkcal 3.0//EN");
 
 
 CalFormat::CalFormat(Calendar *cal)
