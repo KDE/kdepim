@@ -133,7 +133,12 @@ class CalendarLocal : public Calendar, public IncidenceBase::Observer
     /** Return all alarms, which ocur before given date. */
     Alarm::List alarmsTo( const QDateTime &to );
 
-  protected:
+    
+    /** this method should be called whenever a Event is modified directly
+     * via it's pointer.  It makes sure that the calendar is internally
+     * consistent. */
+    void update(IncidenceBase *incidence);
+ 
     /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
@@ -150,11 +155,9 @@ class CalendarLocal : public Calendar, public IncidenceBase::Observer
     QPtrList<Event> rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false );
 
-    /** this method should be called whenever a Event is modified directly
-     * via it's pointer.  It makes sure that the calendar is internally
-     * consistent. */
-    void update(IncidenceBase *incidence);
-  
+ 
+  protected:
+ 
     /** Notification function of IncidenceBase::Observer. */
     void incidenceUpdated( IncidenceBase *i ) { update( i ); }
   
