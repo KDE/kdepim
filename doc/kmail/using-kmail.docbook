@@ -944,8 +944,8 @@ linkend="filter-dialog">filter dialog</link> to those messages.</para>
 to use <menuchoice><guimenu>Tools</guimenu><guimenuitem>Create
 Filter...</guimenuitem></menuchoice>: this will call the filter dialog
 and present you with a new filter which has the first rule of the
-search pattern and the first action (as <guilabel>file into folder</guilabel>) preset. In
-most cases, all you have to do is select the folder where the message
+search pattern and the first action (as <guilabel>Move into Folder</guilabel>) 
+preset. In most cases, all you have to do is select the folder where the message
 should be moved to; but you can, of course, edit the filter as you
 like.</para>
 
@@ -1234,12 +1234,12 @@ the specified value.</entry>
 <title>Filter Action</title>
 
 <para>The most common use of filters is to sort incoming messages to
-certain folders; this can be done by choosing <guilabel>file into
-folder</guilabel>. Here is a list of all possible actions:</para>
+certain folders; this can be done by choosing <guilabel>Move into
+Folder</guilabel>. Here is a list of all possible actions:</para>
 
 <variablelist>
 <varlistentry>
-<term><guilabel>file into folder</guilabel></term>
+<term><guilabel>Move into Folder</guilabel></term>
 <listitem>
 <para>This will file the message into another folder, removing it from
 its current folder if necessary; you cannot, currently 
@@ -1247,63 +1247,61 @@ use &imap; folders as a target.</para>
 <!-- fixme: still correct? -->
 </listitem>
 </varlistentry>
-<!-- TODO: does not exist yet
 <varlistentry>
-<term><guilabel>copy to folder</guilabel></term>
+<term><guilabel>Copy to Folder</guilabel></term>
 <listitem>
 <para>This will copy the message to another folder.</para>
 <note><para>You currently cannot use &imap;
 folders as a target.</para></note>
 </listitem>
 </varlistentry>
--->
 <varlistentry>
-<term><guilabel>set identity to</guilabel></term>
+<term><guilabel>Set Identity To</guilabel></term>
 <listitem>
 <para>This will set the identity that will be used if you reply to this
 message.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>mark as</guilabel></term>
+<term><guilabel>Mark As</guilabel></term>
 <listitem>
 <para>This allows you to mark the message as read or important (flagged), but
 also as forwarded, replied, &etc;</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>send fake MDN</guilabel></term>
+<term><guilabel>Send Fake MDN</guilabel></term>
 <listitem>
 <para>This will send a faked message disposition notification (&ie; a read
 receipt) to the sender of the message.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>set transport to</guilabel></term>
+<term><guilabel>Set Transport To</guilabel></term>
 <listitem>
 <para>This will set the method of transport (&eg; <acronym>SMTP</acronym>) 
 that will be used if you reply to the message.</para>
 </listitem>
 </varlistentry> 
 <varlistentry>
-<term><guilabel>set Reply-To to</guilabel></term>
+<term><guilabel>Set Reply-To To</guilabel></term>
 <listitem><para>This will modify the <guilabel>Reply-To</guilabel> field of this
 message. This can be useful for mailing lists that automatically set a Reply-To
 which you do not like.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>forward to</guilabel></term>
+<term><guilabel>Forward To</guilabel></term>
 <listitem><para>This will forward the message inline (&ie; as if you selected <menuchoice><guimenu>Message</guimenu><guimenuitem>Forward</guimenuitem><guimenuitem>Inline...</guimenuitem></menuchoice>) to another email address.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>redirect to</guilabel></term>
+<term><guilabel>Redirect To</guilabel></term>
 <listitem><para>This will redirect the message as-is to another email address.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>confirm delivery</guilabel></term>
+<term><guilabel>Confirm Delivery</guilabel></term>
 <listitem><para>Will try to return a message to the sender that
 indicates successful delivery of their message, if the sender requested that.</para> <para>This
 action allows you to select who will get delivery receipts from
@@ -1315,7 +1313,7 @@ makes tracking of spam messages, for example, very easy for the sender.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>execute command</guilabel></term>
+<term><guilabel>Execute Command</guilabel></term>
 <listitem>
 <para>This will execute a program, but will not modify the
 message. Specify the full path to the program you want to
@@ -1347,7 +1345,7 @@ even this command will work (within its limits):
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>pipe through</guilabel></term>
+<term><guilabel>Pipe Through</guilabel></term>
 <listitem>
 <para>This will feed the message to a program: if the program returns
 output, the entire message (including the headers) will be replaced
@@ -1363,7 +1361,7 @@ lines.</para></warning>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>remove header</guilabel></term>
+<term><guilabel>Remove Header</guilabel></term>
 <listitem>
 <para>Will remove all header fields with the
 given name from the message. This is useful mainly for removing bogus
@@ -1371,7 +1369,7 @@ given name from the message. This is useful mainly for removing bogus
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>add header</guilabel></term>
+<term><guilabel>Add Header</guilabel></term>
 <listitem>
 <para>If no such field is already present this will add a new header field
 with the given name and value to the message; if there already is a
@@ -1385,7 +1383,7 @@ there are no other headers with that name in the message.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>rewrite header</guilabel></term>
+<term><guilabel>Rewrite Header</guilabel></term>
 <listitem>
 <para>Will scan the given header field, modify its contents and write
 it back. The search string is always interpreted as a case-sensitive
@@ -1400,7 +1398,7 @@ in the search string.</para><para>Analogous restrictions as in the
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>play sound</guilabel></term>
+<term><guilabel>Play Sound</guilabel></term>
 <listitem>
 <para>Will play the specified sound.</para>
 </listitem>
