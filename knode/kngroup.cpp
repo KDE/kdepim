@@ -113,7 +113,7 @@ bool KNGroup::readInfo(const QString &confPath)
     delete i_dentity;
     i_dentity=0;
   }
-  
+
   return (!g_roupname.isEmpty());
 }
 
@@ -121,10 +121,10 @@ bool KNGroup::readInfo(const QString &confPath)
 void KNGroup::saveInfo()
 {
   QString dir(path());
-  
+
   if (dir != QString::null){
     KSimpleConfig info(dir+g_roupname+".grpinfo");
-  
+
     info.writeEntry("groupname", g_roupname);
     info.writeEntry("description", d_escription);
     info.writeEntry("firstMsg", f_irstNr);
@@ -168,7 +168,7 @@ KNNntpAccount* KNGroup::account()
 {
   KNCollection *p=parent();
   while(p->type()!=KNCollection::CTnntpAccount) p=p->parent();
-  
+
   return (KNNntpAccount*)p_arent;
 }
 
@@ -376,7 +376,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
 
   timer.start();
 
-  //resize the list 
+  //resize the list
   if(!resize(size()+hdrs->count())) return;
 
   // recreate msg-ID index
@@ -388,7 +388,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
 
   for(char *line=hdrs->first(); line; line=hdrs->next()) {
     split.init(line, "\t");
-      
+
     //new Header-Object
     art=new KNRemoteArticle(this);
     art->setNew(true);
@@ -402,29 +402,29 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
     art->subject()->from7BitString(split.string());
     if(art->subject()->isEmpty())
       art->subject()->fromUnicodeString(i18n("no subject"), art->defaultCharset());
-    
+
     //From and Email
     split.next();
     art->from()->from7BitString(split.string());
-        
+
     //Date
     split.next();
     art->date()->from7BitString(split.string());
-                    
+
     //Message-ID
     split.next();
     art->messageID()->from7BitString(split.string().simplifyWhiteSpace());
-      
+
     //References
     split.next();
     if(!split.string().isEmpty())
       art->references()->from7BitString(split.string()); //use QCString::copy() ?
-    
+
     //Lines
     split.next();
     split.next();
     art->lines()->setNumberOfLines(split.string().toInt());
-        
+
     // check if we have this article already in this group,
     // if so mark it as new (useful with leafnodes delay-body function)
     art2=byMessageId(art->messageID()->as7BitString(false));
@@ -474,26 +474,26 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 {
   int idx, savedCnt=0, mode;
   KNRemoteArticle *art;
-  
+
   QString dir(path());
   if (dir == QString::null)
     return 0;
-  
+
   QFile f(dir+g_roupname+".static");
-  
+
   if(ovr) mode=IO_WriteOnly;
   else mode=IO_WriteOnly | IO_Append;
-  
+
   if(f.open(mode)) {
-  
+
     QTextStream ts(&f);
-    
+
     for(idx=length()-cnt; idx<length(); idx++) {
-            
-      art=at(idx);    
-      
+
+      art=at(idx);
+
       if(art->subject()->isEmpty()) continue;
-    
+
       ts << art->messageID()->as7BitString(false) << '\t';
       ts << art->subject()->as7BitString(false) << '\t';
       ts << art->from()->email() << '\t';
@@ -502,12 +502,12 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
         ts << art->from()->nameAs7Bit() << '\n';
       else
         ts << "0\n";
-          
+
       if(!art->references()->isEmpty())
         ts << art->references()->as7BitString(false) << "\n";
       else
         ts << "0\n";
-    
+
       ts << art->id() << ' ';
       ts << art->lines()->numberOfLines() << ' ';
       ts << art->date()->unixTime() << ' ';
@@ -517,10 +517,10 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 
       savedCnt++;
     }
-  
+
     f.close();
   }
-  
+
   return savedCnt;
 }
 
@@ -530,21 +530,21 @@ void KNGroup::saveDynamicData(int cnt,bool ovr)
   dynDataVer1 data;
   int mode;
   KNRemoteArticle *art;
-  
+
   if(length()>0) {
     QString dir(path());
     if (dir == QString::null)
       return;
-    
+
     QFile f(dir+g_roupname+".dynamic");
-    
+
     if(ovr) mode=IO_WriteOnly;
     else mode=IO_WriteOnly | IO_Append;
-    
+
     if(f.open(mode)) {
-        
+
       for(int idx=length()-cnt; idx<length(); idx++) {
-        art=at(idx);  
+        art=at(idx);
         if(art->subject()->isEmpty()) continue;
         data.setData(art);
         f.writeBlock((char*)(&data), sizeof(data));
@@ -561,34 +561,34 @@ void KNGroup::syncDynamicData()
   dynDataVer1 data;
   int cnt=0, readCnt=0, sOfData;
   KNRemoteArticle *art;
-  
+
   if(length()>0) {
 
     QString dir(path());
     if (dir == QString::null)
       return;
-    
+
     QFile f(dir+g_roupname+".dynamic");
-        
+
     if(f.open(IO_ReadWrite)) {
-      
+
       sOfData=sizeof(data);
-    
+
       for(int i=0; i<length(); i++) {
         art=at(i);
-        
+
         if(art->hasChanged() && !art->subject()->isEmpty()) {
-          
+
           data.setData(art);
           f.at(i*sOfData);
           f.writeBlock((char*) &data, sOfData);
           cnt++;
           art->setChanged(false);
         }
-      
+
         if(art->isRead()) readCnt++;
       }
-      
+
       f.close();
 
       kdDebug(5003) << g_roupname << " => updated " << cnt << " entries of dynamic data" << endl;
@@ -660,12 +660,12 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
         }
       }
     }
-    
-  
+
+
   for(idx=start; idx<end; idx++) {
-  
+
     art=at(idx);
-    
+
     if(art->idRef()==-1 && !art->references()->isEmpty() ){   //hdr has references
       refCnt++;
       if(findReference(art))
@@ -686,47 +686,47 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
         client->updatePercentage(30+((foundCnt)*70)/cnt);
     }
   }
-  
-    
+
+
   if(foundCnt<refCnt) {    // some references could not been found
-  
+
     //try to sort by subject
     KNRemoteArticle *oldest;
     QList<KNRemoteArticle> list;
     list.setAutoDelete(false);
-      
+
     for(idx=start; idx<end; idx++) {
-      
-      art=at(idx);      
-        
+
+      art=at(idx);
+
       if(art->idRef()==-1) {  //for all not sorted headers
-      
+
         list.clear();
         list.append(art);
-        
+
         //find all headers with same subject
         for(int idx2=0; idx2<length(); idx2++)
           if(at(idx2)==art) continue;
           else if(at(idx2)->subject()==art->subject())
             list.append(at(idx2));
-      
+
         if(list.count()==1) {
           art->setIdRef(0);
           art->setThreadingLevel(6);
           bySubCnt++;
         }
         else {
-      
+
           //find oldest
           oldest=list.first();
           for(KNRemoteArticle *var=list.next(); var; var=list.next())
             if(var->date()->unixTime() < oldest->date()->unixTime()) oldest=var;
-          
-          //oldest gets idRef 0 
+
+          //oldest gets idRef 0
           if(oldest->idRef()==-1) bySubCnt++;
           oldest->setIdRef(0);
-          oldest->setThreadingLevel(6);   
-          
+          oldest->setThreadingLevel(6);
+
           for(KNRemoteArticle *var=list.first(); var; var=list.next()) {
             if(var==oldest) continue;
             else if(var->idRef()==-1 || (var->idRef()!=-1 && var->threadingLevel()==6)) {
@@ -742,7 +742,7 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
         timer.restart();
         if (client) client->updatePercentage(30+((bySubCnt+foundCnt)*70)/cnt);
       }
-    } 
+    }
   }
 
   //all not found items get refID 0
@@ -753,8 +753,8 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
       art->setThreadingLevel(6);   //was 0 !!!
     }
   }
-  
-#ifdef CHECKLOOPS 
+
+#ifdef CHECKLOOPS
   //check for loops in threads
   int startId;
   bool isLoop;
@@ -768,7 +768,7 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
       idRef=en->idRef;
       isLoop=(idRef==startId);
     }
-    
+
     if(isLoop) {
       // this method is called from the nntp-thread!!!
       #ifndef NDEBUG
@@ -777,15 +777,15 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
       hList[idx]->idRef=0;
       hList[idx]->thrLevel=0;
     }
-      
+
   }
-#endif  
-  
+#endif
+
   // propagate ignored/watched flags to new headers
   for(int idx=start; idx<end; idx++) {
     art=at(idx);
     int idRef=art->idRef();
-    
+
     if(idRef!=0) {
       while(idRef!=0) {
         art=byId(idRef);
@@ -797,7 +797,7 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
       }
     }
   }
-  
+
   // this method is called from the nntp-thread!!!
 #ifndef NDEBUG
   qDebug("knode: Sorting : %d headers resorted", resortCnt);
@@ -838,6 +838,10 @@ void KNGroup::scoreArticles(bool onlynew)
       todo=(onlynew)? newCount():length();
 
   if (todo) {
+    // reset the notify collection
+    delete KNScorableArticle::notifyC;
+    KNScorableArticle::notifyC = 0;
+
     kdDebug(5003) << "scoring " << newCount() << " articles" << endl;
     kdDebug(5003) << "(total " << length() << " article in group)" << endl;
     knGlobals.top->setCursorBusy(true);
@@ -867,6 +871,9 @@ void KNGroup::scoreArticles(bool onlynew)
 
     knGlobals.top->setStatusMsg(QString::null);
     knGlobals.top->setCursorBusy(false);
+
+    //kdDebug(5003) << KNScorableArticle::notifyC->collection() << endl;
+    KNScorableArticle::notifyC->displayCollection();
   }
 }
 
@@ -899,12 +906,12 @@ void KNGroup::updateThreadInfo()
 {
   KNRemoteArticle *ref;
   bool brokenThread=false;
-  
+
   for(int idx=0; idx<length(); idx++) {
     at(idx)->setUnreadFollowUps(0);
     at(idx)->setNewFollowUps(0);
   }
-    
+
   for(int idx=0; idx<length(); idx++) {
     int idRef=at(idx)->idRef();
     while(idRef!=0) {
@@ -913,7 +920,7 @@ void KNGroup::updateThreadInfo()
         brokenThread=true;
         break;
       }
-      
+
       if(!at(idx)->isRead())  {
         ref->incUnreadFollowUps();
         if(at(idx)->isNew()) ref->incNewFollowUps();
@@ -935,7 +942,7 @@ void KNGroup::showProperties()
 {
   if(!i_dentity) i_dentity=new KNConfig::Identity(false);
   KNGroupPropDlg *d=new KNGroupPropDlg(this, knGlobals.topWidget);
-  
+
   if(d->exec())
     if(d->nickHasChanged())
       l_istItem->setText(0, name());
@@ -982,7 +989,7 @@ void KNGroup::dynDataVer0::setData(KNRemoteArticle *a)
   idRef=a->idRef();
   thrLevel=a->threadingLevel();
   read=a->isRead();
-  score=a->score(); 
+  score=a->score();
 }
 
 

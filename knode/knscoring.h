@@ -32,9 +32,12 @@ public:
 
   virtual void addScore(short s);
   virtual void changeColor(const QColor&);
+  virtual void displayMessage(const QString&);
   virtual QString from() const;
   virtual QString subject() const;
   virtual QString getHeaderByType(const QString&) const;
+
+  static NotifyCollection* notifyC;
 
 private:
   KNRemoteArticle *_a;

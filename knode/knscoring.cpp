@@ -32,6 +32,7 @@
 #include "knglobals.h"
 
 //----------------------------------------------------------------------------
+static NotifyCollection* KNScorableArticle::notifyC = 0;
 
 KNScorableArticle::KNScorableArticle(KNRemoteArticle* a)
   : ScorableArticle(), _a(a)
@@ -53,6 +54,13 @@ void KNScorableArticle::addScore(short s)
 void KNScorableArticle::changeColor(const QColor& c)
 {
   _a->setColor(c);
+}
+
+void KNScorableArticle::displayMessage(const QString& s)
+{
+  if (!_a->isNew()) return;
+  if (!notifyC) notifyC = new NotifyCollection();
+  notifyC->addNote(*this,s);
 }
 
 QString KNScorableArticle::from() const
