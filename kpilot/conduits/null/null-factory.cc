@@ -50,7 +50,7 @@ void *init_conduit_null()
 	return new NullConduitFactory;
 }
 
-} ;
+}
 
 class NullConduitConfig : public ConduitConfigBase
 {

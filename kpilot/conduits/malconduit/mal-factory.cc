@@ -51,7 +51,7 @@ void *init_conduit_mal()
 	return new MALConduitFactory;
 }
 
-} ;
+}
 
 
 // A number of static variables

@@ -48,7 +48,7 @@ void *init_conduit_popmail()
 	return new PopMailConduitFactory;
 }
 
-} ;
+}
 
 
 /* static */ const char * const PopMailConduitFactory::fGroup = "Popmail-conduit" ;
