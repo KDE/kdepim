@@ -34,7 +34,7 @@ using namespace std;
 
 KonsoleKalendarAdd::KonsoleKalendarAdd( KonsoleKalendarVariables *variables )
 {
-	m_variables = variables;
+  m_variables = variables;
 
 }
 
@@ -44,20 +44,27 @@ KonsoleKalendarAdd::~KonsoleKalendarAdd()
 }
 
 /**
- * Adds event to Calendar 
+ * Adds event to Calendar
  */
 
 bool KonsoleKalendarAdd::addEvent()
 {
-	Event event;
-	
-	event.setDtStart( m_variables->getStartDate() );
-	event.setDtEnd( m_variables->getStartDate() );
-	event.setDescription( m_variables->getDescription() );
-	event.setSummary( m_variables->getSummary() );
-	m_variables->getCalendar()->addEvent( &event );
-	m_variables->getCalendar()->save();
-	
-	
-	return true;
+  Event *event = new Event();
+
+  event->setDtStart( m_variables->getStartDate() );
+  event->setDtEnd( m_variables->getStartDate() );
+  //event->setDescription( m_variables->getDescription() );
+  //event->setSummary( m_variables->getSummary() );
+
+  if( m_variables->getCalendar()->addEvent( event ) == true ) {
+    kdDebug() << "Event added!" << endl;
+  } else {
+    kdDebug() << "Can't add event" << endl;
+  }
+
+  m_variables->getCalendar()->save( m_variables->getCalendarFile() );
+
+  delete event;
+
+  return true;
 }
