@@ -530,11 +530,13 @@ void KABCore::setWhoAmI()
 
 void KABCore::incrementalTextSearch( const QString& text )
 {
+  setContactSelected( QString::null );
   mSearchManager->search( text, mIncSearchWidget->currentField() );
 }
 
 void KABCore::incrementalJumpButtonSearch( const QStringList& characters )
 {
+  setContactSelected( QString::null );
   mSearchManager->setJumpButtonFilter( characters, mViewManager->currentSortField() );
 }
 
