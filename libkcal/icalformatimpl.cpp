@@ -314,15 +314,14 @@ const int gSecondsPerDay    = gSecondsPerHour   * 24;
 const int gSecondsPerWeek   = gSecondsPerDay    * 7;
 
 ICalFormatImpl::ICalFormatImpl( ICalFormat *parent ) :
-  mParent( parent ), mCalendarVersion( 0 )
+  mParent( parent ), mCalendarVersion( 0 ), mCompat( new Compat )
 {
-  mCompat = new Compat;
   mTimezones.setAutoDelete( true );
 }
 
 ICalFormatImpl::~ICalFormatImpl()
 {
-  delete mCompat;
+  if ( mCompat ) delete mCompat;
 }
 
 class ICalFormatImpl::ToComponentVisitor : public IncidenceBase::Visitor
@@ -1177,7 +1176,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
     p = icalcomponent_get_next_property(vtodo,ICAL_ANY_PROPERTY);
   }
 
-  mCompat->fixEmptySummary( todo );
+  if (mCompat) mCompat->fixEmptySummary( todo );
 
   return todo;
 }
@@ -1206,7 +1205,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
         if (icaltime.is_date) {
           // End date is non-inclusive
           QDate endDate = readICalDate( icaltime ).addDays( -1 );
-          mCompat->fixFloatingEnd( endDate );
+          if ( mCompat ) mCompat->fixFloatingEnd( endDate );
           if ( endDate < event->dtStart().date() ) {
             endDate = event->dtStart().date();
           }
@@ -1299,7 +1298,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
     }
   }
 
-  mCompat->fixEmptySummary( event );
+  if ( mCompat ) mCompat->fixEmptySummary( event );
 
   return event;
 }
@@ -1486,7 +1485,8 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   if (v == ICAL_VALUE_BINARY && e == ICAL_ENCODING_BASE64) {
     attachment = new Attachment(icalattachtype_get_base64(a));
   } else if ((v == ICAL_VALUE_NONE || v == ICAL_VALUE_URI) && (e == ICAL_ENCODING_NONE || e == ICAL_ENCODING_8BIT)) {
-    attachment = new Attachment(QString(icalattachtype_get_url(a)));
+    const char *u = icalattachtype_get_url(a);
+    attachment = new Attachment( QString( u ) );
   } else {
     kdWarning(5800) << "Unsupported attachment format, discarding it!" << endl;
     return 0;
@@ -1589,7 +1589,8 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_PRIORITY_PROPERTY:  // priority
         intvalue = icalproperty_get_priority( p );
-        intvalue = mCompat->fixPriority( intvalue );
+        if ( mCompat ) 
+          intvalue = mCompat->fixPriority( intvalue );
         incidence->setPriority( intvalue );
         break;
 
@@ -1649,7 +1650,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
   // Now that recurrence and exception stuff is completely set up,
   // do any backwards compatibility adjustments.
-  if (incidence->doesRecur())
+  if ( incidence->doesRecur() && mCompat )
       mCompat->fixRecurrence( incidence );
 
   // add categories
@@ -1662,7 +1663,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
     readAlarm(alarm,incidence);
   }
   // Fix incorrect alarm settings by other applications (like outloook 9)
-  mCompat->fixAlarms( incidence );
+  if ( mCompat ) mCompat->fixAlarms( incidence );
 }
 
 void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *incidenceBase)
@@ -2004,21 +2005,26 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
       }
       // Only in AUDIO and EMAIL and PROCEDURE alarms
       case ICAL_ATTACH_PROPERTY: {
-        icalattachtype *attach = icalproperty_get_attach(p);
-        QString url = QFile::decodeName(icalattachtype_get_url(attach));
-        switch ( action ) {
-          case ICAL_ACTION_AUDIO:
-            ialarm->setAudioFile( url );
-            break;
-          case ICAL_ACTION_PROCEDURE:
-            ialarm->setProgramFile( url );
-            break;
-          case ICAL_ACTION_EMAIL:
-            ialarm->addMailAttachment( url );
-            break;
-          default:
-            break;
+        Attachment *attach = readAttachment( p );
+        if ( attach && attach->isUri() ) {
+          switch ( action ) {
+            case ICAL_ACTION_AUDIO:
+              ialarm->setAudioFile( attach->uri() );
+              break;
+            case ICAL_ACTION_PROCEDURE:
+              ialarm->setProgramFile( attach->uri() );
+              break;
+            case ICAL_ACTION_EMAIL:
+              ialarm->addMailAttachment( attach->uri() );
+              break;
+            default:
+              break;
+          }
+        } else {
+          kdDebug() << "Alarm attachments currently only support URIs, but "
+                       "no binary data" << endl;
         }
+        delete attach;
         break;
       }
       default:
@@ -2115,7 +2121,7 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
     }
   }
 
-  if ( t.is_utc && mCompat->useTimeZoneShift() ) {
+  if ( t.is_utc && mCompat && mCompat->useTimeZoneShift() ) {
 //    kdDebug(5800) << "--- Converting time to zone '" << cal->timeZoneId() << "'." << endl;
     if (mParent->timeZoneId().isEmpty())
       t = icaltime_as_zone(t, 0);
