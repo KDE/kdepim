@@ -94,8 +94,8 @@ void KTimeWidget::setTime( int hour, int minute )
 	dummy.setNum( hour );
 	_hourLE->setText( dummy );
 	
-	dummy.setNum( minute );
-	if (minute < 10 ) {
+	dummy.setNum( abs(minute) );
+	if (abs(minute) < 10 ) {
 		dummy = QString::fromLatin1( "0" ) + dummy;
 	}
 	_minuteLE->setText( dummy );
@@ -104,5 +104,11 @@ void KTimeWidget::setTime( int hour, int minute )
 long KTimeWidget::time() const
 {
 	bool ok;
-	return _hourLE->text().toInt( &ok ) * 60 + _minuteLE->text().toInt( &ok );
+	int h, m;
+	
+	h = _hourLE->text().toInt( &ok );
+	m = _minuteLE->text().toInt( &ok );
+
+	// if h is negative, we have to *subtract* m
+	return h * 60 + ( ( h < 0) ? -1 : 1 ) * m;
 }
