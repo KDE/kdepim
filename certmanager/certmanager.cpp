@@ -830,7 +830,6 @@ void CertManager::slotSelectionChanged()
   mKeyListView->flushKeys();
   bool b = mKeyListView->hasSelection();
   mExportCertificateAction->setEnabled( b );
-  mExportSecretKeyAction->setEnabled( b );
   mViewCertDetailsAction->setEnabled( b );
   mDeleteCertificateAction->setEnabled( b );
 #ifdef NOT_IMPLEMENTED_ANYWAY
