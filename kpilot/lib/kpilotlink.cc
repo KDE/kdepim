@@ -806,9 +806,11 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 	if (!QFile::exists(f))
 		return false;
 
+	char buffer[PATH_MAX];
+	memset(buffer,0,PATH_MAX);
+	strlcpy(buffer,QFile::encodeName(f),PATH_MAX);
 	struct pi_file *pf =
-		pi_file_open(const_cast < char *>
-			((const char *) QFile::encodeName(f)));
+		pi_file_open(buffer);
 
 	if (!f)
 	{
@@ -965,6 +967,7 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 	}
 	QCString encodedName = QFile::encodeName(fullBackupName);
 	char filenameBuf[PATH_MAX];
+	memset(filenameBuf,0,PATH_MAX);
 	strlcpy(filenameBuf,(const char *)encodedName,PATH_MAX);
 	f = pi_file_create(filenameBuf,info);
 

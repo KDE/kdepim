@@ -685,16 +685,15 @@ void PilotLocalDatabase::openDatabase()
 	pi_uid_t id;
 
 	setDBOpen(false);
-	QString tempName = dbPathName();
-	QCString fileName = QFile::encodeName(tempName);
 	char buffer[PATH_MAX];
-	strlcpy(buffer,(const char *)fileName,PATH_MAX);
+	memset(buffer,0,PATH_MAX);
+	strlcpy(buffer,QFile::encodeName(dbPathName()),PATH_MAX);
 
 	dbFile = pi_file_open(buffer);
 	if (dbFile == 0L)
 	{
 		kdError() << k_funcinfo
-			<< ": Failed to open " << tempName << endl;
+			<< ": Failed to open " << dbPathName() << endl;
 		return;
 	}
 	pi_file_get_info(dbFile, &fDBInfo);
@@ -732,13 +731,11 @@ void PilotLocalDatabase::closeDatabase()
 		return;
 	}
 
-	QString tempName_ = dbPathName();
-	QString newName_ = tempName_ + CSL1(".bak");
-	QCString tempName = QFile::encodeName(tempName_);
-	QCString newName = QFile::encodeName(newName_);
+	QString newName = dbPathName() + CSL1(".new");
+	char buf[PATH_MAX];
+	memset(buf,0,PATH_MAX);
+	strlcpy(buf,QFile::encodeName(newName),PATH_MAX);
 
-	char *buf = new char[newName.length()+2];
-	strncpy(buf,newName.data(),newName.length());
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Creating temp file " << buf
@@ -764,10 +761,9 @@ void PilotLocalDatabase::closeDatabase()
 	}
 
 	pi_file_close(dbFile);
-	delete[] buf;
-	unlink((const char *) QFile::encodeName(tempName));
+	QFile::remove(dbPathName());
 	rename((const char *) QFile::encodeName(newName),
-		(const char *) QFile::encodeName(tempName));
+		(const char *) QFile::encodeName(dbPathName()));
 	setDBOpen(false);
 }
 
