@@ -230,17 +230,13 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
   if ( context == InComment )
     return UnbalancedParens;
  
-  if ( context == TopLevel && !tooManyAtsFlag ) {
-    return AddressOk;
-  }
-
   if ( context == InAngleAddress )
     return UnclosedAngleAddr;
 
   if ( tooManyAtsFlag ) {
     return TooManyAts;
   }
-  return AddressEmpty;
+  return AddressOk;
 } 
 
 //-----------------------------------------------------------------------------
