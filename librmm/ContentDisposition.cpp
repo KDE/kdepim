@@ -117,7 +117,7 @@ ContentDisposition::_parse()
 
     if (dispTypeAsString.isEmpty())
         dispType_ = DispositionTypeInline;
-    else if (0 == stricmp(dispTypeAsString,"inline"))
+    else if (0 == qstricmp(dispTypeAsString,"inline"))
         dispType_ = DispositionTypeInline;
     else
         dispType_ = DispositionTypeAttachment;
@@ -128,7 +128,7 @@ ContentDisposition::_parse()
 
     for (QValueList<Parameter>::Iterator it(l.begin()); it != l.end(); ++it)
 
-        if (0 == stricmp((*it).attribute(), "filename")) {
+        if (0 == qstricmp((*it).attribute(), "filename")) {
 
             filename_ = (*it).value();
             break;

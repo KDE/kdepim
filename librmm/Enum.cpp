@@ -142,7 +142,7 @@ RMM::strToMonth(const QCString & s)
     if (s.isEmpty()) return MonthJan;
 
     for (int i = 1; i <= 12; i++)
-        if (!stricmp(s, monthNames[i-1])) return (Month)i;
+        if (!qstricmp(s, monthNames[i-1])) return (Month)i;
 
     return MonthJan;
 
@@ -164,10 +164,10 @@ RMM::mimeGroupStr2Enum(const QCString & s)
         case 'a':
         case 'A':
 
-            if (stricmp(s, "application") == 0)
+            if (qstricmp(s, "application") == 0)
                 t = MimeGroupApplication;
 
-            else if (stricmp(s, "audio") == 0)
+            else if (qstricmp(s, "audio") == 0)
                 t = MimeGroupAudio;
 
             break;
@@ -175,7 +175,7 @@ RMM::mimeGroupStr2Enum(const QCString & s)
         case 'i':
         case 'I':
 
-            if (stricmp(s, "image") == 0)
+            if (qstricmp(s, "image") == 0)
                 t = MimeGroupImage;
 
             break;
@@ -183,10 +183,10 @@ RMM::mimeGroupStr2Enum(const QCString & s)
         case 'm':
         case 'M':
 
-            if (stricmp(s, "message") == 0)
+            if (qstricmp(s, "message") == 0)
                 t = MimeGroupMessage;
 
-            else if (stricmp(s, "multipart") == 0)
+            else if (qstricmp(s, "multipart") == 0)
                 t = MimeGroupMultiPart;
 
             break;
@@ -194,7 +194,7 @@ RMM::mimeGroupStr2Enum(const QCString & s)
         case 't':
         case 'T':
 
-            if (stricmp(s, "text") == 0)
+            if (qstricmp(s, "text") == 0)
                 t = MimeGroupText;
 
             break;
@@ -202,7 +202,7 @@ RMM::mimeGroupStr2Enum(const QCString & s)
         case 'v':
         case 'V':
 
-            if (stricmp(s, "video") == 0)
+            if (qstricmp(s, "video") == 0)
                 t = MimeGroupVideo;
 
             break;
@@ -282,7 +282,7 @@ RMM::mimeValueStr2Enum(const QCString & s)
         case 'a':
         case 'A':
 
-            if (stricmp(s, "alternative") == 0)
+            if (qstricmp(s, "alternative") == 0)
                 st = MimeValueAlternative;
 
             break;
@@ -290,7 +290,7 @@ RMM::mimeValueStr2Enum(const QCString & s)
         case 'b':
         case 'B':
 
-            if (stricmp(s, "basic") == 0)
+            if (qstricmp(s, "basic") == 0)
                 st = MimeValueBasic;
 
             break;
@@ -298,7 +298,7 @@ RMM::mimeValueStr2Enum(const QCString & s)
         case 'd':
         case 'D':
 
-            if (stricmp(s, "digest") == 0)
+            if (qstricmp(s, "digest") == 0)
                 st = MimeValueDigest;
 
             break;
@@ -306,10 +306,10 @@ RMM::mimeValueStr2Enum(const QCString & s)
         case 'e':
         case 'E':
 
-            if (stricmp(s, "enriched") == 0)
+            if (qstricmp(s, "enriched") == 0)
                 st = MimeValueEnriched;
 
-            else if (stricmp(s, "external-body") == 0)
+            else if (qstricmp(s, "external-body") == 0)
                 st = MimeValueExternalBody;
 
             break;
@@ -317,7 +317,7 @@ RMM::mimeValueStr2Enum(const QCString & s)
         case 'g':
         case 'G':
 
-            if (stricmp(s, "gif") == 0)
+            if (qstricmp(s, "gif") == 0)
                 st = MimeValueGIF;
 
             break;
@@ -325,7 +325,7 @@ RMM::mimeValueStr2Enum(const QCString & s)
         case 'h':
         case 'H':
 
-            if (stricmp(s, "html") == 0)
+            if (qstricmp(s, "html") == 0)
                 st = MimeValueHTML;
 
             break;
@@ -333,7 +333,7 @@ RMM::mimeValueStr2Enum(const QCString & s)
         case 'j':
         case 'J':
 
-            if (stricmp(s, "jpeg") == 0)
+            if (qstricmp(s, "jpeg") == 0)
                 st = MimeValueJpeg;
 
             break;
@@ -341,10 +341,10 @@ RMM::mimeValueStr2Enum(const QCString & s)
         case 'm':
         case 'M':
 
-            if (stricmp(s, "mixed") == 0)
+            if (qstricmp(s, "mixed") == 0)
                 st = MimeValueMixed;
 
-            else if (stricmp(s, "mpeg") == 0)
+            else if (qstricmp(s, "mpeg") == 0)
                 st = MimeValueMPEG;
 
             break;
@@ -352,7 +352,7 @@ RMM::mimeValueStr2Enum(const QCString & s)
         case 'o':
         case 'O':
 
-            if (stricmp(s, "octet-stream") == 0)
+            if (qstricmp(s, "octet-stream") == 0)
                 st = MimeValueOctetStream;
 
             break;
@@ -360,19 +360,19 @@ RMM::mimeValueStr2Enum(const QCString & s)
         case 'p':
         case 'P':
 
-            if (stricmp(s, "plain") == 0)
+            if (qstricmp(s, "plain") == 0)
                 st = MimeValuePlain;
 
-            else if (stricmp(s, "png") == 0)
+            else if (qstricmp(s, "png") == 0)
                 st = MimeValuePNG;
             
-            else if (stricmp(s, "postscript") == 0)
+            else if (qstricmp(s, "postscript") == 0)
                 st = MimeValuePostScript;
 
-            else if (stricmp(s, "parallel") == 0)
+            else if (qstricmp(s, "parallel") == 0)
                 st = MimeValueParallel;
 
-            else if (stricmp(s, "partial") == 0)
+            else if (qstricmp(s, "partial") == 0)
                 st = MimeValuePartial;
 
             break;
@@ -380,10 +380,10 @@ RMM::mimeValueStr2Enum(const QCString & s)
         case 'r':
         case 'R':
 
-            if (stricmp(s, "rfc822") == 0)
+            if (qstricmp(s, "rfc822") == 0)
                 st = MimeValueRFC822;
 
-            else if (stricmp(s, "richtext") == 0)
+            else if (qstricmp(s, "richtext") == 0)
                 st = MimeValueRichtext;
 
             break;
@@ -396,10 +396,10 @@ RMM::mimeValueStr2Enum(const QCString & s)
                 case 'A':
                 case 'a':
                     
-                    if (stricmp(s, "x-msvideo") == 0)
+                    if (qstricmp(s, "x-msvideo") == 0)
                         st = MimeValueXavi;
             
-                    else if (stricmp(s, "x-aiff") == 0)
+                    else if (qstricmp(s, "x-aiff") == 0)
                         st = MimeValueXaiff;
 
                     break;
@@ -407,42 +407,42 @@ RMM::mimeValueStr2Enum(const QCString & s)
                 case 'C':
                 case 'c':
                 
-                    if (stricmp(s, "x-cpio") == 0)
+                    if (qstricmp(s, "x-cpio") == 0)
                         st = MimeValueXcpio;
                     break;
 
                 case 'D':
                 case 'd':
                     
-                    if (stricmp(s, "x-dvi") == 0)
+                    if (qstricmp(s, "x-dvi") == 0)
                         st = MimeValueXdvi;
-                    else if (stricmp(s, "x-deb") == 0)
+                    else if (qstricmp(s, "x-deb") == 0)
                         st = MimeValueXdeb;
                     break;
 
                 case 'L':
                 case 'l':
                 
-                    if (stricmp(s, "x-latex") == 0)
+                    if (qstricmp(s, "x-latex") == 0)
                         st = MimeValueXlatex;
                     break;
 
                 case 'P':
                 case 'p':
                 
-                    if (stricmp(s, "x-perl") == 0)
+                    if (qstricmp(s, "x-perl") == 0)
                         st = MimeValueXperl;
 
-                    else if (stricmp(s, "x-portable-anymap") == 0)
+                    else if (qstricmp(s, "x-portable-anymap") == 0)
                         st = MimeValueXpnm;
                     
-                    else if (stricmp(s, "x-portable-bitmap") == 0)
+                    else if (qstricmp(s, "x-portable-bitmap") == 0)
                         st = MimeValueXpbm;
                     
-                    else if (stricmp(s, "x-portable-graymap") == 0)
+                    else if (qstricmp(s, "x-portable-graymap") == 0)
                         st = MimeValueXpgm;
                     
-                    else if (stricmp(s, "x-portable-pixmap") == 0)
+                    else if (qstricmp(s, "x-portable-pixmap") == 0)
                         st = MimeValueXppm;
 
                     break;
@@ -450,13 +450,13 @@ RMM::mimeValueStr2Enum(const QCString & s)
                 case 'R':
                 case 'r':
 
-                    if (stricmp(s, "x-rar") == 0)
+                    if (qstricmp(s, "x-rar") == 0)
                         st = MimeValueXrar;
 
-                    else if (stricmp(s, "x-cmu-raster") == 0)
+                    else if (qstricmp(s, "x-cmu-raster") == 0)
                         st = MimeValueXras;
             
-                    else if (stricmp(s, "x-rgb") == 0)
+                    else if (qstricmp(s, "x-rgb") == 0)
                         st = MimeValueXrgb;
 
                     break;
@@ -464,13 +464,13 @@ RMM::mimeValueStr2Enum(const QCString & s)
                 case 'S':
                 case 's':
     
-                    if (stricmp(s, "x-sh") == 0)
+                    if (qstricmp(s, "x-sh") == 0)
                         st = MimeValueXsh;
 
-                    else if (stricmp(s, "x-shar") == 0)
+                    else if (qstricmp(s, "x-shar") == 0)
                         st = MimeValueXshar;
                     
-                    else if (stricmp(s, "x-sgi-movie") == 0)
+                    else if (qstricmp(s, "x-sgi-movie") == 0)
                         st = MimeValueXsgi;
 
                     break;
@@ -478,19 +478,19 @@ RMM::mimeValueStr2Enum(const QCString & s)
                 case 'T':
                 case 't':
                     
-                    if (stricmp(s, "x-tar") == 0)
+                    if (qstricmp(s, "x-tar") == 0)
                         st = MimeValueXtar;
 
-                    else if (stricmp(s, "x-tgz") == 0)
+                    else if (qstricmp(s, "x-tgz") == 0)
                         st = MimeValueXtgz;
 
-                    else if (stricmp(s, "x-tcl") == 0)
+                    else if (qstricmp(s, "x-tcl") == 0)
                         st = MimeValueXtcl;
 
-                    else if (stricmp(s, "x-tex") == 0)
+                    else if (qstricmp(s, "x-tex") == 0)
                         st = MimeValueXtex;
 
-                    else if (stricmp(s, "x-troff") == 0)
+                    else if (qstricmp(s, "x-troff") == 0)
                         st = MimeValueXtroff;
 
                     break;
@@ -498,10 +498,10 @@ RMM::mimeValueStr2Enum(const QCString & s)
                 case 'X':
                 case 'x':
 
-                    if (stricmp(s, "x-xbitmap") == 0)
+                    if (qstricmp(s, "x-xbitmap") == 0)
                         st = MimeValueXxbm;
                     
-                    else if (stricmp(s, "x-xpixmap") == 0)
+                    else if (qstricmp(s, "x-xpixmap") == 0)
                         st = MimeValueXxpm;
                 
                     break;
@@ -509,14 +509,14 @@ RMM::mimeValueStr2Enum(const QCString & s)
                 case 'W':
                 case 'w':
                     
-                    if (stricmp(s, "x-wav") == 0)
+                    if (qstricmp(s, "x-wav") == 0)
                         st = MimeValueXwav;
                     break;
                 
                 case 'Z':
                 case 'z':
 
-                    if (stricmp(s, "x-zip") == 0)
+                    if (qstricmp(s, "x-zip") == 0)
                         st = MimeValueXzip;
                     break;
     
@@ -771,14 +771,14 @@ RMM::RCteStr2Enum(const QCString & s)
 
         case '7':
 
-            if (stricmp(s, "7bit") == 0)
+            if (qstricmp(s, "7bit") == 0)
                 cte = CteType7bit;
 
             break;
 
         case '8':
 
-            if (stricmp(s, "8bit") == 0)
+            if (qstricmp(s, "8bit") == 0)
                 cte = CteType8bit;
 
             break;
@@ -786,10 +786,10 @@ RMM::RCteStr2Enum(const QCString & s)
         case 'b':
         case 'B':
 
-            if (stricmp(s, "binary") == 0)
+            if (qstricmp(s, "binary") == 0)
                 cte = CteTypeBinary;
 
-            else if (stricmp(s, "base64") == 0)
+            else if (qstricmp(s, "base64") == 0)
                 cte = CteTypeBase64;
 
             break;
@@ -797,7 +797,7 @@ RMM::RCteStr2Enum(const QCString & s)
         case 'q':
         case 'Q':
 
-            if (stricmp(s, "quoted-printable") == 0)
+            if (qstricmp(s, "quoted-printable") == 0)
                 cte = CteTypeQuotedPrintable;
 
             break;
@@ -1161,7 +1161,7 @@ RMM::mimeGroupToIconName(MimeGroup t, MimeValue st)
 RMM::headerNameToType(const QCString & headerName)
 {
     for (int i = 0; i < HeaderUnknown + 1; i++)
-        if (0 == stricmp(headerName, headerNames[i]))
+        if (0 == qstricmp(headerName, headerNames[i]))
             return (HeaderType)i;
 
     return HeaderUnknown;

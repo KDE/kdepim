@@ -158,7 +158,7 @@ Envelope::has(const QCString & headerName)
     parse();
 
     for (HeaderListIterator it(headerList_); it.current(); ++it)
-        if (0 == stricmp(it.current()->headerName(), headerName))
+        if (0 == qstricmp(it.current()->headerName(), headerName))
             return true;
 
     return false;
@@ -170,7 +170,7 @@ Envelope::get(const QCString & s)
     parse();
 
     for (HeaderListIterator it(headerList_); it.current(); ++it)
-        if (0 == stricmp(it.current()->headerName(), s))
+        if (0 == qstricmp(it.current()->headerName(), s))
             return *it.current();
 
     Header * h = new Header(s + ":");
@@ -243,7 +243,7 @@ Envelope::set(const QCString & headerName, const QCString & s)
     parse();
 
     for (HeaderListIterator it(headerList_); it.current(); ++it)
-        if (0 == stricmp(it.current()->headerName(), headerName)) {
+        if (0 == qstricmp(it.current()->headerName(), headerName)) {
             *it.current() = headerName + ": " + s;
             break;
         }

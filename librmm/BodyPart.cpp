@@ -222,7 +222,7 @@ BodyPart::_parse()
     //rmmDebug("contentType.type() == " + contentType.type());
     
     // If this isn't multipart, we've finished parsing.
-    if (stricmp(contentType.type(), "multipart") != 0) {
+    if (qstricmp(contentType.type(), "multipart") != 0) {
         mimeGroup_       = mimeGroupStr2Enum(contentType.type());
         mimeValue_    = mimeValueStr2Enum(contentType.subType());
 
@@ -238,7 +238,7 @@ BodyPart::_parse()
     //rmmDebug("Looking for boundary");
 
     for (it = parameterList.begin(); it != parameterList.end(); ++it)
-        if (0 == stricmp((*it).attribute(), "boundary"))
+        if (0 == qstricmp((*it).attribute(), "boundary"))
             boundary_ = (*it).value();
     
     //rmmDebug("boundary == \"" + boundary_ + "\"");
