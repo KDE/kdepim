@@ -319,10 +319,6 @@ class KABCore : public KAB::Core
 
     void configurationChanged();
 
-  signals:
-    void contactSelected( const QString &name );
-    void contactSelected( const QPixmap &pixmap );
-
   private slots:
     void setJumpButtonBarVisible( bool visible );
     void setDetailsVisible( bool visible );

@@ -288,13 +288,6 @@ void KABCore::setContactSelected( const QString &uid )
   if ( !mDetails->isHidden() )
     mDetails->setAddressee( addr );
 
-  if ( !addr.isEmpty() ) {
-    emit contactSelected( addr.formattedName() );
-    KABC::Picture pic = addr.photo();
-    if ( pic.isIntern() )
-      emit contactSelected( pic.data() );
-  }
-
   mExtensionManager->setSelectionChanged();
 
   // update the actions

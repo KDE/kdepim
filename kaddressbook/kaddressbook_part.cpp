@@ -35,7 +35,6 @@
 
 #include "kabcore.h"
 #include "kaddressbookiface.h"
-#include "libkdepim/infoextension.h"
 
 #include "kaddressbook_part.h"
 
@@ -72,12 +71,6 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
 
   KParts::StatusBarExtension *statusBar = new KParts::StatusBarExtension( this );
   mCore->setStatusBar( statusBar->statusBar() );
-
-  KParts::InfoExtension *info = new KParts::InfoExtension( this, "KABPart" );
-  connect( mCore, SIGNAL( contactSelected( const QString& ) ),
-           info, SIGNAL( textChanged( const QString& ) ) );
-  connect( mCore, SIGNAL( contactSelected( const QPixmap& ) ),
-           info, SIGNAL( iconChanged( const QPixmap& ) ) );
 
   setXMLFile( "kaddressbook_part.rc" );
 }
