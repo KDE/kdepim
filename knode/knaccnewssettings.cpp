@@ -211,7 +211,7 @@ void KNAccNewsSettings::slotSubBtnClicked()
 
   if (it) {
     KNNntpAccount *a = static_cast<KNNntpAccount*>(it->data());
-    gManager->showGroupDialog(a);
+    gManager->showGroupDialog(a,this);
   }
 }
 
