@@ -29,6 +29,5 @@ kpalmdoc_SOURCES = kpalmdoc_dlgbase.ui kpalmdoc_dlg.cc kpalmdoc.cpp
 kpalmdoc_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kpalmdoc_LDADD = $(LIB_KFILE) $(PISOCK_LIB) ../../lib/libkpilot.la libpalmdoc_shared.la
 
-appsdir = $(kde_appsdir)/Utilities
+xdg_apps_DATA = kpalmdoc.desktop 
 servicetypedir = $(kde_servicetypesdir)
-apps_DATA = kpalmdoc.desktop 

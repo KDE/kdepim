@@ -22,5 +22,4 @@ METASOURCES = AUTO
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kcmkabconfig.pot
 
-pim_DATA = kabconfig.desktop kabldapconfig.desktop
-pimdir = $(kde_appsdir)/PIM
+xdg_apps_DATA = kabconfig.desktop kabldapconfig.desktop
