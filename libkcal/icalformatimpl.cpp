@@ -154,20 +154,20 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
   for ( QStringList::Iterator it = tmpStrList.begin();
         it != tmpStrList.end();
         ++it )
-    addPropValue(vevent, VCAttachProp, (*it).ascii());
+    addPropValue(vevent, VCAttachProp, (*it).local8Bit());
 
   // resources
   tmpStrList = anEvent->resources();
   tmpStr = tmpStrList.join(";");
   if (!tmpStr.isEmpty())
-    addPropValue(vevent, VCResourcesProp, tmpStr.ascii());
+    addPropValue(vevent, VCResourcesProp, tmpStr.local8Bit());
 
 #endif
 
 // TODO: transparency
   // transparency
 //  tmpStr.sprintf("%i",anEvent->getTransparency());
-//  addPropValue(vevent, VCTranspProp, tmpStr.ascii());
+//  addPropValue(vevent, VCTranspProp, tmpStr.local8Bit());
 
   return vevent;
 }
@@ -189,7 +189,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
   // unique id
   icalcomponent_add_property(parent,icalproperty_new_uid(
-      incidence->VUID().latin1()));
+      incidence->VUID().local8Bit()));
 
   // revision
   icalcomponent_add_property(parent,icalproperty_new_sequence(
@@ -204,7 +204,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
   // organizer stuff
   icalcomponent_add_property(parent,icalproperty_new_organizer(
-      ("MAILTO:" + incidence->organizer()).utf8()));
+      ("MAILTO:" + incidence->organizer()).local8Bit()));
 
   // attendees
   if (incidence->attendeeCount() != 0) {
@@ -218,18 +218,18 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   // description
   if (!incidence->description().isEmpty()) {
     icalcomponent_add_property(parent,icalproperty_new_description(
-        incidence->description().utf8()));
+        incidence->description().local8Bit()));
   }
 
   // summary
   if (!incidence->summary().isEmpty()) {
     icalcomponent_add_property(parent,icalproperty_new_summary(
-        incidence->summary().utf8()));
+        incidence->summary().local8Bit()));
   }
 
 // TODO:
   // status
-//  addPropValue(parent, VCStatusProp, incidence->getStatusStr().ascii());
+//  addPropValue(parent, VCStatusProp, incidence->getStatusStr().local8Bit());
 
   // secrecy
   const char *classStr;
@@ -255,7 +255,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   QStringList categories = incidence->categories();
   QStringList::Iterator it;
   for(it = categories.begin(); it != categories.end(); ++it ) {
-    icalcomponent_add_property(parent,icalproperty_new_categories((*it).utf8()));
+    icalcomponent_add_property(parent,icalproperty_new_categories((*it).local8Bit()));
   }
 // TODO: Ensure correct concatenation of categories properties.
 
@@ -287,15 +287,15 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   // related event
   if (incidence->relatedTo()) {
     icalcomponent_add_property(parent,icalproperty_new_relatedto(
-        incidence->relatedTo()->VUID().latin1()));
+        incidence->relatedTo()->VUID().local8Bit()));
   }
 
   // pilot sync stuff
   icalproperty *p =
-      icalproperty_new_x((QString::number(incidence->pilotId())).utf8());
+      icalproperty_new_x((QString::number(incidence->pilotId())).local8Bit());
   icalproperty_set_x_name(p,"X-PILOTID");
   icalcomponent_add_property(parent,p);
-  p = icalproperty_new_x((QString::number(incidence->syncStatus())).utf8());
+  p = icalproperty_new_x((QString::number(incidence->syncStatus())).local8Bit());
   icalproperty_set_x_name(p,"X-PILOTSTAT");
   icalcomponent_add_property(parent,p);
 
@@ -335,10 +335,10 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
 icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
 {
-  icalproperty *p = icalproperty_new_attendee("mailto:" + attendee->email().utf8());
+  icalproperty *p = icalproperty_new_attendee("mailto:" + attendee->email().local8Bit());
 
   if (!attendee->name().isEmpty()) {
-    icalproperty_add_parameter(p,icalparameter_new_cn(attendee->name()));
+    icalproperty_add_parameter(p,icalparameter_new_cn(attendee->name().local8Bit()));
   }
 
   icalproperty_add_parameter(p,icalparameter_new_rsvp(
@@ -653,7 +653,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
     } else {
       tmpStr += qDateTimeToISO(anEvent->rEndDate, FALSE);
     }
-    addPropValue(vevent,VCRRuleProp, tmpStr.ascii());
+    addPropValue(vevent,VCRRuleProp, tmpStr.local8Bit());
 
   } // event repeats
 #endif
@@ -905,12 +905,12 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
 {
   icalparameter *p = 0;
 
-  QString email = QString::fromUtf8(icalproperty_get_attendee(attendee));
+  QString email = QString::fromLocal8Bit(icalproperty_get_attendee(attendee));
 
   QString name;
   p = icalproperty_get_first_parameter(attendee,ICAL_CN_PARAMETER);
   if (p) {
-    name = icalparameter_get_cn(p);
+    name = QString::fromLocal8Bit(icalparameter_get_cn(p));
   } else {
   }
 
@@ -1012,7 +1012,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_ORGANIZER_PROPERTY:  // organizer
         text = icalproperty_get_organizer(p);
-        incidence->setOrganizer(QString::fromUtf8(text));
+        incidence->setOrganizer(QString::fromLocal8Bit(text));
         break;
 
       case ICAL_ATTENDEE_PROPERTY:  // attendee
@@ -1036,12 +1036,12 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_DESCRIPTION_PROPERTY:  // description
         text = icalproperty_get_description(p);
-        incidence->setDescription(QString::fromUtf8(text));
+        incidence->setDescription(QString::fromLocal8Bit(text));
         break;
 
       case ICAL_SUMMARY_PROPERTY:  // summary
         text = icalproperty_get_summary(p);
-        incidence->setSummary(QString::fromUtf8(text));
+        incidence->setSummary(QString::fromLocal8Bit(text));
         break;
 
 #if 0
@@ -1061,7 +1061,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_CATEGORIES_PROPERTY:  // categories
         text = icalproperty_get_categories(p);
-        categories.append(QString::fromUtf8(text));
+        categories.append(QString::fromLocal8Bit(text));
         break;
 
       case ICAL_RRULE_PROPERTY:
@@ -1088,10 +1088,10 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
       case ICAL_X_PROPERTY:
         if (strcmp(icalproperty_get_name(p),"X-PILOTID") == 0) {
           text = icalproperty_get_value_as_string(p);
-          incidence->setPilotId(QString::fromUtf8(text).toInt());
+          incidence->setPilotId(QString::fromLocal8Bit(text).toInt());
         } else if (strcmp(icalproperty_get_name(p),"X-PILOTSTAT") == 0) {
           text = icalproperty_get_value_as_string(p);
-          incidence->setSyncStatus(QString::fromUtf8(text).toInt());
+          incidence->setSyncStatus(QString::fromLocal8Bit(text).toInt());
         }
         break;
 
@@ -1687,7 +1687,7 @@ icalcomponent *ICalFormatImpl::createCalendarComponent()
   icalproperty *p;
 
   // Product Identifier
-  p = icalproperty_new_prodid(const_cast<char *>(CalFormat::productId().latin1()));
+  p = icalproperty_new_prodid(CalFormat::productId().local8Bit().data());
   icalcomponent_add_property(calendar,p);
 
   // TODO: Add time zone
@@ -1730,7 +1730,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
   // warn the user that we might have trouble reading non-known calendar.
   if ((curVO = isAPropertyOf(vcal, VCProdIdProp)) != 0) {
     char *s = fakeCString(vObjectUStringZValue(curVO));
-    if (strcmp(CalFormat::productId().latin1(), s) != 0)
+    if (strcmp(CalFormat::productId().local8Bit(), s) != 0)
       if (mEnableDialogs)
 	KMessageBox::information(mTopWidget,
 			     i18n("This vCalendar file was not created by KOrganizer\n"

@@ -96,7 +96,7 @@ bool VCalFormat::save(const QString &fileName)
   //  addPropValue(vcal,VCLocationProp, "0.0");
   addPropValue(vcal,VCProdIdProp, productId());
   tmpStr = mCalendar->getTimeZoneStr();
-  addPropValue(vcal,VCTimeZoneProp, tmpStr.latin1());
+  addPropValue(vcal,VCTimeZoneProp, tmpStr.local8Bit());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
 
   // TODO STUFF
@@ -146,9 +146,7 @@ bool VCalFormat::save(const QString &fileName)
   }
 #endif
 
-  writeVObjectToFile(const_cast<char *>(
-                       (const char *)QFile::encodeName(fileName)
-                     ),vcal);
+  writeVObjectToFile(QFile::encodeName(fileName).data() ,vcal);
   cleanVObjects(vcal);
   cleanStrTbl();
 
@@ -171,7 +169,7 @@ VCalDrag *VCalFormat::createDrag(Event *selectedEv, QWidget *owner)
 
   addPropValue(vcal,VCProdIdProp, productId());
   tmpStr = mCalendar->getTimeZoneStr();
-  addPropValue(vcal,VCTimeZoneProp, tmpStr.latin1());
+  addPropValue(vcal,VCTimeZoneProp, tmpStr.local8Bit());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
 
   vevent = eventToVEvent(selectedEv);
@@ -195,7 +193,7 @@ VCalDrag *VCalFormat::createDragTodo(Todo *selectedEv, QWidget *owner)
 
   addPropValue(vcal,VCProdIdProp, productId());
   tmpStr = mCalendar->getTimeZoneStr();
-  addPropValue(vcal,VCTimeZoneProp, tmpStr.latin1());
+  addPropValue(vcal,VCTimeZoneProp, tmpStr.local8Bit());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
 
   vevent = eventToVTodo(selectedEv);
@@ -285,7 +283,7 @@ bool VCalFormat::copyEvent(Event *selectedEv)
   //  addPropValue(vcal,VCLocationProp, "0.0");
   addPropValue(vcal,VCProdIdProp, productId());
   tmpStr = mCalendar->getTimeZoneStr();
-  addPropValue(vcal,VCTimeZoneProp, tmpStr.latin1());
+  addPropValue(vcal,VCTimeZoneProp, tmpStr.local8Bit());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
 
   vevent = eventToVEvent(selectedEv);
@@ -313,7 +311,8 @@ Event *VCalFormat::pasteEvent(const QDate &newDate, const QTime *newTime)
   QClipboard *cb = QApplication::clipboard();
   int bufsize;
   const char * buf;
-  buf = cb->text().latin1();  // vCalendar object is in latin1
+  buf = cb->text().local8Bit();  // vCalendar object is in latin1
+				//lukas: yeah, so why not screw it :(
   bufsize = strlen(buf);
 
   if (!VCalDrag::decode(cb->data(),&vcal)) {
@@ -390,36 +389,35 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   if (anEvent->hasDueDate()) {
     tmpStr = qDateTimeToISO(anEvent->dtDue(),
                             !anEvent->doesFloat());
-    addPropValue(vtodo, VCDueProp, tmpStr.latin1());
+    addPropValue(vtodo, VCDueProp, tmpStr.local8Bit());
   }
 
   // start date
   if (anEvent->hasStartDate()) {
     tmpStr = qDateTimeToISO(anEvent->dtStart(),
 	                    !anEvent->doesFloat());
-    addPropValue(vtodo, VCDTstartProp, tmpStr.latin1());
+    addPropValue(vtodo, VCDTstartProp, tmpStr.local8Bit());
   }
 
   // creation date
   tmpStr = qDateTimeToISO(anEvent->created());
-  addPropValue(vtodo, VCDCreatedProp, tmpStr.latin1());
+  addPropValue(vtodo, VCDCreatedProp, tmpStr.local8Bit());
 
   // unique id
   addPropValue(vtodo, VCUniqueStringProp,
-	       anEvent->VUID().latin1());
+	       anEvent->VUID().local8Bit());
 
   // revision
   tmpStr.sprintf("%i", anEvent->revision());
-  addPropValue(vtodo, VCSequenceProp, tmpStr.latin1());
+  addPropValue(vtodo, VCSequenceProp, tmpStr.local8Bit());
 
   // last modification date
   tmpStr = qDateTimeToISO(anEvent->lastModified());
-  addPropValue(vtodo, VCLastModifiedProp, tmpStr.latin1());
+  addPropValue(vtodo, VCLastModifiedProp, tmpStr.local8Bit());
 
   // organizer stuff
   tmpStr = "MAILTO:" + anEvent->organizer();
-  addPropValue(vtodo, ICOrganizerProp,
-	       tmpStr.utf8());
+  addPropValue(vtodo, ICOrganizerProp, tmpStr.local8Bit());
 
   // attendees
   if (anEvent->attendeeCount() != 0) {
@@ -440,7 +438,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
       else if (curAttendee->name().isEmpty() &&
 	       curAttendee->email().isEmpty())
 	kdDebug() << "warning! this Event has an attendee w/o name or email!" << endl;
-      VObject *aProp = addPropValue(vtodo, VCAttendeeProp, (const char *)tmpStr.utf8());
+      VObject *aProp = addPropValue(vtodo, VCAttendeeProp, tmpStr.local8Bit());
       addPropValue(aProp, VCRSVPProp, curAttendee->RSVP() ? "TRUE" : "FALSE");
       addPropValue(aProp, VCStatusProp, writeStatus(curAttendee->status()));
     }
@@ -449,14 +447,14 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   // description BL:
   if (!anEvent->description().isEmpty()) {
     VObject *d = addPropValue(vtodo, VCDescriptionProp,
-			      anEvent->description().utf8());
+			      anEvent->description().local8Bit());
     if (anEvent->description().find('\n') != -1)
       addProp(d, VCQuotedPrintableProp);
   }
 
   // summary
   if (!anEvent->summary().isEmpty())
-    addPropValue(vtodo, VCSummaryProp, anEvent->summary().utf8());
+    addPropValue(vtodo, VCSummaryProp, anEvent->summary().local8Bit());
 
   // completed
   // status
@@ -466,17 +464,17 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   // completion date
   if (anEvent->hasCompletedDate()) {
     tmpStr = qDateTimeToISO(anEvent->completed());
-    addPropValue(vtodo, VCCompletedProp, tmpStr.latin1());
+    addPropValue(vtodo, VCCompletedProp, tmpStr.local8Bit());
   }
 
   // priority
   tmpStr.sprintf("%i",anEvent->priority());
-  addPropValue(vtodo, VCPriorityProp, tmpStr.latin1());
+  addPropValue(vtodo, VCPriorityProp, tmpStr.local8Bit());
 
   // related event
   if (anEvent->relatedTo()) {
     addPropValue(vtodo, VCRelatedToProp,
-	         anEvent->relatedTo()->VUID().latin1());
+	         anEvent->relatedTo()->VUID().local8Bit());
   }
 
   // categories
@@ -498,7 +496,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   }
   if (!tmpStr.isEmpty()) {
     tmpStr.truncate(tmpStr.length()-1);
-    addPropValue(vtodo, VCCategoriesProp, tmpStr.utf8());
+    addPropValue(vtodo, VCCategoriesProp, tmpStr.local8Bit());
   }
 
   // alarm stuff
@@ -509,31 +507,29 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
     if (alarm->enabled()) {
       VObject *a = addProp(vtodo, VCDAlarmProp);
       tmpStr = qDateTimeToISO(alarm->time());
-      addPropValue(a, VCRunTimeProp, tmpStr.latin1());
+      addPropValue(a, VCRunTimeProp, tmpStr.local8Bit());
       addPropValue(a, VCRepeatCountProp, "1");
       addPropValue(a, VCDisplayStringProp, "beep!");
       if (!alarm->audioFile().isEmpty()) {
         a = addProp(vtodo, VCAAlarmProp);
-        addPropValue(a, VCRunTimeProp, tmpStr.latin1());
+        addPropValue(a, VCRunTimeProp, tmpStr.local8Bit());
         addPropValue(a, VCRepeatCountProp, "1");
-        addPropValue(a, VCAudioContentProp,
-          (const char *)QFile::encodeName(alarm->audioFile()));
+        addPropValue(a, VCAudioContentProp, QFile::encodeName(alarm->audioFile()));
       }
       if (!alarm->programFile().isEmpty()) {
         a = addProp(vtodo, VCPAlarmProp);
-        addPropValue(a, VCRunTimeProp, tmpStr.latin1());
+        addPropValue(a, VCRunTimeProp, tmpStr.local8Bit());
         addPropValue(a, VCRepeatCountProp, "1");
-        addPropValue(a, VCProcedureNameProp,
-          (const char *)QFile::encodeName(alarm->programFile()));
+        addPropValue(a, VCProcedureNameProp, QFile::encodeName(alarm->programFile()));
       }
     }
   }
 
   // pilot sync stuff
   tmpStr.sprintf("%i",anEvent->pilotId());
-  addPropValue(vtodo, KPilotIdProp, tmpStr.latin1());
+  addPropValue(vtodo, KPilotIdProp, tmpStr.local8Bit());
   tmpStr.sprintf("%i",anEvent->syncStatus());
-  addPropValue(vtodo, KPilotStatusProp, tmpStr.latin1());
+  addPropValue(vtodo, KPilotStatusProp, tmpStr.local8Bit());
 
   return vtodo;
 }
@@ -549,36 +545,35 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   // start and end time
   tmpStr = qDateTimeToISO(anEvent->dtStart(),
 			  !anEvent->doesFloat());
-  addPropValue(vevent, VCDTstartProp, tmpStr.latin1());
+  addPropValue(vevent, VCDTstartProp, tmpStr.local8Bit());
 
   // events that have time associated but take up no time should
   // not have both DTSTART and DTEND.
   if (anEvent->dtStart() != anEvent->dtEnd()) {
     tmpStr = qDateTimeToISO(anEvent->dtEnd(),
 			    !anEvent->doesFloat());
-    addPropValue(vevent, VCDTendProp, tmpStr.latin1());
+    addPropValue(vevent, VCDTendProp, tmpStr.local8Bit());
   }
 
   // creation date
   tmpStr = qDateTimeToISO(anEvent->created());
-  addPropValue(vevent, VCDCreatedProp, tmpStr.latin1());
+  addPropValue(vevent, VCDCreatedProp, tmpStr.local8Bit());
 
   // unique id
   addPropValue(vevent, VCUniqueStringProp,
-	       anEvent->VUID().latin1());
+	       anEvent->VUID().local8Bit());
 
   // revision
   tmpStr.sprintf("%i", anEvent->revision());
-  addPropValue(vevent, VCSequenceProp, tmpStr.latin1());
+  addPropValue(vevent, VCSequenceProp, tmpStr.local8Bit());
 
   // last modification date
   tmpStr = qDateTimeToISO(anEvent->lastModified());
-  addPropValue(vevent, VCLastModifiedProp, tmpStr.latin1());
+  addPropValue(vevent, VCLastModifiedProp, tmpStr.local8Bit());
 
   // attendee and organizer stuff
   tmpStr = "MAILTO:" + anEvent->organizer();
-  addPropValue(vevent, ICOrganizerProp,
-	       tmpStr.utf8());
+  addPropValue(vevent, ICOrganizerProp, tmpStr.local8Bit());
 
   if (anEvent->attendeeCount() != 0) {
     QPtrList<Attendee> al = anEvent->attendees();
@@ -599,7 +594,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
       else if (curAttendee->name().isEmpty() &&
 	       curAttendee->email().isEmpty())
 	kdDebug() << "warning! this Event has an attendee w/o name or email!" << endl;
-      VObject *aProp = addPropValue(vevent, VCAttendeeProp, (const char *)tmpStr.utf8());
+      VObject *aProp = addPropValue(vevent, VCAttendeeProp, tmpStr.local8Bit());
       addPropValue(aProp, VCRSVPProp, curAttendee->RSVP() ? "TRUE" : "FALSE");;
       addPropValue(aProp, VCStatusProp, writeStatus(curAttendee->status()));
     }
@@ -694,7 +689,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     } else {
       tmpStr += qDateTimeToISO(anEvent->recurrence()->endDate(), FALSE);
     }
-    addPropValue(vevent,VCRRuleProp, tmpStr.latin1());
+    addPropValue(vevent,VCRRuleProp, tmpStr.local8Bit());
 
   } // event repeats
 
@@ -709,24 +704,24 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   }
   if (!tmpStr2.isEmpty()) {
     tmpStr2.truncate(tmpStr2.length()-1);
-    addPropValue(vevent, VCExDateProp, tmpStr2.latin1());
+    addPropValue(vevent, VCExDateProp, tmpStr2.local8Bit());
   }
 
   // description
   if (!anEvent->description().isEmpty()) {
     VObject *d = addPropValue(vevent, VCDescriptionProp,
-			      anEvent->description().utf8());
+			      anEvent->description().local8Bit());
     if (anEvent->description().find('\n') != -1)
       addProp(d, VCQuotedPrintableProp);
   }
 
   // summary
   if (!anEvent->summary().isEmpty())
-    addPropValue(vevent, VCSummaryProp, anEvent->summary().utf8());
+    addPropValue(vevent, VCSummaryProp, anEvent->summary().local8Bit());
 
   // status
 // TODO: define Event status
-//  addPropValue(vevent, VCStatusProp, anEvent->statusStr().latin1());
+//  addPropValue(vevent, VCStatusProp, anEvent->statusStr().local8Bit());
 
   // secrecy
   const char *text = 0;
@@ -764,7 +759,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   }
   if (!tmpStr.isEmpty()) {
     tmpStr.truncate(tmpStr.length()-1);
-    addPropValue(vevent, VCCategoriesProp, tmpStr.utf8());
+    addPropValue(vevent, VCCategoriesProp, tmpStr.local8Bit());
   }
 
   // attachments
@@ -772,13 +767,13 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   for ( QStringList::Iterator it = tmpStrList.begin();
         it != tmpStrList.end();
         ++it )
-    addPropValue(vevent, VCAttachProp, (*it).latin1());
+    addPropValue(vevent, VCAttachProp, (*it).local8Bit());
 
   // resources
   tmpStrList = anEvent->resources();
   tmpStr = tmpStrList.join(";");
   if (!tmpStr.isEmpty())
-    addPropValue(vevent, VCResourcesProp, tmpStr.latin1());
+    addPropValue(vevent, VCResourcesProp, tmpStr.local8Bit());
 
   // alarm stuff
   QPtrList<Alarm> alarms = anEvent->alarms();
@@ -787,45 +782,43 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     if (alarm->enabled()) {
       VObject *a = addProp(vevent, VCDAlarmProp);
       tmpStr = qDateTimeToISO(alarm->time());
-      addPropValue(a, VCRunTimeProp, tmpStr.latin1());
+      addPropValue(a, VCRunTimeProp, tmpStr.local8Bit());
       addPropValue(a, VCRepeatCountProp, "1");
       addPropValue(a, VCDisplayStringProp, "beep!");
       if (!alarm->audioFile().isEmpty()) {
         a = addProp(vevent, VCAAlarmProp);
-        addPropValue(a, VCRunTimeProp, tmpStr.latin1());
+        addPropValue(a, VCRunTimeProp, tmpStr.local8Bit());
         addPropValue(a, VCRepeatCountProp, "1");
-        addPropValue(a, VCAudioContentProp,
-          (const char *)QFile::encodeName(alarm->audioFile()));
+        addPropValue(a, VCAudioContentProp, QFile::encodeName(alarm->audioFile()));
       }
       if (!alarm->programFile().isEmpty()) {
         a = addProp(vevent, VCPAlarmProp);
-        addPropValue(a, VCRunTimeProp, tmpStr.latin1());
+        addPropValue(a, VCRunTimeProp, tmpStr.local8Bit());
         addPropValue(a, VCRepeatCountProp, "1");
-        addPropValue(a, VCProcedureNameProp,
-          (const char *)QFile::encodeName(alarm->programFile()));
+        addPropValue(a, VCProcedureNameProp, QFile::encodeName(alarm->programFile()));
       }
     }
   }
 
   // priority
   tmpStr.sprintf("%i",anEvent->priority());
-  addPropValue(vevent, VCPriorityProp, tmpStr.latin1());
+  addPropValue(vevent, VCPriorityProp, tmpStr.local8Bit());
 
   // transparency
   tmpStr.sprintf("%i",anEvent->transparency());
-  addPropValue(vevent, VCTranspProp, tmpStr.latin1());
+  addPropValue(vevent, VCTranspProp, tmpStr.local8Bit());
 
   // related event
   if (anEvent->relatedTo()) {
     addPropValue(vevent, VCRelatedToProp,
-	         anEvent->relatedTo()->VUID().latin1());
+	         anEvent->relatedTo()->VUID().local8Bit());
   }
 
   // pilot sync stuff
   tmpStr.sprintf("%i",anEvent->pilotId());
-  addPropValue(vevent, KPilotIdProp, tmpStr.latin1());
+  addPropValue(vevent, KPilotIdProp, tmpStr.local8Bit());
   tmpStr.sprintf("%i",anEvent->syncStatus());
-  addPropValue(vevent, KPilotStatusProp, tmpStr.latin1());
+  addPropValue(vevent, KPilotStatusProp, tmpStr.local8Bit());
 
   return vevent;
 }
@@ -879,7 +872,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
       Attendee *a;
       VObject *vp;
       s = fakeCString(vObjectUStringZValue(vo));
-      QString tmpStr = QString::fromUtf8(s);
+      QString tmpStr = QString::fromLocal8Bit(s);
       deleteStr(s);
       tmpStr = tmpStr.simplifyWhiteSpace();
       int emailPos1, emailPos2;
@@ -912,14 +905,14 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
   // description for todo
   if ((vo = isAPropertyOf(vtodo, VCDescriptionProp)) != 0) {
     s = fakeCString(vObjectUStringZValue(vo));
-    anEvent->setDescription(QString::fromUtf8(s));
+    anEvent->setDescription(QString::fromLocal8Bit(s));
     deleteStr(s);
   }
 
   // summary
   if ((vo = isAPropertyOf(vtodo, VCSummaryProp))) {
     s = fakeCString(vObjectUStringZValue(vo));
-    anEvent->setSummary(QString::fromUtf8(s));
+    anEvent->setSummary(QString::fromLocal8Bit(s));
     deleteStr(s);
   }
 
@@ -1007,7 +1000,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
   int index2 = 0;
   if ((vo = isAPropertyOf(vtodo, VCCategoriesProp)) != 0) {
     s = fakeCString(vObjectUStringZValue(vo));
-    QString categories = QString::fromUtf8(s);
+    QString categories = QString::fromLocal8Bit(s);
     deleteStr(s);
     //const char* category;
     QString category;
@@ -1099,7 +1092,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       Attendee *a;
       VObject *vp;
       s = fakeCString(vObjectUStringZValue(vo));
-      QString tmpStr = QString::fromUtf8(s);
+      QString tmpStr = QString::fromLocal8Bit(s);
       deleteStr(s);
       tmpStr = tmpStr.simplifyWhiteSpace();
       int emailPos1, emailPos2;
@@ -1395,7 +1388,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   // summary
   if ((vo = isAPropertyOf(vevent, VCSummaryProp))) {
     s = fakeCString(vObjectUStringZValue(vo));
-    anEvent->setSummary(QString::fromUtf8(s));
+    anEvent->setSummary(QString::fromLocal8Bit(s));
     deleteStr(s);
   }
 
@@ -1404,9 +1397,9 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     s = fakeCString(vObjectUStringZValue(vo));
     if (!anEvent->description().isEmpty()) {
       anEvent->setDescription(anEvent->description() + "\n" +
-			      QString::fromUtf8(s));
+			      QString::fromLocal8Bit(s));
     } else {
-      anEvent->setDescription(QString::fromUtf8(s));
+      anEvent->setDescription(QString::fromLocal8Bit(s));
     }
     deleteStr(s);
   }
@@ -1451,7 +1444,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   int index2 = 0;
   if ((vo = isAPropertyOf(vevent, VCCategoriesProp)) != 0) {
     s = fakeCString(vObjectUStringZValue(vo));
-    QString categories = QString::fromUtf8(s);
+    QString categories = QString::fromLocal8Bit(s);
     deleteStr(s);
     //const char* category;
     QString category;
@@ -1655,7 +1648,7 @@ void VCalFormat::populate(VObject *vcal)
   // warn the user that we might have trouble reading non-known calendar.
   if ((curVO = isAPropertyOf(vcal, VCProdIdProp)) != 0) {
     char *s = fakeCString(vObjectUStringZValue(curVO));
-    if (strcmp(productId().latin1(), s) != 0)
+    if (strcmp(productId().local8Bit(), s) != 0)
       if (mEnableDialogs)
 	KMessageBox::information(mTopWidget,
 			     i18n("This vCalendar file was not created by KOrganizer\n"

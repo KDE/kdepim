@@ -71,6 +71,7 @@ bool ICalFormat::load(const QString &fileName)
     return false;
   }
   QTextStream ts( &file );
+  ts.setEncoding(QTextStream::UnicodeUTF8);
   QString text = ts.read();
   file.close();
 
@@ -78,7 +79,7 @@ bool ICalFormat::load(const QString &fileName)
   // TODO: Handle more than one VCALENDAR or non-VCALENDAR top components
   icalcomponent *calendar;
 
-  calendar = icalcomponent_new_from_string( const_cast<char *>(text.latin1()));
+  calendar = icalcomponent_new_from_string( text.local8Bit().data());
   //  kdDebug() << "Error: " << icalerror_perror() << endl;
   if (!calendar) {
     kdDebug() << "ICalFormat::load() parse error" << endl;
@@ -146,14 +147,15 @@ bool ICalFormat::save(const QString &fileName)
     return false;    
   }
   QTextStream ts( &file );
-  char *text = icalcomponent_as_ical_string( calendar );
+  ts.setEncoding(QTextStream::UnicodeUTF8);
+  const char *text = icalcomponent_as_ical_string( calendar );
   if (!text) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
                  i18n("libical error")));
     file.close();
     return false;
   }
-  ts << QString::fromLatin1(text);
+  ts << QString::fromLocal8Bit(text);
   file.close();
 
   return true;
@@ -171,7 +173,7 @@ VCalDrag *ICalFormat::createDrag(Event */*selectedEv*/, QWidget */*owner*/)
   
   addPropValue(vcal,VCProdIdProp, productId());
   tmpStr = mCalendar->getTimeZoneStr();
-  addPropValue(vcal,VCTimeZoneProp, tmpStr.latin1());
+  addPropValue(vcal,VCTimeZoneProp, tmpStr.local8Bit());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
   
   vevent = eventToVEvent(selectedEv);
@@ -198,7 +200,7 @@ VCalDrag *ICalFormat::createDragTodo(Todo */*selectedEv*/, QWidget */*owner*/)
   
   addPropValue(vcal,VCProdIdProp, productId());
   tmpStr = mCalendar->getTimeZoneStr();
-  addPropValue(vcal,VCTimeZoneProp, tmpStr.latin1());
+  addPropValue(vcal,VCTimeZoneProp, tmpStr.local8Bit());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
   
   vevent = eventToVTodo(selectedEv);
@@ -295,7 +297,7 @@ bool ICalFormat::copyEvent(Event */*selectedEv*/)
   //  addPropValue(vcal,VCLocationProp, "0.0");
   addPropValue(vcal,VCProdIdProp, productId());
   tmpStr = mCalendar->getTimeZoneStr();
-  addPropValue(vcal,VCTimeZoneProp, tmpStr.ascii());
+  addPropValue(vcal,VCTimeZoneProp, tmpStr.local8Bit());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
 
   vevent = eventToVEvent(selectedEv);
@@ -325,7 +327,7 @@ Event *ICalFormat::pasteEvent(const QDate &/*newDate*/,const QTime */*newTime*/)
   QClipboard *cb = QApplication::clipboard();
   int bufsize;
   const char * buf;
-  buf = cb->text().ascii();
+  buf = cb->text().local8Bit();
   bufsize = strlen(buf);
 
   if (!VCalDrag::decode(cb->data(),&vcal)) {
@@ -412,7 +414,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage(const QString &messageText)
   if (messageText.isEmpty()) return 0;
 
   icalcomponent *message;
-  message = icalparser_parse_string(messageText.latin1());
+  message = icalparser_parse_string(messageText.local8Bit());
   
   if (!message) return 0;
   

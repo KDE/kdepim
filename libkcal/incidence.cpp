@@ -133,13 +133,11 @@ int Incidence::revision() const
   return mRevision;
 }
 
-
 void Incidence::setDtStart(const QDateTime &dtStart)
 {
   recurrence()->setRecurStart( dtStart);
   IncidenceBase::setDtStart( dtStart );
 }
-
 
 void Incidence::setDescription(const QString &description)
 {

@@ -180,8 +180,7 @@ const QString &Calendar::getOwner() const
 void Calendar::setOwner(const QString &os)
 {
   int i;
-  // mOwner = os.ascii(); // to detach it
-  mOwner = os; // #### Why? This should be okay?
+  mOwner = os;
   i = mOwner.find(',');
   if (i != -1)
     mOwner = mOwner.left(i);
@@ -295,7 +294,7 @@ void Calendar::updateConfig()
 #endif
 
 // TODO: Fix time zone setting
-//  setTimeZone(KOPrefs::instance()->mTimeZone.latin1());
+//  setTimeZone(KOPrefs::instance()->mTimeZone.local8Bit());
 
   if (updateFlag)
     emit calUpdated((Event *) 0L);
