@@ -36,7 +36,7 @@
 #include <qobject.h>
 #include <qvaluevector.h>
 
-#include <kleo/cryptobackend.h>
+#include "kleo/cryptobackend.h"
 
 namespace Kleo {
   class BackendConfigWidget;

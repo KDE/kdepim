@@ -28,7 +28,7 @@
 #include <config.h>
 #endif
 
-#include <kleo/oidmap.h>
+#include "kleo/oidmap.h"
 
 #include <gpgmepp/context.h>
 #include <gpgmepp/data.h>
