@@ -218,11 +218,7 @@ int ExchangeClient::downloadSynchronous( KCal::Calendar *calendar,
   connect( this, SIGNAL( downloadFinished( int, const QString & ) ), 
            SLOT( slotSyncFinished( int, const QString & ) ) );
 
-  kdDebug() << "tick" << endl;
-
   download( calendar, start, end, showProgress );
-
-  kdDebug() << "tack" << endl;
 
   // TODO: Remove this busy loop
   QApplication::setOverrideCursor
@@ -231,8 +227,6 @@ int ExchangeClient::downloadSynchronous( KCal::Calendar *calendar,
     qApp->processEvents();
   } while ( mClientState == WaitingForResult );
   QApplication::restoreOverrideCursor();  
-
-  kdDebug() << "tock" << endl;
 
   disconnect( this, SIGNAL( downloadFinished( int, const QString & ) ), 
               this, SLOT( slotSyncFinished( int, const QString & ) ) );
@@ -244,7 +238,7 @@ int ExchangeClient::uploadSynchronous( KCal::Event* event )
 {
   mClientState = WaitingForResult;
   connect( this, SIGNAL( uploadFinished( int, const QString & ) ), 
-           this, SLOT( slotSyncFinished( int, const QString & ) ) );
+           SLOT( slotSyncFinished( int, const QString & ) ) );
 
   upload( event );
 
@@ -263,7 +257,7 @@ int ExchangeClient::removeSynchronous( KCal::Event* event )
 {
   mClientState = WaitingForResult;
   connect( this, SIGNAL( removeFinished( int, const QString & ) ), 
-           this, SLOT( slotSyncFinished( int, const QString & ) ) );
+           SLOT( slotSyncFinished( int, const QString & ) ) );
 
   remove( event );
 

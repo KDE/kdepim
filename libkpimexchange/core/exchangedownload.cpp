@@ -141,6 +141,8 @@ void ExchangeDownload::download( const QDate& start, const QDate& end, bool show
            SLOT( slotSearchResult( KIO::Job * ) ) );
 }
 
+// Original query TODO: make query configurable
+#if 0
 QString ExchangeDownload::dateSelectQuery( const QDate& start, const QDate& end )
 {
   QString startString;
@@ -149,6 +151,24 @@ QString ExchangeDownload::dateSelectQuery( const QDate& start, const QDate& end 
   endString.sprintf("%04i/%02i/%02i",end.year(),end.month(),end.day());
   QString sql = 
         "SELECT \"DAV:href\", \"urn:schemas:calendar:instancetype\", \"urn:schemas:calendar:uid\"\r\n"
+        "FROM Scope('shallow traversal of \"\"')\r\n"
+        "WHERE \"urn:schemas:calendar:dtend\" > '" + startString + "'\r\n"
+        "AND \"urn:schemas:calendar:dtstart\" < '" + endString + "'";
+  return sql;
+}
+#endif
+
+QString ExchangeDownload::dateSelectQuery( const QDate& start, const QDate& end )
+{
+  QString startString;
+  startString.sprintf( "%04i-%02i-%02iT00:00:00Z", start.year(),
+                       start.month(), start.day() );
+  QString endString;
+  endString.sprintf( "%04i-%02i-%02iT23:59:59Z", end.year(), end.month(),
+                     end.day() );
+  QString sql = 
+        "SELECT \"DAV:href\", \"urn:schemas:calendar:instancetype\", "
+        "\"urn:schemas:calendar:uid\"\r\n"
         "FROM Scope('shallow traversal of \"\"')\r\n"
         "WHERE \"urn:schemas:calendar:dtend\" > '" + startString + "'\r\n"
         "AND \"urn:schemas:calendar:dtstart\" < '" + endString + "'";
@@ -194,8 +214,10 @@ void ExchangeDownload::slotMasterResult( KIO::Job *job )
   decreaseDownloads();
 }
 
-void ExchangeDownload::handleAppointments( const QDomDocument& response, bool recurrence ) {
-  // kdDebug() << "Entering handleAppointments" << endl;
+void ExchangeDownload::handleAppointments( const QDomDocument &response,
+                                           bool recurrence )
+{
+  kdDebug() << "Entering handleAppointments" << endl;
   int successCount = 0;
 
   if ( response.documentElement().firstChild().toElement().isNull() ) {
@@ -206,17 +228,14 @@ void ExchangeDownload::handleAppointments( const QDomDocument& response, bool re
 
   for( QDomElement item = response.documentElement().firstChild().toElement();
        !item.isNull();
-       item = item.nextSibling().toElement() )
-  {
+       item = item.nextSibling().toElement() ) {
     //kdDebug() << "Current item:" << item.tagName() << endl;
     QDomNodeList propstats = item.elementsByTagNameNS( "DAV:", "propstat" );
     // kdDebug() << "Item has " << propstats.count() << " propstat children" << endl; 
-    for( uint i=0; i < propstats.count(); i++ )
-    {
+    for( uint i=0; i < propstats.count(); i++ ) {
       QDomElement propstat = propstats.item(i).toElement();
       QDomElement prop = propstat.namedItem( "prop" ).toElement();
-      if ( prop.isNull() )
-      {
+      if ( prop.isNull() ) {
         kdError() << "Error: no <prop> in response" << endl;
 	continue;
       }
@@ -259,11 +278,13 @@ void ExchangeDownload::handleAppointments( const QDomDocument& response, bool re
     }
   }
   if ( !successCount ) {
-    finishUp( ExchangeClient::ServerResponseError, "WebDAV SEARCH response:\n" + response.toString() );
+    finishUp( ExchangeClient::ServerResponseError,
+              "WebDAV SEARCH response:\n" + response.toString() );
   }
-}  
+}
 
-void ExchangeDownload::handleRecurrence(QString uid) {
+void ExchangeDownload::handleRecurrence( QString uid )
+{
   // kdDebug() << "Handling recurrence info for uid=" << uid << endl;
   QString query = 
         "SELECT \"DAV:href\", \"urn:schemas:calendar:instancetype\"\r\n"
@@ -276,10 +297,12 @@ void ExchangeDownload::handleRecurrence(QString uid) {
 
   increaseDownloads();
  
-  KIO::DavJob* job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", query, false );
-  KIO::Scheduler::scheduleJob(job);
+  KIO::DavJob* job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql",
+                                     query, false );
+  KIO::Scheduler::scheduleJob( job );
   job->setWindow( mWindow );
-  connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotMasterResult(KIO::Job *)));
+  connect( job, SIGNAL( result( KIO::Job * ) ),
+           SLOT( slotMasterResult( KIO::Job * ) ) );
 }
 
 void ExchangeDownload::readAppointment( const KURL& url )
@@ -311,7 +334,8 @@ void ExchangeDownload::readAppointment( const KURL& url )
   addElement( doc, prop, "urn:schemas:mailheader:", "sensitivity" );
   addElement( doc, prop, "urn:schemas:calendar:", "reminderoffset" );
   
-  addElement( doc, prop, "urn:schemas-microsoft-com:office:office", "Keywords" );
+  addElement( doc, prop, "urn:schemas-microsoft-com:office:office",
+              "Keywords" );
 
 //  addElement( doc, prop, "", "" );
 //  addElement( doc, prop, "DAV:", "" );
@@ -322,36 +346,38 @@ void ExchangeDownload::readAppointment( const KURL& url )
   increaseDownloads();
 
   KIO::DavJob* job = KIO::davPropFind( url, doc, "0", false );
-  KIO::Scheduler::scheduleJob(job);
+  KIO::Scheduler::scheduleJob( job );
   job->setWindow( mWindow );
   job->addMetaData( "errorPage", "false" );
-  connect( job, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotPropFindResult( KIO::Job * ) ) );
+  connect( job, SIGNAL( result( KIO::Job * ) ),
+           SLOT( slotPropFindResult( KIO::Job * ) ) );
 }
 
-void ExchangeDownload::slotPropFindResult( KIO::Job * job )
+void ExchangeDownload::slotPropFindResult( KIO::Job *job )
 {
-  // kdDebug() << "slotPropFindResult" << endl;
+  kdDebug() << "slotPropFindResult" << endl;
 
   int error = job->error(); 
-  if ( error )
-  {
+  if ( error ) {
     job->showErrorDialog( 0 );
     finishUp( ExchangeClient::CommunicationError, job );
     return;
   }
 
   QDomDocument response = static_cast<KIO::DavJob *>( job )->response();
-//  kdDebug() << "Response: " << endl;
-//  kdDebug() << response.toString() << endl;
+  kdDebug() << "Response: " << endl;
+  kdDebug() << response.toString() << endl;
 
-  QDomElement prop = response.documentElement().namedItem( "response" ).namedItem( "propstat" ).namedItem( "prop" ).toElement();
+  QDomElement prop = response.documentElement().namedItem( "response" )
+                     .namedItem( "propstat" ).namedItem( "prop" ).toElement();
  
   KCal::Event* event = new KCal::Event();
 
   QDomElement uidElement = prop.namedItem( "uid" ).toElement();
   if ( uidElement.isNull() ) {
     kdError() << "Error: no uid in Exchange server reply" << endl;
-    finishUp( ExchangeClient::IllegalAppointmentError, "WebDAV server response:\n" + response.toString() );
+    finishUp( ExchangeClient::IllegalAppointmentError,
+              "WebDAV server response:\n" + response.toString() );
     return;
   }
   event->setUid( uidElement.text() );
@@ -374,9 +400,11 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   }
 
   QString lastModified = prop.namedItem( "lastmodified" ).toElement().text();
-  QDateTime dt = utcAsZone( QDateTime::fromString( lastModified, Qt::ISODate ), localTimeZoneId );
-  event->setLastModified( dt );
-  // kdDebug() << "Got lastModified:" << lastModified << ", " << dt.toString() << endl;
+  if ( !lastModified.isEmpty() ) {
+    QDateTime dt = utcAsZone( QDateTime::fromString( lastModified, Qt::ISODate ), localTimeZoneId );
+    event->setLastModified( dt );
+    kdDebug() << "Got lastModified:" << lastModified << ", " << dt.toString() << endl;
+  }
 
   QString organizer = prop.namedItem( "organizer" ).toElement().text();
   event->setOrganizer( organizer );
@@ -402,30 +430,39 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   }
 
   QString readonly = prop.namedItem( "isreadonly" ).toElement().text();
-  event->setReadOnly( readonly != "0" );
-  // kdDebug() << "Got readonly: " << readonly << ":" << (readonly != "0") << endl;
+  event->setReadOnly( readonly == "1" );
+  kdDebug() << "Got readonly: " << readonly << ":" << (readonly != "0") << endl;
 
   QString created = prop.namedItem( "created" ).toElement().text();
-  dt = utcAsZone( QDateTime::fromString( created, Qt::ISODate ), localTimeZoneId );
-  event->setCreated( dt );
-  // kdDebug() << "got created: " << dt.toString() << endl;
+  if ( !created.isEmpty() ) {
+    QDateTime dt = utcAsZone( QDateTime::fromString( created, Qt::ISODate ),
+                    localTimeZoneId );
+    event->setCreated( dt );
+    kdDebug() << "got created: " << dt.toString() << endl;
+  }
 
   QString dtstart = prop.namedItem( "dtstart" ).toElement().text();
-  dt = utcAsZone( QDateTime::fromString( dtstart, Qt::ISODate ), localTimeZoneId );
-  event->setDtStart( dt );
-  // kdDebug() << "got dtstart: " << dtstart << " becomes in timezone " << dt.toString() << endl;
+  if ( !dtstart.isEmpty() ) {
+    QDateTime dt = utcAsZone( QDateTime::fromString( dtstart, Qt::ISODate ),
+                              localTimeZoneId );
+    event->setDtStart( dt );
+    kdDebug() << "got dtstart: " << dtstart << " becomes in timezone " << dt.toString() << endl;
+  }
 
   QString alldayevent = prop.namedItem( "alldayevent" ).toElement().text();
   bool floats = alldayevent.toInt() != 0;
   event->setFloats( floats );
-  // kdDebug() << "Got alldayevent: \"" << alldayevent << "\":" << floats << endl;
+  kdDebug() << "Got alldayevent: \"" << alldayevent << "\":" << floats << endl;
 
   QString dtend = prop.namedItem( "dtend" ).toElement().text();
-  dt = utcAsZone( QDateTime::fromString( dtend, Qt::ISODate ), localTimeZoneId );
-  // Outlook thinks differently about floating event timing than libkcal
-  if ( floats ) dt = dt.addDays( -1 );
-  event->setDtEnd( dt );
-  // kdDebug() << "got dtstart: " << dtend << " becomes in timezone " << dt.toString() << endl;
+  if ( !dtend.isEmpty() ) {
+    QDateTime dt = utcAsZone( QDateTime::fromString( dtend, Qt::ISODate ),
+                              localTimeZoneId );
+    // Outlook thinks differently about floating event timing than libkcal
+    if ( floats ) dt = dt.addDays( -1 );
+    event->setDtEnd( dt );
+    kdDebug() << "got dtend: " << dtend << " becomes in timezone " << dt.toString() << endl;
+  }
 
   QString transparent = prop.namedItem( "transparent" ).toElement().text();
   event->setTransparency( transparent.toInt() > 0 ? KCal::Event::Transparent
@@ -434,19 +471,19 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
 
   QString description = prop.namedItem( "textdescription" ).toElement().text();
   event->setDescription( description );
-  // kdDebug() << "Got description: " << description << endl;
+  kdDebug() << "Got description: " << description << endl;
 
   QString subject = prop.namedItem( "subject" ).toElement().text();
   event->setSummary( subject );
-  // kdDebug() << "Got summary: " << subject << endl;
+  kdDebug() << "Got summary: " << subject << endl;
 
   QString location =  prop.namedItem( "location" ).toElement().text();
   event->setLocation( location );
   // kdDebug() << "Got location: " << location << endl;
 
   QString rrule = prop.namedItem( "rrule" ).toElement().text();
-  // kdDebug() << "Got rrule: " << rrule << endl;
-  if ( ! rrule.isNull() ) {
+  kdDebug() << "Got rrule: " << rrule << endl;
+  if ( !rrule.isEmpty() ) {
     // Timezone should be handled automatically 
     // because we used mFormat->setTimeZone() earlier
     if ( ! mFormat->fromString( event->recurrence(), rrule ) ) {
@@ -495,10 +532,10 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
 
   QString reminder = prop.namedItem( "reminderoffset" ).toElement().text();
   // kdDebug() << "Reminder offset: " << reminder << endl;
-  if ( ! reminder.isNull() ) {
+  if ( !reminder.isEmpty() ) {
     // Duration before event in seconds
     KCal::Duration offset( - reminder.toInt() );
-    KCal::Alarm* alarm = event->newAlarm();
+    KCal::Alarm *alarm = event->newAlarm();
     alarm->setStartOffset( offset );
     alarm->setEnabled( true );
     // TODO: multiple alarms; alarm->setType( KCal::Alarm::xxxx );
@@ -539,15 +576,15 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   // multi-day events into single-day events WITH ALL THE SAME UID
   // Grrrrrrr.
   if ( mCalendar ) {
-    KCal::Event* oldEvent = mCalendar->event( event->uid() );
+    KCal::Event *oldEvent = mCalendar->event( event->uid() );
     if ( oldEvent ) {
-      kdWarning() << "Already got his event, keeping old version..." << endl;
-      // This doesn't work
-      // *oldEvent = *event;
-    } else {
-      mCalendar->addEvent( event );
+      kdWarning() << "Already got his event, replace it..." << endl;
+      mCalendar->deleteEvent( oldEvent );
     }
+    kdDebug() << "ADD EVENT" << endl;
+    mCalendar->addEvent( event );
   } else {
+    kdDebug() << "EMIT gotEvent" << endl;
     emit gotEvent( event, static_cast<KIO::DavJob *>( job )->url() );
 //    mEvents->append( event );
   }

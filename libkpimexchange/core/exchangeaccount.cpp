@@ -243,7 +243,7 @@ void ExchangeAccount::calcFolderURLs()
            SLOT( slotFolderResult( KIO::Job * ) ) );
 }
 
-void ExchangeAccount::slotFolderResult( KIO::Job *job ) 
+void ExchangeAccount::slotFolderResult( KIO::Job *job )
 {
   kdDebug() << "ExchangeAccount::slotFolderResult()" << endl;
   if ( job->error() ) {
@@ -256,7 +256,8 @@ void ExchangeAccount::slotFolderResult( KIO::Job *job )
   }
   QDomDocument &response = static_cast<KIO::DavJob *>( job )->response();
 
-  QDomElement prop = response.documentElement().namedItem( "response" ).namedItem( "propstat" ).namedItem( "prop" ).toElement();
+  QDomElement prop = response.documentElement().namedItem( "response" )
+                     .namedItem( "propstat" ).namedItem( "prop" ).toElement();
  
   QDomElement calElement = prop.namedItem( "calendar" ).toElement();
   if ( calElement.isNull() ) {
@@ -266,7 +267,7 @@ void ExchangeAccount::slotFolderResult( KIO::Job *job )
   }
   QString calendar = calElement.text();
 
-  kdDebug() << "calendarURL: " << calendar << endl;
+  kdDebug() << "ExchangeAccount: response calendarURL: " << calendar << endl;
 
   mCalendarURL = toDAV( new KURL( calendar ) );
   kdDebug() << "Calendar URL: " << mCalendarURL->url() << endl;
@@ -288,14 +289,15 @@ QString ExchangeAccount::tryFindMailbox( const QString& host, const QString& por
   return result;
 }
   
-QString ExchangeAccount::tryMailbox( const QString& _url, const QString& user, const QString& password ) {
+QString ExchangeAccount::tryMailbox( const QString &_url, const QString &user,
+                                     const QString &password )
+{
   KURL url = KURL( _url );
   url.setUser( user );
   url.setPass( password );
 
   QString tmpFile;
-  if ( !KIO::NetAccess::download( url, tmpFile, 0L ) )
-  {
+  if ( !KIO::NetAccess::download( url, tmpFile, 0 ) ) {
     kdWarning() << "Trying to find mailbox failed: not able to download " << url.prettyURL() << endl;
     return QString::null;
   }
