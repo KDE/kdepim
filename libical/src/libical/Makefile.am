@@ -42,7 +42,9 @@ libical_la_LDFLAGS = -version-info 0:0:0
 
 # Order is important!
 libical_la_SOURCES =		\
-	ical.h			\
+	dummy.c			\
+	icalderivedparameter.c	\
+	icalderivedparameter.h	\
 	icalrecur.c		\
 	icalrecur.h		\
 	icalattendee.h		\
@@ -61,8 +63,6 @@ libical_la_SOURCES =		\
 	icalparameter.c		\
 	icalparameter.h		\
 	icalparameterimpl.h	\
-	icalderivedparameter.c	\
-	icalderivedparameter.h	\
 	icalparser.c		\
 	icalparser.h		\
 	icalderivedproperty.c	\
@@ -135,13 +135,16 @@ BUILT_SOURCES =			\
 	icalderivedvalue.c	\
 	icalderivedvalue.h
 
+dummy.c: $(COMBINEDHEADERS)
+	echo > dummy.c
+
+
 ical.h: $(COMBINEDHEADERS)
 	cat $(COMBINEDHEADERS)				\
 	| egrep -v "#include.*\"ical"			\
 	| egrep -v "#include.*\"pvl\.h\"" > ical.h
 
 icallexer.c : icalyacc.h
-
 
 # parameters
 
