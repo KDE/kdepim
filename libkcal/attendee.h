@@ -51,37 +51,78 @@ class Attendee : public Person
       @param role Role
       @param u the uid for the attendee
     */
-    Attendee(const QString& name, const QString &email,
-             bool rsvp=false, PartStat status=NeedsAction,
-             Role role=ReqParticipant,const QString& u=QString::null);
-    /** Destruct Attendee */
+    Attendee( const QString &name, const QString &email,
+              bool rsvp = false, PartStat status = NeedsAction,
+              Role role = ReqParticipant, const QString &u = QString::null );
+    /**
+      Destruct Attendee.
+    */
     virtual ~Attendee();
 
-    /** Set role of Attendee. List of roles still has to be documented. */
+    /**
+      Set role of Attendee.
+    */
+    // FIXME: List of roles still has to be documented.
     void setRole( Role );
-    /** Return role of Attendee. */
+    
+    /**
+      Return role of Attendee.
+    */
     Role role() const;
-    /** Return role as clear text string */
+    
+    /**
+      Return role as clear text string.
+    */
     QString roleStr() const;
+    /**
+      Return string represenation of role.
+    */
     static QString roleName( Role );
+    /**
+      Return string representations of all available roles.
+    */
     static QStringList roleList();
 
-    /** Holds the uid of the attendee, if applicable **/
+    /**
+      Return unique id of the attendee.
+    */
+    // FIXME: Do we use that?
     QString uid() const;
-    void setUid (QString);
+    /**
+      Set unique id of attendee.
+    */
+    void setUid ( const QString & );
 
-    /** Set status. See enum for definitions of possible values */
-    void setStatus(PartStat s);
-    /** Return status. */
+    /**
+      Set status. See enum for definitions of possible values.
+    */
+    void setStatus( PartStat s );
+
+    /**
+      Return status.
+    */
     PartStat status() const;
-    /** Return status as human-readable string. */
+    
+    /**
+      Return status as human-readable string.
+    */
     QString statusStr() const;
+    /**
+      Return string representation of attendee status.
+    */
     static QString statusName( PartStat );
+    /**
+      Return string representations of all available attendee status values.
+    */
     static QStringList statusList();
 
-    /** Set if Attendee is asked to reply. */
-    void setRSVP(bool r) { mRSVP = r; }
-    /** Return, if Attendee is asked to reply. */
+    /**
+      Set if Attendee is asked to reply.
+    */
+    void setRSVP( bool r ) { mRSVP = r; }
+    /**
+      Return, if Attendee is asked to reply.
+    */
     bool RSVP() const { return mRSVP; }
 
   private:

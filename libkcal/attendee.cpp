@@ -27,11 +27,11 @@
 
 using namespace KCal;
 
-Attendee::Attendee(const QString &name, const QString &email, bool _rsvp, Attendee::PartStat s,
-                   Attendee::Role r,const QString &u) :
-  Person(name,email)
+Attendee::Attendee( const QString &name, const QString &email, bool _rsvp,
+                    Attendee::PartStat s, Attendee::Role r, const QString &u)
+  : Person( name, email )
 {
-  mFlag = TRUE;
+  mFlag = true;
   mRSVP = _rsvp;
   mStatus = s;
   mRole = r;
@@ -42,7 +42,6 @@ Attendee::~Attendee()
 {
 }
 
-
 bool KCal::operator==( const Attendee& a1, const Attendee& a2 )
 {
     return ( operator==( (const Person&)a1, (const Person&) a2 ) &&
@@ -52,9 +51,7 @@ bool KCal::operator==( const Attendee& a1, const Attendee& a2 )
              a1.uid() == a2.uid() );
 }
 
-
-
-void Attendee::setStatus(Attendee::PartStat s)
+void Attendee::setStatus( Attendee::PartStat s )
 {
   mStatus = s;
 }
@@ -66,53 +63,53 @@ Attendee::PartStat Attendee::status() const
 
 QString Attendee::statusStr() const
 {
-  return statusName(mStatus);
+  return statusName( mStatus );
 }
 
 QString Attendee::statusName( Attendee::PartStat s )
 {
-    switch (s) {
-        default:
-        case NeedsAction:
-            return i18n("Needs Action");
-            break;
-        case Accepted:
-            return i18n("Accepted");
-            break;
-        case Declined:
-            return i18n("Declined");
-            break;
-        case Tentative:
-            return i18n("Tentative");
-            break;
-        case Delegated:
-            return i18n("Delegated");
-            break;
-        case Completed:
-            return i18n("Completed");
-            break;
-        case InProcess:
-            return i18n("In Process");
-            break;
-    }
+  switch ( s ) {
+    default:
+    case NeedsAction:
+      return i18n("Needs Action");
+      break;
+    case Accepted:
+      return i18n("Accepted");
+      break;
+    case Declined:
+      return i18n("Declined");
+      break;
+    case Tentative:
+      return i18n("Tentative");
+      break;
+    case Delegated:
+      return i18n("Delegated");
+      break;
+    case Completed:
+      return i18n("Completed");
+      break;
+    case InProcess:
+      return i18n("In Process");
+      break;
+  }
 }
 
 QStringList Attendee::statusList()
 {
-    QStringList list;
-    list << statusName(NeedsAction);
-    list << statusName(Accepted);
-    list << statusName(Declined);
-    list << statusName(Tentative);
-    list << statusName(Delegated);
-    list << statusName(Completed);
-    list << statusName(InProcess);
+  QStringList list;
+  list << statusName( NeedsAction );
+  list << statusName( Accepted );
+  list << statusName( Declined );
+  list << statusName( Tentative );
+  list << statusName( Delegated );
+  list << statusName( Completed );
+  list << statusName( InProcess );
 
-    return list;
+  return list;
 }
 
 
-void Attendee::setRole(Attendee::Role r)
+void Attendee::setRole( Attendee::Role r )
 {
   mRole = r;
 }
@@ -124,10 +121,10 @@ Attendee::Role Attendee::role() const
 
 QString Attendee::roleStr() const
 {
-  return roleName(mRole);
+  return roleName( mRole );
 }
 
-void Attendee::setUid(QString uid)
+void Attendee::setUid( const QString &uid )
 {
   mUid = uid;
 }
@@ -139,30 +136,30 @@ QString Attendee::uid() const
 
 QString Attendee::roleName( Attendee::Role r )
 {
-    switch (r) {
-        case Chair:
-            return i18n("Chair");
-            break;
-        default:
-        case ReqParticipant:
-            return i18n("Participant");
-            break;
-        case OptParticipant:
-            return i18n("Optional Participant");
-            break;
-        case NonParticipant:
-            return i18n("Observer");
-            break;
-    }
+  switch ( r ) {
+    case Chair:
+      return i18n("Chair");
+      break;
+    default:
+    case ReqParticipant:
+      return i18n("Participant");
+      break;
+    case OptParticipant:
+      return i18n("Optional Participant");
+      break;
+    case NonParticipant:
+      return i18n("Observer");
+      break;
+  }
 }
 
 QStringList Attendee::roleList()
 {
-    QStringList list;
-    list << roleName(ReqParticipant);
-    list << roleName(OptParticipant);
-    list << roleName(NonParticipant);
-    list << roleName(Chair);
+  QStringList list;
+  list << roleName( ReqParticipant );
+  list << roleName( OptParticipant );
+  list << roleName( NonParticipant );
+  list << roleName( Chair );
 
-    return list;
+  return list;
 }
