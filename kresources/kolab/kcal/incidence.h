@@ -121,6 +121,8 @@ protected:
 
   void loadRecurrence( const QDomElement& element );
   void saveRecurrence( QDomElement& element ) const;
+  void saveCustomAttributes( QDomElement& element ) const;
+  void loadCustomAttributes( QDomElement& element );
 
   QString productID() const;
 
@@ -133,6 +135,12 @@ protected:
   bool mHasAlarm;
   Recurrence mRecurrence;
   QValueList<Attendee> mAttendees;
+
+  struct Custom {
+    QCString key;
+    QString value;
+  };
+  QValueList<Custom> mCustomList;
 };
 
 }
