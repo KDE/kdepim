@@ -78,11 +78,28 @@ static QString emailTestParseResultToString( EmailParseResult errorCode )
   return "unknown errror code";
 }
 
+static QString simpleEmailTestParseResultToString( bool validEmail )
+{
+  if ( validEmail ) {
+    return "true"; 
+  } else if ( !validEmail ) {
+    return "false";
+  }
+}
+
 static bool checkIsValidEmailAddress( const QString& input, const QString&  expErrorCode )
 {
   EmailParseResult errorCode = KPIM::isValidEmailAddress( input );
   QString errorC = emailTestParseResultToString( errorCode );
   check( "isValidEmailAddress " + input + " errorCode ", errorC , expErrorCode );
+  return true;
+}
+
+static bool checkIsValidSimpleEmailAddress( const QString& input, const QString& expResult )
+{
+  bool validEmail = KPIM::isValidSimpleEmailAddress( input );
+  QString result = simpleEmailTestParseResultToString( validEmail );
+  check( "isValidSimpleEmailAddress " + input + " result ", result, expResult );
   return true;
 }
 
@@ -202,6 +219,12 @@ int main(int argc, char *argv[])
   // a , inside a double quoted string is OK, how do I know this? well Ingo says so
   // and it makes sense since it is also a seperator of email addresses
   checkIsValidEmailAddress( "\"Douhan, Matt\" <matt@fruitsalad.org>", "AddressOk" );
+
+  // checks for "pure" email addresses in the form of xxx@yyy.tld
+  checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
+
+  // check if the pure email address is wrong
+  checkIsValidSimpleEmailAddress( "mattfruitsalad.org", "false" );
 
   printf("\nTest OK !\n");
 
