@@ -1,125 +1,150 @@
-#include "detailsviewcontainer.h"
-#include "detailsviewcontainer.moc"
+/*                                                                      
+    This file is part of KAddressBook.
+    Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
+                                                                        
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or   
+    (at your option) any later version.                                 
+                                                                        
+    This program is distributed in the hope that it will be useful,     
+    but WITHOUT ANY WARRANTY; without even the implied warranty of      
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
+    GNU General Public License for more details.                        
+                                                                        
+    You should have received a copy of the GNU General Public License   
+    along with this program; if not, write to the Free Software         
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.           
+                                                                        
+    As a special exception, permission is given to link this program    
+    with any edition of Qt, and distribute the resulting executable,    
+    without including the source code for Qt in the source distribution.
+*/                                                                      
 
 #include <qcombobox.h>
 #include <qframe.h>
-#include <qlayout.h>
 #include <qlabel.h>
+#include <qlayout.h>
 #include <qwidgetstack.h>
 
-#include <kdebug.h>
 #include <kapplication.h>
+#include <kdebug.h>
+#include <kdialog.h>
 
 #include "look_basic.h"
 #include "look_details.h"
 
-ViewContainer::ViewContainer(QWidget *parent, const char* name )
-    : QWidget(parent, name),
-      m_look(0)
+#include "detailsviewcontainer.h"
+
+ViewContainer::ViewContainer( QWidget *parent, const char* name )
+  : QWidget( parent, name ), mCurrentLook( 0 )
 {
-    QBoxLayout *topLayout = new QVBoxLayout( this );
-    topLayout->setMargin( 3 );
-    topLayout->setSpacing( 3 );
+  QBoxLayout *topLayout = new QVBoxLayout( this );
+  topLayout->setMargin( KDialog::marginHint() );
+  topLayout->setSpacing( KDialog::spacingHint() );
 
-    QBoxLayout *styleLayout = new QHBoxLayout( topLayout );    
+  QBoxLayout *styleLayout = new QHBoxLayout( topLayout );    
 
-    QLabel *tlStyle = new QLabel( i18n("Style:"), this );
-    styleLayout->addWidget( tlStyle );
+  QLabel *label = new QLabel( i18n("Style:"), this );
+  styleLayout->addWidget( label );
 
-    cbStyle = new QComboBox( this );
-    styleLayout->addWidget( cbStyle );
+  mStyleCombo = new QComboBox( this );
+  styleLayout->addWidget( mStyleCombo );
 
-    QFrame *frameRuler = new QFrame( this );
-    frameRuler->setFrameShape( QFrame::HLine );
-    frameRuler->setFrameShadow( QFrame::Sunken );
-    topLayout->addWidget( frameRuler );
+  QFrame *frameRuler = new QFrame( this );
+  frameRuler->setFrameShape( QFrame::HLine );
+  frameRuler->setFrameShadow( QFrame::Sunken );
+  topLayout->addWidget( frameRuler );
 
-    frameDetails = new QWidgetStack( this );
-    topLayout->addWidget( frameDetails, 1 );
+  mDetailsStack = new QWidgetStack( this );
+  topLayout->addWidget( mDetailsStack, 1 );
 
-    registerLooks();
+  registerLooks();
 
 #if 1
     // Hide detailed view selection combo box, because we currently have
     // only one. Reenable it when there are more detailed views.
-    tlStyle->hide();
-    cbStyle->hide();
+    label->hide();
+    mStyleCombo->hide();
     frameRuler->hide();
 #endif
 }
 
-
-KABBasicLook *ViewContainer::look()
+KABBasicLook *ViewContainer::currentLook()
 {
-    return m_look;
+  return mCurrentLook;
 }
 
 void ViewContainer::registerLooks()
 {
-    m_lookFactories.append(new KABDetailedViewFactory(frameDetails));
-    cbStyle->clear();
-    for(unsigned int i=0; i<m_lookFactories.count(); ++i)
-    {
-        cbStyle->insertItem(m_lookFactories.at(i)->description());
-    }
-    // selected first look:
-    if(!m_lookFactories.isEmpty())
-    {
-        slotStyleSelected(0);
-    }
+  mLookFactories.append( new KABDetailedViewFactory( mDetailsStack ) );
+  mStyleCombo->clear();
+
+  for ( uint i = 0; i < mLookFactories.count(); ++i )
+    mStyleCombo->insertItem( mLookFactories.at( i )->description() );
+
+  if ( !mLookFactories.isEmpty() )
+    slotStyleSelected( 0 );
 }
 
-void ViewContainer::slotStyleSelected(int index)
+void ViewContainer::slotStyleSelected( int index )
 {
-    KConfig *config;
-    if(index>=0 && index<cbStyle->count())
-    {
-        if(m_look!=0)
-        {
-            // WORK_TO_DO: save changes
-            delete m_look;
-            m_look=0;
-        }
-        KABLookFactory *factory=m_lookFactories.at(index);
-        kdDebug(5720) << "ViewContainer::slotStyleSelected: "
+  KConfig *config = kapp->config();
+  KABC::Addressee addr;
+
+  if ( index >= 0 && index < mStyleCombo->count() ) {
+    if ( mCurrentLook != 0 ) {
+      mCurrentLook->saveSettings( config );
+      addr = mCurrentLook->addressee();
+
+      delete mCurrentLook;
+      mCurrentLook = 0;
+    }
+
+    KABLookFactory *factory = mLookFactories.at( index );
+    kdDebug(5720) << "ViewContainer::slotStyleSelected: "
                   << "creating look "
                   << factory->description() << endl;
-        m_look=factory->create();
-        frameDetails->raiseWidget( m_look );
-        connect(m_look, SIGNAL(sendEmail(const QString&)), this,
-                SIGNAL(sendEmail(const QString&)));
-        connect(m_look, SIGNAL(browse(const QString&)), this,
-                SIGNAL(browse(const QString&)));
-    }
-    // WORK_TO_DO: set current entry
-    // ----- configure the style:
-    config=kapp->config();
-    m_look->configure(config);
+
+    mCurrentLook = factory->create();
+    mDetailsStack->raiseWidget( mCurrentLook );
+
+    connect( mCurrentLook, SIGNAL( sendEmail( const QString& ) ), this,
+             SIGNAL( sendEmail( const QString& ) ) );
+    connect( mCurrentLook, SIGNAL( browse( const QString& ) ), this,
+             SIGNAL( browse( const QString& ) ) );
+  }
+
+  mCurrentLook->restoreSettings( config );
+  mCurrentLook->setAddressee( addr );
 }
 
-void ViewContainer::setAddressee(const KABC::Addressee& addressee)
+void ViewContainer::setAddressee( const KABC::Addressee& addressee )
 {
-  if( m_look != 0 ) {
-    m_look->setEntry(addressee);
+  if ( mCurrentLook != 0 ) {
+    if ( addressee == mCurrentAddressee )
+      return;
+    else {
+      mCurrentAddressee = addressee;
+      mCurrentLook->setAddressee( mCurrentAddressee );
+    }
   }
 }
 
 KABC::Addressee ViewContainer::addressee()
 {
-    static KABC::Addressee empty; // do not use!
-    if(m_look==0)
-    {
-        return empty;
-    } else {
-        return m_look->entry();
-    }
+  static KABC::Addressee empty; // do not use!
+
+  if ( !mCurrentLook )
+    return empty;
+  else
+    return mCurrentLook->addressee();
 }
 
-void ViewContainer::setReadonly(bool state)
+void ViewContainer::setReadOnly( bool state )
 {
-    if(m_look!=0)
-    {
-        m_look->setReadonly(state);
-    }
+  if ( mCurrentLook )
+    mCurrentLook->setReadOnly( state );
 }
 
+#include "detailsviewcontainer.moc"

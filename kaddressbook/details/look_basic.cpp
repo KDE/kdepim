@@ -1,59 +1,69 @@
-/* -*- C++ -*-
-   This file implements the base class for kab´s looks..
+/*                                                                      
+    This file is part of KAddressBook.
+    Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
+                                                                        
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or   
+    (at your option) any later version.                                 
+                                                                        
+    This program is distributed in the hope that it will be useful,     
+    but WITHOUT ANY WARRANTY; without even the implied warranty of      
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
+    GNU General Public License for more details.                        
+                                                                        
+    You should have received a copy of the GNU General Public License   
+    along with this program; if not, write to the Free Software         
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.           
+                                                                        
+    As a special exception, permission is given to link this program    
+    with any edition of Qt, and distribute the resulting executable,    
+    without including the source code for Qt in the source distribution.
+*/                                                                      
 
-   the KDE addressbook
-
-   $ Author: Mirko Boehm $
-   $ Copyright: (C) 1996-2001, Mirko Boehm $
-   $ Contact: mirko@kde.org
-         http://www.kde.org $
-   $ License: GPL with the following explicit clarification:
-         This code may be linked against any version of the Qt toolkit
-         from Troll Tech, Norway. $
-
-   $Revision$
-*/
-
-#include "look_basic.h"
 #include <kdebug.h>
 
-KABBasicLook::KABBasicLook(QWidget* parent, const char* name)
-    : QWidget(parent, name),
-      m_ro(false)
+#include "look_basic.h"
+
+KABBasicLook::KABBasicLook( QWidget *parent, const char *name )
+  : QWidget( parent, name ), mReadOnly( false )
 {
 }
 
-void KABBasicLook::setReadonly(bool state)
+void KABBasicLook::setReadOnly( bool state )
 {
-
-    m_ro=state;
+  mReadOnly = state;
 }
 
-bool KABBasicLook::readonly() const
+bool KABBasicLook::isReadOnly() const
 {
-    return m_ro;
+  return mReadOnly;
 }
 
-void KABBasicLook::setEntry(const KABC::Addressee& e)
+void KABBasicLook::setAddressee( const KABC::Addressee &addr )
 {
-  if ( current == e )
+  if ( mAddressee == addr )
     return;
 
-  current = e;
+  mAddressee = addr;
   repaint( false );
 }
 
-KABC::Addressee KABBasicLook::entry()
+KABC::Addressee KABBasicLook::addressee()
 {
-    return current;
+  return mAddressee;
 }
 
-void KABBasicLook::configure(KConfig*)
+void KABBasicLook::restoreSettings( KConfig* )
 {
 }
 
-KABLookFactory::KABLookFactory(QWidget* parent_, const char* name_)
-    : parent(parent_), name(name_)
+void KABBasicLook::saveSettings( KConfig* )
+{
+}
+
+KABLookFactory::KABLookFactory( QWidget *parent, const char *name )
+  : mParent( parent ), mName( name )
 {
 }
 

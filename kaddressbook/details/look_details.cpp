@@ -1,32 +1,42 @@
-/* -*- C++ -*-
-   This file implements the business card look.
+/*                                                                      
+    This file is part of KAddressBook.
+    Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
+                                                                        
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or   
+    (at your option) any later version.                                 
+                                                                        
+    This program is distributed in the hope that it will be useful,     
+    but WITHOUT ANY WARRANTY; without even the implied warranty of      
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
+    GNU General Public License for more details.                        
+                                                                        
+    You should have received a copy of the GNU General Public License   
+    along with this program; if not, write to the Free Software         
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.           
+                                                                        
+    As a special exception, permission is given to link this program    
+    with any edition of Qt, and distribute the resulting executable,    
+    without including the source code for Qt in the source distribution.
+*/                                                                      
 
-   the KDE addressbook
-
-   $ Author: Mirko Boehm $
-   $ Copyright: (C) 1996-2001, Mirko Boehm $
-   $ Contact: mirko@kde.org
-   http://www.kde.org $
-   $ License: GPL with the following explicit clarification:
-   This code may be linked against any version of the Qt toolkit
-   from Troll Tech, Norway. $
-
-   $Revision$
-*/
-
-#include "look_details.h"
-#include <qdir.h>
-#include <qcursor.h>
-#include "kabentrypainter.h"
-#include "global.h"
+#include <kconfig.h>
 #include <kdebug.h>
 #include <kglobalsettings.h>
 #include <kinstance.h>
-#include <kstandarddirs.h>
 #include <klocale.h>
-#include <kconfig.h>
+#include <kstandarddirs.h>
+
+#include <qcursor.h>
+#include <qdir.h>
 #include <qpainter.h>
 #include <qpopupmenu.h>
+
+#include "global.h"
+#include "kabentrypainter.h"
+
+#include "look_details.h"
 
 #define GRID 5
 
@@ -156,7 +166,7 @@ void KABDetailedView::paintEvent(QPaintEvent*)
     epainter->setShowEmails(actionShowEmails->isChecked());
     epainter->setShowTelephones(actionShowTelephones->isChecked());
     epainter->setShowURLs(actionShowURLs->isChecked());
-    epainter->printEntry(current,
+    epainter->printEntry( addressee(),
                          QRect(0, 0, entryArea.width(), entryArea.height()),
                          &p);
     p.end();
@@ -232,7 +242,7 @@ void KABDetailedView::mousePressEvent(QMouseEvent *e)
     switch(e->button())
     {
     case QMouseEvent::RightButton:
-        if(m_ro)
+        if(isReadOnly())
         {
             menu.setItemEnabled(menu.idAt(0), false);
         } else {
@@ -282,25 +292,25 @@ void KABDetailedView::mousePressEvent(QMouseEvent *e)
         // talk address or telephone number:
         if((rc=epainter->hitsEmail(point))!=-1)
 	{
-            emit(sendEmail(current.emails()[rc]));
+            emit(sendEmail( addressee().emails()[rc]));
             break;
 	}
         if((rc=epainter->hitsURLs(point))!=-1)
 	{
-            emit(browse(current.url().prettyURL()));
+            emit(browse( addressee().url().prettyURL()));
             break;
 	}
         if((rc=epainter->hitsTelephones(point))!=-1)
 	{
-            /* emit(call(current.telephone.at(2*rc),
-               current.telephone.at(2*rc+1))); */
+            /* emit(call(addressee().telephone.at(2*rc),
+               addressee().telephone.at(2*rc+1))); */
             kdDebug(5720) << "KABDetailedView::mousePressEvent: ni (calling)."
                       << endl;
             break;
 	}
         if((rc=epainter->hitsTalkAddresses(point))!=-1)
 	{
-            /* emit(talk(current.talk.at(rc))); */
+            /* emit(talk(addressee().talk.at(rc))); */
             kdDebug(5720) << "KABDetailedView::mousePressEvent: ni (invoking ktalk)."
                       << endl;
             break;
@@ -315,17 +325,17 @@ void KABDetailedView::mousePressEvent(QMouseEvent *e)
     menuTiledBG=0;
 }
 
-void KABDetailedView::setEntry(const KABC::Addressee& e)
+void KABDetailedView::setAddressee(const KABC::Addressee& e)
 {
 
     BackgroundStyle style=None;
     QString dir, file, styleSetting;
-    KABBasicLook::setEntry(e);
+    KABBasicLook::setAddressee(e);
     // @todo: preload path and styleSetting with possible preference values
     // ----- load the background image:
-    styleSetting=current.custom("kab", "BackgroundStyle");
+    styleSetting=addressee().custom("kab", "BackgroundStyle");
     style=(BackgroundStyle)styleSetting.toInt();
-    file=current.custom("kab", "BackgroundImage");
+    file=addressee().custom("kab", "BackgroundImage");
     if(!file.isEmpty())
     {
         switch(style)
@@ -373,39 +383,39 @@ void KABDetailedView::setEntry(const KABC::Addressee& e)
 
 void KABDetailedView::slotBorderedBGSelected(int index)
 {
-    if(index>=0 && (unsigned)index<borders.count() && !readonly())
+    if(index>=0 && (unsigned)index<borders.count() && !isReadOnly())
     {
         // ----- get the selection and make it a full path:
         QString path=borders[index];
         bgStyle=Bordered;
-        current.insertCustom("kab", "BackgroundStyle", QString().setNum(bgStyle));
-        current.insertCustom("kab", "BackgroundImage", path);
-        setEntry(current);
+        addressee().insertCustom("kab", "BackgroundStyle", QString().setNum(bgStyle));
+        addressee().insertCustom("kab", "BackgroundImage", path);
+        setAddressee( addressee() );
         emit(entryChanged());
     }
 }
 
 void KABDetailedView::slotTiledBGSelected(int index)
 {
-    if(index>=0 && (unsigned)index<tiles.count() && !readonly())
+    if(index>=0 && (unsigned)index<tiles.count() && !isReadOnly())
     {
         QString path=tiles[index];
         bgStyle=Tiled;
-        current.insertCustom("kab", "BackgroundStyle", QString().setNum(bgStyle));
-        current.insertCustom("kab", "BackgroundImage", path);
-        setEntry(current);
+        addressee().insertCustom("kab", "BackgroundStyle", QString().setNum(bgStyle));
+        addressee().insertCustom("kab", "BackgroundImage", path);
+        setAddressee( addressee() );
         emit(entryChanged());
     }
 }
 
 
-void KABDetailedView::setReadonly(bool state)
+void KABDetailedView::setReadOnly( bool state )
 {
-    KABBasicLook::setReadonly(state);
-    repaint(false);
+  KABBasicLook::setReadOnly( state );
+  repaint( false );
 }
 
-void KABDetailedView::configure(KConfig *config)
+void KABDetailedView::restoreSettings( KConfig *config )
 {
     QFont general=KGlobalSettings::generalFont();
     QFont fixed=KGlobalSettings::fixedFont();
@@ -488,6 +498,5 @@ void KABDetailedView::configure(KConfig *config)
               QFont(ffont, fpointsize, QFont::Normal, false),
               QFont(gfont, gpointsize, QFont::Normal, false));
 }
-
 
 #include "look_details.moc"
