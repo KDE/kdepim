@@ -26,6 +26,8 @@
 
 #include "actionpartservice.h"
 
+#include <kdepimmacros.h>
+
 namespace KSync {
 
 /**
