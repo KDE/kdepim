@@ -22,6 +22,7 @@
 
 #include <qmap.h>
 #include <qdict.h>
+#include <qintdict.h>
 
 #include <libkcal/calendar.h>
 #include <libkcal/calendarlocal.h>
