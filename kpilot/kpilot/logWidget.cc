@@ -126,11 +126,17 @@ LogWidget::LogWidget(QWidget * parent) :
 #endif
 
 	initialText.append(CSL1(TE_EOL));
-	initialText.append(i18n("<qt><B>HotSync Log</B></qt>"));
+	initialText.append(i18n("<qt><b>HotSync Log</b></qt>"));
 	initialText.append(CSL1(TE_EOL));
 
-	initialText.append(CSL1(TE_EOL "<QT><B>KPilot has been reported to cause "
-		"data loss. Please check with kdepim-users@kde.org.</B></QT>" TE_EOL));
+	initialText.append(CSL1(TE_EOL "<qt><b>KPilot has been reported to cause "
+		"data loss. Please check with kdepim-users@kde.org.</b></qt>" TE_EOL));
+
+#if KDE_IS_VERSION(3,3,0)
+#else
+	initialText.append(CSL1(TE_EOL "<qt><b>KDE 3.2 is no longer supported. Please update to KDE 3.3 or later.</b></qt>" TE_EOL));
+	initialText.append(CSL1(TE_EOL "<qt><b>You may be unable to do conflict resolution.</b></qt>" TE_EOL));
+#endif
 
 	fLog->setText(initialText);
 	fLog->scrollToBottom();
