@@ -89,6 +89,8 @@ bool CSVXXPort::exportContacts( const KABC::AddresseeList &list, const QString& 
     doExport( &file, list );
     file.close();
 
+    KMessageBox::information( parentWidget(), i18n( "The contacts have been exported successfully." ) );
+
     return true;
   }
 }
