@@ -28,6 +28,7 @@ SUBDIRS = \
           popmail \
           timeconduit \
           sysinfoconduit \
+	  notepadconduit \
           $(MAL_SUBDIR) $(ABC_SUBDIR)
 
 ###
