@@ -549,13 +549,13 @@ void ContactDialog::parseName()
       ""
      };
     QString sSuffix[] = {
-      i18n( "IIII" ), i18n( "II" ), i18n( "I" ), i18n( "Junior" ),
+      i18n( "III" ), i18n( "II" ), i18n( "I" ), i18n( "Junior" ),
       i18n( "Jr." ), i18n( "Senior" ), i18n( "Sr." ),
       ""
     };
 
     for (int i =0; sTitle[i] != ""; ++i )
-      if (name.find( sTitle[i], 0, false ) == 0) {
+      if (name.find( sTitle[i] + " ", 0, false ) == 0) {
 	prefix = sTitle[i];
 	name = name.right( name.length() - prefix.length() - 1 );
 	name = name.simplifyWhiteSpace();
@@ -564,10 +564,10 @@ void ContactDialog::parseName()
 
     for (int i =0; sSuffix[i] != ""; ++i ) {
       QString tSuffix = sSuffix[i];
-      int pos = name.length() - tSuffix.length();
-      if ((pos > 0) && (name.findRev( tSuffix, -1, false ) == pos)) {
+      int pos = name.length() - tSuffix.length() - 1;
+      if ((pos > 0) && (name.findRev( " " + tSuffix, -1, false ) == pos)) {
 	suffix = tSuffix;
-	name = name.left( pos - 1 );
+	name = name.left( pos );
 	name = name.simplifyWhiteSpace();
 	break;
       }
