@@ -80,7 +80,10 @@ size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
 {
   QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
   it = mServerMap.find( soap );
-  if ( it == mServerMap.end() ) return 0;
+  if ( it == mServerMap.end() ) {
+    kdDebug() << "No soap object found" << endl;
+    return 0;
+  }
 
   return (*it)->gSoapReceiveCallback( soap, s, n );
 }
@@ -223,9 +226,12 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
     mSSL( url.left(6)=="https:" ), m_sock( 0 )
 {
   mSoap = new soap;
+
+#if 0
   mWeaver = new KPIM::ThreadWeaver::Weaver( this );
   KPIM::ThreadWeaver::WeaverThreadLogger *weaverLogger = new KPIM::ThreadWeaver::WeaverThreadLogger( this );
   weaverLogger->attach( mWeaver );
+#endif
 
   kdDebug() << "GroupwiseServer(): URL: " << url << endl;
 
@@ -233,28 +239,21 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
 
 #if 1
   // disable this block to use native gSOAP network functions
-kdDebug() << "TTTTTTTTTTT" << mSSL << " " << url << endl;
-#if 0
-  if (mSSL) {
-     kdDebug() << "Creating KSSLSocket()" << endl;
-     m_sock = new KSSLSocket();
-  } else
-     m_sock = new KExtendedSocket();
-#endif
-
   mSoap->fopen = myOpen;
   mSoap->fsend = mySendCallback;
   mSoap->frecv = myReceiveCallback;
   mSoap->fclose = myClose;
+#endif
 
   mServerMap.insert( mSoap, this );
-#endif
 }
 
 GroupwiseServer::~GroupwiseServer()
 {
+#if 0
   delete mWeaver;
   mWeaver = 0;
+#endif
 
   delete mSoap;
   mSoap = 0;
@@ -267,20 +266,22 @@ bool GroupwiseServer::login()
   loginReq.language = 0;
   loginReq.version = 0;
 
+  GWConverter conv( mSoap );
+
   ns1__PlainText pt;
 
 //  soap_init( mSoap );
-  pt.username = mUser.latin1();
-  pt.password = new string( mPassword.latin1() );
+  pt.username = mUser.utf8();
+  pt.password = conv.qStringToString( mPassword );
   loginReq.auth = &pt;
-  mSoap->userid = strdup( mUser.latin1() );
-  mSoap->passwd = strdup( mPassword.latin1() );
+  mSoap->userid = strdup( mUser.utf8() );
+  mSoap->passwd = strdup( mPassword.utf8() );
 
   mSession.clear();
 
 //  cout << "Login" << endl;
 
-  kdDebug() << "GroupwiseServer::login() URL:" << mUrl << endl;
+  kdDebug() << "GroupwiseServer::login() URL: " << mUrl << endl;
 
   int result = soap_call___ns2__loginRequest(mSoap, mUrl.latin1(), NULL, &loginReq, &loginResp );
 
