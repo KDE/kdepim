@@ -142,12 +142,13 @@ Wallet* KNServerInfo::mWallet = 0;
 
 Wallet* KNServerInfo::wallet()
 {
-  if (mWallet)
+  if (mWallet && mWallet->isOpen())
     return mWallet;
 
   if (!Wallet::isEnabled())
     return 0;
 
+  delete mWallet;
   static KStaticDeleter<Wallet> sd;
   if (knGlobals.top)
     sd.setObject( mWallet, Wallet::openWallet(Wallet::NetworkWallet(),
