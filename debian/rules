@@ -40,9 +40,9 @@ DEB_INSTALL_DOCS_ALL :=
 DEB_INSTALL_CHANGELOGS_ALL = $(shell for f in ChangeLog CHANGELOG CHANGES; do if test -s $(cdbs_curpkg)/$$f; then echo $(cdbs_curpkg)/$$f; break; fi; done)
 
 shlibs_ver=4:3.3.1
-DEB_DH_MAKESHLIBS_ARGS_libkcal2 := -V'libkcal2 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libkcal2a := -V'libkcal2a (>= 4:3.3.2)'
 DEB_DH_MAKESHLIBS_ARGS_libkdenetwork2 := -V'libkdenetwork2 (>= $(shlibs_ver))'
-DEB_DH_MAKESHLIBS_ARGS_libkdepim1 := -V'libkdepim1 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libkdepim1 := -V'libkdepim1 (>= 4:3.3.2)'
 DEB_DH_MAKESHLIBS_ARGS_libkgantt0 := -V'libkgantt0 (>= $(shlibs_ver))'
 DEB_DH_MAKESHLIBS_ARGS_libkleopatra0 := -V'libkleopatra0 (>= $(shlibs_ver))'
 DEB_DH_MAKESHLIBS_ARGS_libkpimexchange1 := -V'libkpimexchange1 (>= $(shlibs_ver))'
@@ -77,7 +77,7 @@ DEB_SHLIBDEPS_INCLUDE := \
 	debian/kpilot/usr/lib \
 	debian/ksync/usr/lib \
 	debian/ktnef/usr/lib \
-	debian/libkcal2/usr/lib \
+	debian/libkcal2a/usr/lib \
 	debian/libkdenetwork2/usr/lib \
 	debian/libkdepim1/usr/lib \
 	debian/libkgantt0/usr/lib \
