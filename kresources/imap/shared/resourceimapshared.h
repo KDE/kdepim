@@ -55,8 +55,8 @@ class ResourceIMAPShared {
 
     // These are the KMail dcop functions
     bool kmailIncidences( QStringList& lst, const QString& type,
-                          const QString& resource );
-    bool kmailSubresources( QStringList& lst, const QString& type );
+                          const QString& resource ) const;
+    bool kmailSubresources( QStringList& lst, const QString& type ) const;
     bool kmailAddIncidence( const QString& type, const QString& resource,
                             const QString& uid, const QString& incidence );
     bool kmailDeleteIncidence( const QString& type, const QString& resource,

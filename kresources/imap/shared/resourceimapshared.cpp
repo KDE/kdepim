@@ -40,13 +40,13 @@ ResourceIMAPShared::~ResourceIMAPShared()
 
 bool ResourceIMAPShared::kmailIncidences( QStringList& lst,
                                           const QString& type,
-                                          const QString& resource )
+                                          const QString& resource ) const
 {
   return mConnection->kmailIncidences( lst, type, resource );
 }
 
 bool ResourceIMAPShared::kmailSubresources( QStringList& lst,
-                                            const QString& type )
+                                            const QString& type ) const
 {
   return mConnection->kmailSubresources( lst, type );
 }
