@@ -99,6 +99,10 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
           this, SLOT(slotSignatureEdit()));
   topL->addWidget(e_ditBtn, 6, 2);
 
+  s_igGenerator = new QCheckBox(i18n("&The file is a program"), this);
+  topL->addMultiCellWidget(s_igGenerator, 6, 6, 0, 1);
+  s_igGenerator->setChecked(d_ata->useSigGenerator());
+
   s_igEdit = new QRadioButton( i18n("Specify signature &below"), this);
   buttonGroup->insert(s_igEdit);
   topL->addMultiCellWidget(s_igEdit, 7, 7, 0, 2);
@@ -130,6 +134,7 @@ void KNConfig::IdentityWidget::apply()
   d_ata->e_mail=e_mail->text();
   d_ata->r_eplyTo=r_eplyTo->text();
   d_ata->u_seSigFile=s_igFile->isChecked();
+  d_ata->u_seSigGenerator=s_igGenerator->isChecked();
   d_ata->s_igPath=s_ig->text();
   d_ata->s_igText=s_igEditor->text();
 
@@ -147,6 +152,7 @@ void KNConfig::IdentityWidget::slotSignatureType(int type)
   s_ig->setEnabled(sigFromFile);
   c_hooseBtn->setEnabled(sigFromFile);
   e_ditBtn->setEnabled(sigFromFile);
+  s_igGenerator->setEnabled(sigFromFile);
   s_igEdit->setChecked(!sigFromFile);
   s_igEditor->setEnabled(!sigFromFile);
 

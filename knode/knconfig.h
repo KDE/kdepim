@@ -79,7 +79,9 @@ class BaseWidget : public QWidget {
 };
 
 
-class Identity : public Base {
+class Identity : public QObject, public Base {
+
+Q_OBJECT
 
   friend class IdentityWidget;
 
@@ -111,9 +113,14 @@ class Identity : public Base {
     //signature
     bool hasSignature()       { return ( (u_seSigFile && !s_igPath.isEmpty()) || !s_igText.isEmpty() ); }
     bool useSigFile()         { return u_seSigFile; }
+    bool useSigGenerator()    { return u_seSigGenerator; }
     QString sigPath()         { return s_igPath; }
     QString sigText()         { return s_igText; }
     QString getSignature();
+
+  protected slots:
+    void slotReceiveStdout(KProcess *proc, char *buffer, int buflen);
+    void slotReceiveStderr(KProcess *proc, char *buffer, int buflen);
 
   protected:
     QString   n_ame,
@@ -124,6 +131,7 @@ class Identity : public Base {
               s_igContents,
               s_igPath;
     bool      u_seSigFile,
+              u_seSigGenerator,
               g_lobal;
 };
 
@@ -148,6 +156,7 @@ class IdentityWidget : public BaseWidget {
                     *s_ig;
     QRadioButton    *s_igFile,
                     *s_igEdit;
+    QCheckBox       *s_igGenerator;
     QPushButton     *c_hooseBtn,
                     *e_ditBtn;
     QMultiLineEdit  *s_igEditor;

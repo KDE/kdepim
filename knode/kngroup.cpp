@@ -151,6 +151,7 @@ void KNGroup::saveInfo()
       info.deleteEntry("Reply-To", false);
       info.deleteEntry("Org", false);
       info.deleteEntry("UseSigFile", false);
+      info.deleteEntry("UseSigGenerator", false);
       info.deleteEntry("sigFile", false);
       info.deleteEntry("sigText", false);
     }

@@ -88,6 +88,7 @@ void KNNntpAccount::saveInfo()
     conf.deleteEntry("Reply-To", false);
     conf.deleteEntry("Org", false);
     conf.deleteEntry("UseSigFile", false);
+    conf.deleteEntry("UseSigGenerator", false);
     conf.deleteEntry("sigFile", false);
     conf.deleteEntry("sigText", false);
   }

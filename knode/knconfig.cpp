@@ -65,6 +65,7 @@ void KNConfig::Identity::loadConfig(KConfigBase *c)
   r_eplyTo=c->readEntry("Reply-To");
   o_rga=c->readEntry("Org");
   u_seSigFile=c->readBoolEntry("UseSigFile",false);
+  u_seSigGenerator=c->readBoolEntry("UseSigGenerator",false);
   s_igPath=c->readEntry("sigFile");
   s_igText=c->readEntry("sigText");
 }
@@ -77,6 +78,7 @@ void KNConfig::Identity::saveConfig(KConfigBase *c)
   c->writeEntry("Reply-To", r_eplyTo);
   c->writeEntry("Org", o_rga);
   c->writeEntry("UseSigFile", u_seSigFile);
+  c->writeEntry("UseSigGenerator",u_seSigGenerator);
   c->writeEntry("sigFile", s_igPath);
   c->writeEntry("sigText", s_igText);
 }
@@ -116,18 +118,33 @@ QString KNConfig::Identity::getSignature()
 
   if (u_seSigFile) {
     if(!s_igPath.isEmpty()) {
-      QFile f(s_igPath);
-      if(f.open(IO_ReadOnly)) {
-        QTextStream ts(&f);
-        while(!ts.atEnd()) {
-          s_igContents += ts.readLine();
-          if (!ts.atEnd())
-            s_igContents += "\n";
+      if (!u_seSigGenerator) {
+        QFile f(s_igPath);
+        if(f.open(IO_ReadOnly)) {
+          QTextStream ts(&f);
+          while(!ts.atEnd()) {
+            s_igContents += ts.readLine();
+            if (!ts.atEnd())
+              s_igContents += "\n";
+          }
+          f.close();
         }
-        f.close();
+        else
+          KMessageBox::error(knGlobals.topWidget, i18n("Cannot open the signature file!"));
+      } else {
+        KProcess process;
+
+        // construct command line...
+        QStringList command = QStringList::split(' ',s_igPath);
+        for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it )
+          process << (*it);
+
+        connect(&process, SIGNAL(receivedStdout(KProcess *, char *, int)), SLOT(slotReceiveStdout(KProcess *, char *, int)));
+        connect(&process, SIGNAL(receivedStderr(KProcess *, char *, int)), SLOT(slotReceiveStderr(KProcess *, char *, int)));
+
+        if (!process.start(KProcess::Block,KProcess::AllOutput))
+          KMessageBox::error(knGlobals.topWidget, i18n("Cannot run the signature generator!"));
       }
-      else
-        KMessageBox::error(knGlobals.topWidget, i18n("Cannot open the signature file!"));
     }
   }
   else
@@ -137,6 +154,18 @@ QString KNConfig::Identity::getSignature()
     s_igContents.prepend("-- \n");
 
   return s_igContents;
+}
+
+
+void KNConfig::Identity::slotReceiveStdout(KProcess *, char *buffer, int buflen)
+{
+  s_igContents.append(QString::fromLocal8Bit(buffer,buflen));
+}
+
+
+void KNConfig::Identity::slotReceiveStderr(KProcess *, char *buffer, int buflen)
+{
+  s_igContents.append(QString::fromLocal8Bit(buffer,buflen));
 }
 
 
