@@ -518,7 +518,15 @@ QString getFQDomainName (const KConfig& config)
 #ifdef HAVE_GETDOMAINNAME
 		char namebuffer [1024];
 		int ret;
+#ifdef __osf__
+		// OSF has a getdomainname that returns void.
+		//
+		//
+		getdomainname(namebuffer,1024);
+		ret=0;
+#else
 		ret = getdomainname (namebuffer, 1024);
+#endif
 		fqDomainName = namebuffer;
 		if (ret)
 			kdWarning() << __FUNCTION__ << ": getdomainname: " << strerror(errno) << endl;
@@ -692,27 +700,6 @@ int PopMailConduit::sendViaSMTP ()
 	//     Should probably read the prefs..
 	//     But, let's just get the mail..
 	//
-#ifdef __osf__
-	getdomainname(buffer+1024,1024);    // getdomainname is void here
-        ret = 0;
-#else
-	ret = getdomainname(buffer+1024,1024);
-#endif
-	if (ret)
-	{
-		ret=errno;
-		kdWarning() << __FUNCTION__
-			<< ": getdomainname: "
-			<< strerror(ret)
-			<< endl;
-	}
-	else
-	{
-		DEBUGCONDUIT << fname
-			<< ": Got domain name "
-			<< buffer+1024
-			<< endl;
-	}
 
 	// Handle each message in queue
 	for (current=0, handledCount=0; ; current++) {
@@ -2036,6 +2023,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.23  2001/05/07 20:03:12  adridg
+// Major SMTP fixups by Marko
+//
 // Revision 1.22  2001/05/03 06:37:21  leitner
 // getdomainname is void under Tru64
 //
