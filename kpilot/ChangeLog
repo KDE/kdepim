@@ -1,6 +1,36 @@
 KPilot Developer's notes for september 16th 2001
 ================================================
 
+KPilot now compiles completely again, at least on a KDE 2.1.1 platform.
+I'll check w/ KDE 2.2 as soon as I get that working here, and then we'll
+take another look at Qt3 -- I saw Cornelius has already put some changes in.
+
+2001-09-15  Adriaan de Groot
+* TODO
+  () Added a TODO file. I didn't copy all the TODO's from the ChangeLog
+  into it, though, since many make no sense right now.
+
+2001-09-13  Adriaan de Groot
+* kpilot/kpilotlink.{h,cc}
+  () Changed fTransientDevice into fDeviceType since we have lots of
+  variants to deal with.
+  () Added functions installFiles() and installFile() to handle
+  the installation (!) of files to the Pilot.
+* kpilot/pilotDaemon.cc
+  () Finally dealt with all the changed classes and methods of the
+  device link.
+  (slotEndHotSync) No need to tell the link to end the Sync, since
+  it's the one that's telling *us*.
+
+2001-09-08  Adriaan de Groot
+* kpilot/options.h
+  () I've installed RH 7.1 and gone back to KDE 2.1.1. Whee. They've
+  somehow utterly broken kdDebug() and kdWarning(). Added compile flag
+  DEBUG_CERR to make all the debugging info go to cerr instead.
+* kpilot/kpilot.cc
+  () Startup notification was added to startService...() in 2.2, so now 
+  there's an #ifdef handling that case.
+
 2001-09-07  Adriaan de Groot
 * kpilot/pilotComponent.h
   () Fixed up #ifdefs for new style
