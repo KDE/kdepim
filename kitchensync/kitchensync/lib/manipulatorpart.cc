@@ -49,7 +49,7 @@ ManipulatorPart::ManipulatorPart(QObject *parent, const char *name )
 //    kdDebug() << "M_Window " << endl;
     m_window = 0;
 
-    if ( parent && parent->inherits("KitchenSync::KSyncMainWindow") ) {
+    if ( parent && parent->inherits("KSync::KSyncMainWindow") ) {
 //        kdDebug() << "Cast " << endl;
         m_window = static_cast<KSyncMainWindow*>(parent);
     }else{

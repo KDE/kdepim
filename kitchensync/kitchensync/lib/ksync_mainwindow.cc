@@ -472,7 +472,21 @@ void KSyncMainWindow::switchProfile( const KonnectorProfile& prof ) {
  * configure current loaded
  */
 void KSyncMainWindow::slotConfigCur() {
+    ConfigureDialog *dlg = new ConfigureDialog(this);
+    ManipulatorPart *part = 0l;
 
+    for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
+        if( part->configIsVisible() )
+            dlg->addWidget(part->configWidget(),
+                           part->name(),
+                           part->pixmap() );
+    }
+    if (dlg->exec()) {
+        for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
+            part->slotConfigOk();
+        }
+    }
+    delete dlg;
 }
 
 void KSyncMainWindow::slotKonnectorProfile() {

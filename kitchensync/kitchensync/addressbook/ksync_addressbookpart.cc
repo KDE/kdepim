@@ -30,8 +30,14 @@ using namespace KSync;
 AddressBookPart::AddressBookPart( QWidget* parent,  const char* name,
                                   QObject* obj,  const char* name2,
                                   const QStringList & )
-    : ManipulatorPart( parent,  name )
+    : ManipulatorPart( parent ? parent : obj ,  name )
 {
+    kdDebug() << "parent " <<   parent << endl;
+    kdDebug() << "obj " << obj << endl;
+    if (parent)
+        kdDebug() << "parent class " << parent->className() << endl;
+    if (obj )
+        kdDebug() << "object class " << obj->className() << endl;
     setInstance( AddressBookPartFactory::instance() );
     m_pixmap = KGlobal::iconLoader()->loadIcon("kaddressbook",  KIcon::Desktop,  48 );
     m_widget = 0;
