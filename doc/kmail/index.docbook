@@ -12,6 +12,11 @@
 <!-- note from daniel.naber@t-online.de, 2001-05-05: I'm working on this
 "by hand" (using nedit) so please don't mix up the formatting too much. -->
 
+<!-- TODO: 
+* is it "message", "mail" or "email" ??? 
+* what is section / tab / ... ?
+-->
+
 <authorgroup>
 <author>
 <firstname>Daniel</firstname>
@@ -139,7 +144,7 @@ messages.</para>
 Headers</guilabel>, <guilabel>Security</guilabel>, and
 <guilabel>Miscellaneous</guilabel>.
 
-To begin sending and receiving email you will only have to change the settings
+To begin sending and receiving messages you will only have to change the settings
 in the <guilabel>Identity</guilabel> and <guilabel>Network</guilabel>
 tabs.</para>
 
@@ -156,14 +161,19 @@ email address. If you are using <application>PGP</application> or
 <application>GnuPG</application> you need to set an identity in 
 the <guilabel>PGP User Identity</guilabel> field.</para>
 
-<para>Finally, set the location of your signature file in the
-<guilabel>Signature File</guilabel> field. You can skip setting the signature
-file if you do not have one, but every time you compose a new message, &kmail;
-will ask you for your signature file. So if you don't want one, select
-<guilabel>Specify signature below</guilabel> and just don't enter anything in
-the field below. If you want a random signature, you may specify a program <!-- TODO: like
+<para>Optionally, set the location of your signature file in the
+<guilabel>Signature File</guilabel> field. If you want a random 
+signature, you may specify a program <!-- TODO: like
 "fortune"? --> and check the <guilabel>The file is a program</guilabel>
 box.</para>
+
+<para>If you add a new identity, an <guilabel>Add
+Transport...</guilabel> button will appear (this button does not exist
+for the <guilabel>Default</guilabel> identity). It allows you to
+configure a way of sending messages for a specific identitiy, &eg; you
+might want to use a different <acronym>SMTP</acronym> server for one
+of your identities.</para>
+
 </sect1>
 
 <sect1 id="setting-up-your-account">
@@ -180,7 +190,7 @@ or System Administrator.</para>
 <title>Sending Mail</title>
 
 <para>The <guilabel>Sending Mail</guilabel> section provides two options for
-sending mail: <guilabel>sendmail</guilabel> and
+sending messages: <guilabel>sendmail</guilabel> and
 <guilabel>SMTP</guilabel>. <application>Sendmail</application> has a reputation of
 being difficult to set up, so if you do not already have a working
 <application>sendmail</application> configuration, choose
@@ -192,6 +202,13 @@ the <guilabel>Port</guilabel> setting (the default is
 <para>If you do want to use <application>sendmail</application> and you are
 using a dial-up connection, follow the instructions for setting up sendmail for
 a dial-up connection in the <link linkend="faq">FAQ</link> section.</para>
+
+<para>The way of sending messages configured here will be used for your default
+identity and for all other identities that have no own way of sending messages. You 
+can use different ways of sending messages for different
+identities by adding them with the <guilabel>Add Transport...</guilabel> button
+in the <guilabel>Identity</guilabel> section.</para>
+
 </sect2>
       
 <sect2 id="properties">
@@ -275,16 +292,16 @@ folders whose name starts with a dot are also displayed.</para>
 <title>Options only relevant to POP3</title>
 
 <para>Select <guilabel>Delete mail from server</guilabel> if you don't want to
-leave your mail on the server after you downloaded it.</para>
+leave your messages on the server after you downloaded it.</para>
 
 <para>Select <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> if you
 don't want to check this account whenever you use <menuchoice><guimenu>Check
-mail</guimenu></menuchoice>.  You can still check for new mail on this account
+mail</guimenu></menuchoice>.  You can still check for new messages on this account
 with <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail
 in</guimenuitem></menuchoice>.</para>
 
 <para>Select <guilabel>Enable interval mail checking</guilabel> if you want
-&kmail; to check for new mail automatically. The interval can be specified below
+&kmail; to check for new messages automatically. The interval can be specified below
 under <guilabel>Check interval (minutes)</guilabel>.</para>
 
 <para><guilabel>inbox</guilabel> is the default folder for incoming
@@ -309,7 +326,7 @@ every time you start &kmail; and fetch new mail.</para>
 
 <warning><para>Be warned that we cannot really
 encrypt your password, so people who can access your configuration files (&eg;
-system administrators) can get your password if you select this option.</para></warning>
+system administrators) can easily get your password if you select this option.</para></warning>
 
 <para>&kmail; supports encryption via <guilabel>SSL</guilabel> 
 and <guilabel>TLS</guilabel>.</para> 
@@ -340,22 +357,22 @@ displays the folders it finds. For POP3 use <menuchoice><guimenu>File</guimenu>
 <sect1 id="testing-your-setup">
 <title>Testing your Setup</title>
 
-<para>First, you should send an email to test your configuration. To
-send an email, hit <keycombo
+<para>First, you should send yourself a message to test your configuration. To
+send a message, hit <keycombo
 action="simul">&Ctrl;<keycap>N</keycap></keycombo>, select the
 <guiicon>New message</guiicon> icon (the empty sheet of paper)
 or select the <menuchoice><guimenu>Message</guimenu><guimenuitem>New
 Message...</guimenuitem></menuchoice> menu item.  The
 <guilabel>Composer</guilabel> window will appear. Fill in the
 <guilabel>To:</guilabel> field with your email address and type
-something in the <guilabel>Subject</guilabel> field. Send the mail by
+something in the <guilabel>Subject</guilabel> field. Send the message by
 selecting <menuchoice><guimenu>Message</guimenu>
 <guimenuitem>Send now</guimenuitem></menuchoice>.</para>
       
 <para>To check your email, select
 <menuchoice><guimenu>File</guimenu><guimenuitem>Check
 Mail</guimenuitem></menuchoice>. In the lower right corner of the main window, a
-progress bar will indicate how much mail is being downloaded. If you receive the
+progress bar will indicate how many messages are being downloaded. If you receive the
 message you just sent, then congratulations!  If, however, you receive any error
 messages while testing your setup, make sure that your network connection is
 working and recheck your settings by selecting
@@ -370,9 +387,9 @@ working and recheck your settings by selecting
 <title>Using &kmail;</title>
 
 <sect1 id="the-mail-reader-window">
-<title>The Mail Reader Window</title>
+<title>The Main Window</title>
 
-<para>The <guilabel>Mail Reader</guilabel> window is the window that appears
+<para>The main window is the window that appears
 when &kmail; is started. It is divided into three panes:</para>
 
 <variablelist>
@@ -1114,7 +1131,7 @@ the program with the parts of the mail: <symbol>&percnt;0</symbol>,
 <symbol>&percnt;1</symbol>, &etc; will stand for files representing
 the message parts. For common mails <symbol>&percnt;0</symbol> is the
 text, <symbol>&percnt;1</symbol> the first attachment and so
-on. Additionally, the whole mail is fed into the program's
+on. Additionally, the whole message is fed into the program's
 <acronym>stdin</acronym>.</para>
 
 <caution><para>This currently only works if the message has
@@ -1237,14 +1254,14 @@ that are from fj@anywhere.com.</para>
 <sect1 id="multiple-accounts">
 <title>Multiple Accounts</title>
 
-<para>Multiple accounts are used to check mail from more than one email address
+<para>Multiple accounts are used to check fro messages from more than one email address
 and/or mail server. Select <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kmail;...</guimenuitem></menuchoice> and click on the
 <guilabel>Network</guilabel> tab to add or change your account settings. See the
 <link linkend="getting-started">Getting started</link> section for more
 information on the settings in the <guilabel>Network</guilabel> tab.</para>
 
-<para>To check mail from a particular account, use the
+<para>To check for messages from a particular account, use the
 <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail
 in...</guimenuitem></menuchoice> submenu to select the account to check
 for mail. You can also press the mouse button on the <guiicon>Check
@@ -1288,8 +1305,9 @@ after composing</guilabel>.  </para></warning>
 necessary to have <application>PGP</application> installed and set up
 properly. Of course we cannot give you a full introduction of
 <application>PGP</application> here. We will only mention the steps you have to
-do to get <application>PGP</application> going. For details you should have a look at the excellent 
-<application>PGP</application> documentation.</para> 
+do to get <application>PGP</application> going. For details you should have a look at 
+the excellent  <application>PGP</application> documentation 
+or <ulink url="http://www.gnupg.org/docs.html#guides">The GNU Privacy Handbook</ulink>.</para> 
 
 <para>It is certainly a good idea to study this documentation as well as an
 introduction into public key cryptography (&eg; out of the
@@ -1321,25 +1339,21 @@ co-operation between &kmail; and <application>pgp</application>.</para>
 <sect2 id="pgp-settings">
 <title><application>PGP</application> Related Settings in &kmail;</title>
 
-<para>Open the &kmail; <guilabel>Configure &kmail;...</guilabel> dialog and go to the
-<guilabel>Security</guilabel> settings page. Type your identity into the
-<guilabel>PGP user identity</guilabel> entry field. There are also three
-options:</para>
+<para>Enter your <application>PGP</application> user identity in the
+corresponding field of the <guilabel>Identity</guilabel> settings.
+Then select the <guilabel>PGP</guilabel> tab on
+the <guilabel>Security</guilabel> settings page. There you'
+ll find the following options:</para>
 
 <variablelist>
 <varlistentry>
 <term><guilabel>Keep passphrase in memory</guilabel></term>
 <listitem>
-<para>When this option is off, then &kmail; will ask for your passphrase each
-time you sign a message (before sending) or decrypting a message (sent to
-you). If you turn this option on, &kmail; will remember your passphrase from
+<para>When this option is off, &kmail; will ask for your passphrase each
+time you sign a message (before sending) or select an encrypted message.
+If you turn this option on, &kmail; will remember your passphrase from
 after your first successful input until you finish your &kmail; session. The
 passphrase is stored in memory and not written to the harddisk.</para>
-
-<warning><para>Note that a user
-with enough privileges (&eg; <systemitem>root</systemitem>) might be able to
-catch your passphrase even from the computer's memory.</para></warning>
-
 </listitem>
 </varlistentry>
 
@@ -1365,8 +1379,9 @@ strongly recommended to use this option.</para>
 <varlistentry>
 <term><guilabel>Encryption tool</guilabel></term>
 <listitem>
-<para>Here you can choose if you want to use <application>GnuPG</application> or
-<application>PGP</application>. Of course the program you select has to be
+<para>Here you can choose if you want to use <application>PGP</application>,
+<application>GnuPG</application> or no encryption
+software at all. Of course the program you select has to be
 installed on your system. It is also important to select the correct
 version.</para>
 </listitem>
@@ -1376,11 +1391,13 @@ version.</para>
 <para>On the <guilabel>Composer</guilabel> tab you can also check the
 <guilabel>Automatically sign messages using PGP</guilabel> option. This means
 that all your messages will be signed before being sent. (So you don't have to
-set the signing option for each mail manually.)</para>
+set the signing option for each message manually.)</para>
 
-<para>Now you are able to sign outgoing messages. To let people send encrypted
-messages to you and to let them verify your signature you must send them your
-public key. To send encrypted mails to other people or to verify their signed
+<para>Now you are able to sign outgoing messages. To let people send you
+encrypted messages and to let them verify your signature you
+must send them your public key or upload your public key to a public
+<application>PGP</application> key server so that they can fetch your key from there.
+To send encrypted mails to other people or to verify their signed
 messages you will need their public keys.  You can store your public key(s) on a
 public <application>PGP</application> key server such as <ulink
 url="http://www.cam.ac.uk.pgp.net/pgpnet/">http://www.cam.ac.uk.pgp.net/pgpnet/</ulink>.</para>
@@ -1433,16 +1450,22 @@ encrypted, so nobody can read these messages without knowing your passphrase.</p
 <sect2 id="pgp-receiving-a-public-key">
 <title>Receiving a Public Key</title>
 
-<para>You can get a public key as an attachment or simply by ftp or
-floppy. Before you can use this key to encrypt a message to the owner of the
-key, you should verify the key (check its fingerprint or look for trusted
-signatures). Then you can add this key to your public keyring by typing
-<userinput><command>pgp</command> <option>-ka</option>
-<replaceable>filename</replaceable></userinput> at the command line. If the key
-is not certified with a trusted signature, you can't use it with &kmail; to
-encrypt messages unless you have signed that key (use
-<userinput><command>pgp</command> <option>-ks</option> <replaceable>identity of
-the key</replaceable></userinput>).</para>
+<para>You can receive a public key as an attachment or via http, ftp or a floppy.
+Before you can use this key to encrypt a message to the owner of the
+key, you should verify the key (check its fingerprint or look for
+trusted signatures). Then you can add this key to your public keyring
+by typing <userinput><command>pgp</command> <option>-ka</option>
+<replaceable>filename</replaceable></userinput> at the command line if you are using 
+<application>PGP</application> or by typing 
+<userinput><command>gpg</command> <option>--import</option>
+<replaceable>filename</replaceable></userinput> at the command line if you are using
+<application>GnuPG</application>. If the key is not certified with a trusted signature 
+and you are using <application>PGP</application>, you can't use it with &kmail; 
+to encrypt messages unless you have signed that key (use 
+<userinput><command>pgp</command> <option>-ks</option> <replaceable>identity of 
+the key</replaceable></userinput>). With <application>GnuPG</application>,
+on the other hand, it's currently possible to encrypt messages with
+untrusted keys.</para>
 
 </sect2>
 
@@ -1454,10 +1477,12 @@ you simply create the message in the composer window. Before you send the
 message, check the button with the lock symbol in the toolbar of the composer
 window. Then send the message.</para>
 
-<para>If &kmail; can't find a key for any of the recipients, it will display a
-list containing all available keys. You can choose the appropriate key out of
-the list (or cancel the action).  &kmail; might also inform you about errors
-throughout the encryption process.</para>
+<para>&kmail; always uses the first key which matches the recipient's address to
+encrypt the message. If &kmail; can't find a matching key for a
+recipient, it will display a list containing all available keys. You
+can choose the appropriate key from the list or cancel the action.
+&kmail; might also inform you about errors throughout the encryption
+process.</para>
 
 <para>As mentioned above, you won't be able to read your own encrypted sent
 mails if you don't check <guilabel>Always encrypt to self</guilabel> in the
@@ -1604,7 +1629,7 @@ start of the line).</para>
 
 <para><guilabel>Automatically sign messages using PGP</guilabel> lets you toggle
 whether to automatically sign your messages by default. Of course you can still
-deselect the icon in the composer window for each mail if necessary.</para>
+deselect the icon in the composer window for each message if necessary.</para>
 
 <para><guilabel>Word wrap at column</guilabel> lets you turn word wrapping on
 and off in the <guilabel>Composer window</guilabel> and lets you set the column
@@ -1661,7 +1686,7 @@ forwarding.</para>
 <para>The <guilabel>Create own Message-Id headers</guilabel> section lets you define
 how your messages' Message-Id field will be generated. The Message-Id
 must have a suffix that's world-wide unique. Depeding on your setup,
-this might already be the case. You should send yourself a mail and
+this might already be the case. You should send yourself a message and
 look at its headers. If it contains a Message-Id that ends in
 <quote>localhost</quote> or any other string that's not guaranteed to
 be unique you need to select <guilabel>Create own Message-Id
@@ -1792,7 +1817,7 @@ really want to emtpy the folder.</para>
 <term><guilabel>New Mail Notification</guilabel></term>
 <listitem>
 <para>This let's you configure actions for the arrival of new mail. Note that
-automatically fetching mail can be configured in your account settings under <link
+automatically fetching messages can be configured in your account settings under <link
 linkend="receiving-mail">Incoming Mail</link>.</para>
 </listitem>
 </varlistentry>
@@ -1812,7 +1837,7 @@ linkend="receiving-mail">Incoming Mail</link>.</para>
 performs a menu item function, it is listed with the menu item.</para>
 
 <sect1 id="main-mail-reader-window">
-<title>The Main Mail Reader window</title>
+<title>The Main Window</title>
 
 <sect2 id="reader-file-menu">
 <title><guimenu>File</guimenu> Menu</title>
@@ -1826,7 +1851,7 @@ performs a menu item function, it is listed with the menu item.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Creates a new <guilabel>Mail Reader</guilabel> window.</para>
+<para>Creates a new main window.</para>
 </listitem>
 </varlistentry>
 
@@ -1883,7 +1908,7 @@ on disk according to how you have moved and deleted them in &kmail;.</para>
 <guimenuitem>Check <accel>M</accel>ail</guimenuitem>
 </menuchoice>
 </term>
-<listitem><para>Checks for new mail in all your accounts, except those that
+<listitem><para>Checks for new messages in all your accounts, except those that
 have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 </listitem>
 </varlistentry>
@@ -1896,7 +1921,7 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Submenu that lets you check for new mail from a particular account.</para>
+<para>Submenu that lets you check for new messages from a particular account.</para>
 </listitem>
 </varlistentry>
 
@@ -1932,7 +1957,7 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 </term>
 <listitem>
 <para>Starts up <application>kmailcvt</application> (which is part of kdenetwork).
-This application lets you import mail from several proprietary mail clients to
+This application lets you import messages from several proprietary mail clients to
 &kmail;.</para>
 </listitem>
 </varlistentry>
@@ -1948,7 +1973,7 @@ This application lets you import mail from several proprietary mail clients to
 </menuchoice>
 </term>
 <listitem>
-<para>Closes the current <guilabel>Mail Reader</guilabel> window or exits
+<para>Closes the current main window or exits
 &kmail; if there's only this one window.</para>
 </listitem>
 </varlistentry>
@@ -2527,7 +2552,7 @@ This new filter is based on the fields of the current mail.</para>
 </term>
 <listitem>
 <para>Allows you to change the status of the selected message to one of the
-below (more than one status per mail is currently not supported):</para>
+below (more than one status per message is currently not supported):</para>
 <!-- fixme: more than one somewhen supported? -->
 
 <itemizedlist>
@@ -3396,7 +3421,7 @@ reply.</para></answer>
 <question><para>&kmail; disappears/crashes while fetching mail.</para></question>
 <answer><para>Make sure you have enough free disk space. &kmail; currently
 does not handle the situation of a full disk gracefully and quits. Note: &kmail;
-does protect your data, mail that could not be saved to disk is left on the 
+does protect your data, messages that could not be saved to disk is left on the 
 server.</para></answer>
 </qandaentry>
 
@@ -3409,7 +3434,7 @@ address entry if you are using the <quote>traditional</quote> &kmail; address bo
 <qandaentry>
 <question><para>My signature has two dashes above it. This makes me very sad.</para></question>
 <answer>
-<para>Separating the signature from the mail body with two dashes and a space
+<para>Separating the signature from the message body with two dashes and a space
 is a common and useful kind of standard. If you have strong feelings about this
 I suggest you modify the &kmail; source to remove that line.</para>
 </answer>
@@ -3551,7 +3576,9 @@ which often change between different versions.</para>
 <para>Trusting a foreign public key without checking it is no good idea.</para>
 </listitem>
 <listitem>
-<para>&kmail; will not encrypt messages with an untrusted (unsigned) public key.</para>
+<para>&kmail; will not encrypt messages with an untrusted (unsigned) public key
+if you use <application>PGP</application>. If you use <application>GnuPG</application>
+&kmail; <emphasis>will</emphasis> encrypt messages with untrusted public keys.</para>
 </listitem>
 <listitem>
 <para>As most other mail clients, &kmail; can encrypt your messages, but
@@ -3720,12 +3747,12 @@ signature below.</para></answer>
 <qandaentry>
 <question><para>Why does &kmail; keep asking me for the location of my signature
 file?</para></question>
-<answer><para>&kmail; will ask you the location of your signature file if you
-have checked the option <guilabel>Use a signature from file</guilabel> in the
+<answer><para>&kmail; will ask you for the location of your signature file if you
+have checked the option <guilabel>Automatically append signature</guilabel> in the
 <guilabel>Composer</guilabel> tab of the <guilabel>Configure &kmail;...</guilabel> dialog,
-but have not specified a signature file in the <guilabel>Identity</guilabel>
-tab. You should either specify a signature file or deselect <guilabel>Use a
-signature from file</guilabel>.</para></answer>
+but you have not specified a signature file in the <guilabel>Identity</guilabel>
+tab. You should either specify a signature file, select <guilabel>Use signature below</guilabel>,
+or deselect <guilabel>Automatically append signature</guilabel>.</para></answer>
 </qandaentry>
 
 <qandaentry>
