@@ -50,6 +50,7 @@ protected slots:
 	void slotNewToolbarConfig();
 	void slotShowMessageProperties();
 	void slotShowMessageText();
+	void slotSaveMessageText();
 
 	void viewSelectionChanged();
 	void viewRightButtonPressed(QListViewItem *item, const QPoint& p, int c);
@@ -65,6 +66,7 @@ private:
 	void enableExtractAll(bool on = true);
 	void enableSingleAction(bool on = true);
 	void cleanup();
+	
 	void extractTo(const QString& dirname);
 	QString extractTemp(KTNEFAttach *att);
 

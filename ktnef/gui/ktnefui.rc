@@ -13,6 +13,8 @@
     <Action name="properties_file" />
 	<Separator />
 	<Action name="msg_properties" />
+	<Action name="msg_text" />
+	<Action name="msg_save" />
   </Menu>
   <Menu name="settings"><text>&amp;Settings</text>
     <Action name="options_default_dir" />

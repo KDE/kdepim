@@ -102,7 +102,8 @@ void KTNEFMain::setupActions()
 	new KAction(i18n("Extract All To..."), QString("ktnef_extract_all_to"), 0, this, SLOT(extractAllFiles()), actionCollection(), "extract_all_files");
 	new KAction( i18n( "Message Properties..." ), "help", 0, this, SLOT( slotShowMessageProperties() ), actionCollection(), "msg_properties" );
 	new KAction(i18n("Properties..."), QString("contents"), 0, this, SLOT(propertiesFile()), actionCollection(), "properties_file");
-	new KAction( i18n( "Message Text..." ), "mail_generic", 0, this, SLOT( slotShowMessageText() ), actionCollection(), "msg_text" );
+	new KAction( i18n( "Show Message Text" ), "mail_generic", 0, this, SLOT( slotShowMessageText() ), actionCollection(), "msg_text" );
+	new KAction( i18n( "Save Message Text..." ), "filesave", 0, this, SLOT( slotSaveMessageText() ), actionCollection(), "msg_save" );
 	actionCollection()->action("view_file")->setEnabled(false);
 	actionCollection()->action("view_file_as")->setEnabled(false);
 	actionCollection()->action("extract_file")->setEnabled(false);
@@ -372,6 +373,25 @@ void KTNEFMain::slotShowMessageText()
 	tmpFile.close();
 
 	KRun::runURL( tmpFile.name(), "text/rtf", true );
+}
+
+void KTNEFMain::slotSaveMessageText()
+{
+	QString rtf = parser_->message()->rtfString();
+	QString filename = KFileDialog::getSaveFileName( QString::null, QString::null, this );
+	if ( !filename.isEmpty() )
+	{
+		QFile f( filename );
+		if ( f.open( IO_WriteOnly ) )
+		{
+			QTextStream t( &f );
+			t << rtf;
+		}
+		else
+			QMessageBox::critical( this, i18n( "Error" ),
+					i18n( "Unable to save message text, check file permissions." ),
+					QMessageBox::Ok|QMessageBox::Default, 0);
+	}
 }
 
 #include "ktnefmain.moc"
