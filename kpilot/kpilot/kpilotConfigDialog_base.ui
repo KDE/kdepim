@@ -136,10 +136,6 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <name>name</name>
                                     <cstring>fPilotDevice</cstring>
                                 </property>
-                                <property stdset="1">
-                                    <name>text</name>
-                                    <string>/dev/pilot</string>
-                                </property>
                                 <property>
                                     <name>whatsThis</name>
                                     <string>&lt;qt&gt;Enter the port the Pilot is attached to, serial or USB.&lt;/qt&gt;</string>
@@ -535,10 +531,6 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <name>name</name>
                                     <cstring>fBackupOnly</cstring>
                                 </property>
-                                <property stdset="1">
-                                    <name>text</name>
-                                    <string>Arng,PmDB,lnch</string>
-                                </property>
                                 <property>
                                     <name>whatsThis</name>
                                     <string>&lt;qt&gt;Databases listed here are only backed up, not synced.&lt;/qt&gt;</string>
@@ -549,10 +541,6 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 <property stdset="1">
                                     <name>name</name>
                                     <cstring>fSkipDB</cstring>
-                                </property>
-                                <property stdset="1">
-                                    <name>text</name>
-                                    <string>AvGo</string>
                                 </property>
                                 <property>
                                     <name>whatsThis</name>
