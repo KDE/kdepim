@@ -23,6 +23,8 @@ noinst_HEADERS = desktoptracker.h edittaskdialog.h \
 
 KDE_ICON = karm
 
+KDE_OPTIONS = nofinal
+
 rcdir = $(kde_datadir)/karm
 rc_DATA = karmui.rc
 
