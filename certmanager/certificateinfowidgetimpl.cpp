@@ -269,9 +269,12 @@ void CertificateInfoWidgetImpl::updateChainView() {
   // root item:
   if ( (*it).chainID() && qstrcmp( (*it).chainID(), (*it).subkey(0).fingerprint() ) == 0 )
     item = new QListViewItem( pathView, Kleo::DN( (*it++).userID(0).id() ).prettyDN() );
-  else
+  else {
     item = new QListViewItem( pathView, i18n("Issuer certificate not found ( %1)")
 			      .arg( Kleo::DN( (*it).issuerName() ).prettyDN() ) );
+    item->setOpen( true ); // Qt bug: doesn't open after setEnabled( false ) :/
+    item->setEnabled( false );
+  }
   item->setOpen( true );
 
   // subsequent items:
