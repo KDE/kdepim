@@ -2,6 +2,7 @@ KDE_CXXFLAGS = $(USE_THREADS)
 
 INCLUDES=	-I$(top_srcdir)/libkdenetwork \
 		-I$(top_srcdir)/libkdepim \
+                -I$(top_srcdir) \
 		 $(all_includes)
 
 lib_LTLIBRARIES = libknodecommon.la
