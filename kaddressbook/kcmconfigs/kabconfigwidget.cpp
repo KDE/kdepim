@@ -86,19 +86,21 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   mNameParsing = new QCheckBox( i18n( "Automatic name parsing for new addressees" ), groupBox, "mparse" );
   boxLayout->addWidget( mNameParsing );
 
-  layout->addWidget( groupBox );
-
-  QBoxLayout *editorLayout = new QHBoxLayout( layout );
+  QBoxLayout *editorLayout = new QHBoxLayout( boxLayout, KDialog::spacingHint() );
   
-  QLabel *label = new QLabel( i18n("Addressee Editor Type:"), generalPage );
+  QLabel *label = new QLabel( i18n( "Addressee Editor Type:" ), groupBox );
   editorLayout->addWidget( label );
   
-  mEditorCombo = new QComboBox( generalPage );
-  mEditorCombo->insertItem( i18n("Full Editor") );
-  mEditorCombo->insertItem( i18n("Simple Editor") );
+  mEditorCombo = new QComboBox( groupBox );
+  mEditorCombo->insertItem( i18n( "Full Editor" ) );
+  mEditorCombo->insertItem( i18n( "Simple Editor" ) );
+  label->setBuddy( mEditorCombo );
   editorLayout->addWidget( mEditorCombo );
 
   editorLayout->addStretch( 1 );
+
+
+  layout->addWidget( groupBox );
 
   groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "Script-Hooks" ), generalPage );
   QGridLayout *grid = new QGridLayout( groupBox->layout(), 2, 2,
@@ -121,18 +123,22 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   layout->addWidget( groupBox );
 
   groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "Extensions" ), generalPage );
-  boxLayout = new QVBoxLayout( groupBox->layout() );
+  boxLayout = new QVBoxLayout( groupBox->layout(), KDialog::spacingHint() );
   boxLayout->setAlignment( Qt::AlignTop );
 
   mExtensionView = new KListView( groupBox );
   mExtensionView->setAllColumnsShowFocus( true );
+  mExtensionView->setFullWidth( true );
   mExtensionView->addColumn( i18n( "Name" ) );
   mExtensionView->addColumn( i18n( "Description" ) );
   boxLayout->addWidget( mExtensionView );
-  connect( mExtensionView, SIGNAL(doubleClicked ( QListViewItem *)), this, SLOT(configureExtension(QListViewItem *)));
+  connect( mExtensionView, SIGNAL( doubleClicked ( QListViewItem* ) ),
+           this, SLOT( configureExtension( QListViewItem* ) ) );
+  QHBoxLayout *hboxLayout = new QHBoxLayout( boxLayout, KDialog::spacingHint() );
+  hboxLayout->addStretch( 1 );
   mConfigureButton = new QPushButton( i18n( "Configure..." ), groupBox );
   mConfigureButton->setEnabled( false );
-  boxLayout->addWidget( mConfigureButton );
+  hboxLayout->addWidget( mConfigureButton );
 
   layout->addWidget( groupBox );
 
