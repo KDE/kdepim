@@ -235,7 +235,7 @@ bool KNGroup::loadHdrs()
         if(buff!="0") art->references()->from7BitString(buff.copy());
                       
         buff=f.readLine();
-        sscanf(buff,"%d %d %d", &id, &lines, (uint*) &timeT);
+        sscanf(buff,"%d %d %u", &id, &lines, (uint*) &timeT);
         art->setId(id);
         art->lines()->setNumberOfLines(lines);
         art->date()->setUnixTime(timeT);
