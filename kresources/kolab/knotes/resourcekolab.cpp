@@ -128,9 +128,11 @@ bool ResourceKolab::loadSubResource( const QString& resource )
   mSilent = true;
   QMap<Q_UINT32, QString>::Iterator it;
   for ( it = lst.begin(); it != lst.end(); ++it ) {
-    bool ret = addNote( it.data(), resource, it.key() );
-    if ( !ret )
+    KCal::Journal* journal = addNote( it.data(), resource, it.key() );
+    if ( !journal )
       kdDebug(5500) << "loading note " << it.key() << " failed" << endl;
+    else
+      manager()->registerNote( this, journal );
   }
   mSilent = silent;
 
@@ -153,11 +155,6 @@ bool ResourceKolab::load()
     rc &= loadSubResource( itR.key() );
   }
 
-  KCal::Journal::List journals = mCalendar.journals();
-  KCal::Journal::List::ConstIterator it;
-  for ( it = journals.begin(); it != journals.end(); ++it )
-    manager()->registerNote( this, *it );
-
   return rc;
 }
 
@@ -172,15 +169,17 @@ bool ResourceKolab::addNote( KCal::Journal* journal )
   return addNote( journal, QString::null, 0 );
 }
 
-bool ResourceKolab::addNote( const QString& xml, const QString& subresource,
+KCal::Journal* ResourceKolab::addNote( const QString& xml, const QString& subresource,
                              Q_UINT32 sernum )
 {
   KCal::Journal* journal = Note::xmlToJournal( xml );
   Q_ASSERT( journal );
-  Q_ASSERT( !mUidMap.contains( journal->uid() ) );
   if( journal && !mUidMap.contains( journal->uid() ) )
-    return addNote( journal, subresource, sernum );
-  return false;
+    if ( addNote( journal, subresource, sernum ) )
+      return journal;
+    else
+      delete journal;
+  return 0;
 }
 
 bool ResourceKolab::addNote( KCal::Journal* journal,
@@ -222,9 +221,12 @@ bool ResourceKolab::deleteNote( KCal::Journal* journal )
     // Odd
     return false;
 
-  kmailDeleteIncidence( mUidMap[ uid ].resource(),
-                        mUidMap[ uid ].serialNumber() );
+  if ( !mSilent ) {
+    kmailDeleteIncidence( mUidMap[ uid ].resource(),
+                          mUidMap[ uid ].serialNumber() );
+  }
   mUidMap.remove( uid );
+  manager()->deleteNote( journal );
   mCalendar.deleteJournal( journal );
   return true;
 }
@@ -240,7 +242,6 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
     resource = findWritableResource( mResources );
     sernum = 0;
   }
-  kdDebug() << k_funcinfo << "sernum=" << sernum << endl;
 
   KCal::Journal* journal = dynamic_cast<KCal::Journal*>( i );
   QString xml = Note::journalToXML( journal );
@@ -262,34 +263,29 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
 
   const bool silent = mSilent;
   mSilent = true;
-  addNote( note, resource, sernum );
+  KCal::Journal* journal = addNote( note, resource, sernum );
+  if ( journal )
+    manager()->registerNote( this, journal );
   mSilent = silent;
-
   return true;
 }
 
 void ResourceKolab::fromKMailDelIncidence( const QString& type,
                                            const QString& /*resource*/,
-                                           const QString& note )
+                                           const QString& uid )
 {
   // Check if this is a note
   if( type != kmailContentsType ) return;
 
-  // kdDebug(5500) << "ResourceKolab::deleteIncidence( " << type << ", " << uid
-  //               << " )" << endl;
-
-  // ### this is just to load the uid - make it faster by parsing it here?
-  KCal::Journal* journal = Note::xmlToJournal( note );
-  if ( !journal )
-    return;
+  kdDebug(5500) << "ResourceKolab::fromKMailDelIncidence( " << type << ", " << uid
+                << " )" << endl;
 
   const bool silent = mSilent;
   mSilent = true;
-  KCal::Journal* j = mCalendar.journal( journal->uid() );
-  if( j ) deleteNote( j );
+  KCal::Journal* j = mCalendar.journal( uid );
+  if( j )
+    deleteNote( j );
   mSilent = silent;
-
-  delete journal;
 }
 
 void ResourceKolab::slotRefresh( const QString& type,
@@ -349,12 +345,15 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
 
   // Finally delete all the incidences
   if ( !uids.isEmpty() ) {
+    const bool silent = mSilent;
+    mSilent = true;
     QStringList::ConstIterator it;
     for ( it = uids.begin(); it != uids.end(); ++it ) {
       KCal::Journal* j = mCalendar.journal( *it );
-      if( j ) deleteNote( j );
-      mUidMap.remove( *it );
+      if( j )
+        deleteNote( j );
     }
+    mSilent = silent;
   }
 
   emit signalSubresourceRemoved( this, type, resource );

@@ -80,7 +80,7 @@ public:
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
                               Q_UINT32 sernum, const QString& note );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
-                              const QString& note );
+                              const QString& uid );
   void slotRefresh( const QString& type, const QString& resource );
 
   /// Listen to KMail changes in the amount of sub resources
@@ -101,8 +101,8 @@ signals:
 private:
   bool addNote( KCal::Journal* journal, const QString& resource,
                 Q_UINT32 sernum );
-  bool addNote( const QString& xml, const QString& subresource,
-                Q_UINT32 sernum );
+  KCal::Journal* addNote( const QString& xml, const QString& subresource,
+                          Q_UINT32 sernum );
 
   bool loadSubResource( const QString& resource );
 
