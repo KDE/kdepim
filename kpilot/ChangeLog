@@ -35,6 +35,16 @@ TODO LIST (Ignore the file TODO)
 KPilot Developer's notes for April 30th, 2003
 =============================================
 
+2003-4-20  Adriaan de Groot
+* Added the sources for a generic DB viewer and a datebook viewer.
+  These don't show up anywhere yet though. The datebook viewer has
+  no functionality yet.
+* kpilot.cc Minor change to detect non-functioning daemon better.
+* Restored the tooltip code to the conduit config dialog. Removed
+  the "description" column again.
+* uiDialog.cc Moved the addAboutPage() code to a static function so
+  that it can be reused elsewhere.
+
 2003-4-18  Adriaan de Groot
 * Laurent Montel did some compile fixes for restrictive (NO_ASCII_ ...)
   compile environments. And I fixed them to match the coding guide.
