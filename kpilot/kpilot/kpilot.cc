@@ -639,7 +639,7 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Adding component @"
-		<< (int) p << " called " << p->name("(none)") << endl;
+		<< (unsigned long) p << " called " << p->name("(none)") << endl;
 #endif
 
 	fP->list().append(p);
@@ -750,39 +750,34 @@ void KPilotInstaller::slotNewToolbarConfig()
 #endif
 }
 
-void KPilotInstaller::slotConfigureKPilot()
+/*
+** Can't be a member function because it needs to be called even with no KPilotInstaller.
+*/
+static bool runConfigure(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 {
 	FUNCTIONSETUP;
+	bool ret = false;
 
-	if (fAppStatus!=Normal) return;
-	fAppStatus=UIBusy;
-	fConfigureKPilotDialogInUse = true;
 	// Display the (modal) options page.
 	//
 	//
-	int rememberedSync = getDaemon().nextSyncType();
-	getDaemon().requestSync(0);
+	int rememberedSync = daemon.nextSyncType();
+	daemon.requestSync(0);
 
 	KPilotSettings::self()->readConfig();
 
-	KCMultiDialog *options = new KCMultiDialog( KDialogBase::Plain, i18n("Configuration"), this, "KPilotPreferences", true );
+	KCMultiDialog *options = new KCMultiDialog( KDialogBase::Plain, i18n("Configuration"), parent, "KPilotPreferences", true );
 	options->addModule( "kpilot_config.desktop" );
 
 	if (!options)
 	{
 		kdError() << k_funcinfo
 			<< ": Can't allocate KPilotOptions object" << endl;
-		getDaemon().requestSync(rememberedSync);
-		fConfigureKPilotDialogInUse = false;
-		fAppStatus=Normal;
-		return;
+		daemon.requestSync(rememberedSync);
+		return false;
 	}
 
 	int r = options->exec();
-//	connect( options, SIGNAL( configCommitted() ),
-//		this, SLOT( readConfig() ) );
-//	options->show();
-//	options->raise();
 
 	if ( r && options->result() )
 	{
@@ -791,16 +786,43 @@ void KPilotInstaller::slotConfigureKPilot()
 #endif
 
 		// The settings are changed in the external module!!!
+		KPilotSettings::self()->config()->sync();
 		KPilotSettings::self()->readConfig();
 
 		// Update the daemon to reflect new settings.
 		//
 		//
-		getDaemon().reloadSettings();
+		daemon.reloadSettings();
+		ret = true;
+	}
 
+	KPILOT_DELETE(options);
+	daemon.requestSync(rememberedSync);
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Done with options." << endl;
+#endif
+
+	return ret;
+}
+
+void KPilotInstaller::slotConfigureKPilot()
+{
+	FUNCTIONSETUP;
+
+	if (fAppStatus!=Normal)
+	{
+		if (fLogWidget)
+		{
+			fLogWidget->addMessage(i18n("Cannot configure KPilot right now."));
+		}
+		return;
+	}
+	fAppStatus=UIBusy;
+	fConfigureKPilotDialogInUse = true;
+	if (runConfigure(getDaemon(),this))
+	{
 		// Update each installed component.
-		//
-		//
 		for (fP->list().first();
 			fP->list().current();
 			fP->list().next())
@@ -810,12 +832,6 @@ void KPilotInstaller::slotConfigureKPilot()
 		}
 	}
 
-	KPILOT_DELETE(options);
-	getDaemon().requestSync(rememberedSync);
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Done with options." << endl;
-#endif
 	fConfigureKPilotDialogInUse = false;
 	fAppStatus=Normal;
 }
@@ -948,13 +964,9 @@ int main(int argc, char **argv)
 			outdated = true;
 			KPilotConfig::interactiveUpdate();
 		}
-		KCMultiDialog *options = new KCMultiDialog( KDialogBase::Plain,
-			i18n("KPilot configuration"), 0L, "KPilotPreferences", true );
-		options->addModule( "kpilot_config.desktop" );
-//		ConduitConfigDialog *options = new ConduitConfigDialog(0L, "configDialog", true);
-		int r = options->exec();
-
-		// If canceled, always fail.
+		PilotDaemonDCOP_stub *daemon = new PilotDaemonDCOP_stub("kpilotDaemon","KPilotDaemonIface");
+		bool r = runConfigure(*daemon,0L);
+		delete daemon;
 		if (!r) return 1;
 		// User expected configure only.
 		if (run_mode == ConfigureKPilot)

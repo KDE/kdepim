@@ -401,6 +401,8 @@ void PilotDaemon::showTray()
 		break;
 	}
 
+	delete KPilotSettings::self();
+	KPilotSettings::self()->config()->reparseConfiguration();
 	KPilotSettings::self()->readConfig();
 	getPilotSpeed();
 
@@ -416,6 +418,10 @@ void PilotDaemon::showTray()
 		<< " ("
 		<< fPilotType
 		<< ")"
+		<< endl;
+	DEBUGDAEMON << fname
+		<< ": Got conduit list "
+		<< (KPilotSettings::installedConduits().join(","))
 		<< endl;
 #endif
 
