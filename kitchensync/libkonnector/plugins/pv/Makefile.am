@@ -20,7 +20,7 @@ SUBDIRS = libpv
 
 lib_LTLIBRARIES = libpvkonnector.la
 
-INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/libkcal $(all_includes) -Ilibpv
+INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/libkcal -Ilibpv $(all_includes)
 
 libpvkonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/lib -I../../   $(all_includes)
 libpvkonnector_la_LIBDADD = ../../libkonnector.la ../../../libksync.la
