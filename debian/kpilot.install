@@ -1,6 +1,7 @@
 debian/tmp/usr/bin/kpilot
 debian/tmp/usr/bin/kpilotDaemon
 debian/tmp/usr/bin/kpalmdoc
+debian/tmp/usr/lib/libkpilot.la
 debian/tmp/usr/lib/libkpilot.so.*
 debian/tmp/usr/lib/kde3/conduit_doc.so
 debian/tmp/usr/lib/kde3/conduit_doc.la
