@@ -31,7 +31,7 @@ class GroupwiseServer;
 
 namespace KCal {
 
-class GroupwisePrefs;
+class GroupwisePrefsBase;
 
 /**
   This class provides a resource for accessing a Groupwise calendar.
@@ -49,7 +49,7 @@ class ResourceGroupwise : public ResourceCached
     void readConfig( const KConfig *config );
     void writeConfig( KConfig *config );
 
-    GroupwisePrefs *prefs();
+    GroupwisePrefsBase *prefs();
 
     bool doOpen();
     void doClose();
@@ -69,7 +69,7 @@ class ResourceGroupwise : public ResourceCached
     void loadFinished();
 
   private:
-    GroupwisePrefs *mPrefs;
+    GroupwisePrefsBase *mPrefs;
     KABC::LockNull mLock;
 
     GroupwiseServer *mServer;

@@ -110,14 +110,7 @@ void ResourceGroupwiseConfig::loadSettings( KRES::Resource *res )
     return;
   }
 
-  QString url;
-  if ( mResource->prefs()->useHttps() )
-     url =  "https://";
-  else
-     url =  "http://";
-  url += mResource->prefs()->host() +":";
-  url += QString::number(mResource->prefs()->port()) + "/soap/";
-  mURL->setURL( url );
+  mURL->setURL( mResource->prefs()->url() );
   mUser->setText( mResource->prefs()->user() );
   mPassword->setText( mResource->prefs()->password() );
 }
@@ -131,9 +124,7 @@ void ResourceGroupwiseConfig::saveSettings( KRES::Resource *res )
     return;
   }
 
-  KURL url(mURL->url());
-  resource->prefs()->setHost( url.host() );
-  resource->prefs()->setPort( url.port() );
+  resource->prefs()->setUrl( mURL->url() );
   resource->prefs()->setUser( mUser->text() );
   resource->prefs()->setPassword( mPassword->text() );
 
@@ -142,15 +133,7 @@ void ResourceGroupwiseConfig::saveSettings( KRES::Resource *res )
 
 void ResourceGroupwiseConfig::updateAddressBookList()
 {
-  QString url;
-  if ( mResource->prefs()->useHttps() )
-     url =  "https://";
-  else
-     url =  "http://";
-  url += mResource->prefs()->host() +":";
-  url += QString::number(mResource->prefs()->port()) + "/soap/";
-qDebug("ASDASDSAD HOST %s", mResource->prefs()->host().latin1() );
-  GroupwiseServer server( url,
+  GroupwiseServer server( mResource->prefs()->url(),
                           mResource->prefs()->user(),
                           mResource->prefs()->password(), this );
 

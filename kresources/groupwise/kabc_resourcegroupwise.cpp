@@ -57,7 +57,7 @@ ResourceGroupwise::ResourceGroupwise( const KURL &url,
 
   mPrefs->addGroupPrefix( identifier() );
 
-  mPrefs->setHost( url.url() );
+  mPrefs->setUrl( url.url() );
   mPrefs->setUser( user );
   mPrefs->setPassword( password );
   mPrefs->setReadAddressBooks( readAddressBooks );
@@ -75,14 +75,7 @@ void ResourceGroupwise::init()
 
 void ResourceGroupwise::initGroupwise()
 {
-  QString url;
-  if ( mPrefs->useHttps() )
-     url =  "https://";
-  else
-     url =  "http://";
-  url += mPrefs->host() +":";
-  url += QString::number(mPrefs->port()) + "/soap/";
-  mServer = new GroupwiseServer( url, mPrefs->user(),
+  mServer = new GroupwiseServer( mPrefs->url(), mPrefs->user(),
                                  mPrefs->password(), this );
 
   connect( mServer, SIGNAL( readAddressBooksFinished() ),

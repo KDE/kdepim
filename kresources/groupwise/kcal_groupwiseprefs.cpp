@@ -29,7 +29,5 @@ GroupwisePrefs::GroupwisePrefs()
 
 QString GroupwisePrefs::serverUrl() const
 {
-  QString url;
-  url =  "http://" + host() + ":" + QString::number( port() ) + "/soap/";  
-  return url;
+  return url();
 }

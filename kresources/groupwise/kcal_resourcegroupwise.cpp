@@ -21,7 +21,7 @@
 
 #include "kcal_resourcegroupwise.h"
 
-#include "kcal_groupwiseprefs.h"
+#include "kcal_groupwiseprefsbase.h"
 #include "kcal_resourcegroupwiseconfig.h"
 
 #include "confirmsavedialog.h"
@@ -80,7 +80,7 @@ ResourceGroupwise::~ResourceGroupwise()
 
 void ResourceGroupwise::init()
 {
-  mPrefs = new GroupwisePrefs();
+  mPrefs = new GroupwisePrefsBase();
   
   setType( "groupwise" );
 
@@ -89,32 +89,25 @@ void ResourceGroupwise::init()
 
 void ResourceGroupwise::initGroupwise()
 {
-  QString url;
-  if ( mPrefs->useHttps() )
-     url =  "https://";
-  else
-     url =  "http://";
-  url += mPrefs->host() + ":";
-  url += QString::number(mPrefs->port()) + "/soap/";
-  mServer = new GroupwiseServer( url, mPrefs->user(),
+  mServer = new GroupwiseServer( mPrefs->url(), mPrefs->user(),
                                  mPrefs->password(), this );
 
   connect( mServer, SIGNAL( readCalendarFinished() ),
            SLOT( loadFinished() ) );
 }
 
-GroupwisePrefs *ResourceGroupwise::prefs()
+GroupwisePrefsBase *ResourceGroupwise::prefs()
 {
   return mPrefs;
 }
 
-void ResourceGroupwise::readConfig( const KConfig * )
+void ResourceGroupwise::readConfig( const KConfig *config )
 {
   kdDebug() << "KCal::ResourceGroupwise::readConfig()" << endl;
 
   mPrefs->readConfig();
 
-  kdDebug() << "HOST: " << mPrefs->host() << endl;
+  ResourceCached::readConfig( config );
 }
 
 void ResourceGroupwise::writeConfig( KConfig *config )

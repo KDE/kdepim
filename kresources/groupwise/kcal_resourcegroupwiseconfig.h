@@ -49,12 +49,9 @@ class ResourceGroupwiseConfig : public KRES::ConfigWidget
     virtual void saveSettings( KRES::Resource *resource );
 
   private:
-    KLineEdit *mHost;
-    KLineEdit *mPort;
+    KLineEdit *mUrl;
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;
-    QCheckBox *mLastSyncCheck;    
-    QCheckBox *mSSL;
 
     ResourceCachedReloadConfig *mReloadConfig;
     ResourceCachedSaveConfig *mSaveConfig;

@@ -44,37 +44,27 @@ ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent,  const char* 
   resize( 245, 115 ); 
   QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
 
-  QLabel *label = new QLabel( i18n("Server:"), this );
+  QLabel *label = new QLabel( i18n("URL:"), this );
   mainLayout->addWidget( label, 1, 0 );
-  mHost = new KLineEdit( this );
-  mainLayout->addWidget( mHost, 1, 1 );
-  
-  label = new QLabel( i18n("Port:"), this );
-  mainLayout->addWidget( label, 2, 0 );
-  mPort = new KLineEdit( this );
-  mainLayout->addWidget( mPort, 2, 1 );
+  mUrl = new KLineEdit( this );
+  mainLayout->addWidget( mUrl, 1, 1 );
   
   label = new QLabel( i18n("User:"), this );
-  mainLayout->addWidget( label, 3, 0 );
+  mainLayout->addWidget( label, 2, 0 );
   mUserEdit = new KLineEdit( this );
-  mainLayout->addWidget( mUserEdit, 3, 1 );
+  mainLayout->addWidget( mUserEdit, 2, 1 );
   
   label = new QLabel( i18n("Password:"), this );
-  mainLayout->addWidget( label, 4, 0 );
+  mainLayout->addWidget( label, 3, 0 );
   mPasswordEdit = new KLineEdit( this );
-  mainLayout->addWidget( mPasswordEdit, 4, 1 );
+  mainLayout->addWidget( mPasswordEdit, 3, 1 );
   mPasswordEdit->setEchoMode( KLineEdit::Password );
 
-  mSSL = new QCheckBox( i18n("&Encrypt communication with server"), this );
-  mainLayout->addWidget( mSSL, 5, 0 );
-
-#if 0
   mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
   mainLayout->addMultiCellWidget( mReloadConfig, 5, 5, 0, 1 );
 
   mSaveConfig = new KCal::ResourceCachedSaveConfig( this );
   mainLayout->addMultiCellWidget( mSaveConfig, 6, 6, 0, 1 );
-#endif
 }
 
 void ResourceGroupwiseConfig::loadSettings( KRES::Resource *resource )
@@ -88,15 +78,11 @@ void ResourceGroupwiseConfig::loadSettings( KRES::Resource *resource )
       return;
     }
   
-    mHost->setText( res->prefs()->host() );
-    mPort->setText( QString::number(res->prefs()->port()) );
+    mUrl->setText( res->prefs()->url() );
     mUserEdit->setText( res->prefs()->user() );
     mPasswordEdit->setText( res->prefs()->password() );
-    mSSL->setChecked( res->prefs()->useHttps() );
-#if 0
     mReloadConfig->loadSettings( res );
     mSaveConfig->loadSettings( res );
-#endif
   } else {
     kdError(5700) << "KCalResourceGroupwiseConfig::loadSettings(): no KCalResourceGroupwise, cast failed" << endl;
   }
@@ -106,15 +92,11 @@ void ResourceGroupwiseConfig::saveSettings( KRES::Resource *resource )
 {
   ResourceGroupwise *res = static_cast<ResourceGroupwise*>( resource );
   if ( res ) {
-    res->prefs()->setHost( mHost->text() );
-    res->prefs()->setPort( mPort->text().toUInt() );
+    res->prefs()->setUrl( mUrl->text() );
     res->prefs()->setUser( mUserEdit->text() );
     res->prefs()->setPassword( mPasswordEdit->text() );
-    res->prefs()->setUseHttps( mSSL->isChecked() );
-#if 0
     mReloadConfig->saveSettings( res );
     mSaveConfig->saveSettings( res );
-#endif
   } else {
     kdError(5700) << "KCalResourceGroupwiseConfig::saveSettings(): no KCalResourceGroupwise, cast failed" << endl;
   }

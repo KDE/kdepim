@@ -2,8 +2,9 @@
 <kcfg>
  <kcfgfile name="kresources_kcal_groupwiserc" />
  <group name="General" >
-  <entry key="Host" type="String" >
-   <label>Host Name</label>
+  <entry key="Url" type="String" >
+   <label>Server URL</label>
+   <whatsthis>URL of SOAP interface of GroupWise server</whatsthis>
   </entry>
   <entry key="User" type="String" >
    <label>User Name</label>
@@ -14,10 +15,6 @@
   <entry key="Port" type="UInt" >
    <label>TCP Port</label>
    <default>7181</default>
-  </entry>
-  <entry key="UseHttps" type="Bool" >
-   <label>Use HTTPS</label>
-   <default>false</default>
   </entry>
  </group>
 </kcfg>

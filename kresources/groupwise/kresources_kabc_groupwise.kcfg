@@ -2,23 +2,15 @@
 <kcfg>
  <kcfgfile name="kresources_kabc_groupwiserc" />
  <group name="General" >
-  <entry key="Host" type="String" >
-   <label>Hostname</label>
-   <whatsthis>Hostname for the groupwise server.</whatsthis>
+  <entry key="Url" type="String" >
+   <label>Server URL</label>
+   <whatsthis>URL of SOAP interface of GroupWise server</whatsthis>
   </entry>
   <entry key="User" type="String" >
    <label>User Name</label>
   </entry>
   <entry key="Password" type="String" >
    <label>Password</label>
-  </entry>
-  <entry key="Port" type="UInt" >
-   <label>Port</label>
-   <whatsthis>TCP Port of the GroupWise server</whatsthis>
-  </entry>
-  <entry key="UseHttps" type="Bool" >
-   <label>Use HTTPS</label>
-   <default>false</default>
   </entry>
  </group>
  <group name="AddressBooks" >
