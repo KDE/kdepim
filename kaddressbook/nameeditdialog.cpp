@@ -47,7 +47,7 @@
 NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
                                 bool readOnly, QWidget *parent, const char *name )
   : KDialogBase( Plain, i18n( "Edit Contact Name" ), Help | Ok | Cancel,
-                 Ok, parent, name, true ), mAddressee( addr )
+                 Ok, parent, name, true )
 {
   QWidget *page = plainPage();
   QGridLayout *layout = new QGridLayout( page );
@@ -150,19 +150,14 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   KAcceleratorManager::manage( this );
 
   connect( mPrefixCombo, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mPrefixCombo, SIGNAL( textChanged( const QString& ) ), SLOT( updateTypeCombo() ) );
   connect( mGivenNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mGivenNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( updateTypeCombo() ) );
   connect( mAdditionalNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mAdditionalNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( updateTypeCombo() ) );
   connect( mFamilyNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mFamilyNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( updateTypeCombo() ) );
   connect( mSuffixCombo, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mSuffixCombo, SIGNAL( textChanged( const QString& ) ), SLOT( updateTypeCombo() ) );
   connect( mFormattedNameCombo, SIGNAL( activated( int ) ), SLOT( modified() ) );
   connect( mFormattedNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
 
-  updateTypeCombo();
+  initTypeCombo();
   mFormattedNameCombo->setCurrentItem( type );
   mPrefixCombo->lineEdit()->setFocus();
   mChanged = false;
@@ -255,25 +250,17 @@ void NameEditDialog::modified()
   mChanged = true;
 }
 
-void NameEditDialog::updateTypeCombo()
+void NameEditDialog::initTypeCombo()
 {
-  KABC::Addressee addr;
-  addr.setPrefix( mPrefixCombo->currentText() );
-  addr.setGivenName( mGivenNameEdit->text() );
-  addr.setAdditionalName( mAdditionalNameEdit->text() );
-  addr.setFamilyName( mFamilyNameEdit->text() );
-  addr.setSuffix( mSuffixCombo->currentText() );
-  addr.setOrganization( mAddressee.organization() );
-
   int pos = mFormattedNameCombo->currentItem();
 
   mFormattedNameCombo->clear();
   mFormattedNameCombo->insertItem( i18n( "Custom" ) );
-  mFormattedNameCombo->insertItem( formattedName( addr, SimpleName ) );
-  mFormattedNameCombo->insertItem( formattedName( addr, FullName ) );
-  mFormattedNameCombo->insertItem( formattedName( addr, ReverseNameWithComma ) );
-  mFormattedNameCombo->insertItem( formattedName( addr, ReverseName ) );
-  mFormattedNameCombo->insertItem( formattedName( addr, Organization ) );
+  mFormattedNameCombo->insertItem( i18n( "Simple Name" ) );
+  mFormattedNameCombo->insertItem( i18n( "Full Name" ) );
+  mFormattedNameCombo->insertItem( i18n( "Reverse Name with comma" ) );
+  mFormattedNameCombo->insertItem( i18n( "Reverse Name" ) );
+  mFormattedNameCombo->insertItem( i18n( "Organization" ) );
 
   mFormattedNameCombo->setCurrentItem( pos );
 }

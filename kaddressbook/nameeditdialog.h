@@ -55,7 +55,7 @@ class NameEditDialog : public KDialogBase
     NameEditDialog( const KABC::Addressee &addr, int type,
                     bool readOnly, QWidget *parent, const char *name = 0 );
     ~NameEditDialog();
-   
+
     QString familyName() const;
     QString givenName() const;
     QString prefix() const;
@@ -67,14 +67,14 @@ class NameEditDialog : public KDialogBase
     bool changed() const;
 
     static QString formattedName( const KABC::Addressee &addr, int type );
-   
+
   protected slots:
     void slotHelp();
 
   private slots:
     void parseBoxChanged( bool );
     void typeChanged( int );
-    void updateTypeCombo();
+    void initTypeCombo();
     void modified();
 
   private:
@@ -88,7 +88,6 @@ class NameEditDialog : public KDialogBase
     QCheckBox *mParseBox;
 
     AddresseeConfig mAddresseeConfig;
-    KABC::Addressee mAddressee;
     bool mChanged;
 };
 
