@@ -1,0 +1,8 @@
+[Misc]
+Encoding=UTF-8
+Name=Application Octetstream
+Comment=A bodypart formatter plugin for text/vcard
+
+[Plugin]
+Type=text/x-vcard
+X-KDE-Library=libkmail_bodypartformatter_text_vcard
