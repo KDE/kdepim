@@ -19,6 +19,8 @@
 #include <kmessagebox.h>
 #include <ktempfile.h>
 #include <dcopclient.h>
+#include <ktoolbar.h>
+#include <klineedit.h>
 
 // Qt
 #include <qtextedit.h>
@@ -26,11 +28,13 @@
 #include <qradiobutton.h>
 #include <qwizard.h>
 #include <qgrid.h>
-#include <qpushbutton.h>
-#include <qvbox.h>
 #include <qcursor.h>
 
 extern CryptPlugWrapper* pWrapper;
+
+static const int ID_LINEEDIT = 1;
+static const int ID_BUTTON   = 2;
+
 
 CertManager::CertManager( QWidget* parent, const char* name ) :
     KMainWindow( parent, name ),
@@ -107,20 +111,18 @@ CertManager::CertManager( QWidget* parent, const char* name ) :
   importCRLFromLDAP->setEnabled( false );
 
   // Main Window --------------------------------------------------
-  QVBox* vb = new QVBox( this );
-  QHBox* hb = new QHBox( vb );
-  _searchEdit = new QLineEdit( hb, "searchEdit" );
-  QPushButton* searchButton = new QPushButton( i18n("Search"), hb, "searchEdit" );
+  _toolbar = toolBar( "mainToolBar" );
+  _toolbar->insertLined( "", ID_LINEEDIT, SIGNAL( returnPressed() ), this, 
+			 SLOT( loadCertificates() ) );
+  _toolbar->setItemAutoSized( ID_LINEEDIT, true );
+  KAction* find = KStdAction::find( this, SLOT( loadCertificates() ), actionCollection());
+  _toolbar->insertButton( find->icon(), ID_BUTTON, SIGNAL( clicked() ), this, 
+			  SLOT( loadCertificates() ), 
+			  true, i18n("Search") );
+  _toolbar->alignItemRight( ID_BUTTON, true );
 
-  _certBox = new CertBox( vb, "certBox" );
-  setCentralWidget( vb );
-
-  connect( _searchEdit, SIGNAL( returnPressed() ),
-	   searchButton, SLOT( animateClick() ) );
-  connect( searchButton, SIGNAL( clicked() ),
-	   this, SLOT( loadCertificates() ) );
-
-  //loadCertificates();
+  _certBox = new CertBox( this, "certBox" );
+  setCentralWidget( _certBox );
 }
 
 CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent, 
@@ -198,15 +200,21 @@ void CertManager::loadCertificates()
   */
 
   QApplication::setOverrideCursor( QCursor::WaitCursor );
+  _toolbar->setItemEnabled( ID_LINEEDIT, false );
+  _toolbar->setItemEnabled( ID_BUTTON, false );
 
   // Clear display
   _certBox->clear();
 
-  if( _searchEdit->text().isEmpty() ) {
+  QString text = _toolbar->getLinedText( ID_LINEEDIT ).stripWhiteSpace();
+
+  qDebug("About to query plugin");
+  if( text.isEmpty() ) {
     _certList = pWrapper->listKeys();
   } else {
-    _certList = pWrapper->listKeys(_searchEdit->text().stripWhiteSpace());
+    _certList = pWrapper->listKeys(text, false);
   }
+  qDebug("Done");
   
   //lst = fillInListView( _certBox, 0, lst );
   
@@ -215,6 +223,11 @@ void CertManager::loadCertificates()
     //qDebug("New CertItem %s", (*it).userid.latin1() );
     fillInOneItem( _certBox, 0, *it );
   }
+  _toolbar->setItemEnabled( ID_LINEEDIT, true );
+  _toolbar->setItemEnabled( ID_BUTTON, true );
+  KLineEdit* le = _toolbar->getLined( ID_LINEEDIT );
+  le->selectAll();
+  le->setFocus();
   QApplication::restoreOverrideCursor();
 }
 

@@ -6,6 +6,7 @@
 class CertBox;
 class KProcess;
 class CertItem;
+class KToolBar;
 
 class CertManager :public KMainWindow
 {
@@ -35,7 +36,7 @@ private:
 
     CryptPlugWrapper::CertificateInfoList _certList;
     KProcess* gpgsmProc;
-    QLineEdit* _searchEdit;
+    KToolBar* _toolbar;
     CertBox* _certBox;
 };
 
