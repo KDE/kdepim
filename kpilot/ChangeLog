@@ -30,6 +30,14 @@ TODO LIST (Ignore the file TODO)
 * Update README, TODO, NEWS, AUTHORS in HEAD.
 * Merge the JPilot proxy changes (even though it's disabled).
 
+2003-3-15  Adriaan de Groot
+* The popmail conduit runs in backup mode during syncs. So do all the
+  other conduits. What's going on? Thanks to Tobia Baier for spotting this.
+  Worse still, the bug comes from the difference between & and &&. Fixed.
+* syncStack.cc [BOTH] Fixed --backup bug.
+* David Mott is back with more patches, but he's got competition from
+  Ulrik Mikaelsson, who's also doing GJJs.
+
 KPilot Developer's notes for March 12th, 2003
 =============================================
 
