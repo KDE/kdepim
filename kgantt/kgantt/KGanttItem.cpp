@@ -388,7 +388,7 @@ KGanttItem::adjustMinMax()
 
 
 void 
-KGanttItem::subItemChanged(KGanttItem* item, Change change)
+KGanttItem::subItemChanged(KGanttItem* /*item*/, Change change)
 /////////////////////////////////////////////////////
 {  
   if(change & StyleChanged)

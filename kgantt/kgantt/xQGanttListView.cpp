@@ -51,7 +51,7 @@ xQGanttListView::drawHeader()
   p.setPen( QPen(QColor(black)) );
   p.fillRect(0,0,width(),TOPMARGIN, _headerBackBrush );
 
-  p.drawText(5, (0.8 * TOPMARGIN), i18n("Items"));
+  p.drawText(5, (int)(0.8 * TOPMARGIN), i18n("Items"));
 
 }
 
@@ -68,7 +68,7 @@ xQGanttListView::contentsMoved(int x, int y)
 
 
 void 
-xQGanttListView::paintEvent(QPaintEvent * e)
+xQGanttListView::paintEvent(QPaintEvent * /*e*/)
 {      
   drawHeader();
 }

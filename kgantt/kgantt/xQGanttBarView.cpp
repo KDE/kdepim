@@ -54,7 +54,7 @@ xQGanttBarView::~xQGanttBarView()
 
 
 void
-xQGanttBarView::horizontalScrollBarChanged(int x)
+xQGanttBarView::horizontalScrollBarChanged(int /*x*/)
 ////////////////////////////////////////////////////
 {
   printf("xQGanttBarView::horizontalScrollBarChanged()\n");
@@ -118,7 +118,7 @@ xQGanttBarView::drawHeader()
   p.drawRect(a, top + height + skip, (int) (e*dayWidth), height );
 
   if(a<0) a = 0;
-  p.drawText(a+5, top + height + skip + (0.8*height), 
+  p.drawText(a+5, int( top + height + skip + (0.8*height) ), 
 	     t.shortMonthName(t.month()) + " " + QString::number(t.year()) );  
 
 
@@ -163,7 +163,7 @@ xQGanttBarView::drawHeader()
       if(a<0) a = 0;
 
       QString str = t.shortDayName(t.dayOfWeek()) + " " + QString::number(t.day());
-      QRect rect = p.boundingRect(a+5, (0.8 * height), 
+      QRect rect = p.boundingRect(a+5, (int)(0.8 * height), 
 				  (int) dayWidth, height, AlignLeft, str );
 
       if(t.dayOfWeek() > 5)
@@ -172,7 +172,7 @@ xQGanttBarView::drawHeader()
 	p.fillRect(rect.x(), rect.y(), 
 		   rect.width(), -rect.height(), QBrush(QColor(240,240,240)));
 
-      p.drawText(a+5, (0.8 * height), str );
+      p.drawText(a+5, (int)(0.8 * height), str );
 
       if(t.dayOfWeek()>1 && t.dayOfWeek()<6) {
 	p.setPen(_dotPen);
@@ -192,7 +192,7 @@ xQGanttBarView::drawHeader()
       p.drawRect(a, top + height + skip, (int) (e * dayWidth), height );
       
       p.drawText(a+5, 
-		 top + (1.8 * height) + skip, 
+		 top + (int)(1.8 * height) + skip, 
 		 t.shortMonthName(t.month()) + " " + QString::number(t.year()) );  
 
       //  draw snapgrid
@@ -214,7 +214,7 @@ xQGanttBarView::drawHeader()
 
 
 void 
-xQGanttBarView::paintEvent(QPaintEvent * e)
+xQGanttBarView::paintEvent(QPaintEvent * /*e*/)
 {      
   drawHeader();
 }

@@ -69,7 +69,7 @@ KGanttRelation::getTo()
 
 
 void
-KGanttRelation::itemDestroyed(KGanttItem* item)
+KGanttRelation::itemDestroyed(KGanttItem* /*item*/)
 {
   delete this;
 }

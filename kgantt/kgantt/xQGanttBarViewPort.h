@@ -307,7 +307,7 @@ private:
   void mousePressEvent(QMouseEvent*);
   void mouseReleaseEvent(QMouseEvent*);
 
-  void wheelEvent ( QWheelEvent * e) {
+  void wheelEvent ( QWheelEvent * /*e*/) {
     printf("wheelEvent\n");
   }
 

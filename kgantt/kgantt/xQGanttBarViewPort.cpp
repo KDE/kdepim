@@ -246,7 +246,7 @@ xQGanttBarViewPort::initMenu()
 
 
 void
-xQGanttBarViewPort::toplevelitemChanged(KGanttItem* item, KGanttItem::Change c)
+xQGanttBarViewPort::toplevelitemChanged(KGanttItem* /*item*/, KGanttItem::Change /*c*/)
 ///////////////////////////////////////////////////////////////////
 {
   recalc();
@@ -443,8 +443,8 @@ xQGanttBarViewPort::recalc(KGanttItem* item, int xPos, int yPos,
 	subitem = item->getSubItems().next() ) {
       
       recalc(subitem, 
-	     xPos + (item->getStart().secsTo(subitem->getStart())/60 * _scaleX), 
-	     yPos + h * _scaleY, depth + 1, ++nr );
+	     xPos + (int)(item->getStart().secsTo(subitem->getStart())/60 * _scaleX), 
+	     yPos + (int)( h * _scaleY ), depth + 1, ++nr );
 
       h += subitem->getTotalHeight();
       
@@ -480,11 +480,11 @@ xQGanttBarViewPort::drawItem(KGanttItem* item, QPainter* p,
 
     QPointArray a(4);
     a.setPoint(0, tpos->_screenX, tpos->_screenY + _margin );
-    a.setPoint(1, tpos->_screenX - 0.5 * tpos->_screenH + _margin, 
-	          tpos->_screenY + 0.5 * tpos->_screenH );
+    a.setPoint(1, tpos->_screenX - tpos->_screenH / 2 + _margin, 
+	          tpos->_screenY + tpos->_screenH / 2 );
     a.setPoint(2, tpos->_screenX, tpos->_screenY + tpos->_screenH - _margin );
-    a.setPoint(3, tpos->_screenX + 0.5 * tpos->_screenH - _margin, 
-	          tpos->_screenY + 0.5 * tpos->_screenH );
+    a.setPoint(3, tpos->_screenX + tpos->_screenH / 2 - _margin, 
+	          tpos->_screenY + tpos->_screenH / 2 );
     p->drawPolygon(a);
 
   }
@@ -611,15 +611,15 @@ xQGanttBarViewPort::drawRelation(QPainter* p,
 
 
   // 3   
-  y = (tpos_from->_screenY + tpos_from->_screenH/2) * 0.8 +  
-    (tpos_to->_screenY + tpos_to->_screenH/2) * 0.2;
+  y = (int)( (tpos_from->_screenY + tpos_from->_screenH/2) * 0.8 +  
+    (tpos_to->_screenY + tpos_to->_screenH/2) * 0.2 );
   a.setPoint(i++, x, y);
 
 
   // 4
   x = tpos_to->_screenX - hw;
-  y = (tpos_from->_screenY + tpos_from->_screenH/2) * 0.2 +  
-    (tpos_to->_screenY + tpos_to->_screenH/2) * 0.8;
+  y = (int)( (tpos_from->_screenY + tpos_from->_screenH/2) * 0.2 +  
+    (tpos_to->_screenY + tpos_to->_screenH/2) * 0.8 );
 
   a.setPoint(i++, x, y);
 
@@ -651,7 +651,7 @@ xQGanttBarViewPort::drawRelation(QPainter* p,
 
 
 void 
-xQGanttBarViewPort::drawHeader(QPainter* p, int x1, int y1, int x2, int y2)
+xQGanttBarViewPort::drawHeader(QPainter* p, int /*x1*/, int /*y1*/, int /*x2*/, int /*y2*/)
 //////////////////////////////////////////////////////////////////////////
 {
   bool drawDays = false;
@@ -679,8 +679,8 @@ xQGanttBarViewPort::drawHeader(QPainter* p, int x1, int y1, int x2, int y2)
 
     if(t.dayOfWeek() == 1) {
 	
-      p->fillRect(a, 0, 1440*5*_scaleX, 20, QBrush(QColor(240,240,240)));
-      p->drawRect(a, 0, 1440*5*_scaleX, 20 );
+      p->fillRect(a, 0, (int)( 1440*5*_scaleX ), 20, QBrush(QColor(240,240,240)));
+      p->drawRect(a, 0, (int)( 1440*5*_scaleX ), 20 );
 
       if(!drawDays)
 	p->drawText(a+5, 15, QString::number(t.day()) );
@@ -694,8 +694,8 @@ xQGanttBarViewPort::drawHeader(QPainter* p, int x1, int y1, int x2, int y2)
 
       e = t.daysInMonth();
 
-      p->fillRect(a, 21, 1440*e*_scaleX, 20, QBrush(QColor(240,240,240))); 
-      p->drawRect(a, 21, 1440*e*_scaleX, 20 );
+      p->fillRect(a, 21, (int)( 1440*e*_scaleX ), 20, QBrush(QColor(240,240,240))); 
+      p->drawRect(a, 21, (int)( 1440*e*_scaleX ), 20 );
 
       if(a<0) a = 0;
       p->drawText(a+5, 36, t.shortMonthName(t.month()) );        
