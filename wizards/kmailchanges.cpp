@@ -52,20 +52,26 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
 
     void apply()
     {
+      QString defaultDomain = KolabConfig::self()->server();
       QString email;
       QString user = KolabConfig::self()->user();
       int pos = user.find( "@" );
       // with kolab the userid _is_ the full email
-      if ( pos > 0 )
+      if ( pos > 0 ) {
         // The user typed in a full email address. Assume it's correct
         email = user;
+        const QString h = user.mid( pos+1 );
+        if ( !h.isEmpty() )
+          // The user did type in a domain on the email address. Use that
+          defaultDomain = h;
+      }
       else
         // Construct the email address. And use it for the username also
         user = email = user+"@"+KolabConfig::self()->server();
 
       KConfig c( "kmailrc" );
       c.setGroup( "General" );
-      c.writeEntry( "Default domain", KolabConfig::self()->server() );
+      c.writeEntry( "Default domain", defaultDomain );
       uint accCnt = c.readNumEntry( "accounts", 0 );
       c.writeEntry( "accounts", accCnt+1 );
       uint transCnt = c.readNumEntry( "transports", 0 );
