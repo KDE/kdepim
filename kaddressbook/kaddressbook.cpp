@@ -77,13 +77,13 @@ KAddressBook::KAddressBook( QWidget *parent, const char *name )
                                  this, "mViewManager");
   topLayout->addWidget(mViewManager);
   connect(mViewManager, SIGNAL(selected(const QString &)),
-          this, SLOT(addresseeSelected(const QString &)));
+          SLOT(addresseeSelected(const QString &)));
   connect(mViewManager, SIGNAL(executed(const QString &)),
-          this, SLOT(addresseeExecuted(const QString &)));
-  connect(mViewManager, SIGNAL(modified()), this,
+          SLOT(addresseeExecuted(const QString &)));
+  connect(mViewManager, SIGNAL(modified()),
           SLOT(viewModified()));
   connect(mViewManager, SIGNAL(importVCard(const QString &, bool)),
-          this, SLOT(importVCard(const QString &, bool)));
+          SLOT(importVCard(const QString &, bool)));
 
   mPrefsDialog = 0;
   mLdapSearchDialog = 0;
@@ -486,8 +486,7 @@ void KAddressBook::addresseeExecuted(const QString &uid)
 {
     // WORK_TO_DO: find a way to decide this (quickedit will
     // become a part of the details view)
-    //  if ( uid != QString::null && !mViewManager->isQuickEditVisible() )
-  if ( uid != QString::null )
+  if ( uid != QString::null && !mViewManager->isQuickEditVisible() )
     editAddressee(uid);
 }
 
