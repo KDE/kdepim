@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Icon=groupwise_protocol
+ServiceTypes=KABC/IMProtocol,KPluginInfo
+X-KDE-InstantMessagingKABCField=messaging/groupwise
+Comment=Novell GroupWise Messenger
+Name=GroupWise
+
