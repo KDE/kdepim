@@ -35,8 +35,6 @@ Important (hight priority)
 15) Add force-first-time to the KNotes conduit.
 17) Include a calendar viewer, or get rid of the internal viewers
     altogether.
-18) VCal conduit: events going over midnight need to be split up
-    on the handheld (bug #59223)
 19) GJJ: Replace newlines in TODO summaries (not allowed in libkcal),
     also do the same for phone numbers etc. (bug #56379)
 19b)Make the doc conduit use the new global settings instead of its own 
@@ -44,6 +42,8 @@ Important (hight priority)
 
 Medium (nice to have, but not essential)
 ========================================
+18) VCal conduit: events going over midnight need to be split up
+    on the handheld (bug #59223)
 20) GJJ: Check all debug output, what should be put in the log (i.e.
     be visible to the user) and what is just debug output to track
     down problems.

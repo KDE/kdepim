@@ -1,6 +1,39 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2003-7-30  Reinhold Kainhofer
+* The addressbook conduit now uses a different algorithm to find 
+  the type of address on the PC to sync with.
+  First, if there is a preferred address (no matter if home, work 
+  or whatever), this one is synced to the handheld. If no preferred 
+  address exists, either home or work (depending on the setting in 
+  the conduit config dialog) is used for the sync. If that doesn't 
+  exist, either, the other one (work/home) is tried. If that also 
+  doesn't exist, and the address is copied to the PC, its type is 
+  set to preferred+the setting from the config dialog. 
+  This fixes both bugs #50560 (conduit should sync with preferred 
+  address) as well as bug #60659 (conduit should use the existing 
+  address from the PC, even if the type is not the one chosen in 
+  the config dialog).  (also backported to BRANCH)
+* Allow two addressbook entries with the same name and organization, 
+  but different phones, addresses etc. Actually, it allows entries 
+  which are equal up to at least one entry. This fixes bug #59569. 
+* Fixed bug #60691 where events recurring monthly on a given weekday 
+  were shifted by one day. (also backported to BRANCH)
+* Also, when initializing a LocalCalendar, you are not supposed 
+  to give a time zone...
+* Also, fixed infinite loop glitch by Cornelius. 
+* If the user chose to sync to an iCalendar file instead of the 
+  standard (resource) calendar, and he gave an empty or invalid 
+  file name, an error message is now written out to inform him/her 
+  about the problem.
+  I don't want to ask him for a file name, because one of the 
+  guidelines of conduit development is that a sync should be able 
+  to run without user intervention.
+  this should probably also be backported, but it introduces two 
+  new i18n strings, so it is not possible. Thus the bug will remain 
+  in 3.1 branch.
+* Fixed the toolbar configuration.
 
 2003-7-27  Reinhold Kainhofer
 * The internal editor action now displays the contents of the conflicting 
