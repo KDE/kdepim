@@ -504,16 +504,31 @@ void Incidence::setRecurrence( KCal::Recurrence* recur )
     mRecurrence.dayNumber = QString::number( day );
     QPtrList<int> months = recur->yearNums();
     if ( !months.isEmpty() )
-      mRecurrence.month = s_monthName[ *months.first() ];
+      mRecurrence.month = s_monthName[ *months.first() ]; // #### Kolab XML limitation
     break;
   }
-  case KCal::Recurrence::rYearlyDay: // YearlyDay (day N of the year)
+  case KCal::Recurrence::rYearlyDay: // YearlyDay (day N of the year). Not supported by Outlook
     mRecurrence.cycle = "yearly";
     mRecurrence.type = "yearday";
     mRecurrence.dayNumber = QString::number( *recur->yearNums().getFirst() );
     break;
   case KCal::Recurrence::rYearlyPos: // (weekday X of week N of month Y)
-    // ##### Not in Kolab XML
+    mRecurrence.cycle = "yearly";
+    mRecurrence.type = "weekday";
+    QPtrList<int> months = recur->yearNums();
+    if ( !months.isEmpty() )
+      mRecurrence.month = s_monthName[ *months.first() ]; // #### Kolab XML limitation
+    const QPtrList<KCal::Recurrence::rMonthPos> &monthPositions = recur->yearMonthPositions();
+    if ( !monthPositions.isEmpty() ) {
+      KCal::Recurrence::rMonthPos monthPos = *monthPositions.getFirst();
+      QBitArray arr = monthPos.rDays;
+      for ( uint idx = 0 ; idx < 7 ; ++idx )
+        if ( arr.testBit( idx ) )
+          mRecurrence.days.append( s_weekDayName[idx] );
+      mRecurrence.dayNumber = QString::number( monthPos.rPos );
+    mRecurrence.dayNumber = QString::number( *recur->yearNums().getFirst() );
+      // Not handled: monthPos.negative (nth days before end of month)
+    }
     break;
   }
   int howMany = recur->duration();
@@ -695,6 +710,12 @@ void Incidence::saveTo( KCal::Incidence* incidence )
       } else if ( mRecurrence.type == "yearday" ) {
         recur->setYearly( KCal::Recurrence::rYearlyDay, mRecurrence.interval, -1 );
         recur->addYearlyNum( mRecurrence.dayNumber.toInt() );
+      } else if ( mRecurrence.type == "weekday" ) {
+	recur->setYearly( KCal::Recurrence::rYearlyPos, mRecurrence.interval, -1 );
+        for ( int i = 0; i < 12; ++i )
+          if ( s_monthName[ i ] == mRecurrence.month )
+            recur->addYearlyNum( i );
+        recur->addMonthlyPos( mRecurrence.dayNumber.toInt(), daysListToBitArray( mRecurrence.days ) );
       } else kdWarning() << "Unhandled yearly recurrence type " << mRecurrence.type << endl;
     } else kdWarning() << "Unhandled recurrence cycle " << mRecurrence.cycle << endl;
 
