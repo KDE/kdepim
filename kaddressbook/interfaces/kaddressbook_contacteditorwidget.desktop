@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=KAddressBook/ContactEditorWidget
 Comment=KAddressBook Contact Editor Widget Plugin
+Comment[ar]=أداة إضافية لتحرير بيانات جهات الإتصال في KAddressBook
 Comment[bg]=Приставка за редактиране на контактите от адресника
 Comment[bs]=KAddressBook dodatak za prozor za izmjenu kontakta
 Comment[ca]=Endollable de l'estri editor de contactes de la llibreta d'adreces

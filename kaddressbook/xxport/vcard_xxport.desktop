@@ -2,7 +2,9 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_vcard_xxport
 Name=KAB vCard XXPort Plugin
+Name[ar]=أداة إضافية لمدخل XX vCard
 Name[be]=Дапаўненьне KAB "Імпарт/Экспарт vCard"
+Name[br]=Lugent KAB vCard XXPort
 Name[bs]=KAB dodatak za vCard XXPort
 Name[ca]=Endollable d'importació/exportació vCard per a KAB
 Name[cs]=Exportní modul vCard
@@ -37,6 +39,7 @@ Name[tr]=KAB vCard XXPort Eklentisi
 Name[uk]=Втулок KAB для обміну через vCard
 Name[zh_CN]=KAB vCard XXPort 插件
 Comment=Plugin to import and export contacts in vCard format
+Comment[ar]=أداة إضافية لاستيراد أو تصدير بيانات جهات الاتصال بتنسيق vCard
 Comment[be]=Дапаўненьне для імпарту і экспарту кантактаў у фармаце vCard
 Comment[bg]=Приставка за експорт/импорт на контактите във формат на vCard
 Comment[bs]=Dodatak za uvoz i izvoz kontakata u vCard formatu

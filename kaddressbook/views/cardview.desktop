@@ -2,8 +2,10 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_cardview
 Name=Card View
+Name[ar]=عرض بشكل بطاقات
 Name[be]=У выглядзе картак
 Name[bg]=Преглед като карти
+Name[br]=Gwell ar c'hartennoù
 Name[bs]=Pogled kartice
 Name[ca]=Vista de targeta
 Name[cs]=Pohled s kartičkami

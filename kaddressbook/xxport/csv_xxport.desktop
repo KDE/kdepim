@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_csv_xxport
 Name=KAB CSV XXPort Plugin
+Name[ar]=أداة إضافية لـCVS في المدخل XX التابع لـ KAB
 Name[be]=Дапаўненьне KAB "Імпарт/Экспарт CSV"
 Name[bs]=KAB dodatak za CSV XXPort
 Name[ca]=Endollable d'importació/exportació CSV per a KAB
@@ -36,6 +37,7 @@ Name[tr]=KAB CSV XXPort Eklentisi
 Name[uk]=Втулок KAB для обміну через CSV
 Name[zh_CN]=KAB CSV XXPort 插件
 Comment=Plugin to import and export contacts in CSV format
+Comment[ar]= أداة إضافية لاستيراد أو تصدير بيانات جهات الاتصال بتنسيق CVS
 Comment[be]=Дапаўненьне для імпарту і экспарту кантактаў у фармаце CSV
 Comment[bg]=Приставка за импорт/експорт на контактите във формат CSV
 Comment[bs]=Dodatak za uvoz i izvoz kontakata u CSV formatu

@@ -2,6 +2,7 @@
 Type=ServiceType
 X-KDE-ServiceType=KABC/IMProtocol
 Name=KAddressbook Instant Messaging Protocol
+Name[ar]=بروتوكول الإرسال الفوري لـ KAddressbook
 Name[bg]=Протокол за МС за адресника
 Name[bs]=KAddressbook protokol za instant poruke
 Name[ca]=Protocol de missatgeria instantània KAddressbook

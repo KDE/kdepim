@@ -5,6 +5,7 @@ ServiceTypes=KResources/Plugin
 X-KDE-Library=libremotekonnector
 
 Name=Remote Konnector
+Name[ar]=Konnector بعيد
 Name[bs]=Udaljeni Konnector
 Name[ca]=Konnector remot
 Name[cs]=Vzdálený konektor

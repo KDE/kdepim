@@ -5,6 +5,7 @@ ServiceTypes=KResources/Plugin
 X-KDE-Library=libkabckonnector
 
 Name=AddressBook Konnector
+Name[ar]=دفتر العناوين Konnector
 Name[bs]=Adresar Konnector
 Name[ca]=Llibreta d'adreces Konnector
 Name[cs]=Konektor Knihy adres

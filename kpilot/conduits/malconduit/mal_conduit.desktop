@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=MAL (AvantGo) Conduit
+Name[ar]=مسلك خاص ببرنامج AvantGo
 Name[ca]=Conducte MAL (AvantGo)
 Name[cs]=Propojení s AvantGo
 Name[cy]=Cwndid MAL (AvantGo)
@@ -19,6 +20,7 @@ Name[is]=MAL (AvantGo)-rás
 Name[it]=Conduit MAL (AvantGo)
 Name[ja]=MAL (AvantGo) コンジット
 Name[lt]=MAL (AvantGo) kanalas
+Name[mk]=МAL (AvantGo) спој
 Name[nb]=MAL (AvantGo) kanal
 Name[nn]=MAL-kopling (AvantGo)
 Name[nso]=Conduit ya MAL (AvantGo)

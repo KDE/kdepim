@@ -5,6 +5,7 @@ Icon=yahoo_protocol
 ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/yahoo
 Comment=Yahoo Protocol
+Comment[ar]=قوانةن تبادل المعلومات الخاص بـ Yahoo
 Comment[be]=Пратакол Yahoo
 Comment[bg]=Протокол Yahoo
 Comment[br]=Komenad Yahoo

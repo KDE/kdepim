@@ -13,6 +13,7 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Signing/Verifying
+Name[ar]=االتوقيع و التأكد
 Name[bg]=Подпис/проверка
 Name[bs]=Potpisivanje/Provjera
 Name[ca]=Signat/Verificació
@@ -45,6 +46,7 @@ Name[tg]=Имзо ва тафтиш
 Name[uk]=Підписування і перевірка
 Name[zh_CN]=签名/校验
 Comment=Protect your privacy by signing and verifying postings
+Comment[ar]=إحم خصوصيتك عن طريق توقيع و التأكد من المنشورات
 Comment[bg]=Защита на личната кореспонденция чрез подписване и проверка на съобщенията
 Comment[bs]=Zaštitite vašu privatnost potpisivanjem i provjerom postinga
 Comment[ca]=Protegiu la vostra privacitat signant i verificant els missatges

@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_kde2_xxport
 Name=KAB KDE2 XXPort Plugin
+Name[ar]=أداة إضافية لـ KDE2 المدخل XX التابع لـ KAB
 Name[be]=Дапаўненьне KAB "Імпарт/Экспарт KDE2"
 Name[bs]=KAB dodatak za KDE2 XXPort
 Name[ca]=Endollable d'importació/exportació KDE2 per a KAB
@@ -37,6 +38,7 @@ Name[tr]=KAB KDE2 XXPort Eklentisi
 Name[uk]=Втулок KAB для обміну з KDE2
 Name[zh_CN]=KAB KDE2 XXPort 插件
 Comment=Plugin to import the old KDE 2 address book
+Comment[ar]=أداة إضافية لاستيراد دفتر العناوين القديم التابع لـ KDE
 Comment[be]=Дапаўненьне для імпарту старой адраснай кнігі KDE 2
 Comment[bg]=Приставка за импорт на контактите от старата версия на адресника в КДЕ 2
 Comment[bs]=Dodatak za uvoz iz starog KDE 2 adresara

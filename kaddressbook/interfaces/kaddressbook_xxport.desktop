@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=KAddressBook/XXPort
 Comment=KAddressBook Import/Export Plugin
+Comment[ar]=أداة إضافية لتصدير و استيراد kAddressBook
 Comment[be]=Дапаўненьне K Адраснай кнігі "Імпарт/Экспарт"
 Comment[bg]=Приставка за импорт/експорт на данни от адресника
 Comment[bs]=KAddressBook dodatak za uvoz/izvoz

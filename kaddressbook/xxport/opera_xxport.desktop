@@ -2,7 +2,9 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_opera_xxport
 Name=KAB Opera XXPort Plugin
+Name[ar]=مداة إضافية لمدخل XX KAB Opera
 Name[be]=Дапаўненьне KAB "Імпарт Opera"
+Name[br]=Lugent KAB Opera XXPort
 Name[bs]=KAB dodatak za Opera XXPort
 Name[ca]=Endollable d'importació/exportació d'Opera per a KAB
 Name[cs]=Exportní modul do Opery
@@ -36,6 +38,7 @@ Name[tr]=KAB Opera XXPort Eklentisi
 Name[uk]=Name=Втулок KAB для обміну з Opera
 Name[zh_CN]=KAB Opera XXPort 插件
 Comment=Plugin to import Opera contacts
+Comment[ar]=مداة إضافية لمدخل XX KAB Opera
 Comment[be]=Дапаўненьне для імпарту кантактаў Opera
 Comment[bg]=Приставка за импорт на контактите от Опера
 Comment[bs]=Dodatak za uvoz kontakata iz Opere

@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=KAddressBook/Extension
 Comment=KAddressBook Extension Plugin
+Comment[ar]=أداة لملحقات kAddressBook
 Comment[be]=Дапаўненьне K Адраснай кнігі "Пашырэньне"
 Comment[bg]=Приставка-разширение за адресника
 Comment[bs]=KAddressBook dodatak proširenja

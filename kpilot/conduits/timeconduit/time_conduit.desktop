@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Comment=This conduit sets the time on your handheld from the PC clock.
+Comment[ar]=تقوم هذه الأداة الإضافية بإعداد الوقت على جهازك المحمول من خلال وصله على الحاسوب الشخصي
 Comment[bg]=Синхронизация на датата и часа на мобилно устройство с часовника на компютъра
 Comment[bs]=Ovaj conduit postavlja vrijeme na vašem ručnom računaru prema PC satu.
 Comment[ca]=Aquest conducte estableix l'hora en la vostra agenda electrònica des del rellotge del PC.

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Skeleton Device
+Name[ar]=جهاز أساسي
 Name[bg]=Организатори
 Name[bs]=Skeleton uređaj
 Name[ca]=Dispositiu Skeleton
@@ -38,6 +39,7 @@ Name[tr]=Çatı Aygıt
 Name[uk]=Прототип пристрою
 Name[zh_CN]=万能设备
 Comment=Mobile Skeleton Device
+Comment[ar]=جهاز أساسي نقال
 Comment[bg]=Мобилни организатори (устройства)
 Comment[bs]=Mobilni skeleton uređaj
 Comment[ca]=Dispositiu mòbil Skeleton

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Mobile Phone or Organizer (gammu)
+Name[ar]=هاتف جوال أو منظم  (gammu)
 Name[be]=Мабільны тэлефон ці арганізатар (gammu)
 Name[bg]=Мобилни телефони или организатори (gammu)
 Name[bs]=Mobilni telefon ili organizer (gammu)
@@ -40,6 +41,7 @@ Name[uk]=Мобільний телефон та тижневик (gammu)
 Name[uz]=Уяли телефон ёки органайзер (gammu)
 Name[zh_CN]=移动电话或 PDA(gammu)
 Comment=This driver supports many NOKIA and other mobile phones via the gammu library
+Comment[ar]=برنامج التشغيل هذا يعتمد عددا من من هواتف NOKIA و غيرها عن طريق مكتبة gammu
 Comment[bg]=Драйвер за поддръжка на мобилни телефони, предимно Нокия, чрез библиотеката gammu
 Comment[bs]=Ovaj drajver podržava mnoge NOKIA i druge mobilne telefone putem gammu biblioteke
 Comment[ca]=Aquest controlador suporta la gran majoria de NOKIA i d'altres telèfons mòbil mitjançant la biblioteca «gammu»

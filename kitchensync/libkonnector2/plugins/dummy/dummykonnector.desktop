@@ -5,6 +5,7 @@ ServiceTypes=KitchenSync/Konnector,KResources/Plugin
 X-KDE-Library=libdummykonnector
 
 Name=Dummy Konnector
+Name[ar]=Konnector وهمي
 Name[bs]=Testni Konnector
 Name[ca]=Konnector de prova
 Name[cy]=Kysylltydd Ffug

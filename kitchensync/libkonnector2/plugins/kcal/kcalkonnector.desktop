@@ -5,6 +5,7 @@ ServiceTypes=KResources/Plugin
 X-KDE-Library=libkcalkonnector
 
 Name=Calendar Konnector
+Name[ar]=تقويم Konnector
 Name[bs]=Kalendar Konnector
 Name[ca]=Calendari Konnector
 Name[cs]=Konektor kalendáře

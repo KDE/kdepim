@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=FileviewPart
+Name[ar]=حزء عرض الملف
 Name[ca]=Part del visor de fitxers
 Name[eo]=Dosierantaŭrigardo-parto
 Name[es]=Parte de vista de archivo
@@ -10,6 +11,7 @@ Name[hi]=फ़ाइलव्यू-पार्ट
 Name[is]=Skráarsýnar-íforrit
 Name[ja]=ファイルプレビューパート
 Name[lt]=Bylų peržiūros dalis
+Name[mk]=Разгледување датотеки
 Name[nb]=Filforhåndsvisning
 Name[nl]=Bestandsvoorbeeld-part
 Name[nn]=Filvisingsdel

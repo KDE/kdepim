@@ -5,6 +5,7 @@ ServiceTypes=KResources/Plugin
 X-KDE-Library=liblocalkonnector
 
 Name=Local Konnector
+Name[ar]=Konnector محلي
 Name[bs]=Lokalni Konnector
 Name[ca]=Konnector local
 Name[cs]=Místní konektor

@@ -5,6 +5,8 @@ ServiceTypes=KitchenSync/Konnector
 X-KDE-Library=libagendakonnector
 
 Name=Agenda Vr3 Konnector
+Name[ar]=جدول أعمال Vr3 Konnector
+Name[br]=Deiziataer Vr3 Konnector
 Name[ca]=Konnector Agenda Vr3
 Name[cs]=Agenda Vr3 konektor
 Name[cy]=Kysylltydd Agenda Vr3
@@ -14,6 +16,7 @@ Name[es]=Konnector para Agenda Vr3
 Name[fr]=Konnector Agenda Vr3
 Name[hi]=एजेंडा वीआर3 कनेक्टर
 Name[hu]=Agenda Vr3-konnektor
+Name[mk]=Агенда Vr3 Konnecktor
 Name[nl]=Agenda Vr3-Konnector
 Name[nn]=Agenda Vr3-tilknyting
 Name[nso]= Mokgomaganyi wa Vr3 ya Lenaneotheo

@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_ldif_xxport
 Name=KAB LDIF XXPort Plugin
+Name[ar]=أداة إضافية لمدخل XX KAB LDIF
 Name[be]=Дапаўненьне KAB "Імпарт LDIF"
 Name[bs]=KAB dodatak za LDIF XXPort
 Name[ca]=Endollable per importació/exportació de LDIF per a KAB
@@ -38,6 +39,7 @@ Name[tr]=KAB LDIF XXPort Eklentisi
 Name[uk]=Втулок KAB для обміну через LDIF
 Name[zh_CN]=KAB LDIF XXPort 插件
 Comment=Plugin to import and export contacts in Netscape and Mozilla LDIF format
+Comment[ar]=أداة إضافية لاستيراد أو تصدير بيانات جهات الاتصال بتنسيق Netscape و Mozilla LDIF
 Comment[be]=Дапаўненьне для імпарту кантактаў у фармаце Netscape/Mozilla LDIF
 Comment[bg]=Приставка за импорт/експорт на контактите във формат на Netscape и Mozilla (LDIF)
 Comment[bs]=Dodatak za uvoz i izvoz kontakata iz LDIF formata koji koriste Netscape i Mozilla

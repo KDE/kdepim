@@ -5,6 +5,7 @@ Icon=irc_protocol
 ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/irc
 Comment=Internet Relay Chat
+Comment[ar]=محادثة إنترنت مرحلة
 Comment[bg]=Протокол IRC
 Comment[hu]=IRC (Internet Relay Chat)
 Comment[ja]=インターネット・リレー・チャット

@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_tableview
 Name=Table View
+Name[ar]=عرض بشكل جدول
 Name[be]=У выглядзе табліцы
 Name[bg]=Преглед в таблица
 Name[bs]=Pogled tabele

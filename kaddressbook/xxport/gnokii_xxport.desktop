@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_gnokii_xxport
 Name=KAB Mobile Phone XXPort Plugin
+Name[ar]=أداة إضافية للهواتف النقالة في المدخل XX التابع لـ KAB
 Name[bs]=KAB dodatak XXPort u/iz mobilnog telefona
 Name[ca]=Endollable d'importació/exportació de telèfon mòbil per a KAB
 Name[cs]=Exportní modul do mobilního telefonu
@@ -37,6 +38,7 @@ Name[tr]=KAB Cep Telefonu XXPort Eklentisi
 Name[uk]=Втулок KAB для обміну з мобільними телефонами
 Name[zh_CN]=KAB 移动电话 XXPort 插件
 Comment=Mobile Phone Plugin to Import and Export Addressbook Entries
+Comment[ar]=أداة هاتف جوال إضافية لاستيراد أو تصدير إدخالات دفتر العناوين
 Comment[bg]=Приставка за експорт/импорт на контактите от/към мобилен телефон
 Comment[bs]=Dodatak za uvoz i izvoz stavki adresara iz mobilnog telefona
 Comment[ca]=Endollable de telèfon mòbil per a importar i exportar entrades de la llibreta d'adreces

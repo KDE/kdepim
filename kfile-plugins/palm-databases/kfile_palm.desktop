@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=PalmOS Database Info
+Name[ar]=معلومات عن قاعدة بيانات خاصة بنظام تشغيل PalmOS
 Name[be]=Інфармацыя аб базе дадзеных PalmOS
 Name[bg]=Информация за БД за PalmOS
 Name[bs]=Informacije o PalmOS bazi podataka

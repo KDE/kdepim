@@ -1,6 +1,7 @@
 [Misc]
 Encoding=UTF-8
 Name=Application Octetstream
+Name[ar]=دفق ثماني الأجزاء للبرنامج
 Name[ca]=Aplicació Octetstream
 Name[da]=Program oktetstrøm
 Name[es]=Aplicación en flujo de octetos
@@ -21,6 +22,7 @@ Name[ta]=பயன்பாட்டு எண்மம்
 Name[tg]=Миқдори зиёди бинарии барномот
 Name[zh_CN]=应用程序 Octetstream
 Comment=A bodypart formatter plugin for text/vcard
+Comment[ar]=أداة إضافية لتنسيق أجزاء من ملفات نصية أو vCard
 Comment[br]=Arload tresañ Xfig
 Comment[bs]=Dodatak za formatiranje tijela poruke za text/vcard
 Comment[ca]=Un endollable formatador del cos per a text/vcard

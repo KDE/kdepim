@@ -13,6 +13,7 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Posting News
+Name[ar]=نشر الأخبار
 Name[bg]=Изпращане
 Name[bs]=Slanje na Usenet
 Name[ca]=Enviament de notícies

@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_cryptosettings
 Name=Crypto Preferences
+Name[ar]=تفضيلات التشفير
 Name[be]=Перавагі крыптаграфіі
 Name[bg]=Криптография
 Name[bs]=Postavke kriptografije

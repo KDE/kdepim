@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=NotePad
+Name[ar]=دفتر المذكرات
 Name[cs]=Poznámkový blok
 Name[da]=Notesblok
 Name[de]=Notizen
@@ -19,6 +20,7 @@ Name[ta]=நோட்பேட்
 Name[tg]=Эзоҳот
 Name[zh_CN]=记事本
 Comment=This conduit backs up NotePad drawings to a local folder
+Comment[ar]=هذا المسلك يقوم بنسخ رسومات NotePad إلى ملف محلي
 Comment[bg]=Създаване на архивни копия на изображенията създадени с NotePad в локална директория
 Comment[bs]=Ovaj pomoćnik čuva backup NotePad crteža u lokalnom direktoriju
 Comment[ca]=Aquest conducte copia els dibuixos NotePad a una carpeta local

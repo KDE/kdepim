@@ -1,9 +1,11 @@
 [Desktop Entry]
 Type=Service
 Name=Instant Messaging
+Name[ar]=إرسال  فوري
 Name[bg]=Мигновени съобщения
 Name[bs]=Instant poruke
 Name[ca]=Missatgeria instantània
+Name[cs]=Komunikátor
 Name[es]=Mensajería instantánea
 Name[et]=Kiirsuhtlus
 Name[fi]=Pikaviestintä
@@ -29,9 +31,11 @@ Name[tg]=Хизматгоҳи мубодилаи иттилоот
 Name[uk]=Миттєвий зв'язок
 Name[zh_CN]=即时消息
 Comment=Instant Messaging Address Editor
+Comment[ar]=محرر عنوان الرسائل الفورية
 Comment[bg]=Редактор на адреси за мигновените съобщения
 Comment[bs]=Editor adresa za instant poruke
 Comment[ca]=Editor d'adreces de missatgeria instantània
+Comment[cs]=Editor adres komunikátorů
 Comment[da]=Instant Messaging adresseeditor
 Comment[de]= Editor für Instant Messaging Addressen
 Comment[es]=Editor de direcciones de mensajería instantánea

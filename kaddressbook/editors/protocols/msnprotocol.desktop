@@ -5,6 +5,7 @@ Icon=msn_protocol
 ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/msn
 Comment=MSN Messenger
+Comment[ar]=MSN Messenger إم إس إن ماسنجر
 Comment[bg]=Протокол MSN
 Comment[fr]=Messagerie MSN
 Comment[ja]=MSN メッセンジャー

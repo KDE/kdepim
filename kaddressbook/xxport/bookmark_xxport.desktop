@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_bookmark_xxport
 Name=KAB Bookmark XXPort Plugin
+Name[ar]=أداة إضافية لوضع إشارة مرجعية في المدخل XX التابع لـ KAB
 Name[be]=Дапаўненьне KAB "Экспарт у закладкі"
 Name[bs]=KAB dodatak za XXPort zabilješki
 Name[ca]=Endollable d'importació/exportació de punts per a KAB
@@ -38,6 +39,7 @@ Name[tr]=KAB Yer imleri XXPort Eklentisi
 Name[uk]=Втулок обміну закладками KAB
 Name[zh_CN]=KAB 书签 XXPort 插件
 Comment=Plugin to export the web addresses of the contacts as bookmarks
+Comment[ar]=أداة إضافية لتصدير عناوين الشبكة ويب لجهات الاتصال كإشارات مرجعية
 Comment[bg]=Приставка за експорт на уеб адресите на контактите, като отметки
 Comment[bs]=Dodatak za izvoz web adresa kontakata u formi zabilješki
 Comment[ca]=Endollable per a exportar les adreces web dels contactes com a punts
