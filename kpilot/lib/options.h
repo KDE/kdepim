@@ -178,6 +178,7 @@ kdbgstream& operator << (kdbgstream&,const QSize &);
 //
 //
 #define FUNCTIONSETUP
+#define FUNCTIONSETUPL(a)
 #endif
 
 class KConfig;
@@ -216,6 +217,11 @@ kndbgstream& operator << (kndbgstream&,const QSize &);
 
 
 // $Log$
+// Revision 1.16  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.15  2002/08/20 20:47:43  adridg
 // (re)Introduce suppressing the function-name debug output for certain uninteresting functions
 //
