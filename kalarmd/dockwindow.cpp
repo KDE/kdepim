@@ -47,7 +47,8 @@ AlarmDockWindow::AlarmDockWindow(AlarmGui *ag, QWidget *parent, const char *name
   : KSystemTray(parent, name),
     mAlarmGui(ag),
     mNumClientIds(0L),
-    mNumCalendarIds(0L)
+    mNumCalendarIds(0L),
+    mSettingDaemonStatus(false)
 {
   // Set up GUI icons
   KGlobal::iconLoader()->addAppDir(kapp->aboutData()->appName());
@@ -218,7 +219,9 @@ void AlarmDockWindow::setDaemonStatus(bool newstatus)
   {
     setPixmap(newstatus ? mPixmapEnabled : mPixmapDisabled);
     contextMenu()->setItemChecked(mAlarmsEnabledId, newstatus);
+    mSettingDaemonStatus = true;
     contextMenuAboutToShow(contextMenu());
+    mSettingDaemonStatus = false;
   }
 }
 
@@ -299,7 +302,7 @@ void AlarmDockWindow::toggleDaemonAutostart()
  */
 void AlarmDockWindow::contextMenuAboutToShow(KPopupMenu* menu)
 {
-  menu->setItemEnabled(mAutostartDaemonId, mAlarmGui->isDaemonRunning());
+  menu->setItemEnabled(mAutostartDaemonId, mAlarmGui->isDaemonRunning(!mSettingDaemonStatus));
   updateMenuCalendars(false);
 }
 

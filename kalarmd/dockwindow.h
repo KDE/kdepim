@@ -66,10 +66,11 @@ class AlarmDockWindow : public KSystemTray
     void       handleEvent(const QString& calendarURL, const QString& eventID);
 
     AlarmGui   *mAlarmGui;
-    QString    mDefaultClient;    // default application name
-    int        mClientIndex;      // menu index to client names separator
-    int        mNumClientIds;       // number of client names + 1 in menu
-    int        mNumCalendarIds;     // number of calendar URLs + 1 in menu
+    QString    mDefaultClient;       // default application name
+    int        mClientIndex;         // menu index to client names separator
+    int        mNumClientIds;        // number of client names + 1 in menu
+    int        mNumCalendarIds;      // number of calendar URLs + 1 in menu
+    bool       mSettingDaemonStatus; // to avoid recursion in setDaemonStatus()
 };
 
 #endif
