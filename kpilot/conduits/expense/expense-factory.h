@@ -36,8 +36,7 @@
 class KInstance;
 class KAboutData;
 
-class ExpenseCSVPage;
-class ExpenseDBPage;
+class ExpenseWidget;
 
 class ExpenseWidgetSetup : public ConduitConfig
 {
@@ -52,8 +51,7 @@ protected:
 	virtual void commitChanges();
 
 private:
-	ExpenseCSVPage *fCSVPage;
-	ExpenseDBPage *fDBPage;
+	ExpenseWidget *fConfigWidget;
 } ;
 
 class ExpenseConduitFactory : public KLibFactory
@@ -84,5 +82,8 @@ void *init_libexpenseconduit();
 } ;
 
 // $Log$
+// Revision 1.1  2001/11/18 16:55:51  adridg
+// Moving expenses conduit to new arch.
+//
 
 #endif

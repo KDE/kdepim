@@ -1,5 +1,6 @@
 <!DOCTYPE UI><UI>
-<class>Form2</class>
+<class>ExpenseWidget</class>
+<author>David B?</author>
 <widget>
     <class>QWidget</class>
     <property stdset="1">
@@ -11,7 +12,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>592</width>
+            <width>588</width>
             <height>480</height>
         </rect>
     </property>
@@ -23,15 +24,15 @@
         <class>QTabWidget</class>
         <property stdset="1">
             <name>name</name>
-            <cstring>TabWidget5</cstring>
+            <cstring>tabWidget</cstring>
         </property>
         <property stdset="1">
             <name>geometry</name>
             <rect>
                 <x>10</x>
                 <y>10</y>
-                <width>510</width>
-                <height>401</height>
+                <width>312</width>
+                <height>286</height>
             </rect>
         </property>
         <widget>
@@ -44,202 +45,176 @@
                 <name>title</name>
                 <string>CSV Export</string>
             </attribute>
-            <widget>
-                <class>QLabel</class>
+            <grid>
                 <property stdset="1">
-                    <name>name</name>
-                    <cstring>TextLabel1</cstring>
+                    <name>margin</name>
+                    <number>11</number>
                 </property>
                 <property stdset="1">
-                    <name>geometry</name>
-                    <rect>
-                        <x>10</x>
-                        <y>20</y>
-                        <width>120</width>
-                        <height>31</height>
-                    </rect>
+                    <name>spacing</name>
+                    <number>6</number>
                 </property>
-                <property stdset="1">
-                    <name>text</name>
-                    <string>CSV Filename:</string>
-                </property>
-            </widget>
-            <widget>
-                <class>QButtonGroup</class>
-                <property stdset="1">
-                    <name>name</name>
-                    <cstring>fRotatePolicy</cstring>
-                </property>
-                <property stdset="1">
-                    <name>geometry</name>
-                    <rect>
-                        <x>138</x>
-                        <y>76</y>
-                        <width>231</width>
-                        <height>191</height>
-                    </rect>
-                </property>
-                <property stdset="1">
-                    <name>title</name>
-                    <string>Rotate Policy</string>
-                </property>
-                <widget>
-                    <class>QRadioButton</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>RadioButton1</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>geometry</name>
-                        <rect>
-                            <x>20</x>
-                            <y>30</y>
-                            <width>160</width>
-                            <height>28</height>
-                        </rect>
-                    </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>&amp;Overwrite</string>
-                    </property>
-                </widget>
-                <widget>
-                    <class>QRadioButton</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>RadioButton3</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>geometry</name>
-                        <rect>
-                            <x>20</x>
-                            <y>100</y>
-                            <width>161</width>
-                            <height>20</height>
-                        </rect>
-                    </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>&amp;Rotate</string>
-                    </property>
-                    <property stdset="1">
-                        <name>checked</name>
-                        <bool>false</bool>
-                    </property>
-                </widget>
-                <widget>
-                    <class>QRadioButton</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>RadioButton2</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>geometry</name>
-                        <rect>
-                            <x>20</x>
-                            <y>60</y>
-                            <width>151</width>
-                            <height>31</height>
-                        </rect>
-                    </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>&amp;Append</string>
-                    </property>
-                    <property stdset="1">
-                        <name>checked</name>
-                        <bool>true</bool>
-                    </property>
-                </widget>
-                <widget>
+                <widget row="0"  column="0" >
                     <class>QLabel</class>
                     <property stdset="1">
                         <name>name</name>
-                        <cstring>TextLabel2</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>geometry</name>
-                        <rect>
-                            <x>20</x>
-                            <y>140</y>
-                            <width>110</width>
-                            <height>31</height>
-                        </rect>
+                        <cstring>TextLabel1</cstring>
                     </property>
                     <property stdset="1">
                         <name>text</name>
-                        <string>Rotate Depth:</string>
+                        <string>CSV Filename:</string>
                     </property>
                 </widget>
-                <widget>
-                    <class>QSpinBox</class>
+                <widget row="0"  column="1" >
+                    <class>QLineEdit</class>
                     <property stdset="1">
                         <name>name</name>
-                        <cstring>fRotateDepth</cstring>
+                        <cstring>fCSVFilename</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>geometry</name>
-                        <rect>
-                            <x>141</x>
-                            <y>140</y>
-                            <width>80</width>
-                            <height>31</height>
-                        </rect>
-                    </property>
-                    <property stdset="1">
-                        <name>maxValue</name>
-                        <number>10</number>
-                    </property>
-                    <property stdset="1">
-                        <name>minValue</name>
-                        <number>1</number>
-                    </property>
-                    <property stdset="1">
-                        <name>value</name>
-                        <number>3</number>
+                    <property>
+                        <name>toolTip</name>
+                        <string>Full path to csv file containing expense data</string>
                     </property>
                 </widget>
-            </widget>
-            <widget>
-                <class>QLineEdit</class>
-                <property stdset="1">
-                    <name>name</name>
-                    <cstring>fCSVFilename</cstring>
-                </property>
-                <property stdset="1">
-                    <name>geometry</name>
-                    <rect>
-                        <x>140</x>
-                        <y>20</y>
-                        <width>230</width>
-                        <height>32</height>
-                    </rect>
-                </property>
-                <property>
-                    <name>toolTip</name>
-                    <string>Full path to csv file containing expense data</string>
-                </property>
-            </widget>
-            <widget>
-                <class>QPushButton</class>
-                <property stdset="1">
-                    <name>name</name>
-                    <cstring>fCSVBrowse</cstring>
-                </property>
-                <property stdset="1">
-                    <name>geometry</name>
-                    <rect>
-                        <x>380</x>
-                        <y>20</y>
-                        <width>111</width>
-                        <height>31</height>
-                    </rect>
-                </property>
-                <property stdset="1">
-                    <name>text</name>
-                    <string>Browse</string>
-                </property>
-            </widget>
+                <widget row="0"  column="2" >
+                    <class>QPushButton</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>fCSVBrowse</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>Browse</string>
+                    </property>
+                </widget>
+                <widget row="1"  column="0"  rowspan="1"  colspan="3" >
+                    <class>QButtonGroup</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>fRotatePolicy</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>title</name>
+                        <string>Rotate Policy</string>
+                    </property>
+                    <widget>
+                        <class>QRadioButton</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>RadioButton1</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>geometry</name>
+                            <rect>
+                                <x>20</x>
+                                <y>30</y>
+                                <width>160</width>
+                                <height>28</height>
+                            </rect>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>&amp;Overwrite</string>
+                        </property>
+                    </widget>
+                    <widget>
+                        <class>QRadioButton</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>RadioButton3</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>geometry</name>
+                            <rect>
+                                <x>20</x>
+                                <y>100</y>
+                                <width>161</width>
+                                <height>20</height>
+                            </rect>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>&amp;Rotate</string>
+                        </property>
+                        <property stdset="1">
+                            <name>checked</name>
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget>
+                        <class>QRadioButton</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>RadioButton2</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>geometry</name>
+                            <rect>
+                                <x>20</x>
+                                <y>60</y>
+                                <width>151</width>
+                                <height>31</height>
+                            </rect>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>&amp;Append</string>
+                        </property>
+                        <property stdset="1">
+                            <name>checked</name>
+                            <bool>true</bool>
+                        </property>
+                    </widget>
+                    <widget>
+                        <class>QLabel</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>TextLabel2</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>geometry</name>
+                            <rect>
+                                <x>20</x>
+                                <y>140</y>
+                                <width>110</width>
+                                <height>31</height>
+                            </rect>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>Rotate Depth:</string>
+                        </property>
+                    </widget>
+                    <widget>
+                        <class>QSpinBox</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>fRotateDepth</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>geometry</name>
+                            <rect>
+                                <x>141</x>
+                                <y>140</y>
+                                <width>80</width>
+                                <height>31</height>
+                            </rect>
+                        </property>
+                        <property stdset="1">
+                            <name>maxValue</name>
+                            <number>10</number>
+                        </property>
+                        <property stdset="1">
+                            <name>minValue</name>
+                            <number>1</number>
+                        </property>
+                        <property stdset="1">
+                            <name>value</name>
+                            <number>3</number>
+                        </property>
+                    </widget>
+                </widget>
+            </grid>
         </widget>
         <widget>
             <class>QWidget</class>
@@ -531,7 +506,7 @@
     </widget>
 </widget>
 <tabstops>
-    <tabstop>TabWidget5</tabstop>
+    <tabstop>tabWidget</tabstop>
     <tabstop>fCSVFilename</tabstop>
     <tabstop>fCSVBrowse</tabstop>
     <tabstop>RadioButton3</tabstop>

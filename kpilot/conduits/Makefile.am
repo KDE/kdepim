@@ -7,7 +7,8 @@
 ###
 SUBDIRS = knotes \
 	expense \
-	abbrowserconduit
+	abbrowserconduit \
+	null \
+	vcalconduit
 
-#	vcalconduit \
 #	popmail \

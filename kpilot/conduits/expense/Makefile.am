@@ -11,7 +11,7 @@ service_DATA = expense-conduit.desktop
 kde_module_LTLIBRARIES = libexpenseconduit.la
 
 
-libexpenseconduit_la_SOURCES = expense-factory.cc setupDialog.cc expense.cc
+libexpenseconduit_la_SOURCES = expense-factory.cc expenseConduit.ui expense.cc 
 libexpenseconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
 libexpenseconduit_la_LIBADD  =  -lkpilot
 

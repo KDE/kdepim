@@ -24,7 +24,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
@@ -33,7 +33,7 @@
 */
 
 
-#include "gsetupDialog.h"
+#include <qwidget.h>
 
 class KConfig;
 class QLabel;
@@ -43,19 +43,21 @@ class QPushButton;
 class QRadioButton;
 class QButtonGroup;
 
+
 // A standard dialog page with all the
 // settings used when sending mail, both
 // with SMTP and sendmail (in future via KMail
 // as well?)
 //
 //
-class PopMailSendPage : public setupDialogPage
+class PopMailSendPage : public QWidget
 {
 	Q_OBJECT
 
 public:
-	PopMailSendPage(setupDialog *parent,KConfig& );
+	PopMailSendPage(QWidget *parent );
 	virtual int commitChanges(KConfig& );
+	void readSettings(KConfig &);
 
 public slots:
 	/**
@@ -70,11 +72,17 @@ public slots:
 	void toggleMode();
 
 public:
-	void setMode(PopMailConduit::SendMode m);
-	PopMailConduit::SendMode getMode() const { return fMode; };
+	typedef enum { SEND_NONE=0,
+		SEND_SENDMAIL=7,
+		SEND_KMAIL=8,
+		SEND_SMTP=12
+		} SendMode ;
+
+	void setMode(SendMode m);
+	SendMode getMode() const { return fMode; };
 
 private:
-	PopMailConduit::SendMode fMode;
+	SendMode fMode;
 
 	QButtonGroup *sendGroup;
 	QRadioButton *fNoSend,*fSendmail,*fSMTP, *fKMail;
@@ -96,13 +104,14 @@ private:
 // (and in future from KMail?)
 //
 //
-class PopMailReceivePage : public setupDialogPage
+class PopMailReceivePage : public QWidget
 {
 	Q_OBJECT
 
 public:
-	PopMailReceivePage(setupDialog *,KConfig& );
+	PopMailReceivePage(QWidget *);
 	virtual int commitChanges(KConfig& );
+	void readSettings(KConfig &);
 
 public slots:
 	void browseMailbox();
@@ -110,8 +119,14 @@ public slots:
 	void toggleMode();
 
 public:
-	void setMode(PopMailConduit::RetrievalMode m);
-	PopMailConduit::RetrievalMode getMode() const { return fMode; };
+	typedef enum {
+		RECV_NONE=0,
+		RECV_POP=1,
+		RECV_UNIX=2
+		} RetrievalMode ;
+
+	void setMode(RetrievalMode m);
+	RetrievalMode getMode() const { return fMode; };
 
 private:
 	QButtonGroup *methodGroup;
@@ -129,31 +144,19 @@ private:
 	QLineEdit *fPopPass;
 	QCheckBox *fStorePass;
 
-	PopMailConduit::RetrievalMode fMode;
+	RetrievalMode fMode;
 } ;
 
 
 
-class PopMailOptions : public setupDialog
-{
-	Q_OBJECT
-
-friend class PopMailConduit;	// For getting the PopGroup
-public:
-	PopMailOptions(QWidget *parent=0L);
-	~PopMailOptions();
-  
-protected:
-	static const QString PopGroup;
-
-protected:
-	virtual void setupWidget();
-} ;
 
 #endif
 
 
 // $Log$
+// Revision 1.10  2001/10/31 23:47:12  adridg
+// CVS_SILENT: Ongoing conduits ports
+//
 // Revision 1.9  2001/07/04 08:53:37  cschumac
 // - Added explicitDomainName text widget to setup dialog
 // - Changed the support for the explicit domain name a little

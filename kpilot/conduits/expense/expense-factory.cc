@@ -35,7 +35,7 @@
 #include <kinstance.h>
 #include <kaboutdata.h>
 
-#include "setupDialog.h"
+#include "expenseConduit.h"
 #include "expense.h"
 
 #include "expense-factory.moc"
@@ -139,16 +139,11 @@ ExpenseWidgetSetup::ExpenseWidgetSetup(QWidget *w, const char *n,
 {
 	FUNCTIONSETUP;
 
-	QTabWidget *t = new QTabWidget(widget());
-	fCSVPage = new ExpenseCSVPage(t);
-	t->addTab(fCSVPage,i18n("CSV Export"));
-	fDBPage = new ExpenseDBPage(t);
-	t->addTab(fDBPage,i18n("DB Export"));
-
-	setTabWidget(t);
+	fConfigWidget = new ExpenseWidget(widget());
+	setTabWidget(fConfigWidget->tabWidget);
 	addAboutPage(false,ExpenseConduitFactory::about());
-
-	t->adjustSize();
+	fConfigWidget->tabWidget->adjustSize();
+	fConfigWidget->resize(fConfigWidget->tabWidget->size());
 }
 
 ExpenseWidgetSetup::~ExpenseWidgetSetup()
@@ -164,8 +159,6 @@ ExpenseWidgetSetup::~ExpenseWidgetSetup()
 
 	KConfigGroupSaver s(fConfig,"Expense-conduit");
 
-	fCSVPage->commitChanges(*fConfig);
-	fDBPage->commitChanges(*fConfig);
 }
 
 /* virtual */ void ExpenseWidgetSetup::readSettings()
@@ -175,13 +168,13 @@ ExpenseWidgetSetup::~ExpenseWidgetSetup()
 	if (!fConfig) return;
 
 	KConfigGroupSaver s(fConfig,"Expense-conduit");
-
-	fCSVPage->readSettings(*fConfig);
-	fDBPage->readSettings(*fConfig);
 }
 
 
 // $Log$
+// Revision 1.2  2001/12/02 22:03:07  adridg
+// Expense conduit finally works
+//
 // Revision 1.1  2001/11/18 16:55:51  adridg
 // Moving expenses conduit to new arch.
 //

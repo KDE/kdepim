@@ -1,5 +1,5 @@
 <!DOCTYPE UI><UI>
-<class>Form1</class>
+<class>VCalWidget</class>
 <widget>
     <class>QWidget</class>
     <property stdset="1">
@@ -23,7 +23,7 @@
         <class>QTabWidget</class>
         <property stdset="1">
             <name>name</name>
-            <cstring>TabWidget2</cstring>
+            <cstring>tabWidget</cstring>
         </property>
         <property stdset="1">
             <name>geometry</name>
@@ -160,7 +160,7 @@
     </widget>
 </widget>
 <tabstops>
-    <tabstop>TabWidget2</tabstop>
+    <tabstop>tabWidget</tabstop>
     <tabstop>fCalFile</tabstop>
     <tabstop>fCalBrowse</tabstop>
     <tabstop>fPromptBeforeChange</tabstop>

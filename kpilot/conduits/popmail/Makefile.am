@@ -1,5 +1,9 @@
-INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH) \
-	-I$(top_srcdir)/kpilot -I$(top_srcdir)/kpilot/kpilot
+### Makefile for the VCal and Todo conduits
+###
+### The conduits are copyrighted by all kinds of people, see
+### the individual files.
+
+INCLUDES= $(all_includes) -I$(top_srcdir)/kpilot/lib
 METASOURCES = AUTO
 
 servicedir  = $(kde_servicesdir)
@@ -7,22 +11,12 @@ service_DATA = popmail-conduit.desktop
 
 ####### This part is very kpilot specific
 # you can add here more. This one gets installed 
-bin_PROGRAMS = popmail_conduit
+kde_module_LTLIBRARIES = libpopmailconduit.la
 
 # Which sources should be compiled for popmail_conduit
-popmail_conduit_SOURCES= popmail-conduit.cc \
-	passworddialog.cc parsedate.c setupDialog.cc
-
-# the library search path
-popmail_conduit_LDFLAGS = $(all_libraries) \
-	$(KDE_RPATH) -L../../kpilot
-
-# the libraries to link against. Be aware of the order. First the libraries,
-# that depend on the following ones.
-popmail_conduit_LDADD   =  \
-	-lconduit -lpilotdb \
-	$(LIB_KDEUI) $(LIB_KFILE) $(LIB_KDECORE) \
-	@LIBSOCKET@ $(LIBPISOCK)
+libpopmailconduit_la_SOURCES = popmail-factory.cc setupDialog.cc
+libpopmailconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
+libpopmailconduit_la_LIBADD   =  -lkpilot
 
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = popmail-conduit.h passworddialog.h setupDialog.h

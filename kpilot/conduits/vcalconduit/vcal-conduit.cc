@@ -630,9 +630,17 @@ void VCalConduit::setRepetition(PilotDateEntry *dateEntry,Incidence *incidence)
       period = DailyPeriod;
       break;
     case KORecurrence::rWeekly:
-      dateEntry->setRepeatType(repeatWeekly);
-      period = WeeklyPeriod;
-      dateEntry->setRepeatDays(recur->days());
+      {
+	// On the pilot bit 0 means sunday, on the desktop it means
+	// monday. => We need to rotate the the bit array by one.
+	dateEntry->setRepeatType(repeatWeekly);
+	period = WeeklyPeriod;
+	QBitArray days = recur->days();
+	QBitArray days2(7);
+	for (int i = 0; i < 7; i++)
+	  days2[(i + 1) % 7] = days[i];
+	dateEntry->setRepeatDays(days2);
+      }
       break;
     case KORecurrence::rMonthlyPos:
       dateEntry->setRepeatType(repeatMonthlyByDay);
@@ -768,6 +776,10 @@ void VCalConduit::doTest()
 
 
 // $Log$
+// Revision 1.43  2001/06/18 19:51:40  cschumac
+// Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
+// They use libkcal now.
+//
 // Revision 1.42  2001/06/13 21:30:24  adridg
 // Avoid uninitialized variable warning
 //
