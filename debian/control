@@ -52,13 +52,6 @@ Description: KDE mobile phone utility
  .
  Kandy is aimed at mobile phones with integrated (GSM) modems.
 
-Package: kaplan
-Section: utils
-Architecture: any
-Depends: ${shlibs:Depends}
-Description: KDE PIM shell
- KDE PIM Shell application combining knode, kmail and korganizer
-
 Package: karm
 Section: utils
 Architecture: any
