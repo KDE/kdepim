@@ -1,3 +1,5 @@
+KDE_OPTIONS = nofinal
+
 INCLUDES = -I$(top_srcdir)/libkdenetwork \
 	-I$(top_srcdir)/certmanager/lib \
 	$(GPGME_CFLAGS) $(all_includes)
