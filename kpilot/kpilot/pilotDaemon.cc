@@ -769,49 +769,28 @@ static bool isKDesktopLockRunning()
 	}
 }
 
-
-/* slot */ void PilotDaemon::startHotSync(KPilotDeviceLink*pilotLink)
+static void possiblyChangeTray(PilotDaemonTray *fTray)
 {
-	FUNCTIONSETUP;
-
-
 	if (fTray)
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname << ": Changing tray icon." << endl;
-#endif
-
 		fTray->changeIcon(PilotDaemonTray::Busy);
 	}
+}
 
-	// Tell KPilot what's going on.
-	getKPilot().daemonStatus(KPilotDCOP::StartOfHotSync);
-	getLogger().logStartSync();
-	getFileLogger().logStartSync();
+static void informOthers(KPilotDCOP_stub &kpilot,
+	LoggerDCOP_stub &log,
+	LoggerDCOP_stub &filelog)
+{
+	kpilot.daemonStatus(KPilotDCOP::StartOfHotSync);
+	log.logStartSync();
+	filelog.logStartSync();
+}
 
-	fDaemonStatus = HOTSYNC_START ;
-	int mode=0;
-	bool pcchanged=false;
-
-#ifdef DEBUG
-	DEBUGDAEMON << fname
-		<< ": Starting Sync with type "
-		<< syncTypeString(fNextSyncType)
-		<< " (" << fNextSyncType << ")" << endl;
-	DEBUGDAEMON << fname << ": Status is " << shortStatusString() << endl;
-#endif
-
-	QStringList conduits( KPilotSettings::installedConduits() );
-	if ( (conduits.findIndex( CSL1("internal_fileinstall") ) >= 0) &&
-		fInstaller) mode |= ActionQueue::WithInstaller;
-
-	// Queue to add all the actions for this sync to.
-	fSyncStack = new ActionQueue(pilotLink);
-
-#ifdef ENABLE_KROUPWARE
-	bool _syncWithKMail = false;
-	int _kroupwareParts = 0;
-#endif
+static bool isSyncPossible(ActionQueue *fSyncStack,
+	KPilotDeviceLink *pilotLink,
+	KPilotDCOP_stub &kpilot)
+{
+	FUNCTIONSETUP;
 
 	/**
 	* If KPilot is busy with something - like configuring
@@ -819,8 +798,8 @@ static bool isKDesktopLockRunning()
 	* just tell the user that the sync couldn't run because
 	* of that.
 	*/
-	int kpilotstatus = getKPilot().kpilotStatus();
-	DCOPStub::Status callstatus = getKPilot().status();
+	int kpilotstatus = kpilot.kpilotStatus();
+	DCOPStub::Status callstatus = kpilot.status();
 
 #ifdef DEBUG
 	if (callstatus != DCOPStub::CallSucceeded)
@@ -845,9 +824,7 @@ static bool isKDesktopLockRunning()
 
 		fSyncStack->queueInit();
 		fSyncStack->addAction(new SorryAction(pilotLink));
-		// Near the end of this function - sets up
-		// signal/slot connections and fires off the sync.
-		goto launch;
+		return false;
 	}
 
 	if (isKDesktopLockRunning())
@@ -855,43 +832,114 @@ static bool isKDesktopLockRunning()
 		fSyncStack->queueInit();
 		fSyncStack->addAction(new SorryAction(pilotLink,
 			i18n("HotSync is disabled while the screen is locked.")));
+		return false;
+	}
+
+	return true;
+}
+
+static int checkKroupware(ActionQueue *fSyncStack,
+	KPilotDeviceLink *pilotLink,
+	const QStringList &conduits,
+	QString &errreturn,
+	bool &syncWithKMail)
+{
+	FUNCTIONSETUP;
+	int _kroupwareParts = 0;
+#ifdef ENABLE_KROUPWARE
+
+	syncWithKMail =  (conduits.findIndex( CSL1("internal_kroupware") ) >= 0) ;
+	if (!syncWithKMail) return 0;
+
+	QString errmsg;
+	if (!KroupwareSync::startKMail(&errmsg))
+	{
+		errreturn = i18n("Could not start KMail. The "
+			"error message was: %1.").arg(errmsg);
+	}
+
+	if (conduits.findIndex( CSL1("vcal-conduit") ) >= 0 )
+		_kroupwareParts |= KroupwareSync::Cal ;
+	if (conduits.findIndex( CSL1("todo-conduit") ) >= 0 )
+		_kroupwareParts |= KroupwareSync::Todo ;
+	if (conduits.findIndex( CSL1("knotes-conduit") ) >= 0 )
+		_kroupwareParts |= KroupwareSync::Notes ;
+	if (conduits.findIndex( CSL1("abbrowser_conduit") ) >= 0 )
+		_kroupwareParts |= KroupwareSync::Address ;
+
+	fSyncStack->addAction(new KroupwareSync(true /* pre-sync */,
+		_kroupwareParts,pilotLink));
+#endif
+	return _kroupwareParts;
+}
+
+static void finishKroupware(ActionQueue *fSyncStack,
+	KPilotDeviceLink *pilotLink,
+	int kroupwareParts,
+	bool syncWithKMail)
+{
+#ifdef ENABLE_KROUPWARE
+	if (syncWithKMail)
+	{
+		fSyncStack->addAction(new KroupwareSync(false /* post-sync */ ,
+			kroupwareParts,pilotLink));
+	}
+#endif
+}
+
+/* slot */ void PilotDaemon::startHotSync(KPilotDeviceLink*pilotLink)
+{
+	FUNCTIONSETUP;
+
+	int mode=0; // Random bit flag
+	bool pcchanged=false; // If last PC to sync was a different one (implies full sync, normally)
+	QStringList conduits ; // list of conduits to run
+	bool syncWithKMail = false; // if kroupware sync is enabled
+	int _kroupwareParts = 0; // which parts to sync
+	QString s; // a generic string for stuff
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname
+		<< ": Starting Sync with type "
+		<< syncTypeString(fNextSyncType)
+		<< " (" << fNextSyncType << ")" << endl;
+	DEBUGDAEMON << fname << ": Status is " << shortStatusString() << endl;
+#endif
+
+
+
+	fDaemonStatus = HOTSYNC_START ;
+	possiblyChangeTray(fTray);
+	informOthers(getKPilot(),getLogger(),getFileLogger());
+
+
+	// Queue to add all the actions for this sync to.
+	fSyncStack = new ActionQueue(pilotLink);
+
+	// Check if the sync is possible at all.
+	if (!isSyncPossible(fSyncStack,pilotLink,getKPilot()))
+	{
+		// Sync is not possible now, sorry action was added to
+		// the queue, and we run that -- skipping all the rest of the sync stuff.
 		goto launch;
 	}
+
 
 	// Normal case: regular sync.
 	fSyncStack->queueInit(ActionQueue::WithUserCheck);
 
 
-#ifdef ENABLE_KROUPWARE
-	if ( conduits.findIndex( CSL1("internal_kroupware") ) >= 0 )
-	{
-		logMessage( i18n("Kroupware syncing is enabled.") );
+	// Add kroupware to the mix, if needed.
+	_kroupwareParts = checkKroupware(fSyncStack,pilotLink,conduits,s,syncWithKMail);
+	if (syncWithKMail) logMessage( i18n("Kroupware syncing is enabled.") );
+	if (!s.isEmpty()) logError(s);
 
-		QString errmsg;
-		if (!KroupwareSync::startKMail(&errmsg))
-		{
-			logMessage( i18n("Could not start KMail. The "
-				"error message was: %1.").arg(errmsg));
-		}
 
-		_syncWithKMail = true;
 
-		if (conduits.findIndex( CSL1("vcal-conduit") ) >= 0 )
-			_kroupwareParts |= KroupwareSync::Cal ;
-		if (conduits.findIndex( CSL1("todo-conduit") ) >= 0 )
-			_kroupwareParts |= KroupwareSync::Todo ;
-		if (conduits.findIndex( CSL1("knotes-conduit") ) >= 0 )
-			_kroupwareParts |= KroupwareSync::Notes ;
-		if (conduits.findIndex( CSL1("abbrowser_conduit") ) >= 0 )
-			_kroupwareParts |= KroupwareSync::Address ;
-	}
 
-	if (_syncWithKMail)
-	{
-		fSyncStack->addAction(new KroupwareSync(true /* pre-sync */,
-			_kroupwareParts,pilotLink));
-	}
-#endif
+	conduits = KPilotSettings::installedConduits() ;
+	if ( (conduits.findIndex( CSL1("internal_fileinstall") ) >= 0) &&
+		fInstaller) mode |= ActionQueue::WithInstaller;
 
 	switch (fNextSyncType)
 	{
@@ -984,13 +1032,8 @@ skipExtraSyncSettings:
 		break;
 	}
 
-#ifdef ENABLE_KROUPWARE
-	if (_syncWithKMail)
-	{
-		fSyncStack->addAction(new KroupwareSync(false /* post-sync */ ,
-			_kroupwareParts,pilotLink));
-	}
-#endif
+	finishKroupware(fSyncStack,pilotLink,_kroupwareParts,syncWithKMail);
+
 
 // Jump here to finalize the connections to the sync action
 // queue and start the actual sync.
