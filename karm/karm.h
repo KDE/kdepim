@@ -9,7 +9,7 @@
 #include <qptrlist.h>
 #include <qtextstream.h>
 #include "kwinmodule.h"
-#include <vector.h>
+#include <vector>
 
 class KMenuBar;
 class KToolBar;
@@ -20,8 +20,8 @@ class QTimer;
 class Preferences;
 class Task;
 
-typedef vector<int> DesktopListType;
-typedef vector<Task*> TaskVector;
+typedef std::vector<int> DesktopListType;
+typedef std::vector<Task*> TaskVector;
 
 /**
  * Container and interface for the tasks.

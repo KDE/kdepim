@@ -25,7 +25,7 @@
 #include <kdialogbase.h>
 #include <qvalidator.h>
 #include <qcheckbox.h>
-#include <vector.h>
+#include <vector>
 
 #include "karm.h"       // only for DesktopListType
 #include "ktimewidget.h"
@@ -65,7 +65,7 @@ class AddTaskDialog : public KDialogBase
     KTimeWidget* _sessionTW;
     KTimeWidget* _diffTW;
     QComboBox* _operator;
-    vector<QCheckBox*> _deskBox; // we only need an array, but ISO forbids
+    std::vector<QCheckBox*> _deskBox; // we only need an array, but ISO forbids
                                  // passing an array as a function argument
 
     long origTotal;
