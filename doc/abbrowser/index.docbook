@@ -1,10 +1,12 @@
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
- <!ENTITY abbrowser "<application>abbrowser</application>">
- <!ENTITY % addindex "IGNORE">
- <![ %addindex; [ <!ENTITY docindex SYSTEM "docindex.docbook"> ]]>
+  <!ENTITY kappname "&abbrowser;">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % English "INCLUDE" -- change language only here -->
+  <!ENTITY % ents PUBLIC "-//KDE//ENTITIES Documentation V2.0//EN">
+  %ents;
 ]>
 
-<book lang="en">
+<book lang="&language;">
 <bookinfo>
 <title>The Pab Handbook</title>
 <authorgroup>
