@@ -273,9 +273,9 @@ QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr 
   QString result;
 
   if ( query.isEmpty() )
-    result = "%1=*%2";
+    result = "%1=%2";
   else
-    result = "%1=*%2*";
+    result = "%1=%2*";
 
   if ( attr == i18n( "Name" ) ) {
     result = result.arg( "cn" ).arg( query );
