@@ -129,7 +129,6 @@ QCString KPIM::getEmailAddr(const QString& aStr)
   return aStr.mid(i+1,len).latin1();
 }
 
-//static:
 bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
 {
   name = QString::null;
@@ -137,7 +136,7 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
 
   const int len=aStr.length();
   const char cQuotes = '"';
-  
+
   bool bInComment, bInQuotesOutsideOfEmail;
   int i=0, iAd=0, iMailStart=0, iMailEnd=0;
   QChar c;
@@ -234,7 +233,7 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
     mail.append('@');
 
     // Loop forward until we find the end of the string
-    // or a ',' that is outside of a comment 
+    // or a ',' that is outside of a comment
     //          and outside of quoted text behind the trailing '>'.
     bInComment = false;
     bInQuotesOutsideOfEmail = false;
@@ -282,6 +281,18 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
 
   name = name.simplifyWhiteSpace();
   mail = mail.simplifyWhiteSpace();
-  
+
   return ! (name.isEmpty() || mail.isEmpty());
+}
+
+bool KPIM::compareEmail( const QString& email1, const QString& email2,
+                         bool matchName )
+{
+  QString e1Name, e1Email, e2Name, e2Email;
+
+  getNameAndMail( email1, e1Name, e1Email );
+  getNameAndMail( email2, e2Name, e2Email );
+
+  return e1Email == e2Email &&
+    ( !matchName || ( e1Name == e2Name ) );
 }
