@@ -25,11 +25,26 @@
 #include <groupwaredataadaptor.h>
 
 #include <libemailfunctions/idmapper.h>
-#include <kio/job.h>
+// #include <kio/job.h>
 #include <kio/davjob.h>
 #include <kdebug.h>
 
-#include <qdom.h>
+// #include <qdom.h>
+
+KIO::Job *ExchangeGlobals::createListFoldersJob( const KURL &url )
+{
+  QDomDocument doc;
+  QDomElement root = WebdavHandler::addDavElement(  doc, doc, "d:propfind" );
+  QDomElement prop = WebdavHandler::addElement(  doc, root, "d:prop" );
+  WebdavHandler::addElement( doc, prop, "d:displayname" );
+  WebdavHandler::addElement( doc, prop, "d:contentclass" );
+  WebdavHandler::addElement( doc, prop, "d:hassubs" );
+
+  kdDebug(7000) << "props: " << doc.toString() << endl;
+  return KIO::davPropFind( url, doc, "1", false );
+}
+
+
 
 QString ExchangeGlobals::extractFingerprint( KIO::TransferJob *job,
           const QString &/*rawText*/ )
@@ -89,10 +104,10 @@ KPIM::GroupwareJob::ContentType ExchangeGlobals::getContentType( const QString &
 }
 
 // FIXME: This is exactly the same code, except that it calls getContentType of the ExchangeGlobals class, instead of the one from DAVGroupwareGlobals!!!!
-bool ExchangeGlobals::itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *adaptor,
+bool ExchangeGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,
     KIO::Job *job, QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
 {
-kdDebug()<<"ExchangeGlobals::itemsForDownloadFromList"<<endl;
+kdDebug()<<"ExchangeGlobals::interpretListItemsJob"<<endl;
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob *>(job);
 
   if ( !davjob ) {
@@ -143,6 +158,36 @@ KIO::TransferJob *ExchangeGlobals::createListItemsJob( const KURL &url )
   WebdavHandler::addElement( doc, prop, "d:contentclass" );
   kdDebug(5800) << "props = "<< doc.toString() << endl;
   return KIO::davPropFind( url, doc, "1", false );
+}
+
+bool ExchangeGlobals::getFolderHasSubs( const QDomNode &folderNode )
+{
+  QString hassubs = folderNode.namedItem( "hassubs" ).toElement().text();
+  return hassubs == "1";
+}
+
+KPIM::FolderLister::FolderType ExchangeGlobals::getFolderType( const QDomNode &folderNode )
+{
+kdDebug()<<"ExchangeGlobals::getFolderType(...)"<<endl;
+  QDomNode n4;
+  for( n4 = folderNode.firstChild(); !n4.isNull(); n4 = n4.nextSibling() ) {
+    QDomElement e = n4.toElement();
+
+    if ( e.tagName() == "contentclass" ) {
+      QString contentclass( e.text() );
+      if ( contentclass == "urn:content-classes:contactfolder" )
+        return KPIM::FolderLister::ContactsFolder;
+      if ( contentclass == "urn:content-classes:calendarfolder" )
+        return KPIM::FolderLister::CalendarFolder;
+      if ( contentclass == "urn:content-classes:taskfolder" )
+        return KPIM::FolderLister::TasksFolder;
+      if ( contentclass == "urn:content-classes:journalfolder" )
+        return KPIM::FolderLister::JournalsFolder;
+      if ( contentclass == "urn:content-classes:folder" )
+        return KPIM::FolderLister::Folder;
+    }
+  }
+  return KPIM::FolderLister::Unknown;
 }
 
 

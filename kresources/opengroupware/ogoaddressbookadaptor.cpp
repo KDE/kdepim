@@ -34,18 +34,13 @@
 
 using namespace KABC;
 
-OGoAddressBookAdaptor::OGoAddressBookAdaptor()
+OGoAddressBookAdaptor::OGoAddressBookAdaptor() : DavAddressBookAdaptor()
 {
 }
 
 void OGoAddressBookAdaptor::adaptDownloadUrl( KURL &url )
 {
   url = WebdavHandler::toDAV( url );
-}
-
-QCString OGoAddressBookAdaptor::identifier() const
-{
-  return "KABCResourceOpengroupware";
 }
 
 void OGoAddressBookAdaptor::adaptUploadUrl( KURL &url )
@@ -57,39 +52,9 @@ kdDebug()<<"OGoAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
 kdDebug()<<"after OGoAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
 }
 
-QString OGoAddressBookAdaptor::mimeType() const
-{
-  return "text/x-vcard";
-}
-
-KABC::Addressee::List OGoAddressBookAdaptor::parseData( KIO::TransferJob */*job*/, const QString &rawText )
+KABC::Addressee::List OGoAddressBookAdaptor::interpretDownloadItemJob( KIO::TransferJob */*job*/, const QString &rawText )
 {
   KABC::VCardConverter conv;
   return conv.parseVCards( rawText );
 }
 
-QString OGoAddressBookAdaptor::extractFingerprint( KIO::TransferJob *job,
-                                                   const QString &rawText )
-{
-  return OGoGlobals::extractFingerprint( job, rawText );
-}
-
-KIO::TransferJob *OGoAddressBookAdaptor::createDownloadItemJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
-{
-  return OGoGlobals::createDownloadItemJob( this, url, ctype );
-}
-
-KIO::TransferJob *OGoAddressBookAdaptor::createListItemsJob( const KURL &url )
-{
-  return DAVGroupwareGlobals::createListItemsJob( url );
-}
-
-bool OGoAddressBookAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
-{
-  return DAVGroupwareGlobals::itemsForDownloadFromList( this, job, currentlyOnServer, itemsForDownload );
-}
-
-KIO::Job *OGoAddressBookAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
-{
-  return OGoGlobals::createRemoveItemsJob( uploadurl, deletedItems );
-}

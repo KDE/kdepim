@@ -38,6 +38,8 @@ class KConfig;
 
 namespace KPIM {
 
+class GroupwareDataAdaptor;
+
 class FolderLister : public QObject
 {
     Q_OBJECT
@@ -68,6 +70,9 @@ class FolderLister : public QObject
     void setFolders( const Entry::List & );
     Entry::List folders() const { return mFolders; }
 
+    void setAdaptor( KPIM::GroupwareDataAdaptor *adaptor );
+    GroupwareDataAdaptor* adaptor() const { return mAdaptor; }
+
     QStringList activeFolderIds() const;
     bool isActive( const QString &id ) const;
 
@@ -77,38 +82,39 @@ class FolderLister : public QObject
     void readConfig( const KConfig * );
     void writeConfig( KConfig * );
 
+  
   signals:
     void foldersRead();
 
   protected slots:
     void slotListJobResult( KIO::Job * );
-
-  protected:
+    /** Adds the folder with the given url and display name to the folder tree (if
+        is has an appropriate type) */ 
+    virtual void processFolderResult( const QString &href, const QString &displayName, KPIM::FolderLister::FolderType  type );
     /** Retrieve information about the folder u. If it has sub-folders, it
         descends into the hierarchy */
     virtual void doRetrieveFolder( const KURL &u );
-    /** Adjusts the given url, in particular, adds the user and password to the URL. */
-    virtual KURL adjustUrl( const KURL &u );
-    /** Applied custom adjustments to the URL, e.g. changing the protocol from http:// -> webdav://, etc. */
-    virtual KURL customAdjustUrl( const KURL &u );
+    /** A subitem was detected. If it's a folder, we need to descend, otherwise
+        we just add the url to the list of processed URLs. */
+    void folderSubitemRetrieved( const KURL &url, bool isFolder );
+
+  protected:
     /** Creates the job to retrieve information about the folder at the given
         url. It's results will be interpreted by interpretFolderResult
     */
-    virtual KIO::Job *createJob( const KURL &url ) = 0;
+    virtual KIO::Job *createListFoldersJob( const KURL &url );
     /** Interprets the results returned by the liste job (created by
-        createJob(url) ). Typically, this adds an Entry to the mFolders list if
-        the job describes a folder of the appropriate type. If the folder has
-        subfolders, just call doRetrieveFolder(url) recursively. */
-    virtual void interpretFolderResult( KIO::Job *job ) = 0;
+        createJob(url) ). The default implementation calls interpretFolderListJob
+        of the GroupwareDataAdaptor. Typically, this adds an Entry to the mFolders list if
+        the job describes a folder of the appropriate type, by calling processsFolderResult.
+        If the folder has subfolders, just call doRetrieveFolder(url) recursively. */
+    virtual void interpretListFoldersJob( KIO::Job *job );
     /** List of folders that will always be included (subfolders won't!). Usually
         this is not needed as you should traverse the whole folder tree starting
         from the user's root dir. */
     virtual Entry::List defaultFolders();
     /** Type of this folder lister (i.e. AddressBook or Calendar) */
     Type getType() const { return mType; }
-    /** Adds the folder with the given url and display name to the folder tree (if 
-        is has an appropriate type) */ 
-    virtual void processFolderResult( const QString &href, const QString &displayName, FolderType type );
 
 
   protected:
@@ -116,10 +122,10 @@ class FolderLister : public QObject
     QStringList mUrls;
     QStringList mProcessedUrls;
     Entry::List mFolders;
+    GroupwareDataAdaptor *mAdaptor;
   private:
+    // TODO: We need multiple destinations for Events, Tasks and Journals
     QString mWriteDestinationId;
-    QString mUser;
-    QString mPassword;
 };
 
 }

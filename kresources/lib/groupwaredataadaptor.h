@@ -23,9 +23,11 @@
 #define KPIM_GROUPWAREDATAADAPTOR_H
 
 #include <groupwareresourcejob.h>
+#include <folderlister.h>
 #include <kurl.h>
 #include <qstring.h>
 #include <libkcal/listbase.h>
+#include <qobject.h>
 
 
 namespace KIO {
@@ -72,8 +74,9 @@ class GroupwareUploadItem
 };
 
 
-class GroupwareDataAdaptor
+class GroupwareDataAdaptor : public QObject
 {
+Q_OBJECT
   public:
     GroupwareDataAdaptor();
     virtual ~GroupwareDataAdaptor();
@@ -176,11 +179,13 @@ class GroupwareDataAdaptor
     /** Apply custom adaptions to the url for uploading. Reimplement this method if you want
         to use webdav:// instead of http:// URLs. */
     virtual void customAdaptUploadUrl( KURL &/*url*/ ) {}
+    
     /** Return the mime-type expected by the resource. */
     virtual QString mimeType() const = 0;
     /** Identifier of the Resource. Used for the custom fields where
         resource-specific information is stored. */
     virtual QCString identifier() const = 0;
+    
     /** Returns whether the item with the given localId exists locally. */
     virtual bool localItemExists( const QString &localId ) = 0;
     /** Returns whether the item was changed locally since the last download
@@ -191,6 +196,7 @@ class GroupwareDataAdaptor
     /** Returns the ginerprint of the item on the server */
     virtual QString extractFingerprint( KIO::TransferJob *job,
            const QString &rawText ) = 0;
+           
     /** Adds the downloaded item to the local cache (job was created by createDownloadItemJob). */
     virtual QString addItem( KIO::TransferJob *job,
            const QString &rawText, QString &fingerprint,
@@ -199,33 +205,48 @@ class GroupwareDataAdaptor
     virtual QString extractUid( KIO::TransferJob *job, const QString &data ) = 0;
     /** Removed the changed flag for the item with the given uid. */
     virtual void clearChange( const QString &uid ) = 0;
+
+    virtual FolderLister::Entry::List defaultFolders();
+
+
+    // Creating jobs
+    
+    /** Creates the KIO::Job for listing all subfolders of the given url. */
+    virtual KIO::Job *createListFoldersJob ( const KURL &url ) = 0;
     /** Creates the KIO::TransferJob for listing all items in the given url. */
     virtual KIO::TransferJob *createListItemsJob( const KURL &url ) = 0;
     /** Creates the KIO::TransferJob for downloading one given item. */
     virtual KIO::TransferJob *createDownloadItemJob( const KURL &url, GroupwareJob::ContentType ctype ) = 0;
-    /** Extract the list of items on the server and the list of items to be
-        downloaded from the results of the job (the job was created by
-        createListitemsJob). */
-    virtual bool itemsForDownloadFromList( KIO::Job *job,
-           QStringList &currentlyOnServer,
-           QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload ) = 0;
-
     /** Create the job to remove the deletedItems from the server. The base
         URL of the server is passedas uploadurl. */
-    virtual KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
-           KPIM::GroupwareUploadItem::List deletedItems ) = 0;
+    virtual KIO::Job *createRemoveItemsJob( const KURL &url, KPIM::GroupwareUploadItem::List deletedItems ) = 0;
     /** Create the job to change the item on the server (at the given URL) */
     virtual KIO::TransferJob *createUploadJob( const KURL &url, GroupwareUploadItem *item );
     /** Create the job to add the item to the server (at the given baseURL) */
     virtual KIO::TransferJob *createUploadNewJob( const KURL &url, GroupwareUploadItem *item );
-    virtual void uploadFinished( KIO::TransferJob *trfjob, GroupwareUploadItem *item ) = 0;
 
+
+    // Interpreting the result of the jobs
+        
+    virtual void interpretListFoldersJob( KIO::Job *job, FolderLister *folderLister) = 0;
+    /** Extract the list of items on the server and the list of items to be
+        downloaded from the results of the job (the job was created by
+        createListitemsJob). */
+    virtual bool interpretListItemsJob( KIO::Job *job, QStringList &currentlyOnServer,
+           QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload ) = 0;
+
+
+    virtual void uploadFinished( KIO::TransferJob *trfjob, GroupwareUploadItem *item ) = 0;
     virtual void processDownloadListItem( QStringList &currentlyOnServer,
         QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload,
         const QString &entry, const QString &newFingerprint,
         KPIM::GroupwareJob::ContentType type );
     /** Return the default file name for a new item. */
     virtual QString defaultNewItemName( GroupwareUploadItem */*item*/ ) { return QString::null; }
+
+  signals:
+    void folderInformationRetrieved( const QString &href, const QString &name, KPIM::FolderLister::FolderType );
+    void folderSubitemRetrieved( const KURL &, bool isFolder );
 
   private:
     FolderLister *mFolderLister;

@@ -19,7 +19,6 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "exchangefolderlister.h"
 #include "exchangeaddressbookadaptor.h"
 
 #include "kabc_resourceexchange.h"
@@ -49,7 +48,7 @@ void ResourceExchange::init()
 {
   setType( "ResourceExchange" );
   setPrefs( createPrefs() );
-  setFolderLister( new KPIM::ExchangeFolderLister( KPIM::FolderLister::AddressBook ) );
+  setFolderLister( new KPIM::FolderLister( KPIM::FolderLister::AddressBook ) );
   setAdaptor( new ExchangeAddressBookAdaptor() );
   
   ResourceGroupwareBase::init();

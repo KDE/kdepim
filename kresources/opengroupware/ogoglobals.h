@@ -22,8 +22,10 @@
 #ifndef OGOGLOBALS_H
 #define OGOGLOBALS_H
 
-#include <kurl.h>
 #include <groupwareuploadjob.h>
+#include <folderlister.h>
+#include <kurl.h>
+#include <qdom.h>
 
 namespace KPIM {
 class GroupwareDataAdaptor;
@@ -38,12 +40,15 @@ class OGoGlobals
 {
   public:
     OGoGlobals() {}
+    static KIO::Job *createListFoldersJob( const KURL &url );
     static KIO::TransferJob *createDownloadItemJob(
           KPIM::GroupwareDataAdaptor *adaptor, const KURL &url, KPIM::GroupwareJob::ContentType ctype );
 
     static QString extractFingerprint( KIO::TransferJob *job, const QString &rawText );
     static KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
        KPIM::GroupwareUploadItem::List deletedItems );
+    static bool getFolderHasSubs( const QDomNode &folderNode );
+    static KPIM::FolderLister::FolderType getFolderType( const QDomNode &folderNode );
 };
 
 #endif

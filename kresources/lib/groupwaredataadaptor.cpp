@@ -65,7 +65,7 @@ KIO::TransferJob *GroupwareUploadItem::createUploadJob( GroupwareDataAdaptor *ad
 
 
 GroupwareDataAdaptor::GroupwareDataAdaptor()
-  : mFolderLister( 0 ), mIdMapper( 0 )
+  : QObject(), mFolderLister( 0 ), mIdMapper( 0 )
 {
 }
 
@@ -78,6 +78,11 @@ void GroupwareDataAdaptor::setUserPassword( KURL &url )
   kdDebug(5800) << "GroupwareDataAdaptor::setUserPassword, mUser=" << mUser << endl;
   url.setUser( mUser );
   url.setPass( mPassword );
+}
+
+FolderLister::Entry::List GroupwareDataAdaptor::defaultFolders()
+{
+  return FolderLister::Entry::List();
 }
 
 KIO::TransferJob *GroupwareDataAdaptor::createUploadJob( const KURL &url, GroupwareUploadItem *item )
@@ -135,3 +140,4 @@ void GroupwareDataAdaptor::processDownloadListItem( QStringList &currentlyOnServ
 }
 
 
+#include "groupwaredataadaptor.moc"

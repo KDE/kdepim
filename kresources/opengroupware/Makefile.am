@@ -4,7 +4,7 @@ INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kresources/lib \
 lib_LTLIBRARIES = libkcal_opengroupware.la libkabc_opengroupware.la
 noinst_LTLIBRARIES = libkopengroupware.la
 
-libkopengroupware_la_SOURCES = ogoglobals.cpp ogofolderlister.cpp
+libkopengroupware_la_SOURCES = ogoglobals.cpp
 
 libkcal_opengroupware_la_SOURCES = ogocalendaradaptor.cpp kcal_resourceopengroupware.cpp 
 libkcal_opengroupware_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) \

@@ -78,7 +78,7 @@ class CalendarAdaptor : public KPIM::GroupwareDataAdaptor
     QString extractUid( KIO::TransferJob *job, const QString &data );
     void clearChange( const QString &uid );
 
-    virtual KCal::Incidence::List parseData( KIO::TransferJob *job,
+    virtual KCal::Incidence::List interpretDownloadItemJob( KIO::TransferJob *job,
                                              const QString &rawText );
     virtual KPIM::GroupwareUploadItem *newUploadItem( KCal::Incidence*it,
            KPIM::GroupwareUploadItem::UploadType type );

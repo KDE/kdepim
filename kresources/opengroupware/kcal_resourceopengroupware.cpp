@@ -19,7 +19,6 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "ogofolderlister.h"
 #include "ogocalendaradaptor.h"
 
 #include "kcal_resourceopengroupware.h"
@@ -43,7 +42,7 @@ void ResourceOpenGroupware::init()
 {
   setType( "ResourceOpenGroupware" );
   setPrefs( createPrefs() );
-  setFolderLister( new KPIM::OGoFolderLister( KPIM::FolderLister::Calendar ) );
+  setFolderLister( new KPIM::FolderLister( KPIM::FolderLister::Calendar ) );
   setAdaptor( new OGoCalendarAdaptor() );
   
   ResourceGroupwareBase::init();

@@ -19,7 +19,6 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "ogofolderlister.h"
 #include "ogoaddressbookadaptor.h"
 #include "kabc_groupwareprefs.h"
 
@@ -47,7 +46,7 @@ void ResourceOpenGroupware::init()
 {
   setType( "ResourceOpenGroupware" );
   setPrefs( createPrefs() );
-  setFolderLister( new KPIM::OGoFolderLister( KPIM::FolderLister::AddressBook ) );
+  setFolderLister( new KPIM::FolderLister( KPIM::FolderLister::AddressBook ) );
   setAdaptor( new OGoAddressBookAdaptor() );
   
   ResourceGroupwareBase::init();

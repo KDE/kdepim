@@ -19,7 +19,6 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "exchangefolderlister.h"
 #include "exchangecalendaradaptor.h"
 
 #include "kcal_resourceexchange.h"
@@ -46,7 +45,7 @@ void ResourceExchange::init()
 {
   setType( "ResourceExchange" );
   setPrefs( createPrefs() );
-  setFolderLister( new KPIM::ExchangeFolderLister( KPIM::FolderLister::Calendar ) );
+  setFolderLister( new KPIM::FolderLister( KPIM::FolderLister::Calendar ) );
   setAdaptor( new ExchangeCalendarAdaptor() );
   
   ResourceGroupwareBase::init();

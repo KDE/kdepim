@@ -22,36 +22,59 @@
 #ifndef KABC_OGOADDRESSBOOKADAPTOR_H
 #define KABC_OGOADDRESSBOOKADAPTOR_H
 
-#include "addressbookadaptor.h"
-
+#include "davaddressbookadaptor.h"
+#include "ogoglobals.h"
+#include <davgroupwareglobals.h>
 #include <kabc/addressee.h>
 #include <kurl.h>
 
+#include <qdom.h>
+
 namespace KABC {
 
-class OGoAddressBookAdaptor : public AddressBookAdaptor
+class OGoAddressBookAdaptor : public DavAddressBookAdaptor
 {
   public:
     OGoAddressBookAdaptor();
 
     void adaptDownloadUrl( KURL &url );
     void adaptUploadUrl( KURL &url );
-    QString mimeType() const;
-    QCString identifier() const;
-
-    QString extractFingerprint( KIO::TransferJob *job,
-           const QString &rawText );
-    KIO::TransferJob *createListItemsJob( const KURL &url );
-    KIO::TransferJob *createDownloadItemJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype );
-
-    bool itemsForDownloadFromList( KIO::Job *job,
-      QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload );
-    KABC::Addressee::List parseData( KIO::TransferJob *job, const QString &rawText );
-    KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
-       KPIM::GroupwareUploadItem::List deletedItems );
+    QString mimeType() const { return "text/x-vcard"; }
+    QCString identifier() const { return "KABCResourceOpengroupware"; }
     QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.vcf"; }
+
+
+    QString extractFingerprint( KIO::TransferJob *job, const QString &rawText )
+        { return OGoGlobals::extractFingerprint( job, rawText ); }
+
+
+    // Creating Jobs
+    KIO::Job *createListFoldersJob( const KURL &url )
+        { return OGoGlobals::createListFoldersJob( url ); }
+    KIO::TransferJob *createListItemsJob( const KURL &url )
+        { return DAVGroupwareGlobals::createListItemsJob( url ); }
+    KIO::TransferJob *createDownloadItemJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
+        { return OGoGlobals::createDownloadItemJob( this, url, ctype ); }
+    KIO::Job *createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
+        { return OGoGlobals::createRemoveItemsJob( uploadurl, deletedItems ); }
+
+        
+    // Interpreting Jobs
+    bool interpretListItemsJob( KIO::Job *job, QStringList &currentlyOnServer,
+            QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
+        { return DAVGroupwareGlobals::interpretListItemsJob( this, job, currentlyOnServer, itemsForDownload ); }
+    KABC::Addressee::List interpretDownloadItemJob( KIO::TransferJob *job, const QString &rawText );
+
+        
+    bool getFolderHasSubs( const QDomNode &folderNode )
+        { return OGoGlobals::getFolderHasSubs( folderNode ); }
+    KPIM::FolderLister::FolderType getFolderType( const QDomNode &folderNode )
+        { return OGoGlobals::getFolderType( folderNode ); }
 };
 
 }
+
+
+
 
 #endif

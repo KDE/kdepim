@@ -22,6 +22,7 @@
 */
 
 #include "folderlister.h"
+#include "groupwaredataadaptor.h"
 
 #include <kio/job.h>
 
@@ -31,22 +32,8 @@
 using namespace KPIM;
 
 FolderLister::FolderLister( Type type )
-  : mType( type )
+  : mType( type ), mAdaptor( 0 )
 {
-}
-
-KURL FolderLister::adjustUrl( const KURL &u )
-{
-kdDebug()<<"FolderLister::adjustUrl( url="<<u.url()<<")"<<endl;
-  KURL url( u );
-  url.setPass( mPassword );
-  url.setUser( mUser );
-  return customAdjustUrl( url );
-}
-
-KURL FolderLister::customAdjustUrl( const KURL &u )
-{
-  return u;
 }
 
 void FolderLister::setFolders( const FolderLister::Entry::List &folders )
@@ -127,6 +114,26 @@ void FolderLister::writeConfig( KConfig *config )
   config->writeEntry( "WriteDestinationId", mWriteDestinationId );
 }
 
+void FolderLister::setAdaptor( KPIM::GroupwareDataAdaptor *adaptor )
+{
+  if ( mAdaptor ) {
+    disconnect( mAdaptor, 0, this, 0 );
+  }
+  mAdaptor = adaptor;
+  connect( mAdaptor, SIGNAL( folderInformationRetrieved( const QString &, const QString &, KPIM::FolderLister::FolderType ) ),
+           this, SLOT( processFolderResult( const QString &, const QString &, KPIM::FolderLister::FolderType ) ) );
+  connect( mAdaptor, SIGNAL( folderSubitemRetrieved( const KURL &, bool ) ),
+           this, SLOT( folderSubitemRetrieved( const KURL &, bool ) ) );
+}
+
+void FolderLister::folderSubitemRetrieved( const KURL &url, bool isFolder )
+{
+  if ( isFolder )
+    doRetrieveFolder( url );
+  else
+    mProcessedUrls.append( url.path(-1) );
+}
+
 void FolderLister::retrieveFolders( const KURL &u )
 {
 kdDebug()<<"FolderLister::retrieveFolders( "<<u.url()<<" )"<<endl;
@@ -143,9 +150,6 @@ kdDebug()<<"FolderLister::retrieveFolders( "<<u.url()<<" )"<<endl;
     }
   }
 
-  mUser = u.user();
-  mPassword = u.pass();
-
   doRetrieveFolder( u );
 }
 
@@ -156,22 +160,34 @@ void FolderLister::doRetrieveFolder( const KURL &u )
   if ( mUrls.contains( u.path(-1) ) || mProcessedUrls.contains( u.path(-1) ) ) {
     kdDebug()<<"Item "<<u.path(-1)<<" is already being downloaded "<<endl;
   } else {
-    KURL url( adjustUrl( u ) );
-    mUrls.append( url.path(-1) );
+    KURL url( u );
+    if ( adaptor() ) adaptor()->adaptDownloadUrl( url );
 
-    KIO::Job *listjob = createJob( url );
+    KIO::Job *listjob = createListFoldersJob( url );
+    if ( listjob ) {
+      mUrls.append( url.path(-1) );
 
-    kdDebug(7000) << "FolderLister::retrieveFolders: adjustedURL=" << url.prettyURL() << endl;
-    connect( listjob, SIGNAL( result( KIO::Job * ) ),
-             SLOT( slotListJobResult( KIO::Job * ) ) );
+      kdDebug(7000) << "FolderLister::retrieveFolders: adjustedURL=" << url.prettyURL() << endl;
+      connect( listjob, SIGNAL( result( KIO::Job * ) ),
+               SLOT( slotListJobResult( KIO::Job * ) ) );
+    } else {
+      // TODO: Indicate a problem to the user!
+      kdWarning() << "Unable to create the folder list job for the url " << url.prettyURL() << endl;
+      if ( mUrls.isEmpty() ) {
+        kdDebug()<<"No more URLS to download, emitting foldersRead()"<<endl;
+        emit foldersRead();
+      }
+    }
   }
 }
 
 FolderLister::Entry::List FolderLister::defaultFolders()
 {
-  Entry::List newFolders;
-
-  return newFolders;
+  if ( adaptor() ) {
+    return adaptor()->defaultFolders();
+  } else {
+    return Entry::List();
+  }
 }
 
 void FolderLister::processFolderResult( const QString &href, const QString &displayName, FolderType type )
@@ -207,13 +223,34 @@ void FolderLister::slotListJobResult( KIO::Job *job )
   if ( job->error() ) {
     kdError() << "Unable to retrieve folders." << endl;
   } else {
-    interpretFolderResult( job );
+    interpretListFoldersJob( job );
   }
   kdDebug()<<"After URLS ("<<mUrls.count()<<"): "<<mUrls.join(" | ") << endl;
   kdDebug()<<"After Processed URLS ("<<mProcessedUrls.count()<<"): "<<mProcessedUrls.join(" | ") << endl;
   if ( mUrls.isEmpty() ) {
     kdDebug()<<"No more URLS to download, emitting foldersRead()"<<endl;
     emit foldersRead();
+  }
+}
+
+void FolderLister::interpretListFoldersJob( KIO::Job *job )
+{
+  if ( adaptor() ) {
+    adaptor()->interpretListFoldersJob( job, this );
+  } else {
+    // TODO: Error handling should show a message to the user!
+    kdError() << "The FolderLister does not have a GroupwareDataAdaptor, so it cannot interpret the response!" << endl;
+  }
+}
+
+KIO::Job *FolderLister::createListFoldersJob( const KURL &url )
+{
+  if ( adaptor() ) {
+    return adaptor()->createListFoldersJob( url );
+  } else {
+    // TODO: Error handling should show a message to the user!
+    kdError() << "The FolderLister does not have a GroupwareDataAdaptor, so it cannot create the job for the folder list!" << endl;
+    return 0;
   }
 }
 

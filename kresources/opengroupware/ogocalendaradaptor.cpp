@@ -21,20 +21,20 @@
 */
 
 #include "ogocalendaradaptor.h"
-#include "ogoglobals.h"
-#include "davgroupwareglobals.h"
+// #include "ogoglobals.h"
+// #include "davgroupwareglobals.h"
 #include "webdavhandler.h"
-#include <libemailfunctions/idmapper.h>
+// #include <libemailfunctions/idmapper.h>
 
-#include <libkcal/calendarlocal.h>
-#include <libkcal/icalformat.h>
-#include <libkcal/resourcecached.h>
+// #include <libkcal/calendarlocal.h>
+// #include <libkcal/icalformat.h>
+// #include <libkcal/resourcecached.h>
 
 #include <kdebug.h>
 
 using namespace KCal;
 
-OGoCalendarAdaptor::OGoCalendarAdaptor()
+OGoCalendarAdaptor::OGoCalendarAdaptor() : DavCalendarAdaptor()
 {
 }
 
@@ -50,28 +50,3 @@ void OGoCalendarAdaptor::customAdaptUploadUrl( KURL &url )
 //  url.setPath( url.path() + "/new.ics" );
 }
 
-QString OGoCalendarAdaptor::extractFingerprint( KIO::TransferJob *job,
-                                             const QString &rawText )
-{
-  return OGoGlobals::extractFingerprint( job, rawText );
-}
-
-KIO::TransferJob *OGoCalendarAdaptor::createDownloadItemJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
-{
-  return OGoGlobals::createDownloadItemJob( this, url,ctype );
-}
-
-KIO::TransferJob *OGoCalendarAdaptor::createListItemsJob( const KURL &url )
-{
-  return DAVGroupwareGlobals::createListItemsJob( url );
-}
-
-bool OGoCalendarAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
-{
-  return DAVGroupwareGlobals::itemsForDownloadFromList( this, job, currentlyOnServer, itemsForDownload );
-}
-
-KIO::Job *OGoCalendarAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
-{
-  return OGoGlobals::createRemoveItemsJob( uploadurl, deletedItems );
-}

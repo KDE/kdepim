@@ -5,7 +5,7 @@ INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkdepim \
 lib_LTLIBRARIES = libkabc_newexchange.la libkcal_newexchange.la 
 noinst_LTLIBRARIES = libknewexchange.la
 
-libknewexchange_la_SOURCES = exchangefolderlister.cpp exchangeglobals.cpp
+libknewexchange_la_SOURCES = exchangeglobals.cpp
 
 libkcal_newexchange_la_SOURCES = exchangecalendaradaptor.cpp kcal_resourceexchange.cpp \
                                  exchangeconvertercalendar.cpp

@@ -108,7 +108,7 @@ void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
     }
     error( job->errorString() );
   } else {
-    adaptor()->itemsForDownloadFromList( job, mCurrentlyOnServer, mItemsForDownload );
+    adaptor()->interpretListItemsJob( job, mCurrentlyOnServer, mItemsForDownload );
   }
 
   mListEventsJob = 0;

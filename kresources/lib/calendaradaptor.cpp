@@ -92,9 +92,9 @@ void CalendarAdaptor::deleteItem( const QString &localId )
   mResource->enableChangeNotification();
 }
 
-KCal::Incidence::List CalendarAdaptor::parseData( KIO::TransferJob */*job*/, const QString &rawText )
+KCal::Incidence::List CalendarAdaptor::interpretDownloadItemJob( KIO::TransferJob */*job*/, const QString &rawText )
 {
-kdDebug(5800)<<"CalendarAdaptor::parseData, iCalendar="<<endl;
+kdDebug(5800)<<"CalendarAdaptor::interpretDownloadItemJob, iCalendar="<<endl;
 kdDebug(5800)<<rawText<<endl;
   KCal::CalendarLocal calendar;
   KCal::ICalFormat ical;
@@ -118,7 +118,7 @@ QString CalendarAdaptor::addItem( KIO::TransferJob *job,
 {
   fingerprint = extractFingerprint( job, rawText );
 
-  KCal::Incidence::List incidences = parseData( job, rawText );
+  KCal::Incidence::List incidences = interpretDownloadItemJob( job, rawText );
   if ( incidences.count() < 1 ) {
     kdError() << "Parsed iCalendar contains no event." << endl;
     return QString::null;
@@ -149,7 +149,7 @@ QString CalendarAdaptor::addItem( KIO::TransferJob *job,
 
 QString CalendarAdaptor::extractUid( KIO::TransferJob *job, const QString &data )
 {
-  KCal::Incidence::List incidences = parseData( job, data );
+  KCal::Incidence::List incidences = interpretDownloadItemJob( job, data );
   if ( incidences.count() > 0 ) {
     return incidences.first()->uid();
   }

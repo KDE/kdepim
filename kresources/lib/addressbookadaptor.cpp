@@ -92,7 +92,7 @@ void AddressBookAdaptor::deleteItem( const QString &localId )
   if ( !a.isEmpty() ) mResource->removeAddressee( a );
 }
 
-KABC::Addressee::List AddressBookAdaptor::parseData( KIO::TransferJob *, const QString &rawText )
+KABC::Addressee::List AddressBookAdaptor::interpretDownloadItemJob( KIO::TransferJob *, const QString &rawText )
 {
   KABC::VCardConverter conv;
   return conv.parseVCards( rawText );
@@ -104,7 +104,7 @@ QString AddressBookAdaptor::addItem( KIO::TransferJob *job,
 {
   fingerprint = extractFingerprint( job, rawText );
 
-  KABC::Addressee::List addressees( parseData( job, rawText ) );
+  KABC::Addressee::List addressees( interpretDownloadItemJob( job, rawText ) );
 
   if ( addressees.count() > 1 ) {
     kdError() << "More than one addressee in vCard" << endl;
@@ -133,7 +133,7 @@ QString AddressBookAdaptor::addItem( KIO::TransferJob *job,
 
 QString AddressBookAdaptor::extractUid( KIO::TransferJob *job, const QString &data )
 {
-  KABC::Addressee::List addressees = parseData( job, data );
+  KABC::Addressee::List addressees = interpretDownloadItemJob( job, data );
   if ( addressees.begin() == addressees.end() ) return QString::null;
 
   KABC::Addressee a = *(addressees.begin());

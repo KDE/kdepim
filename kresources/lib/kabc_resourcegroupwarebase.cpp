@@ -85,7 +85,10 @@ void ResourceGroupwareBase::setFolderLister( KPIM::FolderLister *folderLister )
   if ( !folderLister ) return;
   if ( mFolderLister ) delete mFolderLister;
   mFolderLister = folderLister;
-  if ( mAdaptor ) mAdaptor->setFolderLister( mFolderLister );
+  if ( mAdaptor ) {
+    mAdaptor->setFolderLister( mFolderLister );
+    mFolderLister->setAdaptor( mAdaptor );
+  }
 }
 
 void ResourceGroupwareBase::setAdaptor( AddressBookAdaptor *adaptor )
@@ -94,6 +97,7 @@ void ResourceGroupwareBase::setAdaptor( AddressBookAdaptor *adaptor )
   if ( mAdaptor ) delete mAdaptor;
   mAdaptor = adaptor;
   mAdaptor->setFolderLister( mFolderLister );
+  if ( mFolderLister ) mFolderLister->setAdaptor( mAdaptor );
   mAdaptor->setDownloadProgressMessage( i18n("Downloading addressbook") );
   mAdaptor->setUploadProgressMessage( i18n("Uploading addressbook") );
   if ( prefs() ) {

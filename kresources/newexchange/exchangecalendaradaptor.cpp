@@ -27,7 +27,7 @@
 #include <kdebug.h>
 #include <kio/davjob.h>
 #include <libkcal/resourcecached.h>
-#include "calendaradaptor.h"
+#include "davcalendaradaptor.h"
 
 using namespace KCal;
 
@@ -63,7 +63,7 @@ kdDebug()<<"Upload path: "<<url.url()<<endl;
 
 
 
-ExchangeCalendarAdaptor::ExchangeCalendarAdaptor()
+ExchangeCalendarAdaptor::ExchangeCalendarAdaptor() : DavCalendarAdaptor()
 {
 }
 
@@ -78,23 +78,12 @@ void ExchangeCalendarAdaptor::adaptUploadUrl( KURL &url )
 //   url.setPath( url.path() + "/NewItem.EML" );
 }
 
-KIO::TransferJob *ExchangeCalendarAdaptor::createListItemsJob( const KURL &url )
-{
-  return ExchangeGlobals::createListItemsJob( url );
-}
-
-QString ExchangeCalendarAdaptor::extractFingerprint( KIO::TransferJob *job,
-                                                   const QString &rawText )
-{
-  return ExchangeGlobals::extractFingerprint( job, rawText );
-}
-
-KCal::Incidence::List ExchangeCalendarAdaptor::parseData( KIO::TransferJob *job, const QString &/*rawText*/ )
+KCal::Incidence::List ExchangeCalendarAdaptor::interpretDownloadItemJob( KIO::TransferJob *job, const QString &/*rawText*/ )
 {
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>(job);
   if (!davjob) return KCal::Incidence::List();
 
-kdDebug() << "ExchangeCalendarAdaptor::parseData(): QDomDocument=" << endl << davjob->response().toString() << endl;
+kdDebug() << "ExchangeCalendarAdaptor::interpretDownloadItemJob(): QDomDocument=" << endl << davjob->response().toString() << endl;
   KCal::ExchangeConverterCalendar conv;
   KCal::Incidence::List incidences = conv.parseWebDAV( davjob->response() );
   return incidences;
@@ -136,16 +125,6 @@ kdDebug()<<"Appointment="<<KPIM::GroupwareJob::Appointment<<", Task="<<KPIM::Gro
   kdDebug(7000) << "doc: " << doc.toString() << endl;
   KIO::DavJob *job = KIO::davPropFind( url, doc, "0", false );
   return job;
-}
-
-bool ExchangeCalendarAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
-{
-  return ExchangeGlobals::itemsForDownloadFromList( this, job, currentlyOnServer, itemsForDownload );
-}
-
-KIO::Job *ExchangeCalendarAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
-{
-  return ExchangeGlobals::createRemoveItemsJob( uploadurl, deletedItems );
 }
 
 /* Removing items: old version of the exchange resource:  If the event is part

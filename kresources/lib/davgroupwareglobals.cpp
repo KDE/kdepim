@@ -31,6 +31,7 @@
 
 #include <qdom.h>
 
+
 KIO::TransferJob *DAVGroupwareGlobals::createListItemsJob( const KURL &url )
 {
   QDomDocument doc;
@@ -52,7 +53,7 @@ kdDebug()<<"Found content type: "<<type<<endl;
   return KPIM::GroupwareJob::Unknown;
 }
 
-bool DAVGroupwareGlobals::itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *adaptor,
+bool DAVGroupwareGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,
     KIO::Job *job, QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
 {
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob *>(job);

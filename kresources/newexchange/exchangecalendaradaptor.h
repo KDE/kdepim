@@ -22,8 +22,10 @@
 #ifndef KPIM_EXCHANGECALENDARADAPTOR_H
 #define KPIM_EXCHANGECALENDARADAPTOR_H
 
+#include "exchangeglobals.h"
+
 #include <groupwareresourcejob.h>
-#include <calendaradaptor.h>
+#include <davcalendaradaptor.h>
 #include <kurl.h>
 #include <qdom.h>
 
@@ -46,31 +48,51 @@ class ExchangeCalendarUploadItem : public KPIM::GroupwareUploadItem
     QDomDocument mDavData;
 };
 
-class ExchangeCalendarAdaptor : public CalendarAdaptor
+class ExchangeCalendarAdaptor : public DavCalendarAdaptor
 {
   public:
     ExchangeCalendarAdaptor();
 
     void adaptDownloadUrl( KURL &url );
     void adaptUploadUrl( KURL &url );
-//    QString mimeType() const;
+    QString mimeType() const { return "message/rfc822"; }
     QCString identifier() const { return "KCalResourceExchange"; }
+    QString defaultNewItemName( KPIM::GroupwareUploadItem *item );
 
-    QString extractFingerprint( KIO::TransferJob *job, const QString &rawText );
 
-    KIO::TransferJob *createListItemsJob( const KURL &url );
+    
+    QString extractFingerprint( KIO::TransferJob *job, const QString &rawText )
+        { return ExchangeGlobals::extractFingerprint( job, rawText ); }
+
+
+
+    // Creating Jobs
+    KIO::Job *createListFoldersJob( const KURL &url )
+        { return ExchangeGlobals::createListFoldersJob( url ); }
+    KIO::TransferJob *createListItemsJob( const KURL &url )
+        { return ExchangeGlobals::createListItemsJob( url ); }
     KIO::TransferJob *createDownloadItemJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype );
+    KIO::Job *createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
+        { return ExchangeGlobals::createRemoveItemsJob( uploadurl, deletedItems ); }
 
-    bool itemsForDownloadFromList( KIO::Job *job,
-      QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload );
+        
+    // Interpreting Jobs
+    bool interpretListItemsJob( KIO::Job *job, QStringList &currentlyOnServer,
+            QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
+        { return ExchangeGlobals::interpretListItemsJob( this, job, currentlyOnServer, itemsForDownload ); }
+    KCal::Incidence::List interpretDownloadItemJob( KIO::TransferJob *job, const QString &rawText );
 
-    KCal::Incidence::List parseData( KIO::TransferJob *job, const QString &rawText );
 
+        
     KPIM::GroupwareUploadItem *newUploadItem( KCal::Incidence*it,
            KPIM::GroupwareUploadItem::UploadType type );
-    KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
-           KPIM::GroupwareUploadItem::List deletedItems );
-    QString defaultNewItemName( KPIM::GroupwareUploadItem *item );
+    
+
+
+    bool getFolderHasSubs( const QDomNode &folderNode )
+        { return ExchangeGlobals::getFolderHasSubs( folderNode ); }
+    KPIM::FolderLister::FolderType getFolderType( const QDomNode &folderNode )
+        { return ExchangeGlobals::getFolderType( folderNode ); }
 };
 
 }

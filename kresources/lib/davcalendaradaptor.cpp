@@ -1,8 +1,6 @@
 /*
-    This file is part of libkcal.
+    This file is part of kdepim.
 
-    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2004 Till Adam <adam@kde.org>
     Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
@@ -21,41 +19,17 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include "davfolderlister.h"
-#include "webdavhandler.h"
+#include "davcalendaradaptor.h"
 
-#include <kio/davjob.h>
 #include <kdebug.h>
+#include <kio/davjob.h>
+// #include <folderlister.h>
 
-#include <qdom.h>
+// #include <qdom.h>
 
-using namespace KPIM;
+using namespace KCal;
 
-DavFolderLister::DavFolderLister( Type type )
-  : FolderLister( type )
-{
-}
-
-KURL DavFolderLister::customAdjustUrl( const KURL &u )
-{
-  return WebdavHandler::toDAV( u );
-}
-
-KIO::Job *DavFolderLister::createJob( const KURL &url )
-{
-  QDomDocument doc;
-  QDomElement root = WebdavHandler::addDavElement(  doc, doc, "d:propfind" );
-  QDomElement prop = WebdavHandler::addElement(  doc, root, "d:prop" );
-  WebdavHandler::addElement( doc, prop, "d:displayname" );
-  WebdavHandler::addElement( doc, prop, "d:resourcetype" );
-  WebdavHandler::addElement( doc, prop, "d:hassubs" );
-
-  kdDebug(7000) << "props: " << doc.toString() << endl;
-  return KIO::davPropFind( url, doc, "1", false );
-}
-
-
-void DavFolderLister::interpretFolderResult( KIO::Job *job )
+void DavCalendarAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister */*folderLister*/ )
 {
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>( job );
   Q_ASSERT( davjob );
@@ -72,16 +46,9 @@ void DavFolderLister::interpretFolderResult( KIO::Job *job )
     
     QString href = n.namedItem( "href" ).toElement().text();
     QString displayName = n3.namedItem( "displayname" ).toElement().text();
-    FolderType type = getFolderType( n3 );
+    KPIM::FolderLister::FolderType type = getFolderType( n3 );
 
-    processFolderResult( href, displayName, type );
-    if ( getFolderHasSubs( n3 ) ) {
-      doRetrieveFolder( href );
-    } else {
-      KURL u( href );
-      mProcessedUrls.append( u.path(-1) );
-    }
+    emit folderInformationRetrieved( href, displayName, type );
+    emit folderSubitemRetrieved( href, getFolderHasSubs( n3 ) );
   }
 }
-
-#include "davfolderlister.moc"

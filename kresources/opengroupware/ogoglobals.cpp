@@ -22,11 +22,25 @@
 
 #include "ogoglobals.h"
 #include "groupwaredataadaptor.h"
-#include "webdavhandler.h"
+#include <webdavhandler.h>
 #include <libemailfunctions/idmapper.h>
-#include <kdebug.h>
 
+#include <kdebug.h>
+#include <kio/davjob.h>
 #include <kio/job.h>
+
+KIO::Job *OGoGlobals::createListFoldersJob( const KURL &url )
+{
+  QDomDocument doc;
+  QDomElement root = WebdavHandler::addDavElement(  doc, doc, "d:propfind" );
+  QDomElement prop = WebdavHandler::addElement(  doc, root, "d:prop" );
+  WebdavHandler::addElement( doc, prop, "d:displayname" );
+  WebdavHandler::addElement( doc, prop, "d:resourcetype" );
+//  WebdavHandler::addElement( doc, prop, "d:hassubs" );
+
+  kdDebug(7000) << "props: " << doc.toString() << endl;
+  return KIO::davPropFind( url, doc, "1", false );
+}
 
 KIO::TransferJob *OGoGlobals::createDownloadItemJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &url, KPIM::GroupwareJob::ContentType /*ctype*/ )
 {
@@ -62,4 +76,35 @@ KIO::Job *OGoGlobals::createRemoveItemsJob( const KURL &uploadurl,
     kdDebug(5700) << "Delete (Mod) : " <<   url.url() << endl;
   }
   return KIO::del( urls, false, false );
+}
+
+bool OGoGlobals::getFolderHasSubs( const QDomNode &folderNode )
+{
+  // a folder is identified by the collection item in the resourcetype:
+  // <a:resourcetype xmlns:a="DAV:"><a:collection xmlns:a="DAV:"/>...</a:resourcetype>
+  QDomElement e = folderNode.namedItem("resourcetype").toElement();
+  if ( !e.namedItem( "collection" ).isNull() )
+    return true;
+  else return false;
+}
+
+KPIM::FolderLister::FolderType OGoGlobals::getFolderType( const QDomNode &folderNode )
+{
+  QDomNode n4;
+kdDebug()<<"OGoGlobals::getFolderType(...)"<<endl;
+  for( n4 = folderNode.firstChild(); !n4.isNull(); n4 = n4.nextSibling() ) {
+    QDomElement e = n4.toElement();
+
+    if ( e.tagName() == "resourcetype" ) {
+      if ( !e.namedItem( "vevent-collection" ).isNull() )
+        return KPIM::FolderLister::CalendarFolder;
+      if ( !e.namedItem( "vtodo-collection" ).isNull() )
+        return KPIM::FolderLister::TasksFolder;
+      if ( !e.namedItem( "vcard-collection" ).isNull() )
+        return KPIM::FolderLister::ContactsFolder;
+      if ( !e.namedItem( "collection" ).isNull() )
+        return KPIM::FolderLister::Folder;
+    }
+  }
+  return KPIM::FolderLister::Unknown;
 }

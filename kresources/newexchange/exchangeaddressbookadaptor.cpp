@@ -49,7 +49,7 @@ KIO::TransferJob *ExchangeAddressBookUploadItem::createUploadJob( KPIM::Groupwar
   return job;
 }
 
-ExchangeAddressBookAdaptor::ExchangeAddressBookAdaptor() : AddressBookAdaptor()
+ExchangeAddressBookAdaptor::ExchangeAddressBookAdaptor() : DavAddressBookAdaptor()
 {
 }
 
@@ -64,28 +64,12 @@ void ExchangeAddressBookAdaptor::adaptUploadUrl( KURL &url )
 //   url.setPath( url.path() + "/NewItem.EML" );
 }
 
-QString ExchangeAddressBookAdaptor::mimeType() const
-{
-  return "message/rfc822";
-}
-
-KIO::TransferJob *ExchangeAddressBookAdaptor::createListItemsJob( const KURL &url )
-{
-  return ExchangeGlobals::createListItemsJob( url );
-}
-
-QString ExchangeAddressBookAdaptor::extractFingerprint( KIO::TransferJob *job,
-                                                   const QString &rawText )
-{
-  return ExchangeGlobals::extractFingerprint( job, rawText );
-}
-
-KABC::Addressee::List ExchangeAddressBookAdaptor::parseData( KIO::TransferJob *job, const QString &/*rawText*/ )
+KABC::Addressee::List ExchangeAddressBookAdaptor::interpretDownloadItemJob( KIO::TransferJob *job, const QString &/*rawText*/ )
 {
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>(job);
   if (!davjob) return KABC::Addressee::List();
 
-kdDebug() << "ExchangeAddressBookAdaptor::parseData(): QDomDocument=" << endl << davjob->response().toString() << endl;
+kdDebug() << "ExchangeAddressBookAdaptor::interpretDownloadItemJob(): QDomDocument=" << endl << davjob->response().toString() << endl;
   KABC::ExchangeConverterContact conv;
   KABC::Addressee::List addressees = conv.parseWebDAV( davjob->response() );
   return addressees;
@@ -114,16 +98,6 @@ kdDebug()<<"ExchangeAddressBookAdaptor::createDownloadItemJob()"<<endl;
     job = KIO::davPropFind( url, doc, "0", false );
   }
   return job;
-}
-
-bool ExchangeAddressBookAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
-{
-  return ExchangeGlobals::itemsForDownloadFromList( this, job, currentlyOnServer, itemsForDownload );
-}
-
-KIO::Job *ExchangeAddressBookAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
-{
-  return ExchangeGlobals::createRemoveItemsJob( uploadurl, deletedItems );
 }
 
 QString ExchangeAddressBookAdaptor::defaultNewItemName( KPIM::GroupwareUploadItem *item ) {

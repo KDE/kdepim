@@ -90,7 +90,10 @@ void ResourceGroupwareBase::setFolderLister( KPIM::FolderLister *folderLister )
   if ( !folderLister ) return;
   if ( mFolderLister ) delete mFolderLister;
   mFolderLister = folderLister;
-  if ( adaptor() ) adaptor()->setFolderLister( mFolderLister );
+  if ( adaptor() ) {
+    adaptor()->setFolderLister( mFolderLister );
+    mFolderLister->setAdaptor( adaptor() );
+  }
 }
 
 void ResourceGroupwareBase::setAdaptor( CalendarAdaptor *adaptor )
@@ -99,6 +102,7 @@ void ResourceGroupwareBase::setAdaptor( CalendarAdaptor *adaptor )
   if ( mAdaptor ) delete mAdaptor;
   mAdaptor = adaptor;
   mAdaptor->setFolderLister( mFolderLister );
+  if ( mFolderLister ) mFolderLister->setAdaptor( mAdaptor );
   mAdaptor->setDownloadProgressMessage( i18n("Downloading calendar") );
   mAdaptor->setUploadProgressMessage( i18n("Uploading calendar") );
   if ( prefs() ) {

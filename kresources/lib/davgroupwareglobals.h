@@ -30,12 +30,12 @@
 namespace KIO {
 class Job;
 class TransferJob;
-}
+};
 
 namespace KPIM {
 class GroupwareDataAdaptor;
 class GroupwareUploadItem;
-}
+};
 
 class DAVGroupwareGlobals
 {
@@ -44,7 +44,7 @@ class DAVGroupwareGlobals
 
     static KIO::TransferJob *createListItemsJob( const KURL &url );
 
-    static bool itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *adaptor,
+    static bool interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,
         KIO::Job *job, QStringList &currentlyOnServer,
         QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload );
     static KPIM::GroupwareJob::ContentType getContentType( const QDomElement &prop );
