@@ -397,6 +397,7 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list,
   layout->addWidget( label );
 
   mView = new KPIM::AddresseeView( page );
+  mView->enableLinks( 0 );
   mView->setVScrollBarMode( QScrollView::Auto );
   layout->addWidget( mView );
 
