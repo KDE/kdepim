@@ -64,6 +64,20 @@ WelcomeAction::WelcomeAction(KPilotDeviceLink *p) :
 	return true;
 }
 
+SorryAction::SorryAction(KPilotDeviceLink *p) :
+	SyncAction(p,"sorryAction")
+{
+}
+
+bool SorryAction::exec()
+{
+	FUNCTIONSETUP;
+
+	addSyncLogEntry(i18n("KPilot is busy and cannot process the "
+		"HotSync sight now."));
+	return delayDone();
+}
+
 ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	const QString &name,
 	int m) :

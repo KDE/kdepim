@@ -232,6 +232,22 @@ protected:
 } ;
 
 /**
+* This one just says "sorry, can't sync now". This is used
+* in cases when the hotsync starts while KPilot is busy configuring
+* something and can't be interrupted.
+*/
+class SorryAction : public SyncAction
+{
+Q_OBJECT
+
+public:
+	SorryAction(KPilotDeviceLink *);
+
+protected:
+	virtual bool exec();
+} ;
+
+/**
 * The ConduitProxy action delays loading the plugin for a conduit until the conduit
 * actually executes; the proxy then loads the file, creates a SyncAction for the conduit
 * and runs that. Once the conduit has finished, the proxy unloads everything

@@ -72,13 +72,8 @@ public:
 	void addComponentPage(PilotComponent *, const QString &name);
 
 
-	typedef enum { Normal,
-		Startup,
-		WaitingForDaemon,
-		UIBusy,
-		Error } Status ;
 
-	Status status() const { return fStatus; } ;
+	KPilotStatus status() const { return fStatus; } ;
 
 
 protected:
@@ -172,7 +167,7 @@ private:
 	bool            fKillDaemonOnExit;
 	bool fDaemonWasRunning;
 
-	Status fStatus;
+	KPilotStatus fStatus;
 
 	FileInstallWidget *fFileInstallWidget;
 	LogWidget *fLogWidget;

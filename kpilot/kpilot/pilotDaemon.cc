@@ -642,8 +642,9 @@ QString PilotDaemon::syncTypeString(int i) const
 		fTray->changeIcon(PilotDaemonTray::Busy);
 	}
 
+	// Tell KPilot what's going on.
 	getKPilot().daemonStatus(KPilotDCOP::StartOfHotSync);
-	
+
 	fStatus = HOTSYNC_START ;
 
 #ifdef DEBUG
@@ -657,6 +658,11 @@ QString PilotDaemon::syncTypeString(int i) const
 	QStringList conduits ;
 	bool installFiles = false;
 
+#ifdef ENABLE_KROUPWARE
+	bool _syncWithKMail = false;
+	int _kroupwareParts = 0;
+#endif
+
 	if ((fNextSyncType == PilotDaemonDCOP::HotSync)
 		/* || other sync types */
 		)
@@ -665,13 +671,30 @@ QString PilotDaemon::syncTypeString(int i) const
 		installFiles = c.getSyncFiles();
 	}
 
+	// Queue to add all the actions for this sync to.
 	fSyncStack = new ActionQueue(fPilotLink);
-	fSyncStack->queueInit(ActionQueue::WithUserCheck);
+	
+	/**
+	* If KPilot is busy with something - like configuring
+	* conduit - then we shouldn't run a real sync, but
+	* just tell the user that the sync couldn't run because
+	* of that.
+	*/
+	int kpilotstatus = getKPilot().kpilotStatus();
+	if (kpilotstatus!=KPilotDCOP::Normal)
+	{
+		fSyncStack->queueInit();
+		fSyncStack->addAction(new SorryAction(fPilotLink));
+		// Near the end of this function - sets up 
+		// signal/slot connections and fires off the sync.
+		goto launch;
+	}
+	else
+	{
+		fSyncStack->queueInit(ActionQueue::WithUserCheck);
+	}
 
 #ifdef ENABLE_KROUPWARE
-	bool _syncWithKMail = false;
-	int _kroupwareParts = 0;
-	
 	c.setGroup(QString::null);
 	if ( c.getSyncWithKMail() ) 
 	{
@@ -752,6 +775,9 @@ QString PilotDaemon::syncTypeString(int i) const
 	}
 #endif	
 
+// Jump here to finalize the connections to the sync action
+// queue and start the actual sync.
+launch:
 	fSyncStack->queueCleanup();
 	
 	QObject::connect(fSyncStack, SIGNAL(logError(const QString &)),
