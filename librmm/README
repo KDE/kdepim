@@ -1,0 +1,76 @@
+Description:
+
+  RFC822 parser.
+
+  Part of the KDE Personal Information Management project.
+
+Requirements:
+
+  * Qt 2.1
+
+Contributing:
+
+  If you're interested in contributing, please mail Rik <rik@kde.org>
+  and ask questions.
+
+  Help is needed in the following areas.
+   
+  * Implementation
+    - Adding missing features.
+    - Debugging.
+    - Clean up over-complex, dangerous, sloppy or ill-conceived code.
+    - Identify and plug memory leaks.
+    - Identify and plug security holes.
+
+    Note: Programmers and designers may read DESIGN for a useful
+    introduction to the library architecture. Information on developing
+    with Qt is available within the Qt documentation, which comes
+    with the Qt distribution.
+    
+  * Documentation
+    - Clean up and assure completeness of class documentation.
+    - Write and maintain a user manual.
+
+  * Maintenance
+    - Bug reporting.
+    - Testing.
+  
+Contact information:
+
+  librmm:
+  
+    Chief maintainer:
+  
+      Rik Hemsley <rik@kde.org>
+
+      Questions and comments from any party, including journalists, are
+      welcome.
+
+  KDE-PIM project:
+
+    Home page:
+ 
+      http://without.netpedia.net
+    
+    Mailing list:
+    
+      Address for messages:
+      
+        kde-pim@kde.org
+
+      This list exists for the benefit of developers, users and any other
+      interested parties. Discussions are generally of a technical nature,
+      but questions from non-technical persons are welcome. 
+
+      - To subscribe:
+      
+        Send a message to <kde-pim-request@kde.org>.
+        Put 'subscribe my@email.address' in the message body.
+        You may leave the subject line blank.
+
+      - To unsubscribe:
+      
+        Send a message to <kde-pim-request@kde.org>
+        Put 'unsubscribe my@email.address' in the message body.
+        You may leave the subject line blank.
+
