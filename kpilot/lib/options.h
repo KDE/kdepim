@@ -40,7 +40,7 @@
 
 // #define QT_NO_ASCII_CAST		(1)
 // #define QT_NO_CAST_ASCII		(1)
-// #define DEBUG				(1)
+#define DEBUG				(1)
 // #define DEBUG_CERR			(1)
 
 #ifdef HAVE_CONFIG_H
@@ -112,7 +112,7 @@ inline std::ostream& operator <<(std::ostream &o, const QCString &s) { return (o
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 #endif
 
-#define KPILOT_VERSION	"4.4.2 (Osnabr\374ck)"
+#define KPILOT_VERSION	"4.4.3 (Wien)"
 
 // * KPilot debugging code looks like:
 //
