@@ -24,13 +24,13 @@ SUBDIRS = \
 	  popmail \
           timeconduit \
           sysinfoconduit \
-          $(PERL_SUBDIR) $(MAL_SUBDIR) $(ABC_SUBDIR)
+          $(MAL_SUBDIR) $(ABC_SUBDIR)
 
 ###
 ### Subdirs you might have for experimental purposes:
 ###
-###	null        - a conduit that just logs a single message
-###	perlconduit - fires off a perl interpreter in a thread.
+###	null           - a conduit that just logs a single message
+###	$(PERL_SUBDIR) - fires off a perl interpreter in a thread.
 ###
 
 
