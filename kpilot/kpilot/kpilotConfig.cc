@@ -37,7 +37,7 @@
 
 
 static const char *kpilotconfig_id =
-	"$Id:$";
+	"$Id$";
 
 // This is a number indicating what configuration version
 // we're dealing with. Whenever new configuration options are
@@ -169,11 +169,46 @@ static QFont *thefont=0L;
 
 /* static */ const QFont& KPilotConfig::fixed()
 {
-	if (thefont) return *thefont;
+	FUNCTIONSETUP;
+
+	if (thefont)
+	{
+#ifdef DEBUG
+		if (debug_level && UI_TEDIOUS)
+		{
+			DEBUGKPILOT << fname
+				<< ": Font already set."
+				<< endl;
+		}
+#endif
+
+		return *thefont;
+	}
 
 	KConfig KDEGlobalConfig(QString::null);
 	KDEGlobalConfig.setGroup("General");
+	QString s = KDEGlobalConfig.readEntry("fixed");
+
+	DEBUGKPILOT << fname
+		<< ": Creating font "
+		<< s 
+		<< endl;
+
 	thefont = new QFont(KDEGlobalConfig.readFontEntry("fixed"));
+
+	if (!thefont)
+	{
+		kdError() << fname
+			<< ": **\n"
+			<< ": ** No font was created! (Expect crash now)\n"
+			<< ": **"
+			<< endl;
+	}
+
+	return *thefont;
 }
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
