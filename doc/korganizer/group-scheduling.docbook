@@ -203,7 +203,7 @@ In order to publish an event, just click on it to mark it, and then select
 menu. A dialog will appear, asking for email addresses. Enter all mail
 addresses of the people who should attend the your event. After pressing
 the <guibutton>OK</guibutton> button, the event will either be sent
-directly to the recipients or - acording to your setting - will first
+directly to the recipients or - according to your setting - will first
 be placed in the <quote>Outbox</quote>.
 </para>
 
@@ -355,7 +355,7 @@ data, and select <guimenuitem>Counter</guimenuitem> from the
 </mediaobject>
 
 <para>
-One other possiblity to <quote>Reply</quote> is not to update your
+One other possibility to <quote>Reply</quote> is not to update your
 attendee data, but select <guimenuitem>Reply</guimenuitem> and use the
 <guilabel>Reply</guilabel> dialog that appears to change your attendee
 data.

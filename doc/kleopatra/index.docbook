@@ -95,14 +95,14 @@ exits the application.
 
 <sect1 id="redisplay"><title>View/Redisplay</title>
 <para>The menuitem <menuchoice><guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem></menuchoice>
-performs the current query again and displays the retults.
+performs the current query again and displays the results.
 </para></sect1>
 
 <sect1 id="newcert"><title>Certificates/New Certificate</title>
 <para>The menuitem
 <menuchoice><guimenu>Certificates</guimenu><guimenuitem>New
 Certificate</guimenuitem></menuchoice> starts the certificate 
-request creating wizard. It will giude you through a number of steps
+request creating wizard. It will guide you through a number of steps
 to create a certificate request. This request can, at the end of the
 wizard, either be sent to a certificate authority (CA) to be signed or
 saved to a file (for example a floppy, so it can be shipped to the

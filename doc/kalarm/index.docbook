@@ -1045,7 +1045,7 @@ time.</para>
   <option>--mail</option> must be specified with this option.</entry>
 </row>
 <row>
-  <entry><option>-c</option>, <option>--color</option>, <option>--colour
+  <entry><option>-c</option>, <option>--color</option>, <option>--color
   <replaceable>color</replaceable></option></entry>
   <entry>Set the message background color to the specified &Qt;
   color name or hex code 0xRRGGBB.</entry>

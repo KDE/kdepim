@@ -364,7 +364,7 @@ established a connection to the news server and if, for whatever
 reason, no data is received from or transmitted to the news
 server. After the specified time has expired, &knode; automatically
 disconnects. This, among other things, relieves the server of
-unnecessary connections which reduce its availibility for other
+unnecessary connections which reduce its availability for other
 subscribers. It also makes sure that an automatically established
 Internet connection is not held unnecessarily although no data is
 being sent or received.</para>
@@ -1455,7 +1455,7 @@ KNode...</guimenuitem><guilabel>Identity</guilabel></menuchoice>.</para>
 <title><guilabel>Introduction Phrase:</guilabel></title> 
 
 <para>When you write a followup, &knode; inserts an introductionary
-phrase before the quoted original Text. You can put an aribrary text
+phrase before the quoted original Text. You can put an arbitrary text
 here. You can use variables, which &knode; extracts from the original
 article, &eg; the name of the author or the date the article was
 written.</para>

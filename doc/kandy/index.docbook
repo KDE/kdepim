@@ -77,7 +77,7 @@ phone.</para>
 list. By pressing the <guibutton>Write</guibutton> button you write back
 the data shown in the list to the corresponding phonebook. By pressing
 <guibutton>Save to File</guibutton> you can store the mobile phonebook
-as list of comma-seperated values to disk.  After loading the phonebook
+as list of comma-separated values to disk.  After loading the phonebook
 data using the <guibutton>Read</guibutton> buttons, you can merge the
 phonebooks by pressing the <guibutton>Merge</guibutton> button. This
 will put data only present in one of the phonebooks into the other and

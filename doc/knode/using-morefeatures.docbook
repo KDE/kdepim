@@ -347,7 +347,7 @@ the old view of the newsgroup appears again.</para>
 <title><guilabel>Start Search</guilabel></title> 
 
 <para>With this button you start the Search with the search criteria
-you defined. All articles in the selected newsgroup, fulfilling this
+you defined. All articles in the selected newsgroup, fulfiling this
 criterias, appear in the article view.</para> 
 
 </sect3> 
@@ -472,7 +472,7 @@ the articles header in the <guilabel>Outbox</guilabel>.</para>
 
 <para>Activate <menuchoice><guimenu>View</guimenu><guimenuitem>Show
 all headers</guimenuitem></menuchoice>, because we want to see all the
-header, the newsserver recives. You will notice a line like:</para> 
+header, the newsserver receives. You will notice a line like:</para> 
 
 <para>Supersedes: &lt;oggcm8.4n5.ln@konqi.org&gt;</para> 
 
@@ -739,8 +739,8 @@ newsserver.</para>
 <anchor id="anc-PGP-support"/>
 
 <para><acronym>PGP</acronym> is the most spread method to encrypt or
-sign datas. With the <glossterm>PGP-signature</glossterm> you can
-verify if the datas are really from the original author or if they are
+sign data. With the <glossterm>PGP-signature</glossterm> you can
+verify if the data are really from the original author or if they are
 changed by others. You will find PGP-programs and guides at <ulink
 url="http://www.pgpi.org">http://www.pgpi.org</ulink>.</para>
 

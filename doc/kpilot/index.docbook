@@ -79,7 +79,7 @@ the &ThreeCom; &PalmPilot; and similar products.
 <keyword>KPilot</keyword>
 <keyword>kdepim</keyword>
 <keyword>palm pilot</keyword>
-<keyword>synchronisation</keyword>
+<keyword>synchronization</keyword>
 </keywordset>
 
 </bookinfo>
@@ -90,7 +90,7 @@ the &ThreeCom; &PalmPilot; and similar products.
 <para>
 &kpilot; &kpilotver;
 is an application that
-synchronises your &PalmPilot; or similar
+synchronizes your &PalmPilot; or similar
 device (like the &Handspring; &Visor; or the
 &Sony; &Clie;)
 with your &kde; desktop,
@@ -98,7 +98,7 @@ much like the Palm Desktop &HotSync; software does
 for &Windows;.
 &kpilot; can back-up, restore, and &HotSync;
 your &PalmPilot;.
-It can synchronise the built-in applications
+It can synchronize the built-in applications
 with their &kde; counterparts.
 It also features additional conduits for
 third-party software.
@@ -291,7 +291,7 @@ to match your hardware.
 The <link linkend="conduits">conduits</link>
 need to be configured as well.
 After that you can use &kpilot;
-to synchronise your &PalmPilot; with
+to synchronize your &PalmPilot; with
 your &kde; desktop or view
 data from your &PalmPilot; with the
 <link linkend="builtin">builtin applications</link>.
@@ -708,7 +708,7 @@ option is a matter of personal preference.
 <term><guilabel>Do full backup when changing PCs</guilabel></term>
 <listitem>
 <para>
-If you have more than one <acronym>PC</acronym> and synchronise your &PalmPilot;
+If you have more than one <acronym>PC</acronym> and synchronize your &PalmPilot;
 with each of them you may want to disable this option.
 When you change <acronym>PC</acronym>s 
 it is a good idea to perform a full backup,
@@ -727,9 +727,9 @@ you can disable such a backup here.
 <para>
 While a HotSync is faster than a full backup,
 a FastSync is faster still than a HotSync and
-synchronises only those databases that have conduits.
+synchronizes only those databases that have conduits.
 This means that any database without a conduit is
-not backed up and not synchronised.
+not backed up and not synchronized.
 This also means that if something goes wrong with your &PalmPilot;,
 you may not be able to recover databases with no
 conduit.

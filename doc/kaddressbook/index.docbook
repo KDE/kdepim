@@ -276,7 +276,7 @@ what fields were selected in the view configure dialog.</para></listitem>
 </mediaobject>
 </screenshot>
 
-<para>The <guilabel>Selected Fields</guilabel> page offers you the possebility
+<para>The <guilabel>Selected Fields</guilabel> page offers you the possibility
 to select what parts of a contact should be shown in the view. In the
 <guilabel>Default Filter</guilabel> page you can setup what
 <link linkend="using-filters">filter</link> should be used by the view.</para>
@@ -341,11 +341,11 @@ view and drop it over the distribution list manager.</para></listitem>
 </variablelist>
 
 <screenshot>
-<screeninfo>The main window with distribtuion list extension.</screeninfo>
+<screeninfo>The main window with distribution list extension.</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="extension.png" format="PNG"/></imageobject>
-<textobject><phrase>The main window with distribtuion list extension.</phrase></textobject>
-<caption><para>The main window with distribtuion list extension.</para></caption>
+<textobject><phrase>The main window with distribution list extension.</phrase></textobject>
+<caption><para>The main window with distribution list extension.</para></caption>
 </mediaobject>
 </screenshot>
 </sect1>
@@ -403,7 +403,7 @@ can use this item.</para></listitem>
 <varlistentry>
 <term><guilabel>LDIF</guilabel></term>
 <listitem><para>LDIF is a plain text representation of LDAP data.
-Netscape and Mozzila use this format to store their addressbook
+Netscape and Mozilla use this format to store their addressbook
 data. &kaddressbook; supports import and export of this format.
 </para></listitem>
 </varlistentry>
@@ -703,7 +703,7 @@ selected contacts as vCards attached</action>.</para></listitem>
 <guimenu>Edit</guimenu>
 <guimenuitem>Copy</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Copys the currently selected contacts to the
+<listitem><para><action>Copies the currently selected contacts to the
 clipboard</action>.</para></listitem>
 </varlistentry>
 

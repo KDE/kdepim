@@ -1935,7 +1935,7 @@ information.</para></listitem>
 <guimenuitem>Month</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Switch the display to the Month view.</action></para>
-<para>The month view shows all the events for the current month in a familar
+<para>The month view shows all the events for the current month in a familiar
 calendar layout. Each day contains all of the events that can fit in the area
 provided (maximizing the window will enable you to see more appointments).
 Information on repeating and alarm status is indicated through
@@ -2722,7 +2722,7 @@ on your platform and the size of your calendar(s).</para>
 
 <para>All required libraries are part of standard &kde; libraries
 (kdelibs). &kde; base package (kdebase) must also be installed to change
-localisation preferences like date and time formats. &korganizer; itself
+localization preferences like date and time formats. &korganizer; itself
 is in the kdepim package. All packages can be found on <ulink
 url="http://www.kde.org">&kde; home page.</ulink>.</para>
 
@@ -2772,7 +2772,7 @@ have to compile &korganizer; yourself from a source file.</para>
 <title>Setting up Groupscheduling</title>
 <para>To make groupscheduling work with &korganizer; you need to apply a filter to
 your mail-client. If you use <application>kmail</application> you have to make 
-a filter, that <emphasis>pipes</emphasis> every email through a skript called
+a filter, that <emphasis>pipes</emphasis> every email through a script called
 <emphasis>korganizerIn</emphasis>, which you should find in the same directory,
 as the korganizer binary is.
 </para>

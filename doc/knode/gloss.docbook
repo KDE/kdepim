@@ -167,7 +167,7 @@ defines how the articles in the usenet are spread.</para>
 <glossentry id="gloss-port">
 <glossterm>Port</glossterm>
 <glossdef> 
-<para>A kind of address for the application to listen for datas and
+<para>A kind of address for the application to listen for data and
 for connecting to another computer. The standard-port for the
 connection between the newsreader and the newsserver is 119.</para>
 </glossdef> 
@@ -234,7 +234,7 @@ article by e-mail.</para>
 <para>The <glossterm>signature</glossterm> is a personal sign of the
 author which is attached at the normal contents of the article. It's a
 kind of visiting card, very often there are e-mail addresses, a
-homepage <acronym>URL</acronym> or other personal datas. The
+homepage <acronym>URL</acronym> or other personal data. The
 <glossterm>signature</glossterm> shouldn't be longer than 4 lines. The
 <glossterm>signature</glossterm> shouldn't be mixed up with the
 <glossterm>PGP-signature</glossterm>.</para>
