@@ -2,7 +2,11 @@
 #define _KPILOT_NOTEPAD_CONDUIT_H
 /* notepad-conduit.h			KPilot
 **
-** Copyright (C) 2004 by Adriaan de Groot, Joern Ahrens
+** Copyright (C) 2004 by Adriaan de Groot, Joern Ahrens, Angus Ainslie
+**
+** The code for NotepadActionThread::unpackNotePad was taken from 
+** Angus Ainslies read-notepad.c, which is part of pilot-link.
+** NotepadActionThread::saveImage is also based on read-notepad.c.
 **
 ** This file is part of the Notepad conduit, a conduit for KPilot that
 ** store the notepad drawings to files.
@@ -31,6 +35,9 @@
 
 #include "plugin.h"
 
+#include <qthread.h>
+struct NotePad;
+
 class NotepadConduit : public ConduitAction
 {
 public:
@@ -38,9 +45,28 @@ public:
 		const char *name=0L,
 		const QStringList &args = QStringList());
 	virtual ~NotepadConduit();
-
+	virtual bool event(QEvent *e);
 protected:
 	virtual bool exec();           // From ConduitAction
+};
+
+
+/**
+ * This class saves the notepads to disk
+ */
+class NotepadActionThread : public QThread
+{
+public:
+	NotepadActionThread(QObject *parent, int pilotSocket);
+
+	virtual void run();
+	
+private:
+	QObject *fParent;
+	int fPilotSocket;
+	
+	int unpackNotePad(struct NotePad *a, unsigned char *buffer, int len);
+	void saveImage(struct NotePad *n);
 };
 
 #endif

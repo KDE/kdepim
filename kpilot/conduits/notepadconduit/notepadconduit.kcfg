@@ -2,9 +2,9 @@
 <!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
 <kcfg><kcfgfile name="kpilotrc"/> 
   <group name="Notepad-conduit">
-    <entry name="OutputDirectory" type="Path">
+    <entry name="outputDirectory" type="Path">
         <label>The export directory for the notepad drawings</label>
-        <default></default>
+        <default>$HOME</default>
     </entry>
   </group>
 	

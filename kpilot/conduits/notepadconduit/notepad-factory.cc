@@ -114,8 +114,11 @@ NotepadConduitFactory::NotepadConduitFactory(QObject *p, const char *n) :
 		"(C) 2004, Joern Ahrens");
 	fAbout->addAuthor("Joern Ahrens",
 		I18N_NOOP("Primary Author"),
-		"joern@kpilot.org",
+		"kde@jokele.de",
 		"http://www.jokele.de/");
+	fAbout->addCredit("Adriaan de Groot");
+	fAbout->addCredit("Angus Ainslies", 
+		I18N_NOOP("Notepad conduit is based on Angus' read-notepad, part of pilot-link" ));
 }
 
 NotepadConduitFactory::~NotepadConduitFactory()
@@ -159,7 +162,7 @@ NotepadConduitFactory::~NotepadConduitFactory()
 
 		if (d)
 		{
-			return new NotepadConduit(d,n,a);
+			return new NotepadConduit(d, 0L, n);
 		}
 		else
 		{
