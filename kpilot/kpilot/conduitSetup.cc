@@ -28,6 +28,8 @@
 #include <kapp.h>
 #include <kprocess.h>
 #include <kmessagebox.h>
+#include <kstddirs.h>
+
 #include "conduitSetup.moc"
 
 #include "kpilot.h"
@@ -160,17 +162,18 @@ CConduitSetup::~CConduitSetup()
 void
 CConduitSetup::fillLists()
 {
-	FUNCTIONSETUP;
-
-  KSimpleConfig* config = new KSimpleConfig(kapp->localconfigdir() + "/kpilotconduits");
+  FUNCTIONSETUP;
+  KSimpleConfig* config = new KSimpleConfig("kpilotconduits");
+//   KSimpleConfig* config = new KSimpleConfig(kapp->localconfigdir() + "/kpilotconduits");
   config->setGroup("Conduit Names");
   fInstalledConduitNames.clear();
   fAvailableConduitNames.clear();
-  config->readListEntry("InstalledConduits", fInstalledConduitNames);
+  fInstalledConduitNames = config->readListEntry("InstalledConduits");
   delete config;
-  QString conduitPath = kapp->kde_datadir() + "/kpilot/conduits";
+  QString conduitPath = KGlobal::dirs()->resourceDirs("conduits").first();
+//   QString conduitPath = kapp->kde_datadir() + "/kpilot/conduits";
   QDir availableDir(conduitPath);
-  fAvailableConduitNames = *(availableDir.entryList());
+  fAvailableConduitNames = availableDir.entryList();
   fAvailableConduitNames.remove(".");
   fAvailableConduitNames.remove("..");
   // Make sure that all the ones in fInstalledConduitNames are available
@@ -178,17 +181,17 @@ CConduitSetup::fillLists()
   
   // Now actually fill the two list boxes, just make sure that nothing gets
   // listed in both.
-  QStrListIterator availList(fAvailableConduitNames);
-  while(availList.current())
+  QStringList::Iterator availList = fAvailableConduitNames.begin();
+  while(availList != fAvailableConduitNames.end())
     {
-      if(fInstalledConduitNames.contains(availList.current()) == 0)
-	fAvailableConduits->insertItem(availList.current());
+      if(fInstalledConduitNames.contains(*availList) == 0)
+	fAvailableConduits->insertItem(*availList);
       ++availList;
     }
-  QStrListIterator installList(fInstalledConduitNames);
-  while(installList.current())
+  QStringList::Iterator installList = fInstalledConduitNames.begin();
+  while(installList != fInstalledConduitNames.end())
     {
-      fInstalledConduits->insertItem(installList.current());
+      fInstalledConduits->insertItem(*installList);
       ++installList;
     }
   checkButtons();
@@ -196,22 +199,22 @@ CConduitSetup::fillLists()
 
 // Removes any entries from installed that aren't in available
 void
-CConduitSetup::cleanupLists(const QStrList* available, QStrList* installed)
+CConduitSetup::cleanupLists(const QStringList* available, QStringList* installed)
 {
 	FUNCTIONSETUP;
 
-  QStrListIterator availList(*available);
-  if(availList.current() == 0L)
+  QStringList::ConstIterator availList = available->begin();
+  if(availList == available->end())
     installed->clear();
   else
     {
       // Check all our installed ones to make sure they still exist.
-      QStrListIterator installedOnes(*installed);
-      while(installedOnes.current())
+      QStringList::Iterator installedOnes = installed->begin();
+      while(installedOnes != installed->end())
 	{
-	  if(available->contains(installedOnes.current()) == 0) 
+	  if(available->contains(*installedOnes) == 0) 
 	    // Not in fileList
-	    installed->remove(installedOnes.current());
+	    installed->remove(*installedOnes);
 	  else
 	    ++installedOnes;
 	}
@@ -226,20 +229,23 @@ CConduitSetup::slotDone()
   FILE* conduit;
   char dbName[255];
   int len = 0;
-  QString conduitPath = kapp->kde_datadir() + "/kpilot/conduits";
+  QString conduitPath = KGlobal::dirs()->resourceDirs("conduits").first();
+//   QString conduitPath = kapp->kde_datadir() + "/kpilot/conduits";
 
   // Unfortunately we need to rewrite the whole file 
   // after a conduit setup, since we don't know what 
   // used to be in there and there's no deleteEntry() in KSimpleConfig.
-  unlink(kapp->localconfigdir() + "/kpilotconduits");
-  KSimpleConfig* config = new KSimpleConfig(kapp->localconfigdir() + "/kpilotconduits");
+
+  // FIXME: Do we still need to do this?
+//   unlink(kapp->localconfigdir() + "/kpilotconduits");
+  KSimpleConfig* config = new KSimpleConfig("kpilotconduits");
   config->setGroup("Conduit Names");
   config->writeEntry("InstalledConduits", fInstalledConduitNames);
   config->setGroup("Database Names");
-  QStrListIterator iter(fInstalledConduitNames);
-  while(iter.current())
+  QStringList::Iterator iter = fInstalledConduitNames.begin();
+  while(iter != fInstalledConduitNames.end())
     {
-	QString currentConduit=conduitPath+'/'+iter.current();
+	QString currentConduit=conduitPath+'/'+ *iter;
 	currentConduit+=" --info";
 	if (debug_level)
 	{
@@ -261,14 +267,14 @@ CConduitSetup::slotDone()
 	{
 	  QString tmpMessage;
 	  tmpMessage = i18n("The conduit ");
-	  tmpMessage = tmpMessage + iter.current();
+	  tmpMessage = tmpMessage + *iter;
 	  tmpMessage = tmpMessage + i18n(" did not identify what database it supports. "
 						       "\nPlease check with the conduits author to correct it.");
 	  
 	  KMessageBox::error(0L, tmpMessage, i18n("Conduit error."));
 	}
       else
-	config->writeEntry(dbName, iter.current());
+	config->writeEntry(dbName, *iter);
       ++iter;
     }
   config->sync();
@@ -386,13 +392,13 @@ CConduitSetup::slotSetupConduit()
 
 	if(fSetupConduitProcess.isRunning())
 	{
-		KMessageBox::message(this, 
+		KMessageBox::error(this, 
 				     i18n("A conduit is already being set up.\n"
 					  "Please complete that setup before starting another."),
 				     i18n("Setup already in progress"));
 		return;
 	}
-	QString conduitName =   kapp->kde_datadir() + "/kpilot/conduits/";
+	QString conduitName =   KGlobal::dirs()->resourceDirs("conduits").first();
 	conduitName = conduitName + 
 		fInstalledConduits->text(fInstalledConduits->currentItem());
 

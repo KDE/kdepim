@@ -18,7 +18,6 @@
 
 class KConfig;
 class KSocket;
-class KFM;
 class KProcess;
 
 class PilotDaemon;
@@ -31,15 +30,15 @@ public:
   DockingLabel(PilotDaemon* daemon, QWidget* w);
   void setPopupMenu(QPopupMenu* menu) { fMenu = menu; }
 
+ protected:
+  void dropEvent(QDropEvent* drop);
+
 private:
   QPopupMenu* fMenu;
-  KFM* fKFM;
   PilotDaemon* fDaemon;
 
  private slots:
  void mousePressEvent(QMouseEvent* e);
-  void slotDropEvent(QDropEvent* drop);
-  void slotKFMCopyComplete();
 };
 
 

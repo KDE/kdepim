@@ -687,7 +687,7 @@ KPilotInstaller::initMenu()
 		SLOT(menuCallback(int)));
 
 	QPopupMenu *theHelpMenu = KTMainWindow::helpMenu(QString(version(0)) +
-		i18n("\n\nCopyright (C) 1998-2000 Dan Pilone") +
+		i18n("\n\nCopyright (C) 1998-2000 Dan Pilone, Adriaan de Groot") +
 		i18n("\n\nProgramming by:\n") +
 		authors()) ;
     
@@ -943,7 +943,7 @@ void handleOptions(int& argc, char **argv)
 	static const char *banner=
 		"KPilot v4.0b\n"
 		"Copyright (C) 1998,1999 Dan Pilone\n"
-		"Copyright (C) 2000 Adriaan de Groot\n\n";
+		"Copyright (C) 2000 Dan Pilone, Adriaan de Groot\n\n";
 
 	int c,li;
 

@@ -41,13 +41,13 @@ private:
   QListBox *fAvailableConduits;
   QPushButton *fInstallConduit;
   QPushButton *fSetupConduit;
-  QStrList     fInstalledConduitNames;
-  QStrList     fAvailableConduitNames;
+  QStringList     fInstalledConduitNames;
+  QStringList     fAvailableConduitNames;
   KProcess     fSetupConduitProcess;
 
   void fillLists();
   // Removes any installed items that aren't available
-  void cleanupLists(const QStrList* available, QStrList* installed);
+  void cleanupLists(const QStringList* available, QStringList* installed);
   void checkButtons() ;
 
 protected:

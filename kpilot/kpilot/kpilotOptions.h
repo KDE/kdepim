@@ -54,7 +54,6 @@ public:
 
 public slots:
 	void slotSetupDaemon();
-	void slotKFMFinished();
 
 private:
 	QLineEdit* fPilotDevice;

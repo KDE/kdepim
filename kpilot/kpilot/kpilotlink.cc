@@ -53,6 +53,8 @@ static const char *id="$Id$";
 #include <kstatusbar.h>
 #include <kapp.h>
 #include <kprogress.h>
+#include <kglobal.h>
+#include <kstddirs.h>
 
 #include "kpilotlink.moc"
 #else
@@ -1459,13 +1461,14 @@ void KPilotLink::checkPilotUser()
 
 PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 {
-	QString dbPath(LOCALKDE);
-	dbPath+=BACKUP_DIR;
-	dbPath+=getPilotUser().getUserName();
-	dbPath+='/';
+// 	QString dbPath(LOCALKDE);
+// 	dbPath+=BACKUP_DIR;
+// 	dbPath+=getPilotUser().getUserName();
+// 	dbPath+='/';
 
-	return new PilotLocalDatabase(dbPath,database);
-}
+// 	return new PilotLocalDatabase(dbPath,database);
+  return new PilotLocalDatabase(KGlobal::dirs()->findDirs("pilotdbs", getPilotUser().getUserName()).first(), database);
+  }
         // {
         //      return new PilotLocalDatabase(kapp->localkdedir() +
         //              BACKUP_DIR +

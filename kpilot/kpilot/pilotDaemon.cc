@@ -29,18 +29,22 @@ static char *id="$Id$";
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <signal.h>
 
 #include <qdir.h>
-#include "pilotDaemon.moc"
-#include <kapp.h>
-#include <kwm.h>
-#include <ksimpleconfig.h>
 #include <qlist.h>
-#include <kurl.h>
 #include <qpopmenu.h>
 #include <qcursor.h>
-#include <kmsgbox.h>
-#include <signal.h>
+
+#include <kapp.h>
+#include <kwin.h>
+#include <ksimpleconfig.h>
+#include <kurl.h>
+#include <ksock.h>
+#include <kmessagebox.h>
+#include <kstddirs.h>
+
+#include "pilotDaemon.moc"
 #include "hotsync.h"
 #include "busysync.h"
 #include "statusMessages.h"
@@ -59,7 +63,7 @@ void handleOptions(int& argc, char **argv)
 	FUNCTIONSETUP;
 
 	static const char *banner=
-		"\t\tKPilotDaemon v" VERSION "\n"
+		"\t\tKPilotDaemon v4.0b\n"
 		"Copyright (C) 1998,1999 Dan Pilone\n"
 		"Copyright (C) 2000 Adriaan de Groot\n\n";
 
@@ -83,15 +87,9 @@ void handleOptions(int& argc, char **argv)
 }
 
 
-const int PilotDaemon::COMMAND_PORT = PILOTDAEMON_COMMAND_PORT;
-const int PilotDaemon::STATUS_PORT = PILOTDAEMON_STATUS_PORT;
-
-DockingLabel::DockingLabel (PilotDaemon* daemon, QWidget* w) : QLabel(w), fKFM(0L), fDaemon(daemon)
+DockingLabel::DockingLabel (PilotDaemon* daemon, QWidget* w) : QLabel(w), fDaemon(daemon)
 {
 	FUNCTIONSETUP;
-
-  KDNDDropZone* dropZone = new KDNDDropZone(this, DndURL);
-  connect(dropZone, SIGNAL(dropAction(KDNDDropZone*)), this, SLOT(slotDropEvent(KDNDDropZone*)));
 }
 
 
@@ -109,62 +107,53 @@ DockingLabel::mousePressEvent(QMouseEvent *e)
 }
 
 void
-DockingLabel::slotDropEvent(KDNDDropZone* drop)
+DockingLabel::dropEvent(QDropEvent* drop)
 {
-	FUNCTIONSETUP;
+// 	FUNCTIONSETUP;
 
-  QStrList& list = drop->getURLList();
-  unsigned int i = 0;
-  QString tempFileName;
-  QString dest = "file:";
-  dest += kapp->localkdedir();
-  dest += "/share/apps/kpilot/pending_install/";
+//   QStrList& list = drop->getURLList();
+//   unsigned int i = 0;
+//   QString tempFileName;
+//   QString dest = "file:";
+//   dest += kapp->localkdedir();
+//   dest += "/share/apps/kpilot/pending_install/";
   
-	if (debug_level & DB_MAJOR)
-	{
-		cerr << fname << ": Dropped files on us. "
-			<< list.at(0) << endl;
-	}
+// 	if (debug_level & DB_MAJOR)
+// 	{
+// 		cerr << fname << ": Dropped files on us. "
+// 			<< list.at(0) << endl;
+// 	}
 
-  if(fKFM)
-    {
-      KMsgBox::message(this, klocale->translate("Busy"), 
-		       klocale->translate("Please wait for current operation to complete."), KMsgBox::STOP);
-      return;
-    }
-  fKFM = new KFM;
-  fKFM->allowKFMRestart(true);
-  if(!fKFM->isOK())
-    {
-      KMsgBox::message(this, klocale->translate("Error"), 
-		       klocale->translate("Could not start KFM."), KMsgBox::STOP);
-      delete fKFM;
-      fKFM = 0L;
-      return;
-    }
+//   if(fKFM)
+//     {
+//       KMessageBox::error(this, i18n("Please wait for current operation to complete."),
+// 			 i18n("Busy"));
+//       return;
+//     }
+//   fKFM = new KFM;
+//   fKFM->allowKFMRestart(true);
+//   if(!fKFM->isOK())
+//     {
+//       KMessageBox::message(this, i18n("Could not start KFM."), 
+// 			   i18n("Error"));
+//       delete fKFM;
+//       fKFM = 0L;
+//       return;
+//     }
   
-  while(i < list.count())
-    {
-      tempFileName += list.at(i);
-      if(++i < list.count())
-	tempFileName += '\n';
-    }
-  connect(fKFM, SIGNAL(finished()), this, SLOT(slotKFMCopyComplete()));
-  if(list.count() == 1)
-    fKFM->copy(tempFileName, dest + strrchr(list.at(0), '/'));
-  else
-    fKFM->copy(tempFileName, dest);
+//   while(i < list.count())
+//     {
+//       tempFileName += list.at(i);
+//       if(++i < list.count())
+// 	tempFileName += '\n';
+//     }
+//   connect(fKFM, SIGNAL(finished()), this, SLOT(slotKFMCopyComplete()));
+//   if(list.count() == 1)
+//     fKFM->copy(tempFileName, dest + strrchr(list.at(0), '/'));
+//   else
+//     fKFM->copy(tempFileName, dest);
 }
 
-void
-DockingLabel::slotKFMCopyComplete()
-{
-	FUNCTIONSETUP;
-
-  delete fKFM;
-  fKFM = 0L;
-  fDaemon->sendStatus(CStatusMessages::FILE_INSTALL_REQUEST);
-}
 
 int PilotDaemon::getPilotSpeed(KConfig *config)
 {
@@ -215,7 +204,7 @@ int PilotDaemon::getPilotSpeed(KConfig *config)
 }
 
 PilotDaemon::PilotDaemon() : 
-	KTopLevelWidget(), 
+	KTMainWindow(), 
 	fStatus(INIT),
   	fMonitorProcess(0L), fCurrentSocket(0L),
     fCommandSocket(0L), fStatusSocket(0L), fQuit(false), fPilotLink(0L),
@@ -236,8 +225,10 @@ PilotDaemon::PilotDaemon() :
   fStatusConnections.setAutoDelete(true);
 
 //   cout << "Using: " << fPilotDevice << endl;
-  testDir(kapp->localkdedir() + "/share/apps/kpilot");
-  testDir(kapp->localkdedir() + "/share/apps/kpilot/DBBackup");
+
+  // FIXME: More localkdedir stuff..Sigh...
+//   testDir(kapp->localkdedir() + "/share/apps/kpilot");
+//   testDir(kapp->localkdedir() + "/share/apps/kpilot/DBBackup");
   setupWidget();
   setupConnections();
 	if (fStatus == ERROR) return;
@@ -356,7 +347,7 @@ PilotDaemon::setupWidget()
       QPixmap icon(hotsync_icon);
       fDockingLabel->setFixedSize(24,24);
       fDockingLabel->setPixmap(icon);
-      KWM::setDockWindow(fDockingLabel->winId());
+//       KWM::setDockWindow(fDockingLabel->winId());
       QPopupMenu* menu = new QPopupMenu();
       menu->insertItem("&About", this, SLOT(slotShowAbout()));
       menu->insertSeparator();
@@ -370,13 +361,12 @@ PilotDaemon::setupWidget()
 void 
 PilotDaemon::slotShowAbout()
 {
-	FUNCTIONSETUP;
-
-  KMsgBox::message(0L, i18n("KPilot Daemon v3.2"), 
-		   i18n("KPilot Hot-Sync Daemon v3.2 \n"
-			"By: Dan Pilone.\n"
-			"Email: pilone@slac.com"),
-		   KMsgBox::INFORMATION);
+  FUNCTIONSETUP;
+  
+  KMessageBox::error(0L, i18n("KPilot Hot-Sync Daemon v3.2 \n"
+				 "By: Dan Pilone.\n"
+				"Email: pilone@slac.com"),
+		       i18n("KPilot Daemon v3.2"));
 }
 
 void
@@ -461,8 +451,7 @@ PilotDaemon::slotDBBackupFinished()
 	config->setGroup(0L);
 	if(config->readNumEntry("SyncFiles"))
 	{
-		getPilotLink()->installFiles(kapp->localkdedir() + 
-			"/share/apps/kpilot/pending_install/");
+	  getPilotLink()->installFiles(KGlobal::dirs()->resourceDirs("pilotInstalls").first());
 	}
 	delete config;
 	emit(endHotSync());
@@ -526,9 +515,8 @@ PilotDaemon::slotAccepted(KSocket* connection)
 
 	if(fCurrentSocket)
 	{
-		KMsgBox::message(0L, i18n("Too Many Connections"),
-			i18n("Error: Only one command connection at a time."), 
-			KMsgBox::STOP);
+		KMessageBox::error(0L, i18n("Error: Only one command connection at a time."),
+				   i18n("Too Many Connections"));			       
 		delete connection;
 		return;
 	}
@@ -583,7 +571,7 @@ PilotDaemon::slotCommandReceived(KSocket*)
 	getPilotLink()->quickHotSync();
       break;
     case KPilotLink::InstallFile:
-      getPilotLink()->installFiles(kapp->localkdedir() + "/share/apps/kpilot/pending_install/");
+      getPilotLink()->installFiles(KGlobal::dirs()->resourceDirs("pilotInstalls").first());
       break;
 	case KPilotLink::TestConnection :
 		if (debug_level & SYNC_MAJOR)
@@ -853,9 +841,7 @@ void signalHandler(int s)
 
 		msg += i18n(" This window will self-destruct in 10 seconds.");
 
-		KMsgBox::message(0L, i18n("Signal Caught"), 
-			msg,
-			KMsgBox::EXCLAMATION);
+		KMessageBox::error(0L, msg,i18n("Signal Caught"));
 	}
 
 
@@ -903,6 +889,5 @@ int main(int argc, char* argv[])
 	signal(SIGTERM, signalHandler);
 
 	a.setMainWidget(gPilotDaemon);
-	a.enableSessionManagement(true);
 	return a.exec();
 }
