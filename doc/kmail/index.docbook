@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>11/09/2000</date>
+<date>22/09/2000</date>
 <releaseinfo>1.01.90</releaseinfo>
 
 <abstract>
@@ -1785,10 +1785,19 @@ Mailreader window</link>.
 <qandaentry>
  <question><para>Are there any known bugs in &kmail;?</para></question>
  <answer><para>You can find a list of submitted bugs at <ulink url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink>.
- Not all these bugs are "real", some apply only to old versions, some are based on misunderstanding
+ Not all these bugs are "real", some are based on misunderstanding
  of features etc. Here's a real problem: &kmail; will not delete some temporary files if it crashes. In this
  case, you should <command>cd</command> to <filename class="directory">~/.kde/share/apps/kmail/tmp/</filename>
  and delete all the files and folders there.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>&kmail; doesn't display <acronym>HTML</acronym> mail as <acronym>HTML</acronym>,
+ I can only see the source.</para></question>
+ <answer><para>Select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer HTML to plain 
+ text</guimenuitem></menuchoice>. For security reasons you should only do so for
+ mails from trusted sources.
+ </para></answer>
 </qandaentry>
 
 <qandaentry>
