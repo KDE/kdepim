@@ -207,7 +207,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   if (selectedText.isEmpty()) {
     KNMimeContent *tc = a->textContent();
     if(tc)
-      tc->decodedText(text);
+      tc->decodedText(text, true);
   }
   else
     text = QStringList::split('\n',selectedText,true);
@@ -296,7 +296,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   KNMimeContent *text=a->textContent();
   if(text) {
     QStringList decodedLines;
-    text->decodedText(decodedLines);
+    text->decodedText(decodedLines, true);
     for(QStringList::Iterator it=decodedLines.begin(); it!=decodedLines.end(); ++it)
       fwd+=" "+(*it)+"\n";
   }

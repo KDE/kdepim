@@ -963,7 +963,7 @@ QByteArray KNMimeContent::decodedContent()
 }
 
 
-void KNMimeContent::decodedText(QString &s)
+void KNMimeContent::decodedText(QString &s, bool trimText)
 {
   if(!decodeText()) //this is not a text content !!
     return;
@@ -972,10 +972,18 @@ void KNMimeContent::decodedText(QString &s)
   QTextCodec *codec=KGlobal::charsets()->codecForName(contentType()->charset(),ok);
 
   s=codec->toUnicode(b_ody.data(), b_ody.length());
+
+  if (trimText && knGlobals.cfgManager->readNewsViewer()->removeTrailingNewlines()) {
+    int i;
+    for (i=s.length()-1; i>=0; i--)
+      if (!s[i].isSpace())
+        break;
+    s.truncate(i+1);
+  }
 }
 
 
-void KNMimeContent::decodedText(QStringList &l)
+void KNMimeContent::decodedText(QStringList &l, bool trimText)
 {
   if(!decodeText()) //this is not a text content !!
     return;
@@ -986,7 +994,16 @@ void KNMimeContent::decodedText(QStringList &l)
   QTextCodec *codec=KGlobal::charsets()->codecForName(contentType()->charset(),ok);
 
   unicode=codec->toUnicode(b_ody.data(), b_ody.length());
-  l=QStringList::split("\n", unicode, true); //split the string at linebreaks
+
+  if (trimText && knGlobals.cfgManager->readNewsViewer()->removeTrailingNewlines()) {
+    int i;
+    for (i=unicode.length()-1; i>=0; i--)
+      if (!unicode[i].isSpace())
+        break;
+    unicode.truncate(i+1);
+  }
+
+  l=QStringList::split('\n', unicode, true); //split the string at linebreaks
 }
 
 

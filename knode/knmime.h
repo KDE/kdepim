@@ -178,8 +178,8 @@ class KNMimeContent : public KNMimeBase {
     QCString body()       { return b_ody; }
     QCString encodedContent(bool useCrLf=false);
     QByteArray decodedContent();
-    void decodedText(QString &s);
-    void decodedText(QStringList &s);
+    void decodedText(QString &s, bool trimText=false);
+    void decodedText(QStringList &s, bool trimText=false);
     void fromUnicodeString(const QString &s);
 
     KNMimeContent* textContent();

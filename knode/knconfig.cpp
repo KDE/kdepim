@@ -613,6 +613,7 @@ KNConfig::ReadNewsViewer::ReadNewsViewer()
 
   s_howHeaderDeco=conf->readBoolEntry("showHeaderDeco", true);
   r_ewrapBody=conf->readBoolEntry("rewrapBody", true);
+  r_emoveTrailingNewlines=conf->readBoolEntry("removeTrailingNewlines", true);
   s_howSig=conf->readBoolEntry("showSig", true);
   i_nterpretFormatTags=conf->readBoolEntry("interpretFormatTags", true);
   q_uoteCharacters=conf->readEntry("quoteCharacters",">:");
@@ -648,6 +649,7 @@ void KNConfig::ReadNewsViewer::save()
 
   conf->writeEntry("showHeaderDeco", s_howHeaderDeco);
   conf->writeEntry("rewrapBody", r_ewrapBody);
+  conf->writeEntry("removeTrailingNewlines", r_emoveTrailingNewlines);
   conf->writeEntry("showSig", s_howSig);
   conf->writeEntry("interpretFormatTags", i_nterpretFormatTags);
   conf->writeEntry("quoteCharacters",q_uoteCharacters);

@@ -977,7 +977,7 @@ void KNArticleWidget::createHtmlPage()
     html+="<bodyblock>";
     if(text->contentType()->isHTMLText()) {
       QString htmlTxt;
-      text->decodedText(htmlTxt);
+      text->decodedText(htmlTxt, true);
       html+=htmlTxt+"</bodyblock>";
     }
     else {
@@ -987,7 +987,7 @@ void KNArticleWidget::createHtmlPage()
       bool isSig=false;
       QStringList lines;
       QString line;
-      text->decodedText(lines);
+      text->decodedText(lines, true);
       QString quoteChars = rnv->quoteCharacters().simplifyWhiteSpace();
       if (quoteChars.isEmpty()) quoteChars = ">";
 
@@ -1327,7 +1327,7 @@ void KNArticleWidget::slotPrint()
     KNMimeContent *txt=a_rticle->textContent();
 
     if(txt) {
-      txt->decodedText(lines);
+      txt->decodedText(lines, true);
       for(QStringList::Iterator it=lines.begin(); it!=lines.end(); ++it) {
 
         if(yPos+margin > metrics.height()) {
