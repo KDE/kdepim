@@ -36,6 +36,7 @@ class KTextEdit;
 class KPushButton;
 class KComboBox;
 class PilotLocalDatabase;
+class PilotRecord;
 //class CHexViewWidget;
 
 class GenericDBWidget : public PilotComponent
@@ -50,6 +51,8 @@ public:
 	/* virtual */ void initialize();
 
 	QString getCurrentDB() const {  return currentDB; }
+protected:
+	void setupWidget();
 
 protected slots:
 	void slotSelected(const QString &dbname);
@@ -67,7 +70,7 @@ private:
 	KComboBox*fDBType;
 	KTextEdit*fDBInfo;
 	KPushButton*fDBInfoButton, *fAppInfoButton;
-	KListBox*fRecordList;
+	KListView*fRecordList;
 	KPushButton*fAddRecord, *fEditRecord, *fDeleteRecord;
 
 	enum eDBType {
@@ -77,6 +80,7 @@ private:
 
 	PilotLocalDatabase*fDB;
 	QString currentDB;
+	QPtrList<PilotRecord>   fRecList;
 //	CHexViewWidget*fHexEdit;
 };
 

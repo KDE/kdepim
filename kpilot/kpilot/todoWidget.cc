@@ -295,7 +295,7 @@ void TodoWidget::updateWidget()
 		{
 			QString title = todo->getDescription();
 
-			PilotTodoListItem*item=new PilotTodoListItem(fListBox, title,
+			PilotCheckListItem*item=new PilotCheckListItem(fListBox, title,
 				listIndex, todo);
 			item->setOn(todo->getComplete());
 		}
@@ -337,7 +337,7 @@ void TodoWidget::slotEditRecord(QListViewItem*item)
 {
 	FUNCTIONSETUP;
 
-	PilotTodoListItem*p = static_cast<PilotTodoListItem*>(item);
+	PilotCheckListItem*p = static_cast<PilotCheckListItem*>(item);
 	if (!p) return;
 	PilotTodoEntry *selectedRecord = (PilotTodoEntry *) p->rec();
 
@@ -440,7 +440,7 @@ void TodoWidget::slotUpdateRecord(PilotTodoEntry * todo)
 	FUNCTIONSETUP;
 
 	writeTodo(todo);
-	PilotTodoListItem* currentRecord = static_cast<PilotTodoListItem*>(fListBox->currentItem());
+	PilotCheckListItem* currentRecord = static_cast<PilotCheckListItem*>(fListBox->currentItem());
 
 	// TODO: Just change the record
 	updateWidget();
@@ -462,7 +462,7 @@ void TodoWidget::slotDeleteRecord()
 {
 	FUNCTIONSETUP;
 
-	PilotTodoListItem* p = static_cast<PilotTodoListItem*>(fListBox->currentItem());
+	PilotCheckListItem* p = static_cast<PilotCheckListItem*>(fListBox->currentItem());
 	if (p == 0L) return;
 
 	PilotTodoEntry *selectedRecord = (PilotTodoEntry *) p->rec();
@@ -493,7 +493,7 @@ void TodoWidget::slotShowTodo(QListViewItem*item)
 {
 	FUNCTIONSETUP;
 
-	PilotTodoListItem *p = dynamic_cast<PilotTodoListItem*>(item);
+	PilotCheckListItem *p = dynamic_cast<PilotCheckListItem*>(item);
 	if (!p) return;
 	PilotTodoEntry *todo = (PilotTodoEntry *) p->rec();
 

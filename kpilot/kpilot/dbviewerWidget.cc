@@ -32,10 +32,12 @@
 #include "options.h"
 
 #include <pi-file.h>
+#include <pi-dlp.h>
 
 #include <qlayout.h>
 #include <qdir.h>
 #include <qregexp.h>
+#include <qlistview.h>
 
 #include <klistbox.h>
 #include <ktextedit.h>
@@ -44,10 +46,12 @@
 #include <kmessagebox.h>
 
 #include "listCat.h"
+#include "listItems.h"
 
 #include "dbviewerWidget.h"
 #include "pilotLocalDatabase.h"
 #include "pilotDatabase.h"
+#include "pilotRecord.h"
 
 //#include "hexviewwidget.h"
 
@@ -55,7 +59,13 @@ GenericDBWidget::GenericDBWidget(QWidget *parent, const QString &dbpath) :
 	PilotComponent(parent,"component_generic",dbpath), fDB(0L)
 {
 	FUNCTIONSETUP;
+	setupWidget();
+	fRecList.setAutoDelete(true);
+}
 
+
+void GenericDBWidget::setupWidget()
+{
 	QGridLayout *g = new QGridLayout( this, 1, 1, SPACING);
 
 	fDBList = new KListBox( this );
@@ -77,8 +87,16 @@ GenericDBWidget::GenericDBWidget(QWidget *parent, const QString &dbpath) :
 	g1->addWidget( fAppInfoButton, 2, 0 );
 
 	QGridLayout *g2 = new QGridLayout( 0, 1, 1);
-	fRecordList = new KListBox( this );
+	fRecordList = new KListView( this );
 	g2->addMultiCellWidget( fRecordList, 0, 0, 0, 2 );
+	fRecordList->addColumn(i18n("Rec. Nr."));
+	fRecordList->addColumn(i18n("Length"));
+	fRecordList->addColumn(i18n("Record ID"));
+	fRecordList->setAllColumnsShowFocus(true);
+	fRecordList->setResizeMode( KListView::LastColumn );
+	fRecordList->setFullWidth( TRUE );
+	fRecordList->setItemsMovable( FALSE );
+
 /*	CHexBuffer*fHexBuff=new CHexBuffer();
 	fHexEdit=new CHexViewWidget( this, "HexEdit", fHexBuff );
 	fHexEdit->newFile("/local/home/reinhold/libgtkhtml1.1-dev_1.1.10-0.ximian.3_i386.deb");
@@ -140,6 +158,8 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 #endif
 	struct DBInfo dbinfo;
 	QString display("");
+	fRecList.clear();
+	fRecordList->clear();
 
 	if (fDB) KPILOT_DELETE(fDB);
 	currentDB=dbname;
@@ -167,6 +187,34 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 		buff[4]='\0';
 		QString cr(buff);
 		display.append(i18n("<B>Type:</B> %1, <B>Creator:</B> %2<br><br>").arg(tp).arg(cr));
+
+		int currentRecord = 0;
+		PilotRecord *pilotRec;
+
+#ifdef DEBUG
+		DEBUGKPILOT << fname << ": Reading database "<<dbname<<"..." << endl;
+#endif
+
+		while ((pilotRec = fDB->readRecordByIndex(currentRecord)) != 0L)
+		{
+			if (!(pilotRec->isDeleted()) )
+			{
+				PilotListViewItem*item=new PilotListViewItem(fRecordList,
+					QString::number(currentRecord), QString::number(pilotRec->getLen()),  QString::number(pilotRec->getID()), QString::null,
+					pilotRec->getID(), pilotRec);
+				item->setNumericCol(0, true);
+				item->setNumericCol(1, true);
+				item->setNumericCol(2, true);
+			}
+			fRecList.append(pilotRec);
+
+			currentRecord++;
+		}
+
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": Total " << currentRecord << " records" << endl;
+#endif
 
 /*		unsigned char*appBlock=new unsigned char[0xFFFF];
 		int len=fDB->readAppBlock(appBlock, 0xFFFF);

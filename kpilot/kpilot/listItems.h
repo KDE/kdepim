@@ -33,18 +33,19 @@
 
 #include <qlistbox.h>
 #include <qlistview.h>
+#include <pi-dlp.h>
 
 class PilotListItem : public QListBoxText
 {
 public:
-	PilotListItem(const QString &text, int pilotid=0, void *r=0);
+	PilotListItem(const QString &text, recordid_t pilotid=0, void *r=0);
 	virtual ~PilotListItem();
-	int id() const {return fid;};
+	recordid_t id() const {return fid;};
 	const void *rec() const {return fr;};
 
 
 protected:
-	int fid;
+	recordid_t fid;
 	void *fr;
 
 #ifdef DEBUG
@@ -55,17 +56,52 @@ private:
 #endif
 };
 
-class PilotTodoListItem : public QCheckListItem
+class PilotCheckListItem : public QCheckListItem
 {
 public:
-	PilotTodoListItem( QListView * parent, const QString & text, int pilotid=0, void *r=0);
-	virtual ~PilotTodoListItem();
-	int id() const {return fid;};
+	PilotCheckListItem( QListView * parent, const QString & text, recordid_t pilotid=0, void *r=0);
+	virtual ~PilotCheckListItem();
+	recordid_t id() const {return fid;};
 	const void  *rec() const {return fr;};
 protected:
 	virtual void stateChange ( bool );
-	int fid;;
+	recordid_t fid;;
 	void *fr;
+#ifdef DEBUG
+public:
+	static void counts();
+private:
+	static int crt, del, bal, count;
+#endif
+};
+
+struct PilotListViewItemData
+{
+	int valCol;
+	bool valOk;
+	unsigned long val;
+};
+
+class PilotListViewItem : public QListViewItem
+{
+public:
+	PilotListViewItem( QListView * parent,
+		QString label1, QString label2 = QString::null,
+		QString label3 = QString::null, QString label4 = QString::null,
+		recordid_t pilotid=0, void *r=0);
+	virtual ~PilotListViewItem();
+	recordid_t id() const {return fid;};
+	const void  *rec() const {return fr;};
+public:
+	void setNumericCol(int col, bool numeric);
+	int compare( QListViewItem *i, int col, bool ascending ) const;
+protected:
+	QValueList<int> numericCols;
+	recordid_t fid;;
+	void *fr;
+	// Caching to make sorting faster:
+	PilotListViewItemData*d;
+	unsigned long colValue(int col, bool *ok) const;
 #ifdef DEBUG
 public:
 	static void counts();
