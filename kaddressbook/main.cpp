@@ -80,6 +80,7 @@ int KAddressBookApp::newInstance()
       if ( mMainWin ) {
         mMainWin->show();
         KWin::setActiveWindow( mMainWin->winId() );
+        KStartupInfo::appStarted();
       } else {
         mMainWin = new KAddressBookMain;
         mMainWin->show();
