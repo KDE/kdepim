@@ -165,12 +165,12 @@ void ResourceExchange::doClose()
 //  setModified( false );
 }
 
-bool ResourceExchange::load()
+bool ResourceExchange::doLoad()
 {
   return true;
 }
 
-bool ResourceExchange::save()
+bool ResourceExchange::doSave()
 {
   kdDebug() << "ResourceExchange::save() " << mChangedIncidences.count()
             << endl;

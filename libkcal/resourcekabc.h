@@ -63,10 +63,6 @@ class ResourceKABC : public ResourceCalendar
     void setAlarmDays( int );
     int alarmDays();
 
-    bool load();
-
-    bool save();
-
     bool isSaving();
 
     KABC::Lock *lock();
@@ -149,16 +145,15 @@ class ResourceKABC : public ResourceCalendar
     /** Return all alarms, which ocur before given date. */
     Alarm::List alarmsTo( const QDateTime &to );
 
-    // Public because needed in MultiCalendar::load()
-    bool doOpen();
-
     void dump() const;
 
     void setTimeZoneId( const QString& tzid );
 
   protected:
-    /** clears out the current calendar, freeing all used memory etc. etc. */
+    bool doOpen();
     void doClose();
+    bool doLoad();
+    bool doSave();
 
   private slots:
     void reload();

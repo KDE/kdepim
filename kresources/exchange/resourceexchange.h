@@ -55,14 +55,6 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
 
     virtual void writeConfig( KConfig* config );
 
-    virtual bool load();
-
-    /**
-     Writes calendar to storage. Writes calendar to disk file,
-     writes updates to server, whatever.
-     */
-    virtual bool save();
-
     KABC::Lock *lock();
 
     /** constructs a new calendar, with variables initialized to sane values. */
@@ -180,6 +172,9 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
 
     /** clears out the current calendar, freeing all used memory etc. etc. */
     virtual void doClose();
+
+    virtual bool doLoad();
+    virtual bool doSave();
 
     /**
       Builds and then returns a list of all events that match for the

@@ -128,7 +128,7 @@ void ResourceIMAP::doClose()
     config.writeEntry( it.key(), it.data() );
 }
 
-bool ResourceIMAP::load()
+bool ResourceIMAP::doLoad()
 {
   mUidmap.clear();
 
@@ -225,7 +225,7 @@ bool ResourceIMAP::loadAllJournals()
   return true;
 }
 
-bool ResourceIMAP::save()
+bool ResourceIMAP::doSave()
 {
   // The KMail folders are always up to date with the state of the folders
   return true;

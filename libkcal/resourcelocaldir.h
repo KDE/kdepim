@@ -56,10 +56,6 @@ class ResourceLocalDir : public ResourceCached
     void readConfig( const KConfig *config );
     void writeConfig( KConfig* config );
 
-    bool load();
-
-    bool save();
-
     KABC::Lock *lock();
 
     /** deletes an event from this calendar. */
@@ -77,9 +73,10 @@ class ResourceLocalDir : public ResourceCached
 
   protected:
     bool doOpen();
-
-    /** clears out the current calendar, freeing all used memory etc. etc. */
     void doClose();
+
+    bool doLoad();
+    bool doSave();
 
   private:
     void init();

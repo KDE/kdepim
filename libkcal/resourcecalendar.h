@@ -74,8 +74,11 @@ class ResourceCalendar : public KRES::Resource
 
       Calling this function multiple times should have the same effect as
       calling it once, given that the data isn't changed between calls.
+    
+      This function calls doLoad() which has to be reimplented by the resource
+      to do the actual loading.
     */
-    virtual bool load() = 0;
+    bool load();
 
     /**
       Save resource data. After calling this function it is safe to close the
@@ -87,8 +90,11 @@ class ResourceCalendar : public KRES::Resource
       If saving the data takes significant time, the resource should return from
       the function, do the saving in the background and notify the end of the
       save by emitting the signal resourceSaved().
+
+      This function calls doSave() which has to be reimplented by the resource
+      to do the actual loading.
     */
-    virtual bool save() = 0;
+    bool save();
 
     /**
       Return true if a save operation is still in progress, otherwise return
@@ -151,6 +157,7 @@ class ResourceCalendar : public KRES::Resource
       This signal is emitted when the data in the resource has changed.
     */
     void resourceChanged( ResourceCalendar * );
+
     /**
       This signal is emitted when loading data into the resource has been
       finished.
@@ -161,6 +168,7 @@ class ResourceCalendar : public KRES::Resource
       finished.
     */
     void resourceSaved( ResourceCalendar * );
+
     /**
       This signal is emitted when an error occurs during loading.
     */
@@ -271,7 +279,29 @@ class ResourceCalendar : public KRES::Resource
     */
     virtual void setSubresourceActive( const QString &, bool active );
 
+  protected:
+    /**
+      Do the actual loading of the resource data. Called by load().
+    */
+    virtual bool doLoad() = 0;
+    /**
+      Do the actual saving of the resource data. Called by save().
+    */
+    virtual bool doSave() = 0;
+
+    /**
+      A resource should call this function if a load error happens.
+    */
+    void loadError( const QString &errorMessage = QString::null );
+    /**
+      A resource should call this function if a save error happens.
+    */
+    void saveError( const QString &errorMessage = QString::null );
+
   private:
+    bool mReceivedLoadError;
+    bool mReceivedSaveError;
+
     class Private;
     Private *d;
 };

@@ -177,7 +177,7 @@ bool ResourceRemote::doOpen()
   return true;
 }
 
-bool ResourceRemote::load()
+bool ResourceRemote::doLoad()
 {
   kdDebug(5800) << "ResourceRemote::load()" << endl;
 
@@ -247,7 +247,7 @@ void ResourceRemote::slotLoadJobResult( KIO::Job *job )
   emit resourceLoaded( this );
 }
 
-bool ResourceRemote::save()
+bool ResourceRemote::doSave()
 {
   kdDebug(5800) << "ResourceRemote::save()" << endl;
 

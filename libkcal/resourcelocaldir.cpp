@@ -118,7 +118,7 @@ bool ResourceLocalDir::doOpen()
   return true;
 }
 
-bool ResourceLocalDir::load()
+bool ResourceLocalDir::doLoad()
 {
   kdDebug(5800) << "ResourceLocalDir::load()" << endl;
 
@@ -148,12 +148,10 @@ bool ResourceLocalDir::load()
     if ( i ) mCalendar.addIncidence( i->clone() );
   }
 
-  emit resourceLoaded( this );
-
   return true;
 }
 
-bool ResourceLocalDir::save()
+bool ResourceLocalDir::doSave()
 {
   kdDebug(5800) << "ResourceLocalDir::save()" << endl;
 
@@ -171,8 +169,6 @@ bool ResourceLocalDir::save()
     cal.addIncidence( i->clone() );
     cal.save( fileName );
   }
-
-  emit resourceSaved( this );
 
   return true;
 }

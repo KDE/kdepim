@@ -138,7 +138,8 @@ ResourceLocal::~ResourceLocal()
 
 bool ResourceLocal::doOpen()
 {
-  kdDebug(5800) << "Opening resource " << resourceName() << " with URL " << mURL.prettyURL() << endl;
+  kdDebug(5800) << "Opening resource " << resourceName() << " with URL "
+                << mURL.prettyURL() << endl;
 
   mOpen = true;
 
@@ -151,7 +152,7 @@ QDateTime ResourceLocal::readLastModified()
   return fi.lastModified();
 }
 
-bool ResourceLocal::load()
+bool ResourceLocal::doLoad()
 {
   if ( !mOpen ) return true;
 
@@ -165,20 +166,16 @@ bool ResourceLocal::load()
     if ( success ) d->mLastModified = readLastModified();
   }
 
-  if ( success ) emit resourceLoaded( this );
-
   return success;
 }
 
-bool ResourceLocal::save()
+bool ResourceLocal::doSave()
 {
   if ( !mOpen ) return true;
 
   bool success = mCalendar.save( mURL.path() );
 
   d->mLastModified = readLastModified();
-
-  emit resourceSaved( this );
 
   return success;
 }

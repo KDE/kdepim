@@ -145,7 +145,7 @@ bool KCalResourceSlox::doOpen()
   return true;
 }
 
-bool KCalResourceSlox::load()
+bool KCalResourceSlox::doLoad()
 {
   kdDebug() << "KCalResourceSlox::load() " << int( this ) << endl;
 
@@ -177,7 +177,7 @@ bool KCalResourceSlox::load()
   if ( p != "http" && p != "https" && p != "webdav" && p != "webdavs" ) {
     QString err = i18n("Non-http protcol: '%1'").arg( p );
     kdDebug() << "KCalResourceSlox::load(): " << err << endl;
-    emit resourceLoadError( this, err );
+    loadError( err );
     return false;
   }
 
@@ -584,7 +584,7 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
   kdDebug() << "KCalResourceSlox::slotLoadTodosJobResult()" << endl;
 
   if ( job->error() ) {
-    emit resourceLoadError( this, job->errorString() );
+    loadError( job->errorString() );
   } else {
     kdDebug() << "KCalResourceSlox::slotLoadTodosJobResult() success" << endl;
 
@@ -637,14 +637,14 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
     clearChanges();
     
     if ( changed ) emit resourceChanged( this );
+
+    emit resourceLoaded( this );
   }
 
   mLoadTodosJob = 0;
 
   if ( mLoadTodosProgress ) mLoadTodosProgress->setComplete();
   mLoadTodosProgress = 0;
-
-  emit resourceLoaded( this );
 }
 
 void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
@@ -652,7 +652,7 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
   kdDebug() << "KCalResourceSlox::slotLoadEventsResult() " << int( this ) << endl;
 
   if ( job->error() ) {
-    emit resourceLoadError( this, job->errorString() );
+    loadError( job->errorString() );
   } else {
     kdDebug() << "KCalResourceSlox::slotLoadEventsResult() success" << endl;
 
@@ -709,14 +709,14 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
     clearChanges();
     
     if ( changed ) emit resourceChanged( this );
+
+    emit resourceLoaded( this );
   }
 
   mLoadEventsJob = 0;
 
   if ( mLoadEventsProgress ) mLoadEventsProgress->setComplete();
   mLoadEventsProgress = 0;
-
-  emit resourceLoaded( this );
 }
 
 void KCalResourceSlox::slotUploadResult( KIO::Job *job )
@@ -724,7 +724,7 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
   kdDebug() << "KCalResourceSlox::slotUploadResult()" << endl;
 
   if ( job->error() ) {
-    emit resourceSaveError( this, job->errorString() );
+    saveError( job->errorString() );
   } else {
     kdDebug() << "KCalResourceSlox::slotUploadResult() success" << endl;
 
@@ -852,7 +852,7 @@ bool KCalResourceSlox::confirmSave()
   return result == QDialog::Accepted;
 }
 
-bool KCalResourceSlox::save()
+bool KCalResourceSlox::doSave()
 {
   kdDebug() << "KCalResourceSlox::save()" << endl;
 

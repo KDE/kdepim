@@ -129,59 +129,10 @@ void CalendarResources::load()
   // Open all active resources
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    loadResource( *it );
+    (*it)->load();
   }
 
   mOpen = true;
-}
-
-bool CalendarResources::loadResource( ResourceCalendar *r )
-{
-  kdDebug(5800) << "Opening resource " + r->resourceName() << endl;
-
-  mReceivedLoadError = false;
-
-  bool success = r->open();
-  if ( success ) {
-    success = r->load();
-  }
-  if ( !success ) {
-    r->setActive( false );
-    emit signalResourceModified( r );
-  
-    if ( !mReceivedLoadError ) slotLoadError( r );
-  }
-
-  return success;
-}
-
-void CalendarResources::slotLoadError( ResourceCalendar *r, const QString &err )
-{
-  kdDebug() << "Error loading resource: " << err << endl;
-
-  mReceivedLoadError = true;
-
-  r->setActive( false );
-  emit signalResourceModified( r );
-
-  QString msg = i18n("Error while loading %1.\n") .arg( r->resourceName() );
-  if ( !err.isEmpty() ) {
-    msg += err;
-  }
-  emit signalErrorMessage( msg );
-}
-
-void CalendarResources::slotSaveError( ResourceCalendar *r, const QString &err )
-{
-  kdDebug() << "Error saving resource: " << err << endl;
-
-  mReceivedSaveError = true;
-
-  QString msg = i18n("Error while saving %1.\n") .arg( r->resourceName() );
-  if ( !err.isEmpty() ) {
-    msg += err;
-  }
-  emit signalErrorMessage( msg );
 }
 
 void CalendarResources::setStandardDestinationPolicy()
@@ -221,20 +172,6 @@ void CalendarResources::save()
 
     setModified( false );
   }
-}
-
-bool CalendarResources::saveResource( ResourceCalendar *r )
-{
-  kdDebug(5800) << "Save resource " + r->resourceName() << endl;
-
-  mReceivedSaveError = false;
-
-  bool success = r->save();
-  if ( !success ) {
-    if ( !mReceivedSaveError ) slotSaveError( r );
-  }
-
-  return success;
 }
 
 bool CalendarResources::isSaving()
@@ -665,6 +602,7 @@ void CalendarResources::connectResource( ResourceCalendar *resource )
            SIGNAL( calendarChanged() ) );
   connect( resource, SIGNAL( resourceSaved( ResourceCalendar * ) ),
            SIGNAL( calendarSaved() ) );
+
   connect( resource, SIGNAL( resourceLoadError( ResourceCalendar *,
                                                 const QString & ) ),
            SLOT( slotLoadError( ResourceCalendar *, const QString & ) ) );
@@ -832,6 +770,16 @@ int CalendarResources::decrementChangeCount( ResourceCalendar *r )
   mChangeCounts[ r ] = count;
 
   return count;
+}
+
+void CalendarResources::slotLoadError( ResourceCalendar *, const QString &err )
+{
+  emit signalErrorMessage( err );
+}
+
+void CalendarResources::slotSaveError( ResourceCalendar *, const QString &err )
+{
+  emit signalErrorMessage( err );
 }
 
 #include "calendarresources.moc"

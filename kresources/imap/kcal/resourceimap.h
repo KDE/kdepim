@@ -47,10 +47,6 @@ public:
 
   virtual void writeConfig( KConfig* config );
 
-  bool load();
-
-  bool save();
-
   KABC::Lock *lock();
 
   /** Add Event to calendar. */
@@ -177,6 +173,9 @@ protected:
                         bool silence );
 
   void doClose();
+  bool doLoad();
+  bool doSave();
+
 
 private:
   void init();

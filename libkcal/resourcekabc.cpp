@@ -126,7 +126,7 @@ bool ResourceKABC::doOpen()
   return true;
 }
 
-bool ResourceKABC::load()
+bool ResourceKABC::doLoad()
 {
   kdDebug(5800) << "ResourceKABC::load()" << endl;
 
@@ -264,9 +264,6 @@ bool ResourceKABC::load()
     kdDebug(5800) << "imported " << anniversary.toString() << endl;
   }
 
-  emit resourceChanged( this );
-  emit resourceLoaded( this );
-
   return true;
 }
 
@@ -290,10 +287,8 @@ int ResourceKABC::alarmDays()
   return mAlarmDays;
 }
 
-bool ResourceKABC::save()
+bool ResourceKABC::doSave()
 {
-  emit resourceSaved( this );
-
   // is always read only!
   return true;
 }

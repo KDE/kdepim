@@ -85,10 +85,6 @@ class KCalResourceSlox : public KCal::ResourceCached
     */
     QString cacheFile();
 
-    bool load();
-
-    bool save();
-
     KABC::Lock *lock();
 
     bool isSaving();
@@ -110,9 +106,9 @@ class KCalResourceSlox : public KCal::ResourceCached
 
   protected:
     bool doOpen();
-
-    /** clears out the current calendar, freeing all used memory etc. etc. */
     void doClose();
+    bool doLoad();
+    bool doSave();
 
     void requestEvents();
     void requestTodos();

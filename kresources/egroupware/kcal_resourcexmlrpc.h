@@ -69,10 +69,6 @@ class ResourceXMLRPC : public ResourceCalendar
     void setPassword( const QString& password );
     QString password() const;
 
-    bool load();
-
-    bool save();
-
     bool isSaving();
 
     KABC::Lock *lock();
@@ -208,6 +204,8 @@ class ResourceXMLRPC : public ResourceCalendar
 
   protected:
     void doClose();
+    bool doLoad();
+    bool doSave();
 
   private slots:
     void reload();

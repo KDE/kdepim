@@ -87,10 +87,6 @@ class ResourceRemote : public ResourceCached
     */
     QString cacheFile();
 
-    bool load();
-
-    bool save();
-
     KABC::Lock *lock();
 
     bool isSaving();
@@ -105,9 +101,9 @@ class ResourceRemote : public ResourceCached
 
   protected:
     bool doOpen();
-
-    /** clears out the current calendar, freeing all used memory etc. etc. */
     void doClose();
+    bool doLoad();
+    bool doSave();
 
   private:
     void init();

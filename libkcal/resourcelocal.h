@@ -59,10 +59,6 @@ class ResourceLocal : public ResourceCached
 
     virtual void writeConfig( KConfig* config );
 
-    bool load();
-
-    bool save();
-
     KABC::Lock *lock();
 
     QString fileName() const;
@@ -77,6 +73,9 @@ class ResourceLocal : public ResourceCached
 
     /** clears out the current calendar, freeing all used memory etc. etc. */
     void doClose();
+
+    bool doLoad();
+    bool doSave();
 
     QDateTime readLastModified();
  

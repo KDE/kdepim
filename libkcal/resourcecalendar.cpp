@@ -1,7 +1,7 @@
 /*
     This file is part of libkdepim.
     Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2001-2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
 
     This library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 
 #include <kconfig.h>
 #include <kdebug.h>
+#include <klocale.h>
 
 #include "calendar.h"
 
@@ -59,5 +60,65 @@ Incidence::List ResourceCalendar::rawIncidences()
 void ResourceCalendar::setSubresourceActive( const QString &, bool )
 {
 }
+
+bool ResourceCalendar::load()
+{
+  kdDebug(5800) << "Loading resource " + resourceName() << endl;
+
+  // FIXME: test if resource is opened and remove this test from concrete
+  // resources
+
+  mReceivedLoadError = false;
+
+  bool success = true;
+  if ( !isOpen() ) success = open();
+  if ( success ) {
+    success = doLoad();
+  }
+  if ( !success && !mReceivedLoadError ) loadError();
+
+  kdDebug(5800) << "Done loading resource " + resourceName() << endl;
+
+  return success;
+}
+
+void ResourceCalendar::loadError( const QString &err )
+{
+  kdDebug(5800) << "Error loading resource: " << err << endl;
+
+  mReceivedLoadError = true;
+
+  QString msg = i18n("Error while loading %1.\n") .arg( resourceName() );
+  if ( !err.isEmpty() ) {
+    msg += err;
+  }
+  emit resourceLoadError( this, msg );
+}
+
+bool ResourceCalendar::save()
+{
+  kdDebug(5800) << "Save resource " + resourceName() << endl;
+
+  mReceivedSaveError = false;
+
+  bool success = doSave();
+  if ( !success && !mReceivedSaveError ) saveError();
+
+  return success;
+}
+
+void ResourceCalendar::saveError( const QString &err )
+{
+  kdDebug(5800) << "Error saving resource: " << err << endl;
+
+  mReceivedSaveError = true;
+
+  QString msg = i18n("Error while saving %1.\n") .arg( resourceName() );
+  if ( !err.isEmpty() ) {
+    msg += err;
+  }
+  emit resourceSaveError( this, msg );
+}
+
 
 #include "resourcecalendar.moc"

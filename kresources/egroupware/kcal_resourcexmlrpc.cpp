@@ -201,7 +201,7 @@ bool ResourceXMLRPC::doOpen()
   return true;
 }
 
-bool ResourceXMLRPC::load()
+bool ResourceXMLRPC::doLoad()
 {
   kdDebug() << "ResourceXMLRPC::load()" << endl;
 
@@ -269,7 +269,7 @@ QString ResourceXMLRPC::password() const
   return mPassword;
 }
 
-bool ResourceXMLRPC::save()
+bool ResourceXMLRPC::doSave()
 {
   Event::List events = mCalendar.rawEvents();
   Event::List::Iterator evIt;
