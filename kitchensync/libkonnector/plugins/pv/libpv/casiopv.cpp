@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 // C++ includes
+#include <iostream>
 #include <map>
 #include <set>
 // project includes
@@ -23,6 +24,8 @@
 #include "casiopv.h"
 #include "protocolexception.h"
 #include "casiopvexception.h"
+
+using namespace std;
 
 #ifdef DEBUG
 #define debugout( out ) { std::cout << out << std::endl; }
@@ -36,10 +39,10 @@
 CasioPV::CasioPV::CasioPV()
 {
   debugout( "BEGIN:CasioPV::CasioPV()" );
-  
+
   m_protocol = new Protocol::Protocol();
   m_portopen = false;
-  
+
   debugout( "END:CasioPV::CasioPV()" );
 }
 

@@ -25,10 +25,11 @@
 // C++ includes
 #include <map>
 #include <string>
-#include <ostream.h>
+#include <ostream>
 // project includes
-#include <datapacket.h>
+#include "datapacket.h"
 
+using namespace std;
 
 /**
   * This class is the abstract base class for all data classes
@@ -52,7 +53,7 @@ class PVDataEntry
        * @param uid The uid of the data entry.
        */
     virtual void setUid(unsigned int uid) = 0;
-    
+
     /**
        * Getter for the uid.
        * @return The uid of the data entry.
@@ -64,13 +65,13 @@ class PVDataEntry
        * @param state The state of the entry
        */
     virtual void setState(unsigned int state) = 0;
-    
+
     /**
        * Getter for the state of an entry.
        * @return The state of the entry
        */
-    virtual unsigned int getState() = 0;    
-    
+    virtual unsigned int getState() = 0;
+
     /**
        * Getter for the data.
        * @return Return all of the data.
@@ -83,7 +84,7 @@ class PVDataEntry
        * @exception PVDataEntryException
        */
     virtual void setFieldData( datapacket& packet ) = 0;
-    
+
     /**
        * Checks if a dataentry is sendable.
        * @return bool true if all nessecary fields are filled else false.
@@ -107,7 +108,7 @@ class PVDataEntry
        * @param strXML The XML string to be converted
        */
     virtual void fromXML(string strXML) = 0;
-    
+
     /** Possible states of the entries. The states are used in two ways:
       * 1. Getting the modified entries from the PV. The state of the entry is
       *    set depending what was happening with this entry since the last sync.
@@ -118,14 +119,14 @@ class PVDataEntry
     enum State {
       // The state of the data entry is undefined -> state is set to UNDEFINED in constructor
       UNDEFINED,
-      // The data entry was 1. added since the last synchronisation 
+      // The data entry was 1. added since the last synchronisation
       //                    2. added on desktop -> has to be added on PV
       ADDED,
-      // The data entry was 1. modified since the last synchronisation 
+      // The data entry was 1. modified since the last synchronisation
       //                    2. modified on desktop -> has to be modified on PV
       MODIFIED,
-      // The data entry was 1. removed since the last synchronisation 
-      //                    2. removed on desktop -> has to be removed on PV       
+      // The data entry was 1. removed since the last synchronisation
+      //                    2. removed on desktop -> has to be removed on PV
       REMOVED
     };
   };

@@ -15,6 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 
+// C++ includes
+#include <iostream>
+
 // C includes
 #include <unistd.h>
 // project includes
@@ -28,6 +31,8 @@
 #define NAK   0x15      // NAK: Negative response packet
 #define CAN   0x18      // Link packet
 
+
+using namespace std;
 /**
    * Standard Constructor.
    */

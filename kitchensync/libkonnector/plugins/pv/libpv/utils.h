@@ -27,6 +27,8 @@
   *classes (derived from PVDataEntry).
   *@author Maurus Erni
   */
+using std::string;
+using std::vector;
 
 namespace CasioPV {
 

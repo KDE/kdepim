@@ -23,6 +23,9 @@
 #ifndef PVDATAPACKET_H
 #define PVDATAPACKET_H
 
+#include <string>
+
+
 namespace CasioPV {
 
 struct datapacket {
@@ -38,7 +41,7 @@ struct datapacket {
 		/**
 		   * This holds the data.
 		   */
-		string data;
+		std::string data;
 };
 
 }; // namespace CasioPV

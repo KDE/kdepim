@@ -29,6 +29,8 @@
 // project includes
 #include "serial.h"
 
+using namespace std;
+
 #ifdef DEBUG
 #define debugout( out ) { std::cout << out << std::endl; }
 #else
@@ -193,7 +195,7 @@ void CasioPV::Serial::WriteByte( const unsigned char& byte ){
 	if (n < 0) {
 		cerr << "could not send " << hex << byte << endl;
 		throw SerialException( "Serial::WriteByte : could not send", 3004 );
-	} 
+	}
 //	debugout( hex << "byte " << byte << " sended" );
 
 }
@@ -502,7 +504,8 @@ void CasioPV::Serial::lockDevice( const string& port ){
 	m_lockfile = "/var/lock/LCK.."; m_lockfile.append( port.c_str(), 5, port.size()-5 );
 
 	// check for existing lockfile
-	ifstream ifile( m_lockfile.c_str(), ios::nocreate );
+        // FIXME
+	ifstream ifile( m_lockfile.c_str()  );
 	if ( ifile ) {
 		ifile.close();
 		cerr << "Serial::OpenPort: Device is locked" << endl;

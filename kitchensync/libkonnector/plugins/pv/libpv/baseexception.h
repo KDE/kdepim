@@ -21,6 +21,7 @@
 // C++ includes
 #include <string>
 
+using namespace std;
 /**This class is the base for every exception in libpv
   *@author Selzer Michael
   */
@@ -31,7 +32,7 @@ class BaseException {
 	public:
 		/**
 		   * Constructor.
-		   */ 
+		   */
 		BaseException( string message, unsigned int errorcode );
 		/**
 		   * Destructor.

@@ -15,10 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 #include <stdlib.h>
-#include <fstream.h>
+#include <fstream>
 
 #include <kdebug.h>
 #include <kapplication.h>
@@ -47,6 +47,8 @@
 #include "utils.h"
 
 #include "pvdaemon.h"
+
+using namespace std;
 
 using namespace CasioPV;
 
@@ -107,6 +109,7 @@ QStringList pvDaemon::connectPV(const QString& port)
   {
     sendException(e.getMessage().c_str(), e.getErrorCode());
   }
+  return QStringList();
 }
 
 /**
@@ -129,6 +132,7 @@ bool pvDaemon::disconnectPV( void )
   {
     sendException(e.getMessage().c_str(), e.getErrorCode());
   }
+  return false;
 }
 
 /**
@@ -564,6 +568,7 @@ QString pvDaemon::getAllEntriesFromPV(unsigned int category)
     kdDebug() << "CasioPVException catched" << endl;
     sendException(e.getMessage().c_str(), e.getErrorCode());
   }
+  return QString::null;
 }
 
 /**
@@ -617,6 +622,7 @@ QString pvDaemon::getChangesFromPV(unsigned int category)
     kdDebug() << "CasioPVException catched" << endl;
     sendException(e.getMessage().c_str(), e.getErrorCode());
   }
+  return QString::null;
 }
 
 /**
@@ -648,7 +654,7 @@ void pvDaemon::writeEntries(QDomNode& n, bool ignoreState)
           // Get uid and state from entry
           unsigned int uid = (e.attribute("uid")).toUInt();
           QString state = e.attribute("state");
-          unsigned int category;
+          unsigned int category = 0;
 
           if (e.tagName() == QString::fromLatin1("contact"))
           {
