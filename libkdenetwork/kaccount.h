@@ -45,6 +45,7 @@ class KAccount
       MBox,
       Maildir,
       News,
+      DImap,
       Other
     };
 
@@ -54,19 +55,19 @@ class KAccount
     /**
      * Get/Set name
      */ 
-    QString name() { return mName; }
+    QString name() const { return mName; }
     void setName( const QString& name ) { mName = name; }
     
     /**
      * Get/Set id
      */ 
-    uint id() { return mId; }
+    uint id() const { return mId; }
     void setId( const uint id ) { mId = id; }
 
     /**
      * Get/Set type
      */ 
-    Type type() { return mType; }
+    Type type() const { return mType; }
     void setType( const Type type ) { mType = type; }
 
     /**
