@@ -8,7 +8,7 @@ noinst_HEADERS = resourcekolab.h contact.h
 
 kabc_kolab_la_SOURCES = resourcekolab.cpp contact.cpp
 kabc_kolab_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
-kabc_kolab_la_LIBADD =  $(top_builddir)/libkcal/libkcal.la \
+kabc_kolab_la_LIBADD =  \
 	$(top_builddir)/kresources/kolab/shared/libresourcekolabshared.la \
 	$(top_builddir)/libkdepim/libkdepim.la -lkresources -lkabc
 messages: rc.cpp
