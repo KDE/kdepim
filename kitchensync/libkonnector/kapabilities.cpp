@@ -204,7 +204,7 @@ void Kapabilities::setUserProposals( QValueList< QPair<QString, QString> > auth 
 }
 void Kapabilities::setExtraOption( const QString &extra, const QString &variant )
 {
-  m_extras.replace( extra, variant );
+    m_extras.replace( extra, variant );
 }
 bool Kapabilities::needsNetworkConnection()const
 {

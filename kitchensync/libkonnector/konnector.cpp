@@ -17,6 +17,7 @@
 #include "kapabilities.h"
 #include "koperations.h"
 #include "configwidget.h"
+#include "configpart.h"
 
 using namespace KSync;
 
@@ -342,8 +343,13 @@ ConfigWidget* KonnectorManager::configWidget( const QString& udi, QWidget* paren
     KonnectorPlugin * plugin = pluginByUDI( udi );
     if ( plugin == 0l )
         return 0l;
-    return plugin->configWidget( parent, name );
+    ConfigWidget* wid = plugin->configWidget( parent, name );
 
+    if (wid ==0 ) {
+        wid = new ConfigPart( plugin->capabilities(), parent, name );
+    }
+
+    return wid;
 }
 ConfigWidget* KonnectorManager::configWidget( const QString& udi,
                                               const Kapabilities& caps,  QWidget* parent,
@@ -354,6 +360,25 @@ ConfigWidget* KonnectorManager::configWidget( const QString& udi,
     if ( plugin == 0l )
         return 0l;
 
-    return plugin->configWidget( caps, parent,  name );
+    ConfigWidget* wid = plugin->configWidget( caps, parent,  name );
+    if (wid ==0 ) {
+        wid = new ConfigPart( plugin->capabilities(), parent, name );
+    }
+
+    return wid;
 }
+bool KonnectorManager::unregisterKonnector( const QString& udi ) {
+    bool ok = false;
+    if( d->m_konnectors.contains(udi ) ){
+        KonnectorPlugin *plugin;
+        QMap<QString, KonnectorPlugin*>::Iterator it;
+        it = d->m_konnectors.find( udi );
+        plugin = it.data();
+        d->m_konnectors.remove( it );
+        delete plugin;
+        ok = true;
+    }
+    return ok;
+}
+
 #include "konnector.moc"

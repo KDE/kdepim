@@ -78,11 +78,17 @@ public:
      *  @return a runtime unique device id or QString::null if could not be loaded
      */
     QString registerKonnector(const QString &DeviceIdentification );
+
     /** registers a konnector to with a Device
      *  @param Device will load the Device
      *  @return returns a unique id or QString::null if a failure occured
      */
     QString registerKonnector(const Device &device );
+
+    /**
+     * Tries to unregister the Konnector with the udi
+     */
+    bool unregisterKonnector( const QString& udi );
 
     /**
      * @param udi the unique device id got when registering a device
@@ -100,21 +106,19 @@ public:
      * @return 0 if no QWidget could be created
      *
      */
-    ConfigWidget* configWidget( const QString& udi, QWidget* parent,  const char* name );
+    ConfigWidget* configWidget( const QString& udi,
+                                QWidget* parent,
+                                const char* name );
 
     /**
      *
      * same as above but uses a Kapability for the initial setup
      */
-    ConfigWidget* configWidget( const QString& udi, const Kapabilities&, QWidget* parent,  const char* name );
+    ConfigWidget* configWidget( const QString& udi,
+                                const Kapabilities&,
+                                QWidget* parent,
+                                const char* name );
 
-
-    /**
-     * @return If GUI is available and the KonnectorPlugin
-     *         supports it. a configure widget get's returned
-     *
-     */
-     /*QWidget* configureWidget( const QString& udi );*/
 
     /**
      *  sets the Kabilities of a konnector

@@ -9,7 +9,7 @@ libkonnector_la_LIBADD = $(top_builddir)/kitchensync/lib/libksync.la  $(LIB_KDEC
 libkonnector_la_SOURCES = konnectorplugin.cpp kapabilities.cpp \
     kdevice.cpp konnector.cpp \
     koperations.cpp idhelper.cc \
-    configwidget.cpp
+    configwidget.cpp configpart.cpp
 
 
 servicetype_DATA = konnector.desktop

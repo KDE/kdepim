@@ -27,10 +27,10 @@ namespace KSync {
         virtual ~ConfigWidget();
 
         /** returns a capability of the widget */
-        virtual Kapabilities kapabilities() const = 0;
+        virtual Kapabilities capabilities() const = 0;
 
         /** set this widget to show a capability */
-        virtual void setKapabilities( const Kapabilities& ) = 0;
+        virtual void setCapabilities( const Kapabilities& ) = 0;
     private:
         class ConfigWidgetPrivate;
         ConfigWidgetPrivate* d;
