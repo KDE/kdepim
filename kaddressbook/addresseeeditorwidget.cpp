@@ -75,10 +75,10 @@ AddresseeEditorWidget::AddresseeEditorWidget( KAB::Core *core, bool isExtension,
   initGUI();
   mCategoryDialog = 0;
   mCategoryEditDialog = 0;
-  
+
   // Load the empty addressee as defaults
   load();
-  
+
   mDirty = false;
 }
 
@@ -95,6 +95,8 @@ void AddresseeEditorWidget::setAddressee( const KABC::Addressee &addr )
   setReadOnly( readOnly );
 
   load();
+
+  mNameEdit->setFocus();
 }
 
 const KABC::Addressee &AddresseeEditorWidget::addressee()
@@ -118,8 +120,6 @@ void AddresseeEditorWidget::initGUI()
   setupTab2();
   setupAdditionalTabs();
   setupCustomFieldsTabs();
-
-  mNameEdit->setFocus();
 
   connect( mTabWidget, SIGNAL( currentChanged(QWidget*) ),
            SLOT( pageChanged(QWidget*) ) );
