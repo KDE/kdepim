@@ -2,6 +2,16 @@
 Type=ServiceType
 X-KDE-ServiceType=KABC/IMProtocol
 Name=KAddressbook Instant Messaging Protocol
+Name[da]=KAddressbook kvikbesked-protokol
+Name[es]=Protocolo de mensajería instantánea de KAddressbook
+Name[et]=KDE aadressiraamatu kiirsuhtlusprotokoll
+Name[it]=KAddressbook protocollo messaggistica istantanea
+Name[nl]=KAddressbook Instant Messaging-protocol
+Name[ru]=Протокол обмена сообщениями адресной книги KDE
+Name[sv]=Direktmeddelandeprotokoll för adressboken
+Name[ta]=கேஅட்ரஸ்புக் உடனடி செய்தி பரிமாற்றம்
+Name[xx]=xxKAddressbook Instant Messaging Protocolxx
+Name[zh_CN]=KAddressbook 即时消息协议
 [PropertyDef::X-KDE-InstantMessagingKABCField]
 Type=QString
 

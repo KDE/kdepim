@@ -5,5 +5,9 @@ Icon=msn_protocol
 ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/msn
 Comment=MSN Messenger
+Comment[ta]=MSN மெசஞர்
+Comment[xx]=xxMSN Messengerxx
 Name=MSN Messenger
+Name[ta]=MSN மெசெஞர்
+Name[xx]=xxMSN Messengerxx
 

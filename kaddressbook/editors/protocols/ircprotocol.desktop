@@ -5,5 +5,10 @@ Icon=irc_protocol
 ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/irc
 Comment=Internet Relay Chat
+Comment[ru]=IRC
+Comment[ta]=இணைய வழங்கும் அறட்டை
+Comment[xx]=xxInternet Relay Chatxx
+Comment[zh_CN]=Internet 聊天
 Name=IRC
+Name[xx]=xxIRCxx
 

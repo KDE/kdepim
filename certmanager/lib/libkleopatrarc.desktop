@@ -7,10 +7,12 @@ Name[et]=Võtme ehtsus kontrollimatu
 Name[fr]=Clé non validée
 Name[it]=Chiave non valida
 Name[nl]=Geen gevalideerde sleutel
+Name[ru]=Непроверенный ключ
 Name[sl]=Nepotrjen ključ
 Name[sv]=Nyckeln har inte validerats
 Name[ta]=செல்லுபடியாகாத விசை
 Name[xx]=xxNot validated keyxx
+Name[zh_CN]=未校验的密钥
 
 [Key Filter #1]
 was-validated=true
@@ -22,12 +24,17 @@ Name[da]=Udløbet nøgle
 Name[es]=Clave caducada
 Name[et]=Aegunud võti
 Name[fr]=Clé expirée
+Name[he]=מפתח לא תקף
 Name[it]=Chiave scaduta
 Name[nl]=Verlopen sleutel
+Name[pt]=Chave expirada
+Name[pt_BR]=Chave expirada
+Name[ru]=Утерявший силу ключ
 Name[sl]=Pretečen ključ
 Name[sv]=Utgången nyckel
 Name[ta]=காலம் கடந்த விசை
 Name[xx]=xxExpired keyxx
+Name[zh_CN]=过期密钥
 
 [Key Filter #2]
 was-validated=true
@@ -39,10 +46,14 @@ Name[et]=Tühistatud võti
 Name[fr]=Clé révoquée
 Name[it]=Chiave revocata
 Name[nl]=Ingetrokken sleutel
+Name[pt]=Chave revogada
+Name[pt_BR]=Chave revogada
+Name[ru]=Восстановленный ключ
 Name[sl]=Preklican ključ
 Name[sv]=Återkallad nyckel
 Name[ta]=நீக்கிய விசை
 Name[xx]=xxRevoked keyxx
+Name[zh_CN]=吊销的密钥
 
 [Key Filter #3]
 was-validated=true
@@ -53,8 +64,11 @@ Name[da]=Root-certifikat der stoles på
 Name[es]=Certificado raíz de confianza
 Name[et]=Usaldusväärne juursertifikaat
 Name[it]=Certificato radice affidabile
+Name[sl]=Zaupan korenski certifikat
 Name[sv]=Pålitligt rotcertifikat
 Name[ta]=நம்பப்பட்ட மூல சாண்றிதழ்
+Name[xx]=xxTrusted root certificatexx
+Name[zh_CN]=可信任的根证书
 
 [Key Filter #4]
 was-validated=true
@@ -66,8 +80,11 @@ Name[es]=Certificado raíz no de confianza
 Name[et]=Ebausaldusväärne juursertifikaat
 Name[it]=Certificato radice non affidabile
 Name[nl]=Niet vertrouwd hoofdcertificaat
+Name[sl]=Nezaupan korenski certifikat
 Name[sv]=Opålitligt rotcertifikat
 Name[ta]=நம்பமுடியாத மூல சாண்றிதழ்
+Name[xx]=xxNot trusted root certificatexx
+Name[zh_CN]=未信任的根证书
 
 [Key Filter #5]
 was-validated=true
@@ -77,10 +94,15 @@ Name[da]=Andre nøgler
 Name[es]=Otras claves
 Name[et]=Muud võtmed
 Name[fr]=Autres clés
+Name[he]=מפתחות אחרים
 Name[it]=Altre chiavi
 Name[nl]=Andere sleutels
+Name[pt]=Outras chaves
+Name[pt_BR]=Outras chaves
+Name[ru]=Другие ключи
 Name[sl]=Drugi ključi
 Name[sv]=Andra nycklar
 Name[ta]=மற்ற விசைகள்
 Name[xx]=xxOther keysxx
+Name[zh_CN]=其它密钥
 
