@@ -144,12 +144,20 @@ ConduitTip::~ConduitTip()
 #define NEW_CONDUIT      (8)
 
 
-static QHBox *addDescriptionPage(QWidgetStack *parent,
+/*
+** Create a page in the widget stack @p parent on page @p pageno,
+** bearing the given @p text. The remainder of the parameters are
+** for esoteric things like:
+**  @p buttons set to non-null to include (and return) a QHBox suitable
+**     for displaying a row of buttons in on the page.
+**  @p label set to non-null to return the QLabel used to display @p text.
+*/
+static void addDescriptionPage(QWidgetStack *parent,
 	int pageno,
 	const QString &text,
-	bool buttons)
+	QHBox **buttons = 0L,
+	QLabel **label = 0L)
 {
-	QHBox *h = 0L;
 	QVBox *v = new QVBox(parent);
 	QLabel *l = 0L;
 
@@ -160,20 +168,26 @@ static QHBox *addDescriptionPage(QWidgetStack *parent,
 	l->setText(text);
 	l->setAlignment(Qt::AlignLeft | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
 
+	if (label) { *label = l; }
+
 	if (buttons)
 	{
-		h = new QHBox(v);
+		*buttons = new QHBox(v);
 		l = new QLabel(v);
 	}
 
 	parent->addWidget(v,pageno);
-
-	return h;
 }
 
 
 ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n) :
-	KCModule(parent, n)
+	KCModule(parent, n),
+	fConduitList(0L),
+	fStack(0L),
+	fConfigureButton(0L),
+	fConfigureWizard(0L),
+	fConfigureKontact(0L),
+	fActionDescription(0L)
 {
 	QBoxLayout *p = new QVBoxLayout( this );
 
@@ -182,19 +196,12 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	p->addWidget(spl);
 
 	QWidget *w = 0L; // For spacing purposes only.
-	QLabel *l = 0L;
-	QVBox *v = 0L;
 	QHBox *btns = 0L;
 
 	// Create the left hand column
 	// v = new QVBox( spl );
 	fConduitList = new QListView(spl,"ConduitList");
 	fConduitList->addColumn(i18n("Conduit"));
-	// v->setStretchFactor(fConduitList, 97);
-	// v->setSpacing(50);
-	// l = new QLabel(v);    // Just a placekeeper, to fix redraw problems.
-	// l->resize(30,30);
-	// v->setStretchFactor(l,3);
 
 	// Right hand column
 	fStack = new QWidgetStack(spl,"RightPart");
@@ -202,14 +209,14 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	// First page in stack (right hand column)
 	addDescriptionPage(fStack,BROKEN_CONDUIT,
 		i18n("<qt>This conduit appears to be broken and cannot "
-		"be configured.</qt>"),false);
+		"be configured.</qt>"));
 
 	// Second page, now with layout in a single column
 	//
 	// Probably deprecated.
 	//
-	btns = addDescriptionPage(fStack,OLD_CONDUIT,
-		i18n("<qt>This is an old-style conduit.</qt>"),true);
+	addDescriptionPage(fStack,OLD_CONDUIT,
+		i18n("<qt>This is an old-style conduit.</qt>"),&btns);
 	w = new QWidget(btns);
 	btns->setStretchFactor(w,50);
 	fConfigureButton = new QPushButton(btns);
@@ -219,14 +226,14 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 
 	// Page 3
 	addDescriptionPage(fStack,INTERNAL_CONDUIT,
-		i18n("<qt>This is an internal conduit which has no "
-		"configuration options.</qt>"),false);
+		QString::null,0L,&fActionDescription);
 
 	// Page 4 - explanation of what "actions" are.
 	addDescriptionPage(fStack,INTERNAL_EXPLN,
 		i18n("<qt><i>Actions</i> lists actions that can occur "
 		"during a HotSync but that require no further configuration. "
-		"</qt>"),false);
+		"Checked actions will be performed during a HotSync. "
+		"</qt>"));
 
 	// Page 5 - explanation about conduits
 	addDescriptionPage(fStack,CONDUIT_EXPLN,
@@ -234,10 +241,10 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 		"programs that perform synchronization actions. They may "
 		"have individual configurations. Select a conduit to configure it, "
 		"and enable it by clicking on its checkbox. "
-		"</qt>"),false);
+		"</qt>"));
 
 	// Page 6 - explanation about general setup
-	btns = addDescriptionPage(fStack,GENERAL_EXPLN,
+	addDescriptionPage(fStack,GENERAL_EXPLN,
 		i18n("<qt><p>The <i>general</i> portion of KPilot's setup "
 		"contains settings for your hardware and the way KPilot "
 		"should display your data. For the basic setup, which should fulfill "
@@ -248,7 +255,7 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 		"<p>You can enable an action or conduit by clicking on its checkbox. "
 		"Checked conduits will be run during a HotSync. "
 		"Select a conduit to configure it.</p>"
-		"</qt>"),true);
+		"</qt>"),&btns);
 	w = new QWidget(btns);
 	btns->setStretchFactor(w,50);
 	fConfigureWizard = new QPushButton(i18n("Configuration Wizard"),btns);
@@ -275,13 +282,13 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
 	fConduitList->setTreeStepSize(10);
 	// fConduitList->removeColumn(CONDUIT_COMMENT);
 	fillLists();
-	
+
 	fConduitList->resize(fConduitList->sizeHint());
 	fConduitList->setMinimumSize(fConduitList->sizeHint());
 
 	fStack->resize(fStack->sizeHint()+QSize(10,40));
 	fStack->setMinimumSize(fStack->sizeHint()+QSize(10,40));
-	
+
 	QObject::connect(fConduitList,
 		SIGNAL(selectionChanged(QListViewItem *)),
 		this,SLOT(selected(QListViewItem *)));
@@ -327,6 +334,11 @@ void ConduitConfigWidget::fillLists()
 
 	conduits = new QListViewItem(fConduitList, i18n("Conduits"));
 	actions = new QListViewItem(fConduitList, i18n("Actions"));
+
+	q = new QListViewItem(fConduitList, i18n("About"));
+	q->setText(CONDUIT_COMMENT, i18n("About KPilot. Credits."));
+	q->setText(CONDUIT_LIBRARY, CSL1("general_about"));
+
 	general = new QListViewItem( fConduitList, i18n("General Setup" ) );
 	fGeneralPage = general;
 
@@ -352,19 +364,15 @@ void ConduitConfigWidget::fillLists()
 
 
 	// Create entries under general.
-	q = new QListViewItem(general, i18n("About"));
-	q->setText(CONDUIT_COMMENT, i18n("About KPilot. Credits."));
-	q->setText(CONDUIT_LIBRARY, CSL1("general_about"));
+	q = new QListViewItem(general, i18n("Viewers") );
+	q->setText(CONDUIT_COMMENT,
+		i18n("Viewer settings.") );
+	q->setText(CONDUIT_LIBRARY, CSL1("general_view") );
 
 	q = new QListViewItem(general, i18n("HotSync") );
 	q->setText(CONDUIT_COMMENT,
 		i18n("Special behavior during HotSync.") );
 	q->setText(CONDUIT_LIBRARY, CSL1("general_sync") );
-
-	q = new QListViewItem(general, i18n("Viewers") );
-	q->setText(CONDUIT_COMMENT,
-		i18n("Viewer settings.") );
-	q->setText(CONDUIT_LIBRARY, CSL1("general_view") );
 
 	q = new QListViewItem(general, i18n("Device") );
 	q->setText(CONDUIT_COMMENT,
@@ -471,6 +479,11 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 	if (p->text(CONDUIT_LIBRARY).startsWith(CSL1("internal_")))
 	{
 		fStack->raiseWidget(INTERNAL_CONDUIT);
+		fActionDescription->setText(
+			i18n("<qt>This is an internal action which has no "
+			"configuration options. "
+			"The action's description is: <i>%1</i> "
+			"</qt>").arg(p->text(CONDUIT_COMMENT)));
 		return;
 	}
 

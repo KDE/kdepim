@@ -54,6 +54,7 @@ public:
 	QWidgetStack *fStack;
 	QPushButton *fConfigureButton;
 	QPushButton *fConfigureWizard,*fConfigureKontact;
+	QLabel *fActionDescription;
 } ;
 
 class ConduitConfigWidget : public ConduitConfigWidgetBase
