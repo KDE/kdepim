@@ -50,9 +50,11 @@ public:
 
 signals:
   void reconfigure();
-public slots:
+
+private slots:
   void slotChanged();
   void slotSave();
+  void slotSetHistorySizeUnlimited();
 
 private:
   KURLRequester* mExeED;
