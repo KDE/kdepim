@@ -30,15 +30,30 @@ OverViewProgressEntry::~OverViewProgressEntry() {
 
 void OverViewProgressEntry::setText( QString text ) {
     m_textLabel->setText( text );
+    m_name = text;
 }
 
-void OverViewProgressEntry::setProgress( QString text ) {
-    m_progressField->setText( text );
+void OverViewProgressEntry::setProgress( int status ) {
+    // SyncStatus { SYNC_START=0, SYNC_PROGRESS=1,  SYNC_DONE=2,  SYNC_FAIL };
+
+    if ( status == 0 )  {
+         m_progressField->setPixmap(  DesktopIcon( "player_play", KIcon::Small ) );
+    } else if ( status == 1 )  {
+         m_progressField->setPixmap(  DesktopIcon( "reload", KIcon::Small ) );
+    } else if ( status == 2 )  {
+        m_progressField->setPixmap(  DesktopIcon( "ok", KIcon::Small ) );
+    } else {
+        m_progressField->setPixmap(  DesktopIcon( "no", KIcon::Small ) );
+    }
 }
 
 void OverViewProgressEntry::setPixmap( QPixmap pixmap ) {
     QImage test = pixmap.convertToImage();
     m_pixmapLabel->setPixmap( test.smoothScale( 16, 16, QImage::ScaleMin ) );
+}
+
+QString OverViewProgressEntry::name()  {
+    return m_name;
 }
 
 #include "overviewprogressentry.moc"

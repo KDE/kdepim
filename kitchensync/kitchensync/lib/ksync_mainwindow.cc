@@ -516,6 +516,7 @@ void KSyncMainWindow::slotSync( const QString &udi,
     if (part) {
         kdDebug(5210) << "Syncing first " << endl;
         emit startSync(part);
+        emit syncProgress( part, 0, 0 );
         part->sync( m_inSyncee, m_outSyncee );
     }
     else{
@@ -683,7 +684,6 @@ void KSyncMainWindow::slotKonnectorProg( const UDI& udi, const Progress& prog) {
      * and success
      */
     if (udi == konnectorProfile().udi() ) {
-        qDebug( "TESETTEST" );
         switch( prog.code() ) {
         case Progress::Connected:
             m_konBar->setState( true );
@@ -741,6 +741,7 @@ void KSyncMainWindow::slotPartSyncStatus( ManipulatorPart* par, int err) {
     if (part ) {
         kdDebug(5210) << "Syncing " << part->name() << endl;
         emit startSync( part );
+        emit syncProgress( part, 0, 0 );
         part->sync( m_inSyncee, m_outSyncee );
     }else{ // we're done go write it back
         emit partProgress( 0, Progress(i18n("Going to write the information back now.") ) );

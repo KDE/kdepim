@@ -70,25 +70,42 @@ Widget::~Widget() {
 }
 void Widget::setProfile( const Profile& prof) {
     m_profile->setText("<qt><b>" + i18n(" Profile: ") + "</b>" + prof.name() + "</qt>");
+    cleanView();
 }
 void Widget::setProfile( const QString& name, const QPixmap& pix) {
     m_device->setText("<qt><b>"+ i18n(" Device: ") + "</b>" + name + "</qt>");
     m_logo->setPixmap( pix );
+    cleanView();
 }
 void Widget::addProgress( const UDI&, const Progress& prog) {
     m_edit->append( "<b>"+QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }
 void Widget::addProgress( ManipulatorPart* part, const Progress& prog) {
     m_edit->append( "<b>" + QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
+}
+void Widget::syncProgress( ManipulatorPart* part, int status, int percent )  {
+
+    OverViewProgressEntry* it;
+    for ( it = m_messageList.first(); it; m_messageList.next() )  {
+        if ( QString::compare( it->name(), part->type() ) == 0 ) {
+            it->setProgress( status );
+            return;
+        }
+    }
 
     OverViewProgressEntry* test = new OverViewProgressEntry( m_ab, "test" );
     m_messageList.append( test );
-    test->setText( prog.text() );
-    if ( part &&  part->pixmap() ) {
+
+    if ( part->type() )  {
+        test->setText( part->type() );
+    }
+    if ( part->pixmap() ) {
         test->setPixmap( *(part->pixmap()) );
     }
+    test->setProgress( status );
     test->show();
 }
+
 void Widget::addError( const UDI&, const Error& prog) {
     m_edit->append( "<b>"+ QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }
@@ -96,8 +113,10 @@ void Widget::addError( ManipulatorPart*, const Error& prog) {
     m_edit->append( "<b>"+ QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }
 void Widget::startSync() {
-    m_messageList.clear();
     m_edit->append("Starting to sync now");
+}
+void Widget::cleanView() {
+    m_messageList.clear();
 }
 
 #include "overviewwidget.moc"

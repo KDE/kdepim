@@ -24,13 +24,14 @@ namespace KSync {
     QString description()const;
     bool partIsVisible()const;
     QPixmap *pixmap();
-      QString iconName()const;
+    QString iconName()const;
     QWidget* widget();
 
   private slots:
       void slotPartChanged(ManipulatorPart*);
       void slotPartProgress( ManipulatorPart* part, const Progress& );
       void slotPartError( ManipulatorPart*, const Error& );
+      void slotSyncProgress( ManipulatorPart*, int, int );
       void slotKonnectorProgress(const UDI&, const Progress& );
       void slotKonnectorError(const UDI&, const Error& );
       void slotProfileChanged(const Profile& );

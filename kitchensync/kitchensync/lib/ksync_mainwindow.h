@@ -230,6 +230,7 @@ namespace KSync {
 	 */
         void startSync(ManipulatorPart*);
 
+	void syncProgress(ManipulatorPart*, int, int);
 	/**
 	 * emitted when done with syncing
 	 */

@@ -18,16 +18,16 @@ namespace OverView {
         ~OverViewProgressEntry();
 	
 	void setText( QString );
-	void setProgress( QString );
+	void setProgress( int );
 	void setPixmap( QPixmap );
-
-    private:
+	QString name();
 	
+    private:
+	QString m_name;
 	QHBoxLayout* m_layout;
 	QLabel* m_textLabel;
 	QLabel* m_progressField;
 	QLabel* m_pixmapLabel;
-
     };
 }
 }

@@ -6,6 +6,8 @@
 #include <qlabel.h>
 #include <qlist.h>
 
+#include "overviewprogressentry.h"
+
 class QTextEdit;
 class QSplitter;
 namespace KSync {
@@ -33,14 +35,16 @@ namespace OverView {
         void addProgress( ManipulatorPart*, const Progress& );
         void addError( const UDI&, const Error& );
         void addError( ManipulatorPart*, const Error& );
+	void syncProgress( ManipulatorPart*, int, int);
         void startSync();
+	void cleanView();
     private:
         QVBoxLayout* m_lay;
         QLabel* m_device;
         QLabel* m_profile;
         QLabel* m_logo;
 	QVBoxLayout* m_layout;
-	QList<QWidget> m_messageList;
+	QList<OverViewProgressEntry> m_messageList;
 	QSplitter *m_split;
 	QWidget* m_ab;
         QTextEdit* m_edit;
