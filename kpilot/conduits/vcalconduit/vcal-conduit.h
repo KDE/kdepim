@@ -88,6 +88,9 @@ protected:
 
 	KCal::Event *findEvent(recordid_t);
 
+//	virtual const QString configGroup() const { return VCalConduitFactory::group;};
+//	virtual const QString dbname() const { return "DatebookDB";};
+
 protected:
 	KCal::Calendar *fCalendar;
 	PilotSerialDatabase *fCurrentDatabase;
@@ -103,6 +106,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.22  2002/04/19 19:10:29  kainhofe
+// added some comments describin the sync logic, deactivated the sync again (forgot it when I commited last time)
+//
 // Revision 1.21  2002/04/14 22:18:16  kainhofe
 // Implemented the second part of the sync (PC=>Palm), but disabled it, because it corrupts the Palm datebook
 //

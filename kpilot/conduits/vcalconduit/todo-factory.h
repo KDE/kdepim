@@ -44,13 +44,12 @@ public:
 
 	static KAboutData *about() { return fAbout; } ;
 
-	// Configuration keys
-	//
-	//
 	static const char * const group;
-	static const char * const calendarFile;
-	static const char * const firstTime;
-	static const char * const deleteOnPilot;
+	static const char * const calendarFile,
+		* const firstTime,
+		* const deleteOnPilot,
+		*const fullSyncOnPCChange,
+		*const alwaysFullSync;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
@@ -70,6 +69,9 @@ void *init_libtodoconduit();
 } ;
 
 // $Log$
+// Revision 1.2  2001/12/27 16:43:36  adridg
+// Fixup configuration
+//
 // Revision 1.1  2001/12/13 21:40:40  adridg
 // New files for move to .so
 //

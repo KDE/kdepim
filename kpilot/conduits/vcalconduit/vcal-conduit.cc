@@ -668,7 +668,7 @@ void VCalConduit::updateEventOnPalm(KCal::Event*e, PilotDateEntry*de)
 PilotRecord*VCalConduit::entryFromEvent(PilotDateEntry*de, const KCal::Event*e)
 {
 	FUNCTIONSETUP;
-	if (!de) {
+	if (!de || !e) {
 #ifdef DEBUG
 		DEBUGCONDUIT<<fname<<": NULL event given... Skipping it"<<endl;
 #endif
@@ -1166,6 +1166,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.62  2002/04/21 17:39:01  kainhofe
+// recurrences without enddate work now
+//
 // Revision 1.61  2002/04/21 17:07:12  kainhofe
 // Fixed some memory leaks, old alarms and exceptions are deleted before new are added, Alarms are now correct
 //

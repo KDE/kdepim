@@ -1,15 +1,10 @@
-#ifndef _TODOCONDUIT_H
-#define _TODOCONDUIT_H
-
-/* todo-conduit.h			KPilot
+#ifndef _KPILOT_VCAL_CONDUIT_H
+#define _KPILOT_VCAL_CONDUIT_H
+/* vcal-conduit.h                       KPilot
 **
-** Copyright (C) 1998-2001 Dan Pilone
-** Copyright (C) 1998-2000 Preston Brown
-** Copyright (C) 1998 Herwin-Jan Steehouwer
+** Copyright (C) 2001 by Dan Pilone
 **
-** This file is part of the todo conduit, a conduit for KPilot that
-** synchronises the Pilot's todo application with the outside world,
-** which currently means KOrganizer.
+** This file defines the vcal-conduit plugin.
 */
 
 /*
@@ -30,52 +25,89 @@
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "vcalBase.h"
+#include <plugin.h>
 
-using namespace KCal;
-
-class TodoConduit : public VCalBaseConduit
+namespace KCal
 {
+class Calendar;
+class Todo;
+} ;
+
+class PilotRecord;
+class PilotSerialDatabase;
+class PilotLocalDatabase;
+class PilotTodoEntry;
+
+class TodoConduit : public ConduitAction
+{
+Q_OBJECT
 public:
 	TodoConduit(KPilotDeviceLink *,
-		const char *n=0L,
-		const QStringList &l=QStringList());
+		const char *name=0L,
+		const QStringList &args = QStringList());
 	virtual ~TodoConduit();
 
-	virtual void doSync();
-	virtual void doBackup();
 	virtual void exec();
 
+protected slots:
+	/**
+	* This function is called to sync modified records from the Pilot to KOrganizer.
+	*/
+	void syncRecord();
+	/**
+	* This function goes the other way around: KOrganizer -> Pilot.
+	*/
+	void syncTodo();
+	void cleanup();
+	void deleteRecord();
+
 protected:
-	virtual void doLocalSync();
-	virtual void updateTodo(PilotRecord *rec);
+	void addRecord(PilotRecord *);
+	void deleteRecord(PilotRecord *,PilotRecord *);
+	void changeRecord(PilotRecord *,PilotRecord *);
+
+	void deletePalmRecord(KCal::Todo*e, PilotRecord*s);
+	void updateTodoOnPalm(KCal::Todo*e, PilotTodoEntry*de);
+	//void addPalmRecord(KCal::Todo *e);
+
+	KCal::Todo *todoFromRecord(KCal::Todo *, const PilotTodoEntry &);
+	PilotRecord *entryFromTodo(PilotTodoEntry*de, const KCal::Todo*e);
+
+
+	KCal::Todo *findTodo(recordid_t);
+
+//	virtual const QString configGroup() const { return TodoConduitFactory::group;};
+//	virtual const QString dbname() const { return "DatebookDB";};
+
+protected:
+	KCal::Calendar *fCalendar;
+	PilotSerialDatabase *fCurrentDatabase;
+	PilotLocalDatabase *fBackupDatabase;
+
+	QString fCalendarFile;
+	bool fFirstTime,fDeleteOnPilot, fFullSync;
+	int pilotindex;
 
 private:
-	void firstSyncCopy(bool DeleteOnPilot);
-};
-
+	class VCalPrivate;
+	VCalPrivate *fP;
+} ;
 
 // $Log$
-// Revision 1.3  2001/06/18 19:51:40  cschumac
-// Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
-// They use libkcal now.
+// Revision 1.22  2002/04/19 19:10:29  kainhofe
+// added some comments describin the sync logic, deactivated the sync again (forgot it when I commited last time)
 //
-// Revision 1.2  2001/06/05 22:58:40  adridg
-// General rewrite, cleanup thx. Philipp Hullmann
+// Revision 1.21  2002/04/14 22:18:16  kainhofe
+// Implemented the second part of the sync (PC=>Palm), but disabled it, because it corrupts the Palm datebook
 //
-// Revision 1.1  2001/04/16 13:36:20  adridg
-// Moved todoconduit
+// Revision 1.20  2002/01/26 15:01:02  adridg
+// Compile fixes and more
 //
-// Revision 1.10  2001/03/10 18:26:04  adridg
-// Refactored vcal conduit and todo conduit
+// Revision 1.19  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //
-// Revision 1.9  2001/03/04 13:46:49  adridg
-// struct tm woes
-//
-// Revision 1.8  2001/02/07 15:46:32  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//
+
 #endif
