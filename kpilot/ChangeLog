@@ -5,6 +5,7 @@
 * Made KNotes conduit work when KNotes is embedded in kontact, too.
 * One branch of the check-username code wasn't setting the username properly.
 * More debugging niftiness, major NO_CAST cleanup.
+* Fixed sysinfo conduit, which didn't read its config file.
 
 
 2005-01-11  Adriaan de Groot
