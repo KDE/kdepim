@@ -43,6 +43,7 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
   // complained that exceptions are not allowed.  Not sure how apps
   // typically handle error conditions in KDE, but I'll return the error
   // as a string (empty is no error).  -- Mark, Aug 8, 2003
+  // Use KDE_CXXFLAGS=$(USE_EXCEPTIONS) in Makefile.am if you want to use exceptions (David Faure)
   QString err;
   KEMailSettings settings;
   int handle;
@@ -60,7 +61,7 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
   // umask.  (See man creat)
   handle = open(QFile::encodeName(preferences->iCalFile()), O_CREAT|O_EXCL|O_WRONLY,
       S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
-     
+
   kdDebug() << "KarmStorage::load: handle = " << handle << endl;
   if (handle != -1)
   {
