@@ -689,6 +689,7 @@ KNPgp::checkForPGP(void)
 
   // check if path exists
   if ( !access( path.latin1(), X_OK ) ) {
+    kdDebug(5003) << "pgp exe is " << path << endl;
     havePgp = true;
     switch (pgpVersion) {
       case 0: // GnuPG
@@ -721,6 +722,10 @@ KNPgp::checkForPGP(void)
     }
     return true;
   }
+  havePgp = false;
+  havePGP5 = false;
+  havePGP6 = false;
+  haveGpg = false;
   return false;
 }
 

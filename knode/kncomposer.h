@@ -107,7 +107,8 @@ class KNComposer : public KMainWindow  {
     KAction       *a_ctExternalEditor,
                   *a_ctSpellCheck,
                   *a_ctRemoveAttachment,
-                  *a_ctAttachmentProperties;
+                  *a_ctAttachmentProperties,
+                  *a_ctPGPsign;
     KToggleAction *a_ctShowToolbar, *a_ctShowStatusbar,
                   *a_ctDoPost, *a_ctDoMail, *a_ctWordWrap;
     KSelectAction *a_ctSetCharset;

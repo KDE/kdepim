@@ -136,8 +136,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   new KAction(i18n("Attach &File..."), "attach", 0, this, SLOT(slotAttachFile()),
                    actionCollection(), "attach_file");
 
-  new KAction(i18n("Sign Article with &PGP"), 0, this, SLOT(slotSignArticle()),
-                  actionCollection(), "sign_article");
+  a_ctPGPsign = new KAction(i18n("Sign Article with &PGP"), 0, this, SLOT(slotSignArticle()),
+                            actionCollection(), "sign_article");
 
   a_ctRemoveAttachment = new KAction(i18n("&Remove"), 0, this,
                                     SLOT(slotRemoveAttachment()), actionCollection(), "remove_attachment");
@@ -265,6 +265,9 @@ void KNComposer::setConfig(bool onlyFonts)
                               QMultiLineEdit::FixedColumnWidth : QMultiLineEdit::NoWrap);
     v_iew->e_dit->setWrapColumnOrWidth(knGlobals.cfgManager->postNewsComposer()->maxLineLength());
     a_ctWordWrap->setChecked(knGlobals.cfgManager->postNewsComposer()->wordWrap());
+
+    KNPgp pgp;
+    a_ctPGPsign->setEnabled(pgp.havePGP());
   }
 
   QFont fnt=knGlobals.cfgManager->appearance()->composerFont();
@@ -775,15 +778,14 @@ void KNComposer::slotSignArticle()
   QString text = v_iew->e_dit->text();
   KNPgp pgp;
   pgp.setMessage(text);
-  //kdDebug(5003) << "message text is " << endl << text << endl;
-  //KNHeaders::From *from = article()->from
   pgp.setUser(article()->from()->email());
   kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
   if (!pgp.sign())
     KMessageBox::error(this,i18n("Sorry, couldn't sign this message!\n%1").arg(pgp.lastErrorMsg()));
-  //kdDebug(5003) << "signed message: " << endl << pgp.message() << endl;
-  v_iew->e_dit->setText( pgp.message() );
-  v_iew->e_dit->setModified(true);
+  else {
+    v_iew->e_dit->setText( pgp.message() );
+    v_iew->e_dit->setModified(true);
+  }
 }
 
 
