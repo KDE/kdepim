@@ -54,6 +54,7 @@ static const char *memowidget_id =
 #include <kmessagebox.h>
 #include <kfiledialog.h>
 #include <kdeversion.h>
+#include <ktextedit.h>
 
 #include "kpilot.h"
 #include "kpilotConfig.h"
@@ -62,13 +63,6 @@ static const char *memowidget_id =
 #include "pilotMemo.h"
 
 #include "memoWidget.moc"
-
-#if KDE_IS_VERSION(3,1,0)
-#include <ktextedit.h>
-#else
-#define KTextEdit QTextEdit
-#include <qtextedit.h>
-#endif
 
 
 
@@ -374,31 +368,9 @@ void MemoWidget::slotDeleteMemo()
 #endif
 		return;
 	}
-
-	PilotListItem *p = (PilotListItem *) fListBox->item(item);
-	PilotMemo *selectedMemo = (PilotMemo *) p->rec();
-
-	if (selectedMemo->id() == 0x0)
-	{
-		// QADE: Why is this? What prevents us from deleting
-		// a "new" memo, ie. one we've imported, before *ever*
-		// sending it to the Pilot?
-		//
-		//
-		kdWarning() << k_funcinfo <<
-			": Refusing to delete new memo.\n";
-
-		KMessageBox::error(this,
-			i18n("New memo cannot be deleted until "
-				"HotSynced with pilot."),
-			i18n("HotSync Required"));
-		return;
-	}
-
-
 	if (KMessageBox::questionYesNo(this,
 			i18n("Delete currently selected memo?"),
-			i18n("Delete Memo?")) == KMessageBox::No)
+			i18n("Delete Memo?")) != KMessageBox::Yes)
 	{
 #ifdef DEBUG
 		DEBUGKPILOT << fname <<
@@ -407,8 +379,49 @@ void MemoWidget::slotDeleteMemo()
 		return;
 	}
 
-	selectedMemo->makeDeleted();
-	writeMemo(selectedMemo);
+	PilotListItem *p = (PilotListItem *) fListBox->item(item);
+	PilotMemo *selectedMemo = (PilotMemo *) p->rec();
+
+	if (selectedMemo->id() == 0x0)
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname << ": Searching for record to delete (it's fresh)" << endl;
+#endif
+		PilotLocalDatabase *memoDB = new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
+		if (!memoDB || (!memoDB->isDBOpen()))
+		{
+			// Err.. peculiar.
+			kdWarning() << k_funcinfo << ": Can't open MemoDB" << endl;
+			KMessageBox::sorry(this,
+				i18n("Cannot open MemoDB to delete record."),
+				i18n("Cannot Delete Memo"));
+			return;
+		}
+		memoDB->resetDBIndex();
+#ifdef DEBUG
+		DEBUGKPILOT << fname << ": Searching for new record." << endl;
+#endif
+		const PilotRecord *r = 0L;
+		while ((r = memoDB->findNextNewRecord()))
+		{
+#ifdef DEBUG
+			DEBUGKPILOT << fname << ": got record " << (void *) r << endl;
+#endif
+			PilotMemo m(r);
+			if (m.text() == selectedMemo->text())
+			{
+				DEBUGKPILOT << fname << ": I think I found the memo." << endl;
+				(const_cast<PilotRecord *>(r))->makeDeleted();
+				break;
+			}
+		}
+		delete memoDB;
+	}
+	else
+	{
+		selectedMemo->makeDeleted();
+		writeMemo(selectedMemo);
+	}
 	fMemoList.remove(selectedMemo);
 	delete p;
 }
@@ -531,18 +544,17 @@ void MemoWidget::slotShowMemo(int which)
 	fTextWidget->blockSignals(false);
 }
 
+
 void MemoWidget::writeMemo(PilotMemo * which)
 {
 	FUNCTIONSETUP;
 	if (!shown) return;
-
-	PilotDatabase *memoDB = new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
 	PilotRecord *pilotRec = which->pack();
-
+	PilotDatabase *memoDB = new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
 	memoDB->writeRecord(pilotRec);
 	markDBDirty("MemoDB");
-	KPILOT_DELETE( pilotRec );
 	KPILOT_DELETE( memoDB );
+	KPILOT_DELETE( pilotRec );
 }
 
 void MemoWidget::saveChangedMemo()
