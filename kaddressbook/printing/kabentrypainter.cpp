@@ -32,8 +32,6 @@
 #include <kprinter.h>
 #include <kurl.h>
 
-#include "look_basic.h"
-
 #include "kabentrypainter.h"
 
 KABEntryPainter::KABEntryPainter()
