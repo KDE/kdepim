@@ -312,8 +312,9 @@ void MemoWidget::setupWidget()
 	label = new QLabel(i18n("Memo text:"), this);
 	grid->addWidget(label, 0, 2);
 
-	fTextWidget = new QMultiLineEdit(this, "textArea");
-	fTextWidget->setWordWrap(QMultiLineEdit::WidgetWidth);
+	fTextWidget = new KTextEdit(this, "textArea");
+	fTextWidget->setWordWrap(KTextEdit::WidgetWidth);
+	fTextWidget->setTextFormat(Qt::PlainText);
 	grid->addMultiCellWidget(fTextWidget, 1, 4, 2, 2);
 	QWhatsThis::add(fTextWidget,
 		i18n("The text of the selected memo appears here."));
@@ -493,7 +494,6 @@ void MemoWidget::slotShowMemo(int which)
             return;
 	disconnect(fTextWidget, SIGNAL(textChanged()),
 		this, SLOT(slotTextChanged()));
-	fTextWidget->deselect();
 	PilotListItem *p = (PilotListItem *) fListBox->item(which);
 	PilotMemo *theMemo = (PilotMemo *) p->rec();
 	fTextWidget->setText(theMemo->text());

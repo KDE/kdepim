@@ -28,8 +28,8 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#ifndef QMULTILINEEDIT_H
-#include <qmultilineedit.h>
+#ifndef KTEXTEDIT_H
+#include <ktextedit.h>
 #endif
 
 #ifndef QCOMBOBOX_H
@@ -102,10 +102,10 @@ private:
 	void writeMemo(PilotMemo* which);
 	QComboBox* fCatList;
   
-	QMultiLineEdit*    fTextWidget;
-	struct MemoAppInfo fMemoAppInfo;
-	QList<PilotMemo>   fMemoList;
-	QListBox *          fListBox;
+	KTextEdit*		fTextWidget;
+	struct MemoAppInfo	fMemoAppInfo;
+	QList<PilotMemo>	fMemoList;
+	QListBox*		fListBox;
 
 	QPushButton *fExportButton,*fDeleteButton;
 };
