@@ -113,6 +113,21 @@ bool SyncAction::delayDone()
 	return true;
 }
 
+/* static */ QString SyncAction::syncModeName(SyncMode e)
+{
+	switch(e)
+	{
+	case eTest : return i18n("Test Sync");
+	case eFastSync : return i18n("FastSync");
+	case eHotSync : return i18n("HotSync");
+	case eFullSync : return i18n("Full Synchronization");
+	case eCopyPCToHH : return i18n("Copy PC to Handheld");
+	case eCopyHHToPC : return i18n("Copy Handheld to PC");
+	case eBackup : return i18n("Backup");
+	case eRestore : return i18n("Restore from Backup");
+	}
+}
+
 InteractiveAction::InteractiveAction(KPilotDeviceLink *p,
 	QWidget * visibleparent,
 	const char *name) :

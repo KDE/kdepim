@@ -109,6 +109,9 @@ protected:
 
 	int openConduit() { return fHandle->openConduit(); } ;
 public:
+	/**
+	* These are the different syncs that we can do.
+	*/
 	enum SyncMode
 	{
 		eTest=0,
@@ -120,6 +123,12 @@ public:
 		eBackup=6,
 		eRestore
 	};
+
+	/**
+	* Returns a standard name for each of the syncs.
+	*/
+	static QString syncModeName(SyncMode);
+
 	enum ConflictResolution
 	{
 		eUseGlobalSetting=-1,
