@@ -208,7 +208,7 @@ QPtrList<Event> ExchangeCalendar::rawEventsForDate(const QDate &qd, bool sorted)
   // kdDebug() << "mDates->contains(qd) is " << mDates->contains( qd ) << endl;
   if ( !mDates->contains( qd ) || (*mCacheDates)[qd].secsTo( now ) > mCachedSeconds ) {
     kdDebug() << "Reading events for date " << qd.toString() << endl;
-    mClient->events( mCache, qd );
+    mClient->downloadSynchronous( mCache, qd, qd );
     mDates->add( qd );
     mCacheDates->insert( qd, now );
   }

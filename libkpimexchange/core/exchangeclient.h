@@ -21,15 +21,17 @@
 #define KDEPIM_EXCHANGE_CLIENT_H
 
 #include <qstring.h>
-#include <kio/job.h>
+#include <qdatetime.h>
+#include <qobject.h>
 
-#include <libkcal/event.h>
-#include <libkcal/icalformat.h>
-#include <libkcal/incidence.h>
+namespace KCal { 
+  class Event;
+  class Calendar;
+}
 
-class DwString;
-class DwEntity;
-class KCal::Calendar;
+namespace KIO { 
+  class Job; 
+}
 
 namespace KPIM {
 
@@ -57,15 +59,13 @@ class ExchangeClient : public QObject {
     // synchronous functions
     enum { ResultOK, UnknownError };
 
-    int downloadSynchronous( KCal::Calendar* calendar, QDate& start, QDate& end, bool showProgress);
+    int downloadSynchronous( KCal::Calendar* calendar, const QDate& start, const QDate& end, bool showProgress=false);
     int uploadSynchronous( KCal::Event* event );
     int removeSynchronous( KCal::Event* event );
 
-    // Will be removed in the near future
-    QPtrList<KCal::Event> events( KCal::Calendar* calendar, const QDate& qd );
-
   public slots:
-    void download( KCal::Calendar* calendar, QDate& start, QDate& end, bool showProgress);
+    // Asynchronous functions, wait for "finished" signals for result
+    void download( KCal::Calendar* calendar, const QDate& start, const QDate& end, bool showProgress=false);
     void upload( KCal::Event* event );
     void remove( KCal::Event* event );
     void test();
@@ -75,9 +75,9 @@ class ExchangeClient : public QObject {
     void slotUploadFinished( ExchangeUpload* worker );
     void slotRemoveFinished( ExchangeDelete* worker );
     void slotSyncFinished( int result );
-    void slotTestResult( KIO::Job * job );
 
   signals:
+    // Useful for progress dialogs, shows how much still needs to be done.
     void startDownload();
     void finishDownload();
 

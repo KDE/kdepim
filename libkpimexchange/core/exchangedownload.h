@@ -21,13 +21,11 @@
 #define KDEPIM_EXCHANGE_DOWNLOAD_H
 
 #include <qstring.h>
+#include <qdatetime.h>
 #include <qdom.h>
 #include <qmap.h>
 #include <kio/job.h>
 
-#include <libkcal/event.h>
-#include <libkcal/icalformat.h>
-#include <libkcal/incidence.h>
 #include <libkcal/calendar.h>
 
 class DwString;
@@ -38,47 +36,31 @@ namespace KPIM {
 class ExchangeProgress;
 class ExchangeAccount;
 
-enum DownloadMode { Synchronous, Asynchronous };
-enum DownloadState { WaitingForResult, HaveResult };
-
 class ExchangeDownload : public QObject {
     Q_OBJECT
   public:
     ExchangeDownload( ExchangeAccount* account, QWidget* window=0 );
    ~ExchangeDownload();
 
-    // Synchronous functions
-    QPtrList<KCal::Event> eventsForDate( KCal::Calendar* calendar, const QDate &qd );
-
-    // Asynchronous functions
     void download( KCal::Calendar* calendar, 
          const QDate& start, const QDate& end, bool showProgress);
  
-  private slots:
-    // void slotPatchResult( KIO::Job * );
-    // void slotPropFindResult( KIO::Job * );
-    // void slotComplete( ExchangeProgress * );
- 
-    void slotSearchResult( KIO::Job *job );
-    void slotMasterResult( KIO::Job* job );
-    void slotData( KIO::Job *job, const QByteArray &data );
-    void slotTransferResult( KIO::Job *job );
-
-    void slotDownloadFinished( ExchangeDownload * );
-    void slotSyncResult( KIO::Job * job );
-
   signals:
     void startDownload();
     void finishDownload();
 
     void finished( ExchangeDownload* );
 
+  private slots:
+    void slotSearchResult( KIO::Job *job );
+    void slotMasterResult( KIO::Job* job );
+    void slotData( KIO::Job *job, const QByteArray &data );
+    void slotTransferResult( KIO::Job *job );
+
   private:
     void handleAppointments( const QDomDocument &, bool recurrence );
     void handleRecurrence( QString uid );
     void handlePart( DwEntity *part );
-
-    void initiateDownload( const QDate& start, const QDate& end, bool showProgress );
 
     void increaseDownloads();
     void decreaseDownloads();
@@ -90,8 +72,6 @@ class ExchangeDownload : public QObject {
     ExchangeAccount *mAccount;
     ExchangeProgress *mProgress;
     int mDownloadsBusy;
-    DownloadMode mMode;
-    DownloadState mState;
     QDomDocument mResponse;
 
     QMap<QString,int> m_uids; // This keeps track of uids we already covered. Especially useful for

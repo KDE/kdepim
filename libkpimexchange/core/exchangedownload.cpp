@@ -18,13 +18,29 @@
     Boston, MA 02111-1307, USA.
 */
 
+#include <qfile.h>
+#include <qinputdialog.h>
+#include <qtextstream.h>
+#include <qdatastream.h>
+#include <qcstring.h>
+#include <qregexp.h>
+
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
-
+#include <kapp.h>
+#include <kmessagebox.h>
+#include <klocale.h>
+#include <kaction.h>
 #include <kurl.h>
 #include <kdebug.h>
 #include <krfcdate.h>
+
+#include <kio/slave.h>
+#include <kio/scheduler.h>
+#include <kio/slavebase.h>
+#include <kio/davjob.h>
+#include <kio/http.h>
 #include <kio/job.h>
 
 #include <mimelib/string.h>
@@ -37,23 +53,8 @@
 #include <mimelib/mboxlist.h>
 #include <mimelib/text.h>
 
-#include <qfile.h>
-#include <qinputdialog.h>
-#include <qtextstream.h>
-#include <qdatastream.h>
-#include <qcstring.h>
-#include <qregexp.h>
-
-#include <kapp.h>
-#include <kmessagebox.h>
-#include <klocale.h>
-#include <kaction.h>
-#include <kio/slave.h>
-#include <kio/scheduler.h>
-#include <kio/slavebase.h>
-#include <kio/davjob.h>
-#include <kio/http.h>
-
+#include <libkcal/incidence.h>
+#include <libkcal/event.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/icalformatimpl.h>
 #include <libkcal/calendarlocal.h>
@@ -72,7 +73,6 @@ ExchangeDownload::ExchangeDownload( ExchangeAccount* account, QWidget* window ) 
   mWindow( window )
 {
   mAccount = account;
-  mMode = Asynchronous;
   mDownloadsBusy = 0;
   mProgress = 0L;
   mCalendar = 0L;
@@ -83,18 +83,9 @@ ExchangeDownload::~ExchangeDownload()
   kdDebug() << "ExchangeDownload destructor" << endl;
 }
 
-// Asynchronous functions
-
 void ExchangeDownload::download(KCal::Calendar* calendar, const QDate& start, const QDate& end, bool showProgress)
 {
   mCalendar = calendar;
-  mMode = Asynchronous;
-  initiateDownload( start, end, showProgress );
-}
-
-void ExchangeDownload::initiateDownload( const QDate& start, const QDate& end, bool showProgress ) 
-{
-  // mAccount->authenticate();
 
   if( showProgress ) {
     //kdDebug() << "Creating progress dialog" << endl;
@@ -103,10 +94,9 @@ void ExchangeDownload::initiateDownload( const QDate& start, const QDate& end, b
   
     connect( this, SIGNAL(startDownload()), mProgress, SLOT(slotTransferStarted()) );
     connect( this, SIGNAL(finishDownload()), mProgress, SLOT(slotTransferFinished()) );
-    // connect( mProgress, SIGNAL(complete( ExchangeProgress* )), this, SLOT(slotComplete( ExchangeProgress* )) );
   }
 
-  QString sql = dateSelectQuery( start, end );
+  QString sql = dateSelectQuery( start, end.addDays( 1 ) );
  
   // kdDebug() << "Exchange download query: " << endl << sql << endl;
 
@@ -313,10 +303,10 @@ void ExchangeDownload::handlePart( DwEntity *part ) {
     // kdDebug() << "VCalendar text:" << endl << "---- BEGIN ----" << endl << part->Body().AsString().c_str() << "---- END ---" << endl;
     KCal::ICalFormat *format = new KCal::ICalFormat();
     bool result = format->fromString( mCalendar, part->Body().AsString().c_str() );
-    if ( mMode == Synchronous )
-    {
+    // if ( mMode == Synchronous )
+    // {
       // mEvents.add();
-    }
+    // }
     delete format;
     // kdDebug() << "Result:" << result << endl;
   } else {
@@ -345,71 +335,6 @@ void ExchangeDownload::decreaseDownloads()
     }
     emit finished( this );
   }
-}
-
-// Synchronous functions
-
-QPtrList<KCal::Event> ExchangeDownload::eventsForDate( KCal::Calendar* calendar, const QDate &qd )
-{
-  // kdDebug() << "Entering ExchangeDownload::eventsForDate()" << endl;
-
-  mState = WaitingForResult;
-  mMode = Synchronous;
-  mCalendar = calendar;
-  mEvents = QPtrList<KCal::Event>();
-
-  // kdDebug() << "Initiating download..." << endl;
-  initiateDownload( qd, qd.addDays( 1 ), false );
-
-  connect(this, SIGNAL(finished( ExchangeDownload * )), 
-		  this, SLOT(slotDownloadFinished( ExchangeDownload *)));
-  do {
-    qApp->processEvents();
-  } while ( mState==WaitingForResult );
-
-  // kdDebug() << "Finished downloading events for date" << endl;
-  return mEvents;
-
-  /*
-  mAccount->authenticate();
-  kdDebug() << "Authenticated" << endl;
-  mMode = Synchronous;
-
-  kdDebug() << "Constructing query..." << endl;
-  QString sql = dateSelectQuery( qd, qd );
- 
-  kdDebug() << "Exchange download query: " << endl << sql << endl;
-
-  mState = WaitingForResult;
-  KIO::DavJob *job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", sql, false );
-  connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotSyncResult(KIO::Job *)));
-  do {
-    qApp->processEvents();
-  } while ( mState==WaitingForResult );
-
-  // QDomDocument& response = job->response();
-
-  kdDebug() << "Search result: " << endl << mResponse.toString() << endl;
-  QPtrList<KCal::Event> list;
-  return list;
-  */
-}
-
-void ExchangeDownload::slotDownloadFinished( ExchangeDownload *download )
-{
-  // kdDebug() << "slotDownloadFinished" << endl;
-  mState = HaveResult;
-}
-
-void ExchangeDownload::slotSyncResult( KIO::Job * job )
-{
-  // kdDebug() << "slotSyncResult(): error=" << job->error() << endl;
-  if ( job->error() ) {
-    job->showErrorDialog( 0L );
-  }
-
-  mState = HaveResult;
-  mResponse = static_cast< KIO::DavJob * >(job)->response();
 }
 
 #include "exchangedownload.moc"
