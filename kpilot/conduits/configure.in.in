@@ -1,0 +1,120 @@
+dnl Configure.in.in for KPilot conduits.
+dnl
+dnl Copyright (C) 2000,2001 Adriaan de Groot
+dnl Copyright (C) 2002 Reinhold Kainhofer
+dnl
+dnl This file is released under the terms of the Gnu General Public
+dnl Licence (GPL) Version 2.
+
+
+
+
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                     checks for the MAL conduit
+dnl
+dnl ----------------------------------------------------------------------------
+
+
+dnl
+dnl Check to see if MAL header and library are available
+dnl
+
+dnl
+dnl Questions and comments can be sent to kde-pim@kde.org
+dnl
+
+dnl Check for the headers first. The first test is the somewhat-
+dnl sophisticated one AC uses, and incorporates all the extra-includes
+dnl and whatnot stuff.
+dnl
+dnl We need to explicitly use the --with-extra-includes passed in,
+dnl since AC_CHECK_HEADER does not do so.
+dnl
+HAVE_MAL=0
+
+mal_save_cflags="$CPPFLAGS"
+mal_save_ldflags="$LDFLAGS"
+
+CPPFLAGS="$CPPFLAGS $all_includes"
+LDFLAGS="$LDFLAGS $all_libraries"
+
+MAL_LIB=""
+MAL_INCLUDE=""
+
+AC_CHECK_HEADER(libmal.h,[HAVE_MAL=1], )
+
+
+
+dnl Warn if no headers found. Maybe this should be collected at the end
+dnl of the build as well, like other this-won't-be-built messages?
+dnl
+if  test "$HAVE_MAL" = "0" ; then
+	AC_MSG_CHECKING([for libmal.h alternate])
+	for i in /usr/local/include/mal  /usr/local/include /vol/kde/support/include /usr/include/mal ; do
+		test -f $i/libmal.h && HAVE_MAL=1
+		test -f $i/libmal.h && MAL_INCLUDE="-I$i"
+	done
+
+
+	if test "$HAVE_MAL" = "0" ; then
+		AC_MSG_RESULT([no])
+dnl		AC_MSG_WARN([KPILOT: no MAL headers found.])
+	else
+		AC_MSG_RESULT([found])
+	fi
+fi
+
+if test "$HAVE_MAL" = "1" ; then
+	HAVE_MAL=0
+
+	AC_CHECK_LIB(mal,
+		Disconnect,
+		[MAL_LIB="-lmal"
+		HAVE_MAL=1
+		],
+		[HAVE_MAL=0]
+	)
+
+dnl Run through the loop *anyway*, even if we've already found
+dnl the library. The inner if makes sure that we only check until
+dnl we've found the library once.
+dnl
+dnl
+for i in /usr/local/pilot/lib /usr/local/lib /usr/local/mal/lib /usr/local/lib /vol/kde/support/lib ; do
+	if test "$HAVE_MAL" = "0" ; then
+		CPPFLAGS="$mal_save_cflags  $all_includes $MAL_INCLUDE"
+		LDFLAGS="$mal_save_ldflags  $all_libraries -L$i -R$i"
+
+		unset ac_cv_lib_mal_Disconnect
+		AC_CHECK_LIB(mal,Disconnect,
+			[MAL_LIB="-L$i -R$i -lmal"
+			HAVE_MAL=1],[],[])
+	fi
+done
+
+if test "$HAVE_MAL" = "0" ; then
+	AC_MSG_WARN([KPILOT: MAL library not found. AvantGo conduit will not be compiled.])
+fi
+
+else
+if test "$HAVE_MAL" = "0" ; then
+	AC_MSG_WARN([KPILOT: MAL headers not found. AvantGo conduit will not be compiled.])
+fi
+	
+fi
+
+dnl if test "$HAVE_MAL" = "0" ; then
+dnl 	DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot/conduits/malconduit"
+dnl fi
+
+AM_CONDITIONAL(include_malconduit, test "$HAVE_MAL" = "1")
+
+AC_SUBST(MAL_LIB)
+AC_SUBST(MAL_INCLUDE)
+
+
+CPPFLAGS="$mal_save_cflags"
+LDFLAGS="$mal_save_ldflags"
+unset mal_save_cflags
+unset mal_save_ldflags

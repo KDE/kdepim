@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=MAL (AvantGo) Conduit
+Implemented=file
+ServiceTypes=KPilotConduit
+X-KDE-Library=libmalconduit

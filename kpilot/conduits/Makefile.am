@@ -6,9 +6,9 @@
 ### installed on user systems.
 ###
 
-if include_malconduit
-        MALSUBDIR = malconduit
-endif
+#if include_malconduit
+#        MALSUBDIR = malconduit
+#endif
 
 
 SUBDIRS = knotes \
