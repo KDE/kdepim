@@ -19,7 +19,6 @@ empath_SOURCES = \
 	EmpathComposeSettingsDialog.cpp \
 	EmpathComposeWidget.cpp \
 	EmpathComposeWindow.cpp \
-	EmpathConfig.cpp \
 	EmpathConfigIMAP4Dialog.cpp \
 	EmpathConfigLocalDialog.cpp \
 	EmpathConfigPOP3Dialog.cpp \
@@ -110,7 +109,6 @@ noinst_HEADERS = \
 	EmpathComposeSettingsDialog.h \
 	EmpathComposeWidget.h \
 	EmpathComposeWindow.h \
-	EmpathConfig.h \
 	EmpathConfigIMAP4Dialog.h \
 	EmpathConfigLocalDialog.h \
 	EmpathConfigPOP3Dialog.h \

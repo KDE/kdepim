@@ -34,7 +34,7 @@ class RGroup : public RAddress {
 
 		RGroup();
 		RGroup(const RGroup & group);
-		RGroup(const QString & s) : RAddress(s), mailboxList_(0) { }
+		RGroup(const QString & s) : RAddress(s) { }
 		const RGroup & operator = (const RGroup & group);
 
 		virtual ~RGroup();
