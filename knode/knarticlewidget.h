@@ -19,7 +19,7 @@
 
 //bad hack, but we need access to QTextBrowser::anchorAt(). Obsolete with Qt 3.0.
 #define private protected
-#include <qtextbrowser.h>
+#include <ktextbrowser.h>
 #undef private
 
 #include <qlist.h>
@@ -37,7 +37,7 @@ class KNArticle;
 class KNArticleCollection;
 class KNMimeContent;
 
-class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
+class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
 
   Q_OBJECT
 

@@ -65,9 +65,10 @@
 
 
 KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, const char *name )
-    : QTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false), a_ctions(actColl)
+    : KTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false), a_ctions(actColl)
 {
   i_nstances.append(this);
+  setNotifyClick( true );
 
   //custom tags <bodyblock> , <headerblock>
   QStyleSheetItem *style;
