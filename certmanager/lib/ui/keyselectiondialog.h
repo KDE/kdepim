@@ -4,6 +4,10 @@
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
+    Based on kpgpui.h
+    Copyright (C) 2001,2002 the KPGP authors
+    See file libkdenetwork/AUTHORS.kpgp for details
+
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
     published by the Free Software Foundation; either version 2 of the
@@ -28,23 +32,7 @@
     your version of the file, but you are not obligated to do so.  If
     you do not wish to do so, delete this exception statement from
     your version.
-
-
-    Based on kpgpui.h
-    Copyright (C) 2001,2002 the KPGP authors
-    See file libkdenetwork/AUTHORS.kpgp for details
-
-    This file is part of KPGP, the KDE PGP/GnuPG support library.
-
-    KPGP is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
- */
+*/
 
 #ifndef __KLEO_UI_KEYSELECTIONDIALOG_H__
 #define __KLEO_UI_KEYSELECTIONDIALOG_H__
@@ -143,11 +131,6 @@ namespace Kleo {
     void disconnectSignals();
 
     void startKeyListJobForBackend( const Kleo::CryptoBackend::Protocol * );
-
-#if 0
-    QString keyInfo( const Kpgp::Key* ) const;
-    QString beautifyFingerprint( const QCString& ) const;
-#endif
 
   private:
     Kleo::KeyListView * mKeyListView;
