@@ -34,34 +34,30 @@
 #define KMAILCVT_VERSION " v2.1"
 #define KMAILCVT         I18N_NOOP("KMail & KAddressBook Import Filters")
 
-void procEvents(void);
-int  dcopAddMessage(QString folderName,QString message);
-void dcopReload(void);
+#include <kapplication.h>
+#include <kwizard.h>
 
-#include <qpushbutton.h>
+#include "kimportpage.h"
+#include "kselfilterpage.h"
+  
+/** KMailCVT is the base class of the project */
+class Kmailcvt2 : public KWizard {
+	Q_OBJECT
+public:
+	Kmailcvt2(QWidget* parent=0, const char *name=0);
+	~Kmailcvt2();
+
+	virtual void next();
+	virtual void back();
+public slots:
+	void help();
+private:
+	KSelFilterPage* selfilterpage;
+	KImportPage* importpage;
+	QWidget *_parent;
+};
 
 #include "filters.hxx"
 
-class Kmailcvt2 : public QWidget
-{
-  Q_OBJECT
-  public:
-    /** construtor */
-    Kmailcvt2(QWidget* parent=0, const char *name=0);
-    /** destructor */
-    ~Kmailcvt2();
-  private:
-     QPushButton *import;
-     QPushButton *quit;
-     QPushButton *about;
-     filters     *imports;
-     filterInfo  *info;
-  private slots:
-     void startFilter();
-     void Quit();
-     void About();
-  private:
-     void doFilters(void);
-};
 
 #endif

@@ -30,6 +30,9 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kabc/stdaddressbook.h>
+#include <kapplication.h>
+#include <dcopclient.h>
+#include <krun.h>
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -38,105 +41,81 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-filterInfo::filterInfo(QWidget *parent,char */*name*/)
-: QWidget( parent )
+filterInfo::filterInfo(KImportPageDlg *dlg, QWidget *parent)
 {
-  QGridLayout *grid1 = new QGridLayout(this,20,4,15,7);
-   _parent=parent;
-
-   _log=new QListBox(this);
-   grid1->addMultiCellWidget(_log,5,19,0,4);
-   _done_overall=new QProgressBar(100,this);
-   grid1->addMultiCellWidget(_done_overall,4,4,0,4);
-   _done_current=new QProgressBar(100,this);
-   grid1->addMultiCellWidget(_done_current,3,3,0,4);
-
-   _current=new QLabel(this);
-   _current->setText(i18n("Current:"));
-   grid1->addMultiCellWidget(_current,2,2,0,4);
-   _to=new QLabel(this);
-   _to->setText(i18n("Destination:"));
-      grid1->addMultiCellWidget(_to,0,0,0,4);
-   _from=new QLabel(this);
-   _from->setText(i18n("Source:"));
-   grid1->addMultiCellWidget(_from,1,1,0,4);
+   _dlg = dlg;
+   _parent = parent;
 }
 
 filterInfo::~filterInfo()
 {
-  delete _log;
-  delete _from;
-  delete _to;
-  delete _current;
-  delete _done_overall;
-  delete _done_current;
 }
 
 void  filterInfo::from(const char *from)
 {
-  _from->setText(from);
+  _dlg->_from->setText(from);
 }
 
 void filterInfo::from(QString from)
 {
-  _from->setText(from);
+  _dlg->_from->setText(from);
 }
 
 void  filterInfo::to(const char *to)
 {
-  _to->setText(to);
+  _dlg->_to->setText(to);
 }
 
 void filterInfo::to(QString to)
 {
-  _to->setText(to);
+  _dlg->_to->setText(to);
 }
 
 void  filterInfo::current(const char *current)
 {
-  _current->setText(current);
+  _dlg->_current->setText(current);
 }
 
 void filterInfo::current(QString current)
 {
-  _current->setText(current);
+  _dlg->_current->setText(current);
 }
 
 
 void  filterInfo::current(float percent)
 {
   int p=(int) (percent+0.5);
-  if (percent<0) { _done_current->reset(); }
-  _done_current->setProgress(p);
-  procEvents();
+  if (percent<0) { _dlg->_done_current->reset(); }
+  _dlg->_done_current->setProgress(p);
+  kapp->processEvents(50);
 }
 
 void  filterInfo::overall(float percent)
 {
   int p=(int) (percent+0.5);
-  if (percent<0) { _done_overall->reset(); }
-  _done_overall->setProgress(p);
+  if (percent<0) { _dlg->_done_overall->reset(); }
+  _dlg->_done_overall->setProgress(p);
 }
 
 void filterInfo::log(const char *toLog)
 {
-  _log->insertItem(toLog);
-  _log->setCurrentItem(_log->count()-1);
-  _log->centerCurrentItem();
-  procEvents();
+  _dlg->_log->insertItem(toLog);
+  _dlg->_log->setCurrentItem(_dlg->_log->count()-1);
+  _dlg->_log->centerCurrentItem();
+  kapp->processEvents(50);
 }
 
 void filterInfo::log(QString toLog)
 {
-  _log->insertItem(toLog);
-  _log->setCurrentItem(_log->count()-1);
-  _log->centerCurrentItem();
-  procEvents();
+  _dlg->_log->insertItem(toLog);
+  _dlg->_log->setCurrentItem(_dlg->_log->count()-1);
+  _dlg->_log->centerCurrentItem();
+  kapp->processEvents(50);
 }
 
 void filterInfo::clear(void)
 {
-  _log->clear();
+  _dlg->_log->clear();
   current();
   overall();
   current("");
@@ -147,22 +126,6 @@ void filterInfo::clear(void)
 void filterInfo::alert(QString conversion, QString message)
 {
   KMessageBox::information(_parent,message,conversion);
-}
-
-void filterInfo::adjWidth(QWidget *q)
-{
- int w=_parent->width()-20;
-  q->resize(w,q->height());
-}
-
-void filterInfo::adjustSize(void)
-{
-  adjWidth(_log);
-  adjWidth(_from);
-  adjWidth(_to);
-  adjWidth(_current);
-  adjWidth(_done_overall);
-  adjWidth(_done_current);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -213,50 +176,6 @@ void filter::import(filterInfo *info)
 {
   info->alert(  i18n("class filter"),
 		i18n("no import function implemented") );
-}
-
-//////////////////////////////////////////////////////////////////////////////////
-//
-// The filters class, container for the filter class and
-// keeps the filterInfo widget and the reference to the parent
-//
-// Makes a selectable box for choosing the right filter.
-//
-//////////////////////////////////////////////////////////////////////////////////
-
-filters::filters(filterInfo *i,QWidget *_parent,char *name) : QComboBox(_parent,name)
-{
-  info=i;
-  parent=_parent;
-}
-
-filters::~filters()
-{
-  int i;
-  for(i=0;i<F.len();i++) {
-    delete F[i];
-  }
-}
-
-void filters::add(filter *f)
-{
-  F[F.len()]=f;
-  insertItem(f->name());
-}
-
-void filters::import(void)
-{
-  info->clear();
-  F[currentItem()]->import(info);
-}
-
-QString filters::getFilters(void)
-{
-  int i;
-  QString f;
-  for(i=0;i<F.len();i++)
-    f += QString(" - %1 ( %2 ) \n").arg(F[i]->name()).arg(F[i]->author());
-  return f;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -341,7 +260,6 @@ return true;
 
 void kmail::kmailStop(filterInfo *info)
 {
-  dcopReload();
   info->log("kmail has adopted the (new) folders and messages");
 }
 
@@ -352,6 +270,46 @@ bool kmail::kmailFolder(filterInfo *info,char *folder, FILE *fldr)
   info->alert(cap,"kmailFolder: Not implemented yet");
   return false;
 //return kmailMessage(info,folder,fldr);
+}
+
+int kmail::dcopAddMessage(QString folderName,QString fileName)
+{
+   const QByteArray kmData;
+   QByteArray kmRes;
+   QDataStream kmArg(kmData,IO_WriteOnly);
+   const QCString kmApp("kmail"),kmIface("KMailIface"),
+                  kmFunc("dcopAddMessage(QString,KURL)");
+   //QCString type("int");
+   QCString type;//("void");
+   bool res;
+   KURL message(fileName);
+
+
+   kmArg << folderName;
+   kmArg << message;
+
+   DCOPClient *c=kapp->dcopClient();
+   res=c->call(kmApp,kmIface,kmFunc,kmData,type,kmRes);
+   if (!res) { 
+     /*c->detach();
+     if (!fork()) {
+        if (execlp("kmail","kmail",NULL)==-1) {
+          exit(0);
+        }
+     }
+     c->attach();*/
+     KRun::runCommand("kmail");
+     sleep(5); // FIXME: nasty hack!
+     res=c->call(kmApp,kmIface,kmFunc,kmData,type,kmRes);
+     if (!res) { return -3; }
+   }
+
+   QDataStream KmResult(kmRes,IO_ReadOnly);
+   int result;
+   KmResult >> result;
+   //printf("res=%d %d\n",res,result);
+
+return result; 
 }
 
 //////////////////////////////////////////////////////////////////////////////////

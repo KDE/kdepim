@@ -33,20 +33,15 @@
 #include "harray.hxx"
 #include <string>
 #include <stdio.h>
+#include "kimportpagedlg.h"
 
-class filterInfo : public QWidget
+class filterInfo
 {
   private:
+    KImportPageDlg *_dlg;
     QWidget      *_parent;
-  private:
-    QListBox     *_log;
-    QLabel       *_from;
-    QLabel       *_to;
-    QLabel       *_current;
-    QProgressBar *_done_current;
-    QProgressBar *_done_overall;
   public:
-    filterInfo(QWidget *parent=0, char *name=0);
+    filterInfo(KImportPageDlg *dlg, QWidget *parent);
    ~filterInfo();
   public:
     void  from(const char *from);
@@ -60,16 +55,9 @@ class filterInfo : public QWidget
     void  log(const char *toLog);
     void  log(QString toLog);
     void  clear(void);
-  public:
     void  alert(QString c,QString m);
-  public:
     QWidget *parent(void) { return _parent; }
-  public:
-    void  adjustSize(void);
-  private:
-    void  adjWidth(QWidget *);
 };
-
 
 class kmail
 {
@@ -83,6 +71,8 @@ class kmail
     bool kmailMessage(filterInfo *info,char *folder,char *msg,unsigned long & added);
     bool kmailFolder(filterInfo *info,char *folder,FILE *_folder);
     void kmailStop(filterInfo *info);
+  private:
+    int  dcopAddMessage(QString folderName,QString message);
 };
 
 class kab
@@ -135,23 +125,6 @@ class filter : public kmail, public kab
      QString name(void);
      QString author(void);
 };
-
-class filters : public QComboBox
-{
-   private:
-     filterInfo *info;
-     harray<filter *> F;
-     QWidget *parent;
-   public:
-     filters(filterInfo *i,QWidget *parent=0,char *name=0);
-    ~filters();
-   public:
-     void add(filter *);
-   public:
-     void    import(void);
-     QString getFilters(void);
-};
-
 
 #endif
 
