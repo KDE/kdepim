@@ -84,9 +84,6 @@
     <Action name="file_sync" />
     <Action name="file_print" />
     <Separator/>
-    <Action name="file_mail"/>
-    <Action name="file_chat"/>
-    <Separator/>
     <Action name="ldap_lookup"/>
   </ToolBar>
 
