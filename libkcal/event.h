@@ -41,11 +41,11 @@ class Event : public Incidence
     QCString type() const { return "Event"; }
 
     Incidence *clone();
-  
+
     /** for setting an event's ending date/time with a QDateTime. */
     void setDtEnd(const QDateTime &dtEnd);
-    /** returns an event's ending date/time as a QDateTime. */
-    QDateTime dtEnd() const;
+    /** Return the event's ending date/time as a QDateTime. */
+    virtual QDateTime dtEnd() const;
     /** returns an event's end time as a string formatted according to the
      users locale settings */
     QString dtEndTimeStr() const;
@@ -56,7 +56,20 @@ class Event : public Incidence
      to the users locale settings */
     QString dtEndStr() const;
     void setHasEndDate(bool);
+    /** Return whether the event has an end date/time. */
     bool hasEndDate() const;
+
+    /** Return true or false depending on whether the end date/time "floats,"
+     * i.e. has a date but no time attached to it. */
+    bool doesEndFloat() const;
+    /** Set whether the end date/time floats, i.e. has a date but no time attached to it.
+     *  Note that this is overridden by subsequent calls to setFloats().
+     */
+    virtual void setEndFloats(bool f);
+    /** Set whether the event floats, i.e. has a date but no time attached to it.
+     *  Both the start and end float status are set.
+     */
+    virtual void setFloats(bool f);
 
     /** Return true if the event spans multiple days, otherwise return false. */
     bool isMultiDay() const;
@@ -73,6 +86,7 @@ class Event : public Incidence
 
     QDateTime mDtEnd;
     bool mHasEndDate;
+    bool mEndFloats;
     int mTransparency;
 };
 
