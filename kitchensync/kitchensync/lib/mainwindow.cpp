@@ -67,16 +67,14 @@ MainWindow::MainWindow( QWidget *widget, const char *name )
   mActionManager->setView( mView );
   mActionManager->initActions();
   KStdAction::quit( this, SLOT( close() ), actionCollection() );
-  setXMLFile("ksyncgui.rc");
+  setXMLFile( "ksyncgui.rc" );
   createGUI( 0 );
 
   mView->initProfiles();
   mActionManager->readConfig();
   mView->activateProfile();
 
-  //statusBar()->insertItem(i18n("Not Connected"), 10, 0, true );
   m_konBar = new KonnectorBar( statusBar() );
-  m_konBar->setName(i18n("No Konnector") );
   connect( m_konBar, SIGNAL( toggled( bool ) ),
            mView, SLOT( slotKonnectorBar( bool ) ) );
   statusBar()->addWidget( m_konBar, 0, true );
