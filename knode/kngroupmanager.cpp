@@ -592,7 +592,7 @@ void KNGroupManager::slotLoadGroupList(KNNntpAccount *a)
   d->path = a->path();
       
   if(!QFileInfo(d->path+"groups").exists()) {
-    if (KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,i18n("You don´t have any groups for this account.\nDo you want to fetch a current list?"))) {
+    if (KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,i18n("You don't have any groups for this account.\nDo you want to fetch a current list?"))) {
       delete d;
       slotFetchGroupList(a);
       return;
