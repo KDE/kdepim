@@ -10,6 +10,8 @@ SUBDIRS = knotes \
 	abbrowserconduit \
 	null \
 	vcalconduit \
-	popmail \
-	ProjectManagerConduits
+	popmail 
 
+## These are disabled until they are stable enough to be useful
+###	ProjectManagerConduits
+###     JPilotPluginProxy
