@@ -24,11 +24,11 @@ libkcal_la_SOURCES = \
 METASOURCES = AUTO
 
 $(srcdir)/parseholiday.c: parseholiday.y
-	cd $(srcdir) && bison -d -o parseholiday.c parseholiday.y
+	cd $(srcdir) && bison -pkcal -d -o parseholiday.c parseholiday.y
 
 $(srcdir)/parseholiday.h: parseholiday.y
-	cd $(srcdir) && bison -d -o parseholiday.c parseholiday.y
+	cd $(srcdir) && bison -pkcal -d -o parseholiday.c parseholiday.y
 
 $(srcdir)/scanholiday.c: scanholiday.lex parseholiday.h
-	cd $(srcdir) && flex -B -oscanholiday.c scanholiday.lex
+	cd $(srcdir) && flex -Pkcal -B -oscanholiday.c scanholiday.lex
 

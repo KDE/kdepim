@@ -43,8 +43,8 @@
 #define AFTER		-2
 
 /**** Private forward declarations ****/
-extern int       yylex(void);          /* external lexical analyzer */
-static void      yyerror(char *s);
+extern int       kcallex(void);          /* external lexical analyzer */
+static void      kcalerror(char *s);
 static time_t    date_to_time(int day, int month, int year, 
 			      int *wkday, int *julian, int *weeknum);
 static time_t    tm_to_time(struct tm *tm);
@@ -62,8 +62,8 @@ static void      setdoff(int wday, int rel, int month, int day,
 			 int year, int off, int length);
 /*** Variables and structures ***/
 static int	 m, d, y;
-int              yylineno;	       	/* current line # being parsed */
-FILE            *yyin;                  /* file currently being processed */
+int              kcallineno;	       	/* current line # being parsed */
+FILE            *kcalin;                  /* file currently being processed */
 int	         yacc_small;		/* small string or on its own line? */
 int	         yacc_stringcolor;	/* color of holiday name text, 1..8 */
 char	        *yacc_string;		/* holiday name text */
@@ -210,14 +210,14 @@ small	:					{ yacc_small = 0; }
 %%
 	 
 /*** Private Yacc callbacks and helper functions ***/
-static void yyerror(char *msg)
+static void kcalerror(char *msg)
 {
   fprintf(stderr, "%s: %s in line %d of %s\n", progname,
-	  msg, yylineno+1, filename);
+	  msg, kcallineno+1, filename);
   if (!*errormsg)
     sprintf(errormsg,
 	    "Problem with holiday file %s:\n%.80s in line %d",
-	    filename, msg, yylineno+1);
+	    filename, msg, kcallineno+1);
 }
 
 static time_t date_to_time(int day, int month, int year, 
@@ -616,13 +616,13 @@ char *parse_holidays(const char *holidays, int year, short force)
 
   filename = holidays;
   if (access(filename, R_OK)) return(0);
-  yyin = fopen(filename, "r");
-  if (!yyin) return(0);
+  kcalin = fopen(filename, "r");
+  if (!kcalin) return(0);
   *errormsg = 0;
-  yylineno = 0;
-  yyparse();
-  if (piped) pclose(yyin);
-  else fclose(yyin);
+  kcallineno = 0;
+  kcalparse();
+  if (piped) pclose(kcalin);
+  else fclose(kcalin);
   if (*errormsg) return(errormsg);
 
   return(0);
