@@ -25,14 +25,14 @@ libkaddressbookpart_la_LIBADD  = $(top_builddir)/libkdepim/libkdepim.la \
 	-lkabc -lkdeprint
 
 libkaddressbookpart_la_SOURCES = \
- actionmanager.cpp addhostdialog.cpp addresseditwidget.cpp addresseeconfig.cpp \
+ actionmanager.cpp  addresseditwidget.cpp addresseeconfig.cpp \
  addresseeeditordialog.cpp addresseeeditorwidget.cpp addresseeutil.cpp \
  addviewdialog.cpp configureviewdialog.cpp configureviewfilterpage.cpp \
  emaileditwidget.cpp filter.cpp filtereditdialog.cpp \
  filterselectionwidget.cpp importdialog.cpp incsearchwidget.cpp \
  jumpbuttonbar.cpp kabprefs.cpp kaddressbook.cpp \
  kaddressbook_part.cpp kaddressbookiface.skel kaddressbookmain.cpp \
- kaddressbookprinter.cpp kaddressbookview.cpp ldapoptionswidget.cpp \
+ kaddressbookprinter.cpp kaddressbookview.cpp \
  ldapsearchdialog.ui ldapsearchdialogimpl.cpp nameeditdialog.cpp \
  phoneeditwidget.cpp prefsdialog.cpp selectfieldswidget.cpp \
  undo.cpp undocmds.cpp viewmanager.cpp viewwrapper.cpp
@@ -40,7 +40,7 @@ libkaddressbookpart_la_SOURCES = \
 kaddressbook_METASOURCES = AUTO
 
 noinst_HEADERS = \
- actionmanager.h addhostdialog.h addresseditwidget.h addresseeconfig.h \
+ actionmanager.h  addresseditwidget.h addresseeconfig.h \
  addresseeeditordialog.h addresseeeditorwidget.h addresseeutil.h \
  addviewdialog.h configureviewdialog.h configureviewfilterpage.h \
  emaileditwidget.h filter.h filtereditdialog.h \
