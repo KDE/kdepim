@@ -20,43 +20,92 @@ dnl
 dnl We need to explicitly use the --with-extra-includes passed in,
 dnl since AC_CHECK_HEADER does not do so.
 dnl
-HAVE_PISOCK=0
+
+AC_LANG_PUSH(C++)
 
 kpilot_save_cflags="$CPPFLAGS"
 kpilot_save_ldflags="$LDFLAGS"
 
+
 CPPFLAGS="$CPPFLAGS $all_includes"
 LDFLAGS="$LDFLAGS $all_libraries"
 
+HAVE_PISOCK=0
 PISOCK_LIB=""
 PISOCK_INCLUDE=""
+pisock_path=""
 
+dnl Try looking normally
+dnl
+dnl
 AC_CHECK_HEADER(pi-file.h,[HAVE_PISOCK=1], )
 
 
-
-dnl Warn if no headers found. Maybe this should be collected at the end
-dnl of the build as well, like other this-won't-be-built messages?
+dnl If nothing found, try some other places that might have
+dnl pilot-link installed. These can be extended for particular
+dnl distro's; /vol/kde is where I install stuff on Suns and BSD.
 dnl
-dnl If we do have the headers, try to link against the library. On some
-dnl platforms, notably Solaris, this requires some extra linkage against
-dnl -lsocket -lxnet. That leads us to some deeply nested AC_CHECK_LIB
-dnl calls, and NOTE the yuckiness when assigning values to PISOCK_LIB.
 dnl
 if  test "$HAVE_PISOCK" = "0" ; then
+	pisock_path=""
 	AC_MSG_CHECKING([for pi-file.h alternate])
 	for i in /usr/local/pilot/include /usr/local/include /vol/kde/support/include /usr/include/libpisock ; do
 		test -f $i/pi-file.h && HAVE_PISOCK=1
 		test -f $i/pi-file.h && PISOCK_INCLUDE="-I$i"
+		test -f $i/pi-file.h && pisock_path="$i"
 	done
 
-
-	if test "$HAVE_PISOCK" = "0" ; then
-		AC_MSG_WARN([KPILOT: no pilot-link headers found.])
+	if test -z "$pisock_path" ; then
+		AC_MSG_RESULT([found $pisock_path])
 	else
-		AC_MSG_RESULT([found $PISOCK_INCLUDE])
+		AC_MSG_RESULT([still not found])
+		HAVE_PISOCK="0"
 	fi
+
 fi
+
+dnl Next, check the version of pilot-link to make sure it's sufficiently new.
+dnl
+dnl
+if test -z "$pisock_path" ; then
+	AC_CHECK_HEADER(pi-version.h,[HAVE_PISOCK=1], )
+else
+	test -d "$pisock_path" || HAVE_PISOCK="0"
+	test -f "$pisock_path/pi-version.h" || HAVE_PISOCK="0"
+fi
+
+if test "$HAVE_PISOCK" = "0" ; then
+	AC_MSG_WARN([KPILOT: no pilot-link headers found.])
+fi
+
+
+dnl Now we know where the includes are, we need to
+dnl check the version more closely.
+dnl
+dnl
+CPPFLAGS="$CPPFLAGS $PISOCK_INCLUDE"
+if test "$HAVE_PISOCK" = "1" ; then
+	AC_MSG_CHECKING([pilot-link version])
+	AC_TRY_RUN([
+	#include <pi-version.h>
+	int main()
+	{ if (PILOT_LINK_VERSION==0) {
+	    if ((PILOT_LINK_MAJOR==10) || (PILOT_LINK_MAJOR==11)) exit(0);
+	  }
+	  exit(1);
+	}
+	]
+	,
+	[AC_MSG_RESULT([pilot-link version 0.10 or 0.11 found])],
+	AC_MSG_RESULT([Your version of pilot-link won't work with KPilot])
+	HAVE_PISOCK="0"
+	,
+	[AC_MSG_RESULT([Cross-compiling KPilot is doomed])
+	HAVE_PISOCK="0"
+	])
+fi
+
+
 
 if test "$HAVE_PISOCK" = "1" ; then
 	HAVE_PISOCK=0
@@ -88,7 +137,6 @@ if test "$HAVE_PISOCK" = "1" ; then
 			)
 		]
 		)
-fi
 
 dnl Run through the loop *anyway*, even if we've already found
 dnl the library. The inner if makes sure that we only check until
@@ -107,6 +155,12 @@ for i in /usr/local/pilot/lib /usr/local/lib /vol/kde/support/lib ; do
 	fi
 done
 
+else
+	HAVE_PISOCK="0"
+	PISOCK_LIB=""
+	PISOCK_INCLUDE=""
+fi
+
 if test "$HAVE_PISOCK" = "0" ; then
 	AC_MSG_WARN([KPILOT: pisock library not found])
 	DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
@@ -120,3 +174,5 @@ CPPFLAGS="$kpilot_save_cflags"
 LDFLAGS="$kpilot_save_ldflags"
 unset kpilot_save_cflags
 unset kpilot_save_ldflags
+
+AC_LANG_POP(C++)
