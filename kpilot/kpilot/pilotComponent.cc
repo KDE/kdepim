@@ -28,7 +28,7 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 	//		category number mapping defined by the Pilot, 
 	// ==-1 	means "All" category selected when 
 	//		AllIsUnfiled is true.
-	// == Unfiled	means "All" category selected when 
+	// == 0		== Unfiled means "All" category selected when 
 	//		AllIsUnfiled is false.
 	//
 	//
