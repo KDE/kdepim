@@ -12,8 +12,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>495</width>
-            <height>243</height>
+            <width>622</width>
+            <height>293</height>
         </rect>
     </property>
     <property stdset="1">
@@ -54,59 +54,43 @@
                         <name>spacing</name>
                         <number>6</number>
                     </property>
-                    <widget row="3"  column="0" >
-                        <class>QLabel</class>
+                    <widget row="0"  column="0"  rowspan="1"  colspan="3" >
+                        <class>QCheckBox</class>
                         <property stdset="1">
                             <name>name</name>
-                            <cstring>TextLabel1</cstring>
+                            <cstring>fFirstTimeSync</cstring>
                         </property>
                         <property stdset="1">
                             <name>text</name>
-                            <string>Handle conflict in addresses:</string>
-                        </property>
-                    </widget>
-                    <widget row="3"  column="1" >
-                        <class>QComboBox</class>
-                        <item>
-                            <property>
-                                <name>text</name>
-                                <string>User Choose</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property>
-                                <name>text</name>
-                                <string>Keep Both in Abbrowser</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property>
-                                <name>text</name>
-                                <string>PDA Overrides</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property>
-                                <name>text</name>
-                                <string>Abbrowser Overrides</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property>
-                                <name>text</name>
-                                <string>Do Nothing</string>
-                            </property>
-                        </item>
-                        <property stdset="1">
-                            <name>name</name>
-                            <cstring>fConflictStrategy</cstring>
+                            <string>&amp;First Time syncing</string>
                         </property>
                         <property>
                             <name>whatsThis</name>
-                            <string>&lt;qt&gt;If you select &amp;quot;User Choose&amp;quot; here, the conduit will ask you what to do with every conflicting entry individually. Otherwise, it will apply your choice to every conflict.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Should be checked if your PDA has never been synced or backed up before.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget row="2"  column="0"  rowspan="1"  colspan="2" >
+                    <spacer row="5"  column="1" >
+                        <property>
+                            <name>name</name>
+                            <cstring>Spacer1</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>orientation</name>
+                            <enum>Vertical</enum>
+                        </property>
+                        <property stdset="1">
+                            <name>sizeType</name>
+                            <enum>Expanding</enum>
+                        </property>
+                        <property>
+                            <name>sizeHint</name>
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget row="2"  column="0"  rowspan="1"  colspan="3" >
                         <class>QCheckBox</class>
                         <property stdset="1">
                             <name>name</name>

@@ -74,6 +74,8 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 
 	fConfig->writeEntry(AbbrowserConduitFactory::firstSync(),
 		fConfigWidget->fFirstTimeSync->isChecked());
+	fConfig->writeEntry(AbbrowserConduitFactory::formatName(),
+		fConfigWidget->fFormatName->isChecked());
 	fConfig->writeEntry(AbbrowserConduitFactory::closeAbbrowser(),
 		fConfigWidget->fCloseKab->isChecked());
 	fConfig->writeEntry(AbbrowserConduitFactory::smartMerge(),
@@ -114,6 +116,9 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 
 
 // $Log$
+// Revision 1.2  2001/12/20 22:55:21  adridg
+// Making conduits save their configuration and doing syncs
+//
 // Revision 1.1  2001/10/31 23:54:45  adridg
 // CVS_SILENT: Ongoing conduits ports
 //

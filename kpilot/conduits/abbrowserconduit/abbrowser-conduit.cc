@@ -374,7 +374,7 @@ void AbbrowserConduit::_copy(ContactEntry & toAbEntry,
 	toAbEntry.setCompany(fromPiAddr.getField(entryCompany));
 	toAbEntry.setJobTitle(fromPiAddr.getField(entryTitle));
 	toAbEntry.setNote(fromPiAddr.getField(entryNote));
-	toAbEntry.setName();
+	toAbEntry.setName(isFormatName());
 
 	// copy the phone stuff
 	toAbEntry.setEmail(fromPiAddr.getPhoneField(PilotAddress::eEmail));
@@ -666,7 +666,7 @@ bool AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress,
 
 	abEntry.setCustomField("KPILOT_ID",
 		QString::number(pilotAddress.id()));
-	abEntry.setName();
+	abEntry.setName(isFormatName());
 
 	abEntry.setFolder(pilotAddress.getCategoryLabel());
 
@@ -1634,6 +1634,9 @@ void AbbrowserConduit::readConfig()
 		fPilotStreetHome = false;
 	}
 
+	fFormatName = fConfig->readBoolEntry(
+		AbbrowserConduitFactory::formatName(),true);
+
 	prefsStr = fConfig->readEntry(
 		AbbrowserConduitFactory::faxType(),"Home Fax");
 	fPilotFaxHome = true;
@@ -1650,6 +1653,7 @@ void AbbrowserConduit::readConfig()
 		<< " fConflictResolution=" << fConflictResolution
 		<< " fPilotOtherMap=" << fPilotOtherMap
 		<< " fPilotStreetHome=" << fPilotStreetHome
+		<< " fFormatName=" << fFormatName
 		<< " fPilotFaxHome=" << fPilotFaxHome << endl;
 #endif
 }

@@ -49,6 +49,7 @@ public:
 	static const char *mapOther() { return fOtherMap; } ;
 	static const char *conflictResolution() { return fResolution; } ;
 	static const char *firstSync() { return fFirstSync; } ;
+	static const char *formatName() { return fFormatName; } ;
 	static const char *closeAbbrowser() { return fCloseAbbrowser; } ;
 
 protected:
@@ -70,7 +71,8 @@ private:
 		*fOtherMap,
 		*fFaxType,
 		*fCloseAbbrowser,
-		*fFirstSync;
+		*fFirstSync,
+		*fFormatName;
 } ;
 
 extern "C"
@@ -81,6 +83,9 @@ void *init_libknotesconduit();
 } ;
 
 // $Log$
+// Revision 1.3  2001/12/20 22:55:21  adridg
+// Making conduits save their configuration and doing syncs
+//
 // Revision 1.2  2001/12/10 22:10:17  adridg
 // Make the conduit compile, for Danimo, but it may not work
 //

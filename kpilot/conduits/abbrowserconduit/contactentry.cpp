@@ -13,6 +13,7 @@
 //#include <kabapi.h>
 #include <kdebug.h>
 #include <qtextstream.h>
+#include "abbrowser-conduit.h"
 
 ////////////////////////
 // ContactEntry methods
@@ -26,7 +27,7 @@ ContactEntry::ContactEntry( const ContactEntry &r )
       : QObject(), fLoading(false)
     {
   QDictIterator<QString> it( r.dict );
-  
+
   while ( it.current() ) {
     dict.replace( it.currentKey(), new QString( *it.current() ));
     ++it;
@@ -295,27 +296,51 @@ void ContactEntry::touch()
   emit changed();
 }
 
-void ContactEntry::setName()
-    {
-    QString title = getNamePrefix().simplifyWhiteSpace();
-    QString first = getFirstName().simplifyWhiteSpace();
-    QString middle = getMiddleName().simplifyWhiteSpace();
-    QString last = getLastName().simplifyWhiteSpace();
+void ContactEntry::setName(bool formatName)
+{
+	QString title = getNamePrefix().simplifyWhiteSpace();
+	QString first = getFirstName().simplifyWhiteSpace();
+	QString middle = getMiddleName().simplifyWhiteSpace();
+	QString last = getLastName().simplifyWhiteSpace();
 
-    QString name = title;
-    if (!title.isEmpty())
-	name += " ";
-    name += first;
-    if (!first.isEmpty())
-	name += " ";
-    name += middle;
-    if (!middle.isEmpty())
-	name += " ";
-    name += last;
-    replaceValue("N", name);
-    replaceValue("X-FileAs", name);
-    replaceValue("fn", name);
-    }
+	QString name = title;
+	QString fileas = title;
+
+	// Construct name as title first middle last
+	// with spaces between units.
+	//
+	if (!title.isEmpty())
+		name += " ";
+	name += first;
+	if (!first.isEmpty())
+		name += " ";
+	name += middle;
+	if (!middle.isEmpty())
+		name += " ";
+	name += last;
+
+	if (formatName)
+	{
+		fileas += last;
+		if (!last.isEmpty())
+			name += " ";
+		if (!first.isEmpty())
+		{
+			fileas += ", ";
+			fileas += first;
+			fileas += " ";
+		}
+		fileas += middle;
+	}
+	else
+	{
+		fileas = name;
+	}
+
+	replaceValue("N", name);
+	replaceValue("X-FileAs", fileas);
+	replaceValue("fn", name);
+}
 
 const QString &ContactEntry::getFolder() const
     {

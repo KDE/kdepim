@@ -80,6 +80,7 @@ public:
 	const QString &getPilotOtherMap() const { return fPilotOtherMap; }
 	bool isPilotStreetHome() const { return fPilotStreetHome; }
 	bool isPilotFaxHome() const { return fPilotFaxHome; }
+	bool isFormatName() const { return fFormatName; }
 	// bool backupDone() const { return fBackupDone; }
 
 
@@ -178,10 +179,14 @@ private:
 	QString fPilotOtherMap;
 	bool fPilotStreetHome;
 	bool fPilotFaxHome;
+	bool fFormatName;
 	Mode fMode;
 } ;
 
 // $Log$
+// Revision 1.13  2001/12/10 22:10:17  adridg
+// Make the conduit compile, for Danimo, but it may not work
+//
 // Revision 1.12  2001/10/31 23:54:45  adridg
 // CVS_SILENT: Ongoing conduits ports
 //

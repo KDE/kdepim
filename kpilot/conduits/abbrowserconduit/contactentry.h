@@ -67,7 +67,7 @@ public:
  * @param the name of the textstream.
  */
   ContactEntry( QTextStream &t );
-  
+
 /**
  * Returns a list of all custom fields, that is those beginning with
  * the prefix "X-CUSTOM-"
@@ -99,10 +99,10 @@ public:
 /**
  * Needed for DCOP serialization.
  */
-  void load( QDataStream &t );  
-  
+  void load( QDataStream &t );
+
 /**
- * Inserts a new key/value pair 
+ * Inserts a new key/value pair
  */
   void insert( const QString &key, const QString *value);
 
@@ -115,10 +115,10 @@ public:
   /** Same as replace() above except the arguments that it excepts
    */
   void replaceValue( const QString &key, const QString &value);
-  
+
 /**
  * Remove a key and deletes its associated value.
- */ 
+ */
   bool remove ( const QString &key );
 
 /**
@@ -172,7 +172,7 @@ public:
 	    { replaceValue("middlename", v); replaceValue("X-MiddleName",v); }
   void setNamePrefix(const QString &v) { replaceValue("X-Title", v); }
   /** Use Prefix, First, Last, Middle to set the name */
-  void setName();
+  void setName(bool formatName);
   void setJobTitle(const QString &v)
 	    { replaceValue("title", v); replaceValue("ROLE", v); }
   void setCompany(const QString &v) { replaceValue("ORG", v); }

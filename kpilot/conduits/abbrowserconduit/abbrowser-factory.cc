@@ -73,6 +73,8 @@ const char *AbbrowserConduitFactory::fStreetType = "PilotStreet";
 const char *AbbrowserConduitFactory::fFaxType = "PilotFax";
 const char *AbbrowserConduitFactory::fCloseAbbrowser = "CloseAbbrowser";
 const char *AbbrowserConduitFactory::fFirstSync = "FirstSync";
+const char *AbbrowserConduitFactory::fFormatName = "FormatName";
+
 
 
 AbbrowserConduitFactory::AbbrowserConduitFactory(QObject *p, const char *n) :
@@ -158,6 +160,9 @@ AbbrowserConduitFactory::~AbbrowserConduitFactory()
 
 
 // $Log$
+// Revision 1.3  2001/12/20 22:55:21  adridg
+// Making conduits save their configuration and doing syncs
+//
 // Revision 1.2  2001/12/10 22:10:17  adridg
 // Make the conduit compile, for Danimo, but it may not work
 //
