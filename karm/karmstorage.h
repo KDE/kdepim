@@ -34,6 +34,7 @@
 #include <calendarresources.h>
 #include <vector>
 #include "resourcecalendar.h"
+#include <kdepimmacros.h>
 
 class QDateTime;
 class Preferences;
