@@ -204,9 +204,13 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
   QValueList<Week> weeks = Week::weeksFromDateRange(from, to);
   for (week = weeks.begin(); week != weeks.end(); ++week)
   {
-    if ( (*week).start() < from )
+    if ( (*week).start() < from && (*week).end() > to)
     {
-      events = taskview->getHistory( from, (*week).end());
+      events = taskview->getHistory(from, to);
+    }
+    else if ( (*week).start() < from )
+    {
+      events = taskview->getHistory(from, (*week).end());
     }
     else if ( (*week).end() > to)
     {
