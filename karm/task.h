@@ -85,6 +85,9 @@ class Task : public QObject, public QListViewItem
     /** insert Task into the destination Task */
     void paste(Task* destination);
 
+    /** Sort times numerically, not alphabetically.  */
+    int compare ( QListViewItem * i, int col, bool ascending ) const;
+
     //@{ timing related functions
 
       /**
