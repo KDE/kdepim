@@ -91,6 +91,8 @@ namespace Kleo {
 
     const char * enumerateProtocols( int i ) const;
 
+    bool knowsAboutProtocol( const char * name ) const;
+
   protected:
     std::vector<CryptoBackend*> mBackendList;
     mutable KConfig* mConfigObject;

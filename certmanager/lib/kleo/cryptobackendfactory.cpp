@@ -238,5 +238,33 @@ const char * Kleo::CryptoBackendFactory::enumerateProtocols( int i ) const {
   return mAvailableProtocols[i];
 }
 
+namespace {
+  class CaseInsensitiveString {
+    const char * m;
+  public:
+    CaseInsensitiveString( const char * s ) : m( s ) {}
+#define make_operator( op ) \
+    bool operator op( const CaseInsensitiveString & other ) const { \
+      return qstricmp( m, other.m ) op 0; \
+    } \
+    bool operator op( const char * other ) const { \
+      return qstricmp( m, other ) op 0; \
+    }
+    make_operator( == )
+    make_operator( != )
+    make_operator( < )
+    make_operator( > )
+    make_operator( <= )
+    make_operator( >= )
+#undef make_operator
+    operator const char *() const { return m; }
+  };
+}
+
+bool Kleo::CryptoBackendFactory::knowsAboutProtocol( const char * name ) const {
+  return std::find( mAvailableProtocols.begin(), mAvailableProtocols.end(),
+                    CaseInsensitiveString( name ) ) != mAvailableProtocols.end();
+}
+
 #include "cryptobackendfactory.moc"
 
