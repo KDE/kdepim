@@ -99,11 +99,8 @@ void OverViewPage::showWizardEGroupware()
 
 void OverViewPage::showWizardKolab()
 {
-#if 0
-  // Kolab stuff disabled
   KolabWizard wizard;
   wizard.exec();
-#endif
 }
 
 void OverViewPage::showWizardSlox()
