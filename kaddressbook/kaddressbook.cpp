@@ -113,7 +113,7 @@ KAddressBook::~KAddressBook()
   mConfigureDialog = 0;
 }
 
-ViewManager *KAddressBook::viewManager()
+ViewManager *KAddressBook::viewManager()const
 {
   return mViewManager;
 }

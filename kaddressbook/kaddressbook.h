@@ -46,18 +46,18 @@ namespace KABC {
 /**
   This class serves as the main window for KAddressBook.  It handles the
   menus, toolbars, and status bars as well as creating the view.
- 
+
   Most of the actions of the application will be resolved here or in the
   view manager. Since the application can have multiple views, the actions
   cannot be connect directly to the views.
- 
+
   This class should be used as the main widget of the application. It will
   hold a VBox, with the view manager on top, and the quick edit widget on
   the bottom.
- 
+
   To interact with the view manager directly, it can be retrieved using
   viewManager().
- 
+
   @short Main window class
   @author Don Sanders <dsanders@kde.org>
   @version 0.1
@@ -70,7 +70,7 @@ class KAddressBook : public QWidget
     KAddressBook( QWidget *parent, const char *name = 0 );
     virtual ~KAddressBook();
 
-    ViewManager *viewManager();
+    ViewManager *viewManager()const;
 
   public slots:
     /**
@@ -123,7 +123,7 @@ class KAddressBook : public QWidget
       Import VCard files, the version is detected automatically.
      */
     void importVCard( const QString &, bool );
-    
+
     /**
       Import VCard file. Simple refers to the fact that no QString is passed
       here, used for menu items
@@ -218,14 +218,14 @@ class KAddressBook : public QWidget
   signals:
     /**
       Emitted whenever an addressee is selected in the view.
-      
+
       @param selected True if an addressee was selected, false otherwise.
      */
     void addresseeSelected( bool selected );
 
     /**
       Emitted whenever the address book is modified in some way.
-     
+
       @param mod True if the address book has been modified, false otherwise.
      */
     void modified( bool mod );
