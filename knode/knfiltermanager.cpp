@@ -47,8 +47,6 @@ KNFilterSelectAction::KNFilterSelectAction( const QString& text, const QString& 
                                             int accel, QObject* parent, const char* name )
  : KAction(text,pix,accel,parent,name), currentItem(-42)
 {
-  if (!pix.isEmpty())
-    p_ixmap = BarIcon(pix);
   p_opup = new KPopupMenu;
   p_opup->setCheckable(true);
   connect(p_opup,SIGNAL(activated(int)),this,SLOT(slotMenuActivated(int)));
@@ -68,14 +66,10 @@ int KNFilterSelectAction::plug(QWidget* widget, int index)
   if ( widget->inherits("QPopupMenu") ) {
     QPopupMenu* menu = static_cast<QPopupMenu*>( widget );
     int id;
-    if ( !pixmap().isNull() ) {
-      id = menu->insertItem( pixmap(), p_opup, -1, index );
-    } else {
-      if ( hasIconSet() )
-        id = menu->insertItem( iconSet(), text(), p_opup, -1, index );
-      else
-        id = menu->insertItem( text(), p_opup, -1, index );
-    }
+    if ( hasIconSet() )
+      id = menu->insertItem( iconSet(), text(), p_opup, -1, index );
+    else
+      id = menu->insertItem( text(), p_opup, -1, index );
 
     menu->setItemEnabled( id, isEnabled() );
     menu->setWhatsThis( id, whatsThis() );
@@ -88,9 +82,12 @@ int KNFilterSelectAction::plug(QWidget* widget, int index)
     KToolBar *bar = static_cast<KToolBar *>( widget );
 
     int id_ = getToolButtonID();
-    bar->insertButton( p_ixmap, id_, p_opup, isEnabled(), plainText(), index);
+    bar->insertButton( icon(), id_, isEnabled(), plainText(), index);
 
-    QWhatsThis::add( bar->getButton(id_), whatsThis() );
+    KToolBarButton *btn = bar->getButton(id_);
+    btn->setPopup(p_opup);
+
+    QWhatsThis::add( btn, whatsThis() );
     addContainer( bar, id_ );
 
     connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );

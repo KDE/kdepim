@@ -51,7 +51,6 @@ class KNFilterSelectAction : public KAction
     void activated(int id);
 
   private:
-    QPixmap p_ixmap;
     KPopupMenu *p_opup;
     int currentItem;
 };
