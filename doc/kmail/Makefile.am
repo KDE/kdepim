@@ -5,5 +5,5 @@ datadir = $(kde_htmldir)/en/kmail
 
 EXTRA_DIST = $(data_DATA)
 
-index*.html: index.sgml
+doc: index.sgml
 	sgml2html index.sgml
