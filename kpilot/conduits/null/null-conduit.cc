@@ -38,7 +38,7 @@
 // then Qt, then KDE, then local includes.
 //
 //
-#include <stream.h>
+#include <iostream.h>
 
 #ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
@@ -174,6 +174,9 @@ NullConduit::dbInfo()
 
 
 // $Log$
+// Revision 1.17  2001/03/09 09:46:14  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.16  2001/03/05 23:57:53  adridg
 // Added KPILOT_VERSION
 //

@@ -1204,6 +1204,7 @@ void VCalConduit::doLocalSync()
 		QString s = QString::fromUtf8(s2);
 		dateEntry->setDescription(s.latin1());
 
+#ifdef DEBUG
 		DEBUGCONDUIT << fname
 			<< ": Fake CString = "
 			<< s2
@@ -1220,6 +1221,7 @@ void VCalConduit::doLocalSync()
 			<< "    "
 			<< charExpansion(s.latin1())
 			<< endl;
+#endif
 		deleteStr(s2);
 	} else {
 		char *s2 = (char *) malloc(2);
@@ -1467,6 +1469,9 @@ QWidget* VCalConduit::aboutAndSetup()
 
 
 // $Log$
+// Revision 1.31  2001/03/24 16:11:06  adridg
+// Fixup some date-to-vcs functions
+//
 // Revision 1.30  2001/03/15 16:53:26  adridg
 // i18n from KOrganizer -> Pilot
 //

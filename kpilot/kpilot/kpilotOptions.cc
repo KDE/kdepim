@@ -33,7 +33,7 @@
 
 #include "options.h"
 
-#include <stream.h>
+#include <iostream.h>
 #include <stdlib.h>
 
 // for reading the passwd file
@@ -717,6 +717,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.24  2001/03/06 12:11:58  adridg
+// Fixed 'start daemon at login' problems
+//
 // Revision 1.23  2001/03/04 11:23:04  adridg
 // Changed for bug 21392
 //

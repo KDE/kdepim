@@ -28,7 +28,7 @@
 */
 #include "options.h"
 
-#include <stream.h>
+#include <iostream.h>
 #include <qcheckbox.h>
 #include <qlayout.h>
 #include <kconfig.h>
@@ -89,6 +89,9 @@ KNotesOptions::KNotesOptions(QWidget *parent) :
 
   
 // $Log$
+// Revision 1.5  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.4  2001/02/09 15:59:28  habenich
 // replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
 //

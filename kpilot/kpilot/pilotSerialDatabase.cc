@@ -29,7 +29,7 @@
 #include "options.h"
 
 #include <time.h>
-#include <stream.h>
+#include <iostream.h>
 #include <pi-dlp.h>
 #include <kmessagebox.h>
 #include <klocale.h>
@@ -39,7 +39,7 @@
 #include "kpilotlink.h"
 
 static const char *pilotSerialDatabase_id =
-	"$Id:$";
+	"$Id$";
 
 PilotSerialDatabase::PilotSerialDatabase(KPilotLink* pilotLink, const char* dbName)
   : PilotDatabase(), fDBName(0L), fDBHandle(-1), fPilotLink(pilotLink)
@@ -237,6 +237,9 @@ void PilotSerialDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.9  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.8  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //

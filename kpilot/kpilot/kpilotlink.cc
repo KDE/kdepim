@@ -30,6 +30,7 @@
 */
 static const char *kpilotlink_id="$Id$";
 
+#include <config.h>
 #include "options.h"
 
 #include <pi-source.h>
@@ -42,7 +43,7 @@ static const char *kpilotlink_id="$Id$";
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <stream.h>
+#include <iostream.h>
 #include <qdir.h>
 
 #include <kconfig.h>
@@ -1660,6 +1661,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 #endif
 
 // $Log$
+// Revision 1.39  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.38  2001/03/02 16:59:35  adridg
 // Added new protocol message READ_APP_INFO for conduit->daemon communication
 //

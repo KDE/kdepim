@@ -33,7 +33,7 @@ static const char *conduitapp_id=
 
 #include <unistd.h>
 #include <stdlib.h>
-#include <stream.h>
+#include <iostream.h>
 #include <kwin.h>
 #include <klocale.h>
 #include <kglobal.h>
@@ -344,6 +344,9 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.19  2001/02/26 22:13:07  adridg
+// Removed useless getopt.h; fixes compile prob on Solaris
+//
 // Revision 1.18  2001/02/08 08:13:44  habenich
 // exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
 //

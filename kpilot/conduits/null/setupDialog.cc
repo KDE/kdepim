@@ -31,7 +31,7 @@
 */
 #include "options.h"
 
-#include <stream.h>
+#include <iostream.h>
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qlayout.h>
@@ -130,6 +130,9 @@ NullPage::NullPage(setupDialog *parent, KConfig& config) :
 
 
 // $Log$
+// Revision 1.14  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.13  2001/02/08 08:13:44  habenich
 // exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
 //

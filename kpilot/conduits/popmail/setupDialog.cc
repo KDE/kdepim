@@ -42,7 +42,7 @@ static const char *setupDialog_id=
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdlib.h>
-#include <stream.h>
+#include <iostream.h>
 
 #ifndef _KCONFIG_H
 #include <kconfig.h>
@@ -632,6 +632,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.15  2001/03/09 09:46:14  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.14  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

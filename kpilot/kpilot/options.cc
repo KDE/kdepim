@@ -29,7 +29,7 @@
 
 static const char *options_id="$Id$";
 
-#include <stream.h>
+#include <iostream.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include "options.h"
@@ -146,6 +146,9 @@ const int fname = (int) options_id;
 
 
 // $Log$
+// Revision 1.11  2001/03/01 20:43:24  adridg
+// Some new (and harmless) debug functions
+//
 // Revision 1.10  2001/02/09 12:56:29  brianj
 // Fixed bug where variable "id" was renamed to "options_id" but
 // a couple of occurences were missed.

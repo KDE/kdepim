@@ -37,7 +37,7 @@ static const char *gsetupdialog_id="$Id$";
 
 #include "options.h"
 
-#include <stream.h>
+#include <iostream.h>
 
 #include <qfileinf.h>
 #include <qlabel.h>
@@ -432,6 +432,9 @@ setupInfoPage::setupInfoPage(setupDialog *parent,bool includeabout) :
 
 
 // $Log$
+// Revision 1.16  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.15  2001/02/08 08:13:44  habenich
 // exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
 //

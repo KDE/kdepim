@@ -27,7 +27,7 @@
 */
 #include "options.h"
 
-#include <stream.h>
+#include <iostream.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qspinbox.h>
@@ -335,6 +335,9 @@ ExpenseOptions::ExpenseOptions(QWidget *parent) :
 
   
 // $Log$
+// Revision 1.3  2001/03/24 16:10:11  adridg
+// Minor beautification
+//
 // Revision 1.2  2001/03/14 16:56:02  molnarc
 //
 // CJM - Added browse button on csv export tab.

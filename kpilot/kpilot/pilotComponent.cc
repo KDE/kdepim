@@ -32,7 +32,7 @@
 #include "options.h"
 
 #include <time.h>
-#include <stream.h>
+#include <iostream.h>
 
 #ifndef _PILOT_APPINFO_H_
 #include <pi-appinfo.h>
@@ -56,7 +56,6 @@
 static const char *pilotComponent_id =
 	"$Id$";
 
-inline
 PilotComponent::PilotComponent(QWidget* parent,
 	const QString &path) : 
 	QWidget(parent),
@@ -184,6 +183,7 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 		}
 		else
 		{
+#ifdef DEBUG       // necessary for Tru64 unix
 			kdWarning() << __FUNCTION__ 
 				<< ": Selected category didn't match "
 				"any name!\n" ;
@@ -200,16 +200,19 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 			kdWarning() << __FUNCTION__
 				<< ": Categories expand to "
 				<< endl;
+#endif
 			currentCatID=0;
 			while((info->name[currentCatID][0]) &&
 				(currentCatID < fCatList->count()))
 			{
+#ifdef DEBUG
 				kdWarning() << __FUNCTION__
 					<< ": Category ["
 					<< currentCatID
 					<< "] = "
 					<< charExpansion(info->name[currentCatID])
 					<< endl;
+#endif
 				currentCatID++;
 			}
 
@@ -259,6 +262,9 @@ CategoryAll:
 
 
 // $Log$
+// Revision 1.13  2001/03/24 15:59:22  adridg
+// Some populateCategories changes for bug #22112
+//
 // Revision 1.12  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //
@@ -282,7 +288,7 @@ CategoryAll:
 //  #include "options.h"
 // -#include <sys/time.h>
 // +#include <time.h>
-//  #include <stream.h>
+//  #include <iostream.h>
 //  #include <pi-appinfo.h>
 //  #include <qwidget.h>
 //

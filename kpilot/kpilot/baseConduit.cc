@@ -28,7 +28,7 @@
 */
 #include "options.h"
 
-#include <stream.h>
+#include <iostream.h>
 #include <fcntl.h>
 #include <ctype.h>
 #include <unistd.h>
@@ -394,6 +394,9 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.17  2001/03/02 16:59:35  adridg
+// Added new protocol message READ_APP_INFO for conduit->daemon communication
+//
 // Revision 1.16  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

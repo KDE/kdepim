@@ -37,7 +37,7 @@
 //
 //
 #ifndef STREAM_H
-#include <stream.h>
+#include <iostream.h>
 #endif
 
 #ifndef TIME_H
@@ -469,8 +469,12 @@ ExpenseConduit::doSync()
 			const char* etmsg=get_entry_type(e.type);
 			const char* epmsg=get_pay_type(e.payment);
 			char sqlcmd[400];
-			sprintf(sqlcmd,"echo \"%s\"|psql -h %s -U %s -c \"INSERT INTO \"%s\" (\"fldTdate\", \"fldAmount\", \"fldPType\", \"fldVName\", \"fldEType\", \"fldLocation\", \"fldAttendees\", \"fldNotes\") VALUES ('%s', '%s', '%s',
- '%s', '%s', '%s', '%s', '%s');\" %s",mDBpasswd.latin1(),mDBsrv.latin1(),mDBlogin.latin1(),mDBtable.latin1(),dtstng,e.amount,epmsg,e.vendor,etmsg,e.city,amesg,nmsg,mDBnm.latin1());
+			sprintf(sqlcmd,"echo \"%s\"|psql -h %s -U %s -c "
+"\"INSERT INTO \"%s\" (\"fldTdate\", \"fldAmount\", \"fldPType\", "
+"\"fldVName\", \"fldEType\", \"fldLocation\", \"fldAttendees\", "
+"\"fldNotes\") VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');\" %s",
+mDBpasswd.latin1(),mDBsrv.latin1(),mDBlogin.latin1(),mDBtable.latin1(),dtstng,
+e.amount,epmsg,e.vendor,etmsg,e.city,amesg,nmsg,mDBnm.latin1());
 			// DEBUGCONDUIT << fname << " " << sqlcmd << endl;
 		        //	DEBUGCONDUIT << fname << " " << proc.args() << endl;
 			shproc = new KShellProcess;
@@ -525,6 +529,10 @@ ExpenseConduit::doTest()
 }
 
 // $Log$
+// Revision 1.13  2001/03/23 21:08:39  molnarc
+//
+// more cleanup and commit before I rebuild all.
+//
 // Revision 1.12  2001/03/23 15:49:05  molnarc
 //
 // more cleanup
