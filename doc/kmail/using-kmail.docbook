@@ -224,7 +224,7 @@ below:</para>
 to attach.</para>
 </listitem>
 <listitem>
-<para>Drag a file from the desktop or another directory into the
+<para>Drag a file from the desktop or another folder into the
 composer window.</para> 
 </listitem>
 <listitem>
@@ -286,8 +286,8 @@ checker. Note that you may first need to configure the spellchecker using
 <title>Message Folders</title>
 
 <para>Message Folders are used to organize your email messages. By default, all
-message folders are stored in the directory <filename
-class="directory">Mail</filename>, which is created in your home directory. When
+message folders are stored in the folder <filename
+class="directory">Mail</filename>, which is created in your home folder. When
 you first start &kmail; the <guilabel>inbox</guilabel>,
 <guilabel>outbox</guilabel>, <guilabel>sent-mail</guilabel>,
 <guilabel>trash</guilabel> and <guilabel>drafts</guilabel> folders are created.
@@ -351,7 +351,7 @@ by dragging them from the Headers pane into the Folders pane.</para>
 <menuchoice><guimenu>Folder</guimenu><guimenuitem>Move All Message to
 Trash</guimenuitem></menuchoice>. You can use 
 <menuchoice><guimenu>Folder</guimenu><guimenuitem>Delete Folder</guimenuitem></menuchoice>
-to remove a folder and all its messages and sub folders.</para>
+to remove a folder and all its messages and subfolders.</para>
 
 <sect2 id="folders-properties-window">
 <title>Folder Properties</title>
@@ -362,7 +362,7 @@ are only available for your own folders and not for default folder like
 <guilabel>inbox</guilabel> &etc;. Default folders also cannot be moved
 or renamed.</para>
 
-<para>You can make a folder a sub folder if you choose a parent
+<para>You can make a folder a subfolder if you choose a parent
 folder using the <guilabel>Belongs to</guilabel> selection. </para>
 
 <para>The <guilabel>Folder Icons</guilabel> section lets you choose

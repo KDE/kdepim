@@ -628,7 +628,7 @@ deleted.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Removes the selected folder and all its contents, including sub folders.</para>
+<para>Removes the selected folder and all its contents, including subfolders.</para>
 <warning><para>Note that there is no way to access the contents
 of a folder after it has been removed.</para></warning>
 </listitem>

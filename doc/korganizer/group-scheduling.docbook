@@ -148,7 +148,7 @@ The last step for setting up group scheduling in &korganizer;
 is to enable a filter in your mail client. The filter has to
 <quote>pipe</quote> every mail through a small script called
 <application>korganizerIn</application>. This script is shipped with
-&korganizer; and can be found in the same directory as the &korganizer;
+&korganizer; and can be found in the same folder as the &korganizer;
 binary (&eg; <filename>/opt/kde3/bin/</filename>). In the picture shown
 here, you can see an example for the filter settings for &kde;'s mail
 client <ulink url="http://kmail.kde.org">&kmail;</ulink>.

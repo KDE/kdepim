@@ -1633,7 +1633,7 @@ Preferences</link> for more information.</para></listitem>
 older calendar program for &UNIX;, you may wish to <action>import your events,
 events, and to-do items</action> directly to &korganizer;. This action
 will read the <filename>.calendar</filename> file from your home
-directory and merge any entries it contains into your current calendar.
+folder and merge any entries it contains into your current calendar.
 If any errors or suspicious things occur during the process, you will be
 notified via a message box.</para></listitem> 
 </varlistentry>
@@ -2576,7 +2576,7 @@ to merge with the current calendar.</para>
 
 <para>You can import calendar data from the classic scheduling program
 <application>Ical</application>. The <application>Ical</application>
-files must reside in your home directory. Choose <menuchoice>
+files must reside in your home folder. Choose <menuchoice>
 <guimenu>File</guimenu> <guimenuitem>Import from
 Ical</guimenuitem></menuchoice> to carry out this task.</para>
 
@@ -2612,7 +2612,7 @@ linkend="file-import-ical">Import From Ical section</link>.</para>
 </question>
 <answer><para>Yes you can, but you must first tell
 <application>Outlook</application> to export its data to vCalendar format. Then
-you must copy this data to your home directory, click
+you must copy this data to your home folder, click
 <menuchoice><guimenu>File</guimenu> <guimenuitem>Open</guimenuitem>
 </menuchoice>, navigate to the file and double-click it.</para>
 </answer>
@@ -2712,8 +2712,8 @@ url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</u
 <title>Requirements</title>
 
 <para>&korganizer; requires &kde; 2.0. It requires roughly 2MB of space
-in your &kde; system directory. Your calendars will require additional
-space in your home directory. Very large calendars slow down
+in your &kde; system folder. Your calendars will require additional
+space in your home folder. Very large calendars slow down
 &korganizer; operation, therefore periodic cleanup is advisable.</para>
 
 <para>&korganizer; needs about 5 Megabytes of memory to run, but this may vary
@@ -2773,7 +2773,7 @@ have to compile &korganizer; yourself from a source file.</para>
 <para>To make groupscheduling work with &korganizer; you need to apply a filter to
 your mail-client. If you use <application>kmail</application> you have to make 
 a filter, that <emphasis>pipes</emphasis> every email through a script called
-<emphasis>korganizerIn</emphasis>, which you should find in the same directory,
+<emphasis>korganizerIn</emphasis>, which you should find in the same folder,
 as the korganizer binary is.
 </para>
 </sect1>

@@ -43,7 +43,7 @@ be done by using <link linkend="keyboard-shortcuts">Keyboard Shortcuts</link>.</
 </listitem>
 <listitem>
 <para>Although &kmail; can be considered reliable you should keep 
-backups of your messages, &ie; just copy the files and directories 
+backups of your messages, &ie; just copy the files and folders 
 in <filename class="directory">~/Mail</filename>
 (including the hidden ones that start with a dot) to a safe place.</para>
 </listitem>

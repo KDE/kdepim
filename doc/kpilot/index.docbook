@@ -475,7 +475,7 @@ check to see if this name matches the one on the &PalmPilot;.  If they do
 not, you are asked to pick which you will use.  If you pick the local
 name, the &PalmPilot; will be changed to match.
 The <guilabel>Pilot User</guilabel> entry  is also used to store
-the information synced from the &PalmPilot;, in a directory
+the information synced from the &PalmPilot;, in a folder
 named <filename>DBBackup/<replaceable>Pilot User</replaceable></filename>.
 </para>
 </listitem>
@@ -770,7 +770,7 @@ cradle.
 Assuming everything is set up properly you should see the
 &PalmPilot; begin to sync and a message box telling you what databases are
 being backed up.  This will back up your entire &PalmPilot; into your local
-directory.
+folder.
 Note that this may take a little while, however a normal
 &HotSync; operation is significantly faster.
 </para>
@@ -1391,7 +1391,7 @@ conduit needs two pieces of information: the filename of the calendar
 file (this will usually be a file that ends in <literal
 role="extension">.vcs</literal> under <filename
 class="directory">.kde/share/apps/korganizer/</filename> under your home
-directory) and whether or not to ask before changing data in that
+folder) and whether or not to ask before changing data in that
 calendar file.
 </para>
 

@@ -523,16 +523,16 @@ packages.</para>
 <para>If you cannot obtain a suitable precompiled binary package, you
 need to compile &konsolekalendar; yourself from source files. Get the source
 package file <filename>kdepim-x.x.tar.bz2</filename>.
-Unpack it in a new directory using a command similar to
+Unpack it in a new folder using a command similar to
 <userinput><command>tar</command> <option>xvfj
 <replaceable>package.tar.bz2</replaceable></option></userinput>, and
-change to the directory which has been created.</para>
+change to the folder which has been created.</para>
 
 &install.compile.documentation;
 
 <note><para>If you have more than one version of &kde; installed
 (e.g. &kde;2 and &kde;3), this may possibly install &konsolekalendar; into the
-wrong &kde; directory. If necessary, you can give the &kde; directory
+wrong &kde; folder. If necessary, you can give the &kde; folder
 as a parameter to
 <userinput><command>./configure</command></userinput> . For example,
 if your &kde; is installed in <filename>/opt/kde3</filename>:</para>

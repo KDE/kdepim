@@ -119,7 +119,7 @@ in the exported file or not. Normally you will probably not wish to
 do this, so the <guilabel>Skip Holidays</guilabel> box is checked by
 default. Next, click the <guibutton>Export</guibutton> button, which will
 display a standard <guilabel>File Save</guilabel> dialog box. Browse to
-the desired directory and enter the filename where you wish to create
+the desired folder and enter the filename where you wish to create
 the new vCalendar data file.
 </para>
 

@@ -67,7 +67,7 @@ files. To use them with &kmail;, make sure that your
 <literal role="extension">.mbx</literal> files (&Windows;
 <application>Eudora</application>) or <application>Eudora</application> mailbox
 files (&Mac; <application>Eudora</application>) to your <filename
-class="directory">~/Mail</filename> directory. You do not need to copy the
+class="directory">~/Mail</filename> folder. You do not need to copy the
 <filename>index</filename> files. Once you start &kmail;, the mailboxes should
 appear in the Folders pane and the messages should be accessible in the Headers
 pane.</para>
@@ -94,7 +94,7 @@ command under &Linux;:</para>
 | perl -e 'while (&lt;STDIN&gt;) { s/\r/\n/gi; print $_ ;}'  &gt; mail-unix.txt</userinput></para>
 
 <para>&kmail; will only recognize mboxes placed directly in the <filename class="directory">~/Mail/</filename>
-directory. This means that  a folder hierarchy cannot be preserved by simply moving files into the 
+folder. This means that  a folder hierarchy cannot be preserved by simply moving files into the 
 <filename class="directory">~/Mail/</filename> folder, but will need to be reconstructed
 within &kmail; manually.</para>
 
@@ -106,7 +106,7 @@ within &kmail; manually.</para>
 <listitem>
 <para>This format is close enough to the mailbox format that &kmail; should be
 able to use these mailboxes if you just copy them to your
-<filename class="directory">~/Mail</filename> directory. However, MMDF mailboxes
+<filename class="directory">~/Mail</filename> folder. However, MMDF mailboxes
 have not been tested with &kmail;, so your results may vary.  If you can get
 this format to work with &kmail;, please let us know so we can include more
 specific directions in the next documentation release.</para>
@@ -170,20 +170,20 @@ there.</para>
 
 <para>If you are using &Netscape; 4.x, the mail files should be found
 in <filename class="directory">~/nsmail</filename>. If you are using
-&Netscape; 6.x, they're buried in a directory deep in the <filename
-class="directory">~/.mozilla</filename> subdirectory, something like:
+&Netscape; 6.x, they're buried in a folder deep in the <filename
+class="directory">~/.mozilla</filename> subfolder, something like:
 <filename
 class="directory">/home/user_name/.mozilla/user_name/2ts1ixha.slt/Mail/Mail/server_name</filename>
 (The <filename class="directory">2ts1ixha.slt</filename> string will
 probably vary, so check it on your own system.)  The <filename
-class="directory">[...]/Mail/Mail</filename> directory contains one
-subdirectory for each account from which you receive mail through
+class="directory">[...]/Mail/Mail</filename> folder contains one
+subfolder for each account from which you receive mail through
 Netscape (&eg; <filename
 class="directory">[...]/Mail/Mail/math.university.edu</filename>);
 you will need to copy files from each of them if you want everything to
 be accessible under &kmail;.</para>
 
-<para>If you have no sub folders, just copy all of the &Netscape;
+<para>If you have no subfolders, just copy all of the &Netscape;
 files to <filename class="directory">~/Mail</filename>, make sure
 that they are writable (only by your user, of course), and restart
 &kmail;: all of the messages will now appear in &kmail; folders.
@@ -195,8 +195,8 @@ folder has a corresponding <filename>.msf</filename> file, and if you
 do not get rid of them you will have a bunch of spurious empty
 folders.)</para>
 
-<para>If you were using sub folders under &Netscape; (&eg; a main
-folder called <replaceable>Work</replaceable> with sub folders called
+<para>If you were using subfolders under &Netscape; (&eg; a main
+folder called <replaceable>Work</replaceable> with subfolders called
 <replaceable>Jim</replaceable> and <replaceable>Nancy</replaceable>),
 there are additional steps required. First, create the main folder
 (<replaceable>Work</replaceable>) in &kmail; and create a temporary
@@ -204,17 +204,17 @@ child folder under it (by right-clicking on the folder name and
 selecting <guilabel>Create child folder</guilabel>); it does not
 matter what you call this folder -- <replaceable>dummy</replaceable>
 or the default <replaceable>unnamed</replaceable>, for example. Once
-a child folder has been requested, &kmail; creates a hidden directory
+a child folder has been requested, &kmail; creates a hidden folder
 in <filename class="directory">~/Mail</filename> called (in this
 example) <filename class="directory">.Work.directory</filename>. You
-can then copy your &Netscape; sub folder files
+can then copy your &Netscape; subfolder files
 (<replaceable>Jim</replaceable> and <replaceable>Nancy</replaceable>)
 into <filename class="directory">~/Mail/.Work.directory</filename>,
 and restart &kmail;; the child folders will appear under the main
 folder <replaceable>Work</replaceable>. Of course, this procedure may
-be extended for sub-sub folders, to any depth. (You can remove the
+be extended for sub-subfolders, to any depth. (You can remove the
 temporary child folders afterwards, unless it amuses you to have a
-<replaceable>Work</replaceable> sub folder called
+<replaceable>Work</replaceable> subfolder called
 <replaceable>dummy</replaceable>.)</para>
 
 </listitem>
@@ -257,7 +257,7 @@ there are tools to convert your messages.</para>
 proprietary mail formats that &kmail; cannot understand. However, there is no
 harm in trying! If the mailbox file looks similar to the mbox format, try
 copying the mailbox file (remember, the index file is not needed) to your
-<filename>~/Mail</filename> directory and see what happens if you start
+<filename>~/Mail</filename> folder and see what happens if you start
 &kmail;. If you get mailboxes from your favorite email client to work in &kmail;,
 please tell us how you did it so that we can include directions in a future
 revision of this documentation. </para>

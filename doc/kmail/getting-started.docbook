@@ -30,9 +30,9 @@ start working with it right away. For more in-depth information see the
 &kmail;'s installation is described in <link linkend="installation">the
 appendix</link>.</para>
 
-<para>Invoking &kmail; for the first time creates a directory called
-<filename class="directory">Mail</filename> in your home directory.
-This directory contains the initial folders
+<para>Invoking &kmail; for the first time creates a folder called
+<filename class="directory">Mail</filename> in your home folder.
+This folder contains the initial folders
 (<filename>inbox</filename>, <filename>outbox</filename>,
 <filename>sent-mail</filename>, <filename>trash</filename> and
 <filename>drafts</filename>). Use <menuchoice>
@@ -148,7 +148,7 @@ need to change the <guilabel>Port</guilabel> setting (the default for POP3 is
 specify a path in the <guilabel>Prefix to folders</guilabel> field. This
 tells &kmail; where it can find your folders on the server. If you also
 have a shell account on the server and the messages are stored in your home
-directory it might be useful to store the messages in a subdirectory
+folder it might be useful to store the messages in a subfolder
 <filename class="directory">Mail</filename>. Use this as a value in
 the <guilabel>Prefix to folders</guilabel> field so that &kmail; does
 not mix up mailbox files and other files. If you are not interested in 

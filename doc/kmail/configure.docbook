@@ -268,7 +268,7 @@ signature</guilabel> in the <guilabel>Composer</guilabel> configuration page.</p
 
 <para>&kmail; can obtain the signature text from various sources. The
 traditional way on Unix is to read the text from a file called
-<filename>.signature</filename> in your home directory. This file can
+<filename>.signature</filename> in your home folder. This file can
 be shared between several programs, so you get the same
 signature in each mail program you use.</para>
 

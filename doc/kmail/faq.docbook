@@ -28,7 +28,7 @@
 <qandaset id="faq-set">
 
 <!-- fixme: how to use old kmail mail data: copy files from
-~/Mail (incl. hidden ones) to the new ~/Mail directory -->
+~/Mail (incl. hidden ones) to the new ~/Mail folder -->
 
 <qandaentry>
 <question><para>Why are my filters not applied to incoming messages of IMAP accounts?</para></question>
@@ -117,7 +117,7 @@ to use &kmail; together with procmail then please read <link
  linkend="faq-procmail">this &FAQ;</link>. If you want to use &kmail; together with
 another email client then please read <link 
 linkend="faq-other-muas">this &FAQ;</link>.</para></listitem>
-<listitem><para>If your mail directory (usually <filename class="directory">~/Mail</filename>)
+<listitem><para>If your mail folder (usually <filename class="directory">~/Mail</filename>)
 is on a volume which is mounted via NFS and if the clock of the NFS server is ahead of the
 clock of your computer then the NFS server sometimes reports a wrong
 file date for the index file. In this case &kmail; assumes that the index
@@ -225,7 +225,7 @@ select <menuchoice><guimenu>Help</guimenu><guimenuitem>&kmail; Introduction</gui
 </qandaentry>
 
 <qandaentry>
-<question><para>Can I configure the location of my mail directory?</para></question>
+<question><para>Can I configure the location of my mail folder?</para></question>
 <answer>
 <para>Exit &kmail;, make a backup of <filename>~/.kde/share/config/kmailrc</filename>,
 then open it with an editor and add &eg; <userinput>folders=/home/username/.mail</userinput>
@@ -233,7 +233,7 @@ to the <quote>[General]</quote> section. Then move all your existing folders (in
 the hidden index files) to the new location. The next time you start &kmail; it will use
 <filename class="directory">/home/username/.mail</filename> instead of
 <filename class="directory">/home/username/Mail</filename>. Note that &kmail;
-will lose its filters if you change the mail directory's location but forget
+will lose its filters if you change the mail folder's location but forget
 to move your existing folders.</para>
 </answer>
 </qandaentry>
@@ -242,12 +242,12 @@ to move your existing folders.</para>
 <question><para>How can I use mail folders that are not in <filename
 class="directory">~/Mail/</filename>?</para></question>
 
-<answer><para>To add a whole mbox mail directory use
+<answer><para>To add a whole mbox mail folder use
 <userinput><command>ln</command> <option>-s</option>
 <filename>/somewhere/Mail/.remotedir.directory</filename> <filename
 class="symlink">~/Mail/.mymailboxfile.directory</filename></userinput>.
 Note that it is not possible to use links to files, only links that point
-to directories will work.</para></answer>
+to folders will work.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -459,7 +459,7 @@ locking as your mail delivery agent.</para>
 
 <para><guilabel>Procmail lockfile</guilabel> will use a small utility that comes
 with <application>procmail</application> called <command>lockfile</command>. You
-can use this if your mail folder is in a directory where you have write
+can use this if your mail folder is in a folder where you have write
 permission.  This will not work on your <filename
 class="directory">/var/spool/mail/user</filename> file in most cases.  It will
 create <filename>.lock</filename> files on your account when &kmail; is checking
@@ -474,7 +474,7 @@ can be used in the same way as the <guilabel>Procmail lockfile</guilabel>
 option, with the same limitation with regards to the <filename
 class="directory">/var/spool/mail/</filename> folders. However, the
 <guilabel>Mutt dotlock privileged</guilabel> option can create lock files
-in the <filename class="directory">/var/spool/mail</filename> directory. 
+in the <filename class="directory">/var/spool/mail</filename> folder. 
 <command>mutt_dotlock</command> is a setgid program and this option will
 run it in setgid mode. Please note that these options will only work if
 <application>mutt</application> is installed on your system.</para>
