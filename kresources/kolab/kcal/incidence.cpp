@@ -568,8 +568,11 @@ void Incidence::saveTo( KCal::Incidence* incidence )
     alarm->setEnabled( true );
   }
 
-  incidence->setOrganizer( organizer().displayName + "<"
-                           + organizer().smtpAddress + ">" );
+  if ( organizer().displayName.isEmpty() )
+    incidence->setOrganizer( organizer().smtpAddress );
+  else
+    incidence->setOrganizer( organizer().displayName + "<"
+                             + organizer().smtpAddress + ">" );
 
   incidence->clearAttendees();
   QValueList<Attendee>::ConstIterator it;
