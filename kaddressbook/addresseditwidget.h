@@ -59,6 +59,7 @@ class AddressEditWidget : public QWidget
     KABC::Address::List addresses();
     void setAddresses( const KABC::Addressee &addr,
                        const KABC::Address::List &list );
+    void updateAddressee( const KABC::Addressee &addr );
 
     void updateTypeCombo( const KABC::Address::List&, KComboBox* );
     KABC::Address currentAddress( KComboBox*, int );

@@ -92,6 +92,7 @@ AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
   mAddressField = new QLabel( this );
   mAddressField->setFrameStyle( QFrame::Panel | QFrame::Sunken );
   mAddressField->setMinimumHeight( 20 );
+  mAddressField->setAlignment( Qt::AlignTop );
   layout->addWidget( mAddressField );
 
   mEditButton = new QPushButton( i18n( "&Edit Addresses..." ), this );
@@ -165,6 +166,12 @@ void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
   updateAddressEdit();
 }
 
+void AddressEditWidget::updateAddressee( const KABC::Addressee &addr )
+{
+  mAddressee = addr;
+  updateAddressEdit();
+}
+
 void AddressEditWidget::edit()
 {
   AddressEditDialog dialog( mAddressList, mTypeCombo->currentItem(), this );
@@ -213,7 +220,7 @@ void AddressEditWidget::updateAddressEdit()
     KABC::Address a = *it;
     if ( !a.isEmpty() ) {
 #if KDE_VERSION >= 319
-      if ( a.type() & KABC::Address::Work ) {
+      if ( a.type() & KABC::Address::Work && mAddressee.realName() != mAddressee.organization() ) {
         mAddressField->setText( a.formattedAddress( mAddressee.realName(),
                                    mAddressee.organization() ) );
       } else {

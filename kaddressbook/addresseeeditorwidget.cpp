@@ -701,6 +701,8 @@ void AddresseeEditorWidget::organizationTextChanged( const QString &text )
 
   nameBoxChanged();
 
+  mAddressEditWidget->updateAddressee( mAddressee );
+
   emitModified();
 }
 
@@ -723,6 +725,8 @@ void AddresseeEditorWidget::nameBoxChanged()
     mFormattedNameLabel->setText( NameEditDialog::formattedName( mAddressee, mFormattedNameType ) );
     mAddressee.setFormattedName( NameEditDialog::formattedName( mAddressee, mFormattedNameType ) );
   }
+
+  mAddressEditWidget->updateAddressee( mAddressee );
 }
 
 void AddresseeEditorWidget::nameButtonClicked()
