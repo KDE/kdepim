@@ -1,5 +1,5 @@
 /*
-    This file is part of KOrganizer.
+    This file is part of libkcal.
     Copyright (c) 2000, 2001 Cornelius Schumacher <schumacher@kde.org>
 
     This program is free software; you can redistribute it and/or modify
@@ -66,17 +66,19 @@ bool HtmlExport::save(QTextStream *ts)
   *ts << "<html><head>" << endl;
   *ts << "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=";
   *ts << "UTF-8\" />\n";
-  *ts << "  <title>" << i18n("KOrganizer To-Do List") << "</title>\n";
+  if (!mTitle.isEmpty())
+    *ts << "  <title>" << mTitle.local8Bit() << "</title>\n";
   *ts << "  <style type=\"text/css\">\n";
   *ts << styleSheet();
   *ts << "  </style>\n";
   *ts << "</head><body>\n";
 
-  // TO DO: Write KOrganizer header
+  // TO DO: Write header
   // (Heading, Calendar-Owner, Calendar-Date, ...)
 
   if (eventsEnabled() || monthViewEnabled()) {
-    *ts << "<h1>" << i18n("KOrganizer Calendar") << "</h1>\n";
+    if (!mTitle.isEmpty())
+      *ts << "<h1>" << mTitle.local8Bit() << "</h1>\n";
   }
 
   // Write Month View
@@ -92,13 +94,14 @@ bool HtmlExport::save(QTextStream *ts)
 
   // Write Todo List
   if (todosEnabled()) {
-    *ts << "<h1>" << i18n("KOrganizer To-Do List") << "</h1>\n";
+    if (!mTitleTodo.isEmpty())
+      *ts << "<h1>" << mTitleTodo.local8Bit() << "</h1>\n";
 
     // Write HTML page content
     createHtmlTodoList(ts);
   }
 
-  // Write KOrganizer trailer
+  // Write trailer
   QString trailer = i18n("This page was created ");
 
   if (!mEmail.isEmpty()) {
@@ -110,7 +113,12 @@ bool HtmlExport::save(QTextStream *ts)
     if (!mName.isEmpty())
       trailer += i18n("by %1 ").arg( mName );
   }
-  trailer += i18n("with <a href=\"http://korganizer.kde.org\">KOrganizer</a>");
+  if (!mCreditName.isEmpty()) {
+    if (!mCreditURL.isEmpty())
+      trailer += i18n("with <a href=\"%1\">%2</a>").arg( mCreditURL ).arg( mCreditName );
+    else
+      trailer += i18n("with %1").arg( mCreditName );
+  }
   *ts << "<p>" << trailer << "</p>\n";
 
   // Write HTML trailer

@@ -1,5 +1,5 @@
 /*
-    This file is part of KOrganizer.
+    This file is part of libkcal.
     Copyright (c) 2000, 2001 Cornelius Schumacher <schumacher@kde.org>
 
     This program is free software; you can redistribute it and/or modify
@@ -50,7 +50,15 @@ class HtmlExport {
         mExcludeConfidentialTodoEnabled(false),
         mExcludePrivateEventEnabled(false),
         mExcludeConfidentialEventEnabled(false),
-        mName(), mEmail() {}
+        mTitle(), mTitleTodo(),
+        mName(), mEmail(),
+        mCreditName(), mCreditURL() {
+      
+      mTitle = I18N_NOOP("KOrganizer Calendar");
+      mTitleTodo = I18N_NOOP("KOrganizer To-Do List");
+      mCreditName = "KOrganizer";
+      mCreditURL = "http://korganizer.kde.org";
+    }
 
     virtual ~HtmlExport() {};
 
@@ -64,11 +72,21 @@ class HtmlExport {
     */
     bool save(QTextStream *);
 
+    void setTitle( QString title ) {mTitle = title; }
+    QString title() { return mTitle; }
+
+    void setTitleTodo( QString title ) {mTitleTodo = title; }
+    QString titleTodo() { return mTitleTodo; }
+
     void setFullName( QString name ) { mName = name; }
     QString fullName() { return mName; }
 
     void setEmail( QString email ) { mEmail = email; }
     QString email() { return mEmail; }
+
+    void setCredit( QString name, QString url ) {mCreditName = name; mCreditURL = url; }
+    QString creditName() { return mCreditName; }
+    QString creditURL() { return mCreditURL; }
 
     void setMonthViewEnabled(bool enable=true) { mMonthViewEnabled = enable; }
     bool monthViewEnabled() { return mMonthViewEnabled; }
@@ -153,8 +171,12 @@ class HtmlExport {
     QDate mToDate;
 
     QString mStyleSheet;
+    QString mTitle;
+    QString mTitleTodo;
     QString mName;
     QString mEmail;
+    QString mCreditName;
+    QString mCreditURL;
     QMap<QDate,QString> mHolidayMap;
 };
 
