@@ -36,7 +36,7 @@ void KAccelMenuWatch::setMenu( QPopupMenu *menu )
 void KAccelMenuWatch::connectAccel( int itemId, const char *action )
 {
 	AccelItem *item = newAccelItem( _menu, itemId, StringAccel ) ;
-	item->action	= action;
+	item->action	= QString::fromLocal8Bit( action );
 }
 
 void KAccelMenuWatch::connectAccel( int itemId, KStdAccel::StdAccel accel )
