@@ -107,7 +107,7 @@ class LIBKCAL_EXPORT CalendarResources : public Calendar,
 
     /** constructs a new calendar, with variables initialized to sane values. */
     CalendarResources( const QString &timeZoneId = QString::fromLatin1( "UTC" ),
-                       const QString &family = "calendar" );
+                       const QString &family = QString::fromLatin1("calendar") );
     ~CalendarResources();
 
     /**
