@@ -4,9 +4,6 @@ YFLAGS =-d -v -p ss
 LFLAGS = -Pss 
 LEX_OUTPUT_ROOT = lex.ss
 
-# just to get it built
-icalgauge.c: icalss.h icalssyacc.c
-
 INCLUDES =			\
 	-I$(top_builddir)	\
 	-I$(top_srcdir)/src	\
@@ -35,7 +32,8 @@ libicalss_la_SOURCES =		\
 	icalcstpclient.h        \
 	icalcstpserver.c        \
 	icalcstpserver.h 	\
-	icalcstp.c
+	icalcstp.c		\
+	icalss.h
 
 libicalssincludedir = $(includedir)
 
@@ -53,7 +51,7 @@ COMBINEDHEADERS = \
 	$(srcdir)/icalcstpserver.h
 
 
-icalss.h: $(COMBINEDHEADERS)
+icalss.h: $(COMBINEDHEADERS) icalssyacc.c
 	cat $(COMBINEDHEADERS) | egrep -v "#include.*\"ical" \
 	| egrep -v "#include.*\"pvl\.h\"" > icalss.h
 
