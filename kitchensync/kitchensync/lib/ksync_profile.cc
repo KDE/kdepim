@@ -40,9 +40,27 @@ void Profile::setUid(const QString& uid) {
 }
 void Profile::setManParts( const ManPartService::ValueList& list ) {
     m_list = list;
-};
+}
 ManPartService::ValueList Profile::manParts() const {
     return m_list;
+}
+QMap<QString,QString> Profile::paths() const {
+    return m_map;
+}
+void Profile::setPaths(const QMap<QString, QString>& map ) {
+    m_map = map;
+}
+void Profile::setPath( const QString& partName,  const QString& path ) {
+    m_map.replace( partName, path );
+}
+QString Profile::path( const QString& partName) const {
+    QMap<QString, QString>::ConstIterator it;
+    QString path;
+    it = m_map.find( partName );
+    if ( it != m_map.end() )
+        path = it.data();
+
+    return path;
 }
 Profile &Profile::operator=( const Profile &prof )
 {
@@ -50,6 +68,7 @@ Profile &Profile::operator=( const Profile &prof )
     m_uid = prof.m_uid;
     m_pixmap = prof.m_pixmap;
     m_list = prof.m_list;
+    m_map = prof.m_map;
     return *this;
 }
 

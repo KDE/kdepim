@@ -1,6 +1,7 @@
 #ifndef KitchenSync_Profile_H
 #define KitchenSync_Profile_H
 
+#include <qmap.h>
 #include <qstring.h>
 
 #include <kapabilities.h>
@@ -17,6 +18,7 @@ namespace KSync {
      */
     class Profile {
     public:
+        typedef QMap<QString,  QString> PathMap;
         /** some kewl operators */
         bool operator==( const Profile& );
 //        bool operator!=( const Profile& a) { return !(a == *this); };
@@ -79,6 +81,28 @@ namespace KSync {
         void setManParts( const ManPartService::ValueList& );
 
         /**
+         * Parts can save the file location inside a Profile
+         * path returns the PATH for a part
+         */
+        QString path( const QString& partName )const;
+
+        /**
+         * sets the path for a partName
+         * to path
+         */
+        void setPath( const QString& partName,  const QString& path );
+
+        /**
+         * sets the PATH MAp
+         */
+        void setPaths( const PathMap& );
+
+        /**
+         * returns the PathMap
+         */
+        PathMap paths() const;
+
+        /**
          * copy operator;
          */
         Profile &operator=(const Profile & );
@@ -88,6 +112,7 @@ namespace KSync {
         QString m_uid;
         QString m_pixmap;
         ManPartService::ValueList m_list;
+        PathMap m_map;
     };
 
 };
