@@ -72,7 +72,9 @@ int KNApplication::newInstance()
         }
         n++;
       }
-    } else {
+    }
+
+    if (!mainWidget()) {
       KNMainWindow* knode = new KNMainWindow;
       knode->show();
     }

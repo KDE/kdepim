@@ -85,12 +85,15 @@ class KNGroupBrowser : public KDialogBase {
     QListView *groupView;
     int delayedCenter;
     KLineEdit *filterEdit;
-    QCheckBox *subCB, *newCB;
+    QCheckBox *noTreeCB, *subCB, *newCB;
     QPushButton  *arrowBtn1, *arrowBtn2;
     QPixmap pmGroup, pmNew,
             pmRight, pmLeft;
     QGridLayout *listL;
     QLabel *leftLabel, *rightLabel;
+    QTimer *refilterTimer;
+    QString lastFilter;
+    bool incrementalFilter;
 
     KNNntpAccount *a_ccount;
     QSortedList<KNGroupInfo> *allList, *matchList;
@@ -101,9 +104,12 @@ class KNGroupBrowser : public KDialogBase {
     void slotCenterDelayed();
     void slotItemDoubleClicked(QListViewItem *it);   // double click checks/unchecks (opens/closes) item
     void slotFilter(const QString &txt);
+    void slotTreeCBToggled();
+    void slotSubCBToggled();
+    void slotNewCBToggled();
+    void slotFilterTextChanged(const QString &txt);
     void slotRefilter();
 
 };
-
 
 #endif

@@ -37,8 +37,10 @@
 KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAccount *a,
                                int buttons, bool newCBact, const QString &user1, const QString &user2) :
   KDialogBase( parent, 0L, true, caption, buttons | Help | Ok | Cancel, Ok, true, user1, user2 ),
-  a_ccount(a)
+  incrementalFilter(false), a_ccount(a)
 {
+  refilterTimer = new QTimer();
+
   allList=new QSortedList<KNGroupInfo>;
   allList->setAutoDelete(true);
   matchList=new QSortedList<KNGroupInfo>;
@@ -50,6 +52,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
 
   filterEdit=new KLineEdit(page);
   QLabel *l=new QLabel(filterEdit,i18n("&Filter:"), page);
+  noTreeCB=new QCheckBox(i18n("disable &tree view"), page);
+  noTreeCB->setChecked(false);
   subCB=new QCheckBox(i18n("&subscribed only"), page);
   subCB->setChecked(false);
   newCB=new QCheckBox(i18n("&new only"), page);
@@ -100,6 +104,7 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
 
   filterL->addWidget(l);
   filterL->addWidget(filterEdit, 1);
+  filterL->addWidget(noTreeCB);
   filterL->addWidget(subCB);
   if (newCBact)
     filterL->addWidget(newCB);
@@ -117,12 +122,14 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
 
   //connect
   connect(filterEdit, SIGNAL(textChanged(const QString&)),
-    this, SLOT(slotFilter(const QString&)));
+          SLOT(slotFilterTextChanged(const QString&)));
   connect(groupView, SIGNAL(expanded(QListViewItem*)),
-    this, SLOT(slotItemExpand(QListViewItem*)));
+          SLOT(slotItemExpand(QListViewItem*)));
 
-  connect(subCB, SIGNAL(clicked()), this, SLOT(slotRefilter()));
-  connect(newCB, SIGNAL(clicked()), this, SLOT(slotRefilter()));
+  connect(refilterTimer, SIGNAL(timeout()), SLOT(slotRefilter()));
+  connect(noTreeCB, SIGNAL(clicked()), SLOT(slotTreeCBToggled()));
+  connect(subCB, SIGNAL(clicked()), SLOT(slotSubCBToggled()));
+  connect(newCB, SIGNAL(clicked()), SLOT(slotNewCBToggled()));
 
   enableButton(User1,false);
   enableButton(User2,false);
@@ -133,9 +140,9 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
 }
 
 
-
 KNGroupBrowser::~KNGroupBrowser()
 {
+
   knGlobals.netAccess->stopJobsNntp(KNJobData::JTLoadGroups);
   knGlobals.netAccess->stopJobsNntp(KNJobData::JTFetchGroups);
   knGlobals.netAccess->stopJobsNntp(KNJobData::JTCheckNewGroups);
@@ -143,7 +150,6 @@ KNGroupBrowser::~KNGroupBrowser()
   delete matchList;
   delete allList;
 }
-
 
 
 void KNGroupBrowser::slotReceiveList(KNGroupListData* d)
@@ -154,10 +160,10 @@ void KNGroupBrowser::slotReceiveList(KNGroupListData* d)
   if (d) {  // d==0 if something has gone wrong...
     delete allList;
     allList = d->extractList();
+    incrementalFilter=false;
     slotRefilter();
   }
 }
-
 
 
 void KNGroupBrowser::changeItemState(const KNGroupInfo &gi, bool s)
@@ -168,7 +174,6 @@ void KNGroupBrowser::changeItemState(const KNGroupInfo &gi, bool s)
     if (it.current()->isSelectable() && (static_cast<CheckItem*>(it.current())->info==gi))
       static_cast<CheckItem*>(it.current())->setChecked(s);
 }
-
 
 
 bool KNGroupBrowser::itemInListView(QListView *view, const KNGroupInfo &gi)
@@ -182,7 +187,6 @@ bool KNGroupBrowser::itemInListView(QListView *view, const KNGroupInfo &gi)
 
   return false;
 }
-
 
 
 void KNGroupBrowser::createListItems(QListViewItem *parent)
@@ -243,7 +247,6 @@ void KNGroupBrowser::createListItems(QListViewItem *parent)
 }
 
 
-
 void KNGroupBrowser::removeListItem(QListView *view, const KNGroupInfo &gi)
 {
   if(!view) return;
@@ -301,33 +304,55 @@ void KNGroupBrowser::slotItemDoubleClicked(QListViewItem *it)
 }
 
 
-#define MIN_FOR_TREE 50
+#define MIN_FOR_TREE 200
 void KNGroupBrowser::slotFilter(const QString &txt)
 {
   QString filtertxt = txt.lower();
   CheckItem *cit=0;
 
-  matchList->clear();
-  groupView->clear();
-
   bool notCheckSub = !subCB->isChecked();
   bool notCheckNew = !newCB->isChecked();
   bool notCheckStr = (filtertxt.isEmpty());
 
-  for(KNGroupInfo *g=allList->first(); g; g=allList->next()) {
-    if ((notCheckSub||g->subscribed)&&
-        (notCheckNew||g->newGroup)&&
-        (notCheckStr||(g->name.contains(filtertxt))))
-      matchList->append(g);
+  bool doIncrementalUpdate = (incrementalFilter && (filtertxt.left(lastFilter.length())==lastFilter));
+
+  if (doIncrementalUpdate) {
+    QSortedList<KNGroupInfo> *tempList = new QSortedList<KNGroupInfo>();
+    tempList->setAutoDelete(false);
+
+    for(KNGroupInfo *g=matchList->first(); g; g=matchList->next()) {
+      if ((notCheckSub||g->subscribed)&&
+          (notCheckNew||g->newGroup)&&
+          (notCheckStr||(g->name.contains(filtertxt))))
+      tempList->append(g);
+    }
+
+    delete matchList;
+    matchList=tempList;
+  } else {
+    matchList->clear();
+
+    for(KNGroupInfo *g=allList->first(); g; g=allList->next()) {
+      if ((notCheckSub||g->subscribed)&&
+          (notCheckNew||g->newGroup)&&
+          (notCheckStr||(g->name.contains(filtertxt))))
+        matchList->append(g);
+    }
   }
 
-  if(matchList->count() < MIN_FOR_TREE) {
+  groupView->clear();
+
+  if((matchList->count() < MIN_FOR_TREE) || noTreeCB->isChecked()) {
     for(KNGroupInfo *g=matchList->first(); g; g=matchList->next()) {
       cit=new CheckItem(groupView, *g, this);
       updateItemState(cit);
     }
-  } else
+  } else {
     createListItems();
+  }
+
+  lastFilter = filtertxt;
+  incrementalFilter = true;
 
   leftLabel->setText(i18n("Groups on %1: (%2 displayed)").arg(a_ccount->name()).arg(matchList->count()));
 
@@ -336,16 +361,44 @@ void KNGroupBrowser::slotFilter(const QString &txt)
 }
 
 
+void KNGroupBrowser::slotTreeCBToggled()
+{
+  incrementalFilter=false;
+  slotRefilter();
+}
+
+
+void KNGroupBrowser::slotSubCBToggled()
+{
+  incrementalFilter=subCB->isChecked();
+  slotRefilter();
+}
+
+
+void KNGroupBrowser::slotNewCBToggled()
+{
+  incrementalFilter=newCB->isChecked();
+  slotRefilter();
+}
+
+
+void KNGroupBrowser::slotFilterTextChanged(const QString &txt)
+{
+  if (subCB->isChecked() || newCB->isChecked())
+    slotRefilter();
+  else
+    refilterTimer->start(200,true);
+}
+
 
 void KNGroupBrowser::slotRefilter()
 {
+  refilterTimer->stop();
   slotFilter(filterEdit->text());
 }
 
 
-
 //=======================================================================================
-
 
 
 KNGroupBrowser::CheckItem::CheckItem(QListView *v, const KNGroupInfo &gi, KNGroupBrowser *b) :
@@ -361,7 +414,6 @@ KNGroupBrowser::CheckItem::CheckItem(QListView *v, const KNGroupInfo &gi, KNGrou
 }
 
 
-
 KNGroupBrowser::CheckItem::CheckItem(QListViewItem *i, const KNGroupInfo &gi, KNGroupBrowser *b) :
   QCheckListItem(i, gi.name, QCheckListItem::CheckBox), info(gi), browser(b)
 {
@@ -375,11 +427,9 @@ KNGroupBrowser::CheckItem::CheckItem(QListViewItem *i, const KNGroupInfo &gi, KN
 }
 
 
-
 KNGroupBrowser::CheckItem::~CheckItem()
 {
 }
-
 
 
 void KNGroupBrowser::CheckItem::setChecked(bool c)
@@ -389,7 +439,6 @@ void KNGroupBrowser::CheckItem::setChecked(bool c)
   QCheckListItem::setOn(c);
   browser=b;
 }
-
 
 
 void KNGroupBrowser::CheckItem::stateChange(bool s)

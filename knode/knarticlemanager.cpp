@@ -290,7 +290,6 @@ void KNArticleManager::showHdrs(bool clear)
 
   }
 
-
   if(setFirstChild && v_iew->firstChild()) {
     v_iew->setCurrentItem(v_iew->firstChild());
     knGlobals.view->articleView()->setArticle(0);

@@ -323,6 +323,7 @@ void KNGroupDialog::slotUser2()
     subCB->setChecked(false);
     newCB->setChecked(true);
     emit(checkNew(a_ccount,lastDate));
+    incrementalFilter=false;
     slotRefilter();
   }
 
