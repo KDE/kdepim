@@ -56,6 +56,7 @@
 #include <kleo/dn.h>
 #include <kleo/keyfilter.h>
 #include <kleo/keyfiltermanager.h>
+#include <kleo/hierarchicalkeylistjob.h>
 
 #include <ui/progressdialog.h>
 #include <ui/progressbar.h>
@@ -358,6 +359,8 @@ void CertManager::slotToggleRemote( int idx ) {
 void CertManager::slotToggleHierarchicalView( bool hier ) {
   mKeyListView->setHierarchical( hier );
   mKeyListView->setRootIsDecorated( hier );
+  if ( hier && !mCurrentQuery.isEmpty() )
+    startRedisplay( false );
 }
 
 void CertManager::connectJobToStatusBarProgress( Kleo::Job * job, const QString & initialText ) {
@@ -451,8 +454,14 @@ void CertManager::startKeyListing( bool validating, bool refresh, const QStringL
   mComboAction->setEnabled( false );
   mFindAction->setEnabled( false );
 
-  Kleo::KeyListJob * job =
-    Kleo::CryptPlugFactory::instance()->smime()->keyListJob( mRemote, false, validating );
+  Kleo::Job * job = 0;
+  Kleo::KeyListJob * normal = 0;
+  Kleo::HierarchicalKeyListJob * hier = 0;
+  if ( !validating && !refresh && mKeyListView->hierarchical() && !patterns.empty() )
+    job = hier = new Kleo::HierarchicalKeyListJob( Kleo::CryptPlugFactory::instance()->smime(),
+						   mRemote, false, validating );
+  else
+    job = normal = Kleo::CryptPlugFactory::instance()->smime()->keyListJob( mRemote, false, validating );
   assert( job );
 
   connect( job, SIGNAL(nextKey(const GpgME::Key&)),
@@ -462,7 +471,7 @@ void CertManager::startKeyListing( bool validating, bool refresh, const QStringL
 
   connectJobToStatusBarProgress( job, i18n("Fetching keys...") );
 
-  const GpgME::Error err = job->start( patterns );
+  const GpgME::Error err = hier ? hier->start( patterns ) : normal->start( patterns ) ;
   if ( err ) {
     showKeyListError( this, err );
     return;
