@@ -8,10 +8,10 @@ Standards-Version: 3.1.1
 Package: korganizer
 Architecture: any
 Section: x11
-Replaces: kdepim, kdepim-common
+Replaces: kdepim, kdepim-common, kdepim-dev
 Depends: ${shlibs:Depends}, kdebase-libs
 Suggests: kdebase, abbrowser, kpilot
-Conflicts: kdepim
+Conflicts: kdepim, kdepim-dev
 Description: Personal organizer based on QT and KDE 
  A complete calendar and scheduling program. KOrganizer supports
  information interchange with other calendar applications through the
@@ -35,10 +35,10 @@ Description: Personal organizer based on QT and KDE
 Package: abbrowser
 Architecture: any
 Section: utils
-Replaces: kdepim, kdepim-common
+Replaces: kdepim, kdepim-common, kdepim-dev
 Depends: ${shlibs:Depends}, kdebase-libs
 Suggests: kdebase, korganizer
-Conflicts: kdepim
+Conflicts: kdepim, kdepim-dev
 Description: Address book reader
  Address book reader for KDE
 
@@ -50,11 +50,19 @@ Suggests: kdebase, korganizer, kab, knotes
 Description: Palm Pliot sync tool for KDE
  Palm Pilot sync tool for KDE
 
+Package: kdepim-libs
+Architecture: any
+Section: x11
+Depends: ${shlibs:Depends}
+Description: KDE libraries amd modules for kdepim
+ This package contains the different interface modules and libraries
+ provided by the kdepim package.  These includes interfaces to imap and ical
+
 Package: kdepim-dev
 Architecture: any
 Section: devel
-Replaces: kdepim-dev-cvs, korganizer-dev
-Depends: korganizer (= ${Source-Version}), abbrowser (= ${Source-Version}), libqt2.2-dev, kdelibs3-dev
-Description: Personal Information Management (development files)
- Development files for KDE related Personal Information Management apps
- including abbrowser and korganizer
+Replaces: korganizer (<< 4:2.1-20010101-0)
+Depends: kdepim-libs (= ${Source-Version}), libqt2.2-dev, kdelibs3-dev, xlibs-dev | xlib6g-dev, libc6-dev
+Description: KDE PIM applications (development files)
+ KDE PIM application development files
+ You need these files to compile some PIM related KDE apps.

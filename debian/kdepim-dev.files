@@ -1,0 +1,6 @@
+usr/include/*
+usr/lib/libical.a
+usr/lib/libicalss.a
+usr/lib/libicalvcal.a
+usr/lib/librmm.so
+usr/lib/libkorganizer.so

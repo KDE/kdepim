@@ -1,0 +1,12 @@
+usr/lib/libical.la
+usr/lib/libicalss.la
+usr/lib/libicalvcal.la
+usr/lib/libimap.so.0.0.0
+usr/lib/libimap.so.0
+usr/lib/libimap.la
+usr/lib/librmm.so.1.0.0
+usr/lib/librmm.so.1
+usr/lib/librmm.la
+usr/lib/libvcard.so.0.0.0
+usr/lib/libvcard.so.0
+usr/lib/libvcard.la
