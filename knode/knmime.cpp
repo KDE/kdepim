@@ -743,8 +743,14 @@ void KNMimeContent::parse()
       ct->setMimeType("text/plain");
       //ct->setCharset("US-ASCII");
       contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
-   }
+    }
   }
+
+  if (ct->mimeType()=="invalid/invalid") { // this article is broken, treat it as text/plain
+    ct->setMimeType("text/plain");
+    contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
+  }
+
   //qDebug("void KNMimeContent::parse() : finished");
 }
 

@@ -553,8 +553,8 @@ class UserAgent : public Base {
 class ContentType : public Base {
 
   public:
-    ContentType() : Base(),m_imeType("application/octet-stream"),c_ategory(CCsingle)  {}
-    ContentType(KNMimeContent *p) : Base(p),m_imeType("application/octet-stream"),c_ategory(CCsingle)  {}
+    ContentType() : Base(),m_imeType("invalid/invalid"),c_ategory(CCsingle)  {}
+    ContentType(KNMimeContent *p) : Base(p),m_imeType("invalid/invalid"),c_ategory(CCsingle)  {}
     ContentType(KNMimeContent *p, const QCString &s) : Base(p)  { from7BitString(s); }
     ContentType(KNMimeContent *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
     ~ContentType()  {}
