@@ -232,6 +232,7 @@ class Calendar : public QObject, public CustomProperties,
       Return list of all Journal entries.
     */
     virtual Journal::List journals() = 0;
+    // TODO: Add rawJournals() and rawJournal( QDate )
 
     /**
       Searches all incidence types for an incidence with this unique

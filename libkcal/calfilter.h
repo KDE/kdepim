@@ -1,7 +1,7 @@
 /*
     This file is part of libkcal.
 
-    Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2001,2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -26,6 +26,7 @@
 
 #include "event.h"
 #include "todo.h"
+#include "journal.h"
 
 namespace KCal {
 
@@ -38,14 +39,14 @@ class CalFilter
     /** Construct filter. */
     CalFilter();
     /** Construct filter with name */
-    CalFilter(const QString &name);
+    CalFilter( const QString &name );
     /** Destruct filter. */
     ~CalFilter();
     
     /**
       Set name of filter.
     */
-    void setName(const QString &name) { mName = name; }
+    void setName( const QString &name ) { mName = name; }
     /**
       Return name of filter.
     */
@@ -55,24 +56,30 @@ class CalFilter
       Apply filter to eventlist, all events not matching filter criterias are
       removed from the list.
     */
-    void apply(Event::List *eventlist);
+    void apply( Event::List *eventlist );
     
     /**
       Apply filter to todolist, all todos not matching filter criterias are
       removed from the list.
     */
-    void apply(Todo::List *todolist);
+    void apply( Todo::List *todolist );
+    
+    /**
+      Apply filter to todolist, all todos not matching filter criterias are
+      removed from the list.
+    */
+    void apply( Journal::List *journallist);
     
     /**
       Apply filter criteria on the specified incidence. Return true, if event passes
       criteria, otherwise return false.
     */
-    bool filterIncidence(Incidence *);
+    bool filterIncidence( Incidence * );
     
     /**
       Enable or disable filter.
     */
-    void setEnabled(bool);
+    void setEnabled( bool );
     /**
       Return wheter the filter is enabled or not.
     */
@@ -84,7 +91,7 @@ class CalFilter
       events.
       See related functions.
     */
-    void setCategoryList(const QStringList &);
+    void setCategoryList( const QStringList & );
     /**
       Return category list, used for showing/hiding categories of events.
       See related functions.
@@ -96,7 +103,7 @@ class CalFilter
     /**
       Set criteria, which have to be fulfilled by events passing the filter.
     */
-    void setCriteria(int);
+    void setCriteria( int );
     /**
       Get inclusive filter criteria.
     */

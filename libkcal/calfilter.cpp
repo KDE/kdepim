@@ -76,6 +76,20 @@ void CalFilter::apply( Todo::List *todolist )
 //  kdDebug(5800) << "CalFilter::apply() done" << endl;
 }
 
+void CalFilter::apply( Journal::List *journallist )
+{
+  if ( !mEnabled ) return;
+
+  Journal::List::Iterator it = journallist->begin();
+  while( it != journallist->end() ) {
+    if ( !filterIncidence( *it ) ) {
+      it = journallist->remove( it );
+    } else {
+      ++it;
+    }
+  }
+}
+
 bool CalFilter::filterIncidence(Incidence *incidence)
 {
 //  kdDebug(5800) << "CalFilter::filterIncidence(): " << incidence->summary() << endl;
