@@ -137,10 +137,15 @@ private:
 	bool setupDCOP();
 } ;
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 // $Log$
+// Revision 1.14  2001/03/30 17:11:31  stern
+// Took out LocalDB for mode and added DatabaseSource enum in BaseConduit.  This the user can set the source for backup and sync
+//
 // Revision 1.13  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

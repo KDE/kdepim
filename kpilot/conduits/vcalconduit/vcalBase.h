@@ -26,8 +26,8 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _KPILOT_VCALBASE_H
-#define _KPILOT_VCALBASE_H
+#ifndef _VCAL_VCALBASE_H
+#define _VCAL_VCALBASE_H
 
 class PilotRecord;
 class VObject;

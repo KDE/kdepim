@@ -81,11 +81,16 @@ private:
   void fillFields();
 };
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 
 // $Log$
+// Revision 1.9  2001/04/04 21:20:32  stern
+// Added support for category information and copy constructors
+//
 // Revision 1.8  2001/03/19 23:12:39  stern
 // Made changes necessary for upcoming abbrowser conduit.
 //

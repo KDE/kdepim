@@ -132,12 +132,17 @@ private:
 
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 
 
 // $Log$
+// Revision 1.8  2001/04/01 17:32:06  adridg
+// Fiddling around with date properties
+//
 // Revision 1.7  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

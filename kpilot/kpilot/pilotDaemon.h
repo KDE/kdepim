@@ -217,10 +217,15 @@ protected slots:
 };
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 // $Log$
+// Revision 1.20  2001/04/01 17:32:51  adridg
+// I really don't remember
+//
 // Revision 1.19  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

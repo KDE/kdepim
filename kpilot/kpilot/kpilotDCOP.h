@@ -40,11 +40,16 @@ k_dcop:
 } ;
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 
 // $Log$
+// Revision 1.2  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.1  2001/03/04 22:22:29  adridg
 // DCOP cooperation between daemon & kpilot for d&d file install
 //

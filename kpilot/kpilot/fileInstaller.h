@@ -70,10 +70,15 @@ private:
 } ;
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 // $Log$
+// Revision 1.3  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.2  2001/03/04 13:11:58  adridg
 // Actually use the fileInstaller object
 //

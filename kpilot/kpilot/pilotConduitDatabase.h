@@ -92,4 +92,10 @@ class PilotConduitDatabase : public PilotDatabase
       KSocket *fDaemonSocket;
     };
 
+#else
+#ifdef DEBUG
+#warning "File doubly included"
 #endif
+#endif
+
+// $Log:$

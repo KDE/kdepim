@@ -109,11 +109,16 @@ public:
     };
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 
 // $Log$
+// Revision 1.14  2001/03/24 15:59:22  adridg
+// Some populateCategories changes for bug #22112
+//
 // Revision 1.13  2001/03/19 23:12:39  stern
 // Made changes necessary for upcoming abbrowser conduit.
 //

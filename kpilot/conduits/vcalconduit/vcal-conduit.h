@@ -29,8 +29,8 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _KPILOT_VCALCONDUIT_H
-#define _KPILOT_VCALCONDUIT_H
+#ifndef _VCAL_VCALCONDUIT_H
+#define _VCAL_VCALCONDUIT_H
 
 #include <time.h>
 
@@ -38,14 +38,13 @@
 #include <pi-datebook.h>
 #endif
 
-#include "vcc.h"
-
 #ifndef _KPILOT_VCALBASE_H
 #include "vcalBase.h"
 #endif
 
 class PilotRecord;
 class PilotDateEntry;
+class VObject;
 
 	
 class VCalConduit : public VCalBaseConduit
@@ -109,6 +108,9 @@ private:
 
 
 // $Log$
+// Revision 1.14  2001/03/10 18:26:04  adridg
+// Refactored vcal conduit and todo conduit
+//
 // Revision 1.13  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

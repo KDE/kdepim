@@ -35,8 +35,8 @@
 
 
 
-#ifndef _KPILOT_OPTIONS_H_
-#define _KPILOT_OPTIONS_H_ 1
+#ifndef _KPILOT_OPTIONS_H
+#define _KPILOT_OPTIONS_H 1
 
 #include "config.h"
 
@@ -217,11 +217,16 @@ extern const int fname;
 //
 #define SPACING		(10)
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 
 // $Log$
+// Revision 1.25  2001/04/14 15:21:35  adridg
+// XML GUI and ToolTips
+//
 // Revision 1.24  2001/04/11 21:33:06  adridg
 // Make version number consistent across KPilot applications
 //

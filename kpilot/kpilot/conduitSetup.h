@@ -69,10 +69,15 @@ private:
 	QStringList conduitPaths;
 } ;
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 // $Log$
+// Revision 1.11  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.10  2001/02/08 17:59:34  adridg
 // Removed spurious #ifdefs, and the #define that goes with it. Make KPilot exit consistently after user-requested setup actions.
 //

@@ -104,11 +104,16 @@ public:
     };
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 
 // $Log$
+// Revision 1.9  2001/04/04 21:19:38  stern
+// Added copy constructor and equals operator
+//
 // Revision 1.8  2001/03/30 17:11:31  stern
 // Took out LocalDB for mode and added DatabaseSource enum in BaseConduit.  This the user can set the source for backup and sync
 //

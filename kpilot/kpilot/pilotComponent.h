@@ -118,12 +118,17 @@ private:
 } ;
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 
 
 // $Log$
+// Revision 1.8  2001/04/14 15:21:35  adridg
+// XML GUI and ToolTips
+//
 // Revision 1.7  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

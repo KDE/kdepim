@@ -45,11 +45,16 @@ class StrTokenizer
     };
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 
 // $Log$
+// Revision 1.5  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.4  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

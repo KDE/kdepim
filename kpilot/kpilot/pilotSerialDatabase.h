@@ -91,11 +91,16 @@ class PilotSerialDatabase : public PilotDatabase
     };
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 
 // $Log$
+// Revision 1.7  2001/03/27 23:54:43  stern
+// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
+//
 // Revision 1.6  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

@@ -31,7 +31,6 @@
 #ifndef _KPILOT_KPILOTLINK_H
 #define _KPILOT_KPILOTLINK_H
 
-
 #ifndef QOBJECT_H
 #include <qobject.h>
 #endif
@@ -46,23 +45,12 @@ class KProcess;
 class PilotRecord;
 class MessageDialog;
 
+class PilotDatabase;
 class PilotSerialDatabase;
 class PilotLocalDatabase;
 
 #ifndef _KPILOT_PILOTUSER_H
 #include "pilotUser.h"
-#endif
-
-#ifndef _KPILOT_PILOTDATABASE_H
-#include "pilotDatabase.h"
-#endif
-
-#ifndef _KPILOT_PILOTSERIALDATABASE_H
-#include "pilotSerialDatabase.h"
-#endif
-
-#ifndef _KPILOT_PILOTLOCALDATABASE_H
-#include "pilotLocalDatabase.h"
 #endif
 
 /**
@@ -337,10 +325,15 @@ signals:
 };
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 // $Log$
+// Revision 1.22  2001/03/27 23:54:43  stern
+// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
+//
 // Revision 1.21  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

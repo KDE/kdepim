@@ -31,7 +31,9 @@
 #ifndef PILOTDAEMONDCOP_H
 #define PILOTDAEMONDCOP_H
 
+#ifndef _DCOPOBJECT_H
 #include <dcopobject.h>
+#endif
 
 
 class PilotDaemonDCOP : virtual public DCOPObject
@@ -50,11 +52,16 @@ k_dcop:
 } ;
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 
 // $Log$
+// Revision 1.4  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.3  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

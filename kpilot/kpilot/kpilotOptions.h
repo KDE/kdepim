@@ -151,11 +151,16 @@ private:
 
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 
 // $Log$
+// Revision 1.15  2001/04/01 17:31:11  adridg
+// --enable-final and #include fixes
+//
 // Revision 1.14  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

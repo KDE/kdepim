@@ -69,11 +69,16 @@ public:
 
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 
 // $Log$
+// Revision 1.8  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.7  2001/03/02 16:59:35  adridg
 // Added new protocol message READ_APP_INFO for conduit->daemon communication
 //

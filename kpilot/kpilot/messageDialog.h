@@ -30,11 +30,15 @@
 */
 
 
-#ifndef __MESSAGE_DIALOG
-#define __MESSAGE_DIALOG
+#ifndef _KPILOT_MESSAGEDIALOG_H
+#define _KPILOT_MESSAGEDIALOG_H
 
+#ifndef QDIALOG_H
 #include <qdialog.h>
+#endif
+#ifndef QLABEL_H
 #include <qlabel.h>
+#endif
 
 class MessageDialog : public QDialog
     {
@@ -48,10 +52,15 @@ class MessageDialog : public QDialog
     QLabel* fMessage;
     };
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 // $Log$
+// Revision 1.6  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.5  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

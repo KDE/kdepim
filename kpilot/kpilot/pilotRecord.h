@@ -75,11 +75,16 @@ public:
     };
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 
 // $Log$
+// Revision 1.6  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.5  2001/02/07 14:21:56  brianj
 // Changed all include definitions for libpisock headers
 // to use include path, which is defined in Makefile.

@@ -158,11 +158,16 @@ class PilotAddress : public PilotAppCategory
 
 
 #else
+#ifdef DEBUG
 #warning "File doubly included"
+#endif
 #endif
 
 
 // $Log$
+// Revision 1.12  2001/04/13 22:13:38  stern
+// Added setShownPhoneField method
+//
 // Revision 1.11  2001/04/04 21:20:32  stern
 // Added support for category information and copy constructors
 //
