@@ -674,7 +674,7 @@ int main(int argc, char **argv)
 
 	KAboutData *a=new KAboutData("kpilot",
 		I18N_NOOP("KPilot"),
-		"4.0.0",
+		KPILOT_VERSION,
 		I18N_NOOP("Pilot Hot-sync software for KDE"),
 		KAboutData::License_GPL,
 		"Copyright (c) 1998-2000 Dan Pilone",
@@ -717,6 +717,10 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.25  2001/03/27 11:10:39  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.24  2001/03/06 12:11:58  adridg
 // Fixed 'start daemon at login' problems
 //

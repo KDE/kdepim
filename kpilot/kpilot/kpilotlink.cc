@@ -1179,7 +1179,7 @@ KPilotLink::startHotSync()
   updateProgressBar(10);
   destroyProgressBar();
   showMessage("Hot-Sync started.");
-  addSyncLogEntry("Sync started with KPilot-v4.0b\n");
+  addSyncLogEntry("Sync started with KPilot-v" KPILOT_VERSION "\n");
   fNextDBIndex = 0;
   fCurrentDB = 0L;
 }
@@ -1661,6 +1661,10 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 #endif
 
 // $Log$
+// Revision 1.40  2001/03/27 11:10:39  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.39  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //
