@@ -15,9 +15,11 @@
 #ifdef __cplusplus  
 extern "C" void usleep(unsigned int);
 extern "C" long gethostid (void);
+extern "C" void getdomainname (char *name, int namelen);
 #else
 void usleep(unsigned int);
-extern gethostid (void);
+extern long gethostid (void);
+extern void getdomainname (char *name, int namelen);
 #endif
 #endif
 #endif
