@@ -46,8 +46,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>9/12/2000</date>
-<releaseinfo>4.0.0</releaseinfo>
+<date>09/12/2000</date>
+<releaseinfo>4.00.00</releaseinfo>
 
 <abstract>
 <para>
@@ -1796,6 +1796,9 @@ Documentation copyright 2000 Adriaan de Groot <email>adridg@cs.kun.nl</email>
 </book>
 <!-- 
      $Log$
+     Revision 1.5  2001/02/08 16:42:47  bischoff
+     Temporarily reverted to DocBook 3.1
+
      Revision 1.4  2000/12/19 07:12:26  adridg
      Mostly updated
 
