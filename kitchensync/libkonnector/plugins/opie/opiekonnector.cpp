@@ -134,6 +134,12 @@ void OpiePlugin::slotChanged( bool b)
     kdDebug() << "State changed Opiekonnector" << endl;
     emit  stateChanged( d->udi,  b );
 }
-
-
+KSyncEntry* OpiePlugin::retrEntry( const QString& path )
+{
+    return d->socket->retrEntry( path );
+}
+QString OpiePlugin::metaId()const
+{
+    return d->socket->metaId();
+}
 

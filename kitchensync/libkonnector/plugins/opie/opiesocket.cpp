@@ -10,9 +10,12 @@
 #include <kgenericfactory.h>
 #include <qsocket.h>
 #include <kdebug.h>
+#include <ktempfile.h>
 #include <kio/netaccess.h>
 #include <kfileitem.h>
 #include <kurl.h>
+#include <kglobal.h>
+#include <kstandarddirs.h>
 #include <qregexp.h>
 
 #include <kalendarsyncentry.h>
@@ -50,6 +53,7 @@ public:
     QPtrList<KSyncEntry> m_sync;
     QValueList<OpieCategories> m_categories;
     QString partnerId;
+    QStringList files;
     // helper
     KonnectorUIDHelper *helper;
     OpieHelper::CategoryEdit *edit;
@@ -71,6 +75,7 @@ OpieSocket::OpieSocket(QObject *obj, const char *name )
 }
 OpieSocket::~OpieSocket()
 {
+    kdDebug() << "Delete OpieSocket" << endl;
     delete d->edit;
     delete d->helper;
 }
@@ -159,19 +164,55 @@ QByteArray OpieSocket::retrFile(const QString &path )
 }
 bool OpieSocket::insertFile( const QString &fileName )
 {
-// files
-}
-void OpieSocket::write(const QString &, const QByteArray & )
-{
+  if ( !d->connected )
+      return false;
 
+  d->files.append( fileName );
+  return true;
 }
-void OpieSocket::write(QPtrList<KSyncEntry> )
+//if starts with / we got a absolute target else
+// relatve to QPEApplication::documentDir()
+void OpieSocket::write(const QString &path, const QByteArray &array )
 {
+    KTempFile temp(locateLocal("tmp", "opie-konn-tmp"),  "konn" );
+    QFile* file = temp.file();
+    if ( file!=0 ) {
+        file->writeBlock( array  );
+        temp.close();
 
+        KURL url;
+        url.setProtocol("ftp" );
+        url.setUser( d->user );
+        url.setPass( d->pass );
+        url.setHost( d->dest );
+        url.setPort( 4242 );
+        url.setPath( path );
+        KIO::NetAccess::upload(temp.name(), url );
+    }
+    temp.unlink();
+}
+void OpieSocket::write(QPtrList<KSyncEntry> lis)
+{
+// ok the list
+    kdDebug() << "Write back" << endl;
+    lis.setAutoDelete( TRUE );
+    KSyncEntry* entry;
+    for ( entry = lis.first(); entry != 0; lis.next() ) {
+        // convert to XML
+        if ( entry->type() == QString::fromLatin1("KAlendarSyncEntry") ) {
+            KAlendarSyncEntry* cal = (KAlendarSyncEntry*) entry;
+            OpieHelper::DateBook dateb( d->edit,  d->helper,  d->meta );
+            OpieHelper::ToDo todo( d->edit,  d->helper, d->meta );
+            QByteArray todos = todo.fromKDE( cal );
+            QByteArray events = dateb.fromKDE( cal );
+            // Events + Todo
+        }
+    }
+    lis.clear();
 }
 void OpieSocket::write(QValueList<KOperations> )
 {
-
+    kdDebug() << "write KOperations not implemented yet" << endl;
 }
 void OpieSocket::slotError(int error )
 {
@@ -463,4 +504,10 @@ QString OpieSocket::randomString( int length )
     }
     return str;
 }
-
+QString OpieSocket::metaId() const{
+    return d->partnerId;
+}
+KSyncEntry* retrEntry( const QString& )
+{
+    return 0l;
+}

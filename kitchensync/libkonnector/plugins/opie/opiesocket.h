@@ -27,10 +27,12 @@ Q_OBJECT
   bool startSync();
   bool isConnected();
   QByteArray retrFile(const QString &path );
+  KSyncEntry* retrEntry( const QString& );
   bool insertFile(const QString &fileName );
   void write(const QString &, const QByteArray & );
   void write(QPtrList<KSyncEntry> );
   void write(QValueList<KOperations> );
+  QString metaId()const;
 
 signals:
   void sync( QPtrList<KSyncEntry> );
@@ -47,7 +49,7 @@ signals:
  private slots:
   void slotError(int );
   void slotConnected( );
-  void slotDis();
+    // void slotDis();
   void slotClosed();
   void process(); // ready read
   void slotNOOP();
