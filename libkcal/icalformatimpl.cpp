@@ -2539,7 +2539,23 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
 
   icalcomponent_add_property(message,icalproperty_new_method(icalmethod));
 
-  icalcomponent_add_component( message, writeIncidence( incidence, method ) );
+  icalcomponent *inc = writeIncidence( incidence, method );
+  /*
+   * RFC 2446 states in section 3.4.3 ( REPLY to a VTODO ), that
+   * a REQUEST-STATUS property has to be present. For the other two, event and
+   * free busy, it can be there, but is optional. Until we do more 
+   * fine grained handling, assume all is well. Note that this is the 
+   * status of the _request_, not the attendee. Just to avoid confusion.
+   * - till
+   */
+  if ( icalmethod == ICAL_METHOD_REPLY ) {
+    struct icalreqstattype rst;
+    rst.code = ICAL_2_0_SUCCESS_STATUS;
+    rst.desc = 0;
+    rst.debug = 0;
+    icalcomponent_add_property( inc, icalproperty_new_requeststatus( rst ) );
+  }
+  icalcomponent_add_component( message, inc );
 
   return message;
 }
