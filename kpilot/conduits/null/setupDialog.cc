@@ -27,43 +27,23 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
-
-#include <iostream.h>
 
 
 
-#ifndef QLABEL_H
 #include <qlabel.h>
-#endif
-#ifndef QLINEEDIT_H
 #include <qlineedit.h>
-#endif
-#ifndef QLAYOUT_H
 #include <qlayout.h>
-#endif
-#ifndef QTOOLTIP_H
 #include <qtooltip.h>
-#endif
+#include <qtabwidget.h>
 
 
-#ifndef _KCONFIG_H
 #include <kconfig.h>
-#endif
-#ifndef _KLOCALE_H
 #include <klocale.h>
-#endif
-#ifndef _KDEBUG_H
-#include <kdebug.h>
-#endif
 
-#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#endif
 
 #include "setupDialog.moc"
 
@@ -75,13 +55,14 @@ static const char *setupdialog_id="$Id$";
 
 
 
-/* static */ const QString NullOptions::NullGroup("Null-conduit Options");
-
-NullOptions::NullOptions(QWidget *parent) :
-	setupDialog(parent, NullGroup,0L)
+NullOptions::NullOptions(QWidget *parent,const char *name) :
+	UIDialog(parent, name,false)
 {
 	FUNCTIONSETUP;
+
 	KConfig& config=KPilotConfig::getConfig(NullGroup);
+
+	QTabWidget *w = new QTabWidget(this);
 
 	addPage(new NullPage(this,config));
 	addPage(new setupInfoPage(this));
@@ -150,6 +131,9 @@ NullPage::NullPage(setupDialog *parent, KConfig& config) :
 
 
 // $Log$
+// Revision 1.18  2001/04/26 19:19:26  adridg
+// [GUI] i18n updates and QToolTips
+//
 // Revision 1.17  2001/04/16 13:36:03  adridg
 // Removed --enable-final borkage
 //

@@ -1,3 +1,5 @@
+#ifndef _NULL_SETUPDIALOG_H
+#define _NULL_SETUPDIALOG_H
 /* setupDialog.h			KPilot
 **
 ** Copyright (C) 2000-2001 by Adriaan de Groot
@@ -25,18 +27,14 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#ifndef _NULL_SETUPDIALOG_H
-#define _NULL_SETUPDIALOG_H
 
 class QLabel;
 class QLineEdit;
 
-#ifndef _KPILOT_GSETUPDIALOG_H
-#include "gsetupDialog.h"
-#endif
+#include "uiDialog.h"
 
 
 class NullPage : public setupDialogPage
@@ -56,22 +54,22 @@ private:
 	QLineEdit *dbField;
 } ;
 
-class NullOptions : public setupDialog
+class NullOptions : public UIDialog
 {
 	Q_OBJECT
 
-friend class NullConduit;
 public:
-	NullOptions(QWidget *parent);
+	NullOptions(QWidget *parent=0L,const char *name=0L);
 
-protected:
-	static const QString NullGroup;
 };
 
-#endif
 
 
 // $Log$
+// Revision 1.9  2001/04/01 17:31:11  adridg
+// --enable-final and #include fixes
+//
 // Revision 1.8  2001/02/07 15:46:31  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //
+#endif
