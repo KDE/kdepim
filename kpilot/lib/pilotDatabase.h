@@ -77,7 +77,7 @@ public:
 	virtual int readAppBlock(unsigned char* buffer, int maxLen) = 0;
 
 	/** Writes the application block info. */
-	virtual int writeAppBlock(unsigned char* buffer, int len) = 0;  
+	virtual int writeAppBlock(unsigned char* buffer, int len) = 0;
 
 	/** Reads a record from database by id, returns record length */
 	virtual PilotRecord* readRecordById(recordid_t id) = 0;
@@ -101,7 +101,7 @@ public:
 	virtual int resetDBIndex() = 0;
 
 	/** Purges all Archived/Deleted records from Palm Pilot database */
-	virtual int cleanUpDatabase() = 0;
+	virtual int cleanup() = 0;
 
 	bool isDBOpen() const { return fDBOpen; }
 
@@ -124,6 +124,9 @@ private:
 
 
 // $Log$
+// Revision 1.4  2002/01/17 16:24:10  adridg
+// Compile fixes on Solaris
+//
 // Revision 1.3  2002/01/08 01:25:48  cschumac
 // Compile fixes.
 //

@@ -61,7 +61,7 @@ public:
 	/** Resets next record index to beginning */
 	virtual int resetDBIndex();
 	/** Purges all Archived/Deleted records from Palm Pilot database */
-	virtual int cleanUpDatabase();
+	virtual int cleanup();
 
 	const char *getDBName() { return fDBName; }
 
@@ -82,6 +82,9 @@ private:
 
 
 // $Log$
+// Revision 1.1  2001/10/10 22:01:24  adridg
+// Moved from ../kpilot/, shared files
+//
 // Revision 1.9  2001/09/16 13:37:48  adridg
 // Large-scale restructuring
 //

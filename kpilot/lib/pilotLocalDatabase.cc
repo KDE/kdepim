@@ -353,7 +353,7 @@ int PilotLocalDatabase::resetDBIndex()
 }
 
 // Purges all Archived/Deleted records from Palm Pilot database
-int PilotLocalDatabase::cleanUpDatabase()
+int PilotLocalDatabase::cleanup()
 {
 	FUNCTIONSETUP;
 	fPendingRec = -1;
@@ -491,6 +491,9 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 }
 
 // $Log$
+// Revision 1.3  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.2.2.2  2002/05/07 13:38:43  adridg
 // Additional debugging to track down mis-set paths
 //

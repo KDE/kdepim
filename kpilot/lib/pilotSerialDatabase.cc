@@ -215,7 +215,7 @@ int PilotSerialDatabase::resetDBIndex()
 }
 
 // Purges all Archived/Deleted records from Palm Pilot database
-int PilotSerialDatabase::cleanUpDatabase()
+int PilotSerialDatabase::cleanup()
 {
 	FUNCTIONSETUP;
 	if (isDBOpen() == false)
@@ -254,6 +254,9 @@ void PilotSerialDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.1  2001/10/10 22:01:24  adridg
+// Moved from ../kpilot/, shared files
+//
 // Revision 1.13  2001/09/16 13:37:48  adridg
 // Large-scale restructuring
 //

@@ -71,7 +71,7 @@ public:
 	// Resets next record index to beginning
 	virtual int resetDBIndex();
 	// Purges all Archived/Deleted records from Palm Pilot database
-	virtual int cleanUpDatabase();
+	virtual int cleanup();
 
 	// Writes a new ID to the record specified the index.  Not supported on Serial connections
 	virtual recordid_t writeID(PilotRecord* rec);
@@ -124,6 +124,9 @@ private:
 
 
 // $Log$
+// Revision 1.3  2002/05/19 15:01:49  adridg
+// Patches for the KNotes conduit
+//
 // Revision 1.2  2002/01/21 23:14:03  adridg
 // Old code removed; extra abstractions added; utility extended
 //
