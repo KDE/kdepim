@@ -25,7 +25,7 @@ noinst_HEADERS =	\
 
 METASOURCES = AUTO
 
-INCLUDES  = -I../include $(all_includes)
+INCLUDES  = $(all_includes)
 
 include_HEADERS = 	\
 			KDGanttView.h			\
