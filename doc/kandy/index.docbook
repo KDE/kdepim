@@ -96,12 +96,12 @@ back.</para>
 
 <para>By selecting the entry <guimenuitem>Configure Kandy</guimenuitem>
 from the menu you get the preferences dialog of &kandy;. You can set the
-name of the serial device, where your mobile is connected in this
+name of the serial device where your mobile is connected in this
 dialog. Examples for the name of the serial device under &Linux; are
 <filename class="devicefile">/dev/ttyS0</filename> for the first and
 <filename class="devicefile">/dev/ttyS1</filename> for the second serial
-interface of your computer. You can also set, which windows are opened
-per default, when starting &kandy;.</para>
+interface of your computer. You can also set which windows are opened
+per default when starting &kandy;.</para>
 
 </sect1>
 
