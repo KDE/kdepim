@@ -489,6 +489,8 @@ IMAP4Protocol::listDir (const KURL & _url)
     else
     {
       error (ERR_CANNOT_ENTER_DIRECTORY, _url.prettyURL());
+      completeQueue.removeRef (cmd);
+      return;
     }
     completeQueue.removeRef (cmd);
   }
