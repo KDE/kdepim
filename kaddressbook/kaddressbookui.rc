@@ -36,6 +36,7 @@
     </Menu>
 
     <Menu noMerge="1" name="settings"><text>&amp;Settings</text>
+      <Merge name="StandardToolBarMenuHandler" />
       <Action name="options_show_extensions"/>
       <Action name="options_show_jump_bar"/>
       <Action name="options_show_details"/>
