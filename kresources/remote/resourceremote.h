@@ -109,8 +109,6 @@ class ResourceRemote : public ResourceCached
     bool mUseProgressManager;
     bool mUseCacheFile;
 
-    ICalFormat mFormat;
-
     KIO::FileCopyJob *mDownloadJob;
     KIO::FileCopyJob *mUploadJob;
     
