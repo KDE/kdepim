@@ -81,8 +81,8 @@ QtopiaKonnector::QtopiaKonnector( const KConfig *cfg )
   d->socket = new QtopiaSocket(this, "Opie Socket" );
 
   /* now do some signal and slot connection */
-  connect( d->socket, SIGNAL( sync( Syncee::PtrList ) ),
-           SLOT( slotSync( Syncee::PtrList ) ) );
+  connect( d->socket, SIGNAL( sync( SynceeList ) ),
+           SLOT( slotSync( SynceeList ) ) );
   connect( d->socket, SIGNAL( error( const Error & ) ),
            SLOT( slotError( const Error & ) ) );
   connect( d->socket, SIGNAL( prog( const Progress & ) ),
