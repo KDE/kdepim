@@ -16,7 +16,8 @@
 #include "close.xpm"
 
 #include <ktoolbarbutton.h> 
-#include <kiconloader.h> 
+#include <kiconloader.h>
+#include <klocale.h> 
   
 
 
@@ -117,7 +118,7 @@ xQGanttBarViewPort::toolbar(QMainWindow* mw)
   _toolbar->insertButton("ganttSelect.png", 0, 
 			 SIGNAL(clicked()),
 			 this, SLOT(setSelect()),
-			 true, "Select" );
+			 true, i18n("Select") );
 
   KPopupMenu *selectMenu = new KPopupMenu(_toolbar);
 
@@ -127,7 +128,7 @@ xQGanttBarViewPort::toolbar(QMainWindow* mw)
   */
   QPixmap pix = _iconloader->loadIcon("ganttSelecttask.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("ganttSelecttask.png not found !\n");
-  selectMenu->insertItem(pix, "Select All", this, SLOT(selectAll()) );  
+  selectMenu->insertItem(pix, i18n("Select All"), this, SLOT(selectAll()) );  
 
 
   /*
@@ -135,7 +136,7 @@ xQGanttBarViewPort::toolbar(QMainWindow* mw)
   */
   pix = _iconloader->loadIcon("ganttUnselecttask", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("ganttUnselecttask.png not found !\n");
-  selectMenu->insertItem(pix, "Unselect All", this, SLOT(unselectAll()) );
+  selectMenu->insertItem(pix, i18n("Unselect All"), this, SLOT(unselectAll()) );
 
 
   KToolBarButton* b = _toolbar->getButton(0);
@@ -145,22 +146,22 @@ xQGanttBarViewPort::toolbar(QMainWindow* mw)
   _toolbar->insertButton("viewmag.png", 1, 
 			 SIGNAL(clicked()),
 			 this, SLOT(setZoom()),
-			 true, "Zoom" );
+			 true, i18n("Zoom") );
   
   KPopupMenu* zoomMenu = new KPopupMenu(_toolbar);
  
   pix = _iconloader->loadIcon("viewmag.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("viewmag.png not found !\n");
-  zoomMenu->insertItem(pix, "Zoom all", this, SLOT(zoomAll()) );
+  zoomMenu->insertItem(pix, i18n("Zoom all"), this, SLOT(zoomAll()) );
   zoomMenu->insertSeparator();
 
   pix = _iconloader->loadIcon("viewmag+.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("viewmag+.png not found !\n");
-  zoomMenu->insertItem(pix, "Zoom in +", this, SLOT(zoomIn()) );
+  zoomMenu->insertItem(pix, i18n("Zoom in +"), this, SLOT(zoomIn()) );
 
   pix = _iconloader->loadIcon("viewmag-.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("viewmag-.png not found !\n");
-  zoomMenu->insertItem(pix, "Zoom out -", this, SLOT(zoomOut()) );
+  zoomMenu->insertItem(pix, i18n("Zoom out -"), this, SLOT(zoomOut()) );
   
   b = _toolbar->getButton(1);
   b->setDelayedPopup(zoomMenu);
@@ -168,7 +169,7 @@ xQGanttBarViewPort::toolbar(QMainWindow* mw)
   _toolbar->insertButton("move.png", 2, 
 			  SIGNAL(clicked()),
 			  this, SLOT(setMove()),
-			  true, "Move" );
+			  true, i18n("Move") );
 
    return _toolbar;
 
@@ -190,19 +191,19 @@ xQGanttBarViewPort::initMenu()
 
   QPixmap pix = _iconloader->loadIcon("ganttSelect.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("ganttSelect.png not found !\n");
-  _selectMenu->insertItem(pix, "Select mode", this, SLOT(setSelect()));
+  _selectMenu->insertItem(pix, i18n("Select mode"), this, SLOT(setSelect()));
 
   _selectMenu->insertSeparator();
 
   pix = _iconloader->loadIcon("ganttSelecttask.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("ganttSelecttask.png not found !\n");
-  _selectMenu->insertItem(pix, "Select All", this, SLOT(selectAll()) );  
+  _selectMenu->insertItem(pix, i18n("Select All"), this, SLOT(selectAll()) );  
 
   pix = _iconloader->loadIcon("ganttUnselecttask", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("ganttUnselecttask.png not found !\n");
-  _selectMenu->insertItem(pix, "Unselect All", this, SLOT(unselectAll()) );
+  _selectMenu->insertItem(pix, i18n("Unselect All"), this, SLOT(unselectAll()) );
   
-  _menu->insertItem( "Select", _selectMenu);
+  _menu->insertItem( i18n("Select"), _selectMenu);
 
 
   /*
@@ -213,32 +214,32 @@ xQGanttBarViewPort::initMenu()
 
   pix = _iconloader->loadIcon("viewmag.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("viewmag.png not found !\n");
-  _zoomMenu->insertItem("Zoom mode", this, SLOT(setZoom()) );
+  _zoomMenu->insertItem(i18n("Zoom mode"), this, SLOT(setZoom()) );
 
   _zoomMenu->insertSeparator();
 
-  _zoomMenu->insertItem(pix, "Zoom all", this, SLOT(zoomAll()) );
+  _zoomMenu->insertItem(pix, i18n("Zoom all"), this, SLOT(zoomAll()) );
   _zoomMenu->insertSeparator();
 
   pix = _iconloader->loadIcon("viewmag+.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("viewmag+.png not found !\n");
-  _zoomMenu->insertItem(pix, "Zoom in +", this, SLOT(zoomIn()) );
+  _zoomMenu->insertItem(pix, i18n("Zoom in +"), this, SLOT(zoomIn()) );
 
   pix = _iconloader->loadIcon("viewmag-.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("viewmag-.png not found !\n");
-  _zoomMenu->insertItem(pix, "Zoom out -", this, SLOT(zoomOut()) );
+  _zoomMenu->insertItem(pix, i18n("Zoom out -"), this, SLOT(zoomOut()) );
   
   _menu->insertItem( "Zoom", _zoomMenu);
 
   pix = _iconloader->loadIcon("move.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("move.png not found !\n");
-  _menu->insertItem(pix, "Move mode", this, SLOT(setMove()) );
+  _menu->insertItem(pix, i18n("Move mode"), this, SLOT(setMove()) );
 
   _menu->insertSeparator();
 
   pix = _iconloader->loadIcon("configure.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("configure.png not found !\n");
-  _menu->insertItem(pix, "Configure gantt", _parent, SLOT(showConfig()));
+  _menu->insertItem(pix, i18n("Configure gantt"), _parent, SLOT(showConfig()));
 
 }
 
