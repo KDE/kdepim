@@ -306,8 +306,8 @@ void AbbrowserConduit::_getAppInfo()
 {
 	FUNCTIONSETUP;
 	// get the address application header information
-	unsigned char *buffer = new unsigned char[PilotAddress::APP_BUFFER_SIZE];
-	int appLen=fDatabase->readAppBlock(buffer, PilotAddress::APP_BUFFER_SIZE);
+	unsigned char *buffer = new unsigned char[PilotRecord::APP_BUFFER_SIZE];
+	int appLen=fDatabase->readAppBlock(buffer, PilotRecord::APP_BUFFER_SIZE);
 
 	unpack_AddressAppInfo(&fAddressAppInfo, buffer, appLen);
 	delete[]buffer;
