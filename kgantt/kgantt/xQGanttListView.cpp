@@ -51,7 +51,7 @@ xQGanttListView::drawHeader()
   p.setPen( QPen(QColor(black)) );
   p.fillRect(0,0,width(),TOPMARGIN, _headerBackBrush );
 
-  p.drawText(5, (0.8 * TOPMARGIN), "Items");
+  p.drawText(5, (0.8 * TOPMARGIN), i18n("Items"));
 
 }
 
