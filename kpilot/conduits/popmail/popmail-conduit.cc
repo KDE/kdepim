@@ -910,6 +910,9 @@ QString PopMailConduit::getKMailOutbox() const
 		KConfigGroupSaver gs(fConfig,PopmailConduitFactory::group);
 		outbox = fConfig->readEntry("outboxFolder");
 	}
+
+	if (outbox.isEmpty()) outbox=CSL1("outbox");
+
 	return outbox;
 }
 
