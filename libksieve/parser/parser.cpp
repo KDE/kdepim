@@ -620,7 +620,8 @@ namespace KSieve {
     unsigned long result = 0;
     unsigned int i = 0;
     QCString s = tokenValue().latin1();
-    for ( ; i < s.length() && isdigit( s[i] ) ; ++i ) {
+    unsigned int sLength = s.length();
+		for ( ; i < sLength && isdigit( s[i] ) ; ++i ) {
       unsigned long digitValue = s[i] - '0' ;
       if ( willOverflowULong( result, digitValue ) ) {
 	makeError( Error::NumberOutOfRange );
@@ -633,7 +634,7 @@ namespace KSieve {
     // optional quantifier:
     char quantifier = '\0';
     if ( i < s.length() ) {
-      assert( i == s.length() - 1 );
+      assert( i == sLength - 1 );
       quantifier = s[i];
       unsigned long factor = factorForQuantifier( quantifier );
       if ( result > double(ULONG_MAX) / double(factor) ) {
