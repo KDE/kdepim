@@ -95,7 +95,7 @@ protected:
 	KConfig *fConfig;
 	PilotDatabase *fDatabase,*fLocalDatabase;
 
-	bool openDatabases(const char *dbName);
+	bool openDatabases(const char *dbName, bool*retrieved=0L);
 	
 private:
 	bool fTest;	// Do some kind of test run on the pilot
@@ -104,9 +104,12 @@ private:
 	/**
 	* Open both the local copy of database @p dbName
 	* and the version on the Pilot. Return true only
-	* if both opens succeed.
+	* if both opens succeed. If the local copy of the database
+	* does not exist, it is retrieved from the handheld. In this
+	* case, retrieved is set to true, otherwise it is left alone 
+	* (i.e. retains it value and it not explicitly set to false).
 	*/
-	bool openDatabases_(const char *dbName);
+	bool openDatabases_(const char *dbName, bool*retrieved=0L);
 
 	/**
 	* Open both databases, but get the fDatabase not from
@@ -181,6 +184,9 @@ public:
 */
 
 // $Log$
+// Revision 1.6  2002/05/19 15:01:50  adridg
+// Patches for the KNotes conduit
+//
 // Revision 1.5  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //

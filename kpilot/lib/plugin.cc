@@ -90,7 +90,7 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	KPILOT_DELETE(fLocalDatabase);
 }
 
-bool ConduitAction::openDatabases_(const char *name)
+bool ConduitAction::openDatabases_(const char *name, bool *retrieved)
 {
 	FUNCTIONSETUP;
 
@@ -100,9 +100,55 @@ bool ConduitAction::openDatabases_(const char *name)
 		<< name << endl;
 #endif
 
-	fDatabase = new PilotSerialDatabase(pilotSocket(),
-		name,this,name);
+	fLocalDatabase = new PilotLocalDatabase(name);
 
+	if (!fLocalDatabase)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Could not initialize object for local copy of database \""
+			<< name
+			<< "\"" << endl;
+			return false;
+	}
+
+	// if there is no backup db yet, fetch it from the palm, open it and set the full sync flag.
+	if (!fLocalDatabase->isDBOpen() )
+	{
+		QString dbpath(dynamic_cast<PilotLocalDatabase*>(fLocalDatabase)->dbPathName());
+#ifdef DEBUG
+		DEBUGCONDUIT << "Backup database "<< dbpath <<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
+#endif
+		struct DBInfo dbinfo;
+		if (fHandle->findDatabase(const_cast<char*>(name), &dbinfo)<0 ) 
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT<<fname<<"Could not get DBInfo for "<<name<<"! "<<endl;
+#endif
+			return false;
+		}
+		dbinfo.flags &= ~dlpDBFlagOpen;
+		if (!fHandle->retrieveDatabase(dbpath, &dbinfo) ) 
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << "Could not retrieve database "<<name<<" from the handheld."<<endl;
+#endif
+			KPILOT_DELETE(fLocalDatabase);
+			return false;
+		}
+		KPILOT_DELETE(fLocalDatabase);
+		fLocalDatabase = new PilotLocalDatabase(name);
+		if (!fLocalDatabase || !fLocalDatabase->isDBOpen()) 
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT<<"local backup of database "<<name<<" could not be initialized."<<endl;
+#endif
+			return false;
+		}
+		if (retrieved) *retrieved=true;
+	}
+
+	fDatabase = new PilotSerialDatabase(pilotSocket(), name, this, name);
+	
 	if (!fDatabase)
 	{
 		kdWarning() << k_funcinfo
@@ -112,17 +158,8 @@ bool ConduitAction::openDatabases_(const char *name)
 			<< endl;
 	}
 
-	fLocalDatabase = new PilotLocalDatabase(name);
-
-	if (!fLocalDatabase)
-	{
-		kdWarning() << k_funcinfo
-			<< ": Could not open local copy of database \""
-			<< name
-			<< "\"" << endl;
-	}
-
-	return (fDatabase && fLocalDatabase);
+	return (fDatabase && fDatabase->isDBOpen() &&
+	        fLocalDatabase && fLocalDatabase->isDBOpen() );
 }
 
 bool ConduitAction::openDatabases_(const char *dbName,const char *localPath)
@@ -151,7 +188,7 @@ bool ConduitAction::openDatabases_(const char *dbName,const char *localPath)
 	return (fDatabase && fLocalDatabase);
 }
 
-bool ConduitAction::openDatabases(const char *dbName)
+bool ConduitAction::openDatabases(const char *dbName, bool*retrieved)
 {
 	/*
 	** We should look into the --local flag passed
@@ -159,7 +196,7 @@ bool ConduitAction::openDatabases(const char *dbName)
 	** that is implemented ..
 	*/
 	
-	return openDatabases_(dbName);
+	return openDatabases_(dbName, retrieved);
 }
 
 int PluginUtility::findHandle(const QStringList &a)
@@ -210,6 +247,9 @@ bool PluginUtility::isModal(const QStringList &a)
 }
 
 // $Log$
+// Revision 1.9  2002/05/22 20:42:09  adridg
+// Additional support for testing instrumentation
+//
 // Revision 1.8  2002/05/19 15:01:49  adridg
 // Patches for the KNotes conduit
 //
