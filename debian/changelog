@@ -1,3 +1,11 @@
+kdepim (4:3.3.2-1) unstable; urgency=low
+
+  * Uploading to unstable.
+  * Include updates from KDE_3_3_BRANCH.
+  * Reenable gnokii support.
+
+ -- Daniel Schepler <schepler@debian.org>  Wed, 19 Jan 2005 18:20:43 -0800
+
 kdepim (4:3.3.2-0pre1) experimental; urgency=low
 
   * New upstream release.
