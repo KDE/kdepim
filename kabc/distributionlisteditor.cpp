@@ -33,6 +33,7 @@
 #include "distributionlist.h"
 
 #include "distributionlisteditor.h"
+#include "distributionlisteditor.moc"
 
 using namespace KABC;
 
