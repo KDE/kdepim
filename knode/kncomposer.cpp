@@ -265,6 +265,7 @@ bool KNComposer::hasValidData()
 
 void KNComposer::applyChanges()
 {
+
   KNMimeContent *text=0;
   KNAttachment *a=0;
 
@@ -323,8 +324,16 @@ void KNComposer::applyChanges()
     a_rticle->addContent(text, true);
   }
 
+
+  //set text
   text->contentType()->setCharset(c_harset);
-  text->fromUnicodeString(v_iew->e_dit->text());
+
+  //auto-wrapped lines in v_iew->e_dit don't get an "\n", so we have to
+  //assemble the text line by line
+  QString tmp;
+  for(int i=0; i < v_iew->e_dit->numLines(); i++)
+    tmp+=v_iew->e_dit->textLine(i)+"\n";
+  text->fromUnicodeString(tmp);
 
   //text is set and all attached contents have been assembled => now set lines
   a_rticle->lines()->setNumberOfLines(a_rticle->lineCount());
