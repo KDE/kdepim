@@ -38,18 +38,33 @@ using namespace std;
 KonsoleKalendarExports::KonsoleKalendarExports( KonsoleKalendarVariables *variables )
 {
   m_variables = variables;
+  m_firstEntry = true;
 }
+
 
 KonsoleKalendarExports::~KonsoleKalendarExports()
 {
 }
 
-void KonsoleKalendarExports::exportAsHTML( Event *event ){
-}
-
 void KonsoleKalendarExports::exportAsTxt( Event *event ){
 
+  if( m_firstEntry == true || 
+      m_lastDate.day() != event->dtStart().date().day() ||
+      m_lastDate.month() != event->dtStart().date().month() ||
+      m_lastDate.year() != event->dtStart().date().year() ){
+	  
+	  
+    m_firstEntry=false;	  
+    int len = event->dtStartStr().length();
+    QString date = event->dtStartStr();
+    date.truncate( len - 5 );
+    cout << I18N_NOOP("Date:") << "\t" <<  date.local8Bit() << endl;
+    m_lastDate = event->dtStart().date();
+	  
+  }
+
   if ( !event->doesFloat() ) {
+    cout << "\t";
     cout <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
     cout << " - ";
     cout << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
@@ -64,6 +79,7 @@ void KonsoleKalendarExports::exportAsTxt( Event *event ){
 }
 
 void KonsoleKalendarExports::exportAsTxtKorganizer( Event *event ){
+ event = event;
 }
 
 void KonsoleKalendarExports::exportAsCSV( Event *event ){

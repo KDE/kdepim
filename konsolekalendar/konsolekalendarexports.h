@@ -35,7 +35,7 @@ public:
    * without a notice
    */
    
-  void exportAsHTML( Event *event );
+
   void exportAsTxt( Event *event );
   void exportAsTxtKorganizer( Event *event );
   void exportAsCSV( Event *event );
@@ -43,7 +43,9 @@ public:
 
 private:
    KonsoleKalendarVariables *m_variables;
-   
+   QDate m_lastDate;
+   bool m_firstEntry;
+	   
 };
 
 }

@@ -118,8 +118,9 @@ void KonsoleKalendar::showInstance()
 
       delete eventList;
 
-    }else {
-
+    }else if( m_variables.getExportType() == HTML &&  
+              m_variables.getExportFile().contains("none.html") == false ){
+      kdDebug() << "konsolekalendar.cpp::showInstance() | HTML" << endl;
       KCal::HtmlExport Export( m_Calendar );
       Export.setEmail( "" );
       Export.setFullName( "" );
@@ -139,11 +140,15 @@ void KonsoleKalendar::showInstance()
 
       Export.setDateRange( m_variables.getStartDateTime().date(), m_variables.getEndDateTime().date());
 
-      QString output;
-      Export.save( "~/tmp" );
+      Export.save( m_variables.getExportFile() );
 
       //cout << output.local8Bit() << endl;
-    }     
+    } else {    
+	cout << "Can't initialize export. If you are trying to export as HTML" << endl;
+	cout << "try use --export-file <file name> switch." << endl;
+		 
+    }
+	  
 
   }
 }
@@ -160,10 +165,8 @@ void KonsoleKalendar::printEventList( Event::List *eventList )
     for( it = eventList->begin(); it != eventList->end(); ++it ) {
       singleEvent = *it;
 
-      if( m_variables.getExportType() == HTML ) {
-        kdDebug() << "konsolekalendar.cpp::printEventList() | HTML export" << endl;
-        exports.exportAsHTML( singleEvent );
-      } else if( m_variables.getExportType() == CSV ) {
+
+      if( m_variables.getExportType() == CSV ) {
        kdDebug() << "konsolekalendar.cpp::printEventList() | CSV export" << endl;
        exports.exportAsCSV( singleEvent );
       } else if( m_variables.getExportType() == TEXT_KORGANIZER ) {

@@ -2,8 +2,10 @@
 #define _KONSOLEKALENDARVARIABLES_H_
 
 /***************************************************************************
-        konsolekalendarvariables.h  -  description
-           -------------------
+                       konsolekalendarvariables.h
+            Konsolekalendar variables contains global variables that are
+            used with this marvelous app;)
+                           -------------------
     begin                : Sun Jan 6 2002
     copyright            : (C) 2002-2003 by Tuukka Pasanen
     copyright            : (C) 2003 by Allen Winter
@@ -90,26 +92,38 @@ class KonsoleKalendarVariables
     QDate parseDate( QString string );
     QTime parseTime( QString str );
 
-    /*
+    /**
      * Set calendar file for global use
      */
 
    void setCalendar( CalendarLocal *calendar );
 
-   /*
+   /**
     * Get global calendar
     */
 
    CalendarLocal *getCalendar();
 
-    /*
-     * Set calendar file for global use
+   /**
+    * Set output file
+    */
+   
+   void setExportFile( QString export_file );
+   
+   /**
+    *  To what file we'll output
+    */
+   
+   QString getExportFile();
+   
+    /**
+     * Set export type that'll we use
      */
-
+   
    void setExportType( int export_type );
 
-   /*
-    * Get global calendar
+   /**
+    * what export type konsolekalendar will use
     */
 
    int getExportType();
@@ -131,6 +145,7 @@ class KonsoleKalendarVariables
     QString m_import;
     QString m_description;
     QString m_summary;
+    QString m_export_file;
     bool m_bSummary;
     bool m_bNext;
     bool m_bVerbose;

@@ -143,6 +143,17 @@ CalendarLocal *KonsoleKalendarVariables::getCalendar()
 }
 
 
+void KonsoleKalendarVariables::setExportFile( QString export_file )
+{
+  m_export_file = export_file;
+}
+
+QString KonsoleKalendarVariables::getExportFile()
+{
+  return m_export_file;
+}
+
+
 void KonsoleKalendarVariables::setExportType( int export_type )
 {
   m_export_type = export_type;

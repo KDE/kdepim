@@ -152,7 +152,8 @@ int main(int argc, char *argv[])
   KonsoleKalendarEpoch epochs;
 
   variables.setExportType( NONE );
-
+  variables.setExportFile( "none.html" );
+	
   if ( args->isSet("verbose") ) {
      variables.setVerbose(true);
   }
@@ -178,21 +179,34 @@ int main(int argc, char *argv[])
      option = args->getOption("export-type");
 
      if ( option.upper() == "HTML" ) {
-       kdDebug() << "main | exporttype | Export to HTML" << endl;
+       kdDebug() << "main | export-type | Export to HTML" << endl;
        variables.setExportType( HTML );
      } else if( option.upper() == "CSV" ) {
-       kdDebug() << "main | exporttype | Export to CSV" << endl;
+       kdDebug() << "main | export-type | Export to CSV" << endl;
        variables.setExportType( CSV );
      } else if( option.upper() == "TEXT-ORGANIZER" ) {
-       kdDebug() << "main | exporttype | Export to Korganizer TXT" << endl;
+       kdDebug() << "main | export-type | Export to Korganizer TXT" << endl;
        variables.setExportType( TEXT_KORGANIZER );
      } else {
-       kdDebug() << "main | exporttype | Export to TXT" << endl;
+       kdDebug() << "main | export-type | Export to TXT" << endl;
        variables.setExportType( TEXT_KONSOLEKALENDAR );
      }
   }
 
 
+ /*
+  * If we use HTML this must be set other wise this is trivial
+  * 
+  */ 
+
+  if ( args->isSet("export-file") ) {
+     option = args->getOption("export-file");	  
+     kdDebug() << "main | export-file | Export to file: " << option << endl;	  
+     variables.setExportFile( option );  
+  }
+	
+	
+	
   /*
    *  Switch on View (Print Entries).  This is the default mode of operation.
    *
