@@ -102,6 +102,7 @@ KNSourceViewWindow::KNSourceViewWindow(const QString &htmlCode)
   style->setFontUnderline(app->articleFixedFont().underline());
   style->setFontWeight(app->articleFixedFont().weight());
   style->setFontItalic(app->articleFixedFont().italic());
+  style->setColor( app->textColor() );
 
   setText(QString("<qt><txt>%1</txt></qt>").arg(htmlCode));
   KNHelper::restoreWindowSize("sourceWindow", this, QSize(500,300));
