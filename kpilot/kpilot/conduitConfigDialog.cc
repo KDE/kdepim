@@ -147,8 +147,6 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QHBox *p,const char *n) :
 
 	// Zero'th page in stack
 	l = new QLabel(fStack);
-	l->setText(i18n("<qt>Select a conduit in the list above to configure it. "
-		"Checked conduits will be run during a HotSync.</qt>"));
 	fStack->addWidget(l,INTRO);
 
 	// First page in stack (right hand column)
