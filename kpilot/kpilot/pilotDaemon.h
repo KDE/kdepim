@@ -136,10 +136,12 @@ public:
 	void showTray();
 	void addInstallFiles(const QStringList &);
 
-	// The next few functions are the DCOP interface
+	// The next few functions are the DCOP interface.
+	// Some are also slots.
 	//
-	//
+public slots:
 	virtual ASYNC requestSync(int);
+public:
 	virtual ASYNC requestSyncType(QString);
 	virtual ASYNC requestFastSyncNext();
 	virtual ASYNC requestRegularSyncNext();

@@ -165,6 +165,16 @@ void PilotDaemonTray::setupWidget()
 	menuConfigureConduitsItem = menu->insertItem(i18n("&Configure KPilot..."),
 		daemon, SLOT(slotRunConfig()));
 
+	KPopupMenu *synctype = new KPopupMenu(menu,"sync_type_menu");
+#define MI(a) synctype->insertItem(SyncAction::syncModeName(SyncAction::a),(int)(SyncAction::a));
+	MI(eHotSync);
+	MI(eFastSync);
+	MI(eBackup);
+#undef MI
+	connect(synctype,SIGNAL(activated(int)),daemon,SLOT(requestSync(int)));
+
+	menu->insertItem(i18n("Next &Sync"),synctype);
+
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Finished getting icons" << endl;
 #endif
@@ -220,7 +230,7 @@ void PilotDaemonTray::slotShowNotListening()
 	changeIcon( NotListening );
 }
 
-static SyncAction::SyncMode getSyncType()
+static inline SyncAction::SyncMode getSyncType()
 {
 	unsigned int m = KPilotSettings::syncType();
 	if (m>SyncAction::eRestore) m=SyncAction::eTest;
