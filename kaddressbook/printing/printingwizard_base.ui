@@ -86,7 +86,7 @@
                 </sizepolicy>
             </property>
             <property name="title">
-                <string>Print what Contacts</string>
+                <string>Print Which Contacts</string>
             </property>
             <vbox>
                 <property name="name">
