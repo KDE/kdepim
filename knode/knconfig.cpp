@@ -79,7 +79,7 @@ void KNConfig::Identity::saveConfig(KConfigBase *c)
   c->writeEntry("Name", n_ame);
   c->writeEntry("Email", e_mail);
   c->writeEntry("Reply-To", r_eplyTo);
-  c->writeEntry("Mail-Copies-To", r_eplyTo);
+  c->writeEntry("Mail-Copies-To", m_ailCopiesTo);
   c->writeEntry("Org", o_rga);
   c->writeEntry("UseSigFile", u_seSigFile);
   c->writeEntry("UseSigGenerator",u_seSigGenerator);
