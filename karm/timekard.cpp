@@ -197,7 +197,7 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
     // QStrings in this format: YYYYMMDD_NNNNNN, where Y = year, M = month, d
     // = day and NNNNN = the VTODO uid.  The value is the total seconds logged
     // against that task on that day.  Note the UID is the todo id, not the
-    // event id, so things are accumulated for each task.
+    // event id, so times are accumulated for each task.
     datamap.clear();
     for (event = events.begin(); event != events.end(); ++event)
     {

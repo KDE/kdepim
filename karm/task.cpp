@@ -140,6 +140,9 @@ void Task::setPercentComplete(const int percent, KarmStorage *storage)
 
   if (isRunning()) setRunning(false, storage);
 
+  setEnabled(false);
+  setOpen(false);
+
   if (!percent)
     _percentcomplete = 0;
   else if (percent > 100)
@@ -162,12 +165,11 @@ void Task::setPercentComplete(const int percent, KarmStorage *storage)
   if (_percentcomplete == 100)
   {
     for (Task* child= this->firstChild(); child; child = child->nextSibling())
-    {
-      if (child->isRunning()) child->setRunning(false, storage);
       child->setPercentComplete(_percentcomplete, storage);
-    }
   }
 }
+
+bool Task::isComplete() { return _percentcomplete == 100; }
 
 void Task::removeFromView()
 {

@@ -449,10 +449,12 @@ void TaskView::deleteTask(bool markingascomplete)
     {
       task->setPercentComplete(100, _storage);
       save();
+
       // Have to remove after saving, as the save routine only affects tasks
       // that are in the view.  Otherwise, the new percent complete does not
-      // get saved.
-      task->removeFromView();
+      // get saved.   (No longer remove when marked as complete.)
+      //task->removeFromView();
+
     }
     else
     {

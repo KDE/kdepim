@@ -92,6 +92,7 @@ class TaskView : public KListView
 
     /** Calls newTask with caption "New Sub Task". */
     void newSubTask();
+
     void editTask();
 
     /**

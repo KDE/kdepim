@@ -123,18 +123,39 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
       << todoList.count() << endl;
     for( todo = todoList.begin(); todo != todoList.end(); ++todo ) 
     {
-      if ((*todo)->isCompleted()) continue;
+      // Initially, if a task was complete, it was removed from the view.
+      // However, this increased the complexity of reporting on task history.
+      //
+      // For example, if a task is complete yet has time logged to it during
+      // the date range specified on the history report, we have to figure out
+      // how that task fits into the task hierarchy.  Currently, this
+      // structure is held in memory by the structure in the list view.
+      //
+      // I considered creating a second tree that held the full structure of
+      // all complete and incomplete tasks.  But this seemed to much of a
+      // change with an impending beta release and a full todo list.
+      //
+      // Hence this "solution".  Include completed tasks, but mark them as
+      // inactive in the view.
+      //
+      //if ((*todo)->isCompleted()) continue;
+
       Task* task = new Task(*todo, view);
       map.insert( (*todo)->uid(), task );
       view->setRootIsDecorated(true);
-      task->setOpen(true);
+      if ((*todo)->isCompleted()) 
+      {
+        task->setEnabled(false);
+        task->setOpen(false);
+      }
+      else
+        task->setOpen(true);
+
     }
 
     // Load each task under it's parent task.
     for( todo = todoList.begin(); todo != todoList.end(); ++todo ) 
     {
-      if ((*todo)->isCompleted()) continue;
-
       Task* task = map.find( (*todo)->uid() );
 
       // No relatedTo incident just means this is a top-level task.
