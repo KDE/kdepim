@@ -65,8 +65,10 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
 
       c.writeEntry( "login", KolabConfig::self()->user() );
 
-      if ( KolabConfig::self()->savePassword() )
+      if ( KolabConfig::self()->savePassword() ) {
         c.writeEntry( "pass", encryptStr(KolabConfig::self()->password()) );
+        c.writeEntry( "store-passwd", true );
+      }
 
       c.setGroup( QString("Transport %1").arg(transCnt+1) );
       c.writeEntry( "name", "Kolab Server" );
@@ -97,7 +99,7 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
 
       // This needs to be done here, since it reference just just generated id
       c.setGroup( "IMAP Resource" );
-      c.writeEntry("Folder Parent", uid);
+      c.writeEntry("TheIMAPResourceFolderParent", QString(".%1.directory/INBOX").arg( uid ));
    }
 
 };
