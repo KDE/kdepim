@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <awinterz@users.sourceforge.net>      *
+ * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>                      *
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -33,7 +33,6 @@
 #include <libkcal/resourcelocal.h>
 #include <libkcal/resourcecalendar.h>
 #include <libkcal/event.h>
-#include <libkcal/todo.h>
 
 #include <qstring.h>
 #include <qdatetime.h>

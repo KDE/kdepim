@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <awinterz@users.sourceforge.net>      *
+ * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>                      *
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -68,15 +68,13 @@ using namespace std;
 
 static const char progName[] = "konsolekalendar";
 static const char progDisplay[] = "KonsoleKalendar";
-static const char progVersion[] = "1.3.2";
+static const char progVersion[] = "1.3.4";
 static const char progDesc[] = "A command line interface to KDE calendars";
 static const char progURL[] = "pim.kde.org/components/konsolekalendar.php";
 
 
 static KCmdLineOptions options[] =
 {
-  { "help",
-    I18N_NOOP( "Print this help and exit" ), 0 },
   { "verbose",
     I18N_NOOP( "Print helpful runtime messages" ), 0 },
   { "dry-run",
@@ -89,9 +87,9 @@ static KCmdLineOptions options[] =
   { "event",
     I18N_NOOP( "  Operate for Events only (Default)" ), 0 },
   { "todo",
-    I18N_NOOP( "  Operate for Todos only" ), 0 },
+    I18N_NOOP( "  Operate for To-dos only [NOT WORKING YET]" ), 0 },
   { "journal",
-    I18N_NOOP( "  Operate for Journals only" ), 0 },
+    I18N_NOOP( "  Operate for Journals only [NOT WORKING YET]" ), 0 },
 
   { ":",
     I18N_NOOP( "Major operation modes:" ), 0 },
@@ -107,8 +105,8 @@ static KCmdLineOptions options[] =
     I18N_NOOP( "  Create new calendar file if one does not exist" ), 0 },
   { "import <import-file>",
     I18N_NOOP( "  Import this calendar to main calendar" ), 0 },
-  { "parse-string <entries>",
-    I18N_NOOP( "  Parses many entries in same line [YYYY-MM-DD,HH:MM:SS,description,location]" ), 0 },
+//  { "parse-string <entries>",  this has not been fully implemented
+//    I18N_NOOP( "  Parses many entries in same line [YYYY-MM-DD,HH:MM:SS,description,location]" ), 0 },
   { ":",
     I18N_NOOP( "Operation modifiers:" ), 0 },
   { "all",
@@ -185,7 +183,7 @@ int main( int argc, char *argv[] )
   aboutData.addAuthor(
     "Allen Winter",                  // developer's name
     I18N_NOOP( "Author" ),           // task or role
-    "awinterz@users.sourceforge.net",// email address
+    "winter@kde.org",                // email address
     0                                // home page or relevant link
     );
 
@@ -267,11 +265,17 @@ int main( int argc, char *argv[] )
   }
   if ( args->isSet( "todo" ) ) {
     variables.setUseTodos( true );
-    kdDebug() << "main | parse options | use Todos" << endl;
+    kdDebug() << "main | parse options | use To-dos" << endl;
+    cout << i18n( "Sorry, To-dos are not working yet." ).local8Bit()
+         << endl;
+    return 1;
   }
   if ( args->isSet( "journal" ) ) {
     variables.setUseJournals( true );
     kdDebug() << "main | parse options | use Journals" << endl;
+    cout << i18n( "Sorry, Journals are not working yet." ).local8Bit()
+         << endl;
+    return 1;
   }
   // Use Events if no incidence type is specified on the command line
   if ( !args->isSet( "event" ) &&
@@ -312,7 +316,7 @@ int main( int argc, char *argv[] )
   /*
    * If we like to use new Parsing system
    */
-
+/* TODO: not fully implemented yet
   if ( args->isSet( "parse-string" ) ) {
     option = args->getOption( "parse-string" );
 
@@ -323,10 +327,7 @@ int main( int argc, char *argv[] )
 
     variables.setParseString( option );
   }
-
-  //testing purposes only!!
-  //exit(0);
-
+*/
   /*
    *  Switch on export file name
    *

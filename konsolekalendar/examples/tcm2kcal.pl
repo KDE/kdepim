@@ -3,7 +3,7 @@
 # tcm2kcal.pl -- converts a Turner Classic Movies (TCM) calendar
 #                web page into a KDE calendar file.
 ############################################################################
-# Copyright (c) 2003 Allen Winter <awinterz@users.sourceforge.net>         #
+# Copyright (c) 2003-2004 Allen Winter <winter@kde.org>                    #
 # All rights reserved.                                                     #
 # This program is free software; you can redistribute it and/or modify     #
 # it under the terms of the GNU General Public License as published by     #
@@ -88,12 +88,14 @@ while($line=<GET>) {
   next if( $line =~ m/^All Times Eastern/ );
   next if( $line =~ m/^$mmonth[[:space:]]*$year/ );
 
-  #process event if line begins with a DD Sunday|Monday|...|Friday|Saturday
+  #start new day if line begins with a DD Sunday|Monday|...|Friday|Saturday
   ($tday,$mday) = split(" ",$line);
   if( $tday =~ m/^[0-9]*$/ ) {
     if( $tday >= 1 && $tday <= 31 ) {
       if( $mday =~ m/day$/ ) {
 	&process() if( $event );
+        print "New day starting: $tday $mday\n";
+        $day = $tday;
 	$event = "";
 	next;
       }
@@ -147,21 +149,25 @@ sub process() {
   #remove any evil double quotes from the event string
   $event =~ s/\"//g;
 
-  ### Compute starting date and time
+  ### Compute starting date
+  my($date) = sprintf("%4d-%02d-%02d",$year,$month,$day);
+
+  ### Compute starting time
   my($ttime,$ampm) = split(" ",$event);
   my($hour,$min) = split(":",$ttime);
 
+  # adjust the hour by am or pm
   $hour += 12 if( $ampm =~ m/[Pp][Mm]/ && $hour < 12 );
   $hour -= 12 if( $ampm =~ m/[Aa][Mm]/ && $hour == 12 );
 
-  # advance day?
+  my($time) = sprintf("%02d:%02d",$hour,$min);
+
+  # advance day (for the enddate) if we have moved from pm to am
   if($lastampm =~ m/[Pp][Mm]/ && $ampm =~ m/[Aa][Mm]/ ) {
     ($year, $month, $day) = Add_Delta_Days($year,$month, $day, 1);
   }
 
-  # format start datetime
-  my($date) = sprintf("%4d-%02d-%02d",$year,$month,$day);
-  my($time) = sprintf("%02d:%02d",$hour,$min);
+  # format start date and time for "greping" later
   my($gdate) = sprintf("\"%s %02d %s %4d\"",
                        Day_of_Week_to_Text(Day_of_Week($year,$month,$day)),
                        $day,
@@ -238,7 +244,7 @@ sub process() {
   # New Title for Change Mode
   $title=uc($title) if( $mode eq "--change" );
 
-  #print "EVENT start datetime=$date, $time, title=$title, end datetime=$enddate, $endtime, duration=$duration\n";
+  print "EVENT start datetime=$date, $time, title=$title, end datetime=$enddate, $endtime, duration=$duration\n";
   $lastampm=$ampm;
 
   # Run konsolekalendar to insert/change/delete the event

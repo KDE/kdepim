@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2004  Allen Winter <awinterz@users.sourceforge.net>      *
+ * Copyright (C) 2003-2004  Allen Winter <winter@kde.org>
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -215,6 +215,8 @@ bool KonsoleKalendar::showInstance()
       } else {
 	QDate firstdate, lastdate;
 	if ( m_variables->getAll() ) {
+          // TODO: this is broken since the date on last() may not be last date
+          // (this is the case for me)
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "HTML view all events sorted list"
                     << endl;
@@ -251,7 +253,7 @@ bool KonsoleKalendar::showInstance()
 
         htmlSettings.setExcludePrivate( true );
         htmlSettings.setExcludeConfidential( true );
-        
+
         htmlSettings.setMonthView( false );
         htmlSettings.setEventView( true );
         htmlSettings.setEventAttendees( true );
@@ -265,10 +267,10 @@ bool KonsoleKalendar::showInstance()
 //         htmlSettings.setTaskCategories( false );
 //         htmlSettings.setTaskAttendees( false );
 //         htmlSettings.setTaskDueDate( true );
-        
+
         htmlSettings.setDateStart( QDateTime( firstdate ) );
         htmlSettings.setDateEnd( QDateTime( lastdate ) ) ;
-        
+
         KCal::HtmlExport *Export;
         if ( !m_variables->isCalendarResources() ) {
           Export = new HtmlExport( m_variables->getCalendar(), &htmlSettings );
@@ -308,9 +310,8 @@ bool KonsoleKalendar::printEventList( QTextStream *ts,
 
 bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
 {
+  /* This has not been finished
   bool status = false;
-  //bool sameDay = true;
-  //KonsoleKalendarExports exports;
   QString output;
   QString floating = "location %location, summary %summary\r\n";
   QString sameday = "time is %starttime, location %location, summary %summary\r\n";
@@ -344,10 +345,13 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
 
   *ts << output ;
 
-  /* TODO
-   * Left for backup (IF EVERYTHING GOES WRONG)
-   *
-   *
+  return( status );
+  */
+
+  bool status = false;
+  bool sameDay = true;
+  KonsoleKalendarExports exports;
+
   if ( event )
   {
     switch ( m_variables->getExportType() ) {
@@ -359,7 +363,7 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
       status = exports.exportAsCSV( ts, event, dt );
       break;
 
-    case ExportTypeShort:
+    case ExportTypeTextShort:
       kdDebug()
         << "konsolekalendar.cpp::printEvent() | "
         << "TEXT-SHORT export"
@@ -375,14 +379,14 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
       // this is handled separately for now
       break;
 
-    default:// Default ExportType is ExportTypeText
+    default:// Default export-type is ExportTypeText
       kdDebug() << "konsolekalendar.cpp::printEvent() | "
                 << "TEXT export"
                 << endl;
       status = exports.exportAsTxt( ts, event, dt );
       break;
     }
-  }*/
+  }
   return( status );
 }
 
@@ -434,7 +438,7 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
   bool found = false;
 
   Event::List eventList( m_variables->getCalendar()->
-                         events( startdate.date(), true ));
+                         rawEventsForDate( startdate.date(), true ) );
   for ( it =  eventList.begin(); it != eventList.end(); ++it ) {
     event = *it;
     if ( event->dtEnd()==enddate && event->summary()==summary ) {
