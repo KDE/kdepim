@@ -58,7 +58,7 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
       // with kolab the userid _is_ the full email
       if ( pos > 0 )
         // The user typed in a full email address. Assume it's correct
-        email = pos;
+        email = user;
       else
         // Construct the email address. And use it for the username also
         user = email = user+"@"+KolabConfig::self()->server();
