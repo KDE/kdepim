@@ -176,7 +176,7 @@ KOListView::KOListView(Calendar *calendar, QWidget *parent,
 
   QObject::connect(mListView,SIGNAL(doubleClicked(QListViewItem *)),
                    this,SLOT(defaultItemAction(QListViewItem *)));
-  QObject::connect(mListView,SIGNAL(rightButtonClicked ( QListViewItem *,
+  QObject::connect(mListView,SIGNAL(contextMenuRequested( QListViewItem *,
                      const QPoint &, int )),
                    this,SLOT(popupMenu(QListViewItem *,const QPoint &,int)));
   QObject::connect(mListView,SIGNAL(selectionChanged()),
