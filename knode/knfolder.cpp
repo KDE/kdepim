@@ -90,14 +90,14 @@ QString KNFolder::path()
 
 bool KNFolder::readInfo(const QString &)
 {
-#warning IMPLEMENT ME
+//#warning IMPLEMENT ME
   return true;
 }
 
 
 void KNFolder::saveInfo()
 {
-#warning IMPLEMENT ME
+//#warning IMPLEMENT ME
   /*QString dir(path());
   if (dir!=QString::null) {
     int pId=-1;
