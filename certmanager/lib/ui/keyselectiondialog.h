@@ -40,6 +40,7 @@
 #include <kdialogbase.h>
 
 #include <kleo/cryptobackend.h>
+#include <gpgmepp/key.h>
 
 #include <vector>
 
@@ -56,7 +57,6 @@ namespace Kleo {
 }
 
 namespace GpgME {
-  class Key;
   class KeyListResult;
 }
 

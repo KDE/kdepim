@@ -90,6 +90,23 @@ Kleo::KeyRequester::KeyRequester( unsigned int allowedKeys, bool multipleKeys,
     mJobs( 0 ),
     d( 0 )
 {
+  init();
+}
+
+Kleo::KeyRequester::KeyRequester( QWidget * parent, const char * name )
+  : QWidget( parent, name ),
+    mOpenPGPBackend( 0 ),
+    mSMIMEBackend( 0 ),
+    mMulti( false ),
+    mKeyUsage( 0 ),
+    mJobs( 0 ),
+    d( 0 )
+{
+  init();
+}
+
+void Kleo::KeyRequester::init()
+{
   QHBoxLayout * hlay = new QHBoxLayout( this, 0, KDialog::spacingHint() );
 
   // the label where the key id is to be displayed:
