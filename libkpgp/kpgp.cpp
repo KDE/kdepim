@@ -110,7 +110,10 @@ Module::readConfig()
   storePass = config->readBoolEntry("storePass", false);
   showEncryptionResult = config->readBoolEntry("showEncryptionResult", true);
   mShowKeyApprovalDlg = config->readBoolEntry( "showKeysForApproval", true );
-  pgpType = (Module::PGPType) config->readNumEntry("pgpType", tAuto);
+  // We have no config GUI for this key anymore, and the KPGP backend isn't ported,
+  // so let's just use Auto all the time.  See #92619.
+  ///pgpType = (Module::PGPType) config->readNumEntry("pgpType", tAuto);
+  pgpType = tAuto;
   flagEncryptToSelf = config->readBoolEntry("encryptToSelf", true);
 }
 
@@ -120,7 +123,7 @@ Module::writeConfig(bool sync)
   config->writeEntry("storePass", storePass);
   config->writeEntry("showEncryptionResult", showEncryptionResult);
   config->writeEntry( "showKeysForApproval", mShowKeyApprovalDlg );
-  config->writeEntry("pgpType", (int) pgpType);
+  //config->writeEntry("pgpType", (int) pgpType);
   config->writeEntry("encryptToSelf", flagEncryptToSelf);
 
   if(sync)
