@@ -5,10 +5,10 @@ debian/tmp/usr/lib/kde3/libkaddressbookpart.so
 debian/tmp/usr/share/applnk/Utilities/kaddressbook.desktop
 debian/tmp/usr/share/apps/kaddressbook/csv-templates/kaddressbook.desktop
 debian/tmp/usr/share/apps/kaddressbook/csv-templates/outlook2000.desktop
-debian/tmp/usr/share/apps/kaddressbook/icons/hicolor/16x16/actions/ldap_lookup.png
-debian/tmp/usr/share/apps/kaddressbook/icons/hicolor/16x16/actions/smallcal.png
-debian/tmp/usr/share/apps/kaddressbook/icons/hicolor/32x32/actions/gohome.png
-debian/tmp/usr/share/apps/kaddressbook/icons/hicolor/32x32/actions/homepage.png
+debian/tmp/usr/share/apps/kaddressbook/icons/crystalsvg/16x16/actions/ldap_lookup.png
+debian/tmp/usr/share/apps/kaddressbook/icons/crystalsvg/16x16/actions/smallcal.png
+debian/tmp/usr/share/apps/kaddressbook/icons/crystalsvg/32x32/actions/gohome.png
+debian/tmp/usr/share/apps/kaddressbook/icons/crystalsvg/32x32/actions/homepage.png
 debian/tmp/usr/share/apps/kaddressbook/icons/locolor/16x16/actions/contact.png
 debian/tmp/usr/share/apps/kaddressbook/icons/locolor/16x16/actions/down.png
 debian/tmp/usr/share/apps/kaddressbook/icons/locolor/16x16/actions/group.png
@@ -21,6 +21,6 @@ debian/tmp/usr/share/apps/kaddressbook/printing/mike-style.png
 debian/tmp/usr/share/doc/kde/HTML/en/kaddressbook/common
 debian/tmp/usr/share/doc/kde/HTML/en/kaddressbook/index.cache.bz2
 debian/tmp/usr/share/doc/kde/HTML/en/kaddressbook/index.docbook
-debian/tmp/usr/share/icons/hicolor/16x16/apps/kaddressbook.png
-debian/tmp/usr/share/icons/hicolor/32x32/apps/kaddressbook.png
-debian/tmp/usr/share/icons/hicolor/48x48/apps/kaddressbook.png
+debian/tmp/usr/share/icons/crystalsvg/16x16/apps/kaddressbook.png
+debian/tmp/usr/share/icons/crystalsvg/32x32/apps/kaddressbook.png
+debian/tmp/usr/share/icons/crystalsvg/48x48/apps/kaddressbook.png
