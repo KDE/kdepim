@@ -31,7 +31,6 @@
 */
 
 #include "resourcekolab.h"
-#include <klocale.h>
 
 using namespace Kolab;
 
@@ -53,7 +52,6 @@ extern "C"
 {
   void *init_kabc_kolab()
   {
-    KGlobal::locale()->insertCatalogue( "kabc_kolab" );
     return ( new KolabFactory() );
   }
 }
