@@ -76,7 +76,7 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
   mUseCategories = new QRadioButton( i18n( "Category &members" ), mButtonGroup );
   QWhatsThis::add( mUseCategories, i18n( "Only print contacts who are members of a category that is checked on the list to the left.\n"
                                        "This option is disabled if you have no categories." ) );
-  groupLayout->addWidget( mUseCategories, 3, 0 );
+  groupLayout->addWidget( mUseCategories, 3, 0, Qt::AlignTop );
 
   mFiltersCombo = new QComboBox( false, mButtonGroup );
   QWhatsThis::add( mFiltersCombo, i18n( "Select a filter to decide which contacts to print." ) );
