@@ -83,12 +83,15 @@ KABC::ResourceKolab::~ResourceKolab()
   delete mFormat;
 }
 
-void KABC::ResourceKolab::loadSubResourceConfig( KConfig& config, const QString& name )
+void KABC::ResourceKolab::loadSubResourceConfig( KConfig& config,
+                                                 const QString& name,
+                                                 bool writable )
 {
   KConfigGroup group( &config, name );
   bool active = group.readBoolEntry( "Active", true );
   int completionWeight = group.readNumEntry( "CompletionWeight", 80 );
-  mResources.insert( name, SubResource( active, completionWeight ) );
+  mResources.insert( name, Kolab::SubResource( active, writable, name,
+                                               completionWeight ) );
 }
 
 bool KABC::ResourceKolab::doOpen()
@@ -99,12 +102,10 @@ bool KABC::ResourceKolab::doOpen()
   QMap<QString, bool> resources;
   if ( !kmailSubresources( resources, "Contact" ) )
     return false;
-#if 0
   mResources.clear();
-  QStringList::ConstIterator it;
+  QMap<QString, bool>::ConstIterator it;
   for ( it = resources.begin(); it != resources.end(); ++it )
-    loadSubResourceConfig( config, *it );
-#endif
+    loadSubResourceConfig( config, it.key(), it.data() );
 
   return true;
 }
@@ -113,11 +114,11 @@ void KABC::ResourceKolab::doClose()
 {
   KConfig config( configFile() );
 
-  ResourceMap::ConstIterator it;
+  Kolab::ResourceMap::ConstIterator it;
   for ( it = mResources.begin(); it != mResources.end(); ++it ) {
     config.setGroup( it.key() );
-    config.writeEntry( "Active", it.data().active );
-    config.writeEntry( "CompletionWeight", it.data().completionWeight );
+    config.writeEntry( "Active", it.data().active() );
+    config.writeEntry( "CompletionWeight", it.data().completionWeight() );
   }
 }
 
@@ -163,9 +164,9 @@ bool KABC::ResourceKolab::load()
   mAddrMap.clear();
 
   bool rc = true;
-  ResourceMap::ConstIterator itR;
+  Kolab::ResourceMap::ConstIterator itR;
   for ( itR = mResources.begin(); itR != mResources.end(); ++itR ) {
-    if ( !itR.data().active )
+    if ( !itR.data().active() )
       // This resource is disabled
       continue;
 
@@ -306,7 +307,8 @@ void KABC::ResourceKolab::slotRefresh( const QString& type,
 }
 
 void KABC::ResourceKolab::fromKMailAddSubresource( const QString& type,
-                                                   const QString& resource )
+                                                   const QString& resource,
+                                                   bool writable )
 {
   if ( type != "Contact" )
     // Not ours
@@ -318,7 +320,7 @@ void KABC::ResourceKolab::fromKMailAddSubresource( const QString& type,
 
   KConfig config( configFile() );
   config.setGroup( "Contact" );
-  loadSubResourceConfig( config, resource );
+  loadSubResourceConfig( config, resource, writable );
   loadResource( resource );
   addressBook()->emitAddressBookChanged();
   emit signalSubresourceAdded( this, type, resource );
@@ -372,9 +374,9 @@ QStringList KABC::ResourceKolab::subresources() const
 QStringList KABC::ResourceKolab::activeSubresources() const
 {
   QStringList lst;
-  ResourceMap::ConstIterator itR;
+  Kolab::ResourceMap::ConstIterator itR;
   for ( itR = mResources.begin(); itR != mResources.end(); ++itR ) {
-    if ( itR.data().active )
+    if ( itR.data().active() )
       lst << itR.key();
   }
   return lst;
@@ -383,7 +385,7 @@ QStringList KABC::ResourceKolab::activeSubresources() const
 bool KABC::ResourceKolab::subresourceActive( const QString& subresource ) const
 {
   if ( mResources.contains( subresource ) ) {
-    return mResources[ subresource ].active;
+    return mResources[ subresource ].active();
   }
 
   // Safe default bet:
@@ -395,7 +397,7 @@ bool KABC::ResourceKolab::subresourceActive( const QString& subresource ) const
 int KABC::ResourceKolab::subresourceCompletionWeight( const QString& subresource ) const
 {
   if ( mResources.contains( subresource ) ) {
-    return mResources[ subresource ].completionWeight;
+    return mResources[ subresource ].completionWeight();
   }
 
   kdDebug(5650) << "subresourceCompletionWeight( " << subresource << " ): not found, using default\n";
@@ -406,7 +408,7 @@ int KABC::ResourceKolab::subresourceCompletionWeight( const QString& subresource
 void KABC::ResourceKolab::setSubresourceCompletionWeight( const QString& subresource, int completionWeight )
 {
   if ( mResources.contains( subresource ) ) {
-    mResources[ subresource ].completionWeight = completionWeight;
+    mResources[ subresource ].setCompletionWeight( completionWeight );
   } else {
     kdDebug(5650) << "setSubresourceCompletionWeight: subresource " << subresource << " not found" << endl;
   }

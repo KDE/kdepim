@@ -37,7 +37,7 @@
 #include <libkdepim/resourceabc.h>
 #include <dcopobject.h>
 #include <resourcekolabbase.h>
-
+#include <subresource.h>
 
 namespace KABC {
 
@@ -105,11 +105,12 @@ public:
   virtual void removeAddressee( const Addressee& addr );
 
   // Listen to KMail changes in the amount of sub resources
-  void fromKMailAddSubresource( const QString& type, const QString& id );
+  void fromKMailAddSubresource( const QString& type, const QString& id,
+                                bool writable );
   void fromKMailDelSubresource( const QString& type, const QString& id );
 
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
-                     const QString& ical );
+                              const QString& ical );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                         const QString& uid );
   void slotRefresh( const QString& type, const QString& resource );
@@ -143,7 +144,8 @@ protected:
   void insertAddressee( const Addressee&, const QString& resource );
   void doClose();
 
-  void loadSubResourceConfig( KConfig& config, const QString& name );
+  void loadSubResourceConfig( KConfig& config, const QString& name,
+                              bool writable );
   bool loadResource( const QString& resource );
 
   QString configFile() const {
@@ -156,17 +158,8 @@ protected:
 
   KABC::VCardConverter mConverter;
 
-  struct SubResource {
-    SubResource() : active(false) {} // for qmap
-    SubResource( bool _active, int _completionWeight )
-      : active( _active ), completionWeight( _completionWeight ) {}
-    bool active;
-    int completionWeight;
-  };
-
   // The list of subresources
-  typedef QMap<QString, SubResource> ResourceMap;
-  ResourceMap mResources;
+  Kolab::ResourceMap mResources;
   // Mapping from uid to resource
   QMap<QString, QString> mUidmap;
 };
