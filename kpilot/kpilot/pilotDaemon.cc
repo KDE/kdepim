@@ -729,9 +729,10 @@ bool PilotDaemon::killDaemonOnExit()
 	return KPilotSettings::killDaemonAtExit();
 }
 
-static bool isKDesktopLockRunning()
+typedef enum { NotLocked=0, Locked=1, DCOPError=2 } KDesktopLockStatus;
+static KDesktopLockStatus isKDesktopLockRunning()
 {
-	if (!KPilotSettings::screenlockSecure()) return false;
+	if (!KPilotSettings::screenlockSecure()) return NotLocked;
 
 	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
 
@@ -740,7 +741,7 @@ static bool isKDesktopLockRunning()
 	{
 		kdWarning() << k_funcinfo << ": Could not make DCOP connection. "
 			<< "Assuming screensaver is active." << endl;
-		return true;
+		return DCOPError;
 	}
 
 	QByteArray data,returnValue;
@@ -752,7 +753,7 @@ static bool isKDesktopLockRunning()
 		kdWarning() << k_funcinfo << ": Check for screensaver failed."
 			<< "Assuming screensaver is active." << endl;
 		// Err on the side of safety again.
-		return true;
+		return DCOPError;
 	}
 
 	if (returnType == "bool")
@@ -760,14 +761,14 @@ static bool isKDesktopLockRunning()
 		bool b;
 		QDataStream reply(returnValue,IO_ReadOnly);
 		reply >> b;
-		return b;
+		return (b ? Locked : NotLocked);
 	}
 	else
 	{
 		kdWarning() << k_funcinfo << ": Strange return value from screensaver. "
 			<< "Assuming screensaver is active." << endl;
 		// Err on the side of safety.
-		return true;
+		return DCOPError;
 	}
 }
 
@@ -829,11 +830,23 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 		return false;
 	}
 
-	if (isKDesktopLockRunning())
+	switch (isKDesktopLockRunning())
 	{
+	case NotLocked :
+		break; /* Fall through to return true below */
+	case Locked :
 		fSyncStack->queueInit();
 		fSyncStack->addAction(new SorryAction(pilotLink,
 			i18n("HotSync is disabled while the screen is locked.")));
+		return false;
+	case DCOPError :
+		fSyncStack->queueInit();
+		fSyncStack->addAction(new SorryAction(pilotLink,
+			i18n("HotSync is disabled because KPilot could not "
+			"determine the state of the screen saver. You "
+			"can disable this security feature by unchecking "
+			"the 'do not sync when screensaver is active' box "
+			"in the HotSync page of the configuration dialog.")));
 		return false;
 	}
 
