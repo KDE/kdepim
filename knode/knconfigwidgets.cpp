@@ -895,7 +895,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
 
   a_utoCB=new QCheckBox(i18n("Check for new articles a&utomatically"), hgb);
   m_axFetch=new KIntSpinBox(0, 100000, 1, 0, 10, hgb);
-  l1=new QLabel(m_axFetch, i18n("&Maximal number of articles to fetch:"), hgb);
+  l1=new QLabel(m_axFetch, i18n("&Maximum number of articles to fetch:"), hgb);
   m_arkCB=new QCheckBox(i18n("Mar&k article as read after:"), hgb);
   m_arkSecs=new KIntSpinBox(0, 9999, 1, 0, 10, hgb);
   connect(m_arkCB, SIGNAL(toggled(bool)), m_arkSecs, SLOT(setEnabled(bool)));
