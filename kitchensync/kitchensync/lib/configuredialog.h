@@ -53,7 +53,7 @@ class ConfigureDialog : public KDialogBase
 
     /**
      * add a widget to ConfigureDialog
-     * @param widegt The widget to be added. It'll be reparented
+     * @param widget The widget to be added. It'll be reparented
      * @param name The string shown as name
      * @param pixmap the QPixmap shown
      */
@@ -71,7 +71,7 @@ class ConfigureDialog : public KDialogBase
 
   protected:
      /**
-      * Plugin sensitive. 
+      * Plugin sensitive.
       */
      void apply( bool );
 
@@ -85,7 +85,7 @@ class ConfigureDialog : public KDialogBase
       * unload the plugins
       */
      void unload();
-};  
+};
 
 }
 

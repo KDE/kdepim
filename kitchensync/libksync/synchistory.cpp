@@ -129,7 +129,7 @@ bool SyncHistoryMap::contains( const QString& id_key )const
  * is shadowed.
  *
  * @param id_key the Key for the inernal map
- * @param text The text associated with the id_key
+ * @param text_data The text associated with the id_key
  */
 void SyncHistoryMap::insert( const QString& id_key, const QString& text_data )
 {

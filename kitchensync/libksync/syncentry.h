@@ -43,7 +43,7 @@ class Syncee;
   implemented by concrete subclasses. This makes it possible to
   operate with one synchronisation algorithm on different Syncees.
 
-  SyncEntry objects are collected by a @ref Syncee objects.
+  SyncEntry objects are collected by a @see Syncee objects.
 */
 class SyncEntry
 {
@@ -77,7 +77,7 @@ class SyncEntry
     /**
       Return a unique id. This is used to uniquely identify the entry. Two
       entries having the same id are considered to be two variants of the same
-      entry. No two entries of the same @ref KSyncee data set must have the same
+      entry. No two entries of the same @see KSyncee data set must have the same
       id.
     */
     virtual QString id() = 0;
@@ -171,12 +171,12 @@ class SyncEntry
     virtual SyncEntry *clone() = 0;
 
     /**
-      Set the @ref Syncee data set, the entry belongs to.
+      Set the @see Syncee data set, the entry belongs to.
     */
     void setSyncee( Syncee * );
 
     /**
-      Return the @ref Syncee data set, the entry belongs to.
+      Return the @see Syncee data set, the entry belongs to.
     */
     Syncee *syncee()const;
 

@@ -48,12 +48,12 @@ class SyncUi
     virtual ~SyncUi();
 
     /**
-      Deconflict two conflicting @ref SyncEntry objects. Returns the entry,
+      Deconflict two conflicting @see SyncEntry objects. Returns the entry,
       which has been chosen by the user to take precedence over the other.
 
       The default implementation always returns 0, which should be interpreted
       to not sync the entries at all. Reimplement this function in a subclass to
-      provide a more useful implementation to @ref KSyncer.
+      provide a more useful implementation to @see KSyncer.
     */
     virtual SyncEntry* deconflict( SyncEntry *syncEntry, SyncEntry *target );
 

@@ -58,8 +58,8 @@ class Core : public QWidget
 
     /**
      * @return access to the profilemanager
-     * @FIXME make const pointer to const object
      */
+    // FIXME make const pointer to const object
     virtual ProfileManager *profileManager() const = 0;
 
     virtual Engine *engine() const = 0;
@@ -67,7 +67,7 @@ class Core : public QWidget
     /**
      * @return a SyncUi
      */
-    virtual SyncUi *syncUi() = 0;    
+    virtual SyncUi *syncUi() = 0;
 
     /**
      * @return the all loaded ActionParts
@@ -111,7 +111,7 @@ class Core : public QWidget
     /**
      * error coming from one part
      * @param part where the error comes from, 0 if from MainWindow
-     * @param err The error
+     * @param error The error
      */
     void partError( ActionPart *part, const Error &error );
 

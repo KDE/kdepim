@@ -58,11 +58,10 @@ class KitchenSync : public Core
   public:
     /**
       The KitchenSync C'tor
-      @param widget parent widget
-      @param name The name
-      @param flags the flags
+      @param actionManager is the name of the ActionManager
+      @param parent is the parent widget
     */
-    KitchenSync( ActionManager *, QWidget * );
+    KitchenSync( ActionManager *actionManager, QWidget *parent );
     ~KitchenSync();
 
     void readProfileConfig();
@@ -85,8 +84,8 @@ class KitchenSync : public Core
 
     /**
       @return access to the profilemanager
-      @FIXME make const pointer to const object
     */
+    // FIXME make const pointer to const object
     ProfileManager *profileManager() const;
 
     Engine *engine() const;
@@ -155,7 +154,7 @@ class KitchenSync : public Core
     KSyncSystemTray *m_tray;
 
     ProfileManager *m_profileManager;
-    SyncUi *m_syncUi;    
+    SyncUi *m_syncUi;
 
     Engine *mEngine;
     QMap<ActionPart *, QWidget *> mActionWidgetMap;

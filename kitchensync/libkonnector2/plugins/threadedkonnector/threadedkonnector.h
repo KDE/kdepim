@@ -40,17 +40,12 @@ namespace Threaded {
     : public KSync::Konnector {
     Q_OBJECT;
     public:
-    /**
-     * @param parent the Parent Object
-     * @param name the name
-     * @param strlist a QStringList which is not used but necessary for KGenericFactory
-     */
     ThreadedPlugin( const KConfig *config );
     ~ThreadedPlugin();
-    
+
     /** return our capabilities() */
     KSync::Kapabilities capabilities();
-    
+
     /**
      * the user configured this konnector
      * apply his preferecnes
@@ -58,19 +53,19 @@ namespace Threaded {
     void setCapabilities( const KSync::Kapabilities& );
 
     SynceeList syncees();
-    
+
     bool readSyncees();
     bool writeSyncees();
-    
+
     bool connectDevice();
     bool disconnectDevice();
-    
+
     /** the state and some informations */
     KSync::KonnectorInfo info() const;
-    
+
     /** download a resource/url/foobar */
     void download( const QString& );
-    
+
   protected:
 /*     QString metaId() const; */
 /*     QIconSet iconSet() const; */
@@ -80,12 +75,12 @@ namespace Threaded {
     void slotFinished();
     void slotError( const KSync::Error& );
     void slotProgress( const KSync::Progress& );
-    
+
   private:
 
     ClientManager mClientManager;
   };
-  
+
 } // namespace Threaded
 
 #endif

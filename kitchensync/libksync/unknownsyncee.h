@@ -52,6 +52,7 @@ class UnknownSyncEntry : public SyncEntry
       c'tor
       @param array the ByteArray
       @param path the path where the file was downloaded from
+      @param parent the parent Syncee
     */
     UnknownSyncEntry( const QByteArray& array, const QString& path,
                       Syncee *parent );
@@ -60,6 +61,7 @@ class UnknownSyncEntry : public SyncEntry
       c'tor
       @param fileName the place where the temp file is stored
       @param path The path where the files comes from
+      @param parent is parent Syncee
     */
     UnknownSyncEntry( const QString& fileName, const QString& path,
                       Syncee *parent );

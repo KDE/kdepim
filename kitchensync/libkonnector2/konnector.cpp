@@ -127,7 +127,7 @@ QString Konnector::generateMD5Sum( const QString& base) {
 /**
  * Remove SyncEntry::wasRemoved() itrems from the Syncee
  *
- * @param syn The Syncee to manipulate
+ * @param sync The Syncee to manipulate
  */
 void Konnector::purgeRemovedEntries( Syncee* sync) {
   QPtrList<SyncEntry> lst = sync->removed();

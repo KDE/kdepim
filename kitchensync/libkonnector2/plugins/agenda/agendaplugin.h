@@ -14,15 +14,15 @@ namespace KSync {
      * we need to implement the interface to fully support it...
      */
     class AgendaPlugin : public KSync::Konnector
-    { 
+    {
         Q_OBJECT
     public:
         /**
          * @param parent the Parent Object
          * @param name the name
-         * @param strlist a QStringList which is not used but necessary for KGenericFactory
+         * @param QStringList() a QStringList which is not used but necessary for KGenericFactory
          */
-        AgendaPlugin( QObject*, const char*, const QStringList = QStringList() );
+        AgendaPlugin( QObject* parent, const char* name, const QStringList = QStringList() );
         ~AgendaPlugin();
 
         /** return our capabilities() */

@@ -33,7 +33,7 @@ class CalendarSyncEntry : public SyncEntry
   public:
     CalendarSyncEntry( Syncee* parent );
     CalendarSyncEntry( KCal::Incidence *, Syncee *parent );
-    CalendarSyncEntry( const CalendarSyncEntry& );    
+    CalendarSyncEntry( const CalendarSyncEntry& );
 
     QString name();
     QString id();
@@ -53,8 +53,8 @@ class CalendarSyncEntry : public SyncEntry
 };
 
 /**
-  This class provides an implementation of the @KSyncee interface for KSync. It
-  provides syncing of iCalendar files.
+  This class provides an implementation of the @see KSyncee interface for KSync.
+  It provides syncing of iCalendar files.
 */
 class CalendarSyncee : public Syncee
 {

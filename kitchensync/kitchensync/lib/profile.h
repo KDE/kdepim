@@ -127,8 +127,8 @@ class Profile
     /**
      * sets the path for a partName
      * to path
-     * @partName The part name
-     * @path the path
+     * @param partName The part name
+     * @param path the path
      */
     void setPath( const QString &partName, const QString &path );
 

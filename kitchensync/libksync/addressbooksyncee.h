@@ -65,8 +65,8 @@ class AddressBookSyncEntry : public SyncEntry
 };
 
 /**
-  This class provides an implementation of the @KSyncee interface for KSync. It
-  provides syncing of AddressBook files.
+  This class provides an implementation of the @see KSyncee interface for KSync.
+  It provides syncing of AddressBook files.
 */
 class AddressBookSyncee : public Syncee
 {
