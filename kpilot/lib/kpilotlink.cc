@@ -137,6 +137,7 @@ void KPilotDeviceLink::reset(DeviceType t, const QString & dP)
 	fDeviceType = t;
 	if (t == None)
 		return;
+	fDeviceType=OldStyleUSB;
 
 	fPilotPath = dP;
 	if (fPilotPath.isEmpty())
@@ -679,6 +680,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.12  2002/05/15 20:16:20  kainhofe
+// Wrongfully had a constant where 0 needed to be...
+//
 // Revision 1.11  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //

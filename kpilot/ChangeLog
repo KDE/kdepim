@@ -1,6 +1,9 @@
 KPilot Developer's notes for may 18th 2002
 ==========================================
 
+2002-05-18  Adriaan de Groot
+* Bunch of compile fixes. What happened?
+
 2002-05-15  Adriaan de Groot
 * Updated the version number.
 * Removed the device type combobox, since it's not needed.

@@ -215,18 +215,18 @@ void LogWidget::addError(const QString & s)
 	if (s.isEmpty()) return;
 	if (!fLog) return;
 
-	QString t("<qt><b>");
+	QString t("<qt>");
 
 	if (fShowTime)
 	{
-
+		t.append("<b>");
 		t = QTime::currentTime().toString();
-		t.append("  ");
+		t.append("</b>  ");
 	}
 
-	QString t("<i>");
+	t.append("<i>");
 	t.append(s);
-	t.append("</i>");
+	t.append("</i></qt>");
 
 	addMessage(t);
 }
@@ -363,6 +363,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.21  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.20  2002/04/10 20:09:03  cschumac
 // Make it compile.
 //

@@ -29,7 +29,6 @@
 #include "options.h"
 
 static const char *syncStack_id = "$Id$";
-static const char *syncStack_id = "$Id$";
 
 #include <qtimer.h>
 
@@ -338,6 +337,9 @@ void SyncStack::actionCompleted(SyncAction *b)
 }
 
 // $Log$
+// Revision 1.5  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.4  2002/04/20 13:03:31  binner
 // CVS_SILENT Capitalisation fixes.
 //

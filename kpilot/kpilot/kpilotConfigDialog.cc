@@ -67,10 +67,6 @@ KPilotConfigDialog::KPilotConfigDialog(QWidget * w, const char *n,
 	disableUnusedOptions();
 	readConfig();
 
-	changePortType(fConfigWidget->fPortType->currentItem());
-
-	QObject::connect(fConfigWidget->fPortType, SIGNAL(activated(int)),
-		this, SLOT(changePortType(int)));
 
 	addAboutPage(false);
 
@@ -100,7 +96,6 @@ void KPilotConfigDialog::readConfig()
 	c.resetGroup();
 
 	(void) c.getPilotDevice(fConfigWidget->fPilotDevice);
-	(void) c.getPilotType(fConfigWidget->fPortType);
 	(void) c.getPilotSpeed(fConfigWidget->fPilotSpeed);
 	(void) c.getUser(fConfigWidget->fUserName);
 	(void) c.getStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin);
@@ -155,7 +150,6 @@ void KPilotConfigDialog::readConfig()
 
 	// General page
 	c.setPilotDevice(fConfigWidget->fPilotDevice);
-	c.setPilotType(fConfigWidget->fPortType);
 	c.setPilotSpeed(fConfigWidget->fPilotSpeed);
 	c.setUser(fConfigWidget->fUserName);
 	c.setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin);
@@ -232,6 +226,9 @@ void KPilotConfigDialog::setAddressDisplay(int i)
 }
 
 // $Log$
+// Revision 1.6  2001/11/11 22:20:23  adridg
+// Add workaround for pilot-link limitation <= 0.9.5
+//
 // Revision 1.5  2001/10/08 22:20:18  adridg
 // Changeover to libkpilot, prepare for lib-based conduits
 //
