@@ -321,7 +321,9 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 			<< ": Adding " << s << " to restore list." << endl;
 #endif
 
-		f = pi_file_open(QFile::encodeName(dirname + s));
+    char * fileName = qstrdup( QFile::encodeName(dirname + s) );
+    f = pi_file_open( fileName );
+    delete fileName;
 		if (!f)
 		{
 			kdWarning() << k_funcinfo
@@ -349,7 +351,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	}
 
 	fP->fDBIndex = 0;
-	fP->fDBIterator = fP->fDBList::begin();
+	fP->fDBIterator = fP->fDBList.begin();
 	fActionStatus = GettingFileInfo;
 
 	QObject::connect(&(fP->fTimer), SIGNAL(timeout()),
@@ -372,7 +374,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	qBubbleSort(fP->fDBList);
 
 	fP->fDBIndex = 0;
-	fP->fDBIterator = fP->fDBList::begin();
+	fP->fDBIterator = fP->fDBList.begin();
 	fActionStatus = InstallingFiles;
 
 	QObject::connect(&(fP->fTimer), SIGNAL(timeout()),
@@ -418,12 +420,15 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		return;
 	}
 
-	QFileInfo databaseInfo(dbi->path));
+	QFileInfo databaseInfo(dbi->path);
 	addSyncLogEntry(databaseInfo.fileName());
 	emit logProgress(i18n("Restoring %1...").arg(databaseInfo.fileName()),
 		(100*fP->fDBIndex) / (fP->fDBList.count()+1)) ;
 
-	pi_file *f = pi_file_open( QFile::encodeName(dbi->path) );
+	char * fileName = qstrdup( dbi->path.utf8() );
+	pi_file *f  = pi_file_open( fileName );
+	delete fileName;
+	
 	if (!f)
 	{
 		kdWarning() << k_funcinfo
@@ -437,7 +442,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	if (pi_file_install(f, pilotSocket(), 0) < 0)
 	{
 		kdWarning() << k_funcinfo
-			<< ": Couldn't  restore " << dbi.name << endl;
+			<< ": Couldn't  restore " << dbi->path << endl;
 		logError(i18n("Cannot restore file `%1'.")
 			.arg(databaseInfo.fileName()));
 	}
