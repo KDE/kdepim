@@ -135,7 +135,7 @@ QSize KNProgress::sizeHint() const
 
 
 KNodeApp::KNodeApp()
-  : setDialog()
+  : KMainWindow(0), setDialog(0)
 {
   knGlobals.top=this;
   kapp->setMainWidget(this);  // this makes the external viewer windows close on shutdown...
@@ -273,7 +273,7 @@ void KNodeApp::initView()
   KNArticleWidget::readOptions();
   KNViewHeader::loadAll();
   view = new KNodeView(this);
-  setView(view);
+  setCentralWidget(view);
 
   connect(view->collectionView, SIGNAL(selectionChanged(QListViewItem *)),
   	this, SLOT(slotCollectionSelected(QListViewItem *)));
@@ -699,7 +699,7 @@ bool KNodeApp::eventFilter(QObject* o, QEvent *e)
     return true;
 */
 
-  return KTMainWindow::eventFilter( o, e );
+  return KMainWindow::eventFilter( o, e );
 }
 
 

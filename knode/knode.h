@@ -66,7 +66,7 @@ class KNProgress : public KProgress
 };
 
 
-class KNodeApp : public KTMainWindow
+class KNodeApp : public KMainWindow
 {
   Q_OBJECT
 

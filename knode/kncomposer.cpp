@@ -939,21 +939,38 @@ void KNComposer::readConfig()
 
 
 KNAttachmentPropertyDialog::KNAttachmentPropertyDialog(QWidget *p, KNAttachment *a) :
-  KDialogBase(p, 0, true, i18n("Properties of attachment"), Help|Ok|Cancel, Ok), attachment(a),
+  KDialogBase(p, 0, true, i18n("Attachment Properties"), Help|Ok|Cancel, Ok), attachment(a),
   nonTextAsText(false)
 {
-  QVBox *top=makeVBoxMainWidget();
+  QWidget *page = new QWidget(this);
+  setMainWidget(page);
+  QVBoxLayout *topL = new QVBoxLayout(page);
 
-  QVGroupBox *fileGB=new QVGroupBox(i18n("File"), top);
-  QLabel  *fileName=new QLabel(QString(i18n("Name: <b>%1</b>")).arg(a->contentName()), fileGB),
-          *fileSize=new QLabel(QString(i18n("Size: %1")).arg(a->contentSize()), fileGB);
+  // file info ========================================================
+  QGroupBox *fileGB=new QGroupBox(i18n("File"), page);
+  QGridLayout *fileL = new QGridLayout(fileGB,2,2,20,10);
 
-  QGroupBox *mimeGB=new QGroupBox(i18n("Mime"), top);
-  QLabel  *l1=new QLabel(i18n("Mime-Type:"), mimeGB),
-          *l2=new QLabel(i18n("Description:"), mimeGB),
-          *l3=new QLabel(i18n("Encoding:"), mimeGB);
+  fileL->addWidget(new QLabel(i18n("Name:"),fileGB),0,0);
+  fileL->addWidget(new QLabel(QString("<b>%1</b>").arg(a->contentName()),fileGB),0,1,Qt::AlignLeft);
+  fileL->addWidget(new QLabel(i18n("Size:"),fileGB),1,0);
+  fileL->addWidget(new QLabel(a->contentSize(),fileGB),1,1,Qt::AlignLeft);
+
+  fileL->setColStretch(1,1);
+  topL->addWidget(fileGB);
+
+  // mime info =======================================================
+  QGroupBox *mimeGB=new QGroupBox(i18n("Mime"), page);
+  QGridLayout *mimeL=new QGridLayout(mimeGB, 3,2, 20,10);
+
+  mimeL->addWidget(new QLabel(i18n("Mime-Type:"), mimeGB), 0,0);
   mimeType=new QLineEdit(mimeGB);
+  mimeL->addWidget(mimeType, 0,1);
+
+  mimeL->addWidget(new QLabel(i18n("Description:"), mimeGB), 1,0);
   description=new QLineEdit(mimeGB);
+  mimeL->addWidget(description, 1,1);
+
+  mimeL->addWidget(new QLabel(i18n("Encoding:"), mimeGB), 2,0);
   encoding=new QComboBox(false, mimeGB);
   encoding->insertItem("7Bit");
   encoding->insertItem("8Bit");
@@ -962,21 +979,14 @@ KNAttachmentPropertyDialog::KNAttachmentPropertyDialog(QWidget *p, KNAttachment 
   if(a->isFixedBase64()) {
     encoding->setCurrentItem(3);
     encoding->setEnabled(false);
-  }
-  else
+  } else
     encoding->setCurrentItem(a->cte());
-
-  QGridLayout *mimeL=new QGridLayout(mimeGB, 3,2, 20,10);
-
-  mimeL->addWidget(l1, 0,0);
-  mimeL->addWidget(mimeType, 0,1);
-  mimeL->addWidget(l2, 1,0);
-  mimeL->addWidget(description, 1,1);
-  mimeL->addWidget(l3, 2,0);
   mimeL->addWidget(encoding, 2,1);
-  mimeL->setColStretch(1,1);
 
-  top->setStretchFactor(mimeGB, 1);
+  mimeL->setColStretch(1,1);
+  topL->addWidget(mimeGB);
+
+  setFixedHeight(sizeHint().height());
 
   mimeType->setText(a->contentMimeType());
   description->setText(a->contentDescription());

@@ -92,14 +92,14 @@ KNScoreDialog::~KNScoreDialog()
 
 short KNScoreDialog::score()
 {
-	short ret;
+  short ret=0;
 	
-	if(iBtn->isChecked()) 			ret=0;
-	else if(nBtn->isChecked()) 	ret=50;
-	else if(wBtn->isChecked()) 	ret=100;
-	else if(cBtn->isChecked()) 	ret=spin->value();
+  if (iBtn->isChecked())      ret=0;
+  else if (nBtn->isChecked()) ret=50;
+  else if (wBtn->isChecked()) ret=100;
+  else if (cBtn->isChecked()) ret=spin->value();
 	
-	return ret;
+  return ret;
 }
 
 

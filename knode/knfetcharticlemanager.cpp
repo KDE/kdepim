@@ -439,14 +439,10 @@ void KNFetchArticleManager::createHdrItem(KNFetchArticle *a)
 
 void KNFetchArticleManager::createThread(KNFetchArticle *a)
 {
-	KNFetchArticle *ref;
-  int idRef;
-	bool found;
+  KNFetchArticle *ref=0;
+  int idRef=a->idRef();
+  bool found=false;
 
-	//if(a->idRef()==0) createHdrItem(a);
-	//else {
-  idRef=a->idRef();
-  found=false;
   while(idRef!=0 && !found) {
     ref=g_roup->byId(idRef);
     found=ref->filterResult();
@@ -454,10 +450,9 @@ void KNFetchArticleManager::createThread(KNFetchArticle *a)
   }
 
   if(found) {
-  	if(!ref->listItem())  createThread(ref);
-  	a->setListItem(new KNHdrViewItem(ref->listItem()));
-  }
-  else
+    if(!ref->listItem())  createThread(ref);
+    a->setListItem(new KNHdrViewItem(ref->listItem()));
+  } else
     a->setListItem(new KNHdrViewItem(view));
 
   a->initListItem();
