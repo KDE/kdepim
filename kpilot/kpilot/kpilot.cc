@@ -215,6 +215,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 			<< ": Daemon not responding, trying to start it."
 			<< endl;
 #endif
+		fLogWidget->addMessage(i18n("Starting the KPilot daemon ..."));
 		fDaemonWasRunning = false;
 	}
 	else

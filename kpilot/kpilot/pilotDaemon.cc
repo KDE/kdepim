@@ -681,8 +681,29 @@ QString PilotDaemon::syncTypeString(int i) const
 	* of that.
 	*/
 	int kpilotstatus = getKPilot().kpilotStatus();
-	if (kpilotstatus!=KPilotDCOP::Normal)
+	DCOPStub::Status callstatus = getKPilot().status();
+
+#ifdef DEBUG
+	if (callstatus != DCOPStub::CallSucceeded)
 	{
+		DEBUGDAEMON << fname <<
+			": Could not call KPilot for status." << endl;
+	}
+	else
+	{
+		DEBUGDAEMON << fname << ": KPilot status " << kpilotstatus << endl;
+	}
+#endif
+	/**
+	* If the call fails, then KPilot is probably not running
+	* and we can behave normally.
+	*/
+	if ((callstatus == DCOPStub::CallSucceeded) &&
+		(kpilotstatus != KPilotDCOP::Normal))
+	{
+		kdWarning() << k_funcinfo <<
+			": KPilot returned status " << kpilotstatus << endl;
+
 		fSyncStack->queueInit();
 		fSyncStack->addAction(new SorryAction(fPilotLink));
 		// Near the end of this function - sets up 

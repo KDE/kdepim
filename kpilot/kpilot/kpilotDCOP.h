@@ -43,11 +43,11 @@ public:
 		EndOfHotSync=2,
 		DaemonQuit=4 } ;
 	enum KPilotStatus {
-		Normal,
-		Startup,
-		WaitingForDaemon,
-		UIBusy,
-		Error } ;
+		Startup=1,
+		WaitingForDaemon=2,
+		Normal=10,
+		UIBusy=100,
+		Error=101 } ;
 
 k_dcop:
 	/**
