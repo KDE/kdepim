@@ -1,0 +1,594 @@
+
+
+
+
+
+
+Network Working Group                                        K. T. Homme
+Document: draft-homme-sieve-variables-01.txt          University of Oslo
+Expires October 17, 2003                                     17 Apr 2003
+
+
+
+                      Sieve -- Variables Extension
+
+
+
+Status of this Memo
+
+
+   This document is an Internet-Draft and is subject to all provisions
+   of Section 10 of RFC2026.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF), its areas, and its working groups.  Note that
+   other groups may also distribute working documents as Internet-
+   Drafts.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference mate­
+   rial or to cite them other than as "work in progress."
+
+   The list of current Internet-Drafts can be accessed at
+   http://www.ietf.org/ietf/1id-abstracts.txt
+
+   To view the list Internet-Draft Shadow Directories, see
+   http://www.ietf.org/shadow.html.
+
+   Distribution of this memo is unlimited.
+
+
+Abstract
+
+   In advanced filtering rule sets, it is useful to keep state or con­
+   figuration details across rules.  This extension adds an action to
+   store data in variables, an action to retrieve the current time,
+   changes the interpolation of strings, and supplies a new test so that
+   the value of a string can be examined.
+
+
+0.  Meta-information on this draft
+
+   This information is intended to facilitate discussion.  It will be
+   removed when this document leaves the Internet-Draft stage.
+
+
+0.1.  Discussion
+
+   This draft is intended to be an extension to the Sieve mail filtering
+   language, available from the RFC repository as
+
+
+
+Homme                                                           [Page 1]
+
+
+
+
+
+Internet Draft        Sieve -- Variables Extension           17 Apr 2003
+
+
+   <ftp://ftp.ietf.org/rfc/rfc3028.txt>.
+
+   This draft and the Sieve language itself are being discussed on the
+   MTA Filters mailing list at <ietf-mta-filters@imc.org>.  Subscription
+   requests can be sent to <ietf-mta-filters-request@imc.org> (send an
+   email message with the word "subscribe" in the body).  More informa­
+   tion on the mailing list along with a WWW archive of back messages is
+   available at <http://www.imc.org/ietf-mta-filters/>.
+
+
+0.2.  Noted Changes
+
+0.2.1.  Changes since -00
+
+a)   allow generic time zone names, without requiring implementations to
+     support it.  added a "${timezone}" variable so that the user can
+     check if the implementation does support the time zone name he
+     wants.  the default time zone was changed to localtime again.
+
+b)   allow back references from :matches as well as :regex.
+
+c)   added a section on implementation limits.
+
+d)   clarified global scope so that it spans include.
+
+e)   clarified that this draft only affects scripts which require "vari­
+     ables".
+
+f)   changed modifiers into being tagged arguments for SET, added prece­
+     dence table.
+
+g)   added optional COMPARATOR to SET to solve the internationalisation
+     problem with :lower etc.
+
+h)   the name of the variable being SET is passed in a string to conform
+     with overall Sieve grammar.  this string is explicitly disallowed
+     from containing variable references.
+
+
+0.3.  Open Issues
+
+a)   should we include more predefined variables to access the time?
+     (weekday, week number (US, EU and/or ISO?), name of month, name of
+     weekday, ...)  could use strftime(3c) as a list of what to offer,
+     but the names should be in English.
+
+b)   this extension is particularily useful if fileinto creates new
+     folders on demand.  [SIEVE] doesn't prohibit this, and currently
+     some implementations will create new folders automatically, others
+     won't.
+
+c)   the NOTIFY draft has variables, too.  it would be nice if the syn­
+     tax for the two extensions agreed.  a changed NOTIFY can be used on
+     its own without the variables extension, the user simply won't be
+
+
+
+Homme                                                           [Page 2]
+
+
+
+
+
+Internet Draft        Sieve -- Variables Extension           17 Apr 2003
+
+
+     able to configure the notification message to include different
+     snippets from the message.
+
+
+1.  Introduction
+
+   This is an extension to the Sieve language defined by [SIEVE].  It
+   adds support for storing and referencing data in string variables.
+   The mechanisms detailed in this document will only apply to Sieve
+   scripts which include a require clause for the "variables" extension.
+   The require clauses themselves are not affected by this extension.
+
+   Conventions for notations are as in [SIEVE] section 1.1, including
+   use of [KEYWORDS].
+
+
+2.  Capability Identifier
+
+   The capability string associated with the extension defined in this
+   document is "variables".
+
+
+3.  Interpretation of strings
+
+   This extension changes the semantics of quoted-string, multi-line-
+   literal and multi-line-dotstuff found in [SIEVE] to enable the inclu­
+   sion of the value of variables.  The syntax follows [ABNF].
+
+      variable-ref        =  "${" variable-name "}"
+      variable-name       =  num-variable / identifier
+      num-variable        =  1*DIGIT
+
+   When the string is evaluated, substrings matching variable-ref shall
+   be replaced by the value of variable-name.  Only one pass through the
+   string shall be done.  Variable names are case insensitive.  Unknown
+   variables are replaced by the empty string.  As per the grammar,
+   illegal variable names leaves the would-be variable-ref verbatim,
+   since it doesn't match the variable-ref syntax.
+
+   Examples:
+      "&%${}!"     => unchanged, as the empty string is an illegal
+                      identifier
+      "${doh!}"    => unchanged, as "!" is illegal in identifiers
+
+      The variable company holds the value "ACME".  No other variables
+      are set.
+
+         "${full}"    => the empty string
+         "${company}" => "ACME"
+         "${President, ${Company} Inc.}"
+                      => "${President, ACME Inc.}"
+
+   The expanded string MUST use the variable values which are current
+   when control reaches the statement the string is part of.
+
+
+
+Homme                                                           [Page 3]
+
+
+
+
+
+Internet Draft        Sieve -- Variables Extension           17 Apr 2003
+
+
+3.1.  Quoting
+
+   The semantics of quoting using backslash are not changed: backslash
+   quoting is resolved before doing variable substitution.
+
+   Examples:
+      "${fo\o}"  => ${foo}  => the expansion of variable foo.
+      "${fo\\o}" => ${fo\o} => illegal identifier => left verbatim.
+      "\${foo}"  => ${foo}  => the expansion of variable foo.
+      "\\${foo}" => \${foo} => a backslash character followed by the
+                               expansion of variable foo.
+
+   If it is required to include a character sequence such as "${beep}"
+   verbatim in a text literal, the user can define a variable to circum­
+   vent expansion to the empty string.
+
+   Example:
+      set dollar "$"
+      set text "regarding ${dollar}{beep}"
+
+
+3.2.  Numeric variables
+
+   The decimal value of the numeric variable name will index the list of
+   matching strings from the most recently evaluated match of type
+   ":matches" or ":regex".  The list is empty if the match was unsuc­
+   cessful.
+
+   For ":matches", the list will contain one string for each wildcard in
+   the match pattern.  Each string holds what the corresponding wildcard
+   expands to, possibly the empty string.  The wildcards expand greed­
+   ily.
+
+   For ":regex", the list will contain the strings corresponding to the
+   group operators.  The groups are ordered by the position of the open­
+   ing parenthesis, from left to right.
+
+   The first string in the list has index 1.  If the index is out of
+   range, the empty string will be substituted.  Index 0 returns the
+   number of strings in the list.
+
+   Example:
+      require [ "fileinto", "regex", "variables" ];
+
+      if header :regex "List-ID" "<(.*)@" {
+          fileinto "lists.${1}"; stop;
+      }
+
+      # this is equivalent to the above:
+      if header :matches "List-ID" "<*@" {
+          fileinto "lists.${1}"; stop;
+      }
+
+      if header :matches [ "To", "Cc" ] "coyote@**.com" {
+
+
+
+Homme                                                           [Page 4]
+
+
+
+
+
+Internet Draft        Sieve -- Variables Extension           17 Apr 2003
+
+
+          # ${0} is always "2", and ${2} is always the empty string.
+          fileinto "business.${1}"; stop;
+      } else {
+          # ${0} is always "0"
+          stop;
+      }
+
+
+4.  Action Commands
+
+   This extension defines two actions, "set" and "setdate", both of
+   which MUST be supported by an implementation of this extension.
+
+
+4.1.  Action set
+
+   Syntax:   set [MODIFIER] [COMPARATOR] <name: string> <value: string>
+
+   The "set" action stores the specified value in the variable called
+   name.  name MUST be a constant string without variable references.
+   The contents of name MUST conform to the syntax of identifier.  An
+   illegal name MUST cause a syntax error.
+
+   The default comparator is "i;ascii-casemap".
+
+   All variables have global scope: they are visible until processing
+   stops.  Variable names are case insensitive.
+
+   Example:
+      set "honorific"  "Mr";
+      set "first_name" "Wile";
+      set "last_name"  "Coyote";
+      set "vacation" text:
+      Dear ${HONORIFIC} ${last_name},
+      I'm out, please leave a message after the meep.
+      .
+      ;
+
+   "set" does not affect the implicit keep.
+
+
+4.1.1.  Modifiers
+
+   Modifiers are applied on value before it is stored in the variable.
+   Modifier names are case insensitive.  Unknown modifiers MUST yield a
+   syntax error.  More than one modifier can be specified, in which case
+   they are applied according to this precedence list, highest value
+   first:
+
+
+
+
+
+
+
+
+
+Homme                                                           [Page 5]
+
+
+
+
+
+Internet Draft        Sieve -- Variables Extension           17 Apr 2003
+
+
+                        Precedence     Modifier
+                       -----------------------------
+                            1          :length
+                       -----------------------------
+                            2          :lowerfirst
+                                       :upperfirst
+                       -----------------------------
+                            3          :lower
+                                       :upper
+
+
+   If two or more modifiers of the same precedence are used, they can be
+   applied in any order.
+
+   Examples:
+      set "var" "juMBlEd lETteRS"           => "juMBlEd lETteRS"
+      set :length "var" "${var}"            => "15"
+      set :lower "var" "${var}"             => "jumbled letters"
+      set :upperfirst "var" "${var}"        => "JuMBlEd lETteRS"
+      set :upperfirst :lower "var" "{$var}" => "Jumbled letters"
+
+
+4.1.1.1.  Modifier ":length"
+
+   The value is the decimal number of letters in the expansion, con­
+   verted to a string.
+
+
+4.1.1.2.  Case modifiers
+
+   These modifiers change the letters of the text from upper to lower
+   case or vice versa.  The implementation MUST support US-ASCII, but is
+   not required to handle the entire Unicode repertoire.  The comparator
+   specified SHOULD be consulted to establish which locale to use.
+
+
+4.1.1.2.1.  Modifier ":upper"
+
+   All lower case letters are converted to their upper case counterpart.
+
+
+4.1.1.2.2.  Modifier ":lower"
+
+   All upper case letters are converted to their lower case counterpart.
+
+
+4.1.1.2.3.  Modifier ":upperfirst"
+
+   The first character of the string is converted to upper case if it is
+   a letter and set in lower case.  The rest of the string is left
+   unchanged.
+
+
+
+
+
+
+Homme                                                           [Page 6]
+
+
+
+
+
+Internet Draft        Sieve -- Variables Extension           17 Apr 2003
+
+
+4.1.1.2.4.  Modifier ":lowerfirst"
+
+   The first character of the string is converted to lower case if it is
+   a letter and set in upper case.  The rest of the string is left
+   unchanged.
+
+
+4.2.  Action setdate
+
+   Syntax: setdate [ <time-zone: string> ]
+
+   The value of time-zone SHOULD be a well-known name, or an offset rel­
+   ative to UTC.  All implementations MUST support the time-offset syn­
+   tax
+
+           time-offset  =  ( "+" / "-" ) 4DIGIT
+
+   time-offset should be interpreted the same way as "zone" in [IMAIL].
+
+
+     Note: There is currently no registry for time zones.  If IETF
+     establishes one, its names SHOULD be used.  In the absence of
+     such a registry, [TZ] is the most widespread collection of
+     time zone definitions and its use as a reference is RECOM­
+     MENDED.
+
+   If the time-zone is left out or not recognised, the local time zone
+   SHOULD be used.
+
+   The action setdate initialises a few variables:
+
+      ${year}     => the current year, "0000" .. "9999"
+      ${month}    => the current month, "01" .. "12"
+      ${day}      => the current day, "01" .. "31"
+      ${hour}     => the current hour, "00" .. "23"
+      ${minute}   => the current hour, "00" .. "59"
+      ${second}   => the current second, "00" .. "59"
+      ${timezone} => the time zone in use.  If the user specified a
+                     time zone which was recognised, ${timezone} will
+                     contain the name given.  Otherwise, the value
+                     MUST be the server's default time zone in offset
+                     format.
+
+   These variables SHOULD reference the time when execution of the Sieve
+   script reaches the statement.  All calls to setdate MUST refer to the
+   same point in time.
+
+   "setdate" does not affect the implicit keep.
+
+
+5.  Test string
+
+   Syntax: string [MATCH-TYPE] [COMPARATOR]
+           <source: string-list> <key-list: string-list>
+
+
+
+Homme                                                           [Page 7]
+
+
+
+
+
+Internet Draft        Sieve -- Variables Extension           17 Apr 2003
+
+
+   The "string" test evaluates to true if any of the strings matches any
+   key.  The type of match defaults to ":is".
+
+
+6.  Implementation Limits
+
+   An implementation of this draft MUST support at least 128 distinct
+   variables.  The supported length of variable names MUST be at least
+   32 characters.  Each variable MUST be able to hold at least 4000
+   characters.  Attempts to set the variable to a value larger than what
+   the implementation supports MUST be treated as an error.
+
+   Numeric variables ${1} through ${9} MUST be supported.  Referencing
+   higher indices than is supported is a syntax error which MUST be dis­
+   covered at compile-time.  If the string matching a wildcard or a
+   regex group operator exceeds the maximum variable size, the implemen­
+   tation SHOULD truncate it and MUST NOT treat it as an error.
+
+
+7.  Security Considerations
+
+   When combined with the regex extension, strings can contain arbitrary
+   values controlled by the sender of the e-mail if the author of the
+   script isn't careful.
+
+   The introduction of variables makes advanced decision making easier
+   to write, but since no looping construct is provided, all Sieve
+   scripts will terminate orderly.
+
+
+8.  Acknowledgments
+
+   Thanks to Jutta Degener, Ned Freed, Lawrence Greenfield, Peder Stray
+   and Nigel Swinson for valuable feedback.
+
+
+9.  Author's Address
+
+   Kjetil T. Homme
+   Frydens g 5B
+   0564 Oslo, Norway
+
+   Phone: +47 9366 0091
+   E-mail: kjetilho@ifi.uio.no
+
+
+Appendix A.  References
+
+
+     [ABNF]     D. Crocker, Ed., "Augmented BNF for Syntax Specifica­
+                tions: ABNF", Internet Mail Consortium, RFC 2234, Novem­
+                ber 1997
+
+
+
+
+
+Homme                                                           [Page 8]
+
+
+
+
+
+Internet Draft        Sieve -- Variables Extension           17 Apr 2003
+
+
+     [IMAIL]    P. Resnick, Ed., "Internet Message Format", QUALCOMM
+                Incorporated, April 2001.
+
+     [KEYWORDS] Bradner, S., "Key words for use in RFCs to Indicate
+                Requirement Levels", Harvard University, RFC 2119, March
+                1997.
+
+     [SIEVE]    Showalter, T., "Sieve: A Mail Filtering Language", Mira­
+                point, RFC 3028, January 2001.
+
+     [TZ]       Olson, A.D., et al, Time zone code and data,
+                ftp://elsie.nci.nih.gov/pub/, updated periodically.
+
+
+
+Appendix B.  Full Copyright Statement
+
+   Copyright (C) The Internet Society 2003. All Rights Reserved.
+
+   This document and translations of it may be copied and furnished to
+   others, and derivative works that comment on or otherwise explain it
+   or assist in its implementation may be prepared, copied, published
+   and distributed, in whole or in part, without restriction of any
+   kind, provided that the above copyright notice and this paragraph are
+   included on all such copies and derivative works.  However, this doc­
+   ument itself may not be modified in any way, such as by removing the
+   copyright notice or references to the Internet Society or other
+   Internet organizations, except as needed for the purpose of develop­
+   ing Internet standards in which case the procedures for copyrights
+   defined in the Internet Standards process must be followed, or as
+   required to translate it into languages other than English.
+
+   The limited permissions granted above are perpetual and will not be
+   revoked by the Internet Society or its successors or assigns.
+
+   This document and the information contained herein is provided on an
+   "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+   TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
+   BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
+   HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MER­
+   CHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Homme                                                           [Page 9]
+
+

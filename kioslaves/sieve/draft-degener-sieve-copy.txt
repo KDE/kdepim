@@ -1,0 +1,176 @@
+Network Working Group                                       Jutta Degener
+Internet Draft					           Sendmail, Inc.
+Expires: October 2003                                          April 2003
+
+
+                      Sieve -- "copy" extension
+		  <draft-degener-sieve-copy-00.txt>
+
+
+Status of this memo
+
+   This document is an Internet-Draft and is subject to all
+   provisions of Section 10 of RFC2026.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF), its areas, and its working groups.  Note that
+   other groups may also distribute working documents as
+   Internet-Drafts.
+
+   Internet-Drafts are draft documents valid for a maximum of six
+   months and may be updated, replaced, or obsoleted by other
+   documents at any time.  It is inappropriate to use Internet-
+   Drafts as reference material or to cite them other than as
+   "work in progress."
+
+   The list of current Internet-Drafts can be accessed at
+   http://www.ietf.org/1id-abstracts.html
+
+   The list of Internet-Draft Shadow Directories can be accessed at
+   http://www.ietf.org/shadow.html
+
+
+Abstract
+
+   This document defines a new keyword parameter, ":copy", to
+   be used with the sieve "fileinto" and "redirect" actions.
+   The new parameter prevents cancellation of the implicit keep.
+
+
+1. Introduction
+
+   Some users have the notion of forwarding a copy of a message
+   for safekeeping to another e-mail address, or of saving a copy
+   in a folder -- in addition to the regular message delivery,
+   which shouldn't be affected by the copy.
+
+   If saving an extra copy is all the user wanted to do, 
+   
+   	fileinto "unfiltered";
+	keep;
+
+   would do the job.  But the explicit "keep" is a poor substitute
+   for the implicit keep when more processing follows:
+
+   	fileinto "unfiltered";
+	keep;
+
+	if header "Subject" "MAKE MONEY FAST!!!"
+	{
+		discard;
+	}
+
+   In this example, the "discard" is ineffective against the
+   explicit "keep"; the discarded message still ends up in
+   the user's inbox.
+
+   It is possibly to generate sieve code that perfectly
+   expresses a user's wishes, but such code quickly grows
+   unwieldy because it needs to keep track of the state
+   the implicit keep would have had without the fileinto
+   or redirect command.
+
+   This extension tries to make life easier for user interface
+   designers and script writers by allowing them to express
+   the "copy" semantics directly.
+
+
+2. Conventions used.
+
+   Conventions for notations are as in [SIEVE] section 1.1, including
+   use of [KEYWORDS] and "Syntax:" label for the definition of action
+   and tagged arguments syntax.
+
+   The capability string associated with extension defined in this
+   document is "copy".
+
+
+3. ":copy" extension to the "fileinto" and "redirect" command.
+
+   Syntax:
+   	"fileinto" [:copy] <folder: string>
+   	"redirect" [:copy] <folder: string>
+
+   If the optional :copy keyword is specified with "fileinto"
+   or "redirect", the tagged command does not cancel the
+   implicit keep.  Instead, it merely files or redirects a
+   copy in addition to whatever else is happening to the
+   message.
+
+
+4. Security Considerations
+
+   The "copy" extension makes it easier to eavesdrop on a user's
+   message stream without the user noticing.
+
+
+5. Acknowledgments
+
+   Thanks to Eric Allman, Will Lee, and Rand Wacker for
+   corrections and comments.
+
+
+6. Author's Address
+
+   Jutta Degener
+   Sendmail, Inc.
+   6425 Christie Ave, 4th Floor
+   Emeryville, CA 94608
+
+   Email: jutta@sendmail.com
+
+
+7. Discussion
+
+   This section will be removed when this document leaves the
+   Internet-Draft stage.
+
+   This draft is intended as an extension to the Sieve mail filtering
+   language.  Sieve extensions are discussed on the MTA Filters mailing
+   list at <ietf-mta-filters@imc.org>.  Subscription  requests can
+   be sent to <ietf-mta-filters-request@imc.org> (send an email
+   message with the word "subscribe" in the body).
+
+   More information on the mailing list along with a WWW archive of
+   back messages is available at <http://www.imc.org/ietf-mta-filters/>.
+
+
+
+Appendices
+
+Appendix A.  References
+
+   [KEYWORDS] 	Bradner, S., "Key words for use in RFCs to Indicate
+   		Requirement Levels", RFC 2119, March 1997.
+
+   [SIEVE] 	Showalter, T.,  "Sieve: A Mail Filtering Language", RFC 3028,
+		January 2001.
+
+
+Appendix B. Full Copyright Statement
+
+    Copyright (C) The Internet Society 2003. All Rights Reserved.
+
+    This document and translations of it may be copied and furnished to
+    others, and derivative works that comment on or otherwise explain it
+    or assist in its implementation may be prepared, copied, published
+    and distributed, in whole or in part, without restriction of any
+    kind, provided that the above copyright notice and this paragraph
+    are included on all such copies and derivative works.  However, this
+    document itself may not be modified in any way, such as by removing
+    the copyright notice or references to the Internet Society or other
+    Internet organizations, except as needed for the purpose of
+    developing Internet standards in which case the procedures for
+    copyrights defined in the Internet Standards process must be
+    followed, or as required to translate it into languages other than
+    English.
+
+    The limited permissions granted above are perpetual and will not be
+    revoked by the Internet Society or its successors or assigns.
+
+    This document and the information contained herein is provided on an
+    "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+    TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
+    BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
+    HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF
+    MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.

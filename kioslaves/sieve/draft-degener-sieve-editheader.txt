@@ -1,0 +1,287 @@
+Network Working Group                                       Jutta Degener
+Internet Draft					           Sendmail, Inc.
+Expires: October 2003                                          April 2003
+
+
+                      Sieve -- "editheader" extension
+		  <draft-degener-sieve-editheader-00.txt>
+
+
+Status of this memo
+
+   This document is an Internet-Draft and is subject to all
+   provisions of Section 10 of RFC2026.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF), its areas, and its working groups.  Note that
+   other groups may also distribute working documents as
+   Internet-Drafts.
+
+   Internet-Drafts are draft documents valid for a maximum of six
+   months and may be updated, replaced, or obsoleted by other
+   documents at any time.  It is inappropriate to use Internet-
+   Drafts as reference material or to cite them other than as
+   "work in progress."
+
+   The list of current Internet-Drafts can be accessed at
+   http://www.ietf.org/1id-abstracts.html
+
+   The list of Internet-Draft Shadow Directories can be accessed at
+   http://www.ietf.org/shadow.html
+
+
+Abstract
+
+   This document defines three new actions for the "sieve"
+   language that add, delete, and change e-mail header fields.
+
+
+1. Introduction
+
+   Email headers are a flexible and easy to understand means
+   of communication between email processors.
+   This extension enables sieve scripts to interact with other
+   components that consume or produce header fields by allowing
+   the script to delete, modify, and add header fields itself.
+
+
+2. Conventions used.
+
+   Conventions for notations are as in [SIEVE] section 1.1, including
+   use of [KEYWORDS] and "Syntax:" label for the definition of action
+   and tagged arguments syntax.
+
+   The capability string associated with extension defined in this
+   document is "editheader".
+
+
+3. Action addheader
+
+   Syntax:
+   	"addheader" <name: string> <value: string>
+
+   The addheader action appends a header field to the existing
+   message header.  The name MUST be a valid 7-bit US-ASCII header
+   field name as described by RFC 2822 "field-name" nonterminal.
+
+   If the specified field value does not match the RFC 2822
+   "unstructured" nonterminal or exceeds a length limit set by
+   the implementation, the implementation MUST either flag an
+   error or encode the field using folding white space and the
+   encodings described in RFC 2047 or RFC 2231 to be compliant
+   with RFC 2822.
+
+   The header field MUST be added at the end of the existing
+   header.
+
+   An implementation MAY impose a length limit onto the size of
+   the encoded header field; such a limit MUST NOT be less
+   than 998 characters, not including the terminating CRLF
+   supplied by the implementation.
+
+   Example:
+	/* Don't redirect if we already redirected */
+	if not header :contains "X-Sieve-Filtered"
+		["<kim@job.tld>", "<kim@home.tld>"]
+	{
+   		addheader "X-Sieve-Filtered" "<kim@job.tld>";
+		redirect "kim@home.tld";
+	}
+
+
+4. Action deleteheader
+
+   Syntax:
+   	"deleteheader"
+		[":index" <fieldno: number> [":last"]]
+		[COMPARATOR] [MATCH-TYPE]
+		<field-name: string>
+		[<value-patterns: string-list>]
+
+   By default, the deleteheader action deletes all occurrences
+   of the named header field.
+
+   The field-name is mandatory and always matched as a
+   case-insensitive us-ascii string.  The value-patterns,
+   if specified, are matched according to the match type and
+   comparator.  If none are specified, all values match.
+
+   The field-name MUST be a valid 7-bit header field name as
+   described by the RFC 2822 "field-name" nonterminal.
+
+   If :index <fieldno> is specified, the attempts to match 
+   a value are limited to the header field <fieldno> (beginning
+   at 1, the first named header field).  If :last is specified,
+   the count is backwards; 1 denotes the last named header field,
+   2 the second to last, and so on.  The counting happens
+   before the <value-patterns> match, if any;
+   
+   	deleteheader :index 2 :contains "Received" "via carrier-pigeon"
+
+   deletes the second "Received:" header field if it contains
+   the string "via carrier-pigeon" (not the second Received: field
+   that contains "via carrier-pigeon").
+
+
+5. Action replaceheader
+
+   Syntax:
+   	"replaceheader" 
+		[":index" <fieldno: number> [":last"]]
+		[":newname" <newname: string>]
+		[":newvalue" <newvalue: string>]
+		[COMPARATOR] [MATCH-TYPE] <field-name: string>
+		[<value-patterns: string-list>]
+
+   The replaceheader action replaces all or parts of a header
+   field, in some or all occurrences of that header field.
+
+   If :index <fieldno> is specified, the attempts to match 
+   a value are limited to the named header field <fieldno> (beginning
+   at 1, the first named header field).  If :last is specified,
+   the count is backwards; 1 denotes the last named header field,
+   2 the second to last, and so on.  As with "deleteheader",
+   the counting happens before the <value-patterns> match, if any.
+
+   The header field names in the field-name and in the ":newname"
+   argument, if specified, MUST be valid 7-bit header field names
+   as described by the RFC 2822 "field-name" nonterminal.
+
+   The field-name is mandatory and always matched as a
+   case-insensitive us-ascii string.  The value-patterns,
+   if specified, are matched according to the match type and
+   comparator.   (If no value-patterns are specified, they
+   always match.)
+
+   If :newname <newname> is specified, the action changes the
+   name of all matching header fields to <newname>.
+
+   If :newvalue <newvalue> is specified, the action changes the
+   value of all matching header fields to to <newvalue>.
+   If the [VARIABLES] extension is present and the MATCH-TYPE
+   is a type that interacts with the [VARIABLES] extension,
+   variable references to ${1}...${N} in the replacement string
+   following ":newvalue" are evaluated according to the matched
+   substring in the header field that is being replaced.
+
+   For example,
+
+   	replaceheader :newvalue "[ADV] ${1}" :matches "Subject" "*";
+
+   would insert an "[ADV]" tag before the value of the
+   "Subject" header field, changing
+   	
+	Subject: Make Money Fast!!
+  to 	Subject: [ADV] Make Money Fast!!
+
+   If neither :newname nor :newvalue are specified, the operation
+   still matches its argument and, in the presence of the
+   [VARIABLES] extension and a match type that interacts with it,
+   sets the ${1}...${N} variables to the last header matched.
+
+
+6. Interaction with Other Sieve Extensions
+
+   Tests and actions such as "exist" or "header" that examine
+   headers MUST examine the current state of a header as modified
+   by any actions that have taken place so far.
+
+   Actions that create messages in storage or in transport to
+   MTAs MUST store and send messages with the current set of
+   header fields.
+
+
+7. Security Considerations
+
+   Someone with write access to a user's script storage may use this
+   extension to generate headers that a user would otherwise be
+   shielded from (by a gateway MTA that removes them).
+
+   A sieve filter that removes headers may unwisely destroy
+   evidence about the path a header has taken.
+
+   Any change in a message content may interfere with digital
+   signature mechanisms that include the header in the signed
+   material.
+
+   Any decision mechanism in a user's filter that is based
+   on headers is vulnerable to header spoofing.  For example,
+   if the user adds an APPROVED header or tag, a malicious sender
+   may add that tag or header themselves.  One way to guard against
+   this is to delete or rename any such headers or stamps prior
+   to processing the message.
+
+
+8. Acknowledgments
+
+   Thanks to Eric Allman, Philip Guenther, Will Lee, Chris Markle,
+   Randall Schwartz, and Rand Wacker for extensive corrections
+   and suggestions.
+
+
+9. Author's Address
+
+   Jutta Degener
+   Sendmail, Inc.
+   6425 Christie Ave, 4th Floor
+   Emeryville, CA 94608
+
+   Email: jutta@sendmail.com
+
+
+10. Discussion
+
+   This section will be removed when this document leaves the
+   Internet-Draft stage.
+
+   This draft is intended as an extension to the Sieve mail filtering
+   language.  Sieve extensions are discussed on the MTA Filters mailing
+   list at <ietf-mta-filters@imc.org>.  Subscription  requests can
+   be sent to <ietf-mta-filters-request@imc.org> (send an email
+   message with the word "subscribe" in the body).
+
+   More information on the mailing list along with a WWW archive of
+   back messages is available at <http://www.imc.org/ietf-mta-filters/>.
+
+
+Appendices
+
+Appendix A.  References
+
+   [SIEVE]     Showalter, T.,  "Sieve: A Mail Filtering Language", RFC 3028,
+               January 2001.
+
+   [KEYWORDS]  Bradner, S., "Key words for use in RFCs to Indicate
+               Requirement Levels", RFC 2119, March 1997.
+
+   [VARIABLES] Homme, K.T., "Sieve -- Variables Extension",
+               draft-homme-sieve-variables-01.txt, April 2003.
+
+
+Appendix B. Full Copyright Statement
+
+    Copyright (C) The Internet Society 2002. All Rights Reserved.
+
+    This document and translations of it may be copied and furnished to
+    others, and derivative works that comment on or otherwise explain it
+    or assist in its implementation may be prepared, copied, published
+    and distributed, in whole or in part, without restriction of any
+    kind, provided that the above copyright notice and this paragraph
+    are included on all such copies and derivative works.  However, this
+    document itself may not be modified in any way, such as by removing
+    the copyright notice or references to the Internet Society or other
+    Internet organizations, except as needed for the purpose of
+    developing Internet standards in which case the procedures for
+    copyrights defined in the Internet Standards process must be
+    followed, or as required to translate it into languages other than
+    English.
+
+    The limited permissions granted above are perpetual and will not be
+    revoked by the Internet Society or its successors or assigns.
+
+    This document and the information contained herein is provided on an
+    "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+    TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
+    BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
+    HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF
+    MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
