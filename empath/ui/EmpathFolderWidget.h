@@ -46,16 +46,13 @@ class EmpathFolderWidget : public EmpathListView
 
     public:
         
-        EmpathFolderWidget(
-            QWidget * parent = 0,
-            const char * name = 0,
-            bool waitForShown = false);
+        EmpathFolderWidget(QWidget * parent);
 
-        ~EmpathFolderWidget() { empathDebug("dtor"); }
+        ~EmpathFolderWidget();
         
-        void update();
-
         EmpathURL selected() const;
+
+        unsigned int id() const;
 
     protected slots:
 
@@ -64,6 +61,7 @@ class EmpathFolderWidget : public EmpathListView
         void s_mailboxCheck();
         void s_mailboxProperties();
         void s_update();
+        void s_sync();
         void s_newFolder();
         void s_removeFolder();
         void s_setUpAccounts();
@@ -84,6 +82,10 @@ class EmpathFolderWidget : public EmpathListView
         void contentsDropEvent          (QDropEvent *);
 
     private:
+
+        static unsigned int ID_;
+
+        unsigned int id_;
 
         enum OverType { Folder, Mailbox };
         

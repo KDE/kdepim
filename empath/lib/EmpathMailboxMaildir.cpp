@@ -33,6 +33,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
+#include <kapp.h>
 
 // Local includes
 #include "EmpathMailboxMaildir.h"
@@ -137,11 +138,11 @@ EmpathMailboxMaildir::_setupDefaultFolders()
     QStringList folders;
 
     folders
-        << c->readEntry(FOLDER_INBOX,   i18n("Inbox"))
-        << c->readEntry(FOLDER_OUTBOX,  i18n("Outbox"))
-        << c->readEntry(FOLDER_TRASH,   i18n("Trash"))
-        << c->readEntry(FOLDER_SENT,    i18n("Sent"))
-        << c->readEntry(FOLDER_DRAFTS,  i18n("Drafts"));
+        << empath->inbox()  .folderPath()
+        << empath->outbox() .folderPath()
+        << empath->sent()   .folderPath()
+        << empath->drafts() .folderPath()
+        << empath->trash()  .folderPath();
 
     QStringList::ConstIterator it;
 
@@ -161,24 +162,7 @@ EmpathMailboxMaildir::_setupDefaultFolders()
 
         EmpathURL u(url_.mailboxName(), *it, QString::null);
 
-        EmpathFolder * f = new EmpathFolder(u);
-    
-        if (c->readEntry(FOLDER_INBOX) == *it)
-            f->setPixmap("folder-inbox");
-        
-        else if (c->readEntry(FOLDER_OUTBOX) == *it)
-            f->setPixmap("folder-outbox");
-        
-        else if (c->readEntry(FOLDER_SENT) == *it)
-            f->setPixmap("folder-sent");
-        
-        else if (c->readEntry(FOLDER_DRAFTS) == *it)
-            f->setPixmap("folder-drafts");
-        
-        else if (c->readEntry(FOLDER_TRASH) == *it)
-            f->setPixmap("folder-trash");
-        
-        folderList_.insert(*it, f);
+        folderList_.insert(*it, new EmpathFolder(u));
 
         boxList_.append(new EmpathMaildir(path_, u));
     }
@@ -255,7 +239,8 @@ EmpathMailboxMaildir::loadConfig()
     
     if (!d.exists())
         if (!d.mkdir(path_)) {
-            empathDebug("Couldn't make " + path_ + " !!!!!");
+            empathDebug("Couldn't make directory `" + path_ + "' !");
+            return;
         }
 
     _recursiveReadFolders(path_);
@@ -263,12 +248,10 @@ EmpathMailboxMaildir::loadConfig()
     
     // Initialise all maildir objects.
     
-    EmpathMaildirListIterator it(boxList_);
-    
-    for (; it.current(); ++it)
+    for (EmpathMaildirListIterator it(boxList_); it.current(); ++it)
         it.current()->init();
     
-    emit(updateFolderLists());
+    emit(syncFolderLists());
 }
 
     void
@@ -298,7 +281,7 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
     
     for (; it != l.end(); ++it) {
         
-        if ((*it).left(1) == ".")
+        if ((*it).at(0) == '.')
             continue;
         
         if (*it == "cur") {
@@ -327,30 +310,9 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
         QString::null);
     
     EmpathFolder * f = new EmpathFolder(url);
-
-    KConfig * c(KGlobal::config());
-
-    using namespace EmpathConfig;
-
-    c->setGroup(GROUP_FOLDERS);
-
-    if (currentDir == c->readEntry(FOLDER_INBOX))
-        f->setPixmap("folder-inbox");
     
-    else if (currentDir == c->readEntry(FOLDER_OUTBOX))
-        f->setPixmap("folder-outbox");
-    
-    else if (currentDir == c->readEntry(FOLDER_SENT))
-        f->setPixmap("folder-sent");
-    
-    else if (currentDir == c->readEntry(FOLDER_DRAFTS))
-        f->setPixmap("folder-drafts");
-    
-    else if (currentDir == c->readEntry(FOLDER_TRASH))
-        f->setPixmap("folder-trash");
-
     folderList_.insert(url.folderPath(), f);
- 
+
     // If this dir is not itself a maildir folder, we add it as a containing
     // folder.
     if (!isMaildir) {
@@ -359,19 +321,15 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
     }
    
     boxList_.append(new EmpathMaildir(path_, url));
-}
-
-    bool
-EmpathMailboxMaildir::getMail()
-{
-    // STUB
-    return false;
+    
+    emit(updateFolderLists());
+    kapp->processEvents();
 }
 
     void
 EmpathMailboxMaildir::s_checkMail()
 {
-    sync(url_);    
+    sync(url_);
 }
     
     void

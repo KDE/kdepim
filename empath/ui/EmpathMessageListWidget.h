@@ -90,7 +90,6 @@ class EmpathMessageListWidget : public EmpathListView
         void addItem(EmpathIndexRecord * item);
         EmpathURL firstSelectedMessage();
         
-        void setSignalUpdates(bool yn);
         const EmpathURL & currentFolder() { return url_; }
         
         void selectTagged();
@@ -100,6 +99,8 @@ class EmpathMessageListWidget : public EmpathListView
         
         virtual void setSelected(QListViewItem *, bool);
         virtual void clearSelection();
+
+        void listenTo(unsigned int);
 
     public slots:
 
@@ -129,7 +130,7 @@ class EmpathMessageListWidget : public EmpathListView
         void s_linkChanged          (QListViewItem *);
         void s_startDrag            (const QList<QListViewItem> &);
         
-        void s_showFolder           (const EmpathURL &);
+        void s_showFolder           (const EmpathURL &, unsigned int);
         void s_headerClicked        (int);
         void s_itemGone             (const QString &);
         void s_itemCome             (const QString &);
@@ -137,7 +138,7 @@ class EmpathMessageListWidget : public EmpathListView
     signals:
         
         void changeView(const EmpathURL &);
-        void showing();
+//        void showing();
         
     private:
         
@@ -216,9 +217,9 @@ class EmpathMessageListWidget : public EmpathListView
         
         EmpathMessageListItemList selected_;
         
+        unsigned int listenTo_;
         
         // Order dependency
-        bool                wantScreenUpdates_;
         bool                filling_;
         Q_UINT32            itemListCount_;
         // End order dependency

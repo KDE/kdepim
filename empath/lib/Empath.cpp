@@ -39,6 +39,7 @@
 // KDE includes
 #include <kglobal.h>
 #include <kconfig.h>
+#include <klocale.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -91,7 +92,27 @@ Empath::init()
     
     _saveHostName();
     _setStartTime();
+ 
+    KConfig * c = KGlobal::config();
+
+    using namespace EmpathConfig;
     
+    c->setGroup(GROUP_FOLDERS);
+
+    QString s(i18n("Local"));
+
+    inbox_  .setMailboxName(s);
+    outbox_ .setMailboxName(s);
+    sent_   .setMailboxName(s);
+    drafts_ .setMailboxName(s);
+    trash_  .setMailboxName(s);
+    
+    inbox_  .setFolderPath  (c->readEntry(FOLDER_INBOX,   i18n("Inbox")));
+    outbox_ .setFolderPath  (c->readEntry(FOLDER_OUTBOX,  i18n("Outbox")));
+    sent_   .setFolderPath  (c->readEntry(FOLDER_SENT,    i18n("Sent")));
+    drafts_ .setFolderPath  (c->readEntry(FOLDER_DRAFTS,  i18n("Drafts")));
+    trash_  .setFolderPath  (c->readEntry(FOLDER_TRASH,   i18n("Trash")));
+   
     mailboxList_.loadConfig();
     filterList_.loadConfig();
 }
@@ -157,7 +178,7 @@ Empath::message(const EmpathURL & source, const QString & xinfo)
     }
 
     if (cached->message(xinfo) == 0) {
-        empathDebug("Message \"" + source.asString() + "\" not in cache !");
+        empathDebug("Message data has been deleted in cache object !");
         return 0;
     }
     
@@ -184,7 +205,10 @@ Empath::finishedWithMessage(const EmpathURL & url, const QString & xinfo)
     EmpathMailbox *
 Empath::mailbox(const EmpathURL & url)
 {
-    return mailboxList_[url.mailboxName()];
+    EmpathMailbox * m = mailboxList_[url.mailboxName()];
+    if (m == 0)
+        empathDebug("Cannot find mailbox called `" + url.mailboxName() + "'");
+    return m;
 }
 
     EmpathFolder *
@@ -566,7 +590,6 @@ void Empath::send(RMM::RMessage & m)     { mailSender_->send(m);     }
 void Empath::queue(RMM::RMessage & m)    { mailSender_->queue(m);    }
 void Empath::sendQueued()                { mailSender_->sendQueued();}
 void Empath::s_newMailArrived()          { emit(newMailArrived());   }
-void Empath::s_newTask(EmpathTask * t)   { emit(newTask(t));         }
 void Empath::filter(const EmpathURL & m) { filterList_.filter(m);    }
 void Empath::s_bugReport()               { emit(bugReport());        }
 
@@ -577,6 +600,8 @@ void Empath::s_setupComposing(QWidget * parent){ emit(setupComposing(parent)); }
 void Empath::s_setupAccounts(QWidget * parent) { emit(setupAccounts(parent));  }
 void Empath::s_setupFilters(QWidget * parent)  { emit(setupFilters(parent));   }
 void Empath::s_about(QWidget * parent)         { emit(about(parent));          }
+
+void Empath::s_newTask(EmpathTask * t) { emit(newTask(t)); }
 
     void 
 Empath::s_compose(const QString & recipient)
@@ -614,5 +639,37 @@ Empath::s_infoMessage(const QString & s)
     void
 Empath::s_checkMail()
 { emit(checkMail()); }
+
+    void
+Empath::s_showFolder(const EmpathURL & u, unsigned int i)
+{ emit(showFolder(u, i)); }
+
+    void
+Empath::s_updateFolderLists()
+{ emit(updateFolderLists()); }
+    
+    void
+Empath::s_syncFolderLists()
+{ emit(syncFolderLists()); }
+
+    EmpathURL
+Empath::inbox() const
+{ return inbox_; }
+
+    EmpathURL
+Empath::outbox() const
+{ return outbox_; }
+
+    EmpathURL
+Empath::sent() const
+{ return sent_; }
+    
+    EmpathURL
+Empath::drafts() const
+{ return drafts_; }
+    
+    EmpathURL
+Empath::trash() const
+{ return trash_; }
 
 // vim:ts=4:sw=4:tw=78

@@ -36,6 +36,7 @@
 #include <kapp.h>
 
 // Local includes
+#include "EmpathTask.h"
 #include "EmpathUIUtils.h"
 #include "EmpathDefines.h"
 #include "EmpathMainWidget.h"
@@ -64,7 +65,13 @@ EmpathMainWindow::EmpathMainWindow()
     resize(x, y);
     
     menu_       = menuBar();
-    status_     = statusBar();    
+
+    progressStack_ = new QWidgetStack(statusBar());
+    statusBar()->insertWidget(progressStack_, width(), 0);
+    statusBar()->show();
+
+    progressStack_->hide();
+
 
     mainWidget_ = new EmpathMainWidget(this);
     
@@ -147,6 +154,14 @@ EmpathMainWindow::_setupToolBar()
 EmpathMainWindow::_setupStatusBar()
 {
     empath->s_infoMessage(i18n("Welcome to Empath"));
+}
+
+    void
+EmpathMainWindow::s_newTask(EmpathTask * t)
+{
+    empathDebug(t->name());
+    new EmpathProgressIndicator(t, progressStack_);
+    progressStack_->show();
 }
 
 // If the user presses the close button on the title bar, or tries
@@ -355,13 +370,13 @@ EmpathMainWindow::s_aboutQt()
     void
 EmpathMainWindow::statusMessage(const QString & messageText, int seconds)
 {
-    status_->message(messageText, seconds);
+    statusBar()->message(messageText, seconds);
 }
 
     void
 EmpathMainWindow::clearStatusMessage()
 {
-    status_->clear();
+    statusBar()->clear();
 }
 
     void
@@ -385,12 +400,6 @@ EmpathMainWindow::newMailArrived()
 EmpathMainWindow::messageListWidget()
 {
     return messageListWidget_;
-}
-
-    void
-EmpathMainWindow::s_dumpWidgetList()
-{
-    // STUB
 }
 
     void
@@ -453,6 +462,68 @@ EmpathMainWindow::s_setupAccounts()
 EmpathMainWindow::s_setupFilters()
 { empath->s_setupFilters(this); }
 
+/////////////////////////////////////////////////////////////////////////////
+
+EmpathProgressIndicator::EmpathProgressIndicator
+    (EmpathTask * t, QWidgetStack * parent)
+    :   QWidget(parent, "ProgressIndicator")
+{
+    parent->addWidget(this, (int)this);
+
+    QHBoxLayout * layout = new QHBoxLayout(this, 0, 6);
+
+    progress_ = new KProgress(0, 100, 0, KProgress::Horizontal, this);
+    progress_->setFixedWidth(120);
+    QLabel * l = new QLabel(t->name(), this);
+
+    layout->addWidget(progress_);
+    layout->addWidget(l);
+    layout->addStretch(10);
+
+    QObject::connect(t, SIGNAL(posChanged(int)),    SLOT(s_setValue(int)));
+    QObject::connect(t, SIGNAL(maxChanged(int)),    SLOT(s_setMaxValue(int)));
+    QObject::connect(t, SIGNAL(addOne()),           SLOT(s_incValue()));
+    QObject::connect(t, SIGNAL(finished()),         SLOT(s_finished()));
+
+    show();
+}
+
+EmpathProgressIndicator::~EmpathProgressIndicator()
+{
+    // Empty.
+}
+
+    void
+EmpathProgressIndicator::s_setValue(int v)
+{
+    pos_ = v;
+    progress_->setValue(v);
+    kapp->processEvents();
+}
+
+    void
+EmpathProgressIndicator::s_setMaxValue(int v)
+{
+    if (max_ != 0)
+        pos_ = (pos_ / max_) * v;
+
+    max_ = v;
+    progress_->setValue(v);
+}
+
+    void
+EmpathProgressIndicator::s_incValue()
+{
+    ++pos_;
+    progress_->advance(1);
+    kapp->processEvents();
+}
+
+    void
+EmpathProgressIndicator::s_finished()
+{
+    delete this;
+}
 
 #include "EmpathMainWindowMenus.cpp"
 

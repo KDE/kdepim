@@ -25,53 +25,55 @@
 // Qt includes
 #include <qheader.h>
 #include <qvaluelist.h>
+#include <qlayout.h>
 
 // KDE includes
 #include <kconfig.h>
 #include <kglobal.h>
 
 // Local includes
+#include "EmpathURL.h"
 #include "EmpathConfig.h"
 #include "EmpathMainWidget.h"
-#include "EmpathLeftSideWidget.h"
+#include "EmpathFolderWidget.h"
 #include "EmpathMessageViewWidget.h"
 #include "EmpathMessageListWidget.h"
 
 EmpathMainWidget::EmpathMainWidget(QWidget * parent)
     : QWidget(parent, "MainWidget")
 {
+    QVBoxLayout * layout = new QVBoxLayout(this);
+    layout->setAutoAdd(true);
+    
     hSplit = new QSplitter(this, "hSplit");
+    
+    EmpathFolderWidget * fw = new EmpathFolderWidget(hSplit);
     
     vSplit = new QSplitter(Qt::Vertical, hSplit, "vSplit");
         
     messageListWidget_ = new EmpathMessageListWidget(vSplit);
+    messageListWidget_->listenTo(fw->id());
 
     messageViewWidget_ = new EmpathMessageViewWidget(EmpathURL(), vSplit);
-
-    leftSideWidget_ =
-        new EmpathLeftSideWidget(messageListWidget_, hSplit, "leftSideWidget");
-    
-    hSplit->moveToFirst(leftSideWidget_);
-
-    messageListWidget_->update();
-    
-    QObject::connect(messageListWidget_, SIGNAL(changeView(const EmpathURL &)),
-            this, SLOT(s_displayMessage(const EmpathURL &)));
-    
-    messageListWidget_->setSignalUpdates(true);
-    
+   
     QValueList<int> vSizes;
     QValueList<int> hSizes;
     
     KConfig * c = KGlobal::config();
+    
     using namespace EmpathConfig;
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
+    
+    c->setGroup(GROUP_DISPLAY);
     
     vSizes.append(c->readNumEntry(UI_MAIN_W_V, width() / 2));
     hSizes.append(c->readNumEntry(UI_MAIN_W_H, height() / 2));
     
     vSplit->setSizes(vSizes);
     hSplit->setSizes(hSizes);
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(changeView(const EmpathURL &)),
+        messageViewWidget_, SLOT(s_setMessage(const EmpathURL &)));
 }
 
 EmpathMainWidget::~EmpathMainWidget()
@@ -88,13 +90,6 @@ EmpathMainWidget::~EmpathMainWidget()
     c->sync();
 }
 
-    void
-EmpathMainWidget::resizeEvent(QResizeEvent * e)
-{
-    resize(e->size());
-    hSplit->resize(e->size());
-}
-
     EmpathMessageListWidget *
 EmpathMainWidget::messageListWidget()
 {
@@ -105,12 +100,6 @@ EmpathMainWidget::messageListWidget()
 EmpathMainWidget::messageViewWidget()
 {
     return messageViewWidget_;
-}
-
-    void
-EmpathMainWidget::s_displayMessage(const EmpathURL & url)
-{
-    messageViewWidget_->s_setMessage(url);
 }
 
 // vim:ts=4:sw=4:tw=78

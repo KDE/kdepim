@@ -47,9 +47,13 @@
 #include "EmpathMailboxPOP3.h"
 #include "EmpathMailboxIMAP4.h"
 
-EmpathFolderWidget::EmpathFolderWidget(
-    QWidget * parent, const char * name, bool /* wait */)
-    :    EmpathListView(parent, name)
+// Start at 1 so EmpathMessageListWidget won't automatically listen to
+// our first instance it listens to 0 by default).
+unsigned int EmpathFolderWidget::ID_ = 1;
+
+EmpathFolderWidget::EmpathFolderWidget(QWidget * parent)
+    :   EmpathListView(parent, "FolderWidget"),
+        id_(ID_++)
 {
     setFrameStyle(QFrame::NoFrame);
     viewport()->setAcceptDrops(true);
@@ -81,6 +85,9 @@ EmpathFolderWidget::EmpathFolderWidget(
 
     QObject::connect(
         empath, SIGNAL(updateFolderLists()), this, SLOT(s_update()));
+    
+    QObject::connect(
+        empath, SIGNAL(syncFolderLists()), this, SLOT(s_sync()));
 
     QObject::connect(autoOpenTimer, SIGNAL(timeout()),
             this, SLOT(s_openCurrent()));
@@ -117,29 +124,52 @@ EmpathFolderWidget::EmpathFolderWidget(
 
     /////////
     
-    update();
+    s_update();
+}
+
+EmpathFolderWidget::~EmpathFolderWidget()
+{
+    // Empty.
+}
+
+    unsigned int
+EmpathFolderWidget::id() const
+{
+    return id_;
 }
 
     void
-EmpathFolderWidget::update()
+EmpathFolderWidget::s_update()
 {
     itemList_.clear();
     clear();
 
+    setUpdatesEnabled(false);
+    viewport()->setUpdatesEnabled(false);
     EmpathMailboxListIterator mit(empath->mailboxList());
 
     for (; mit.current(); ++mit)
         _addMailbox(mit.current());
-    
+
     QListIterator<EmpathFolderListItem> it(itemList_);
     
     for (; it.current(); ++it)
         if (!it.current()->isTagged()) {
             itemList_.remove(it.current());
-            QListView::removeItem((QListViewItem *)it.current());
-        } else {
-            it.current()->s_update();
+            QListView::removeItem((QListViewItem *)(it.current()));
         }
+
+    setUpdatesEnabled(true);
+    viewport()->setUpdatesEnabled(true);
+}
+
+    void
+EmpathFolderWidget::s_sync()
+{
+    triggerUpdate();
+    QListIterator<EmpathFolderListItem> it(itemList_);
+    for (; it.current(); ++it)
+        it.current()->s_update();
 }
 
     void
@@ -209,22 +239,19 @@ EmpathFolderWidget::s_linkChanged(QListViewItem * item)
 {
     EmpathFolderListItem * i = (EmpathFolderListItem *)item;
     
-    if (i->url().isMailbox()) {
-        empathDebug("mailbox " + i->url().mailboxName() + " selected");
-    } else {
+    if (!i->url().isFolder())
+        return;
+    
+    EmpathFolder * f = empath->folder(i->url());
+   
+    if (f == 0)
+        return;
+    
+    if (f->isContainer())
+        return;
 
-        empathDebug("folder " + i->url().folderPath() + " selected");
-        EmpathFolder * f = empath->folder(i->url());
-        if (f == 0)
-            return;
-        if (f->isContainer()) {
-            empathDebug("Is container folder. Not showing");
-        } else {
-            empathDebug("Showing...");
-            emit(showFolder(i->url()));
-        }
-    }
-}    
+    empath->s_showFolder(i->url(), id_);
+}
 
     EmpathURL
 EmpathFolderWidget::selected() const
@@ -284,12 +311,6 @@ EmpathFolderWidget::s_mailboxProperties()
     }
 
     empath->s_configureMailbox(popupMenuOver->url(), this);
-}
-
-    void
-EmpathFolderWidget::s_update()
-{
-    update();
 }
 
     void

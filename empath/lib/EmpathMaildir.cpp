@@ -90,16 +90,10 @@ EmpathMaildir::sync(bool force)
     if (!force && !_touched(f))
         return;
     
-    kapp->processEvents();
-
     _markNewMailAsSeen();
-    
-    kapp->processEvents();
     
     _tagOrAdd(f);
     
-    kapp->processEvents();
-
     _removeUntagged(f);
     
     f->index()->setInitialised(true);
@@ -305,8 +299,10 @@ EmpathMaildir::_markNewMailAsSeen()
     
     QStringList l = dn.entryList();
     
-    for (QStringList::ConstIterator it = l.begin(); it != l.end(); ++it)
+    for (QStringList::ConstIterator it = l.begin(); it != l.end(); ++it) {
         _markAsSeen(*it);
+        kapp->processEvents();
+    }
 }
 
     void
@@ -473,13 +469,6 @@ EmpathMaildir::_touched(EmpathFolder * f)
     
     QFileInfo fiDir(path_ + "/cur/");
     
-    QFileInfo fiIndex(f->index()->indexFileName());
-    
-    if (!fiIndex.exists()) {
-        empathDebug("Index file does not yet exist");
-        return true;
-    }
-    
     if (fiDir.lastModified() > f->index()->lastModified()) {
         empathDebug("Index file is older than Maildir");
         return true;
@@ -491,8 +480,16 @@ EmpathMaildir::_touched(EmpathFolder * f)
     void
 EmpathMaildir::_tagOrAdd(EmpathFolder * f)
 {
-    EmpathTask * t(empath->addTask(i18n("Scanning")));
+    QString taskMsg = i18n("Scanning folder %1:%2");
+    
+    QString taskMsg2 =
+        taskMsg.arg(f->url().mailboxName()).arg(f->url().folderPath());
+    
+    EmpathTask * t(empath->addTask(taskMsg2));
 
+    // May take a while for QDir to read the directory.
+    kapp->processEvents();
+    
     QDir d(
         path_ + "/cur/",
         QString::null,
@@ -501,6 +498,9 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
         );
 
     QStringList fileList(d.entryList());
+    
+    // Finished reading dir. Get the UI going again quick ! :)
+    kapp->processEvents();
 
     QStringList::ConstIterator it(fileList.begin());
     
@@ -530,8 +530,6 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
         
         s.replace(re_flags, QString::null);
 
-        empathDebug("s == `" + s + "'");
-        
         EmpathIndexRecord * rec = f->index()->record(s);
         
         if (rec != 0) {
@@ -552,6 +550,7 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
             f->itemCome(s);
         }
 
+        // Calls kapp->processEvents() for us.
         t->doneOne();
     }
 
@@ -561,19 +560,13 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
     void
 EmpathMaildir::_removeUntagged(EmpathFolder * f)
 {
-    EmpathTask * t(empath->addTask(i18n("Clearing")));
-
     QStrList l(f->index()->allKeys());
-    
-    t->setMax(l.count());
 
-    QStrListIterator iit(l);
+    QStrListIterator it(l);
     
-    for (; iit.current(); ++iit) {
+    for (; it.current(); ++it) {
         
-        t->doneOne();
-        
-        EmpathIndexRecord * i = f->index()->record(iit.current());
+        EmpathIndexRecord * i = f->index()->record(it.current());
         
         if (i == 0) {
 
@@ -583,12 +576,12 @@ EmpathMaildir::_removeUntagged(EmpathFolder * f)
 
         if (!i->isTagged()) {
             
-            f->itemGone(iit.current());
-            f->index()->remove(iit.current());
+            f->itemGone(it.current());
+            f->index()->remove(it.current());
         }
+
+        kapp->processEvents();
     }
-    
-    t->done();
 }
 
 // vim:ts=4:sw=4:tw=78

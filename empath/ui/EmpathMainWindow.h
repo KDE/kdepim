@@ -27,26 +27,47 @@
 
 // Qt includes
 #include <qpopupmenu.h>
+#include <qwidgetstack.h>
 
 // KDE includes
 #include <ktmainwindow.h>
 #include <ktoolbar.h>
-#include <kstdaccel.h>
+#include <kprogress.h>
 #include <kapp.h>
 
 // Local includes
 #include "EmpathDefines.h"
 #include <RMM_Message.h>
 
-class EmpathSettingsDialog;
 class EmpathFolderWidget;
 class EmpathMessageListWidget;
 class EmpathMessageWidget;
-class EmpathComposeWindow;
-class EmpathAboutBox;
 class EmpathMainWidget;
 
 enum BarPosition {};
+class EmpathTask;
+
+class EmpathProgressIndicator : public QWidget
+{
+    Q_OBJECT
+
+    public:
+
+        EmpathProgressIndicator(EmpathTask *, QWidgetStack * parent);
+        virtual ~EmpathProgressIndicator();
+
+    protected slots:
+
+        void s_setValue(int);
+        void s_setMaxValue(int);
+        void s_incValue();
+        void s_finished();
+
+    private:
+        
+        int max_, pos_;
+        KProgress * progress_;
+};
 
 class EmpathMainWindow : public KTMainWindow
 {
@@ -113,9 +134,8 @@ class EmpathMainWindow : public KTMainWindow
         void s_about();
         void s_aboutQt();
         
-        // Debugging
-        void s_dumpWidgetList();
-        
+        void s_newTask(EmpathTask * t);
+
     protected:
         
         void closeEvent(QCloseEvent *);
@@ -124,7 +144,6 @@ class EmpathMainWindow : public KTMainWindow
     
         // General
         KMenuBar        * menu_;
-        KStatusBar        * status_;
         
         QPopupMenu        * fileMenu_;
         QPopupMenu        * editMenu_;
@@ -135,15 +154,9 @@ class EmpathMainWindow : public KTMainWindow
 
         // Empath stuff
 
-        EmpathFolderWidget            * folderWidget_;
-        EmpathMessageListWidget        * messageListWidget_;
-        EmpathMessageWidget            * messageWidget_;
-        EmpathMainWidget            * mainWidget_;
+        EmpathMessageListWidget * messageListWidget_;
+        EmpathMainWidget        * mainWidget_;
         
-        EmpathSettingsDialog        * settingsDialog_;
-        EmpathComposeWindow            * composeWindow_;
-        EmpathAboutBox                * aboutBox_;
-
         // Setup methods
         void _setupMenuBar();
         void _setupToolBar();
@@ -151,6 +164,8 @@ class EmpathMainWindow : public KTMainWindow
 
         bool queryExit();
         bool _messageSelected();
+
+        QWidgetStack * progressStack_;
 };
 
 #endif

@@ -67,13 +67,14 @@ EmpathMailSenderSMTP::sendOne(RMM::RMessage & m, const QString & id)
 
     QString recipient;
 
-    RMM::RAddress * address = m.envelope().to().at(0);
-    if (address == 0) {
+    RMM::RAddressList addressList = m.envelope().to();
+
+    if (addressList.count() == 0) {
         // XXX: We're not sending to anyone ?
         return;
     }
     
-    RMM::RMailbox * mailbox = address->mailbox();
+    RMM::RMailbox * mailbox = addressList.at(0)->mailbox();
     
     if (mailbox == 0) {
         // FIXME: Handle sending to a group.

@@ -22,6 +22,9 @@
 # pragma implementation "EmpathIndex.h"
 #endif
 
+// System includes
+#include <utime.h>
+
 // Qt includes
 #include <qdatastream.h>
 #include <qregexp.h>
@@ -45,8 +48,7 @@
 // [de]serialising records when we only want to access the status.
 
 EmpathIndex::EmpathIndex()
-    :   blockSize_(1024),
-        dbf_(0),
+    :   dbf_(0),
         count_(0),
         unreadCount_(0),
         initialised_(false)
@@ -56,8 +58,7 @@ EmpathIndex::EmpathIndex()
 }
 
 EmpathIndex::EmpathIndex(const EmpathURL & folder)
-	:	blockSize_(1024),
-        folder_(folder),
+    :   folder_(folder),
         dbf_(0),
         count_(0),
         unreadCount_(0),
@@ -85,6 +86,11 @@ EmpathIndex::EmpathIndex(const EmpathURL & folder)
     _open();
 }
 
+    void
+EmpathIndex::touch()
+{
+}
+
 EmpathIndex::~EmpathIndex()
 {
     _close();
@@ -107,44 +113,32 @@ EmpathIndex::setFolder(const EmpathURL & folder)
     EmpathIndexRecord *
 EmpathIndex::record(const QCString & key)
 {
-    if ((dbf_ == 0) && !_open()) {
+    if (dbf_ == 0) {
         empathDebug("Index not open!");
         return 0;
     }
-    
-    datum k;
-    k.dptr  = key.data();
-    k.dsize = key.length();
-    
-    datum out = gdbm_fetch(dbf_, k);
 
-    if (!out.dptr) {
+    QByteArray a = dbf_->retrieve(key);
+
+    if (a.isNull())
         return 0;
-    }
-    
-    QByteArray a;
-    a.setRawData(out.dptr + 1, out.dsize - 1);
     
     EmpathIndexRecord * rec = new EmpathIndexRecord;
 
     QDataStream s(a, IO_ReadOnly);
     s >> *rec;
     
-    a.resetRawData(out.dptr + 1, out.dsize - 1);
-    
-    rec->setStatus((RMM::MessageStatus)(out.dptr[0]));
-    
     return rec;
 }
 
     Q_UINT32
-EmpathIndex::countUnread()
+EmpathIndex::countUnread() const
 {
     return unreadCount_;
 }
 
      Q_UINT32
-EmpathIndex::count()
+EmpathIndex::count() const
 {
     return count_;
 }
@@ -175,7 +169,8 @@ EmpathIndex::_close()
         return;
     }
     
-    gdbm_close(dbf_);
+    delete dbf_;
+    dbf_ = 0;
     
     count_ = unreadCount_ = 0;
 }
@@ -188,71 +183,46 @@ EmpathIndex::_open()
         return true;
     }
 
-    dbf_ = gdbm_open(
-        filename_.utf8().data(), blockSize_, GDBM_WRCREAT, 0600, NULL);
+    dbf_ = new RDB::Database(filename_);
     
-    if (dbf_ == 0) {
-        empathDebug(gdbm_strerror(gdbm_errno));
-        return false;
-    }
-
     count_ = unreadCount_ = 0;
 
     return true;
 }
 
     QStrList
-EmpathIndex::allKeys()
+EmpathIndex::allKeys() const
 {
     QStrList l;   
 
-    if ((dbf_ == 0) && !_open()) {
+    if (dbf_ == 0) {
         empathDebug("Index not open!");
         return l;
     }
  
-    datum key = gdbm_firstkey(dbf_);
+    RDB::IndexIterator it(dbf_->index());
 
-    while (key.dptr) {
-        
-        QCString s(key.dptr, key.dsize + 1);
-        
-        l.append(s);
-        
-        key = gdbm_nextkey(dbf_, key);
-    }
-  
+    for (; it.current(); ++it)
+        l.append(it.currentKey());
+
     return l;
 }
 
     bool
 EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
 {
-    if ((dbf_ == 0) && !_open()) {
+    if (dbf_ == 0) {
         empathDebug("Index not open!");
         return false;
     }
 
-    datum k;
-    k.dptr  = key.data();
-    k.dsize = key.length();
-    
     QByteArray a;
     QDataStream s(a, IO_WriteOnly);
     s << rec;
     
-    unsigned int dataSize = 1 + a.size();
-    char * data = new char[dataSize];
-    memcpy(data + 1, a.data(), a.size());
-    data[0] = (unsigned char)(rec.status());
+    bool ok = dbf_->insert(key, a);
     
-    datum d;
-    d.dptr  = data;
-    d.dsize = dataSize;
-    
-    int retval = gdbm_store(dbf_, k, d, GDBM_REPLACE);
-    
-    if (retval == -1) {
+    if (!ok) {
         empathDebug("Could not insert record !");
         return false;
     }
@@ -268,31 +238,18 @@ EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
     bool
 EmpathIndex::remove(const QCString & key)
 {  
-    if ((dbf_ == 0) && !_open()) {
+    if (dbf_ == 0) {
         empathDebug("Index not open!");
         return false;
     }
 
-    datum k;
-    
-    k.dptr  = const_cast<char *>(key.data());
-    k.dsize = key.length();
- 
-    datum die = gdbm_fetch(dbf_, k);
-
-    if (!die.dptr) {
-        empathDebug("Record does not exist");
-        return false;
-    }
-    
-    RMM::MessageStatus status = (RMM::MessageStatus)(die.dptr[0]);
-
-    bool ok = (gdbm_delete(dbf_, k) == 0);
+    bool ok = dbf_->remove(key);
     
     if (ok) {
         --count_;
-        if (!(status & RMM::Read))
-            --unreadCount_;
+        // FIXME
+     //   if (!(status & RMM::Read))
+     //       --unreadCount_;
     
     } else {
         empathDebug("Could not delete record");
@@ -304,18 +261,12 @@ EmpathIndex::remove(const QCString & key)
     void
 EmpathIndex::clear()
 {
-    if ((dbf_ == 0) && !_open()) {
+    if (dbf_ == 0) {
         empathDebug("Index not open!");
         return;
     }
     
-    datum key = gdbm_firstkey(dbf_);
-
-    while (key.dptr) {
-        
-        gdbm_delete(dbf_, key);
-        key = gdbm_nextkey(dbf_, key);
-    }
+    dbf_->clear();
 
     count_ = unreadCount_ = 0;
 }
@@ -323,46 +274,19 @@ EmpathIndex::clear()
     void
 EmpathIndex::setStatus(const QString & id, RMM::MessageStatus status)
 {
-    if ((dbf_ == 0) && !_open()) {
+    if (dbf_ == 0) {
         empathDebug("Index not open!");
         return;
     }
-    
-    datum k;
-    k.dptr  = const_cast<char *>(id.data());
-    k.dsize = id.length();
-    
-    datum changer = gdbm_fetch(dbf_, k);
 
-    if (!changer.dptr) {
-        empathDebug("does not exist");
-        return;
-    }
+    // TODO
     
-    bool wasRead = ((RMM::MessageStatus)(changer.dptr[0])) & RMM::Read;
-    bool isRead = status & RMM::Read;
-    
-    changer.dptr[0] = (unsigned char)(status);
-
-    int retval = gdbm_store(dbf_, k, changer, GDBM_REPLACE);
-
-    if (retval == -1) {
-        empathDebug("Couldn't replace record");
-        return;
-    }
-    
-    if (wasRead && !isRead)
-        unreadCount_++;
-    
-    if (!wasRead && isRead)
-        unreadCount_--;
 }
     
     QDateTime
 EmpathIndex::lastModified() const
 {
-    QFileInfo fi(filename_);
-    return fi.lastModified();
+    return dbf_->lastModified();
 }	 
 	
 

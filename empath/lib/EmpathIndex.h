@@ -25,14 +25,12 @@
 #ifndef EMPATHINDEX_H
 #define EMPATHINDEX_H
 
-// System includes
-#include <gdbm.h>
-
 // Qt includes
 #include <qdict.h>
 #include <qdatetime.h>
 
 // Local includes
+#include "RDatabase.h"
 #include "EmpathIndexRecord.h"
 #include "EmpathURL.h"
 
@@ -72,12 +70,12 @@ class EmpathIndex
         /**
          * Count the number of messages stored.
          */
-        Q_UINT32 count();
+        Q_UINT32 count() const;
 
         /**
          * Count the number of unread messages stored.
          */
-        Q_UINT32 countUnread();
+        Q_UINT32 countUnread() const;
 
         /**
          * Sync up the message list with the mailbox.
@@ -97,18 +95,20 @@ class EmpathIndex
         /**
          * @return URL of the related folder.
          */
-        const EmpathURL & folder() { return folder_; }
+        const EmpathURL & folder() const { return folder_; }
 		
-        QString indexFileName() { return filename_; }
+        QString indexFileName() const { return filename_; }
 		
         QDateTime lastModified() const;
 		
-        QStrList allKeys();
+        QStrList allKeys() const;
 
         void setStatus(const QString & id, RMM::MessageStatus status);
         
-        bool initialised() { return initialised_; }
+        bool initialised() const { return initialised_; }
         void setInitialised(bool i) { initialised_ = i; }
+
+        void touch();
         
         const char * className() const { return "EmpathIndex"; }
 
@@ -122,7 +122,7 @@ class EmpathIndex
         QDateTime mtime_;
         int mode_;
         QString filename_;
-        GDBM_FILE dbf_;
+        RDB::Database * dbf_;
         
         Q_UINT32 count_;
         Q_UINT32 unreadCount_;

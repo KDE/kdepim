@@ -102,6 +102,31 @@ class Empath : public QObject
          * @return Pointer to controller class.
          */
         static Empath * getEmpath() { return EMPATH; }
+
+        /**
+         * @return The folder being used as the inbox.
+         */
+        EmpathURL inbox()   const;
+
+        /**
+         * @return The folder being used for queued messages. 
+         */
+        EmpathURL outbox()  const;
+        
+        /**
+         * @return The folder being used for sent messages. 
+         */
+        EmpathURL sent()    const;
+        
+        /**
+         * @return The folder being used for draft messages. 
+         */
+        EmpathURL drafts()  const;
+        
+        /**
+         * @return The folder being used for 'deleted' messages. 
+         */
+        EmpathURL trash()   const;
         
         /**
          * @internal
@@ -233,7 +258,8 @@ class Empath : public QObject
         /**
          * Use when folders have changed and any displayed lists need updating.
          */
-        void s_updateFolderLists() { emit(updateFolderLists()); }
+        void s_updateFolderLists();
+        void s_syncFolderLists();
 
         /**
          * Please ask the user to enter settings for the mailbox
@@ -396,6 +422,15 @@ class Empath : public QObject
          * @internal
          */
         void s_saveNameReady(const EmpathURL & url, QString path);
+
+        /**
+         * @short We want to show a folder's contents
+         * Call this when you want a folder's contents to be displayed.
+         * Used only by EmpathFolderWidget, which maintains unique
+         * numbers for each instance of itself so you can decide whether
+         * to ignore the signal or not.
+         */
+        void s_showFolder(const EmpathURL & url, unsigned int idx);
  
     protected slots:        
 
@@ -490,6 +525,13 @@ class Empath : public QObject
         void s_messageReadyForSave(bool, const EmpathURL &, QString, QString);
         
     signals:
+
+        /**
+         * EmpathMessageListWidget connects to this to be notified when
+         * it should show the contents of a folder. It uses the int to
+         * decide whether to ignore the signal.
+         */
+        void showFolder(const EmpathURL &, unsigned int);
 
         /**
          * EmpathMailbox connects to this to be notified of
@@ -604,8 +646,17 @@ class Empath : public QObject
         /**
          * Signals that the on-screen folder lists should be updated.
          * Usually connected to a slot in the UI module.
+         * Call this when a folder has been added/removed.
+         * Once you are done adding/removing folders, call syncFolderLists().
          */
         void updateFolderLists();
+        /**
+         * Signals that the on-screen folder lists should be synced.
+         * Usually connected to a slot in the UI module.
+         * Call updateFolderLists() when a folder has been added/removed.
+         * Once you are done adding/removing folders, call this.
+         */
+        void syncFolderLists();
         /**
          * Signals that new mail has arrived somewhere.
          */
@@ -685,9 +736,9 @@ class Empath : public QObject
         void infoMessage(const QString &);
         
     private:
+
+        EmpathURL inbox_, outbox_, sent_, drafts_, trash_;
     
-        // General
-        
         void _saveHostName();
         void _setStartTime();
         

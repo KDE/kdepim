@@ -45,7 +45,7 @@ EmpathFolderChooserDialog::EmpathFolderChooserDialog(QWidget * parent)
 {
     setCaption(i18n("Folder Chooser"));
 
-    folderWidget_ = new EmpathFolderWidget(this, "folderWidget");
+    folderWidget_ = new EmpathFolderWidget(this);
     KButtonBox * buttonBox  = new KButtonBox(this);
 
     QPushButton * pb_help   = buttonBox->addButton(i18n("&Help"));    

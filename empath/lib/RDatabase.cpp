@@ -57,19 +57,19 @@ Database::_setError(const QString & s)
 }
 
   QString
-Database::error()
+Database::error() const
 {
   return error_;
 }
     
   bool
-Database::ok()
+Database::ok() const
 {
   return ok_;
 }
 
-  Index
-Database::index()
+  const Index &
+Database::index() const
 {
   return index_;
 }
@@ -181,6 +181,12 @@ Database::insert(const QCString & key, const QByteArray & data)
   dataFileSize_ = dataFile_.at();
 
   return true;
+}
+
+  bool
+Database::exists(const QCString & key)
+{
+  return (index_[key] != 0);
 }
 
   QByteArray
@@ -413,7 +419,36 @@ Database::reorganise()
     return;
   }
 }
+
+  QDateTime
+Database::lastModified() const
+{
+  return QFileInfo(dataFile_).lastModified();
+}
+
+  void
+Database::clear()
+{
+  index_.clear();
  
+  indexFile_.remove();
+  dataFile_.remove();
+
+  if (!indexFile_.open(IO_ReadWrite)) {
+    _setError("Could not reopen index file");
+    return;
+  }
+
+  indexLoaded_ = false;
+  _loadIndex();
+  
+  if (!dataFile_.open(IO_ReadWrite)) {
+    _setError("Could not reopen data file");
+    return;
+  }
+ 
+}
+
 } // End namespace
 
 // vim:ts=2:sw=2:tw=78

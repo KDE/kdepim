@@ -99,8 +99,7 @@ EmpathMailboxList::loadConfig()
         c->setGroup(GROUP_MAILBOX + *it);
         
         mailboxType =
-            (EmpathMailbox::Type)
-            c->readUnsignedNumEntry(M_TYPE);
+            static_cast<EmpathMailbox::Type>(c->readUnsignedNumEntry(M_TYPE));
 
         EmpathMailbox * m = createNew(mailboxType);
 
@@ -205,8 +204,13 @@ EmpathMailboxList::s_rename(EmpathMailbox * mailbox, const QString & oldName)
     void
 EmpathMailboxList::_append(EmpathMailbox * mailbox)
 {
-    if (find(mailbox->name()))
+    if (find(mailbox->name()) != 0) {
+        empathDebug(
+            "A mailbox with same name (" +
+            mailbox->name() +
+            ") already exists ! I can't add this.");
         return;
+    }
     
     QDict<EmpathMailbox>::insert(mailbox->name(), mailbox);
 

@@ -33,9 +33,6 @@ public:
 init();
     
     virtual bool
-getMail();
-    
-    virtual bool
 newMail() const;
 
     virtual void

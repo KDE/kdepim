@@ -339,6 +339,7 @@ class EmpathMailbox : public QObject
         void removeFolderComplete(bool, const EmpathURL &, QString, QString);
         
         void updateFolderLists();
+        void syncFolderLists();
         void newMailArrived();
         void mailboxChangedByExternal();
         void countUpdated(Q_UINT32, Q_UINT32);

@@ -58,6 +58,8 @@ EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
     job->setGUImode(KIOJob::LIST);
     
     commandQueue_.setAutoDelete(true);
+
+    init(); // Might as well.
 }
 
 EmpathMailboxPOP3::~EmpathMailboxPOP3()
@@ -91,7 +93,7 @@ EmpathMailboxPOP3::init()
     url.setFolderPath(i18n("Inbox"));
     
     EmpathFolder * folder_inbox = new EmpathFolder(url);
-    folderList_.insert(folder_inbox->name(), folder_inbox);
+    folderList_.insert(url.folderPath(), folder_inbox);
     
     emit(updateFolderLists());
 }
@@ -125,29 +127,14 @@ EmpathMailboxPOP3::_nextCommand()
     QString command = prefix + commandQueue_.head()->command();
     
     ASSERT(job != 0);
+    empathDebug("Doing `" + command + "'");
     job->get(command);
-}
-
-    bool
-EmpathMailboxPOP3::getMail()
-{
-    // STUB
-    return false;
 }
 
     void
 EmpathMailboxPOP3::s_checkMail()
 {
-    _enqueue(EmpathPOPCommand::Stat, -1, QString::null, QString::null);
-    
-    EmpathPOPIndexIterator it(index_);
-
-    for (; it.current(); ++it)
-        _enqueue(
-            EmpathPOPCommand::Get,
-            it.current()->number(),
-            QString::null,
-            QString::null);
+    _enqueue(EmpathPOPCommand::UIDL, -1, "all", "filter");
 }
 
     QString
@@ -244,6 +231,19 @@ EmpathMailboxPOP3::_removeMessage(
 {
     emit (removeComplete(false, url, xxinfo, xinfo));
 }
+    
+#if 0
+    void
+EmpathMailboxPOP3::s_commandComplete(const EmpathPOPCommand & p)
+{
+    if (p.type() == UIDL && p.xinfo() == "filter")
+        if (p.xxinfo() == "all")
+            for (EmpathPOPIndexIterator it(index_); it.current(); ++it)
+                empath->filter(folderList_.at(0).url(), it.current()->id());
+        else
+            empath->filter(folderList_.at(0).url(), it.current()->id());
+}
+#endif
 
 //////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// KIOJOB SLOTS /////////////////////////////////
@@ -576,8 +576,6 @@ EmpathPOPCommand::EmpathPOPCommand(
         xxinfo_(xxinfo),
         xinfo_(xinfo)
 {
-    empathDebug("ctor");
-
     switch (t) {
         
         case Stat:      command_ = "stat";      break;
@@ -596,7 +594,7 @@ EmpathPOPCommand::EmpathPOPCommand(
 
 EmpathPOPCommand::~EmpathPOPCommand()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     QString
@@ -619,12 +617,11 @@ EmpathPOPIndexEntry::EmpathPOPIndexEntry(int i, const QString & s)
     :    number_(i),
         id_(s)
 {
-    empathDebug("ctor");
 }
 
 EmpathPOPIndexEntry::~EmpathPOPIndexEntry()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     int
@@ -641,12 +638,12 @@ EmpathPOPIndexEntry::id()
 
 EmpathPOPIndex::EmpathPOPIndex()
 {
-    empathDebug("ctor");
+    // Empty.
 }
 
 EmpathPOPIndex::~EmpathPOPIndex()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     int

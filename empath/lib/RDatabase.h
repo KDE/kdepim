@@ -19,6 +19,7 @@
   Boston, MA 02111-1307, USA. 
 */
 
+#include <qdatetime.h>
 #include <qasciidict.h>
 #include <qfile.h>
 #include <qstring.h>
@@ -62,14 +63,14 @@ class Database
      * @return The last error that occurred, in English.
      * Useful for debugging.
      */
-    QString error();
+    QString error() const;
     
     /**
      * Check this after each transaction you care about.
      * If it's false, look at error() to see what went wrong. Error
      * messages are in English.
      */
-    bool ok();
+    bool ok() const;
 
     /**
      * @return false if the record could not be added
@@ -92,6 +93,11 @@ class Database
      * (use QByteArray::isNull() to test) if the record didn't exist.
      */
     QByteArray retrieve(const QCString & key);
+    
+    /**
+     * @return true if the key is in the index.
+     */
+    bool exists(const QCString & key);
 
     /**
      * Write all data to disk NOW.
@@ -113,7 +119,14 @@ class Database
      * database file. This is useful for iterating through all keys
      * in the database.
      */
-    Index index();
+    const Index & index() const;
+
+    /**
+     * Clear out all entries.
+     */
+    void clear();
+
+    QDateTime lastModified() const;
 
   private:
 

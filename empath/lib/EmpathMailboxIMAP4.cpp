@@ -37,13 +37,6 @@ EmpathMailboxIMAP4::EmpathMailboxIMAP4(const QString & name)
 }
 
 
-    bool    
-EmpathMailboxIMAP4::getMail()
-{
-    // STUB
-    return false;
-}
-
     void
 EmpathMailboxIMAP4::s_checkMail()
 {

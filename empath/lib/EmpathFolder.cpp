@@ -52,12 +52,17 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
         url_(url),
         container_(false)
 {
-    index_ = new EmpathIndex(url);
+    index_ = new EmpathIndex(url_);
 	
     QObject::connect(this, SIGNAL(countUpdated(Q_UINT32, Q_UINT32)),
         empath->mailbox(url_), SLOT(s_countUpdated(Q_UINT32, Q_UINT32)));
-    
-    pixmapName_ = "folder-normal";
+ 
+    if      (url_ == empath->inbox())   pixmapName_ = "folder-inbox";
+    else if (url_ == empath->outbox())  pixmapName_ = "folder-outbox";
+    else if (url_ == empath->sent())    pixmapName_ = "folder-sent";
+    else if (url_ == empath->drafts())  pixmapName_ = "folder-drafts";
+    else if (url_ == empath->trash())   pixmapName_ = "folder-trash";
+    else                                pixmapName_ = "folder-normal";
 }
 
     bool
@@ -88,8 +93,10 @@ EmpathFolder::update()
 {
     EmpathMailbox * m = empath->mailbox(url_);
     
-    if (m == 0)
+    if (m == 0) {
+        empathDebug("Can't find my mailbox !");
         return;
+    }
     
     m->sync(url_);
     

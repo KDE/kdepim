@@ -32,7 +32,6 @@ EmpathHeaderSpecWidget.cpp \
 EmpathHeaderViewWidget.cpp \
 EmpathIdentitySettingsDialog.cpp \
 EmpathListView.cpp \
-EmpathLeftSideWidget.cpp \
 EmpathMainWidget.cpp \
 EmpathMainWindow.cpp \
 EmpathMessageMarkDialog.cpp \
@@ -52,7 +51,6 @@ EmpathSubjectSpecWidget.cpp \
 EmpathSendingSettingsDialog.cpp \
 EmpathSetupWizard.cpp \
 EmpathSeparatorWidget.cpp \
-EmpathTaskWidget.cpp \
 EmpathUI.cpp \
 EmpathUIUtils.cpp
 

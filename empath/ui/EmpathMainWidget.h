@@ -33,14 +33,8 @@
 #include <kapp.h>
 #include <kiconloader.h>
 
-// Local includes
-#include "EmpathDefines.h"
-#include "EmpathURL.h"
-
 class EmpathMessageViewWidget;
 class EmpathMessageListWidget;
-class EmpathStatusWidget;
-class EmpathLeftSideWidget;
 
 class EmpathMainWidget : public QWidget
 {
@@ -48,26 +42,19 @@ class EmpathMainWidget : public QWidget
 
     public:
         
-        EmpathMainWidget(QWidget * parent = 0);
+        EmpathMainWidget(QWidget * parent);
         ~EmpathMainWidget();
+        
         EmpathMessageListWidget * messageListWidget();
         EmpathMessageViewWidget * messageViewWidget();
         
-    protected slots:
-        
-        void s_displayMessage(const EmpathURL &);
-        void resizeEvent(QResizeEvent * e);
-
     private:
 
         QSplitter                  * vSplit;
         QSplitter                  * hSplit;
         
-        EmpathLeftSideWidget       * leftSideWidget_;
         EmpathMessageListWidget    * messageListWidget_;
         EmpathMessageViewWidget    * messageViewWidget_;
-
-        Q_UINT32 horizPannerAbsSeparator;
 };
 
 #endif

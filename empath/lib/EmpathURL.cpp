@@ -47,11 +47,12 @@ EmpathURL::EmpathURL(
         const QString & messageID)
     :
         mailboxName_    (mailboxName),
-        folderPath_     (folderPath),
-        messageID_      (messageID),
         strRep_         (QString::null),
         isValid_        (true)
 {
+    folderPath_ = _stripSlashes(folderPath);
+    messageID_  = _stripSlashes(messageID);
+
     _assemble();
 }
 
