@@ -72,6 +72,8 @@ bool GroupwiseServer::login()
   pt.password = new string( mPassword.latin1() );
   loginReq.auth = &pt;
 
+  mSession.clear();
+
   cout << "Login" << endl;
 
   int result = soap_call___ns2__loginRequest(mSoap, mUrl.latin1(), NULL, &loginReq, &loginResp );
@@ -91,6 +93,11 @@ bool GroupwiseServer::login()
 
 bool GroupwiseServer::getCategoryList()
 {
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::getCategoryList(): no session." << endl;
+    return false;
+  }
+
   _ns1__getCategoryListResponse catListResp;
   mSoap->header->ns1__session = mSession;
   soap_call___ns3__getCategoryListRequest( mSoap, mUrl.latin1(),
@@ -111,7 +118,6 @@ bool GroupwiseServer::getCategoryList()
 
 bool GroupwiseServer::dumpData()
 {
-
   mSoap->header->ns1__session = mSession;
   _ns1__getAddressBookListResponse addressBookListResponse;
   soap_call___ns4__getAddressBookListRequest( mSoap, mUrl.latin1(),
@@ -307,8 +313,13 @@ bool GroupwiseServer::logout()
   return true;
 }
 
-void GroupwiseServer::getDelta()
+bool GroupwiseServer::getDelta()
 {
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::getDelta(): no session." << endl;
+    return false;
+  }
+
   _ns1__getDeltaRequest deltaRequest;
   deltaRequest.AddressBookItem = 0;
   deltaRequest.Appointment = 0;
@@ -327,11 +338,17 @@ void GroupwiseServer::getDelta()
   soap_call___ns8__getDeltaRequest( mSoap, mUrl.latin1(), 0,
                                     &deltaRequest, &deltaResponse );
 
+  return true;
 }
 
 QMap<QString, QString> GroupwiseServer::addressBookList()
 {
   QMap<QString, QString> map;
+
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::addressBookList(): no session." << endl;
+    return map;
+  }
 
   mSoap->header->ns1__session = mSession;
   _ns1__getAddressBookListResponse addressBookListResponse;
@@ -352,6 +369,11 @@ QMap<QString, QString> GroupwiseServer::addressBookList()
 
 bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds, KABC::ResourceGroupwise *resource )
 {
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::readAddressBooks(): no session." << endl;
+    return false;
+  }
+
   ReadAddressBooksJob *job = new ReadAddressBooksJob( mSoap, mUrl, mSession, 0 );
   job->setAddressBookIds( addrBookIds );
   job->setResource( resource );
@@ -367,6 +389,11 @@ bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds, KABC::Re
 bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
   KCal::ResourceGroupwise *resource )
 {
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::addIncidence(): no session." << endl;
+    return false;
+  }
+
   kdDebug() << "GroupwiseServer::addIncidence() " << incidence->summary()
             << endl;
 
@@ -413,6 +440,11 @@ bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
 
 bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
 {
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::changeIncidence(): no session." << endl;
+    return false;
+  }
+
   kdDebug() << "GroupwiseServer::changeIncidence() " << incidence->summary()
             << endl;
 
@@ -456,6 +488,11 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
 
 bool GroupwiseServer::deleteIncidence( KCal::Incidence *incidence )
 {
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::deleteIncidence(): no session." << endl;
+    return false;
+  }
+
   kdDebug() << "GroupwiseServer::deleteIncidence(): " << incidence->summary()
             << endl;
 
@@ -492,6 +529,11 @@ bool GroupwiseServer::deleteIncidence( KCal::Incidence *incidence )
 
 bool GroupwiseServer::insertAddressee( const QString &addrBookId, KABC::Addressee &addr )
 {
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::insertAddressee(): no session." << endl;
+    return false;
+  }
+
   ContactConverter converter( mSoap );
 
   addr.insertCustom( "GWRESOURCE", "CONTAINER", addrBookId );
@@ -520,6 +562,11 @@ bool GroupwiseServer::insertAddressee( const QString &addrBookId, KABC::Addresse
 
 bool GroupwiseServer::changeAddressee( const KABC::Addressee &addr )
 {
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::changeAddressee(): no session." << endl;
+    return false;
+  }
+
   ContactConverter converter( mSoap );
 
   ns1__Contact* contact = converter.convertToContact( addr );
@@ -546,6 +593,11 @@ bool GroupwiseServer::changeAddressee( const KABC::Addressee &addr )
 
 bool GroupwiseServer::removeAddressee( const KABC::Addressee &addr )
 {
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::removeAddressee(): no session." << endl;
+    return false;
+  }
+
   if ( addr.custom( "GWRESOURCE", "UID" ).isEmpty() ||
        addr.custom( "GWRESOURCE", "CONTAINER" ).isEmpty() )
     return false;
@@ -570,6 +622,11 @@ bool GroupwiseServer::removeAddressee( const KABC::Addressee &addr )
 
 bool GroupwiseServer::readCalendar( KCal::Calendar *calendar, KCal::ResourceGroupwise *resource )
 {
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::readCalendar(): no session." << endl;
+    return false;
+  }
+
   ReadCalendarJob *job = new ReadCalendarJob( mSoap, mUrl, mSession, 0 );
   job->setCalendar( calendar );
   job->setCalendarFolder( &mCalendarFolder );
@@ -586,6 +643,11 @@ bool GroupwiseServer::readCalendar( KCal::Calendar *calendar, KCal::ResourceGrou
 bool GroupwiseServer::readFreeBusy( const QString &email, 
   const QDate &start, const QDate &end, KCal::FreeBusy *freeBusy )
 {
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::readFreeBusy(): no session." << endl;
+    return false;
+  }
+
   kdDebug() << "GroupwiseServer::readFreeBusy()" << endl;
 
   GWConverter conv( mSoap );

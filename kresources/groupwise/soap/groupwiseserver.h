@@ -81,7 +81,7 @@ class GroupwiseServer : public QObject
     bool dumpData();
     void dumpFolderList();
 
-    void getDelta();
+    bool getDelta();
 
     bool getCategoryList();
 
