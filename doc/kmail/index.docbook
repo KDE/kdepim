@@ -23,7 +23,7 @@
 </author>
 </authorgroup>
 
-<date>2001-05-14</date>
+<date>2001-06-09</date>
 <releaseinfo>1.02.00</releaseinfo>
 
 <copyright>
@@ -1432,7 +1432,8 @@ text. There are special &percnt;-denoted characters that will insert certain
 values. These are shown at the top of the <guilabel>Phrases</guilabel> section:
 <symbol>%D</symbol> to insert the date, <symbol>%S</symbol> to insert the
 subject, <symbol>%F</symbol> to insert the sender, <symbol>%%</symbol> to insert
-a percent sign, and <symbol>%_</symbol> to insert a space. <!-- fixme for 2.2: add %L -->
+a percent sign, <symbol>%_</symbol> to insert a space, and <symbol>%L</symbol> 
+to insert a line break.
 The <guilabel>Indentation</guilabel> field contains the character that will denote
 quoted text (you will probably want to use the default).</para>
 
@@ -3235,51 +3236,72 @@ entries in the Mailreader's help menu</link>.</para>
 <qandaset id="faq-set">
 
 <qandaentry>
+<question><para>Where can I get a list of changes between the versions of &kmail;?</para></question>
+<answer>
+<para>The welcome screen lists all important changes for its release. It is displayed when you
+start a new version of &kmail; the first time. You can always look at it again
+by selecting the root element of the folder list, &ie; <guilabel>Mail</guilabel>.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>I'm one of those people whose mails consist of 100 quoted lines
+and one line written by myself. For some reason (which I don't get) this annoys other people. Can
+&kmail; help me and make everyone's life better?</para></question>
+<answer><para>Sure. Just select a short relevant part of the original mail
+with the mouse before you reply. Only this part will then be quoted in your 
+reply.</para></answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>&kmail; disappears/crashes while fetching mail.</para></question>
+<answer><para>Make sure you have enough free disk space. &kmail; currently
+cannot handle the situation of a full disk gracefully and just quits.</para></answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>Does &kmail; support distribution lists?</para></question>
+<answer><para>No. As a workaround you can add several email address into one 
+address entry, if you are using the <quote>traditional</quote> &kmail; address book.</para></answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>My signature has two dashes above it. This makes me very sad.</para></question>
+<answer>
+<para>Separating the signature from the mail body with two dashes and a space
+is a common and useful kind of standard. If you have strong feelings about this
+I suggest you change the source to remove that line.</para>
+</answer>
+</qandaentry>
+
+<!-- kmail can beep, but how to add an icon to the taskbar
+<qandaentry>
+<question><para>How do I get a notification if new mail arrives?</para></question>
+<answer><para>fixme</para></answer>
+</qandaentry>
+-->
+
+<qandaentry>
+<question><para>&kmail; fetches the same messages over and over again.</para></question>
+<answer><para>This happens if you have <guilabel>Delete mail from server</guilabel>
+deselected and your POP3 server doesn't support the UIDL command. There's currently
+no workaround besides selecting <guilabel>Delete mail from server</guilabel>.</para></answer>
+</qandaentry>
+
+<qandaentry>
 <question><para>Does &kmail; support <acronym>IMAP</acronym>?</para></question>
-<answer><para>Not yet. However, IMAP support is now in active
-development and will probably be part of the &kmail; version that comes with &kde; 2.2.
-Until then, you can receive mails via <acronym>IMAP</acronym>
-by using <application>fetchmail</application>:</para>
-
-<procedure>
-<step><para>Create a file <filename>~/.fetchmailrc</filename> which contains the
-following lines:</para>
-<screen><userinput>poll &lt;your-mail-server&gt;
-proto IMAP
-user <replaceable>your-username</replaceable>
-pass <replaceable>your-password</replaceable></userinput></screen>
-
-<para>If your mail username and your local username differ you have to add the
-following entry:</para>
-
-<screen>is <replaceable>local-username</replaceable></screen>
-</step>
-<step>
-<para>Execute <userinput><command>chmod</command> <option>700</option>
-<filename>~/.fetchmailrc</filename></userinput></para></step>
-<step><para>Create a local account in &kmail;</para></step>
-<step><para>Enter <userinput>fetchmail</userinput> in the field
-<guilabel>Precommand</guilabel>.  This is not necessary if you have a permanent
-connection to the net. In that case you are better off leaving
-<application>fetchmail</application> running as a daemon. This also has the
-advantage that you won't have to add your password to
-<filename>~/.fetchmailrc</filename>, you will be asked for it when the daemon
-starts.</para>
-</step>
-<step><para>Check your mail</para></step>
-</procedure>
+<answer>
+<para>Yes, it does so since &kde; version 2.2.</para>
 </answer>
 </qandaentry>
 
 <qandaentry>
 <question><para>Are there any known bugs in &kmail;?</para></question>
-
 <answer>
 <para>You can find a list of submitted bugs at <ulink
 url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink>. Note that not all
 these bugs are valid, all in all we think that &kmail; is now a very good piece
 of software.</para>
-
 <para><warning><para>However, you should not run &kmail; while another mail client is already
 accessing the files in <filename class="directory">~/Mail</filename>. If you try to do so,
 you might lose messages.</para></warning></para>
@@ -3292,8 +3314,34 @@ you might lose messages.</para></warning></para>
 <answer><para>Select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer
 HTML to plain text</guimenuitem></menuchoice>. For security reasons you should
 only do so for trusted mails. Note that plugins (like <trademark
-class="registered">Macromedia</trademark> <application>Flash</application>) will
-not be displayed in &kmail;.</para></answer>
+class="registered">Macromedia</trademark> <application>Flash</application>),
+Java and Javascript will not be displayed in &kmail; and there's no setting
+to activate them.</para></answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>Can I use two different version of &kmail; at the same time? Can I go
+back from a current version of &kmail; to an older one?</para></question>
+<answer><para>You can only run one instance of &kmail; at once. We recommend also
+to stick to a certain version and not switch back and forth between different versions.
+Downgrading to an older version might cause problems, &eg; because the index file
+formats might have changed.</para></answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>Does &kmail; support uuencoded files?</para></question>
+<answer><para>No. However, you can handle them using a filter, which is
+described in <ulink url="http://lists.kde.org/?l=kmail&amp;m=98908576320145&amp;w=2">this 
+posting</ulink> to the mailing list.</para></answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>&kmail; crashed while I was writing a mail. So my mail is lost now?</para></question>
+<answer><para>&kmail; tries to save your mail to 
+<filename>~/dead.letter</filename> in case of a crash. The next time you start
+&kmail; the mail composer should appear with your mail again. If it doesn't,
+try to open <filename>~/dead.letter</filename> with an editor. If it doesn't
+exist, the crash was so bad that &kmail; couldn't save your mail.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -3302,27 +3350,39 @@ anything when receiving an email from the list.</para></question>
 <answer><para>Associating a folder with a mailing list has nothing to do with
 filtering the mailing list messages. You have to add a new filter rule manually.
 However, once you associated a folder with a mailing list you can use <menuchoice>
-<guimenu>Message</guimenu><guimenuitem>Reply List</guimenuitem></menuchoice> and 
-write to the list by clicking the <mousebutton>middle</mousebutton>
-mousebutton on the folder.</para></answer>
+<guimenu>Message</guimenu><guimenuitem>Reply List...</guimenuitem></menuchoice> or 
+<menuchoice><guimenu>Message</guimenu><guimenuitem>New message...</guimenuitem></menuchoice>
+and the mailing list address will be set to the <guilabel>To:</guilabel> field.
+</para></answer>
 </qandaentry>
 
 <qandaentry>
-<question><para>Does &kmail; support <acronym>APOP</acronym>?</para></question>
-<answer><para>Yes, <acronym>APOP</acronym> is used automatically if it's
-available. There's currently no feedback if it's used, and no way to
-check.</para></answer>
+<question><para>My SMTP server requires authentification. Does &kmail; support it?</para></question>
+<answer><para>There are two common techniques used for SMTP authentification:
+<quote>SMTP after POP3</quote> and <quote>SMTP Auth</quote>. 
+<quote>SMTP Auth</quote> is currently not supported.<!-- fixme? -->
+To use <quote>SMTP after POP3</quote> you have to collect all your mails in the
+<guilabel>outbox</guilabel> and send them just after you have fetched new mail.</para></answer>
 </qandaentry>
 
 <qandaentry>
-<question><para>Can I use &kmail; and
-<application>procmail</application>?</para></question>
+<question><para>Can I use &kmail; and <application>procmail</application>?</para></question>
 <answer><para>Yes, but it's important to do it the right way or you might lose
-mail.  Do <emphasis>not</emphasis> let procmail sort the mail to <filename
-class="directory">~/Mail</filename>, but to some other directory which you then
-access by &kmail; as a <guilabel>Local Mailbox</guilabel>.  That is, you have to
-add another account in the <guilabel>Network</guilabel> tab of the <guilabel>Configure</guilabel>
-dialog. Also see the &FAQ; about lockfiles.</para></answer>
+mail. In order to use procmail and &kmail; you need 
+to set KMail so that it will fetch new
+mail from the spoolfiles in which procmail drops your mail. Do <emphasis>not</emphasis> set
+procmail to deliver mail in a KMail folder, this 
+cannot work.</para>
+<para>For each procmail spoolfile, you then need to create an account from which
+&kmail; will fetch new mail. You also need to make sure you specify the right
+lockfile name for this account. When setting up an account, &kmail; will do
+some minimal parsing on your procmail file, and will try to list every
+spoolfile it has found, and also the lockfiles next to the "procmail
+lockfile" item. procmail lets the user specify lockfiles in three different
+ways, so there's no way to establish a correspondence between the spoolfiles
+and lockfiles. So it's really up to you to make sure you specify the right
+lockfile for each spoolfile.</para>
+</answer>
 </qandaentry>
 
 <qandaentry id="pgp-faq">
@@ -3332,7 +3392,7 @@ dialog. Also see the &FAQ; about lockfiles.</para></answer>
 
 <answer><para>&kmail; provides a simple and easy to use interface for basic
  functions of these programs. Still you should understand how these programs
- work and what might make them insecure. Important issues:</para>
+ work and what might make their use insecure. Some important issues:</para>
 
 <itemizedlist>
 <listitem>
@@ -3353,45 +3413,10 @@ which often change between different versions.</para>
 before you attach them.</para>
 </listitem>
 <listitem>
-<para><!-- fixme for kde 2.2 -->There's a bug in &kmail; 1.1.99 (which comes with &kde; 2.0 and 2.0.1)
-that makes <application>PGP</application> not work if you use a different
-language than English. You can work around it this way (&kmail; will still use
-your favourite language):</para>
-<procedure>
-<step>
-<para>Rename <filename>/usr/bin/kmail</filename> to
-<filename>/usr/bin/kmail.original</filename></para>
-</step>
-<step>
-<para>Install in <filename class="directory">/usr/bin</filename> the following
-shell script, calling it <filename>kmail</filename> and making sure it is owned
-by <systemitem>root</systemitem> and has <literal>755</literal> permissions
-(<literal>rwxr-xr-x</literal>):</para>
-<screen>
-<userinput>#!/bin/bash
-LANGUAGE=en
-export LANGUAGE
-kmail.original $*</userinput>
-</screen>
-</step>
-</procedure>
-</listitem>
-<listitem>
 <para>&kmail; is <emphasis>not</emphasis> able to use different keys
-for multiple identities.</para>
+for multiple identities.<!-- fixme: remove for KDE 2.2??? --></para>
 </listitem>
 </itemizedlist>
-</answer>
-</qandaentry>
-
-<!-- fixme: remove for KDE 2.2 -->
-<qandaentry>
-<question><para>Which version of &kmail; supports which version of
-<application>PGP</application>/<application>GnuPG</application>?</para></question>
-<answer>
-<para>Since &kmail; 1.2 you can choose which encryption tool to use if you have
-more than one. All the programs that are listed in the <guilabel>Security</guilabel>
-tab of the <guilabel>Configure</guilabel> dialog are supported.</para>
 </answer>
 </qandaentry>
 
@@ -3416,7 +3441,8 @@ characters.</para></question>
 <answer><para>Before you can use spellchecking the first time, you have to
 configure it. You can do so in the <guilabel>Composer</guilabel> window's menu
 under <menuchoice><guimenu>Settings</guimenu>
-<guimenuitem>Spellchecker...</guimenuitem></menuchoice>.</para></answer>
+<guimenuitem>Spellchecker...</guimenuitem></menuchoice>. You can set
+the dictionary and the encoding there.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -3454,9 +3480,7 @@ messages.</para></question>
 your folders. To do so automatically, open up the
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem></menuchoice>
 window, select the <guilabel>Miscellaneous</guilabel> tab and select
-<guilabel>Compact all folders on exit</guilabel>. Maybe you want to select
-<guilabel>Empty trash on exit</guilabel>, too. This will remove all the messages
-in the trash folder whenever you exit &kmail;.</para></answer>
+<guilabel>Compact all folders on exit</guilabel>.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -3475,8 +3499,8 @@ the connection for you. You need to be root to execute this
 command. Alternatively, change the first port number, &ie; the first occurence
 of <userinput>110</userinput>, to something above 1024 and configure &kmail; to
 use that port. <note><para>If non-encrypted mails have already been sent
-via internet, the (only) advantage of using <application>ssh</application> is
-that your password will be sent encrypted to the <acronym>POP3</acronym>
+via internet, the only advantage of using <application>ssh</application> is
+that your <emphasis>password</emphasis> will be sent encrypted to the <acronym>POP3</acronym>
 server.</para></note></para>
 </answer>
 </qandaentry>
@@ -3568,7 +3592,7 @@ signature from file</guilabel>.</para></answer>
 &kmail; if I have a  dial-up connection?</para></question> 
 
 <answer><para>First you should check if your &Linux;/BSD/whatever distribution
-can do this for you. Perhaps it has already been set up during
+can do this for you. It probably has already been set up during
 installation.</para>
 
 <para>If that's not the case, you may want to have a look at <ulink
@@ -3620,6 +3644,8 @@ connections</ulink>.</para></answer>
 <listitem><para>Lars Knoll <email>knoll@mpi-hd.mpg.de</email></para></listitem>
 <listitem><para>J. Nick Koston
 <email>bdraco@darkorb.net</email></para></listitem>
+<listitem><para>Marc Mutz
+<email>mutz@kde.org</email></para></listitem>
 <listitem><para>Daniel Naber
 <email>daniel.naber@t-online.de</email></para></listitem>
 <listitem><para>Sven Radej <email>radej@kde.org</email></para></listitem>
@@ -3642,13 +3668,14 @@ maintainer)</para></listitem>
 <para>Update for &kmail; 1.2 by Daniel Naber
 <email>daniel.naber@t-online.de</email>, <application>PGP</application> part by
 Andreas Gungl <email>a.gungl@gmx.de</email>, filter part by
-Marc Mutz <email>Marc.Mutz@uni-bielefeld.de</email></para>
+Marc Mutz <email>Marc.Mutz@uni-bielefeld.de</email>. Other parts
+have been contributed by the various &kmail; maintainers.</para>
 
 <para>&kmail; 1.0
-documentation by David Rugge <email>davidrugge@mindspring.com</email></para>
-<para>Original documentation by Markus Wuebben
+documentation by David Rugge <email>davidrugge@mindspring.com</email>.
+Original documentation by Markus Wuebben
 <email>markus.wuebben@kde.org</email>, Robert Williams
-<email>rwilliams@kde.org</email> (Editor)</para>
+<email>rwilliams@kde.org</email> (Editor).</para>
 
 <para>Thanks to Michael Elkins <email>me@cs.hmc.edu</email> for his excellent
 description of the different Unix mail formats in the Mutt documentation.</para>
