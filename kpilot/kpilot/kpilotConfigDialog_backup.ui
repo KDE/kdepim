@@ -108,7 +108,7 @@
                 <cstring>fRunConduitsWithBackup</cstring>
             </property>
             <property name="text">
-                <string>Run &amp;conduits during a backup</string>
+                <string>Run &amp;conduits during a backup sync</string>
             </property>
             <property name="whatsThis" stdset="0">
                 <string>&lt;qt&gt;Check this box to run the selected conduits before every backup. This makes sure the backup is up to date with the last changes from your PC.&lt;/qt&gt;</string>
