@@ -86,12 +86,12 @@ void ConfigureViewFilterPage::readConfig( KConfig *config )
   for ( it = list.begin(); it != list.end(); ++it )
     mFilterCombo->insertItem( (*it).name() );
     
-  if ( config->hasKey( "DefaultFilter" ) )
-    mFilterCombo->setCurrentText( config->readEntry( "DefaultFilterName" ) );
-  
   int id = config->readNumEntry( "DefaultFilterType", 1 );
   mFilterGroup->setButton( id );
   buttonClicked( id );
+
+  if ( id == 2 ) // has default filter
+    mFilterCombo->setCurrentText( config->readEntry( "DefaultFilterName" ) );
 }
 
 void ConfigureViewFilterPage::writeConfig( KConfig *config )
