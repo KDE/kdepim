@@ -147,7 +147,7 @@ EmpathMailboxMaildir::_setupDefaultFolders()
 
     for (it = folders.begin(); it != folders.end(); ++it) {
  
-        QString folderPath = path_ + *it;
+        QString folderPath = path_ + "/" + *it;
 
         QDir d(folderPath);
         
