@@ -347,8 +347,7 @@ void ResourceKolab::addIncidence( const char* mimetype, const QString& data,
   else if ( mimetype == journalAttachmentMimeType )
     addJournal( data, subResource, sernum );
   else if ( mimetype == incidenceInlineMimeType ) {
-    ICalFormat format;
-    Incidence *inc = format.fromString( data );
+    Incidence *inc = mFormat.fromString( data );
     addIncidence( inc, subResource, sernum );
   }
 }
@@ -360,7 +359,6 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   const QString& type = incidencebase->type();
   const char* mimetype = 0;
   QString data;
-  ICalFormat format;
   bool isXMLStorageFormat = kmailStorageFormat( subresource ) == KMailICalIface::StorageXML;
   if ( type == "Event" ) {
     if( isXMLStorageFormat ) {
@@ -369,7 +367,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
           mCalendar.timeZoneId() );
     } else {
       mimetype = incidenceInlineMimeType;
-      data = format.createScheduleMessage( static_cast<KCal::Event *>(incidencebase), 
+      data = mFormat.createScheduleMessage( static_cast<KCal::Event *>(incidencebase), 
           Scheduler::Request );
     }
   } else if ( type == "Todo" ) {
@@ -379,7 +377,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
           mCalendar.timeZoneId() );
     } else {
       mimetype = incidenceInlineMimeType;
-      data = format.createScheduleMessage( static_cast<KCal::Todo *>(incidencebase), 
+      data = mFormat.createScheduleMessage( static_cast<KCal::Todo *>(incidencebase), 
           Scheduler::Request );
     }
   } else if ( type == "Journal" ) {
@@ -389,7 +387,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
           mCalendar.timeZoneId() );
     } else {
       mimetype = incidenceInlineMimeType;
-      data = format.createScheduleMessage( static_cast<KCal::Journal *>(incidencebase), 
+      data = mFormat.createScheduleMessage( static_cast<KCal::Journal *>(incidencebase), 
           Scheduler::Request );
     }
   } else {
@@ -652,6 +650,7 @@ KCal::Alarm::List ResourceKolab::alarmsTo( const QDateTime& to )
 void ResourceKolab::setTimeZoneId( const QString& tzid )
 {
   mCalendar.setTimeZoneId( tzid );
+  mFormat.setTimeZone( mCalendar.timeZoneId(), !mCalendar.isLocalTime() );
 }
 
 bool ResourceKolab::fromKMailAddIncidence( const QString& type,
@@ -681,8 +680,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
     else
       rc = false;
   } else {
-    ICalFormat f;
-    Incidence *inc = f.fromString( data );
+    Incidence *inc = mFormat.fromString( data );
     if ( !inc ) 
       rc = false;
     else

@@ -38,11 +38,12 @@
 #include <qtimer.h>
 
 #include <libkcal/calendarlocal.h>
+#include <libkcal/icalformat.h>
 #include <libkcal/resourcecalendar.h>
 #include "../shared/resourcekolabbase.h"
 
 namespace KCal {
-
+  
 class ResourceKolab : public KCal::ResourceCalendar,
                       public KCal::IncidenceBase::Observer,
                       public Kolab::ResourceKolabBase
@@ -178,6 +179,7 @@ private:
   bool mOpen; // If the resource is open, this is true
   QDict<KCal::IncidenceBase> mPendingUpdates;
   QTimer mResourceChangedTimer;
+  ICalFormat mFormat;
 };
 
 }
