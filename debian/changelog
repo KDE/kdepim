@@ -1,3 +1,15 @@
+kdepim (4:2.2-alpha1-5) experimental; urgency=low
+ 
+  * More upstream fixes
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Sun, 29 Apr 2001 03:59:00 -0700
+
+kdepim (4:2.2-alpha1-4) experimental; urgency=low
+ 
+  * More upstream fixes
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Tue, 24 Apr 2001 17:46:00 -0700
+
 kdepim (4:2.2-alpha1-3) experimental; urgency=low
  
   * More upstream fixes
