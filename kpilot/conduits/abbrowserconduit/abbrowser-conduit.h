@@ -50,6 +50,7 @@
 
 //#define ADD_BOTH CHANGED_BOTH|CHANGED_ADD
 
+using namespace KABC;
 
 //class DCOPClient;
 class PilotLocalDatabase;
@@ -67,9 +68,9 @@ public:
 	virtual bool exec();
 
 public slots:
-   void syncDeletedRecord();
-   void syncPCRecToPalm();
-   void syncPalmRecToPC();
+	void syncDeletedRecord();
+	void syncPCRecToPalm();
+	void syncPalmRecToPC();
 	void cleanup();
 
 public:
@@ -138,7 +139,7 @@ private:
 	
 
 	void _setAppInfo();
-   KABC::Addressee _addToAbbrowser(const PilotAddress & address);
+	KABC::Addressee _addToAbbrowser(const PilotAddress & address);
 	int _mergeEntries(PilotAddress &pilotAddress, PilotAddress &backupAddress, KABC::Addressee &abEntry);
 	int _handleConflict(PilotAddress &piAddress, PilotAddress &backup, KABC::Addressee &abEntry);
 	int _smartMerge(PilotAddress & outPilotAddress, const PilotAddress & backupAddress, KABC::Addressee & outAbEntry);
@@ -146,10 +147,11 @@ private:
 		PilotAddress &pilotAddress, PilotAddress::EPhoneType PalmFlag, KABC::PhoneNumber phone, QString
 		 thisName, QString name);
 	int _smartMergeEntry(QString abEntry, const PilotAddress &backupAddress, PilotAddress &pilotAddress, int PalmFlag, QString thisName, QString name, QString &mergedString);
-	
+	int _smartMergeCategories(KABC::Addressee &abAddress, const PilotAddress &backupAddress, PilotAddress &pilotAddress, QString thisName, QString name, QString &mergedString);
+
 	void _removePilotAddress(PilotAddress &address);
 	void _removeAbEntry(KABC::Addressee addressee);
-   KABC::Addressee _saveAbEntry(KABC::Addressee &abEntry);
+	KABC::Addressee _saveAbEntry(KABC::Addressee &abEntry);
 
    /** 
 	*  @return true if the abbEntry's pilot id was changed 
@@ -164,6 +166,7 @@ private:
 	bool _equal(const PilotAddress &piAddress, KABC::Addressee &abEntry) const;
 	KABC::Addressee _findMatch(const PilotAddress & pilotAddress) const;
 	int _getCat(const QStringList cats) const ;
+	void _setCategory(KABC::Addressee &abEntry, QString cat);
 
    /** 
 	*  Given a list of contacts, creates the pilot id to contact key map
@@ -238,6 +241,9 @@ private:
 
 
 // $Log$
+// Revision 1.25  2002/08/23 22:59:29  kainhofe
+// Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
+//
 // Revision 1.24  2002/08/16 18:54:06  kainhofe
 // Tried to fix the conduit, but KABC has changed so much that the conduit was totaly broken again. I will not touch the conduit any more until KABC is really solid and doesn't change any more!!!!
 //

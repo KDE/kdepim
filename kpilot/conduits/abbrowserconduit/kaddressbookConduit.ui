@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>413</width>
-            <height>263</height>
+            <width>486</width>
+            <height>364</height>
         </rect>
     </property>
     <property name="caption">
@@ -30,6 +30,9 @@
             <property name="name">
                 <cstring>tabWidget</cstring>
             </property>
+            <property name="enabled">
+                <bool>true</bool>
+            </property>
             <widget class="QWidget">
                 <property name="name">
                     <cstring>tab</cstring>
@@ -47,7 +50,7 @@
                     <property name="spacing">
                         <number>6</number>
                     </property>
-                    <spacer row="5" column="0">
+                    <spacer row="6" column="0">
                         <property name="name">
                             <cstring>Spacer1</cstring>
                         </property>
@@ -57,8 +60,14 @@
                         <property name="sizeType">
                             <enum>Expanding</enum>
                         </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>0</width>
+                                <height>28</height>
+                            </size>
+                        </property>
                     </spacer>
-                    <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="2">
+                    <widget class="QCheckBox" row="4" column="0" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>fSmartMerge</cstring>
                         </property>
@@ -72,7 +81,7 @@
                             <string>&lt;qt&gt;Use key fields to merge address books.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="4" column="0" rowspan="1" colspan="2">
+                    <widget class="QCheckBox" row="5" column="0" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>fFirstTimeSync</cstring>
                         </property>
@@ -86,7 +95,7 @@
                             <string>&lt;qt&gt;Should be checked if your PDA has never been synced or backed up before.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+                    <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>fArchive</cstring>
                         </property>
@@ -100,7 +109,7 @@
                             <string>&lt;qt&gt;If you delete an address on your handheld, you can determine if it should be archived on the PC. If you check that and this checkbox, the address will be added to your addressbook, but no longer synchronized with the handheld.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget class="QLabel" row="0" column="0">
+                    <widget class="QLabel" row="1" column="0">
                         <property name="name">
                             <cstring>TextLabel1</cstring>
                         </property>
@@ -108,7 +117,7 @@
                             <string>Handle conflict in addresses:</string>
                         </property>
                     </widget>
-                    <widget class="QLabel" row="1" column="0">
+                    <widget class="QLabel" row="2" column="0">
                         <property name="name">
                             <cstring>TextLabel1_2</cstring>
                         </property>
@@ -116,7 +125,7 @@
                             <string>Synchronization mode:</string>
                         </property>
                     </widget>
-                    <widget class="QComboBox" row="0" column="1">
+                    <widget class="QComboBox" row="1" column="1">
                         <item>
                             <property name="text">
                                 <string>User choose</string>
@@ -154,7 +163,7 @@
                             <string>&lt;qt&gt;How to handle a situation where the pim's address book has conflicting information with the KDE's addressbook&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget class="QComboBox" row="1" column="1">
+                    <widget class="QComboBox" row="2" column="1">
                         <item>
                             <property name="text">
                                 <string>Hot Sync (fast)</string>
@@ -170,6 +179,23 @@
                         </property>
                         <property name="whatsThis" stdset="0">
                             <string>&lt;qt&gt;There are two synchronization modes: &lt;ul&gt;&lt;li&gt;A &lt;i&gt;full sync&lt;/i&gt; synchronizes all records, even if they have not changed.&lt;li&gt;A &lt;i&gt;fast sync&lt;/i&gt; goes just through the addresses that have been changed since the last sync (possibly missing some changes).&lt;/ul&gt;&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>TextLabel2_2</cstring>
+                        </property>
+                        <property name="font">
+                            <font>
+                                <pointsize>12</pointsize>
+                                <bold>1</bold>
+                            </font>
+                        </property>
+                        <property name="text">
+                            <string>The addressbook conduit needed to be completely rewritten since KDE 3.0.3. It is not yet finished, and thus will not do any synchronization to avoid data loss. Sorry for the inconvenience.</string>
+                        </property>
+                        <property name="alignment">
+                            <set>WordBreak|AlignVCenter</set>
                         </property>
                     </widget>
                 </grid>
@@ -308,6 +334,12 @@
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>0</width>
+                                <height>20</height>
+                            </size>
                         </property>
                     </spacer>
                 </grid>
