@@ -28,7 +28,7 @@ class KNStringSplitter {
         
     void reset()                  { start=0; end=0; sep=""; incSep=false;}
     
-    void init(QCString &str, const char *s);
+    void init(const QCString &str, const char *s);
     void init(const char *str, const char *s);
     void setIncludeSep(bool inc)  { incSep=inc; }
     

@@ -30,7 +30,7 @@ KNStringSplitter::~KNStringSplitter()
 
 
 
-void KNStringSplitter::init(QCString &str, const char *s)
+void KNStringSplitter::init(const QCString &str, const char *s)
 {
   sep=s;
   src=str;
