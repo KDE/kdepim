@@ -35,3 +35,19 @@ conduit_todo_la_LIBADD = ../../lib/libkpilot.la \
 
 kde_kcfg_DATA = vcalconduitbase.kcfg
 
+# Dear automake, here are some dependencies you're too stupid to
+# figure out yourself.
+
+todo-conduit.cc : vcalconduitSettings.h
+
+todo-factory.cc : vcalconduitSettings.h
+
+vcal-conduitbase.cc : vcalconduitSettings.h
+
+vcal-factory.cc : vcalconduitSettings.h
+
+vcal-setup.cc : vcalconduitSettings.h
+
+vcal-setupbase.cc : vcalconduitSettings.h
+
+
