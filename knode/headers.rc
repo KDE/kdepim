@@ -18,3 +18,7 @@ Name=To
 Flags=0,1,0,0,0,0,0,0
 Header=Newsgroups
 Name=Groups
+[5]
+Flags=0,1,0,0,0,0,0,0
+Header=Followup-To
+Name=Followup-To
