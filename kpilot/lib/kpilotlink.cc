@@ -669,7 +669,7 @@ void TickleThread::run()
 #endif
 	while (!(*fDone))
 	{
-		usleep(1000/ChecksPerSecond);
+		QThread::msleep(1000/ChecksPerSecond);
 		if (!(--subseconds))
 		{
 #ifdef DEBUG_CERR
