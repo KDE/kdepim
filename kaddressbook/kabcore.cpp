@@ -52,6 +52,7 @@
 #include <kstdguiitem.h>
 #include <ktempfile.h>
 #include <kxmlguiclient.h>
+#include <ktoolbar.h>
 #include <libkdepim/addresseeview.h>
 #include <libkdepim/categoryeditdialog.h>
 #include <libkdepim/categoryselectdialog.h>
@@ -900,22 +901,23 @@ void KABCore::slotEditorDestroyed( const QString &uid )
 
 void KABCore::initGUI()
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( mWidget, KDialog::marginHint(),
-                                            KDialog::spacingHint() );
-  QHBoxLayout *hbox = new QHBoxLayout( topLayout, KDialog::spacingHint() );
-
-  mIncSearchWidget = new IncSearchWidget( mWidget );
+  QVBoxLayout *topLayout = new QVBoxLayout( mWidget, 0, 0 );
+  KToolBar* searchTB = new KToolBar( mWidget, "search toolbar");
+  searchTB->boxLayout()->setSpacing( KDialog::spacingHint() );
+  mIncSearchWidget = new IncSearchWidget( searchTB, "kde toolbar widget");
+  searchTB->setStretchableWidget( mIncSearchWidget );
   connect( mIncSearchWidget, SIGNAL( doSearch( const QString& ) ),
            SLOT( incrementalTextSearch( const QString& ) ) );
 
-  mFilterSelectionWidget = new FilterSelectionWidget( mWidget );
-  hbox->addWidget( mIncSearchWidget );
-  hbox->addWidget( mFilterSelectionWidget );
+  mFilterSelectionWidget = new FilterSelectionWidget( searchTB , "kde toolbar widget" );
 
-  hbox = new QHBoxLayout( topLayout, KDialog::spacingHint() );
+  QHBoxLayout *hbox = new QHBoxLayout( mWidget, 0, 0 );
 
   mDetailsSplitter = new QSplitter( mWidget );
   hbox->addWidget( mDetailsSplitter );
+
+  topLayout->addWidget( searchTB );
+  topLayout->addWidget( mDetailsSplitter );
 
   mExtensionBarSplitter = new QSplitter( mDetailsSplitter );
   mExtensionBarSplitter->setOrientation( Qt::Vertical );
@@ -926,9 +928,7 @@ void KABCore::initGUI()
   mDetailsPage = new QWidget( detailsWidget );
   detailsLayout->addWidget( mDetailsPage );
 
-  QHBoxLayout *detailsPageLayout = new QHBoxLayout( mDetailsPage,
-                                                    KDialog::marginHint(),
-                                                    KDialog::spacingHint() );
+  QHBoxLayout *detailsPageLayout = new QHBoxLayout( mDetailsPage, 0, 0 );
   mDetails = new KPIM::AddresseeView( mDetailsPage );
   detailsPageLayout->addWidget( mDetails );
 

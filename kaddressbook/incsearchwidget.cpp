@@ -24,7 +24,7 @@
 #include <qcombobox.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qpushbutton.h>
+#include <qtoolbutton.h>
 #include <qtooltip.h>
 #include <qwhatsthis.h>
 
@@ -40,9 +40,8 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
 {
   QHBoxLayout *layout = new QHBoxLayout( this, 2, KDialog::spacingHint() );
 
-  QPushButton *button = new QPushButton( this );
-  button->setAutoDefault( false );
-  button->setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum ) );
+  QToolButton *button = new QToolButton( this );
+  button->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
   button->setPixmap( SmallIcon( "locationbar_erase" ) );
   QToolTip::add( button, i18n( "Reset" ) );
   layout->addWidget( button );
@@ -52,12 +51,18 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   layout->addWidget( label );
 
   mSearchText = new KLineEdit( this );
+  mSearchText->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
   QWhatsThis::add( mSearchText, i18n( "The incremental search<p>Enter some text here will start the search for the contact, which matches the search pattern best. The part of the contact, which will be used for matching, depends on the field selection." ) );
   label->setBuddy( mSearchText );
   layout->addWidget( mSearchText );
 
+  label = new QLabel( i18n( "as in 'Search in:'", "&in:" ), this );
+  label->setAlignment( QLabel::AlignVCenter | QLabel::AlignRight );
+  layout->addWidget( label );
+ 
   mFieldCombo = new QComboBox( false, this );
   layout->addWidget( mFieldCombo );
+  label->setBuddy(mFieldCombo);
 
   QToolTip::add( mFieldCombo, i18n( "Select incremental search field" ) );
   QWhatsThis::add( mFieldCombo, i18n( "Here you can choose the field, which shall be used for incremental search." ) );
