@@ -78,7 +78,7 @@ Codec * Codec::codecForName( const char * name ) {
 #endif
 
   if ( !codec )
-    kdWarning() << "Unknown codec \"" << name << "\" requested!" << endl;
+    kdDebug() << "Unknown codec \"" << name << "\" requested!" << endl;
 
   return codec;
 }
