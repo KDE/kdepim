@@ -63,8 +63,6 @@ binary-arch: build
 	dh_installchangelogs -pkpilot kpilot/ChangeLog
 	dh_installchangelogs -pkdepim-libs
 	dh_installchangelogs -pkdepim-dev
-	dh_installchangelogs -plibical libical/ChangeLog
-	dh_installchangelogs -plibical-dev libical/ChangeLog
 	dh_strip -a
 	dh_compress -a
 	dh_fixperms -a
