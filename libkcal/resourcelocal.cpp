@@ -89,7 +89,7 @@ ResourceLocal::ResourceLocal( const QString& fileName )
 }
 
 
-void ResourceLocal::writeConfig( KConfig* config ) const
+void ResourceLocal::writeConfig( KConfig* config )
 {
   kdDebug() << "ResourceLocal::writeConfig()" << endl;
 

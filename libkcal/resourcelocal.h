@@ -47,7 +47,7 @@ class ResourceLocal : public ResourceCalendar
     ResourceLocal( const QString& fileName );
     virtual ~ResourceLocal();
 
-    virtual void writeConfig( KConfig* config ) const;
+    virtual void writeConfig( KConfig* config );
 
     bool sync();
 

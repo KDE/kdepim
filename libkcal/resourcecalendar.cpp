@@ -40,7 +40,7 @@ ResourceCalendar::~ResourceCalendar()
 {
 }
 
-void ResourceCalendar::writeConfig( KConfig* config ) const
+void ResourceCalendar::writeConfig( KConfig* config )
 {
   kdDebug() << "ResourceCalendar::writeConfig()" << endl;
 

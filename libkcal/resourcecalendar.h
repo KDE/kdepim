@@ -52,7 +52,7 @@ class ResourceCalendar : public QObject, public KRES::Resource
     ResourceCalendar( const KConfig * );
     virtual ~ResourceCalendar();
 
-    virtual void writeConfig( KConfig* config ) const;
+    virtual void writeConfig( KConfig* config );
 
     /**
      Writes calendar to storage. Writes calendar to disk file,
