@@ -207,8 +207,8 @@ You may need to specify fully qualified addresses
 users, depending on your system configuration.</para>
 
 <para>When you are finished with your
-message, click the <guiicon>Send</guiicon> icon (the envelope) to send
-the message now, or click the <guiicon>Queue</guiicon> icon to put
+message, click the <guiicon>Send Now</guiicon> icon (the envelope) to send
+the message now, or click the <guiicon>Send Later</guiicon> icon to put
 the message in the outbox. If your message is not finished yet, select
 <menuchoice><guimenu>Message</guimenu><guimenuitem>Save in Drafts
 Folder</guimenuitem></menuchoice>.
