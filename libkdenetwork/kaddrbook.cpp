@@ -129,20 +129,20 @@ bool KAddrBookExternal::addAddressee( const KABC::Addressee& addressee )
 QString KAddrBookExternal::expandDistributionList( const QString& listName )
 {
   if ( listName.isEmpty() )
-    return QString();
+    return QString::null;
 
-  QString lowerListName = listName.lower();
+  const QString lowerListName = listName.lower();
   KABC::AddressBook *addressBook = KABC::StdAddressBook::self();
   KABC::DistributionListManager manager( addressBook );
   manager.load();
-  QStringList listNames = manager.listNames();
+  const QStringList listNames = manager.listNames();
 
-  for ( QStringList::Iterator it = listNames.begin();
+  for ( QStringList::ConstIterator it = listNames.begin();
         it != listNames.end(); ++it) {
     if ( (*it).lower() == lowerListName ) {
-      QStringList addressList = manager.list( *it )->emails();
+      const QStringList addressList = manager.list( *it )->emails();
       return addressList.join( ", " );
     }
   }
-  return QString();
+  return QString::null;
 }
