@@ -71,6 +71,7 @@ void ResourceRemoteConfig::loadSettings( KRES::Resource *resource )
     mDownloadUrl->setURL( res->downloadUrl().url() );
     mUploadUrl->setURL( res->uploadUrl().url() );
     mReloadConfig->loadSettings( res );
+    mSaveConfig->loadSettings( res );
   } else {
     kdError(5700) << "ResourceRemoteConfig::loadSettings(): no ResourceRemote, cast failed" << endl;
   }
@@ -83,6 +84,7 @@ void ResourceRemoteConfig::saveSettings( KRES::Resource *resource )
     res->setDownloadUrl( KURL( mDownloadUrl->url() ) );
     res->setUploadUrl( KURL( mUploadUrl->url() ) );
     mReloadConfig->saveSettings( res );
+    mSaveConfig->saveSettings( res );
   } else {
     kdError(5700) << "ResourceRemoteConfig::saveSettings(): no ResourceRemote, cast failed" << endl;
   }
