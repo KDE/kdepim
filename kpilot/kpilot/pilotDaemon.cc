@@ -85,6 +85,7 @@ static KAboutData *aboutData = 0L;
 
 PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 	KSystemTray(0, "pilotDaemon"),
+	fSyncTypeMenu(0L),
 	daemon(p),
 	kap(0L),
 	fBlinkTimer(0L)
@@ -169,17 +170,28 @@ void PilotDaemonTray::setupWidget()
 		daemon, SLOT(slotRunConfig()));
 	menu->insertSeparator();
 
-	KPopupMenu *synctype = new KPopupMenu(menu,"sync_type_menu");
-#define MI(a,b) synctype->insertItem( \
-		KGlobal::iconLoader()->loadIconSet(b,KIcon::Small,0,true), \
-		SyncAction::syncModeName(SyncAction::a), \
+	fSyncTypeMenu = new KPopupMenu(menu,"sync_type_menu");
+	QString once = i18n("Appended to names of sync types to indicate the sync will happen just one time"," (once)");
+#define MI(a) fSyncTypeMenu->insertItem( \
+		SyncAction::syncModeName(SyncAction::a) + once, \
 		(int)(SyncAction::a));
-	MI(eHotSync,"hotsync");
-	MI(eFastSync,"fastsync");
-	MI(eBackup,"backup");
+	fSyncTypeMenu->insertItem(i18n("Default (%1)")
+		.arg(SyncAction::syncModeName((SyncAction::SyncMode)KPilotSettings::syncType())),
+		0);
+	fSyncTypeMenu->insertSeparator();
+	MI(eHotSync);
+	MI(eFastSync);
+	MI(eFullSync);
+	MI(eBackup);
+	MI(eRestore);
+	MI(eCopyHHToPC);
+	MI(eCopyPCToHH);
+
+	fSyncTypeMenu->setCheckable(true);
+	fSyncTypeMenu->setItemChecked(0,true);
 #undef MI
-	connect(synctype,SIGNAL(activated(int)),daemon,SLOT(requestSync(int)));
-	menu->insertItem(i18n("Next &Sync"),synctype);
+	connect(fSyncTypeMenu,SIGNAL(activated(int)),daemon,SLOT(requestSync(int)));
+	menu->insertItem(i18n("Next &Sync"),fSyncTypeMenu);
 
 	KHelpMenu *help = new KHelpMenu(menu,aboutData);
 	menu->insertItem(
@@ -450,6 +462,8 @@ void PilotDaemon::showTray()
 		<< endl;
 #endif
 
+	requestSync(SyncAction::eDefaultSync);
+
 
 	if (fPilotLink)
 	{
@@ -631,9 +645,23 @@ bool PilotDaemon::setupPilotLink()
 	FUNCTIONSETUP;
 
 
-	if ( (mode>=0) && (mode<=SyncAction::eRestore))
+	if ( (mode>=0) && (mode<=SyncAction::eLastMode))
 	{
-		fNextSyncType = (SyncAction::SyncMode) mode;
+		if (((int)SyncAction::eDefaultSync)==mode)
+		{
+			fNextSyncType = (SyncAction::SyncMode) KPilotSettings::syncType();
+			if ( (((int)SyncAction::eDefaultSync) == fNextSyncType) ||
+				(fNextSyncType < 0) || (fNextSyncType > SyncAction::eLastMode) )
+			{
+				// Bad mode set in config file.
+				kdWarning() << k_funcinfo << ": Bad mode set in config file." << endl;
+				fNextSyncType = SyncAction::eHotSync;
+			}
+		}
+		else
+		{
+			fNextSyncType = (SyncAction::SyncMode) mode;
+		}
 #ifdef DEBUG
 		DEBUGDAEMON << fname
 			<< ": Next sync is: "
@@ -644,9 +672,20 @@ bool PilotDaemon::setupPilotLink()
 	else
 	{
 		kdWarning() << k_funcinfo << ": Ignored fake sync type " << mode << endl;
+		return;
 	}
 
 	updateTrayStatus();
+
+	if (fTray && (fTray->fSyncTypeMenu))
+	{
+		for (int i=((int)SyncAction::eDefaultSync);
+			i<=((int)SyncAction::eLastUserMode) /* Restore */ ;
+			++i)
+		{
+			fTray->fSyncTypeMenu->setItemChecked(i,mode==i);
+		}
+	}
 }
 
 /* DCOP ASYNC */ void PilotDaemon::requestSyncType(QString s)
@@ -662,6 +701,7 @@ bool PilotDaemon::setupPilotLink()
 	else if (s.startsWith(CSL1("T"))) requestSync(SyncAction::eTest);
 	else if (s.startsWith(CSL1("CopyHHToPC"))) requestSync(SyncAction::eCopyHHToPC);
 	else if (s.startsWith(CSL1("CopyPCToHH"))) requestSync(SyncAction::eCopyPCToHH);
+	else if (s.startsWith(CSL1("D"))) requestSync(SyncAction::eDefaultSync);
 	else
 	{
 		kdWarning() << ": Unknown sync type " << ( s.isEmpty() ? "<none>" : s )
@@ -1076,6 +1116,8 @@ static void queueConduits(ActionQueue *fSyncStack,
 	case SyncAction::eCopyHHToPC:
 		queueConduits(fSyncStack,conduits,SyncAction::eCopyHHToPC);
 		break;
+	case SyncAction::eDefaultSync:
+		Q_ASSERT(SyncAction::eDefaultSync != fNextSyncType);
 #if 0
 	default:
 #ifdef DEBUG
@@ -1178,7 +1220,7 @@ launch:
 	}
 
 	fPostSyncAction = None;
-	requestRegularSyncNext();
+	requestSync(SyncAction::eDefaultSync /* default */);
 
 	(void) PilotDatabase::count();
 

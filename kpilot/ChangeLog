@@ -6,6 +6,13 @@
   moved everything to the new names. Finally, no more getCat(),
   but just category().
 * Detect special case of bad resource headers in file installer.
+* Rearranged sync enum just a little. Moved eTest out of the way,
+  since it's not really a valid value to pass to the demon and made
+  0 the value to indicate "default, whatever is stored in the
+  config file".
+* Fixed up sync-type not honored, clarified next-sync menu (I
+  think so, didn't ask -usability about it though).
+
 
 2004-08-16  Adriaan de Groot
 * Was away at a summer school for two weeks. Got no KPilot stuff

@@ -119,14 +119,17 @@ public:
 	*/
 	enum SyncMode
 	{
-		eTest=0,
+		eDefaultSync=0,
 		eFastSync=1,
 		eHotSync=2,
 		eFullSync=3,
 		eCopyPCToHH=4,
 		eCopyHHToPC=5,
 		eBackup=6,
-		eRestore=7
+		eRestore=7,
+		eTest=8,
+		eLastMode=eTest,
+		eLastUserMode=eRestore
 	};
 
 	/**
