@@ -12,7 +12,7 @@ bin_PROGRAMS = conduitKNotes
 MAGIC=$(kde_mimedir)/magic
 
 # Which sources should be compiled for vcalconduit
-conduitKNotes_SOURCES= knotes-conduit.cc setupDialog.cc
+conduitKNotes_SOURCES= knotes-conduit.cc setupDialog.cc md5.c md5wrap.cc
 
 # the library search path
 conduitKNotes_LDFLAGS = $(all_libraries) \
@@ -26,4 +26,4 @@ conduitKNotes_LDADD   =  ../../kpilot/pilotMemo.o -lconduit \
 	@LIBSOCKET@ -lpisock
 
 # this option you can leave out. Just, if you use "make dist", you need it
-noinst_HEADERS = knotes-conduit.h setupDialog.h
+noinst_HEADERS = knotes-conduit.h setupDialog.h md5.h md5wrap.h
