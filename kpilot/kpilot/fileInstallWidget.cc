@@ -41,12 +41,12 @@ static const char *fileinstallwidget_id =
 #include <qstring.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
-#include <qdragobject.h>
 #include <qlayout.h>
 #include <qwhatsthis.h>
 #include <qmultilineedit.h>
 
 #include <kfiledialog.h>
+#include <kurldrag.h>
 
 #include "kpilotConfig.h"
 #include "fileInstaller.h"
@@ -114,7 +114,7 @@ FileInstallWidget::~FileInstallWidget()
 void FileInstallWidget::dragEnterEvent(QDragEnterEvent * event)
 {
 	FUNCTIONSETUP;
-	event->accept(QUriDrag::canDecode(event));
+	event->accept(KURLDrag::canDecode(event));
 }
 
 
@@ -122,18 +122,23 @@ void FileInstallWidget::dropEvent(QDropEvent * drop)
 {
 	FUNCTIONSETUP;
 
-	QStrList list;
+	KURL::List list;
 
-	QUriDrag::decode(drop, list);
-
+	if (!KURLDrag::decode(drop, list) || list.isEmpty())
+		return;
+	
 #ifdef DEBUG
 	DEBUGKPILOT << ": Got " << list.first() << endl;
 #endif
 
-	if (list.first() != 0L)
+	QStringList files;
+	for(KURL::List::ConstIterator it = list.begin(); it != list.end(); ++it)
 	{
-		fInstaller->addFiles(list);
+	   if ((*it).isLocalFile())
+	      files << (*it).path();
 	}
+
+	fInstaller->addFiles(files);
 }
 
 void FileInstallWidget::slotClearButton()

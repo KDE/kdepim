@@ -118,43 +118,19 @@ void FileInstaller::clearPending()
 }
 
 
-
-void FileInstaller::addFiles(QStrList & fileList)
+void FileInstaller::addFiles(const QStringList & fileList)
 {
 	FUNCTIONSETUP;
 
 	if (!enabled) return;
 	
-	unsigned int i = 0;
 	unsigned int succ = 0;
 
-	while (i < fileList.count())
+	for(QStringList::ConstIterator it = fileList.begin();
+	    it != fileList.end(); ++it)
 	{
-		if (runCopy(QFile::decodeName(fileList.at(i))))
+		if (runCopy(*it))
 			succ++;
-		i++;
-	}
-
-	if (succ)
-	{
-		emit filesChanged();
-	}
-}
-
-void FileInstaller::addFiles(QStringList & fileList)
-{
-	FUNCTIONSETUP;
-
-	if (!enabled) return;
-	
-	unsigned int i = 0;
-	unsigned int succ = 0;
-
-	while (i < fileList.count())
-	{
-		if (runCopy(fileList[i]))
-			succ++;
-		i++;
 	}
 
 	if (succ)

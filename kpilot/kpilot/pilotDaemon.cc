@@ -55,7 +55,6 @@ static const char *pilotdaemon_id =
 #include <qdir.h>
 #include <qptrlist.h>
 #include <qcursor.h>
-#include <qdragobject.h>
 #include <qptrstack.h>
 #include <qtimer.h>
 #include <qtooltip.h>
@@ -77,6 +76,7 @@ static const char *pilotdaemon_id =
 #include <ktempfile.h>
 #include <kprocess.h>
 #include <dcopclient.h>
+#include <kurldrag.h>
 
 #include "pilotAppCategory.h"
 
@@ -115,19 +115,26 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 /* virtual */ void PilotDaemonTray::dragEnterEvent(QDragEnterEvent * e)
 {
 	FUNCTIONSETUP;
-	e->accept(QUriDrag::canDecode(e));
+	e->accept(KURLDrag::canDecode(e));
 }
 
 /* virtual */ void PilotDaemonTray::dropEvent(QDropEvent * e)
 {
 	FUNCTIONSETUP;
 
-	QStrList list;
+	KURL::List list;
 
-	QUriDrag::decode(e, list);
+	KURLDrag::decode(e, list);
+	
+	QStringList files;
+	for(KURL::List::ConstIterator it = list.begin(); it != list.end(); ++it)
+	{
+	   if ((*it).isLocalFile())
+	      files << (*it).path();
+	}
 
-	daemon->addInstallFiles(list);
-//	fInstaller->addFiles(list);
+	daemon->addInstallFiles(files);
+//	fInstaller->addFiles(files);
 }
 
 /* virtual */ void PilotDaemonTray::mousePressEvent(QMouseEvent * e)
@@ -293,7 +300,7 @@ PilotDaemon::~PilotDaemon()
 	KPILOT_DELETE(fInstaller);
 }
 
-void PilotDaemon::addInstallFiles(QStrList l)
+void PilotDaemon::addInstallFiles(const QStringList &l)
 {
 	FUNCTIONSETUP;
 

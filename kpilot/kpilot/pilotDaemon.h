@@ -140,7 +140,7 @@ public:
 	* setting in the config file)
 	*/
 	void showTray();
-	void addInstallFiles(QStrList);
+	void addInstallFiles(const QStringList &);
 
 	// The next few functions are the DCOP interface
 	//

@@ -47,8 +47,7 @@ public:
 
 	void clearPending();
 
-	void addFiles(QStrList&);
-	void addFiles(QStringList&);
+	void addFiles(const QStringList&);
 	void addFile(const QString&);
 
 	/**
