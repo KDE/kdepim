@@ -7,6 +7,7 @@
   magic constant 0xffff in PilotRecord::APP_BUFFER_SIZE. Removed
   some * in char *buffer[] where char buffer[] was meant, reducing KPilot's
   stack memory usage there by a factor of 4 or more.
+* Patch from Jörn Ahrens to close another Bugzilla bug.
 
 2004-04-18  Reinhold Kainhofer
 * Finish the autodetection of the handheld for the wizard. You *CAN* pi_bind

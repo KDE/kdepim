@@ -55,7 +55,7 @@ static const char kpilotconfig_id[] =
 // (increase) this number.
 //
 //
-/* static */ const uint KPilotConfig::ConfigurationVersion = 440;
+/* static */ const uint KPilotConfig::ConfigurationVersion = 443;
 
 /* static */ int KPilotConfig::getConfigVersion()
 {
@@ -181,6 +181,12 @@ void KPilotConfig::addFlagsChangedDatabase(QString db)
 			"been made conduits as well.");
 		s += ' ';
 		s += i18n("Conflict resolution is now a global setting.");
+		s += ' ';
+	}
+	if (fileversion < 443)
+	{
+		s += i18n("Changed format of no backup databases.");
+		s += ' ';
 	}
 	// Insert more recent additions here
 
@@ -198,22 +204,8 @@ void KPilotConfig::addFlagsChangedDatabase(QString db)
 		i18n("Configuration File Out-of Date"));
 }
 
-
-/* static */ void KPilotConfig::interactiveUpdate()
+static void update440()
 {
-	FUNCTIONSETUP;
-	
-	int res = 0;
-	// TODO!!! better config handling -> Move the config entries using kconf_update
-
-	res = KMessageBox::warningContinueCancel(0L,
-		i18n("The configuration file for KPilot is out-of "
-			"date. KPilot can update some parts of the "
-			"configuration automatically. Do you wish to "
-			"continue?"),
-		i18n("Configuration File Out-of Date"));
-	if (res!=KMessageBox::Continue) return;
-
 	// Try to update conduit list
 	{
 	QStringList conduits( KPilotSettings::installedConduits() );
@@ -266,12 +258,80 @@ void KPilotConfig::addFlagsChangedDatabase(QString db)
 			foundlibs,
 			i18n("Old Conduits Found"));
 	}
+}
+
+static void update443()
+{
+	FUNCTIONSETUP;
+
+	QStringList skip = KPilotSettings::skipBackupDB();
+	QStringList fixSkip;
+	bool fixedSome = false;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Skip databases are: "
+		<< skip.join(",") << endl;
+#endif
+
+	for (QStringList::const_iterator i = skip.begin(); i!=skip.end(); ++i)
+	{
+		if ((*i).length()==4)
+		{
+			fixSkip.append(CSL1("[%1]").arg(*i));
+			fixedSome = true;
+		}
+		else
+		{
+			fixSkip.append(*i);
+		}
+	}
+
+	if (fixedSome)
+	{
+		KMessageBox::informationList(0L,
+			i18n("<qt>The no backup databases listed in your configuration file "
+				"have been adjusted to the new format. Database creator IDs "
+				"have been changed to use square brackets []."),
+			fixSkip,
+			i18n("No Backup Databases Updated"));
+	}
+}
+
+/* static */ bool KPilotConfig::interactiveUpdate()
+{
+	FUNCTIONSETUP;
+
+	int res = 0;
+	unsigned int fileVersion = KPilotSettings::configVersion();
+	// TODO!!! better config handling -> Move the config entries using kconf_update
+
+	// It's OK if we're already at the required level.
+	if (fileVersion >= KPilotConfig::ConfigurationVersion)
+	{
+		return true;
+	}
+
+	res = KMessageBox::warningContinueCancel(0L,
+		i18n("The configuration file for KPilot is out-of "
+			"date. KPilot can update some parts of the "
+			"configuration automatically. Do you wish to "
+			"continue?"),
+		i18n("Configuration File Out-of Date"));
+	if (res!=KMessageBox::Continue) return false;
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Updating from "
+		<< fileVersion << " to " << ConfigurationVersion << endl;
+#endif
+
+	if (fileVersion < 440) update440();
+	if (fileVersion < 443) update443();
 
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::writeConfig();
+	return true;
 }
 
-void KPilotConfig::sync() 
+void KPilotConfig::sync()
 {
-  KPilotSettings::self()->config()->sync(); 
+  KPilotSettings::self()->config()->sync();
 }

@@ -1044,6 +1044,7 @@ int main(int argc, char **argv)
 		// user is expecting normal startup. Otherwise,
 		// do the configuration they're explicitly asking for.
 		if (Normal==run_mode) run_mode = ConfigureAndContinue;
+		if (!KPilotConfig::interactiveUpdate()) return 1;
 	}
 
 	if ((run_mode == ConfigureKPilot) || (run_mode == ConfigureAndContinue))
@@ -1053,12 +1054,6 @@ int main(int argc, char **argv)
 			<< ": Running setup first."
 			<< " (mode " << run_mode << ")" << endl;
 #endif
-		bool outdated = false;
-		if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
-		{
-			outdated = true;
-			KPilotConfig::interactiveUpdate();
-		}
 		PilotDaemonDCOP_stub *daemon = new PilotDaemonDCOP_stub("kpilotDaemon","KPilotDaemonIface");
 		bool r = runConfigure(*daemon,0L);
 		delete daemon;

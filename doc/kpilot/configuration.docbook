@@ -364,7 +364,7 @@ You can disable the full sync by unchecking this box.
 <para>
 Data can be changed both on the &handheld; and
 on the PC; if one record has incompatible changes
-in both the &handheld; and the PC, (such as 
+in both the &handheld; and the PC, (such as
 changing a phone number in different ways on both sides),
 the conflicting change needs to be resolved so
 that both the &handheld; and the <acronym>PC</acronym> are in sync again.
@@ -411,7 +411,7 @@ Backup Page
 </title>
 
 <para>
-This page contains settings specific to the backup operation, which saves 
+This page contains settings specific to the backup operation, which saves
 a copy of the the &handheld; databases, allowing the user to
 restore this information later.
 </para>
@@ -451,14 +451,24 @@ here (the default should be OK though).
 <guilabel>No backup:</guilabel> Databases that will be excluded from the backup
 operation. Some databases do not follow the standard database layout, and trying
 to backup them will result in errors.
-<!-- CW TODO: should this be "No Sync?" as it was before? This makes no sense to me--> 
-</para></listitem>
+<!-- CW TODO: should this be "No Sync?" as it was before? This makes no sense to me-->
+<!-- [ade] Current GUI label is "No Backup", and it now matches the description. -->
+</para>
+<para>
+The <guilabel>no backup</guilabel> field contains a list of values, separated by commas.
+The values can be either database creator values, which are 4-letter strings
+surrounded by square brackets, or database names,
+which are strings without square brackets that may contain shell-style
+wildcards.
+</para>
+<!-- [ade] TODO need examples -->
+</listitem>
 
 <listitem><para>
 <guilabel>Not restored:</guilabel> Databases with volatile information, such as
 news or web pages, often do not need to be restored. Add here the databases
 you do not need to restore, in order to speed up the backup operation.
-<!-- CW TODO: should this be "No Backup?" --> 
+<!-- CW TODO: should this be "No Backup?" -->
 </para></listitem>
 </itemizedlist>
 
@@ -543,7 +553,7 @@ Set there the options for the address internal viewer.
 
 <itemizedlist>
 <listitem><para>
-<guilabel>Show as "Last, first"</guilabel> or 
+<guilabel>Show as "Last, first"</guilabel> or
 <guilabel>Show as "Company, last"</guilabel>: the order and display of the
 address records in the address internal viewer can be set to match the
 &handheld;. Select the option that suits better your personal preferences.
@@ -569,7 +579,7 @@ address records in the address internal viewer can be set to match the
 <title>Startup and Exit Page</title>
 
 <para>
-This pages present options related to the startup and exit of &kpilot; and 
+This pages present options related to the startup and exit of &kpilot; and
 &kpilot; daemon.
 </para>
 
@@ -617,7 +627,7 @@ needed if the daemon is docked in the panel.
 <listitem>
 <para>
 <guilabel>Show daemon in panel</guilabel>:
-Check this box to instruct the daemon to place a &HotSync; icon 
+Check this box to instruct the daemon to place a &HotSync; icon
 <guiicon>HotSync icon
 <inlinemediaobject>
 <imageobject><imagedata fileref="toolbar_hotsync.png" format="PNG"/>

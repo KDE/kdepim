@@ -162,6 +162,54 @@ BackupAction::BackupAction(KPilotDeviceLink * p, int mode) :
 	return s;
 }
 
+static inline bool dontBackup(struct DBInfo *info,
+	const QStringList &dbnames,
+	const QValueList<unsigned long> &dbcreators)
+{
+	QString db = QString::fromLatin1(info->name);
+
+	if (dbcreators.findIndex(info->creator) != -1) return true;
+
+	// Now take wildcards into account
+	for (QStringList::const_iterator i = dbnames.begin(); i != dbnames.end(); ++i)
+	{
+		QRegExp re(*i,true,true); // Wildcard match
+		if (re.exactMatch(db)) return true;
+	}
+	return false;
+}
+
+static inline void initNoBackup(QStringList &dbnames,
+	QValueList<unsigned long> &dbcreators)
+{
+	dbnames.clear();
+	dbcreators.clear();
+
+	QStringList configuredSkip = KPilotSettings::skipBackupDB();
+	QStringList::const_iterator e = configuredSkip.end();
+	for (QStringList::const_iterator i = configuredSkip.begin();
+		i!= e; ++i)
+	{
+		QString s = *i;
+		if (s.startsWith(CSL1("[")) && s.endsWith(CSL1("]")))
+		{
+			if (s.length() != 6)
+			{
+				kdWarning() << k_funcinfo << ": Creator ID " << s << " is malformed." << endl;
+			}
+			else
+			{
+				QCString data =  s.mid(2,4).latin1();
+				unsigned long creator = pi_mktag(data[0],data[1],data[2],data[3]);
+				dbcreators.append(creator);
+			}
+		}
+		else
+		{
+			dbnames.append(s);
+		}
+	}
+}
 
 /* virtual */ bool BackupAction::exec()
 {
@@ -196,6 +244,8 @@ BackupAction::BackupAction(KPilotDeviceLink * p, int mode) :
 		// did this already...
 		return false;
 	}
+
+	initNoBackup(fNoBackupDBs,fNoBackupCreators);
 
 	fTimer = new QTimer(this);
 	QObject::connect(fTimer, SIGNAL(timeout()),
@@ -242,7 +292,6 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	return true;
 }
 
-
 /* slot */ void BackupAction::backupOneDB()
 {
 	FUNCTIONSETUP;
@@ -283,14 +332,15 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 
 	fDBIndex = info.index + 1;
 
-	const QStringList nobackupdb( KPilotSettings::skipBackupDB() );
-	if (nobackupdb.findIndex(QString::fromLatin1(info.name)) != -1)
+
+	if (dontBackup(&info,fNoBackupDBs,fNoBackupCreators))
 	{
 		QString s = i18n("Skipping %1")
 			.arg(QString::fromLatin1(info.name));
 		addSyncLogEntry(s);
 		return;
 	}
+
 
 	// Pretty sure all database names are latin1.
 	QString s = i18n("Backing up: %1")

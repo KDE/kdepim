@@ -95,14 +95,13 @@
         <default>false</default>
     </entry>
     <entry name="SkipBackupDB" type="StringList">
-        <label>
-        </label>
-        <default>Arng,PmDB,lnch</default>
+        <label>Which databases not to backup.</label>
+        <default>[Arng],[PmDB],[lnch],FATFS</default>
     </entry>
     <entry name="SkipRestoreDB" type="StringList">
         <label>
         </label>
-        <default>AvGo</default>
+        <default>[AvGo]</default>
     </entry>
     <entry name="RunConduitsWithBackup" type="Bool">
         <label></label>

@@ -85,6 +85,8 @@ private:
 	QString fBackupDir, fDatabaseDir;
 	int fMode;
 	bool fFullBackup;
+	QStringList fNoBackupDBs;
+	QValueList<unsigned long> fNoBackupCreators;
 } ;
 
 class FileInstallAction : public SyncAction

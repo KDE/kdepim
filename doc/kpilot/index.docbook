@@ -217,20 +217,19 @@ on your &handheld;.
 <caution>
 <title>Changes in &kpilotver;</title>
 <para>
+The expressiveness of the <guilabel>No Backup</guilabel> configuration
+item, which prevents specific databases from being backed up (for space, speed,
+or stability reasons), has been extended.
+In particular, the old format listed only
+creator values, while the new format can list wildcard database names
+as well as creator values.
+The value set in the configuration dialog will be automatically adjusted to
+the new format.
+</para>
+<para>
 In &kpilot; &kpilotver;, the way conduits are programmed changed,
 and you will need to use newly compiled conduits. If there are
 old conduits on your system, &kpilot; will prompt you to remove them.
-</para>
-<para>
-The way file installation and Kroupware are enabled has changed.
-They have been moved to conduits; your settings will be preserved,
-and &kpilot; will warn you.
-</para>
-<para>
-The names of encodings have changed as well. If you enabled
-encodings for &kpilot; by editing the configuration file,
-you will need to re-select your encoding from the configuration dialog.
-&kpilot; will <emphasis>not</emphasis> warn you about this.
 </para>
 <para>
 Please take the time to review all of the configuration settings.

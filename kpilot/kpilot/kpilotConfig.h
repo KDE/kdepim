@@ -49,7 +49,7 @@ public:
 	static void addDirtyDatabase(QString db);
 	static void addAppBlockChangedDatabase(QString db);
 	static void addFlagsChangedDatabase(QString db);
-	
+
 	/**
 	* This number can be changed every time a new
 	* KPilot version is released that absolutely requires
@@ -73,13 +73,24 @@ public:
 
 	/**
 	* Warn the user that the config file is outdated.
-	* versionDetails() returns a descriptive string.
+	* versionDetails() returns a descriptive string. Pass in the
+	*     actual version of the config file. Set @p run to true to add an
+	*     admonition to run kpilot in config mode to fix this.
 	* sorryVersionOutdated() uses KMessageBox to display it.
-	* interactiveUpdate() tries to copy old configs to new.
 	*/
 	static QString versionDetails(int fileversion, bool run);
 	static void sorryVersionOutdated(int fileversion);
-	static void interactiveUpdate();
+	/**
+	* Update the config file as best we can, and inform the user.
+	* Returns true if it's ok (ie. update finished, or file was already
+	* up-to-date) and false if the user cancels. If the user cancels,
+	* it's probably best to _not_ continue with anything, since the
+	* config is bogus.
+	*
+	* This function can call functions to update from different versions
+	* to current; these are static in kpilotConfig.cc.
+	*/
+	static bool interactiveUpdate();
 
 	/**
 	* Deal with --debug options.
@@ -92,7 +103,7 @@ public:
 	* fixed font.
 	*/
 	static const QFont& fixed() ;
-	
+
 	static void sync();
 } ;
 
