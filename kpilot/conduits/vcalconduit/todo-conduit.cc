@@ -34,23 +34,12 @@
 
 #include "options.h"
 
-#include <unistd.h>
-
 #include <qdatetime.h>
-#include <qtimer.h>
 #include <qtextcodec.h>
-
-#include <pilotUser.h>
-#include <kconfig.h>
 
 #include <libkcal/calendar.h>
 #include <libkcal/todo.h>
 
-
-#define DateList_t KCal::DateList
-#define DateListIterator_t KCal::DateList::ConstIterator
-
-#include <pilotSerialDatabase.h>
 #include <pilotLocalDatabase.h>
 
 #include "todo-conduit.moc"

@@ -29,7 +29,6 @@
 
 #include "options.h"
 
-#include <qtabwidget.h>
 #include <qbuttongroup.h>
 
 #include "korganizerConduit.h"

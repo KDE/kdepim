@@ -29,19 +29,12 @@
 
 #include "options.h"
 
-
-#include <qtabwidget.h>
-#include <qcheckbox.h>
 #include <qbuttongroup.h>
-#include <qcombobox.h>
-
-#include <kconfig.h>
-#include <kurlrequester.h>
+#include <klocale.h>
 
 #include "korganizerConduit.h"
 #include "vcal-factory.h"
 #include "vcal-setup.h"
-#include "vcalconduitSettings.h"
 
 VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
 	VCalWidgetSetupBase(w,n)

@@ -29,7 +29,6 @@
 
 #include "options.h"
 
-#include <kinstance.h>
 #include <kaboutdata.h>
 
 #include "vcal-setup.h"

@@ -28,8 +28,11 @@
 */
 
 #include "options.h"
-#include "vcal-conduit.moc"
+#include <libkcal/calendar.h>
+#include <libkcal/recurrence.h>
+#define Recurrence_t KCal::Recurrence
 #include <pilotDateEntry.h>
+#include "vcal-conduit.moc"
 #include "vcal-factory.h"
 
 extern "C"
@@ -39,27 +42,6 @@ long version_conduit_vcal = KPILOT_PLUGIN_API;
 const char *id_conduit_vcal = "$Id$";
 
 }
-
-#include <unistd.h>
-
-#include <qdatetime.h>
-#include <qtimer.h>
-
-#include <pilotUser.h>
-#include <kconfig.h>
-
-#include <libkcal/calendarlocal.h>
-
-
-#include <libkcal/recurrence.h>
-#define Recurrence_t KCal::Recurrence
-#define DateList_t KCal::DateList
-#define DateListIterator_t KCal::DateList::ConstIterator
-
-#include <pilotSerialDatabase.h>
-#include <pilotLocalDatabase.h>
-
-
 
 
 

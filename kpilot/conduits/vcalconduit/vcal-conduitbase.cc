@@ -33,44 +33,21 @@
 static const char *vcalconduitbase_id = "$Id$";
 
 #include <options.h>
-#include <unistd.h>
 
-#include <qdatetime.h>
 #include <qtimer.h>
 #include <qfile.h>
 
-#include <pilotUser.h>
-#include <kconfig.h>
 #include <kmessagebox.h>
 
 #include <libkcal/calendar.h>
 #include <libkcal/calendarlocal.h>
-#include <libkcal/incidence.h>
 #include <libkcal/calendarresources.h>
 #include <kstandarddirs.h>
-#include <ksimpleconfig.h>
-
-
-/*
-** KDE 2.2 uses class KORecurrence in a different header file.
-*/
-#ifdef KDE2
-#include <korecurrence.h>
-#define Recurrence_t KCal::KORecurrence
-#define DateList_t QDateList
-#define DateListIterator_t QDateListIterator
-#else
-#include <libkcal/recurrence.h>
-#define Recurrence_t KCal::Recurrence
-#define DateList_t KCal::DateList
-#define DateListIterator_t KCal::DateList::ConstIterator
-#endif
 
 #include <pilotSerialDatabase.h>
 #include <pilotLocalDatabase.h>
 #include <pilotDateEntry.h>
 
-#include "vcal-factorybase.h"
 #include "vcal-conduitbase.moc"
 #include "vcalconduitSettings.h"
 

@@ -29,8 +29,6 @@
 
 #include "options.h"
 
-
-#include <qtabwidget.h>
 #include <qcheckbox.h>
 #include <qbuttongroup.h>
 #include <qcombobox.h>
