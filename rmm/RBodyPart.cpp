@@ -40,20 +40,21 @@ RBodyPart::RBodyPart()
 
 RBodyPart::RBodyPart(const RBodyPart & part)
     :   REntity(part),
-        envelope_            (part.envelope_),
-        data_                (part.data_),
-        body_                (part.body_),
-        encoding_            (part.encoding_),
-        mimeType_            (part.mimeType_),
+        envelope_           (part.envelope_),
+        data_               (part.data_),
+        encoding_           (part.encoding_),
+        mimeType_           (part.mimeType_),
         mimeSubType_        (part.mimeSubType_),
-        contentDescription_    (part.contentDescription_),
+        contentDescription_ (part.contentDescription_),
         disposition_        (part.disposition_),
-        boundary_            (part.boundary_),
-        type_                (part.type_),
-        preamble_            (part.preamble_),
-        epilogue_            (part.epilogue_)
+        boundary_           (part.boundary_),
+        type_               (part.type_),
+        preamble_           (part.preamble_),
+        epilogue_           (part.epilogue_),
+        charset_            (part.charset_),
+        body_               (part.body_)
 {
-    body_ = part.body_;
+    // Empty
 }
 
 RBodyPart::RBodyPart(const QCString & s)
@@ -68,18 +69,19 @@ RBodyPart::operator = (const RBodyPart & part)
     if (this == &part) return *this;    // Avoid a = a.
     REntity::operator = (part);
     
-    envelope_            = part.envelope_;
-    data_                = part.data_;
-    body_                = part.body_;
-    encoding_            = part.encoding_;
-    mimeType_            = part.mimeType_;
+    envelope_           = part.envelope_;
+    data_               = part.data_;
+    encoding_           = part.encoding_;
+    mimeType_           = part.mimeType_;
     mimeSubType_        = part.mimeSubType_;
-    contentDescription_    = part.contentDescription_;
+    contentDescription_ = part.contentDescription_;
     disposition_        = part.disposition_;
-    boundary_            = part.boundary_;
-    type_                = part.type_;
-    preamble_            = part.preamble_;
-    epilogue_            = part.epilogue_;
+    boundary_           = part.boundary_;
+    type_               = part.type_;
+    preamble_           = part.preamble_;
+    epilogue_           = part.epilogue_;
+    charset_            = part.charset_;
+    body_               = part.body_;
 
     return *this;
 }
@@ -104,17 +106,18 @@ RBodyPart::operator == (RBodyPart & part)
     part.parse();
     
     bool equal = (
-        envelope_            == part.envelope_            &&
-        data_                == part.data_                &&
-        encoding_            == part.encoding_            &&
-        mimeType_            == part.mimeType_            &&
+        envelope_           == part.envelope_           &&
+        data_               == part.data_               &&
+        encoding_           == part.encoding_           &&
+        mimeType_           == part.mimeType_           &&
         mimeSubType_        == part.mimeSubType_        &&
-        contentDescription_    == part.contentDescription_    &&
+        contentDescription_ == part.contentDescription_ &&
         disposition_        == part.disposition_        &&
-        boundary_            == part.boundary_            &&
-        type_                == part.type_                &&
-        preamble_            == part.preamble_            &&
-        epilogue_            == part.epilogue_);
+        boundary_           == part.boundary_           &&
+        type_               == part.type_               &&
+        preamble_           == part.preamble_           &&
+        epilogue_           == part.epilogue_           &&
+        charset_            == part.charset_ );
     
     return (equal && false);
     //body_                == part.body_                &&

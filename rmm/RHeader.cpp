@@ -27,8 +27,9 @@ RHeader::RHeader(const RHeader & h)
         headerType_(h.headerType_),
         headerBody_(0)
 {
-    parse();
-    headerBody_ = _newHeaderBody(headerType_, h.headerBody_);   
+    // XXX necessary?
+    // parse();
+    headerBody_ = _copyHeaderBody(headerType_, h.headerBody_);   
 }
 
 RHeader::~RHeader()
@@ -65,7 +66,7 @@ RHeader::operator = (const RHeader & h)
 
     delete headerBody_;
     headerBody_ = 0;
-    headerBody_ = _newHeaderBody(headerType_, h.headerBody_);
+    headerBody_ = _copyHeaderBody(headerType_, h.headerBody_);
   
     RMessageComponent::operator = (h);
     return *this;
@@ -212,10 +213,10 @@ RHeader::_newHeaderBody(HeaderType headerType)
 }
 
     RHeaderBody *
-RHeader::_newHeaderBody(HeaderType headerType, RHeaderBody * headerBody)
+RHeader::_copyHeaderBody(HeaderType headerType, RHeaderBody * headerBody)
 {    
     if (headerBody == 0)
-        return _newHeaderBody(headerType);
+        return 0;
 
     RHeaderBody * b = 0;
 

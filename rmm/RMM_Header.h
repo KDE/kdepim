@@ -51,7 +51,7 @@ class RHeader : public RMessageComponent
     private:
  
         RHeaderBody * _newHeaderBody(RMM::HeaderType);
-        RHeaderBody * _newHeaderBody(RMM::HeaderType, RHeaderBody *);
+        RHeaderBody * _copyHeaderBody(RMM::HeaderType, RHeaderBody *);
         
         QCString        headerName_;
         RMM::HeaderType headerType_;
