@@ -75,7 +75,7 @@ class AddresseeCardViewItem : public CardViewItem
                           bool showEmptyFields,
                           KABC::AddressBook *doc, const KABC::Addressee &a,
                           CardView *parent)
-      : CardViewItem(parent, a.formattedName()),
+      : CardViewItem( parent, a.realName() ),
         mFields( fields ), mShowEmptyFields(showEmptyFields),
         mDocument(doc), mAddressee(a)
       {
