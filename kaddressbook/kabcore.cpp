@@ -469,6 +469,26 @@ void KABCore::pasteContacts( KABC::Addressee::List &list )
   setModified( true );
 }
 
+void KABCore::mergeContacts()
+{
+  KABC::Addressee::List list = mViewManager->selectedAddressees();
+  if ( list.count() < 2 )
+    return;
+
+  KABC::Addressee addr = mergeContacts( list );
+
+  KABC::Addressee::List::Iterator it = list.begin();
+  ++it;
+  while ( it != list.end() ) {
+    mAddressBook->removeAddressee( *it );
+    ++it;
+  }
+
+  mAddressBook->insertAddressee( addr );
+
+  SearchManager::self()->reload();
+}
+
 void KABCore::setWhoAmI()
 {
   KABC::Addressee::List addrList = mViewManager->selectedAddressees();
@@ -915,6 +935,10 @@ void KABCore::initActions()
                                       actionCollection(), "file_properties" );
   mActionEditAddressee->setWhatsThis( i18n( "Edit a contact<p>You will be presented with a dialog where you can change all data about a person, including addresses and phone numbers." ) );
 
+  mActionMerge = new KAction( i18n( "&Merge Contacts" ), "", 0,
+                              this, SLOT( mergeContacts() ), 
+                              actionCollection(), "edit_merge" );
+
   // edit menu
   mActionCopy = KStdAction::copy( this, SLOT( copyContacts() ), actionCollection() );
   mActionCut = KStdAction::cut( this, SLOT( cutContacts() ), actionCollection() );
@@ -1002,6 +1026,143 @@ void KABCore::updateActionMenu()
     mActionRedo->setText( i18n( "Redo %1" ).arg( redo->top()->name() ) );
 
   mActionRedo->setEnabled( !redo->isEmpty() );
+}
+
+KABC::Addressee KABCore::mergeContacts( const KABC::Addressee::List &list )
+{
+  if ( list.count() == 0 ) //emtpy
+    return KABC::Addressee();
+  else if ( list.count() == 1 ) // nothing to merge
+    return list.first();
+
+  KABC::Addressee masterAddressee = list.first();
+
+  KABC::Addressee::List::ConstIterator contactIt = list.begin();
+  for ( ++contactIt; contactIt != list.end(); ++contactIt ) {
+    // ADR + LABEL
+    KABC::Address::List addresses = (*contactIt).addresses();
+    KABC::Address::List masterAddresses = masterAddressee.addresses();
+    KABC::Address::List::Iterator addrIt ;
+    for ( addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt ) {
+      if ( !masterAddresses.contains( *addrIt ) )
+        masterAddressee.insertAddress( *addrIt );
+    }
+
+    if ( masterAddressee.birthday().isNull() && !(*contactIt).birthday().isNull() )
+      masterAddressee.setBirthday( (*contactIt).birthday() );
+
+
+    // CATEGORIES
+    QStringList::Iterator it;
+    QStringList categories = (*contactIt).categories();
+    QStringList masterCategories = masterAddressee.categories();
+    QStringList newCategories( masterCategories );
+    for ( it = categories.begin(); it != categories.end(); ++it )
+      if ( !masterCategories.contains( *it ) )
+        newCategories.append( *it );
+    masterAddressee.setCategories( newCategories );
+
+    // CLASS
+    if ( !masterAddressee.secrecy().isValid() && (*contactIt).secrecy().isValid() )
+      masterAddressee.setSecrecy( (*contactIt).secrecy() );
+
+    // EMAIL
+    QStringList emails = (*contactIt).emails();
+    QStringList masterEmails = masterAddressee.emails();
+    for ( it = emails.begin(); it != emails.end(); ++it )
+      if ( !masterEmails.contains( *it ) )
+        masterAddressee.insertEmail( *it, false );
+
+    // FN
+    if ( masterAddressee.formattedName().isEmpty() && !(*contactIt).formattedName().isEmpty() )
+      masterAddressee.setFormattedName( (*contactIt).formattedName() );
+
+    // GEO
+    if ( !masterAddressee.geo().isValid() && (*contactIt).geo().isValid() )
+      masterAddressee.setGeo( (*contactIt).geo() );
+
+/*
+  // KEY
+  // LOGO
+*/
+
+    // MAILER
+    if ( masterAddressee.mailer().isEmpty() && !(*contactIt).mailer().isEmpty() )
+      masterAddressee.setMailer( (*contactIt).mailer() );
+
+    // N
+    if ( masterAddressee.assembledName().isEmpty() && !(*contactIt).assembledName().isEmpty() )
+      masterAddressee.setNameFromString( (*contactIt).assembledName() );
+
+    // NICKNAME
+    if ( masterAddressee.nickName().isEmpty() && !(*contactIt).nickName().isEmpty() )
+      masterAddressee.setNickName( (*contactIt).nickName() );
+
+    // NOTE
+    if ( masterAddressee.note().isEmpty() && !(*contactIt).note().isEmpty() )
+      masterAddressee.setNote( (*contactIt).note() );
+
+    // ORG
+    if ( masterAddressee.organization().isEmpty() && !(*contactIt).organization().isEmpty() )
+      masterAddressee.setOrganization( (*contactIt).organization() );
+
+/*
+  // PHOTO
+*/
+
+    // PROID
+    if ( masterAddressee.productId().isEmpty() && !(*contactIt).productId().isEmpty() )
+      masterAddressee.setProductId( (*contactIt).productId() );
+
+    // REV
+    if ( masterAddressee.revision().isNull() && !(*contactIt).revision().isNull() )
+      masterAddressee.setRevision( (*contactIt).revision() );
+
+    // ROLE
+    if ( masterAddressee.role().isEmpty() && !(*contactIt).role().isEmpty() )
+      masterAddressee.setRole( (*contactIt).role() );
+
+    // SORT-STRING
+    if ( masterAddressee.sortString().isEmpty() && !(*contactIt).sortString().isEmpty() )
+      masterAddressee.setSortString( (*contactIt).sortString() );
+
+/*
+  // SOUND
+*/
+
+    // TEL
+    KABC::PhoneNumber::List phones = (*contactIt).phoneNumbers();
+    KABC::PhoneNumber::List masterPhones = masterAddressee.phoneNumbers();
+    KABC::PhoneNumber::List::ConstIterator phoneIt;
+    for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt )
+      if ( !masterPhones.contains( *it ) )
+        masterAddressee.insertPhoneNumber( *it );
+
+    // TITLE
+    if ( masterAddressee.title().isEmpty() && !(*contactIt).title().isEmpty() )
+      masterAddressee.setTitle( (*contactIt).title() );
+
+    // TZ
+    if ( !masterAddressee.timeZone().isValid() && (*contactIt).timeZone().isValid() )
+      masterAddressee.setTimeZone( (*contactIt).timeZone() );
+
+    // UID // ignore UID
+
+    // URL
+    if ( masterAddressee.url().isEmpty() && !(*contactIt).url().isEmpty() )
+      masterAddressee.setUrl( (*contactIt).url() );
+
+    // X-
+    QStringList customs = (*contactIt).customs();
+    QStringList masterCustoms = masterAddressee.customs();
+    QStringList newCustoms( masterCustoms );
+    for ( it = customs.begin(); it != customs.end(); ++it )
+      if ( !masterCustoms.contains( *it ) )
+        newCustoms.append( *it );
+    masterAddressee.setCustoms( newCustoms );
+  }
+
+  return masterAddressee;
 }
 
 void KABCore::setCategories()

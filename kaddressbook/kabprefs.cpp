@@ -51,7 +51,6 @@ KABPrefs::KABPrefs()
 
   KConfigSkeleton::setCurrentGroup( "Extensions_General" );
   QStringList defaultExtensions;
-  defaultExtensions << "merge";
   defaultExtensions << "distribution_list_editor";
   addItemInt( "CurrentExtension", mCurrentExtension, 0 );
   addItemStringList( "ActiveExtensions", mActiveExtensions, defaultExtensions );

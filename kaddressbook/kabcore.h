@@ -198,6 +198,12 @@ class KABCore : public KAB::Core
      */
     void pasteContacts( KABC::Addressee::List &list );
 
+
+    /**
+      Merge the selected contacts in a single one.
+     */
+    void mergeContacts();
+
     /**
       Sets the whoAmI contact, that is used by many other programs to
       get personal information about the current user.
@@ -311,6 +317,8 @@ class KABCore : public KAB::Core
 
     void detailsHighlighted( const QString& );
 
+    void configurationChanged();
+
   signals:
     void contactSelected( const QString &name );
     void contactSelected( const QPixmap &pixmap );
@@ -324,7 +332,6 @@ class KABCore : public KAB::Core
     void updateActionMenu();
 
     void slotEditorDestroyed( const QString &uid );
-    void configurationChanged();
     void addressBookChanged();
 
     void categoriesSelected( const QStringList& );
@@ -333,6 +340,8 @@ class KABCore : public KAB::Core
   private:
     void initGUI();
     void initActions();
+
+    KABC::Addressee mergeContacts( const KABC::Addressee::List &list );
 
     AddresseeEditorDialog *createAddresseeEditorDialog( QWidget *parent,
                                                         const char *name = 0 );
@@ -367,6 +376,7 @@ class KABCore : public KAB::Core
     KAction *mActionDelete;
     KAction *mActionCopy;
     KAction *mActionEditAddressee;
+    KAction *mActionMerge;
     KAction *mActionMail;
     KAction *mActionMailVCard;
     KAction *mActionUndo;
