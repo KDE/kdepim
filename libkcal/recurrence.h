@@ -51,6 +51,10 @@ class Recurrence {
     Recurrence(Incidence *parent);
     ~Recurrence();
 
+    /** Returns the start of the recurrence */
+    QDateTime recurStart() const   { return mRecurStart; }
+    /** Returns the number of exception dates for the recurrence */
+    int recurExDatesCount() const  { return mRecurExDatesCount; }
     /** Set start of recurrence. */
     void setRecurStart(QDateTime start) { mRecurStart = start; }
     /** Set if recurrence is read-only or can be changed. */
