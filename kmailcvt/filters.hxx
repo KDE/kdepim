@@ -18,6 +18,10 @@
 #ifndef FILTERS_HXX
 #define FILTERS_HXX
 
+#ifndef MAX_LINE
+#define MAX_LINE 4096
+#endif
+
 #include <qcombobox.h>
 #include <qprogressbar.h>
 #include <qptrlist.h>
