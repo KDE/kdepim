@@ -1,5 +1,5 @@
 /* kroupware.cc			KPilot
-** 
+**
 ** Copyright still to be determined.
 **
 ** This file defines the actions taken when KPilot
@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -35,10 +35,6 @@
 #include <dcopclient.h>
 #include <ktempfile.h>
 
-#include <kabc/addressbook.h>
-#include <kabc/addressee.h>
-#include <kabc/stdaddressbook.h>
-
 
 #include <kapplication.h>
 #include "kroupware.h"
@@ -46,7 +42,7 @@
 
 static const char *kroupware_id =
 	"$Id$";
-	
+
 KroupwareSync::KroupwareSync(bool pre,int parts,KPilotDeviceLink *p) :
 	SyncAction(p,pre ? "KroupwarePreSync" : "KroupwarePostSync"),
 	fPre(pre),
@@ -81,7 +77,7 @@ void KroupwareSync::cleanupConfig()
     if ( fn != CSL1("empty") ) {
       c.writeEntry( "CalFile" ,fn );
       c.writeEntry( "CalFileBackup" , "empty" );
-    } 
+    }
   }
   c.setGroup("vcalOptions");
   if ( c.hasKey( "CalFileBackup") ) {
@@ -89,8 +85,8 @@ void KroupwareSync::cleanupConfig()
     if ( fn != CSL1("empty") ) {
       c.writeEntry( "CalFile" ,fn );
       c.writeEntry( "CalFileBackup" , "empty" );
-    } 
-  } 
+    }
+  }
   c.setGroup("Abbrowser-conduit");
   c.writeEntry( "KMailTempFile" , "empty" );
   c.sync();
@@ -109,14 +105,14 @@ void KroupwareSync::start_syncCal_TodosWithKMail( bool cal, bool todos )
   DCOPClient *client = kapp->dcopClient();
   KTempFile  tempfile;
   QString filename = tempfile.name();
-  QByteArray  data, reply_data;  
+  QByteArray  data, reply_data;
   QCString reply_type;
   QDataStream arg(data, IO_WriteOnly);
   arg << filename;
   if (!client->call( "kmail" ,
 		     "KOrganizerSyncIface",
 		     "pullSyncData(QString)",
-		     data,     
+		     data,
 		     reply_type,
 		     reply_data)) {
     logMessage( CSL1("Calling KMail over DCOP failed!" ));
@@ -155,16 +151,14 @@ void KroupwareSync::start_syncAddWithKMail()
   DCOPClient *client = kapp->dcopClient();
   KTempFile  tempfile;
   QString filename = tempfile.name();
-  QByteArray  data, reply_data;  
+  QByteArray  data, reply_data;
   QCString reply_type;
-  QString name  = KABC::StdAddressBook::fileName();
-  logMessage( name );
   QDataStream arg(data, IO_WriteOnly);
   arg << filename;
   if (!client->call( "kmail" ,
 		     "KMailIface",
 		     "requestAddresses(QString)",
-		     data,     
+		     data,
 		     reply_type,
 		     reply_data)) {
     logMessage(CSL1("Calling KMail over DCOP failed!" ));
@@ -205,19 +199,19 @@ void KroupwareSync::end_syncCal_TodosWithKMail( bool cal, bool todos)
    c.writeEntry( "CalFile" , tf  );
    c.writeEntry( "CalFileBackup" ,"empty");
  }
- c.sync(); 
+ c.sync();
  if ( !filename.isEmpty() ) {
    logMessage(CSL1("Try to call KMail via DCOP to finish sync..."));
    // try DCOP connection to KMail
    DCOPClient *client = kapp->dcopClient();
-   QByteArray  data, reply_data;  
+   QByteArray  data, reply_data;
    QCString reply_type;
    QDataStream arg(data, IO_WriteOnly);
    arg << filename;
    if (!client->call( "kmail" /*"korganizer" kmdcop */,
 		      "KOrganizerSyncIface",
 		      "pushSyncData(QString)",
-		      data,     
+		      data,
 		      reply_type,
 		      reply_data)) {
      logMessage( CSL1("Calling KMail over DCOP failed!" ));
@@ -240,7 +234,7 @@ void KroupwareSync::end_syncAddWithKMail()
   QString filename = c.readEntry( "KMailTempFile" );
   c.writeEntry( "KMailTempFile" , "empty" );
   c.sync();
-  QByteArray  data, reply_data;  
+  QByteArray  data, reply_data;
   QCString reply_type;
   QDataStream arg(data, IO_WriteOnly);
   arg << filename;
@@ -248,13 +242,13 @@ void KroupwareSync::end_syncAddWithKMail()
   if (!client->call( "kmail" ,
 		     "KMailIface",
 		     "storeAddresses(QString, QStringList)",
-		     data,     
+		     data,
 		     reply_type,
 		     reply_data)) {
     logMessage(CSL1("Calling KMail over DCOP failed!" ));
     logMessage(CSL1("Not syncing Addresses with KMail"));
   }
-  else {  
+  else {
     logMessage(CSL1("Calling  store addresses over DCOP succeeded"));
   }
   //QFile::remove( filename );
@@ -270,15 +264,15 @@ void KroupwareSync::end_syncNotesWithKMail()
 /* static */ bool KroupwareSync::startKMail(QString *error)
 {
 	FUNCTIONSETUP;
-	
+
 	QCString kmdcop;
 	QString mess;
 	int pid;
-	
+
 	return KApplication::startServiceByDesktopName(CSL1("kmail"),
-						      QString::null, 
-						      error, 
-						      &kmdcop, 
+						      QString::null,
+						      error,
+						      &kmdcop,
 						      &pid
 						      )==0;
 }
@@ -311,6 +305,6 @@ void KroupwareSync::postSync()
 		end_syncAddWithKMail();
 	}
 }
-	
-	
-	
+
+
+
