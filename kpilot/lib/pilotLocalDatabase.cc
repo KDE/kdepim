@@ -695,8 +695,10 @@ void PilotLocalDatabase::openDatabase()
 			<< ": Failed to open " << dbPathName() << endl;
 		return;
 	}
+	size = 0;
 	pi_file_get_info(dbFile, &fDBInfo);
-	pi_file_get_app_info(dbFile, &tmpBuffer, &fAppLen);
+	pi_file_get_app_info(dbFile, &tmpBuffer, &size);
+	fAppLen = size;
 	fAppInfo = new char[fAppLen];
 
 	memcpy(fAppInfo, tmpBuffer, fAppLen);
