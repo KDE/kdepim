@@ -12,6 +12,9 @@
   <!ENTITY kmail-credits-and-licenses SYSTEM "credits-and-licenses.docbook">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
+  <!ENTITY html "<acronym>HTML</acronym>">
+  <!ENTITY gpg "<application>GPG</application>">
+  <!ENTITY mdn "<acronym>MDN</acronym>">
 ]>
 <book lang="&language;">
 <bookinfo>

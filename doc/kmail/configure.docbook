@@ -447,10 +447,10 @@ the composer.<!-- TODO --></para>
 <title>Layout</title>
 
 <para><guilabel>Show HTML status bar</guilabel> activates a bar at the left side of the reader
-pane that tells you if a message is HTML or not. This is important because
-HTML messages might imitate the look of a signed and encrypted message, so
-you should be aware of the fact that you are reading a HTML message. The HTML
-status bar itself cannot be influenced by the HTML code of the message.</para>
+pane that tells you if a message is &html; or not. This is important because
+&html; messages might imitate the look of a signed and encrypted message, so
+you should be aware of the fact that you are reading a &html; message. The &html;
+status bar itself cannot be influenced by the &html; code of the message.</para>
 
 <para>The <guilabel>Window Layout</guilabel> section lets you choose the 
 layout of the main window. You can choose where you want the 
@@ -464,7 +464,7 @@ disable the structure viewer (note that you can still access attachments as icon
 <guilabel>Show always</guilabel> will show the structure viewer even if there is only
 one plaintext part. <guilabel>Show only for non-plaintext messages</guilabel> will 
 display the structure viewer only if it makes sense, &ie; if the current message
-has attachments or has HTML parts.</para>
+has attachments or has &html; parts.</para>
 
 </sect2>
 
@@ -613,38 +613,252 @@ is only useful for advanced users.</para>
 
 </sect1>
 
-<sect1 id="configure-security">
-<title>Security Page</title>
+  <sect1 id="configure-security">
+    <title>
+      Security Page
+    </title>
 
-<sect2 id="configure-security-general">
-<title>General</title>
+    <sect2 id="configure-security-reading">
+      <title>
+	Reading
+      </title>
 
-<para><guilabel>Prefer HTML to plain text</guilabel> will show
-<acronym>HTML</acronym> messages with their <acronym>HTML</acronym>
-formatting and layout. We strongly recommend to leave this option off, as
-security problems with <acronym>HTML</acronym> might show up. When
-this option is off, you can still read <acronym>HTML</acronym>
-messages, but only as plain text.</para>
+      <para>
+	On this tab you can configure security-relavant options for
+	reading messages.
+      </para>
 
-<para>With <guilabel>Allow messages to load external references from the internet</guilabel>
-turned on, &kmail; can load external images, style sheets &etc; from the Internet when
-you look at an <acronym>HTML</acronym> message. We strongly recommend
-to leave this option off (although it has no effect if you only view 
-plain text messages). By
-adding external references to their messages, people sending spam can
-detect that and when you have looked at their message. Note that this option
-has no effect on &Java;, JavaScript and Plugins - these are disabled
-anyway and cannot be enabled at all.</para>
+      <variablelist>
 
-<para><guilabel>Automatically send receive- and read
-confirmations</guilabel> will automatically send a confirmation (in
-form of a new message) to the sender of a message if he requested
-that. If you leave this option off, no confirmation will be sent. We
-recommend to leave this option off. If you want to send confirmations
-to certain people you can do so by using the <guilabel>confirm
-delivery</guilabel> filter action.</para>
+	<varlistentry id="configure-security-reading-prefer-html">
+	  <term>
+	    <guilabel>Prefer HTML to plain text</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; will show &html; messages with their
+	      &html; formatting and layout. We strongly recommend to
+	      leave this option off, as security problems with &html;
+	      might show up. When this option is off, you can still
+	      read &html; messages, but only as plain text.
+	    </para>
+	  </listitem>
+	</varlistentry>
 
-</sect2>
+	<varlistentry id="configure-security-reading-external-references">
+	  <term>
+	    <guilabel>Allow messages to load external references from the internet</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; can load external images, style
+	      sheets &etc; from the Internet when you look at an
+	      &html; message. We strongly recommend to leave this
+	      option off (although it has no effect if you only view
+	      plain text messages). By adding external references to
+	      their messages, people sending spam can detect that and
+	      when you have looked at their message. Note that this
+	      option has no effect on &Java;, JavaScript and Plugins -
+	      these are disabled anyway and cannot be enabled at all.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-reading-mdns">
+	  <term>
+	    <guilabel>Message Disposition Notifications</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      &mdn;s are a generalization of what is commonly called a
+	      <quote>read receipt</quote>. The message author requests
+	      a disposition notification to be sent and the receiver's
+	      mail program generates a reply from which the author can
+	      learn what happened to his message. Common disposition
+	      types include <quote>displayed</quote> (&ie; read),
+	      <quote>deleted</quote> and <quote>dispatched</quote>
+	      (&eg; forwarded).
+	    </para>
+	    <para>
+	      The following options (listed as <guilabel>Send
+	      policy</guilabel>) are available to control
+	      <emphasis>when</emphasis> &kmail; sends &mdn;s:
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>
+		  <guilabel>Ignore</guilabel> (recommended)
+		</term>
+		<listitem>
+		  <para>
+		    Ignores any request for disposition
+		    notifications. No &mdn; will ever be sent
+		    automatically.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>
+		  <guilabel>Ask</guilabel>
+		</term>
+		<listitem>
+		  <para>
+		    Answers requests only after asking the user for
+		    permission. This way, you can send &mdn;s for
+		    selected messages while denying or ignoring them
+		    for others.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>
+		  <guilabel>Deny</guilabel>
+		</term>
+		<listitem>
+		  <para>
+		    Always sends a <quote>denied</quote>
+		    notification. This is only
+		    <emphasis>slightly</emphasis> better than always
+		    sending &mdn;s. The author will still know that
+		    the messages has been acted upon, he just cannot
+		    tell whether it was deleted or read &etc;
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>
+		  <guilabel>Always send</guilabel>
+		</term>
+		<listitem>
+		  <para>
+		    Always sends the requested disposition
+		    notification. That means that the author of the
+		    message gets to know when the message was acted
+		    upon and, in addition, what happened to it
+		    (displayed, deleted, &etc;). This option is
+		    strongly discouraged, but since it makes sense
+		    where privacy is not a concern, &eg; in customer
+		    relationship management, it has been made
+		    available.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+	    <para>
+	      If you are unsure, experiment a while with
+	      <guilabel>Ask</guilabel> and if you find &kmail;s
+	      questions annoying, switch to <guilabel>Ignore</guilabel>.
+	    </para>
+	    <para>
+	      The following options (listed as <guilabel>Quote
+	      original message</guilabel>) are available to control
+	      <emphasis>how much</emphasis> of the original message
+	      &kmail; sends back in &mdn;s.
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>
+		  <guilabel>Nothing</guilabel>
+		</term>
+		<listitem>
+		  <para>
+		    No parts of the message other than the mandatory
+		    message-id and the original recipient is included
+		    in the &mdn; reply. This preserves enough
+		    information for the sender to find the message in
+		    his sent messages for which this &mdn; was
+		    generated.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>
+		  <guilabel>Full message</guilabel>
+		</term>
+		<listitem>
+		  <para>
+		    Attaches the complete message to the disposition
+		    notification. Usually, this is overkill. It does
+		    not add any valueable information that cannot be
+		    deduced from the message headers alone, but people
+		    sometimes insist on this, since it is much easier
+		    for humans to correlate the content of the message
+		    than just the headers to what they sent earlier.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>
+		  <guilabel>Only headers</guilabel>
+		</term>
+		<listitem>
+		  <para>
+		    Attaches only the headers to the disposition
+		    notification. This is usually enough to enable
+		    both humans (by subject) and computers (by
+		    message-id) to easily correlate &mdn; and original
+		    message.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+	    <para>
+	      If unsure, leave the option at the default.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>
+	    <guilabel>Do not send MDNs in response to encrypted messages</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      This option supresses the sending of &mdn;s if the
+	      message is encrypted (partially or in whole). This
+	      thwards attempts to use &kmail;'s &mdn; feature as an
+	      <emphasis>oracle</emphasis> to deduce whether you were
+	      able to decrypt the message or not.
+	    </para>
+	    <para>
+	      Strictly speaking, this option is not needed, since
+	      &kmail; sends &mdn;s regardless of whether the message
+	      could be successfully decrypted or not (the disposition
+	      notification request resides in the unencrypted part of
+	      the message), but it gives the security-concious user
+	      the choice to either send them always if requested
+	      (option unchecked), or never (option checked).
+	    </para>
+	    <para>
+	      If unsure, leave the option checked.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>
+	    <guilabel>Automatically import keys and certificates</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, automatically imports any attachments
+	      containing OpenPGP keys into your local keyring, and any
+	      attachments containing S/MIME keys into your local key
+	      box.
+	    </para>
+	    <note>
+	      <para>
+		Verifying S/MIME signatures always involves importing
+		the contained certificates. This option thus does not
+		affect this. It is also unrelated to &gpg;'s
+		auto-key-retrieve feature, where &gpg; will try to
+		import unknown keys from a key server.
+	      </para>
+	    </note>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+    </sect2>
 
 <sect2 id="configure-security-pgp">
 <title>OpenPGP</title>

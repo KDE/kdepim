@@ -756,9 +756,9 @@ spam messages.</para></warning>
 <listitem><para>Will try to return a message to the sender that
 indicates successful delivery of their message, if the sender requested that.</para> <para>This
 action allows you to select who will get delivery receipts from
-you. Though you can globally enable the sending of delivery
+you. <!-- FIXME: removed-->Though you can globally enable the sending of delivery
 confirmations in the <guilabel>Configure &kmail;...</guilabel> dialog
-(<link linkend="configure-security-general"><guilabel>Security</guilabel>
+(<link linkend="configure-security"><guilabel>Security</guilabel>
 page</link>) we recommended not to send them to everyone, since this
 makes tracking of spam messages, for example, very easy for the sender.</para>
 </listitem>
