@@ -17,6 +17,13 @@
 
 */
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
+#include <sys/types.h>
+#include <unistd.h>
+#include <time.h>
+
 #include <qstring.h>
 #include <qstringlist.h>
 
@@ -45,12 +52,12 @@ KMobileDevice::KMobileDevice(QObject *obj, const char *name, const QStringList &
   connect( this, SIGNAL( message(int,const QString &) ),
 	this, SLOT( slotMessage(int, const QString &) ) ); 
 
-  m_deviceClassName = i18n("Unknown Device Class");
+  setClassType(Unclassified);
+  setCapabilities(hasNothing);
+  m_deviceClassName = defaultClassName(Unclassified);
   m_deviceName = i18n("Unknown Device");
   m_deviceRevision = i18n("n/a");  /* not available */
   m_connectionName = i18n("Unknown Connection");
-  setClassType(Unclassified);
-  setCapabilities(hasNothing);
 
   // set the config file name
   m_configFileName = args[0];
@@ -124,14 +131,14 @@ QString KMobileDevice::defaultIconFileName( ClassType ct )
 {
   QString name;
   switch (ct) {
-    case Phone:		name = "phone.png";	break;
-    case Organizer:	name = "pda.png";	break;
-    case Camera:	name = "camera.png";	break;
-    case MusicPlayer:	name = "mp3player.png";	break;
+    case Phone:		name = "mobile_phone";		break;
+    case Organizer:	name = "mobile_organizer";	break;
+    case Camera:	name = "mobile_camera";		break;
+    case MusicPlayer:	name = "mobile_mp3player";	break;
     case Unclassified:
-    default:		name = "unknown.png";	break;
+    default:		name = KMOBILE_ICON_UNKNOWN;	break;
   }
-  return ::locate("data", "kmobile/pics/"+name);
+  return name;
 }
 
 QString KMobileDevice::defaultClassName( ClassType ct )
@@ -143,7 +150,7 @@ QString KMobileDevice::defaultClassName( ClassType ct )
     case Camera:	name = i18n("Digital Camera");		break;
     case MusicPlayer:	name = i18n("Music/MP3 Player");	break;
     case Unclassified:
-    default:		name = i18n("Unclassified device");	break;
+    default:		name = i18n("Unclassified");		break;
   }
   return name;
 }
@@ -227,6 +234,44 @@ int KMobileDevice::storeNote( int, const QString & )
  * File storage support
  * @param fileName  path and name of a file in the mobile device, e.g. "/MYFILE.TXT", "/mp3/song1.mp3"
  */
+
+static
+void addAtom(KIO::UDSEntry& entry, unsigned int ID, long l, const QString& s = QString::null)
+{
+	KIO::UDSAtom atom;
+	atom.m_uds = ID;
+	atom.m_long = l;
+	atom.m_str = s;
+	entry.append(atom);
+}
+
+void KMobileDevice::createDirEntry(KIO::UDSEntry& entry, const QString& name, const QString& url, const QString& mime) const
+{
+	entry.clear();
+	addAtom(entry, KIO::UDS_NAME, 0, name);
+	addAtom(entry, KIO::UDS_FILE_TYPE, S_IFDIR);
+	addAtom(entry, KIO::UDS_ACCESS, 0500);
+	addAtom(entry, KIO::UDS_MIME_TYPE, 0, mime);
+	addAtom(entry, KIO::UDS_URL, 0, url);
+	PRINT_DEBUG << QString("createDirEntry: File: %1  MIME: %2  URL: %3\n").arg(name).arg(mime).arg(url);
+//	addAtom(entry, KIO::UDS_SIZE, 0);
+	addAtom(entry, KIO::UDS_GUESSED_MIME_TYPE, 0, mime);
+}
+
+void KMobileDevice::createFileEntry(KIO::UDSEntry& entry, const QString& name, const QString& url, const QString& mime, 
+		const unsigned long size) const
+{
+	entry.clear();
+	addAtom(entry, KIO::UDS_NAME, 0, name);
+	addAtom(entry, KIO::UDS_FILE_TYPE, S_IFREG);
+	addAtom(entry, KIO::UDS_URL, 0, url);
+	addAtom(entry, KIO::UDS_ACCESS, 0400);
+	addAtom(entry, KIO::UDS_MIME_TYPE, 0, mime);
+	if (size) addAtom(entry, KIO::UDS_SIZE, size);
+	addAtom(entry, KIO::UDS_GUESSED_MIME_TYPE, 0, mime);
+	PRINT_DEBUG << QString("createFileEntry: File: %1, Size: %2,  MIME: %3\n").arg(name).arg(size).arg(mime);
+}
+
 
 void KMobileDevice::listDir( const QString & )
 {

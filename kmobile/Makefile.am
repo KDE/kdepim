@@ -32,7 +32,7 @@ testlibkmobile_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 testlibkmobile_LDADD = libkmobileclient.la
 testlibkmobile_SOURCES = testlibkmobile.cpp
 
-# the servicetype for kmobile/device
+# the servicetype for mobile devices
 kde_servicetypes_DATA = libkmobile.desktop
 
 METASOURCES = AUTO

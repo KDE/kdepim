@@ -1,11 +1,11 @@
 DONE:
 -----
 - devices:/ kioslave integration
+- show per-device icons in konqueror (same as in the kmobile view)
+- fix mimetypes and their location under /share/mimelnk
 
 TODO:
 -----
 - kitchensync driver/plugin (starting...)
-- fix mimetypes and their location under /share/mimelnk
-- show per-device icon in konqueror (same as in the kmobile view)
 - more drivers
 

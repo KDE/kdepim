@@ -223,8 +223,8 @@ void KMobile::addDevice()
 
     QString iconName = ptr->icon();
     if (iconName.isEmpty())
-	iconName = "unknown.png";
-    QPixmap pm( ::locate("data", "kmobile/pics/"+iconName) );
+	iconName = KMOBILE_ICON_UNKNOWN;
+    QPixmap pm = KGlobal::instance()->iconLoader()->loadIcon(iconName, KIcon::Desktop );
     
     QIconViewItem *item;
     item = new QIconViewItem( dialog->iconView, ptr->name(), pm );
@@ -302,8 +302,8 @@ KMobileDevice * KMobileFactory::chooseDeviceDialog( QWidget *parent,
 
     QString iconName = ptr->icon();
     if (iconName.isEmpty())
-	iconName = "unknown.png";
-    QPixmap pm( ::locate("data", "kmobile/pics/"+iconName) );
+	iconName = KMOBILE_ICON_UNKNOWN;
+    QPixmap pm( ::locate("icon", iconName+".png") );
     
     QIconViewItem *item;
     item = new QIconViewItem( dialog->iconView, ptr->name(), pm );

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=ServiceType
-X-KDE-ServiceType=kmobile/device
+X-KDE-ServiceType=kdedevice/mobiledevice
 Name=KDE Mobile Device Lowlevel Hardware Driver
+Name[sv]=KDE:s lågnivådrivrutin för mobilenheter

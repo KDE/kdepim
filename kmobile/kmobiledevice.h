@@ -33,6 +33,14 @@
 #include <kio/global.h>
 #include <kio/authinfo.h>
 
+
+#define KMOBILE_MIMETYPE_DEVICE	"kdedevice/mobiledevice"
+#define KMOBILE_MIMETYPE_DEVICE_KONQUEROR(name) \
+			  QString("kdedevice/kmobile_%1").arg(name)
+#define KMOBILE_MIMETYPE_INODE	"inode/"
+
+#define KMOBILE_ICON_UNKNOWN	"mobile_unknown"
+
 /**
  * @short Represents the base class for dynamically loaded mobile device drivers.
  *
@@ -190,6 +198,14 @@ public:
      * mostly compatible to the kioslave base class <kio/slavebase.h>
      */
 
+    /**
+     * helper functions for the kmobile device drivers
+     */
+     void createDirEntry(KIO::UDSEntry& entry, const QString& name,
+		const QString& url, const QString& mime) const;
+     void createFileEntry(KIO::UDSEntry& entry, const QString& name,
+		const QString& url, const QString& mime, 
+		const unsigned long size = 0) const;
     /**
      * Lists the contents of @p path.
      * The slave should emit ERR_CANNOT_ENTER_DIRECTORY if it doesn't exist,

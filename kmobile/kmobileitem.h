@@ -28,6 +28,10 @@ public:
     static KTrader::OfferList getMobileDevicesList();
 
 protected:
+    QString getKonquMimeType() const;
+    void writeKonquMimeFile() const;
+
+
     KService::Ptr getServicePtr() const;
     bool driverAvailable();
     KMobileDevice *m_dev;

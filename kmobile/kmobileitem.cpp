@@ -4,15 +4,12 @@
 
 #include <qobject.h>
 
-#include <kstandarddirs.h>
+#include <kiconloader.h>
 #include <klocale.h>
 #include <kdebug.h>
 
 #include "kmobileitem.h"
 
-
-#define UNKNOWN_ICON	"kmobile/pics/unknown.png"
-#define UNNAMED_DEVICE	i18n("New Device")
 
 #define PRINT_DEBUG kdDebug() << "KMobileItem: "
 
@@ -27,11 +24,11 @@ KMobileItem::KMobileItem(QIconView *parent, KConfig *_config, KService::Ptr serv
 	m_deviceDesktopFile = service->desktopEntryName();
 	m_deviceConfigFile = QString("kmobile_%1_rc").arg(text());
 	m_deviceConfigFile = m_deviceConfigFile.replace(' ', "");
-	m_iconName = "kmobile/pics/" + service->icon();
+	m_iconName = service->icon();
    };
 
    if (m_iconName.isEmpty())
-        m_iconName = UNKNOWN_ICON;
+        m_iconName = KMOBILE_ICON_UNKNOWN;
 
    setPixmap(getIcon());
    setRenameEnabled(true);
@@ -66,6 +63,8 @@ void KMobileItem::configSave() const
    config->writeEntry( "DesktopFile", m_deviceDesktopFile );
    config->writeEntry( "IconName", m_iconName );
    config->sync();
+
+   writeKonquMimeFile();
 }
 
 bool KMobileItem::configLoad(int idx)
@@ -85,7 +84,7 @@ bool KMobileItem::configLoad(int idx)
 
 QPixmap KMobileItem::getIcon() const
 {
-   return QPixmap( ::locate("data", m_iconName) );
+   return KGlobal::instance()->iconLoader()->loadIcon(m_iconName, KIcon::Desktop );
 }
 
 QString KMobileItem::config_SectionName(int idx) const
@@ -94,13 +93,40 @@ QString KMobileItem::config_SectionName(int idx) const
    return QString("MobileDevice_%1").arg(idx);
 }
 
+/* this MimeType is used by konqueror */
+QString KMobileItem::getKonquMimeType() const
+{
+   return KMOBILE_MIMETYPE_DEVICE_KONQUEROR(text());
+}
+
+/* provide MimeType for konqueror */
+void KMobileItem::writeKonquMimeFile() const
+{
+   // strip path and file extension of icon name
+   QString icon = m_iconName;
+   int p = icon.findRev('/');
+   if (p>=0) icon = icon.mid(p+1);
+   p = icon.find('.');
+   if (p>=0) icon = icon.left(p);
+
+   KConfig conf( getKonquMimeType()+".desktop", false, true, "mime" );
+   conf.setDesktopGroup();
+   conf.writeEntry("Encoding", "UTF-8");
+   conf.writeEntry("Comment", "Kommentar");
+   conf.writeEntry("Type", "MimeType");
+   conf.writeEntry("Icon", icon );
+   conf.writeEntry("MimeType", getKonquMimeType());
+   conf.writeEntry("Patterns", "" );
+   conf.sync();
+}
+
 
 /*
  * get a list of all services providing a libkmobile device driver
  */
 KTrader::OfferList KMobileItem::getMobileDevicesList()
 { 
-  KTrader::OfferList offers = KTrader::self()->query("kmobile/device");
+  KTrader::OfferList offers = KTrader::self()->query(KMOBILE_MIMETYPE_DEVICE);
   return offers;
 }
 

@@ -88,7 +88,7 @@ bool KMobileSkeleton::isReadOnly()
 
 QString KMobileSkeleton::iconFileName() const
 {
-  return "mobile_unknown";
+  return "mobile_unknown"; /* KMOBILE_ICON_UNKNOWN */
 }
 
 /*

@@ -66,7 +66,6 @@ KMobileItem *KMobileView::findDevice( const QString &deviceName ) const
 void KMobileView::slotDoubleClicked( QIconViewItem * item )
 {
    KProcess *proc = new KProcess;
-kdWarning() << "starte: " << item->text() << endl;
    *proc << "kfmclient" << "openProfile" << "webbrowsing" << "mobile:/"+item->text();
    proc->start();
 }
@@ -381,10 +380,13 @@ QStringList KMobileView::kio_devices_deviceInfo(QString deviceName)
 		if (deviceName!=name)
 			continue;
 
+	KMobileItem *dev = findDevice(name);
+	QString mime = dev ? dev->getKonquMimeType() : KMOBILE_MIMETYPE_DEVICE;
+
 	mountList << name;
 	mountList << " ";
 	mountList << QString("mobile:/%1").arg(name); // KIO::encodeFileName()
-	mountList << "mobile/device";
+	mountList << mime;
 	mountList << "true"; // mountState
 	mountList << "---";
 	if (!deviceName.isEmpty())
