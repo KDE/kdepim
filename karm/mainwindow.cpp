@@ -199,7 +199,7 @@ void MainWindow::makeMenus()
                                                actionCollection() );
   actionPreferences = KStdAction::preferences( _preferences, SLOT( showDialog() ),
                                                actionCollection() );
-  (void) KStdAction::save( _preferences, SLOT( save() ), actionCollection() );
+  (void) KStdAction::save( this, SLOT( save() ), actionCollection() );
   KAction* actionResetSession = new KAction( i18n("&Reset Session Times"),
                                     CTRL + Key_R,
                                     this,

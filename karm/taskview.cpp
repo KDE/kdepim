@@ -83,7 +83,6 @@ TaskView::TaskView( QWidget *parent, const char *name )
 
 TaskView::~TaskView()
 {
-  save();
   _preferences->save();
 }
 
