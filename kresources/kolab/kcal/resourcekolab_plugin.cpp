@@ -31,6 +31,7 @@
 */
 
 #include "resourcekolab.h"
+#include <klocale.h>
 
 class KolabFactory : public KRES::PluginFactoryBase
 {
@@ -50,6 +51,7 @@ extern "C"
 {
   void *init_kcal_kolab()
   {
+    KGlobal::locale()->insertCatalogue( "kcal_kolab" );
     return ( new KolabFactory() );
   }
 }
