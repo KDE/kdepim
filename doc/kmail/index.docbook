@@ -52,7 +52,7 @@
 
 </authorgroup>
 
-<date>2002-02-01</date>
+<date>2002-02-04</date>
 <releaseinfo>1.04.00</releaseinfo>
 
 <copyright>
@@ -1366,11 +1366,14 @@ message without any further prompt.</para>
 <sect2 id="pgp-encrypt-your-messages">
 <title>Use Public Keys of other People - Encrypt your Messages</title>
 
-<para>To send an encrypted message to somebody of whom you have a public key,
-you simply create the message in the composer window. Before you send the
-message, check the button with the lock symbol in the toolbar of the composer
-window. Then send the message.</para>
-<!-- fixme in kmail: icon not pre-selected when using "autom. encrypt" -->
+<para>To send an encrypted message to somebody of whom you have a
+public key, you simply create the message in the composer window.
+Before you send the message, check the <guibutton>Encrypt
+Message</guibutton> button in the toolbar of the composer window. Note
+that you don't have to check the button if <guilabel>Automatically
+encrypt messages whenever possible</guilabel> is selected in
+&kmail;'s configuration. Then send the message.</para> <!-- fixme
+3.1? -->
 
 <para>If &kmail; can't find a matching key for a recipient or if it
 finds more than one key for a recipient, it will display a list
@@ -1384,9 +1387,9 @@ show the encryption keys for approval</guilabel> is selected in the
 the <guilabel>Encryption Key Approval</guilabel> dialog will appear.
 Here you can select a different key for the recipients and you can also 
 set the <guilabel>Encryption Preference</guilabel> for each recipient.
-<!-- ###fixme: what does this mean?? 
-<guilabel>Encrypt whenever encryption is possible</guilabel>
---></para>
+The default option, <guilabel>Encrypt whenever encryption is
+possible</guilabel>, will automatically encrypt your message if there's a 
+trusted key for each recipient.</para>
 
 <para>As mentioned above, you won't be able to read your own encrypted sent
 messages if you don't check <guilabel>Always encrypt to self</guilabel> in the
