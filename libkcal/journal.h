@@ -36,6 +36,8 @@ class Journal : public Incidence
   public:
     Journal();
     ~Journal();
+
+    QCString type() const { return "Journal"; }
     
     Incidence *clone();
 };

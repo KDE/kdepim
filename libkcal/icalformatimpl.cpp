@@ -20,8 +20,6 @@
 
 // $Id$
 
-#include "config.h"
-
 #include <qdatetime.h>
 #include <qstring.h>
 #include <qptrlist.h>
@@ -29,7 +27,6 @@
 
 #include <kdebug.h>
 #include <klocale.h>
-//#include <kmessagebox.h>
 
 extern "C" {
   #include <ical.h>
@@ -2023,12 +2020,12 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(Incidence *incidence,
   icalcomponent_add_property(message,icalproperty_new_method(icalmethod));
 
   // TODO: check, if dynamic cast is required
-  Todo *todo = dynamic_cast<Todo *>(incidence);
-  if (todo) {
+  if (incidence->type() == "Todo") {
+    Todo *todo = static_cast<Todo *>(incidence);
     icalcomponent_add_component(message,writeTodo(todo));
   }
-  Event *event = dynamic_cast<Event *>(incidence);
-  if (event) {
+  if (incidence->type() == "Event") {
+    Event *event = static_cast<Event *>(incidence);
     icalcomponent_add_component(message,writeEvent(event));
   }
 

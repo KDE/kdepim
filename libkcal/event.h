@@ -39,6 +39,8 @@ class Event : public Incidence
     Event(const Event &);
     ~Event();
 
+    QCString type() const { return "Event"; }
+
     Incidence *clone();
   
     /** for setting an event's ending date/time with a QDateTime. */

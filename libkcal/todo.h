@@ -38,6 +38,8 @@ class Todo : public Incidence
     Todo(const Todo &);
     ~Todo();
 
+    QCString type() const { return "Todo"; }
+
     /** Return an exact copy of this todo. */
     Incidence *clone();
 

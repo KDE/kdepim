@@ -49,6 +49,8 @@ class IncidenceBase
     IncidenceBase(const IncidenceBase &);
     virtual ~IncidenceBase();
 
+    virtual QCString type() const = 0;
+
     /** set the unique text string for the event */
     void setVUID(const QString &);
     /** get the unique text string for the event */

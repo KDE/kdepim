@@ -442,8 +442,9 @@ void CalendarLocal::update(IncidenceBase *incidence)
   // or internally in the Event itself when certain things change.
   // need to verify with ical documentation.
 
-  Event *anEvent = dynamic_cast<Event *>(incidence);
-  if ( anEvent ) {
+  if ( incidence->type() == "Event" ) {
+    Event *anEvent = static_cast<Event *>(incidence);
+
     QIntDictIterator<QPtrList<Event> > qdi(*mCalDict);
     QPtrList<Event> *tmpList;
 

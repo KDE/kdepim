@@ -273,14 +273,14 @@ ScheduleMessage *ICalFormat::parseScheduleMessage(const QString &messageText)
 
   Incidence *existingIncidence = mCalendar->getEvent(incidence->VUID());
   if (existingIncidence) {
-    // TODO: check, if dynamic cast is required
-    Todo *todo = dynamic_cast<Todo *>(existingIncidence);
-    if (todo) {
+    // TODO: check, if cast is required, or if it can be done by virtual funcs.
+    if (existingIncidence->type() == "Todo") {
+      Todo *todo = static_cast<Todo *>(existingIncidence);
       icalcomponent_add_component(calendarComponent,
                                   mImpl->writeTodo(todo));
     }
-    Event *event = dynamic_cast<Event *>(existingIncidence);
-    if (event) {
+    if (existingIncidence->type() == "Event") {    
+      Event *event = static_cast<Event *>(existingIncidence);
       icalcomponent_add_component(calendarComponent,
                                   mImpl->writeEvent(event));
     }
