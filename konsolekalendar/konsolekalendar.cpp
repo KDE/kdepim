@@ -30,6 +30,8 @@
 
 #include "konsolekalendar.h"
 #include "konsolekalendaradd.h"
+#include "konsolekalendarchange.h"
+#include "konsolekalendardelete.h"
 
 using namespace KCal;
 using namespace std;
@@ -150,21 +152,28 @@ void KonsoleKalendar::showInstance()
 
 void KonsoleKalendar::addEvent()
 {
-        kdDebug() << "konsolecalendar.cpp::addEvent | Create Adding"  << endl;
-
-	KonsoleKalendarAdd add( &m_variables );
-
-	kdDebug() << "konsolecalendar.cpp::addEvent | Adding now!"  << endl;
-	add.addEvent();
+  kdDebug() << "konsolecalendar.cpp::addEvent | Create Adding"  << endl;
+  KonsoleKalendarAdd add( &m_variables );
+  kdDebug() << "konsolecalendar.cpp::addEvent | Adding now!"  << endl;
+  add.addEvent();
 
 }
 
 void KonsoleKalendar::changeEvent()
 {
+
+  KonsoleKalendarChange change( &m_variables );
+  change.changeEvent();
+
+
+
+
 }
 
 void KonsoleKalendar::deleteEvent()
 {
+  KonsoleKalendarDelete del( &m_variables );
+  del.deleteEvent();
 }
 
 void KonsoleKalendar::showDate( QDateTime date )
@@ -251,9 +260,9 @@ void KonsoleKalendar::showNext()
       for( len = len; len < 80; len ++) {
         cout << "-";
       }
-      
+
       cout << endl;
-  
+
       for ( singleEvent = eventList.first(); singleEvent != 0; singleEvent = eventList.next() ){
         printEventTime(singleEvent);
         cout << endl;
