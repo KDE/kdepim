@@ -175,7 +175,7 @@ void ActionManager::initReadOnlyActions()
     new KAction(i18n("Add View..."), "window_new", 0, mViewManager,
                 SLOT(addView()), mACollection,
                 "view_add");
-    mActionDeleteView = new KAction(i18n("Delete View..."), "delete", 0,
+    mActionDeleteView = new KAction(i18n("Delete View..."), "view_remove", 0,
                                     mViewManager,
                                     SLOT(deleteView()), mACollection,
                                     "view_delete");
@@ -203,7 +203,7 @@ void ActionManager::initReadOnlyActions()
     (void) new KAction(i18n("Edit &Filters..."), "filter",
                        0, mWidget, SLOT(configureFilters()),
                        mACollection, "options_edit_filters");
-    mActionSelectFilter = new KSelectAction(i18n("Select Filter"), "select_filter",
+    mActionSelectFilter = new KSelectAction(i18n("Select Filter"), 0,
                                             0,
                                             this, SLOT(slotFilterActivated(int)),
                                             mACollection, "select_filter");
