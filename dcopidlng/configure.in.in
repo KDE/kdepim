@@ -1,5 +1,5 @@
 dnl we need to use our own copy, since kmailicalIface needs post 3.3 fixes in it
 dnl TODO: remove once we rely on kdelibs 3.4
-DCOPIDLNG=$(top_srcdir)/dcopidlng/dcopidlng
+DCOPIDLNG='$(top_srcdir)/dcopidlng/dcopidlng'
 AC_SUBST(DCOPIDLNG)
 
