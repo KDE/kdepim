@@ -572,7 +572,7 @@ void Recurrence::setMonthly(short type, int _rFreq, const QDate &_rEndDate)
 
 void Recurrence::addMonthlyPos(short _rPos, const QBitArray &_rDays)
 {
-  if (recurs == rMonthlyPos)
+  if ( recurs == rMonthlyPos || recurs == rYearlyPos )
     addMonthlyPos_(_rPos, _rDays);
 }
 
@@ -3531,5 +3531,10 @@ void Recurrence::dump() const
   for( i = 0; i < 7; ++i ) {
     kdDebug(5800) << "    " << i << ": "
               << ( rDays.testBit( i ) ? "true" : "false" ) << endl;
+  }
+  kdDebug(5800) << "  duration: " << rDuration << endl;
+
+  for (QPtrListIterator<int> it(rMonthDays);  it.current();  ++it) {
+    kdDebug(5800) << "  monthday: " << *(it.current()) << endl;
   }
 }
