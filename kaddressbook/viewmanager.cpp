@@ -623,8 +623,11 @@ void ViewManager::dropped(QDropEvent *e)
     QStringList::Iterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
       if ( converter.vCardToAddressee( (*it).stripWhiteSpace(), addr ) ) {
-        mDocument->insertAddressee( addr );
-        emit modified();
+        KABC::Addressee a = mDocument->findByUid( addr.uid() );
+        if ( a.isEmpty() ) {
+          mDocument->insertAddressee( addr );
+          emit modified();
+        }
       }
     }
 
@@ -646,10 +649,10 @@ void ViewManager::startDrag()
   KMultipleDrag *drag = new KMultipleDrag( this );
   drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToClipboard(aList), this ) );
   KABC::Addressee::List::Iterator it;
-  KABC::VCardConverter converter;
   QStringList vcards;
   for ( it = aList.begin(); it != aList.end(); ++it ) {
     QString vcard = QString::null;
+    KABC::VCardConverter converter;
     if ( converter.addresseeToVCard( *it, vcard ) )
       vcards.append( vcard );
   }
