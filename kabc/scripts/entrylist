@@ -1,0 +1,46 @@
+QString uid
+QString name
+QString email
+
+QString formattedName
+
+QString familyName
+QString givenName
+QString additionalName
+QString prefix
+QString suffix
+
+QString nickName
+#QPixmap photo
+
+QDateTime birthday .toString()
+
+#Address address
+#QString label (part of Address)
+
+#phoneNumbers
+#emails
+QString mailer
+
+TimeZone timeZone .asString()
+Geo geo .asString()
+
+QString title
+QString role
+#QPixmap logo
+#Agent agent
+QString organization
+
+QStringList categories .join(",")
+QString note
+
+QString productId
+QDateTime revision .toString()
+
+QString sortString
+
+#sound
+#class (PUBLIC, PRIVATE, CONFIDENTIAL)
+#key
+
+KURL url .url()

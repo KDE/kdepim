@@ -43,6 +43,7 @@ int main(int argc,char **argv)
   c.setName( "Klara Klossbruehe" );
   c.insertPhoneNumber( PhoneNumber( "00000", PhoneNumber::Mobile ) );
   c.insertPhoneNumber( PhoneNumber( "4711", PhoneNumber::Fax ) );
+  c.setNickName( "Klaerchen" );
   ab.insertAddressee( c );
   
 //  ab.dump();
@@ -53,7 +54,7 @@ int main(int argc,char **argv)
   kdDebug() << "Write addressbook to: " << ab.fileName() << endl;
   ab.dump();
   
-  AddressBook::Ticket *t = ab.requestSave( "/home/cs/kdecvs/kdepim/kabc/my.kabc" );
+  AddressBook::Ticket *t = ab.requestSaveTicket( "/home/cs/kdecvs/kdepim/kabc/my.kabc" );
   if ( t ) {
     ab.save( t );
   } else {

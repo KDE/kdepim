@@ -130,6 +130,19 @@ void MainWindow::readAddressee( const KABC::Addressee &a )
     mPhoneNumberCombo->setCurrentItem( 0 );
   }
   mUrlEdit->setText( a.url().url() );
+  mAdditionalNameEdit->setText( a.additionalName() );
+  mSuffixEdit->setText( a.suffix() );
+  mGivenNameEdit->setText( a.givenName() );
+  mPrefixEdit->setText( a.prefix() );
+  mFamilyNameEdit->setText( a.familyName() );
+  mFormattedNameEdit->setText( a.formattedName() );
+  mNickNameEdit->setText( a.nickName() );
+  mSortStringEdit->setText( a.sortString() );
+  mTitleEdit->setText( a.title() );
+  mRoleEdit->setText( a.role() );
+  mOrganizationEdit->setText( a.organization() );
+  mNoteEdit->setText( a.note() );
+//  mLabelEdit->setText( a.label() );
 }
 
 KABC::Addressee MainWindow::writeAddressee( const KABC::Addressee &addressee )
@@ -146,7 +159,21 @@ KABC::Addressee MainWindow::writeAddressee( const KABC::Addressee &addressee )
   if ( !mUrlEdit->text().isEmpty() ) {
     a.setUrl( KURL( mUrlEdit->text() ) );
   }
- 
+  
+  a.setAdditionalName( mAdditionalNameEdit->text() );
+  a.setSuffix( mSuffixEdit->text() );
+  a.setGivenName( mGivenNameEdit->text() );
+  a.setPrefix( mPrefixEdit->text() );
+  a.setFamilyName( mFamilyNameEdit->text() );
+  a.setFormattedName( mFormattedNameEdit->text() );
+  a.setNickName( mNickNameEdit->text() );
+  a.setSortString( mSortStringEdit->text() );
+  a.setTitle( mTitleEdit->text() );
+  a.setRole( mRoleEdit->text() );
+  a.setOrganization( mOrganizationEdit->text() );
+  a.setNote( mNoteEdit->text() );
+//  a.setLabel( mLabelEdit->text() );
+  
   kdDebug() << "MainWindow::writeAddressee()" << endl;
   a.dump();
     

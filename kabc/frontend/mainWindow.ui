@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>576</width>
-            <height>495</height>
+            <width>596</width>
+            <height>621</height>
         </rect>
     </property>
     <property name="caption">
@@ -40,6 +40,14 @@
             <property name="name">
                 <cstring>mAddresseeList</cstring>
             </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>7</hsizetype>
+                    <vsizetype>7</vsizetype>
+                    <horstretch>1</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
             <property name="frameShape">
                 <enum>StyledPanel</enum>
             </property>
@@ -50,6 +58,14 @@
         <widget class="QTabWidget" row="0" column="1">
             <property name="name">
                 <cstring>TabWidget2</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>7</hsizetype>
+                    <vsizetype>7</vsizetype>
+                    <horstretch>2</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
             </property>
             <property name="tabPosition">
                 <enum>Top</enum>
@@ -146,7 +162,103 @@
                             <string>URL</string>
                         </property>
                     </widget>
-                    <spacer row="4" column="1">
+                    <widget class="QLineEdit" row="3" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mUrlEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="7" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mAdditionalNameEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="9" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mSuffixEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="6" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mGivenNameEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="5" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mPrefixEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="8" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mFamilyNameEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="4" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mFormattedNameEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="10" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mNickNameEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="10" column="0">
+                        <property name="name">
+                            <cstring>TextLabel7</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Nickname</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="9" column="0">
+                        <property name="name">
+                            <cstring>TextLabel5</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Honorific Suffixes</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="8" column="0">
+                        <property name="name">
+                            <cstring>TextLabel3_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Family Name</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="7" column="0">
+                        <property name="name">
+                            <cstring>TextLabel4</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Additional Names</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="6" column="0">
+                        <property name="name">
+                            <cstring>TextLabel6</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Given Name</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="5" column="0">
+                        <property name="name">
+                            <cstring>TextLabel1_3</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Honorific Prefixes</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="4" column="0">
+                        <property name="name">
+                            <cstring>TextLabel8</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Formatted Name</string>
+                        </property>
+                    </widget>
+                    <spacer row="12" column="1">
                         <property name="name">
                             <cstring>Spacer1</cstring>
                         </property>
@@ -163,9 +275,72 @@
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QLineEdit" row="3" column="1" rowspan="1" colspan="2">
+                    <widget class="QLabel" row="11" column="0">
                         <property name="name">
-                            <cstring>mUrlEdit</cstring>
+                            <cstring>TextLabel15</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Sort String</string>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="11" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mSortStringEdit</cstring>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Address</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QTextEdit" row="2" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mLabelEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="1" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>TextLabel13</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Label:</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>TextLabel16</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Type</string>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="0" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Home</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Work</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>ComboBox2</cstring>
                         </property>
                     </widget>
                 </grid>
@@ -177,6 +352,69 @@
                 <attribute name="title">
                     <string>Special</string>
                 </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>TextLabel10</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Title</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="1" column="0">
+                        <property name="name">
+                            <cstring>TextLabel11</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Role</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="2" column="0">
+                        <property name="name">
+                            <cstring>TextLabel12</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Organization</string>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="0" column="1">
+                        <property name="name">
+                            <cstring>mTitleEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="1" column="1">
+                        <property name="name">
+                            <cstring>mRoleEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="2" column="1">
+                        <property name="name">
+                            <cstring>mOrganizationEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QTextEdit" row="4" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mNoteEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="3" column="0">
+                        <property name="name">
+                            <cstring>TextLabel14</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Note:</string>
+                        </property>
+                    </widget>
+                </grid>
             </widget>
         </widget>
     </grid>
@@ -322,15 +560,15 @@
     <variable>AddresseeItem *mCurrentItem</variable>
 </variables>
 <slots>
-    <slot>updateAddressee(QListViewItem * item)</slot>
+    <slot>updateAddressee( QListViewItem * item )</slot>
     <slot>fileSave()</slot>
     <slot>fileOpen()</slot>
     <slot>init()</slot>
     <slot>removeEntry()</slot>
     <slot>newEntry()</slot>
     <slot>destroy()</slot>
-    <slot>readAddressee(const KABC::Addressee &amp; a)</slot>
-    <slot returnType="KABC::Addressee">writeAddressee(const KABC::Addressee &amp; addressee)</slot>
+    <slot>readAddressee( const KABC::Addressee &amp; a )</slot>
+    <slot returnType="KABC::Addressee">writeAddressee( const KABC::Addressee &amp; addressee )</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

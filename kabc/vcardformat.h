@@ -8,11 +8,18 @@
 namespace KABC {
 
 class AddressBook;
+class VCardFormatImpl;
 
 class VCardFormat : public Format {
   public:
+    VCardFormat();
+    virtual ~VCardFormat();
+  
     bool load( AddressBook *, const QString &fileName );
     bool save( AddressBook *, const QString &fileName );
+
+  private:
+    VCardFormatImpl *mImpl;
 };
 
 }

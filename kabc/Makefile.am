@@ -9,7 +9,8 @@ libkabc_la_LIBADD  = $(top_builddir)/vCard/libvcard.la $(LIB_KDECORE)
 
 libkabc_la_SOURCES = \
   addressbook.cpp addressee.cpp phonenumber.cpp simpleformat.cpp \
-  stdaddressbook.cpp vcardformat.cpp
+  stdaddressbook.cpp vcardformat.cpp address.cpp geo.cpp timezone.cpp \
+  vcardformatimpl.cpp
 
 METASOURCES = AUTO
 
