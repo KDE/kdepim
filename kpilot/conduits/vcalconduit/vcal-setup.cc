@@ -78,15 +78,14 @@ VCalWidgetSetup::~VCalWidgetSetup()
 	FUNCTIONSETUP;
 
 	if (!fConfig) return;
-
 	KConfigGroupSaver s(fConfig,configGroup() );
 
-	fConfig->writeEntry(VCalConduitFactoryBase::calendarFile, fConfigWidget->fCalendarFile->url());
-	fConfig->writeEntry(VCalConduitFactoryBase::archive, fConfigWidget->fArchive->isChecked());
-	fConfig->writeEntry(VCalConduitFactoryBase::conflictResolution,
-		fConfigWidget->conflictResolution->id(fConfigWidget->conflictResolution->selected()));
+	// General page
 	fConfig->writeEntry(VCalConduitFactoryBase::calendarType,
-		fConfigWidget->fSyncDestination->id(fConfigWidget->fSyncDestination->selected()));
+		fConfigWidget->fSyncDestination->id(
+			fConfigWidget->fSyncDestination->selected()));
+	fConfig->writeEntry(VCalConduitFactoryBase::calendarFile,
+		fConfigWidget->fCalendarFile->url());
 
 	int act=fConfigWidget->syncAction->id(fConfigWidget->syncAction->selected())+1;
 	if (act>SYNC_MAX)
@@ -98,6 +97,14 @@ VCalWidgetSetup::~VCalWidgetSetup()
 		fConfig->writeEntry(VCalConduitFactoryBase::nextSyncAction, 0);
 		fConfig->writeEntry(VCalConduitFactoryBase::syncAction, act);
 	}
+	fConfig->writeEntry(VCalConduitFactoryBase::archive,
+		fConfigWidget->fArchive->isChecked());
+
+	// Conflicts page
+	fConfig->writeEntry(VCalConduitFactoryBase::conflictResolution,
+		fConfigWidget->conflictResolution->id(
+			fConfigWidget->conflictResolution->selected()));
+
 }
 
 /* virtual */ void VCalWidgetSetup::readSettings()
@@ -105,12 +112,13 @@ VCalWidgetSetup::~VCalWidgetSetup()
 	FUNCTIONSETUP;
 
 	if (!fConfig) return;
-
 	KConfigGroupSaver s(fConfig, configGroup());
-	fConfigWidget->fCalendarFile->setURL( fConfig->readEntry(VCalConduitFactoryBase::calendarFile,QString::null));
-	fConfigWidget->fArchive->setChecked( fConfig->readBoolEntry(VCalConduitFactoryBase::archive, true));
-	fConfigWidget->conflictResolution->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution, RES_ASK));
-	fConfigWidget->fSyncDestination->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::calendarType, 0));
+
+	// General page
+	fConfigWidget->fSyncDestination->setButton(
+		fConfig->readNumEntry(VCalConduitFactoryBase::calendarType, 0));
+	fConfigWidget->fCalendarFile->setURL( fConfig->readEntry(
+		VCalConduitFactoryBase::calendarFile,QString::null));
 
 	int nextAction=fConfig->readNumEntry(VCalConduitFactoryBase::nextSyncAction, 0);
 	if (nextAction)
@@ -119,7 +127,15 @@ VCalWidgetSetup::~VCalWidgetSetup()
 	}
 	else
 	{
-		fConfigWidget->syncAction->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::syncAction, SYNC_FAST)-1);
+		fConfigWidget->syncAction->setButton(
+			fConfig->readNumEntry(VCalConduitFactoryBase::syncAction, SYNC_FAST)-1);
 	}
+	fConfigWidget->fArchive->setChecked(
+		fConfig->readBoolEntry(VCalConduitFactoryBase::archive, true));
+
+	// Conflicts page
+	fConfigWidget->conflictResolution->setButton(
+		fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution, RES_ASK));
+
 
 }

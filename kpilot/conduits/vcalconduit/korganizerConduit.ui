@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>572</width>
-            <height>442</height>
+            <width>530</width>
+            <height>338</height>
         </rect>
     </property>
     <property name="caption">
@@ -34,7 +34,7 @@
                     <cstring>tab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Calendar File</string>
+                    <string>General</string>
                 </attribute>
                 <vbox>
                     <property name="name">
@@ -51,29 +51,26 @@
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="KURLRequester" row="1" column="1" rowspan="1" colspan="2">
+                            <widget class="KURLRequester" row="1" column="1">
                                 <property name="name">
                                     <cstring>fCalendarFile</cstring>
                                 </property>
                                 <property name="enabled">
                                     <bool>false</bool>
                                 </property>
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>3</hsizetype>
+                                        <vsizetype>5</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
+                                </property>
                                 <property name="toolTip" stdset="0">
                                     <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="2">
-                                <property name="name">
-                                    <cstring>fSyncStdCalendar</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Standard calendar</string>
-                                </property>
-                                <property name="checked">
-                                    <bool>true</bool>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="1" column="0">
@@ -87,6 +84,17 @@
                                     <string>Calendar &amp;file:</string>
                                 </property>
                             </widget>
+                            <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="2">
+                                <property name="name">
+                                    <cstring>fSyncStdCalendar</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Standard calendar</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                            </widget>
                         </grid>
                     </widget>
                     <widget class="QButtonGroup">
@@ -94,7 +102,7 @@
                             <cstring>syncAction</cstring>
                         </property>
                         <property name="title">
-                            <string>Sync Action</string>
+                            <string>Synchronization Mode:</string>
                         </property>
                         <vbox>
                             <property name="name">
@@ -148,7 +156,10 @@
                             <cstring>fArchive</cstring>
                         </property>
                         <property name="text">
-                            <string>Sync &amp;archived entries to the PC</string>
+                            <string>Store &amp;archived records  in the KDE calendar</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
                         </property>
                         <property name="whatsThis" stdset="0">
                             <string>&lt;qt&gt;Deleting something in KOrganizer will delete it in your PDA as well&lt;/qt&gt;</string>
@@ -178,7 +189,7 @@
                     <cstring>tab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Conflict Resolution</string>
+                    <string>Conflicts</string>
                 </attribute>
                 <grid>
                     <property name="name">
@@ -191,60 +202,41 @@
                         <property name="title">
                             <string>Conflicting Items</string>
                         </property>
-                        <widget class="QRadioButton">
+                        <grid>
                             <property name="name">
-                                <cstring>RadioButton3</cstring>
+                                <cstring>unnamed</cstring>
                             </property>
-                            <property name="geometry">
-                                <rect>
-                                    <x>11</x>
-                                    <y>64</y>
-                                    <width>434</width>
-                                    <height>17</height>
-                                </rect>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Ask for every conflicting item</string>
-                            </property>
-                        </widget>
-                        <widget class="QRadioButton">
-                            <property name="name">
-                                <cstring>RadioButton1</cstring>
-                            </property>
-                            <property name="geometry">
-                                <rect>
-                                    <x>11</x>
-                                    <y>18</y>
-                                    <width>434</width>
-                                    <height>17</height>
-                                </rect>
-                            </property>
-                            <property name="focusPolicy">
-                                <enum>NoFocus</enum>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Handheld overrides desktop</string>
-                            </property>
-                        </widget>
-                        <widget class="QRadioButton">
-                            <property name="name">
-                                <cstring>RadioButton2</cstring>
-                            </property>
-                            <property name="geometry">
-                                <rect>
-                                    <x>11</x>
-                                    <y>41</y>
-                                    <width>434</width>
-                                    <height>17</height>
-                                </rect>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Desktop overrides handheld</string>
-                            </property>
-                            <property name="checked">
-                                <bool>true</bool>
-                            </property>
-                        </widget>
+                            <widget class="QRadioButton" row="2" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton3</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Ask for every conflicting item</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="0" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton1</cstring>
+                                </property>
+                                <property name="focusPolicy">
+                                    <enum>NoFocus</enum>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Handheld overrides desktop</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Desktop overrides handheld</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                            </widget>
+                        </grid>
                     </widget>
                     <spacer row="2" column="0">
                         <property name="name">
