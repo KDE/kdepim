@@ -3,6 +3,7 @@
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,25 +47,25 @@ ResourceGroupwareBase::~ResourceGroupwareBase()
   mPrefs = 0;
 }
 
-KPIM::GroupwareDownloadJob *ResourceGroupwareBase::createDownloadJob( 
+KPIM::GroupwareDownloadJob *ResourceGroupwareBase::createDownloadJob(
                             AddressBookAdaptor *adaptor )
 {
   return new KPIM::GroupwareDownloadJob( adaptor );
 }
 
-KPIM::GroupwareUploadJob *ResourceGroupwareBase::createUploadJob( 
+KPIM::GroupwareUploadJob *ResourceGroupwareBase::createUploadJob(
                           AddressBookAdaptor *adaptor )
 {
   return new KPIM::GroupwareUploadJob( adaptor );
 }
 
-void ResourceGroupwareBase::setPrefs( GroupwarePrefsBase *newprefs ) 
+void ResourceGroupwareBase::setPrefs( GroupwarePrefsBase *newprefs )
 {
   if ( !newprefs ) return;
   if ( mPrefs ) delete mPrefs;
   mPrefs = newprefs;
   mPrefs->addGroupPrefix( identifier() );
-  
+
   mPrefs->readConfig();
 }
 
@@ -184,6 +185,7 @@ void ResourceGroupwareBase::slotDownloadJobResult( KPIM::GroupwareJob *job )
     kdError() << "job failed: " << job->errorString() << endl;
   } else {
     emit loadingFinished( this );
+    emit addressbookChanged();
   }
 
   mDownloadJob = 0;
@@ -212,20 +214,20 @@ bool ResourceGroupwareBase::asyncSave( Ticket* )
 
   addr = addedAddressees();
   for( it = addr.begin(); it != addr.end(); ++it ) {
-    addedItems.append( adaptor()->newUploadItem( *it, 
+    addedItems.append( adaptor()->newUploadItem( *it,
                                            KPIM::GroupwareUploadItem::Added ) );
   }
   // TODO: Check if the item has changed on the server...
-  // In particular, check if the version we based our change on is still current 
+  // In particular, check if the version we based our change on is still current
   // on the server
   addr = changedAddressees();
   for( it = addr.begin(); it != addr.end(); ++it ) {
-    changedItems.append( adaptor()->newUploadItem( *it, 
+    changedItems.append( adaptor()->newUploadItem( *it,
                                          KPIM::GroupwareUploadItem::Changed ) );
   }
   addr = deletedAddressees();
   for( it = addr.begin(); it != addr.end(); ++it ) {
-    deletedItems.append( adaptor()->newUploadItem( *it, 
+    deletedItems.append( adaptor()->newUploadItem( *it,
                                          KPIM::GroupwareUploadItem::Deleted ) );
   }
 

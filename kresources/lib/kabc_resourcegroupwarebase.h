@@ -3,6 +3,7 @@
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -74,9 +75,9 @@ class KDE_EXPORT ResourceGroupwareBase : public ResourceCached
     void init();
 
     GroupwarePrefsBase *createPrefs();
-    virtual KPIM::GroupwareDownloadJob *createDownloadJob( 
+    virtual KPIM::GroupwareDownloadJob *createDownloadJob(
                                                   AddressBookAdaptor *adaptor );
-    virtual KPIM::GroupwareUploadJob *createUploadJob( 
+    virtual KPIM::GroupwareUploadJob *createUploadJob(
                                                   AddressBookAdaptor *adaptor );
 
   private slots:

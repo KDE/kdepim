@@ -16,6 +16,7 @@ kresources/lib (general):
 -) If upload fails, mark the item as changed/added/deleted again
 -) Don't ask immediately for uploading in korganizer, wait at least a 
    QTimer::singleShot
+-) Better progress bar messages
 
 
 kresources/newexchange:
