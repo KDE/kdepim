@@ -22,7 +22,19 @@
 #include "kcal_resourcefeatureplan.h"
 #include "kcal_resourcefeatureplanconfig.h"
 
+#include <kglobal.h>
+#include <klocale.h>
+
 using namespace KCal;
 
 typedef KRES::PluginFactory< ResourceFeaturePlan, ResourceFeaturePlanConfig > FeatureplanFactory;
-K_EXPORT_COMPONENT_FACTORY( kcal_resourcefeatureplan, FeatureplanFactory )
+// FIXME K_EXPORT_COMPONENT_FACTORY( kcal_resourcefeatureplan, FeatureplanFactory )
+// Problem: How to insert the catalogue!
+extern "C"
+{
+  void* init_kcal_resourcefeatureplan()
+  {
+    KGlobal::locale()->insertCatalogue( "kres_featureplan" );
+    return new FeatureplanFactory;
+  }
+}
