@@ -1164,7 +1164,7 @@ char *decode_base64(char *dest,
 			     char *src,
 			     size_t *size)
 {
-    int cc;
+    int cc = 0;
     char buf[4] = {0,0,0,0};  
     int p = 0;
     int valid_data = 0;
