@@ -340,7 +340,13 @@ bool AbbrowserConduit::_saveAddressBook()
 
 	if (ticket)
 	{
-		if (abChanged) res=aBook->save(ticket);
+		if (abChanged) {
+			res=aBook->save(ticket);
+			if (res) { 
+				aBook->releaseSaveTicket(ticket);
+				ticket=0;
+			} else { aBook->cleanUp(); }
+		}
 		else
 		{
 #ifdef DEBUG
