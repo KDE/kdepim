@@ -328,7 +328,7 @@ ExpenseConduit::doSync()
 	
 	PilotRecord* rec;
     
-	KShellProcess proc;
+	KShellProcess shproc;
         int recordcount=0;
 	int index=0;
 	int syscall=0;
@@ -342,14 +342,14 @@ ExpenseConduit::doSync()
 // next three lines just for debug purposes - Remove for final creates a dump of table.		
 		char sqlcmd[300];
 		sprintf(sqlcmd,"echo \"%s\"|psql -h %s -U %s -c \"select * from %s;\" %s >testpg.txt",mDBpasswd.latin1(),mDBsrv.latin1(),mDBlogin.latin1(),mDBtable.latin1(),mDBnm.latin1());
-		proc.clearArguments();
-		proc << sqlcmd;
-		proc.start(KShellProcess::Block, KShellProcess::NoCommunication);
-		while (proc.isRunning())
+		shproc.clearArguments();
+		shproc << sqlcmd;
+		shproc.start(KShellProcess::Block, KShellProcess::NoCommunication);
+		while (shproc.isRunning())
 			{
-			DEBUGCONDUIT << fname << " " << proc.pid() << " still running" << endl;
+			DEBUGCONDUIT << fname << " " << shproc.pid() << " still running" << endl;
 			}
-		// DEBUGCONDUIT << fname << proc.args() << endl;
+		// DEBUGCONDUIT << fname << shproc.args() << endl;
 		// DEBUGCONDUIT << fname << sqlcmd << endl;
 	}
 
@@ -471,10 +471,10 @@ ExpenseConduit::doSync()
  '%s', '%s', '%s', '%s', '%s');\" %s",mDBpasswd.latin1(),mDBsrv.latin1(),mDBlogin.latin1(),mDBtable.latin1(),dtstng,e.amount,epmsg,e.vendor,etmsg,e.city,amesg,nmsg,mDBnm.latin1());
 			// DEBUGCONDUIT << fname << " " << sqlcmd << endl;
 		        //	DEBUGCONDUIT << fname << " " << proc.args() << endl;
-			proc.clearArguments();
-			proc << sqlcmd;
-			proc.start(KShellProcess::Block, KShellProcess::NoCommunication);
-			DEBUGCONDUIT << fname << " " << proc.pid() << " finished OK " << endl;
+			shproc.clearArguments();
+			shproc << sqlcmd;
+			shproc.start(KShellProcess::Block, KShellProcess::NoCommunication);
+			DEBUGCONDUIT << fname << " " << shproc.pid() << " finished OK " << endl;
 			DEBUGCONDUIT << fname << " " << syscall << endl;
 			}
 
@@ -489,7 +489,6 @@ ExpenseConduit::doSync()
 		}
 	DEBUGCONDUIT << fname << " Records: " << recordcount << endl;
 	}
-	proc.kill();
 }
 
 
@@ -523,6 +522,10 @@ ExpenseConduit::doTest()
 }
 
 // $Log$
+// Revision 1.11  2001/03/23 15:29:39  molnarc
+//
+// clean up some debug
+//
 // Revision 1.10  2001/03/23 14:30:55  molnarc
 //
 // Now it actually writes to a postrgres db. (Not the right way yet but that is still in progress).
