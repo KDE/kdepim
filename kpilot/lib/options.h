@@ -190,6 +190,7 @@ QString qstringExpansion(const QString &);
 QString charExpansion(const char *);
 
 inline ostream& operator <<(ostream &o,const QString &s) { return (o << s.latin1()); } ;
+inline ostream& operator <<(ostream &o,const QCString &s) { return (o << *s ); } ;
 
 /**
  * Convert a struct tm from the pilot-link package to a QDateTime
