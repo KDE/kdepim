@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Service
+
+[Misc]
+Encoding=UTF-8
+Name=Calendar on IMAP-server via kmail
+
+[Plugin]
+Type=imap
+X-KDE-Library=libcalendarresources
