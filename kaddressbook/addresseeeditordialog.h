@@ -1,6 +1,3 @@
-#ifndef ADDRESSEEEDITORDIALOG_H
-#define ADDRESSEEEDITORDIALOG_H
-
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -24,12 +21,15 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#ifndef ADDRESSEEEDITORDIALOG_H
+#define ADDRESSEEEDITORDIALOG_H
+
 #include <kdialogbase.h>
 
 #include <kabc/addressbook.h>
 
-class QWidget;
 class AddresseeEditorWidget;
+class QWidget;
 class ViewManager;
 
 class AddresseeEditorDialog : public KDialogBase
@@ -40,14 +40,14 @@ class AddresseeEditorDialog : public KDialogBase
     AddresseeEditorDialog( ViewManager *vm, QWidget *parent, const char *name = 0 );
     ~AddresseeEditorDialog();
     
-    void setAddressee(const KABC::Addressee &a);
+    void setAddressee( const KABC::Addressee& );
     KABC::Addressee addressee();
     
     bool dirty();
     
   signals:
-    void addresseeModified(const KABC::Addressee &a);
-    void editorDestroyed( const QString & );
+    void addresseeModified( const KABC::Addressee& );
+    void editorDestroyed( const QString& );
     
   protected slots:
     virtual void slotApply();

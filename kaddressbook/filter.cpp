@@ -62,6 +62,16 @@ Filter &Filter::operator=(const Filter &copyFrom)
   return *this;
 }
 
+void Filter::setName( const QString &name )
+{
+  mName = name;
+}
+
+const QString &Filter::name() const
+{
+  return mName;
+}
+
 void Filter::apply(KABC::Addressee::List &addresseeList)
 {
   KABC::Addressee::List::Iterator iter;
@@ -89,6 +99,26 @@ bool Filter::filterAddressee(const KABC::Addressee &a)
   }
   
   return !( mMatchRule == Matching );
+}
+
+void Filter::setEnabled( bool on )
+{
+  mEnabled = on;
+}
+
+bool Filter::isEnabled() const
+{
+  return mEnabled;
+}
+
+void Filter::setCategories( const QStringList &list )
+{
+  mCategoryList = list;
+}
+    
+const QStringList &Filter::categories() const
+{
+  return mCategoryList;
 }
 
 void Filter::save(KConfig *config)
@@ -154,4 +184,14 @@ Filter::List Filter::restore(KConfig *config, QString baseGroup)
   }
   
   return list;
+}
+
+void Filter::setMatchRule( MatchRule rule )
+{
+  mMatchRule = rule;
+}
+    
+Filter::MatchRule Filter::matchRule() const
+{
+  return mMatchRule;
 }

@@ -22,40 +22,40 @@
 */                                                                      
 
 #include <qcheckbox.h>
-#include <qtabwidget.h>
-#include <qlayout.h>
-#include <qlabel.h>
-#include <qpushbutton.h>
-#include <qtoolbutton.h>
-#include <qtextedit.h>
-#include <qtooltip.h>
-#include <qlistbox.h>
 #include <qhbox.h>
+#include <qlabel.h>
+#include <qlayout.h>
+#include <qlistbox.h>
+#include <qpushbutton.h>
+#include <qtabwidget.h>
+#include <qtextedit.h>
+#include <qtoolbutton.h>
+#include <qtooltip.h>
 
 #include <kaccelmanager.h>
 #include <kapplication.h>
-#include <kglobal.h>
-#include <kiconloader.h>
 #include <kconfig.h>
-#include <klocale.h>
-#include <kdialogbase.h>
-#include <kseparator.h>
-#include <kmessagebox.h>
-#include <klineedit.h>
 #include <kcombobox.h>
 #include <kdebug.h>
+#include <kdialogbase.h>
+#include <kglobal.h>
+#include <kiconloader.h>
+#include <klineedit.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <kseparator.h>
 #include <ksqueezedtextlabel.h>
 
-#include <libkdepim/categoryselectdialog.h>
 #include <libkdepim/categoryeditdialog.h>
+#include <libkdepim/categoryselectdialog.h>
 
 #include <libkdepim/kdateedit.h>
 
-#include "nameeditdialog.h"
-#include "phoneeditwidget.h"
 #include "addresseditwidget.h"
 #include "emaileditwidget.h"
 #include "kabprefs.h"
+#include "nameeditdialog.h"
+#include "phoneeditwidget.h"
 
 #include "addresseeeditorwidget.h"
 
@@ -63,6 +63,8 @@ AddresseeEditorWidget::AddresseeEditorWidget( ViewManager *vm, QWidget *parent,
                                               const char *name )
   : FeatureBarWidget( vm, parent, name )
 {
+  kdDebug(5720) << "AddresseeEditorWidget()" << endl;
+
   initGUI();
   mCategoryDialog = 0;
   mCategoryEditDialog = 0;
@@ -75,20 +77,20 @@ AddresseeEditorWidget::AddresseeEditorWidget( ViewManager *vm, QWidget *parent,
 
 AddresseeEditorWidget::~AddresseeEditorWidget()
 {
-  kdDebug() << "~AddresseeEditorWidget()" << endl;
+  kdDebug(5720) << "~AddresseeEditorWidget()" << endl;
 }  
   
 void AddresseeEditorWidget::addresseeSelectionChanged()
 {
   KABC::Addressee::List list = selectedAddressees();
 
-  mAddressee = list[0];
+  mAddressee = list[ 0 ];
   load();
 }
 
-void AddresseeEditorWidget::setAddressee( const KABC::Addressee &a )
+void AddresseeEditorWidget::setAddressee( const KABC::Addressee &addr )
 {
-  mAddressee = a;
+  mAddressee = addr;
   load();
 }
 
@@ -97,7 +99,7 @@ const KABC::Addressee &AddresseeEditorWidget::addressee()
   return mAddressee;
 }
 
-void AddresseeEditorWidget::textChanged(const QString &)
+void AddresseeEditorWidget::textChanged( const QString& )
 {
   emitModified();
 }
@@ -115,7 +117,8 @@ void AddresseeEditorWidget::initGUI()
 
   mNameEdit->setFocus();
 
-  connect( mTabWidget, SIGNAL( currentChanged(QWidget*) ), SLOT( pageChanged(QWidget*) ) );
+  connect( mTabWidget, SIGNAL( currentChanged(QWidget*) ),
+           SLOT( pageChanged(QWidget*) ) );
 }
 
 void AddresseeEditorWidget::setupTab1()
@@ -123,9 +126,9 @@ void AddresseeEditorWidget::setupTab1()
   // This is the General tab
   QWidget *tab1 = new QWidget( mTabWidget );
 
-  QGridLayout *layout = new QGridLayout(tab1, 11, 7);
-  layout->setMargin(KDialogBase::marginHint());
-  layout->setSpacing(KDialogBase::spacingHint());
+  QGridLayout *layout = new QGridLayout( tab1, 11, 7 );
+  layout->setMargin( KDialogBase::marginHint() );
+  layout->setSpacing( KDialogBase::spacingHint() );
   
   QLabel *label;
   KSeparator* bar;
@@ -135,141 +138,137 @@ void AddresseeEditorWidget::setupTab1()
   // Upper left group (person info)
   
   // Person icon
-  label = new QLabel(tab1);
-  label->setPixmap(KGlobal::iconLoader()->loadIcon("personal", KIcon::Desktop));
-  layout->addMultiCellWidget(label, 0, 1, 0, 0);
+  label = new QLabel( tab1 );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "personal", KIcon::Desktop ) );
+  layout->addMultiCellWidget( label, 0, 1, 0, 0 );
   
   // First name
-  button = new QPushButton( i18n("Name..."), tab1 );
-  QToolTip::add(button, i18n("Edit the contact's name"));
+  button = new QPushButton( i18n( "Name..." ), tab1 );
+  QToolTip::add( button, i18n( "Edit the contact's name" ) );
   mNameEdit = new KLineEdit( tab1, "mNameEdit" );
-  connect( mNameEdit, SIGNAL( textChanged(const QString & )), 
-           SLOT( nameTextChanged(const QString & )));
-  connect( button, SIGNAL( clicked()), this, SLOT( nameButtonClicked()));
+  connect( mNameEdit, SIGNAL( textChanged( const QString& ) ), 
+           SLOT( nameTextChanged( const QString& ) ) );
+  connect( button, SIGNAL( clicked() ), SLOT( nameButtonClicked() ) );
   mNameLabel = new KSqueezedTextLabel( tab1 );
   mNameLabel->hide();
   layout->addWidget( button, 0, 1 );
   layout->addWidget( mNameEdit, 0, 2 );
   layout->addWidget( mNameLabel, 0, 2 );
-  label = new QLabel( i18n("Role:"), tab1 );
-  mRoleEdit = new KLineEdit( tab1, "mRoleEdit" );
-  connect(mRoleEdit, SIGNAL( textChanged(const QString &) ),
-          SLOT( textChanged(const QString &) ));
+  label = new QLabel( i18n( "Role:" ), tab1 );
+  mRoleEdit = new KLineEdit( tab1 );
+  connect( mRoleEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mRoleEdit );
   layout->addWidget( label, 1, 1 );
   layout->addWidget( mRoleEdit, 1, 2 );
   
   // Organization
-  label = new QLabel( i18n("Organization:"), tab1 );
-  mOrgEdit = new KLineEdit( tab1, "mOrgEdit" );
+  label = new QLabel( i18n( "Organization:" ), tab1 );
+  mOrgEdit = new KLineEdit( tab1 );
   label->setBuddy( mOrgEdit );
-  connect( mOrgEdit, SIGNAL( textChanged(const QString &) ), 
-           SLOT( textChanged(const QString &) ));
+  connect( mOrgEdit, SIGNAL( textChanged( const QString& ) ), 
+           SLOT( textChanged( const QString& ) ) );
   layout->addWidget( label, 2, 1 );
   layout->addWidget( mOrgEdit, 2, 2 );
   
   // File as (formatted name)
-  label = new QLabel( i18n("Formatted name:"), tab1 );
-  mFormattedNameBox = new KComboBox(tab1, "mFormattedNameBox");
-  mFormattedNameBox->setEditable(true);
-  mFormattedNameBox->setDuplicatesEnabled(false);
-  mFormattedNameBox->setAutoCompletion(true);
+  label = new QLabel( i18n( "Formatted name:" ), tab1 );
+  mFormattedNameBox = new KComboBox( tab1 );
+  mFormattedNameBox->setEditable( true );
+  mFormattedNameBox->setDuplicatesEnabled( false );
+  mFormattedNameBox->setAutoCompletion( true );
   label->setBuddy( mFormattedNameBox );
-  connect(mFormattedNameBox, SIGNAL(activated(const QString &)),
-          SLOT(textChanged(const QString &)));
-  connect(mFormattedNameBox, SIGNAL(textChanged(const QString &)),
-          SLOT(textChanged(const QString &)));
-  connect(mFormattedNameBox, SIGNAL(textChanged(const QString &)),
-          SLOT(formattedNameChanged(const QString &)));
+  connect( mFormattedNameBox, SIGNAL( activated( const QString& ) ),
+           SLOT( textChanged( const QString& ) ) );
+  connect( mFormattedNameBox, SIGNAL( textChanged( const QString& ) ),
+           SLOT( textChanged( const QString& ) ) );
+  connect( mFormattedNameBox, SIGNAL( textChanged( const QString& ) ),
+           SLOT( formattedNameChanged( const QString& ) ) );
   layout->addWidget( label, 3, 1 );
   layout->addWidget( mFormattedNameBox, 3, 2 );
   
   // Left hand separator. This separator doesn't go all the way
   // across so the dialog still flows from top to bottom
-  bar = new KSeparator( KSeparator::HLine, tab1);
+  bar = new KSeparator( KSeparator::HLine, tab1 );
   layout->addMultiCellWidget( bar, 4, 4, 0, 2 );
   
   //////////////////////////////////////
   // Phone numbers (upper right)
-  label = new QLabel(tab1);
-  label->setPixmap(KGlobal::iconLoader()->loadIcon("kaddressbook",
-                                                   KIcon::Desktop));
-  layout->addMultiCellWidget(label, 0, 1, 3, 3);
+  label = new QLabel( tab1 );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "kaddressbook",
+                    KIcon::Desktop ) );
+  layout->addMultiCellWidget( label, 0, 1, 3, 3 );
   
-  mPhoneEditWidget = new PhoneEditWidget(tab1, "mPhoneEditWidget");
-  connect(mPhoneEditWidget, SIGNAL(modified()), this,
-          SLOT(emitModified()));
-  layout->addMultiCellWidget(mPhoneEditWidget, 0, 3, 4, 6); 
-  
-  bar = new KSeparator( KSeparator::HLine, tab1);
+  mPhoneEditWidget = new PhoneEditWidget( tab1 );
+  connect( mPhoneEditWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
+  layout->addMultiCellWidget( mPhoneEditWidget, 0, 3, 4, 6 ); 
+
+  bar = new KSeparator( KSeparator::HLine, tab1 );
   layout->addMultiCellWidget( bar, 4, 4, 3, 6 );
   
   //////////////////////////////////////
   // Addresses (lower left)
-  label = new QLabel(tab1);
-  label->setPixmap(KGlobal::iconLoader()->loadIcon("gohome",
-                                                   KIcon::Desktop));
-  layout->addMultiCellWidget(label, 5, 6, 0, 0);
+  label = new QLabel( tab1 );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "gohome", KIcon::Desktop ) );
+  layout->addMultiCellWidget( label, 5, 6, 0, 0 );
   
-  mAddressEditWidget = new AddressEditWidget(tab1, "mAddressEditWidget");
-  connect(mAddressEditWidget, SIGNAL(modified()), this, SLOT(emitModified()));
-  layout->addMultiCellWidget(mAddressEditWidget, 5, 9, 1, 2);
+  mAddressEditWidget = new AddressEditWidget( tab1 );
+  connect( mAddressEditWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
+  layout->addMultiCellWidget( mAddressEditWidget, 5, 9, 1, 2 );
 
   //////////////////////////////////////
   // Email / Web (lower right)
-  label = new QLabel(tab1);
-  label->setPixmap(KGlobal::iconLoader()->loadIcon("email",
-                                                   KIcon::Desktop));
-  layout->addMultiCellWidget(label, 5, 6, 3, 3);
+  label = new QLabel( tab1 );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "email", KIcon::Desktop) );
+  layout->addMultiCellWidget( label, 5, 6, 3, 3 );
 
-  mEmailWidget = new EmailEditWidget(tab1, "mEmailWidget");
-  connect(mEmailWidget, SIGNAL(modified()), this, SLOT(emitModified()));
+  mEmailWidget = new EmailEditWidget( tab1 );
+  connect( mEmailWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
   layout->addMultiCellWidget( mEmailWidget, 5, 6, 4, 6 );
 
   // add the separator
-  bar = new KSeparator( KSeparator::HLine, tab1);
+  bar = new KSeparator( KSeparator::HLine, tab1 );
   layout->addMultiCellWidget( bar, 7, 7, 3, 6 );
 
-  label = new QLabel(tab1);
-  label->setPixmap(KGlobal::iconLoader()->loadIcon("homepage",
-                                                   KIcon::Desktop));
-  layout->addMultiCellWidget(label, 8, 9, 3, 3);
+  label = new QLabel( tab1 );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "homepage", KIcon::Desktop) );
+  layout->addMultiCellWidget( label, 8, 9, 3, 3 );
 
-  label = new QLabel( i18n("URL:"), tab1 );
-  mURLEdit = new KLineEdit( tab1, "mURLEdit" );
-  connect( mURLEdit, SIGNAL( textChanged(const QString & )), 
-           SLOT( textChanged(const QString & )));
+  label = new QLabel( i18n( "URL:" ), tab1 );
+  mURLEdit = new KLineEdit( tab1 );
+  connect( mURLEdit, SIGNAL( textChanged( const QString& ) ), 
+           SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mURLEdit );
   layout->addWidget( label, 8, 4 );
   layout->addMultiCellWidget( mURLEdit, 8, 8, 5, 6 );
 
-  label = new QLabel( i18n( "&IM address:"), tab1 );
-  mIMAddressEdit = new KLineEdit(tab1, "mIMAddressEdit");
-  connect( mIMAddressEdit, SIGNAL( textChanged(const QString & )), 
-           SLOT( textChanged(const QString & )));
+  label = new QLabel( i18n( "&IM address:" ), tab1 );
+  mIMAddressEdit = new KLineEdit( tab1 );
+  connect( mIMAddressEdit, SIGNAL( textChanged( const QString& ) ), 
+           SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mIMAddressEdit );
   layout->addWidget( label, 9, 4 );
   layout->addMultiCellWidget( mIMAddressEdit, 9, 9, 5, 6 );
   
-  layout->addColSpacing(6, 50); 
+  layout->addColSpacing( 6, 50 );
   
-  bar = new KSeparator(KSeparator::HLine, tab1);
-  layout->addMultiCellWidget(bar, 10, 10, 0, 6);
+  bar = new KSeparator( KSeparator::HLine, tab1 );
+  layout->addMultiCellWidget( bar, 10, 10, 0, 6 );
   
   ///////////////////////////////////////
   QHBox *categoryBox = new QHBox( tab1 );
   categoryBox->setSpacing( KDialogBase::spacingHint() );
   
   // Categories
-  button = new QPushButton(i18n("Categories"), categoryBox);
-  connect(button, SIGNAL(clicked()), SLOT(categoryButtonClicked()));
+  button = new QPushButton( i18n( "Categories" ), categoryBox );
+  connect( button, SIGNAL( clicked() ), SLOT( categoryButtonClicked() ) );
 
-  mCategoryEdit = new KLineEdit(categoryBox, "mCategoryEdit");
-  mCategoryEdit->setReadOnly(true);
-  connect(mCategoryEdit, SIGNAL(textChanged(const QString &)), 
-          SLOT(textChanged(const QString &)));
+  mCategoryEdit = new KLineEdit( categoryBox );
+  mCategoryEdit->setReadOnly( true );
+  connect( mCategoryEdit, SIGNAL( textChanged( const QString& ) ), 
+           SLOT( textChanged( const QString& ) ) );
 
-  layout->addMultiCellWidget(categoryBox, 11, 11, 0, 6);
+  layout->addMultiCellWidget( categoryBox, 11, 11, 0, 6 );
   
   // Build the layout and add to the tab widget
   layout->activate(); // required
@@ -282,9 +281,9 @@ void AddresseeEditorWidget::setupTab2()
   // This is the Details tab
   QWidget *tab2 = new QWidget( mTabWidget );
 
-  QGridLayout *layout = new QGridLayout(tab2, 6, 6);
-  layout->setMargin(KDialogBase::marginHint());
-  layout->setSpacing(KDialogBase::spacingHint());
+  QGridLayout *layout = new QGridLayout( tab2, 6, 6 );
+  layout->setMargin( KDialogBase::marginHint() );
+  layout->setSpacing( KDialogBase::spacingHint() );
   
   QLabel *label;
   KSeparator* bar;
@@ -293,111 +292,110 @@ void AddresseeEditorWidget::setupTab2()
   // Office info
   
   // Department
-  label = new QLabel(tab2);
-  label->setPixmap(KGlobal::iconLoader()->loadIcon("folder", KIcon::Desktop));
-  layout->addMultiCellWidget(label, 0, 1, 0, 0);
+  label = new QLabel( tab2 );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "folder", KIcon::Desktop ) );
+  layout->addMultiCellWidget( label, 0, 1, 0, 0 );
   
-  label = new QLabel(i18n("Department:"), tab2);
-  layout->addWidget(label, 0, 1);
-  mDepartmentEdit = new KLineEdit(tab2, "mDepartmentEdit");
-  connect(mDepartmentEdit, SIGNAL(textChanged(const QString &)),
-          SLOT(textChanged(const QString &)));
+  label = new QLabel( i18n( "Department:" ), tab2 );
+  layout->addWidget( label, 0, 1 );
+  mDepartmentEdit = new KLineEdit( tab2 );
+  connect( mDepartmentEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mDepartmentEdit );
-  layout->addWidget(mDepartmentEdit, 0, 2);
+  layout->addWidget( mDepartmentEdit, 0, 2 );
   
-  label = new QLabel(i18n("Office:"), tab2);
-  layout->addWidget(label, 1, 1);
-  mOfficeEdit = new KLineEdit(tab2, "mOfficeEdit");
-  connect(mOfficeEdit, SIGNAL(textChanged(const QString &)),
-          SLOT(textChanged(const QString &)));
+  label = new QLabel( i18n( "Office:" ), tab2 );
+  layout->addWidget( label, 1, 1 );
+  mOfficeEdit = new KLineEdit( tab2 );
+  connect( mOfficeEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mOfficeEdit );
-  layout->addWidget(mOfficeEdit, 1, 2);
+  layout->addWidget( mOfficeEdit, 1, 2 );
   
-  label = new QLabel(i18n("Profession:"), tab2);
-  layout->addWidget(label, 2, 1);
-  mProfessionEdit = new KLineEdit(tab2, "mProfessionEdit");
-  connect(mProfessionEdit, SIGNAL(textChanged(const QString &)),
-          SLOT(textChanged(const QString &)));
+  label = new QLabel( i18n( "Profession:" ), tab2 );
+  layout->addWidget( label, 2, 1 );
+  mProfessionEdit = new KLineEdit( tab2 );
+  connect( mProfessionEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mProfessionEdit );
-  layout->addWidget(mProfessionEdit, 2, 2);
+  layout->addWidget( mProfessionEdit, 2, 2 );
   
-  label = new QLabel(i18n("Manager\'s name:"), tab2);
-  layout->addWidget(label, 0, 3);
-  mManagerEdit = new KLineEdit(tab2, "mManagerEdit");
-  connect(mManagerEdit, SIGNAL(textChanged(const QString &)),
-          SLOT(textChanged(const QString &)));
+  label = new QLabel( i18n( "Manager\'s name:" ), tab2 );
+  layout->addWidget( label, 0, 3 );
+  mManagerEdit = new KLineEdit( tab2 );
+  connect( mManagerEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mManagerEdit );
-  layout->addMultiCellWidget(mManagerEdit, 0, 0, 4, 5);
+  layout->addMultiCellWidget( mManagerEdit, 0, 0, 4, 5 );
   
-  label = new QLabel(i18n("Assistant's name:"), tab2);
-  layout->addWidget(label, 1, 3);
-  mAssistantEdit = new KLineEdit(tab2, "mAssistantEdit");
-  connect(mAssistantEdit, SIGNAL(textChanged(const QString &)),
-          SLOT(textChanged(const QString &)));
+  label = new QLabel( i18n( "Assistant's name:" ), tab2 );
+  layout->addWidget( label, 1, 3 );
+  mAssistantEdit = new KLineEdit( tab2 );
+  connect( mAssistantEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mAssistantEdit );
-  layout->addMultiCellWidget(mAssistantEdit, 1, 1, 4, 5);
+  layout->addMultiCellWidget( mAssistantEdit, 1, 1, 4, 5 );
   
-  bar = new KSeparator(KSeparator::HLine, tab2);
-  layout->addMultiCellWidget(bar, 3, 3, 0, 5);
+  bar = new KSeparator( KSeparator::HLine, tab2 );
+  layout->addMultiCellWidget( bar, 3, 3, 0, 5 );
   
   /////////////////////////////////////////////////
   // Personal info
   
-  label = new QLabel(tab2);
-  label->setPixmap(KGlobal::iconLoader()->loadIcon("personal", KIcon::Desktop));
-  layout->addMultiCellWidget(label, 4, 5, 0, 0);
+  label = new QLabel( tab2 );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "personal", KIcon::Desktop ) );
+  layout->addMultiCellWidget( label, 4, 5, 0, 0 );
   
-  label = new QLabel(i18n("Nick name:"), tab2);
-  layout->addWidget(label, 4, 1);
-  mNicknameEdit = new KLineEdit(tab2, "mNicknameEdit");
-  connect(mNicknameEdit, SIGNAL(textChanged(const QString &)),
-          SLOT(textChanged(const QString &)));
+  label = new QLabel( i18n( "Nick name:" ), tab2 );
+  layout->addWidget( label, 4, 1 );
+  mNicknameEdit = new KLineEdit( tab2 );
+  connect( mNicknameEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mNicknameEdit );
-  layout->addWidget(mNicknameEdit, 4, 2);
+  layout->addWidget( mNicknameEdit, 4, 2 );
 
-  label = new QLabel(i18n("Spouse's name:"), tab2);
-  layout->addWidget(label, 5, 1);
-  mSpouseEdit = new KLineEdit(tab2, "mSpouseEdit");
-  connect(mSpouseEdit, SIGNAL(textChanged(const QString &)),
-          SLOT(textChanged(const QString &)));
+  label = new QLabel( i18n( "Spouse's name:" ), tab2 );
+  layout->addWidget( label, 5, 1 );
+  mSpouseEdit = new KLineEdit( tab2 );
+  connect( mSpouseEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mSpouseEdit );
-  layout->addWidget(mSpouseEdit, 5, 2);
+  layout->addWidget( mSpouseEdit, 5, 2 );
 
-  label = new QLabel(i18n("Birthday:"), tab2);
-  layout->addWidget(label, 4, 3);
-  mBirthdayPicker = new KDateEdit(tab2, "mBirthdayPicker");
-  mBirthdayPicker->setHandleInvalid(true);
-  connect(mBirthdayPicker, SIGNAL(dateChanged(QDate)),
-          SLOT(dateChanged(QDate)));
+  label = new QLabel( i18n( "Birthday:" ), tab2 );
+  layout->addWidget( label, 4, 3 );
+  mBirthdayPicker = new KDateEdit( tab2 );
+  mBirthdayPicker->setHandleInvalid( true );
+  connect( mBirthdayPicker, SIGNAL( dateChanged( QDate ) ),
+           SLOT( dateChanged( QDate ) ) );
   connect( mBirthdayPicker, SIGNAL( invalidDateEntered() ),
            SLOT( invalidDate() ) );
   label->setBuddy( mBirthdayPicker );
-  layout->addWidget(mBirthdayPicker, 4, 4);
+  layout->addWidget( mBirthdayPicker, 4, 4 );
   
-  label = new QLabel(i18n("Anniversary:"), tab2);
-  layout->addWidget(label, 5, 3);
-  mAnniversaryPicker = new KDateEdit(tab2, "mAnniversaryPicker");
-  mAnniversaryPicker->setHandleInvalid(true);
-  connect(mAnniversaryPicker, SIGNAL(dateChanged(QDate)),
-          SLOT(dateChanged(QDate)));
+  label = new QLabel( i18n( "Anniversary:" ), tab2 );
+  layout->addWidget( label, 5, 3 );
+  mAnniversaryPicker = new KDateEdit( tab2 );
+  mAnniversaryPicker->setHandleInvalid( true );
+  connect( mAnniversaryPicker, SIGNAL( dateChanged( QDate ) ),
+           SLOT( dateChanged( QDate ) ) );
   connect( mAnniversaryPicker, SIGNAL( invalidDateEntered() ),
            SLOT( invalidDate() ) );
   label->setBuddy( mAnniversaryPicker );
-  layout->addWidget(mAnniversaryPicker, 5, 4);
+  layout->addWidget( mAnniversaryPicker, 5, 4 );
   
-  bar = new KSeparator(KSeparator::HLine, tab2);
-  layout->addMultiCellWidget(bar, 6, 6, 0, 5);
+  bar = new KSeparator( KSeparator::HLine, tab2 );
+  layout->addMultiCellWidget( bar, 6, 6, 0, 5 );
   
    //////////////////////////////////////
   // Notes
-  label = new QLabel(i18n("Note:"), tab2);
-  label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  layout->addWidget(label, 7, 0);
-  mNoteEdit = new QTextEdit( tab2, "mNoteEdit" );
+  label = new QLabel( i18n( "Note:" ), tab2 );
+  label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
+  layout->addWidget( label, 7, 0 );
+  mNoteEdit = new QTextEdit( tab2 );
   mNoteEdit->setWordWrap( QTextEdit::WidgetWidth );
   mNoteEdit->setMinimumSize( mNoteEdit->sizeHint() );
-  connect(mNoteEdit, SIGNAL(textChanged()),
-          SLOT(emitModified()));
+  connect( mNoteEdit, SIGNAL( textChanged() ), SLOT( emitModified() ) );
   label->setBuddy( mNoteEdit );
   layout->addMultiCellWidget( mNoteEdit, 7, 7, 1, 5 );
   
@@ -413,39 +411,40 @@ void AddresseeEditorWidget::setupTab3()
     
 void AddresseeEditorWidget::load()
 {
-  kdDebug() << "AddresseeEditorWidget::load()" << endl;
+  kdDebug(5720) << "AddresseeEditorWidget::load()" << endl;
 
   // Block signals in case anything tries to emit modified
   // CS: This doesn't seem to work.
   bool block = signalsBlocked();
-  blockSignals(true); 
+  blockSignals( true ); 
 
-  mNameEdit->setText(mAddressee.assembledName());
-  mFormattedNameBox->setCurrentText(mAddressee.formattedName());
+  mNameEdit->setText( mAddressee.assembledName() );
+  mFormattedNameBox->setCurrentText( mAddressee.formattedName() );
 
-  mRoleEdit->setText(mAddressee.role());
-  mOrgEdit->setText(mAddressee.organization());
-  mURLEdit->setURL(mAddressee.url().url());
-  mURLEdit->home(false);
-  mNoteEdit->setText(mAddressee.note());
-  mEmailWidget->setEmails(mAddressee.emails());
-  mPhoneEditWidget->setPhoneNumbers(mAddressee.phoneNumbers());
-  mAddressEditWidget->setAddresses(mAddressee, mAddressee.addresses());
-  mBirthdayPicker->setDate(mAddressee.birthday().date());
-  mAnniversaryPicker->setDate(QDate::fromString(mAddressee.custom("KADDRESSBOOK", "X-Anniversary"), Qt::ISODate));
-  mNicknameEdit->setText(mAddressee.nickName());
-  mCategoryEdit->setText(mAddressee.categories().join(","));
+  mRoleEdit->setText( mAddressee.role() );
+  mOrgEdit->setText( mAddressee.organization() );
+  mURLEdit->setURL( mAddressee.url().url() );
+  mURLEdit->home( false );
+  mNoteEdit->setText( mAddressee.note() );
+  mEmailWidget->setEmails( mAddressee.emails() );
+  mPhoneEditWidget->setPhoneNumbers( mAddressee.phoneNumbers() );
+  mAddressEditWidget->setAddresses( mAddressee, mAddressee.addresses() );
+  mBirthdayPicker->setDate( mAddressee.birthday().date() );
+  mAnniversaryPicker->setDate( QDate::fromString( mAddressee.custom(
+                               "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate) );
+  mNicknameEdit->setText( mAddressee.nickName() );
+  mCategoryEdit->setText( mAddressee.categories().join( "," ) );
   
   // Load customs
-  mIMAddressEdit->setText(mAddressee.custom("KADDRESSBOOK", "X-IMAddress"));
-  mSpouseEdit->setText(mAddressee.custom("KADDRESSBOOK", "X-SpousesName"));
-  mManagerEdit->setText(mAddressee.custom("KADDRESSBOOK", "X-ManagersName"));
-  mAssistantEdit->setText(mAddressee.custom("KADDRESSBOOK", "X-AssistantsName"));
-  mDepartmentEdit->setText(mAddressee.custom("KADDRESSBOOK", "X-Department"));
-  mOfficeEdit->setText(mAddressee.custom("KADDRESSBOOK", "X-Office"));
-  mProfessionEdit->setText(mAddressee.custom("KADDRESSBOOK", "X-Profession"));
+  mIMAddressEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-IMAddress" ) );
+  mSpouseEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-SpousesName" ) );
+  mManagerEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-ManagersName" ) );
+  mAssistantEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-AssistantsName" ) );
+  mDepartmentEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Department" ) );
+  mOfficeEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Office" ) );
+  mProfessionEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Profession" ) );
   
-  blockSignals(block);
+  blockSignals( block );
 
   mDirty = false;
 }
@@ -454,51 +453,43 @@ void AddresseeEditorWidget::save()
 {
   if ( !mDirty ) return;
 
-  mAddressee.setFormattedName(mFormattedNameBox->currentText());
-  mAddressee.setRole(mRoleEdit->text());
-  mAddressee.setOrganization(mOrgEdit->text());
-  mAddressee.setUrl(KURL(mURLEdit->text()));
-  mAddressee.setNote(mNoteEdit->text());
+  mAddressee.setFormattedName( mFormattedNameBox->currentText() );
+  mAddressee.setRole( mRoleEdit->text() );
+  mAddressee.setOrganization( mOrgEdit->text() );
+  mAddressee.setUrl( KURL( mURLEdit->text() ) );
+  mAddressee.setNote( mNoteEdit->text() );
   if ( mBirthdayPicker->inputIsValid() )
-    mAddressee.setBirthday(QDateTime(mBirthdayPicker->date()));
+    mAddressee.setBirthday( QDateTime( mBirthdayPicker->date() ) );
   else
-    mAddressee.setBirthday(QDateTime());
+    mAddressee.setBirthday( QDateTime() );
   
-  mAddressee.setNickName(mNicknameEdit->text());
-  mAddressee.setCategories(QStringList::split(",", mCategoryEdit->text()));
+  mAddressee.setNickName( mNicknameEdit->text() );
+  mAddressee.setCategories( QStringList::split( ",", mCategoryEdit->text() ) );
   
   // save custom fields
-  mAddressee.insertCustom("KADDRESSBOOK", "X-IMAddress",
-                          mIMAddressEdit->text());
-  mAddressee.insertCustom("KADDRESSBOOK", "X-SpousesName",
-                          mSpouseEdit->text());
-  mAddressee.insertCustom("KADDRESSBOOK", "X-ManagersName",
-                          mManagerEdit->text());
-  mAddressee.insertCustom("KADDRESSBOOK", "X-AssistantsName",
-                          mAssistantEdit->text());
-  mAddressee.insertCustom("KADDRESSBOOK", "X-Department",
-                          mDepartmentEdit->text());
-  mAddressee.insertCustom("KADDRESSBOOK", "X-Office",
-                          mOfficeEdit->text());
-  mAddressee.insertCustom("KADDRESSBOOK", "X-Profession",
-                          mProfessionEdit->text());
+  mAddressee.insertCustom( "KADDRESSBOOK", "X-IMAddress", mIMAddressEdit->text() );
+  mAddressee.insertCustom( "KADDRESSBOOK", "X-SpousesName", mSpouseEdit->text() );
+  mAddressee.insertCustom( "KADDRESSBOOK", "X-ManagersName", mManagerEdit->text() );
+  mAddressee.insertCustom( "KADDRESSBOOK", "X-AssistantsName", mAssistantEdit->text() );
+  mAddressee.insertCustom( "KADDRESSBOOK", "X-Department", mDepartmentEdit->text() );
+  mAddressee.insertCustom( "KADDRESSBOOK", "X-Office", mOfficeEdit->text() );
+  mAddressee.insertCustom( "KADDRESSBOOK", "X-Profession", mProfessionEdit->text() );
   if ( mAnniversaryPicker->inputIsValid() )
-    mAddressee.insertCustom("KADDRESSBOOK", "X-Anniversary",
-                          mAnniversaryPicker->date().toString(Qt::ISODate));
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-Anniversary",
+                             mAnniversaryPicker->date().toString( Qt::ISODate ) );
   else
-    mAddressee.removeCustom("KADDRESSBOOK", "X-Anniversary");
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-Anniversary" );
                           
   // Save the email addresses
   QStringList emails = mAddressee.emails();
   QStringList::Iterator iter;
-  for (iter = emails.begin(); iter != emails.end(); ++iter)
-    mAddressee.removeEmail(*iter);
+  for ( iter = emails.begin(); iter != emails.end(); ++iter )
+    mAddressee.removeEmail( *iter );
   
   emails = mEmailWidget->emails();
   bool first = true;
-  for (iter = emails.begin(); iter != emails.end(); ++iter)
-  {
-    mAddressee.insertEmail(*iter, first);
+  for ( iter = emails.begin(); iter != emails.end(); ++iter ) {
+    mAddressee.insertEmail( *iter, first );
     first = false;
   }
   
@@ -506,27 +497,27 @@ void AddresseeEditorWidget::save()
   KABC::PhoneNumber::List phoneNumbers;
   KABC::PhoneNumber::List::Iterator phoneIter;
   phoneNumbers = mAddressee.phoneNumbers();
-  for (phoneIter = phoneNumbers.begin(); phoneIter != phoneNumbers.end();
-        ++phoneIter)
-    mAddressee.removePhoneNumber(*phoneIter);
+  for ( phoneIter = phoneNumbers.begin(); phoneIter != phoneNumbers.end();
+        ++phoneIter )
+    mAddressee.removePhoneNumber( *phoneIter );
     
   phoneNumbers = mPhoneEditWidget->phoneNumbers();
-  for (phoneIter = phoneNumbers.begin(); phoneIter != phoneNumbers.end();
-        ++phoneIter)
-    mAddressee.insertPhoneNumber(*phoneIter);
+  for ( phoneIter = phoneNumbers.begin(); phoneIter != phoneNumbers.end();
+        ++phoneIter )
+    mAddressee.insertPhoneNumber( *phoneIter );
 
   // Save the addresses
   KABC::Address::List addresses;
   KABC::Address::List::Iterator addressIter;
   addresses = mAddressee.addresses();
-  for (addressIter = addresses.begin(); addressIter != addresses.end();
-        ++addressIter)
-    mAddressee.removeAddress(*addressIter);
+  for ( addressIter = addresses.begin(); addressIter != addresses.end();
+        ++addressIter )
+    mAddressee.removeAddress( *addressIter );
     
   addresses = mAddressEditWidget->addresses();
-  for (addressIter = addresses.begin(); addressIter != addresses.end();
-        ++addressIter)
-    mAddressee.insertAddress(*addressIter);
+  for ( addressIter = addresses.begin(); addressIter != addresses.end();
+        ++addressIter )
+    mAddressee.insertAddress( *addressIter );
 
   mDirty = false;
 }
@@ -536,19 +527,19 @@ bool AddresseeEditorWidget::dirty()
   return mDirty;
 }
 
-void AddresseeEditorWidget::nameTextChanged(const QString &text)
+void AddresseeEditorWidget::nameTextChanged( const QString &text )
 {
   // use the addressee class to parse the name for us
   AddresseeConfig config( mAddressee );
   if ( config.automaticNameParsing() ) {
     if ( !mAddressee.formattedName().isEmpty() ) {
       QString fn = mAddressee.formattedName();
-      mAddressee.setNameFromString(text);
+      mAddressee.setNameFromString( text );
       mAddressee.setFormattedName( fn );
     } else {
       // use extra addressee to avoid a formatted name assignment
       Addressee addr;
-      addr.setNameFromString(text);
+      addr.setNameFromString( text );
       mAddressee.setPrefix( addr.prefix() );
       mAddressee.setGivenName( addr.givenName() );
       mAddressee.setAdditionalName( addr.additionalName() );
@@ -557,7 +548,7 @@ void AddresseeEditorWidget::nameTextChanged(const QString &text)
     }
   }
 
-  nameBoxChanged();  
+  nameBoxChanged();
 
   emitModified();
 }
@@ -587,7 +578,7 @@ void AddresseeEditorWidget::nameBoxChanged()
           << QString( addr.assembledName() ).simplifyWhiteSpace()
           << QString( addr.givenName() + QString(" ") + addr.familyName() ).simplifyWhiteSpace()
           << addr.familyName() + QString(", ") + addr.givenName();
-  mFormattedNameBox->insertStringList(options);
+  mFormattedNameBox->insertStringList( options );
   mFormattedNameBox->setCurrentItem( pos );
 
   mFormattedNameBox->blockSignals( block );
@@ -598,14 +589,13 @@ void AddresseeEditorWidget::nameButtonClicked()
   // show the name dialog.
   NameEditDialog dialog( mAddressee, this );
   
-  if (dialog.exec())
-  {
+  if ( dialog.exec() ) {
     if ( dialog.changed() ) {
-      mAddressee.setFamilyName(dialog.familyName());
-      mAddressee.setGivenName(dialog.givenName());
-      mAddressee.setPrefix(dialog.prefix());
-      mAddressee.setSuffix(dialog.suffix());
-      mAddressee.setAdditionalName(dialog.additionalName());
+      mAddressee.setFamilyName( dialog.familyName() );
+      mAddressee.setGivenName( dialog.givenName() );
+      mAddressee.setPrefix( dialog.prefix() );
+      mAddressee.setSuffix( dialog.suffix() );
+      mAddressee.setAdditionalName( dialog.additionalName() );
 
       // Update the name edit.
       bool block = mNameEdit->signalsBlocked();
@@ -624,33 +614,30 @@ void AddresseeEditorWidget::nameButtonClicked()
 void AddresseeEditorWidget::categoryButtonClicked()
 {
   // Show the category dialog
-  if (mCategoryDialog == 0)
-  {
+  if ( mCategoryDialog == 0 ) {
     mCategoryDialog = new KPIM::CategorySelectDialog( KABPrefs::instance(), this );
-    connect(mCategoryDialog, SIGNAL(categoriesSelected(const QStringList &)),
-            SLOT(categoriesSelected(const QStringList &)));
-    connect(mCategoryDialog, SIGNAL(editCategories()),
-            SLOT(editCategories()));
+    connect( mCategoryDialog, SIGNAL( categoriesSelected( const QStringList& ) ),
+             SLOT(categoriesSelected( const QStringList& ) ) );
+    connect( mCategoryDialog, SIGNAL( editCategories() ), SLOT( editCategories() ) );
   }
 
   mCategoryDialog->setCategories();
-  mCategoryDialog->setSelected(QStringList::split(",", mCategoryEdit->text()));
+  mCategoryDialog->setSelected( QStringList::split( ",", mCategoryEdit->text() ) );
   mCategoryDialog->show();
   mCategoryDialog->raise();
 }
 
-void AddresseeEditorWidget::categoriesSelected(const QStringList &list)
+void AddresseeEditorWidget::categoriesSelected( const QStringList &list )
 {
-  mCategoryEdit->setText(list.join(","));
+  mCategoryEdit->setText( list.join( "," ) );
 }
 
 void AddresseeEditorWidget::editCategories()
 {
-  if (mCategoryEditDialog == 0)
-  {
+  if ( mCategoryEditDialog == 0 ) {
     mCategoryEditDialog = new KPIM::CategoryEditDialog( KABPrefs::instance(), this );
-    connect(mCategoryEditDialog, SIGNAL(categoryConfigChanged()),
-            SLOT(categoryButtonClicked()));
+    connect( mCategoryEditDialog, SIGNAL( categoryConfigChanged() ),
+             SLOT( categoryButtonClicked() ) );
   }
   
   mCategoryEditDialog->show();
@@ -667,7 +654,7 @@ void AddresseeEditorWidget::emitModified()
   emit modified( list );
 }
 
-void AddresseeEditorWidget::dateChanged(QDate)
+void AddresseeEditorWidget::dateChanged( QDate )
 {
   emitModified();
 }
@@ -677,7 +664,7 @@ void AddresseeEditorWidget::invalidDate()
   KMessageBox::sorry( this, i18n( "You must specify a valid date" ) );
 }
 
-void AddresseeEditorWidget::formattedNameChanged(const QString &fn)
+void AddresseeEditorWidget::formattedNameChanged( const QString &fn )
 {
   mAddressee.setFormattedName( fn );
   QLineEdit *le = mFormattedNameBox->lineEdit();
@@ -690,7 +677,7 @@ void AddresseeEditorWidget::formattedNameChanged(const QString &fn)
   le->setCursorPosition( pos );
 }
 
-void AddresseeEditorWidget::pageChanged(QWidget *wdg)
+void AddresseeEditorWidget::pageChanged( QWidget *wdg )
 {
   if ( wdg )
     KAcceleratorManager::manage( wdg );

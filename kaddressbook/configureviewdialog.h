@@ -1,5 +1,3 @@
-#ifndef CONFIGUREVIEWDIALOG_H
-#define CONFIGUREVIEWDIALOG_H
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -23,46 +21,51 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#ifndef CONFIGUREVIEWDIALOG_H
+#define CONFIGUREVIEWDIALOG_H
 
 #include <kdialogbase.h>
 
-class SelectFieldsWidget;
 class ConfigureViewFilterPage;
+class SelectFieldsWidget;
 
 namespace KABC { class AddressBook; }
 
-/** This dialog is the base class for all view configuration dialogs. The 
-* author of a view may wish to inherit from this dialog and add config pages
-* that add custom config options. The default implementation of this dialog
-* is to show a page with the select fields widget. For simple views this may
-* be sufficient.
-*
-* This dialog is based on an IconList version of KDialogBase. See the 
-* KDialogBase documentation for more information on adding pages.
+/**
+  This dialog is the base class for all view configuration dialogs. The 
+  author of a view may wish to inherit from this dialog and add config pages
+  that add custom config options. The default implementation of this dialog
+  is to show a page with the select fields widget. For simple views this may
+  be sufficient.
+
+  This dialog is based on an IconList version of KDialogBase. See the 
+  KDialogBase documentation for more information on adding pages.
 */
 class ConfigureViewDialog : public KDialogBase
 {
-    Q_OBJECT
+  Q_OBJECT
     
   public:
-    ConfigureViewDialog(const QString &viewName, KABC::AddressBook *document,
-                        QWidget *parent, const char *name = 0);
+    ConfigureViewDialog( const QString &viewName, KABC::AddressBook *ab,
+                         QWidget *parent, const char *name = 0 );
     virtual ~ConfigureViewDialog();
     
-    /** Reads the configuration from the config object and sets the values
-    * in the GUI. If this method is overloaded, be sure to call the base
-    * class's method.
-    *
-    * Do not change the group of the config object in this method.
-    */
-    virtual void readConfig(KConfig *config);
+    /**
+      Reads the configuration from the config object and sets the values
+      in the GUI. If this method is overloaded, be sure to call the base
+      class's method.
     
-    /** Writes the configuration from the GUI to the config object. If this
-    * method is overloaded, be sure to call the base class's method.
-    *
-    * Do not change the group of the config object in this method.
-    */
-    virtual void writeConfig(KConfig *config);
+      Do not change the group of the config object in this method.
+     */
+    virtual void readConfig( KConfig *config );
+    
+    /**
+      Writes the configuration from the GUI to the config object. If this
+      method is overloaded, be sure to call the base class's method.
+     
+      Do not change the group of the config object in this method.
+     */
+    virtual void writeConfig( KConfig *config );
  
   private:
     void initGUI( KABC::AddressBook * );

@@ -106,10 +106,9 @@ class AddresseeIconViewItem : public KIconViewItem
 ///////////////////////////////
 // KAddressBookView
 
-KAddressBookIconView::KAddressBookIconView(KABC::AddressBook *doc, 
-                                           QWidget *parent,
-                                           const char *name)
-    : KAddressBookView(doc, parent, name)
+KAddressBookIconView::KAddressBookIconView( KABC::AddressBook *ab,
+                                            QWidget *parent, const char *name)
+    : KAddressBookView( ab, parent, name )
 {
     // Init the GUI
     QVBoxLayout *layout = new QVBoxLayout(viewWidget());

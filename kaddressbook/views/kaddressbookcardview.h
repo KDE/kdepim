@@ -35,19 +35,18 @@ class QDropEvent;
 class KConfig;
 class AddresseeCardView;
 
-namespace KABC { class AddressBook; }
-
-/** This view uses the CardView class to create a card view. At some
-* point in the future I think this will be the default view of
-* KAddressBook.
-*/
+/**
+  This view uses the CardView class to create a card view. At some
+  point in the future I think this will be the default view of
+  KAddressBook.
+ */
 class KAddressBookCardView : public KAddressBookView
 {
   Q_OBJECT
     
   public:
-    KAddressBookCardView(KABC::AddressBook *doc, QWidget *parent,
-                         const char *name);
+    KAddressBookCardView( KABC::AddressBook *ab, QWidget *parent,
+                          const char *name = 0 );
     virtual ~KAddressBookCardView();
     
     virtual QStringList selectedUids();

@@ -1,5 +1,3 @@
-#ifndef JUMPBUTTONBAR_H
-#define JUMPBUTTONBAR_H
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -23,17 +21,20 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#ifndef JUMPBUTTONBAR_H
+#define JUMPBUTTONBAR_H
+
 #include <qsizepolicy.h>
 #include <qvbox.h>
 
-class QScrollView;
-class QPushButton;
 class QChar;
+class QPushButton;
+class QScrollView;
 class QResizeEvent;
 
-/** Used to draw the jump button bar on the right of the
-* view.
-*/
+/**
+  Used to draw the jump button bar on the right of the view.
+ */
 class JumpButtonBar : public QVBox
 {
   Q_OBJECT
@@ -42,14 +43,11 @@ class JumpButtonBar : public QVBox
     JumpButtonBar( QWidget *parent, const char *name = 0 );
     ~JumpButtonBar();
     
-    QSizePolicy sizePolicy() const { return QSizePolicy(QSizePolicy::Maximum,
-                                                  QSizePolicy::Minimum,
-                                                  QSizePolicy::Vertically); }
-    
+    QSizePolicy sizePolicy() const;    
     virtual void show();
     
   protected:
-    void resizeEvent(QResizeEvent *);
+    void resizeEvent( QResizeEvent* );
     
   protected slots:
     void letterClicked();
@@ -57,9 +55,10 @@ class JumpButtonBar : public QVBox
     void downClicked();
     
   signals:
-    /** Emitted whenever a letter is selected by the user
-    */
-    void jumpToLetter(const QChar &ch);
+    /**
+      Emitted whenever a letter is selected by the user.
+     */
+    void jumpToLetter( const QChar &ch );
     
   private:
     void updateArrowButtons();

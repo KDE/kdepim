@@ -23,78 +23,77 @@
 
 #include "jumpbuttonbar.h"
 
-#include <qstring.h>
 #include <qevent.h>
+#include <qlayout.h>
 #include <qpushbutton.h>
 #include <qscrollview.h>
-#include <qlayout.h>
+#include <qstring.h>
 
-#include <klocale.h>
 #include <kglobal.h>
 #include <kiconloader.h>
+#include <klocale.h>
 
-////////////////////////////////
-// JumpButtonBar
-
-JumpButtonBar::JumpButtonBar(QWidget *parent, const char *name)
-  : QVBox(parent, name)
+JumpButtonBar::JumpButtonBar( QWidget *parent, const char *name )
+  : QVBox( parent, name )
 {
   // I don't think this is i18n approved, but I am not sure.
-  int base = (int)'a';
-  int end = (int)'z';
   QPushButton *b;
   QString letter;
+
+  mUpButton = new QPushButton( this );
+  mUpButton->setPixmap( KGlobal::iconLoader()->loadIcon( "up", KIcon::Small ) );
+  connect( mUpButton, SIGNAL( clicked() ), this, SLOT( upClicked() ) );
+
+  mScrollView = new QScrollView( this );
+  mScrollView->setVScrollBarMode( QScrollView::AlwaysOff );
+  mScrollView->setHScrollBarMode( QScrollView::AlwaysOff );
+
+  QVBox *vBox = new QVBox( mScrollView->viewport() );
+  mScrollView->addChild( vBox );
   
-  mUpButton = new QPushButton(this);
-  mUpButton->setPixmap(KGlobal::iconLoader()->loadIcon("up", KIcon::Small));
-  connect(mUpButton, SIGNAL(clicked()), this, SLOT(upClicked()));
+  b = new QPushButton( "0,1,2", vBox, "0" );
+  connect( b, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
   
-  mScrollView = new QScrollView(this, "mScrollView");
-  mScrollView->setVScrollBarMode(QScrollView::AlwaysOff);
-  mScrollView->setHScrollBarMode(QScrollView::AlwaysOff);
-  
-  // Number button
-  QVBox *vBox = new QVBox(mScrollView->viewport());
-  mScrollView->addChild(vBox);
-  
-  b = new QPushButton("0,1,2", vBox, "0");
-  connect(b, SIGNAL(clicked()), this, SLOT(letterClicked()));
-  
-  for (int i = base; i <= end; i++)
-  {
+  for ( int i = 'a'; i <= 'z'; i++ ) {
     letter = (char)i;
-    b = new QPushButton(letter, vBox, letter.latin1());
-    connect(b, SIGNAL(clicked()), this, SLOT(letterClicked()));
+    b = new QPushButton( letter, vBox, letter.latin1() );
+    connect( b, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
   }
   
-  vBox->setFixedSize(vBox->sizeHint());
-  
+  vBox->setFixedSize( vBox->sizeHint() );
+
   // There has to be a better way of setting the preferred size of the 
   // scroll view. Hmmm.
-  mScrollView->setFixedWidth(vBox->sizeHint().width() + 3);
+  mScrollView->setFixedWidth( vBox->sizeHint().width() + 3 );
   
-  mDownButton = new QPushButton(this);
-  mDownButton->setPixmap(KGlobal::iconLoader()->loadIcon("down", KIcon::Small));
-  connect(mDownButton, SIGNAL(clicked()), this, SLOT(downClicked()));
+  mDownButton = new QPushButton( this );
+  mDownButton->setPixmap( KGlobal::iconLoader()->loadIcon( "down", KIcon::Small ) );
+  connect( mDownButton, SIGNAL( clicked() ), this, SLOT( downClicked() ) );
   
   // insert a spacer widget to use the rest of the space
-  (void) new QWidget(this, "spacer");
+  new QWidget( this );
 }
 
 JumpButtonBar::~JumpButtonBar()
 {
 }
+
+QSizePolicy JumpButtonBar::sizePolicy() const
+{
+  return QSizePolicy( QSizePolicy::Maximum, QSizePolicy::Minimum,
+                      QSizePolicy::Vertically );
+}
     
 void JumpButtonBar::upClicked()
 {
-  mScrollView->scrollBy(0, -25);
+  mScrollView->scrollBy( 0, -25 );
   
   updateArrowButtons();
 }
 
 void JumpButtonBar::downClicked()
 {
-  mScrollView->scrollBy(0, 25);
+  mScrollView->scrollBy( 0, 25 );
   
   updateArrowButtons();
 }
@@ -102,28 +101,28 @@ void JumpButtonBar::downClicked()
 void JumpButtonBar::letterClicked()
 {
   QString name = sender()->name();
-  if (!name.isEmpty())
-    emit jumpToLetter(QChar(name[0]));
+  if ( !name.isEmpty() )
+    emit jumpToLetter( QChar( name[0] ) );
 }
 
 void JumpButtonBar::updateArrowButtons()
 {
   QScrollBar *bar = mScrollView->verticalScrollBar();
-  mUpButton->setEnabled(bar->value() > bar->minValue());
-  mDownButton->setEnabled(bar->value() < bar->maxValue());
+  mUpButton->setEnabled( bar->value() > bar->minValue() );
+  mDownButton->setEnabled( bar->value() < bar->maxValue() );
 }
 
-void JumpButtonBar::resizeEvent(QResizeEvent *e)
+void JumpButtonBar::resizeEvent( QResizeEvent *e )
 {
-  QVBox::resizeEvent(e);
-  
+  QVBox::resizeEvent( e );
+
   updateArrowButtons();
 }
 
 void JumpButtonBar::show()
 {
   QVBox::show();
-  
+
   updateArrowButtons();
 }
 

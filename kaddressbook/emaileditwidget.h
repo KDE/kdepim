@@ -1,5 +1,3 @@
-#ifndef EMAILEDITWIDGET_H
-#define EMAILEDITWIDGET_H
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -23,20 +21,23 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include <kdialogbase.h>
+#ifndef EMAILEDITWIDGET_H
+#define EMAILEDITWIDGET_H
+
 #include <kabc/addressee.h>
+#include <kdialogbase.h>
 
 #include "addresseeconfig.h"
 
 class QButtonGroup;
-class QToolButton;
+class QCheckBox;
 class QListView;
 class QTextEdit;
-class QCheckBox;
+class QToolButton;
 
+class KComboBox;
 class KLineEdit;
 class KListView;
-class KComboBox;
 
 /**
   This widget displays a list box of the email addresses as well as buttons
@@ -47,10 +48,10 @@ class EmailEditWidget : public QWidget
   Q_OBJECT
 
   public:
-    EmailEditWidget( QWidget *parent, const char *name );
+    EmailEditWidget( QWidget *parent, const char *name = 0 );
     ~EmailEditWidget();
 
-    void setEmails(const QStringList &list);
+    void setEmails( const QStringList &list );
     QStringList emails();
 
   signals:
@@ -58,7 +59,7 @@ class EmailEditWidget : public QWidget
     
   private slots:
     void edit();
-    void textChanged(const QString&);
+    void textChanged( const QString& );
 
   private:
     KLineEdit *mEmailEdit;
@@ -70,7 +71,8 @@ class EmailEditDialog : public KDialogBase
   Q_OBJECT
   
   public:
-    EmailEditDialog( const QStringList &list, QWidget *parent, const char *name = 0 );
+    EmailEditDialog( const QStringList &list, QWidget *parent,
+                     const char *name = 0 );
     ~EmailEditDialog();
 
     QStringList emails() const;

@@ -79,7 +79,7 @@ void IncSearchWidget::initGUI()
 
   QToolTip::add( mCombo, i18n( "Select Incremental Search Field" ) );
 
-  resize( QSize(420, 50).expandedTo(sizeHint()) );
+  resize( QSize(420, 50).expandedTo( sizeHint() ) );
 }
 
 #include "incsearchwidget.moc"

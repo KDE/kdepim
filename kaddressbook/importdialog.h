@@ -38,7 +38,7 @@ namespace KABC { class AddressBook; }
 class ContactImportDialog : public KImportDialog 
 {
   public:
-    ContactImportDialog(KABC::AddressBook *doc, QWidget *parent);
+    ContactImportDialog( KABC::AddressBook *ab, QWidget *parent );
 
     void convertRow();
     
@@ -83,7 +83,7 @@ class ContactImportDialog : public KImportDialog
 
     QPtrList<KImportColumn> mCustomList;
 
-    KABC::AddressBook *mDocument;
+    KABC::AddressBook *mAddressBook;
 };
 
 #endif

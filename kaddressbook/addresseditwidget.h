@@ -33,14 +33,14 @@
 #include "typecombo.h"
 
 class QButtonGroup;
-class QToolButton;
+class QCheckBox;
 class QListView;
 class QTextEdit;
-class QCheckBox;
+class QToolButton;
 
+class KComboBox;
 class KLineEdit;
 class KListView;
-class KComboBox;
 
 typedef TypeCombo<KABC::Address> AddressTypeCombo;
 
@@ -105,7 +105,7 @@ class AddressEditDialog : public KDialogBase
     void modified();
 
   private:
-    void fillCountryCombo(KComboBox *combo);
+    void fillCountryCombo( KComboBox *combo );
 
     void saveAddress();
 

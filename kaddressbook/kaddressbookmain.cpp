@@ -1,76 +1,121 @@
 /*
- * kaddressbookmain.cpp
- *
- * Copyright (C) 1999 Don Sanders <dsanders@kde.org>
- */
+    This file is part of KAddressbook.
+    Copyright (c) 1999 Don Sanders <dsanders@kde.org>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
+    without including the source code for Qt in the source distribution.
+*/
 
 #include <qclipboard.h>
 
-#include <kiconloader.h>
-#include <klocale.h>
-#include <kglobal.h>
-#include <kmenubar.h>
-#include <kconfig.h>
 #include <kaccel.h>
-#include <kdebug.h>
 #include <kaction.h>
-#include <kstdaction.h>
-#include <kstatusbar.h>
-#include <kstandarddirs.h>
+#include <kconfig.h>
+#include <kdebug.h>
+#include <kedittoolbar.h>
+#include <kglobal.h>
+#include <kiconloader.h>
+#include <kkeydialog.h>
+#include <klocale.h>
+#include <kmenubar.h>
 #include <kmessagebox.h>
 #include <kprocess.h>
 #include <kprotocolinfo.h>
-#include <kedittoolbar.h>
-#include <kkeydialog.h>
+#include <kstandarddirs.h>
+#include <kstatusbar.h>
+#include <kstdaction.h>
 
-#include "kaddressbook.h"
 #include "actionmanager.h"
 #include "incsearchwidget.h"
+#include "kaddressbook.h"
 #include "kaddressbookmain.h"
 #include "kaddressbookmain.moc"
 
 KAddressBookMain::KAddressBookMain()
-  : KMainWindow(0), DCOPObject("KAddressBookIface")
+  : KMainWindow( 0 ), DCOPObject( "KAddressBookIface" )
 {
-    setCaption( i18n( "Address Book Browser" ));
+  setCaption( i18n( "Address Book Browser" ) );
 
-    mWidget = new KAddressBook( this, "KAddressBook" );
+  mWidget = new KAddressBook( this, "KAddressBook" );
 
-    mActionManager = new ActionManager(this, mWidget, true, this);
+  mActionManager = new ActionManager( this, mWidget, true, this );
 
-    initActions();
+  initActions();
 
-    // tell the KMainWindow that this is indeed the main widget
-    setCentralWidget(mWidget);
+  setCentralWidget( mWidget );
 
-    // we do want a status bar
-    statusBar()->show();
+  statusBar()->show();
 
-    // Tell the central widget to read its config
-    mWidget->readConfig();
+  mWidget->readConfig();
 
-    // Finally create the GUI
-    createGUI( "kaddressbookui.rc", false );
-    // <HACK reason="there is no line edit action">
-    // create the incremental search line edit manually:
-    const int IncSearch=1; //the ID of the widget - just to be clear :-)
-    KToolBar *isToolBar=toolBar("incSearchToolBar");
-    IncSearchWidget *incSearchWidget=new IncSearchWidget(isToolBar);
-    isToolBar->insertWidget(IncSearch, 0,  incSearchWidget, 0);
-    isToolBar->setItemAutoSized(IncSearch);
-    mWidget->setIncSearchWidget(incSearchWidget);
-    // </HACK>
-    mActionManager->initActionViewList();
+  createGUI( "kaddressbookui.rc", false );
 
-    setAutoSaveSettings();
+  // <HACK reason="there is no line edit action">
+  // create the incremental search line edit manually:
+  const int IncSearch = 1; // the ID of the widget - just to be clear :-)
+  KToolBar *isToolBar = toolBar( "incSearchToolBar" );
+  IncSearchWidget *incSearchWidget = new IncSearchWidget( isToolBar );
+  isToolBar->insertWidget( IncSearch, 0,  incSearchWidget, 0 );
+  isToolBar->setItemAutoSized( IncSearch );
+  mWidget->setIncSearchWidget( incSearchWidget );
+  // </HACK>
+
+  mActionManager->initActionViewList();
+
+  setAutoSaveSettings();
 }
 
 KAddressBookMain::~KAddressBookMain()
 {
-    mWidget->writeConfig();
+  mWidget->writeConfig();
 }
 
-void KAddressBookMain::saveProperties(KConfig *)
+void KAddressBookMain::addEmail( QString addr )
+{
+  mWidget->addEmail( addr );
+}
+
+ASYNC KAddressBookMain::showContactEditor( QString uid )
+{
+  mWidget->showContactEditor( uid );
+}
+
+void KAddressBookMain::newContact()
+{
+  mWidget->newContact();
+}
+
+QString KAddressBookMain::getNameByPhone( QString phone )
+{
+  return mWidget->getNameByPhone( phone );
+}
+
+void KAddressBookMain::save()
+{
+  mWidget->save();
+}
+
+void KAddressBookMain::exit()
+{
+  close();
+}
+
+void KAddressBookMain::saveProperties( KConfig* )
 {
   // the 'config' object points to the session managed
   // config file.  anything you write here will be available
@@ -85,7 +130,7 @@ void KAddressBookMain::saveProperties(KConfig *)
   // e.g., config->writeEntry("key", var);
 }
 
-void KAddressBookMain::readProperties(KConfig *)
+void KAddressBookMain::readProperties( KConfig* )
 {
   // the 'config' object points to the session managed
   // config file.  this function is automatically called whenever
@@ -97,20 +142,19 @@ void KAddressBookMain::readProperties(KConfig *)
 
 void KAddressBookMain::initActions()
 {
-  KStdAction::quit( this, SLOT(close()), actionCollection() );
+  KStdAction::quit( this, SLOT( close() ), actionCollection() );
 
   KStdAction::preferences( mWidget, SLOT( configure() ), actionCollection() );
-  KStdAction::configureToolbars( this, SLOT( configureToolbars() ),
-                                 actionCollection() );
-  KStdAction::keyBindings(this, SLOT( configureKeys()), actionCollection() );
+  KStdAction::configureToolbars( this, SLOT( configureToolbars() ), actionCollection() );
+  KStdAction::keyBindings( this, SLOT( configureKeys() ), actionCollection() );
 }
 
 void KAddressBookMain::configureToolbars()
 {
   saveMainWindowSettings( KGlobal::config(), "MainWindow" );
 
-  KEditToolbar dlg(factory());
-  connect(&dlg,SIGNAL(newToolbarConfig()),this,SLOT(slotNewToolbarConfig()));
+  KEditToolbar dlg( factory() );
+  connect( &dlg, SIGNAL( newToolbarConfig() ), SLOT( slotNewToolbarConfig() ) );
 
   dlg.exec();
 }
@@ -124,7 +168,7 @@ void KAddressBookMain::slotNewToolbarConfig()
 
 void KAddressBookMain::configureKeys()
 {
-  KKeyDialog::configureKeys(actionCollection(),xmlFile(),true,this);
+  KKeyDialog::configureKeys( actionCollection(), xmlFile(), true, this );
 }
 
 bool KAddressBookMain::queryClose()

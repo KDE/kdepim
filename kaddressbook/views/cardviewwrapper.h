@@ -48,11 +48,10 @@ class CardViewWrapper : public ViewWrapper
       return desc;
     }
     
-    virtual KAddressBookView *createView(KABC::AddressBook *doc,
-                                         QWidget *parent, 
-                                         const char *name)
+    virtual KAddressBookView *createView( KABC::AddressBook *ab, QWidget *parent,
+                                          const char *name )
     {
-      return new KAddressBookCardView(doc, parent, name);
+      return new KAddressBookCardView( ab, parent, name );
     }
     
     virtual ConfigureViewDialog *createConfigureViewDialog(

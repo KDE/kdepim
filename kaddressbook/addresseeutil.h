@@ -1,6 +1,3 @@
-#ifndef ADDRESSEEUTIL_H
-#define ADDRESSEEUTIL_H
-
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -24,36 +21,43 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#ifndef ADDRESSEEUTIL_H
+#define ADDRESSEEUTIL_H
+
 #include <qstring.h>
 #include <kabc/addressee.h>
 
-/** This class provides some utility methods for transposing an
-* addressee to different types (ie: clipboard). This class
-* is probably just temporary until these function stablize and move
-* to KABC.
-*
-* NOTE: Currently these methods are not implemented properly. The
-* vCard parser in KABC needs to be updated and there is no way to get from
-* KABC::Addressee to vCard.
+/**
+  This class provides some utility methods for transposing an
+  addressee to different types (ie: clipboard). This class
+  is probably just temporary until these function stablize and move
+  to KABC.
+
+  NOTE: Currently these methods are not implemented properly. The
+  vCard parser in KABC needs to be updated and there is no way to get from
+  KABC::Addressee to vCard.
 */
 class AddresseeUtil
 {
   public:
-   /** Convert an addressee into a string capable of being pushed into the
-   * clipboard. This format is a vCard.
-   */
-   static QString addresseeToClipboard(KABC::Addressee &);
+   /**
+     Convert an addressee into a string capable of being pushed into the
+     clipboard. This format is a vCard.
+    */
+   static QString addresseeToClipboard( KABC::Addressee& );
    
-   /** Same as above function, except that an entire list of KABC::Addressee
-   * objects will be converted to vCard and put in the string.
-   */
-   static QString addresseesToClipboard(KABC::Addressee::List &aList);
+   /**
+     Same as above function, except that an entire list of KABC::Addressee
+     objects will be converted to vCard and put in the string.
+    */
+   static QString addresseesToClipboard( KABC::Addressee::List &addrList );
    
-   /** Convert a string from the clipboard into a list of addressee objects.
-   * If the clipboard text was not a valid vcard, an empty list
-   * will be returned.
-   */
-   static KABC::Addressee::List clipboardToAddressees(const QString &clipboard);
+   /**
+     Convert a string from the clipboard into a list of addressee objects.
+     If the clipboard text was not a valid vcard, an empty list
+     will be returned.
+    */
+   static KABC::Addressee::List clipboardToAddressees( const QString &clipboard );
    
   private:
     AddresseeUtil() {}

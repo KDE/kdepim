@@ -34,7 +34,8 @@
 #include "configureviewfilterpage.h"
 #include "filter.h"
 
-ConfigureViewFilterPage::ConfigureViewFilterPage( QWidget *parent, const char *name )
+ConfigureViewFilterPage::ConfigureViewFilterPage( QWidget *parent,
+                                                  const char *name )
   : QWidget( parent, name )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );

@@ -55,6 +55,6 @@ void KABPrefs::setCategoryDefaults()
 {
   mCustomCategories.clear();
   
-  mCustomCategories << i18n("Business") << i18n("Family") << i18n("School")
-                    << i18n("Customer") << i18n("Friend");
+  mCustomCategories << i18n( "Business" ) << i18n( "Family" ) << i18n( "School" )
+                    << i18n( "Customer" ) << i18n( "Friend" );
 }

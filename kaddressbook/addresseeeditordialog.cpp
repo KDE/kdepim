@@ -25,21 +25,23 @@
 
 #include <qlayout.h>
 
-#include <klocale.h>
 #include <kdebug.h>
+#include <klocale.h>
 
 #include "addresseeeditorwidget.h"
 #include "viewmanager.h"
 
 AddresseeEditorDialog::AddresseeEditorDialog( ViewManager *vm, QWidget *parent,
                                               const char *name )
-  : KDialogBase(KDialogBase::Plain, i18n("Edit Contact"), 
-                KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Apply,
-                KDialogBase::Ok, parent, name, false)
+  : KDialogBase( KDialogBase::Plain, i18n( "Edit Contact" ), 
+                 KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Apply,
+                 KDialogBase::Ok, parent, name, false )
 {
+  kdDebug(5720) << "AddresseeEditorDialog()" << endl;
+
   QWidget *page = plainPage();
   
-  QVBoxLayout *layout = new QVBoxLayout(page);
+  QVBoxLayout *layout = new QVBoxLayout( page );
 
   mEditorWidget = new AddresseeEditorWidget( vm, page );
   connect( mEditorWidget, SIGNAL( modified( KABC::Addressee::List ) ),
@@ -56,11 +58,11 @@ AddresseeEditorDialog::~AddresseeEditorDialog()
   emit editorDestroyed( mEditorWidget->addressee().uid() );
 }
 
-void AddresseeEditorDialog::setAddressee(const KABC::Addressee &a)
+void AddresseeEditorDialog::setAddressee( const KABC::Addressee &addr )
 {
   enableButton( KDialogBase::Apply, false );
   
-  mEditorWidget->setAddressee( a );
+  mEditorWidget->setAddressee( addr );
 }
 
 KABC::Addressee AddresseeEditorDialog::addressee()
@@ -77,7 +79,7 @@ void AddresseeEditorDialog::slotApply()
 {
   if ( mEditorWidget->dirty() ) {
     mEditorWidget->save();
-    emit addresseeModified(mEditorWidget->addressee());
+    emit addresseeModified( mEditorWidget->addressee() );
   }
 
   enableButton( KDialogBase::Apply, false );

@@ -21,10 +21,11 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include "viewwrapper.h"
-
 #include <qwidget.h>
+
 #include "configureviewdialog.h"
+
+#include "viewwrapper.h"
 
 ViewWrapper::ViewWrapper()
 {
@@ -34,11 +35,10 @@ ViewWrapper::~ViewWrapper()
 {
 }
     
-ConfigureViewDialog *ViewWrapper::createConfigureViewDialog(
-                                              const QString &viewName,
-                                              KABC::AddressBook *doc,
-                                              QWidget *parent,
-                                              const char *name)
+ConfigureViewDialog *ViewWrapper::createConfigureViewDialog( const QString &viewName,
+                                                             KABC::AddressBook *ab,
+                                                             QWidget *parent,
+                                                             const char *name )
 {
-  return new ConfigureViewDialog(viewName, doc, parent, name);
+  return new ConfigureViewDialog( viewName, ab, parent, name );
 }

@@ -20,58 +20,60 @@
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
 */
-#ifndef KAddressbook_PART_H
-#define KAddressbook_PART_H
+#ifndef KADDRESSBOOK_PART_H
+#define KADDRESSBOOK_PART_H
 
 #include <kparts/browserextension.h>
-#include <kparts/factory.h>
 #include <kparts/event.h>
+#include <kparts/factory.h>
 
 #include "kaddressbookiface.h"
 
-class KInstance;
 class KAboutData;
 class KAddressbookBrowserExtension;
+class KInstance;
 
 class KAddressBook;
 class ActionManager;
 
 class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBookIface
 {
-    Q_OBJECT
+  Q_OBJECT
+
   public:
-    KAddressbookPart(QWidget *parentWidget, const char *widgetName,
-                   QObject *parent, const char *name, const QStringList &);
+    KAddressbookPart( QWidget *parentWidget, const char *widgetName,
+                      QObject *parent, const char *name, const QStringList& );
     virtual ~KAddressbookPart();
 
     static KAboutData *createAboutData();
 
   public slots:
-    virtual void addEmail( QString addr ) { widget->addEmail( addr ); }
-
-    virtual ASYNC showContactEditor( QString uid ) { widget->showContactEditor( uid ); }
-    virtual void newContact() { widget->newContact(); }
-    virtual QString getNameByPhone( QString phone ) { return widget->getNameByPhone( phone ); }
-    virtual void save() { widget->save(); }
-    virtual void exit() { delete this; }
-    virtual void updateEditMenu() {};
+    virtual void addEmail( QString addr );
+    virtual ASYNC showContactEditor( QString uid );
+    virtual void newContact();
+    virtual QString getNameByPhone( QString phone );
+    virtual void save();
+    virtual void exit();
+    virtual void updateEditMenu();
 
   protected:
     virtual bool openFile();
-    virtual void guiActivateEvent(KParts::GUIActivateEvent *e);
+    virtual void guiActivateEvent( KParts::GUIActivateEvent* );
     
   private:
-    KAddressBook *widget;
+    KAddressBook *mWidget;
     ActionManager *mActionManager;
-    KAddressbookBrowserExtension *m_extension;
+    KAddressbookBrowserExtension *mExtension;
 };
 
 class KAddressbookBrowserExtension : public KParts::BrowserExtension
 {
-    Q_OBJECT
-    friend class KAddressbookPart;
+  Q_OBJECT
+
+  friend class KAddressbookPart;
+
   public:
-    KAddressbookBrowserExtension(KAddressbookPart *parent);
+    KAddressbookBrowserExtension( KAddressbookPart *parent );
     virtual ~KAddressbookBrowserExtension();
 };
 

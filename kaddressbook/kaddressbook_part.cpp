@@ -23,57 +23,58 @@
 
 #include <qlayout.h>
 
+#include <kaboutdata.h>
+#include <kaction.h>
 #include <kapplication.h>
+#include <kdebug.h>
+#include <kiconloader.h>
 #include <kinstance.h>
 #include <klocale.h>
-#include <kaboutdata.h>
-#include <kiconloader.h>
-#include <kaction.h>
-#include <kdebug.h>
 #include <kparts/genericfactory.h>
 
+#include "actionmanager.h"
 #include "kaddressbook.h"
+#include "kaddressbookiface.h"
 #include "kaddressbooktableview.h"
 #include "viewmanager.h"
-#include "kaddressbookiface.h"
-#include "actionmanager.h"
 
 #include "kaddressbook_part.h"
 
 typedef KParts::GenericFactory< KAddressbookPart > KAddressbookFactory;
 K_EXPORT_COMPONENT_FACTORY( libkaddressbookpart, KAddressbookFactory );
 
-KAddressbookPart::KAddressbookPart(QWidget *parentWidget, const char *widgetName,
-                               QObject *parent, const char *name, const QStringList &) :
-  KParts::ReadOnlyPart(parent, name), DCOPObject("KAddressBookIface")
+KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetName,
+                                    QObject *parent, const char *name,
+                                    const QStringList & )
+  : KParts::ReadOnlyPart( parent, name ), DCOPObject( "KAddressBookIface" )
 {
-  kdDebug() << "KAddressbookPart()" << endl;
-  kdDebug() << "  InstanceName: " << kapp->instanceName() << endl;
+  kdDebug(5720) << "KAddressbookPart()" << endl;
+  kdDebug(5720) << "  InstanceName: " << kapp->instanceName() << endl;
 
-  setInstance(KAddressbookFactory::instance());
+  setInstance( KAddressbookFactory::instance() );
 
-  kdDebug() << "KAddressbookPart()..." << endl;
-  kdDebug() << "  InstanceName: " << kapp->instanceName() << endl;
+  kdDebug(5720) << "KAddressbookPart()..." << endl;
+  kdDebug(5720) << "  InstanceName: " << kapp->instanceName() << endl;
 
   // create a canvas to insert our widget
-  QWidget *canvas = new QWidget(parentWidget, widgetName);
-  canvas->setFocusPolicy(QWidget::ClickFocus);
-  setWidget(canvas);
+  QWidget *canvas = new QWidget( parentWidget, widgetName );
+  canvas->setFocusPolicy( QWidget::ClickFocus );
+  setWidget( canvas );
 
-  m_extension = new KAddressbookBrowserExtension(this);
+  mExtension = new KAddressbookBrowserExtension( this );
 
-  QVBoxLayout *topLayout = new QVBoxLayout(canvas);
+  QVBoxLayout *topLayout = new QVBoxLayout( canvas );
 
-  KGlobal::iconLoader()->addAppDir("kaddressbook");
+  KGlobal::iconLoader()->addAppDir( "kaddressbook" );
 
-  widget = new KAddressBook(canvas);
-  widget->readConfig();
-  topLayout->addWidget(widget);
-  widget->viewManager()->showFeatureBarWidget( 0 );
+  mWidget = new KAddressBook( canvas );
+  mWidget->readConfig();
+  topLayout->addWidget( mWidget );
+  mWidget->viewManager()->showFeatureBarWidget( 0 );
 
-  widget->show();
+  mWidget->show();
 
-  mActionManager = new ActionManager(this, widget, false, this);
+  mActionManager = new ActionManager( this, mWidget, false, this );
 
   setXMLFile( "kaddressbook_part.rc" );
 }
@@ -85,45 +86,79 @@ KAddressbookPart::~KAddressbookPart()
 
 KAboutData *KAddressbookPart::createAboutData()
 {
-  KAboutData *about = new KAboutData("kaddressbook", I18N_NOOP("KAddressBook"),
-                                     "3.1", I18N_NOOP("The KDE Address Book"),
-                                     KAboutData::License_BSD,
-                                     I18N_NOOP("(c) 1997-2002, The KDE PIM Team"));
-  about->addAuthor("Tobias Koenig", I18N_NOOP("Current maintainer"), "tokoe@kde.org");
-  about->addAuthor("Don Sanders",I18N_NOOP("Original author"));
-  about->addAuthor("Cornelius Schumacher",
-                  I18N_NOOP("Co-maintainer, libkabc port, csv import/export"),
-                  "schumacher@kde.org");
-  about->addAuthor("Mike Pilone", I18N_NOOP( "GUI and framework redesign" ),
-                  "mpilone@slac.com" );
-  about->addAuthor("Greg Stern", I18N_NOOP("DCOP interface"));
-  about->addAuthor("Mark Westcott",I18N_NOOP("Contact pinning"));
-  about->addAuthor("Mischel Boyer de la Giroday", I18N_NOOP("LDAP Lookup"),
-		   "michel@klaralvdalens-datakonsult.se");
-  about->addAuthor("Steffen Hansen", I18N_NOOP("LDAP Lookup"), "hansen@kde.org");
-
+  KAboutData *about = new KAboutData( "kaddressbook", I18N_NOOP( "KAddressBook" ),
+                                      "3.1", I18N_NOOP( "The KDE Address Book" ),
+                                      KAboutData::License_BSD,
+                                      I18N_NOOP( "(c) 1997-2002, The KDE PIM Team" ) );
+  about->addAuthor( "Tobias Koenig", I18N_NOOP( "Current maintainer" ), "tokoe@kde.org" );
+  about->addAuthor( "Don Sanders", I18N_NOOP( "Original author" ) );
+  about->addAuthor( "Cornelius Schumacher",
+                    I18N_NOOP( "Co-maintainer, libkabc port, csv import/export" ),
+                    "schumacher@kde.org" );
+  about->addAuthor( "Mike Pilone", I18N_NOOP( "GUI and framework redesign" ),
+                    "mpilone@slac.com" );
+  about->addAuthor( "Greg Stern", I18N_NOOP( "DCOP interface" ) );
+  about->addAuthor( "Mark Westcott", I18N_NOOP( "Contact pinning" ) );
+  about->addAuthor( "Mischel Boyer de la Giroday", I18N_NOOP( "LDAP Lookup" ),
+                    "michel@klaralvdalens-datakonsult.se" );
+  about->addAuthor( "Steffen Hansen", I18N_NOOP( "LDAP Lookup" ),
+                    "hansen@kde.org" );
 
   return about;
 }
 
+void KAddressbookPart::addEmail( QString addr )
+{
+  mWidget->addEmail( addr );
+}
+
+ASYNC KAddressbookPart::showContactEditor( QString uid )
+{
+  mWidget->showContactEditor( uid );
+}
+
+void KAddressbookPart::newContact()
+{
+  mWidget->newContact();
+}
+
+QString KAddressbookPart::getNameByPhone( QString phone )
+{
+  return mWidget->getNameByPhone( phone );
+}
+
+void KAddressbookPart::save()
+{
+  mWidget->save();
+}
+
+void KAddressbookPart::exit()
+{
+  delete this;
+}
+
+void KAddressbookPart::updateEditMenu()
+{
+}
+
 bool KAddressbookPart::openFile()
 {
-  kdDebug() << "KAddressbookPart:openFile()" << endl;
+  kdDebug(5720) << "KAddressbookPart:openFile()" << endl;
 
-  widget->show();
+  mWidget->show();
   return true;
 }
 
-void KAddressbookPart::guiActivateEvent(KParts::GUIActivateEvent *e)
+void KAddressbookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
 {
-  kdDebug() << "KAddressbookPart::guiActivateEvent" << endl;
-  KParts::ReadOnlyPart::guiActivateEvent(e);
+  kdDebug(5720) << "KAddressbookPart::guiActivateEvent" << endl;
+  KParts::ReadOnlyPart::guiActivateEvent( e );
 
   mActionManager->initActionViewList();
 }
 
-KAddressbookBrowserExtension::KAddressbookBrowserExtension(KAddressbookPart *parent) :
-  KParts::BrowserExtension(parent, "KAddressbookBrowserExtension")
+KAddressbookBrowserExtension::KAddressbookBrowserExtension( KAddressbookPart *parent )
+  : KParts::BrowserExtension( parent, "KAddressbookBrowserExtension" )
 {
 }
 
@@ -132,4 +167,5 @@ KAddressbookBrowserExtension::~KAddressbookBrowserExtension()
 }
 
 using namespace KParts;
+
 #include "kaddressbook_part.moc"

@@ -26,9 +26,9 @@
 
 #include "addresseeutil.h"
 
-QString AddresseeUtil::addresseeToClipboard( KABC::Addressee &a )
+QString AddresseeUtil::addresseeToClipboard( KABC::Addressee &addr )
 {
-  return a.uid();
+  return addr.uid();
 }
    
 QString AddresseeUtil::addresseesToClipboard( KABC::Addressee::List &list )
@@ -46,6 +46,6 @@ QString AddresseeUtil::addresseesToClipboard( KABC::Addressee::List &list )
 
 KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString& )
 {
-  kdDebug(5700) << "Not yet implemented" << endl;
+  kdDebug(5720) << "Not yet implemented" << endl;
   return KABC::Addressee::List();
 }

@@ -21,37 +21,35 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-
 #include <qbuttongroup.h>
-#include <qlayout.h>
+#include <qcheckbox.h>
+#include <qhbox.h>
 #include <qlabel.h>
+#include <qlayout.h>
 #include <qlistbox.h>
 #include <qlistview.h>
-#include <qtoolbutton.h>
-#include <qtooltip.h>
-#include <qtextedit.h>
 #include <qpushbutton.h>
-#include <qcheckbox.h>
 #include <qsignal.h>
 #include <qstring.h>
-#include <qhbox.h>
+#include <qtextedit.h>
+#include <qtoolbutton.h>
+#include <qtooltip.h>
 
 #include <kaccelmanager.h>
 #include <kapplication.h>
 #include <kbuttonbox.h>
+#include <kcombobox.h>
 #include <kconfig.h>
+#include <kdebug.h>
+#include <kdialog.h>
+#include <kiconloader.h>
 #include <klineedit.h>
 #include <klistview.h>
-#include <kcombobox.h>
 #include <klocale.h>
-#include <kdebug.h>
-#include <kiconloader.h>
 #include <kmessagebox.h>
-#include <kdialog.h>
 #include <kseparator.h>
 
 #include "addresseditwidget.h"
-
 
 AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
@@ -179,52 +177,52 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
 
   QWidget *page = plainPage();
   
-  QGridLayout *topLayout = new QGridLayout(page, 8, 2);
-  topLayout->setSpacing(spacingHint());
+  QGridLayout *topLayout = new QGridLayout( page, 8, 2 );
+  topLayout->setSpacing( spacingHint() );
 
   mTypeCombo = new AddressTypeCombo( mAddressList, page );
   topLayout->addMultiCellWidget( mTypeCombo, 0, 0, 0, 1 );
 
-  QLabel *label = new QLabel(i18n("Street:"), page);
-  label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  topLayout->addWidget(label, 1, 0);
-  mStreetTextEdit = new QTextEdit(page, "mStreetTextEdit");
+  QLabel *label = new QLabel( i18n( "Street:" ), page );
+  label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
+  topLayout->addWidget( label, 1, 0 );
+  mStreetTextEdit = new QTextEdit( page );
   label->setBuddy( mStreetTextEdit );
-  topLayout->addWidget(mStreetTextEdit, 1, 1);
+  topLayout->addWidget( mStreetTextEdit, 1, 1 );
 
-  label = new QLabel(i18n("Post office box:"), page);
-  topLayout->addWidget(label, 2 , 0);
-  mPOBoxEdit = new KLineEdit(page, "mPOBoxEdit");
+  label = new QLabel( i18n( "Post office box:" ), page );
+  topLayout->addWidget( label, 2 , 0 );
+  mPOBoxEdit = new KLineEdit( page );
   label->setBuddy( mPOBoxEdit );
-  topLayout->addWidget(mPOBoxEdit, 2, 1);
+  topLayout->addWidget( mPOBoxEdit, 2, 1 );
 
-  label = new QLabel(i18n("Locality:"), page);
-  topLayout->addWidget(label, 3, 0);
-  mLocalityEdit = new KLineEdit(page, "mLocalityEdit");
+  label = new QLabel( i18n( "Locality:" ), page );
+  topLayout->addWidget( label, 3, 0 );
+  mLocalityEdit = new KLineEdit( page, "mLocalityEdit" );
   label->setBuddy( mLocalityEdit );
-  topLayout->addWidget(mLocalityEdit, 3, 1);
+  topLayout->addWidget( mLocalityEdit, 3, 1 );
 
-  label = new QLabel(i18n("Region:"), page);
-  topLayout->addWidget(label, 4, 0);
-  mRegionEdit = new KLineEdit(page, "mRegionEdit");
+  label = new QLabel( i18n( "Region:" ), page );
+  topLayout->addWidget( label, 4, 0 );
+  mRegionEdit = new KLineEdit( page );
   label->setBuddy( mRegionEdit );
-  topLayout->addWidget(mRegionEdit, 4, 1);
+  topLayout->addWidget( mRegionEdit, 4, 1 );
 
-  label = new QLabel(i18n("Postal code:"), page);
-  topLayout->addWidget(label, 5, 0);
-  mPostalCodeEdit = new KLineEdit(page, "mPostalCodeEdit");
+  label = new QLabel( i18n( "Postal code:" ), page );
+  topLayout->addWidget( label, 5, 0 );
+  mPostalCodeEdit = new KLineEdit( page );
   label->setBuddy( mPostalCodeEdit );
-  topLayout->addWidget(mPostalCodeEdit, 5, 1);
+  topLayout->addWidget( mPostalCodeEdit, 5, 1 );
 
-  label = new QLabel(i18n("Country:"), page);
-  topLayout->addWidget(label, 6, 0);
-  mCountryCombo = new KComboBox(page, "mCountryCombo");
-  mCountryCombo->setEditable(true);
-  mCountryCombo->setDuplicatesEnabled(false);
-  mCountryCombo->setAutoCompletion(true);
+  label = new QLabel( i18n( "Country:" ), page );
+  topLayout->addWidget( label, 6, 0 );
+  mCountryCombo = new KComboBox( page );
+  mCountryCombo->setEditable( true );
+  mCountryCombo->setDuplicatesEnabled( false );
+  mCountryCombo->setAutoCompletion( true );
   fillCountryCombo( mCountryCombo );
   label->setBuddy( mCountryCombo );
-  topLayout->addWidget(mCountryCombo, 6, 1);
+  topLayout->addWidget( mCountryCombo, 6, 1 );
   
   mPreferredCheckBox = new QCheckBox( i18n( "This is the preferred address" ), page );
   topLayout->addMultiCellWidget( mPreferredCheckBox, 7, 7, 0, 1 );
@@ -419,7 +417,7 @@ void AddressEditDialog::fillCountryCombo(KComboBox *combo)
   };
   
   QStringList countries;
-  for (int i =0; sCountry[i] != ""; ++i )
+  for ( int i = 0; sCountry[ i ] != ""; ++i )
     countries.append( sCountry[i] );
 
   countries.sort();

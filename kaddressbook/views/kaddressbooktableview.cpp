@@ -30,10 +30,9 @@
 #include "contactlistview.h"
 #include "kabprefs.h"
 
-KAddressBookTableView::KAddressBookTableView( KABC::AddressBook *doc,
-		      QWidget *parent,
-		      const char *name )
-  : KAddressBookView(doc, parent, name)
+KAddressBookTableView::KAddressBookTableView( KABC::AddressBook *ab,
+                                              QWidget *parent, const char *name )
+  : KAddressBookView( ab, parent, name )
 {
   mainLayout = new QVBoxLayout( viewWidget(), 2 );
   

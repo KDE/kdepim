@@ -1,6 +1,3 @@
-#ifndef FILTEREDITDIALOG_H
-#define FILTEREDITDIALOG_H
-
 /*
     This file is part of KAddressBook.
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>
@@ -24,6 +21,9 @@
     without including the source code for Qt in the source distribution.
 */
 
+#ifndef FILTEREDITDIALOG_H
+#define FILTEREDITDIALOG_H
+
 class QButtonGroup;
 class QString;
 class QToolButton;
@@ -42,17 +42,17 @@ class FilterDialog : public KDialogBase
   Q_OBJECT
 
   public:
-    FilterDialog(QWidget *parent, const char *name = 0);
+    FilterDialog( QWidget *parent, const char *name = 0 );
     ~FilterDialog();
 
-    void setFilters(const Filter::List &list);
+    void setFilters( const Filter::List &list );
     Filter::List &filters();
 
   protected slots:
     void add();
     void edit();
     void remove();
-    void selectionChanged( QListBoxItem * );
+    void selectionChanged( QListBoxItem* );
 
   private:
     void initGUI();
@@ -75,8 +75,10 @@ class FilterEditDialog : public KDialogBase
 
     void setFilter( const Filter &filter );
     Filter filter();
-protected slots:
-    void filterNameTextChanged( const QString&);
+
+  protected slots:
+    void filterNameTextChanged( const QString& );
+
   private:
     void initGUI();
 

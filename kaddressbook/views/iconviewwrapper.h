@@ -47,11 +47,10 @@ class IconViewWrapper : public ViewWrapper
       return desc;
     }
     
-    virtual KAddressBookView *createView(KABC::AddressBook *doc,
-                                         QWidget *parent, 
-                                         const char *name)
+    virtual KAddressBookView *createView( KABC::AddressBook *ab, QWidget *parent,
+                                          const char *name )
     {
-      return new KAddressBookIconView(doc, parent, name);
+      return new KAddressBookIconView( ab, parent, name );
     }
 
 };

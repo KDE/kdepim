@@ -26,13 +26,13 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+#include <kabc/address.h>
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
 #include <kabc/phonenumber.h>
-#include <kabc/address.h>
 
-ContactImportDialog::ContactImportDialog( KABC::AddressBook *doc, QWidget *parent )
-  : KImportDialog( parent ), mDocument( doc )
+ContactImportDialog::ContactImportDialog( KABC::AddressBook *ab, QWidget *parent )
+  : KImportDialog( parent ), mAddressBook( ab )
 {
   mCustomList.setAutoDelete( true );
 
@@ -75,7 +75,7 @@ ContactImportDialog::ContactImportDialog( KABC::AddressBook *doc, QWidget *paren
   mNote = new KImportColumn( this, KABC::Addressee::noteLabel() );
   mUrl = new KImportColumn( this, KABC::Addressee::urlLabel() );
 
-  KABC::Field::List fields = mDocument->fields( KABC::Field::CustomCategory );
+  KABC::Field::List fields = mAddressBook->fields( KABC::Field::CustomCategory );
   KABC::Field::List::Iterator it;
 
   for ( it = fields.begin(); it != fields.end(); ++it ) {
@@ -145,7 +145,7 @@ void ContactImportDialog::convertRow()
   if ( !addrWork.isEmpty() )
     a.insertAddress( addrWork );
 
-  KABC::Field::List fields = mDocument->fields( KABC::Field::CustomCategory );
+  KABC::Field::List fields = mAddressBook->fields( KABC::Field::CustomCategory );
   KABC::Field::List::Iterator it;
 
   uint counter = 0;
@@ -154,5 +154,5 @@ void ContactImportDialog::convertRow()
     ++counter;
   }
   
-  mDocument->insertAddressee( a );
+  mAddressBook->insertAddressee( a );
 }

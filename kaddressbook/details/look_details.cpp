@@ -294,18 +294,18 @@ void KABDetailedView::mousePressEvent(QMouseEvent *e)
 	{
             /* emit(call(current.telephone.at(2*rc),
                current.telephone.at(2*rc+1))); */
-            kdDebug() << "KABDetailedView::mousePressEvent: ni (calling)."
+            kdDebug(5720) << "KABDetailedView::mousePressEvent: ni (calling)."
                       << endl;
             break;
 	}
         if((rc=epainter->hitsTalkAddresses(point))!=-1)
 	{
             /* emit(talk(current.talk.at(rc))); */
-            kdDebug() << "KABDetailedView::mousePressEvent: ni (invoking ktalk)."
+            kdDebug(5720) << "KABDetailedView::mousePressEvent: ni (invoking ktalk)."
                       << endl;
             break;
 	}
-        kdDebug() << "KABDetailedView::mousePressEvent: not over active item."
+        kdDebug(5720) << "KABDetailedView::mousePressEvent: not over active item."
                   << endl;
         break;
     default:
@@ -360,7 +360,7 @@ void KABDetailedView::setEntry(const KABC::Addressee& e)
             }
             if(count==dirs.count())
             {   // not found:
-                kdDebug() << "KABDetailedView::setEntry: " << file
+                kdDebug(5720) << "KABDetailedView::setEntry: " << file
                           << " not locatable." << endl;
             }
         }
@@ -452,7 +452,7 @@ void KABDetailedView::configure(KConfig *config)
             useDefaultBGImage=getBackground(bgImage, defaultBGImage);
             if(!useDefaultBGImage)
             {
-                kdDebug() << "KABDetailedView::configure: "
+                kdDebug(5720) << "KABDetailedView::configure: "
                           << "default BG image selected, but could not be loaded."
                           << endl;
             }

@@ -1,6 +1,3 @@
-#ifndef FILTERSELECTIONWIDGET_H
-#define FILTERSELECTIONWIDGET_H
-
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -24,40 +21,45 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#ifndef FILTERSELECTIONWIDGET_H
+#define FILTERSELECTIONWIDGET_H
+
 #include <qhbox.h>
 
 class KComboBox;
 
-/** A simple widget which consists of a label and a combo box in a 
-* horizontal line. The combo box allows the user to select the active
-* filter.
-*/
+/**
+  A simple widget which consists of a label and a combo box in a 
+  horizontal line. The combo box allows the user to select the active
+  filter.
+ */
 class FilterSelectionWidget : public QHBox
 {
   Q_OBJECT
-  
+
   public:
-    FilterSelectionWidget(QWidget *parent, const char *name = 0);
+    FilterSelectionWidget( QWidget *parent, const char *name = 0 );
     ~FilterSelectionWidget();
-    
-    void setFilterNames(const QStringList &names);
-    
+
+    void setFilterNames( const QStringList &names );
+
     int currentItem() const;
-    void setCurrentItem(int index);
+    void setCurrentItem( int index );
     
-    QString text(int index) const;
+    QString text( int index ) const;
     unsigned int count() const;
     
     QString currentFilterName() const;
-    void setCurrentFilterName(const QString &name);
+    void setCurrentFilterName( const QString &name );
     
   signals:
-    void filterActivated(int);
+    void filterActivated( int );
     
   protected slots:
-    void activated(int);
+    void activated( int );
     
   private:
     KComboBox *mFilterCombo;
 };
+
 #endif

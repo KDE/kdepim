@@ -1,6 +1,3 @@
-#ifndef ADDRESSEEEDITORWIDGET_H
-#define ADDRESSEEEDITORWIDGET_H
-
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -24,26 +21,29 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#ifndef ADDRESSEEEDITORWIDGET_H
+#define ADDRESSEEEDITORWIDGET_H
+
 #include <qdatetime.h>
 
+#include <kabc/addressee.h>
 #include <kdialogbase.h>
 #include <kjanuswidget.h>
-#include <kabc/addressee.h>
 
 #include "featurebarwidget.h"
 
 class QCheckBox;
+class QSpinBox;
 class QTabWidget;
 class QTextEdit;
-class QSpinBox;
 
-class KLineEdit;
 class KComboBox;
 class KDateEdit;
+class KLineEdit;
 class KSqueezedTextLabel;
 
-class EmailEditWidget;
 class AddressEditWidget;
+class EmailEditWidget;
 class PhoneEditWidget;
 
 namespace KPIM
@@ -79,28 +79,32 @@ class AddresseeEditorWidget : public FeatureBarWidget
     void modified( KABC::Addressee::List );
   
   protected slots:
-    void textChanged(const QString &);
-    void pageChanged(QWidget *wdg);
+    void textChanged( const QString& );
+    void pageChanged( QWidget *wdg );
     
-    /** Emits the modified signal and sets the dirty flag. Any slot
-    * that modifies data should use this method instead of calling emit
-    * modified() directly.
-    */
+    /**
+      Emits the modified signal and sets the dirty flag. Any slot
+      that modifies data should use this method instead of calling emit
+      modified() directly.
+     */
     void emitModified();
-    void dateChanged(QDate);
+
+    void dateChanged( QDate );
     void invalidDate();
-    void nameTextChanged(const QString &);
+    void nameTextChanged( const QString& );
     void nameBoxChanged();
     void nameButtonClicked();
     void categoryButtonClicked();
-    void formattedNameChanged(const QString &);
+    void formattedNameChanged( const QString& );
     
-    /** Called whenever the categories change in the categories dialog.
-    */
-    void categoriesSelected(const QStringList &);
+    /**
+      Called whenever the categories change in the categories dialog.
+     */
+    void categoriesSelected( const QStringList& );
     
-    /** Edits which categories are available in the CategorySelectDialog.
-    */
+    /**
+      Edits which categories are available in the CategorySelectDialog.
+     */
     void editCategories();
     
   private:

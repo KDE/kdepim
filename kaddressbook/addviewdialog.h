@@ -1,6 +1,3 @@
-#ifndef ADDVIEWDIALOG_H
-#define ADDVIEWDIALOG_H
-
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -24,26 +21,30 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include <qstring.h>
-#include <qdict.h>
-#include <kdialogbase.h>
+#ifndef ADDVIEWDIALOG_H
+#define ADDVIEWDIALOG_H
 
-class QLineEdit;
+#include <kdialogbase.h>
+#include <qdict.h>
+#include <qstring.h>
+
 class QButtonGroup;
+class QLineEdit;
 class ViewWrapper;
 
 
-/** Modal dialog used for adding a new view. The dialog asks for the name of
-* the view as well as the type. Someday it would be nice for this to be a
-* wizard.
-*/
+/**
+  Modal dialog used for adding a new view. The dialog asks for the name of
+  the view as well as the type. Someday it would be nice for this to be a
+  wizard.
+ */
 class AddViewDialog : public KDialogBase
 {
-    Q_OBJECT
+  Q_OBJECT
     
   public:
-    AddViewDialog(QDict<ViewWrapper> *viewWrapperDict, 
-                  QWidget *parent, const char *name = 0);
+    AddViewDialog( QDict<ViewWrapper> *viewWrapperDict, QWidget *parent,
+                   const char *name = 0 );
     ~AddViewDialog();
     
     QString viewName();
@@ -51,14 +52,15 @@ class AddViewDialog : public KDialogBase
     QString viewType();
     
   protected slots:
-    /** Called when the user selects a type radio button
-    */
-    void clicked(int id);
+    /**
+      Called when the user selects a type radio button.
+     */
+    void clicked( int id );
     
-    /** Called when the user changes the text in the name of the
-    * view.
-    */
-    void textChanged(const QString &text);
+    /**
+      Called when the user changes the text in the name of the view.
+     */
+    void textChanged( const QString &text );
     
   private:
     QDict<ViewWrapper> *mViewWrapperDict;
@@ -66,7 +68,6 @@ class AddViewDialog : public KDialogBase
     QButtonGroup *mTypeGroup;
     
     int mTypeId;
-    
 };
 
 #endif

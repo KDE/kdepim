@@ -81,7 +81,7 @@ void ViewContainer::slotStyleSelected(int index)
             m_look=0;
         }
         KABLookFactory *factory=m_lookFactories.at(index);
-        kdDebug() << "ViewContainer::slotStyleSelected: "
+        kdDebug(5720) << "ViewContainer::slotStyleSelected: "
                   << "creating look "
                   << factory->description() << endl;
         m_look=factory->create();

@@ -21,62 +21,56 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include <qlayout.h>
 #include <qbuttongroup.h>
+#include <qlabel.h>
+#include <qlayout.h>
 #include <qlineedit.h>
 #include <qradiobutton.h>
-#include <qlabel.h>
 
 #include <klocale.h>
 
 #include "addviewdialog.h"
 #include "viewwrapper.h"
 
-AddViewDialog::AddViewDialog(QDict<ViewWrapper> *viewWrapperDict, 
-                             QWidget *parent, const char *name)
-    : KDialogBase(KDialogBase::Plain, i18n("Add View"),
-                  KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
-                  parent, name/*, true, true*/),
-                  mViewWrapperDict(viewWrapperDict)
+AddViewDialog::AddViewDialog( QDict<ViewWrapper> *viewWrapperDict, 
+                              QWidget *parent, const char *name )
+  : KDialogBase( KDialogBase::Plain, i18n( "Add View" ),
+                 KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
+                 parent, name ),
+   mViewWrapperDict( viewWrapperDict )
 {
-    mTypeId = 0;
+  mTypeId = 0;
     
-    QWidget *page = plainPage();
+  QWidget *page = plainPage();
     
-    QGridLayout *layout = new QGridLayout(page, 2, 2);
-    layout->setSpacing( spacingHint() );
-    layout->setRowStretch(1, 1);
-    layout->setColStretch(1, 1);
+  QGridLayout *layout = new QGridLayout( page, 2, 2 );
+  layout->setSpacing( spacingHint() );
+  layout->setRowStretch( 1, 1 );
+  layout->setColStretch( 1, 1 );
     
-    QLabel *label = new QLabel(i18n("View name:"), page);
-    layout->addWidget(label, 0, 0);
+  QLabel *label = new QLabel( i18n( "View name:" ), page );
+  layout->addWidget( label, 0, 0 );
     
-    mViewNameEdit = new QLineEdit(page, "mViewNameEdit");
-    connect(mViewNameEdit, SIGNAL(textChanged(const QString &)),
-            this, SLOT(textChanged(const QString &)));
-    layout->addWidget(mViewNameEdit, 0, 1);
+  mViewNameEdit = new QLineEdit( page );
+  connect( mViewNameEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( textChanged( const QString& ) ) );
+  layout->addWidget( mViewNameEdit, 0, 1 );
     
-    mTypeGroup = new QButtonGroup(2, Qt::Horizontal, 
-                                        i18n("View Type"), page);
-    connect(mTypeGroup, SIGNAL(clicked(int)), this, SLOT(clicked(int)));
-    layout->addMultiCellWidget(mTypeGroup, 1, 1, 0, 1);
+  mTypeGroup = new QButtonGroup( 2, Qt::Horizontal, i18n( "View Type" ), page );
+  connect( mTypeGroup, SIGNAL( clicked( int ) ), this, SLOT( clicked( int ) ) );
+  layout->addMultiCellWidget( mTypeGroup, 1, 1, 0, 1 );
     
-    // Now create the radio buttons. This needs some layout work.
-    QRadioButton *rb;
-    QDictIterator<ViewWrapper> iter(*mViewWrapperDict);
-    ViewWrapper *wrapper;
-    for (iter.toFirst(); iter.current(); ++iter)
-    {
-      wrapper = *iter;
-      
-      rb = new QRadioButton(wrapper->type(), mTypeGroup);
-      label = new QLabel(wrapper->description(), mTypeGroup);
-      label->setAlignment(Qt::AlignLeft | Qt::AlignTop | Qt::WordBreak);
-    }
+  // Now create the radio buttons. This needs some layout work.
+  QDictIterator<ViewWrapper> iter( *mViewWrapperDict );
+  for ( iter.toFirst(); iter.current(); ++iter ) {
+    QRadioButton *rb = new QRadioButton( (*iter)->type(), mTypeGroup );
+    label = new QLabel( (*iter)->description(), mTypeGroup );
+    label->setAlignment( Qt::AlignLeft | Qt::AlignTop | Qt::WordBreak );
+  }
     
-    mTypeGroup->setButton(0);
-    mViewNameEdit->setFocus();
-    enableButton(KDialogBase::Ok, false);
+  mTypeGroup->setButton( 0 );
+  mViewNameEdit->setFocus();
+  enableButton( KDialogBase::Ok, false );
 }
 
 AddViewDialog::~AddViewDialog()
@@ -85,22 +79,22 @@ AddViewDialog::~AddViewDialog()
     
 QString AddViewDialog::viewName()
 {
-    return mViewNameEdit->text();
+  return mViewNameEdit->text();
 }
     
 QString AddViewDialog::viewType()
 {
-    return mTypeGroup->find(mTypeId)->text();
+  return mTypeGroup->find( mTypeId )->text();
 }
 
-void AddViewDialog::clicked(int id)
+void AddViewDialog::clicked( int id )
 {
-    mTypeId = id;
+  mTypeId = id;
 }
 
-void AddViewDialog::textChanged(const QString &text)
+void AddViewDialog::textChanged( const QString &text )
 {
-    enableButton(KDialogBase::Ok, !text.isEmpty());
+  enableButton( KDialogBase::Ok, !text.isEmpty() );
 }
 
 #include "addviewdialog.moc"

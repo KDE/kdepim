@@ -120,10 +120,9 @@ void AddresseeCardView::startDrag()
 ///////////////////////////////
 // KAddressBookCardView
 
-KAddressBookCardView::KAddressBookCardView(KABC::AddressBook *doc,
-                                           QWidget *parent,
-                                           const char *name)
-    : KAddressBookView(doc, parent, name)
+KAddressBookCardView::KAddressBookCardView( KABC::AddressBook *ab,
+                                            QWidget *parent, const char *name )
+    : KAddressBookView( ab, parent, name )
 {
     mShowEmptyFields = true;
 

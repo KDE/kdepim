@@ -26,8 +26,8 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
-#include <qregexp.h>
 #include <qradiobutton.h>
+#include <qregexp.h>
 #include <qstring.h>
 #include <qtoolbutton.h>
 #include <qtooltip.h>
@@ -41,12 +41,12 @@
 #include <klistview.h>
 #include <klocale.h>
 
-#include "filtereditdialog.h"
 #include "kabprefs.h"
+#include "filtereditdialog.h"
 
 FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n("Edit Address Book Filter"),
-                Ok | Cancel, Ok, parent, name, false )
+  : KDialogBase( Plain, i18n( "Edit Address Book Filter" ),
+                 Ok | Cancel, Ok, parent, name, false )
 {
   initGUI();
 
@@ -55,7 +55,7 @@ FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
   QStringList::Iterator iter;
   for ( iter = cats.begin(); iter != cats.end(); ++iter )
     mCategoriesView->insertItem( new QCheckListItem( mCategoriesView, (*iter), QCheckListItem::CheckBox ) );
-  filterNameTextChanged( mNameEdit->text());
+  filterNameTextChanged( mNameEdit->text() );
 }
 
 FilterEditDialog::~FilterEditDialog()
@@ -124,7 +124,8 @@ void FilterEditDialog::initGUI()
   mNameEdit = new KLineEdit( page );
   topLayout->addWidget( label, 0, 0 );
   topLayout->addWidget( mNameEdit, 0, 1 );
-  connect (mNameEdit, SIGNAL(textChanged ( const QString & )), this, SLOT(filterNameTextChanged( const QString&)));
+  connect( mNameEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( filterNameTextChanged( const QString&) ) );
 
   mCategoriesView = new KListView( page );
   mCategoriesView->addColumn( i18n( "Categories" ) );
@@ -135,28 +136,28 @@ void FilterEditDialog::initGUI()
 
   QBoxLayout *gbLayout = new QVBoxLayout( mMatchRuleGroup );
   gbLayout->setSpacing( KDialog::spacingHint() );
-  gbLayout->setMargin( 20 );
+  gbLayout->setMargin( KDialog::marginHint() );
 
   QRadioButton *radio = new QRadioButton( i18n( "Show only contacts matching the selected categories" ), mMatchRuleGroup );
   radio->setChecked( true );
   mMatchRuleGroup->insert( radio );
   gbLayout->addWidget( radio );
 
-  radio = new QRadioButton(i18n("Show all contacts except those matching the selected categories"), mMatchRuleGroup );
+  radio = new QRadioButton( i18n( "Show all contacts except those matching the selected categories" ), mMatchRuleGroup );
   mMatchRuleGroup->insert( radio );
   gbLayout->addWidget( radio );
 
   topLayout->addMultiCellWidget( mMatchRuleGroup, 2, 2, 0, 1 );
 }
 
-void FilterEditDialog::filterNameTextChanged( const QString&text)
+void FilterEditDialog::filterNameTextChanged( const QString &text )
 {
-    enableButtonOK( !text.isEmpty());
+  enableButtonOK( !text.isEmpty() );
 }
 
-FilterDialog::FilterDialog(QWidget *parent, const char *name)
-  : KDialogBase(Plain, i18n("Edit Address Book Filters"),
-                Ok | Cancel, Ok, parent, name, false)
+FilterDialog::FilterDialog( QWidget *parent, const char *name )
+  : KDialogBase( Plain, i18n( "Edit Address Book Filters" ),
+                 Ok | Cancel, Ok, parent, name, false )
 {
   initGUI();
 }
@@ -165,7 +166,7 @@ FilterDialog::~FilterDialog()
 {
 }
 
-void FilterDialog::setFilters(const Filter::List &list)
+void FilterDialog::setFilters( const Filter::List &list )
 {
   mFilterList.clear();
   mFilterList = list;
@@ -244,7 +245,7 @@ void FilterDialog::initGUI()
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( marginHint() );
 
-  mFilterListBox = new KListBox( page, "mFilterListBox" );
+  mFilterListBox = new KListBox( page );
   topLayout->addWidget( mFilterListBox, 0, 0 );
   connect( mFilterListBox, SIGNAL( selectionChanged( QListBoxItem * ) ),
            SLOT( selectionChanged( QListBoxItem * ) ) );

@@ -22,38 +22,40 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include <qradiobutton.h>
 #include <qcombobox.h>
-#include <qlayout.h>
-#include <qpixmap.h>
-#include <qlabel.h>
-#include <qpushbutton.h>
-#include <qlistview.h>
 #include <qheader.h>
+#include <qlabel.h>
+#include <qlayout.h>
+#include <qlistview.h>
+#include <qpixmap.h>
+#include <qpushbutton.h>
+#include <qradiobutton.h>
 
+#include <kabc/addresseelist.h>
+#include <kapplication.h>
 #include <kdebug.h>
-#include <kprinter.h>
-#include <klocale.h>
 #include <kdialog.h>
 #include <kdialogbase.h>
-#include <kapplication.h>
-#include <kabc/addresseelist.h>
+#include <klocale.h>
+#include <kprinter.h>
 
 // including the styles
 #include "detailledstyle.h"
 #include "mikesstyle.h"
 
-#include "printingwizard.h"
-#include "printstyle.h"
-#include "printprogress.h"
 #include "../kabprefs.h"
+#include "printprogress.h"
+#include "printstyle.h"
+
+#include "printingwizard.h"
 
 using namespace KABPrinting;
 
-PrintingWizardImpl::PrintingWizardImpl( KPrinter *printer, KABC::AddressBook* doc,
-                                        const QStringList& selection,
-                                        QWidget *parent, const char* name )
-  : PrintingWizard( printer, doc, selection, parent, name ), mStyle( 0 )
+PrintingWizard::PrintingWizard( KPrinter *printer, KABC::AddressBook* ab,
+                                const QStringList& selection, QWidget *parent,
+                                const char* name )
+  : KWizard( parent, name ), mPrinter( printer ), mAddressBook( ab ),
+    mSelection( selection ), mStyle( 0 )
 {
   mSelectionPage = new SelectionPage( this );
   mSelectionPage->setUseSelection( !selection.isEmpty() );
@@ -71,7 +73,7 @@ PrintingWizardImpl::PrintingWizardImpl( KPrinter *printer, KABC::AddressBook* do
   setAppropriate( mSelectionPage, true );
 
 
-  mStylePage = new StylePage( doc, this );
+  mStylePage = new StylePage( mAddressBook, this );
   connect( mStylePage, SIGNAL( styleChanged(int) ), SLOT( slotStyleSelected(int) ) );
   insertPage( mStylePage, i18n("Chose Printing Style"), -1 );
 
@@ -81,17 +83,17 @@ PrintingWizardImpl::PrintingWizardImpl( KPrinter *printer, KABC::AddressBook* do
     slotStyleSelected( 0 );
 }
 
-PrintingWizardImpl::~PrintingWizardImpl()
+PrintingWizard::~PrintingWizard()
 {
 }
 
-void PrintingWizardImpl::accept()
+void PrintingWizard::accept()
 {
   print();
   close();
 }
 
-void PrintingWizardImpl::registerStyles()
+void PrintingWizard::registerStyles()
 {
   mStyleFactories.append( new DetailledPrintStyleFactory( this ) );
   mStyleFactories.append( new MikesStyleFactory( this ) );
@@ -101,7 +103,7 @@ void PrintingWizardImpl::registerStyles()
     mStylePage->addStyleName( mStyleFactories.at( i )->description() );
 }
 
-void PrintingWizardImpl::slotStyleSelected( int index )
+void PrintingWizard::slotStyleSelected( int index )
 {
   if ( index < 0 || (uint)index >= mStyleFactories.count() )
     return;
@@ -134,17 +136,17 @@ void PrintingWizardImpl::slotStyleSelected( int index )
   }
 }
 
-KABC::AddressBook* PrintingWizardImpl::document()
+KABC::AddressBook* PrintingWizard::addressBook()
 {
-  return mDocument;
+  return mAddressBook;
 }
 
-KPrinter* PrintingWizardImpl::printer()
+KPrinter* PrintingWizard::printer()
 {
   return mPrinter;
 }
 
-void PrintingWizardImpl::print()
+void PrintingWizard::print()
 {
   // create and show print progress widget:
   PrintProgress *progress = new PrintProgress( this );
@@ -159,7 +161,7 @@ void PrintingWizardImpl::print()
     if ( mSelectionPage->useSelection() ) {
       QStringList::Iterator it;
       for ( it = mSelection.begin(); it != mSelection.end(); ++it ) {
-        KABC::Addressee addr = document()->findByUid( *it );
+        KABC::Addressee addr = addressBook()->findByUid( *it );
         if ( !addr.isEmpty() )
           list.append( addr );
       }
@@ -171,7 +173,7 @@ void PrintingWizardImpl::print()
           break;
 
       KABC::AddressBook::Iterator it;
-      for ( it = document()->begin(); it != document()->end(); ++it ) {
+      for ( it = addressBook()->begin(); it != addressBook()->end(); ++it ) {
         if ( (*filterIt).filterAddressee( *it ) )
           list.append( *it );
       }
@@ -179,7 +181,7 @@ void PrintingWizardImpl::print()
     } else if ( mSelectionPage->useCategories() ) {
       QStringList categories = mSelectionPage->categories();
       KABC::AddressBook::Iterator it;
-      for ( it = document()->begin(); it != document()->end(); ++it ) {
+      for ( it = addressBook()->begin(); it != addressBook()->end(); ++it ) {
         QStringList tmp( (*it).categories() );
         QStringList::Iterator tmpIt;
         for ( tmpIt = tmp.begin(); tmpIt != tmp.end(); ++tmpIt )
@@ -191,7 +193,7 @@ void PrintingWizardImpl::print()
     } else {
       // create a string list of all entries:
       KABC::AddressBook::Iterator it;
-      for( it = document()->begin(); it != document()->end(); ++it )
+      for( it = addressBook()->begin(); it != addressBook()->end(); ++it )
         list.append( *it );
     }
 

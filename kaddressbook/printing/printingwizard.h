@@ -28,7 +28,8 @@
 #include <qlist.h>
 #include <qstringlist.h>
 
-#include "../kaddressbookprinter.h"
+#include <kwizard.h>
+
 #include "../filter.h"
 #include "kabc/addressbook.h"
 #include "printstyle.h"
@@ -46,20 +47,19 @@ namespace KABPrinting {
   The PrintingWizard combines pages common for all print styles
   and those provided by the respective style.
 */
-class PrintingWizardImpl : public PrintingWizard
+class PrintingWizard : public KWizard
 {
   Q_OBJECT
 
   public:
     /**
-      Construct a printing wizard. Give the document
-      (addressbook instance) to print.
+      Construct a printing wizard. Give the addressbook instance to print.
      */
-    PrintingWizardImpl( KPrinter *printer,
-                        KABC::AddressBook* doc,
-                        const QStringList& selection,
-                        QWidget *parent = 0, const char *name = 0 );
-    ~PrintingWizardImpl();
+    PrintingWizard( KPrinter *printer,
+                    KABC::AddressBook* ab,
+                    const QStringList& selection,
+                    QWidget *parent = 0, const char *name = 0 );
+    ~PrintingWizard();
 
     /**
       Modify this method to add a new PrintStyle.
@@ -74,7 +74,7 @@ class PrintingWizardImpl : public PrintingWizard
     /**
       Retrieve the document object.
      */
-    KABC::AddressBook *document();
+    KABC::AddressBook *addressBook();
 
     /**
       Retrieve the printer to be used.
@@ -92,6 +92,9 @@ class PrintingWizardImpl : public PrintingWizard
     QPtrList<PrintStyleFactory> mStyleFactories;
     QPtrList<PrintStyle> mStyleList;
     Filter::List mFilters;
+    KPrinter *mPrinter;
+    KABC::AddressBook *mAddressBook;
+    QStringList mSelection;
     PrintStyle *mStyle;
 
     StylePage *mStylePage;

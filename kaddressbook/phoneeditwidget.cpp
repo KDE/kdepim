@@ -212,17 +212,17 @@ void PhoneEditWidget::updateEdit( PhoneTypeCombo *combo )
     return;
 
 #if 0
-  if ( edit == mPrefEdit ) kdDebug() << " prefEdit" << endl;
-  if ( edit == mSecondEdit ) kdDebug() << " secondEdit" << endl;
-  if ( edit == mThirdEdit ) kdDebug() << " thirdEdit" << endl;
-  if ( edit == mFourthEdit ) kdDebug() << " fourthEdit" << endl;
+  if ( edit == mPrefEdit ) kdDebug(5720) << " prefEdit" << endl;
+  if ( edit == mSecondEdit ) kdDebug(5720) << " secondEdit" << endl;
+  if ( edit == mThirdEdit ) kdDebug(5720) << " thirdEdit" << endl;
+  if ( edit == mFourthEdit ) kdDebug(5720) << " fourthEdit" << endl;
 #endif
 
   PhoneNumber::List::Iterator it = combo->selectedElement();
   if ( it != mPhoneList.end() ) {
     edit->setText( (*it).number() );
   } else {
-    kdDebug() << "PhoneEditWidget::updateEdit(): no selected element" << endl;
+    kdDebug(5720) << "PhoneEditWidget::updateEdit(): no selected element" << endl;
   }
 }
 
@@ -248,8 +248,6 @@ void PhoneEditWidget::slotFourthEditChanged()
 
 void PhoneEditWidget::updatePhoneNumber( PhoneTypeCombo *combo )
 {
-//  kdDebug() << "PhoneEditWidget::updatePhoneNumber()" << endl;
-
   QLineEdit *edit = combo->lineEdit();
   if ( !edit ) return;
 
@@ -257,7 +255,7 @@ void PhoneEditWidget::updatePhoneNumber( PhoneTypeCombo *combo )
   if ( it != mPhoneList.end() ) {
     (*it).setNumber( edit->text() );
   } else {
-    kdDebug() << "PhoneEditWidget::updatePhoneNumber(): no selected element"
+    kdDebug(5720) << "PhoneEditWidget::updatePhoneNumber(): no selected element"
               << endl;
   }
 
@@ -271,8 +269,6 @@ void PhoneEditWidget::updatePhoneNumber( PhoneTypeCombo *combo )
 
 void PhoneEditWidget::updateOtherEdit( PhoneTypeCombo *combo, PhoneTypeCombo *otherCombo )
 {
-//  kdDebug() << "PhoneEditWidget::updateOtherEdit()" << endl;
-
   if ( combo == otherCombo ) return;
 
   if ( combo->currentItem() == otherCombo->currentItem() ) {

@@ -163,7 +163,7 @@ namespace KABPrinting
         // now the fields, in two halves
         painter.setFont(font);
 
-        KABC::Field::List fields = wizard()->document()->fields();
+        KABC::Field::List fields = wizard()->addressBook()->fields();
         int numFields = fields.count();
         QString label;
         QString value;
@@ -225,7 +225,7 @@ namespace KABPrinting
         int height = 0;
 
         // get the fields
-        KABC::Field::List fieldList = wizard()->document()->fields();
+        KABC::Field::List fieldList = wizard()->addressBook()->fields();
         int numFields = fieldList.count();
         int halfHeight = 0;
 

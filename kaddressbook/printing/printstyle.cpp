@@ -49,14 +49,14 @@ bool PrintStyle::setPreview( const QString& fileName )
   QPixmap preview;
   QString path = locate( "appdata", "printing/" + fileName );
   if ( path.isEmpty() ) {
-    kdDebug() << "PrintStyle::setPreview: preview not locatable." << endl;
+    kdDebug(5720) << "PrintStyle::setPreview: preview not locatable." << endl;
     return false;
   } else {
     if ( preview.load( path ) ) {
       setPreview( preview );
       return true;
     } else {
-      kdDebug() << "PrintStyle::setPreview: preview at '" << path << "' cannot be loaded." << endl;
+      kdDebug(5720) << "PrintStyle::setPreview: preview at '" << path << "' cannot be loaded." << endl;
       return false;
     }
   }

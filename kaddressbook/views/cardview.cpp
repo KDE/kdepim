@@ -603,7 +603,7 @@ CardViewItem *CardView::findItem(const QString &text, const QString &label,
   }
   else
   {
-    kdDebug() << "CardView::findItem: search method not implemented" << endl;
+    kdDebug(5720) << "CardView::findItem: search method not implemented" << endl;
   }
 
   return 0;
@@ -797,7 +797,7 @@ void CardView::mousePressEvent(QMouseEvent *e)
     else if ((e->button() & Qt::LeftButton) &&
              (e->state() & Qt::ShiftButton))
     {
-      kdDebug() << "CardView::mousePressEvent: shift-click not implemented"
+      kdDebug(5720) << "CardView::mousePressEvent: shift-click not implemented"
                 << endl;
     }
 

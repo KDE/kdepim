@@ -182,7 +182,7 @@ namespace KABPrinting {
             fixed.setPointSize(mPageAppearance->kisbFixedFontSize->value());
             config->writeEntry(FixedFont, fixed);
         }
-        kdDebug() << "DetailledPrintStyle::print: printing using" << endl
+        kdDebug(5720) << "DetailledPrintStyle::print: printing using" << endl
                   << "    header:   " << header.family() << "("
                   << header.pointSize() << ")" << endl
                   << "    headline: " << headlines.family() << "("
@@ -210,7 +210,7 @@ namespace KABPrinting {
         painter.begin(printer);
         printer->setFullPage(true); // use whole page
         QPaintDeviceMetrics metrics(printer);
-        kdDebug() << "DetailledPrintStyle::print: printing on a "
+        kdDebug(5720) << "DetailledPrintStyle::print: printing on a "
                   << metrics.width() << "x" << metrics.height()
                   << " size area," << endl << "   "
                   << "margins are "
@@ -247,7 +247,7 @@ namespace KABPrinting {
         {
             if( !(*it).isEmpty())
             { // print it:
-                kdDebug() << "DetailledPrintStyle::printEntries: printing addressee "
+                kdDebug(5720) << "DetailledPrintStyle::printEntries: printing addressee "
                           << (*it).realName() << endl;
                 // ----- do a faked print to get the bounding rect:
                 if(!mEPntr->printEntry((*it), window, painter, ypos, true, &brect))
@@ -260,7 +260,7 @@ namespace KABPrinting {
                 mEPntr->printEntry((*it), window, painter, ypos, false, &brect);
                 ypos+=brect.height();
             } else {
-                kdDebug() << "DetailledPrintStyle::printEntries: strange, addressee "
+                kdDebug(5720) << "DetailledPrintStyle::printEntries: strange, addressee "
                           << "with UID " << (*it).uid() << " not available." << endl;
             }
             // ----- set progress:

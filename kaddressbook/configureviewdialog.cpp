@@ -33,61 +33,57 @@
 #include "configureviewfilterpage.h"
 #include "configureviewdialog.h"
 
-ConfigureViewDialog::ConfigureViewDialog(const QString &viewName,
-                                         KABC::AddressBook *document, 
-                                         QWidget *parent, 
-                                         const char *name)
-    : KDialogBase(KDialogBase::IconList, 
-                  QString( i18n("Modify View: ") ) + viewName,
-                  KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
-                  parent, name, true, true)
+ConfigureViewDialog::ConfigureViewDialog( const QString &viewName,
+                                          KABC::AddressBook *ab, 
+                                          QWidget *parent, const char *name )
+  : KDialogBase( KDialogBase::IconList, QString( i18n( "Modify View: " ) ) +
+                 viewName, KDialogBase::Ok | KDialogBase::Cancel,
+                 KDialogBase::Ok, parent, name, true, true )
 {
-    initGUI( document );
+  initGUI( ab );
 }
 
 ConfigureViewDialog::~ConfigureViewDialog()
 {
 }
 
-void ConfigureViewDialog::readConfig(KConfig *config)
+void ConfigureViewDialog::readConfig( KConfig *config )
 {
   KABC::Field::List fields = KABC::Field::restoreFields( config, "KABCFields" );
 
-  if ( fields.isEmpty() ) {
+  if ( fields.isEmpty() )
     fields = KABC::Field::defaultFields();
-  }
   
   mSelectFieldsWidget->setSelectedFields( fields );
-  mFilterPage->readConfig(config);
+  mFilterPage->readConfig( config );
 }
 
-void ConfigureViewDialog::writeConfig(KConfig *config)
+void ConfigureViewDialog::writeConfig( KConfig *config )
 {
-  kdDebug() << "ConfigureViewDialog::writeConfig()" << endl;
+  kdDebug(5720) << "ConfigureViewDialog::writeConfig()" << endl;
 
   KABC::Field::List fields = mSelectFieldsWidget->selectedFields();
 
   KABC::Field::saveFields( config, "KABCFields", fields );
   
-  mFilterPage->writeConfig(config);
+  mFilterPage->writeConfig( config );
 }
     
-void ConfigureViewDialog::initGUI( KABC::AddressBook *document )
+void ConfigureViewDialog::initGUI( KABC::AddressBook *ab )
 {
   // Add the first page, the attributes
-  QVBox *page = addVBoxPage(i18n("Select Fields"), QString::null,
-                            KGlobal::iconLoader()
-                            ->loadIcon("view_detailed", KIcon::Desktop));
+  QVBox *page = addVBoxPage( i18n( "Select Fields" ), QString::null,
+                             KGlobal::iconLoader()->loadIcon( "view_detailed",
+                             KIcon::Desktop ) );
 
   // Add the select fields widget 
-  mSelectFieldsWidget = new SelectFieldsWidget( document, page,
-                                                "mSelectFieldsWidget");
-                                                
+  mSelectFieldsWidget = new SelectFieldsWidget( ab, page );
+
   // Add the second page, the filter selection
-  page = addVBoxPage(i18n("Default Filter"), QString::null,
-                     KGlobal::iconLoader()
-                     ->loadIcon("filter", KIcon::Desktop));
-  mFilterPage = new ConfigureViewFilterPage(page, "mFilterPage");
+  page = addVBoxPage( i18n( "Default Filter" ), QString::null, KGlobal::iconLoader()
+                      ->loadIcon( "filter", KIcon::Desktop ) );
+
+  mFilterPage = new ConfigureViewFilterPage( page );
 }
 
 #include "configureviewdialog.moc"

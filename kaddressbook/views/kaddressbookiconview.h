@@ -44,8 +44,8 @@ class KAddressBookIconView : public KAddressBookView
   Q_OBJECT
     
   public:
-    KAddressBookIconView(KABC::AddressBook *doc, QWidget *parent,
-                         const char *name);
+    KAddressBookIconView( KABC::AddressBook *ab, QWidget *parent,
+                          const char *name = 0 );
     virtual ~KAddressBookIconView();
     
     virtual QStringList selectedUids();
