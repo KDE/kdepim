@@ -1,5 +1,5 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
-    backends.cpp
+    kpgpbackendbase.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -45,11 +45,7 @@
 
 #include <qstring.h>
 
-#include "cryptplugwrapper.h"
-
-// Define this to enable the checkboxes in backendconfigwidget, for testing
-// Remove when this backend is correctly implemented
-// #define IMPL_HACK
+#include "kpgpwrapper.h"
 
 Kleo::KpgpBackendBase::KpgpBackendBase()
   : Kleo::CryptoBackend(),
@@ -63,7 +59,7 @@ Kleo::KpgpBackendBase::~KpgpBackendBase()
 }
 
 QString Kleo::GPG1Backend::name() const {
-  return "Kpgp/gpg1";
+  return GPG1_BACKEND_NAME;
 }
 
 QString Kleo::GPG1Backend::displayName() const {
@@ -71,7 +67,7 @@ QString Kleo::GPG1Backend::displayName() const {
 }
 
 QString Kleo::PGP2Backend::name() const {
-  return "Kpgp/pgp v2";
+  return PGP2_BACKEND_NAME;
 }
 
 QString Kleo::PGP2Backend::displayName() const {
@@ -79,7 +75,7 @@ QString Kleo::PGP2Backend::displayName() const {
 }
 
 QString Kleo::PGP5Backend::name() const {
-  return "Kpgp/pgp v5";
+  return PGP5_BACKEND_NAME;
 }
 
 QString Kleo::PGP5Backend::displayName() const {
@@ -87,7 +83,7 @@ QString Kleo::PGP5Backend::displayName() const {
 }
 
 QString Kleo::PGP6Backend::name() const {
-  return "Kpgp/pgp v6";
+  return PGP6_BACKEND_NAME;
 }
 
 QString Kleo::PGP6Backend::displayName() const {
@@ -102,13 +98,8 @@ static const QString notSupported() {
   return i18n("This backend does not support S/MIME");
 }
 
-bool Kleo::KpgpBackendBase::checkForOpenPGP( QString * reason ) const {
-#ifdef IMPL_HACK
+bool Kleo::KpgpBackendBase::checkForOpenPGP( QString * /*reason*/ ) const {
   return true;
-#else
-  if ( reason ) *reason = notYetImplemented();
-  return false;
-#endif
 }
 
 bool Kleo::KpgpBackendBase::checkForSMIME( QString * reason ) const {
@@ -117,12 +108,8 @@ bool Kleo::KpgpBackendBase::checkForSMIME( QString * reason ) const {
 }
 
 Kleo::CryptoBackend::Protocol * Kleo::KpgpBackendBase::openpgp() const {
-#ifdef IMPL_HACK
   if ( !mOpenPGPProtocol )
     if ( checkForOpenPGP() )
-      //############### HACK
-      mOpenPGPProtocol = new CryptPlugWrapper( "gpg", "openpgp" );
-#endif
+      mOpenPGPProtocol = new KpgpWrapper( name() );
   return mOpenPGPProtocol;
 }
-

@@ -1,8 +1,8 @@
-/*  -*- mode: C++; c-file-style: "gnu" -*-
-    kpgpbackendbase.h
+/*  -*- mode: C++ -*-
+    kpgpkeylistjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Ingo Kloecker <kloecker@kde.org>
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,44 +30,42 @@
     your version.
 */
 
+#ifndef __KLEO_KPGPKEYLISTJOB_H__
+#define __KLEO_KPGPKEYLISTJOB_H__
 
-#ifndef __KLEO_KPGPBACKENDBASE_H__
-#define __KLEO_KPGPBACKENDBASE_H__
+#include <kleo/keylistjob.h>
 
-#include "kleo/cryptobackend.h"
+#include <gpgmepp/interfaces/progressprovider.h>
 
-#define GPG1_BACKEND_NAME "Kpgp/gpg1"
-#define PGP2_BACKEND_NAME "Kpgp/pgp2"
-#define PGP5_BACKEND_NAME "Kpgp/pgp5"
-#define PGP6_BACKEND_NAME "Kpgp/pgp6"
-
-namespace Kleo {
-  class CryptoConfig;
+namespace GpgME {
+  class Error;
+  class Context;
+  class Key;
 }
-class QString;
-class KpgpWrapper;
+
+namespace Kpgp {
+  class Base;
+}
 
 namespace Kleo {
 
-  class KpgpBackendBase : public Kleo::CryptoBackend {
+  class KpgpKeyListJob : public KeyListJob {
+    Q_OBJECT
   public:
-    KpgpBackendBase();
-    ~KpgpBackendBase();
+    KpgpKeyListJob( Kpgp::Base * pgpBase );
+    ~KpgpKeyListJob();
 
-    CryptoConfig * config() const { return 0; }
-    Protocol * openpgp() const;
-    Protocol * smime() const { return 0; }
+    /*! \reimp from KeyListJob */
+    GpgME::Error start( const QStringList & patterns, bool secretOnly );
 
-    bool supportsOpenPGP() const { return true; }
-    bool supportsSMIME() const { return false; }
+    /*! \reimp from KeyListJob */
+    GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly,
+                               std::vector<GpgME::Key> & keys );
 
-    bool checkForOpenPGP( QString * reason=0 ) const;
-    bool checkForSMIME( QString * reason=0 ) const;
   private:
-    mutable KpgpWrapper * mOpenPGPProtocol;
+    Kpgp::Base * mPgpBase;
   };
 
 }
 
-
-#endif // __KLEO_KPGPBACKENDBASE_H__
+#endif // __KLEO_KPGPKEYLISTJOB_H__

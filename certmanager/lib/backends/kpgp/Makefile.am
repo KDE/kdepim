@@ -5,4 +5,5 @@ INCLUDES = -I$(top_srcdir)/libkdenetwork \
 noinst_LTLIBRARIES = libkleopatra_backend_kpgp.la
 
 libkleopatra_backend_kpgp_la_SOURCES = \
-			kpgpbackendbase.cpp
+			kpgpbackendbase.cpp kpgpwrapper.cpp \
+                        kpgpkeylistjob.cpp
