@@ -25,12 +25,11 @@
     Description:
     This filter allows you to import and export the KDE addressbook entries
     to/from a mobile phone, which is accessible via gnokii.
-    Gnokii homepage is at: http://www.gnokii.org
+    Gnokii homepage: http://www.gnokii.org
 
     TODO:
-	- handle callergroup value (Friend, VIP, Family, ...) better
 	- modal mode (show dialog during up/download)
-	- automatically detect mobile phone
+	- handle callergroup value (Friend, VIP, Family, ...) better
 	- we do not yet write back to SIM memory (for security reasons)
 */
 
@@ -83,8 +82,8 @@ extern "C"
 GNOKIIXXPort::GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : XXPortObject( ab, parent, name )
 {
-	createImportAction( i18n( "Import from Mobile Phone..." ) );
-	createExportAction( i18n( "Export to Mobile Phone..." ) );
+	createImportAction( i18n( "Import from Nokia Mobile Phone..." ) );
+	createExportAction( i18n( "Export to Nokia Mobile Phone..." ) );
 }
 
 /* import */
@@ -278,13 +277,12 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		a->setProductId(PhoneProductId);
 
 		// evaluate timestamp (ignore timezone)
-		QDate date;
 		QDateTime datetime;
 		if (entry.date.year<1998)
-			date = QDate::currentDate();
+			datetime = QDateTime::currentDateTime();
 		else
-			date = QDate(entry.date.year, entry.date.month, entry.date.day);
-		datetime = QDateTime( date, QTime(entry.date.hour, entry.date.minute, entry.date.second) );
+			datetime = QDateTime( QDate(entry.date.year, entry.date.month, entry.date.day), 
+							  QTime(entry.date.hour, entry.date.minute, entry.date.second) );
 		GNOKII_DEBUG(QString(" date=%1\n").arg(datetime.toString()));
 		a->setRevision(datetime);
 

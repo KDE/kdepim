@@ -110,7 +110,8 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
 	if (s.isEmpty() && t.eof()) {
 		// Newline: Write data
 writeData:
-		if (!a->formattedName().isEmpty()) {
+		if (!a->formattedName().isEmpty() || !a->name().isEmpty() || 
+		    !a->familyName().isEmpty()) {
 			if (!homeAddr->isEmpty())
 				a->insertAddress(*homeAddr);
 			if (!workAddr->isEmpty())
