@@ -42,6 +42,7 @@ class EmpathIndexRecord
 		EmpathIndexRecord();
 			
 		EmpathIndexRecord(const QString & id, RMessage &);
+		EmpathIndexRecord(const EmpathIndexRecord &);
 
 		EmpathIndexRecord(
 				const QString &		id,
@@ -71,13 +72,13 @@ class EmpathIndexRecord
 		Q_UINT32			size()		const	{ return size_;				}
 		RMessageID &		messageID()			{ return messageId_;		}
 		RMessageID &		parentID()			{ return parentMessageId_;	}
-
-		bool				hasParent();
-		QString				niceDate(bool twelveHour)	const;
-
-		void setStatus(RMM::MessageStatus s) { status_ = s; }
 		
-		void tag()		{ tagged_ = true; }
+		bool				hasParent();
+		QString				niceDate(bool twelveHour);
+
+		void setStatus(RMM::MessageStatus s);
+		
+		void tag(bool b){ tagged_ = b; }
 		bool isTagged()	{ return tagged_; }
 		
 	private:

@@ -46,8 +46,8 @@ RMessageComponent::~RMessageComponent()
 RMessageComponent::operator = (const RMessageComponent & m)
 {
 	rmmDebug("operator =");
-	parsed_		= m.parsed_;
-	assembled_	= m.assembled_;
+	if (this == &m) return *this;	// Avoid a = a.
+	assembled_	= false;
 	strRep_ = m.strRep_;
 	return *this;
 }

@@ -35,7 +35,6 @@
 // Local includes
 #include "EmpathComposeWidget.h"
 #include "EmpathHeaderEditWidget.h"
-#include "EmpathAttachmentListWidget.h"
 #include "EmpathSubjectSpecWidget.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
@@ -163,6 +162,28 @@ EmpathComposeWidget::_init()
 					else
 						subjectSpecWidget_->setSubject("Re: " + s);
 				
+				// Now quote original message if we need to.
+				
+				KConfig * c(kapp->getConfig());
+				c->setGroup(EmpathConfig::GROUP_COMPOSE);
+				
+				empathDebug("Quoting original if necessary");
+
+				if (c->readBoolEntry(EmpathConfig::KEY_AUTO_QUOTE)) {
+					empathDebug("It is necessary");
+				
+					QCString s(message->data());
+					empathDebug("original:");
+					empathDebug(s);
+					
+					s.replace(QRegExp("\\n"), "\n> ");
+					empathDebug("quoted:");
+					empathDebug(s);
+					
+					editorWidget_->setText(s);
+
+				}
+				
 				editorWidget_->setFocus();
 			}
 			break;
@@ -174,6 +195,24 @@ EmpathComposeWidget::_init()
 		case ComposeForward:
 			{
 				empathDebug("Forwarding");
+				
+				RMessage * message(empath->message(url_));
+				if (message == 0) return;
+				
+				QString s;
+			   
+				// Fill in the subject.
+				s = message->envelope().subject().asString();
+				empathDebug("Subject was \"" + s + "\""); 
+
+				if (s.isEmpty())
+					subjectSpecWidget_->setSubject(
+						i18n("Fwd: (no subject given)"));
+				else
+					if (s.find(QRegExp("^[Ff][Ww][Dd]:")) != -1)
+						subjectSpecWidget_->setSubject(s);
+					else
+						subjectSpecWidget_->setSubject("Fwd: " + s);
 			}
 			break;
 
@@ -228,16 +267,18 @@ EmpathComposeWidget::messageAsString()
 	// Put the user's added headers at the end, as they're more likely to
 	// be important, and it's easier to see them when they're near to the
 	// message body text.
-	msgData += headerEditWidget_->headersAsText();
+	
+	// FIXME Remove these asciis
+	msgData += headerEditWidget_->headersAsText().ascii();
 	msgData += RMM::headerNames[RMM::HeaderSubject];
 	msgData += ": ";
-	msgData += subjectSpecWidget_->getSubject();
+	msgData += subjectSpecWidget_->getSubject().ascii();
 	msgData += "\n";
 	msgData += "X-Mailer: Empath\n";
 	msgData += "\n\n";
 
 	// Header / body separator
-	msgData +=	editorWidget_->text();
+	msgData +=	editorWidget_->text().ascii();
 
 	return msgData;
 }

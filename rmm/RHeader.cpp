@@ -42,7 +42,8 @@ RHeader::RHeader()
 }
 
 RHeader::RHeader(const RHeader & h)
-	:	RMessageComponent()
+	:	RMessageComponent(h),
+		headerBody_(0)
 {
 	rmmDebug("copy ctor");
 }
@@ -54,6 +55,26 @@ RHeader::~RHeader()
 	headerBody_ = 0;
 }
 
+RHeader::RHeader(const QCString & s)
+	:	RMessageComponent(s),
+		headerBody_(0)
+{
+	rmmDebug("ctor");
+}
+
+	RHeader &
+RHeader::operator = (const QCString & s)
+{
+	rmmDebug("operator =");
+	delete headerBody_;
+	headerBody_ = 0;
+
+	RMessageComponent::operator = (s);
+	assembled_	= false;
+	return *this;
+}
+
+
 	RHeader &
 RHeader::operator = (const RHeader & h)
 {
@@ -63,10 +84,8 @@ RHeader::operator = (const RHeader & h)
 	headerName_ = h.headerName_;
 	headerType_ = h.headerType_;
 
-	if (headerBody_ != 0) {
-		delete headerBody_;
-		headerBody_ = 0;
-	}
+	delete headerBody_;
+	headerBody_ = 0;
 	
 	headerBody_ = new RHeaderBody(*h.headerBody_);
 	CHECK_PTR(headerBody_);

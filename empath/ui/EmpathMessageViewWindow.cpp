@@ -83,12 +83,12 @@ EmpathMessageViewWindow::setupMenuBar()
 	// File menu
 	empathDebug("setting up file menu");
 	
-	fileMenu_->insertItem(empathIcon("empath-save.xpm"), i18n("Save &As"),
+	fileMenu_->insertItem(empathIcon("empath-save.png"), i18n("Save &As"),
 		this, SLOT(s_fileSaveAs()));
 	
 	fileMenu_->insertSeparator();
 
-	fileMenu_->insertItem(empathIcon("empath-print.xpm"), i18n("&Print"),
+	fileMenu_->insertItem(empathIcon("empath-print.png"), i18n("&Print"),
 		this, SLOT(s_filePrint()));
 	
 	fileMenu_->insertSeparator();
@@ -100,30 +100,30 @@ EmpathMessageViewWindow::setupMenuBar()
 	
 	empathDebug("setting up edit menu");
 
-	editMenu_->insertItem(empathIcon("empath-copy.xpm"), i18n("&Copy"),
+	editMenu_->insertItem(empathIcon("empath-copy.png"), i18n("&Copy"),
 		this, SLOT(s_editCopy()));
 	
 	editMenu_->insertSeparator();
 	
-	editMenu_->insertItem(empathIcon("findf.xpm"), i18n("Find..."),
+	editMenu_->insertItem(empathIcon("findf.png"), i18n("Find..."),
 		this, SLOT(s_editFind()));
 	
-	editMenu_->insertItem(empathIcon("find.xpm"), i18n("Find &Again"),
+	editMenu_->insertItem(empathIcon("find.png"), i18n("Find &Again"),
 		this, SLOT(s_editFindAgain()));
 	
 	// Message Menu
 	empathDebug("setting up message menu");
 
-	messageMenu_->insertItem(empathIcon("mini-view.xpm"), i18n("&View source"),
+	messageMenu_->insertItem(empathIcon("mini-view.png"), i18n("&View source"),
 		this, SLOT(s_messageViewSource()));
 	
-	messageMenu_->insertItem(empathIcon("mini-view.xpm"), i18n("&New"),
+	messageMenu_->insertItem(empathIcon("mini-view.png"), i18n("&New"),
 		this, SLOT(s_messageNew()));
 
-	messageMenu_->insertItem(empathIcon("mini-save.xpm"), i18n("Save &As"),
+	messageMenu_->insertItem(empathIcon("mini-save.png"), i18n("Save &As"),
 		this, SLOT(s_messageSaveAs()));
 
-	messageMenu_->insertItem(empathIcon("editcopy.xpm"), i18n("&Copy to..."),
+	messageMenu_->insertItem(empathIcon("editcopy.png"), i18n("&Copy to..."),
 		this, SLOT(s_messageCopyTo()));
 	
 
@@ -141,24 +141,27 @@ EmpathMessageViewWindow::setupToolBar()
 {
 	empathDebug("setting up tool bar");
 
-	KToolBar * tb = new KToolBar(this, "tooly", 42);
+	QPixmap p = empathIcon("compose.png");
+	int i = QMAX(p.width(), p.height());
+
+	KToolBar * tb = new KToolBar(this, "tooly", i + 4);
 	CHECK_PTR(tb);
 	
 	this->addToolBar(tb, 0);
 
-	tb->insertButton(empathIcon("compose.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("compose.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_fileNewMessage()), true, i18n("Compose"));
 	
-	tb->insertButton(empathIcon("reply.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("reply.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_messageReply()), true, i18n("Reply"));
 	
-	tb->insertButton(empathIcon("forward.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("forward.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_messageForward()), true, i18n("Forward"));
 	
-	tb->insertButton(empathIcon("delete.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("delete.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_messageDelete()), true, i18n("Delete"));
 	
-	tb->insertButton(empathIcon("save.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("save.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_messageSaveAs()), true, i18n("Save"));
 }
 

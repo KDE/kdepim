@@ -131,3 +131,9 @@ RMimeType::assemble()
 	rmmDebug("assemble() called");
 }
 
+	void
+RMimeType::createDefault()
+{
+	rmmDebug("createDefault called");
+}
+

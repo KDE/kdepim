@@ -22,6 +22,7 @@
 #define RMM_ENUM_H
 
 #include <qcstring.h>
+#include <qstring.h>
 
 class RMM
 {
@@ -141,7 +142,41 @@ class RMM
 			MimeSubTypeJpeg,
 			MimeSubTypeGIF,
 			MimeSubTypeBasic,
-			MimeSubTypeMPEG
+			MimeSubTypeMPEG,
+			MimeSubTypeXcpio,
+			MimeSubTypeXdvi,
+			MimeSubTypeXperl,
+			MimeSubTypeXtar,
+			MimeSubTypeXdeb,
+			MimeSubTypeXrar,
+			MimeSubTypeXlatex,
+			MimeSubTypeXsh,
+			MimeSubTypeXshar,
+			MimeSubTypeXtgz,
+			MimeSubTypeXtcl,
+			MimeSubTypeXtex,
+			MimeSubTypeXtroff,
+			MimeSubTypeXzip,
+			MimeSubTypeXras,
+			MimeSubTypeXpnm,
+			MimeSubTypeXpbm,
+			MimeSubTypeXpgm,
+			MimeSubTypeXppm,
+			MimeSubTypeXrgb,
+			MimeSubTypeXxbm,
+			MimeSubTypeXxpm,
+			MimeSubTypeXavi,
+			MimeSubTypeXsgi,
+			MimeSubTypeXaiff,
+			MimeSubTypeXwav,
+			MimeSubTypePNG,
+			MimeSubTypeTIFF,
+			MimeSubTypeGL,
+			MimeSubTypeFLI,
+			MimeSubTypeQuickTime,
+			MimeSubTypeXvrml,
+			MimeSubTypeMIDI,
+			MimeSubTypeULAW
 		};
 
 		enum DispType {
@@ -169,6 +204,8 @@ class RMM
 		static	QCString	mimeSubTypeEnum2Str(MimeSubType t);
 		static	CteType		RCteStr2Enum(const QCString & s);
 		static 	QCString	cteTypeEnumToStr(CteType t);
+
+		static	QString		mimeTypeToIconName(MimeType t, MimeSubType st);
 };
 
 #endif

@@ -52,7 +52,7 @@ class EmpathMaildir
 		const EmpathURL &	url()		const { return url_; }
 		const QString &		path()		const { return path_; }
 		
-		void		mark(const EmpathURL & message, RMM::MessageStatus msgStat);
+		bool		mark(const EmpathURL &, RMM::MessageStatus);
 		
 		bool		writeMessage(RMessage & msg);
 		
@@ -65,7 +65,7 @@ class EmpathMaildir
 		
 		const char * className() const { return "EmpathMaildir"; }
 		
-		void sync(const EmpathURL & url);
+		void sync(const EmpathURL & url, bool ignoreMtime = false);
 		
 	private:
 		

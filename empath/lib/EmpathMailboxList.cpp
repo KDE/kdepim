@@ -79,7 +79,7 @@ EmpathMailboxList::append(EmpathMailbox * mailbox)
 	bool
 EmpathMailboxList::remove(EmpathMailbox * mailbox)
 {
-	empathDebug("remove");
+	empathDebug("remove \"" + mailbox->name() + "\" called");
 
 	QListIterator<EmpathMailbox> it(*this);
 
@@ -89,17 +89,7 @@ EmpathMailboxList::remove(EmpathMailbox * mailbox)
 			
 			QList::remove(it.current());
 			
-			empathDebug("Saving mailbox list count = " +
-					QString().setNum(count()));
-
-			// Save the number of mailboxes into the config.
-			KConfig * config_ = kapp->getConfig();
-			
-			// Save the config group.
-			KConfigGroupSaver cgs(config_, EmpathConfig::GROUP_GENERAL);
-			
-			// Save how many mailboxes we have.
-			config_->writeEntry(EmpathConfig::KEY_NUM_MAILBOXES, count());
+			saveConfig();
 		}
 
 		emit(updateFolderLists());
@@ -174,7 +164,9 @@ EmpathMailboxList::readConfig()
 		
 		c->setGroup(it.current());
 		
-		mailboxType = (AccountType)c->readUnsignedNumEntry(EmpathConfig::KEY_MAILBOX_TYPE);
+		mailboxType =
+			(AccountType)
+			c->readUnsignedNumEntry(EmpathConfig::KEY_MAILBOX_TYPE);
 
 		EmpathMailbox * m = 0;
 
@@ -242,7 +234,8 @@ EmpathMailboxList::saveConfig() const
 	
 	for (; it.current(); ++it) {
 		empathDebug("Mailbox with name '" + it.current()->name() + "' saved");
-		l.append(it.current()->name());
+		// FIXME Use QStringList when it works for KConfig
+		l.append(it.current()->name().ascii());
 		it.current()->saveConfig();
 	}
 	
@@ -250,5 +243,6 @@ EmpathMailboxList::saveConfig() const
 	
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	c->writeEntry(EmpathConfig::KEY_MAILBOX_LIST, l);
+	c->sync();
 }
 

@@ -108,9 +108,9 @@ class REnvelope : public RMessageComponent
 		/**
 		 * Gets the specified header.
 		 */
-		RText 		get(const QCString & headerName);
+		RHeader		* get(const QCString &);
 
-		RHeaderBody	*get(RMM::HeaderType h);
+		RHeaderBody	* get(RMM::HeaderType h);
 
 		/**
 		 * This applies to all similar methods:

@@ -137,7 +137,7 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 		bool				useAPOP_;
 		SavePolicy			passwordSavePolicy_;
 		bool				loggingPolicy_;
-		QCString			logFilePath_;
+		QString				logFilePath_;
 		bool				logFileDisposalPolicy_;
 		Q_UINT32			maxLogFileSize_;
 		Q_UINT32			messageSizeThreshold_;

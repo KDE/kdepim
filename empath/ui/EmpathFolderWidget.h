@@ -47,7 +47,7 @@ class EmpathFolderWidget : public QListView
 		
 		void update();
 
-		EmpathFolder * selectedFolder() const;
+		EmpathURL selected() const;
 
 	protected slots:
 
@@ -70,15 +70,14 @@ class EmpathFolderWidget : public QListView
 		enum OverType { Folder, Mailbox };
 		EmpathFolderListItem * _parentFolderListFolder(const EmpathFolder & folder);
 		void _addMailbox(const EmpathMailbox & mailbox);
-		void _addChildren(const EmpathFolder & item);
-		
-		EmpathFolderListItemList itemList_;
+		void _addChildren(EmpathFolder * item, EmpathFolderListItem * parent);
 		
 		QPopupMenu folderPopup_;
 		QPopupMenu mailboxPopup_;
 		QPopupMenu otherPopup_;
 		
-		EmpathURL popupMenuOverURL;
+		EmpathFolderListItem	* popupMenuOver;
+		OverType				popupMenuOverType;
 };
 
 #endif

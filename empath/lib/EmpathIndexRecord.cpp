@@ -34,9 +34,24 @@ EmpathIndexRecord::EmpathIndexRecord()
 		status_				(RMM::MessageStatus(0)),
 		size_				(0),
 		messageId_			(""),
-		parentMessageId_	("")
+		parentMessageId_	(""),
+		tagged_				(false)
 {
 	empathDebug("default ctor");
+}
+		
+EmpathIndexRecord::EmpathIndexRecord(const EmpathIndexRecord & i)
+	:	id_					(i.id_),
+		subject_			(i.subject_),
+		sender_				(i.sender_),
+		date_				(i.date_),
+		status_				(i.status_),
+		size_				(i.size_),
+		messageId_			(i.messageId_),
+		parentMessageId_	(i.parentMessageId_),
+		tagged_				(i.tagged_)
+{
+	empathDebug("copy ctor");
 }
 
 
@@ -48,7 +63,8 @@ EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMessage & m)
 		status_				(m.status()),
 		size_				(m.size()),
 		messageId_			(m.envelope().messageID()),
-		parentMessageId_	(m.envelope().parentMessageId())
+		parentMessageId_	(m.envelope().parentMessageId()),
+		tagged_				(false)
 {
 	empathDebug("ctor w/ an RMessage - my id == " + id_);
 }
@@ -70,7 +86,8 @@ EmpathIndexRecord::EmpathIndexRecord(
 		status_				(status),
 		size_				(size),
 		messageId_			(messageId),
-		parentMessageId_	(parentMessageId)
+		parentMessageId_	(parentMessageId),
+		tagged_				(false)
 {
 	empathDebug("ctor - my id == " + id_);
 }
@@ -87,11 +104,11 @@ EmpathIndexRecord::hasParent()
 }
 
 	QString
-EmpathIndexRecord::niceDate(bool twelveHour) const
+EmpathIndexRecord::niceDate(bool twelveHour)
 {
 	QDateTime now, then;
 	now = QDateTime::currentDateTime();
-	then = date_;
+	then = date_.qdt();
 	
 	// Use difference between times to work out how old a message is, and see
 	// if we can represent it in a more concise fashion.
@@ -195,5 +212,12 @@ operator >> (QDataStream & s, EmpathIndexRecord & rec)
 	rec.status_ = (RMM::MessageStatus)i;
 	
 	return s;
+}
+
+	void
+EmpathIndexRecord::setStatus(RMM::MessageStatus s)
+{
+	empathDebug("setStatus() called");
+	status_ = s;
 }
 

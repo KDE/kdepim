@@ -44,7 +44,6 @@
 #include "EmpathAboutBox.h"
 #include "EmpathMessageSourceView.h"
 #include "EmpathConfig.h"
-#include "EmpathFindDialog.h"
 #include "EmpathFilterManagerDialog.h"
 #include "EmpathFolderChooserDialog.h"
 #include "Empath.h"
@@ -72,11 +71,8 @@ EmpathMainWindow::EmpathMainWindow(const char * name)
 	setupStatusBar();
 	
 	setCaption(kapp->getCaption());
-	
 	updateRects();
-
-	qApp->processEvents();
-	empathDebug("About to show...");
+	kapp->processEvents();
 	show();
 	messageListWidget_->update();
 }
@@ -87,115 +83,11 @@ EmpathMainWindow::~EmpathMainWindow()
 }
 
 	void
-EmpathMainWindow::setupMenuBar()
-{
-	empathDebug("setting up menu bar");
-
-	fileMenu_		= new QPopupMenu;
-	CHECK_PTR(fileMenu_);
-
-	editMenu_		= new QPopupMenu;
-	CHECK_PTR(editMenu_);
-
-	folderMenu_		= new QPopupMenu;
-	CHECK_PTR(folderMenu_);
-
-	messageMenu_	= new QPopupMenu;
-	CHECK_PTR(messageMenu_);
-	
-	optionsMenu_	= new QPopupMenu;
-	CHECK_PTR(optionsMenu_);
-
-	helpMenu_		= new QPopupMenu;
-	CHECK_PTR(helpMenu_);
-
-	// File menu
-	
-	fileMenu_->insertItem(empathIcon("send.xpm"), i18n("&Send Pending Mail"),
-		this, SLOT(s_fileSendNew()));
-
-//	fileMenu_->insertSeparator();
-
-//	fileMenu_->insertItem(i18n("Address&book..."),
-//		this, SLOT(s_fileAddressBook()));
-	
-	fileMenu_->insertSeparator();
-
-	fileMenu_->insertItem(i18n("E&xit"),
-		this, SLOT(s_fileQuit()));
-
-	// Edit menu
-	
-	editMenu_->insertItem(empathIcon("empath-cut.xpm"), i18n("Cu&t"),
-		this, SLOT(s_editCut()));
-	
-	editMenu_->insertItem(empathIcon("empath-copy.xpm"),i18n("&Copy"),
-		this, SLOT(s_editCopy()));
-	
-	editMenu_->insertItem(empathIcon("empath-paste.xpm"), i18n("&Paste"),
-		this, SLOT(s_editPaste()));
-	
-	editMenu_->insertItem(i18n("&Delete"),
-		this, SLOT(s_editDelete()));
-
-	editMenu_->insertSeparator();
-	
-	editMenu_->insertItem(i18n("&Select") + "...",
-		this, SLOT(s_editSelect()));
-	
-	editMenu_->insertSeparator();
-	
-	editMenu_->insertItem(i18n("&Find In Message") + "...",
-		this, SLOT(s_editFindInMessage()));
-	
-	editMenu_->insertItem(i18n("Find In A&ll Messages") + "...",
-		this, SLOT(s_editFind()));
-
-	editMenu_->insertItem(i18n("Find &Again"),
-		this, SLOT(s_editFindAgain()));
-	
-	// Folder menu
-
-	folderMenu_->insertItem(empathIcon("mini-folder-grey.xpm"),
-		i18n("&New") + "...",
-		this, SLOT(s_folderNew()));
-
-	folderMenu_->insertItem(
-		i18n("&Properties") + "...",
-		this, SLOT(s_folderEdit()));
-
-	folderMenu_->insertItem(empathIcon("mini-folder-outbox.xpm"),
-		i18n("&Clear") + "...",
-		this, SLOT(s_folderClear()));
-
-	folderMenu_->insertItem(
-		i18n("Delete") + "...",
-		this, SLOT(s_folderDelete()));
-
-	// Message Menu
-	setupMessageMenu(this, 0, messageMenu_);
-	
-	// Options menu
-	setupOptionsMenu(this, 0, optionsMenu_);
-	
-	// Help menu
-	setupHelpMenu(this, 0, helpMenu_);
-
-	menu_->insertItem(i18n("&File"), fileMenu_);
-	menu_->insertItem(i18n("&Edit"), editMenu_);
-	menu_->insertItem(i18n("F&older"), folderMenu_);
-	menu_->insertItem(i18n("&Message"), messageMenu_);
-	menu_->insertItem(i18n("&Options"), optionsMenu_);
-	menu_->insertSeparator();
-	menu_->insertItem(i18n("&Help"), helpMenu_);
-}
-
-	void
 EmpathMainWindow::setupToolBar()
 {
 	empathDebug("setting up tool bar");
 
-	QPixmap p = empathIcon("compose.xpm");
+	QPixmap p = empathIcon("compose.png");
 	int i = QMAX(p.width(), p.height());
 
 	KToolBar * tb = new KToolBar(this, "tooly", i + 4 );
@@ -216,25 +108,25 @@ EmpathMainWindow::setupToolBar()
 	QObject::connect(tb, SIGNAL(moved(BarPosition)),
 			this, SLOT(s_toolbarMoved(BarPosition)));
 
-	tb->insertButton(empathIcon("compose.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("compose.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_messageNew()), true, i18n("Compose"));
 	
-	tb->insertButton(empathIcon("reply.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("reply.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_messageReply()), true, i18n("Reply"));
 	
-	tb->insertButton(empathIcon("forward.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("forward.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_messageForward()), true, i18n("Forward"));
 	
 	tb->insertSeparator();
 	
-	tb->insertButton(empathIcon("delete.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("delete.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_messageDelete()), true, i18n("Delete"));
 	
-	tb->insertButton(empathIcon("save.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("save.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_messageSaveAs()), true, i18n("Save"));
 	
 	// Debugging
-	tb->insertButton(empathIcon("mini-view.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("mini-view.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_dumpWidgetList()), true, i18n("Debug"));
 }
 
@@ -315,24 +207,18 @@ EmpathMainWindow::s_editSelect()
 EmpathMainWindow::s_editFindInMessage()
 {
 	empathDebug("s_editFindInMessage called");
-	EmpathFindDialog f(this, "findDialog");
-	f.exec();
 }
 
 	void
 EmpathMainWindow::s_editFind()
 {
 	empathDebug("s_editFind called");
-	EmpathFindDialog f(this, "findDialog");
-	f.exec();
 }
 
 	void
 EmpathMainWindow::s_editFindAgain()
 {
 	empathDebug("s_editFindAgain called");
-	EmpathFindDialog f(this, "findDialog");
-	f.exec();
 }
 
 // Folder menu slots
@@ -407,7 +293,7 @@ EmpathMainWindow::s_messageBounce()
 EmpathMainWindow::s_messageDelete()
 {
 	empathDebug("s_messageDelete called");
-	empath->s_remove(messageListWidget_->firstSelectedMessage());
+	empath->remove(messageListWidget_->firstSelectedMessage());
 }
 
 	void
@@ -424,7 +310,7 @@ EmpathMainWindow::s_messageSaveAs()
 
 	QString saveFilePath =
 		KFileDialog::getSaveFileName(
-			QString::null, QString::null, this, i18n("Empath: Save Message"));
+			QString::null, QString::null, this, i18n("Empath: Save Message").ascii());
 	empathDebug(saveFilePath);
 	
 	if (saveFilePath.isEmpty()) {
@@ -465,21 +351,20 @@ EmpathMainWindow::s_messageCopyTo()
 		return;
 	}
 	
-	EmpathFolderChooserDialog * fcd =
-		new EmpathFolderChooserDialog((QWidget *)0L, "fcd");
+	EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
 
-	fcd->exec();
-
-	EmpathFolder * copyFolder = fcd->selectedFolder();
-
-	if (copyFolder == 0) {
-		empathDebug("No folder selected for copy");
-		delete message; message = 0;
+	if (fcd.exec() != QDialog::Accepted) {
+		empathDebug("copy cancelled");
 		return;
 	}
 
-	copyFolder->writeMessage(*message);
-	delete message; message = 0;
+	EmpathFolder * copyFolder = empath->folder(fcd.selected());
+
+	if (copyFolder != 0)
+		copyFolder->writeMessage(*message);
+	else {
+		empathDebug("Couldn't get copy folder");
+	}
 }
 
 	void
@@ -494,23 +379,21 @@ EmpathMainWindow::s_messageMoveTo()
 		return;
 	}
 	
-	EmpathFolderChooserDialog * fcd =
-		new EmpathFolderChooserDialog((QWidget *)0L, "fcd");
+	EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
 
-	fcd->exec();
-
-	EmpathFolder * copyFolder = fcd->selectedFolder();
-
-	if (copyFolder == 0) {
-		empathDebug("No folder selected for move");
-		delete message; message = 0;
+	if (fcd.exec() != QDialog::Accepted) {
+		empathDebug("copy cancelled");
 		return;
 	}
 
-	if (copyFolder->writeMessage(*message)) {
-		// FIXME: Remove message from its parent folder.
+
+	EmpathFolder * copyFolder = empath->folder(fcd.selected());
+
+	if (copyFolder != 0) {
+		if (copyFolder->writeMessage(*message)) {
+			empath->remove(messageListWidget_->firstSelectedMessage());
+		}
 	}
-	delete message; message = 0;
 }
 
 	void
@@ -618,3 +501,4 @@ EmpathMainWindow::_getFirstSelectedMessage() const
 	return empath->message(messageListWidget_->firstSelectedMessage());
 }
 
+#include "EmpathMainWindowMenus.cpp"

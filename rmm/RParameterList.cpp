@@ -31,7 +31,6 @@ RParameterList::RParameterList()
 		RHeaderBody()
 {
 	rmmDebug("ctor");
-	setAutoDelete(true);
 }
 
 RParameterList::RParameterList(const RParameterList & l)
@@ -39,7 +38,6 @@ RParameterList::RParameterList(const RParameterList & l)
 		RHeaderBody(l)
 {
 	rmmDebug("ctor");
-	setAutoDelete(true);
 }
 
 RParameterList::RParameterList(const QCString & s)
@@ -47,7 +45,6 @@ RParameterList::RParameterList(const QCString & s)
 		RHeaderBody(s)
 {
 	rmmDebug("ctor");
-	setAutoDelete(true);
 }
 
 

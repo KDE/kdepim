@@ -42,7 +42,6 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
 	public:
 		
 		EmpathMessageHTMLWidget(
-				const EmpathURL & url,
 				QWidget		* _parent	= 0,
 				const char	* _name		= 0);
 		
@@ -53,7 +52,8 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
 		 */
 		void go();
 		void toHTML(QCString &);
-		void setMessage(const EmpathURL &);
+		void use(REnvelope &, RBodyPart &);
+		void use(RBodyPart &);
 //		void s_imageRequest(KHTMLWidget * view, const char *url);
 
 	protected slots:
@@ -61,7 +61,8 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
 
 	private:
 		
-		EmpathURL url_;
+		REnvelope envelope_;
+		RBodyPart bodyPart_;
 		
 		bool	loadTemplate(const QString & filename);
 
@@ -76,6 +77,8 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
 		void	markupHeaderNames(QCString & html);
 		
 		QCString htmlTemplate;
+		
+		bool useEnvelope_;
 };
 
 #endif

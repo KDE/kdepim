@@ -110,7 +110,7 @@ RAddressList::assemble()
 	
 	RAddressListIterator it(*this);
 
-	strRep_ = QString::null;
+	strRep_ = "";
 	
 	for (; it.current(); ++it) {
 		

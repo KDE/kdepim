@@ -54,7 +54,6 @@ EmpathComposeWindow::EmpathComposeWindow(
 	CHECK_PTR(composeWidget_);
 	
 	setView(composeWidget_, false);
-	composeWidget_->show();
 
 	setupMenuBar();
 	setupToolBar();
@@ -64,6 +63,7 @@ EmpathComposeWindow::EmpathComposeWindow(
 	setCaption(title);
 	
 	updateRects();
+	kapp->processEvents();
 	show();
 }
 
@@ -73,121 +73,11 @@ EmpathComposeWindow::~EmpathComposeWindow()
 }
 	
 	void
-EmpathComposeWindow::setupMenuBar()
-{
-	empathDebug("setting up menu bar");
-
-	fileMenu_	= new QPopupMenu();
-	CHECK_PTR(fileMenu_);
-
-	editMenu_	= new QPopupMenu();
-	CHECK_PTR(editMenu_);
-
-	messageMenu_	= new QPopupMenu();
-	CHECK_PTR(messageMenu_);
-	
-	helpMenu_	= new QPopupMenu();
-	CHECK_PTR(helpMenu_);
-
-	// File menu
-	empathDebug("setting up file menu");
-	
-	fileMenu_->insertItem(empathIcon("mini-send.xpm"), i18n("&Send Message"),
-		this, SLOT(s_fileSendMessage()));
-	
-	fileMenu_->insertItem(empathIcon("mini-sendlater.xpm"), i18n("Send &Later"),
-		this, SLOT(s_fileSendLater()));
-	
-	fileMenu_->insertSeparator();
-
-	fileMenu_->insertItem(empathIcon("mini-save.xpm"), i18n("Save &As"),
-		this, SLOT(s_fileSaveAs()));
-	
-	fileMenu_->insertSeparator();
-	
-	fileMenu_->insertItem(i18n("Attach &File"),
-		this, SLOT(s_fileAttachFile()));
-	
-	fileMenu_->insertSeparator();
-
-	fileMenu_->insertItem(empathIcon("empath-print.xpm"), i18n("&Print"),
-		this, SLOT(s_filePrint()));
-	
-	fileMenu_->insertSeparator();
-
-	fileMenu_->insertItem(empathIcon("blank.xpm"), i18n("&Close"),
-		this, SLOT(s_fileClose()));
-
-	// Edit menu
-	
-	empathDebug("setting up edit menu");
-
-	editMenu_->insertItem(i18n("&Undo"),
-		this, SLOT(s_editUndo()));
-	
-	editMenu_->insertItem(i18n("&Redo"),
-		this, SLOT(s_editRedo()));
-	
-	editMenu_->insertSeparator();
-
-	editMenu_->insertItem(empathIcon("empath-cut.xpm"), i18n("Cu&t"),
-		this, SLOT(s_editCut()));
-	
-	editMenu_->insertItem(empathIcon("empath-copy.xpm"), i18n("&Copy"),
-		this, SLOT(s_editCopy()));
-	
-	editMenu_->insertItem(empathIcon("empath-paste.xpm"), i18n("&Paste"),
-		this, SLOT(s_editPaste()));
-	
-	editMenu_->insertItem(empathIcon("blank.xpm"), i18n("&Delete"),
-		this, SLOT(s_editDelete()));
-
-	editMenu_->insertSeparator();
-	
-	editMenu_->insertItem(empathIcon("blank.xpm"), i18n("&Select All"),
-		this, SLOT(s_editSelectAll()));
-	
-	editMenu_->insertSeparator();
-	
-	editMenu_->insertItem(empathIcon("blank.xpm"), i18n("Find..."),
-		this, SLOT(s_editFind()));
-	
-	editMenu_->insertItem(empathIcon("blank.xpm"), i18n("Find &Again"),
-		this, SLOT(s_editFindAgain()));
-	
-	// Message Menu
-	empathDebug("setting up message menu");
-
-	messageMenu_->insertItem(empathIcon("mini-compose.xpm"), i18n("&New"),
-		this, SLOT(s_messageNew()));
-
-	messageMenu_->insertItem(empathIcon("mini-save.xpm"), i18n("Save &As"),
-		this, SLOT(s_messageSaveAs()));
-
-	messageMenu_->insertItem(empathIcon("mini-copy.xpm"), i18n("&Copy to..."),
-		this, SLOT(s_messageCopyTo()));
-	
-	messageMenu_->insertSeparator();
-		
-	messageMenu_->insertItem(empathIcon("blank.xpm"), i18n("&View source"),
-		this, SLOT(s_messageViewSource()));
-
-	setupHelpMenu(this, 0, helpMenu_);
-	
-	empathDebug("Adding submenus to main menu");
-	menu->insertItem(i18n("&File"), fileMenu_);
-	menu->insertItem(i18n("&Edit"), editMenu_);
-	menu->insertItem(i18n("&Message"), messageMenu_);
-	menu->insertSeparator();
-	menu->insertItem(i18n("&Help"), helpMenu_);
-}
-
-	void
 EmpathComposeWindow::setupToolBar() 
 {
 	empathDebug("setting up tool bar");
 
-	QPixmap p = empathIcon("compose.xpm");
+	QPixmap p = empathIcon("compose.png");
 	int i = QMAX(p.width(), p.height());
 
 	KToolBar * tb = new KToolBar(this, "tooly", i + 4 );
@@ -195,13 +85,13 @@ EmpathComposeWindow::setupToolBar()
 
 	this->addToolBar(tb, 0);
 
-	tb->insertButton(empathIcon("send.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("send.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_fileSendMessage()), true, i18n("Send"));
 	
-	tb->insertButton(empathIcon("sendlater.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("sendlater.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_fileSendLater()), true, i18n("Send Later"));
 	
-	tb->insertButton(empathIcon("save.xpm"), 0, SIGNAL(clicked()),
+	tb->insertButton(empathIcon("save.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_fileSaveAs()), true, i18n("Save"));
 }
 
@@ -389,4 +279,6 @@ EmpathComposeWindow::s_aboutQt()
 {
 	QMessageBox::aboutQt(this, "aboutQt");
 }
+
+#include "EmpathComposeWindowMenus.cpp"
 

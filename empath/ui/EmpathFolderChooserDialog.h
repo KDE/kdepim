@@ -31,6 +31,9 @@
 // KDE includes
 #include <kbuttonbox.h>
 
+// Local includes
+#include "EmpathURL.h"
+
 class EmpathFolder;
 class EmpathFolderWidget;
 
@@ -44,7 +47,7 @@ class EmpathFolderChooserDialog : public QDialog
 
 		~EmpathFolderChooserDialog();
 
-		EmpathFolder * selectedFolder() const;
+		EmpathURL selected() const;
 
 	protected slots:
 

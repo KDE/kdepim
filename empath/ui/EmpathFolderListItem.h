@@ -53,7 +53,4 @@ class EmpathFolderListItem : public QObject, public QListViewItem
 		EmpathURL url_;
 };
 
-typedef QList<EmpathFolderListItem> EmpathFolderListItemList;
-typedef QListIterator<EmpathFolderListItem> EmpathFolderListItemIterator;
-
 #endif

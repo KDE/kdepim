@@ -18,44 +18,46 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef EMPATHFOLDERCHOOSERWIDGET_H
-#define EMPATHFOLDERCHOOSERWIDGET_H
+#ifndef EMPATHMESSAGESTRUCTUREITEM_H
+#define EMPATHMESSAGESTRUCTUREITEM_H
 
 // Qt includes
-#include <qlabel.h>
-#include <qpushbutton.h>
-#include <qwidget.h>
-#include <qlayout.h>
-#include <qframe.h>
+#include <qstring.h>
+#include <qlistview.h>
 
 // Local includes
-#include "EmpathURL.h"
+#include "EmpathDefines.h"
+#include "RMM_BodyPart.h"
+#include "RMM_Enum.h"
 
-class EmpathFolderChooserWidget : public QFrame
+/**
+ * @internal
+ */
+class EmpathMessageStructureItem : public QListViewItem
 {
-	Q_OBJECT
-	
 	public:
 	
-		EmpathFolderChooserWidget(QWidget * parent, const char * name);
-		virtual ~EmpathFolderChooserWidget();
+		EmpathMessageStructureItem(
+			QListView * parent,
+			RBodyPart &);
 
-		EmpathURL selectedURL() const;
+		EmpathMessageStructureItem(
+			EmpathMessageStructureItem * parent,
+			RBodyPart &);
+
+		~EmpathMessageStructureItem();
 		
-		void setURL(const EmpathURL & url);
+		virtual void setup();
+		
+		RBodyPart * part() { return &part_; }
 
-
-	protected slots:
-	
-		void		s_browse();
-	
+		const char * className() const { return "EmpathStructureListItem"; }
+		
 	private:
 
-		QLabel		* l_folderName_;
-		QPushButton	* pb_selectFolder_;
-		QGridLayout	* layout_;
-
-		EmpathURL	url_;
+		void _init();
+		
+		RBodyPart part_;
 };
 
 #endif

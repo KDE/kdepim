@@ -134,6 +134,9 @@ class EmpathMailbox : public QObject
 		virtual void
 			syncIndex			(const EmpathURL &) = 0;
 	
+		virtual bool
+			mark(const EmpathURL &, RMM::MessageStatus) = 0;
+
 	public slots:
 
 		virtual void s_checkNewMail()	= 0;

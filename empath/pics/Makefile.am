@@ -1,1 +1,1 @@
-SUBDIRS = standard 8bit small
+SUBDIRS = mime standard 8bit small

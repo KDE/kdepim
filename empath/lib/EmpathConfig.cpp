@@ -357,3 +357,9 @@ EmpathConfig::DEFAULT_CHECK_NEW_INTERVAL = 10;
 	const QString
 EmpathConfig::DEFAULT_MAIL_SAVE_FOLDER = "~/.empath";
 
+	const QString
+EmpathConfig::KEY_THREAD_MESSAGES = "ThreadMessages";
+
+	const QString
+EmpathConfig::KEY_SHOW_HEADERS = "ShowHeaders";
+

@@ -35,10 +35,11 @@ class RMessageID : public RHeaderBody {
 
 		RMessageID();
 		RMessageID(const RMessageID &);
-		RMessageID(const QCString & s) : RHeaderBody(s) { }
+		RMessageID(const QCString & s);
 		bool operator == (RMessageID &);
 		bool operator != (RMessageID &);
 		RMessageID & operator = (const RMessageID &);
+		RMessageID & operator = (const QCString &);
 
 		friend QDataStream & operator >> (
 			QDataStream & s, RMessageID & mid);

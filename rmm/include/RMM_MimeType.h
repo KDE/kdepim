@@ -44,6 +44,7 @@ class RMimeType : public RHeaderBody {
 
 		void parse();
 		void assemble();
+		void createDefault();
 
 		QCString boundary();
 		QCString name();

@@ -39,7 +39,6 @@
 #include "EmpathURL.h"
 
 class EmpathHeaderEditWidget;
-class EmpathAttachmentListWidget;
 class EmpathSubjectSpecWidget;
 class RMessage;
 class KProcess;

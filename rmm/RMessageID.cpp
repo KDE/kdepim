@@ -31,11 +31,16 @@ RMessageID::RMessageID()
 }
 
 RMessageID::RMessageID(const RMessageID & messageID)
-	:	RHeaderBody(),
-		localPart_(messageID.localPart_.data()),
-		domain_(messageID.domain_.data())
+	:	RHeaderBody(messageID),
+		localPart_(messageID.localPart_),
+		domain_(messageID.domain_)
 {
 	rmmDebug("ctor");
+}
+
+RMessageID::RMessageID(const QCString & s)
+	:	RHeaderBody(s)
+{
 }
 
 RMessageID::~RMessageID()
@@ -80,6 +85,16 @@ RMessageID::operator = (const RMessageID & messageID)
 	assembled_ = false;
 	return *this;
 }
+
+	RMessageID &
+RMessageID::operator = (const QCString & s)
+{
+	rmmDebug("operator =");
+	RHeaderBody::operator = (s);
+	assembled_ = false;
+	return *this;
+}
+
 
 	QDataStream &
 operator >> (QDataStream & s, RMessageID & mid)

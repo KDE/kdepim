@@ -22,8 +22,8 @@
 #include "EmpathMessageWidget.h"
 
 EmpathMessageWidget::EmpathMessageWidget(
-		QWidget * parent	= 0,
-		const char * name	= 0)
+		QWidget * parent,
+		const char * name)
 	: QWidget(parent, name)
 {
 	empathDebug("ctor");

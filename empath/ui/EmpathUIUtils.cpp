@@ -28,18 +28,19 @@
 #include "Empath.h"
 
 	QPixmap
+empathMimeIcon(const QString & name)
+{
+	QPixmap p(kapp->kde_datadir() + "/empath/pics/mime/" + name);
+	return p;
+}
+
+	QPixmap
 empathIcon(const QString & name)
 {
 	KConfig * c = kapp->getConfig();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	QString iconSet = c->readEntry(EmpathConfig::KEY_ICON_SET, "8bit");
-	
-	QPixmap p;
-	p = Icon(iconSet + "/" + name);
-	
-	if (p.isNull())
-		p = Icon(name);
-	
+	QPixmap p(kapp->kde_datadir() + "/empath/pics/" + iconSet + "/" + name);
 	return p;
 }
 

@@ -34,8 +34,11 @@
 
 // Local includes
 #include <RMM_Message.h>
+#include "EmpathMessageStructureWidget.h"
 #include "EmpathDefines.h"
 #include "EmpathMessageHTMLView.h"
+
+class EmpathHeaderViewWidget;
 
 class EmpathMessageViewWidget : public QWidget
 {
@@ -60,6 +63,7 @@ class EmpathMessageViewWidget : public QWidget
 
 		void s_print();
 		void s_setMessage(const EmpathURL &);
+		void s_partChanged(RBodyPart *);
 
 	protected slots:
 		
@@ -67,15 +71,19 @@ class EmpathMessageViewWidget : public QWidget
 		void s_hScrollbarSetValue(int);
 		void s_vScrollbarSetValue(int);
 		void s_URLSelected(const char *, int);
+		void s_clipClicked();
 
 	private:
 		
+		EmpathMessageStructureWidget * structureWidget_;
 		EmpathMessageHTMLWidget	* messageWidget_;
 		QGridLayout				* mainLayout_;
 		QScrollBar				* verticalScrollBar_;
 		QScrollBar				* horizontalScrollBar_;
+		EmpathHeaderViewWidget	* headerViewWidget_;
 		EmpathURL				url_;
 		int						scrollbarSize_;
 };
 
 #endif
+

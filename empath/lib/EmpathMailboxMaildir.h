@@ -44,8 +44,6 @@ class EmpathMailboxMaildir : public EmpathMailbox
 		
 		virtual ~EmpathMailboxMaildir();
 	
-		void mark(const EmpathURL & message, RMM::MessageStatus msgStat);
-		
 		void setPath(const QString & path);
 		const QString & path() const { return path_; }
 		

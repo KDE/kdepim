@@ -35,11 +35,12 @@ class RHeader : public RMessageComponent
 	public:
 		
 		RHeader();
-		RHeader(const RHeader & b);
-		RHeader(const QCString & name, RHeaderBody * b);
-		RHeader(const QCString & s) : RMessageComponent(s), headerBody_(0) { }
-		RHeader(RMM::HeaderType t, RHeaderBody * b);
-		RHeader & operator = (const RHeader & h);
+		RHeader(const RHeader &);
+		RHeader(const QCString & name, RHeaderBody *);
+		RHeader(const QCString &);
+		RHeader(RMM::HeaderType t, RHeaderBody *);
+		RHeader & operator = (const RHeader &);
+		RHeader & operator = (const QCString &);
 
 		virtual ~RHeader();
 

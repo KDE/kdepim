@@ -153,7 +153,7 @@ EmpathURL::operator == (const QString & s) const
 	empathDebug("operator ==");
 	EmpathURL url(s);
 	
-	return (*this == s);
+	return (*this == url);
 }
 
 
@@ -191,7 +191,7 @@ EmpathURL::_assemble()
 EmpathURL::folderPathList()
 {
 	QStrList sl_f;
-	RTokenise(folderPath_, "/", sl_f);
+	RTokenise(folderPath_.ascii(), "/", sl_f);
 	return sl_f;
 }
 

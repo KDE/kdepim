@@ -32,8 +32,7 @@
 #include <RMM_Token.h>
 
 RDateTime::RDateTime()
-	:	QDateTime(),
-		RHeaderBody(),
+	:	RHeaderBody(),
 		zone_("")
 {
 	rmmDebug("ctor");
@@ -45,24 +44,23 @@ RDateTime::~RDateTime()
 }
 
 RDateTime::RDateTime(const RDateTime & t)
-	:	QDateTime(t),
-		RHeaderBody(t),
-		zone_(t.zone_.data())
+	:	RHeaderBody(t)
 {
-	rmmDebug("ctor");
+	rmmDebug("copy ctor");
+	parsed_ = false;
 	assembled_ = false;
 }
 
 	RDateTime &
-RDateTime::operator = (const RDateTime & dt)
+RDateTime::operator = (const RDateTime & t)
 {
 	rmmDebug("operator =");
-    if (this == &dt) return *this; // Don't do a = a.
-
-	QDateTime::operator = (dt);
-	zone_ = dt.zone_.data();
+    if (this == &t) return *this; // Don't do a = a.
+	const_cast<RDateTime>(t).parse();
+	qdate_	= t.qdate_;
+	zone_	= t.zone_;
 	
-	RHeaderBody::operator = (dt);
+	RHeaderBody::operator = (t);
 	
 	assembled_ = false;
 	return *this;
@@ -71,8 +69,8 @@ RDateTime::operator = (const RDateTime & dt)
 	QDataStream &
 operator >> (QDataStream & s, RDateTime & dt)
 {
-	s >> (QDateTime &)dt;
-	s >> dt.zone_;
+	s	>> dt.qdate_
+		>> dt.zone_;
 	//cerr << " >> gave me : " << dt.toString() << endl;
 	dt.parsed_		= true;
 	dt.assembled_	= false;
@@ -84,9 +82,16 @@ operator << (QDataStream & s, RDateTime & dt)
 {
 	//cerr << " << is getting : " << dt.toString() << endl;
 	dt.parse();
-	s	<< (QDateTime)dt
+	s	<< dt.qdate_
 		<< dt.zone_;
 	return s;
+}
+
+	QCString
+RDateTime::timeZone()
+{
+	parse();
+	return zone_;
 }
 
 	void
@@ -173,7 +178,7 @@ RDateTime::parse()
 
 	QDate d;
 	d.setYMD(year_, month_, dayOfMonth_);
-	setDate(d);
+	qdate_.setDate(d);
 	
 	rmmDebug("setHMS(" +
 		QCString().setNum(hour_) +
@@ -185,9 +190,7 @@ RDateTime::parse()
 	
 	QTime t;
 	t.setHMS(hour_, min_, sec_);
-	setTime(t);
-	
-	rmmDebug("XXX " + toString());
+	qdate_.setTime(t);
 	
 	parsed_		= true;
 	assembled_	= false;
@@ -200,23 +203,24 @@ RDateTime::assemble()
 	if (assembled_) return;
 	
 	rmmDebug("assemble() called");
-	if (!QDateTime::isValid()) {
+	if (!qdate_.isValid()) {
 		rmmDebug("I'm not VALID !");
 		return;
 	}
 
-	QDate d = date();
+	QDate d = qdate_.date();
+	QTime t = qdate_.time();
 	
-	strRep_ = d.dayName(date().dayOfWeek());
+	strRep_ = d.dayName(d.dayOfWeek()).ascii();
 	strRep_ += ',';
 	strRep_ += ' ';
 	strRep_ += QCString().setNum(d.day());
 	strRep_ += ' ';
-	strRep_ += d.monthName(d.month());
+	strRep_ += d.monthName(d.month()).ascii();
 	strRep_ += ' ';
 	strRep_ += QCString().setNum(d.year());
 	strRep_ += ' ';
-	strRep_ += time().toString();
+	strRep_ += t.toString().ascii();
 	strRep_ += ' ';
 	strRep_ += zone_;
 	
@@ -236,8 +240,8 @@ RDateTime::asUnixTime()
 	parse();
 	struct tm timeStruct;
 	
-	QDate d = date();
-	QTime t = time();
+	QDate d = qdate_.date();
+	QTime t = qdate_.time();
 	
 	timeStruct.tm_sec	= t.second();
 	timeStruct.tm_min	= t.minute();

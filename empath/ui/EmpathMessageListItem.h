@@ -56,30 +56,26 @@ class EmpathMessageListItem : public QListViewItem
 
 		QString key(int, bool) const;
 
-		const QString &		id()		const	{ return id_;			}
-		RMessageID &		messageID() 		{ return messageID_;	}
-		RMessageID &		parentID()			{ return parentID_;		}
-		const QString &		subject()	const	{ return subject_;		}
-		RMailbox &			sender()			{ return sender_;		}
-		RDateTime &			date()				{ return date_;			}
-		RMM::MessageStatus	status()	const	{ return status_;		}
-		Q_UINT32			size()		const	{ return size_;			}
+		const QString &		id()		const	{ return m.id();		}
+		RMessageID &		messageID() 		{ return m.messageID();	}
+		RMessageID &		parentID()			{ return m.parentID();	}
+		const QString &		subject()	const	{ return m.subject();	}
+		RMailbox &			sender()			{ return m.sender();	}
+		RDateTime &			date()				{ return m.date();		}
+		RMM::MessageStatus	status()	const	{ return m.status();	}
+		Q_UINT32			size()		const	{ return m.size();		}
+		
+		void setStatus(RMM::MessageStatus);
 
 		const char * className() const { return "EmpathMessageListItem"; }
 		
 	private:
 
 		void _init();
+
+		EmpathIndexRecord	m;
 		
-		QString				id_;
-		RMessageID			messageID_;
-		RMessageID			parentID_;
-		QString				subject_;
-		RMailbox			sender_;
-		RDateTime			date_;
-		RMM::MessageStatus	status_;
 		QString				niceDate_;
-		Q_UINT32			size_;
 		QString				dateStr_;
 		QString				sizeStr_;
 };

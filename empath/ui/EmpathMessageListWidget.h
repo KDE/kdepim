@@ -55,7 +55,7 @@ class EmpathMessageListWidget : public QListView
 		EmpathMessageListItem * findRecursive(
 				EmpathMessageListItem * initialItem, RMessageID & msgId);
 		
-		void addItem(EmpathIndexRecord & item);
+		void addItem(EmpathIndexRecord * item);
 		EmpathURL firstSelectedMessage();
 		
 		void setSignalUpdates(bool yn);
@@ -105,10 +105,15 @@ class EmpathMessageListWidget : public QListView
 		QList<EmpathIndexRecord> masterList_;
 		QList<EmpathMessageListItem> threadItemList_;
 
-		QPixmap px_read_marked;
-		QPixmap px_unread_marked;
-		QPixmap px_read_unmarked;
-		QPixmap px_unread_unmarked;
+		QPixmap px_;
+		QPixmap pxRead_;
+		QPixmap pxMarked_;
+		QPixmap pxReplied_;
+		QPixmap pxReadMarked_;
+		QPixmap pxReadReplied_;
+		QPixmap pxMarkedReplied_;
+		QPixmap pxReadMarkedReplied_;
+
 		bool wantScreenUpdates_;
 		
 		void setStatus(EmpathMessageListItem * item, RMM::MessageStatus status);

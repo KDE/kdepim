@@ -518,6 +518,9 @@ EmpathDisplaySettingsDialog::loadData()
 		if (it->at(0) == ".")
 			continue;
 		
+		if (*it == "mime")
+			continue;
+		
 		if (*it == s)
 			found = true;
 		else
@@ -579,6 +582,13 @@ EmpathDisplaySettingsDialog::s_cancel()
 {
 	if (!applied_)
 		kapp->getConfig()->rollback(true);
+	delete this;
+}
+
+	void
+EmpathDisplaySettingsDialog::closeEvent(QCloseEvent * e)
+{
+	e->accept();
 	delete this;
 }
 

@@ -106,7 +106,6 @@ EmpathFolderWidget::update()
 	empathDebug("update() called");
 	setUpdatesEnabled(false);
 	empathDebug("set updates to disabled");
-	itemList_.clear();
 	clear();
 	empathDebug("cleared");
 	
@@ -134,8 +133,6 @@ EmpathFolderWidget::_addMailbox(const EmpathMailbox & mailbox)
 	
 	CHECK_PTR(newItem);
 	
-	itemList_.append(newItem);
-	
 	empathDebug("============================================================");
 	empathDebug("Adding folders of mailbox \"" + mailbox.name() + "\"");
 	EmpathFolderListIterator fit(mailbox.folderList());
@@ -143,96 +140,33 @@ EmpathFolderWidget::_addMailbox(const EmpathMailbox & mailbox)
 	for (; fit.current(); ++fit) {
 
 		if (fit.current()->parent() == 0)
-			_addChildren(*fit.current());
+			_addChildren(fit.current(), newItem);
 	}
 	empathDebug("============================================================");
 }
 
 	void
-EmpathFolderWidget::_addChildren(const EmpathFolder & item)
+EmpathFolderWidget::_addChildren(
+	EmpathFolder * item,
+	EmpathFolderListItem * parent)
 {
-	empathDebug("_addChildren(" + item.url().folderPath() + ") called");
+	empathDebug("_addChildren(" + item->url().folderPath() + ") called");
 	
 	// Add this item first.
 
-	EmpathFolderListItem * newItem(0);
+	EmpathFolderListItem * newItem =
+		new EmpathFolderListItem(parent, item->url());
+	CHECK_PTR(newItem);
 
-	EmpathFolderListItem *
-		parentFolderListFolder(_parentFolderListFolder(item));
-	
-	if (parentFolderListFolder == 0) {
-		
-		EmpathFolderListItemIterator mit(itemList_);
-
-		for (; mit.current(); ++mit) {
-
-			if (!mit.current()->url().hasFolder() &&
-				mit.current()->url().mailboxName() == item.url().mailboxName()){
-
-				empathDebug("Making folder with a mailbox as its parent");
-				newItem = new EmpathFolderListItem(mit.current(), item.url());
-				CHECK_PTR(newItem);
-			}
-		}
-
-		if (newItem == 0) {
-			empathDebug("Uh ? Couldn't find folder");
-			return;
-		}
-		
-	} else {
-		
-		empathDebug("Making folder with a folder as its parent");
-		newItem =
-			new EmpathFolderListItem(parentFolderListFolder, item.url());
-		CHECK_PTR(newItem);
-	}
-
-	empathDebug("Appending new item to list");
-	itemList_.append(newItem);
-	
-	empathDebug("Adding children of the new item now");
-
-	EmpathMailbox * m = empath->mailbox(item.url());
+	EmpathMailbox * m = empath->mailbox(item->url());
 	if (m == 0) return;
    	
 	EmpathFolderListIterator it(m->folderList());
 
 	for (; it.current(); ++it) {
-		if (it.current()->parent() == 0) continue;
-		if (item.url() == it.current()->parent()->url())
-			_addChildren(*it.current());
+		if (it.current()->parent() == item)
+			_addChildren(it.current(), newItem);
 	}
-}
-
-	EmpathFolderListItem *
-EmpathFolderWidget::_parentFolderListFolder(const EmpathFolder & folder)
-{
-	empathDebug("_parentFolderListFolder " +
-		folder.url().folderPath() + " called");
-	
-	EmpathFolderListItemIterator it(itemList_);
-	
-	empathDebug("List of folder items count == " + QString().setNum(itemList_.count()));
-
-	for (; it.current(); ++it) {
-
-		if (it.current()->url().hasFolder()) {
-
-			EmpathFolder * f(folder.parent());
-
-			if (f == 0)
-				return 0;
-			else
-				if (it.current()->url() == f->url()) {
-					empathDebug("Parent is: " + f->url().folderPath());
-					return it.current();
-				}
-		}
-	}
-
-	empathDebug("Returning 0");
-	return 0;
 }
 
 	void
@@ -252,21 +186,19 @@ EmpathFolderWidget::s_currentChanged(QListViewItem * item)
 	}
 }
 
-	EmpathFolder *
-EmpathFolderWidget::selectedFolder() const
+	EmpathURL
+EmpathFolderWidget::selected() const
 {
-	// Is it a mailbox ?
-	if (!((EmpathFolderListItem *)currentItem())->url().hasFolder()) return 0;
+	EmpathURL url;
+	if (!currentItem()) return url;
 	
-	return empath->folder(((EmpathFolderListItem *)currentItem())->url());
+	return (((EmpathFolderListItem *)currentItem())->url());
 }
 
 	void
 EmpathFolderWidget::s_rightButtonPressed(
 	QListViewItem * item, const QPoint &, int)
 {
-	empathDebug("!");
-
 	if (item == 0) {
 	
 		otherPopup_.exec(QCursor::pos());
@@ -278,9 +210,10 @@ EmpathFolderWidget::s_rightButtonPressed(
 	empathDebug("Right button pressed over object with url \"" +
 		i->url().asString() + "\"");
 	
-	popupMenuOverURL = i->url();
+	popupMenuOverType = (i->depth() == 0 ? Mailbox : Folder);
+	popupMenuOver = i;
 	
-	if (popupMenuOverURL.hasFolder())
+	if (popupMenuOverType == Folder)
 		folderPopup_.exec(QCursor::pos());
 	else
 		mailboxPopup_.exec(QCursor::pos());
@@ -291,12 +224,11 @@ EmpathFolderWidget::s_folderProperties()
 {
 	empathDebug("s_folderProperties() called");
 	
-	if (!(popupMenuOverURL.hasFolder())) {
+	if (popupMenuOverType != Folder) {
 		empathDebug("The popup menu wasn't over a folder !");
 		return;
 	}
 	
-	EmpathFolder * f = empath->folder(popupMenuOverURL);
 	empathDebug("Nothing to do for folder properties as yet");
 	return;
 }
@@ -306,12 +238,12 @@ EmpathFolderWidget::s_mailboxCheck()
 {
 	empathDebug("s_mailboxCheck() called");
 
-	if (popupMenuOverURL.hasFolder()) {
+	if (popupMenuOverType != Mailbox) {
 		empathDebug("The popup menu wasn't over a mailbox !");
 		return;
 	}
 	
-	EmpathMailbox * m = empath->mailbox(popupMenuOverURL);
+	EmpathMailbox * m = empath->mailbox(popupMenuOver->url());
 	
 	if (m == 0) return;
 
@@ -323,12 +255,12 @@ EmpathFolderWidget::s_mailboxProperties()
 {
 	empathDebug("s_mailboxProperties() called");
 
-	if (popupMenuOverURL.hasFolder()) {
+	if (popupMenuOverType != Mailbox) {
 		empathDebug("The popup menu wasn't over a mailbox !");
 		return;
 	}
 	
-	EmpathMailbox * m = empath->mailbox(popupMenuOverURL);
+	EmpathMailbox * m = empath->mailbox(popupMenuOver->url());
 
 	if (m == 0) return;
 	
@@ -400,39 +332,30 @@ EmpathFolderWidget::s_newFolder()
 	
 	if (name.isEmpty()) return;
 		
-	EmpathMailbox * m = empath->mailbox(popupMenuOverURL);
+	EmpathMailbox * m = empath->mailbox(popupMenuOver->url());
 	if (m == 0) return;
 	
-	EmpathURL newFolderURL(popupMenuOverURL.asString() + "/" + name + "/");
+	EmpathURL newFolderURL(popupMenuOver->url().asString() + "/" + name + "/");
 
 	if (!m->addFolder(newFolderURL)) return;
 
-	EmpathFolderListItemIterator it(itemList_);
-	
-	for (; it.current(); ++it) {
-		if (it.current()->url() == popupMenuOverURL) {
-			EmpathFolderListItem * item =
-				new EmpathFolderListItem(it.current(), newFolderURL);
-			break;
-		}
-	}
-
+	EmpathFolderListItem * item =
+		new EmpathFolderListItem(popupMenuOver, newFolderURL);
 }
 
 	void
 EmpathFolderWidget::s_removeFolder()
 {
-	EmpathMailbox * m = empath->mailbox(popupMenuOverURL);
+	empathDebug("s_removeFolder \"" + popupMenuOver->url().asString() + "\" called");
+	EmpathMailbox * m = empath->mailbox(popupMenuOver->url());
 	if (m == 0) return;
-	
-	EmpathFolderListItemIterator it(itemList_);
-	
-	for (; it.current(); ++it) {
-		if (it.current()->url() == popupMenuOverURL) {
-			delete it.current();
-			break;
-		}
+	if (!m->removeFolder(popupMenuOver->url())) {
+		empathDebug("Couldn't remove folder \"" +
+			popupMenuOver->url().asString() + "\"");
+		return;
 	}
+	
+	delete popupMenuOver;
 }
 
 	void

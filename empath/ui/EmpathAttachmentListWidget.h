@@ -29,14 +29,12 @@
 #include <qpushbutton.h>
 
 // Local includes
+#include <RMM_Message.h>
 #include "EmpathDefines.h"
+#include "EmpathAttachmentListItem.h"
 
 /**
- * This widget is used to get the attachments to be used in a message.
- * It shows a list with the filename, type, encoding and size of each
- * attachment. You can press the buttons to add a new attachment, edit an
- * existing, or delete one. You can drag and drop files from e.g. kfm into
- * the listview bit and they will be looked at and added.
+ * This widget shows the structure of a message.
  */
 class EmpathAttachmentListWidget : public QWidget
 {
@@ -47,41 +45,12 @@ class EmpathAttachmentListWidget : public QWidget
 		EmpathAttachmentListWidget(QWidget * parent = 0, const char * name = 0);
 		~EmpathAttachmentListWidget();
 
-		QSize sizeHint() const;
-
-		/**
-		 * Check if there are any attachments in the list
-		 */
-		bool hasAttachments() const;
+		void use(const RMessage &);
 		
-		/**
-		 * Get the list of attachments as EmpathAttachmentSpec(s).
-		 */
-		QList<EmpathAttachmentSpec> attachmentList() const;
-
-		/**
-		 * Add an attachment to the internal list and the widget
-		 */
-		void addAttachment(const EmpathAttachmentSpec & att);
-		
-		/**
-		 * Add lots of attachments to the internal list and the widget.
-		 * Useful when forwarding w/ attachments.
-		 */
-		void addAttachmentList(const QList<EmpathAttachmentSpec> & att);
-
-	protected:
-
-
 	private:
 
-		void setupToolbar();
-		
-		QPushButton						* pb_add_;
-		QPushButton						* pb_edit_;
-		QPushButton						* pb_remove_;
-		QListView						* lv_attachments_;
-		QList<EmpathAttachmentSpec>		attachmentList_;
+		QListView	* lv_attachments_;
+		RMessage	message_;
 };
 
 #endif

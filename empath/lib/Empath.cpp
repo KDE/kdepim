@@ -232,27 +232,30 @@ Empath::folder(const EmpathURL & url)
 	return m->folder(url);
 }
 
-	void
-Empath::s_remove(const EmpathURL & url)
+	bool
+Empath::remove(const EmpathURL & url)
 {
-	EmpathMailbox * m = mailbox(url.mailboxName());
-	if (m == 0) return;
-	m->removeMessage(url);
+	empathDebug("remove(" + url.asString() + ") called");
+	EmpathMailbox * m = mailbox(url);
+	if (m == 0) {
+		empathDebug("Can't find mailbox \"" + url.mailboxName() + "\"");
+		return false;
+	}
+	return m->removeMessage(url);
 }
 
-	void
-Empath::s_mark(const EmpathURL & url, RMM::MessageStatus s)
+	bool
+Empath::mark(const EmpathURL & url, RMM::MessageStatus s)
 {
-	EmpathMailbox * m = mailbox(url.mailboxName());
-	if (m == 0) return;
-//	m->mark(url, s);
+	EmpathMailbox * m = mailbox(url);
+	if (m == 0) return false;
+	return m->mark(url, s);
 }
 
 	void
 Empath::s_setupDisplay()
 {
 	emit(setupDisplay());
-	empathDebug("setupDisplay() called");
 }
 	void
 Empath::s_setupIdentity()
@@ -290,5 +293,6 @@ Empath::addTask(const QString & name)
 	EmpathTask * t = new EmpathTask(name);
 	CHECK_PTR(t);
 	emit(newTask(t));
+	return t;
 }
 	

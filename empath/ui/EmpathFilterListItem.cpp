@@ -38,7 +38,7 @@ EmpathFilterListItem::EmpathFilterListItem(
 		filter_(_filter)
 {
 	empathDebug("ctor");
-	setPixmap(0, empathIcon("filter.xpm"));
+	setPixmap(0, empathIcon("filter.png"));
 }
 
 EmpathFilterListItem::~EmpathFilterListItem()

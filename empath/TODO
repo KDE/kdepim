@@ -26,16 +26,8 @@ Things you might want to VOLUNTEER for :)
   then I also end up refusing to show large messages ! If I resize the cache,
   and then set it back down, the message will be deleted !
 
-* Sort out the mime handling. Currently all messages are treated as just plain
-  text. I've started to put the mechanism into place, but it's hard work.
-   
 * Finish off doing the apply/revert stuff in the config dialogs. It's almost
   done, but just needs looking at and checking it really works properly.
-  
-* Sort out adding folders. For some reason the folder name doesn't appear in
-  the FolderWidget. Also, the FolderWidget shouldn't collapse the tree when
-  a folder is added. This is a symptom of the fact I'm calling 'update()' on
-  the FolderWidget via a signal. Some more intelligence is necessary.
   
 * mbox and MMDF handling. (Started but untested and unused as yet)
 
@@ -61,6 +53,3 @@ Things you might want to VOLUNTEER for :)
   - Working on this
   
 * Drag and drop.
-
-* Switch on recursive deletion of folders in EmpathMailboxMaildir.
-

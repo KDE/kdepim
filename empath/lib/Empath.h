@@ -180,7 +180,7 @@ class Empath : public QObject
 		/**
 		 * @short Remove given message.
 		 */
-		void s_remove(const EmpathURL &);
+		bool remove(const EmpathURL &);
 		
 		/**
 		 * Bounce a message.
@@ -190,7 +190,7 @@ class Empath : public QObject
 		/**
 		 * Mark a message with a given status.
 		 */
-		void s_mark(const EmpathURL &, RMM::MessageStatus);
+		bool mark(const EmpathURL &, RMM::MessageStatus);
 		
 		void s_setupDisplay();
 		void s_setupIdentity();

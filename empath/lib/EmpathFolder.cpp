@@ -36,7 +36,7 @@ EmpathFolder::EmpathFolder()
 {
 	empathDebug("default ctor !");
 	id_ = ID++;
-	pixmapName_ = "mini-folder-grey.xpm";
+	pixmapName_ = "mini-folder-grey.png";
 }
 
 EmpathFolder::EmpathFolder(const EmpathURL & url)
@@ -50,7 +50,7 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
 	id_ = ID++;
 	QObject::connect(this, SIGNAL(countUpdated(int, int)),
 		empath->mailbox(url_), SLOT(s_countUpdated(int, int)));
-	pixmapName_ = "mini-folder-grey.xpm";
+	pixmapName_ = "mini-folder-grey.png";
 }
 
 	bool
@@ -107,6 +107,7 @@ EmpathFolder::update()
 	bool
 EmpathFolder::writeMessage(RMessage & message)
 {
+	empathDebug("writeMessage() called")
 	EmpathMailbox * m = empath->mailbox(url_);
 	return (m != 0 && m->writeMessage(url_, message));
 }

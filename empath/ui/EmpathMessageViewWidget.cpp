@@ -26,9 +26,11 @@
 
 // Local includes
 #include <RMM_Message.h>
+#include "EmpathHeaderViewWidget.h"
 #include "EmpathMessageViewWidget.h"
 #include "EmpathComposeWindow.h"
 #include "EmpathUtilities.h"
+#include "EmpathUIUtils.h"
 #include "Empath.h"
 	
 EmpathMessageViewWidget::EmpathMessageViewWidget(
@@ -40,19 +42,18 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 {
 	empathDebug("ctor");
 	
-	mainLayout_ = new QGridLayout(this, 2, 2, 0, 0);
+	mainLayout_ = new QGridLayout(this, 3, 2, 0, 0);
 	CHECK_PTR(mainLayout_);
 	
-	// Column 1 and row 1 contain the scrollbars and should not be resized.
 	mainLayout_->setColStretch(0, 1);
 	mainLayout_->setColStretch(1, 0);
 	mainLayout_->setRowStretch(0, 1);
-	mainLayout_->setRowStretch(1, 0);
+	mainLayout_->setRowStretch(1, 10);
+	mainLayout_->setRowStretch(2, 0);
 	
 	empathDebug("Creating HTML widget");
 	
-	messageWidget_ = new EmpathMessageHTMLWidget(url_, this, "messageWidget");
-	
+	messageWidget_ = new EmpathMessageHTMLWidget(this, "messageWidget");
 	CHECK_PTR(messageWidget_);
 	
 	empathDebug("Creating scrollbars");
@@ -63,14 +64,21 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 	
 	verticalScrollBar_->setFixedWidth(scrollbarSize_);
 	
-	horizontalScrollBar_ = new QScrollBar(QScrollBar::Horizontal, this, "hScBar");
+	horizontalScrollBar_ =
+		new QScrollBar(QScrollBar::Horizontal, this, "hScBar");
 	CHECK_PTR(horizontalScrollBar_);
+	
 	horizontalScrollBar_->setFixedHeight(scrollbarSize_);
 	
+	headerViewWidget_ =
+		new EmpathHeaderViewWidget(this, "headerViewWidget");
+	
+
 	empathDebug("Adding widgets to layout");
-	mainLayout_->addWidget(messageWidget_,			0, 0);
-	mainLayout_->addWidget(verticalScrollBar_,		0, 1);
-	mainLayout_->addWidget(horizontalScrollBar_,	1, 0);
+	mainLayout_->addMultiCellWidget(headerViewWidget_,	0, 0, 0, 1);
+	mainLayout_->addWidget(messageWidget_,				1, 0);
+	mainLayout_->addWidget(verticalScrollBar_,			1, 1);
+	mainLayout_->addWidget(horizontalScrollBar_,		2, 0);
 	
 	QObject::connect(messageWidget_, SIGNAL(scrollVert(int)),
 			SLOT(s_vScrollbarSetValue(int)));
@@ -98,6 +106,82 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 EmpathMessageViewWidget::go()
 {
 	empathDebug("go() called");
+
+	RMessage * m(empath->message(url_));
+	
+	if (m == 0) {
+		empathDebug("Can't load message from \"" + url_.asString() + "\"");
+		return;
+	}
+	
+	RMessage message(*m);
+	
+	// Ok I'm going to try and get the viewable body parts now.
+	// To start with, I'll see if there's only one part. If so, I'll show it,
+	// if possible. Otherwise, I'll have to have a harder look and see what
+	// we're supposed to be showing. If we're looking at a
+	// multipart/alternative, I'll pick the 'best' of the possibilities.
+	
+	headerViewWidget_->useEnvelope(message.envelope());
+	
+	empathDebug("envelope:");
+	empathDebug(message.envelope().asString());
+	
+	if (message.body().count() == 0)
+		messageWidget_->use(message.envelope(), message);
+	
+	else if (message.body().count() == 1)
+		messageWidget_->use(message.envelope(), *(message.body().at(0)));
+	
+	else {
+		
+		// Multipart message
+		
+		empathDebug("===================== MULTIPART ====================");
+		
+		QListIterator<RBodyPart> it(message.body());
+		
+		int i = 0;
+		for (; it.current(); ++it) {
+		
+			++i;
+		
+			empathDebug(
+				" ===================== PART # "
+				+ QString().setNum(i) +
+				" =====================");
+
+			if (it.current()->envelope().has(RMM::HeaderContentType)) {
+				
+				empathDebug("Ok this part has a Content-Type");                            
+					
+				RContentType t = it.current()->envelope().contentType();
+				
+				empathDebug("   Type of this part is \"" + t.type() + "\"");
+				empathDebug("SubType of this part is \"" + t.subType() + "\"");
+
+				if (
+					(!stricmp(
+								t.type(),
+								RMM::mimeTypeEnum2Str(RMM::MimeTypeText))) &&
+					(!stricmp(
+								t.subType(),
+								RMM::mimeSubTypeEnum2Str(RMM::MimeSubTypePlain)))) {
+					
+					empathDebug("Using this part as body");
+
+//						messageBody = it.current()->data();
+				
+				} else {
+					empathDebug("Haven't decided what to do with this part yet");
+				}
+			}
+			empathDebug("...");
+		}
+		
+		empathDebug("=================== END MULTIPART =====================");
+	}
+
 	messageWidget_->go();
 }
 
@@ -158,7 +242,6 @@ EmpathMessageViewWidget::s_setMessage(const EmpathURL & url)
 {
 	empathDebug("setMessage() called with \"" + url.asString() + "\"");
 	url_ = url;
-	messageWidget_->setMessage(url);
 }
 
 	void
@@ -201,5 +284,38 @@ EmpathMessageViewWidget::s_URLSelected(const char * url, int button)
 //		kfm->openURL(fixedURL);
 //		delete kfm;
 	}
+}
+
+	void
+EmpathMessageViewWidget::s_clipClicked()
+{
+	EmpathMessageStructureWidget * w =
+		new EmpathMessageStructureWidget(0, "structureWidget");
+	CHECK_PTR(w);
+	
+	connect(
+		w,		SIGNAL(partChanged(RBodyPart *)),
+		this,	SLOT(s_partChanged(RBodyPart *)));
+
+	RMessage * m(empath->message(url_));
+	
+	if (m == 0) {
+		empathDebug("Can't load message from \"" + url_.asString() + "\"");
+		return;
+	}
+	
+	RMessage message(*m);
+	
+	w->setMessage(message);
+	w->show();
+}
+
+	void
+EmpathMessageViewWidget::s_partChanged(RBodyPart * part)
+{
+	empathDebug("s_partChanged() called");
+	RBodyPart p(*part);
+	messageWidget_->use(p);
+	messageWidget_->go();
 }
 

@@ -69,3 +69,11 @@ operator << (QDataStream & str, RMessage & m)
 	str << m.asString(); return str;
 }
 
+	RMessage &
+RMessage::operator = (const RMessage & m)
+{
+	if (this == &m) return *this;	// Avoid a = a.
+	RBodyPart::operator = (m);
+	return *this;
+}
+

@@ -35,7 +35,8 @@ RContentType::RContentType(const RContentType & cte)
 		subType_(cte.subType_),
 		parameterList_(cte.parameterList_)
 {
-	rmmDebug("ctor");
+	rmmDebug("copy ctor - param list count == "  + QCString().setNum(parameterList_.count()));
+	parsed_ = true;
 	assembled_	= false;
 }
 
@@ -169,6 +170,7 @@ RContentType::type()
 RContentType::subType()
 {
 	parse();
+	rmmDebug("subType() called. SubType is \"" + subType_ + "\"");
 	return subType_;
 }
 	

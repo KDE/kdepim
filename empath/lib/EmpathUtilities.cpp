@@ -32,30 +32,6 @@
 // Local includes
 #include "EmpathUtilities.h"
 
-	QString
-token(const char * str, const char * delim, Q_UINT32 pos)
-{
-	if (!delim || !str || strlen(delim) == 0 || strlen(str) == 0)
-		return QString::null;
-
-	char * s = new char[strlen(str)];
-	CHECK_PTR(s);
-
-	strcpy(s, str);
-
-	QString ret = strtok(s, delim);
-
-	Q_UINT32 i = 0;
-	while (i < pos) {
-		ret = strtok(0, delim);
-		++i;
-	}
-
-	delete [] s;
-	
-	return ret ? ret : QString::null;
-}
-
 QString baseName(const QString & filename)
 {
 	return filename.right(filename.length() - filename.findRev('/') - 1);
@@ -77,7 +53,7 @@ EmpathLockMailFile(QFile & f, LockType ltype)
 #endif
 }
 
-	QString
+	QCString
 QColorToHTML(const QColor & col)
 {
 	char colourAsString[6];
@@ -88,12 +64,12 @@ QColorToHTML(const QColor & col)
 	return colourAsString;
 }
 
-	QString
-quoteSeparators(const QString & s, char separator)
+	QCString
+quoteSeparators(const QCString & s, char separator)
 {
-	QString tempString(s);
+	QCString tempString(s);
 
-	QString quoted = "\\";
+	QCString quoted = "\\";
 	quoted += separator;
 
 	tempString.replace(QRegExp(&separator), quoted);
@@ -103,7 +79,7 @@ quoteSeparators(const QString & s, char separator)
 	QString
 empathDir()
 {
-	return kapp->kde_datadir() + QString("/empath/");
+	return kapp->kde_datadir() + "/empath/";
 }
 
 
@@ -113,7 +89,7 @@ empathInvokeHelp(const QString & a, const QString & b)
 	kapp->invokeHTMLHelp(a, b);
 }
 
-	QString
+	const char *
 className()
 {
 	return "Empath General Debugging:";

@@ -51,7 +51,8 @@ EmpathSendingSettingsDialog::create()
 EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 		QWidget * parent,
 		const char * name)
-	:	QDialog(parent, name, false)
+	:	QDialog(parent, name, false),
+		applied_(false)
 {
 	empathDebug("ctor");
 	setCaption(i18n("Sending Settings - ") + kapp->getCaption());
@@ -497,7 +498,7 @@ EmpathSendingSettingsDialog::loadData()
 	cb_copyOther_->setChecked(	c->readBoolEntry(EmpathConfig::KEY_CC_OTHER));
 	asw_copyOther_->setAddress(	c->readEntry(EmpathConfig::KEY_CC_OTHER_ADDRESS));
 	
-	cb_copyFolder_->setChecked(	c->readEntry(EmpathConfig::KEY_COPY_FOLDER));
+	cb_copyFolder_->setChecked(	c->readBoolEntry(EmpathConfig::KEY_COPY_FOLDER));
 	fcw_copyFolder_->setURL(	c->readEntry(EmpathConfig::KEY_COPY_FOLDER_NAME));
 	
 	empath->updateOutgoingServer();
@@ -538,6 +539,10 @@ EmpathSendingSettingsDialog::s_apply()
 	void
 EmpathSendingSettingsDialog::s_default()
 {
+	le_sendmail_->setText("/usr/lib/sendmail");
+	le_qmail_->setText("/var/qmail/bin/qmail-inject");
+	le_smtpServer_->setText("localhost");
+	sb_smtpPort_->setValue(25);
 }
 	
 	void
@@ -545,6 +550,13 @@ EmpathSendingSettingsDialog::s_cancel()
 {
 	if (!applied_)
 		kapp->getConfig()->rollback(true);
+	delete this;
+}
+
+	void
+EmpathSendingSettingsDialog::closeEvent(QCloseEvent * e)
+{
+	e->accept();
 	delete this;
 }
 

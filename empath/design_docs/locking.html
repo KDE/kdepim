@@ -137,10 +137,6 @@ a better solution, but again there weren't many IMAP-aware mailers about.<P>
 
 So, you say, why don't you use flock() for local mailboxes ?<BR>
 Firstly, how do I know it's a local mailbox and not on NFS ?<BR>
-Note: I think I could test:
-<PRE>
-fstat(fd, stat *) with ustat(statbuf.st_dev, ustat *) and ustatbuf[1].f_tinode
-</PRE>
 Whatever, it's not worth it if I can't be sure.<BR>
 Secondly, flock() might not exist on the target system, or be implemented via
 emulation (fcntl()).<P>

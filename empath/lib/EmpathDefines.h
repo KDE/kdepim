@@ -47,7 +47,6 @@
 # undef CHECK_STATE
 # undef CHECK_RANGE
 # undef CHECK_NULL
-# define NO_DEBUG
 # define NO_CHECK
 # define empathDebug(a)
 #endif

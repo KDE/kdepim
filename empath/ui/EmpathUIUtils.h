@@ -29,6 +29,7 @@
 // Local includes
 #include "EmpathUtilities.h"
 
+QPixmap empathMimeIcon(const QString & name);
 QPixmap empathIcon(const QString & name);
 QFont	empathFixedFont();
 QFont	empathGeneralFont();

@@ -19,7 +19,7 @@
 */
 
 // Qt includes
-#include <qstring.h>
+#include <qregexp.h>
 
 // Local includes
 #include <RMM_Body.h>
@@ -36,10 +36,23 @@ RBodyPart::RBodyPart()
 }
 
 RBodyPart::RBodyPart(const RBodyPart & part)
-	:	REntity(part)
+	:	REntity(part),
+		envelope_			(part.envelope_),
+		data_				(part.data_),
+		body_				(part.body_),
+		encoding_			(part.encoding_),
+		mimeType_			(part.mimeType_),
+		mimeSubType_		(part.mimeSubType_),
+		contentDescription_	(part.contentDescription_),
+		disposition_		(part.disposition_),
+		boundary_			(part.boundary_),
+		type_				(part.type_),
+		preamble_			(part.preamble_),
+		epilogue_			(part.epilogue_)
 {
 	rmmDebug("ctor");
 	body_.setAutoDelete(true);
+	body_ = part.body_;
 }
 
 RBodyPart::RBodyPart(const QCString & s)
@@ -58,8 +71,23 @@ RBodyPart::~RBodyPart()
 RBodyPart::operator = (const RBodyPart & part)
 {
 	rmmDebug("operator =");
+
 	if (this == &part) return *this;	// Avoid a = a.
 	REntity::operator = (part);
+	
+	envelope_			= part.envelope_;
+	data_				= part.data_;
+	body_				= part.body_;
+	encoding_			= part.encoding_;
+	mimeType_			= part.mimeType_;
+	mimeSubType_		= part.mimeSubType_;
+	contentDescription_	= part.contentDescription_;
+	disposition_		= part.disposition_;
+	boundary_			= part.boundary_;
+	type_				= part.type_;
+	preamble_			= part.preamble_;
+	epilogue_			= part.epilogue_;
+
 	return *this;
 }
 
@@ -121,7 +149,7 @@ RBodyPart::parse()
 	
 	if (endOfHeaders == -1) {
 		rmmDebug("No end of headers ! - message is " +
-			QString().setNum(strRep_.length()) + " bytes long");
+			QCString().setNum(strRep_.length()) + " bytes long");
 		return;
 	}
 	
@@ -211,16 +239,13 @@ RBodyPart::parse()
 
 		epilogue_ =
 			strRep_.right(strRep_.length() - i + boundary_.length());
+		
+		data_ = "";
 			
-	} else {
-
-		rmmDebug("This part is NOT multipart");	
-		RBodyPart * newPart =
-			new RBodyPart(strRep_.right(strRep_.length() - endOfHeaders));
-		CHECK_PTR(newPart);
-		body_.append(newPart);
-		newPart->parse();
 	}
+
+	mimeType_		= RMM::mimeTypeStr2Enum(contentType.type());
+	mimeSubType_	= RMM::mimeSubTypeStr2Enum(contentType.subType());
 
 	parsed_		= true;
 	assembled_	= false;
@@ -238,19 +263,10 @@ RBodyPart::assemble()
 
 	strRep_ = envelope_.asString();
 	strRep_ += "\n\n";
+	strRep_ += preamble_;
+	strRep_ += data_;
+	strRep_ += epilogue_;
 
-	if (body_.count() == 1) {
-		
-		strRep_ += body_.at(0)->asString();
-	
-	} else {
-		
-		QListIterator<RBodyPart> it(body_);
-		
-		for (; it.current(); ++it)
-			strRep_ += it.current()->asString();
-	}
-	
 	assembled_ = true;
 }
 
@@ -277,7 +293,7 @@ RBodyPart::body()
 	Q_UINT32
 RBodyPart::size()
 {
-	return strRep_.length();
+	return data_.length();
 }
 
 	void
@@ -289,18 +305,21 @@ RBodyPart::_update()
 	void
 RBodyPart::addPart(RBodyPart * bp)
 {
+	parse();
 	_update();
 }
 
 	void
 RBodyPart::removePart(RBodyPart * part)
 {
+	parse();
 	_update();
 }
 
 	RBodyPart::PartType
 RBodyPart::type()
 {
+	parse();
 	return type_;
 }
 
@@ -309,5 +328,11 @@ RBodyPart::data()
 {
 	parse();
 	return data_;
+}
+
+	RMM::DispType
+RBodyPart::disposition()
+{
+	return disposition_;
 }
 

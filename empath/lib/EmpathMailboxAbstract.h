@@ -42,6 +42,7 @@ virtual bool 					removeMessage		(const EmpathURL &);
 virtual bool					addFolder			(const EmpathURL &);
 virtual bool					removeFolder		(const EmpathURL &);
 virtual void					syncIndex			(const EmpathURL &);
+virtual bool					mark	(const EmpathURL &, RMM::MessageStatus);
 
 virtual void init();
 		

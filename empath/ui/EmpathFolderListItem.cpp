@@ -75,7 +75,9 @@ EmpathFolderListItem::EmpathFolderListItem(
 	QString s = url_.folderPath();
 	if (s.right(1) == "/")
 		s = s.remove(s.length(), 1);
+	empathDebug("s now == " + s);
 	s = s.right(s.length() - s.findRev("/") - 1);
+	empathDebug("s now == " + s);
 	
 	setText(0, s);
 	setText(1, QString().setNum(f->unreadMessageCount()));
@@ -87,7 +89,7 @@ EmpathFolderListItem::EmpathFolderListItem(
 	
 EmpathFolderListItem::~EmpathFolderListItem()
 {
-	empathDebug("dtor");
+	empathDebug("dtor - my url was \"" + url_.asString() + "\"");
 }
 
 	QString

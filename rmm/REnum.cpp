@@ -378,10 +378,150 @@ RMM::mimeSubTypeStr2Enum(const QCString & s)
 				st = MimeSubTypeRichtext;
 
 			break;
+			
+		case 'x':
+		case 'X':
+
+			switch (s[2]) {
+				
+				case 'A':
+				case 'a':
+					
+					if (stricmp(s, "x-msvideo") == 0)
+						st = MimeSubTypeXavi;
+			
+					else if (stricmp(s, "x-aiff") == 0)
+						st = MimeSubTypeXaiff;
+
+					break;
+				
+				case 'C':
+				case 'c':
+				
+					if (stricmp(s, "x-cpio") == 0)
+						st = MimeSubTypeXcpio;
+					break;
+
+				case 'D':
+				case 'd':
+					
+					if (stricmp(s, "x-dvi") == 0)
+						st = MimeSubTypeXdvi;
+					else if (stricmp(s, "x-deb") == 0)
+						st = MimeSubTypeXdeb;
+					break;
+
+				case 'L':
+				case 'l':
+				
+					if (stricmp(s, "x-latex") == 0)
+						st = MimeSubTypeXlatex;
+					break;
+
+				case 'P':
+				case 'p':
+				
+					if (stricmp(s, "x-perl") == 0)
+						st = MimeSubTypeXperl;
+
+					else if (stricmp(s, "x-portable-anymap") == 0)
+						st = MimeSubTypeXpnm;
+					
+					else if (stricmp(s, "x-portable-bitmap") == 0)
+						st = MimeSubTypeXpbm;
+					
+					else if (stricmp(s, "x-portable-graymap") == 0)
+						st = MimeSubTypeXpgm;
+					
+					else if (stricmp(s, "x-portable-pixmap") == 0)
+						st = MimeSubTypeXppm;
+
+					break;
+				
+				case 'R':
+				case 'r':
+
+					if (stricmp(s, "x-rar") == 0)
+						st = MimeSubTypeXrar;
+
+					else if (stricmp(s, "x-cmu-raster") == 0)
+						st = MimeSubTypeXras;
+			
+					else if (stricmp(s, "x-rgb") == 0)
+						st = MimeSubTypeXrgb;
+
+					break;
+
+				case 'S':
+				case 's':
+	
+					if (stricmp(s, "x-sh") == 0)
+						st = MimeSubTypeXsh;
+
+					else if (stricmp(s, "x-shar") == 0)
+						st = MimeSubTypeXshar;
+					
+					else if (stricmp(s, "x-sgi-movie") == 0)
+						st = MimeSubTypeXsgi;
+
+					break;
+	
+				case 'T':
+				case 't':
+					
+					if (stricmp(s, "x-tar") == 0)
+						st = MimeSubTypeXtar;
+
+					else if (stricmp(s, "x-tgz") == 0)
+						st = MimeSubTypeXtgz;
+
+					else if (stricmp(s, "x-tcl") == 0)
+						st = MimeSubTypeXtcl;
+
+					else if (stricmp(s, "x-tex") == 0)
+						st = MimeSubTypeXtex;
+
+					else if (stricmp(s, "x-troff") == 0)
+						st = MimeSubTypeXtroff;
+
+					break;
+					
+				case 'X':
+				case 'x':
+
+					if (stricmp(s, "x-xbitmap") == 0)
+						st = MimeSubTypeXxbm;
+					
+					else if (stricmp(s, "x-xpixmap") == 0)
+						st = MimeSubTypeXxpm;
+				
+					break;
+			
+				case 'W':
+				case 'w':
+					
+					if (stricmp(s, "x-wav") == 0)
+						st = MimeSubTypeXwav;
+					break;
+				
+				case 'Z':
+				case 'z':
+
+					if (stricmp(s, "x-zip") == 0)
+						st = MimeSubTypeXzip;
+					break;
+	
+					
+				default:
+					break;
+			}
+
+			break;
 
 		default:
 
 			st = MimeSubTypeUnknown;
+			break;
 	}
 
 	return st;
@@ -452,19 +592,155 @@ RMM::mimeSubTypeEnum2Str(MimeSubType t)
 			break;
 
 		case MimeSubTypeJpeg:
-			s = "jpeg";
+			s = "JPEG";
 			break;
 
 		case MimeSubTypeGIF:
-			s = "gif";
+			s = "GIF";
 			break;
 
 		case MimeSubTypeBasic:
-			s = "basic";
+			s = "Basic";
 			break;
 
 		case MimeSubTypeMPEG:
-			s = "mpeg";
+			s = "MPEG";
+			break;
+			
+		case MimeSubTypeXcpio:
+			s = "X-cpio";
+			break;
+
+		case MimeSubTypeXdvi:
+			s = "X-dvi";
+			break;
+
+		case MimeSubTypeXperl:
+			s = "X-perl";
+			break;
+
+		case MimeSubTypeXtar:
+			s = "X-tar";
+			break;
+
+		case MimeSubTypeXdeb:
+			s = "X-deb";
+			break;
+
+		case MimeSubTypeXrar:
+			s = "X-rar-compressed";
+			break;
+
+		case MimeSubTypeXlatex:
+			s = "X-latex";
+			break;
+
+		case MimeSubTypeXsh:
+			s = "X-sh";
+			break;
+
+		case MimeSubTypeXshar:
+			s = "X-shar";
+			break;
+
+		case MimeSubTypeXtgz:
+			s = "X-tar-gz";
+			break;
+
+		case MimeSubTypeXtcl:
+			s = "X-tcl";
+			break;
+
+		case MimeSubTypeXtex:
+			s = "X-tex";
+			break;
+
+		case MimeSubTypeXtroff:
+			s = "X-troff";
+			break;
+
+		case MimeSubTypeXzip:
+			s = "X-zip";
+			break;
+			
+		case MimeSubTypeXras:
+			s = "X-cmu-raster";
+			break;
+
+		case MimeSubTypeXpnm:
+			s = "X-portable-anymap";
+			break;
+
+		case MimeSubTypeXpbm:
+			s = "X-portable-bitmap";
+			break;
+
+		case MimeSubTypeXpgm:
+			s = "X-portable-graymap";
+			break;
+
+		case MimeSubTypeXppm:
+			s = "X-portable-pixmap";
+			break;
+
+		case MimeSubTypeXrgb:
+			s = "X-rgb";
+			break;
+
+		case MimeSubTypeXxbm:
+			s = "X-xbitmap";
+			break;
+
+		case MimeSubTypeXxpm:
+			s = "X-xpixmap";
+			break;
+
+		case MimeSubTypeXavi:
+			s = "X-msvideo";
+			break;
+
+		case MimeSubTypeXsgi:
+			s = "X-sgi-movie";
+			break;
+
+		case MimeSubTypePNG:
+			s = "PNG";
+			break;
+
+		case MimeSubTypeTIFF:
+			s = "TIFF";
+			break;
+
+		case MimeSubTypeGL:
+			s = "GL";
+			break;
+
+		case MimeSubTypeFLI:
+			s = "FLI";
+			break;
+
+		case MimeSubTypeQuickTime:
+			s = "quicktime";
+			break;
+
+		case MimeSubTypeXvrml:
+			s = "X-VRML";
+			break;
+
+		case MimeSubTypeMIDI:
+			s = "MIDI";
+			break;
+
+		case MimeSubTypeULAW:
+			s = "ULAW";
+			break;
+
+		case MimeSubTypeXaiff:
+			s = "X-AIFF";
+			break;
+
+		case MimeSubTypeXwav:
+			s = "X-wav";
 			break;
 
 		case MimeSubTypeUnknown:
@@ -556,6 +832,288 @@ RMM::cteTypeEnumToStr(CteType t)
 			s = "";
 	}
 
+	return s;
+}
+
+	QString
+RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
+{
+	QString s;
+	
+	switch (t) {
+
+		case MimeTypeText:
+
+			switch (st) {
+
+			case MimeSubTypeNone:
+				s = "unknown.xpm";
+				break;
+
+			case MimeSubTypePlain:
+				s = "text.xpm";
+				break;
+
+			case MimeSubTypeRichtext:
+				s = "richtext.xpm";
+				break;
+
+			case MimeSubTypeEnriched:
+				s = "enriched.xpm";
+				break;
+
+			case MimeSubTypeHTML:
+				s = "html.xpm";
+				break;
+			}
+
+			break;
+
+		case MimeTypeMultiPart:
+	
+			switch (st) {
+
+				case MimeSubTypeMixed:
+					s = "mixed.xpm";
+					break;
+
+				case MimeSubTypeAlternative:
+					s = "alternative.xpm";
+					break;
+
+				case MimeSubTypeDigest:
+					s = "digest.xpm";
+					break;
+
+				case MimeSubTypeParallel:
+					s = "parallel.xpm";
+					break;
+			}
+				
+			break;
+
+		case MimeTypeMessage:
+			
+			switch (st) {
+
+				case MimeSubTypeRFC822:
+					s = "rfc822.xpm";
+					break;
+
+				case MimeSubTypePartial:
+					s = "partial.xpm";
+					break;
+
+				case MimeSubTypeExternalBody:
+					s = "external-body.xpm";
+					break;
+			}
+
+			break;
+	
+		case MimeTypeImage:
+
+			switch (st) {
+			
+				case MimeSubTypeJpeg:
+					s = "jpeg.xpm";
+					break;
+
+				case MimeSubTypeGIF:
+					s = "gif.xpm";
+					break;
+		
+				case MimeSubTypePNG:
+					s = "png.xpm";
+					break;
+
+				case MimeSubTypeTIFF:
+					s = "tiff.xpm";
+					break;
+				
+				case MimeSubTypeXras:
+					s = "x-cmu-raster.xpm";
+					break;
+
+				case MimeSubTypeXpnm:
+					s = "x-portable-anymap.xpm";
+					break;
+
+				case MimeSubTypeXpbm:
+					s = "x-portable-bitmap.xpm";
+					break;
+
+				case MimeSubTypeXpgm:
+					s = "x-portable-graymap.xpm";
+					break;
+
+				case MimeSubTypeXppm:
+					s = "x-portable-pixmap.xpm";
+					break;
+
+				case MimeSubTypeXrgb:
+					s = "x-rgb.xpm";
+					break;
+
+				case MimeSubTypeXxbm:
+					s = "x-xbitmap.xpm";
+					break;
+
+				case MimeSubTypeXxpm:
+					s = "x-xpixmap.xpm";
+					break;
+			}
+
+			break;
+
+		case MimeTypeApplication:
+
+			switch (st) {
+
+				case MimeSubTypeXcpio:
+					s = "x-cpio.xpm";
+					break;
+
+				case MimeSubTypeXdvi:
+					s = "x-dvi.xpm";
+					break;
+
+				case MimeSubTypePostScript:
+					s = "postscript.xpm";
+					break;
+
+				case MimeSubTypeOctetStream:
+					s = "octet-stream.xpm";
+					break;
+					
+				case MimeSubTypeXperl:
+					s = "x-perl.xpm";
+					break;
+
+				case MimeSubTypeXtar:
+					s = "x-tar.xpm";
+					break;
+
+				case MimeSubTypeXdeb:
+					s = "x-deb.xpm";
+					break;
+
+				case MimeSubTypeXrar:
+					s = "x-rar-compressed.xpm";
+					break;
+
+				case MimeSubTypeXlatex:
+					s = "x-latex.xpm";
+					break;
+
+				case MimeSubTypeXsh:
+					s = "x-sh.xpm";
+					break;
+
+				case MimeSubTypeXshar:
+					s = "x-shar.xpm";
+					break;
+
+				case MimeSubTypeXtgz:
+					s = "x-tar-gz.xpm";
+					break;
+
+				case MimeSubTypeXtcl:
+					s = "x-tcl.xpm";
+					break;
+
+				case MimeSubTypeXtex:
+					s = "x-tex.xpm";
+					break;
+
+				case MimeSubTypeXtroff:
+					s = "x-troff.xpm";
+					break;
+
+				case MimeSubTypeXzip:
+					s = "x-zip.xpm";
+					break;
+			}
+
+			break;
+
+		case MimeTypeAudio:
+
+			switch (st) {
+			
+				case MimeSubTypeBasic:
+					s = "basic.xpm";
+					break;
+
+				case MimeSubTypeMIDI:
+					s = "midi.xpm";
+					break;
+
+				case MimeSubTypeULAW:
+					s = "ulaw.xpm";
+					break;
+
+				case MimeSubTypeXaiff:
+					s = "x-aiff.xpm";
+					break;
+
+				case MimeSubTypeXwav:
+					s = "x-wav.xpm";
+					break;
+			}
+	
+			break;
+
+		case MimeTypeVideo:
+
+			switch (st) {
+		
+				case MimeSubTypeMPEG:
+					s = "mpeg.xpm";
+					break;
+			
+				case MimeSubTypeXavi:
+					s = "x-msvideo.xpm";
+					break;
+
+				case MimeSubTypeXsgi:
+					s = "x-sgi-movie.xpm";
+					break;
+					
+				case MimeSubTypeGL:
+					s = "gl.xpm";
+					break;
+
+				case MimeSubTypeFLI:
+					s = "fli.xpm";
+					break;
+
+				case MimeSubTypeQuickTime:
+					s = "quicktime.xpm";
+					break;
+			}
+
+			break;
+
+		case MimeTypeModel:
+			
+			// This shouldn't be here, but it'll do for now.
+			switch (st) {
+			
+				case MimeSubTypeXvrml:
+					s = "x-vrml.xpm";
+					break;
+			}
+			
+			break;
+
+		case MimeTypeNone:
+		case MimeTypeUnknown:
+		default:
+			s = "unknown.xpm";
+			break;
+	}
+	
 	return s;
 }
 

@@ -48,6 +48,7 @@ REntity::operator = (const REntity & e)
 	rmmDebug("operator =");
     if (this == &e) return *this; // Don't do a = a.
 	RMessageComponent::operator = (e);
+	assembled_ = false;
 	return *this;
 }
 

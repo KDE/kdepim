@@ -29,13 +29,12 @@
 // Local includes
 #include "EmpathDefines.h"
 
-QString token(const char * str, const char * delim, Q_UINT32 pos);
 QString baseName(const QString & filename);
 bool	EmpathLockMailFile(QFile & f, LockType ltype);
-QString QColorToHTML(const QColor & col);
-QString quoteSeparators(const QString & s, char separator);
+QCString QColorToHTML(const QColor & col);
+QCString quoteSeparators(const QCString & s, char separator);
 QString empathDir();
 void empathInvokeHelp(const QString & a, const QString & b);
-QString className();
+const char * className();
 
 #endif

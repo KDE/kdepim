@@ -56,6 +56,7 @@ class EmpathSendingSettingsDialog : public QDialog
 
 		void saveData();
 		void loadData();
+		void closeEvent(QCloseEvent *);
 		
 	protected slots:
 

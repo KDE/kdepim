@@ -48,17 +48,6 @@ EmpathMailboxMaildir::EmpathMailboxMaildir(const QString & name)
 	type_ = Maildir;
 	seq_ = 0;
 	boxList_.setAutoDelete(true);
-	
-	// for testing
-	
-	path_ = QDir::homeDirPath() + "/Maildir/";
-	
-	QDir d(path_);
-	
-	if (!d.exists())
-		if (!d.mkdir(path_)) {
-			empathDebug("Couldn't make " + path_ + " !!!!!");
-		}
 }
 
 EmpathMailboxMaildir::~EmpathMailboxMaildir()
@@ -66,12 +55,12 @@ EmpathMailboxMaildir::~EmpathMailboxMaildir()
 	empathDebug("dtor");
 }
 
-	void
-EmpathMailboxMaildir::mark(const EmpathURL & message, RMM::MessageStatus msgStat)
+	bool
+EmpathMailboxMaildir::mark(const EmpathURL & message, RMM::MessageStatus s)
 {
 	EmpathMaildir * m = _box(message);
-	if (m == 0) return;
-	m->mark(message, msgStat);
+	if (m == 0) return false;
+	return m->mark(message, s);
 }
 
 	void
@@ -151,12 +140,11 @@ EmpathMailboxMaildir::_setupDefaultFolders()
 EmpathMailboxMaildir::writeMessage(const EmpathURL & folder, RMessage & m)
 {
 	empathDebug("writeMessage() called");
-	// FIXME: Write writeNewMail method !
-	QString s;// = writeNewMail(m);
 	
-	if (s.isEmpty()) return false;
+	EmpathMaildir * box = _box(folder);
+	if (box == 0) return 0;
+	box->writeMessage(m);
 	
-//	m.setFilename(s);
 	return true;
 }
 
@@ -175,6 +163,7 @@ EmpathMailboxMaildir::saveConfig()
 	c->setGroup(url_.mailboxName());
 	
 	c->writeEntry(EmpathConfig::KEY_MAILBOX_TYPE, type_);
+	c->writeEntry(EmpathConfig::KEY_LOCAL_MAILBOX_PATH, path_);
 	
 	c->writeEntry(EmpathConfig::KEY_CHECK_MAIL, checkMail_);
 	c->writeEntry(EmpathConfig::KEY_CHECK_MAIL_INTERVAL, checkMailInterval_);
@@ -195,6 +184,7 @@ EmpathMailboxMaildir::readConfig()
 	folderList_.clear();
 	boxList_.clear();
 	
+	path_ = c->readEntry(EmpathConfig::KEY_LOCAL_MAILBOX_PATH);
 	_recursiveReadFolders(path_);
 }
 
@@ -319,6 +309,12 @@ EmpathMailboxMaildir::init()
 {
 	empathDebug("init() called");
 	readConfig();
+	QDir d(path_);
+	
+	if (!d.exists())
+		if (!d.mkdir(path_)) {
+			empathDebug("Couldn't make " + path_ + " !!!!!");
+		}
 }
 
 	RMessage *
@@ -336,8 +332,12 @@ EmpathMailboxMaildir::message(const EmpathURL & id)
 	bool
 EmpathMailboxMaildir::removeMessage(const EmpathURL & id)
 {
+	empathDebug("removeMessage(" + id.asString() + ") called");
 	EmpathMaildir * m = _box(id);
-	if (m == 0) return 0;
+	if (m == 0) {
+		empathDebug("Can't find maildir");
+		return 0;
+	}
 	return m->removeMessage(id.messageID());
 }
 
@@ -396,25 +396,33 @@ EmpathMailboxMaildir::removeFolder(const EmpathURL & id)
 			break;
 		}
 	
+	if (!removedFromFolderList) {
+		empathDebug("Couldn't remove from folder list");
+		return false;
+	}
+	
 	EmpathMaildirListIterator mit(boxList_);
 	
 	for (; mit.current(); ++mit)
-		if (mit.current()->path() == id.folderPath()) {
+		if (mit.current()->url() == id) {
 			boxList_.remove(mit.current());
 			removedFromMaildirList = true;
 			break;
 		}
 	
-	bool removedDiskFiles = _recursiveRemove(path_ + id.folderPath());
+	if (!removedFromMaildirList) {
+		empathDebug("Couldn't remove from box list");
+		return false;
+	}
 	
-	return
-		(removedFromFolderList && removedFromMaildirList && removedDiskFiles);
+	return _recursiveRemove(path_ + id.folderPath());
 }
 
 	bool
 EmpathMailboxMaildir::_recursiveRemove(const QString & dir)
 {
 	empathDebug("_recursiveRemove(" + dir + ") called");
+	
 	QDir d(dir);
 
 	// First remove all dirs.
@@ -429,12 +437,12 @@ EmpathMailboxMaildir::_recursiveRemove(const QString & dir)
 		if (*it == ".") continue;
 		if (*it == "..") continue;
 		
-		_recursiveRemove(dir + "/" + *it);
-		empathDebug("REMOVE DIR  \"" + dir + "/" + *it + "\"");
+		if (!_recursiveRemove(dir + "/" + *it))
+			return false;
 	}
 	
 	// Now remove all files.
-	d.setFilter(QDir::NoSymLinks | QDir::Files);
+	d.setFilter(QDir::NoSymLinks | QDir::Files | QDir::Hidden);
 	
 	l = d.entryList();
 	
@@ -443,11 +451,18 @@ EmpathMailboxMaildir::_recursiveRemove(const QString & dir)
 	for (; it != l.end(); ++it) {
 
 		empathDebug("REMOVE FILE \"" + dir + "/" + *it + "\"");
-//		QFile(*it).remove();
+		if (!QFile::remove(dir + "/" + *it)) {
+			empathDebug("Couldn't remove " + dir + "/" + *it);
+			return false;
+		}
 	}
 	
 	// Finally, remove this dir.
 	empathDebug("REMOVE DIR  \"" + dir + "\"");
+	if (!d.rmdir(dir)) {
+		empathDebug("Couldn't remove " + dir);
+		return false;
+	}
 	
 	return true;
 }

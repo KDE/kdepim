@@ -42,6 +42,7 @@
 #include "EmpathMailboxPOP3.h"
 #include "EmpathMailboxIMAP4.h"
 #include "EmpathUtilities.h"
+#include "EmpathUIUtils.h"
 #include "Empath.h"
 	
 bool EmpathAccountsSettingsDialog::exists_ = false;
@@ -64,6 +65,7 @@ EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(
 	:	QDialog(parent, name, false)
 {
 	empathDebug("ctor");
+	setCaption(i18n("Accounts Settings - ") + kapp->getCaption());
 
 	rgb_account_	= new RikGroupBox(i18n("Account"), 8, this, "rgb_account");
 	CHECK_PTR(rgb_account_);
@@ -454,11 +456,17 @@ EmpathAccountsSettingsDialog::updateMailboxList()
 			default:								break;
 		}
 
-		new QListViewItem(
+		QListViewItem * newItem =
+			new QListViewItem(
 				lv_accts_,
 				m->name(),
 				accType,
 				timerInterval);
+		
+		CHECK_PTR(newItem);
+		
+		newItem->setPixmap(0, empathIcon("settings-accounts.png"));
+		
 	}
 }
 
@@ -480,9 +488,7 @@ EmpathAccountsSettingsDialog::s_removeAccount()
 	void
 EmpathAccountsSettingsDialog::s_OK()
 {
-	if (!applied_)
-		kapp->getConfig()->rollback(true);
-	
+	s_apply();
 	kapp->getConfig()->sync();
 	delete this;
 }
@@ -504,6 +510,7 @@ EmpathAccountsSettingsDialog::s_apply()
 	} else {
 		pb_apply_->setText(i18n("&Revert"));
 		pb_cancel_->setText(i18n("&Close"));
+		empath->mailboxList().saveConfig();
 		applied_ = true;
 	}
 }
@@ -513,6 +520,13 @@ EmpathAccountsSettingsDialog::s_cancel()
 {
 	if (!applied_)
 		kapp->getConfig()->rollback(true);
+	delete this;
+}
+
+	void
+EmpathAccountsSettingsDialog::closeEvent(QCloseEvent * e)
+{
+	e->accept();
 	delete this;
 }
 

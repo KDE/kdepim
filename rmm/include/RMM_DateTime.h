@@ -33,7 +33,7 @@
  * An RDateTime encapsulates a time value. It is basically a QDateTime with an
  * added 'asUnixTime()' method and knowledge of time zones.
  */ 
-class RDateTime : public QDateTime, public RHeaderBody {
+class RDateTime : public RHeaderBody {
 
 	public:
 
@@ -42,6 +42,8 @@ class RDateTime : public QDateTime, public RHeaderBody {
 		RDateTime(const QCString & s) : RHeaderBody(s) { }
 		RDateTime & operator = (const RDateTime & dt);
 		void set(const QCString & s) { RHeaderBody::set(s); }
+		
+		QDateTime qdt() { parse(); return qdate_; }
 
 		friend QDataStream & operator >> (
 			QDataStream & s, RDateTime & dt);
@@ -68,6 +70,7 @@ class RDateTime : public QDateTime, public RHeaderBody {
 	private:
 
 		QCString	zone_;
+		QDateTime	qdate_;
 		
 		bool		parsed_;
 		bool		assembled_;

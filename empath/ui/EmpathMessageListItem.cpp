@@ -31,14 +31,7 @@ EmpathMessageListItem::EmpathMessageListItem(
 		EmpathIndexRecord & msgDesc)
 	:	
 		QListViewItem(parent),
-		id_			(msgDesc.id()),
-		messageID_	(msgDesc.messageID()),
-		parentID_	(msgDesc.parentID()),
-		subject_	(msgDesc.subject()),
-		sender_		(msgDesc.sender()),
-		date_		(msgDesc.date()),
-		status_		(msgDesc.status()),
-		size_		(msgDesc.size())
+		m(msgDesc)
 {
 	empathDebug("ctor");
 	niceDate_ = msgDesc.niceDate(true);
@@ -50,14 +43,7 @@ EmpathMessageListItem::EmpathMessageListItem(
 		EmpathIndexRecord & msgDesc)
 	:	
 		QListViewItem(parent),
-		id_			(msgDesc.id()),
-		messageID_	(msgDesc.messageID()),
-		parentID_	(msgDesc.parentID()),
-		subject_	(msgDesc.subject()),
-		sender_		(msgDesc.sender()),
-		date_		(msgDesc.date()),
-		status_		(msgDesc.status()),
-		size_		(msgDesc.size())
+		m(msgDesc)
 {
 	empathDebug("ctor");
 	niceDate_ = msgDesc.niceDate(true);
@@ -72,7 +58,7 @@ EmpathMessageListItem::~EmpathMessageListItem()
 	void
 EmpathMessageListItem::_init()
 {	
-	setText(0, subject_);
+	setText(0, m.subject());
 	setText(2, niceDate_);
 	
 	QString sizeStr;
@@ -80,21 +66,31 @@ EmpathMessageListItem::_init()
 	// Why does using floats not work ?
 	// Anyway, this should handle up to 9999 Mb (nearly 10G).
 	// I hope that 10G mail messages won't exist during my lifetime ;)
+	
+	Q_UINT32 size_(m.size());
+
 	if (size_ < 1024) {
+		
 		sizeStr = "%1 bytes";
 		sizeStr = sizeStr.arg((Q_UINT32)size_, 4);
-		setText(4, sizeStr);
+	
 	} else {
+	
 		if (size_ < 1048576) {
+	
 			sizeStr = "%1 Kb";
 			sizeStr = sizeStr.arg((Q_UINT32)(size_ / 1024.0), 4);
-			setText(4, sizeStr);
+	
 		} else {
+	
 			sizeStr = "%1 Mb";
 			sizeStr = sizeStr.arg((Q_UINT32)(size_ / 1048576.0), 4);
-			setText(4, sizeStr);
 		}
 	}
+	
+	setText(4, sizeStr);
+	
+	RMailbox sender_(m.sender());
 	
 	if (sender_.phrase().isEmpty()) {
 		sender_.assemble();
@@ -112,9 +108,10 @@ EmpathMessageListItem::_init()
 		setText(1, s);
 	}
 	
-	dateStr_.sprintf("%08x", date_.asUnixTime());
+	dateStr_.sprintf("%016x", m.date().asUnixTime());
+	setText(2, dateStr_);
 	
-	sizeStr_.sprintf("%08x", size_);
+	sizeStr_.sprintf("%016x", size_);
 }
 
 	void
@@ -160,4 +157,11 @@ EmpathMessageListItem::key(int column, bool b) const
 	
 	return s;
 }
+
+	void
+EmpathMessageListItem::setStatus(RMM::MessageStatus s)
+{
+	m.setStatus(s);
+}
+
 

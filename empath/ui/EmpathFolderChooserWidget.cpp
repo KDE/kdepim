@@ -24,7 +24,6 @@
 // Local includes
 #include "Empath.h"
 #include "EmpathDefines.h"
-#include "EmpathFolder.h"
 #include "EmpathFolderChooserWidget.h"
 #include "EmpathFolderChooserDialog.h"
 #include "EmpathMailboxList.h"
@@ -35,7 +34,6 @@ EmpathFolderChooserWidget::EmpathFolderChooserWidget(
 	:	QFrame(parent, name)
 {
 	empathDebug("ctor");
-	folder_ = 0;
 	setFrameStyle(QFrame::Box | QFrame::Raised);
 	setLineWidth(1);
 	l_folderName_		= new QLabel(this, "l_folderName_");
@@ -61,13 +59,7 @@ EmpathFolderChooserWidget::~EmpathFolderChooserWidget()
 	EmpathURL
 EmpathFolderChooserWidget::selectedURL() const
 {
-	empathDebug("selectedURL() called");
-	if (folder_ != 0) {
-		empathDebug("Selected folder is " +
-			folder_->url().asString());
-		return folder_->url();
-	}
-	else return EmpathURL(QString::null);
+	return url_;
 }
 
 	void
@@ -75,14 +67,9 @@ EmpathFolderChooserWidget::setURL(const EmpathURL & url)
 {
 	empathDebug("setURL(" + url.asString() + ") called");
 	
-	folder_ = empath->folder(url);
+	url_ = url;
 	
-	if (folder_ == 0) {
-		empathDebug("Folder is 0");
-		return;
-	}
-	
-	l_folderName_->setText(url.asString());
+	l_folderName_->setText(url_.asString());
 }
 
 	void
@@ -93,8 +80,7 @@ EmpathFolderChooserWidget::s_browse()
 	
 	if (fcd.exec() == Cancel) return;
 
-	folder_ = fcd.selectedFolder();
-	if (folder_ != 0)
-		l_folderName_->setText(folder_->url().asString());
+	url_ = fcd.selected();
+	l_folderName_->setText(url_.asString());
 }
 

@@ -349,3 +349,9 @@ EmpathMailboxIMAP4::removeFolder(const EmpathURL & id)
 	return false;
 }
 
+	bool
+EmpathMailboxIMAP4::mark(const EmpathURL & url, RMM::MessageStatus s)
+{
+	return false;
+}
+

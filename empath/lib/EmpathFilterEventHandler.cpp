@@ -125,7 +125,7 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
 				
 				if (!mcf->writeMessage(*m)) return;
 				
-				empath->s_remove(id);
+				empath->remove(id);
 			}
 			
 			break;
@@ -158,7 +158,7 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
 			
 		case Delete:
 			empathDebug("Deleting message " + QString(id.asString()));
-			empath->s_remove(id);
+			empath->remove(id);
 			break;
 	
 		case Ignore:

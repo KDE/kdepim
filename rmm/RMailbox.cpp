@@ -180,7 +180,7 @@ RMailbox::parse()
 	QStrListIterator it(l);
 
 	for (; it.current(); ++it) {
-		rmmDebug("TOKEN: " + QString(it.current()));
+		rmmDebug("TOKEN: " + QCString(it.current()));
 		hasRouteAddress = (*(it.current()) == '<');
 	}
 	

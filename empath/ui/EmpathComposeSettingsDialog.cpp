@@ -48,7 +48,8 @@ EmpathComposeSettingsDialog::create()
 EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 		QWidget * parent,
 		const char * name)
-	:	QDialog(parent, name, false)
+	:	QDialog(parent, name, false),
+		applied_(false)
 {
 	empathDebug("ctor");
 	setCaption(i18n("Compose Settings - ") + kapp->getCaption());
@@ -479,6 +480,13 @@ EmpathComposeSettingsDialog::s_cancel()
 {
 	if (!applied_)
 		kapp->getConfig()->rollback(true);
+	delete this;
+}
+
+	void
+EmpathComposeSettingsDialog::closeEvent(QCloseEvent * e)
+{
+	e->accept();
 	delete this;
 }
 

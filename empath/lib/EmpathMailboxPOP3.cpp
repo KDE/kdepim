@@ -81,7 +81,7 @@ EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
 	
 	errorStr	= "Unknown Error!";
 	
-	QString folderPixmapName = "mini-folder-inbox.xpm";
+	QString folderPixmapName = "mini-folder-inbox.png";
 	QString inboxName = i18n("Inbox");
 
 	EmpathURL url("empath://" + name_ + inboxName);
@@ -1174,6 +1174,11 @@ EmpathMailboxPOP3::addFolder(const EmpathURL & id)
 
 	bool
 EmpathMailboxPOP3::removeFolder(const EmpathURL & id)
+{
+	return false;
+}
+	bool
+EmpathMailboxPOP3::mark(const EmpathURL & url, RMM::MessageStatus s)
 {
 	return false;
 }

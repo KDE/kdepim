@@ -52,6 +52,7 @@ class EmpathAccountsSettingsDialog : public QDialog
 		static void create();
 
 		~EmpathAccountsSettingsDialog() { empathDebug("dtor"); exists_ = false;}
+		void closeEvent(QCloseEvent *);
 
 	protected slots:
 

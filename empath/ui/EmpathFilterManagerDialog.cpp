@@ -51,6 +51,7 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(
 	:	QDialog(parent, name, false)
 {
 	empathDebug("ctor");
+	setCaption(i18n("Filter Settings - ") + kapp->getCaption());
 
 	mainLayout_ = new QGridLayout(this, 2, 1, 10, 10);
 	CHECK_PTR(mainLayout_);
@@ -120,8 +121,6 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(
 	filtersButtonBox_->setFixedWidth(filtersButtonBox_->sizeHint().width());
 	filtersButtonBox_->setMinimumHeight(filtersButtonBox_->sizeHint().height());
 
-	rgb_filters_->setMinimumWidth(filtersButtonBox_->sizeHint().width() + 40);
-
 ///////////////////////////////////////////////////////////////////////////////
 // Button box
 
@@ -154,7 +153,6 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(
 	QObject::connect(pb_help_,		SIGNAL(clicked()),	SLOT(s_help()));
 /////////////////////////////////////////////////////////////////////////////
 
-
 	filtersLayout_ = new QGridLayout(w_filters_, 2, 2, 10, 10);
 	CHECK_PTR(filtersLayout_);
 
@@ -167,6 +165,7 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(
 	mainLayout_->addWidget(rgb_filters_,	0, 0);
 	mainLayout_->addWidget(buttonBox_,		1, 0);
 	mainLayout_->activate();
+
 	setMinimumSize(minimumSizeHint());
 	resize(minimumSizeHint());
 	
@@ -268,9 +267,7 @@ EmpathFilterManagerDialog::saveData()
 	void
 EmpathFilterManagerDialog::s_OK()
 {
-	if (!applied_)
-		kapp->getConfig()->rollback(true);
-	
+	s_apply();
 	kapp->getConfig()->sync();
 	delete this;
 }
@@ -301,6 +298,13 @@ EmpathFilterManagerDialog::s_cancel()
 {
 	if (!applied_)
 		kapp->getConfig()->rollback(true);
+	delete this;
+}
+
+	void
+EmpathFilterManagerDialog::closeEvent(QCloseEvent * e)
+{
+	e->accept();
 	delete this;
 }
 

@@ -29,7 +29,6 @@ EmpathMaildirIndex.cpp \
 EmpathMatcher.cpp \
 EmpathMessageDataCache.cpp \
 EmpathMessageList.cpp \
-EmpathTimeStamp.cpp \
 EmpathURL.cpp \
 EmpathUtilities.cpp \
 EmpathTask.cpp \

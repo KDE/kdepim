@@ -18,6 +18,8 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <iostream>
+
 // Qt includes
 #include <qheader.h>
 #include <qstring.h>
@@ -63,10 +65,14 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 	addColumn("Status");
 	addColumn("Size");
 	
-	px_read_marked		= empathIcon("tree-read-marked.xpm");
-	px_unread_marked	= empathIcon("tree-unread-marked.xpm");
-	px_read_unmarked	= empathIcon("tree-read.xpm");
-	px_unread_unmarked	= empathIcon("tree-unread.xpm");
+	px_						= empathIcon("tree.png");
+	pxRead_					= empathIcon("tree-read.png");
+	pxMarked_				= empathIcon("tree-marked.png");
+	pxReplied_				= empathIcon("tree-replied.png");
+	pxReadMarked_			= empathIcon("tree-read-marked.png");
+	pxReadReplied_			= empathIcon("tree-read-replied.png");
+	pxMarkedReplied_		= empathIcon("tree-marked-replied.png");
+	pxReadMarkedReplied_	= empathIcon("tree-read-marked-replied.png");
 
 	empathDebug("Restoring column sizes");
 	
@@ -156,10 +162,14 @@ EmpathMessageListWidget::find(RMessageID & msgId)
 }
 
 	void
-EmpathMessageListWidget::addItem(EmpathIndexRecord & item)
+EmpathMessageListWidget::addItem(EmpathIndexRecord * item)
 {
 	// Put the item into the master list.
 	empathDebug("addItem called");
+	if (item == 0) {
+		empathDebug("item == 0 !");
+		return;
+	}
 #if 0	
 	QListIterator<EmpathMessageListItem> it(threadItemList_);
 	bool needToClearOut = false;
@@ -185,8 +195,8 @@ EmpathMessageListWidget::addItem(EmpathIndexRecord & item)
 	// clock is set wrongly. It remains to be seen how far out of sync the world's
 	// clocks are and how quickly people can reply to messages.
 	
-	if (! item.parentID().localPart().isEmpty() &&
-		! item.messageID().localPart().isEmpty()) {
+	if (! item->parentID().localPart().isEmpty() &&
+		! item->messageID().localPart().isEmpty()) {
 		// Child of other item
 		empathDebug("Message has parentID, looking for parent");
 //		empathDebug("MESSAGE ID: \"" + messageID.asString() + "\"");
@@ -194,19 +204,19 @@ EmpathMessageListWidget::addItem(EmpathIndexRecord & item)
 		
 		EmpathMessageListItem * parentItem = 0;
 		
-		parentItem = this->find(item.parentID());
+		parentItem = this->find(item->parentID());
 
 		if (parentItem == 0) {
 			
 			empathDebug("No parent for this item");
-			newItem = new EmpathMessageListItem(this, item);
+			newItem = new EmpathMessageListItem(this, *item);
 			CHECK_PTR(newItem);
 			empathDebug("Created OK");
 			
 		} else {
 			
 			empathDebug("There's parent for this item");
-			newItem = new EmpathMessageListItem(parentItem, item);
+			newItem = new EmpathMessageListItem(parentItem, *item);
 			CHECK_PTR(newItem);
 			empathDebug("Created OK");
 		}
@@ -214,15 +224,12 @@ EmpathMessageListWidget::addItem(EmpathIndexRecord & item)
 	} else {
 		// Root item
 		empathDebug("Message is root item");
-		QTime begin(QTime::currentTime());
-		newItem = new EmpathMessageListItem(this, item);
-		empathDebug("Creation of message list item took " +
-			QString().setNum(begin.msecsTo(QTime::currentTime())) + " ms");
+		newItem = new EmpathMessageListItem(this, *item);
 		CHECK_PTR(newItem);
 		empathDebug("Created OK");
 	}
 
-	setStatus(newItem, item.status());
+	setStatus(newItem, item->status());
 }
 /*
 	void
@@ -261,28 +268,37 @@ EmpathMessageListWidget::firstSelectedMessage()
 	void
 EmpathMessageListWidget::s_messageMark()
 {
+	empathDebug("s_messageMark() called");
 	if (currentItem() == 0) return;
 	EmpathMessageListItem * item = (EmpathMessageListItem *)currentItem();
 	EmpathURL u = EmpathURL(url_.mailboxName(), url_.folderPath(), item->id());
-	empath->s_mark(u, RMM::MessageStatus(item->status() ^ RMM::Marked));
+	if (empath->mark(u, RMM::MessageStatus(item->status() ^ RMM::Marked))) {
+		setStatus(item, RMM::MessageStatus(item->status() ^ RMM::Marked));
+	}
 }
 
 	void
 EmpathMessageListWidget::s_messageMarkRead()
 {
+	empathDebug("s_messageMark() called");
 	if (currentItem() == 0) return;
 	EmpathMessageListItem * item = (EmpathMessageListItem *)currentItem();
 	EmpathURL u = EmpathURL(url_.mailboxName(), url_.folderPath(), item->id());
-	empath->s_mark(u, RMM::MessageStatus(item->status() ^ RMM::Read));
+	if (empath->mark(u, RMM::MessageStatus(item->status() ^ RMM::Read))) {
+		setStatus(item, RMM::MessageStatus(item->status() ^ RMM::Read));
+	}
 }
 
 	void
 EmpathMessageListWidget::s_messageMarkReplied()
 {
+	empathDebug("s_messageMark() called");
 	if (currentItem() == 0) return;
 	EmpathMessageListItem * item = (EmpathMessageListItem *)currentItem();
 	EmpathURL u = EmpathURL(url_.mailboxName(), url_.folderPath(), item->id());
-	empath->s_mark(u, RMM::MessageStatus(item->status() ^ RMM::Replied));
+	if (empath->mark(u, RMM::MessageStatus(item->status() ^ RMM::Replied))) {
+		setStatus(item, RMM::MessageStatus(item->status() ^ RMM::Replied));
+	}
 }
 
 	void
@@ -317,7 +333,18 @@ EmpathMessageListWidget::s_messageBounce()
 EmpathMessageListWidget::s_messageDelete()
 {
 	empathDebug("s_messageDelete called");
-	empath->s_remove(firstSelectedMessage());
+	if (!empath->remove(firstSelectedMessage())) {
+		empathDebug("Couldn't remove message !");
+		return;
+	}
+	
+	QListViewItem * i(selectedItem());
+	if (i == 0) {
+		empathDebug("No currently selected item to remove !");
+		return;
+	}
+	
+	delete i;
 }
 
 	void
@@ -326,7 +353,8 @@ EmpathMessageListWidget::s_messageSaveAs()
 	empathDebug("s_messageSaveAs called");
 	QString saveFilePath =
 		KFileDialog::getSaveFileName(
-			QString::null, QString::null, this, i18n("Empath: Save Message"));
+			QString::null, QString::null, this,
+			i18n("Empath: Save Message").ascii());
 	empathDebug(saveFilePath);
 	
 	if (saveFilePath.isEmpty()) {
@@ -349,7 +377,7 @@ EmpathMessageListWidget::s_messageSaveAs()
 	RMessage * message(folder->message(firstSelectedMessage()));
 	if (message == 0) return;
 	
-	QString s =
+	QCString s =
 		message->asString();
 	
 	unsigned int blockSize = 1024; // 1k blocks
@@ -358,12 +386,12 @@ EmpathMessageListWidget::s_messageSaveAs()
 
 	for (unsigned int i = 0 ; i < s.length() ; i += blockSize) {
 		
-		QString outStr;
+		QCString outStr;
 		
 		if ((fileLength - i) < blockSize)
-			outStr = QString(s.right(fileLength - i));
+			outStr = QCString(s.right(fileLength - i));
 		else
-			outStr = QString(s.mid(i, blockSize));
+			outStr = QCString(s.mid(i, blockSize));
 		
 		if (f.writeBlock(outStr, outStr.length()) != outStr.length()) {
 			// Warn user file not written.
@@ -409,7 +437,7 @@ EmpathMessageListWidget::s_messageView()
 	EmpathMessageViewWindow * messageViewWindow =
 		new EmpathMessageViewWindow(
 			firstSelectedMessage(),
-			i18n("Empath: Message View"));
+			i18n("Empath: Message View").ascii());
 	
 	CHECK_PTR(messageViewWindow);
 	
@@ -436,9 +464,32 @@ EmpathMessageListWidget::s_rightButtonPressed(
 	if (item == 0) return;
 	wantScreenUpdates_ = false;
 	setSelected(item, true);
+	
+	EmpathMessageListItem * i = (EmpathMessageListItem *)item;
+
+	if (i->status() & RMM::Read)
+		messageMenu_.changeItem(messageMenuItemMark,
+			i18n("Mark as unread"));
+	else
+		messageMenu_.changeItem(messageMenuItemMark,
+			i18n("Mark as read"));
+
+	if (i->status() & RMM::Replied)
+		messageMenu_.changeItem(messageMenuItemMark,
+			i18n("Mark as not replied to"));
+	else
+		messageMenu_.changeItem(messageMenuItemMark,
+			i18n("Mark as replied to"));
+	
+	if (i->status() & RMM::Marked)
+		messageMenu_.changeItem(messageMenuItemMark,
+			i18n("Untag"));
+	else
+		messageMenu_.changeItem(messageMenuItemMark,
+			i18n("Tag"));
+
 	messageMenu_.exec(pos);
 	wantScreenUpdates_ = true;
-	emit(currentChanged(item));
 }
 /*
 	void
@@ -480,16 +531,31 @@ EmpathMessageListWidget::setSignalUpdates(bool yn)
 EmpathMessageListWidget::setStatus(
 		EmpathMessageListItem * item, RMM::MessageStatus status)
 {
+	empathDebug("setStatus() called with " + QString().setNum(status));
 	if (status & RMM::Read)
 		if (status & RMM::Marked)
-			item->setPixmap(0, px_read_marked);
+			if (status & RMM::Replied)
+				item->setPixmap(0, pxReadMarkedReplied_);
+			else
+				item->setPixmap(0, pxReadMarked_);
 		else
-			item->setPixmap(0, px_read_unmarked);
+			if (status & RMM::Replied)
+				item->setPixmap(0, pxReadReplied_);
+			else
+				item->setPixmap(0, pxRead_);
 	else
 		if (status & RMM::Marked)
-			item->setPixmap(0, px_unread_marked);
+			if (status & RMM::Replied)
+				item->setPixmap(0, pxMarkedReplied_);
+			else
+				item->setPixmap(0, pxMarked_);
 		else
-			item->setPixmap(0, px_unread_unmarked);
+			if (status & RMM::Replied)
+				item->setPixmap(0, pxReplied_);
+			else
+				item->setPixmap(0, px_);
+	
+	item->setStatus(status);
 
 	return;
 }
@@ -497,6 +563,7 @@ EmpathMessageListWidget::setStatus(
 	void
 EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 {
+	cerr << "SHOW_FOLDER START" << endl;
 	empathDebug("s_showFolder(" + url.asString() + ") called");
 	
 	if (url_ == url) {
@@ -519,6 +586,23 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 			" messages to visual list");
 	
 	EmpathIndexIterator it(f->messageList());
+	
+	KConfig * c(kapp->getConfig());
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
+	
+	// If we're not threading, just fire 'em in.
+	if (!c->readBoolEntry(EmpathConfig::KEY_THREAD_MESSAGES, false)) {
+		cerr << "NON-THREADING";
+		for (; it.current(); ++it) {
+			cerr << ".";
+			EmpathMessageListItem * newItem =
+				new EmpathMessageListItem(this, *it.current());
+			CHECK_PTR(newItem);
+			setStatus(newItem, it.current()->status());
+		}
+		cerr << endl;
+		return;
+	}
 
 	// Start by putting everything into our list. This takes care of sorting so
 	// hopefully threading will be simpler.
@@ -543,7 +627,9 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	
 	for (; mit.current(); ++mit) {
 		
-		addItem(*mit.current());
+		empathDebug("in s_showFolder() mit.current()->status == " +
+			QString().setNum(mit.current()->status()));
+		addItem(mit.current());
 		
 		now = QTime::currentTime();
 		if (begin.msecsTo(now) > 100) {
@@ -560,6 +646,7 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	}
 	
 	setUpdatesEnabled(true);
+	cerr << "SHOW_FOLDER END" << endl;
 }
 
 	void
@@ -581,48 +668,48 @@ EmpathMessageListWidget::s_headerClicked(int i)
 	void
 EmpathMessageListWidget::_setupMessageMenu()
 {
-	messageMenu_.insertItem(empathIcon("mini-view.xpm"), i18n("&View"),
+	messageMenu_.insertItem(empathIcon("mini-view.png"), i18n("View"),
 		this, SLOT(s_messageView()));
 	
-	messageMenu_.insertItem(empathIcon("mini-view.xpm"), i18n("View &Source"),
+	messageMenu_.insertItem(empathIcon("mini-view.png"), i18n("View &Source"),
 		this, SLOT(s_messageViewSource()));
 
 	messageMenuItemMark =
 		messageMenu_.insertItem(
-			empathIcon("mini-mark.xpm"), i18n("&Tag"),
+			empathIcon("mini-mark.png"), i18n("Tag"),
 			this, SLOT(s_messageMark()));
 	
 	messageMenuItemMarkRead =
 		messageMenu_.insertItem(
-			empathIcon("mini-mark.xpm"), i18n("&Mark as Read"),
+			empathIcon("mini-mark.png"), i18n("Mark as Read"),
 			this, SLOT(s_messageMarkRead()));
 	
 	messageMenuItemMarkReplied =
 		messageMenu_.insertItem(
-			empathIcon("mini-mark.xpm"), i18n("&Mark as Replied"),
+			empathIcon("mini-mark.png"), i18n("Mark as Replied"),
 			this, SLOT(s_messageMarkReplied()));
 		
 	messageMenu_.insertSeparator();
 
-	messageMenu_.insertItem(empathIcon("mini-reply.xpm"), i18n("&Reply"),
+	messageMenu_.insertItem(empathIcon("mini-reply.png"), i18n("Reply"),
 		this, SLOT(s_messageReply()));
 
-	messageMenu_.insertItem(empathIcon("mini-reply.xpm"),i18n("Reply to A&ll"),
+	messageMenu_.insertItem(empathIcon("mini-reply.png"),i18n("Reply to A&ll"),
 		this, SLOT(s_messageReplyAll()));
 
-	messageMenu_.insertItem(empathIcon("mini-forward.xpm"), i18n("&Forward"),
+	messageMenu_.insertItem(empathIcon("mini-forward.png"), i18n("Forward"),
 		this, SLOT(s_messageForward()));
 
-	messageMenu_.insertItem(empathIcon("mini-bounce.xpm"), i18n("&Bounce"),
+	messageMenu_.insertItem(empathIcon("mini-bounce.png"), i18n("Bounce"),
 		this, SLOT(s_messageBounce()));
 
-	messageMenu_.insertItem(empathIcon("mini-delete.xpm"), i18n("&Delete"),
+	messageMenu_.insertItem(empathIcon("mini-delete.png"), i18n("Delete"),
 		this, SLOT(s_messageDelete()));
 
-	messageMenu_.insertItem(empathIcon("mini-save.xpm"), i18n("Save &As"),
+	messageMenu_.insertItem(empathIcon("mini-save.png"), i18n("Save As"),
 		this, SLOT(s_messageSaveAs()));
 	
-	messageMenu_.insertItem(empathIcon("empath-print.xpm"), i18n("&Print..."),
+	messageMenu_.insertItem(empathIcon("empath-print.png"), i18n("Print..."),
 		this, SLOT(s_messagePrint()));
 }
 

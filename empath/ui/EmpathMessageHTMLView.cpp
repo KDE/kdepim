@@ -33,6 +33,7 @@
 
 // Local includes
 #include "RMM_Message.h"
+#include "RMM_Enum.h"
 #include "EmpathMessageHTMLView.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
@@ -61,11 +62,9 @@ static char * replaceTagsBody[] = {
 const int fsizes[7] = { 14, 14, 14, 14, 14, 14, 14 };
 
 EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
-		const EmpathURL &	url,
 		QWidget			*	_parent,
 		const char		*	_name)
-	:	KHTMLWidget(_parent, _name),
-		url_(url)
+	:	KHTMLWidget(_parent, _name)
 {
 	empathDebug("ctor");
 	
@@ -82,14 +81,14 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 	write("\">");
 	write(
 		"<IMG SRC=\"file:" +
-		empathDir() +
+		QCString(empathDir().ascii()) +
 		"/pics/" +
-		iconSet +
+		iconSet.ascii() +
 		"/empath.png\">");
 	write("<TT><FONT COLOR=\"#");
 	write(QColorToHTML(empathTextColour()));
 	write("\">");
-	write (i18n("Welcome to Empath"));
+	write (i18n("Welcome to Empath").ascii());
 	write ("</FONT></TT></HTML>");
 	// End welcome message
 	parse();
@@ -108,21 +107,36 @@ EmpathMessageHTMLWidget::~EmpathMessageHTMLWidget()
 }
 
 	void
-EmpathMessageHTMLWidget::setMessage(const EmpathURL & url)
+EmpathMessageHTMLWidget::use(RBodyPart & bp)
 {
-	url_ = url;
+	useEnvelope_ = false;
+	bodyPart_ = bp;
+}
+
+
+	void
+EmpathMessageHTMLWidget::use(REnvelope & e, RBodyPart & bp)
+{
+	empathDebug("use() called");
+	useEnvelope_ = true;
+	envelope_ = e;
+	empathDebug("envelope:");
+	empathDebug(envelope_.asString());
+	bodyPart_ = bp;
+	empathDebug("body:");
+	empathDebug(bodyPart_.data());
 }
 
 	void
 EmpathMessageHTMLWidget::go()
 {
-	empathDebug("go() called .. message we're working on is \"" +
-			url_.asString() + "\"");
+	empathDebug("go() called");
 
 	setCursor(waitCursor);
 
-	setStandardFont(empathGeneralFont().family());
-	setFixedFont(empathFixedFont().family());
+	// FIXME Remove ascii()
+	setStandardFont(empathGeneralFont().family().ascii());
+	setFixedFont(empathFixedFont().family().ascii());
 	setURLCursor(KCursor::handCursor());
 	setFocusPolicy(QWidget::StrongFocus);
 	
@@ -158,52 +172,29 @@ EmpathMessageHTMLWidget::go()
 	// Markup <TT> and </TT> in the template.
 	htmlTemplate.replace(QRegExp("@_TT_"), "<PRE>");
 	htmlTemplate.replace(QRegExp("@_TTEND_"), "</PRE>");
-	
-	RMessage * message(empath->message(url_));
-	
-	if (message == 0) {
-		empathDebug("Can't load message from \"" + url_.asString() + "\"");
-		// Don't forget to reset the cursor.
-		setCursor(arrowCursor);
-		return;
-	}
-	
-	QCString messageHeaders = message->envelope().asString();
-	QCString messageBody = "";
-	
-	// Ok I'm going to try and get the viewable body parts now.
-	// To start with, I'll see if there's only one part. If so, I'll show it,
-	// if possible. Otherwise, I'll have to have a harder look and see what
-	// we're supposed to be showing. If we're looking at a
-	// multipart/alternative, I'll pick the 'best' of the possibilities.
-	
-	if (message->body().count() == 1)
-		messageBody = message->body().at(0)->data();
-	else {
-		// Multipart message
-	}
-	
-	// Markup and place headers of the message in the template.
-	replaceHeaderTagsByData(messageHeaders, htmlTemplate);
-
 	int bodyTagPos = htmlTemplate.find("@_MESSAGE_BODY_");
 	
-	kapp->processEvents();
 	begin();
-	parse();
-	kapp->processEvents();
-	write(htmlTemplate.left(bodyTagPos - 1)); // catch the last char
-	kapp->processEvents();
-			
-	// Markup and place the body of the message in the template.
+	
+	// Envelope
+	if (useEnvelope_) {
+		QCString messageHeaders(envelope_.asString());
+		empathDebug("envelope:");
+		empathDebug(messageHeaders);
+		replaceHeaderTagsByData(messageHeaders, htmlTemplate);
+		write(htmlTemplate.left(bodyTagPos - 1)); // catch the last char
+		parse();
+	}
+
+	// Body
+	QCString messageBody(bodyPart_.data());
+		empathDebug("body");
+		empathDebug(messageBody);
 	replaceBodyTagsByData(messageBody, htmlTemplate);
-	
 	write(htmlTemplate.right(htmlTemplate.length() - bodyTagPos + 1));
-	kapp->processEvents();
+	setCursor(arrowCursor);
+	parse();
 	
-	///////////////////////////////////////////////////////////// Testing ///
-	// Write the HTML to a file. Useful considering HTML widget crashes.  ///
-	/////////////////////////////////////////////////////////////////////////
 #if 0
 	empathDebug("Writing message as html to message.html");
 	QFile f("message.html");
@@ -213,12 +204,6 @@ EmpathMessageHTMLWidget::go()
 		f.close();
 	}
 #endif
-	/////////////////////////////////////////////////////////////////////////
-
-	setCursor(arrowCursor);
-	kapp->processEvents();
-	parse();
-	kapp->processEvents();
 }
 
 	bool
@@ -227,14 +212,14 @@ EmpathMessageHTMLWidget::loadTemplate(const QString & templateFilename)
 	empathDebug("loadTemplate");
 	QFile f(templateFilename);
 	
-	htmlTemplate = QString::null;
+	htmlTemplate = "";
 	
 	if (!f.open(IO_ReadOnly)) {
 		
 		empathDebug("Couldn't open file");
 		htmlTemplate =
 			"<HTML>\n<H1>" +
-			QString(i18n("Warning: Couldn't load the template for displaying this message")) +
+			QCString(i18n("Warning: Couldn't load the template for displaying this message").ascii()) +
 			"</H1>";
 		return false;
 	
@@ -243,7 +228,7 @@ EmpathMessageHTMLWidget::loadTemplate(const QString & templateFilename)
 		QTextStream t(&f);
 		
 		while (!t.eof())
-		   htmlTemplate	+= t.readLine();
+		   htmlTemplate	+= t.readLine().ascii();
 		
 		f.close();
 	
@@ -316,7 +301,7 @@ EmpathMessageHTMLWidget::replaceBodyTagsByData(
 
 	} else {
 
-		sigOnly		= QString::null;
+		sigOnly		= "";
 		bodyOnly	= body;
 	}
 	toHTML(bodyOnly);
@@ -379,22 +364,23 @@ EmpathMessageHTMLWidget::markupHeaderBodies(
 		// If we can't find the field, loop.
 		if (html.find(fieldToReplace, 0) == -1) continue;
 
-		empathDebug("fieldToReplace: " + QCString(fieldToReplace.pattern()));
+		empathDebug("fieldToReplace: " + fieldToReplace.pattern());
 		
 		// e.g. replacementRegExp = "Subject" + ":".
 	
 		QRegExp replacementRegExp(replaceTagsHeader[i] + QCString(":"));
 		
 		empathDebug("replacementRegExp: " +
-			QCString(replacementRegExp.pattern()));
+			replacementRegExp.pattern());
 		
 		// Try to find the header in the message header, not case sensitive.
-		int headerPos = body.find(replacementRegExp.pattern(), 0, false);
+		int headerPos =
+			body.find(QRegExp(replacementRegExp.pattern()));
 		
 		// Didn't find the field in the message header ? Replace the tag in the
 		// html with nothing.
 		if (headerPos == -1) {
-			html.replace(fieldToReplace, QString::null);
+			html.replace(QRegExp(fieldToReplace), "");
 			continue;
 		}
 

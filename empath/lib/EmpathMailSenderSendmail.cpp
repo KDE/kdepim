@@ -167,7 +167,7 @@ EmpathMailSenderSendmail::sendmailExited(KProcess * p)
 	
 	written_ = !error_;
 	
-	messageAsString_ = QString::null;
+	messageAsString_ = "";
 }
 
 	void

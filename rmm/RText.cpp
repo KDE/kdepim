@@ -31,8 +31,6 @@ RText::RText()
 RText::RText(const RText & r)
 	:	RHeaderBody(r)
 {
-	rmmDebug("ctor with RText(" + r.asString() + ")");
-	rmmDebug("my strRep becomes \"" + strRep_ + "\"");
 }
 
 RText::RText(const QCString & s)

@@ -9,6 +9,7 @@ EmpathAboutBox.cpp \
 EmpathAccountsSettingsDialog.cpp \
 EmpathAddressSelectionWidget.cpp \
 EmpathAttachmentListWidget.cpp \
+EmpathAttachmentListItem.cpp \
 EmpathComposeSettingsDialog.cpp \
 EmpathComposeWidget.cpp \
 EmpathComposeWindow.cpp \
@@ -29,7 +30,6 @@ EmpathFilterActionDialog.cpp \
 EmpathFilterEditDialog.cpp \
 EmpathFilterListItem.cpp \
 EmpathFilterManagerDialog.cpp \
-EmpathFindDialog.cpp \
 EmpathFolderChooserDialog.cpp \
 EmpathFolderChooserWidget.cpp \
 EmpathFolderListItem.cpp \
@@ -38,6 +38,7 @@ EmpathHeaderBodyWidget.cpp \
 EmpathHeaderEditWidget.cpp \
 EmpathHeaderNameWidget.cpp \
 EmpathHeaderSpecWidget.cpp \
+EmpathHeaderViewWidget.cpp \
 EmpathIdentitySettingsDialog.cpp \
 EmpathMainWidget.cpp \
 EmpathMainWindow.cpp \
@@ -48,6 +49,8 @@ EmpathMessageHTMLView.cpp \
 EmpathMessageListItem.cpp \
 EmpathMessageListWidget.cpp \
 EmpathMessageSourceView.cpp \
+EmpathMessageStructureWidget.cpp \
+EmpathMessageStructureItem.cpp \
 EmpathMessageViewWidget.cpp \
 EmpathMessageViewWindow.cpp \
 EmpathMessageWidget.cpp \

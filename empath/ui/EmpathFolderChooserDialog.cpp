@@ -23,6 +23,7 @@
 
 // KDE includes
 #include <klocale.h>
+#include <kapp.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -37,6 +38,7 @@ EmpathFolderChooserDialog::EmpathFolderChooserDialog(
 	:	QDialog(parent, name, true)
 {
 	empathDebug("ctor");
+	setCaption(i18n("Folder Chooser - ") + kapp->getCaption());
 	folderWidget_	=
 		new EmpathFolderWidget(this, "folderWidget");
 	CHECK_PTR(folderWidget_);
@@ -87,14 +89,14 @@ EmpathFolderChooserDialog::~EmpathFolderChooserDialog()
 EmpathFolderChooserDialog::s_OK()
 {
 	empathDebug("s_OK called");
-	done(OK);
+	accept();
 }
 
 	void
 EmpathFolderChooserDialog::s_cancel()
 {
 	empathDebug("s_cancel called");
-	done(Cancel);
+	reject();
 }
 
 	void
@@ -103,10 +105,10 @@ EmpathFolderChooserDialog::s_help()
 	empathDebug("s_help called");
 }
 
-	EmpathFolder *
-EmpathFolderChooserDialog::selectedFolder() const
+	EmpathURL
+EmpathFolderChooserDialog::selected() const
 {
-	empathDebug("selectedFolder() called");
-	return folderWidget_->selectedFolder();
+	empathDebug("selected() called");
+	return folderWidget_->selected();
 }
 

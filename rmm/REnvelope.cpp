@@ -27,14 +27,14 @@
 REnvelope::REnvelope()
 {
 	rmmDebug("ctor");
-	headerList_.setAutoDelete(true);
+//	headerList_.setAutoDelete(true);
 }
 
 REnvelope::REnvelope(const REnvelope & e)
-	:	RMessageComponent()
+	:	RMessageComponent(e)
 {
 	rmmDebug("ctor");
-	headerList_.setAutoDelete(true);
+//	headerList_.setAutoDelete(true);
 }
 
 	REnvelope &
@@ -43,7 +43,6 @@ REnvelope::operator = (const REnvelope & e)
 	rmmDebug("operator =");
     if (this == &e) return *this; // Don't do a = a.
 	headerList_ = e.headerList_;
-	rmmDebug(".");
 	RMessageComponent::operator = (e);
 	assembled_ = false;
 	return *this;
@@ -144,7 +143,7 @@ REnvelope::assemble()
 	void
 REnvelope::_createDefault(RMM::HeaderType t)
 {
-	rmmDebug("Creating default of type " + QString(RMM::headerNames[t]));
+	rmmDebug("Creating default of type " + QCString(RMM::headerNames[t]));
 	RHeader * h = new RHeader;
 	h->setName(RMM::headerNames[t]);
 
@@ -229,9 +228,23 @@ REnvelope::has(const QCString & headerName)
 	RHeaderListIterator it(headerList_);
 
 	for (; it.current(); ++it)
-		if (it.current()->headerName() == headerName) return true;
+		if (!stricmp(it.current()->headerName(), headerName))
+			return true;
 
 	return false;
+}
+
+	RHeader *
+REnvelope::get(const QCString & s)
+{
+	parse();
+	RHeaderListIterator it(headerList_);
+
+	for (; it.current(); ++it)
+		if (!stricmp(it.current()->headerName(), s))
+			return it.current();
+	
+	return 0;
 }
 
 	RHeaderBody *
@@ -555,30 +568,6 @@ REnvelope::to()
 REnvelope::xref()
 {
 	return *(RText *)get(RMM::HeaderXref);
-}
-
-	RText
-REnvelope::get(const QCString & headerName)
-{
-	parse();
-	RHeaderListIterator it(headerList_);
-
-	for (; it.current(); ++it) {
-		if (stricmp(it.current()->headerName(),headerName))
-			return *((RText *)(it.current()->headerBody()));
-	}
-
-	RText * d = new RText;
-	d->createDefault();
-
-	RHeader * hdr = new RHeader;
-
-	hdr->setName(headerName);
-	hdr->setBody(d);
-
-	headerList_.append(hdr);
-
-	return *d;
 }
 
 	RMailbox
