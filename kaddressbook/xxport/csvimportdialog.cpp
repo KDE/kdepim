@@ -563,7 +563,7 @@ void CSVImportDialog::fillTable()
   for ( column = 0; column < mTable->numCols(); ++column ) {
     QComboTableItem *item = new QComboTableItem( mTable, mTypeMap.keys() );
     mTable->setItem( 0, column, item );
-    if ( column < mTypeStore.count() )
+    if ( column < (int)mTypeStore.count() )
       item->setCurrentItem( mTypeStore[ column ] );
     else
       item->setCurrentItem( typeToPos( Undefined ) );
@@ -771,7 +771,7 @@ void CSVImportDialog::saveTemplate()
 
   config.setGroup( "csv column map" );
   
-  for ( uint column = 0; column < mTable->numCols(); ++column ) {
+  for ( int column = 0; column < mTable->numCols(); ++column ) {
     QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0, 
                                                            column ) );
     if ( item )
