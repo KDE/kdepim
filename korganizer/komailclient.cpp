@@ -14,6 +14,7 @@
 #include <kurl.h>
 #include <kapp.h>
 #include <dcopclient.h>
+#include <kprocess.h>
 
 #include "version.h"
 #include "event.h"
@@ -67,17 +68,16 @@ bool KOMailClient::send(const QString &from,const QString &to,
       command = KStandardDirs::findExe(QString::fromLatin1("mail"));
       if (command.isNull()) return false; // give up
     
-      command.append(QString::fromLatin1(" -s \x22"));
-      command.append(subject);
-      command.append(QString::fromLatin1("\x22"));
+      command.append(QString::fromLatin1(" -s "));
+      command.append(KShellProcess::quote(subject));
 
       if (bcc) {
         command.append(QString::fromLatin1(" -b "));
-        command.append(from);
+        command.append(KShellProcess::quote(from));
       }
 
       command.append(" ");
-      command.append(to);
+      command.append(KShellProcess::quote(to));
 
       needHeaders = false;
     }
