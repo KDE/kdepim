@@ -78,7 +78,8 @@ bool KNotesIMAP::ResourceIMAP::load()
   // Get the list of journals
   QStringList lst;
   if( !kmailIncidences( lst, "Note" ) ) {
-    kdError() << "Communication problem in ResourceIMAP::getIncidenceList()\n";
+    kdError(5500) << "Communication problem in "
+                  << "ResourceIMAP::getIncidenceList()\n";
     return false;
   }
 
@@ -99,24 +100,24 @@ bool KNotesIMAP::ResourceIMAP::load()
 
 bool KNotesIMAP::ResourceIMAP::save()
 {
-  kdDebug() << "NYI: KNotesIMAP::ResourceIMAP::save()\n";
+  kdDebug(5500) << "NYI: KNotesIMAP::ResourceIMAP::save()\n";
   return false;
 }
 
 bool KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* journal )
 {
-  kdDebug() << "KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* )\n";
+  kdDebug(5500) << "KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* )\n";
 
   mCalendar.addJournal( journal );
-  journal->registerObserver( this );
   manager()->registerNote( this, journal, true );
+  journal->registerObserver( this );
 
   if ( mSilent ) return true;
 
   KCal::ICalFormat format;
-  QString note = format.toString( journal );
+  QString note = format.toICalString( journal );
   if( !kmailAddIncidence( "Note", journal->uid(), note ) ) {
-    kdError() << "Communication problem in ResourceIMAP::addNote()\n";
+    kdError(5500) << "Communication problem in ResourceIMAP::addNote()\n";
     return false;
   }
 
@@ -125,7 +126,7 @@ bool KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* journal )
 
 bool KNotesIMAP::ResourceIMAP::deleteNote( KCal::Journal* journal )
 {
-  kdDebug(5800) << "ResourceIMAP::deleteNote\n";
+  kdDebug(5500) << "ResourceIMAP::deleteNote " << journal->uid() << endl;
 
   // Call kmail ...
   if ( !mSilent )
@@ -138,9 +139,9 @@ bool KNotesIMAP::ResourceIMAP::deleteNote( KCal::Journal* journal )
 void KNotesIMAP::ResourceIMAP::incidenceUpdated( KCal::IncidenceBase* i )
 {
   KCal::ICalFormat format;
-  QString note = format.toString( static_cast<KCal::Journal*>( i ) );
+  QString note = format.toICalString( static_cast<KCal::Journal*>( i ) );
   if( !kmailUpdate( "Note", i->uid(), note ) )
-    kdError() << "Communication problem in ResourceIMAP::addNote()\n";
+    kdError(5500) << "Communication problem in ResourceIMAP::addNote()\n";
 }
 
 /*
@@ -153,8 +154,8 @@ bool KNotesIMAP::ResourceIMAP::addIncidence( const QString& type,
   // Check if this is a note
   if( type != "Note" ) return false;
 
-  // kdDebug() << "ResourceIMAP::addIncidence( " << type << ", "
-  //           << /*ical*/"..." << " )" << endl;
+  // kdDebug(5500) << "ResourceIMAP::addIncidence( " << type << ", "
+  //               << /*ical*/"..." << " )" << endl;
   KCal::Journal* journal = parseJournal( note );
   if ( !journal ) return false;
 
@@ -171,8 +172,8 @@ void KNotesIMAP::ResourceIMAP::deleteIncidence( const QString& type,
   // Check if this is a note
   if( type != "Note" ) return;
 
-  // kdDebug() << "ResourceIMAP::deleteIncidence( " << type << ", " << uid
-  //           << " )" << endl;
+  // kdDebug(5500) << "ResourceIMAP::deleteIncidence( " << type << ", " << uid
+  //               << " )" << endl;
 
   mSilent = true;
   KCal::Journal* j = mCalendar.journal( uid );
@@ -195,11 +196,11 @@ KCal::Journal* KNotesIMAP::ResourceIMAP::parseJournal( const QString& str )
     if ( i->type() == "Journal" )
       return static_cast<KCal::Journal*>( i );
     else {
-      kdDebug() << "Unknown incidence type " << i->type() << endl;
+      kdDebug(5500) << "Unknown incidence type " << i->type() << endl;
       delete i;
     }
   } else
-    kdDebug() << "Parse error\n";
+    kdDebug(5500) << "Parse error\n";
 
   return 0;
 }
