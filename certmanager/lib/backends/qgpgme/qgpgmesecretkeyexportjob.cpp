@@ -72,16 +72,17 @@ Kleo::QGpgMESecretKeyExportJob::~QGpgMESecretKeyExportJob() {
 GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns ) {
   assert( mKeyData.isEmpty() );
 
-  // create and start gpgsm process:
-  mProcess = new GnuPGProcessBase( this, "gpgsm --export-secret-key" );
+  if ( patterns.size() != 1 || patterns.front().isEmpty() )
+    return mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_INV_VALUE );
 
-  *mProcess << "gpgsm";
+  // create and start gpgsm process:
+  mProcess = new GnuPGProcessBase( this, "gpgsm --export-secret-key-p12" );
+
+  // FIXME: obbtain the path to gpgsm from gpgme, so we use the same instance.
+  *mProcess << "gpgsm" << "--export-secret-key-p12";
   if ( mArmour )
     *mProcess << "--armor";
-  *mProcess << "--export-secret-key";
-  for ( QStringList::const_iterator it = patterns.begin() ; it != patterns.end() ; ++it )
-    if ( !(*it).isEmpty() )
-      *mProcess << (*it).utf8();
+  *mProcess << patterns.front().utf8();
 
   mProcess->setUseStatusFD( true );
 
