@@ -38,9 +38,13 @@
 #define T_LINESIZE 1023
 
 TaskView::TaskView( QWidget *parent, const char *name )
-  : KListView( parent, name )
+  : KListView( parent, name ), _calendar()
 {
   _preferences = Preferences::instance();
+
+  KEMailSettings settings;
+  _calendar.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
+  _calendar.setOwner( settings.getSetting( KEMailSettings::RealName ) );
 
   connect(this, SIGNAL(doubleClicked(QListViewItem *)),
           this, SLOT(changeTimer(QListViewItem *)));
@@ -111,119 +115,73 @@ void TaskView::load()
     loadFromFileFormat();
   else {
     loadFromKCalFormat();
-    // loadFromKOrgTodos();
-    // loadFromKOrgEvents();
   }
+}
+
+void TaskView::loadFromKCalFormat( const QString& file, int loadMask )
+{
+  bool loadOk = _calendar.load( file );
+  if ( !loadOk ) {
+    kdDebug() << "Failed to load the calendar!!!" << endl;
+    return;
+  }
+  kdDebug() << "Loading karm calendar data from " << file << endl;
+
+  if ( loadMask & TaskView::loadEvent ) {
+    QPtrList<KCal::Event> eventList = _calendar.rawEvents();
+    kdDebug() << "There are " << eventList.count() << " events in the calendar." << endl;
+    buildAndPositionTasks( eventList );
+  }
+
+  if ( loadMask & TaskView::loadTodo ) {
+    QPtrList<KCal::Todo> todoList = _calendar.rawTodos();
+    kdDebug() << "There are " << todoList.count() << " todos in the calendar." << endl;
+    buildAndPositionTasks( todoList );
+  }
+
+  setSelected(firstChild(), true);
+  setCurrentItem(firstChild());
+
+  applyTrackers();
 }
 
 void TaskView::loadFromKCalFormat()
 {
-  KCal::CalendarLocal cal;
-  KEMailSettings settings;
-  cal.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
-  cal.setOwner( settings.getSetting( KEMailSettings::RealName ) );
-
-  bool loadOk = cal.load( _preferences->loadFile() );
-  if ( !loadOk ) {
-    kdDebug() << "Failed to load the calendar!!!" << endl;
-    return;
-  }
-  kdDebug() << "Loading karm calendar data from " << _preferences->loadFile() << endl;
-
-  QPtrList<KCal::Event> eventList = cal.rawEvents();
-  kdDebug() << "There are " << eventList.count() << " events in the calendar." << endl;
-
-  QDict< Task > uid_task_map;
-  for ( QPtrListIterator<KCal::Event> eventIter ( eventList ); eventIter.current(); ++eventIter ) {
-    buildTask( *eventIter, uid_task_map );
-  }
-
-  for ( QPtrListIterator<KCal::Event> eventIter ( eventList ); eventIter.current(); ++eventIter ) {
-    positionTask( *eventIter, uid_task_map );
-  }
-
-  setSelected(firstChild(), true);
-  setCurrentItem(firstChild());
-
-  applyTrackers();
+  loadFromKCalFormat( _preferences->loadFile(), TaskView::loadEvent|TaskView::loadTodo );
 }
 
 void TaskView::loadFromKOrgTodos()
 {
-  KStandardDirs dirs;
-  QString korganizerrc = locateLocal( "config", QString::fromLatin1("korganizerrc") );
-  KConfig korgconfig( korganizerrc, true );
-  korgconfig.setGroup( "General" );
-  QString active = korgconfig.readEntry( "Active Calendar" ).section( ':', 1 );
-  kdDebug() << "Looked up korganizer file: " << active << endl;
-
-  KCal::CalendarLocal cal;
-  KEMailSettings settings;
-  cal.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
-  cal.setOwner( settings.getSetting( KEMailSettings::RealName ) );
-
-  bool loadOk = cal.load( active );
-  // bool loadOk = cal.load( QString::fromLatin1( "/home/smonach/.kde/share/apps/korganizer/planner_sam.ics" ) );
-  if ( !loadOk ) {
-    kdDebug() << "Failed to load the calendar!!!" << endl;
-    return;
-  }
-
-  QPtrList<KCal::Todo> todoList = cal.rawTodos();
-  kdDebug() << "There are " << todoList.count() << " todos in the calendar." << endl;
-
-  QDict< Task > uid_task_map;
-  for ( QPtrListIterator<KCal::Todo> todoIter ( todoList ); todoIter.current(); ++todoIter ) {
-    buildTask( *todoIter, uid_task_map );
-  }
-
-  for ( QPtrListIterator<KCal::Todo> todoIter ( todoList ); todoIter.current(); ++todoIter ) {
-    positionTask( *todoIter, uid_task_map );
-  }
-
-  setSelected(firstChild(), true);
-  setCurrentItem(firstChild());
-
-  applyTrackers();
+  loadFromKCalFormat( _preferences->activeCalendarFile(), TaskView::loadTodo );
 }
 
 void TaskView::loadFromKOrgEvents()
 {
-  KStandardDirs dirs;
-  QString korganizerrc = locateLocal( "config", QString::fromLatin1("korganizerrc") );
-  KConfig korgconfig( korganizerrc, true );
-  korgconfig.setGroup( "General" );
-  QString active = korgconfig.readEntry( "Active Calendar" ).section( ':', 1 );
-  kdDebug() << "Looked up korganizer file: " << active << endl;
+  loadFromKCalFormat( _preferences->activeCalendarFile(), TaskView::loadEvent );
+}
 
-  KCal::CalendarLocal cal;
-  KEMailSettings settings;
-  cal.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
-  cal.setOwner( settings.getSetting( KEMailSettings::RealName ) );
-
-  bool loadOk = cal.load( active );
-  // bool loadOk = cal.load( QString::fromLatin1( "/home/smonach/.kde/share/apps/korganizer/planner_sam.ics" ) );
-  if ( !loadOk ) {
-    kdDebug() << "Failed to load the calendar!!!" << endl;
-    return;
-  }
-
-  QPtrList<KCal::Event> eventList = cal.rawEvents();
-  kdDebug() << "There are " << eventList.count() << " events in the calendar." << endl;
-
+void TaskView::buildAndPositionTasks( QPtrList<KCal::Event>& eventList )
+{
   QDict< Task > uid_task_map;
-  for ( QPtrListIterator<KCal::Event> eventIter ( eventList ); eventIter.current(); ++eventIter ) {
-    buildTask( *eventIter, uid_task_map );
+  for ( QPtrListIterator<KCal::Event> iter ( eventList ); iter.current(); ++iter ) {
+    buildTask( *iter, uid_task_map );
   }
 
-  for ( QPtrListIterator<KCal::Event> eventIter ( eventList ); eventIter.current(); ++eventIter ) {
-    positionTask( *eventIter, uid_task_map );
+  for ( QPtrListIterator<KCal::Event> iter ( eventList ); iter.current(); ++iter ) {
+    positionTask( *iter, uid_task_map );
+  }
+}
+
+void TaskView::buildAndPositionTasks( QPtrList<KCal::Todo>& todoList )
+{
+  QDict< Task > uid_task_map;
+  for ( QPtrListIterator<KCal::Todo> iter ( todoList ); iter.current(); ++iter ) {
+    buildTask( *iter, uid_task_map );
   }
 
-  setSelected(firstChild(), true);
-  setCurrentItem(firstChild());
-
-  applyTrackers();
+  for ( QPtrListIterator<KCal::Todo> iter ( todoList ); iter.current(); ++iter ) {
+    positionTask( *iter, uid_task_map );
+  }
 }
 
 void TaskView::buildTask( KCal::Incidence* event, QDict<Task>& map )

@@ -25,6 +25,7 @@ public:
   int idlenessTimeout();
   QString loadFile();
   QString saveFile();
+  QString activeCalendarFile();
   bool timeLogging();
   QString timeLog();
   bool autoSave();

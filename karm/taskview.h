@@ -51,6 +51,8 @@ private: // member variables
     int lastDesktop;
     int desktopCount;
 
+    KCal::CalendarLocal _calendar;
+
 public:
     TaskView( QWidget *parent = 0, const char *name = 0 );
     virtual ~TaskView();
@@ -58,6 +60,7 @@ public:
     void printTrackers();
 
 private:
+    enum { loadEvent = 1, loadTodo = 2 };
     void updateParents( QListViewItem* task, long totalDiff, long sesssionDiff );
     void startTimerFor(Task* item);
     void stopTimerFor(Task* item);
@@ -66,8 +69,11 @@ private:
     bool parseLine(QString line, long *time, QString *name, int *level, DesktopListType* desktops);
     void loadFromFileFormat();
     void saveToFileFormat();
+    void loadFromKCalFormat( const QString& file, int loadMask );
     void loadFromKCalFormat();
     void saveToKCalFormat();
+    void buildAndPositionTasks( QPtrList<KCal::Event>& eventList );
+    void buildAndPositionTasks( QPtrList<KCal::Todo>& todoList );
     void buildTask( KCal::Incidence* event, QDict<Task>& map );
     void positionTask( const KCal::Incidence* event, const QDict<Task>& map );
 

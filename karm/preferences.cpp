@@ -179,6 +179,16 @@ QString Preferences::saveFile()
   return _saveFileV;
 }
 
+QString Preferences::activeCalendarFile()
+{
+  KStandardDirs dirs;
+  QString korganizerrc = locateLocal( "config", QString::fromLatin1("korganizerrc") );
+  KConfig korgconfig( korganizerrc, true );
+  korgconfig.setGroup( "General" );
+
+  return korgconfig.readEntry( "Active Calendar" ).section( ':', 1 );
+}
+
 QString Preferences::loadFile()
 {
   if ( useLegacyFileFormat() )
