@@ -240,6 +240,61 @@ bool Calendar::deleteIncidence( Incidence *i )
   return i->accept( v );
 }
 
+Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
+                                           bool single )
+{
+  if ( !incidence || !incidence->doesRecur() ) return 0;
+  
+  Incidence *newInc = incidence->clone();
+  newInc->recreate();
+  newInc->setRelatedTo( incidence );
+  Recurrence *recur = newInc->recurrence();
+  if ( single ) {
+    recur->unsetRecurs();
+  } else {
+    // TODO_RK: Adjust the recurrence for the future incidences. In particular
+    // adjust the "end after n occurences" rules! "No end date" and "end by ..."
+    // don't need to be modified.
+  }
+  // Adjust the date of the incidence
+  if ( incidence->type() == "Event" ) {
+    Event *ev = static_cast<Event *>( newInc );
+    QDateTime start( ev->dtStart() );
+    int daysTo = start.date().daysTo( date );
+    ev->setDtStart( start.addDays( daysTo ) );
+    ev->setDtEnd( ev->dtEnd().addDays( daysTo ) );    
+  } else if ( incidence->type() == "Todo" ) {
+    Todo *td = static_cast<Todo *>( newInc );
+    bool haveOffset = false;
+    int daysTo = 0;
+    if ( td->hasDueDate() ) {
+      QDateTime due( td->dtDue() );
+      daysTo = due.date().daysTo( date ) ;
+      td->setDtDue( due.addDays( daysTo ) );
+      haveOffset = true;
+    }
+    if ( td->hasStartDate() ) {
+      QDateTime start( td->dtStart() );
+      if ( !haveOffset ) daysTo = start.date().daysTo( date );
+      td->setDtStart( start.addDays( daysTo ) );
+      haveOffset = true;
+    }
+  }
+  if ( addIncidence( newInc ) ) {
+    if (single) {
+      incidence->addExDate( date );
+    } else {
+      recur = incidence->recurrence();
+      // TODO_RK: Make sure the recurrence of the past events ends at the corresponding day
+      // recur->???
+    }
+  } else {
+    delete newInc;
+    return 0;
+  }
+  return newInc;
+}
+
 Incidence *Calendar::incidence( const QString& uid )
 {
   Incidence *i = event( uid );

@@ -237,7 +237,7 @@ class Calendar : public QObject, public CustomProperties,
       Searches all incidence types for an incidence with this unique
       string identifier, returns a pointer or null.
     */
-    Incidence* incidence( const QString&UID );
+    Incidence *incidence( const QString &UID );
 
     /**
       Setup relations for an incidence.
@@ -294,6 +294,16 @@ class Calendar : public QObject, public CustomProperties,
 
     virtual bool beginChange( Incidence * );
     virtual bool endChange( Incidence * );
+
+    /** 
+      Dissociate an incidence from a recurring incidence. By default, only one
+      single event for the given date will be dissociated and returned.
+      If single == false, the recurrence will be split at date, the
+      old incidence will have its recurrence ending at date and the 
+      new incidence (return value) will have all recurrences past the date.
+    */
+    Incidence *dissociateOccurrence( Incidence *incidence, QDate date,
+                                     bool single = true );
 
   signals:
     void calendarChanged();
