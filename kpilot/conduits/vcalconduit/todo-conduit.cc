@@ -123,6 +123,11 @@ int main(int argc, char* argv[])
   	"ToDo-list conduit",
 	KPILOT_VERSION);
   a.addAuthor("Preston Brown",I18N_NOOP("Organizer author"));
+	a.addAuthor("Adriaan de Groot",
+		I18N_NOOP("Maintainer"),
+		"adridg@cs.kun.nl");
+	a.addAuthor("Philipp Hullmann",
+		I18N_NOOP("Bugfixer"));
   TodoConduit conduit(a.getMode());
   a.setConduit(&conduit);
   return a.exec();
@@ -409,7 +414,8 @@ void TodoConduit::doLocalSync()
 	// what we call summary pilot calls description.
 	if ((vo = isAPropertyOf(vtodo, VCSummaryProp)) != 0L) {
 	  char *s2 = fakeCString(vObjectUStringZValue(vo));
-	  todoEntry->setDescription(s2);
+	  QString s = QString::fromUtf8(s2);
+	  todoEntry->setDescription(s.latin1());
 	  deleteStr(s2);
 	} else {
 	  char *s2 = (char *) malloc(2);
@@ -422,7 +428,8 @@ void TodoConduit::doLocalSync()
 	// what we call description pilot puts as a separate note
 	if ((vo = isAPropertyOf(vtodo, VCDescriptionProp)) != 0L) {
 	  char *s3 = fakeCString(vObjectUStringZValue(vo));
-	  todoEntry->setNote(s3);
+	  QString s = QString::fromUtf8(s3);
+	  todoEntry->setNote(s.latin1());
 	  deleteStr(s3);
 	} 
 
@@ -534,6 +541,9 @@ QWidget* TodoConduit::aboutAndSetup()
 }
 
 // $Log$
+// Revision 1.2  2001/04/23 06:29:30  adridg
+// Patches for bug #23385 and probably #23289
+//
 // Revision 1.1  2001/04/16 13:36:20  adridg
 // Moved todoconduit
 //

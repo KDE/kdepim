@@ -119,7 +119,11 @@ int main(int argc, char* argv[])
   	"Calendar / Organizer conduit",
 	KPILOT_VERSION);
   a.addAuthor("Preston Brown",I18N_NOOP("Organizer author"));
-	a.addAuthor("Adriaan de Groot",I18N_NOOP("Maintainer"));
+	a.addAuthor("Adriaan de Groot",
+		I18N_NOOP("Maintainer"),
+		"adridg@cs.kun.nl");
+	a.addAuthor("Philipp Hullmann",
+		I18N_NOOP("Bugfixer"));
   VCalConduit conduit(a.getMode());
   a.setConduit(&conduit);
   return a.exec(false,true);
@@ -1440,13 +1444,6 @@ void mimeError(char *s)
 {
 	FUNCTIONSETUP;
 
-	QString message("This is a test. This is only a test.\n"
-		"If this had been a real error message\n"
-		"you would also have had an 18Mb core file\n"
-		"on your hands.");
-
-	KMessageBox::error(0, message, "Testing vCalendar Conduit");
-
 	registerMimeErrorHandler(mimeError);
 	getCalendar(VCalSetup::VCalGroup);
 	printVObject(stderr,calendar());
@@ -1454,6 +1451,9 @@ void mimeError(char *s)
 
 
 // $Log$
+// Revision 1.38  2001/04/23 06:29:30  adridg
+// Patches for bug #23385 and probably #23289
+//
 // Revision 1.37  2001/04/18 21:20:29  adridg
 // Response to bug #24291
 //
