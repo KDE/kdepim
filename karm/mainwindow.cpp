@@ -20,6 +20,7 @@
 #include <kglobal.h>
 #include <kkeydialog.h>
 #include <klocale.h>            // i18n
+#include <kmessagebox.h>
 #include <kstatusbar.h>         // statusBar()
 #include <kstdaction.h>
 
@@ -183,7 +184,9 @@ void MainWindow::startNewSession()
 
 void MainWindow::resetAllTimes()
 {
-  _taskView->resetTimeForAllTasks();
+  if ( KMessageBox::warningContinueCancel( this, i18n( "Do you really want to reset the time to 0 for all tasks?" ),
+       i18n( "Confirmation required" ), KGuiItem( i18n( "Reset All Times" ) ) ) == KMessageBox::Yes )
+    _taskView->resetTimeForAllTasks();
 }
 
 void MainWindow::makeMenus()

@@ -620,13 +620,14 @@ void TaskView::clipTotals()
   if (current_item() && current_item()->isRoot())
   {
     int response = KMessageBox::questionYesNo( 0,
-        i18n("Copy totals for just this task and its subtasks?"
-          "  (Click No to copy totals for all tasks.)"));
-    if (response == KMessageBox::Yes)
+        i18n("Copy totals for just this task and its subtasks, or copy totals for all tasks?"),
+        i18n("Copy Totals to Clipboard"),
+        i18n("Copy This Task"), i18n("Copy All Tasks") );
+    if (response == KMessageBox::Yes) // this task only
     {
       KApplication::clipboard()->setText(t->totalsAsText(this));
     }
-    else
+    else // only task
     {
       KApplication::clipboard()->setText(t->totalsAsText(this, false));
     }
