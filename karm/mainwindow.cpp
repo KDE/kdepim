@@ -37,13 +37,13 @@
 #include "version.h"
 
 MainWindow::MainWindow()
-  : KMainWindow(0), 
+  : DCOPObject ( "KarmDCOPIface" ),
+    KMainWindow(0), 
     _accel     ( new KAccel( this ) ),
     _watcher   ( new KAccelMenuWatch( _accel, this ) ),
     _taskView  ( new TaskView( this ) ),
     _totalSum  ( 0 ),
-    _sessionSum( 0 ),
-    DCOPObject ( "KarmDCOPIface" )
+    _sessionSum( 0 )
 {
   setCentralWidget( _taskView );
   // status bar
