@@ -86,6 +86,8 @@ void ResourceGroupwise::init()
 {
   mDownloadJob = 0;
   mProgress = 0;
+  
+  mIsShowingError = false;
 
   mPrefs = new GroupwisePrefsBase();
   
@@ -145,6 +147,11 @@ bool ResourceGroupwise::doLoad()
 {
   kdDebug() << "ResourceGroupwise::load()" << endl;
 
+  if ( mIsShowingError ) {
+    kdDebug() << "Still showing error" << endl;
+    return true;
+  }
+
   if ( !mServer ) {
     kdError() << "KCal::ResourceGrouwise::doLoad(): No Server set." << endl;
     return false;
@@ -165,7 +172,6 @@ bool ResourceGroupwise::doLoad()
 
   clearChanges();
 
-#if 1
   KURL url( prefs()->url() );
   if ( url.protocol() == "http" ) url.setProtocol( "groupwise" );
   else url.setProtocol( "groupwises" );
@@ -188,23 +194,7 @@ bool ResourceGroupwise::doLoad()
   connect( mProgress,
            SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
            SLOT( cancelLoad() ) );
-#else
 
-#if 1
-  if ( !mServer->readCalendarSynchronous( this ) ) {
-    loadError( i18n("Unable to read calendar.") );
-    return false;
-  }
-
-  loadFinished();
-#else
-  if ( !mServer->readCalendar( this ) ) {
-    loadError( i18n("Unable to read calendar.") );
-    return false;
-  }
-#endif
-
-#endif
   return true;
 }
 
@@ -213,7 +203,9 @@ void ResourceGroupwise::slotJobResult( KIO::Job *job )
   kdDebug() << "ResourceGroupwise::slotJobResult(): " << endl;
 
   if ( job->error() ) {
+    mIsShowingError = true;
     loadError( job->errorString() );
+    mIsShowingError = false;
   } else {
     disableChangeNotification();
 

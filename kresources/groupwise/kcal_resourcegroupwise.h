@@ -84,6 +84,8 @@ class ResourceGroupwise : public ResourceCached
     KIO::TransferJob *mDownloadJob;
     KPIM::ProgressItem *mProgress;
     QString mJobData;
+
+    bool mIsShowingError;
 };
 
 }
