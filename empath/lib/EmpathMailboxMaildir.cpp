@@ -20,6 +20,10 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+// System includes
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 // Qt includes
 #include <qfile.h>
@@ -242,6 +246,12 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
     // folder.
 
     empathDebug(currentDir);
+
+    // Cheat like fuck.
+    struct stat s;
+    stat(QFile::encodeName(currentDir), &s);
+    if (2 == s.st_nlink)
+        return;
 
     QDir d(
         currentDir,
