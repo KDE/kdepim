@@ -280,3 +280,5 @@ void KIncidenceChooser::takeBoth()
     QDialog::accept();
 }
 
+
+#include "kincidencechooser.moc"
