@@ -133,7 +133,7 @@ public:
 
   QPtrListIterator < mimeHdrLine > getOriginalIterator ();
   QPtrListIterator < mimeHdrLine > getAdditionalIterator ();
-  void setContent (QCString aContent)
+  void setContent (const QCString &aContent)
   {
     mimeContent = aContent;
   }
