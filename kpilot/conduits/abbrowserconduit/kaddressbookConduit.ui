@@ -110,7 +110,7 @@
                                     </sizepolicy>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Enter the vCard file name here and location or select it by clicking the file picker button. vCard is a standard format for exchanging contact information. &lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Enter the vCard file name here or select it by clicking the file picker button. vCard is a standard format for exchanging contact information. &lt;/qt&gt;</string>
                                 </property>
                             </widget>
                         </grid>
