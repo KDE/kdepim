@@ -492,7 +492,7 @@ void KCalResourceSlox::parseIncidenceAttribute( const QDomElement &e,
                                                 Incidence *incidence )
 {
   QString tag = e.tagName();
-  QString text = e.text();
+  QString text = QString::fromUtf8( e.text().latin1() );
   if ( text.isEmpty() ) return;
 
   if ( tag == "title" ) {
@@ -523,7 +523,7 @@ void KCalResourceSlox::parseEventAttribute( const QDomElement &e,
                                             Event *event )
 {
   QString tag = e.tagName();
-  QString text = e.text();
+  QString text = QString::fromUtf8( e.text().latin1() );
   if ( text.isEmpty() ) return;
 
   if ( tag == "begins" ) {
@@ -548,7 +548,7 @@ void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,
                                            Todo *todo )
 {
   QString tag = e.tagName();
-  QString text = e.text();
+  QString text = QString::fromUtf8( e.text().latin1() );
   if ( text.isEmpty() ) return;
 
   if ( tag == "startdate" ) {
