@@ -1,20 +1,19 @@
 /*
  * Copyright (C) 2004, Mart Kelder (mart.kde@hccnet.nl)
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Library General Public License
- * along with this library; see the file COPYING.LIB.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include "kio_count.h"
@@ -65,8 +64,6 @@ void KIO_Count::count( KKioDrop *drop )
 	delete _protocol;
 	_kio = drop;
 	
-	_new_mailurls = new QValueList< KKioDrop::FileInfo >;
-		
 	/*
 	 * Saving current settings: all actions are asynchroon, so if someone
 	 * use slow servers, settings could been changed before this class is
@@ -92,7 +89,8 @@ void KIO_Count::count( KKioDrop *drop )
 		{
 			kdWarning() << i18n( "Not able to open a kio slave for %1." ).arg( _protocol->configName() ) << endl;
 			_valid = false;
-			delete _new_mailurls; _new_mailurls = 0; //No connection pending
+			_slave = 0;
+			//delete _new_mailurls; _new_mailurls = 0; //No connection pending
 			return;
 		}
 		
@@ -108,6 +106,9 @@ void KIO_Count::count( KKioDrop *drop )
 	{
 		_slave = 0; //Prevent disconnecting not-existing slave
 	}
+
+	/* Blocking this function: no new counts can be started from now */	
+	_new_mailurls = new QValueList< KKioDrop::FileInfo >;
 	
 	_protocol->recheckKURL( kurl, metadata );
 	
@@ -138,10 +139,11 @@ void KIO_Count::stopActiveCount()
 	            this, SLOT( entries( KIO::Job*, const KIO::UDSEntryList& ) ) );
 	
 	KIO::Scheduler::cancelJob( _job );
-		       
+	
 	if( _slave )
 	{
-		KIO::Scheduler::disconnectSlave( _slave );
+		//Slave seems to be disconnected by canceling the last job of the slave
+		//KIO::Scheduler::disconnectSlave( _slave );
 		_slave = 0;
 	}
 	
