@@ -31,7 +31,6 @@ AC_DEFUN(KPILOT_CHECK_MAL,
 AC_REQUIRE([KDE_CHECK_LIB64])
 AC_REQUIRE([KPILOT_CHECK_PISOCK])
 
-
 AC_MSG_CHECKING(for libmal (for KPilots MAL conduit))
 AC_ARG_WITH(mal,
 [  --with-mal=PATH        set path for libmal files @<:@default=check@:>@],
@@ -48,7 +47,7 @@ if test "x$with_mal" = "xCHECK" ; then
   search_incs="$kde_includes /usr/include /usr/local/include /usr/include/libmal /usr/local/include/libmal"
   AC_FIND_FILE(libmal.h, $search_incs, mal_incdir)
   if test -r $mal_incdir/libmal.h ; then
-    test "x$mal_incdir" != "x/usr/include" && MAL_INCS="-I$mal_incdir"
+    test "x$mal_incdir" != "x/usr/include" && MAL_INCLUDE="-I$mal_incdir"
     with_mal=FOUND
   fi
   if test $with_mal = FOUND ; then
@@ -58,10 +57,10 @@ if test "x$with_mal" = "xCHECK" ; then
         mal_libdir)
       if test -r $mal_libdir/libmal.$ext ; then
         if test "x$mal_libdir" != "x/usr/lib$kdelibsuff" ; then
-          MAL_LIBS="-L$mal_libdir "
+          MAL_LIB="-L$mal_libdir "
           test "$USE_RPATH" = yes && MAL_RPATH="-R $mal_libdir"
         fi
-        MAL_LIBS="${MAL_LIBS}-lmal"
+        MAL_LIB="${MAL_LIB}-lmal"
         with_mal=FOUND
         break
       fi
@@ -82,20 +81,24 @@ NOTFOUND) AC_MSG_RESULT(searched but not found)
     msg="$with_mal"
     MAL_ROOT="$with_mal"
     if test "x$MAL_ROOT" != "x/usr" ; then
-      MAL_INCS="-I${MAL_ROOT}/include"
-      MAL_LIBS="-L${MAL_ROOT}/lib$kdelibsuff "
+      MAL_INCLUDE="-I${MAL_ROOT}/include"
+      MAL_LIB="-L${MAL_ROOT}/lib$kdelibsuff "
       if test "$USE_RPATH" = "yes" ; then
         MAL_RPATH="-R ${MAL_ROOT}/lib$kdelibsuff"
       fi
     fi
-    MAL_LIBS="${MAL_LIBS}-lmal"
+    MAL_LIB="${MAL_LIBS}-lmal"
   fi
+
+  CPPFLAGS="$CPPFLAGS $all_includes"
+  LDFLAGS="$LDFLAGS $all_libraries"
+
   kde_safe_LIBS="$LIBS"
   kde_safe_CFLAGS="$CFLAGS"
-  kde_safe_CXXFLAGS="$CXXFLAGS"
-  LIBS="$LIBS $MAL_LIBS -ldl"
-  CFLAGS="$CFLAGS $MAL_INCS"
-  CXXFLAGS="$CXXFLAGS $MAL_INCS"
+  kde_safe_CPPFLAGS="$CPPFLAGS"
+  LIBS="$LIBS $PISOCK_LIB $MAL_LIB -ldl"
+  CFLAGS="$CFLAGS $MAL_INCLUDE"
+  CPPFLAGS="$CPPFLAGS $PISOCK_INCLUDE $MAL_INCLUDE"
   AC_LANG_SAVE
   AC_LANG_CPLUSPLUS
   AC_TRY_LINK(dnl
@@ -109,11 +112,11 @@ NOTFOUND) AC_MSG_RESULT(searched but not found)
   )
   AC_LANG_RESTORE
   CFLAGS=$kde_safe_CFLAGS
-  CXXFLAGS=$kde_safe_CXXFLAGS
+  CPPFLAGS=$kde_safe_CPPFLAGS
   LIBS=$kde_safe_LIBS
   if test "$with_mal" = "no" ; then
-    MAL_INCS=
-    MAL_LIBS=
+    MAL_INCLUDE=
+    MAL_LIB=
     MAL_RPATH=
     AC_MSG_RESULT(no (but first try gave $msg))
     AC_MSG_WARN([KPILOT: MAL headers or library not found. AvantGo conduit will not be compiled.])
@@ -126,8 +129,8 @@ NOTFOUND) AC_MSG_RESULT(searched but not found)
   ;;
 esac
 
-AC_SUBST(MAL_INCS)
-AC_SUBST(MAL_LIBS)
+AC_SUBST(MAL_INCLUDE)
+AC_SUBST(MAL_LIB)
 AC_SUBST(MAL_RPATH)
 
 AM_CONDITIONAL(include_malconduit, test "$HAVE_LIBMAL" = 1)
