@@ -31,6 +31,7 @@
 
 #include "incidence.h"
 #include "calendarlocal.h"
+#include "icalformat.h"
 
 #include "resourcecached.h"
 

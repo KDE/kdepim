@@ -37,7 +37,7 @@ class CalFormat;
 class ResourceCalendar;
 
 /**
-  This class provides a calendar stored as a local file.
+  This class provides a calendar composed of several calendar resources.
 */
 class CalendarResources : public Calendar, public KRES::ManagerListener<ResourceCalendar>
 {
