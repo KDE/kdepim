@@ -145,9 +145,8 @@ starts it.</para>
 <title>Adding a new alarm</title>
 
 <para>To add a new alarm message, select <menuchoice>
-<guimenu>Actions</guimenu><guimenuitem>New</guimenuitem></menuchoice>
-from the menu or use the keybinding <keycap>Ins</keycap>. This
-displays the alarm message edit window:</para>
+<guimenu>Actions</guimenu><guimenuitem>New</guimenuitem></menuchoice>.
+This displays the alarm message edit window:</para>
 
 <screenshot>
 <screeninfo>Screenshot of the alarm edit window</screeninfo>
@@ -166,7 +165,7 @@ displays the alarm message edit window:</para>
 may include newlines) in the edit box, or <guilabel>File</guilabel>
 to enter the name or &URL; of a text file whose contents are to be
 displayed in the alarm message.  When <guilabel>File</guilabel> is
-selected, <guibutton><accel>B</accel>rowse...</guibutton> may be used
+selected, <guibutton>Browse...</guibutton> may be used
 to display a file selection dialog.</para>
 
 <para>In the <guilabel>Time</guilabel> group box, select <guilabel>At
@@ -199,7 +198,7 @@ audible alarm to sound when the alarm message is displayed.</para>
 <para>Select the background colour for the alarm message
 window.</para>
 
-<para>Press the <guibutton><accel>S</accel>et Alarm</guibutton> button
+<para>Press the <guibutton>OK</guibutton> button
 when all details are correct, to add the alarm to the scheduled
 list.</para>
 
@@ -215,9 +214,7 @@ following:</para>
 <listitem>
 <para>Select it by clicking on its entry in the alarm list. Then
 choose <menuchoice><guimenu>Actions</guimenu>
-<guimenuitem>Modify</guimenuitem></menuchoice> from the menu or use
-the keybinding <keycombo
-action="simul">&Ctrl;<keycap>M</keycap></keycombo>.</para>
+<guimenuitem>Modify</guimenuitem></menuchoice>.</para>
 </listitem>
 
 <listitem>
@@ -244,8 +241,7 @@ following:</para>
 <para>Select it by clicking on its entry in the alarm list. Then choose
 <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Delete</guimenuitem>
-</menuchoice>
-from the menu or press <keycap>Del</keycap>.</para>
+</menuchoice>.</para>
 </listitem>
 <listitem>
 <para><mousebutton>Right</mousebutton> click on its entry in the alarm
@@ -265,8 +261,8 @@ following:</para>
 
 <itemizedlist>
 <listitem>
-<para>Acknowledge it by clicking the <guibutton>OK</guibutton>
-button. This closes the alarm message window.</para>
+<para>Acknowledge it by clicking the <guibutton>Close</guibutton>
+button.</para>
 </listitem>
 
 <listitem>
@@ -276,9 +272,7 @@ button. This closes the alarm message window.</para>
 when the message is to be redisplayed, or select <guilabel>Defer for
 time interval</guilabel> to enter how long after now (in hours and
 minutes) the message should be redisplayed. Then click
-<guibutton>Defer</guibutton> to defer the alarm message. If you don't
-want to defer it after all, just click
-<guibutton>OK</guibutton>.</para>
+<guibutton>Defer</guibutton> to defer the alarm message.</para>
 
 <note><para>The <guibutton>Defer...</guibutton> button is not
 available for alarms which are displayed at login due to the
@@ -299,9 +293,8 @@ alarm message window.</para>
 <para>To display &kalarm; in the &kde; system tray when it is not
 currently displayed, select <menuchoice>
 <guimenu>View</guimenu><guimenuitem>Show System Tray Icon</guimenuitem>
-</menuchoice> or use the keybinding
-<keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>. This
-menu option is available only if you are currently running the &kde;
+</menuchoice>. This menu option is available only if you are currently
+running the &kde;
 desktop.</para>
 
 <para>To remove &kalarm; from the &kde; system tray when it is
@@ -310,9 +303,7 @@ currently displayed, do one of the following:</para>
 <itemizedlist>
 <listitem>
 <para>Select <menuchoice><guimenu>View</guimenu>
-<guimenuitem>Hide System Tray Icon</guimenuitem></menuchoice>
-or use the keybinding
-<keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>.</para>
+<guimenuitem>Hide System Tray Icon</guimenuitem></menuchoice>.</para>
 </listitem>
 
 <listitem>
@@ -336,9 +327,7 @@ do one of the following:</para>
 <itemizedlist>
 <listitem>
 <para>Select <menuchoice><guimenu>Actions</guimenu>
-<guimenuitem>Enable Alarms</guimenuitem></menuchoice> or use the
-keybinding
-<keycombo action="simul">&Ctrl;<keycap>E</keycap></keycombo>.</para>
+<guimenuitem>Enable Alarms</guimenuitem></menuchoice>.</para>
 </listitem>
 
 <listitem>
@@ -360,9 +349,7 @@ do one of the following:</para>
 <itemizedlist>
 <listitem>
 <para>Select <menuchoice><guimenu>Actions</guimenu>
-<guimenuitem>Alarms Enabled</guimenuitem></menuchoice> or use the
-keybinding
-<keycombo action="simul">&Ctrl;<keycap>E</keycap></keycombo>.</para>
+<guimenuitem>Alarms Enabled</guimenuitem></menuchoice>.</para>
 </listitem>
 
 <listitem>
@@ -391,8 +378,7 @@ monitoring status.</para>
 
 <para>To reset the alarm daemon, select <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Reset Daemon</guimenuitem>
-</menuchoice> or use the keybinding
-<keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo>.</para>
+</menuchoice>.</para>
 
 <para>See the <link linkend="daemon-reset">Alarm daemon</link> section
 for a discussion about resetting the alarm daemon.</para>
@@ -439,9 +425,8 @@ This displays the alarm daemon configuration dialog.</para>
 <title>Quitting the program</title>
 
 <para>To exit from &kalarm;, select <menuchoice>
-<guimenu>File</guimenu><guimenuitem>Quit</guimenuitem></menuchoice>
-or use the keybinding
-<keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo>.</para>
+<guimenu>File</guimenu><guimenuitem>Quit</guimenuitem>
+</menuchoice>.</para>
 
 <tip><para>This has no effect on the alarm daemon, which if already
 active will continue to monitor scheduled alarms and request their
@@ -460,7 +445,7 @@ icon indicates that alarms are being monitored, while a red cross
 through the icon indicates that alarms are not being monitored.</para>
 
 <para><mousebutton>Left</mousebutton> click on the system tray icon to
-activate &kalarm;.</para>
+toggle between displaying and hiding the &kalarm; main window.</para>
 
 <para><mousebutton>Right</mousebutton> click on the system tray icon to
 display its context menu:</para>
@@ -779,9 +764,7 @@ running.</para></tip>
 <para>To reset the alarm daemon, either use the menu command
 <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Reset Daemon</guimenuitem>
-</menuchoice>, the keybinding
-<keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo>,
-or type the following command:</para>
+</menuchoice> or type the following command:</para>
 
 <screen width="40">
 <prompt>%</prompt> <userinput><command>kalarm</command> <option>--reset</option></userinput>
