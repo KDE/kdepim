@@ -253,31 +253,27 @@ EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
     QCString
 EmpathMaildir::_messageData(const QString & filename, bool isFullName)
 {
-    QString filename_(filename);
-
     if (filename.length() == 0) {
         empathDebug("Must supply filename !");
         return "";
     }
+
+    QString filename_(filename);
 
     if (!isFullName) {
 
         // We need to locate the actual file, by looking for the basename
         // with the flags section appended.
         
-        QDir cur(path_ + "/cur/", filename + "*", QDir::Unsorted);
         
-        if (cur.count() == 0) {
-            empathDebug("Can't match the filename, giving up.");
+        QStringList matchingEntries = _entryList().grep(filename);
+        
+        if (matchingEntries.count() != 1) {
+            empathDebug("Can't find exactly one message using `" + filename + "'");
             return "";
         }
         
-        if (cur.count() > 1) {
-            empathDebug("Duplicate messages with the name `" + filename + "'");
-            empathDebug("Using the first one I found.");
-        }
-
-        filename_ = cur[0];
+        filename_ = matchingEntries[0];
     }
     
     QFile f(path_ + "/cur/" + filename_);
