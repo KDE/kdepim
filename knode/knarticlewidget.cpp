@@ -56,7 +56,7 @@
 #include <kpopupmenu.h>
 #include <kstandarddirs.h>
 #include <kbookmarkmanager.h>
-
+#include <kaddrbook.h>
 
 #define PUP_OPEN    1000
 #define PUP_SAVE    2000
@@ -64,6 +64,9 @@
 #define PUP_SELALL  4000
 #define PUP_COPY    5000
 #define PUP_ADDBOOKMARKS 6000
+
+#define PUP_ADDRESSBOOK 7000
+#define PUP_COPYTOCLIPBOARD 8000
 
 #define HDR_COL   0
 #define QCOL_1    1
@@ -150,6 +153,9 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   u_rlPopup->insertItem(SmallIcon("editcopy"),i18n("&Copy Link Location"), PUP_COPYURL);
   u_rlPopup->insertItem(SmallIcon("bookmark_add"),i18n("Add to Bookmarks"), PUP_ADDBOOKMARKS);
 
+  u_mailtoPopup=new KPopupMenu();
+  u_mailtoPopup->insertItem(i18n("Add to Address Book"), PUP_ADDRESSBOOK);
+  u_mailtoPopup->insertItem(i18n("Copy to Clipboard"), PUP_COPYTOCLIPBOARD);
 
   a_ttPopup=new KPopupMenu();
   a_ttPopup->insertItem(SmallIcon("fileopen"),i18n("&Open Attachment"), PUP_OPEN);
@@ -224,6 +230,7 @@ KNArticleWidget::~KNArticleWidget()
   delete f_actory;
   delete t_imer;
   delete f_inddialog;
+  delete u_mailtoPopup;
 }
 
 void KNArticleWidget::setText( const QString& text, const QString& context )
@@ -1468,7 +1475,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
 {
   anchorType type=ATunknown;
   QString target;
-
+  kdDebug()<<"void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const QPoint *p)***********************************"<<a<<endl;
   if(a.left(17)=="internal://author") {
     type=ATauthor;
   }
@@ -1489,6 +1496,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     type=ATnews;
   }
   else if(a.left(7)=="mailto:") {
+      kdDebug()<<"a.left(7)==========================\n";
     target=a.mid(7, a.length()-7);
     type=ATmailto;
   }
@@ -1519,7 +1527,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     KNRemoteArticle *a;
     KNArticleWindow *awin;
     KMime::Headers::AddressField adr(a_rticle);
-
+    kdDebug()<<"dddddddddcxxxxxxxxxxxxxxxxxxxvvvvvvvvvvvvvvvvvvvvvvv\n";
     switch(type) {
       case ATauthor:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : mailto author" << endl;
@@ -1582,7 +1590,9 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     }
   }
   else {
-
+      kdDebug()<<"sddddddddddddddddddddddddddddddddddddddddddddddddd\n";
+      kdDebug()<<" type :"<<type<<endl;
+      kdDebug()<<" (type==ATmailto) "<<(type==ATmailto)<<endl;
     if(type==ATattachment) {
       kdDebug(5003) << "KNArticleWidget::anchorClicked() : popup for attachment " << target << endl;
       switch(a_ttPopup->exec(*p)) {
@@ -1594,7 +1604,17 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
         break;
       }
     }
-
+    else if ( type==ATauthor ) {
+        target = a_rticle->from()->asUnicodeString();
+        switch( u_mailtoPopup->exec( *p ) ) {
+        case PUP_ADDRESSBOOK:
+            addAddressbook(target);
+            break;
+        case PUP_COPYTOCLIPBOARD:
+            QApplication::clipboard()->setText(target);
+            break;
+        }
+    }
     else if(type==ATurl) {
       kdDebug(5003) << "KNArticleWidget::anchorClicked() : popup for url " << target << endl;
       switch(u_rlPopup->exec(*p)) {
@@ -1613,6 +1633,12 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
   }
 }
 
+void KNArticleWidget::addAddressbook(const QString & target)
+{
+    kdDebug()<<" target:\n";
+    KAddrBookExternal::openEmail( target, target, this );
+
+}
 
 void KNArticleWidget::slotSave()
 {

@@ -132,7 +132,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     QCString o_verrideCS;
     bool f_orceCS, emuKMail;
 
-    KPopupMenu *u_rlPopup, *a_ttPopup;
+    KPopupMenu *u_rlPopup, *a_ttPopup, *u_mailtoPopup;
 
     KEdFind* f_inddialog;
     bool     f_ind_first;
@@ -182,7 +182,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
 
     void slotFindStart();
     void slotFindDone();
-
+    void addAddressbook(const QString &);
   //-------------------------- </Actions> --------------------------
 
     void slotTimeout();
