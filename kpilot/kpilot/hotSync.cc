@@ -375,7 +375,6 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 		mDeviceDBs << creator;
 	if ( !mDeviceDBs.contains( dbname ) )
 		mDeviceDBs << dbname;
-kdDebug() << "Backup of db with creator "<<creator<<" and name "<<dbname<<endl;
 
 
 #ifdef DEBUG

@@ -198,9 +198,12 @@ void ProbeDialog::startDetection()
 	}
 	KPILOT_DELETE(daemonStub);
 	processEvents();
-	if (!fTimeoutTimer->start( 30000, true ) ) kdDebug()<<"Could not start fTimeoutTimer"<<endl;
-	if (!fProcessEventsTimer->start( 100, false ) ) kdDebug()<<"Could not start fProcessEventsTimer"<<endl;
-	if (!fProgressTimer->start( 300, false) ) kdDebug()<<"Could not start Progress timer"<<endl;
+	if (!fTimeoutTimer->start( 30000, true ) ) 
+		kdWarning()<<"Could not start fTimeoutTimer"<<endl;
+	if (!fProcessEventsTimer->start( 100, false ) ) 
+		kdWarning()<<"Could not start fProcessEventsTimer"<<endl;
+	if (!fProgressTimer->start( 300, false) ) 
+		kdWarning()<<"Could not start Progress timer"<<endl;
 
 	KPilotDeviceLink*link;
 	for (int i=0; i<3; i++)
@@ -210,7 +213,7 @@ void ProbeDialog::startDetection()
 		{
 			link = new KPilotDeviceLink();
 #ifdef DEBUG
-			kdDebug()<<"new kpilotDeviceLink for "<<(*it)<<endl;
+			DEBUGKPILOT<<"new kpilotDeviceLink for "<<(*it)<<endl;
 #endif
 			link->reset( *it );
 			link->close();
@@ -224,7 +227,8 @@ void ProbeDialog::startDetection()
 	mProbeDevicesIndex=0;
 
 	detect();
-	if (!fRotateLinksTimer->start( 3000, false) ) kdDebug()<<"Could not start Device link rotation timer"<<endl;
+	if (!fRotateLinksTimer->start( 3000, false) ) 
+		kdWarning()<<"Could not start Device link rotation timer"<<endl;
 }
 
 
