@@ -1,4 +1,4 @@
-METASOURCES = AUTO
+METASOURCES = backup busysync fastsync hotsync kpilot kpilotDaemon restore
 
 kpilotDaemonicondir = $(kde_datadir)/kpilot/icons
 kpilotDaemonicon_ICON = hotsync busysync
