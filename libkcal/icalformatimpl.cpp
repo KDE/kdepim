@@ -68,7 +68,7 @@ class ToStringVisitor : public Incidence::Visitor
     bool visit( Journal *e ) { mComponent = mImpl->writeJournal( e ); return true; }
 
     icalcomponent *component() { return mComponent; }
-    
+
   private:
     ICalFormatImpl *mImpl;
     icalcomponent *mComponent;
@@ -540,15 +540,19 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       r.freq = ICAL_MONTHLY_RECURRENCE;
 
       tmpPositions = recur->monthPositions();
-      tmpPos = tmpPositions.first();
-      r.by_set_pos[index2++] = tmpPos->rPos;
-      for (i = 0; i < 7; i++) {
-        if (tmpPos->rDays.testBit(i)) {
-          day = (i + 1)%7 + 1;     // convert from Monday=0 to Sunday=1
-          r.by_day[index++] = icalrecurrencetype_day_day_of_week(day);
+      for (tmpPos = tmpPositions.first();
+           tmpPos;
+           tmpPos = tmpPositions.next()) {
+        for (i = 0; i < 7; i++) {
+          if (tmpPos->rDays.testBit(i)) {
+            day = (i + 1)%7 + 1;     // convert from Monday=0 to Sunday=1
+            day += tmpPos->rPos*8;
+            if (tmpPos->negative) day = -day;
+            r.by_day[index++] = day;
+          }
         }
       }
-//      r.by_month_day[index] = ICAL_RECURRENCE_ARRAY_MAX;
+//      r.by_day[index] = ICAL_RECURRENCE_ARRAY_MAX;
 #if 0
       tmpStr.sprintf("MP%i ", anEvent->rFreq);
       // write out all rMonthPos's
@@ -616,15 +620,19 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
 #endif
       if (recur->doesRecur() == Recurrence::rYearlyPos) {
         tmpPositions = recur->monthPositions();
-        tmpPos = tmpPositions.first();
-        r.by_set_pos[index2++] = tmpPos->rPos;
-        for (i = 0; i < 7; i++) {
-          if (tmpPos->rDays.testBit(i)) {
-            day = (i + 1)%7 + 1;     // convert from Monday=0 to Sunday=1
-            r.by_day[index++] = icalrecurrencetype_day_day_of_week(day);
+        for (tmpPos = tmpPositions.first();
+             tmpPos;
+             tmpPos = tmpPositions.next()) {
+          for (i = 0; i < 7; i++) {
+            if (tmpPos->rDays.testBit(i)) {
+              day = (i + 1)%7 + 1;     // convert from Monday=0 to Sunday=1
+              day += tmpPos->rPos*8;
+              if (tmpPos->negative) day = -day;
+              r.by_day[index2++] = day;
+            }
           }
         }
-//        r.by_month_day[index] = ICAL_RECURRENCE_ARRAY_MAX;
+//        r.by_day[index2] = ICAL_RECURRENCE_ARRAY_MAX;
 #if 0
         tmpStr.sprintf("MP%i ", anEvent->rFreq);
         // write out all rMonthPos's
@@ -1468,7 +1476,7 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
               day = icalrecurrencetype_day_day_of_week(day);
               QBitArray ba(7);          // don't wipe qba
               ba.setBit((day+5)%7);     // convert from Sunday=1 to Monday=0
-              recur->addMonthlyPos(pos,ba);
+              recur->addYearlyMonthPos(pos,ba);
             } else {
               qba.setBit((day+5)%7);    // convert from Sunday=1 to Monday=0
               useSetPos = true;
@@ -1476,7 +1484,7 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
           }
           if (useSetPos) {
             if (r.by_set_pos[0] != ICAL_RECURRENCE_ARRAY_MAX) {
-              recur->addMonthlyPos(r.by_set_pos[0],qba);
+              recur->addYearlyMonthPos(r.by_set_pos[0],qba);
             }
           }
         } else {
@@ -1490,6 +1498,7 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
               recur->setYearly(Recurrence::rYearlyMonth,r.interval,r.count);
           }
         }
+        index = 0;
         while((day = r.by_month[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
           recur->addYearlyNum(day);
         }
