@@ -106,12 +106,18 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
   KSaveFile file( fileName );
   if (file.status() != 0) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
-                 i18n("Could not open file '%1'").arg(fileName)));
+                i18n( "Error saving to '%1'." ).arg(fileName)));
     return false;
   }
   QTextStream* ts = file.textStream();
   ts->setEncoding( QTextStream::UnicodeUTF8 );
   (*ts) << text;
+
+  if ( !file.close() ) {
+    setException(new ErrorFormat(ErrorFormat::SaveError,
+                 i18n("Could not save '%1'").arg(fileName)));
+    return false;
+  }
 
   return true;
 }
