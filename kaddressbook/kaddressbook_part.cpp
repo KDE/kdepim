@@ -74,7 +74,7 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
   connect( mCore, SIGNAL( contactSelected( const QPixmap& ) ),
            info, SIGNAL( iconChanged( const QPixmap& ) ) );
 
-  setXMLFile( "kaddressbookui.rc" );
+  setXMLFile( "kaddressbook_part.rc" );
 }
 
 KAddressbookPart::~KAddressbookPart()

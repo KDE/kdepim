@@ -62,7 +62,7 @@ noinst_HEADERS = \
 kaddressbook_METASOURCES = AUTO
 
 rcdir = $(kde_datadir)/kaddressbook
-rc_DATA = kaddressbookui.rc
+rc_DATA = kaddressbookui.rc kaddressbook_part.rc
 
 kabdatadir = $(kde_datadir)/kaddressbook
 kabdata_DATA = zone.tab

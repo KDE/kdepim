@@ -73,6 +73,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
     mExtensionManager( 0 ), mConfigureDialog( 0 ), mLdapSearchDialog( 0 ),
     mReadWrite( readWrite ), mModified( false )
 {
+  mIsPart = !parent->isA( "KAddressBookMain" );
+
   mWidget = new QWidget( parent, name );
 
   mAddressBook = KABC::StdAddressBook::self( true );
@@ -1007,8 +1009,18 @@ void KABCore::initActions()
   mActionRedo->setEnabled( false );
 
   // settings menu
-  action = KStdAction::preferences( this, SLOT( openConfigDialog() ), actionCollection() );
-  settingsAction = KStdAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
+  if ( mIsPart ) {
+    action = new KAction( i18n( "&Configure KAddressBook..." ), "configure", 0, this,
+                 SLOT( openConfigDialog() ), actionCollection(),
+                 "kaddressbook_configure" );
+    settingsAction = new KAction( i18n( "Configure S&hortcuts..." ), "configure_shortcuts", 0,
+                 this, SLOT( configureKeyBindings() ), actionCollection(),
+                 "kaddressbook_configure_shortcuts" );
+  } else {
+    action = KStdAction::preferences( this, SLOT( openConfigDialog() ), actionCollection() );
+    settingsAction = KStdAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
+  }
+
   action->setWhatsThis( i18n( "You will be presented with a dialog, that offers you all possebilities to configure KAddressBook." ) );
   settingsAction->setWhatsThis( i18n( "You will be presented with a dialog, where you can configure the application wide shortcuts." ) );
 

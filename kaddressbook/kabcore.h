@@ -340,6 +340,7 @@ class KABCore : public KAB::Core
 
     bool mReadWrite;
     bool mModified;
+    bool mIsPart;
 
     KAction *mActionPaste;
     KAction *mActionCut;
