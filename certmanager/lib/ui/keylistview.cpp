@@ -55,6 +55,8 @@
 #include <vector>
 #include <map>
 
+#include <assert.h>
+
 static const int updateDelayMilliSecs = 500;
 
 namespace {
@@ -181,8 +183,11 @@ void Kleo::KeyListView::setHierarchical( bool hier ) {
   if ( hier == mHierarchical )
     return;
   mHierarchical = hier;
-  refillFingerprintDictionary();
-  gatherScattered();
+  if ( hier ) {
+    refillFingerprintDictionary();
+    gatherScattered();
+  } else
+    scatterGathered( firstChild() );
 }
 
 void Kleo::KeyListView::slotAddKey( const GpgME::Key & key ) {
@@ -249,6 +254,23 @@ void Kleo::KeyListView::gatherScattered() {
       takeItem( cur );
       parent->insertItem( cur );
     }
+  }
+}
+
+void Kleo::KeyListView::scatterGathered( QListViewItem * start ) {
+  QListViewItem * item = start;
+  while ( item ) {
+    QListViewItem * cur = item;
+    item = item->nextSibling();
+
+    scatterGathered( cur->firstChild() );
+    assert( cur->childCount() == 0 );
+
+    if ( cur->parent() )
+      cur->parent()->takeItem( cur );
+    else
+      takeItem( cur );
+    insertItem( cur );
   }
 }
 
