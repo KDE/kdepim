@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>CertificateInfoWidget</class>
 <widget class="QWidget">
     <property name="name">
@@ -134,6 +134,36 @@
                         </property>
                     </widget>
                 </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>dump</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Du&amp;mp</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>6</number>
+                    </property>
+                    <widget class="QTextEdit">
+                        <property name="name">
+                            <cstring>dumpView</cstring>
+                        </property>
+                        <property name="textFormat">
+                            <enum>LogText</enum>
+                        </property>
+                        <property name="readOnly">
+                            <bool>true</bool>
+                        </property>
+                        <property name="undoRedoEnabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                </vbox>
             </widget>
         </widget>
         <widget class="QPushButton" row="3" column="1">

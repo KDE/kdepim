@@ -39,6 +39,8 @@
 
 #include <qvaluelist.h>
 
+class KProcess;
+class KProcIO;
 class QListViewItem;
 
 namespace GpgME {
@@ -58,15 +60,18 @@ signals:
 
 private slots:
   void slotShowInfo( QListViewItem* );
-  void slotShowCertPathDetails( QListViewItem* ); 
+  void slotShowCertPathDetails( QListViewItem* );
   void slotImportCertificate();
   void slotCertificateChainListingResult( const GpgME::KeyListResult & res );
   void slotNextKey( const GpgME::Key & key );
   void slotKeyExistanceCheckNextCandidate( const GpgME::Key & key );
   void slotKeyExistanceCheckFinished();
+  void slotCollectStdOut(KProcIO*);
+  void slotDumpProcessExited(KProcess*);
 
 private:
   void startCertificateChainListing();
+  void startCertificateDump();
   void startKeyExistanceCheck();
   void updateChainView();
 

@@ -53,6 +53,7 @@
 #include <kdialogbase.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
+#include <kprocio.h>
 
 // Qt
 #include <qlistview.h>
@@ -65,6 +66,7 @@
 
 // other
 #include <assert.h>
+#include <qtextcodec.h>
 
 CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( const GpgME::Key & key, bool external,
 						      QWidget * parent, const char * name )
@@ -124,11 +126,11 @@ void CertificateInfoWidgetImpl::setKey( const GpgME::Key & key  ) {
   item = new QListViewItem( listView, item, i18n("Valid"), QString("From %1 to %2")
 			    .arg( time_t2string( key.subkey(0).creationTime() ),
 				  time_t2string( key.subkey(0).expirationTime() ) ) );
-  item = new QListViewItem( listView, item, i18n("Can be used for signing"), 
+  item = new QListViewItem( listView, item, i18n("Can be used for signing"),
 			    key.canSign() ? i18n("Yes") : i18n("No") );
-  item = new QListViewItem( listView, item, i18n("Can be used for encryption"), 
+  item = new QListViewItem( listView, item, i18n("Can be used for encryption"),
 			    key.canEncrypt() ? i18n("Yes") : i18n("No") );
-  item = new QListViewItem( listView, item, i18n("Can be used for certification"), 
+  item = new QListViewItem( listView, item, i18n("Can be used for certification"),
 			    key.canCertify() ? i18n("Yes") : i18n("No") );
   item = new QListViewItem( listView, item, i18n("Can be used for authentication"),
 			    key.canAuthenticate() ? i18n("Yes") : i18n("No" ) );
@@ -175,6 +177,7 @@ void CertificateInfoWidgetImpl::setKey( const GpgME::Key & key  ) {
 
   updateChainView();
   startCertificateChainListing();
+  startCertificateDump();
 }
 
 static void showChainListError( QWidget * parent, const GpgME::Error & err, const char * subject ) {
@@ -245,6 +248,46 @@ void CertificateInfoWidgetImpl::startCertificateChainListing() {
     showChainListError( this, err, mChain.front().issuerName() );
   else
     (void)new Kleo::ProgressDialog( job, i18n("Fetching Certificate Chain"), this );
+}
+
+void CertificateInfoWidgetImpl::startCertificateDump() {
+  KProcIO* proc = new KProcIO( QTextCodec::codecForName( "utf8" ) );
+  (*proc) << "gpgsm"; // must be in the PATH
+  (*proc) << "--dump-keys";
+  (*proc) << mChain.front().subkey(0).fingerprint();
+
+  QObject::connect( proc, SIGNAL( readReady(KProcIO*) ),
+                    this, SLOT( slotCollectStdOut(KProcIO*) ) );
+  QObject::connect( proc, SIGNAL( processExited(KProcess*) ),
+                    this, SLOT( slotDumpProcessExited(KProcess*) ) );
+
+  if ( !proc->start( KProcess::NotifyOnExit ) ) {
+    QString wmsg = i18n("Failed to execute gpgsm:\n%1").arg( i18n( "program not found" ) );
+    dumpView->setText( wmsg );
+  }
+}
+
+void CertificateInfoWidgetImpl::slotCollectStdOut(KProcIO* proc) {
+  QString line;
+  int result;
+  while( ( result = proc->readln(line) ) != -1 ) {
+    dumpView->append( line );
+  }
+}
+
+void CertificateInfoWidgetImpl::slotDumpProcessExited(KProcess* proc) {
+  int rc = ( proc->normalExit() ) ? proc->exitStatus() : -1 ;
+
+  if ( rc != 0 ) {
+    QString wmsg = i18n("Failed to execute gpgsm:\n%1");
+    if ( rc == -1 )
+        wmsg = wmsg.arg( i18n( "program cannot be executed" ) );
+    else
+        wmsg = wmsg.arg( strerror(rc) );
+    dumpView->append( wmsg );
+  }
+
+  proc->deleteLater();
 }
 
 void CertificateInfoWidgetImpl::slotNextKey( const GpgME::Key & key ) {
