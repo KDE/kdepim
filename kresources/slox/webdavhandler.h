@@ -51,7 +51,11 @@ class WebdavHandler
                                        const QString &text = QString::null );
 
     static QDateTime sloxToQDateTime( const QString &str );
+    static QDateTime sloxToQDateTime( const QString &str,
+                                      const QString &timeZoneId );
     static QString qDateTimeToSlox( const QDateTime &dt );
+    static QString qDateTimeToSlox( const QDateTime &dt,
+                                    const QString &timeZoneId );
 
     static QValueList<SloxItem> getSloxItems( const QDomDocument &doc );
 

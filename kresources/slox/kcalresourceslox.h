@@ -109,6 +109,8 @@ class KCalResourceSlox : public KCal::ResourceCached
     void requestEvents();
     void requestTodos();
  
+    void parseMembersAttribute( const QDomElement &e,
+                                KCal::Incidence *incidence );
     void parseIncidenceAttribute( const QDomElement &e,
                                   KCal::Incidence *incidence );
     void parseTodoAttribute( const QDomElement &e, KCal::Todo *todo );

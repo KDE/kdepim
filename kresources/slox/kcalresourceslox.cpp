@@ -51,6 +51,8 @@
 
 #include "kcalresourceslox.h"
 
+using namespace KCal;
+
 KCalResourceSlox::KCalResourceSlox( const KConfig *config )
   : ResourceCached( config )
 {
@@ -236,45 +238,104 @@ void KCalResourceSlox::requestTodos()
   mLastTodoSync = QDateTime::currentDateTime();
 }
 
-void KCalResourceSlox::parseIncidenceAttribute( const QDomElement &e,
-                                                KCal::Incidence *incidence )
+void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
+                                              Incidence *incidence )
 {
-  if ( e.tagName() == "title" ) {
-    incidence->setSummary( e.text() );
+  incidence->clearAttendees();
+  QDomNode n;
+  for( n = e.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    QDomElement memberElement = n.toElement();
+    if ( memberElement.tagName() == "member" ) {
+      QString member = memberElement.text();
+      Attendee *a = new Attendee( member, member + "@" );
+      a->setUid( member );
+      incidence->addAttendee( a );
+    } else {
+      kdDebug() << "Unknown tag in members attribute: "
+                << memberElement.tagName() << endl;
+    }
+  }
+}
+
+void KCalResourceSlox::parseIncidenceAttribute( const QDomElement &e,
+                                                Incidence *incidence )
+{
+  QString tag = e.tagName();
+  QString text = QString::fromUtf8( e.text().latin1() );
+  if ( text.isEmpty() ) return;
+
+  if ( tag == "title" ) {
+    incidence->setSummary( text );
   } else if ( e.tagName() == "description" ) {
-    incidence->setDescription( e.text() );
+    incidence->setDescription( text );
+  } else if ( tag == "reminder" ) {
+    int minutes = text.toInt();
+    // FIXME: What exactly means a "0" reminder?
+    if ( minutes != 0 ) {
+      Alarm::List alarms = incidence->alarms();
+      Alarm *alarm;
+      if ( alarms.isEmpty() ) alarm = incidence->newAlarm();
+      else alarm = alarms.first(); 
+      if ( alarm->type() == Alarm::Invalid ) {
+        alarm->setType( Alarm::Display );
+      }
+      Duration d( minutes * 60 );
+      alarm->setStartOffset( d );
+      alarm->setEnabled( true );
+    }
+  } else if ( tag == "members" ) {
+    parseMembersAttribute( e, incidence );
   }
 }
 
 void KCalResourceSlox::parseEventAttribute( const QDomElement &e,
-                                            KCal::Event *event )
+                                            Event *event )
 {
-  if ( e.tagName() == "begins" ) {
-    event->setDtStart( WebdavHandler::sloxToQDateTime( e.text() ) );
-  } else if ( e.tagName() == "ends" ) {
-    event->setDtEnd( WebdavHandler::sloxToQDateTime( e.text() ) );
+  QString tag = e.tagName();
+  QString text = QString::fromUtf8( e.text().latin1() );
+  if ( text.isEmpty() ) return;
+
+  if ( tag == "begins" ) {
+    QDateTime dt;
+    if ( event->doesFloat() ) dt = WebdavHandler::sloxToQDateTime( text );
+    else dt = WebdavHandler::sloxToQDateTime( text, timeZoneId() );
+    event->setDtStart( dt );
+  } else if ( tag == "ends" ) {
+    QDateTime dt;
+    if ( event->doesFloat() ) {
+      dt = WebdavHandler::sloxToQDateTime( text );
+      dt = dt.addSecs( -1 );
+    }
+    else dt = WebdavHandler::sloxToQDateTime( text, timeZoneId() );
+    event->setDtEnd( dt );
+  } else if ( tag == "location" ) {
+    event->setLocation( text );
   }
 }
 
 void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,
-                                           KCal::Todo *todo )
+                                           Todo *todo )
 {
-  if ( e.tagName() == "startdate" ) {
-    QDateTime dt = WebdavHandler::sloxToQDateTime( e.text() );
+  QString tag = e.tagName();
+  QString text = QString::fromUtf8( e.text().latin1() );
+  if ( text.isEmpty() ) return;
+
+  if ( tag == "startdate" ) {
+    QDateTime dt = WebdavHandler::sloxToQDateTime( text );
     if ( dt.isValid() ) {
       todo->setDtStart( dt );
       todo->setHasStartDate( true );
     }
-  } else if ( e.tagName() == "deadline" ) {
-    QDateTime dt = WebdavHandler::sloxToQDateTime( e.text() );
+  } else if ( tag == "deadline" ) {
+    QDateTime dt = WebdavHandler::sloxToQDateTime( text );
     if ( dt.isValid() ) {
       todo->setDtDue( dt );
       todo->setHasDueDate( true );
     }
-  } else if ( e.tagName() == "priority" ) {
-    int p = e.text().toInt();
+  } else if ( tag == "priority" ) {
+    int p = text.toInt();
     if ( p < 1 || p > 3 ) {
-      kdError() << "Unknown priority: " << e.text() << endl;
+      kdError() << "Unknown priority: " << text << endl;
     } else {
       int priority;
       switch ( p ) {
@@ -291,8 +352,8 @@ void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,
       }
       todo->setPriority( priority );
     }
-  } else if ( e.tagName() == "status" ) {
-    int completed = e.text().toInt();
+  } else if ( tag == "status" ) {
+    int completed = text.toInt();
     todo->setPercentComplete( completed );
   }
 }
@@ -318,16 +379,16 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
     for( it = items.begin(); it != items.end(); ++it ) {
       SloxItem item = *it;
       if ( item.status == SloxItem::Delete ) {
-        KCal::Todo *todo = mCalendar.todo( item.uid );
+        Todo *todo = mCalendar.todo( item.uid );
         if ( todo ) { 
           mCalendar.deleteTodo( todo );
           changed = true;
         }
       } else if ( item.status == SloxItem::Create ) {
-        KCal::Todo *newTodo = 0;
-        KCal::Todo *todo = mCalendar.todo( item.uid );
+        Todo *newTodo = 0;
+        Todo *todo = mCalendar.todo( item.uid );
         if ( !todo ) {
-          newTodo = new KCal::Todo;
+          newTodo = new Todo;
           todo = newTodo;
           todo->setUid( item.uid );
         }
@@ -374,30 +435,30 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
     for( it = items.begin(); it != items.end(); ++it ) {
       SloxItem item = *it;
       if ( item.status == SloxItem::Delete ) {
-        KCal::Event *event = mCalendar.event( item.uid );
+        Event *event = mCalendar.event( item.uid );
         if ( event ) {
           mCalendar.deleteEvent( event );
           changed = true;
         }
       } else if ( item.status == SloxItem::Create ) {
-        KCal::Event *newEvent = 0;
-        KCal::Event *event = mCalendar.event( item.uid );
+        Event *newEvent = 0;
+        Event *event = mCalendar.event( item.uid );
         if ( !event ) {
-          newEvent = new KCal::Event;
+          newEvent = new Event;
           event = newEvent;
           event->setUid( item.uid );
         }
 
-        event->setFloats( false );
+        QDomNode n = item.domNode.namedItem( "full_time" );
+        event->setFloats( n.toElement().text() == "yes" );
 
-        QDomNode n;
         for( n = item.domNode.firstChild(); !n.isNull(); n = n.nextSibling() ) {
           QDomElement e = n.toElement();
           parseIncidenceAttribute( e, event );
           parseEventAttribute( e, event );
         }
 
-        kdDebug() << "EVENT " << item.uid << " " << event->summary() << endl;
+//        kdDebug() << "EVENT " << item.uid << " " << event->summary() << endl;
 
         if ( newEvent ) mCalendar.addEvent( event );
 
@@ -477,7 +538,7 @@ KABC::Lock *KCalResourceSlox::lock()
   return mLock;
 }
 
-void KCalResourceSlox::update( KCal::IncidenceBase * )
+void KCalResourceSlox::update( IncidenceBase * )
 {
 }
 

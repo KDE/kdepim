@@ -20,6 +20,8 @@
 
 #include "webdavhandler.h"
 
+#include <libkdepim/kpimprefs.h>
+
 #include <kdebug.h>
 #include <kconfig.h>
 
@@ -121,6 +123,13 @@ QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt )
   return QString::number( ticks );
 }
 
+QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt,
+                                        const QString &timeZoneId )
+{
+  uint ticks = dt.toTime_t();
+  return QString::number( ticks );
+}
+
 QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
 {
   QString s = str.mid( 0, str.length() - 3 );
@@ -128,9 +137,22 @@ QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
   unsigned long ticks = s.toULong();
 
   QDateTime dt;
-  dt.setTime_t( ticks );
+  dt.setTime_t( ticks, Qt::UTC );
 
   return dt;
+}
+
+QDateTime WebdavHandler::sloxToQDateTime( const QString &str,
+                                          const QString &timeZoneId )
+{
+  QString s = str.mid( 0, str.length() - 3 );
+
+  unsigned long ticks = s.toULong();
+
+  QDateTime dt;
+  dt.setTime_t( ticks, Qt::UTC );
+
+  return KPimPrefs::utcToLocalTime( dt, timeZoneId );
 }
 
 QDomElement WebdavHandler::addDavElement( QDomDocument &doc, QDomNode &node,
