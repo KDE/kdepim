@@ -50,9 +50,16 @@ KCal::Todo* ToDo::dom2todo( QDomElement e ) {
     todo->setSummary( e.attribute("Summary") ); //opie only
 
     setUid(todo,  e.attribute("Uid")  );
+
     dummy = e.attribute("Completed");
     Int = dummy.toInt();
-    todo->setCompleted( Int);
+    if ( Int )
+        todo->setCompleted( true);
+    else
+        todo->setPercentComplete( e.attribute("Progress").toInt() );
+
+    kdDebug() << "dummy completed " << dummy << " " << Int
+              << endl;
 
     dummy = e.attribute("Priority" );
     todo->setPriority(dummy.toInt( )  );
@@ -128,7 +135,8 @@ QByteArray ToDo::fromKDE( KSync::TodoSyncee* syncee )
         stream << "</Tasks>" << endl;
         buffer.close();
     }
-    m_helper->replaceIds( "todo",  m_kde2opie );
+    if (m_helper)
+        m_helper->replaceIds( "todo",  m_kde2opie );
     return array;
 }
 void ToDo::setUid( KCal::Todo* todo,  const QString &uid )
@@ -143,6 +151,8 @@ QString ToDo::todo2String( KCal::Todo* todo )
     QStringList list = todo->categories();
     text.append( "Categories=\"" + categoriesToNumber( list ) + "\" " );
     text.append( "Completed=\""+QString::number( todo->isCompleted()) + "\" " );
+    text.append( "Progress=\"" + QString::number( todo->percentComplete() ) + "\" ");
+    text.append( "Summary=\"" + todo->summary() + "\" ");
     if ( todo->hasDueDate() ) {
         text.append( "HasDate=\"1\" ");
         QDateTime time = todo->dtDue();

@@ -82,8 +82,8 @@ int main(int argc, char *argv[] )
       kdDebug() << "------" << endl;
   }
 
-  kdDebug() << "Checking for added" << endl;
-  QPtrList<KSync::SyncEntry> list = cloned->added();
+  kdDebug() << "Checking for modified (test) " << endl; // changed for testing purposes
+  QPtrList<KSync::SyncEntry> list = cloned->modified();
   if (list.isEmpty() ) kdDebug() << "List is empty"  << endl;
   for (clonedE = list.first(); clonedE != 0; clonedE = list.next() ) {
       kdDebug() << "Id " << clonedE->id() << endl;

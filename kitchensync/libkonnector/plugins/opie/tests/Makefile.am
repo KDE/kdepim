@@ -16,14 +16,24 @@
 #    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 #    Boston, MA 02111-1307, USA.
 
-INCLUDES= -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/lib $(all_includes)
+INCLUDES= -I$(top_srcdir)/kitchensync/libkonnector \
+	-I$(top_srcdir)/kitchensync/lib  \
+	-I$(top_srcdir)/kitchensync/libkonnector/plugins \
+	-I$(top_srcdir)/libkcal \
+	$(all_includes)
 LDADD = $(top_builddir)/kitchensync/libkonnector/libkonnector.la $(top_builddir)/kitchensync/libkonnector/plugins/opie/libopiekonnector.la
 LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 
-check_PROGRAMS = opieimport
+check_PROGRAMS = opieimport todoreader
 
 #opieimport_LDADD = ../../../libkonnector.la ../libopiekonnector.la
 opieimport_SOURCES =  convertermain.cc
+
+todoreader_LDADD = $(top_builddir)/libkcal/libkcal.la \
+	$(top_builddir)/kitchensync/lib/libksync.la \
+	$(top_builddir)/kitchensync/libkonnector/plugins/opie/libopiekonnector.la \
+	$(top_builddir)/kitchensync/libkonnector/libkonnector.la
+todoreader_SOURCES = todoreader.cpp
 
 METASOURCES = AUTO
 

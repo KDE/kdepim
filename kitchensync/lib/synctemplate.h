@@ -75,11 +75,14 @@ namespace KSync {
 
     protected:
         SyncEntry::PtrList find( int state ) {
+            kdDebug() << "state " << state << endl;
             SyncEntry::PtrList found;
             Entry* entry;
             for (entry = mList.first(); entry != 0; entry = mList.next() ) {
-                if ( entry->state() == state )
+                if ( entry->state() == state ) {
+                    kdDebug() << "match state " << entry->state() << endl;
                     found.append( entry );
+                }
             }
             return found;
         }

@@ -34,6 +34,7 @@ namespace OpieHelper {
                       entryOld = (Entry*) old->nextEntry() )
                 {
                     if ( entryNew->id() == entryOld->id() ) {
+                        kdDebug() << "found id: " << entryOld->id() << endl;
                         found = true;
                         // found the old one. Let's test for differences
                         if ( test( entryNew, entryOld ) )
@@ -42,8 +43,10 @@ namespace OpieHelper {
                     }
 
                 };
-                if (!found )  // it was not found. So it's new
+                if (!found ) { // it was not found. So it's new
+                    kdDebug() << "Set state Added " << entryNew->id() << endl;
                     entryNew->setState( KSync::SyncEntry::Added );
+                }
 
             }
             // now find the deleted once and clone them
