@@ -29,7 +29,7 @@
 #include <stdio.h>
 
 
-#define KMAILCVT_VERSION " v"VERSION
+#define KMAILCVT_VERSION " v2.1"
 #define KMAILCVT         "KMail & K Addressbook import filters"
 
 void procEvents(void);

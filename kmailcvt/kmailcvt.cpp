@@ -29,15 +29,17 @@
 
 #include "filter_oe4.hxx"
 #include "filter_oe5.hxx"
+#include "filter_pmail.hxx"
 #include "filter_pab.hxx"
 #include "filter_eudora_ab.hxx"
 #include "filter_ldif.hxx"
 
 void Kmailcvt2::doFilters(void)
 {
-  imports->add(new filter_pab);
   imports->add(new filter_oe5);
+  imports->add(new filter_pmail);
   imports->add(new filter_oe4);
+  imports->add(new filter_pab);
   imports->add(new filter_ldif);
   imports->add(new filter_eudora_ab);
 }
