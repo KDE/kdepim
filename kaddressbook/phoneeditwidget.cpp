@@ -350,11 +350,10 @@ PhoneEditDialog::PhoneEditDialog( const KABC::PhoneNumber::List &list, QWidget *
   layout->setSpacing( spacingHint() );
 
   mListView = new KListView( page );
-  mListView->setAllColumnsShowFocus( true );
   mListView->addColumn( i18n( "Number" ) );
   mListView->addColumn( i18n( "Type" ) );
-  mListView->setResizeMode(QListView::LastColumn);
-  mListView->setMinimumWidth(fontMetrics().maxWidth()*10); 
+  mListView->setAllColumnsShowFocus( true );
+  mListView->setFullWidth( true );
 
   KButtonBox *buttonBox = new KButtonBox( page, Vertical );
 
