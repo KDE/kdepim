@@ -11,7 +11,9 @@
 Misc:
 =====
 
-d - Configuration Merge
+Configuration Merge
+-------------------
+
 d Idea: The KOffice way of life: Offer a method that adds a given wiget of a
 d predefined type as page in a KDialogBase or offer a pointer to a KDialogBase
 d -> requires a kaplan part or an external lib per part
@@ -21,7 +23,13 @@ m kdegraphics/kview/kpreferences{dialog,module}.{h,cpp}. I'd like to generalize
 m these classes and include them into kdelibs (the same configuration merge is
 m being done in Kate, Noatun, Kopete, KView and probably more).
 
-d - Merged Foldertree View
+# The problem is even more generic. We also have to merge about boxes, tips of
+# the day and maybe more.
+
+
+Merged Foldertree View
+----------------------
+
 d Idea: Let the part send a description of their folders and reaction to calls
 d as XML, similar to XMLGUI
 
@@ -79,14 +87,38 @@ Don:
 Don: I might investigate the Qt designer widget further but if someone
 Don: else wants to look at a folder tree widget that's cool with me.
 
+# I had a look at the Qt designer widget choosing widget. I think it has a
+# severe usability problem, because the buttons (or kind of tabs) which are used
+# to access the widget subgroups are not always at the same place but move
+# around when you click on them. Dependening on which group is shown, the button
+# is at the top or at the bottom of the widget. In my opinion this solution is
+# unacceptable.
+
+# But Daniel had a good idea how to improve that. It looks similar to the Qt
+# designer widget, but it opens the current group always at the top of the
+# widget and only highlights the current group in the list at the bottom, but
+# doesn't move it. This seems to also be the way Outlook does it.
+
 Don: Guenter, agree.
 Don: Wouldn't the idea to be to show calendars in the tree or
 Don: navigator widget, rather than individual events?
+
+# Yes, that makes sense. Calendars are much more similar to mail folders than
+# single events. You wouldn't integrate individual mails in the folder tree,
+# would you?
 
 d That raises an interesting point: The KNotes plugin would not need an own
 d canvas in the WidgetStack then. It's sufficient to have the notes in the
 d folder view, an RMB menu on them and a "New Note" action.
 d So the new design must be able to catch that case (the current one does not).
+
+# I think notes are on the same level as mails or events. They should be listed
+# in the view. KNotes would probably just create a single entry in the folder
+# tree.
+
+
+KNotes integration
+------------------
 
 MiB: Which reminds me of my own concern about the 'how' of integrating KNotes:
 MiB: * the current solution is to start KNotes extern, it is not embedded in Kaplan
@@ -111,7 +143,10 @@ MiB:       area---how to do this best?
 MiB: what does M$ do? How do they manage the notes in their PIM app? (I don't know
 MiB: it, never seen that thing)
 
-d - Toolbar Items
+
+Toolbar Items
+-------------
+
 d The KParts Technology only provides actions for the current part. It might be
 d desireable to have common actions that are always available.
 
@@ -160,13 +195,22 @@ Don: actually use loadKMail() and then use the resulting iface.
 Don:
 Don: And the same for all other loadX apps.
 
-d - Status Bar
+
+Status Bar
+----------
+
 d We need a more sophisticated handling (progressbar, etc)
 
 Don: Definitely.
 
-# - Kaplan plugin unification
-# Currentlly all Kaplan plugins look quite similar. It would be nice, if we
+# We now have kdelibs/kparts/statusbarextension. This is intended to solve these
+# problems, right?
+
+
+Kaplan plugin unification
+-------------------------
+
+# Currently all Kaplan plugins look quite similar. It would be nice, if we
 # could provide infratructure to reduce duplicated code as far as possible.
 
 d I thouht of a KaplanPart, similar to a KOPart, if that makes sense. I don't think
@@ -181,6 +225,7 @@ Don: apps folder tree (or navigator)
 Don:
 Don: And maybe for communicating with the status bar.
 	
+
 Communication/Interaction:
 ==========================
 
@@ -267,7 +312,11 @@ d it barely plays a role anyway).
 
 MiB: hm. true. But not too important, IMHO. Just add a Kaplan-DCOP interface :-)
 
-d - Security: If we use the kparts (ktrader) approach to find a parts by looking
+
+Security
+--------
+
+d If we use the kparts (ktrader) approach to find a parts by looking
 d for an application with the correct mime type this might raise security
 d problems. (Martin's concern)
 
