@@ -34,17 +34,21 @@ static const char *syncStack_id = "$Id$";
 
 #include <qtimer.h>
 #include <qfile.h>
+#include <qdir.h>
+#include <qtextcodec.h>
 
 #include <kservice.h>
 #include <kservicetype.h>
 #include <kuserprofile.h>
 #include <klibloader.h>
+#include <ksavefile.h>
 
 #include "pilotUser.h"
 #include "hotSync.h"
 #include "interactiveSync.h"
 #include "fileInstaller.h"
 #include "kpilotSettings.h"
+#include "pilotAppCategory.h"
 
 #include "syncStack.moc"
 
@@ -86,6 +90,48 @@ bool SorryAction::exec()
 	addSyncLogEntry(fMessage);
 	return delayDone();
 }
+
+LocalBackupAction::LocalBackupAction(KPilotDeviceLink *p, const QString &d) :
+	SyncAction(p,"LocalBackupAction"),
+	fDir(d)
+{
+}
+
+bool LocalBackupAction::exec()
+{
+	FUNCTIONSETUP;
+
+	startTickle();
+
+	QString dirname = fDir +
+		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
+		CSL1("/");
+	QDir dir(dirname,QString::null,QDir::Unsorted,QDir::Files);
+
+	if (!dir.exists())
+	{
+		emit logMessage( i18n("Cannot create local backup.") );
+		return false;
+	}
+
+	logMessage( i18n("Creating local backup of databases in %1.").arg(dirname) );
+	addSyncLogEntry( i18n("Creating local backup ..") );
+	qApp->processEvents();
+
+	QStringList files = dir.entryList();
+
+	for (QStringList::Iterator i = files.begin() ;
+		i != files.end();
+		++i)
+	{
+		KSaveFile::backupFile(dirname + (*i));
+	}
+
+	stopTickle();
+
+	return delayDone();
+}
+
 
 ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	const QString &name,

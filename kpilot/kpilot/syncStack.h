@@ -123,8 +123,6 @@ protected slots:
 */
 class WelcomeAction : public SyncAction
 {
-Q_OBJECT
-
 public:
 	WelcomeAction(KPilotDeviceLink *);
 
@@ -139,14 +137,28 @@ protected:
 */
 class SorryAction : public SyncAction
 {
-Q_OBJECT
-
 public:
 	SorryAction(KPilotDeviceLink *, const QString &s=QString::null);
 
 protected:
 	virtual bool exec();
 	QString fMessage;
+} ;
+
+/**
+* This conduit isn't really a conduit -- it just makes a quick
+* backup copy of all the pdbs in the standard DBBackup/ directory,
+* so that in case something goes horribly wrong we still have the
+* state from before this sync started, cq. the state after the
+* last sync.
+*/
+class LocalBackupAction : public SyncAction
+{
+public:
+	LocalBackupAction(KPilotDeviceLink *, const QString &);
+protected:
+	virtual bool exec();
+	QString fDir;
 } ;
 
 /**
