@@ -1,639 +1,650 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Date: 1998-02-24 02:20:14-0500\n"
-"From: Dan Pilone,,,, <pilone@lemur.slac.com>\n"
-"Content-Type: text/plain; charset=\n"
-"Xgettext-Options: -C -ktranslate\n"
-"Files: addressWidget.cc emailWidget.cc fileInstallWidget.cc kpilot.cc kpilotOptions.cc kpilotlink.cc memoWidget.cc messageDialog.cc passworddialog.cc pilotAddress.cc pilotComponent.cc pilotDaemon.cc pilotListener.cc pilotLocalDatabase.cc pilotMemo.cc pilotRecord.cc pilotSerialDatabase.cc strToken.cc addressEditor.cpp addressEditorData.cpp\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2000-07-25 01:24+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
 
-#: addressWidget.cc:26
-msgid "Address Book"
+#: kpilot.cc:212
+msgid "Welcome to KPilot"
 msgstr ""
 
-#: addressWidget.cc:119
-msgid "Addresses:"
+#: kpilot.cc:238
+msgid "Hot-Sync"
 msgstr ""
 
-#: addressWidget.cc:124
-msgid "Address Info:"
+#: kpilot.cc:249
+msgid "Full Backup"
 msgstr ""
 
-#: addressWidget.cc:134
-msgid "Edit Record"
-msgstr ""
-
-#: addressWidget.cc:137
-msgid "New Record"
-msgstr ""
-
-#: addressWidget.cc:140
-msgid "Delete Record"
-msgstr ""
-
-#: addressWidget.cc:143
-msgid "Import List"
-msgstr ""
-
-#: addressWidget.cc:146
-msgid "Export List"
-msgstr ""
-
-#: addressWidget.cc:204 addressWidget.cc:251 memoWidget.cc:152 memoWidget.cc:226
-msgid "Hot-Sync Required"
-msgstr ""
-
-#: addressWidget.cc:205
-msgid ""
-"Cannot edit new records until \r\n"
-" Hot-Synced with pilot."
-msgstr ""
-
-#: addressWidget.cc:252
-msgid ""
-"Cannot delete new records until \r\n"
-" Hot-Synced with pilot."
-msgstr ""
-
-#: addressWidget.cc:256
-msgid "Delete Record?"
-msgstr ""
-
-#: addressWidget.cc:257
-msgid "Delete currently selected record?"
-msgstr ""
-
-#: emailWidget.cc:116 emailWidget.cc:397
-msgid "Syncing Email"
-msgstr ""
-
-#: emailWidget.cc:117
-msgid "Checking outgoing..."
-msgstr ""
-
-#: emailWidget.cc:137
-msgid "Error Sending Mail"
-msgstr ""
-
-#: emailWidget.cc:138
-msgid "Cannot talk to sendmail!"
-msgstr ""
-
-#: emailWidget.cc:356
-msgid "Please Enter your POP password:"
-msgstr ""
-
-#: emailWidget.cc:397
-msgid "Retrieving incoming..."
-msgstr ""
-
-#: fileInstallWidget.cc:29
-msgid "Files To Install:"
-msgstr ""
-
-#: fileInstallWidget.cc:31
-msgid "Clear List"
-msgstr ""
-
-#: fileInstallWidget.cc:34
-msgid "Add File"
-msgstr ""
-
-#: fileInstallWidget.cc:41
-msgid "File Installer"
-msgstr ""
-
-#: fileInstallWidget.cc:101 pilotDaemon.cc:64
-msgid "Error"
-msgstr ""
-
-#: fileInstallWidget.cc:102
-msgid "Could not start KFM"
-msgstr ""
-
-#: kpilot.cc:91 kpilot.cc:190 kpilot.cc:383
-msgid "KPilot v2.0"
-msgstr ""
-
-#: kpilot.cc:134
-msgid "Welcome to KPilot v2.0"
-msgstr ""
-
-#: kpilot.cc:152
+#: kpilot.cc:264
 msgid "Pilot Application"
 msgstr ""
 
-#: kpilot.cc:153
-msgid "KPilot Mode"
+#: kpilot.cc:339
+msgid "Allocating PilotLink failed."
 msgstr ""
 
-#: kpilot.cc:191
-msgid "Starting Sync Daemon.  Please Wait."
+#: kpilot.cc:340 kpilot.cc:389
+msgid "Cannot create link to Daemon"
 msgstr ""
 
-#: kpilot.cc:202
+#: kpilot.cc:388
+msgid "Allocating fPilotCommandSocket failed."
+msgstr ""
+
+#: kpilot.cc:426
+msgid "Starting Sync Daemon. Please Wait."
+msgstr ""
+
+#: kpilot.cc:486
+msgid "Cannot start KPilot Daemon. Check settings and restart KPilot manually."
+msgstr ""
+
+#: kpilot.cc:489
 msgid "Cannot connect to Daemon"
 msgstr ""
 
-#: kpilot.cc:203
-msgid "Cannot start KPilot Daemon.  Check settings."
-msgstr ""
-
-#: kpilot.cc:207
-msgid "Restart?"
-msgstr ""
-
-#: kpilot.cc:208
-msgid "Restart KPilot?"
-msgstr ""
-
-#: kpilot.cc:258
+#: kpilot.cc:590
 msgid "Hot-Sync in progress..."
 msgstr ""
 
-#: kpilot.cc:266 kpilot.cc:417
+#: kpilot.cc:599 kpilot.cc:877
 msgid "Hot-Sync complete."
 msgstr ""
 
-#: kpilot.cc:283
+#: kpilot.cc:618
 msgid "Backing up pilot. Please press the hot-sync button."
 msgstr ""
 
-#: kpilot.cc:293
+#: kpilot.cc:629
 msgid "Restoring pilot. Please press the hot-sync button."
 msgstr ""
 
-#: kpilot.cc:307
+#: kpilot.cc:640
 msgid "Hot-Syncing.  Please press the hot-sync button."
 msgstr ""
 
-#: kpilot.cc:331
+#: kpilot.cc:674
 msgid "&Settings"
 msgstr ""
 
-#: kpilot.cc:333
+#: kpilot.cc:676
 msgid "&Backup"
 msgstr ""
 
-#: kpilot.cc:334
+#: kpilot.cc:677
 msgid "&Restore"
 msgstr ""
 
-#: kpilot.cc:336
-msgid "&Quit"
+#: kpilot.cc:683
+msgid "&External"
 msgstr ""
 
-#: kpilot.cc:340
-msgid "&About"
-msgstr ""
-
-#: kpilot.cc:341
-msgid "&Contents"
-msgstr ""
-
-#: kpilot.cc:345
-msgid "&File"
-msgstr ""
-
-#: kpilot.cc:347
-msgid "&Help"
-msgstr ""
-
-#: kpilot.cc:384
+#: kpilot.cc:690
 msgid ""
-"KPilot v2.0 Hot-Sync Software for Unix\n"
+"\n"
+"\n"
+"Copyright (C) 1998-2000 Dan Pilone"
+msgstr ""
+
+#: kpilot.cc:691
+msgid ""
+"\n"
+"\n"
+"Programming by:\n"
+msgstr ""
+
+#: kpilot.cc:696
+msgid "&Conduits"
+msgstr ""
+
+#: kpilot.cc:769
+msgid ""
+"Hot-Sync Software for Unix\n"
 "By: Dan Pilone\n"
 "Email: pilone@slac.com"
 msgstr ""
 
-#: kpilot.cc:413
+#: kpilot.cc:873
 msgid "Updating display..."
 msgstr ""
 
-#: kpilotOptions.cc:16
-msgid "KPilot Options"
+#: kpilot.cc:915
+msgid "and many others."
 msgstr ""
 
-#: kpilotOptions.cc:71
-msgid "Setup Daemon"
+#: kpilotlink.cc:147
+msgid "Sync Status"
 msgstr ""
 
-#: kpilotOptions.cc:72
-msgid "Cannot connect to KFM."
+#: kpilotlink.cc:186
+msgid "Cannot create socket for communicating with the Pilot"
 msgstr ""
 
-#: kpilotOptions.cc:104
-msgid "Pilot Device: "
+#: kpilotlink.cc:188 kpilotlink.cc:191 kpilotlink.cc:212 kpilotlink.cc:216
+msgid "Error Initializing"
 msgstr ""
 
-#: kpilotOptions.cc:112
-msgid "Speed: "
-msgstr ""
-
-#: kpilotOptions.cc:123
-msgid "Pilot User: "
-msgstr ""
-
-#: kpilotOptions.cc:131
-msgid "Sync Options:"
-msgstr ""
-
-#: kpilotOptions.cc:135
-msgid "Sync M&ail"
-msgstr ""
-
-#: kpilotOptions.cc:140
-msgid "Sync &Files"
-msgstr ""
-
-#: kpilotOptions.cc:145
-msgid "Local &overrides Pilot."
-msgstr ""
-
-#: kpilotOptions.cc:150
-msgid "Start Hot-Sync Daemon at login. (Only available with KFM)"
-msgstr ""
-
-#: kpilotOptions.cc:161
-msgid "Start KPilot at Hot-Sync."
-msgstr ""
-
-#: kpilotOptions.cc:166
-msgid "Show Daemon in KPanel. (Only available with KWM.)"
-msgstr ""
-
-#: kpilotOptions.cc:178
-msgid "&General"
-msgstr ""
-
-#: kpilotOptions.cc:183
-msgid "Email Address: "
-msgstr ""
-
-#: kpilotOptions.cc:192
-msgid "Signature File: "
-msgstr ""
-
-#: kpilotOptions.cc:201
-msgid "Sendmail Cmd:"
-msgstr ""
-
-#: kpilotOptions.cc:209
-msgid "POP Server:"
-msgstr ""
-
-#: kpilotOptions.cc:217
-msgid "POP Port:"
-msgstr ""
-
-#: kpilotOptions.cc:225
-msgid "POP Username:"
-msgstr ""
-
-#: kpilotOptions.cc:233
-msgid "&Leave mail on server."
-msgstr ""
-
-#: kpilotOptions.cc:238
-msgid "Sync &Incoming mail."
-msgstr ""
-
-#: kpilotOptions.cc:243
-msgid "Send &Outgoing mail."
-msgstr ""
-
-#: kpilotOptions.cc:248
-msgid "&Email Settings"
-msgstr ""
-
-#: kpilotOptions.cc:253
-msgid "Import Format:"
-msgstr ""
-
-#: kpilotOptions.cc:262
-msgid "Export Format:"
-msgstr ""
-
-#: kpilotOptions.cc:271
-msgid "%FN = First Name"
-msgstr ""
-
-#: kpilotOptions.cc:276
-msgid "%LN = Last Name"
-msgstr ""
-
-#: kpilotOptions.cc:281
-msgid "%CO = Company"
-msgstr ""
-
-#: kpilotOptions.cc:286
-msgid "%P1 = Phone Number 1"
-msgstr ""
-
-#: kpilotOptions.cc:291
-msgid "%P2 = Phone Number 2"
-msgstr ""
-
-#: kpilotOptions.cc:296
-msgid "%P3 = Phone Number 3"
-msgstr ""
-
-#: kpilotOptions.cc:301
-msgid "%P4 = Phone Number 4"
-msgstr ""
-
-#: kpilotOptions.cc:306
-msgid "%P5 = Phone 5 (E-mail)"
-msgstr ""
-
-#: kpilotOptions.cc:311
-msgid "%AD = Address"
-msgstr ""
-
-#: kpilotOptions.cc:316
-msgid "%CI = City"
-msgstr ""
-
-#: kpilotOptions.cc:321
-msgid "%ST = State"
-msgstr ""
-
-#: kpilotOptions.cc:326
-msgid "%ZI = Zip Code"
-msgstr ""
-
-#: kpilotOptions.cc:331
-msgid "%CT = Country"
-msgstr ""
-
-#: kpilotOptions.cc:336
-msgid "%TI = Title"
-msgstr ""
-
-#: kpilotOptions.cc:341
-msgid "%C1 = Custom 1"
-msgstr ""
-
-#: kpilotOptions.cc:346
-msgid "%C2 = Custom 2"
-msgstr ""
-
-#: kpilotOptions.cc:351
-msgid "%C3 = Custom 3"
-msgstr ""
-
-#: kpilotOptions.cc:356
-msgid "%C4 = Custom 4"
-msgstr ""
-
-#: kpilotOptions.cc:366
-msgid ""
-"%IG = Ignore (used\n"
-"          for import)"
-msgstr ""
-
-#: kpilotOptions.cc:371
-msgid "Use &Key Field"
-msgstr ""
-
-#: kpilotOptions.cc:376
-msgid "A&ddress Settings"
-msgstr ""
-
-#: kpilotlink.cc:43 kpilotlink.cc:57
-msgid "Error Initializing?"
-msgstr ""
-
-#: kpilotlink.cc:44
+#: kpilotlink.cc:192
 msgid "Cannot create socket."
 msgstr ""
 
-#: kpilotlink.cc:58
-msgid ""
-"Cannot connect to pilot.\r\n"
-"(check pilot path)"
+#: kpilotlink.cc:210
+msgid "Cannot connect socket to Pilot (check Pilot path)"
 msgstr ""
 
-#: kpilotlink.cc:110
-msgid "Full Restore"
+#: kpilotlink.cc:217
+msgid "Cannot connect to pilot (check pilot path)."
 msgstr ""
 
-#: kpilotlink.cc:111
+#: kpilotlink.cc:485 kpilotlink.cc:490
 msgid "Replace all data on pilot with local data?"
 msgstr ""
 
-#: kpilotlink.cc:192 kpilotlink.cc:284
-msgid "Full Sync Status"
+#: kpilotlink.cc:486 kpilotlink.cc:489
+msgid "Full Restore"
 msgstr ""
 
-#: kpilotlink.cc:203
+#: kpilotlink.cc:595
 msgid "Restoring databases to Palm Pilot. Slow sync required."
 msgstr ""
 
-#: kpilotlink.cc:287
+#: kpilotlink.cc:708
 msgid "Backing up Palm Pilot... Slow sync required."
 msgstr ""
 
-#: kpilotlink.cc:295 kpilotlink.cc:311 kpilotlink.cc:562
+#: kpilotlink.cc:718
+msgid ""
+"Exiting on cancel.\n"
+"<B>Not</B> all the data was backed up."
+msgstr ""
+
+#: kpilotlink.cc:720 kpilotlink.cc:722 kpilotlink.cc:745 kpilotlink.cc:1305
+#: kpilotlink.cc:1308
 msgid "Backup"
 msgstr ""
 
-#: kpilotlink.cc:296 kpilotlink.cc:516
+#: kpilotlink.cc:723
 msgid ""
 "Exiting on canel.\n"
 " All Data NOT backed up"
 msgstr ""
 
-#: kpilotlink.cc:311 kpilotlink.cc:562
+#: kpilotlink.cc:742 kpilotlink.cc:746 kpilotlink.cc:1308
 msgid "Could not backup data!"
 msgstr ""
 
-#: kpilotlink.cc:336
+#: kpilotlink.cc:743
+msgid "Backup failed"
+msgstr ""
+
+#: kpilotlink.cc:801
 msgid "Installing Files"
 msgstr ""
 
-#: kpilotlink.cc:337
+#: kpilotlink.cc:802
 msgid "Percentage of files installed:"
 msgstr ""
 
-#: kpilotlink.cc:355 kpilotlink.cc:362
+#: kpilotlink.cc:804
+msgid "Installing files..."
+msgstr ""
+
+#: kpilotlink.cc:847
+msgid "Unable to open file &quot;%1&quot;!"
+msgstr ""
+
+#: kpilotlink.cc:851
+msgid "Missing File"
+msgstr ""
+
+#: kpilotlink.cc:853
+msgid "Unable to open file: "
+msgstr ""
+
+#: kpilotlink.cc:856 kpilotlink.cc:870
 msgid "Missing file?"
 msgstr ""
 
-#: kpilotlink.cc:454
+#: kpilotlink.cc:867
+msgid "Cannot install file on Pilot"
+msgstr ""
+
+#: kpilotlink.cc:868
+msgid "Install File Error"
+msgstr ""
+
+#: kpilotlink.cc:962
 msgid "Waiting to Sync"
 msgstr ""
 
-#: kpilotlink.cc:454
+#: kpilotlink.cc:963
 msgid "Reading user information..."
 msgstr ""
 
-#: kpilotlink.cc:516
-msgid "Hot-Sync"
+#: kpilotlink.cc:1005
+msgid "Hot-Sync started."
 msgstr ""
 
-#: kpilotlink.cc:574
+#: kpilotlink.cc:1006
+msgid "Sync started with KPilot-v3.2\n"
+msgstr ""
+
+#: kpilotlink.cc:1202
+msgid "Could not backup data for database &quot;%1&quot;"
+msgstr ""
+
+#: kpilotlink.cc:1207 kpilotlink.cc:1210
+msgid "Backup for Sync"
+msgstr ""
+
+#: kpilotlink.cc:1211
+msgid "Could not backup data for database "
+msgstr ""
+
+#: kpilotlink.cc:1296
+msgid "No previous copy.  Copying data from pilot..."
+msgstr ""
+
+#: kpilotlink.cc:1303
+msgid "Could not create local copy of database &quot;%1&quot;"
+msgstr ""
+
+#: kpilotlink.cc:1318
+msgid "Hot-Syncing Pilot. Looking for modified data..."
+msgstr ""
+
+#: kpilotlink.cc:1325
+msgid "Cannot find database &quot;%1&quot;"
+msgstr ""
+
+#: kpilotlink.cc:1329
+msgid "Error Syncing Database"
+msgstr ""
+
+#: kpilotlink.cc:1334
 msgid "Error syncing."
 msgstr ""
 
-#: memoWidget.cc:115
+#: kpilotlink.cc:1417
+msgid ""
+"The Palm Pilot thinks the user name is &quot;%1&quot;, however KPilot says "
+"you are &quot;%2&quot;.\n"
+"Should I assume the Pilot is right and set the user name for KPilot to "
+"&quot;%1&quot;? (Otherwise I'll use &quot;%2&quot; for now)"
+msgstr ""
+
+#: kpilotlink.cc:1427
+msgid "Pilot User Changed"
+msgstr ""
+
+#: fileInstallWidget.cc:44
+msgid "Files To Install:"
+msgstr ""
+
+#: fileInstallWidget.cc:46
+msgid "Clear List"
+msgstr ""
+
+#: fileInstallWidget.cc:49
+msgid "Add File"
+msgstr ""
+
+#: fileInstallWidget.cc:55
+msgid "File Installer"
+msgstr ""
+
+#: addressWidget.cc:169 memoWidget.cc:92
+msgid "All"
+msgstr ""
+
+#: memoWidget.cc:258
 msgid "Memos:"
 msgstr ""
 
-#: memoWidget.cc:120
+#: memoWidget.cc:266
 msgid "Memo Text:"
 msgstr ""
 
-#: memoWidget.cc:126
+#: memoWidget.cc:274
 msgid "Import Memo"
 msgstr ""
 
-#: memoWidget.cc:129
+#: memoWidget.cc:278
 msgid "Export Memo"
 msgstr ""
 
-#: memoWidget.cc:132
+#: memoWidget.cc:282
 msgid "Delete Memo"
 msgstr ""
 
-#: memoWidget.cc:153
+#: addressWidget.cc:447 addressWidget.cc:512 memoWidget.cc:322
+#: memoWidget.cc:517
+msgid "Hot-Sync Required"
+msgstr ""
+
+#: memoWidget.cc:323
 msgid ""
 "Cannot delete new memo until \r\n"
-" Hot-Synced with pilot."
+"Hot-Synced with pilot."
 msgstr ""
 
-#: memoWidget.cc:157
-msgid "Delete Memo?"
-msgstr ""
-
-#: memoWidget.cc:158
+#: memoWidget.cc:330
 msgid "Delete currently selected memo?"
 msgstr ""
 
-#: memoWidget.cc:227
+#: memoWidget.cc:331
+msgid "Delete Memo?"
+msgstr ""
+
+#: memoWidget.cc:516
 msgid ""
 "Cannot edit new memo until \r\n"
 " Hot-Synced with pilot."
 msgstr ""
 
-#: passworddialog.cc:39 passworddialog.cc:78
-msgid "Password"
+#: kpilotOptions.cc:53
+msgid "DB Specials"
 msgstr ""
 
-#: passworddialog.cc:67
-msgid "Ok"
+#: kpilotOptions.cc:57
+msgid "Show Secrets"
 msgstr ""
 
-#: addressEditorData.cpp:559 passworddialog.cc:70
-msgid "Cancel"
+#: kpilotOptions.cc:79
+msgid "Backup Only:"
 msgstr ""
 
-#: pilotDaemon.cc:56
-msgid "Busy"
+#: kpilotOptions.cc:80
+msgid "Skip:"
 msgstr ""
 
-#: pilotDaemon.cc:57
-msgid "Please wait for current operation to complete."
+#: kpilotOptions.cc:132
+msgid "Address"
 msgstr ""
 
-#: pilotDaemon.cc:65
-msgid "Could not start KFM."
+#: kpilotOptions.cc:140
+msgid "Address Formats"
 msgstr ""
 
-#: pilotDaemon.cc:224
-msgid "KPilot Daemon v2.0"
+#: kpilotOptions.cc:141
+msgid "Import Format:"
 msgstr ""
 
-#: pilotDaemon.cc:225
+#: kpilotOptions.cc:154
+msgid "Export Format:"
+msgstr ""
+
+#: kpilotOptions.cc:167
+msgid "Use &Key Field"
+msgstr ""
+
+#: kpilotOptions.cc:179
+msgid "Address Display"
+msgstr ""
+
+#: kpilotOptions.cc:183
+msgid "Last,First"
+msgstr ""
+
+#: kpilotOptions.cc:185
+msgid "Company,Last"
+msgstr ""
+
+#: kpilotOptions.cc:269
+msgid "General"
+msgstr ""
+
+#: kpilotOptions.cc:277
+msgid "Pilot Device: "
+msgstr ""
+
+#: kpilotOptions.cc:285
+msgid "Speed: "
+msgstr ""
+
+#: kpilotOptions.cc:303
+msgid "Pilot User: "
+msgstr ""
+
+#: kpilotOptions.cc:311
+msgid "Sync Options:"
+msgstr ""
+
+#: kpilotOptions.cc:314
+msgid "Sync &Files"
+msgstr ""
+
+#: kpilotOptions.cc:320
+msgid "Local &overrides Pilot."
+msgstr ""
+
+#: kpilotOptions.cc:327
+msgid "Start Hot-Sync Daemon at login. (Only available with KFM)"
+msgstr ""
+
+#: kpilotOptions.cc:355
+msgid "Start KPilot at Hot-Sync."
+msgstr ""
+
+#: kpilotOptions.cc:362
+msgid "Show Daemon in KPanel. (Only available with KWM.)"
+msgstr ""
+
+#: kpilotOptions.cc:460
+msgid "KPilot Options"
+msgstr ""
+
+#: gsetupDialog.cc:280
+msgid "Cannot find the"
+msgstr ""
+
+#: gsetupDialog.cc:288
+msgid "Really use this file?"
+msgstr ""
+
+#: pilotSerialDatabase.cc:203
+msgid "Cannot open database"
+msgstr ""
+
+#: pilotSerialDatabase.cc:204
+msgid "Pilot database error"
+msgstr ""
+
+#: addressWidget.cc:64
+msgid "Address Book"
+msgstr ""
+
+#: addressWidget.cc:225
+msgid "Addresses:"
+msgstr ""
+
+#: addressWidget.cc:233
+msgid "Address Info:"
+msgstr ""
+
+#: addressWidget.cc:239
+msgid "Edit Record"
+msgstr ""
+
+#: addressWidget.cc:242
+msgid "New Record"
+msgstr ""
+
+#: addressWidget.cc:245
+msgid "Delete Record"
+msgstr ""
+
+#: addressWidget.cc:248
+msgid "Import List"
+msgstr ""
+
+#: addressWidget.cc:251
+msgid "Export List"
+msgstr ""
+
+#: addressWidget.cc:445
 msgid ""
-"KPilot Hot-Sync Daemon v2.0 \n"
-"By: Dan Pilone.\n"
-"Email: pilone@slac.com"
+"Cannot edit new records until \r\n"
+"Hot-Synced with pilot."
 msgstr ""
 
-#: pilotDaemon.cc:305
-msgid "Too Many Connections"
+#: addressWidget.cc:511
+msgid ""
+"Cannot delete new records until \r\n"
+" Hot-Synced with pilot."
 msgstr ""
 
-#: pilotDaemon.cc:306
-msgid "Error: Only one command connection at a time."
+#: addressWidget.cc:515
+msgid "Delete currently selected record?"
 msgstr ""
 
-#: addressEditorData.cpp:101 addressEditorData.cpp:103
+#: addressWidget.cc:516
+msgid "Delete Record?"
+msgstr ""
+
+#: addressWidget.cc:589
+msgid "Can't open the address file for import:"
+msgstr ""
+
+#: addressWidget.cc:590
+msgid "Import Address Error"
+msgstr ""
+
+#: addressEditorData.cpp:102 addressEditorData.cpp:104
 msgid "Address Editor"
 msgstr ""
 
-#: addressEditorData.cpp:118
+#: addressEditorData.cpp:119
 msgid "Last Name:"
 msgstr ""
 
-#: addressEditorData.cpp:131
+#: addressEditorData.cpp:132
 msgid "First Name:"
 msgstr ""
 
-#: addressEditorData.cpp:144
+#: addressEditorData.cpp:145
 msgid "Title:"
 msgstr ""
 
-#: addressEditorData.cpp:157
+#: addressEditorData.cpp:158
 msgid "Company:"
 msgstr ""
 
-#: addressEditorData.cpp:170
+#: addressEditorData.cpp:171
 msgid "Phone 1:"
 msgstr ""
 
-#: addressEditorData.cpp:183
+#: addressEditorData.cpp:184
 msgid "Phone 2:"
 msgstr ""
 
-#: addressEditorData.cpp:196
+#: addressEditorData.cpp:197
 msgid "Phone 3:"
 msgstr ""
 
-#: addressEditorData.cpp:209
+#: addressEditorData.cpp:210
 msgid "Phone 4:"
 msgstr ""
 
-#: addressEditorData.cpp:222
+#: addressEditorData.cpp:223
 msgid "Phone 5:"
 msgstr ""
 
-#: addressEditorData.cpp:235
+#: addressEditorData.cpp:236
 msgid "Address:"
 msgstr ""
 
-#: addressEditorData.cpp:248
+#: addressEditorData.cpp:249
 msgid "City:"
 msgstr ""
 
-#: addressEditorData.cpp:261
+#: addressEditorData.cpp:262
 msgid "State:"
 msgstr ""
 
-#: addressEditorData.cpp:274
+#: addressEditorData.cpp:275
 msgid "Zip Code:"
 msgstr ""
 
-#: addressEditorData.cpp:287
+#: addressEditorData.cpp:288
 msgid "Country:"
 msgstr ""
 
-#: addressEditorData.cpp:300
+#: addressEditorData.cpp:301
 msgid "Custom 1:"
 msgstr ""
 
-#: addressEditorData.cpp:313
+#: addressEditorData.cpp:314
 msgid "Custom 2:"
 msgstr ""
 
-#: addressEditorData.cpp:326
+#: addressEditorData.cpp:327
 msgid "Custom 3:"
 msgstr ""
 
-#: addressEditorData.cpp:339
+#: addressEditorData.cpp:340
 msgid "Custom 4:"
 msgstr ""
 
-#: addressEditorData.cpp:548
-msgid "OK"
+#: conduitSetup.cc:45
+msgid "External Conduit Setup"
+msgstr ""
+
+#: conduitSetup.cc:49
+msgid "Available Conduits:"
+msgstr ""
+
+#: conduitSetup.cc:56
+msgid "Installed Conduits:"
+msgstr ""
+
+#: conduitSetup.cc:89
+msgid "Done"
+msgstr ""
+
+#: conduitSetup.cc:115
+msgid "Install"
+msgstr ""
+
+#: conduitSetup.cc:126
+msgid "Uninstall"
+msgstr ""
+
+#: conduitSetup.cc:138
+msgid "Setup"
+msgstr ""
+
+#: conduitSetup.cc:263
+msgid "The conduit "
+msgstr ""
+
+#: conduitSetup.cc:265
+msgid ""
+" did not identify what database it supports. \n"
+"Please check with the conduits author to correct it."
+msgstr ""
+
+#: conduitSetup.cc:268
+msgid "Conduit error."
+msgstr ""
+
+#: conduitSetup.cc:390
+msgid ""
+"A conduit is already being set up.\n"
+"Please complete that setup before starting another."
+msgstr ""
+
+#: conduitSetup.cc:392
+msgid "Setup already in progress"
 msgstr ""
