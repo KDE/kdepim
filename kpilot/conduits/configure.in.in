@@ -90,10 +90,10 @@ NOTFOUND) AC_MSG_RESULT(searched but not found)
     MAL_LIB="${MAL_LIBS}-lmal"
   fi
 
-  kde_safe_LIBS="$LIBS"
-  kde_safe_CFLAGS="$CFLAGS"
-  kde_safe_CPPFLAGS="$CPPFLAGS"
-  kde_safe_LDFLAGS="$CPPFLAGS"
+  kde_save_LIBS="$LIBS"
+  kde_save_CFLAGS="$CFLAGS"
+  kde_save_CPPFLAGS="$CPPFLAGS"
+  kde_save_LDFLAGS="$LDFLAGS"
   LIBS="$LIBS $PISOCK_LIB $MAL_LIB -ldl"
   CFLAGS="$CFLAGS $MAL_INCLUDE"
   CPPFLAGS="$CPPFLAGS $all_includes $PISOCK_INCLUDE $MAL_INCLUDE"
@@ -110,10 +110,10 @@ NOTFOUND) AC_MSG_RESULT(searched but not found)
   , with_mal=no
   )
   AC_LANG_RESTORE
-  CFLAGS=$kde_safe_CFLAGS
-  CPPFLAGS=$kde_safe_CPPFLAGS
-  LIBS=$kde_safe_LIBS
-  LDFLAGS=$kde_safe_LDFLAGS
+  CFLAGS=$kde_save_CFLAGS
+  CPPFLAGS=$kde_save_CPPFLAGS
+  LIBS=$kde_save_LIBS
+  LDFLAGS=$kde_save_LDFLAGS
   if test "$with_mal" = "no" ; then
     MAL_INCLUDE=
     MAL_LIB=
