@@ -84,7 +84,7 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent,
   new QRadioButton( i18n("Never"), mGroup );
   new QRadioButton( i18n("On exit"), mGroup );
 
-  QRadioButton *intervalRadio = new QRadioButton( i18n("Regular interval"),
+  QRadioButton *intervalRadio = new QRadioButton( i18n("Regular Interval"),
                                                   mGroup );
   connect( intervalRadio, SIGNAL( stateChanged( int ) ),
            SLOT( slotIntervalStateChanged( int ) ) );
