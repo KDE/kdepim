@@ -61,7 +61,7 @@ class KNComposer : public KMainWindow  {
     bool hasValidData();
     composerResult result()               { return r_esult; }
     KNLocalArticle* article()             { return a_rticle; }
-    void applyChanges();
+    bool applyChanges();
 
     // this tells closeEvent() whether it can accept or not:
     void setDoneSuccess(bool b)           { d_oneSuccess = b; }
@@ -96,6 +96,7 @@ class KNComposer : public KMainWindow  {
     QString s_ignature, u_nwraped;
     QCString c_harset;
     MessageMode m_ode;
+    bool d_oSign;
     bool d_oneSuccess,
          n_eeds8Bit,    // false: fall back to us-ascii
          v_alidated,    // hasValidData was run and found no problems, n_eeds8Bit is valid
@@ -118,9 +119,8 @@ class KNComposer : public KMainWindow  {
                   *a_ctSpellCheck,
                   *a_ctRemoveAttachment,
                   *a_ctAttachmentProperties,
-                  *a_ctPGPsign,
                   *a_ctSetCharsetKeyb;
-    KToggleAction *a_ctShowToolbar, *a_ctShowStatusbar,
+    KToggleAction *a_ctShowToolbar, *a_ctShowStatusbar,*a_ctPGPsign,
                   *a_ctDoPost, *a_ctDoMail, *a_ctWordWrap;
     KSelectAction *a_ctSetCharset;
 

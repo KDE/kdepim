@@ -56,7 +56,7 @@
 KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy)
     : KMainWindow(0,"composerWindow"), r_esult(CRsave), a_rticle(a), s_ignature(sig), u_nwraped(unwraped),
       n_eeds8Bit(true), v_alidated(false), a_uthorDislikesMailCopies(dislikesCopies), e_xternalEdited(false), e_xternalEditor(0),
-      e_ditorTempfile(0), s_pellChecker(0), a_ttChanged(false)
+      e_ditorTempfile(0), s_pellChecker(0), a_ttChanged(false), d_oSign(false)
 {
   d_elAttList.setAutoDelete(true);
 
@@ -144,7 +144,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   new KAction(i18n("Attach &File..."), "attach", 0, this, SLOT(slotAttachFile()),
                    actionCollection(), "attach_file");
 
-  a_ctPGPsign = new KAction(i18n("Sign Article with &PGP"), 0, this, SLOT(slotSignArticle()),
+  a_ctPGPsign = new KToggleAction(i18n("Sign Article with &PGP"), 0, this, SLOT(slotSignArticle()),
                             actionCollection(), "sign_article");
 
   a_ctRemoveAttachment = new KAction(i18n("&Remove"), 0, this,
@@ -476,7 +476,7 @@ bool KNComposer::hasValidData()
 }
 
 
-void KNComposer::applyChanges()
+bool KNComposer::applyChanges()
 {
   KMime::Content *text=0;
   KNAttachment *a=0;
@@ -560,11 +560,11 @@ void KNComposer::applyChanges()
       text->contentTransferEncoding()->setCte(pnt->allow8BitBody()? KMime::Headers::CE8Bit : KMime::Headers::CEquPr);
   }
 
+  //auto-wrapped lines in v_iew->e_dit don't get an "\n", so we have to
+  //assemble the text line by line
+  QString tmp = QString::null;
   if ( v_iew->e_dit->wordWrap() != QMultiLineEdit::NoWrap ) {
-      //auto-wrapped lines in v_iew->e_dit don't get an "\n", so we have to
-      //assemble the text line by line
-      QString tmp, line;
-      
+      QString line;
       int num_lines = v_iew->e_dit->numLines();
       for (int i = 0; i < num_lines; ++i) {
           int lastLine = 0;
@@ -576,16 +576,69 @@ void KNComposer::applyChanges()
               }
               tmp += line[j];
           }
-          if (i + 1 < num_lines) tmp += '\n';
-      }  
-      text->fromUnicodeString(tmp);
+	  tmp += '\n';
+      }
   }
+  if ( tmp == QString::null)
+    tmp = v_iew->e_dit->text();
+
+  // Sign article if needed
+  if ( d_oSign ) {
+      // first get the signing key
+      QCString signingKey = knGlobals.cfgManager->identity()->signingKey();
+      KNNntpAccount *acc = knGlobals.accManager->account( a_rticle->serverId() );
+      if ( acc ) {
+          KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
+          KNGroup *grp = knGlobals.grpManager->group( grps->firstGroup(), acc );
+          if ( grp && grp->identity() && grp->identity()->hasSigningKey() )
+              signingKey = grp->identity()->signingKey();
+          else if ( acc->identity() && acc->identity()->hasSigningKey() )
+              signingKey = acc->identity()->signingKey();
+      }
+      // now try to sign the article
+      if (!signingKey.isEmpty()) {
+          QString tmpText = tmp;
+          Kpgp::Module *pgp = Kpgp::Module::getKpgp();
+          bool ok=true;
+          QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
+          if(!ok) // no suitable codec found => try local settings and hope the best ;-)
+              codec=KGlobal::locale()->codecForEncoding();
+
+          pgp->setMessage(codec->fromUnicode(tmpText),codec->name());
+          kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
+          if (!pgp->sign(signingKey))
+              KMessageBox::error(this,
+                                  i18n("Sorry, couldn't sign this message!\n\n%1")
+                                      .arg(pgp->lastErrorMsg()));
+          else {
+              QCString result = pgp->message();
+              tmp = codec->toUnicode(result.data(), result.length() );
+          }
+      }
+      else {
+          if ( KMessageBox::warningContinueCancel( this, 
+                   i18n("You haven't configured your preferred "
+                        "signing key yet.\n"
+                        "Please specify it either in the global "
+                        "identity configuration\n"
+                        "or in the account properties or in the "
+                        "group properties!\n"
+                        "The article will be send unsigned." ),
+                   QString::null, i18n( "Send unsigned" ),
+                   "sendUnsignedDialog" ) 
+               == KMessageBox::Cancel )
+	      return false;
+      }
+  }
+
+  text->fromUnicodeString(tmp);
 
   //text is set and all attached contents have been assembled => now set lines
   a_rticle->lines()->setNumberOfLines(a_rticle->lineCount());
 
   a_rticle->assemble();
   a_rticle->updateListItem();
+  return true;
 }
 
 
@@ -839,49 +892,10 @@ void KNComposer::slotRemoveAttachment()
   }
 }
 
-
 void KNComposer::slotSignArticle()
 {
-  // first get the signing key
-  QCString signingKey = knGlobals.cfgManager->identity()->signingKey();
-  KNNntpAccount *acc = knGlobals.accManager->account( a_rticle->serverId() );
-  if ( acc )
-  {
-    KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
-    KNGroup *grp = knGlobals.grpManager->group( grps->firstGroup(), acc );
-    if ( grp && grp->identity() && grp->identity()->hasSigningKey() )
-      signingKey = grp->identity()->signingKey();
-    else if ( acc->identity() && acc->identity()->hasSigningKey() )
-      signingKey = acc->identity()->signingKey();
-  }
-  // now try to sign the article
-  if (!signingKey.isEmpty()) {
-    QString text = v_iew->e_dit->text();
-    Kpgp::Block block;
-    bool ok=true;
-    QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
-    if(!ok) // no suitable codec found => try local settings and hope the best ;-)
-      codec=KGlobal::locale()->codecForEncoding();
-
-    block.setText( codec->fromUnicode(text) );
-    kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
-    if( block.clearsign( signingKey, codec->name() ) )
-    {
-      QCString result = block.text();
-      v_iew->e_dit->setText( codec->toUnicode(result.data(), result.length()) );
-      v_iew->e_dit->setModified(true);
-    }
-  }
-  else {
-    KMessageBox::sorry( this, i18n("You haven't configured your preferred "
-                                   "signing key yet.\n"
-                                   "Please specify it either in the global "
-                                   "identity configuration, "
-                                   "in the account properties or in the "
-                                   "group properties!") );
-  }
+    d_oSign = a_ctPGPsign->isChecked();
 }
-
 
 void KNComposer::slotAttachmentProperties()
 {

@@ -1001,8 +1001,8 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
     case KNComposer::CRsendNow:
       delCom=com->hasValidData();
       if(delCom) {
-        com->applyChanges();
-        sendArticles(&lst, true);
+        if ( com->applyChanges() )
+          sendArticles(&lst, true);
       }
       else
         com->setDoneSuccess(false);
@@ -1011,16 +1011,16 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
     case KNComposer::CRsendLater:
       delCom=com->hasValidData();
       if(delCom) {
-        com->applyChanges();
-        sendArticles(&lst, false);
+        if ( com->applyChanges() )
+          sendArticles(&lst, false);
       }
       else
         com->setDoneSuccess(false);
     break;
 
     case KNComposer::CRsave :
-      com->applyChanges();
-      knGlobals.artManager->moveIntoFolder(lst, knGlobals.folManager->drafts());
+      if ( com->applyChanges() )
+        knGlobals.artManager->moveIntoFolder(lst, knGlobals.folManager->drafts());
     break;
 
     case KNComposer::CRdelAsk:
