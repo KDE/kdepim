@@ -42,9 +42,9 @@ FilterOE5::FilterOE5() : Filter(i18n("Import Folders From Outlook Express 5/6"),
       "folder names, but they will be preceded with 'OE5-'. If this causes "
       "problems for you (you have KMail folders beginning with 'OE5-'), "
       "cancel this import function (the next dialog will allow you to do "
-      "that) and rename the existing KMail folders.</p>"))
+      "that) and rename the existing KMail folders.</p>")),
+      CAP(i18n("Import Outlook Express 5/6"))
 {
-  CAP=i18n("Import Outlook Express 5/6");
 }
 
 FilterOE5::~FilterOE5()
@@ -52,91 +52,49 @@ FilterOE5::~FilterOE5()
 
 void FilterOE5::import(FilterInfo *info)
 {
-  QString  choosen;
-  QString  msg;
+  QString  chosen;
   QWidget *parent=info->parent();
 
-  if (!kmailStart(info)) { return; }
+  if (!kmailStart(info)) return;
 
-  choosen=KFileDialog::getExistingDirectory(QDir::homeDirPath(),parent, 
-      i18n("Select Folder"));
-  if (choosen.isEmpty()) { return; } // No directory choosen here!
+  chosen=KFileDialog::getExistingDirectory(QDir::homeDirPath(),parent, 
+                                           i18n("Select Folder"));
+  if (chosen.isEmpty()) return; // No directory chosen here!
 
-  msg=i18n("Searching for Outlook Express '.dbx' folders in directory %1").arg(choosen);
-  info->log(msg);
+  info->log(i18n("Searching for Outlook Express '.dbx' folders in directory %1").arg(chosen));
 
+  QDir dir(chosen);
+  if (!dir.isReadable())
   {
-    DIR *d;
-    struct dirent *entry;
-    d=opendir(QFile::encodeName(choosen));
-    if (d==NULL) {QString msg;
-      msg=i18n("Can't open directory %1").arg(choosen);
-      info->alert(CAP,msg);
-    }
-    else {int   N=0,n=0;
-      float perc;
-
-      entry=readdir(d);
-      while (entry!=NULL) {char *file=entry->d_name;
-        if (strlen(file)>4 && strcasecmp(&file[strlen(file)-4],".dbx")==0) {
-          N+=1;
-        }
-        entry=readdir(d);
-      }
-      if (N==0) {
-        info->alert(CAP,i18n("No '.dbx' folders found!"));
-      }
-      rewinddir(d);
-
-      info->overall();
-
-      entry=readdir(d);
-      while (entry!=NULL) {char *file=entry->d_name;
-
-        n+=1;
-        perc=(((float) n)/((float) N))*100.0;
-        info->overall(perc);
-
-        if (strlen(file)>4 && strcasecmp(&file[strlen(file)-4],".dbx")==0) {
-          {
-            char fldr[PATH_MAX],name[256];
-
-            snprintf(fldr, sizeof(fldr), "%s/%s",QFile::encodeName(choosen).data(),file);
-            snprintf(name, sizeof(name), "%s",file);name[strlen(name)-4]='\0';
-
-            {
-              QString s;
-              s.sprintf("\t%s",fldr);
-              s=i18n("Source:")+s;
-              info->from(s);
-              s.sprintf("\tOE5-%s",name);
-              s=i18n("Destination:")+s;
-              info->to(s);
-            }
-
-            {
-              msg=i18n("  importing folder '%1' to KMail 'OE5-%2'...").arg(file).arg(name);
-              info->log(msg);
-            }
-
-            {
-              OE52MBox m(fldr,name,this,info);
-              m.convert();
-            }
-          }
-        }
-        entry=readdir(d);
-      }
-      closedir(d);
-
-      if (N!=0) {
-        info->log(i18n("done."));
-        info->current();info->current(100.0);
-        info->overall();info->overall(100.0);
-        info->alert(CAP,i18n("All '.dbx' folders are imported"));
-      }
-    }
+    info->alert(CAP, i18n("Can't open directory %1").arg(chosen));
+    return;
   }
+
+  QStringList folders = dir.entryList("*.[dD][bB][xX]", QDir::Files);
+  if (folders.isEmpty())
+  {
+    info->alert(CAP,i18n("No '.dbx' folders found!"));
+    return;
+  }
+
+  info->overall(0.0f);
+  int n=0;
+  for (QStringList::ConstIterator it = folders.begin(); it != folders.end(); ++it)
+  {
+    info->overall(float(++n) / folders.count() * 100.0f);
+
+    QString path = chosen + '/' + *it,
+            name = (*it).left((*it).length() - 4);
+    info->from(i18n("Source: ") + path);
+    info->to(i18n("Destination: ") + "OE5-" + name);
+    info->log(i18n("  importing folder '%1' to KMail 'OE5-%2'...").arg(*it).arg(name));
+    OE52MBox(path,name,this,info).convert();
+  }
+
+  info->log(i18n("done."));
+  info->current();info->current(100.0);
+  info->overall();info->overall(100.0);
+  info->alert(CAP,i18n("All '.dbx' folders are imported"));
 
   kmailStop(info);
 }

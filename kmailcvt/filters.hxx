@@ -15,15 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef __FILTERS__HXX
-#define __FILTERS__HXX
-
-#ifndef HAVE_SGI_STL
-  #define HAVE_SGI_STL
-#endif
-
-
-#include <stdio.h>
+#ifndef FILTERS_HXX
+#define FILTERS_HXX
 
 #include <qcombobox.h>
 #include <qprogressbar.h>
@@ -46,8 +39,8 @@ class FilterInfo
     void  from(QString from);
     void  to(QString to);
     void  current(QString current);
-    void  current(float percent=-0.3);
-    void  overall(float percent=-0.3);
+    void  current(float percent=0.0f);
+    void  overall(float percent=0.0f);
     void  log(QString toLog);
     void  clear(void);
     void  alert(QString c,QString m);
@@ -60,7 +53,7 @@ class KMail
     KMail();
    ~KMail();
    
-    bool kmailStart(FilterInfo *info) { return true; }
+    bool kmailStart(FilterInfo *) { return true; }
     bool kmailMessage(FilterInfo *info,QString folder,QString msgFile);
     void kmailStop(FilterInfo *info);
   private:
