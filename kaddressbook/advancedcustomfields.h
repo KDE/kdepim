@@ -51,6 +51,7 @@ class AdvancedCustomFields : public KAB::ContactEditorWidget
     void initGUI( const QString& );
 
     QMap<QString, QWidget*> mWidgets;
+    QValueList<QWidget*> mDisabledWidgets;
     QString mTitle;
     QString mIdentifier;
 };

@@ -172,7 +172,8 @@ void AdvancedCustomFields::setReadOnly( bool readOnly )
 {
   QMap<QString, QWidget*>::Iterator it;
   for ( it = mWidgets.begin(); it != mWidgets.end(); ++it )
-    it.data()->setEnabled( !readOnly );
+    if ( mDisabledWidgets.find( it.data() ) == mDisabledWidgets.end() )
+      it.data()->setEnabled( !readOnly );
 }
 
 void AdvancedCustomFields::initGUI( const QString &uiFile )
@@ -209,8 +210,10 @@ void AdvancedCustomFields::initGUI( const QString &uiFile )
       QString name = it.current()->name();
       if ( name.startsWith( "X_" ) ) {
         name = name.mid( 2 );
+
+        QWidget *widget = static_cast<QWidget*>( it.current() );
         if ( !name.isEmpty() )
-          mWidgets.insert( name, static_cast<QWidget*>( it.current() ) );
+          mWidgets.insert( name, widget );
 
         if ( it.current()->isA( "QLineEdit" ) ||
              it.current()->isA( "KLineEdit" ) )
@@ -234,6 +237,9 @@ void AdvancedCustomFields::initGUI( const QString &uiFile )
         else if ( it.current()->isA( "KDatePicker" ) )
           connect( it.current(), SIGNAL( dateChanged( QDate ) ),
                    this, SLOT( setModified() ) );
+
+        if ( !widget->isEnabled() )
+          mDisabledWidgets.append( widget );
       }
     }
 
