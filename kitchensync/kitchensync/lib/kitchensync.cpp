@@ -175,29 +175,6 @@ void KitchenSync::addPart( const ActionPartService &service )
       return;
     }
 
-// We don't need this anymore. The Engine class takes care of the signals/slots.
-#if 0
-    /* the usual signal and slots */
-    connect( part, SIGNAL(sig_progress(ActionPart*, int ) ),
-             SLOT(slotPartProg(ActionPart*, int ) ) );
-    connect( part, SIGNAL(sig_progress(ActionPart*, const Progress& ) ),
-             SLOT(slotPartProg(ActionPart*, const Progress& ) ) );
-    connect( part, SIGNAL(sig_error(ActionPart*, const Error& ) ),
-             SLOT(slotPartErr(ActionPart*, const Error& ) ) );
-    connect( part, SIGNAL(sig_syncStatus(ActionPart*, int) ),
-             SLOT(slotPartSyncStatus( ActionPart*, int ) ) );
-
-    KonnectorManager *m = KonnectorManager::self();
-    connect( m, SIGNAL( synceesRead( Konnector * ) ),
-             part, SLOT( slotSynceesRead( Konnector * ) ) );
-    connect( m, SIGNAL( synceeReadError( Konnector * ) ),
-             part, SLOT( slotSynceeReadError( Konnector * ) ) );
-    connect( m, SIGNAL( synceesWritten( Konnector * ) ),
-             part, SLOT( slotSynceesWritten( Konnector * ) ) );
-    connect( m, SIGNAL( synceeWriteError( Konnector * ) ),
-             part, SLOT( slotSynceeWriteError( Konnector * ) ) );
-#endif
-
     if ( part->hasGui() )  {
         kdDebug(5210) << "Part has GUI (" << part->name() << ")" << endl;
         int pos = -1;
@@ -248,14 +225,13 @@ void KitchenSync::slotSync()
 
 void KitchenSync::slotActivated( ActionPart *part )
 {
-    emit partChanged( part );
-    m_stack->raiseWidget( mActionWidgetMap[ part ] );
-//    createGUI( part );
+  emit partChanged( part );
+  m_stack->raiseWidget( mActionWidgetMap[ part ] );
 }
 
 KSyncSystemTray* KitchenSync::tray()
 {
-    return m_tray;
+  return m_tray;
 }
 
 /*
@@ -287,45 +263,6 @@ Engine *KitchenSync::engine() const
 {
   return mEngine;
 }
-
-#if 0
-// do we need to change the Konnector first?
-// raise overview and then pipe informations
-// when switching to KSyncee/KSyncEntry we will make
-// it asynchronus
-void KitchenSync::slotSync( Konnector *konnector, SynceeList lis)
-{
-    if ( konnector != currentKonnectorProfile().konnector() ) {
-        emit partError( 0, Error(i18n("A Konnector wanted to sync but it's not the current one") ) );
-        KonnectorManager::self()->write( konnector, lis );
-        return;
-    }
-    if ( m_isSyncing ) {
-        emit partError( 0, Error(i18n("A sync is currently taking place. We will just ignore this request.") ) );
-        return;
-    }
-    m_isSyncing = true;
-    emit startSync();
-    m_outSyncee.clear();
-    m_inSyncee = lis;
-    kdDebug(5210) << "KitchenSync::Start sync" << endl;
-    m_partsIt = new QPtrListIterator<ActionPart>( m_parts );
-
-    ActionPart *part = m_partsIt->current();
-    if ( part ) {
-        kdDebug(5210) << "Syncing first " << endl;
-        emit startSync( part );
-        emit syncProgress( part, 0, 0 );
-        part->sync( m_inSyncee, m_outSyncee );
-    } else {
-        emit partProgress( 0, Progress(i18n("Error could not start syncing with the parts.") ) );
-        delete m_partsIt;
-        m_partsIt = 0;
-        KonnectorManager::self()->write( konnector, lis );
-        m_isSyncing = false;
-    }
-}
-#endif
 
 void KitchenSync::configureProfiles()
 {
@@ -498,27 +435,6 @@ void KitchenSync::slotPartErr( ActionPart *part, const Error &err )
 void KitchenSync::slotPartSyncStatus( ActionPart *par, int err )
 {
     kdDebug(5210) << "SyncStatus: " << par << " " << err << endl;
-#if 0
-    emit doneSync( par );
-    emit syncProgress( par, 2, 0 );
-    // done() from ActionPart now go on to the next ActionPart...
-    ++( *m_partsIt );
-    ActionPart *part = m_partsIt->current();
-    if ( part ) {
-        kdDebug(5210) << "Syncing " << part->name() << endl;
-        emit startSync( part );
-        emit syncProgress( part, 0, 0 );
-        part->sync( m_inSyncee, m_outSyncee );
-    } else { // we're done go write it back
-        emit partProgress( 0, Progress(i18n("Going to write the information back now.") ) );
-        delete m_partsIt;
-        m_partsIt = 0;
-        kdDebug(5210) << "Going to write back " << m_outSyncee.count() << endl;
-        KonnectorManager::self()->write( currentKonnectorProfile().konnector(),
-                                         m_outSyncee );
-        // now we only wait for the done
-    }
-#endif
 }
 
 QWidget *KitchenSync::widgetStack()
@@ -529,21 +445,6 @@ QWidget *KitchenSync::widgetStack()
 void KitchenSync::slotKonnectorBar( bool b )
 {
     kdDebug(5210) << "slotKonnectorBar " << b << endl;
-
-#if 0
-    Konnector *k = currentKonnectorProfile().konnector();
-    if ( b ) {
-        if ( k->isConnected() ) {
-            kdDebug(5210) << "Going to connect " << endl;
-            k->connectDevice();
-        }
-    } else {
-        kdDebug(5210) << "disconnecting " << endl;
-        k->disconnectDevice();
-        m_konBar->setState( b );
-        m_tray->setState( b );
-    }
-#endif
 }
 
 void KitchenSync::slotPreferences()

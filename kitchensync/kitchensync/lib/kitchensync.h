@@ -131,7 +131,6 @@ class KitchenSync : public Core
 
     /* slots for the KonnectorManager */
   private slots:
-// obsolete:    void slotSync( Konnector *, SynceeList );
     void slotKonnectorProg( Konnector *, const Progress & );
     void slotKonnectorErr( Konnector *, const Error & );
 
