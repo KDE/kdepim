@@ -39,7 +39,7 @@ class IncSearchWidget : public QWidget
     IncSearchWidget( QWidget *parent, const char *name = 0 );
     ~IncSearchWidget();
 
-    KABC::Field *currentField() const;
+    KABC::Field::List currentFields() const;
 
     void setCurrentItem( int pos );
     int currentItem() const;
@@ -52,11 +52,8 @@ class IncSearchWidget : public QWidget
      */
     void doSearch( const QString& text );
 
-    /**
-      This signal is emitted whenever the 'Reset' button is
-      clicked.
-     */
-    void doReset();
+  public slots:
+    void setViewFields( const KABC::Field::List& );
 
   private slots:
     void announceDoSearch();
@@ -67,6 +64,7 @@ class IncSearchWidget : public QWidget
     QComboBox* mFieldCombo;
     KLineEdit* mSearchText;
     KABC::Field::List mFieldList;
+    KABC::Field::List mViewFields;
 };
 
 #endif

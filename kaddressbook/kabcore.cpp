@@ -137,18 +137,18 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
            SLOT( setModified() ) );
   connect( mViewManager, SIGNAL( urlDropped( const KURL& ) ),
            mXXPortManager, SLOT( importVCard( const KURL& ) ) );
+  connect( mViewManager, SIGNAL( viewFieldsChanged() ),
+           SLOT( updateIncSearchWidget() ) );
   connect( mExtensionManager, SIGNAL( modified( const KABC::Addressee::List& ) ),
            this, SLOT( extensionModified( const KABC::Addressee::List& ) ) );
 
   connect( mXXPortManager, SIGNAL( modified() ),
            SLOT( setModified() ) );
 
-  connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QStringList& ) ),
-           SLOT( incrementalJumpButtonSearch( const QStringList& ) ) );
+  connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QString& ) ),
+           SLOT( incrementalJumpButtonSearch( const QString& ) ) );
   connect( mViewManager, SIGNAL( sortFieldChanged() ),
            mJumpButtonBar, SLOT( updateButtons() ) );
-  connect( mIncSearchWidget, SIGNAL( doReset() ),
-           mJumpButtonBar, SLOT( reset() ) );
 
   connect( mDetails, SIGNAL( highlightedMessage( const QString& ) ),
            SLOT( detailsHighlighted( const QString& ) ) );
@@ -189,6 +189,7 @@ void KABCore::restoreSettings()
   mViewManager->restoreSettings();
   mExtensionManager->restoreSettings();
 
+  updateIncSearchWidget();
   mIncSearchWidget->setCurrentItem( KABPrefs::instance()->currentIncSearchField() );
 
   QValueList<int> splitterSize = KABPrefs::instance()->extensionsSplitter();
@@ -533,13 +534,25 @@ void KABCore::setWhoAmI()
 void KABCore::incrementalTextSearch( const QString& text )
 {
   setContactSelected( QString::null );
-  mSearchManager->search( text, mIncSearchWidget->currentField() );
+  mSearchManager->search( text, mIncSearchWidget->currentFields() );
 }
 
-void KABCore::incrementalJumpButtonSearch( const QStringList& characters )
+void KABCore::incrementalJumpButtonSearch( const QString& character )
 {
-  setContactSelected( QString::null );
-  mSearchManager->setJumpButtonFilter( characters, mViewManager->currentSortField() );
+  mViewManager->setSelected( QString::null, false );
+
+  KABC::AddresseeList list = mSearchManager->contacts();
+  KABC::Field *field = mViewManager->currentSortField();
+  if ( field ) {
+    list.sortByField( field );
+    KABC::AddresseeList::Iterator it;
+    for ( it = list.begin(); it != list.end(); ++it ) {
+      if ( field->value( *it ).startsWith( character, false ) ) {
+        mViewManager->setSelected( (*it).uid(), true );
+        return;
+      }
+    }
+  }
 }
 
 void KABCore::setModified()
@@ -678,8 +691,9 @@ void KABCore::editContact( const QString &uid )
     if ( !dialog ) {
 
       if ( !addr.resource()->readOnly() )
-        if ( !KABLock::self( mAddressBook )->lock( addr.resource() ) )
+        if ( !KABLock::self( mAddressBook )->lock( addr.resource() ) ) {
           return;
+        }
 
       dialog = createAddresseeEditorDialog( mWidget );
 
@@ -888,7 +902,6 @@ void KABCore::showContactsAddress( const QString &addrUid )
 void KABCore::configurationChanged()
 {
   mExtensionManager->reconfigure();
-  mSearchManager->reconfigure();
   mViewManager->refreshView();
 }
 
@@ -896,6 +909,7 @@ void KABCore::addressBookChanged()
 {
   mJumpButtonBar->updateButtons();
   mSearchManager->reload();
+  mViewManager->setSelected( QString::null, false );
 }
 
 AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent,
@@ -917,11 +931,11 @@ void KABCore::slotEditorDestroyed( const QString &uid )
 
   KABC::Addressee addr = mAddressBook->findByUid( uid );
 
-  QApplication::setOverrideCursor( Qt::waitCursor );
-
-  KABLock::self( mAddressBook )->unlock( addr.resource() );
-
-  QApplication::restoreOverrideCursor();
+  if ( !addr.resource()->readOnly() ) {
+    QApplication::setOverrideCursor( Qt::waitCursor );
+    KABLock::self( mAddressBook )->unlock( addr.resource() );
+    QApplication::restoreOverrideCursor();
+  }
 }
 
 void KABCore::initGUI()
@@ -1112,6 +1126,11 @@ void KABCore::updateActionMenu()
     mActionRedo->setText( i18n( "Redo %1" ).arg( redo->top()->name() ) );
 
   mActionRedo->setEnabled( !redo->isEmpty() );
+}
+
+void KABCore::updateIncSearchWidget()
+{
+  mIncSearchWidget->setViewFields( mViewManager->viewFields() );
 }
 
 KABC::Addressee KABCore::mergeContacts( const KABC::Addressee::List &list )

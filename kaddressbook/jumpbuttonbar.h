@@ -47,22 +47,21 @@ class Field;
 class JumpButtonBar : public QWidget
 {
   Q_OBJECT
-  
+
   public:
     JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name = 0 );
     ~JumpButtonBar();
-    
+
     virtual QSizePolicy sizePolicy() const;
 
   public slots:
     void updateButtons();
-    void reset();
 
   signals:
     /**
       Emitted whenever a letter is selected by the user.
      */
-    void jumpToLetter( const QStringList &characters );
+    void jumpToLetter( const QString &character );
 
   protected slots:
     void letterClicked();
@@ -77,7 +76,6 @@ class JumpButtonBar : public QWidget
 
     QButtonGroup *mGroupBox;
     QPtrList<QPushButton> mButtons;
-    QPushButton *mAllButton;
 };
 
 #endif

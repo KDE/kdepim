@@ -43,31 +43,22 @@ class JumpButton : public QPushButton
 {
   public:
     JumpButton( const QString &firstChar, const QString &lastChar,
-                const QString &charRange, QWidget *parent );
-    JumpButton( const QString &text, QWidget *parent );
+                QWidget *parent );
 
-    QString charRange() const { return mCharRange; }
+    QString firstChar() const { return mChar; }
 
   private:
-    QString mCharRange;
+    QString mChar;
 };
 
 JumpButton::JumpButton( const QString &firstChar, const QString &lastChar,
-                        const QString &charRange, QWidget *parent )
-  : QPushButton( "", parent ), mCharRange( charRange )
+                        QWidget *parent )
+  : QPushButton( "", parent ), mChar( firstChar )
 {
   if ( !lastChar.isEmpty() )
     setText( QString( "%1 - %2" ).arg( firstChar.upper() ).arg( lastChar.upper() ) );
   else
     setText( firstChar.upper() );
-
-  setToggleType( QButton::Toggle );
-}
-
-JumpButton::JumpButton( const QString &text, QWidget *parent )
-  : QPushButton( text, parent ), mCharRange( "" )
-{
-  setToggleType( QButton::Toggle );
 }
 
 JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name )
@@ -84,7 +75,6 @@ JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name
   mGroupBox->layout()->setSpacing( 0 );
   mGroupBox->layout()->setMargin( 0 );
   mGroupBox->setFrameStyle( QFrame::NoFrame );
-  mGroupBox->setExclusive( true );
 }
 
 JumpButtonBar::~JumpButtonBar()
@@ -117,12 +107,7 @@ void JumpButtonBar::updateButtons()
                      expandedTo( QApplication::globalStrut() );
   delete btn;
 
-  mAllButton = new JumpButton( i18n( "All" ), mGroupBox );
-  connect( mAllButton, SIGNAL( clicked() ), this, SLOT( reset() ) );
-  mButtons.append( mAllButton );
-  mAllButton->show();
-
-  int buttonHeight = buttonSize.height() + 12;
+  int buttonHeight = buttonSize.height() + 8;
   uint possibleButtons = (height() / buttonHeight) - 1;
 
   QString character;
@@ -150,7 +135,7 @@ void JumpButtonBar::updateButtons()
     // at first the easy case: all buttons fits in window
     for ( uint i = 0; i < characters.count(); ++i ) {
       JumpButton *button = new JumpButton( characters[ i ], QString::null,
-                                           characters[ i ], mGroupBox );
+                                           mGroupBox );
       connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
       mButtons.append( button );
       button->show();
@@ -169,8 +154,7 @@ void JumpButtonBar::updateButtons()
         continue;
       if ( characters.count() - current <= possibleButtons - i ) {
         JumpButton *button = new JumpButton( characters[ current ],
-                                             QString::null,
-                                             characters[ current ], mGroupBox );
+                                             QString::null, mGroupBox );
         connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
         mButtons.append( button );
         button->show();
@@ -182,7 +166,7 @@ void JumpButtonBar::updateButtons()
         for ( int j = current; j < pos + 1; ++j )
           range.append( characters[ j ] );
         JumpButton *button = new JumpButton( characters[ current ],
-                                             characters[ pos ], range, mGroupBox );
+                                             characters[ pos ], mGroupBox );
         connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
         mButtons.append( button );
         button->show();
@@ -197,25 +181,12 @@ void JumpButtonBar::updateButtons()
     mGroupBox->setButton( 0 );
 }
 
-void JumpButtonBar::reset()
-{
-  mGroupBox->setButton( 0 );
-
-  QStringList list;
-  list.append( "" );
-  emit jumpToLetter( list );
-}
-
 void JumpButtonBar::letterClicked()
 {
   JumpButton *button = (JumpButton*)sender();
-  QString characters = button->charRange();
+  QString character = button->firstChar();
 
-  QStringList charList;
-  for ( uint i = 0; i < characters.length(); ++i )
-    charList.append( QString( characters[ i ] ) );
-
-  emit jumpToLetter( charList );
+  emit jumpToLetter( character );
 }
 
 void JumpButtonBar::resizeEvent( QResizeEvent* )

@@ -67,6 +67,7 @@ class ViewManager : public QWidget
     void setFilterSelectionWidget( FilterSelectionWidget *wdg );
 
     KABC::Field *currentSortField() const;
+    KABC::Field::List viewFields() const;
 
   public slots:
     void setSelected( const QString &uid = QString::null, bool selected = true );
@@ -116,6 +117,11 @@ class ViewManager : public QWidget
       Emitted whenever the sort field of a view has changed.
      */
     void sortFieldChanged();
+
+    /**
+      Emitted whenever the view fields changed.
+     */
+    void viewFieldsChanged();
 
   private slots:
     void setActiveView( const QString &name );

@@ -74,7 +74,6 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
            SLOT( announceDoSearch() ) );
   connect( mFieldCombo, SIGNAL( activated( const QString& ) ),
            SLOT( announceDoSearch() ) );
-  connect( button, SIGNAL( clicked() ), SIGNAL( doReset() ) );
   connect( button, SIGNAL( clicked() ),
            mSearchText, SLOT( clear() ) );
   connect( button, SIGNAL( clicked() ),
@@ -99,6 +98,7 @@ void IncSearchWidget::initFields()
   mFieldList = KABC::Field::allFields();
 
   mFieldCombo->clear();
+  mFieldCombo->insertItem( i18n( "Visible Fields" ) );
   mFieldCombo->insertItem( i18n( "All Fields" ) );
 
   KABC::Field::List::ConstIterator it;
@@ -108,12 +108,16 @@ void IncSearchWidget::initFields()
   announceDoSearch();
 }
 
-KABC::Field *IncSearchWidget::currentField() const
+KABC::Field::List IncSearchWidget::currentFields() const
 {
-  if ( mFieldCombo->currentItem() == -1 || mFieldCombo->currentItem() == 0 )
-    return 0;  // for error or 'use all fields'
-  else
-    return mFieldList[ mFieldCombo->currentItem() - 1 ];
+  KABC::Field::List fieldList;
+
+  if ( mFieldCombo->currentItem() == 0 )
+    fieldList = mViewFields;
+  else if ( mFieldCombo->currentItem() > 1 )
+    fieldList.append( mFieldList[ mFieldCombo->currentItem() - 2 ] );
+
+  return fieldList;
 }
 
 void IncSearchWidget::setCurrentItem( int pos )
@@ -124,6 +128,11 @@ void IncSearchWidget::setCurrentItem( int pos )
 int IncSearchWidget::currentItem() const
 {
   return mFieldCombo->currentItem();
+}
+
+void IncSearchWidget::setViewFields( const KABC::Field::List &fields )
+{
+  mViewFields = fields;
 }
 
 #include "incsearchwidget.moc"

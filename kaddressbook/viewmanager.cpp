@@ -153,6 +153,16 @@ KABC::Field *ViewManager::currentSortField() const
     return 0;
 }
 
+KABC::Field::List ViewManager::viewFields() const
+{
+/*
+  if ( mActiveView )
+    return mActiveView->fields();
+  else
+*/
+    return KABC::Field::List();
+}
+
 void ViewManager::setSelected( const QString &uid, bool selected )
 {
   if ( mActiveView )
@@ -282,6 +292,7 @@ void ViewManager::editView()
       }
 
       mActiveView->refresh();
+      emit viewFieldsChanged();
     }
   }
 }

@@ -54,12 +54,7 @@ class SearchManager : public QObject
       @param field The field which shall be compared with the search string.
       @param type The type for the matching.
      */
-    void search( const QString &pattern, KABC::Field *field, Type type = Contains );
-
-
-    void setJumpButtonFilter( const QStringList &patterns, KABC::Field *field );
-    
-    void reconfigure();
+    void search( const QString &pattern, const KABC::Field::List &fields, Type type = Contains );
 
     /**
       Returns the contacts which matched the last search query.
@@ -76,19 +71,12 @@ class SearchManager : public QObject
     void reload();
 
   private:
-    void doSearch( const QString&, KABC::Field*, Type, const KABC::Addressee::List& );
-
     KABC::Addressee::List mContacts;
     KABC::AddressBook *mAddressBook;
 
-    QString mLastPattern;
-    KABC::Field *mLastField;
-    Type mLastType;
-
-    QStringList mJumpButtonPatterns;
-    KABC::Field *mJumpButtonField;
-    
-    bool mLimitContactDisplay;
+    QString mPattern;
+    KABC::Field::List mFields;
+    Type mType;
 };
 
 }

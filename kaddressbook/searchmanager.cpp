@@ -30,28 +30,23 @@ using namespace KAB;
 
 SearchManager::SearchManager( KABC::AddressBook *ab,
                               QObject *parent, const char *name )
-  : QObject( parent, name ),
-    mAddressBook( ab ), mLastField( 0 ), mLastType( Contains ),
-    mJumpButtonField( 0 )
+  : QObject( parent, name ), mAddressBook( ab )
 {
-  mJumpButtonPatterns.append( "" );
-
-  reconfigure();
 }
 
-void SearchManager::search( const QString &pattern, KABC::Field *field, Type type )
+void SearchManager::search( const QString &pattern, const KABC::Field::List &fields, Type type )
 {
-  mLastPattern = pattern;
-  mLastField = field;
-  mLastType = type;
+  mPattern = pattern;
+  mFields = fields;
+  mType = type;
 
   KABC::Addressee::List allContacts;
   mContacts.clear();
 
 #if KDE_VERSION >= 319
   KABC::AddresseeList list( mAddressBook->allAddressees() );
-  if ( field )
-    list.sortByField( field );
+  if ( !fields.isEmpty() )
+    list.sortByField( fields.first() );
 
   allContacts = list;
 #else
@@ -60,69 +55,37 @@ void SearchManager::search( const QString &pattern, KABC::Field *field, Type typ
     allContacts.append( *abIt );
 #endif
 
-  QStringList::ConstIterator it;
-  for ( it = mJumpButtonPatterns.begin(); it != mJumpButtonPatterns.end(); ++it )
-    doSearch( *it, mJumpButtonField, StartsWith, allContacts );
+  if ( mPattern.isEmpty() ) { // no pattern, return all
+    mContacts = allContacts;
 
-  allContacts = mContacts;
-  mContacts.clear();
-
-  doSearch( mLastPattern, mLastField, mLastType, allContacts );
-  emit contactsUpdated();
-}
-
-void SearchManager::setJumpButtonFilter( const QStringList &patterns, KABC::Field *field )
-{
-  mJumpButtonPatterns = patterns;
-  mJumpButtonField = field;
-
-  search( mLastPattern, mLastField, mLastType );
-}
-
-void SearchManager::reconfigure()
-{
-  KConfig config( "kabcrc", false, false );
-  config.setGroup( "General" );
-
-  mLimitContactDisplay = config.readBoolEntry( "LimitContactDisplay", true );
-
-  reload();
-}
-
-void SearchManager::doSearch( const QString &pattern, KABC::Field *field, Type type,
-                              const KABC::Addressee::List &list )
-{
-  if ( pattern.isEmpty() ) {
-    mContacts = list;
-// Don't delete the contacts. There are addressbooks with more than 100 entres
-// and there doesn't seem to be a way to get the deleted contacts back with
-// another search
-#if 0
-    if ( mLimitContactDisplay && mContacts.count() > 100 ) { // show only 100 contacts
-      KABC::Addressee::List::Iterator it = mContacts.at( 100 );
-      while ( it != mContacts.end() )
-        it = mContacts.remove( it );
-    }
-#endif
+    emit contactsUpdated();
 
     return;
   }
 
-  if ( field ) {
+  if ( !mFields.isEmpty() ) {
+    KABC::Field::List::ConstIterator fieldIt;
     KABC::Addressee::List::ConstIterator it;
-    for ( it = list.begin(); it != list.end(); ++it ) {
-      if ( type == StartsWith && field->value( *it ).startsWith( pattern, false ) )
-        mContacts.append( *it );
-      else if ( type == EndsWith && field->value( *it ).endsWith( pattern, false ) )
-        mContacts.append( *it );
-      else if ( type == Contains && field->value( *it ).find( pattern, 0, false ) != -1 )
-        mContacts.append( *it );
-      else if ( type == Equals && field->value( *it ).localeAwareCompare( pattern ) == 0 )
-        mContacts.append( *it );
+    for ( it = allContacts.begin(); it != allContacts.end(); ++it ) {
+      for ( fieldIt = mFields.begin(); fieldIt != mFields.end(); ++fieldIt ) {
+        if ( type == StartsWith && (*fieldIt)->value( *it ).startsWith( pattern, false ) ) {
+          mContacts.append( *it );
+          break;
+        } else if ( type == EndsWith && (*fieldIt)->value( *it ).endsWith( pattern, false ) ) {
+          mContacts.append( *it );
+          break;
+        } else if ( type == Contains && (*fieldIt)->value( *it ).find( pattern, 0, false ) != -1 ) {
+          mContacts.append( *it );
+          break;
+        } else if ( type == Equals && (*fieldIt)->value( *it ).localeAwareCompare( pattern ) == 0 ) {
+          mContacts.append( *it );
+          break;
+        }
+      }
     }
   } else {
     KABC::Addressee::List::ConstIterator it;
-    for ( it = list.begin(); it != list.end(); ++it ) {
+    for ( it = allContacts.begin(); it != allContacts.end(); ++it ) {
       KABC::Field::List fieldList = KABC::Field::allFields();
       KABC::Field::List::ConstIterator fieldIt;
       for ( fieldIt = fieldList.begin(); fieldIt != fieldList.end(); ++fieldIt ) {
@@ -142,6 +105,8 @@ void SearchManager::doSearch( const QString &pattern, KABC::Field *field, Type t
       }
     }
   }
+
+  emit contactsUpdated();
 }
 
 KABC::Addressee::List SearchManager::contacts() const
@@ -151,7 +116,7 @@ KABC::Addressee::List SearchManager::contacts() const
 
 void SearchManager::reload()
 {
-  search( mLastPattern, mLastField, mLastType );
+  search( mPattern, mFields, mType );
 }
 
 #include "searchmanager.moc"

@@ -225,6 +225,11 @@ class KAddressBookView : public QWidget
      */
     void sortFieldChanged();
 
+    /**
+      Emitted whenever the view fields changed.
+     */
+    void viewFieldsChanged();
+
   protected:
     /**
       Returns a list of the addressees that should be displayed. This method
