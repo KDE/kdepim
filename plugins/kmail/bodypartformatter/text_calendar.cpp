@@ -44,6 +44,7 @@
 
 #include <kmail/callback.h>
 #include <kmail/kmmessage.h>
+#include <kmail/kmcommands.h>
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -256,7 +257,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         return handleDecline( iCal, c );
       if ( path == "reply" || path == "cancel" )
         // These should just be saved with their type as the dir
-        return saveFile( "Reciever Not Searched", iCal, path );
+        if ( saveFile( "Receiver Not Searched", iCal, path ) )
+          ( new KMDeleteMsgCommand( c.getMsg()->parent(), c.getMsg() ) )->start();
 
       return false;
     }
