@@ -47,6 +47,7 @@ using namespace Kolab;
 ResourceKolabBase::ResourceKolabBase( const QCString& objId )
   : mSilent( false )
 {
+  KGlobal::locale()->insertCatalogue( "kres_kolab" );
   mConnection = new KMailConnection( this, objId );
 }
 
