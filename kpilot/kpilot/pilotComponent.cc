@@ -198,18 +198,18 @@ int PilotComponent::findSelectedCategory(QComboBox * fCatList,
 		else
 		{
 #ifdef DEBUG			// necessary for Tru64 unix
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": Selected category didn't match "
 				"any name!\n";
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": Number of listed categories "
 				<< fCatList->count() << endl;
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": Selected category ("
 				<< selectedCategory
 				<< ") expands to "
 				<< qstringExpansion(selectedCategory) << endl;
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": Categories expand to " << endl;
 #endif
 			currentCatID = 0;
@@ -217,7 +217,7 @@ int PilotComponent::findSelectedCategory(QComboBox * fCatList,
 				(currentCatID < MAX_CATEGORIES))
 			{
 #ifdef DEBUG
-				kdWarning() << __FUNCTION__
+				kdWarning() << k_funcinfo
 					<< ": Category ["
 					<< currentCatID
 					<< "] = "
@@ -298,6 +298,9 @@ void PilotComponent::slotShowComponent()
 }
 
 // $Log$
+// Revision 1.22  2001/09/30 17:19:02  adridg
+// Updated preHotSync
+//
 // Revision 1.21  2001/09/29 16:26:18  adridg
 // The big layout change
 //

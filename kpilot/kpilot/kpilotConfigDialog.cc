@@ -185,9 +185,12 @@ void KPilotConfigDialog::setAddressDisplay(int i)
 		fConfigWidget->fPilotSpeed->setEnabled(false);
 		break;
 	default:
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Unknown port type " << i << endl;
 	}
 }
 
-// $Log:$
+// $Log$
+// Revision 1.3  2001/09/29 16:26:18  adridg
+// The big layout change
+//

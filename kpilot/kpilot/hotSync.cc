@@ -192,7 +192,7 @@ SyncAction(p, 0, "backupAction")
 
 	if (!createLocalDatabase(&info))
 	{
-		kdError() << __FUNCTION__
+		kdError() << k_funcinfo
 			<< ": Couldn't create local database for "
 			<< info.name << endl;
 		addSyncLogEntry(i18n("Backup of %1 failed.").arg(info.name));
@@ -231,7 +231,7 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 		fi = QFileInfo(fDatabaseDir);
 		if (!(fi.exists() && fi.isDir()))
 		{
-			kdError() << __FUNCTION__
+			kdError() << k_funcinfo
 				<< ": Database backup directory "
 				<< "doesn't exist."
 				<< endl;
@@ -242,7 +242,7 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 
 		if (!databaseDir.mkdir(fullBackupDir, true))
 		{
-			kdError() << __FUNCTION__
+			kdError() << k_funcinfo
 				<< ": Can't create backup directory." << endl;
 			return false;
 		}
@@ -285,14 +285,14 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 
 	if (f == 0)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Failed, unable to create file" << endl;
 		return false;
 	}
 
 	if (pi_file_retrieve(f, pilotSocket(), 0) < 0)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Failed, unable to back up database" << endl;
 
 		pi_file_close(f);
@@ -426,7 +426,7 @@ FileInstallAction::~FileInstallAction()
 
 	if (!f)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Unable to open file." << endl;
 
 		emit logError(i18n("Unable to open file &quot;%1&quot;!").
@@ -436,7 +436,7 @@ FileInstallAction::~FileInstallAction()
 
 	if (pi_file_install(f, pilotSocket(), 0) < 0)
 	{
-		kdWarning() << __FUNCTION__ << ": failed to install." << endl;
+		kdWarning() << k_funcinfo << ": failed to install." << endl;
 
 
 		emit logError(i18n("Cannot install file &quot;%1&quot;!").
@@ -551,7 +551,7 @@ void KPilotDeviceLink::slotConduitDone(KProcess * p)
 
 	if (!p || !fConduitProcess)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Called without a running conduit and process!"
 			<< endl;
 		return;
@@ -559,7 +559,7 @@ void KPilotDeviceLink::slotConduitDone(KProcess * p)
 
 	if (p != fConduitProcess)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Process with id "
 			<< p->pid()
 			<< " exited while waiting on "
@@ -576,7 +576,7 @@ void KPilotDeviceLink::slotConduitDone(KProcess * p)
 
 	if (fConduitRunStatus != Done)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": It seems that a conduit has crashed." << endl;
 
 		// Force a resume even though the conduit never ran.
@@ -623,7 +623,7 @@ void KPilotDeviceLink::slotConduitRead(KSocket * cSocket)
 	//
 	if (!fCurrentDB)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": There is no open database." << endl;
 
 		writeResponse(cSocket, CStatusMessages::NO_SUCH_RECORD);
@@ -721,7 +721,7 @@ void KPilotDeviceLink::slotConduitRead(KSocket * cSocket)
 	}
 		break;
 	default:
-		kdWarning() << __FUNCTION__ << ": Unknown status message "
+		kdWarning() << k_funcinfo << ": Unknown status message "
 			<< message << endl;
 	}
 }
@@ -732,13 +732,13 @@ void KPilotDeviceLink::slotConduitClosed(KSocket * theSocket)
 
 	if (fConduitRunStatus != Connected)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Strange -- unconnected conduit closed" << endl;
 	}
 
 	if (theSocket != fCurrentConduitSocket)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Strange -- different socket closed" << endl;
 	}
 
@@ -758,7 +758,7 @@ void KPilotDeviceLink::resumeDB()
 	FUNCTIONSETUP;
 	if (!fCurrentDB)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": resumeDB called after the end of a sync."
 			<< endl;
 		return;
@@ -914,7 +914,7 @@ bool KPilotDeviceLink::doFullRestore()
 
 		if (!dir.exists())
 		{
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": Save directory "
 				<< dirname << " doesn't exist." << endl;
 			return false;
@@ -941,7 +941,7 @@ bool KPilotDeviceLink::doFullRestore()
 		f = pi_file_open(db[dbcount]->name);
 		if (f == 0)
 		{
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": Unable to open " << *it << endl;
 			continue;
 		}
@@ -995,7 +995,7 @@ bool KPilotDeviceLink::doFullRestore()
 
 		if (dlp_OpenConduit(getCurrentPilotSocket()) < 0)
 		{
-			kdWarning() << __FUNCTION__ << ": Exiting on cancel. "
+			kdWarning() << k_funcinfo << ": Exiting on cancel. "
 				"All data not restored." << endl;
 			return false;
 		}
@@ -1064,7 +1064,7 @@ void KPilotDeviceLink::doFullBackup()
 			// value of OpenConduit??
 			//
 			//
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": dlp_OpenConduit failed -- means cancel?"
 				<< endl;
 
@@ -1098,7 +1098,7 @@ void KPilotDeviceLink::doFullBackup()
 
 		if (createLocalDatabase(&info) == false)
 		{
-			kdError() << __FUNCTION__
+			kdError() << k_funcinfo
 				<< ": Couldn't create local database for "
 				<< info.name << endl;
 
@@ -1136,7 +1136,7 @@ void KPilotDeviceLink::installFiles(const QString & path)
 
 	if (getConnected() == false)
 	{
-		kdWarning() << __FUNCTION__ << ": No HotSync started!" <<
+		kdWarning() << k_funcinfo << ": No HotSync started!" <<
 			endl;
 		return;
 	}
@@ -1173,7 +1173,7 @@ void KPilotDeviceLink::installFiles(const QString & path)
 
 		if (f == 0)
 		{
-			kdWarning() << __FUNCTION__ <<
+			kdWarning() << k_funcinfo <<
 				": Unable to open file." << endl;
 
 			QString message;
@@ -1188,7 +1188,7 @@ void KPilotDeviceLink::installFiles(const QString & path)
 			if (pi_file_install(f, getCurrentPilotSocket(),
 					0) < 0)
 			{
-				kdWarning() << __FUNCTION__ <<
+				kdWarning() << k_funcinfo <<
 					": failed to install." << endl;
 				KMessageBox::error(0L,
 					i18n("Cannot install file on Pilot"),
@@ -1264,7 +1264,7 @@ void KPilotDeviceLink::doConduitBackup()
 	fCurrentDB->resetDBIndex();
 	if (fConduitProcess->isRunning())
 	{
-		kdWarning() << __FUNCTION__ <<
+		kdWarning() << k_funcinfo <<
 			": Waiting for conduit to die.. " << endl;
 	}
 	// Eek! Busy waiting w/no event loop?
@@ -1426,7 +1426,7 @@ void KPilotDeviceLink::syncNextDB()
 		}
 		else
 		{
-			kdWarning() << __FUNCTION__ << ": Sync "
+			kdWarning() << k_funcinfo << ": Sync "
 				<< info.name << " failed." << endl;
 
 			addSyncLogEntry("FAILED!\n");
@@ -1458,7 +1458,7 @@ void KPilotDeviceLink::syncNextDB()
 	fCurrentDB->resetDBIndex();
 	if (fConduitProcess->isRunning())
 	{
-		kdWarning() << __FUNCTION__ <<
+		kdWarning() << k_funcinfo <<
 			": Waiting for conduit to die.. " << endl;
 	}
 
@@ -1631,6 +1631,9 @@ void CleanupAction::exec()
 
 
 // $Log$
+// Revision 1.8  2001/09/30 17:11:10  adridg
+// fname unknown with DEBUG turned off
+//
 // Revision 1.7  2001/09/29 16:26:18  adridg
 // The big layout change
 //

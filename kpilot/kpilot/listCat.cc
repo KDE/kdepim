@@ -89,7 +89,7 @@ void ListCategorizer::setupWidget()
 	setItemsMovable(false);
 	setDragEnabled(true);
 	setAcceptDrops(true);
-	setDropVisualizer(false);
+	setDropVisualizer(true);
 	setRootIsDecorated(true);
 }
 
@@ -189,6 +189,9 @@ QListViewItem *ListCategorizer::addItem(const QString & category,
 
 
 // $Log$
+// Revision 1.5  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.4  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

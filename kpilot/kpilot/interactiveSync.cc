@@ -134,7 +134,7 @@ void InteractiveAction::tickle()
 	{
 		if (pi_tickle(pilotSocket()))
 		{
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< "Couldn't tickle Pilot!" << endl;
 		}
 	}
@@ -319,8 +319,9 @@ CheckUser::~CheckUser()
 	emit syncDone(this);
 }
 
-class RestoreAction::RestoreActionPrivate {
-      public:
+class RestoreAction::RestoreActionPrivate 
+{
+public:
 	QString fDatabaseDir;
 	QValueList < struct db >fDBList;
 	QTimer fTimer;
@@ -390,7 +391,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible,
 
 	if (!dir.exists())
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Restore directory "
 			<< dirname << " does not exist." << endl;
 		fStatus = Error;
@@ -416,7 +417,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible,
 		f = pi_file_open(dbi.name);
 		if (!f)
 		{
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": Can't open " << dbi.name << endl;
 			continue;
 		}
@@ -462,7 +463,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible,
 	f = pi_file_open(dbi.name);
 	if (!f)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Can't open " << dbi.name << endl;
 		goto nextFile;
 	}
@@ -495,7 +496,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible,
 		<< ": Read " << max << " entries for this database." << endl;
 #endif
 
-      nextFile:
+nextFile:
 	if (f)
 		pi_file_close(f);
 
@@ -542,7 +543,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible,
 
 	if (dlp_OpenConduit(pilotSocket()) < 0)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Restore apparently cancelled." << endl;
 		fStatus = Done;
 		emit syncDone(this);
@@ -557,7 +558,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible,
 		char *>((const char *)QFile::encodeName(dbi.name)));
 	if (!f)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Can't open "
 			<< dbi.name << " for restore." << endl;
 		return;
@@ -565,7 +566,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible,
 
 	if (pi_file_install(f, pilotSocket(), 0) < 0)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Couldn't  restore " << dbi.name << endl;
 	}
 
@@ -605,6 +606,9 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible,
 
 
 // $Log$
+// Revision 1.4  2001/09/29 16:24:30  adridg
+// Layout + Typos
+//
 // Revision 1.3  2001/09/27 17:28:32  adridg
 // Conflict management
 //

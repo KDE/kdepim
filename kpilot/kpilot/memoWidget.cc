@@ -204,7 +204,7 @@ void MemoWidget::initialize()
 		new PilotLocalDatabase(dbPath(), "MemoDB");
 	if (memoDB == NULL || !memoDB->isDBOpen())
 	{
-		kdWarning() << __FUNCTION__ <<
+		kdWarning() << k_funcinfo <<
 			": Can't open local database MemoDB\n";
 
 		populateCategories(fCatList, 0L);
@@ -381,7 +381,7 @@ void MemoWidget::slotDeleteMemo()
 		// sending it to the Pilot?
 		//
 		//
-		kdWarning() << __FUNCTION__ <<
+		kdWarning() << k_funcinfo <<
 			": Refusing to delete new memo.\n";
 
 		KMessageBox::error(this,
@@ -511,7 +511,7 @@ void MemoWidget::slotTextChanged()
 
 	if (fListBox->currentItem() == -1)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": slotTextChanged with no memo selected!" << endl;
 		return;
 	}
@@ -606,6 +606,9 @@ void MemoWidget::slotExportMemo()
 }
 
 // $Log$
+// Revision 1.39  2001/09/30 16:59:22  adridg
+// Cleaned up preHotSync
+//
 // Revision 1.38  2001/09/29 16:26:18  adridg
 // The big layout change
 //

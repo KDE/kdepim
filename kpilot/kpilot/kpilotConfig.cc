@@ -91,7 +91,7 @@ static const char *kpilotconfig_id =
 
 	if (version < ConfigurationVersion)
 	{
-		kdWarning() << __FUNCTION__ <<
+		kdWarning() << k_funcinfo <<
 			": Config file has old version " << version << endl;
 	}
 	else
@@ -221,7 +221,7 @@ KPilotConfigSettings & KPilotConfig::getConfig()
 
 	if (theconfig == 0L)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": No configuration was found." << endl;
 	}
 
@@ -252,7 +252,7 @@ static QFont *thefont = 0L;
 
 	if (!thefont)
 	{
-		kdError() << __FUNCTION__
+		kdError() << k_funcinfo
 			<< ": **\n"
 			<< ": ** No font was created! (Expect crash now)\n"
 			<< ": **" << endl;
@@ -365,6 +365,9 @@ void KPilotConfigSettings::setDatabaseConduit(const QString & database,
 
 
 // $Log$
+// Revision 1.9  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.8  2001/09/23 21:44:56  adridg
 // Myriad small changes
 //

@@ -127,11 +127,18 @@ extern KCmdLineOptions *debug_options;
 // which outputs function and line information on every call.
 //
 //
+#ifdef __GNUC__
 #define FUNCTIONSETUP	static const char *fname=__FUNCTION__; \
 			if (debug_level) { DEBUGFUNC << \
 			fname << debug_spaces+(strlen(fname)) \
 				<< "(" << __FILE__ << ":" << \
 				__LINE__ << ")\n"; }
+#else
+#define FUNCTIONSETUP	static const char *fname=__FILE__ ":" __LINE__; \
+			if (debug_level) { DEBUGFUNC << \
+			fname << debug_spaces+(strlen(fname)) << "\n" ; }
+#endif
+
 
 class KConfig;
 
@@ -188,6 +195,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.35  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.34  2001/09/24 22:23:28  adridg
 // More generalized debugging handling, even on broken platforms
 //

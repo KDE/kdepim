@@ -250,7 +250,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 #endif
 		))
 	{
-		kdError() << __FUNCTION__ << ": Can't start daemon." << endl;
+		kdError() << k_funcinfo << ": Can't start daemon." << endl;
 	}
 }
 
@@ -556,7 +556,7 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 
 	if (!p)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Adding NULL component?" << endl;
 		return;
 	}
@@ -680,7 +680,7 @@ void KPilotInstaller::slotConfigureKPilot()
 
 	if (!options)
 	{
-		kdError() << __FUNCTION__
+		kdError() << k_funcinfo
 			<< ": Can't allocate KPilotOptions object" << endl;
 		return;
 	}
@@ -937,7 +937,7 @@ int main(int argc, char **argv)
 
 	if (c.getVersion() < KPilotConfig::ConfigurationVersion)
 	{
-		kdWarning() << __FUNCTION__ <<
+		kdWarning() << k_funcinfo <<
 			": Is still not configured for use." << endl;
 		return 1;
 	}
@@ -964,6 +964,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.62  2001/09/30 16:58:45  adridg
+// Cleaned up preHotSync interface, removed extra includes, added private-d-ptr.
+//
 // Revision 1.61  2001/09/29 16:26:18  adridg
 // The big layout change
 //

@@ -294,7 +294,7 @@ void CConduitSetup::conduitExecuted(QListViewItem * p)
 		this, SLOT(setupDone(KProcess *)));
 	if (!conduitSetup->start(KProcess::NotifyOnExit))
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Could not start process for conduit setup!"
 			<< endl;
 		warnNoExec(p);
@@ -606,6 +606,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.28  2001/09/30 16:59:54  adridg
+// Implemented actions with buttons
+//
 // Revision 1.27  2001/09/29 16:26:18  adridg
 // The big layout change
 //

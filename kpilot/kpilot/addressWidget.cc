@@ -150,7 +150,7 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 			address = new PilotAddress(fAddressAppInfo, pilotRec);
 			if (address == 0L)
 			{
-				kdWarning() << __FUNCTION__ 
+				kdWarning() << k_funcinfo 
 					<< ": Couldn't allocate record " 
 					<< currentRecord++ 
 					<< endl;
@@ -199,7 +199,7 @@ void AddressWidget::initialize()
 	else
 	{
 		populateCategories(fCatList, 0L);
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Could not open local AddressDB" << endl;
 	}
 
@@ -373,7 +373,7 @@ char *AddressWidget::createTitle(PilotAddress * address, int displayMode)
 
 	if (title == 0L)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Cannot allocate title string." << endl;
 		return 0L;
 	}
@@ -775,6 +775,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.41  2001/09/30 16:59:22  adridg
+// Cleaned up preHotSync
+//
 // Revision 1.40  2001/09/29 16:26:18  adridg
 // The big layout change
 //

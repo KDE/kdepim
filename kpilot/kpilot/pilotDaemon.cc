@@ -135,7 +135,6 @@ static const char *id =
 
 class PilotDaemon::PilotDaemonPrivate 
 {
-	FUNCTIONSETUP;
 private:
 	QStack < SyncAction > SyncActionStack;
 
@@ -257,7 +256,7 @@ void PilotDaemonTray::changeIcon(IconShape i)
 	case Normal:
 		if (icon.isNull())
 		{
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": Regular icon is NULL!" << endl;
 		}
 		setPixmap(icon);
@@ -265,13 +264,13 @@ void PilotDaemonTray::changeIcon(IconShape i)
 	case Busy:
 		if (busyicon.isNull())
 		{
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": Busy icon is NULL!" << endl;
 		}
 		setPixmap(busyicon);
 		break;
 	default:
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Bad icon number " << (int) i << endl;
 	}
 }
@@ -328,7 +327,7 @@ PilotDaemon::PilotDaemon() :
 
 	if (fStatus == ERROR)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Connecting to device failed." << endl;
 		return;
 	}
@@ -537,7 +536,7 @@ bool PilotDaemon::setupPilotLink()
 	fPilotLink = KPilotDeviceLink::init();
 	if (!fPilotLink)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Can't get pilot link." << endl;
 		return false;
 	}
@@ -612,7 +611,7 @@ bool PilotDaemon::setupPilotLink()
 #endif
 		break;
 	default:
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Unknown mode " << mode << endl;
 		return;
 	}
@@ -699,7 +698,7 @@ QString PilotDaemon::syncTypeString(int i) const
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGDAEMON << __FUNCTION__ << ": " << s << endl;
+	DEBUGDAEMON << fname << ": " << s << endl;
 #endif
 
 	getKPilot().daemonStatus(s);
@@ -709,7 +708,7 @@ QString PilotDaemon::syncTypeString(int i) const
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGDAEMON << __FUNCTION__ << ": " << s << " (" << i << "%)" << endl;
+	DEBUGDAEMON << fname << ": " << s << " (" << i << "%)" << endl;
 #endif
 
 	getKPilot().daemonProgress(s, i);
@@ -805,7 +804,7 @@ void PilotDaemon::slotRunKPilot()
 #endif
 		))
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Couldn't start KPilot! " << kpilotError << endl;
 	}
 	else
@@ -859,7 +858,7 @@ int main(int argc, char **argv)
 
 		if (c.getVersion() < KPilotConfig::ConfigurationVersion)
 		{
-			kdError() << __FUNCTION__
+			kdError() << k_funcinfo
 				<< ": Is still not configured for use."
 				<< endl;
 			return 1;
@@ -880,7 +879,7 @@ int main(int argc, char **argv)
 		delete gPilotDaemon;
 
 		gPilotDaemon = 0;
-		kdError() << __FUNCTION__
+		kdError() << k_funcinfo
 			<< ": **\n"
 			": Failed to start up daemon\n"
 			": due to errors constructing it.\n" ": **" << endl;
@@ -898,6 +897,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.49  2001/09/30 16:58:08  adridg
+// Daemon reports name in statusString
+//
 // Revision 1.48  2001/09/29 16:23:31  adridg
 // Layout + icons changed
 //

@@ -211,7 +211,7 @@ bool KPilotDeviceLink::open()
 	{
 		if (fPilotPath.isEmpty())
 		{
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": No point in trying empty device."
 				<< endl;
 
@@ -320,10 +320,10 @@ errInit:
 	// number as well, right?
 	//
 	//
-	kdError() << __FUNCTION__ << ": " << msg << endl;
+	kdError() << k_funcinfo << ": " << msg << endl;
 	if (e)
 	{
-		kdError() << __FUNCTION__
+		kdError() << k_funcinfo
 			<< ": (" << strerror(e) << ")" << endl;
 	}
 
@@ -378,7 +378,7 @@ void KPilotDeviceLink::acceptDevice()
 	if ((fStatus != DeviceOpen) || (fPilotMasterSocket == -1))
 	{
 		fStatus = PilotLinkError;
-		kdError() << __FUNCTION__
+		kdError() << k_funcinfo
 			<< ": Already connected or unable to connect!"
 			<< endl;
 		return;
@@ -459,7 +459,7 @@ bool KPilotDeviceLink::installFile(const QString & f)
 
 	if (!f)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Can't open file " << f << endl;
 		emit logError(i18n
 			("<qt>Can't install the file &quot;%1&quot;.</qt>").
@@ -469,7 +469,7 @@ bool KPilotDeviceLink::installFile(const QString & f)
 
 	if (pi_file_install(pf, fCurrentPilotSocket, 0) < 0)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Can't pi_file_install " << f << endl;
 		emit logError(i18n
 			("<qt>Can't install the file &quot;%1&quot;.</qt>").
@@ -552,6 +552,9 @@ QString KPilotDeviceLink::statusString() const
 
 
 // $Log$
+// Revision 1.59  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.58  2001/09/24 22:20:28  adridg
 // Made exec() pure virtual for SyncActions
 //

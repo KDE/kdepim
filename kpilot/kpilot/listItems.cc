@@ -27,7 +27,7 @@
 */
 
 static const char *listitems_id =
-	"$Id:$";
+	"$Id$";
 
 #include "options.h"
 
@@ -54,7 +54,7 @@ static const char *listitems_id =
 /* static */ void PilotListItem::counts()
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << __FUNCTION__
+	DEBUGKPILOT << fname
 		<< ": created=" << crt << " deletions=" << del << endl;
 }
 #endif
@@ -89,6 +89,9 @@ PilotListItem::~PilotListItem()
 
 
 // $Log$
+// Revision 1.5  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.4  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //

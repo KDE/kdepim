@@ -104,7 +104,7 @@ int PilotLocalDatabase::readAppBlock(unsigned char *buffer, int)
 
 	if (!isDBOpen())
 	{
-		kdError() << __FUNCTION__ << ": DB not open!" << endl;
+		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return -1;
 	}
 
@@ -118,7 +118,7 @@ int PilotLocalDatabase::writeAppBlock(unsigned char *buffer, int len)
 
 	if (isDBOpen() == false)
 	{
-		kdError() << __FUNCTION__ << ": DB not open!" << endl;
+		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return -1;
 	}
 	delete[]fAppInfo;
@@ -161,7 +161,7 @@ PilotRecord *PilotLocalDatabase::readRecordByIndex(int index)
 	fPendingRec = (-1);
 	if (isDBOpen() == false)
 	{
-		kdError() << __FUNCTION__ << ": DB not open!" << endl;
+		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
 	if (index >= fNumRecords)
@@ -178,7 +178,7 @@ PilotRecord *PilotLocalDatabase::readNextRecInCategory(int category)
 	fPendingRec = -1;
 	if (isDBOpen() == false)
 	{
-		kdError() << __FUNCTION__ << ": DB not open!" << endl;
+		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
 	while ((fCurrentRecord < fNumRecords)
@@ -201,7 +201,7 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec()
 
 	if (isDBOpen() == false)
 	{
-		kdError() << __FUNCTION__ << ": DB not open!" << endl;
+		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
 	// Should this also check for deleted?
@@ -226,12 +226,12 @@ recordid_t PilotLocalDatabase::writeID(PilotRecord * rec)
 
 	if (isDBOpen() == false)
 	{
-		kdError() << __FUNCTION__ << ": DB not open!" << endl;
+		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return 0;
 	}
 	if (fPendingRec == -1)
 	{
-		kdError() << __FUNCTION__ <<
+		kdError() << k_funcinfo <<
 			": Last call was _NOT_ readNextModifiedRec()" << endl;
 		return 0;
 	}
@@ -249,7 +249,7 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 	fPendingRec = -1;
 	if (isDBOpen() == false)
 	{
-		kdError() << __FUNCTION__ << ": DB not open!" << endl;
+		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return 0;
 	}
 	// We can't do this since it's possible the local apps need to rewrite a record
@@ -296,7 +296,7 @@ int PilotLocalDatabase::resetSyncFlags()
 	fPendingRec = -1;
 	if (isDBOpen() == false)
 	{
-		kdError() << __FUNCTION__ << ": DB not open!" << endl;
+		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return -1;
 	}
 	for (i = 0; i < fNumRecords; i++)
@@ -312,7 +312,7 @@ int PilotLocalDatabase::resetDBIndex()
 	fPendingRec = -1;
 	if (isDBOpen() == false)
 	{
-		kdError() << __FUNCTION__ << ": DB not open!" << endl;
+		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return -1;
 	}
 	fCurrentRecord = 0;
@@ -326,7 +326,7 @@ int PilotLocalDatabase::cleanUpDatabase()
 	fPendingRec = -1;
 	if (isDBOpen() == false)
 	{
-		kdError() << __FUNCTION__ << ": DB not open!" << endl;
+		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return -1;
 	}
 	int i, j;
@@ -377,7 +377,7 @@ void PilotLocalDatabase::openDatabase()
 
 	if (dbFile == 0L)
 	{
-		kdError() << __FUNCTION__
+		kdError() << k_funcinfo
 			<< ": Failed to open " << tempName << endl;
 		return;
 	}
@@ -435,6 +435,9 @@ void PilotLocalDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.16  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.15  2001/09/24 10:43:19  cschumac
 // Compile fixes.
 //
