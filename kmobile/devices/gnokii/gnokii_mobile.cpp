@@ -26,9 +26,9 @@
 #include <qdir.h>
 
 #include <klibloader.h>
+#include <kconfig.h>
 #include <kstandarddirs.h>
 #include <kmessagebox.h>
-
 #include <kio/global.h>
 #include <kdebug.h>
 #include <klocale.h>

@@ -9,6 +9,8 @@ DONE:
 
 TODO:
 -----
+- fix doubled loading of plugins
+- where do I get the device name from the kmobile unique process? 
 - finish the functions which are available to client apps.
 - kitchensync driver/plugin (starting...)
 - a plugin for the left side of the "Open File Dialog". ->
