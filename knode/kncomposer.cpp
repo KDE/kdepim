@@ -368,19 +368,19 @@ bool KNComposer::hasValidData()
         return false;
 
     if (fupCount>12) {
-      KMessageBox::sorry(this, i18n("You are directing replies into more than 12 newsgroups.\nPlease remove some newsgroups from the \"Followup-To\" header!"));
+      KMessageBox::sorry(this, i18n("You are directing replies to more than 12 newsgroups.\nPlease remove some newsgroups from the \"Followup-To\" header!"));
       return false;
     }
 
     if (fupCount>5)
-      if (!(KMessageBox::warningYesNo( this, i18n("You are directing replies into more than five newsgroups.\nPlease reconsider whether this is really useful.\nDo you want to re-edit the article or send it anyway?"),
+      if (!(KMessageBox::warningYesNo( this, i18n("You are directing replies to more than five newsgroups.\nPlease reconsider whether this is really useful.\nDo you want to re-edit the article or send it anyway?"),
                                        QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
         return false;
   }
 
   if (m_ode != news) {
     if (v_iew->t_o->text().isEmpty() ) {
-      KMessageBox::sorry(this, i18n("Please enter the mail-address!"));
+      KMessageBox::sorry(this, i18n("Please enter the email address!"));
       return false;
     }
     if (!n_eeds8Bit && !KMime::isUsAscii(v_iew->t_o->text()))
@@ -432,7 +432,7 @@ bool KNComposer::hasValidData()
   }
 
   if (n_eeds8Bit && (c_harset.lower()=="us-ascii")) {
-    KMessageBox::sorry(this, i18n("Your message contains characters that aren't included\nin the \"us-ascii\" character set, please choose\na suitable character set in the \"Options\" menu!"));
+    KMessageBox::sorry(this, i18n("Your message contains characters that aren't included\nin the \"us-ascii\" character set. Please choose\na suitable character set in the \"Options\" menu!"));
     return false;
   }
 
@@ -1450,7 +1450,7 @@ KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
   QVBoxLayout *notL=new QVBoxLayout(e_dit);
   notL->addStretch(1);
   n_otification=new QGroupBox(2, Qt::Horizontal, e_dit);
-  l=new QLabel(i18n("You are currently editing the article body\nin an external editor. To continue you have\nto close the external editor."), n_otification);
+  l=new QLabel(i18n("You are currently editing the article body\nin an external editor. To continue, you have\nto close the external editor."), n_otification);
   c_ancelEditorBtn=new QPushButton(i18n("&Kill external editor"), n_otification);
   n_otification->setFrameStyle(QFrame::Panel | QFrame::Raised);
   n_otification->setLineWidth(2);

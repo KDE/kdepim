@@ -136,7 +136,7 @@ void KNConvert::convert()
   else
     r_esultLabel->setText(i18n(
 "<b>The conversion was successful.</b>\
-<br>Have a lot of fun with this new Version of KNode. ;-)"));
+<br>Have a lot of fun with this new version of KNode. ;-)"));
 
   s_tartBtn->setText(i18n("Start KNode"));
   s_tartBtn->setEnabled(true);
@@ -169,7 +169,7 @@ void KNConvert::slotStart()
   //create backup of old data using "tar"
   if(c_reateBkup->isChecked()) {
     if(b_ackupPath->text().isEmpty()) {
-      KMessageBox::error(this, i18n("Please select a valid backup-path."));
+      KMessageBox::error(this, i18n("Please select a valid backup path."));
       return;
     }
 
