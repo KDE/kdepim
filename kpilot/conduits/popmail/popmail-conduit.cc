@@ -17,8 +17,7 @@
 ** (at your option) any later version.
 **
 ** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ** GNU General Public License for more details.
 **
 ** You should have received a copy of the GNU General Public License
@@ -48,49 +47,6 @@ static const char *popmail_conduit_id=
 #include <ctype.h>
 #include <iostream.h>
 
-#if 0
-
-
-#ifndef _KMESSAGEBOX_H
-#include <kmessagebox.h>
-#endif
-
-#ifndef _KICONLOADER_H
-#include <kiconloader.h>
-#endif
-
-#ifndef _KDEBUG_H
-#include <kdebug.h>
-#endif
-
-#ifndef _KABOUTDATA_H
-#include <kaboutdata.h>
-#endif
-
-
-#ifndef _DCOPCLIENT_H
-#include <dcopclient.h>
-#endif
-
-#ifndef _KSIMPLECONFIG_H
-#include <ksimpleconfig.h>
-#endif
-
-#ifndef _PILOT_SOURCE_H_
-#include <pi-source.h>
-#endif
-#ifndef _PILOT_DLP_H_
-#include <pi-dlp.h>
-#endif
-
-#ifndef _KPILOT_CONDUITAPP_H
-#include "conduitApp.h"
-#endif
-
-#ifndef _KPILOT_KPILOTCONFIG_H
-#include "kpilotConfig.h"
-#endif
-#endif
 
 #include <unistd.h>
 #include <errno.h>
@@ -162,9 +118,11 @@ void showResponseResult(int const ret,
 	if (ret==TIMEOUT)
 	{
 		msg.append(i18n(" (Timed out)"));
+#ifdef DEBUG
 		DEBUGCONDUIT << func
 			<< ": " << message
 			<< endl;
+#endif
 	}
 	if (ret==PERROR)
 	{
@@ -248,7 +206,7 @@ static int getPOPResponse(KSocket *s,const char *message,
 
 	if (ret==TIMEOUT)
 	{
-		showResponseResult(ret,message,buffer,__FUNCTION__);
+		showResponseResult(ret,message,buffer,"getPOPResponse");
 		return TIMEOUT;
 	}
 
@@ -268,7 +226,7 @@ static int getPOPResponse(KSocket *s,const char *message,
 	//
 	if(buffer[i] != '+')
 	{
-		showResponseResult(ret,message,buffer+i,__FUNCTION__);
+		showResponseResult(ret,message,buffer+i,"getPOPResponse");
 		return BADPOP;
 	}
 
@@ -329,26 +287,24 @@ PopMailConduit::doSync()
 	addSyncLogEntry("Mail ");
 
 	mode=fConfig->readNumEntry(PopmailConduitFactory::syncOutgoing);
+#ifdef DEBUG
+	DEBUGCONDUIT << fname 
+		<< ": Outgoing mail mail disposition " 
+		<< mode << endl;
+#endif
+
 	if(mode)
 	{
-#ifdef DEBUG
-		if (debug_level)
-		{
-			kdDebug() << fname << ": Sending pending mail" << endl;
-		}
-#endif
 		sent_count=sendPendingMail(mode);
 	}
 
 	mode=fConfig->readNumEntry(PopmailConduitFactory::syncIncoming);
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Sending mail mode " << mode << endl;
+#endif
+
 	if(mode)
 	{
-#ifdef DEBUG
-		if (debug_level)
-		{
-			kdDebug() << fname << ": Querying pop server." << endl;
-		}
-#endif
 		received_count=retrieveIncoming(mode);
 	}
 
@@ -411,17 +367,19 @@ int PopMailConduit::sendPendingMail(int mode)
 
 	if (count < 0)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Mail was not sent at all!"
 			<< endl;
 	}
 	else
 	{
+#ifdef DEBUG
 		DEBUGCONDUIT << fname 
 			<< ": Sent "
 			<< count 
 			<< " messages"
 			<< endl;
+#endif
 	}
 
 	return count;
@@ -465,6 +423,8 @@ int PopMailConduit::retrieveIncoming(int mode)
 // Helper function to get the Fully Qualified Domain Name
 QString getFQDomainName (const KConfig& config)
 {
+	FUNCTIONSETUP;
+
 	QString fqDomainName;
 
 	// Has the user given an explicit domain name?
@@ -476,8 +436,10 @@ QString getFQDomainName (const KConfig& config)
 	if (!useExplicitDomainName && getenv ("MAILDOMAIN"))
 		useExplicitDomainName = 2;
 
-	DEBUGCONDUIT << __FUNCTION__ << ": EDN=" << config.readEntry("explicitDomainName", "") << endl;
-	DEBUGCONDUIT << __FUNCTION__ << ": useEDN=" << useExplicitDomainName << endl;
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": EDN=" << config.readEntry("explicitDomainName", "") << endl;
+	DEBUGCONDUIT << fname << ": useEDN=" << useExplicitDomainName << endl;
+#endif
 
 	if (useExplicitDomainName > 0) {
 		// User has provided the FQDN either in config or in environment.
@@ -488,7 +450,9 @@ QString getFQDomainName (const KConfig& config)
 			// Use explicitly configured FQDN.
 			// The domain name can also be the name of an environment variable.
 			fqDomainName = config.readEntry("explicitDomainName", "$MAILDOMAIN");
-			DEBUGCONDUIT << __FUNCTION__ << ": got from config" << endl;
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": got from config" << endl;
+#endif
 		}
 
 		// Get FQDN from environment, from given variable.
@@ -497,13 +461,17 @@ QString getFQDomainName (const KConfig& config)
 			char* envDomain = getenv (envVar.latin1());
 			if (envDomain) {
 				fqDomainName = envDomain;
-				DEBUGCONDUIT << __FUNCTION__ << ": got from env" << endl;
+#ifdef DEBUG
+				DEBUGCONDUIT << fname << ": got from env" << endl;
+#endif
 			} else {
 				// Ummh... It didn't exist, fall back to using system domain name
 				useExplicitDomainName = false;
 
-				DEBUGCONDUIT << __FUNCTION__ << ": Promised domain name environment variable "
+#ifdef DEBUG
+				DEBUGCONDUIT << fname << ": Promised domain name environment variable "
 							 << fqDomainName << " wasn't available." << endl;
+#endif
 			}
 		}
 	}
@@ -525,16 +493,30 @@ QString getFQDomainName (const KConfig& config)
 #endif
 		fqDomainName = namebuffer;
 		if (ret)
-			kdWarning() << __FUNCTION__ << ": getdomainname: " << strerror(errno) << endl;
+		{
+			kdWarning() << k_funcinfo 
+				<< ": getdomainname: " 
+				<< strerror(errno) << endl;
+		}
 		else
-			DEBUGCONDUIT << __FUNCTION__ << ": Got domain name " << namebuffer  << endl;
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname 
+				<< ": Got domain name " 
+				<< namebuffer  << endl;
+#endif
+		}
 
 #else
 		struct utsname u;
 		uname (&u);
 		fqDomainName = u.nodename;
 
-		DEBUGCONDUIT << __FUNCTION__ << ": Got uname.nodename " << u.nodename << endl;
+#ifdef DEBUG
+		DEBUGCONDUIT << fname 
+			<< ": Got uname.nodename " 
+			<< u.nodename << endl;
+#endif
 #endif
 	}
 
@@ -575,12 +557,14 @@ QString buildRFC822Headers (const QString& sender,
 }
 
 int sendSMTPCommand (KSocket& kSocket,
-					 const QString& sendBuffer,		// Buffer to send
-					 QTextOStream& logStream,		// For SMTP conversation logging
-					 const QString& logBuffer,		// Entire SMTP conversation log
-					 const QRegExp& expect,			// What do we expect as response (regexp)
-					 const QString& errormsg)		// Error message for error dialog
+	const QString& sendBuffer,   // Buffer to send
+	QTextOStream& logStream,     // For SMTP conversation logging
+	const QString& logBuffer,    // Entire SMTP conversation log
+	const QRegExp& expect,       // What do we expect as response (regexp)
+	const QString& errormsg)     // Error message for error dialog
 {
+	FUNCTIONSETUP;
+
 	// Send
 	logStream << ">>> " << sendBuffer;
 	write (kSocket.socket(), sendBuffer.latin1(), sendBuffer.length());
@@ -602,8 +586,10 @@ int sendSMTPCommand (KSocket& kSocket,
 
 		showMessage (msg);
 
-		kdWarning() << __FUNCTION__ << ": SMTP error: " << msg << endl;
-		DEBUGCONDUIT << __FUNCTION__ << ": SMTP error: " << logBuffer << endl;
+		kdWarning() << k_funcinfo << ": SMTP error: " << msg << endl;
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": SMTP error: " << logBuffer << endl;
+#endif
 
 		return -1;
 	}
@@ -895,9 +881,9 @@ int PopMailConduit::sendViaSendmail()
 	    {
  	      KMessageBox::error(0L, "Cannot talk to sendmail!",
 				   "Error Sending Mail");
-		kdWarning() << __FUNCTION__
-			<< ": Could not start sendmail.\n"
-			<< __FUNCTION__ << ": " << count
+		kdWarning() << k_funcinfo
+			<< ": Could not start sendmail." << endl;
+		kdWarning() << k_funcinfo << ": " << count
 			<< " messages sent OK"
 			<< endl ;
 	      return -1;
@@ -960,7 +946,7 @@ int PopMailConduit::sendViaKMail()
 		dcopClient();
 	if (!dcopptr)
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Can't get DCOP client."
 			<< endl;
 		KMessageBox::error(0L,
@@ -970,6 +956,7 @@ int PopMailConduit::sendViaKMail()
 		return -1;
 	}
 
+	dcopptr->attach();
 	while (PilotRecord *pilotRec = fDatabase->readNextRecInCategory(1))
 	{
 		DEBUGCONDUIT << fname 
@@ -992,7 +979,7 @@ int PopMailConduit::sendViaKMail()
 
 		if (t.status())
 		{
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": Can't open temp file."
 				<< endl;
 			KMessageBox::error(0L, 
@@ -1006,7 +993,7 @@ int PopMailConduit::sendViaKMail()
 
 		if (!sendf)
 		{
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": Can't open temporary file for writing!"
 				<< endl;
 			KMessageBox::error(0L, 
@@ -1029,15 +1016,15 @@ int PopMailConduit::sendViaKMail()
 		arg << kmailOutboxName
 			<< t.name();
 
-		if (dcopptr->call("kmail",
+		if (!dcopptr->call("kmail",
 			"KMailIface",
-			"dcopAddMessage",
+			"dcopAddMessage(QString,QString)",
 			data,
 			returnType,
 			returnValue,
 			true))
 		{
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": DCOP call failed."
 				<< endl;
 
@@ -1070,7 +1057,7 @@ int PopMailConduit::sendViaKMail()
 		QByteArray data;
 		if (dcopptr->send("kmail","KMailIface","sendQueued",data))
 		{
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": Couldn't flush queue."
 				<< endl;
 		}
@@ -1298,7 +1285,7 @@ void PopMailConduit::retrievePOPMessages(KSocket *popSocket,int const msgcount,
 
 		if (len > 16000) 
 		{
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": Skipped long message " << i
 				<< endl;
 			continue; 
@@ -1450,7 +1437,7 @@ int PopMailConduit::doPopQuery()
 	{
 		showResponseResult(PERROR,
 			"Cannot connect to POP server -- no socket",
-			0L,__FUNCTION__);
+			0L,"doPopQuery");
 		delete popSocket;
 		return -1;
 	}
@@ -1661,7 +1648,7 @@ int PopMailConduit::doPopQuery()
 		skipBlanks(f,line,LINESIZE);
 		if (strncmp(line,"From ",5))
 		{
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": No leading From line." << endl;
 			return 0;
 		}
@@ -1797,7 +1784,7 @@ int PopMailConduit::doPopQuery()
 	messageLength=readHeaders(mailbox,buffer,bufferSize,&t,1);
 	if (messageLength == 0)
 	{
-		kdWarning() << __FUNCTION__ 
+		kdWarning() << k_funcinfo 
 			<< ": Bad headers in message." << endl;
 		return 0;
 	}
@@ -1821,7 +1808,7 @@ int PopMailConduit::doPopQuery()
 			buffer+messageLength,
 			bufferSize-messageLength) < 0)
 		{
-			kdWarning() << __FUNCTION__
+			kdWarning() << k_funcinfo
 				<< ": Bad body for message." << endl;
 			return 0;
 		}
@@ -1892,7 +1879,7 @@ int PopMailConduit::doUnixStyle()
 	mailbox=fopen(filename.latin1(),"r");
 	if (mailbox==0L)
 	{
-		kdWarning() << __FUNCTION__ << ": Can't open mailbox:" 
+		kdWarning() << k_funcinfo << ": Can't open mailbox:" 
 			<< perror
 			<< endl;
 		return -1;
@@ -1914,7 +1901,7 @@ int PopMailConduit::doUnixStyle()
 		}
 		else
 		{
-			kdWarning() << __FUNCTION__ << ": Message "
+			kdWarning() << k_funcinfo << ": Message "
 				<< messageCount << " couldn't be written."
 				<< endl;
 			showMessage(i18n("Error writing mail message to Pilot"));
@@ -1954,6 +1941,8 @@ int PopMailConduit::doUnixStyle()
 
 	if (!fConfig) return;
 
+	KConfigGroupSaver cfgs(fConfig,PopmailConduitFactory::group);
+
 	fDatabase=new PilotSerialDatabase(pilotSocket(),
 		"MailDB",this,"MailDB");
 
@@ -1986,6 +1975,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.30  2001/12/28 13:01:16  adridg
+// Add SyncAction
+//
 // Revision 1.29  2001/10/10 17:01:15  mueller
 // CVS_SILENT: fixincludes
 //

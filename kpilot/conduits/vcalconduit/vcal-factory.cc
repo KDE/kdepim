@@ -32,6 +32,7 @@
 #include <kaboutdata.h>
 
 #include "vcal-setup.h"
+#include "vcal-conduit.h"
 #include "vcal-factory.moc"
 
 
@@ -121,10 +122,29 @@ VCalConduitFactory::~VCalConduitFactory()
 		}
 	}
 
+	if (qstrcmp(c,"SyncAction")==0)
+	{
+		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
+
+		if (d)
+		{
+			return new VCalConduit(d,n,a);
+		}
+		else
+		{
+			kdError() << k_funcinfo
+				<< ": Couldn't cast to KPilotDeviceLink."
+				<< endl;
+		}
+	}
+
 	return 0L;
 }
 
 // $Log$
+// Revision 1.3  2001/12/28 12:56:46  adridg
+// Added SyncAction, it may actually do something now.
+//
 // Revision 1.2  2001/12/27 16:43:36  adridg
 // Fixup configuration
 //

@@ -13,6 +13,7 @@ noinst_PROGRAMS = testkab testdcop
 
 
 libabbrowserconduit_la_SOURCES = \
+	contactentry.cpp \
 	abbrowser-factory.cc \
 	abbrowser-setup.cc \
 	abbrowser-conduit.cc \

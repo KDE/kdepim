@@ -138,9 +138,9 @@ void VCalBaseConduit::saveVCal()
 void VCalBaseConduit::noCalendarError(const QString &conduitName)
 {
   QString message = i18n(
-      "The %1 could not open the file `%2'. "
+      "<qt>The %1 could not open the file `%2'. "
       "Please configure the conduit with the correct "
-      "filename and try again.")
+      "filename and try again.</qt>")
       .arg(conduitName)
       .arg(calName);
 
@@ -196,54 +196,75 @@ void VCalBaseConduit::deleteRecord(PilotRecord *rec)
 
 void VCalBaseConduit::deleteFromPilot(int entryType)
 {
-  QValueList<recordid_t> deletedList;
+	FUNCTIONSETUP;
 
-  /* Build a list of records in the pilot calendar that are not
-     found in the vcal and thus probably have been deleted. */
+	QValueList<recordid_t> deletedList;
 
-  // Get all entries from Pilot
-  PilotRecord *rec;
-  int index = 0;
-  while ((rec = fDatabase->readRecordByIndex(index++)) != 0) {
-    bool found = false;
-    if ((entryType == TypeTodo) && findTodo(rec->getID())) found = true;
-    if ((entryType == TypeEvent) && findEvent(rec->getID())) found = true;
-    if (!found) {
-      DEBUGCONDUIT << __FUNCTION__
-		   << ": record "
-		   << rec->getID()
-		   << " found on pilot, but not in vcalendar. "
-		   << "Scheduling it for deletion."
-		   << endl;
-      deletedList.append(rec->getID());
-    }
-    delete rec;
-  }
+	/* Build a list of records in the pilot calendar that are not
+	found in the vcal and thus probably have been deleted. */
 
-  // Disable deletion to prevent data loss in case of logs.
-  // Will be removed, when the todo and datebook conduits are thoroughly tested
-  // TODO: Reenable deleteFromPilot()
-  return;
-  
-  // Now process the list of deleted records. 
-  for (QValueList<recordid_t>::Iterator it = deletedList.begin();
-       it != deletedList.end(); ++it) {
-    PilotRecord *r = fDatabase->readRecordById(*it);
-    if (r) {
-      DEBUGCONDUIT << __FUNCTION__ << ": deleting record " << *it
-		   << endl;
-      r->setAttrib(~dlpRecAttrDeleted);
-      recordid_t rid = fDatabase->writeRecord(r);
-      delete r;
-      if (rid != *it)
-	DEBUGCONDUIT << __FUNCTION__
-		     << ": writeRecord() returned "
-		     << rid << endl;
-    } else
-      kdWarning(CONDUIT_AREA) << __FUNCTION__
-			      << ": readRecordById() failed for record"
-			      << *it << endl;
-  }
+	// Get all entries from Pilot
+	PilotRecord *rec;
+	int index = 0;
+
+	while ((rec = fDatabase->readRecordByIndex(index++)) != 0) 
+	{
+		bool found = false;
+		if ((entryType == TypeTodo) && findTodo(rec->getID())) found = true;
+		if ((entryType == TypeEvent) && findEvent(rec->getID())) found = true;
+
+		if (!found) 
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname
+				<< ": record "
+				<< rec->getID()
+				<< " found on pilot, but not in vcalendar. "
+				<< "Scheduling it for deletion."
+				<< endl;
+#endif
+			deletedList.append(rec->getID());
+		}
+		delete rec;
+	}
+
+	// Disable deletion to prevent data loss in case of logs.
+	// Will be removed, when the todo and datebook conduits are 
+	// thoroughly tested
+	// TODO: Reenable deleteFromPilot()
+	return;
+
+	// Now process the list of deleted records. 
+	for (QValueList<recordid_t>::Iterator it = deletedList.begin();
+		it != deletedList.end(); ++it) 
+	{
+		PilotRecord *r = fDatabase->readRecordById(*it);
+		if (r) 
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": deleting record " << *it
+				<< endl;
+#endif
+			r->setAttrib(~dlpRecAttrDeleted);
+			recordid_t rid = fDatabase->writeRecord(r);
+			delete r;
+
+			if (rid != *it)
+			{
+#ifdef DEBUG
+				DEBUGCONDUIT << fname
+					<< ": writeRecord() returned "
+					<< rid << endl;
+#endif
+			}
+		} 
+		else
+		{
+			kdWarning(CONDUIT_AREA) << __FUNCTION__
+				<< ": readRecordById() failed for record"
+				<< *it << endl;
+		}
+	}
 }
 
 Todo *VCalBaseConduit::findTodo(recordid_t id)
@@ -302,6 +323,9 @@ bool VCalBaseConduit::isKOrganizerRunning()
 }
 
 // $Log$
+// Revision 1.11  2001/12/28 12:56:46  adridg
+// Added SyncAction, it may actually do something now.
+//
 // Revision 1.10  2001/06/19 11:42:13  cschumac
 // Fixed memory leak.
 //

@@ -166,17 +166,27 @@ void TodoConduit::doSync()
  */
 void TodoConduit::updateTodo(PilotRecord *rec)
 {
-  PilotTodoEntry todoEntry(rec);
+	FUNCTIONSETUP;
 
-  Todo *vtodo=findTodo(rec->getID());
-  if (!vtodo) {
-    // no event was found, so we need to add one with some initial info
-    vtodo = new Todo;
-    calendar()->addTodo(vtodo);
+	PilotTodoEntry todoEntry(rec);
 
-    vtodo->setPilotId(todoEntry.getID());
-    vtodo->setSyncStatus(Incidence::SYNCNONE);
-  }
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Using rec @" << (int) rec
+		<< " with ID " << ( rec ? rec->getID() : -1)
+		<< endl;
+#endif
+
+	Todo *vtodo=findTodo(rec->getID());
+	if (!vtodo)
+	{
+		// no event was found, so we need to add one with some initial info
+		vtodo = new Todo;
+		calendar()->addTodo(vtodo);
+
+		vtodo->setPilotId(todoEntry.getID());
+		vtodo->setSyncStatus(Incidence::SYNCNONE);
+	}
 
   // we don't want to modify the vobject with pilot info, because it has
   // already been  modified on the desktop.  The VObject's modified state
@@ -201,7 +211,7 @@ void TodoConduit::updateTodo(PilotRecord *rec)
 
   setSummary(vtodo, todoEntry.getDescription());
   setNote(vtodo, todoEntry.getNote());
-  
+
   vtodo->setSyncStatus(Incidence::SYNCNONE);
 }
 
@@ -211,7 +221,7 @@ void TodoConduit::doLocalSync()
   FUNCTIONSETUP;
 
   QList<Todo> todos = calendar()->getTodoList();
-  
+
   /* go through the whole todo list.  If the event has the dirty
      (modified) flag set, make a new pilot record and add it. */
   for(Todo *todo = todos.first();todo;todo = todos.next()) {
@@ -222,8 +232,8 @@ void TodoConduit::doLocalSync()
     if (todo->syncStatus() != Incidence::SYNCNONE) {
       // The event has been modified, need to write it to the pilot.
       // After using the writeRecord method, be sure and put the returned id
-      // back into the todo entry! 
-      
+      // back into the todo entry!
+
       // we read the pilotID.
 
       id = todo->pilotId();
@@ -262,7 +272,7 @@ void TodoConduit::doLocalSync()
 
       // what we call summary pilot calls description.
       todoEntry->setDescription(todo->summary());
-	
+
       // what we call description pilot puts as a separate note
       todoEntry->setNote(todo->description());
 
@@ -302,83 +312,96 @@ void TodoConduit::firstSyncCopy(bool DeleteOnPilot)
 {
 	FUNCTIONSETUP;
 
-  bool insertall = false, skipall = false;
+	bool insertall = false, skipall = false;
 
-  // Get all entries from Pilot
-  PilotRecord *rec;
-  int index = 0;
-  while ((rec = fDatabase->readRecordByIndex(index++)) != 0) {
-    PilotTodoEntry *todoEntry = new PilotTodoEntry(rec);
+	// Get all entries from Pilot
+	PilotRecord *rec = 0L;
+	int index = 0;
 
-    if (!todoEntry) {
-      kdError(CONDUIT_AREA) << k_funcinfo
-			    << ": Conversion to PilotTodoEntry failed"
-			    << endl;
-      continue;
-    }
+	while ((rec = fDatabase->readRecordByIndex(index++)) != 0)
+	{
+		PilotTodoEntry *todoEntry = new PilotTodoEntry(rec);
 
-    Todo *todo = findTodo(rec->getID());
-    if (!todo) {
+		if (!todoEntry)
+		{
+			kdError() << k_funcinfo
+				<< ": Conversion to PilotTodoEntry failed"
+				<< endl;
+			KPILOT_DELETE(rec);
+			continue;
+		}
+
+		Todo *todo = findTodo(rec->getID());
+		if (!todo)
+		{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname
-			<< ": Entry found on pilot but not in vcalendar."
-			<< endl;
+			DEBUGCONDUIT << fname
+				<< ": Entry found on pilot but not in vcalendar."
+				<< endl;
 #endif
 
-      // First hot-sync, ask user how to treat this event.
-      if (!insertall && !skipall) {
-	DEBUGCONDUIT << __FUNCTION__
-		     << ": Questioning event disposition."
-		     << endl;
-
-	QString text = i18n("This is the first time that "
-			    "you have done a HotSync\n"
-			    "with the vCalendar conduit. "
-			    "There is a to-do item\n"
-			    "in the PalmPilot which is not "
-			    "in the vCalendar (KOrganizer).\n\n");
-	text += i18n("Item: %1.\n\n"
-		     "What must be done with this item?")
-	  .arg(todoEntry->getDescription());
-
-	int response =
-		QMessageBox::information(0,
-			i18n("KPilot To-Do Conduit"),
-			text,
-			i18n("&Insert"),
-			( DeleteOnPilot ? i18n("&Delete") : i18n("&Skip") ),
-			i18n("Insert &All"),
-			false);
-
+			// First hot-sync, ask user how to treat this event.
+			if (!insertall && !skipall)
+			{
 #ifdef DEBUG
-	DEBUGCONDUIT << fname
-		     << ": Event disposition "
-		     << response
-		     << endl;
+				DEBUGCONDUIT << fname
+					<< ": Questioning event disposition."
+					<< endl;
 #endif
 
-	switch (response) {
-          case 0:
-          default: 
-	    // Default is to insert this single entry and ask again later
-            updateTodo(rec);
-            break;
-          case 1:
-            // Just skip this, it will be deleted by deleteFromPilot().
-            break;
-          case 2:
-            insertall = true;
-            skipall = false;
-            updateTodo(rec);
-            break;
+				QString text = i18n("<qt>This is the first time that "
+					"you have done a HotSync "
+					"with the vCalendar conduit. "
+					"There is a to-do item "
+					"in the PalmPilot which is not "
+					"in the vCalendar (KOrganizer).<br>"
+					"Item: <i>%1</i><br>"
+					"What must be done with this item?</qt>")
+					.arg(todoEntry->getDescription());
+
+				int response = QMessageBox::information(0,
+						i18n("KPilot To-Do Conduit"),
+						text,
+						i18n("&Insert"),
+						( DeleteOnPilot ? i18n("&Delete") : i18n("&Skip") ),
+						i18n("Insert &All"),
+						false);
+
+#ifdef DEBUG
+				DEBUGCONDUIT << fname
+					<< ": Event disposition "
+					<< response
+					<< endl;
+#endif
+
+				switch (response)
+				{
+				case 1:
+					// Just skip this, it will be deleted by deleteFromPilot().
+					break;
+				case 2:
+					insertall = true;
+					skipall = false;
+					updateTodo(rec);
+					break;
+				case 0:
+				default:
+					// Default is to insert this single entry and ask again later
+					updateTodo(rec);
+					break;
+				}
+			}
+			else if (insertall)
+			{
+				// all records are to be inserted.
+				updateTodo(rec);
+			}
+			// else if() ... apparently skipall is set, so
+			// we should do nothing with this entry and
+			// it will eventually be deleted.
+		}
+		KPILOT_DELETE(rec);
 	}
-      } else if (insertall) {
-        // all records are to be inserted.
-        updateTodo(rec);
-      }
-    }
-    delete rec;
-  }
 }
 
 /* virtual */ void TodoConduit::exec()
@@ -423,6 +446,9 @@ void TodoConduit::firstSyncCopy(bool DeleteOnPilot)
 }
 
 // $Log$
+// Revision 1.7  2001/12/28 12:56:46  adridg
+// Added SyncAction, it may actually do something now.
+//
 // Revision 1.6  2001/06/18 19:51:40  cschumac
 // Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
 // They use libkcal now.

@@ -32,6 +32,7 @@
 #include <kaboutdata.h>
 
 #include "todo-setup.h"
+#include "todo-conduit.h"
 #include "todo-factory.moc"
 
 
@@ -121,10 +122,29 @@ ToDoConduitFactory::~ToDoConduitFactory()
 		}
 	}
 
+	if (qstrcmp(c,"SyncAction")==0)
+	{
+		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
+
+		if (d)
+		{
+			return new TodoConduit(d,n,a);
+		}
+		else
+		{
+			kdError() << k_funcinfo
+				<< ": Couldn't cast to KPilotDeviceLink."
+				<< endl;
+		}
+	}
+
 	return 0L;
 }
 
 // $Log$
+// Revision 1.2  2001/12/27 16:43:36  adridg
+// Fixup configuration
+//
 // Revision 1.1  2001/12/13 21:40:40  adridg
 // New files for move to .so
 //

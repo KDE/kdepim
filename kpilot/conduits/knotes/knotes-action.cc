@@ -73,6 +73,34 @@ protected:
 	int memoId;
 } ;
 
+NoteAndMemo NoteAndMemo::findNote(const QValueList<NoteAndMemo> &l ,int note)
+{
+	FUNCTIONSETUP;
+
+	for (QValueList<NoteAndMemo>::ConstIterator it =l.begin();
+		it != l.end();
+		++it)
+	{
+		if ((*it).note()==note) return *it;
+	}
+
+	return NoteAndMemo();
+}
+
+NoteAndMemo NoteAndMemo::findMemo(const QValueList<NoteAndMemo> &l ,int memo)
+{
+	FUNCTIONSETUP;
+
+	for (QValueList<NoteAndMemo>::ConstIterator it =l.begin();
+		it != l.end();
+		++it)
+	{
+		if ((*it).memo()==memo) return *it;
+	}
+
+	return NoteAndMemo();
+}
+
 class KNotesAction::KNotesActionPrivate
 {
 public:
@@ -449,6 +477,9 @@ bool KNotesAction::knotesRunning() const
 
 
 // $Log$
+// Revision 1.5  2001/12/20 22:55:44  adridg
+// Making conduits save their configuration and doing syncs
+//
 // Revision 1.4  2001/12/02 22:08:24  adridg
 // CVS_SILENT: I forget
 //

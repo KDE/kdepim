@@ -1395,8 +1395,13 @@ void AbbrowserConduit::_removeFromSync(const QString & key,
 	bool abAlreadyRunning;
 
 
-	if (!_prepare(abbrowserContacts, 
-		idContactMap, 
+	fDatabase = new PilotSerialDatabase(pilotSocket(),
+		"AddressDB",
+		this,
+		"AddressDB");
+
+	if (!_prepare(abbrowserContacts,
+		idContactMap,
 		newContacts,
 		abAlreadyRunning))
 	{
@@ -1405,11 +1410,6 @@ void AbbrowserConduit::_removeFromSync(const QString & key,
 			<< endl;
 		return;
 	}
-
-	fDatabase = new PilotSerialDatabase(pilotSocket(),
-		"AddressDB",
-		this,
-		"AddressDB");
 
 	// perform syncing from palm to abbrowser
 	PilotRecord *record = 0L;
