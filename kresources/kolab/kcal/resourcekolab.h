@@ -113,10 +113,6 @@ public:
 
   KABC::Lock* lock();
 
-signals:
-  void signalSubresourceAdded( Resource*, const QString&, const QString& );
-  void signalSubresourceRemoved( Resource*, const QString&, const QString& );
-
 private:
   void addIncidence( const char* mimetype, const QString& xml,
                      const QString& subResource, Q_UINT32 sernum );
