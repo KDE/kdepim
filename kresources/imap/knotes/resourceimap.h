@@ -76,6 +76,10 @@ public:
     virtual void deleteIncidence( const QString& type, const QString& uid );
     virtual void slotRefresh( const QString& type );
 
+    // Listen to KMail changes in the amount of sub resources
+    void subresourceAdded( const QString& type, const QString& id );
+    void subresourceDeleted( const QString& type, const QString& id );
+
 private:
     // Parse a journal from a string
     KCal::Journal* parseJournal( const QString& str );

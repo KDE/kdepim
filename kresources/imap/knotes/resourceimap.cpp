@@ -75,26 +75,33 @@ KNotesIMAP::ResourceIMAP::~ResourceIMAP()
 
 bool KNotesIMAP::ResourceIMAP::load()
 {
-  // Get the list of journals
-  QStringList lst;
-  if( !kmailIncidences( lst, "Note", "FIXME" ) ) {
-    kdError(5500) << "Communication problem in "
-                  << "ResourceIMAP::getIncidenceList()\n";
+  // Get the list of resources
+  QStringList resources;
+  if ( !kmailSubresources( resources, "Note" ) )
     return false;
-  }
 
-  // We got a fresh list of events, so clean out the old ones
-  // TODO: notify KNotes
+  // We get a fresh list of events, so clean out the old ones
   mCalendar.deleteAllEvents();
 
-  // Populate the calendar with the new events
-  mSilent = true;
-  for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
-    KCal::Journal* journal = parseJournal( *it );
-    if( journal )
-      addNote( journal );
+  QStringList::ConstIterator itR;
+  for ( itR = resources.begin(); itR != resources.end(); ++itR ) {
+    // Get the list of journals
+    QStringList lst;
+    if( !kmailIncidences( lst, "Note", *itR ) ) {
+      kdError(5500) << "Communication problem in "
+                    << "ResourceIMAP::getIncidenceList()\n";
+      return false;
+    }
+
+    // Populate the calendar with the new events
+    mSilent = true;
+    for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+      KCal::Journal* journal = parseJournal( *it );
+      if( journal )
+        addNote( journal );
+    }
+    mSilent = false;
   }
-  mSilent = false;
 
   return true;
 }
@@ -188,6 +195,19 @@ void KNotesIMAP::ResourceIMAP::slotRefresh( const QString& type )
     load();
 }
 
+void KNotesIMAP::ResourceIMAP::subresourceAdded( const QString& type,
+                                                 const QString& )
+{
+  // TODO: Optimize this
+  slotRefresh( type );
+}
+
+void KNotesIMAP::ResourceIMAP::subresourceDeleted( const QString& type,
+                                                   const QString& )
+{
+  // TODO: Optimize this
+  slotRefresh( type );
+}
 
 KCal::Journal* KNotesIMAP::ResourceIMAP::parseJournal( const QString& str )
 {
