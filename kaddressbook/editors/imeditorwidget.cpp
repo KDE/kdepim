@@ -174,7 +174,7 @@ IMContext IMAddressLVI::context() const
 
 QString IMAddressLVI::address() const
 {
-	return text( 2 );
+	return text( 1 );
 }
 
 void IMAddressLVI::activate()
