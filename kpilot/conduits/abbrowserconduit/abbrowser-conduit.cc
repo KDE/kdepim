@@ -66,7 +66,12 @@ bool AbbrowserConduit::fPilotStreetHome=true;
 bool AbbrowserConduit::fPilotFaxHome=true;
 enum AbbrowserConduit::ePilotOtherEnum AbbrowserConduit::ePilotOther=AbbrowserConduit::eOtherPhone;
 
-enum AbbrowserConduit::eCustomEnum AbbrowserConduit::eCustom[4]={AbbrowserConduit::eCustomField, AbbrowserConduit::eCustomField, AbbrowserConduit::eCustomField, AbbrowserConduit::eCustomField};
+enum AbbrowserConduit::eCustomEnum AbbrowserConduit::eCustom[4] = {
+	AbbrowserConduit::eCustomField,
+	AbbrowserConduit::eCustomField,
+	AbbrowserConduit::eCustomField,
+	AbbrowserConduit::eCustomField
+	} ;
 
 
 
@@ -130,8 +135,8 @@ void AbbrowserConduit::_mapContactsToPilot(QMap < recordid_t, QString > &idConta
 		}
 	}
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Loaded " << idContactMap.size() << 
-	    " addresses from the addressbook " << 
+	DEBUGCONDUIT << fname << ": Loaded " << idContactMap.size() <<
+	    " addresses from the addressbook " <<
 			dynamic_cast <KABC::StdAddressBook*>(aBook)->fileName() << endl;
 #endif
 }
