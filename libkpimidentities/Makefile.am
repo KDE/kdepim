@@ -9,4 +9,6 @@ libkpimidentities_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:
 
 identitymanager_DCOPIDLNG = true
 
+METASOURCES = AUTO
+
 # No messages target. Those files are part of libkdepim.pot.
