@@ -1,0 +1,14 @@
+dnl Configure.in.bot for KPilot conduits.
+dnl
+dnl Copyright (C) 2000,2001 Adriaan de Groot
+dnl Copyright (C) 2002 Reinhold Kainhofer
+dnl
+dnl This file is released under the terms of the Gnu General Public
+dnl Licence (GPL) Version 2.
+
+if test "$with_mal" = NOTFOUND; then
+    echo ""
+    echo "KPILOT: MAL headers or library not found. AvantGo conduit will not be compiled."
+    echo "KPILOT: Download libmal>=0.20 from http://jasonday.home.att.net/code/libmal/"
+    echo ""
+fi
