@@ -181,7 +181,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 	fConduit->setConfig(fConfig);
 
-	logMessage(i18n("[Conduit %1]").arg(fDesktopName));
+	addSyncLogEntry(i18n("[Conduit %1]").arg(fDesktopName));
 
 	QString conduitFlags = TODO_I18N("Running with flags: ");
 	for (QStringList::ConstIterator i = l.begin() ; i!=l.end(); ++i)
@@ -228,6 +228,7 @@ void ConduitProxy::execDone(SyncAction *p)
 	emit syncDone(this);
 }
 
+#if 0
 ActionQueue::ActionQueue(KPilotDeviceLink *d,
 	KConfig *config,
 	const QStringList &conduits,
@@ -255,6 +256,7 @@ ActionQueue::ActionQueue(KPilotDeviceLink *d,
 
 	kdWarning() << "SyncStack usage is deprecated." << endl;
 }
+#endif
 
 ActionQueue::ActionQueue(KPilotDeviceLink *d) :
 	SyncAction(d,"ActionQueue"),
@@ -270,6 +272,7 @@ ActionQueue::~ActionQueue()
 	FUNCTIONSETUP;
 }
 
+#if 0
 void ActionQueue::prepare(int m)
 {
 	FUNCTIONSETUP;
@@ -323,6 +326,7 @@ void ActionQueue::prepare(int m)
 
 	queueCleanup();
 }
+#endif
 
 void ActionQueue::queueInit(int m)
 {
@@ -347,6 +351,14 @@ void ActionQueue::queueConduits(KConfig *config,const QStringList &l,int m)
 		it != l.end();
 		++it)
 	{
+		if ((*it).startsWith(CSL1("internal_")))
+		{
+#ifdef DEBUG
+			DEBUGDAEMON << k_funcinfo <<
+				"Ignoring conduit " << *it << endl;
+#endif
+			continue;
+		}
 		ConduitProxy *cp = new ConduitProxy(fHandle,*it,m);
 		cp->setConfig(config);
 		addAction(cp);

@@ -99,12 +99,15 @@ class ActionQueue : public SyncAction
 Q_OBJECT
 public:
 	ActionQueue(KPilotDeviceLink *device);
+#if 0
 	/** DEPRECATED **/
 	ActionQueue(KPilotDeviceLink *device,
 		KConfig *config,
 		const QStringList &conduits = QStringList(),
 		const QString &installDir = QString::null,
 		const QStringList &installFiles = QStringList());
+#endif
+
 	virtual ~ActionQueue();
 
 private:
@@ -174,6 +177,7 @@ public:
 		HotSyncMode = HotSync | WithUserCheck | WithConduits
 		} ;
 
+#if 0
 	/**
 	* Call prepare() to push a "standard profile" of SyncActions onto the stack,
 	* ready for execution. These are welcome, cleanup, and actions indicated
@@ -188,6 +192,7 @@ public:
 	void prepareBackup() { prepare(BackupMode); } ;
 	void prepareRestore() { prepare(RestoreMode); } ;
 	void prepareSync() { prepare(HotSyncMode); } ;
+#endif
 
 	/**
 	* Call these queue*() functions to append
@@ -200,7 +205,7 @@ public:
 	* actions to the queue (unless you do that
 	* yourself.)
 	*
-	* For queueInit, relevant modes are WithUserCheck.
+	* For queueInit, relevant modes are WithUserCheck (and 0 for no check).
 	* For queueConduits, whatever is relevant for the conduits
 	*   can be used, usually things in the FlagMask and ActionMask.
 	*/
