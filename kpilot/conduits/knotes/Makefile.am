@@ -1,5 +1,4 @@
-INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH) \
-	-I../../lib -DDEBUG -DDEBUG_CERR
+INCLUDES= $(all_includes) -I../../lib
 
 METASOURCES = AUTO
 
