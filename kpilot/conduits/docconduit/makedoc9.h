@@ -17,6 +17,7 @@
 // ver 2.0 added category control on the command line
 //              changed extensions from .prc to .pdb
 
+#include <stdio.h>
 
 typedef unsigned char byte;
 typedef unsigned long DWORD;
