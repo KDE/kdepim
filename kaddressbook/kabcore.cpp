@@ -939,12 +939,13 @@ void KABCore::initActions()
   KAction *action;
 
   // file menu
-  mActionMail = KStdAction::mail( this, SLOT( sendMail() ), actionCollection() );
+  mActionMail = new KAction( i18n( "&Send email to contact" ), "mail_send", 0,
+                             this, SLOT( sendMail() ), actionCollection(), "file_mail" );
   action = KStdAction::print( this, SLOT( print() ), actionCollection() );
   mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
   action->setWhatsThis( i18n( "Print a special number of contacts." ) );
 
-  mActionSave = new KAction(  KStdGuiItem::save().text(), "filesave", CTRL+Key_S, this,
+  mActionSave = new KAction( KStdGuiItem::save().text(), "filesave", CTRL+Key_S, this,
                              SLOT( save() ), actionCollection(), "file_sync" );
   mActionSave->setWhatsThis( i18n( "Save all changes of the address book to the storage backend." ) );
 
