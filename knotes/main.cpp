@@ -1,7 +1,7 @@
 /*******************************************************************
  KNotes -- Notes for the KDE project
 
- Copyright (c) 1997-2001, The KNotes Developers
+ Copyright (c) 1997-2002, The KNotes Developers
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -23,11 +23,12 @@
 #include <kaboutdata.h>
 #include <klocale.h>
 
-#include <iostream.h>
+#include <iostream>
 
 #include "knotesapp.h"
 #include "version.h"
 
+using namespace std;
 
 int main( int argc, char* argv[] )
 {

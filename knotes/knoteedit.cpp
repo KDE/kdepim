@@ -24,6 +24,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kaction.h>
+#include <kurldrag.h>
 #include <kstdaction.h>
 #include <kcolordialog.h>
 #include <kxmlguiclient.h>
@@ -42,24 +43,31 @@ KNoteEdit::KNoteEdit( QWidget* parent, const char* name )
     KXMLGUIClient* client = dynamic_cast<KXMLGUIClient*>(parent);
     KActionCollection* actions = client->actionCollection();
 
+    
     // create the actions for the RMB menu
     KAction* undo = KStdAction::undo( this, SLOT(undo()), actions );
     KAction* redo = KStdAction::redo( this, SLOT(redo()), actions );
+    undo->setEnabled( isUndoAvailable() );
+    redo->setEnabled( isRedoAvailable() );
+    
     m_cut = KStdAction::cut( this, SLOT(cut()), actions );
     m_copy = KStdAction::copy( this, SLOT(copy()), actions );
     m_paste = KStdAction::paste( this, SLOT(paste()), actions );
 
     m_cut->setEnabled( false );
     m_copy->setEnabled( false );
-    m_paste->setEnabled( false );
+    m_paste->setEnabled( true );
 
     connect( this, SIGNAL(undoAvailable(bool)), undo, SLOT(setEnabled(bool)) );
     connect( this, SIGNAL(redoAvailable(bool)), redo, SLOT(setEnabled(bool)) );
+    
+    connect( this, SIGNAL(copyAvailable(bool)), m_cut, SLOT(setEnabled(bool)) );
     connect( this, SIGNAL(copyAvailable(bool)), m_copy, SLOT(setEnabled(bool)) );
 
     new KAction( i18n("Clear"), "editclear", 0, this, SLOT(clear()), actions, "edit_clear" );
     KStdAction::selectAll( this, SLOT(selectAll()), actions );
 
+    
     // create the actions modifying the text format
     m_textBold = new KToggleAction( i18n( "&Bold" ), "text_bold", CTRL + Key_B,
                                     actions, "format_bold" );
@@ -137,13 +145,13 @@ KNoteEdit::~KNoteEdit()
 {
 }
 
-void KNoteEdit::readFile( QString& filename )
+void KNoteEdit::readFile( const QString& filename )
 {
     QFile infile( filename );
     if( infile.open( IO_ReadOnly ) )
     {
         QTextStream input( &infile );
-	input.setEncoding(QTextStream::UnicodeUTF8);
+        input.setEncoding(QTextStream::UnicodeUTF8);
         setText( input.read() );
         infile.close();
     } else
@@ -152,7 +160,7 @@ void KNoteEdit::readFile( QString& filename )
     setModified( false );
 }
 
-void KNoteEdit::dumpToFile( QString& filename ) const
+void KNoteEdit::dumpToFile( const QString& filename ) const
 {
     QFile outfile( filename );
     if( outfile.open( IO_WriteOnly ) )
@@ -165,33 +173,17 @@ void KNoteEdit::dumpToFile( QString& filename ) const
         kdDebug(5500) << "could not open file to write to" << endl;
 }
 
-void KNoteEdit::setTextFont( QFont& font )
+void KNoteEdit::setTextFont( const QFont& font )
 {
     if ( textFormat() == PlainText )
-    {
-        setSelectionAttributes( 1, colorGroup().background(), false );
-        setSelection( 0, 0, length(), paragraphLength( length() ), 1 );
-        setCurrentFont( font );
-        removeSelection( 1 );
-    }
+        setFont( font );
     else
-    {
-        setFamily( font.family() );
-        setPointSize( font.pointSize() );
-    }
+        setCurrentFont( font );
 }
 
-void KNoteEdit::setTextColor( QColor& color )
+void KNoteEdit::setTextColor( const QColor& color )
 {
-    if ( textFormat() == PlainText )
-    {
-        setSelectionAttributes( 1, colorGroup().background(), false );
-        setSelection( 0, 0, length(), paragraphLength( length() ), 1 );
-        setColor( color );
-        removeSelection( 1 );
-    }
-    else
-        setColor( color );
+    setColor( color );
 
     QPixmap pix( 16, 16 );
     pix.fill( color );
@@ -285,27 +277,37 @@ void KNoteEdit::textDecreaseIndent()
 
 /** protected methods **/
 
-void KNoteEdit::dragEnterEvent( QDragEnterEvent* event )
+void KNoteEdit::contentsDragEnterEvent( QDragEnterEvent* event )
 {
-    event->accept( QUriDrag::canDecode(event) || QTextDrag::canDecode(event) );
-}
-
-void KNoteEdit::dragMoveEvent( QDragMoveEvent* event )
-{
-    if ( QUriDrag::canDecode(event) )
+    if ( KURLDrag::canDecode( event ) )
         event->accept();
-    else if ( QTextDrag::canDecode(event) )
-        QTextEdit::dragMoveEvent(event);
+    else
+        QTextEdit::contentsDragEnterEvent( event );
 }
 
-void KNoteEdit::dropEvent( QDropEvent* event )
+void KNoteEdit::contentsDragMoveEvent( QDragMoveEvent* event )
 {
-    QStringList list;
+    if ( KURLDrag::canDecode( event ) )
+        event->accept();
+    else
+        QTextEdit::contentsDragMoveEvent( event );
+}
 
-    if ( QUriDrag::decodeToUnicodeUris( event, list ) )
-        emit gotUrlDrop( list.first() );
-    else if ( QTextDrag::canDecode( event ) )
-        QTextEdit::dropEvent( event );
+void KNoteEdit::contentsDropEvent( QDropEvent* event )
+{
+    KURL::List list;
+
+    if ( KURLDrag::decode( event, list ) )
+    {
+        QString text;
+        for ( KURL::List::Iterator it = list.begin(); it != list.end(); ++it )
+            text += (*it).prettyURL() + ", ";
+
+        text.remove( text.length() - 2, 2 );
+        insert( text );
+    }
+    else
+        QTextEdit::contentsDropEvent( event );
 }
 
 /** private slots **/

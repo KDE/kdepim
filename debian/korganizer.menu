@@ -1,8 +1,7 @@
 ?package(korganizer):\
-	needs=x11\
+	needs=X11\
 	section=Apps/Tools\
 	hints="KDE"\
 	kderemove="y"\
 	title="KOrganizer"\
-	command=/usr/bin/korganizer
-
+	command="/usr/bin/korganizer"

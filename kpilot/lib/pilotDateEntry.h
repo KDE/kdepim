@@ -117,7 +117,7 @@ public:
   void setExceptionCount(int e) { fAppointmentInfo.exceptions = e; }
 
   const struct tm *getExceptions() const { return fAppointmentInfo.exception; }
-  void setExceptions(struct tm *e) { fAppointmentInfo.exception = e; }
+  void setExceptions(struct tm *e) { KPILOT_DELETE(fAppointmentInfo.exception); fAppointmentInfo.exception = e; }
 
   void  setDescription(const char* desc);
   const char* getDescription() const { return fAppointmentInfo.description; }
@@ -151,6 +151,9 @@ private:
 
 
 // $Log$
+// Revision 1.3  2002/01/21 23:14:03  adridg
+// Old code removed; extra abstractions added; utility extended
+//
 // Revision 1.2  2001/12/28 12:55:24  adridg
 // Fixed email addresses; added isBackup() to interface
 //

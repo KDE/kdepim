@@ -1,7 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Twister
-Name[af]=twister
 Name[ar]=العاصف
 Name[is]=Snúningur
 Name[ja]=ツイスター
@@ -13,7 +12,7 @@ Name[zu]=Goqonga
 Exec=twister
 Icon=twister
 GenericName=PIM client
-GenericName[af]=pim kliënt
+GenericName[af]=Pim kliënt
 GenericName[ar]=مساعد شخصي
 GenericName[az]=PIM proqramı
 GenericName[bg]=Клиент на PIM
@@ -56,6 +55,7 @@ GenericName[sl]=Odjemnik za PIM
 GenericName[sr]=PIM klijent
 GenericName[sv]=PIM-klient
 GenericName[ta]=PIM ¸ÕÅ¢
+GenericName[th]=ไคลเอนต์ PIM
 GenericName[tr]=PIM programı
 GenericName[uk]=Клієнт PIM
 GenericName[ven]=Mushumisani wa PIM

@@ -50,14 +50,11 @@ void *init_libvcalconduit()
 //
 //
 const char * const VCalConduitFactory::group = "vcalOptions" ;
-const char * const VCalConduitFactory::calendarFile = "CalFile" ;
-const char * const VCalConduitFactory::firstTime = "FirstTime" ;
-const char * const VCalConduitFactory::deleteOnPilot = "DeleteOnPilot" ;
 
 
 KAboutData *VCalConduitFactory::fAbout = 0L;
 VCalConduitFactory::VCalConduitFactory(QObject *p, const char *n) :
-	KLibFactory(p,n)
+	VCalConduitFactoryBase(p,n)
 {
 	FUNCTIONSETUP;
 
@@ -72,6 +69,10 @@ VCalConduitFactory::VCalConduitFactory(QObject *p, const char *n) :
 		I18N_NOOP("Maintainer"),
 		"groot@kde.org",
 		"http://www.cs.kun.nl/~adridg/kpilot");
+	fAbout->addAuthor("Reinhold Kainhofer", 
+		I18N_NOOP("Maintainer"),
+		"reinhold@kainhofer.com",
+		"http://reinhold.kainhofer.com/Linux/");
 	fAbout->addAuthor("Dan Pilone",
 		I18N_NOOP("Original Author"));
 	fAbout->addAuthor("Preston Brown",
@@ -145,6 +146,15 @@ VCalConduitFactory::~VCalConduitFactory()
 }
 
 // $Log$
+// Revision 1.5.2.1  2002/04/28 12:58:54  kainhofe
+// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
+//
+// Revision 1.6  2002/04/20 14:21:26  kainhofe
+// Alarms are now written to the palm. Some bug fixes, extensive testing. Exceptions still crash the palm ;-(((
+//
+// Revision 1.5  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.4  2001/12/31 09:25:05  adridg
 // Cleanup, various fixes for runtime loading
 //
