@@ -1,5 +1,5 @@
 /* XPM */
-static char * kpilprc_xpm[] = {
+static const char * kpilprc_xpm[] = {
 "35 49 7 1",
 " 	s none	c none",
 ".	c black",

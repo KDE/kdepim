@@ -1,5 +1,5 @@
 /* XPM */
-static char*mini[]={
+static const char*mini[]={
 "17 24 6 1",
 ". c #808080",
 "c c #bebebe",
