@@ -1646,8 +1646,9 @@ forwarding.</para>
 
 <sect1 id="mime-tab">
 <title>&MIME; Headers Tab</title>
+<!-- fixme in kmail, too: "headers tab" -->
 
-<para>The <guilabel>Mime Headers</guilabel> section lets you define
+<para>The <guilabel>Create own Message-Id headers</guilabel> section lets you define
 how your messages' Message-Id field will be generated. The Message-Id
 must have a suffix that's world-wide unique. Depeding on your setup,
 this might already be the case. You should send yourself a mail and
