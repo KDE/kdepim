@@ -245,8 +245,9 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   KConfig *config = pgp->getConfig();
   KConfigGroup dialogConfig( config, "Key Selection Dialog" );
 
-  QSize dialogSize = dialogConfig.readSizeEntry( "Dialog size",
-                                                 new QSize( 580, 400 ) );
+  QSize defaultSize( 580, 400 );
+  QSize dialogSize = dialogConfig.readSizeEntry( "Dialog size", &defaultSize );
+
   resize( dialogSize );
 
   mCheckSelectionTimer = new QTimer( this );
