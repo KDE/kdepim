@@ -1,6 +1,9 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2003-11-23  Adriaan de Groot
+* Minor string fixups that don't affect TL.
+
 2003-11-22  Reinhold Kainhofer
 * Fixed the broken conduit config dialog (wasn't able to show config 
   widgets of more than one conduit. If you configured one conduit, and 
@@ -132,7 +135,7 @@ Complete rewrite of the addressbook conduit (for the, umhh, third(?) time).
   the last few years, where they were in a terribly broken state.
 
 2003-6-xx to 2003-7-10  Reinhold Kainhofer
-* I was busy with a lot of stuff from KPIlot, none of which is actually
+* I was busy with a lot of stuff from KPilot, none of which is actually
   in a state where I can commit it. In particular, I'm working on
    -) Custom field sync of the addressbook conduit
    -) Make the conflict resolution of the abook conduit more
