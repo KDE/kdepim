@@ -33,7 +33,7 @@
 #define T_LINESIZE 1023
 
 TaskView::TaskView( QWidget *parent, const char *name )
-  : QListView( parent, name )
+  : KListView( parent, name )
 {
   _preferences = Preferences::instance();
 

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include <qsplitter.h>
-#include <qlistview.h>
+#include <klistview.h>
 #include <qptrlist.h>
 #include <qtextstream.h>
 #include "kwinmodule.h"
@@ -27,7 +27,7 @@ typedef std::vector<Task*> TaskVector;
  * Container and interface for the tasks.
  */
 
-class TaskView : public QListView
+class TaskView : public KListView
 {
     Q_OBJECT
 

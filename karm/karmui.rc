@@ -1,7 +1,7 @@
-<!DOCTYPE kpartgui ><kpartgui name="karm" version="2" >
+<!DOCTYPE kpartgui ><kpartgui name="karm" version="3" >
 <MenuBar>
 	<Menu name="file" >
-		<text>File</text>
+		<text>&amp;File</text>
 		<Action name="reset_session_time" />
 	</Menu>
 	<Menu name="clock" >
