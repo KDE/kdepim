@@ -63,9 +63,9 @@ void KNFetchArticle::parseFrom(const QCString &s)
     else f_rom=p.from();
   }
   else {
-    if(!p.hasValidFrom()) f_rom="no name";
-    else f_rom=p.from();
-    e_mail="no email";
+    if(!p.hasValidFrom()) f_rom="no name";   // ******************************************************************
+    else f_rom=p.from();                     // i18n() is missing !!!!!!!!!!!!!!!!!
+    e_mail="no email";                       // ******************************************************************
   }
 }
 

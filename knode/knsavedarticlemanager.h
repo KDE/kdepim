@@ -100,7 +100,7 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
     KNSavedArticle *c_urrentArticle;
     KNFolder *f_older, *fDrafts, *fOutbox, *fSent;
     int wrapAt;
-    bool rewrap, incSig, genMId, dontIncUA;
+    bool rewrap, incSig, genMId, dontIncUA, allow8bit;
     QCString MIdhost, intro;
     QString quotSign;
     KNSendErrorDialog *sedlg;

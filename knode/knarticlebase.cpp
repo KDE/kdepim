@@ -243,11 +243,11 @@ QCString KNArticleBase::encodeRFC2047String(const QCString aStr)
 
     for (unsigned int x=end;x<aStr.length();x++)
       if (aStr[x]<0) {                   // we found another non-ascii word
-        end = aStr.length();
+        end = x;
 
-    while ((end<aStr.length())&&(aStr[end]!=' '))  // we encode complete words
-      end++;
-    }
+        while ((end<aStr.length())&&(aStr[end]!=' '))  // we encode complete words
+          end++;
+      }
 
     QCString chset;
 

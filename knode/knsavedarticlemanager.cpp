@@ -97,7 +97,8 @@ void KNSavedArticleManager::readConfig()
   intro=conf->readEntry("Intro", "%NAME wrote:").local8Bit();
   KNArticleBase::setDefaultCharset(conf->readEntry("Charset","ISO-8859-1").upper().local8Bit()); // we should use charsetForLocale, but it has the wrong format
   KNArticleBase::setDefaultTextEncoding((KNArticleBase::encoding)(conf->readNumEntry("Encoding", 0)));
-  KNArticleBase::setAllow8bitHeaders(conf->readBoolEntry("allow8bitChars", false));
+  allow8bit = conf->readBoolEntry("allow8bitChars", false);
+  KNArticleBase::setAllow8bitHeaders(allow8bit);
   genMId=conf->readBoolEntry("generateMId", false);
   MIdhost=conf->readEntry("MIdhost").local8Bit();
   KNComposer::readConfig();
@@ -622,7 +623,7 @@ KNSavedArticle* KNSavedArticleManager::newArticle(KNNntpAccount *acc)
     KNFile f(dir+"xheaders");
     if(f.open(IO_ReadOnly)) {
       while(!f.atEnd())
-        a->addHeaderLine(f.readLine(), true);   
+        a->addHeaderLine(f.readLine(), !allow8bit);
       f.close();
     }   
   }
@@ -700,7 +701,7 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
   //Organization
   if(guser && guser->hasOrga()) usr=guser;
   else usr=knGlobals.appManager->defaultUser();
-  if(usr->hasOrga()) art->setHeader(KNArticleBase::HTorga, usr->orga(), true);
+  if(usr->hasOrga()) art->setHeader(KNArticleBase::HTorga, usr->orga(), !allow8bit);
   else art->removeHeader("Organization");
       
   //Reply-To
@@ -709,18 +710,21 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
   else
     usr=knGlobals.appManager->defaultUser();
   if(usr->hasReplyTo())
-    art->setHeader(KNArticleBase::HTreplyTo, usr->replyTo(), true);
+    art->setHeader(KNArticleBase::HTreplyTo, usr->replyTo());
   else
     art->removeHeader("Reply-To");
   
   //From
   if(guser && guser->hasName()) usr=guser;
   else usr=knGlobals.appManager->defaultUser();
-  tmp=usr->name().copy()+" <";
+  if (allow8bit)
+    tmp=usr->name().copy()+" <";
+  else
+    tmp=KNArticleBase::encodeRFC2047String(usr->name())+" <";
   if(guser && guser->hasEmail()) usr=guser;
   else usr=knGlobals.appManager->defaultUser();
   tmp+=usr->email()+">";      
-  art->setHeader(KNArticleBase::HTfrom, tmp, true);
+  art->setHeader(KNArticleBase::HTfrom, tmp, false);
 
   art->assemble();
     
