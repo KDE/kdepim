@@ -49,7 +49,7 @@ const int gSecondsPerDay    = gSecondsPerHour   * 24;
 const int gSecondsPerWeek   = gSecondsPerDay    * 7;
 
 ICalFormatImpl::ICalFormatImpl( ICalFormat *parent ) :
-  mParent( parent )
+  mParent( parent ), mCalendarVersion( 0 )
 {
   mCompat = new Compat;
 }
