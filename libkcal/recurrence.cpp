@@ -2,6 +2,7 @@
     This file is part of libkcal.
     Copyright (c) 1998 Preston Brown
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2002 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -301,31 +302,46 @@ void Recurrence::setRecurStart(const QDateTime &start)
 void Recurrence::setRecurStart(const QDate &start)
 {
   mRecurStart.setDate(start);
-  setFloats(true);
+  mRecurStart.setTime(QTime(0,0,0));
+  switch (recurs)
+  {
+    case rMinutely:
+    case rHourly:
+      break;
+    case rDaily:
+    case rWeekly:
+    case rMonthlyPos:
+    case rMonthlyDay:
+    case rYearlyMonth:
+    case rYearlyDay:
+    case rYearlyPos:
+    default:
+      mFloats = true;
+      break;
+  }
 }
 
 void Recurrence::setFloats(bool f)
 {
+  switch (recurs)
+  {
+    case rDaily:
+    case rWeekly:
+    case rMonthlyPos:
+    case rMonthlyDay:
+    case rYearlyMonth:
+    case rYearlyDay:
+    case rYearlyPos:
+      break;
+    case rMinutely:
+    case rHourly:
+    default:
+      return;     // can't set sub-daily to floating
+  }
   mFloats = f;
   if (f) {
     mRecurStart.setTime(QTime(0,0,0));
-    mFloats = true;
-    switch (recurs)
-    {
-      case rMinutely:
-      case rHourly:
-        break;
-      case rDaily:
-      case rWeekly:
-      case rMonthlyPos:
-      case rMonthlyDay:
-      case rYearlyMonth:
-      case rYearlyDay:
-      case rYearlyPos:
-      default:
-        rEndDateTime.setTime(QTime(0,0,0));
-        break;
-    }
+    rEndDateTime.setTime(QTime(0,0,0));
   }
 }
 
@@ -375,7 +391,8 @@ const QPtrList<int> &Recurrence::monthDays() const
 
 void Recurrence::setMinutely(int _rFreq, int _rDuration)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
+    return;
   setDailySub(rMinutely, _rFreq, _rDuration);
 }
 
@@ -388,7 +405,8 @@ void Recurrence::setMinutely(int _rFreq, const QDateTime &_rEndDateTime)
 
 void Recurrence::setHourly(int _rFreq, int _rDuration)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
+    return;
   setDailySub(rHourly, _rFreq, _rDuration);
 }
 
@@ -401,7 +419,8 @@ void Recurrence::setHourly(int _rFreq, const QDateTime &_rEndDateTime)
 
 void Recurrence::setDaily(int _rFreq, int _rDuration)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
+    return;
   setDailySub(rDaily, _rFreq, _rDuration);
 }
 
@@ -416,7 +435,8 @@ void Recurrence::setDaily(int _rFreq, const QDate &_rEndDate)
 void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
                                int _rDuration, int _rWeekStart)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
+    return;
   recurs = rWeekly;
 
   rFreq = _rFreq;
@@ -462,7 +482,8 @@ void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
 
 void Recurrence::setMonthly(short type, int _rFreq, int _rDuration)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
+    return;
   recurs = type;
 
   rFreq = _rFreq;
@@ -474,7 +495,7 @@ void Recurrence::setMonthly(short type, int _rFreq, int _rDuration)
 }
 
 void Recurrence::setMonthly(short type, int _rFreq,
-                                const QDate &_rEndDate)
+                            const QDate &_rEndDate)
 {
   if (mRecurReadOnly) return;
   recurs = type;
@@ -566,7 +587,8 @@ void Recurrence::addMonthlyDay(short _rDay)
 
 void Recurrence::setYearly(int type, int _rFreq, int _rDuration)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
+    return;
   if (mCompatVersion < 310)
     mCompatDuration = (_rDuration > 0) ? _rDuration : 0;
   setYearly_(type, _rFreq, _rDuration);
@@ -1151,6 +1173,8 @@ void Recurrence::setDailySub(short type, int freq, int duration)
   rMonthPositions.clear();
   rMonthDays.clear();
   rYearNums.clear();
+  if (type != rDaily)
+    mFloats = false;     // sub-daily types can't be floating
   if (mParent) mParent->updated();
 }
 
@@ -1730,10 +1754,9 @@ int Recurrence::monthlyCalcNextAfter(QDate& enddate, MonthlyData& data) const
 {
   uint countTogo = (rDuration > 0) ? rDuration + mRecurExDatesCount : UINT_MAX;
   int countGone = 0;
-  int endYear  = enddate.year();
-  int endMonth = enddate.month() - 1;
-  int endDay   = enddate.day();
-  int endYearMonth = endYear*12 + endMonth;
+  int endYear = enddate.year();
+  int endDay  = enddate.day();
+  int endYearMonth = endYear*12 + enddate.month() - 1;
   QValueList<int>::ConstIterator it;
   const QValueList<int>* days = data.dayList();
 
@@ -2046,7 +2069,7 @@ ex:
 struct Recurrence::YearlyPosData {
     const Recurrence *recurrence;
     int               year;          // current year
-    int               month;         // current month 0..11
+    int               month;         // current month 1..12
     int               day;           // current day of month 1..31
     int               daysPerMonth;  // number of days which recur each month, or -1 if variable
     int               count;         // number of days which recur each year, or -1 if variable
@@ -2061,12 +2084,12 @@ struct Recurrence::YearlyPosData {
               varies = (daysPerMonth < 0);
             }
     const QValueList<int>* dayList() const {
-            QDate startOfMonth(year, month + 1, 1);
+            QDate startOfMonth(year, month, 1);
             recurrence->getMonthlyPosDays(days, startOfMonth.daysInMonth(), startOfMonth.dayOfWeek());
             return &days;
     }
-    int    yearMonth() const       { return year*12 + month; }
-    void   addMonths(int diff)     { month += diff;  year += month / 12;  month %= 12; }
+    int    yearMonth() const       { return year*12 + month - 1; }
+    void   addMonths(int diff)     { month += diff - 1;  year += month / 12;  month = month % 12 + 1; }
     QDate  date() const            { return QDate(year, month, day); }
 };
 
