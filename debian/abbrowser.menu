@@ -2,6 +2,5 @@
 	needs=x11\
 	section=Apps/Tools\
 	title="abbrowser"\
-	command=abbrowser\
-	icon="/usr/share/icons/locolor/16x16/apps/abbrowser.png"
+	command=abbrowser
 

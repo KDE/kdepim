@@ -2,6 +2,5 @@
 	needs=x11\
 	section=Apps/Tools\
 	title="KOrganizer"\
-	command=korganizer\
-	icon="/usr/share/icons/locolor/16x16/apps/korganizer.png"
+	command=korganizer
 
