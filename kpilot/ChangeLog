@@ -1,6 +1,10 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-03-15  Adriaan de Groot
+* Patches from David Mott and Jörn Ahrens today. Excellent!
+* Worked on the docs and website some.
+
 2004-03-13  Adriaan de Groot
 * Stared at the screen for a while trying to think of how to test syncing
   with my spare m100 without breaking my existing stuff from my m500.
