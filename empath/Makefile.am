@@ -13,12 +13,12 @@ empath_LDADD = \
 empath_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 messages:
-	$(XGETTEXT) -C -ki18n -x $(includedir)/kde.pot $(empath_SOURCES) && \
+	$(XGETTEXT) -C -ki18n -x $(includedir)/kde.pot */*.cpp *.cpp && \
 	mv messages.po ../po/empath.pot
 
 install-data-local: 
 	$(mkinstalldirs) $(APPSDIR)
-	$(INSTALL_DATA) $(top_srcdir)/empath/empath.desktop $(APPSDIR)
+	$(INSTALL_DATA) $(srcdir)/empath.desktop $(APPSDIR)
 	$(mkinstalldirs) $(kde_datadir)/empath
 	
 uninstall-local:
