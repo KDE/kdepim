@@ -89,7 +89,8 @@ void ResourceRemoteConfig::saveSettings( KRES::Resource *resource )
 
 
     if ( mUploadUrl->url().isEmpty() && !resource->readOnly() ) {
-      KMessageBox::information( this, i18n( "You have specified no upload URL, the calendar will be read-only." ) );
+      KMessageBox::information( this, i18n( "You have specified no upload URL, "
+			    "the calendar will be read-only." ), "RemoteResourseNoUploadURL" );
       resource->setReadOnly( true );
     }
   } else {
