@@ -37,13 +37,13 @@ void OverViewProgressEntry::setProgress( int status ) {
     // SyncStatus { SYNC_START=0, SYNC_PROGRESS=1,  SYNC_DONE=2,  SYNC_FAIL };
 
     if ( status == 0 )  {
-         m_progressField->setPixmap(  DesktopIcon( "player_play", KIcon::Small ) );
+         m_progressField->setPixmap(  KGlobal::iconLoader()->loadIcon("player_play", KIcon::Desktop, 16 ) );
     } else if ( status == 1 )  {
-         m_progressField->setPixmap(  DesktopIcon( "reload", KIcon::Small ) );
+         m_progressField->setPixmap( KGlobal::iconLoader()->loadIcon("reload", KIcon::Desktop, 16 ) );
     } else if ( status == 2 )  {
-        m_progressField->setPixmap(  DesktopIcon( "ok", KIcon::Small ) );
+        m_progressField->setPixmap( KGlobal::iconLoader()->loadIcon("ok", KIcon::Desktop, 16 ) );
     } else {
-        m_progressField->setPixmap(  DesktopIcon( "no", KIcon::Small ) );
+        m_progressField->setPixmap( KGlobal::iconLoader()->loadIcon("no", KIcon::Desktop, 16 ) );
     }
 }
 
