@@ -48,39 +48,33 @@
 /////////////////////////////////
 // ConfigureCardViewDialog
 
-ConfigureCardViewDialog::ConfigureCardViewDialog(const QString &viewName, 
-                                                   KABC::AddressBook *doc,
-                                                   QWidget *parent, 
-                                                   const char *name)
-  : ConfigureViewDialog(viewName, doc, parent, name)
+ConfigureCardViewWidget::ConfigureCardViewWidget( ViewManager *vm, QWidget *parent, 
+                                                  const char *name )
+  : ViewConfigureWidget( vm, parent, name )
 {
-  initGUI();
+  QWidget *page = addPage( i18n( "Look & Feel" ), QString::null,
+                           DesktopIcon( "looknfeel" ) );
+  mAdvancedPage = new CardViewLookNFeelPage( page );
 }
                                            
-ConfigureCardViewDialog::~ConfigureCardViewDialog()
+ConfigureCardViewWidget::~ConfigureCardViewWidget()
 {
 }
     
-void ConfigureCardViewDialog::readConfig(KConfig *config)
+void ConfigureCardViewWidget::restoreSettings( KConfig *config )
 {
-  ConfigureViewDialog::readConfig(config);
-  
-  advancedPage->readConfig( config );
+  ViewConfigureWidget::restoreSettings( config );
+
+  mAdvancedPage->restoreSettings( config );
 }
 
-void ConfigureCardViewDialog::writeConfig(KConfig *config)
+void ConfigureCardViewWidget::saveSettings( KConfig *config )
 {
-  ConfigureViewDialog::writeConfig(config);
-  
-  advancedPage->writeConfig( config );
+  ViewConfigureWidget::saveSettings( config );
+
+  mAdvancedPage->saveSettings( config );
 }
     
-void ConfigureCardViewDialog::initGUI()
-{
-  QWidget *page = addVBoxPage( i18n("Look & Feel"), QString::null, DesktopIcon("looknfeel") );
-  advancedPage = new CardViewLookNFeelPage( page );
-}
-
 ////////////////////////
 // CardViewLookNFeelPage
 CardViewLookNFeelPage::CardViewLookNFeelPage( QWidget *parent, const char *name )
@@ -93,7 +87,7 @@ CardViewLookNFeelPage::~CardViewLookNFeelPage()
 {
 }
 
-void CardViewLookNFeelPage::readConfig( KConfig *config )
+void CardViewLookNFeelPage::restoreSettings( KConfig *config )
 {
   // colors
   cbEnableCustomColors->setChecked( config->readBoolEntry( "EnableCustomColors", false ) );
@@ -139,7 +133,7 @@ void CardViewLookNFeelPage::readConfig( KConfig *config )
   cbShowEmptyFields->setChecked( config->readBoolEntry( "ShowEmptyFields", true ) );
 }
 
-void CardViewLookNFeelPage::writeConfig( KConfig *config )
+void CardViewLookNFeelPage::saveSettings( KConfig *config )
 {
   // colors
   config->writeEntry( "EnableCustomColors", cbEnableCustomColors->isChecked() );

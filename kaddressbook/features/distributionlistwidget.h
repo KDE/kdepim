@@ -45,7 +45,7 @@ class DistributionListWidget : public ExtensionWidget
     Q_OBJECT
 
   public:
-    DistributionListWidget( ViewManager*, QWidget *parent );
+    DistributionListWidget( ViewManager*, QWidget *parent, const char *name = 0 );
     virtual ~DistributionListWidget();
 
     void addresseeSelectionChanged();

@@ -24,7 +24,7 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include "configureviewdialog.h"
+#include "viewconfigurewidget.h"
 
 #include <qvbox.h>
 #include <qwidget.h>
@@ -40,27 +40,23 @@ namespace KABC { class AddressBook; }
 
 class CardViewLookAndFeelPage;
 
-/** Configure dialog for the card view. This dialog inherits from the
-* standard view dialog in order to add a custom page for the card
-* view.
-*/
-class ConfigureCardViewDialog : public ConfigureViewDialog
+/**
+  Configure dialog for the card view. This dialog inherits from the
+  standard view dialog in order to add a custom page for the card
+  view.
+ */
+class ConfigureCardViewWidget : public ViewConfigureWidget
 {
   public:
-    ConfigureCardViewDialog(const QString &viewName, KABC::AddressBook *doc,
-                             QWidget *parent, const char *name);
-    virtual ~ConfigureCardViewDialog();
+    ConfigureCardViewWidget( ViewManager *vm, QWidget *parent, const char *name );
+    virtual ~ConfigureCardViewWidget();
     
-    virtual void readConfig(KConfig *config);
-    virtual void writeConfig(KConfig *config);
+    virtual void restoreSettings( KConfig* );
+    virtual void saveSettings( KConfig* );
     
   private:
-    void initGUI();
-    
-    //CardViewLookAndFeelPage *mPage;
-    class CardViewLookNFeelPage *advancedPage;
+    class CardViewLookNFeelPage *mAdvancedPage;
 };
-
 
 /**
     Card View Advanced LookNFeel settings widget:
@@ -89,8 +85,8 @@ class CardViewLookNFeelPage : public QVBox {
     CardViewLookNFeelPage( QWidget *parent=0, const char *name=0 );
     ~CardViewLookNFeelPage();
   
-    void readConfig( KConfig * );
-    void writeConfig( KConfig * );
+    void restoreSettings( KConfig* );
+    void saveSettings( KConfig* );
   
   private slots:
     void setTextFont();

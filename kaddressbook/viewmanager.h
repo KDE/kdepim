@@ -32,6 +32,7 @@
 #include <ktrader.h>
 
 #include "filter.h"
+#include "kaddressbookview.h"
 
 class QComboBox;
 class QDropEvent;
@@ -49,9 +50,7 @@ namespace KABC { class AddressBook; }
 class AddresseeEditorWidget;
 class ExtensionWidget;
 class JumpButtonBar;
-class KAddressBookView;
 class ViewContainer;
-class ViewWrapper;
 
 /**
   The view manager manages the views and everything related to them. The
@@ -332,13 +331,10 @@ class ViewManager : public QWidget
     ExtensionWidget *loadExtension( KService::Ptr, QWidget *parent );
     ExtensionWidget *loadExtension( const QString&, QWidget *parent  );
 
-    KAddressBookView *loadView( KService::Ptr, QWidget *parent  );
-    KAddressBookView *loadView( const QString&, QWidget *parent  );
-
     /**
-      Create a view wrapper for each type of view we know about.
+      Create all factories for each type of view we know about.
      */
-    void createViewWrappers();
+    void createViewFactories();
 
     /**
       Creates the GUI components.
@@ -360,7 +356,7 @@ class ViewManager : public QWidget
     KConfig *mConfig;
 
     QDict<KAddressBookView> mViewDict;
-    QDict<ViewWrapper> mViewWrapperDict;
+    QDict<ViewFactory> mViewFactoryDict;
     QStringList mViewNameList;
     QWidgetStack *mViewWidgetStack;
 

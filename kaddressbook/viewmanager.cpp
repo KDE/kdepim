@@ -47,21 +47,18 @@
 #include <kmultipledrag.h>
 #include <libkdepim/kvcarddrag.h>
 
+#include "addresseeeditorwidget.h"
+#include "addresseeutil.h"
+#include "addviewdialog.h"
+#include "detailsviewcontainer.h"
+#include "extensionwidget.h"
+#include "filterselectionwidget.h"
+#include "jumpbuttonbar.h"
 #include "undo.h"
 #include "undocmds.h"
+#include "viewconfigurewidget.h"
+
 #include "viewmanager.h"
-#include "configureviewdialog.h"
-#include "viewwrapper.h"
-#include "iconviewwrapper.h"
-#include "tableviewwrapper.h"
-#include "detailsviewcontainer.h"
-#include "cardviewwrapper.h"
-#include "addviewdialog.h"
-#include "jumpbuttonbar.h"
-#include "addresseeutil.h"
-#include "addresseeeditorwidget.h"
-#include "filterselectionwidget.h"
-#include "extensionwidget.h"
 
 ViewManager::ViewManager( KABC::AddressBook *ab, KConfig *config,
                           QWidget *parent, const char *name )
@@ -70,9 +67,9 @@ ViewManager::ViewManager( KABC::AddressBook *ab, KConfig *config,
   initGUI();
 
   mViewDict.setAutoDelete( true );
-  mViewWrapperDict.setAutoDelete( true );
+  mViewFactoryDict.setAutoDelete( true );
 
-  createViewWrappers();
+  createViewFactories();
 
   mActiveView = 0;
 }
@@ -80,7 +77,7 @@ ViewManager::ViewManager( KABC::AddressBook *ab, KConfig *config,
 ViewManager::~ViewManager()
 {
   unloadViews();
-  mViewWrapperDict.clear();
+  mViewFactoryDict.clear();
 }
 
 void ViewManager::readConfig()
@@ -259,9 +256,9 @@ void ViewManager::setActiveView( const QString &name )
 
     kdDebug(5720) << "ViewManager::setActiveView: creating view - " << name << endl;
 
-    ViewWrapper *wrapper = mViewWrapperDict.find( type );
-    if ( wrapper )
-      view = wrapper->createView( mAddressBook, mViewWidgetStack, name.latin1() );
+    ViewFactory *factory = mViewFactoryDict.find( type );
+    if ( factory )
+      view = factory->view( this, mViewWidgetStack, name.latin1() );
 
     if ( view ) {
       mViewDict.insert( name, view );
@@ -320,23 +317,24 @@ void ViewManager::modifyView()
   if ( !mActiveView )
     return;
 
-  ConfigureViewDialog *dialog = 0;
+  ViewFactory *factory = mViewFactoryDict.find( mActiveView->type() );
+  ViewConfigureWidget *wdg = 0;
 
-  ViewWrapper *wrapper = mViewWrapperDict.find( mActiveView->type() );
-
-  if ( wrapper ) {
+  if ( factory ) {
     // Save the filters so the dialog has the latest set
     Filter::save( mConfig, "Filter", mFilterList );
 
-    dialog = wrapper->createConfigureViewDialog( mActiveView->name(),
-                                                 mAddressBook, this );
+    wdg = factory->configureWidget( this, 0 );
   }
 
-  if ( dialog ) {
+  if ( wdg ) {
+    ViewConfigureDialog dlg( wdg, mActiveView->name(), this );
+
     mConfig->setGroup( mActiveView->name() );
-    dialog->readConfig( mConfig );
-    if ( dialog->exec() ) {
-      dialog->writeConfig( mConfig );
+    dlg.restoreSettings( mConfig );
+
+    if ( dlg.exec() ) {
+      dlg.saveSettings( mConfig );
       mActiveView->readConfig( mConfig );
 
       // Set the proper filter in the view. By setting the combo
@@ -354,8 +352,6 @@ void ViewManager::modifyView()
       refreshIncrementalSearchCombo();
 
       mActiveView->refresh();
-
-      delete dialog;
     }
   }
 }
@@ -383,7 +379,7 @@ void ViewManager::deleteView()
 
 void ViewManager::addView()
 {
-  AddViewDialog dialog( &mViewWrapperDict, this );
+  AddViewDialog dialog( &mViewFactoryDict, this );
 
   if ( dialog.exec() ) {
     QString newName = dialog.viewName();
@@ -418,19 +414,30 @@ void ViewManager::addView()
   }
 }
 
-void ViewManager::createViewWrappers()
+void ViewManager::createViewFactories()
 {
-  // View Developers: Add an entry here to create the wrapper for your view
-  // type and add it to the list. Thats it :D
+  KTrader::OfferList plugins = availablePlugins( "KAddressBook/View" );
+  KTrader::OfferList::ConstIterator it;
+  for ( it = plugins.begin(); it != plugins.end(); ++it ) {
+    if ( !(*it)->hasServiceType( "KAddressBook/View" ) )
+      continue;
 
-  ViewWrapper *wrapper = new IconViewWrapper();
-  mViewWrapperDict.insert( wrapper->type(), wrapper );
+    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library() );
 
-  wrapper = new TableViewWrapper();
-  mViewWrapperDict.insert( wrapper->type(), wrapper );
+    if ( !factory ) {
+      kdDebug(5720) << "ViewManager::createViewFactories(): Factory creation failed" << endl;
+      continue;
+    }
 
-  wrapper = new CardViewWrapper();
-  mViewWrapperDict.insert( wrapper->type(), wrapper );
+    ViewFactory *viewFactory = static_cast<ViewFactory*>( factory );
+  
+    if ( !viewFactory ) {
+      kdDebug(5720) << "ViewManager::createViewFactories(): Cast failed" << endl;
+      continue;
+    }
+
+    mViewFactoryDict.insert( viewFactory->type(), viewFactory );
+  }
 }
 
 void ViewManager::initGUI()
@@ -472,8 +479,6 @@ void ViewManager::initGUI()
   KTrader::OfferList plugins = availablePlugins( "KAddressBook/Extension" );
   KTrader::OfferList::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
-    kdDebug() << "Part: " << (*it)->desktopEntryName() << " ("
-              << (*it)->name() << ")" << endl;
     wdg = loadExtension( *it, mExtensionBar );
     if ( wdg ) {
       wdg->hide();
@@ -740,7 +745,7 @@ ExtensionWidget *ViewManager::loadExtension( KService::Ptr service, QWidget *par
     return 0;
   }
   
-  return extensionFactory->create( this, parent );
+  return extensionFactory->extension( this, parent );
 }
 
 ExtensionWidget *ViewManager::loadExtension( const QString &name, QWidget *parent )
@@ -750,40 +755,6 @@ ExtensionWidget *ViewManager::loadExtension( const QString &name, QWidget *paren
   for ( it = list.begin(); it != list.end(); ++it ) {
     if ( (*it)->desktopEntryName() == name )
       return loadExtension( *it, parent );
-  }
-
-  return 0;
-}
-
-KAddressBookView *ViewManager::loadView( KService::Ptr service, QWidget *parent )
-{
-  if ( !service->hasServiceType( "KAddressBook/View" ) )
-    return 0;
-
-  KLibFactory *factory = KLibLoader::self()->factory( service->library() );
-
-  if ( !factory ) {
-    kdDebug(5720) << "ViewManager::loadView(): Factory creation failed" << endl;
-    return 0;
-  }
-  
-  ViewFactory *viewFactory = static_cast<ViewFactory*>( factory );
-  
-  if ( !viewFactory ) {
-    kdDebug(5720) << "ViewManager::loadView(): Cast failed" << endl;
-    return 0;
-  }
-  
-  return viewFactory->create( this, parent );
-}
-
-KAddressBookView *ViewManager::loadView( const QString &name, QWidget *parent )
-{
-  KTrader::OfferList list = availablePlugins( "KAddressBook/View" );
-  KTrader::OfferList::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
-    if ( (*it)->desktopEntryName() == name )
-      return loadView( *it, parent );
   }
 
   return 0;

@@ -12,23 +12,53 @@
 #include <qevent.h>
 #include <qurl.h>
 
-#include <kurl.h>
-#include <kdebug.h>
-#include <klocale.h>
-#include <kconfig.h>
-#include <kapplication.h>
-#include <kcolorbutton.h>
-#include <kglobal.h>
-#include <kmessagebox.h>
-#include <kiconloader.h>
-#include <kurlrequester.h>
-#include <klineedit.h>
 #include <kabc/addressbook.h>
+#include <kapplication.h>
+#include <kconfig.h>
+#include <kcolorbutton.h>
+#include <kdebug.h>
+#include <kglobal.h>
+#include <kiconloader.h>
+#include <klineedit.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <kurl.h>
+#include <kurlrequester.h>
 
-#include "kaddressbooktableview.h"
-#include "undocmds.h"
+#include "configuretableviewdialog.h"
 #include "contactlistview.h"
 #include "kabprefs.h"
+#include "undocmds.h"
+#include "viewmanager.h"
+
+#include "kaddressbooktableview.h"
+
+class TableViewFactory : public ViewFactory
+{
+  public:
+    KAddressBookView *view( ViewManager *vm, QWidget *parent, const char *name )
+    {
+      return new KAddressBookTableView( vm->addressBook(), parent, name );
+    }
+
+    QString type() const { return "Table"; }
+    
+    QString description() const { return i18n( "A listing of contacts in a table. Each cell of "
+                                  "the table holds a field of the contact." ); }
+
+    ViewConfigureWidget *configureWidget( ViewManager *vm, QWidget *parent,
+                                          const char *name = 0 )
+    {
+      return new ConfigureTableViewWidget( vm, parent, name );
+    }
+};
+
+extern "C" {
+  void *init_libkaddrbk_tableview()
+  {
+    return ( new TableViewFactory );
+  }
+}
 
 KAddressBookTableView::KAddressBookTableView( KABC::AddressBook *ab,
                                               QWidget *parent, const char *name )

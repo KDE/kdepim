@@ -41,7 +41,7 @@ class LocationWidget : public ExtensionWidget
     Q_OBJECT
 
   public:
-    LocationWidget( ViewManager*, QWidget *parent );
+    LocationWidget( ViewManager*, QWidget *parent, const char *name = 0 );
     virtual ~LocationWidget();
 
     void addresseeSelectionChanged();

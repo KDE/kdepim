@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "configurewidget.h"
+
 #include "extensionwidget.h"
 
 ExtensionWidget::ExtensionWidget( ViewManager *vm, QWidget *parent,
@@ -73,6 +75,12 @@ QString ExtensionWidget::title() const
 QString ExtensionWidget::identifier() const
 {
   return "empty_widget";
+}
+
+ConfigureWidget *ExtensionFactory::configureWidget( ViewManager*, QWidget*,
+                                                    const char* )
+{
+  return 0;
 }
 
 #include "extensionwidget.moc"

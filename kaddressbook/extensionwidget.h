@@ -31,6 +31,8 @@
 
 #include "viewmanager.h"
 
+class ConfigureWidget;
+
 class ExtensionWidget : public QWidget
 {
   Q_OBJECT
@@ -83,8 +85,12 @@ class ExtensionWidget : public QWidget
 class ExtensionFactory : public KLibFactory
 {
   public:
-    virtual ExtensionWidget *create( ViewManager *vm, QWidget *parent ) = 0;
+    virtual ExtensionWidget *extension( ViewManager *vm, QWidget *parent,
+                                        const char *name = 0 ) = 0;
 
+    virtual ConfigureWidget *configureWidget( ViewManager *vm,
+                                              QWidget *parent,
+                                              const char *name = 0 );
   protected:
     virtual QObject* createObject( QObject*, const char*, const char*,
                                    const QStringList & )

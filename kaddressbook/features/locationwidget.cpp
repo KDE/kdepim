@@ -41,9 +41,9 @@
 class LocationFactory : public ExtensionFactory
 {
   public:
-    ExtensionWidget *create( ViewManager *vm, QWidget *parent )
+    ExtensionWidget *extension( ViewManager *vm, QWidget *parent, const char *name )
     {
-      return new LocationWidget( vm, parent );
+      return new LocationWidget( vm, parent, name );
     }
 };
 
@@ -54,8 +54,8 @@ extern "C" {
   }
 }
 
-LocationWidget::LocationWidget( ViewManager *vm, QWidget *parent )
-  : ExtensionWidget( vm, parent )
+LocationWidget::LocationWidget( ViewManager *vm, QWidget *parent, const char *name )
+  : ExtensionWidget( vm, parent, name )
 {
   QGridLayout *topLayout = new QGridLayout( this, 3, 2, KDialog::marginHint(),
                                             KDialog::spacingHint() );

@@ -3,7 +3,7 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/details -I$(top_srcdir)/kaddressbook/feat
 	-I$(top_srcdir) -I$(top_builddir)/kaddressbook/printing \
 	-I$(top_builddir)/kaddressbook/details $(all_includes) 
 
-SUBDIRS = details printing views . features pics csv-templates
+SUBDIRS = details printing . views features pics csv-templates
 
 SRCDOC_DEST=$(kde_htmldir)/en/kaddressbook
 
@@ -19,36 +19,36 @@ libkaddressbookpart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 libkaddressbookpart_la_LIBADD  = $(top_builddir)/libkdepim/libkdepim.la \
 	./details/libdetails.la \
 	./printing/libprinter.la \
-	./views/libviews.la \
 	$(LIB_KPARTS) $(LIB_KHTML) \
 	-lkabc -lkdeprint
 
 libkaddressbookpart_la_SOURCES = \
  actionmanager.cpp addhostdialog.cpp addresseditwidget.cpp addresseeconfig.cpp \
  addresseeeditordialog.cpp addresseeeditorwidget.cpp addresseeutil.cpp \
- addviewdialog.cpp configureviewdialog.cpp configureviewfilterpage.cpp \
+ addviewdialog.cpp configurewidget.cpp \
  emaileditwidget.cpp extensionwidget.cpp filter.cpp filtereditdialog.cpp \
  filterselectionwidget.cpp importdialog.cpp incsearchwidget.cpp \
  jumpbuttonbar.cpp kabprefs.cpp kaddressbook.cpp \
  kaddressbook_part.cpp kaddressbookiface.skel kaddressbookmain.cpp \
  kaddressbookview.cpp ldapoptionswidget.cpp \
  ldapsearchdialog.ui ldapsearchdialogimpl.cpp nameeditdialog.cpp \
- phoneeditwidget.cpp prefsdialog.cpp selectfieldswidget.cpp \
- undo.cpp undocmds.cpp viewmanager.cpp viewwrapper.cpp
+ phoneeditwidget.cpp prefsdialog.cpp undo.cpp undocmds.cpp \
+ viewconfigurefieldspage.cpp viewconfigurefilterpage.cpp \
+ viewconfigurewidget.cpp viewmanager.cpp
 
 kaddressbook_METASOURCES = AUTO
 
 noinst_HEADERS = \
  actionmanager.h addhostdialog.h addresseditwidget.h addresseeconfig.h \
  addresseeeditordialog.h addresseeeditorwidget.h addresseeutil.h \
- addviewdialog.h configureviewdialog.h configureviewfilterpage.h \
+ addviewdialog.h configurewidget.h \
  emaileditwidget.h filter.h filtereditdialog.h \
  filterselectionwidget.h importdialog.h incsearchwidget.h \
  jumpbuttonbar.h kabprefs.h kaddressbook.h kaddressbook_part.h \
  kaddressbookmain.h kaddressbookview.h ldapoptionswidget.h \
  ldapsearchdialogimpl.h nameeditdialog.h phoneeditwidget.h prefsdialog.h \
- selectfieldswidget.h typecombo.h undo.h undocmds.h viewmanager.h \
- viewwrapper.h
+ typecombo.h undo.h undocmds.h viewconfigurefieldspage.h \
+ viewconfigurefilterpage.h viewconfigurewidget.h viewmanager.h
 
 rcdir = $(kde_datadir)/kaddressbook
 rc_DATA = kaddressbookui.rc

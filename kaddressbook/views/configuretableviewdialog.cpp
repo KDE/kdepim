@@ -38,8 +38,38 @@
 #include <kiconloader.h>
 #include <kconfig.h>
 
-/////////////////////////////////
-// Look and feel page
+ConfigureTableViewWidget::ConfigureTableViewWidget( ViewManager *vm,
+                                                    QWidget *parent, 
+                                                    const char *name )
+  : ViewConfigureWidget( vm, parent, name )
+{
+  QWidget *page = addPage( i18n( "Look & Feel" ), QString::null,
+                           KGlobal::iconLoader()->loadIcon( "looknfeel",
+                           KIcon::Desktop ) );
+  
+  mPage = new LookAndFeelPage( page );
+}
+                                           
+ConfigureTableViewWidget::~ConfigureTableViewWidget()
+{
+}
+
+void ConfigureTableViewWidget::restoreSettings( KConfig *config )
+{
+  ViewConfigureWidget::restoreSettings( config );
+
+  mPage->restoreSettings( config );
+}
+
+void ConfigureTableViewWidget::saveSettings( KConfig *config )
+{
+  ViewConfigureWidget::saveSettings( config );
+
+  mPage->saveSettings( config );
+}
+
+
+
 LookAndFeelPage::LookAndFeelPage(QWidget *parent, const char *name)
   : QWidget(parent, name)
 {
@@ -49,7 +79,7 @@ LookAndFeelPage::LookAndFeelPage(QWidget *parent, const char *name)
   enableBackgroundToggled(mBackgroundBox->isChecked());
 }
     
-void LookAndFeelPage::readConfig(KConfig *config)
+void LookAndFeelPage::restoreSettings( KConfig *config )
 {
   mAlternateButton->setChecked(config->readBoolEntry("ABackground", true));
   mLineButton->setChecked(config->readBoolEntry("SingleLine", false));
@@ -62,7 +92,7 @@ void LookAndFeelPage::readConfig(KConfig *config)
   mBackgroundName->lineEdit()->setText(config->readEntry("BackgroundName"));
 }
     
-void LookAndFeelPage::writeConfig(KConfig *config)
+void LookAndFeelPage::saveSettings( KConfig *config )
 {
   config->writeEntry("ABackground", mAlternateButton->isChecked());
   config->writeEntry("SingleLine", mLineButton->isChecked());
@@ -112,44 +142,5 @@ void LookAndFeelPage::enableBackgroundToggled(bool enabled)
 {
   mBackgroundName->setEnabled(enabled);
 }
-
-/////////////////////////////////
-// ConfigureTableViewDialog
-
-ConfigureTableViewDialog::ConfigureTableViewDialog(const QString &viewName, 
-                                                   KABC::AddressBook *doc,
-                                                   QWidget *parent, 
-                                                   const char *name)
-  : ConfigureViewDialog(viewName, doc, parent, name)
-{
-  initGUI();
-}
-                                           
-ConfigureTableViewDialog::~ConfigureTableViewDialog()
-{
-}
     
-void ConfigureTableViewDialog::readConfig(KConfig *config)
-{
-  ConfigureViewDialog::readConfig(config);
-  
-  mPage->readConfig(config);
-}
-
-void ConfigureTableViewDialog::writeConfig(KConfig *config)
-{
-  ConfigureViewDialog::writeConfig(config);
-  
-  mPage->writeConfig(config);
-}
-    
-void ConfigureTableViewDialog::initGUI()
-{
-  QWidget *page = addVBoxPage(i18n("Look & Feel"), QString::null,
-                              KGlobal::iconLoader()->loadIcon("looknfeel",
-                                                            KIcon::Desktop));
-  
-  mPage = new LookAndFeelPage(page, "mLookAndFeelPage");
-}
-
 #include "configuretableviewdialog.moc"

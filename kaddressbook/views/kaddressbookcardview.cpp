@@ -21,20 +21,49 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "kaddressbookcardview.h"
-
-#include <qevent.h>
 #include <qdragobject.h>
-#include <qlayout.h>
+#include <qevent.h>
 #include <qiconview.h>
+#include <qlayout.h>
 #include <qstringlist.h>
 
-#include <kconfig.h>
-#include <kdebug.h>
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
+#include <kconfig.h>
+#include <kdebug.h>
+#include <klocale.h>
 
+#include "configurecardviewdialog.h"
 #include "kabprefs.h"
+#include "viewmanager.h"
+
+#include "kaddressbookcardview.h"
+
+class CardViewFactory : public ViewFactory
+{
+  public:
+    KAddressBookView *view( ViewManager *vm, QWidget *parent, const char *name )
+    {
+      return new KAddressBookCardView( vm->addressBook(), parent, name );
+    }
+
+    QString type() const { return "Card"; }
+    
+    QString description() const { return i18n( "Rolodex style cards represent contacts." ); }
+    
+    ViewConfigureWidget *configureWidget( ViewManager *vm, QWidget *parent,
+                                          const char *name = 0 )
+    {
+      return new ConfigureCardViewWidget( vm, parent, name );
+    }
+};
+
+extern "C" {
+  void *init_libkaddrbk_cardview()
+  {
+    return ( new CardViewFactory );
+  }
+}
 
 ////////////////////////////////
 // AddresseeCardViewItem  (internal class)

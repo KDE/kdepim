@@ -31,10 +31,13 @@
 #include <klibloader.h>
 
 #include "filter.h"
-#include "viewmanager.h"
+#include "viewconfigurewidget.h"
+
+class KConfig;
 
 class QDropEvent;
-class KConfig;
+
+class ViewManager;
 
 namespace KABC { class AddressBook; }
 
@@ -256,7 +259,33 @@ class KAddressBookView : public QWidget
 class ViewFactory : public KLibFactory
 {
   public:
-    virtual KAddressBookView *create( ViewManager *parent, QWidget *parent ) = 0;
+    virtual KAddressBookView *view( ViewManager *vm, QWidget *parent,
+                                    const char *name = 0 ) = 0;
+    /**
+      @return The type of the view. This is normally a small one word
+      string (ie: Table, Icon, Tree, etc).
+     */
+    virtual QString type() const = 0;
+    
+    /**
+      @return The description of the view. This should be a 3 to
+      4 line string (don't actually use return characters in the string)
+      describing the features offered by the view.
+     */
+    virtual QString description() const = 0;
+    
+    /**
+      Creates a config dialog for the view type. The default 
+      implementation will return a ViewConfigDialog. This default
+      dialog will allow the user to set the visible fields only. If
+      you need more config options (as most views will), this method
+      can be overloaded to return your sublcass of ViewConfigDialog.
+      If this method is over loaded the base classes method should
+      <B>not</B> be called.
+     */
+    virtual ViewConfigureWidget *configureWidget( ViewManager *vm,
+                                                  QWidget *parent,
+                                                  const char *name = 0 ); 
 
   protected:
     virtual QObject* createObject( QObject*, const char*, const char*,

@@ -1,6 +1,3 @@
-#ifndef ICONVIEWWRAPPER_H
-#define ICONVIEWWRAPPER_H
-
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -24,35 +21,33 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include <qstring.h>
-#include <klocale.h>
-#include "kaddressbookiconview.h"
-#include "viewwrapper.h"
+#ifndef VIEWCONFIGUREFILTERPAGE
+#define VIEWCONFIGUREFILTERPAGE
 
-namespace KABC { class AddressBook; }
+#include <qwidget.h>
 
-class IconViewWrapper : public ViewWrapper
+class QButtonGroup;
+
+class KComboBox;
+class KConfig;
+
+class ViewConfigureFilterPage : public QWidget
 {
+  Q_OBJECT
+  
   public:
-    IconViewWrapper() : ViewWrapper() {}
-    virtual ~IconViewWrapper() {}
+    ViewConfigureFilterPage( QWidget *parent, const char *name = 0 );
+    ~ViewConfigureFilterPage();
     
-    virtual QString type() const { return "Icon"; };
+    void restoreSettings( KConfig* );
+    void saveSettings( KConfig* );
     
-    virtual QString description() const
-    {
-      // Needs a better description.
-      QString desc = i18n("Icons represent contacts. Very simple view.");
-      
-      return desc;
-    }
+  protected slots:
+    void buttonClicked( int id );
     
-    virtual KAddressBookView *createView( KABC::AddressBook *ab, QWidget *parent,
-                                          const char *name )
-    {
-      return new KAddressBookIconView( ab, parent, name );
-    }
-
+  private:
+    KComboBox *mFilterCombo;
+    QButtonGroup *mFilterGroup;
 };
 
 #endif

@@ -21,57 +21,81 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#ifndef CONFIGUREVIEWDIALOG_H
-#define CONFIGUREVIEWDIALOG_H
+#ifndef VIEWCONFIGUREWIDGET_H
+#define VIEWCONFIGUREWIDGET_H
 
 #include <kdialogbase.h>
 
-class ConfigureViewFilterPage;
-class SelectFieldsWidget;
+#include <qpixmap.h>
 
-namespace KABC { class AddressBook; }
+#include "configurewidget.h"
+
+class KJanusWidget;
+
+class QString;
+class QVBox;
+
+class ViewConfigureFieldsPage;
+class ViewConfigureFilterPage;
 
 /**
-  This dialog is the base class for all view configuration dialogs. The 
-  author of a view may wish to inherit from this dialog and add config pages
-  that add custom config options. The default implementation of this dialog
+  This widget is the base class for all view configuration widgets. The 
+  author of a view may wish to inherit from this widget and add config pages
+  that add custom config options. The default implementation of this widget
   is to show a page with the select fields widget. For simple views this may
   be sufficient.
-
-  This dialog is based on an IconList version of KDialogBase. See the 
-  KDialogBase documentation for more information on adding pages.
 */
-class ConfigureViewDialog : public KDialogBase
+class ViewConfigureWidget : public ConfigureWidget
 {
   Q_OBJECT
     
   public:
-    ConfigureViewDialog( const QString &viewName, KABC::AddressBook *ab,
-                         QWidget *parent, const char *name = 0 );
-    virtual ~ConfigureViewDialog();
+    ViewConfigureWidget( ViewManager *vm, QWidget *parent, const char *name = 0 );
+    virtual ~ViewConfigureWidget();
     
     /**
       Reads the configuration from the config object and sets the values
       in the GUI. If this method is overloaded, be sure to call the base
       class's method.
-    
+
       Do not change the group of the config object in this method.
      */
-    virtual void readConfig( KConfig *config );
+    virtual void restoreSettings( KConfig *config );
     
     /**
       Writes the configuration from the GUI to the config object. If this
       method is overloaded, be sure to call the base class's method.
-     
+
       Do not change the group of the config object in this method.
      */
-    virtual void writeConfig( KConfig *config );
+    virtual void saveSettings( KConfig *config );
  
+
+    /**
+      Use this method to add new pages to the widget.
+     */
+    QVBox *addPage( const QString &item, const QString &header = QString::null,
+                    const QPixmap &pixmap = QPixmap() );
+
   private:
-    void initGUI( KABC::AddressBook * );
-    
-    SelectFieldsWidget *mSelectFieldsWidget;
-    ConfigureViewFilterPage *mFilterPage;
+    KJanusWidget *mMainWidget;    
+
+    ViewConfigureFieldsPage *mFieldsPage;
+    ViewConfigureFilterPage *mFilterPage;
+};
+
+class ViewConfigureDialog : public KDialogBase
+{
+  public:
+    ViewConfigureDialog( ViewConfigureWidget *wdg, const QString &viewName,
+                         QWidget *parent, const char *name = 0 );
+    ~ViewConfigureDialog();
+
+    void restoreSettings( KConfig* );
+    void saveSettings( KConfig* );
+
+  private:
+    ViewConfigureWidget *mConfigWidget;
 };
 
 #endif

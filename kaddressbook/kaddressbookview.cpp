@@ -30,6 +30,8 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+#include "viewmanager.h"
+
 #include "kaddressbookview.h"
 
 KAddressBookView::KAddressBookView( KABC::AddressBook *ab, QWidget *parent,
@@ -149,6 +151,13 @@ KABC::AddressBook *KAddressBookView::addressBook() const
 QWidget *KAddressBookView::viewWidget()
 {
   return mViewWidget;
+}
+
+ViewConfigureWidget *ViewFactory::configureWidget( ViewManager *vm,
+                                                   QWidget *parent,
+                                                   const char *name )
+{
+  return new ViewConfigureWidget( vm, parent, name );
 }
 
 #include "kaddressbookview.moc"

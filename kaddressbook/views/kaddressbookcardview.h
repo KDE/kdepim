@@ -86,4 +86,5 @@ class AddresseeCardView : public CardView
     virtual void dropEvent(QDropEvent *);
     virtual void startDrag();
 };
+
 #endif

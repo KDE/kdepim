@@ -31,10 +31,10 @@
 #include <kdialog.h>
 #include <klocale.h>
 
-#include "configureviewfilterpage.h"
+#include "viewconfigurefilterpage.h"
 #include "filter.h"
 
-ConfigureViewFilterPage::ConfigureViewFilterPage( QWidget *parent,
+ViewConfigureFilterPage::ViewConfigureFilterPage( QWidget *parent,
                                                   const char *name )
   : QWidget( parent, name )
 {
@@ -72,12 +72,12 @@ ConfigureViewFilterPage::ConfigureViewFilterPage( QWidget *parent,
   comboLayout->addWidget( mFilterCombo );
 }
 
-ConfigureViewFilterPage::~ConfigureViewFilterPage()
+ViewConfigureFilterPage::~ViewConfigureFilterPage()
 {
   delete mFilterGroup;
 }
     
-void ConfigureViewFilterPage::readConfig( KConfig *config )
+void ViewConfigureFilterPage::restoreSettings( KConfig *config )
 {
   mFilterCombo->clear();
   
@@ -95,15 +95,15 @@ void ConfigureViewFilterPage::readConfig( KConfig *config )
     mFilterCombo->setCurrentText( config->readEntry( "DefaultFilterName" ) );
 }
 
-void ConfigureViewFilterPage::writeConfig( KConfig *config )
+void ViewConfigureFilterPage::saveSettings( KConfig *config )
 {
   config->writeEntry( "DefaultFilterName", mFilterCombo->currentText() );
   config->writeEntry( "DefaultFilterType", mFilterGroup->id( mFilterGroup->selected() ) );
 }
     
-void ConfigureViewFilterPage::buttonClicked( int id )
+void ViewConfigureFilterPage::buttonClicked( int id )
 {
   mFilterCombo->setEnabled( id == 2 );
 }
 
-#include "configureviewfilterpage.moc"
+#include "viewconfigurefilterpage.moc"

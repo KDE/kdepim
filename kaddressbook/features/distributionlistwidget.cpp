@@ -47,9 +47,9 @@
 class DistributionListFactory : public ExtensionFactory
 {
   public:
-    ExtensionWidget *create( ViewManager *vm, QWidget *parent )
+    ExtensionWidget *extension( ViewManager *vm, QWidget *parent, const char *name )
     {
-      return new DistributionListWidget( vm, parent );
+      return new DistributionListWidget( vm, parent, name );
     }
 };
 
@@ -100,8 +100,9 @@ class ContactItem : public QListViewItem
     QString mEmail;
 };
 
-DistributionListWidget::DistributionListWidget( ViewManager *vm, QWidget *parent )
-  : ExtensionWidget( vm, parent ), mManager( 0 )
+DistributionListWidget::DistributionListWidget( ViewManager *vm, QWidget *parent,
+                                                const char *name )
+  : ExtensionWidget( vm, parent, name ), mManager( 0 )
 {
   QGridLayout *topLayout = new QGridLayout( this, 3, 4, KDialog::marginHint(),
                                             KDialog::spacingHint() );

@@ -21,8 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef SELECTFIELDSWIDGET_H 
-#define SELECTFIELDSWIDGET_H 
+#ifndef VIEWCONFIGUREFIELDSPAGE_H 
+#define VIEWCONFIGUREFIELDSPAGE_H
 
 #include <qwidget.h>
 
@@ -35,20 +35,16 @@ class QListBoxItem;
 class QPushButton;
 class QToolButton;
 
-class SelectFieldsWidget : public QWidget
+class ViewConfigureFieldsPage : public QWidget
 {
   Q_OBJECT
 
   public:
-    SelectFieldsWidget( KABC::AddressBook *doc,
-                        const KABC::Field::List &selectedFields,
-                        QWidget *parent = 0, const char *name = 0 );
-                       
-    SelectFieldsWidget( KABC::AddressBook *doc, QWidget *parent = 0,
-                        const char *name = 0);
-    
-    virtual void setSelectedFields( const KABC::Field::List & );
-    virtual KABC::Field::List selectedFields();
+    ViewConfigureFieldsPage( KABC::AddressBook *ab, QWidget *parent = 0,
+                             const char *name = 0 );
+
+    void restoreSettings( KConfig* );
+    void saveSettings( KConfig* );
 
   public slots:
     void slotSelect();
@@ -60,7 +56,7 @@ class SelectFieldsWidget : public QWidget
     void slotButtonsEnabled();
   
   private:
-    void initGUI( KABC::AddressBook * );
+    void initGUI();
     
     KComboBox *mCategoryCombo;
     QListBox *mSelectedBox;
@@ -69,8 +65,8 @@ class SelectFieldsWidget : public QWidget
     QToolButton *mRemoveButton;
     QToolButton *mUpButton;
     QToolButton *mDownButton;
-    
-    KABC::AddressBook *mDoc;
+
+    KABC::AddressBook *mAddressBook;
 };
 
-#endif // SELECTFIELDSWIDGET_H 
+#endif

@@ -21,28 +21,50 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include "kaddressbookiconview.h"
-
-#include <qlayout.h>
 #include <qiconview.h>
+#include <qlayout.h>
 #include <qstringlist.h>
 
-#include <kconfig.h>
-#include <kiconloader.h>
-#include <kglobal.h>
-#include <kdebug.h>
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
+#include <kconfig.h>
+#include <kdebug.h>
+#include <kglobal.h>
+#include <kiconloader.h>
+#include <klocale.h>
 
 #include "kabprefs.h"
+#include "viewmanager.h"
+
+#include "kaddressbookiconview.h"
+
+class IconViewFactory : public ViewFactory
+{
+  public:
+    KAddressBookView *view( ViewManager *vm, QWidget *parent, const char *name )
+    {
+      return new KAddressBookIconView( vm->addressBook(), parent, name );
+    }
+
+    QString type() const { return "Icon"; }
+    
+    QString description() const { return i18n( "Icons represent contacts. Very simple view." ); }
+};
+
+extern "C" {
+  void *init_libkaddrbk_iconview()
+  {
+    return ( new IconViewFactory );
+  }
+}
 
 ////////////////////////////////
 // AddresseeIconView (internal class)
 AddresseeIconView::AddresseeIconView(QWidget *parent, const char *name)
   : KIconView(parent, name)
 {
-  setSelectionMode(QIconView::Extended);
-  setResizeMode(QIconView::Adjust);
+  setSelectionMode( QIconView::Extended );
+  setResizeMode( QIconView::Adjust );
   setWordWrapIconText( true );
   setGridX( 100 );
   setItemsMovable(false);

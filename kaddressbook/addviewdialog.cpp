@@ -29,15 +29,16 @@
 
 #include <klocale.h>
 
-#include "addviewdialog.h"
-#include "viewwrapper.h"
+#include "kaddressbookview.h"
 
-AddViewDialog::AddViewDialog( QDict<ViewWrapper> *viewWrapperDict, 
+#include "addviewdialog.h"
+
+AddViewDialog::AddViewDialog( QDict<ViewFactory> *viewFactoryDict, 
                               QWidget *parent, const char *name )
   : KDialogBase( KDialogBase::Plain, i18n( "Add View" ),
                  KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
                  parent, name ),
-   mViewWrapperDict( viewWrapperDict )
+   mViewFactoryDict( viewFactoryDict )
 {
   mTypeId = 0;
     
@@ -61,9 +62,9 @@ AddViewDialog::AddViewDialog( QDict<ViewWrapper> *viewWrapperDict,
   layout->addMultiCellWidget( mTypeGroup, 1, 1, 0, 1 );
     
   // Now create the radio buttons. This needs some layout work.
-  QDictIterator<ViewWrapper> iter( *mViewWrapperDict );
+  QDictIterator<ViewFactory> iter( *mViewFactoryDict );
   for ( iter.toFirst(); iter.current(); ++iter ) {
-    QRadioButton *rb = new QRadioButton( (*iter)->type(), mTypeGroup );
+    new QRadioButton( (*iter)->type(), mTypeGroup );
     label = new QLabel( (*iter)->description(), mTypeGroup );
     label->setAlignment( Qt::AlignLeft | Qt::AlignTop | Qt::WordBreak );
   }

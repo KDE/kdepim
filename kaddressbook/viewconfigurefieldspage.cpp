@@ -33,7 +33,7 @@
 #include <kiconloader.h>
 #include <klocale.h>
 
-#include "selectfieldswidget.h"
+#include "viewconfigurefieldspage.h"
 
 class FieldItem : public QListBoxText
 {
@@ -51,35 +51,42 @@ class FieldItem : public QListBoxText
     KABC::Field *mField;
 };
 
-////////////////////////
-// SelectFieldsWidget Methods
 
-SelectFieldsWidget::SelectFieldsWidget( KABC::AddressBook *doc,
-                                        const KABC::Field::List &selectedFields,
-                                        QWidget *parent, const char *name )
-  : QWidget( parent, name )
+ViewConfigureFieldsPage::ViewConfigureFieldsPage( KABC::AddressBook *ab,
+                                                  QWidget *parent,
+                                                  const char *name )
+  : QWidget( parent, name ), mAddressBook( ab )
 {
-  initGUI( doc );
-  setSelectedFields( selectedFields );
+  initGUI();
 }
 
-SelectFieldsWidget::SelectFieldsWidget( KABC::AddressBook *doc, QWidget *parent,
-                                        const char *name )
-  : QWidget( parent, name )
+void ViewConfigureFieldsPage::restoreSettings( KConfig *config )
 {
-  initGUI( doc );
-}
+  KABC::Field::List fields = KABC::Field::restoreFields( config, "KABCFields" );
 
-void SelectFieldsWidget::setSelectedFields( const KABC::Field::List &selectedFields )
-{
+  if ( fields.isEmpty() )
+    fields = KABC::Field::defaultFields();
+  
   KABC::Field::List::ConstIterator it;
-  for( it = selectedFields.begin(); it != selectedFields.end(); ++it )
+  for( it = fields.begin(); it != fields.end(); ++it )
     new FieldItem( mSelectedBox, *it );
 
   slotShowFields( mCategoryCombo->currentItem() );
 }
 
-void SelectFieldsWidget::slotShowFields( int index )
+void ViewConfigureFieldsPage::saveSettings( KConfig *config )
+{
+  KABC::Field::List fields;
+
+  for( uint i = 0; i < mSelectedBox->count(); ++i ) {
+    FieldItem *fieldItem = static_cast<FieldItem *>( mSelectedBox->item( i ) );
+    fields.append( fieldItem->field() );
+  }
+
+  KABC::Field::saveFields( config, "KABCFields", fields );
+}
+
+void ViewConfigureFieldsPage::slotShowFields( int index )
 {
   int currentPos = mUnSelectedBox->currentItem();
   mUnSelectedBox->clear();
@@ -88,7 +95,7 @@ void SelectFieldsWidget::slotShowFields( int index )
   if ( index == 0 ) category = KABC::Field::All;
   else category = 1 << ( index - 1 );
 
-  KABC::Field::List allFields = mDoc->fields( category );
+  KABC::Field::List allFields = mAddressBook->fields( category );
 
   KABC::Field::List::ConstIterator it;
   for ( it = allFields.begin(); it != allFields.end(); ++it ) {
@@ -108,7 +115,7 @@ void SelectFieldsWidget::slotShowFields( int index )
   mUnSelectedBox->setCurrentItem( currentPos );
 }
 
-void SelectFieldsWidget::slotSelect()
+void ViewConfigureFieldsPage::slotSelect()
 {
   // insert selected items in the unselected list to the selected list,
   // directoy under the current item if selected, or at the bottonm if
@@ -127,7 +134,7 @@ void SelectFieldsWidget::slotSelect()
   slotShowFields( mCategoryCombo->currentItem() );
 }
 
-void SelectFieldsWidget::slotUnSelect()
+void ViewConfigureFieldsPage::slotUnSelect()
 {
   for ( uint i = 0; i < mSelectedBox->count(); ++i )
     if ( mSelectedBox->isSelected( mSelectedBox->item( i ) ) ) {
@@ -138,19 +145,7 @@ void SelectFieldsWidget::slotUnSelect()
   slotShowFields( mCategoryCombo->currentItem() );
 }
 
-KABC::Field::List SelectFieldsWidget::selectedFields()
-{
-  KABC::Field::List result;
-
-  for( uint i = 0; i < mSelectedBox->count(); ++i ) {
-    FieldItem *fieldItem = static_cast<FieldItem *>( mSelectedBox->item( i ) );
-    result.append( fieldItem->field() );
-  }
-
-  return result;
-}
-
-void SelectFieldsWidget::slotButtonsEnabled()
+void ViewConfigureFieldsPage::slotButtonsEnabled()
 {
   bool state = false;
   // add button: enabled if any items are selected in the unselected list
@@ -180,7 +175,7 @@ void SelectFieldsWidget::slotButtonsEnabled()
   mRemoveButton->setEnabled( state );
 }
 
-void SelectFieldsWidget::slotMoveUp()
+void ViewConfigureFieldsPage::slotMoveUp()
 {
   int i = mSelectedBox->currentItem();
   if ( i > 0 ) {
@@ -192,7 +187,7 @@ void SelectFieldsWidget::slotMoveUp()
   }
 }
 
-void SelectFieldsWidget::slotMoveDown()
+void ViewConfigureFieldsPage::slotMoveDown()
 {
   int i = mSelectedBox->currentItem();
   if ( i > -1 && i < (int)mSelectedBox->count() - 1 ) {
@@ -204,10 +199,8 @@ void SelectFieldsWidget::slotMoveDown()
   }
 }
 
-void SelectFieldsWidget::initGUI( KABC::AddressBook *doc )
+void ViewConfigureFieldsPage::initGUI()
 {
-  mDoc = doc;
-
   setCaption( i18n("Select Fields to Display") );
 
   QGridLayout *gl = new QGridLayout( this , 6, 4, KDialog::spacingHint() );
@@ -288,4 +281,4 @@ void SelectFieldsWidget::initGUI( KABC::AddressBook *doc )
   slotButtonsEnabled();
 }
 
-#include "selectfieldswidget.moc"
+#include "viewconfigurefieldspage.moc"

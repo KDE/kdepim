@@ -30,7 +30,7 @@
 
 class QButtonGroup;
 class QLineEdit;
-class ViewWrapper;
+class ViewFactory;
 
 
 /**
@@ -43,7 +43,7 @@ class AddViewDialog : public KDialogBase
   Q_OBJECT
     
   public:
-    AddViewDialog( QDict<ViewWrapper> *viewWrapperDict, QWidget *parent,
+    AddViewDialog( QDict<ViewFactory> *viewFactoryDict, QWidget *parent,
                    const char *name = 0 );
     ~AddViewDialog();
     
@@ -63,7 +63,7 @@ class AddViewDialog : public KDialogBase
     void textChanged( const QString &text );
     
   private:
-    QDict<ViewWrapper> *mViewWrapperDict;
+    QDict<ViewFactory> *mViewFactoryDict;
     QLineEdit *mViewNameEdit;
     QButtonGroup *mTypeGroup;
     
