@@ -221,7 +221,7 @@ void QtopiaSocket::write( Syncee::PtrList list) {
     }
     Syncee *syncee;
 
-    kdDebug(5225) << "Writing informations back now. Count is " << list.count() << endl;
+    kdDebug(5225) << "Writing information back now. Count is " << list.count() << endl;
     /*
      * For all Syncees we see if it
      * is one of the Opie built in functionality
@@ -246,7 +246,7 @@ void QtopiaSocket::write( Syncee::PtrList list) {
     list.clear();
 
     /*
-     * write new category informations
+     * write new category information
      */
     writeCategory();
     d->helper->save();

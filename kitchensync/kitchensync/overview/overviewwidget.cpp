@@ -43,6 +43,8 @@ Widget::Widget( QWidget* parent, const char* name )
 
     QSplitter *split = new QSplitter(this);
     m_edit = new QTextEdit( split );
+    m_edit->setReadOnly(true);
+    m_edit->setTextFormat(Qt::LogText);
     QLabel* ab = new QLabel(split);
     ab->setText("SplitLabel");
 

@@ -714,7 +714,7 @@ void KSyncMainWindow::slotPartSyncStatus( ManipulatorPart* par, int err) {
         emit startSync( part );
         part->sync( m_inSyncee, m_outSyncee );
     }else{ // we're done go write it back
-        emit partProgress( 0, Progress(i18n("Going to write the informations back now.") ) );
+        emit partProgress( 0, Progress(i18n("Going to write the information back now.") ) );
         m_inSyncee.setAutoDelete( true );
         m_inSyncee.clear();
         delete m_partsIt;

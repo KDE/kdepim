@@ -237,7 +237,7 @@ void QtopiaSocket::write( Syncee::PtrList list) {
     list.clear();
 
     /*
-     * write new category informations
+     * write new category information
      */
     writeCategory();
     d->helper->save();
