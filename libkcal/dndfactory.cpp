@@ -174,7 +174,7 @@ Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime
         anJournal->setDtStart( QDateTime( newDate ) );
       }
     } else {
-      kdDebug(5850) << "Trying to past unknown incidence of type " << inc->type() << endl;
+      kdDebug(5850) << "Trying to paste unknown incidence of type " << inc->type() << endl;
     }
     
     if ( mCalendar ) mCalendar->addIncidence( inc );
