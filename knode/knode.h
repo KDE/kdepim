@@ -144,6 +144,8 @@ class KNodeApp : public KMainWindow
     void slotConfKeys();
     void slotConfToolbar();
     void slotSettingsFinished();
+
+    void slotCurrentArticleChanged();   // enable/disable Cancel & Supersede actions
         
     //view-slots
     void slotCollectionClicked(QListViewItem *it);

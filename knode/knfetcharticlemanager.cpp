@@ -163,7 +163,6 @@ void KNFetchArticleManager::setGroup(KNGroup *g)
     actAllRead->setEnabled(true);
     actAllUnread->setEnabled(true);
     actSearch->setEnabled(true);
-    actOwnWindow->setEnabled(true);
   } else {
     actShowThreads->setEnabled(false);
     actExpandAll->setEnabled(false);
@@ -172,7 +171,6 @@ void KNFetchArticleManager::setGroup(KNGroup *g)
     actAllRead->setEnabled(false);
     actAllUnread->setEnabled(false);
     actSearch->setEnabled(false);
-    actOwnWindow->setEnabled(false);
   }
 
   g_roup=g;
@@ -185,6 +183,8 @@ void KNFetchArticleManager::showHdrs(bool clear)
 {
   if(!g_roup) return;
   KNFetchArticle *art;
+
+  mainArtWidget->showBlankPage();
 
   knGlobals.top->setCursorBusy(true);
   knGlobals.top->setStatusMsg(i18n(" Creating list ..."));
@@ -273,6 +273,8 @@ void KNFetchArticleManager::setCurrentArticle(KNFetchArticle *a)
   actThreadSetScore->setEnabled((c_urrent));
   actThreadWatch->setEnabled((c_urrent));
   actThreadIgnore->setEnabled((c_urrent));
+  actOwnWindow->setEnabled((c_urrent));
+  emit(currentArticleChanged());    // let KNodeApp enable/disable its actions
 }
 
 

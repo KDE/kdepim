@@ -122,6 +122,9 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
     void slotCancel()            { cancel(); }
     void slotSendNow()           { sendArticle(); }
     void slotSendLater()         { sendArticle(0, false); }
+
+  signals:
+    void currentArticleChanged();
       
 };
 

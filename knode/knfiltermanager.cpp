@@ -228,6 +228,8 @@ void KNFilterManager::saveFilterLists()
 void KNFilterManager::startConfig(KNFilterSettings *fs)
 {
   fset=fs;
+  commitNeeded = false;
+
   for(KNArticleFilter *f=fList.first(); f; f=fList.next())
     fset->addItem(f); 
   
@@ -260,7 +262,8 @@ void KNFilterManager::commitChanges()
 
   updateMenu();
 
-  emit filterChanged(currFilter);
+  if (commitNeeded)
+    emit filterChanged(currFilter);
 }
 
 
@@ -298,6 +301,7 @@ void KNFilterManager::editFilter(KNArticleFilter *f)
   KNFilterDialog *fdlg=new KNFilterDialog(f,(fset)? fset:knGlobals.topWidget);
   
   if (fdlg->exec()) {
+    commitNeeded = true;
     if(f->id()==-1) {  // new filter
       addFilter(f);
       f->setLoaded(true);

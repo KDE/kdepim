@@ -139,6 +139,8 @@ void KNSavedArticleManager::showHdrs()
   //bool filterResult=true;
   if(!f_older) return;
 
+  mainArtWidget->showBlankPage();
+
   knGlobals.top->setCursorBusy(true);
   knGlobals.top->setStatusMsg(i18n(" Creating list ..."));
   knGlobals.top->secureProcessEvents();
@@ -195,6 +197,7 @@ void KNSavedArticleManager::setCurrentArticle(KNSavedArticle *a)
     actSendNow->setEnabled(false);
     actSendLater->setEnabled(false);
   }
+  emit(currentArticleChanged());    // let KNodeApp enable/disable its actions
 }
 
 

@@ -365,6 +365,8 @@ void KNodeApp::initActions()
   actSupersede = new KAction(i18n("S&upersede"), 0 , this, SLOT(slotSupersede()),
                              actionCollection(), "article_supersede");
   actSupersede->setEnabled(false);
+  connect(FAManager, SIGNAL(currentArticleChanged()), SLOT(slotCurrentArticleChanged()));
+  connect(SAManager, SIGNAL(currentArticleChanged()), SLOT(slotCurrentArticleChanged()));
 
   KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
   KStdAction::showStatusbar(this, SLOT(slotToggleStatusBar()), actionCollection());
@@ -540,6 +542,15 @@ void KNodeApp::slotSettingsFinished()
 
 
 
+// enable/disable Cancel & Supersede actions
+void KNodeApp::slotCurrentArticleChanged()
+{
+  bool b = FAManager->hasCurrentArticle() || SAManager->hasCurrentArticle();
+  actCancel->setEnabled(b);
+  actSupersede->setEnabled(b);
+}
+
+
 //==================== VIEW-SLOTS ======================
 
 
@@ -585,7 +596,6 @@ void KNodeApp::slotCollectionSelected(QListViewItem *it)
       setStatusMsg(QString::null, SB_FILTER);
       setCaption(acc->name());
     }
-    view->artView->showBlankPage();
   }
 
   AManager->setCurrentAccount(acc);
@@ -594,8 +604,6 @@ void KNodeApp::slotCollectionSelected(QListViewItem *it)
   FoManager->setCurrentFolder(fldr);
   view->setNotAFolder(!(fldr));
   view->setHeaderSelected(false);
-  actCancel->setEnabled(false);
-  actSupersede->setEnabled(false);
 }
 
 
@@ -616,8 +624,6 @@ void KNodeApp::slotHeaderSelected(QListViewItem *it)
   FAManager->setCurrentArticle(fart);
   SAManager->setCurrentArticle(sart);
   view->setHeaderSelected((fart));
-  actCancel->setEnabled(true);
-  actSupersede->setEnabled(true);
 }
 
 

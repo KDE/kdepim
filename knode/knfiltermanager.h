@@ -100,7 +100,7 @@ class KNFilterManager : public QObject
     KNFilterSelectAction *actFilter;
     QValueList<int> menuOrder;  
     KActionCollection actionCollection;
-    bool isAGroup;
+    bool isAGroup, commitNeeded;
   
   protected slots:
     void slotMenuActivated(int id);

@@ -122,6 +122,9 @@ class KNFetchArticleManager : public QObject, public KNArticleManager  {
     void slotOwnWindow()          { articleWindow(); }
     void slotMarkRead()           { setArticleRead(0, true); }
     void slotMarkUnread()         { setArticleRead(0, false); }
+
+  signals:
+    void currentArticleChanged();
     
 };
 
