@@ -714,8 +714,6 @@ mimeHeader::magicSetType (bool aAutoDecode)
   QByteArray body;
   KMimeMagicResult *result;
 
-  int sep;
-
   KMimeMagic::self ()->setFollowLinks (TRUE); // is it necessary ?
 
   if (aAutoDecode)
