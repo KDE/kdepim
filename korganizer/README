@@ -13,7 +13,7 @@ QUICK NOTES ON WHAT'S NEW IN THIS RELEASE:
   - Bug fixes:
     - Use correct default duration for events crossing a day boundary (#53477).
     - Correctly save category colors (#54913).
-
+    - Don't show todos more than once in what's next view.
 
 * Official 3.1 release (January 2003)
 
