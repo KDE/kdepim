@@ -190,9 +190,6 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     /** Return Resource for given uid */
     ResourceCalendar *resource(Incidence *);
 
-  signals:
-    void calendarChanged();
-
   protected:
     /**
       The observer interface. So far not implemented.
