@@ -156,6 +156,13 @@ void ExchangeDownload::slotMasterResult( KIO::Job *job )
 void ExchangeDownload::handleAppointments( const QDomDocument& response, bool recurrence ) {
   //kdDebug() << "Entering handleAppointments" << endl;
   int successCount = 0;
+
+  if ( response.documentElement().firstChild().toElement().isNull() ) {
+    // Got an empty response, but no error. This would mean there are
+    // no appointments in this time period.
+    return;
+  }
+
   for( QDomElement item = response.documentElement().firstChild().toElement();
        !item.isNull();
        item = item.nextSibling().toElement() )
