@@ -17,7 +17,7 @@
 2004-04-28  Adriaan de Groot
 * [kpilotConfigDialog] Added UI for screenlockSecure option. Docs, too.
 * [kpilot] Changed hotSync button to one with a little dropdown
-  menu, thanks to Jörn. [kpilotConfig] String fix for outdated config.
+  menu, thanks to Joern. [kpilotConfig] String fix for outdated config.
   [probeDialog] Fixed up comments. [hotSync] Normalized debugging output.
   [pilotDaemon] Fixed backwards logic.
 
@@ -44,7 +44,7 @@
   magic constant 0xffff in PilotRecord::APP_BUFFER_SIZE. Removed
   some * in char *buffer[] where char buffer[] was meant, reducing KPilot's
   stack memory usage there by a factor of 4 or more.
-* Patch from Jörn Ahrens to close another Bugzilla bug.
+* Patch from Joern Ahrens to close another Bugzilla bug.
 
 2004-04-18  Reinhold Kainhofer
 * Finish the autodetection of the handheld for the wizard. You *CAN* pi_bind
@@ -68,7 +68,7 @@
 
 2004-04-16  Adriaan de Groot
 * Fixed double dialog when cancelling a change in the selection in the config
-  dialog. Took patch from Jörn to fix resize problem in abbrowser resolution
+  dialog. Took patch from Joern to fix resize problem in abbrowser resolution
   dialog. Minor constructor mod in pilotMemo.h, and a much more nasty problem
   in pilotMemo.cc, which seems to use a wrong memo length. Added some
   docs. Removed a warning in addressWidget.cc.
@@ -108,7 +108,7 @@
   if the message says it it for esoteric stuff.
 
 2004-04-09  Adriaan de Groot
-* Work on docs. Accept patch from Jörn for broken config in abbrowser
+* Work on docs. Accept patch from Joern for broken config in abbrowser
   conduit. Receive docs patches from Carlos.
 
 2004-04-05  Adriaan de Groot
@@ -117,7 +117,7 @@
 
 2004-04-04  Adriaan de Groot
 * Split out the general settings pages so that no tab widgets are
-  needed. Jörn's title patch for those pages made the tabs weird
+  needed. Joern's title patch for those pages made the tabs weird
   anyway, and now things are consistent, at least. We could move
   the backup page to "Actions", if we want.
 
@@ -134,7 +134,7 @@
   testing 71122 as long as possible.
 
 2004-03-26  Adriaan de Groot
-* Another day, another fix from Jörn.
+* Another day, another fix from Joern.
 * Backported the fix for backup settings being ignored from Sebastian V.
   (Actually, just used his original patch, which didn't use kcfgXT.
 * Prevent sync when screen locked, as a security measure.
@@ -144,7 +144,7 @@
 * 71122 has been top of the list for over a week - not getting around to
   it at all. Fixes elsewhere; working on getting a Linux machine up and
   running to be able to run POSE with a null-modem pseudo-device.
-* Another patch from Jörn; arr, it's a learning experience!
+* Another patch from Joern; arr, it's a learning experience!
 * Removed logging weirdness in the fileinstall action.
 
 2004-03-19  Adriaan de Groot
@@ -174,10 +174,10 @@
   conduit, fixed up the code that was left, reduced the size of the
   setup dialog, and ended up with something that actually works again.
   Fixed bugs  60579 and 77948.
-* Yet another patch from Jörn, added him to credits, too.
+* Yet another patch from Joern, added him to credits, too.
 
 2004-03-15  Adriaan de Groot
-* Patches from David Mott and Jörn Ahrens today. Excellent!
+* Patches from David Mott and Joern Ahrens today. Excellent!
 * Worked on the docs and website some.
 
 2004-03-14  Reinhold Kainhofer
@@ -195,7 +195,7 @@
 * Added configuration widget to perl conduit.
 
 2004-03-12  Adriaan de Groot
-* Received patches from Jörn Ahrens and Sebastian Voitzsch for
+* Received patches from Joern Ahrens and Sebastian Voitzsch for
   various issues. Thanks guys! It's contributions like this that
   really inspire me to keep working on KPilot. Reinhold and I can't
   do everything by ourselves.
