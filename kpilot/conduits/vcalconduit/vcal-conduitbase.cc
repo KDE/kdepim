@@ -53,6 +53,10 @@ static const char *vcalconduitbase_id = "$Id$";
 #include "vcalconduitSettings.h"
 
 
+#ifndef LIBKCAL_IS_VERSION
+#warning "Using an old version of libkcal with timezone bug."
+#define LIBKCAL_IS_VERSION(a,b,c) (0)
+#endif
 
 
 
@@ -339,7 +343,7 @@ static void listResources(KCal::CalendarResources *p)
 			rescal->readConfig();
 			rescal->load();
 #else
-#error "Timezone bug is present."
+#warning "Timezone bug is present."
 #endif
 			addSyncLogEntry(i18n("Syncing with standard calendar resource."));
 			emit logMessage(i18n("Using %1 time zone: %2")
