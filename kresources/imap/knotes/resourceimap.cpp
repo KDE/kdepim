@@ -43,6 +43,7 @@ KNotesIMAP::ResourceIMAP::ResourceIMAP( const KConfig *config )
   : ResourceNotes( config ),
     ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-KNotes" )
 {
+  setType( "imap" );
 }
 
 KNotesIMAP::ResourceIMAP::~ResourceIMAP()

@@ -46,6 +46,7 @@ KABC::ResourceIMAP::ResourceIMAP( const KConfig *config )
   : KPIM::ResourceABC( config ),
     ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-KABC" )
 {
+  setType( "imap" );
   FormatFactory *factory = FormatFactory::self();
   mFormat = factory->format( "vcard" );
 }
