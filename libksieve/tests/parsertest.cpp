@@ -34,6 +34,7 @@
 using KSieve::Parser;
 
 #include <ksieve/error.h>
+#include <ksieve/scriptbuilder.h>
 
 #include <qcstring.h> // qstrlen
 #include <qstring.h>
@@ -378,8 +379,9 @@ static const int numTestCases = sizeof testCases / sizeof *testCases ;
 // (manual tests).
 class PrintingScriptBuilder : public KSieve::ScriptBuilder {
 public:
-  PrintingScriptBuilder() : KSieve::ScriptBuilder() {
-    indent = 0;
+  PrintingScriptBuilder()
+    : KSieve::ScriptBuilder(), indent( 0 )
+  {
     write( "<script type=\"application/sieve\">" );
     ++indent;
   }
@@ -483,7 +485,7 @@ class VerifyingScriptBuilder : public KSieve::ScriptBuilder {
 public:
   VerifyingScriptBuilder( const TestCase & testCase )
     : KSieve::ScriptBuilder(),
-      mNextResponse( 0 ), mTestCase( testCase )
+      mNextResponse( 0 ), mTestCase( testCase ), mOk( true )
   {
   }
   virtual ~VerifyingScriptBuilder() {}
@@ -633,7 +635,7 @@ int main( int argc, char * argv[]  ) {
       VerifyingScriptBuilder v( t );
       Parser p( t.script, t.script + qstrlen( t.script ) );
       p.setScriptBuilder( &v );
-      bool ok = p.parse();
+      const bool ok = p.parse();
       if ( v.ok() )
 	if ( ok )
 	  cerr << " ok";
