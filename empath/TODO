@@ -5,18 +5,19 @@ Highest priority first.
 * Make forwarding work properly. If only one plain body part -> just
   add some text stating this is forwarded, else attach as message/rfc822 ?
 
-* Drag and drop - Working on this but I need HELP ! It's not working right !
+* Drag and drop - Wilco is working on this
 
 * Nail down the parser (rmm). It's still buggy when creating message parts
   yourself and trying to put them together.
   
-* kioslaves need to be worked in for POP, IMAP, and possibly SMTP (where a
-  kioslave would have to be written !)
+* kioslaves need to be worked in for POP (working on), IMAP, and possibly SMTP
+  (where a kioslave would have to be written !)
   
 * Find a way to both use a message cache, AND allow messages larger than the
   maximum size for the cache. If I limit the cache to 1Mb to keep mem usage down
   then I also end up refusing to show large messages ! If I resize the cache,
   and then set it back down, the message will be deleted !
+  Working on this...
  
 * Come up with an intelligent solution to the password storage problem.
 
@@ -32,20 +33,13 @@ Highest priority first.
 * Use inbox, outbox etc icons where appropriate ?
 
 * Make From: bit in header view widget active as HTML label - basically need
-  some way to be able to mail to or add to non-existant address book.
+  some way to be able to mail to or add to (non-existant) address book.
 
 * Plug memory leaks. Basically this just means putting setAutoDelete() back
   in various parts of rmm. I think this crashes because of a Qt bug.
   
-* Implement locking of index files. Will have to use dotlocking to ensure it'll
-  work over NFS. We can get away with this as only Empath knows about them.
+* Implement locking of index files. Update: Should work ok with gdbm now.
   
 * CORBA !
 
-  x Use an OpenPart for the mail editor.
-
-  x Make the mail reading stuff, the message listing stuff, the folder listing
-  stuff, etc, all into OpenParts. Perhaps. Necessary ? Well, at least the
-  compose stuff.
-
-  x Talk to Simon Hausmann about this stuff.
+ (Work in progress...)
