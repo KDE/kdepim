@@ -115,6 +115,23 @@ bool Scheduler::acceptTransaction(Incidence *incidence,Method method,ScheduleMes
         return true;
       }
     }
+    else {
+      if (method==Cancel) {
+        kdDebug() << "Scheduler::acceptTransaction -Cancel-" << endl;
+        //get event in calendar
+        QPtrList<Event> eventList;
+        eventList=mCalendar->getEvents(incidence->dtStart().date(),incidence->dtStart().date(),false);
+        Event *ev;
+        for ( ev = eventList.first(); ev; ev = eventList.next() ) {
+          if (ev->VUID()==incidence->VUID()) {
+            //get matching attendee in calendar
+            kdDebug() << "Scheduler::acceptTransaction match found!" << endl;
+            mCalendar->deleteEvent(ev);
+          }
+        }
+      }
+    }
+
   }
   deleteTransaction(incidence);
   return false;
