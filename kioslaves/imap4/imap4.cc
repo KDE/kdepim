@@ -2043,6 +2043,22 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
   else
   {
     kdDebug(7116) << "IMAP4: parseURL: box [root]" << endl;
+    QString myNamespace = QString::null; // until namespace is supported
+    if (!mHierarchyDelim.contains(myNamespace))
+    {
+      // get the hierarchydelimiter (empty listing) and put it in the cache
+      imapCommand *cmd = doCommand (imapCommand::clientList ("", ""));
+      if (cmd->result () == "OK")
+      {
+        for (QValueListIterator < imapList > it = listResponses.begin ();
+             it != listResponses.end (); ++it)
+        {
+          _hierarchyDelimiter = (*it).hierarchyDelimiter();
+          mHierarchyDelim[myNamespace] = _hierarchyDelimiter;
+        }
+      }
+      completeQueue.removeRef (cmd);
+    }
     retVal = ITYPE_DIR;
   }
 
