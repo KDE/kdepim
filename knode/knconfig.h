@@ -38,6 +38,7 @@ class KIntSpinBox;
 class KSpellConfig;
 namespace Kpgp {
   class Config;
+  class SecretKeyRequester;
 };
 
 class KNNntpAccount;
@@ -174,20 +175,19 @@ class IdentityWidget : public BaseWidget {
                     *r_eplyTo,
                     *m_ailCopiesTo,
                     *s_ig;
-    QLabel          *s_igningKey;
     QRadioButton    *s_igFile,
                     *s_igEdit;
     QCheckBox       *s_igGenerator;
-    QPushButton     *c_hangeBtn,
-                    *c_hooseBtn,
+    QPushButton     *c_hooseBtn,
                     *e_ditBtn;
     QMultiLineEdit  *s_igEditor;
     QButtonGroup    *b_uttonGroup;
+    Kpgp::SecretKeyRequester
+                    *s_igningKey;
 
     Identity        *d_ata;
 
   protected slots:
-    void slotSigningKeyChange();
     void slotSignatureType(int type);
     void slotSignatureChoose();
     void slotSignatureEdit();

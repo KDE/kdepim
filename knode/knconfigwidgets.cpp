@@ -81,19 +81,19 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   topL->addMultiCellWidget(m_ailCopiesTo, 4,4, 1,2);
   m_ailCopiesTo->setText(d_ata->m_ailCopiesTo);
 
-  s_igningKey = new QLabel( this );
-  s_igningKey->setFrameStyle( QFrame::Panel | QFrame::Sunken );
-  s_igningKey->setText( d_ata->s_igningKey );
-  l=new QLabel( i18n("Signing key:"), this );
-  QPushButton *c_hangeBtn = new QPushButton( i18n("Chan&ge..."), this );
-  connect( c_hangeBtn, SIGNAL(clicked()), 
-           this, SLOT(slotSigningKeyChange()) );
-  c_hangeBtn->setAutoDefault( false );
-  topL->addWidget( l, 5, 0 );
-  topL->addWidget( s_igningKey, 5, 1 );
-  topL->addWidget( c_hangeBtn, 5, 2 );
-  QWhatsThis::add( l, i18n("<qt><p>The OpenPGP key you choose here will be "
-                           "used to sign your articles.</p></qt>") );
+  s_igningKey = new Kpgp::SecretKeyRequester(this);
+  s_igningKey->dialogButton()->setText(i18n("Chan&ge..."));
+  s_igningKey->setDialogCaption(i18n("Your OpenPGP Key"));
+  s_igningKey->setDialogMessage(i18n("Select the OpenPGP key which should be "
+				     "used for signing articles."));
+  s_igningKey->setKeyIDs(Kpgp::KeyIDList() << d_ata->s_igningKey);
+  l=new QLabel(s_igningKey, i18n("Signing ke&y:"), this);
+  topL->addWidget(l, 5,0);
+  topL->addMultiCellWidget(s_igningKey, 5,5, 1,2);
+  QString msg = i18n("<qt><p>The OpenPGP key you choose here will be "
+		     "used to sign your articles.</p></qt>");
+  QWhatsThis::add( l, msg );
+  QWhatsThis::add( s_igningKey, msg );
 
   b_uttonGroup = new QButtonGroup(this);
   connect( b_uttonGroup, SIGNAL(clicked(int)),
@@ -161,7 +161,7 @@ void KNConfig::IdentityWidget::apply()
   d_ata->e_mail=e_mail->text();
   d_ata->r_eplyTo=r_eplyTo->text();
   d_ata->m_ailCopiesTo=m_ailCopiesTo->text();
-  d_ata->s_igningKey = s_igningKey->text().local8Bit();
+  d_ata->s_igningKey = s_igningKey->keyIDs().first();
   d_ata->u_seSigFile=s_igFile->isChecked();
   d_ata->u_seSigGenerator=s_igGenerator->isChecked();
   d_ata->s_igPath=s_ig->text();
@@ -169,23 +169,6 @@ void KNConfig::IdentityWidget::apply()
 
   if(d_ata->isGlobal())
     d_ata->save();
-}
-
-
-void KNConfig::IdentityWidget::slotSigningKeyChange()
-{
-  Kpgp::Module *pgp;
-  
-  if ( !(pgp = Kpgp::Module::getKpgp()) )
-    return;
-
-  QCString keyID = s_igningKey->text().local8Bit();
-  keyID = pgp->selectSecretKey( i18n("Your OpenPGP Key"),
-                                i18n("Select the OpenPGP key which should be "
-                                     "used for signing articles."),
-                                keyID );
-  if ( !keyID.isEmpty() )
-    s_igningKey->setText( keyID );
 }
 
 
