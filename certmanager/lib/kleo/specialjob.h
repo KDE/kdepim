@@ -62,24 +62,15 @@ namespace Kleo {
   public:
    ~SpecialJob();
 
-     /**
-       Starts the special operation. \a pattern is a list of patterns
-       used to restrict the list of keys returned. Empty patterns are
-       ignored. If \a pattern is empty or contains only empty strings,
-       all keys are returned (however, the backend is free to truncate
-       the result and should do so; when this happens, it will be
-       reported by the reult object).
-
-       If \a secretOnly is true, only keys for which the secret key is
-       also available are returned. Use this if you need to select a
-       key for signing.
+    /**
+       Starts the special operation.
     */
     virtual GpgME::Error start() = 0;
 
-    virtual GpgME::Error exec() = 0;
+    virtual GpgME::Error exec( QVariant * result ) = 0;
 
   signals:
-    void result( const GpgME::Error & result );
+    void result( const GpgME::Error & result, const QVariant & data );
   };
 
 }

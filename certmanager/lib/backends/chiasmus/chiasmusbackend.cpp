@@ -37,6 +37,7 @@
 #include "chiasmusbackend.h"
 
 #include "config_data.h"
+#include "obtainkeysjob.h"
 
 #include "kleo/cryptoconfig.h"
 
@@ -339,7 +340,15 @@ public:
 };
 
 class Kleo::ChiasmusBackend::Protocol : public Kleo::CryptoBackend::Protocol {
+  Kleo::CryptoConfig * mCryptoConfig;
 public:
+  Protocol( Kleo::CryptoConfig * config )
+    : Kleo::CryptoBackend::Protocol(), mCryptoConfig( config )
+  {
+    assert( config );
+  }
+  ~Protocol() {}
+
   QString name() const { return "Chiasmus"; }
   QString displayName() const { return i18n( "Chiasmus command line tool" ); }
   KeyListJob * keyListJob( bool, bool, bool ) const { return 0; }
@@ -358,7 +367,14 @@ public:
   DecryptVerifyJob * decryptVerifyJob( bool ) const { return 0; }
   RefreshKeysJob * refreshKeysJob() const { return 0; }
 
-  SpecialJob * specialJob( const char *, const QMap<QString,QVariant> & ) const { return 0; }
+  SpecialJob * specialJob( const char * type, const QMap<QString,QVariant> & args ) const {
+    if ( qstricmp( type, "x-obtain-keys" ) == 0 && args.size() == 0 ) {
+      CryptoConfigEntry * entry = mCryptoConfig->entry( "Chiasmus", "General", "keydir" );
+      assert( entry );
+      return new ObtainKeysJob( entry->urlValue().path() ); // FIXME: allow more than one keypath
+    }
+    return 0;
+  }
 };
 
 Kleo::ChiasmusBackend::ChiasmusBackend()
@@ -393,7 +409,7 @@ Kleo::CryptoBackend::Protocol * Kleo::ChiasmusBackend::protocol( const char * na
     return 0;
   if ( !mProtocol )
     if ( checkForChiasmus() )
-      mProtocol = new Protocol();
+      mProtocol = new Protocol( config() );
   return mProtocol;
 }
 
