@@ -122,6 +122,8 @@ class PilotAddress : public PilotAppCategory
     void *pack(void *, int *);
     void unpack(const void *, int = 0) { }
 
+      static const int APP_BUFFER_SIZE;
+      
     private:
       QString _typeToStr(EPhoneType type) const;
       int _getNextEmptyPhoneSlot() const;
@@ -144,6 +146,15 @@ class PilotAddress : public PilotAppCategory
 
 
 // $Log$
+// Revision 1.8  2001/03/19 23:12:39  stern
+// Made changes necessary for upcoming abbrowser conduit.
+//
+// Mainly, I added two public methods to PilotAddress that allow for easier
+// setting and getting of phone fields.
+//
+// I also have added some documentation throughout as I have tried to figure
+// out how everything works.
+//
 // Revision 1.7  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //
