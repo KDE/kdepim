@@ -263,7 +263,6 @@ bool AbbrowserConduit::_loadAddressBook()
 	{
 		// Something went wrong, so tell the user and return false to exit the conduit
 		kdWarning()<<k_funcinfo<<": Unable to initialize the addressbook for the sync."<<endl;
-		if (aBook) aBook->cleanUp();
 		KPILOT_DELETE(aBook);
 		return false;
 	}
