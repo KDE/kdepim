@@ -193,6 +193,8 @@ namespace Kleo {
     const ColumnStrategy * columnStrategy() const { return mColumnStrategy; }
     const DisplayStrategy * displayStrategy() const { return mDisplayStrategy; }
 
+    void flushKeys() {}
+
   signals:
     void doubleClicked( Kleo::KeyListViewItem*, const QPoint&, int );
     void returnPressed( Kleo::KeyListViewItem* );
