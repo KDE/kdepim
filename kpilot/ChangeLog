@@ -26,6 +26,21 @@ TODO LIST (Ignore the file TODO)
 * GJJ: Add a flag to the log{Error,Message} function 
   to prevent the addition of the trailing <br> and the date
 
+KPilot Developer's notes for January 15th, 2003
+===============================================
+
+2003-1-9  Adriaan de Groot
+* Made new tarballs of the build system (for 3.0 and 3.1) and
+  the sources.
+* Decision: I'm going to do bugfixes in _BRANCH. Reinhold can do
+  bugfixes and new conduits in HEAD, and I'll merge from BRANCH to
+  HEAD fairly regularly. I think that's the best balance between
+  getting stuff out the door and sticking to the KDE release schedule.
+* Decision: Remove all the Log: tags from the source files.
+  The Id: tags stay in, for debugging output.
+
+2003-1-1  Adriaan de Groot
+* Ho ho ho. Happy new year.
 
 KPilot Developer's notes for December 30th, 2002
 ================================================
@@ -63,8 +78,9 @@ KPilot Developer's notes for December 30th, 2002
   int index=0, long type=0, long creator=0
 	 
 
+
 KPilot Developer's notes for november 10th, 2002
-=======================================
+================================================
 
 2002-11-10  Adriaan de Groot
 * Is kate acting up? I would have sworn I did some ChangeLog
@@ -120,23 +136,22 @@ KPilot Developer's notes for november 10th, 2002
   of popmail in that conduit.
 * Added extra undocumented configuration option to the popmail
   conduit in an effort to save KMail sending capability.
-	
-2002-10-10  Reinhold Kainhofer
-* Addressbook conduit: 
-   - Archived records are now treated correctly
-   - conflict resolution now also works if you chose ignore on the last sync
-   - home/work phone/fax were mixed up
-   - deleting an address in kaddressbook now also deletes the address from the handheld
-   - variable renaming for consistent naming
-   - fix a crash with an iterator being deleted and then incremented
-   - Offering the value from the last sync in the conflict resolution dialog
-   - Using an addressbook for several handhelds should work now
-   - archived records are now synced to the PC, but not back to the handheld
-   - If an addressee has a wrong pilotID, the pilotID is reset
 
+KPilot Developer's notes for october 31st, 2002
+======================================
 
+2002-10-27  Adriaan de Groot
+* Don't you hate code / feature freezes? It always stops KPilot development
+  in it's tracks, if only because fixing the bug related to KMail's outbox
+  requires a new string. Bitch bitch, moan moan.
+* Added new TODO_I18N macro to flag I18N todos. The popmail
+  conduit is a big candidate for fixups.
+* Thought of a new starter project: moving the popmail conduit config
+  dialog to Qt Designer.
+* Added extra undocumented configuration option to the popmail
+  conduit in an effort to save KMail sending capability.
 
-
+  
 KPilot Developer's notes for september 19th, 2002
 =================================================
 
