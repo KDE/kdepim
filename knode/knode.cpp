@@ -38,6 +38,7 @@
 #include "knaccountmanager.h"
 #include "knserverinfo.h"
 #include "knarticlewidget.h"
+#include "knnetaccess.h"
 
 
 KNGlobals knGlobals;
@@ -55,20 +56,17 @@ KNProgress::KNProgress (int desiredHeight, int minValue, int maxValue, int value
 }
 
 
-
 KNProgress::~KNProgress()
 {}
-
 
 
 // 0% and no text
 void KNProgress::disableProgressBar()
 {
-  progVal=0;
   setFormat(QString::null);
   setValue(0);
+  repaint(false);
 }
-
 
 
 // manual operation
@@ -83,37 +81,6 @@ void KNProgress::setProgressBar(int value,const QString& text)
 }
 
 
-
-// display 0%
-void KNProgress::initProgressBar()
-{
-  progVal=0;
-  setFormat("%p%");
-  setValue(1);
-}
-
-
-
-// add 10%
-void KNProgress::stepProgressBar()
-{
-  progVal+=100;
-  if(progVal>=1000) progVal=1000;
-  setFormat("%p%");
-  setValue(progVal);
-}
-
-
-
-// display 100%
-void KNProgress::fullProgressBar()
-{
-  setFormat("%p%");
-  setValue(1000);
-}
-
-
-
 QSize KNProgress::sizeHint() const
 {
   return QSize(KProgress::sizeHint().width(),desHeight);
@@ -121,7 +88,6 @@ QSize KNProgress::sizeHint() const
 
 
 //===============================================================================================
-
 
 
 KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
@@ -141,7 +107,6 @@ KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
   sb->setItemAlignment (SB_FILTER,AlignLeft | AlignVCenter);
   sb->insertItem(QString::null,SB_GROUP,3);
   sb->setItemAlignment (SB_GROUP,AlignLeft | AlignVCenter);
-  setStatusMsg();
 
   //view
   setCaption(i18n("KDE News Reader"));
@@ -186,6 +151,8 @@ KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
   }
   v_iew->collectionView()->setFocus();
 
+  setStatusMsg();
+
   if(firstStart()) {  // open the config dialog on the first start
     show();              // the settings dialog must appear in front of the main window!
     slotSettings();
@@ -210,7 +177,10 @@ void KNMainWindow::setStatusMsg(const QString& text, int id)
 {
   statusBar()->clear();
   if (text.isEmpty() && (id==SB_MAIN))
-    statusBar()->changeItem(i18n(" Ready"),SB_MAIN);
+    if (knGlobals.netAccess->currentMsg().isEmpty())
+      statusBar()->changeItem(i18n(" Ready"),SB_MAIN);
+    else
+      statusBar()->changeItem(knGlobals.netAccess->currentMsg(), SB_MAIN);   // restore the original message
   else
     statusBar()->changeItem(text, id);
 }

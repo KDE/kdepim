@@ -43,14 +43,10 @@ class KNProgress : public KProgress
 
     void disableProgressBar();                                      // 0% and no text
     void setProgressBar(int value,const QString& = QString::null);  // manual operation
-    void initProgressBar();                                         // display 0%
-    void stepProgressBar();                                         // add 10%
-    void fullProgressBar();                                         // display 100%
-
     virtual QSize sizeHint() const;
 
   protected:
-    int desHeight, progVal;
+    int desHeight;
 };
 
 

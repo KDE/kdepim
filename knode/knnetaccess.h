@@ -22,9 +22,7 @@
 #include <qobject.h>
 #include <qqueue.h>
 
-
 class QSocketNotifier;
-
 class KNJobData;
 class KNNntpClient;
 class KNSmtpClient;
@@ -44,6 +42,8 @@ class KNNetAccess : public QObject  {
     void stopJobsSmtp(int type);         // type==0 => all jobs
     void cancelAllJobs();
 
+    QString currentMsg()         { return currMsg; }      // current statusbar message
+
     pthread_mutex_t* nntpMutex() { return &nntp_Mutex; }
 
   protected:
@@ -53,9 +53,11 @@ class KNNetAccess : public QObject  {
     void threadDoneNntp();
     void threadDoneSmtp();
 
-    QString unshownMsg, unshownByteCount;    // messages from the nntp-client have priority
-    int unshownProgress;                     // unshown messages get stored here
-  
+    QString currMsg;                       // stores the current status message,
+                                           // so that it can be restored by the mainwindow
+    QString unshownMsg, unshownByteCount;  // messages from the nntp-client have priority
+    int unshownProgress;                   // unshown messages get stored here
+
     KNNntpClient *nntpClient;
     KNSmtpClient *smtpClient;   
     QQueue<KNJobData> nntpJobQueue, smtpJobQueue;
@@ -65,15 +67,12 @@ class KNNetAccess : public QObject  {
     int nntpInPipe[2], nntpOutPipe[2], smtpInPipe[2], smtpOutPipe[2];
     QSocketNotifier *nntpNotifier,*smtpNotifier;
 
-  
   protected slots:
     void slotThreadSignal(int i);
-
 
   signals:
     void netActive(bool);
 
-    
 };
 
 #endif

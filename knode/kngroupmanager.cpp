@@ -34,6 +34,7 @@
 #include "kngroup.h"
 #include "kncollectionviewitem.h"
 #include "knnntpaccount.h"
+#include "knprotocolclient.h"
 #include "kncleanup.h"
 #include "knnetaccess.h"
 #include "knglobals.h"
@@ -98,7 +99,7 @@ KNGroupListData::~KNGroupListData()
 
 
 
-bool KNGroupListData::readIn()
+bool KNGroupListData::readIn(KNProtocolClient *client)
 {
   KNFile f(path+"groups");
   QCString line;
@@ -106,6 +107,11 @@ bool KNGroupListData::readIn()
   QString name,description;
   bool sub;
   KNGroup::Status status=KNGroup::unknown;
+  QTime timer;
+  uint size=f.size()+2;
+
+  timer.start();
+  if (client) client->updatePercentage(0);
 
   if(f.open(IO_ReadOnly)) {
     while(!f.atEnd()) {
@@ -145,6 +151,11 @@ bool KNGroupListData::readIn()
         sub = false;
 
       groups->append(new KNGroupInfo(name,description,false,sub,status));
+
+      if (timer.elapsed() > 200) {           // don't flicker
+        timer.restart();
+        if (client) client->updatePercentage((f.at()*100)/size);
+      }
     }
 
     f.close();
@@ -177,7 +188,7 @@ bool KNGroupListData::writeOut()
       }
       temp += i->description.utf8() + "\n";
       f.writeBlock(temp.data(),temp.length());
-    }         
+    }
     f.close();
     return true;
   } else {

@@ -18,7 +18,6 @@
 #include <qstringlist.h>
 #include <mimelib/datetime.h>
 
-#include <kdebug.h>
 #include <kglobal.h>
 #include <kcharsets.h>
 
@@ -746,7 +745,7 @@ void KNHeaders::ContentType::from7BitString(const QCString &s, QFont::CharSet de
 {
   e_ncCSet=defaultCS;
   f_orceDefaultCS=force;
-//  kdDebug(5003) << "KNHeaders::ContentType::from7BitString(const QCString &s) : s = " << s << endl;
+
   int pos=s.find(';');
 
   if(pos==-1)
@@ -965,7 +964,6 @@ QCString KNHeaders::ContentType::getParameter(const char *name)
     pos1+=strlen(name)+1;
     ret=p_arams.mid(pos1, pos2-pos1);
     KNMimeBase::removeQuots(ret);
-    //kdDebug(5003) << "KNHeaders::ContentType::getParameter() : " << name << " = " << ret << endl;
   }
   return ret;
 }

@@ -23,6 +23,8 @@
 #include <kmessagebox.h>
 #include <kdebug.h>
 
+#include "knserverinfo.h"
+#include "knprotocolclient.h"
 #include "knglobals.h"
 #include "knmime.h"
 #include "knstringsplitter.h"
@@ -316,15 +318,18 @@ bool KNGroup::loadHdrs()
 
 
 // Attention: this method is called from the network thread!
-void KNGroup::insortNewHeaders(QStrList *hdrs)
+void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
 {
   KNRemoteArticle *art=0;
   QCString tmp;
   KNStringSplitter split;
   split.setIncludeSep(false);
   QFont::CharSet defCS;
-  int cnt=0;
-  
+  int cnt=0,todo=hdrs->count();
+  QTime timer;
+
+  timer.start();
+
   //resize the list 
   if(!resize(siz+hdrs->count())) return;
 
@@ -374,9 +379,15 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
       delete art;
       return;
     }
+
+    if (timer.elapsed() > 200) {           // don't flicker
+      timer.restart();
+      if (client) client->updatePercentage((cnt*30)/todo);
+    }
   }
 
-  sortHdrs(cnt);
+  sortHdrs(cnt,client);
+
   int count = saveStaticData(cnt);
 #ifndef NDEBUG
   qDebug("knode: %d headers wrote to file",count);
@@ -523,16 +534,22 @@ void KNGroup::syncDynamicData()
 
 
 
-void KNGroup::sortHdrs(int cnt)
+void KNGroup::sortHdrs(int cnt, KNProtocolClient *client)
 {
   int end=len,
       start=len-cnt,
       foundCnt_1=0, foundCnt_2=0, bySubCnt=0, refCnt=0,
       resortCnt=0, idx, oldRef, idRef;
   KNRemoteArticle *art;
-  
-  kdDebug(5003) << "KNGroup::sortHdrs() : start = " << start << "   end = " << end << endl;
-  
+  QTime timer;
+
+  timer.start();
+
+  // this method is called from the nntp-thread!!!
+#ifndef NDEBUG
+  qDebug("knode: KNGroup::sortHdrs() : start = %d  end = %d",start,end);
+#endif
+
   //resort old hdrs
   if(start>0)
     for(idx=0; idx<start; idx++) {
@@ -540,7 +557,10 @@ void KNGroup::sortHdrs(int cnt)
       if(art->threadingLevel()>1) {
         oldRef=art->idRef();
         if(findRef(art, start, end)!=-1) {
-          kdDebug(5003) << art->id() << " : old " << oldRef << "    new " << art->idRef() << "\n" << endl;
+          // this method is called from the nntp-thread!!!
+          #ifndef NDEBUG
+          qDebug("knode: %d: old %d  new %d",art->id(), oldRef, art->idRef());
+          #endif
           resortCnt++;
           art->setChanged(true);
         }
@@ -566,6 +586,11 @@ void KNGroup::sortHdrs(int cnt)
         art->setThreadingLevel(0);
       }
       else if(art->idRef()==-1) refCnt++;
+    }
+
+    if (timer.elapsed() > 200) {           // don't flicker
+      timer.restart();
+      if (client) client->updatePercentage(30+((foundCnt_1+foundCnt_2)*70)/cnt);
     }
   }
   
@@ -619,11 +644,14 @@ void KNGroup::sortHdrs(int cnt)
           }
         }
       }
+
+      if (timer.elapsed() > 200) {           // don't flicker
+        timer.restart();
+        if (client) client->updatePercentage(30+((bySubCnt+foundCnt_1+foundCnt_2)*70)/cnt);
+      }
     } 
   }
-  
-  
-  
+
   //all not found items get refID 0
   for (int idx=start; idx<end; idx++){
     art=at(idx);
@@ -649,7 +677,10 @@ void KNGroup::sortHdrs(int cnt)
     }
     
     if(isLoop) {
-      kdDebug(5003) << "Sorting : loop in " << hList[idx]->id << endl;
+      // this method is called from the nntp-thread!!!
+      #ifndef NDEBUG
+      qDebug("knode: Sorting : loop in %d",hList[idx]->id);
+      #endif
       hList[idx]->idRef=0;
       hList[idx]->thrLevel=0;
     }
@@ -672,11 +703,13 @@ void KNGroup::sortHdrs(int cnt)
     }
   }
   
-  
-  kdDebug(5003) << "Sorting : " << resortCnt << " headers resorted" << endl;
-  kdDebug(5003) << "Sorting : " << foundCnt_1 << " references of " << refCnt << " found in step 1" << endl;
-  kdDebug(5003) << "Sorting : " << foundCnt_2 << " references of " << refCnt << " found in step 2" << endl;
-  kdDebug(5003) << "Sorting : " << bySubCnt << " references of " << refCnt << " sorted by subject" << endl;
+  // this method is called from the nntp-thread!!!
+#ifndef NDEBUG
+  qDebug("knode: Sorting : %d headers resorted", resortCnt);
+  qDebug("knode: Sorting : %d references of %d found in step 1", foundCnt_1, refCnt);
+  qDebug("knode: Sorting : %d references of %d found in step 2", foundCnt_2, refCnt);
+  qDebug("knode: Sorting : %d references of %d sorted by subject", bySubCnt, refCnt);
+#endif
     
 }
 

@@ -46,6 +46,7 @@ KNProtocolClient::KNProtocolClient(int NfdPipeIn, int NfdPipeOut, QObject *paren
   input = new char[inputSize];
 }
 
+
 KNProtocolClient::~KNProtocolClient()
 {
   if (isConnected())
@@ -79,6 +80,14 @@ void KNProtocolClient::insertJob(KNJobData *newJob)
 void KNProtocolClient::removeJob()
 {
   job = 0L;
+}
+
+
+void KNProtocolClient::updatePercentage(int percent)
+{
+  byteCountMode=false;
+  progressValue = percent*10;
+  sendSignal(TSprogressUpdate);
 }
 
 
@@ -121,6 +130,8 @@ void KNProtocolClient::waitForWork()
 
     clearPipe();      // remove start signal
 
+    timer.start();
+
     sendSignal(TSjobStarted);
     if (job) {
     //  qDebug("knode: KNProtocolClient::waitForWork(): got job");
@@ -139,6 +150,7 @@ void KNProtocolClient::waitForWork()
       predictedLines = -1;
       doneLines = 0;
       byteCount = 0;
+      byteCountMode = true;
 
       if (!job->net())    // job needs no net access
         processJob();
@@ -361,9 +373,12 @@ bool KNProtocolClient::getNextLine()
 
   } while (!(nextLine = strstr(thisLine,"\r\n")));
 
-  if (predictedLines > 0)
-    progressValue = 100 + (doneLines*900/predictedLines);
-  sendSignal(TSprogressUpdate);
+  if (timer.elapsed()>50) {   // reduce framerate to 20 f/s
+    timer.start();
+    if (predictedLines > 0)
+      progressValue = 100 + (doneLines*900/predictedLines);
+    sendSignal(TSprogressUpdate);
+  }
 
   nextLine[0] = 0;  // terminate string
   nextLine[1] = 0;
@@ -696,9 +711,12 @@ bool KNProtocolClient::sendStr(const QCString &str)
     }
     byteCount += ret;
   }
-  if (predictedLines > 0)
-    progressValue = 100 + (doneLines/predictedLines)*900;
-  sendSignal(TSprogressUpdate);
+  if (timer.elapsed()>50) {   // reduce framerate to 20 f/s
+    timer.start();
+    if (predictedLines > 0)
+      progressValue = 100 + (doneLines/predictedLines)*900;
+    sendSignal(TSprogressUpdate);
+  }
   return true;
 }
 

@@ -21,7 +21,7 @@
 #include "knmime.h"
 #include "knjobdata.h"
 
-
+class KNProtocolClient;
 class KNNntpAccount;
 class QStrList;
 
@@ -44,7 +44,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
 
     void showProperties();
     bool loadHdrs();
-    void insortNewHeaders(QStrList *hdrs);
+    void insortNewHeaders(QStrList *hdrs, KNProtocolClient *client=0);
     int saveStaticData(int cnt,bool ovr=false);
     void saveDynamicData(int cnt,bool ovr=false);
     void syncDynamicData();
@@ -93,7 +93,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     void setLocked(bool l)                  { l_ocked=l; }
 
   protected:
-    void sortHdrs(int cnt);
+    void sortHdrs(int cnt, KNProtocolClient *client=0);
     int findRef(KNRemoteArticle *a, int from, int to, bool reverse=false);
         
     int       n_ewCount,

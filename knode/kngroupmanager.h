@@ -28,6 +28,7 @@
 
 class KNCleanUp;
 class KNNntpAccount;
+class KNProtocolClient;
 class KNServerInfo;
 class KNArticleManager;
 
@@ -60,7 +61,7 @@ class KNGroupListData : public KNJobItem {
     KNGroupListData();
     ~KNGroupListData();
 
-    bool readIn();
+    bool readIn(KNProtocolClient *client=0);
     bool writeOut();
     void merge(QSortedList<KNGroupInfo>* newGroups);
 

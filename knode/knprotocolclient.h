@@ -17,6 +17,7 @@
 #ifndef KNPROTOCOLCLIENT_H
 #define KNPROTOCOLCLIENT_H
 
+#include <qdatetime.h>
 #include <qobject.h>
 #include <qcstring.h>
 
@@ -44,8 +45,11 @@ class KNProtocolClient : public QObject  {
     void insertJob(KNJobData *newJob);
     void removeJob();
 
+    void updatePercentage(int percent);
+
     int getProgressValue() const { return progressValue; };
     int getByteCount() const { return byteCount; };       // bytes in&out for the current connection
+    bool isInByteCountMode() const { return byteCountMode; };
   
   protected:
 
@@ -74,6 +78,7 @@ class KNProtocolClient : public QObject  {
     KNServerInfo account;
     QString errorPrefix;     // handleErrors() adds this string to the error message
     int progressValue, predictedLines, doneLines;
+    bool byteCountMode;
 
   private:
 
@@ -90,6 +95,8 @@ class KNProtocolClient : public QObject  {
     int fdPipeIn,fdPipeOut;      //IPC-Pipes to/from async thread
     int tcpSocket;
     int byteCount;     // bytes in&out for the current connection
+    QTime timer;
+
 };
 
 #endif

@@ -73,7 +73,7 @@ void KNNntpClient::doLoadGroups()
   KNGroupListData *target = static_cast<KNGroupListData *>(job->data());
   sendSignal(TSloadGrouplist);
 
-  if (!target->readIn())
+  if (!target->readIn(this))
     job->setErrorString(i18n("Unable to read the group list file"));
 }
 
@@ -388,7 +388,7 @@ void KNNntpClient::doFetchNewHeaders()
   sendSignal(TSsortNew);
 
   if (0==pthread_mutex_lock(mutex)) {
-    target->insortNewHeaders(&headers);
+    target->insortNewHeaders(&headers, this);
     target->setLastNr(last);
     if (0!=pthread_mutex_unlock(mutex)) {
 #ifndef NDEBUG
