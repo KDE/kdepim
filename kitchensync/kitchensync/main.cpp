@@ -82,5 +82,4 @@ int main( int argc, char *argv[] )
   mainwindow->show();
   kdDebug(5210) << "exec now " << endl;
   a.exec();
-  delete mainwindow;
 }
