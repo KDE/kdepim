@@ -525,7 +525,7 @@ void TaskView::newSubTask()
     return;
   newTask(i18n("New Sub Task"), task);
   task->setOpen(true);
-  setRootIsDecorated(true);
+  refresh();
 }
 
 void TaskView::editTask()
