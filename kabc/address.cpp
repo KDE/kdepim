@@ -6,13 +6,20 @@
 using namespace KABC;
 
 Address::Address() :
-  mType( 0 )
+  mEmpty( true ), mType( 0 )
 {
   mId = KApplication::randomString( 10 );
 }
 
+bool Address::isEmpty() const
+{
+  return mEmpty;
+}
+
 void Address::setId( const QString &id )
 {
+  mEmpty = false;
+
   mId = id;
 }
 
@@ -23,6 +30,8 @@ QString Address::id() const
 
 void Address::setType( int type )
 {
+  mEmpty = false;
+
   mType = type;
 }
 
@@ -33,6 +42,8 @@ int Address::type() const
 
 void Address::setPostOfficeBox( const QString &s )
 {
+  mEmpty = false;
+
   mPostOfficeBox = s;
 }
 
@@ -44,6 +55,8 @@ QString Address::postOfficeBox() const
 
 void Address::setExtended( const QString &s )
 {
+  mEmpty = false;
+
   mExtended = s;
 }
 
@@ -55,6 +68,8 @@ QString Address::extended() const
 
 void Address::setStreet( const QString &s )
 {
+  mEmpty = false;
+
   mStreet = s;
 }
 
@@ -66,6 +81,8 @@ QString Address::street() const
 
 void Address::setLocality( const QString &s )
 {
+  mEmpty = false;
+
   mLocality = s;
 }
 
@@ -77,6 +94,8 @@ QString Address::locality() const
 
 void Address::setRegion( const QString &s )
 {
+  mEmpty = false;
+
   mRegion = s;
 }
 
@@ -88,6 +107,8 @@ QString Address::region() const
 
 void Address::setPostalCode( const QString &s )
 {
+  mEmpty = false;
+
   mPostalCode = s;
 }
 
@@ -99,6 +120,8 @@ QString Address::postalCode() const
 
 void Address::setCountry( const QString &s )
 {
+  mEmpty = false;
+
   mCountry = s;
 }
 
@@ -110,6 +133,8 @@ QString Address::country() const
 
 void Address::setLabel( const QString &s )
 {
+  mEmpty = false;
+
   mLabel = s;
 }
 

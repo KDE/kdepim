@@ -53,6 +53,9 @@ int main(int argc,char **argv)
       if ( (*customIt).startsWith( "X-KABC-UID:" ) ) {
         a.setUid( (*customIt).mid( (*customIt).find( ":" ) + 1 ) );
         break;
+      } else {
+        int count = 0;
+        a.insertCustom( "kab2kabc", QString::number( count++ ), *customIt );
       }
     }
     if( customIt == entry.custom.end() ) {
@@ -109,13 +112,15 @@ int main(int argc,char **argv)
       adr.setLocality( kabAddress.town );
       adr.setCountry( kabAddress.country );
       adr.setRegion( kabAddress.state );
-    
-      // headline
-      // position
-      // org
-      // orgUnit
-      // orgSubUnit
-      // deliveryLabel
+
+      QString label;
+      if ( !kabAddress.headline.isEmpty() ) label += kabAddress.headline + "\n";
+      if ( !kabAddress.position.isEmpty() ) label += kabAddress.position + "\n";
+      if ( !kabAddress.org.isEmpty() ) label += kabAddress.org + "\n";
+      if ( !kabAddress.orgUnit.isEmpty() ) label += kabAddress.orgUnit + "\n";
+      if ( !kabAddress.orgSubUnit.isEmpty() ) label += kabAddress.orgSubUnit + "\n";
+      if ( !kabAddress.deliveryLabel.isEmpty() ) label += kabAddress.deliveryLabel + "\n";
+      adr.setLabel( label );
       
       a.insertAddress( adr );
     }
@@ -139,8 +144,6 @@ int main(int argc,char **argv)
     a.setPrefix( entry.rank + a.prefix() );  // Add rank to prefix
     
     a.setCategories( entry.categories );
-
-    // TODO: QStringList entry.custom;
 
     kdDebug() << "Addressee: " << a.familyName() << endl;
 

@@ -8,7 +8,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>608</width>
+            <width>607</width>
             <height>613</height>
         </rect>
     </property>
@@ -1290,6 +1290,7 @@
     <slot>destroy()</slot>
     <slot>fileSave()</slot>
     <slot>fileOpen()</slot>
+    <slot>loadAddressBook(const QString &amp; fileName)</slot>
     <slot>updateAddressee(QListViewItem * item)</slot>
     <slot>readAddressee(const KABC::Addressee &amp; a)</slot>
     <slot returnType="KABC::Addressee">writeAddressee(const KABC::Addressee &amp; addressee)</slot>
@@ -1319,6 +1320,9 @@
     <slot>editCustom()</slot>
     <slot>newCustom()</slot>
     <slot>removeCustom()</slot>
+    <slot>addressBookChanged()</slot>
+    <slot>addressBookLocked()</slot>
+    <slot>addressBookUnlocked()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

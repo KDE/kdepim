@@ -35,6 +35,13 @@ void MainWindow::init()
 
   mEmailListView->header()->hide();
   mCategoryListView->header()->hide();
+
+  connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook * ) ),
+           SLOT( addressBookChanged() ) );
+  connect( mAddressBook, SIGNAL( addressBookLocked( AddressBook * ) ),
+           SLOT( addressBookLocked() ) );
+  connect( mAddressBook, SIGNAL( addressBookUnlocked( AddressBook * ) ),
+           SLOT( addressBookUnlocked() ) );
 }
 
 void MainWindow::destroy()
@@ -66,8 +73,13 @@ void MainWindow::fileOpen()
 {
   QString fileName = QFileDialog::getOpenFileName();
     
+  loadAddressBook( fileName );
+}
+
+void MainWindow::loadAddressBook( const QString &fileName )
+{
   if ( !mAddressBook->load( fileName ) ) return;
-   
+
   mAddresseeList->clear();
   mCurrentItem = 0;
   mCurrentAddress = QString::null;
@@ -628,5 +640,23 @@ void MainWindow::removeCustom()
   if( !item ) return;
 
   mCurrentItem->addressee().removeCustom( item->text( 0 ), item->text( 1 ) );
-  delete item;  
+  delete item;
+}
+
+void MainWindow::addressBookChanged()
+{
+  QMessageBox::warning( this, i18n("Address Book Changed"),
+                        i18n("The address book has changed on disk"),
+                        i18n("Reload") );
+  loadAddressBook( mAddressBook->fileName() );
+}
+
+void MainWindow::addressBookLocked()
+{
+  kdDebug() << "AddressBook locked()" << endl;
+}
+
+void MainWindow::addressBookUnlocked()
+{
+  kdDebug() << "AddressBook unlocked()" << endl;
 }

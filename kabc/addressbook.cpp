@@ -37,7 +37,7 @@ AddressBook::~AddressBook()
 
 bool AddressBook::load( const QString &fileName )
 {
-  mFileName = fileName;
+  setFileName( fileName );
 
   mAddressees.clear();
 
@@ -191,7 +191,7 @@ void AddressBook::setFileName( const QString &fileName )
 
   struct stat s;
   int result = stat( QFile::encodeName( mFileName ), &s );
-  if ( result ) {
+  if ( result == 0 ) {
     mChangeTime  = s.st_ctime;
   }
 
@@ -207,7 +207,15 @@ void AddressBook::checkFile()
 {
   struct stat s;
   int result = stat( QFile::encodeName( mFileName ), &s );
-  if ( result && ( mChangeTime != s.st_ctime ) ) {
+
+#if 0
+  kdDebug() << "AddressBook::checkFile() result: " << result
+            << " new ctime: " << s.st_ctime
+            << " old ctime: " << mChangeTime
+            << endl;
+#endif
+
+  if ( result == 0 && ( mChangeTime != s.st_ctime ) ) {
     mChangeTime  = s.st_ctime;
     load( mFileName );
     emit addressBookChanged( this );

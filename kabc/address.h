@@ -16,6 +16,8 @@ class Address
     enum { Dom = 1, Intl = 2, Postal = 4, Parcel = 8, Home = 16, Work = 32,
            Pref = 64 };
 
+    bool isEmpty() const;
+
     void setId( const QString & );
     QString id() const;
 
@@ -49,6 +51,8 @@ class Address
     void dump() const;
   
   private:
+    bool mEmpty;
+  
     QString mId;
     int mType;
   
