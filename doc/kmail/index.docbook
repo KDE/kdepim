@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>19/07/2000</date>
+<date>23/07/2000</date>
 <releaseinfo>1.01.61</releaseinfo>
 
 <abstract>
@@ -61,13 +61,13 @@ the <link linkend="secGettingStarted">Getting Started</link> section first so th
 
 <listitem><para>You don't have to use your mouse to use &kmail;. Everything
 should be possible with keys. &kmail; supports all the standard keys
-like TAB (switch between panes). The trick is: cursor left/right
+like <keycap>TAB</keycap> (switch between panes). The trick is: cursor left/right
 always jumps to the previous/next message, but when you hold down
-Ctrl, you can use cursor left/right to navigate in the Folders pane
+<keycap>Ctrl</keycap>, you can use <keycap>cursor left</keycap>/<keycap>cursor right</keycap> to navigate in the Folders pane
 or in the Headers pane (depending on what has the focus).</para></listitem>
 
 <listitem><para>When you're writing a new mail and you're in the <guilabel>To:</guilabel> field, only type
-the first few characters of the receiver's address, then press Ctrl+T to get a list 
+the first few characters of the receiver's address, then press <keycombo><keycap>Ctrl</keycap><keycap>T</keycap></keycombo> to get a list 
 of choices. These are taken from your address book, so keep your address book
 up to date and this feature will be very useful.</para></listitem>
 
@@ -174,8 +174,7 @@ do not already have a working sendmail configuration, choose SMTP and fill in th
 not need to change the <guilabel>Port</guilabel> setting.</para>
 
 <para>If you do want to use sendmail and you are using a dial-up connection, follow the instructions
-for setting up sendmail for a dial-up connection in the <link linkend="secqasendmail">Questions and
-Answers</link> section.</para>
+for setting up sendmail for a dial-up connection in the <link linkend="faq">FAQ</link> section.</para>
 </sect2>
 
 <sect2 id="receivingmail">
@@ -222,7 +221,7 @@ inbox for now, although you may want to change it if you add more accounts later
 <title>Testing your Setup</title>
 
 <para>First, we will send an email to test our configuration. To send an email, hit 
-Ctrl+N, select the <guiicon>Compose new message</guiicon> icon (the empty
+<keycombo><keycap>Ctrl</keycap><keycap>N</keycap></keycombo>, select the <guiicon>Compose new message</guiicon> icon (the empty
 sheet of paper) or
 select the <menuchoice><guimenu>File</guimenu><guimenuitem>New Composer</guimenuitem></menuchoice> menu item.  
 The <guilabel>Composer</guilabel> 
@@ -271,9 +270,9 @@ folders.</para>
 information (message Status Flags, Sender, Subject, Date) for the messages in the 
 currently selected folder. Clicking on a header
 will select that message and display it in the Message pane. You can also select
-a series of messages by clicking on one message, holding down the Shift key, and
+a series of messages by clicking on one message, holding down the <keycap>Shift</keycap> key, and
 clicking on another message. The two messages you just clicked on will be
-selected, along with all the messages in between. By holding down the Ctrl key
+selected, along with all the messages in between. By holding down the <keycap>Ctrl</keycap> key
 you can select any number of messages without those in between. You may sort the messages by
 clicking on the column that you wish to sort. If you click on the same
 column more then once, sort order will toggle between ascending/descending.
@@ -361,7 +360,7 @@ next to the <guilabel>To:</guilabel>,
 <guilabel>Cc:</guilabel>, and <guilabel>Bcc:</guilabel>
 fields will call up the address book so that you can select addresses
 from there instead of trying to remember them. If you already started typing
-an adress you can also press Ctrl+T to get a list of possible completions.
+an adress you can also press <keycombo><keycap>Ctrl</keycap><keycap>T</keycap></keycombo> to get a list of possible completions.
 When you are finished with
 your message, hit the Send button (the envelope) to queue or send the message.
 Note that you can use the <menuchoice><guimenu>View</guimenu></menuchoice> menu to
@@ -492,7 +491,7 @@ incoming messages and to manually perform actions on selected messages in a fold
 
 <para>Usually, filters are used on incoming messages, but they can also be applied to a message or group of
 messages.  To selectively filter messages in a message folder, select the messages you want to filter and
-type Ctrl+J or select <menuchoice><guimenu>Message</guimenu><guimenuitem>Apply Filters</guimenuitem></menuchoice>. Note that this will apply all
+type <keycombo><keycap>Ctrl</keycap><keycap>J</keycap></keycombo> or select <menuchoice><guimenu>Message</guimenu><guimenuitem>Apply Filters</guimenuitem></menuchoice>. Note that this will apply all
 of your filters to that message; there is no way to apply only certain filters to a message.</para>
 
 <para>If you ever need to remove a filter, select it from the <guilabel>Filter Rules</guilabel> window and press the 
@@ -983,14 +982,14 @@ menu item function, it is listed after the menu item.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Save As... (Ctrl+S)</term>
+<term>Save As... (<keycombo><keycap>Ctrl</keycap><keycap>S</keycap></keycombo>)</term>
 <listitem>
 <para>Saves the currently displayed message as a plain text file.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Print... (Ctrl+P)</term>
+<term>Print... (<keycombo><keycap>Ctrl</keycap><keycap>P</keycap></keycombo>)</term>
 <listitem>
 <para>Prints the currently displayed message.</para>
 </listitem>
@@ -1005,7 +1004,7 @@ according to how you have moved and deleted them in &kmail;.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Check Mail (Ctrl+L)</term>
+<term>Check Mail (<keycombo><keycap>Ctrl</keycap><keycap>L</keycap></keycombo>)</term>
 <listitem>
 <para>Checks for new mail in all your accounts.</para>
 </listitem>
@@ -1026,7 +1025,7 @@ according to how you have moved and deleted them in &kmail;.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Close (Ctrl+W)</term>
+<term>Close (<keycombo><keycap>Ctrl</keycap><keycap>W</keycap></keycombo>)</term>
 <listitem>
 <para>Closes the current <guilabel>Mail Reader</guilabel> window or exits
 &kmail; if there's only this one window.</para>
@@ -1034,7 +1033,7 @@ according to how you have moved and deleted them in &kmail;.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Quit (Ctrl+Q)</term>
+<term>Quit (<keycombo><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo>)</term>
 <listitem>
 <para>Exits &kmail;.</para>
 </listitem>
@@ -1051,7 +1050,7 @@ according to how you have moved and deleted them in &kmail;.</para>
 <para><variablelist>
 
 <varlistentry>
-<term>Undo (Ctrl+Z)</term>
+<term>Undo (<keycombo><keycap>Ctrl</keycap><keycap>Z</keycap></keycombo>)</term>
 <listitem>
 <para>Revoke you last move or delete action Note that you cannot undo a deletion
 in the trash.</para>
@@ -1059,14 +1058,14 @@ in the trash.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Copy text(Ctrl+C)</term>
+<term>Copy text(<keycombo><keycap>Ctrl</keycap><keycap>C</keycap></keycombo>)</term>
 <listitem>
 <para>Copies selected text to the clipboard.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Delete (D)</term>
+<term>Delete (<keycap>D</keycap>)</term>
 <listitem>
 <para>Moves the selected messages in the trash folder. If the selected
 messages are already in the trash folder, they will really be deleted.</para>
@@ -1074,7 +1073,7 @@ messages are already in the trash folder, they will really be deleted.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Search messages... (S)</term>
+<term>Search messages... (<keycap>S</keycap>)</term>
 <listitem>
 <para>Opens up a search window that lets you search for messages with
 certain characteristics, e.g. a certain subject. Start the search by
@@ -1084,14 +1083,14 @@ the resulting messages and it will appear in the <guilabel>Message pane</guilabe
 </varlistentry>
 
 <varlistentry>
-<term>Find in message... (Ctrl+F)</term>
+<term>Find in message... (<keycombo><keycap>Ctrl</keycap><keycap>F</keycap></keycombo>)</term>
 <listitem>
 <para>Lets you search for a string in the current message.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Select all messages (K)</term>
+<term>Select all messages (<keycap>K</keycap>)</term>
 <listitem>
 <para>Selects all messages in the current folder.</para>
 </listitem>
@@ -1195,42 +1194,42 @@ they reply to.</para>
 <para><variablelist>
 
 <varlistentry>
-<term>New Message (Ctrl+N)</term>
+<term>New Message (<keycombo><keycap>Ctrl</keycap><keycap>N</keycap></keycombo>)</term>
 <listitem>
 <para>Opens the <guilabel>Composer</guilabel> window so you can write a new mail.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Next (N or the right arrow key)</term>
+<term>Next (<keycap>N</keycap> or the <keycap>right arrow key</keycap>)</term>
 <listitem>
 <para>Selects the next message in the Headers pane.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Next Unread (+)</term>
+<term>Next Unread (<keycap>+</keycap>)</term>
 <listitem>
 <para>Selects the next unread message in the Headers pane.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Previous (P or the left arrow key)</term>
+<term>Previous (<keycap>P</keycap> or the <keycap>left arrow key</keycap>)</term>
 <listitem>
 <para>Selects the previous message in the Headers pane.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Previous Unread (-)</term>
+<term>Previous Unread (<keycap>-</keycap>)</term>
 <listitem>
 <para>Selects the previous unread message in the Headers pane.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Reply... (R)</term>
+<term>Reply... (<keycap>R</keycap>)</term>
 <listitem>
 <para>Opens up the <guilabel>Composer</guilabel> window with the contents of the
 selected message's Reply-To field  in the To: field.</para>
@@ -1238,7 +1237,7 @@ selected message's Reply-To field  in the To: field.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Reply All... (A)</term>
+<term>Reply All... (<keycap>A</keycap>)</term>
 <listitem>
 <para>Opens up the <guilabel>Composer</guilabel> window and copies the contents
 of the selected message's <guilabel>Reply-To:</guilabel> and 
@@ -1249,7 +1248,7 @@ field of the <guilabel>Composer</guilabel> window.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Forward... (F)</term>
+<term>Forward... (<keycap>F</keycap>)</term>
 <listitem>
 <para>Forwards the message to a new recipient. The message's text will be copied
 into the body of the new message with a text marking the forwarded part. Attachments
@@ -1258,7 +1257,7 @@ will be forwarded, too.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Redirect... (E)</term>
+<term>Redirect... (<keycap>E</keycap>)</term>
 <listitem>
 <para>Works like forward, except that the message stays the same (even
 the <guilabel>From</guilabel> field). The user who redirected the message is added in
@@ -1283,7 +1282,7 @@ a mail relay if the user does not exist.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Edit... (T)</term>
+<term>Edit... (<keycap>T</keycap>)</term>
 <listitem>
 <para>Edits the selected message if it is editable. Only messages in the outbox
 folder can be edited.</para>
@@ -1333,7 +1332,7 @@ folder can be edited.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Apply Filters (Ctrl+J)</term>
+<term>Apply Filters (<keycombo><keycap>Ctrl</keycap><keycap>J</keycap></keycombo>)</term>
 <listitem>
 <para>Applies your filters to the selected messages.</para>
 </listitem>
@@ -1384,12 +1383,14 @@ folder can be edited.</para>
 </listitem>
 </varlistentry>
 
+<!-- fixme: it's somewhere else now??
 <varlistentry>
 <term>Use KAB</term>
 <listitem>
 <para>Activate this to use a slightly advanced address book instead of a very simple one.</para>
 </listitem>
 </varlistentry>
+-->
 
 </variablelist></para>
 
@@ -1402,7 +1403,7 @@ folder can be edited.</para>
 <para><variablelist>
 
 <varlistentry>
-<term>Contents (F1)</term>
+<term>Contents (<keycap>F1</keycap>)</term>
 <listitem>
 <para>Invokes the KDE help system with the &kmail; help pages displayed.</para>
 </listitem>
@@ -1448,7 +1449,7 @@ see if the bug has been reported already.</para>
 <para><variablelist>
 
 <varlistentry>
-<term>Send (Ctrl+Return)</term>
+<term>Send (<keycombo><keycap>Ctrl</keycap><keycap>Return</keycap></keycombo>)</term>
 <listitem>
 <para>Sends the message immediately.</para>
 </listitem>
@@ -1469,7 +1470,7 @@ see if the bug has been reported already.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Print... (Ctrl+P)</term>
+<term>Print... (<keycombo><keycap>Ctrl</keycap><keycap>P</keycap></keycombo>)</term>
 <listitem>
 <para>Prints the current text.</para>
 </listitem>
@@ -1483,7 +1484,7 @@ see if the bug has been reported already.</para>
 </varlistentry>
 
 <varlistentry>
-<term>New Composer (Ctrl+N)</term>
+<term>New Composer (<keycombo><keycap>Ctrl</keycap><keycap>N</keycap></keycombo>)</term>
 <listitem>
 <para>Opens up a new <guilabel>Composer</guilabel> window.</para>
 </listitem>
@@ -1497,7 +1498,7 @@ see if the bug has been reported already.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Close (Ctrl+W)</term>
+<term>Close (<keycombo><keycap>Ctrl</keycap><keycap>W</keycap></keycombo>)</term>
 <listitem>
 <para>Closes this <guilabel>Composer</guilabel> window.</para>
 </listitem>
@@ -1514,14 +1515,17 @@ see if the bug has been reported already.</para>
 <para><variablelist>
 
 <varlistentry>
-<term>Undo (Ctrl+Z), Redo (Ctrl+Shift+Z)</term>
+<term>Undo (<keycombo><keycap>Ctrl</keycap><keycap>Z</keycap></keycombo>), 
+Redo (<keycombo><keycap>Ctrl</keycap><keycap>Shift</keycap><keycap>Z</keycap></keycombo>)</term>
 <listitem>
 <para>Undo or Redo your steps of editing the current mail.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Cut (Ctrl+X), Copy (Ctrl+C), Paste (Ctrl+V)</term>
+<term>Cut (<keycombo><keycap>Ctrl</keycap><keycap>X</keycap></keycombo>), 
+Copy (<keycombo><keycap>Ctrl</keycap><keycap>C</keycap></keycombo>), 
+Paste (<keycombo><keycap>Ctrl</keycap><keycap>V</keycap></keycombo>)</term>
 <listitem>
 <para>These items are for cutting, copying, and pasting text. They work like in most editors.
 Hint: You can also select text and drag it to a new position. If you hold down
@@ -1537,14 +1541,14 @@ Ctrl while dragging the text, it will not be moved, but copied.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Find (Ctrl+F)</term>
+<term>Find (<keycombo><keycap>Ctrl</keycap><keycap>F</keycap></keycombo>)</term>
 <listitem>
 <para>Finds words, phrases, or expressions in the message.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Replace (Ctrl+R)</term>
+<term>Replace (<keycombo><keycap>Ctrl</keycap><keycap>R</keycap></keycombo>)</term>
 <listitem>
 <para>Lets you replace words, phrases, or expressions in your message with other words or phrases.</para>
 </listitem>
@@ -1703,133 +1707,106 @@ Mailreader window</link>.
 </chapter>
 
 
-<chapter id="questionsandanswers">
-<title>FAQ</title>
+<chapter id="faq">
+<title>Frequently Asked Questions (FAQ)</title>
 
-<sect1 id="questionsandanswersstart">
-<title>Common Questions and Answers</title>
+<qandaset>
 
-<para>This section contains the solution to common problems.
-Don't hesitate to mail <email>kmail@kde.org</email>
-if you think something is missing here.</para>
-
-<sect2 id="myfolderskeepgrowingevenwhenideletemessages">
-<title>My folders keep growing even when I delete messages.</title>
-
-<para>To really remove deleted messages from disk, you have to compact your folders. To do so
+<qandaentry>
+ <question><para>My folders keep growing even when I delete messages.</para></question>
+ <answer><para>To really remove deleted messages from disk, you have to compact your folders. To do so
 automatically, open up the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem></menuchoice> window,
 select the Miscellaneous tab and select <guilabel>Compact all folders
 on exit</guilabel>. Maybe you want to select <guilabel>Empty trash on exit</guilabel>,
-too. This will remove all the messages in the trash folder whenever you exit &kmail;.</para>
-</sect2>
+too. This will remove all the messages in the trash folder whenever you exit &kmail;.</para></answer>
+</qandaentry>
 
-
-<sect2 id="spellcheckingdoesntrecognize">
-<title>Spellchecking doesn't recognize non-english characters.</title>
-
-<para>Before you can use spellchecking the first time, you have to configure it.
+<qandaentry>
+ <question><para>Spellchecking doesn't recognize non-english characters.</para></question>
+ <answer><para>Before you can use spellchecking the first time, you have to configure it.
 You can do so in the <guilabel>Composer</guilabel> window's 
-menu under <menuchoice><guimenu>Settings</guimenu><guimenuitem>Spellchecker...</guimenuitem></menuchoice>.</para>
-</sect2>
+menu under <menuchoice><guimenu>Settings</guimenu><guimenuitem>Spellchecker...</guimenuitem></menuchoice>.</para></answer>
+</qandaentry>
 
-
-<sect2 id="pgpgpgsupport">
-<title>Which version of &kmail; supports which version of PGP/GnuPG?</title>
-
-<para>&kmail; 1.0.x: The unpatched version supports only PGP (version 2.x and 5.x). &kmail;
+<qandaentry>
+ <question><para>Which version of &kmail; supports which version of PGP/GnuPG?</para></question>
+ <answer><para>&kmail; 1.0.x: The unpatched version supports only PGP (version 2.x and 5.x). &kmail;
 will prefer version 5.x if both versions are installed. There is no
 way for the user to force &kmail; to use version 2.x in this case. There
 are patches for PGP6 and GnuPG support at <ulink url="http://devel-home.kde.org/~kmail/">&kmail;'s
 homepage</ulink>. If the GPG patch is applied, and GPG *and* PGP are installed, &kmail;
 will prefer GPG. Here is no way to force &kmail; to use PGP.</para>
+<para>&kmail; 1.1.x: This has at least the improvements from the patches above.</para></answer>
+</qandaentry>
 
-<para>&kmail; 1.1.x: This has at least the improvements from the patches above.</para>
-</sect2>
-
-
-<sect2 id="canuuseencryption">
-<title>Can I use encryption with my normal (non-SSL) POP3 account?</title>
-
-<para>If your POP3 server runs an ssh daemon, you can use ssh to tunnel your POP3 connection
+<qandaentry>
+ <question><para>Can I use encryption with my normal (non-SSL) POP3 account?</para></question>
+ <answer><para>If your POP3 server runs an ssh daemon, you can use ssh to tunnel your POP3 connection
 using this command:</para>
 
 <para><userinput>ssh -L 110:127.0.0.1:110 user@host</userinput></para>
 
 <para>Note that this often doesn't make things more secure if your
 mails have already been sent through the Internet.
-</para>
-</sect2>
+</para></answer>
+</qandaentry>
 
+<qandaentry>
+ <question><para>How do I use my Eudora / XFmail / other random mail client mailboxes in &kmail;?</para></question>
+ <answer><para>See the section <link linkend="secImporting">Using other Mailbox files With &kmail;</link>.</para></answer>
+</qandaentry>
 
-<sect2 id="howdoiusemyeudoraxfmailotherrandommailclient">
-<title>How do I use my (Eudora, XFmail, other random mail client) mailboxes in &kmail;?</title>
-
-<para>See the section <link linkend="secImporting">Using other Mailbox files With &kmail;</link>.</para>
-</sect2>
-
-
-<sect2 id="howdoileavemailontheserverfromthekdefaq">
-<title>How do I leave mail on the server?</title>
-
-<para>Open up the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem></menuchoice> window. Click
+<qandaentry>
+ <question><para>How do I leave mail on the server?</para></question>
+ <answer><para>Open up the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem></menuchoice> window. Click
 on the <guilabel>Network</guilabel> tab. Select your account
 from the account list and click the <guilabel>Modify</guilabel> button. This
 dialog contains the <guilabel>Delete mail from server</guilabel> setting which
-you must not select. </para>
-</sect2>
+you must not select.</para></answer>
+</qandaentry>
 
-
-<sect2 id="howdoiautomaticallyinsertatextfooterwithinth">
-<title>How do I automatically insert a text footer within my mails?</title>
-
-<para>The text footer is called a signature file. Select 
+<qandaentry>
+ <question><para>How do I automatically insert a text footer within my mails?</para></question>
+ <answer><para>The text footer is called a signature file. Select 
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem></menuchoice>
 Look in the <guilabel>Identity</guilabel> tab for the
 <guilabel>Specify signature below</guilabel> field.
-Select the radio button and type your signature below.</para>
-</sect2>
+Select the radio button and type your signature below.</para></answer>
+</qandaentry>
 
-
-<sect2 id="whydoeskmailkeepaskingmeforthelocationofmysi">
-<title>Why does &kmail; keep asking me for the location of my signature file?</title>
-
-<para>&kmail; will ask you the location of your signature file if you have checked the
+<qandaentry>
+ <question><para>Why does &kmail; keep asking me for the location of my signature file?</para></question>
+ <answer><para>&kmail; will ask you the location of your signature file if you have checked the
 option <guilabel>Use a signature from file</guilabel> in the <guilabel>Composer</guilabel> tab of
 the <guilabel>Configure</guilabel> dialog, but have not specified a signature file in the
 <guilabel>Identity</guilabel> tab. You should either specify a signature file or deselect
-<guilabel>Use a signature from file</guilabel>.</para>
-</sect2>
+<guilabel>Use a signature from file</guilabel>.</para></answer>
+</qandaentry>
 
+<qandaentry>
+ <question><para>Why doesn't word wrap work in the Composer window?</para></question>
+ <answer><para>The word wrap setting is probably turned off. Word wrap can be toggled on and off in the 
+<guilabel>Composer</guilabel> tab of the <guilabel>Configure</guilabel> dialog.</para></answer>
+</qandaentry>
 
-<sect2 id="whydoesntwordwrapworkinthecomposerwindow">
-<title>Why doesn't word wrap work in the Composer window?</title>
+<qandaentry>
+ <question><para>How can I find out how many unread messages I have in a mail folder?</para></question>
+ <answer><para>The number of unread messages is conveniently displayed in the
+<guilabel>Folders pane</guilabel> after the folder name.</para></answer>
+</qandaentry>
 
-<para>The word wrap setting is probably turned off. Word wrap can be toggled on and off in the 
-<guilabel>Composer</guilabel> tab of the <guilabel>Configure</guilabel> dialog.</para>
-</sect2>
-
-
-<sect2 id="howcanifindouthowmanyunreadmessagesihaveinam">
-<title>How can I find out how many unread messages I have in a mail folder?</title>
-
-<para>The number of unread messages is conveniently displayed in the
-<guilabel>Folders pane</guilabel> after the folder name.</para>
-</sect2>
-
-
-<sect2 id="secqasendmail">
-<title>How do I set up sendmail to work with &kmail; if I have a dial-up connection?</title>
-
-<para>First you should check if your Linux/BSD/whatever distribution can do this for
+<qandaentry>
+ <question><para>How do I set up sendmail to work with &kmail; if I have a dial-up connection?</para></question>
+ <answer><para>First you should check if your Linux/BSD/whatever distribution can do this for
 you. Perhaps it has already been set up during installation.</para>
 
 <para>If that's not the case, you may want to have a look at
 <ulink url="http://www.linuxdoc.org/HOWTO/mini/Mail-Queue.html">the Mail Queue HOWTO</ulink>
 or at <ulink url="http://www.leg.uct.ac.za/Articles/sendmail_dialup.html">UCT Linux User's group page
-on configuring sendmail for Dial-up connections</ulink>.</para>
-</sect2>
+on configuring sendmail for Dial-up connections</ulink>.</para></answer>
+</qandaentry>
 
-</sect1>
+</qandaset>
 
 </chapter>
 
@@ -1877,7 +1854,7 @@ on configuring sendmail for Dial-up connections</ulink>.</para>
 	<para>&kmail; 1.0 documentation by David Rugge <email>davidrugge@mindspring.com</email></para>
 	<para>Original documentation by Markus Wuebben <email>markus.wuebben@kde.org</email>, 
 	Robert Williams <email>rwilliams@kde.org</email> (Editor)</para>
-	<para>Some of the &kmail; Questions and Answers were taken from the &kmail; section of the KDE FAQ.</para>
+	<para>Some of the &kmail; FAQs were taken from the &kmail; section of the KDE FAQ.</para>
 
 	<para>Thanks to Michael Elkins <email>me@cs.hmc.edu</email> for his
 	excellent description of the different Unix mail formats in the Mutt documentation.</para>
