@@ -47,7 +47,7 @@ void KonnectorState::setState( bool b) {
 bool KonnectorState::state()const {
     return ( m_state != 0 );
 }
-void KonnectorState::mousePressEvent( QMouseEvent* e ) {
+void KonnectorState::mousePressEvent( QMouseEvent* ) {
     emit clicked( state() );
 }
 
@@ -73,7 +73,7 @@ bool KonnectorBar::state()const {
     return isOn();
 }
 bool KonnectorBar::isOn()const {
-    m_state->state();
+    return m_state->state();
 }
 
 #include "konnectorbar.moc"
