@@ -307,7 +307,7 @@ void KNComposer::applyChanges()
     a_rticle->addContent(text, true);
   }
 
-  QString tmp="";
+  QString tmp;
   for(int i=0; i < v_iew->e_dit->numLines(); i++)
     tmp+=v_iew->e_dit->textLine(i)+"\n";
 

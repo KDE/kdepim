@@ -147,7 +147,15 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, bool post, bool mail)
 
   //--------------------------- <Body> -----------------------------
 
-  QString quoted="";
+  // attribution line
+  QString attribution=knGlobals.cfgManager->postNewsComposer()->intro();
+  attribution.replace(QRegExp("%NAME"),a->from()->name());
+  attribution.replace(QRegExp("%EMAIL"),QString::fromLatin1(a->from()->email()));
+  attribution.replace(QRegExp("%DATE"),KGlobal::locale()->formatDateTime(a->date()->qdt(),false));
+  attribution.replace(QRegExp("%MSID"),a->messageID()->asUnicodeString());
+  attribution+="\n\n";
+
+  QString quoted;
   QStringList text;
   QStringList::Iterator line;
   bool incSig=knGlobals.cfgManager->postNewsComposer()->includeSignature();
@@ -213,7 +221,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, bool post, bool mail)
 
 
   //open composer
-  KNComposer *c=new KNComposer(art, quoted, sig, true);
+  KNComposer *c=new KNComposer(art, attribution+quoted, sig, true);
   c_ompList.append(c);
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();

@@ -150,7 +150,7 @@ void KNProtocolClient::waitForWork()
         if (isConnected())         // connection is ready
           processJob();
       }
-      errorPrefix = "";
+      errorPrefix = QString::null;
 
       clearPipe();
     }
@@ -570,7 +570,7 @@ bool KNProtocolClient::conRawIP(in_addr* ip)
   fd_set fdsR,fdsW;
   timeval tv;
 
-  job->setErrorString("");
+  job->setErrorString(QString::null);
   sockaddr_in address;
   address.sin_family = AF_INET;
   address.sin_port = htons(account.port());

@@ -194,7 +194,7 @@ void KNGroupBrowser::createListItems(QListViewItem *parent)
   bool expandit=false;
 
   if(parent) {
-    QString tmp("");
+    QString tmp;
     QListViewItem *p=parent;
     while(p) {
       tmp.prepend(p->text(0));

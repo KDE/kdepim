@@ -248,7 +248,7 @@ void KNArticleManager::showHdrs(bool clear)
     if (g_roup->isLocked()) {
       if (0!=pthread_mutex_lock(knGlobals.netAccess->nntpMutex())) {
         kdDebug(5003) << "failed to lock nntp mutex" << endl;
-        knGlobals.top->setStatusMsg("");
+        knGlobals.top->setStatusMsg(QString::null);
         updateStatusString();
         knGlobals.top->setCursorBusy(false);
         return;
@@ -306,7 +306,7 @@ void KNArticleManager::showHdrs(bool clear)
   if(v_iew->firstChild())
     v_iew->setCurrentItem(v_iew->firstChild());
 
-  knGlobals.top->setStatusMsg("");
+  knGlobals.top->setStatusMsg(QString::null);
   updateStatusString();
   knGlobals.top->setCursorBusy(false);
 }

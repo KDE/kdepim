@@ -1674,7 +1674,7 @@ void KNLocalArticle::updateListItem()
     return;
 
   i_tem->setText(0, s_ubject.asUnicodeString());
-  QString tmp="";
+  QString tmp;
   int idx=0;
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
 
@@ -1694,7 +1694,7 @@ void KNLocalArticle::updateListItem()
   }
 
   i_tem->setText(1, tmp);
-  i_tem->setText(2, "");
+  i_tem->setText(2, QString::null);
   i_tem->setText(3, KGlobal::locale()->formatDateTime(d_ate.qdt(), true));
 }
 

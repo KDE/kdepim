@@ -245,8 +245,6 @@ QCString KNHeaders::AddressField::as7BitString(bool incType)
 
   if(incType && type()[0]!='\0')
     ret=typeIntro();
-  else
-    ret="";
 
   if(n_ame.isEmpty())
     ret+=e_mail;
@@ -429,12 +427,10 @@ void KNHeaders::To::from7BitString(const QCString &s)
 
 QCString KNHeaders::To::as7BitString(bool incType)
 {
-  QCString ret="";
+  QCString ret;
 
   if(incType)
     ret+=typeIntro();
-  else
-    ret="";
 
   AddressList::Iterator it=a_ddrList->begin();
   ret+=(*it).as7BitString(false);
@@ -468,7 +464,7 @@ QString KNHeaders::To::asUnicodeString()
   if(!a_ddrList)
     return QString::null;
 
-  QString ret="";
+  QString ret;
   AddressList::Iterator it=a_ddrList->begin();
   ret+=(*it).asUnicodeString();
   ++it;

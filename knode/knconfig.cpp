@@ -82,7 +82,7 @@ bool KNConfig::Identity::isEmpty()
 
 QString KNConfig::Identity::getSignature()
 {
-  s_igContents = "";      // don't cache file contents
+  s_igContents = QString::null;      // don't cache file contents
 
   if (u_seSigFile) {
     if(!s_igPath.isEmpty()) {

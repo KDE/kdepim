@@ -98,7 +98,7 @@ QCString KNGroupSelectDialog::selectedGroups()
 {
   QCString ret;
   QListViewItemIterator it(selView);
-  ret="";
+
   bool isFirst=true;
   for(; it.current(); ++it) {
     if(!isFirst)
