@@ -5,6 +5,7 @@ Name[eo]=Poŝtelefonilo
 Name[hi]=केंडी
 Name[ta]=Kஅன்டி
 Name[xx]=xxKandyxx
+Comment=Tool for syncing address book data with mobile phones
 Exec=kandy %i %m -caption "%c"
 Icon=kandy
 Type=Application
