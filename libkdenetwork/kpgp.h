@@ -245,11 +245,11 @@ public:
   bool usePGP(void) const { return (havePGP() && (pgpType != tOff)); }
 
   // show the result of encryption/signing?
-  void setShowCipherText(const bool);
+  void setShowCipherText(const bool flag);
   bool showCipherText(void) const;
 
   // show the encryption keys for approval?
-  void setShowKeyApprovalDlg(const bool);
+  void setShowKeyApprovalDlg(const bool flag);
   bool showKeyApprovalDlg(void) const;
 
   /** Shows a key selection dialog with all secret keys and the given title
