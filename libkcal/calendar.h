@@ -96,22 +96,6 @@ class Calendar : public QObject, public CustomProperties,
     void setEmail( const QString & );
   
     /**
-      Set time zone from a timezone string (e.g. -2:00)
-    */
-    void setTimeZone( const QString &tz );
-    /**
-      Set time zone from a minutes value (e.g. -60)
-    */
-    void setTimeZone( int tz );
-    /**
-      Return time zone as offest in minutes.
-    */
-    int getTimeZone() const;
-    /**
-      Compute an ISO 8601 format string from the time zone.
-    */
-    QString getTimeZoneStr() const;
-    /**
       Set time zone id (see /usr/share/zoneinfo/zone.tab for list of legal
       values).
     */

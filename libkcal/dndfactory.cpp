@@ -45,8 +45,7 @@ DndFactory::DndFactory( Calendar *cal ) :
 
 ICalDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
 {
-  CalendarLocal cal;
-  if (mCalendar) cal.setTimeZone( mCalendar->getTimeZoneStr() );
+  CalendarLocal cal( mCalendar->timeZoneId() );
   Incidence *i = incidence->clone();
   cal.addIncidence( i );
 
@@ -63,8 +62,7 @@ Event *DndFactory::createDrop(QDropEvent *de)
 {
   kdDebug() << "DndFactory::createDrop()" << endl;
 
-  CalendarLocal cal;
-  if (mCalendar) cal.setTimeZone( mCalendar->getTimeZoneStr() );
+  CalendarLocal cal( mCalendar->timeZoneId() );
 
   if ( ICalDrag::decode( de, &cal ) || VCalDrag::decode( de, &cal ) ) {
     de->accept();
@@ -83,8 +81,7 @@ Todo *DndFactory::createDropTodo(QDropEvent *de)
 {
   kdDebug(5800) << "VCalFormat::createDropTodo()" << endl;
 
-  CalendarLocal cal;
-  if (mCalendar) cal.setTimeZone( mCalendar->getTimeZoneStr() );
+  CalendarLocal cal( mCalendar->timeZoneId() );
 
   if ( ICalDrag::decode( de, &cal ) || VCalDrag::decode( de, &cal ) ) {
     de->accept();
@@ -118,8 +115,7 @@ bool DndFactory::copyEvent( Event *selectedEv )
 {
   QClipboard *cb = QApplication::clipboard();
 
-  CalendarLocal cal;
-  if (mCalendar) cal.setTimeZone( mCalendar->getTimeZoneStr() );
+  CalendarLocal cal( mCalendar->timeZoneId() );
   Event *ev = new Event( *selectedEv );
   cal.addEvent(ev);
   cb->setData( new ICalDrag( &cal ) );
@@ -131,8 +127,7 @@ bool DndFactory::copyTodo( Todo *selectedTodo )
 {
   QClipboard *cb = QApplication::clipboard();
 
-  CalendarLocal cal;
-  if (mCalendar) cal.setTimeZone( mCalendar->getTimeZoneStr() );
+  CalendarLocal cal( mCalendar->timeZoneId() );
   Todo *todo = new Todo( *selectedTodo );
   cal.addTodo(todo);
   cb->setData( new ICalDrag( &cal ) );

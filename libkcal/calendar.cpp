@@ -126,57 +126,6 @@ void Calendar::setOwner(const QString &os)
   setModified( true );
 }
 
-void Calendar::setTimeZone(const QString & tz)
-{
-  bool neg = FALSE;
-  int hours, minutes;
-  QString tmpStr(tz);
-
-  if (tmpStr.left(1) == "-")
-    neg = TRUE;
-  if (tmpStr.left(1) == "-" || tmpStr.left(1) == "+")
-    tmpStr.remove(0, 1);
-  hours = tmpStr.left(2).toInt();
-  if (tmpStr.length() > 2)
-    minutes = tmpStr.right(2).toInt();
-  else
-    minutes = 0;
-  mTimeZone = (60*hours+minutes);
-  if (neg)
-    mTimeZone = -mTimeZone;
-  mLocalTime = false;
-
-  setModified( true );
-}
-
-QString Calendar::getTimeZoneStr() const
-{
-  if (mLocalTime)
-    return QString();
-  QString tmpStr;
-  int hours = abs(mTimeZone / 60);
-  int minutes = abs(mTimeZone % 60);
-  bool neg = mTimeZone < 0;
-
-  tmpStr.sprintf("%c%.2d%.2d",
-		 (neg ? '-' : '+'),
-		 hours, minutes);
-  return tmpStr;
-}
-
-void Calendar::setTimeZone(int tz)
-{
-  mTimeZone = tz;
-  mLocalTime = false;
-
-  setModified( true );
-}
-
-int Calendar::getTimeZone() const
-{
-  return mTimeZone;
-}
-
 void Calendar::setTimeZoneId(const QString &id)
 {
   mTimeZoneId = id;
