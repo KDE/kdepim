@@ -73,7 +73,7 @@ void KCalKonnectorConfig::initGUI()
 {
   QBoxLayout *layout = new QVBoxLayout( this );
 
-  QLabel *label = new QLabel( i18n( "Select the resource you want to sync with." ), this );
+  QLabel *label = new QLabel( i18n( "Select the calendar you want to sync with." ), this );
   layout->addWidget( label );
 
   mResourceBox = new QComboBox( this );
