@@ -34,10 +34,8 @@ FilterCSV::~FilterCSV()
 {}
 
 void FilterCSV::import(FilterInfo *info) {
-   QWidget *parent = info->parent();
-
    QString filename = KFileDialog::getOpenFileName( QDir::homeDirPath(), 
-		   	"*.[cC][sS][vV]|CSV files (*.csv)", parent);
+		   	"*.[cC][sS][vV]|" + i18n("CSV files (*.csv)"), info->parent());
    if (filename.isEmpty()) {
      info->alert(i18n("No directory chosen"));
      return;

@@ -30,7 +30,7 @@ FilterPAB::~FilterPAB()
 
 void FilterPAB::import(FilterInfo *info)
 {
-  QString file = KFileDialog::getOpenFileName(QDir::homeDirPath(),"*.[pP][aA][bB]|MS Personal Address Book Files (*.pab)", info->parent());
+  QString file = KFileDialog::getOpenFileName(QDir::homeDirPath(),"*.[pP][aA][bB]|" + i18n("MS Personal Address Book Files (*.pab)"), info->parent());
   
   if (file.isEmpty()) {
     info->alert(i18n("No address book chosen"));

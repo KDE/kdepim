@@ -34,12 +34,7 @@ FilterEudoraAb::~FilterEudoraAb()
 
 void FilterEudoraAb::import(FilterInfo *info)
 {
-  QString file;
-  QWidget *parent=info->parent();
-
-  if (!openAddressBook(info)) return;
-
-  file=KFileDialog::getOpenFileName(QDir::homeDirPath() ,"*.[tT][xX][tT]|Eudora Light Addressbook (*.txt)",parent);
+  QString file = KFileDialog::getOpenFileName(QDir::homeDirPath() ,"*.[tT][xX][tT]|" + i18n("Eudora Light Addressbook (*.txt)"), info->parent() );
   if (file.length()==0) 
   {
     info->alert(i18n("No address book chosen"));
@@ -56,7 +51,8 @@ void FilterEudoraAb::import(FilterInfo *info)
   info->setTo(i18n("KAddressBook"));
   info->setCurrent(i18n("Currently converting Eudora Light addresses to address book"));
   info->setCurrent(0);
-  
+
+  if (!openAddressBook(info)) return; 
   QString line;
   QTextStream stream(&F);
   KABC::Addressee *a = 0;
