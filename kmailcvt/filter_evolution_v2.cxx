@@ -32,8 +32,8 @@ FilterEvolution_v2::FilterEvolution_v2(void) :
               "<p>Select the base directory of your local Evolution mailfolder (usually ~/.evolution/mail/local/).</p>"
               "<p><b>Note:</b> Never choose a Folder, which <u>does not</u> contain mbox-files (for example "
               "a maildir). If you do it anyway, you will get many new folders.</p>"
-              "<p>As it is currently impossible to recreate the folder structure, it will be "
-	      "\"contained\" in the generated folder's names.</p>"))
+              "<p>Since it is possible to recreate the folder structure all folder "
+	      "stored under: \"Evolution-Import\".</p>"))
 {}
 
 /** Destructor. */
@@ -135,7 +135,7 @@ void FilterEvolution_v2::importDirContents(FilterInfo *info, const QString& dirN
     for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
       QString kSubDir;
       if(!KMailSubDir.isNull()) {
-        kSubDir = KMailSubDir + "-" + *filename;
+        kSubDir = KMailSubDir + "/" + *filename;
       } else {
         kSubDir = *filename;
       }
@@ -205,11 +205,10 @@ void FilterEvolution_v2::importMBox(FilterInfo *info, const QString& mboxName, c
       QString _targetDir = targetDir;
       if(!targetDir.isNull()){
          if(_targetDir.contains(".sbd")) _targetDir.remove(".sbd");
-         destFolder += _targetDir;
-         destFolder += "-" + filenameInfo.baseName(TRUE);// mboxName;
+         destFolder += "Evolution-Import/" + _targetDir + "/" + filenameInfo.baseName(TRUE); // mboxName;
       }
       else {
-	destFolder = rootDir;
+	destFolder = "Evolution-Import/" + rootDir;
 	if(destFolder.contains(".sbd")) destFolder.remove(".sbd");
       }
 

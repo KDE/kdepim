@@ -32,10 +32,8 @@ FilterEvolution::FilterEvolution(void) :
 	 "Simon MARTIN<br /><br />( Filter accelerated by Danny Kukawka )",
 	 i18n("<p><b>Evolution 1.x import filter</b></p>"
 	      "<p>Select the base directory of Evolution's mails (usually ~/evolution/local).</p>"
-	      "<p>As it is currently impossible to recreate the folder structure, it will be "
-	      "\"contained\" in the generated folder's names.</p>"
-	      "<p>For instance, if you have a \"foo\" folder in Evolution, with a \"bar\" subfolder, "
-	      "two folders will be created in KMail : \"foo\" and \"foo-bar\"</p>"))
+	      "<p>Since it is possible to recreate the folder structure all folder "
+	      "stored under: \"Evolution-Import\".</p>"))
 {}
 
 /** Destructor. */
@@ -102,7 +100,7 @@ void FilterEvolution::importDirContents(FilterInfo *info, const QString& dirName
     for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
       QString kSubDir;
       if(!KMailSubDir.isNull()) {
-	kSubDir = KMailSubDir + "-" + *filename;
+	kSubDir = KMailSubDir + "/" + *filename;
       } else {
 	kSubDir = *filename;
       }
@@ -173,9 +171,13 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
       first_msg = false;
 
       QString destFolder = rootDir;
-      if(!targetDir.isNull())
-	destFolder = destFolder + "-" + targetDir;
-      
+      if(!targetDir.isNull()) {
+	destFolder = "Evolution-Import/" + destFolder + "/" + targetDir;
+      }
+      else {
+	destFolder = "Evolution-Import/" + destFolder;
+      }
+
       /* comment by Danny Kukawka:
        * addMessage() == old function, need more time and check for duplicates
        * addMessage_fastImport == new function, faster and no check for duplicates

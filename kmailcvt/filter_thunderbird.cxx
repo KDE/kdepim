@@ -32,8 +32,8 @@ FilterThunderbird::FilterThunderbird(void) :
               " (usually ~/.thunderbird/*.default/Mail/Local Folders/).</p>"
               "<p><b>Note:</b> Never choose a Folder, which <u>does not</u> contain mbox-files (for example"
               " a maildir). If you do it anyway, you will get many new folders.</p>"
-              "<p>As it is currently impossible to recreate the folder structure, it will be "
-	      "\"contained\" in the generated folder's names.</p>"))
+              "<p>Since it is possible to recreate the folder structure all folder "
+	      "stored under: \"Thunderbird-Import\".</p>"))
 {}
 
 /** Destructor. */
@@ -132,7 +132,7 @@ void FilterThunderbird::importDirContents(FilterInfo *info, const QString& dirNa
     for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
       QString kSubDir;
       if(!KMailSubDir.isNull()) {
-        kSubDir = KMailSubDir + "-" + *filename;
+        kSubDir = KMailSubDir + "/" + *filename;
       } else {
         kSubDir = *filename;
       }
@@ -202,11 +202,10 @@ void FilterThunderbird::importMBox(FilterInfo *info, const QString& mboxName, co
       QString _targetDir = targetDir;
       if(!targetDir.isNull()){
          if(_targetDir.contains(".sbd")) _targetDir.remove(".sbd");
-         destFolder += _targetDir;
-         destFolder += "-" + filenameInfo.baseName(TRUE);// mboxName;
+         destFolder += "Thunderbird-Import/" + _targetDir + "/" + filenameInfo.baseName(TRUE);// mboxName;
       }
       else {
-	destFolder = rootDir;
+	destFolder = "Thunderbird-Import/" + rootDir;
 	if(destFolder.contains(".sbd")) destFolder.remove(".sbd");
       }
       
