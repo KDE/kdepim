@@ -1,3 +1,5 @@
+#ifndef PILOTDAEMONDCOP_H
+#define PILOTDAEMONDCOP_H
 /* pilotDaemonDCOP.h			KPilotDaemon
 **
 ** Copyright (C) 2000 by Adriaan de Groot
@@ -28,8 +30,6 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef PILOTDAEMONDCOP_H
-#define PILOTDAEMONDCOP_H
 
 #ifndef _DCOPOBJECT_H
 #include <dcopobject.h>
@@ -39,15 +39,22 @@
 class PilotDaemonDCOP : virtual public DCOPObject
 {
 	K_DCOP
+public:
+	enum HotSyncTypes { Default=0,
+		HotSync,
+		FastSync,
+		Backup,
+		Restore } ;
 k_dcop:
 	/**
 	* Start a HotSync. What kind of HotSync is determined
-	* by the int parameter:
+	* by the int parameter (use the enum above!):
 	*
 	* 0 default -> use whatever form of HotSync has most recently been requested
 	* 1 regular HotSync -> backup databases and run conduits
 	* 2 FastSync -> only backup databases with conduits
 	* 3 FullBackup -> backup, no conduits
+	* 4 FullRestore -> restore from local databases
 	*/
 	virtual ASYNC startHotSync(int) = 0;
 	virtual ASYNC requestFastSyncNext() = 0;
@@ -59,16 +66,19 @@ k_dcop:
 	*/
 	virtual ASYNC quitNow() = 0;
 	virtual ASYNC reloadSettings() =0; // Indicate changed config file.
+
+	/**
+	* Functions requesting the status of the daemon.
+	*/
+	virtual QString statusString() const = 0;
 } ;
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
-#endif
 
 
 // $Log$
+// Revision 1.7  2001/08/27 22:54:27  adridg
+// Decruftifying; improve DCOP link between daemon & viewer
+//
 // Revision 1.6  2001/08/19 19:25:57  adridg
 // Removed kpilotlink dependency from kpilot; added DCOP interfaces to make that possible. Also fixed a connect() type mismatch that was harmless but annoying.
 //
@@ -84,3 +94,4 @@ k_dcop:
 // Revision 1.2  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //
+#endif
