@@ -57,6 +57,7 @@ namespace KSync {
     class KonnectorManager;
     class SyncUi;
     class SyncAlgorithm;
+    class KonnectorBar;
 
     enum KonnectorMode { KONNECTOR_ONLINE=0,  KONNECTOR_OFFLINE };
 
@@ -68,6 +69,7 @@ namespace KSync {
                         WFlags f = WType_TopLevel );
         ~KSyncMainWindow();
 
+        QWidget* widgetStack();
         KSyncSystemTray *tray();
         KonnectorManager*  konnector();
 
@@ -98,7 +100,7 @@ namespace KSync {
 
     signals:
         void profileChanged(const Profile& oldProfile   );
-        void konnectorChanged( const QString & );
+        void konnectorChanged( const UDI& );
         void konnectorChanged( const KonnectorProfile& oldProf );
         void konnectorProgress( const UDI&, const Progress& );
         void konnectorError( const UDI&, const Error& );
@@ -107,7 +109,9 @@ namespace KSync {
         void partProgress( ManipulatorPart* part, const Progress& );
         void partError( ManipulatorPart* part, const Error& );
         void startSync();
+        void startSync(ManipulatorPart*);
         void doneSync();
+        void doneSync(ManipulatorPart* );
 
    private slots:
         void slotKonnectorProfile();
@@ -127,6 +131,7 @@ namespace KSync {
         void slotConfigure();
         void slotActivated(ManipulatorPart *);
         void slotQuit();
+        void slotKonnectorBar(bool );
 
         /* slots for the KonnectorManager */
     private slots:
@@ -146,6 +151,11 @@ namespace KSync {
         QWidgetStack *m_stack;
         // loaded parts
         QPtrList<ManipulatorPart> m_parts;
+        QPtrListIterator<ManipulatorPart>* m_partsIt;
+        Syncee::PtrList m_outSyncee;
+        Syncee::PtrList m_inSyncee;
+        bool m_isSyncing;
+
         ManPartService::ValueList m_partsLst;
         KSyncSystemTray *m_tray;
 
@@ -159,6 +169,10 @@ namespace KSync {
         QString m_currentId;
         // udi + Identify
         QMap<QString, QString> m_ids;
+        KonnectorBar* m_konBar;
+
+        struct Data;
+        Data* d;
     };
 };
 

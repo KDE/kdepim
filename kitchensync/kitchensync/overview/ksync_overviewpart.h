@@ -28,15 +28,18 @@ namespace KSync {
     QWidget* widget();
 
   private slots:
-      void slotPartProgress( ManipulatorPart* part, const Progress& ) {
-
-      };
-      void slotPartError( ManipulatorPart*, const Error& ) {
-
-      }
+      void slotPartChanged(ManipulatorPart*);
+      void slotPartProgress( ManipulatorPart* part, const Progress& );
+      void slotPartError( ManipulatorPart*, const Error& );
+      void slotKonnectorProgress(const UDI&, const Progress& );
+      void slotKonnectorError(const UDI&, const Error& );
+      void slotProfileChanged(const Profile& );
+      void slotKonnectorChanged(const UDI& );
+      void slotStartSync();
+      void slotDoneSync();
   private:
-    QPixmap m_pixmap;
-      QWidget* m_widget;
+      QPixmap m_pixmap;
+      OverView::Widget* m_widget;
   };
 };
 

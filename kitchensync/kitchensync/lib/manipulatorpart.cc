@@ -103,7 +103,7 @@ void ManipulatorPart::connectPartChange( const char* slot ) {
 
 }
 void ManipulatorPart::connectPartProgress( const char* slot ) {
-    connect( core(), SIGNAL(partProgress( ManipulatorPart* part, const Progress& ) ),
+    connect( core(), SIGNAL(partProgress( ManipulatorPart*, const Progress& ) ),
              this, slot );
 }
 void ManipulatorPart::connectPartError( const char* slot ) {
@@ -111,7 +111,7 @@ void ManipulatorPart::connectPartError( const char* slot ) {
              this, slot );
 }
 void ManipulatorPart::connectKonnectorProgress( const char* slot ) {
-    connect( core(), SIGNAL(konnectorProfile(const UDI&, const Progress& ) ),
+    connect( core(), SIGNAL(konnectorProgress(const UDI&, const Progress& ) ),
              this, slot );
 }
 void ManipulatorPart::connectKonnectorError( const char* slot ) {

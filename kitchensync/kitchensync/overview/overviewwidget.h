@@ -1,132 +1,45 @@
-#ifndef OVERVIEWWIDGET_H
-#define OVERVIEWWIDGET_H
+#ifndef KSYNC_OVERVIEW_WIDGET_H
+#define KSYNC_OVERVIEW_WIDGET_H
 
-#include <qvariant.h>
-#include <qscrollview.h>
 #include <qwidget.h>
-#include <qptrlist.h>
+#include <qlayout.h>
+#include <qlabel.h>
 
-#include <konnector.h>
+class QTextEdit;
+namespace KSync {
+    class KonnectorProfile;
+    class Profile;
+    class Error;
+    class Progress;
+    typedef QString UDI;
 
-#include <manipulatorpart.h>
+namespace OverView {
 
-class QVBoxLayout;
-class QVBox;
-class QHBoxLayout;
-class QGridLayout;
-class QFrame;
-class QLabel;
-class newProgress;
-
-namespace KSync{
-    class ManipulatorPart;
-    class NewProgress;
-  class OverviewWidget : public QWidget
-    {
-      Q_OBJECT
-
-    private:
-      QFrame* Line;
-      /**
-       * The logo should be 120 x 120 pixel
-       *
-       */
-      QLabel* deviceLogo;
-      QLabel* deviceName;
-      QLabel* nameField;
-      QLabel* progressWindow;
-      QWidget* progressWindowPart;
-
-      QScrollView *sv;
-      NewProgress* current;
-      QPtrList<NewProgress> m_progress;
-      QVBox *m_svView;
-       QVBoxLayout *box;
-
-    private:
-      void showProgressPart();
-
+    /**
+     * This is the MainWidget of the OverView and the only interface to the part...
+     *
+     */
+    class Widget : public QWidget {
+        Q_OBJECT
     public:
-      OverviewWidget( QWidget* parent = 0, const char* name = 0, WFlags fl = 0 );
-      ~OverviewWidget();
+        Widget( QWidget* parent, const char* name );
+        ~Widget();
 
+        void setProfile( const Profile& );
+        void setProfile( const QString&,const QPixmap& pix );
+        void addProgress( const UDI&, const Progress& );
+        void addProgress( ManipulatorPart*, const Progress& );
+        void addError( const UDI&, const Error& );
+        void addError( ManipulatorPart*, const Error& );
+        void startSync();
+    private:
+        QVBoxLayout* m_lay;
+        QLabel* m_device;
+        QLabel* m_profile;
+        QLabel* m_logo;
+        QTextEdit* m_edit;
 
-    public:
-      /**
-       * Set the name of the device to sync with.
-       * Its the bigger Name on top
-       * @param the Name
-       */
-      void setDeviceName(const QString&);
-
-      /**
-       *
-       *
-       */
-      void setNameField(const QString&);
-
-      /**
-       * With this the it is possible to set a custom logo for the device
-       * @param the logo pixmap
-       */
-      void setLogo(const QPixmap &);
-
-      /**
-       * Prints the list of possible syncable features
-       */
-      void showList(QPtrList<ManipulatorPart>);
-      /**
-       *
-       */
-      void clearProgress(const Profile&,  KonnectorManager* con,  const QString& id);
-      void addProgress( ManipulatorPart* part );
-      void currentDone();
     };
-
-  /**
-   * This class is used for the sync entrys in the lower
-   * part.
-   * It has a pixmap, the name and a progress indicator
-   */
-  class NewProgress : public QWidget {
-    Q_OBJECT
-
-     private:
-    QLabel* progressItemPix;
-    QLabel* progressLabel;
-    QLabel* statusLabel;
-
-      public:
-    NewProgress( QPixmap &icon,
-		 QString text,
-		 QWidget* parent = 0,
-		 const char* name = 0,
-		 WFlags fl = 0) ;
-    ~NewProgress();
-
-  public:
-    /**
-     * sets the icon
-     * @param the pixmap
-     */
-    void setProgressItemPix(const QPixmap&);
-
-    /**
-     * sets the name
-     * @param the name
-     */
-    void setProgressLabel(const QString& );
-
-    void timerEvent(QTimerEvent *);
-
-    /**
-     * sets the icon on status.
-     * @param 0 for working 1 for done
-     */
-    void setStatusLabel(int status);
-
-  };
-
-};
-
+}
+}
 #endif
