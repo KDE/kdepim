@@ -140,4 +140,3 @@ bool KNSmtpClient::openConnection()
 
 //--------------------------------
 
-#include "knsmtpclient.moc"

@@ -722,4 +722,3 @@ void KNNntpClient::handleErrors()
 
 //--------------------------------
 
-#include "knnntpclient.moc"
