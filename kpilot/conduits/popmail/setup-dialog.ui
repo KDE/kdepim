@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>418</width>
-            <height>273</height>
+            <width>363</width>
+            <height>279</height>
         </rect>
     </property>
     <property name="caption">
@@ -18,6 +18,12 @@
     <grid>
         <property name="name">
             <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
         </property>
         <widget class="QTabWidget" row="0" column="0">
             <property name="name">
@@ -140,16 +146,6 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>Use Sendmail</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Use SMTP</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
                                 <string>Use KMail</string>
                             </property>
                         </item>
@@ -157,10 +153,10 @@
                             <cstring>fSendMode</cstring>
                         </property>
                         <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                         </property>
-                        <property name="currentItem">
-                            <number>3</number>
+                        <property name="whatsThis" stdset="0">
+                            <string>This combobox allows you to select the method KPilot will use to send the mail from your Handheld to the recipients. Depending on the method you choose, the other fields in the dialog may be enabled or disabled. The only &lt;i&gt;working&lt;/i&gt; method is through KMail.</string>
                         </property>
                     </widget>
                 </grid>
@@ -252,21 +248,14 @@
                                 <string>Do Not Receive Mail</string>
                             </property>
                         </item>
-                        <item>
-                            <property name="text">
-                                <string>Use POP3 Server</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Use System Mailbox</string>
-                            </property>
-                        </item>
                         <property name="name">
                             <cstring>fRecvMode</cstring>
                         </property>
                         <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>This combobox allows you to select the method KPilot will use to receive mail and place it on the Handheld. Depending on the method you choose, the other fields in the dialog may be enabled or disabled. Currently, &lt;i&gt;none&lt;/i&gt; of the receiving methods work, so there is only one option.</string>
                         </property>
                     </widget>
                     <widget class="KURLRequester" row="6" column="1">
@@ -305,7 +294,7 @@
 </widget>
 <customwidgets>
 </customwidgets>
-<layoutdefaults spacing="6" margin="0"/>
+<layoutdefaults spacing="6" margin="11"/>
 <includehints>
     <includehint>klineedit.h</includehint>
     <includehint>kurlrequester.h</includehint>
