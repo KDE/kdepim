@@ -271,7 +271,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 </property>
                                 <property>
                                     <name>whatsThis</name>
-                                    <string>&lt;qt&gt;Places a HotSync icon in the system tray, which you can use to configure the KPilot daemon.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Places a HotSync icon in the system tray, which shows the daemon's status and allows you to configure KPilot.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget row="2"  column="0" >
@@ -286,7 +286,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 </property>
                                 <property>
                                     <name>whatsThis</name>
-                                    <string>Stop the KPilot daemon when you quit KPilot.</string>
+                                    <string>&lt;qt&gt;Stop the KPilot daemon when you quit KPilot (only if KPilot started the daemon itself).&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                         </grid>
