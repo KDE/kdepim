@@ -49,7 +49,7 @@ static const char *syncAction_id =
 
 #include <kdialogbase.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kconfig.h>
 
 #if KDE_VERSION < 300
