@@ -86,48 +86,41 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
     if ( key.isInvalid() )
       qDebug( "key is invalid - ignoring" );
     if ( key.isExpired() ) {
-      //qDebug( "key is expired" );
+      qDebug( "key is expired" );
       return false;
     } else if ( key.isRevoked() ) {
-      //qDebug( "key is revoked" );
+      qDebug( "key is revoked" );
       return false;
     } else if ( key.isDisabled() ) {
-      //qDebug( "key is disabled" );
+      qDebug( "key is disabled" );
       return false;
     }
 
   if ( keyUsage & Kleo::KeySelectionDialog::EncryptionKeys &&
        !key.canEncrypt() ) {
-    //qDebug( "key can's encrypt" );
+    qDebug( "key can't encrypt" );
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::SigningKeys &&
        !key.canSign() ) {
-    //qDebug( "key can't sign" );
+    qDebug( "key can't sign" );
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::CertificationKeys &&
        !key.canCertify() ) {
-    //qDebug( "key can't certify" );
+    qDebug( "key can't certify" );
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::AuthenticationKeys &&
        !key.canAuthenticate() ) {
-    //qDebug( "key can't authenticate" );
+    qDebug( "key can't authenticate" );
     return false;
   }
 
   if ( keyUsage & Kleo::KeySelectionDialog::SecretKeys &&
        !( keyUsage & Kleo::KeySelectionDialog::PublicKeys ) &&
        !key.isSecret() ) {
-    //qDebug( "key isn't secret" );
-    return false;
-  }
-
-  if ( keyUsage & Kleo::KeySelectionDialog::PublicKeys &&
-       !( keyUsage & Kleo::KeySelectionDialog::SecretKeys ) &&
-       key.isSecret() ) {
-    //qDebug( "key is secret" );
+    qDebug( "key isn't secret" );
     return false;
   }
 
@@ -135,13 +128,13 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
        key.protocol() == GpgME::Context::OpenPGP )
     switch ( key.userID(0).validity() ) {
     case GpgME::UserID::Unknown:
-      //qDebug( "key validity is unknown" );
+      qDebug( "key validity is unknown" );
       return false;
     case GpgME::UserID::Undefined:
-      //qDebug( "key validity is undefined" );
+      qDebug( "key validity is undefined" );
       return false;
     case GpgME::UserID::Never:
-      //qDebug( "key validity is \"never\"" );
+      qDebug( "key validity is \"never\"" );
       return false;
     case GpgME::UserID::Marginal:
     case GpgME::UserID::Full:
