@@ -111,6 +111,9 @@ public:
   /** Is this subresource active? */
   bool subresourceActive( const QString& ) const;
 
+  /** What is the label for this subresource? */
+  virtual const QString labelForSubresource( const QString& resource ) const;
+  
   KABC::Lock* lock();
 
 private:

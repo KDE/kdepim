@@ -646,6 +646,18 @@ QStringList ResourceKolab::subresources() const
          + mJournalSubResources.keys() ); 
 }
 
+const QString
+ResourceKolab::labelForSubresource( const QString& subresource ) const
+{
+  if ( mEventSubResources.contains( subresource ) )
+    return mEventSubResources[ subresource ].label();
+  if ( mTodoSubResources.contains( subresource ) )
+    return mTodoSubResources[ subresource ].label();
+  if ( mJournalSubResources.contains( subresource ) )
+    return mJournalSubResources[ subresource ].label();
+  return subresource;
+}
+
 void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
                                               const QString& type,
                                               const QString& folder )
