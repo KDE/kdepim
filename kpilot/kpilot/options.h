@@ -65,6 +65,10 @@
 #include <qstring.h>
 #endif
 
+#ifndef QSTRLIST_H
+#include <qstrlist.h>
+#endif
+
 #ifndef _KLOCALE_H
 #include <klocale.h>
 #endif
@@ -188,6 +192,11 @@ inline kndbgstream operator << (kndbgstream s, const debugName &d) { s << d.j; r
 
 
 // $Log$
+// Revision 1.30  2001/09/05 21:53:51  adridg
+// Major cleanup and architectural changes. New applications kpilotTest
+// and kpilotConfig are not installed by default but can be used to test
+// the codebase. Note that nothing else will actually compile right now.
+//
 // Revision 1.29  2001/08/26 13:17:47  zander
 // added includes to make it compile
 //
