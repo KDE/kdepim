@@ -3,6 +3,7 @@
 /* options.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+**           (C) 2002 by Adriaan de Groot
 **
 ** This file defines some global constants and macros for KPilot.
 ** In particular, KDE2 is defined when KDE2 seems to be the environment
@@ -156,9 +157,12 @@ class KConfig;
 QString qstringExpansion(const QString &);
 QString charExpansion(const char *);
 
+#if KDE_VERSION < 319
+// Holger Freyther added these in December 2002 to kdbgstream and kndbgstream
 class QSize;
 ostream& operator << (ostream&,const QSize &) ;
 kdbgstream& operator << (kdbgstream&,const QSize &);
+#endif
 
 #else
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
@@ -190,10 +194,12 @@ class KConfig;
 QString qstringExpansion(const QString &);
 QString charExpansion(const char *);
 
+#if KDE_VERSION < 319
 class QSize;
 ostream& operator << (ostream&,const QSize &) ;
 kdbgstream& operator << (kdbgstream&,const QSize &);
 kndbgstream& operator << (kndbgstream&,const QSize &);
+#endif
 
 // class QStringList;
 // ostream& operator <<(ostream&,const QStringList &);
@@ -219,6 +225,9 @@ kndbgstream& operator << (kndbgstream&,const QSize &);
 
 
 // $Log$
+// Revision 1.18  2002/11/27 21:29:07  adridg
+// See larger ChangeLog entry
+//
 // Revision 1.17  2002/08/21 17:20:24  adridg
 // Forgot the non-debugging crowd
 //
