@@ -693,7 +693,7 @@ void KNFetchArticleManager::updateStatusString()
                         .arg(g_roup->name()).arg(g_roup->newCount()).arg(displCnt),SB_GROUP);
 
     if (f_ilter)
-      knGlobals.top->setStatusMsg(i18n(" Filter: %1").arg(f_ilter->name()), SB_FILTER);
+      knGlobals.top->setStatusMsg(i18n(" Filter: %1").arg(f_ilter->translatedName()), SB_FILTER);
     else
       knGlobals.top->setStatusMsg(QString::null, SB_FILTER);
   }

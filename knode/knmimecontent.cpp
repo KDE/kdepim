@@ -646,17 +646,19 @@ void KNMimeContent::setHeader(headerType t, const QCString &value, bool encode)
   QCString hdr;
   
   for(line=h_ead->first(); line; line=h_ead->next()) {
-    ht=stringToHeaderType(line);
-    if(ht==t) {
-      insPos=h_ead->at();
-      h_ead->remove(insPos);
-      break;
-    }
-    if(ht>t) {
-      insPos=h_ead->at();
-      break;
-    }
-    else insPos=h_ead->at()+1;
+    if (line[0]!=32 && line[0]!=9) {   // don't insert into continued headers
+      ht=stringToHeaderType(line);
+      if(ht==t) {
+        insPos=h_ead->at();
+        h_ead->remove(insPos);
+        break;
+      }
+      if(ht>t) {
+        insPos=h_ead->at();
+        break;
+      }
+      else insPos=h_ead->at()+1;
+    } else insPos=h_ead->at()+1;
   }
   
   hdr=headerTypeToString(t)+": ";

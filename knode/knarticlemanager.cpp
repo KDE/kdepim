@@ -167,7 +167,7 @@ QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
     return path;
   }
 
-  KTempFile* tmpFile = new KTempFile(QString::null,c->ctName());    // prefix null, real filename as suffix
+  KTempFile* tmpFile = new KTempFile();
   if (tmpFile->status()!=0) {
     displayTempFileError();
     delete tmpFile;

@@ -877,7 +877,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
         case PUP_OPEN:
           openURL(target);
         break;
-        case PUP_COPY:
+        case PUP_COPYURL:
           QApplication::clipboard()->setText(target);
         break;
       }
