@@ -418,11 +418,11 @@ void
 KPilotLink::slotConduitRead(KSocket* cSocket)
 {
 	FUNCTIONSETUP;
-
   int message;
   PilotRecord* tmpRec = 0L;
 
   read(cSocket->socket(), &message, sizeof(int));
+  //kdDebug() << fname << " read message " << message << endl;
 
 	// This one message doesn't require a database to be open.
 	//
@@ -473,6 +473,7 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 		write(cSocket->socket(),&appLen,sizeof(int));
 		write(cSocket->socket(),buf,appLen);
 		delete buf;
+		break;
 		}
 	case CStatusMessages::WRITE_RECORD :
 		{
@@ -519,16 +520,23 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 		{
 		int index;
 		read(cSocket->socket(), &index, sizeof(int));
+		//kdDebug() << fname << " about to read record by index "
+		//<< index << endl;
 		tmpRec = fCurrentDB->readRecordByIndex(index);
 		if(tmpRec)
-		{
-		writeRecord(cSocket, tmpRec);
-		delete tmpRec;
-		}
+		    {
+		    //kdDebug() << fname << " record found!!! id = " <<
+		    //tmpRec->getID() << endl;
+		    writeRecord(cSocket, tmpRec);
+		    delete tmpRec;
+		    }
 		else
-		CStatusMessages::write(cSocket->socket(), 
-		CStatusMessages::NO_SUCH_RECORD);
-		}
+		    {
+		    //kdDebug() << fname << " no record found!!!" << endl; 
+
+		    CStatusMessages::write(cSocket->socket(), 
+					   CStatusMessages::NO_SUCH_RECORD);
+		    }
 		break;
 	case CStatusMessages::READ_REC_BY_ID :
 		{
@@ -1726,6 +1734,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 #endif
 
 // $Log$
+// Revision 1.45  2001/04/26 21:59:00  adridg
+// CVS_SILENT B0rkage with previous commit
+//
 // Revision 1.44  2001/04/26 19:25:24  adridg
 // Real change in addSyncLogEntry; muchos reformatting
 //
