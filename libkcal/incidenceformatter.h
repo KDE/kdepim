@@ -46,9 +46,9 @@ class InvitationFormatterHelper
 class IncidenceFormatter
 {
   public:
-    static QString toolTipString( Incidence *incidence, bool richText = true );
+    static QString toolTipString( IncidenceBase *incidence, bool richText = true );
     static QString mailBodyString( IncidenceBase *incidencebase );
-    static QString extensiveDisplayString( Incidence *incidence );
+    static QString extensiveDisplayString( IncidenceBase *incidence );
     
     static QString formatICalInvitation( QString invitation, Calendar *mCalendar, 
                                          InvitationFormatterHelper *helper );

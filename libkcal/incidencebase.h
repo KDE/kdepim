@@ -33,6 +33,10 @@ namespace KCal {
 
 typedef QValueList<QDate> DateList;
 typedef QValueList<QDateTime> DateTimeList;
+class Event;
+class Todo;
+class Journal;
+class FreeBusy;
 
 /**
   This class provides the base class common to all calendar components.
@@ -40,6 +44,44 @@ typedef QValueList<QDateTime> DateTimeList;
 class IncidenceBase : public CustomProperties
 {
   public:
+    /**
+      This class provides the interface for a visitor of calendar components. It
+      serves as base class for concrete visitors, which implement certain actions on
+      calendar components. It allows to add functions, which operate on the concrete
+      types of calendar components, without changing the calendar component classes.
+    */
+    class Visitor
+    {
+      public:
+        /** Destruct Incidence::Visitor */
+        virtual ~Visitor() {}
+
+        /**
+          Reimplement this function in your concrete subclass of IncidenceBase::Visitor to perform actions
+          on an Event object.
+        */
+        virtual bool visit(Event *) { return false; }
+        /**
+          Reimplement this function in your concrete subclass of IncidenceBase::Visitor to perform actions
+          on a Todo object.
+        */
+        virtual bool visit(Todo *) { return false; }
+        /**
+          Reimplement this function in your concrete subclass of IncidenceBase::Visitor to perform actions
+          on an Journal object.
+        */
+        virtual bool visit(Journal *) { return false; }
+        /**
+          Reimplement this function in your concrete subclass of IncidenceBase::Visitor to perform actions
+          on a FreeBusy object.
+        */
+        virtual bool visit(FreeBusy *) { return false; }
+
+      protected:
+        /** Constructor is protected to prevent direct creation of visitor base class. */
+        Visitor() {}
+    };
+
     class Observer {
       public:
         virtual void incidenceUpdated( IncidenceBase * ) = 0;
@@ -49,6 +91,15 @@ class IncidenceBase : public CustomProperties
     IncidenceBase( const IncidenceBase & );
     virtual ~IncidenceBase();
     bool operator==( const IncidenceBase & ) const;
+
+    /**
+      Accept IncidenceVisitor. A class taking part in the visitor mechanism has to
+      provide this implementation:
+      <pre>
+        bool accept(Visitor &v) { return v.visit(this); }
+      </pre>
+    */
+    virtual bool accept(Visitor &) { return false; }
 
     virtual QCString type() const = 0;
 

@@ -288,12 +288,61 @@ static QString eventViewerFormatJournal( Journal *journal )
   return tmpStr;
 }
 
+static QString eventViewerFormatFreeBusy( FreeBusy *fb )
+{
+  if ( !fb ) return QString::null;
+  QString tmpStr( eventViewerAddTag( "h1", i18n("Free/Busy information for %1").arg( fb->organizer() ) ) );
+  tmpStr += eventViewerAddTag( "h3", i18n("Busy times in date range %1 - %2:")
+      .arg( KGlobal::locale()->formatDate( fb->dtStart().date(), true ) )
+      .arg( KGlobal::locale()->formatDate( fb->dtEnd().date(), true ) ) );
+  
+  QValueList<Period> periods = fb->busyPeriods();
+ 
+  QString text = eventViewerAddTag( "em", eventViewerAddTag( "b", i18n("Busy:") ) );
+  QValueList<Period>::iterator it;
+  for ( it = periods.begin(); it != periods.end(); ++it ) {
+    Period per = *it;
+    if ( per.hasDuration() ) {
+      int dur = per.duration().asSeconds();
+      QString cont;
+      if ( dur > 3600 ) {
+        cont += i18n("%1 hours ").arg( dur / 3600 );
+        dur %= 3600;
+      }
+      if ( dur > 60 ) {
+        cont += i18n("%1 minutes ").arg( dur / 60 );
+        dur %= 60;
+      }
+      if ( dur > 0 ) {
+        cont += i18n("%1 seconds").arg( dur );
+      }
+      text += i18n("startDate for duration", "%1 for %2")
+          .arg( KGlobal::locale()->formatDateTime( per.start(), false ) )
+          .arg( cont );
+      text += "<br>";
+    } else {
+      if ( per.start().date() == per.end().date() ) {
+        text += i18n("date, fromTime - toTime ", "%1, %2 - %3")
+            .arg( KGlobal::locale()->formatDate( per.start().date() ) )
+            .arg( KGlobal::locale()->formatTime( per.start().time() ) )
+            .arg( KGlobal::locale()->formatTime( per.end().time() ) );
+      } else {
+        text += i18n("fromDateTime - toDateTime", "%1 - %2")
+          .arg( KGlobal::locale()->formatDateTime( per.start(), false ) )
+          .arg( KGlobal::locale()->formatDateTime( per.end(), false ) );
+      }
+      text += "<br>";
+    }
+  }
+  tmpStr += eventViewerAddTag( "p", text );
+  return tmpStr;
+}
 
-class EventViewerVisitor : public Incidence::Visitor
+class EventViewerVisitor : public IncidenceBase::Visitor
 {
   public:
     EventViewerVisitor() { mResult = ""; }
-    bool act( Incidence *incidence ) { return incidence->accept( *this ); }
+    bool act( IncidenceBase *incidence ) { return incidence->accept( *this ); }
     QString result() const { return mResult; }
   protected:
     bool visit( Event *event ) 
@@ -311,12 +360,17 @@ class EventViewerVisitor : public Incidence::Visitor
       mResult = eventViewerFormatJournal( journal ); 
       return !mResult.isEmpty(); 
     }
+    bool visit( FreeBusy *fb )
+    {
+      mResult = eventViewerFormatFreeBusy( fb );
+      return !mResult.isEmpty();
+    }
   
   protected:
     QString mResult;
 };
 
-QString IncidenceFormatter::extensiveDisplayString( Incidence *incidence )
+QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
 {
   if ( !incidence ) return QString::null;
   EventViewerVisitor v;
@@ -662,11 +716,11 @@ static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
   }
 }
 
-class ScheduleMessageVisitor : public Incidence::Visitor
+class ScheduleMessageVisitor : public IncidenceBase::Visitor
 {
   public:
     ScheduleMessageVisitor() : mMessage(0) { mResult = ""; }
-    bool act( Incidence *incidence, ScheduleMessage *msg ) { mMessage = msg; return incidence->accept( *this ); }
+    bool act( IncidenceBase *incidence, ScheduleMessage *msg ) { mMessage = msg; return incidence->accept( *this ); }
     QString result() const { return mResult; }
   
   protected:
@@ -688,8 +742,13 @@ class InvitationHeaderVisitor : public ScheduleMessageVisitor
       return !mResult.isEmpty();
     }
     bool visit( Journal *journal ) 
-    { 
+    {
       mResult = invitationHeaderJournal( journal, mMessage ); 
+      return !mResult.isEmpty();
+    }
+    bool visit( FreeBusy *fb )
+    {
+      mResult = invitationHeaderFreeBusy( fb, mMessage ); 
       return !mResult.isEmpty();
     }
 };
@@ -710,6 +769,11 @@ class InvitationBodyVisitor : public ScheduleMessageVisitor
     bool visit( Journal *journal ) 
     { 
       mResult = invitationDetailsJournal( journal ); 
+      return !mResult.isEmpty();
+    }
+    bool visit( FreeBusy *fb ) 
+    { 
+      mResult = invitationDetailsFreeBusy( fb ); 
       return !mResult.isEmpty();
     }
 };
@@ -738,7 +802,6 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   }
  
   IncidenceBase *incBase = msg->event();
-  Incidence* incidence = dynamic_cast<Incidence*>( incBase );
 
   // First make the text of the message
   QString html;
@@ -751,26 +814,16 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     "<tr><td>").arg(tableStyle);
   
   html += tableHead;
-  if ( incidence ) {
-    InvitationHeaderVisitor headerVisitor;
-    // The InvitationHeaderVisitor returns false if the incidence is somehow invalid, or not handled
-    if ( !headerVisitor.act( incidence, msg ) )
-      return QString::null;
-    html += "<h2>" + headerVisitor.result() + "</h2>";
-  } else if ( incBase && incBase->type()=="FreeBusy" ) {
-    FreeBusy *fb = static_cast<FreeBusy *>(incBase);
-    html += "<h2>" + invitationHeaderFreeBusy( fb, msg ) + "</h2>";
-  }
+  InvitationHeaderVisitor headerVisitor;
+  // The InvitationHeaderVisitor returns false if the incidence is somehow invalid, or not handled
+  if ( !headerVisitor.act( incBase, msg ) )
+    return QString::null;
+  html += "<h2>" + headerVisitor.result() + "</h2>";
   
-  if ( incidence ) {
-    InvitationBodyVisitor bodyVisitor;
-    if ( !bodyVisitor.act( incidence, msg ) )
-      return QString::null;
-    html += bodyVisitor.result();
-  } else if ( incBase && incBase->type()=="FreeBusy" ) {
-    FreeBusy *fb = static_cast<FreeBusy *>(incBase);
-    html += invitationDetailsFreeBusy( fb );
-  }
+  InvitationBodyVisitor bodyVisitor;
+  if ( !bodyVisitor.act( incBase, msg ) )
+    return QString::null;
+  html += bodyVisitor.result();
     
   html += "<br>&nbsp;<br>&nbsp;<br>";
   html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td><td>";
@@ -811,7 +864,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
     case Scheduler::Reply: 
         // Enter this into my calendar
-        if ( incidence->type() == "Todo" ) {
+        if ( incBase->type() == "Todo" ) {
           html += helper->makeLink( "reply", i18n( "[Enter this into my task list]" ) );
         } else {
           html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
@@ -826,6 +879,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
   html += "</td></tr></table>";
 
+  Incidence* incidence = dynamic_cast<Incidence*>( incBase );
   if ( incidence ) {
     QString sDescr = incidence->description();
     if( ( msg->method() == Scheduler::Request || msg->method() == Scheduler::Cancel ) &&
@@ -1306,12 +1360,12 @@ QString IncidenceFormatter::formatTNEFInvitation( const QByteArray& tnef,
  *******************************************************************/
 
  
-class ToolTipVisitor : public Incidence::Visitor
+class ToolTipVisitor : public IncidenceBase::Visitor
 {
   public:
     ToolTipVisitor() : mRichText( true ), mResult( "" ) {}
 
-    bool act( Incidence *incidence, bool richText=true)
+    bool act( IncidenceBase *incidence, bool richText=true)
     {
       mRichText = richText;
       mResult = "";
@@ -1323,10 +1377,12 @@ class ToolTipVisitor : public Incidence::Visitor
     bool visit( Event *event );
     bool visit( Todo *todo );
     bool visit( Journal *journal );
+    bool visit( FreeBusy *fb );
 
     QString dateRangeText( Event*event );
     QString dateRangeText( Todo *todo );
     QString dateRangeText( Journal *journal );
+    QString dateRangeText( FreeBusy *fb );
 
     QString generateToolTip( Incidence* incidence, QString dtRangeText );
 
@@ -1403,6 +1459,16 @@ QString ToolTipVisitor::dateRangeText( Journal*journal )
   return ret;
 }
 
+QString ToolTipVisitor::dateRangeText( FreeBusy *fb )
+{
+  QString tmp( "<br>" + i18n("<i>Period start:</i>&nbsp;1") );
+  QString ret = tmp.arg( KGlobal::locale()->formatDateTime( fb->dtStart() ) );
+  tmp = "<br>" + i18n("<i>Period start:</i>&nbsp;1");
+  ret += tmp.arg( KGlobal::locale()->formatDateTime( fb->dtEnd() ) );
+  return ret;
+}
+
+
 
 bool ToolTipVisitor::visit( Event *event )
 {
@@ -1419,6 +1485,14 @@ bool ToolTipVisitor::visit( Todo *todo )
 bool ToolTipVisitor::visit( Journal *journal )
 {
   mResult = generateToolTip( journal, dateRangeText( journal ) );
+  return !mResult.isEmpty();
+}
+
+bool ToolTipVisitor::visit( FreeBusy *fb )
+{
+  mResult = "<qt><b>" + i18n("Free/Busy information for %1").arg(fb->organizer()) + "</b>";
+  mResult += dateRangeText( fb );
+  mResult += "</qt>";
   return !mResult.isEmpty();
 }
 
@@ -1443,8 +1517,8 @@ QString ToolTipVisitor::generateToolTip( Incidence* incidence, QString dtRangeTe
   tmp += "</qt>";
   return tmp;
 }
-    
-QString IncidenceFormatter::toolTipString( Incidence *incidence, bool richText )
+
+QString IncidenceFormatter::toolTipString( IncidenceBase *incidence, bool richText )
 {
   ToolTipVisitor v;
   if ( v.act( incidence, richText ) ) {
@@ -1461,12 +1535,12 @@ QString IncidenceFormatter::toolTipString( Incidence *incidence, bool richText )
  *******************************************************************/
 
  
-class MailBodyVisitor : public Incidence::Visitor
+class MailBodyVisitor : public IncidenceBase::Visitor
 {
   public:
     MailBodyVisitor() : mResult( "" ) {}
 
-    bool act( Incidence *incidence )
+    bool act( IncidenceBase *incidence )
     {
       mResult = "";
       return incidence ? incidence->accept( *this ) : false;
@@ -1477,6 +1551,7 @@ class MailBodyVisitor : public Incidence::Visitor
     bool visit( Event *event );
     bool visit( Todo *todo );
     bool visit( Journal *journal );
+    bool visit( FreeBusy * ) { mResult = i18n("This is a Free Busy Object"); return !mResult.isEmpty(); }
   protected:
     QString mResult;
 };
@@ -1570,21 +1645,14 @@ bool MailBodyVisitor::visit( Journal *journal )
 
 
 
-QString IncidenceFormatter::mailBodyString( IncidenceBase *incidencebase )
+QString IncidenceFormatter::mailBodyString( IncidenceBase *incidence )
 {
-  if ( !incidencebase ) 
+  if ( !incidence ) 
     return QString::null;
     
-  Incidence *incidence = dynamic_cast<Incidence*>( incidencebase );
-  if ( incidence ) {
-    MailBodyVisitor v;
-    if ( v.act( incidence ) ) {
-      return v.result();
-    }
-  } else {
-    if ( incidencebase->type() == "FreeBusy" ) {
-      return i18n("This is a Free Busy Object");
-    }
+  MailBodyVisitor v;
+  if ( v.act( incidence ) ) {
+    return v.result();
   }
   return QString::null;
 }

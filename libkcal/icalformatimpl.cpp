@@ -325,27 +325,30 @@ ICalFormatImpl::~ICalFormatImpl()
   delete mCompat;
 }
 
-class ToStringVisitor : public Incidence::Visitor
+class ToComponentVisitor : public IncidenceBase::Visitor
 {
   public:
-    ToStringVisitor( ICalFormatImpl *impl ) : mImpl( impl ), mComponent( 0 ) {}
+    ToComponentVisitor( ICalFormatImpl *impl, Scheduler::Method m ) : mImpl( impl ), mComponent( 0 ), mMethod( m ) {}
 
     bool visit( Event *e ) { mComponent = mImpl->writeEvent( e ); return true; }
     bool visit( Todo *e ) { mComponent = mImpl->writeTodo( e ); return true; }
     bool visit( Journal *e ) { mComponent = mImpl->writeJournal( e ); return true; }
+    bool visit( FreeBusy *fb ) { mComponent = mImpl->writeFreeBusy( fb, mMethod ); return true; }
 
     icalcomponent *component() { return mComponent; }
 
   private:
     ICalFormatImpl *mImpl;
     icalcomponent *mComponent;
+    Scheduler::Method mMethod;
 };
 
-icalcomponent *ICalFormatImpl::writeIncidence(Incidence *incidence)
+icalcomponent *ICalFormatImpl::writeIncidence( IncidenceBase *incidence, Scheduler::Method method )
 {
-  ToStringVisitor v( this );
-  incidence->accept(v);
-  return v.component();
+  ToComponentVisitor v( this, method );
+  if ( incidence->accept(v) ) 
+    return v.component();
+  else return 0;
 }
 
 icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
@@ -2508,24 +2511,7 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
 
   icalcomponent_add_property(message,icalproperty_new_method(icalmethod));
 
-  // TODO: check, if dynamic cast is required
-  // @TODO: Use visitor for this!
-  if(incidence->type() == "Todo") {
-    Todo *todo = static_cast<Todo *>(incidence);
-    icalcomponent_add_component(message,writeTodo(todo));
-  }
-  if(incidence->type() == "Event") {
-    Event *event = static_cast<Event *>(incidence);
-    icalcomponent_add_component(message,writeEvent(event));
-  }
-  if(incidence->type() == "FreeBusy") {
-    FreeBusy *freebusy = static_cast<FreeBusy *>(incidence);
-    icalcomponent_add_component(message,writeFreeBusy(freebusy, method));
-  }
-  if (incidence->type() == "Journal" ) {
-    Journal *journal = static_cast<Journal *>(incidence);
-    icalcomponent_add_component( message, writeJournal( journal ) );
-  }
+  icalcomponent_add_component( message, writeIncidence( incidence, method ) );
 
   return message;
 }

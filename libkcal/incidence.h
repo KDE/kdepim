@@ -33,9 +33,6 @@
 
 namespace KCal {
 
-class Event;
-class Todo;
-class Journal;
 
 /**
   This class provides the base class common to all calendar components.
@@ -44,44 +41,11 @@ class Incidence : public IncidenceBase
 {
   public:
     /**
-      This class provides the interface for a visitor of calendar components. It
-      serves as base class for concrete visitors, which implement certain actions on
-      calendar components. It allows to add functions, which operate on the concrete
-      types of calendar components, without changing the calendar component classes.
-    */
-    class Visitor
-    {
-      public:
-        /** Destruct Incidence::Visitor */
-        virtual ~Visitor() {}
-
-        /**
-          Reimplement this function in your concrete subclass of IncidenceVisitor to perform actions
-          on an Event object.
-        */
-        virtual bool visit(Event *) { return false; }
-        /**
-          Reimplement this function in your concrete subclass of IncidenceVisitor to perform actions
-          on an Todo object.
-        */
-        virtual bool visit(Todo *) { return false; }
-        /**
-          Reimplement this function in your concrete subclass of IncidenceVisitor to perform actions
-          on an Journal object.
-        */
-        virtual bool visit(Journal *) { return false; }
-
-      protected:
-        /** Constructor is protected to prevent direct creation of visitor base class. */
-        Visitor() {}
-    };
-
-    /**
       This class implements a visitor for adding an Incidence to a resource
       supporting addEvent(), addTodo() and addJournal() calls.
     */
     template<class T>
-    class AddVisitor : public Visitor
+    class AddVisitor : public IncidenceBase::Visitor
     {
       public:
         AddVisitor( T *r ) : mResource( r ) {}
@@ -99,7 +63,7 @@ class Incidence : public IncidenceBase
       supporting deleteEvent(), deleteTodo() and deleteJournal() calls.
     */
     template<class T>
-    class DeleteVisitor : public Visitor
+    class DeleteVisitor : public IncidenceBase::Visitor
     {
       public:
         DeleteVisitor( T *r ) : mResource( r ) {}
@@ -130,15 +94,6 @@ class Incidence : public IncidenceBase
     ~Incidence();
 
     bool operator==( const Incidence & ) const;
-
-    /**
-      Accept IncidenceVisitor. A class taking part in the visitor mechanism has to
-      provide this implementation:
-      <pre>
-        bool accept(Visitor &v) { return v.visit(this); }
-      </pre>
-    */
-    virtual bool accept(Visitor &) { return false; }
 
     /**
       Return copy of this object. The returned object is owned by the caller.

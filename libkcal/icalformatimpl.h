@@ -27,6 +27,7 @@
 #include "scheduler.h"
 #include "freebusy.h"
 
+
 extern "C" {
   #include <ical.h>
   #include <icalss.h>
@@ -50,11 +51,11 @@ class ICalFormatImpl
 
     bool populate( Calendar *, icalcomponent *fs);
 
-    icalcomponent *writeIncidence(Incidence *incidence);
+    icalcomponent *writeIncidence(IncidenceBase *incidence, Scheduler::Method method = Scheduler::Request );
     icalcomponent *writeTodo(Todo *todo);
     icalcomponent *writeEvent(Event *event);
     icalcomponent *writeFreeBusy(FreeBusy *freebusy,
-                                 Scheduler::Method method);
+                                 Scheduler::Method method = Scheduler::Publish );
     icalcomponent *writeJournal(Journal *journal);
     void writeIncidence(icalcomponent *parent,Incidence *incidence);
     icalproperty *writeAttendee(Attendee *attendee);

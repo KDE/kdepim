@@ -58,6 +58,7 @@ class FreeBusy : public IncidenceBase
     void sortList();
     
   private:
+    bool accept( Visitor &v ) { return v.visit( this ); }
     //This is used for creating a freebusy object for the current user
     bool addLocalPeriod( const QDateTime &start, const QDateTime &end );
 
