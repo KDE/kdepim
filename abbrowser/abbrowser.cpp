@@ -4,8 +4,9 @@
  * Copyright (C) 1999 Don Sanders <dsanders@kde.org>
  */
 
-#include <KabAddressBookClient.h>
-#include <KabEntity.h>
+#include <KAddressBookInterface.h>
+#include <Entity.h>
+#include <Field.h>
 
 #include "abbrowser.h"
 #include "browserentryeditor.h"
@@ -20,13 +21,12 @@
 
 #include "undo.h"
 #include "browserwidget.h"
-#include "entry.h"
 
 Pab::Pab()
+  : KTMainWindow()
 {
   setCaption( i18n( "Address Book Browser" ));
-  document = new KAB::AddressBookClient( "Local", KURL("kab://localhost"));
-  view = new PabWidget( document, this, "Kontact" );
+  view = new PabWidget( "kab", this, "Kontact" );
 
   // tell the KTMainWindow that this is indeed the main widget
   setView(view);
@@ -72,11 +72,11 @@ Pab::Pab()
   menuBar()->insertSeparator();
 
   // KDE will generate a short help menu automagically
-  p = kapp->getHelpMenu(true, 
-			i18n("Kab --- KDE Address Book\n\n"
-			     "(c) 1999 The KDE PIM Team \n"
-			     "Long Description"));
-  menuBar()->insertItem(i18n("&Help"), p);
+//  p = kapp->helpMenu(true, 
+//			i18n("Kab --- KDE Address Book\n\n"
+//			     "(c) 1999 The KDE PIM Team \n"
+//			     "Long Description"));
+//  menuBar()->insertItem(i18n("&Help"), p);
   
   // insert a quit button.  the icon is the standard one in KDE
   toolBar()->insertButton(BarIcon("exit"),   // icon
@@ -122,8 +122,8 @@ Pab::Pab()
 void Pab::newContact()
 {
  ContactDialog *test = new PabNewContactDialog( this, i18n( "Address Book Entry Editor" ));
- connect( test, SIGNAL( add( KAB::Entity* ) ), 
-	  view, SLOT( addNewEntry( KAB::Entity* ) ));
+ connect( test, SIGNAL( add( Entity* ) ), 
+	  view, SLOT( addNewEntry( Entity* ) ));
  test->show();
 }
 
@@ -140,7 +140,7 @@ void Pab::saveConfig()
 {
   debug( "saveConfig" );
   view->saveConfig();
-  KConfig *config = kapp->getConfig();
+  KConfig *config = KGlobal::config();
 
   config->setGroup("Geometry");
   config->writeEntry("MainWin", "abc");

@@ -4,8 +4,9 @@
    License: GNU GPL
 */
 
-#include <KabEntity.h>
-#include <KabField.h>
+#include <Entity.h>
+#include <Field.h>
+#include <KAddressBookInterface.h>
 
 #include "entryeditorwidget.h"
 
@@ -28,19 +29,18 @@
 
 #include "namevaluewidget.h"
 #include "attributes.h"
-#include "entry.h"
 #include "datepickerdialog.h"
 #include <klocale.h>
 #include <kglobal.h>
 
-ContactDialog::ContactDialog( QWidget *parent, const char *name, KAB::Entity *ce, bool modal )
+ContactDialog::ContactDialog( QWidget *parent, const char *name, Entity *ce, bool modal )
   : QDialog( parent, name, modal ), vs( 0 ), vp( 0 )
 {
-    ce ? this->ce = ce : this->ce = new KAB::Entity();
+    ce ? this->ce = ce : this->ce = new Entity;
     
-    KAB::Field * f = ce->find("N");
-    if (f != 0)
-      curName = QString(f->data());
+    Field f = ce->field("N");
+    if (!f.isNull())
+      curName = QString(f.value());
     
     setCaption( name );
 
@@ -76,7 +76,7 @@ void ContactDialog::ok()
   emit accepted();
 }
 
-KAB::Entity * ContactDialog::entry()
+Entity * ContactDialog::entry()
 {
   return ce;
 }
@@ -97,7 +97,7 @@ void ContactDialog::setupTab1()
   leFullName = new ContactLineEdit( tab1, ".AUXCONTACT-N", ce );
   leFullName->setText( curName );
 
-  connect( ce, SIGNAL( changed() ), this, SLOT( parseName() ));
+//  connect( ce, SIGNAL( changed() ), this, SLOT( parseName() ));
   connect( pbFullName, SIGNAL( clicked()), this, SLOT( newNameDialog()));
   tab1lay->addWidget( pbFullName, 0, 0 );
   tab1lay->addWidget( leFullName, 0, 1 );
@@ -118,7 +118,7 @@ void ContactDialog::setupTab1()
   QLineEdit *leCompany = new ContactLineEdit( tab1, "ORG", ce );
   lCompany->setBuddy( leCompany );
   curCompany = leCompany->text();
-  connect( ce, SIGNAL( changed() ), this, SLOT( monitorCompany() ));
+//  connect( ce, SIGNAL( changed() ), this, SLOT( monitorCompany() ));
   tab1lay->addWidget( lCompany, 1, 0 );
   tab1lay->addWidget( leCompany, 1, 1 );
 
@@ -131,9 +131,9 @@ void ContactDialog::setupTab1()
   cbFileAs = new FileAsComboBox( tab1, "X-FileAs", ce );
   QString sFileAs;
   
-  KAB::Field * f = ce->find("X-FileAs");
-  if (f != 0)
-    sFileAs = QString(f->data());
+  Field f = ce->field("X-FileAs");
+  if (!f.isNull())
+    sFileAs = QString(f.value());
   
   updateFileAs();
   if (sFileAs != "")
@@ -469,9 +469,9 @@ void ContactDialog::newFieldDialog()
 void ContactDialog::newNameDialog()
 {
   debug( "newNameDialog " + leFullName->text() );
-  KAB::Field * f = ce->find(".AUXCONTACT-N");
+  Field f = ce->field(".AUXCONTACT-N");
   
-  if ((f != 0) && (leFullName->text() != QString(f->data())) || (f == 0)) {
+  if (!f.isNull() && (leFullName->text() != QString(f.value())) || (f.isNull())) {
 
     ce->replace( ".AUXCONTACT-N", leFullName->text());
     parseName();
@@ -480,9 +480,9 @@ void ContactDialog::newNameDialog()
   QDialog *nd = new NameDialog( this, ce, true );
   if (nd->exec()) {
     
-    KAB::Field * f = ce->find("N");
-    if (f != 0) {
-      curName = QString(f->data());
+    Field f = ce->field("N");
+    if (!f.isNull()) {
+      curName = QString(f.value());
       ce->replace( ".AUXCONTACT-N", curName);
     }
     else {
@@ -495,12 +495,12 @@ void ContactDialog::newNameDialog()
 
 void ContactDialog::monitorCompany()
 {
-  KAB::Field * f = ce->find("ORG");
+  Field f = ce->field("ORG");
   
-  if (f == 0)
+  if (f.isNull())
     return;
   
-  QString org = QString(f->data());
+  QString org = QString(f.value());
   if (!(org.isEmpty()))
     if (org != curCompany) {
       curCompany = org;
@@ -514,55 +514,57 @@ void ContactDialog::updateFileAs()
   cbFileAs->clear();
   QString surnameFirst;
 
-  KAB::Field * f = ce->find("N");
+  Field f = ce->field("N");
   
-  if (f != 0) {
+  if (!f.isNull()) {
     
-    cbFileAs->insertItem(QString(f->data()));
+    cbFileAs->insertItem(QString(f.value()));
     cbFileAs->setCurrentItem( 0 );
     //    cbFileAs->updateContact();
-    f = ce->find("X-LastName");
+    f = ce->field("X-LastName");
     
-    if (f != 0) {
+    if (!f.isNull()) {
       
-      surnameFirst += QString(f->data());
+      surnameFirst += QString(f.value());
 
-      if ((ce->find( "X-FirstName" )) || (ce->find( "X-MiddleName" )))
+      if (
+        (!ce->field("X-FirstName").isNull()) ||
+        (!ce->field("X-MiddleName").isNull()))
 	      surnameFirst += ", ";
       
-      if (ce->find( "X-FirstName" ))
-	      surnameFirst += QString(f->data()) + " ";
+      if (!ce->field("X-FirstName").isNull())
+	      surnameFirst += QString(f.value()) + " ";
       
-      if (ce->find( "X-MiddleName" ))
-	      surnameFirst += QString(f->data());
+      if (!ce->field("X-MiddleName").isNull())
+	      surnameFirst += QString(f.value());
       
       surnameFirst = surnameFirst.simplifyWhiteSpace();
       
-      f = ce->find("N");
+      f = ce->field("N");
 
-      if (f != 0) // Should be ok - got it earlier.
-        if (surnameFirst != QString(f->data()))
+      if (!f.isNull()) // Should be ok - got it earlier.
+        if (surnameFirst != QString(f.value()))
 	        cbFileAs->insertItem( surnameFirst );
     
     } else {
       
-      f = ce->find("N");
-      if (f != 0)
-      surnameFirst = QString(f->data());
+      f = ce->field("N");
+      if (!f.isNull())
+      surnameFirst = QString(f.value());
     }
 
 
-    f = ce->find("ORG");
+    f = ce->field("ORG");
     
-    if (f != 0) {
-      cbFileAs->insertItem( QString(f->data()) + " (" + surnameFirst + ")");
-      cbFileAs->insertItem( surnameFirst + " (" + QString(f->data()) + ")");
+    if (!f.isNull()) {
+      cbFileAs->insertItem( QString(f.value()) + " (" + surnameFirst + ")");
+      cbFileAs->insertItem( surnameFirst + " (" + QString(f.value()) + ")");
     }
   }
   else {
-    f = ce->find("ORG");
-    if (f != 0) {
-      cbFileAs->insertItem(QString(f->data()));
+    f = ce->field("ORG");
+    if (!f.isNull()) {
+      cbFileAs->insertItem(QString(f.value()));
       cbFileAs->setCurrentItem( 0 );
       // cbFileAs->updateContact();
     }
@@ -574,13 +576,13 @@ void ContactDialog::updateFileAs()
 void ContactDialog::parseName()
 {
   debug( "parseName()" );
-  KAB::Field * f = ce->find(".AUXCONTACT-N");
-  if (f == 0)
+  Field f = ce->field(".AUXCONTACT-N");
+  if (f.isNull())
     return;
-  //  debug( ".AUX" + *ce->find( ".AUXCONTACT-N" ) + " curname " + curName);
-  if (QString(f->data()) == curName)
+  //  debug( ".AUX" + *ce->field( ".AUXCONTACT-N" ) + " curname " + curName);
+  if (QString(f.value()) == curName)
     return;
-  curName = QString(f->data()).simplifyWhiteSpace();
+  curName = QString(f.value()).simplifyWhiteSpace();
   //  debug( "curName " + curName );
   ce->replace( ".AUXCONTACT-N", curName);
   QString name = curName;
@@ -591,7 +593,7 @@ void ContactDialog::parseName()
   QString last;
   
   name = name.simplifyWhiteSpace();
-  if (name.find( i18n( "the" ), 0, false ) != 0) {
+  if (name.find( i18n( "the" ), 0, false ) == 0) {
     QString sTitle[] = {
       i18n( "Doctor" ), i18n( "Dr." ), i18n( "Dr" ), i18n( "Miss" ), 
       i18n ( "Mr." ), i18n( "Mr" ), i18n( "Mrs." ), i18n( "Mrs" ),
@@ -652,7 +654,7 @@ void ContactDialog::parseName()
 
 AddressDialog::AddressDialog( QWidget *parent, 
 			      QString entryField, 
-            KAB::Entity *ce, 
+            Entity *ce, 
 			      bool modal )
  : QDialog( parent, "", modal ), entryField( entryField), ce( ce )
 {
@@ -674,30 +676,30 @@ AddressDialog::AddressDialog( QWidget *parent,
   mleStreet = new QMultiLineEdit( gb );
   lay->addWidget( mleStreet, 1, 1 );
   
-  KAB::Field * f = ce->find(entryField + "Street");
-  if (f != 0) mleStreet->setText(f->data());
+  Field f = ce->field(entryField + "Street");
+  if (!f.isNull()) mleStreet->setText(f.value());
   
   mleStreet->setMinimumSize( mleStreet->sizeHint() );
   
   lay->addWidget( new QLabel( i18n( "City" ), gb ), 2, 0 );
   leCity = new QLineEdit( gb );
   
-  f = ce->find(entryField + "City");
-  if (f != 0) leCity->setText(f->data());
+  f = ce->field(entryField + "City");
+  if (!f.isNull()) leCity->setText(f.value());
   
   lay->addWidget( leCity, 2, 1 );
   lay->addWidget( new QLabel( i18n( "State/Province" ), gb ), 3, 0 );
   leState = new QLineEdit( gb );
   
-  f = ce->find(entryField + "State");
-  if (f != 0) leState->setText(f->data());
+  f = ce->field(entryField + "State");
+  if (!f.isNull()) leState->setText(f.value());
   
   lay->addWidget( leState, 3, 1 );
   lay->addWidget( new QLabel( i18n( "Zip/Postal Code" ), gb ), 4, 0 );
   lePostal = new QLineEdit( gb );
   
-  f = ce->find(entryField + "PostalCode");
-  if (f != 0) lePostal->setText(f->data());
+  f = ce->field(entryField + "PostalCode");
+  if (!f.isNull()) lePostal->setText(f.value());
 
   lay->addWidget( lePostal, 4, 1 );
 
@@ -706,8 +708,8 @@ AddressDialog::AddressDialog( QWidget *parent,
   QString curCountry;
 //  int cbNum = -1; Rikkus: unused ?
 
-  f = ce->find(entryField + "Country");
-  if (f != 0) curCountry = QString(f->data());
+  f = ce->field(entryField + "Country");
+  if (!f.isNull()) curCountry = QString(f.value());
  
   cbCountry->setAutoCompletion( true );
   lay->addWidget( cbCountry, 5, 1 );
@@ -801,7 +803,7 @@ void AddressDialog::AddressOk()
   accept();
 }
 
-NameDialog::NameDialog( QWidget *parent, KAB::Entity *ce, bool modal )
+NameDialog::NameDialog( QWidget *parent, Entity *ce, bool modal )
   : QDialog( parent, "", modal ), ce( ce )
 {
   QStringList sTitle;
@@ -838,9 +840,9 @@ NameDialog::NameDialog( QWidget *parent, KAB::Entity *ce, bool modal )
   for ( unsigned int i = 0; i < sTitle.count(); ++i )
     cbTitle->insertItem( sTitle[i] );
 
-  KAB::Field * f = ce->find("X-Title");
-  if (f != 0)
-    cbTitle->setEditText(f->data());
+  Field f = ce->field("X-Title");
+  if (!f.isNull())
+    cbTitle->setEditText(f.value());
   else
     cbTitle->setEditText( "" );
   lay->addWidget( cbTitle,1,1 );
@@ -848,9 +850,9 @@ NameDialog::NameDialog( QWidget *parent, KAB::Entity *ce, bool modal )
   lay->addWidget( new QLabel( i18n("First"), gb ), 2,0);
   leFirst = new QLineEdit( gb );
   
-  f = ce->find("X-FirstName");
-  if (f != 0)
-    leFirst->setText(f->data());
+  f = ce->field("X-FirstName");
+  if (!f.isNull())
+    leFirst->setText(f.value());
   else
     leFirst->setText( "" );
   lay->addWidget( leFirst, 2, 1 );
@@ -859,9 +861,9 @@ NameDialog::NameDialog( QWidget *parent, KAB::Entity *ce, bool modal )
   lay->addWidget( new QLabel( i18n("Middle"), gb ), 3, 0 );
   leMiddle = new QLineEdit( gb );
   
-  f = ce->find("X-MiddleName");
-  if (f != 0)
-    leMiddle->setText(f->data());
+  f = ce->field("X-MiddleName");
+  if (!f.isNull())
+    leMiddle->setText(f.value());
   else
     leMiddle->setText( "" );
   lay->addWidget( leMiddle,3 ,1 );
@@ -869,9 +871,9 @@ NameDialog::NameDialog( QWidget *parent, KAB::Entity *ce, bool modal )
   lay->addWidget( new QLabel( i18n("Last"), gb ), 4, 0 );
   leLast = new QLineEdit( gb );
   
-  f = ce->find("X-Title");
-  if (f != 0)
-    leLast->setText(f->data());
+  f = ce->field("X-Title");
+  if (!f.isNull())
+    leLast->setText(f.value());
   else
     leLast->setText( "" );
   lay->addWidget( leLast, 4, 1 );
@@ -881,9 +883,9 @@ NameDialog::NameDialog( QWidget *parent, KAB::Entity *ce, bool modal )
   for ( unsigned int i = 0; i < sSuffix.count(); ++i )
     cbSuffix->insertItem( sSuffix[i] );
 
-  f = ce->find("X-Suffix");
-  if (f != 0)
-    cbSuffix->setEditText(f->data());
+  f = ce->field("X-Suffix");
+  if (!f.isNull())
+    cbSuffix->setEditText(f.value());
   else
     cbSuffix->setEditText( "" );
   lay->addWidget( cbSuffix, 5, 1 );

@@ -7,7 +7,8 @@
 #ifndef NAMEVALUE_H 
 #define NAMEVALUE_H 
 
-#include <KabEntity.h>
+#include <Entity.h>
+#include <Field.h>
 
 #include <qframe.h>
 #include <qlabel.h>
@@ -18,8 +19,6 @@
 #include <qlineedit.h>
 #include <qmultilineedit.h>
 #include <qcombobox.h>
-
-#include "entry.h"
 
 /**
  * A table with two columns and a variable number of rows. The columns are 
@@ -42,7 +41,7 @@ public:
  * @param entryField A list of entry field keys.
  * @param ce An Entity object that will be updated as values are changed.
  */
-    NameValueSheet( QWidget *parent, int rows, QStringList name, QStringList entryField, KAB::Entity *ce );
+    NameValueSheet( QWidget *parent, int rows, QStringList name, QStringList entryField, Entity *ce );
 
 /**
  * Destroys the name NameValueSheet object
@@ -105,7 +104,7 @@ public:
  * Entity object.
  * @param ce The Entity object associated with this LineEdit.
  */
-    ContactLineEdit( QWidget *parent, const char *name, KAB::Entity *ce );
+    ContactLineEdit( QWidget *parent, const char *name, Entity *ce );
 
 /**
  * When the widget loses focus the associated Entity object is updated.
@@ -119,7 +118,7 @@ public:
     virtual void setName ( const char * name );
 
 private:
-    KAB::Entity *ce;
+    Entity *ce;
 
 private slots:
     void sync();
@@ -134,12 +133,12 @@ class ContactMultiLineEdit : public QMultiLineEdit
     Q_OBJECT
 
 public:
-    ContactMultiLineEdit( QWidget *parent, const char *name, KAB::Entity *ce );
+    ContactMultiLineEdit( QWidget *parent, const char *name, Entity *ce );
     virtual void focusOutEvent ( QFocusEvent * );
     virtual void setName ( const char * name );
 
 private:
-    KAB::Entity *ce;
+    Entity *ce;
 
 private slots:
     void sync();
@@ -154,11 +153,11 @@ class FileAsComboBox : public QComboBox
     Q_OBJECT
 
 public:
-    FileAsComboBox( QWidget *parent, const char *name, KAB::Entity *ce );
+    FileAsComboBox( QWidget *parent, const char *name, Entity *ce );
     virtual void setName ( const char * name );
 
 private:
-    KAB::Entity *ce;
+    Entity *ce;
 
 public slots:
     virtual void updateContact();

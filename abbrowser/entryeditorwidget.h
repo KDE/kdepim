@@ -7,7 +7,8 @@
 #ifndef CONTACT_H 
 #define CONTACT_H 
 
-#include <KabEntity.h>
+#include <Entity.h>
+#include <Field.h>
 
 #include <qstring.h>
 #include <qdialog.h>
@@ -16,7 +17,6 @@
 class NameValueSheet;
 class NameValueFrame;
 class ContactComboBox;
-class KAB::Entity;
 class QMultiLineEdit;
 class QLineEdit;
 class QComboBox;
@@ -38,12 +38,12 @@ public:
  * then that Entity object will be updated otherwise a new 
  * Entity object will be created
  */
-    ContactDialog( QWidget *parent, const char *name, KAB::Entity* ce = 0, bool modal = false );
+    ContactDialog( QWidget *parent, const char *name, Entity* ce = 0, bool modal = false );
 
 /**
  * Returns the Entity associated with this dialog.
  */
-    KAB::Entity* entry();
+    Entity* entry();
 
 protected:
     void setupTab1();
@@ -56,7 +56,7 @@ protected:
     QStringList names;
     QStringList values;
     QStringList entryNames;
-    KAB::Entity* ce;
+    Entity* ce;
     QMultiLineEdit *mleAddress;
     ContactComboBox *cbAddress;
     FileAsComboBox *cbFileAs;
@@ -98,11 +98,11 @@ public:
  * @param entryField Specifies the category of address (Business, Home, Other) to update.
  * @param ce The Entity to update.
  */
-    AddressDialog( QWidget *parent, QString entryField, KAB::Entity *ce, bool modal = false );
+    AddressDialog( QWidget *parent, QString entryField, Entity *ce, bool modal = false );
 
 private:
     QString entryField;
-    KAB::Entity *ce;
+    Entity *ce;
     QMultiLineEdit *mleStreet;
     QLineEdit *leCity;
     QLineEdit *leState;
@@ -128,10 +128,10 @@ public:
  *
  * @param ce The Entity to update.
  */
-    NameDialog( QWidget *parent, KAB::Entity *ce, bool modal = false );
+    NameDialog( QWidget *parent, Entity *ce, bool modal = false );
 
 private:
-    KAB::Entity *ce;
+    Entity *ce;
     QComboBox *cbTitle;
     QLineEdit *leFirst;
     QLineEdit *leMiddle;

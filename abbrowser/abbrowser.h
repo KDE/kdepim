@@ -4,8 +4,9 @@
 #include <kapp.h>
 #include <ktmainwindow.h>
  
-#include <KabEntity.h>
-#include <KabAddressBookClient.h>
+#include <Entity.h>
+#include <Field.h>
+#include <KAddressBookInterface.h>
 
 class PabWidget;
 
@@ -65,7 +66,6 @@ protected:
 
 private:
 	PabWidget *view;
-  KAB::AddressBookClient *document;
 };
 
 #endif // PAB_H 

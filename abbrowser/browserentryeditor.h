@@ -3,7 +3,7 @@
 
 #include "entryeditorwidget.h"
 
-class KAB::Entity;
+class Entity;
 class QWidget;
 
 class PabContactDialog : public ContactDialog
@@ -14,12 +14,12 @@ public:
   PabContactDialog::PabContactDialog( QWidget *parent, 
 				      const char *name,
 				      QString entryKey,
-              KAB::Entity* entry,
+              Entity* entry,
 				      bool modal = FALSE );
   virtual ~PabContactDialog();
  
 signals:
-  virtual void change( QString entryKey , KAB::Entity *ce );
+  virtual void change( QString entryKey , Entity *ce );
 
 protected slots:
   virtual void accept();
@@ -39,7 +39,7 @@ public:
   virtual ~PabNewContactDialog();
 
 signals:
-  virtual void add( KAB::Entity* ce );
+  virtual void add( Entity* ce );
 
 protected slots:
   virtual void accept();

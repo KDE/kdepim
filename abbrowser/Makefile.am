@@ -32,14 +32,14 @@ bin_PROGRAMS = 	abbrowser
 abbrowser_SOURCES = abbrowser.cpp undo.cpp attributes.cpp selectfields.cpp viewoptions.cpp namevaluewidget.cpp browserentryeditor.cpp entryeditorwidget.cpp datepickerdialog.cpp browserwidget.cpp main.cpp
 
 # let automoc handle all of the meta source files (moc)
-abbrowser_METASOURCES = USE_AUTOMOC
+abbrowser_METASOURCES = AUTO
 
 # the library search path. 
 abbrowser_LDFLAGS = -L../kab2/lib $(all_libraries) $(KDE_RPATH)
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-abbrowser_LDADD = -lkab2 -lqimgio -ljpeg $(LIB_KFILE)
+abbrowser_LDADD = -lkab2 -lkimgio $(LIB_KFILE)
 
 # these are the headers for your project
 noinst_HEADERS = abbrowser.h undo.h attributes.h selectfields.h viewoptions.h namevaluewidget.h browserentryeditor.h entryeditorwidget.h datepickerdialog.h browserwidget.h
