@@ -12,6 +12,15 @@
   <!ENTITY kmail-credits-and-licenses SYSTEM "credits-and-licenses.docbook">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
+  <!ENTITY html "<acronym>HTML</acronym>">
+  <!ENTITY gpg "<application>GPG</application>">
+  <!ENTITY gpgsm "<application>GpgSM</application>">
+  <!ENTITY mdn "<acronym>MDN</acronym>">
+  <!ENTITY acl "<acronym>ACL</acronym>">
+  <!ENTITY imap "<acronym>IMAP</acronym>">
+  <!ENTITY nntp "<acronym>NNTP</acronym>">
+  <!ENTITY openpgp "<acronym>OpenPGP</acronym>">
+  <!ENTITY smime "<acronym>S/MIME</acronym>">
 ]>
 <book lang="&language;">
 <bookinfo>
@@ -69,8 +78,8 @@
 
 </authorgroup>
 
-<date>2004-02-21</date>
-<releaseinfo>1.6</releaseinfo>
+<date>2004-07-13</date>
+<releaseinfo>1.7</releaseinfo>
 
 <copyright>
 <year>1999</year>
@@ -81,8 +90,12 @@
 </copyright>
 <copyright>
 <year>2003</year>
+<holder>Daniel Naber</holder>
+</copyright>
+<copyright>
 <year>2004</year>
 <holder>Daniel Naber</holder>
+<holder>Ingo Kl&ouml;cker</holder>
 </copyright>
 
 <abstract>

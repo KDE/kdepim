@@ -51,6 +51,9 @@
             <property name="resizeMode">
                 <enum>AllColumns</enum>
             </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;qt&gt;Use this list to resolve, field by field, the conflicts created when a record was edited both on the handheld and on the PC. For each record, the different values from the last sync, the handheld and PC are displayed for each field, allowing you to choose the desired value.&lt;/qt&gt;</string>
+            </property>
         </widget>
         <widget class="QLabel" row="2" column="0">
             <property name="name">
@@ -81,6 +84,9 @@
                     <property name="text">
                         <string>&amp;Keep Both</string>
                     </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Click this button to use both values, resulting in the duplication of the record.&lt;/qt&gt;</string>
+                    </property>
                 </widget>
                 <widget class="QPushButton" row="0" column="0">
                     <property name="name">
@@ -88,6 +94,9 @@
                     </property>
                     <property name="text">
                         <string>&amp;PC Values</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Click this button to use the PC values for synchronizing all conflicting fields in this record.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QPushButton" row="1" column="0">
@@ -97,6 +106,9 @@
                     <property name="text">
                         <string>&amp;Last Sync Values</string>
                     </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Click this button to use the last sync values (old values) for synchronizing all conflicting fields in this record.&lt;/qt&gt;</string>
+                    </property>
                 </widget>
                 <widget class="QPushButton" row="1" column="1">
                     <property name="name">
@@ -104,6 +116,9 @@
                     </property>
                     <property name="text">
                         <string>&amp;Handheld Values</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Click this button to use the handheld values for synchronizing all conflicting fields in this record.&lt;/qt&gt;</string>
                     </property>
                 </widget>
             </grid>

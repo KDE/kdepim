@@ -59,6 +59,9 @@
                         <property name="name">
                             <cstring>fOutputFile</cstring>
                         </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Enter here, or select by clicking the file picker button, the location and file name of the output file used to store the handheld's system information.&lt;/qt&gt;</string>
+                        </property>
                     </widget>
                     <widget class="QLabel" row="0" column="0">
                         <property name="name">
@@ -69,6 +72,9 @@
                         </property>
                         <property name="buddy" stdset="0">
                             <cstring>fOutputFile</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Enter here, or select by clicking the file picker button, the location and file name of the output file used to store the handheld's system information.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="2">
@@ -92,6 +98,9 @@
                                 <property name="checked">
                                     <bool>true</bool>
                                 </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Select this option to output the system information data as a HTML document.&lt;/qt&gt;</string>
+                                </property>
                             </widget>
                             <widget class="QRadioButton" row="1" column="0" rowspan="1" colspan="2">
                                 <property name="name">
@@ -99,6 +108,9 @@
                                 </property>
                                 <property name="text">
                                     <string>Te&amp;xt file</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Select this option to output the system information data as a text document.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="KURLRequester" row="2" column="1">
@@ -108,6 +120,9 @@
                                 <property name="enabled">
                                     <bool>false</bool>
                                 </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Enter here, or select by clicking on the file picker button, the location of the template to be used if you select the Custom template option.&lt;/qt&gt;</string>
+                                </property>
                             </widget>
                             <widget class="QRadioButton" row="2" column="0">
                                 <property name="name">
@@ -115,6 +130,9 @@
                                 </property>
                                 <property name="text">
                                     <string>&amp;Custom template:</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Select this option to output the system information data as defined by a custom template. Enter the location of the template in the edit box, or select it clicking on the file picker button.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                         </grid>
@@ -166,6 +184,9 @@
                         </property>
                         <property name="resizeMode">
                             <enum>LastColumn</enum>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Check on this list the types of information about your system and handheld you want to display in the output file.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                 </grid>

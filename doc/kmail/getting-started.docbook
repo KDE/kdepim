@@ -18,8 +18,8 @@
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2004-02-21</date>
-<releaseinfo>1.6</releaseinfo>
+<date>2004-07-13</date>
+<releaseinfo>1.7</releaseinfo>
 </chapterinfo>
 
 <title>Getting Started</title>
@@ -51,24 +51,38 @@ messages.</para>
 change some settings in the <guilabel>Identities</guilabel> and
 <guilabel>Network</guilabel> pages.</para>
 
-<sect1 id="setting-your-identity">
-<title>Setting your Identity</title>
+  <sect1 id="setting-your-identity">
+    <title>
+      Setting your Identity
+    </title>
 
-<para>The settings in the <guilabel>Identities</guilabel> page are fairly
-straightforward. Select your default identity and click <guibutton>Modify</guibutton>.
-Fill in the <guilabel>Your name</guilabel> field with your
-full name (&eg; <userinput>John Doe</userinput>) and the
-<guilabel>Organization</guilabel> field (optional) with the appropriate
-information. Next, fill in the <guilabel>Email address</guilabel> field with your
-email address (&eg; <userinput>john@example.net</userinput>). If you are 
-using <application>PGP</application> or
-<application>GnuPG</application> you need to set your key in 
-the <guilabel>OpenPGP Key</guilabel> field in the <guilabel>Advanced</guilabel>
-tab. Optionally, go to the <guilabel>Signature</guilabel> tab and
-enter your signature. This is a short text that will be automatically
-appended to all your messages.</para>
+    <para>
+      The settings in the <guilabel>Identities</guilabel> page are
+      fairly straightforward. Select your default identity and click
+      <guibutton>Modify</guibutton>.  Fill in the <guilabel>Your
+      name</guilabel> field with your full name (&eg; <userinput>John
+      Doe</userinput>) and the <guilabel>Organization</guilabel> field
+      (optional) with the appropriate information.
+    </para>
+    <para>
+      Next, fill in the <guilabel>Email address</guilabel> field with
+      your email address (&eg; <userinput>john@example.net</userinput>).
+    </para>
+    <para>
+      If you are using <application>PGP</application> or
+      <application>GnuPG</application> you can set your &openpgp; keys
+      and/or &smime; certificates in the <link
+      linkend="configure-identity-cryptography"><guilabel>Cryptography</guilabel></link>
+      tab.
+    </para>
+    <para>
+      Optionally, go to the <guilabel>Signature</guilabel> tab and
+      enter your signature. This is a short text that will be
+      automatically appended to all your messages. It has nothing to
+      do with <emphasis>digital signatures</emphasis>.
+    </para>
 
-</sect1>
+  </sect1>
 
 <sect1 id="setting-up-your-account">
 <title>Setting up your Account</title>
@@ -169,8 +183,8 @@ folders whose name starts with a dot are also displayed.</para>
 <sect3 id="receiving-mail-pop3">
 <title>Options only relevant to POP3</title>
 
-<para>Select <guilabel>Delete message from server after fetching</guilabel> if you do not want to
-leave your messages on the server after you downloaded it.</para>
+<para>Select <guilabel>Leave fetched messages on the server</guilabel> if you want to
+leave your messages on the server after you downloaded them.</para>
 
 <para>Select <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> if you
 do not want to check this account whenever you use <menuchoice><guimenu>File</guimenu><guimenuitem>Check

@@ -60,6 +60,12 @@ class ResourceCalendar : public KRES::Resource
     virtual void writeConfig( KConfig* config );
 
     /**
+      Return rich text with info about the resource. Adds standard info and
+      then calls addInfoText() to add info about concrete resources.
+    */
+    virtual QString infoText() const;
+
+    /**
       Load resource data. After calling this function all data is accessible by
       calling the incidence/event/todo/etc. accessor functions.
 
@@ -74,11 +80,14 @@ class ResourceCalendar : public KRES::Resource
 
       Calling this function multiple times should have the same effect as
       calling it once, given that the data isn't changed between calls.
+    
+      This function calls doLoad() which has to be reimplented by the resource
+      to do the actual loading.
     */
-    virtual bool load() = 0;
+    bool load();
 
     /**
-      Save resource data. After calling this function it is save to close the
+      Save resource data. After calling this function it is safe to close the
       resource without losing data.
 
       If data is actually saved within this function or saving is delayed
@@ -87,14 +96,11 @@ class ResourceCalendar : public KRES::Resource
       If saving the data takes significant time, the resource should return from
       the function, do the saving in the background and notify the end of the
       save by emitting the signal resourceSaved().
-    */
-    virtual bool save() = 0;
 
-    /**
-      If a function fails (especially the load and save functions) this function
-      might give an error message with details about the failure.
+      This function calls doSave() which has to be reimplented by the resource
+      to do the actual loading.
     */
-    virtual QString errorMessage();
+    bool save();
 
     /**
       Return true if a save operation is still in progress, otherwise return
@@ -121,8 +127,6 @@ class ResourceCalendar : public KRES::Resource
       Delete event from this resource.
     */
     virtual void deleteEvent( Event * ) = 0;
-
-    virtual void changeIncidence( Incidence * ) {};
 
     /**
       Retrieves an event on the basis of the unique string ID.
@@ -156,9 +160,13 @@ class ResourceCalendar : public KRES::Resource
 
   signals:
     /**
-      This signal is emitted when the data in the resource has changed.
+      This signal is emitted when the data in the resource has changed. The
+      resource has to make sure that this signal is emitted whenever any
+      pointers to incidences become invalid the resource has given to the
+      calling code before.
     */
     void resourceChanged( ResourceCalendar * );
+
     /**
       This signal is emitted when loading data into the resource has been
       finished.
@@ -169,6 +177,15 @@ class ResourceCalendar : public KRES::Resource
       finished.
     */
     void resourceSaved( ResourceCalendar * );
+
+    /**
+      This signal is emitted when an error occurs during loading.
+    */
+    void resourceLoadError( ResourceCalendar *, const QString &error );
+    /**
+      This signal is emitted when an error occurs during saving.
+    */
+    void resourceSaveError( ResourceCalendar *, const QString &error );
 
     /**
      This signal is emitted when a subresource is added.
@@ -245,13 +262,6 @@ class ResourceCalendar : public KRES::Resource
     virtual Alarm::List alarmsTo( const QDateTime &to ) = 0;
 
 
-    /**
-      This method should be called whenever a Event is modified directly
-      via it's pointer. It makes sure that the resource is internally
-      consistent.
-    */
-    virtual void update( IncidenceBase *incidence ) = 0;
-
     /** Returns a list of all incideces */
     Incidence::List rawIncidences();
 
@@ -278,7 +288,34 @@ class ResourceCalendar : public KRES::Resource
     */
     virtual void setSubresourceActive( const QString &, bool active );
 
+  protected:
+    /**
+      Do the actual loading of the resource data. Called by load().
+    */
+    virtual bool doLoad() = 0;
+    /**
+      Do the actual saving of the resource data. Called by save().
+    */
+    virtual bool doSave() = 0;
+
+    /**
+      Add info text for concrete resources. Called by infoText().
+    */
+    virtual void addInfoText( QString & ) const {};
+
+    /**
+      A resource should call this function if a load error happens.
+    */
+    void loadError( const QString &errorMessage = QString::null );
+    /**
+      A resource should call this function if a save error happens.
+    */
+    void saveError( const QString &errorMessage = QString::null );
+
   private:
+    bool mReceivedLoadError;
+    bool mReceivedSaveError;
+
     class Private;
     Private *d;
 };

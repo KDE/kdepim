@@ -11,21 +11,62 @@ KPilot's settings.</comment>
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>593</width>
-            <height>323</height>
+            <width>610</width>
+            <height>325</height>
         </rect>
     </property>
     <property name="caption">
         <string>KPilot Options</string>
     </property>
-    <grid>
+    <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
         <property name="margin">
             <number>0</number>
         </property>
-        <widget class="QButtonGroup" row="2" column="0">
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>groupBox2</cstring>
+            </property>
+            <property name="title">
+                <string>Viewers</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>fInternalEditors</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Make internal viewers &amp;editable</string>
+                    </property>
+                    <property name="checked">
+                        <bool>false</bool>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;The internal viewers can be read only or editable. The editable mode allows you to add new records, delete or edit the existing records and sync your modifications back to the handheld. Check this box to set the internal viewers to editable mode, uncheck to set them to read only mode.&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>fUseSecret</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Show private records</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Check this box to display in the internal viewers records that are marked &amp;quot;Private&amp;quot; in the Pilot.&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QButtonGroup">
             <property name="name">
                 <cstring>fAddressGroup</cstring>
             </property>
@@ -44,7 +85,7 @@ KPilot's settings.</comment>
                         <string>Show as "&amp;Last, first"</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Addresses are displayed in the address viewer sorted by last name, first name.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Select this option to display addresses in the internal address viewer sorted by last name, first name.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QRadioButton" row="1" column="0">
@@ -55,7 +96,7 @@ KPilot's settings.</comment>
                         <string>Show as "&amp;Company, last"</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Addresses are displayed in the address viewer sorted by company name, last name.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Select this option to display addresses in the internal address viewer sorted by company name, last name.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="Line" row="2" column="0">
@@ -80,37 +121,12 @@ KPilot's settings.</comment>
                         <string>&amp;Use key field</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Combine all entries with the same last name.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Check this box to combine all entries with the same last name in the internal address viewer.&lt;/qt&gt;</string>
                     </property>
                 </widget>
             </grid>
         </widget>
-        <widget class="QCheckBox" row="1" column="0">
-            <property name="name">
-                <cstring>fUseSecret</cstring>
-            </property>
-            <property name="text">
-                <string>&amp;Show private records</string>
-            </property>
-            <property name="whatsThis" stdset="0">
-                <string>&lt;qt&gt;Records that are marked &amp;quot;Private&amp;quot; in the Pilot are displayed by KPilot only when this box is checked.&lt;/qt&gt;</string>
-            </property>
-        </widget>
-        <widget class="QCheckBox" row="0" column="0">
-            <property name="name">
-                <cstring>fInternalEditors</cstring>
-            </property>
-            <property name="enabled">
-                <bool>false</bool>
-            </property>
-            <property name="text">
-                <string>Make internal viewers &amp;editable</string>
-            </property>
-            <property name="checked">
-                <bool>false</bool>
-            </property>
-        </widget>
-        <spacer row="3" column="0">
+        <spacer>
             <property name="name">
                 <cstring>spacer1</cstring>
             </property>
@@ -127,7 +143,7 @@ KPilot's settings.</comment>
                 </size>
             </property>
         </spacer>
-    </grid>
+    </vbox>
 </widget>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

@@ -1,2 +1,4 @@
 SUBDIRS = shared kcal kabc knotes
-COMPILE_AFTER_shared = kcal kabc knotes
+
+messages: rc.cpp
+	$(XGETTEXT) */*.cpp -o $(podir)/kres_imap.pot

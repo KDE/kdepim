@@ -336,23 +336,17 @@ public:
   SignatureAlgorithm      signatureAlgorithm;
   SignatureCompoundMode   signatureCompoundMode;
   SendCertificates        sendCertificates;
-  SignEmail               signEmail;
   bool                    saveSentSignatures;
   bool                    warnNoCertificate;
-  PinRequests             numPINRequests;
-  bool                    checkSignatureCertificatePathToRoot;
   bool                    signatureUseCRLs;
   EncryptionAlgorithm     encryptionAlgorithm;
   EncryptEmail            encryptEmail;
   bool                    saveMessagesEncrypted;
-  bool                    checkEncryptionCertificatePathToRoot;
   bool                    encryptionUseCRLs;
   bool                    encryptionCRLExpiryNearWarning;
   int                     encryptionCRLNearExpiryInterval;
   CertificateSource       certificateSource;
-  CertificateSource       cRLSource;
   bool                    warnSendUnsigned;
-  int                     numPINRequestsInterval;
   bool                    signatureCertificateExpiryNearWarning;
   int                     signatureCertificateExpiryNearInterval;
   bool                    cACertificateExpiryNearWarning;
@@ -379,23 +373,17 @@ CryptPlugWrapper::Config::Config( gpgme_protocol_t proto )
   else
     signatureCompoundMode              = SignatureCompoundMode_Detached;
   sendCertificates                     = SendCert_SendChainWithRoot;
-  signEmail                            = SignEmail_SignAll;
   saveSentSignatures                   = true;
   warnNoCertificate                    = true;
-  numPINRequests                       = PinRequest_Always;
-  checkSignatureCertificatePathToRoot  = true;
   signatureUseCRLs                     = true;
   encryptionAlgorithm                  = EncryptAlg_RSA;
   encryptEmail                         = EncryptEmail_Ask;
   saveMessagesEncrypted                = true;
-  checkEncryptionCertificatePathToRoot = true;
   encryptionUseCRLs                    = true;
   encryptionCRLExpiryNearWarning       = false;
   encryptionCRLNearExpiryInterval      = NEAR_EXPIRY;
   certificateSource                    = CertSrc_Server;
-  cRLSource                            = CertSrc_Server;
   warnSendUnsigned                             = true;
-  numPINRequestsInterval                       = NEAR_EXPIRY;
   signatureCertificateExpiryNearWarning        = true;
   signatureCertificateExpiryNearInterval       = NEAR_EXPIRY;
   cACertificateExpiryNearWarning               = true;
@@ -428,37 +416,6 @@ SignatureAlgorithm CryptPlugWrapper::signatureAlgorithm()
   return _config->signatureAlgorithm;
 }
 
-void CryptPlugWrapper::setSignatureCompoundMode( SignatureCompoundMode signComp )
-{
-  _config->signatureCompoundMode = signComp;
-}
-
-SignatureCompoundMode CryptPlugWrapper::signatureCompoundMode()
-{
-  return _config->signatureCompoundMode;
-}
-
-void CryptPlugWrapper::setSendCertificates( SendCertificates sendCert )
-{
-  _config->sendCertificates = sendCert;
-}
-
-SendCertificates CryptPlugWrapper::sendCertificates()
-{
-  return _config->sendCertificates;
-}
-
-void CryptPlugWrapper::setSignEmail( SignEmail signMail )
-{
-  _config->signEmail = signMail;
-}
-
-SignEmail CryptPlugWrapper::signEmail()
-{
-  return _config->signEmail;
-}
-
-
 
 
 
@@ -474,85 +431,6 @@ bool CryptPlugWrapper::warnSendUnsigned()
 
 
 
-
-
-
-void CryptPlugWrapper::setSaveSentSignatures( bool flag )
-{
-  _config->saveSentSignatures = flag;
-}
-
-bool CryptPlugWrapper::saveSentSignatures()
-{
-  return _config->saveSentSignatures;
-}
-
-void CryptPlugWrapper::setWarnNoCertificate( bool flag )
-{
-  _config->warnNoCertificate = flag;
-}
-
-bool CryptPlugWrapper::warnNoCertificate()
-{
-  return _config->warnNoCertificate;
-}
-
-
-void CryptPlugWrapper::setNumPINRequests( PinRequests reqMode )
-{
-  _config->numPINRequests = reqMode;
-
-  /* PENDING(g10) Put this value into gpg and make it ask for the pin
-     according to this. Note that there is also
-     setNumPINRequestsInterval() which is only used if reqMode ==
-     PinRequest_AfterMinutes.
-  */
-}
-
-PinRequests CryptPlugWrapper::numPINRequests()
-{
-  return _config->numPINRequests;
-}
-
-
-
-void CryptPlugWrapper::setNumPINRequestsInterval( int interval )
-{
-  _config->numPINRequestsInterval = interval;
-
-  /* PENDING(g10) Put this value into gpg and make it ask for the pin
-     according to this. Note that this should only be used if
-     _config->numPINRequests (set with setNumPINRequests()) has the
-     value PinRequest_AfterMinutes.
-  */
-}
-
-int CryptPlugWrapper::numPINRequestsInterval()
-{
-  return _config->numPINRequestsInterval;
-}
-
-
-
-void CryptPlugWrapper::setCheckSignatureCertificatePathToRoot( bool flag )
-{
-  _config->checkSignatureCertificatePathToRoot = flag;
-}
-
-bool CryptPlugWrapper::checkSignatureCertificatePathToRoot()
-{
-  return _config->checkSignatureCertificatePathToRoot;
-}
-
-void CryptPlugWrapper::setSignatureUseCRLs( bool flag )
-{
-  _config->signatureUseCRLs = flag;
-}
-
-bool CryptPlugWrapper::signatureUseCRLs()
-{
-  return _config->signatureUseCRLs;
-}
 
 
 
@@ -699,18 +577,6 @@ bool CryptPlugWrapper::checkCertificatePath()
 
 
 
-void CryptPlugWrapper::setCheckEncryptionCertificatePathToRoot( bool flag )
-{
-  _config->checkEncryptionCertificatePathToRoot = flag;
-}
-
-bool CryptPlugWrapper::checkEncryptionCertificatePathToRoot()
-{
-  return _config->checkEncryptionCertificatePathToRoot;
-}
-
-
-
 
 
 
@@ -790,11 +656,6 @@ bool CryptPlugWrapper::encryptionUseCRLs()
 }
 
 
-int CryptPlugWrapper::encryptionCRLsDaysLeftToExpiry()
-{
-  return CRYPTPLUG_CERT_DOES_NEVER_EXPIRE;
-}
-
 void CryptPlugWrapper::setEncryptionCRLExpiryNearWarning( bool flag )
 {
   _config->encryptionCRLExpiryNearWarning = flag;
@@ -826,15 +687,6 @@ CertificateSource CryptPlugWrapper::certificateSource()
   return _config->certificateSource;
 }
 
-void CryptPlugWrapper::setCRLSource( CertificateSource source )
-{
-  _config->cRLSource = source;
-}
-
-CertificateSource CryptPlugWrapper::crlSource()
-{
-  return _config->cRLSource;
-}
 
 
 
@@ -1082,45 +934,6 @@ bool CryptPlugWrapper::hasFeature( Feature flag )
 
 
 /* normal functions ******************************************************/
-
-
-
-int CryptPlugWrapper::certificateInChainDaysLeftToExpiry( const char* certificate )
-{
-    return _cp ? _cp->certificateInChainDaysLeftToExpiry( certificate ) : 0 ;
-}
-
-
-int CryptPlugWrapper::signatureCertificateDaysLeftToExpiry( const char* certificate )
-{
-    return _cp ? _cp->signatureCertificateDaysLeftToExpiry( certificate ) : 0 ;
-}
-
-int CryptPlugWrapper::rootCertificateDaysLeftToExpiry( const char* certificate )
-{
-    return _cp ? _cp->rootCertificateDaysLeftToExpiry( certificate ) : 0 ;
-}
-
-int CryptPlugWrapper::caCertificateDaysLeftToExpiry( const char* certificate )
-{
-    return _cp ? _cp->caCertificateDaysLeftToExpiry( certificate ) : 0 ;
-}
-
-int CryptPlugWrapper::receiverCertificateDaysLeftToExpiry( const char* certificate )
-{
-    return _cp ? _cp->receiverCertificateDaysLeftToExpiry( certificate ) : 0 ;
-}
-
-bool CryptPlugWrapper::isEmailInCertificate( const char* email, const char* certificate )
-{
-  return _cp && _cp->isEmailInCertificate( email, certificate );
-}
-
-bool CryptPlugWrapper::certificateValidity( const char* certificate,
-                          int* level )
-{
-  return _cp && _cp->certificateValidity( certificate, level );
-}
 
 
 bool CryptPlugWrapper::signMessage( const char* cleartext,

@@ -39,6 +39,7 @@
 #include <gpgmepp/keylistresult.h>
 
 #include <qcstring.h>
+#include <qguardedptr.h>
 
 #include <set>
 
@@ -106,7 +107,7 @@ namespace Kleo {
     std::set<QString> mScheduledSet; // keys already scheduled (by starting a job for them)
     std::set<QString> mNextSet; // keys to schedule for the next iteraton
     GpgME::KeyListResult mIntermediateResult;
-    KeyListJob * mJob;
+    QGuardedPtr<KeyListJob> mJob;
   };
 
 }

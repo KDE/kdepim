@@ -82,6 +82,9 @@
                                 <property name="checked">
                                     <bool>true</bool>
                                 </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Select this option to synchronize the handheld time with the PC time, by using the PC time on both.&lt;/qt&gt;</string>
+                                </property>
                             </widget>
                             <widget class="QRadioButton" row="1" column="0">
                                 <property name="name">
@@ -92,6 +95,9 @@
                                 </property>
                                 <property name="text">
                                     <string>Set the &amp;PC time from the time on the handheld</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Select this option to synchronize the handheld time with the PC time, by using the handheld time on both.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                         </grid>

@@ -77,6 +77,8 @@ namespace Kleo {
   public:
     KeyRequester( unsigned int allowedKeys, bool multipleKeys=false,
 		  QWidget * parent=0, const char * name=0 );
+    // Constructor for Qt Designer
+    KeyRequester( QWidget * parent=0, const char * name=0 );
     ~KeyRequester();
 
     const GpgME::Key & key() const;
@@ -120,7 +122,11 @@ namespace Kleo {
     void setInitialQuery( const QString & s ) { mInitialQuery = s; }
     const QString & initialQuery() const { return mInitialQuery; }
 
+  signals:
+    void changed();
+
   private:
+    void init();
     void startKeyListJob( const QStringList & fingerprints );
     void updateKeys();
 
@@ -185,6 +191,11 @@ namespace Kleo {
 
     /**
      * Preferred constructor
+     * @param multipleKeys whether multiple keys can be selected
+     *
+     * @param proto the allowed protocols, OpenPGP and/or SMIME
+     * @param onlyTrusted only show trusted keys
+     * @param onlyValid only show valid keys
      */
     SigningKeyRequester( bool multipleKeys=false, unsigned int proto=AllProtocols,
 			 QWidget * parent=0, const char * name=0,
@@ -195,6 +206,12 @@ namespace Kleo {
     SigningKeyRequester( QWidget * parent=0, const char * name=0 );
     ~SigningKeyRequester();
 
+    /*
+     * Those parameters affect the parameters given to the key selection dialog.
+     * @param proto the allowed protocols, OpenPGP and/or SMIME
+     * @param onlyTrusted only show trusted keys
+     * @param onlyValid only show valid keys
+     */
     void setAllowedKeys( unsigned int proto, bool onlyTrusted=true, bool onlyValid=true );
 
   private:

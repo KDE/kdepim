@@ -12,7 +12,7 @@ the Python-conduit settings.</comment>
             <x>0</x>
             <y>0</y>
             <width>342</width>
-            <height>167</height>
+            <height>169</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -50,16 +50,6 @@ the Python-conduit settings.</comment>
             <property name="name">
                 <cstring>tabWidget</cstring>
             </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>7</hsizetype>
-                    <vsizetype>7</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="layoutMargin" stdset="0">
-            </property>
             <widget class="QWidget">
                 <property name="name">
                     <cstring>Widget2</cstring>
@@ -71,23 +61,6 @@ the Python-conduit settings.</comment>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <widget class="QLineEdit" row="0" column="1">
-                        <property name="name">
-                            <cstring>fExpression</cstring>
-                        </property>
-                        <property name="text">
-                            <string>$a = 17;</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Enter the Python expression to be evaluated during a HotSync here.&lt;/qt&gt;</string>
-                        </property>
-                    </widget>
                     <widget class="QLabel" row="0" column="0">
                         <property name="name">
                             <cstring>TextLabel1_2</cstring>
@@ -99,23 +72,17 @@ the Python-conduit settings.</comment>
                             <cstring>fExpression</cstring>
                         </property>
                     </widget>
-                    <spacer row="3" column="1">
+                    <widget class="QTextEdit" row="1" column="0">
                         <property name="name">
-                            <cstring>Spacer4</cstring>
+                            <cstring>fExpression</cstring>
                         </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
+                        <property name="text">
+                            <string>$a = 17;</string>
                         </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Enter the Python expression to be evaluated during a HotSync here.&lt;/qt&gt;</string>
                         </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
+                    </widget>
                 </grid>
             </widget>
         </widget>

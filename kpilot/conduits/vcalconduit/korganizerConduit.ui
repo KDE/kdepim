@@ -105,7 +105,7 @@
                                     <string>&amp;Standard calendar</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>Select this to use the calendar specified by the KDE calendar settings.</string>
+                                    <string>&lt;qt&gt;Select this option to synchronize with the calendar specified by the KDE calendar settings.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="1" column="0">
@@ -119,7 +119,7 @@
                                     <string>Calendar &amp;file:</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>Use a specific calendar file, not necessarily the one the KDE calendar uses.</string>
+                                    <string>&lt;qt&gt;Select this option to use a specific calendar file, instead of the standard KDE calendar. This file must be in the in the vCalendar or iCalendar format. Enter the location of this file in the edit box or select it clicking the file picker button.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="KURLRequester" row="1" column="1">
@@ -138,7 +138,7 @@
                                     </sizepolicy>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Path to a calendar file (iCalendar or vCalendar format) for the sync. This does not necessarily have to be the file KOrganizer uses.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Enter here the location and filename of the calendar file or select it clicking the file picker button. This file must be in the iCalendar or vCalendar format.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                         </grid>
@@ -230,9 +230,7 @@ be saved in the calendar on the PC.</string>
                             <number>6</number>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>Here you can select the action to take if an event was modified on both
-the handheld and the PC. This does &lt;i&gt;not&lt;/i&gt; handle double-scheduling
-conflicts.</string>
+                            <string>&lt;qt&gt;Select in this list how conflicting entries (entries which were edited both on your handheld and on the PC) are resolved. Possibly values are "Use KPilot's Global Setting" to use the settings defined in KPilot HotSync configuration, "Ask User" to let you decide case by case, "Do Nothing" to allow the entries to be different, "PC overrides", "Handheld overrides", "Use values from last sync" and "Use both entries" to create a new entry on both the PC and handheld. Note that this does &lt;i&gt;not&lt;/i&gt; handle double-scheduling conflicts.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <spacer row="1" column="1">

@@ -34,6 +34,7 @@
 #define __KLEO_QGPGMEJOB_H__
 
 #include <gpgmepp/interfaces/progressprovider.h>
+#include <gpgmepp/interfaces/passphraseprovider.h>
 
 #include <gpgmepp/key.h>
 
@@ -73,7 +74,7 @@ namespace Kleo {
       signal there. Pass "this" as the first argument this QGpgMEJOb's
       ctor. The rest is dealt with automatically.
   */
-  class QGpgMEJob : public GpgME::ProgressProvider {
+  class QGpgMEJob : public GpgME::ProgressProvider, public GpgME::PassphraseProvider {
   public:
     QGpgMEJob( Kleo::Job * _this, GpgME::Context * context );
     ~QGpgMEJob();
@@ -108,6 +109,8 @@ namespace Kleo {
   private:
     /*! \reimp from GpgME::ProgressProvider */
     void showProgress( const char * what, int type, int current, int total );
+    char * getPassphrase( const char * useridHint, const char * description,
+			  bool previousWasBad, bool & canceled );
 
   protected:
     Kleo::Job * mThis;

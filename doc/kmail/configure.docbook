@@ -16,13 +16,26 @@
 <email>davidrugge@mediaone.net</email>
 </address></affiliation>
 </author>
+      <author>
+	<firstname>Marc</firstname>
+	<surname>Mutz</surname>
+	<affiliation>
+	  <orgname>Klar&auml;lvdalens Datakonsult AB</orgname>
+	  <address>
+	    <email>mutz@kde.org</email>
+	  </address>
+	</affiliation>
+      </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2002-10-03</date>
-<releaseinfo>1.5</releaseinfo>
+<date>2004-07-13</date>
+<releaseinfo>1.7</releaseinfo>
 </chapterinfo>
 
 <title>Configure &kmail;</title>
+
+<sect1 id="configure-generalinfo">
+<title>General Information</title>
 
 <para>&kmail;'s configuration window enables you to configure &kmail;
 in many ways. You can reach it via
@@ -31,11 +44,51 @@ in many ways. You can reach it via
 
 <para>It is divided into six
 pages, each of them represented by one of the
-icons in the list on the left hand side of the dialog. This chapter
-will describe each page in detail.</para>
+icons in the list on the left hand side of the dialog. Below the pages
+will be described in detail.</para>
+
+<para>The dialog has several buttons:</para>
+
+<variablelist>
+<varlistentry>
+<term><guibutton>Help</guibutton></term>
+<listitem><para>This will open this manual at the appropriate page.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guibutton>Defaults</guibutton></term>
+<listitem><para>This will reset the configuration options on the current
+page back to the default values.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guibutton>Load Profile...</guibutton></term>
+<listitem><para>This will open a dialog which offers several configuration
+profiles. You can use these as starting points for your own configuration.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guibutton>Reset</guibutton></term>
+<listitem><para>This resets all changes you have made since you last saved
+the settings.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guibutton>OK</guibutton></term>
+<listitem><para>This saves the settings and closes the configuration dialog.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guibutton>Apply</guibutton></term>
+<listitem><para>This saves the settings without closing the configuration
+dialog.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guibutton>Cancel</guibutton></term>
+<listitem><para>This closes the configuration dialog without saving the
+changes you have made.</para></listitem>
+</varlistentry>
+</variablelist>
+
+</sect1>
 
 <sect1 id="configure-identity">
-<title><guilabel>Identities</guilabel> Page</title>
+<title>Identities Page</title>
 
 <para>You can find a quick introduction to the
 <guilabel>Identities</guilabel> page in the <link
@@ -62,7 +115,7 @@ will then appear.</para>
 <sect2 id="configure-identity-newidentitydialog">
 <title>The <guilabel>New Identity</guilabel> Dialog</title>
 
-<para>You can enter the name of the new identity into the
+<para>You have to enter the name of the new identity into the
 <guilabel>New Identity</guilabel> edit field. This will be the name
 shown in the identity list.</para>
 
@@ -105,7 +158,7 @@ entry in the <guilabel>Existing identities</guilabel> popup.</para>
 </sect2>
 
 <sect2 id="configure-identity-general">
-<title><guilabel>General</guilabel></title>
+<title>General</title>
 
 <para>The <guilabel>General</guilabel> tab allows you to specify some
 basic settings for the currently selected identity.</para>
@@ -121,29 +174,176 @@ the correct value here.</para>
 <varlistentry>
 <term><guilabel>Organization</guilabel></term>
 <listitem>
-<para>Enter your organization here. This field is 
-optional. Most programs will show this information in a separate
-header field <guilabel>Organization</guilabel>. &kmail;, however, puts
-it between parentheses and displays it together with the email address
-in the <guilabel>From</guilabel> header field.</para>
+<para>Enter your organization here. This field is optional.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Email address</guilabel></term>
 <listitem>
-<para>Enter your email address here.</para>
+<para>Enter your email address here, &ie; something like 
+<userinput>joe@example.com</userinput>.</para>
 </listitem>
 </varlistentry>
 </variablelist>
+<example>
+<title>Example</title>
 <para>So if your address is <replaceable>Joe User
 &lt;joe@example.com&gt;</replaceable>, you should enter <userinput>Joe
 User</userinput> into the <guilabel>Your name</guilabel> field and
 <userinput>joe@example.com</userinput> into the <guilabel>Email
-address</guilabel> field.</para>
+address</guilabel> field.</para></example>
 </sect2>
 
+    <sect2 id="configure-identity-cryptography">
+      <title>
+	Cryptography
+      </title>
+
+      <para>
+	The <guilabel>Cryptography</guilabel> tab allows you to
+	specify &openpgp; and &smime; keys associated with this
+	identity, as well as choosing the preferred (cryptographic)
+	message format to use.
+      </para>
+
+      <variablelist>
+
+	<varlistentry id="configure-identity-cryptography-openpgp-sign">
+	  <term>
+	    <guilabel>OpenPGP signing key</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Here you can select the key to be used when
+	      &openpgp;-signing messages written with this identity in
+	      effect.
+	    </para>
+	    <para>
+	      For brevity, only the short key id of selected keys is
+	      shown. Hovering with the mouse over the key list will
+	      show more information in a tooltip.
+	    </para>
+	    <para>
+	      To clear the label press the
+	      <guibutton>Clear</guibutton> button.
+	    </para>
+	    <para>
+	      To change the selected key, press the
+	      <guibutton>Change...</guibutton> button. A dialog
+	      listing all secret &openpgp; keys will be shown allowing
+	      you to select the one to use.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	
+	<varlistentry id="configure-identity-cryptography-openpgp-encrypt">
+	  <term>
+	    <guilabel>OpenPGP encryption key</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Here you can select the key to &openpgp;-encrypt
+	      messages to when this identity and <xref
+	      linkend="configure-security-composing-encrypt-to-self"/>
+	      are in effect. This key is also used for the <xref
+	      linkend="composer-attach-attach-my-public-key"/>
+	      function of the <link
+	      linkend="the-composer-window">Composer</link>.
+	    </para>
+	    <para>
+	      To change the selected key, press the
+	      <guibutton>Change...</guibutton> button. A dialog
+	      listing all &openpgp; keys found in your keyring will be
+	      shown allowing you to select the one to use.
+	    </para>
+	    <para>
+	      You can clear the list of keys and get more information
+	      about them in the same way as described for <xref
+	      linkend="configure-identity-cryptography-openpgp-sign"/>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	
+	<varlistentry id="configure-identity-cryptography-smime-sign">
+	  <term>
+	    <guilabel>S/MIME signing certificate</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Here you can select the certificate to be used when
+	      &smime;-signing messages written with this identity in
+	      effect.
+	    </para>
+	    <para>
+	      To change the selected certificate, press the
+	      <guibutton>Change...</guibutton> button. A dialog
+	      listing all secret &smime; signing certificates will be
+	      shown allowing you to select the one to use.
+	    </para>
+	    <para>
+	      You can clear the list of certificates and get more
+	      information about them in the same way as described for
+	      <xref linkend="configure-identity-cryptography-openpgp-sign"/>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	
+	<varlistentry id="configure-identity-cryptography-smime-encrypt">
+	  <term>
+	    <guilabel>S/MIME encryption certificate</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Here you can select the certificate to &smime;-encrypt
+	      messages to when this identity and <xref
+	      linkend="configure-security-composing-encrypt-to-self"/>
+	      are in effect.
+	    </para>
+	    <para>
+	      To change the selected certificate, press the
+	      <guibutton>Change...</guibutton> button. A dialog
+	      listing all &smime; encryption certificates found in
+	      your local keybox will be shown allowing you to select
+	      the one to use.
+	    </para>
+	    <para>
+	      You can clear the list of certificates and get more
+	      information about them in the same way as described for
+	      <xref linkend="configure-identity-cryptography-openpgp-sign"/>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-identity-cryptography-preferred-format">
+	  <term>
+	    <guilabel>Preferred crypto message format</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Here you can choose which cryptographic message format
+	      to use by default with this identity.
+	    </para>
+	    <para>
+	      You can either select any of the four formats supported
+	      by &kmail; or leave the option at the recommended
+	      default setting of <guilabel>Any</guilabel>, which will
+	      choose a suitable format based on the recipients of the
+	      message, or might even go so far as to create two copies
+	      of the message, one &smime; signed and/or encrypted, the
+	      other &openpgp; signed and/or encrypted.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+
+    </sect2>
+
 <sect2 id="configure-identity-advanced">
-<title><guilabel>Advanced</guilabel></title>
+<title>Advanced</title>
 
 <para>The <guilabel>Advanced</guilabel> tab allows you to specify some
 rarely used or otherwise specialized settings for the currently
@@ -163,8 +363,7 @@ anyway.</para>
 <note><para>This field is only useful if you want replies to your mail
 to go somewhere else than your regular email address, &eg; if you are
 using this identity to send messages from an email address that cannot
-receive messages. Note that this field will possibly be
-deprecated by newer versions of the Internet email standard. Furthermore,
+receive messages. Note that 
 some mailing lists overwrite this header field with their post address to
 make sure that replies go to the list instead of individuals. So the
 usefulness of this field is very limited and it should only be used in
@@ -181,32 +380,6 @@ should be sent to. Note that a BCC is only send to this address, when
 is activated while composing a message. If you want to send a BCC regardless 
 of this setting, you should look at the <guilabel>Headers</guilabel> tab of the
 <guilabel>Composer</guilabel> page.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>OpenPGP key</guilabel></term>
-<listitem>
-<para>Select here the <application>OpenPGP</application>
-key that should be used to (digitally) sign messages when this
-identity is used. When you click on the <guilabel>Change...</guilabel>
-button, a key selection dialog comes up where you can select the key
-to use from the list of secret keys found. If you do not have an
-<application>OpenPGP</application> key or do not know what that is, you
-do not need to worry about this setting.</para>
-
-<note><para>The selected key will also be used as the recipient when
-you check <link linkend="configure-security-pgp-encrypttoself">
-<guilabel>Always encrypt to self</guilabel></link> on the <link
-linkend="configure-security-pgp"><guilabel>OpenPGP</guilabel> tab</link>
-of the <link linkend="configure-security">
-<guilabel>Security</guilabel> page</link>.</para></note>
-
-<note><para>You might need to configure your
-<application>OpenPGP</application> environment first, to make the key
-selection dialog work. You can do this on the <link
-linkend="configure-security"> <guilabel>Security</guilabel>
-page</link>.</para></note>
 </listitem>
 </varlistentry>
 
@@ -256,16 +429,16 @@ tab</link> of the <link linkend="configure-network">
 </sect2>
 
 <sect2 id="configure-identity-signature">
-<title><guilabel>Signature</guilabel></title>
+<title>Signature</title>
 
 <para>This tab allows you to specify a signature (sometimes called
 <quote>footer</quote> or <quote>disclaimer</quote>)
 to be appended to each message sent using this identity.</para>
 
 <note><para>This type of signature has nothing to do with the
-(digital) signatures for which you can select the to-be-used key on
-the <link linkend="configure-identity-advanced">Advanced
-tab</link>. It is just bad wording to call this a signature, but since
+(digital) signatures for which you can select the keys to use on
+the <link linkend="configure-identity-cryptography">Cryptography</link>
+tab. It is just bad wording to call this a signature, but since
 the term is already used everywhere else, we keep this notation. Just
 keep in mind that these signatures and digital signatures are two
 completely different things.</para></note>
@@ -321,7 +494,7 @@ text yourself.</para>
 </sect1>
 
 <sect1 id="configure-network">
-<title><guilabel>Network</guilabel> Page</title>
+<title>Network Page</title>
 
 <para>You can find a quick introduction to the
 <guilabel>Network</guilabel> page in the <link
@@ -338,7 +511,7 @@ linkend="configure-identity">identities</link> or decide on a per-message
 basis.</para>
 
 <sect2 id="configure-network-sending">
-<title><guilabel>Sending</guilabel></title>
+<title>Sending</title>
 
 <para>The <guilabel>Sending</guilabel> tab allows you to define new
 outgoing mail servers and set some common options.</para>
@@ -349,7 +522,8 @@ linkend="sending-mail">Setting up your Account: Sending</link>.</para>
 <para>When you click <guibutton>Add...</guibutton> or
 <guibutton>Modify...</guibutton> the <guilabel>Add
 transport</guilabel> or <guilabel>Modify transport</guilabel> dialogs
-will open respectively. For sending via <command>sendmail</command>
+will open respectively. For sending via <application>sendmail</application>
+or similar programs
 you can specify a name and the location of the
 <command>sendmail</command> program.  For <acronym>SMTP</acronym> you
 can specify <guilabel>Name</guilabel>, <guilabel>Host</guilabel>, and
@@ -364,8 +538,30 @@ using <guibutton>Check What the Server Supports</guibutton>.</para>
 <para><guilabel>Confirm before send</guilabel> will pop up a
 confirmation box every time you send a message.</para>
 
-<para><guilabel>Send messages in outbox folder on check</guilabel> will send
-all messages from the outbox when you check for new messages.</para>
+<para><guilabel>Send messages in outbox folder</guilabel> lets you specify
+when queued messages, &ie; messages in the outbox folder pending to be sent,
+should be sent. You can choose between:</para>
+<variablelist>
+<varlistentry>
+<term><guilabel>Never Automatically</guilabel></term>
+<listitem><para>Queued messages will only be sent if you select 
+<menuchoice><guimenu>File</guimenu><guimenuitem>Send queued messages</guimenuitem></menuchoice>.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>On Manual Mail Checks</guilabel></term>
+<listitem><para>Queued messages will be sent after you have manually checked
+for new mail, &eg; with <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail</guimenuitem></menuchoice>. Of course, you can also
+manually sent the queued messages with
+<menuchoice><guimenu>File</guimenu><guimenuitem>Send queued messages</guimenuitem></menuchoice>.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>On All Mail Checks</guilabel></term>
+<listitem><para>Queued messages will be sent after all checks for new mail,
+&ie; after automatic mail checks as well as after manual mail checks.
+Of course, you can also manually sent the queued messages with
+<menuchoice><guimenu>File</guimenu><guimenuitem>Send queued messages</guimenuitem></menuchoice>.</para></listitem>
+</varlistentry>
+</variablelist>
 
 <para><guilabel>Default send method</guilabel> lets you define what
 happens when a message is sent. If <guilabel>Send now</guilabel> is
@@ -375,7 +571,7 @@ the outbox to be sent later with the
 <menuchoice><guimenu>File</guimenu><guimenuitem>Send
 Queued Messages</guimenuitem></menuchoice> command or automatically when you
 check your mail, depending on the setting of 
-<guilabel>Send messages in outbox folder on check</guilabel> above.</para>
+<guilabel>Send messages in outbox folder</guilabel> above.</para>
 
 <para><guilabel>Message property</guilabel> lets you select how your
 message will be encoded when it is sent. <guilabel>Allow
@@ -401,16 +597,21 @@ then messages you send to <replaceable>johndoe</replaceable> will be sent to
 </sect2>
 
 <sect2 id="configure-network-receiving">
-<title><guilabel>Receiving</guilabel></title>
+<title>Receiving</title>
 
 <para>For basic information, see <link
 linkend="receiving-mail">Setting up your Account: Receiving</link>.</para>
 
+<para><guilabel>Check mail on startup</guilabel> lets you specify whether
+KMail should check for new mail immediately after it has been started.</para>
+
 <para>With <guilabel>New Mail Notification</guilabel> you can set
-how &kmail; will notify you if new messages have arrived. Of course
-this only makes sense if <guilabel>Enable interval mail checking</guilabel>
-is activated for at least one account: <guilabel>Beep</guilabel> will
-play a short beep sound, while more advanced notification options
+how &kmail; will notify you if new messages have arrived:
+<guilabel>Beep</guilabel> will play a short beep sound;
+if <guilabel>Detailed new mail notification</guilabel> is enabled then
+&kmail; will show the number of new messages for each folder provided
+you have chosen to be notified with a dialog. More advanced 
+notification options, like showing a dialog or running a certain command,
 are available via the <guibutton>Other Actions</guibutton> button.</para>
 
 </sect2>
@@ -447,10 +648,10 @@ the composer.<!-- TODO --></para>
 <title>Layout</title>
 
 <para><guilabel>Show HTML status bar</guilabel> activates a bar at the left side of the reader
-pane that tells you if a message is HTML or not. This is important because
-HTML messages might imitate the look of a signed and encrypted message, so
-you should be aware of the fact that you are reading a HTML message. The HTML
-status bar itself cannot be influenced by the HTML code of the message.</para>
+pane that tells you if a message is &html; or not. This is important because
+&html; messages might imitate the look of a signed and encrypted message, so
+you should be aware of the fact that you are reading a &html; message. The &html;
+status bar itself cannot be influenced by the &html; code of the message.</para>
 
 <para>The <guilabel>Window Layout</guilabel> section lets you choose the 
 layout of the main window. You can choose where you want the 
@@ -464,7 +665,7 @@ disable the structure viewer (note that you can still access attachments as icon
 <guilabel>Show always</guilabel> will show the structure viewer even if there is only
 one plaintext part. <guilabel>Show only for non-plaintext messages</guilabel> will 
 display the structure viewer only if it makes sense, &ie; if the current message
-has attachments or has HTML parts.</para>
+has attachments or has &html; parts.</para>
 
 </sect2>
 
@@ -502,14 +703,26 @@ and then clicking on <guilabel>Custom</guilabel> option.</para>
 
 </sect2>
 
-<sect2 id="configure-appearance-profiles">
-<title>Profiles</title>
+<sect2 id="configure-appearance-systemtray">
+<title>System Tray</title>
 
-<para>This section offers several default settings for &kmail;'s layout. You can
-use these as starting points for your own configuration.</para>
+<para>If you enable the system tray icon then a small &kmail; icon with the
+number of unread messages will be shown in the system tray. You can enable
+&kmail;'s system tray icon with <guilabel>Enable system tray icon</guilabel>,
+and with <guilabel>System Tray Mode</guilabel>
+you can specify whether the tray icon should always be shown or only if
+you have unread messages.</para>
 
-<warning><para>Note that choosing
-one of the offered profiles will override your current layout settings.</para></warning>
+<para>If the icon is visible then you can hide &kmail;'s main window by
+clicking on the icon or by clicking on the window close button. By clicking
+on the icon you can make &kmail;'s main window visible again.
+If you click on the icon with the <mousebutton>right</mousebutton>
+mousebutton then you get a menu with a few useful commands. You can check
+for new mail, create a new message or quit &kmail;. Additionally, there is
+the entry <guilabel>New Messages In</guilabel> which lists all folders
+containing unread messages. If you choose one of those folders then this
+folder will be selected in &kmail;'s main window.
+</para>
 
 </sect2>
 
@@ -518,34 +731,110 @@ one of the offered profiles will override your current layout settings.</para></
 
 </sect1>
 
-<sect1 id="configure-composer">
-<title>Composer Page</title>
+  <sect1 id="configure-composer">
+    <title>
+      Composer Page
+    </title>
 
-<sect2 id="configure-composer-general">
-<title>General</title>
+    <sect2 id="configure-composer-general">
+      <title>
+	General
+      </title>
 
-<para><guilabel>Automatically append signature</guilabel> lets you toggle
-whether to automatically include your signature as defined in the 
-<link linkend="setting-your-identity">identity page</link>.</para>
+      <variablelist>
+	<varlistentry id="configure-composer-general-append-signature">
+	  <term>
+	    <guilabel>Automatically append signature</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, your signature as defined in the <link
+	      linkend="configure-identity-signature">identity
+	      page</link> is automatically included at the end of
+              all messages you create (&ie; new messages, replies, &etc;).
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry id="configure-composer-general-smart-quoting">
+	  <term>
+	    <guilabel>Use smart quoting</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; will break long lines but will try
+	      to keep the correct quoting (&eg; the <quote>&gt;
+	      </quote> will always be at the start of the line).
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry id="configure-composer-general-auto-request-mdns">
+	  <term>
+	    <guilabel>Automatically request message disposition notifications</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, <xref
+	      linkend="composer-options-request-mdn"/> will default to
+	      <emphasis>on</emphasis>. Check this option only if you
+	      know what you are doing. &mdn;s are considered a
+	      nuisance (or are simply ignored) by a lot of people. It
+	      is better to decide to request them on a
+	      message-by-message basis.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry id="configure-composer-general-word-wrap">
+	  <term>
+	    <guilabel>Word wrap at column</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Lets you turn word wrapping on and off in the composer
+	      window and lets you set the column at which words will
+	      be wrapped (you probably should not need to change the
+	      default value, which is <literal>78</literal>).
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry id="configure-composer-general-autosave-interval">
+	  <term>
+	    <guilabel>Autosave interval</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+              A backup copy of the text in the composer window can be created
+	      regularly. This option lets you specify the interval used to 
+              create the backup. You can disable autosaving by setting it to 
+              the value <literal>0</literal>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry id="configure-composer-general-external-editor">
+	  <term>
+	    <guilabel>External Editor</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If you do not like the Composer you can use a different
+	      editor. Note that the composer window will still open
+	      and the external editor will open as soon as you type
+	      just one character in the body of the message. If you're
+	      done, save the text and exit the editor. The text will
+	      now appear in the composer window, where you can send
+	      it. Note that your editor may not return immediately,
+	      you have to use &eg;
+	      <userinput>
+		<command>
+		  gvim <option>-f</option> <varname>%f</varname>
+		</command>
+	      </userinput> for <application>gvim</application>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
 
-<para><guilabel>Use smart quoting</guilabel> will break long lines but will try
-to keep the correct quoting (&eg; the <quote>&gt; </quote> will always be at the
-start of the line).</para>
+    </sect2>
 
-<para><guilabel>Word wrap at column</guilabel> lets you turn word wrapping on
-and off in the composer window and lets you set the column
-at which words will be wrapped (you probably should not need to change
-the default value, which is <userinput>78</userinput>).</para>
-
-<para>If you do not like the Composer you can use a
-different editor. Note that the composer window will still open and
-the external editor will open as soon as you type just one character in the body
-of the message. If you're done, save the text and exit the editor. The text will
-now appear in the composer window, where you can send
-it. Note that your editor may not return immediately, you have to
-use &eg; <userinput>gvim -f %f</userinput> for <application>gvim</application>.</para>
-
-</sect2>
 
 <sect2 id="configure-composer-phrases">
 <title>Phrases</title>
@@ -556,7 +845,9 @@ character that is added in front of quoted text.
 There are special &percnt;-denoted characters that will insert certain
 values, which are also displayed at the top of the <guilabel>Phrases</guilabel> section.
 You can add reply phrases in languages other than
-your default &kde; language using the <guilabel>Language</guilabel> button.
+your default &kde; language using the <guibutton>Add...</guibutton> button.
+You can then choose between different languages with the
+<guilabel>Language</guilabel> drop down box.
 This will only work for languages whose i18n package you have installed.</para>
 
 </sect2>
@@ -568,8 +859,9 @@ This will only work for languages whose i18n package you have installed.</para>
 <quote>Forward</quote>. If you receive messages that use prefixes different
 to the standard ones, you can add them here so &kmail; will recognize 
 them. This way &kmail; can ignore them for sorting messages and
-when setting the subject of a reply, and optionally replace them 
-with <quote>Re:</quote>.</para>
+when setting the subject of a reply or a forwarded messages, and optionally 
+replace them with <quote>Re:</quote> or <quote>Fwd:</quote> 
+respectively.</para>
 
 </sect2>
 
@@ -585,7 +877,7 @@ a charset using
 </para>
 
 <para>If you select <guilabel>Keep original charset when replying
-or forwarding</guilabel>, the original message's charset
+or forwarding (if possible)</guilabel>, the original message's charset
 will be kept, unless there are now characters that cannot be
 represented using that charset.</para>
 
@@ -611,110 +903,682 @@ is only useful for advanced users.</para>
 
 </sect2>
 
-</sect1>
+<sect2 id="configure-composer-attachments">
+<title>Attachments</title>
 
-<sect1 id="configure-security">
-<title>Security Page</title>
+<para>If you have to send attachments with filenames containing non-English 
+characters to users of Outlook(TM) or Outlook Express(TM) then you might want
+to check the <guilabel>Outlook-compatible attachment naming</guilabel> option.
+&kmail; will then encode the attachment names in a non-standard way that is
+understood by Outlook(TM).</para>
+<para>Note that &kmail; will create non-standard compliant messages, and
+consequently it is possible that your messages will not be understood by
+standard-compliant mail clients. So, unless you have no other choice, you
+should not enable this option.</para>
 
-<sect2 id="configure-security-general">
-<title>General</title>
-
-<para><guilabel>Prefer HTML to plain text</guilabel> will show
-<acronym>HTML</acronym> messages with their <acronym>HTML</acronym>
-formatting and layout. We strongly recommend to leave this option off, as
-security problems with <acronym>HTML</acronym> might show up. When
-this option is off, you can still read <acronym>HTML</acronym>
-messages, but only as plain text.</para>
-
-<para>With <guilabel>Allow messages to load external references from the internet</guilabel>
-turned on, &kmail; can load external images, style sheets &etc; from the Internet when
-you look at an <acronym>HTML</acronym> message. We strongly recommend
-to leave this option off (although it has no effect if you only view 
-plain text messages). By
-adding external references to their messages, people sending spam can
-detect that and when you have looked at their message. Note that this option
-has no effect on &Java;, JavaScript and Plugins - these are disabled
-anyway and cannot be enabled at all.</para>
-
-<para><guilabel>Automatically send receive- and read
-confirmations</guilabel> will automatically send a confirmation (in
-form of a new message) to the sender of a message if he requested
-that. If you leave this option off, no confirmation will be sent. We
-recommend to leave this option off. If you want to send confirmations
-to certain people you can do so by using the <guilabel>confirm
-delivery</guilabel> filter action.</para>
-
-</sect2>
-
-<sect2 id="configure-security-pgp">
-<title>OpenPGP</title>
-
-<para id="configure-security-pgp-encrypttoself">For the
-<guilabel>OpenPGP</guilabel> tab please see the <link
-linkend="pgp-settings"><application>OpenPGP</application>
-section</link>.</para>
-
-</sect2>
-
-<sect2 id="configure-security-plugins">
-<title>Crypto Plugins</title>
-
-<para>For now, please refer to the homepage of the 
-<ulink url="http://www.gnupg.org/aegypten/">&Auml;gypten project</ulink>.</para>
+<para>Check the <guilabel>Enable detection of missing attachments</guilabel>
+checkbox if you want &kmail; to warn you whenever you are about to send a
+message without attachments although the message text contains certain
+words which indicate that you wanted to include an attachment. The list
+of key words can be modified.</para>
 
 </sect2>
 
 </sect1>
 
-<sect1 id="configure-folders">
-<title>Folders Page</title>
+  <sect1 id="configure-security">
+    <title>
+      Security Page
+    </title>
+
+    <sect2 id="configure-security-reading">
+      <title>
+	Reading
+      </title>
+
+      <para>
+	On this tab you can configure security-relevant options for
+	reading messages.
+      </para>
+
+      <variablelist>
+
+	<varlistentry id="configure-security-reading-prefer-html">
+	  <term>
+	    <guilabel>Prefer HTML to plain text</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; will show &html; messages with their
+	      &html; formatting and layout. We strongly recommend to
+	      leave this option off, as security problems with &html;
+	      might show up. When this option is off, you can still
+	      read &html; messages, but only as plain text.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-reading-external-references">
+	  <term>
+	    <guilabel>Allow messages to load external references from the internet</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; can load external images, style
+	      sheets &etc; from the Internet when you look at an
+	      &html; message. We strongly recommend to leave this
+	      option off (although it has no effect if you only view
+	      plain text messages). By adding external references to
+	      their messages, people sending spam can detect that and
+	      when you have looked at their message. Note that this
+	      option has no effect on &Java;, JavaScript and Plugins -
+	      these are disabled anyway and cannot be enabled at all.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-reading-mdns">
+	  <term>
+	    <guilabel>Message Disposition Notifications</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      &mdn;s are a generalization of what is commonly called a
+	      <quote>read receipt</quote>. The message author requests
+	      a disposition notification to be sent and the receiver's
+	      mail program generates a reply from which the author can
+	      learn what happened to his message. Common disposition
+	      types include <quote>displayed</quote> (&ie; read),
+	      <quote>deleted</quote> and <quote>dispatched</quote>
+	      (&eg; forwarded).
+	    </para>
+	    <para>
+	      The following options (listed as <guilabel>Send
+	      policy</guilabel>) are available to control
+	      <emphasis>when</emphasis> &kmail; sends &mdn;s:
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>
+		  <guilabel>Ignore</guilabel> (recommended)
+		</term>
+		<listitem>
+		  <para>
+		    Ignores any request for disposition
+		    notifications. No &mdn; will ever be sent
+		    automatically.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>
+		  <guilabel>Ask</guilabel>
+		</term>
+		<listitem>
+		  <para>
+		    Answers requests only after asking the user for
+		    permission. This way, you can send &mdn;s for
+		    selected messages while denying or ignoring them
+		    for others.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>
+		  <guilabel>Deny</guilabel>
+		</term>
+		<listitem>
+		  <para>
+		    Always sends a <quote>denied</quote>
+		    notification. This is only
+		    <emphasis>slightly</emphasis> better than always
+		    sending &mdn;s. The author will still know that
+		    the messages has been acted upon, he just cannot
+		    tell whether it was deleted or read &etc;
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>
+		  <guilabel>Always send</guilabel>
+		</term>
+		<listitem>
+		  <para>
+		    Always sends the requested disposition
+		    notification. That means that the author of the
+		    message gets to know when the message was acted
+		    upon and, in addition, what happened to it
+		    (displayed, deleted, &etc;). This option is
+		    strongly discouraged, but since it makes sense
+		    where privacy is not a concern, &eg; in customer
+		    relationship management, it has been made
+		    available.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+	    <para>
+	      If you are unsure, experiment a while with
+	      <guilabel>Ask</guilabel> and if you find &kmail;s
+	      questions annoying, switch to <guilabel>Ignore</guilabel>.
+	    </para>
+	    <para>
+	      The following options (listed as <guilabel>Quote
+	      original message</guilabel>) are available to control
+	      <emphasis>how much</emphasis> of the original message
+	      &kmail; sends back in &mdn;s.
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>
+		  <guilabel>Nothing</guilabel>
+		</term>
+		<listitem>
+		  <para>
+		    No parts of the message other than the mandatory
+		    message-id and the original recipient is included
+		    in the &mdn; reply. This preserves enough
+		    information for the sender to find the message in
+		    his sent messages for which this &mdn; was
+		    generated.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>
+		  <guilabel>Full message</guilabel>
+		</term>
+		<listitem>
+		  <para>
+		    Attaches the complete message to the disposition
+		    notification. Usually, this is overkill. It does
+		    not add any valueable information that cannot be
+		    deduced from the message headers alone, but people
+		    sometimes insist on this, since it is much easier
+		    for humans to correlate the content of the message
+		    than just the headers to what they sent earlier.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>
+		  <guilabel>Only headers</guilabel>
+		</term>
+		<listitem>
+		  <para>
+		    Attaches only the headers to the disposition
+		    notification. This is usually enough to enable
+		    both humans (by subject) and computers (by
+		    message-id) to easily correlate &mdn; and original
+		    message.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+	    <para>
+	      If unsure, leave the option at the default.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>
+	    <guilabel>Do not send MDNs in response to encrypted messages</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      This option supresses the sending of &mdn;s if the
+	      message is encrypted (partially or in whole). This
+	      thwarts attempts to use &kmail;'s &mdn; feature as an
+	      <emphasis>oracle</emphasis> to deduce whether you were
+	      able to decrypt the message or not.
+	    </para>
+	    <para>
+	      Strictly speaking, this option is not needed, since
+	      &kmail; sends &mdn;s regardless of whether the message
+	      could be successfully decrypted or not (the disposition
+	      notification request resides in the unencrypted part of
+	      the message), but it gives the security-conscious user
+	      the choice to either send them always if requested
+	      (option unchecked), or never (option checked).
+	    </para>
+	    <para>
+	      If unsure, leave the option checked.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>
+	    <guilabel>Automatically import keys and certificates</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; automatically imports any attachments
+	      containing &openpgp; keys into your local keyring, and any
+	      attachments containing &smime; keys into your local key
+	      box.
+	    </para>
+	    <note>
+	      <para>
+		Verifying &smime; signatures always involves importing
+		the contained certificates. This option thus does not
+		affect this. It is also unrelated to &gpg;'s
+		<option>auto-key-retrieve</option> feature, where &gpg;
+                will try to import unknown keys from a key server.
+	      </para>
+	    </note>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+    </sect2>
+
+    <sect2 id="configure-security-composing">
+      <title>
+	Composing
+      </title>
+
+      <para>
+	On this tab you can configure security-relevant options for
+	composing messages.
+      </para>
+
+      <variablelist>
+
+	<varlistentry id="configure-security-composing-automatically-sign">
+	  <term>
+	    <guilabel>Automatically sign messages</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, the <xref
+	      linkend="composer-options-sign-message"/> option in the
+	      composer will default to <emphasis>on</emphasis>.
+	    </para>
+	    <para>
+	      However, you can still switch it on and off on a
+	      per-message basis.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-composing-encrypt-to-self">
+	  <term>
+	    <guilabel>Always encrypt to self</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, any message that is encrypted to the
+	      recipients will additionally be encrypted to yourself.
+	    </para>
+	    <warning>
+	      <para>
+		If you uncheck this option, you may not be able to
+		decrypt the messages written by yourself and encrypted
+		to other people anymore.
+	      </para>
+	    </warning>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-composing-store-sent-encrypted">
+	  <term>
+	    <guilabel>Store sent messages encrypted</guilabel><!--
+	    --><footnote>
+	      <para>
+		This options enables a mode of using mail encryption
+		that is sometimes (misleadingly) called
+		<quote>transport-only</quote> encryption. In this mode
+		of operation, the message encryption is stripped off
+		as soon as the message has reached its
+		destination. The encryption lasts only while the
+		message is on its way.
+	      </para>
+	      <para>
+		&kmail; supports this mode half-heartedly, since such
+		functionality should better placed at the mail
+		<emphasis>server</emphasis> (<acronym>MTA</acronym>)
+		than at the mail <emphasis>client</emphasis>
+		(<acronym>MUA</acronym>) level. Thus, future versions
+		of &kmail; may drop support for this option.
+	      </para>
+	    </footnote>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, messages are stored in your
+	      <guilabel>sent-mail</guilabel> folder just as you sent
+	      them (&ie; if they were encrypted, they are also stored
+	      that way).
+	    </para>
+	    <para>
+	      If unchecked, messages will <emphasis>always</emphasis>
+	      be stored unencrypted in your
+	      <guilabel>sent-mail</guilabel> folder, even if they are
+	      sent encrypted.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-composing-show-encryption-key">
+	  <term>
+	    <guilabel>Always show the encryption keys for approval</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, everytime you encrypt a message, a dialog
+	      will appear that presents you with the encryption keys
+	      that will be used for each recipient. You can then
+	      review the choice of keys, change them, and approve or
+	      cancel the encryption operation. We recommend to keep
+	      this option checked, since it makes the encryption
+	      process more transparent.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-composing-opportunistic-encryption">
+	  <term>
+	    <guilabel>Automatically encrypt messages whenever possible</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Also called <quote>opportunistic encryption</quote>. If
+	      checked, &kmail; will try to match recipients to
+	      (&openpgp; or &smime;) keys even when you did
+	      <emphasis>not</emphasis> specifically request
+	      encryption. If usable keys are found for all recipients,
+	      &kmail; will ask whether or not you want to encrypt the
+	      message.
+	    </para>
+	    <para>
+	      It is highly recommeded to turn this on, as it makes
+	      encrypting messages really easy to use.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-composing-never-sign-encrypt-drafts">
+	  <term>
+	    <guilabel>Never sign/encrypt when saving as draft</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; will not attempt to sign and/or
+	      encrypt messages that are merely saved to the
+	      <guilabel>drafts</guilabel> folder. This is more
+	      convenient, and does not result in a gross loss of
+	      security, provided the drafts folder is safe. &imap;
+	      users might want this options turned off, if their
+	      <guilabel>drafts</guilabel> folder is on the server.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+
+    </sect2>
+
+    <sect2 id="configure-security-warnings">
+      <title>
+	Warnings
+      </title>
+
+      <para>
+	On this tab you can switch security-relavant warnings on and
+	off.
+      </para>
+
+      <variablelist>
+
+	<varlistentry id="configure-security-warnings-warn-send-unsigned">
+	  <term>
+	    <guilabel>Warn when trying to send unsigned messages</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; will show a warning if for whatever
+	      reason a message would be sent without being digitally
+	      signed.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-warnings-warn-send-unencrypted">
+	  <term>
+	    <guilabel>Warn when trying to send unencrypted messages</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; will show a warning if for whatever
+	      reason a message would be sent without being encrypted.
+	    </para>
+	    <note>
+	      <para>
+		While it is common to sign all outgoing messages,
+		encrypting them is not. So unless your company has a
+		policy of never sending any unencrypted messages, it
+		might be a good idea to keep this option switched off
+		and rely on <link
+		linkend="configure-security-composing-opportunistic-encryption">opportunistic
+		encryption</link> to alert you if you
+		<emphasis>could</emphasis> send encrypted messages,
+		but did not request it.
+	      </para>
+	    </note>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-warnings-warn-receiver-email-not-in-cert">
+	  <term>
+	    <guilabel>Warn if receiver's email address is not in certificate</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; will emit a warning if an &smime;
+	      certifciate or &openpgp; key will be used for a recipient
+	      whose email address is not listed in the email addresses
+	      stored in the certificate.
+	    </para>
+	    <para>
+	      Situations in which this warning will trigger include
+	      when configuring your per-identity &openpgp; keys or
+	      &smime; certificates, when encrypting, and when verifying
+	      signatures, if the signature was made with a certificate
+	      that does not include the email address of the sender.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-warnings-warn-near-expire">
+	  <term>
+	    <guilabel>Warn if certificates/keys expire soon</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; will warn when an &smime; certificate
+	      or &openpgp; key is used which will expire soon.
+	    </para>
+	    <para>
+	      The period in which to warn before key/certificate
+	      expiration can then be configured separately for signing
+	      and encryption keys, as well as (in the case of &smime;),
+	      for end-user certificates, intermediate
+	      <acronym>CA</acronym> certificates and root
+	      certificates.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-warnings-reenable-all-warnings">
+	  <term>
+	    <guilabel>Re-Enable All &quot;Don&apos;t Ask Again&quot; Warnings</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Apart from the main warnings described above, there are
+	      more warning and information messages, which contain an
+	      option to not show them again. If you would like to
+	      re-enable them after choosing not to show them again,
+	      you can achieve this by pressing this button.<!--
+	      --><footnote>
+		<para>
+		  This will re-enable <emphasis>all</emphasis> such
+		  warnings for &kmail;. It does not make much sense to
+		  allow more fine-grained selection of which warnings
+		  to show since you can just check the option to
+		  suppress them again when they next show up.
+		</para>
+	      </footnote>
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+
+    </sect2>
+
+    <sect2 id="configure-security-smime-validation">
+      <title>
+	&smime; Validation
+      </title>
+
+      <para>
+	This tab contains selected entries from &gpgsm;'s <link
+	linkend="configure-security-crypto-backends-configure">dynamic
+	backend configuration dialog</link>. Please refer
+	to the &gpgsm; manual for a description of these options.
+      </para>
+    </sect2>
+
+    <sect2 id="configure-security-crypto-backends">
+      <title>
+	Crypto Backends
+      </title>
+
+      <para>
+	On this tab you can configure which crypto backends are to be
+	used for &openpgp; and &smime; cryptographic operations (such
+	as signing and encrypting).
+      </para>
+
+      <para>
+	On the right-hand side, you see a list of available
+	backends. Below each backend entry, you can see what protocols
+	(&openpgp; and/or &smime;) the backend supports. If a protocol
+	is not listed, the backend does not support it. If it is
+	listed, but greyed out, the backend supports the protocol, but
+	some required programs were not found, or other errors
+	occurred during initialization. If you press
+	<guibutton>Rescan</guibutton>, a dialog box will appear that
+	lists reasons for the initialization failure.
+      </para>
+
+      <para id="configure-security-crypto-backends-configure">
+	To configure a backend, select it in the list of available
+	backends and press <guibutton>Configure...</guibutton>. The
+	per-backend configuration dialog is dynamically created from
+	the information returned by the backend. It may therefore
+	change if you update the backend applications, although
+	&kmail; itself is unchanged. If the
+	<guibutton>Configure...</guibutton> button is disabled, the
+	backend does not support a backend configuration dialog.
+      </para>
+
+      <para>
+	Please refer to the manuals of the applications underlying
+	each backend for a description of the options presented in the
+	backend configuration dialogs.
+      </para>
+
+      <para>
+	In front of each backend's protocol entries, you can see a
+	checkbox, with which you select which backend is to be used
+	for a given protocol. These checkboxes are exclusive per
+	protocol, meaning that if you select a backend to perform
+	&openpgp; operations, any previously selected &openpgp;
+	implementation will be unselected, but the &smime; backend
+	selection will be unchanged. If no backend is selected for a
+	given protocol, that protocol is effectively disabled for use
+	in &kmail;.
+      </para>
+
+    </sect2>
+
+  </sect1> <!-- configure-security -->
+
+<sect1 id="configure-misc">
+<title>Misc Page</title>
+
+<sect2 id="configure-misc-folders">
+<title>Folders</title>
 
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Confirm before emptying folders</guilabel></term>
+<term><guilabel>Ask for confirmation before moving all messages to trash</guilabel></term>
 <listitem>
-<para>To empty a folder means that its messages get transferred to the
-<guilabel>trash</guilabel> folder (and only get deleted if they are already in the
-<guilabel>trash</guilabel> folder).  So although you normally will not lose any
-mail, you can still activate a confirmation dialog that will ask you if you
-really want to empty the folder.</para>
+<para>Enable this option if you want to be asked for confirmation whenever
+you use <menuchoice><guimenu>Folder</guimenu><guimenuitem>Move All Messages to Trash</guimenuitem></menuchoice>.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Warn before expiring messages</guilabel></term>
+<term><guilabel>Exclude important messages from expiry</guilabel></term>
 <listitem>
-<para>This will pop up a confirmation dialog before messages are expired
-(&eg; on exit).</para>
+<para>Enable this option if important messages should never be deleted
+during message expiration, &ie; during automatic deletion of old
+messages.</para>
 </listitem>
 </varlistentry>
 
-<varlistentry>
-<term><guilabel>Loop in the current folder when trying to find unread mail</guilabel></term>
+<varlistentry id="configure-misc-folders-go-unread">
+<term><guilabel>When trying to find unread messages</guilabel></term>
 <listitem>
-<para>When you press one of the shortcuts to find new messages (&eg; <keycap>Space</keycap>)
-and this option is activated, &kmail; will not jump to the next folder, but instead
-try to find new messages at the top of the current folder.</para>
+<para>This option controls what happens if you press one of the shortcuts to
+go to the next or previous unread message (&eg; <keycap>Space</keycap>).
+If you ask &kmail; to go to the next unread message although there is no
+unread message below the currently selected message then the following happens:
+<itemizedlist>
+<listitem>
+<para>If <guilabel>Do not Loop</guilabel> is selected then nothing will happen.
+</para>
+</listitem>
+<listitem>
+<para>If <guilabel>Loop in Current Folder</guilabel> is selected then &kmail; 
+will search from the beginning of the current folder for an unread message. If
+none is found then nothing happens.</para>
+</listitem>
+<listitem>
+<para>If <guilabel>Loop in All Folders</guilabel> is selected then &kmail;
+will first search in the current folder for another unread message. If none
+is found then &kmail; will search the next folder containing unread messages.
+</para>
+</listitem>
+</itemizedlist>
+Correspondingly, if you ask &kmail; to go to the previous unread message.
+</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Jump to first unread message when entering a folder</guilabel></term>
 <listitem>
-<para>If this option is enabled &kmail; will go to the next unread message
- when you enter a folder; if it is not enabled, &kmail; will go to 
- the message that was selected when you last left the folder.</para>
+<para>If this option is enabled &kmail; will go to the first unread message
+when you enter a folder; if it is not enabled, &kmail; will go to first
+new message or, if there is no new message, to the message
+that was selected when you last left the folder.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Mark selected messages as read after...</guilabel></term>
+<term><guilabel>Mark selected message as read after...</guilabel></term>
 <listitem>
-<para>When you select a <guilabel>new</guilabel> message, &kmail; will change the
+<para>When you select a <guilabel>new</guilabel> or 
+<guilabel>unread</guilabel> message, &kmail; will change the
 message's status to <guilabel>read</guilabel> after the number of seconds
 entered here. If you disable this option, messages will keep their
-<guilabel>new</guilabel> status.</para>
+<guilabel>new</guilabel> or <guilabel>unread</guilabel> status.</para>
 </listitem>
 </varlistentry>
 
@@ -722,7 +1586,7 @@ entered here. If you disable this option, messages will keep their
 <term><guilabel>Ask for action after dragging messages to another folder</guilabel></term>
 <listitem>
 <para>When you drag a message to a different folder, a small popup will ask
-you if you want to copy or move the message. If you disable this option,
+you if you want to move or copy the message. If you disable this option,
 the message will be moved immediately, without a popup.</para>
 </listitem>
 </varlistentry>
@@ -735,39 +1599,28 @@ that is used when you create a new folder.</para>
 </listitem>
 </varlistentry>
 
-</variablelist>
-
-<!-- TODO: better structure needed: -->
-<para><guilabel>On program exit, perform the following tasks</guilabel>:</para>
-
-<variablelist>
-
 <varlistentry>
-<term><guilabel>Compact all folders</guilabel></term>
+<term><guilabel>Open this folder on startup</guilabel></term>
 <listitem>
-<para>This will compact all folders every time you exit &kmail;. Compacting
-folders means that the messages you deleted will really be
-removed.</para>
+<para>Here you can set the folder that should be selected by default if you
+start &kmail;. If you use only &imap; folders then you might want to set
+this to your &imap; inbox folder.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Empty trash</guilabel></term>
+<term><guilabel>Empty trash on program exit</guilabel></term>
 <listitem>
 <para>The trash folder is cleared of messages when you quit &kmail; if this
 option is selected.</para> 
 </listitem>
 </varlistentry>
 
-<varlistentry>
-<term><guilabel>Expire old messages</guilabel></term>
-<listitem>
-<para>Delete old messages from folders, according to the rules in
-each folder's <link linkend="folders-properties-window">Properties dialog</link>.</para>
-</listitem>
-</varlistentry>
-
 </variablelist>
+
+</sect2>
+
+<!-- FIXME: Add information about the Groupware tab -->
 
 </sect1>
 

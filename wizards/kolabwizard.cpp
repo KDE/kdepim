@@ -2,6 +2,7 @@
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2004 Daniel Molkentin <molkentin@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -22,10 +23,16 @@
 #include "kolabwizard.h"
 #include "kolabconfig.h"
 
-#include "kresources/imap/kcal/resourceimap.h"
+#include "kmailchanges.h"
 
 #include <libkcal/resourcecalendar.h>
+#include <kabc/resource.h>
 
+#include "kresources/imap/kcal/resourceimap.h"
+#include "kresources/imap/kabc/resourceimap.h"
+#include "kresources/imap/knotes/resourceimap.h"
+
+#include <qwhatsthis.h>
 #include <klineedit.h>
 #include <klocale.h>
 
@@ -33,27 +40,92 @@
 #include <qcheckbox.h>
 #include <qlabel.h>
 
-
-class CreateImapResource : public KConfigPropagator::Change
+class SetupLDAPSearchAccount : public KConfigPropagator::Change
 {
   public:
-    CreateImapResource()
-      : KConfigPropagator::Change( i18n("Create IMAP Resource") )
+    SetupLDAPSearchAccount()
+      : KConfigPropagator::Change( i18n("Setup LDAP Search Account") )
     {
     }
 
     void apply()
     {
-      kdDebug() << "Create IMAP Resource" << endl;
+      QString host = KolabConfig::self()->server();
+      QString basedn = host;
+      basedn.replace(".",",dc=");
+      basedn.prepend("dc=");
 
+      KConfig c( "kabldaprc" );
+      c.setGroup( "LDAP" );
+      uint selHosts = c.readNumEntry("NumSelectedHosts", 0);
+      c.writeEntry( "NumSelectedHosts", selHosts + 1 );
+      c.writeEntry( QString("SelectedHost%1").arg(selHosts), host);
+      c.writeEntry( QString("SelectedBase%1").arg(selHosts), basedn);
+      c.writeEntry( QString("SelectedPort%1").arg(selHosts), "389");
+    }
+
+};
+
+class CreateCalenderImapResource : public KConfigPropagator::Change
+{
+  public:
+    CreateCalenderImapResource()
+      : KConfigPropagator::Change( i18n("Create Calender IMAP Resource") )
+    {
+    }
+
+    void apply()
+    {
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
-      KCal::ResourceIMAP *r = new KCal::ResourceIMAP( "FIXME" );
-      r->setResourceName( i18n("Kolab") );
+      QString server = KolabConfig::self()->server();
+      KCal::ResourceIMAP *r = new KCal::ResourceIMAP( server );
+      r->setResourceName( i18n("Kolab Server") );
       m.add( r );
       m.writeConfig();
     }
 };
+
+class CreateContactImapResource : public KConfigPropagator::Change
+{
+  public:
+    CreateContactImapResource()
+      : KConfigPropagator::Change( i18n("Create Contact IMAP Resource") )
+    {
+    }
+
+    void apply()
+    {
+      KRES::Manager<KABC::Resource> m( "contact" );
+      m.readConfig();
+      KABC::ResourceIMAP *r = new KABC::ResourceIMAP( 0 );
+      r->setResourceName( i18n("Kolab Server") );
+      m.add( r );
+      m.writeConfig();
+    }
+
+};
+
+class CreateNotesImapResource : public KConfigPropagator::Change
+{
+  public:
+    CreateNotesImapResource()
+      : KConfigPropagator::Change( i18n("Create Notes IMAP Resource") )
+    {
+    }
+
+    void apply()
+    {
+      KRES::Manager<ResourceNotes> m( "notes" );
+      m.readConfig();
+      KNotesIMAP::ResourceIMAP *r = new KNotesIMAP::ResourceIMAP( 0 );
+      r->setResourceName( i18n("Kolab Server") );
+      m.add( r );
+      m.writeConfig();
+    }
+
+};
+
 
 class KolabPropagator : public KConfigPropagator
 {
@@ -80,7 +152,7 @@ class KolabPropagator : public KConfigPropagator
       int pos = user.find( "@" );
       if ( pos > 0 ) user = user.left( pos );
 
-      c->value = freeBusyBaseUrl + user + ".vfb";
+      c->value = freeBusyBaseUrl + user + ".ifb";
 
       changes.append( c );
 
@@ -91,7 +163,11 @@ class KolabPropagator : public KConfigPropagator
       c->name = "FreeBusyRetrieveUrl";
       c->value = freeBusyBaseUrl;
 
+      // KMail cruft has been outsourced
+      createKMailChanges( changes );
+
       changes.append( c );
+      changes.append( new SetupLDAPSearchAccount );
 
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
@@ -100,7 +176,9 @@ class KolabPropagator : public KConfigPropagator
         if ( (*it)->type() == "imap" ) break;
       }
       if ( it == m.end() ) {
-        changes.append( new CreateImapResource );
+        changes.append( new CreateCalenderImapResource );
+        changes.append( new CreateContactImapResource );
+        changes.append( new CreateNotesImapResource );
       }
     }
 };
@@ -117,19 +195,26 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
   mServerEdit = new KLineEdit( page );
   topLayout->addWidget( mServerEdit, 0, 1 );
 
-  label = new QLabel( i18n("User name:"), page );
+  label = new QLabel( i18n("Kolab user name:"), page );
   topLayout->addWidget( label, 1, 0 );
   mUserEdit = new KLineEdit( page );
   topLayout->addWidget( mUserEdit, 1, 1 );
+  QWhatsThis::add(mUserEdit, i18n("Your Kolab Server user ID. "
+                        "Format: <i>name@server.domain.tld</i>"));
+
+  label = new QLabel( i18n("Real name:"), page );
+  topLayout->addWidget( label, 2, 0 );
+  mRealNameEdit = new KLineEdit( page );
+  topLayout->addWidget( mRealNameEdit, 2, 1 );
 
   label = new QLabel( i18n("Password:"), page );
-  topLayout->addWidget( label, 2, 0 );
+  topLayout->addWidget( label, 3, 0 );
   mPasswordEdit = new KLineEdit( page );
   mPasswordEdit->setEchoMode( KLineEdit::Password );
-  topLayout->addWidget( mPasswordEdit, 2, 1 );
+  topLayout->addWidget( mPasswordEdit, 3, 1 );
 
   mSavePasswordCheck = new QCheckBox( i18n("Save password"), page );
-  topLayout->addMultiCellWidget( mSavePasswordCheck, 3, 3, 0, 1 );
+  topLayout->addMultiCellWidget( mSavePasswordCheck, 4, 4, 0, 1 );
 
   topLayout->setRowStretch( 4, 1 );
 
@@ -147,6 +232,7 @@ void KolabWizard::usrReadConfig()
 {
   mServerEdit->setText( KolabConfig::self()->server() );
   mUserEdit->setText( KolabConfig::self()->user() );
+  mRealNameEdit->setText( KolabConfig::self()->realName() );
   mPasswordEdit->setText( KolabConfig::self()->password() );
   mSavePasswordCheck->setChecked( KolabConfig::self()->savePassword() );
 }
@@ -155,6 +241,7 @@ void KolabWizard::usrWriteConfig()
 {
   KolabConfig::self()->setServer( mServerEdit->text() );
   KolabConfig::self()->setUser( mUserEdit->text() );
+  KolabConfig::self()->setRealName( mRealNameEdit->text() );
   KolabConfig::self()->setPassword( mPasswordEdit->text() );
   KolabConfig::self()->setSavePassword( mSavePasswordCheck->isChecked() );
 }
