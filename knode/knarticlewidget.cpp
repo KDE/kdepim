@@ -25,10 +25,12 @@
 #include <qpopupmenu.h>
 #include <qfileinfo.h>
 #include <qdir.h>
+#include <qprinter.h>
+#include <qpaintdevicemetrics.h>
+#include <qstylesheet.h>
 
+#include <kdebug.h>
 #include <kcursor.h>
-#include <khtml_part.h>
-#include <khtmlview.h>
 #include <kcharsets.h>
 #include <kmessagebox.h>
 #include <kglobal.h>
@@ -44,28 +46,39 @@
 #include "knarticlewidget.h"
 #include "knviewheader.h"
 #include "knsavedarticlemanager.h"
+#include "knappmanager.h"
 #include "knglobals.h"
 
-#define PUP_OPEN  1000
-#define PUP_SAVE  2000
-#define PUP_COPY  3000
-#define TXT_COL   0
-#define LNK_COL   1
-#define BK_COL    2
-#define FG_COL    3
-#define QCOL_1    4
-#define QCOL_2    5
-#define QCOL_3    6
+#define PUP_OPEN    1000
+#define PUP_SAVE    2000
+#define PUP_COPYURL 3000
+#define PUP_SELALL  4000
+#define PUP_COPY    5000
+
+
+#define HDR_COL   0
+#define QCOL_1    1
+#define QCOL_2    2
+#define QCOL_3    3
 
 //==================================================================================
+
+//flags
 bool KNArticleWidget::showSig;
 bool KNArticleWidget::fullHdrs;
 bool KNArticleWidget::openAtt;
 bool KNArticleWidget::inlineAtt;
 bool KNArticleWidget::altAsAtt;
-QString KNArticleWidget::hexColors[7];
-QString KNArticleWidget::htmlFont;
-int KNArticleWidget::htmlFontSize;
+
+//colors
+QString KNArticleWidget::hexColors[4];
+QColor KNArticleWidget::txtCol;
+QColor KNArticleWidget::bgCol;
+QColor KNArticleWidget::lnkCol;
+
+//font
+QFont KNArticleWidget::htmlFont;
+
 KNArticleWidget::browserType KNArticleWidget::browser;
 QList<KNArticleWidget> KNArticleWidget::instances;
 
@@ -81,22 +94,18 @@ void KNArticleWidget::readOptions()
   altAsAtt=c->readBoolEntry("showAlts", false);
   browser=(browserType)(c->readNumEntry("Browser", 0));
   
-  c->setGroup("FONTS-COLORS");
-  
-  htmlFont= c->readEntry("family", "helvetica");
-  htmlFontSize=c->readNumEntry("size", 12);
-  
+  htmlFont=knGlobals.appManager->font(KNAppManager::article);
+
+  txtCol=knGlobals.appManager->color(KNAppManager::normalText);
+  bgCol=knGlobals.appManager->color(KNAppManager::background);
+  lnkCol=knGlobals.appManager->color(KNAppManager::url);
+
   QColor col;
-  for(int i=0; i<7; i++) {
-    switch (i) {
-      case 0:
-      case 1: col=black; break;     
-      case 2: col=white; break;     
-      case 3: col=gray; break;
-      default: col=black;
-    }
-    col=c->readColorEntry(QString("color%1").arg(i+1), &col);
-    hexColors[i]= QString("#%1%2%3").arg(col.red(),2,16).arg(col.green(),2,16).arg(col.blue(),2,16);
+  col=knGlobals.appManager->color(KNAppManager::header);
+  hexColors[0]= QString("#%1%2%3").arg(col.red(),2,16).arg(col.green(),2,16).arg(col.blue(),2,16);
+  for(int i=3; i<6; i++) {
+    col=knGlobals.appManager->color(i);
+    hexColors[i-2]= QString("#%1%2%3").arg(col.red(),2,16).arg(col.green(),2,16).arg(col.blue(),2,16);
   }
 }
 
@@ -176,37 +185,37 @@ bool KNArticleWidget::fullHeaders()
 
 
 KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
-    : QVBox(parent, name), a_rticle(0), c_oll(0), att(0), h_tmlDone(false)
+    : QTextBrowser(parent, name), a_rticle(0), c_oll(0), att(0), h_tmlDone(false)
 {
-  p_art=new KHTMLPart(this,0,0,0,KHTMLPart::DefaultGUI);
-  p_art->setURLCursor(KCursor::handCursor());
-  
-  connect(p_art->browserExtension(),SIGNAL(openURLRequest(const KURL &,const KParts::URLArgs &)),
-          this,SLOT(slotURLRequest(const KURL &,const KParts::URLArgs &)));
-  connect(p_art, SIGNAL(popupMenu(const QString&, const QPoint&)),
-          this, SLOT(slotPopup(const QString&, const QPoint&)));
-  instances.append(this); 
+  instances.append(this);
 
-  view=p_art->view();
-  view->viewport()->setFocusProxy(this);
+  //custom tags <bodyblock> , <headerblock>
+  QStyleSheetItem *style;
+  style=new QStyleSheetItem(styleSheet(), "bodyblock");
+  style->setDisplayMode(QStyleSheetItem::DisplayBlock);
+  style->setMargin(QStyleSheetItem::MarginAll, 5);
+  style=new QStyleSheetItem(styleSheet(), "headerblock");
+  style->setDisplayMode(QStyleSheetItem::DisplayBlock);
+  style->setMargin(QStyleSheetItem::MarginLeft, 10);
+  style->setMargin(QStyleSheetItem::MarginVertical, 2);
+
   setFocusPolicy(QWidget::WheelFocus);
+
+  //popups
   urlPopup=new QPopupMenu();
   urlPopup->insertItem(i18n("Open URL"), PUP_OPEN);
-  urlPopup->insertItem(i18n("Copy to clipboard"), PUP_COPY);
+  urlPopup->insertItem(i18n("Copy to clipboard"), PUP_COPYURL);
   attPopup=new QPopupMenu();
   attPopup->insertItem(i18n("Open"), PUP_OPEN);
   attPopup->insertItem(i18n("Save"), PUP_SAVE);
 
+  //actions
   actSave = KStdAction::save(this, SLOT(slotSave()), &actionCollection);
   actSave->setEnabled(false);
-  actPrint = KStdAction::print(p_art->browserExtension(), SLOT(print()), &actionCollection);
+  actPrint = KStdAction::print(this, SLOT(slotPrint()), &actionCollection);
   actPrint->setEnabled(false);
-  actCopy = KStdAction::copy(p_art->browserExtension(), SLOT(copy()), &actionCollection);
-  actCopy->setEnabled(false);
-  connect(p_art->browserExtension(),SIGNAL(enableAction(const char *,bool)),this,SLOT(slotEnableAction(const char *,bool)));
-
-  KCharsets *cs = KGlobal::charsets();
-  defaultCharset = cs->name(cs->charsetForLocale());
+  actSelAll =  KStdAction::selectAll(this, SLOT(slotSelectAll()), &actionCollection);
+  actCopy = KStdAction::copy(this, SLOT(copy()), &actionCollection);
 
   applyConfig();
 }
@@ -224,15 +233,15 @@ KNArticleWidget::~KNArticleWidget()
 
 bool KNArticleWidget::scrollingDownPossible()
 {
-  return ((view->contentsY()+view->visibleHeight())<view->contentsHeight());
+  return ((contentsY()+visibleHeight())<contentsHeight());
 }
 
 
 
 void KNArticleWidget::scrollDown()
 {
-  int offs = (view->visibleHeight() < 30) ? view->visibleHeight() : 30;
-  view->scrollBy( 0, view->visibleHeight()-offs);
+  int offs = (visibleHeight() < 30) ? visibleHeight() : 30;
+  scrollBy( 0, visibleHeight()-offs);
 }
 
 
@@ -240,8 +249,8 @@ void KNArticleWidget::scrollDown()
 void KNArticleWidget::focusInEvent(QFocusEvent *e)
 {
   emit focusChanged(e);
-  QVBox::focusInEvent(e);
-//  repaint(false);
+  QTextBrowser::focusInEvent(e);
+
 }
 
 
@@ -249,9 +258,7 @@ void KNArticleWidget::focusInEvent(QFocusEvent *e)
 void KNArticleWidget::focusOutEvent(QFocusEvent *e)
 {
   emit focusChanged(e);
-
-  QVBox::focusOutEvent(e);
-//  repaint(false);
+  QTextBrowser::focusOutEvent(e);
 }
 
 
@@ -260,92 +267,82 @@ void KNArticleWidget::keyPressEvent(QKeyEvent *e)
 {
   if ( !e ) return;
 
-  int offs = (view->visibleHeight() < 30) ? view->visibleHeight() : 30;
+  int offs = (visibleHeight() < 30) ? visibleHeight() : 30;
     
   switch(e->key()) {
     case Key_Up:
-      view->scrollBy( 0, -10 );
+      scrollBy( 0, -10 );
       break;
     case Key_Down:
-      view->scrollBy( 0, 10 );
+      scrollBy( 0, 10 );
       break;      
     case Key_Left:
-      view->scrollBy( -10, 0 );
+      scrollBy( -10, 0 );
       break;
     case Key_Right:
-      view->scrollBy( 10, 0 );
+      scrollBy( 10, 0 );
       break;            
     case Key_Prior:
-      view->scrollBy( 0, -view->visibleHeight()+offs);
+      scrollBy( 0, -visibleHeight()+offs);
       break;
     case Key_Next:
-      view->scrollBy( 0, view->visibleHeight()-offs);
+      scrollBy( 0, visibleHeight()-offs);
       break;
     case Key_Home :
-      view->scrollBy(0,-view->contentsY());
+      scrollBy(0,-contentsY());
       break;
     case Key_End:
-      view->scrollBy(0,view->contentsHeight());
+      scrollBy(0,contentsHeight());
       break;      
     default:
-      QVBox::keyPressEvent(e);
+      QTextBrowser::keyPressEvent(e);
   }
 }
 
 
-void KNArticleWidget::wheelEvent(QWheelEvent *e)
+
+void KNArticleWidget::viewportMousePressEvent(QMouseEvent *e)
 {
-  QApplication::sendEvent( view, e);
+  QString a=QTextBrowser::anchorAt(e->pos());
+  if(!a.isEmpty() && e->button()==RightButton)
+    anchorClicked(a, RightButton, &(e->globalPos()));
+
+  QTextBrowser::viewportMousePressEvent(e);
+
 }
+
+
+
+void KNArticleWidget::viewportMouseReleaseEvent(QMouseEvent *e)
+{
+  QTextBrowser::viewportMouseReleaseEvent(e);
+
+  if(hasSelectedText() && !selectedText().isEmpty()) {
+    copy();
+    actCopy->setEnabled(true);
+  }
+  else
+    actCopy->setEnabled(false);
+}
+
 
 
 void KNArticleWidget::applyConfig()
 {
-  p_art->setStandardFont(htmlFont);
-  
-  QValueList<int> fontsizes;          // taken from kmail
-  p_art->resetFontSizes();
-  int diff = htmlFontSize - p_art->fontSizes()[3];
-  if (p_art->fontSizes()[0]+diff > 0) {
-    for (int i=0;i<7; i++)
-      fontsizes << p_art->fontSizes()[i] + diff;
-    p_art->setFontSizes(fontsizes);
-  }
+  QFont fnt(htmlFont);
+  setFont(fnt);
+
+  QColorGroup pcg(paperColorGroup());
+  pcg.setColor(QColorGroup::Base, bgCol);
+  pcg.setColor(QColorGroup::Text, txtCol);
+  setPaperColorGroup(pcg);
+
+  setLinkColor(lnkCol);
   
   updateContents();
 }
 
 
-
-void KNArticleWidget::slotURLRequest (const KURL &url, const KParts::URLArgs &args)
-{
-  QString type = url.protocol();
-  QString urlText = url.url();
-  int pos;
-  
-  if (type.length()) {             // valid url
-    if(type=="http" || type=="https" || type=="ftp") {      
-      openURL(urlText); 
-    } else {
-      if(type=="mailto")
-        knGlobals.sArtManager->mailToClicked(this);           
-      else
-        if(type=="news") {    
-          pos = urlText.find(':');          
-          QString target=urlText.mid(pos+1);
-          if((pos=target.find("Ref."))!=-1) {
-            pos+=4;
-            target=target.mid(pos, target.length()-pos);
-            knGlobals.fArtManager->referenceClicked(target.toInt(), this,0);
-          } else
-            if((pos=target.find("Att."))!=-1) {
-              if(openAtt) openAttachement(target);
-              else saveAttachement(target);
-            }           
-        }
-    } 
-  }
-}
 
 QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool beautification)
 {
@@ -353,6 +350,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
   QRegExp regExp;
   uint len=line.length();
   int matchLen;
+  bool forceNBSP=false; //use "&nbsp;" for spaces => workaround for a bug in QTextBrowser
           
   for(uint idx=0; idx<len; idx++){
     
@@ -366,16 +364,20 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case '"' :  result+="&quot;"; break;
       case '\t':  result+="&nbsp;&nbsp;"; break;
       
-      case 32 : 
+      case 32 :
         if(line[idx+1].isSpace())  {
           while(line[idx].isSpace()) {
             result+="&nbsp;";
             idx++;
+
           }
           idx--;
+          forceNBSP=true; // force &nbsp; for the rest of this line
         } else
-          if(idx==0)
+          if(idx==0 || forceNBSP) {
             result+="&nbsp;";
+            forceNBSP=true; // force &nbsp; for the rest of this line
+          }
           else result+=' ';
         break;
       
@@ -480,22 +482,24 @@ void KNArticleWidget::openURL(const QString &url)
 
 
 
-void KNArticleWidget::saveAttachement(const QString &id)
+void KNArticleWidget::saveAttachment(int id)
 {
-  int pos = id.findRev('.');
-  if(pos!=-1)
-    KNArticleManager::saveContentToFile(att->at(id.mid(++pos, id.length()-pos).toInt()));
+  KNMimeContent *a=att->at(id);
+
+  if(a)
+    KNArticleManager::saveContentToFile(a);
   else KMessageBox::error(this, i18n("Internal error: Malformed identifier!"));
 }
 
 
 
 
-void KNArticleWidget::openAttachement(const QString &id)
+void KNArticleWidget::openAttachment(int id)
 {
- int pos = id.findRev('.');
- if(pos!=-1)
-   KNArticleManager::openContent(att->at(id.mid(++pos, id.length()-pos).toInt()));
+ KNMimeContent *a=att->at(id);
+
+ if(a)
+   KNArticleManager::openContent(a);
  else KMessageBox::error(this, i18n("Internal error: Malformed identifier!"));
 }
 
@@ -514,39 +518,36 @@ bool KNArticleWidget::inlinePossible(KNMimeContent *c)
 
 void KNArticleWidget::showBlankPage()
 {
-  p_art->begin();
-  p_art->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\"></body></html>")
-                .arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]));
-  p_art->end();
-  
-  a_rticle=0;
-  c_oll=0;
-  delete att;
-  att=0;  
-  h_tmlDone=false;
-  actSave->setEnabled(false);
-  actPrint->setEnabled(false);
-}
 
+  kdDebug(5003) << "KNArticleWidget::showBlankPage()" << endl;
+  setText(QString::null);
 
-
-void KNArticleWidget::showErrorMessage(const QString &s)
-{
-  p_art->begin();
-  p_art->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\">")
-                .arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]));
-  p_art->write(i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>"));
-  p_art->write(toHtmlString(s,true,false));
-  p_art->write("</font></body></html>");
-  p_art->end();
-  
   a_rticle=0;
   c_oll=0;
   delete att;
   att=0;
   h_tmlDone=false;
   actSave->setEnabled(false);
-  actPrint->setEnabled(true);
+  actPrint->setEnabled(false);
+  actCopy->setEnabled(false); //probaly not neede, but who knows ;-)
+}
+
+
+
+void KNArticleWidget::showErrorMessage(const QString &s)
+{
+
+  QString msg="<qt>"+i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>");
+  msg+=toHtmlString(s, false, false)+"</qt>";
+  setText(msg);
+
+  a_rticle=0;
+  c_oll=0;
+  delete att;
+  att=0;
+  h_tmlDone=false;
+  actSave->setEnabled(false);
+  actPrint->setEnabled(false);
 }
 
 
@@ -564,15 +565,17 @@ void KNArticleWidget::setData(KNArticle *a, KNArticleCollection *c)
   a_rticle=a;
   c_oll=c;
   h_tmlDone=false;
-  actSave->setEnabled((a && a->hasContent()));
-  // if(!a || !a->hasContent()) showBlankPage();
+  if(!a) showBlankPage();
 }
 
 
 
 void KNArticleWidget::createHtmlPage()
 {
+  kdDebug(5003) << "KNArticleWidget::createHtmlPage()" << endl;
+
   if(!a_rticle || !a_rticle->hasContent()) {
+    kdDebug("KNArticleWidget::createHtmlPage() : nothing to display - returning");
     showBlankPage();
     return;
   }
@@ -580,95 +583,94 @@ void KNArticleWidget::createHtmlPage()
   actPrint->setEnabled(true);
 
   KNMimeContent *text=a_rticle->textContent();
-  QString charset;
-  bool brokenCharset=false;
+  KNContentCodec codec(text);
+  QString html, hLine;
+  QFont fnt(htmlFont);
 
-  if(text) {
-    text->decodeText();
-    charset = text->ctCharset();
-  } else
-    charset = defaultCharset;
+  codec.matchFont(fnt);
+  setFont(fnt);
 
-  if (!p_art->setCharset(charset,true) || !p_art->setEncoding(charset,true)) {
-      brokenCharset=true;
-      p_art->setCharset(defaultCharset,true);
-      p_art->setCharset(defaultCharset,true);
+
+  html=QString("<qt><table width=\"100%\" cellpadding=0 cellspacing=1><tr><td width=40 bgcolor=\"%1\"></td><td width=\"1%\"><headerblock><table cellpadding=0 cellspacing=0>")
+        .arg(hexColors[HDR_COL]);
+
+
+  if(fullHdrs) {
+    char name[128], *val;
+    int nameLen=0;
+    for( char *h=a_rticle->firstHeaderLine(); h; h=a_rticle->nextHeaderLine()){
+      html+="<tr><td align=right>";
+      val=strchr(h, ':');
+      if(!val ||(val-h)>127) {
+        html+=QString("</td><td width=\"100%\"> %1</td></tr>").arg(toHtmlString(h, false, false));
+      }
+      else {
+        nameLen=val-h;
+        memcpy(name, h, val-h);
+        name[nameLen]='\0';
+        if(*val==' ') val++;
+        html+=QString("<b>%1</b></td><td width=\"100%\">%2</td></tr>").arg(toHtmlString(name, false, false))
+        .arg(toHtmlString(val, false, false));
+      }
+    }
+  }
+  else {
+    for(KNViewHeader *vh=KNViewHeader::first(); vh; vh=KNViewHeader::next()) {
+
+      hLine=a_rticle->headerLine(vh->header().local8Bit().data(), true);
+
+      if(hLine.isEmpty()) continue;
+
+
+      if(vh->hasName()) {
+
+        html += QString("<tr><td align=right>%1%2:%3</td><td width=\"100%\">")
+        .arg(vh->nameOpenTag()).arg(toHtmlString(vh->translatedName(),false,false))
+        .arg(vh->nameCloseTag());
+      }
+      else
+        html+="<tr><td colspan=2>";
+
+      html+=vh->headerOpenTag();
+
+      if(vh->header().lower()=="subject")
+        html+=toHtmlString(a_rticle->subject(), false);
+
+      else if(vh->header().lower()=="from")
+        html+=QString("<a href=\"internal:author\">%1 &lt;%2&gt;</a>")
+                .arg(toHtmlString(a_rticle->fromName(),false))
+                .arg(toHtmlString(a_rticle->fromEmail(), false));
+
+      else if(vh->header().lower()=="date")
+        html+=a_rticle->longTimeString();
+
+      else
+        html+=toHtmlString(hLine, false);
+
+      html += vh->headerCloseTag()+"</td></tr>";
+    }
   }
 
-  QString buffer,hLine;
-  int rowCount=0, pos, refCnt=0;
+  html+=QString("</table></headerblock></td></tr><tr><td colspan=2 bgcolor=\"%1\"><headerblock>")
+    .arg(hexColors[HDR_COL]);
 
-  buffer = QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\">"
-                   "<table width=\"100%\" cols=3 cellpadding=0 style=\"padding-left: 3px\">\n")
-                 .arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]);
-
-  QString header;
-  if(fullHdrs) {  
-    for(char *h=a_rticle->firstHeaderLine(); h; h=a_rticle->nextHeaderLine()) {
-      hLine = toHtmlString(h,false,false);        
-      if ((pos=hLine.find(':'))!=-1)
-        header += QString("<tr><td align=right valign=top width=\"1%\"><b>%1</b></td><td valign=top width=\"99%\">%2</td></tr>\n")
-                          .arg(hLine.left(pos+1)).arg(hLine.mid(pos+1));
-      else
-        header += QString("<tr><td colspan =\"2\" width=\"100%\">%1</td></tr>\n").arg(hLine);
-      ++rowCount;
-    }
-  } else {
-    for(KNViewHeader *vh=KNViewHeader::first(); vh; vh=KNViewHeader::next()) {
-      hLine=a_rticle->headerLine(vh->header().local8Bit().data());
-      
-      if(hLine.isEmpty()) continue;
-      
-      if(vh->hasName()) {
-        header += QString("<tr><td align=right valign=top width=\"1%\">%1%2:%3</td><td valign=top width=\"99%\">")
-                          .arg(vh->nameOpenTag()).arg(toHtmlString(vh->translatedName(),false,false)).arg(vh->nameCloseTag());
-      } else {
-        header += "<tr><td colspan =\"2\" width=\"100%\">";
-      }
-      
-      header += vh->headerOpenTag();
-      
-      if(vh->header().lower()=="subject")
-        header+=toHtmlString(a_rticle->subject(), false);
-      else
-        if(vh->header().lower()=="from")
-          header+=QString("<a href=\"mailto:AUTHOR\">%1 &lt;%2&gt;</a>")
-                  .arg(toHtmlString(a_rticle->fromName(),false))
-                  .arg(toHtmlString(a_rticle->fromEmail(), false));
-      else
-        if(vh->header().lower()=="date")
-          header+=a_rticle->longTimeString();
-      else
-          header+=toHtmlString(hLine, false);
-        
-      header += vh->headerCloseTag()+"</td></tr>\n";
-      ++rowCount;
-    } 
-  } 
-
-  if (!rowCount)
-    header += QString("<tr><td width=40 bgcolor=\"%1\">&nbsp;</td><td colspan=\"2\"></td></tr>")
-                      .arg(hexColors[FG_COL]);
-  else
-    header.insert(4,QString("<td width=40 bgcolor=\"%1\" rowspan=\"%2\">&nbsp;</td>")
-                           .arg(hexColors[FG_COL]).arg(rowCount));
-
-  buffer+=header+QString("<tr><td colspan=3 bgcolor=\"%1\" width=\"100%\">").arg(hexColors[FG_COL]);
-  
-  if(a_rticle->type()==KNArticleBase::ATfetch && a_rticle->hasReferences()) {
-    refCnt=a_rticle->references().count();
-    buffer += QString("<b>%1&nbsp;</b>").arg(i18n("References:"));
+  if(a_rticle->type()==KNArticleBase::ATfetch && a_rticle->references().count()>0) {
+    int refCnt=a_rticle->references().count();
+    html += QString("<b>%1</b>").arg(i18n("References:"));
     for(int refNr=0; refNr < refCnt; refNr++)
-      buffer += QString("<a href=\"news:Ref.%1\">%2</a>&nbsp;").arg(refNr).arg(refNr+1);
-  } else
-    buffer+=i18n("no references");
-  buffer+="</td></tr>\n";
-  
-  if (brokenCharset)
-    buffer+=QString("<tr><td colspan=3 bgcolor=red width=\"100%\"><font color=black>%1</font></td></tr>\n")
-                    .arg(i18n("Unknown charset! Default charset is used instead."));
-    
-  buffer+="</table><br>\n<div style=\"padding-left: 4px\">\n";
+      html += QString(" <a href=\"internal:ref=%1\">%2</a>").arg(refNr).arg(refNr+1);
+  }
+  else html += i18n("no references");
+
+  html+="</headerblock></td></tr>";
+
+
+  if(text && !codec.charsetAvailable())
+      html+=QString("<tr><td colspan=3 bgcolor=red><font color=black>%1</font></td></tr>")
+              .arg(i18n("Unknown charset! Default charset is used instead."));
+
+  html+="</table>";
+
 
   if(!text || a_rticle->isMultipart()) {
     if(att) att->clear();
@@ -680,150 +682,211 @@ void KNArticleWidget::createHtmlPage()
   } else {
     delete att;
     att=0;
-  } 
-  
+  }
+
   if(a_rticle->mimeInfo()->ctSubType()==KNArticleBase::STpartial) {
-    buffer += "<b>This article has the Mime-Type &quot;message/partial&quot;, \
+    html+="<br><bodyblock><b>This article has the Mime-Type &quot;message/partial&quot;, \
              which KNode cannot handle yet.<br>Meanwhile you can save the \
-             article as a text-file and reassemble it by hand.<b></div></body></html>";
-    p_art->begin();
-    p_art->write(buffer);
-    p_art->end();
+             article as a text-file and reassemble it by hand.</b></bodyblock></qt>";
+    setText(html);
     h_tmlDone=true;
     return;
-  } 
-  
-  if(text) {
+  }
+
+  if(text && text->hasContent()) {
+    text->decodeText();
+    html+="<bodyblock>";
     if(text->mimeInfo()->ctSubType()==KNArticleBase::SThtml) {
-      /*text->prepareHtml();
-      for(char* l=text->firstBodyLine(); l; l=text->nextBodyLine()) {
-        //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : HTML-Line = " << l << endl;
-        buffer+=l;
-      }*/
-      buffer+=text->htmlCode();
+
+      html+=codec.asUnicodeString();
+
     }
     else {
-      char firstChar;
+      QChar firstChar;
       int oldLevel=0, newLevel=0;
       unsigned int idx=0;
       bool isSig=false;
+      QString line;
 
-      for(const char* var=text->firstBodyLine(); var; var=text->nextBodyLine()) {
-        if(strcmp(var,"-- ")==0) {
-          isSig=true;
-          if(newLevel>0) {
-            newLevel=0;
-            buffer+="</font>";
-          }
-          if(showSig) {
-            buffer+="<br><hr size=2><br>";
-            continue;
-          }
-          else break;
-        }
-        if(!isSig) {
-          idx=0;
-          oldLevel=newLevel;
-          newLevel=0;
-          firstChar=var[idx];
-          while(idx < strlen(var)) {
-            firstChar=var[idx];
-            if(firstChar==' ') idx++;
-            else if(firstChar=='>') { idx++; newLevel++; }
+      for(bool b=codec.setFirstLine(); b; b=codec.setNextLine()) {
+        line=codec.currentUnicodeLine();
+        if(!line.isNull()) {
+          if(!isSig && line.left(3)=="-- ") {
+            isSig=true;
+            if(newLevel>0) {
+              newLevel=0;
+              html+="</font>";
+            }
+            if(showSig) {
+              html+="<hr size=2>";
+              continue;
+            }
             else break;
           }
-        
-          if(newLevel!=oldLevel) {
-            if(newLevel==0) buffer+="</font>";
-            else {
-              if(newLevel>=3) newLevel=3;
-                buffer+=QString("</font><font color=\"%1\">").arg(hexColors[newLevel+3]);
+          if(!isSig) {
+            idx=0;
+            oldLevel=newLevel;
+            newLevel=0;
+            firstChar=line[idx];
+            while(idx < line.length()) {
+              firstChar=line[idx];
+              if(firstChar.isSpace()) idx++;
+              else if(firstChar.latin1()=='>') { idx++; newLevel++; }
+              else break;
+            }
+
+            if(newLevel!=oldLevel) {
+              if(newLevel==0) html+="</font>";
+              else {
+                if(newLevel>=3) newLevel=3;
+                if(oldLevel>0) html+="</font>";
+                html+=QString("<font color=\"%1\">").arg(hexColors[newLevel]);
+              }
             }
           }
-        }         
-        buffer+=toHtmlString(var)+"<br>";
+          html+=toHtmlString(line)+"<br>";
+	      }
+	      else
+          html+="<br>";
       }
-      if(newLevel>0) buffer+="</font>";
-    } 
+      if(newLevel>0) html+="</font>";
+    }
+
+    html+="</bodyblock>";
   }
+
 
   if(att) {
     int attCnt=0;
     QString path;
     if(!att->isEmpty()) {
-      buffer+="<br><center><table width=\"90%\" border cellpadding=2>";
-      buffer+=QString("<tr><th width=\"20%%\">%1</th><th width=\"20%%\">%2</th><th>%3</th></tr>")
+      html+="<table border width=\"100%\">";
+      html+=QString("<tr><th>%1</th><th>%2</th><th>%3</th></tr>")
                     .arg(i18n("name")).arg(i18n("mime-type")).arg(i18n("description"));
-      
+
       for(KNMimeContent *var=att->first(); var; var=att->next()) {
-        buffer+=QString("<tr><td align=center><a href=\"news:Att.%1\">%2</a></td><td align=center>%3</td><td align=center>%4</td></tr>")
-              .arg(attCnt).arg(var->ctName()).arg(var->ctMimeType()).arg(var->ctDescription());
+        html+=QString("<tr><td align=center><a href=\"internal:att=%1\">%2</a></td><td align=center>%3</td><td align=center>%4</td></tr>")
+              .arg(attCnt).arg(var->ctName()).arg(var->ctMimeType()).arg(toHtmlString(var->ctDescription()));
         if(inlineAtt && inlinePossible(var)) {
-          buffer+="<tr><td colspan=3>";
+          html+="<tr><td colspan=3>";
           if(var->mimeInfo()->ctMediaType()==KNArticleBase::MTimage) {
             path=KNArticleManager::saveContentToTemp(var);
             if(!path.isEmpty()) {
-              buffer+=QString("<a href=\"news:Att.%1\"><img src=\"file:%2\"></a>").arg(attCnt).arg(path);
+              html+=QString("<a href=\"internal:att=%1\"><img src=\"%2\"></a>").arg(attCnt).arg(path);
             }
           }
           else if(var->mimeInfo()->ctMediaType()==KNArticleBase::MTtext) {
             var->decodeText();
+            codec.setSourceContent(var);
             if(var->mimeInfo()->ctSubType()==KNArticleBase::SThtml) {
-              buffer+=var->htmlCode();
+              html+=codec.asUnicodeString();
             }
             else {
-              buffer+="<pre>";
-              for(char *line=var->firstBodyLine(); line; line=var->nextBodyLine()) {
-                buffer+=line;       
-                buffer+="<br>\n";
-              }
-              buffer+="</pre>";
+              html+="<pre>";
+              html+=codec.asUnicodeString();
+              html+="</pre>";
             }
           }
-          buffer+="</td></tr>";     
+          html+="</td></tr>";
         }
         attCnt++;
       }
-      buffer+="</table></center>";
+      html+="</table>";
     }
-  } 
+  }
 
-  buffer += "</div></body></html>";
 
-  p_art->begin();
-  p_art->write(buffer);
-  p_art->end();
+  html+="</qt>";
+  setText(html);
+
 
   h_tmlDone=true;
-} 
+}
 
 
-void KNArticleWidget::slotPopup(const QString &url, const QPoint &p)
+
+void KNArticleWidget::setSource(const QString &s)
 {
-  if(url.isEmpty()) return;
+  if(!s.isEmpty())
+    anchorClicked(s);
+}
 
-  if(url.left(9)=="news:Att.") {
-    switch(attPopup->exec(p)) {
-      case PUP_OPEN:
-        openAttachement(url);
+
+
+void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const QPoint *p)
+{
+  anchorType type=ATunknown;
+  QString target;
+
+  if(a.left(15)=="internal:author") {
+    type=ATauthor;
+  }
+  else if(a.left(13)=="internal:ref=") {
+    target=a.mid(13, a.length()-13);
+    type=ATreference;
+  }
+  else if(a.left(13)=="internal:att=") {
+    target=a.mid(13, a.length()-13);
+    type=ATattachment;
+  }
+  else if(a.left(7).lower()=="http://" ||a.left(6).lower()=="ftp://") {
+    target=a;
+    type=ATurl;
+  }
+
+  if(button==LeftButton) {
+    switch(type) {
+      case ATauthor:
+        kdDebug(5003) << "KNArticleWidget::anchorClicked() : mailto author" << endl;
+        knGlobals.sArtManager->mailToClicked(this);
       break;
-      case PUP_SAVE:
-        saveAttachement(url);
+      case ATreference:
+        kdDebug(5003) << "KNArticleWidget::anchorClicked() : reference " << target.latin1() << endl;
+        knGlobals.fArtManager->referenceClicked(target.toInt(), this, 0);
+      break;
+      case ATattachment:
+        kdDebug(5003) << "KNArticleWidget::anchorClicked() : attachment " << target.latin1() << endl;
+        if(openAtt)
+          openAttachment(target.toInt());
+        else
+          saveAttachment(target.toInt());
+      break;
+      case ATurl:
+        kdDebug(5003) << "KNArticleWidget::anchorClicked() : url " << target.latin1() << endl;;
+        openURL(target);
+      break;
+      default:
+        kdDebug(5003) << "KNArticleWidget::anchorClicked() : unknown" << endl;
       break;
     }
   }
-  else if(url.left(3).upper()=="FTP" || url.left(4).upper()=="HTTP") {
-    switch(urlPopup->exec(p)) {
-      case PUP_OPEN:
-        openURL(url);
-      break;
-      case PUP_COPY:
-        QApplication::clipboard()->setText(url);
-      break;
+  else {
+
+    if(type==ATattachment) {
+      kdDebug(5003) << "KNArticleWidget::anchorClicked() : popup for attachment " << target.latin1() << endl;
+      switch(attPopup->exec(*p)) {
+        case PUP_OPEN:
+          openAttachment(target.toInt());
+        break;
+        case PUP_SAVE:
+          saveAttachment(target.toInt());
+        break;
+      }
+    }
+
+    else if(type==ATurl) {
+      kdDebug(5003) << "KNArticleWidget::anchorClicked() : popup for url " << target.latin1() << endl;
+      switch(urlPopup->exec(*p)) {
+        case PUP_OPEN:
+          openURL(target);
+        break;
+        case PUP_COPY:
+          QApplication::clipboard()->setText(target);
+        break;
+      }
     }
   }
 }
-
 
 
 void KNArticleWidget::slotSave()
@@ -834,12 +897,89 @@ void KNArticleWidget::slotSave()
 
 
 
-void KNArticleWidget::slotEnableAction( const char * name, bool enabled )
+void KNArticleWidget::slotPrint()
 {
-  if (!strcmp(name,"copy"))
-    actCopy->setEnabled(enabled);   
+  QPrinter *printer=new QPrinter();
+
+  if(printer->setup()) {
+
+
+    QPaintDeviceMetrics metrics(printer);
+
+    QPainter p;
+
+    const int margin=50;
+    int yPos=0;
+    QString text;
+    QCString hdr;
+
+    p.begin(printer);
+    p.setFont( QFont(font().family(), 12, QFont::Bold) );
+    QFontMetrics fm=p.fontMetrics();
+
+    KNViewHeader *vh=KNViewHeader::first();
+    while(vh!=0) {
+      hdr=a_rticle->headerLine(vh->header().local8Bit().data(), true);
+
+      if(!hdr.isEmpty()) {
+
+        if(vh->hasName())
+          text=QString("%1: %2").arg(vh->translatedName()).arg(hdr);
+        else
+          text=hdr;
+
+        p.drawText( 10, yPos+margin,  metrics.width(),
+                  fm.lineSpacing(), ExpandTabs | DontClip,
+                  text );
+
+        vh=KNViewHeader::next();
+
+        if(vh)
+          yPos+=fm.lineSpacing();
+      }
+      else
+        vh=KNViewHeader::next();
+    }
+
+    yPos+=fm.lineSpacing()+10;
+
+
+    QPen pen(QColor(0,0,0), 2);
+    p.setPen(pen);
+
+    p.drawLine(10, yPos+margin, metrics.width(), yPos+margin);
+    yPos+=2*fm.lineSpacing();
+
+    p.setFont( QFont(font().family(), 12, QFont::Normal) );
+    fm=p.fontMetrics();
+
+    for(const char *line=a_rticle->firstBodyLine(); line; line=a_rticle->nextBodyLine()) {
+      if(yPos+margin > metrics.height()) {
+        printer->newPage();
+        yPos=0;
+      }
+      text=line;
+      p.drawText( 10, yPos+margin,  metrics.width(),
+                fm.lineSpacing(), ExpandTabs | DontClip,
+                text );
+      yPos+=fm.lineSpacing();
+    }
+
+    p.end();
+  }
+
+  delete printer;
+
 }
 
+
+
+void KNArticleWidget::slotSelectAll()
+{
+  selectAll();
+
+  actCopy->setEnabled(true);
+}
 
 
 //--------------------------------

@@ -354,23 +354,24 @@ void KNComposer::applyChanges()
           a->detach(a_rticle);
   }
 
-
-  if(textChanged()) {
-    text=a_rticle->textContent();
-    if(!text) {
+  text=a_rticle->textContent();
+  if(!text) {
       text=new KNMimeContent();
       text->initContent();
       a_rticle->addContent(text, true);
     }
-    text->mimeInfo()->setCTMediaType(KNArticleBase::MTtext);
-    text->mimeInfo()->setCTSubType(KNArticleBase::STplain);
-    text->mimeInfo()->setCTEncoding();
-    text->clearBody();
-    for(int idx=0; idx < view->edit->numLines(); idx++)
-      text->addBodyLine(view->edit->textLine(idx).latin1());
-    text->mimeInfo()->setDecoded(true);
-  }
 
+  text->mimeInfo()->setCTMediaType(KNArticleBase::MTtext);
+  text->mimeInfo()->setCTSubType(KNArticleBase::STplain);
+
+  text->mimeInfo()->setCTEncoding(); //default encoding for textual contents
+  text->mimeInfo()->setDecoded(true);
+
+  if(textChanged()) {
+    text->clearBody();
+    for(int i=0; i<view->edit->numLines(); i++)
+      text->addBodyLine(view->edit->textLine(i).local8Bit());
+  }
 }
 
 

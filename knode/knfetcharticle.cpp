@@ -102,6 +102,8 @@ void KNFetchArticle::updateListItem()
   i_tem->setText(2, QString("%1").arg(s_core,3));
   
   i_tem->setExpandable(t_hreaded && hasFollowUps());
+
+  i_tem->repaint(); //force repaint
 }
 
 

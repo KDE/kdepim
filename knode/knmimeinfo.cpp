@@ -278,7 +278,7 @@ void KNMimeInfo::setCTParameter(const QCString &name, const QCString &value, boo
   else
     param=name+"="+value;
 
-  pos1=c_ontentType.find(param, 0, false);
+  pos1=c_ontentType.find(name, 0, false);
   if(pos1==-1) {
     c_ontentType+="; "+param;
   }

@@ -17,6 +17,7 @@
 
 #include <qtextstream.h>
 #include <qfileinfo.h>
+#include <qtextcodec.h>
 
 #include <mimelib/string.h>
 #include <mimelib/utility.h>
@@ -25,6 +26,8 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmimemagic.h>
+#include <kcharsets.h>
+
 
 #include "knarticlecollection.h"
 #include "knstringsplitter.h"
@@ -376,43 +379,6 @@ void KNMimeContent::decodeText()
 
 
 
-/*void KNMimeContent::prepareHtml()
-{
-  if(!b_ody) return;
-  QCString tmp;
-  int pos=0;
-    
-  for(char *line=b_ody->first(); line; line=b_ody->next()) {
-    tmp=line;
-    pos=tmp.find("<html>", 0, false);
-    if(pos!=-1) {
-      tmp.remove(pos, pos+6);
-      pos=b_ody->at();
-      b_ody->remove();
-      if(!tmp.isEmpty()) b_ody->insert(pos, tmp);
-      for(int i=0; i<pos; i++)
-        b_ody->remove(b_ody->at(i));
-      break;
-    }
-  }
-  for(char *line=b_ody->next(); line; line=b_ody->next()) { 
-    tmp=line;
-    pos=tmp.find("</html>", 0, false);
-    if(pos!=-1) {
-      tmp.remove(pos, tmp.length()-pos);
-      pos=b_ody->at();
-      b_ody->remove();
-      if(!tmp.isEmpty()) b_ody->insert(pos, tmp);
-      line=b_ody->next();
-      if(line)
-        while(b_ody->remove());
-      break;
-    }
-  }
-}*/
-
-
-
 void KNMimeContent::changeEncoding(int e)
 {
 
@@ -461,7 +427,7 @@ void KNMimeContent::changeEncoding(int e)
 KNMimeContent* KNMimeContent::textContent()
 {
   KNMimeContent *ret=0;
-  
+
   if(mimeInfo()->ctMediaType()==MTtext && mimeInfo()->ctDisposition()==DPinline)
     ret=this;
   else if(ct_List) {
@@ -475,10 +441,9 @@ KNMimeContent* KNMimeContent::textContent()
 
 
 
-QString KNMimeContent::htmlCode()
+QCString KNMimeContent::htmlCode()
 {
-  QString html;
-  QCString tmp;
+  QCString html, tmp;
   int htmlPos1=-1,
       htmlPos2=-1,
       bodyPos1=-1,
@@ -635,8 +600,8 @@ QCString KNMimeContent::ctName()
 QCString KNMimeContent::ctDescription()
 {
   QCString ret;
-  ret=headerLine("Content-Description");
-  //if(ret.isEmpty()) ret=i18n("none").local8Bit();
+  ret=decodeRFC1522String(headerLine("Content-Description"));
+
   return ret;
 }
 
@@ -718,7 +683,7 @@ bool KNMimeContent::removeHeader(const char* name)
       
 
 
-QCString KNMimeContent::headerLine(const char* name)
+QCString KNMimeContent::headerLine(const char* name, bool decode)
 {
   QCString ret;
   int len=strlen(name);//, pos=0;
@@ -741,6 +706,9 @@ QCString KNMimeContent::headerLine(const char* name)
         else break;       
       }
     }
+
+    if(decode && !ret.isEmpty())
+      ret=decodeRFC1522String(ret);
     /*pos=ret.find(' ');
     if(pos!=-1) ret.remove(0, pos+1);
     else ret="";*/
@@ -954,6 +922,175 @@ void KNMimeContent::removeContent(KNMimeContent *c, bool del)
     ct_List=0;
   }
 }
+
+
+
+//=============================================================================================
+
+
+
+KNContentCodec::KNContentCodec(KNMimeContent *c)
+{
+  setSourceContent(c);
+}
+
+
+
+KNContentCodec::~KNContentCodec()
+{
+}
+
+
+
+bool KNContentCodec::setFirstLine()
+{
+  if(s_rc)
+    l_ine=s_rc->firstBodyLine();
+  else
+    l_ine=0;
+
+  return (l_ine!=0);
+}
+
+
+
+bool KNContentCodec::setNextLine()
+{
+  if(s_rc)
+    l_ine=s_rc->nextBodyLine();
+  else
+    l_ine=0;
+
+  return (l_ine!=0);
+}
+
+
+
+QString KNContentCodec::currentUnicodeLine()
+{
+  return(toUnicode(l_ine));
+}
+
+
+QString KNContentCodec::asUnicodeString()
+{
+  QString ret;
+
+  if(s_rc->mimeInfo()->ctSubType()==KNArticleBase::SThtml)
+    ret=toUnicode(s_rc->htmlCode());
+  else
+    for(l_ine=s_rc->firstBodyLine(); l_ine; l_ine=s_rc->nextBodyLine())
+      ret+=toUnicode(l_ine)+"\n";
+
+  return ret;
+}
+
+
+
+void KNContentCodec::matchFont(QFont &f)
+{
+  KCharsets *c=KGlobal::charsets();
+
+  if(c_sAvailable)
+    c->setQFont(f, c_harset);
+  else
+    c->setQFont(f, c->charsetForLocale());
+}
+
+
+
+void KNContentCodec::setSourceContent(KNMimeContent *c)
+{
+  s_rc=c;
+  l_ine=0;
+
+  if(!c) {
+    c_harset=QString::null;
+    c_odec=0;
+    c_sAvailable=false;
+  }
+  else
+    setCharset(QString(c->ctCharset()));
+}
+
+
+
+void KNContentCodec::setCharset(const QString &chset)
+{
+  if(chset==QString::null) {
+    kdDebug(5003) << "void KNContentCodec::setCharset() : charset cannot be set to QString::null !! => returning" << endl;
+    return;
+  }
+
+  c_harset=chset;
+
+  KCharsets *c=KGlobal::charsets();
+
+  if(!(c_sAvailable=c->isAvailable(c_harset)))
+    c_odec=0;
+  else
+    c_odec=c->codecForName(c_harset);
+}
+
+
+
+/*void KNContentCodec::fromUnicodeString(const QString &unicode)
+{
+  KNStringSplitter split;
+  bool splitOK;
+  split.init(fromUnicode(unicode), "\n");
+
+  s_rc->clearBody();
+
+  if(!(splitOK=split.first()))
+    s_rc->addBodyLine(split.source());
+  else
+    while(splitOK) {
+      s_rc->addBodyLine(split.string());
+      splitOK=split.next();
+    }
+}
+
+
+
+void KNContentCodec::appendLine(const QString &l)
+{
+  s_rc->addBodyLine(fromUnicode(l));
+}*/
+
+
+
+QString KNContentCodec::toUnicode(const char *aStr)
+{
+  if(!aStr) {
+    kdDebug(5003) << "KNContentCodec::toUnicode() : aStr==0 this should not happen => returnin QString::null" << endl;
+    return QString::null;
+  }
+
+  QString uc;
+
+  if(c_odec)
+    uc=c_odec->toUnicode(aStr, strlen(aStr));
+  else {
+    kdDebug(5003) << "KNContentCodec::toUnicode() : no codec available!! => Text is not converted" << endl;
+    uc=aStr; //take the text "as is" and hope the best ;-)
+  }
+
+  return uc;
+}
+
+
+/*QCString KNContentCodec::fromUnicode(const QString &uc)
+{
+  if(!c_odec) {
+    kdDebug(5003) << "KNContentCodec::fromUnicode() : no codec available!! => using local charset instead" << endl;
+    KCharsets *c=KGlobal::charsets();
+    setCharset(c->name(c->charsetForLocale()));
+    s_rc->mimeInfo()->setCharsetParameter(QCString(c_harset.latin1()));
+  }
+
+  return c_odec->fromUnicode(uc);
+}*/
 
 
 

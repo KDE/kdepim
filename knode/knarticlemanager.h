@@ -20,11 +20,12 @@
 #define KNARTICLEMANAGER_H
 
 #include <qlist.h>
+#include <kurl.h>
 
 class QFile;
 class QString;
 
-class KURL;
+
 class KTempFile;
 
 class KNListView;

@@ -38,6 +38,7 @@ class KNStringSplitter {
     bool prev();  
       
     QCString& string()              { return dst; }
+    const QCString& source()        { return src; }
           
   private:
     QCString src, dst, sep;

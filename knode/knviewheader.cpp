@@ -264,7 +264,7 @@ void KNViewHeader::setTranslatedName(const QString &s)
 
 void  KNViewHeader::createTags()
 {
-  const char *tokens[] = {  "<font size=+1>","</font>","<b>","</b>",
+  const char *tokens[] = {  "<large>","</large>","<b>","</b>",
                             "<i>","</i>","<u>","</u>" };
   
   for(int i=0; i<4; i++) tags[i]=QString::null;
@@ -279,30 +279,30 @@ void  KNViewHeader::createTags()
   }
 
   if(flags.at(1)) {     // <b>
-    tags[0]+=tokens[2];
-    tags[1]+=tokens[3];
+    tags[0]+=(tokens[2]);
+    tags[1].prepend(tokens[3]);
   }
   if(flags.at(5)) {
     tags[2]+=tokens[2];
-    tags[3]+=tokens[3];
+    tags[3].prepend(tokens[3]);
   } 
   
   if(flags.at(2)) {     // <i>
     tags[0]+=tokens[4];
-    tags[1]+=tokens[5];
+    tags[1].prepend(tokens[5]);
   }
   if(flags.at(6)) {
     tags[2]+=tokens[4];
-    tags[3]+=tokens[5];
+    tags[3].prepend(tokens[5]);
   }
   
   if(flags.at(3)) {    // <u>
     tags[0]+=tokens[6];
-    tags[1]+=tokens[7];
+    tags[1].prepend(tokens[7]);
   }
   if(flags.at(7)) {
     tags[2]+=tokens[6];
-    tags[3]+=tokens[7];
+    tags[3].prepend(tokens[7]);
   }
 }
 

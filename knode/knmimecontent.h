@@ -21,17 +21,18 @@
 
 #include <qlist.h>
 #include <qfile.h>
+#include <qfont.h>
 
 #include "knarticlebase.h"
 #include "knmimeinfo.h"
 #include "knarticlecollection.h"
 
+class QTextCodec;
 class QTextStream;
 class DwString;
 
-
 class KNMimeContent : public KNArticleBase  {
-  
+
   public:
     KNMimeContent();
     virtual ~KNMimeContent();
@@ -45,9 +46,8 @@ class KNMimeContent : public KNArticleBase  {
     void clearHead()                { if(h_ead) h_ead->clear(); }   
     void clearBody()                { if(b_ody) b_ody->clear(); }       
     void decodeText();
-    //void prepareHtml();   
     void changeEncoding(int e);
-    
+
     //get
     
     //info
@@ -63,13 +63,14 @@ class KNMimeContent : public KNArticleBase  {
     QCString ctDescription();
     int contentSize();
     int contentLineCount();
-    
+
+
     //content
     KNMimeContent* textContent();
-    QString htmlCode();
+    QCString htmlCode();
     void attachments(QList<KNMimeContent> *dst, bool incAlternatives=false);
         
-    QCString headerLine(const char* name);        
+    QCString headerLine(const char* name, bool decode=false);
     char* firstHeaderLine()               { if(h_ead) return h_ead->first();
                                             else return 0; }
     char* nextHeaderLine()                { if(h_ead) return h_ead->next();
@@ -85,14 +86,17 @@ class KNMimeContent : public KNArticleBase  {
     
     //set 
     void setData(QStrList *data, bool crfl=true);
-    void addBodyLine(const char* line)  { if(b_ody) b_ody->append(line); }
+
+    //header
     void addHeaderLine(const char *line, bool encode=false);
     void setHeader(const char* name, const QCString &value, bool encode=false);
     void setHeader(headerType t, const QCString &value, bool encode=false);
     bool removeHeader(const char* name);
+
+    //body
     void addContent(KNMimeContent *c, bool prepend=false);
     void removeContent(KNMimeContent *c, bool del=false);
-    
+    void addBodyLine(const char* line)    { if(b_ody) b_ody->append(line); }
     
       
             
@@ -101,6 +105,45 @@ class KNMimeContent : public KNArticleBase  {
     QList<KNMimeContent>  *ct_List;
     KNMimeInfo *mInfo;
         
+};
+
+
+
+//=============================================================================================
+
+
+
+class KNContentCodec {
+
+  public:
+    KNContentCodec(KNMimeContent *c=0);
+    ~KNContentCodec();
+
+    //get
+    bool setFirstLine();
+    bool setNextLine();
+    QString currentUnicodeLine();
+    QString asUnicodeString();
+
+    void matchFont(QFont &f);
+    bool charsetAvailable()     { return c_sAvailable; }
+    bool valid()                { return (!c_harset.isNull()); }
+
+    //set
+    void setSourceContent(KNMimeContent *c);
+    void setCharset(const QString &chset);
+    //void fromUnicodeString(const QString &unicode);
+    //void appendLine(const QString &l);
+
+
+  protected:
+    QString toUnicode(const char *aStr);
+    //QCString fromUnicode(const QString &uc);
+    KNMimeContent *s_rc;
+    QTextCodec *c_odec;
+    QString c_harset;
+    bool c_sAvailable;
+    char *l_ine;
 };
 
 

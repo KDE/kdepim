@@ -67,7 +67,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
   createGUI("knreaderui.rc",false);
-  guiFactory()->addClient(artW->part());
+  //guiFactory()->addClient(artW->part());
   conserveMemory();
 
   restoreWindowSize("reader", this, QSize(500,400));
@@ -145,9 +145,9 @@ void KNArticleWindow::slotConfToolbar()
 {
   KEditToolbar *dlg = new KEditToolbar(guiFactory(),this);
   if (dlg->exec()) {
-    guiFactory()->removeClient(artW->part());
+    //guiFactory()->removeClient(artW->part());
     createGUI("knreaderui.rc",false);
-    guiFactory()->addClient(artW->part());
+    //guiFactory()->addClient(artW->part());
     conserveMemory();
   }
   delete dlg;

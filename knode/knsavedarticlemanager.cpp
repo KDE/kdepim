@@ -181,6 +181,7 @@ void KNSavedArticleManager::showHdrs()
 void KNSavedArticleManager::setCurrentArticle(KNSavedArticle *a)
 {
   c_urrentArticle=a;
+
   if(a) {
     mainArtWidget->setData(a, f_older);
     if(a->hasContent()) showArticle(a);

@@ -19,11 +19,14 @@
 #ifndef KNARTICLEWIDGET_H
 #define KNARTICLEWIDGET_H
 
-#include <qvbox.h>
+//bad hack, but we need access to QTextBrowser::anchorAt() !!
+#define private protected
+#include <qtextbrowser.h>
+#undef private
+
 #include <qlist.h>
 
 #include <kaction.h>
-#include <kparts/browserextension.h>
 
 class QPopupMenu;
 class QScrollView;
@@ -34,12 +37,13 @@ class KNArticle;
 class KNArticleCollection;
 class KNMimeContent;
 
-class KNArticleWidget : public QVBox  {
+class KNArticleWidget : public QTextBrowser  {
 
   Q_OBJECT
 
   public:
     enum browserType { BTkonqueror=0 , BTnetscape=1 };
+    enum anchorType { ATurl, ATauthor, ATreference, ATattachment, ATunknown };
 
     KNArticleWidget(QWidget *parent=0, const char *name=0 );
     ~KNArticleWidget();
@@ -72,41 +76,43 @@ class KNArticleWidget : public QVBox  {
 
     KNArticle* article()              { return a_rticle; }
     KNArticleCollection* collection() { return c_oll; }
-    KHTMLPart* part()                 { return p_art; }
+
 
   protected:
     void focusInEvent(QFocusEvent *e);
     void focusOutEvent(QFocusEvent *e);
     void keyPressEvent(QKeyEvent *e);
-    void wheelEvent(QWheelEvent *e);
+    void viewportMousePressEvent(QMouseEvent *e); // RMB for links
+    void viewportMouseReleaseEvent(QMouseEvent *e); // automatic copy
     QString toHtmlString(const QString &line, bool parseURLs=true, bool beautification=true);
     void openURL(const QString &url);
-    void saveAttachement(const QString &id);
-    void openAttachement(const QString &id);
+    void saveAttachment(int id);
+    void openAttachment(int id);
     bool inlinePossible(KNMimeContent *c);
+    void setSource(const QString &s); // reimplemented from QTextBrowser
+    void anchorClicked(const QString &a, ButtonState button=LeftButton, const QPoint *p=0);
+
     KNArticle *a_rticle;
     KNArticleCollection *c_oll;
     QList<KNMimeContent> *att;
     bool h_tmlDone;
+
     QPopupMenu *urlPopup, *attPopup;
-    KHTMLPart *p_art;
-    QScrollView *view;
-    KAction *actSave, *actPrint, *actCopy;
+    KAction *actSave, *actPrint, *actSelAll, *actCopy;
     KActionCollection actionCollection;
-    QString defaultCharset;
 
     static bool showSig, fullHdrs, inlineAtt, openAtt, altAsAtt;
-    static QString hexColors[7];
-    static QString htmlFont;
-    static int htmlFontSize;
+    static QString hexColors[4];
+    static QColor txtCol, bgCol, lnkCol;
+    static QFont htmlFont;
     static browserType browser;
     static QList<KNArticleWidget> instances;
 
+
   protected slots:
-    void slotURLRequest (const KURL &url, const KParts::URLArgs &args);
-    void slotPopup(const QString &url, const QPoint &p);
     void slotSave();
-    void slotEnableAction(const char *, bool);
+    void slotPrint();
+    void slotSelectAll(); //needed to enable the copy-action
 
   signals:
     void focusChanged(QFocusEvent*);
