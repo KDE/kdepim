@@ -490,7 +490,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, QStrList *hdrfmt, KNProtocolClien
   updateThreadInfo();
 
   // save the new headers
-  int count = saveStaticData(added_cnt);
+  saveStaticData(added_cnt);
   saveDynamicData(added_cnt);
 
 #ifndef NDEBUG
