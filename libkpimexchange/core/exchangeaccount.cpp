@@ -263,7 +263,7 @@ QString ExchangeAccount::tryMailbox( const QString& _url, const QString& user, c
   url.setPass( password );
 
   QString tmpFile;
-  if ( !KIO::NetAccess::download( url, tmpFile ) )
+  if ( !KIO::NetAccess::download( url, tmpFile, 0L ) )
   {
     kdWarning() << "Trying to find mailbox failed: not able to download " << url.prettyURL() << endl;
     return QString::null;
