@@ -137,12 +137,15 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   //newsgroups
   KMime::Headers::FollowUpTo *fup2=a->followUpTo(false);
   if(fup2 && !fup2->isEmpty()) {
-    if(fup2->as7BitString(false).upper()=="POSTER") { //Followup-To: poster
-      if (post)         // warn the user
-        KMessageBox::information(knGlobals.topWidget,i18n("The author has requested a reply by email instead\nof a followup to the newsgroup. (Followup-To: poster)"),
-                                 QString::null,"followupToPosterWarning");
-      art->setDoPost(false);
-      art->setDoMail(true);
+    if( ( fup2->as7BitString(false).upper()=="POSTER" ) ) { //Followup-To: poster
+      if( post && // user wanted to reply by public posting?
+          // ask the user if she wants to ignore this F'up-To: poster
+          ( KMessageBox::Yes != KMessageBox::questionYesNo(knGlobals.topWidget,
+                i18n("The author has requested a reply by email instead\nof a followup to the newsgroup. (Followup-To: poster)\nDo you want to reply in public anyway?")) ))
+      {
+        art->setDoPost(false);
+        art->setDoMail(true);
+      }
       art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false));
     }
     else
