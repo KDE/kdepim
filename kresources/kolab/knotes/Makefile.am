@@ -19,8 +19,5 @@ knotes_kolab_la_SOURCES = resourcekolab_plugin.cpp
 knotes_kolab_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN) -no-undefined
 knotes_kolab_la_LIBADD = libknoteskolab.la
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/knotes_kolab.pot
-
 servicedir = $(kde_servicesdir)/kresources/knotes
 service_DATA = kolabresource.desktop

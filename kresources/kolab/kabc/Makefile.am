@@ -19,8 +19,5 @@ kabc_kolab_la_SOURCES = resourcekolab_plugin.cpp
 kabc_kolab_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN) -no-undefined
 kabc_kolab_la_LIBADD = libkabckolab.la
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kabc_kolab.pot
-
 servicedir = $(kde_servicesdir)/kresources/kabc
 service_DATA = kolab.desktop
