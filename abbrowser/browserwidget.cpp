@@ -30,6 +30,9 @@
 #include <qcheckbox.h>
 #include <qradiobutton.h>
 
+#include <qdragobject.h>
+#include <qevent.h>
+
 #include <klocale.h>
 #include <kconfig.h>
 #include <kapp.h>
@@ -695,7 +698,7 @@ void PabWidget::properties()
   itemSelected( listView->currentItem() );
 }
 
-void PabWidget::sendMail()
+QString PabWidget::selectedEmails()
 {
   bool first = true;
   QString emailAddrs;
@@ -730,8 +733,13 @@ void PabWidget::sendMail()
       first = false;
 
     emailAddrs += sFileAs + "<" + email + ">";
-  }    
+  }      
+  return emailAddrs;
+}
 
+void PabWidget::sendMail()
+{
+  QString emailAddrs = selectedEmails();
   kapp->invokeMailer( emailAddrs, "" );
 }
 
@@ -1110,3 +1118,23 @@ bool PabListView::tooltips()
 {
   return tooltips_;
 }
+
+void PabListView::contentsMousePressEvent(QMouseEvent* e)
+{
+  presspos = e->pos();
+  QListView::contentsMousePressEvent(e);
+}
+
+
+  // To initiate a drag operation
+void PabListView::contentsMouseMoveEvent( QMouseEvent *e )
+{
+  if ((e->state() & LeftButton) && (e->pos() - presspos).manhattanLength() > 4 ) {
+    QDragObject *drobj;
+    drobj = new QTextDrag( pabWidget->selectedEmails(), this );
+    drobj->dragCopy();
+  }
+  else
+    QListView::contentsMouseMoveEvent( e );
+}
+

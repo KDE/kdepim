@@ -87,6 +87,8 @@ public:
 protected:
   virtual void paintEmptyArea( QPainter * p, const QRect & rect );
   virtual void backgroundColorChange( const QColor &color );
+  virtual void contentsMousePressEvent(QMouseEvent*);
+  void contentsMouseMoveEvent( QMouseEvent *e );
 
 public slots:
   void incSearch( const QString &value );
@@ -111,6 +113,7 @@ private:
   bool autUnderline;
   QColor cUnderline;
   bool tooltips_;
+  QPoint presspos;
 };
 
 class PabWidget : public QWidget
@@ -125,6 +128,7 @@ public:
   virtual ContactEntryList* contactEntryList();
   virtual PabListView* pabListView();
   virtual QStringList *fields();
+  virtual QString selectedEmails();
 
 public slots:
   virtual void showSelectNameDialog();
