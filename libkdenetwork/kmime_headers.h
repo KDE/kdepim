@@ -198,14 +198,14 @@ namespace Generics {
     Subclasses need only re-implement @p const @p char* @p type().
 
     A macro to automate this is named
-    <pre>
+\code
     MK_TRIVIAL_GUnstructured_SUBCLASS(classname,headername);
-    </pre>
+\endcode
 
-    The @ref ContentDescription class then reads:
-    <pre>
+    The ContentDescription class then reads:
+\code
     MK_TRIVIAL_GUnstructured_SUBCLASS(ContentDescription,Content-Description);
-    </pre>
+\endcode
 */
 
   // known issues:
@@ -240,7 +240,7 @@ private:
     contains parsing methods for all basic token types found in
     rfc2822.
 
-    @sect Parsing
+    @section Parsing
 
     At the basic level, there are tokens & tspecials (rfc2045),
     atoms & specials, quoted-strings, domain-literals (all rfc822) and
@@ -560,7 +560,7 @@ mk_trivial_subclass_with_name(ContentDisposition,Content-Disposition,
 
 /** Represents an arbitrary header, that can contain
     any header-field.
-    Adds a type over @ref GUnstructured.
+    Adds a type over GUnstructured.
     @see GUnstructured
 */
 class Generic : public Generics::GUnstructured {
