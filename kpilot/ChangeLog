@@ -1,5 +1,6 @@
 TODO LIST (Ignore the file TODO)
 
+* GJJ: Hunt down and kill printfs. Hunt down bad i18n.
 * GJJ: move the file install widget to an iconview.
 * GJJ: Add a menuitem "Configure conduits" to the kpilotDaemon RMB Menu
 * GJJ: Show the sync log as a KPassivePopup
@@ -26,6 +27,50 @@ TODO LIST (Ignore the file TODO)
 * GJJ: Make an application that just has a LogWidget and KPilot's dcop
   interface (and registration!) so that you can follow the daemon's log
   output without starting KPilot at all.
+
+KPilot Developer's notes for February 14th, 2003
+================================================  
+
+2003-2-10  Adriaan de Groot
+* popmail-conduit.cc [HEAD] Did some actual TODO_I18N work,
+  removed printfs from the message construction in the conduit.
+  Added a GJJ for it.
+* pilotDaemon.cc has lots of Kroupware additions in HEAD and
+  also changes "unix" -> "KDE" in the about box.
+* conduitConfigDialog.cc has lots of new code for changing the
+  conduit list to a list of checkboxes.
+* kpilotConfigDialog_base has been edited in HEAD for new Kroupware
+  options. Same with kpilotConfigDialog.cc, kpilotConfig.{h,cc}.
+* conduitSetup.cc may be deprecated, but there was a minor difference
+  between files. HEAD <- BRANCH (ie. HEAD gets BRANCH version).
+* hotSync.cc variable names changed, BRANCH <- HEAD.
+* interactiveSync.cc typos and latin1() fixes. BRANCH <-> HEAD.
+* logWidgetDCOP.h still had Log: tag in it,. removed [HEAD,BRANCH]
+* abbrowser conduit has new custom field code. Did BRANCH <- HEAD
+  for the includes, though, just to normalize 'em. But, to quote
+  TMBG, "Who keeps moving my #includes?" The only unmerged stuff 
+  that _could_ be merged is minor code beautification in
+  @@ -1496,22 +1563,26 @@
+* Should re-add a Pilot*Database constructor that takes a const char *
+  for those places that already have a dbName. 
+* vcalconduit has startOffset() support for alarms.
+  
+  
+2003-2-9  Adriaan de Groot (merge status)
+* Merging. I hate merging. We _definitely_ need a better process for
+  this, like merging every fix into HEAD as soon as it's done. That
+  would save a lot of effort, I think. And I'm going to check out
+  KPilot with -kk for merging efforts from now on. Here's the list
+  of features I found in HEAD that are not in BRANCH:
+  - KPilotDeviceLink::installFiles() extra arguments.
+  - KPilotDeviceLink::findDatabase() extra arguments.
+  - PilotDatabase::createDatabase() and deleteDatabase() added.
+  - Pilot*Database::readNextModifiedRec() extra arguments.
+  - Pilot*Database::deleteRecord() added.
+  - PilotLocalDatabase::PilotLocalDatabase extra arguments.
+  - FileInstallWidget lots of changes. FileInstaller as well. [MERGED]
+* Managed to revert, prevert, and advert syncStack.{h,cc} all in
+  one go. I think I have it back to normal now.
 
 KPilot Developer's notes for February 7th, 2003
 ===============================================  
