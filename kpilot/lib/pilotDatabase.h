@@ -29,9 +29,26 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <time.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <qobject.h>
+
+// Handle all time.h variations properly.
+// Required because pi-macros.h sometimes forgets it.
+//
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
+#endif
+
 #include <pi-macros.h>
 
 #include "pilotRecord.h"
@@ -107,6 +124,9 @@ private:
 
 
 // $Log$
+// Revision 1.3  2002/01/08 01:25:48  cschumac
+// Compile fixes.
+//
 // Revision 1.2  2001/10/17 08:46:08  adridg
 // Minor cleanups
 //

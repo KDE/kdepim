@@ -30,17 +30,15 @@
 ** Bug reports and questions can be sent to groot@kde.org
 */
 
-#include "options.h"
-
 static const char *popmail_conduit_id=
 	"$Id$";
+
+#include "options.h"
+#include <config.h>
 
 #include <qsocket.h>
 #include <qregexp.h>
 
-#ifndef HAVE_GETDOMAINNAME
-#include <sys/utsname.h>
-#endif
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -70,6 +68,7 @@ static const char *popmail_conduit_id=
 #include "passworddialog.h"
 #include "popmail-factory.h"
 #include "popmail-conduit.h"
+
 
 extern "C" {
 extern time_t parsedate(char * p);
@@ -1975,6 +1974,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.32  2002/01/08 01:25:03  cschumac
+// Compile fixes.
+//
 // Revision 1.31  2001/12/31 09:24:45  adridg
 // Cleanup, various fixes for runtime loading
 //

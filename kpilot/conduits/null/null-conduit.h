@@ -50,6 +50,9 @@ protected:
 };
 
 // $Log$
+// Revision 1.10  2001/12/18 13:11:55  cschumac
+// Make it compile.
+//
 // Revision 1.9  2001/12/18 07:43:25  adridg
 // Actually do a (null) sync
 //
@@ -66,3 +69,4 @@ protected:
 // Added attach-to-database feature
 //
 #endif
+
