@@ -559,7 +559,7 @@ void AddresseeEditorWidget::save()
 
   mAddressee.setRole( mRoleEdit->text() );
   mAddressee.setOrganization( mOrgEdit->text() );
-  mAddressee.setUrl( KURL( mURLEdit->text() ) );
+  mAddressee.setUrl( KURL( mURLEdit->text().stripWhiteSpace() ) );
   mAddressee.setNote( mNoteEdit->text() );
   if ( mBirthdayPicker->inputIsValid() )
     mAddressee.setBirthday( QDateTime( mBirthdayPicker->date() ) );
