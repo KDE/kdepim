@@ -11,7 +11,7 @@ static const char *description =
 
 static KCmdLineOptions options[] =
 {
-  { 0, 0, 0 }
+  KCmdLineLastOption
   // INSERT YOUR COMMANDLINE OPTIONS HERE
 };
 

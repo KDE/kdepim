@@ -19,13 +19,13 @@ static const char *description =
 
 static const char *version = "0.3";
 
-static KCmdLineOptions options[] = 
+static KCmdLineOptions options[] =
 {
    { "terminal", I18N_NOOP("Show terminal window."), 0 },
    { "mobilegui", I18N_NOOP("Show mobile GUI."), 0 },
    { "nogui", I18N_NOOP("Don't show GUI."), 0 },
    { "+[profile]", I18N_NOOP("Filename of command profile file."), 0 },
-   { 0, 0, 0 } // End of options.
+   KCmdLineLastOption // End of options.
 };
 
 void initModem(Modem *modem)
@@ -78,7 +78,7 @@ int main(int argc, char **argv)
 
   Modem *modem = new Modem;
   CommandScheduler *scheduler = new CommandScheduler(modem);
-  
+
   // see if we are starting with session management
   if (app.isRestored()) {
     // TODO: do session management
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
   {
     // no session.. just start up normally
     Kandy *k = new Kandy(scheduler);
-    
+
     MobileMain *m = new MobileMain(scheduler);
     if (!args->isSet("gui")) {
     } else {
@@ -100,15 +100,15 @@ int main(int argc, char **argv)
         m->show();
       }
     }
-    
+
     if (args->count() == 1) {
       k->load(QFile::decodeName(args->arg(0)));
     } else if (args->count() > 1) {
       args->usage();
     }
- 
+
     args->clear();
- 
+
     QObject::connect(k,SIGNAL(showMobileWin()),m,SLOT(show()));
     QObject::connect(m,SIGNAL(showTerminalWin()),k,SLOT(show()));
     QObject::connect(m,SIGNAL(showPreferencesWin()),

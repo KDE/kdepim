@@ -32,7 +32,7 @@ static const char *version = "0.1";
 static KCmdLineOptions options[] =
 {
     { "minimized", I18N_NOOP( "Minimize on startup to system tray." ), 0 },
-    { 0, 0, 0 }
+    KCmdLineLastOption
 };
 
 int main(int argc, char **argv)

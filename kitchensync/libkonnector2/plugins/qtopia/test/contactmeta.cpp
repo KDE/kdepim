@@ -27,7 +27,7 @@ static KCmdLineOptions options[] =
     { "con <path>" , I18N_NOOP("Path to the addressbook.xml"),  0},
     { "out <path>" , I18N_NOOP("Path to where this app should write") ,  0 },
     { "c", I18N_NOOP("Only dump data"), 0 },
-    { 0, 0, 0 }
+    KCmdLineLastOption
   // INSERT YOUR COMMANDLINE OPTIONS HERE
 };
 

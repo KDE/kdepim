@@ -8,7 +8,7 @@
 
 static KCmdLineOptions options[] =
 {
-  { 0, 0, 0 }
+  KCmdLineLastOption
   // INSERT YOUR COMMANDLINE OPTIONS HERE
 };
 
@@ -25,7 +25,7 @@ int main(int argc, char *argv[] )
   KSharedFileDevice file;
   file.setName("kuick,crash" );
   qWarning("open" );
-  
+
   if( file.open(IO_WriteOnly ) )
   {
   qWarning("opened" );

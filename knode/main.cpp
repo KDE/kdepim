@@ -26,7 +26,7 @@
 static KCmdLineOptions knoptions[] =
 {
   { "+[url]", I18N_NOOP("A 'news://server/group' URL."), 0 },
-  { 0, 0, 0 }
+  KCmdLineLastOption
 };
 
 
