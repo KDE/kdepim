@@ -4,6 +4,7 @@
 #include "ktimewidget.h"
 #include <qvalidator.h>
 #include <kdebug.h>
+#include <stdlib.h>
 
 enum ValidatorType { HOUR, MINUTE };
 
