@@ -10,6 +10,15 @@ Lots of things have changed in the class hierarchy.
 
 * The getConfig() change was very poorly done, sorry about that.
 
+* Ditched all the #ifdef KDE2 stuff and dropped the KDE1 backport.
+
+* Added a .desktop file for the NULL conduit (with some translations
+  of my own)
+
+* Added Qt2 layout code to the address and memo widgets so that they 
+  become easier to i18n() (ie. they display properly when the string
+  lengths change).
+
 Developer's notes for november 9th 2000
 =======================================
 

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+Name=KPilot NULL Conduit
+Name[fr]=Conduite inutile de KPilot
+Name[nl]=Leeg KPilot Kanaal
+Implemented=file
+ServiceTypes=KPilotConduit
+Exec=null_conduit
