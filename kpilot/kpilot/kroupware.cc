@@ -66,7 +66,8 @@ KroupwareSync::KroupwareSync(bool pre,int parts,KPilotDeviceLink *p) :
 	{
 		postSync();
 	}
-	delayDone();
+	// delayDone();
+	emit syncDone(this);
 	return true;
 }
 
@@ -77,7 +78,7 @@ void KroupwareSync::cleanupConfig()
   c.setGroup("todoOptions");
   if ( c.hasKey( "CalFileBackup") ) {
     QString fn = c.readEntry( "CalFileBackup" , QString::null );
-    if ( fn != "empty" ) {
+    if ( fn != CSL1("empty") ) {
       c.writeEntry( "CalFile" ,fn );
       c.writeEntry( "CalFileBackup" , "empty" );
     } 
@@ -85,7 +86,7 @@ void KroupwareSync::cleanupConfig()
   c.setGroup("vcalOptions");
   if ( c.hasKey( "CalFileBackup") ) {
     QString fn = c.readEntry( "CalFileBackup" , QString::null );
-    if ( fn != "empty" ) {
+    if ( fn != CSL1("empty") ) {
       c.writeEntry( "CalFile" ,fn );
       c.writeEntry( "CalFileBackup" , "empty" );
     } 
@@ -95,6 +96,11 @@ void KroupwareSync::cleanupConfig()
   c.sync();
 }
 
+// For the log messages, I've added TODO_I18N to the
+// ones I consider relevant for the user. The rest is
+// really debug info, and shouldn't go to the normal
+// sync log for the user.
+//
 void KroupwareSync::start_syncCal_TodosWithKMail( bool cal, bool todos )
 {
   if ( !cal && ! todos )
@@ -113,39 +119,39 @@ void KroupwareSync::start_syncCal_TodosWithKMail( bool cal, bool todos )
 		     data,     
 		     reply_type,
 		     reply_data)) {
-    logMessage("Calling KMail over DCOP failed!" );
-    logMessage("Not syncing Calendars with KMail");
-    logMessage("Not syncing Todos with KMail");
+    logMessage( CSL1("Calling KMail over DCOP failed!" ));
+    logMessage(CSL1("Not syncing Calendars with KMail"));
+    logMessage(CSL1("Not syncing Todos with KMail"));
   }
   else {
-    logMessage("Calling Cal/Todo over DCOP succeeded");
+    logMessage(CSL1("Calling Cal/Todo over DCOP succeeded"));
     // now prepare for syncing
     _syncWithKMail = true;
     if ( todos ) {
-      logMessage( "Syncing todos with KMail" );
+      logMessage( TODO_I18N("Syncing todos with KMail" ));
       c.setGroup("todoOptions");
       QString fn = c.readEntry( "CalFile" , QString::null );
       c.writeEntry( "CalFileBackup" ,fn );
       c.writeEntry( "CalFile" ,filename );
     }
     else
-      logMessage( "Not syncing todos with KMail" );
+      logMessage( CSL1("Not syncing todos with KMail" ));
     if ( cal ) {
-      logMessage( "Syncing calendar with KMail" );
+      logMessage( TODO_I18N("Syncing calendar with KMail" ));
       c.setGroup("vcalOptions");
       QString fn = c.readEntry( "CalFile" , QString::null );
       c.writeEntry( "CalFileBackup" ,fn );
       c.writeEntry( "CalFile" ,filename );
     }
     else
-      logMessage( "Not syncing calendar with KMail" );
+      logMessage( CSL1("Not syncing calendar with KMail" ));
   }
   c.sync();
 }
 
 void KroupwareSync::start_syncAddWithKMail()
 {
-  logMessage( "Syncing Addresses with KMail" );
+  logMessage( CSL1("Syncing Addresses with KMail" ));
   DCOPClient *client = kapp->dcopClient();
   KTempFile  tempfile;
   QString filename = tempfile.name();
@@ -161,12 +167,12 @@ void KroupwareSync::start_syncAddWithKMail()
 		     data,     
 		     reply_type,
 		     reply_data)) {
-    logMessage("Calling KMail over DCOP failed!" );
-    logMessage("Not syncing Addresses with KMail");
+    logMessage(CSL1("Calling KMail over DCOP failed!" ));
+    logMessage(CSL1("Not syncing Addresses with KMail"));
   }
   else {
     KPilotConfigSettings &c = KPilotConfig::getConfig();
-    logMessage("Calling addresses over DCOP succeeded");
+    logMessage(CSL1("Calling addresses over DCOP succeeded"));
     c.setGroup("Abbrowser-conduit");
     c.writeEntry( "KMailTempFile" , filename );
     c.sync();
@@ -174,25 +180,25 @@ void KroupwareSync::start_syncAddWithKMail()
 }
 void KroupwareSync::start_syncNotesWithKMail()
 {
-  logMessage( "Syncing Notes with Mail" );
-  logMessage( "Syncing Notes-sorry not implemented" );
+  logMessage( TODO_I18N("Syncing Notes with Mail" ));
+  logMessage( CSL1("Syncing Notes-sorry not implemented" ));
 }
 
 void KroupwareSync::end_syncCal_TodosWithKMail( bool cal, bool todos)
 {
  if ( !cal && ! todos )
     return;
- QString filename = "";
+ QString filename;
  KPilotConfigSettings &c = KPilotConfig::getConfig();
  if ( todos ) {
-   logMessage( "Rewriting Todos to KMail..." );
+   logMessage( TODO_I18N("Rewriting Todos to KMail..." ));
    c.setGroup("todoOptions");
    filename = c.readEntry( "CalFile" , QString::null );
    c.writeEntry( "CalFile" ,c.readEntry( "CalFileBackup", QString::null ) );
    c.writeEntry( "CalFileBackup" ,"empty");
  }
  if ( cal ) {
-   logMessage( "Rewriting Calendar to KMail" );
+   logMessage( TODO_I18N("Rewriting Calendar to KMail" ));
    c.setGroup("vcalOptions");
    filename = c.readEntry( "CalFile" , QString::null );
    QString tf = c.readEntry( "CalFileBackup", QString::null ) ;
@@ -200,8 +206,8 @@ void KroupwareSync::end_syncCal_TodosWithKMail( bool cal, bool todos)
    c.writeEntry( "CalFileBackup" ,"empty");
  }
  c.sync(); 
- if ( filename != "" ) {
-   logMessage("Try to call KMail via DCOP to finish sync...");
+ if ( !filename.isEmpty() ) {
+   logMessage(CSL1("Try to call KMail via DCOP to finish sync..."));
    // try DCOP connection to KMail
    DCOPClient *client = kapp->dcopClient();
    QByteArray  data, reply_data;  
@@ -214,20 +220,20 @@ void KroupwareSync::end_syncCal_TodosWithKMail( bool cal, bool todos)
 		      data,     
 		      reply_type,
 		      reply_data)) {
-     logMessage("Calling KMail over DCOP failed!" );
-     logMessage("Sync is not complete");
-     logMessage("Data from Palm stored in file:");
+     logMessage( CSL1("Calling KMail over DCOP failed!" ));
+     logMessage( CSL1("Sync is not complete"));
+     logMessage( CSL1("Data from Palm stored in file:"));
      logMessage(filename);
    } else {
-     logMessage("Calling over DCOP succeeded");
-     logMessage("Sync to KMail has finished successfully");
+     logMessage(CSL1("Calling over DCOP succeeded"));
+     logMessage(CSL1("Sync to KMail has finished successfully"));
    }
    QFile::remove( filename );
  }
 }
 void KroupwareSync::end_syncAddWithKMail()
 {
-  logMessage( "Syncing KMail with Addresses " );
+  logMessage( TODO_I18N("Syncing KMail with Addresses " ));
   DCOPClient *client = kapp->dcopClient();
   KPilotConfigSettings &c = KPilotConfig::getConfig();
   c.setGroup("Abbrowser-conduit");
@@ -245,18 +251,18 @@ void KroupwareSync::end_syncAddWithKMail()
 		     data,     
 		     reply_type,
 		     reply_data)) {
-    logMessage("Calling KMail over DCOP failed!" );
-    logMessage("Not syncing Addresses with KMail");
+    logMessage(CSL1("Calling KMail over DCOP failed!" ));
+    logMessage(CSL1("Not syncing Addresses with KMail"));
   }
   else {  
-    logMessage("Calling  store addresses over DCOP succeeded");
+    logMessage(CSL1("Calling  store addresses over DCOP succeeded"));
   }
   //QFile::remove( filename );
 }
 void KroupwareSync::end_syncNotesWithKMail()
 {
-  logMessage( "Syncing KMail with Notes" );
-  logMessage( "Syncing Notes-sorry not implemented" );
+  logMessage( TODO_I18N("Syncing KMail with Notes" ));
+  logMessage( CSL1("Syncing Notes-sorry not implemented" ));
 }
 
 
@@ -269,7 +275,7 @@ void KroupwareSync::end_syncNotesWithKMail()
 	QString mess;
 	int pid;
 	
-	return KApplication::startServiceByDesktopName("kmail",
+	return KApplication::startServiceByDesktopName(CSL1("kmail"),
 						      QString::null, 
 						      error, 
 						      &kmdcop, 
