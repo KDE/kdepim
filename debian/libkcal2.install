@@ -2,3 +2,16 @@ debian/tmp/usr/lib/libkcal.la
 debian/tmp/usr/lib/libkcalsystem.la
 debian/tmp/usr/lib/libkcal.so.*
 debian/tmp/usr/lib/libkcalsystem.so.*
+debian/tmp/usr/lib/kde3/kcal_dir.la
+debian/tmp/usr/lib/kde3/kcal_dir.so
+debian/tmp/usr/lib/kde3/kcal_remote.la
+debian/tmp/usr/lib/kde3/kcal_remote.so
+debian/tmp/usr/lib/kde3/libkcm_kcalendars.la
+debian/tmp/usr/lib/kde3/libkcm_kcalendars.so
+debian/tmp/usr/share/applnk/Settings/Components/kcalendars.desktop
+debian/tmp/usr/share/apps/kresources/calendar/exchange.desktop
+debian/tmp/usr/share/apps/kresources/calendar/imap.desktop
+debian/tmp/usr/share/apps/kresources/calendar/local.desktop
+debian/tmp/usr/share/apps/kresources/calendar/localdir.desktop
+debian/tmp/usr/share/apps/kresources/calendar/remote.desktop
+debian/tmp/usr/share/servicetypes/dcopcalendar.desktop
