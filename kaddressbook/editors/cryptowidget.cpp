@@ -60,8 +60,9 @@ CryptoWidgetFactory::CryptoWidgetFactory()
 
 QString CryptoWidgetFactory::pageTitle() const
 {
-  return "Crypto Settings";
+  return i18n( "Crypto Settings" );
 }
+
 QString CryptoWidgetFactory::pageIdentifier() const
 {
   return "crypto";
@@ -71,7 +72,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   : KAB::ContactEditorWidget( ab, parent, name ), mReadOnly( false )
 {
   QGridLayout *topLayout = new QGridLayout( this, 2, 5, KDialog::marginHint(),
-											KDialog::spacingHint() );
+                                            KDialog::spacingHint() );
   topLayout->setColStretch( 1, 1 );
   topLayout->setRowStretch( 4, 1 );
 
