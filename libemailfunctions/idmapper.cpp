@@ -158,7 +158,10 @@ QString IdMapper::asString() const
 
   QMap<QString, QVariant>::ConstIterator it;
   for ( it = mIdMap.begin(); it != mIdMap.end(); ++it ) {
-    content += it.key() + "\t" + it.data().toString() + "\r\n";
+    QString fp;
+    if ( mFingerprintMap.contains( it.key() ) )
+      fp = mFingerprintMap[ it.key() ];
+    content += it.key() + "\t" + it.data().toString() + "\t" + fp + "\r\n";
   }
 
   return content;
