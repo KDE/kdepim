@@ -44,12 +44,15 @@ class KNodeView : public QSplitter
     void readOptions();
     void saveOptions();
 
-    void updateViewMode();   // switch between long & short group list
+    void updateAppearance();   // switch between long & short group list, update fonts and colors
 
   protected:
     void initCollectionView();
     void initHdrView();
-    
+
+    virtual void paletteChange ( const QPalette & );
+    virtual void fontChange ( const QFont & );
+
     QSplitter *secSplitter;
     KNArticleWidget *artView;
     KNListView *hdrView;

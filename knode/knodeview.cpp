@@ -19,6 +19,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kglobal.h>
+#include <kglobalsettings.h>
 #include <kapp.h>
 
 #include "knappmanager.h"
@@ -91,7 +92,7 @@ KNodeView::KNodeView(QWidget *parent, const char * name)
 
   readOptions();
 
-  updateViewMode();
+  updateAppearance();
 }
 
 
@@ -185,11 +186,10 @@ void KNodeView::saveOptions()
 
 
 
-// switch between long & short group list
-void KNodeView::updateViewMode()
+// switch between long & short group list, update fonts and colors
+void KNodeView::updateAppearance()
 {
   if (longView != knGlobals.appManager->longGroupList()) {
-    qDebug("relayout****");
     longView = knGlobals.appManager->longGroupList();
     QValueList<int> size1 = sizes();
     QValueList<int> size2 = secSplitter->sizes();
@@ -223,6 +223,25 @@ void KNodeView::updateViewMode()
     setSizes(size2);
     secSplitter->setSizes(size1);
   }
+
+  KNLVItemBase::updateAppearance();
+  if (knGlobals.appManager->useFonts()) {
+    collectionView->setFont(knGlobals.appManager->font(KNAppManager::groupList));
+    hdrView->setFont(knGlobals.appManager->font(KNAppManager::articleList));
+  } else {
+    collectionView->setFont(KGlobalSettings::generalFont());
+    hdrView->setFont(KGlobalSettings::generalFont());
+  }
+  if (knGlobals.appManager->useColors()) {
+    QPalette p = collectionView->palette();
+    p.setColor(QColorGroup::Base,knGlobals.appManager->color(KNAppManager::background));
+    collectionView->setPalette(p);
+    hdrView->setPalette(p);
+  } else {
+    QPalette p = collectionView->palette();
+    collectionView->setPalette(p);
+    hdrView->setPalette(p);
+  }
 }
 
 
@@ -252,6 +271,20 @@ void KNodeView::initHdrView()
   hdrView->addColumn(i18n("Score"),42);
   hdrView->addColumn(i18n("Date (Time)"),102);
   hdrView->setColumnAlignment(2, AlignCenter);
+}
+
+
+
+void KNodeView::paletteChange ( const QPalette & )
+{
+  updateAppearance();
+}
+
+
+
+void KNodeView::fontChange ( const QFont & )
+{
+  updateAppearance();
 }
 
 

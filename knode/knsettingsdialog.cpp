@@ -175,7 +175,7 @@ void KNSettingsDialog::slotApply()
     if(sw) sw->apply();
   }
 
-  knGlobals.view->updateViewMode();
+  knGlobals.view->updateAppearance();
   knGlobals.accManager->readConfig();               // read changed config...
   knGlobals.sArtManager->readConfig();
   knGlobals.gManager->readConfig();

@@ -17,7 +17,6 @@
 #include "knfetcharticle.h"
 #include <stdio.h>
 
-//bool KNHdrViewItem::totalExpand=false;
 
 KNHdrViewItem::KNHdrViewItem(KNListView *ref, KNArticle *a) :
   KNLVItemBase(ref), art(a)
@@ -37,26 +36,6 @@ KNHdrViewItem::~KNHdrViewItem()
 {
   if(art) art->setListItem(0);
 }
-
-
-
-/*void KNHdrViewItem::setOpen(bool o)
-{
-  QListViewItem *it;
-  QListViewItem::setOpen(o);
-  
-  
-  if(o && totalExpand) {
-    it=firstChild();
-    while(it) {
-      if(it->depth()==0) break;
-      else {
-        it->setOpen(true);
-        it=it->nextSibling();
-      }
-    }
-  }   
-}*/
 
 
 
@@ -85,7 +64,4 @@ bool KNHdrViewItem::firstColBold()
 {
   return art->isNew();
 }
-
-
-
 

@@ -41,7 +41,8 @@ class KNLVItemBase : public QListViewItem  {
     void sortChildItems(int column, bool a);
     
     void expandChildren();
-        
+
+    static void updateAppearance();
     static void initIcons();
     static void clearIcons();
     static QPixmap& icon(pixmapType t);
@@ -50,6 +51,7 @@ class KNLVItemBase : public QListViewItem  {
     virtual bool greyOut()          { return false; }
     virtual bool firstColBold()     { return false; }
     static QPixmap *pms[15];
+    static QColor normal, grey;
 };
 
 
@@ -77,7 +79,6 @@ class KNListView : public QListView  {
       
   protected:
     void keyPressEvent(QKeyEvent *e);
-    void mouseDoubleClickEvent(QMouseEvent *e);
     void focusInEvent(QFocusEvent *e);
     void focusOutEvent(QFocusEvent *e);
     bool sAsc;

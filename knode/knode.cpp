@@ -735,6 +735,14 @@ void KNodeApp::jobDone(KNJobData *j)
 
 
 
+void KNodeApp::paletteChange( const QPalette & )
+{
+  progBar->setPalette(palette());    // should be called automatically?
+}
+
+
+
+
 bool KNodeApp::eventFilter(QObject* o, QEvent *e)
 {
 /*  if( (e->type()>1 && e->type()<10)  || //mouse and key events

@@ -104,6 +104,8 @@ class KNodeApp : public KMainWindow
     void cleanup();
     bool queryClose();
 
+    virtual void paletteChange ( const QPalette & );
+
     //even filter for kapp
     bool eventFilter(QObject*, QEvent *e);
 

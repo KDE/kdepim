@@ -48,27 +48,27 @@ void KNAppManager::readOptions()
 
   u_seColors = c->readBoolEntry("customColors", false);
 
-  QColor defCol = QColor(kapp->palette().normal().base());
+  QColor defCol = kapp->palette().active().base();
   colors.append(c->readColorEntry("backgroundColor",&defCol));
   colorNames.append(i18n("Background"));
 
-  defCol = QColor(kapp->palette().normal().midlight());
+  defCol = kapp->palette().active().midlight();
   colors.append(c->readColorEntry("headerColor",&defCol));
   colorNames.append(i18n("Header Decoration"));
 
-  defCol = QColor(kapp->palette().normal().text());
+  defCol = kapp->palette().active().text();
   colors.append(c->readColorEntry("textColor",&defCol));
   colorNames.append(i18n("Normal Text"));
 
-  defCol = QColor(kapp->palette().normal().text());
+  defCol = kapp->palette().active().text();
   colors.append(c->readColorEntry("quote1Color",&defCol));
   colorNames.append(i18n("Quoted Text - First level"));
 
-  defCol = QColor(kapp->palette().normal().text());
+  defCol = kapp->palette().active().text();
   colors.append(c->readColorEntry("quote2Color",&defCol));
   colorNames.append(i18n("Quoted Text - Second level"));
 
-  defCol = QColor(kapp->palette().normal().text());
+  defCol = kapp->palette().active().text();
   colors.append(c->readColorEntry("quote3Color",&defCol));
   colorNames.append(i18n("Quoted Text - Third level"));
 
@@ -80,15 +80,7 @@ void KNAppManager::readOptions()
   colors.append(c->readColorEntry("followedURLColor",&defCol));
   colorNames.append(i18n("Followed Link"));
 
-  defCol = QColor("red");
-  colors.append(c->readColorEntry("newArticleColor",&defCol));
-  colorNames.append(i18n("New Article"));
-
-  defCol = QColor("blue");
-  colors.append(c->readColorEntry("unreadArticleColor",&defCol));
-  colorNames.append(i18n("Unread Article"));
-
-  defCol = QColor("black");
+  defCol = kapp->palette().disabled().text();
   colors.append(c->readColorEntry("readArticleColor",&defCol));
   colorNames.append(i18n("Read Article"));
 
@@ -128,7 +120,6 @@ void KNAppManager::saveOptions()
   c->writeEntry("quote3Color", colors[Quoted3]);
   c->writeEntry("URLColor", colors[url]);
   c->writeEntry("followedURLColor", colors[followedUrl]);
-  c->writeEntry("newArticleColor", colors[newArticle]);
   c->writeEntry("readArticleColor", colors[readArticle]);
 
   c->writeEntry("customFonts", u_seFonts);

@@ -16,14 +16,31 @@
 #include <qheader.h>
 #include <qpixmap.h>
 
+#include <kapp.h>
 #include <kiconloader.h>
 
+#include "knglobals.h"
+#include "knappmanager.h"
 #include "utilities.h"
 #include "knlistview.h"
 
 
-//bool KNLVItemBase::totalExpand=true;
 QPixmap* KNLVItemBase::pms[15];
+QColor KNLVItemBase::normal, KNLVItemBase::grey;
+
+
+void KNLVItemBase::updateAppearance()
+{
+  if (knGlobals.appManager->useColors()) {
+    normal = knGlobals.appManager->color(KNAppManager::normalText);
+    grey = knGlobals.appManager->color(KNAppManager::readArticle);
+  } else {
+    normal = kapp->palette().active().text();
+    grey = kapp->palette().disabled().text();
+  }
+}
+
+
 
 void KNLVItemBase::initIcons()
 {
@@ -92,21 +109,19 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
 {
   int xText=0, xPM=3, yPM=0;
   QColor base;
-  
-  if(isSelected()) {
-    QPen pen=p->pen();
+
+  QPen pen=p->pen();
+  if (isSelected()) {
     pen.setColor(cg.highlightedText());
-    p->setPen(pen);
     base=cg.highlight();
-  }
-  else {
-    if(this->greyOut()) {
-      QPen pen=p->pen();
-      pen.setColor(cg.dark());
-      p->setPen(pen);
-    }
+  } else {
+    if (this->greyOut())
+      pen.setColor(grey);
+    else
+      pen.setColor(normal);
     base=cg.base();
   }
+  p->setPen(pen);
       
   p->fillRect(0,0,width, height(), QBrush(base));
   
@@ -131,11 +146,20 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
     }
         
     xText=xPM;
-    
   }
-  
-  //yText=p->fontMetrics().ascent() + p->fontMetrics().leading()/2;
-  p->drawText(xText, 0, width-xText-5, height(), alignment | AlignVCenter,  text(column));
+
+  // making the string shorter when the column is to narrow
+  QFontMetrics fm( p->fontMetrics() );
+  QString t(text(column));
+  int ew = fm.width("...");
+  if (fm.width(t) > width-xText-5) {
+    for (int i=t.length();i>0;i--)
+      if (fm.width(t)+ew > width-xText-5)
+        t.truncate(i);
+    t += "...";
+  }
+
+  p->drawText(xText, 0, width-xText-5, height(), alignment | AlignVCenter,  t);
 }
 
 
@@ -202,8 +226,8 @@ KNListView::KNListView(QWidget *parent, const char *name)
   setSelectionMode(QListView::Multi);
   
   //setAllColumnsShowFocus(true);
-  
 }
+
 
 
 KNListView::~KNListView()
@@ -260,107 +284,6 @@ void KNListView::keyPressEvent(QKeyEvent *e)
    default:
      QListView::keyPressEvent(e);
   }
-}
-
-
-/*void KNListView::keyPressEvent(QKeyEvent *e)
-{
-  if ( !e ) return; // subclass bug
-
-  switch(e->key()) {
-    
-    case Key_Enter:
-    case Key_Return:
-      if (currentItem())
-        setSelected(currentItem(),true);
-    break;
-    
-    case Key_Up:
-      i = i->itemAbove();
-      e->accept();
-    break;
-
-    case Key_Right:
-      if ( i->isOpen()) i = i->itemBelow();
-      else setOpen( i, TRUE );
-      e->accept();
-    break;
-
-    case Key_Left:
-      if ( i->isOpen() ) setOpen( i, FALSE );
-      else i = i->itemAbove();
-      e->accept();
-    break;
-
-    case Key_Next:
-      i2 = itemAt(QPoint(0,viewport()->height()-1 ));
-      if (i2 == i || !r.isValid() || viewport()->height()<=itemRect(i).bottom()) {
-        if (i2)
-          i = i2;
-        int left = viewport()->height();
-        while((i2 = i->itemBelow()) != 0 && left > i2->height() ) {
-          left -= i2->height();
-          i = i2;
-        }
-      }
-      else {
-        if (!i2) {     // list is shorter than the view, goto last item
-          while( (i2 = i->itemBelow())!=0)
-          i = i2;
-        }
-        else i = i2;
-      }
-      e->accept();
-    
-    break;
-  
-    case Key_Prior:
-      i2 = itemAt( QPoint( 0, 0 ) );
-      if ( i == i2 || !r.isValid() || r.top() <= 0 ) {
-        if ( i2 ) i = i2;
-        int left = viewport()->height();
-        while( (i2 = i->itemAbove()) != 0 && left > i2->height() ) {
-          left -= i2->height();
-          i = i2;
-        }
-      }
-      else i = i2;
-      e->accept();
-    break;
-    
-    case Key_Home:  
-      i = firstChild();
-      e->accept();
-    break;  
-
-    case Key_End:           // *Hack* , a direct way to the end of the list would be nicer..
-      while( (i2 = i->itemBelow())!=0) i = i2;
-      e->accept();
-    break;                                                            
-  
-    default:  
-      e->ignore();
-    break;    
-  }
-  
-  if ( !i ) return;
-
-  setCurrentItem( i );
-  ensureItemVisibleSmooth( i );
-  //CG end    
-}*/
-
-
-
-void KNListView::mouseDoubleClickEvent(QMouseEvent *e)
-{
-//  QListView::mouseDoubleClickEvent(e);
-  QListViewItem *it;
-  
-  if(e->button()==RightButton || e->button()==LeftButton) {
-    it=itemAt(e->pos());
-    if(it) emit doubleClicked(it);
-  } 
 }
 
 
