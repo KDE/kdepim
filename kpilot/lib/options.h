@@ -142,7 +142,7 @@ extern KCmdLineOptions *debug_options;
 				<< "(" << __FILE__ << ":" << \
 				__LINE__ << ")\n"; }
 #else
-#define FUNCTIONSETUP	static const char *fname=__FILE__ ":" __LINE__; \
+#define FUNCTIONSETUP	static const char *fname=__FILE__ ":" "__LINE__"; \
 			if (debug_level) { DEBUGFUNC << \
 			fname << debug_spaces+(strlen(fname)) << "\n" ; }
 #endif
@@ -204,6 +204,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.8  2002/02/02 11:46:03  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.7  2002/01/18 10:08:00  adridg
 // CVS_SILENT: Fixing my compile fixes again
 //
