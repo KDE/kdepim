@@ -12,7 +12,7 @@ SRCDOC_DEST=$(kde_htmldir)/en/abbrowser
 
 bin_PROGRAMS = abbrowser
 
-abbrowser_SOURCES = abbrowserapp.cpp abbrowser.cpp abbrowseriface.skel undo.cpp attributes.cpp selectfields.cpp viewoptions.cpp namevaluewidget.cpp entry.cpp browserentryeditor.cpp entryeditorwidget.cpp datepickerdialog.cpp browserwidget.cpp main.cpp
+abbrowser_SOURCES = abbrowserapp.cpp abbrowser.cpp abbrowseriface.skel undo.cpp attributes.cpp selectfields.cpp viewoptions.cpp namevaluewidget.cpp entry.cpp browserentryeditor.cpp entryeditorwidget.cpp datepickerdialog.cpp browserwidget.cpp main.cpp contactentry.cpp
 
 abbrowser_METASOURCES = AUTO
 

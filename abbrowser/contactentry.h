@@ -98,13 +98,13 @@ public:
 /**
  * Inserts a new key/value pair 
  */
-  void insert( const QString key, const QString *value );
+  void insert( const QString &key, const QString *value );
 
 /**
  * Updates the value associated with a key. The old value
  * will be deleted.
  */
-  void replace( const QString key, const QString *value );  
+  void replace( const QString &key, const QString *value );  
 
   /** Same as replace() above except the arguments that it excepts
    */
@@ -113,7 +113,7 @@ public:
 /**
  * Remove a key and deletes its associated value.
  */ 
-  bool remove ( const QString key );
+  bool remove ( const QString &key );
 
 /**
  * Returns a const pointer to the value associated with a key.
@@ -212,15 +212,15 @@ public:
 	/** @return true if all address values are null, or not set */
 	bool isEmpty() const;
 	const QString &getStreet() const
-		  { return fParent.findRef(fPre + "Street"); }
+		  { return fParent->findRef(fPre + "Street"); }
 	const QString &getCity() const
-		  { return fParent.findRef(fPre + "City"); }
+		  { return fParent->findRef(fPre + "City"); }
 	const QString &getState() const
-		  { return fParent.findRef(fPre + "State"); }
+		  { return fParent->findRef(fPre + "State"); }
 	const QString &getZip() const
-		  { return fParent.findRef(fPre + "PostalCode"); }
+		  { return fParent->findRef(fPre + "PostalCode"); }
 	const QString &getCountry() const
-		  { return fParent.findRef(fPre + "Country"); }
+		  { return fParent->findRef(fPre + "Country"); }
 
 	void setStreet(const QString &v);
 	void setCity(const QString &v);
@@ -229,22 +229,22 @@ public:
 	void setCountry(const QString &v);
 	
       protected :
-	Address(const ContactEntry &parent, const QString &type) :
+	Address(ContactEntry *parent, const QString &type) :
 	      fParent(parent), fPre("X-" + type + "Address")
 		  { }
 	    
       private :
 	
-	mutable const ContactEntry &fParent;
+	ContactEntry *fParent;
 	QString fPre;
       };
 
   /** @return a newed Address.  The user must delete the Address when finished.
    */
-  Address *getHomeAddress() const;
+  Address *getHomeAddress();
   /** @return a newed Address.  The user must delete the Address when finished.
    */
-  Address *getBusinessAddress() const;
+  Address *getBusinessAddress();
 
   /** GDS: Every entry will have a Category field for now.  It will be stored
    *  in the "X-Folder" field.  I am adding this for palm pilot syncing.

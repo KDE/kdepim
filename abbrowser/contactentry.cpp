@@ -202,7 +202,7 @@ void ContactEntry::_setModified()
 	setModified(true);
     }
 
-void ContactEntry::insert( const QString key, const QString *item )
+void ContactEntry::insert( const QString &key, const QString *item )
 {
   if (item && (*item == ""))
     return;
@@ -211,7 +211,7 @@ void ContactEntry::insert( const QString key, const QString *item )
   emit changed();
 }
 
-void ContactEntry::replace( const QString key, const QString *item )
+void ContactEntry::replace( const QString &key, const QString *item )
 {
   QString *current = dict.find( key );
   if (item) {
@@ -248,13 +248,15 @@ void ContactEntry::replaceValue(const QString &key, const QString &value)
     replace(key, newValue);
     }
 
-bool ContactEntry::remove( const QString key )
+bool ContactEntry::remove( const QString &key )
 { 
   if (dict.remove( key ))
       {
       _setModified();
       emit changed();
+      return true;
       }
+  return false;
 }
 
 void ContactEntry::touch()
@@ -341,15 +343,15 @@ bool ContactEntry::isModified() const
     return (val != 0);
     }
 
-ContactEntry::Address *ContactEntry::getHomeAddress() const
+ContactEntry::Address *ContactEntry::getHomeAddress()
     {
-    Address *a = new Address(*this, "Home");
+    Address *a = new Address(this, "Home");
     return a;    
     }
 
-ContactEntry::Address *ContactEntry::getBusinessAddress() const
+ContactEntry::Address *ContactEntry::getBusinessAddress()
     {
-    Address *a = new Address(*this, "Business");
+    Address *a = new Address(this, "Business");
     return a;
     }
 
@@ -408,21 +410,21 @@ bool ContactEntry::Address::isEmpty() const
 void ContactEntry::Address::setStreet(const QString &v)
     {
     QString key = fPre + "Street";
-    fParent.replaceValue(key, v);
+    fParent->replaceValue(key, v);
     }
 void ContactEntry::Address::setCity(const QString &v)
     {
-    fParent.replaceValue(fPre + "City", v);
+    fParent->replaceValue(fPre + "City", v);
     }
 void ContactEntry::Address::setState(const QString &v)
     {
-    fParent.replaceValue(fPre + "State", v);
+    fParent->replaceValue(fPre + "State", v);
     }
 void ContactEntry::Address::setZip(const QString &v)
     {
-    fParent.replaceValue(fPre + "Zip", v);
+    fParent->replaceValue(fPre + "Zip", v);
     }
 void ContactEntry::Address::setCountry(const QString &v)
     {
-    fParent.replaceValue(fPre + "Country", v);
+    fParent->replaceValue(fPre + "Country", v);
     }
