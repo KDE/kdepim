@@ -25,61 +25,75 @@
 #include <qlayout.h>
 #include <qtooltip.h>
 
+#include <kabc/field.h>
 #include <kdialog.h>
 #include <klineedit.h>
 #include <klocale.h>
 
 #include "incsearchwidget.h"
 
-IncSearchWidget::IncSearchWidget( QWidget *parent, const char* )
-    : QWidget( parent, "kde toolbar widget" )
+IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
+    : QWidget( parent, name )
 {
   setCaption( i18n( "Incremental Search" ) );
 
-  initGUI();
+  QHBoxLayout *layout = new QHBoxLayout( this, 2, KDialog::spacingHint() ); 
 
-  connect( mEdit, SIGNAL( textChanged( const QString& ) ),
-           SLOT( slotAnnounce() ) );
-  connect( mEdit, SIGNAL( returnPressed() ),
-           SLOT( slotAnnounce() ) );
-  connect( mCombo, SIGNAL( activated( const QString& ) ),
-           SLOT( slotAnnounce() ) );
+  QLabel *label = new QLabel( i18n( "Incremental search:" ), this );
+  label->setAlignment( QLabel::AlignVCenter | QLabel::AlignRight );
+  layout->addWidget( label );
+
+  mSearchText = new KLineEdit( this );
+  layout->addWidget( mSearchText );
+
+  mFieldCombo = new QComboBox( false, this );
+  layout->addWidget( mFieldCombo );
+
+  QToolTip::add( mFieldCombo, i18n( "Select Incremental Search Field" ) );
+
+  resize( QSize(420, 50).expandedTo( sizeHint() ) );
+
+  connect( mSearchText, SIGNAL( textChanged( const QString& ) ),
+           SLOT( announceDoSearch() ) );
+  connect( mSearchText, SIGNAL( returnPressed() ),
+           SLOT( announceDoSearch() ) );
+  connect( mFieldCombo, SIGNAL( activated( const QString& ) ),
+           SLOT( announceDoSearch() ) );
+  connect( mFieldCombo, SIGNAL( activated( const QString& ) ),
+           SLOT( announceFieldChanged() ) );
 }
 
 IncSearchWidget::~IncSearchWidget()
 {
 }
 
-void IncSearchWidget::slotAnnounce()
+void IncSearchWidget::announceDoSearch()
 {
-  emit incSearch( mEdit->text(), mCombo->currentItem() );
+  emit doSearch( mSearchText->text() );
 }
 
-void IncSearchWidget::setFields( const QStringList& fields )
+void IncSearchWidget::announceFieldChanged()
 {
-  mCombo->clear();
-  mCombo->insertStringList( fields );
+  emit fieldChanged();
 }
 
-void IncSearchWidget::initGUI()
+void IncSearchWidget::setFields( const KABC::Field::List &list )
 {
-  setName("kde toolbar widget");
+  mFieldCombo->clear();
+  
+  KABC::Field::List::ConstIterator it;
+  for ( it = list.begin(); it != list.end(); ++it )
+    mFieldCombo->insertItem( (*it)->label() );
 
-  QHBoxLayout *layout = new QHBoxLayout( this, 2, KDialog::spacingHint() ); 
+  mFieldList = list;
+  
+  announceDoSearch();
+  announceFieldChanged();
+}
 
-  QLabel *label = new QLabel( i18n( "Incremental search:" ), this, "kde toolbar widget" );
-  label->setAlignment( int( QLabel::AlignVCenter | QLabel::AlignRight ) );
-  layout->addWidget( label );
-
-  mEdit = new KLineEdit( this );
-  layout->addWidget( mEdit );
-
-  mCombo = new QComboBox( false, this );
-  layout->addWidget( mCombo );
-
-  QToolTip::add( mCombo, i18n( "Select Incremental Search Field" ) );
-
-  resize( QSize(420, 50).expandedTo( sizeHint() ) );
+KABC::Field *IncSearchWidget::currentField()
+{
+  return mFieldList[ mFieldCombo->currentItem() ];
 }
 
 #include "incsearchwidget.moc"

@@ -175,11 +175,6 @@ class KAddressBook : public QWidget
      */
     void configureFilters();
 
-    /**
-      Make the incremental search widget known. Not elegant, but works.
-     */
-    void setIncSearchWidget( IncSearchWidget* );
-
   protected:
     AddresseeEditorDialog *createAddresseeEditorDialog( QWidget *parent,
                                                         const char *name = 0 );
@@ -249,7 +244,6 @@ class KAddressBook : public QWidget
     LDAPSearchDialogImpl *mLdapSearchDialog;
     ViewManager *mViewManager;
     QDict<AddresseeEditorDialog> mEditorDict;
-    IncSearchWidget *mIncSearchWidget;
 };
 
 #endif // KADDRESSBOOK_H

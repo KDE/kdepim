@@ -54,7 +54,6 @@ friend class ContactListView;
     virtual void readConfig(KConfig *config);
     virtual void writeConfig(KConfig *config);
     virtual QString type() const { return "Table"; }
-    virtual void incrementalSearch(const QString &value, KABC::Field *field);
   
   public slots:
     virtual void reconstructListView();

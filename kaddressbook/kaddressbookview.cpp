@@ -118,11 +118,6 @@ void KAddressBookView::initGUI()
   layout->addWidget( mViewWidget );
 }
 
-void KAddressBookView::incrementalSearch( const QString&, KABC::Field* )
-{
-  // Does nothing unless overloaded
-}
-
 KABC::Field::List KAddressBookView::fields() const
 {
   return mFieldList;

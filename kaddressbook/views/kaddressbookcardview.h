@@ -55,8 +55,6 @@ class KAddressBookCardView : public KAddressBookView
     virtual void readConfig(KConfig *config);
     virtual void writeConfig(KConfig *);
     
-    virtual void incrementalSearch(const QString &value,KABC::Field *field );
-    
   public slots:
     void refresh(QString uid = QString::null);
     void setSelected(QString uid = QString::null, bool selected = true);

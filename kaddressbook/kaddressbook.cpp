@@ -45,7 +45,6 @@
 #include "addresseeeditordialog.h"
 #include "filtereditdialog.h"
 #include "filter.h"
-#include "incsearchwidget.h"
 #include "importdialog.h"
 #include "ldapsearchdialogimpl.h"
 #include "prefsdialog.h"
@@ -564,15 +563,6 @@ void KAddressBook::configureFilters()
 
   if ( dlg.exec() )
     mViewManager->filtersChanged( dlg.filters() );
-}
-
-void KAddressBook::setIncSearchWidget( IncSearchWidget *wdg )
-{
-  mIncSearchWidget = wdg;
-  connect( wdg, SIGNAL( incSearch( const QString&, int ) ), mViewManager,
-           SLOT( incSearch( const QString&, int ) ) );
-  connect( mViewManager, SIGNAL( setIncSearchFields( const QStringList& ) ),
-           wdg, SLOT( setFields( const QStringList& ) ) );
 }
 
 #include "kaddressbook.moc"

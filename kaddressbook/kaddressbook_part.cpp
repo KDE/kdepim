@@ -70,7 +70,7 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
   mWidget = new KAddressBook( canvas );
   mWidget->readConfig();
   topLayout->addWidget( mWidget );
-  mWidget->viewManager()->showExtensionWidget( 0 );
+  mWidget->viewManager()->setActiveExtension( 0 );
 
   mWidget->show();
 

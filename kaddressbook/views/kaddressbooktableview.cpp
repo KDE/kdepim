@@ -237,43 +237,6 @@ void KAddressBookTableView::setSelected(QString uid, bool selected)
     }
 }
 
-void KAddressBookTableView::incrementalSearch(const QString &value, 
-                                              KABC::Field *field)
-{
-    if ( value.isEmpty() ) {
-      mListView->clearSelection();
-      return;
-    }
-
-    KABC::Field::List fieldList = fields();
-    KABC::Field::List::ConstIterator it;
-    int column = 0;
-    for( it = fieldList.begin(); it != fieldList.end(); ++it ) {
-      if ( (*it)->equals( field ) ) break;
-      ++column;
-    }
-    
-    if ( it == fieldList.end() ) column = 0;
-
-    // Now do the inc search
-    mListView->setCurrentItem( mListView->firstChild() );
-    QListViewItem *item = mListView->findItem(value, column, Qt::BeginsWith);
-    
-    if (item)
-    {
-        // We have a match. Deselect all the others and select this one
-
-        // avoid flickering in details page
-        bool blocked = signalsBlocked();
-        blockSignals( true );
-        mListView->clearSelection();
-        blockSignals( blocked );
-
-        mListView->setSelected(item, true);
-        mListView->ensureItemVisible(item);
-    }
-}
-
 void KAddressBookTableView::addresseeSelected()
 {
     // We need to try to find the first selected item. This might not be the

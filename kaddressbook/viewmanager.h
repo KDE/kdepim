@@ -49,6 +49,7 @@ namespace KABC { class AddressBook; }
 
 class AddresseeEditorWidget;
 class ExtensionWidget;
+class IncSearchWidget;
 class JumpButtonBar;
 class ViewContainer;
 
@@ -124,12 +125,17 @@ class ViewManager : public QWidget
     /**
       @return The name list of all registered extension widgets.
      */
-    QStringList extensionWidgetList();
+    QStringList extensionNames();
 
     /**
       Returns the address book.
      */
     KABC::AddressBook *addressBook();
+
+    /**
+      Returns the current global search field.
+     */
+    KABC::Field *currentSearchField();
 
   public slots:
     /**
@@ -228,22 +234,19 @@ class ViewManager : public QWidget
     void slotModified();
 
     /**
-      Show widget of the extension bar.
-      @param id 0: hide extension bar, otherwise the according extension
-                   widget is shown.
+      Set the active widget of the extension bar.
+
+      @param id 0: hide extension bar, otherwise an extension widget is shown
+                   according to the list that is returned by
+                   @ref extensionNames()
      */
-    void showExtensionWidget( int id );
+    void setActiveExtension( int id );
 
   protected slots:
     /**
       Handle events on the incremental search widget.
      */
-    void incSearch( const QString& text, int field );
-
-    /**
-      Called whenever the user selects a button from the jump bar.
-     */
-    void jumpToLetter( const QChar &ch );
+    void incSearch( const QString& text );
 
     /**
       Called whenever the user drops something in the active view.
@@ -300,12 +303,6 @@ class ViewManager : public QWidget
     void viewConfigChanged( const QString &newActive );
 
     /**
-      Update the IncSearchWidget (in the toolbars) with a new list
-      of fields.
-     */
-    void setIncSearchFields( const QStringList& );
-
-    /**
       Update the select_filter action.
      */
     void setFilterNames( const QStringList& );
@@ -331,27 +328,13 @@ class ViewManager : public QWidget
     ExtensionWidget *loadExtension( KService::Ptr, QWidget *parent );
     ExtensionWidget *loadExtension( const QString&, QWidget *parent  );
 
-    /**
-      Create all factories for each type of view we know about.
-     */
     void createViewFactories();
-
-    /**
-      Creates the GUI components.
-     */
     void initGUI();
-
-    /**
-      Populates the incremental search combo box.
-     */
-    void refreshIncrementalSearchCombo();
 
     Filter mCurrentFilter;
     Filter::List mFilterList;
 
     KABC::AddressBook *mAddressBook;
-    KABC::Field *mCurrentIncSearchField;
-    KABC::Field::List mIncrementalSearchFields;
 
     KConfig *mConfig;
 
@@ -362,6 +345,7 @@ class ViewManager : public QWidget
 
     ExtensionWidget *mCurrentExtensionWidget;
     JumpButtonBar *mJumpButtonBar;
+    IncSearchWidget *mIncSearchWidget;
     KAddressBookView *mActiveView;
     ViewContainer *mDetails;
     QHBox *mExtensionBar;

@@ -335,6 +335,7 @@ void KAddressBookCardView::setSelected(QString uid, bool selected)
              if ((aItem) && (aItem->addressee().uid() == uid))
              {
                  mCardView->setSelected(aItem, selected);
+                 mCardView->ensureItemVisible(item);
                  found = true;
              }
          }
@@ -375,21 +376,5 @@ void KAddressBookCardView::addresseeSelected()
         emit selected(QString::null);
 
 }
-
-void KAddressBookCardView::incrementalSearch(const QString &value,
-                                             KABC::Field *field)
-{
-  CardViewItem *item = mCardView->findItem(value, field->label());
-
-  if (item)
-  {
-    mCardView->setSelected(item, true);
-    mCardView->ensureItemVisible(item);
-  } else {
-    for ( item = mCardView->firstItem(); item; item = item->nextItem() )
-      mCardView->setSelected( item, false );
-  }
-}
-
 
 #include "kaddressbookcardview.moc"

@@ -109,25 +109,6 @@ class KAddressBookView : public QWidget
     virtual QString type() const = 0;
 
     /**
-      This method can be overloaded in the subclass to implement incremental
-      searching. Incremental searching is where the user types in characters
-      and after each character the selection is updated to select the
-      item (addressee) that matches the search.
-
-      For example, if this method is called with <i>value</i> being 'p', the
-      selection should be moved to the first item with the <i>field</i>
-      matching 'p'. If the user then typed 'r', making the value 'pr', the
-      selection should be updated to the first item with the <i>field</i>
-      matching 'pr'. If there is no item matching 'pr', the selection should
-      remain on the last valid match. If the <i>value</i> is empty,
-      select the first item.
-
-      @param value The string value to match.
-      @param field The KABC::Field that should be searched
-     */
-    virtual void incrementalSearch( const QString &value, KABC::Field *field );
-
-    /**
       Returns a list of the fields that should be displayed. The list
       is composed of the fields proper names (ie: Home Address), so
       the view may need to translate them in order to get the

@@ -21,96 +21,64 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include "jumpbuttonbar.h"
-
 #include <qevent.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
 #include <qstring.h>
 
 #include <kabc/addressbook.h>
+#include <kabc/field.h>
+#include <kdebug.h>
 #include <klocale.h>
+
+#include "jumpbuttonbar.h"
 
 class JumpButton : public QPushButton
 {
   public:
     JumpButton( const QString &text, QWidget *parent,
-                const QChar &character );
+                const QString &character );
 
-    void setCharacter( const QChar &character );
-    QChar character() const;
+    void setCharacter( const QString &character );
+    QString character() const;
 
   private:
-    QChar mCharacter;
+    QString mCharacter;
 };
 
 JumpButton::JumpButton( const QString &text, QWidget *parent,
-                        const QChar &character )
+                        const QString &character )
   : QPushButton( text, parent )
 {
   mCharacter = character;
 }
 
-void JumpButton::setCharacter( const QChar &character )
+void JumpButton::setCharacter( const QString &character )
 {
   mCharacter = character;
 }
 
-QChar JumpButton::character() const
+QString JumpButton::character() const
 {
   return mCharacter;
 }
 
 JumpButtonBar::JumpButtonBar( ViewManager *parent, const char *name )
-  : QWidget( parent, name )
+  : QWidget( parent, name ), mViewManager( parent )
 {
-  JumpButton *b;
-  QString letter;
-
-  QGridLayout *topLayout = new QGridLayout( this, 10, 3 );
+  mButtonLayout = new QGridLayout( this, 10, 3 );
   
-  b = new JumpButton( "0,1,2", this, QChar( '0' ) );
+  JumpButton *b = new JumpButton( "0,1,2", this, "0" );
   connect( b, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
-  topLayout->addMultiCellWidget( b, 0, 0, 0, 1 );
 
-  QValueList<QChar> charMap;
-  KABC::AddressBook::Iterator it;
-  KABC::AddressBook *ab = parent->addressBook();
-  for ( it = ab->begin(); it != ab->end(); ++it ) {
-    QChar curr;
-    if ( !(*it).formattedName().isEmpty() )
-      curr = (*it).formattedName()[ 0 ];
-    else
-      curr = (*it).givenName()[ 0 ];
+  mButtonLayout->addMultiCellWidget( b, 0, 0, 0, 1 );
 
-    if ( !charMap.contains( curr ) )
-      charMap.append( curr );
-  }
-
-  int maxRows = charMap.count() / 2; // we use 2 columns
-  if ( charMap.count() % 2 )
-    maxRows++;
-
-  qHeapSort( charMap );
-
-  int row = 1, col = 0;
-  for ( uint i = 0; i < charMap.count(); ++i ) {
-    b = new JumpButton( charMap[ i ], this, charMap[ i ] );
-    connect( b, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
-    topLayout->addWidget( b, row, col );
-
-    if ( row == maxRows ) {
-      col++;
-      row = 1;
-    } else
-      row++;
-  }
+  recreateButtons();
 }
 
 JumpButtonBar::~JumpButtonBar()
 {
 }
-
 
 QSizePolicy JumpButtonBar::sizePolicy() const
 {
@@ -118,13 +86,87 @@ QSizePolicy JumpButtonBar::sizePolicy() const
                       QSizePolicy::Vertically );
 }
   
-
 void JumpButtonBar::letterClicked()
 {
   JumpButton *button = (JumpButton*)sender();
-  QChar character = button->character();
+  QString character = button->character();
   if ( !character.isNull() )
     emit jumpToLetter( character );
+}
+
+void JumpButtonBar::recreateButtons()
+{
+  // the easiest way to remove all buttons ;)
+  mButtons.setAutoDelete( true );
+  mButtons.clear();
+  mButtons.setAutoDelete( false );
+  mCharacters.clear();
+
+  QString character;
+  KABC::AddressBook *ab = mViewManager->addressBook();
+  KABC::AddressBook::Iterator it;
+  for ( it = ab->begin(); it != ab->end(); ++it ) {
+    KABC::Field *field = mViewManager->currentSearchField();
+    if ( field && !field->value( *it ).isEmpty() )
+      character = field->value( *it )[ 0 ];
+
+    if ( !character.isEmpty() && !mCharacters.contains( character ) )
+      mCharacters.append( character );
+  }
+
+  int maxRows = mCharacters.count() / 2; // we use 2 columns
+  if ( mCharacters.count() % 2 )
+    maxRows++;
+
+  sortListLocaleAware( mCharacters );
+
+  bool state = isUpdatesEnabled();
+  setUpdatesEnabled( false );
+
+  int row = 1, col = 0;
+  for ( uint i = 0; i < mCharacters.count(); ++i ) {
+    JumpButton *button = new JumpButton( mCharacters[ i ], this, mCharacters[ i ] );
+    connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
+    mButtonLayout->addWidget( button, row, col );
+    mButtons.append( button );
+    button->show();
+
+    if ( row == maxRows ) {
+      col++;
+      row = 1;
+    } else
+      row++;
+  }
+
+  mButtonLayout->activate();
+  setUpdatesEnabled( state );
+  update();
+}
+
+void JumpButtonBar::sortListLocaleAware( QStringList &list )
+{
+  QStringList::Iterator beginIt = list.begin();
+  QStringList::Iterator endIt = list.end();
+
+  --endIt;
+  if ( beginIt == endIt ) // don't need sorting
+    return;
+
+  QStringList::Iterator walkBackIt = endIt;
+  while ( beginIt != endIt ) {
+    QStringList::Iterator j1 = list.begin();
+    QStringList::Iterator j2 = j1;
+    ++j2;
+    while ( j1 != walkBackIt ) {
+      if ( QString::localeAwareCompare( *j2, *j1 ) < 0 )
+        qSwap( *j1, *j2 );
+
+      ++j1;
+      ++j2;
+    }
+    ++beginIt;
+    --walkBackIt;
+  }
 }
 
 #include "jumpbuttonbar.moc"

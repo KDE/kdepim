@@ -41,7 +41,6 @@
 #include <kstdaction.h>
 
 #include "actionmanager.h"
-#include "incsearchwidget.h"
 #include "kaddressbook.h"
 #include "kaddressbookmain.h"
 #include "kaddressbookmain.moc"
@@ -64,16 +63,6 @@ KAddressBookMain::KAddressBookMain()
   mWidget->readConfig();
 
   createGUI( "kaddressbookui.rc", false );
-
-  // <HACK reason="there is no line edit action">
-  // create the incremental search line edit manually:
-  const int IncSearch = 1; // the ID of the widget - just to be clear :-)
-  KToolBar *isToolBar = toolBar( "incSearchToolBar" );
-  IncSearchWidget *incSearchWidget = new IncSearchWidget( isToolBar );
-  isToolBar->insertWidget( IncSearch, 0,  incSearchWidget, 0 );
-  isToolBar->setItemAutoSized( IncSearch );
-  mWidget->setIncSearchWidget( incSearchWidget );
-  // </HACK>
 
   mActionManager->initActionViewList();
 

@@ -29,6 +29,10 @@
 
 #include <klineedit.h>
 
+namespace KABC {
+class Field;
+}
+
 class IncSearchWidget : public QWidget
 {
   Q_OBJECT
@@ -37,27 +41,30 @@ class IncSearchWidget : public QWidget
     IncSearchWidget( QWidget *parent, const char *name = 0 );
     ~IncSearchWidget();
 
-  public slots:
-    /**
-      Set the incremental search fields (in the combo).
-     */
-    void setFields( const QStringList& list );
-
-  protected slots:
-    void slotAnnounce();
+    void setFields( const KABC::Field::List &list );
+    KABC::Field *currentField();
 
   signals:
     /**
-      Do incremental search, using the field at index field.
-      @see setFields
+      This signal is emmited whenever the text in the input
+      widget is changed. You can get the sorting field by
+      @ref currentField.
      */
-    void incSearch( const QString& text, int field );
+    void doSearch( const QString& text );
+
+    /**
+      This signal is emmited whenever the search field changes.
+     */
+    void fieldChanged();
+
+  private slots:
+    void announceDoSearch();
+    void announceFieldChanged();
 
   private:
-    void initGUI();
-
-    QComboBox* mCombo;
-    KLineEdit* mEdit;
+    QComboBox* mFieldCombo;
+    KLineEdit* mSearchText;
+    KABC::Field::List mFieldList;
 };
 
 #endif

@@ -32,9 +32,11 @@
 #include <qlineedit.h>
 #include <qsplitter.h>
 #include <qtabwidget.h>
+#include <qvbox.h>
 #include <qwidgetstack.h>
 
 #include <kabc/addressbook.h>
+#include <kabc/addresseelist.h>
 #include <kabc/field.h>
 #include <kabc/vcardconverter.h>
 #include <kapplication.h>
@@ -53,6 +55,7 @@
 #include "detailsviewcontainer.h"
 #include "extensionwidget.h"
 #include "filterselectionwidget.h"
+#include "incsearchwidget.h"
 #include "jumpbuttonbar.h"
 #include "undo.h"
 #include "undocmds.h"
@@ -295,11 +298,11 @@ void ViewManager::setActiveView( const QString &name )
       emit setCurrentFilterName( filterName );
     }
 
-    // Update the inc search combo to show the fields in the new active
+    // Update the inc search widget to show the fields in the new active
     // view.
-    refreshIncrementalSearchCombo();
+    mIncSearchWidget->setFields( mActiveView->fields() );
+    mActiveView->refresh();
 
-    mActiveView->refresh( QString::null );
   } else
     kdDebug(5720) << "ViewManager::setActiveView: unable to find view\n";
 }
@@ -349,8 +352,7 @@ void ViewManager::modifyView()
         emit setCurrentFilterName( filterName );
       }
 
-      refreshIncrementalSearchCombo();
-
+      mIncSearchWidget->setFields( mActiveView->fields() );
       mActiveView->refresh();
     }
   }
@@ -452,7 +454,13 @@ void ViewManager::initGUI()
 
   mDetailsSplitter = new QSplitter( mExtensionBarSplitter );
 
-  mViewWidgetStack = new QWidgetStack( mDetailsSplitter );
+  QVBox *viewSpace = new QVBox( mDetailsSplitter );
+  mIncSearchWidget = new IncSearchWidget( viewSpace );
+  connect( mIncSearchWidget, SIGNAL( doSearch( const QString& ) ),
+           SLOT( incSearch( const QString& ) ) );
+
+  mViewWidgetStack = new QWidgetStack( viewSpace );
+  viewSpace->setStretchFactor( mViewWidgetStack, 1 );
 
   mDetails = new ViewContainer( mDetailsSplitter );
   connect( mDetails, SIGNAL( sendEmail( const QString& ) ),
@@ -461,8 +469,10 @@ void ViewManager::initGUI()
            SLOT( browse( const QString& ) ) );
 
   mJumpButtonBar = new JumpButtonBar( this );
-  connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QChar& ) ),
-           SLOT( jumpToLetter( const QChar& ) ) );
+  connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QString& ) ),
+           SLOT( incSearch( const QString& ) ) );
+  connect( mIncSearchWidget, SIGNAL( fieldChanged() ),
+           mJumpButtonBar, SLOT( recreateButtons() ) );
 
   // Setup the feature bar widget.
   mExtensionBar = new QHBox( mExtensionBarSplitter );
@@ -494,34 +504,24 @@ void ViewManager::initGUI()
   topLayout->setStretchFactor( mJumpButtonBar, 1 );
 }
 
-void ViewManager::refreshIncrementalSearchCombo()
+void ViewManager::incSearch( const QString& text )
 {
-  QStringList items;
+  mActiveView->setSelected( QString::null, false );
 
-  KABC::Field::List fields = mActiveView->fields();
+  if ( !text.isEmpty() ) {
+    KABC::Field *field = mIncSearchWidget->currentField();
 
-  mIncrementalSearchFields.clear();
+    KABC::AddresseeList list( mAddressBook->allAddressees() );
+    list.sortByField( field );
 
-  KABC::Field::List::Iterator it;
-  for ( it = fields.begin(); it != fields.end(); ++it ) {
-    items.append( (*it)->label() );
-    mIncrementalSearchFields.append( *it );
+    KABC::AddresseeList::Iterator it;
+    for ( it = list.begin(); it != list.end(); ++it ) {
+      if ( field->value( *it ).startsWith( text ) ) {
+        mActiveView->setSelected( (*it).uid(), true );
+        return;
+      }
+    }
   }
-
-  mCurrentIncSearchField = mIncrementalSearchFields.first(); // we assume there are always columns?
-  emit setIncSearchFields( items );
-}
-
-void ViewManager::incSearch( const QString& text, int field )
-{
-  mCurrentIncSearchField = mIncrementalSearchFields[ field ];
-
-  mActiveView->incrementalSearch( text, mCurrentIncSearchField );
-}
-
-void ViewManager::jumpToLetter( const QChar &ch )
-{
-  mActiveView->incrementalSearch( QString(ch), mCurrentIncSearchField );
 }
 
 void ViewManager::setJumpButtonBarVisible( bool visible )
@@ -678,7 +678,7 @@ void ViewManager::slotModified()
   modified();
 }
 
-void ViewManager::showExtensionWidget( int id )
+void ViewManager::setActiveExtension( int id )
 {
   if ( id == 0 ) {
     mExtensionBar->hide();
@@ -694,7 +694,7 @@ void ViewManager::showExtensionWidget( int id )
   }
 }
 
-QStringList ViewManager::extensionWidgetList()
+QStringList ViewManager::extensionNames()
 {
   QStringList list;
   list.append( i18n( "None" ) );
@@ -709,6 +709,11 @@ QStringList ViewManager::extensionWidgetList()
 KABC::AddressBook *ViewManager::addressBook()
 {
   return mAddressBook;
+}
+
+KABC::Field *ViewManager::currentSearchField()
+{
+  return mIncSearchWidget->currentField();
 }
 
 const QStringList &ViewManager::viewNames()

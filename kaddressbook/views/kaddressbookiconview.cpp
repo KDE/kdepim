@@ -278,22 +278,4 @@ void KAddressBookIconView::addresseeSelected()
         emit selected(QString::null);
 }
 
-void KAddressBookIconView::incrementalSearch(const QString &value, 
-                                             KABC::Field *field)
-{
-  if ( value.isEmpty() ) {
-    mIconView->selectAll( false );
-    return;
-  }
-
-  AddresseeIconViewItem *item;
-  for ( item = mIconList.first(); item; item = mIconList.next() ) {
-    if ( field->value( item->addressee() ).startsWith( value ) ) {
-      mIconView->setSelected( item, true, false );
-      mIconView->ensureItemVisible( item );
-      return;
-    }
-  }
-}
-
 #include "kaddressbookiconview.moc"

@@ -186,9 +186,9 @@ void ActionManager::initReadOnlyActions()
   // settings menu
   mActionExtensions = new KSelectAction( i18n( "Show Extension Bar" ), 0,
                                        mACollection, "options_show_extensions" );
-  mActionExtensions->setItems( mViewManager->extensionWidgetList() );
+  mActionExtensions->setItems( mViewManager->extensionNames() );
   connect( mActionExtensions, SIGNAL( activated( int ) ),
-           mViewManager, SLOT( showExtensionWidget( int ) ) );
+           mViewManager, SLOT( setActiveExtension( int ) ) );
 
   mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", 0,
                                       this, SLOT( quickToolsAction() ),
@@ -316,7 +316,7 @@ void ActionManager::slotViewSelected()
 void ActionManager::quickToolsAction()
 {
   mViewManager->setJumpButtonBarVisible( mActionJumpBar->isChecked() );
-  mViewManager->showExtensionWidget( mActionExtensions->currentItem() );
+  mViewManager->setActiveExtension( mActionExtensions->currentItem() );
   mViewManager->setDetailsVisible( mActionDetails->isChecked() );
 }
 

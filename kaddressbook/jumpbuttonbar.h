@@ -30,7 +30,12 @@
 #include "viewmanager.h"
 
 class QChar;
+class QGridLayout;
 class QResizeEvent;
+
+namespace KABC {
+class Field;
+}
 
 /**
   Used to draw the jump button bar on the right of the view.
@@ -45,14 +50,31 @@ class JumpButtonBar : public QWidget
     
     QSizePolicy sizePolicy() const;    
     
-  protected slots:
-    void letterClicked();
+  public slots:
+    /**
+      This method removes all buttons from the GUI and recreates them
+      according to the current global search field and the content of
+      the address book.
+     */
+    void recreateButtons();
     
   signals:
     /**
       Emitted whenever a letter is selected by the user.
      */
-    void jumpToLetter( const QChar &ch );
+    void jumpToLetter( const QString &character );
+
+  protected slots:
+    void letterClicked();
+
+  private:
+    void sortListLocaleAware( QStringList &list );
+
+    ViewManager *mViewManager;
+
+    QGridLayout *mButtonLayout;
+    QStringList mCharacters;
+    QPtrList<QPushButton> mButtons;
 };
 
 #endif
