@@ -255,16 +255,15 @@ void KAddressBookTableView::refresh(QString uid)
   } else {
     // Only need to update on entry. Iterate through and try to find it
     ContactListViewItem *ceItem;
-    QListViewItemIterator it( mListView );
-    while ( it.current() ) {
-      ceItem = dynamic_cast<ContactListViewItem*>( it.current() );
+    QPtrList<QListViewItem> selectedItems( mListView->selectedItems() );
+    QListViewItem *it;
+    for ( it = selectedItems.first(); it; it = selectedItems.next() ) {
+      ceItem = dynamic_cast<ContactListViewItem*>( it );
       if ( ceItem && ceItem->addressee().uid() == uid ) {
         ceItem->refresh();
         return;
       }
-      ++it;
     }
-
     refresh( QString::null );
   }
 }

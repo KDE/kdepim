@@ -89,6 +89,9 @@ AddresseeEditorWidget::~AddresseeEditorWidget()
 
 void AddresseeEditorWidget::setAddressee( const KABC::Addressee &addr )
 {
+  if ( mAddressee.uid() == addr.uid() ) 
+	  return;
+
   mAddressee = addr;
 
   bool readOnly = ( !addr.resource() ? false : addr.resource()->readOnly() );
@@ -762,14 +765,14 @@ void AddresseeEditorWidget::emitModified()
 {
   mDirty = true;
 
-  KABC::Addressee::List list;
+  if ( !mBlockSignals ) {
+    KABC::Addressee::List list;
 
-  if ( isExtension() && !mBlockSignals ) {
     save();
     list.append( mAddressee );
-  }
 
-  emit modified( list );
+    emit modified( list );
+  }
 }
 
 void AddresseeEditorWidget::dateChanged( QDate )
