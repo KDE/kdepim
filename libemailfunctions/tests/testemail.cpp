@@ -91,6 +91,11 @@ static QString getEmailParseResultToString( QCString emailAddress )
   return QString( emailAddress );
 }
 
+static QString getSplitEmailParseResultToString( QStringList emailAddresses )
+{
+  return QString( emailAddresses.join( "," ) );
+}
+
 static bool checkIsValidEmailAddress( const QString& input, const QString&  expErrorCode )
 {
   EmailParseResult errorCode = KPIM::isValidEmailAddress( input );
@@ -112,6 +117,14 @@ static bool checkGetEmailAddr( const QString& input, const QString& expResult )
   QCString emailAddress = KPIM::getEmailAddr( input );
   QString result = getEmailParseResultToString( emailAddress );
   check( "getEmail " + input + " result ", result, expResult );
+  return true;
+}
+
+static bool checkSplitEmailAddrList( const QString& input, const QString& expResult )
+{
+  QStringList emailAddresses = KPIM::splitEmailAddrList( input );
+  QString result = getSplitEmailParseResultToString( emailAddresses );
+  check( "splitEmailAddrList " + input + " result ", result, expResult );
   return true;
 }
 
@@ -272,6 +285,12 @@ int main(int argc, char *argv[])
   checkGetEmailAddr( "\"Matt <blah blah>\" <matt@fruitsalad.org>", "matt@fruitsalad.org" ); 
   checkGetEmailAddr( "Matt Douhan (jongel) <matt@fruitsalad.org", "matt@fruitsalad.org" );
   checkGetEmailAddr( "Matt Douhan (m@tt) <matt@fruitsalad.org>", "matt@fruitsalad.org" );
+ 
+  // check the splitEmailAddrList method
+  checkSplitEmailAddrList( "Matt Douhan <matt@fruitsalad.org>, Foo Bar <foo@bar.com>", "Matt Douhan <matt@fruitsalad.org>,Foo Bar <foo@bar.com>" );
+  checkSplitEmailAddrList( "\"Matt, Douhan\" <matt@fruitsalad.org>, Foo Bar <foo@bar.com>", "\"Matt, Douhan\" <matt@fruitsalad.org>,Foo Bar <foo@bar.com>" );
+
+
 
   printf("\nTest OK !\n");
 
