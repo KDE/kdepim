@@ -118,7 +118,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                                 "X-IMAddress", "KADDRESSBOOK" );
   mAddressBook->addCustomField( i18n( "Anniversary" ), KABC::Field::Personal,
                                 "X-Anniversary", "KADDRESSBOOK" );
-  mAddressBook->addCustomField( i18n( " Blog" ), KABC::Field::Personal,
+  mAddressBook->addCustomField( i18n( "Blog" ), KABC::Field::Personal,
                                 "Blog", "KADDRESSBOOK" );
 
   mSearchManager = new KAB::SearchManager( mAddressBook, parent );
@@ -292,7 +292,7 @@ KAboutData *KABCore::createAboutData()
   KAboutData *about = new KAboutData( "kaddressbook", I18N_NOOP( "KAddressBook" ),
                                       "3.3", I18N_NOOP( "The KDE Address Book" ),
                                       KAboutData::License_GPL_V2,
-                                      I18N_NOOP( "(c) 1997-2004, The KDE PIM Team" ) );
+                                      I18N_NOOP( "(c) 1997-2005, The KDE PIM Team" ) );
   about->addAuthor( "Tobias Koenig", I18N_NOOP( "Current maintainer" ), "tokoe@kde.org" );
   about->addAuthor( "Don Sanders", I18N_NOOP( "Original author" ) );
   about->addAuthor( "Cornelius Schumacher",
