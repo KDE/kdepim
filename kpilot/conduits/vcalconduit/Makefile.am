@@ -25,31 +25,15 @@ conduit_vcal_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 conduit_vcal_la_LIBADD = ../../lib/libkpilot.la \
 	../../../libkcal/libkcal.la \
 	libvcalconduit_shared.la
+conduit_vcal_la_COMPILE_FIRST = vcalconduitSettings.h korganizerConduit.h
 
 conduit_todo_la_SOURCES = todo-factory.cc todo-setup.cc todo-conduit.cc
 conduit_todo_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 conduit_todo_la_LIBADD = ../../lib/libkpilot.la \
 	../../../libkcal/libkcal.la \
 	libvcalconduit_shared.la
+conduit_todo_la_COMPILE_FIRST = vcalconduitSettings.h korganizerConduit.h
 
 
 kde_kcfg_DATA = vcalconduitbase.kcfg
-
-# Dear automake, here are some dependencies you're too stupid to
-# figure out yourself.
-
-todo-conduit.lo : vcalconduitSettings.h
-
-todo-factory.lo : vcalconduitSettings.h
-
-todo-setup.lo : korganizerConduit.h
-
-vcal-conduitbase.lo : vcalconduitSettings.h
-
-vcal-factory.lo : vcalconduitSettings.h
-
-vcal-setup.lo : vcalconduitSettings.h korganizerConduit.h
-
-vcal-setupbase.lo : vcalconduitSettings.h korganizerConduit.h
-
 
