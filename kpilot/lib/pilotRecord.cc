@@ -77,7 +77,7 @@ PilotRecord::PilotRecord(void *data, int len, int attrib, int cat,
 	fBuffer(0L)
 #endif
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	fData = new char[len];
 
 	memcpy(fData, data, len);
@@ -93,7 +93,7 @@ PilotRecord::PilotRecord(PilotRecord * orig) :
 	fBuffer(0L)
 #endif
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	fData = new char[orig->getLen()];
 
 	memcpy(fData, orig->getData(), orig->getLen());
