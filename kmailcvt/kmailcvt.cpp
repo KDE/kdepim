@@ -92,11 +92,12 @@ void Kmailcvt2::back() {
 
 void Kmailcvt2::help()
 {
-	KAboutData aboutData( "KMailCVT", I18N_NOOP("KMAILCVT"),
+	KAboutData aboutData( "kmailcvt", I18N_NOOP("KMailCVT"),
 		KMAILCVT_VERSION, KMAILCVT, 
 		KAboutData::License_GPL_V2,
-		"(c) 2000, Hans Dijkema");
+		"(c) 2000-3, The KMailCVT developers");
 	aboutData.addAuthor("Hans Dijkema","Original author", "kmailcvt@hum.org", "http://www.hum.org/kmailcvt.html");
+	aboutData.addAuthor("Laurence Anderson","New GUI & cleanups", "l.d.anderson@warwick.ac.uk");
 	selfilterpage->setAuthors(aboutData);
 
 	KAboutApplication a(&aboutData, _parent);

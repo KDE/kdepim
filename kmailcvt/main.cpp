@@ -23,10 +23,6 @@
 
 #include "kmailcvt.h"
 
-static const char *description =
-	I18N_NOOP("A little tool to convert mail boxes and address books to KMail format");
-	
-	
 static KCmdLineOptions options[] =
 {
   { 0, 0, 0 }
@@ -37,10 +33,9 @@ int main(int argc, char *argv[])
 {
   KLocale::setMainCatalogue("kmailcvt");
 
-  KAboutData aboutData( "kmailcvt2", I18N_NOOP("Kmailcvt2"),
-    VERSION, description, KAboutData::License_GPL,
-    "(c) 2000, Hans Dijkema");
-  aboutData.addAuthor("Hans Dijkema",0, "kmailcvt@hum.org");
+  KAboutData aboutData( "kmailcvt", I18N_NOOP("KMailCVT"),
+    KMAILCVT_VERSION, KMAILCVT, KAboutData::License_GPL_V2,
+    "(c) 2000-3, The KMailCVT developers");
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 

@@ -22,7 +22,7 @@
 #include <config.h>
 #endif
 
-#define KMAILCVT_VERSION " v2.1"
+#define KMAILCVT_VERSION "3"
 #define KMAILCVT         I18N_NOOP("KMail & KAddressBook Import Filters")
 
 #include <kapplication.h>
