@@ -367,7 +367,7 @@ bool KNProtocolClient::getNextLine()
 
   } while (!(nextLine = strstr(thisLine,"\r\n")));
 
-  if (predictedLines != -1)
+  if (predictedLines > 0)
     progressValue = 100 + (doneLines*900/predictedLines);
   sendSignal(TSprogressUpdate);
 
@@ -676,7 +676,7 @@ bool KNProtocolClient::sendStr(const QCString &str)
     }
     byteCount += ret;
   }
-  if (predictedLines != -1)
+  if (predictedLines > 0)
     progressValue = 100 + (doneLines/predictedLines)*900;
   sendSignal(TSprogressUpdate);
   return true;
