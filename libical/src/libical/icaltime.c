@@ -126,20 +126,7 @@ void unset_tz(struct set_tz_save savetz)
     char* orig_tzid = savetz.orig_tzid;
 
     if(orig_tzid!=0){	
-	size_t tmp_sz =strlen(orig_tzid)+4; 
-	char* orig_env_str = (char*)icalmemory_tmp_buffer(tmp_sz);
-
-	if(orig_env_str == 0){
-            icalerror_set_errno(ICAL_NEWFAILED_ERROR);
-            return;
-	}
-	
-	strcpy(orig_env_str,"TZ=");
-	strcpy(orig_env_str+3,orig_tzid);
-    /* it is not very smart to store the TZ variable in a ringbuffer, */
-    /* which is later overwritten */
-	/*putenv(orig_env_str); this was the cause of many timezone problem */
-    setenv("TZ", savetz.orig_tzid,1 );
+        setenv( "TZ", orig_tzid, 1 );
 	free(orig_tzid);
     } else {
         unsetenv("TZ");
