@@ -33,14 +33,14 @@ class ATParameter {
     ATParameter();
     ATParameter(const QString &value,const QString &name="",
                 bool userInput=false);
-    
+
     void setName(const QString &name) { mName = name; }
     QString name() const { return mName; }
     void setValue(const QString &value) { mValue = value; }
     QString value() const { return mValue; }
     void setUserInput(bool userInput) { mUserInput = userInput; }
     bool userInput() const { return mUserInput; }
-    
+
   private:
     QString mName;
     QString mValue;
@@ -58,23 +58,23 @@ class ATCommand {
     ATCommand(const QString &cmdName,const QString &cmdString,
               bool hexOutput=false);
     virtual ~ATCommand();
-    
+
     void setCmdName(const QString &);
     QString cmdName();
-    
+
     void setCmdString(const QString &);
     QString cmdString();
 
     QString cmd();
 
     QString id();
-    
+
     void setHexOutput(bool);
     bool hexOutput();
-    
+
     QString processOutput(const QString &);
     QString processOutput();
-    
+
     void setResultString(const QString &);
     QString resultString();
     QString resultField(int index);
@@ -89,12 +89,12 @@ class ATCommand {
 
     void setAutoDelete(bool autoDelete) { mAutoDelete = autoDelete; }
     bool autoDelete() { return mAutoDelete; }
-    
+
   private:
     void construct();
-    void setResultFields(const QString &fieldsString);
+    void setResultFields(QString fieldsString);
     void extractParameters();
-  
+
     QString mCmdName;
     QString mCmdString;
     QString mId;
