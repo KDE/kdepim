@@ -1325,7 +1325,7 @@ public:
     Kleo::DecryptVerifyJob * decryptVerifyJob( bool textmode=false ) const;
     Kleo::RefreshKeysJob * refreshKeysJob() const;
 
-    Kleo::SpecialJob * specialJob( const QMap<QString,QString> & ) const { return 0; }
+    Kleo::SpecialJob * specialJob( const char *, const QMap<QString,QVariant> & ) const { return 0; }
 
     GpgME::ImportResult importCertificate( const char* data, size_t length );
 

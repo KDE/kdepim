@@ -53,6 +53,7 @@ namespace Kleo {
 }
 
 class QString;
+class QVariant;
 template <typename T_Key, typename T_Value> class QMap;
 
 namespace Kleo {
@@ -110,7 +111,7 @@ namespace Kleo {
     virtual DecryptVerifyJob  * decryptVerifyJob( bool textmode=false ) const = 0;
     virtual RefreshKeysJob    * refreshKeysJob() const = 0;
 
-    virtual SpecialJob        * specialJob( const QMap<QString,QString> & args ) const = 0;
+    virtual SpecialJob        * specialJob( const char * type, const QMap<QString,QVariant> & args ) const = 0;
   };
 
 }

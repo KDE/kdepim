@@ -357,7 +357,7 @@ public:
   DecryptVerifyJob * decryptVerifyJob( bool ) const { return 0; }
   RefreshKeysJob * refreshKeysJob() const { return 0; }
 
-  SpecialJob * specialJob( const QMap<QString,QString> & ) const { return 0; }
+  SpecialJob * specialJob( const char *, const QMap<QString,QVariant> & ) const { return 0; }
 };
 
 Kleo::ChiasmusBackend::ChiasmusBackend()
