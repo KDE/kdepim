@@ -1395,10 +1395,17 @@ Kleo::KeyListJob * CryptPlugWrapper::keyListJob( bool remote, bool includeSigs, 
   if ( !context )
     return 0;
 
-  unsigned int mode = remote ? GpgME::Context::Extern : GpgME::Context::Local;
+  unsigned int mode = context->keyListMode();
+  if ( remote ) {
+    mode |= GpgME::Context::Extern;
+    mode &= ~GpgME::Context::Local;
+  } else {
+    mode |= GpgME::Context::Local;
+    mode &= ~GpgME::Context::Extern;
+  }
   if ( includeSigs ) mode |= GpgME::Context::Signatures;
   if ( validate ) mode |= GpgME::Context::Validate;
-  context->addKeyListMode( mode );
+  context->setKeyListMode( mode );
   return new Kleo::QGpgMEKeyListJob( context );
 }
 
