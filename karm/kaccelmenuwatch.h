@@ -81,7 +81,7 @@ public:
 
 	/** 
 	 * Return the last menu set with KAccelMenuWatch::setMenu(QPopupMenu*),
-         * or 0 if none has been set.
+	 * or 0 if none has been set.
 	 */
 	QPopupMenu *currentMenu() const  { return _menu; }
 
