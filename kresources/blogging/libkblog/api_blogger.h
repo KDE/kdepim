@@ -24,49 +24,68 @@ namespace KXMLRPC
 
 namespace KBlog {
 
+class BloggerPostingWrapper;
+
 class bloggerAPI : public blogInterface
 {
     Q_OBJECT
   public:
     bloggerAPI( const KURL &server, QObject *parent = 0L, const char *name = 0L );
     ~bloggerAPI();
-    QString interfaceName() { return "Blogger API 1.0"; }
+    QString interfaceName() const { return "Blogger API 1.0"; }
+    QString defaultBlogID() const { return mDefaultBlogID; }
 
   public slots:
     void initServer();
     void getBlogs();
-    void post( const BlogPosting& post, bool publish = false );
-    void editPost( const BlogPosting& post, bool publish = false );
+    void post( BlogPosting *post, bool publish = false );
+    void editPost( BlogPosting *post, bool publish = false );
     void fetchPosts( const QString &blogID, int maxPosts );
     void fetchPost( const QString &postID );
     // void fetchTemplates();
-    void deletePost( const QString &postID );
+    void deletePost( BlogPosting *posting );
+    
+    void setDefaultBlogID( const QString &blogID );
 
   private slots:
     void userInfoFinished( const QValueList<QVariant> & );
     void listFinished( const QValueList<QVariant> & );
     void blogListFinished( const QValueList<QVariant> & );
-    void deleteFinished( const QValueList<QVariant> & );
+//     void deleteFinished( const QValueList<QVariant> & );
     void getFinished( const QValueList<QVariant> & );
-    void postFinished( const QValueList<QVariant> & );
+//     void postFinished( const QValueList<QVariant> & );
     void fault( int, const QString& );
 
   protected:
+    enum blogFunctions {
+      bloggerGetUserInfo,
+      bloggerGetUsersBlogs,
+      bloggerGetRecentPosts,
+      bloggerNewPost,
+      bloggerEditPost,
+      bloggerDeletePost,
+      bloggerGetPost,
+      bloggerGetTemplate,
+      bloggerSetTemplate
+    };
+
     QValueList<QVariant> defaultArgs( const QString &id = QString::null );
     void warningNotInitialized();
     
     static QString escapeContent( const QString &content );
-    QString formatContents( const BlogPosting &blog );
-    bool readPostingFromMap( BlogPosting &post, 
+    QString formatContents( BlogPosting *blog );
+    bool readPostingFromMap( BlogPosting *post, 
         const QMap<QString, QVariant> &postInfo );
-    bool readBlogInfoFromMap( BlogListItem &blog, 
+    bool readBlogInfoFromMap( KBlog::BlogListItem &blog, 
         const QMap<QString, QVariant> &postInfo );
-        
-    void dumpBlog( const BlogPosting &blog );
 
+    BloggerPostingWrapper *createWrapper( BlogPosting *posting );
+    virtual QString getFunctionName( blogFunctions type );
+    
   private:
     KXMLRPC::Server *mXMLRPCServer;
     bool isValid;
+    QString mDefaultBlogID;
 };
 
 };

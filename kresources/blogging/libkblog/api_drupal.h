@@ -24,7 +24,8 @@ class drupalAPI : public bloggerAPI
 public:
   drupalAPI( const KURL &server, QObject *parent = 0L, const char *name = 0L );
   ~drupalAPI();
-  QString interfaceName() { return "Drupal API"; }
+  QString interfaceName() const { return "Drupal API"; }
+  QString getFunctionName( blogFunctions type );
 };
 
 };

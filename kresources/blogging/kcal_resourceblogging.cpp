@@ -22,13 +22,6 @@
 */
 
 
-/*
-      void resourceChanged( ResourceCalendar * );
-    emit resourceLoaded( ResourceCalendar * );
-    void resourceSaved( ResourceCalendar * );
-    void resourceLoadError( ResourceCalendar *, const QString &error );
-    void resourceSaveError( ResourceCalendar *, const QString &error );
-*/
 #include "kcal_resourceblogging.h"
 
 #include <libkblog/api_blogger.h>
@@ -46,7 +39,27 @@
 
 
 using namespace KCal;
-using namespace KBlog;
+//using namespace KBlog;
+namespace KBlog {
+class JournalBlogPosting : public KBlog::BlogPosting
+{
+public:
+  JournalBlogPosting( Journal *journal ) : BlogPosting(), mJournal( journal ) {}
+  JournalBlogPosting( Journal *journal, const BlogPosting &post ) : BlogPosting(post), mJournal( journal ) {}
+  JournalBlogPosting( const JournalBlogPosting &post ) : BlogPosting(post), mJournal( post.mJournal ) {}
+  virtual ~JournalBlogPosting() {}  
+
+protected:
+  // Override this method to detect the new postID assigned when adding a new post
+  virtual void assignPostID( const QString &postID ) 
+  {
+    if ( mJournal ) 
+      mJournal->setCustomProperty( "KCalBloggerRes", "PostID", postID );
+  }
+  Journal *mJournal;
+};
+};
+
 
 
 QString ResourceBlogging::mAppID = QString("20ffffffd7ffffffc5ffffffbdffffff87ffffffb72d39fffffffe5c4bffffffcfffffff80ffffffd4665cfffffff375ffffff88ffffff871a0cffffff8029");
@@ -130,37 +143,37 @@ int ResourceBlogging::serverAPI() const
   return mServerAPI;
 }
 
-void ResourceBlogging::setTemplate( const BlogTemplate &templ )
+void ResourceBlogging::setTemplate( const KBlog::BlogTemplate &templ )
 {
   mTemplate = templ;
 }
-BlogTemplate ResourceBlogging::getTemplate() const
+KBlog::BlogTemplate ResourceBlogging::getTemplate() const
 {
   return mTemplate;
 }
 
-blogInterface *ResourceBlogging::initBlogAPI( int serverAPI, const KURL &url, QObject*parent ) 
+KBlog::blogInterface *ResourceBlogging::initBlogAPI( int serverAPI, const KURL &url, QObject*parent ) 
 {
-  blogInterface *blogIf = 0;
+  KBlog::blogInterface *blogIf = 0;
   switch ( serverAPI ) {
-    case blogAPIBlogger2:
+    case KBlog::blogAPIBlogger2:
 // TODO:      blogIf =
       break;
-    case blogAPIFile:
-      blogIf = new fileAPI( url, parent, "FileAPI" );
+    case KBlog::blogAPIFile:
+      blogIf = new KBlog::fileAPI( url, parent, "FileAPI" );
       break;
-    case blogAPIDrupal:
-      blogIf = new drupalAPI( url, parent, "DrupalAPI" );
+    case KBlog::blogAPIDrupal:
+      blogIf = new KBlog::drupalAPI( url, parent, "DrupalAPI" );
       break;
-    case blogAPIMetaWeblog:
-      blogIf = new metaweblogAPI( url, parent, "MetaWeblogAPI" );
+    case KBlog::blogAPIMetaWeblog:
+      blogIf = new KBlog::metaweblogAPI( url, parent, "MetaWeblogAPI" );
       break;
-    case blogAPIMovableType:
-      blogIf = new movabletypeAPI( url, parent, "MovableTypeAPI" );
+    case KBlog::blogAPIMovableType:
+      blogIf = new KBlog::movabletypeAPI( url, parent, "MovableTypeAPI" );
       break;
-    case blogAPIBlogger:
+    case KBlog::blogAPIBlogger:
     default:
-      blogIf = new bloggerAPI( url, parent, "BloggerAPI" );
+      blogIf = new KBlog::bloggerAPI( url, parent, "BloggerAPI" );
       break;
   }
   if ( !blogIf ) 
@@ -168,15 +181,16 @@ blogInterface *ResourceBlogging::initBlogAPI( int serverAPI, const KURL &url, QO
     
   blogIf->setUsername( url.user() );
   blogIf->setPassword( url.pass() );
+  blogIf->setTemplateTags( mTemplate );
   
   connect( blogIf, SIGNAL( serverInfoSignal( const QString &, const QString &, const QString & ) ),
            this, SLOT( serverInfo( const QString &, const QString &, const QString & ) ) );
-  connect( blogIf, SIGNAL( blogListSignal( QValueList<BlogListItem> ) ),
-           this, SLOT( blogList( QValueList<BlogListItem> ) ) );
+  connect( blogIf, SIGNAL( blogListSignal( QValueList<KBlog::BlogListItem> ) ),
+           this, SLOT( blogList( QValueList<KBlog::BlogListItem> ) ) );
 //  connect( blogIf, SIGNAL( recentPostsSignal( QStringList ) ),
 //           this, SLOT( recentPosts( QStringList ) ) ) ;
-  connect( blogIf, SIGNAL( recentPostsSignal( const QValueList<BlogPosting> & ) ),
-           this, SLOT( recentPosts( const QValueList<BlogPosting> & ) ) );
+  connect( blogIf, SIGNAL( recentPostsSignal( const QValueList<KBlog::BlogPosting*> & ) ),
+           this, SLOT( recentPosts( const QValueList<KBlog::BlogPosting*> & ) ) );
   
 
   connect( blogIf, SIGNAL( postFinishedSignal( bool ) ),
@@ -187,8 +201,8 @@ blogInterface *ResourceBlogging::initBlogAPI( int serverAPI, const KURL &url, QO
            this, SLOT( editFinished( bool ) ) );
   connect( blogIf, SIGNAL( deleteFinishedSignal( bool ) ),
            this, SLOT( deleteFinished( bool ) ) );
-  connect( blogIf, SIGNAL( newPostSignal( const BlogPosting & ) ),
-           this, SLOT( newPost( const BlogPosting & ) ) );
+  connect( blogIf, SIGNAL( newPostSignal( KBlog::BlogPosting * ) ),
+           this, SLOT( newPost( KBlog::BlogPosting * ) ) );
 
   // Error message
   connect( blogIf, SIGNAL( error( const QString & ) ),
@@ -210,7 +224,10 @@ void ResourceBlogging::decrementDownloadCount()
   }
   if ( mProgress ) {
     mProgress->incCompletedItems( 1 );
-    if ( finished ) mProgress->setComplete();
+    if ( finished ) {
+      mProgress->setComplete();
+      mProgress = 0;
+    }
   }
 }
 
@@ -227,16 +244,20 @@ void ResourceBlogging::decrementUploadCount()
   }
   if ( mProgress ) {
     mProgress->incCompletedItems( 1 );
-    if ( finished ) mProgress->setComplete();
+    if ( finished ) {
+      mProgress->setComplete();
+      mProgress = 0;
+    }
   }
 }
 
-void ResourceBlogging::newPost( const BlogPosting &newblog )
+void ResourceBlogging::newPost( KBlog::BlogPosting *newblog )
 {
+  if ( !newblog ) return;
 kdDebug() << "ResourceBlogging::newPost(): Downloaded post with ID " << 
-newblog.postID() << endl;
+newblog->postID() << endl;
   if ( mProgress )
-    mProgress->setStatus( i18n("Received blog #%1").arg( newblog.postID() ) );
+    mProgress->setStatus( i18n("Received blog #%1").arg( newblog->postID() ) );
   Journal *j = journalFromBlog( newblog );
   if ( j ) addJournal( j );
   decrementDownloadCount();
@@ -303,40 +324,51 @@ kdDebug(5800) << "ResourceBlogging::load()" << endl;
 
 //    void serverInfo( const QString &nickname, const QString & m_userid, const QString & email );
 
-Journal *ResourceBlogging::journalFromBlog( const BlogPosting &blog ) 
+Journal *ResourceBlogging::journalFromBlog( KBlog::BlogPosting *blog ) 
 {
-  // FIXME:
+  if ( !blog ) return 0;
   Journal *j = new Journal();
-  j->setDtStart( blog.dateTime() );
-  kdDebug() << "Date for blog " << blog.title() << " is " 
-            << blog.dateTime().toString()<<endl;
-  j->setSummary( blog.title() );
-  j->setDescription( blog.content() );
-  j->setCategories( QStringList( blog.category() ) );
-  j->setOrganizer( blog.userID() );
-  j->setCustomProperty( "KCalBloggerRes", "UserID", blog.userID() );
-  j->setCustomProperty( "KCalBloggerRes", "BlogID", blog.blogID() );
-  j->setCustomProperty( "KCalBloggerRes", "PostID", blog.postID() );
+  if ( blog->dateTime().isValid() ) {
+    j->setDtStart( blog->dateTime() );
+  } else {
+    j->setDtStart( blog->creationDateTime() );
+  }
+  j->setCreated( blog->creationDateTime() );
+  j->setLastModified( blog->modificationDateTime() );
+  j->setFloats( false );
+  kdDebug() << "Date for blog " << blog->title() << " is " 
+            << blog->dateTime().toString()<<endl;
+  j->setSummary( blog->title() );
+  j->setDescription( blog->content() );
+  j->setCategories( QStringList( blog->category() ) );
+  j->setOrganizer( blog->userID() );
+  j->setCustomProperty( "KCalBloggerRes", "UserID", blog->userID() );
+  j->setCustomProperty( "KCalBloggerRes", "BlogID", blog->blogID() );
+  j->setCustomProperty( "KCalBloggerRes", "PostID", blog->postID() );
+  
+  j->setReadOnly( readOnly() );
   
   return j;
 }
 
-BlogPosting ResourceBlogging::blogFromJournal( Journal *journal ) 
+KBlog::JournalBlogPosting *ResourceBlogging::blogFromJournal( KCal::Journal *journal ) 
 {
-  BlogPosting item;
-  if ( journal ) {
-    item.setContent( journal->description() );
-    item.setTitle( journal->summary() );
-    item.setCategory( journal->categories().first() );
-    item.setDateTime( journal->dtStart() );
-    item.setUserID( journal->customProperty( "KCalBloggerRes", "UserID" ) );
-    item.setBlogID( journal->customProperty( "KCalBloggerRes", "BlogID" ) );
-    item.setPostID( journal->customProperty( "KCalBloggerRes", "PostID" ) );
+  KBlog::JournalBlogPosting *item = new KBlog::JournalBlogPosting( journal );
+  if ( journal && item ) {
+    item->setContent( journal->description() );
+    item->setTitle( journal->summary() );
+    item->setCategory( journal->categories().first() );
+    item->setDateTime( journal->dtStart() );
+    item->setModificationDateTime( journal->lastModified() );
+    item->setCreationDateTime( journal->created() );
+    item->setUserID( journal->customProperty( "KCalBloggerRes", "UserID" ) );
+    item->setBlogID( journal->customProperty( "KCalBloggerRes", "BlogID" ) );
+    item->setPostID( journal->customProperty( "KCalBloggerRes", "PostID" ) );
   }
   return item;
 }
 
-void ResourceBlogging::blogList( QValueList<BlogListItem> blogs )
+void ResourceBlogging::blogList( QValueList<KBlog::BlogListItem> blogs )
 {
   kdDebug(5800) << "ResourceBlogging::blogList() success" << endl;
 
@@ -348,11 +380,11 @@ void ResourceBlogging::blogList( QValueList<BlogListItem> blogs )
   if ( mProgress )
     mProgress->setTotalItems( mProgress->totalItems() + blogs.count() );
   mDownloading += blogs.count();
-  QValueList<BlogListItem>::Iterator it;
+  QValueList<KBlog::BlogListItem>::Iterator it;
   for ( it = blogs.begin(); it != blogs.end(); ++it ) {
 kdDebug()<<"Fetching List of posts for blog with ID="<<(*it).id()<<endl;
     // FIXME: Implement "last N blogs":
-    mBlogInterface->fetchPosts( (*it).id(), 50 );
+    mBlogInterface->fetchPosts( (*it).id(), 300 );
 //    mBlogInterface->fetchPost( (*it).ID );
   }
   enableChangeNotification();
@@ -384,27 +416,38 @@ bool ResourceBlogging::doSave()
   Incidence::List deletedBlogs = deletedIncidences();
   
   mUploading += newBlogs.count() + changedBlogs.count() + deletedBlogs.count();
-  // TODO: post the new blogs, update the changed blogs, and remove the 
-  // deleted blogs (if they have ever been on the server)
-/*  if ( mDownloadJob ) {
-    kdWarning() << "ResourceBlogging::save(): download still in progress."
-                << endl;
-    return false;
+  
+  Incidence::List::ConstIterator it;
+  // Add:
+  for ( it = newBlogs.constBegin(); it != newBlogs.constEnd(); ++it ) {
+    Journal *j = static_cast<Journal*>( *it );
+    KBlog::JournalBlogPosting *blog = blogFromJournal( j );
+    kdDebug() << "Posting blog " << j->summary() << ", datum=" 
+              << j->dtStart().toString() << endl;
+    mBlogInterface->post( blog, true );
+// FIXME:    delete blog;
   }
-  if ( mUploadJob ) {
-    kdWarning() << "ResourceBlogging::save(): upload still in progress."
-                << endl;
-    return false;
+  // Change:
+  for ( it = changedBlogs.constBegin(); it != changedBlogs.constEnd(); ++it ) {
+    Journal *j = static_cast<Journal*>( *it );
+    KBlog::JournalBlogPosting *blog = blogFromJournal( j );
+    kdDebug() << "Editing blog " << j->summary() << ", datum=" 
+              << j->dtStart().toString() << endl;
+    mBlogInterface->editPost( blog, true );
+// FIXME:    delete blog;
   }
-
-  mChangedIncidences = allChanges();
-
+  // Delete:
+  for ( it = deletedBlogs.constBegin(); it != deletedBlogs.constEnd(); ++it ) {
+    if ( *it && mBlogInterface ) {
+      QString postID( (*it)->customProperty( "KCalBloggerRes", "PostID" ) );
+      if ( !postID.isEmpty() ) {
+        mBlogInterface->deletePost( postID );
+        kdDebug() << "Deleting blog " << postID << endl;
+      }
+    }
+  }
   saveCache();
-
-  mUploadJob = KIO::file_copy( KURL( cacheFile() ), mUploadUrl, -1, true );
-  connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotSaveJobResult( KIO::Job * ) ) );
-*/
+  
   return true;
 }
 
@@ -421,7 +464,7 @@ kdDebug()<<"resourceBlogging::serverInfo( nickname="<<nickname<<", m_userid="<<m
   doDownLoad();
 }
 
-void ResourceBlogging::recentPosts( const QValueList<BlogPosting> &blogs )
+void ResourceBlogging::recentPosts( const QValueList<KBlog::BlogPosting*> &blogs )
 {
 kdDebug() << "resourceBlogging::recentPosts(), #=" << blogs.count() << endl;
   disableChangeNotification();
@@ -431,9 +474,9 @@ kdDebug() << "resourceBlogging::recentPosts(), #=" << blogs.count() << endl;
   }
   mDownloading += blogs.count();
   --mDownloading; 
-  QValueList<BlogPosting>::ConstIterator it;
+  QValueList<KBlog::BlogPosting*>::ConstIterator it;
   for ( it = blogs.constBegin(); it != blogs.constEnd(); ++it ) {
-kdDebug()<<"Fetching blog with ID=" << (*it).postID() << endl;
+kdDebug()<<"Fetching blog with ID=" << (*it)->postID() << endl;
     newPost( *it );
 //    mBlogInterface->fetchPost( *it );
   }
@@ -486,6 +529,13 @@ kdWarning()<<"ResourceBlogging::error: " << faultMessage <<
     kdWarning()<<"Connection error while trying to establish connection:" <<
          faultMessage << endl;
     mConnectionStatus &= ~blogConnecting;
+    mDownloading = 0;
+    if ( mProgress ) {
+      mProgress->cancel();
+      mProgress->setComplete();
+      mProgress = 0;
+    }
+    loadError( faultMessage );
   } else if ( mConnectionStatus & blogLoading ) {
     decrementDownloadCount();
     loadError( faultMessage );

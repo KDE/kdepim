@@ -24,7 +24,7 @@ class metaweblogAPI : public bloggerAPI
 public:
   metaweblogAPI( const KURL &server, QObject *parent = 0L, const char *name = 0L );
   ~metaweblogAPI();
-  QString interfaceName() { return "MetaWeblog API"; }
+  QString interfaceName() const { return "MetaWeblog API"; }
 };
 
 };

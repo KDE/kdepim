@@ -29,7 +29,9 @@
 #include <libkcal/incidence.h>
 #include <libkcal/resourcecached.h>
 
-using namespace KBlog;
+namespace KBlog {
+class JournalBlogPosting;
+};
 namespace KCal {
 
 class Journal;
@@ -59,8 +61,8 @@ class ResourceBlogging : public ResourceCached
     void setServerAPI( int );
     int serverAPI() const;
     
-    void setTemplate( const BlogTemplate &templ );
-    BlogTemplate getTemplate() const;
+    void setTemplate( const KBlog::BlogTemplate &templ );
+    KBlog::BlogTemplate getTemplate() const;
 
     KABC::Lock *lock();
 
@@ -73,14 +75,14 @@ class ResourceBlogging : public ResourceCached
     
   protected slots:
     void serverInfo( const QString &nickname, const QString & m_userid, const QString & email );
-    void blogList( QValueList<BlogListItem> blogs );
-    void recentPosts( const QValueList<BlogPosting> &blogs );
+    void blogList( QValueList<KBlog::BlogListItem> blogs );
+    void recentPosts( const QValueList<KBlog::BlogPosting*> &blogs );
     //void post( const blogPost &post );
     void postFinished( bool success );
     void publishFinished( bool success );
     void editFinished( bool success );
     void deleteFinished( bool success );
-    void newPost( const BlogPosting& post );
+    void newPost( KBlog::BlogPosting *post );
 
     // Error message
     void error( const QString &faultMessage );
@@ -92,19 +94,19 @@ class ResourceBlogging : public ResourceCached
 
     void addInfoText( QString & ) const;
     
-    Journal *journalFromBlog( const KBlog::BlogPosting &blog );
-    KBlog::BlogPosting blogFromJournal( Journal *journal );
+    Journal *journalFromBlog( KBlog::BlogPosting *blog );
+    KBlog::JournalBlogPosting *blogFromJournal( KCal::Journal *journal );
 
   private:
     void init();
-    blogInterface *initBlogAPI( int serverAPI, const KURL &url, QObject*parent );
+    KBlog::blogInterface *initBlogAPI( int serverAPI, const KURL &url, QObject*parent );
     void decrementDownloadCount();
     void decrementUploadCount();
     void handleUploadResult( bool success );
 
     KURL mUrl;
     int mServerAPI;
-    BlogTemplate mTemplate;
+    KBlog::BlogTemplate mTemplate;
 
     KPIM::ProgressItem *mProgress;
 

@@ -50,11 +50,11 @@ ResourceBloggingConfig::ResourceBloggingConfig( QWidget* parent,  const char* na
   mPage = new ResourceBloggingSettings( this );
   mainLayout->addMultiCellWidget( mPage, 1, 1, 0, 1 );
 
-  mReloadConfig = new ResourceCachedReloadConfig( this );
+/*  mReloadConfig = new ResourceCachedReloadConfig( this );
   mainLayout->addMultiCellWidget( mReloadConfig, 2, 2, 0, 1 );
 
   mSaveConfig = new ResourceCachedSaveConfig( this );
-  mainLayout->addMultiCellWidget( mSaveConfig, 3, 3, 0, 1 );
+  mainLayout->addMultiCellWidget( mSaveConfig, 3, 3, 0, 1 );*/
 }
 
 void ResourceBloggingConfig::loadSettings( KRES::Resource *resource )
@@ -72,14 +72,14 @@ void ResourceBloggingConfig::loadSettings( KRES::Resource *resource )
     
     mPage->mServerAPI->setCurrentItem( res->serverAPI() );
     
-    const BlogTemplate templ( res->getTemplate() );
+    const KBlog::BlogTemplate templ( res->getTemplate() );
     mPage->mOpenTitle->setText( templ.titleTagOpen() );
     mPage->mCloseTitle->setText( templ.titleTagClose() );
     mPage->mOpenCategory->setText( templ.categoryTagOpen() );
     mPage->mCloseCategory->setText( templ.categoryTagClose() );
     
-    mReloadConfig->loadSettings( res );
-    mSaveConfig->loadSettings( res );
+/*    mReloadConfig->loadSettings( res );
+    mSaveConfig->loadSettings( res );*/
   } else {
     kdError(5700) << "ResourceBloggingConfig::loadSettings(): no ResourceBlogging, cast failed" << endl;
   }
@@ -106,8 +106,8 @@ void ResourceBloggingConfig::saveSettings( KRES::Resource *resource )
     templ.setCategoryTagClose( mPage->mCloseCategory->text() );
     res->setTemplate( templ );
 
-    mReloadConfig->saveSettings( res );
-    mSaveConfig->saveSettings( res );
+/*    mReloadConfig->saveSettings( res );
+    mSaveConfig->saveSettings( res );*/
 
   } else {
     kdError(5700) << "ResourceBloggingConfig::saveSettings(): no ResourceBlogging, cast failed" << endl;

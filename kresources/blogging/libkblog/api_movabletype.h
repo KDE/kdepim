@@ -24,7 +24,7 @@ class movabletypeAPI : public bloggerAPI
 public:
   movabletypeAPI( const KURL &server, QObject *parent = 0L, const char *name = 0L );
   ~movabletypeAPI();
-  QString interfaceName() { return "MovableType API"; }
+  QString interfaceName() const { return "MovableType API"; }
 };
 
 };

@@ -1,6 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2003 by ian reinhart geiser                             *
-*   geiseri@kde.org                                                       *
+*   Copyright (C) 2004 by Reinhold Kainhofer <reinhold@kainhofer.com>     *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
 *   it under the terms of the GNU General Public License as published by  *
@@ -74,7 +73,7 @@ void fileAPI::getBlogs()
 
 }
 
-void fileAPI::post( const BlogPosting &/*pst*/, bool /*publish*/ )
+void fileAPI::post( BlogPosting */*pst*/, bool /*publish*/ )
 {
 /*  if ( isValid )
   {
@@ -149,7 +148,7 @@ void fileAPI::fetchPost( const QString &/*postID*/ )
 //{
 //}
 
-void fileAPI::editPost( const BlogPosting& /*pst*/, bool /*publish*/ )
+void fileAPI::editPost( BlogPosting */*pst*/, bool /*publish*/ )
 {
 /*  if ( isValid )
   {
@@ -184,7 +183,8 @@ void fileAPI::editPost( const BlogPosting& /*pst*/, bool /*publish*/ )
 */
 }
 
-void fileAPI::deletePost( const QString &/*postID*/ )
+void fileAPI::deletePost( BlogPosting *posting )
+//void fileAPI::deletePost( const QString &/*postID*/ )
 {
 /*  if ( isValid )
   {
@@ -202,16 +202,6 @@ void fileAPI::deletePost( const QString &/*postID*/ )
   }*/
 }
 
-void fileAPI::dumpBlog( const BlogPosting &blog ) 
-{
-  kdDebug() << "-----------------------------------" << endl;
-  kdDebug() << "Post " << blog.postID() << " by \"" << 
-               blog.userID() << "\" on " << 
-               blog.dateTime().toString() << endl;
-  kdDebug() << "Title: " << blog.title() << endl;
-  kdDebug() << blog.content() <<endl;
-  kdDebug() << "-----------------------------------" << endl;
-}
 /*void fileAPI::listFinished( const QValueList<QVariant> &message )
 {
   //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;

@@ -195,51 +195,52 @@ QString Query::marshal( const QVariant &arg ) const
   {
       case QVariant::String:
       case QVariant::CString:
-      return "<value><string>" + arg.toString() + "</string></value>\r\n";
+//           return "<value><string>" + arg.toString() + "</string></value>\r\n";
+          return "<value>" + arg.toString() + "</value>\r\n";
       case QVariant::Int:
-      return "<value><int>" + QString::number( arg.toInt() ) + "</int></value>\r\n";
+          return "<value><int>" + QString::number( arg.toInt() ) + "</int></value>\r\n";
       case QVariant::Double:
-      return "<value><double>" + QString::number( arg.toDouble() ) + "</double></value>\r\n";
+          return "<value><double>" + QString::number( arg.toDouble() ) + "</double></value>\r\n";
       case QVariant::Bool:
-      {
-        QString markup = "<value><boolean>";
-        markup += arg.toBool() ? "1" : "0";
-        markup += "</boolean></value>\r\n";
-        return markup;
-      }
+          {
+            QString markup = "<value><boolean>";
+            markup += arg.toBool() ? "1" : "0";
+            markup += "</boolean></value>\r\n";
+            return markup;
+          }
       case QVariant::ByteArray:
-      return "<value><base64>" + KCodecs::base64Encode( arg.toByteArray() ) + "</base64></value>\r\n";
+          return "<value><base64>" + KCodecs::base64Encode( arg.toByteArray() ) + "</base64></value>\r\n";
       case QVariant::DateTime:
-      return "<value><datetime.iso8601>" + arg.toDateTime().toString( Qt::ISODate ) + "</datetime.iso8601></value>\r\n";
+          return "<value><datetime.iso8601>" + arg.toDateTime().toString( Qt::ISODate ) + "</datetime.iso8601></value>\r\n";
       case QVariant::List:
-      {
-        QString markup = "<value><array><data>\r\n";
-        const QValueList<QVariant> args = arg.toList();
-        QValueList<QVariant>::ConstIterator it = args.begin();
-        QValueList<QVariant>::ConstIterator end = args.end();
-        for ( ; it != end; ++it )
-          markup += marshal( *it );
-        markup += "</data></array></value>\r\n";
-        return markup;
-      }
+          {
+            QString markup = "<value><array><data>\r\n";
+            const QValueList<QVariant> args = arg.toList();
+            QValueList<QVariant>::ConstIterator it = args.begin();
+            QValueList<QVariant>::ConstIterator end = args.end();
+            for ( ; it != end; ++it )
+              markup += marshal( *it );
+            markup += "</data></array></value>\r\n";
+            return markup;
+          }
       case QVariant::Map:
-      {
-        QString markup = "<value><struct>\r\n";
-        QMap<QString, QVariant> map = arg.toMap();
-        QMap<QString, QVariant>::ConstIterator it = map.begin();
-        QMap<QString, QVariant>::ConstIterator end = map.end();
-        for ( ; it != end; ++it )
-        {
-          markup += "<member>\r\n";
-          markup += "<name>" + it.key() + "</name>\r\n";
-          markup += marshal( it.data() );
-          markup += "</member>\r\n";
-        }
-        markup += "</struct></value>\r\n";
-        return markup;
-      }
+          {
+            QString markup = "<value><struct>\r\n";
+            QMap<QString, QVariant> map = arg.toMap();
+            QMap<QString, QVariant>::ConstIterator it = map.begin();
+            QMap<QString, QVariant>::ConstIterator end = map.end();
+            for ( ; it != end; ++it )
+            {
+              markup += "<member>\r\n";
+              markup += "<name>" + it.key() + "</name>\r\n";
+              markup += marshal( it.data() );
+              markup += "</member>\r\n";
+            }
+            markup += "</struct></value>\r\n";
+            return markup;
+          }
       default:
-      kdWarning() << "Failed to marshal unknown variant type: " << arg.type() << endl;
+          kdWarning() << "Failed to marshal unknown variant type: " << arg.type() << endl;
   };
   return QString::null;
 }

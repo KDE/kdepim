@@ -8,6 +8,7 @@
 *   (at your option) any later version.                                   *
 ***************************************************************************/
 #include "bloginterface.h"
+#include <kdebug.h>
 
 using namespace KBlog;
 
@@ -20,6 +21,19 @@ blogInterface::blogInterface( const KURL &url, QObject *parent, const char *name
 
 blogInterface::~blogInterface()
 {}
+
+void blogInterface::dumpBlog( BlogPosting *blog ) 
+{
+  kdDebug() << "-----------------------------------" << endl;
+  kdDebug() << "Post " << blog->postID() << " by \"" << 
+               blog->userID() << "\" on " << 
+               blog->dateTime().toString() << endl;
+  kdDebug() << "Title: " << blog->title() << endl;
+  kdDebug() << blog->content() <<endl;
+  kdDebug() << "-----------------------------------" << endl;
+}
+
+
 
 void blogInterface::setPassword( const QString &pass )
 {
@@ -56,4 +70,15 @@ BlogTemplate blogInterface::templateTags() const
 {
   return mTemplate;
 }
+
+void blogInterface::deletePost( const QString &postID )
+{
+  BlogPosting *post = new BlogPosting();
+  post->setPostID( postID );
+  deletePost( post );
+  delete post;
+}
+
+
+
 #include "bloginterface.moc"

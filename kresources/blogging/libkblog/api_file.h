@@ -25,17 +25,17 @@ class fileAPI : public blogInterface
   public:
     fileAPI( const KURL &server, QObject *parent = 0L, const char *name = 0L );
     ~fileAPI();
-    QString interfaceName() { return "File API"; }
+    QString interfaceName() const { return "File API"; }
 
   public slots:
     void initServer();
     void getBlogs();
-    void post( const BlogPosting& post, bool publish = false );
-    void editPost( const BlogPosting& post, bool publish = false );
+    void post( BlogPosting *post, bool publish = false );
+    void editPost( BlogPosting *post, bool publish = false );
     void fetchPosts( const QString &blogID, int maxPosts );
     void fetchPost( const QString &postID );
     // void fetchTemplates();
-    void deletePost( const QString &postID );
+    void deletePost( BlogPosting *posting );
 
   private slots:
 /*    void userInfoFinished( const QValueList<QVariant> & );
@@ -48,15 +48,14 @@ class fileAPI : public blogInterface
 */
 
   private:
-    void dumpBlog( const BlogPosting &blog );
     bool isValid;
     
 /*    KIO::Job *mDownloadJob;
     KIO::Job *mUploadJob;
     QString mTempFile;*/
     
-    BlogListItem mBlogInfo;
-    QValueList<BlogPosting> mBlogList;
+    KBlog::BlogListItem mBlogInfo;
+    QValueList<KBlog::BlogPosting> mBlogList;
 };
 
 };

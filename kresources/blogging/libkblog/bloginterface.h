@@ -36,7 +36,7 @@ class BlogPosting
 {
 public:
   BlogPosting() {}
-  ~BlogPosting() {}  
+  virtual ~BlogPosting() {}  
 
   QString userID() const { return mUserID; }
   void setUserID( const QString &userID ) { mUserID = userID; }
@@ -45,7 +45,7 @@ public:
   void setBlogID( const QString &blogID ) { mBlogID = blogID; }
 
   QString postID() const { return mPostID; }
-  void setPostID( const QString &postID ) { mPostID = postID; }
+  void setPostID( const QString &postID ) { assignPostID( postID ); mPostID = postID; }
 
   QString title() const { return mTitle; }
   void setTitle( const QString &title ) { mTitle = title; }
@@ -59,7 +59,19 @@ public:
   QDateTime dateTime() const { return mDateTime; }
   void setDateTime( const QDateTime &datetime ) { mDateTime = datetime; }
   
+  QDateTime creationDateTime() const { return mCreationDateTime; }
+  void setCreationDateTime( const QDateTime &datetime ) { mCreationDateTime = datetime; }
+  
+  QDateTime modificationDateTime() const { return mModificationDateTime; }
+  void setModificationDateTime( const QDateTime &datetime ) { mModificationDateTime = datetime; }
+  
+  virtual void wasDeleted( bool ) {}
+  virtual void wasUploaded( bool ) {}
+  virtual void error( int /*code*/, const QString &/*error*/ ) {}
+
 protected:
+  // Override this method to detect the new postID assigned when adding a new post
+  virtual void assignPostID( const QString &/*postID*/ ) {}
   QString mUserID;
   QString mBlogID;
   QString mPostID;
@@ -67,7 +79,10 @@ protected:
   QString mContent;
   QString mCategory;
   QDateTime mDateTime;
+  QDateTime mCreationDateTime;
+  QDateTime mModificationDateTime;
 };
+
 
 class BlogListItem
 {
@@ -126,7 +141,7 @@ class blogInterface : public QObject
   public:
     blogInterface( const KURL &server, QObject *parent = 0L, const char *name = 0L );
     virtual ~blogInterface();
-    virtual QString interfaceName() = 0;
+    virtual QString interfaceName() const = 0;
     
     void setAppID( const QString &appID ) { mAppID = appID; }
     QString appID() const { return mAppID; }
@@ -142,31 +157,34 @@ class blogInterface : public QObject
 
     void setTemplateTags( const BlogTemplate& Template );
     BlogTemplate templateTags() const;
+    
+    static void dumpBlog( BlogPosting *blog );
 
 
   public slots:
     virtual void initServer() = 0;
     virtual void getBlogs() = 0;
-    virtual void post( const BlogPosting& data, bool publish = false ) = 0;
-    virtual void editPost( const BlogPosting& data, bool publish = false ) = 0;
+    virtual void post( BlogPosting *data, bool publish = false ) = 0;
+    virtual void editPost( BlogPosting *data, bool publish = false ) = 0;
     virtual void fetchPosts( const QString &blogID, int maxPosts ) = 0;
     virtual void fetchPost( const QString &postID ) = 0;
     // void fetchTemplates() = 0;
-    virtual void deletePost( const QString &postID ) = 0;
+    virtual void deletePost( const QString &postID );
+    virtual void deletePost( BlogPosting *posting ) = 0;
 
   signals:
     void serverInfoSignal( const QString &/*nickname*/, 
                            const QString & /*m_userid*/,
                            const QString & /*email*/ );
-    void blogListSignal( QValueList<BlogListItem> /*blogs*/ );
+    void blogListSignal( QValueList<KBlog::BlogListItem> /*blogs*/ );
     void recentPostsSignal( QStringList /*postIDs*/ );
-    void recentPostsSignal( const QValueList<BlogPosting> &/*blogs*/ );
+    void recentPostsSignal( const QValueList<KBlog::BlogPosting*> &/*blogs*/ );
     //void post( const blogPost &post );
     void postFinishedSignal( bool /*success*/ );
     void publishFinishedSignal( bool /*success*/ );
     void editFinishedSignal( bool /*success*/ );
     void deleteFinishedSignal( bool /*success*/ );
-    void newPostSignal( const BlogPosting& /*post*/ );
+    void newPostSignal( KBlog::BlogPosting */*post*/ );
 
     // Error message
     void error( const QString &/*faultMessage*/ );

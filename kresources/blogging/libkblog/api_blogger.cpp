@@ -9,12 +9,18 @@
 ***************************************************************************/
 #include "api_blogger.h"
 #include "xmlrpciface.h"
+#include "bloggerwrapper.h"
 #include <kdebug.h>
 #include <klocale.h>
 
 #include <qregexp.h>
 
-using namespace KBlog;
+//using namespace KBlog;
+
+
+
+namespace KBlog {
+
 
 bloggerAPI::bloggerAPI( const KURL &kurl, QObject *parent, const char *name ) : blogInterface( kurl, parent, name )
 {
@@ -27,10 +33,31 @@ bloggerAPI::bloggerAPI( const KURL &kurl, QObject *parent, const char *name ) : 
 bloggerAPI::~bloggerAPI()
 {}
 
+QString bloggerAPI::getFunctionName( blogFunctions type )
+{
+  switch ( type ) {
+    case bloggerGetUserInfo:    return "blogger.getUserInfo";
+    case bloggerGetUsersBlogs:  return "blogger.getUsersBlogs";
+    case bloggerGetRecentPosts: return "blogger.getRecentPosts";
+    case bloggerNewPost:        return "blogger.newPost";
+    case bloggerEditPost:       return "blogger.editPost";
+    case bloggerDeletePost:     return "blogger.deletePost";
+    case bloggerGetPost:        return "blogger.getPost";
+    case bloggerGetTemplate:    return "blogger.getTemplate";
+    case bloggerSetTemplate:    return "blogger.setTemplate";
+    default: return QString::null;
+  }
+}
+
 
 /*****************************************************
  *     Helper methods
  *****************************************************/
+ 
+void bloggerAPI::setDefaultBlogID( const QString &blogID )
+{
+  mDefaultBlogID = blogID;
+}
 
 QValueList<QVariant> bloggerAPI::defaultArgs( const QString &id )
 {
@@ -60,78 +87,91 @@ QString bloggerAPI::escapeContent( const QString &content )
   return post;
 }
 
-QString bloggerAPI::formatContents( const BlogPosting &blog )
+QString bloggerAPI::formatContents( BlogPosting *blog )
 {
-  QString content = blog.content();
+  if ( !blog ) return QString::null;
+  QString content = blog->content();
 
   QString post = "";
-  if ( !blog.title().isEmpty() ) {
-    post += mTemplate.titleTagOpen() + blog.title() + mTemplate.titleTagClose() + "\n";
+  if ( !blog->title().isEmpty() ) {
+    post += mTemplate.titleTagOpen() + blog->title() + mTemplate.titleTagClose() + "\n";
   }
-  if ( !blog.category().isEmpty() ) {
-    post += mTemplate.categoryTagOpen() + blog.category() + mTemplate.categoryTagClose() + "\n";
+  if ( !blog->category().isEmpty() ) {
+    post += mTemplate.categoryTagOpen() + blog->category() + mTemplate.categoryTagClose() + "\n";
   }
   post += content;
   return escapeContent( post );
 }
 
-void bloggerAPI::dumpBlog( const BlogPosting &blog ) 
-{
-  kdDebug() << "-----------------------------------" << endl;
-  kdDebug() << "Post " << blog.postID() << " by \"" << 
-               blog.userID() << "\" on " << 
-               blog.dateTime().toString() << endl;
-  kdDebug() << "Title: " << blog.title() << endl;
-  kdDebug() << blog.content() <<endl;
-  kdDebug() << "-----------------------------------" << endl;
-}
-
-bool bloggerAPI::readPostingFromMap( BlogPosting &post, 
+bool bloggerAPI::readPostingFromMap( BlogPosting *post, 
         const QMap<QString, QVariant> &postInfo )
 {
   // FIXME:
+  if ( !post ) return false;
   QStringList mapkeys = postInfo.keys();
   kdDebug() << endl << "Keys: " << mapkeys.join(", ") << endl << endl;
 
-  post.setDateTime( postInfo[ "dateCreated" ].toDateTime() );
-  post.setUserID( postInfo[ "userid" ].toString() );
-  post.setPostID( postInfo[ "postid" ].toString() );
-  post.setTitle( postInfo[ "title" ].toString() );
-//   post.description = postInfo[ "description" ].toString();
-  QString postContent = postInfo[ "content" ].toString();
+  QDateTime dt( postInfo[ "dateCreated" ].toDateTime() );
+  if ( dt.isValid() ) post->setCreationDateTime( dt );
+  dt = postInfo[ "lastModified" ].toDateTime();
+  if ( dt.isValid() ) post->setModificationDateTime( dt );
+  dt = postInfo[ "postDate" ].toDateTime();
+  if ( dt.isValid() ) post->setDateTime( dt );
   
-/////
+  post->setUserID( postInfo[ "userid" ].toString() );
+  post->setPostID( postInfo[ "postid" ].toString() );
+  
+  QString title( postInfo[ "title" ].toString() );
+  QString description( postInfo[ "description" ].toString() );
+  QString contents( postInfo[ "content" ].toString() );
+  QString category;
+  
+  if ( (title.isEmpty() || description.isEmpty() ) && !contents.isEmpty()  ) {
+    // we don't have both title and description, so use the content (ie. it's an 
+    // old-style blogger api, not the extended drupal api.
+    
+    kdDebug() << "No title and description given, so it's an old-style "
+                 "Blogger API without extensions" << endl;
+    QString catTagOpen = mTemplate.categoryTagOpen();
+    QString catTagClose = mTemplate.categoryTagClose();
+    QString titleTagOpen = mTemplate.titleTagOpen();
+    QString titleTagClose = mTemplate.titleTagClose();
 
-  QString catTagOpen = mTemplate.categoryTagOpen();
-  QString catTagClose = mTemplate.categoryTagClose();
-  QString titleTagOpen = mTemplate.titleTagOpen();
-  QString titleTagClose = mTemplate.titleTagClose();
-
-  int catStart = postContent.find( catTagOpen, 0, false ) + catTagOpen.length();
-  int catEnd = postContent.find( catTagClose, 0, false );
-  if ( catEnd > catStart )
-  {
-    QString cat = postContent.mid( catStart, catEnd - catStart );
-    postContent = postContent.remove( catStart - catTagOpen.length(), catEnd - catStart + catTagClose.length() + catTagOpen.length() );
-    post.setCategory( cat );
+    int catStart = contents.find( catTagOpen, 0, false ) + catTagOpen.length();
+    int catEnd = contents.find( catTagClose, 0, false );
+kdDebug() << "  catTagOpen = " << catTagOpen << ", catTagClose = " << catTagClose << ", start - end : " << catStart <<" - " << catEnd << endl;
+    if ( catEnd > catStart ) {
+      category = contents.mid( catStart, catEnd - catStart );
+      kdDebug() << "Found a category \"" << category << "\"" << endl;
+      contents = contents.remove( catStart - catTagOpen.length(), 
+              catEnd - catStart + catTagClose.length() + catTagOpen.length() );
+    }
+    int titleStart = contents.find( titleTagOpen, 0, false ) + titleTagOpen.length();
+    int titleEnd = contents.find( titleTagClose, 0, false );
+kdDebug() << "  titleTagOpen = " << titleTagOpen << ", titleTagClose = " << titleTagClose << ", start - end : " << titleStart <<" - " << titleEnd << endl;
+    kdDebug() << "Title start and end: " << titleStart << ", " << titleEnd << endl;
+    if ( titleEnd > titleStart ) {
+      title = contents.mid( titleStart, titleEnd - titleStart );
+      contents = contents.remove( titleStart - titleTagOpen.length(), 
+              titleEnd - titleStart + titleTagClose.length() + titleTagOpen.length() );
+    }
+    kdDebug() << endl << endl << endl << "After treatment of the special tags, we have a content of: "<< endl << contents << endl;
   }
-  int titleStart = postContent.find( titleTagOpen, 0, false ) + titleTagOpen.length();
-  int titleEnd = postContent.find( titleTagClose, 0, false );
-  kdDebug() << titleStart << titleEnd << endl;
-  if ( titleEnd > titleStart )
-  {
-    QString title = postContent.mid( titleStart, titleEnd - titleStart );
-    postContent = postContent.remove( titleStart - titleTagOpen.length(), titleEnd - titleStart + titleTagClose.length() + titleTagOpen.length() );
-    post.setTitle( title );
-  }
-  post.setContent( postContent );
-
+  
+  post->setTitle( title );
+  post->setContent( contents );
+  if ( !category.isEmpty() )
+    post->setCategory( category );
   return true;
 }
 
-bool bloggerAPI::readBlogInfoFromMap( BlogListItem &blog, 
+bool bloggerAPI::readBlogInfoFromMap( KBlog::BlogListItem &blog, 
         const QMap<QString, QVariant> &postInfo )
 {
+kdDebug() << "BlogID=" << postInfo["blogid"].toString() << 
+             ", blogName=" << postInfo["blogName"].toString() <<
+             ", URL=" << postInfo[ "url" ].toString() << endl;
+kdDebug() << "bloggerAPI::readBlogInfoFromMap, keys = " << QStringList(postInfo.keys()).join(" - ") << endl;
   blog.setId( postInfo[ "blogid" ].toString() );
   blog.setName( postInfo[ "blogName" ].toString() );
   blog.setUrl( postInfo[ "url" ].toString() );
@@ -149,7 +189,7 @@ void bloggerAPI::initServer()
   QValueList<QVariant> args( defaultArgs() );
 
   mXMLRPCServer->setUrl( mServerURL );
-  mXMLRPCServer->call( "blogger.getUserInfo", args,
+  mXMLRPCServer->call( getFunctionName(bloggerGetUserInfo), args,
                         this, SLOT( userInfoFinished( const QValueList<QVariant> & ) ),
                         this, SLOT( fault( int, const QString& ) ) );
 }
@@ -160,7 +200,7 @@ void bloggerAPI::getBlogs()
     kdDebug() << "Fetch Blogs..." << endl;
     QValueList<QVariant> args( defaultArgs() );
 
-    mXMLRPCServer->call( "blogger.getUsersBlogs", args,
+    mXMLRPCServer->call( getFunctionName(bloggerGetUsersBlogs), args,
                           this, SLOT( blogListFinished( const QValueList<QVariant> & ) ),
                           this, SLOT( fault( int, const QString& ) ) );
   } else {
@@ -169,19 +209,38 @@ void bloggerAPI::getBlogs()
 
 }
 
-void bloggerAPI::post( const BlogPosting &posting, bool publish )
+BloggerPostingWrapper *bloggerAPI::createWrapper( BlogPosting *posting )
+{
+  BloggerPostingWrapper *postwrapper = new BloggerPostingWrapper( posting );
+  connect( postwrapper, SIGNAL( errorSignal( const QString & ) ),
+           this, SIGNAL( error( const QString & ) ) );
+  connect( postwrapper, SIGNAL( postFinishedSignal( bool ) ),
+           this, SIGNAL( postFinishedSignal( bool ) ) );
+  connect( postwrapper, SIGNAL( editFinishedSignal( bool ) ),
+           this, SIGNAL( editFinishedSignal( bool ) ) );
+  connect( postwrapper, SIGNAL( deleteFinishedSignal( bool ) ),
+           this, SIGNAL( deleteFinishedSignal( bool ) ) );
+  return postwrapper;
+}
+
+void bloggerAPI::post( BlogPosting *posting, bool publish )
 {
   if ( isValid ) {
-
+// FIXME: Use the wrapper here for posting-specific slots
     kdDebug() << "Posting data..." << endl;
 
-    QValueList<QVariant> args( defaultArgs( posting.blogID() ) );
+    QString blogID( posting->blogID() );
+    if ( blogID.isEmpty() ) blogID = mDefaultBlogID;
+    QValueList<QVariant> args( defaultArgs( blogID ) );
     args << QVariant( formatContents( posting ) )
-         << QVariant( publish );
+         << QVariant( publish, 0 );
+         
+kdDebug()<<"type name of last variant: "<< args.last().typeName() << endl;
 
-    mXMLRPCServer->call( "blogger.newPost", args,
-                          this, SLOT( postFinished( const QValueList<QVariant> & ) ),
-                          this, SLOT( fault( int, const QString& ) ) );
+    BloggerPostingWrapper *postwrap = createWrapper( posting );
+    mXMLRPCServer->call( getFunctionName(bloggerNewPost), args,
+                          postwrap, SLOT( postFinished( const QValueList<QVariant> & ) ),
+                          postwrap, SLOT( postFault( int, const QString& ) ) );
   } else {
     warningNotInitialized();
   }
@@ -195,9 +254,9 @@ void bloggerAPI::fetchPosts( const QString &blogID, int maxPosts )
     QValueList<QVariant> args( defaultArgs( blogID ) );
     args << QVariant( maxPosts );
 
-    mXMLRPCServer->call( "blogger.getRecentPosts", args,
-                          this, SLOT( listFinished( const QValueList<QVariant> & ) ),
-                          this, SLOT( fault( int, const QString& ) ) );
+    mXMLRPCServer->call( getFunctionName(bloggerGetRecentPosts), args,
+                         this, SLOT( listFinished( const QValueList<QVariant> & ) ),
+                         this, SLOT( fault( int, const QString& ) ) );
   } else {
     warningNotInitialized();
   }
@@ -209,46 +268,52 @@ void bloggerAPI::fetchPost( const QString &postID )
     kdDebug() << "Fetch Post..." << endl;
     QValueList<QVariant> args( defaultArgs( postID ) );
 
-    mXMLRPCServer->call( "blogger.getPost", args,
-                          this, SLOT( getFinished( const QValueList<QVariant> & ) ),
-                          this, SLOT( fault( int, const QString& ) ) );
+    mXMLRPCServer->call( getFunctionName(bloggerGetPost), args,
+                         this, SLOT( getFinished( const QValueList<QVariant> & ) ),
+                         this, SLOT( fault( int, const QString& ) ) );
   } else {
     warningNotInitialized();
   }
 
 }
 
-// void bloggerAPI::fetchTemplates(const QString &username, const QString &password)
-//{
-//}
-
-void bloggerAPI::editPost( const BlogPosting& posting, bool publish )
+void bloggerAPI::editPost( BlogPosting *posting, bool publish )
 {
   if ( isValid ) {
-    kdDebug() << "Posting data..." << endl;
-    QValueList<QVariant> args( defaultArgs( posting.postID() ) );
-    args << QVariant( formatContents( posting ) )
-         << QVariant( publish );
+    kdDebug() << "bloggerAPI::Posting data..." << endl;
+    QString postID( posting->postID() );
+    if ( postID.isEmpty() ) {
+      kdDebug() << "Posting has no PostID, so assume it has never been on the "
+                   "server. Posting it as new item." << endl;
+      post( posting, publish );
+    } else {
+      QValueList<QVariant> args( defaultArgs( posting->postID() ) );
+      args << QVariant( formatContents( posting ) )
+           << QVariant( publish, 0 );
 
-    mXMLRPCServer->call( "blogger.editPost", args,
-                          this, SLOT( postFinished( const QValueList<QVariant> & ) ),
-                          this, SLOT( fault( int, const QString& ) ) );
+      BloggerPostingWrapper *postwrap = createWrapper( posting );
+      mXMLRPCServer->call( getFunctionName(bloggerEditPost), args,
+                           postwrap, SLOT( editFinished( const QValueList<QVariant> & ) ),
+                           postwrap, SLOT( postFault( int, const QString& ) ) );
+    }
   } else {
     warningNotInitialized();
   }
 }
 
-void bloggerAPI::deletePost( const QString &postID )
+void bloggerAPI::deletePost( BlogPosting *posting )
 {
+  if ( !posting || posting->postID().isEmpty() ) return;
   if ( isValid )
   {
     kdDebug() << "delete post..." << endl;
-    QValueList<QVariant> args( defaultArgs( postID ) );
-    args << QVariant( true );
+    QValueList<QVariant> args( defaultArgs( posting->postID() ) );
+    args << QVariant( true, 0 );
 
-    mXMLRPCServer->call( "blogger.getRecentPosts", args,
-                          this, SLOT( deleteFinished( const QValueList<QVariant> & ) ),
-                          this, SLOT( fault( int, const QString& ) ) );
+    BloggerPostingWrapper *postwrap = createWrapper( posting );
+    mXMLRPCServer->call( getFunctionName(bloggerDeletePost), args,
+                         postwrap, SLOT( deleteFinished( const QValueList<QVariant> & ) ),
+                         postwrap, SLOT( deleteFault( int, const QString& ) ) );
   } else {
     warningNotInitialized();
   }
@@ -283,31 +348,36 @@ void bloggerAPI::listFinished( const QValueList<QVariant> &message )
   //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
   kdDebug () << "TOP: " << message[ 0 ].typeName() << endl;
   QStringList posts;
-  QValueList<BlogPosting> fullposts;
+  QValueList<BlogPosting*> fullposts;
         
   const QValueList<QVariant> postReceived = message[ 0 ].toList();
   QValueList<QVariant>::ConstIterator it = postReceived.begin();
   QValueList<QVariant>::ConstIterator end = postReceived.end();
   for ( ; it != end; ++it ) {
-    BlogPosting posting;
+    BlogPosting *posting = new BlogPosting();
     kdDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
     const QMap<QString, QVariant> postInfo = ( *it ).toMap();
     
     if ( readPostingFromMap( posting, postInfo ) ) {
       dumpBlog( posting );
-      posts.append( posting.postID() );
+      posts.append( posting->postID() );
       fullposts.append( posting );
     }
   }
 
   emit recentPostsSignal( posts );
   emit recentPostsSignal( fullposts );
+  // TODO: Does this work, i.e. does emit recentPostsSignal really return after the signal is processed???
+  // TODO: Add warning that the QValueList<BlogPosting*> argument to the signal is just a temporary object!
+  for ( QValueList<BlogPosting*>::Iterator it = fullposts.begin(); it != fullposts.end(); ++it ) {
+    delete (*it);
+  }
 }
 
 void bloggerAPI::blogListFinished( const QValueList<QVariant> &message )
 {
   kdDebug () << "TOP: " << message[ 0 ].typeName() << endl;
-  QValueList<BlogListItem> blogs;
+  QValueList<KBlog::BlogListItem> blogs;
   const QValueList<QVariant> posts = message[ 0 ].toList();
   QValueList<QVariant>::ConstIterator it = posts.begin();
   QValueList<QVariant>::ConstIterator end = posts.end();
@@ -315,29 +385,30 @@ void bloggerAPI::blogListFinished( const QValueList<QVariant> &message )
     kdDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
     const QMap<QString, QVariant> postInfo = ( *it ).toMap();
     
-    BlogListItem blog;
+    KBlog::BlogListItem blog;
     if ( readBlogInfoFromMap( blog, postInfo ) ) {
       blogs.append( blog );
     }
   }
+  if ( blogs.count()>0 ) {
+kdDebug()<<endl<<endl<<endl<<endl<<"BlogID of the first blog is: "<<blogs.first().id()<<", using that as default"<<endl;
+    setDefaultBlogID( blogs.first().id() );
+  }
   emit blogListSignal( blogs );
-}
-
-void bloggerAPI::deleteFinished( const QValueList<QVariant> & /*message */ )
-{
-  emit deleteFinishedSignal( true );
 }
 
 void bloggerAPI::getFinished( const QValueList<QVariant> &message )
 {
   kdDebug () << "TOP: " << message[ 0 ].typeName() << endl;
-  BlogPosting post;
+  BlogPosting *post = new BlogPosting();
   const QMap<QString, QVariant> postInfo = message[ 0 ].toMap();
   if ( readPostingFromMap( post, postInfo ) ) {
+    // TODO: Add warning that post is just temporary!
     emit newPostSignal( post );
   } else {
     emit error( i18n("Unable to interpret posting returned by the server" ) );
   }
+  delete post;
 }
 
 void bloggerAPI::fault( int code, const QString &message )
@@ -346,11 +417,7 @@ void bloggerAPI::fault( int code, const QString &message )
   emit error( message );
 }
 
-void bloggerAPI::postFinished( const QValueList<QVariant> &/*data */)
-{
-  kdDebug() << "Post successful. " << endl;
-  emit postFinishedSignal( true );
-}
+};
 
 #include "api_blogger.moc"
 

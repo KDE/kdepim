@@ -59,7 +59,7 @@
                         </property>
                     </item>
                     <property name="name">
-                        <cstring>kcfg_service</cstring>
+                        <cstring>mServiceType</cstring>
                     </property>
                     <property name="enabled">
                         <bool>false</bool>
@@ -291,7 +291,15 @@
 <customwidgets>
 </customwidgets>
 <tabstops>
-    <tabstop>kcfg_service</tabstop>
+    <tabstop>mServiceType</tabstop>
+    <tabstop>mURL</tabstop>
+    <tabstop>mUser</tabstop>
+    <tabstop>mPassword</tabstop>
+    <tabstop>mServerAPI</tabstop>
+    <tabstop>mOpenTitle</tabstop>
+    <tabstop>mCloseTitle</tabstop>
+    <tabstop>mOpenCategory</tabstop>
+    <tabstop>mCloseCategory</tabstop>
 </tabstops>
 <layoutdefaults spacing="5" margin="5"/>
 <includehints>
