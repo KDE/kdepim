@@ -476,6 +476,7 @@ void KTNEFParser::checkCurrent( int key )
 					KMimeType::Ptr mimetype;
 					if ( !d->current_->fileName().isEmpty() )
 						mimetype = KMimeType::findByPath( d->current_->fileName(), 0, true );
+                                        if (!mimetype) return; // FIXME
 					if ( mimetype->name() == "application/octet-stream" && d->current_->size() > 0 )
 					{
 						int oldOffset = d->device_->at();
