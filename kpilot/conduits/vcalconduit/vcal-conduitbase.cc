@@ -199,7 +199,7 @@ there are two special cases: a full and a first sync.
 //	debug_level=0;
 	FUNCTIONSETUP;
 
-	bool loadSuccesful = true;
+//	bool loadSuccesful = true;
 	KPilotUser*usr;
 
 	if (!fConfig)
@@ -225,7 +225,7 @@ there are two special cases: a full and a first sync.
 
 	fCalendarFile = fConfig->readEntry(VCalConduitFactory::calendarFile);
 	fDeleteOnPilot = fConfig->readBoolEntry(VCalConduitFactory::deleteOnPilot, false);
-	// don't do a fist sync by default, only when explicitely requested, or the backup
+	// don't do a first sync by default in any case, only when explicitely requested, or the backup
 	// database or the calendar are empty.
 	fFirstTime = fConfig->readBoolEntry(VCalConduitFactory::firstTime, false);
 	usr=fHandle->getPilotUser();
@@ -245,24 +245,45 @@ there are two special cases: a full and a first sync.
 	fCurrentDatabase = new PilotSerialDatabase(pilotSocket(), dbname(), this, dbname());
 	fBackupDatabase = new PilotLocalDatabase(dbname());
 	fCalendar = new KCal::CalendarLocal();
+	if (!fCurrentDatabase || !fBackupDatabase || !fCalendar) goto error;
 
+	// if there is no backup db yet, fetch it from the palm, open it and set the full sync flag.
+	if (!fBackupDatabase->isDBOpen() )
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << "Backup database "<<fBackupDatabase->dbPathName()<<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
+#endif
+		struct DBInfo dbinfo;
+		strncpy(&dbinfo.name[0], dbname().latin1(), sizeof(dbinfo.name));
+		if (!fHandle->retrieveDatabase(fBackupDatabase->dbPathName(), &dbinfo) ) goto error;
+		KPILOT_DELETE(fBackupDatabase);
+		fBackupDatabase = new PilotLocalDatabase(dbname());
+		if (!fBackupDatabase || !fBackupDatabase->isDBOpen()) goto error;
+		fFullSync=true;
+	}
 
 	// Handle lots of error cases.
-	//
-	fFullSync=(fBackupDatabase==0);
-	if (!fCurrentDatabase || !fBackupDatabase || !fCalendar) goto error;
 	if (!fCurrentDatabase->isDBOpen() ||
-		!fBackupDatabase->isDBOpen()) goto error;
-	
+		 !fBackupDatabase->isDBOpen()) goto error;
+
+
 	// TODO: fix the time zone setting: How do I get the correct setting???
 	//       I have to set this explicitely, otherwise, all entries will be in GMT...
 //	fCalendar->setTimeZone(0);
-	loadSuccesful = fCalendar->load(fCalendarFile);
-	fFullSync=!loadSuccesful;
+
+
+	// if there is no calendar yet, use a first sync..
+	// the calendar is initialized, so nothing more to do...
+	if (!fCalendar->load(fCalendarFile) )
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << "calendar file "<<fCalendarFile<<" could not be opened. Will create a new one"<<endl;
+#endif
+		fFirstTime=true;
+	}
 // TODO: remove this:
-fFullSync=true;
-fFirstTime=false;
-	if (!loadSuccesful) goto error;
+//fFullSync=true;
+//fFirstTime=false;
 
 	fP = newVCalPrivate(fCalendar);
    if (!fP) goto error;
@@ -289,14 +310,14 @@ error:
 			<< ": Couldn't open local copy"
 			<< endl;
 	}
-	if (!loadSuccesful)
+/*	if (!loadSuccesful)
 	{
 		kdWarning() << k_funcinfo
 			<< ": Couldn't load <"
 			<< fCalendarFile
 			<< ">"
 			<< endl;
-	}
+	}*/
 
 	emit logError(i18n("Couldn't open the calendar databases."));
 
@@ -586,6 +607,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.1.2.1  2002/04/28 12:58:54  kainhofe
+// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
+//
 // Revision 1.62  2002/04/21 17:39:01  kainhofe
 // recurrences without enddate work now
 //
