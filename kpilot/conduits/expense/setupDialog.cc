@@ -73,6 +73,9 @@ ExpenseWidgetSetup::ExpenseWidgetSetup(QWidget *w, const char *n,
 		this,SLOT(slotDBPolicyChanged()));
 	QObject::connect(fConfigWidget->fRotatePolicy,SIGNAL(clicked(int)),
 		this,SLOT(slotRotatePolicyChanged()));
+		
+	QObject::connect(fConfigWidget->fCSVBrowse,SIGNAL(clicked()),
+		this,SLOT(slotCSVBrowse()));
 
 	QSize s = fConfigWidget->size() + QSize(SPACING,SPACING);
 	fConfigWidget->resize(s);
@@ -273,6 +276,9 @@ void ExpenseWidgetSetup::slotDBPolicyChanged()
 }
 
 // $Log$
+// Revision 1.10  2002/01/02 12:14:09  bero
+// Fix build with -DNDEBUG
+//
 // Revision 1.9  2001/12/18 07:40:49  adridg
 // Enable conduit's config & back out danimo's work
 //
@@ -308,6 +314,9 @@ void ExpenseWidgetSetup::slotDBPolicyChanged()
 //
 
 // $Log$
+// Revision 1.10  2002/01/02 12:14:09  bero
+// Fix build with -DNDEBUG
+//
 // Revision 1.9  2001/12/18 07:40:49  adridg
 // Enable conduit's config & back out danimo's work
 //
@@ -328,6 +337,9 @@ void ExpenseWidgetSetup::slotDBPolicyChanged()
 //
 
 // $Log$
+// Revision 1.10  2002/01/02 12:14:09  bero
+// Fix build with -DNDEBUG
+//
 // Revision 1.9  2001/12/18 07:40:49  adridg
 // Enable conduit's config & back out danimo's work
 //
