@@ -220,6 +220,7 @@ class Calendar {
     bool mDialogsOn;       // display various GUI dialogs?
 
     CalFilter *mFilter;
+    CalFilter *mDefaultFilter;
     
     QString mTimeZoneId;
 

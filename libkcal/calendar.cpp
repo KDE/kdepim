@@ -51,6 +51,8 @@ class AddIncidenceVisitor : public Incidence::Visitor {
 
 Calendar::Calendar()
 {
+  mTimeZoneId = QString::fromLatin1("UTC");
+
   init();
 }
 
@@ -74,7 +76,8 @@ void Calendar::init()
   mICalFormat = new ICalFormat(this);
 
   // Setup default filter, which does nothing
-  mFilter = new CalFilter;
+  mDefaultFilter = new CalFilter;
+  mFilter = mDefaultFilter;
   mFilter->setEnabled(false);
 
   mDialogsOn = true;
@@ -127,6 +130,7 @@ void Calendar::init()
 
 Calendar::~Calendar() 
 {
+  delete mDefaultFilter;
   delete mICalFormat;
   delete mDndFormat;
   delete mFormat;
