@@ -165,7 +165,7 @@ void KAddressBook::editAddressee( QString uid )
     return;
 
   // First, locate the contact entry
-  if ( uid == QString::null ) {
+  if ( uid.isNull() ) {
     QStringList uidList = mViewManager->selectedUids();
     if ( uidList.count() > 0 )
       uid = *( uidList.at( 0 ) );
@@ -489,12 +489,12 @@ QString KAddressBook::getNameByPhone( QString phone )
 
 void KAddressBook::addresseeSelected( const QString &uid )
 {
-  emit addresseeSelected( uid != QString::null );
+  emit addresseeSelected( !uid.isNull() );
 }
 
 void KAddressBook::addresseeExecuted( const QString &uid )
 {
-  if ( uid != QString::null && !mViewManager->isQuickEditVisible() )
+  if ( !uid.isNull() && !mViewManager->isQuickEditVisible() )
     editAddressee( uid );
 }
 

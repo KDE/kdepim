@@ -208,7 +208,7 @@ void KNGroupBrowser::createListItems(QListViewItem *parent)
   for(KNGroupInfo *gn=matchList->first(); gn; gn=matchList->next()) {
 
     if(!prefix.isEmpty() && !gn->name.startsWith(prefix))
-      if(compare!=QString::null)
+      if(!compare.isNull())
         break;
       else
         continue;

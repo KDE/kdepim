@@ -256,7 +256,7 @@ void KNGroupManager::loadGroups(KNNntpAccount *a)
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
 
   QString dir(a->path());
-  if (dir == QString::null)
+  if (dir.isNull())
     return;
   QDir d(dir);  
     

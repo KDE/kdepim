@@ -780,7 +780,7 @@ KNConfig::DisplayedHeaders::DisplayedHeaders()
   h_drList.setAutoDelete(true);
 
   QString fname(KGlobal::dirs()->findResource("appdata","headers.rc"));
-  if (fname != QString::null) {
+  if (!fname.isNull()) {
     KSimpleConfig headerConf(fname,true);
     QStringList headers = headerConf.groupList();
     headers.remove("<default>");
@@ -824,7 +824,7 @@ void KNConfig::DisplayedHeaders::save()
   kdDebug(5003) << "KNConfig::DisplayedHeaders::save()" << endl;
 
   QString dir(KGlobal::dirs()->saveLocation("appdata"));
-  if (dir==QString::null) {
+  if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;
   }
@@ -992,7 +992,7 @@ KNConfig::PostNewsTechnical::PostNewsTechnical()
   u_seExternalMailer=conf->readBoolEntry("useExternalMailer", false);
 
   QString dir(KGlobal::dirs()->saveLocation("appdata"));
-  if (dir!=QString::null) {
+  if (!dir.isNull()) {
     QFile f(dir+"xheaders");
     if(f.open(IO_ReadOnly)) {
       QTextStream ts(&f);
@@ -1030,7 +1030,7 @@ void KNConfig::PostNewsTechnical::save()
   conf->writeEntry("useExternalMailer", u_seExternalMailer);
 
   QString dir(KGlobal::dirs()->saveLocation("appdata"));
-  if (dir==QString::null)
+  if (dir.isNull())
     KNHelper::displayInternalFileError();
   else {
     QFile f(dir+"xheaders");

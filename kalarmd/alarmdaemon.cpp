@@ -246,7 +246,7 @@ void AlarmDaemon::registerApp_(const QCString& appName, const QString& appTitle,
                 <<  dcopObject << ", " << notificationType << ", " << reregister << ")" << endl;
   if (!appName.isEmpty())
   {
-    if (KStandardDirs::findExe(appName) == QString::null)
+    if (KStandardDirs::findExe(appName).isNull())
       kdError() << "AlarmDaemon::registerApp(): app not found\n";
     else
     {

@@ -279,7 +279,7 @@ void KAddressBookCardView::refresh(QString uid)
     CardViewItem *item;
     AddresseeCardViewItem *aItem;
 
-    if (uid == QString::null)
+    if (uid.isNull())
     {
         // Rebuild the view
         mCardView->viewport()->setUpdatesEnabled( false );
@@ -320,7 +320,7 @@ void KAddressBookCardView::setSelected(QString uid, bool selected)
     CardViewItem *item;
     AddresseeCardViewItem *aItem;
 
-    if (uid == QString::null)
+    if (uid.isNull())
     {
         mCardView->selectAll(selected);
     }

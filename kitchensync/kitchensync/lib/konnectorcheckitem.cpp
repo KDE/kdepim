@@ -8,7 +8,7 @@ KonnectorCheckItem::KonnectorCheckItem( QListView* parent,  const KonnectorProfi
       m_prof( prof ){
     setText(0, "");
     setText(1, prof.name() );
-    if (prof.udi() != QString::null )
+    if (!prof.udi().isNull() )
         setOn( true );
 }
 KonnectorCheckItem::~KonnectorCheckItem() {
@@ -19,18 +19,18 @@ KonnectorProfile KonnectorCheckItem::profile() const {
 }
 bool KonnectorCheckItem::load() const {
     bool load = false;
-    if ( m_prof.udi() == QString::null &&  isEnabled() ) // not loaded but it's marked as loaded
+    if ( m_prof.udi().isNull() &&  isEnabled() ) // not loaded but it's marked as loaded
         load = true;
 
     return load;
 }
 bool KonnectorCheckItem::unload() const {
     bool load = false;
-    if ( m_prof.udi() != QString::null && !isEnabled() ) // loaded but not marked as loaded unload it now
+    if ( !m_prof.udi().isNull() && !isEnabled() ) // loaded but not marked as loaded unload it now
         load = true;
 
     return load;
 }
 bool KonnectorCheckItem::isLoaded() const {
-    return (m_prof.udi() != QString::null ); // if udi != null it's loaded
+    return (!m_prof.udi().isNull() ); // if udi != null it's loaded
 }

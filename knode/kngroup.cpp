@@ -116,7 +116,7 @@ void KNGroup::saveInfo()
 {
   QString dir(path());
 
-  if (dir != QString::null){
+  if (!dir.isNull()) {
     KSimpleConfig info(dir+g_roupname+".grpinfo");
 
     info.writeEntry("groupname", g_roupname);
@@ -183,7 +183,7 @@ bool KNGroup::loadHdrs()
   KNRemoteArticle *art;
 
   QString dir(path());
-  if (dir == QString::null)
+  if (dir.isNull())
     return false;
 
   f.setName(dir+g_roupname+".static");
@@ -473,7 +473,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
   KNRemoteArticle *art;
 
   QString dir(path());
-  if (dir == QString::null)
+  if (dir.isNull())
     return 0;
 
   QFile f(dir+g_roupname+".static");
@@ -531,7 +531,7 @@ void KNGroup::saveDynamicData(int cnt,bool ovr)
 
   if(length()>0) {
     QString dir(path());
-    if (dir == QString::null)
+    if (dir.isNull())
       return;
 
     QFile f(dir+g_roupname+".dynamic");
@@ -564,7 +564,7 @@ void KNGroup::syncDynamicData()
   if(length()>0) {
 
     QString dir(path());
-    if (dir == QString::null)
+    if (dir.isNull())
       return;
 
     QFile f(dir+g_roupname+".dynamic");

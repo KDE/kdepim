@@ -67,7 +67,7 @@ void KNAccountManager::prepareShutdown()
 void KNAccountManager::loadAccounts()
 {
   QString dir(KGlobal::dirs()->saveLocation("appdata"));
-  if (dir==QString::null) {
+  if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;
   }
@@ -121,7 +121,7 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
 {
   // find a unused id for the new account...
   QString dir(KGlobal::dirs()->saveLocation("appdata"));
-  if (dir==QString::null) {
+  if (dir.isNull()) {
     delete a;
     KNHelper::displayInternalFileError();
     return false;
@@ -136,7 +136,7 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
   a->setId(id);
     
   dir = KGlobal::dirs()->saveLocation("appdata",QString("nntp.%1/").arg(a->id()));
-  if (dir!=QString::null) {
+  if (!dir.isNull()) {
     accList->append(a);
     KNCollectionViewItem *it = new KNCollectionViewItem(view);
     it->setPixmap(0, knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::nntp));

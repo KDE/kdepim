@@ -116,7 +116,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
                   << clients.at(i) << endl;
     QCString client = clients.at(i);
     if ( client.isEmpty() ||
-         KStandardDirs::findExe( client ) == QString::null )
+         KStandardDirs::findExe( client ).isNull() )
     {
       // Null client name, or application doesn't exist
       if (mIsAlarmDaemon)

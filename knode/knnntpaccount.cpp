@@ -69,7 +69,7 @@ bool KNNntpAccount::readInfo(const QString &confPath)
 void KNNntpAccount::saveInfo()
 {
   QString dir(path());
-  if (dir == QString::null)
+  if (dir.isNull())
     return;
     
   KSimpleConfig conf(dir+"info");
@@ -103,7 +103,7 @@ void KNNntpAccount::saveInfo()
 /*void KNNntpAccount::syncInfo()
 {
   QString dir(path());
-  if (dir == QString::null)
+  if (dir.isNull())
     return;
   KSimpleConfig conf(dir+"info");
   conf.writeEntry("unsentCnt", u_nsentCount);
@@ -113,7 +113,7 @@ void KNNntpAccount::saveInfo()
 QString KNNntpAccount::path()
 {
   QString dir(KGlobal::dirs()->saveLocation("appdata",QString("nntp.%1/").arg(i_d)));
-  if (dir==QString::null)
+  if (dir.isNull())
     KNHelper::displayInternalFileError();
   return (dir);
 }

@@ -39,7 +39,7 @@ KNFolderManager::KNFolderManager(KNListView *v, KNArticleManager *a) : v_iew(v),
 
   //standard folders
   QString dir(KGlobal::dirs()->saveLocation("appdata","folders/"));
-  if (dir==QString::null) {
+  if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;
   }
@@ -431,7 +431,7 @@ void KNFolderManager::exportToMBox(KNFolder *f)
 void KNFolderManager::syncFolders()
 {
   QString dir(KGlobal::dirs()->saveLocation("appdata","folders/"));
-  if (dir==QString::null) {
+  if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;
   }
@@ -451,7 +451,7 @@ int KNFolderManager::loadCustomFolders()
   QString dir(KGlobal::dirs()->saveLocation("appdata","folders/"));
   KNFolder *f;
 
-  if (dir == QString::null) {
+  if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return 0;
   }

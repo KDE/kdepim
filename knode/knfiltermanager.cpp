@@ -109,7 +109,7 @@ void KNFilterManager::prepareShutdown()
 void KNFilterManager::loadFilters()
 {
   QString fname(KGlobal::dirs()->findResource("appdata","filters/filters.rc"));
-  if (fname != QString::null) {
+  if (!fname.isNull()) {
     KSimpleConfig conf(fname,true);
   
     QValueList<int> activeFilters = conf.readIntListEntry("Active");
@@ -133,7 +133,7 @@ void KNFilterManager::loadFilters()
 void KNFilterManager::saveFilterLists()
 {
   QString dir(KGlobal::dirs()->saveLocation("appdata","filters/"));
-  if (dir==QString::null) {
+  if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;
   }

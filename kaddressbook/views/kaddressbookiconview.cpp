@@ -209,7 +209,7 @@ void KAddressBookIconView::refresh(QString uid)
   QIconViewItem *item;
   AddresseeIconViewItem *aItem;
     
-  if ( uid == QString::null ) {
+  if ( uid.isNull() ) {
     // Rebuild the view
     mIconView->clear();
     mIconList.clear();
@@ -243,7 +243,7 @@ void KAddressBookIconView::setSelected(QString uid, bool selected)
     QIconViewItem *item;
     AddresseeIconViewItem *aItem;
     
-    if (uid == QString::null)
+    if (uid.isNull())
     {
         mIconView->selectAll(selected);
     }

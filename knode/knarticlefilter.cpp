@@ -77,7 +77,7 @@ bool KNArticleFilter::loadInfo()
 {
   if (i_d!=-1) {
     QString fname(KGlobal::dirs()->findResource("appdata",QString("filters/%1.fltr").arg(i_d)));
-    if (fname==QString::null)
+    if (fname.isNull())
       return false;
     KSimpleConfig conf(fname,true);
 
@@ -96,7 +96,7 @@ bool KNArticleFilter::loadInfo()
 void KNArticleFilter::load()
 {
   QString fname(KGlobal::dirs()->findResource("appdata",QString("filters/%1.fltr").arg(i_d)));
-  if (fname==QString::null)
+  if (fname.isNull())
     return;
   KSimpleConfig conf(fname,true);
   
@@ -137,7 +137,7 @@ void KNArticleFilter::save()
   if (i_d==-1)
     return;
   QString dir(KGlobal::dirs()->saveLocation("appdata","filters/"));
-  if (dir==QString::null) {
+  if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;
   }

@@ -56,7 +56,7 @@ void ADConfigDataRW::readDaemonData(bool sessionStarting)
     QCString gui = guis.at(i);
     kdDebug(5900) << "ADConfigDataRW::readDaemonData(): gui: " << gui << endl;
     if (gui.isEmpty()
-    ||  KStandardDirs::findExe(gui) == QString::null)
+    ||  KStandardDirs::findExe(gui).isNull())
     {
       // Null client name, or application doesn't exist
       if (!gui.isEmpty())

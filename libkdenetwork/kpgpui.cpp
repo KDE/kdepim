@@ -69,7 +69,7 @@ PassphraseDialog::PassphraseDialog( QWidget *parent,
   QWidget *rightArea = new QWidget( hbox );
   QVBoxLayout *vlay = new QVBoxLayout( rightArea, 0, spacingHint() );
 
-  if (keyID == QString::null)
+  if (keyID.isNull())
     label = new QLabel(i18n("Please enter your OpenPGP passphrase"),rightArea);
   else
     label = new QLabel(i18n("Please enter the OpenPGP passphrase for\n\"%1\"").arg(keyID),

@@ -164,7 +164,7 @@ void KAddressBookTableView::refresh(QString uid)
   // check the value of uid, and if valid iterate through
   // the listview to find the entry, then tell it to refresh.
 
-  if (uid == QString::null) {
+  if (uid.isNull()) {
     // Clear the list view
     mListView->clear();
 
@@ -218,7 +218,7 @@ void KAddressBookTableView::setSelected(QString uid, bool selected)
     QListViewItem *item;
     ContactListViewItem *ceItem;
 
-    if (uid == QString::null)
+    if (uid.isNull())
     {
         mListView->selectAll(selected);
     }

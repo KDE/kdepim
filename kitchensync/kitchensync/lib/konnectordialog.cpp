@@ -45,7 +45,7 @@ KonnectorProfile::ValueList KonnectorDialog::toUnload()const {
     KonnectorCheckItem* item;
     for ( item = items.first(); item != 0; item = items.next() ) {
         // loaded but not marked as loaded
-        if ( !item->isOn() && item->profile().udi() != QString::null )
+        if ( !item->isOn() && !item->profile().udi().isNull() )
             list.append( item->profile() );
     }
 
@@ -59,7 +59,7 @@ KonnectorProfile::ValueList KonnectorDialog::toLoad()const {
     KonnectorCheckItem* item;
     for ( item = items.first(); item != 0; item = items.next() ) {
         /* not loaded but marked as loaded */
-        if ( item->isOn() && item->profile().udi() == QString::null ) {
+        if ( item->isOn() && item->profile().udi().isNull() ) {
             list.append( item->profile() );
             kdDebug(5210) << " item " << item->profile().name() << endl;
         }

@@ -98,7 +98,7 @@ void KNFolder::updateListItem()
 QString KNFolder::path()
 {
   QString dir(KGlobal::dirs()->saveLocation("appdata","folders/"));
-  /*if (dir==QString::null)
+  /*if (dir.isNull())
     KNHelper::displayInternalFileError();*/
   return dir;
 }
