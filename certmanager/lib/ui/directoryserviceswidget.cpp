@@ -175,14 +175,16 @@ void DirectoryServicesWidget::slotAddService()
 {
     AddDirectoryServiceDialogImpl* dlg = new AddDirectoryServiceDialogImpl( this );
     if( dlg->exec() == QDialog::Accepted ) {
-        (void)new QX500ListViewItem( x500LV, x500LV->lastItem(),
+      QX500ListViewItem *item = new QX500ListViewItem( x500LV, x500LV->lastItem(),
                                      dlg->serverNameED->text(),
                                      dlg->portED->text(),
                                      dlg->descriptionED->text(),
                                      dlg->usernameED->text(),
                                      dlg->passwordED->text() );
+       slotServiceChanged(item);
         emit changed();
     }
+    delete dlg;
 }
 
 /*
