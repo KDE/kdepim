@@ -29,11 +29,11 @@
     your version.
 */
 
-#ifndef RESOURCEIMAP_H
-#define RESOURCEIMAP_H
+#ifndef KNOTES_RESOURCEIMAP_H
+#define KNOTES_RESOURCEIMAP_H
 
-#include <resourceimapshared.h>
-#include <resourcenotes.h>
+#include "resourceimapshared.h"
+#include "resourcenotes.h"
 #include <libkcal/incidencebase.h>
 #include <libkcal/calendarlocal.h>
 

@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef RESOURCEIMAP_H
-#define RESOURCEIMAP_H
+#ifndef KABC_RESOURCEIMAP_H
+#define KABC_RESOURCEIMAP_H
 
 #include <kabc/vcardconverter.h>
 #include <libkdepim/resourceabc.h>
