@@ -19,8 +19,6 @@ konsolekalendar_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 appsdir = $(kde_appsdir)/Utilities
 xdg_apps_DATA = konsolekalendar.desktop
 
-KDE_ICON = AUTO
-
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/konsolekalendar.pot
 
