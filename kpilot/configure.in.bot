@@ -7,7 +7,7 @@ else
 	if test "x$HAVE_BAD_PISOCK" = "xYES" ; then
 		echo ""
 		echo "You have a version of pilot-link < 0.11.8."
-		echo "This version is deprecated an KPilot will soon stop"
+		echo "This version is deprecated and KPilot will soon stop"
 		echo "working with it."
 		echo ""
 	fi
