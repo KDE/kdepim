@@ -70,6 +70,8 @@ public:
   virtual KCal::Event::Transparency transparency() const;
 
   virtual void setEndDate( const QDateTime& date );
+  virtual void setEndDate( const QDate& date );
+  virtual void setEndDate( const QString& date );
   virtual QDateTime endDate() const;
 
   // Load the attributes of this class

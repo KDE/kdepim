@@ -79,6 +79,28 @@ void Event::setEndDate( const QDateTime& date )
 {
   mEndDate = date;
   mHasEndDate = true;
+  if ( mFloatingStatus == AllDay )
+    kdDebug() << "ERROR: Time on end date but no time on the event\n";
+  mFloatingStatus = HasTime;
+}
+
+void Event::setEndDate( const QDate& date )
+{
+  mEndDate = date;
+  mHasEndDate = true;
+  if ( mFloatingStatus == HasTime )
+    kdDebug() << "ERROR: No time on end date but time on the event\n";
+  mFloatingStatus = AllDay;
+}
+
+void Event::setEndDate( const QString& endDate )
+{
+  if ( endDate.length() > 10 )
+    // This is a date + time
+    setEndDate( stringToDateTime( endDate ) );
+  else
+    // This is only a date
+    setEndDate( stringToDate( endDate ) );
 }
 
 QDateTime Event::endDate() const
@@ -98,7 +120,7 @@ bool Event::loadAttribute( QDomElement& element )
     else
       setTransparency( KCal::Event::Opaque );
   } else if ( tagName == "end-date" )
-    setEndDate( stringToDateTime( element.text() ) );
+    setEndDate( element.text() );
   else
     return Incidence::loadAttribute( element );
 
@@ -116,8 +138,12 @@ bool Event::saveAttributes( QDomElement& element ) const
     writeString( element, "show-time-as", "free" );
   else
     writeString( element, "show-time-as", "busy" );
-  if ( mHasEndDate )
-    writeString( element, "end-date", dateTimeToString( endDate() ) );
+  if ( mHasEndDate ) {
+    if ( mFloatingStatus == HasTime )
+      writeString( element, "end-date", dateTimeToString( endDate() ) );
+    else
+      writeString( element, "end-date", dateToString( endDate().date() ) );
+  }
 
   return true;
 }
@@ -162,9 +188,16 @@ void Event::setFields( const KCal::Event* event )
 {
   Incidence::setFields( event );
 
-  if ( event->hasEndDate() )
-    setEndDate( localToUTC( event->dtEnd() ) );
-  else
+  if ( event->hasEndDate() ) {
+    if ( event->doesFloat() ) {
+      // This is a floating event. Don't timezone move this one
+      mFloatingStatus = AllDay;
+      setEndDate( event->dtEnd().date() );
+    } else {
+      mFloatingStatus = HasTime;
+      setEndDate( localToUTC( event->dtEnd() ) );
+    }
+  } else
     mHasEndDate = false;
   setTransparency( event->transparency() );
 }
@@ -174,7 +207,12 @@ void Event::saveTo( KCal::Event* event )
   Incidence::saveTo( event );
 
   event->setHasEndDate( mHasEndDate );
-  if ( mHasEndDate )
-    event->setDtEnd( utcToLocal( endDate() ) );
+  if ( mHasEndDate ) {
+    if ( mFloatingStatus == AllDay )
+      // This is a floating event. Don't timezone move this one
+      event->setDtEnd( endDate() );
+    else
+      event->setDtEnd( utcToLocal( endDate() ) );
+  }
   event->setTransparency( transparency() );
 }

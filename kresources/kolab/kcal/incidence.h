@@ -88,6 +88,8 @@ public:
   virtual Email organizer() const;
 
   virtual void setStartDate( const QDateTime& startDate );
+  virtual void setStartDate( const QDate& startDate );
+  virtual void setStartDate( const QString& startDate );
   virtual QDateTime startDate() const;
 
   virtual void setAlarm( float alarm );
@@ -107,6 +109,8 @@ public:
   virtual bool saveAttributes( QDomElement& ) const;
 
 protected:
+  enum FloatingStatus { Unset, AllDay, HasTime };
+
   // Read all known fields from this ical incidence
   void setFields( const KCal::Incidence* );
 
@@ -122,7 +126,9 @@ protected:
   QString mLocation;
   Email mOrganizer;
   QDateTime mStartDate;
+  FloatingStatus mFloatingStatus;
   float mAlarm;
+  bool mHasAlarm;
   Recurrence mRecurrence;
   QValueList<Attendee> mAttendees;
 };

@@ -41,7 +41,7 @@ using namespace Kolab;
 
 
 Incidence::Incidence( const QString& tz, KCal::Incidence* incidence )
-  : KolabBase( tz ), mAlarm( 0 )
+  : KolabBase( tz ), mFloatingStatus( Unset ), mHasAlarm( false )
 {
   if ( incidence )
     setFields( incidence );
@@ -84,6 +84,27 @@ KolabBase::Email Incidence::organizer() const
 void Incidence::setStartDate( const QDateTime& startDate )
 {
   mStartDate = startDate;
+  if ( mFloatingStatus == AllDay )
+    kdDebug() << "ERROR: Time on start date but no time on the event\n";
+  mFloatingStatus = HasTime;
+}
+
+void Incidence::setStartDate( const QDate& startDate )
+{
+  mStartDate = startDate;
+  if ( mFloatingStatus == HasTime )
+    kdDebug() << "ERROR: No time on start date but time on the event\n";
+  mFloatingStatus = AllDay;
+}
+
+void Incidence::setStartDate( const QString& startDate )
+{
+  if ( startDate.length() > 10 )
+    // This is a date + time
+    setStartDate( stringToDateTime( startDate ) );
+  else
+    // This is only a date
+    setStartDate( stringToDate( startDate ) );
 }
 
 QDateTime Incidence::startDate() const
@@ -94,6 +115,7 @@ QDateTime Incidence::startDate() const
 void Incidence::setAlarm( float alarm )
 {
   mAlarm = alarm;
+  mHasAlarm = true;
 }
 
 float Incidence::alarm() const
@@ -258,7 +280,7 @@ bool Incidence::loadAttribute( QDomElement& element )
     } else
       return false;
   } else if ( tagName == "start-date" ) {
-    setStartDate( stringToDateTime( element.text() ) );
+    setStartDate( element.text() );
   }
   else if ( tagName == "recurrence" )
     loadRecurrence( element );
@@ -287,11 +309,15 @@ bool Incidence::saveAttributes( QDomElement& element ) const
   writeString( element, "summary", summary() );
   writeString( element, "location", location() );
   saveEmailAttribute( element, organizer(), "organizer" );
-  writeString( element, "start-date", dateTimeToString( startDate() ) );
+  if ( mFloatingStatus == HasTime )
+    writeString( element, "start-date", dateTimeToString( startDate() ) );
+  else
+    writeString( element, "start-date", dateToString( startDate().date() ) );
   if ( !mRecurrence.cycle.isEmpty() )
     saveRecurrence( element );
   saveAttendees( element );
-  writeString( element, "alarm", QString::number( alarm() ) );
+  if ( mHasAlarm )
+    writeString( element, "alarm", QString::number( alarm() ) );
   return true;
 }
 
@@ -449,9 +475,20 @@ void Incidence::setFields( const KCal::Incidence* incidence )
 {
   KolabBase::setFields( incidence );
 
-  setStartDate( localToUTC( incidence->dtStart() ) );
+  if ( incidence->doesFloat() ) {
+    // This is a floating event. Don't timezone move this one
+    mFloatingStatus = AllDay;
+    setStartDate( incidence->dtStart().date() );
+  } else {
+    mFloatingStatus = HasTime;
+    setStartDate( localToUTC( incidence->dtStart() ) );
+  }
+
   setSummary( incidence->summary() );
   setLocation( incidence->location() );
+
+  // Alarm
+  mHasAlarm = false; // Will be set to true, if we actually have one
   if ( incidence->isAlarmEnabled() ) {
     const KCal::Alarm::List& alarms = incidence->alarms();
     if ( !alarms.isEmpty() ) {
@@ -510,14 +547,19 @@ void Incidence::saveTo( KCal::Incidence* incidence )
 {
   KolabBase::saveTo( incidence );
 
-  incidence->setDtStart( utcToLocal( startDate() ) );
-  // floating events are currently not covered with the spec because it requires an explizit timezone
-  incidence->setFloats( false );
+  if ( mFloatingStatus == AllDay ) {
+    // This is a floating event. Don't timezone move this one
+    incidence->setDtStart( startDate() );
+    incidence->setFloats( true );
+  } else {
+    incidence->setDtStart( utcToLocal( startDate() ) );
+    incidence->setFloats( false );
+  }
 
   incidence->setSummary( summary() );
   incidence->setLocation( location() );
 
-  if ( mAlarm != 0 ) {
+  if ( mHasAlarm ) {
     KCal::Alarm* alarm = incidence->newAlarm();
     alarm->setStartOffset( qRound( mAlarm * 60.0 ) );
   }
