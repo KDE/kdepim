@@ -4,11 +4,11 @@
 <sect2 id="using-filters">
 <title>Defining and Using Filters</title>
 
-<para>You already read about using Filters in the chapter explaining
-the configuration of &knode;. We were talking about the built-in
-filters provided by &knode; there. You can configure the built-in
-filters like all the others. The screenshot shows the Dialog Box for
-configuring the Filters.</para>
+<para>You may already have read about using filters in the chapter explaining
+the configuration of &knode;; there, we were talking about the built-in
+filters provided by &knode; there.  You can configure the built-in
+filters like all the others. The screenshot below shows the dialog box for
+configuring the filters.</para>
 
 <tip><para>While filters and scoring are very powerful and have many
 uses, one of the most common requirements is simply to add all posts
@@ -18,22 +18,22 @@ section</link> is a quick guide to using filters and scores to create
 such a killfile.</para></tip>
 
 <screenshot>
-<screeninfo>The dialog <guilabel>New Filter</guilabel></screeninfo>
+<screeninfo>The <guilabel>New Filter</guilabel> dialog</screeninfo>
 <mediaobject>
 <imageobject>
 <imagedata fileref="knode-edit-filter.png" format="PNG"/> </imageobject>
 <textobject>
-<phrase>The dialog <guilabel>New Filter</guilabel></phrase>
+<phrase>The <guilabel>New Filter</guilabel> dialog</phrase>
 </textobject>
 <caption>
-<para>The dialog <guilabel>New Filter</guilabel></para>
+<para>The <guilabel>New Filter</guilabel> dialog</para>
 </caption>
 </mediaobject>
 </screenshot>
 
-<para>First we will create a new filter. There will be the case, that
-you want to find your own articles among all the others. Or you do not
-want to see the articles of a particular person at all. Both cases can
+<para>First we will create a new filter.  You may, at some point, want
+to find your own articles amongst all the others; or, you may not
+want to see the articles posted by a particular person at all: both cases can
 be solved by a simple filter on the Sender. Here are some
 examples:</para> 
 
@@ -52,19 +52,19 @@ News</guilabel><guilabel>Filters</guilabel></menuchoice></para>
 <guilabel>Name</guilabel></para> 
 </step> 
 <step performance="required"> 
-<para>For making the filter appear in the menu, check <guilabel>show
+<para>To make the filter appear on the menu, check <guilabel>Show
 in menu</guilabel>.</para>
 </step> 
 <step performance="required"> 
-<para>Go to the area <guilabel>From</guilabel>.</para> 
+<para>Go to the <guilabel>From</guilabel> area.</para> 
 </step> 
 <step performance="required"> 
-<para>Choose <guilabel>does NOT contain</guilabel> from the Drop Down
-Box.</para> 
+<para>Choose <guilabel>Does NOT contain</guilabel> from the drop-down
+box.</para> 
 </step>
 <step performance="required"> 
-<para>Insert the name of the moron you want to ignore in the now
-active Text Box for example <userinput>Idiot</userinput>.</para>
+<para>Insert the name of the person you want to ignore in the now-
+active Text Box; for example, <userinput>Idiot</userinput>.</para>
 </step> 
 <step performance="required"> 
 <para>Confirm the filter settings with
@@ -75,7 +75,7 @@ active Text Box for example <userinput>Idiot</userinput>.</para>
 <para>The filter now shows all articles, except the ones containing
 <quote>Idiot</quote> in the From: line.</para>
 
-<para>You can combine the settings of the tab for Subject + From line
+<para>You can combine the settings of the 'Subject + From' tab 
 with the settings on the other tabs. For example:</para>
 
 <procedure>
@@ -98,21 +98,21 @@ articles</guilabel></para>
 <guilabel>Name</guilabel> field.</para>
 </step>
 <step>
-<para>Select the tab <guilabel>Status</guilabel></para>
+<para>Select the <guilabel>Status</guilabel> tab</para>
 </step>
 <step>
 <para>Select <guilabel>has new followups</guilabel></para>
 </step>
 <step>
-<para>Select <guilabel>true</guilabel> in the Drop Down Box next to
+<para>Select <guilabel>true</guilabel> in the drop-down box next to
 it.</para>
 </step>
 <step>
 <para>Confirm the filter settings with
 <guibutton>OK</guibutton></para>
-<para>This filter shows all threads your are participating in, which
-have unread messages. Also, you saw the possibility, to use already
-existing filters as a base for new ones. This makes life easier for
+<para>This filter shows all the threads your are participating in which
+have unread messages; also, you have seen the possibility of using
+existing filters as a base for new ones: this makes life easier for
 complex filters.</para>
 </step>
 </procedure>
@@ -133,28 +133,28 @@ News</guilabel><guilabel>Filters</guilabel></menuchoice></para>
 <guilabel>Name</guilabel> field.</para>
 </step>
 <step>
-<para>For making the filter appear in the menu, check <guilabel>show
+<para>To make the filter appear in the menu, check <guilabel>show
 in menu</guilabel>.</para> 
 </step> 
 <step> 
-<para>In the Drop Down Box <guilabel>apply on</guilabel> select
+<para>From the <guilabel>apply on</guilabel> drop-down box select
 <guilabel>single articles</guilabel></para> 
 </step> 
 <step> 
-<para>Go to the area <guilabel>Subject</guilabel> and select
-<guilabel>does contain</guilabel> in the Drop Down Box.</para> 
+<para>Go to the <guilabel>Subject</guilabel> area and select
+<guilabel>does contain</guilabel> in the drop-down box.</para> 
 </step> 
 <step> 
-<para>Insert <userinput>knode</userinput> in the Text Box.</para>
+<para>Insert <userinput>knode</userinput> in the text box.</para>
 </step> 
 <step> 
-<para>Change to Tab <guilabel>Additional</guilabel></para> 
+<para>Change to the <guilabel>Additional</guilabel> tab</para> 
 </step>
 <step> 
-<para>Select the Check Box <guilabel>Age</guilabel></para> 
+<para>Select the <guilabel>Age</guilabel> check box</para> 
 </step> 
 <step> 
-<para>Place the following settings <guilabel>0 &lt; days &lt;=
+<para>Enter the following settings: <guilabel>0 &lt; days &lt;=
 3</guilabel></para> 
 </step> 
 <step> 
@@ -177,12 +177,12 @@ zero and can be adjusted according to author, thread, &etc;).</para>
 poster, but this is not really suitable when you want to kill several
 posters universally.</para>
 
-<para>Using the scoring gives lots of control but appears to filter
-only at the thread level: you can set watch and ignore (threads). Not
-good because you lose otherwise useful threads just because of one
-poster.</para>
+<para>Using the scoring gives lots of control but filters
+only at the thread level, i.e. you can watch and ignore threads; the
+disadvantage of this, however, is that you may lose otherwise-useful
+threads just because of one poster.</para>
 
-<para>Solution is to use these in combination.</para>
+<para>The solution is to use these in combination.</para>
 
 <procedure>
 <title>Creating a Killfile</title>
@@ -205,13 +205,13 @@ zero</quote> (<guilabel>&lt;=</guilabel>); then click the
 <step>
 <para>Open an article whose author should be killed and just type
 <keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo>(or
-select from <guimenu>Scoring</guimenu> menu <guimenuitem>Lower Score
+select, from the <guimenu>Scoring</guimenu> menu, <guimenuitem>Lower Score
 for Author</guimenuitem>).  This opens the Rule Editor (a part of
-scoring). You can optionally give the rule a name that matches your
-author (<userinput>Kook</userinput>, for example.) and then if this is
+scoring).  You can optionally give the rule a name that matches the 
+author (<userinput>Kook</userinput>, for example.) and then, if this is
 to be permanent, uncheck the <guilabel>expire automatically</guilabel>
-box. You'll see that this rule will change the author's score to minus
-ten (or as you wish). Save.</para>
+box; you'll see that this rule will change the author's score to minus
+ten (or the score you entered); finally, click <guibutton>OK</guibutton>.</para>
 </step>
 
 <step>
@@ -222,7 +222,7 @@ ten (or as you wish). Save.</para>
 </procedure>
 
 <para>This will cause any articles with scores less than zero will
-disappear. To kill additional authors you only need repeat the
+disappear; to kill additional authors you only need repeat the
 <keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo> part of
 these instructions.</para>
 
@@ -241,13 +241,13 @@ posting and replying to articles.</para>
 <title>Publish Articles in Multiple Newsgroups</title>
 
 <para>By selecting the Button <guilabel>Browse</guilabel> you can
-choose additional newsgroups, you want to publish your article
+choose additional newsgroups you want to publish your article
 in.</para> 
 
 <caution> 
 <para>It is generally undesirable to post articles in multiple
-newsgroups. Please think about it twice. If you are not sure, where to
-post your article, ask in one of the possible groups. Somebody will
+newsgroups: please think twice about it; if you are not sure where to
+post your article ask in one of the possible groups &mdash; somebody will
 tell you were to post.</para> 
 </caution> 
 </sect3> 
@@ -255,35 +255,35 @@ tell you were to post.</para>
 <sect3> 
 <title>Redirect Followups</title> 
 
-<para>The main use of this feature is the case, when a thread has gone
-off topic for the newsgroup it is posted in. For example a thread in a
-&kde; newsgroup about how to redirect a followup in &knode; which
-leads to a dicussion about graphical and text based
+<para>The main use of this feature is when a thread has gone
+off topic for the newsgroup in which it is posted; for example, a thread may
+start in a &kde; newsgroup discussing how to redirect a followup in &knode;,
+but may leads to a dicussion about graphical and text based
 newsreaders.</para>
 
 <para>Sometimes it happens that usenet users post an article into the
-wrong newsgroup. Very often those articles are just ignored. If it
+wrong newsgroup; very often those articles are just ignored. If it
 looks like the author did this unintentionally, you might like to tell
-it politely and make the followup articles go into the right
+them politely and make the followup articles go into the right
 group.</para>
 
 <para>Another reason for using <guilabel>Followup-To:</guilabel> is a
-possible crossposting in multiple newsgroups. You should take care
-that the replies will be posted in one single newsgroup.</para> 
+when dealing with articles cross-posted across in multiple newsgroups:
+you should take care that the replies are only posted in one single newsgroup.</para> 
 
 <para>You can activate this by filling the text box
-<guilabel>Followups - To:</guilabel>. Here you can enter the suitable
-group. If there are multiple newsgroups in the
-<guilabel>Groups:</guilabel> field, they are shown in the drop down
+<guilabel>Followups - To:</guilabel>; here you can enter the suitable
+group.  If there are multiple newsgroups in the 
+<guilabel>Groups:</guilabel> field, they are shown in the drop-down
 list.</para> 
 
 <tip> 
-<para>When you enter <userinput>poster</userinput> here, instead of a
-newsgroup, the replies go directly to the author, not to the
+<para>If you enter <userinput>poster</userinput> here, instead of a
+newsgroup, the replies will go directly to the author, not to the
 newsgroup.</para> 
 
 <para>Some people put an email address here, but this is not a valid
-entry.  Use <userinput>poster</userinput> and correctly set your
+entry:  use <userinput>poster</userinput> and correctly set your
 Reply-To address in the normal &knode; settings.</para>
 
 </tip> 
@@ -295,7 +295,7 @@ Reply-To address in the normal &knode; settings.</para>
 
 <para>Using <menuchoice><guimenu>Tools</guimenu><guimenuitem>Start
 External Editor</guimenuitem></menuchoice> you can start an editor of
-your choice, for editing the reply. So you can use your preferred
+your choice for editing the reply; this way you can use your preferred
 Editor for writing articles and e-mails.</para> 
 
 </sect3> 
@@ -305,7 +305,7 @@ Editor for writing articles and e-mails.</para>
 
 <para>By selecting
 <menuchoice><guimenu>Tools</guimenu><guimenuitem>Spelling</guimenuitem></menuchoice>,
-you can check the article in the composer on spelling errors.</para> 
+you can check the article in the composer for spelling errors.</para> 
 
 </sect3> 
 
@@ -314,14 +314,14 @@ you can check the article in the composer on spelling errors.</para>
 
 <para>By selecting
 <menuchoice><guimenu>Attach</guimenu><guimenuitem>Attach
-File</guimenuitem></menuchoice> you open the File Selection Dialog
-Box. Here you can choose the file you want to attach.</para> 
+File</guimenuitem></menuchoice> you can open the File Selection Dialog
+Box; here you can choose the file you want to attach.</para> 
 
 <para>Most of the time, &knode; determines the correct
-<acronym>MIME</acronym> type for the attachment. If &knode; errs, you
-can correct the <acronym>MIME</acronym> type manually.</para>
+<acronym>MIME</acronym> type for the attachment; if &knode; detects
+it incorrectly, you can correct the <acronym>MIME</acronym> type manually.</para>
 
-<para>This screenshot shows the Composer with 2 attachments. A text
+<para>This screenshot shows the Composer with 2 attachments: a text
 file and a PNG picture.</para> 
 
 <screenshot> 
@@ -339,28 +339,28 @@ file and a PNG picture.</para>
 </screenshot> 
 
 <caution> 
-<para>Only do this, if you know, what you're doing! An incorrect
-<acronym>MIME</acronym> type could cause a wrong sending of the
-attachment or that the attachment couldn't be rebuild after
-sending.</para> 
+<para>Only do this if you know what you're doing! An incorrect
+<acronym>MIME</acronym> type could cause the attachment to be sent
+incorrectly, or mean that the attachment will not be able to be
+rebuilt after sending.</para> 
 </caution> 
 
 <tip> 
-<para>The English word attachment is used all over the world, you can
+<para>The English word attachment is used all over the world; you can
 use it in your language, too.</para> 
 </tip> 
 
 <important> 
-<para>In most newsgroups, attachments are prohibited. Do not send
-unsolicited attachments. If you are asked to send them, look who is
-asking for. Mostly, this person wants you to send them by
+<para>In most newsgroups, attachments are prohibited: do not send
+unsolicited attachments; if you are asked to send them, look who is
+asking for them &mdash; normally, the person will want you to send them by
 email.</para> 
 
-<para>The news server will probably reject article with attachments
-for most groups anyway, and those that do accept attachments will
+<para>The news server will probably reject articles with attachments
+for most groups anyway; those that do accept attachments
 normally have the word <quote>binaries</quote> in their name. Some
-news servers even stop carrying non-binaries news groups that
-continuous receive attachments.</para>
+news servers even stop carrying non-binaries newsgroups that
+continuously receive attachments.</para>
 </important> 
 </sect3> 
 </sect2> 
@@ -368,13 +368,13 @@ continuous receive attachments.</para>
 <sect2> 
 <title>Searching for Articles</title> 
 
-<para>Sooner or later, you will start searching for one specific
-article. The &knode; search feature is an easy way to do so.</para> 
+<para>Sooner or later, you will want to search for one specific
+article; the &knode; search feature is an easy way to do this.</para> 
 
 <para>You can reach the search function by selecting
 <menuchoice><guimenu>Edit</guimenu><guimenuitem>Search
-Articles...</guimenuitem></menuchoice> or the <keycap>F4</keycap>
-key. The screenshot below shows the Search Dialog Box.</para> 
+Articles...</guimenuitem></menuchoice> or the by pressing
+<keycap>F4</keycap>. The screenshot below shows the Search Dialog Box.</para> 
 
 <screenshot> 
 <screeninfo>The Search Dialog Box</screeninfo> 
@@ -390,33 +390,33 @@ key. The screenshot below shows the Search Dialog Box.</para>
 </mediaobject> 
 </screenshot> 
 
-<para>The Search Dialog Box has four tabs, which allow several search
-criteria. The first tab contains the settings for the criterion
-<guilabel>Subject</guilabel> and <guilabel>From</guilabel>. The second
+<para>The Search Dialog Box has four tabs which allow several search
+criteria: the first tab contains the settings for the
+<guilabel>Subject</guilabel> and <guilabel>From</guilabel> criteria; the second
 tab contains the settings for the <guilabel>message-IDs</guilabel> of
-an article and its references. The third tab contains the settings for
+an article and its references; the third tab contains the settings for
 the <guilabel>Status</guilabel> of an
-article. <guilabel>Additional</guilabel> contains the criteria, which
-do not belong to the first or second tab.</para>
+article; the fourth tab, <guilabel>Additional</guilabel>, contains the remaining
+criteria.</para>
 
-<para>You probably already noticed the similarities between the Filter
-Dialog Box and the Search Dialog Box. The usage is the same and should
-not be too complicated, if you already defined your own
+<para>You have probably already noticed the similarities between the Filter
+Dialog Box and the Search Dialog Box: the usage is the same and should
+not be too complicated if you have already defined your own
 filters.</para> 
 
-<para>&knode; always searches in the currently active newsgroup. A
+<para>&knode; always searches in the currently-active newsgroup; a
 search in all newsgroups is not possible at the moment. After the
-Search finished, the articles found appear in the article view. When
-you close the Search Dialog Box, When you close the Search Dialog Box
-with <guibutton>Close</guibutton>the search results are deleted, and
-the old view of the newsgroup appears again.</para> 
+Search has finished the articles found appear in the article view; when
+you close the Search Dialog Box using <guibutton>Close</guibutton> 
+the search results are deleted, and the old view of the newsgroup
+appears again.</para> 
 
 <sect3> 
 <title><guilabel>Start Search</guilabel></title> 
 
 <para>With this button you start the Search with the search criteria
-you defined. All articles in the selected newsgroup, fulfiling this
-criterias, appear in the article view.</para> 
+you defined; all articles in the selected newsgroup, fulfiling these
+criteria, appear in the article view.</para> 
 
 </sect3> 
 
@@ -431,40 +431,40 @@ criterias, appear in the article view.</para>
 <sect2 id="supersede-and-cancel"> 
 <title>Supersede and Cancel Articles</title> 
 
-<para>This chapter deals with superseding and canceling articles. You
-will not use this two features very often, but they belong to the
-comfort features of a newsreader.</para> 
+<para>This chapter deals with superseding and canceling articles.  You
+will not use these two features very often, but they do exist should
+you, one day, need them.</para> 
 
 <caution> 
 <para>Both functions need a news server prepared to handle
-them. You should remember that there is no guarantee that no one has
-already read your article, before it is superseded or canceled.
+them; you should also remember that there is no guarantee that no one has
+already read your article before it is superseded or canceled.
 </para>
 
 <para>So first think, then post.</para> 
 </caution> 
 
 <sect3> 
-<title>Cancel </title>
+<title>Cancel</title>
 
 <para>Canceling an article means deleting it from the
 newsgroup.</para> 
 
-<para>Why should you want to cancel an article? Well, perhaps you
+<para>Why should you want to cancel an article?  Perhaps you
 flamed somebody in a rage and now you want to get this article out of
-the newsgroup, because you regret what you wrote. A personal insult,
-read by everybody, looks not too good, especially when you regret
-it. So there is only one thing, cancel the article.</para> 
+the newsgroup because you regret what you wrote: a personal insult,
+read by everybody, doesn't look good, especially when you regret
+it; so, there is only one thing you can do &mdash; cancel the article.</para> 
 
 <para>Select the article you want to cancel and choose
-<guimenuitem>Cancel article</guimenuitem> in the context menu. When
+<guimenuitem>Cancel article</guimenuitem> from its context menu. If
 you are sure it is the right article, confirm &knode;s question with
-<guibutton>Yes</guibutton>. Now you are asked if you want to send the
-Cancel message now or later. For this example we decide to send it
-<guibutton>Later</guibutton>. You will notice the new message in the
+<guibutton>Yes</guibutton>. Now you will be asked if you want to send the
+Cancel message now or later; for this example we decide to send it
+<guibutton>Later</guibutton>.  You will notice the new message in the
 folder <guilabel>Outbox</guilabel>.</para> 
 
-<para>Now we want to look at the so called cancel message. In the
+<para>Now we want to look at the so-called cancel message. In the
 subject you will find something like:</para> 
 
 <screen> 
@@ -472,43 +472,43 @@ subject you will find something like:</para>
 </screen> 
 
 <para>This strange letters between the brackets are the Message-ID of
-the article, you want to cancel. This message tells the newsserver to
-delete your article. When you look at complete header of this message
+the article you want to cancel.  This message tells the newsserver to
+delete your article: if you look at complete header of this message,
 by selecting <menuchoice><guimenu>View</guimenu><guimenuitem>Show all
-headers</guimenuitem></menuchoice> you will notice a line with the
+headers</guimenuitem></menuchoice>, you will notice a line with the
 name <emphasis>control</emphasis> and the content <emphasis>cancel
-&lt;xxxxx@ddddd.dd&gt;</emphasis> This line tells the server, this
-message is a control message. In our case, this message cancels your
-article.</para> 
+&lt;xxxxx@ddddd.dd&gt;</emphasis> &mdash; this line tells the server that
+this message is a control message and, in our case, tells the server to
+cancel your article.</para> 
 
 <para>You can still delete the control message from the
-<guilabel>Outbox</guilabel>.</para> 
+<guilabel>Outbox</guilabel> should you change your mind.</para> 
 
 <caution> 
-<para>Keep in mind, an article can only be identified by his
-Message-ID. You need this Message-ID if you want to cancel an
-article. Normally your article gets this Message-ID when it arrives at
-the newsserver. Thats why you can only cancel an article, when it is
-already published. The articles in the folder
-<guilabel>Sent</guilabel> have no Message-ID, so you can not cancel
+<para>Keep in mind that articles can only be identified by their
+Message-IDs; you need this Message-ID if you want to cancel an
+article.  Normally, your article gets a Message-ID when it arrives at
+the newsserver &mdash; that's why you can only cancel an article once
+it has been published.  The articles in the 
+<guilabel>Sent</guilabel> folder have no Message-ID, so you cannot cancel
 them from there.</para> 
 
-<para>There is one exception. If you have configured &knode; to
-generate a Message-ID, you can cancel you articles in folder
-<guilabel>Sent</guilabel>, too.</para> 
+<para>There is one exception: if you have configured &knode; to
+generate a Message-ID you can cancel you articles in folder
+<guilabel>Sent</guilabel> too.</para> 
 
-<para>&knode; allows only to cancel your own articles. It refuses to
+<para>&knode; allows only to cancel your own articles: it refuses to
 cancel articles from other authors.</para> 
 </caution> 
 
 <warning>
 <para>Since the cancel feature is so easily fooled, by newsreaders
 that let you cancel any post, many news servers do not acknowledge
-cancel messages from posters.  Even if your own <acronym>ISP</acronym>
+cancel messages from posters; even if your own <acronym>ISP</acronym>
 accepts the cancel and passes it on, many other servers will ignore it
 <emphasis>and will not pass it on</emphasis>.</para>
 
-<para>You should consider any previously sent article, canceled or
+<para>You should consider any previously-sent article, canceled or
 not, to be published and publicly available.</para>
 </warning>
 
@@ -520,27 +520,27 @@ not, to be published and publicly available.</para>
 <para>Supersede overwrites your article with a new version. One reason
 for doing this could be:</para> 
 
-<para>You have written a long article and already posted it. Now you
-find an error in this article. You can cancel this article and post a
-new, corrected, article. Or you can use Supersede.</para> 
+<para>You have written a long article and have already posted it; now, you
+have found an error in this article: you could cancel this article, and post a
+new, corrected, article; or, you can use Supersede.</para> 
 
-<para>Select this article in the article view. In the context menu,
+<para>Select the article in the article view.  From its context menu
 select <guimenuitem>Supersede article...</guimenuitem>. &knode; will
-ask you, if you really want to overwrite this article. Confirm with
-<guibutton>Yes</guibutton> and the Composer appears.</para> 
+ask you if you really want to overwrite this article; if you confirm with 
+<guibutton>Yes</guibutton> the Composer appears.</para> 
 
-<para>In the Composer you can now make the wanted corrections and
-changes. You can publish this article in the same way as you post
-every other article. When the newsserver receives this article, it
+<para>In the Composer you can now make the desired corrections and
+changes. You can then publish this article in the same way as you post
+every other article; when the newsserver receives this article it
 reads some special lines in the header which tell the newsserver to
-supersede the older article. Select
+supersede the older article.  Select
 <menuchoice><guimenu>File</guimenu><guimenuitem>Send
 Later</guimenuitem></menuchoice> for now, because we want to look at
-the articles header in the <guilabel>Outbox</guilabel>.</para>
+the article's header in the <guilabel>Outbox</guilabel>.</para>
 
 <para>Activate <menuchoice><guimenu>View</guimenu><guimenuitem>Show
 all headers</guimenuitem></menuchoice>, because we want to see all the
-header, the newsserver receives. You will notice a line like:</para> 
+headers the newsserver receives. You will notice a line like:</para> 
 
 <para>Supersedes: &lt;oggcm8.4n5.ln@konqi.org&gt;</para> 
 
@@ -548,29 +548,29 @@ header, the newsserver receives. You will notice a line like:</para>
 article with the Message-ID &lt;oggcm8.4n5.ln@konqi.org&gt; with the
 new article.</para> 
 
-<para>Besides this Supersede is used for periodical posted articles, &eg;
- a <acronym>FAQ</acronym>. The new article supersedes the old one and
+<para>Besides this, Supersede is used for periodical posted articles, &eg;
+ an <acronym>FAQ</acronym>. The new article supersedes the old one and
  the newsgroups do not end up with lots of different versions.</para> 
 
 <caution> 
-<para>Again, using this function is only possible, if the article
-already has a Message-ID. Normally articles get their by the
-newsserver. This means, you can only supersede articles, which are
-already published.</para> 
+<para>Again, using this function is only possible if the article
+already has a Message-ID. Normally, articles get their Message-ID from the
+newsserver: this means that you can only supersede articles which have
+already been published.</para> 
 
-<para>you can configure &knode; to generate this message, then you can
+<para>You can configure &knode; to generate this message, then you can
 supersede your articles in the <guilabel>Outbox</guilabel>,
 too.</para> 
 
-<para>&knode; allows only to supersede your own articles.</para> 
+<para>&knode; allows you to only supersede your own articles.</para> 
 
 </caution> 
 
 <warning>
 <para>As with cancels, supersede messages have been abused in the
-past, with for example certain parties sending hundreds or even
+past, with, for example, certain parties sending hundreds or even
 thousands of them to overwrite legitimate posts with random computer
-generated junk.  Again, as with cancels, many news servers do not
+generated junk; again, as with cancels, many news servers do not
 honor supersede messages, nor do they pass them on.</para>
 </warning>
 
@@ -581,154 +581,160 @@ honor supersede messages, nor do they pass them on.</para>
 <title>Score, watch, ignore</title>
  
 <anchor id="anc-score-watch-ignore"/> 
-<para>Score, Watch and Ignore are only different names for the same
+<para>Score, Watch and Ignore are different names for the same
 feature.</para> 
 
 <para>By scoring a thread, you determine its importance. &knode;
 allows scores between -100000 and 100000. A normal article will get a
-score of 0 if you do not change this. So threads with a score below 0
-are less important and threads with a score above 0 are more important
-than the average.</para> 
+score of 0 if you do not change this; threads with a score below 0
+are less important than average; threads with a score above 0 are more
+important than average.</para> 
 
 <para>The score is an attribute of the thread and the articles in this
-thread. So you can use the score for filtering and searching
-articles. For example, you can define a filter, which shows only
-articles with a score &gt; 0, that means all articles you are
-specially interested in.</para> 
+thread, so you can use the score for filtering and searching
+articles; for example, you can define a filter to show only
+articles with a score &gt; 0, i.e. all articles in which you are
+specifically interested.</para> 
 
-<para>The function <guilabel>Watch</guilabel> only sets the score of
-all article in a thread to 100. So they get a high score and &knode;
+<para>The function <guilabel>Watch</guilabel> sets the score of
+all article in a thread to 100; this way they get a high score and &knode;
 labels them with a special icon.</para>
 
 <para>The function <guilabel>Ignore</guilabel> does the
-opposite. Ignore scores all articles with -100 and does not show this
-articles anymore.</para>
+opposite: it scores all articles in a thread with -100 so &knode;
+does not show these articles anymore.</para>
 
 <tip> 
 <para>The English word <quote>scoring</quote> is used in many other
 countries, too.</para>
 </tip> 
 
-<para>You can score an article or a thread manual with the right
-mousebutton or with the menu <guimenu>Scoring</guimenu>. Here you can
+<para>You can score an article or a thread manually with the right
+mouse button or with the <guimenu>Scoring</guimenu> menu &mdash; here you can
 score with <guilabel>Watch Thread</guilabel> and <guilabel>Ignore
-Thread</guilabel> directly. Besides you can let &knode; score the
-articles with scoring rules automatically. You can configure those
+Thread</guilabel> directly.  Apart from scoring manually you can let &knode;
+score the articles with scoring rules automatically; you can configure these
 rules at <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
 KNode...</guimenuitem><guimenuitem>Reading
 News</guimenuitem><guimenuitem>Scoring</guimenuitem></menuchoice> or
 at <menuchoice><guimenu>Scoring</guimenu><guimenuitem>Edit scoring
-rules...</guimenuitem></menuchoice>. The only different of these
+rules...</guimenuitem></menuchoice> &mdash; the only difference between these
 dialogs is that the last one has the rule-list next to the rule
-configuration. In the following guide I'm using the editor you get
-with <menuchoice><guimenu>Scoring</guimenu><guimenuitem>Edit scoring
-rules...</guimenuitem></menuchoice>.</para> 
+configuration. In the following guide I'm using the editor that appears
+if <menuchoice><guimenu>Scoring</guimenu><guimenuitem>Edit scoring
+rules...</guimenuitem></menuchoice> is chosen.</para> 
 
 <screenshot> 
-<screeninfo>The Rule Composer</screeninfo>
+<screeninfo>The Rule Editor</screeninfo>
 <mediaobject>
 <imageobject>
 <imagedata fileref="knode-rule-editor.png" format="PNG"/> </imageobject>
 <textobject>
-<phrase>The Rule Composer</phrase>
+<phrase>The Rule Editor</phrase>
 </textobject>
 <caption>
-<para>The Rule Composer</para> 
+<para>The Rule Editor</para> 
 </caption> 
 </mediaobject> 
 </screenshot> 
 
-<para>The composer consists of 4 areas. On the left side is the list
-of the rules. With the buttons below the list you can add, delete or
-copy an existing rule. Below that you have the possibility to limit
-the rules which are shown. You have the choice to show all rules or
-only the rules for a special <glossterm>newsgroup</glossterm>.</para> 
+<para>The composer consists of 4 areas: on the left side is the list
+of the rules; with the buttons below the list you can add, delete or
+copy an existing rule; below that you have the possibility to limit
+the rules which are shown &mdash; you have the choice whether to show all
+rules or only the rules for a specific <glossterm>newsgroup</glossterm>.</para> 
 
-<para>If you chose a rule-name in the list you will see the rule on
-the right side. Now you can edit the rule. At the top you can change
-the name and set the newsgroups this rule is for. You can chose one or
-more than one group. Several groups must be separated by a
-semicolon. Furthermore you can chose from the subscribed groups with
-the drop down list and the <guibutton>Add group</guibutton> button or
-use regular expressions and wild cards, &eg; <quote>.*</quote> for all
-groups. The option <guilabel>Expire rule automatically</guilabel>
+<para>If you chose a rule-name in the list you the rule will be displayed
+on the right-hand side; now you can edit the rule. At the top you can change
+the name of the rule and set the newsgroups to which this rule applies.
+You can choose one or
+more than one group, note that group names must be separated by a
+semicolon.  You can choose from the subscribed groups with
+the drop-down list and the <guibutton>Add group</guibutton> button; or
+you can use regular expressions and wild cards, &eg; <quote>.*</quote> for all
+groups.  The <guilabel>Expire rule automatically</guilabel> option
 makes it possible to delete the rule automatically after the
-configured number of days. This is senseful if a special person
-behaves bad and you don't want to read anything from this person for a
+configured number of days; this is useful if a specific person
+behaves badly and you do not want to read anything from this person for a
 few days.</para> 
 
 <para>In the <guilabel>Condition</guilabel> field you enter the
-condition which should activate the rule. Normally you can enter only
-one condition, but you can change this by pressing the buttons
-<guibutton>More</guibutton> and <guibutton>Fewer</guibutton>. If you
-have more than one condition, you must tell knode if all conditions
-must be fulfilled or only one of them. If <guilabel>Match all
-conditions</guilabel> is activated, all conditions must be fulfilled,
-if <guilabel>Match any conditions</guilabel> only one of them needs to
-be be fulfilled.</para> 
+condition on which this rule is activated.  Normally, you can enter only
+one condition, but you can change this by pressing the 
+<guibutton>More</guibutton> and <guibutton>Fewer</guibutton> buttons. If you
+have more than one condition, you must tell knode whether all conditions
+need to be fulfilled or only one of them; this can be done by choosing
+<guilabel>Match all conditions</guilabel> or 
+<guilabel>Match any condition</guilabel> respectively.
+</para> 
 
-<para>Every condition consists of 2 drop down lists and a free
-text. In the first list you chose the part of the message which should
-be used for the condition. This part will be compared with the text
-field. And the second drop down list tells &knode; how it's
-compared. For example, the free text should match the chosen header
-field exactly or just be a part of it. Regular expressions are
-allowed, too. If you check <guilabel>Not</guilabel>, the condition is
-fulfilled if the chosen things are false.</para> 
+<para>Each condition consists of 2 drop-down lists and a text
+field. In the first list you chose the part of the message which should
+be used for the condition &mdash; this part will be compared with the text
+field; the second drop-down list tells &knode; how it is to be
+compared, for example, whether the chosen header should be identical
+to the text entered in the text field, or if it just needs to match part of it.
+Regular expressions are allowed, too.
+If you check <guilabel>Not</guilabel> then the conditions under which
+the condition is satisfied are reversed, and the condition will be satisfied
+if the opposite of its shown conditions is true.</para> 
 
-<para>That was the theory, now lets have a look on some
+<para>Now, let's have a look at some
 examples.</para>
 
 <itemizedlist> 
 <listitem>
-<para>Maybe you want to filter away all postings of Theodor
-Test. Therefor you have to chose the header line
-<guilabel>From</guilabel>, enter his name in the text field and chose
-that the fields should match. But before doing that you should have a
-look on the <glossterm>header</glossterm> of an article of Theoder
-Test and check out, what's in the <quote>From</quote> line
-there.</para>
+<para>Maybe you want to filter away all the postings by Theodor
+Test; to do this choose the
+<guilabel>From</guilabel> header line from the first drop-down
+list, choose <guilabel>is exactly the same as</guilabel> from the second
+drop-down list, and enter his name in the text field.
+But, before doing this you should have a
+look at the <glossterm>header</glossterm> of one of Theodor's
+articles and see what is in the <quote>From</quote> line.</para>
 </listitem> 
 <listitem>
-<para>If you don't want to read articles with more than 100 lines, you
-can chose the header entry <guilabel>Lines</guilabel>, in the second
-drop down you chose <guilabel>greater than</guilabel> and enter
-<userinput>100</userinput> in the text field. You probably want to
+<para>If you do not want to read articles with more than 100 lines, choose
+the header entry <guilabel>Lines</guilabel> from the first drop-down
+list, choose <guilabel>greater than</guilabel> from the second, and enter
+<userinput>100</userinput> in the text field. You probably, then, want to
 score down the message.</para>
 </listitem>
 <listitem>
-<para>Last example: Of course you're very interested in every article
-that refers to &knode;. Now you can chose the header entry
-<guilabel>Subject</guilabel>, <guilabel>contains substring</guilabel>
+<para>Last example: of course, you're very interested in every article
+that refers to &knode;.  Choose the header entry
+<guilabel>Subject</guilabel>, then <guilabel>contains substring</guilabel>
 and enter <userinput>knode</userinput> in the text field. But what do
 you do if &knode; is not mentioned in the
-<guilabel>Subject</guilabel>. I suggest to use a regular
-expression. Change <guilabel>contains substring</guilabel> to
+<guilabel>Subject</guilabel>?  I suggest using a regular
+expression: change <guilabel>contains substring</guilabel> to
 <guilabel>matches regular expression</guilabel> and type
-<userinput>knode|newsreader|usenet</userinput> in the text
-field. Alternatively you can make 3 conditions for that and activate
-<guilabel>Match any condition</guilabel>. But this needs a lot of
-space and is very inelegant, isn't it?</para>
+<userinput>knode|newsreader|usenet</userinput> into the text
+field to match either knode, newsreader or usenet &mdash; the <userinput>|</userinput> symbol
+means OR.  Alternatively, you can make 3 conditions &mdash; one that matches knode,
+one that matches newsreader and so on &mdash; and choose
+<guilabel>Match any condition</guilabel>; but, this needs a lot of
+space and it is not very elegant, is it?</para>
 </listitem>
  
 </itemizedlist> 
 
-<para>If your condition is ready you should set an action down in the
+<para>Once your condition is ready you should set an action down in the
 <guilabel>Actions</guilabel> section. The most important action is
-<guilabel>adjust score</guilabel>. If this action is chosen, you can
-raise or lower the score for this articles by the configured
-value. &knode; can also show you a little message when finding such an
-article or colorize the header in the article list, You can make
-interesting articles screeming pink, so you will see them very
+<guilabel>adjust score</guilabel>; if this action is chosen you can
+raise or lower the score, by the configured value, for articles to which
+this rule applies.  &knode; can also show you a little message when finding
+such an article or colorize the header in the article list; for example, you could make
+interesting articles scraeming pink so you would notice them very
 quickly.</para> 
 
-<para>When leaving the editor or choosing the menu item
+<para>When leaving the editor, or when the 
 <menuchoice><guimenu>Scoring</guimenu><guimenuitem>Recalculate
-scores</guimenuitem></menuchoice> the rules are executed. Furthermore
+scores</guimenuitem></menuchoice> menu item is chosen, the rules are executed; furthermore,
 the rules are automatically used for new
-<glossterm>articles</glossterm>. Scoring makes the most sense when
-used with filters. You score some articles down and filter them away,
-so they won't appear in the article list.</para>
+<glossterm>articles</glossterm>.  Scoring makes the most sense when
+used with filters: by scoring some articles down and filtering them away
+they won't appear in the article list.</para>
 
 </sect2>
 
@@ -736,20 +742,21 @@ so they won't appear in the article list.</para>
 <title>Group identities</title> 
 
 <para>With &knode; you can use a different identity with every
-newsgroup you are subscribed to. This involves name, email, reply-to
-address and signature.</para>
+newsgroup to which you are subscribed; i.e. you can set a name, email address,
+reply-to address and signature to use with that group.</para>
 
-<para>It is easy to set group identities. For setting up a group
-identity, select the according newsgroup. In the context menu, select
-<guimenuitem>Group Properties</guimenuitem>. The second tab is
-identical with the global identity settings. Confirm your settings
-with <guibutton>OK</guibutton> and your articles in this group are
-always posted with this identity.</para> 
+<para>It is easy to set group identities.  First, with the right mouse button,
+click on the name of the newsgroup in which to have a different identity in; then,
+select <guimenuitem>Group Properties</guimenuitem> from the context menu
+that appears.  In the dialog that appears the second tab contains
+fields identical to the global identity settings; enter your settings here and
+click <guibutton>OK</guibutton> to confirm the changes: then, your articles in
+this group will always posted with this newly-entered identity.</para> 
 
 <caution> 
-<para>When you unsubscribe from a group, you lose the identity
-settings for this group. If you resubscribe to this group, you have to
-repeat the settings. For new newsgroups, the global identity is
+<para>When you unsubscribe from a group you lose its identity
+settings for this group: if you re-subscribe to the group, you will need to
+re-enter its identity settings. For new newsgroups, the global identity is
 used.</para> 
 </caution> 
 
@@ -759,46 +766,46 @@ used.</para>
 <title>Managing Multiple News Accounts</title> 
 
 <para>&knode; can handle an unlimited number of news server accounts in
-addition to your main news server. Most users don't need this feature,
-but it can be very handy to if your main newsserver doesn't provide
-all groups you want to read. Typical cases are support groups for
-commercial software that are hosted on a special server or binary
-newsgroups.</para> 
+addition to your main news server; most users don't need this feature,
+but it can be very useful to if your main newsserver does not provide
+all groups you want to read.  Typical cases of this are when support groups for
+commercial software are hosted on a special, private, server or binary
+newsgroups, which are only available from some servers.</para> 
 
-<para>Another example why you sometimes need more than one newsserver
-is, that there are sometimes not all interesting newsgroups on one
-server. In fact, there are very often only a selection of
-newsgroups. For example very many servers doesn't support binary
-groups with pictures or programs. If you want such a newsgroup and
-your newsserver provider don't want to serve it, you can configure
+<para>Another example of why you sometimes need more than one newsserver
+is that sometimes not all interesting newsgroups are on one
+server; in fact, there is very often only a selection of
+newsgroups.  For example, many servers do not support binary
+groups with pictures or programs; if you want such a newsgroup and
+your newsserver provider does not want to serve it you can configure
 &knode; to get it from another server.</para>
 
 <para>Or, perhaps you find you are just subscribed to too many
-newsgroups, and would like to organize them a little better.  You
+newsgroups, and would like to organize them a little better;  you
 could set up several accounts for the same server, perhaps one for
 groups you read every day, and one for groups you read less often, so
-that you don't have to search for your <quote>everyday</quote> groups
+that you do not have to search for your <quote>everyday</quote> groups
 in a long list of subscribed groups.</para>
 
-<para>In order to add an new account, you have to open the preferences
+<para>In order to add an new account, open the preferences
 dialog via
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
 KNode...</guimenuitem><guilabel>Accounts</guilabel><guilabel>News</guilabel>
-</menuchoice>The button<guibutton>New</guibutton> creates a new
-account, you then have to enter the same data as for your first
-account, typically a name for the account, the host name and user name
-and password combination if the server requires authentication. When
+</menuchoice>.  The <guibutton>New</guibutton> button creates a new
+account; you then have to enter the same data as for your first
+account, typically a name for the account, the host name, and a user name
+and password if the server requires authentication.  When
 this is done the new server will appear both in the configuration
-dialog and in the group view. You can now subscribe to
+dialog and in the group view: you can now subscribe to
 newsgroups.</para>
 
-<para>You can delete the currently selected account by pressing the
+<para>You can delete the currently-selected account by pressing the
 <guibutton>Delete</guibutton> button.</para> 
 
 <tip>
-<para>With <guimenu>Account properties</guimenu> in the context menu
-of the newsserver you can chose a special identity for only this
-newsserver.</para>
+<para>In the <guimenu>Account properties</guimenu> dialog (available
+from the context menu of the newsserver) you can setup an identity for use
+only on this newsserver.</para>
 </tip>
 </sect2>
 
@@ -806,28 +813,31 @@ newsserver.</para>
 <title>Sign and Verify Articles with <acronym>PGP</acronym></title>
 <anchor id="anc-PGP-support"/>
 
-<para><acronym>PGP</acronym> is the most spread method to encrypt or
-sign data. With the <glossterm>PGP-signature</glossterm> you can
-verify if the data are really from the original author or if they are
-changed by others. You will find PGP-programs and guides at <ulink
+<para><acronym>PGP</acronym> is the most-widespread method used to encrypt or
+sign data.  Using the <glossterm>PGP-signature</glossterm> you can
+verify if an article is really from the original author or if it has been
+changed by others. You can find PGP-programs and guides at <ulink
 url="http://www.pgpi.org">http://www.pgpi.org</ulink>.</para>
 
-<para>With &knode; you are able to sign an article with
-<acronym>PGP</acronym> and to verify a <acronym>PGP</acronym> signed
-article. After you configured the <acronym>PGP</acronym> support
+<para>With &knode; you can sign an article with
+<acronym>PGP</acronym> and to verify <acronym>PGP</acronym>-signed
+article.  After you have configured the <acronym>PGP</acronym> support,
 at <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
 Knode...</guimenuitem><guilabel>Signing/Verifying</guilabel></menuchoice>,
-you can sign an article in the editor with the menu item
+you can sign articles in the editor with the 
 <menuchoice><guimenu>Tools</guimenu><guimenuitem>Sign article with
-PGP</guimenuitem></menuchoice>. You will be asked for your passphrase
+PGP</guimenuitem></menuchoice> menu item &mdash; you will be asked for your passphrase
 and after that the article will be signed.</para>
 
 <caution> 
 <para>Your <application>GnuPG</application>/<acronym>PGP</acronym>
 <acronym>ID</acronym> is automatically built from your name and your
-email address and is identically with the sender of the message
-(<quote>From</quote>-header).</para> </caution> <para> To verify
-a<glossterm> PGP-signature</glossterm> you have to chose the menu
+email address and is identical to the sender of the message
+(<quote>From</quote>-header).</para>
+</caution>
+
+<para> To verify
+a <glossterm>PGP-signature</glossterm> you have to choose the menu
 item <menuchoice><guimenu>View</guimenu><guimenuitem>Verify
 PGP-signature</guimenuitem></menuchoice>.</para> 
 </sect2>
