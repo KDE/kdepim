@@ -250,6 +250,61 @@ KNodeApp::~KNodeApp()
 }
 
 
+//============================ URL handling ==============================
+
+
+void KNodeApp::openURL(const KURL &url)
+{
+  QString host = url.host();
+  unsigned short int port = url.port();
+  KNNntpAccount *acc;
+
+  // lets see if we already have an account for this host...
+  for (acc = AManager->first(); acc; acc = AManager->next())
+    if ((acc->server()==host)&&((port == 0) || (acc->port()==port)))
+      break;
+
+  if (!acc) {
+    acc = new KNNntpAccount();
+    acc->setName(host);
+    acc->setServer(host);
+    if (port != 0)
+      acc->setPort(port);
+    if (url.hasUser() && url.hasPass()) {
+      acc->setNeedsLogon(true);
+      acc->setUser(url.user());
+      acc->setPass(url.pass());
+    }
+    if (!AManager->newAccount(acc))
+      return;
+  }
+
+  QString groupname = url.path(-1);
+  while (groupname.startsWith("/"))
+    groupname.remove(0,1);
+
+  QListViewItem *item = 0;
+  if (groupname.isEmpty())
+    item = acc->listItem();
+  else {
+    KNGroup *grp = GManager->group(groupname.local8Bit(),acc);
+    if (!grp) {
+      KNGroupInfo inf(groupname.local8Bit(),"");
+      GManager->subscribeGroup(&inf,acc);
+      grp = GManager->group(groupname.local8Bit(),acc);
+      if (grp)
+        item = grp->listItem();
+    } else
+      item = grp->listItem();
+  }
+  if (item) {
+    view->collectionView->setCurrentItem(item);
+    view->collectionView->ensureItemVisible(item);
+    view->collectionView->setSelected(item, true);
+  }
+}
+
+
 //================================== GUI =================================
 
 
@@ -613,6 +668,7 @@ void KNodeApp::slotCollectionSelected(QListViewItem *it)
       setStatusMsg(QString::null, SB_GROUP);
       setStatusMsg(QString::null, SB_FILTER);
       setCaption(acc->name());
+      view->artView->showBlankPage();
     }
   }
 

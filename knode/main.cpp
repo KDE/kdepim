@@ -21,6 +21,13 @@
 #include "resource.h"
 
 
+static KCmdLineOptions knoptions[] =
+{
+  { "+[url]", "A 'news://server/group' URL.", 0 },  // add I18N_NOOP after 2.0
+  { 0, 0, 0 }
+};
+
+
 int main(int argc, char* argv[])
 {
   KAboutData aboutData("knode",
@@ -39,6 +46,7 @@ int main(int argc, char* argv[])
   aboutData.addCredit("Matthias Kalle Dalheimer",0,"kalle@kde.org");
 
   KCmdLineArgs::init( argc, argv, &aboutData );
+  KCmdLineArgs::addCmdLineOptions( knoptions );
   KUniqueApplication::addCmdLineOptions();
 
   if (!KNApplication::start())

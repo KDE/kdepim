@@ -15,6 +15,8 @@
 
 #include <kwin.h>
 #include <kdebug.h>
+#include <kcmdlineargs.h>
+#include <kurl.h>
 
 #include "knode.h"
 #include "knapplication.h"
@@ -51,6 +53,16 @@ int KNApplication::newInstance()
       KNodeApp* knode = new KNodeApp;
       knode->show();
     }
+  }
+
+  // process URLs...
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+  if (args->count()>0) {
+    KURL url = args->url(0);    // we take only one URL
+    if ((url.protocol()=="news")&&(url.hasHost()))
+      static_cast<KNodeApp*>(mainWidget())->openURL(url);
+    else
+      kdDebug(5003) << "ignoring broken URL" << endl;
   }
 
   kdDebug(5003) << "KNApplication::newInstance() done" << endl;

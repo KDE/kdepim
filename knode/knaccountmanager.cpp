@@ -161,13 +161,14 @@ void KNAccountManager::setCurrentAccount(KNNntpAccount *a)
 
 
 // a is new account allocated and configured by the caller
-void KNAccountManager::newAccount(KNNntpAccount *a)
+bool KNAccountManager::newAccount(KNNntpAccount *a)
 {
   // find a unused id for the new account...
   QString dir(KGlobal::dirs()->saveLocation("appdata"));
   if (dir==QString::null) {
+    delete a;
     displayInternalFileError();
-    return;
+    return false;
   }
   QDir d(dir);
   QStringList entries(d.entryList("nntp.*", QDir::Dirs));
@@ -186,10 +187,11 @@ void KNAccountManager::newAccount(KNNntpAccount *a)
     it->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTnntp));
     a->setListItem(it);
     emit(accountAdded(a));
-  }
-  else {
+    return true;
+  } else {
     delete a;
     KMessageBox::error(knGlobals.topWidget, i18n("Cannot create a directory for this account!"));
+    return false;
   }
 }
 

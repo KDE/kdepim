@@ -75,6 +75,9 @@ class KNodeApp : public KMainWindow
           
     KNodeApp();
     ~KNodeApp();
+
+    // handle URL given as argument
+    void openURL(const KURL &url);
         
     //GUI
     void setStatusMsg(const QString& = QString::null, int id=SB_MAIN);
