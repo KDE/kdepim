@@ -763,16 +763,18 @@ void CertManager::slotDeleteCertificate() {
 
   if ( Kleo::DeleteJob * job = Kleo::CryptPlugFactory::instance()->smime()->deleteJob() )
     job->slotCancel();
-  else
+  else {
+    QString str = keys.size() == 1
+                  ? i18n("<qt><p>An error occurred while trying to delete "
+                         "the certificate:</p>"
+                         "<p><b>%1</b><p></qt>" )
+                  : i18n( "<qt><p>An error occurred while trying to delete "
+                          "the certificates:</p>"
+                          "<p><b>%1</b><p></qt>" );
     KMessageBox::error( this,
-			i18n("<qt><p>An error occurred while trying to delete "
-			     "the certificate:</p>"
-			     "<p><b>%1</b><p></qt>",
-			     "<qt><p>An error occurred while trying to delete "
-			     "the certificates:</p>"
-			     "<p><b>%1</b><p></qt>", keys.size() )
-			.arg( i18n("Operation not supported by the backend.") ),
+			str.arg( i18n("Operation not supported by the backend.") ),
 			i18n("Certificate Deletion Failed") );
+  }
   Kleo::MultiDeleteJob * job = new Kleo::MultiDeleteJob( Kleo::CryptPlugFactory::instance()->smime() );
   assert( job );
 
