@@ -42,13 +42,14 @@
 
 class KAddressBookApp : public KUniqueApplication {
   public:
-    KAddressBookApp() : mMainWin( 0 ) {}
+    KAddressBookApp() : mMainWin( 0 ), mDefaultIsOpen( false ) {}
     ~KAddressBookApp() {}
 
     int newInstance();
 
   private:
     KAddressBookMain *mMainWin;
+    bool mDefaultIsOpen;
 };
 
 int KAddressBookApp::newInstance()
@@ -77,13 +78,16 @@ int KAddressBookApp::newInstance()
       if ( args->isSet( "document" ) ) {
          file = args->getOption( "document" );
       }
-      if ( !mMainWin ) {
-        mMainWin = new KAddressBookMain( file );
-        setMainWidget( mMainWin );
-        mMainWin->show();
-      } else {
-        KAddressBookMain *m = new KAddressBookMain( file );
-        m->show();
+      if ( !( file.isEmpty() && mDefaultIsOpen ) ) {
+        if ( !mMainWin ) {
+          mMainWin = new KAddressBookMain( file );
+          setMainWidget( mMainWin );
+          mMainWin->show();
+        } else {
+          KAddressBookMain *m = new KAddressBookMain( file );
+          m->show();
+        }
+        if ( file.isEmpty() ) mDefaultIsOpen = true;
       }
     }
 
