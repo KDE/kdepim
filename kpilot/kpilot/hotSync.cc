@@ -2,9 +2,10 @@
 **
 ** Copyright (C) 2001 by Dan Pilone
 **
-** This file defines a specialization of KPilotDeviceLink
-** that can actually handle some HotSync tasks, like backup
-** and restore. It does NOT do conduit stuff.
+** This file defines SyncActions, which are used to perform some specific
+** task during a HotSync. Conduits are not included here, nor are 
+** sync actions requiring user interaction. Those can be found in the
+** conduits subdirectory or interactiveSync.h.
 */
  
 /*
@@ -33,6 +34,7 @@ static const char *hotsync_id = "$Id$";
 #include "options.h"
 
 #include <time.h>
+#include <unistd.h>
 
 #include <pi-file.h>
 
@@ -41,7 +43,6 @@ static const char *hotsync_id = "$Id$";
 #include <qfileinfo.h>
 #include <qdir.h>
 #include <qvaluelist.h>
-#include <qtl.h>
 #include <qregexp.h>
 
 #include <kglobal.h>
@@ -52,13 +53,11 @@ static const char *hotsync_id = "$Id$";
 
 #include "hotSync.moc"
 
-static const char *hotSync_id="$Id$";
-
 TestLink::TestLink(KPilotDeviceLink *p) : SyncAction(p,0,"testLink")
 {
 	FUNCTIONSETUP;
 	
-	(void) hotSync_id;
+	(void) hotsync_id;
 }
 
 /* virtual slot */ void TestLink::exec()
@@ -302,284 +301,11 @@ void BackupAction::endBackup()
 	emit syncDone(this);
 }
 
-class RestoreAction::RestoreActionPrivate
-{
-public:
-	QString fDatabaseDir;
-	QValueList<struct db> fDBList;
-	QTimer fTimer;
-	int fDBIndex;
-} ;
-
-bool operator<(const db &a, const db &b)
-{
-	if (a.creator == b.creator)
-	{
-		if (a.type != b.type)
-		{
-			if (a.type == pi_mktag('a','p','p','l'))
-				return false;
-			else
-				return true;
-		}
-	}
-
-	return a.maxblock < b.maxblock;
-}
-
-RestoreAction::RestoreAction(KPilotDeviceLink *p) :
-	SyncAction(p,0,"restoreAction")
-{
-	FUNCTIONSETUP;
-
-	fP = new RestoreActionPrivate;
-	fP->fDatabaseDir = KGlobal::dirs()->saveLocation("data",
-		QString("kpilot/DBBackup/"));
-}
-
-/* virtual */ void RestoreAction::exec()
-{
-	FUNCTIONSETUP;
-
-	DEBUGDAEMON << fname
-		<< ": Restoring from base directory "
-		<< fP->fDatabaseDir
-		<< endl;
-	
-	QString dirname = fP->fDatabaseDir +
-		fHandle->getPilotUser()->getUserName() +
-		"/";
-
-	DEBUGDAEMON << fname
-		<< ": Restoring user " 
-		<< dirname
-		<< endl;
-
-	QDir dir(dirname,QString::null,QDir::Name,
-		QDir::Files | QDir::Readable | QDir::NoSymLinks);
-
-	if (!dir.exists())
-	{
-		kdWarning() << __FUNCTION__
-			<< ": Restore directory "
-			<< dirname
-			<< " does not exist."
-			<< endl;
-		fStatus=Error;
-		return;
-	}
-
-	for (int i=0; i<dir.count(); i++)
-	{
-		QString s; 
-		struct db dbi;
-		struct DBInfo info;
-		struct pi_file *f;
-
-		s = dir[i];
-
-		DEBUGDAEMON << fname
-			<< ": Adding "
-			<< s 
-			<< " to restore list."
-			<< endl;
-
-		qstrcpy(dbi.name,QFile::encodeName(dirname + s));
-		
-		f=pi_file_open(dbi.name);
-		if (!f)
-		{
-			kdWarning() << __FUNCTION__
-				<< ": Can't open "
-				<< dbi.name
-				<< endl;
-			continue;
-		}
-
-		pi_file_get_info(f,&info);
-
-		dbi.creator=info.creator;
-		dbi.type=info.type;
-		dbi.flags=info.flags;
-		dbi.maxblock=0;
-
-		fP->fDBList.append(dbi);
-
-		pi_file_close(f);
-		f=0L;
-	}
-
-	fP->fDBIndex=0;
-	fStatus=GettingFileInfo;
-
-	QObject::connect(&(fP->fTimer),SIGNAL(timeout()),
-		this,SLOT(getNextFileInfo()));
-
-	fP->fTimer.start(0,false);
-}
-
-/* slot */ void RestoreAction::getNextFileInfo()
-{
-	FUNCTIONSETUP;
-
-	ASSERT(fStatus==GettingFileInfo);
-	ASSERT(fP->fDBIndex < fP->fDBList.count());
-
-	struct db &dbi = fP->fDBList[fP->fDBIndex];
-	pi_file *f;
-
-	if (fP->fDBIndex >= fP->fDBList.count()-1)
-	{
-		QObject::disconnect(&(fP->fTimer),SIGNAL(timeout()),
-			this,SLOT(getNextFileInfo()));
-		fP->fTimer.stop();
-
-		qBubbleSort(fP->fDBList);
-
-		fP->fDBIndex=0;
-		fStatus=InstallingFiles;
-
-		QObject::connect(&(fP->fTimer),SIGNAL(timeout()),
-			this,SLOT(installNextFile()));
-		fP->fTimer.start(0,false);
-	}
-	fP->fDBIndex++;
-
-	DEBUGDAEMON << fname
-		<< ": Getting info on "
-		<< dbi.name
-		<< endl;
-
-	f = pi_file_open(dbi.name);
-	if (!f)
-	{
-		kdWarning() << __FUNCTION__
-			<< ": Can't open "
-			<< dbi.name
-			<< endl;
-		return;
-	}
-
-	int max;
-	pi_file_get_entries(f,&max);
-
-	for (int i=0; i<max; i++)
-	{
-		int size;
-
-		if (dbi.flags & dlpDBFlagResource)
-		{
-			pi_file_read_resource(f,i,0,&size,0,0);
-		}
-		else
-		{
-			pi_file_read_record(f,i,0,&size,0,0,0);
-		}
-
-		if (size>dbi.maxblock)
-		{
-			dbi.maxblock=size;
-		}
-	}
-
-	DEBUGDAEMON << fname
-		<< ": Read " 
-		<< max
-		<< " entries for this database."
-		<< endl;
-
-	pi_file_close(f);
-}
-
-/* slot */ void RestoreAction::installNextFile()
-{
-	FUNCTIONSETUP;
-
-	ASSERT(fStatus==InstallingFiles);
-	ASSERT(fP->fDBIndex < fP->fDBList.count());
-
-	struct db &dbi = fP->fDBList[fP->fDBIndex];
-	fP->fDBIndex++;
-
-	DEBUGDAEMON << fname
-		<< ": Trying to install "
-		<< dbi.name
-		<< endl;
-
-	if (fP->fDBIndex >= fP->fDBList.count()-1)
-	{
-		QObject::disconnect(&(fP->fTimer),SIGNAL(timeout()),
-			this,SLOT(getNextFileInfo()));
-		fP->fTimer.stop();
-
-		fStatus=Done;
-	}
-
-	if (dlp_OpenConduit(pilotSocket()) < 0)
-	{
-		kdWarning() << __FUNCTION__
-			<< ": Restore apparently cancelled."
-			<< endl;
-		fStatus=Done;
-		emit syncDone(this);
-		return;
-	}
-
-	addSyncLogEntry(i18n("Restoring %1 ...").arg(dbi.name));
-
-	pi_file *f = pi_file_open(const_cast<char *>((const char *)QFile::encodeName(dbi.name)));
-	if (!f)
-	{
-		kdWarning() << __FUNCTION__
-			<< ": Can't open "
-			<< dbi.name
-			<< " for restore."
-			<< endl;
-		return;
-	}
-
-	if (pi_file_install(f,pilotSocket(),0) < 0)
-	{
-		kdWarning() << __FUNCTION__
-			<< ": Couldn't  restore "
-			<< dbi.name
-			<< endl;
-	}
-
-	pi_file_close(f);
-
-
-	if (fStatus==Done)
-	{
-		addSyncLogEntry(i18n("OK."));
-		emit syncDone(this);
-	}
-}
-
-/* virtual */ QString RestoreAction::statusString() const
-{
-	QString s;
-
-	switch(status())
-	{
-	case InstallingFiles : s.append("Installing Files (");
-		s.append(QString::number(fP->fDBIndex));
-		s.append(")");
-		break;
-	case GettingFileInfo : s.append("Getting File Info (");
-		s.append(QString::number(fP->fDBIndex));
-		s.append(")");
-		break;
-	default:
-		return SyncAction::statusString();
-	}
-
-	return s;
-}
-
 FileInstallAction::FileInstallAction(KPilotDeviceLink *p,
+	const QString &d,
 	const QStringList &l) :
 	SyncAction(p,0,"fileInstall"),
+	fDir(d),
 	fList(l),
 	fDBIndex(-1),
 	fTimer(0L)
@@ -587,11 +313,11 @@ FileInstallAction::FileInstallAction(KPilotDeviceLink *p,
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": File list has " << l.count() << " entries" << endl;
+	DEBUGDAEMON << fname << ": File list has " << fList.count() << " entries" << endl;
 
 	QStringList::ConstIterator i;
 
-	for (i=l.begin(); i!=l.end(); ++i)
+	for (i=fList.begin(); i!=fList.end(); ++i)
 	{
 		DEBUGDAEMON << fname << ": " << *i << endl;
 	}
@@ -658,7 +384,7 @@ FileInstallAction::~FileInstallAction()
 		emit syncDone(this);
 	}
 
-	const QString &s = fList[fDBIndex];
+	const QString s = fDir + fList[fDBIndex];
 	fDBIndex++;
 
 	DEBUGDAEMON << fname
@@ -670,13 +396,16 @@ FileInstallAction::~FileInstallAction()
 	{
 		fDBIndex=-1;
 		fTimer->stop();
+		emit logProgress(i18n("Done Installing Files"),100);
+	}
+	else
+	{
+		emit logProgress(QString::null,
+			(100 * fDBIndex) / fList.count());
 	}
 
 	
-	struct pi_file *f;
-
-	emit logProgress(QString::null,
-		(100 * fDBIndex) / fList.count());
+	struct pi_file *f = 0L;
 
 	f = pi_file_open(const_cast<char *>((const char *)QFile::encodeName(s)));
 
@@ -689,7 +418,7 @@ FileInstallAction::~FileInstallAction()
 		emit logError(
 			i18n("Unable to open file &quot;%1&quot;!").
 			arg(s));
-		return;
+		goto nextFile;
 	}
 
 	if (pi_file_install(f, pilotSocket(), 0) < 0)
@@ -708,13 +437,11 @@ FileInstallAction::~FileInstallAction()
 		QFile::remove(s);
 	}
 
-	pi_file_close(f);
 
-	if (fDBIndex==-1)
+nextFile:
+	if (f) pi_file_close(f);
+	if (fDBIndex == -1)
 	{
-		// fDBIndex was set to -1 if this was the last file to install.
-		//
-		//
 		emit syncDone(this);
 	}
 }
@@ -1441,69 +1168,7 @@ void KPilotDeviceLink::installFiles(const QString & path)
 }
 
 
-void KPilotDeviceLink::syncFlags()
-{
-	if (getConnected() == false)
-	{
-		DEBUGDAEMON << "KPilotDeviceLink::syncFlags() No HotSync started!" <<
-			endl;
-		return;
-	}
 
-	getPilotUser()->setLastSyncPC((unsigned long) gethostid());
-	getPilotUser()->setLastSyncDate(time(0));
-}
-
-#if 0
-void
-	KPilotDeviceLink::createNewProgressBar(const QString & title,
-	const QString & text, int min, int max, int value)
-{
-	if (fProgressDialog)
-		delete fProgressDialog;
-
-	fProgressDialog = new QDialog(0L);
-	fProgressDialog->setCaption(title);
-	QLabel *label = new QLabel(fProgressDialog);
-
-	label->setAutoResize(true);
-	label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-	label->setAlignment(AlignBottom | AlignHCenter | WordBreak);
-	label->setText(text);
-	label->setFixedWidth(200);
-	label->move(10, 0);
-	fProgressMeter =
-		new KProgress(min, max, value, KProgress::Horizontal,
-		fProgressDialog);
-	fProgressMeter->setGeometry(10, label->height() + 10, 200, 20);
-	fProgressDialog->setFixedWidth(220);
-	fProgressDialog->setFixedHeight(label->height() + 40);
-	fProgressDialog->show();
-	kapp->processEvents();
-}
-
-void
- KPilotDeviceLink::updateProgressBar(int newValue) const
-{
-	if (fProgressMeter)
-	{
-		fProgressMeter->setValue(newValue);
-		kapp->processEvents();
-	}
-}
-
-void KPilotDeviceLink::destroyProgressBar()
-{
-	if (fProgressDialog)
-	{
-		delete fProgressDialog;
-
-		fProgressMeter = 0L;
-		fProgressDialog = 0L;
-	}
-	kapp->processEvents();
-}
-#endif
 
 void KPilotDeviceLink::quickHotSync()
 {
@@ -1882,126 +1547,24 @@ bool KPilotDeviceLink::syncDatabase(DBInfo * database)
 	return true;
 }
 
-void KPilotDeviceLink::endHotSync()
-{
-	if (getConnected() == false)
-		return;
 
-	syncFlags();
-	dlp_WriteUserInfo(getCurrentPilotSocket(), getPilotUser()->pilotUser());
-	addSyncLogEntry("End of Hot-Sync\n");
-	dlp_EndOfSync(getCurrentPilotSocket(), 0);
-	pi_close(getCurrentPilotSocket());
-	fCurrentPilotSocket = -1;
-	setConnected(false);
-	showMessage("Hot-Sync completed");
-	fConduitRunStatus = None;
-}
 
-void KPilotDeviceLink::checkPilotUser()
+
+#endif
+
+void CleanupAction::exec()
 {
 	FUNCTIONSETUP;
 
-	KConfig & config = KPilotConfig::getConfig();
-	if (config.readBoolEntry("AlwaysTrustPilotUser"))
-	{
-		return;
-	}
+	fHandle->getPilotUser()->setLastSyncPC((unsigned long) gethostid());
+	fHandle->getPilotUser()->setLastSyncDate(time(0));
 
-	QString guiUserName;
+	dlp_WriteUserInfo(pilotSocket(), fHandle->getPilotUser()->pilotUser());
+	addSyncLogEntry("End of Hot-Sync\n");
+	dlp_EndOfSync(pilotSocket(), 0);
 
-	guiUserName = config.readEntry("UserName");
-
-	if (guiUserName != getPilotUser()->getUserName())
-	{
-		QString imessage(i18n("<qt>The Pilot thinks the user name is %1, "
-			"however KPilot says you are %2."
-			"Should I assume the Pilot is right and set the " 
-			"user name for KPilot to %1? "
-			"(Otherwise I'll use %2 for now)"));
-
-		QString message =
-			imessage.arg(getPilotUser()->getUserName()).
-			arg(getPilotUser()->getUserName()).arg(guiUserName).
-			arg(guiUserName);
-
-		if (KMessageBox::warningYesNo(0L,
-				message,
-				i18n("Pilot User Changed")) ==
-			KMessageBox::Yes)
-		{
-			config.writeEntry("UserName",
-				getPilotUser()->getUserName());
-		}
-		else
-		{
-			// The gui was right.
-			getPilotUser()->setUserName(guiUserName.latin1());
-
-			kdWarning() << __FUNCTION__
-				<< ": Pilot User set to "
-				<< getPilotUser()->getUserName() << endl;
-		}
-	}
+	emit syncDone(this);
 }
 
 
-/* Tickle support */
-
-void KPilotDeviceLink::initTickle()
-{
-	fTimer = 0L;
-	fTickleCount = 0;
-	setTickleTimeout();
-}
-
-void KPilotDeviceLink::startTickle()
-{
-	fTickleCount = 0;
-	if (!fTimer)
-	{
-		fTimer = new QTimer(this);
-	}
-
-	if (fTimer->isActive())
-	{
-		fTimer->stop();
-	}
-
-	QObject::connect(fTimer, SIGNAL(timeout()), this, SLOT(tickle()));
-	fTimer->start(1000, false);
-}
-
-void KPilotDeviceLink::stopTickle()
-{
-	if (fTimer)
-	{
-		fTimer->stop();
-	}
-}
-
-void KPilotDeviceLink::tickle()
-{
-	fTickleCount++;
-
-	// Note that if fTickleTimeout == 0 then this
-	// test will never be true until unsigned wraps
-	// around, which is 2^32 seconds, which is a long time.
-	//
-	// This is intentional.
-	//
-	//
-	if (fTickleCount == fTickleTimeout)
-	{
-		emit timeout();
-	}
-	else
-	{
-		if (pi_tickle(getCurrentPilotSocket()))
-		{
-			kdWarning() << __FUNCTION__
-				<< "Couldn't tickle Pilot!" << endl;
-		}
-	}
-}
-#endif
+// $Log:$
