@@ -78,7 +78,7 @@ void FilterThunderbird::import(FilterInfo *info)
     QStringList rootSubDirs = dir.entryList("[^\\.]*", QDir::Dirs, QDir::Name); // Removal of . and ..
     int currentDir = 1, numSubDirs = rootSubDirs.size();
     for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
-      importDirContents(info, dir.filePath(*filename), *filename, QString::null);
+      importDirContents(info, dir.filePath(*filename), *filename, *filename);
       info->setOverall((int) ((float) currentDir / numSubDirs * 100));
     }
     
@@ -180,13 +180,16 @@ void FilterThunderbird::importMBox(FilterInfo *info, const QString& mboxName, co
 	tmp.file()->writeBlock( input, l );
       }
       tmp.close();
-      QString destFolder = rootDir;
+      QString destFolder = "";
       QString _targetDir = targetDir;
-      if(destFolder.contains(".sbd")) destFolder.remove(".sbd");
       if(!targetDir.isNull()){
          if(_targetDir.contains(".sbd")) _targetDir.remove(".sbd");
-         destFolder += ("-" + _targetDir);
+         destFolder += _targetDir;
          destFolder += "-" + filenameInfo.baseName(TRUE);// mboxName;
+      }
+      else {
+	destFolder = rootDir;
+	if(destFolder.contains(".sbd")) destFolder.remove(".sbd");
       }
       
       if(info->removeDupMsg) addMessage( info, destFolder, tmp.name() );
