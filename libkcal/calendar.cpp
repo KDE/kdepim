@@ -299,11 +299,86 @@ bool Calendar::addIncidence(Incidence *i)
   return i->accept(v);
 }
 
+Incidence* Calendar::incidence( const QString& uid )
+{
+  Incidence* i;
+
+  if( (i = todo( uid )) != 0 )
+    return i;
+  if( (i = event( uid )) != 0 )
+    return i;
+
+  return 0;
+}
+
 QPtrList<Todo> Calendar::todos()
 {
   QPtrList<Todo> tl = rawTodos();
   mFilter->apply( &tl );
   return tl;
+}
+
+// When this is called, the todo have already been added to the calendar.
+// This method is only about linking related todos
+void Calendar::setupRelations( Incidence *incidence )
+{
+  QString uid = incidence->uid();
+
+  // First, go over the list of orphans and see if this is their parent
+  while( Incidence* i = mOrphans[ uid ] ) {
+    mOrphans.remove( uid );
+    i->setRelatedTo( incidence );
+    incidence->addRelation( i );
+    mOrphanUids.remove( i->uid() );
+  }
+
+  // Now see about this incidences parent
+  if( !incidence->relatedTo() && !incidence->relatedToUid().isEmpty() ) {
+    // This incidence has a uid it is related to, but is not registered to it yet
+    // Try to find it
+    Incidence* parent = this->incidence( incidence->relatedToUid() );
+    if( parent ) {
+      // Found it
+      incidence->setRelatedTo( parent );
+      parent->addRelation( incidence );
+    } else {
+      // Not found, put this in the mOrphans list
+      mOrphans.insert( incidence->relatedToUid(), incidence );
+      mOrphanUids.insert( incidence->uid(), incidence );
+    }
+  }
+}
+
+// If a task with subtasks is deleted, move it's subtasks to the orphans list
+void Calendar::removeRelations( Incidence *incidence )
+{
+  QString uid = incidence->uid();
+
+  QPtrList<Incidence> relations = incidence->relations();
+  for( Incidence* i = relations.first(); i; i = relations.next() )
+    if( !mOrphanUids.find( i->uid() ) ) {
+      mOrphans.insert( uid, i );
+      mOrphanUids.insert( i->uid(), i );
+      i->setRelatedTo( 0 );
+      i->setRelatedToUid( uid );
+    }
+
+  // If this incidence is related to something else, tell that about it
+  if( incidence->relatedTo() )
+    incidence->relatedTo()->removeRelation( incidence );
+
+  // Remove this one from the orphans list
+  if( mOrphanUids.remove( uid ) )
+    // This incidence is located in the orphans list - it should be removed
+    if( !( incidence->relatedTo() != 0 && mOrphans.remove( incidence->relatedTo()->uid() ) ) ) {
+      // Removing wasn't that easy
+      for( QDictIterator<Incidence> it( mOrphans ); it.current(); ++it ) {
+	if( it.current()->uid() == uid ) {
+	  mOrphans.remove( it.currentKey() );
+	  break;
+	}
+      }
+    }
 }
 
 void Calendar::registerObserver( Observer *observer )

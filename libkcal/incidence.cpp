@@ -248,11 +248,9 @@ QString Incidence::relatedToUid() const
 
 void Incidence::setRelatedTo(Incidence *relatedTo)
 {
-  if (mReadOnly) return;
-  Incidence *oldRelatedTo = mRelatedTo;
-  if(oldRelatedTo) {
-    oldRelatedTo->removeRelation(this);
-  }
+  if (mReadOnly || mRelatedTo == relatedTo) return;
+  if(mRelatedTo)
+    mRelatedTo->removeRelation(this);
   mRelatedTo = relatedTo;
   if (mRelatedTo) mRelatedTo->addRelation(this);
 }
@@ -269,8 +267,10 @@ QPtrList<Incidence> Incidence::relations() const
 
 void Incidence::addRelation(Incidence *event)
 {
-  mRelations.append(event);
-  updated();
+  if( mRelations.findRef( event ) == -1 ) {
+    mRelations.append(event);
+    updated();
+  }
 }
 
 void Incidence::removeRelation(Incidence *event)

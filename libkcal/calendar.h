@@ -26,6 +26,7 @@
 #include <qstring.h>
 #include <qdatetime.h>
 #include <qptrlist.h>
+#include <qdict.h>
 
 #include "customproperties.h"
 #include "event.h"
@@ -234,6 +235,21 @@ class Calendar : public QObject, public CustomProperties,
     virtual QPtrList<Journal> journals() = 0;
 
     /**
+      Searches all incidence types for an incidence with this unique
+      string identifier, returns a pointer or null.
+    */
+    Incidence* incidence( const QString&UID );
+
+    /**
+      Setup relations for an incidence.
+    */
+    virtual void setupRelations( Incidence * );
+    /**
+      Remove all relations to an incidence
+    */
+    virtual void removeRelations( Incidence * );
+    
+    /**
       Set calendar filter, which filters events for the events() functions.
       The Filter object is owned by the caller.
     */
@@ -310,6 +326,10 @@ class Calendar : public QObject, public CustomProperties,
     bool mModified;
 
     QString mLoadedProductId;
+
+    // This list is used to put together related todos
+    QDict<Incidence> mOrphans;
+    QDict<Incidence> mOrphanUids;
 };
   
 }

@@ -134,6 +134,9 @@ bool CalendarLocal::addTodo( Todo *todo )
 
   todo->registerObserver( this );
 
+  // Set up subtask relations
+  setupRelations( todo );
+
   setModified( true );
 
   return true;
@@ -141,6 +144,9 @@ bool CalendarLocal::addTodo( Todo *todo )
 
 void CalendarLocal::deleteTodo( Todo *todo )
 {
+  // Handle orphaned children
+  removeRelations( todo );
+
   if ( mTodoList.removeRef( todo ) ) {
     setModified( true );
   }
