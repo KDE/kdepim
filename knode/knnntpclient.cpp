@@ -47,8 +47,9 @@ void KNNntpClient::processJob()
       doCheckNewGroups();
       break;      
     case KNJobData::JTfetchNewHeaders :
+    case KNJobData::JTsilentFetchNewHeaders :    
       doFetchNewHeaders();
-      break;
+      break;   
     case KNJobData::JTfetchArticle :
       doFetchArticle();
       break;

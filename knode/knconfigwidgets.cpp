@@ -462,7 +462,20 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   topL->addWidget(p_assLabel, 8,0);
   topL->addMultiCellWidget(p_ass, 8,8, 1,2);
 
+  i_nterval=new QCheckBox(i18n("Enable &interval news checking"), page);
+  connect(i_nterval, SIGNAL(toggled(bool)), this, SLOT(slotIntervalChecked(bool)));
+  topL->addMultiCellWidget(i_nterval, 9,9, 0,3);
+
+  c_heckInterval=new KIntSpinBox(1,10000,1,1,10,page);
+  c_heckIntervalLabel=new QLabel(c_heckInterval, i18n("Check inter&val"), page);  
+  c_heckInterval->setSuffix(i18n(" min") );
+  c_heckInterval->setValue(a->checkInterval());
+  c_heckIntervalLabel->setBuddy(c_heckInterval);
+  topL->addWidget(c_heckIntervalLabel, 10,0);
+  topL->addMultiCellWidget(c_heckInterval, 10,10, 1,2);
+
   slotAuthChecked(a->needsLogon());
+  slotIntervalChecked(a->intervalChecking());
 
   topL->setColStretch(1, 1);
   topL->setColStretch(2, 1);
@@ -500,6 +513,8 @@ void KNConfig::NntpAccountConfDialog::slotOk()
   a_ccount->setNeedsLogon(a_uth->isChecked());
   a_ccount->setUser(u_ser->text());
   a_ccount->setPass(p_ass->text());
+  a_ccount->setIntervalChecking(i_nterval->isChecked());
+  a_ccount->setCheckInterval(c_heckInterval->value());
 
   i_dWidget->apply();
 
@@ -516,6 +531,12 @@ void KNConfig::NntpAccountConfDialog::slotAuthChecked(bool b)
   p_assLabel->setEnabled(b);
 }
 
+void KNConfig::NntpAccountConfDialog::slotIntervalChecked(bool b)
+{
+  i_nterval->setChecked(b);
+  c_heckInterval->setEnabled(b);
+  c_heckIntervalLabel->setEnabled(b);
+}
 
 //=============================================================================================
 

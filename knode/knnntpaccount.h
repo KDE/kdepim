@@ -21,11 +21,34 @@
 
 #include "kncollection.h"
 #include "knserverinfo.h"
+#include <qobject.h>
+#include <qtimer.h>
+
+class KNNntpAccount;
 
 namespace KNConfig {
 class Identity;
 };
 
+
+class KNNntpAccountIntervalChecking : public QObject  {
+
+  Q_OBJECT
+
+  public:
+    KNNntpAccountIntervalChecking(KNNntpAccount *account);
+    ~KNNntpAccountIntervalChecking();
+    void installTimer();
+    void deinstallTimer();
+
+  protected:
+    QTimer *t_imer;
+    KNNntpAccount *a_ccount;
+
+  protected slots:
+    void slotCheckNews();
+
+};
 
 class KNNntpAccount : public KNCollection , public KNServerInfo {
 
@@ -42,6 +65,9 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     QString path();
     /** returns true when the user accepted */
     bool editProperties(QWidget *parent);
+    
+    // news interval checking
+    void startTimer();
 
     //get
     bool fetchDescriptions()const          { return f_etchDescriptions; }
@@ -49,11 +75,15 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     bool wasOpen()const                    { return w_asOpen; }
     bool useDiskCache()const               { return u_seDiskCache; }
     KNConfig::Identity* identity() const   { return i_dentity; }
+    bool intervalChecking() const          { return i_ntervalChecking; }
+    int checkInterval() const              { return c_heckInterval; }
 
     //set
     void setFetchDescriptions(bool b) { f_etchDescriptions = b; }
     void setLastNewFetch(QDate date)  { l_astNewFetch = date; }
     void setUseDiskCache(bool b)      { u_seDiskCache=b; }
+    void setCheckInterval(int c);    
+    void setIntervalChecking(bool b)  { i_ntervalChecking=b; }
 
   protected:
     /** server specific identity */
@@ -66,6 +96,13 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     bool w_asOpen;
     /** cache fetched articles on disk */
     bool u_seDiskCache;
+    /** is interval checking enabled */
+    bool i_ntervalChecking;
+    int c_heckInterval;
+       
+    /** helper class for news interval checking, manages the QTimer */
+    KNNntpAccountIntervalChecking *a_ccountIntervalChecking;    
+
 };
 
 #endif

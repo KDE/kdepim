@@ -110,7 +110,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     void reorganizeGroup(KNGroup *g=0);
 
     void checkGroupForNewHeaders(KNGroup *g=0);
-    void checkAll(KNNntpAccount *a);
+    void checkAll(KNNntpAccount *a, bool silent=false);    
 
     void expireAll(KNCleanUp *cup);
     void expireAll(KNNntpAccount *a);

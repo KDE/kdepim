@@ -74,10 +74,11 @@ class KNJobData {
                     JTFetchGroups,
                     JTCheckNewGroups,
                     JTfetchNewHeaders,
+                    JTsilentFetchNewHeaders,
                     JTfetchArticle,
                     JTpostArticle,
                     JTmail,
-                    JTfetchSource };
+                    JTfetchSource   };
     
     KNJobData(jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem *i);
     ~KNJobData();

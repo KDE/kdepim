@@ -579,14 +579,17 @@ void KNGroupManager::setCurrentGroup(KNGroup *g)
 }
 
 
-void KNGroupManager::checkAll(KNNntpAccount *a)
+void KNGroupManager::checkAll(KNNntpAccount *a, bool silent)
 {
   if(!a) return;
 
   for(KNGroup *g=g_List->first(); g; g=g_List->next()) {
     if(g->account()==a) {
       g->setMaxFetch(knGlobals.cfgManager->readNewsGeneral()->maxToFetch());
-      emitJob( new KNJobData(KNJobData::JTfetchNewHeaders, this, g->account(), g) );
+      if (silent)
+        emitJob( new KNJobData(KNJobData::JTsilentFetchNewHeaders, this, g->account(), g) );
+      else
+        emitJob( new KNJobData(KNJobData::JTfetchNewHeaders, this, g->account(), g) );
     }
   }
 }
@@ -624,7 +627,7 @@ void KNGroupManager::processJob(KNJobData *j)
     delete d;
 
 
-  } else {               //KNJobData::JTfetchNewHeaders
+  } else {               //KNJobData::JTfetchNewHeaders or KNJobData::JTsilentFetchNewHeaders
     KNGroup *group=static_cast<KNGroup*>(j->data());
 
     if (!j->canceled()) {
@@ -641,7 +644,10 @@ void KNGroupManager::processJob(KNJobData *j)
         // stop all other active fetch jobs, this prevents that
         // we show multiple error dialogs if a server is unavailable
         knGlobals.netAccess->stopJobsNntp(KNJobData::JTfetchNewHeaders);
-        KMessageBox::error(knGlobals.topWidget, j->errorString());
+	knGlobals.netAccess->stopJobsNntp(KNJobData::JTsilentFetchNewHeaders);
+        if(!(j->type()==KNJobData::JTsilentFetchNewHeaders)) {
+          KMessageBox::error(knGlobals.topWidget, j->errorString());
+        }
       }
     }         
     if(group==c_urrentGroup)

@@ -251,19 +251,22 @@ class NntpAccountConfDialog : public KDialogBase  {
     NntpAccountConfDialog(KNNntpAccount* acc, QWidget *p=0, const char *n=0);
     ~NntpAccountConfDialog();
 
-  protected:
+  protected:    
     KLineEdit   *n_ame,
                 *s_erver,
                 *u_ser,
                 *p_ass,
                 *p_ort;
     QLabel      *u_serLabel,
-                *p_assLabel;
+                *p_assLabel,
+                *c_heckIntervalLabel;
     KIntSpinBox *h_old,
-                *t_imeout;
+                *t_imeout,
+                *c_heckInterval;
     QCheckBox   *f_etchDes,
                 *a_uth,
-                *u_seDiskCache;
+                *u_seDiskCache,
+                *i_nterval;
     KNConfig::IdentityWidget* i_dWidget;
 
     KNNntpAccount *a_ccount;
@@ -271,6 +274,7 @@ class NntpAccountConfDialog : public KDialogBase  {
   protected slots:
     void slotOk();
     void slotAuthChecked(bool b);
+    void slotIntervalChecked(bool b);
 
 };
 

@@ -116,15 +116,33 @@ void KNNetAccess::addJob(KNJobData *job)
     if (!currentSmtpJob)   // no active job, start the new one
       startJobSmtp();
   } else {
-    if (job->type()==KNJobData::JTfetchNewHeaders || job->type()==KNJobData::JTpostArticle)
-      nntpJobQueue.append(job);
-    else
-      nntpJobQueue.prepend(job);
-    if (!currentNntpJob)   // no active job, start the new one
-      startJobNntp();
+   
+    /*
+        TODO: the following code doesn't really belong here, it should
+              be moved to KNGroupManager, or elsewere...
+    */
+  
+    // avoid duplicate fetchNewHeader jobs...
+    bool duplicate = false;
+    if (job->type()==KNJobData::JTfetchNewHeaders || job->type()==KNJobData::JTsilentFetchNewHeaders) {      
+      for (KNJobData *j = nntpJobQueue.first(); j; j = nntpJobQueue.next())
+        if ((j->type()==KNJobData::JTfetchNewHeaders || j->type()==KNJobData::JTsilentFetchNewHeaders) &&
+             j->data() == job->data())     // job works on the same group...
+          duplicate = true;
+    }
+    
+    if (!duplicate) {
+      // give a lower priority to fetchNewHeaders and postArticle jobs
+      if (job->type()==KNJobData::JTfetchNewHeaders || job->type()==KNJobData::JTsilentFetchNewHeaders || job->type()==KNJobData::JTpostArticle)
+        nntpJobQueue.append(job);  
+      else
+        nntpJobQueue.prepend(job);
+        
+      if (!currentNntpJob)   // no active job, start the new one
+        startJobNntp();
+    }
   }
 }
-    
 
 
 // type==0 => all jobs
