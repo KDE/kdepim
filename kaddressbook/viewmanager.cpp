@@ -62,6 +62,7 @@
 #include "addresseeeditorwidget.h"
 #include "filterselectionwidget.h"
 #include "distributionlistwidget.h"
+#include "locationwidget.h"
 #include "featurebarwidget.h"
 
 ViewManager::ViewManager( KABC::AddressBook *ab, KConfig *config,
@@ -470,6 +471,12 @@ void ViewManager::initGUI()
   mFeatureBarWidgetList.append( wdg );
 
   wdg = new DistributionListWidget( this, mFeatureBar );
+  wdg->hide();
+  connect( wdg, SIGNAL( modified( KABC::Addressee::List ) ),
+           SLOT( featureBarWidgetModified( KABC::Addressee::List ) ) );
+  mFeatureBarWidgetList.append( wdg );
+
+  wdg = new LocationWidget( this, mFeatureBar );
   wdg->hide();
   connect( wdg, SIGNAL( modified( KABC::Addressee::List ) ),
            SLOT( featureBarWidgetModified( KABC::Addressee::List ) ) );
