@@ -567,23 +567,31 @@ QStringList ResourceIMAP::subresources() const
 void ResourceIMAP::setSubresourceActive( const QString& subresource,
                                          bool active )
 {
+  kdDebug(5650) << "setSubresourceActive( " << subresource << ", "
+                << active << " )\n";
   // Get the config file
   const QString configFile = locateLocal( "config", "kresources/imaprc" );
   KConfig config( configFile );
 
   if ( mEventResources.contains( subresource ) ) {
+    kdDebug(5650) << "Calendar\n";
     config.setGroup( "Calendar" );
     config.writeEntry( subresource, active );
+    mEventResources[ subresource ] = active;
     slotRefresh( "Calendar", subresource );
   } else if ( mTaskResources.contains( subresource ) ) {
     config.setGroup( "Task" );
     config.writeEntry( subresource, active );
+    mTaskResources[ subresource ] = active;
     slotRefresh( "Task", subresource );
   } else if ( mJournalResources.contains( subresource ) ) {
     config.setGroup( "Journal" );
     config.writeEntry( subresource, active );
+    mJournalResources[ subresource ] = active;
     slotRefresh( "Journal", subresource );
   }
+
+  config.sync();
 }
 
 // Add the new subresource entries
@@ -618,6 +626,8 @@ void ResourceIMAP::subresourceAdded( const QString& type,
       emit resourceChanged( this );
     }
   }
+
+  emit signalSubresourceAdded( this, type, subresource );
 }
 
 void ResourceIMAP::subresourceDeleted( const QString& type,
@@ -647,6 +657,7 @@ void ResourceIMAP::subresourceDeleted( const QString& type,
   KConfig config( configFile );
   config.setGroup( type );
   config.deleteEntry( subresource );
+  config.sync();
 
   // Make a list of all uids to remove
   QMap<QString, QString>::ConstIterator mapIt;
@@ -664,6 +675,32 @@ void ResourceIMAP::subresourceDeleted( const QString& type,
 
     emit resourceChanged( this );
   }
+
+  emit signalSubresourceRemoved( this, type, subresource );
+}
+
+bool ResourceIMAP::subresourceActive( const QString& subresource ) const
+{
+  if ( mEventResources.contains( subresource ) ) {
+    kdDebug(5650) << "subresourceActive/Event( " << subresource << " ): "
+                  << mEventResources[ subresource ] << endl;
+    return mEventResources[ subresource ];
+  }
+  if ( mTaskResources.contains( subresource ) ) {
+    kdDebug(5650) << "subresourceActive/Task( " << subresource << " ): "
+                  << mTaskResources[ subresource ] << endl;
+    return mTaskResources[ subresource ];
+  }
+  if ( mJournalResources.contains( subresource ) ) {
+    kdDebug(5650) << "subresourceActive/Journal( " << subresource << " ): "
+                  << mJournalResources[ subresource ] << endl;
+    return mJournalResources[ subresource ];
+  }
+
+  // Safe default bet:
+  kdDebug(5650) << "subresourceActive( " << subresource << " ): Safe bet\n";
+
+  return true;
 }
 
 void ResourceIMAP::setTimeZoneId( const QString& tzid )

@@ -170,6 +170,18 @@ class ResourceCalendar : public KRES::Resource
     */
     void resourceSaved( ResourceCalendar * );
 
+    /**
+     This signal is emitted when a subresource is added.
+    */
+    void signalSubresourceAdded( ResourceCalendar *, const QString &,
+                                 const QString & );
+
+    /**
+     This signal is emitted when a subresource is removed.
+    */
+    void signalSubresourceRemoved( ResourceCalendar *, const QString,
+                                   const QString & );
+
   public:
     /**
       Add a todo to the todolist.
@@ -250,10 +262,15 @@ class ResourceCalendar : public KRES::Resource
 
     /**
       If this resource has subresources, return a QStringList of them.
-      In the normal case, resources do not have subresources, so this is
+      In most cases, resources do not have subresources, so this is
       by default just empty.
     */
     virtual QStringList subresources() const { return QStringList(); }
+
+    /**
+      Is this subresource active or not?
+    */
+    virtual bool subresourceActive( const QString& ) const { return true; }
 
   public slots:
     /**

@@ -164,6 +164,8 @@ public:
   void subresourceAdded( const QString& type, const QString& id );
   void subresourceDeleted( const QString& type, const QString& id );
 
+  bool subresourceActive( const QString& ) const;
+
 public slots:
   /**
      (De-)activate a subresource.
