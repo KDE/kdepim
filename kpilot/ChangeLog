@@ -1,3 +1,22 @@
+KPilot Developer's notes for december 27th 2001
+===============================================
+
+So I never posted the previous notes. And besides Maarten's little comment
+on the odd jobs, no response either --- but then again, it was Xmas and
+maybe people had more important things to do. I know I had enough dinners
+that I can fast & hack for the rest of the week.
+
+Things fixed now:
+
+* conduits/vcalconduit/
+  - All the configuration dialogs now look ok, after a little fiddling 
+  about with the .ui files, and the configuration is saved as well.
+  A sync is out of the question right now.
+
+Yet another odd job: someone (David?) needs to check all the ToolTips
+in the .ui files for the conduits with Qt *2*'s designer. And we need
+to check that all the configurations are in fact saved properly. Testers?
+
 KPilot Developer's notes for december 23rd 2001
 ===============================================
 
