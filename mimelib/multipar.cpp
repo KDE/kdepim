@@ -8,7 +8,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -152,7 +152,7 @@ void MultipartBodyPart::SetContentDescription(const DwString& aStr)
     mContentDescription = aStr;
 }
 
-    
+
 const DwString& MultipartBodyPart::ContentDisposition() const
 {
     return mContentDisposition;
@@ -211,7 +211,7 @@ void MultipartMessage::SetAutomaticFields()
 }
 
 
-int MultipartMessage::NumberOfParts() const 
+int MultipartMessage::NumberOfParts() const
 {
     int count = 0;
     DwBodyPart* part = mMessage->Body().FirstBodyPart();
@@ -236,7 +236,7 @@ void MultipartMessage::BodyPart(int aIdx, MultipartBodyPart& aPart)
 
     if (part != 0) {
         DwHeaders& headers = part->Headers();
-        
+
         // Content-type
 
         if (headers.HasContentType()) {
@@ -287,7 +287,7 @@ void MultipartMessage::BodyPart(int aIdx, MultipartBodyPart& aPart)
         const DwString& body = part->Body().AsString();
         aPart.SetBody(body);
     }
-    
+
     // If the body part was not found, set all MultipartBodyPart attributes
     // to empty values.  This only happens if you don't pay attention to
     // the value returned from NumberOfParts().
@@ -335,17 +335,17 @@ void MultipartMessage::SetBodyPart(int aIdx, const MultipartBodyPart& aPart)
     const DwString& bodyStr  = aPart.Body();
 
     DwHeaders& headers = part->Headers();
-    if (type != "" && subtype != "") {
+    if (!type.empty() && !subtype.empty()) {
         headers.ContentType().SetTypeStr(type);
         headers.ContentType().SetSubtypeStr(subtype);
     }
-    if (cte != "") {
+    if (!cte.empty()) {
         headers.Cte().FromString(cte);
     }
-    if (contDesc != "") {
+    if (!contDesc.empty()) {
         headers.ContentDescription().FromString(contDesc);
     }
-    if (contDisp != "") {
+    if (!contDisp.empty()) {
         headers.ContentDisposition().FromString(contDisp);
     }
     part->Body().FromString(bodyStr);
@@ -364,17 +364,17 @@ void MultipartMessage::AddBodyPart(const MultipartBodyPart& aPart)
     const DwString& bodyStr  = aPart.Body();
 
     DwHeaders& headers = part->Headers();
-    if (type != "" && subtype != "") {
+    if (!type.empty() && !subtype.empty()) {
         headers.ContentType().SetTypeStr(type);
         headers.ContentType().SetSubtypeStr(subtype);
     }
-    if (cte != "") {
+    if (!cte.empty()) {
         headers.Cte().FromString(cte);
     }
-    if (contDesc != "") {
+    if (!contDesc.empty()) {
         headers.ContentDescription().FromString(contDesc);
     }
-    if (contDisp != "") {
+    if (!contDisp.empty()) {
         headers.ContentDisposition().FromString(contDisp);
     }
     part->Body().FromString(bodyStr);
