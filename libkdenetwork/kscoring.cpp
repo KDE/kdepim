@@ -976,6 +976,7 @@ void KScoringManager::editRule(KScoringRule *e, QWidget *w)
 void KScoringManager::editorReady()
 {
   kdDebug(5100) << "emitting signal finishedEditing" << endl;
+  save();
   emit finishedEditing();
 }
 
