@@ -36,6 +36,7 @@
 #include <string.h>
 
 #include <qtextcodec.h>
+#include <qregexp.h>
 
 // PilotAppCategory includes pilotRecord and we
 // provide its implementation here as well.
@@ -140,23 +141,29 @@ static const char *latin1 = "ISO8859-1" ;
 /* static */ QTextCodec *PilotAppCategory::setupPilotCodec(const QString &s)
 {
 	FUNCTIONSETUP;
+	QString cdc(s);
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname
-		<< ": Creating codec " << s << endl;
+		<< ": Creating codec " << cdc << endl;
 #endif
+	// the codec can also be of the form "Description (codec)", so
+	// if it matches the regexp ".*\\((.*)\\).*", use just the
+	// value between the brackets.
+	cdc.replace(QRegExp(".*\\((.*)\\).*"), "\\1");
 
 	const char *p = 0L;
 	// This latin1() is OK. The names of the encodings
 	// as shown in the table in the QTextCodec docs
 	// are all US-ASCII.
-	if (!s.isEmpty()) p=s.latin1();
-	
+	if (!cdc.isEmpty()) p=cdc.latin1();
+
 	(void) PilotAppCategory::createCodec(p);
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname
-		<< ": Got codec " << codec()->name() << endl;
+		<< ": Got codec " << codecName().latin1() << " for setting "
+		<< s.latin1() << endl;
 #endif
 	return codec();
 }
