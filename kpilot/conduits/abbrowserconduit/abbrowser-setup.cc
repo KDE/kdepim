@@ -29,12 +29,9 @@
 
 #include "options.h"
 
-#include <qtabwidget.h>
 #include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qbuttongroup.h>
-
-#include <kconfig.h>
 #include <kurlrequester.h>
 
 #include "kaddressbookConduit.h"

@@ -28,14 +28,13 @@
 */
 
 #include "options.h"
-#include "abbrowser-factory.moc"
 
-#include <kinstance.h>
 #include <kaboutdata.h>
 
 #include "abbrowser-conduit.h"
 #include "abbrowser-setup.h"
 
+#include "abbrowser-factory.moc"
 
 extern "C"
 {
@@ -73,73 +72,6 @@ AbbrowserConduitFactory::AbbrowserConduitFactory(QObject *p, const char *n) :
 	fAbout->addAuthor("Reinhold Kainhofer", I18N_NOOP("Maintainer"),
 		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com");
 	fAbout->addCredit("David Bishop", I18N_NOOP("UI"));
-
-
-/*
-// This is just testing code for the custom fields sync. Does not yet work.
-	char format[]="%d.%m.%y";
-	QDateTime bdate, backdate;
-	time_t btime, backt;
-	struct tm*btmtime, backtm;
-	char whatever[500];
-	size_t len;
-	QString strdate;
-	char*end;
-
-	bdate=QDateTime::currentDateTime();
-	if (!bdate.isValid())  DEBUGCONDUIT<<"Not valid "<< endl;
-
-	DEBUGCONDUIT<<"Birthdate="<<bdate.toString()<<endl;
-
-	btime=bdate.toTime_t();
-	btmtime=localtime(&btime);
-	len=strftime(&whatever[0], 500, format, btmtime);
-	strdate=&whatever[0];
-	DEBUGCONDUIT<<"Birthdate="<<strdate<<endl;
-
-//	end=strptime(strdate.latin1(), format, &backtm);
-//	end=strptime("01.04.03 11:22:33", "%d.%m.%y %H:%M:%S", &backtm);
-DEBUGCONDUIT<<"latin1: "<<strdate.latin1()<<endl;
-	end=strptime(strdate.latin1(), "%d.%m.%y", &backtm);
-	DEBUGCONDUIT<< (int)end<<endl;
-
-//if (!end) {
-	backt=mktime(&backtm);
-	backdate.setTime_t(backt);
-//} else  DEBUGCONDUIT<<"Conversion failed"<<endl;
-
-	DEBUGCONDUIT<<"Result of Back-conversion: "<<backdate.date().toString()<<endl;
-
-
-
-DEBUGCONDUIT<<"------------------------------------------"<<endl;
-
-
-
-	bdate=QDateTime::currentDateTime();
-	if (!bdate.isValid())  DEBUGCONDUIT<<"Not valid "<< endl;
-
-	DEBUGCONDUIT<<"Birthdate="<<bdate.toString()<<endl;
-
-	btime=bdate.toTime_t();
-	btmtime=localtime(&btime);
-	len=strftime(&whatever[0], 500, format, btmtime);
-	strdate=&whatever[0];
-	DEBUGCONDUIT<<"Birthdate="<<strdate<<endl;
-
-//	end=strptime(strdate.latin1(), format, &backtm);
-	end=strptime("01.04.03 11:22:33", "%d.%m.%y %H:%M:%S", &backtm);
-	DEBUGCONDUIT<< (int)end<<endl;
-
-//if (!end) {
-	backt=mktime(&backtm);
-	backdate.setTime_t(backt);
-//} else  DEBUGCONDUIT<<"Conversion failed"<<endl;
-
-	DEBUGCONDUIT<<"Result of Back-conversion: "<<backdate.date().toString()<<endl;
-
-*/
-
 
 }
 

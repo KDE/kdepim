@@ -31,31 +31,21 @@
 
 
 #include "options.h"
-#include "abbrowser-conduit.moc"
-
-#include <unistd.h>
 
 #include <qtimer.h>
-#include <qvbuttongroup.h>
-#include <qcheckbox.h>
 #include <qtextcodec.h>
-#include <time.h>
 
-
-#include <kglobal.h>
-#include <kdebug.h>
-#include <kconfig.h>
-#include <kabc/addressbook.h>
 #include <kabc/stdaddressbook.h>
 #include <kabc/resourcefile.h>
 
-#include <pilotUser.h>
 #include <pilotSerialDatabase.h>
+#include <pilotLocalDatabase.h>
 
-#include "abbrowser-factory.h"
 #include "resolutionDialog.h"
 #include "resolutionTable.h"
 #include "abbrowserSettings.h"
+
+#include "abbrowser-conduit.moc"
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.

@@ -40,13 +40,11 @@
 #define SYNCDEL 3
 
 class ResolutionTable;
-//class PilotAddress;
 namespace KABC 
 {
 class Addressee;
 class Address;
 class PhoneNumber;
-//class AddressBook;
 class Ticket;
 }
 

@@ -27,23 +27,17 @@
 */
 
 #include "options.h"
-#include "resolutionDialog.moc"
 
-#include <qcheckbox.h>
 #include <qtimer.h>
-#include <qlayout.h>
 #include <qlabel.h>
-#include <qradiobutton.h>
 #include <qpushbutton.h>
 #include <qlistview.h>
-#include <qgroupbox.h>
 #include <qregexp.h>
 
-#include <kpilotlink.h>
-#include "abbrowser-conduit.h"
 #include "resolutionTable.h"
 #include "resolutionDialog_base.h"
-#include <typeinfo>
+
+#include "resolutionDialog.moc"
 
 /** This class describes the controllers of the conflict resolution ListView,
  *  as well as its child radio buttons. There are two different constructors
