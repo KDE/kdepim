@@ -39,6 +39,7 @@ static const char *conduitconfigdialog_id =
 #include <qhbox.h>
 #include <qlayout.h>
 #include <qwidgetstack.h>
+#include <qvbox.h>
 
 #include <kservice.h>
 #include <kservicetype.h>
@@ -116,6 +117,65 @@ ConduitTip::~ConduitTip()
 	tip(fListView->itemRect(l),s);
 }
 
+// Page numbers in the widget stack
+#define INTRO		(0)
+#define OLD_CONDUIT	(1)
+#define BROKEN_CONDUIT	(2)
+#define NEW_CONDUIT	(3)
+
+
+ConduitConfigWidgetBase::ConduitConfigWidgetBase(QHBox *p,const char *n) :
+	QObject(p,n)
+{
+	p->setSpacing(10);
+
+	QWidget *w = 0L; // For spacing purposes only.
+
+	// Create the left hand column
+	QVBox *v = new QVBox(p,"LeftPart");
+	fConduitList = new QListView(v,"ConduitList");
+	fConduitList->addColumn(i18n("Conduit"));
+	QLabel *l = new QLabel(v);
+	l->setText(i18n("<qt>Select a conduit in the list above to configure it. "
+		"Checked conduits will be run during a HotSync.</qt>"));
+	// This is a spacer
+	w = new QWidget(v);
+	v->setStretchFactor(w,100);
+
+	// Right hand column
+	fStack = new QWidgetStack(p,"RightPart");
+
+	// Zero'th page in stack
+	l = new QLabel(fStack);
+	l->setText(i18n("<qt>Select a conduit in the list above to configure it. "
+		"Checked conduits will be run during a HotSync.</qt>"));
+	fStack->addWidget(l,INTRO);
+
+	// First page in stack (right hand column)
+	l = new QLabel(fStack);
+	l->setFrameShape(QLabel::Box);
+	l->setText(i18n("<qt>This conduit appears to be broken and cannot "
+		"be configured.</qt>"));
+	fStack->addWidget(l,BROKEN_CONDUIT);
+
+	// Second page, now with layout in a single column
+	v = new QVBox(fStack,"OldStyle");
+	w = new QWidget(v);
+	v->setStretchFactor(w,50);
+	fOldStyleLabel = new QLabel(v);
+	// Within this column, center the button box
+	QHBox *h = new QHBox(v,"ButtonBox");
+	w = new QWidget(h);
+	h->setStretchFactor(w,50);
+	fConfigureButton = new QPushButton(h);
+	fConfigureButton->setText(i18n("Configure..."));
+	w = new QWidget(h);
+	h->setStretchFactor(w,50);
+	// Add stretch beneath the button box
+	w = new QWidget(v);
+	v->setStretchFactor(w,50);
+	fStack->addWidget(v,OLD_CONDUIT);
+}
 
 
 ConduitConfigDialog::ConduitConfigDialog(QWidget * _w, const char *n,
@@ -124,14 +184,20 @@ ConduitConfigDialog::ConduitConfigDialog(QWidget * _w, const char *n,
 	FUNCTIONSETUP;
 
 	enableButtonSeparator(true);
-	selected(0L);
+	// selected(0L);
 
-	fConfigWidget = new ConduitConfigWidget(widget(),0L);
-	fConfigWidget->show();
+	QHBox *h = dynamic_cast<QHBox *>(widget());
+	if (!h)
+	{
+		h = new QHBox(widget());
+	}
 
-	QObject::connect(fConfigWidget,
-		SIGNAL(selectionChanged(QListViewItem *)),
-		this,SLOT(selected(QListViewItem *)));
+	fConfigWidget = new ConduitConfigWidget(h,0L);
+
+	QObject::connect(fConfigWidget,SIGNAL(sizeChanged()),
+		h,SLOT(adjustSize()));
+	QObject::connect(fConfigWidget,SIGNAL(sizeChanged()),
+		this,SLOT(adjustSize()));
 
 	(void) conduitconfigdialog_id;
 }
@@ -151,23 +217,22 @@ ConduitConfigDialog::~ConduitConfigDialog()
 	fConfigWidget->commitChanges();
 }
 
+#if 0
 void ConduitConfigDialog::selected(QListViewItem *)
 {
 }
+#endif
 
-// Page numbers in the widget stack
-#define INTRO		(0)
-#define OLD_CONDUIT	(1)
-#define BROKEN_CONDUIT	(2)
-#define NEW_CONDUIT	(3)
+#define PAGE_SIZE	QSize(440,300)
 
-ConduitConfigWidget::ConduitConfigWidget(QWidget *p, const char *n,
+ConduitConfigWidget::ConduitConfigWidget(QHBox *p, const char *n,
 	bool) :
 	ConduitConfigWidgetBase(p,n),
 	fConfigure(0L),
 	fCurrentConduit(0L),
 	fCurrentConfig(0L),
-	fCurrentOldStyle(0L)
+	fCurrentOldStyle(0L),
+	fParentWidget(p)
 {
 	FUNCTIONSETUP;
 
@@ -175,6 +240,9 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *p, const char *n,
 	fillLists();
 	fConduitList->adjustSize();
 	fConduitList->show();
+
+	fStack->resize(PAGE_SIZE);
+	fStack->setMinimumSize(PAGE_SIZE);
 
 	QObject::connect(fConduitList,
 		SIGNAL(selectionChanged(QListViewItem *)),
@@ -184,7 +252,7 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *p, const char *n,
 		this,SLOT(configure()));
 
 	selected(0L);
-	adjustSize();
+	// adjustSize();
 	fStack->raiseWidget(INTRO);
 
 	(void) new ConduitTip(fConduitList);
@@ -310,7 +378,7 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 			<< endl;
 #endif
 
-		o = f->create(this,0L,"ConduitConfig",a);
+		o = f->create(fParentWidget,0L,"ConduitConfig",a);
 		oldstyle=true;
 
 		if (!o)
@@ -346,7 +414,7 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 		fStack->raiseWidget(OLD_CONDUIT);
 		fOldStyleLabel->setText(i18n("<qt>The conduit <i>%1</i> "
 			"is an old-style conduit. To configure it, "
-			"click the configure button below.")
+			"click the configure button below.</qt>")
 				.arg(p->text(CONDUIT_NAME)));
 
 		fCurrentOldStyle=d;
@@ -380,18 +448,26 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 		else
 		{
 			d->load(&KPilotConfig::getConfig());
+#if 0
+			d->widget()->resize(PAGE_SIZE);
+			d->widget()->setMinimumSize(PAGE_SIZE);
+			d->widget()->setMaximumSize(PAGE_SIZE);
 			fStack->erase();
+
+			// fStack->resize(d->widget()->size());
+			// fStack->setMinimumSize(d->widget()->size());
+			// fStack->adjustSize();
+			// adjustSize();
+#endif
+
 			fStack->raiseWidget(NEW_CONDUIT);
 			d->widget()->show();
-			d->widget()->adjustSize();
 			fCurrentConfig=d;
-			fStack->resize(d->widget()->size());
-			fStack->setMinimumSize(d->widget()->size());
-			fStack->adjustSize();
-			adjustSize();
 		}
 	}
+#if 0
 	fConduitList->repaint();
+#endif
 }
 
 bool ConduitConfigWidget::release()
@@ -438,9 +514,21 @@ void ConduitConfigWidget::selected(QListViewItem *p)
 	}
 	fCurrentConduit=p;
 	loadAndConfigure(p);
-	// Workaround for repaint problems
-	p->repaint();
-	fConduitList->repaint();
+	fStack->adjustSize();
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": New widget size "
+		<< fStack->size().width() << "x" << fStack->size().height() << endl;
+	DEBUGKPILOT << fname << ": Parent current size "
+		<< fParentWidget->size().width() << "x"
+		<< fParentWidget->size().height() << endl;
+#endif
+	emit sizeChanged();
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Parent new size "
+		<< fParentWidget->size().width() << "x"
+		<< fParentWidget->size().height() << endl;
+#endif
+
 }
 
 void ConduitConfigWidget::configure()
@@ -468,7 +556,7 @@ void ConduitConfigWidget::warnNoExec(const QListViewItem * p)
 	DEBUGKPILOT << fname << ": " << msg << endl;
 #endif
 
-	KMessageBox::error(this, msg, i18n("Conduit Error"));
+	KMessageBox::error(fParentWidget, msg, i18n("Conduit Error"));
 }
 
 void ConduitConfigWidget::warnNoLibrary(const QListViewItem *p)
@@ -480,7 +568,7 @@ void ConduitConfigWidget::warnNoLibrary(const QListViewItem *p)
 		"conduit was not installed properly.</qt>")
 		.arg(p->text(CONDUIT_NAME));
 
-	KMessageBox::error(this, msg, i18n("Conduit Error"));
+	KMessageBox::error(fParentWidget, msg, i18n("Conduit Error"));
 }
 
 /* virtual */ void ConduitConfigWidget::commitChanges()

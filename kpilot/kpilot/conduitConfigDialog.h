@@ -30,21 +30,37 @@
 */
 
 #include <qstringlist.h>
+#include <qhbox.h>
 
-#include "conduitConfigDialog_base.h"
+// #include "conduitConfigDialog_base.h"
 #include "uiDialog.h"
 
+class QListView;
 class QListViewItem;
 class QPushButton;
+class QLabel;
+class QWidgetStack;
 class KProcess;
 class ConduitConfigBase;
 class ConduitConfig;
+
+class ConduitConfigWidgetBase : public QObject
+{
+Q_OBJECT
+public:
+	ConduitConfigWidgetBase(QHBox *p=0L,const char *n=0L);
+
+	QListView *fConduitList;
+	QWidgetStack *fStack;
+	QLabel *fOldStyleLabel;
+	QPushButton *fConfigureButton;
+} ;
 
 class ConduitConfigWidget : public ConduitConfigWidgetBase
 {
 Q_OBJECT
 public:
-	ConduitConfigWidget(QWidget *, 
+	ConduitConfigWidget(QHBox *,
 		const char *name=0L, bool ownButtons=false);
 	virtual ~ConduitConfigWidget();
 
@@ -60,7 +76,7 @@ public:
 	/**
 	* Get rid of the current conduit configuration widget,
 	* saving changes if necessary. Returns false if the user
-	* selects cancel for the action that is supposed to 
+	* selects cancel for the action that is supposed to
 	* release the conduit (ie. selecting a different one,
 	* or closing the dialog.)
 	*/
@@ -70,6 +86,7 @@ public slots:
 
 signals:
 	void selectionChanged(QListViewItem *);
+	void sizeChanged();
 
 protected slots:
 	void selected(QListViewItem *);
@@ -80,21 +97,19 @@ private:
 	QListViewItem *fCurrentConduit;
 	ConduitConfigBase *fCurrentConfig;
 	ConduitConfig *fCurrentOldStyle;
+	QWidget *fParentWidget;
 } ;
 
 class ConduitConfigDialog : public UIDialog
 {
-Q_OBJECT
 public:
 	ConduitConfigDialog(QWidget *,const char *,bool);
 	virtual ~ConduitConfigDialog();
 
 protected:
+	// These are slots in the base class
 	virtual void commitChanges();
 	virtual bool validate();
-
-protected slots:
-	void selected(QListViewItem *);
 
 private:
 	ConduitConfigWidget *fConfigWidget;

@@ -36,7 +36,7 @@ kpilot_SOURCES	= \
 	pilotDaemonDCOP.stub kpilotDCOP.skel logWidgetDCOP.skel \
 	kpilot.cc kpilotConfig.cc \
 	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
-	conduitConfigDialog.cc conduitConfigDialog_base.ui \
+	conduitConfigDialog.cc \
 	dbSelectionDialog.cc dbSelection_base.ui \
 	pilotComponent.cc logWidget.cc memoWidget.cc addressWidget.cc \
 	addressEditor.cc \
@@ -62,7 +62,7 @@ kpilotTest_SOURCES = kpilotConfig.cc \
 kpilotConfig_SOURCES = kpilotConfig.cc \
 	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
 	dbSelectionDialog.cc dbSelection_base.ui \
-	conduitConfigDialog_base.ui conduitConfigDialog.cc \
+	conduitConfigDialog.cc \
 	listCat.cc main-config.cc
 
 
