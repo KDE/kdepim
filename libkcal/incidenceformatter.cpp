@@ -28,6 +28,7 @@
 #include <libkcal/calendar.h>
 #include <libkcal/calendarlocal.h>
 #include <libkcal/icalformat.h>
+#include <libkcal/freebusy.h>
 
 #include <ktnef/ktnefparser.h>
 #include <ktnef/ktnefmessage.h>
@@ -347,7 +348,7 @@ static QString invitationRow( QString cell1, QString cell2 )
   return "<tr><td>" + cell1 + "</td><td>" + cell2 + "</td></tr>\n";
 }
 
-static QString invitationMeetingDetails( Event* event )
+static QString invitationDetailsEvent( Event* event )
 {
   // Meeting details are formatted into an HTML table
   if ( !event )
@@ -423,7 +424,7 @@ static QString invitationMeetingDetails( Event* event )
   return html;
 }
 
-static QString invitationTaskDetails( Todo *todo )
+static QString invitationDetailsTodo( Todo *todo )
 {
   // Task details are formatted into an HTML table
   if ( !todo ) 
@@ -445,7 +446,7 @@ static QString invitationTaskDetails( Todo *todo )
   return html;
 }
 
-static QString invitationJournalDetails( Journal *journal )
+static QString invitationDetailsJournal( Journal *journal )
 {
   if ( !journal )
     return QString::null;
@@ -463,6 +464,62 @@ static QString invitationJournalDetails( Journal *journal )
   html += invitationRow( i18n( "Description:" ), sDescr );
   html += "</table>\n";
 
+  return html;
+}
+
+static QString invitationDetailsFreeBusy( FreeBusy *fb )
+{
+  if ( !fb )
+    return QString::null;
+  QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
+
+  html += invitationRow( i18n("Person:"), fb->organizer() );
+  html += invitationRow( i18n("Start date:"), fb->dtStartDateStr() );
+  html += invitationRow( i18n("End date:"), 
+      KGlobal::locale()->formatDate( fb->dtEnd().date(), true ) );
+  html += "<tr><td colspan=2><hr></td></tr>\n";
+  html += "<tr><td colspan=2>Busy periods given in this free/busy object:</td></tr>\n";
+  
+  QValueList<Period> periods = fb->busyPeriods();
+ 
+  QValueList<Period>::iterator it;
+  for ( it = periods.begin(); it != periods.end(); ++it ) {
+    Period per = *it;
+    if ( per.hasDuration() ) {
+      int dur = per.duration().asSeconds();
+      QString cont;
+      if ( dur > 3600 ) {
+        cont += i18n("%1 hours ").arg( dur / 3600 );
+        dur %= 3600;
+      }
+      if ( dur > 60 ) {
+        cont += i18n("%1 minutes ").arg( dur / 60 );
+        dur %= 60;
+      }
+      if ( dur > 0 ) {
+        cont += i18n("%1 seconds").arg( dur );
+      }
+      html += invitationRow( QString::null, i18n("startDate for duration", "%1 for %2")
+          .arg( KGlobal::locale()->formatDateTime( per.start(), false ) )
+          .arg(cont) );
+    } else {
+      QString cont;
+      if ( per.start().date() == per.end().date() ) {
+        cont = i18n("date, fromTime - toTime ", "%1, %2 - %3")
+            .arg( KGlobal::locale()->formatDate( per.start().date() ) )
+            .arg( KGlobal::locale()->formatTime( per.start().time() ) )
+            .arg( KGlobal::locale()->formatTime( per.end().time() ) );
+      } else {
+        cont = i18n("fromDateTime - toDateTime", "%1 - %2")
+          .arg( KGlobal::locale()->formatDateTime( per.start(), false ) )
+          .arg( KGlobal::locale()->formatDateTime( per.end(), false ) );
+      }
+            
+      html += invitationRow( QString::null, cont );
+    }
+  }
+ 
+  html += "</table>\n";
   return html;
 }
 
@@ -580,7 +637,29 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
 
 static QString invitationHeaderJournal( Journal */*journal*/, ScheduleMessage */*msg*/ )
 {
-  return QString::null;
+  return i18n("Journal entry");
+}
+
+static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
+{
+  if ( !msg || !fb ) 
+    return QString::null;
+  switch ( msg->method() ) {
+    case Scheduler::Publish: 
+        return i18n("This free/busy list has been published");
+    case Scheduler::Request: 
+        return i18n( "The free/busy list has been requested" );
+    case Scheduler::Refresh: 
+        return i18n( "This free/busy list was refreshed" );
+    case Scheduler::Cancel: 
+        return i18n( "This free/busy list was canceled" );
+    case Scheduler::Add: 
+        return i18n( "Addition to the free/busy list" );
+    case Scheduler::NoMethod: 
+    default:
+        return i18n("Error: Free/Busy iMIP message with unknown method: '%1'")
+            .arg( msg->method() );
+  }
 }
 
 class ScheduleMessageVisitor : public Incidence::Visitor
@@ -620,17 +699,17 @@ class InvitationBodyVisitor : public ScheduleMessageVisitor
   protected:
     bool visit( Event *event ) 
     { 
-      mResult = invitationMeetingDetails( event );
+      mResult = invitationDetailsEvent( event );
       return !mResult.isEmpty();
     }
     bool visit( Todo *todo ) 
     { 
-      mResult = invitationTaskDetails( todo ); 
+      mResult = invitationDetailsTodo( todo ); 
       return !mResult.isEmpty();
     }
     bool visit( Journal *journal ) 
     { 
-      mResult = invitationJournalDetails( journal ); 
+      mResult = invitationDetailsJournal( journal ); 
       return !mResult.isEmpty();
     }
 };
@@ -657,8 +736,9 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     kdDebug(5850) << "No iCal in this scheduling message\n";
     return QString::null;
   }
-
-  Incidence* incidence = dynamic_cast<Incidence*>( msg->event() );
+ 
+  IncidenceBase *incBase = msg->event();
+  Incidence* incidence = dynamic_cast<Incidence*>( incBase );
 
   // First make the text of the message
   QString html;
@@ -671,18 +751,26 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     "<tr><td>").arg(tableStyle);
   
   html += tableHead;
-
-
-  InvitationHeaderVisitor headerVisitor;
-  // The InvitationHeaderVisitor returns false if the incidence is somehow invalid, or not handled
-  if ( !headerVisitor.act( incidence, msg ) )
-    return QString::null;
-  html += "<h2>" + headerVisitor.result() + "</h2>";
+  if ( incidence ) {
+    InvitationHeaderVisitor headerVisitor;
+    // The InvitationHeaderVisitor returns false if the incidence is somehow invalid, or not handled
+    if ( !headerVisitor.act( incidence, msg ) )
+      return QString::null;
+    html += "<h2>" + headerVisitor.result() + "</h2>";
+  } else if ( incBase && incBase->type()=="FreeBusy" ) {
+    FreeBusy *fb = static_cast<FreeBusy *>(incBase);
+    html += "<h2>" + invitationHeaderFreeBusy( fb, msg ) + "</h2>";
+  }
   
-  InvitationBodyVisitor bodyVisitor;
-  if ( !bodyVisitor.act( incidence, msg ) )
-    return QString::null;
-  html += bodyVisitor.result();
+  if ( incidence ) {
+    InvitationBodyVisitor bodyVisitor;
+    if ( !bodyVisitor.act( incidence, msg ) )
+      return QString::null;
+    html += bodyVisitor.result();
+  } else if ( incBase && incBase->type()=="FreeBusy" ) {
+    FreeBusy *fb = static_cast<FreeBusy *>(incBase);
+    html += invitationDetailsFreeBusy( fb );
+  }
     
   html += "<br>&nbsp;<br>&nbsp;<br>";
   html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td><td>";
@@ -738,13 +826,15 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
   html += "</td></tr></table>";
 
-  QString sDescr = incidence->description();
-  if( ( msg->method() == Scheduler::Request || msg->method() == Scheduler::Cancel ) &&
-      !sDescr.isEmpty() ) {
-    string2HTML( sDescr );
-    html += "<br>&nbsp;<br>&nbsp;<br><u>" + i18n("Description:")
-      + "</u><br><table border=\"0\"><tr><td>&nbsp;</td><td>";
-    html += sDescr + "</td></tr></table>";
+  if ( incidence ) {
+    QString sDescr = incidence->description();
+    if( ( msg->method() == Scheduler::Request || msg->method() == Scheduler::Cancel ) &&
+        !sDescr.isEmpty() ) {
+      string2HTML( sDescr );
+      html += "<br>&nbsp;<br>&nbsp;<br><u>" + i18n("Description:")
+        + "</u><br><table border=\"0\"><tr><td>&nbsp;</td><td>";
+      html += sDescr + "</td></tr></table>";
+    }
   }
 
   html += "</td></tr></table><br></div>";
