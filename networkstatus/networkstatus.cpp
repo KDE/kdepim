@@ -11,6 +11,7 @@
 #include "clientifaceimpl.h"
 #include "serviceifaceimpl.h"
 #include "network.h"
+#include <kdepimmacros.h>
 
 extern "C" {
 	KDE_EXPORT KDEDModule* create_networkstatus( const QCString& obj )
