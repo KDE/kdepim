@@ -9,7 +9,7 @@ servicedir = $(kde_servicesdir)
 service_DATA = abbrowser_conduit.desktop
 
 kde_module_LTLIBRARIES = libabbrowserconduit.la
-noinst_PROGRAMS = testkab testdcop
+noinst_PROGRAMS = testdcop
 
 
 libabbrowserconduit_la_SOURCES = \
@@ -23,10 +23,6 @@ libabbrowserconduit_la_LIBADD = ../../lib/libkpilot.la
 # You may want to enable debugging like this on systems with broken kdelibs
 #
 # libabbrowserconduit_la_CFLAGS = -DDEBUG -DDEBUG_CERR
-
-testkab_SOURCES = testkabapi.cpp
-testkab_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-testkab_LDADD = $(LIB_KDECORE) -lkab
 
 testdcop_SOURCES = testAbbrowserDCOP.cc contactentry.cpp
 testdcop_LDFLAGS = $(all_libraries) $(KDE_RPATH)
