@@ -1,0 +1,313 @@
+===============================================================================
+              The Design of Empath 
+              Guide for developers 
+-------------------------------------------------------------------------------
+              Rik Hemsley rik@kde.org 
+              Last update: Wed Nov 24 1999
+===============================================================================
+              Introduction 
+-------------------------------------------------------------------------------
+
+  The design of Empath may be a little confusing at first. Please
+  take the time to read this document. It should help make things a little
+  clearer. You should hopefully end up with the impression that the design
+  is actually quite simple !
+
+===============================================================================
+              Contents 
+-------------------------------------------------------------------------------
+  librmm - The Message Parser
+    Introduction
+    Qt collections
+    Transparency
+    Construction
+    Unicode
+  libempath - The Kernel
+    Introduction
+    URLs
+    General Operations
+      Asynchronous Operations
+    Composing
+    Filtering
+      Introduction
+      What is a filter ?
+      Example
+      Source URL
+      Matcher
+      Event Handler
+    Sending Mail
+    Kernel Summary
+  libempathui - The User Interface
+
+===============================================================================
+              librmm - The Message Parser 
+-------------------------------------------------------------------------------
+Introduction
+-------------------------------------------------------------------------------
+
+  librmm is designed to have a class hierarchy which looks exactly the same
+  as that specified by RFC 822.
+  
+  You'll notice that in a couple of places, the code is a little strange.
+  For example, RFC 822 specifies that an Address may be either a Mailbox
+  OR a Group.
+  
+  This doesn't work well with an OO design, so an RAddress is a little smart -
+  it know whether it's a Mailbox or a Group.
+
+-------------------------------------------------------------------------------
+Qt collections
+-------------------------------------------------------------------------------
+
+  librmm uses Qt collection classes. While these may be slightly slower than,
+  e.g. STL, they're guaranteed to be available and consistent over the
+  platforms that Empath runs on.
+
+-------------------------------------------------------------------------------
+Transparency
+-------------------------------------------------------------------------------
+
+  Parsing of string data and reassembly of string-based representations is
+  handled automatically by librmm. librmm avoids doing more parsing or
+  reassembly than is necessary.
+
+-------------------------------------------------------------------------------
+Construction
+-------------------------------------------------------------------------------
+
+  You may create any part in librmm by using either a string or specific
+  parameters. This means that you can create an RHeader by passing
+  either the header name (e.g. 'To:') and the header body as strings,
+  or you can simply pass the whole header (e.g. 'To: foo@bar').
+
+-------------------------------------------------------------------------------
+Unicode
+-------------------------------------------------------------------------------
+
+  librmm uses QCString rather than QString. This is deliberate, as we're
+  dealing with data, which may be binary. There's no concept of Unicode in
+  the RFCs defining Internet Mail Messages. Another reason is that it's a lot
+  faster to use QCString, as you can cast to const char * and do some fast
+  parsing.
+
+===============================================================================
+              libempath - The Kernel 
+-------------------------------------------------------------------------------
+Introduction
+-------------------------------------------------------------------------------
+
+  The kernel does most of the hard work. It is designed to be very open, in
+  the sense that the parts are not tied together tightly with interdependencies.
+
+-------------------------------------------------------------------------------
+URLs
+-------------------------------------------------------------------------------
+
+  The system works with URLs. For the moment, these are of proprietary format
+  and look like:
+
+  empath://<mailbox name>[/<folder path>][/<message id>] 
+
+  So an URL which references a message with id 'some_long_message_id' in
+  mailbox 'Local', folder 'Personal' and subfolder 'Charlie' would look like
+  this:
+  
+  empath://Local/Personal/Charlie/some_long_message_id 
+
+  Note that spaces are allowed in the URLs for the moment.
+
+  You can see from the above that there's no reference to the type of
+  the mailbox. Empath's kernel tries to hide the network. The only place
+  you'll find networking code (and hence knowledge that a network exists)
+  is in classes that need it, e.g. EmpathMailboxSendmail. Even the class
+  EmpathMailboxPOP3 don't know about networks. It talks to the kio_pop3
+  ioslave.
+
+-------------------------------------------------------------------------------
+General operations
+-------------------------------------------------------------------------------
+
+  From anywhere in Empath, you can reference a mailbox or a folder.
+
+  This is done using the Empath object, of which there can be only one (tm).
+
+  The macro 'empath' references the Empath object from anywhere within the
+  system. Just include 'Empath.h' to get the macro defined. If you have an
+  URL like this:
+
+  empath://a mailbox/a folder/another folder/bigLongMessageID.localhost 
+
+  You can get a pointer to the mailbox 'arse' that's referenced in there like
+  this:
+
+  EmpathMailbox * m(empath->mailbox(url)); 
+
+  Remember to check the pointer isn't 0.
+
+...............................................................................
+Asynchronous Operations
+...............................................................................
+
+  To avoid stalling of the interface, Empath supports doing many operations in
+  the background. This makes user code more complex, but that's tough.
+
+  If you're writing code for Empath and you want a message - say you want
+  to save it to a file, you must:
+
+  Connect the following signal to a slot in your object:
+  
+  empath->retrieveComplete(bool status, const EmpathURL & url, QString xinfo)
+
+  Ask Empath to retrieve the message:
+
+  empath->retrieve(const EmpathURL &, QString extraInfo);
+
+  Note: 'extraInfo' is used to identify your object. If you're a widget that
+  displays message, you'd probably use 'displayWidget:id' where 'id' is unique
+  to your particular instance. See EmpathMessageViewWidget for an example.
+
+  When Empath calls the slot you connected to retrieveComplete(), ask for the
+  message data. You need the extraInfo string here to identify yourself.
+
+  RMM::RMessage * m = empath->message(url, extraInfo);
+
+  Once you are finished using the message, you must tell Empath that you don't
+  want it any more. This allows Empath to remove it from its cache. If you
+  don't tell Empath that you've finished with it, it will remain in the cache
+  and can be retrieved at a later time, if you still want to access it.
+
+  empath->finishedWithMessage(url, extraInfo);
+
+  Other operations are also asynchronous. For example, you can do:
+
+  empath->remove(const EmpathURL &);
+
+  If you don't care if the message is removed or not, simply don't connect
+  to, or ignore, the signal Empath::removeComplete(...).
+
+-------------------------------------------------------------------------------
+Composing
+-------------------------------------------------------------------------------
+
+  This section will reappear once I'm sure I understand what Wilco's new
+  composition code does :)
+
+-------------------------------------------------------------------------------
+Filtering
+...............................................................................
+Introduction
+...............................................................................
+
+  All automatic operations are done by filters. Please forget what you believe
+  about filters. In Empath, a filter is not just for matching a message and
+  moving it to a folder. Empath's filters basically do all the work.
+
+  When an EmpathMailbox notices that a new message is available, it doesn't do
+  anything with it. It tells Empath that the message has arrived. Empath lets
+  the filter mechanism know. The filter mechanism is basically a list of
+  EmpathFilter.
+
+...............................................................................
+What is a filter ?
+...............................................................................
+
+  Each EmpathFilter consists of a source URL, 1..n EmpathMatcher and an
+  EmpathFilterEventHandler.
+
+  Example
+  -------
+  
+  A mailbox signals that an event has occurred (new message). The filter
+  mechanism goes through each filter in turn, and tells it that the new message
+  has arrived. It gives the filter an URL.
+
+  The filter compares the mailbox and folder parts of this URL with its own
+  'source URL'. If they match, it knows that it should try to match this
+  message. Basically the source URL just specifies the folder that the filter
+  operates on. So, if the filter is set to look at messages from this
+  mailbox/folder, it tells its matching mechanism to try to match the message.
+
+...............................................................................
+Matcher
+...............................................................................
+
+  A matcher may request information about the message referenced by
+  the URL. Of course, it does this via calls to empath->message(),
+  to get the message data. Note that Empath caches all messages, so
+  multiple calls to empath->message() shouldn't result in multiple
+  network transactions. If any of the matchers match the message, then the
+  filter continues by running the EmpathFilterEventHandler.
+
+...............................................................................
+Event Handler
+...............................................................................
+
+  The handler may perform any action it likes. Currently these options have
+  been set up, but it's trivial to add more: Move to folder, Copy to folder,
+  Delete, Ignore, Forward. The handler may then request that no further filters
+  run. Move to folder does this:
+
+  // We have already requested the message and been told it's ready
+  RMessage * m(empath->message(messageURL));
+
+  EmpathFolder * f(empath->folder(destinationURL));
+
+  if (f->writeMessage(m));
+    empath->remove(messageURL);
+
+  See how it works ? Get the message data, write it to the destination
+  folder. If the write worked, remove the original message. Note that
+  EmpathFolder::writeMessage() actually does this:
+
+  EmpathMailbox * m = empath->mailbox(url);
+
+  return (m != 0 && m->writeMessage(url, message));
+
+-------------------------------------------------------------------------------
+Sending Mail
+-------------------------------------------------------------------------------
+
+  If you want to send a message straight away, call:
+  
+  empath->send(RMessage &) 
+  
+  If you want to add a mail to the queue, call:
+  
+  empath->queue(RMessage &) 
+  
+  If you want to send all messages in the queue, call:
+  
+  empath->sendQueued() 
+
+  Simple ? Quite !
+  
+-------------------------------------------------------------------------------
+Kernel Summary
+-------------------------------------------------------------------------------
+
+  You should by now be able to see that you don't have much work to do. If
+  you want the data of a message, you simply ask for it. If you want to send
+  a new message, you just ask. Empath handles the rest as intelligently
+  as it can.
+
+===============================================================================
+              The User Interface 
+-------------------------------------------------------------------------------
+
+  This should look pretty familiar to KDE programmers.
+
+  If you don't understand something, look it up in the KDE/Qt docs or the
+  library documentation for libempath or librmm. Anyone with some KDE
+  programming experience should have no trouble here.
+
+  The UI is entirely separate from the kernel, and should stay that way.
+
+  Most operations are in fact very simple from within the UI code. That's
+  why the kernel's there, to provide the intelligence.
+
+  I like having the UI separate as it allows me to think more clearly. Of
+  course, it is entirely possible to write a new (GTK/Motif/Tk/slang) interface,
+  but that's not my intention, though it's nice to have the option.
+
+===============================================================================
+
