@@ -1,8 +1,24 @@
 kdepim (4:3.2.92-1) experimental; urgency=low
 
   * New upstream release.
+    + New packages: kdepim-wizards, kitchensync, libkleopatra0[-dev],
+      libkpimidentities1.
+    + Removed packages: libkdgantt0[-dev].
+    + Renamed kgpgcertmanager to kleopatra.
+  * Build in gnokii support again.  Closes: #254643.
+  * Add Build-Depends on libgpgme11-dev for kmail.
+  * Make the *.install files a bit more robust by listing directories
+    clearly belonging to packages instead of listing each individual
+    file.
 
- -- Daniel Schepler <schepler@debian.org>  Mon,  2 Aug 2004 10:49:28 -0700
+ -- Daniel Schepler <schepler@debian.org>  Thu,  5 Aug 2004 16:31:24 -0700
+
+kdepim (4:3.2.3-1) unstable; urgency=high
+
+  * New upstream release.
+  * kmail Suggests: cryptplug. (Closes: #231797)
+
+ -- Christopher L Cheney <ccheney@debian.org>  Tue,  3 Aug 2004 23:00:00 -0500
 
 kdepim (4:3.2.2-2) unstable; urgency=high
 

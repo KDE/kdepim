@@ -1,10 +1,4 @@
-debian/tmp/usr/include/kde/kgantt/KGantt.h
-debian/tmp/usr/include/kde/kgantt/KGanttBarConfig.h
-debian/tmp/usr/include/kde/kgantt/KGanttItem.h
-debian/tmp/usr/include/kde/kgantt/KGanttRelation.h
-debian/tmp/usr/include/kde/kgantt/xQGanttBarView.h
-debian/tmp/usr/include/kde/kgantt/xQGanttBarViewPort.h
-debian/tmp/usr/include/kde/kgantt/xQGanttListView.h
-debian/tmp/usr/include/kde/kgantt/xQGanttListViewPort.h
+debian/tmp/usr/include/kde/kgantt
+debian/tmp/usr/lib/libkgantt.a
 debian/tmp/usr/lib/libkgantt.la
 debian/tmp/usr/lib/libkgantt.so
