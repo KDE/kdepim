@@ -446,6 +446,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   Incidence *existingIncidence = cal->incidence(incidence->uid());
   if (existingIncidence) {
     // TODO: check, if cast is required, or if it can be done by virtual funcs.
+    // TODO: Use a visitor for this!
     if (existingIncidence->type() == "Todo") {
       Todo *todo = static_cast<Todo *>(existingIncidence);
       icalcomponent_add_component(calendarComponent,
