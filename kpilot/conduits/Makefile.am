@@ -1,2 +1,2 @@
-SUBDIRS = null vcalconduit todoconduit popmail 
+SUBDIRS = null vcalconduit todoconduit popmail knotes
 

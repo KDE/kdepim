@@ -1,3 +1,58 @@
+KPilot Developer's notes for november 19th 2000
+===============================================
+
+Fixes:
+
+* Added most of Heiko's patches to the vcal-conduit
+* Added convention to conduits --info handling: return "<none>" for
+  no databases. Handled in conduitSetup as well.
+* Made some minor changes to the info page presented in dialogs
+  (generally the setup dialog of a conduit) so that it gracefully
+  handles weird settings and handles its own resizing properly.
+* Added some const-qualifiers to various char *s
+* Add a "kill daemon on exit" feature -- there was already some code
+  for this, but not complete.
+* Changed all the boolean config entries to booleans as opposed to
+  0-or-1 ints.
+* Removed all the "const char * id defined but not used" warnings
+* Added some extra robustness in PilotDaemon::setupConnections
+* Made the daemon obey the "show in system tray" setting -- this was
+  broken during the first port to KDE2
+* Handle reconfiguration through the settings dialog properly -- 
+  at least KPilot picks up the changes to "Kill Daemon on Exit"
+* (re)Added --test option to conduits, though not all of them
+  will support actual tests.
+* KNotes conduit is now functional in the sense that notes you write
+  on your desktop are in fact copied to the Pilot. 
+
+Some general comments:
+
+* Suggestion: call the desktop files for conduits
+	conduit-pilot-appname.desktop
+  and the conduit executables themselves
+  	conduit-pilot-Appname
+  This at least gives conduits some consistent naming scheme and
+  the addition of -pilot leaves some namespace for conduits for
+  other PDA's.
+
+  Well, actually this naming scheme isn't much good. But we *do*
+  need to think about how to handle sync-programs for various
+  PDA's in a nice fashion -- I can imagine having a Nokia phone,
+  a Psion and a Pilot and wanting to sync them all.
+
+Still on the todo-list:
+
+* Fix bad repeat-n-times handling in vcal-conduit
+* Dealing with the rest of Heiko's patches
+	- Some phone number magic I don't understand yet
+	- Some changes in the address import function
+	- Fast-sync capability (this is different from SyncLast)
+	- getShowPhone() -- don't understand that yet either
+* More and better information in the progress bar
+* The PilotMemo class is butt-ugly and filled with weird C-string
+  manipulations.
+
+
 KPilot Developer's notes for november 14th 2000
 ===============================================
 
