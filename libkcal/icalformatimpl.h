@@ -43,7 +43,7 @@ class ICalFormatImpl {
     ICalFormatImpl( ICalFormat *parent );
     virtual ~ICalFormatImpl();
 
-    bool populate( Calendar *, icalfileset *fs);
+    bool populate( Calendar *, icalcomponent *fs);
 
     icalcomponent *writeIncidence(Incidence *incidence);
     icalcomponent *writeTodo(Todo *todo);
