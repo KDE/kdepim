@@ -171,7 +171,7 @@ public:
 
 KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	const char *n, const QStringList &a) :
-	ConduitAction(o,!n ? "knotes-conduit" : n,a),
+	ConduitAction(o,n ? n : "knotes-conduit",a),
 	fP(new KNotesActionPrivate)
 {
 	FUNCTIONSETUP;
@@ -218,6 +218,13 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	fP->fKNotes = new KNotesIface_stub("knotes","KNotesIface");
 
 	fP->fNotes = fP->fKNotes->notes();
+	if (fP->fKNotes->status() != DCOPStub::CallSucceeded)
+	{
+		emit logError(i18n("Could not retrieve list of notes from KNotes. "
+			"The KNotes conduit will not be run."));
+		return false;
+		
+	}
 
 	// Database names seem to be latin1
 	openDatabases(QString::fromLatin1("MemoDB"));

@@ -74,7 +74,7 @@ protected:
 
 ResolutionCheckListItem::ResolutionCheckListItem(ResolutionItem*it,
 		ResolutionTable*tb, QListView*parent) :
-	QCheckListItem(parent, "", QCheckListItem::Controller),
+	QCheckListItem(parent, QString::null, QCheckListItem::Controller),
 	fResItem(it),
 	isController(true),
 	fCaption(it?(it->fName):(QString::null)),

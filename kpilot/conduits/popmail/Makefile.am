@@ -20,5 +20,5 @@ conduit_popmail_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 conduit_popmail_la_LIBADD  =  ../../lib/libkpilot.la $(LIB_KIO)
 
 # this option you can leave out. Just, if you use "make dist", you need it
-noinst_HEADERS = popmail-conduit.h passworddialog.h setupDialog.h
+noinst_HEADERS = popmail-conduit.h setupDialog.h
 
