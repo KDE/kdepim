@@ -15,7 +15,7 @@ DetailedViewWrapper::~DetailedViewWrapper()
 
 QString DetailedViewWrapper::type() const
 {
-    return i18n("Detailed View");
+    return i18n("Detailed view");
 }
 
 QString DetailedViewWrapper::description() const
