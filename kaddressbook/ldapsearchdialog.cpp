@@ -284,7 +284,7 @@ QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr 
   QString result( "%1=%2*" );
 
   if ( attr == i18n( "Name" ) ) {
-    result = result.arg( "cn" ).arg( query );
+    result = QString( "|(cn=%1*)(sn=%2*)" ).arg( query ).arg( query );
   } else if ( attr == i18n( "Email" ) ) {
     result = result.arg( "mail" ).arg( query );
   } else if ( attr == i18n( "Home Number" ) ) {
