@@ -936,7 +936,7 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 	}
 	QCString encodedName = QFile::encodeName(fullBackupName);
 	char filenameBuf[PATH_MAX];
-	strlcpy(filenameBuf,(const char *)encodedName,encodedName.length()+1);
+	strlcpy(filenameBuf,(const char *)encodedName,PATH_MAX);
 	f = pi_file_create(filenameBuf,info);
 
 	if (f == 0)
