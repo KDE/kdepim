@@ -42,8 +42,7 @@ int main(int argc, char* argv[])
                         KAboutData::License_GPL,
                         "Copyright (C) 1999-2000, Christian Thurner",
                         0,
-                        "http://knode.sourceforge.net/",
-                        "cthurner@freepage.de");
+                        "http://knode.sourceforge.net/");
     										
   aboutData.addAuthor("Christian Thurner",I18N_NOOP("Maintainer"),"cthurner@freepage.de");
   aboutData.addAuthor("Christian Gebauer",0,"gebauer@bigfoot.com");
