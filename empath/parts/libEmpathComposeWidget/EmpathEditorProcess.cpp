@@ -30,12 +30,12 @@
 // Qt includes
 #include <qfile.h>
 #include <qfileinfo.h>
-#include <qmessagebox.h>
 
 // KDE includes
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
+#include <kmessagebox.h>
 
 // Local includes
 #include "EmpathEditorProcess.h"
@@ -79,10 +79,7 @@ EmpathEditorProcess::go()
         
         QString warning = i18n("Couldn't open the temporary file `%1'");
         
-        QMessageBox::warning(
-            (QWidget *)0, "Empath",
-            warning.arg(fileName_),
-            i18n("OK"));
+        KMessageBox::sorry(0, warning.arg(fileName_));
         return;
     }
     
@@ -94,7 +91,7 @@ EmpathEditorProcess::go()
         
         QString warning = i18n("Couldn't write to the temporary file `%1'");
         
-        QMessageBox::warning(0, "Empath", warning.arg(fileName_), i18n("OK"));
+        KMessageBox::sorry(0, warning.arg(fileName_));
     }
     
     QFileInfo fi(f);
@@ -111,8 +108,7 @@ EmpathEditorProcess::go()
 
         QString warning = i18n("Couldn't start the editor `%1'");
         
-        QMessageBox::warning
-            (0, "Empath", warning.arg(externalEditor), i18n("OK"));
+        KMessageBox::sorry(0, warning.arg(externalEditor));
         return;
     }
 }
