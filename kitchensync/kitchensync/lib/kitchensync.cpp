@@ -548,7 +548,7 @@ void KitchenSync::slotKonnectorBar( bool b )
 
 void KitchenSync::slotPreferences()
 {
-  KCMultiDialog *dialog = new KCMultiDialog( "PIM", this );
+  KCMultiDialog *dialog = new KCMultiDialog( this );
   connect( dialog, SIGNAL( applyClicked() ), SLOT( updateConfig() ) );
   connect( dialog, SIGNAL( okClicked() ), SLOT( updateConfig() ) );
 
