@@ -79,6 +79,10 @@ namespace Kleo {
     virtual GpgME::Error start( const std::vector<GpgME::Key> & recipients,
 				const QByteArray & plainText, bool alwaysTrust=false ) = 0;
 
+    virtual GpgME::EncryptionResult exec( const std::vector<GpgME::Key> & recipients,
+					  const QByteArray & plainText,
+					  bool alwaysTrust, QByteArray & cipherText ) = 0;
+
   signals:
     void result( const GpgME::EncryptionResult & result, const QByteArray & cipherText );
   };

@@ -39,6 +39,7 @@
 #include <qcstring.h>
 
 #include <vector>
+#include <utility>
 
 namespace GpgME {
   class Error;
@@ -84,6 +85,12 @@ namespace Kleo {
 				const std::vector<GpgME::Key> & recipients,
 				const QByteArray & plainText,
 				bool alwaysTrust=false ) = 0;
+
+    virtual std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
+      exec( const std::vector<GpgME::Key> & signers,
+	    const std::vector<GpgME::Key> & recipients,
+	    const QByteArray & plainText,
+	    bool alwaysTrust, QByteArray & cipherText ) = 0;
 
   signals:
     void result( const GpgME::SigningResult & signingresult,

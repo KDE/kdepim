@@ -63,6 +63,12 @@ namespace Kleo {
 			const QByteArray & plainText,
 			GpgME::Context::SignatureMode mode );
 
+    /*! \reimp from SignJob */
+    GpgME::SigningResult exec( const std::vector<GpgME::Key> & signers,
+			       const QByteArray & plainText,
+			       GpgME::Context::SignatureMode mode,
+			       QByteArray & signature );
+
   private slots:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
     /*! \reimp from Job */
@@ -71,6 +77,7 @@ namespace Kleo {
   private:
     /*! \reimp from GpgME::ProgressProvider */
     void showProgress( const char * what, int type, int current, int total );
+    GpgME::Error setup( const std::vector<GpgME::Key> &, const QByteArray & );
 
   private:
     GpgME::Context * mCtx;

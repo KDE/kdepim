@@ -76,6 +76,10 @@ namespace Kleo {
     virtual GpgME::Error start( const std::vector<GpgME::Key> & signers,
 				const QByteArray & plainText,
 				GpgME::Context::SignatureMode mode ) = 0;
+    virtual GpgME::SigningResult exec( const std::vector<GpgME::Key> & signers,
+				       const QByteArray & plainText,
+				       GpgME::Context::SignatureMode mode,
+				       QByteArray & signature ) = 0;
 
   signals:
     void result( const GpgME::SigningResult & result, const QByteArray & signature );

@@ -62,6 +62,11 @@ namespace Kleo {
     GpgME::Error start( const std::vector<GpgME::Key> & recipients,
 			const QByteArray & plainText, bool alwaysTrust );
 
+    /*! \reimp from EncryptJob */
+    GpgME::EncryptionResult exec( const std::vector<GpgME::Key> & recipients,
+				  const QByteArray & plainText, bool alwaysTrust,
+				  QByteArray & cipherText );
+
   private slots:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
     /*! \reimp from Job */
@@ -70,6 +75,7 @@ namespace Kleo {
   private:
     /*! \reimp from GpgME::ProgressProvider */
     void showProgress( const char * what, int type, int current, int total );
+    void setup( const QByteArray & );
 
   private:
     GpgME::Context * mCtx;

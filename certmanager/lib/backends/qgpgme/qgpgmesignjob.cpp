@@ -67,9 +67,8 @@ Kleo::QGpgMESignJob::~QGpgMESignJob() {
   delete mPlainTextDataProvider; mPlainTextDataProvider = 0;
 }
 
-GpgME::Error Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers,
-					 const QByteArray & plainText,
-					 GpgME::Context::SignatureMode mode ) {
+GpgME::Error Kleo::QGpgMESignJob::setup( const std::vector<GpgME::Key> & signers,
+					 const QByteArray & plainText ) {
   assert( !mSignature );
   assert( !mPlainText );
 
@@ -83,6 +82,24 @@ GpgME::Error Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers
   mPlainText = new GpgME::Data( mPlainTextDataProvider );
   assert( !mPlainText->isNull() );
 
+  mCtx->clearSigningKeys();
+  for ( std::vector<GpgME::Key>::const_iterator it = signers.begin() ; it != signers.end() ; ++it ) {
+    if ( (*it).isNull() )
+      continue;
+    if ( const GpgME::Error err = mCtx->addSigningKey( *it ) )
+      return err;
+  }
+  return 0;
+}
+
+GpgME::Error Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers,
+					 const QByteArray & plainText,
+					 GpgME::Context::SignatureMode mode ) {
+  if ( const GpgME::Error error = setup( signers, plainText ) ) {
+    deleteLater();
+    return error;
+  }
+
   // hook up the context to the eventloopinteractor:
   mCtx->setManagedByEventLoopInteractor( true );
   connect( QGpgME::EventLoopInteractor::instance(),
@@ -90,21 +107,22 @@ GpgME::Error Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers
 	   SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
   mCtx->setProgressProvider( this );
 
-  mCtx->clearSigningKeys();
-  for ( std::vector<GpgME::Key>::const_iterator it = signers.begin() ; it != signers.end() ; ++it ) {
-    if ( (*it).isNull() )
-      continue;
-    if ( const GpgME::Error err = mCtx->addSigningKey( *it ) ) {
-      deleteLater();
-      return err;
-    }
-  }
-
   const GpgME::Error err = mCtx->startSigning( *mPlainText, *mSignature, mode );
 						  
   if ( err )
     deleteLater();
   return err;
+}
+
+GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & signers,
+						const QByteArray & plainText,
+						GpgME::Context::SignatureMode mode,
+						QByteArray & signature ) {
+  if ( const GpgME::Error err = setup( signers, plainText ) )
+    return GpgME::SigningResult( 0, err );
+  const GpgME::SigningResult result = mCtx->sign( *mPlainText, *mSignature, mode );
+  signature = mSignatureDataProvider->data();
+  return result;
 }
 
 void Kleo::QGpgMESignJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {
