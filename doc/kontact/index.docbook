@@ -24,7 +24,7 @@
 <author>
 <firstname>Antonio</firstname>
 <surname>Salazar</surname>
-<affiliation><address><email>flossadvocate@bellsouth.net</email></address></affiliation>
+<affiliation><address><email>savedfastcool@gmail.com</email></address></affiliation>
 </author>
 </authorgroup>
 
@@ -34,8 +34,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2004-06-29</date>
-<releaseinfo>0.9</releaseinfo>
+<date>2005-02-09</date>
+<releaseinfo>1.1</releaseinfo>
 
 <abstract><para>&kontact; is the integrated solution to your personal
 information management (&PIM;) needs. It combines well-known &kde;
@@ -64,8 +64,9 @@ address book and other &PIM; functionality.  </para></abstract>
 
 <para>&kontact; is the integrated solution for personal information
 management.  It combines the well-known &kde; applications for email,
-scheduling, address book, notes and newsgroups (&kmail;, &korganizer;,
-&kaddressbook;, &knotes; and &knode;) into a single interface. Being
+scheduling, address book, notes, and newsgroups (&kmail;, &korganizer;,
+&kaddressbook;, &knotes;, and &knode;)
+into a single interface. Being
 based on a true component framework &kontact; provides exactly the
 same functionality as the stand-alone applications, and adds more
 features, by making use of the integrated way &kontact; runs the
@@ -104,6 +105,15 @@ as well as running them stand-alone.
 <listitem>
   <para><ulink url="help:knode">&knode;</ulink>, the &kde; news reader.</para>
 </listitem>
+<listitem>
+  <para><ulink url="help:kpilot">&kpilot;</ulink>, the &kde; Pilot synchronization application.</para>
+</listitem>
+<listitem>
+  <para><ulink url="help:kitchensync">&kitchensync;</ulink>, the &kde; synchronization application.</para>
+</listitem>
+<listitem>
+  <para><ulink url="help:akregator">&akregator;</ulink>, the &kde; RSS feed reader.</para>
+</listitem>
 </itemizedlist>
 </para>
 </chapter>
@@ -113,9 +123,7 @@ as well as running them stand-alone.
 
 <para>The main window consists of a side pane on the left showing the icons of
 the available components, the main view on the right which contains the main
-window of the active component and the usual menu, tool and status bars.
-If you would like, you can change this layout to tabs in the <link
-linkend="configuration">&kontact; configuration dialog</link></para>
+window of the active component and the usual menu, tool and status bars.</para>
 
 <sect1 id="side-pane">
 <title>Side Pane</title>
@@ -175,7 +183,28 @@ time.</para>
 </textobject>
 <caption>
 <para>
-&kontact;'s Main View
+	&kontact;'s Main View
+</para>
+</caption>
+</mediaobject>
+</screenshot>
+
+<para>In addition, there are two ways of overriding the component that &kontact;
+starts in. The first is as an argument to the Kontact program call
+(see <xref linkend="command-line"/>). The second is a setting in the
+&kontact; Settings dialog that will allow you to always start &kontact; in a 
+certain mode.</para>
+
+<screenshot>
+<screeninfo>&kontact; Starting Component Setting</screeninfo>
+<mediaobject>
+<imageobject><imagedata format="PNG" fileref="configuration-starting-component.png"/></imageobject>
+<textobject>
+<phrase>&kontact; Starting Component Setting</phrase>
+</textobject>
+<caption>
+<para>
+	&kontact; Starting Component Setting
 </para>
 </caption>
 </mediaobject>
@@ -221,7 +250,7 @@ ones which are also available when running the application stand-alone.</para>
 </textobject>
 <caption>
 <para>
-Views of &kontact;'s menu bars in the Summary View, Mail View, and Calendar View
+	Views of &kontact;'s menu bars in the Summary View, Mail View, and Calendar View
 </para>
 </caption>
 </mediaobject>
@@ -327,11 +356,6 @@ from the email address of the sender, unless a contact with that name
 already exists. A dialog box notifies you of this action.
 </para>
 
-<para>Note that dragging onto the Todo button creates a Todo,
-whereas dragging onto the Calendar creates an Event. More on this
-distinction is available in the 
-<ulink url="help:korganizer">&korganizer; documentation</ulink>
-</para>
 
 </sect2>
 
@@ -413,6 +437,43 @@ linkend="configuration">&kontact; configuration dialog</link>.</para>
 </mediaobject>
 </screenshot>
 
+<sect1 id="summary-view-component-reposition">
+<title>Repositioning Summary View Components</title>
+
+<para>The Summary View allows you to change where the
+components are in the view itself. So, if you prefer to
+have your Special Dates in the lower left and your to-dos in
+the upper right, you can rearrange the summary view to
+reflect that.</para>
+
+<para>Repositioning components in the Summary View is as simple
+as dragging them to the new location you want them to be in. Click and
+hold on the grey title area of the component and drag the component
+to wherever you want it to be. Note that this positioning is done
+compared to other components. So you can move the Mail component to be
+below the to-do component in the view, but you can't place it in a specific
+position. If you have only one component in your summary view, the only option
+is to move it between the two columns of the view; two components can either
+be two in one column or one in each column; and so on and so forth. Whenever
+you are dragging a component, you will see a small preview box following your
+mouse around showing you the component.</para>
+
+<screenshot>
+<screeninfo>Rearranging &kontact;'s Summary View</screeninfo>
+<mediaobject>
+<imageobject><imagedata format="PNG" fileref="summary-view-repositioning.png"/></imageobject>
+<textobject>
+<phrase>Rearranging &kontact;'s Summary View</phrase>
+</textobject>
+<caption>
+<para>
+Rearranging &kontact;'s Summary View
+</para>
+</caption>
+</mediaobject>
+</screenshot>
+</sect1>
+
 </chapter>
 
 
@@ -462,7 +523,7 @@ button.</para>
 <screenshot>
 <screeninfo>&kontact;'s Select Components Window</screeninfo>
 <mediaobject>
-<imageobject><imagedata format="PNG" fileref="configuration-select-components.png"/></imageobject>
+<imageobject><imagedata format="PNG" fileref="configuration-components.png"/></imageobject>
 <textobject>
 <phrase>&kontact;'s Select Components Window</phrase>
 </textobject>
@@ -659,6 +720,38 @@ of these messages there are and which folder they are in.
 </screenshot>
 </sect2>
 
+<sect2 id="summary-view-config-newsticker">
+<title>&kontact; Summary Plugins: NewsTicker</title>
+
+<para>
+The <quote>NewsTicker</quote> plugin for &kontact;'s Summary View adds an
+area in the view labeled <guilabel>News Feeds</guilabel>.
+This area contains the latest news from the currently configured news
+feeds. You can add and remove feeds in &kontact;'s Summary View
+Configuration. Please note that as of &kde; 3.4, the more efficient
+way of accessing RSS feed information is the new &akregator; application,
+which provides notifications instead of requiring constant checking of
+the Summary View to see if new articles have appeared.
+</para>
+
+<screenshot>
+<screeninfo>&kontact; NewsTicker Plugin</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata format="PNG" fileref="summary-view-newsticker.png"/>
+</imageobject>
+<textobject>
+<phrase>&kontact; NewsTicker Plugin</phrase>
+</textobject>
+<caption>
+<para>
+	&kontact; NewsTicker Plugin
+</para>
+</caption>
+</mediaobject>
+</screenshot>
+</sect2>
+
 <sect2 id="summary-view-config-notes">
 <title>&kontact; Summary Plugins: Notes</title>
 
@@ -713,6 +806,37 @@ currently do nothing.
 <caption>
 <para>
 &kontact; Todo List Summary Plugin
+</para>
+</caption>
+</mediaobject>
+</screenshot>
+</sect2>
+
+<sect2 id="summary-view-config-special-dates">
+<title>&kontact; Summary Plugins: Special Dates</title>
+
+<para>
+The <quote>Special Dates</quote> plugin for &kontact;'s Summary View adds an
+area in the view labeled <guilabel>Special Dates</guilabel>.
+This area contains information based on the criteria selected in the
+configuration area of the plugin in &kontact;'s Summary View configuration.
+The <quote>Special Dates</quote> plugin is especially useful because it can
+display birthdays, anniversaries, holidays, and special occasions from both
+the calendar and the contact list in one place. 
+</para>
+
+<screenshot>
+<screeninfo>&kontact; Special Dates Plugin</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata format="PNG" fileref="summary-view-special-dates.png"/>
+</imageobject>
+<textobject>
+<phrase>&kontact; Special Dates Plugin</phrase>
+</textobject>
+<caption>
+<para>
+	&kontact; Special Dates Plugin
 </para>
 </caption>
 </mediaobject>
@@ -866,7 +990,7 @@ integrating. They did almost all the work.</para>
 <itemizedlist>
 <listitem><para>Cornelius Schumacher <email>schumacher@kde.org</email></para>
 </listitem>
-<listitem><para>Antonio Salazar<email>savedfastcool@gmail.com</email></para>
+<listitem><para>Antonio Salazar <email>savedfastcool@gmail.com</email></para>
 </listitem>
 
 <listitem><para>All the members of the KDE documentation list who
