@@ -1,5 +1,47 @@
-TODO LIST (Moved again to the file TODO)
+(The TODO list was moved again to the file TODO)
 
+
+** KPILOT CHANGELOG **
+======================
+
+
+2003-7-11  Reinhold Kainhofer
+* Records in the PilotLocalDatabase with ID 0 (i.e. new records 
+  added by KPilot's internal editors) will always be treated as 
+  modified records and found by readNextModifiedRecord, even if 
+  they don't have the dirty flag set. This ensures that all new 
+  records from KPilot will be added to the handheld
+* Finished the internal todo editor:
+  Entries can be maked completed and edited directly in the check 
+	list view.
+  Moved the editor dialog to a designer ui file instead of a 
+	manually created layout
+* Finished the sync action that copies the changes done in the 
+  internal editors of KPilot to the handheld. So, finally, the 
+  internal viewers/editors of KPilot are working again, unlike 
+  the last few years, where they were in a terribly broken state. 
+
+2003-6-xx to 2003-7-10  Reinhold Kainhofer
+* I was busy with a lot of stuff from KPIlot, none of which is actually 
+  in a state where I can commit it. In particular, I'm working on
+   -) Custom field sync of the addressbook conduit
+   -) Make the conflict resolution of the abook conduit more 
+      intuitive (ask just once for each conflicting address)
+   -) Finish up the todo editor
+   -) Make the generic DB viewer an editor (more or less finished, 
+      but the KHexEdit widget is not yet publically available, so 
+  		I can't commit that part either)
+   -) Implement the InternalEditorAction which syncs the changes 
+      done in the internal editors/viewers to the handheld
+
+
+KPilot Developer's notes for July 9th
+============================================
+
+2003-7-7  Adriaan de Groot
+* Added a conduit description to PalmDOC. Well, fixed the "Conduit"
+  vs. "Comment" typo in the .desktop file.
+	
 2003-7-6  Adriaan de Groot
 * Made the bugreport and question and help links in the about pages
   clickable through KActiveLabel. Made the credits text scrollable
