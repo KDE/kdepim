@@ -22,6 +22,8 @@
 #ifndef KDEPIM_RESOURCECALENDAREXCHANGECONFIG_H
 #define KDEPIM_RESOURCECALENDAREXCHANGECONFIG_H
 
+#include <qcheckbox.h>
+
 #include <kcombobox.h>
 #include <kurlrequester.h>
 #include <klineedit.h>
@@ -43,10 +45,18 @@ public slots:
   virtual void loadSettings( KRES::Resource *resource);
   virtual void saveSettings( KRES::Resource *resource );
 
+protected slots:
+  void slotToggleEquals( bool on );
+  void slotUserChanged( const QString& text );
+  void slotFindClicked();
+
 private:
   KLineEdit* mHostEdit;
   KLineEdit* mAccountEdit;
   KLineEdit* mPasswordEdit;
+  QCheckBox *mMailboxEqualsUser;
+  KLineEdit* mMailboxEdit;
+  QPushButton* mTryFindMailbox;
   KIntNumInput* mCacheEdit;
 };
 
