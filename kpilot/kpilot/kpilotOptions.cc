@@ -18,6 +18,11 @@
 #include <stream.h>
 #include <stdlib.h>
 
+// for reading the passwd file
+#include <unistd.h>
+#include <pwd.h>
+#include <sys/types.h>
+
 #include <qlabel.h>
 #include <qchkbox.h>
 #include <qgrpbox.h>
@@ -25,7 +30,7 @@
 #include <qradiobt.h>
 #include <qlineedit.h>
 #include <qcombobox.h>
-
+#include <qcstring.h>
 #include <qlayout.h>
 
 
@@ -45,7 +50,7 @@
 #include "kpilotOptions.moc"
 
 
-static char *id="$Id$";
+static const char *id="$Id$";
 
 
 
@@ -295,6 +300,68 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	//
 	QString t;
 
+	// read the environment settings from the pilotlink setup
+	// and use them, if there is no settings in the config file.
+	// FIXME: if this dialog is cancelled the environment should still
+	//        be read from the main/sync application
+	// Currently the application doesn't start, if the user cancelles
+	// the dialog. If the user doesn't cancel it,
+	// the setting gets written in the config.
+	// 04.Nov.2000 habenich
+	char *envPilotPort = ::getenv("PILOTPORT");
+	char *envPilotRate = ::getenv("PILOTRATE");
+	int pilotRate = 0;
+	if (envPilotRate) {
+	  if (!strncmp(envPilotRate, "115200", 6)) {
+	    pilotRate = 4;
+	  }
+	  else if (!strncmp(envPilotRate, "57600", 5)) {
+	    pilotRate = 3;
+	  }
+	  else if (!strncmp(envPilotRate, "38400", 5)) {
+	    pilotRate = 2;
+	  }
+	  else if (!strncmp(envPilotRate,"19200", 5)) {
+	    pilotRate = 1;
+	  }
+	  // 9600 is default so no need to search on this
+	  //else if (strncmp(envPilotRate, "9600", 4)) {
+	  //  pilotRate = 0;
+	  //}
+	  //cerr << "env: " << envPilotRate << " found " << pilotRate << endl;
+	}
+	QCString pilotPort;
+	// this construct is only for security
+	// of buffer overflow by environment vars being too long
+	if (envPilotPort) {
+	  // max length of the device name = "/dev/xxxyyyzzz" = 14 < 20
+	  // change this length
+	  // if the users get strange errors from environment settings
+	  QCString tmp(envPilotPort, 20);
+	  pilotPort = tmp;
+	}
+	else {
+	  pilotPort = "/dev/pilot";
+	}
+	// look in the password file for the Real User Name.
+	// if there is none, use the environment setting.
+	// if there is none, use ""
+	QCString userName("");
+	struct passwd *myPasswdEntry = getpwuid(getuid());
+	if (myPasswdEntry 
+	    && myPasswdEntry->pw_gecos 
+	    && strlen(myPasswdEntry->pw_gecos)>0 ) {
+	  QCString tmp(myPasswdEntry->pw_gecos, 256);
+	  userName = tmp;
+	}
+	else { // use the environment
+	  char *envUser = ::getenv("USER");
+	  if (envUser) {
+	    QCString tmp(envUser,256);
+	    userName = tmp;
+	  }
+	}
+
 	const int labelCol=0;
 	const int fieldCol=1;
 	const int nRows=8;
@@ -307,7 +374,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	currentLabel->adjustSize();
 
 	fPilotDevice = new QLineEdit(this);
-	fPilotDevice->setText(config->readEntry("PilotDevice", "/dev/pilot"));
+	fPilotDevice->setText(config->readEntry("PilotDevice", pilotPort));
 	fPilotDevice->resize(100, fPilotDevice->height());
 	grid->addWidget(currentLabel,0,labelCol);
 	grid->addWidget(fPilotDevice,0,fieldCol);
@@ -320,12 +387,13 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	fPilotSpeed->insertItem("38400");
 	fPilotSpeed->insertItem("57600");
 	fPilotSpeed->insertItem("115200");
-	value=config->readNumEntry("PilotSpeed", 0);
+	value=config->readNumEntry("PilotSpeed", pilotRate);
 	if (debug_level & UI_TEDIOUS)
 	{
 		cerr << fname << ": Read pilot speed "
 			<< value << " from config." << endl;
 	}
+	//cerr << "inserting combo nr " << value << endl;
 	fPilotSpeed->setCurrentItem(value);
 	grid->addWidget(currentLabel,0,labelCol+2);
 	grid->addWidget(fPilotSpeed,0,fieldCol+2);
@@ -333,7 +401,6 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	currentLabel = new QLabel(i18n("Pilot User: "), this);
 	currentLabel->adjustSize();
 	fUserName = new QLineEdit(this);
-	QCString userName = ::getenv("USER");
 	fUserName->setText(config->readEntry("UserName", userName));
 	fUserName->resize(200, fUserName->height());
 	grid->addWidget(currentLabel,1,labelCol);
@@ -400,6 +467,7 @@ int KPilotOptionsGeneral::commitChanges(KConfig *config)
 
 	QString dest,src;
 
+	// WARNING: shouldn't this be QCString with a limit to 256 chars ?
 	dest = getenv("HOME");
 	dest+="/Desktop/Autostart/KPilotDaemon.desktop";
 
@@ -551,6 +619,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.10  2000/10/26 10:10:09  adridg
+// Many fixes
+//
 // Revision 1.9  2000/10/19 19:21:33  adridg
 // Added decent error messages
 //
