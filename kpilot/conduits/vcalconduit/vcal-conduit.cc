@@ -58,10 +58,7 @@ static const char *vcalconduit_id = "$Id$";
 
 #include <pilotSerialDatabase.h>
 #include <pilotLocalDatabase.h>
-//#include <pilotDateEntry.h>
 
-//#include "vcal-conduitbase.h"
-//#include "vcal-factory.h"
 #include "vcal-conduit.moc"
 
 
@@ -164,7 +161,9 @@ VCalConduit::VCalConduit(KPilotDeviceLink *d,
 	const QStringList &a) : VCalConduitBase(d,n,a)
 {
 	FUNCTIONSETUP;
-	(void) vcalconduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<vcalconduit_id<<endl;
+#endif
 }
 
 

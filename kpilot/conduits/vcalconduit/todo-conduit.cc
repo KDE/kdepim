@@ -61,10 +61,7 @@ static const char *TodoConduit_id = "$Id$";
 
 #include <pilotSerialDatabase.h>
 #include <pilotLocalDatabase.h>
-//#include <pilotTodoEntry.h>
 
-//#include "vcal-conduitbase.h"
-//#include "todo-factory.h"
 #include "todo-conduit.moc"
 
 // define conduit versions, one for the version when categories were synced for the first time, and the current version number
@@ -178,7 +175,9 @@ TodoConduit::TodoConduit(KPilotDeviceLink *d,
 	const QStringList &a) : VCalConduitBase(d,n,a)
 {
 	FUNCTIONSETUP;
-	(void) TodoConduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<TodoConduit_id<<endl;
+#endif
 }
 
 

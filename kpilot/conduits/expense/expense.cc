@@ -193,7 +193,9 @@ ExpenseConduit::ExpenseConduit(KPilotDeviceLink *d,
 	fCSVStream(0L)
 {
 	FUNCTIONSETUP;
-	(void) expense_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<expense_id<<endl;
+#endif
 }
 
 ExpenseConduit::~ExpenseConduit()

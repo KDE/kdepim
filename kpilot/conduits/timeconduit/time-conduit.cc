@@ -51,7 +51,9 @@ TimeConduit::TimeConduit(KPilotDeviceLink * o,
 	fDirection(0)
 {
 	FUNCTIONSETUP;
-	(void) Time_conduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<Time_conduit_id<<endl;
+#endif
 }
 
 

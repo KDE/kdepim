@@ -77,7 +77,9 @@ DOCConduit::DOCConduit(KPilotDeviceLink * o,
 	const char *n, const QStringList & a):ConduitAction(o, n, a)
 {
 	FUNCTIONSETUP;
-	(void) doc_conduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<doc_conduit_id<<endl;
+#endif
 }
 
 

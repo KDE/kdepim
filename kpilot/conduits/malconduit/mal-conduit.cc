@@ -33,19 +33,12 @@
 
 
 #include "options.h"
-//#include <unistd.h>
-//#include <time.h>
 
-//#include <qtimer.h>
-
-//#include <kglobal.h>
-//#include <kmessagebox.h>
 #include <kconfig.h>
 #include <kdebug.h>
 
 #include "mal-factory.h"
 #include "mal-conduit.moc"
-//#include "malsync/libmal.h"
 #include <libmal.h>
 
 
@@ -94,7 +87,9 @@ MALConduit::MALConduit(KPilotDeviceLink * o,
 	register_printStatusHook(malconduit_logf);
 	register_printErrorHook(malconduit_logf);
 	conduitInstance=this;
-	(void) MAL_conduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<MAL_conduit_id<<endl;
+#endif
 }
 
 

@@ -138,7 +138,9 @@ VCalConduitBase::VCalConduitBase(KPilotDeviceLink *d,
 	fP(0L)
 {
 	FUNCTIONSETUP;
-	(void) vcalconduitbase_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<vcalconduitbase_id<<endl;
+#endif
 }
 
 
@@ -359,7 +361,6 @@ void VCalConduitBase::syncPalmRecToPC()
 		r = fDatabase->readNextModifiedRec();
 	}
 	PilotRecord *s = 0L;
-DEBUGCONDUIT<<"1"<<endl;
 	
 	if (!r)
 	{
@@ -376,13 +377,13 @@ DEBUGCONDUIT<<"1"<<endl;
 		}
 	}
 
-DEBUGCONDUIT<<"2"<<endl;
 	// let subclasses do something with the record before we try to sync
 	preRecord(r);
 
+//	DEBUGCONDUIT<<fname<<": Event: "<<e->dtStart()<<" until "<<e->dtEnd()<<endl;
+//	DEBUGCONDUIT<<fname<<": Time: "<<e->dtStart()<<" until "<<e->dtEnd()<<endl;
 	bool archiveRecord=(r->isArchived());
 
-DEBUGCONDUIT<<"3"<<endl;
 	s = fLocalDatabase->readRecordById(r->getID());
 	if (!s || fFirstTime)
 	{
@@ -403,10 +404,8 @@ DEBUGCONDUIT<<"3"<<endl;
 	}
 	else
 	{
-DEBUGCONDUIT<<"4"<<endl;
 		if (r->isDeleted())
 		{
-DEBUGCONDUIT<<"5"<<endl;
 			if (archive && archiveRecord) 
 			{
 				changeRecord(r,s);
@@ -415,17 +414,13 @@ DEBUGCONDUIT<<"5"<<endl;
 			{
 				deleteRecord(r,s);
 			}
-DEBUGCONDUIT<<"6"<<endl;
 		}
 		else
 		{
-DEBUGCONDUIT<<"7"<<endl;
 			changeRecord(r,s);
 		}
-DEBUGCONDUIT<<"8"<<endl;
 	}
 
-DEBUGCONDUIT<<"9"<<endl;
 	KPILOT_DELETE(r);
 	KPILOT_DELETE(s);
 
@@ -460,6 +455,7 @@ void VCalConduitBase::syncPCRecToPalm()
 #ifdef DEBUG
 		DEBUGCONDUIT<<fname<<": found PC entry with pilotID "<<ix<<endl;
 		DEBUGCONDUIT<<fname<<": Description: "<<e->summary()<<endl;
+		DEBUGCONDUIT<<fname<<": Time: "<<e->dtStart()<<" until "<<e->dtEnd()<<endl;
 #endif
 	PilotRecord *s=0L;
 	if (ix>0 && (s=fDatabase->readRecordById(ix)))

@@ -86,7 +86,9 @@ AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o, const char *n, const QS
     abiter()
 {
   FUNCTIONSETUP;
- (void) abbrowser_conduit_id;
+#ifdef DEBUG
+  DEBUGCONDUIT<<abbrowser_conduit_id<<endl;
+#endif
 }
 
 

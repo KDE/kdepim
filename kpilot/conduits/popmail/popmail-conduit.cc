@@ -278,7 +278,9 @@ PopMailConduit::PopMailConduit(KPilotDeviceLink *d,
 	ConduitAction(d,n,l)
 {
 	FUNCTIONSETUP;
-	(void) popmail_conduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<popmail_conduit_id<<endl;
+#endif
 }
 
 PopMailConduit::~PopMailConduit()
