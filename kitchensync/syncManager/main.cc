@@ -27,8 +27,8 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#include "config.h"
-#include "lib/debug.h"
+#include <config.h>
+#include "../lib/debug.h"
 
 #include <kaboutdata.h>
 #include <kuniqueapp.h>
@@ -51,12 +51,13 @@ int main(int argc, char **argv)
 		KAboutData::License_GPL,
 		"(C) 2001 Adriaan de Groot");
 	KCmdLineArgs::init(argc,argv,&about);
+#ifndef NDEBUG
 	KCmdLineArgs::addCmdLineOptions(debug_options);
 	KUniqueApplication::addCmdLineOptions();
 
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
-
 	debug_level = p->isSet("debug");
+#endif
 
 	KUniqueApplication a(true,true);
 
@@ -76,4 +77,9 @@ int main(int argc, char **argv)
 	return a.exec();
 }
 
-// $Log:$
+// $Log$
+// Revision 1.1.1.1  2001/06/21 19:50:18  adridg
+// KitchenSync is the next-gen KDE-PIM Handheld Device Synchronization
+// Framework, which aims to integrate all the Handheld sync tools in 
+// KDE, such as KPilot and Kandy. (This is the *real* import).
+//

@@ -27,12 +27,15 @@
 ## Bug reports and questions can be sent to adridg@cs.kun.nl
 ##
 
+COMPILE_FIRST = pilot-link
+SUBDIRS = $(COMPILE_FIRST)
+
 bin_PROGRAMS = pilotDaemon
 noinst_LIBRARIES = libpilotdb.a
 
 METASOURCES = AUTO
 
-INCLUDES = $(QT_INCLUDES) $(KDE_INCLUDES) -I$(top_srcdir)
+INCLUDES = $(QT_INCLUDES) $(KDE_INCLUDES)
 LDFLAGS = $(KDE_LDFLAGS) $(LIB_KDECORE) $(LIB_KDEUI) $(LIB_QT)
 
 libpilotdb_a_SOURCES = pilotRecord.cc \
@@ -41,9 +44,9 @@ libpilotdb_a_SOURCES = pilotRecord.cc \
 pilotDaemon_SOURCES = main.cc pilotDaemon.cc configdialog.cc \
 	backupConduit.cc
 pilotDaemon_LDADD = ./libpilotdb.a \
-	-L$(top_srcdir)/lib -lkitchensync \
-	-L$(top_srcdir)/syncManager -lsyncmanager \
-	-L$(top_srcdir)/pilot-link/libsock -lpisock
+	-L../lib -lkitchensync \
+	-L../syncManager -lsyncmanager \
+	./pilot-link/libsock/libpisock.la
 
 servicedir = $(kde_servicesdir)/Utilities
 service_DATA = pilotDaemon.desktop

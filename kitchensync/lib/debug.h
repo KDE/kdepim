@@ -58,10 +58,12 @@
 //
 //
 // #define KPILOT_AREA	5510
-#define MANAGER_AREA	5511
+#define DAEMON_AREA	5511
 // #define CONDUIT_AREA	5512
 // #define LIBPILOTDB_AREA	5513
+#define MANAGER_AREA    5514
 
+#define DEBUGDAEMON     kdDebug(DAEMON_AREA)
 #define DEBUGMANAGER    kdDebug(MANAGER_AREA)
 
 
@@ -133,4 +135,9 @@ extern const int fname;
 
 #endif
 
-// $Log:$
+// $Log$
+// Revision 1.1.1.1  2001/06/21 19:49:55  adridg
+// KitchenSync is the next-gen KDE-PIM Handheld Device Synchronization
+// Framework, which aims to integrate all the Handheld sync tools in 
+// KDE, such as KPilot and Kandy. (This is the *real* import).
+//

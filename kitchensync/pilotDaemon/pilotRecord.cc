@@ -27,12 +27,10 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-static const char *pilotRecord_id = "$Id:$";
+static const char *pilotRecord_id = "$Id$";
 
-#include "config.h"
-#include "lib/debug.h"
-
-#include <string.h>
+#include <config.h>
+#include "../lib/debug.h"
 
 #include "pilotRecord.h"
 
@@ -110,4 +108,9 @@ void PilotRecord::makeSecret()
 	fAttrib |= dlpRecAttrSecret;
 }
 
-// $Log:$
+// $Log$
+// Revision 1.1.1.1  2001/06/21 19:50:04  adridg
+// KitchenSync is the next-gen KDE-PIM Handheld Device Synchronization
+// Framework, which aims to integrate all the Handheld sync tools in 
+// KDE, such as KPilot and Kandy. (This is the *real* import).
+//

@@ -27,10 +27,10 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-static const char *configdialog_id = "$Id:$";
+static const char *configdialog_id = "$Id$";
 
-#include "config.h"
-#include "lib/debug.h"
+#include <config.h>
+#include "../lib/debug.h"
 
 #include "configdialog.h"
 
@@ -59,4 +59,9 @@ void Config::setDevice(const QString &s)
 	writeEntry("Device",s);
 }
 
-// $Log:$
+// $Log$
+// Revision 1.1.1.1  2001/06/21 19:49:57  adridg
+// KitchenSync is the next-gen KDE-PIM Handheld Device Synchronization
+// Framework, which aims to integrate all the Handheld sync tools in 
+// KDE, such as KPilot and Kandy. (This is the *real* import).
+//

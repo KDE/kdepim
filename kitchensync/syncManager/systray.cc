@@ -27,8 +27,8 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#include "config.h"
-#include "lib/debug.h"
+#include <config.h>
+#include "../lib/debug.h"
 
 #include <kglobal.h>
 #include <kiconloader.h>
@@ -243,4 +243,9 @@ void SystrayWindow::endSync(const QString &s)
 	}
 }
 
-// $Log:$
+// $Log$
+// Revision 1.1.1.1  2001/06/21 19:50:19  adridg
+// KitchenSync is the next-gen KDE-PIM Handheld Device Synchronization
+// Framework, which aims to integrate all the Handheld sync tools in 
+// KDE, such as KPilot and Kandy. (This is the *real* import).
+//

@@ -28,10 +28,10 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-static const char *pilotDaemon_id = "$Id:$";
+static const char *pilotDaemon_id = "$Id$";
 
 #include <config.h>
-#include <lib/debug.h>
+#include "../lib/debug.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,9 +43,9 @@ static const char *pilotDaemon_id = "$Id:$";
 
 #include <kdebug.h>
 
-#include <pilot-link/include/pi-socket.h>
-#include <pilot-link/include/pi-dlp.h>
-#include <syncManager/syncManagerIface_stub.h>
+#include "pilot-link/include/pi-socket.h"
+#include "pilot-link/include/pi-dlp.h"
+#include "../syncManager/syncManagerIface_stub.h"
 
 #include "configdialog.h"
 #include "backupConduit.h"
@@ -61,6 +61,8 @@ PilotDaemon::PilotDaemon(Config *c) :
 	fU(0),
 	fSys(0)
 {
+	FUNCTIONSETUP;
+
 	fStub = new SyncManagerIface_stub("kitchenSync","SyncManager");
 	fState = Unconnected;
 }
@@ -88,6 +90,8 @@ bool PilotDaemon::connectToManager()
 
 void PilotDaemon::openDevice()
 {
+	FUNCTIONSETUP;
+
 	if (fConfig->isTransientDevice())
 	{
 		if (QFile::exists(fConfig->device()))
@@ -153,6 +157,8 @@ bool PilotDaemon::open()
 
 bool PilotDaemon::accept()
 {
+	FUNCTIONSETUP;
+
 	fSocketNotifier->setEnabled(false);
 
         int ret = pi_listen(fSocket, 1);
@@ -198,6 +204,8 @@ bool PilotDaemon::accept()
 
 void PilotDaemon::readUser()
 {
+	FUNCTIONSETUP;
+
 	fStub->setProgress(10,i18n("Reading user information..."));
 
         /* Ask the pilot who it is. */
@@ -217,6 +225,8 @@ void PilotDaemon::readUser()
 
 void PilotDaemon::readDatabases()
 {
+	FUNCTIONSETUP;
+
 	int i;
 	int dbindex=0;
 	int count=0;
@@ -229,13 +239,30 @@ void PilotDaemon::readDatabases()
 		count++;
 		dbindex=db.index+1;
 
+		fStub->setProgress(0,i18n("Syncing database %1...").arg(db.name));
+
 		PilotSerialDatabase *sd = 
 			new PilotSerialDatabase(fSocket,db.name);
-		if (sd)
+		if (sd && sd->isDBOpen())
 		{
 			buc.exec(sd);
+		}
+		else
+		{
+			DEBUGDAEMON << "Can't open database." 
+				<< endl;
+		}
+
+		if (sd)
+		{
 			delete sd;
+			sd=0L;
 		}
 	}
 }
-// $Log:$
+// $Log$
+// Revision 1.1.1.1  2001/06/21 19:50:04  adridg
+// KitchenSync is the next-gen KDE-PIM Handheld Device Synchronization
+// Framework, which aims to integrate all the Handheld sync tools in 
+// KDE, such as KPilot and Kandy. (This is the *real* import).
+//

@@ -27,7 +27,8 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#include "lib/debug.h"
+#include <config.h>
+#include "../lib/debug.h"
 
 #include <kmessagebox.h>
 

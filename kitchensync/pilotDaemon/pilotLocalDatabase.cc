@@ -31,7 +31,7 @@ static const char *pilotlocaldatabase_id =
 	"$Id$";
 
 #include <config.h>
-#include <lib/debug.h>
+#include "../lib/debug.h"
 
 #include <stdio.h>
 #include <unistd.h>
@@ -49,6 +49,8 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 	fAppInfo(0L), fAppLen(0), 
 	fPendingRec(-1)
 {
+	FUNCTIONSETUP;
+
 	openDatabase();
 
 	fRecordList.setAutoDelete(true);
@@ -57,9 +59,27 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 	(void) pilotlocaldatabase_id;
 }
 
+#if 0
+PilotLocalDatabase::PilotLocalDatabse(const QString &path,
+	PilotSerialDatabase *db) : 
+	PilotDatabase(checkDBName(db->name())),
+	fPathName(path),
+	fAppInfo(0L),fAppLen(0),
+	fPendingRec(-1)
+{
+	FUNCTIONSETUP;
+
+	// Must copy DBInfo from serial db and also
+	// get AppInfo.
+
+	fRecordList.setAutoDelete(true);
+}
+#endif
 
 PilotLocalDatabase::~PilotLocalDatabase()
 {
+	FUNCTIONSETUP;
+
 	closeDatabase();
 	delete[]fAppInfo;
 }
@@ -67,6 +87,8 @@ PilotLocalDatabase::~PilotLocalDatabase()
 // Changes any forward slashes to underscores
 QString PilotLocalDatabase::checkDBName(const QString &s)
 {
+	FUNCTIONSETUP;
+
 	QString t = s;
 	t=t.replace(QRegExp("/"), "_");
 
@@ -411,3 +433,8 @@ void PilotLocalDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.1.1.1  2001/06/21 19:50:09  adridg
+// KitchenSync is the next-gen KDE-PIM Handheld Device Synchronization
+// Framework, which aims to integrate all the Handheld sync tools in 
+// KDE, such as KPilot and Kandy. (This is the *real* import).
+//

@@ -85,16 +85,18 @@ This leaves the question: which includes? And how? And where?
 ALWAYS include config.h and lib/debug.h, as follows:
 
 #include <config.h>
-#include <lib/debug.h>
+#include "../lib/debug.h"
 
-(This applies to C++ files; in headers they are not needed).
+(This applies to C++ files; in headers they are not needed. In deeper
+nested subdirectories, you may need to adjust the relative path for
+debug.h.).
 
 NEXT, include all the system headers you need, with <> syntax, then
 the Qt headers, then the KDE headers.
 
 NEXT, include the header files from lib, pilot-link, or other parts
-of KitchenSync, with <> syntax and relative paths from the KitchenSync
-root directory, eg. #include <pilot-link/include/pi-file.h>.
+of KitchenSync, with "" syntax and relative paths from the current
+directory, eg. #include "../syncManager/systray.h".
 
 NEXT, include local header files with "" syntax.
 

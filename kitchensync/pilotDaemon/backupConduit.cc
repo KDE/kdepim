@@ -27,11 +27,11 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-static const char *backupConduit_id = "$Id:$";
+static const char *backupConduit_id = "$Id$";
 
 
 #include <config.h>
-#include <lib/debug.h>
+#include "../lib/debug.h"
 
 #include <unistd.h>
 #include <sys/stat.h>
@@ -40,8 +40,8 @@ static const char *backupConduit_id = "$Id:$";
 #include <qstring.h>
 #include <kdebug.h>
 
-#include <pilot-link/include/pi-dlp.h>
-#include <syncManager/syncManagerIface_stub.h>
+#include "pilot-link/include/pi-dlp.h"
+#include "../syncManager/syncManagerIface_stub.h"
 
 #include "pilotDatabase.h"
 #include "pilotLocalDatabase.h"
@@ -54,7 +54,7 @@ bool BackupConduit::exec(PilotDatabase *db)
 	QString s(i18n("Backing up %1...").arg(db->name()));
 	fStub->setProgress(0,s);
 
-	if (db->isDBOpen())
+	if (!db->isDBOpen())
 	{
 		kdError() << "Can't open database " << db->name() << endl;
 		return false;
@@ -65,19 +65,25 @@ bool BackupConduit::exec(PilotDatabase *db)
 	{
 		kdWarning() << "Can't get number of records." << endl;
 		records=0;
+		fStub->setProgress(50,i18n("Size of %1 unknown.").arg(db->name()));
 	}
 
-	PilotLocalDatabase dl("/tmp/",db->name());
+	PilotLocalDatabase dl("/tmp",db->name());
 
 	int count=0;
 	int mods=-1;
-	if (records) mods=records/100;
+	int modstep=1;
+	if (records)
+	{
+		mods=records/100;
+		if (records<100) modstep=100/records;
+	}
 
 	for (int i=0; i<records; i++)
 	{
 		if (!mods) 
 		{
-			count++;
+			count+=modstep;
 			fStub->setProgress(count,QString::null);
 			mods=records/100;
 		}

@@ -28,10 +28,10 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-static const char *main_id = "$Id:$";
+static const char *main_id = "$Id$";
 
-#include "config.h"
-#include "lib/debug.h"
+#include <config.h>
+#include "../lib/debug.h"
 
 #include <qtimer.h>
 
@@ -54,11 +54,13 @@ int main(int argc, char **argv)
 		KAboutData::License_GPL,
 		"(C) 2001 Adriaan de Groot");
 	KCmdLineArgs::init(argc,argv,&about);
+#ifndef NDEBUG
 	KCmdLineArgs::addCmdLineOptions(debug_options);
 	KUniqueApplication::addCmdLineOptions();
 
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
 	debug_level = p->isSet("debug");
+#endif
 
 	KUniqueApplication a(true,true);
 
