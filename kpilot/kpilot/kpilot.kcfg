@@ -46,11 +46,6 @@
         </label>
         <default></default>
     </entry>
-    <entry name="PostSyncDelay" type="UInt">
-	<label>
-        </label>
-        <default>2</default>
-    </entry>
     <entry name="LogFileName" type="String">
         <label>
         </label>

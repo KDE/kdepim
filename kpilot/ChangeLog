@@ -1,6 +1,14 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-03-08  Adriaan de Groot
+* Wow, lots of activity by Reinhold. I hope he updates the ChangeLog
+  sometime as well.
+* Revert the variable timeout, just do a straight 5 second wait, that
+  should just fix it, and save us a lot of trouble too. Anyway, who
+  wants to sync again within 5 seconds of the previous one finishing?
+  It's just as well that the value wasn't saved anywhere anyway.
+
 2004-03-05  Adriaan de Groot
 * Spent most of the day putting together new tarballs, so I can push
   KPilot improvements out the door again when needed.

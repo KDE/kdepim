@@ -961,7 +961,7 @@ launch:
 	}
 	else
 	{
-		QTimer::singleShot(KPilotSettings::postSyncDelay()*1000,fPilotLink,SLOT(reset()));
+		QTimer::singleShot(5000,fPilotLink,SLOT(reset()));
 	}
 
 	fPostSyncAction = None;
@@ -1069,7 +1069,7 @@ int main(int argc, char **argv)
 		I18N_NOOP("KPilot Daemon"),
 		KPILOT_VERSION,
 		"KPilot - HotSync software for KDE\n\n",
-		KAboutData::License_GPL, 
+		KAboutData::License_GPL,
 		"(c) 1998-2000,2001, Dan Pilone (c) 2000-2004, Adriaan de Groot",
 		0L,
 		"http://www.slac.com/~pilone/kpilot_home/"
