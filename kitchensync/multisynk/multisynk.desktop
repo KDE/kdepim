@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Synchronization
+Name=MultiSynK
+GenericName=Synchronization
 Name[ar]=تزامن
 Name[be]=Сынхранізацыя
 Name[bs]=Sinhronizacija
@@ -29,6 +30,7 @@ Name[pt]=Sincronização
 Name[pt_BR]=Sincronização
 Name[ro]=Sincronizare
 Name[ru]=Синхронизация
+Name[se]=Buohtalastin
 Name[sk]=Synchronizácia
 Name[sl]=Usklajevanje
 Name[sr]=Синхронизација
