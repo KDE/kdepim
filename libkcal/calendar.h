@@ -66,6 +66,9 @@ class Calendar {
     Calendar(const QString &timeZoneId);
     virtual ~Calendar();
 
+    /** Return the calendar format class the calendar object uses for load
+     * operations, and the default format it uses for save operations. */
+    CalFormat *calFormat();
     /** Return the iCalendar format class the calendar object uses. */
     ICalFormat *iCalFormat();
 
@@ -208,7 +211,7 @@ class Calendar {
     virtual QPtrList<Event> events(const QDate &start,const QDate &end,
                                   bool inclusive=false) = 0;
   
-    CalFormat *mFormat;
+    CalFormat *mFormat;     // format used for load, and default for save, operations
     CalFormat *mDndFormat;  // format used for drag and drop operations
     ICalFormat *mICalFormat;
   

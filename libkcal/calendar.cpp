@@ -134,6 +134,11 @@ Calendar::~Calendar()
   delete mFormat;
 }
 
+CalFormat *Calendar::calFormat()
+{
+  return mFormat;
+}
+
 ICalFormat *Calendar::iCalFormat()
 {
   return mICalFormat;
