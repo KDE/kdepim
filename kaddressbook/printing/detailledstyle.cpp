@@ -101,9 +101,9 @@ namespace KABPrinting {
         mPageAppearance->cbBackgroundColor
             ->setChecked(config->readBoolEntry(ColoredContactHeaders, true));
         mPageAppearance->kcbHeaderBGColor
-            ->setColor(config->readColorEntry(ContactHeaderForeColor, &Qt::black));
+            ->setColor(config->readColorEntry(ContactHeaderBGColor, &Qt::black));
         mPageAppearance->kcbHeaderTextColor
-            ->setColor(config->readColorEntry(ContactHeaderBGColor, &Qt::white));
+            ->setColor(config->readColorEntry(ContactHeaderForeColor, &Qt::white));
         // ----- work around Qt Designer's fixed widget spacing:
         mPageAppearance->layout()->setMargin(KDialog::marginHint());
         mPageAppearance->layout()->setSpacing(KDialog::spacingHint());
