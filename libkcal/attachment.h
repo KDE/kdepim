@@ -33,10 +33,10 @@ class Attachment
 {
 public:
     /**
-     * Create a Reference to some URL.
-     * @param url the url this attachment refers to
+     * Create a Reference to some URI.
+     * @param uri the uri this attachment refers to
      */
-    Attachment(const QString& url);
+    Attachment(const QString& uri);
 
     /**
      * Create a binary attachment.
@@ -44,24 +44,22 @@ public:
      */
     Attachment(const char *base64);
 
-    /** Destruct Attachment */
-    virtual ~Attachment();
-
-    bool isURL() const;
-    QString url() const;
-    void setURL(const QString& url);
+    /* The VALUE parameter in Cal */
+    bool isURI() const;
+    QString uri() const;
+    void setURI(const QString& uri);
     
     bool isBinary() const;
-    /** @return the content as base64 */
     const char *data() const;
     void setData(const char *base64);
 
-    /* The FMTTYPE parameter in iCal */
+    /* The optional FMTTYPE parameter in iCal */
     QString mimeType() const;
     void setMimeType(const QString& mime);
 private:
     QString mMimeType;
     QString mData;
+    bool mBinary;
 };
 
 }

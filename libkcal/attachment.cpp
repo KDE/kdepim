@@ -22,48 +22,54 @@
 
 using namespace KCal;
 
-Attachment::Attachment(const QString& url)
+Attachment::Attachment(const QString& uri)
 {
-  mData = url;
+  mData = uri;
+  mBinary = false;
 }
 
-Attachment::Attachment(const char *binary)
+Attachment::Attachment(const char *base64)
 {
-  mData = QString::fromUtf8(binary)
+  mData = QString::fromUtf8(base64);
+  mBinary = true;
 }
 
-Attachment::~Attachment()
+bool Attachment::isURI() const
 {
+  return !mBinary;
 }
 
-bool Attachment::isURL() const
+QString Attachment::uri() const
 {
-  return mMimeType.isEmpty();
+  if (!mBinary)
+    return mData;
+  else
+    return QString::null;
 }
 
-QString Attachment::url() const
+void Attachment::setURI(const QString& uri)
 {
-  return mData;
-}
-
-void Attachment::setURL(const QString& url)
-{
-  mData = url;
+  mData = uri;
+  mBinary = false;
 }
 
 bool Attachment::isBinary() const
 {
-  return !isURL();
+  return mBinary;
 }
 
 const char *Attachment::data() const
 {
-  return mData.utf8().data();
+  if (mBinary)
+    return mData.utf8().data();
+  else
+    return 0;
 }
 
 void Attachment::setData(const char *base64)
 {
   mData = QString::fromUtf8(base64);
+  mBinary = true;
 }
 
 QString Attachment::mimeType() const
@@ -73,6 +79,6 @@ QString Attachment::mimeType() const
 
 void Attachment::setMimeType(const QString& mime)
 {
-  mMimeType = mime
+  mMimeType = mime;
 }
 
