@@ -30,6 +30,21 @@ TODO LIST (Ignore the file TODO)
 KPilot Developer's notes for February 8th, 2003
 ===============================================  
 
+* Need to backport the changes from 2002-11-10 to BRANCH.
+* Grep for and destroy latin1() calls in code. These are now in
+  the code to keep KPilot working under QT_NO_ASCII_CAST conditions,
+  but should all be replaced by the proper functions instead - either
+  QFile::encodeName() or by updating other functions to take QStrings
+  instead of const char *, and using the Pilot codec where appropriate.
+
+2003-2-2  Adriaan de Groot
+* conduitConfigDialog.cc [HEAD] Started inserting code for improved
+  conduit selection and activation.
+* kpilot.cc [BRANCH] Improve perceived startup time by delaying
+  the loading of databases till the GUI is up.
+* options.h [BRANCH] To enforce discipline, use NO_ASCII_CAST.
+* {many files} [BRANCH] Clean up random char * conversions.
+  
 2003-2-1  Adriaan de Groot
 * Some time spent tracking down double activations of slowShowMemo().
 * memoWidget.{h,cc} [BRANCH] Removed double initialization. Removed
