@@ -105,6 +105,8 @@ public:
 		InstallFile, 
 		TestConnection 
 	};
+
+	virtual QString statusString() const = 0;
 } ;
 
 class KPilotDeviceLink : public KPilotLink
@@ -150,7 +152,7 @@ public:
 		} LinkStatus;
 
 	LinkStatus status() const { return fStatus; } ;
-	QString statusString() const;
+	virtual QString statusString() const;
 
 	/**
 	* True if HotSync has been started but not finished yet
@@ -215,6 +217,10 @@ signals:
 	void deviceReady();
 
 protected:
+	int pilotSocket() const { return fCurrentPilotSocket; } ;
+
+
+private:
 	/**
 	* Path of the device special file that will be used.
 	* Usually /dev/pilot, /dev/ttySx, or /dev/usb/x.
@@ -289,6 +295,9 @@ protected:
 #endif
 
 // $Log$
+// Revision 1.29  2001/09/06 22:04:27  adridg
+// Enforce singleton-ness & retry pi_bind()
+//
 // Revision 1.28  2001/09/05 21:53:51  adridg
 // Major cleanup and architectural changes. New applications kpilotTest
 // and kpilotConfig are not installed by default but can be used to test
