@@ -1,17 +1,44 @@
-- http result code handling (404, 200, etc.)
-- handling of errors returned in a valid dav response (Exchange)
-- conflict resolution
-- Error handling in the folder lister (cannot connect to host, timeout, etc.)
-- turn the flat folder list into a folder tree
-- Restore folder subscriptions on folder list refresh
-- If the user cancels, we need to reset the mUploadJob variable to 0 in the abook resource.
-- If an item was changed on the server (i.e. there's a local item, which cannot be found on the server), the local item needs to be removed on folder sync
+kresources/lib (general):
+===============
+-) http result code handling (404, 200, etc.)
+-) conflict resolution
+-) Error handling in the folder lister (cannot connect to host, timeout, etc.)
+-) turn the flat folder list into a folder tree
+-) Restore folder subscriptions on folder list refresh
+-) If the user cancels, we need to reset the mUploadJob variable to 0 in the 
+   abook resource.
+-) if there's an item in the local cache that cannot be bound on the server and
+   in the idMapper, mark it as added and try to upload it on save!
+-) reload libkcal resources in korganizer when config changes
+-) When download is finished, make new contacts appear in kaddressbook
+-) Use the username / password entered into the config dlg. For some reason 
+   each ioslave asks again with a password dialog...
+-) If upload fails, mark the item as changed/added/deleted again
+-) Don't ask immediately for uploading in korganizer, wait at least a 
+   QTimer::singleShot
 
 
-- recurrences on exchange
-- timezone for exchange
-- exdate on exchange
-- recurrences on ogo
-- reload libkcal resource when config changes
-- When download is finished, make new contacts appear in kaddressbook
-- In Exchange abook: if an address is removed, store the empty string to the server to delete the data from the server
+kresources/newexchange:
+=======================
+-) handling of errors returned in a valid dav response (Exchange)
+-) recurrences on exchange
+-) timezone for exchange
+-) exdate on exchange
+-) notifications from the server (old exchange resource has it!)
+-) In Exchange abook: if an address is removed, store the empty string to the
+   server to delete the data from the server
+
+
+kresources/groupdav:
+====================
+-) recurrences on ogo
+-) uploading abook entries don't work (server doesn't implement it yet)
+-) Overview and Calendar have the same items -> downloaded every time (same 
+   uid, different href, only one of them can be in the local cache -> the other
+   one is downloaded and replaces the current item, so on next folder sync the
+   first item is downloaded again and replaces the other one...)
+
+
+kresources/blogging:
+====================
+-) Upload of blog posts
