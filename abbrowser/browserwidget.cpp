@@ -26,7 +26,6 @@
 #include <qheader.h>
 #include <qapplication.h>
 #include <qclipboard.h>
-#include <qimageio.h>
 #include <qcheckbox.h>
 #include <qradiobutton.h>
 
