@@ -1,5 +1,5 @@
-#ifndef _KONSOLEKALENDAR_DELETE_H_
-#define _KONSOLEKALENDAR_DELETE_H_
+#ifndef _KONSOLEKALENDARDELETE_H_
+#define _KONSOLEKALENDARDELETE_H_
 
 /***************************************************************************
         konsolekaledardelete.h  -  description

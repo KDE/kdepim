@@ -1,3 +1,6 @@
+#ifndef KONSOLEKALENDAR_H
+#define KONSOLEKALENDAR_H
+
 /***************************************************************************
         konsolekalendar.h  -  description
            -------------------
@@ -15,8 +18,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KONSOLEKALENDAR_H
-#define KONSOLEKALENDAR_H
 
 #include <qdatetime.h>
 

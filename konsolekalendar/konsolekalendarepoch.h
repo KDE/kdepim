@@ -1,5 +1,5 @@
-#ifndef _KONSOLEKALENDAR_EPOCH_H_
-#define _KONSOLEKALENDAR_EPOCH_H_
+#ifndef _KONSOLEKALENDAREPOCH_H_
+#define _KONSOLEKALENDAREPOCH_H_
 
 /***************************************************************************
         konsolekalendarepoch.h  -  Epoch parsing routines

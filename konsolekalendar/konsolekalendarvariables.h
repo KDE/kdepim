@@ -1,5 +1,5 @@
-#ifndef _KONSOLEKALENDAR_VARIABLES_H_
-#define _KONSOLEKALENDAR_VARIABLES_H_
+#ifndef _KONSOLEKALENDARVARIABLES_H_
+#define _KONSOLEKALENDARVARIABLES_H_
 
 /***************************************************************************
         konsolekalendarvariables.h  -  description
