@@ -179,3 +179,13 @@ const QString& IdMapper::fingerprint( const QString &localId ) const
   else 
     return QString::null;
 }
+
+QMap<QString, QString> IdMapper::remoteIdMap() const
+{
+  QMap<QString, QString> reverseMap;
+  QMap<QString, QVariant>::ConstIterator it;
+  for ( it = mIdMap.begin(); it != mIdMap.end(); ++it ) {
+    reverseMap.insert( it.data().toString(), it.key() );
+  }
+  return reverseMap;
+}

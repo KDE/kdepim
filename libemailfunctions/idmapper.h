@@ -112,6 +112,9 @@ class IdMapper
 
     const QString &fingerprint( const QString &localId ) const;
 
+
+    QMap<QString, QString> remoteIdMap() const;
+
     /**
       Returns a string representation of the id pairs, that's usefull
       for debugging.
