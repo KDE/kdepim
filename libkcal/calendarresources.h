@@ -23,7 +23,6 @@
 
 #include <qintdict.h>
 #include <qmap.h>
-#include <qobject.h>
 
 #include "calendar.h"
 
@@ -37,7 +36,7 @@ class ResourceCalendar;
 /**
   This class provides a calendar stored as a local file.
 */
-class CalendarResources : public QObject, public Calendar, public KRES::ManagerListener<ResourceCalendar>
+class CalendarResources : public Calendar, public KRES::ManagerListener<ResourceCalendar>
 {
     Q_OBJECT
   public:
@@ -59,6 +58,8 @@ class CalendarResources : public QObject, public Calendar, public KRES::ManagerL
     void close();
 
     void save();
+
+    bool isSaving();
 
     /** Add Event to calendar. */
     void addEvent(Event *anEvent);

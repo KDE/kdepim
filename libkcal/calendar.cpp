@@ -31,7 +31,8 @@
 
 using namespace KCal;
 
-class AddIncidenceVisitor : public Incidence::Visitor {
+class AddIncidenceVisitor : public Incidence::Visitor
+{
   public:
     /** Add incidence to calendar \a calendar. */
     AddIncidenceVisitor( Calendar *calendar ) : mCalendar( calendar ) {}
@@ -343,3 +344,5 @@ QString Calendar::loadedProductId()
 {
   return mLoadedProductId;
 }
+
+#include "calendar.moc"

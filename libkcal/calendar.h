@@ -22,6 +22,7 @@
 #ifndef CALENDAR_H
 #define CALENDAR_H
 
+#include <qobject.h>
 #include <qstring.h>
 #include <qdatetime.h>
 #include <qptrlist.h>
@@ -55,8 +56,10 @@ class CalFilter;
   visible in the Calendar. You shouldn't delete any Event object you get from
   Calendar.
 */
-class Calendar : public CustomProperties, public IncidenceBase::Observer
+class Calendar : public QObject, public CustomProperties,
+                 public IncidenceBase::Observer
 {
+    Q_OBJECT
   public:
     Calendar();
     Calendar(const QString &timeZoneId);
@@ -71,7 +74,9 @@ class Calendar : public CustomProperties, public IncidenceBase::Observer
       Sync changes in memory to persistant storage.
     */
     virtual void save() = 0;
-  
+
+    virtual bool isSaving() { return false; }
+
     /**
       Return the owner of the calendar's full name.
     */
@@ -262,6 +267,11 @@ class Calendar : public CustomProperties, public IncidenceBase::Observer
       QString::null, if no calendar has been loaded.
     */
     QString loadedProductId();
+
+  signals:
+    void calendarChanged();
+    void calendarSaved();
+    void calendarLoaded();
 
   protected:
     /**

@@ -134,6 +134,18 @@ void CalendarResources::save()
   }
 }
 
+bool CalendarResources::isSaving()
+{
+  CalendarResourceManager::ActiveIterator it;
+  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+    if ( (*it)->isSaving() ) {
+      return true;
+    }
+  }
+  
+  return false;
+}
+
 void CalendarResources::addEvent(Event *anEvent)
 {
   kdDebug(5800) << "CalendarResources::addEvent" << endl;
@@ -537,6 +549,8 @@ void CalendarResources::connectResource( ResourceCalendar *resource )
 {
   connect( resource, SIGNAL( resourceChanged( ResourceCalendar * ) ),
            SIGNAL( calendarChanged() ) );
+  connect( resource, SIGNAL( resourceSaved( ResourceCalendar * ) ),
+           SIGNAL( calendarSaved() ) );
 }
 
 ResourceCalendar *CalendarResources::resource(Incidence *inc)

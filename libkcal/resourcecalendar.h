@@ -85,6 +85,8 @@ class ResourceCalendar : public QObject, public KRES::Resource
     */
     virtual bool save() = 0;
 
+    virtual bool isSaving() { return false; }
+
     /** Add Event to calendar. */
     virtual void addEvent(Event *anEvent) = 0;
 
