@@ -43,9 +43,9 @@ ICSPlugin::ICSPlugin( QObject *parent, const char *name, const QStringList& args
 
   addItemInfo( group, "ProductID",   i18n("Product ID"),     QVariant::String );
   addItemInfo( group, "Events",        i18n("Events"),         QVariant::Int );
-  addItemInfo( group, "Todos",         i18n("To-Dos"),         QVariant::Int );
-  addItemInfo( group, "TodoCompleted", i18n("Completed To-Dos"), QVariant::Int );
-  addItemInfo( group, "TodoOverdue",   i18n("Overdue To-Dos"), QVariant::Int );
+  addItemInfo( group, "Todos",         i18n("To-dos"),         QVariant::Int );
+  addItemInfo( group, "TodoCompleted", i18n("Completed To-dos"), QVariant::Int );
+  addItemInfo( group, "TodoOverdue",   i18n("Overdue To-dos"), QVariant::Int );
   addItemInfo( group, "Journals",      i18n("Journals"),       QVariant::Int );
 //   addItemInfo( group, "Reminders",     i18n("Reminders"),      QVariant::Int );
 
