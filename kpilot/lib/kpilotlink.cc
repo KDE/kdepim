@@ -822,7 +822,8 @@ unsigned long KPilotDeviceLink::minorVersion() const
 	return (((rom >> 20) & 0xf) * 10)+ ((rom >> 16) & 0xf);
 }
 
-/* static */ const int KPilotDeviceLink::messagesType= (int)OpenFailMessage ;
+/* static */ const int KPilotDeviceLink::messagesType=
+	(int)OpenFailMessage ;
 	
 void KPilotDeviceLink::shouldPrint(int m,const QString &s)
 {
