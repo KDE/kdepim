@@ -50,6 +50,7 @@ static const char *conduitconfigdialog_id =
 #include "kpilotConfigWizard_base3.h"
 
 #include "kpilotConfigWizard.moc"
+#include "kpilotProbeDialog.h"
 
 
 ConfigWizard::ConfigWizard(QWidget *parent, const char *n) :
@@ -118,6 +119,7 @@ void ConfigWizard::accept()
 			// TODO: Once the Evolution abook resource is finished, enable it...
 			conduits.remove("abbrowser_conduit");
 			// TODO: settings for conduits
+			KMessageBox::information(this, i18n("KPilot cannot yet synchronize the addressbook with Evolution, so the addressbook conduit was disabled.\nWhen syncing the calendar or todo list using KPilot, please quit Evolution before the sync, otherwise you will loose data."), i18n("Restrictions with Evolution"));
 			break;
 		case eAppKontact:
 			applicationName=i18n("KDE's PIM suite", "Kontact");
@@ -145,7 +147,11 @@ void ConfigWizard::accept()
 
 void ConfigWizard::probeHandheld()
 {
-	// TODO
-	KMessageBox::information(this, "Probing the handheld, not yet implemented", "Probing");
+	ProbeDialog *probeDialog = new ProbeDialog( this );
+	if ( probeDialog->exec() && probeDialog->detected() ) {
+		page2->fUserName->setText( probeDialog->userName() );
+		page2->fDeviceName->setText( probeDialog->device() );
+	}
+	KPILOT_DELETE(probeDialog);
 }
 

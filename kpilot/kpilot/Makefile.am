@@ -21,11 +21,12 @@ INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 libconfiguration_la_SOURCES = kpilotConfig.cc kpilotSettings.kcfgc
 libconfiguration_la_LDFLAGS = $(all_libraries)
 
-kcm_kpilot_la_SOURCES = kpilotConfigDialog.cc \
+kcm_kpilot_la_SOURCES = pilotDaemonDCOP.stub  kpilotConfigDialog.cc \
 	kpilotConfigDialog_base.ui \
 	kpilotConfigDialog2_base.ui \
 	kpilotConfigDialog3_base.ui \
 	conduitConfigDialog.cc \
+	kpilotProbeDialog.cc \
 	kpilotConfigWizard_base1.ui \
 	kpilotConfigWizard_base2.ui \
 	kpilotConfigWizard_base3.ui \

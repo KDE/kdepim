@@ -153,6 +153,10 @@ public:
 	virtual int nextSyncType() const;
 	virtual ASYNC quitNow();
 	virtual ASYNC reloadSettings();
+	
+	virtual void stopListening();
+	virtual void startListening();
+	virtual bool isListening() { return fIsListening; }
 	/** 
 	* Functions reporting same status data, e.g. for the kontact plugin.
 	*/
@@ -235,6 +239,7 @@ protected:
 	KPilotDCOP_stub &getKPilot() { return *fKPilotStub; } ;
 
 	LogFile*fLogFile;
+	bool fIsListening;
 
 private:
 	LoggerDCOP_stub *fLogStub;

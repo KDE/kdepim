@@ -472,6 +472,18 @@ void PilotDaemon::showTray()
 	updateTrayStatus();
 }
 
+/* DCOP */ void PilotDaemon::stopListening()
+{
+// TODO
+	fIsListening=false;
+}
+
+/* DCOP */ void PilotDaemon::startListening()
+{
+// TODO
+	fIsListening=true;
+}
+
 /* DCOP */ QString PilotDaemon::statusString()
 {
 	FUNCTIONSETUP;

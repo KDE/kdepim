@@ -1,6 +1,15 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-03-1x  Reinhold Kainhofer
+* Implemented a first version of the config wizard. The code to autodetect 
+  the device is not yet finished, though.
+* Extended the daemon DCOP interface to stop listening and start listening 
+  on the configured device (needed e.g. if some other application wants to 
+	bind to that device for some time, like the autodetect dialog needs to).
+	Here, also the code for really (de-)attaching to the device is not there 
+	yet, just the interface to the functions.
+
 2004-03-17  Adriaan de Groot
 * Ripped out all the dead and broken and useless code in the mail 
   conduit, fixed up the code that was left, reduced the size of the
@@ -11,6 +20,13 @@
 2004-03-15  Adriaan de Groot
 * Patches from David Mott and Jörn Ahrens today. Excellent!
 * Worked on the docs and website some.
+
+2004-03-14  Reinhold Kainhofer
+* Make sure the config is really read in in the vcal conduit's setup dlg.
+* also the conduit version number of the vcal conduit needs to be really 
+  written to the cfg file to make sure categories are really synced. So far, 
+	the version number was not written to the config, which resulted in a full
+	sync every time!
 
 2004-03-13  Adriaan de Groot
 * Stared at the screen for a while trying to think of how to test syncing
@@ -27,6 +43,16 @@
 * There will be tarballs of KPilot 4.4.2 soon; this will make it
   possible to get the bugfixes from Joern and Sebastian - and others -
   on your system now without waiting for another KDE release.
+
+2004-03-08  Reinhold Kainhofer
+* Ported all conduits' setup dialog to the new style and remove all old code
+* First steps for the config wizard.
+* Updated the malconduit to work with libmal 0.4, too (using configure 
+  checks, as the code is source-incompatible)
+* Moved the kpilot config page to the correct place in the kontact 
+  setup dlg hierarchy
+* Fixed a crash in the old-style conduits' setup code (widget was removed
+  in favor of some other, but code still tried to access it)
 
 2004-03-08  Adriaan de Groot
 * Wow, lots of activity by Reinhold. I hope he updates the ChangeLog
