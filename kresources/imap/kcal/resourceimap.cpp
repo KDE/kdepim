@@ -297,6 +297,8 @@ bool ResourceIMAP::addTodo(Todo *todo)
 bool ResourceIMAP::addTodo( Todo *todo, const QString& subresource )
 {
   const QString uid = todo->uid();
+  // Don't add todo's twice, CalendarLocal happily accepts duplicates :(
+  if ( mCalendar.todo( uid ) ) return true;
   mCalendar.addTodo( todo );
   todo->registerObserver( this );
 
