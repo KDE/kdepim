@@ -68,11 +68,10 @@ namespace KABPrinting {
         bool kdeFonts;
         QFont standard=KGlobalSettings::generalFont();
         QFont fixed=KGlobalSettings::fixedFont();
-        // ----- set the preview image:
-        setPreview("detailed-style.png"); // now that is simple, huh?
-        // ----- add our pages:
-        wizard()->insertPage(mPageAppearance, i18n("Appearance"), -1);
-        wizard()->setAppropriate(mPageAppearance, true);
+
+        setPreview( "detailed-style.png" );
+
+        addPage( mPageAppearance, i18n("Appearance") );
         // ----- set some values in the pages:
         // ----- now try to load previous settings from the
         // configuration file and set the UI items accordingly:
@@ -108,17 +107,10 @@ namespace KABPrinting {
         mPageAppearance->layout()->setMargin(KDialog::marginHint());
         mPageAppearance->layout()->setSpacing(KDialog::spacingHint());
         // ----- enable finish in our page:
-        wizard()->setFinishEnabled(mPageAppearance, true);
     }
 
     DetailledPrintStyle::~DetailledPrintStyle()
     {
-        // we have to delete the pages manually, since they are
-        // created as children of the wizard, that is, they are not
-        // deleted when the print style object is:
-        delete mPageAppearance;
-        mPageAppearance = 0;
-
         if( mEPntr != 0 )
           delete mEPntr;
         mEPntr = 0;
@@ -288,7 +280,7 @@ namespace KABPrinting {
 
     PrintStyle *DetailledPrintStyleFactory::create()
     {
-        return new DetailledPrintStyle(parent, name);
+        return new DetailledPrintStyle( mParent, mName );
     }
 
     QString DetailledPrintStyleFactory::description()

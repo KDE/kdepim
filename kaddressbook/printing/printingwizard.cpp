@@ -79,31 +79,35 @@ namespace KABPrinting {
         }
     }
 
-    void PrintingWizardImpl::slotStyleSelected(int index)
+    void PrintingWizardImpl::slotStyleSelected( int index )
     {
-        if(index>=0 && index<mBasicPage->cbStyle->count())
-        {
-            if(style!=0)
-            {
-                delete style;
-                style=0;
-            }
-            PrintStyleFactory *factory=styleFactories.at(index);
-            kdDebug() << "PrintingWizardImpl::slotStyleSelected: "
-                      << "creating print style "
-                      << factory->description() << endl;
-            style=factory->create();
-        }
-        const QPixmap& preview=style->preview();
-        mBasicPage->plPreview->setPixmap(preview); // reset it if it is Null
-        if(preview.isNull())
-        {
-            mBasicPage->plPreview->setText(i18n("(No preview available.)"));
-        }
-        if(pageCount()<=1) // the style did not add pages
-        {
-            setFinishEnabled(mBasicPage, style!=0);
-        }
+      if ( index < 0 || index >= styleFactories.count() )
+        return;
+
+      setFinishEnabled( mBasicPage, false );
+
+      if ( style )
+        style->hidePages();
+
+      if ( mStyleList.at( index ) != 0 )
+        style = mStyleList.at( index );
+      else {
+        PrintStyleFactory *factory = styleFactories.at( index );
+        kdDebug() << "PrintingWizardImpl::slotStyleSelected: "
+                  << "creating print style "
+                  << factory->description() << endl;
+        style = factory->create();
+        mStyleList.insert( index, style );
+      }
+
+      style->showPages();
+
+      const QPixmap& preview = style->preview();
+      mBasicPage->plPreview->setPixmap( preview );
+      if ( preview.isNull() )
+        mBasicPage->plPreview->setText( i18n( "(No preview available.)" ) );
+
+      setFinishEnabled( page( pageCount() - 1 ), true );
     }
 
     KABC::AddressBook* PrintingWizardImpl::document()

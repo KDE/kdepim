@@ -17,74 +17,91 @@
 #include <kstandarddirs.h>
 #include <kdebug.h>
 
+#include <qwidget.h>
+
 #include "printstyle.h"
 #include "printingwizard.h"
 
-namespace KABPrinting {
+using namespace KABPrinting;
 
-    PrintStyle::PrintStyle(PrintingWizard* parent, const char* name)
-        : QObject(parent, name),
-          mWizard(parent)
-    {
+
+PrintStyle::PrintStyle( PrintingWizard* parent, const char* name )
+  : QObject( parent, name ), mWizard( parent )
+{
+}
+
+PrintStyle::~PrintStyle()
+{
+}
+
+const QPixmap& PrintStyle::preview()
+{
+  return mPreview;
+}
+
+void PrintStyle::setPreview( const QPixmap& image )
+{
+  mPreview = image;
+}
+
+bool PrintStyle::setPreview( const QString& fileName )
+{
+  QPixmap preview;
+  QString path = locate( "appdata", "printing/" + fileName );
+  if ( path.isEmpty() ) {
+    kdDebug() << "PrintStyle::setPreview: preview not locatable." << endl;
+    return false;
+  } else {
+    if ( preview.load( path ) ) {
+      setPreview( preview );
+      return true;
+    } else {
+      kdDebug() << "PrintStyle::setPreview: preview at '" << path << "' cannot be loaded." << endl;
+      return false;
     }
+  }
+}
 
-    PrintStyle::~PrintStyle()
-    {
-    }
+PrintingWizard *PrintStyle::wizard()
+{
+  return mWizard;
+}
 
-    const QPixmap& PrintStyle::preview()
-    { // this is Null pixmap as long as nothing is assigned to it:
-        return mPreview;
-    }
+void PrintStyle::addPage( QWidget *page, const QString &title )
+{
+  if ( mPageList.find( page ) == -1 ) { // not yet in the list
+    mPageList.append( page );
+    mPageTitles.append( title );
+  }
+}
 
-    void PrintStyle::setPreview(const QPixmap& image)
-    {
-        mPreview=image; // we do not check for Null images etc
-    }
+void PrintStyle::showPages()
+{
+  QWidget *wdg = 0;
+  int i = 0;
+  for ( wdg = mPageList.first(); wdg; wdg = mPageList.next(), ++i ) {
+    mWizard->addPage( wdg, mPageTitles[ i ] );
+    if ( i == 0 )
+      mWizard->setAppropriate( wdg, true );
+  }
 
-    bool PrintStyle::setPreview(const QString& filename)
-    {
-        // ----- locate the preview image and set it:
-        QPixmap preview;
-        QString file=(QString)"printing/";
-        file.append(filename);
-        QString path=locate("appdata", file);
-        if(path.isNull())
-        {
-            kdDebug() << "PrintStyle::setPreview: preview not locatable." << endl;
-            return false;
-        } else {
-            if(preview.load(path))
-            {
-                setPreview(preview);
-                return true;
-            } else {
-                kdDebug() << "PrintStyle::setPreview: preview at "
-                          << path << " cannot be loaded."
-                          << endl;
-                return false;
-            }
-        }
+  if ( wdg )
+    mWizard->setFinishEnabled( wdg, true );
+}
 
+void PrintStyle::hidePages()
+{
+  for ( QWidget *wdg = mPageList.first(); wdg; wdg = mPageList.next() )
+    mWizard->removePage( wdg );
+}
 
-    }
+PrintStyleFactory::PrintStyleFactory( PrintingWizard* parent, const char* name )
+        : mParent( parent ), mName( name )
+{
+}
 
-    PrintingWizard *PrintStyle::wizard()
-    {
-        return mWizard;
-    }
-
-    PrintStyleFactory::PrintStyleFactory(PrintingWizard* parent_,
-                                         const char* name_)
-        : parent(parent_),
-          name(name_)
-    {
-    }
-
-    PrintStyleFactory::~PrintStyleFactory()
-    {
-    }
-
+PrintStyleFactory::~PrintStyleFactory()
+{
 }
 
 #include "printstyle.moc"

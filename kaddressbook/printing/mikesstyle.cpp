@@ -268,7 +268,7 @@ namespace KABPrinting
 
     PrintStyle *MikesStyleFactory::create()
     {
-        return new MikesStyle(parent, name);
+        return new MikesStyle( mParent, mName );
     }
 
     QString MikesStyleFactory::description()

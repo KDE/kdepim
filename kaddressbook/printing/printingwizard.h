@@ -64,6 +64,7 @@ namespace KABPrinting {
         void slotStyleSelected(int);
     protected:
         QPtrList<PrintStyleFactory> styleFactories;
+        QPtrList<PrintStyle> mStyleList;
         PrintStyle *style;
         /** The general page. */
         BasicPage *mBasicPage;
