@@ -265,9 +265,12 @@ default formatted name type for new contacts, use the <link linkend="preferences
 <sect2 id="managing-contacts-im-addresses">
 <title>Instant Messaging</title>
 <para>
+  The <guilabel>IM Address</guilable> text entry holds the standard Instant Messaging Address for this contact.  Further IM Addresses can be viewed, added and editted by choosing <guilabel>Edit IM Addresses...</guilabel>.  
+</para>
+<para>
   A contact can have multiple instant messaging addresses associated with it.  At the time of writing, <application>Kopete</application> and
   <application>Konversation</application> store their information here.  It is recommended that you add and edit instant messaging addresses
-  in <application>Kopete</application> or <application>Konversation</application> as applicable rather than here, since they can assist you better in adding the address, adding the user to a group, and so on.  If you are not interested in whether they are picked up in another application, and just want to store the instant messaging address with the contact, then it is fine to add and edit it here.
+  in <application>Kopete</application> or <application>Konversation</application> rather than here, since they can assist you better in adding the address, adding the user to a group, and so on.  If you are not interested in whether they are picked up in another application, and just want to store the instant messaging address with the contact, then it is fine to add and edit it here.
 </para>
 </sect2>
 
