@@ -1,7 +1,5 @@
-KPilot Developer's notes for febrary 2nd 2002
-=============================================
-
-There is no fun story yet.
+KPilot Developer's notes for february 2nd 2002
+==============================================
 
 2002-01-26  Adriaan de Groot
 * Wherever
@@ -9,10 +7,32 @@ There is no fun story yet.
   - Doubleclick on conduit in active column configures it.
   - Fixed some compile problems under KDE3.
   - Messed around with the vcal conduit.
+  - Configuring conduits resets the daemon.
+  - You can't reset the daemon during a sync; replaced fQuitAfterSync.
 
 I'm starting to think the logWidget belongs with the *daemon*
 (and should be showable from the daemon's context menu), not
 from KPilot (which should be just a viewer). Opinions?
+
+2002-01-27  Adriaan de Groot
+* Wherever
+  - Got rid of the remaining dlp_ functions in code outside
+    of kpilotlink.cc and pilotSerialDatabase.cc. This leaves the pi_ stuff.
+
+Development of KPilot is now done on a 80x25 serial terminal running at
+38400 baud. I have no idea what kind of effect this will have, but it means
+I can sit on the couch and do devel work :)
+
+2002-02-02  Adriaan de Groot
+* lib/kpilotlink.{h,cc}
+  - Continue moving pilot-link related things (pi_*) into the KPilotLink
+    class, so that Dag might have an easier time of it.
+* lib/options.cc
+  - Removed some messy #ifdef DEBUG stuff, with debugging enabled
+    call tracing is now default on.
+* kpilot/logWidget.cc
+  - Added some text stating that KPilot is really alpha. Noone will read
+    this, of course, and it will only piss off the translators.
 
 KPilot Developer's notes for january 25th 2002
 ==============================================
