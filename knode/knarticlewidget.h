@@ -117,6 +117,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     bool canDecode8BitText(const QCString &charset);
     QString toHtmlString(const QString &line, bool parseURLs=false, bool beautification=false, bool allowRot13=false, bool strictURLparsing=false);
     void openURL(const QString &url);
+    void addBookmarks(const QString &url);
     void saveAttachment(int id);
     void openAttachment(int id);
     bool inlinePossible(KMime::Content *c);

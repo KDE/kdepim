@@ -55,12 +55,15 @@
 #include "knode.h"
 #include <kpopupmenu.h>
 #include <kstandarddirs.h>
+#include <kbookmarkmanager.h>
+
 
 #define PUP_OPEN    1000
 #define PUP_SAVE    2000
 #define PUP_COPYURL 3000
 #define PUP_SELALL  4000
 #define PUP_COPY    5000
+#define PUP_ADDBOOKMARKS 6000
 
 #define HDR_COL   0
 #define QCOL_1    1
@@ -144,6 +147,9 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   u_rlPopup=new KPopupMenu();
   u_rlPopup->insertItem(SmallIcon("fileopen"),i18n("&Open Link"), PUP_OPEN);
   u_rlPopup->insertItem(SmallIcon("editcopy"),i18n("&Copy Link Location"), PUP_COPYURL);
+  u_rlPopup->insertItem(SmallIcon("bookmark_add"),i18n("Add to Bookmarks"), PUP_ADDBOOKMARKS);
+
+
   a_ttPopup=new KPopupMenu();
   a_ttPopup->insertItem(SmallIcon("fileopen"),i18n("&Open Attachment"), PUP_OPEN);
   a_ttPopup->insertItem(SmallIcon("filesave"),i18n("&Save Attachment..."), PUP_SAVE);
@@ -754,6 +760,17 @@ bool KNArticleWidget::findExec( const QString & exec)
         return false;
     }
     return true;
+}
+
+void KNArticleWidget::addBookmarks(const QString &url)
+{
+    if(url.isEmpty()) return;
+    QString filename = locateLocal( "data", QString::fromLatin1("konqueror/bookmarks.xml") );
+    KBookmarkManager *bookManager = KBookmarkManager::managerForFile( filename,
+                                                                      false );
+    KBookmarkGroup group = bookManager->root();
+    group.addBookmark( bookManager, url, KURL( url ) );
+    bookManager->save();
 }
 
 void KNArticleWidget::openURL(const QString &url)
@@ -1580,6 +1597,10 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
         case PUP_COPYURL:
           QApplication::clipboard()->setText(target);
         break;
+      case PUP_ADDBOOKMARKS:
+          addBookmarks(target );
+          break;
+
       }
     }
   }
