@@ -3,7 +3,8 @@ Things to be done for the JPilotPluginProxy conduit (in order of importance):
 
 -) Make the jp_* functions available so that loading a plugin no longer crashes
 -) enable adding a plugin path and automatically loading all plugins there (connot be done as long as loading most plugins crashes KPilot)
--) Make sure it sync correctly
+-) Make sure it syncs correctly
 -) Write out the log messages from the JPilot plugins to the log window in KPilot (emit logMessage, maybe have to connect a signal, or just reimplement jpilot_printf?)
+-) check for gtk with autoconf
 -) Write a QGtkDialog which embeds the GtkWidget for the plugin settings. AFAIK this needs the message loop for the modal dialogbox to be rewritten
--) Lots of other things 
+-) Lots of other things

@@ -18,11 +18,28 @@
 #ifndef __APIEMULATION_H__
 #define __APIEMULATION_H__
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "libplugin.h"
+
+
 
 #undef jp_logf
 
-int jp_pref_init();
+#define MAX_PREF_VALUE 80
+
+#define INTTYPE 1
+#define CHARTYPE 2
+
+typedef struct {
+   char *name;
+   int usertype;
+   int filetype;
+   long ivalue;
+   char *svalue;
+   int svalue_size;
+} prefType;
+
 
 int jpilot_logf(int level, char *format, ...);
 int jp_logf(int level, char *format, ...);
@@ -30,13 +47,25 @@ int jp_logf(int level, char *format, ...);
  * plugins start with jp or jpilot?
  */
 //#define jp_logf jpilot_logf
+
+
+// backup, mail, mal:
+int get_home_file_name(char *file, char *full_name, int max_size);
+// mail:
+FILE *jp_open_home_file(char *filename, char *mode);
+// backup, mal
+int jp_get_pref (prefType prefs[], int which, long *n, const char **ret);
+int jp_set_pref (prefType prefs[], int which, long n, const char *string);
+// mal
+void jp_pref_init(prefType prefs[], int count);
+char *pref_lstrncpy_realloc(char **dest, const char *src, int *size, int max_size);
+// backup, mal
+int jp_pref_read_rc_file(char *filename, prefType prefs[], int num_prefs);
+int jp_pref_write_rc_file(char *filename, prefType prefs[], int num_prefs);
+
+
 /*
 // backup:
-get_home_file_name
-jp_get_pref
-jp_pref_read_rc_file
-jp_pref_write_rc_file
-jp_set_pref
 
 // expense
 dialog_save_changed_record
@@ -56,18 +85,10 @@ MD5
 // mail
 gdk_color_alloc
 get_app_info_size
-get_home_file_name
 get_next_unique_pc_id
-jp_open_home_file
 rename_file
 
 // mal
-get_home_file_name
-jp_get_pref
-jp_pref_init
-jp_pref_read_rc_file
-jp_pref_write_rc_file
-jp_set_pref
 
 
 //libsynctime should work!!!
