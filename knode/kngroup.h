@@ -19,7 +19,7 @@
 
 #include "knarticlecollection.h"
 #include "knjobdata.h"
-#include "knmime.h"
+#include "knarticle.h"
 
 class QStrList;
 

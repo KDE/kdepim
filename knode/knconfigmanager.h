@@ -75,7 +75,7 @@ class KNConfigDialog : public KDialogBase {
     ~KNConfigDialog();
 
   protected:
-    QList<KNConfig::BaseWidget> w_idgets;
+    QPtrList<KNConfig::BaseWidget> w_idgets;
     KNConfigManager *m_anager;
 
   protected slots:

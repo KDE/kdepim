@@ -45,7 +45,6 @@
 #include "knarticlewindow.h"
 #include "knarticlewidget.h"
 #include "kngroupmanager.h"
-#include "knstringsplitter.h"
 #include "knmemorymanager.h"
 
 
@@ -236,7 +235,7 @@ QSortedList<KNGroupInfo>* KNGroupListData::extractList()
 KNGroupManager::KNGroupManager(KNArticleManager *a, QObject * parent, const char * name)
   : QObject(parent,name)
 {
-  g_List=new QList<KNGroup>;
+  g_List=new QPtrList<KNGroup>;
   g_List->setAutoDelete(true);
   c_urrentGroup=0;
   a_rticleMgr=a;
@@ -294,7 +293,7 @@ void KNGroupManager::getSubscribed(KNNntpAccount *a, QStringList &l)
 }
 
 
-void KNGroupManager::getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l)
+void KNGroupManager::getGroupsOfAccount(KNNntpAccount *a, QPtrList<KNGroup> *l)
 {
   l->clear();
   for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
@@ -303,7 +302,7 @@ void KNGroupManager::getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l)
 }
 
 
-void KNGroupManager::getAllGroups(QList<KNGroup> *l)
+void KNGroupManager::getAllGroups(QPtrList<KNGroup> *l)
 {
   l->clear();
   l->setAutoDelete(false);

@@ -23,7 +23,8 @@
 #include <klocale.h>
 #include <kscoringeditor.h>
 
-#include "knmime.h"
+#include <kmime_headers.h>
+
 #include "knscoring.h"
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"
@@ -77,7 +78,7 @@ QString KNScorableArticle::subject() const
 
 QString KNScorableArticle::getHeaderByType(const QString& s) const
 {
-  KNHeaders::Base *h = _a->getHeaderByType(s.latin1());
+  KMime::Headers::Base *h = _a->getHeaderByType(s.latin1());
   if (!h) return "";
   QString t = _a->getHeaderByType(s.latin1())->asUnicodeString();
   ASSERT( t );

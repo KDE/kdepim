@@ -19,7 +19,7 @@
 #include <klocale.h>
 #include <qtextcodec.h>
 
-#include "knmime.h"
+#include "knarticle.h"
 #include "kngroup.h"
 #include "kngroupmanager.h"
 #include "knjobdata.h"

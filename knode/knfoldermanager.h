@@ -17,7 +17,14 @@
 #ifndef KNFOLDERMANAGER_H
 #define KNFOLDERMANAGER_H
 
-#include <qlist.h>
+#include <qglobal.h>
+#if QT_VERSION >= 290
+#  include <qptrlist.h>
+#else
+#  include <qlist.h>
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
 
 class KNListView;
 class KNFolder;
@@ -77,7 +84,7 @@ class KNFolderManager
     void createListItem(KNFolder *f);
         
     KNFolder  *c_urrentFolder;
-    QList<KNFolder> f_List;
+    QPtrList<KNFolder> f_List;
     int l_astId;
     KNListView *v_iew;
     KNArticleManager *a_rtManager;

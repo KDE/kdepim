@@ -19,7 +19,7 @@
 #include "knmemorymanager.h"
 #include "kngroup.h"
 #include "knfolder.h"
-#include "knmime.h"
+#include "knarticle.h"
 #include "knglobals.h"
 #include "knconfig.h"
 #include "knconfigmanager.h"
@@ -157,7 +157,7 @@ void KNMemoryManager::checkMemoryUsageCollections()
   KNArticleCollection *c=0;
 
   if (c_ollCacheSize > maxSize) {
-    QList<CollectionItem> tempList(c_olList);  // work on a copy, KNGroup-/Foldermanager will
+    QPtrList<CollectionItem> tempList(c_olList);  // work on a copy, KNGroup-/Foldermanager will
                                                // modify the original list
 
     for( CollectionItem *ci = tempList.first(); ci && (c_ollCacheSize > maxSize); ci = tempList.next() ) {
@@ -182,7 +182,7 @@ void KNMemoryManager::checkMemoryUsageArticles()
   int maxSize = knGlobals.cfgManager->readNewsGeneral()->artCacheSize() * 1024;
 
   if (a_rtCacheSize > maxSize) {
-    QList<ArticleItem> tempList(a_rtList);  // work on a copy, KNArticlemanager will
+    QPtrList<ArticleItem> tempList(a_rtList);  // work on a copy, KNArticlemanager will
                                             // modify the original list
 
     for( ArticleItem *ci = tempList.first(); ci && (a_rtCacheSize > maxSize); ci = tempList.next() )

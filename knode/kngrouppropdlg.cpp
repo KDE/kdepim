@@ -30,7 +30,7 @@
 #include "kngroup.h"
 #include "kngrouppropdlg.h"
 #include "knconfig.h"
-#include "knmime.h"
+#include "knarticle.h"
 
 
 KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name )

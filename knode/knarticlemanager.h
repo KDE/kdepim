@@ -20,7 +20,7 @@
 #include <qlist.h>
 
 #include "knjobdata.h"
-#include "knmime.h"
+#include "knarticle.h"
 
 class QListViewItem;
 
@@ -48,10 +48,10 @@ class KNArticleManager : public QObject, public KNJobConsumer {
 
     //content handling
     void deleteTempFiles();
-    void saveContentToFile(KNMimeContent *c, QWidget *parent);
+    void saveContentToFile(KMime::Content *c, QWidget *parent);
     void saveArticleToFile(KNArticle *a, QWidget *parent);
-    QString saveContentToTemp(KNMimeContent *c);
-    void openContent(KNMimeContent *c);
+    QString saveContentToTemp(KMime::Content *c);
+    void openContent(KMime::Content *c);
 
     //listview handling
     void showHdrs(bool clear=true);

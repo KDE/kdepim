@@ -30,8 +30,9 @@
 #include <klineedit.h>
 #include <kprocess.h>
 
+#include <kmime_util.h>
+
 #include "knconvert.h"
-#include "knmime.h"
 #include "resource.h"
 
 
@@ -415,10 +416,10 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
     ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
     newIdx.so=dstMBox.at(); //save start-offset
     ts << "X-KNode-Overview: ";
-    ts << KNMimeBase::extractHeader(buff, "Subject") << '\t';
-    ts << KNMimeBase::extractHeader(buff, "Newsgroups") << '\t';
-    ts << KNMimeBase::extractHeader(buff, "To") << '\t';
-    ts << KNMimeBase::extractHeader(buff, "Lines") << '\n';
+    ts << KMime::extractHeader(buff, "Subject") << '\t';
+    ts << KMime::extractHeader(buff, "Newsgroups") << '\t';
+    ts << KMime::extractHeader(buff, "To") << '\t';
+    ts << KMime::extractHeader(buff, "Lines") << '\n';
     ts << buff;
     newIdx.eo=dstMBox.at(); //save end-offset
     ts << '\n';

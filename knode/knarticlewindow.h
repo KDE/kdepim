@@ -19,6 +19,11 @@
 
 #include <kmainwindow.h>
 
+#if QT_VERSION < 290
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
+
 class KToggleAction;
 class KNArticle;
 class KNArticleWidget;
@@ -43,7 +48,7 @@ class KNArticleWindow : public KMainWindow  {
     KAccel *a_ccel;
     KNArticleWidget *artW;
     KToggleAction *a_ctShowToolbar;
-    static QList<KNArticleWindow> instances;
+    static QPtrList<KNArticleWindow> instances;
     
   protected slots:
     void slotFileClose();

@@ -22,7 +22,7 @@
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "knhdrviewitem.h"
-#include "knmime.h"
+#include "knarticle.h"
 
 
 KNHdrViewItem::KNHdrViewItem(KNListView *ref, KNArticle *a) :
@@ -76,7 +76,7 @@ void KNHdrViewItem::clearFontCache()
 
 bool KNHdrViewItem::greyOut()
 {
-  if(art->type()==KNMimeBase::ATremote)
+  if(art->type()==KMime::Base::ATremote)
     return (  !((KNRemoteArticle*)art)->hasUnreadFollowUps() &&
               ((KNRemoteArticle*)art)->isRead() );
   else return false;
@@ -85,7 +85,7 @@ bool KNHdrViewItem::greyOut()
 
 bool KNHdrViewItem::firstColBold()
 {
-  if(art->type()==KNMimeBase::ATremote)
+  if(art->type()==KMime::Base::ATremote)
     return ( static_cast<KNRemoteArticle*>(art)->isNew() );
   else
     return false;
@@ -94,7 +94,7 @@ bool KNHdrViewItem::firstColBold()
 
 QColor KNHdrViewItem::normalColor()
 {
-  if (art->type()==KNMimeBase::ATremote) {
+  if (art->type()==KMime::Base::ATremote) {
     KNRemoteArticle *rart = static_cast<KNRemoteArticle*>(art);
     return rart->color();
   }
@@ -120,7 +120,7 @@ const QFont& KNHdrViewItem::fontForColumn(int col, const QFont &font)
     cs = art->subject()->rfc2047Charset();
   }
   else {
-    if(art->type()==KNMimeBase::ATremote)
+    if(art->type()==KMime::Base::ATremote)
       cs = art->from()->rfc2047Charset();
     else
       cs = art->to()->rfc2047Charset();

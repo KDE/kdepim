@@ -150,7 +150,7 @@ void KNFilterManager::saveFilterLists()
   }
   KSimpleConfig conf(dir+"filters.rc");
   QValueList<int> activeFilters;
-  QListIterator<KNArticleFilter> it(fList);
+  QPtrListIterator<KNArticleFilter> it(fList);
   for ( ; it.current(); ++it )
     activeFilters << it.current()->id();
 
@@ -215,7 +215,7 @@ void KNFilterManager::addFilter(KNArticleFilter *f)
 {
   if(f->id()==-1) {      // new filter, find suitable ID
     QValueList<int> activeFilters;
-    QListIterator<KNArticleFilter> it(fList);  // ok, this is a ugly hack:
+    QPtrListIterator<KNArticleFilter> it(fList);  // ok, this is a ugly hack:
     for ( ; it.current(); ++it )               // we want to reuse old id's, so we
       activeFilters << it.current()->id();     // try to find the first unused id.
     int newId = 1;

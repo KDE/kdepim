@@ -20,7 +20,7 @@
 #include <time.h>
 
 #include "utilities.h"
-#include "knmime.h"
+#include "knarticle.h"
 #include "knarticlecollection.h"
 
 

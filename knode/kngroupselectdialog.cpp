@@ -24,7 +24,6 @@
 #include <kmessagebox.h>
 
 #include "utilities.h"
-#include "knstringsplitter.h"
 #include "kngroupselectdialog.h"
 #include "kngroupmanager.h"
 

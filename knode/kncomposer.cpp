@@ -42,14 +42,15 @@
 #include <kprocess.h>
 #include <ktempfile.h>
 
+#include <kqcstringsplitter.h>
+
 #include "kngroupmanager.h"
 #include "kngroupselectdialog.h"
-#include "knstringsplitter.h"
 #include "utilities.h"
 #include "knglobals.h"
 #include "kncomposer.h"
 #include "knode.h"
-#include "knmime.h"
+#include "knarticle.h"
 #include "knconfigmanager.h"
 #include "knaccountmanager.h"
 #include "knnntpaccount.h"
@@ -344,7 +345,7 @@ bool KNComposer::hasValidData()
     KMessageBox::sorry(this, i18n("Please enter a subject!"));
     return false;
   }
-  if (!n_eeds8Bit && !KNHelper::isUsAscii(v_iew->s_ubject->text()))
+  if (!n_eeds8Bit && !KMime::isUsAscii(v_iew->s_ubject->text()))
     n_eeds8Bit=true;
 
   if (m_ode != mail) {
@@ -388,7 +389,7 @@ bool KNComposer::hasValidData()
       KMessageBox::sorry(this, i18n("Please enter the mail-address!"));
       return false;
     }
-    if (!n_eeds8Bit && !KNHelper::isUsAscii(v_iew->t_o->text()))
+    if (!n_eeds8Bit && !KMime::isUsAscii(v_iew->t_o->text()))
       n_eeds8Bit=true;
   }
 
@@ -404,14 +405,14 @@ bool KNComposer::hasValidData()
   for(int i=0; i<v_iew->e_dit->numLines(); i++) {
     line=v_iew->e_dit->textLine(i);
 
-    if (!n_eeds8Bit && !KNHelper::isUsAscii(line))
+    if (!n_eeds8Bit && !KMime::isUsAscii(line))
       n_eeds8Bit=true;
 
     if (line == "-- ") {   // signature text
       for (int j=i+1; j<v_iew->e_dit->numLines(); j++) {
         line=v_iew->e_dit->textLine(j);
 
-        if (!n_eeds8Bit && !KNHelper::isUsAscii(line))
+        if (!n_eeds8Bit && !KMime::isUsAscii(line))
           n_eeds8Bit=true;
 
         sigLength++;
@@ -479,7 +480,7 @@ bool KNComposer::hasValidData()
 
 void KNComposer::applyChanges()
 {
-  KNMimeContent *text=0;
+  KMime::Content *text=0;
   KNAttachment *a=0;
 
   //Date
@@ -490,7 +491,7 @@ void KNComposer::applyChanges()
 
   //Newsgroups
   if (m_ode != mail) {
-    a_rticle->newsgroups()->fromUnicodeString(v_iew->g_roups->text(), KNHeaders::Latin1);
+    a_rticle->newsgroups()->fromUnicodeString(v_iew->g_roups->text(), KMime::Headers::Latin1);
     a_rticle->setDoPost(true);
   } else
     a_rticle->setDoPost(false);
@@ -504,7 +505,7 @@ void KNComposer::applyChanges()
 
   //Followup-To
   if( a_rticle->doPost() && !v_iew->f_up2->currentText().isEmpty())
-    a_rticle->followUpTo()->fromUnicodeString(v_iew->f_up2->currentText(), KNHeaders::Latin1);
+    a_rticle->followUpTo()->fromUnicodeString(v_iew->f_up2->currentText(), KMime::Headers::Latin1);
   else
     a_rticle->removeHeader("Followup-To");
 
@@ -531,9 +532,9 @@ void KNComposer::applyChanges()
   text=a_rticle->textContent();
 
   if(!text) {
-    text=new KNMimeContent();
-    KNHeaders::ContentType *type=text->contentType();
-    KNHeaders::CTEncoding *enc=text->contentTransferEncoding();
+    text=new KMime::Content();
+    KMime::Headers::ContentType *type=text->contentType();
+    KMime::Headers::CTEncoding *enc=text->contentTransferEncoding();
     type->setMimeType("text/plain");
     enc->setDecoded(true);
     text->assemble();
@@ -546,19 +547,19 @@ void KNComposer::applyChanges()
     if (n_eeds8Bit) {
       text->contentType()->setCharset(c_harset);
       if (pnt->allow8BitBody())
-        text->contentTransferEncoding()->setCte(KNHeaders::CE8Bit);
+        text->contentTransferEncoding()->setCte(KMime::Headers::CE8Bit);
       else
-        text->contentTransferEncoding()->setCte(KNHeaders::CEquPr);
+        text->contentTransferEncoding()->setCte(KMime::Headers::CEquPr);
     } else {
       text->contentType()->setCharset("us-ascii");   // fall back to us-ascii
-      text->contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
+      text->contentTransferEncoding()->setCte(KMime::Headers::CE7Bit);
     }
   } else {             // save as draft
     text->contentType()->setCharset(c_harset);
     if (c_harset.lower()=="us-ascii")
-      text->contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
+      text->contentTransferEncoding()->setCte(KMime::Headers::CE7Bit);
     else
-      text->contentTransferEncoding()->setCte(pnt->allow8BitBody()? KNHeaders::CE8Bit : KNHeaders::CEquPr);
+      text->contentTransferEncoding()->setCte(pnt->allow8BitBody()? KMime::Headers::CE8Bit : KMime::Headers::CEquPr);
   }
 
   //auto-wrapped lines in v_iew->e_dit don't get an "\n", so we have to
@@ -624,11 +625,11 @@ void KNComposer::initData(const QString &text)
   v_iew->t_o->setText(a_rticle->to()->asUnicodeString());
 
   //Followup-To
-  KNHeaders::FollowUpTo *fup2=a_rticle->followUpTo(false);
+  KMime::Headers::FollowUpTo *fup2=a_rticle->followUpTo(false);
   if(fup2 && !fup2->isEmpty())
     v_iew->f_up2->lineEdit()->setText(fup2->asUnicodeString());
 
-  KNMimeContent *textContent=a_rticle->textContent();
+  KMime::Content *textContent=a_rticle->textContent();
   QString s;
 
   if(text.isEmpty()) {
@@ -659,11 +660,11 @@ void KNComposer::initData(const QString &text)
 
   if(a_rticle->contentType()->isMultipart()) {
     v_iew->showAttachmentView();
-    KNMimeContent::List attList;
+    KMime::Content::List attList;
     AttachmentViewItem *item=0;
     attList.setAutoDelete(false);
     a_rticle->attachments(&attList);
-    for(KNMimeContent *c=attList.first(); c; c=attList.next()) {
+    for(KMime::Content *c=attList.first(); c; c=attList.next()) {
       item=new AttachmentViewItem(v_iew->a_ttView, new KNAttachment(c));
     }
   }
@@ -1151,7 +1152,7 @@ void KNComposer::slotSubjectChanged(const QString &t)
 
 void KNComposer::slotGroupsChanged(const QString &t)
 {
-  KNStringSplitter split;
+  KQCStringSplitter split;
   bool splitOk;
   QString currText=v_iew->f_up2->currentText();
 

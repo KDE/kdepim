@@ -19,6 +19,10 @@
 
 #include <qbitarray.h>
 
+#if QT_VERSION < 290
+#  define QMemArray QArray
+#endif
+
 #include <klistview.h>
 
 class KNListView;
@@ -102,7 +106,7 @@ class KNListView : public KListView  {
     bool s_ortAsc;
     int s_ortCol, d_elayedCenter;
     KNLVItemBase *a_ctiveItem;
-    QArray<const char*> a_cceptableDropMimetypes;
+    QMemArray<const char*> a_cceptableDropMimetypes;
     QBitArray a_cceptOutside;
     bool k_eepSelection;
 

@@ -23,6 +23,12 @@
 #include <kdialogbase.h>
 #include <keditcl.h>
 
+#if QT_VERSION < 290
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
+
+
 class QGroupBox;
 
 class KProcess;
@@ -31,7 +37,7 @@ class KSelectAction;
 class KToggleAction;
 
 class KNLocalArticle;
-class KNMimeContent;
+//class KMime::Content;
 class KNAttachment;
 
 
@@ -102,7 +108,7 @@ class KNComposer : public KMainWindow  {
     KSpell *s_pellChecker;
 
     //Attachments
-    QList<KNAttachment> d_elAttList;
+    QPtrList<KNAttachment> d_elAttList;
     bool a_ttChanged;
 
   //------------------------------ <Actions> -----------------------------

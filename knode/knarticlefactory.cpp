@@ -138,7 +138,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   art->subject()->fromUnicodeString(subject, a->subject()->rfc2047Charset());
 
   //newsgroups
-  KNHeaders::FollowUpTo *fup2=a->followUpTo(false);
+  KMime::Headers::FollowUpTo *fup2=a->followUpTo(false);
   if(fup2 && !fup2->isEmpty()) {
     if(fup2->as7BitString(false).upper()=="POSTER") { //Followup-To: poster
       if (post)         // warn the user
@@ -155,8 +155,8 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
     art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false));
 
   //To
-  KNHeaders::ReplyTo *replyTo=a->replyTo(false);
-  KNHeaders::AddressField address;
+  KMime::Headers::ReplyTo *replyTo=a->replyTo(false);
+  KMime::Headers::AddressField address;
   if(replyTo && !replyTo->isEmpty()) {
     if(replyTo->hasName())
       address.setName(replyTo->name());
@@ -164,7 +164,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
       address.setEmail(replyTo->email().copy());
   }
   else {
-    KNHeaders::From *from=a->from();
+    KMime::Headers::From *from=a->from();
     if(from->hasName())
       address.setName(from->name());
     if(from->hasEmail())
@@ -173,7 +173,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   art->to()->addAddress(address);
 
   //References
-  KNHeaders::References *references=a->references(false);
+  KMime::Headers::References *references=a->references(false);
   QCString refs;
   if (references)
     refs=references->as7BitString(false);
@@ -186,7 +186,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   //Mail-Copies-To
   bool authorDislikesMailCopies=false;
   bool authorWantsMailCopies=false;
-  KNHeaders::MailCopiesTo *mailCopiesTo=a->mailCopiesTo(false);
+  KMime::Headers::MailCopiesTo *mailCopiesTo=a->mailCopiesTo(false);
 
   if(mailCopiesTo && !mailCopiesTo->isEmpty() && mailCopiesTo->isValid()) {
     authorDislikesMailCopies = mailCopiesTo->neverCopy();
@@ -225,7 +225,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   bool incSig=knGlobals.cfgManager->postNewsComposer()->includeSignature();
 
   if (selectedText.isEmpty()) {
-    KNMimeContent *tc = a->textContent();
+    KMime::Content *tc = a->textContent();
     if(tc)
       tc->decodedText(text, true);
   }
@@ -275,7 +275,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   if(!a)
     return;
 
-  KNHeaders::ContentType *ct=a->contentType();
+  KMime::Headers::ContentType *ct=a->contentType();
   QCString chset;
   bool incAtt = ( !knGlobals.cfgManager->postNewsTechnical()->useExternalMailer() &&
                   ct->isMultipart() && ct->isSubtype("mixed") &&
@@ -313,7 +313,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   fwd+=( i18n(" From")+": "+a->from()->asUnicodeString()+"\n");
   fwd+=( i18n(" Date")+": "+a->date()->asUnicodeString()+"\n\n");
 
-  KNMimeContent *text=a->textContent();
+  KMime::Content *text=a->textContent();
   if(text) {
     QStringList decodedLines;
     text->decodedText(decodedLines, true);
@@ -329,11 +329,11 @@ void KNArticleFactory::createForward(KNArticle *a)
   //------------------------ <Attachments> -------------------------
 
   if(incAtt) {
-    KNMimeContent::List al;
+    KMime::Content::List al;
 
     a->attachments(&al, false);
-    for(KNMimeContent *c=al.first(); c; c=al.next()) {
-      art->addContent( new KNMimeContent(c->head(), c->body()) );
+    for(KMime::Content *c=al.first(); c; c=al.next()) {
+      art->addContent( new KMime::Content(c->head(), c->body()) );
     }
   }
 
@@ -373,7 +373,7 @@ void KNArticleFactory::createCancel(KNArticle *a)
   KNGroup *grp;
   KNNntpAccount *nntp=0;
 
-  if(a->type()==KNMimeBase::ATremote)
+  if(a->type()==KMime::Base::ATremote)
     nntp=(static_cast<KNGroup*>(a->collection()))->account();
   else {
     if(!nntp)
@@ -403,7 +403,7 @@ void KNArticleFactory::createCancel(KNArticle *a)
   art->setServerId(nntp->id());
 
   //subject
-  KNHeaders::MessageID *msgId=a->messageID();
+  KMime::Headers::MessageID *msgId=a->messageID();
   QCString tmp;
   tmp="cancel of "+msgId->as7BitString(false);
   art->subject()->from7BitString(tmp);
@@ -446,7 +446,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
   KNGroup *grp;
   KNNntpAccount *nntp;
 
-  if(a->type()==KNMimeBase::ATremote)
+  if(a->type()==KMime::Base::ATremote)
     nntp=(static_cast<KNGroup*>(a->collection()))->account();
   else {
     KNLocalArticle *la=static_cast<KNLocalArticle*>(a);
@@ -492,7 +492,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 
   //Body
   QString text;
-  KNMimeContent *textContent=a->textContent();
+  KMime::Content *textContent=a->textContent();
   if(textContent)
     textContent->decodedText(text);
 
@@ -504,7 +504,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 }
 
 
-void KNArticleFactory::createMail(KNHeaders::AddressField *address)
+void KNArticleFactory::createMail(KMime::Headers::AddressField *address)
 {
   if (knGlobals.cfgManager->postNewsTechnical()->useExternalMailer()) {
     sendMailExternal(address->asUnicodeString());
@@ -581,7 +581,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
   if(a->doPost()) {
     KNNntpAccount *acc=knGlobals.accManager->account(a->serverId());
     if(acc) {
-      KNHeaders::Newsgroups *grps=a->newsgroups();
+      KMime::Headers::Newsgroups *grps=a->newsgroups();
       KNGroup *grp=knGlobals.grpManager->group(grps->firstGroup(), acc);
       if (grp && grp->identity() && grp->identity()->hasSignature())
         id=grp->identity();
@@ -686,7 +686,7 @@ bool KNArticleFactory::closeComposeWindows()
 
 void KNArticleFactory::deleteComposersForFolder(KNFolder *f)
 {
-  QList<KNComposer> list=c_ompList;
+  QPtrList<KNComposer> list=c_ompList;
 
   for(KNComposer *i=list.first(); i; i=list.next())
     for(int x=0; x<f->count(); x++)
@@ -803,7 +803,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
     art->messageID()->generate(pnt->hostname());
 
   //From
-  KNHeaders::From *from=art->from();
+  KMime::Headers::From *from=art->from();
   from->setRFC2047Charset(pnt->charset());
 
   //name
@@ -866,21 +866,21 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
   }
 
   //Mime
-  KNHeaders::ContentType *type=art->contentType();
+  KMime::Headers::ContentType *type=art->contentType();
   type->setMimeType("text/plain");
 
   type->setCharset(defChset);
 
   if (defChset.lower()=="us-ascii")
-    art->contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
+    art->contentTransferEncoding()->setCte(KMime::Headers::CE7Bit);
   else
-    art->contentTransferEncoding()->setCte(pnt->allow8BitBody()? KNHeaders::CE8Bit : KNHeaders::CEquPr);
+    art->contentTransferEncoding()->setCte(pnt->allow8BitBody()? KMime::Headers::CE8Bit : KMime::Headers::CEquPr);
 
   //X-Headers
   if(withXHeaders) {
     KNConfig::XHeaders::Iterator it;
     for(it=pnt->xHeaders().begin(); it!=pnt->xHeaders().end(); ++it)
-      art->setHeader( new KNHeaders::Generic( (QCString("X-")+(*it).name()), art, (*it).value(), pnt->charset() ) );
+      art->setHeader( new KMime::Headers::Generic( (QCString("X-")+(*it).name()), art, (*it).value(), pnt->charset() ) );
   }
 
   //Signature
@@ -902,7 +902,7 @@ bool KNArticleFactory::cancelAllowed(KNArticle *a)
   if(!a)
     return false;
 
-  if(a->type()==KNMimeBase::ATlocal) {
+  if(a->type()==KMime::Base::ATlocal) {
     KNLocalArticle *localArt=static_cast<KNLocalArticle*>(a);
 
     if(localArt->doMail() && !localArt->doPost()) {
@@ -910,7 +910,7 @@ bool KNArticleFactory::cancelAllowed(KNArticle *a)
       return false;
     }
 
-    KNHeaders::Control *ctrl=localArt->control(false);
+    KMime::Headers::Control *ctrl=localArt->control(false);
     if(ctrl && ctrl->isCancel()) {
       KMessageBox::sorry(knGlobals.topWidget, i18n("Cancel messages cannot be canceled or superseded!"));
       return false;
@@ -926,7 +926,7 @@ bool KNArticleFactory::cancelAllowed(KNArticle *a)
       return false;
     }
 
-    KNHeaders::MessageID *mid=localArt->messageID(false);
+    KMime::Headers::MessageID *mid=localArt->messageID(false);
     if(!mid || mid->isEmpty()) {
       KMessageBox::sorry(knGlobals.topWidget, i18n(
 "This article cannot be canceled or superseded,\n\
@@ -938,7 +938,7 @@ and cancel (or supersede) it there."));
 
     return true;
   }
-  else if(a->type()==KNMimeBase::ATremote) {
+  else if(a->type()==KMime::Base::ATremote) {
 
     KNRemoteArticle *remArt=static_cast<KNRemoteArticle*>(a);
     KNGroup *g=static_cast<KNGroup*>(a->collection());

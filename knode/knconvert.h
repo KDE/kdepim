@@ -20,7 +20,15 @@
 #include <time.h>
 
 #include <qdialog.h>
-#include <qlist.h>
+
+#include <qglobal.h>
+#if QT_VERSION >= 290
+#  include <qptrlist.h>
+#else
+#  include <qlist.h>
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
 
 class QListBox;
 class QLabel;
@@ -105,7 +113,7 @@ class KNConvert : public QDialog {
                   *c_ancelBtn;
     QListBox      *l_ogList;
 
-    QList<Converter> c_onverters;
+    QPtrList<Converter> c_onverters;
     QStringList l_og;
     bool c_onversionDone;
     QString v_ersion;

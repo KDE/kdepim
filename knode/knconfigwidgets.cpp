@@ -51,7 +51,7 @@
 #include "knarticlewidget.h"
 #include "knfiltermanager.h"
 #include "knarticlefilter.h"
-#include "knmime.h"
+#include "knarticle.h"
 #include "knscoring.h"
 #include "knconfigmanager.h"
 #include "knpgp.h"

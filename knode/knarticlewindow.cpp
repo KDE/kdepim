@@ -24,19 +24,19 @@
 #include <kaction.h>
 
 #include "kngroup.h"
-#include "knmime.h"
+#include "knarticle.h"
 #include "knarticlewidget.h"
 #include "utilities.h"
 #include "knglobals.h"
 #include "knode.h"
 #include "knarticlewindow.h"
 
-QList<KNArticleWindow> KNArticleWindow::instances;
+QPtrList<KNArticleWindow> KNArticleWindow::instances;
 
 
 bool KNArticleWindow::closeAllWindowsForCollection(KNArticleCollection *col, bool force)
 {
-  QList<KNArticleWindow> list=instances;
+  QPtrList<KNArticleWindow> list=instances;
   for(KNArticleWindow *i=list.first(); i; i=list.next())
     if(i->artW->article()->collection()==col) {
       if (force)
@@ -50,7 +50,7 @@ bool KNArticleWindow::closeAllWindowsForCollection(KNArticleCollection *col, boo
 
 bool KNArticleWindow::closeAllWindowsForArticle(KNArticle *art, bool force)
 {
-  QList<KNArticleWindow> list=instances;
+  QPtrList<KNArticleWindow> list=instances;
   for(KNArticleWindow *i=list.first(); i; i=list.next())
     if(i->artW->article()==art) {
       if (force)

@@ -17,7 +17,7 @@
 #include <qstrlist.h>
 
 #include "kngroup.h"
-#include "knmime.h"
+#include "knarticle.h"
 #include "knjobdata.h"
 #include "knglobals.h"
 #include "knnetaccess.h"

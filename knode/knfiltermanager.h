@@ -17,7 +17,14 @@
 #ifndef KNFILTERMANAGER_H
 #define KNFILTERMANAGER_H
 
-#include <qlist.h>
+#include <qglobal.h>
+#if QT_VERSION >= 290
+#  include <qptrlist.h>
+#else
+#  include <qlist.h>
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
 
 #include <kaction.h>
 
@@ -83,7 +90,7 @@ class KNFilterManager : public QObject
     KNArticleFilter* byID(int id);
     void updateMenu();
     
-    QList<KNArticleFilter> fList;
+    QPtrList<KNArticleFilter> fList;
     KNConfig::FilterListWidget *fset;
     KNArticleFilter *currFilter;
     KNFilterSelectAction *a_ctFilter;

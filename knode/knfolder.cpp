@@ -23,10 +23,11 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+#include <kqcstringsplitter.h>
+
 #include "knaccountmanager.h"
 #include "knarticlemanager.h"
 #include "knnntpaccount.h"
-#include "knstringsplitter.h"
 #include "kncollectionviewitem.h"
 #include "knhdrviewitem.h"
 #include "utilities.h"
@@ -190,7 +191,7 @@ bool KNFolder::loadHdrs()
   }
 
   QCString tmp;
-  KNStringSplitter split;
+  KQCStringSplitter split;
   KNLocalArticle *art;
   DynData dynamic;
   int pos1=0, pos2=0, cnt=0, byteCount;
@@ -419,7 +420,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
       ts << "X-KNode-Overview: ";
       ts << a->subject()->as7BitString(false) << '\t';
 
-      KNHeaders::Base* h;
+      KMime::Headers::Base* h;
       if( (h=a->newsgroups(false))!=0 )
         ts << h->as7BitString(false);
       ts << '\t';
@@ -447,7 +448,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
     }
 
     if(clear)
-      a->KNMimeContent::clear();
+      a->KMime::Content::clear();
   }
 
   closeFiles();

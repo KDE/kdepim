@@ -22,7 +22,7 @@
 
 #include "knglobals.h"
 #include "knarticlecollection.h"
-#include "knmime.h"
+#include "knarticle.h"
 
 
 static const int sizeIncr=50;

@@ -89,7 +89,7 @@ void KNArticleManager::deleteTempFiles()
 }
 
 
-void KNArticleManager::saveContentToFile(KNMimeContent *c, QWidget *parent)
+void KNArticleManager::saveContentToFile(KMime::Content *c, QWidget *parent)
 {
   KNSaveHelper helper(c->contentType()->name(),parent);
 
@@ -125,11 +125,11 @@ void KNArticleManager::saveArticleToFile(KNArticle *a, QWidget *parent)
 }
 
 
-QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
+QString KNArticleManager::saveContentToTemp(KMime::Content *c)
 {
   QString path;
   KTempFile* tmpFile;
-  KNHeaders::Base *pathHdr=c->getHeaderByType("X-KNode-Tempfile");  // check for existing temp file
+  KMime::Headers::Base *pathHdr=c->getHeaderByType("X-KNode-Tempfile");  // check for existing temp file
 
   if(pathHdr) {
     path = pathHdr->asUnicodeString();
@@ -161,14 +161,14 @@ QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
   f->writeBlock(data.data(), data.size());
   tmpFile->close();
   path=tmpFile->name();
-  pathHdr=new KNHeaders::Generic("X-KNode-Tempfile", c, path, "UTF-8");
+  pathHdr=new KMime::Headers::Generic("X-KNode-Tempfile", c, path, "UTF-8");
   c->setHeader(pathHdr);
 
   return path;
 }
 
 
-void KNArticleManager::openContent(KNMimeContent *c)
+void KNArticleManager::openContent(KMime::Content *c)
 {
   QString path=saveContentToTemp(c);
   if(path.isNull()) return;
@@ -452,13 +452,13 @@ bool KNArticleManager::loadArticle(KNArticle *a)
     return true;
 
   if (a->isLocked()) {
-    if (a->type()==KNMimeBase::ATremote)
+    if (a->type()==KMime::Base::ATremote)
       return true;   // locked == we are already loading this article...
     else
       return false;
   }
 
-  if(a->type()==KNMimeBase::ATremote) {
+  if(a->type()==KMime::Base::ATremote) {
     KNGroup *g=static_cast<KNGroup*>(a->collection());
     if(g)
       emitJob( new KNJobData(KNJobData::JTfetchArticle, this, g->account(), a) );
@@ -489,7 +489,7 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
   if (!force && KNArticleWidget::articleVisible(a))
     return false;
 
-  if (!force && (a->type()==KNMimeBase::ATlocal) &&
+  if (!force && (a->type()==KMime::Base::ATlocal) &&
       (knGlobals.artFactory->findComposer(static_cast<KNLocalArticle*>(a))!=0))
     return false;
 
@@ -498,9 +498,9 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
       return false;
 
   KNArticleWidget::articleRemoved(a);
-  if (!a->type()==KNMimeBase::ATlocal)
+  if (!a->type()==KMime::Base::ATlocal)
     knGlobals.artFactory->deleteComposerForArticle(static_cast<KNLocalArticle*>(a));
-  a->KNMimeContent::clear();
+  a->KMime::Content::clear();
   a->updateListItem();
   knGlobals.memManager->removeCacheEntry(a);
 
@@ -542,12 +542,12 @@ void KNArticleManager::copyIntoFolder(KNArticle::List &l, KNFolder *f)
         if(a->isOrphant())
           delete a; // ok, this is ugly; we simply delete orphant articles
         else
-          a->KNMimeContent::clear(); // no need to keep them in memory
+          a->KMime::Content::clear(); // no need to keep them in memory
       }
       KNHelper::displayInternalFileError();
     } else {
       for(KNLocalArticle *a=l2.first(); a; a=l2.next())
-        a->KNMimeContent::clear(); // no need to keep them in memory
+        a->KMime::Content::clear(); // no need to keep them in memory
       knGlobals.memManager->updateCacheEntry(f);
     }
 

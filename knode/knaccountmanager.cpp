@@ -43,7 +43,7 @@
 KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent, const char * name)
   : QObject(parent, name), gManager(gm), c_urrentAccount(0), view(v)
 {
-  accList=new QList<KNNntpAccount>;
+  accList=new QPtrList<KNNntpAccount>;
   accList->setAutoDelete(true);
   s_mtp=new KNServerInfo();
   s_mtp->setType(KNServerInfo::STsmtp);
@@ -163,12 +163,12 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
   if(!a) a=c_urrentAccount;
   if(!a) return false;
 
-  QList<KNGroup> *lst;
+  QPtrList<KNGroup> *lst;
   if(knGlobals.folManager->unsentForAccount(a->id()) > 0) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("This account cannot be deleted since there are some unsent messages for it."));
   }
   else if(KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to delete this account?"))==KMessageBox::Yes) {
-    lst=new QList<KNGroup>;
+    lst=new QPtrList<KNGroup>;
     lst->setAutoDelete(false);
     gManager->getGroupsOfAccount(a, lst);
     for(KNGroup *g=lst->first(); g; g=lst->next()) {

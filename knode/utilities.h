@@ -17,11 +17,24 @@
 #ifndef UTIL
 #define UTIL
 
-#include <qvector.h>
-#include <qlist.h>
-#include <qfile.h>
 
 #include <kurl.h>
+
+#include <qfile.h>
+
+#include <qglobal.h>
+#if QT_VERSION >= 290
+#  include <qptrvector.h>
+#  include <qptrlist.h>
+#else
+// remove once Qt3 becomes mandatory
+#  include <qvector.h>
+#  include <qlist.h>
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#  define QPtrVector QVector
+#  define QPtrCollection QCollection
+#endif
 
 class QWidget;
 class QString;
@@ -37,17 +50,17 @@ class KTempFile;
 //*****************************************************************************
 
 /** clone of QSortedList... */
-template<class type> class Q_EXPORT QSortedVector : public QVector<type>
+template<class type> class Q_EXPORT QSortedVector : public QPtrVector<type>
 {
 public:
     QSortedVector() {}
-    QSortedVector ( uint size ) : QVector<type>(size) {}
-    QSortedVector( const QSortedVector<type> &l ) : QVector<type>(l) {}
+    QSortedVector ( uint size ) : QPtrVector<type>(size) {}
+    QSortedVector( const QSortedVector<type> &l ) : QPtrVector<type>(l) {}
     ~QSortedVector() { clear(); }
     QSortedVector<type> &operator=(const QSortedVector<type> &l)
-      { return (QSortedVector<type>&)QList<type>::operator=(l); }
+      { return (QSortedVector<type>&)QPtrList<type>::operator=(l); }
 
-    virtual int compareItems( QCollection::Item s1, QCollection::Item s2 )
+    virtual int compareItems( QPtrCollection::Item s1, QPtrCollection::Item s2 )
       { if ( *((type*)s1) == *((type*)s2) ) return 0; return ( *((type*)s1) < *((type*)s2) ? -1 : 1 ); }
 };
 
@@ -148,9 +161,6 @@ public:
   static const QString encryptStr(const QString& aStr);
   static const QString decryptStr(const QString& aStr);
   static QString rot13(const QString &s);
-
-  /** checks whether s contains any non-us-ascii characters */
-  static bool isUsAscii(const QString &s);
 
   /** used for rewarping a text when replying to a message or inserting a file into a box */
   static QString rewrapStringList(QStringList text, int wrapAt, QChar quoteChar, bool stopAtSig, bool alwaysSpace);

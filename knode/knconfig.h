@@ -19,6 +19,12 @@
 
 #include <qasciidict.h>
 
+#if QT_VERSION < 290
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
+
+
 #include <kdialogbase.h>
 
 #include "knwidgets.h"
@@ -669,7 +675,7 @@ class DisplayedHeaders : public Base {
   friend class DisplayedHeadersWidget;
 
   public:
-    typedef QListIterator<KNDisplayedHeader> Iterator;
+    typedef QPtrListIterator<KNDisplayedHeader> Iterator;
 
     DisplayedHeaders();
     ~DisplayedHeaders();
@@ -685,7 +691,7 @@ class DisplayedHeaders : public Base {
 
 
   protected:
-    QList<KNDisplayedHeader> h_drList;
+    QPtrList<KNDisplayedHeader> h_drList;
 
 };
 

@@ -17,7 +17,14 @@
 #ifndef KNACCOUNTMANAGER_H
 #define KNACCOUNTMANAGER_H
 
-#include <qlist.h>
+#include <qglobal.h>
+#if QT_VERSION >= 290
+#  include <qptrlist.h>
+#else
+#  include <qlist.h>
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
 
 class KNGroupManager;
 class KNListView;
@@ -52,7 +59,7 @@ class KNAccountManager : public QObject
   protected:
     void loadAccounts();
     KNGroupManager *gManager;
-    QList<KNNntpAccount> *accList;
+    QPtrList<KNNntpAccount> *accList;
     KNNntpAccount *c_urrentAccount;
     KNServerInfo *s_mtp;
     KNListView *view;

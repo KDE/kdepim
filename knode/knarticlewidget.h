@@ -19,6 +19,11 @@
 
 #include <qbitarray.h>
 
+#if QT_VERSION < 290
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
+
 //bad hack, but we need access to QTextBrowser::anchorAt(). Obsolete with Qt 3.0.
 #define private protected
 #include <ktextbrowser.h>
@@ -37,7 +42,9 @@ class KPopupMenu;
 
 class KNArticle;
 class KNArticleCollection;
-class KNMimeContent;
+namespace KMime {
+  class Content;
+};
 
 
 class KNSourceViewWindow : public KTextBrowser {
@@ -121,12 +128,12 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     void openURL(const QString &url);
     void saveAttachment(int id);
     void openAttachment(int id);
-    bool inlinePossible(KNMimeContent *c);
+    bool inlinePossible(KMime::Content *c);
     void setSource(const QString &s); // reimplemented from QTextBrowser
     void anchorClicked(const QString &a, ButtonState button=LeftButton, const QPoint *p=0);
 
     KNArticle *a_rticle;
-    QList<KNMimeContent> *a_tt;
+    QPtrList<KMime::Content> *a_tt;
     QMimeSourceFactory *f_actory;
     bool h_tmlDone, r_ot13;
     QTimer *t_imer;
@@ -196,7 +203,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     static void cleanup();
 
   protected:
-    static QList<KNArticleWidget> i_nstances;
+    static QPtrList<KNArticleWidget> i_nstances;
 
 };
 

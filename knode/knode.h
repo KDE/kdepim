@@ -25,6 +25,12 @@
 
 #include "resource.h"
 
+#include <qglobal.h>
+#if QT_VERSION < 290
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
+
 class QListViewItem;
 
 class KAccel;
@@ -111,10 +117,10 @@ class KNMainWindow : public KDockMainWindow
     bool eventFilter(QObject *, QEvent *);
 
     // convenience methods...
-    void getSelectedArticles(QList<KNArticle> &l);
-    void getSelectedArticles(QList<KNRemoteArticle> &l);
-    void getSelectedThreads(QList<KNRemoteArticle> &l);
-    void getSelectedArticles(QList<KNLocalArticle> &l);
+    void getSelectedArticles(QPtrList<KNArticle> &l);
+    void getSelectedArticles(QPtrList<KNRemoteArticle> &l);
+    void getSelectedThreads(QPtrList<KNRemoteArticle> &l);
+    void getSelectedArticles(QPtrList<KNLocalArticle> &l);
     void closeCurrentThread();
 
     //GUI

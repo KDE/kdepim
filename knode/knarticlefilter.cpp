@@ -21,7 +21,7 @@
 
 #include "kngroup.h"
 #include "knfolder.h"
-#include "knmime.h"
+#include "knarticle.h"
 #include "utilities.h"
 #include "knarticlefilter.h"
 
@@ -260,13 +260,13 @@ void KNArticleFilter::doFilter(KNGroup *g)
 
       s=art->subject()->asUnicodeString();
       same_subjects.clear();
-      for(QListIterator<KNRemoteArticle> it(orphant_threads); it.current(); ++it) {
+      for(QPtrListIterator<KNRemoteArticle> it(orphant_threads); it.current(); ++it) {
         if(it.current()!=art && it.current()->subject()->asUnicodeString()==s)
           same_subjects.append(it.current());
       }
 
       art->setVisibleFollowUps( art->hasVisibleFollowUps() || (same_subjects.count()>0) );
-      for(QListIterator<KNRemoteArticle> it(same_subjects); it.current(); ++it) {
+      for(QPtrListIterator<KNRemoteArticle> it(same_subjects); it.current(); ++it) {
         it.current()->setDisplayedReference(art);
         mergeCnt++;
       }

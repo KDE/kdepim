@@ -20,6 +20,11 @@
 #include <qobject.h>
 #include <qsortedlist.h>
 
+#if QT_VERSION < 290
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
+
 #include "knjobdata.h"
 #include "kngroup.h"
 
@@ -89,8 +94,8 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     // group access
     void loadGroups(KNNntpAccount *a);
     void getSubscribed(KNNntpAccount *a, QStringList &l);
-    void getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l);   
-    void getAllGroups(QList<KNGroup> *l);
+    void getGroupsOfAccount(KNNntpAccount *a, QPtrList<KNGroup> *l);   
+    void getAllGroups(QPtrList<KNGroup> *l);
 
     bool loadHeaders(KNGroup *g);
     bool unloadHeaders(KNGroup *g, bool force=true);
@@ -127,7 +132,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
   protected:
     /** reimplemented from @ref KNJobConsumer */
     void processJob(KNJobData *j);
-    QList<KNGroup>  *g_List;
+    QPtrList<KNGroup>  *g_List;
     KNGroup *c_urrentGroup;
     KNArticleManager *a_rticleMgr;
 

@@ -35,8 +35,7 @@ knode_SOURCES =   knconfigmanager.cpp \
                   knconvert.cpp \
                   \
                   knarticlemanager.cpp \
-                  knheaders.cpp \
-                  knmime.cpp \
+                  knarticle.cpp \
                   knarticlewidget.cpp \
                   knarticlewindow.cpp \
                   knhdrviewitem.cpp \
@@ -53,7 +52,6 @@ knode_SOURCES =   knconfigmanager.cpp \
                   knfilterdialog.cpp \
                   knsearchdialog.cpp \
                   \
-                  knstringsplitter.cpp \
                   utilities.cpp \
                   \
                   knpgp.cpp \
@@ -98,8 +96,7 @@ noinst_HEADERS =  knconfigmanager.h \
                   knconvert.h \
                   \
                   knarticlemanager.h \
-                  knheaders.h \
-                  knmime.h \
+                  knarticle.h \
                   knarticlewidget.h \
                   knarticlewindow.h \
                   knhdrviewitem.h \
@@ -116,7 +113,6 @@ noinst_HEADERS =  knconfigmanager.h \
                   knfilterdialog.h \
                   knsearchdialog.h \
                   \
-                  knstringsplitter.h \
                   utilities.h \
                   \
                   knpgp.h \

@@ -17,8 +17,14 @@
 #ifndef KNJOBDATA_H
 #define KNJOBDATA_H
 
-#include <qlist.h>
-
+#include <qglobal.h>
+#if QT_VERSION >= 290
+#  include <qptrlist.h>
+#else
+#  include <qlist.h>
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
 class KNJobData;
 class KNServerInfo;
 
@@ -44,7 +50,7 @@ class KNJobConsumer {
   protected:
     /** The actual work is done here */
     virtual void processJob(KNJobData *j);
-    QList<KNJobData> j_obs;
+    QPtrList<KNJobData> j_obs;
 
 };
 

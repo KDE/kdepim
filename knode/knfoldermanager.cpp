@@ -163,7 +163,7 @@ bool KNFolderManager::deleteFolder(KNFolder *f)
   if(!f || f->isRootFolder() || f->isStandardFolder() || f->lockedArticles()>0)
     return false;
 
-  QList<KNFolder> del;
+  QPtrList<KNFolder> del;
   del.setAutoDelete(false);
   KNFolder *fol;
   KNCollection *p;
@@ -480,7 +480,7 @@ int KNFolderManager::loadCustomFolders()
 
   // set parents
   if(cnt>0) {
-    QList<KNFolder> l(f_List);
+    QPtrList<KNFolder> l(f_List);
     l.setAutoDelete(false);
     for(f=l.first(); f; f=l.next()) {
       if (!f->isRootFolder()) {   // the root folder has no parent

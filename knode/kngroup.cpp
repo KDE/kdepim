@@ -22,11 +22,12 @@
 #include <kmessagebox.h>
 #include <kdebug.h>
 
+#include <kqcstringsplitter.h>
+
 #include "knserverinfo.h"
 #include "knprotocolclient.h"
 #include "knglobals.h"
-#include "knmime.h"
-#include "knstringsplitter.h"
+#include "knarticle.h"
 #include "kncollectionviewitem.h"
 #include "kngrouppropdlg.h"
 #include "knnntpaccount.h"
@@ -38,6 +39,12 @@
 #include "knscoring.h"
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"
+
+#if QT_VERSION < 290
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
+
 
 #define SORT_DEPTH 5
 
@@ -183,7 +190,7 @@ bool KNGroup::loadHdrs()
   kdDebug(5003) << "KNGroup::loadHdrs() : loading headers" << endl;
   QCString buff;
   KNFile f;
-  KNStringSplitter split;
+  KQCStringSplitter split;
   int cnt=0, id, lines, fileFormatVersion, artNumber;
   time_t timeT;//, fTimeT;
   KNRemoteArticle *art;
@@ -366,7 +373,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
 {
   KNRemoteArticle *art=0, *art2=0;
   QCString tmp;
-  KNStringSplitter split;
+  KQCStringSplitter split;
   split.setIncludeSep(false);
   int new_cnt=0, added_cnt=0, todo=hdrs->count();
   QTime timer;
@@ -702,7 +709,7 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 
     //try to sort by subject
     KNRemoteArticle *oldest;
-    QList<KNRemoteArticle> list;
+    QPtrList<KNRemoteArticle> list;
     list.setAutoDelete(false);
 
     for(idx=start; idx<end; idx++) {

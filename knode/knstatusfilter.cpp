@@ -19,7 +19,7 @@
 #include <klocale.h>
 #include <ksimpleconfig.h>
 
-#include "knmime.h"
+#include "knarticle.h"
 #include "knstatusfilter.h"
 
 

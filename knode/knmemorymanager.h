@@ -17,7 +17,14 @@
 #ifndef KNMEMORYMANAGER_H
 #define KNMEMORYMANAGER_H
 
-#include <qlist.h>
+#include <qglobal.h>
+#if QT_VERSION >= 290
+#  include <qptrlist.h>
+#else
+#  include <qlist.h>
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
 
 class KNArticle;
 class KNArticleCollection;
@@ -66,8 +73,8 @@ class KNMemoryManager {
     void checkMemoryUsageCollections();
     void checkMemoryUsageArticles();
 
-    QList<CollectionItem> c_olList;
-    QList<ArticleItem> a_rtList;
+    QPtrList<CollectionItem> c_olList;
+    QPtrList<ArticleItem> a_rtList;
     int c_ollCacheSize, a_rtCacheSize;
 };
 

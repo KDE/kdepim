@@ -18,10 +18,17 @@
 #define KNARTICLEFACTORY_H
 
 #include <qsemimodal.h>
-#include <qlist.h>
+
+#if QT_VERSION >= 290
+#  include <qptrlist.h>
+#else
+#  include <qlist.h>
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
 
 #include "knjobdata.h"
-#include "knmime.h"
+#include "knarticle.h"
 #include "knwidgets.h"
 
 class QLabel;
@@ -55,7 +62,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     void createForward(KNArticle *a);
     void createCancel(KNArticle *a);
     void createSupersede(KNArticle *a);
-    void createMail(KNHeaders::AddressField *address);
+    void createMail(KMime::Headers::AddressField *address);
 
     // send a mail via an external program...
     void sendMailExternal(const QString &address=QString::null, const QString &subject=QString::null, const QString &body=QString::null);
@@ -86,7 +93,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     //send-errors
     void showSendErrorDialog();
 
-    QList<KNComposer> c_ompList;
+    QPtrList<KNComposer> c_ompList;
     KNSendErrorDialog *s_endErrDlg;
 
   protected slots:

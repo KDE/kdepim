@@ -19,6 +19,11 @@
 
 #include <qsemimodal.h>
 
+#if QT_VERSION < 290
+#  define QPtrList QList
+#  define QPtrListIterator QListIterator
+#endif
+
 class QProgressBar;
 class QLabel;
 
@@ -65,7 +70,7 @@ class KNCleanUp {
     };
 
     ProgressDialog *d_lg;
-    QList<KNArticleCollection> c_olList;
+    QPtrList<KNArticleCollection> c_olList;
     KNConfig::Cleanup *c_onfig;
 
 };

@@ -40,7 +40,7 @@
 #include <kaction.h>
 
 #include "resource.h"
-#include "knmime.h"
+#include "knarticle.h"
 #include "knarticlewidget.h"
 #include "knglobals.h"
 #include "knarticlemanager.h"
@@ -51,7 +51,6 @@
 #include "kngroup.h"
 #include "knfolder.h"
 #include "knnntpaccount.h"
-#include "knstringsplitter.h"
 #include "utilities.h"
 #include "knscoring.h"
 #include "knpgp.h"
@@ -200,7 +199,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
                                    SLOT(slotSetCharsetKeyboard()), a_ctions, "set_charset_keyboard");
 
 
-  o_verrideCS=KNHeaders::Latin1;
+  o_verrideCS=KMime::Headers::Latin1;
   f_orceCS=false;
 
   //timer
@@ -661,7 +660,7 @@ void KNArticleWidget::openURL(const QString &url)
 
 void KNArticleWidget::saveAttachment(int id)
 {
-  KNMimeContent *a=a_tt->at(id);
+  KMime::Content *a=a_tt->at(id);
 
   if(a)
     knGlobals.artManager->saveContentToFile(a,this);
@@ -671,7 +670,7 @@ void KNArticleWidget::saveAttachment(int id)
 
 void KNArticleWidget::openAttachment(int id)
 {
- KNMimeContent *a=a_tt->at(id);
+ KMime::Content *a=a_tt->at(id);
 
  if(a)
    knGlobals.artManager->openContent(a);
@@ -679,9 +678,9 @@ void KNArticleWidget::openAttachment(int id)
 }
 
 
-bool KNArticleWidget::inlinePossible(KNMimeContent *c)
+bool KNArticleWidget::inlinePossible(KMime::Content *c)
 {
-  KNHeaders::ContentType *ct=c->contentType();
+  KMime::Headers::ContentType *ct=c->contentType();
   return ( ct->isText() || ct->isImage() );
 }
 
@@ -740,7 +739,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   // mark article as read, typically the article is expired on the server, so its
   // impossible to read it later anyway.
   if(knGlobals.cfgManager->readNewsGeneral()->autoMark() &&
-     a_rticle && a_rticle->type()==KNMimeBase::ATremote && !a_rticle->isOrphant()) {
+     a_rticle && a_rticle->type()==KMime::Base::ATremote && !a_rticle->isOrphant()) {
     KNRemoteArticle::List l;
     l.append((static_cast<KNRemoteArticle*>(a_rticle)));
     knGlobals.artManager->setRead(l, true);
@@ -888,7 +887,7 @@ void KNArticleWidget::createHtmlPage()
 
   if(a_ctToggleFullHdrs->isChecked()) {
     QCString head = a_rticle->head();
-    KNHeaders::Generic *header=0;
+    KMime::Headers::Generic *header=0;
 
     while(!head.isEmpty()) {
       header = a_rticle->getNextHeader(head);
@@ -901,7 +900,7 @@ void KNArticleWidget::createHtmlPage()
     }
   }
   else {
-    KNHeaders::Base *hb;
+    KMime::Headers::Base *hb;
     KNDisplayedHeader *dh;
     KNConfig::DisplayedHeaders::Iterator it=knGlobals.cfgManager->displayedHeaders()->iterator();
     for(; it.current(); ++it) {
@@ -923,7 +922,7 @@ void KNArticleWidget::createHtmlPage()
         html+=QString("<a href=\"internal:author\">%1</a>")
                 .arg(toHtmlString(hb->asUnicodeString()));
       } else if(hb->is("Date")) {
-        KNHeaders::Date *date=static_cast<KNHeaders::Date*>(hb);
+        KMime::Headers::Date *date=static_cast<KMime::Headers::Date*>(hb);
         html+=toHtmlString(KGlobal::locale()->formatDateTime(date->qdt(), false, true));
       }
       else
@@ -938,8 +937,8 @@ void KNArticleWidget::createHtmlPage()
           .arg(app->headerDecoHexcode());
 
     //References
-    KNHeaders::References *refs=a_rticle->references(false);
-    if(a_rticle->type()==KNMimeBase::ATremote && refs) {
+    KMime::Headers::References *refs=a_rticle->references(false);
+    if(a_rticle->type()==KMime::Base::ATremote && refs) {
       int refCnt=refs->count(), i=1;
       QCString id = refs->first();
       id = id.mid(1, id.length()-2);  // remove <>
@@ -957,7 +956,7 @@ void KNArticleWidget::createHtmlPage()
     html+="</headerblock></td></tr>";
   }
 
-  KNMimeContent *text=a_rticle->textContent();
+  KMime::Content *text=a_rticle->textContent();
   if(text) {
     if(!canDecode8BitText(text->contentType()->charset())) {
       if (rnv->showHeaderDecoration())
@@ -996,7 +995,7 @@ void KNArticleWidget::createHtmlPage()
 
   // if the article is pgp signed and the user asked for verifying the
   // signature, we show a nice header:
-  if ( a_rticle->type() == KNMimeBase::ATremote ) {
+  if ( a_rticle->type() == KMime::Base::ATremote ) {
     KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rticle);
     KNpgp *pgp = knGlobals.pgp;
 
@@ -1031,13 +1030,13 @@ void KNArticleWidget::createHtmlPage()
     }
   }
 
-  KNHeaders::ContentType *ct=a_rticle->contentType();
+  KMime::Headers::ContentType *ct=a_rticle->contentType();
 
   //Attachments
   if(!text || ct->isMultipart()) {
     if(a_tt) a_tt->clear();
     else {
-      a_tt=new KNMimeContent::List;
+      a_tt=new KMime::Content::List;
       a_tt->setAutoDelete(false);
     }
 
@@ -1054,8 +1053,8 @@ void KNArticleWidget::createHtmlPage()
     h_tmlDone=true;
 
     //enable actions
-    a_ctReply->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
-    a_ctRemail->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
+    a_ctReply->setEnabled(a_rticle->type()==KMime::Base::ATremote);
+    a_ctRemail->setEnabled(a_rticle->type()==KMime::Base::ATremote);
     a_ctSave->setEnabled(true);
     a_ctPrint->setEnabled(true);
     a_ctSelAll->setEnabled(true);
@@ -1145,7 +1144,7 @@ void KNArticleWidget::createHtmlPage()
       html+=QString("<tr><th>%1</th><th>%2</th><th>%3</th></tr>")
                     .arg(i18n("name")).arg(i18n("mime-type")).arg(i18n("description"));
 
-      for(KNMimeContent *var=a_tt->first(); var; var=a_tt->next()) {
+      for(KMime::Content *var=a_tt->first(); var; var=a_tt->next()) {
         ct=var->contentType();
         html+=QString("<tr><td align=center><a href=\"internal:att=%1\">%2</a></td><td align=center>%3</td><td align=center>%4</td></tr>")
               .arg(attCnt)
@@ -1188,12 +1187,12 @@ void KNArticleWidget::createHtmlPage()
   a_ctPrint->setEnabled(true);
   a_ctSelAll->setEnabled(true);
 
-  a_ctReply->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
-  a_ctRemail->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
+  a_ctReply->setEnabled(a_rticle->type()==KMime::Base::ATremote);
+  a_ctRemail->setEnabled(a_rticle->type()==KMime::Base::ATremote);
   a_ctForward->setEnabled(true);
-  a_ctCancel->setEnabled( (a_rticle->type()==KNMimeBase::ATremote) ||
+  a_ctCancel->setEnabled( (a_rticle->type()==KMime::Base::ATremote) ||
                           (a_rticle->collection()==knGlobals.folManager->sent()));
-  a_ctSupersede->setEnabled( (a_rticle->type()==KNMimeBase::ATremote) ||
+  a_ctSupersede->setEnabled( (a_rticle->type()==KMime::Base::ATremote) ||
                              (a_rticle->collection()==knGlobals.folManager->sent()));
   a_ctVerify->setEnabled(true);
   a_ctToggleFullHdrs->setEnabled(true);
@@ -1203,7 +1202,7 @@ void KNArticleWidget::createHtmlPage()
   a_ctViewSource->setEnabled(true);
 
   //start automark-timer
-  if(a_rticle->type()==KNMimeBase::ATremote && knGlobals.cfgManager->readNewsGeneral()->autoMark())
+  if(a_rticle->type()==KMime::Base::ATremote && knGlobals.cfgManager->readNewsGeneral()->autoMark())
     t_imer->start( (knGlobals.cfgManager->readNewsGeneral()->autoMarkSeconds()*1000), true);
 }
 
@@ -1265,7 +1264,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     KNGroup *g;
     KNRemoteArticle *a;
     KNArticleWindow *awin;
-    KNHeaders::AddressField adr(a_rticle);
+    KMime::Headers::AddressField adr(a_rticle);
 
     switch(type) {
       case ATauthor:
@@ -1373,7 +1372,7 @@ void KNArticleWidget::slotPrint()
 
     const int margin=20;
     int yPos=0;
-    KNHeaders::Base *hb=0;
+    KMime::Headers::Base *hb=0;
     QString text;
     QString hdr;
 
@@ -1418,7 +1417,7 @@ void KNArticleWidget::slotPrint()
     fm=p.fontMetrics();
 
     QStringList lines;
-    KNMimeContent *txt=a_rticle->textContent();
+    KMime::Content *txt=a_rticle->textContent();
 
     if(txt) {
       txt->decodedText(lines, true);
@@ -1456,7 +1455,7 @@ void KNArticleWidget::slotSelectAll()
 void KNArticleWidget::slotReply()
 {
   kdDebug(5003) << "KNArticleWidget::slotReply()" << endl;
-  if(a_rticle && a_rticle->type()==KNMimeBase::ATremote)
+  if(a_rticle && a_rticle->type()==KMime::Base::ATremote)
     knGlobals.artFactory->createReply(static_cast<KNRemoteArticle*>(a_rticle), selectedText(), true, false);
 }
 
@@ -1464,7 +1463,7 @@ void KNArticleWidget::slotReply()
 void KNArticleWidget::slotRemail()
 {
   kdDebug(5003) << "KNArticleWidget::slotRemail()" << endl;
-  if(a_rticle && a_rticle->type()==KNMimeBase::ATremote)
+  if(a_rticle && a_rticle->type()==KMime::Base::ATremote)
     knGlobals.artFactory->createReply(static_cast<KNRemoteArticle*>(a_rticle), selectedText(), false, true);
 }
 
@@ -1524,7 +1523,7 @@ void KNArticleWidget::slotSetCharset(const QString &s)
 
   if (s == i18n("Automatic")) {
     f_orceCS=false;
-    o_verrideCS=KNHeaders::Latin1;
+    o_verrideCS=KMime::Headers::Latin1;
   } else {
     f_orceCS=true;
     o_verrideCS=s.latin1();
@@ -1551,10 +1550,10 @@ void KNArticleWidget::slotSetCharsetKeyboard()
 void KNArticleWidget::slotViewSource()
 {
   kdDebug(5003) << "KNArticleWidget::slotViewSource()" << endl;
-  if (a_rticle && a_rticle->type()==KNMimeBase::ATlocal && a_rticle->hasContent()) {
+  if (a_rticle && a_rticle->type()==KMime::Base::ATlocal && a_rticle->hasContent()) {
     new KNSourceViewWindow(toHtmlString(a_rticle->encodedContent(false),false,false));
   } else {
-    if (a_rticle && a_rticle->type()==KNMimeBase::ATremote) {
+    if (a_rticle && a_rticle->type()==KMime::Base::ATremote) {
       KNGroup *g=static_cast<KNGroup*>(a_rticle->collection());
       KNRemoteArticle *a=new KNRemoteArticle(g); //we need "g" to access the nntp-account
       a->messageID(true)->from7BitString(a_rticle->messageID()->as7BitString(false));
@@ -1568,7 +1567,7 @@ void KNArticleWidget::slotViewSource()
 
 void KNArticleWidget::slotTimeout()
 {
-  if(a_rticle && a_rticle->type()==KNMimeBase::ATremote && !a_rticle->isOrphant()) {
+  if(a_rticle && a_rticle->type()==KMime::Base::ATremote && !a_rticle->isOrphant()) {
     KNRemoteArticle::List l;
     l.append((static_cast<KNRemoteArticle*>(a_rticle)));
     knGlobals.artManager->setRead(l, true);
@@ -1580,7 +1579,7 @@ void KNArticleWidget::slotVerify()
 {
   //  knGlobals.artManager->verifyPGPSignature(a_rticle);
   //create a PGP object and check if the posting is signed
-  if (a_rticle->type() == KNMimeBase::ATremote) {
+  if (a_rticle->type() == KMime::Base::ATremote) {
     KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rticle);
     ra->setPgpSigned(true);
     updateContents();
@@ -1591,7 +1590,7 @@ void KNArticleWidget::slotVerify()
 //--------------------------------------------------------------------------------------
 
 
-QList<KNArticleWidget> KNArticleWidget::i_nstances;
+QPtrList<KNArticleWidget> KNArticleWidget::i_nstances;
 
 void KNArticleWidget::configChanged()
 {
