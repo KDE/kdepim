@@ -48,9 +48,6 @@
 #include "modem.h"
 
 
-#define LOCK_PATH "/var/lock"
-
-
 #ifndef CSOH
 #define CSOH  01
 #endif
@@ -77,9 +74,11 @@
 
 
 
-Modem::Modem(QObject *parent, const char *name) : QObject(parent, name)
+Modem::Modem(KandyPrefs *kprefs, QObject *parent, const char *name) : QObject(parent, name)
 {
   mOpen = false;
+  
+  prefs = kprefs;
 
 	timer = new QTimer(this, "modemtimer");
 	Q_CHECK_PTR(timer);
@@ -93,15 +92,6 @@ Modem::Modem(QObject *parent, const char *name) : QObject(parent, name)
 Modem::~Modem()
 {
 	close();
-}
-
-
-void Modem::setDevice(const QString& name)
-{
-	if (fdev)
-		free(fdev);
-
-	fdev = strdup(name.latin1());
 }
 
 
@@ -132,21 +122,15 @@ void Modem::setSpeed(int speed)
 		case 38400:
 			cspeed = B38400;
 			break;
-#ifdef B57600
 		case 57600:
 			cspeed = B57600;
 			break;
-#endif
-#ifdef B115200
 		case 115200:
 			cspeed = B115200;
 			break;
-#endif
-#ifdef B230400
 		case 230400:
 			cspeed = B230400;
 			break;
-#endif
 		default:
 #ifdef MODEM_DEBUG
 			fprintf(stderr, "Modem: setSpeed(): fallback to default speed.\n");
@@ -206,6 +190,7 @@ bool Modem::open()
           return false;
 	}
 
+        char *fdev = strdup((*prefs).serialDevice().latin1());
 	if ((fd = ::open(fdev, O_RDWR | O_NOCTTY | O_NONBLOCK)) == -1) {
           emit errorMessage( i18n("Unable to open device '%1'. "
                                   "Please check that you have sufficient permissions.")
@@ -288,12 +273,13 @@ bool Modem::lockDevice()
 	if (is_locked)
 		return true;
 
+        char *fdev = strdup((*prefs).serialDevice().latin1());
 	if ((p = strrchr(fdev, '/')))
 		p++;
 	else
 		p = fdev;
 
-	sprintf(fname, "%s/LCK..%s", LOCK_PATH, p);
+	sprintf(fname, "%s/LCK..%s", (*prefs).lockDirectory().latin1(), p);
 	if (!access(fname, F_OK)) {
 		if ((lfd = ::open(fname, O_RDONLY)) < 0) {
                   emit errorMessage( i18n("Unable to open lock file '%1'.")
@@ -355,12 +341,13 @@ void Modem::unlockDevice()
 	char fname[1024];
 
 	if (is_locked) {
+	        char *fdev = strdup((*prefs).serialDevice().latin1());
 		if ((p = strrchr(fdev, '/')))
 			p++;
 		else
 			p = fdev;
 
-		sprintf(fname, "%s/LCK..%s", LOCK_PATH, p);
+		sprintf(fname, "%s/LCK..%s", (*prefs).lockDirectory().latin1(), p);
 		unlink(fname);
 		is_locked = false;
 	}
@@ -419,7 +406,7 @@ void Modem::writeChar(const char c)
 
 void Modem::writeLine(const char *line)
 {
-  kdDebug(5960) << "Modem::writeLine(): " << line << endl;
+  kdDebug() << "Modem::writeLine(): " << line << endl;
 
 	write(fd, (const void *)line, strlen(line));
 	writeChar('\r');
@@ -630,7 +617,6 @@ void Modem::init()
 {
 	is_locked = false;
 
-	fdev = 0;
 	fd = 0;
 	sn = 0;
 
