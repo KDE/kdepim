@@ -44,6 +44,7 @@ Name[sl]=Čakajoča opravila (KOrganizer)
 Name[sv]=Att-göra (Korganizer)
 Name[ta]=செய்ய வேண்டியவை(கேஅமைப்பாளர்)
 Name[xx]=xxToDo's (KOrganizer)xx
+Name[zh_CN]=待办事项 (KOrganizer)
 Implemented=file
 ServiceTypes=KPilotConduit
 X-KDE-Library=conduit_todo

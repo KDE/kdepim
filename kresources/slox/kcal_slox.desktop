@@ -10,6 +10,7 @@ Name[sl]=Koledarski vir SLOX
 Name[sv]=SLOX-kalenderresurs
 Name[ta]=SLOX நாள்காட்டி வளம்
 Name[xx]=xxSLOX Calendar Resourcexx
+Name[zh_CN]=SLOX 日历资源
 X-KDE-Library=kcal_slox
 Type=Service
 ServiceTypes=KResources/Plugin

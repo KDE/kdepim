@@ -8,6 +8,7 @@ Name[sl]=Programski Octetstream
 Name[sv]=Program-oktettström
 Name[ta]=பயன்பாட்டு எண்மம்
 Name[xx]=xxApplication Octetstreamxx
+Name[zh_CN]=应用程序 Octetstream
 Comment=A bodypart formatter plugin for text/calendar
 Comment[da]=Et bodypart formateringsplugin for text/calendar
 Comment[es]=Un accesorio de formato para el cuerpo de text/calendar
@@ -18,6 +19,7 @@ Comment[sl]=Oblikovalni vstavek za text/calendar
 Comment[sv]=Ett insticksprogram för brevtextformatering av text/calendar
 Comment[ta]=உரை அல்லது நாளேட்டிற்கான அங்க அமைப்பு சொருகி
 Comment[xx]=xxA bodypart formatter plugin for text/calendarxx
+Comment[zh_CN]=text/calendar 的格式化插件
 
 [Plugin]
 Type=text/calendar
