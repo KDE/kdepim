@@ -24,24 +24,14 @@
   *@author root
   */
 
-class FilterPMail : public Filter  {
-private:
-  /** the working directory */
-  QString dir;
-  /**  */
-  FilterInfo * inf;
-  /** which file (of totalFiles) is now in the work? */
-  int currentFile;
-  /** total number of files that get imported */
-  int totalFiles;
-  /** Our parent widget */
-  QWidget * par;
+class FilterPMail : public Filter, public FilterFactory< FilterPMail >  {
 public:
 	FilterPMail();
 	~FilterPMail();
-public:
+	
   void import(FilterInfo *info);	
-private: // Private methods
+
+protected:
   /** updates currentFile and the overall progress bar */
   void nextFile();
   /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
@@ -54,6 +44,17 @@ private: // Private methods
   void importMailFolder(const char *file);
   /** imports a 'unix' format mail folder (*.MBX) */
   void importUnixMailFolder(const char *file);
+private:
+  /** the working directory */
+  QString dir;
+  /**  */
+  FilterInfo * inf;
+  /** which file (of totalFiles) is now in the work? */
+  int currentFile;
+  /** total number of files that get imported */
+  int totalFiles;
+  /** Our parent widget */
+  QWidget * par;
 };
 
 #endif

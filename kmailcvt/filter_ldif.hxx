@@ -20,7 +20,7 @@
 
 #include "filters.hxx"
 
-class FilterLDIF : public Filter
+class FilterLDIF : public Filter,  protected FilterFactory< FilterLDIF >
 {
   public:
     FilterLDIF();

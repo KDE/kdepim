@@ -30,8 +30,8 @@
 
 
 FilterEudoraAb::FilterEudoraAb() : Filter(i18n("Import Filter for Eudora Light Addressbook"),"Hans Dijkema")
+, LINES(0)
 {
-  LINES=0;
 }
 
 FilterEudoraAb::~FilterEudoraAb()
@@ -46,24 +46,21 @@ void FilterEudoraAb::import(FilterInfo *info)
 
   if (!kabStart(info)) return;
 
-  QString dir = QDir::homeDirPath();
-
-  file=KFileDialog::getOpenFileName(dir,"*.txt *.TXT *.Txt",parent);
-  if (file.length()==0) {
-    info->alert(name(),i18n("No address book chosen"));
+  file=KFileDialog::getOpenFileName(QDir::homeDirPath() ,"*.txt *.TXT *.Txt",parent);
+  if (file.length()==0) 
+  {
+    info->alert(i18n("No address book chosen"));
     return;
   }
+
   F=fopen(file.latin1(),"rt");
-  if (F==NULL) {QString msg=i18n("Unable to open file '%1'").arg(file);
-    info->alert(name(),msg);
+  if (F==NULL) {
+    info->alert(i18n("Unable to open file '%1'").arg(file));
     return;
   }
 
-  QString from=i18n("Source: "),to=i18n("Destination: ");
-  from+="\t";from+=file;
-  to+="\t";to+=i18n("the KAddressBook");
-  info->from(from);
-  info->to(to);
+  info->from(file);
+  info->to(i18n("KAddressBook"));
   info->current(i18n("Currently converting Eudora Light addresses to address book"));
   convert(F,info);
   {int i,N;
@@ -80,11 +77,13 @@ void FilterEudoraAb::import(FilterInfo *info)
       }
 
       QString comment;
-      if(adr[i]=="") { comment=comments[i]; }
-      else { comment=adr[i]+"\n"+comments[i]; }
+      if(adr[i].isEmpty())
+        comment=comments[i];
+      else 
+        comment=adr[i]+"\n"+comments[i]; 
 
       kabAddress(info,"Eudora Light",
-          keys[i],(emails[i]=="") ? QString::null : emails[i],
+          keys[i],(emails[i].isEmpty()) ? QString::null : emails[i],
           QString::null,QString::null,QString::null,
           (names[i]=="") ? QString::null : names[i],
           QString::null,
@@ -100,8 +99,7 @@ void FilterEudoraAb::import(FilterInfo *info)
           );
 
       { 
-        float perc=((float) i)/((float) LINES)*100.0;
-        info->overall(perc);
+        info->overall(100*i/LINES);
       }
     }
     {
@@ -112,7 +110,7 @@ void FilterEudoraAb::import(FilterInfo *info)
   kabStop(info);
   info->current(i18n("Finished converting Eudora Light addresses to KAddressBook"));
   fclose(F);
-  info->overall(100.0);
+  info->overall(100);
 }
 
 #define LINELEN 10240
@@ -123,14 +121,12 @@ void FilterEudoraAb::convert(FILE *f,FilterInfo *info)
   char _line[LINELEN+1];
   int  i,e;
   int LINE=0;
-  float perc;
   while(fgets(_line,LINELEN,f)!=NULL) { LINES+=1; }
   rewind(f);
   while(fgets(_line,LINELEN,f)!=NULL) {
 
     LINE+=1;
-    perc=((float) LINE)/((float) LINES)*100.0;
-    info->current(perc);
+    info->current(100 * LINE / LINES );
 
     for(i=0;_line[i]!='\n' && _line[i]!='\0';i++);
     _line[i]='\0';
@@ -156,7 +152,7 @@ void FilterEudoraAb::convert(FILE *f,FilterInfo *info)
       phones[e]=get(line, "phone");
     }
   }
-  info->current(100.0);
+  info->current(100);
 }
 
 QString FilterEudoraAb::key(const QString& line) const

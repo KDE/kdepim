@@ -20,7 +20,7 @@
 
 #include "filters.hxx"
 
-class FilterPAB : public Filter
+class FilterPAB : public Filter, protected FilterFactory< FilterPAB >
 {
   public:
     FilterPAB();

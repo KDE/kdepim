@@ -20,6 +20,7 @@
 
 #include <qcombobox.h>
 #include <qprogressbar.h>
+#include <qptrlist.h>
 #include <qlistbox.h>
 #include <qlabel.h>
 
@@ -29,36 +30,25 @@
 
 class FilterInfo
 {
-  private:
-    KImportPageDlg *_dlg;
-    QWidget      *_parent;
   public:
     FilterInfo(KImportPageDlg *dlg, QWidget *parent);
    ~FilterInfo();
 
-    void  from(QString from);
-    void  to(QString to);
-    void  current(QString current);
-    void  current(float percent=0.0f);
-    void  overall(float percent=0.0f);
-    void  log(QString toLog);
-    void  clear(void);
-    void  alert(QString c,QString m);
-    QWidget *parent(void) { return _parent; }
-};
+    void from( const QString& from );
+    void to( const QString& to );
+    void current( const QString& current );
+    void current( int percent = 0 );
+    void overall( int percent = 0 );
+    void log( const QString& log );
+    void clear();
+    void alert( const QString& message );
 
-class KMail
-{
-  public:
-    KMail();
-   ~KMail();
-   
-    bool kmailStart(FilterInfo *) { return true; }
-    bool kmailMessage(FilterInfo *info,QString folder,QString msgFile);
-    void kmailStop(FilterInfo *info);
+    QWidget *parent() { return m_parent; }
+
+    
   private:
-    QString cap;
-
+    KImportPageDlg *m_dlg;
+    QWidget      *m_parent;
 };
 
 class KAb
@@ -93,23 +83,56 @@ class KAb
     bool checkStr( QString & );
 };
 
-
-
-class Filter : public KMail, public KAb
+class Filter : public KAb
 {
   public:
-    Filter(QString name,QString author,QString info=QString::null);
-    virtual ~Filter();
-    virtual void import(FilterInfo *i);
-    QString author(void);
-    QString name(void);
-    QString info(void);
+    typedef Filter* ( *Creator )();
+    typedef QPtrList< Filter > List;
+    Filter( const QString& name, const QString& author,
+            const QString& info = QString::null );
+    virtual ~Filter() {}
+    virtual void import( FilterInfo* ) = 0;
+    QString author() const { return m_author; }
+    QString name() const { return m_name; }
+    QString info() const { return m_info; }
+
+    static void registerFilter( Creator );
+    static List createFilters();
+
+  protected:
+    bool addMessage( FilterInfo* info,
+                     const QString& folder,
+                     const QString& msgFile );
 
   private:
-    QString myName;
-    QString myAuthor;
-    QString myInfo;
+    QString m_name;
+    QString m_author;
+    QString m_info;
 };
+
+template< class T >
+class FilterFactory
+{
+  public:
+    static Filter* create()
+      { return new T; }
+
+  protected:
+    FilterFactory()
+    {
+      static_cast< void >( s_register ); // Don't remove
+    }
+  
+  private:
+    static struct Register
+    {
+      Register()
+        { Filter::registerFilter( create ); }
+    } s_register;
+};
+template< class T >
+typename FilterFactory< T >::Register FilterFactory< T >::s_register;
 
 #endif
 
+// vim: ts=2 sw=2 et

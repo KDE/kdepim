@@ -45,39 +45,55 @@ FilterPlain::FilterPlain() :
 {
 }
 
+
+
 FilterPlain::~FilterPlain()
 {
 }
 
-void FilterPlain::import(FilterInfo *inf)
+
+
+void FilterPlain::import(FilterInfo *info)
 {
+   inf = info;
+
    // Select directory containing plain text emails
-   QString mailDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(),inf->parent());
+   mailDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(),inf->parent());
    if (mailDir.isEmpty()) { // No directory selected
-   	inf->alert(name(), i18n("No directory selected"));
+   	info->alert(i18n("No directory selected"));
    	return;
    }
 
    // Count total number of files to be processed
    inf->log(i18n("Counting files..."));
-   QDir dir (mailDir);
-   QStringList files = dir.entryList("*.msg; *.eml; *.txt", QDir::Files, QDir::Name);
-   int totalFiles = files.count();
-   int currentFile = 0;
+   totalFiles = countFiles("*.msg; *.eml; *.txt");
+   currentFile = 0;
 
-   if (!kmailStart(inf)) { // Couldn't start KMail
-   	inf->alert(name(), i18n("Unable to start KMail"));
-   	return;
-   }
-   
    inf->log(i18n("Importing new mail files..."));
+   processFiles("*.msg; *.eml; *.txt");
+}
+
+
+/** counts all files which match filter in mail directory */
+int FilterPlain::countFiles(QString filter)
+{
+   QDir dir (mailDir);
+   QStringList files = dir.entryList(filter, QDir::Files, QDir::Name);
+   return files.count();
+}
+
+
+/** process files that match filter */
+void FilterPlain::processFiles(QString filter)
+{
+   QDir dir (mailDir);
+   QStringList files = dir.entryList(filter, QDir::Files, QDir::Name);
+   
    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
 	inf->from(i18n("From: %1").arg(*mailFile));
 	inf->to(i18n("To: %1").arg(dir.dirName()));
-	kmailMessage((FilterInfo *) inf, dir.dirName(), dir.filePath(*mailFile));
+	addMessage(inf, dir.dirName(), dir.filePath(*mailFile));
         
-	inf->overall((((float) ++currentFile)/((float) totalFiles))*100.0);
+	inf->overall(100 * ++currentFile/ totalFiles);
    }
-   
-   kmailStop(inf); // Stop KMail
 }

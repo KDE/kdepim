@@ -38,7 +38,7 @@ void FilterLDIF::import(FilterInfo *info) {
    QString filename = KFileDialog::getOpenFileName( QDir::homeDirPath(), 
 		   	"*.ldif *.LDIF *.Ldif", parent);
    if (filename.isEmpty()) {
-     info->alert(name(),i18n("No Addressbook chosen"));
+     info->alert(i18n("No Addressbook chosen"));
      return;
    }
 
@@ -51,8 +51,8 @@ void FilterLDIF::import(FilterInfo *info) {
 
    convert(filename, info);
 
-   info->current(100.0);
-   info->overall(100.0);
+   info->current(100);
+   info->overall(100);
    info->current(i18n("Finished converting .LDIF address file to KABC"));
 }
 
@@ -66,7 +66,7 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
    QFile f(filename);
    if ( !f.open(IO_ReadOnly) ) {
 	QString msg =  i18n("Can't open '%1' for reading").arg(filename);
-	info->alert(caption,msg);
+	info->alert(msg);
 	return false;
    }
 
@@ -91,8 +91,8 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
 	bytesProcessed += s.length();
 	
 	// update progress information
-    	info->current((float)bytesProcessed/fileSize*100);
-    	info->overall((float)bytesProcessed/fileSize*100);
+    	info->current(100 * bytesProcessed / fileSize);
+    	info->overall(100 * bytesProcessed / fileSize);
 	
 	if (s.isEmpty()) {
 		// Newline: Write data

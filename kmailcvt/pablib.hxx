@@ -16,8 +16,8 @@
  ***************************************************************************/
 
 
-#ifndef __LIB__HXX
-#define __LIB__HXX
+#ifndef PAB_LIB_HXX
+#define PAB_LIB_HXX
 
 #include "filters.hxx"
 #include "mapihd.h"

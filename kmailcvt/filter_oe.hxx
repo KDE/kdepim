@@ -21,33 +21,38 @@
 #include "filters.hxx"
 
 /**imports outlook text messages into KMail
-  *@author Laurence Anderson
-  */
+ *@author Laurence Anderson
+ */
 
-class FilterOE : public Filter  {
-public:
-	FilterOE();
-	~FilterOE();
+class FilterOE : public Filter, protected FilterFactory< FilterOE >  {
+  public:
+    FilterOE();
+    ~FilterOE();
 
-	void import(FilterInfo *info);
-private: // Private methods
-	FilterInfo * inf;
-	/** which file (of totalFiles) is now in the work? */
-	int currentFile;
-	/** total number of files that get imported */
-	int totalFiles;
-	/** total emails in current file */
-	int totalEmails;
-	/** which email (of totalFiles) is now in the work? */
-	int currentEmail;
-  
-	QString folderName;
-	void importMailBox(QString fileName);
-	void mbxImport(QDataStream& ds);
-	void dbxImport(QDataStream& ds);
-	void dbxReadIndex(QDataStream& ds, int filePos);
-	void dbxReadDataBlock(QDataStream& ds, int filePos);
-	void dbxReadEmail(QDataStream& ds, int filePos);
+    void import(FilterInfo *info);
+
+  protected:
+    void importMailBox(const QString& fileName);
+    void mbxImport(QDataStream& ds);
+    void dbxImport(QDataStream& ds);
+    void dbxReadIndex(QDataStream& ds, int filePos);
+    void dbxReadDataBlock(QDataStream& ds, int filePos);
+    void dbxReadEmail(QDataStream& ds, int filePos);
+
+  private: // Private methods
+    FilterInfo * inf;
+    /** which file (of totalFiles) is now in the work? */
+    int currentFile;
+    /** total number of files that get imported */
+    int totalFiles;
+    /** total emails in current file */
+    int totalEmails;
+    /** which email (of totalFiles) is now in the work? */
+    int currentEmail;
+
+    QString folderName;
 };
 
 #endif
+
+// vim: ts=2 sw=2 et

@@ -15,23 +15,18 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "filters.hxx"
-#include "kmailcvt.h"
-
-/*#include <stdlib.h>
-#include <stdio.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>*/
-
-#include <qlayout.h>
+#include <kapplication.h>
 #include <kmessagebox.h>
 #include <klocale.h>
-#include <kabc/stdaddressbook.h>
-#include <kapplication.h>
-#include <dcopclient.h>
 #include <krun.h>
+
+#include <dcopclient.h>
+#include <dcopref.h>
+
+#include <kabc/stdaddressbook.h>
+
+#include "filters.hxx"
+#include "kmailcvt.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -40,68 +35,61 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-FilterInfo::FilterInfo(KImportPageDlg *dlg, QWidget *parent)
+FilterInfo::FilterInfo( KImportPageDlg* dlg, QWidget* parent )
+  : m_dlg( dlg ),
+    m_parent( parent )
 {
-   _dlg = dlg;
-   _parent = parent;
 }
 
 FilterInfo::~FilterInfo()
 {
 }
 
-void FilterInfo::from(QString from)
+void FilterInfo::from( const QString& from )
 {
-  _dlg->_from->setText(from);
+  m_dlg->_from->setText( from );
 }
 
-void FilterInfo::to(QString to)
+void FilterInfo::to( const QString& to )
 {
-  _dlg->_to->setText(to);
+  m_dlg->_to->setText( to );
 }
 
-void FilterInfo::current(QString current)
+void FilterInfo::current( const QString& current )
 {
-  _dlg->_current->setText(current);
+  m_dlg->_current->setText( current );
 }
 
-void  FilterInfo::current(float percent)
+void  FilterInfo::current( int percent )
 {
-  int p=(int) (percent+0.5);
-  if (percent == 0) { _dlg->_done_current->reset(); }
-  _dlg->_done_current->setProgress(p);
-  kapp->processEvents(50);
+  m_dlg->_done_current->setProgress( percent );
 }
 
-void  FilterInfo::overall(float percent)
+void  FilterInfo::overall( int percent )
 {
-  int p=(int) (percent+0.5);
-  if (percent == 0) { _dlg->_done_overall->reset(); }
-  _dlg->_done_overall->setProgress(p);
-  kapp->processEvents(50);
+  m_dlg->_done_overall->setProgress( percent );
 }
 
-void FilterInfo::log(QString toLog)
+void FilterInfo::log( const QString& log )
 {
-  _dlg->_log->insertItem(toLog);
-  _dlg->_log->setCurrentItem(_dlg->_log->count()-1);
-  _dlg->_log->centerCurrentItem();
-  kapp->processEvents(50);
+  m_dlg->_log->insertItem( log );
+  m_dlg->_log->setCurrentItem( m_dlg->_log->count() - 1 );
+  m_dlg->_log->centerCurrentItem();
 }
 
-void FilterInfo::clear(void)
+void FilterInfo::clear()
 {
-  _dlg->_log->clear();
+  m_dlg->_log->clear();
   current();
   overall();
-  current("");
-  from("");
-  to("");
+  current( QString::null );
+  from( QString::null );
+  to( QString::null );
 }
 
-void FilterInfo::alert(QString conversion, QString message)
+void FilterInfo::alert( const QString& message )
 {
-  KMessageBox::information(_parent,message,conversion);
+  KMessageBox::information( m_parent, message );
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -110,120 +98,72 @@ void FilterInfo::alert(QString conversion, QString message)
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-Filter::Filter(QString _name, QString _author, QString _info)
+namespace
 {
-  myName=_name;
-  myAuthor=_author;
-  myInfo=_info;
+  QValueList< Filter::Creator >& registry()
+  {
+    static QValueList< Filter::Creator > list;
+    return list;
+  }
 }
 
-Filter::~Filter()
+void Filter::registerFilter( Creator create )
+{
+  registry().append( create );
+}
+
+Filter::List Filter::createFilters()
+{
+  List result;
+  for ( QValueList< Creator >::ConstIterator it = registry().begin();
+        it != registry().end(); ++it ) result.append( ( *it )() );
+  return result;
+}
+
+Filter::Filter( const QString& name, const QString& author,
+                const QString& info )
+  : m_name( name ),
+    m_author( author ),
+    m_info( info )
 {
 }
 
-QString Filter::name(void)
-{
-  return myName;
-}
-
-QString Filter::author(void)
-{
-  return myAuthor;
-}
-
-QString Filter::info(void)
-{
-  return myInfo;
-}
-
-void Filter::import(FilterInfo *info)
-{
-  info->alert(  i18n("class filter"),
-		i18n("no import function implemented") );
-}
-
-//////////////////////////////////////////////////////////////////////////////////
-//
-// This is the kmail class, it provides the interface to kmail.
-// I'm waiting for a kmail API.
-//
-//////////////////////////////////////////////////////////////////////////////////
-
-KMail::KMail()
-{
-  cap=i18n("KmailCvt - KMail API");
-}
-
+#if 0
 KMail::~KMail()
 {
+  m_info->log("kmail has adopted the (new) folders and messages");
 }
+#endif
 
-bool KMail::kmailMessage(FilterInfo *info,QString folderName,QString msgPath)
+bool Filter::addMessage( FilterInfo* info, const QString& folderName,
+                         const QString& msgPath )
 {
-  const QByteArray kmData;
-  QByteArray kmRes;
-  QDataStream kmArg(kmData,IO_WriteOnly);
-  QCString type;
+  if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
+    KApplication::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
 
-  kmArg << folderName << msgPath;
-
-  DCOPClient *c=kapp->dcopClient();
-  if (!c->call("kmail", "KMailIface", "dcopAddMessage(QString,QString)", kmData, type, kmRes)) {
-    // Maybe KMail isn't already running, so try starting it
-    KApplication::startServiceByDesktopName("kmail", QString::null); // Will wait until kmail is started
-    if (!c->call("kmail", "KMailIface", "dcopAddMessage(QString,QString)", kmData, type, kmRes)) {
-      info->alert(cap, i18n("FATAL: Unable to start KMail for DCOP communication.\n"
-               "       Make sure 'kmail' is installed."));
-      return false;
-    }
+    DCOPReply reply = DCOPRef( "kmail", "KMailIface" )
+                        .call( "dcopAddMessage", folderName, msgPath );
+  if ( !reply.isValid() )
+  {
+    info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DCOP communication. "
+                       "Make sure <i>kmail</i> is installed." ) );
+    return false;
   }
 
-  QDataStream KmResult(kmRes,IO_ReadOnly);
-  int result;
-  KmResult >> result;
-    
-  if (result==-1) {
-    info->alert(cap, i18n("Cannot make folder %1 in KMail").arg(folderName));
-    return false;
-  } else if (result==-2) {
-    info->alert(cap, i18n("Cannot add message to folder %1 in KMail").arg(folderName));
-    return false;
-  } else if (result==0) {
-    info->alert(cap, i18n("Error while adding message to folder %1 in KMail").arg(folderName));
-    return false;
+  switch ( int( reply ) )
+  {
+    case -1:
+      info->alert( i18n( "Cannot make folder %1 in KMail" ).arg( folderName ) );
+      return false;
+    case -2:
+      info->alert( i18n( "Cannot add message to folder %1 in KMail" ).arg( folderName ) );
+      return false;
+    case 0:
+      info->alert( i18n( "Error while adding message to folder %1 in KMail" ).arg( folderName ) );
+      return false;
   }
 
   return true;
-
-/* OLD code -- kept for
-
-FILE *f,*msg;
-QString FOLDER;
-int   fh,bytes;
-char  buf[4096];
-//QWidget *parent=info->parent();
-
-  FOLDER = QDir::homeDirPath() + "/Mail";
-
-  mkdir(QFile::encodeName(FOLDER),S_IRUSR|S_IWUSR|S_IXUSR);    // This makes $HOME/Mail if itdoesn't exist
-  FOLDER = FOLDER + "/" + folder;
-  f=fopen(QFile::encodeName(FOLDER),"ab");
-  msg=fopen(_msg,"rb");
-  fseek(msg,0,SEEK_SET);
-  fh=fileno(msg);
-  while((bytes=read(fh,buf,4096))>0) {
-    fwrite(buf,bytes,1,f);
-  }
-  fclose(f);
-  fclose(msg);
-return true;
-
-*/
-}
-
-void KMail::kmailStop(FilterInfo *info)
-{
-  info->log("kmail has adopted the (new) folders and messages");
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -233,10 +173,8 @@ void KMail::kmailStop(FilterInfo *info)
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-KAb::KAb()
+KAb::KAb() : mAddressBook(0)
 {
-  mAddressBook = 0;
-  cap=i18n("Kmailcvt - KAddressBook API");
 }
 
 KAb::~KAb()
@@ -248,7 +186,7 @@ bool KAb::kabStart(FilterInfo *info)
   mAddressBook = KABC::StdAddressBook::self();
   mTicket = mAddressBook->requestSaveTicket();
   if ( !mTicket ) {
-     info->alert(cap,i18n("Unable to store imported data in address book."));
+     info->alert(i18n("Unable to store imported data in address book."));
      return false;
   }
   return true;
@@ -350,3 +288,5 @@ bool KAb::kabAddress(FilterInfo *_info,QString adrbookname,
 
   return true;
 }
+
+// vim: ts=2 sw=2 et

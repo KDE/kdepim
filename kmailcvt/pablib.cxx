@@ -50,7 +50,7 @@ bool ret;
 
    if (in==NULL) {QString msg;
      msg=i18n("Can't open %1 for reading").arg(pabfile);
-     info->alert(cap,msg);
+     info->alert(msg);
      return false;
    }
    if (!knownPAB()) {
@@ -74,7 +74,6 @@ bool pab::convert(adr_t A,content_t ,content_t )
 adr_t table;
 content_t start,stop,T;
 int N,n;
-float perc;
 
    N=0;
    go(A);
@@ -119,8 +118,7 @@ float perc;
      go(cp);
      start=read();
      n+=1;
-     perc=((float) n)/((float) N)*100.0;
-     info->overall(perc);
+     info->overall( 100 * n / N );
    }
 
 return true;
@@ -132,7 +130,6 @@ void pab::dotable(adr_t T,content_t start,content_t stop)
 adr_t REC,pREC,cp;
 content_t cmp,skip;
 int   N,n;
-float perc;
 
   go(T);
   cp=tell();
@@ -145,7 +142,7 @@ float perc;
     processRec(stop);
     // Then exit
     info->current();
-    info->current(100.0);
+    info->current(100);
     return;
   }   // This is not a table.
 
@@ -179,12 +176,11 @@ float perc;
       cmp=read();
     }
     n+=1;
-    perc=((float) n)/((float) N)*100.0;
-    info->current(perc);
+    info->current(100 * n / N);
   }
 
   info->current();
-  info->current(100.0);
+  info->current(100);
 }
 
 
@@ -274,7 +270,7 @@ content_t id;
    id=go(0);
    if (id!=PAB_FILE_ID) {QString msg;
      msg=i18n("%1 has no PAB id that I know of, can't convert this").arg(pabfile);
-     info->alert(cap,msg);
+     info->alert(msg);
      return false;
    }
 return true;

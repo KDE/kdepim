@@ -30,25 +30,24 @@ FilterPAB::~FilterPAB()
 
 void FilterPAB::import(FilterInfo *info)
 {
-QString  file;
-QWidget *parent=info->parent();
+  QString  file;
+  QWidget *parent=info->parent();
 
-   file=KFileDialog::getOpenFileName(QDir::homeDirPath(),"*.pab *.PAB *.Pab",parent);
-   if (file.isEmpty()) {
-     info->alert(name(),i18n("No address book chosen"));
-     return;
-   }
+  file=KFileDialog::getOpenFileName(QDir::homeDirPath(),"*.pab *.PAB *.Pab",parent);
+  
+  if (file.isEmpty()) {
+    info->alert(i18n("No address book chosen"));
+    return;
+  }
 
-   {pab PAB(QFile::encodeName(file),this,info);
-    QString from=i18n("Source: "),to=i18n("Destination: ");
-      from+="\t";
-      from+=file;
-      to+="\t";
-      to+=i18n("the KAddressBook");
-      info->from(from);
-      info->to(to);
-      info->current(i18n("Currently converting .PAB addresses to Kab"));
-      PAB.convert();
-      info->current(i18n("Finished converting .PAB addresses to Kab"));
-   }
+  {
+    pab PAB(QFile::encodeName(file),this,info);
+    info->from(file);
+    info->to(i18n("KAddressBook"));
+    info->current(i18n("Currently converting .PAB addresses to Kab"));
+    PAB.convert();
+    info->current(i18n("Finished converting .PAB addresses to Kab"));
+  }
 }
+
+// vim: ts=2 sw=2 et

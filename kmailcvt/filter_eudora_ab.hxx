@@ -20,7 +20,8 @@
 #ifndef __FILTER_EUDORA_AB__
 #define __FILTER_EUDORA_AB__
 
-class FilterEudoraAb : public Filter
+class FilterEudoraAb : public Filter, protected FilterFactory< FilterEudoraAb >
+
 {
   public:
     FilterEudoraAb();

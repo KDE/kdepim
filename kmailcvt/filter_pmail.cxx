@@ -29,9 +29,9 @@
 
 
 FilterPMail::FilterPMail() :
-   Filter(i18n("Import Folders From Pegasus-Mail"),
+   Filter(i18n("Import Folders From Pegasus-Mail (*.CNM, *.PMM, *.MBX)"),
    "Holger Schurig",
-   i18n("<p>Select the Pegasus-Mail directory on your system, containing CNM, PMM and MBX files.  "
+   i18n("<p>Select the Pegasus-Mail directory on your system. "
               "This import filter will import your folders, but not "
               "the folder structure. But you will probably only do "
               "this one time. </p>"
@@ -42,7 +42,6 @@ FilterPMail::FilterPMail() :
               "folders.</p>"))
 {
 }
-
 
 
 FilterPMail::~FilterPMail()
@@ -56,7 +55,6 @@ void FilterPMail::import(FilterInfo *info)
    QString  choosen;
    QString  msg;
 
-   if (!kmailStart(info)) { return; }
    inf = info;
    par = info->parent();
 
@@ -75,15 +73,12 @@ void FilterPMail::import(FilterInfo *info)
    //info->log(msg);
    //totalFiles += countFiles(choosen, "*.pml");
 
-   if (!kmailStart(info))
-      return;
    info->log(i18n("Importing new mail files ('.cnm')..."));
    processFiles(".cnm", &FilterPMail::importNewMessage);
    info->log(i18n("Importing mail folders ('.pmm')..."));
    processFiles(".pmm", &FilterPMail::importMailFolder);
    info->log(i18n("Importing 'UNIX' mail folders ('.mbx')..."));
    processFiles(".mbx", &FilterPMail::importUnixMailFolder);
-   kmailStop(info);
 }
 
 
@@ -112,11 +107,8 @@ int FilterPMail::countFiles(const char *mask)
 /** updates currentFile and the progress bar */
 void FilterPMail::nextFile()
 {
-   float perc;
-
    currentFile++;
-   perc=(((float) currentFile)/((float) totalFiles))*100.0;
-   inf->overall(perc);
+   inf->overall( 100 * currentFile / totalFiles );
 }
 
 
@@ -167,7 +159,7 @@ void FilterPMail::importNewMessage(const char *file)
    msg = i18n("To: %1").arg(destFolder);
    inf->to(msg);
 
-   kmailMessage((FilterInfo *) inf, (char *)destFolder, (char *)file);
+   addMessage(inf, destFolder, file);
 }
 
 
@@ -247,7 +239,7 @@ void FilterPMail::importMailFolder(const char *file)
          if (ch == 0x1a) {
             // close file, send it
             tempfile->close();
-            kmailMessage((FilterInfo *) inf, folder, tempfile->name());
+            addMessage(inf, folder, tempfile->name());
             tempfile->unlink();
             delete tempfile;
             state = 0;
@@ -264,7 +256,7 @@ void FilterPMail::importMailFolder(const char *file)
    // did Folder end without 0x1a at the end?
    if (state != 0) {
       tempfile->close();
-      kmailMessage((FilterInfo *) inf, folder, tempfile->name());
+      addMessage(inf, folder, tempfile->name());
       tempfile->unlink();
       delete tempfile;
    }
@@ -320,7 +312,7 @@ void FilterPMail::importUnixMailFolder(const char *file)
          regexp.search(line) >= 0))                            // slower regexp
       {
          tempfile->close();
-         kmailMessage((FilterInfo *) inf, folder, tempfile->name());
+         addMessage(inf, folder, tempfile->name());
          tempfile->unlink();
          delete tempfile;
          temp = NULL;
@@ -341,7 +333,7 @@ void FilterPMail::importUnixMailFolder(const char *file)
 
    if (temp) {
       tempfile->close();
-      kmailMessage((FilterInfo *) inf, folder, tempfile->name());
+      addMessage(inf, folder, tempfile->name());
       tempfile->unlink();
       delete tempfile;
    }
