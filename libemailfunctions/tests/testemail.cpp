@@ -345,6 +345,9 @@ int main(int argc, char *argv[])
   checkQuoteIfNecessary( "Matt \"jongel\" Douhan", "\"Matt \\\"jongel\\\" Douhan\"");
   checkQuoteIfNecessary( "Matt \\\"jongel\\\" Douhan", "\"Matt \\\"jongel\\\" Douhan\"");
   checkQuoteIfNecessary( "trailing '\\\\' should never occur \\", "\"trailing '\\\\' should never occur \\\"");
+  checkQuoteIfNecessary( "\"don't quote again\"", "\"don't quote again\"" );
+  checkQuoteIfNecessary( "\"leading double quote", "\"\\\"leading double quote\"" );
+  checkQuoteIfNecessary( "trailing double quote\"", "\"trailing double quote\\\"\"" );
 
   printf("\nTest OK !\n");
 

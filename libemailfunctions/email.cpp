@@ -768,7 +768,7 @@ QString KPIM::normalizedAddress( const QString & displayName,
     return displayName + " <" + addrSpec + ">";
   else if ( displayName.isEmpty() ) {
     QString commentStr = comment;
-    return "\"" + commentStr.replace('"', "") + "\" <" + addrSpec + ">";
+    return quoteNameIfNecessary( commentStr ) + " <" + addrSpec + ">";
   }
   else
     return displayName + " (" + comment + ") <" + addrSpec + ">";
@@ -895,7 +895,7 @@ static QString escapeQuotes( const QString & str )
   escaped.reserve( 2*str.length() );
   unsigned int len = 0;
   for ( unsigned int i = 0; i < str.length(); ++i, ++len ) {
-    if ( str[i] == '\"' ) { // unescaped doublequote
+    if ( str[i] == '"' ) { // unescaped doublequote
       escaped[len] = '\\';
       ++len;
     }
@@ -918,7 +918,11 @@ QString KPIM::quoteNameIfNecessary( const QString &str )
   QString quoted = str;
 
   QRegExp needQuotes(  "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
-  if ( quoted.find( needQuotes ) != -1 ) {
+  // avoid double quoting
+  if ( ( quoted[0] == '"' ) && ( quoted[quoted.length() - 1] == '"' ) ) {
+    quoted = "\"" + escapeQuotes( quoted.mid( 1, quoted.length() - 2 ) ) + "\"";
+  }
+  else if ( quoted.find( needQuotes ) != -1 ) {
     quoted = "\"" + escapeQuotes( quoted ) + "\"";
   }
 
