@@ -126,7 +126,7 @@ void ViewManager::writeConfig()
     }
     Filter::save(mConfig, QString("Filter"), mFilterList);
     mConfig->setGroup("Filter");
-    mConfig->writeEntry("Active", currentFilter.name());
+    mConfig->writeEntry("Active", mCurrentFilter.name());
     // write the view name list
     mConfig->setGroup("Views");
     mConfig->writeEntry("Names", mViewNameList);
@@ -286,7 +286,7 @@ void ViewManager::setActiveView(const QString &name)
       }
       else if (view->defaultFilterType() == KAddressBookView::Active)
       {
-          emit(setCurrentFilterName(currentFilter.name()));
+          emit(setCurrentFilterName(mCurrentFilter.name()));
       }
       else   // KAddressBookView::Specific
       {
@@ -356,7 +356,7 @@ void ViewManager::modifyView()
       }
       else if (mActiveView->defaultFilterType() == KAddressBookView::Active)
       {
-          emit(setCurrentFilterName(currentFilter.name()));
+          emit(setCurrentFilterName(mCurrentFilter.name()));
       }
       else   // KAddressBookView::Specific
       {
@@ -640,28 +640,26 @@ void ViewManager::filtersChanged(const Filter::List &list)
 
   // Update the combo
   emit(setFilterNames(names));
-  currentFilter=Filter();
+  mCurrentFilter=Filter();
 }
 
 void ViewManager::filterActivated(int index)
 {
-  // Check if we have a view. Since the filter combo is created before
-  // the view, this slot could be called before there is a valid view.
-  if (!mActiveView)
-    return;
-
   if (index < 0)
   {
-      currentFilter=Filter();
-      mActiveView->setFilter(Filter());
+      mCurrentFilter=Filter();
   }
   else
   {
-      currentFilter=mFilterList[index];
-      mActiveView->setFilter(currentFilter);
+      mCurrentFilter=mFilterList[index];
   }
 
-  mActiveView->refresh();
+  // Check if we have a view. Since the filter combo is created before
+  // the view, this slot could be called before there is a valid view.
+  if ( mActiveView ) {
+    mActiveView->setFilter(mCurrentFilter);
+    mActiveView->refresh();
+  }
 }
 
 #include "viewmanager.moc"

@@ -266,7 +266,7 @@ class ViewManager : public QWidget
     JumpButtonBar *mJumpButtonBar;
     AddresseeEditorWidget *mQuickEdit;
     Filter::List mFilterList;
-    Filter currentFilter;
+    Filter mCurrentFilter;
 };
 
 #endif

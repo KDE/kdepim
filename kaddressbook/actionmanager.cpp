@@ -379,7 +379,7 @@ void ActionManager::setFilterNames(const QStringList& list)
 
 void ActionManager::slotFilterActivated(int index)
 {
-    emit(filterActivated(index-1));
+    emit filterActivated(index-1);
 }
 
 void ActionManager::setCurrentFilterName(const QString& name)
@@ -393,7 +393,7 @@ void ActionManager::setCurrentFilterName(const QString& name)
 void ActionManager::setCurrentFilter(int index)
 {
     mActionSelectFilter->setCurrentItem(index);
-    mViewManager->filterActivated(index-1);
+    emit filterActivated(index-1);
 }
 
 
