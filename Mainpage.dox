@@ -19,7 +19,6 @@
         *   (<a href="karm/html/classes.html">classes</a>)\n
         *   <i>A time tracker.</i>
         * - <a href="kfile-plugins/html/index.html"><b>kfile-plugins</b></a>
-        *   (<a href="kfile-plugins/html/classes.html">classes</a>)\n
         *   <i></i>
         * - <a href="kgantt/html/index.html"><b>kgantt</b></a>
         *   (<a href="kgantt/html/classes.html">classes</a>)\n
@@ -52,13 +51,11 @@
         *   (<a href="ksync/html/classes.html">classes</a>)\n
         *   <i>A generic library for syncing collections of data entries.</i>
         * - <a href="libemailfunctions/html/index.html"><b>libemailfunctions</b></a>
-        *   (<a href="libemailfunctions/html/classes.html">classes</a>)\n
         *   <i>A library for general purpose email handling.</i>
         * - <a href="libkcal/html/index.html"><b>libkcal</b></a>
         *   (<a href="libkcal/html/classes.html">classes</a>)\n
         *   <i>A library of calendaring classes.</i>
         * - <a href="libkdenetwork/html/index.html"><b>libkdenetwork</b></a>
-        *   (<a href="libkdenetwork/html/classes.html">classes</a>)\n
         *   <i>A library of networkworking classes.</i>
         * - <a href="libkdepim/html/index.html"><b>libkdepim</b></a>
         *   (<a href="libkdepim/html/classes.html">classes</a>)\n
@@ -73,7 +70,6 @@
         *   (<a href="libkpgp/html/classes.html">classes</a>)\n
         *   <i>A PGP abstraction layer.</i>
         * - <a href="libkpimexchange/html/index.html"><b>libkpimexchange</b></a>
-        *   (<a href="libkpimexchange/html/classes.html">classes</a>)\n
         *   <i></i>
         *
         * More information can be found at the
