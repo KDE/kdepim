@@ -102,6 +102,7 @@ Wallet* KNServerInfo::openWallet()
 void KNServerInfo::saveConf(KConfig *conf)
 {
   conf->writeEntry("server", s_erver);
+  if ( p_ort == 0 ) p_ort = 119;
   conf->writeEntry("port", p_ort);
   conf->writeEntry("holdTime", h_old);
   conf->writeEntry("timeout", t_imeout);
