@@ -34,7 +34,7 @@ void CertItem::display()
   dialog->setMainWidget( top );
   
   // Fixed Keys
-  new QLabel(i18n("<b>Certicate Information</b>"), top );
+  new QLabel(i18n("<b>Certificate Information</b>"), top );
   new QLabel(i18n("DN: %1").arg( _DN ), top );
   new QLabel(i18n("O: %1").arg( _O ), top );
  

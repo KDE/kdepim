@@ -107,7 +107,7 @@ void CertManager::newCertificate()
           if( !dcopClient->send( "kmail*", "KMailIface",
                                  "sendCertificate(QString,QByteArray)", data ) ) {
               KMessageBox::error( this,
-                                  i18n( "DCOP Communication Error, can't ask KMail to send certificate" ) );
+                                  i18n( "DCOP Communication Error, unable to send certificate using KMail" ) );
               return;
           }
       } else {

@@ -48,7 +48,7 @@
 &lt;br&gt;
 In a few easy steps, this wizard will help you creating a certificate. You use your certificates in order to sign messages, to encrypt messages and to decrypt messages that other people send to you in encrypted form.
 &lt;p&gt;
-The certificates can either be generated in a centralized or a non-centralized manner. Please contact your local help desk if you are unsure how to create a certificate in your organisation.</string>
+The certificates can either be generated in a centralized or a decentralized manner. Please contact your local help desk if you are unsure how to create a certificate in your organization.</string>
                 </property>
             </widget>
         </vbox>
