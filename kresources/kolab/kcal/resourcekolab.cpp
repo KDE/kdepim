@@ -282,13 +282,13 @@ bool ResourceKolab::addEvent( KCal::Event* event, const QString& _subresource,
 
   // Find out if this event was previously stored in KMail
   bool newEvent = _subresource.isEmpty();
-  mCalendar.addEvent( event );
 
   QString subResource =
     newEvent ? findWritableResource( mEventSubResources ) : _subresource;
   if ( subResource.isEmpty() )
     return false;
 
+  mCalendar.addEvent( event );
   if ( !mSilent ) {
     QString xml = Kolab::Event::eventToXML( event, mCalendar.timeZoneId() );
     kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
@@ -532,6 +532,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
     rc = false;
 
   mSilent = silent;
+  emit resourceChanged( this ); // make KOrganizer read it
   return rc;
 }
 
@@ -548,6 +549,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
   if( incidence )
     mCalendar.deleteIncidence( incidence );
   mUidMap.remove( uid );
+  emit resourceChanged( this ); // make KOrganizer read it
 }
 
 void ResourceKolab::fromKMailRefresh( const QString& type,
@@ -560,6 +562,7 @@ void ResourceKolab::fromKMailRefresh( const QString& type,
     loadAllTodos();
   else if ( type == "Journal" )
     loadAllJournals();
+  emit resourceChanged( this ); // make KOrganizer read it
 }
 
 void ResourceKolab::fromKMailAddSubresource( const QString& type,
