@@ -149,13 +149,11 @@ QString PwEditCommand::name()
 
 void PwEditCommand::undo()
 {
-  mDocument->removeAddressee(mNewA);
   mDocument->insertAddressee(mOldA);
 }
 
 void PwEditCommand::redo()
 {
-  mDocument->removeAddressee(mOldA);
   mDocument->insertAddressee(mNewA);
 }
 
