@@ -672,20 +672,14 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
 
   if (!alarm->programFile().isEmpty()) {
     action = ICAL_ACTION_PROCEDURE;
-// The attachement crashes this function. Find the cause and reenable the code
-// later.
-#if 0
     attach = icalattachtype_new();
     icalattachtype_set_url(attach,QFile::encodeName(alarm->programFile()).data());
     icalcomponent_add_property(a,icalproperty_new_attach(*attach));
-#endif
   } else if (!alarm->audioFile().isEmpty()) {
     action = ICAL_ACTION_AUDIO;
-#if 0
     attach = icalattachtype_new();
-    icalattachtype_set_url(attach,QFile::encodeName(alarm->audioFile()).data());
+    icalattachtype_set_url(attach,QFile::encodeName( alarm->audioFile() ).data());
     icalcomponent_add_property(a,icalproperty_new_attach(*attach));
-#endif
   } else if (!alarm->mailAddress().isEmpty()) {
     action = ICAL_ACTION_EMAIL;
     icalcomponent_add_property(a,icalproperty_new_attendee(alarm->mailAddress()));
@@ -1482,10 +1476,11 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
   icalattachtype attach;
   icaldurationtype duration;
 
-  icalproperty_action action;
+  icalproperty_action action = ICAL_ACTION_NONE;
 
   while (p) {
     icalproperty_kind kind = icalproperty_isa(p);
+
     switch (kind) {
 
       case ICAL_ACTION_PROPERTY:
@@ -1514,14 +1509,6 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
         ialarm->setRepeatCount(icalproperty_get_repeat(p));
         break;
 
-      // Only in AUDIO and PROCEDURE alarms
-      case ICAL_ATTACH_PROPERTY:
-        // TODO: move reading the attachement after reading the action type
-        attach = icalproperty_get_attach(p);
-        ialarm->setAudioFile(QFile::decodeName(
-            icalattachtype_get_url(&attach)));
-        break;
-
       // Only in DISPLAY and EMAIL and PROCEDURE alarms
       case ICAL_DESCRIPTION_PROPERTY:
         ialarm->setText(icalproperty_get_description(p));
@@ -1545,54 +1532,26 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
     p = icalcomponent_get_next_property(alarm,ICAL_ANY_PROPERTY);
   }
 
+  p = icalcomponent_get_first_property(alarm,ICAL_ATTACH_PROPERTY);
+  if ( p ) {
+    attach = icalproperty_get_attach(p);
+    QString url = QFile::decodeName(icalattachtype_get_url(&attach));
+
+    switch ( action ) {
+      case ICAL_ACTION_AUDIO:
+        ialarm->setAudioFile( url );
+	break;
+      case ICAL_ACTION_PROCEDURE:
+        ialarm->setProgramFile( url );
+	break;
+      default:
+        break;
+    }
+  } else {
+    kdDebug() << "No attachement found in alarm." << endl;
+  }
+  
   // TODO: check for consistency of alarm properties
-
-// TODO: read alarms
-#if 0
-  /* alarm stuff */
-  if ((vo = isAPropertyOf(vevent, VCDAlarmProp))) {
-    VObject *a;
-    if ((a = isAPropertyOf(vo, VCRunTimeProp))) {
-      anEvent->setTime(ISOToQDateTime(s = fakeCString(vObjectUStringZValue(a))));
-      deleteStr(s);
-    }
-    anEvent->setEnabled(true);
-    if ((vo = isAPropertyOf(vevent, VCPAlarmProp))) {
-      if ((a = isAPropertyOf(vo, VCProcedureNameProp))) {
-	anEvent->setProgramFile(s = fakeCString(vObjectUStringZValue(a)));
-	deleteStr(s);
-      }
-    }
-    if ((vo = isAPropertyOf(vevent, VCAAlarmProp))) {
-      if ((a = isAPropertyOf(vo, VCAudioContentProp))) {
-	anEvent->setAudioFile(s = fakeCString(vObjectUStringZValue(a)));
-	deleteStr(s);
-      }
-    }
-  }
-
-  if ((vo = isAPropertyOf(vtodo, VCDAlarmProp))) {
-    VObject *a;
-    if ((a = isAPropertyOf(vo, VCRunTimeProp))) {
-      aTodo->setTime(ISOToQDateTime(s = fakeCString(vObjectUStringZValue(a))));
-      deleteStr(s);
-    }
-    aTodo->setEnabled(true);
-    if ((vo = isAPropertyOf(vtodo, VCPAlarmProp))) {
-      if ((a = isAPropertyOf(vo, VCProcedureNameProp))) {
-	aTodo->setProgramFile(s = fakeCString(vObjectUStringZValue(a)));
-	deleteStr(s);
-      }
-    }
-    if ((vo = isAPropertyOf(vtodo, VCAAlarmProp))) {
-      if ((a = isAPropertyOf(vo, VCAudioContentProp))) {
-	aTodo->setAudioFile(s = fakeCString(vObjectUStringZValue(a)));
-	deleteStr(s);
-      }
-    }
-  }
-
-#endif
 }
 
 icaltimetype ICalFormatImpl::writeICalDate(const QDate &date)

@@ -240,6 +240,7 @@ icalvalue* icalvalue_new_from_string_with_error(icalvalue_kind kind,const char* 
 {
 
     struct icalvalue_impl *value = 0;
+    struct icalattachtype *attach = 0;
     
     icalerror_check_arg_rz(str!=0,"str");
 
@@ -250,6 +251,10 @@ icalvalue* icalvalue_new_from_string_with_error(icalvalue_kind kind,const char* 
     switch (kind){
 	
     case ICAL_ATTACH_VALUE:
+        attach = icalattachtype_new();
+	icalattachtype_set_url( attach, str );
+      	value = icalvalue_new_attach( *attach );
+	break;
     case ICAL_BINARY_VALUE:	
     case ICAL_BOOLEAN_VALUE:
         {
@@ -611,6 +616,7 @@ char* icalvalue_string_as_ical_string(icalvalue* value) {
     const char* data;
     char* str = 0;
     icalerror_check_arg_rz( (value!=0),"value");
+
     data = ((struct icalvalue_impl*)value)->data.v_string;
 
     str = (char*)icalmemory_tmp_buffer(strlen(data)+1);   
@@ -736,7 +742,10 @@ char* icalvalue_attach_as_ical_string(icalvalue* value) {
 	strcpy(str,a.base64);
 	return str;
     } else if (a.url != 0){
-	return icalvalue_string_as_ical_string(value);
+        icalvalue *v = icalvalue_new_text( a.url );
+      	char *icalstring = icalvalue_string_as_ical_string(v);
+	icalvalue_free( v );
+	return icalstring;
     } else {
 	icalerror_set_errno(ICAL_MALFORMEDDATA_ERROR);
 	return 0;
