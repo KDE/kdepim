@@ -528,6 +528,50 @@ bool CalendarLocal::checkTodos(QPtrList<Todo>& alarmTodos, bool append)
   return alarmTodos.count() != origSize;
 }
 
+Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
+{
+  Alarm::List alarms;
+
+  // Check all non-recurring events.
+  QIntDictIterator<QPtrList<Event> > it( *mCalDict );
+  for( ; it.current(); ++it ) {
+    QPtrList<Event> *events = it.current();
+    Event *e;
+    for( e = events->first(); e; e = events->next() ) {
+      appendAlarms( alarms, e, from, to );
+    }
+  }
+
+  // Check all recurring events.
+  Event *e;
+  for( e = mRecursList.first(); e; e = mRecursList.next() ) {
+    appendAlarms( alarms, e, from, to );
+  }
+
+  // Check all todos.
+  Todo *t;
+  for( t = mTodoList.first(); t; t = mTodoList.next() ) {
+    appendAlarms( alarms, t, from, to );
+  }  
+
+  return alarms;
+}
+
+void CalendarLocal::appendAlarms( Alarm::List &alarms, Incidence *incidence,
+                                  const QDateTime &from, const QDateTime &to )
+{
+  QPtrList<Alarm> alarmList = incidence->alarms();
+  Alarm *alarm;
+  for( alarm = alarmList.first(); alarm; alarm = alarmList.next() ) {  
+    if ( alarm->enabled() ) {  
+      if ( alarm->time() >= from && alarm->time() <= to ) {
+        alarms.append( alarm );
+      }
+    }
+  }
+}
+
+
 /****************************** PROTECTED METHODS ****************************/
 // after changes are made to an event, this should be called.
 void CalendarLocal::updateEvent(Incidence *incidence)

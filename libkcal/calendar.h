@@ -187,6 +187,10 @@ class Calendar : public QObject {
     /** Enable/Disable dialogs shown by calendar class */  
     void showDialogs(bool d);
 
+    /** Return all alarms, which ocur in the given time interval. */
+    virtual Alarm::List alarms( const QDateTime &from,
+                                const QDateTime &to ) = 0;
+
   signals:
     /** emitted at regular intervals to indicate that the events in the
       list have triggered an alarm. */

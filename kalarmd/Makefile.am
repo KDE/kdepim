@@ -14,7 +14,7 @@ kalarmdgui_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
 kalarmdgui_SOURCES = guimain.cpp guiapp.cpp alarmdialog.cpp \
 	dockwindow.cpp alarmguiiface.skel alarmguiiface.stub \
 	koeventviewer.cpp alarmgui.cpp adconfigdatabase.cpp \
-        alarmdaemoniface.stub \
+        alarmdaemoniface.stub calclient.cpp \
         adcalendarbase.cpp adcalendar_gui.cpp
 
 noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \

@@ -66,6 +66,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void    registerGui(const QString& appName, const QString& dcopObject);
     void    quit();
     void    dumpDebug();
+    void    dumpAlarms();
 
   private:
 

@@ -125,22 +125,19 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
     }
     else
     {
-      // Get this client's details from its own config section
-      ClientInfo *info = getClientInfo( clients[i] );
-      bool found = ( !info );
-      ClientInfo newinfo;
-      if ( !found ) info = &newinfo;
       QString groupKey = QString(CLIENT_KEY) + clients[i];
-      clientConfig.setGroup(groupKey);
-      info->title             = clientConfig.readEntry("Title", clients[i]);   // read app title (default = app name)
-      info->dcopObject        = clientConfig.readEntry("DCOP object");
-      info->notificationType  = (ClientInfo::NotificationType)clientConfig.readNumEntry("Notification type", 0);
-      info->displayCalName    = clientConfig.readBoolEntry("Display calendar names", true);
-      if (!found)
-      {
-        info->waitForRegistration = sessionStarting;
-        newinfo.appName = clients[i];
-        mClients.append( newinfo );
+
+      // Get this client's details from its own config section
+      ClientInfo info = getClientInfo( clients[i] );
+      if ( !info.isValid() ) {
+        clientConfig.setGroup(groupKey);
+        QString title = clientConfig.readEntry("Title", clients[i]);   // read app title (default = app name)
+        QString dcopObject = clientConfig.readEntry("DCOP object");
+        int type = clientConfig.readNumEntry("Notification type", 0);
+        bool displayCalName = clientConfig.readBoolEntry("Display calendar names", true);
+        info = ClientInfo( clients[i], title, dcopObject, type, displayCalName,
+                           sessionStarting );
+        mClients.append( info );
       }
 
       // Get the client's calendar files
@@ -197,25 +194,14 @@ void ADConfigDataBase::deleteConfigCalendar(const ADCalendarBase*)
 }
 
 /* Return the ClientInfo structure for the specified client application */
-ClientInfo* ADConfigDataBase::getClientInfo(const QString& appName) 
+ClientInfo ADConfigDataBase::getClientInfo(const QString& appName) 
 {
   ClientList::Iterator it;
   for( it = mClients.begin(); it != mClients.end(); ++it ) {
-    if ( (*it).appName == appName ) return &(*it);
+    if ( (*it).appName == appName ) return *it;
     break;
   }
-  return 0;
-}
-
-/* Return the ClientInfo structure for the specified client application */
-const ClientInfo* ADConfigDataBase::getClientInfo(const QString& appName) const
-{
-  ClientList::ConstIterator it;
-  for( it = mClients.begin(); it != mClients.end(); ++it ) {
-    if ( (*it).appName == appName ) return &(*it);
-    break;
-  }
-  return 0;
+  return ClientInfo();
 }
 
 void ADConfigDataBase::removeClientInfo( const QString &appName )

@@ -237,7 +237,7 @@ void AlarmGui::checkDefaultClient()
   config->setGroup("General");
   mDefaultClient = config->readEntry("Default Client");
 
-  if (!getClientInfo(mDefaultClient))
+  if (!getClientInfo(mDefaultClient).isValid())
   {
     // Default client isn't in the list of clients.
     // Replace it with the first client in the list.
@@ -355,8 +355,8 @@ void AlarmGui::setToolTip()
   {
     if (cal->available())
     {
-      const ClientInfo* c = getClientInfo(cal->appName());
-      if (c  &&  c->displayCalName  &&  !nForDisplay++) {
+      ClientInfo c = getClientInfo(cal->appName());
+      if (c.isValid()  &&  c.displayCalName  &&  !nForDisplay++) {
         firstForDisplay = cal;
       }
       ++nAvailable;

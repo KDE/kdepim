@@ -44,6 +44,7 @@ class AlarmDaemonIface : virtual public DCOPObject
     virtual ASYNC quit() = 0;
 
     virtual ASYNC dumpDebug() = 0;
+    virtual ASYNC dumpAlarms() = 0;
 };
 
 #endif

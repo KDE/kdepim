@@ -235,8 +235,8 @@ void AlarmDaemon::registerApp(const QString& appName, const QString& appTitle,
       kdError() << "AlarmDaemon::registerApp(): app not found\n";
     else
     {
-      const ClientInfo* c = getClientInfo(appName);
-      if (c)
+      ClientInfo c = getClientInfo(appName);
+      if (c.isValid())
       {
         // The application is already in the clients list.
         // Mark all its calendar files as unregistered and remove it from the list.
@@ -392,12 +392,12 @@ bool AlarmDaemon::notifyEvent(const ADCalendarBase* calendar, const QString& eve
   kdDebug() << "AlarmDaemon::notifyEvent(" << eventID << ")\n";
   if (calendar)
   {
-    const ClientInfo* client = getClientInfo(calendar->appName());
-    if (!client)
+    ClientInfo client = getClientInfo(calendar->appName());
+    if (!client.isValid())
       kdDebug() << "AlarmDaemon::notifyEvent(): unknown client" << endl;
     else
     {
-      if (client->waitForRegistration)
+      if (client.waitForRegistration)
       {
         // Don't start the client application if the session manager is still
         // starting the session, since if we start the client before the
@@ -411,7 +411,7 @@ bool AlarmDaemon::notifyEvent(const ADCalendarBase* calendar, const QString& eve
       if (!kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(calendar->appName())))
       {
         // The client application is not running
-        if (client->notificationType == ClientInfo::NO_START_NOTIFY)
+        if (client.notificationType == ClientInfo::NO_START_NOTIFY)
           return true;
 
         // Start the client application
@@ -421,7 +421,7 @@ bool AlarmDaemon::notifyEvent(const ADCalendarBase* calendar, const QString& eve
           kdDebug() << "AlarmDaemon::notifyEvent(): '" << calendar->appName() << "' not found" << endl;
           return true;
         }
-        if (client->notificationType == ClientInfo::COMMAND_LINE_NOTIFY)
+        if (client.notificationType == ClientInfo::COMMAND_LINE_NOTIFY)
         {
           // Use the command line to tell the client about the alarm
           execStr += " --handleEvent ";
@@ -440,7 +440,7 @@ bool AlarmDaemon::notifyEvent(const ADCalendarBase* calendar, const QString& eve
       QDataStream arg(data, IO_WriteOnly);
       arg << calendar->urlString() << eventID;
       if (!kapp->dcopClient()->send(static_cast<const char*>(calendar->appName()),
-                                    static_cast<const char*>(client->dcopObject),
+                                    static_cast<const char*>(client.dcopObject),
                                     "handleEvent(const QString&,const QString&)",
                                     data))
         kdDebug() << "AlarmDaemon::notifyEvent(): dcop send failed" << endl;
@@ -613,3 +613,25 @@ const AlarmDaemon::GuiInfo* AlarmDaemon::getGuiInfo(const QString& appName) cons
   return 0L;
 }
 
+void AlarmDaemon::dumpAlarms()
+{
+  QDateTime start = QDateTime( QDateTime::currentDateTime().date(),
+                               QTime( 0, 0 ) );
+  QDateTime end = start.addDays( 1 ).addSecs( -1 );
+
+  kdDebug() << "AlarmDeamon::dumpAlarms() from " << start.toString()
+            << " to " << end.toString() << endl;
+
+  CalendarList cals = calendars();
+  ADCalendarBase *cal;
+  for( cal = cals.first(); cal; cal = cals.next() ) {
+    kdDebug() << "  Cal: " << cal->urlString() << endl;
+    Alarm::List alarms = cal->alarms( start, end );
+    Alarm::List::ConstIterator it;
+    for( it = alarms.begin(); it != alarms.end(); ++it ) {
+      Alarm *a = *it;
+      kdDebug() << "    " << a->parent()->summary() << " ("
+                << a->time().toString() << ")" << endl;
+    }
+  }
+}

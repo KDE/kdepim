@@ -43,9 +43,9 @@ struct ClientInfo
       DCOP_NOTIFY         = 1,  // start client and use DCOP to notify about events
       COMMAND_LINE_NOTIFY = 2   // start client and use command line arguments to notify about events
     };
-    ClientInfo() { }
-    ClientInfo(const QString &appName, const QString& title,
-               const QString& dcopObj, int notifyType, bool disp,
+    ClientInfo() : mValid( false ) { }
+    ClientInfo(const QString &appName, const QString &title,
+               const QString &dcopObj, int notifyType, bool disp,
                bool wait=false);
 
     void             setNotificationType(int type);
@@ -58,6 +58,11 @@ struct ClientInfo
     // Data which is not used by all alarm daemon applications
     bool     waitForRegistration; // don't notify any events until client has registered
     int      menuIndex;           // context menu index to this client's entry
+
+    bool isValid() const { return mValid; }
+
+  private:
+    bool mValid;
 };
 
 //typedef QMap<QString, ClientInfo> ClientMap;   // maps client names against client data

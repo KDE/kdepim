@@ -393,7 +393,7 @@ int Incidence::syncStatus() const
 }
 
 
-const QPtrList<Alarm> &Incidence::alarms() const
+QPtrList<Alarm> Incidence::alarms() const
 {
   return mAlarms;
 }

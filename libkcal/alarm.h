@@ -33,6 +33,8 @@ class Incidence;
     This class represents an alarm notification. */
 class Alarm {
   public:
+    typedef QValueList<Alarm *> List;
+  
     /** constructs a new event with variables initialized to "sane" values. */
     Alarm(Incidence *parent);
     /** Destruct Alarm object. */

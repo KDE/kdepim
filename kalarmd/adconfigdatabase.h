@@ -33,8 +33,7 @@ class ADConfigDataBase
     explicit ADConfigDataBase(bool daemon);
     virtual ~ADConfigDataBase() {}
 
-    const ClientInfo* getClientInfo(const QString& appName) const;
-    ClientInfo* getClientInfo(const QString& appName);
+    ClientInfo  getClientInfo(const QString& appName);
     void        removeClientInfo( const QString &appName );
     ClientList  clients() const { return mClients; }
     int         clientCount() const     { return mClients.count(); }

@@ -122,6 +122,9 @@ class CalendarLocal : public Calendar {
     /** Return list of all Journals stored in calendar */
     QPtrList<Journal> journalList();
 
+    /** Return all alarms, which ocur in the given time interval. */
+    Alarm::List alarms( const QDateTime &from, const QDateTime &to );
+
   signals:
     /** emitted at regular intervals to indicate that the events in the
       list have triggered an alarm. */
@@ -153,10 +156,14 @@ class CalendarLocal : public Calendar {
     long int makeKey(const QDate &d);
     /** Return the date for which the specified key was made. */
     QDate keyToDate(long int key);
+
+    /** Append alarms of incidence in interval to list of alarms. */
+    void appendAlarms( Alarm::List &alarms, Incidence *incidence,
+                       const QDateTime &from, const QDateTime &to );
   
   private:
     void init();
-  
+
     QIntDict<QPtrList<Event> > *mCalDict;    // dictionary of lists of events.
     QPtrList<Event> mRecursList;             // list of repeating events.
 
