@@ -53,6 +53,10 @@
 // Some systems have changed kdWarning() and kdDebug() into nops,
 // so DEBUG_CERR changes them into cerr again. Odd and disturbing.
 //
+#ifndef NDEBUG
+#define DEBUG
+#endif
+
 #ifdef DEBUG_CERR
 #include <iostream.h>
 #define DEBUGFUNC	cerr
@@ -101,7 +105,7 @@
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 #endif
 
-#define KPILOT_VERSION	"4.2.9b"
+#define KPILOT_VERSION	"4.3.0a"
 
 #ifdef DEBUG
 // * KPilot debugging code looks like:
@@ -195,6 +199,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.2  2001/10/16 21:45:21  adridg
+// Version number change.
+//
 // Revision 1.1  2001/10/08 21:56:02  adridg
 // Start of making a separate KPilot lib
 //

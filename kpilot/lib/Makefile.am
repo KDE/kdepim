@@ -1,6 +1,6 @@
 ### Makefile.am for kpilot/lib
 ###
-### $Id: $
+### $Id$
 ###
 
 METASOURCES = AUTO
@@ -13,7 +13,7 @@ INCLUDES = $(all_includes)
 ###
 ### KDE_CXXFLAGS=-DDEBUG -DDEBUG_CERR
 
-kde_module_LTLIBRARIES = libkpilot.la
+lib_LTLIBRARIES = libkpilot.la
 
 libkpilot_la_SOURCES = options.cc uiDialog.cc plugin.cc syncAction.cc \
 	kpilotlink.cc \

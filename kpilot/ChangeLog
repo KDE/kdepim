@@ -1,3 +1,13 @@
+KPilot Developer's notes for november 25th 2001
+===============================================
+
+More work on the Expense conduit.
+
+In other news:
+
+* kpilot/logWidget.{h,cc}
+  Nifty feature for the sync log: clear the log. Save the log. ToolTips.
+
 KPilot Developer's notes for november 18th 2001
 ===============================================
 
