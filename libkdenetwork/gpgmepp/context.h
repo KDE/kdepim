@@ -52,6 +52,8 @@ namespace GpgME {
     const char * source() const;
     const char * asString() const;
 
+    bool isCanceled() const;
+
     operator int() const { return mErr; }
     operator bool() const { return mErr; }
   private:

@@ -59,6 +59,10 @@ namespace GpgME {
     return gpgme_strerror( (gpgme_error_t)mErr );
   }
 
+  bool Error::isCanceled() const {
+    return gpgme_err_code( mErr ) == GPG_ERR_CANCELED;
+  }
+
   Context::Context( gpgme_ctx_t ctx ) {
     d = new Private( ctx );
   }
