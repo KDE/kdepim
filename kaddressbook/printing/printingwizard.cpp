@@ -62,7 +62,7 @@ namespace KABPrinting {
     }
 
     void PrintingWizardImpl::accept()
-    { // progress display needs to be implemented here:
+    {
         print();
         close();
     }
@@ -81,7 +81,7 @@ namespace KABPrinting {
 
     void PrintingWizardImpl::slotStyleSelected( int index )
     {
-      if ( index < 0 || index >= styleFactories.count() )
+      if ( index < 0 || (unsigned)index >= styleFactories.count() )
         return;
 
       setFinishEnabled( mBasicPage, false );
@@ -120,7 +120,6 @@ namespace KABPrinting {
         return mPrinter;
     }
 
-    // WORK_TO_DO: select contacts for printing
     void PrintingWizardImpl::print()
     {
         // ----- create and show print progress widget:

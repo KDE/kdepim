@@ -37,11 +37,13 @@ class QLineEdit;
 class QWidgetStack;
 class QResizeEvent;
 class QDropEvent;
-
+class QSplitter;
+class QTabWidget;
 class KConfig;
 namespace KABC { class AddressBook; }
 
 class ViewWrapper;
+class ViewContainer;
 class KAddressBookView;
 class JumpButtonBar;
 class AddresseeEditorWidget;
@@ -92,11 +94,15 @@ class ViewManager : public QWidget
     */
     void setJumpButtonBarVisible(bool visible);
 
-    /** Used to enable or disable the quick edit widget.
+    /** Used to enable or disable the features tab widget.
     *
     * @param visible True for the widget to be visible, false otherwise
     */
-    void setQuickEditVisible(bool visible);
+    void setFeaturesVisible(bool visible);
+
+    /** Used to enable or disable the details widget.
+     */
+    void setDetailsVisible(bool visible);
 
     /**
       Return if the quick edit currently is shown or not.
@@ -238,7 +244,7 @@ class ViewManager : public QWidget
 
     /** Set the current filter. 0 for none. */
     void setCurrentFilter(int index);
-    
+
     /** Import a VCard that has been dragged  */
     void importVCard(const QString &, bool);
 
@@ -258,16 +264,21 @@ class ViewManager : public QWidget
     QStringList mViewNameList;
     QDict<ViewWrapper> mViewWrapperDict;
     QDict<KAddressBookView> mViewDict;
-    KAddressBookView *mActiveView;
     KABC::AddressBook *mDocument;
     KConfig *mConfig;
     QWidgetStack *mViewWidgetStack;
     KABC::Field::List mIncrementalSearchFields;
     KABC::Field *mCurrentIncSearchField;
-    JumpButtonBar *mJumpButtonBar;
-    AddresseeEditorWidget *mQuickEdit;
     Filter::List mFilterList;
     Filter mCurrentFilter;
+    // ----- GUI widgets:
+    KAddressBookView *mActiveView;
+    ViewContainer *mDetails;
+    JumpButtonBar *mJumpButtonBar;
+    AddresseeEditorWidget *mQuickEdit;
+    QSplitter *mQSpltDetails;
+    QSplitter *mQSpltFeatures;
+    QTabWidget *mFeatures;
 };
 
 #endif

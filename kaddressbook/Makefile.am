@@ -27,7 +27,8 @@ libkaddressbookpart_la_SOURCES = kaddressbook.cpp kaddressbookiface.skel \
   kabentrypainter.cpp \
   ldapoptionswidget.ui ldapoptionswidgetimpl.cpp \
   ldapsearchdialog.ui ldapsearchdialogimpl.cpp \
-  prefsdialog.cpp viewwrapper.cpp addviewdialog.cpp viewmanager.cpp \
+  prefsdialog.cpp viewwrapper.cpp addviewdialog.cpp \
+  viewmanager.cpp \
   jumpbuttonbar.cpp configuretableviewdialog.cpp addresseeutil.cpp \
   cardview.cpp kaddressbookcardview.cpp addresseeeditorwidget.cpp \
   addresseeeditordialog.cpp configurecardviewdialog.cpp \

@@ -85,7 +85,7 @@ class ActionManager : public QObject
     void viewConfigChanged(const QString &newActive);
 
     /** Called whenever the user clicks changes the view policy
-    * of a quick tool.
+    * of a quick tool. Handles Feature Bar and Jump Button Bar.
     */
     void quickToolsAction();
 
@@ -138,7 +138,8 @@ signals:
     QPtrList<KAction> mActionViewList;
     KToggleAction *mActiveActionView;
     KToggleAction *mActionJumpBar;
-    KToggleAction *mActionQuickEdit;
+    KToggleAction *mActionFeatures;
+    KToggleAction *mActionDetails;
     KSelectAction *mActionSelectFilter;
 };
 

@@ -492,6 +492,8 @@ void KAddressBook::addresseeSelected(const QString &uid)
 
 void KAddressBook::addresseeExecuted(const QString &uid)
 {
+    // WORK_TO_DO: find a way to decide this (quickedit will
+    // become a part of the details view)
   if ( uid != QString::null && !mViewManager->isQuickEditVisible() )
     editAddressee(uid);
 }

@@ -68,8 +68,8 @@ ActionManager::ActionManager(KXMLGUIClient *client, KAddressBook *widget,
     mActiveViewName = config->readEntry("Active");
     config->setGroup("MainWindow");
     mActionJumpBar->setChecked(config->readBoolEntry("JumpBar", false));
-    mActionQuickEdit->setChecked(config->readBoolEntry("QuickEdit", false));
-
+    mActionFeatures->setChecked(config->readBoolEntry("Features", false));
+    mActionDetails->setChecked(config->readBoolEntry("Details", true));
     // Set the defaults
     addresseeSelected(false);
     modified(false);
@@ -93,7 +93,8 @@ ActionManager::~ActionManager()
 
     config->setGroup("MainWindow");
     config->writeEntry("JumpBar", mActionJumpBar->isChecked());
-    config->writeEntry("QuickEdit", mActionQuickEdit->isChecked());
+    config->writeEntry("Features", mActionFeatures->isChecked());
+    config->writeEntry("Details", mActionDetails->isChecked());
 
     config->sync();
 }
@@ -198,10 +199,14 @@ void ActionManager::initReadOnlyActions()
                                        this, SLOT(quickToolsAction()),
                                        mACollection,
                                        "options_show_jump_bar");
-    mActionQuickEdit = new KToggleAction(i18n("Show Quick Edit"), "edit",
-                                         0, this, SLOT(quickToolsAction()),
-                                         mACollection,
-                                         "options_show_quick_edit");
+    mActionFeatures = new KToggleAction(i18n("Show Features Bar"), "features",
+                                        0, this, SLOT(quickToolsAction()),
+                                        mACollection,
+                                        "options_show_features");
+    mActionDetails = new KToggleAction(i18n("Show Details"), "details",
+                                       0, this, SLOT(quickToolsAction()),
+                                       mACollection,
+                                       "options_show_details");
     (void) new KAction(i18n("Edit &Filters..."), "filter",
                        0, mWidget, SLOT(configureFilters()),
                        mACollection, "options_edit_filters");
@@ -365,7 +370,8 @@ void ActionManager::selectViewAction()
 void ActionManager::quickToolsAction()
 {
     mViewManager->setJumpButtonBarVisible(mActionJumpBar->isChecked());
-    mViewManager->setQuickEditVisible(mActionQuickEdit->isChecked());
+    mViewManager->setFeaturesVisible(mActionFeatures->isChecked());
+    mViewManager->setDetailsVisible(mActionDetails->isChecked());
 }
 
 void ActionManager::setFilterNames(const QStringList& list)

@@ -7,6 +7,7 @@
 #include <qlabel.h>
 
 #include <kdebug.h>
+#include <kapplication.h>
 
 #include "look_basic.h"
 #include "look_details.h"
@@ -45,23 +46,54 @@ void ViewContainer::registerLooks()
 
 void ViewContainer::slotStyleSelected(int index)
 {
-     if(index>=0 && index<cbStyle->count())
+    KConfig *config;
+    if(index>=0 && index<cbStyle->count())
+    {
+        if(m_look!=0)
         {
-            if(m_look!=0)
-            {
-                // WORK_TO_DO: save changes
-                delete m_look;
-                m_look=0;
-            }
-            KABLookFactory *factory=m_lookFactories.at(index);
-            kdDebug() << "ViewContainer::slotStyleSelected: "
-                      << "creating look "
-                      << factory->description() << endl;
-            m_look=factory->create();
-            // <HACK>:
-            frameDetails->layout()->add(m_look);
-            // </HACK>
+            // WORK_TO_DO: save changes
+            delete m_look;
+            m_look=0;
         }
-     // WORK_TO_DO: set current entry
+        KABLookFactory *factory=m_lookFactories.at(index);
+        kdDebug() << "ViewContainer::slotStyleSelected: "
+                  << "creating look "
+                  << factory->description() << endl;
+        m_look=factory->create();
+        // <HACK>:
+        frameDetails->layout()->add(m_look);
+        // </HACK>
+    }
+    // WORK_TO_DO: set current entry
+    // ----- configure the style:
+    config=kapp->config();
+    m_look->configure(config);
+}
+
+void ViewContainer::setAddressee(const KABC::Addressee& addressee)
+{
+    if(m_look!=0)
+    {
+        m_look->setEntry(addressee);
+    }
+}
+
+KABC::Addressee ViewContainer::addressee()
+{
+    static KABC::Addressee empty; // do not use!
+    if(m_look==0)
+    {
+        return empty;
+    } else {
+        return m_look->entry();
+    }
+}
+
+void ViewContainer::setReadonly(bool state)
+{
+    if(m_look)
+    {
+        m_look->setReadonly(state);
+    }
 }
 

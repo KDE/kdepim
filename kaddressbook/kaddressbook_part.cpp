@@ -65,18 +65,18 @@ KAddressbookPart::KAddressbookPart(QWidget *parentWidget, const char *widgetName
   m_extension = new KAddressbookBrowserExtension(this);
 
   QVBoxLayout *topLayout = new QVBoxLayout(canvas);
-   
+
   KGlobal::iconLoader()->addAppDir("kaddressbook");
 
   widget = new KAddressBook(canvas);
   widget->readConfig();
   topLayout->addWidget(widget);
-  widget->viewManager()->setQuickEditVisible( false );
+  widget->viewManager()->setFeaturesVisible( false );
 
   widget->show();
 
   mActionManager = new ActionManager(this, widget, false, this);
-  
+
   setXMLFile( "kaddressbook_part.rc" );
 }
 
@@ -89,7 +89,7 @@ KAboutData *KAddressbookPart::createAboutData()
 {
   KAboutData *about = new KAboutData("kaddressbook", I18N_NOOP("KAddressBook"),
                                      "3.1beta1", I18N_NOOP("The KDE Address Book"),
-                                     KAboutData::License_BSD, 
+                                     KAboutData::License_BSD,
                                      I18N_NOOP("(c) 1997-2002, The KDE PIM Team"));
   about->addAuthor("Tobias Koenig", I18N_NOOP("Current maintainer"), "tokoe@kde.org");
   about->addAuthor("Don Sanders",I18N_NOOP("Original author"));
@@ -98,7 +98,7 @@ KAboutData *KAddressbookPart::createAboutData()
                   "schumacher@kde.org");
   about->addAuthor("Greg Stern", I18N_NOOP("DCOP interface"));
   about->addAuthor("Mark Westcott",I18N_NOOP("Contact pinning"));
-  about->addAuthor("Mischel Boyer de la Giroday", I18N_NOOP("LDAP Lookup"), 
+  about->addAuthor("Mischel Boyer de la Giroday", I18N_NOOP("LDAP Lookup"),
 		   "michel@klaralvdalens-datakonsult.se");
   about->addAuthor("Steffen Hansen", I18N_NOOP("LDAP Lookup"), "hansen@kde.org");
 
@@ -118,7 +118,7 @@ void KAddressbookPart::guiActivateEvent(KParts::GUIActivateEvent *e)
 {
   kdDebug() << "KAddressbookPart::guiActivateEvent" << endl;
   KParts::ReadOnlyPart::guiActivateEvent(e);
-  
+
   mActionManager->initActionViewList();
 }
 

@@ -31,7 +31,8 @@
 #include <qclipboard.h>
 #include <qhbox.h>
 #include <qdragobject.h>
-
+#include <qsplitter.h>
+#include <qtabwidget.h>
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kmessagebox.h>
@@ -50,6 +51,7 @@
 #include "iconviewwrapper.h"
 #include "tableviewwrapper.h"
 #include "detailledview/detailledviewwrapper.h"
+#include "detailledview/detailsviewcontainer.h"
 #include "cardviewwrapper.h"
 #include "addviewdialog.h"
 #include "jumpbuttonbar.h"
@@ -309,10 +311,7 @@ void ViewManager::setActiveView(const QString &name)
 void ViewManager::refresh(QString uid)
 {
     mActiveView->refresh(uid);
-
-    // Update the quick edit if needed
-    if (mQuickEdit->addressee().uid() == uid)
-      addresseeSelected(uid);
+    addresseeSelected(uid);
 }
 
 void ViewManager::modifyView()
@@ -462,31 +461,36 @@ void ViewManager::createViewWrappers()
 
 void ViewManager::initGUI()
 {
-    QBoxLayout *layout = new QVBoxLayout( this );
-    QHBoxLayout *topRowLayout = new QHBoxLayout();
-    topRowLayout->setSpacing(10);
-    topRowLayout->setMargin(3);
-    layout->addLayout(topRowLayout);
-    layout->setStretchFactor(topRowLayout, 0);
-    QHBox *hBox = new QHBox(this, "hBox");
-    layout->addWidget(hBox);
-    layout->setStretchFactor(hBox, 1);
-
-    // The widget stack for the different views
-    mViewWidgetStack = new QWidgetStack(hBox, "mViewWidgetStack");
-    hBox->setStretchFactor(mViewWidgetStack, 1);
-
-    // Add the jump bar
-    mJumpButtonBar = new JumpButtonBar(hBox, "mJumpButtonBar");
-    hBox->setStretchFactor(mJumpButtonBar, 0);
-    // Create the quick edit widget
-    mQuickEdit = new AddresseeEditorWidget(this, "mQuickEdit");
+    // ----- create the layout:
+    QHBoxLayout *l=new QHBoxLayout(this);
+    l->setMargin(1 /* KDialogBase::marginHint() */);
+    l->setSpacing(KDialogBase::spacingHint());
+    // ----- create the features splitter:
+    mQSpltFeatures=new QSplitter(this);
+    mQSpltFeatures->setOrientation(Qt::Vertical);
+    // ----- create the details splitter:
+    mQSpltDetails=new QSplitter(mQSpltFeatures);
+    // ----- create the features tabwidget:
+    mFeatures=new QTabWidget(mQSpltFeatures);
+    // ----- create the widget stack for the different views
+    mViewWidgetStack = new QWidgetStack(mQSpltDetails, "mViewWidgetStack");
+    // ----- create the details widget:
+    mDetails=new ViewContainer(mQSpltDetails);
+    // ----- add the jump bar to the layout:
+    mJumpButtonBar = new JumpButtonBar(this, "mJumpButtonBar");
+    // ----- create the quick edit widget as part of the features tabwidget
+    //       (THIS WILL BE REMOVED!):
+    mQuickEdit = new AddresseeEditorWidget(mFeatures, "mQuickEdit");
+    mFeatures->addTab(mQuickEdit, i18n("QuickEdit"));
     connect(mQuickEdit, SIGNAL(modified()), SLOT(quickEditModified()));
-    layout->addWidget(mQuickEdit);
-
     // Connect the slots and signals
     connect(mJumpButtonBar, SIGNAL(jumpToLetter(const QChar &)),
             this, SLOT(jumpToLetter(const QChar &)));
+    // ----- add everything to the layout:
+    l->addWidget(mQSpltFeatures);
+    l->setStretchFactor(mQSpltFeatures, 100);
+    l->addWidget(mJumpButtonBar);
+    l->setStretchFactor(mJumpButtonBar, 1);
 }
 
 
@@ -534,14 +538,25 @@ void ViewManager::setJumpButtonBarVisible(bool visible)
       mJumpButtonBar->hide();
 }
 
-void ViewManager::setQuickEditVisible(bool visible)
+void ViewManager::setFeaturesVisible(bool visible)
 {
   if (visible)
-    mQuickEdit->show();
+    mFeatures->show();
   else
-    mQuickEdit->hide();
+    mFeatures->hide();
 }
 
+void ViewManager::setDetailsVisible(bool visible)
+{
+    if(visible)
+    {
+        mDetails->show();
+    } else {
+        mDetails->hide();
+    }
+}
+
+// WORK_TO_DO: obsolete
 bool ViewManager::isQuickEditVisible()
 {
   return !mQuickEdit->isHidden();
@@ -553,10 +568,10 @@ void ViewManager::dropped(QDropEvent *e)
 
   QString clipText;
   QStrList  urls;
-  
- 
+
+
   if (QUriDrag::decode(e, urls)) {
-     QPtrListIterator<char> it (urls);	
+     QPtrListIterator<char> it (urls);
      int c = urls.count();
      if ( c > 1 ) {
        QString questionString = i18n( "Import one contact into your addressbook?","Import %n contacts into your addressbook?", c );
@@ -573,16 +588,16 @@ void ViewManager::dropped(QDropEvent *e)
   } else if (QTextDrag::decode(e, clipText)) {
      KABC::Addressee::List aList;
      aList = AddresseeUtil::clipboardToAddressees(clipText);
- 
+
      KABC::Addressee::List::Iterator iter;
      for (iter = aList.begin(); iter != aList.end(); ++iter)
      {
        mDocument->insertAddressee(*iter);
      }
- 
+
      mActiveView->refresh();
    }
-  
+
 }
 
 void ViewManager::startDrag()
@@ -607,6 +622,7 @@ void ViewManager::addresseeSelected(const QString &uid)
 {
   KABC::Addressee a = mDocument->findByUid(uid);
   mQuickEdit->setAddressee(a);
+  mDetails->setAddressee(a);
 }
 
 void ViewManager::quickEditModified()
