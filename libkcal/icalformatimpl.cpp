@@ -806,7 +806,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
   icalcomponent *a = icalcomponent_new(ICAL_VALARM_COMPONENT);
 
   icalproperty_action action;
-  icalattachtype *attach;
+  icalattachtype *attach = 0;
 
   if (!alarm->programFile().isEmpty()) {
     action = ICAL_ACTION_PROCEDURE;
