@@ -593,6 +593,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
 #endif
       break;
     case Recurrence::rYearlyMonth:
+    case Recurrence::rYearlyPos:
       r.freq = ICAL_YEARLY_RECURRENCE;
 
       tmpDays = recur->yearNums();
@@ -613,6 +614,38 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
         tmpStr += tmpStr2;
       }
 #endif
+      if (recur->doesRecur() == Recurrence::rYearlyPos) {
+        tmpPositions = recur->monthPositions();
+        tmpPos = tmpPositions.first();
+        r.by_set_pos[index2++] = tmpPos->rPos;
+        for (i = 0; i < 7; i++) {
+          if (tmpPos->rDays.testBit(i)) {
+            day = (i + 1)%7 + 1;     // convert from Monday=0 to Sunday=1
+            r.by_day[index++] = icalrecurrencetype_day_day_of_week(day);
+          }
+        }
+//        r.by_month_day[index] = ICAL_RECURRENCE_ARRAY_MAX;
+#if 0
+        tmpStr.sprintf("MP%i ", anEvent->rFreq);
+        // write out all rMonthPos's
+        tmpPositions = anEvent->rMonthPositions;
+        for (tmpPos = tmpPositions.first();
+             tmpPos;
+             tmpPos = tmpPositions.next()) {
+
+          tmpStr2.sprintf("%i", tmpPos->rPos);
+          if (tmpPos->negative)
+            tmpStr2 += "- ";
+          else
+            tmpStr2 += "+ ";
+          tmpStr += tmpStr2;
+          for (i = 0; i < 7; i++) {
+            if (tmpPos->rDays.testBit(i))
+              tmpStr += dayFromNum(i);
+          }
+        } // loop for all rMonthPos's
+#endif
+      }
       break;
     case Recurrence::rYearlyDay:
       r.freq = ICAL_YEARLY_RECURRENCE;
