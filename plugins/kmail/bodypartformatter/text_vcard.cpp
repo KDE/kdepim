@@ -38,8 +38,12 @@
 #include <kglobalsettings.h>
 #include <kiconloader.h>
 
+#include <kaddrbook.h>
+
 #include "interfaces/bodypartformatter.h"
 #include "interfaces/bodypart.h"
+using KMail::Interface::BodyPart;
+#include "interfaces/bodyparturlhandler.h"
 #include "khtmlparthtmlwriter.h"
 
 #include <kabc/vcardconverter.h>
@@ -54,25 +58,67 @@ namespace {
 
   class Formatter : public KMail::Interface::BodyPartFormatter {
   public:
-    Result format( KMail::Interface::BodyPart *bodyPart, KMail::HtmlWriter *writer ) const { 
+    Result format( BodyPart *bodyPart, KMail::HtmlWriter *writer ) const { 
 
        VCardConverter vcc;
        const QString vCard = bodyPart->asText();
        if ( vCard.isEmpty() ) return AsIcon;
        Addressee::List al = vcc.parseVCards(  vCard );
        if ( al.empty() ) return AsIcon;
-       QValueListIterator<KABC::Addressee> it = al.begin();
 
+       writer->queue (
+             "<div align=\"center\"><h2>" +
+             i18n( "Attached business cards" ) +
+             "</h2></div>"
+                );
+       
+       QValueListIterator<KABC::Addressee> it = al.begin();
+       int count = 0;
        for ( ; it != al.end(); ++it ) {
           KABC::Addressee a = (*it);
           if ( a.isEmpty() ) return AsIcon;
 
-          QString contact = AddresseeView::vCardAsHTML( a );
+          QString contact = AddresseeView::vCardAsHTML( a, false, false );
           writer->queue( contact );
+
+          QString addToLinkText = i18n( "Add this contact to the addressbook." );
+          QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );
+          writer->queue( 
+                "<div align=\"center\"><a href=\"" +
+                bodyPart->makeLink( op ) +
+                "\">" +
+                addToLinkText +
+                "</a></div><br><br>" );
+          count++;
        }
 
        return Ok;
     }
+  };
+
+  class UrlHandler : public KMail::Interface::BodyPartURLHandler {
+  public:
+     bool handleClick( BodyPart * bodyPart, const QString & path ) const {
+ 
+       const QString vCard = bodyPart->asText();
+       if ( vCard.isEmpty() ) return true;
+       VCardConverter vcc;
+       Addressee::List al = vcc.parseVCards(  vCard );
+       int index = path.right( path.length() - path.findRev( ":" ) - 1 ).toInt();
+       if ( index == -1 ) return true;
+       KABC::Addressee a = al[index];
+       if ( a.isEmpty() ) return true;
+       KAddrBookExternal::addVCard( a, 0 );
+       return true;
+     }
+
+     bool handleContextMenuRequest(  BodyPart *, const QString &, const QPoint & ) const {
+       return false;
+     }
+
+     QString statusBarMessage(  BodyPart *, const QString & ) const {
+       return i18n("Add this contact to the address book.");
+     }
   };
 
   class Plugin : public KMail::Interface::BodyPartFormatterPlugin {
@@ -84,11 +130,11 @@ namespace {
       return idx == 0 ? "text" : 0 ;
     }
     const char * subtype( int idx ) const {
-      return idx == 0 ? "x-vcard" : 0 ;
+      return idx == 0 ? "x-vcard" : idx == 1 ? "vcard" : 0 ;
     }
 
-    const KMail::Interface::BodyPartURLHandler * urlHandler( int ) const { 
-       return 0; 
+    const KMail::Interface::BodyPartURLHandler * urlHandler( int idx ) const { 
+       return idx == 0 ? new UrlHandler() : 0 ;
     }
   };
 
