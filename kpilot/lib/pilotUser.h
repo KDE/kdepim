@@ -45,19 +45,11 @@ public:
 
 	PilotUser *pilotUser() { return &fUser; }
 
-	/**
-	* Ensures the names are properly terminated.  Needed incase we
-	* are syncing a new and bogus pilot.
-	*/
-	void boundsCheck()
-	{
-	}
-
 	const char* getUserName() const     { return fUser.username; }
 	void setUserName(const char* name)
 	{
+		memset(&fUser.username, 0, sizeof(fUser.username));
 		strlcpy(fUser.username, name,sizeof(fUser.username));
-		boundsCheck();
 	}
 
 	const int getPasswordLength() const { return fUser.passwordLength; }
@@ -66,7 +58,6 @@ public:
 	{
 		memset(&fUser.password, 0, sizeof(fUser.password));
 		strlcpy(fUser.password, password,sizeof(fUser.password));
-		boundsCheck();
 		fUser.passwordLength = strlen(fUser.password);
 	}
 
