@@ -47,4 +47,4 @@ cvs-local:
         $(AUTOCONF)
 
 cvs-dist-local:
-	@cd  libical && automake -i && autoconf
+	@cd  libical && $(AUTOMAKE) -i && $(AUTOCONF)
