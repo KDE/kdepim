@@ -85,9 +85,9 @@ public:
 	virtual int recordCount();
 	// Returns a QValueList of all record ids in the database.
 	virtual QValueList<recordid_t> idList();
-	// Reads a record from database by id, returns record length
+	// Reads a record from database by id, returns record
 	virtual PilotRecord* readRecordById(recordid_t id);
-	// Reads a record from database, returns the record length
+	// Reads a record from database, returns the record
 	virtual PilotRecord* readRecordByIndex(int index);
 	// Reads the next record from database in category 'category'
 	virtual PilotRecord* readNextRecInCategory(int category);
@@ -97,8 +97,7 @@ public:
 	* returned record.
 	*/
 	virtual PilotRecord* readNextModifiedRec(int *ind=NULL);
-	// Writes a new record to database (if 'id' == 0, one will be
-	// assigned to newRecord)
+	// Writes a new record to database (if 'id' == 0, none is assigned, either)
 	virtual recordid_t writeRecord(PilotRecord* newRecord);
 	/**
 	* Deletes a record with the given recordid_t from the database,
