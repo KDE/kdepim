@@ -191,7 +191,7 @@ void Incidence::setDtStart(const QDateTime &dtStart)
   mDtStart = dtStart;
 
   recurrence()->setRecurStart(mDtStart);
-  /*for (Alarm* alarm = mAlarms.first(); alarm; alarm = mAlarms.next()) {
+  /*for (Alarm* alarm = mAlarms.first(); alarm; alarm = mAlarms.next())
     alarm->setAlarmStart(mDtStart);*/
 
   emit eventUpdated(this);
@@ -569,7 +569,7 @@ int Incidence::syncStatus() const
   return mSyncStatus;
 }
 
-const QList<Alarm> &Incidence::alarms() const
+const QPtrList<Alarm> &Incidence::alarms() const
 {
   return mAlarms;
 }

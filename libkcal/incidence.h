@@ -263,7 +263,7 @@ class Incidence : public QObject
     int priority() const;
 
     /** All alarms that are associated with this incidence */
-    const QList<Alarm> &alarms() const;
+    const QPtrList<Alarm> &alarms() const;
     /** Create a new alarm which is associated with this incidence */
     Alarm* newAlarm();
     /** Add an alarm which is associated with this incidence */
