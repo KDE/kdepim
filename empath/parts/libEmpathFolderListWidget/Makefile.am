@@ -1,4 +1,4 @@
-KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS) -DQT_NO_ASCII_CAST -DKPARTS_VERSION
+AM_CPPFLAGS = -DQT_NO_ASCII_CAST -DKPARTS_VERSION
 
 INCLUDES = -I$(top_srcdir)/empath/lib -I$(top_srcdir)/librmm \
   -I$(top_srcdir)/empath/parts/libEmpathListView $(all_includes)
