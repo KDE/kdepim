@@ -104,9 +104,12 @@ void JumpButtonBar::updateButtons()
 
   // calculate how many buttons are possible
   QFontMetrics fm = fontMetrics();
-  QSize buttonSize = style().sizeFromContents( QStyle::CT_PushButton, this,
+  QPushButton *btn = new QPushButton( "", this );
+  btn->hide();
+  QSize buttonSize = style().sizeFromContents( QStyle::CT_PushButton, btn,
                      fm.size( ShowPrefix, "X") ).
                      expandedTo( QApplication::globalStrut() );
+  delete btn;
 
   uint possibleButtons = height() / buttonSize.height();
 
