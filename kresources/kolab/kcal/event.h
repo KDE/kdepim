@@ -34,13 +34,12 @@
 #ifndef KOLAB_EVENT_H
 #define KOLAB_EVENT_H
 
-#include <kolabbase.h>
+#include "incidence.h"
+
+#include <libkcal/event.h>
 
 class QDomElement;
 
-namespace KCal {
-  class Event;
-}
 
 namespace Kolab {
 
@@ -50,7 +49,7 @@ namespace Kolab {
  * The instances of this class are temporary, only used to convert
  * one to the other.
  */
-class Event : public KolabBase {
+class Event : public Incidence {
 public:
   /// Use this to parse an xml string to a event entry
   /// The caller is responsible for deleting the returned event
@@ -67,6 +66,12 @@ public:
 
   virtual QString type() const { return "Event"; }
 
+  virtual void setTransparency( KCal::Event::Transparency transparency );
+  virtual KCal::Event::Transparency transparency() const;
+
+  virtual void setEndDate( const QDateTime& date );
+  virtual QDateTime endDate() const;
+
   // Load the attributes of this class
   virtual bool loadAttribute( QDomElement& );
 
@@ -82,6 +87,10 @@ public:
 protected:
   // Read all known fields from this ical incidence
   void setFields( const KCal::Event* );
+
+  KCal::Event::Transparency mShowTimeAs;
+  QDateTime mEndDate;
+  bool mHasEndDate;
 };
 
 }

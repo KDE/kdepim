@@ -55,6 +55,7 @@ QString Event::eventToXML( KCal::Event* kcalEvent )
 }
 
 Event::Event( KCal::Event* event )
+  : mShowTimeAs( KCal::Event::Opaque ), mHasEndDate( false )
 {
   if ( event )
     setFields( event );
@@ -64,15 +65,59 @@ Event::~Event()
 {
 }
 
+void Event::setTransparency( KCal::Event::Transparency transparency )
+{
+  mShowTimeAs = transparency;
+}
+
+KCal::Event::Transparency Event::transparency() const
+{
+  return mShowTimeAs;
+}
+
+void Event::setEndDate( const QDateTime& date )
+{
+  mEndDate = date;
+  mHasEndDate = true;
+}
+
+QDateTime Event::endDate() const
+{
+  return mEndDate;
+}
+
 bool Event::loadAttribute( QDomElement& element )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  // This method doesn't handle the color-label tag yet
+  QString tagName = element.tagName();
+
+  if ( tagName == "show-time-as" ) {
+    // TODO: Support tentative and outofoffice
+    if ( element.text() == "free" )
+      setTransparency( KCal::Event::Transparent );
+    else
+      setTransparency( KCal::Event::Opaque );
+  } else if ( tagName == "end-date" )
+    setEndDate( stringToDateTime( element.text() ) );
+  else
+    return Incidence::loadAttribute( element );
+
+  // We handled this
   return true;
 }
 
 bool Event::saveAttributes( QDomElement& element ) const
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  // Save the base class elements
+  Incidence::saveAttributes( element );
+
+  // TODO: Support tentative and outofoffice
+  if ( transparency() == KCal::Event::Transparent )
+    writeString( element, "show-time-as", "free" );
+  else
+    writeString( element, "show-time-as", "busy" );
+  writeString( element, "end-date", dateTimeToString( endDate() ) );
+
   return true;
 }
 
@@ -114,8 +159,13 @@ QString Event::saveXML() const
 
 void Event::setFields( const KCal::Event* event )
 {
-  kdDebug() << "NYFI: " << k_funcinfo << endl;
-  KolabBase::setFields( event );
+  Incidence::setFields( event );
+
+  if ( event->hasEndDate() )
+    setEndDate( event->dtEnd() );
+  else
+    mHasEndDate = false;
+  setTransparency( event->transparency() );
 }
 
 void Event::saveTo( KCal::Event* event )
