@@ -133,7 +133,7 @@ void PilotLocalDatabase::fixupDBName()
 	fDBName = fDBName.replace(QRegExp("/"), "_");
 }
 
-bool PilotLocalDatabase::createDatabase(long creator, long type, int cardno, int flags, int version) 
+bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags, int version) 
 {
 	FUNCTIONSETUP;
 	
@@ -619,6 +619,9 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 }
 
 // $Log$
+// Revision 1.9  2002/12/15 13:16:24  kainhofe
+// Added argument to pilotLocalDatabase's constructor, which specifies whether the default path should be used to search for the database if it cannot be found in the given path.
+//
 // Revision 1.8  2002/12/13 16:26:09  kainhofe
 // Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
 //
