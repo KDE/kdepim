@@ -8,6 +8,11 @@
 
 QUICK NOTES ON WHAT'S NEW IN THIS RELEASE:
 
+* 3.1.2
+
+  - Bug fixes:
+    - Fix event duplication (#55999).
+
 * Official 3.1.1 release (March 2003)
   
   - Bug fixes:
