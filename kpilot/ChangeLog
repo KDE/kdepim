@@ -1,6 +1,9 @@
 TODO LIST (Ignore the file TODO)
 
-* GJJ: Make the log widget tail properly.
+* Factor the Kroupware stuff into a conduit instead of
+  hardcoding it in the daemon.
+* GJJ: Remove all the Log: CVS tags from files. This is just dumbwork,
+  but will save us on merge conflicts later.
 * GJJ: move the file install widget to an iconview.
 * GJJ: lose the QMultiLineEdit in MemoWidget.
 * GJJ: Add a menuitem "Configure conduits" to the kpilotDaemon RMB Menu
@@ -28,6 +31,37 @@ TODO LIST (Ignore the file TODO)
 
 KPilot Developer's notes for January 15th, 2003
 ===============================================
+
+2003-1-11  Adriaan de Groot
+* Weirdly, I can list the databases on the pilot just fine with kpilotTest,
+  but at the end of the sync the pilot complains about the password.
+* Similarly, using the daemon I can back up the pilot just fine (pilot-link
+  0.11.3, all this) and at the end the pilot complains. The data is backed
+  up just fine, though.
+* Wow, USB connections are _fast_.
+* Weirdness comes in threes: after a while the debug output stops printing.
+  Even when it's sent to cerr directly. Hmm .. has something to do with
+  printing NULL QStrings.
+* [hotSync.cc] Every "Backing up:" message was logged twice. 
+* [logWidget.cc] Added more version information. Discovered that
+  QTextView is obsolete. Fixed log tailing problem. #ifdeffed it to
+  Qt 3.1 and later.
+
+2003-1-10  Adriaan de Groot
+* [kpilot/interactivesync.cc] Some strlcpy problems when compiling HEAD 
+  (or BRANCH) KPilot on a KDE 3.0 system. Since we don't maintain branches, 
+  backwards compatibility in HEAD is essential. Added #if KDE_VERSION < 310.
+* [lib/kpilotlink.cc] Might have found the source of the KPilot-hangs-with-USB 
+  problems. There's a note in the QSocketNotifier docs saying not to disable 
+  read-notifiers.  I did anyway, and it never caused problems before. 
+  Added some workaround crud.
+* I'm currently building kdelibs and base and pim on a Linux box, something
+  I haven't done in over a year. This will allow me access to a USB stack
+  that can actually handle the m500, so I can do some more testing.
+  Primary platform remains FreeBSD, though, for all-the-other-KDE-problems-
+  on-nonlinux. 
+* Made a round of removing <iostream.h>, since it's already in options.h.
+  Needed a "using namespace std;" in options to get stuff to work.
 
 2003-1-9  Adriaan de Groot
 * Made new tarballs of the build system (for 3.0 and 3.1) and
