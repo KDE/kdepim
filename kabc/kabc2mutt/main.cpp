@@ -41,7 +41,7 @@ int main(int argc, char **argv)
     KInstance instance( "kabc2mutt" );
 
     KCmdLineArgs::init( argc, argv, "kabc2mutt",
-	    "kabc - mutt converter", "0.1" );
+	    i18n("kabc - mutt converter"), "0.1" );
     KCmdLineArgs::addCmdLineOptions( options );
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
@@ -56,10 +56,10 @@ int main(int argc, char **argv)
 
 	    QString key = (*it).givenName().left(3) + (*it).familyName().left(3);
 	
-	    printf("alias %s\t%s %s <%s>\n", key.latin1(),
-		    (*it).givenName().latin1(),
-		    (*it).familyName().latin1(),
-		    (*it).preferredEmail().latin1());
+	    printf("alias %s\t%s %s <%s>\n", key.local8Bit().data(),
+		    (*it).givenName().local8Bit().data(),
+		    (*it).familyName().local8Bit().data(),
+		    (*it).preferredEmail().local8Bit().data());
 	}
 
 	// print all ditribution lists
@@ -72,8 +72,8 @@ int main(int argc, char **argv)
 	    if ( list ) {
 		QStringList emails = list->emails();
 		printf("alias %s\t %s\n",
-			(*it).replace(QRegExp(" "), "_").latin1(),
-			emails.join(",").latin1());
+			(*it).replace(QRegExp(" "), "_").local8Bit().data(),
+			emails.join(",").local8Bit().data());
 	    }
 	}
     } else if ( args->isSet( "write" ) ) {
