@@ -126,9 +126,8 @@ void ResourceGroupwareBase::readConfig( const KConfig *config )
 {
   kdDebug(5800) << "KCal::ResourceGroupwareBase::readConfig()" << endl;
   ResourceCached::readConfig( config );
-  if ( mFolderLister ) {
-    mFolderLister->readConfig( config );
-  }
+  if ( mPrefs ) mPrefs->readConfig();
+  if ( mFolderLister ) mFolderLister->readConfig( config );
 }
 
 void ResourceGroupwareBase::writeConfig( KConfig *config )
@@ -136,12 +135,10 @@ void ResourceGroupwareBase::writeConfig( KConfig *config )
   kdDebug(5800) << "KCal::ResourceGroupwareBase::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
-
-  mPrefs->writeConfig();
-
   ResourceCached::writeConfig( config );
 
-  mFolderLister->writeConfig( config );
+  if ( mPrefs ) mPrefs->writeConfig();
+  if ( mFolderLister ) mFolderLister->writeConfig( config );
 }
 
 bool ResourceGroupwareBase::doOpen()

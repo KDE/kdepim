@@ -175,7 +175,10 @@ void GroupwareUploadJob::uploadNewItem()
     }
     QString uid = item->uid();
 
-    KURL url( adaptor()->folderLister()->writeDestinationId() );
+    KURL url( mBaseUrl );
+    if ( adaptor() && adaptor()->folderLister() ) {
+      url = adaptor()->folderLister()->writeDestinationId();
+    }
     adaptor()->adaptUploadUrl( url );
     kdDebug(5800) << "Put new URL: " << url.url() << endl;
 

@@ -44,7 +44,12 @@ void GroupwareDownloadJob::run()
 {
   kdDebug(5800) << "GroupwareDownloadJob::run()" << endl;
 
-  mFoldersForDownload = adaptor()->folderLister()->activeFolderIds();
+  if ( adaptor() && adaptor()->folderLister() ){
+    mFoldersForDownload = adaptor()->folderLister()->activeFolderIds();
+  } else {
+    // TODO: If we don't have a folder lister, use the base URL (e.g. if all
+    // communication goes through one script on the server
+  }
 
   mItemsForDownload.clear();
   mCurrentlyOnServer.clear();
