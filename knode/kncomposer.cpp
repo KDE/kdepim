@@ -598,20 +598,16 @@ bool KNComposer::applyChanges()
       // now try to sign the article
       if (!signingKey.isEmpty()) {
           QString tmpText = tmp;
-          Kpgp::Module *pgp = Kpgp::Module::getKpgp();
+	  Kpgp::Block block;
           bool ok=true;
           QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
           if(!ok) // no suitable codec found => try local settings and hope the best ;-)
               codec=KGlobal::locale()->codecForEncoding();
 
-          pgp->setMessage(codec->fromUnicode(tmpText),codec->name());
+	  block.setText( codec->fromUnicode(text) );
           kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
-          if (!pgp->sign(signingKey))
-              KMessageBox::error(this,
-                                  i18n("Sorry, couldn't sign this message!\n\n%1")
-                                      .arg(pgp->lastErrorMsg()));
-          else {
-              QCString result = pgp->message();
+	  if( block.clearsign( signingKey, codec->name() ) ) {
+	      QCString result = block.text();
               tmp = codec->toUnicode(result.data(), result.length() );
           }
       }
