@@ -193,7 +193,12 @@ namespace Kleo {
     const ColumnStrategy * columnStrategy() const { return mColumnStrategy; }
     const DisplayStrategy * displayStrategy() const { return mDisplayStrategy; }
 
+    bool hierarchical() const { return mHierarchical; }
+    virtual void setHierarchical( bool hier );
+
     void flushKeys() { slotUpdateTimeout(); }
+
+    bool hasSelection() const;
 
   signals:
     void doubleClicked( Kleo::KeyListViewItem*, const QPoint&, int );
@@ -223,11 +228,15 @@ namespace Kleo {
     /*! \reimp for covariant return */
     KeyListViewItem * firstChild() const;
 
-    bool hasSelection() const;
+  private:
+    void doHierarchicalInsert( const GpgME::Key & );
+    void gatherScattered();
+    KeyListViewItem * parentFor( const QCString & ) const;
 
   private:
     const ColumnStrategy * mColumnStrategy;
     const DisplayStrategy * mDisplayStrategy;
+    bool mHierarchical;
 
     class Private;
     Private * d;

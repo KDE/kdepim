@@ -48,8 +48,12 @@
 #include <qfont.h>
 #include <qcolor.h>
 #include <qtimer.h>
+#include <qcstring.h>
+
+#include <gpgmepp/key.h>
 
 #include <vector>
+#include <map>
 
 static const int updateDelayMilliSecs = 500;
 
@@ -108,6 +112,7 @@ struct Kleo::KeyListView::Private {
   std::vector<GpgME::Key> keyBuffer;
   QTimer * updateTimer;
   QToolTip * itemToolTip;
+  std::map<QCString,KeyListViewItem*> itemMap;
 };
 
 // a list of signals where we want to replace QListViewItem with
@@ -131,7 +136,8 @@ static const int numSignalReplacements = sizeof signalReplacements / sizeof *sig
 Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const DisplayStrategy * displayStrategy, QWidget * parent, const char * name, WFlags f )
   : KListView( parent, name ),
     mColumnStrategy( columnStrategy ),
-    mDisplayStrategy ( displayStrategy  )
+    mDisplayStrategy ( displayStrategy  ),
+    mHierarchical( false )
 {
   setWFlags( f );
 
@@ -170,6 +176,13 @@ Kleo::KeyListView::~KeyListView() {
   delete mDisplayStrategy; mDisplayStrategy = 0;
 }
 
+void Kleo::KeyListView::setHierarchical( bool hier ) {
+  if ( hier == mHierarchical )
+    return;
+  mHierarchical = hier;
+  // re-insert all keys...
+}
+
 void Kleo::KeyListView::slotAddKey( const GpgME::Key & key ) {
   if ( key.isNull() )
     return;
@@ -188,12 +201,57 @@ void Kleo::KeyListView::slotUpdateTimeout() {
     setUpdatesEnabled( false );
   kdDebug( 5150 ) << "Kleo::KeyListView::slotUpdateTimeout(): processing "
 		  << d->keyBuffer.size() << " items en block" << endl;
-  for ( std::vector<GpgME::Key>::const_iterator it = d->keyBuffer.begin() ; it != d->keyBuffer.end() ; ++it )
-    (void)new KeyListViewItem( this, *it );
+  if ( hierarchical() ) {
+    for ( std::vector<GpgME::Key>::const_iterator it = d->keyBuffer.begin() ; it != d->keyBuffer.end() ; ++it )
+      doHierarchicalInsert( *it );
+    gatherScattered();
+  } else {
+    for ( std::vector<GpgME::Key>::const_iterator it = d->keyBuffer.begin() ; it != d->keyBuffer.end() ; ++it )
+      (void)new KeyListViewItem( this, *it );
+  }
   if ( wasUpdatesEnabled )
     setUpdatesEnabled( true );
   d->keyBuffer.clear();
 }
+
+void Kleo::KeyListView::doHierarchicalInsert( const GpgME::Key & key ) {
+  const QCString fpr = key.subkey(0).fingerprint();
+  if ( fpr.isEmpty() )
+    return;
+  KeyListViewItem * item = 0;
+  if ( !key.isRoot() )
+    if ( KeyListViewItem * parent = parentFor( key.chainID() ) ) 
+      item = new KeyListViewItem( parent, key );
+  if ( !item )
+    item = new KeyListViewItem( this, key ); // top-level (for now)
+
+  d->itemMap.insert( std::make_pair( fpr, item ) );
+}
+
+void Kleo::KeyListView::gatherScattered() {
+  KeyListViewItem * item = firstChild();
+  while ( item ) {
+    KeyListViewItem * cur = item;
+    item = item->nextSibling();
+    if ( cur->key().isRoot() )
+      continue;
+    if ( KeyListViewItem * parent = parentFor( cur->key().chainID() ) ) {
+      // found a new parent...
+      takeItem( cur );
+      parent->insertItem( cur );
+    }
+  }
+}
+
+Kleo::KeyListViewItem * Kleo::KeyListView::parentFor( const QCString & s ) const {
+  if ( s.isEmpty() )
+    return 0;
+  const std::map<QCString,KeyListViewItem*>::const_iterator it = d->itemMap.find( s );
+  if ( it == d->itemMap.end() )
+    return 0;
+  return it->second;
+}
+  
 
 void Kleo::KeyListView::slotRefreshKey( const GpgME::Key & key ) {
   const char * fpr = key.subkey(0).fingerprint();
