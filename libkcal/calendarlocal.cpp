@@ -422,12 +422,28 @@ Event::List CalendarLocal::rawEventsForDate( const QDateTime &qdt )
   return rawEventsForDate( qdt.date() );
 }
 
+// This bool is only used by the regression testing program, to save in a stable order
+bool KCal_CalendarLocal_saveOrdered = false;
+
 Event::List CalendarLocal::rawEvents()
 {
   Event::List eventList;
-  EventDictIterator it( mEvents );
-  for( ; it.current(); ++it )
-    eventList.append( *it );
+  if ( !KCal_CalendarLocal_saveOrdered ) { // normal case: save in random order
+    EventDictIterator it( mEvents );
+    for( ; it.current(); ++it )
+      eventList.append( *it );
+  } else { // regression testing: save in sorted order
+    Event::List::Iterator sortIt;
+    EventDictIterator it( mEvents );
+    for( ; it.current(); ++it ) {
+      sortIt = eventList.begin();
+      while ( sortIt != eventList.end() &&
+              it.current()->dtStart().time() >= (*sortIt)->dtStart().time() ) {
+        ++sortIt;
+      }
+      eventList.insert( sortIt, it.current() );
+    }
+  }
   return eventList;
 }
 
