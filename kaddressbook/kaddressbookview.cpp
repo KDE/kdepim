@@ -158,8 +158,11 @@ void KAddressBookView::popup( const QPoint &point, const QStringList &uids )
   }
 
   QPopupMenu menu( this );
-  menu.insertItem( i18n( "Edit" ), 1 );
-  menu.insertItem( i18n( "Delete" ), 2 );
+  menu.insertItem( i18n( "&Edit" ), 1 );
+  menu.insertItem( i18n( "&Delete" ), 2 );
+  menu.insertSeparator();
+  menu.insertItem( i18n( "&Mail..." ), 3 );
+  menu.insertItem( i18n( "Mail &vCard..." ), 4 );
 
   if ( uids.count() == 0 ) {
     switch ( menu.exec( point ) ) {
@@ -168,6 +171,12 @@ void KAddressBookView::popup( const QPoint &point, const QStringList &uids )
         break;
       case 2:
         mCore->deleteContacts();
+        break;
+      case 3:
+        mCore->sendMail();
+        break;
+      case 4:
+        mCore->mailVCard();
         break;
       default:
         kdDebug(5720) << "Unknown popup menu item" << endl;
@@ -180,6 +189,15 @@ void KAddressBookView::popup( const QPoint &point, const QStringList &uids )
         break;
       case 2:
         mCore->deleteContacts( uids );
+        break;
+      case 3: {
+          KABC::Addressee addr = mAddressBook->findByUid( uids[ 0 ] );
+          if ( !addr.preferredEmail().isEmpty() )
+            mCore->sendMail( addr.preferredEmail() );
+        }
+        break;
+      case 4:
+        mCore->mailVCard( uids );
         break;
       default:
         kdDebug(5720) << "Unknown popup menu item" << endl;
