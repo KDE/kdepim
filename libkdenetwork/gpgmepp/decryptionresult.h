@@ -41,6 +41,8 @@ namespace GpgME {
 
     const char * unsupportedAlgortihm() const;
 
+    bool wrongKeyUsage() const;
+
   private:
     class Private;
     Private * d;
