@@ -670,7 +670,7 @@ QString QGpgMECryptoConfigEntry::outputString() const
       QStringList lst = mValue.toStringList();
       for( QStringList::iterator it = lst.begin(); it != lst.end(); ++it ) {
         if ( !(*it).isNull() )
-          *it = gpgconf_escape( *it ).prepend( "\"" ); // TODO: null vs empty difference?
+          *it = gpgconf_escape( *it ).prepend( "\"" );
       }
       QString res = lst.join( "," );
       kdDebug() << res << endl;
