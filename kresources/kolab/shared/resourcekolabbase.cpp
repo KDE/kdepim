@@ -67,11 +67,20 @@ bool ResourceKolabBase::kmailSubresources( QValueList<KMailICalIface::SubResourc
   return mConnection->kmailSubresources( lst, contentsType );
 }
 
+bool ResourceKolabBase::kmailIncidencesCount( int &count,
+                                              const QString& mimetype,
+                                              const QString& resource ) const
+{
+  return mConnection->kmailIncidencesCount( count, mimetype, resource );
+}
+
 bool ResourceKolabBase::kmailIncidences( QMap<Q_UINT32, QString>& lst,
                                          const QString& mimetype,
-                                         const QString& resource ) const
+                                         const QString& resource,
+                                         int startIndex,
+                                         int nbMessages ) const
 {
-  return mConnection->kmailIncidences( lst, mimetype, resource );
+  return mConnection->kmailIncidences( lst, mimetype, resource, startIndex, nbMessages );
 }
 
 bool ResourceKolabBase::kmailGetAttachment( KURL& url, const QString& resource,

@@ -108,10 +108,17 @@ protected:
   bool kmailSubresources( QValueList<KMailICalIface::SubResource>& lst,
                           const QString& contentsType ) const;
 
-  /// Get the mimetype attachments from this folder. Returns a
-  /// QMap with serialNumber/attachment pairs.
+  /// Get the number of messages in this folder.
+  /// Used to iterate over kmailIncidences by chunks
+  bool kmailIncidencesCount( int& count, const QString& mimetype,
+                             const QString& resource ) const;
+
+  /// Get the mimetype attachments from a chunk of messages from this folder.
+  /// Returns a QMap with serialNumber/attachment pairs.
   bool kmailIncidences( QMap<Q_UINT32, QString>& lst, const QString& mimetype,
-                        const QString& resource ) const;
+                        const QString& resource,
+                        int startIndex,
+                        int nbMessages ) const;
 
 public: // for Contact
   /// Get an attachment from a mail. Returns a URL to it. This can

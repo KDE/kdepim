@@ -91,8 +91,14 @@ void ResourceKolab::doClose()
 bool ResourceKolab::loadSubResource( const QString& subResource )
 {
   // Get the list of journals
+  int count = 0;
+  if ( !kmailIncidencesCount( count, attachmentMimeType, subResource ) ) {
+    kdError() << "Communication problem in ResourceKolab::load()\n";
+    return false;
+  }
+
   QMap<Q_UINT32, QString> lst;
-  if( !kmailIncidences( lst, attachmentMimeType, subResource ) ) {
+  if( !kmailIncidences( lst, attachmentMimeType, subResource, 0, count ) ) {
     kdError(5500) << "Communication problem in "
                   << "ResourceKolab::getIncidenceList()\n";
     return false;

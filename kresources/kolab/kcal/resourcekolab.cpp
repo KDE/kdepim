@@ -37,14 +37,17 @@
 #include "task.h"
 #include "journal.h"
 
-#include <assert.h>
+#include <libkdepim/kincidencechooser.h>
+#include <kabc/locknull.h>
+#include <kmainwindow.h>
+#include <klocale.h>
 
 #include <qobject.h>
 #include <qtimer.h>
+#include <qprogressdialog.h>
+#include <qapplication.h>
 
-#include <kabc/locknull.h>
-#include <klocale.h>
-#include <libkdepim/kincidencechooser.h>
+#include <assert.h>
 
 using namespace KCal;
 using namespace Kolab;
@@ -138,20 +141,49 @@ void ResourceKolab::doClose()
 bool ResourceKolab::loadSubResource( const QString& subResource,
                                      const char* mimetype )
 {
-  QMap<Q_UINT32, QString> lst;
-  if ( !kmailIncidences( lst, mimetype, subResource ) ) {
+  int count = 0;
+  if ( !kmailIncidencesCount( count, mimetype, subResource ) ) {
     kdError() << "Communication problem in ResourceKolab::load()\n";
     return false;
   }
 
-  kdDebug() << "Kolab resource: got " << lst.count() << " in "
-                << subResource << " of type " << mimetype << endl;
+  if ( !count )
+    return true;
 
-  const bool silent = mSilent;
-  mSilent = true;
-  for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it )
-    addIncidence( mimetype, it.data(), subResource, it.key() );
-  mSilent = silent;
+  const int nbMessages = 200; // read 200 mails at a time (see kabc resource)
+
+  // ### There should be a better way to associate a widget with a resource
+  KMainWindow* mw = KMainWindow::memberList ? KMainWindow::memberList->first() : 0;
+  QProgressDialog progress( mw, 0, true /*modal*/ );
+  const QString labelTxt = mimetype == "application/x-vnd.kolab.task" ? i18n( "Loading tasks..." )
+                      : mimetype == "application/x-vnd.kolab.journal" ? i18n( "Loading journals..." )
+                      : i18n( "Loading events..." );
+  progress.setLabelText( labelTxt );
+  progress.setTotalSteps( count );
+
+  for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
+    QMap<Q_UINT32, QString> lst;
+    if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
+      kdError() << "Communication problem in ResourceKolab::load()\n";
+      return false;
+    }
+
+    const bool silent = mSilent;
+    mSilent = true;
+    for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it )
+      addIncidence( mimetype, it.data(), subResource, it.key() );
+    mSilent = silent;
+
+    progress.setProgress( startIndex );
+    // Note that this is a case where processEvents is OK - we have a modal dialog,
+    // the only thing the user can do is cancel the dialog.
+    qApp->processEvents();
+    if ( progress.wasCanceled() )
+      return false;
+  }
+
+  kdDebug() << "KCal Kolab resource: got " << count << " in "
+            << subResource << " of type " << mimetype << endl;
 
   return true;
 }

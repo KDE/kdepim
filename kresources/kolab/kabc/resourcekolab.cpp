@@ -43,7 +43,11 @@
 #include <qtimer.h>
 #include <qstring.h>
 #include <qfile.h>
+#include <qprogressdialog.h>
+#include <qapplication.h>
+
 #include <assert.h>
+#include <kmainwindow.h>
 
 using namespace Kolab;
 
@@ -164,18 +168,45 @@ QString KABC::ResourceKolab::loadContact( const QString& contactXML, const QStri
 
 bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
 {
-  QMap<Q_UINT32, QString> lst;
-  if ( !kmailIncidences( lst, s_attachmentMimeType, subResource ) ) {
+  int count = 0;
+  if ( !kmailIncidencesCount( count, s_attachmentMimeType, subResource ) ) {
     kdError() << "Communication problem in ResourceKolab::load()\n";
     return false;
   }
+  if ( !count )
+    return true;
 
-  if ( !lst.isEmpty() )
-    kdDebug(5650) << "Contacts kolab resource: got " << lst.count() << " contacts in " << subResource << endl;
+  // Read that many contacts at a time.
+  // If this number is too small we lose time in kmail.
+  // If it's too big the progressbar is jumpy.
+  const int nbMessages = 200;
 
-  for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
-    loadContact( it.data(), subResource, it.key() );
+  // ### There should be a better way to associate a widget with a resource
+  KMainWindow* mw = KMainWindow::memberList ? KMainWindow::memberList->first() : 0;
+  QProgressDialog progress( mw, 0, true /*modal*/ );
+  progress.setLabelText( i18n( "Loading contacts..." ) );
+  progress.setTotalSteps( count );
+
+  for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
+    QMap<Q_UINT32, QString> lst;
+
+    if ( !kmailIncidences( lst, s_attachmentMimeType, subResource, startIndex, nbMessages ) ) {
+      kdError() << "Communication problem in ResourceKolab::load()\n";
+      return false;
+    }
+
+    for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+      loadContact( it.data(), subResource, it.key() );
+    }
+    progress.setProgress( startIndex );
+    // Note that this is a case where processEvents is OK - we have a modal dialog,
+    // the only thing the user can do is cancel the dialog.
+    qApp->processEvents();
+    if ( progress.wasCanceled() )
+      return false;
   }
+
+  kdDebug(5650) << "Contacts kolab resource: got " << count << " contacts in " << subResource << endl;
 
   return true;
 }
@@ -360,7 +391,7 @@ bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
                                                  const QString& contactXML )
 {
   // Check if this is a contact
-  if( type != s_kmailContentsType || !subresourceActive( subResource ) ) 
+  if( type != s_kmailContentsType || !subresourceActive( subResource ) )
     return false;
 
   // Load contact to find the UID
