@@ -1,10 +1,41 @@
+kdepim (4:2.2-alpha1-1) experimental; urgency=low
+ 
+  * New upstream version
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Tue, 10 Apr 2001 17:46:00 -0700
+
+kdepim (4:2.1.1-2) unstable; urgency=low
+ 
+  * Update menu bits to include new kde menu removal tag
+  * More upstream fixes
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Sun, 08 Apr 2001 17:46:00 -0700
+
+kdepim (4:2.1.1-1.0.1) unstable; urgency=low
+ 
+  * Rebuild with older libc
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 26 Mar 2001 17:00:00 -0700
+
+kdepim (4:2.1.1-1) unstable; urgency=low
+ 
+  * New upstream version
+  * Upstream fixes (Closes: #77622, #77803)
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 19 Mar 2001 22:31:00 -0700
+
+kdepim (4:2.1.0-1) unstable; urgency=low
+ 
+  * New upstream CVS pull
+  * Update shlibs
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Wed, 07 Mar 2001 22:31:00 -0700
+
 kdepim (4:2.1-final-1) unstable; urgency=low
  
   * New upstream version
   * Upping standards version
   * Fix build problem with new libc 2.2.1 (Closes: #86435)
-  * Fix checkbox and other todo problems (Closes: #77622, #77803)
-  * Fix holiday settings (Closes: #77256)
  
  -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 19 Feb 2001 02:31:00 -0700
 

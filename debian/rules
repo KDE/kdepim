@@ -39,13 +39,13 @@ binary-arch: build
 	dh_testdir
 	dh_testroot
 	dh_clean -k
-	-rm -f debian/undocumented
-	mkdir -p debian/tmp/etc/kde2
+	dh_installdocs -a
 	make install DESTDIR=`pwd`/debian/tmp/
-	perl -w admin/debianrules cleanup
-	for i in `cat debian/undocumented.in | grep -v "#"`; do \
-	  echo "$$i.1" >> debian/undocumented ; \
+	cp debian/*.override debian/tmp/usr/share/lintian/overrides/
+	for i in `ls debian/tmp/usr/share/lintian/overrides/`; do \
+	  mv debian/tmp/usr/share/lintian/overrides/$$i debian/tmp/usr/share/lintian/overrides/`echo $$i | sed -e 's#.override##'`; \
 	done
+	perl -w admin/debianrules cleanup
 	for i in `find debian/ -type l -name "common"`; do \
 		rm $$i ;\
 		ln -s ../common $$i ;\
