@@ -1,24 +1,28 @@
-Source: kdepim-cvs
-Build-Depends: autoconf, kdelibs3-dev-cvs, debhelper, libpisock-dev, pilot-link,libjpeg62-dev, libpng2-dev, libqt2.1-dev, zlib1g-dev, xlib6g-dev, jade, sgml-base, docboook, gettext, bison, libc6-dev
+Source: kdepim
+Build-Depends: autoconf, kdelibs3-dev, debhelper, libpisock-dev, pilot-link,libjpeg62-dev, libpng2-dev, libqt2.1-dev, zlib1g-dev, xlib6g-dev, jade, sgml-base, docboook, gettext, bison, libc6-dev
 Section: utils
 Priority: optional
 Maintainer: Stephan Kulow <coolo@kde.org>
 Standards-Version: 3.1.1
 
-Package: kdepim-cvs
+Package: kdepim
 Architecture: any
+Replaces: kdepim-cvs
 Depends: ${shlibs:Depends}
-Conflicts: korganizer, kpilot
-Suggests: kdebase-cvs
-Provides: korganizer, kpilot
+Conflicts: korganizer, kpilot, kdepim-cvs
+Suggests: kdebase
+Provides: kdepim-cvs, korganizer, kpilot
 Description: KDE Personal Information Management Applications
  This package contains the following programs: 
   - korganizer
   - kpilot
 
-Package: kdepim-dev-cvs
+Package: kdepim-dev
 Architecture: any
 Section: devel
-Depends: kdepim-cvs (= ${Source-Version}), libqt2.1-dev, kdelibs3-dev-cvs
+Replaces: kdepim-dev-cvs
+Depends: kdepim (= ${Source-Version}), libqt2.1-dev, kdelibs3-dev
+Conflicts: kdepim-dev-cvs
+Provides: kdepim-dev-cvs
 Description: Personal Information Management (development files)
  Development files for KDE related Personal Information Management apps
