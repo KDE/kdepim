@@ -1,5 +1,5 @@
-See kdelibs/kabc/HACKING or http://korganizer.kde.org/hacking.html for general
-coding style conventions.
+See kdelibs/kabc/HACKING or http://korganizer.kde.org/develop/hacking.html for
+general coding style conventions.
 
 Additional conventions for libkcal and KOrganizer:
 
