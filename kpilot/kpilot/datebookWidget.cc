@@ -28,7 +28,6 @@
 */
 
 
-#include "config.h"
 #include "options.h"
 
 
@@ -40,7 +39,7 @@
 #include <kdatepicker.h>
 #include <kmessagebox.h>
 
-#include "datebookWidget.h"
+#include "datebookWidget.moc"
 
 DatebookWidget::DatebookWidget(QWidget *parent, const QString &dbpath) :
 	PilotComponent(parent,"component_generic",dbpath)
@@ -132,4 +131,3 @@ void DatebookWidget::slotDeleteEvent()
 }
 
 
-#include "datebookWidget.moc"
