@@ -374,8 +374,6 @@ void ActionManager::setFilterNames(const QStringList& list)
 
 void ActionManager::slotFilterActivated(int index)
 {
-    kdDebug() << "ActionManager::slotFilterActivated: Filter "
-              << index << " activated." << endl;
     emit(filterActivated(index-1));
 }
 
