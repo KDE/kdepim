@@ -26,8 +26,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -105,6 +105,9 @@ private:
 
 
 // $Log$
+// Revision 1.3  2002/08/23 22:59:29  kainhofe
+// Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
+//
 // Revision 1.2  2002/07/05 00:15:22  kainhofe
 // Added KPilotDeviceLink::tickle(), Changelog update, compile fixes
 //
