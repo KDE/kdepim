@@ -36,3 +36,4 @@ kde-features.h kde-features.cpp: $(srcdir)/kde-features.rng \
 	$(top_builddir)/kode/kxml_compiler/kxml_compiler $(srcdir)/kde-features.rng
 
 METASOURCES = AUTO
+DISTCLEANFILES = kde-features.h kde-features.cpp
