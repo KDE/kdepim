@@ -98,7 +98,7 @@ void VCalConduit::getCalendar()
 	KConfig& config = KPilotLink::getConfig(VCalSetup::VCalGroup);
 	(void) getDebugLevel(config);
 	QString calName = config.readEntry("CalFile");
-	first = config.readBoolEntry("FirstTime", TRUE);
+	first = getFirstTime(config);
 
 	if (debug_level & SYNC_TEDIOUS)
 	{
@@ -1240,6 +1240,8 @@ void VCalConduit::doLocalSync()
 
 	deletedList.clear();
   
+	KConfig& config = KPilotLink::getConfig(VCalSetup::VCalGroup);
+	setFirstTime(config,false);
 }
 
 /*

@@ -143,6 +143,24 @@ protected:
 	*/
 	int getDebugLevel(KConfig&);
 
+	/**
+	* Conduits can have a "first time" setting that causes
+	* additional actions to be taken. There is also a global
+	* KPilot setting "force first time" that interferes here.
+	*
+	* Remember that conduits should set first time to false
+	* in their code.
+	*
+	* @ret true for first time, false otherwise
+	*/
+	bool getFirstTime(KConfig&);
+
+	/**
+	* For consistent setting of "first time" we introduce this
+	* convenience function.
+	*/
+	void setFirstTime(KConfig&,bool=false);
+
 private:
   /**
    * Mode for this instance of the conduit

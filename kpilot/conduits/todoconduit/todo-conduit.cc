@@ -76,7 +76,7 @@ void TodoConduit::getCalendar()
 	KConfig& config = KPilotLink::getConfig(TodoSetup::TodoGroup);
 
 	calName = config.readEntry("CalFile");
-	first = config.readBoolEntry("FirstTime", TRUE);
+	first = getFirstTime(config);
 
 
 	if ((getMode() == BaseConduit::HotSync) || 
@@ -532,14 +532,15 @@ void TodoConduit::doLocalSync()
 					       text.latin1(), "&Insert","&Delete",
 					       "Insert &All",0);
 	   switch(response) {
-	   case 0:
-	     updateVObject(rec);
-	     break;
 	   case 1:
 	     deletedList.append(new int(rec->getID()));
 	     break;
 	   case 2:
 	     insertall = 1;
+	     updateVObject(rec);
+	     break;
+	   case 0:
+	   default:
 	     updateVObject(rec);
 	     break;
 	   }
@@ -560,6 +561,9 @@ void TodoConduit::doLocalSync()
      delete rec;
    }
    deletedList.clear();
+
+	KConfig& config = KPilotLink::getConfig(TodoSetup::TodoGroup);
+	setFirstTime(config,false);
 }
 
 /*

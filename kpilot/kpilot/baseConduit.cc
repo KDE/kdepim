@@ -280,4 +280,24 @@ int BaseConduit::getDebugLevel(KConfig& c)
 	return debug_level ;
 }
 
-// $Log:$
+bool BaseConduit::getFirstTime(KConfig& c)
+{
+	bool b = c.readBoolEntry("FirstTime",true);
+	if (b) return b;
+
+	KConfigGroupSaver g(&c,QString::null);
+	b = c.readBoolEntry("ForceFirst",false);
+
+	return b;
+}
+
+void BaseConduit::setFirstTime(KConfig& c,bool b)
+{
+	c.writeEntry("FirstTime",b);
+}
+
+
+// $Log$
+// Revision 1.7  2000/11/14 06:32:26  adridg
+// Ditched KDE1 stuff
+//
