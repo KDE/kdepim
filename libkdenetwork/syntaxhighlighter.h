@@ -102,7 +102,7 @@ public:
 
     virtual bool isMisspelled( const QString& word );
     static void dictionaryChanged();
-
+    void restartBackgroundSpellCheck();
 signals:
     void activeChanged(const QString &);
 

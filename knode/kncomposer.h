@@ -245,6 +245,7 @@ class KNComposer::ComposerView  : public QSplitter {
     void hideAttachmentView();
     void showExternalNotification();
     void hideExternalNotification();
+    void restartBackgroundSpellCheck();
 
     QLabel      *l_to,
                 *l_groups,
@@ -299,7 +300,9 @@ protected slots:
     void slotSpellDone(const QString &);
     void slotSpellFinished();
     void slotMisspelling (const QString &, const QStringList &lst, unsigned int);
-
+    virtual void cut();
+    virtual void clear();
+    virtual void del();
 
   signals:
     void sigDragEnterEvent(QDragEnterEvent *);

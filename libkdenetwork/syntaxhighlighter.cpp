@@ -297,6 +297,11 @@ void DictSpellChecker::slotRehighlight()
     QTimer::singleShot(0, this, SLOT(slotAutoDetection()));
 }
 
+void DictSpellChecker::restartBackgroundSpellCheck()
+{
+    slotDictionaryChanged();
+}
+
 void DictSpellChecker::slotDictionaryChanged()
 {
     delete mSpell;
@@ -346,6 +351,7 @@ void DictSpellChecker::slotAutoDetection()
 	else if (!mActive && (mErrorCount * 3 < mWordCount))
 	    mActive = true;
     }
+    kdDebug()<<" mErrorCount :"<<mErrorCount<<" mWordCount :"<<mWordCount<<endl;
     if (mActive != savedActive) {
 	if (mWordCount > 1)
 	    if (mActive)

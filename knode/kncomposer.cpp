@@ -1776,6 +1776,10 @@ void KNComposer::ComposerView::setMessageMode(KNComposer::MessageMode mode)
   }
 }
 
+void KNComposer::ComposerView::restartBackgroundSpellCheck()
+{
+    mSpellChecker->restartBackgroundSpellCheck();
+}
 
 void KNComposer::ComposerView::showAttachmentView()
 {
@@ -2201,6 +2205,25 @@ void KNComposer::Editor::slotSpellFinished()
     KMessageBox::error(this, i18n("ISpell seems to have crashed."));
   }
 }
+
+void KNComposer::Editor::cut()
+{
+    KEdit::cut();
+    m_composer->v_iew->restartBackgroundSpellCheck();
+}
+
+void KNComposer::Editor::clear()
+{
+    KEdit::clear();
+    m_composer->v_iew->restartBackgroundSpellCheck();
+}
+
+void KNComposer::Editor::del()
+{
+    KEdit::del();
+    m_composer->v_iew->restartBackgroundSpellCheck();
+}
+
 
 void KNComposer::Editor::slotMisspelling (const QString &, const QStringList &lst, unsigned int)
 {
