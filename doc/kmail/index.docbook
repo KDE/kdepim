@@ -5,20 +5,19 @@
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
 ]>
-
 <book lang="&language;">
 <bookinfo>
 <title>The &kmail; Handbook</title>
 
-<!-- note from daniel.naber@t-online.de, 2002-07-20: I'm working on this
-"by hand" (using nedit) so please do not mix up the formatting too much.
+ <!-- Note:
+* please do not mix up the formatting more than necessary so that
+  "cvs diff" makes usefull output
+* no short forms
+* use <warning> instead of <caution>
 $Id$
- -->
+-->
 
 <!-- TODO:
-
-* no short forms
-
 * guisubmenu vs. guititem ??
 * more about security?
 
@@ -62,7 +61,7 @@ $Id$
 </authorgroup>
 
 <date>2002-10-03</date>
-<releaseinfo>1.04.07</releaseinfo>
+<releaseinfo>1.05.00</releaseinfo>
 
 <copyright>
 <year>1999</year>
@@ -372,7 +371,7 @@ Mail</guimenuitem></menuchoice>.</para>
 <para>First, you should send yourself a message to test your
 configuration. To send a message, either hit <keycombo
 action="simul">&Ctrl;<keycap>N</keycap></keycombo>, select the
-<guiicon>New Message</guiicon> icon (the empty sheet of paper) or select
+<guiicon>New Message</guiicon> icon  or select
 the <menuchoice><guimenu>Message</guimenu><guimenuitem>New
 Message...</guimenuitem></menuchoice> menu item.  The
 <link linkend="the-composer-window">composer window</link> will appear. Fill in the
@@ -571,8 +570,17 @@ Folder</guimenuitem></menuchoice>. If you want to send an <link
 linkend="pgp-encrypt-your-messages">encrypted</link>
 or <link linkend="pgp-sign-your-messages">digitally signed</link> message, select the
 <guiicon>Sign Message</guiicon> resp. <guiicon>Encrypt 
-Message</guiicon> icons in the toolbar.
-</para> 
+Message</guiicon> icons in the toolbar.</para>
+
+<para>If you have installed and activated at least one of
+the <link linkend="configure-security-plugins">encryption plugins</link>
+then you can select whether you want to use the
+built-in OpenPGP support or the plugin for encryption and/or signing.
+Use the built-in OpenPGP support if you want to send clearsigned
+messages or inline encrypted messages. If you want to send signed or
+encrypted messages with attachments you should use one of the crypto
+plugins. Please note that the built-in OpenPGP will <emphasis>not</emphasis>
+sign or encrypt attachments.</para> 
 
 </sect2>
 
@@ -619,12 +627,11 @@ be attached to your message by using the appropriate options in the
 <menuchoice><guimenu>Attach</guimenu></menuchoice> menu. <application>PGP</application>
 key attachments are handled like file attachments.</para>
 
-<!-- fixme -->
 <!-- copied from below -->
-<warning><para>You can encrypt your messages sent with &kmail;, but this does
-not mean that the attachments are encrypted. You have to encrypt your
-attachments manually, using a shell command or some other tool before you attach
-them.</para></warning>
+<warning><para>Attachments will not be encrypted if you are using 
+the built-in OpenPGP support. To encrypt attachments, you have to install
+and configure <link linkend="configure-security-plugins">encryption plugins</link>.
+</para></warning>
 <!-- / copied from below -->
 
 </sect2>
@@ -775,7 +782,7 @@ whereas <guilabel>maildir</guilabel> saves each message to its own file.
 robust, but it can be slower on some file systems. If you are unsure, you should
 choose <guilabel>maildir</guilabel>.</para>
 
-<para>Note that there's  currently no feature in &kmail; that allows to convert
+<para>Note that there is currently no feature in &kmail; that allows to convert
 between both formats automatically - but you can just move all messages from an old
 <guilabel>mbox</guilabel> folder to a new <guilabel>maildir</guilabel> folder or
 vice versa.</para>
@@ -1008,7 +1015,7 @@ if any).</para>
 
 <para>The most common use of filters is to sort incoming messages to
 certain folders. This can be done by choosing <guilabel>move to
-folder</guilabel>. Here's a list of all possible actions:</para>
+folder</guilabel>. Here is a list of all possible actions:</para>
 
 <variablelist>
 <varlistentry>
@@ -1024,8 +1031,8 @@ cannot use <acronym>IMAP</acronym> folders as a target.</para>
 <term><guilabel>copy to folder</guilabel></term>
 <listitem>
 <para>This will copy the message to another folder.</para>
-<caution><para>You currently cannot use <acronym>IMAP</acronym>
-folders as a target.</para></caution>
+<note><para>You currently cannot use <acronym>IMAP</acronym>
+folders as a target.</para></note>
 </listitem>
 </varlistentry>
 -->
@@ -1071,9 +1078,9 @@ which you do not like.</para>
 <term><guilabel>bounce</guilabel></term> <listitem><para>Will try to
 return the message to the sender as undeliverable.</para>
 
-<caution><para>This will only work if the senders email address is
-valid. That's <emphasis>not</emphasis> the case for most
-spam messages.</para></caution>
+<warning><para>This will only work if the senders email address is
+valid. That is <emphasis>not</emphasis> the case for most
+spam messages.</para></warning>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -1102,10 +1109,10 @@ on. Additionally, the whole message is fed into the program's
 <acronym>stdin</acronym>.</para>
 
 <!-- fixme: still correct? -->
-<caution><para>This currently only works if the message has
+<warning><para>This currently only works if the message has
 <emphasis>at least one</emphasis> attachment. No, not even
 <symbol>&percnt;0</symbol> will work in the general
-case!</para></caution>
+case!</para></warning>
 
 <tip><para> You can enter arbitrarily complex shell commands here,
 since &kmail; uses a sub shell to execute the command line. Therefore,
@@ -1122,9 +1129,9 @@ even this command will work (within its limits):
 output, the entire message (including the headers) will be replaced
 with this output. If the program does not return output, the message
 will not change.  Specify the full path to the program.</para>
-<caution><para>Be cautious with this action, as it will easily mess up
+<warning><para>Be cautious with this action, as it will easily mess up
 your messages if the filter program does return garbage or extra
-lines.</para></caution>
+lines.</para></warning>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -1195,7 +1202,7 @@ desired destination folder from the folder pull-down menu in the
 messages you want to filter. The (almost) unique property of my &kde;
 List messages is that they always contain
 <quote>kde@lists.netcentral.net</quote> in the
-<guilabel>To:</guilabel> or <guilabel>CC:</guilabel> field. It's only
+<guilabel>To:</guilabel> or <guilabel>CC:</guilabel> field. It is only
 almost unique, because this fails for cross-posted messages.</para>
 </step>
 <step>
@@ -1274,7 +1281,7 @@ matches, they will be shown in a confirmation dialog and you can
 decide what to do with them. The default size for filtering is 50000
 Bytes. This is a good value as the overhead is kept to a minimum.
 Every message that is looked at by the filter causes additional
-traffic because the header of the mail is downloaded twice. The
+traffic because the header of the message is downloaded twice. The
 default action is <guilabel>Download mail</guilabel> to prevent the
 loss of messages.</para>
 
@@ -1378,7 +1385,7 @@ have matched messages, but at least one got tagged for
 </sect1>
 
 <sect1 id="multiple-accounts">
-<title>Using multiple Accounts</title>
+<title>Using Multiple Accounts</title>
 
 <para>Multiple accounts are used to check for messages from more than one email address
 and/or mail server. Select <menuchoice><guimenu>Settings</guimenu>
@@ -1396,14 +1403,14 @@ Mail</guiicon> icon for some time to get a list of accounts.</para>
 </sect1>
 
 <sect1 id="pgp">
-<!-- This section is from Andreas Gungl, 2000-05-21, updated 2002-01-xy -->
+<!-- This section is from Andreas Gungl, 2000-05-21, updated 2002-10-06 by Ingo Kloecker -->
 <title>Signing and Encrypting Messages with <application>PGP</application> 
 or <application>GnuPG</application></title>
 
 <para>This is a short introduction on how to setup &kmail;'s
 <application>PGP</application> (<application>Pretty Good Privacy</application>) support. 
 It will give some hints on the use of
-<application>PGP</application> too. It's written for people who are beginners in
+<application>PGP</application> too. It is written for people who are beginners in
 this area. If you are familiar with the use of <application>PGP</application>, you can
 skip most of the steps. This documentation (and the &kmail; user interface) 
 generally talks only about  <quote>PGP</quote>, but it applies to 
@@ -1416,14 +1423,16 @@ may be different.</para>
 also check out the <link linkend="pgp-faq">&FAQ; item about
 <application>PGP</application></link>.</para>
 
-<warning><para>You can encrypt your messages sent with &kmail;, but this does
-not mean that the attachments are encrypted. You have to encrypt your
-attachments manually, using a shell command or some other tool before you attach
-them.</para></warning>
+<!-- note: this is partly copied above: -->
+<warning><para>Attachments will not be encrypted if you are using 
+the built-in OpenPGP support. To encrypt attachments, you have to install
+and configure <link linkend="configure-security-plugins">encryption plugins</link>.
+Then you can decide for each attachment if it should be encrypted or not.
+</para></warning>
 
 <warning><para>&kmail; has to rely on <application>PGP</application>'s
 output. This output is often different between different versions of 
-<application>PGP</application>, so it's important that you test if encryption
+<application>PGP</application>, so it is important that you test if encryption
 really works with your setup before you start using it seriously. &kmail; might
 <emphasis>not</emphasis> warn you if something fails. You better enable 
 <guilabel>Show ciphered/signed text
@@ -1450,7 +1459,7 @@ many security related issues you should know about are discussed there.</para>
 
 <para>&kmail; expects that your <application>PGP</application> binary is called
 <command>pgp</command>.  In case of <application>GnuPG</application>, it expects
-the binary to be called <command>gpg</command>. If that's not the case for you,
+the binary to be called <command>gpg</command>. If that is not the case for you,
 just make a symlink.</para>
 
 <para>If you have not done so, you have to generate a key pair (secret and public
@@ -1468,9 +1477,7 @@ co-operation between &kmail; and <application>pgp</application>.</para>
 <sect2 id="pgp-settings">
 <title><application>PGP</application> Related Settings in &kmail;</title>
 
-<para>Enter your <application>PGP</application> user identity in the
-corresponding field of the <guilabel>Identity</guilabel> settings.
-Then select the <guilabel>OpenPGP</guilabel> tab on
+<para>Select the <guilabel>OpenPGP</guilabel> tab on
 the <guilabel>Security</guilabel> settings page. There you will find the
 following options:</para>
 
@@ -1494,7 +1501,10 @@ version.</para>
 time you sign a message (before sending) or select an encrypted message.
 If you turn this option on, &kmail; will remember your passphrase from
 after your first successful input until you finish your &kmail; session. The
-passphrase is stored in memory and not written to the hard disk.</para>
+passphrase is stored in memory and not written to the hard disk.
+If you use one of the Crypto-Plugins or if you use <application>GnuPG</application>
+with the gpg-agent then an external program will ask for your passphrase and
+optionally remember it for some time.</para>
 </listitem>
 </varlistentry>
 
@@ -1509,7 +1519,7 @@ you too.</para>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Show ciphered/signed text after composing</guilabel></term>
+<term><guilabel>Show signed/encrypted text after composing</guilabel></term>
 <listitem>
 <para>This will show you the result of encrypting and signing before the message
 gets sent. This way you can still cancel sending if encrypting failed. It is
@@ -1520,19 +1530,39 @@ strongly recommended to use this option.</para>
 <varlistentry>
 <term><guilabel>Always show the encryption keys for approval</guilabel></term>
 <listitem>
-<para>This will always open a dialog that lets you choose the key used for
+<para>This will always open a dialog that lets you choose the keys used for
 each recipient when you are sending an encrypted message. If this
 option is off, &kmail; will show this dialog only when it cannot
-find a key for a recipient.</para> 
+find a key for a recipient or when there are conflicting or unset encryption
+preferences.</para> 
 </listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Automatically sign messages using OpenPGP</guilabel></term>
+<listitem><para>This lets you toggle whether to automatically sign your messages
+by default. Of course it is still possible to send unsigned messages by deselecting
+the icon in the composer window.</para> 
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Automatically encrypt messages whenever possible</guilabel></term>
+<listitem><para>If this option is on, then &kmail; will automatically encrypt messages
+with the built-in OpenPGP support or the PGP/MIME-Plugin provided that
+for every recipient a trusted PGP key is found in your keyring and
+provided that you did not tell &kmail; not to encrypt messages send to
+certain recipients. If in doubt &kmail; will ask whether the message
+should be encrypted or not.</para></listitem>
 </varlistentry>
 
 </variablelist>
 
-<para>In the <guilabel>Composer</guilabel> section you can also check the
-<guilabel>Automatically sign messages using OpenPGP</guilabel> option. This means
-that all your messages will be signed before being sent. (So you do not have to
-set the signing option for each message manually.)</para>
+<para>Now that you have setup the encryption tool you have tell &kmail; which
+OpenPGP key you want to use for signing and for encrypting messages.
+To do this go to the <link linkend="configure-identity">Identities configuration</link>
+and set the key that should be used on the <guilabel>Advanced</guilabel> tab of the
+identity configuration.</para>
 
 <para>Now you are able to sign outgoing messages. To let people send you
 encrypted messages and to let them verify your signature you
@@ -1550,8 +1580,8 @@ url="http://www.cam.ac.uk.pgp.net/pgpnet/">http://www.cam.ac.uk.pgp.net/pgpnet/<
 
 <para>You compose your message as usual in the composer
 window of &kmail;. Before you send the message, check the <guiicon>Sign Message</guiicon>
-icon the toolbar of the composer window. Then, you can send
-the message. The identity you are using the write the current message needs to 
+icon on the toolbar of the composer window. Then, you can send
+the message. The identity you are using to write the current message needs to 
 be connected to an <guilabel>OpenPGP Key</guilabel> in the <guilabel>Identity</guilabel>
 section of the <guilabel>Configure</guilabel> dialog.
 To sign the message, &kmail; needs to know your <application>PGP</application> 
@@ -1569,32 +1599,36 @@ message without any further prompt.</para>
 public key, you simply create the message in the composer window.
 Before you send the message, check the <guibutton>Encrypt
 Message</guibutton> button in the toolbar of the composer window. Note
-that you do not have to check the button if <guilabel>Automatically
+that you might not have to check the button if <guilabel>Automatically
 encrypt messages whenever possible</guilabel> is selected in
-&kmail;'s configuration. Then send the message.</para> <!-- fixme
-3.1? -->
+&kmail;'s configuration (see <link linkend="pgp-sign-your-messages">above</link>).
+Then send the message.</para> <!-- fixme 3.1? -->
 
-<para>If &kmail; cannot find a matching key for a recipient or if it
-finds more than one key for a recipient, it will display a list
-containing all available trusted keys in the <guilabel>Encryption
-Key Selection</guilabel> dialog. Using the <guilabel>Remember choice</guilabel>
+<para>
+If you checked the <guilabel>Encrypt Message</guilabel> button and &kmail;
+cannot find a matching key for a recipient, it will display a list containing
+all available keys in the <guilabel>Encryption Key Selection</guilabel> dialog.
+If &kmail; finds more than one trusted key for a recipient, it will
+display a list containing all matching keys for this recipient. In both
+cases you can select the key(s) which should be used for encrypting
+this message for the recipient in question.
+Using the <guilabel>Remember choice</guilabel>
 checkbox you can save your selection for future messages.</para>
 
-<para>If you are using a key for the first time or if <guilabel>Always
+<para>If you are using a key for the first time or if there are conflicting
+Encryption Preferences or if <guilabel>Always
 show the encryption keys for approval</guilabel> is selected in the
 <guilabel>Security</guilabel> section of &kmail;'s configuration dialog,
 the <guilabel>Encryption Key Approval</guilabel> dialog will appear.
-Here you can select a different key for the recipients and you can also 
+Here you can select different keys for the recipients and you can also 
 set the <guilabel>Encryption Preference</guilabel> for each recipient.
 The default option, <guilabel>Encrypt whenever encryption is
-possible</guilabel>, will automatically encrypt your message if there's a 
+possible</guilabel>, will automatically encrypt your message if there is a 
 trusted key for each recipient.</para>
 
 <para>As mentioned above, you will not be able to read your own encrypted sent
 messages if you do not check <guilabel>Always encrypt to self</guilabel> in the
-settings' <guilabel>Security</guilabel> page. However, note that your
-own key is not listed in the <guilabel>Encryption Key Approval</guilabel> dialog 
-even if that option is set.</para>
+settings' <guilabel>Security</guilabel> page.</para>
 
 </sect2>
 
@@ -1607,10 +1641,10 @@ choose in the composer window's menu
 Key</guimenuitem></menuchoice>. This will attach the public key you
 defined for the current identity to the message. Now you can send the message.</para>
 
-<para>Remember that it's not safe at all if you sign the message to make sure
+<para>Remember that it is not safe at all if you sign the message to make sure
 that the receiver will get the correct key. There can be a man-in-the-middle
 attack, as somebody can change the key and sign the message with that other
-key. That's why the recipient should verify the attached key by checking the
+key. That is why the recipient should verify the attached key by checking the
 key's fingerprint against the one he got in a secure way from you. Have a look
 at the <application>PGP</application> documentation for further details.</para>
 
@@ -1640,11 +1674,7 @@ by typing <userinput><command>pgp</command> <option>-ka</option>
 <userinput><command>gpg</command> <option>--import</option>
 <replaceable>filename</replaceable></userinput> at the command line if you are using
 <application>GnuPG</application>. If the key is not certified with a trusted signature 
-you cannot use it to encrypt messages unless you have signed the key with your key
-(use <userinput><command>pgp</command> <option>-ks</option> <replaceable>identity of 
-the key</replaceable></userinput> resp.
-<userinput><command>gpg</command> <option>--sign-key</option> 
-<replaceable>identity of the key</replaceable></userinput>).
+you cannot use it to encrypt messages unless you have signed the key with your key.
 </para>
 
 </sect2>
@@ -1661,7 +1691,6 @@ in many ways. You can reach it via
 &kmail;...</guimenuitem></menuchoice>.</para>
 
 <para>It is divided into six
-<!-- fixme: update when plugin page becomes available -->
 pages, each of them represented by one of the
 icons in the list on the left hand side of the dialog. This chapter
 will describe each page in detail.</para>
@@ -1781,6 +1810,7 @@ address</guilabel> field.</para>
 rarely used or otherwise specialized settings for the currently
 selected identity.</para>
 <variablelist>
+
 <varlistentry>
 <term><guilabel>Reply-To address</guilabel></term>
 <listitem>
@@ -1803,7 +1833,13 @@ rare cases.</para></note>
 </listitem>
 </varlistentry>
 
-<!-- fixme: bcc addresses -->
+<varlistentry>
+<term><guilabel>BCC address</guilabel></term>
+<listitem>
+<para>Optionally enter an addresses to which blind copies of your messages
+should be sent to.</para>
+</listitem>
+</varlistentry>
 
 <varlistentry>
 <term><guilabel>OpenPGP key</guilabel></term>
@@ -1880,7 +1916,7 @@ to be appended to each message sent using this identity.</para>
 <note><para>This type of signature has nothing to do with the
 (digital) signatures for which you can select the to-be-used key on
 the <link linkend="configure-identity-advanced">Advanced
-tab</link>. It's just bad wording to call this a signature, but since
+tab</link>. It is just bad wording to call this a signature, but since
 the term is already used everywhere else, we keep this notation. Just
 keep in mind that these signatures and digital signatures are two
 completely different things.</para></note>
@@ -1999,7 +2035,13 @@ as accented letters will be sent as-is. If <guilabel>MIME Compliant
 (Quoted Printable)</guilabel> is selected, special characters will be
 encoded using standard &MIME; encodings, which may be more portable to
 other mailing systems than 8-bit <acronym>ASCII</acronym>. You normally
-do not need to change the default.<!-- TODO: advise what's better --></para>
+do not need to change the default.<!-- TODO: advise what is better --></para>
+
+<para><guilabel>Default domain</guilabel> lets you specify which domain name
+should be used to complete email addresses that only consist of the recipient's user
+name. For example when you set the default domain to <replaceable>kde.org</replaceable>
+then messages you send to <replaceable>johndoe</replaceable> will be sent to 
+<replaceable>johndoe@kde.org</replaceable>.</para>
 
 </sect2>
 
@@ -2030,7 +2072,7 @@ are available via the <guibutton>Other Actions</guibutton> button.</para>
 display fonts. <guilabel>Message Body</guilabel> sets the font for
 the reader pane, <guilabel>Composer</guilabel> sets the font for
 writing messages in the composer window.<!-- fixme in kmail: better wording? -->
-There's a separate entry for <guilabel>Message List - Date Field</guilabel>
+There is a separate entry for <guilabel>Message List - Date Field</guilabel>
 so you can choose a monospaced font for the date field for better readability.</para>
 
 </sect2>
@@ -2039,7 +2081,7 @@ so you can choose a monospaced font for the date field for better readability.</
 <title>Colors</title>
 
 <para>This section allows you to change the color of the text.
-<guilabel>Recycle colors on deep quoting</guilabel> means that even text that's
+<guilabel>Recycle colors on deep quoting</guilabel> means that even text that is
 quoted more than three times will appear in color. Note that the
 <guilabel>Quoted text</guilabel> colors only work in the message reader, not in 
 the composer.<!-- TODO --></para>
@@ -2255,17 +2297,6 @@ delivery</guilabel> filter action.</para>
 linkend="pgp-settings"><application>OpenPGP</application>
 section</link>.</para>
 
-<!-- fixme: move?
-<para><guilabel>Automatically sign messages using OpenPGP</guilabel> lets you toggle
-whether to automatically sign your messages by default. Of course you can still
-deselect the icon in the composer window for each message if necessary.</para> 
-
-<para><guilabel>Automatically encrypt messages whenever possible</guilabel> will
-encrypt every message you send, unless there's no trusted key for the recipient
-or you turned off using the recipient's key in the <guilabel>Encryption Preference</guilabel>
-setting of the <guilabel>Encryption Key Approval</guilabel> dialog.</para>
--->
-
 </sect2>
 
 <sect2 id="configure-security-plugins">
@@ -2325,7 +2356,7 @@ that was selected when you left the folder.</para>
 <listitem>
 <para>When you select a <guilabel>new</guilabel> message, &kmail; will change the
 message's status to <guilabel>read</guilabel> after the amount of seconds
-which is configured here. Of you disable this option, messages will keep their
+which is configured here. If you disable this option, messages will keep their
 <guilabel>new</guilabel> status.</para>
 </listitem>
 </varlistentry>
@@ -2367,8 +2398,7 @@ removed.</para>
 <term><guilabel>Empty trash</guilabel></term>
 <listitem>
 <para>The trash folder is cleared of messages when you quit &kmail; if this
-option is selected. The following two options are disabled, if this one
-is enabled.</para> 
+option is selected.</para> 
 </listitem>
 </varlistentry>
 
@@ -2510,7 +2540,7 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 </term>
 <listitem>
 <para>Closes the current main window or exits
-&kmail; if there's only this one window.</para>
+&kmail; if there is only this one window.</para>
 </listitem>
 </varlistentry>
 
@@ -2664,11 +2694,13 @@ headers in the <guilabel>Message pane</guilabel>.</para>
 </term>
 <listitem>
 <para>Changes the way that attachments appear in the <guilabel>Message
-pane</guilabel>. With <guimenuitem>Icons</guimenuitem>
+pane</guilabel> (independent of the MIME Tree). With <guimenuitem>Icons</guimenuitem>
 all attachments appear as icons at the bottom of the message.
 <guimenuitem>Smart</guimenuitem> will show attachments as
-icons, unless they are so-called inline attachments.
-<!-- fixme: what's that? -->
+icons, unless their content disposition is <quote>inline</quote>.
+You can activate <quote>inline</quote> content disposition in
+your own messages when you select <guilabel>Suggest automatic display</guilabel>
+in the attachment's properties dialog.
 <guimenuitem>Inline</guimenuitem> shows the contents of the attachments
 at the bottom of the message. Attachments that cannot be displayed, &eg;
 compressed files, will still be shown as an icon.
@@ -2685,7 +2717,7 @@ compressed files, will still be shown as an icon.
 </menuchoice>
 </term>
 <listitem>
-<para>Display a column in the list of folders which show the number 
+<para>Display a column in the list of folders which shows the number 
 of unread messages per folder.</para>
 </listitem>
 </varlistentry>
@@ -2698,7 +2730,7 @@ of unread messages per folder.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Display a column in the list of folders which show the number 
+<para>Display a column in the list of folders which shows the number 
 of messages per folder.</para>
 </listitem>
 </varlistentry>
@@ -2770,7 +2802,7 @@ it will hide all messages that are replies to the current message.</para>
 <listitem>
 <para>Shows the message and its complete headers in plain text format in a new
 window. This can be useful to find out the origin of a mail. You should know
-that it's easy to fake the <literal>From:</literal> header of a mail, but
+that it is easy to fake the <literal>From:</literal> header of a mail, but
 one can still find out which mail servers have been used to send the message by looking
 at the <literal>Received:</literal> lines in the header.</para>
 </listitem>
@@ -2993,8 +3025,8 @@ deleted.</para>
 </term>
 <listitem>
 <para>Removes the selected folder and all its contents, including sub folders.</para>
-<para><warning><para>Note that there's no way to access the contents
-of a folder after it has been removed.</para></warning></para>
+<warning><para>Note that there is no way to access the contents
+of a folder after it has been removed.</para></warning>
 </listitem>
 </varlistentry>
 
@@ -3251,7 +3283,7 @@ user does not exist. Some people use this option to <quote>reply</quote> to spam
 following states (more than one status per message is currently not supported):</para>
 <!-- TODO: more than one somewhen supported? -->
 
-<!-- TODO: I think it's worth adding inline images here, at some point. LW. -->
+<!-- TODO: I think it is worth adding inline images here, at some point. LW. -->
 <informaltable>
 <tgroup cols="2">
 <thead>
@@ -3387,7 +3419,7 @@ pane</guilabel>.</para>
 </term>
 <listitem>
 <para>Starts up <application>kmailcvt</application> (which is part of kdenetwork).
-This application lets you import messages from several proprietary mail clients to
+This application lets you import messages from several proprietary email clients to
 &kmail;.</para>
 </listitem>
 </varlistentry>
@@ -3524,8 +3556,40 @@ like playing a sound.</para>
 <sect2 id="reader-help-menu">
 <title><guimenu>Help</guimenu> Menu</title>
 
-<!-- fixme: how to add items here? -->
+<para>These are the &kde; standard items for the <guimenu>Help</guimenu> menu:</para>
+
 &help.menu.documentation;
+
+<para>Additionally &kmail; offers these items:</para>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Help</guimenu>
+<guimenuitem>&kmail; Introduction</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>This displays the welcome screen, which lists the most imortant
+differences between your version of &kmail; and the previous one.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Help</guimenu>
+<guimenuitem>Tip of the Day</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>This displays a dialog with useful hints for using &kmail;.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
 
 </sect2>
 </sect1>
@@ -3860,7 +3924,7 @@ dialog.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Sets the priority of the message to Urgent. The receiver's mail client has to support
+<para>Sets the priority of the message to Urgent. The receiver's email client has to support
 this or it will have no effect. &kmail; itself does not support priorities for
 incoming messages.</para>
 </listitem>
@@ -3890,7 +3954,7 @@ also supported from the receiver's side in order to work.</para>
 <listitem>
 <para>If you choose this option, you request a confirmation email once your
 message is downloaded and read by its recipient. This has to be supported and
-enabled by the receiver's mail client in order to work.
+enabled by the receiver's email client in order to work.
 <!-- TODO: kmail... --></para>
 </listitem>
 </varlistentry>
@@ -3918,6 +3982,21 @@ You can learn more about this in the <link linkend="pgp">chapter on OpenPGP</lin
 <listitem>
 <para>Encrypt the message using <application>OpenPGP</application>.
 You can learn more about this in the <link linkend="pgp">chapter on OpenPGP</link>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Options</guimenu>
+<guisubmenu>Select Crypto Module</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>This entry will only be visible if you have installed at least one
+<link linkend="configure-security-plugins">crypto plugin</link>. It allows
+you to choose which plugin you want to use for encryption/signing or if
+you want to use the built-in OpenPGP encryption/signing.</para>
 </listitem>
 </varlistentry>
 
@@ -4016,7 +4095,7 @@ public key to your message.</para>
 <term>
 <menuchoice>
 <guimenu>Attach</guimenu>
-<guimenuitem>Remove</guimenuitem>
+<guimenuitem>Remove Attachment</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -4028,7 +4107,7 @@ public key to your message.</para>
 <term>
 <menuchoice>
 <guimenu>Attach</guimenu>
-<guimenuitem>Save...</guimenuitem>
+<guimenuitem>Save Attachment As...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -4041,11 +4120,11 @@ file.</para>
 <term>
 <menuchoice>
 <guimenu>Attach</guimenu>
-<guimenuitem>Properties...</guimenuitem>
+<guimenuitem>Attachment Properties...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
-<para>Displays the properties of the attachment that is selected in the
+<para>Displays the <link linkend="attachments">properties of the attachment</link> that is selected in the
 attachment window.</para>
 </listitem>
 </varlistentry>
@@ -4152,7 +4231,7 @@ toolbar.</para>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Configure Toolbars...</guimenuitem>
+<guimenuitem>Configure &kmail;...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -4189,6 +4268,7 @@ menu</link>.</para>
 
 <chapter id="faq">
 <title>Frequently Asked Questions (&FAQ;)</title>
+<!-- TODO: split into categories? unfortunately this will produce several files, eg. with <section> -->
 
 <qandaset id="faq-set">
 
@@ -4213,7 +4293,7 @@ is very slow or it blocks &kmail;.</para></question>
 synchronously, &ie; it blocks while <application>PGP</application>/<application>GnuPG</application> 
 works. This means that you might want to disable automatic retrieval 
 of unknown keys from a keyserver to make &kmail; look more responsive.
-If you are using <application>GnuPG</application> 1.0.7 (recommend) or upgrade from an earlier 
+If you are using <application>GnuPG</application> 1.0.7 (or better) or upgraded from an earlier 
 version, then make sure to run <command>gpg <option>--rebuild-keydb-caches</option></command> 
 once and <command>gpg <option>--check-trustdb</option></command> after every import or refresh. 
 Both will speed up <application>GnuPG</application> immensely.</para>
@@ -4221,10 +4301,10 @@ Both will speed up <application>GnuPG</application> immensely.</para>
 </qandaentry>
 
 <qandaentry>
-<question><para>I cannot add addresses to my address book after upgrading to KDE 3.0.</para></question>
+<question><para>I cannot add addresses to my address book after upgrading to KDE 3.x.</para></question>
 <answer>
-<para>You probably copied your old <filename>kmailrc</filename> file manually. That's not
-necessary, there's a script that will do such things when you run KDE 3.0
+<para>You probably copied your old <filename>kmailrc</filename> file manually. That is not
+necessary, there is a script that will do such things when you run KDE 3.x
 for the first time. To fix the problem, remove the complete <quote>[AddressBook]</quote>
 group and the addressbook option in group <quote>[General]</quote> in your 
 <filename>kmailrc</filename> file. However, chances are you will also encounter other problems 
@@ -4233,24 +4313,11 @@ that the config update script was to solve.</para>
 </qandaentry>
 
 <qandaentry>
-<question><para>When sending a mail (using SMTP) to another person in the same
-domain, &kmail; incorrectly completes the <quote>To:</quote> email address.</para></question>
-<answer>
-<para>Add the following entry to the <quote>[General]</quote> section of the 
-<filename>kmailrc</filename>:
-<userinput>Default domain=foo.bar</userinput>
-where <quote>foo.bar</quote> is the domain name which should be used to auto-complete
-not fully qualified email addresses.</para>
-<para>This <quote>hidden</quote> feature will be configurable in the next version of &kmail;.</para>
-</answer>
-</qandaentry>
-
-<qandaentry>
-<question><para>Can I use &kmail; together with a different mail client, &eg;
+<question><para>Can I use &kmail; together with a different email client, &eg;
 <application>mutt</application>?</para></question>
 <answer>
-<para>If you're using the mbox format for your folders it's not
-possible to use a different mail client while &kmail; is running.
+<para>If you're using the mbox format for your folders it is not
+possible to use a different email client while &kmail; is running.
 With <application>mutt</application> there may also be problems
 even if both programs are not running at the same time. We recommend to 
 use the maildir format in this case, this should solve all problems.</para>
@@ -4260,7 +4327,7 @@ use the maildir format in this case, this should solve all problems.</para>
 <qandaentry>
 <question><para>How can I convert my mailboxes from mbox to maildir?</para></question>
 <answer>
-<para>There's no automatic way to do that. You will have to create a new folder
+<para>There is no automatic way to do that. You will have to create a new folder
 in maildir format and copy the messages from the mbox folder into this
 new folder. Remember to adapt any filter rules connected with the old folder before
 you delete it.</para>
@@ -4323,8 +4390,7 @@ where <filename>$KDEHOME</filename> is typically
 <question><para>Where can I get a list of changes between the versions of &kmail;?</para></question>
 <answer>
 <para>The welcome screen lists all important changes for your version. It is displayed when you
-start a new version of &kmail; the first time. You can always look at it again
-by selecting the root element of the folder list, &ie; <guilabel>Mail</guilabel>.</para>
+select <menuchoice><guimenu>Help</guimenu><guimenuitem>&kmail; Introduction</guimenuitem></menuchoice>.</para>
 </answer>
 </qandaentry>
 
@@ -4346,25 +4412,12 @@ to move your existing folders.</para>
 <question><para>How can I use mail folders that are not in <filename
 class="directory">~/Mail/</filename>?</para></question>
 
-<answer><para>Simply create a symlink in your <filename
-class="directory">~/Mail</filename> directory using
+<answer><para>To add a whole mbox mail directory use
 <userinput><command>ln</command> <option>-s</option>
-<filename>/somewhere/Mail/mymailboxfile</filename>
-<filename class="symlink">~/Mail/remote</filename></userinput>. When you start
-&kmail; you will see a new folder with the name <guilabel>remote</guilabel> that
-contains the messages in your remote folder. If you want to add a whole remote mail
-directory use <userinput><command>ln</command> <option>-s</option>
 <filename>/somewhere/Mail/.remotedir.directory</filename> <filename
-class="symlink">~/Mail/.mymailboxfile.directory</filename></userinput>.</para></answer>
-</qandaentry>
-
-<qandaentry>
-<question><para>The button to sign messages is not enabled anymore, it was enabled 
-some time ago.</para></question>
-<answer><para>Select your <guilabel>OpenPGP Key</guilabel> in the
-<guilabel>Identity</guilabel> section of &kmail;'s configuration dialog.
-Otherwise &kmail; cannot know which key should be used to sign your messages.</para>
-</answer>
+class="symlink">~/Mail/.mymailboxfile.directory</filename></userinput>.
+Note that it is not possible to use links to files, only links that point
+to directories will work.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -4378,13 +4431,13 @@ reply.</para></answer>
 
 <qandaentry>
 <question><para>For some messages the value in the <guilabel>Date</guilabel> field
-is <guilabel>unknown</guilabel> or it's not correct.</para></question>
+is <guilabel>unknown</guilabel> or it is not correct.</para></question>
 <answer><para>Probably the <quote>Date:</quote> header of these messages is broken,
 maybe it lacks the time zone information. For this case we've added
 a workaround to mimelib. Mimelib is part of the kdenetwork
 package, you should make sure that &kde;'s mimelib is used and not a different
 one on your system. If that does not help, the <quote>Date:</quote> field is
-really broken and &kmail; cannot interpret it. That's not a bug in &kmail;
+really broken and &kmail; cannot interpret it. That is not a bug in &kmail;
 but in the software that sent the mail.</para></answer>
 </qandaentry>
 
@@ -4398,19 +4451,11 @@ this separator, &kmail; will automatically add it.</para>
 </answer>
 </qandaentry>
 
-<!-- TODO: kmail can beep, but how to add an icon to the taskbar
 <qandaentry>
-<question><para>How do I get a notification if new mail arrives?</para></question>
-<answer><para>fixme</para></answer>
-</qandaentry>
--->
-
-<qandaentry>
-<!-- TODO: still up-to-date? -->
 <question><para>&kmail; fetches the same messages over and over again.</para></question>
-<answer><para>This happens if you have <guilabel>Delete mail from server</guilabel>
-deselected and your POP3 server does not support the UIDL command. There's currently
-no workaround besides selecting <guilabel>Delete mail from server</guilabel>.
+<answer><para>This happens if you have <guilabel>Delete messages from server after fetching</guilabel>
+deselected and your POP3 server does not support the UIDL command. There is currently
+no workaround besides selecting <guilabel>Delete messages from server after fetching</guilabel>.
 A more detailed explanation can be found 
 <ulink url="http://lists.kde.org/?l=kmail&amp;m=99220697415300&amp;w=2">in this
 mailing list post</ulink>.</para></answer>
@@ -4423,14 +4468,14 @@ mailing list post</ulink>.</para></answer>
 url="http://kmail.kde.org/">the &kmail; homepage</ulink>. Note that not all
 these bugs are valid. All in all we think that &kmail; is a very robust piece
 of software.</para>
-<para><warning><para>However, you should not run &kmail; while another mail client is already
+<para><warning><para>However, you should not run &kmail; while another email client is already
 accessing the files in <filename class="directory">~/Mail</filename>. If you try to do so,
 you might lose messages. Note that you should make backups of your messages anyway.</para></warning></para>
 </answer>
 </qandaentry>
 
 <qandaentry>
-<question><para>My folders keep growing even when I delete
+<question><para>My mbox folders keep growing even when I delete
 messages.</para></question>
 <answer><para>
 To really remove deleted messages from disk, you have to compact
@@ -4448,7 +4493,7 @@ HTML to plain text</guimenuitem></menuchoice>. For security reasons you should
 only do so for trusted messages. Note that plugins (like <trademark
 class="registered">Macromedia</trademark> <application>Flash</application>),
 &Java; and JavaScript will not be displayed in &kmail; for security reasons
-and there's no way to activate them.</para></answer>
+and there is no way to activate them.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -4462,9 +4507,7 @@ formats might have changed. Upgrading should never be a problem.</para></answer>
 
 <qandaentry>
 <question><para>Does &kmail; support uuencoded files?</para></question>
-<answer><para>No. However, you can handle them using a filter, which is
-described in <ulink url="http://lists.kde.org/?l=kmail&amp;m=98908576320145&amp;w=2">this 
-posting</ulink> to the mailing list.</para></answer>
+<answer><para>Uuencoded attachments are supported, but inline uuencoded files are not.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -4482,8 +4525,8 @@ anything when receiving an email from the list.</para></question>
 <answer><para>Associating a folder with a mailing list has nothing to do with
 filtering the mailing list messages. You have to add a new filter rule manually.
 However, once you associated a folder with a mailing list you can use <menuchoice>
-<guimenu>Message</guimenu><guimenuitem>Reply List...</guimenuitem></menuchoice> or 
-<menuchoice><guimenu>Message</guimenu><guimenuitem>New Message...</guimenuitem></menuchoice>
+<guimenu>Message</guimenu><guimenuitem>Reply to Mailing-List...</guimenuitem></menuchoice> or 
+<menuchoice><guimenu>Message</guimenu><guimenuitem>New Message to Mailing-List...</guimenuitem></menuchoice>
 and the mailing list address will be set in the <guilabel>To:</guilabel> field.
 </para></answer>
 </qandaentry>
@@ -4502,7 +4545,7 @@ To use <quote>SMTP after POP3</quote> you have to collect all your messages in t
 
 <qandaentry>
 <question><para>Can I use &kmail; and <application>procmail</application>?</para></question>
-<answer><para>Yes, but it's important to do it the right way or you might lose
+<answer><para>Yes, but it is important to do it the right way or you might lose
 mail. In order to use <application>procmail</application> and &kmail; you need 
 to set up &kmail; so that it will fetch new
 mail from the spoolfiles in which <application>procmail</application>
@@ -4516,7 +4559,7 @@ account, &kmail; will do some minimal parsing on your
 <filename>.procmail</filename> file, and will try to list every
 spoolfile it has found, and also the lockfiles next to the
 <guilabel>procmail lockfile</guilabel> item. procmail lets the user
-specify lockfiles in three different ways, so there's no way to
+specify lockfiles in three different ways, so there is no way to
 establish a correspondence between the spoolfiles and lockfiles. So it's
 really up to you to make sure you specify the right lockfile for each
 spoolfile.</para>
@@ -4552,14 +4595,14 @@ please sign the key locally with <userinput><command>gpg</command>
 <para>Trusting a foreign public key without checking it is no good idea.</para>
 </listitem>
 <listitem>
-<para>As most other mail clients, &kmail; can encrypt your messages, but
+<para>As most other email clients, &kmail; can encrypt your messages, but
 <emphasis>not</emphasis> your attachments. You have to encrypt them manually
 before you attach them - unless you have the appropriate 
 <link linkend="configure-security-plugins">crypto plugins</link> installed and configured.</para>
 </listitem>
 <listitem>
 <para>Starting with GnuPG 1.0.7 you have to set your own key to
-ultimate ownertrust. It's no longer implicitly done for you.</para>
+ultimate ownertrust. It is no longer implicitly done for you.</para>
 </listitem>
 </itemizedlist>
 </answer>
@@ -4651,6 +4694,9 @@ run it in setgid mode. Please note that these options will only work if
 <para><guilabel>FCNTL</guilabel> will use the
 <function>fcntl()</function> system call.</para>
 
+<warning><para>Usage of FCNTL locking might cause system lockups when the mail
+spool file is on an NFS mounted device.</para></warning>
+
 <para>If you do not want to use any locking, the <guilabel>none</guilabel> option
 is what you want. However, there are risks of losing mail when no locking is
 used.</para>
@@ -4665,8 +4711,8 @@ If you want to leave all messages on the server: open up the
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem>
 </menuchoice> window. Click on the <guilabel>Network</guilabel> page. Select your
 account from the account list and click the <guilabel>Modify...</guilabel>
-button. This dialog contains the <guilabel>Delete mail from server</guilabel>
-setting which you must not select.</para></answer>
+button. This dialog contains the <guilabel>Delete messages from server after fetching</guilabel>
+setting which you must deselect.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -4687,7 +4733,7 @@ tab and add your signature there.</para></answer>
 can do this for you. It probably has already been set up during
 installation.</para>
 
-<para>If that's not the case, you may want to have a look at <ulink
+<para>If that is not the case, you may want to have a look at <ulink
 url="http://www.linuxdoc.org/HOWTO/mini/Mail-Queue.html">the Mail Queue
 HOWTO</ulink> or at <ulink
 url="http://www.leg.uct.ac.za/Articles/sendmail_dialup.html">UCT Linux User's
@@ -4713,19 +4759,20 @@ available in <filename>kdenetwork/kmail/kmailIface.h</filename> and
 <title>Using other Mailbox Files with &kmail;</title>
 
 <para>&kmail; offers an import tool for the messages and address books of some
-other mail clients. You can access it using <menuchoice><guimenu>Tools</guimenu>
+other email clients. You can access it using <menuchoice><guimenu>Tools</guimenu>
 <guimenuitem>Import...</guimenuitem></menuchoice>. Please make sure that you 
-compact your folders in the other mail client, no matter if you are going to use
+compact your folders in the other email client, no matter if you are going to use
 the import utility or if you are going to copy files manually.
 You only need to read this chapter if this tool does not work for you.</para>
 
 <para>This section is for all of the users who need to move email messages from
-their previous email client over to &kmail;. &kmail; can store its mail using the
-<literal>mbox</literal> format, one of the most widely used mailbox formats on
+their previous email client over to &kmail;. &kmail; can store its messages using 
+<quote>mbox</quote> or <quote>maildir</quote> formats, which are the most widely used mailbox formats on
 &UNIX; systems. Mbox mailboxes store messages in one file, identifying where
 messages start and end with a <literal>From</literal> line (do not mix this up
 with the <literal>From:</literal> header that contains the message's sender).
-For many &UNIX; mail programs, all you must do is move your mailboxes to <filename
+Maildir uses one file per message.
+For many &UNIX; email clients, all you must do is move your mailboxes to <filename
 class="directory">~/Mail</filename> (or make <filename
 class="symlink">Mail</filename> a symbolic link to the folder containing your
 mailboxes), make sure they are writable by your user, and launch &kmail;. The
@@ -4733,14 +4780,14 @@ mailboxes should now show up correctly in &kmail;.</para>
 
 <para>Please have a look at the
 <ulink url="http://kmail.kde.org/tools.html">Tools section of &kmail;'s
-homepage</ulink> first, to see if there's a tool that imports your mailbox
+homepage</ulink> first, to see if there is a tool that imports your mailbox
 and maybe even address book.</para>
 
-<warning><para>Do not use a second mail client that accesses the files in
+<warning><para>Do not use a second email client that accesses the files in
 <filename class="directory">~/Mail</filename> while &kmail; is running or
 you might lose messages. This section only explains how to import mailboxes
-to &kmail; once, it's not useful to you if you're planning to use several
-mail clients for your mailboxes in the future.</para></warning>
+to &kmail; once, it is not useful to you if you're planning to use several
+email clients for your mailboxes in the future.</para></warning>
 
 <variablelist>
 
@@ -4945,7 +4992,7 @@ proprietary mail formats that &kmail; cannot understand. However, there is no
 harm in trying! If the mailbox file looks similar to the mbox format, try
 copying the mailbox file (remember, the index file is not needed) to your
 <filename>~/Mail</filename> directory and see what happens if you start
-&kmail;. If you get mailboxes from your favorite mail client to work in &kmail;,
+&kmail;. If you get mailboxes from your favorite email client to work in &kmail;,
 please tell us how you did it so that we can include directions in a future
 revision of this documentation. </para>
 </listitem>
@@ -5023,10 +5070,11 @@ revision of this documentation. </para>
 <sect1 id="documentation">
 <title>Documentation</title>
 
-<para>Update for &kmail; 1.2 to 1.4 by Daniel Naber
+<para>Update for &kmail; 1.2 to 1.5 by Daniel Naber
 <email>daniel.naber@t-online.de</email>,
 <application>OpenPGP</application> chapter by Andreas Gungl
-<email>a.gungl@gmx.de</email>, message filter chapter by Marc Mutz
+<email>a.gungl@gmx.de</email> and Ingo Kl&ouml;cker <email>kloecker@kde.de</email>,
+message filter chapter by Marc Mutz
 <email>mutz@kde.org</email>, download filter chapter by Thorsten
 Zachmann <email>T.Zachmann@zagge.de</email>. Other parts have been
 contributed by various &kmail; developers.</para>
@@ -5042,7 +5090,7 @@ description of the different &UNIX; mail formats in the <application>Mutt</appli
 documentation.</para>
 
 <para>Thanks to the following people for providing directions on using other
-mail client mailboxes with &kmail;:</para>
+email client mailboxes with &kmail;:</para>
 
 <itemizedlist>
 <listitem><para>Nik Gaffney <email>nik@f0.am</email>
