@@ -365,50 +365,61 @@ int CalendarLocal::numEvents(const QDate &qd)
 void CalendarLocal::checkAlarms()
 {
   QList<Event> alarmEvents;
+  if (checkNonRecurringAlarms(alarmEvents)
+  ||  checkRecurringAlarms(alarmEvents, true))
+    emit alarmSignal(alarmEvents);
+
+  QList<Todo> alarmTodos;
+  if (checkTodos(alarmTodos))
+    emit alarmSignal(alarmTodos);
+}
+
+bool CalendarLocal::checkNonRecurringAlarms(QList<Event>& alarmEvents, bool append)
+{
   QIntDictIterator<QList<Event> > dictIt(*mCalDict);
   QList<Event> *tmpList;
   Event *anEvent;
-  QList<Todo> alarmTodos;
-  Todo *aTodo;
   QDateTime tmpDT;
   
+  if (!append)
+    alarmEvents.clear();
 
   // this function has to look at every event in the whole database
   // and find if any have an alarm pending.
 
+  int origSize = alarmEvents.count();
   while (dictIt.current()) {
     tmpList = dictIt.current();
     for (anEvent = tmpList->first(); anEvent;
 	 anEvent = tmpList->next()) {
       if (anEvent->alarm()->enabled()) {
 	tmpDT = anEvent->alarm()->time();
-	//kdDebug() << "calendarlocal::checkAlarms - tmpDT of " << anEvent->summary() << " - " << tmpDT.date().toString() << endl;
-	if (tmpDT.date() == QDate::currentDate()) {
-	  if ((tmpDT.time().hour() == QTime::currentTime().hour()) &&
-	      (tmpDT.time().minute() == QTime::currentTime().minute())) {
+        //kdDebug() << "calendarlocal::checkNonRecurringAlarms - tmpDT of " << anEvent->summary() << " - " << tmpDT.date().toString() << endl;
+        if (tmpDT.date() == QDate::currentDate()
+        &&  tmpDT.time().hour() == QTime::currentTime().hour()
+        &&  tmpDT.time().minute() == QTime::currentTime().minute()) {
 	    alarmEvents.append(anEvent);
 	  }
 	}
       }
-    }
     ++dictIt;
   }
-  for (anEvent = mRecursList.first(); anEvent;
-       anEvent = mRecursList.next()) {
-    tmpDT = anEvent->alarm()->time();
-    if(anEvent->recursOn(QDate::currentDate())) {
-      if ((tmpDT.time().hour() == QTime::currentTime().hour()) &&
-	  (tmpDT.time().minute() == QTime::currentTime().minute()))
-	alarmEvents.append(anEvent);
-    }
-  }
-  if (!alarmEvents.isEmpty())
-    emit alarmSignal(alarmEvents);
+  return alarmEvents.count() != origSize;
+}
   
+bool CalendarLocal::checkTodos(QList<Todo>& alarmTodos, bool append)
+{
+  Todo *aTodo;
+  QDateTime tmpDT;
+
+  if (!append)
+    alarmTodos.clear();
+
+  int origSize = alarmTodos.count();
   for(aTodo = mTodoList.first(); aTodo; aTodo = mTodoList.next()) {
     if (aTodo->alarm()->enabled()) {
       tmpDT = aTodo->alarm()->time();
-      //kdDebug() << "calendarlocal::checkAlarms - tmpDT of " << aTodo->summary() << " - " << tmpDT.date().toString() << endl;
+      //kdDebug() << "calendarlocal::checkTodos - tmpDT of " << aTodo->summary() << " - " << tmpDT.date().toString() << endl;
       if (tmpDT.date() == QDate::currentDate()) {
 	if ((tmpDT.time().hour() == QTime::currentTime().hour()) &&
 	    (tmpDT.time().minute() == QTime::currentTime().minute())) {
@@ -417,10 +428,58 @@ void CalendarLocal::checkAlarms()
       }
     }
   }
+  return alarmTodos.count() != origSize;
+}
   
-  if (!alarmTodos.isEmpty()) {
-    emit alarmSignal(alarmTodos);
+bool CalendarLocal::checkAlarmsPast(QList<Event>& alarmEvents, bool append)
+{
+  QIntDictIterator<QList<Event> > dictIt(*mCalDict);
+  QList<Event> *tmpList;
+  Event *anEvent;
+  QDateTime tmpDT;
+
+  if (!append)
+    alarmEvents.clear();
+
+  // this function has to look at every event in the whole database
+  // and find if any have an alarm pending.
+
+  int origSize = alarmEvents.count();
+  while (dictIt.current()) {
+    tmpList = dictIt.current();
+    for (anEvent = tmpList->first(); anEvent;
+         anEvent = tmpList->next()) {
+      if (anEvent->alarm()->enabled()
+      &&  anEvent->alarm()->time() <= QDateTime::currentDateTime()) {
+        alarmEvents.append(anEvent);
+      }
+    }
+    ++dictIt;
   }
+  return alarmEvents.count() != origSize;
+}
+
+bool CalendarLocal::checkRecurringAlarms(QList<Event>& alarmEvents, bool append)
+{
+  Event *anEvent;
+  QDateTime tmpDT;
+
+  if (!append)
+    alarmEvents.clear();
+
+  int origSize = alarmEvents.count();
+  for (anEvent = mRecursList.first(); anEvent;
+       anEvent = mRecursList.next()) {
+    if (anEvent->alarm()->enabled()
+    &&  anEvent->recursOn(QDate::currentDate())) {
+      tmpDT = anEvent->alarm()->time();
+      if (tmpDT.time().hour() == QTime::currentTime().hour()
+      &&  tmpDT.time().minute() == QTime::currentTime().minute()) {
+        alarmEvents.append(anEvent);
+      }
+    }
+  }
+  return alarmEvents.count() != origSize;
 }
 
 /****************************** PROTECTED METHODS ****************************/

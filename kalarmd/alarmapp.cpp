@@ -2,7 +2,7 @@
 
 #include <qstring.h>
 
-#include <ksimpleconfig.h>
+#include <kcmdlineargs.h>
 #include <kdebug.h>
 
 #include "alarmdaemon.h"
@@ -23,13 +23,14 @@ AlarmApp::~AlarmApp()
 
 int AlarmApp::newInstance()
 {
-  kdDebug() << "AlarmApp::newInstance()" << endl;
+  kdDebug() << "kalarmd:AlarmApp::newInstance()" << endl;
 
   // Check if we already have a running alarm daemon widget
   if (mAd) return 0;
 
-  mAd = new AlarmDaemon(0,"ad");
-  mAd->reloadCal();
-  
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+  mAd = new AlarmDaemon(0, "ad");
+
   return 0;
 }

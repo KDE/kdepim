@@ -56,6 +56,19 @@ class CalendarLocal : public Calendar {
                              bool inclusive=false);
     /** Return all events in calendar */
     QList<Event> getAllEvents();
+    /** checks to see if any todos are due now, and if so, returns the list
+     * of those todos that have alarms. */
+    bool checkTodos(QList<Todo> &, bool append = false);
+    /** checks to see if any non-recurring alarms are due now, and if so,
+     * returns the list of those events that have alarms. */
+    bool checkNonRecurringAlarms(QList<Event> &, bool append = false);
+    /** checks to see if any recurring alarms are due now, and if so,
+     * returns the list of those events that have alarms. */
+    bool checkRecurringAlarms(QList<Event> &, bool append = false);
+    /** checks to see if any alarms are due now or have already passed, and
+     * if so, returns the list of those events that have alarms.
+     * Does not return recurring events. */
+    bool checkAlarmsPast(QList<Event> &, bool append = false);
   
     /*
       Returns a QString with the text of the holiday (if any) that falls
@@ -97,7 +110,7 @@ class CalendarLocal : public Calendar {
     void calUpdated(Incidence *);
   
   public slots:
-    /** checks to see if any alarms are pending, and if so, returns a list
+    /** checks to see if any alarms or todos are pending, and if so, returns a list
      * of those events that have alarms. */
     void checkAlarms();
    

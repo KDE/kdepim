@@ -7,14 +7,20 @@
 
 #include <kdialogbase.h>
 
-#include <event.h>
-#include <todo.h>
-#include <incidence.h>
+#include "event.h"
+#include "calendarlocal.h"
 
 using namespace KCal;
 
 class KOEventViewer;
 class QSpinBox;
+
+struct EventData
+{
+    EventData(const Calendar* cal, Event* ev)  : calendar(cal), event(ev) { }
+    const Calendar* calendar;
+    Event*          event;
+};
 
 class AlarmDialog : public KDialogBase {
     Q_OBJECT
@@ -22,19 +28,11 @@ class AlarmDialog : public KDialogBase {
     AlarmDialog(QWidget *parent=0,const char *name=0);
     virtual ~AlarmDialog();
 
-    void appendEvent(Event *event);
+    void appendEvent(const Calendar*, Event *event);
 
-  //void eventNotification();
+    void eventNotification();
 
-    void clearEvents();
-
-    void incidenceNotification();
-  
-    void appendTodo(Todo *todo);
-
-  //void todoNotification();
-
-    void clearTodos();
+    int  clearEvents(const Calendar* = 0);
 
   public slots:
     void slotOk();
@@ -42,18 +40,13 @@ class AlarmDialog : public KDialogBase {
 
   signals:
     void suspendSignal(int duration);
-    
+
   private:
     KOEventViewer *mEventViewer;
-    
-    QList<Event> mEvents;
+
+    QList<EventData> mEvents;
 
     QSpinBox *mSuspendSpin;
-
-    QList<Todo> mTodos;
-
-    QList<Incidence> mIncidence;
-  
 };
 
 #endif
