@@ -327,6 +327,11 @@ The default conduits are the following:
 <term><guilabel>KNotes / Memos</guilabel></term>
 <listitem><para>
 Synchronizes the Memo Pad application with &knotes;.
+
+<important><para>
+The conduit only synchronizes the Memo Pad data if &knotes; is running. If you want to enable this functionality, please remember to start &knotes; first, or check if it is already running (tip: look for &knotes; the icon in the system tray).
+</para></important>
+
 </para></listitem>
 </varlistentry>
 

@@ -609,7 +609,7 @@ address records in the address internal viewer can be set to match the
 </para></listitem>
 
 <listitem><para>
-<guilabel>Use key field</guilabel>Check this box to combine entries with the
+<guilabel>Use key field</guilabel> Check this box to combine entries with the
 same last name.
 </para></listitem>
 
@@ -787,7 +787,8 @@ Useful for keeping the clock of the &handheld; accurate.
 <varlistentry>
 <term><guilabel>Calendar (KOrganizer)</guilabel></term>
 <listitem><para>
-Synchronizes the Datebook application with &korganizer;.
+Synchronizes the Datebook application with &korganizer; or with a iCalendar file of
+your choice.
 </para></listitem>
 </varlistentry>
 
@@ -803,7 +804,8 @@ applications on the &handheld;.
 <varlistentry>
 <term><guilabel>Addressbook</guilabel></term>
 <listitem><para>
-Synchronizes the Address application with &kaddressbook;.
+Synchronizes the Address application with &kaddressbook; or with a vCard file of
+your choice.
 </para></listitem>
 </varlistentry>
        
@@ -819,7 +821,8 @@ debugging purposes.
 <varlistentry>
 <term><guilabel>ToDo's (KOrganizer)</guilabel></term>
 <listitem><para>
-Synchronizes the Todo list application with &korganizer;.
+Synchronizes the Todo list application with &korganizer; or with a iCalendar file of
+your choice.
 </para></listitem>
 </varlistentry>
 
@@ -828,7 +831,7 @@ Synchronizes the Todo list application with &korganizer;.
 <listitem><para>
 Synchronizes your &handheld; with the &AvantGo; server. The &AvantGo; server
 offers general content (news, guides, stock quotes, &etc;) in a format that is
-suitable for a &handheld;. To use this conduit, you need to register, subscribe
+suitable for reading in a &handheld;. To use this conduit, you need to register, subscribe
 the channels you select and install the &AvantGo; software on your &handheld;.
 </para></listitem>
 </varlistentry>
@@ -855,102 +858,70 @@ They are not normally listed, but you may see them on some systems.
 
 </variablelist>
 
-<sect2 id="popmail-cond">
-<title>Mail Conduit Setup</title>
+
+<sect2 id="conduit-knotes">
+<title>&knotes; Conduit Setup</title>
 
 <para>
-This conduit allows you to send and receive email.
-The configuration of the Mail Conduit
-is fairly complex.
+The &knotes; Conduit is a partial replacement for the built-in <link
+linkend="builtin">memo application</link>.  It keeps the notes you write
+with &knotes; synchronized with the memos you write on your &PalmPilot;.
+</para>
+
+<para>
+Setting up the &knotes; conduit is very simple.
+
 <screenshot>
-<screeninfo>Setting up the Mail Conduit</screeninfo>
+<screeninfo>&knotes; Conduit Setup</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="conduit-popmail-kmail.png" format="PNG"/></imageobject>
-<textobject><phrase>The Mail Conduit Setup Dialog</phrase></textobject>
-<caption><para>The Mail Conduit Conduit Setup Dialog</para></caption>
+<imageobject><imagedata fileref="conduit-knotes.png" format="PNG"/></imageobject>
+<textobject><phrase>&knotes; Conduit Setup</phrase></textobject>
+<caption><para>&knotes; Conduit Setup</para></caption>
 </mediaobject>
 </screenshot>
-There are two tabs in the setup dialog for
-the Mail Conduit,
-one for
-<link linkend="popmail-cond-send">Sending mail</link>
-and one for
-<link linkend="popmail-cond-recv">Receiving mail</link>.
-</para>
 
-<sect3 id="popmail-cond-send">
-<title>Mail Conduit Setup</title>
+In the <guilabel>General</guilabel> Tab there are two configuration options:
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Delete KNote when Pilot memo is deleted</guilabel></term>
+<listitem><para>
+Uncheck this box if you wish to maintain the note on &knotes; even if the correspondent
+memo was deleted on the &handheld; memo application.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Suppress delete-confirmation in KNotes</guilabel></term>
+<listitem><para>
+If the <guilabel>Delete KNote when Pilot memo is deleted</guilabel> box is checked, you may
+check this box to automatically delete the notes that correspond to a deleted memo, without
+confirmation.
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</para>
+</sect2>
+
+<sect2 id="time-cond">
+<title>Time Synchronization Conduit Setup</title>
 
 <para>
-Depending on which send method you choose,
-different fields will be activated in the remainder of the
-tab, allowing you to enter the necessary information.
+The Time Synchronization Conduit syncs the &handheld;'s time to that of the desktop
+machine. It is useful for keeping the clock of the &handheld; accurate. Currently
+only one direction for the synchronization is enabled, you can only
+<guilabel>Set the handheld time from the time on the PC</guilabel>, and
+not <guilabel>Set the PC time from the time on the handheld</guilabel>.
 </para>
 
-<para>
-Your email address can be entered in the <guilabel>Email
-Address</guilabel> field.  This is the email address that goes in the
-<quote>From:</quote> line in outgoing mail.  If you enter a file name in
-the <guilabel>Signature File</guilabel> field then that file will be
-appended to each outgoing mail as a signature.
-</para>
 
-<para>
-The configuration of the &Sendmail; method of sending is fairly
-straightforward.  Check the path to your installation of &Sendmail;, for
-example by typing <userinput><command>which
-sendmail</command></userinput> in a &konsole; window.  The options to
-&Sendmail; should not need to be changed, but you can if you like.
-</para>
-
-<warning>
-<para>
-&Sendmail; is not provided with destination addresses on the command
-line, so you must specify the <option>-t</option>.  If you are using a
-non-&Sendmail; <acronym>MTA</acronym> like
-<application>Postfix</application> then the equivalent <quote>extract
-recipients from message headers</quote> option must be given.
-</para>
-</warning>
-
-<para>
-To use <acronym>SMTP</acronym> sending you need to specify
-the name of the machine which runs your
-<acronym>SMTP</acronym> server, and the port number to
-connect to.
-The default port number of 25 is almost always correct.
-</para>
-<note>
-<para>
-&kpilot; does not use the <acronym>SMTP</acronym>
-configuration of the <acronym>SMTP</acronym> IOSlave.
-This may change in a future version of &kpilot;.
-</para>
-</note>
-
-
-<para>
-When sending mail through &kmail;, &kpilot; automatically places it in
-your &kmail; outbox.  &kmail; saves mail in the outbox until you request
-that those pieces of mail are <emphasis>really</emphasis> sent.  Check
-the <guilabel>Send mail through &kmail; immediately</guilabel> to let
-the Mail Conduit tell &kmail; to send all mail from the outbox as soon
-as it it done Hotsynchronization.  This has the side effect of also sending any
-other pieces of mail that may be in your outbox.
-</para>
-
-</sect3>
-
-<sect3 id="popmail-cond-recv">
-<title>Receiving Mail</title>
-
-
-<para>
-Depending on which send method you choose, different fields will be
-activated in the remainder of the tab, allowing you to enter the
-necessary information.
-</para>
-</sect3>
+<note><para>
+&PalmOS; Version 3.25 and 3.3 do not support setting the &handheld; system time.
+For these systems, the conduit will be simply skipped.
+</para></note>
 
 </sect2>
 
@@ -958,13 +929,15 @@ necessary information.
 <title>Calendar Conduit Setup</title>
 
 <para>
-This conduit will synchronize your &PalmPilot; with &korganizer;.  The
-conduit needs two pieces of information: the filename of the calendar
-file (this will usually be a file that ends in <literal
-role="extension">.vcs</literal> under <filename
-class="directory">.kde/share/apps/korganizer/</filename> under your home
-folder) and whether or not to ask before changing data in that
-calendar file.
+This conduit will synchronize your &PalmPilot; with &korganizer; and Kontact, or to
+an iCalendar file of your choice. The conduit needs the filename of the
+calendar file (this will usually be a file that ends in <literal
+role="extension">.ics</literal> under the <filename
+class="directory">.kde/share/apps/korganizer/</filename> <filename class="directory">$KDEHOME/share/apps/korganizer/</filename>
+folder, where the <filename class="directory">$KDEHOME</filename> environment variable
+(typically <filename class="directory">/home/Login Name/.kde/</filename>) 
+points to the folder that contains your configuration and data for the &kde;
+applications.
 </para>
 
 <screenshot>
@@ -977,9 +950,69 @@ calendar file.
 </screenshot>
 
 <para>
-You can usually leave
-<guilabel>Prompt before changing data</guilabel>
-off.
+In the <guilabel>General</guilabel> page, you can set the calendar options.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Calendar Destination</guilabel></term>
+<listitem><para>
+Choose between synchronizing with the <guilabel>Standard Calendar</guilabel>,
+or in other words, the &korganizer; standard calendar or with a 
+<guilabel>Calendar file</guilabel> of your choice, that you must either
+write in the <guilabel>Calendar file</guilabel> edit box or select using the
+file picker.
+</para>
+<warning><para>
+You can use the calendar conduit with any application that accepts a file in
+the iCalendar format as a resource. However, some applications, like Evolution,
+do not handle gracefully the sychronization while they are open. As a rule of thumb,
+quit these applications before sychronizing, otherwise you will lose data.
+There is no need to take these precautions when syncing with &korganizer; or Kontact.
+</para></warning>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Store archived records in the KDE calendar</guilabel></term>
+<listitem><para>
+Check this box to save a copy of the archived records from your
+&handheld; on the <acronym>PC</acronym>, in order to keep a history of
+past appointments in you &kde; desktop as well.
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+In the <guilabel>Conflicts</guilabel> page, you can set the calendar options,
+overriding &kpilot;'s general settings for conflict resolution when you are using
+this conduit. For a detailed description of the different conflict resolution possibilities
+available, please refer to the <link linkend="page-hotsync">HotSync Setup section</link> of this
+handbook.
+</para>
+
+</sect2>
+
+
+<sect2 id="conduit-palmdoc">
+<title>Palm DOC Conduit Setup</title>
+
+<para>
+The Palm DOC conduit converts text files in your <acronym>PC</acronym> from and to
+documents in Palm DOC format in the &PalmPilot;. You can use any Palm DOC reader
+to view these files on your &PalmPilot;.
+</para>
+</sect2>
+
+<sect2 id="conduit-kaddressbook">
+<title>&kaddressbook; Conduit Setup</title>
+
+<para>
+The &kaddressbook; conduit allows you to synchronize the
+&PalmPilot; address book with your
+&kde; address book.
 </para>
 
 </sect2>
@@ -995,36 +1028,44 @@ for the <link linkend="vcal-cond">Calendar Conduit</link>.
 
 </sect2>
 
-<sect2 id="conduit-knotes">
-<title>&knotes; Conduit Setup</title>
+<sect2 id="popmail-cond">
+<title>Mail Conduit Setup</title>
 
 <para>
-The &knotes; Conduit is a partial replacement for the built-in <link
-linkend="builtin">memo application</link>.  It keeps the notes you write
-with &knotes; synchronized with the memos you write on your &PalmPilot;.
-</para>
-
-<para>
-Setting up the &knotes; conduit is very simple,
-since there is only one configuration option.
+This conduit allows you to send mail using a transport.
+The configuration of the Mail Conduit is fairly simple.
 <screenshot>
-<screeninfo>&knotes; Conduit Setup</screeninfo>
+<screeninfo>Setting up the Mail Conduit</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="conduit-knotes.png" format="PNG"/></imageobject>
-<textobject><phrase>&knotes; Conduit Setup</phrase></textobject>
-<caption><para>&knotes; Conduit Setup</para></caption>
+<imageobject><imagedata fileref="conduit-popmail-kmail.png" format="PNG"/></imageobject>
+<textobject><phrase>The Mail Conduit Setup Dialog</phrase></textobject>
+<caption><para>The Mail Conduit Conduit Setup Dialog</para></caption>
 </mediaobject>
 </screenshot>
+There are two tabs in the setup dialog for the Mail Conduit,
+one for Sending mail and one for the credits of the mail conduit.
 </para>
-</sect2>
-
-<sect2 id="conduit-kaddressbook">
-<title>&kaddressbook; Conduit Setup</title>
 
 <para>
-The &kaddressbook; conduit allows you to synchronize the
-&PalmPilot; address book with your
-&kde; address book.
+Depending on which send method you choose,
+different fields will be activated in the remainder of the
+tab, allowing you to enter the necessary information.
+Currently, the only method available is <guilabel>Using KMail</guilabel>,
+which has a very simple configuration.
+</para>
+
+<para>
+Your email address can be entered in the <guilabel>Email
+Address:</guilabel> field.  This is the email address that goes in the
+<quote>From:</quote> line in outgoing mail.  If you enter a file name in
+the <guilabel>Signature File</guilabel> field then that file will be
+appended to each outgoing mail as a signature.
+</para>
+
+<para>
+When sending mail through &kmail;, &kpilot; automatically places it in
+your &kmail; outbox.  &kmail; saves mail in the outbox until you request
+that those pieces of mail are <emphasis>really</emphasis> sent. 
 </para>
 
 </sect2>
