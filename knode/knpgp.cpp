@@ -21,14 +21,6 @@
 KNpgp::KNpgp()
   : Kpgp()
 {
-  readConfig();
-}
-
-void KNpgp::readConfig()
-{
-  KConfig *c = KGlobal::config();
-  c->setGroup("PRIVACY");
-  autocheck = c->readBoolEntry("autoCheckSign",false);
 }
 
 KNpgp::~KNpgp()

@@ -286,6 +286,9 @@ KNConfig::Appearance::~Appearance()
 
 void KNConfig::Appearance::save()
 {
+  if(!d_irty)
+    return;
+
   kdDebug(5003) << "KNConfig::Appearance::save()" << endl;
 
   KConfig *c=KGlobal::config();
@@ -316,7 +319,7 @@ void KNConfig::Appearance::save()
   c->writeEntry("groupListFont", f_onts[groupList]);
   c->writeEntry("articleListFont", f_onts[articleList]);
 
-  updateHexcodes();
+  d_irty = false;
 }
 
 
@@ -589,11 +592,12 @@ KNConfig::ReadNewsGeneral::ReadNewsGeneral()
   t_otalExpand=conf->readBoolEntry("totalExpand", true);
   s_howLines=conf->readBoolEntry("showLines3", true);
   s_howScore=conf->readBoolEntry("showScore3", true);
+  s_howThreads = conf->readBoolEntry("showThreads", true);
+  a_utoCheckPgpSigs = conf->readBoolEntry("autoCheckPgpSigs",false);
 
   conf->setGroup("CACHE");
   c_ollCacheSize=conf->readNumEntry("collMemSize", 2048);
   a_rtCacheSize=conf->readNumEntry("artMemSize", 1024);
-
 }
 
 
@@ -604,6 +608,9 @@ KNConfig::ReadNewsGeneral::~ReadNewsGeneral()
 
 void KNConfig::ReadNewsGeneral::save()
 {
+  if(!d_irty)
+    return;
+
   kdDebug(5003) << "KNConfig::ReadNewsGeneral::save()" << endl;
 
   KConfig *conf=KGlobal::config();
@@ -618,10 +625,14 @@ void KNConfig::ReadNewsGeneral::save()
   conf->writeEntry("totalExpand", t_otalExpand);
   conf->writeEntry("showLines3", s_howLines);
   conf->writeEntry("showScore3", s_howScore);
+  conf->writeEntry("showThreads", s_howThreads);
+  conf->writeEntry("autoCheckPgpSigs", a_utoCheckPgpSigs);
 
   conf->setGroup("CACHE");
   conf->writeEntry("collMemSize", c_ollCacheSize);
   conf->writeEntry("artMemSize", a_rtCacheSize);
+
+  d_irty = false;
 }
 
 
@@ -642,6 +653,8 @@ KNConfig::ReadNewsViewer::ReadNewsViewer()
   i_nlineAtt=conf->readBoolEntry("inlüineAtt", true);
   o_penAtt=conf->readBoolEntry("openAtt", false) ;
   s_howAlts=conf->readBoolEntry("showAlts", false);
+  f_ullHdrs=conf->readBoolEntry("fullHdrs", false);
+  u_seFixedFont=conf->readBoolEntry("articleBodyFixedFont", false);
   QString s = conf->readEntry("Browser","Konqueror");
   if (s=="Netscape")
     b_rowser = BTnetscape;
@@ -664,6 +677,9 @@ KNConfig::ReadNewsViewer::~ReadNewsViewer()
 
 void KNConfig::ReadNewsViewer::save()
 {
+  if(!d_irty)
+    return;
+
   kdDebug(5003) << "KNConfig::ReadNewsViewer::save()" << endl;
 
   KConfig *conf=KGlobal::config();
@@ -678,6 +694,8 @@ void KNConfig::ReadNewsViewer::save()
   conf->writeEntry("inlineAtt", i_nlineAtt);
   conf->writeEntry("openAtt", o_penAtt);
   conf->writeEntry("showAlts", s_howAlts);
+  conf->writeEntry("fullHdrs", f_ullHdrs);
+  conf->writeEntry("articleBodyFixedFont", u_seFixedFont);
   switch (b_rowser) {
     case BTkonq: conf->writeEntry("Browser","Konqueror");
                  break;
@@ -691,6 +709,8 @@ void KNConfig::ReadNewsViewer::save()
                   break;
   }
   conf->writeEntry("BrowserCommand", b_rowserCommand);
+
+  d_irty = false;
 }
 
 
@@ -740,6 +760,9 @@ KNConfig::DisplayedHeaders::~DisplayedHeaders()
 
 void KNConfig::DisplayedHeaders::save()
 {
+  if(!d_irty)
+    return;
+
   kdDebug(5003) << "KNConfig::DisplayedHeaders::save()" << endl;
 
   QString dir(KGlobal::dirs()->saveLocation("appdata"));
@@ -775,6 +798,8 @@ void KNConfig::DisplayedHeaders::save()
     }
     headerConf.writeEntry("Flags",flags);
   }
+
+  d_irty = false;
 }
 
 
@@ -837,6 +862,9 @@ KNConfig::Scoring::~Scoring()
 
 void KNConfig::Scoring::save()
 {
+  if(!d_irty)
+    return;
+
   kdDebug(5003) << "KNConfig::Scoring::save()" << endl;
 
   KConfig *conf=KGlobal::config();
@@ -844,6 +872,8 @@ void KNConfig::Scoring::save()
 
   conf->writeEntry("ignoredThreshold", i_gnoredThreshold);
   conf->writeEntry("watchedThreshold", w_atchedThreshold);
+
+  d_irty = false;
 }
 
 
@@ -917,6 +947,9 @@ KNConfig::PostNewsTechnical::~PostNewsTechnical()
 
 void KNConfig::PostNewsTechnical::save()
 {
+  if(!d_irty)
+    return;
+
   kdDebug(5003) << "KNConfig::PostNewsTechnical::save()" << endl;
 
   KConfig *conf=KGlobal::config();
@@ -947,6 +980,8 @@ void KNConfig::PostNewsTechnical::save()
     else
       KNHelper::displayInternalFileError();
   }
+
+  d_irty = false;
 }
 
 
@@ -1066,6 +1101,9 @@ KNConfig::PostNewsComposer::~PostNewsComposer()
 
 void KNConfig::PostNewsComposer::save()
 {
+  if(!d_irty)
+    return;
+
   kdDebug(5003) << "KNConfig::PostNewsComposer::save()" << endl;
 
   KConfig *conf=KGlobal::config();
@@ -1081,6 +1119,7 @@ void KNConfig::PostNewsComposer::save()
   conf->writeEntry("Intro", i_ntro);
   conf->writeEntry("externalEditor", e_xternalEditor);
 
+  d_irty = false;
 }
 
 //==============================================================================================================
@@ -1114,6 +1153,9 @@ KNConfig::Cleanup::~Cleanup()
 
 void KNConfig::Cleanup::save()
 {
+  if(!d_irty)
+    return;
+
   kdDebug(5003) << "KNConfig::Cleanup::save()" << endl;
 
   KConfig *conf=KGlobal::config();
@@ -1127,6 +1169,8 @@ void KNConfig::Cleanup::save()
   conf->writeEntry("readDays", r_eadMaxAge);
   conf->writeEntry("unreadDays", u_nreadMaxAge);
   conf->writeEntry("comInterval", c_ompactInterval);
+
+  d_irty = false;
 }
 
 
@@ -1211,6 +1255,9 @@ KNConfig::Cache::~Cache()
 
 void KNConfig::Cache::save()
 {
+  if(!d_irty)
+    return;
+
   kdDebug(5003) << "KNConfig::Cache::save()" << endl;
 
   KConfig *conf=KGlobal::config();
@@ -1222,5 +1269,6 @@ void KNConfig::Cache::save()
   conf->writeEntry("diskMaxArt", d_iskMaxArt);
   conf->writeEntry("diskMaxKB", d_iskMaxKB);
 
+  d_irty = false;
 }
 */

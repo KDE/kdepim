@@ -50,6 +50,7 @@ class KNFilterSelectAction;
 class KNNetAccess;
 class KNRemoteArticle;
 class KNLocalArticle;
+class KNpgp;
 
 
 class KNodeView : public QSplitter
@@ -117,6 +118,7 @@ class KNodeView : public QSplitter
     KNFilterManager   *f_ilManager;
     KNScoringManager  *s_coreManager;
     KNMemoryManager   *m_emManager;
+    KNpgp             *p_gp;
 
   protected slots:
     //listview slots

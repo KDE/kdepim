@@ -133,6 +133,7 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   //article view
   a_rtFocus=new KNFocusWidget(s_ecSplitter,"artFocus");
   a_rtView=new KNArticleWidget(a_ctions, a_rtFocus,"artView");
+  knGlobals.artWidget=a_rtView;
   a_rtFocus->setWidget(a_rtView);
 
   //tab order
@@ -185,7 +186,8 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   knGlobals.memManager = m_emManager;
 
   // create a global pgp instance
-  new KNpgp();
+  p_gp = new KNpgp();
+  knGlobals.pgp = p_gp;
 
   //-------------------------------- <GUI again> -------------------------------
   connect(s_coreManager, SIGNAL(changedRules()), SLOT(slotReScore()));
@@ -241,6 +243,9 @@ KNodeView::~KNodeView()
 
   delete m_emManager;
   kdDebug(5003) << "KNodeView::~KNodeView() : Memory Manager deleted" << endl;
+
+  delete p_gp;
+  kdDebug(5003) << "KNodeView::~KNodeView() : PGP deleted" << endl;
 }
 
 
@@ -313,11 +318,6 @@ void KNodeView::readOptions()
   sortAsc = conf->readBoolEntry("account_sortAscending", true);
   c_olView->setColAsc(sortCol, sortAsc);
   c_olView->setSorting(sortCol, sortAsc);
-
-  a_rtManager->setShowThreads( conf->readBoolEntry("showThreads", true) );
-  a_ctArtToggleShowThreads->setChecked( a_rtManager->showThreads() );
-  a_rtView->setShowFullHdrs( conf->readBoolEntry("fullHdrs", false) );
-  a_rtView->setUseFixedFont( conf->readBoolEntry("articleBodyFixedFont", false) );
 }
 
 
@@ -362,10 +362,6 @@ void KNodeView::saveOptions()
   conf->writeEntry("sortAscending", h_drView->ascending());
   conf->writeEntry("account_sortCol", c_olView->sortColumn());
   conf->writeEntry("account_sortAscending", c_olView->ascending());
-
-  conf->writeEntry("showThreads", a_rtManager->showThreads());
-  conf->writeEntry("fullHdrs", a_rtView->showFullHdrs());
-  conf->writeEntry("articleBodyFixedFont", a_rtView->useFixedFont());
 }
 
 
@@ -419,6 +415,7 @@ void KNodeView::prepareShutdown()
     delete cup;
 
   saveOptions();
+  c_fgManager->syncConfig();
   a_rtManager->deleteTempFiles();
   g_rpManager->syncGroups();
   f_olManager->syncFolders();
@@ -601,7 +598,8 @@ void KNodeView::initActions()
   a_ctArtToggleThread       = new KAction(i18n("&Toggle Subthread"), Key_T, this,
                               SLOT(slotArtToggleThread()), a_ctions, "thread_toggle");
   a_ctArtToggleShowThreads  = new KToggleAction(i18n("Show T&hreads"), 0 , this,
-                              SLOT(slotArtToggleShowThreads()), a_ctions, "view_showThreads");      
+                              SLOT(slotArtToggleShowThreads()), a_ctions, "view_showThreads");
+  a_ctArtToggleShowThreads->setChecked(c_fgManager->readNewsGeneral()->showThreads());
                                   
   //header-view - remote articles
   a_ctArtSetArtRead         = new KAction(i18n("Mark as &Read"), Key_D , this,
@@ -1026,8 +1024,6 @@ void KNodeView::slotArticleMMB(QListViewItem *item)
     } else {
       if (!KNArticleWindow::raiseWindowForArticle(art)) {
         KNArticleWindow *w=new KNArticleWindow(art);
-        w->artWidget()->setShowFullHdrs(a_rtView->showFullHdrs());
-        w->artWidget()->setUseFixedFont(a_rtView->useFixedFont());
         w->show();
       }
     }
@@ -1540,7 +1536,8 @@ void KNodeView::slotArtToggleShowThreads()
 {
   kdDebug(5003) << "KNodeView::slotArtToggleShowThreads()" << endl;
   if(g_rpManager->currentGroup()) {
-    a_rtManager->toggleShowThreads();
+    c_fgManager->readNewsGeneral()->setShowThreads(!c_fgManager->readNewsGeneral()->showThreads());
+    a_rtManager->showHdrs(true);
   }
 }
 
@@ -1670,8 +1667,6 @@ void KNodeView::slotArtOpenNewWindow()
   if(a_rtView->article()) {
     if (!KNArticleWindow::raiseWindowForArticle(a_rtView->article())) {
       KNArticleWindow *win=new KNArticleWindow(a_rtView->article());
-      win->artWidget()->setShowFullHdrs(a_rtView->showFullHdrs());
-      win->artWidget()->setUseFixedFont(a_rtView->useFixedFont());
       win->show();
     }
   }
@@ -1759,8 +1754,6 @@ void KNodeView::slotFetchArticleWithID()
         KNRemoteArticle *a=new KNRemoteArticle(g_rpManager->currentGroup());
         a->messageID()->from7BitString(id.latin1());
         KNArticleWindow *awin=new KNArticleWindow(a);
-        awin->artWidget()->setShowFullHdrs(a_rtView->showFullHdrs());
-        awin->artWidget()->setUseFixedFont(a_rtView->useFixedFont());
         awin->show();
       }
     }

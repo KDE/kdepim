@@ -31,6 +31,8 @@ class KNMainWindow;
 class KNodeView;
 class KNScoringManager;
 class KNMemoryManager;
+class KNpgp;
+class KNArticleWidget;
 
 
 // idea: Previously the manager classes were available
@@ -43,6 +45,7 @@ class KNGlobals {
 
     QWidget               *topWidget;    // topWidget == top, used for message boxes,
     KNMainWindow          *top;          // no need to include knode.h everywhere
+    KNArticleWidget       *artWidget;
     KNConfigManager       *cfgManager;
     KNNetAccess           *netAccess;
     KNProgress            *progressBar;
@@ -55,6 +58,7 @@ class KNGlobals {
     KNodeView             *view;
     KNScoringManager      *scoreManager;
     KNMemoryManager       *memManager;
+    KNpgp                 *pgp;
 };
 
 

@@ -566,7 +566,7 @@ void KNConfig::SmtpAccountWidget::apply()
     return;
 
   knGlobals.cfgManager->postNewsTechnical()->u_seExternalMailer = u_seExternalMailer->isChecked();
-  knGlobals.cfgManager->postNewsTechnical()->save();
+  knGlobals.cfgManager->postNewsTechnical()->setDirty(true);
 
   s_erverInfo->setServer(s_erver->text());
   s_erverInfo->setPort(p_ort->text().toInt());
@@ -765,8 +765,9 @@ void KNConfig::AppearanceWidget::apply()
   for(int i=0; i<d_ata->fontCount(); i++)
     d_ata->f_onts[i] = (static_cast<FontListItem*>(f_List->item(i)))->font();
 
-  d_ata->save();
+  d_ata->setDirty(true);
 
+  d_ata->updateHexcodes();
   d_ata->recreateLVIcons();
 }
 
@@ -974,7 +975,7 @@ void KNConfig::ReadNewsGeneralWidget::apply()
   d_ata->c_ollCacheSize=c_ollCacheSize->value();
   d_ata->a_rtCacheSize=a_rtCacheSize->value();
 
-  d_ata->save();
+  d_ata->setDirty(true);
 }
 
 
@@ -1085,7 +1086,7 @@ void KNConfig::ReadNewsViewerWidget::apply()
   d_ata->b_rowser=(ReadNewsViewer::browserType)(b_rowser->currentItem());
   d_ata->b_rowserCommand=b_rowserCommand->text();
 
-  d_ata->save();
+  d_ata->setDirty(true);
 }
 
 
@@ -1416,7 +1417,7 @@ void KNConfig::ScoringWidget::apply()
   d_ata->i_gnoredThreshold = i_gnored->value();
   d_ata->w_atchedThreshold = w_atched->value();
 
-  d_ata->save();
+  d_ata->setDirty(true);
 }
 
 
@@ -1800,7 +1801,7 @@ void KNConfig::PostNewsTechnicalWidget::apply()
   for(unsigned int idx=0; idx<l_box->count(); idx++)
     d_ata->x_headers.append( XHeader(l_box->text(idx)) );
 
-  d_ata->save();
+  d_ata->setDirty(true);
 }
 
 
@@ -2029,7 +2030,7 @@ void KNConfig::PostNewsComposerWidget::apply()
   d_ata->e_xternalEditor=e_ditor->text();
   d_ata->u_seExtEditor=e_xternCB->isChecked();
 
-  d_ata->save();
+  d_ata->setDirty(true);
 }
 
 
@@ -2080,30 +2081,31 @@ KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n)
 {
   //QGridLayout *topLayout = new QGridLayout(this,1,1);
   QBoxLayout *topLayout = new QVBoxLayout(this, KDialog::spacingHint());
-  conf = new KpgpConfig(this,"knode pgp config",false);
-  topLayout->addWidget(conf);
+  c_onf = new KpgpConfig(this,"knode pgp config",false);
+  topLayout->addWidget(c_onf);
   QGroupBox *optBox = new QGroupBox(i18n("KNode specific options"), this);
   topLayout->addWidget(optBox);
   QBoxLayout *groupL = new QVBoxLayout(optBox, KDialog::spacingHint());
   groupL->addSpacing(fontMetrics().lineSpacing());
-  check = new QCheckBox(i18n("Automatic check signed articles"),optBox);
-  groupL->addWidget(check);
-  KNpgp *pgp = dynamic_cast<KNpgp*>(KNpgp::getKpgp());
-  check->setChecked(pgp->autoCheck());
+  a_utoCheckSigCB = new QCheckBox(i18n("Automatic check signed articles"),optBox);
+  groupL->addWidget(a_utoCheckSigCB);
+  a_utoCheckSigCB->setChecked(knGlobals.cfgManager->readNewsGeneral()->autoCheckPgpSigs());
 }
+
 
 KNConfig::PrivacyWidget::~PrivacyWidget()
 {
 }
 
+
 void KNConfig::PrivacyWidget::apply()
 {
-  conf->applySettings();
-  KConfig *c=KGlobal::config();
-  c->setGroup("PRIVACY");
-  c->writeEntry("autoCheckSign",check->isChecked());
-  KNpgp *pgp = dynamic_cast<KNpgp*>(KNpgp::getKpgp());
-  pgp->readConfig();
+  if(!d_irty)
+    return;
+
+  c_onf->applySettings();
+  knGlobals.cfgManager->readNewsGeneral()->setAutoCheckPgpSigs(a_utoCheckSigCB->isChecked());
+  knGlobals.cfgManager->readNewsGeneral()->setDirty(true);
 }
 
 
@@ -2208,7 +2210,7 @@ void KNConfig::CleanupWidget::apply()
   d_ata->d_oCompact=f_olderCB->isChecked();
   d_ata->c_ompactInterval=f_olderDays->value();
 
-  d_ata->save();
+  d_ata->setDirty(true);
 }
 
 
@@ -2296,7 +2298,7 @@ void KNConfig::CacheWidget::apply()
   d_ata->d_iskMaxArt=d_iskMaxArt->value();
   d_ata->d_iskMaxKB=d_iskMaxKB->value();
 
-  d_ata->save();
+  d_ata->setDirty(true);
 }
 */
 

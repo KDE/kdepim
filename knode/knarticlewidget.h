@@ -95,11 +95,6 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     void createHtmlPage();
     void showBlankPage();
     void showErrorMessage(const QString &s);
-
-    bool showFullHdrs()               { return f_ullHdrs; }
-    void setShowFullHdrs(bool b=true);
-    bool useFixedFont()               { return u_seFixedFont; }
-    void setUseFixedFont(bool b=true);
     void updateContents();
 
     KNArticle* article()                { return a_rticle; }
@@ -126,7 +121,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     KNArticle *a_rticle;
     QList<KNMimeContent> *a_tt;
     QMimeSourceFactory *f_actory;
-    bool h_tmlDone, f_ullHdrs, r_ot13,  u_seFixedFont;
+    bool h_tmlDone, r_ot13;
     QTimer *t_imer;
     QCString o_verrideCS;
     bool f_orceCS;

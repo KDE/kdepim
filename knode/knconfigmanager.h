@@ -42,6 +42,7 @@ class KNConfigManager : QObject {
     //KNConfig::Cache*                cache()               { return c_ache; }
 
     void configure();
+    void syncConfig();
 
   protected:
     KNConfig::Identity             *i_dentity;
@@ -73,6 +74,7 @@ class KNConfigDialog : public KDialogBase {
 
   protected:
     QList<KNConfig::BaseWidget> w_idgets;
+    KNConfigManager *m_anager;
 
   protected slots:
     void slotApply();

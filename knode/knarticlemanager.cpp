@@ -63,7 +63,6 @@ KNArticleManager::KNArticleManager(KNListView *v, KNFilterManager *f) : QObject(
   f_ilter=f->currentFilter();
   f_ilterMgr=f;
   s_earchDlg=0;
-  s_howThreads=true;
 
   connect(v, SIGNAL(expanded(QListViewItem*)), this,
     SLOT(slotItemExpanded(QListViewItem*)));
@@ -185,6 +184,7 @@ void KNArticleManager::showHdrs(bool clear)
   if(!g_roup && !f_older) return;
 
   bool setFirstChild=true;
+  bool showThreads= knGlobals.cfgManager->readNewsGeneral()->showThreads();
 
   if(clear)
     v_iew->clear();
@@ -229,9 +229,9 @@ void KNArticleManager::showHdrs(bool clear)
     for(int i=0; i<g_roup->length(); i++) {
 
       art=g_roup->at(i);
-      art->setThreadMode(s_howThreads);
+      art->setThreadMode(showThreads);
 
-      if(s_howThreads) {
+      if(showThreads) {
 
         if( !art->listItem() && art->filterResult() ) {
 
@@ -757,7 +757,7 @@ void KNArticleManager::processJob(KNJobData *j)
 void KNArticleManager::createHdrItem(KNRemoteArticle *a)
 {
   a->setListItem(new KNHdrViewItem(v_iew));
-  a->setThreadMode(s_howThreads);
+  a->setThreadMode(knGlobals.cfgManager->readNewsGeneral()->showThreads());
   a->initListItem();
 }
 
@@ -774,7 +774,7 @@ void KNArticleManager::createThread(KNRemoteArticle *a)
   else
     a->setListItem(new KNHdrViewItem(v_iew));
 
-  a->setThreadMode(s_howThreads);
+  a->setThreadMode(knGlobals.cfgManager->readNewsGeneral()->showThreads());
   a->initListItem();
 }
 
@@ -831,6 +831,7 @@ void KNArticleManager::slotItemExpanded(QListViewItem *p)
   KNRemoteArticle *top, *art, *ref;
   KNHdrViewItem *hdrItem;
   bool inThread=false;
+  bool showThreads=knGlobals.cfgManager->readNewsGeneral()->showThreads();
   KNConfig::ReadNewsGeneral *rng=knGlobals.cfgManager->readNewsGeneral();
 
   if(p->childCount() > 0) {
@@ -849,7 +850,7 @@ void KNArticleManager::slotItemExpanded(QListViewItem *p)
 
       if(art->displayedReference()==top) {
         art->setListItem(new KNHdrViewItem(hdrItem));
-        art->setThreadMode(s_howThreads);
+        art->setThreadMode(showThreads);
         art->initListItem();
       }
       else if(rng->totalExpandThreads()) { //totalExpand

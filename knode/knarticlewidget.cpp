@@ -178,10 +178,12 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
                           SLOT(slotVerify()), a_ctions, "article_verify");
   a_ctToggleFullHdrs    = new KToggleAction(i18n("Show &All Headers"), "text_block", 0 , this,
                           SLOT(slotToggleFullHdrs()), a_ctions, "view_showAllHdrs");
+  a_ctToggleFullHdrs->setChecked(knGlobals.cfgManager->readNewsViewer()->showFullHdrs());
   a_ctToggleRot13       = new KToggleAction(i18n("&Unscramble (Rot 13)"), "decrypted", 0 , this,
                           SLOT(slotToggleRot13()), a_ctions, "view_rot13");
   a_ctToggleFixedFont   = new KToggleAction(i18n("U&se Fixed Font"),  Key_X , this,
                           SLOT(slotToggleFixedFont()), a_ctions, "view_useFixedFont");
+  a_ctToggleFixedFont->setChecked(knGlobals.cfgManager->readNewsViewer()->useFixedFont());
   a_ctViewSource        = new KAction(i18n("&View Source"),  0 , this,
                           SLOT(slotViewSource()), a_ctions, "article_viewSource");
 
@@ -204,12 +206,8 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   connect(t_imer, SIGNAL(timeout()), this, SLOT(slotTimeout()));
 
   //config
-  f_ullHdrs=false;
-  a_ctToggleFullHdrs->setChecked(f_ullHdrs);
   r_ot13=false;
   a_ctToggleRot13->setChecked(false);
-  u_seFixedFont=false;
-  a_ctToggleFixedFont->setChecked(false);
   applyConfig();
 }
 
@@ -699,7 +697,8 @@ void KNArticleWidget::showBlankPage()
 
 void KNArticleWidget::showErrorMessage(const QString &s)
 {
-  setFont(u_seFixedFont? knGlobals.cfgManager->appearance()->articleFixedFont()
+  setFont(a_ctToggleFixedFont->isChecked()?
+                           knGlobals.cfgManager->appearance()->articleFixedFont()
                          : knGlobals.cfgManager->appearance()->articleFont());  // switch back from possible obscure charsets
 
   delete f_actory;                          // purge old image data
@@ -738,22 +737,6 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   a_ctSetCharset->setEnabled(false);
   a_ctSetCharsetKeyb->setEnabled(false);
   a_ctViewSource->setEnabled(false);
-}
-
-
-void KNArticleWidget::setShowFullHdrs(bool b)
-{
-  f_ullHdrs=b;
-  a_ctToggleFullHdrs->setChecked(b);
-  updateContents();
-}
-
-
-void KNArticleWidget::setUseFixedFont(bool b)
-{
-  u_seFixedFont = b;
-  a_ctToggleFixedFont->setChecked(b);
-  updateContents();
 }
 
 
@@ -850,7 +833,7 @@ void KNArticleWidget::createHtmlPage()
   else
     html="<qt><headerblock><table width=\"100%\" cellpadding=0 cellspacing=0><tr><td><table cellpadding=0 cellspacing=0>";
 
-  if(f_ullHdrs) {
+  if(a_ctToggleFullHdrs->isChecked()) {
     KNStringSplitter split;
     split.init(a_rticle->head(), "\n");
     QString temp;
@@ -934,17 +917,17 @@ void KNArticleWidget::createHtmlPage()
               .arg(i18n("Unknown charset! Default charset is used instead."));
 
       kdDebug(5003) << "KNArticleWidget::createHtmlPage() : unknown charset = " << text->contentType()->charset() << " not available!" << endl;
-      setFont(u_seFixedFont? app->articleFixedFont():app->articleFont());
+      setFont(a_ctToggleFixedFont->isChecked()? app->articleFixedFont():app->articleFont());
     }
     else {
-      QFont f=(u_seFixedFont? app->articleFixedFont():app->articleFont());
+      QFont f=(a_ctToggleFixedFont->isChecked()? app->articleFixedFont():app->articleFont());
       if (!app->useFontsForAllCS())
         KGlobal::charsets()->setQFont(f, KGlobal::charsets()->charsetForEncoding(text->contentType()->charset()));
       setFont(f);
     }
   }
   else
-    setFont(u_seFixedFont? app->articleFixedFont():app->articleFont());
+    setFont(a_ctToggleFixedFont->isChecked()? app->articleFixedFont():app->articleFont());
 
   //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : font-family = " << font().family() << endl;
   //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : font-charset = " << (int)(font().charSet()) << endl;
@@ -962,16 +945,16 @@ void KNArticleWidget::createHtmlPage()
 
   // if the article is pgp signed and the user asked for verifying the
   // signature, we show a nice header:
-  if (a_rticle->type() == KNMimeBase::ATremote) {
+  if ( a_rticle->type() == KNMimeBase::ATremote ) {
     KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rticle);
-    KNpgp *pgp = dynamic_cast<KNpgp*>(Kpgp::getKpgp());
-    ASSERT(pgp);
-    bool autocheck = pgp->autoCheck();
-    if (autocheck || ra->isPgpSigned()) {
+    KNpgp *pgp = knGlobals.pgp;
+
+    if (knGlobals.cfgManager->readNewsGeneral()->autoCheckPgpSigs() || ra->isPgpSigned()) {
       pgp->setMessage(ra->body());
       html += "<p>";
-      if (!autocheck && !pgp->isSigned()) {
-        html += "<b>" + i18n("Cannot find a signature in this message!") + "</b>";
+      if (!pgp->isSigned()) {
+        if (!knGlobals.cfgManager->readNewsGeneral()->autoCheckPgpSigs())
+          html += "<b>" + i18n("Cannot find a signature in this message!") + "</b>";
       }
       else {
         QString sig;
@@ -980,21 +963,17 @@ void KNArticleWidget::createHtmlPage()
         else
           sig = i18n("Warning: Bad signature from");
 
-        /* HTMLize signedBy data */
         QString sdata=pgp->signedBy();
         QString signer = sdata;
-        sdata.replace(QRegExp("\""), "&quot;");
-        sdata.replace(QRegExp("<"), "&lt;");
-        sdata.replace(QRegExp(">"), "&gt;");
 
         if (sdata.contains(QRegExp("unknown key ID")))
         {
           sdata.replace(QRegExp("unknown key ID"), i18n("unknown key ID"));
-          html += QString("<b>%1 %2</b><br>").arg(sig).arg(sdata);
+          html += QString("<b>%1 %2</b><br>").arg(sig).arg(toHtmlString(sdata,false,false,false));
         }
         else {
           html += QString("<b>%1 <a href=\"mailto:%2\">%3</a></b><br>")
-                     .arg(sig).arg(signer).arg(sdata);
+                     .arg(sig).arg(signer).arg(toHtmlString(sdata,false,false,false));
         }
       }
       html += "</p>";
@@ -1257,8 +1236,6 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
           if(a) {
             //article found in KNGroup
             awin=new KNArticleWindow(a);
-            awin->artWidget()->setShowFullHdrs(showFullHdrs());
-            awin->artWidget()->setUseFixedFont(useFixedFont());
             awin->show();
           }
           else {
@@ -1267,8 +1244,6 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
             a=new KNRemoteArticle(g); //we need "g" to access the nntp-account
             a->messageID()->from7BitString(target.latin1());
             awin=new KNArticleWindow(a);
-            awin->artWidget()->setShowFullHdrs(showFullHdrs());
-            awin->artWidget()->setUseFixedFont(useFixedFont());
             awin->show();
           }
         }
@@ -1467,7 +1442,10 @@ void KNArticleWidget::slotSupersede()
 void KNArticleWidget::slotToggleFullHdrs()
 {
   kdDebug(5003) << "KNArticleWidget::slotToggleFullHdrs()" << endl;
-  f_ullHdrs=!f_ullHdrs;
+
+  // ok, this is a hack
+  if (knGlobals.artWidget == this)
+    knGlobals.cfgManager->readNewsViewer()->setShowFullHdrs(!knGlobals.cfgManager->readNewsViewer()->showFullHdrs());
   updateContents();
 }
 
@@ -1481,7 +1459,9 @@ void KNArticleWidget::slotToggleRot13()
 
 void KNArticleWidget::slotToggleFixedFont()
 {
-  u_seFixedFont=!u_seFixedFont;
+  // ok, this is a hack
+  if (knGlobals.artWidget == this)
+    knGlobals.cfgManager->readNewsViewer()->setUseFixedFont(!knGlobals.cfgManager->readNewsViewer()->useFixedFont());
   updateContents();
 }
 

@@ -72,6 +72,20 @@ void KNConfigManager::configure()
 }
 
 
+void KNConfigManager::syncConfig()
+{
+  a_ppearance->save();
+  r_eadNewsGeneral->save();
+  r_eadNewsViewer->save();
+  d_isplayedHeaders->save();
+  s_coring->save();
+  p_ostNewsTechnical->save();
+  p_ostNewsCompose->save();
+  c_leanup->save();
+  //c_ache->save();
+}
+
+
 void KNConfigManager::slotDialogDone()
 {
   d_ialog->delayedDestruct();
@@ -83,7 +97,7 @@ void KNConfigManager::slotDialogDone()
 
 
 KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
-  : KDialogBase(TreeList, i18n("Preferences"), Ok|Apply|Cancel|Help, Ok, p, n, false, true)
+  : KDialogBase(TreeList, i18n("Preferences"), Ok|Apply|Cancel|Help, Ok, p, n, false, true), m_anager(m)
 {
   setShowIconsInTreeList(true);
   //  setRootIsDecorated(false);
@@ -183,7 +197,6 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   frame = addHBoxPage(QString(" ")+i18n("Cache"),i18n("Caching of articles"), BarIcon("queue"));
   w_idgets.append(new KNConfig::CacheWidget(m->cache(), frame)); */
 
-
   KNHelper::restoreWindowSize("settingsDlg", this, QSize(508,424));
 
   setHelp("anc-setting-your-identity");
@@ -200,6 +213,8 @@ void KNConfigDialog::slotApply()
 {
   for(KNConfig::BaseWidget *w=w_idgets.first(); w; w=w_idgets.next())
     w->apply();
+
+  m_anager->syncConfig();
 
   KNArticleWidget::configChanged();
   knGlobals.view->configChanged();

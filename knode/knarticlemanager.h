@@ -58,9 +58,6 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     void updateViewForCollection(KNArticleCollection *c);
     void updateListViewItems();
     void setAllThreadsOpen(bool b=true);
-    bool showThreads()                { return s_howThreads; }
-    void toggleShowThreads()          { s_howThreads=!s_howThreads; showHdrs(true); }
-    void setShowThreads(bool b=true)  { s_howThreads=b; showHdrs(true); }
 
     void updateStatusString();
 
@@ -103,7 +100,6 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     KNFilterManager *f_ilterMgr;
     KNSearchDialog *s_earchDlg;
     QList<KTempFile> t_empFiles;
-    bool s_howThreads;
 
   public slots:
     void slotFilterChanged(KNArticleFilter *f);

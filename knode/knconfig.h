@@ -50,10 +50,16 @@ namespace KNConfig {
 class Base {
 
   public:
-    Base()    {}
-    virtual ~Base()   {}
+    Base() : d_irty(false) {}
+    virtual ~Base()        {}
 
-    virtual void save() {}
+    virtual void save()    {}
+
+    bool dirty()           { return d_irty; }
+    void setDirty(bool b)  { d_irty=b; }
+
+  protected:
+    bool d_irty;
 
 };
 
@@ -473,6 +479,12 @@ class ReadNewsGeneral : public Base {
     int collCacheSize()              { return c_ollCacheSize; }
     int artCacheSize()               { return a_rtCacheSize; }
 
+    bool showThreads()               { return s_howThreads; }
+    void setShowThreads(bool b)      { d_irty=true; s_howThreads=b;}
+
+    bool autoCheckPgpSigs()          { return a_utoCheckPgpSigs; }
+    void setAutoCheckPgpSigs(bool b) { d_irty=true; a_utoCheckPgpSigs=b;}
+
   protected:
     bool  a_utoCheck,
           a_utoMark,
@@ -480,7 +492,9 @@ class ReadNewsGeneral : public Base {
           s_martScrolling,
           t_otalExpand,
           s_howLines,
-          s_howScore;
+          s_howScore,
+          s_howThreads,
+          a_utoCheckPgpSigs;
 
     int   m_axFetch,
           m_arkSecs,
@@ -542,6 +556,11 @@ class ReadNewsViewer : public Base {
     browserType browser()            { return b_rowser; }
     QString browserCommand()         { return b_rowserCommand; }
 
+    bool showFullHdrs()              { return f_ullHdrs; }
+    void setShowFullHdrs(bool b)     { d_irty = true; f_ullHdrs=b; }
+    bool useFixedFont()              { return u_seFixedFont; }
+    void setUseFixedFont(bool b)     { d_irty = true; u_seFixedFont=b; }
+
   protected:
     bool  s_howHeaderDeco,
           r_ewrapBody,
@@ -550,7 +569,9 @@ class ReadNewsViewer : public Base {
           i_nterpretFormatTags,
           i_nlineAtt,
           o_penAtt,
-          s_howAlts;
+          s_howAlts,
+          f_ullHdrs,
+          u_seFixedFont;
     QString q_uoteCharacters;
 
     browserType b_rowser;
@@ -995,13 +1016,13 @@ class PrivacyWidget : public BaseWidget {
   Q_OBJECT
 
   public:
-    PrivacyWidget(QWidget *_p=0, const char *n=0);
+    PrivacyWidget(QWidget *p=0, const char *n=0);
     ~PrivacyWidget();
     void apply();   // overrides BaseWidget::apply()
 
   protected:
-    KpgpConfig *conf;
-    QCheckBox *check;
+    KpgpConfig *c_onf;
+    QCheckBox *a_utoCheckSigCB;
 };
 
 

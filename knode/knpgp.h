@@ -27,10 +27,6 @@ public:
   virtual void setBusy();
   virtual bool isBusy();
   virtual void idle();
-  void readConfig();
-  bool autoCheck() { return autocheck; }
-private:
-  bool autocheck;
 };
 
 #endif
