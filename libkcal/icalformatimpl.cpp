@@ -813,11 +813,13 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
     attach = icalattachtype_new();
     icalattachtype_set_url(attach,QFile::encodeName(alarm->programFile()).data());
     icalcomponent_add_property(a,icalproperty_new_attach(attach));
+    icalattachtype_free(attach);
   } else if (!alarm->audioFile().isEmpty()) {
     action = ICAL_ACTION_AUDIO;
     attach = icalattachtype_new();
     icalattachtype_set_url(attach,QFile::encodeName( alarm->audioFile() ).data());
     icalcomponent_add_property(a,icalproperty_new_attach(attach));
+    icalattachtype_free(attach);
   } else if (!alarm->mailAddress().isEmpty()) {
     action = ICAL_ACTION_EMAIL;
     icalcomponent_add_property(a,icalproperty_new_attendee(alarm->mailAddress()));
