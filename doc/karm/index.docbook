@@ -37,13 +37,13 @@
 </authorgroup>
 
 <copyright>
-<year>2000</year>
+<year>2000-2002</year>
 <holder>Jonathan Singer</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2001-07-05</date>
+<date>2002-10-07</date>
 <releaseinfo>1.00.00</releaseinfo>
 
 <abstract><para>&karm; tracks time spent on various tasks.</para></abstract>
@@ -145,7 +145,7 @@ accumulated time.</para>
 <sect1 id="menus">
 <title>The &karm; menubar</title>
 <sect2>
-<title>The <guimenu>File</guimenu> Menu</title>
+<title>The <guimenu>File</guimenu> menu</title>
 
 <variablelist>
 <varlistentry>
@@ -206,7 +206,7 @@ zero</action></para>
 </sect2>
 
 <sect2>
-<title>The <guimenu>Clock</guimenu> Menu</title>
+<title>The <guimenu>Clock</guimenu> menu</title>
 
 <variablelist>
 <varlistentry>
@@ -305,11 +305,13 @@ both the session and total times.</para>
 <sect2>
 <title>The <guimenu>Settings</guimenu> menu</title>
 <variablelist>
+
+
 <varlistentry>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Configure Key Bindings...</guimenuitem>
+<guimenuitem>Configure Shortcuts</guimenuitem>
 </menuchoice>
 </term>
 <listitem><para><action>Opens</action> a dialog to allow the user to customize
