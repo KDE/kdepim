@@ -245,7 +245,7 @@ there are two special cases: a full and a first sync.
 		<<", conflictResolution = "<<conflictResolution<<", archive = "<<archive<<endl;
 #endif
 
-	addSyncLogEntry(i18n("Syncing with file \"%s\"").arg(fCalendarFile));
+	addSyncLogEntry(i18n("Syncing with file \"%1\"").arg(fCalendarFile));
 	pilotindex=0;
 	switch (nextSyncAction)
 	{
@@ -688,6 +688,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.15  2002/07/23 00:45:18  kainhofe
+// Fixed several bugs with recurrences.
+//
 // Revision 1.14  2002/07/09 22:38:04  kainhofe
 // Implemented a first (not-yet-functional) version of the category sync
 //
