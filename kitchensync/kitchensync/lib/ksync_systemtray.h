@@ -56,22 +56,20 @@ namespace KSync {
         ~KSyncSystemTray();
 
         KPopupMenu *getContextMenu() const { return contextMenu(); };
-
+	
         void gotConnection( QPixmap );
+	void setName( QString& );
+	void setState( bool );
         void noConnection();
 
     private:
         QPixmap ksyncIconConnected;
         QPixmap ksyncIconDisconnected;
 
-        bool gotDeviceConnection;
-
         //   protected:
         // virtual void mousePressEvent( QMouseEvent *mEvent);
 
-    private slots:
-        void slotPixmap();
-
+   
         //signals:
         //   void leftClicked ( const QPoint );
         // void rightClicked ( const QPoint );

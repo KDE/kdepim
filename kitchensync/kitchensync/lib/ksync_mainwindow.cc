@@ -565,6 +565,7 @@ void KSyncMainWindow::addPart( const ManPartService& service ) {
 }
 void KSyncMainWindow::switchProfile( KonnectorProfile& prof ) {
     m_konBar->setName( prof.name() );
+
     KonnectorProfile ole = m_konprof->current();
 
     if (prof.udi().isEmpty() ) {
@@ -679,9 +680,11 @@ void KSyncMainWindow::slotKonnectorProg( const UDI& udi, const Progress& prog) {
      * and success
      */
     if (udi == konnectorProfile().udi() ) {
+        qDebug( "TESETTEST" );
         switch( prog.code() ) {
         case Progress::Connected:
             m_konBar->setState( true );
+            m_tray->setState( true );
             break;
         case Progress::Done:
             emit doneSync();
@@ -699,10 +702,12 @@ void KSyncMainWindow::slotKonnectorErr( const UDI& udi, const Error& prog) {
         case Error::ConnectionLost: // fall through
         case Error::CouldNotConnect:
             m_konBar->setState( false );
+            m_tray->setState( false );
             break;
         case Error::CouldNotDisconnect:
             if ( m_konnector->isConnected( udi ) )
                 m_konBar->setState( true );
+            m_tray->setState( true );
         default:
             break;
         }
@@ -761,6 +766,7 @@ void KSyncMainWindow::slotKonnectorBar( bool b ) {
         kdDebug(5210) << "disconnecting " << endl;
         m_konnector->disconnectDevice( konnectorProfile().udi() );
         m_konBar->setState( b );
+        m_tray->setState( b );
     }
 }
 #include "ksync_mainwindow.moc"

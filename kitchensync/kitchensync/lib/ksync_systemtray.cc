@@ -45,9 +45,7 @@ KSyncSystemTray::KSyncSystemTray(QWidget* parent,  const char* name)
 
     ksyncIconConnected =   KGlobal::iconLoader()->loadIcon( "connect_established", KIcon::Small );
     ksyncIconDisconnected = KGlobal::iconLoader()->loadIcon( "connect_no", KIcon::Small );
-
-    setPixmap(ksyncIconDisconnected);
-
+    setState( false );
 }
 
 //void KSyncSystemTray::mousePressEvent( QMouseEvent *mEvent ) {
@@ -60,14 +58,18 @@ KSyncSystemTray::KSyncSystemTray(QWidget* parent,  const char* name)
 //    } else {}
 //}
 
-void KSyncSystemTray::slotPixmap() {
+void setName( QString& name ) {
+}
 
-    if (gotDeviceConnection) {
+void KSyncSystemTray::setState( bool connected )  {
+
+    if ( connected ) {
         setPixmap(ksyncIconConnected);
     } else {
-      setPixmap(ksyncIconDisconnected);
+        setPixmap(ksyncIconDisconnected);
     }
 }
+
 
 KSyncSystemTray::~KSyncSystemTray() {
 }
