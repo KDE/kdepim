@@ -691,6 +691,41 @@ QString PilotDaemon::pilotDevice()
 	return KPilotSettings::pilotDevice();
 }
 
+static bool isKDesktopLockRunning()
+{
+	if (!KPilotSettings::screenlockSecure()) return false;
+
+	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
+
+	// Can't tell, very weird, err on the side of safety.
+	if (!dcopptr || !dcopptr->isAttached()) return true;
+
+	QByteArray data,returnValue;
+	QCString returnType;
+
+	if (!dcopptr->call("kdesktop","KScreensaverIface","isBlanked()",
+		data,returnType,returnValue,true))
+	{
+		kdWarning() << k_funcinfo << ": Check for screensaver failed." << endl;
+		// Err on the side of safety again.
+		return true;
+	}
+
+	if (returnType == "bool")
+	{
+		bool b;
+		QDataStream reply(returnValue,IO_ReadOnly);
+		reply >> b;
+		return b;
+	}
+	else
+	{
+		// Err on the side of safety.
+		return true;
+	}
+}
+
+
 /* slot */ void PilotDaemon::startHotSync()
 {
 	FUNCTIONSETUP;
@@ -770,10 +805,18 @@ QString PilotDaemon::pilotDevice()
 		// signal/slot connections and fires off the sync.
 		goto launch;
 	}
-	else
+
+	if (isKDesktopLockRunning())
 	{
-		fSyncStack->queueInit(ActionQueue::WithUserCheck);
+		fSyncStack->queueInit();
+		fSyncStack->addAction(new SorryAction(fPilotLink,
+			i18n("HotSync is disabled while the screen is locked.")));
+		goto launch;
 	}
+
+	// Normal case: regular sync.
+	fSyncStack->queueInit(ActionQueue::WithUserCheck);
+
 
 #ifdef ENABLE_KROUPWARE
 	if ( conduits.findIndex( CSL1("internal_kroupware") ) >= 0 )

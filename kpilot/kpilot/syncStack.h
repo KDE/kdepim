@@ -250,10 +250,11 @@ class SorryAction : public SyncAction
 Q_OBJECT
 
 public:
-	SorryAction(KPilotDeviceLink *);
+	SorryAction(KPilotDeviceLink *, const QString &s=QString::null);
 
 protected:
 	virtual bool exec();
+	QString fMessage;
 } ;
 
 /**

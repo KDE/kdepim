@@ -68,17 +68,22 @@ WelcomeAction::WelcomeAction(KPilotDeviceLink *p) :
 	return true;
 }
 
-SorryAction::SorryAction(KPilotDeviceLink *p) :
-	SyncAction(p,"sorryAction")
+SorryAction::SorryAction(KPilotDeviceLink *p, const QString &s) :
+	SyncAction(p,"sorryAction"),
+	fMessage(s)
 {
+	if (fMessage.isEmpty())
+	{
+		fMessage = i18n("KPilot is busy and cannot process the "
+			"HotSync right now.");
+	}
 }
 
 bool SorryAction::exec()
 {
 	FUNCTIONSETUP;
 
-	addSyncLogEntry(i18n("KPilot is busy and cannot process the "
-		"HotSync right now."));
+	addSyncLogEntry(fMessage);
 	return delayDone();
 }
 
