@@ -146,7 +146,7 @@ extern KDE_EXPORT int debug_level;
 #include <iostream>
 #endif
 
-class KPilotDepthCount 
+class KDE_EXPORT KPilotDepthCount 
 { 
 public: 
 	KPilotDepthCount(int area, int level, const char *s); 
