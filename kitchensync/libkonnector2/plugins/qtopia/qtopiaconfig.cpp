@@ -26,8 +26,9 @@
 
 #include <kapplication.h>
 #include <kdebug.h>
-#include <klocale.h>
 #include <kdialog.h>
+#include <klocale.h>
+#include <kmessagebox.h>
 
 #include <qcombobox.h>
 #include <qlabel.h>
@@ -75,7 +76,8 @@ void QtopiaConfig::loadSettings( KRES::Resource *resource )
   }
 
   setCurrent( k->userName(), m_cmbUser );
-  setCurrent( k->password(), m_cmbPass );
+  m_cmbPass->insertItem( k->password() );
+  m_cmbPass->setCurrentText( k->password() );
   setCurrent( k->destinationIP(), m_cmbIP );
   setCurrent( k->model(), m_cmbDev, false );
   if ( m_cmbDev->currentText() == QString::fromLatin1("Sharp Zaurus ROM") )
@@ -95,6 +97,8 @@ void QtopiaConfig::saveSettings( KRES::Resource *resource )
 
   k->setDestinationIP( m_cmbIP->currentText() );
   k->setUserName( m_cmbUser->currentText() );
+  if ( m_cmbPass->currentText().isEmpty() )
+    KMessageBox::information( this, i18n( "You have entered an empty password, this won't work with Qtopia1.7/OPIE" ) );
   k->setPassword( m_cmbPass->currentText() );
   k->setModel( m_cmbDev->currentText() );
   k->setModelName( name() );
