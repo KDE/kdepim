@@ -1,10 +1,10 @@
 // kpilotLink.cc
 //
-// Copyright (C) 1998,1999 Dan Pilone
+// Copyright (C) 1998,1999,2000 Dan Pilone
 //
 // This file is distributed under the Gnu General Public Licence (GPL).
 // The GPL should have been included with this file in a file called
-// COPYING. 
+// COPYING.
 //
 // This is the version of kpilotLink.cc for KDE2 / KPilot 4.
 //
@@ -12,7 +12,7 @@
 
 
 
-// REVISION HISTORY 
+// REVISION HISTORY
 //
 // 3.1b9	By Dan Pilone
 // 3.1b10	By Adriaan de Groot: comments added all over the place,
@@ -55,6 +55,7 @@ static const char *id="$Id$";
 #include <kprogress.h>
 #include <kglobal.h>
 #include <kstddirs.h>
+#include <kdebug.h>
 
 #include "kpilotlink.moc"
 #else
@@ -122,12 +123,25 @@ const int CStatusMessages::LOG_MESSAGE = 17;
 
 
 KPilotLink::KPilotLink()
-  : fConnected(false), fCurrentPilotSocket(-1), fSlowSyncRequired(false), 
+  : fConnected(false), fCurrentPilotSocket(-1), fSlowSyncRequired(false),
     fOwningWidget(0L), fStatusBar(0L), fProgressDialog(0L), fConduitSocket(0L),
     fCurrentDB(0L), fNextDBIndex(0), fConduitProcess(0L), fMessageDialog(0L)
 {
     fKPilotLink = this;
-    
+
+    // Setup where to find DBs.
+    kdDebug() << "Before adding: \n";
+    QStringList types = KGlobal::dirs()->allTypes();
+    for (QStringList::Iterator it = types.begin() ; it != types.end(); ++it)
+        kdDebug() << *it << "\n";
+    //if (KGlobal::dirs()->addResourceType("pilotdbs", QString("share/apps/kpilot/DBBackup/") + getPilotUser().getUserName()) == false)
+    if (KGlobal::dirs()->addResourceType("pilotdbs", "share/apps/kpilot/DBBackup/") == false) // + getPilotUser().getUserName()) == false)
+        kdDebug() << "Busted!\n";
+    kdDebug() << "\nAfter adding: \n";
+    types = KGlobal::dirs()->allTypes();
+    for (QStringList::Iterator it = types.begin() ; it != types.end(); ++it)
+        kdDebug() << *it << "\n";
+
     // When KPilot starts up we want to be able to find the last synced users data.
     KConfig* config = getConfig();
     config->setGroup(0L);
@@ -136,10 +150,10 @@ KPilotLink::KPilotLink()
 }
 
 
-KPilotLink::KPilotLink(QWidget* owner, KStatusBar* statusBar, 
+KPilotLink::KPilotLink(QWidget* owner, KStatusBar* statusBar,
 	const QString &devicePath)
-  : fConnected(false), fCurrentPilotSocket(-1), fSlowSyncRequired(false), 
-    fOwningWidget(owner), fStatusBar(statusBar), fProgressDialog(0L), 
+  : fConnected(false), fCurrentPilotSocket(-1), fSlowSyncRequired(false),
+    fOwningWidget(owner), fStatusBar(statusBar), fProgressDialog(0L),
     fConduitSocket(0L), fCurrentDB(0L), fNextDBIndex(0), fConduitProcess(0L),
     fMessageDialog(0L)
     {
@@ -173,7 +187,7 @@ KPilotLink::initPilotSocket(const char* devicePath)
 
 	struct pi_sockaddr addr;
 	int ret;
-  
+
 	  pi_close(getCurrentPilotSocket());
 	  fPilotPath = devicePath;
   
@@ -214,7 +228,7 @@ KPilotLink::initPilotSocket(const char* devicePath)
 			i18n("Error Initializing")
 			);
 #else
-		KMsgBox::message(fOwningWidget, 
+		KMsgBox::message(fOwningWidget,
 			i18n("Error Initializing"), 
 			i18n("Cannot connect to pilot "
 			"(check pilot path)."), KMsgBox::STOP);
@@ -508,10 +522,10 @@ KPilotLink::doFullRestore()
 
     dir = opendir(dirname);
     
-    while( (dirent = readdir(dir)) ) 
+    while( (dirent = readdir(dir)) )
 	{
 	char name[256];
-	
+
 	if (dirent->d_name[0] == '.')
 	    continue;
 	
@@ -564,7 +578,7 @@ KPilotLink::doFullRestore()
 // #endif
     
     for (i=0;i<dbcount;i++)
-	for (j=i+1;j<dbcount;j++) 
+	for (j=i+1;j<dbcount;j++)
 	    if (compare(db[i],db[j])>0) {
 	    struct db * temp = db[i];
 	    db[i] = db[j];
@@ -709,7 +723,7 @@ KPilotLink::doFullBackup()
     fMessageDialog->show();
     showMessage(i18n("Backing up Palm Pilot... Slow sync required."));
     addSyncLogEntry("Backing up all data...");
-    for(;;) 
+    for(;;)
 	{
 	struct DBInfo info;
 
@@ -732,7 +746,7 @@ KPilotLink::doFullBackup()
 	if( dlp_ReadDBList(getCurrentPilotSocket(), 0, 0x80, i, &info) < 0)
 	    break;
 	i = info.index + 1;
-	
+
 	strcpy(message, "Backing Up: ");
 	strcat(message, info.name);
 	fMessageDialog->setMessage(message);
@@ -975,7 +989,7 @@ KPilotLink::startHotSync()
 	perror("pi_listen");
 	exit(1);
 	}
-    
+
     fCurrentPilotSocket = pi_accept(fPilotMasterSocket,0,0);
     if(fCurrentPilotSocket == -1) 
 	{
@@ -1012,7 +1026,7 @@ KPilotLink::startHotSync()
 
 void
 KPilotLink::quickHotSync()
-{ 
+{
 	FUNCTIONSETUP;
 
   fMessageDialog->setMessage("Beginning Sync"); 
@@ -1408,7 +1422,7 @@ void KPilotLink::checkPilotUser()
       delete config;
       return;
     }
-  
+
   QString guiUserName;
   guiUserName = config->readEntry("UserName");
   
@@ -1423,7 +1437,7 @@ void KPilotLink::checkPilotUser()
 		"(Otherwise I'll use &quot;%2&quot; for now)")
 		.arg(getPilotUser().getUserName())
 		.arg(guiUserName));
-	
+
 	if (KMessageBox::warningYesNo(0L,
 		message,
 		i18n("Pilot User Changed"))==KMessageBox::Yes)
@@ -1454,7 +1468,8 @@ void KPilotLink::checkPilotUser()
 {
 	FUNCTIONSETUP;
 
-	KConfig* config = new KConfig(LOCALCONFIG + "/kpilotrc");
+	//KConfig* config = new KConfig(LOCALCONFIG + "/kpilotrc");
+        KConfig* config = new KConfig(KGlobal::dirs()->findResource("config", "kpilotrc"));
 	if (!s.isNull()) config->setGroup(s);
 	return config;
 }
@@ -1467,11 +1482,14 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 // 	dbPath+='/';
 
 // 	return new PilotLocalDatabase(dbPath,database);
-  return new PilotLocalDatabase(KGlobal::dirs()->findDirs("pilotdbs", getPilotUser().getUserName()).first(), database);
+  QStringList results = KGlobal::dirs()->resourceDirs("pilotdbs");
+  int numEntries = results.count();
+  //kdDebug << "Num entries:" << results.count();
+  return new PilotLocalDatabase(results.first(), database);
   }
         // {
         //      return new PilotLocalDatabase(kapp->localkdedir() +
         //              BACKUP_DIR +
         //              getPilotUser().getUserName() +
         //              "/", database);
-        // }                                                                    
+        // }

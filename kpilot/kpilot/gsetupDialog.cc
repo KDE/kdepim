@@ -94,13 +94,8 @@ setupDialogPage::setupDialogPage(
 //
 //
 setupDialog::setupDialog(QWidget *parent,
-#ifdef KDE2
 	const QString &name,
 	const QString &caption,
-#else
-	const char *name, 
-	const char *caption, 
-#endif
 	bool modal) :
 	QTabDialog(parent,name,modal),
 	fGroupName(name),
@@ -132,7 +127,7 @@ void setupDialog::commitChanges()
 	FUNCTIONSETUP;
 	QListIterator<setupDialogPage> i(pages);
 
-	KConfig *config=KPilotLink::getConfig();
+	KConfig *config=KGlobal::config();
 	config->setGroup(groupName());
 
 	for (i.toFirst(); i.current(); ++i)

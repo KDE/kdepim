@@ -1,0 +1,9 @@
+# KDE Config File
+[KDE Desktop Entry]
+Name=KPilot
+Exec=kpilot
+Icon=kpilot.xpm
+Type=Application
+DocPath=kpilot/kpilot.html
+Terminal=0
+MiniIcon=kpilot.xpm

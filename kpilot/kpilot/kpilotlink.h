@@ -1,7 +1,6 @@
 // kpilotLink.h
 //
-// Copyright (C) 1998,1999 Dan Pilone
-// Copyright (C) 2000 Adriaan de Groot
+// Copyright (C) 1998,1999,2000 Dan Pilone
 //
 // This file is distributed under the Gnu General Public Licence (GPL).
 // The GPL should have been included with this file in a file called

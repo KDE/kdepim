@@ -1,16 +1,16 @@
 // kpilot.cc
 //
-// Copyright (C) 1998,1999 Dan Pilone
+// Copyright (C) 1998,1999,2000 Dan Pilone
 //
 // This file is distributed under the Gnu General Public Licence (GPL).
 // The GPL should have been included with this file in a file called
-// COPYING. 
+// COPYING.
 
 // $Revision$
 static const char *id="$Id$";
 
 
-// REVISION HISTORY 
+// REVISION HISTORY
 //
 // 3.1b9	By Dan Pilone
 // 3.1b10	By Adriaan de Groot: comments added all over the place,
@@ -46,6 +46,9 @@ static const char *id="$Id$";
 #include <ksock.h>
 #include <kcombobox.h>
 #include <kmenubar.h>
+#include <kaboutdata.h>
+#include <kcmdlineargs.h>
+#include <kstddirs.h>
 
 #include "kpilotOptions.h"
 #include "kpilot.moc"
@@ -88,7 +91,7 @@ const int KPilotInstaller::ID_COMBO = 1000;
 const int KPilotInstaller::ConfigurationVersion = 320;
 
 KPilotInstaller::KPilotInstaller()
-  : KTMainWindow(), fMenuBar(0L), fStatusBar(0L), fToolBar(0L), 
+  : KTMainWindow(), fMenuBar(0L), fStatusBar(0L), fToolBar(0L),
     fQuitAfterCopyComplete(false), fManagingWidget(0L), fPilotLink(0L),
     fPilotCommandSocket(0L), fPilotStatusSocket(0L), fKillDaemonOnExit(false)
 {
@@ -105,13 +108,13 @@ KPilotInstaller::KPilotInstaller()
 		if (debug_level & UI_MAJOR)
 		{
 			cerr << fname << ": Read config version "
-				<< cfg_version 
+				<< cfg_version
 				<< " require "
 				<< ConfigurationVersion
 				<< endl;
 		}
 
-		// If we haven't been configured, 
+		// If we haven't been configured,
 		// force the user to set things up.
 		KPilotOptions* options = new KPilotOptions(this);
 		options->show();
@@ -205,7 +208,7 @@ KPilotInstaller::initComponents()
     fPilotComponentList.append(aComponent);
     }
 
-void 
+void
 KPilotInstaller::initStatusBar()
 {
 	FUNCTIONSETUP;
@@ -267,9 +270,9 @@ KPilotInstaller::initToolBar()
 		this,SLOT(slotModeSelected(int)));
 	/*
 	fToolBar->insertCombo(i18n("Pilot Application"), 
-		KPilotInstaller::ID_COMBO, false, 
+		KPilotInstaller::ID_COMBO, false,
 		SIGNAL(activated(int)), this, 
-		SLOT(slotModeSelected(int)), true, 
+		SLOT(slotModeSelected(int)), true,
 		i18n("KPilot Mode"), 140, 0);
 	*/
 
@@ -299,7 +302,7 @@ KPilotInstaller::slotModeSelected(int selected)
 
 
 	for (fVisibleWidgetList.first();
-		fVisibleWidgetList.current(); 
+		fVisibleWidgetList.current();
 		fVisibleWidgetList.next())
 	{
 		fVisibleWidgetList.current()->hide();
@@ -459,7 +462,7 @@ void KPilotInstaller::initCommandSocket()
 			sleep(1);
 			kapp->processEvents();
 
-			fPilotCommandSocket = new KSocket("localhost", 
+			fPilotCommandSocket = new KSocket("localhost",
 				PILOTDAEMON_COMMAND_PORT);
 			if ((fPilotCommandSocket->socket() >= 0) &&
 				testSocket(fPilotCommandSocket))
@@ -683,7 +686,7 @@ KPilotInstaller::initMenu()
 	conduitMenu->insertItem(i18n("&External"), 
 		KPilotInstaller::ID_CONDUITS_SETUP);
 	conduitMenu->insertSeparator(-1);
-	connect(conduitMenu, SIGNAL(activated(int)), 
+	connect(conduitMenu, SIGNAL(activated(int)),
 		SLOT(menuCallback(int)));
 
 	QPopupMenu *theHelpMenu = KTMainWindow::helpMenu(QString(version(0)) +
@@ -820,7 +823,7 @@ void KPilotInstaller::menuCallback(int item)
 			//
 			//
 			for(fPilotComponentList.first(); 
-			fPilotComponentList.current(); 
+			fPilotComponentList.current();
 			fPilotComponentList.next())
 			{
 				if (debug_level & UI_TEDIOUS)
@@ -973,8 +976,13 @@ int main(int argc, char** argv)
 	FUNCTIONSETUP;
 
 	// QStrList fileList;
+        KAboutData about("kpilot", I18N_NOOP("KPilot"),
+                         "4.0b",
+                         "KPilot - Hot-sync software for unix\n\n",
+                         KAboutData::License_GPL,
+                         "(c) 1998-2000, Dan Pilone");
 
-
+        KCmdLineArgs::init(argc, argv, &about);
 	KApplication a(argc, argv, "kpilot");
 	handleOptions(argc,argv);
 
@@ -996,8 +1004,9 @@ int main(int argc, char** argv)
 	}
 
 
-	KPilotInstaller *tp = new KPilotInstaller();
+        KPilotInstaller *tp = new KPilotInstaller();
 
+        KGlobal::dirs()->addResourceType("pilotdbs", "share/apps/kpilot/DBBackup");
 	a.setMainWidget(tp);
 	return a.exec();
 }
