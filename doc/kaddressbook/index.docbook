@@ -265,12 +265,24 @@ default formatted name type for new contacts, use the <link linkend="preferences
 <sect2 id="managing-contacts-im-addresses">
 <title>Instant Messaging</title>
 <para>
-  The <guilabel>IM Address</guilable> text entry holds the standard Instant Messaging Address for this contact.  Further IM Addresses can be viewed, added and editted by choosing <guilabel>Edit IM Addresses...</guilabel>.  
+  The <guilabel>IM Address</guilabel> box holds the preferred Instant Messaging Address for this contact.  Further IM Addresses can be viewed, added and editted by choosing <guilabel>Edit IM Addresses...</guilabel>.  
+</para>
+<screenshot>
+<screeninfo>The Edit IM Addresses Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="edit_instant_messenging.png" format="PNG"/></imageobject>
+<textobject><phrase>The Edit IM Addresses Dialog.</phrase></textobject>
+<caption><para>The Edit IM Addresses Dialog.</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+  A contact can have multiple instant messaging addresses associated with it.  Other applications, such as <application>Kopete</application> and <application>Konversation</application>, store their information here.  It is recommended that you add, edit and delete instant messaging addresses in <application>Kopete</application> or <application>Konversation</application> rather than here, since they can assist you better in adding the address, adding the user to a group, and so on.  If you are not interested in whether they are picked up in another application, and just want to store the instant messaging address with the contact, then it is fine to add and edit it here.
 </para>
 <para>
-  A contact can have multiple instant messaging addresses associated with it.  At the time of writing, <application>Kopete</application> and
-  <application>Konversation</application> store their information here.  It is recommended that you add and edit instant messaging addresses
-  in <application>Kopete</application> or <application>Konversation</application> rather than here, since they can assist you better in adding the address, adding the user to a group, and so on.  If you are not interested in whether they are picked up in another application, and just want to store the instant messaging address with the contact, then it is fine to add and edit it here.
+  For more information on adding new Instant Messaging Addresses, see
+  <ulink url="help:/kopete/getting-started.html#creating-accounts"><application>Kopete</application>'s handbook</ulink>
+  and <ulink url="help:/konversation/linkaddressbook.html"><application>Konversation</application>'s handbook</ulink>.
 </para>
 </sect2>
 
