@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Groupware server
+X-KDE-Library=kabc_groupware
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=contact
+X-KDE-ResourceType=groupware

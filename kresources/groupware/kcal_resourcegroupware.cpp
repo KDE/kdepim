@@ -24,8 +24,7 @@
 #include "kcal_groupwareprefsbase.h"
 #include "kcal_resourcegroupwareconfig.h"
 
-#include "confirmsavedialog.h"
-
+#include <libkcal/confirmsavedialog.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/calendarlocal.h>
 
@@ -155,7 +154,7 @@ bool ResourceGroupware::doLoad()
 
   mJobData = QString::null;
 
-  mDownloadJob = PIM::GroupwareJob::getCalendar( url );
+  mDownloadJob = KPIM::GroupwareJob::getCalendar( url );
   connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotJobResult( KIO::Job * ) ) );
   connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
