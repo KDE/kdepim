@@ -19,7 +19,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -32,22 +32,15 @@
 
 #include <time.h>
 
-#ifndef _PILOT_APPINFO_H_
 #include <pi-appinfo.h>
-#endif
 
-#ifndef QWIDGET_H
 #include <qwidget.h>
-#endif
-
-#ifndef QCOMBOBOX_H
 #include <qcombobox.h>
-#endif
+#include <qtextcodec.h>
 
-#ifndef _KDEBUG_H
 #include <kdebug.h>
-#endif
 
+#include "pilotAppCategory.h"
 #include "pilotComponent.moc"
 
 static const char *pilotComponent_id =
@@ -61,7 +54,7 @@ static const char *pilotComponent_id =
 PilotComponent::PilotComponent(QWidget * parent,
 	const char *id,
 	const QString & path) :
-	QWidget(parent, id), 
+	QWidget(parent, id),
 	fDBPath(path)
 {
 	FUNCTIONSETUP;
@@ -269,7 +262,7 @@ void PilotComponent::populateCategories(QComboBox * c,
 				<< " with ID: " << (int) info->ID[i] << endl;
 #endif
 
-			c->insertItem(QString::fromLatin1(info->name[i]));
+			c->insertItem(PilotAppCategory::codec()->toUnicode(info->name[i]));
 		}
 	}
 
