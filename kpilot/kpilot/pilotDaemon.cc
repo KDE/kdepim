@@ -1279,9 +1279,9 @@ static KCmdLineOptions daemonoptions[] = {
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif
-	{ "device <device>", I18N_NOOP("device to try first."), ""},
+	{ "device <device>", I18N_NOOP("Device to try first"), ""},
 	{"fail-silently", /* TODO_I18N */ ("Exit instead of complaining "
-		"about bad configuration files."), 0},
+		"about bad configuration files"), 0},
 	KCmdLineLastOption
 } ;
 

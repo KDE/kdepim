@@ -201,7 +201,7 @@ void MainWidget::initGUI()
                                SLOT( deletePair() ), actionCollection(), "delete" );
   mDeleteAction->setEnabled( false );
 
-  new KAction( i18n( "Log..." ), "filefind", 0, this, SLOT( showLog() ),
+  new KAction( i18n( "Log" ), "filefind", 0, this, SLOT( showLog() ),
                actionCollection(), "log" );
 
   mSyncAction = new KAction( i18n( "Sync..." ), "hotsync", 0, this,

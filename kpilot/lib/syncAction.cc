@@ -135,7 +135,7 @@ bool SyncAction::delayDone()
 	case eCopyPCToHH : return i18n("Copy PC to Handheld");
 	case eCopyHHToPC : return i18n("Copy Handheld to PC");
 	case eBackup : return i18n("Backup");
-	case eRestore : return i18n("Restore from Backup");
+	case eRestore : return i18n("Restore From Backup");
 	case eDefaultSync: break; /* FALLTHRU */
 	}
 	return i18n("Unknown sync mode");

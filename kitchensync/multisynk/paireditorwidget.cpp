@@ -123,7 +123,7 @@ QWidget *PairEditorWidget::createPluginTab()
   QWidget *widget = new QWidget( this );
   QVBoxLayout *layout = new QVBoxLayout( widget, KDialog::marginHint(), KDialog::spacingHint() );
 
-  QLabel *label = new QLabel( "<h2><b>" + i18n( "Synchronization plugins:" ) + "</b></h2>", widget );
+  QLabel *label = new QLabel( "<h2><b>" + i18n( "Synchronization Plugins" ) + "</b></h2>", widget );
   layout->addWidget( label );
 
   QVBoxLayout *pluginLayout = new QVBoxLayout( widget, KDialog::marginHint(), KDialog::spacingHint() );
@@ -151,7 +151,7 @@ QWidget *PairEditorWidget::createPluginTab()
 
   layout->addLayout( pluginLayout );
 
-  layout->addStretch( 10 );  
+  layout->addStretch( 10 );
 
   return widget;
 }
@@ -161,7 +161,7 @@ QWidget *PairEditorWidget::createSyncOptionTab()
   QWidget *widget = new QWidget( this );
   QVBoxLayout *layout = new QVBoxLayout( widget, KDialog::marginHint(), KDialog::spacingHint() );
 
-  QLabel *label = new QLabel( "<h2><b>" + i18n( "Conflicts and near duplicates:" ) + "</b></h2>", widget );
+  QLabel *label = new QLabel( "<h2><b>" + i18n( "Conflicts &amp; Near Duplicates" ) + "</b></h2>", widget );
   layout->addWidget( label );
 
   QVBoxLayout *groupLayout = new QVBoxLayout( widget, KDialog::marginHint(), KDialog::spacingHint() );
