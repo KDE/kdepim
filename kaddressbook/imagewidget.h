@@ -48,9 +48,14 @@ class ImageLabel : public QLabel
   protected:
     virtual void dragEnterEvent( QDragEnterEvent *event );
     virtual void dropEvent( QDropEvent *event );
+    virtual void mouseMoveEvent( QMouseEvent *event );
+    virtual void mousePressEvent( QMouseEvent *event );
 
   private:
+    void startDrag();
+
     bool mReadOnly;
+    QPoint mDragStartPos;
 };
 
 class ImageWidget : public QWidget

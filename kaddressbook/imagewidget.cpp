@@ -24,6 +24,7 @@
 #include <kabc/picture.h>
 #include <kdebug.h>
 #include <kdialog.h>
+#include <kglobalsettings.h>
 #include <kiconloader.h>
 #include <kio/netaccess.h>
 #include <klocale.h>
@@ -45,6 +46,14 @@ ImageLabel::ImageLabel( const QString &title, bool readOnly, QWidget *parent )
   setAcceptDrops( true );
 }
 
+void ImageLabel::startDrag()
+{
+  if ( pixmap() && !pixmap()->isNull() ) {
+    QImageDrag *drag = new QImageDrag( pixmap()->convertToImage(), this );
+    drag->dragCopy();
+  }
+}
+
 void ImageLabel::dragEnterEvent( QDragEnterEvent *event )
 {
   event->accept( QImageDrag::canDecode( event ) );
@@ -56,6 +65,21 @@ void ImageLabel::dropEvent( QDropEvent *event )
   if ( QImageDrag::decode( event, pm ) && !mReadOnly ) {
     setPixmap( pm );
     emit changed();
+  }
+}
+
+void ImageLabel::mousePressEvent( QMouseEvent *event )
+{
+  mDragStartPos = event->pos();
+  QLabel::mousePressEvent( event );
+}
+
+void ImageLabel::mouseMoveEvent( QMouseEvent *event )
+{
+  if ( (event->state() & LeftButton) &&
+       (event->pos() - mDragStartPos).manhattanLength() >
+       KGlobalSettings::dndEventDelay() ) {
+    startDrag();
   }
 }
 
