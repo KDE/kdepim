@@ -45,7 +45,7 @@ class FilterDialog : public KDialogBase
     ~FilterDialog();
     
     void setFilters(const Filter::List &list);
-    const Filter::List &filters() const { return mFilterList; }
+    Filter::List &filters();
     
   protected slots:
     void add();

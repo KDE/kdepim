@@ -207,6 +207,8 @@ void ActionManager::initReadOnlyActions()
                                             0,
                                             this, SLOT(slotFilterActivated(int)),
                                             mACollection, "select_filter");
+    mActionSelectFilter->setRemoveAmpersandsInCombo( true );
+
     connect(mActionSelectFilter, SIGNAL(activated(int)),
             SLOT(slotFilterActivated(int)));
     connect(this, SIGNAL(filterActivated(int)),
@@ -375,6 +377,7 @@ void ActionManager::setFilterNames(const QStringList& list)
 
 void ActionManager::slotFilterActivated(int index)
 {
+    kdDebug() << "slotFilterChanged" << endl;
     emit(filterActivated(index-1));
 }
 

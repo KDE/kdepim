@@ -346,6 +346,26 @@ void ViewManager::modifyView()
       // The user accepted
       dialog->writeConfig(mConfig);
       mActiveView->readConfig(mConfig);
+
+      // Set the proper filter in the view. By setting the combo
+      // box, the activated slot will be called, which will push
+      // the filter to the view and refresh it.
+      if (mActiveView->defaultFilterType() == KAddressBookView::None)
+      {
+          emit(setCurrentFilter(0));
+      }
+      else if (mActiveView->defaultFilterType() == KAddressBookView::Active)
+      {
+          emit(setCurrentFilterName(currentFilter.name()));
+      }
+      else   // KAddressBookView::Specific
+      {
+        QString filterName = mActiveView->defaultFilterName();
+        emit(setCurrentFilterName(filterName));
+      }
+
+      kdDebug() << "currentFilter=" << currentFilter.name() << endl;
+
       mActiveView->refresh();
 
       // cleanup

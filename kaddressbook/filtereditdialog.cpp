@@ -26,6 +26,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qregexp.h>
 #include <qradiobutton.h>
 #include <qstring.h>
 #include <qtoolbutton.h>
@@ -63,7 +64,7 @@ FilterEditDialog::~FilterEditDialog()
 
 void FilterEditDialog::setFilter( const Filter &filter )
 {
-  mNameEdit->setText( filter.name() );  
+  mNameEdit->setText( filter.name() );
 
   QStringList categories = filter.categories();
   QListViewItem *item = mCategoriesView->firstChild();
@@ -163,7 +164,24 @@ void FilterDialog::setFilters(const Filter::List &list)
   mFilterList.clear();
   mFilterList = list;
 
+  Filter::List::Iterator it;
+  for ( it = mFilterList.begin(); it != mFilterList.end(); ++it ) {
+    QString tmp = (*it).name();
+    (*it).setName( tmp.replace( QRegExp( "&&" ), "&") );
+  }
+
   refresh();
+}
+
+Filter::List &FilterDialog::filters()
+{
+  Filter::List::Iterator it;
+  for ( it = mFilterList.begin(); it != mFilterList.end(); ++it ) {
+    QString tmp = (*it).name();
+    (*it).setName( tmp.replace( QRegExp( "&" ), "&&") );
+  }
+
+  return mFilterList;
 }
     
 void FilterDialog::add()
