@@ -90,7 +90,7 @@
   </Menu>
 </MenuBar>
 
-<ToolBar noMerge="1" name="mainToolBar">
+<ToolBar noMerge="1" name="mainToolBar"><text>Main Toolbar</text>
   <Action name="account_dnlHeaders"/>
   <Action name="net_stop"/>
   <Separator/>

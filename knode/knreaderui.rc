@@ -22,7 +22,7 @@
   </Menu>
 </MenuBar>
 
-<ToolBar noMerge="1" name="mainToolBar">
+<ToolBar noMerge="1" name="mainToolBar"><text>Main Toolbar</text>
   <Action name="file_save"/>
   <Action name="file_print"/>
   <Action name="edit_copy"/>

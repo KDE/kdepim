@@ -21,7 +21,7 @@
   </Menu>
 </MenuBar>
 
-<ToolBar noMerge="1" name="mainToolBar">
+<ToolBar noMerge="1" name="mainToolBar"><text>Main Toolbar</text>
   <Action name="send_now"/>
   <Action name="send_later"/>
   <Action name="save_as_draft"/>
