@@ -1,7 +1,13 @@
-[Note that the contents of the lib/ directory under this directory
-are not under the GNU GENERAL PUBLIC LICENSE, but rather under the
-GNU LESSER GENERAL PUBLIC LICENSE, to allow plugins with non-GPL
-yet GPL-compatible licenses to be written.]
+[KPilot is licensed under the terms of this GNU GENERAL PUBLIC LICENSE, 
+except for the following parts which are licenced under the GNU LESSER
+GENERAL PUBLIC LICENSE:
+
+* The contents of the lib/ directory under this directory (ie. kpilot/lib/),
+to allow plugins with non-GPL yet LGPL-compatible licenses to be written.
+
+* The NULL conduit in conduits/null/, so that it can serve as a development
+example even for non-GPL conduits.
+]
 
 		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991

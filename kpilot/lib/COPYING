@@ -1,6 +1,6 @@
 [This license applies only to the contents of the lib/ directory,
 whereas the rest of KPilot is under the regular GNU GENERAL PUBLIC
-LICENSE. This has been done to ensure that non-GPL yet GPL-compatibly
+LICENSE. This has been done to ensure that non-GPL yet LGPL-compatibly
 licensed plugins may be written for KPilot.]
 
 		  GNU LESSER GENERAL PUBLIC LICENSE
