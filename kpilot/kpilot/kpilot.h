@@ -110,7 +110,6 @@ public slots:
 	* functionality is in kdelibs starting with KDE 3.1,
 	* but we need to remain backwards compatible.
 	*/
-	void optionsShowToolbar();
 	void optionsConfigureKeys();
 	void optionsConfigureToolbars();
 
