@@ -60,7 +60,7 @@ QWidget *parent=info->parent();
            "them with 'oe4-'. If this causes trouble to you\n"
            "(you've got kmail folders beginning with 'oe4-')\n"
            "cancel this import function (next dialog will\n"
-           "let you do that and rename the existing kmail\n"
+           "let you do that) and rename the existing kmail\n"
            "folders."
            );
 
@@ -70,17 +70,14 @@ QWidget *parent=info->parent();
    if (choosen.length()==0) { return; } // No directory choosen here!
    strcpy(dir,choosen.latin1());
 
-   msg=i18n("Searching for Outlook Express 4 '.mbx' folders in directory");
-   info->log(msg);
-   msg.sprintf("  '%s'",dir);
+   msg=i18n("Searching for Outlook Express 4 '.mbx' folders in directory %1").arg(dir);
    info->log(msg);
 
    {DIR *d;
     struct dirent *entry;
       d=opendir(dir);
       if (d==NULL) {QString msg;
-        msg.sprintf(" '%s'",dir);
-        msg=i18n("Can't open directory")+msg;
+        msg=i18n("Can't open directory %1").arg(dir);
         info->alert(CAP,msg);
       }
       else {int   N=0,n=0;
@@ -127,7 +124,7 @@ QWidget *parent=info->parent();
               {QString f,n;
                  f.sprintf(" '%s' ",file);
                  n.sprintf(" 'OE4-%s'...",name);
-                 msg=i18n("  importing folder")+file+i18n("to kmail")+name;
+                 msg=i18n("  importing folder %1 to kmail %2").arg(file).arg(name);
                  info->log(msg);
               }
 

@@ -73,8 +73,7 @@ char s[1024];
       break;
       case OE_NOTOEBOX :
         {QString msg;
-           msg.sprintf("'%s' ",folderIn);
-           msg=msg+i18n("is not an OE5 mailbox");
+           msg=i18n("%1 is not an OE5 mailbox").arg(folderIn);
            info->alert(CAP,msg);
         }
       break;
@@ -112,8 +111,7 @@ static float perc=0.0;
         sprintf(s,"/tmp/oe5_2mbox.%d",getpid());
         f=fopen(s,"wb");
         if (f==NULL) {QString msg;
-          msg.sprintf(" '%s'",s);
-          msg=i18n("FATAL: Cannot open TEMP file")+msg;
+          msg=i18n("FATAL: Cannot open TEMP file '%1'").arg(s);
           INFO->alert(CAP,msg);
           status=-1;
         }

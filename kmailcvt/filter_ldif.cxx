@@ -178,8 +178,8 @@ bool filter_ldif::convert(const char *filename, filterInfo *info) {
 			}
      	f.close();
 		} else {
-			char msg[1024];
-			sprintf(msg,i18n("Can't open '%s' for reading").latin1(),filename);
+			QString msg;
+			msg=i18n("Can't open '%1' for reading").arg(filename);
 			//lukas: noooo! no sprintf nor .latin1() please!!!
       info->alert(caption,msg);
       return false;

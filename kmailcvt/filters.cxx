@@ -313,14 +313,13 @@ QString msg(_msg);
 int     result;
   result=dcopAddMessage(folderName,msg);
   if (result==-1) { QString msg;
-    msg.sprintf(" '%s' ",folder);
-    msg=i18n("Cannot make folder")+msg+i18n("in kmail");
+    msg=i18n("Cannot make folder %1 in kmail").arg(folder);
     info->alert(cap,msg);
     return false;
   }
   else if (result==-2) { QString msg;
     msg.sprintf(" '%s' ",folder);
-    msg=i18n("Cannot add message to folder")+msg+i18n("in kmail");
+    msg=i18n("Cannot add message to folder %1 in kmail").arg(folder);
     info->alert(cap,msg);
     return false;
   }
@@ -331,8 +330,7 @@ int     result;
     return false;
   }
   else if (result==0) { QString msg;
-    msg.sprintf(" '%s' ",folder);
-    msg=i18n("Error while adding message to folder")+msg+i18n("in kmail");
+    msg=i18n("Error while adding message to folder %1 in kmail").arg(folder);
     info->alert(cap,msg);
     return false;
   }

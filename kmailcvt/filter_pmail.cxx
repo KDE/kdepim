@@ -58,7 +58,7 @@ void filter_pmail::import(filterInfo *info)
               "NOTE: Kmailcvt creates folders with the prefix 'pmail-'.\n"
               "If this causes trouble to you (you've got kmail folders\n"
               "with that prefix) cancel this import function (next dialog\n"
-              "will let you do that and rename the existing kmail\n"
+              "will let you do that) and rename the existing kmail\n"
               "folders."
              );
    info->alert(CAP,msg);
@@ -138,7 +138,7 @@ void filter_pmail::processFiles(const char *mask, void(filter_pmail::* workFunc)
 
          // Notify current file
          QString msg;
-         msg = i18n("From")+": "+file;
+         msg = i18n("From: %1").arg(file);
          inf->from(msg);
 
          // Clear the other fields
@@ -169,7 +169,7 @@ void filter_pmail::importNewMessage(const char *file)
    const char* destFolder = "PMail-New Messages";
    QString msg;
 
-   msg = i18n("To")+": "+destFolder;
+   msg = i18n("To: %1").arg(destFolder);
    inf->to(msg);
 
    kmailMessage((filterInfo *) inf, (char *)destFolder, (char *)file, added);

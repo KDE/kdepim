@@ -57,7 +57,7 @@ FILE   *F;
      return;
    }
    F=fopen(file.latin1(),"rt");
-   if (F==NULL) {QString msg=i18n("Can't open file '")+file+"'";
+   if (F==NULL) {QString msg=i18n("Can't open file '%1'").arg(file);
      info->alert(name(),msg);
      return;
    }
@@ -77,7 +77,7 @@ FILE   *F;
                                    phones[i].latin1(),comments[i].latin1()
                );
       */
-         {QString msg=i18n("Adding/Merging '")+keys[i]+i18n("', email '")+emails[i]+"'";
+         {QString msg=i18n("Adding/Merging '%1' email '%2'").arg(keys[i]).arg(emails[i]);
            info->log(msg);
          }
 
@@ -105,8 +105,7 @@ FILE   *F;
          }
        }
        {QString msg;
-          msg.sprintf("%d",keys.len());
-          msg=i18n("Added ")+msg+i18n(" keys");
+          msg=i18n("Added %1 keys").arg(keys.len());
           info->log(msg);
        }
      }
@@ -143,7 +142,7 @@ float perc;
       email=getemail(line);
       e=find(key);
       keys[e]=key;emails[e]=email;
-      {QString msg=i18n("Reading '")+key+i18n("', email '")+email+"'";
+      {QString msg=i18n("Reading '%1', email '%2'").arg(key).arg(email);
         info->log(msg);
       }
     }

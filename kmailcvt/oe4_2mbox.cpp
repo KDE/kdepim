@@ -66,31 +66,26 @@ char s[1024];
     switch (result->errcode) {
       case OE_CANNOTREAD :
         {QString msg;
-           msg.sprintf(" '%s'",folderIn);
-           msg=i18n("Cannot read mailbox")+msg;
+           msg=i18n("Cannot read mailbox %1").arg(folderIn);
            info->alert(CAP,msg);
         }
       break;
       case OE_NOTOEBOX :
         {QString msg;
-           msg.sprintf("'%s' ",folderIn);
-           msg=msg+i18n("is not an oe4 mailbox");
+           msg=i18n("%1 is not an oe4 mailbox").arg(folderIn);
            info->alert(CAP,msg);
         }
       break;
       default:
         {QString msg;
-           msg.sprintf(" '%s'",folderIn);
-           msg=i18n("Unrecoverable error while reading")+msg;
+           msg=i18n("Unrecoverable error while reading %1").arg(folderIn);
            info->alert(CAP,msg);
         }
       break;
     }
   }
-  else {QString msg,m,a;
-    m.sprintf("%lu ",mails);
-    a.sprintf("%lu ",added);
-    msg=m+i18n("mails read, ")+a+i18n("were new to kmail folder");
+  else {QString msg;
+    msg=i18n("%1 mails read, %2 were new kmail folder").arg(mails).arg(added);
     info->log(msg);
   }
 
@@ -112,8 +107,7 @@ static float perc=0.0;
         sprintf(s,"/tmp/oe4_2mbox.%d",getpid());
         f=fopen(s,"wb");
         if (f==NULL) {QString msg;
-          msg.sprintf(" '%s'",s);
-          msg=i18n("FATAL: Cannot open TEMP file")+msg;
+          msg=i18n("FATAL: Cannot open TEMP file '%1'").arg(s);
           INFO->alert(CAP,msg);
           status=-1;
         }
