@@ -49,6 +49,7 @@ static const char *popmail_conduit_id=
 #include <errno.h>
 
 #include <time.h>  // Needed by pilot-link include
+#include <pi-config.h>
 #include <pi-mail.h>
 
 #include <qdir.h>
@@ -1974,6 +1975,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.34  2002/01/20 06:46:22  waba
+// Messagebox changes.
+//
 // Revision 1.33  2002/01/17 16:24:10  adridg
 // Compile fixes on Solaris
 //
