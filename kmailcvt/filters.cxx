@@ -144,6 +144,9 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
     case -2:
       info->alert( i18n( "Cannot add message to folder %1 in KMail" ).arg( folderName ) );
       return false;
+    case -4:
+      info->alert( i18n( "Duplicate message subject error when adding message to folder %1 in KMail" ).arg( folderName ) );
+      return false;
     case 0:
       info->alert( i18n( "Error while adding message to folder %1 in KMail" ).arg( folderName ) );
       return false;
