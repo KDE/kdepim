@@ -341,11 +341,8 @@ void VCalConduit::updateVObject(PilotRecord *rec)
     // no event was found, so we need to add one with some initial info
     vevent = addProp(calendar(), VCEventProp);
     
-    dateString.sprintf("%.2d%.2d%.2dT%.2d%.2d%.2d",
-			todaysDate.date().year(), todaysDate.date().month(),
-		       todaysDate.date().day(), todaysDate.time().hour(),
-		       todaysDate.time().minute(), todaysDate.time().second());
-    addPropValue(vevent, VCDCreatedProp, dateString.latin1());
+	addDateProperty(vevent,VCDCreatedProp,todaysDate);
+
     numStr.sprintf("KPilot - %d",rec->getID());
     addPropValue(vevent, VCUniqueStringProp, numStr.latin1());
     addPropValue(vevent, VCSequenceProp, "1");
@@ -1470,6 +1467,9 @@ QWidget* VCalConduit::aboutAndSetup()
 
 
 // $Log$
+// Revision 1.30  2001/03/15 16:53:26  adridg
+// i18n from KOrganizer -> Pilot
+//
 // Revision 1.29  2001/03/10 18:26:04  adridg
 // Refactored vcal conduit and todo conduit
 //

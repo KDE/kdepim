@@ -31,6 +31,7 @@
 
 class PilotRecord;
 class VObject;
+class QDateTime;
 
 #ifndef _KPILOT_BASECONDUIT_H
 #include "baseConduit.h"
@@ -58,9 +59,13 @@ public:
 	* but in versit.
 	*/
 	static void setSummary(VObject *vevent,const char *note);
-	void setNote(VObject *vevent,const char *note);
-	void setSecret(VObject *vevent,bool secret);
-	void setStatus(VObject *vevent,int status);	
+	static void setNote(VObject *vevent,const char *note);
+	static void setSecret(VObject *vevent,bool secret);
+	static void setStatus(VObject *vevent,int status);	
+	// Add the date property "prop" to the vevent
+	static void addDateProperty(VObject *vevent,
+		const char *prop,
+		const QDateTime& dt);
 
 	// More *static* utility functions.
 	//

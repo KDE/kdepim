@@ -33,6 +33,10 @@
 #include <qfile.h>
 #endif
 
+#ifndef QDATETIME_H
+#include <qdatetime.h>
+#endif
+
 #ifndef _KMESSAGEBOX_H_
 #include "kmessagebox.h"
 #endif
@@ -171,10 +175,11 @@ void VCalBaseConduit::setNote(VObject *vevent,const char *s)
 	FUNCTIONSETUP;
 
 	VObject *vo = isAPropertyOf(vevent, VCDescriptionProp);
-	QString qnote (s);
 	
 	if (s && *s)
 	{
+		QString qnote (s);
+
 		// There is a note for this event
 		//
 		//
@@ -391,6 +396,19 @@ void VCalBaseConduit::setStatus(VObject *vevent,int status)
 	}
 }
 
+void VCalBaseConduit::addDateProperty(VObject *vevent,
+	const char *prop,
+	const QDateTime& dt)
+{
+	FUNCTIONSETUP;
+
+	QString dateString;
+
+	dateString.sprintf("%.2d%.2d%.2dT%.2d%.2d%.2d",
+		dt.date().year(), dt.date().month(), dt.date().day(), 
+		dt.time().hour(), dt.time().minute(), dt.time().second());
+	addPropValue(vevent, prop, dateString.latin1());
+}
 
 
 
@@ -479,5 +497,8 @@ void VCalBaseConduit::deleteVObject(PilotRecord *rec)
   }
 }
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/03/10 18:26:04  adridg
+// Refactored vcal conduit and todo conduit
+//
 

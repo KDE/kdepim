@@ -184,7 +184,9 @@ void TodoConduit::doSync()
      else {
        bool pilotRecModified = (rec->getAttrib() & dlpRecAttrDirty);
        if (pilotRecModified)
+	{
 	 updateVObject(rec);
+	}
        else {
 		DEBUGCONDUIT << fname
 			<< ": Asked for a modified record and got "
@@ -215,6 +217,8 @@ void TodoConduit::doSync()
  */
 void TodoConduit::updateVObject(PilotRecord *rec)
 {
+	FUNCTIONSETUP;
+
   VObject *vtodo;
   VObject *vo;
   QDateTime todaysDate = QDateTime::currentDateTime();
@@ -227,12 +231,8 @@ void TodoConduit::updateVObject(PilotRecord *rec)
     // no event was found, so we need to add one with some initial info
     vtodo = addProp(calendar(), VCTodoProp);
 
-    dateString.sprintf("%.2d%.2d%.2dT%.2d%.2d%.2d",
-			todaysDate.date().year(), todaysDate.date().month(),
-		       todaysDate.date().day(), todaysDate.time().hour(),
-		       todaysDate.time().minute(), todaysDate.time().second());
+	addDateProperty(vtodo, VCDCreatedProp, todaysDate);
 
-    addPropValue(vtodo, VCDCreatedProp, dateString.latin1());
     numStr.sprintf("KPilot - %d",rec->getID());
     addPropValue(vtodo, VCUniqueStringProp, numStr.latin1());
     addPropValue(vtodo, VCSequenceProp, "1");
@@ -260,22 +260,42 @@ void TodoConduit::updateVObject(PilotRecord *rec)
   
   // END TIME //
   vo = isAPropertyOf(vtodo, VCDTendProp);
-  if (todoEntry.getIndefinite()) { // there is no end date
-    if (vo)
-      addProp(vo, KPilotSkipProp);
-  } else {
-    dateString.sprintf("%.4d%.2d%.2dT%.2d%.2d%.2d",
+	if (todoEntry.getIndefinite()) 
+	{ // there is no end date
+		if (vo)
+		{
+		      addProp(vo, KPilotSkipProp);
+		}
+
+		DEBUGCONDUIT << fname
+			<< ": Todo-item with no end date."
+			<< endl;
+	}
+	else 
+	{
+		dateString.sprintf("%.4d%.2d%.2dT%.2d%.2d%.2d",
 		       1900 + todoEntry.getDueDate().tm_year,
 		       todoEntry.getDueDate().tm_mon + 1,
 		       todoEntry.getDueDate().tm_mday,
 		       todoEntry.getDueDate().tm_hour,
 		       todoEntry.getDueDate().tm_min,
 		       todoEntry.getDueDate().tm_sec);
-    if (vo)
-      setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
-    else
-      addPropValue(vtodo, VCDTendProp, dateString.latin1());
-  }
+
+		DEBUGCONDUIT << fname
+			<< ": Setting end date to "
+			<< dateString
+			<< endl;
+
+		if (vo)
+		{
+			setVObjectUStringZValue_(vo, 
+				fakeUnicode(dateString.latin1(), 0));
+		}
+		else
+		{
+			addPropValue(vtodo, VCDTendProp, dateString.latin1());
+		}
+	}
   
   // PRIORITY //
   vo = isAPropertyOf(vtodo, VCPriorityProp);
@@ -290,51 +310,17 @@ void TodoConduit::updateVObject(PilotRecord *rec)
   vo = isAPropertyOf(vtodo, VCStatusProp);
   tmpStr = (todoEntry.getComplete() ? "COMPLETED" : "X-ACTION");
   if (vo)
+	{
     setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
+	}
   else
+	{
     addPropValue(vtodo, VCStatusProp, tmpStr.latin1());
+	}
 
-  // SUMMARY //
-  vo = isAPropertyOf(vtodo, VCSummaryProp);
-  tmpStr = todoEntry.getDescription();
-  // the following should take care of the multi-line summary bug.
-  tmpStr = tmpStr.simplifyWhiteSpace();
-
-  // the vCalendar parser really hates empty summaries, avoid them.
-  if (!tmpStr.isEmpty()) {
-    if (vo)
-      setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
-    else
-      addPropValue(vtodo, VCSummaryProp, tmpStr.latin1());
-  }
-
-  // DESCRIPTION (NOTE) //
-  vo = isAPropertyOf(vtodo, VCDescriptionProp);
-  if (todoEntry.getNote() != 0L && strlen(todoEntry.getNote()) != 0) {
-    if (vo)
-      setVObjectUStringZValue_(vo, fakeUnicode(todoEntry.getNote(), 0));
-    else
-      vo = addPropValue(vtodo, VCDescriptionProp, todoEntry.getNote());
-    // if the description takes up more than one line, we need
-    // to add the Quoted-Printable property.
-    if (strchr(todoEntry.getNote(), '\n') &&
-	!isAPropertyOf(vo, VCQuotedPrintableProp))
-      addProp(vo, VCQuotedPrintableProp);
-  } else {
-    if (vo)
-      addProp(vo, KPilotSkipProp);
-  }
-
-  // PILOT STATUS //
-  vo = isAPropertyOf(vtodo, KPilotStatusProp);
-  // TURN OFF MODIFIED
-  if (vo) {
-    int voStatus = atol(fakeCString(vObjectUStringZValue(vo)));
-    if (voStatus != 0)
-    setVObjectUStringZValue_(vo, fakeUnicode("0", 0));
-  } else
-    addPropValue(vtodo, KPilotStatusProp, "0");
-  
+	setSummary(vtodo,todoEntry.getDescription());
+	setNote(vtodo,todoEntry.getNote());
+	setStatus(vtodo,0);
 }
 
 /*****************************************************************************/
@@ -555,6 +541,9 @@ QWidget* TodoConduit::aboutAndSetup()
 }
 
 // $Log$
+// Revision 1.16  2001/03/10 18:26:04  adridg
+// Refactored vcal conduit and todo conduit
+//
 // Revision 1.15  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //
