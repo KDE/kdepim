@@ -475,8 +475,8 @@ public:
     //.
     //. The first version compares {\tt aStr} to this string.
     //.
-    //. The second version compares {\tt aStr} to the segment of this string
-    //. of length {\tt aLen} beginning at position {\tt aPos}.
+    //. The second version compares {\tt aStr} with the {\tt aLen1} characters
+    //. beginning at position {\tt aPos1} in this {\tt DwString} object.
     //.
     //. The third version compares the {tt aLen2} characters beginning at
     //. position {\tt aPos2} in {\tt aStr} with the {\tt aLen1} characters
@@ -486,7 +486,8 @@ public:
     //. to this {\tt DwString}.
     //.
     //. The fifth version compares the {\tt aLen2} characters in {\tt aBuf}
-    //. with this {\tt DwString}.
+    //. with the {\tt aLen1} characters beginning at position {\tt aPos1} in
+    //. this {\tt DwString} object.
 
     // Non-ANSI member functions
 
