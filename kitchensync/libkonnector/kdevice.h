@@ -21,6 +21,7 @@
 
 #include <qstring.h>
 
+
 class KDevice {
  public:
   KDevice();
