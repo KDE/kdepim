@@ -37,6 +37,7 @@
 #include "filter_pab.hxx"
 #include "filter_eudora_ab.hxx"
 #include "filter_ldif.hxx"
+#include "filter_oe.hxx"
 
 KMailCVT::KMailCVT(QWidget *parent, const char *name)
 	: KWizard(parent, name, true) {
@@ -50,6 +51,7 @@ KMailCVT::KMailCVT(QWidget *parent, const char *name)
 	addPage( importpage, i18n( "Step 2: Importing..." ) );
 	setFinishEnabled(QWizard::page(2), false);
 
+	selfilterpage->addFilter(new FilterOE);
 	selfilterpage->addFilter(new FilterOE5);
 	selfilterpage->addFilter(new FilterOE4);
 	selfilterpage->addFilter(new FilterPMail);
