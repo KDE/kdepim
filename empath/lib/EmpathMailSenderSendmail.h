@@ -35,7 +35,7 @@
 #include <kprocess.h>
 
 // Local includes
-#include "EmpathMailSender.h"
+#include "EmpathMailSenderImpl.h"
 
 /**
  * @short Sendmail sender
@@ -52,8 +52,7 @@
  * 
  * @author Rikkus
  */
-
-class EmpathMailSenderSendmail : public EmpathMailSender
+class EmpathMailSenderSendmail : public EmpathMailSenderImpl
 {
     Q_OBJECT
 

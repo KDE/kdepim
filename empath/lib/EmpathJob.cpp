@@ -21,9 +21,11 @@
 */
 
 // Local includes
-#include "EmpathJob.h"
 #include "EmpathDefines.h"
 #include "Empath.h"
+#include "EmpathJob.h"
+#include "EmpathFolder.h"
+#include "EmpathMailbox.h"
 
 EmpathJobID EmpathJob::ID_ = 0;
 
@@ -370,7 +372,15 @@ void EmpathRemoveJob::run()
 
 void EmpathRetrieveJob::run()
 {
-    empathDebug("");
+    RMM::RMessage cached = empath->message(url_);
+
+    if (!cached.isNull()) {
+
+        message_ = cached;
+        setSuccess(true);
+        emit(done(*this));
+        return;
+    }
 
     EmpathFolder * f = empath->folder(url_);
 

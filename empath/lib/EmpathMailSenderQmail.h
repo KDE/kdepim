@@ -35,13 +35,13 @@
 #include <kprocess.h>
 
 // Local includes
-#include "EmpathMailSender.h"
+#include "EmpathMailSenderImpl.h"
 
 /**
  * QMail sender
  * @author Rikkus
  */
-class EmpathMailSenderQmail : public EmpathMailSender
+class EmpathMailSenderQmail : public EmpathMailSenderImpl
 {
     Q_OBJECT
 

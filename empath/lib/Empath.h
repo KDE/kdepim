@@ -27,33 +27,30 @@
 #ifndef EMPATH_H
 #define EMPATH_H
 
-#include <sys/types.h>
-
 // Qt includes
 #include <qstring.h>
 #include <qobject.h>
 #include <qcache.h>
 
 // Local includes
-#include "EmpathDefines.h"
-#include "EmpathURL.h"
-#include "EmpathMailboxList.h"
-#include "EmpathFilterList.h"
-#include "EmpathCachedMessage.h"
 #include "EmpathComposeForm.h"
-#include "EmpathViewFactory.h"
 #include "EmpathIndexRecord.h"
+#include "EmpathURL.h"
 
-#include "RMM_Enum.h"
 #include "RMM_Message.h"
 
 #define empath Empath::getEmpath()
 
-class EmpathMailSender;
-class EmpathFolder;
+class EmpathSender;
 class EmpathTask;
-class EmpathComposer;
 class EmpathJobScheduler;
+class EmpathCachedMessage;
+class EmpathComposer;
+class EmpathFilterList;
+class EmpathMailSender;
+class EmpathMailboxList;
+class EmpathMailbox;
+class EmpathFolder;
 
 /**
  * Empath is the controller class for Empath's kernel.
@@ -114,76 +111,50 @@ class Empath : public QObject
         /**
          * @return The folder being used as the inbox.
          */
-        EmpathURL inbox()   const;
+        EmpathURL inbox() const { return inbox_; } 
 
         /**
          * @return The folder being used for queued messages. 
          */
-        EmpathURL outbox()  const;
+        EmpathURL outbox() const { return outbox_; } 
         
         /**
          * @return The folder being used for sent messages. 
          */
-        EmpathURL sent()    const;
+        EmpathURL sent() const { return sent_; } 
         
         /**
          * @return The folder being used for draft messages. 
          */
-        EmpathURL drafts()  const;
+        EmpathURL drafts() const { return drafts_; } 
         
         /**
          * @return The folder being used for 'deleted' messages. 
          */
-        EmpathURL trash()   const;
+        EmpathURL trash() const { return trash_; } 
         
         /**
          * @internal
          * This is used by generateUnique.
          */
-        Q_UINT32    startTime()    const { return startupSeconds_; }
+        Q_UINT32    startTime() const { return startupSeconds_; }
         /**
          * @internal
          * This is used by generateUnique.
          */
-        pid_t        processID()    const { return processID_; }
+        unsigned int processID() const { return processID_; }
         /**
          * @internal
          * This is used by generateUnique.
          */
-        QString        hostName()    const { return hostName_; }
+        QString     hostName() const { return hostName_; }
         
         /**
          * Pass the message referred to in the URL through the filtering
          * mechanism.
          */
         void filter(const EmpathURL &);
-        
-        /**
-         * The system-wide mailbox list.
-         *
-         * @short A shortcut to the mailbox list
-         * @return A reference to the mailbox list
-         */
-        EmpathMailboxList & mailboxList() { return mailboxList_; }
-
-        /**
-         * Pointer to the job scheduler
-         */
-        EmpathJobScheduler * jobScheduler() { return jobScheduler_; }
-        
-        /**
-         * @internal
-         * Reference to the system-wide sender. Don't worry about the type,
-         * just use it. Actually, you should be using send(), queue() and
-         * sendQueued() instead, so this is being marked internal.
-         */
-        EmpathMailSender * mailSender() const { return mailSender_; }
-
-        /**
-         * The filter list.
-         */
-        EmpathFilterList & filterList() { return filterList_; }
-        
+       
         /**
          * Call this when you change the type of server for outgoing
          * messages. The old server will be deleted and the new one
@@ -196,17 +167,17 @@ class Empath : public QObject
          * @return A pointer to an RMM::RMessage, unless the message can't
          * be found, when it returns 0.
          */
-        RMM::RMessage   message(const EmpathURL &);
+        RMM::RMessage message(const EmpathURL &);
 
         /**
          * Gets a pointer to the folder specified in the url, or 0.
          */
-        EmpathFolder    * folder(const EmpathURL &);
+        EmpathFolder * folder(const EmpathURL &);
         
         /**
          * Gets a pointer to the mailbox specified in the url, or 0.
          */
-        EmpathMailbox   * mailbox(const EmpathURL &);
+        EmpathMailbox * mailbox(const EmpathURL &);
         
         /**
          * Queue a new message for sending later.
@@ -233,12 +204,12 @@ class Empath : public QObject
          * Generate an unique filename
          */
         QString generateUnique();
+
         void cacheMessage(const EmpathURL &, RMM::RMessage);
         
-//        void jobFinished(EmpathJob);
-
-        EmpathViewFactory & viewFactory();
-
+        EmpathMailboxList * mailboxList();
+        EmpathFilterList  * filterList();
+        
     protected:
 
         Empath();
@@ -275,7 +246,8 @@ class Empath : public QObject
         /**
          * Compose a new message.
          */
-        void s_compose(const QString & recipient = QString::null);
+        void s_compose();
+        void s_composeTo(const QString & recipient);
         /**
          * Reply to the given message.
          */
@@ -491,32 +463,33 @@ class Empath : public QObject
         
     private:
 
-        EmpathURL inbox_, outbox_, sent_, drafts_, trash_;
-    
+        EmpathJobScheduler  * _jobScheduler();
+        EmpathMailSender    * _sender();
+        EmpathComposer      * _composer();
+        
         void _saveHostName();
         void _setStartTime();
+
+        EmpathURL inbox_, outbox_, sent_, drafts_, trash_;
+    
+        QString         hostName_;
+        unsigned int    processID_;
+        Q_UINT32        startupSeconds_;
+        QString         startupSecondsStr_;
+        QString         pidStr_;
         
-        EmpathMailboxList       mailboxList_;
-        EmpathFilterList        filterList_;
+        QCache<EmpathCachedMessage> cache_;
+
+        // Order dependency
+        EmpathMailboxList       * mailboxList_;
+        EmpathFilterList        * filterList_;
         
-        EmpathMailSender        * mailSender_;
+        EmpathMailSender        * sender_;
         EmpathComposer          * composer_;
         EmpathJobScheduler      * jobScheduler_;
-
-        QString                 hostName_;
-        pid_t                   processID_;
-        Q_UINT32                startupSeconds_;
-        
-        static bool started_;
         
         unsigned long int seq_;
-        
-        QString startupSecondsStr_;
-        QString pidStr_;
-        
-        QDict<EmpathCachedMessage> cache_;
-
-        EmpathViewFactory viewFactory_;
+        // End order dependency
 };
 
 #endif

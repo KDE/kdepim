@@ -39,16 +39,20 @@
 #include "EmpathEnum.h"
 #include "EmpathConfig.h"
 #include "EmpathTask.h"
-#include "EmpathMailSender.h"
 #include "EmpathFolder.h"
 #include "EmpathURL.h"
 #include "EmpathIndex.h"
-#include "EmpathIndex.h"
+#include "EmpathMailSender.h"
+#include "EmpathMailSenderSMTP.h"
+#include "EmpathMailSenderSendmail.h"
+#include "EmpathMailSenderQmail.h"
 
 EmpathMailSender::EmpathMailSender()
-    :   QObject()
+    :   QObject(),
+        impl_(0L)
 {
     sendQueue_.setAutoDelete(true);
+    update();
 }
 
 EmpathMailSender::~EmpathMailSender()
@@ -171,7 +175,7 @@ EmpathMailSender::operationComplete(
             return;
         }
     
-        sendOne(m, url.messageID());
+        impl_->sendOne(m, url.messageID());
 
     } else if ((t == WriteMessage) && (xinfo == "message->pending")) {
         
@@ -270,5 +274,45 @@ EmpathMailSender::_emergencyBackup(RMM::RMessage message)
     
     empath->s_infoMessage(i18n("Message backup written to:") + " " + tempName);
 }
+
+    void
+EmpathMailSender::update()
+{
+    delete impl_;
+    impl_ = 0L;
+    
+    KConfig * c = KGlobal::config();
+    c->setGroup(EmpathConfig::GROUP_GENERAL);
+    
+    OutgoingServerType st =
+        (OutgoingServerType)
+        (c->readUnsignedNumEntry(EmpathConfig::S_TYPE));
+    
+    switch (st) {
+        
+        case Qmail:
+            impl_ = new EmpathMailSenderQmail;
+            break;
+        
+        case SMTP:
+            impl_ = new EmpathMailSenderSMTP;
+            break;
+            
+        case Sendmail:
+        default:
+            impl_ = new EmpathMailSenderSendmail;
+            break;
+    }
+
+    impl_->loadConfig();
+}
+
+    void
+EmpathMailSender::saveConfig()
+{ impl_->saveConfig(); }
+    
+    void
+EmpathMailSender::loadConfig()
+{ impl_->loadConfig(); }
 
 // vim:ts=4:sw=4:tw=78

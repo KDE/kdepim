@@ -60,6 +60,7 @@
 #include "EmpathConfigIMAP4Dialog.h"
 #include "EmpathConfigPOP3Dialog.h"
 #include "EmpathMessageListItem.h"
+#include "EmpathMailbox.h"
 
 QString EmpathAboutText;
 EmpathUI * EmpathUI::instance_ = 0L;
@@ -282,7 +283,7 @@ EmpathUI::_initActions()
             empathIconSet("compose"),
             Key_M, 
             empath,
-            SLOT(s_compose(const QString &)),
+            SLOT(s_compose()),
             actionCollection_,
             "messageCompose"
         );

@@ -39,6 +39,8 @@
 #include "EmpathURL.h"
 #include <RMM_Message.h>
 
+class EmpathMailSenderImpl;
+
 /**
  * @short Sender base class
  * 
@@ -51,7 +53,6 @@
  * 
  * @author Rikkus
  */
-
 class EmpathMailSender : public QObject
 {
     Q_OBJECT
@@ -63,7 +64,7 @@ class EmpathMailSender : public QObject
 
         EmpathMailSender();
 
-        virtual ~EmpathMailSender() = 0L;
+        virtual ~EmpathMailSender();
         
         /**
          * Queue up a message for sending.
@@ -80,11 +81,6 @@ class EmpathMailSender : public QObject
         void send(RMM::RMessage);
 
         /**
-         * Send one message.
-         */
-        virtual void sendOne(RMM::RMessage message, const QString & id) = 0L;
-
-        /**
          * Kick off a send using all queued messages.
          */
         void sendQueued();
@@ -93,26 +89,30 @@ class EmpathMailSender : public QObject
          * Save your config now !
          * Called by Empath when settings have changed.
          */
-        virtual void saveConfig() = 0;
+        virtual void saveConfig();
         /**
          * Load your config now !
          * Called by Empath on startup.
          */
-        virtual void loadConfig() = 0;
+        virtual void loadConfig();
         
         void sendCompleted(const QString &, bool);
+
+        void update();
     
     protected slots:
             
         void operationComplete(ActionType, bool, const EmpathURL &, QString);
     
     private:
-        
+
         void _startNextSend();
         void _emergencyBackup(RMM::RMessage);
         void _addPendingSend(const QString & id);
 
         QQueue<QString> sendQueue_;
+
+        EmpathMailSenderImpl * impl_;
 };
 
 #endif

@@ -38,7 +38,7 @@
 #include "Empath.h"
 
 EmpathMailSenderSendmail::EmpathMailSenderSendmail()
-    :    EmpathMailSender(),
+    :   EmpathMailSenderImpl(),
         error_(false)
 {
     QObject::connect (&sendmailProcess_, SIGNAL(processExited(KProcess *)),
@@ -158,7 +158,7 @@ EmpathMailSenderSendmail::sendmailExited(KProcess *)
     
     messageAsString_ = "";
     
-    sendCompleted(currentID_, !error_);
+//    sendCompleted(currentID_, !error_);
 }
 
     void

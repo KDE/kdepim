@@ -410,7 +410,7 @@ EmpathFolderInfoPage::saveConfig()
     c->writeEntry(FOLDER_TRASH,     le_trash_   ->text());
 
     EmpathMailbox * _m =
-        empath->mailboxList().createNew(EmpathMailbox::Maildir);
+        empath->mailboxList()->createNew(EmpathMailbox::Maildir);
 
     if (_m == 0) {
         empathDebug("Cannot create mailbox !!!!!");
@@ -423,7 +423,7 @@ EmpathFolderInfoPage::saveConfig()
     QString home = QString::fromLatin1(getenv("HOME"));
     empathDebug("Setting new maildir box path to " + home + "/.empath");
     m->setPath(home + "/.empath");
-    empath->mailboxList().saveConfig();
+    empath->mailboxList()->saveConfig();
 }
  
     void
@@ -571,7 +571,7 @@ EmpathPOPInfoPage::saveConfig()
     if (!cb_use_->isChecked())
         return;
 
-    EmpathMailbox * _m = empath->mailboxList().createNew(EmpathMailbox::POP3);
+    EmpathMailbox * _m = empath->mailboxList()->createNew(EmpathMailbox::POP3);
 
     if (_m == 0) {
         empathDebug("Cannot create mailbox !!!!!");
@@ -587,7 +587,7 @@ EmpathPOPInfoPage::saveConfig()
 
     m->init();
 
-    empath->mailboxList().saveConfig();
+    empath->mailboxList()->saveConfig();
 }
 
     void

@@ -174,7 +174,7 @@ EmpathInterface::process(
                 replyType = "void";
                 QString arg;
                 inStream >> arg;
-                empath->s_compose(arg);
+                empath->s_composeTo(arg);
             }
             break;
             

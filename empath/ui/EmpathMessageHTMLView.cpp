@@ -23,13 +23,6 @@
 # pragma implementation "EmpathMessageHTMLView.h"
 #endif
 
-#include <ctype.h>
-
-// Qt includes
-#include <qfile.h>
-#include <qtextstream.h>
-#include <qstring.h>
-
 // KDE includes
 #include <klocale.h>
 #include <kconfig.h>
@@ -37,14 +30,11 @@
 #include <kstddirs.h>
 
 // Local includes
+#include "Empath.h"
+#include "EmpathDefines.h"
 #include "EmpathMessageHTMLView.h"
 #include "EmpathConfig.h"
-#include "Empath.h"
 #include "EmpathUIUtils.h"
-#include "EmpathUtilities.h"
-#include <RMM_Message.h>
-#include <RMM_Enum.h>
-
 
 EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(QWidget * parent)
     :   QTextBrowser(parent)
@@ -58,7 +48,7 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(QWidget * parent)
     setText("<qt bgcolor=\"white\" > 
         <center><img source=\"" + imgPath + "\" /> </qt>");
 
-    setMimeSourceFactory(&(empath->viewFactory()));
+//    setMimeSourceFactory(&(empath->viewFactory()));
     
 //    QObject::connect(
  //       this, SIGNAL(popupMenu(QString, const QPoint &)),
@@ -92,7 +82,6 @@ EmpathMessageHTMLWidget::show(const QString & xml)
     setLinkColor(c->readColorEntry(UI_LINK, DFLT_LINK));
     setLinkUnderline(c->readBoolEntry(UI_UNDERLINE_LINKS, DFLT_UNDER_LINKS));
 
-    empathDebug("About to setText(xml). Watch Qt crash.");
     setText(xml);
 }
 

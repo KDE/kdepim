@@ -145,14 +145,14 @@ EmpathAccountsSettingsDialog::~EmpathAccountsSettingsDialog()
     void
 EmpathAccountsSettingsDialog::s_newPOP()
 {
-    empath->mailboxList().createNew(EmpathMailbox::POP3);
+    empath->mailboxList()->createNew(EmpathMailbox::POP3);
     s_updateMailboxList();
 }
 
     void
 EmpathAccountsSettingsDialog::s_newIMAP()
 {
-    empath->mailboxList().createNew(EmpathMailbox::IMAP4);
+    empath->mailboxList()->createNew(EmpathMailbox::IMAP4);
     s_updateMailboxList();
 }
 
@@ -182,7 +182,7 @@ EmpathAccountsSettingsDialog::s_updateMailboxList()
 {
     lv_accts_->clear();
 
-    EmpathMailboxListIterator it(empath->mailboxList());
+    EmpathMailboxListIterator it(*(empath->mailboxList()));
 
     for (; it.current(); ++it)
         if (it.current()->type() != EmpathMailbox::Maildir)
@@ -210,7 +210,7 @@ EmpathAccountsSettingsDialog::s_remove()
 {
     EmpathURL u;
     u.setMailboxName(lv_accts_->currentItem()->text(0));
-    empath->mailboxList().remove(u);
+    empath->mailboxList()->remove(u);
 }
 
     void
@@ -231,7 +231,7 @@ EmpathAccountsSettingsDialog::s_help()
     void
 EmpathAccountsSettingsDialog::s_apply()
 {
-    empath->mailboxList().saveConfig();
+    empath->mailboxList()->saveConfig();
     applied_ = true;
 }
 

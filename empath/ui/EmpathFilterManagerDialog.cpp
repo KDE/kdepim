@@ -149,8 +149,8 @@ EmpathFilterManagerDialog::s_addFilter()
     }
     
     // 0 is the first- filter becomes the last when it's added.
-    newFilter->setPriority(empath->filterList().count());
-    empath->filterList().append(newFilter);
+    newFilter->setPriority(empath->filterList()->count());
+    empath->filterList()->append(newFilter);
     update();
 }
 
@@ -185,7 +185,7 @@ EmpathFilterManagerDialog::s_removeFilter()
     if (editedFilter == 0)
         return;
     
-    empath->filterList().remove(editedFilter);
+    empath->filterList()->remove(editedFilter);
     
     update();
 }
@@ -201,7 +201,7 @@ EmpathFilterManagerDialog::s_moveUp()
     if (editedFilter == 0)
         return;
     
-    empath->filterList().raisePriority(editedFilter);
+    empath->filterList()->raisePriority(editedFilter);
     
     update();
 }
@@ -217,7 +217,7 @@ EmpathFilterManagerDialog::s_moveDown()
     if (editedFilter == 0)
         return;
     
-    empath->filterList().lowerPriority(editedFilter);
+    empath->filterList()->lowerPriority(editedFilter);
     
     update();
 }
@@ -240,7 +240,7 @@ EmpathFilterManagerDialog::update()
     
     QListViewItem * reselect = 0;
 
-    EmpathFilterListIterator it(empath->filterList());
+    EmpathFilterListIterator it(*(empath->filterList()));
 
     for (; it.current(); ++it) {
         EmpathFilterListItem * i =
@@ -261,7 +261,7 @@ EmpathFilterManagerDialog::update()
     void
 EmpathFilterManagerDialog::saveData()
 {
-    empath->filterList().saveConfig();
+    empath->filterList()->saveConfig();
 }
 
     void

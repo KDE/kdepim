@@ -27,18 +27,13 @@
 #ifndef EMPATHMAILSENDERSMTP_H
 #define EMPATHMAILSENDERSMTP_H
 
-#define NO_KIO_COMPATABILITY 1
-
-// Qt includes
-#include <qobject.h>
-
 // KDE includes
 #include <kio/job.h>
 
 // Local includes
 #include "RMM_Message.h"
 #include "EmpathDefines.h"
-#include "EmpathMailSender.h"
+#include "EmpathMailSenderImpl.h"
 
 /**
  * @short SMTP sender
@@ -48,7 +43,7 @@
  * 
  * @author Rikkus
  */
-class EmpathMailSenderSMTP : public EmpathMailSender
+class EmpathMailSenderSMTP : public EmpathMailSenderImpl
 {
     Q_OBJECT
 
@@ -70,7 +65,7 @@ class EmpathMailSenderSMTP : public EmpathMailSender
         virtual void saveConfig();
         virtual void loadConfig();
         
-    protected:
+    protected slots:
         
         void s_jobError(int, int, const char *);
         void s_jobFinished(int);

@@ -28,6 +28,10 @@
 
 // Local includes
 #include "EmpathAttachmentViewWidget.h"
+#include "RMM_ContentType.h"
+#include "RMM_ContentDisposition.h"
+#include "RMM_ParameterList.h"
+#include "RMM_Parameter.h"
 
 EmpathAttachmentViewWidget::EmpathAttachmentViewWidget(QWidget * parent)
     : QIconView(parent, "EmpathAttachmentViewWidget")
@@ -47,6 +51,9 @@ EmpathAttachmentViewWidget::setMessage(RMM::RBodyPart & message)
     QList<RMM::RBodyPart> body(message.body());
 
     QListIterator<RMM::RBodyPart> it(body);
+
+    ++it; // Ignore first part. That's the main part of the message and
+          // not an attachment.
     
     for (; it.current(); ++it) {
 
@@ -59,8 +66,38 @@ EmpathAttachmentViewWidget::setMessage(RMM::RBodyPart & message)
 
         QIconViewItem * item = new QIconViewItem(this);
         item->setPixmap(mimeType->pixmap(KIconLoader::Medium));
+
         QString text = QString::fromUtf8(
                 it.current()->envelope().contentDescription().asString());
+
+        // No Content-Description ?
+
+        if (text.isEmpty()) {
+            
+            QValueList<RMM::RParameter> l =
+                it.current()->envelope().contentType().parameterList().list();
+
+            QValueList<RMM::RParameter>::Iterator it(l.begin());
+
+            for (; it != l.end(); ++it) {
+
+                if ((*it).attribute() == "name") {
+                    text = QString::fromUtf8((*it).value());
+                    break;
+                }
+            }
+        }
+        
+        // No 'name=' in Content-Type ?
+
+        if (text.isEmpty()) {
+
+            QString quoted = QString::fromUtf8(
+                it.current()->envelope().contentDisposition().filename());
+
+            text = quoted.mid(1, quoted.length() - 2);
+        }
+
 
         item->setText(text.isEmpty() ? i18n("No description") : text);
     }

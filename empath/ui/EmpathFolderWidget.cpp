@@ -132,7 +132,7 @@ EmpathFolderWidget::~EmpathFolderWidget()
     void
 EmpathFolderWidget::s_update()
 {
-    EmpathMailboxListIterator mit(empath->mailboxList());
+    EmpathMailboxListIterator mit(*(empath->mailboxList()));
 
     for (; mit.current(); ++mit)
         if (mit.current()->type() != EmpathMailbox::POP3)

@@ -20,42 +20,53 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMessageHTMLView.h"
-#endif
-
-#ifndef EMPATHMESSAGEHTMLVIEW_H
-#define EMPATHMESSAGEHTMLVIEW_H
+#ifndef EMPATH_MAIL_SENDER_IMPL_H
+#define EMPATH_MAIL_SENDER_IMPL_H
 
 // Qt includes
+#include <qobject.h>
 #include <qstring.h>
-#include <qpopupmenu.h>
-#include <qtextbrowser.h>
 
 // Local includes
+#include "EmpathDefines.h"
+#include "EmpathEnum.h"
 #include "EmpathURL.h"
+#include <RMM_Message.h>
 
-class EmpathMessageHTMLWidget : public QTextBrowser
+/**
+ * @short Sender Implementation base class
+ * 
+ * @author Rikkus
+ */
+
+class EmpathMailSenderImpl : public QObject
 {
     Q_OBJECT
 
     public:
-        
-        EmpathMessageHTMLWidget(QWidget *);
-        ~EmpathMessageHTMLWidget();
-        
-        void show(const QString & xml);
-        virtual QSize sizeHint() const;
-        virtual QSize minimumSizeHint() const;
-        
-    protected slots:
-        
-        void s_popupMenu(QString, const QPoint &);
 
-    private:
+        EmpathMailSenderImpl() { }
+
+        virtual ~EmpathMailSenderImpl() { }
         
-        QPopupMenu popup_;
+        /**
+         * Send one message.
+         */
+        virtual void sendOne(RMM::RMessage message, const QString & id) = 0L;
+
+        /**
+         * Save your config now !
+         * Called by Empath when settings have changed.
+         */
+        virtual void saveConfig() = 0;
+
+        /**
+         * Load your config now !
+         * Called by Empath on startup.
+         */
+        virtual void loadConfig() = 0;
 };
 
 #endif
+
 // vim:ts=4:sw=4:tw=78

@@ -135,7 +135,7 @@ EmpathFilterEditDialog::~EmpathFilterEditDialog()
     void
 EmpathFilterEditDialog::s_OK()
 {
-    EmpathFilterListIterator it(empath->filterList());
+    EmpathFilterListIterator it(*(empath->filterList()));
 
     for (; it.current(); ++it) {
     

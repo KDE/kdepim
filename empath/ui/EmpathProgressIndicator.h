@@ -20,41 +20,34 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMessageHTMLView.h"
-#endif
-
-#ifndef EMPATHMESSAGEHTMLVIEW_H
-#define EMPATHMESSAGEHTMLVIEW_H
+#ifndef EMPATH_PROGRESS_INDICATOR_H
+#define EMPATH_PROGRESS_INDICATOR_H
 
 // Qt includes
-#include <qstring.h>
-#include <qpopupmenu.h>
-#include <qtextbrowser.h>
+#include <qwidget.h>
 
-// Local includes
-#include "EmpathURL.h"
+class QWidgetStack;
+class KProgress;
+class EmpathTask;
 
-class EmpathMessageHTMLWidget : public QTextBrowser
+class EmpathProgressIndicator : public QWidget
 {
     Q_OBJECT
 
     public:
-        
-        EmpathMessageHTMLWidget(QWidget *);
-        ~EmpathMessageHTMLWidget();
-        
-        void show(const QString & xml);
-        virtual QSize sizeHint() const;
-        virtual QSize minimumSizeHint() const;
-        
+
+        EmpathProgressIndicator(EmpathTask *, QWidgetStack * parent);
+        virtual ~EmpathProgressIndicator();
+
     protected slots:
-        
-        void s_popupMenu(QString, const QPoint &);
+
+        void s_setMaxValue(int);
+        void s_incValue();
+        void s_finished();
 
     private:
         
-        QPopupMenu popup_;
+        KProgress * progress_;
 };
 
 #endif

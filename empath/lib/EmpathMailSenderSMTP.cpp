@@ -39,7 +39,7 @@
 #include "Empath.h"
 
 EmpathMailSenderSMTP::EmpathMailSenderSMTP()
-    :    EmpathMailSender()
+    :   EmpathMailSenderImpl()
 {
 //    job_ = new KIO::Job;
 }
@@ -121,19 +121,19 @@ EmpathMailSenderSMTP::loadConfig()
     void
 EmpathMailSenderSMTP::s_jobError(int, int, const char *)
 {
-    sendCompleted(currentID_, false);
+//    sendCompleted(currentID_, false);
 }
     
     void
 EmpathMailSenderSMTP::s_jobFinished(int)
 {
-    sendCompleted(currentID_, true);
+//    sendCompleted(currentID_, true);
 }
     
     void
 EmpathMailSenderSMTP::s_jobCanceled(int)
 {
-    sendCompleted(currentID_, false);
+//    sendCompleted(currentID_, false);
 }
 
     void

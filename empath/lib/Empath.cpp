@@ -32,11 +32,6 @@
 #include <errno.h>
 
 // Qt includes
-#include <qtimer.h>
-#include <qlist.h>
-#include <qdatetime.h>
-#include <qfile.h>
-#include <qfileinfo.h>
 #include <qcolor.h>
 
 // KDE includes
@@ -46,32 +41,31 @@
 #include <kstddirs.h>
 
 // Local includes
-#include "EmpathDefines.h"
-#include "EmpathConfig.h"
 #include "Empath.h"
-#include "EmpathComposer.h"
-#include "EmpathMailboxList.h"
-#include "EmpathMailSenderSendmail.h"
-#include "EmpathMailSenderQmail.h"
-#include "EmpathMailSenderSMTP.h"
-#include "EmpathFilterList.h"
-#include "EmpathTask.h"
-#include "EmpathJob.h"
+#include "EmpathConfig.h"
 #include "EmpathJobScheduler.h"
+#include "EmpathJob.h"
+#include "EmpathCachedMessage.h"
+#include "EmpathComposer.h"
+#include "EmpathFilterList.h"
+#include "EmpathMailSender.h"
+#include "EmpathMailboxList.h"
+#include "EmpathMailbox.h"
+#include "EmpathFolder.h"
+#include "EmpathTask.h"
 #include "config.h"
 
 #ifdef USE_QPTHREAD
 #include <qpthr/qp.h>
 #endif
 
-
 Empath * Empath::EMPATH = 0;
 
     void
 Empath::start()
 {
-    if (!empath)
-        (void)new Empath;
+    if (0 == EMPATH)
+        EMPATH = new Empath;
 }
         
     void
@@ -82,13 +76,13 @@ Empath::shutdown()
 
 Empath::Empath()
     :   QObject((QObject *)0L, "Empath"),
-        mailSender_     (0L),
+        mailboxList_    (0L),
+        filterList_     (0L),
+        sender_         (0L),
         composer_       (0L),
         jobScheduler_   (0L),
         seq_            (0)
 {
-    EMPATH = this;
-
 #ifdef USE_QPTHREAD
     (void)new QpInit;
 #endif
@@ -106,23 +100,18 @@ Empath::Empath()
 
     KGlobal::dirs()->addResourceType("indices", "share/apps/empath/indices");
     KGlobal::dirs()->addResourceType("cache",   "share/apps/empath/cache");
-
-    // Order of creation is important here.
-    // TODO: Replace with code inside jobScheduler() that check for
-    // allocation and allocate if not existing.
-    updateOutgoingServer();
-    jobScheduler_   = new EmpathJobScheduler;
-    composer_       = new EmpathComposer;
 }
 
     void
 Empath::init()
 {
-    processID_ = getpid();
+    processID_ = int(getpid());
     pidStr_.setNum(processID_);
     
     _saveHostName();
     _setStartTime();
+
+    cache_.setMaxCost(5);
 
     QString s(i18n("Local"));
 
@@ -144,20 +133,26 @@ Empath::init()
     drafts_ .setFolderPath  (c->readEntry(FOLDER_DRAFTS,  i18n("Drafts")));
     trash_  .setFolderPath  (c->readEntry(FOLDER_TRASH,   i18n("Trash")));
    
-    mailboxList_.loadConfig();
-    filterList_.loadConfig();
-
-    viewFactory_.init();
+    mailboxList()->loadConfig();
 }
 
 Empath::~Empath()
 {
-    delete mailSender_;
-    mailSender_ = 0L;
+    delete mailboxList_;
+    mailboxList_ = 0L;
+
+    delete sender_;
+    sender_ = 0L;
+
+    delete filterList_;
+    filterList_ = 0L;
+
+    delete jobScheduler_;
+    jobScheduler_ = 0L;
 
     delete composer_;
     composer_   = 0L;
-
+    
     using namespace EmpathConfig;
 
     delete DFLT_Q_1;
@@ -171,64 +166,27 @@ Empath::~Empath()
     void
 Empath::s_saveConfig()
 {
-    filterList_.saveConfig();
-    mailboxList_.saveConfig();
+    filterList()->saveConfig();
+    mailboxList()->saveConfig();
     KGlobal::config()->sync();
-}
-
-    void
-Empath::updateOutgoingServer()
-{
-    delete mailSender_;
-    mailSender_ = 0L;
-    
-    KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_GENERAL);
-    
-    EmpathMailSender::OutgoingServerType st =
-        (EmpathMailSender::OutgoingServerType)
-        (c->readUnsignedNumEntry(EmpathConfig::S_TYPE));
-    
-    switch (st) {
-        
-        case EmpathMailSender::Qmail:
-            mailSender_ = new EmpathMailSenderQmail;
-            break;
-        
-        case EmpathMailSender::SMTP:
-            mailSender_ = new EmpathMailSenderSMTP;
-            break;
-            
-        case EmpathMailSender::Sendmail:
-        default:
-            mailSender_ = new EmpathMailSenderSendmail;
-            break;
-    }
-
-    mailSender_->loadConfig();
 }
 
     RMM::RMessage
 Empath::message(const EmpathURL & source)
 {
-    empathDebug("message(" + source.asString() + ") called");
+    QCacheIterator<EmpathCachedMessage> it(cache_);
 
-    QDictIterator<EmpathCachedMessage> it(cache_);
+    for (; it.current(); ++it)
 
-    for (; it.current(); ++it) {
         if (it.current()->refCount() == 0) {
-            empathDebug("Removing unreferenced message " + it.currentKey());
             cache_.remove(it.currentKey());
             break; // One at a time.
         }
-    }
     
     EmpathCachedMessage * cached = cache_[source.asString()];
 
-    if (cached == 0) {
-        empathDebug("Message \"" + source.asString() + "\" not in cache !");
+    if (cached == 0)
         return RMM::RMessage();
-    }
 
     return cached->message();
 }
@@ -240,109 +198,101 @@ Empath::cacheMessage(const EmpathURL & url, RMM::RMessage m)
 
     if (cached == 0) {
 
-        empathDebug("Not in cache. Adding " + url.asString());
-        empathDebug(url.asString());
-        cache_.insert(url.asString(), new EmpathCachedMessage(m));
-
-    } else {
-
-        empathDebug("Already in cache. Referencing " + url.asString());
-        cached->ref();
+        cached = new EmpathCachedMessage(m);
+        cache_.insert(url.asString(), cached);
     }
+
+    cached->ref();
+}
+        
+    EmpathMailboxList *
+Empath::mailboxList()
+{
+    if (0 == mailboxList_)
+        mailboxList_ = new EmpathMailboxList;
+
+    return mailboxList_;
 }
 
-    QString
-Empath::generateUnique()
+    EmpathMailSender *
+Empath::_sender()
 {
-    QString unique =
-        startupSecondsStr_ +
-        '.' +
-        pidStr_ +
-        '_' +
-        QString().setNum(seq_) +
-        '.' +
-        hostName_;
+    if (0 == sender_)
+        sender_ = new EmpathMailSender;
 
-    ++seq_;
+    return sender_;
+}
 
-    return unique;
+    void
+Empath::updateOutgoingServer()
+{
+    _sender()->update();
+}
+
+    EmpathJobScheduler *
+Empath::_jobScheduler()
+{
+    if (0 == jobScheduler_)
+        jobScheduler_ = new EmpathJobScheduler;
+
+    return jobScheduler_;
+}
+
+    EmpathComposer *
+Empath::_composer()
+{
+    if (0 == composer_)
+        composer_ = new EmpathComposer;
+
+    return composer_;
+}
+
+    EmpathFilterList *
+Empath::filterList()
+{
+    if (0 == filterList_) {
+        filterList_ = new EmpathFilterList;
+        filterList_->loadConfig();
+    }
+
+    return filterList_;
 }
 
     EmpathMailbox *
 Empath::mailbox(const EmpathURL & url)
-{ return mailboxList_[url.mailboxName()]; }
+{ return (*mailboxList())[url.mailboxName()]; }
 
-    EmpathFolder *
+     EmpathFolder *
 Empath::folder(const EmpathURL & url)
 { EmpathMailbox * m = mailbox(url); return (m == 0 ? 0 : m->folder(url)); }
 
-    EmpathJobID
-Empath::copy(
-    const EmpathURL & from,
-    const EmpathURL & to,
-    QObject * o
-)
-{
-    return jobScheduler_->newCopyJob(from, to, o);
-}
+   EmpathJobID
+Empath::copy(const EmpathURL & from, const EmpathURL & to, QObject * o)
+{ return _jobScheduler()->newCopyJob(from, to, o); }
 
     EmpathJobID
-Empath::move(
-    const EmpathURL & from,
-    const EmpathURL & to,
-    QObject * o
-)
-{
-    return jobScheduler_->newMoveJob(from, to, o);
-}
+Empath::move(const EmpathURL & from, const EmpathURL & to, QObject * o)
+{ return _jobScheduler()->newMoveJob(from, to, o); }
 
     EmpathJobID
-Empath::retrieve(
-    const EmpathURL & url,
-    QObject * o
-)
-{
-    return jobScheduler_->newRetrieveJob(url, o);
-}
+Empath::retrieve(const EmpathURL & url, QObject * o)
+{ return _jobScheduler()->newRetrieveJob(url, o); }
 
     EmpathJobID
-Empath::write(
-    RMM::RMessage & msg,
-    const EmpathURL & folder,
-    QObject * o
-)
-{
-    return jobScheduler_->newWriteJob(msg, folder, o);
-}
+Empath::write(RMM::RMessage & msg, const EmpathURL & folder, QObject * o)
+{ return _jobScheduler()->newWriteJob(msg, folder, o); } 
 
     EmpathJobID
-Empath::remove(
-    const EmpathURL & url,
-    QObject * o
-)
-{
-    return jobScheduler_->newRemoveJob(url, o);
-}
+Empath::remove(const EmpathURL & url, QObject * o)
+{ return _jobScheduler()->newRemoveJob(url, o); }
 
     EmpathJobID
-Empath::remove(
-    const EmpathURL & folder,
-    const QStringList & messageIDList,
-    QObject * o
-)
-{
-    return jobScheduler_->newRemoveJob(folder, messageIDList, o);
-}
+Empath::remove(const EmpathURL & f, const QStringList & IDList, QObject * o)
+{ return _jobScheduler()->newRemoveJob(f, IDList, o); }
 
     EmpathJobID
-Empath::mark(
-    const EmpathURL & url,
-    EmpathIndexRecord::Status status,
-    QObject * o
-)
-{
-    return jobScheduler_->newMarkJob(url, status, o);
-}
+Empath::mark(const EmpathURL & url, EmpathIndexRecord::Status s, QObject * o)
+{ return _jobScheduler()->newMarkJob(url, s, o); }
 
     EmpathJobID
 Empath::mark(
@@ -351,39 +301,27 @@ Empath::mark(
     EmpathIndexRecord::Status s,
     QObject * o
 )
-{
-    return jobScheduler_->newMarkJob(f, l, s, o);
-}
+{ return _jobScheduler()->newMarkJob(f, l, s, o); }
 
     EmpathJobID
-Empath::createFolder(
-    const EmpathURL & url,
-    QObject * o
-) 
-{
-    return jobScheduler_->newCreateFolderJob(url, o);
-}
+Empath::createFolder(const EmpathURL & url, QObject * o) 
+{ return _jobScheduler()->newCreateFolderJob(url, o); }
 
     EmpathJobID
-Empath::removeFolder(
-    const EmpathURL & url,
-    QObject * o
-)
-{
-    return jobScheduler_->newRemoveFolderJob(url, o);
-}
+Empath::removeFolder(const EmpathURL & url, QObject * o)
+{ return _jobScheduler()->newRemoveFolderJob(url, o); }
 
     void
 Empath::send(RMM::RMessage & m)
-{ mailSender_->send(m); }
+{ _sender()->send(m); }
 
     void
 Empath::queue(RMM::RMessage & m)
-{ mailSender_->queue(m); }
+{ _sender()->queue(m); }
 
     void
 Empath::sendQueued()
-{ mailSender_->sendQueued(); }
+{ _sender()->sendQueued(); }
 
     void
 Empath::s_newMailArrived()
@@ -391,7 +329,7 @@ Empath::s_newMailArrived()
 
     void
 Empath::filter(const EmpathURL & m)
-{ filterList_.filter(m); }
+{ filterList()->filter(m); }
 
     void
 Empath::s_setup(SetupType t, QWidget * parent)
@@ -406,24 +344,28 @@ Empath::s_newTask(EmpathTask * t)
 { emit(newTask(t)); }
 
     void 
-Empath::s_compose(const QString & recipient)
-{ composer_->newComposeForm(recipient); }
+Empath::s_compose()
+{ _composer()->newComposeForm(QString::null); }
+
+    void 
+Empath::s_composeTo(const QString & recipient)
+{ _composer()->newComposeForm(recipient); }
 
     void
 Empath::s_reply(const EmpathURL & url)
-{ composer_->newComposeForm(ComposeReply, url); }
+{ _composer()->newComposeForm(ComposeReply, url); }
 
     void
 Empath::s_replyAll(const EmpathURL & url)
-{ composer_->newComposeForm(ComposeReplyAll, url); }
+{ _composer()->newComposeForm(ComposeReplyAll, url); }
 
     void
 Empath::s_forward(const EmpathURL & url)
-{ composer_->newComposeForm(ComposeForward, url); }
+{ _composer()->newComposeForm(ComposeForward, url); }
 
     void
 Empath::s_bounce(const EmpathURL & url)
-{ composer_->newComposeForm(ComposeBounce, url); }
+{ _composer()->newComposeForm(ComposeBounce, url); }
 
     void
 Empath::saveMessage(const EmpathURL & url, QWidget * parent)
@@ -449,31 +391,13 @@ Empath::s_updateFolderLists()
 Empath::s_syncFolderLists()
 { emit(syncFolderLists()); }
 
-    EmpathURL
-Empath::inbox() const
-{ return inbox_; }
-
-    EmpathURL
-Empath::outbox() const
-{ return outbox_; }
-
-    EmpathURL
-Empath::sent() const
-{ return sent_; }
-    
-    EmpathURL
-Empath::drafts() const
-{ return drafts_; }
-    
-    EmpathURL
-Empath::trash() const
-{ return trash_; }
-
-    EmpathViewFactory &
-Empath::viewFactory()
-{ return viewFactory_; } 
-
-// Private methods follow
+    QString
+Empath::generateUnique()
+{
+    return (
+        startupSecondsStr_ + '.' + pidStr_ + '_' +
+        QString::number(seq_++) + '.' + hostName_);
+}
 
     void
 Empath::_setStartTime()
@@ -485,6 +409,7 @@ Empath::_setStartTime()
     startupSeconds_ = timeVal.tv_sec;
     startupSecondsStr_.setNum(startupSeconds_);
 }
+
     void
 Empath::_saveHostName()
 {
@@ -492,5 +417,7 @@ Empath::_saveHostName()
     if (uname(&utsName) == 0)
         hostName_ = utsName.nodename;
 }
+
+
 
 // vim:ts=4:sw=4:tw=78
