@@ -4,6 +4,14 @@
 * Really need to do something about all the disabled options in the
   config dialog. Some of them might make sense.
 
+2002-09-13  Reinhold Kainhofer
+* Finally, the addressbook conduit is in a shape where I can release
+  it with beta 2. There are still some issues (e.g. duplication as
+  conflict resolution is messed up on the next sync. Also, entries 
+  with newlines in an address field are always determined as changed, 
+  so the fast sync is not so fast with them.), but they can be targeted 
+  later on.
+  
 2002-09-02  Adriaan de Groot
 * Added finer-grained pilot-link version checking in configure.in.in.
   Removed all support for ancient pilot-link versions.
