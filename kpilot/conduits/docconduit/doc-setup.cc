@@ -47,7 +47,7 @@ ConduitConfig(w, n, a)
 	FUNCTIONSETUP;
 
 	fConfigWidget = new DOCWidget(widget());
-	fConfigWidget->fDOCDir->setMode(KFile::Directory);
+	fConfigWidget->fTXTDir->setMode(KFile::Directory);
 	fConfigWidget->fPDBDir->setMode(KFile::Directory);
 	
 	setTabWidget(fConfigWidget->tabWidget);
@@ -71,8 +71,8 @@ DOCWidgetSetup::~DOCWidgetSetup()
 
 	KConfigGroupSaver s(fConfig, DOCConduitFactory::fGroup);
 
-	fConfig->writeEntry(DOCConduitFactory::fDOCDir,
-		fConfigWidget->fDOCDir->url());
+	fConfig->writeEntry(DOCConduitFactory::fTXTDir,
+		fConfigWidget->fTXTDir->url());
 	fConfig->writeEntry(DOCConduitFactory::fPDBDir,
 		fConfigWidget->fPDBDir->url());
 	fConfig->writeEntry(DOCConduitFactory::fKeepPDBLocally,
@@ -115,8 +115,8 @@ DOCWidgetSetup::~DOCWidgetSetup()
 
 	KConfigGroupSaver s(fConfig, DOCConduitFactory::fGroup);
 
-	fConfigWidget->fDOCDir->setURL(fConfig->
-		readEntry(DOCConduitFactory::fDOCDir, QString::null));
+	fConfigWidget->fTXTDir->setURL(fConfig->
+		readEntry(DOCConduitFactory::fTXTDir, QString::null));
 	fConfigWidget->fPDBDir->setURL(fConfig->
 		readEntry(DOCConduitFactory::fPDBDir, QString::null));
 	fConfigWidget->fkeepPDBLocally->setChecked(fConfig->

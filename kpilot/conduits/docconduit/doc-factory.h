@@ -50,7 +50,7 @@ public:
 	
 
 	static const char *fGroup;
-	static const char *fDOCDir, *fPDBDir, *fKeepPDBLocally, 
+	static const char *fTXTDir, *fPDBDir, *fKeepPDBLocally, 
 		*fConflictResolution, 
 		*fConvertBookmarks, *fBookmarksBmk, *fBookmarksInline, *fBookmarksEndtags, *fPCBookmarks,
 		*fCompress, 

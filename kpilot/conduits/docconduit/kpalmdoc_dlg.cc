@@ -36,8 +36,8 @@ ConverterDlg::ConverterDlg( QWidget *parent, const QString& caption)
 	// e.g.
 	connect(dlg->fDirectories, SIGNAL(toggled(bool)),
 		this, SLOT(slotDirectories(bool)));
-	connect(dlg->fTextToDoc, SIGNAL(clicked()), this, SLOT(slotToDoc()));
-	connect(dlg->fDocToText, SIGNAL(clicked()), this, SLOT(slotToText()));
+	connect(dlg->fTextToPDB, SIGNAL(clicked()), this, SLOT(slotToPDB()));
+	connect(dlg->fPDBToText, SIGNAL(clicked()), this, SLOT(slotToText()));
 
 	resize(minimumSize());
 }
@@ -53,7 +53,7 @@ void ConverterDlg::writeSettings()
 //	config->setGroup("GeneralData");
 
 	// General page
-	fConfig->writeEntry("DOC directory", dlg->fDOCDir->url());
+	fConfig->writeEntry("TXT directory", dlg->fTXTDir->url());
 	fConfig->writeEntry("PDB directory", dlg->fPDBDir->url());
 	fConfig->writeEntry("Sync directories", dlg->fDirectories->isChecked());
 	fConfig->writeEntry("Ask before overwriting files", dlg->fAskOverwrite->isChecked());
@@ -78,8 +78,8 @@ void ConverterDlg::readSettings()
 	if (!fConfig) return;
 
 	// General Page:
-	dlg->fDOCDir->setURL(fConfig->
-		readEntry("DOC directory", QString::null));
+	dlg->fTXTDir->setURL(fConfig->
+		readEntry("TXT directory", QString::null));
 	dlg->fPDBDir->setURL(fConfig->
 		readEntry("PDB directory", QString::null));
 	bool dir=fConfig->
@@ -135,10 +135,10 @@ void ConverterDlg::slotToText()
 
 
 	bool dir=dlg->fDirectories->isChecked();
-	QString docurl=dlg->fDOCDir->url();
+	QString txturl=dlg->fTXTDir->url();
 	QString pdburl=dlg->fPDBDir->url();
 
-	QFileInfo docinfo(docurl);
+	QFileInfo txtinfo(txturl);
 	QFileInfo pdbinfo(pdburl);
 
 	if (dir)
@@ -174,42 +174,42 @@ void ConverterDlg::slotToText()
 
 
 		// Now check the to directory:
-		if (docinfo.isFile())
+		if (txtinfo.isFile())
 		{
 			int res=KMessageBox::questionYesNo(this, i18n("<qt>You selected "
 				"directory sync, but gave a filename <em>%1</em>. <br>Use "
-				"directory <em>%2</em instead?</qt>").arg(docurl)
-				.arg(docinfo.dirPath(true)));
+				"directory <em>%2</em instead?</qt>").arg(txturl)
+				.arg(txtinfo.dirPath(true)));
 			if (res==KMessageBox::Yes) {
-				docurl=docinfo.dirPath(true);
-				docinfo.setFile(docurl);
+				txturl=txtinfo.dirPath(true);
+				txtinfo.setFile(txturl);
 			}
 			else return;
 		}
 
 		// Now that we have a directory path, try to create it:
-		if (!docinfo.isDir()) {
-			docinfo.dir().mkdir(docurl, true);
+		if (!txtinfo.isDir()) {
+			txtinfo.dir().mkdir(txturl, true);
 		}
-		if (!docinfo.isDir()) {
+		if (!txtinfo.isDir()) {
 			KMessageBox::sorry(this, i18n("<qt>The directory <em>%1</em> for "
-				"the text files could not be created.</qt>").arg(docurl));
+				"the text files could not be created.</qt>").arg(txturl));
 			return;
 		}
 
 
 		// Now that we have both directories, create the converter object
 cout<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
-cout<<"txtinfo.dir="<<docinfo.dir().absPath()<<endl;
+cout<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
 		QStringList pdbfiles(pdbinfo.dir().entryList("*.pdb"));
 		QStringList converted_Files;
 
 cout<<"Length of filename list: "<<pdbfiles.size()<<endl;
 		for ( QStringList::Iterator it = pdbfiles.begin(); it != pdbfiles.end(); ++it )
 		{
-			QString docfile=QFileInfo(*it).baseName(true)+".txt";
-cout<<"pdbfile="<<*it<<", pdbdir="<<pdburl<<", docfile="<<docfile<<", docdir="<<docurl<<endl;
-			if (convertPDBToText(pdburl, *it, docurl, docfile, &conv))
+			QString txtfile=QFileInfo(*it).baseName(true)+".txt";
+cout<<"pdbfile="<<*it<<", pdbdir="<<pdburl<<", txtfile="<<txtfile<<", txtdir="<<txturl<<endl;
+			if (convertPDBtoTXT(pdburl, *it, txturl, txtfile, &conv))
 			{
 				converted_Files.append(*it);
 			}
@@ -237,14 +237,14 @@ cout<<"pdbfile="<<*it<<", pdbdir="<<pdburl<<", docfile="<<docfile<<", docdir="<<
 
 		// Now check the to file
 /*		// I can't check if a given filename is a valid filename
-		if (!docinfo.isFile())
+		if (!txtinfo.isFile())
 		{
 			KMessageBox::sorry(this, i18n("<qt>The filename <em>%1</em> for the "
-				"text is not a valid filename.</qt>").arg(docurl));
+				"text is not a valid filename.</qt>").arg(txturl));
 			return;
 		}*/
-		if (convertPDBToText(pdbinfo.dirPath(true), pdbinfo.fileName(),
-				docinfo.dirPath(true), docinfo.fileName(), &conv) )
+		if (convertPDBtoTXT(pdbinfo.dirPath(true), pdbinfo.fileName(),
+				txtinfo.dirPath(true), txtinfo.fileName(), &conv) )
 		{
 			KMessageBox::information(this, i18n("Conversion of file %1 successful.").arg(pdburl));
 		}
@@ -253,7 +253,7 @@ cout<<"pdbfile="<<*it<<", pdbdir="<<pdburl<<", docfile="<<docfile<<", docdir="<<
 
 }
 
-void ConverterDlg::slotToDoc()
+void ConverterDlg::slotToPDB()
 {
 	// First, get the settings from the controls and initialize
 	// the converter object
@@ -276,32 +276,32 @@ void ConverterDlg::slotToDoc()
 
 
 	bool dir=dlg->fDirectories->isChecked();
-	QString docurl=dlg->fDOCDir->url();
+	QString txturl=dlg->fTXTDir->url();
 	QString pdburl=dlg->fPDBDir->url();
 
-	QFileInfo docinfo(docurl);
+	QFileInfo txtinfo(txturl);
 	QFileInfo pdbinfo(pdburl);
 
 	if (dir)
 	{
-		if (docinfo.isFile())
+		if (txtinfo.isFile())
 		{
 			int res=KMessageBox::questionYesNo(this, i18n("<qt>You selected "
 				"directory sync, but gave a filename <em>%1</em>. <br>Use "
-				"directory <em>%2</em instead?</qt>").arg(docurl)
-				.arg(docinfo.dirPath(true)));
+				"directory <em>%2</em instead?</qt>").arg(txturl)
+				.arg(txtinfo.dirPath(true)));
 			if (res==KMessageBox::Yes)
 			{
-				docurl=docinfo.dirPath(true);
-				docinfo.setFile(docurl);
+				txturl=txtinfo.dirPath(true);
+				txtinfo.setFile(txturl);
 			}
 			else return;
 		}
 
-		if (!docinfo.isDir() || !docinfo.exists())
+		if (!txtinfo.isDir() || !txtinfo.exists())
 		{
 			KMessageBox::sorry(this, i18n("<qt>The directory <em>%1</em> for "
-				"the text files is not a valid directory.</qt>").arg(docurl));
+				"the text files is not a valid directory.</qt>").arg(txturl));
 			return;
 		}
 
@@ -333,16 +333,16 @@ void ConverterDlg::slotToDoc()
 
 		// Now that we have both directories, create the converter object
 cout<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
-cout<<"txtinfo.dir="<<docinfo.dir().absPath()<<endl;
-		QStringList txtfiles(docinfo.dir().entryList("*.txt"));
+cout<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
+		QStringList txtfiles(txtinfo.dir().entryList("*.txt"));
 		QStringList converted_Files;
 
 cout<<"Length of filename list: "<<txtfiles.size()<<endl;
 		for ( QStringList::Iterator it = txtfiles.begin(); it != txtfiles.end(); ++it )
 		{
 			QString pdbfile=QFileInfo(*it).baseName(true)+".pdb";
-cout<<"pdbfile="<<pdbfile<<", pdbdir="<<pdburl<<", docfile="<<*it<<", docdir="<<docurl<<endl;
-			if (convertTextToPDB(docurl, *it, pdburl, pdbfile, &conv))
+cout<<"pdbfile="<<pdbfile<<", pdbdir="<<pdburl<<", txtfile="<<*it<<", txtdir="<<txturl<<endl;
+			if (convertTXTtoPDB(txturl, *it, pdburl, pdbfile, &conv))
 			{
 				converted_Files.append(*it);
 			}
@@ -361,17 +361,17 @@ cout<<"pdbfile="<<pdbfile<<", pdbdir="<<pdburl<<", docfile="<<*it<<", docdir="<<
 
 
 		// Check the from file
-		if (!docinfo.isFile() || !docinfo.exists())
+		if (!txtinfo.isFile() || !txtinfo.exists())
 		{
 			KMessageBox::sorry(this, i18n("<qt>The file <em>%1</em> does not "
-				"exist.</qt>").arg(docurl));
+				"exist.</qt>").arg(txturl));
 			return;
 		}
 
-		if (convertTextToPDB(pdbinfo.dirPath(true), pdbinfo.fileName(),
-				docinfo.dirPath(true), docinfo.fileName(), &conv) )
+		if (convertTXTtoPDB(txtinfo.dirPath(true), txtinfo.fileName(), 
+				pdbinfo.dirPath(true), pdbinfo.fileName(), &conv) )
 		{
-			KMessageBox::information(this, i18n("Conversion of file %1 successful.").arg(docurl));
+			KMessageBox::information(this, i18n("Conversion of file %1 successful.").arg(txturl));
 		}
 
 	}
@@ -393,18 +393,18 @@ void ConverterDlg::slotDirectories(bool dir)
 	if (dir)
 	{
 		dlg->fTextLabel->setText(i18n("&Text directory:"));
-		dlg->fDocLabel->setText(i18n("&DOC directory:"));
-		dlg->fDOCDir->setMode(KFile::LocalOnly | KFile::Directory);
+		dlg->fPdbLabel->setText(i18n("&PalmDOC directory:"));
+		dlg->fTXTDir->setMode(KFile::LocalOnly | KFile::Directory);
 		dlg->fPDBDir->setMode(KFile::LocalOnly | KFile::Directory);
 	} else {
 		dlg->fTextLabel->setText(i18n("&Text file:"));
-		dlg->fDocLabel->setText(i18n("&DOC file:"));
-		dlg->fDOCDir->setMode(KFile::LocalOnly | KFile::File);
+		dlg->fPdbLabel->setText(i18n("&DOC file:"));
+		dlg->fTXTDir->setMode(KFile::LocalOnly | KFile::File);
 		dlg->fPDBDir->setMode(KFile::LocalOnly | KFile::File);
 	}
 }
 
-bool ConverterDlg::convertTextToPDB(QString docdir, QString docfile,
+bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 		QString pdbdir, QString pdbfile, DOCConverter*conv)
 {
 	bool res=false;
@@ -430,34 +430,34 @@ cout<<"Working  on file "<<pdbfile<<endl;
 			if (pdbdb->isDBOpen())
 			{
 				conv->setPDB(pdbdb);
-				conv->setDOCpath(docdir, docfile);
-				cout<<"Converting "<<docfile<<" (dir "<<docdir<<") to "<<dbfileinfo.filePath()<<endl;
-				if (conv->convertDOCtoPDB()) res=true;
+				conv->setTXTpath(txtdir, txtfile);
+				cout<<"Converting "<<txtfile<<" (dir "<<txtdir<<") to "<<dbfileinfo.filePath()<<endl;
+				if (conv->convertTXTtoPDB()) res=true;
 			}
 			delete pdbdb;
 		}
 		if ( !res && verbose )
 		{
-			KMessageBox::sorry(this, i18n("<qt>Error while converting the text %1.</qt>").arg(docfile));
+			KMessageBox::sorry(this, i18n("<qt>Error while converting the text %1.</qt>").arg(txtfile));
 		}
 	}
 	else
 	{
-		cout<<"Ignoring the file "<<docfile<<endl;
+		cout<<"Ignoring the file "<<txtfile<<endl;
 	}
 	return res;
 }
 
-bool ConverterDlg::convertPDBToText(QString pdbdir, QString pdbfile,
-		QString docdir, QString docfile, DOCConverter*conv)
+bool ConverterDlg::convertPDBtoTXT(QString pdbdir, QString pdbfile,
+		QString txtdir, QString txtfile, DOCConverter*conv)
 {
 	bool res=false;
-	QFileInfo docfileinfo(docdir, docfile);
-cout<<"Working  on file "<<docfile<<endl;
-	if (!docfileinfo.exists() || !askOverwrite ||
+	QFileInfo txtfileinfo(txtdir, txtfile);
+cout<<"Working  on file "<<txtfile<<endl;
+	if (!txtfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
 			i18n("<qt>The text file already <em>%1</em> exists.  Overwrite it?</qt>")
-			.arg(docfileinfo.filePath()) ) ))
+			.arg(txtfileinfo.filePath()) ) ))
 	{
 		PilotLocalDatabase*pdbdb=new PilotLocalDatabase(pdbdir, QFileInfo(pdbfile).baseName(), false);
 		if (pdbdb)
@@ -465,9 +465,9 @@ cout<<"Working  on file "<<docfile<<endl;
 			if (pdbdb->isDBOpen())
 			{
 				conv->setPDB(pdbdb);
-				conv->setDOCpath(docdir, docfile);
-				cout<<"Converting "<<docfile<<" (dir "<<docdir<<") from "<<pdbfile<<" (dir "<<pdbdir<<")"<<endl;
-				if (conv->convertPDBtoDOC()) res=true;
+				conv->setTXTpath(txtdir, txtfile);
+				cout<<"Converting "<<txtfile<<" (dir "<<txtdir<<") from "<<pdbfile<<" (dir "<<pdbdir<<")"<<endl;
+				if (conv->convertPDBtoTXT()) res=true;
 			}
 			delete pdbdb;
 		}

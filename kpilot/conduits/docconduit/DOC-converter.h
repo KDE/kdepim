@@ -109,7 +109,7 @@ class DOCConverter:public QObject {
 Q_OBJECT
 private:
 	PilotDatabase * docdb;
-	QString docfilename;
+	QString txtfilename;
 	QString bmkfilename;
 	bool compress;
 
@@ -127,18 +127,18 @@ public:
 	 virtual ~ DOCConverter();
 
 	QString readText();
-	void setDOCpath(QString path, QString file);
-	void setDOCpath(QString filename);
+	void setTXTpath(QString path, QString file);
+	void setTXTpath(QString filename);
 	void setPDB(PilotDatabase * dbi);
-	QString docFilename() const {return docfilename;}
+	QString txtFilename() const {return txtfilename;}
 	QString bmkFilename() const {return bmkfilename;}
 	void setBmkFilename(QString bmkf) { bmkfilename=bmkf;}
 
 	bool getCompress() const { return compress; };
 	void setCompress(bool newcomp) {compress=newcomp;};
 
-	bool convertDOCtoPDB();
-	bool convertPDBtoDOC();
+	bool convertTXTtoPDB();
+	bool convertPDBtoTXT();
 
 	int setBookmarks(bmkList bookmarks) {
 		fBookmarks = bookmarks;

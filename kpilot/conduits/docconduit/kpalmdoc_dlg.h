@@ -16,7 +16,7 @@ public:
 protected slots:
 	virtual void slotClose();
 	void slotToText();
-	void slotToDoc();
+	void slotToPDB();
 	void slotDirectories(bool dir);
 	void slotUser1();
 protected:
@@ -24,10 +24,10 @@ protected:
 	void readSettings();
 
 	// These two functions convert one single file to or from a pdb database
-	bool convertTextToPDB(QString docdir, QString docfile,
+	bool convertTXTtoPDB(QString txtdir, QString txtfile,
 		QString pdbdir, QString pdbfile, DOCConverter*conv);
-	bool convertPDBToText(QString pdbdir, QString pdbfile,
-		QString docdir, QString docfile, DOCConverter*conv);
+	bool convertPDBtoTXT(QString pdbdir, QString pdbfile,
+		QString txtdir, QString txtfile, DOCConverter*conv);
 
 
 	// The actual dialog widget (designer created) holding all controls

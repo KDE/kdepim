@@ -36,7 +36,7 @@
                     </property>
                     <widget class="QLabel" row="1" column="0">
                         <property name="name">
-                            <cstring>fDocLabel</cstring>
+                            <cstring>fPdbLabel</cstring>
                         </property>
                         <property name="sizePolicy">
                             <sizepolicy>
@@ -69,7 +69,7 @@
                             <string>&amp;Text file:</string>
                         </property>
                         <property name="buddy" stdset="0">
-                            <cstring>fDOCDir</cstring>
+                            <cstring>fTXTDir</cstring>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="2" column="1" rowspan="1" colspan="2">
@@ -90,7 +90,7 @@
                     </widget>
                     <widget class="KURLRequester" row="0" column="1" rowspan="1" colspan="2">
                         <property name="name">
-                            <cstring>fDOCDir</cstring>
+                            <cstring>fTXTDir</cstring>
                         </property>
                         <property name="toolTip" stdset="0">
                             <string>Enter the name of the directory where the text files reside on the PC. All files with extension .txt will be synced to the handheld.</string>
@@ -98,7 +98,7 @@
                     </widget>
                     <widget class="KPushButton" row="6" column="0" rowspan="1" colspan="2">
                         <property name="name">
-                            <cstring>fTextToDoc</cstring>
+                            <cstring>fTextToPDB</cstring>
                         </property>
                         <property name="text">
                             <string>Convert Text to PalmDOC</string>
@@ -106,7 +106,7 @@
                     </widget>
                     <widget class="KPushButton" row="6" column="2">
                         <property name="name">
-                            <cstring>fDocToText</cstring>
+                            <cstring>fPDBToText</cstring>
                         </property>
                         <property name="text">
                             <string>Convert PalmDOC to Text</string>

@@ -75,7 +75,7 @@ public slots:
 /** syncNextDB walks through all PalmDoc databases on the handheld and decides if they are supposed to be synced to the PC. 
  * syncNextDB and syncNextDOC fist build the list of all PalmDoc texts, and then the method syncDatabases does the actual sync. */
 	void syncNextDB();
-	void syncNextDOC();
+	void syncNextTXT();
 	void checkPDBFiles();
 	void checkDeletedDocs();
 	void resolve();
@@ -106,7 +106,7 @@ public slots:
     */
 	bool postSyncAction(PilotDatabase * dbinfo, docSyncInfo &sinfo, bool res = true);
 
-	bool pcTextChanged(QString docfn);
+	bool pcTextChanged(QString txtfn);
 	bool hhTextChanged(PilotDatabase*docdb);
 	
 	/** Opens the database with name dbname. For a local sync, this will be a 
@@ -115,10 +115,10 @@ public slots:
 	PilotDatabase*openDOCDatabase(QString dbname);
 
 	QString constructPDBFileName(QString name);
-	QString constructDOCFileName(QString name);
+	QString constructTXTFileName(QString name);
 
 
-	QString fDOCDir, fPDBDir;
+	QString fTXTDir, fPDBDir;
 	bool fKeepPDBLocally;
 	eSyncDirectionEnum  eConflictResolution;
 	int fBookmarks;
@@ -136,17 +136,17 @@ public slots:
 class docSyncInfo 
 {
 public:
-	docSyncInfo(QString hhDB=QString(), QString docfn=QString(), QString pdbfn=QString(), eSyncDirectionEnum dir=eSyncNone)
+	docSyncInfo(QString hhDB=QString(), QString txtfn=QString(), QString pdbfn=QString(), eSyncDirectionEnum dir=eSyncNone)
 	{
 		handheldDB=hhDB; 
-		docfilename=docfn; 
+		txtfilename=txtfn; 
 		pdbfilename=pdbfn; 
 		direction=dir; 
 		fPCStatus=eStatNone; 
 		fPalmStatus=eStatNone;
 	};
 	~docSyncInfo(){};
-	QString handheldDB, docfilename, pdbfilename;
+	QString handheldDB, txtfilename, pdbfilename;
 	DBInfo dbinfo;
 	eSyncDirectionEnum direction;
 	eTextStatus fPCStatus, fPalmStatus;

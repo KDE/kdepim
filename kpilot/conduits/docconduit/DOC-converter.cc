@@ -165,17 +165,17 @@ DOCConverter::~DOCConverter() {
 
 
 
-void DOCConverter::setDOCpath(QString path, QString file) {
+void DOCConverter::setTXTpath(QString path, QString file) {
 	QDir dr(path);
 	QFileInfo pth(dr, file);
 	if (!file.isEmpty())
-		 docfilename = pth.absFilePath();
+		 txtfilename = pth.absFilePath();
 };
 
 
 
-void DOCConverter::setDOCpath(QString filename) {
-	if (!filename.isEmpty()) docfilename = filename;
+void DOCConverter::setTXTpath(QString filename) {
+	if (!filename.isEmpty()) txtfilename = filename;
 };
 
 
@@ -188,11 +188,11 @@ void DOCConverter::setPDB(PilotDatabase * dbi) {
 
 QString DOCConverter::readText() {
 	FUNCTIONSETUP;
-	if (docfilename.isEmpty()) return QString();
-	QFile docfile(docfilename);
+	if (txtfilename.isEmpty()) return QString();
+	QFile docfile(txtfilename);
 	if (!docfile.open(IO_ReadOnly))
 	{
-		emit logError(i18n("Unable to open text file %1 for reading.").arg(docfilename));
+		emit logError(i18n("Unable to open text file %1 for reading.").arg(txtfilename));
 		return QString();
 	}
 
@@ -276,7 +276,7 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 	FUNCTIONSETUP;
 	int nr=0;
 	
-	QString bmkfilename = docfilename;
+	QString bmkfilename = txtfilename;
 	if (bmkfilename.endsWith(CSL1(".txt"))){
 		bmkfilename.remove(bmkfilename.length()-4, 4);
 	}
@@ -373,7 +373,7 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 	return nr;
 }
 
-bool DOCConverter::convertDOCtoPDB() {
+bool DOCConverter::convertTXTtoPDB() {
 	FUNCTIONSETUP;
 	
 	if (!docdb) {
@@ -500,10 +500,10 @@ bool DOCConverter::convertDOCtoPDB() {
 
 
 
-bool DOCConverter::convertPDBtoDOC()
+bool DOCConverter::convertPDBtoTXT()
 {
 	FUNCTIONSETUP;
-	if (docfilename.isEmpty()) {
+	if (txtfilename.isEmpty()) {
 		emit logError(i18n("No filename set for the conversion"));
 		return false;
 	}
@@ -534,10 +534,10 @@ bool DOCConverter::convertPDBtoDOC()
 		<<" version="<<header.version<<endl;
 
 	// next come the header.numRecords real document records (might be compressed, see the version flag in the header)
-	QFile docfile(docfilename);
+	QFile docfile(txtfilename);
 	if (!docfile.open(IO_WriteOnly))
 	{
-		emit logError(i18n("Unable to open output file %1.").arg(docfilename));
+		emit logError(i18n("Unable to open output file %1.").arg(txtfilename));
 		KPILOT_DELETE(docdb);
 		return false;
 	}

@@ -114,7 +114,7 @@ void DOCConduit::readConfig()
 
 	KConfigGroupSaver g(fConfig, DOCConduitFactory::fGroup);
 
-	fDOCDir = fConfig->readEntry(DOCConduitFactory::fDOCDir, QString::null);
+	fTXTDir = fConfig->readEntry(DOCConduitFactory::fTXTDir, QString::null);
 	fPDBDir = fConfig->readEntry(DOCConduitFactory::fPDBDir, QString::null);
 	fKeepPDBLocally =
 		fConfig->readBoolEntry(DOCConduitFactory::fKeepPDBLocally, true);
@@ -145,7 +145,7 @@ void DOCConduit::readConfig()
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Settings "
-		<< " fdocdir=" << fDOCDir
+		<< " fTXTDir=" << fTXTDir
 		<< " fPDBDir=" << fPDBDir
 		<< " fkeepPDBLocally=" << fKeepPDBLocally
 		<< " eConflictResolution=" << eConflictResolution
@@ -157,14 +157,14 @@ void DOCConduit::readConfig()
 
 
 
-bool DOCConduit::pcTextChanged(QString docfn)
+bool DOCConduit::pcTextChanged(QString txtfn)
 {
 	KConfigGroupSaver g(fConfig, DOCConduitFactory::fGroup);
 	
 	// How do I find out if a text file has changed shince we last synced it??
 	// Use KMD5 for now. If I realize it is too slow, then I have to go back to comparing modification times
 	// if there is no config setting yet, assume the file has been changed. the md5 sum will be written to the config file after the sync.
-	QString oldDigest=fConfig->readEntry(docfn);
+	QString oldDigest=fConfig->readEntry(txtfn);
 	if (oldDigest.length()<=0) 
 	{
 		return true;
@@ -174,9 +174,9 @@ bool DOCConduit::pcTextChanged(QString docfn)
 #endif
 
 	KMD5 docmd5;
-	QFile docfile(docfn);
-	if (docfile.open(IO_ReadOnly)){
-		docmd5.update(docfile);
+	QFile txtfile(txtfn);
+	if (txtfile.open(IO_ReadOnly)){
+		docmd5.update(txtfile);
 		QString thisDigest(docmd5.hexDigest() /* .data() */);
 #ifdef DEBUG
 		DEBUGCONDUIT<<"New digest is "<<thisDigest<<endl;
@@ -253,10 +253,10 @@ QString DOCConduit::constructPDBFileName(QString name) {
 	if (!name.isEmpty()) fn=pth.absFilePath()+CSL1(".pdb");
 	return fn;
 }
-QString DOCConduit::constructDOCFileName(QString name) {
+QString DOCConduit::constructTXTFileName(QString name) {
 	FUNCTIONSETUP;
 	QString fn;
-	QDir dr(fDOCDir);
+	QDir dr(fTXTDir);
 	QFileInfo pth(dr, name);
 	if (!name.isEmpty()) fn=pth.absFilePath()+CSL1(".txt");
 	return fn;
@@ -300,11 +300,11 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 	bool res=false;
 	
 	if (sinfo.direction==eSyncDelete) {
-		if (!sinfo.docfilename.isEmpty()) {
-			if (!QFile::remove(sinfo.docfilename)) {
-				kdWarning()<<"Unable to delete the text file "<<sinfo.docfilename<<" on the PC"<<endl;
+		if (!sinfo.txtfilename.isEmpty()) {
+			if (!QFile::remove(sinfo.txtfilename)) {
+				kdWarning()<<"Unable to delete the text file "<<sinfo.txtfilename<<" on the PC"<<endl;
 			}
-			QString bmkfilename = sinfo.docfilename;
+			QString bmkfilename = sinfo.txtfilename;
 			if (bmkfilename.endsWith(CSL1(".txt"))){
 				bmkfilename.remove(bmkfilename.length()-4, 4);
 			}
@@ -356,17 +356,17 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 		connect(&docconverter, SIGNAL(logError(const QString &)), SIGNAL(logError(const QString &)));
 		connect(&docconverter, SIGNAL(logMessage(const QString &)), SIGNAL(logMessage(const QString &)));
 
-		docconverter.setDOCpath(fDOCDir, sinfo.docfilename);
+		docconverter.setTXTpath(fTXTDir, sinfo.txtfilename);
 		docconverter.setPDB(database);
 		docconverter.setBookmarkTypes(fBookmarks);
 		docconverter.setCompress(fCompress);
 
 		switch (sinfo.direction) {
 			case eSyncPDAToPC:
-				res = docconverter.convertPDBtoDOC();
+				res = docconverter.convertPDBtoTXT();
 				break;
 			case eSyncPCToPDA:
-				res = docconverter.convertDOCtoPDB();
+				res = docconverter.convertTXTtoPDB();
 				break;
 			default:
 				break;
@@ -376,18 +376,18 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 		{
 			KConfigGroupSaver g(fConfig, DOCConduitFactory::fGroup);
 			KMD5 docmd5;
-			QFile docfile(docconverter.docFilename());
-			if (docfile.open(IO_ReadOnly)) {
-				docmd5.update(docfile);
+			QFile txtfile(docconverter.txtFilename());
+			if (txtfile.open(IO_ReadOnly)) {
+				docmd5.update(txtfile);
 				QString thisDigest(docmd5.hexDigest() /* .data() */);
-				fConfig->writeEntry(docconverter.docFilename(), thisDigest);
+				fConfig->writeEntry(docconverter.txtFilename(), thisDigest);
 				fConfig->sync();
 #ifdef DEBUG
-				DEBUGCONDUIT<<"MD5 Checksum of the text "<<sinfo.docfilename<<" is "<<thisDigest<<endl;
+				DEBUGCONDUIT<<"MD5 Checksum of the text "<<sinfo.txtfilename<<" is "<<thisDigest<<endl;
 #endif
 			} else {
 #ifdef DEBUG
-				DEBUGCONDUIT<<"couldn't open file "<<docconverter.docFilename()<<" for reading!!!"<<endl;
+				DEBUGCONDUIT<<"couldn't open file "<<docconverter.txtFilename()<<" for reading!!!"<<endl;
 #endif
 			}
 		}
@@ -412,7 +412,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 
 
 /** syncNextDB walks through all PalmDoc databases on the handheld and decides if they are supposed to be synced to the PC.
- * syncNextDB and syncNextDOC fist build the list of all PalmDoc texts, and then the method syncDatabases does the actual sync. */
+ * syncNextDB and syncNextTXT fist build the list of all PalmDoc texts, and then the method syncDatabases does the actual sync. */
 void DOCConduit::syncNextDB() {
 	FUNCTIONSETUP;
 	DBInfo dbinfo;
@@ -420,7 +420,7 @@ void DOCConduit::syncNextDB() {
 	if (eSyncDirection==eSyncPCToPDA || fHandle->findDatabase(NULL, &dbinfo, dbnr, dbtype(), dbcreator() /*, cardno */ ) < 0)
 	{
 		// no more databases available, so check for PC->Palm sync
-		QTimer::singleShot(0, this, SLOT(syncNextDOC()));
+		QTimer::singleShot(0, this, SLOT(syncNextTXT()));
 		return;
 	}
 	dbnr=dbinfo.index+1;
@@ -436,11 +436,11 @@ void DOCConduit::syncNextDB() {
 		return;
 	}
 
-	QString docfilename=constructDOCFileName(QString::fromLatin1(dbinfo.name));
+	QString txtfilename=constructTXTFileName(QString::fromLatin1(dbinfo.name));
 	QString pdbfilename=constructPDBFileName(QString::fromLatin1(dbinfo.name));
 
 	docSyncInfo syncInfo(QString::fromLatin1(dbinfo.name),
-		docfilename, pdbfilename, eSyncNone);
+		txtfilename, pdbfilename, eSyncNone);
 	syncInfo.dbinfo=dbinfo;
 	needsSync(syncInfo);
 	fSyncInfoList.append(syncInfo);
@@ -452,7 +452,7 @@ void DOCConduit::syncNextDB() {
 
 
 
-void DOCConduit::syncNextDOC()
+void DOCConduit::syncNextTXT()
 {
 	FUNCTIONSETUP;
 	
@@ -464,9 +464,9 @@ void DOCConduit::syncNextDOC()
 		return;
 	}
 
-	// if docnames isn't initialized, get a list of all *.txt files in fDOCDir
+	// if docnames isn't initialized, get a list of all *.txt files in fTXTDir
 	if (docnames.isEmpty()/* || dociterator==docnames.end() */) {
-		docnames=QDir(fDOCDir, CSL1("*.txt")).entryList() ;
+		docnames=QDir(fTXTDir, CSL1("*.txt")).entryList() ;
 		dociterator=docnames.begin();
 	}
 	if (dociterator==docnames.end()) {
@@ -478,9 +478,9 @@ void DOCConduit::syncNextDOC()
 
 	QString fn=(*dociterator);
 
-	QDir dr(fDOCDir);
+	QDir dr(fTXTDir);
 	QFileInfo fl(dr, fn );
-	QString docfilename=fl.absFilePath();
+	QString txtfilename=fl.absFilePath();
 	QString pdbfilename;
 	dociterator++;
 
@@ -493,18 +493,18 @@ void DOCConduit::syncNextDOC()
 	bool alreadySynced=fDBNames.contains(fl.baseName(TRUE));
 	if (!alreadySynced) {
 		docSyncInfo syncInfo(QString::fromLatin1(dbinfo.name), 
-			docfilename, pdbfilename, eSyncNone);
+			txtfilename, pdbfilename, eSyncNone);
 		syncInfo.dbinfo=dbinfo;
 		needsSync(syncInfo);
 		fSyncInfoList.append(syncInfo);
 		fDBNames.append(QString::fromLatin1(dbinfo.name));
 	} else {
 #ifdef DEBUG
-		DEBUGCONDUIT<<docfilename<<" has already been synced, skipping it."<<endl;
+		DEBUGCONDUIT<<txtfilename<<" has already been synced, skipping it."<<endl;
 #endif
 	}
 
-	QTimer::singleShot(0, this, SLOT(syncNextDOC()));
+	QTimer::singleShot(0, this, SLOT(syncNextTXT()));
 	return;
 }
 
@@ -553,7 +553,7 @@ void DOCConduit::checkPDBFiles() {
 			memset(&dbinfo.name[0], 0, 33);
 			strncpy(&dbinfo.name[0], dbname.latin1(), 30);
 
-			docSyncInfo syncInfo(dbname, constructDOCFileName(dbname), pdbfilename, eSyncNone);
+			docSyncInfo syncInfo(dbname, constructTXTFileName(dbname), pdbfilename, eSyncNone);
 			syncInfo.dbinfo=dbinfo;
 			needsSync(syncInfo);
 			fSyncInfoList.append(syncInfo);
@@ -578,9 +578,9 @@ void DOCConduit::checkDeletedDocs()
 		if (!fDBNames.contains(*it)) {
 			// We need to delete this doc:
 			QString dbname(*it);
-			QString docfilename=constructDOCFileName(dbname);
+			QString txtfilename=constructTXTFileName(dbname);
 			QString pdbfilename=constructPDBFileName(dbname);
-			docSyncInfo syncInfo(dbname, docfilename, pdbfilename, eSyncDelete);
+			docSyncInfo syncInfo(dbname, txtfilename, pdbfilename, eSyncDelete);
 
 			DBInfo dbinfo;
 			memset(&dbinfo.name[0], 0, 33);
@@ -674,7 +674,7 @@ void DOCConduit::syncDatabases() {
 	switch (sinfo.direction) {
 		case eSyncConflict:
 #ifdef DEBUG
-			DEBUGCONDUIT<<"Entry "<<sinfo.handheldDB<<"( docfilename: "<<sinfo.docfilename<<
+			DEBUGCONDUIT<<"Entry "<<sinfo.handheldDB<<"( txtfilename: "<<sinfo.txtfilename<<
 				", pdbfilename: "<<sinfo.pdbfilename<<") had sync direction eSyncConflict!!!"<<endl;
 #endif
 			break;
@@ -685,7 +685,7 @@ void DOCConduit::syncDatabases() {
 			if (!doSync(sinfo)) {
 				// The sync could not be done, so inform the user (the error message should probably issued inside doSync)
 #ifdef DEBUG
-				DEBUGCONDUIT<<"There was some error syncing the text \""<<sinfo.handheldDB<<"\" with the file "<<sinfo.docfilename<<endl;
+				DEBUGCONDUIT<<"There was some error syncing the text \""<<sinfo.handheldDB<<"\" with the file "<<sinfo.txtfilename<<endl;
 #endif
 			}
 			break;
@@ -726,7 +726,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 			N   N   |     C          P           H
 		*/
 
-		if (QFile::exists(sinfo.docfilename)) sinfo.fPCStatus=eStatNew;
+		if (QFile::exists(sinfo.txtfilename)) sinfo.fPCStatus=eStatNew;
 		else sinfo.fPCStatus=eStatDoesntExist;
 		if (docdb && docdb->isDBOpen()) sinfo.fPalmStatus=eStatNew;
 		else sinfo.fPalmStatus=eStatDoesntExist;
@@ -766,8 +766,8 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 	}
 	
 	// Text was included in the last sync
-	if (!QFile::exists(sinfo.docfilename)) sinfo.fPCStatus=eStatDeleted;
-	else if(pcTextChanged(sinfo.docfilename)) {
+	if (!QFile::exists(sinfo.txtfilename)) sinfo.fPCStatus=eStatDeleted;
+	else if(pcTextChanged(sinfo.txtfilename)) {
 		sinfo.fPCStatus=eStatChanged;
 #ifdef DEBUG
 		DEBUGCONDUIT<<"PC side has changed!"<<endl;
@@ -881,7 +881,7 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 
 	{
 		// make sure the dir for the local texts really exists!
-		QDir dir(fDOCDir);
+		QDir dir(fTXTDir);
 		if (!dir.exists())
 		{
 			dir.mkdir(dir.absPath());

@@ -53,7 +53,7 @@ extern "C" {
 KAboutData * DOCConduitFactory::fAbout = 0L;
 
 const char *DOCConduitFactory::fGroup = "DOC-conduit";
-const char *DOCConduitFactory::fDOCDir = "DOC Directory";
+const char *DOCConduitFactory::fTXTDir = "TXT Directory";
 const char *DOCConduitFactory::fPDBDir = "PDB Directory";
 const char *DOCConduitFactory::fKeepPDBLocally = "Keep PDBs locally";
 const char *DOCConduitFactory::fConflictResolution = "Conflict Resolution";
