@@ -1,20 +1,15 @@
 Done:
 ----------------------------------------------------------------
 
-Exports:
-    Changing to new Export system
+Everything for 3.2:
+    All most we need to TEST TEST TEST.
 
 
 In Progress:
 ----------------------------------------------------------------
 
-Exports
-    Exports have to check out. Only basic stuff works (Pasanen)
-    HTML export code must be added (Pasanen)
-
 Docbooks:
     Re-organize  command-line (Winters)
 
-Heavy testing unit:
-    Test adding and changing (deleting) (Winters)
-    Test new export system (Pasanen, Winters)
+Heavy testing:
+    Test everything and report bugs..
