@@ -119,7 +119,7 @@ main(int argc, char ** argv)
     // Restore umask.
     umask(prev_umask);
 
-    cerr << "Finished. Returning retval of " retval << "." << endl;
+    cerr << "Finished. Returning retval of " << retval << "." << endl;
 
     return retval;
 }
