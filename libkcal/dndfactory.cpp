@@ -209,15 +209,10 @@ Event *DndFactory::pasteEvent(const QDate &newDate, const QTime *newTime)
   bufsize = strlen(buf);
 
   if (!VCalDrag::decode(cb->data(),&vcal)) {
-    if (mEnableDialogs) {
-      KMessageBox::sorry(mTopWidget,
-                            i18n("An error has occurred parsing the "
-                                 "contents of the clipboard.\nYou can "
-                                 "only paste a valid vCalendar into "
-                                 "%1.\n").arg(application()),
-                            i18n("%1: Paste Calendar").arg(application()));
-      return 0;
-    }
+    kdDebug() << "An error has occurred parsing the contents of the clipboard."
+                 "You can only paste a valid vCalendar into " << application()
+              << endl;
+    return 0;
   }
 
   initPropIterator(&i, vcal);

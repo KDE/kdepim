@@ -1433,11 +1433,8 @@ void VCalFormat::populate(VObject *vcal)
   if ((curVO = isAPropertyOf(vcal, ICMethodProp)) != 0) {
     char *methodType = 0;
     methodType = fakeCString(vObjectUStringZValue(curVO));
-    if (mEnableDialogs)
-      KMessageBox::information(mTopWidget,
-			       i18n("This calendar is an iTIP transaction of type \"%1\".")
-			       .arg(methodType),
-                               i18n("%1: iTIP Transaction").arg(application()));
+    kdDebug() << "This calendar is an iTIP transaction of type '"
+              << methodType << "'" << endl;
     delete methodType;
   }
 
@@ -1445,11 +1442,8 @@ void VCalFormat::populate(VObject *vcal)
   if ((curVO = isAPropertyOf(vcal, VCProdIdProp)) != 0) {
     char *s = fakeCString(vObjectUStringZValue(curVO));
     if (strcmp(productId().local8Bit(), s) != 0)
-      if (mEnableDialogs)
-	KMessageBox::information(mTopWidget,
-			     i18n("This vCalendar file was not created by KOrganizer "
-				     "or any other product we support. Loading anyway..."),
-                             i18n("%1: Unknown vCalendar Vendor").arg(application()));
+      kdDebug() << "This vCalendar file was not created by KOrganizer "
+                   "or any other product we support. Loading anyway..." << endl;
     deleteStr(s);
   }
 
@@ -1457,12 +1451,8 @@ void VCalFormat::populate(VObject *vcal)
   if ((curVO = isAPropertyOf(vcal, VCVersionProp)) != 0) {
     char *s = fakeCString(vObjectUStringZValue(curVO));
     if (strcmp(_VCAL_VERSION, s) != 0)
-      if (mEnableDialogs)
-	KMessageBox::sorry(mTopWidget,
-			     i18n("This vCalendar file has version %1.\n"
-			          "We only support %2.")
-                             .arg(s).arg(_VCAL_VERSION),
-                             i18n("%1: Unknown vCalendar Version").arg(application()));
+      kdDebug() << "This vCalendar file has version " << s
+                << "We only support " << _VCAL_VERSION << endl;
     deleteStr(s);
   }
 
@@ -1510,36 +1500,9 @@ void VCalFormat::populate(VObject *vcal)
 	deleteStr(s);
 
 	if (mCalendar->getEvent(tmpStr)) {
-// Disable message boxes, because it hinders merging of calendars and does not
-// give a sensible advice anyway.
-#if 0
-	  if (mEnableDialogs)
-	    KMessageBox::error(mTopWidget,
-				 i18n("Aborting merge of an event already in "
-				      "calendar.\n"
-				      "UID is %1\n"
-				      "Please check your vCalendar file for "
-				      "duplicate UIDs "
-				      "and change them MANUALLY to be unique "
-				      "if you find any.").arg(tmpStr),
-				 i18n("%1: Possible Duplicate Event").arg(application()));
-#endif
 	  goto SKIP;
 	}
 	if (mCalendar->getTodo(tmpStr)) {
-#if 0
-	  if (mEnableDialogs)
-	    KMessageBox::error(mTopWidget,
-				 i18n("Aborting merge of an event already in "
-				      "calendar.\n"
-				      "UID is %1\n"
-				      "Please check your vCalendar file for "
-				      "duplicate UIDs "
-				      "and change them MANUALLY to be unique "
-				      "if you find any.").arg(tmpStr),
-				 i18n("%1: Possible Duplicate Event").arg(application()));
-
-#endif
 	  goto SKIP;
 	}
       }

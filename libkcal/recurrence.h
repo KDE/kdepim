@@ -22,8 +22,6 @@
 #define KCAL_RECURRENCE_H
 // $Id$
 
-#define LIBKCAL_BACK_COMPAT
-
 #include <qstring.h>
 #include <qbitarray.h>
 #include <qptrlist.h>
@@ -250,9 +248,12 @@ class Recurrence {
     int  yearlyDayCalcToDate(const QDate& enddate, YearlyDayData&) const;
     int  yearlyDayCalcNextAfter(QDate& enddate, YearlyDayData&) const;
     int  countMonthlyPosDays() const;
-    void getMonthlyPosDays(QValueList<int>&, int daysInMonth, int startDayOfWeek) const;
-    bool getMonthlyDayDays(QValueList<int>&, int daysInMonth, const QValueList<int> *days31 = 0) const;
-    bool getYearlyMonthMonths(int day, QValueList<int>&, QValueList<int> &leaplist) const;
+    void getMonthlyPosDays(QValueList<int> &, int daysInMonth,
+                           int startDayOfWeek) const;
+    bool getMonthlyDayDays(QValueList<int>&, int daysInMonth,
+                           const QValueList<int> *days31 = 0) const;
+    bool getYearlyMonthMonths(int day, QValueList<int>&,
+                              QValueList<int> &leaplist) const;
 
     // stuff below here is for recurring events
     // this is a SUBSET of vCalendar and should be expanded...

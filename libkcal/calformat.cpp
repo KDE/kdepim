@@ -40,7 +40,7 @@ struct CalVersion {
 static CalVersion prodIds[] = {
   { 220, QString::fromLatin1("-//K Desktop Environment//NONSGML KOrganizer 2.2//EN") },
   { 300, QString::fromLatin1("-//K Desktop Environment//NONSGML KOrganizer 3.0//EN") },
-  { 0 }
+  { 0 , QString() }
 };
 
 
@@ -48,25 +48,12 @@ CalFormat::CalFormat(Calendar *cal)
 {
   mCalendar = cal;
 
-  mTopWidget = 0;
-  mEnableDialogs = false;
-
   mException = 0;
 }
 
 CalFormat::~CalFormat()
 {
   delete mException;
-}
-
-void CalFormat::setTopwidget(QWidget *topWidget)
-{
-  mTopWidget = topWidget;
-}
-
-void CalFormat::showDialogs(bool enable)
-{
-  mEnableDialogs = enable;
 }
 
 void CalFormat::clearException()

@@ -355,7 +355,7 @@ void Recurrence::setDuration(int _rDuration)
   if (_rDuration > 0) {
     rDuration = _rDuration;
 #ifdef LIBKCAL_BACK_COMPAT
-    mCompatVersion = ~0;
+    mCompatVersion = 310;
 #endif
   }
 }
@@ -2408,7 +2408,8 @@ int Recurrence::countMonthlyPosDays() const
 
 // Get the days in this month which recur, in numerical order.
 // Reply = true if day numbers varies from month to month.
-bool Recurrence::getMonthlyDayDays(QValueList<int>& list, int daysInMonth, const QValueList<int>* days31) const
+bool Recurrence::getMonthlyDayDays(QValueList<int>& list, int daysInMonth,
+                                   const QValueList<int> *) const
 {
   list.clear();
   bool variable = false;

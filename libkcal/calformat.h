@@ -70,9 +70,6 @@ class CalFormat {
     */
     virtual QString toString() = 0;
 
-    /** /deprecated */
-    void showDialogs(bool);
-
     /** Clear exception status of this format object */
     void clearException();
     /**
@@ -102,9 +99,6 @@ class CalFormat {
     void setException(ErrorFormat *error);
 
   protected:
-    QWidget *mTopWidget;      // topWidget used for message boxes
-    bool mEnableDialogs;      // display various GUI dialogs?
-
     Calendar *mCalendar;
 
   private:
