@@ -134,7 +134,7 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName, ExtraMap&
                                        KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
 
             KABC::PhoneNumber homeMobile( el.attribute( "HomeMobile" ),
-                                          KABC::PhoneNumber::Home | KABC::PhoneNumber::Cell );
+                                          KABC::PhoneNumber::Cell );
 
             if ( !homePhoneNum.number().isEmpty() )
               adr.insertPhoneNumber( homePhoneNum );
