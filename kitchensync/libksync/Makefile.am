@@ -1,6 +1,6 @@
 SUBDIRS = . tests test
 
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkcal $(all_includes)
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkcal -I$(top_srcdir)/libkdepim $(all_includes)
 
 lib_LTLIBRARIES   = libksync2.la
 libksync2_la_LDFLAGS =  $(all_libraries) -no-undefined -version-info 0:0:0
@@ -19,7 +19,7 @@ libksync2_la_SOURCES = \
   conflictdialog.cpp \
   synchistory.cpp
 
-ksincludedir = $(includedir)/kitchensync/
+ksincludedir = $(includedir)/kitchensync
 ksinclude_HEADERS = addressbookmerger.h addressbooksyncee.h  \
                     bookmarksyncee.h calendarmerger.h        \
                     calendarsyncee.h conflictdialog.h        \
