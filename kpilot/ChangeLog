@@ -38,6 +38,14 @@ TODO LIST (Ignore the file TODO)
 KPilot Developer's notes for April 30th, 2003
 =============================================
 
+2003-4-16  Reinhold Kainhofer
+* Tried to add a logMessagePart slot which would append some words 
+  to the last line of the sync log (but would not start a new paragraph, 
+  and more text could be added to the last paragraph). Realized that this 
+  is not possible in a QTextEdit with LogText, and using RichText is too
+  buggy to be useful. However, I found a way to get rid of the pseudo-
+  progressbar in the libmal output, so this is not an issue any longer.
+  
 2003-4-16  Adriaan de Groot
 * Moved conduit config to a list of QCheckListItems, finally.
   This was easier than I thought. Took a bit of time to polish,
