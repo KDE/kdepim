@@ -30,6 +30,7 @@ class KLineEdit;
 
 class QPushButton;
 class QSpinBox;
+class KPasswordEdit;
 
 class AddHostDialog : public KDialogBase
 {
@@ -62,7 +63,7 @@ class AddHostDialog : public KDialogBase
     QSpinBox* mPortSpinBox;
     KLineEdit* mBaseEdit;
     KLineEdit* mBindEdit;
-    KLineEdit* mPwdBindEdit;
+    KPasswordEdit* mPwdBindEdit;
 };
 
 #endif // ADDHOSTDIALOG_H
