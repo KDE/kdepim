@@ -50,7 +50,7 @@ LocationConfigWidget::LocationConfigWidget( KABC::AddressBook *ab, QWidget *pare
   mListView->addColumn( i18n( "URL" ) );
   mListView->setAllColumnsShowFocus( true );
   layout->addMultiCellWidget( mListView, 0, 0, 0, 1 );
-
+  connect( mListView, SIGNAL( doubleClicked( QListViewItem *, const QPoint &, int  )), this, SLOT(edit()));
   KButtonBox *bbox = new KButtonBox( this, Qt::Vertical );
   mAddButton = bbox->addButton( i18n( "Add" ), this, SLOT( add() ) );
   mEditButton = bbox->addButton( i18n( "Edit" ), this, SLOT( edit() ) );
