@@ -787,7 +787,10 @@ void  KDTimeHeaderWidget::preparePopupMenu()
     myPopupMenu->setItemVisible ( 4, flagShowYear );
     myPopupMenu->setItemVisible ( 5, flagShowGrid);
     myPopupMenu->setItemVisible ( 30, flagShowPrint );
-    myPopupMenu->changeItem( 1, i18n("Zoom (%1)").arg( QString::number( zoomFactor(), 'f',3) ) );
+    if (flagZoomToFit)
+        myPopupMenu->changeItem( 1, i18n("Zoom (Fit)"));
+    else
+        myPopupMenu->changeItem( 1, i18n("Zoom (%1)").arg( QString::number( zoomFactor(), 'f',3) ) );
     int i = 0;
     int id;
     while ( ( id = scalePopupMenu->idAt( i++ )) >= 0 ) {
@@ -1137,6 +1140,7 @@ void KDTimeHeaderWidget::moveTimeLineTo(int X)
 
 void KDTimeHeaderWidget::zoom(double factor, bool absolute)
 {
+    flagZoomToFit = false;
     if ( factor < 0.000001 ) {
         qDebug("KDGanttView::zoom() : Zoom factor to low. Nothing zoomed. ");
         return;
@@ -1584,6 +1588,14 @@ QDateTime KDTimeHeaderWidget::getDateTimeForIndex(int X, bool local )
     secs = secs - ( ((int) days) *86400.0 );
     return (myRealStart.addDays ( (int) days )).addSecs( (int) secs);
 }
+
+//FIXME: This doesn't work quite intuitively (imho) when scale is day
+//       and each column containes more than 1 day:
+//       1) If a column includes a weekend day, the whole column gets weekend color,
+//       2) If a column includes 7 days, either *all* columns get weekend color, or
+//          *none* get weekend color (haven't figured out why)
+//       Proposal: Only use weekend color if the whole column is a weekend.
+//       Alt: Color the area that actually is the weekend.
 bool KDTimeHeaderWidget::getColumnColor(QColor& col,int coordLow, int coordHigh)
 {
     if (!flagShowMajorTicks && !flagShowMinorTicks)
@@ -2169,7 +2181,7 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
         default:
             break;
         }
-    flagZoomToFit = false;
+    //flagZoomToFit = false;
     while((minorItems/tempMinorScaleCount+1)*Width < myMinimumWidth ) {
         ++minorItems;
     }
