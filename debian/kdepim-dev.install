@@ -39,9 +39,6 @@ debian/tmp/usr/lib/libkaddressbook.so
 debian/tmp/usr/lib/libkalarmd.a
 debian/tmp/usr/lib/libkalarmd.la
 debian/tmp/usr/lib/libkalarmd.so
-debian/tmp/usr/lib/libkdenetwork.a
-debian/tmp/usr/lib/libkdenetwork.la
-debian/tmp/usr/lib/libkdenetwork.so
 debian/tmp/usr/lib/libkdepim.a
 debian/tmp/usr/lib/libkdepim.la
 debian/tmp/usr/lib/libkdepim.so
