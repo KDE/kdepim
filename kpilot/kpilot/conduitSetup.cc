@@ -83,7 +83,7 @@
 static const char *conduitsetup_id =
 	"$Id$";
 
-#include "listCat.h"
+//#include "listCat.h"
 
 
 // We're going to hide all kinds of information in the

@@ -39,6 +39,7 @@
 #include <kdatewidget.h>
 
 #include "pilotTodoEntry.h"
+#include "todoEditor_base.h"
 #include "todoEditor.moc"
 
 static const char *todoEditor_id =
@@ -46,15 +47,16 @@ static const char *todoEditor_id =
 
 TodoEditor::TodoEditor(PilotTodoEntry * p, struct ToDoAppInfo *appInfo,
 	QWidget * parent, const char *name) :
-	KDialogBase(KDialogBase::Plain, i18n("Todo Editor"),
-		Ok | Cancel, Cancel, parent, name, false /* non-modal */ ),
+	KDialogBase(parent, "TodoEditor", false, i18n("Todo Editor"),
+		Ok | Cancel/*, Cancel, parent, name, false /* non-modal */ ),
 	fDeleteOnCancel(p == 0L),
 	fTodo(p),
 	fAppInfo(appInfo)
 {
 	FUNCTIONSETUP;
 
-	initLayout();
+	fWidget=new TodoEditorBase(this);
+	setMainWidget(fWidget);
 	fillFields();
 
 	connect(parent, SIGNAL(recordChanged(PilotTodoEntry *)),
@@ -94,86 +96,23 @@ void TodoEditor::fillFields()
 		fDeleteOnCancel = true;
 	}
 
-	fDescription->setText(fTodo->getDescription());
-	fCompleted->setChecked(fTodo->getComplete());
+	fWidget->fDescription->setText(fTodo->getDescription());
+	fWidget->fCompleted->setChecked(fTodo->getComplete());
 	if (fTodo->getIndefinite())
 	{
-		fHasEndDate->setChecked(false);
+		fWidget->fHasEndDate->setChecked(false);
 	}
 	else
 	{
-		fHasEndDate->setChecked(true);
-		fEndDate->setDate(readTm(fTodo->getDueDate()).date());
+		fWidget->fHasEndDate->setChecked(true);
+		fWidget->fEndDate->setDate(readTm(fTodo->getDueDate()).date());
 	}
-	fPriority->setCurrentItem(fTodo->getPriority());
+	fWidget->fPriority->setCurrentItem(fTodo->getPriority());
 //	fCategory->setCurrentItem(fTodo->getCategory()));
-	fNote->setText(fTodo->getNote());
+	fWidget->fNote->setText(fTodo->getNote());
 }
 
 
-
-void TodoEditor::initLayout()
-{
-	FUNCTIONSETUP;
-
-	QFrame *p = plainPage();
-	QGridLayout *grid = new QGridLayout(p, 1, 1, 0, SPACING);
-
-	QLabel*fDescriptionLabel = new QLabel(i18n("&Description:"), p, "fDescriptionLabel" );
-	fDescriptionLabel->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)4, (QSizePolicy::SizeType)5, 0, 0, fDescriptionLabel->sizePolicy().hasHeightForWidth() ) );
-	fDescriptionLabel->setAlignment( int( QLabel::AlignTop ) );
-	grid->addWidget( fDescriptionLabel, 0, 0 );
-
-	fDescription = new QTextEdit( p, "fDescription" );
-	fDescription->setMaximumSize( QSize( 32767, 80 ) );
-	grid->addMultiCellWidget( fDescription, 0, 0, 1, 3 );
-	fDescriptionLabel->setBuddy( fDescription );
-
-
-	fCompleted = new QCheckBox(i18n("&Completed"), p, "fCompleted" );
-	grid->addMultiCellWidget(fCompleted, 1, 1, 0, 1 );
-
-	fHasEndDate = new QCheckBox(i18n("Has &end date:"), p, "fHasEndDate" );
-	grid->addMultiCellWidget( fHasEndDate, 2, 2, 0, 1 );
-
-	fEndDate = new KDateWidget(QDate::currentDate(), p, "fEndDate" );
-	fEndDate->setEnabled( FALSE );
-	grid->addMultiCellWidget( fEndDate, 3, 3, 0, 1 );
-
-
-	QLabel*fPriorityLabel = new QLabel( i18n("&Priority:"), p, "fPriorityLabel" );
-	grid->addWidget( fPriorityLabel, 1, 2 );
-	fPriority = new QComboBox( FALSE, p, "fPriority" );
-	grid->addWidget( fPriority, 1, 3 );
-	fPriorityLabel->setBuddy( fPriority );
-	fPriority->insertItem( tr("1") );
-	fPriority->insertItem( tr("2") );
-	fPriority->insertItem( tr("3") );
-	fPriority->insertItem( tr("4") );
-	fPriority->insertItem( tr("5") );
-
-
-/*	fCategoryLabel = new QLabel( i18n("Ca&tegory:"), p, "fCategoryLabel" );
-	grid->addWidget( fCategoryLabel, 2, 2 );
-	fCategory = new QComboBox( FALSE, p, "fCategory" );
-	grid->addWidget( fCategory, 2, 3 );
-	fCategoryLabel->setBuddy( fCategory );
-	// TODO: Fill the list of categories
-	// TODO: Add possibility to edit categories
-*/
-
-
-	QLabel*fNoteLabel = new QLabel(i18n( "&Note:" ), p, "fNoteLabel" );
-	fNoteLabel->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)4, (QSizePolicy::SizeType)5, 0, 0, fNoteLabel->sizePolicy().hasHeightForWidth() ) );
-	fNoteLabel->setAlignment( int( QLabel::AlignTop ) );
-	grid->addWidget( fNoteLabel, 4, 0 );
-
-	fNote = new QTextEdit(p, "fNote" );
-	grid->addMultiCellWidget( fNote, 4, 4, 1, 3 );
-	fNoteLabel->setBuddy( fNote );
-
-	connect( fHasEndDate, SIGNAL( toggled(bool) ), fEndDate, SLOT( setEnabled(bool) ) );
-}
 
 /* slot */ void TodoEditor::slotCancel()
 {
@@ -193,21 +132,21 @@ void TodoEditor::initLayout()
 	FUNCTIONSETUP;
 
 	// Commit changes here
-	fTodo->setDescription(fDescription->text());
-	fTodo->setComplete(fCompleted->isChecked());
-	if (fHasEndDate->isChecked())
+	fTodo->setDescription(fWidget->fDescription->text());
+	fTodo->setComplete(fWidget->fCompleted->isChecked());
+	if (fWidget->fHasEndDate->isChecked())
 	{
 		fTodo->setIndefinite(false);
-		struct tm duedate=writeTm(fEndDate->date());
+		struct tm duedate=writeTm(fWidget->fEndDate->date());
 		fTodo->setDueDate(duedate);
 	}
 	else
 	{
 		fTodo->setIndefinite(true);
 	}
-	fTodo->setPriority(fPriority->currentItem());
-//	fTodo->setCategory(fCategory->currentItem());
-	fTodo->setNote(fNote->text());
+	fTodo->setPriority(fWidget->fPriority->currentItem());
+//	fTodo->setCategory(fWidget->fCategory->currentItem());
+	fTodo->setNote(fWidget->fNote->text());
 
 	emit(recordChangeComplete(fTodo));
 	KDialogBase::slotOk();

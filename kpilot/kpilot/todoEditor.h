@@ -39,6 +39,7 @@ class QComboBox;
 class QTextEdit;
 class QCheckBox;
 class KDateWidget;
+class TodoEditorBase;
 
 class TodoEditor : public KDialogBase
 {
@@ -61,21 +62,12 @@ public slots:
 	void updateRecord(PilotTodoEntry *);
 
 private:
+	TodoEditorBase*fWidget;
 	bool fDeleteOnCancel;
 
 	PilotTodoEntry* fTodo;
-        struct ToDoAppInfo *fAppInfo;
-	// entry fields
-	QComboBox* fCategory;
-	QComboBox* fPriority;
-	QTextEdit* fDescription;
-	QTextEdit* fNote;
-	QCheckBox* fCompleted;
-	QCheckBox* fHasEndDate;
-	KDateWidget* fEndDate;
+	struct ToDoAppInfo *fAppInfo;
 
-
-	void initLayout();
 	void fillFields();
 };
 #else

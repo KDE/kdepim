@@ -1,0 +1,183 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>TodoEditorBase</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>TodoEditorBase</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>399</width>
+            <height>263</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Form1</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>fDescriptionLabel</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>4</hsizetype>
+                    <vsizetype>5</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="text">
+                <string>&amp;Description:</string>
+            </property>
+            <property name="alignment">
+                <set>AlignTop</set>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>fDescription</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="4" column="0">
+            <property name="name">
+                <cstring>fNoteLabel</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>4</hsizetype>
+                    <vsizetype>5</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="text">
+                <string>&amp;Note:</string>
+            </property>
+            <property name="alignment">
+                <set>AlignTop</set>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>fNote</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="2" column="2">
+            <property name="name">
+                <cstring>fCategoryLabel</cstring>
+            </property>
+            <property name="enabled">
+                <bool>false</bool>
+            </property>
+            <property name="text">
+                <string>Ca&amp;tegory:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>fCategory</cstring>
+            </property>
+        </widget>
+        <widget class="QComboBox" row="2" column="3">
+            <property name="name">
+                <cstring>fCategory</cstring>
+            </property>
+            <property name="enabled">
+                <bool>false</bool>
+            </property>
+        </widget>
+        <widget class="QLabel" row="1" column="2">
+            <property name="name">
+                <cstring>fPriorityLabel</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Priority:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>fPriority</cstring>
+            </property>
+        </widget>
+        <widget class="QComboBox" row="1" column="3">
+            <item>
+                <property name="text">
+                    <string>1</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>2</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>3</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>4</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>5</string>
+                </property>
+            </item>
+            <property name="name">
+                <cstring>fPriority</cstring>
+            </property>
+        </widget>
+        <widget class="QTextEdit" row="0" column="1" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>fDescription</cstring>
+            </property>
+            <property name="maximumSize">
+                <size>
+                    <width>32767</width>
+                    <height>80</height>
+                </size>
+            </property>
+        </widget>
+        <widget class="QTextEdit" row="4" column="1" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>fNote</cstring>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>fCompleted</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Completed</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>fHasEndDate</cstring>
+            </property>
+            <property name="text">
+                <string>Has &amp;end date:</string>
+            </property>
+        </widget>
+        <widget class="KDateWidget" row="3" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>fEndDate</cstring>
+            </property>
+            <property name="enabled">
+                <bool>false</bool>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>fHasEndDate</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fEndDate</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kdatewidget.h</includehint>
+</includehints>
+</UI>

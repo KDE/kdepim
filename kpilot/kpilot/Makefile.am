@@ -46,7 +46,7 @@ kpilot_SOURCES	= \
 	addressWidget.cc addressEditor.cc \
 	dbviewerWidget.cc dbFlagsEditor.cc dbFlagsEditor_base.ui dbRecordEditor.cc dbAppInfoEditor.cc \
 	datebookWidget.cc \
-	todoWidget.cc todoEditor.cc \
+	todoWidget.cc todoEditor.cc todoEditor_base.ui \
 	fileInstaller.cc fileInstallWidget.cc \
 	listItems.cc \
 	kroupware.cc
