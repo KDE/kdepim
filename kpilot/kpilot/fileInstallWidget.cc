@@ -30,11 +30,8 @@
 */
 static const char *fileinstallwidget_id="$Id$";
 
+#include "options.h"
 
-#include <sys/types.h>
-#include <dirent.h>
-#include <iostream.h>
-#include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <qdir.h>
@@ -45,6 +42,7 @@ static const char *fileinstallwidget_id="$Id$";
 #include <qlabel.h>
 #include <qpushbt.h>
 #include <qdragobject.h>
+#include <qlayout.h>
 
 #include <kstddirs.h>
 #include <klocale.h>
@@ -61,20 +59,35 @@ FileInstallWidget::FileInstallWidget( QWidget* parent,
 	const QString& path) : 
 	PilotComponent(parent,path), 
 	fSaveFileList(false) 
-    {
-    setGeometry(0, 0, parent->geometry().width(), parent->geometry().height());
-    QLabel* label = new QLabel(i18n("Files To Install:"), this);
-    label->move(20, 10);
-    QPushButton* abutton = new QPushButton(i18n("Clear List"), this);
-    abutton->move(20,280);
-    connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
-    abutton = new QPushButton(i18n("Add File"), this);
-    abutton->move(20,240);
-    connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
-    fListBox = new QListBox(this);
-    fListBox->setGeometry(140, 10, 350, 300);
-    setAcceptDrops(true);
-    }
+{
+	setGeometry(0, 0, 
+		parent->geometry().width(), 
+		parent->geometry().height());
+
+	QGridLayout *grid = new QGridLayout(this,5,5,SPACING);
+
+	QLabel* label = new QLabel(i18n("Files To Install:"), this);
+	grid->addWidget(label,1,1);
+
+	QPushButton* abutton = new QPushButton(i18n("Clear List"), this);
+	connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
+	grid->addWidget(abutton,3,1);
+
+	abutton = new QPushButton(i18n("Add File"), this);
+	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
+	grid->addWidget(abutton,4,1);
+
+	fListBox = new QListBox(this);
+	grid->addMultiCellWidget(fListBox,1,4,2,3);
+
+	grid->setRowStretch(2,100);
+	grid->setColStretch(2,50);
+	grid->setColStretch(2,50);
+	grid->addColSpacing(4,SPACING);
+	grid->addRowSpacing(5,SPACING);
+
+	setAcceptDrops(true);
+}
 
 /**
   * Adds 'fileName' to the pending file list and the list box if using the gui version
@@ -213,6 +226,9 @@ FileInstallWidget::refreshFileInstallList()
 
 
 // $Log$
+// Revision 1.12  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.11  2001/02/08 08:13:44  habenich
 // exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
 //
