@@ -92,7 +92,7 @@ class kab
   private:
     filterInfo  *info;    // tmp var
     KABC::AddressBook *mAddressBook;
-    KABC::Ticket *mTicket;
+    KABC::AddressBook::Ticket *mTicket;
     QString       tels;
     QString       cap;
   public:
