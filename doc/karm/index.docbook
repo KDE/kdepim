@@ -393,7 +393,7 @@ configure &karm;</para>
 
 <para>The dialog has three tabbed panes: <guilabel>Behavior </guilabel>, which 
 allows you to specify an alert for no activity and a warning message when you 
-delete a task,set, <guilabel>Display </guilabel>, which configures the fields 
+delete a task set, <guilabel>Display </guilabel>, which configures the fields 
 shown in the main window and <guilabel>Storage</guilabel>,
 which configures the location of the save file, whether autosaving is
 enabled and the autosave interval.</para> </listitem>
