@@ -289,6 +289,8 @@ void Backup::slotSynceesRead( Konnector *k )
       }
     }
   }
+  
+  k->disconnectDevice();
 
   tryFinishBackup();
 }
@@ -360,6 +362,7 @@ void Backup::restoreBackup()
                     .arg( type ) );
       }
       k->writeSyncees();
+      k->disconnectDevice();
     }
   }
 
