@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
@@ -83,7 +83,7 @@ static const char *memowidget_id =
 #ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
 #endif
-#ifndef _KPILOT_LISTITEMS_H 
+#ifndef _KPILOT_LISTITEMS_H
 #include "listItems.h"
 #endif
 #ifndef _KPILOT_PILOTLOCALDATABASE_H
@@ -95,7 +95,7 @@ static const char *memowidget_id =
 
 
 // This constant (0xffff) appears all over the place (mostly in
-// ::initialize(), but elsewhere as well. It seems to be inherited 
+// ::initialize(), but elsewhere as well. It seems to be inherited
 // from the pilot-link library.
 //
 // I've replaced instances of the constant with this #define
@@ -204,7 +204,7 @@ void MemoWidget::initialize()
 	FUNCTIONSETUP;
 
 
-	// Get the local database - assume the call may fail and return 
+	// Get the local database - assume the call may fail and return
 	// NULL, or the database object may be returned but unopened.
 	//
 	//
@@ -275,7 +275,7 @@ void MemoWidget::postHotSync()
 
 // void MemoWidget::setupWidget()
 //
-// Setup all the GUI components by allocating them. 
+// Setup all the GUI components by allocating them.
 //
 //
 void MemoWidget::setupWidget()
@@ -490,13 +490,13 @@ void MemoWidget::updateWidget()
 void MemoWidget::slotShowMemo(int which)
 {
 	FUNCTIONSETUP;
-
+        if ( which == -1 )
+            return;
 	disconnect(fTextWidget, SIGNAL(textChanged()),
 		this, SLOT(slotTextChanged()));
 	fTextWidget->deselect();
 	PilotListItem *p = (PilotListItem *) fListBox->item(which);
 	PilotMemo *theMemo = (PilotMemo *) p->rec();
-
 	fTextWidget->setText(theMemo->text());
 	connect(fTextWidget, SIGNAL(textChanged()),
 		this, SLOT(slotTextChanged()));
@@ -584,7 +584,7 @@ void MemoWidget::slotImportMemo()
 void MemoWidget::slotExportMemo()
 {
 	FUNCTIONSETUP;
-	
+
 	int index = fListBox->numRows();
 	if (index == 0)
 		return;
@@ -593,14 +593,14 @@ void MemoWidget::slotExportMemo()
 
 	const QString filter = "*|Plain text output\n*.xml|XML output";
 	QString fileName;
-	
+
 	KFileDialog kfile( QString::null , filter, fExportButton , "memoSave" , true );
 	kfile.setOperationMode( KFileDialog::Saving );
-	
+
 	if ( kfile.exec() == QDialog::Accepted ) {
 		fileName = kfile.selectedFile();
 	}
-	
+
 	if (fileName.isEmpty())
 		return;
 
@@ -629,7 +629,7 @@ bool MemoWidget::saveAsText(const QString &fileName,const QList<PilotListItem> &
 {
 	QFile f( fileName );
 	QTextStream stream(&f);
-		
+
 	if ( QFile::exists( fileName ) )
 	{
 		if( !f.open(IO_ReadWrite | IO_Append) )
@@ -653,9 +653,9 @@ bool MemoWidget::saveAsText(const QString &fileName,const QList<PilotListItem> &
 		stream << theMemo->text() << endl;
 	}
 
-	
+
 	return true;
-}	
+}
 
 bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &memo_list)
 {
@@ -664,7 +664,7 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 	QTextStream stream( &f );
 	QDomElement memos;
 	int append = 0;
-	
+
 
 	if ( f.exists() )
 	{
@@ -676,16 +676,16 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 		//
 		//Only if QDom can read the .xml file and set the doc object to be populated with it's contents
 			memos = doc.documentElement();
-			if ( memos.tagName()!="memos" ) 
-			{ 
-				return false; 
-			} 
-				//
-				//			
-				//This is an XML Document but it isn't a valid KPilot-Memo xml document
-			else 
+			if ( memos.tagName()!="memos" )
 			{
-				append = 1; 
+				return false;
+			}
+				//
+				//
+				//This is an XML Document but it isn't a valid KPilot-Memo xml document
+			else
+			{
+				append = 1;
 			}
 				//
 				//
@@ -728,7 +728,7 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 	{
 		PilotListItem *p = it.current();
 		PilotMemo *theMemo = (PilotMemo *) p->rec();
-	
+
 
     	QDomElement memo = doc.createElement( "memo" );
 	    memo.setAttribute ( "pilotid" , mpilotid );
@@ -756,6 +756,9 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 }
 
 // $Log$
+// Revision 1.48  2002/07/20 22:08:19  mhunter
+// Hot-Sync -> HotSync
+//
 // Revision 1.47  2002/07/03 12:22:08  binner
 // CVS_SILENT Style guide fixes
 //
