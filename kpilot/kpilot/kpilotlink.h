@@ -108,7 +108,7 @@ class KPilotLink : public QObject
 {
 	Q_OBJECT
 
-// friend class PilotSerialDatabase;
+friend class PilotSerialDatabase;
 
 public:
 
@@ -417,7 +417,7 @@ protected:
 	int  getCurrentPilotSocket() const { return fCurrentPilotSocket; }
 
 
-	// QWidget* getOwningWidget() { return fOwningWidget; }
+	QWidget* getOwningWidget() { return fOwningWidget; }
 
 	QString    fPilotPath;  // defaults to /dev/pilot
 	bool       fConnected;
@@ -496,6 +496,9 @@ signals:
 #endif
 
 // $Log$
+// Revision 1.24  2001/04/26 19:25:24  adridg
+// Real change in addSyncLogEntry; muchos reformatting
+//
 // Revision 1.23  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //

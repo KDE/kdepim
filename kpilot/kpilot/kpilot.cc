@@ -942,15 +942,15 @@ KPilotInstaller::slotRestoreRequested()
 void KPilotInstaller::slotHotSyncRequested() 
 { 
 	setupSync(KPilotLink::HotSync,
-		i18n("Hot-Syncing. ")+
-		i18n("Please press the hot-sync button."));
+		i18n("HotSyncing. ")+
+		i18n("Please press the HotSync button."));
 }
 
 void KPilotInstaller::slotFastSyncRequested()
 { 
 	setupSync(KPilotLink::FastSync,
-		i18n("Fast-Syncing. ")+
-		i18n("Please press the hot-sync button."));
+		i18n("FastSyncing. ")+
+		i18n("Please press the HotSync button."));
 }
 
 void KPilotInstaller::componentPreSync(bool expectEmptyLinkCommand)
@@ -1629,6 +1629,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.49  2001/04/23 21:05:39  adridg
+// Fixed bug w/ absent conduit executables. Fixed resize bug.
+//
 // Revision 1.48  2001/04/23 06:30:38  adridg
 // XML UI updates
 //

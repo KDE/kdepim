@@ -1136,7 +1136,7 @@ void KPilotLink::syncFlags()
 }
   
 void 
-KPilotLink::createNewProgressBar(QString title, QString text, int min, int max, int value)
+KPilotLink::createNewProgressBar(const QString &title, const QString &text, int min, int max, int value)
 {
   if(fProgressDialog)
     delete fProgressDialog;
@@ -1726,6 +1726,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 #endif
 
 // $Log$
+// Revision 1.44  2001/04/26 19:25:24  adridg
+// Real change in addSyncLogEntry; muchos reformatting
+//
 // Revision 1.43  2001/04/23 21:08:02  adridg
 // Small changes for code integrity
 //

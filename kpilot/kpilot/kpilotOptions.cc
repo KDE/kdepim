@@ -527,8 +527,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig& config) :
 	grid->addMultiCellWidget(fStartKPilotAtHotSync,3,3,fieldCol,fieldCol+2);
 
 	fDockDaemon = new QCheckBox(
-		i18n("Show Daemon in KPanel. "
-			"(Only available with KWM.)"), 
+		i18n("Show Daemon in Kicker."),
 				this);
 	fDockDaemon->adjustSize();
 	fDockDaemon->setChecked(config.readBoolEntry("DockDaemon", false));
@@ -649,7 +648,7 @@ KPilotOptionsSync::KPilotOptionsSync(setupDialog *s,KConfig& config) :
 	grid->addWidget(fSyncLastPC,3,1);
 
 	fPreferFastSync = new QCheckBox(
-		i18n("Prefer Fast-Sync to Hot-Sync"),this);
+		i18n("Prefer FastSync to HotSync"),this);
 	fPreferFastSync -> setChecked(
 		config.readBoolEntry("PreferFastSync",false));
 	grid->addWidget(fPreferFastSync,4,1);
@@ -791,6 +790,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.29  2001/04/26 19:01:10  stern
+// Added myself to people
+//
 // Revision 1.28  2001/04/23 06:30:38  adridg
 // XML UI updates
 //
