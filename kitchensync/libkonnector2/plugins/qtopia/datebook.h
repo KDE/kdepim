@@ -27,7 +27,7 @@
 #include "helper.h"
 
 namespace KSync{
-    class EventSyncee;
+    class CalendarSyncee;
 }
 class QDomElement;
 namespace OpieHelper {
@@ -46,8 +46,8 @@ namespace OpieHelper {
                   const QString &tz = QString::null,
                   bool meta = FALSE, Device* dev = 0);
         ~DateBook();
-        KSync::EventSyncee* toKDE( const QString & fileName, ExtraMap& map );
-        KTempFile* fromKDE( KSync::EventSyncee* syncee, ExtraMap& map );
+        KSync::CalendarSyncee* toKDE( const QString & fileName, ExtraMap& map );
+        KTempFile* fromKDE( KSync::CalendarSyncee* syncee, ExtraMap& map );
     private:
         QStringList attributes()const;
         QString endDate( const QDateTime& time, bool allDay );

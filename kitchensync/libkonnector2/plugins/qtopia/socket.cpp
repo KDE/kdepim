@@ -28,7 +28,7 @@
 #include <kio/netaccess.h>
 
 #include <addressbooksyncee.h>
-#include <eventsyncee.h>
+#include <calendarsyncee.h>
 #include <todosyncee.h>
 
 #include <idhelper.h>
@@ -271,7 +271,7 @@ void QtopiaSocket::write( SynceeList list )
     AddressBookSyncee *abSyncee = list.addressBookSyncee();
     if ( abSyncee ) writeAddressbook( abSyncee );
 
-    EventSyncee *evSyncee = list.eventSyncee();
+    CalendarSyncee *evSyncee = list.calendarSyncee();
     if ( evSyncee ) writeDatebook( evSyncee );
 
     TodoSyncee *toSyncee = list.todoSyncee();
@@ -438,7 +438,7 @@ void QtopiaSocket::writeAddressbook( AddressBookSyncee* syncee )
     }
 }
 
-void QtopiaSocket::writeDatebook( EventSyncee* syncee )
+void QtopiaSocket::writeDatebook( CalendarSyncee* syncee )
 {
     OpieHelper::DateBook dbDB(d->edit, d->helper, d->tz, d->meta, d->device );
     KTempFile* file = dbDB.fromKDE( syncee, d->extras );
@@ -520,12 +520,12 @@ void QtopiaSocket::readAddressbook()
 
 void QtopiaSocket::readDatebook()
 {
-    KSync::EventSyncee* syncee = 0;
+    KSync::CalendarSyncee* syncee = 0;
     emit prog( StdProgress::downloading(i18n("Datebook") ) );
     QString tempfile;
     if (!downloadFile( "/Applications/datebook/datebook.xml", tempfile ) ) {
         emit error( StdError::downloadError(i18n("Datebook") ) );
-        syncee = new KSync::EventSyncee;
+        syncee = new KSync::CalendarSyncee;
         tempfile = QString::null;
     }
     emit prog( StdProgress::converting(i18n("Datebook") ) );

@@ -33,7 +33,7 @@ class KURL;
 namespace KSync {
 
 class AddressBookSyncee;
-class EventSyncee;
+class CalendarSyncee;
 class TodoSyncee;
 
 class QtopiaSocket : public QObject
@@ -89,7 +89,7 @@ class QtopiaSocket : public QObject
     KURL url( const QString &path );
     void writeCategory();
     void writeAddressbook( AddressBookSyncee * );
-    void writeDatebook( EventSyncee * );
+    void writeDatebook( CalendarSyncee * );
     void writeTodoList( TodoSyncee * );
     void readAddressbook();
     void readDatebook();

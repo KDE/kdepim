@@ -27,7 +27,7 @@
 using namespace OpieHelper;
 
 MetaDatebook::MetaDatebook()
-    : MD5Template<KSync::EventSyncee, KSync::EventSyncEntry>()
+    : MD5Template<KSync::CalendarSyncee, KSync::EventSyncEntry>()
 {
 }
 MetaDatebook::~MetaDatebook() {

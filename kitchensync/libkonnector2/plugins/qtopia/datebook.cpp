@@ -24,7 +24,7 @@
 
 #include <kdebug.h>
 
-#include <eventsyncee.h>
+#include <calendarsyncee.h>
 
 #include "device.h"
 #include "datebook.h"
@@ -198,11 +198,12 @@ KCal::Event* DateBook::toEvent( QDomElement e, ExtraMap& extraMap, const QString
     return event;
 }
 
-KSync::EventSyncee* DateBook::toKDE( const QString& fileName, ExtraMap& extraMap )
+KSync::CalendarSyncee* DateBook::toKDE( const QString& fileName, ExtraMap& extraMap )
 {
 //    kdDebug(5229) << "To KDE " << endl;
-    KSync::EventSyncee* syncee = new KSync::EventSyncee();
+    KSync::CalendarSyncee* syncee = new KSync::CalendarSyncee();
     syncee->setSource( "Opie");
+    syncee->setIdentifier( "Opie" );
     if( device() )
 	syncee->setSupports( device()->supports( Device::Calendar ) );
 
@@ -233,9 +234,10 @@ KSync::EventSyncee* DateBook::toKDE( const QString& fileName, ExtraMap& extraMap
                     if (!e.isNull() ) {
                         if (e.tagName() == "event") {
                             KCal::Event* event = toEvent( e, extraMap, attr );
+                            qDebug( ">>>>>>> loaded event %s", event->summary().latin1() );
                             if (event != 0 ) {
-                                KSync::EventSyncEntry* entry;
-                                entry = new KSync::EventSyncEntry( event, syncee );
+                                KSync::CalendarSyncEntry* entry;
+                                entry = new KSync::CalendarSyncEntry( event, syncee );
                                 syncee->addEntry( entry );
                             }
                         }
@@ -249,7 +251,7 @@ KSync::EventSyncee* DateBook::toKDE( const QString& fileName, ExtraMap& extraMap
     return syncee;
 }
 
-KTempFile* DateBook::fromKDE( KSync::EventSyncee* syncee, ExtraMap& extraMap )
+KTempFile* DateBook::fromKDE( KSync::CalendarSyncee* syncee, ExtraMap& extraMap )
 {
     m_kde2opie.clear();
     Kontainer::ValueList newIds = syncee->ids( "EventSyncEntry");
@@ -263,16 +265,16 @@ KTempFile* DateBook::fromKDE( KSync::EventSyncee* syncee, ExtraMap& extraMap )
         stream->setEncoding( QTextStream::UnicodeUTF8 );
         *stream <<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
         *stream << "<!DOCTYPE DATEBOOK><DATEBOOK>" << endl;
-        KSync::EventSyncEntry *entry;
+        KSync::CalendarSyncEntry *entry;
         KCal::Event *event;
         *stream << "<events>" << endl;
-        for ( entry = (KSync::EventSyncEntry*) syncee->firstEntry();
+        for ( entry = (KSync::CalendarSyncEntry*) syncee->firstEntry();
               entry != 0;
-              entry = (KSync::EventSyncEntry*) syncee->nextEntry() )
+              entry = (KSync::CalendarSyncEntry*) syncee->nextEntry() )
         {
             if (entry->state() == KSync::SyncEntry::Removed )
                 continue;
-            event = entry->incidence();
+            event = dynamic_cast<KCal::Event*>( entry->incidence() );
             *stream << event2string( event, extraMap ) << endl;
         }
         *stream << "</events>" << endl;
