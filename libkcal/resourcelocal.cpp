@@ -126,6 +126,8 @@ void ResourceLocal::init()
 
 ResourceLocal::~ResourceLocal()
 {
+  mDirWatch.stopScan();
+
   close();
 
   delete mLock;
