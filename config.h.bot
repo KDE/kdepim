@@ -1,0 +1,38 @@
+
+#ifndef HAVE_BOOL
+#define HAVE_BOOL
+typedef int bool;
+#ifdef __cplusplus
+const bool false = 0;
+const bool true = 1;
+#else
+#define false (bool)0;
+#define true (bool)1;
+#endif
+#endif
+
+/*
+ * jpeg.h needs HAVE_BOOLEAN, when the system uses boolean in system
+ * headers and I'm too lazy to write a configure test as long as only
+ * unixware is related
+ */
+#ifdef _UNIXWARE
+#define HAVE_BOOLEAN
+#endif
+
+/* random() returns a value between 0 and RANDOM_MAX.
+ * RANDOM_MAX is needed to generate good random numbers. (Nicolas)
+ */
+#ifndef HAVE_RANDOM
+#define HAVE_RANDOM
+#define RANDOM_MAX 2^31 // random() is lrand48()
+long int random(void); // defined in fakes.cpp
+void srandom(unsigned int seed);
+#else
+#define RANDOM_MAX RAND_MAX // normal random()
+#endif
+
+#ifndef HAVE_USLEEP
+#define HAVE_USLEEP
+int usleep(unsigned int usec);
+#endif
