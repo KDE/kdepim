@@ -14,7 +14,7 @@ groupwarewizard_SOURCES = groupwarewizard.cpp main.cpp \
 
 kde_module_LTLIBRARIES = libegroupwarewizard.la libkolabwizard.la
 
-libkolabwizard_la_LDADD = ../kresources/imap/kcal/libkcal_imap.la \
+libkolabwizard_la_LIBADD = ../kresources/imap/kcal/libkcal_imap.la \
                           ../libkcal/libkcal.la \
                           ../libkdepim/libkdepim.la \
                           $(LIB_KDECORE)
