@@ -105,6 +105,7 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
         KPIM::Identity& identity = identityManager.newFromScratch( i18n( "Kolab" ) );
         identity.setFullName( KolabConfig::self()->realName() );
         identity.setEmailAddr( email );
+        identityManager.commit();
       } else {
         kdDebug() << "Identity with " << email << " exists already" << endl;
       }
