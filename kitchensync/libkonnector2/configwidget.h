@@ -4,7 +4,7 @@
 
 #include <qwidget.h>
 
-#include <kapabilities.h>
+#include "kapabilities.h"
 
 namespace KSync {
     /**

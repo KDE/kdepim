@@ -46,6 +46,7 @@ Kapabilities::Kapabilities()
     m_supMeta = false;
     m_needsNet = true;
     m_current = -1;
+    m_needsName = false;
 }
 Kapabilities::Kapabilities(const Kapabilities &kap )
     //: //d( 0 )
@@ -275,7 +276,22 @@ Kapabilities &Kapabilities::operator=(const Kapabilities &rhs )
     m_currMode = rhs.m_currMode;
     m_modes = rhs.m_modes;
 
+    m_needsName = rhs.m_needsName;
+    m_name = rhs.m_name;
+
     return (*this );
+}
+bool Kapabilities::needsModelName()const {
+    return m_needsName;
+}
+void Kapabilities::setNeedsModelName( bool b ) {
+    m_needsName = b;
+}
+QString Kapabilities::modelName()const {
+    return m_name;
+}
+void Kapabilities::setModelName( const QString& name ) {
+    m_name = name;
 }
 /*
 void Kapabilities::dump()const

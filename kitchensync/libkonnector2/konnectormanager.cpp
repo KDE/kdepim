@@ -126,7 +126,7 @@ ConfigWidget* KonnectorManager::configWidget( const UDI& uid,
     if (!plugin) return 0l;
 
     ConfigWidget* wid = plugin->configWidget( caps, parent, name );
-    if (!wid) wid = new ConfigPart( plugin->capabilities(), parent, name );
+    if (!wid) wid = new ConfigPart( plugin->capabilities(), caps, parent, name );
 
     return wid;
 }

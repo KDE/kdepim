@@ -43,6 +43,7 @@
 #include <qlistview.h>
 #include <qpushbutton.h>
 
+#include <kapplication.h>
 #include <klocale.h>
 
 #include "configpart.h"
@@ -56,17 +57,18 @@ ConfigPart::ConfigPart(const Kapabilities &kaps, QWidget *parent, const char *na
     initialize( kaps );
     m_kap = kaps;
 }
-ConfigPart::ConfigPart(const Kapabilities& kaps, const Kapabilities &/*src*/,
+ConfigPart::ConfigPart(const Kapabilities& kaps, const Kapabilities &src,
 		       QWidget* parent, const char* name )
     : ConfigWidget( parent, name ) {
     init();
     initialize( kaps );
+    apply( src );
     m_kap = kaps;
 }
 ConfigPart::~ConfigPart() {
 }
-void ConfigPart::setCapabilities( const Kapabilities& ) {
-
+void ConfigPart::setCapabilities( const Kapabilities& caps) {
+    apply( caps );
 }
 void ConfigPart::initialize(const Kapabilities &kaps ){
 //    kaps.dump();
@@ -140,7 +142,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
         for ( it = ips.begin(); it != ips.end(); ++it ) {
             m_conDestIp->insertItem( (*it) );
         }
-        m_conDestIp->insertItem(kaps.destIP(),  0 );
+        //m_conDestIp->insertItem(kaps.destIP(),  0 );
     }
     //user
     m_lblUser = new QLabel(i18n("User:"), m_grpConnection );
@@ -188,7 +190,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
         for (uint i = 0; i < ints.size(); i++ ) {
             m_conPort->insertItem( QString::number( ints[i] ) );
         }
-        m_conPort->insertItem( QString::number( kaps.currentPort() ),  0 );
+        //_conPort->insertItem( QString::number( kaps.currentPort() ),  0 );
     }
 
     // add the Connection Groupbox
@@ -196,7 +198,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
 
     // Model specific
     m_grpModel = new QGroupBox( i18n("Model"),  this );
-    m_grpLayout = new QGridLayout( m_grpModel, 5,  2 );
+    m_grpLayout = new QGridLayout( m_grpModel, 6,  2 );
 
     m_grpLayout->setMargin( 12 );
     QSpacerItem *iti1c = new QSpacerItem(2, 10, QSizePolicy::Fixed,
@@ -205,7 +207,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     // Devices
     m_lblDevice = new QLabel( i18n("Device: "), m_grpModel );
     m_cmbDevice = new QComboBox( m_grpModel );
-    m_cmbDevice->setEditable( TRUE );
+    m_cmbDevice->setEditable( false );
     m_lblDevice->setBuddy( m_cmbDevice );
     m_grpLayout->addWidget( m_lblDevice, 1,  0 );
     m_grpLayout->addWidget( m_cmbDevice, 1,  1 );
@@ -217,15 +219,25 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
         for ( QStringList::ConstIterator it = devices.begin(); it != devices.end(); ++it ) {
             m_cmbDevice->insertItem( (*it) );
         }
-        m_cmbDevice->insertItem( kaps.currentModel() , 0);
+        //m_cmbDevice->insertItem( kaps.currentModel() , 0);
     }
+    // the device Name
+    m_lblName = new QLabel( i18n("Name:"), m_grpModel );
+    m_lneName = new QLineEdit(m_grpModel );
+    m_lblName->setBuddy( m_lneName );
+    m_lblName->setEnabled( kaps.needsModelName() );
+    m_lneName->setEnabled( kaps.needsModelName() );
+    m_grpLayout->addWidget( m_lblName, 2, 0 );
+    m_grpLayout->addWidget( m_lneName, 2, 1 );
+
+
     // Connection Mode usb, paralell, net,....
     m_lblConnection = new QLabel( i18n("Connection:"),  m_grpModel );
     m_cmbConnection = new QComboBox( m_grpModel );
     m_cmbConnection->setEditable( TRUE );
     m_lblConnection->setBuddy( m_cmbConnection );
-    m_grpLayout->addWidget( m_lblConnection, 2, 0 );
-    m_grpLayout->addWidget( m_cmbConnection, 2, 1 );
+    m_grpLayout->addWidget( m_lblConnection, 3, 0 );
+    m_grpLayout->addWidget( m_cmbConnection, 3, 1 );
     QStringList conList = kaps.connectionModes();
     if ( conList.isEmpty() ) {
         m_lblConnection->setEnabled( false );
@@ -234,7 +246,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
         for ( QStringList::ConstIterator it = conList.begin(); it != conList.end(); ++it ) {
             m_cmbConnection->insertItem( (*it) );
         }
-        m_cmbConnection->insertItem( kaps.currentConnectionMode(), 0);
+        //m_cmbConnection->insertItem( kaps.currentConnectionMode(), 0);
 
     }
     //Mode USER
@@ -242,8 +254,8 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     m_cmbUser = new QComboBox( m_grpModel );
     m_cmbUser->setEditable( TRUE );
     m_grpUser->setBuddy( m_cmbUser );
-    m_grpLayout->addWidget(m_grpUser,  3, 0);
-    m_grpLayout->addWidget(m_cmbUser,  3, 1);
+    m_grpLayout->addWidget(m_grpUser,  4, 0);
+    m_grpLayout->addWidget(m_cmbUser,  4, 1);
     m_grpUser->setEnabled( false );
     m_cmbUser->setEnabled( false );
 
@@ -252,8 +264,8 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     m_cmbPass = new QComboBox( m_grpModel );
     m_grpPass->setBuddy( m_cmbPass );
     m_cmbPass->setEditable( TRUE );
-    m_grpLayout->addWidget( m_grpPass,  4, 0 );
-    m_grpLayout->addWidget( m_cmbPass,  4, 1 );
+    m_grpLayout->addWidget( m_grpPass,  5, 0 );
+    m_grpLayout->addWidget( m_cmbPass,  5, 1 );
     m_grpPass->setEnabled( false );
     m_cmbPass->setEnabled( false );
 
@@ -320,6 +332,12 @@ Kapabilities ConfigPart::capabilities()const
     if ( m_cmbConnection != 0 && m_cmbConnection->isEnabled() )
         kaps.setCurrentConnectionMode( m_cmbConnection->currentText() );
 
+    /* model name */
+    if ( m_lneName->isEnabled() ) {
+        QString str = m_lneName->text().isEmpty() ? kapp->randomString(10): m_lneName->text();
+        kaps.setModelName( str );
+    }
+
     return kaps;
 }
 
@@ -358,4 +376,41 @@ void ConfigPart::init()
     m_fetchBrowse = 0;
     m_fetchRem = 0;
     m_view = 0;
+
+    m_lneName =0;
+    m_lblName =0;
+}
+/*
+ * here we're going to apply the choices
+ */
+void ConfigPart::apply( const Kapabilities& caps ) {
+    if (m_kap.needsIPs() || m_kap.needsSrcIP() ) {
+        m_conSrcIp->setCurrentText( caps.srcIP() );
+    }
+    if (m_kap.needsIPs() || m_kap.needsDestIP() ) {
+        m_conDestIp->setCurrentText( caps.destIP() );
+    }
+    if (m_kap.needAuthentication() ) {
+        m_conUser->setCurrentText( caps.user() );
+        m_conPass->setCurrentText( caps.password() );
+    }
+    if ( !m_kap.models().isEmpty() ) {
+        m_cmbDevice->setCurrentText( caps.currentModel() );
+    }
+    if ( m_kap.needsModelName() ) {
+        m_lneName->setText( caps.modelName() );
+    }
+    if ( !m_kap.connectionModes().isEmpty() ) {
+        m_cmbConnection->setCurrentText( caps.currentConnectionMode() );
+    }
+    QMap<QString, QString> specs = caps.extras();
+    for ( QMap<QString, QString>::ConstIterator it = specs.begin(); it != specs.end(); ++it ) {
+        if (!m_devGroup.contains( it.key() ) ) continue;
+        QLineEdit* edit = m_devGroup[it.key()];
+        if (edit)
+            edit->setText( it.data() );
+    }
+    if (!m_kap.ports().isEmpty() ) {
+        m_conPort->setCurrentText( QString::number( caps.currentPort() ) );
+    }
 }

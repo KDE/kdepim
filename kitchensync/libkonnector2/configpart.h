@@ -79,6 +79,7 @@ namespace KSync {
     private:
         void init();
         void initialize(const Kapabilities & );
+        void apply( const Kapabilities& );
         class ConfigPartPrivate;
         ConfigPartPrivate *d;
         Kapabilities m_kap;
@@ -124,6 +125,9 @@ namespace KSync {
         QPushButton* m_fetchBrowse;
         QPushButton* m_fetchRem;
         QListView *m_view;
+
+        QLabel* m_lblName;
+        QLineEdit* m_lneName;
         bool push:1;
     };
 };

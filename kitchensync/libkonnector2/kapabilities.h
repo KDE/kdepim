@@ -267,6 +267,11 @@ public:
     QString currentModel()const;
     void setCurrentModel( const QString & );
     void setConnectionMode( const QStringList & );
+    bool needsModelName()const;
+    void setNeedsModelName(bool );
+    QString modelName()const;
+    void setModelName( const QString& );
+
     QStringList connectionModes()const;
     QString currentConnectionMode()const;
     void setCurrentConnectionMode(const QString &);
@@ -289,6 +294,7 @@ private:
     bool m_needsAuthent:1;
     bool m_supMeta:1; // supports Meta
     bool m_meta:1;
+    bool m_needsName;
     QString m_src;
     QString m_dest;
     QStringList m_propsIPs;
@@ -303,6 +309,7 @@ private:
     QStringList m_models;
     QString m_currMode;
     QStringList m_modes;
+    QString m_name;
 };
 };
 #endif
