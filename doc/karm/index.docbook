@@ -71,18 +71,18 @@
 <title>Introduction</title>
 
 <para>&karm; tracks time spent on various tasks.  It is useful for tracking
-       billable hours and can report the hours logged by task and day.  This
-       history report can be exported to a comma-delimited text file for import
-       into other billing and/or project management tools.  &karm; detects when
-       your keyboard and mouse go idle and can associate different tasks with
-       different desktops, two tools that can help keep the timer running on the
-       correct task.</para>
+	billable hours and can report the hours logged by task and day.</para>
+
+<para>This time history can be exported to a comma-delimited text file for
+	import into other billing and/or project management tools.</para>
+
+<para>&karm; detects when your keyboard and mouse are idle and can associate
+	different tasks with different desktops, two tools that can help keep the
+	timer running on the correct task.</para>
 
 <para>&karm; was originally written by Sirtaj Singh Kang. The word
 <quote>karm</quote> means <quote>work</quote> in the author's native
 Punjabi.</para>
-
-<para>TODO: Add link to kdepim.kde.org page.</para>
 
 </chapter>
 
@@ -107,14 +107,14 @@ at the command line.</para>
 <title>Tasks</title>
 
 <informalexample>
-<formalpara><title>Problem:</title><para>You are a free software consultant with
+<para><emphasis>Problem:</emphasis> You are a free software consultant with
 many clients.  Some clients have multiple projects.  During the course of a
 day, you switch back and forth between different projects.  You need to track
-your time to generate monthly invoices.</para></formalpara>
-<formalpara><title>Solution:</title><para>Create one top-level task for each client
+your time to generate monthly invoices.</para>
+<para><emphasis>Solution:</emphasis> Create one top-level task for each client
 and a subtask for each client project.  For projects that require more
 detailed tracking, create a list of project subtasks.  Track time by
-double-clicking on task you are currently working on.</para></formalpara>
+double-clicking on task you are currently working on.</para>
 </informalexample>
 
 <para>&karm; provides great flexibility in tracking your time, allowing
@@ -154,12 +154,12 @@ When it next opens, it reloads the task list from the same file.</para>
 <sect1 id="timers"><title>Timers</title>
 
 <informalexample>
-<formalpara><title>Problem:</title><para>To remain solvent, you must bill an
+<para><emphasis>Problem:</emphasis> To remain solvent, you must bill an
 average of five hours a day.  To stay on track, you watch your daily and
-weekly totals.</para></formalpara>
-<formalpara><title>Solution:</title><para>Reset the session timer at the
+weekly totals.</para>
+<para><emphasis>Solution:</emphasis> Reset the session timer at the
 beginning of each work day and reset all timers at the beginning of each
-week.</para></formalpara> </informalexample>
+week.</para> </informalexample>
 
 <para>&karm; makes tracking time simple.  To start logging time against a
 task, double-click on the task.  To stop logging time, double-click
@@ -210,15 +210,15 @@ times were reset.</para></listitem> </varlistentry>
 <sect2><title>Desktop Tracking</title>
 
 <informalexample>
-<formalpara><title>Problem:</title><para>You have two main projects that you
+<para><emphasis>Problem:</emphasis> You have two main projects that you
 switch between each day.  To help organize your work, you keep your project
 1 files on Desktop 1 and your project 2 files on Desktop
-2.</para></formalpara>
+2.</para>
 
-<formalpara><title>Solution:</title><para>Associate project 1 task with Desktop 1
+<para><emphasis>Solution:</emphasis> Associate project 1 task with Desktop 1
 and the project 2 task with Desktop 2.  When you switch from Desktop 2 to
 Desktop 1 active, &karm; automatically stops the project 2 task and starts
-the project 1 task.</para></formalpara>
+the project 1 task.</para>
 </informalexample>
 
 <para>To associate a task with a one or more desktops, select
@@ -239,11 +239,11 @@ that task.</para>
 
 <sect2><title>Idle Detection</title>
 
-<informalexample> <formalpara><title>Problem:</title><para>You leave work
-early on Friday to run an errand and forget to stop the timer.  When you
-return on Monday, the timer is still running.</para> </formalpara>
-<formalpara><title>Solution:</title><para>Turn on idle detection.</para>
-</formalpara> </informalexample>
+<informalexample> <para><emphasis>Problem:</emphasis> You leave work early on
+Friday to run an errand and forget to stop the timer.  When you return on
+Monday, the timer is still running.</para>
+<para><emphasis>Solution:</emphasis> Turn on idle detection.</para>
+</informalexample>
 
 <para>&karm; can be configured to detect when the mouse and keyboard become
  idle.  If the mouse and keyboard are idle for longer than the specified
@@ -284,11 +284,11 @@ was idle and still are.  </para></listitem></varlistentry> </variablelist>
 
 <sect1 id="reporting"><title>Reporting</title>
 
-<para>&karm; provides three ways of reporting on time you have logged.  You
-can send the session and time totals to the printer, copy the time totals to
-the clipboard, or the time history to the clipboard.</para>
+<para>&karm; provides three ways to report on time you have logged.  You can
+send the session and time totals to the printer, copy the time totals to the
+clipboard, or copy the time history to the clipboard.</para>
 
-<sect2><title>Printer Report</title>
+<sect2><title>Print Totals</title>
 <para>To generate the totals report for the printer, select
 <menuchoice>
 <shortcut>
@@ -303,7 +303,7 @@ Session Time</guilabel> and the third column is the <guilabel>Total
 Time</guilabel>.</para>
 </sect2>
 
-<sect2><title>Clipboard Totals</title>
+<sect2><title>Clip Totals</title>
 <para>To generate the totals report to the clipboard, select
 <menuchoice>
 <shortcut>
@@ -314,7 +314,7 @@ Time</guilabel>.</para>
 </menuchoice>.
 </para>
 
-<para>This report is generated for the currenly selected task and all it's
+<para>This report is generated for the currently selected task and all it's
 subtasks.  If the current task is a top-level task, &karm; asks you if you
 want to generate the report for the current task and it's subtasks or for the
 entire task list.</para>
@@ -331,24 +331,26 @@ entire task list.</para>
 </mediaobject>
 </screenshot>
 
-<para>Once the report is generated, Open KEdit or some other text editor and
+<para>Once the report is generated, open KEdit or some other text editor and
 paste the report data.</para>
 
-<screen>
+<literallayout>
+<computeroutput>
 Task Totals
 2004-07-10 02:26
 
   Time    Task
 ----------------------------------------------
-  6:35    kde
-   6:35    karm
+  9:14    kde
+   9:14    karm
     1:08    bugs
-    0:00    checkin changes - translation strings
+    0:00    checkin changes
    0:00    promo
    0:00    web stuff
 ----------------------------------------------
-  6:35 Total
-</screen>
+  9:14 Total
+</computeroutput>
+</literallayout>
 
 <para>The first column is the <guilabel>Total Time</guilabel> and is indented
 (like the task names) to indicate task/sub-task relationships.  The reported times
@@ -356,7 +358,8 @@ include the sub-task times.</para>
 
 </sect2>
 
-<sect2><title>Clipboard History</title>
+<sect2><title>Clip History</title>
+
 <para>To generate the totals report to the clipboard, select
 <menuchoice>
 <shortcut>
@@ -367,14 +370,60 @@ include the sub-task times.</para>
 </menuchoice>.
 </para>
 
-<para>This report is generated for the currenly selected task and all it's
+<important><para>You must turn on the <guilabel>Log History</guilabel> option in
+<menuchoice> <guimenu>Settings</guimenu> <guimenuitem>Configure
+KArm</guimenuitem> </menuchoice>.  Otherwise, &karm; only keeps track of
+totals and not the detailed task history.</para></important>
+
+<para>This report is generated for the currently selected task and all it's
 subtasks.  Unlike the totals report, this report does not give you the option
 to report on the complete task list.  You can only report on the current task
 and all it's sub-tasks.</para>
 
-<para>TODO: add screenshot of date selection dialog, explain.</para>
+<para>When you select the history report, &karm; first prompts you to enter the
+date range for the report:</para>
 
-<para>TODO: show example output, mention logging config parameter.</para>
+<screenshot>
+<screeninfo>&karm; Enter Date Range</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="daterange.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>&karm; Enter Date Range</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>After entering a date range, open KEdit or some other text editor and
+paste the report data.</para>
+
+<literallayout>
+<computeroutput>
+Task History
+From Thursday 01 July 2004 to Monday 12 July 2004
+Printed on: 2004-07-12 17:18
+
+                               Week of Monday 05 July 2004
+     5     6     7     8     9    10    11
+-------------------------------------------------------------------------
+                                             0:00 kde
+                                             0:00  dc
+              !:22  1:46  3:14  1:44         8:06  karm
+                                             0:00   3.2 feature plan
+              1:08                           1:08   bugs
+                                             0:00   checkin changes
+                                             0:00  promo
+                                             0:00  web stuff
+-------------------------------------------------------------------------
+              2:30  1:46  3:14  1:44         9:14 Total
+</computeroutput>
+</literallayout>
+
+<para>The task history is totaled for each day and task, grouped by week.  The
+first seven columns are Monday through Sunday.  The eighth column is the total
+for the week and the ninth column is the task name.  The task names are
+indented to indicate the task/sub-task relationships.</para>
 
 </sect2>
 </sect1>
@@ -389,11 +438,120 @@ url="http://developer.kde.org/documentation/standards/index.html">iCalendar</uli
 format for it's data.  &karm; can read and write the to do lists created by
 these two applications.</para>
 
-<para>TODO: Add warning about locking</para>
+<warning><para>If both &karm; and KOrganizer have the same file open, if you
+edit the file with KOrganizer, you risk losing data.  To be safe,
+only edit the file with one application or the other.</para></warning>
 
 </sect2>
-<sect2 id="csv-export"><title>Data Export</title>
-<para>TODO: write data export section</para>
+
+<sect2 id="csv-export"><title>Export Totals to CSV</title>
+
+<para>&karm; can export both totals and history to a comma-delimited file
+format.  To export totals, select
+<menuchoice>
+<guimenu>File</guimenu>
+<guisubmenu>Import/Export</guisubmenu>
+<guimenuitem>Export to CSV file...</guimenuitem>
+</menuchoice> and &karm; displays the following export dialog:</para>
+
+<screenshot>
+<screeninfo>&karm; CSV Export Dialog</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="csvexport.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>&karm; CSV Export Dialog</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>Enter the file you would like to export the data to, and modify the
+other dialog defaults if necessary.  Note that the date range control is
+disabled since you are exporting time totals, not the history data.  Click
+<guibutton>Export</guibutton> and &karm; exports the totals for all tasks to
+the file you selected.</para>
+
+<para>Here is an example of the output format:</para>
+
+<literallayout>
+<computeroutput>
+"kde",,,,,0.00,0.00,6.88,9.83
+,"karm",,,,6.88,8.70,6.88,9.83
+,,"3.2 feature plan",,,0.00,0.00,0.00,0.00
+,,"bugs",,,0.00,1.13,0.00,1.13
+,,"checkin changes - translation strings",,,0.00,0.00,0.00,0.00
+,,"time card report",,,0.00,0.00,0.00,0.00
+,"kopete",,,,0.00,0.00,0.00,0.00
+,"promo",,,,0.00,0.00,0.00,0.00
+,"web stuff",,,,0.00,0.00,0.00,0.00
+</computeroutput>
+</literallayout>
+
+<para>Top-level tasks are output in the first column, sub-tasks in the second,
+and so on.  The time data is output after the maximum task depth (five in
+this example).  The first time column is <guilabel>Session Time</guilabel>,
+the second is <guilabel>Time</guilabel>, the third is <guilabel>Total Session
+Time</guilabel> and the fourth is the <guilabel>Total Time</guilabel>.
+</para>
+
+
+</sect2>
+
+<sect2 id="csv-export-history"><title>Export History to CSV</title>
+
+<para>To export task history, select
+<menuchoice>
+<guimenu>File</guimenu>
+<guisubmenu>Import/Export</guisubmenu>
+<guimenuitem>Export History to CSV file...</guimenuitem>
+</menuchoice> and &karm; displays the following export dialog:</para>
+
+<screenshot>
+<screeninfo>&karm; CSV Export Dialog</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="csvexport.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>&karm; CSV Export Dialog</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>Enter the file you would like to export the data to, and select a date
+range that you want the task history.  Modify the other dialog defaults if
+necessary.  Click <guibutton>Export</guibutton> and &karm; exports the
+task history for all tasks to the file you selected.</para>
+
+<para>Here is an example of the output format:</para>
+
+<literallayout>
+<computeroutput>
+Task History
+From Tuesday 06 July 2004 to Tuesday 13 July 2004
+Printed on: 2004-07-13 18:10
+2004-07-06,2004-07-07,2004-07-08,2004-07-09,2004-07-10,2004-07-11,2004-07-12,2004-07-13,
+,,,,,,,,0.00,"kde"
+,,1.77,3.23,1.73,,1.37,0.82,8.95,,"karm"
+,,,,,,,,0.00,,,"3.2 feature plan"
+,1.13,,,,,,,1.13,,,"bugs"
+,,,,,,,,0.00,,,"checkin changes - translation strings"
+,,,,,,,,0.00,,,"time card report"
+,,,,,,,,0.00,,"kopete"
+,,,,,,,,0.00,,"promo"
+,,,,,,,,0.00,,"web stuff"
+</computeroutput>
+</literallayout>
+
+<para>The three lines identify when the report was generated and for which
+date range.  The fourth row is a comma-delimited list of the dates in the
+date range, in ISO 8601 format (YYYY-MM-DD).  All subsequent rows list the
+time logged against each task.   The last numeric column is the row total
+across all days.  The task name prints after the total column, and is indented
+to indicate the task/sub-task relationship.  Top level task names appear
+in the first column after the total.</para>
+
 </sect2>
 </sect1>
 
@@ -488,11 +646,39 @@ times</action></para>
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Import Legacy Flat File</guimenuitem>
+<guisubmenu>Import/Export</guisubmenu>
+<guimenuitem>Import Legacy Flat File...</guimenuitem>
 </menuchoice></term>
 <listitem>
 <para><action>Import </action>old style &karm; save files (&karm; 
 now uses iCalendar-style save files.)</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>File</guimenu>
+<guisubmenu>Import/Export</guisubmenu>
+<guimenuitem>Export to CSV file...</guimenuitem>
+</menuchoice></term>
+<listitem>
+<para><action>Export </action>
+<guilabel>Total Session Time</guilabel>,
+<guilabel>Session Time</guilabel>, <guilabel>Time</guilabel>, and
+<guilabel>Total Time</guilabel> to a text file.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guisubmenu>Import/Export</guisubmenu>
+<guimenuitem>Export History to CSV file...</guimenuitem>
+</menuchoice></term>
+<listitem>
+<para><action>Export </action> task history to a text file.
+</para>
 </listitem>
 </varlistentry>
 
@@ -805,6 +991,10 @@ session begins when you select <menuchoice> <guimenu>File</guimenu>
 Session data is not saved when you create a new session.
 </para></glossdef> </glossentry>
 
+<glossentry id="gloss-system-time"> <glossterm><guilabel>Session
+Time</guilabel></glossterm> <glossdef><para>The time spent on the task
+since the session began.</para></glossdef> </glossentry> 
+
 <glossentry id="gloss-system-tray"> <glossterm>system tray</glossterm>
 <glossdef><para>The system tray is in the bar that (by default) appears at
 the bottom of the screen.  In this system tray <inlinemediaobject>
@@ -817,6 +1007,17 @@ right.</para></glossdef>
 <glossterm>top level task</glossterm>
 <glossdef><para>A task with no parent tasks.</para></glossdef>
 </glossentry>
+
+<glossentry id="gloss-total-session-time"> <glossterm><guilabel>Total Session
+Time</guilabel></glossterm> <glossdef><para>The time spent on the task and
+all it's subtasks since the session began.</para></glossdef> </glossentry>
+<glossentry> <glossterm><guilabel>Time</guilabel></glossterm>
+<glossdef><para>The time spent on the task since all times were
+reset.</para></glossdef> </glossentry> 
+
+<glossentry id="gloss-total-time"> <glossterm><guilabel>Total Time</guilabel></glossterm>
+<glossdef><para>The time spent on the task and all it's subtasks since all
+times were reset.</para></glossdef> </glossentry> 
 
 </glossary>
 
