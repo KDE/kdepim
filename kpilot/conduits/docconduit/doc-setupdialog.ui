@@ -396,7 +396,7 @@
                                     <number>1</number>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Check this box to convert the Palm DOC database bookmarks to a separate file, in the bmk format (see more about this format in the documentation). The resulting bookmark file shares the same filename as the resulting .txt file, but ends in .bm instead. This approach creates a clean text file and a bookmark file.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Check this box to convert the Palm DOC database bookmarks to a separate file, in the bmk format (see more about this format in the documentation). The resulting bookmark file shares the same filename as the resulting .txt file, but ends in .bmk instead. This approach creates a clean text file and a bookmark file.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="2" column="0">
