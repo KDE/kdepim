@@ -15,6 +15,7 @@
 */
 
 #include <qheader.h>
+#include <qhbox.h>
 #include <stdlib.h>
 
 #include <klocale.h>
@@ -578,6 +579,10 @@ void KNodeView::initActions()
                               SLOT(slotNetCancel()), a_ctions, "net_stop");
   a_ctNetCancel->setEnabled(false);
 
+  a_ctFetchArticleWithID    = new KAction(i18n("&Fetch Article with ID..."), 0, this,
+                              SLOT(slotFetchArticleWithID()), a_ctions, "fetch_article_with_id");
+  a_ctFetchArticleWithID->setEnabled(false);
+
 }
 
 
@@ -789,6 +794,7 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
     a_ctNavNextUnreadArt->setEnabled(enabled);
     a_ctNavNextUnreadThread->setEnabled(enabled);
     a_ctNavReadThrough->setEnabled(enabled);
+    a_ctFetchArticleWithID->setEnabled(enabled);
   }
 
   enabled=( selectedAccount!=0 );
@@ -1454,6 +1460,39 @@ void KNodeView::slotNetCancel()
 {
   kdDebug(5003) << "KNodeView::slotNetCancel()" << endl;
   n_etAccess->cancelAllJobs();
+}
+
+
+void KNodeView::slotFetchArticleWithID()
+{
+  kdDebug(5003) << "KNodeView::slotFetchArticleWithID()" << endl;
+  if( !g_rpManager->currentGroup() )
+    return;
+
+  KDialogBase *dlg =  new KDialogBase(this, 0, true, i18n("Fetch Article with ID"), KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Ok);
+  QHBox *page = dlg->makeHBoxMainWidget();
+
+  QLabel *label = new QLabel(i18n("&Message-ID:"),page);
+  QLineEdit *edit = new QLineEdit(page);
+  label->setBuddy(edit);
+  edit->setFocus();
+
+  if (dlg->exec()) {
+    QString id = edit->text().simplifyWhiteSpace();
+    if (id.find(QRegExp("*@*",false,true))!=-1) {
+      if (id.find(QRegExp("<*>",false,true))==-1)   // add "<>" when necessary
+        id = QString("<%1>").arg(id);
+
+      if(!KNArticleWindow::raiseWindowForArticle(id.latin1())) { //article not yet opened
+        KNRemoteArticle *a=new KNRemoteArticle(g_rpManager->currentGroup());
+        a->messageID()->from7BitString(id.latin1());
+        KNArticleWindow *awin=new KNArticleWindow(a);
+        awin->show();
+      }
+    }
+  }
+
+  delete dlg;
 }
 
 //-------------------------------- </Actions> ----------------------------------

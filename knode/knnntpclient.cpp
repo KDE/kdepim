@@ -422,8 +422,15 @@ void KNNntpClient::doFetchArticle()
   predictedLines = target->lines()->numberOfLines()+10;
     
   QCString cmd = "ARTICLE " + target->messageID()->as7BitString(false);
-  if (!sendCommandWCheck(cmd,220))       // 220 n <a> article retrieved - head and body follow
+  if (!sendCommandWCheck(cmd,220)) {      // 220 n <a> article retrieved - head and body follow
+    int code = atoi(getCurrentLine());
+    if (code == 430)  // 430 no such article found
+      job->setErrorString(
+             errorPrefix + getCurrentLine() +
+             i18n("<br><br>The article you requested isn't available on your newsserver.<br>You can try to get it from <a href=\"http://groups.google.com/groups?q=msgid:%1&ic=1\">groups.google.com</a>.")
+                  .arg(target->messageID()->as7BitString(false)));
     return;
+  }
   
   QStrList msg;
   if (!getMsg(msg))

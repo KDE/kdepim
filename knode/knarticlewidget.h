@@ -43,7 +43,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
 
   public:
     enum browserType  { BTkonqueror=0 , BTnetscape=1 };
-    enum anchorType   { ATurl, ATauthor, ATreference, ATattachment, ATunknown };
+    enum anchorType   { ATurl, ATauthor, ATattachment, ATnews, ATmsgid, ATmailto, ATunknown };
 
     KNArticleWidget(KActionCollection* actColl, QWidget *parent=0, const char *name=0 );
     ~KNArticleWidget();

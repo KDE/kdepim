@@ -40,6 +40,10 @@
 #include "knserverinfo.h"
 #include "knarticlewidget.h"
 #include "knnetaccess.h"
+#include "kngroup.h"
+#include "knnntpaccount.h"
+#include "kngroupmanager.h"
+#include "kncollectionviewitem.h"
 
 
 KNGlobals knGlobals;
@@ -225,6 +229,65 @@ void KNMainWindow::secureProcessEvents()
 QSize KNMainWindow::sizeHint() const
 {
   return QSize(759,478);    // default optimized for 800x600
+}
+
+
+void KNMainWindow::openURL(const KURL &url)
+{
+  QString host = url.host();
+  unsigned short int port = url.port();
+  KNNntpAccount *acc;
+
+  // lets see if we already have an account for this host...
+  for(acc=knGlobals.accManager->first(); acc; acc=knGlobals.accManager->next())
+    if( acc->server()==host && (port==0 || acc->port()==port) )
+      break;
+
+  if(!acc) {
+    acc=new KNNntpAccount();
+    acc->setName(host);
+    acc->setServer(host);
+
+    if(port!=0)
+      acc->setPort(port);
+
+    if(url.hasUser() && url.hasPass()) {
+      acc->setNeedsLogon(true);
+      acc->setUser(url.user());
+      acc->setPass(url.pass());
+    }
+
+    if(!knGlobals.accManager->newAccount(acc))
+      return;
+  }
+
+  QString groupname=url.path(-1);
+  while(groupname.startsWith("/"))
+    groupname.remove(0,1);
+
+  QListViewItem *item=0;
+  if(groupname.isEmpty())
+    item=acc->listItem();
+  else {
+    KNGroup *grp= knGlobals.grpManager->group(groupname, acc);
+
+    if(!grp) {
+      KNGroupInfo inf(groupname, "");
+      knGlobals.grpManager->subscribeGroup(&inf, acc);
+      grp=knGlobals.grpManager->group(groupname, acc);
+      if(grp)
+        item=grp->listItem();
+    }
+    else
+      item=grp->listItem();
+
+  }
+
+  if(item) {
+    v_iew->collectionView()->setActive(item, true);
+    v_iew->collectionView()->setCurrentItem(item);
+    v_iew->collectionView()->ensureItemVisible(item);
+  }
 }
 
 

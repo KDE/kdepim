@@ -186,6 +186,8 @@ class KNodeView : public QSplitter
     //network
     KAction *a_ctNetCancel;
 
+    KAction *a_ctFetchArticleWithID;
+
   protected slots:
     void slotNavNextArt();
     void slotNavPrevArt();
@@ -238,6 +240,8 @@ class KNodeView : public QSplitter
     void slotArtEdit();
 
     void slotNetCancel();
+
+    void slotFetchArticleWithID();
 
   //--------------------------- </Actions> -----------------------------      
 

@@ -52,6 +52,7 @@
 #include "knnntpaccount.h"
 #include "knstringsplitter.h"
 #include "utilities.h"
+#include "knode.h"
 
 #define PUP_OPEN    1000
 #define PUP_SAVE    2000
@@ -369,7 +370,43 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
           }
         }
         result+=text[idx];
-        break;        
+        break;
+
+      case 'n' :
+        if((parseURLs)&&
+           (text[idx+1].latin1()=='e')) {   // don't do all the stuff for every 'e'
+          regExp="^news:[^\\s<>()\"|]+";
+          if (regExp.match(text,idx,&matchLen)!=-1) {
+            if (text[idx+matchLen-1]=='.')   // remove trailing dot
+              matchLen--;
+            else if (text[idx+matchLen-1]==',')   // remove trailing comma
+              matchLen--;
+            result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
+                    QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
+            idx+=matchLen-1;
+            break;
+          }
+        }
+        result+=text[idx];
+        break;
+
+      case 'm' :
+        if((parseURLs)&&
+           (text[idx+1].latin1()=='a')) {   // don't do all the stuff for every 'm'
+          regExp="^mailto:[^\\s<>()\"|]+";
+          if (regExp.match(text,idx,&matchLen)!=-1) {
+            if (text[idx+matchLen-1]=='.')   // remove trailing dot
+              matchLen--;
+            else if (text[idx+matchLen-1]==',')   // remove trailing comma
+              matchLen--;
+            result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
+                    QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
+            idx+=matchLen-1;
+            break;
+          }
+        }
+        result+=text[idx];
+        break;
 
       case '_' :
       case '/' :
@@ -520,11 +557,11 @@ void KNArticleWidget::showBlankPage()
 
 void KNArticleWidget::showErrorMessage(const QString &s)
 {
-
   setFont(knGlobals.cfgManager->appearance()->articleFont());  // switch back from possible obscure charsets
 
-  QString msg="<qt>"+i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>");
-  msg+=toHtmlString(s)+"</qt>";
+  QString errMsg=s;
+  errMsg.replace(QRegExp("\n"),QString("<br>"));  // error messages can contain html-links, but are plain text otherwise
+  QString msg="<qt>"+i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>")+errMsg+"</qt>";
   setText(msg);
 
   a_rticle=0;
@@ -701,15 +738,19 @@ void KNArticleWidget::createHtmlPage()
   //References
   KNHeaders::References *refs=a_rticle->references(false);
   if(a_rticle->type()==KNMimeBase::ATremote && refs) {
-    int refCnt=refs->count();
+    int refCnt=refs->count(), i=1;
+    QCString id = refs->first();
     html+=QString("<b>%1</b>").arg(i18n("References:"));
-    for(int refNr=0; refNr<refCnt; refNr++)
-      html+=QString(" <a href=\"internal:ref=%1\">%2</a>").arg(refNr).arg(refNr+1);
+
+    while (i <= refCnt) {
+      html+=QString(" <a href=\"news:%1\">%2</a>").arg(id).arg(i);
+      id = refs->next();
+      i++;
+    }
   }
   else html+=i18n("no references");
 
   html+="</headerblock></td></tr>";
-
 
   KNMimeContent *text=a_rticle->textContent();
   if(text) {
@@ -933,36 +974,46 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
   if(a.left(15)=="internal:author") {
     type=ATauthor;
   }
-  else if(a.left(13)=="internal:ref=") {
-    target=a.mid(13, a.length()-13);
-    type=ATreference;
-  }
-  else if(a.left(13)=="internal:att=") {
-    target=a.mid(13, a.length()-13);
-    type=ATattachment;
-  }
   else if(a.left(7).lower()=="http://" ||a.left(6).lower()=="ftp://") {
     target=a;
     type=ATurl;
+  }
+  else if(a.left(7).lower()=="news://") {
+    target=a;
+    type=ATnews;
+  }
+  else if(a.left(5)=="news:") {
+    target=a.mid(5, a.length()-5);
+    type=ATmsgid;
+  }
+  else if(a.left(7)=="mailto:") {
+    target=a.mid(7, a.length()-7);
+    type=ATmailto;
   }
 
   if((button==LeftButton)||(button==MidButton)) {
     KNGroup *g;
     KNRemoteArticle *a;
     KNArticleWindow *awin;
-    QCString refMid;
+    KNHeaders::AddressField adr(a_rticle);
 
     switch(type) {
       case ATauthor:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : mailto author" << endl;
         knGlobals.artFactory->createMail(a_rticle->from());
       break;
-      case ATreference:
-        kdDebug(5003) << "KNArticleWidget::anchorClicked() : reference " << target << endl;
+      case ATmsgid:
+        kdDebug(5003) << "KNArticleWidget::anchorClicked() : message-id " << target << endl;
+
+        if (a_rticle->collection()->type()!=KNArticleCollection::CTgroup)  // we need a group for doing network stuff
+          break;
+
         g=static_cast<KNGroup*>(a_rticle->collection());
-        refMid=a_rticle->references()->at(target.toInt());
-        if(!KNArticleWindow::raiseWindowForArticle(refMid)) { //article not yet opened
-          a=g->byMessageId(refMid);
+        if (target.find(QRegExp("<*>",false,true))==-1)   // add "<>" when necessary
+          target = QString("<%1>").arg(target);
+
+        if(!KNArticleWindow::raiseWindowForArticle(target.latin1())) { //article not yet opened
+          a=g->byMessageId(target.latin1());
           if(a) {
             //article found in KNGroup
             awin=new KNArticleWindow(a);
@@ -972,7 +1023,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
             //article not in local group => create a new (orphant) article.
             //It will be deleted by the displaying widget/window
             a=new KNRemoteArticle(g); //we need "g" to access the nntp-account
-            a->messageID()->from7BitString(refMid);
+            a->messageID()->from7BitString(target.latin1());
             awin=new KNArticleWindow(a);
             awin->show();
           }
@@ -988,6 +1039,15 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
       case ATurl:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : url " << target << endl;;
         openURL(target);
+      break;
+      case ATnews:
+        kdDebug(5003) << "KNArticleWidget::anchorClicked() : news-url " << target << endl;;
+        knGlobals.top->openURL(target);
+      break;
+      case ATmailto:
+        kdDebug(5003) << "KNArticleWidget::anchorClicked() : mailto author" << endl;
+        adr.fromUnicodeString(target,"");
+        knGlobals.artFactory->createMail(&adr);
       break;
       default:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : unknown" << endl;

@@ -32,9 +32,6 @@ class KNApplication : public KUniqueApplication
         main window active if KNode is already running */
     int newInstance();
 
-    // handle URL given as argument
-    void openURL(const KURL &url);
-
 };
 
 #endif

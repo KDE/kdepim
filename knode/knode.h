@@ -68,6 +68,8 @@ class KNMainWindow : public KMainWindow
 
     virtual QSize sizeHint() const;   // useful default value
 
+    // handle URL given as command-line argument
+    void openURL(const KURL &url);
 
   protected:
 
