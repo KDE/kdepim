@@ -37,13 +37,7 @@
 
 #include <kleo/keylistjob.h>
 #include <kleo/keygenerationjob.h>
-#include <kleo/cryptobackend.h>
-
-#if 0
-#include <cryptplugwrapper.h>
-#include <cryptplugwrapperlist.h>
-#endif
-#include <cryptplugfactory.h>
+#include <kleo/cryptobackendfactory.h>
 
 #include <ui/progressdialog.h>
 
@@ -114,9 +108,9 @@ void KeyGenerator::slotStartKeyGeneration() {
       params += keyParams[i] + ( ": " + mLineEdits[i]->text().stripWhiteSpace() ) + '\n';
   params += "</GnupgKeyParms>\n";
 
-  const Kleo::CryptoBackend::Protocol * proto = protocol == "openpgp" ? Kleo::CryptPlugFactory::instance()->openpgp() : Kleo::CryptPlugFactory::instance()->smime() ;
+   const Kleo::CryptoBackend::Protocol * proto = protocol == "openpgp" ? Kleo::CryptoBackendFactory::instance()->openpgp() : Kleo::CryptoBackendFactory::instance()->smime() ;
   if ( !proto )
-    proto = Kleo::CryptPlugFactory::instance()->smime();
+    proto = Kleo::CryptoBackendFactory::instance()->smime();
   assert( proto );
 
   kdDebug() << "Using protocol " << proto->name() << endl;
