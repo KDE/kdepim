@@ -109,7 +109,7 @@ QString KNHeaders::MessageID::asUnicodeString()
 
 void KNHeaders::MessageID::generate(const QCString &fqdn)
 {
-  m_id=KNMimeBase::uniqueString()+"@"+fqdn;
+  m_id="<"+KNMimeBase::uniqueString()+"@"+fqdn+">";
 }
 
 
