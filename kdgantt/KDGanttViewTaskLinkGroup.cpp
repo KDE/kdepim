@@ -321,7 +321,8 @@ void KDGanttViewTaskLinkGroup::createNode( QDomDocument& doc,
 KDGanttViewTaskLinkGroup* KDGanttViewTaskLinkGroup::createFromDomElement( QDomElement& element )
 {
     QDomNode node = element.firstChild();
-    bool highlight, visible;
+    bool highlight = false;
+    bool visible = false;
     QColor color, highlightColor;
     QString name;
     while( !node.isNull() ) {

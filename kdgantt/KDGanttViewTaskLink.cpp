@@ -518,7 +518,8 @@ KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& ele
 {
     QDomNode node = element.firstChild();
     QStringList fromList, toList;
-    bool highlight, visible;
+    bool highlight = false;
+    bool visible = false;
     QColor color, highlightColor;
     QString tooltipText, whatsThisText, group;
     while( !node.isNull() ) {
