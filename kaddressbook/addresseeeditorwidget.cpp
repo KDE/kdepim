@@ -244,7 +244,7 @@ void AddresseeEditorWidget::setupTab1()
   categoryBox->setSpacing( KDialogBase::spacingHint() );
   
   // Categories
-  button = new QPushButton(i18n("Categories..."), categoryBox);
+  button = new QPushButton(i18n("Categories"), categoryBox);
   connect(button, SIGNAL(clicked()), SLOT(categoryButtonClicked()));
 
   mCategoryEdit = new KLineEdit(categoryBox, "mCategoryEdit");

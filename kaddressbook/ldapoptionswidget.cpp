@@ -233,7 +233,7 @@ void LDAPOptionsWidget::initGUI()
   buttons->addButton( i18n( "&Add Host..." ), this, SLOT( slotAddHost() ) );
   mEditButton = buttons->addButton( i18n( "&Edit Host..." ), this, SLOT( slotEditHost() ) );
   mEditButton->setEnabled( false );
-  mRemoveButton = buttons->addButton( i18n( "&Remove Host..." ), this, SLOT( slotRemoveHost() ) );
+  mRemoveButton = buttons->addButton( i18n( "&Remove Host" ), this, SLOT( slotRemoveHost() ) );
   mRemoveButton->setEnabled( false );
   buttons->layout();
 
