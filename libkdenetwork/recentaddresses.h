@@ -90,6 +90,11 @@ public:
      */
     void save( KConfig * );
 
+    /**
+     * Removes all entries from the history.
+     */
+    void clear();
+
 private:
     RecentAddresses(KConfig *config = 0L);
 

@@ -126,6 +126,12 @@ void RecentAddresses::adjustSize()
         m_addresseeList.remove( m_addresseeList.fromLast() );
 }
 
+void RecentAddresses::clear()
+{
+    m_addresseeList.clear();
+    adjustSize();
+}
+
 QStringList RecentAddresses::addresses() const
 {
     QStringList addresses;
