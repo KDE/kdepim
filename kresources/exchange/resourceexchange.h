@@ -104,12 +104,6 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     */
     Event::List rawEvents();
 
-    /*
-      Returns a QString with the text of the holiday (if any) that falls
-      on the specified date.
-    */
-    QString getHolidayForDate(const QDate &qd);
-
     virtual void subscribeEvents( const QDate& start, const QDate& end );
 
     /**
