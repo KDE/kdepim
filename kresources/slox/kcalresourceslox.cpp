@@ -294,6 +294,7 @@ void KCalResourceSlox::uploadIncidences()
   } else {
     mUploadedIncidence = 0;
     kdDebug() << "uploadIncidences(): FINISHED" << endl;
+    emit resourceSaved( this );
     return;
   }
 
@@ -856,6 +857,8 @@ bool KCalResourceSlox::isSaving()
 
 void KCalResourceSlox::doClose()
 {
+  kdDebug() << "KCalResourceSlox::doClose()" << endl;
+
   if ( !mOpen ) return;
 
   cancelLoadEvents();
