@@ -31,6 +31,8 @@ class CalendarMerger;
 class KDE_EXPORT CalendarSyncEntry : public SyncEntry
 {
   public:
+    typedef QPtrList<CalendarSyncEntry> PtrList;
+
     CalendarSyncEntry( Syncee* parent );
     CalendarSyncEntry( KCal::Incidence *, Syncee *parent );
     CalendarSyncEntry( const CalendarSyncEntry& );
