@@ -1960,7 +1960,7 @@ int PopMailConduit::doUnixStyle()
 	}
 	else if (isBackup())
 	{
-		emit logError(i18n("Cannot perform backup on mail database"));
+		emit logError(i18n("Cannot perform backup of mail database"));
 	}
 	else
 	{

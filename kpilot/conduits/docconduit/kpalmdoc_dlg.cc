@@ -435,7 +435,7 @@ bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 DEBUGCONDUIT<<"Working  on file "<<pdbfile<<endl;
 	if (!dbfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
-			i18n("<qt>The database file <em>%1</em> already exists.  Overwrite it?</qt>")
+			i18n("<qt>The database file <em>%1</em> already exists. Overwrite it?</qt>")
 			.arg(dbfileinfo.filePath()) ) ))
 	{
 		PilotLocalDatabase*pdbdb=new PilotLocalDatabase(pdbdir, QFileInfo(pdbfile).baseName(), false);
@@ -479,7 +479,7 @@ bool ConverterDlg::convertPDBtoTXT(QString pdbdir, QString pdbfile,
 DEBUGCONDUIT<<"Working  on file "<<txtfile<<endl;
 	if (!txtfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
-			i18n("<qt>The text file <em>%1</em> already exists.  Overwrite it?</qt>")
+			i18n("<qt>The text file <em>%1</em> already exists. Overwrite it?</qt>")
 			.arg(txtfileinfo.filePath()) ) ))
 	{
 		PilotLocalDatabase*pdbdb=new PilotLocalDatabase(pdbdir, QFileInfo(pdbfile).baseName(), false);
