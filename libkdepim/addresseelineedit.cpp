@@ -279,23 +279,29 @@ void AddresseeLineEdit::dropEvent( QDropEvent *e )
       eot--;
       contents.truncate( eot );
     }
+    bool mailtoURL = false;
     // append the mailto URLs
     for ( KURL::List::Iterator it = uriList.begin();
           it != uriList.end(); ++it ) {
       if ( !contents.isEmpty() )
         contents.append( ", " );
       KURL u( *it );
-      contents.append( (*it).path() );
+      if ( u.protocol() == "mailto" ) {
+        mailtoURL = true;
+        contents.append( (*it).path() );
+      }
     }
-    setText( contents );
-    setEdited( true );
+    if ( mailtoURL ) {
+      setText( contents );
+      setEdited( true );
+      return;
+    }
   }
-  else {
-    if ( m_useCompletion )
-       m_smartPaste = true;
-    QLineEdit::dropEvent( e );
-    m_smartPaste = false;
-  }
+
+  if ( m_useCompletion )
+    m_smartPaste = true;
+  QLineEdit::dropEvent( e );
+  m_smartPaste = false;
 }
 
 void AddresseeLineEdit::cursorAtEnd()
@@ -495,10 +501,8 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
     if( '\0' == (*it)[len-1] )
       --len;
     const QString tmp = (*it).left( len );
-    //kdDebug(5300) << "     AddresseeLineEdit::addContact() \"" << tmp << "\"" << endl;
     QString fullEmail = addr.fullEmail( tmp );
-    //kdDebug(5300) << "                                     \"" << fullEmail << "\"" << endl;
-    //kdDebug(5300) << "                                     " << weight << endl;
+    //kdDebug(5300) << "AddresseeLineEdit::addContact() \"" << fullEmail << "\" weight=" << weight << endl;
     s_completion->addItem( fullEmail.simplifyWhiteSpace(), weight );
     // Try to guess the last name: if found, we add an extra
     // entry to the list to make sure completion works even
@@ -525,7 +529,7 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
           QString sExtraEntry( sLastName );
           sExtraEntry.append( tmp.isEmpty() ? addr.preferredEmail() : tmp );
           sExtraEntry.append( ">" );
-          //kdDebug(5300) << "     AddresseeLineEdit::addContact() added extra \"" << sExtraEntry.simplifyWhiteSpace() << "\"" << endl;
+          //kdDebug(5300) << "AddresseeLineEdit::addContact() added extra \"" << sExtraEntry.simplifyWhiteSpace() << "\" weight=" << weight << endl;
           s_completion->addItem( sExtraEntry.simplifyWhiteSpace(), weight );
           bDone = true;
         }
