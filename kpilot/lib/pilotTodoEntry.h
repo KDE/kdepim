@@ -85,7 +85,7 @@ public:
 	// static const int APP_BUFFER_SIZE;
 
 protected:
-	void *pack(void *, int *);
+	void *pack_(void *, int *);
 	void unpack(const void *, int = 0) { } ;
 
 	const char *getDescriptionP() const { return fTodoInfo.description; } ;

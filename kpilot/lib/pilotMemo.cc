@@ -50,18 +50,17 @@ void PilotMemo::unpack(const void *text, int /* firstTime */)
 	fText = codec()->toUnicode((const char *)text);
 }
 
-// The indirection just to make the base class happy
-void *PilotMemo::internalPack(unsigned char *buf)
+PilotRecord *PilotMemo::pack()
 {
-	FUNCTIONSETUP;
-	kdWarning() << k_funcinfo << ": Deprecated." << endl;
-	QCString s = codec()->fromUnicode(fText);
-	// Nasty assumption the buffer is big enough
-	strlcpy((char *) buf, (const char *)s, s.length()+1);
-	return buf;
+	char *buf = new char[fText.length() + 8];
+	int len = fText.length() + 8;
+	pack_(buf,&len);
+	PilotRecord *r = new PilotRecord(buf, len, getAttrib(), getCat(), id());
+	delete[] buf;
+	return r;
 }
 
-void *PilotMemo::pack(void *buf, int *len)
+void *PilotMemo::pack_(void *buf, int *len)
 {
 	FUNCTIONSETUP;
 	if (!*len) return NULL;

@@ -147,7 +147,7 @@ QString PilotTodoEntry::getCategoryLabel() const
 	return codec()->toUnicode(fAppInfo.category.name[getCat()]);
 }
 
-void *PilotTodoEntry::pack(void *buf, int *len)
+void *PilotTodoEntry::pack_(void *buf, int *len)
 {
 	int i;
 

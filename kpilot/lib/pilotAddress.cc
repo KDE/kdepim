@@ -405,7 +405,7 @@ void PilotAddress::setField(int field, const QString &text)
 	}
 }
 
-void *PilotAddress::pack(void *buf, int *len)
+void *PilotAddress::pack_(void *buf, int *len)
 {
 	FUNCTIONSETUPL(4);
 	int i;

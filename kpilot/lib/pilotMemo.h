@@ -48,7 +48,7 @@ public:
 	QString text(void) const { return fText; } ;
 	void setText(const QString &text) { fText = text; } ;
 	QString getTitle(void) const ;
-	PilotRecord* pack() { return PilotAppCategory::pack(); } ;
+	PilotRecord* pack();
 
 	static const int MAX_MEMO_LEN=8192;
 
@@ -67,13 +67,11 @@ public:
 	QString sensibleTitle() const;
 
 protected:
-	void *pack(void *, int *);
+	void *pack_(void *, int *);
 	void unpack(const void *, int = 0);
 
 private:
 	QString fText;
-
-	void *internalPack(unsigned char *);
 };
 
 #endif

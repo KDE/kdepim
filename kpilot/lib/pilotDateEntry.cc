@@ -270,7 +270,7 @@ QString PilotDateEntry::getCategoryLabel() const
 	return codec()->toUnicode(fAppInfo.category.name[getCat()]);
 }
 
-void *PilotDateEntry::pack(void *buf, int *len)
+void *PilotDateEntry::pack_(void *buf, int *len)
 {
 	int i;
 

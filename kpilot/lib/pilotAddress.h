@@ -151,7 +151,7 @@ public:
 	int  getPhoneLabelIndex(int index) { return fAddressInfo.phoneLabel[index]; }
 
 
-	void *pack(void *, int *);
+	virtual void *pack_(void *, int *);
 	void unpack(const void *, int = 0) { }
 
 	static const int APP_BUFFER_SIZE;

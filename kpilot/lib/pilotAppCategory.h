@@ -66,7 +66,7 @@ protected:			// Use protected since we will be subclassed
 	* otherwise @p buf. Set @p size to the actual size of data returned.
 	* (all of this is dictated by the pilot-link interfaces).
 	*/
-	virtual void *pack(void *buf, int *size) = 0;
+	virtual void *pack_(void *buf, int *size) = 0;
 	virtual void unpack(const void *, int = 0) = 0;
 
 
@@ -113,15 +113,7 @@ public:
 	/** @return a PilotRecord that contains all of the info of the
 	*  subclass.  Remember to delete the PilotRecord when finished.
 	*/
-	virtual PilotRecord* pack()
-	{
-		int len = PilotRecord::APP_BUFFER_SIZE;
-		void* buff = new unsigned char[len];
-		pack(buff, &len);
-		PilotRecord* rec =  new PilotRecord(buff, len, getAttrib(), getCat(), id());
-		delete [] (unsigned char*)buff;
-		return rec;
-	}
+	virtual PilotRecord* pack();
 
 	int getAttrib(void) const { return fAttrs; }
 	int getCat(void) const { return fCategory; }

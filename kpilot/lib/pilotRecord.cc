@@ -212,3 +212,13 @@ bool PilotAppCategory::setCat(struct CategoryAppInfo &info,const QString &label)
 	setCat(emptyAvailable);
 	return true;
 }
+
+PilotRecord *PilotAppCategory::pack()
+{
+	int len = PilotRecord::APP_BUFFER_SIZE;
+	void* buff = new unsigned char[len];
+	pack_(buff, &len);
+	PilotRecord* rec =  new PilotRecord(buff, len, getAttrib(), getCat(), id());
+	delete [] (unsigned char*)buff;
+	return rec;
+}
