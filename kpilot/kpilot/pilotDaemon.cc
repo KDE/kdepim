@@ -1170,11 +1170,14 @@ int main(int argc, char* argv[])
 
 	if (gPilotDaemon->status()==PilotDaemon::ERROR)
 	{
-		kdError() << __FUNCTION__ 
-			<< ": Failed to start up daemon"
-			<< endl;
 		delete gPilotDaemon;
 		gPilotDaemon = 0;
+		kdError() << __FUNCTION__ 
+			<< ": **\n"
+			   ": Failed to start up daemon\n"
+			   ": due to errors constructing it.\n"
+			   ": **"
+			<< endl;
 		return 2;
 	}
 	
@@ -1198,6 +1201,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.28  2001/02/05 21:01:07  adridg
+// Fixed copyright headers for source releases. No code changed
+//
 // Revision 1.27  2001/02/05 19:16:32  adridg
 // Removing calls to exit() from internal functions
 //

@@ -576,6 +576,14 @@ KPilotLink::slotConduitClosed(KSocket* theSocket)
 
 void KPilotLink::resumeDB()
 {
+	if (!fCurrentDB)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": resumeDB called after the end of a sync."
+			<< endl;
+		return;
+	}
+
   closeDatabase(fCurrentDB);
 
   // Get our backup copy.
@@ -860,8 +868,20 @@ KPilotLink::doFullRestore()
   addSyncLogEntry("OK.\n");
   fMessageDialog->hide();
   //     delete messageDialog;
-  emit(databaseSyncComplete());
-  return true;
+	finishDatabaseSync();
+	return true;
+}
+
+void KPilotLink::finishDatabaseSync()
+{
+	// Since we're done with the DB anyway
+	// we can forget it. This also flags 
+	// for resumeDB not to do anything
+	// stupid :)
+	//
+	//
+	fCurrentDB=0;
+	emit(databaseSyncComplete());
 }
 
 bool
@@ -1247,7 +1267,7 @@ KPilotLink::doConduitBackup()
       if(dlp_ReadDBList(getCurrentPilotSocket(), 0, 0x80, fNextDBIndex, &info) < 0)
 	{
 	  setSlowSyncRequired(false);
-	  emit(databaseSyncComplete());
+		finishDatabaseSync();
 	  fMessageDialog->hide();
 	  return;
 	}
@@ -1263,7 +1283,7 @@ KPilotLink::doConduitBackup()
 	  if(dlp_ReadDBList(getCurrentPilotSocket(), 0, 0x80, fNextDBIndex, &info) < 0)
 	    {
 	      setSlowSyncRequired(false);
-	      emit(databaseSyncComplete());
+		finishDatabaseSync();
 	      fMessageDialog->hide();
 	      return;
 	    }
@@ -1324,7 +1344,7 @@ int KPilotLink::findNextDB(DBInfo *info)
 		setFastSyncRequired(
 			config.readBoolEntry("PreferFastSync",false));
 	  fMessageDialog->hide();
-	  emit(databaseSyncComplete());
+		finishDatabaseSync();
 	  return 0;
 	}
       fNextDBIndex = info->index + 1;
@@ -1733,6 +1753,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.35  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.34  2001/02/07 14:21:40  brianj
 // Changed all include definitions for libpisock headers
 // to use include path, which is defined in Makefile.

@@ -723,6 +723,11 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
 	int status;
 	in.read(&status, sizeof(int));
 
+	DEBUGKPILOT << fname
+		<< ": Got command "
+		<< status
+		<< endl;
+
 	switch(status)
 	{
 	case CStatusMessages::SYNC_STARTING :
@@ -1257,6 +1262,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.34  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.33  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //

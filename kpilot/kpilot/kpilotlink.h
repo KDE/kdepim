@@ -245,6 +245,12 @@ private:
 	*/
 	void resumeDB();
 
+	/**
+	* When the sync is done (or the backup, or whatever ...)
+	* call this function to cleanup and emit done signals.
+	*/
+	void finishDatabaseSync();
+
 
 public:
 	typedef enum { Normal, PilotLinkError } Status ;
@@ -372,4 +378,7 @@ signals:
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.17  2001/02/06 08:05:19  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//
