@@ -10,6 +10,10 @@
 #include <kdebug.h>
 #include <kapplication.h>
 
+#include <kabc/resourcefile.h>
+#include <kabc/phonenumber.h>
+#include <kabc/address.h>
+
 #include <kontainer.h>
 #include <idhelper.h>
 
@@ -21,6 +25,9 @@
 //#include  "../categoryedit.h"
 //#include "../todo.h"
 
+#include <kaddressbooksyncentry.h>
+
+#include <plugins/opie/addressbook.h>
 #include <plugins/opie/categoryedit.h>
 #include <plugins/opie/todo.h>
 #include <plugins/opie/datebook.h>
@@ -116,6 +123,16 @@ int main( int argc,  char *argv[] )
             cal.addEvent( even );
         }
         kdDebug() << "DateBook add" << endl;
+    }
+    if ( args->isSet("addressbook") ) {
+        QString abook = QString::fromLocal8Bit( args->getOption("addressbook") );
+        OpieHelper::AddressBook address( &edit,  &helper,  true );
+        KAddressbookSyncEntry *entry = address.toKDE( abook );
+        KABC::ResourceFile r( entry->addressbook(),  "/home/ich/addressbook.vcf");
+        entry->addressbook()->addResource( &r );
+        KABC::Ticket *t = entry->addressbook()->requestSaveTicket( &r );
+        kdDebug() << "Save " << endl;
+        entry->addressbook()->save( t );
     }
     kdDebug() << "Calendar save" << endl;
     KCal::ICalFormat form( &cal );
