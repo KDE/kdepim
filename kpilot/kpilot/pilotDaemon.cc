@@ -710,7 +710,7 @@ void PilotDaemon::slotRunKPilot()
 	QCString kpilotDCOP;
 	int kpilotPID;
 
-	if (KApplication::startServiceByDesktopPath("Utilities/kpilot",
+	if (KApplication::startServiceByDesktopName("kpilot",
 			QString::null, &kpilotError, &kpilotDCOP, &kpilotPID
 #if (KDE_VERSION >= 220)
 			// Startup notification added in 2.2
@@ -811,6 +811,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.56  2002/01/20 13:53:52  adridg
+// Added new sync types
+//
 // Revision 1.55  2001/12/29 15:49:01  adridg
 // SyncStack changes
 //

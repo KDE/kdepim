@@ -234,8 +234,8 @@ void KPilotInstaller::startDaemonIfNeeded()
 		fDaemonWasRunning = true;
 	}
 
-	if (KApplication::startServiceByDesktopPath(
-		"Utilities/kpilotdaemon.desktop",
+	if (KApplication::startServiceByDesktopName(
+		"kpilotdaemon",
 		QString::null, &daemonError, &daemonDCOP, &daemonPID
 #if (KDE_VERSION >= 220)
 			// Startup notification was added in 2.2
@@ -856,6 +856,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.68  2001/12/31 15:52:40  adridg
+// CVS_SILENT: Spit 'n polish
+//
 // Revision 1.67  2001/12/31 09:38:09  adridg
 // Splash patch by Aaron
 //
