@@ -110,48 +110,52 @@ PhoneEditWidget::~PhoneEditWidget()
 {
 }
 
+void PhoneEditWidget::insertType( const KABC::PhoneNumber::List &list,
+                                  int type )
+{
+  uint i;
+  for ( i = 0; i < list.count(); ++i ) {
+    if ( list[ i ].type() == type ) {
+      mPhoneList.append( list[ i ] );
+      break;
+    }
+  }
+  if ( i == list.count() ) {
+    mPhoneList.append( PhoneNumber( "", type ) );
+  }
+}
+
 void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
 {
-  mPhoneList = list;
+  mPhoneList.clear();
 
   kdDebug() << "PhoneEditWidget::setPhoneNumbers(): count: "
-            << mPhoneList.count() << endl;
+            << list.count() << endl;
 
   QValueList<int> defaultTypes;
-  defaultTypes << KABC::PhoneNumber::Home;
-  defaultTypes << KABC::PhoneNumber::Work;
-  defaultTypes << KABC::PhoneNumber::Cell;
-  defaultTypes << ( KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
-  defaultTypes << ( KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax );
+  insertType( list, KABC::PhoneNumber::Home );
+  insertType( list, KABC::PhoneNumber::Work );
+  insertType( list, KABC::PhoneNumber::Cell );
+  insertType( list, KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
+  insertType( list, KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax );
 
   uint i;
-  for ( i = 0; i < defaultTypes.count(); ++i ) {
+  for ( i = 0; i < list.count(); ++i ) {
     uint j;
     for( j = 0; j < mPhoneList.count(); ++j ) {
-      if ( defaultTypes[ i ] == mPhoneList[ j ].type() ) break;
+      if ( list[ i ].id() == mPhoneList[ j ].id() ) break;
     }
     if ( j == mPhoneList.count() ) {
-      mPhoneList.append( PhoneNumber( "", defaultTypes[ i ] ) );
+      mPhoneList.append( list[ i ] );
     }
   }
 
   updateCombos();
 
-  if ( mPhoneList.count() > 0 ) {
-    mPrefCombo->selectType( mPhoneList[ 0 ].type() );
-  } else mPrefCombo->selectType( PhoneNumber::Home );
-
-  if ( mPhoneList.count() > 1 ) {
-    mSecondCombo->selectType( mPhoneList[ 1 ].type() );
-  } else mSecondCombo->selectType( PhoneNumber::Work );
-
-  if ( mPhoneList.count() > 2 ) {
-    mThirdCombo->selectType( mPhoneList[ 2 ].type() );
-  } else mThirdCombo->selectType( PhoneNumber::Cell );
-
-  if ( mPhoneList.count() > 3 ) {
-    mFourthCombo->selectType( mPhoneList[ 3 ].type() );
-  } else mFourthCombo->selectType( PhoneNumber::Work | PhoneNumber::Fax );
+  mPrefCombo->selectType( PhoneNumber::Home );
+  mSecondCombo->selectType( PhoneNumber::Work );
+  mThirdCombo->selectType( PhoneNumber::Cell );
+  mFourthCombo->selectType( PhoneNumber::Work | PhoneNumber::Fax );
 
   updateLineEdits();
 }
