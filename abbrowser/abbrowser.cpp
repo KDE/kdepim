@@ -49,8 +49,6 @@ Pab::Pab()
   edit->insertItem(i18n("Paste"), view, SLOT(paste()), CTRL+Key_V);
   edit->insertSeparator();
   edit->insertItem(i18n("Select All"), view, SLOT(selectAll()), CTRL+Key_A);
-  edit->insertSeparator();
-  edit->insertItem(i18n("&Find"), this, SLOT(find()), CTRL+Key_F);
   edit->setItemEnabled( undoId, false );
   edit->setItemEnabled( redoId, false );
   QObject::connect( edit, SIGNAL( aboutToShow() ), this, SLOT( updateEditMenu() ));
@@ -60,8 +58,8 @@ Pab::Pab()
   v->insertItem(i18n("Options..."), view, SLOT(viewOptions()) );
   v->insertSeparator();
   v->insertItem(i18n("Restore defaults"), view, SLOT(defaultSettings()) );
-  v->insertSeparator();
-  v->insertItem(i18n("Refresh"), view, SLOT(refresh()), Key_F5 );
+  //  v->insertSeparator();
+  //  v->insertItem(i18n("Refresh"), view, SLOT(refresh()), Key_F5 );
 
   // put our newly created menu into the main menu bar
   menuBar()->insertItem(i18n("&File"), p);
@@ -75,40 +73,21 @@ Pab::Pab()
 		     "Long Description"));
   menuBar()->insertItem(i18n("&Help"), p);
   
-  // insert a quit button.  the icon is the standard one in KDE
-  toolBar()->insertButton(BarIcon("exit"),   // icon
-			  0,                  // button id
-			  SIGNAL(clicked()),  // action
-			  kapp, SLOT(quit()), // result
-			  i18n("Exit"));      // tooltip text
-	
   toolBar()->insertButton(BarIcon("filenew"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  this, SLOT(newContact()), // result
 			  i18n("Add a new entry"));      // tooltip text
-  toolBar()->insertButton(BarIcon("page"),   // icon
+  toolBar()->insertButton(BarIcon("pencil"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(properties()), // result
 			  i18n("Change this entry"));      // tooltip text
-  toolBar()->insertButton(BarIcon("delete"),   // icon
+  toolBar()->insertButton(BarIcon("eraser"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(clear()), // result
 			  i18n("Remove this entry"));      // tooltip text
-  toolBar()->insertButton(BarIcon("find"),   // icon
-			  0,                  // button id
-			  SIGNAL(clicked()),  // action
-			  this, SLOT(find()), // result
-			  i18n("Search entries"));      // tooltip text
-
-  toolBar()->insertButton(BarIcon("filemail"),   // icon
-			  0,                  // button id
-			  SIGNAL(clicked()),  // action
-			  this, SLOT(mail()), // result
-			  i18n("Send mail"));      // tooltip text
-
   
   // we do want a status bar
   enableStatusBar();
