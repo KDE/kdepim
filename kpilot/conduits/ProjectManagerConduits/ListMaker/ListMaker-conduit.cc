@@ -51,7 +51,7 @@
 //#include "ListMaker-factory.h"
 #include "MultiDB-factory.h"
 #include "ListMaker-conduit.h"
-
+#include "ListMaker-conduit.moc"
 using namespace KCal;
 
 static const char *ListMaker_conduit_id = "$Id$";
@@ -64,6 +64,9 @@ ListMakerConduit::ListMakerConduit(KPilotDeviceLink *d, const char *n, const QSt
 
 
 // $Log$
+// Revision 1.1  2002/04/07 12:09:42  kainhofe
+// Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
+//
 // Revision 1.5  2002/04/07 11:56:18  reinhold
 // Last version before moving to KDE CVS
 //
