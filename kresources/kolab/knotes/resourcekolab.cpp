@@ -204,12 +204,15 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
 
 bool ResourceKolab::deleteNote( KCal::Journal* journal )
 {
-#if 0
   const QString uid = journal->uid();
-  kmailDeleteIncidence( "Kolab/Note", mUidMap[ uid ] );
+  if ( !mUidMap.contains( uid ) )
+    // Odd
+    return false;
+
+  kmailDeleteIncidence( mUidMap[ uid ].resource(),
+                        mUidMap[ uid ].serialNumber() );
   mUidMap.remove( uid );
   mCalendar.deleteJournal( journal );
-#endif
   return true;
 }
 
@@ -233,16 +236,11 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
                                            const QString& note )
 {
   // Check if this is a note
-  if( type != "Kolab/Note" ) return false;
-
-  // kdDebug(5500) << "ResourceKolab::addIncidence( " << type << ", "
-  //               << /*ical*/"..." << " )" << endl;
-  KCal::Journal* journal = parseJournal( note );
-  if ( !journal ) return false;
+  if( type != kmailResourceType ) return false;
 
   const bool silent = mSilent;
   mSilent = true;
-  addNote( journal, resource, sernum );
+  addNote( note, resource, sernum );
   mSilent = silent;
 
   return true;
@@ -252,25 +250,29 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
                                            const QString& /*resource*/,
                                            const QString& note )
 {
-#if 0
   // Check if this is a note
-  if( type != "Kolab/Note" ) return;
+  if( type != kmailResourceType ) return;
 
   // kdDebug(5500) << "ResourceKolab::deleteIncidence( " << type << ", " << uid
   //               << " )" << endl;
 
+  KCal::Journal* journal = Note::xmlToJournal( note );
+  if ( !journal )
+    return;
+
   const bool silent = mSilent;
   mSilent = true;
-  KCal::Journal* j = mCalendar.journal( uid );
+  KCal::Journal* j = mCalendar.journal( journal->uid() );
   if( j ) deleteNote( j );
   mSilent = silent;
-#endif
+
+  delete journal;
 }
 
 void ResourceKolab::slotRefresh( const QString& type,
                                  const QString& /*resource*/ )
 {
-  if ( type == "Kolab/Note" )
+  if ( type == kmailResourceType )
     load();
 }
 
@@ -278,7 +280,7 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
                                              const QString& resource,
                                              bool writable )
 {
-  if ( type != "Kolab/Note" )
+  if ( type != kmailResourceType )
     // Not ours
     return;
 
@@ -287,7 +289,7 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
     return;
 
   KConfig config( configFile() );
-  config.setGroup( "Note" );
+  config.setGroup( configGroupName );
 
   bool active = config.readBoolEntry( resource, true );
   mResources[ resource ] = Kolab::SubResource( active, writable, resource );
@@ -298,7 +300,7 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
 void ResourceKolab::fromKMailDelSubresource( const QString& type,
                                              const QString& resource )
 {
-  if ( type != "Kolab/Note" )
+  if ( type != configGroupName )
     // Not ours
     return;
 
@@ -310,7 +312,7 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
   mResources.erase( resource );
 
   KConfig config( configFile() );
-  config.setGroup( "Kolab/Note" );
+  config.setGroup( configGroupName );
   config.deleteEntry( resource );
   config.sync();
 
@@ -350,24 +352,6 @@ bool ResourceKolab::subresourceActive( const QString& res ) const
   kdDebug(5650) << "subresourceActive( " << res << " ): Safe bet\n";
 
   return true;
-}
-
-
-KCal::Journal* ResourceKolab::parseJournal( const QString& str )
-{
-  KCal::ICalFormat format;
-  KCal::Incidence* i = format.fromString( str );
-  if ( i ) {
-    if ( i->type() == "Journal" )
-      return static_cast<KCal::Journal*>( i );
-    else {
-      kdDebug(5500) << "Unknown incidence type " << i->type() << endl;
-      delete i;
-    }
-  } else
-    kdDebug(5500) << "Parse error\n";
-
-  return 0;
 }
 
 

@@ -109,8 +109,6 @@ private:
     return ResourceKolabBase::configFile( "knotes" );
   }
 
-  // Parse a journal from a string
-  KCal::Journal* parseJournal( const QString& str );
   KCal::CalendarLocal mCalendar;
 
   // The list of subresources
