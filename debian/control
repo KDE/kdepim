@@ -20,8 +20,8 @@ Description: Personal Information Management for KDE (common files)
 Package: korganizer
 Architecture: any
 Section: x11
+Replaces: kdepim, kdepim-common
 Depends: ${shlibs:Depends}
-Conflicts: kdepim-common
 Suggests: kdebase, abbrowser
 Description: Personal organizer based on QT and KDE 
  A complete calendar and scheduling program. KOrganizer supports
@@ -46,8 +46,8 @@ Description: Personal organizer based on QT and KDE
 Package: abbrowser
 Architecture: any
 Section: utils
+Replaces: kdepim, kdepim-common
 Depends: ${shlibs:Depends}
-Conflicts: kdepim-common
 Suggests: kdebase, korganizer
 Description: Address book reader
  Address book reader for KDE
