@@ -28,8 +28,6 @@
 
 #include <libkcal/calendarlocal.h>
 
-#include "compat.h"
-
 using namespace KCal;
 
 // Base class for Alarm Daemon calendar access
