@@ -2,6 +2,9 @@ INCLUDES= @all_includes@ -I$(top_srcdir)/kpilot/kpilot -I$(srcdir)/versit -I$(to
 SUBDIRS = versit
 METASOURCES = AUTO
 
+servicedir  = $(kde_servicesdir)
+service_DATA = vcal-conduit.desktop
+
 ####### This part is very kpilot specific
 # you can add here more. This one gets installed
 noinst_PROGRAMS = vcalconduit

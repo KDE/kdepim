@@ -27,19 +27,18 @@ static const char *id="$Id$";
 #include <qpushbt.h>
 #include <qdragobject.h>
 
+#include <kstddirs.h>
 #include <kurl.h>
 #include <kmessagebox.h>
 #include <kwin.h>
 #include <kapp.h>
 #include <kfiledialog.h>
 #include <kdebug.h>
+#include <kio/netaccess.h>
 
 #include "kpilot.h"
 #include "kpilotlink.h"
 #include "fileInstallWidget.moc"
-
-#define KPILOT_INSTALL_FILE "/share/apps/kpilot/kpilot_install_list"
-#define KPILOT_INSTALL_DIR "/share/apps/kpilot/pending_install/"
 
 FileInstallWidget::FileInstallWidget(KPilotInstaller* installer, QWidget* parent)//, QList<KURL>* fileList);
   : PilotComponent(parent), fSaveFileList(false), fKPilotInstaller(installer)//, fHotSyncEnabled(true)
@@ -60,10 +59,9 @@ FileInstallWidget::FileInstallWidget(KPilotInstaller* installer, QWidget* parent
     }
 
 /**
-  * Adds 'url' to the pending file list and the list box if using the gui version
+  * Adds 'fileName' to the pending file list and the list box if using the gui version
   */
 void
-// FileInstallWidget::addFileToLists(KURL* url)
 FileInstallWidget::addFileToLists(const char* fileName)
     {
     char* newFileName;
@@ -73,15 +71,6 @@ FileInstallWidget::addFileToLists(const char* fileName)
     strcpy(newFileName, fileName);
     fListBox->insertItem(newFileName, -1);
     }
-
-void
-FileInstallWidget::kfmFileCopyComplete()
-{
-  //     delete fKFM;
-  //     fKFM = 0L;
-  if(getPilotInstallerApp()->getQuitAfterCopyComplete())
-    emit fileInstallWidgetDone();
-}
 
 void FileInstallWidget::dragEnterEvent(QDragEnterEvent* event)
 {
@@ -103,26 +92,20 @@ void FileInstallWidget::dropEvent(QDropEvent* drop)
 void
 FileInstallWidget::slotClearButton()
 {
-//   unsigned int i;
-//   QDir installDir(kapp->localkdedir() + KPILOT_INSTALL_DIR);
-//   for(i = 2; i < installDir.count(); i++)
-//     {
-//       unlink((kapp->localkdedir() + KPILOT_INSTALL_DIR + installDir[i]).data());
-//     }
-//   refreshFileInstallList();
+  unsigned int i;
+  QString dirname = KGlobal::dirs()->saveLocation("data", QString("kpilot/pending_install/"));
+  QDir installDir(dirname);
+  for(i = 2; i < installDir.count(); i++)
+    {
+      unlink((dirname + installDir[i]).latin1());
+    }
+  refreshFileInstallList();
 }
 
 void
 FileInstallWidget::initialize()
 {
-  unsigned int i;
-
-//   getPilotInstallerApp()->testDir( kapp->localkdedir() + "/share/apps/kpilot" );
-//   getPilotInstallerApp()->testDir( kapp->localkdedir() + KPILOT_INSTALL_DIR);
-//   fListBox->clear();
-//   QDir installDir(kapp->localkdedir() + KPILOT_INSTALL_DIR);
-//   for(i = 2; i < installDir.count(); i++)
-//     addFileToLists(installDir[i]);
+  refreshFileInstallList();
 }
 
 void
@@ -140,39 +123,16 @@ FileInstallWidget::slotAddFile()
 void
 FileInstallWidget::getFilesForInstall(QStrList& fileList)
     {
-//     QString tempFileName = '\0';
-//     QString destFileDir = '\0';
-//     unsigned int i = 0;
-
-//     if (initKFM()) return; // Init fKFM
-
-//     destFileDir = "file:";
-//     destFileDir += kapp->localkdedir();
-//     destFileDir += KPILOT_INSTALL_DIR;
-
-//     while(i < fileList.count())
-// 	{
-// 	/* Will be deleted by list: */
-//  	KURL* tempURL = new KURL(destFileDir + strrchr(fileList.at(i), '/'));
-// 	addFileToLists(tempURL->filename());
-// 	tempFileName += fileList.at(i);
-// 	if(++i < fileList.count())
-// 	    tempFileName += '\n';
-// 	}
-//     //    cout << "Requesting file " << tempFileName << " copied to " << destFileDir << endl;
-//     connect( getKFM(), SIGNAL( finished() ), this, SLOT( kfmFileCopyComplete() ) );
-
-// 	/* if there is only one, specify the file name of the dest file, */
-// 	/* else just the dir */
-// 	if(fileList.count() == 1)
-// 	{
-// 		getKFM()->copy(tempFileName, 
-// 			destFileDir + strrchr(fileList.at(0), '/'));
-// 	}
-// 	else
-// 	{
-// 		getKFM()->copy(tempFileName, destFileDir);
-// 	}
+      unsigned int i = 0;
+      QString dirname = KGlobal::dirs()->saveLocation("data", QString("kpilot/pending_install/"));
+      while (i < fileList.count())
+	{
+	  KURL srcName = fileList.at(i);
+	  KURL destDir(dirname + "/" + srcName.filename());
+	  KIO::NetAccess::copy(srcName, destDir);
+	  i++;
+	  refreshFileInstallList();
+	}
     }
 
 
@@ -223,9 +183,10 @@ FileInstallWidget::saveInstallList()
 void
 FileInstallWidget::refreshFileInstallList()
     {
-//       unsigned int i;
-//       fListBox->clear();
-//       QDir installDir(kapp->localkdedir() + KPILOT_INSTALL_DIR);
-//       for(i = 2; i < installDir.count(); i++)
-// 	addFileToLists(installDir[i]);
+      unsigned int i;
+      fListBox->clear();
+      QString dirname = KGlobal::dirs()->saveLocation("data", QString("kpilot/pending_install/"));
+      QDir installDir(dirname);
+      for(i = 2; i < installDir.count(); i++)
+ 	addFileToLists(installDir[i].latin1());
     }

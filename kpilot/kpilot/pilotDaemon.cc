@@ -35,6 +35,7 @@ static char *id="$Id$";
 #include <qlist.h>
 #include <qpopmenu.h>
 #include <qcursor.h>
+#include <qdragobject.h>
 
 #include <kapp.h>
 #include <kwin.h>
@@ -44,6 +45,8 @@ static char *id="$Id$";
 #include <kmessagebox.h>
 #include <kstddirs.h>
 #include <kpopupmenu.h>
+#include <kio/netaccess.h>
+#include <kdebug.h>
 
 #include "pilotDaemon.moc"
 #include "hotsync.h"
@@ -97,6 +100,7 @@ DockingLabel::DockingLabel (PilotDaemon* daemon, QWidget* w) : KDockWindow(), fD
   menu->insertItem(i18n("&About"), daemon, SLOT(slotShowAbout()));
   menu->insertSeparator();
   menu->insertItem(i18n("&Exit"), daemon, SLOT(quitImmediately()));
+  setAcceptDrops(true);
 }
 
 
@@ -112,54 +116,33 @@ DockingLabel::mousePressEvent(QMouseEvent *e)
     }
 }
 
+void DockingLabel::dragEnterEvent(QDragEnterEvent* event)
+{
+  event->accept(QUriDrag::canDecode(event));
+}
+
+
 void
 DockingLabel::dropEvent(QDropEvent* drop)
 {
-// 	FUNCTIONSETUP;
-
-//   QStrList& list = drop->getURLList();
-//   unsigned int i = 0;
-//   QString tempFileName;
-//   QString dest = "file:";
-//   dest += kapp->localkdedir();
-//   dest += "/share/apps/kpilot/pending_install/";
+  QStrList list;
+  QUriDrag::decode(drop, list);
   
-// 	if (debug_level & DB_MAJOR)
-// 	{
-// 		cerr << fname << ": Dropped files on us. "
-// 			<< list.at(0) << endl;
-// 	}
-
-//   if(fKFM)
-//     {
-//       KMessageBox::error(this, i18n("Please wait for current operation to complete."),
-// 			 i18n("Busy"));
-//       return;
-//     }
-//   fKFM = new KFM;
-//   fKFM->allowKFMRestart(true);
-//   if(!fKFM->isOK())
-//     {
-//       KMessageBox::message(this, i18n("Could not start KFM."), 
-// 			   i18n("Error"));
-//       delete fKFM;
-//       fKFM = 0L;
-//       return;
-//     }
+  kdDebug() << "DockingLabel::dropEvent() - Got " << list.first() << endl;
   
-//   while(i < list.count())
-//     {
-//       tempFileName += list.at(i);
-//       if(++i < list.count())
-// 	tempFileName += '\n';
-//     }
-//   connect(fKFM, SIGNAL(finished()), this, SLOT(slotKFMCopyComplete()));
-//   if(list.count() == 1)
-//     fKFM->copy(tempFileName, dest + strrchr(list.at(0), '/'));
-//   else
-//     fKFM->copy(tempFileName, dest);
+  if(list.first() != 0L)
+    {
+      unsigned int i = 0;
+      QString dirname = KGlobal::dirs()->saveLocation("data", QString("kpilot/pending_install/"));
+      while (i < list.count())
+	{
+	  KURL srcName = list.at(i);
+	  KURL destDir(dirname + "/" + srcName.filename());
+	  KIO::NetAccess::copy(srcName, destDir);
+	  i++;
+	}
+    }
 }
-
 
 int PilotDaemon::getPilotSpeed(KConfig *config)
 {
@@ -230,11 +213,6 @@ PilotDaemon::PilotDaemon() :
   delete config;
   fStatusConnections.setAutoDelete(true);
 
-//   cout << "Using: " << fPilotDevice << endl;
-
-  // FIXME: More localkdedir stuff..Sigh...
-//   testDir(kapp->localkdedir() + "/share/apps/kpilot");
-//   testDir(kapp->localkdedir() + "/share/apps/kpilot/DBBackup");
   setupWidget();
   setupConnections();
 	if (fStatus == ERROR) return;
@@ -360,10 +338,10 @@ PilotDaemon::slotShowAbout()
 {
   FUNCTIONSETUP;
   
-  KMessageBox::error(0L, i18n("KPilot Hot-Sync Daemon v3.2 \n"
+  KMessageBox::error(0L, i18n("KPilot Hot-Sync Daemon v4.0 \n"
 				 "By: Dan Pilone.\n"
 				"Email: pilone@slac.com"),
-		       i18n("KPilot Daemon v3.2"));
+		       i18n("KPilot Daemon v4.0"));
 }
 
 void

@@ -31,8 +31,9 @@ kpilotDaemon_LDFLAGS = @all_libraries@ -L/usr/local/lib
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
 kpilot_LDADD   = $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) -lqt -lX11 -lXext @LIBSOCKET@ -lpisock -lpicc
-kpilotDaemon_LDADD = $(LIB_KDEUI) $(LIB_KDECORE) -lqt -lX11 -lXext @LIBSOCKET@ -lpisock
+kpilotDaemon_LDADD = $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) -lqt -lX11 -lXext @LIBSOCKET@ -lpisock
 
 appsdir = $(kde_appsdir)/Utilities
 apps_DATA = kpilot.desktop kpilotdaemon.desktop
-
+servicetype_DATA = kpilotconduit.desktop
+servicetypedir = $(kde_servicetypesdir)

@@ -30,6 +30,8 @@
 #include <kmessagebox.h>
 #include <kstddirs.h>
 #include <kdebug.h>
+#include <kuserprofile.h>
+#include <kservice.h>
 
 #include "conduitSetup.moc"
 
@@ -50,14 +52,14 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
   
   label1 = new QLabel(this, "label1");
   label1->setText(i18n("Available Conduits:"));
-  label1->setFont(QFont("times",14,QFont::Normal,(int)0));
+//   label1->setFont(QFont("times",14,QFont::Normal,(int)0));
   label1->setAlignment(AlignLeft | AlignTop);
   label1->setFrameStyle(QFrame::NoFrame | QFrame::NoFrame);
   label1->setGeometry(14,V,130,23);
 	
   label2 = new QLabel(this, "label2");
   label2->setText(i18n("Installed Conduits:"));
-  label2->setFont(QFont("times",14,QFont::Normal,(int)0));
+//   label2->setFont(QFont("times",14,QFont::Normal,(int)0));
   label2->setAlignment(AlignLeft | AlignTop);
   label2->setFrameStyle(QFrame::NoFrame | QFrame::NoFrame);
   label2->setGeometry(261,V,130,23);
@@ -72,7 +74,7 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
 //   fInstalledConduits->setBottomScrollBar(FALSE);
 //   fInstalledConduits->setScrollBar(FALSE);
   fInstalledConduits->setGeometry(261,V,182,217);
-  fInstalledConduits->setFont(QFont("times",14,QFont::Normal,(int)0));
+//   fInstalledConduits->setFont(QFont("times",14,QFont::Normal,(int)0));
 	connect(fInstalledConduits, SIGNAL(highlighted(int)), 
 		this, SLOT(slotSelectInstalled()));
 
@@ -84,13 +86,13 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
 //   fAvailableConduits->setBottomScrollBar(FALSE);
 //   fAvailableConduits->setScrollBar(FALSE);
   fAvailableConduits->setGeometry(11,V,167,217);
-  fAvailableConduits->setFont(QFont("times",14,QFont::Normal,(int)0));
+//   fAvailableConduits->setFont(QFont("times",14,QFont::Normal,(int)0));
 	connect(fAvailableConduits, SIGNAL(highlighted(int)), 
 		this, SLOT(slotSelectAvailable()));
 	
   fDoneButton = new QPushButton(this, "fDoneButton");
   fDoneButton->setText(i18n("Done"));
-  fDoneButton->setFont(QFont("times",14,QFont::Normal,(int)0));
+//   fDoneButton->setFont(QFont("times",14,QFont::Normal,(int)0));
   fDoneButton->setDefault(FALSE);
   fDoneButton->setToggleButton(FALSE);
   fDoneButton->setAutoResize(FALSE);
@@ -116,7 +118,7 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
 	
   fInstallConduit = new QPushButton(this, "fInstallConduit");
   fInstallConduit->setText(i18n("Install"));
-  fInstallConduit->setFont(QFont("times",14,QFont::Normal,(int)0));
+//   fInstallConduit->setFont(QFont("times",14,QFont::Normal,(int)0));
   fInstallConduit->setDefault(FALSE);
   fInstallConduit->setToggleButton(FALSE);
   fInstallConduit->setAutoResize(FALSE);
@@ -127,7 +129,7 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
 
   fRemoveConduit = new QPushButton(this, "fRemoveConduit");
   fRemoveConduit->setText(i18n("Uninstall"));
-  fRemoveConduit->setFont(QFont("times",14,QFont::Normal,(int)0));
+//   fRemoveConduit->setFont(QFont("times",14,QFont::Normal,(int)0));
   fRemoveConduit->setDefault(FALSE);
   fRemoveConduit->setToggleButton(FALSE);
   fRemoveConduit->setAutoResize(FALSE);
@@ -139,7 +141,7 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
 	
   fSetupConduit = new QPushButton(this, "fSetupConduit");
   fSetupConduit->setText(i18n("Setup"));
-  fSetupConduit->setFont(QFont("times",14,QFont::Normal,(int)0));
+//   fSetupConduit->setFont(QFont("times",14,QFont::Normal,(int)0));
   fSetupConduit->setDefault(FALSE);
   fSetupConduit->setToggleButton(FALSE);
   fSetupConduit->setAutoResize(FALSE);
@@ -180,21 +182,30 @@ CConduitSetup::fillLists()
   // Make sure that all the ones in fInstalledConduitNames are available
   cleanupLists(&fAvailableConduitNames, &fInstalledConduitNames);
   
+  KServiceTypeProfile::OfferList offers = KServiceTypeProfile::offers("KPilotConduit");
+  QValueListIterator<KServiceOffer> offerIter(offers.begin());
+  while (offerIter != offers.end())
+    {
+      KService::Ptr ptr = (*offerIter).service();
+      fAvailableConduits->insertItem(ptr->name());
+      offerIter++;
+    }
+  
   // Now actually fill the two list boxes, just make sure that nothing gets
   // listed in both.
-  QStringList::Iterator availList = fAvailableConduitNames.begin();
-  while(availList != fAvailableConduitNames.end())
-    {
-      if(fInstalledConduitNames.contains(*availList) == 0)
-	fAvailableConduits->insertItem(*availList);
-      ++availList;
-    }
-  QStringList::Iterator installList = fInstalledConduitNames.begin();
-  while(installList != fInstalledConduitNames.end())
-    {
-      fInstalledConduits->insertItem(*installList);
-      ++installList;
-    }
+//   QStringList::Iterator availList = fAvailableConduitNames.begin();
+//   while(availList != fAvailableConduitNames.end())
+//     {
+//       if(fInstalledConduitNames.contains(*availList) == 0)
+// 	fAvailableConduits->insertItem(*availList);
+//       ++availList;
+//     }
+//   QStringList::Iterator installList = fInstalledConduitNames.begin();
+//   while(installList != fInstalledConduitNames.end())
+//     {
+//       fInstalledConduits->insertItem(*installList);
+//       ++installList;
+//     }
   checkButtons();
 }
 

@@ -18,3 +18,10 @@
 7/20/2000:
 	o 3.2.0 (i.e. 3.1final) is being ported to KDE 2 and is now 
 	  called KPilot 4.0.0
+8/30/2000:
+	o Fixed drag-n-drop file installation.  Both the docking widget
+	  the main KPilot list work.
+	o Added ServiceType support for conduits.  Conduits are now 
+	  found by looking for the KPilotConduit type.  This fits better
+	  into KDE 2's architecture and is much more flexible for us.
+	  Conduits still don't work quite yet, but it finds them now.

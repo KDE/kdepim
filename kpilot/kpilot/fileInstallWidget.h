@@ -59,7 +59,6 @@ class FileInstallWidget : public PilotComponent
     KPilotInstaller* fKPilotInstaller;
 
  protected slots:
-    void kfmFileCopyComplete();
     void slotClearButton();
     void slotAddFile();
     };

@@ -32,6 +32,7 @@ public:
 
  protected:
   void dropEvent(QDropEvent* drop);
+  void dragEnterEvent(QDragEnterEvent* event);
 
 private:
   QPopupMenu* fMenu;

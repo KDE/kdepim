@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Service
+Name=KOrganizer Calendar Conduit
+Implemented=file
+ServiceTypes=KPilotConduit
