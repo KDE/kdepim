@@ -167,7 +167,7 @@ int icalcstpc_next_input(icalcstpc* cstp, char* line)
         break;
     }
     default:
-
+        break;
     }
 }
 
