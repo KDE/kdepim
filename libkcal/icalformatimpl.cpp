@@ -1415,30 +1415,33 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
         ialarm->addMailAddress(from8Bit(icalproperty_get_attendee(p)));
         break;
 
-      case ICAL_ATTACH_PROPERTY: {
-        attach = icalproperty_get_attach(p);
-        QString url = QFile::decodeName(icalattachtype_get_url(attach));
-        switch ( action ) {
-          case ICAL_ACTION_AUDIO:
-            ialarm->setAudioFile( url );
-            break;
-          case ICAL_ACTION_PROCEDURE:
-            ialarm->setProgramFile( url );
-            break;
-          case ICAL_ACTION_EMAIL:
-            ialarm->addMailAttachment( url );
-            break;
-          default:
-            break;
-        }
-        break;
-      }
-
       default:
         break;
     }
 
     p = icalcomponent_get_next_property(alarm,ICAL_ANY_PROPERTY);
+  }
+
+  // Now that the alarm action has been determined, process attachments
+  p = icalcomponent_get_first_property(alarm,ICAL_ATTACH_PROPERTY);
+  while ( p ) {
+    attach = icalproperty_get_attach(p);
+    QString url = QFile::decodeName(icalattachtype_get_url(attach));
+    switch ( action ) {
+      case ICAL_ACTION_AUDIO:
+        ialarm->setAudioFile( url );
+        break;
+      case ICAL_ACTION_PROCEDURE:
+        ialarm->setProgramFile( url );
+        break;
+      case ICAL_ACTION_EMAIL:
+        ialarm->addMailAttachment( url );
+        break;
+      default:
+        break;
+    }
+
+    p = icalcomponent_get_next_property(alarm,ICAL_ATTACH_PROPERTY);
   }
 
   // TODO: check for consistency of alarm properties
