@@ -159,3 +159,4 @@ KAboutDialog dlg(this,"KmailCvt2");
   dlg.show();
 }
 
+#include "kmailcvt.moc"
