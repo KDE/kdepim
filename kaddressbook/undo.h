@@ -37,8 +37,8 @@ class Command
     virtual ~Command() {};
 
     virtual QString name() = 0;
-    virtual void redo() = 0;
-    virtual void undo() = 0;
+    virtual bool redo() = 0;
+    virtual bool undo() = 0;
 
   protected:
     KABC::AddressBook *addressBook() const { return mAddressBook; }

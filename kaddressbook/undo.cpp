@@ -81,9 +81,10 @@ void UndoStack::undo()
     return;
 
   Command *command = pop();
-  command->undo();
-
-  RedoStack::instance()->push( command );
+  if ( !command->undo() )
+    push( command );
+  else
+    RedoStack::instance()->push( command );
 }
 
 ////////////////////
@@ -110,8 +111,10 @@ void RedoStack::redo()
     return;
 
   command = pop();
-  command->redo();
-  UndoStack::instance()->push( command );
+  if ( !command->redo() )
+    push( command );
+  else
+    UndoStack::instance()->push( command );
 }
 
 #include "undo.moc"

@@ -55,7 +55,7 @@ QString PwDeleteCommand::name()
   return i18n( "Delete" );
 }
 
-void PwDeleteCommand::undo()
+bool PwDeleteCommand::undo()
 {
   // Put it back in the document
   KABC::Addressee::List::Iterator it;
@@ -64,9 +64,11 @@ void PwDeleteCommand::undo()
   }
 
   mAddresseeList.clear();
+
+  return true;
 }
 
-void PwDeleteCommand::redo()
+bool PwDeleteCommand::redo()
 {
   // Just remove it from the document. This is enough to make the user
   // Think the item has been deleted
@@ -79,6 +81,8 @@ void PwDeleteCommand::redo()
     AddresseeConfig cfg( addr );
     cfg.remove();
   }
+
+  return true;
 }
 
 /////////////////////////////////
@@ -96,14 +100,16 @@ QString PwPasteCommand::name()
   return i18n( "Paste" );
 }
 
-void PwPasteCommand::undo()
+bool PwPasteCommand::undo()
 {
   KABC::Addressee::List::Iterator it;
   for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) 
     addressBook()->removeAddressee( *it );
+
+  return true;
 }
 
-void PwPasteCommand::redo()
+bool PwPasteCommand::redo()
 {
   QStringList uids;
   KABC::Addressee::List::Iterator it;
@@ -119,6 +125,8 @@ void PwPasteCommand::redo()
   QStringList::Iterator uidIt;
   for ( uidIt = uids.begin(); uidIt != uids.end(); ++uidIt )
     mCore->editContact( *uidIt );
+
+  return true;
 }
 
 /////////////////////////////////
@@ -139,14 +147,18 @@ QString PwNewCommand::name()
   return i18n( "New Contact" );
 }
 
-void PwNewCommand::undo()
+bool PwNewCommand::undo()
 {
   addressBook()->removeAddressee( mAddr );
+
+  return true;
 }
 
-void PwNewCommand::redo()
+bool PwNewCommand::redo()
 {
   addressBook()->insertAddressee( mAddr );
+
+  return true;
 }
 
 /////////////////////////////////
@@ -169,14 +181,18 @@ QString PwEditCommand::name()
   return i18n( "Entry Edit" );
 }
 
-void PwEditCommand::undo()
+bool PwEditCommand::undo()
 {
   addressBook()->insertAddressee( mOldAddr );
+
+  return true;
 }
 
-void PwEditCommand::redo()
+bool PwEditCommand::redo()
 {
   addressBook()->insertAddressee( mNewAddr );
+
+  return true;
 }
 
 /////////////////////////////////
@@ -193,7 +209,7 @@ QString PwCutCommand::name()
   return i18n( "Cut" );
 }
 
-void PwCutCommand::undo()
+bool PwCutCommand::undo()
 {
   KABC::Addressee::List::Iterator it;
   for ( it = mAddresseeList.begin(); it != mAddresseeList.end(); ++it ) {
@@ -205,9 +221,11 @@ void PwCutCommand::undo()
   QClipboard *cb = QApplication::clipboard();
   kapp->processEvents();
   cb->setText( mOldText );
+
+  return true;
 }
 
-void PwCutCommand::redo()
+bool PwCutCommand::redo()
 {
   KABC::Addressee addr;
   QStringList::Iterator it;
@@ -224,4 +242,6 @@ void PwCutCommand::redo()
   mOldText = cb->text();
   kapp->processEvents();
   cb->setText( mClipText );
+
+  return true;
 }

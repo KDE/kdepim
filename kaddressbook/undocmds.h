@@ -44,8 +44,8 @@ class PwDeleteCommand : public Command
     virtual ~PwDeleteCommand();
 
     virtual QString name();
-    virtual void undo();
-    virtual void redo();
+    virtual bool undo();
+    virtual bool redo();
 
   private:
     KABC::Addressee::List mAddresseeList;
@@ -58,8 +58,8 @@ class PwPasteCommand : public Command
     PwPasteCommand( KAB::Core *core, const KABC::Addressee::List &list );
 
     virtual QString name();
-    virtual void undo();
-    virtual void redo();
+    virtual bool undo();
+    virtual bool redo();
 
   private:
     KAB::Core *mCore;
@@ -72,8 +72,8 @@ class PwCutCommand : public Command
     PwCutCommand( KABC::AddressBook *ab, const QStringList &uidList );
 
     virtual QString name();
-    virtual void undo();
-    virtual void redo();
+    virtual bool undo();
+    virtual bool redo();
 
   private:
     KABC::Addressee::List mAddresseeList;
@@ -89,8 +89,8 @@ class PwNewCommand : public Command
     ~PwNewCommand();
 
     virtual QString name();
-    virtual void undo();
-    virtual void redo();
+    virtual bool undo();
+    virtual bool redo();
 
   private:
     KABC::Addressee mAddr;
@@ -104,8 +104,8 @@ class PwEditCommand : public Command
     virtual ~PwEditCommand();
 
     virtual QString name();
-    virtual void undo();
-    virtual void redo();
+    virtual bool undo();
+    virtual bool redo();
 
   private:
     KABC::Addressee mOldAddr;
