@@ -34,17 +34,15 @@
 
 #include <klocale.h>
 
-static const char * kleopatra_version = "0.11";
-static const char * description = I18N_NOOP("KDE Key Manager");
+static const char kleopatra_version[] = "0.11";
+static const char description[] = I18N_NOOP("KDE Key Manager");
 
-namespace {
-  struct about_data {
-    const char * name;
-    const char * desc;
-    const char * email;
-    const char * web;
-  };
-}
+struct about_data {
+  const char * name;
+  const char * desc;
+  const char * email;
+  const char * web;
+};
 
 static const about_data authors[] = {
   { "Marc Mutz", I18N_NOOP("Current Maintainer"), "mutz@kde.org", 0 },
