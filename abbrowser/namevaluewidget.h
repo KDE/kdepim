@@ -17,7 +17,7 @@
 #include <qmultilineedit.h>
 #include <qcombobox.h>
 
-#include "entry.h"
+#include "contactentry.h"
 
 /**
  * A table with two columns and a variable number of rows. The columns are 

@@ -8,7 +8,7 @@
 #include <qlayout.h>
 #include <qstringlist.h>
 #include <qcombobox.h>
-#include "entry.h"
+#include "contactentry.h"
 
 #include <klocale.h>
 #include <kdebug.h>

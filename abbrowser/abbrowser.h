@@ -57,6 +57,8 @@ public slots:
 	void undo();
 	void redo();
 	void updateEditMenu();
+        /** Export comma-seperated list of all addressbook entries. */
+        void exportCSV();
  
 protected:
 	/**

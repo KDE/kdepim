@@ -12,7 +12,7 @@ SRCDOC_DEST=$(kde_htmldir)/en/abbrowser
 
 bin_PROGRAMS = abbrowser
 
-abbrowser_SOURCES = abbrowserapp.cpp abbrowser.cpp abbrowseriface.skel undo.cpp attributes.cpp selectfields.cpp viewoptions.cpp namevaluewidget.cpp entry.cpp browserentryeditor.cpp entryeditorwidget.cpp datepickerdialog.cpp browserwidget.cpp main.cpp contactentry.cpp
+abbrowser_SOURCES = abbrowserapp.cpp abbrowser.cpp abbrowseriface.skel undo.cpp attributes.cpp selectfields.cpp viewoptions.cpp namevaluewidget.cpp contactentrylist.cpp browserentryeditor.cpp entryeditorwidget.cpp datepickerdialog.cpp browserwidget.cpp main.cpp contactentry.cpp
 
 abbrowser_METASOURCES = AUTO
 
@@ -20,7 +20,7 @@ abbrowser_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 abbrowser_LDADD = -lkab $(LIB_KFILE)
 
-noinst_HEADERS = abbrowserapp.h abbrowser.h undo.h attributes.h selectfields.h viewoptions.h namevaluewidget.h entry.h browserentryeditor.h entryeditorwidget.h datepickerdialog.h browserwidget.h
+noinst_HEADERS = abbrowserapp.h abbrowser.h undo.h attributes.h selectfields.h viewoptions.h namevaluewidget.h contactentrylist.h browserentryeditor.h entryeditorwidget.h datepickerdialog.h browserwidget.h
 
 messages:
 	$(XGETTEXT) *.cpp -o $(podir)/abbrowser.pot

@@ -3,7 +3,8 @@
 #include "viewoptions.h"
 #include "selectfields.h"
 #include "attributes.h"
-#include "entry.h"
+#include "contactentry.h"
+#include "contactentrylist.h"
 #include "browserentryeditor.h"
 
 #include <qtabwidget.h>

@@ -4,7 +4,7 @@
     License: BSD
 */
 
-#include "entry.h"
+#include "contactentrylist.h"
 #include <qdict.h>
 #include <qfile.h>
 #include <qregexp.h>

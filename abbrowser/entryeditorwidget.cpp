@@ -19,7 +19,7 @@
 
 #include "namevaluewidget.h"
 #include "attributes.h"
-#include "entry.h"
+#include "contactentry.h"
 #include "datepickerdialog.h"
 #include <klocale.h>
 #include <kapp.h> // for kapp->palette()

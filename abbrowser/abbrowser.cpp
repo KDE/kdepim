@@ -15,10 +15,12 @@
 #include <kconfig.h>
 #include <kaccel.h>
 #include <kdebug.h>
+#include <kfiledialog.h>
 
 #include "undo.h"
 #include "browserwidget.h"
-#include "entry.h"
+#include "contactentry.h"
+#include "contactentrylist.h"
 
 Pab::Pab() : KMainWindow(0), DCOPObject("AbBrowserIface")
 {
@@ -35,10 +37,12 @@ Pab::Pab() : KMainWindow(0), DCOPObject("AbBrowserIface")
   p->insertItem(i18n("&New Contact"), this, SLOT(newContact()), CTRL+Key_N);
   /*  p->insertItem(i18n("New &Group"), this, SLOT(newGroup()), CTRL+Key_G); */
   p->insertSeparator();
-  p->insertItem(i18n("&Send Mail"), view, SLOT(sendMail()), CTRL+Key_Return);
+  p->insertItem(i18n("Send &Mail"), view, SLOT(sendMail()), CTRL+Key_Return);
   p->insertSeparator();
   p->insertItem(i18n("&Properties"), view, SLOT(properties()));
   p->insertItem(i18n("&Delete\tDel"));
+  p->insertSeparator();
+  p->insertItem(i18n("&Export List"), this, SLOT(exportCSV()));
   p->insertSeparator();
   p->insertItem(i18n("&Quit"), kapp, SLOT(quit()), CTRL+Key_Q);
   
@@ -255,4 +259,83 @@ void Pab::updateEditMenu()
   else
     edit->changeItem( redoId, i18n( "Redo" ) + " " + redo->top()->name() );
   edit->setItemEnabled( redoId, !redo->isEmpty() );  
+}
+
+void Pab::exportCSV()
+{
+  QString fileName = KFileDialog::getSaveFileName("addressbook.csv");
+
+  QFile outFile(fileName);
+  if ( outFile.open(IO_WriteOnly) ) {    // file opened successfully
+    QTextStream t( &outFile );        // use a text stream
+
+    QStringList keys = document->keys();
+    QStringList::ConstIterator it = keys.begin();
+    QStringList::ConstIterator end = keys.end();
+
+    t << "\"First Name\",";
+    t << "\"Last Name\",";
+    t << "\"Middle Name\",";
+    t << "\"Name Prefix\",";
+    t << "\"Job Title\",";
+    t << "\"Company\",";
+    t << "\"Email\",";
+    t << "\"Nickname\",";
+    t << "\"Note\",";
+    t << "\"Business Phone\",";
+    t << "\"Home Phone\",";
+    t << "\"Mobile Phone\",";
+    t << "\"Home Fax\",";
+    t << "\"Business Fax\",";
+    t << "\"Pager\",";
+    t << "\"Street Home Address\",";
+    t << "\"City Home Address\",";
+    t << "\"State Home Address\",";
+    t << "\"Zip Home Address\",";
+    t << "\"Country Home Address\",";
+    t << "\"Street Business Address\",";
+    t << "\"City Business Address\",";
+    t << "\"State Business Address\",";
+    t << "\"Zip Business Address\",";
+    t << "\"Country Business Address\"";
+    t << "\n";
+
+    while(it != end) {
+      ContactEntry *entry = document->find(*it);
+
+      t << "\"" << entry->getFirstName() << "\",";
+      t << "\"" << entry->getLastName() << "\",";
+      t << "\"" << entry->getMiddleName() << "\",";
+      t << "\"" << entry->getNamePrefix() << "\",";
+      t << "\"" << entry->getJobTitle() << "\",";
+      t << "\"" << entry->getCompany() << "\",";
+      t << "\"" << entry->getEmail() << "\",";
+      t << "\"" << entry->getNickname() << "\",";
+      t << "\"" << entry->getNote() << "\",";
+      t << "\"" << entry->getBusinessPhone() << "\",";
+      t << "\"" << entry->getHomePhone() << "\",";
+      t << "\"" << entry->getMobilePhone() << "\",";
+      t << "\"" << entry->getHomeFax() << "\",";
+      t << "\"" << entry->getBusinessFax() << "\",";
+      t << "\"" << entry->getPager() << "\",";
+      ContactEntry::Address *address;
+      address = entry->getHomeAddress();
+      t << "\"" << address->getStreet() << "\",";
+      t << "\"" << address->getCity() << "\",";
+      t << "\"" << address->getState() << "\",";
+      t << "\"" << address->getZip() << "\",";
+      t << "\"" << address->getCountry() << "\",";
+      address = entry->getBusinessAddress();
+      t << "\"" << address->getStreet() << "\",";
+      t << "\"" << address->getCity() << "\",";
+      t << "\"" << address->getState() << "\",";
+      t << "\"" << address->getZip() << "\",";
+      t << "\"" << address->getCountry(); 
+      t << "\n";
+      
+      ++it;
+    }
+
+    outFile.close();
+  }
 }

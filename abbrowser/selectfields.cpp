@@ -1,6 +1,6 @@
 #include "selectfields.h"
 #include "attributes.h"
-#include "entry.h"
+#include "contactentry.h"
 
 #include <qlistbox.h>
 #include <qlineedit.h>

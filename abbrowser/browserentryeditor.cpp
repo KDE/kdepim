@@ -1,5 +1,5 @@
 #include "browserentryeditor.h"
-#include "entry.h"
+#include "contactentry.h"
 
 ////////////////////////////
 // PabContactDialog Methods

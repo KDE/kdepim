@@ -2,7 +2,7 @@
 #define ABBROWSERIFACE_H
  
 #include <dcopobject.h>
-#include <entry.h>
+#include <contactentry.h>
 
 class AbBrowserIface : virtual public DCOPObject
 {
