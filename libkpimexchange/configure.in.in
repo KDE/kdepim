@@ -11,11 +11,11 @@ AC_TRY_COMPILE(
   int method = (int) KIO::DAV_SUBSCRIBE;
 ],
 [
-  ac_has_recent_kdelibs="yes"
+  ac_has_recent_webdav="yes"
   AC_MSG_RESULT([yes])
 ],
 [
-  ac_has_recent_kdelibs="no"
+  ac_has_recent_webdav="no"
   AC_MSG_RESULT([no])
 ])
 CPPFLAGS=$kde_safe_cppflags
@@ -24,9 +24,9 @@ AC_LANG_RESTORE
 ac_use_exchange="no"
 AC_ARG_ENABLE(exchange,
         [  --disable-exchange      disable Microsoft Exchange 2000 support for korganizer [default=enable]], ac_use_exchange=$enableval, ac_use_exchange=yes)
-AM_CONDITIONAL(include_exchange_SUBDIR, test "$ac_use_exchange" = "yes")
+AM_CONDITIONAL(include_exchange_SUBDIR, test "$ac_use_exchange" = "yes" && test "ac_has_recent_webdav" = "yes")
 
-if test "x$ac_use_exchange" != "xyes" || test "x$ac_has_recent_kdelibs" != "xyes"; then
+if test "x$ac_use_exchange" != "xyes" || test "x$ac_has_recent_webdav" != "xyes"; then
         DO_NOT_COMPILE="$DO_NOT_COMPILE libkpimexchange"
 	AC_MSG_WARN([Exchange 2000 support disabled])
 else
