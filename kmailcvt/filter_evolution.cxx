@@ -30,7 +30,7 @@
 FilterEvolution::FilterEvolution(void) : 
   Filter(i18n("Import Evolution 1.x Local Mails and Folder Structure"),
 	 "Simon MARTIN<br /><br />( Filter accelerated by Danny Kukawka )",
-	 i18n(<p><b>Evolution 1.x import filter</b></p>"
+	 i18n("<p><b>Evolution 1.x import filter</b></p>"
 	      "<p>Select the base directory of Evolution's mails (usually ~/evolution/local).</p>"
 	      "<p>As it is currently impossible to recreate the folder structure, it will be "
 	      "\"contained\" in the generated folder's names.</p>"
