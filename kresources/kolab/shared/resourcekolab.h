@@ -44,9 +44,9 @@ public:
   // TODO: Update these methods
   // These are the methods called by KMail when the resource changes
   virtual bool addIncidence( const QString& type, const QString& resource,
-                             const QString& ical ) = 0;
+                             const QString& xml ) = 0;
   virtual void deleteIncidence( const QString& type, const QString& resource,
-                                const QString& uid ) = 0;
+                                const QString& xml ) = 0;
   virtual void slotRefresh( const QString& type,
                             const QString& resource ) = 0;
   virtual void subresourceAdded( const QString& type,

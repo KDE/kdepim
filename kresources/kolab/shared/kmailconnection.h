@@ -40,17 +40,14 @@ class KMailConnection : public QObject, public DCOPObject {
   K_DCOP
 
   // These are the methods called by KMail when the resource changes
-#if 0
-  // TODO: Reimplement these
-//k_dcop:
+k_dcop:
   bool addIncidence( const QString& type, const QString& resource,
-                     const QString& ical );
+                     const QString& xml );
   void deleteIncidence( const QString& type, const QString& resource,
-                        const QString& uid );
+                        const QString& xml );
   void slotRefresh( const QString& type, const QString& resource );
   void subresourceAdded( const QString& type, const QString& resource );
   void subresourceDeleted( const QString& type, const QString& resource );
-#endif
 
 public:
   KMailConnection( ResourceKolabBase* resource, const QCString& objId );

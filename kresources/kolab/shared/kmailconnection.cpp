@@ -76,8 +76,6 @@ bool KMailConnection::connectToKMail()
     mKMailIcalIfaceStub = new KMailICalIface_stub( kapp->dcopClient(),
                                                    dcopService, dcopObjectId );
 
-#if 0
-    // TODO:
     // Attach to the KMail signals
     if ( !connectKMailSignal( "incidenceAdded(QString,QString,QString)",
                               "addIncidence(QString,QString,QString)" ) )
@@ -94,29 +92,27 @@ bool KMailConnection::connectToKMail()
     if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
                               "subresourceDeleted(QString,QString)" ) )
       kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
-#endif
   }
 
   return ( mKMailIcalIfaceStub != 0 );
 }
 
-#if 0
 // TODO: Reimplement these
 bool KMailConnection::addIncidence( const QString& type, const QString& folder,
-                                    const QString& ical )
+                                    const QString& xml )
 {
 //   kdDebug(5650) << "KMailConnection::addIncidence( " << type << ", "
 //                 << folder << " ). iCal:\n" << ical << endl;
-  return mResource->addIncidence( type, folder, ical );
+  return mResource->addIncidence( type, folder, xml );
 }
 
 void KMailConnection::deleteIncidence( const QString& type,
                                        const QString& folder,
-                                       const QString& uid )
+                                       const QString& xml )
 {
 //   kdDebug(5650) << "KMailConnection::deleteIncidence( " << type << ", "
 //                 << folder << ", " << uid << " )\n";
-  mResource->deleteIncidence( type, folder, uid );
+  mResource->deleteIncidence( type, folder, xml );
 }
 
 void KMailConnection::slotRefresh( const QString& type, const QString& folder )
@@ -141,7 +137,6 @@ void KMailConnection::subresourceDeleted( const QString& type,
 //                 << resource << " )\n";
   mResource->subresourceDeleted( type, resource );
 }
-#endif
 
 bool KMailConnection::connectKMailSignal( const QCString& signal,
                                           const QCString& method )
