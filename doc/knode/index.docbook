@@ -1,9 +1,8 @@
-<?xml version="1.0" ?><!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [  
- <!ENTITY kappname "&knode;">
- <!ENTITY % English "INCLUDE">
- <!ENTITY % addindex "IGNORE">
- 
- 
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
+  <!ENTITY kappname "&knode;">
+  <!ENTITY % English "INCLUDE">
+  <!ENTITY % addindex "IGNORE">
 ]>
 
 <book lang="&language;">
@@ -85,7 +84,7 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>16/12/2000</date>
+<date>2000-12-16</date>
 <releaseinfo>0.03.02</releaseinfo>
 
 <abstract>

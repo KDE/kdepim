@@ -1,11 +1,8 @@
-<?xml version="1.0" ?><!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
   <!ENTITY kappname "&kmail;">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
-  
-  
-  <!-- Do not define any other entities; instead, use the entities
-       from kde-genent.entities and <lg>/user.entities. -->
 ]>
 
 <book lang="&language;">
@@ -26,7 +23,7 @@
 </author>
 </authorgroup>
 
-<date>11/03/2001</date>
+<date>2001-03-11</date>
 <releaseinfo>1.02.00</releaseinfo>
 
 <copyright>
