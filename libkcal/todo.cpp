@@ -140,13 +140,13 @@ bool Todo::hasStartDate() const
   return mHasStartDate;
 }
 
-void Todo::setHasStartDate(bool f)
+void Todo::setHasStartDate(bool f) // zie reinholds opmerking
 {
   if (mReadOnly) return;
 
   if ( doesRecur() && !f ) {
     if ( !comments().grep("NoStartDate").count() )
-      addComment("NoStartDate");
+      addComment("NoStartDate"); //TODO: --> custom flag?
   } else {
     QString s("NoStartDate");
     removeComment(s);
@@ -210,9 +210,11 @@ QString Todo::completedStr() const
 
 void Todo::setCompleted(const QDateTime &completed)
 {
-  mHasCompletedDate = true;
-  mPercentComplete = 100;
-  mCompleted = completed;
+  if( !recurTodo() ) {
+    mHasCompletedDate = true;
+    mPercentComplete = 100;
+    mCompleted = completed;
+  }
   updated();
 }
 
@@ -239,8 +241,38 @@ void Todo::setDtRecurrence( const QDateTime &dt )
 
 QDateTime Todo::dtRecurrence() const
 {
-  if ( !mDtRecurrence.isValid() )
-    return mDtDue;
-
-  return mDtRecurrence;
+  return mDtRecurrence.isValid() ? mDtRecurrence : mDtDue;
 }
+
+bool Todo::recursOn( const QDate &date )
+{
+  QDate today = QDate::currentDate();
+  return ( Incidence::recursOn(date) &&
+           !( date < today && mDtRecurrence.date() < today &&
+              mDtRecurrence > recurrence()->recurStart() ) );
+}
+
+bool Todo::recurTodo()
+{
+  if ( doesRecur() ) {
+    Recurrence *r = recurrence();
+    QDateTime endDateTime = r->endDateTime();
+    QDateTime nextDate = r->getNextDateTime( dtDue() );
+
+    if ( ( r->duration() == -1 || ( nextDate.isValid() && endDateTime.isValid()
+           && nextDate <= endDateTime ) ) ) {
+      setDtDue( nextDate );
+      while ( !recursAt( dtDue() ) || dtDue() <= QDateTime::currentDateTime() ) {
+        setDtDue( r->getNextDateTime( dtDue() ) );
+      }
+
+      setCompleted( false );
+      setRevision( revision() + 1 );
+
+      return true;
+    }
+  }
+
+  return false;
+}
+

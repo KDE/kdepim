@@ -197,8 +197,18 @@ class Todo : public Incidence
     */
     QDateTime dtRecurrence() const;
 
+    /**
+      Returns true if the date specified is one on which the todo will
+      recur. Todo's are a special case, hence the overload. It adds an extra
+      check, which make it return false if there's an occurence between
+      the recurstart and today.
+    */
+    virtual bool recursOn( const QDate &date );
+
   private:
     bool accept(Visitor &v) { return v.visit( this ); }
+    /** Returns true if the todo got a new date, else false will be returned. */
+    bool recurTodo();
 
     QDateTime mDtDue;                    // due date of todo
                                          // (first occurence if recurrent)

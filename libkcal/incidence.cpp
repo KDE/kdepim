@@ -70,7 +70,7 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
     mAlarms.append( b );
   }
   mAlarms.setAutoDelete(true);
-  
+
   Attachment::List::ConstIterator it1;
   for ( it1 = i.mAttachments.begin(); it1 != i.mAttachments.end(); ++it1 ) {
     Attachment *a = new Attachment( **it1 );
@@ -582,7 +582,7 @@ Recurrence *Incidence::recurrence() const
   {
     const_cast<KCal::Incidence*>(this)->mRecurrence = new Recurrence(const_cast<KCal::Incidence*>(this));
     mRecurrence->setRecurReadOnly(mReadOnly);
-    mRecurrence->setRecurStart(dtStart());
+    mRecurrence->setRecurStart(IncidenceBase::dtStart());
   }
 
   return mRecurrence;

@@ -324,7 +324,7 @@ class Incidence : public IncidenceBase
       Returns true if the date specified is one on which the incidence will
       recur.
     */
-    bool recursOn( const QDate &qd ) const;
+    virtual bool recursOn( const QDate &qd ) const;
     /**
       Returns true if the date/time specified is one on which the incidence will
       recur.
