@@ -67,7 +67,7 @@ KNNetAccess::KNNetAccess(QObject *parent, const char *name )
   smtpClient=new KNSmtpClient(smtpOutPipe[0],smtpInPipe[1],this);
   
   if(pthread_mutex_init(&nntp_Mutex, NULL)!=0) {
-    KMessageBox::error(knGlobals.topWidget, "Internal error:\nCannot initialize the nntp mutex!");  // i18n missing
+    KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nCannot initialize the nntp mutex!"));
     kapp->exit(1);
   }
   if(pthread_create(&nntpThread, 0,&(nntpClient->startThread), nntpClient)!=0) {
