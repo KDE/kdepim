@@ -9,3 +9,6 @@ libksync_la_SOURCES = \
   addressbooksyncee.cpp
 
 METASOURCES = AUTO
+
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/libksync.pot
