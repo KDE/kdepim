@@ -39,8 +39,11 @@ class QPushButton;
 class QVBoxLayout;
 class QHBox;
 
-/** Simple widget that nonetheless does a lot of the dirty work for
-    the filter edit widgets (@ref KMSearchpatternEdit and @ref
+/** 
+    @short Widget that manages a list of other widgets (incl. 'more', 'fewer' and 'clear' buttons).
+
+    Simple widget that nonetheless does a lot of the dirty work for
+    the filter edit widgets (KMSearchPatternEdit and 
     KMFilterActionEdit). It provides a growable and shrinkable area
     where widget may be displayed in rows. Widgets can be added by
     hitting the provided 'More' button, removed by the 'Fewer' button
@@ -50,10 +53,9 @@ class QHBox;
     To use this widget, derive from it with the template changed to
     the type of widgets this class should list. Then reimplement @ref
     addWidgetAtEnd, @ref removeLastWidget, calling the original
-    implementation as necessary. Instantate an object of the class and
+    implementation as necessary. Instantiate an object of the class and
     put it in your dialog.
 
-    @short Widget that manages a list of other widgets (incl. 'more', 'fewer' and 'clear' buttons).
     @author Marc Mutz <Marc@Mutz.com>
     @see KMSearchPatternEdit::WidgetLister KMFilterActionEdit::WidgetLister
 
@@ -76,13 +78,13 @@ protected slots:
   /** Called whenever the user clicks on the 'fewer' button.
       Reimplementations should call this method, because this
       implementation does all the dirty work with removing the widgets
-      from the layout (through @ref removelastWidget) and
+      from the layout (through @ref removeLastWidget) and
       enabling/disabling the control buttons. */
   virtual void slotFewer();
   /** Called whenever the user clicks on the 'clear' button.
       Reimplementations should call this method, because this
       implementation does all the dirty work with removing all but
-      @ref mMinWidets widgets from the layout and enabling/disabling
+      @ref mMinWidgets widgets from the layout and enabling/disabling
       the control buttons. */
   virtual void slotClear();
 
