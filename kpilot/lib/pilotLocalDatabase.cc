@@ -34,6 +34,7 @@ static const char *pilotlocaldatabase_id =
 
 #include <stdio.h>
 #include <unistd.h>
+#include <assert.h>
 
 #include <iostream>
 
