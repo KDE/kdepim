@@ -322,6 +322,11 @@ void CertManager::createActions() {
 			actionCollection(), "view_dump_crls" );
   action->setEnabled( mDirMngrFound ); // we also need dirmngr for this
 
+  action = new KAction( i18n("Clear CRL Cache..."), 0,
+			this, SLOT(slotClearCRLs()),
+			actionCollection(), "crl_clear_crl_cache" );
+  action->setEnabled( mDirMngrFound ); // we also need dirmngr for this
+
   action = new KAction( i18n("GnuPG Log Viewer..."), "pgp-keys", 0, this,
                         SLOT(slotStartWatchGnuPG()), actionCollection(), "tools_start_kwatchgnupg");
   // disable action if no kwatchgnupg binary is around
@@ -924,6 +929,14 @@ void CertManager::slotViewCRLs() {
 
   mCrlView->show();
   mCrlView->slotUpdateView();
+}
+
+
+void CertManager::slotClearCRLs() {
+  // FIXME: report errors
+  KProcess p;
+  p << "dirmngr" << "--flush";
+  p.start( KProcess::DontCare );
 }
 
 

@@ -121,6 +121,7 @@ private slots:
     void slotToggleHierarchicalView( bool );
 
     void slotViewCRLs();
+    void slotClearCRLs();
 
     void slotViewDetails();
     void slotViewDetails( Kleo::KeyListViewItem * item );
