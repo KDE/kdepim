@@ -76,3 +76,34 @@ PilotDatabase::PilotDatabase(const QString &s) :
 	return creationCount;
 }
 
+/* virtual */ RecordIDList PilotDatabase::idList()
+{
+	RecordIDList l;
+
+	for (unsigned int i = 0 ; ; i++)
+	{
+		PilotRecord *r = readRecordByIndex(i);
+		if (!r) break;
+		l.append(r->id());
+		delete r;
+	}
+
+	return l;
+}
+
+/* virtual */ RecordIDList PilotDatabase::modifiedIDList()
+{
+	RecordIDList l;
+
+	resetDBIndex();
+	while(1)
+	{
+		PilotRecord *r = readNextModifiedRec();
+		if (!r) break;
+		l.append(r->id());
+		delete r;
+	}
+
+	return l;
+}
+

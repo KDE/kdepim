@@ -108,8 +108,13 @@ public:
 	/** returns the number of records in the database */
 	virtual int recordCount()=0;
 
-	/** Returns a QValueList of all record ids in the database.  */
-	 virtual QValueList<recordid_t> idList()=0;
+	/** Returns a QValueList of all record ids in the database.
+	    This implementation is really bad. */
+	virtual RecordIDList idList();
+	/** Returns a list of all record ids that have been modified in the
+	    database. This implementation is really bad. */
+	virtual RecordIDList modifiedIDList();
+
 
 	/** Reads a record from database by id, returns record length */
 	virtual PilotRecord* readRecordById(recordid_t id) = 0;
