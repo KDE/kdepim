@@ -112,7 +112,11 @@ public:
                               Q_UINT32 sernum, const QString& contact );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& contact );
-  void slotRefresh( const QString& type, const QString& resource );
+  void fromKMailRefresh( const QString& type, const QString& resource );
+
+  void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
+                                 const QString& type,
+                                 const QString& folder );
 
   /// Return the list of subresources.
   QStringList subresources() const;

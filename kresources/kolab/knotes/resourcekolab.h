@@ -81,12 +81,16 @@ public:
                               Q_UINT32 sernum, const QString& note );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& uid );
-  void slotRefresh( const QString& type, const QString& resource );
+  void fromKMailRefresh( const QString& type, const QString& resource );
 
   /// Listen to KMail changes in the amount of sub resources
   void fromKMailAddSubresource( const QString& type, const QString& resource,
                                 bool writable );
   void fromKMailDelSubresource( const QString& type, const QString& resource );
+
+  void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
+                                 const QString& type,
+                                 const QString& folder );
 
   /** Return the list of subresources. */
   QStringList subresources() const;

@@ -84,14 +84,17 @@ public:
   virtual void fromKMailDelIncidence( const QString& type,
                                       const QString& resource,
                                       const QString& xml ) = 0;
-  virtual void slotRefresh( const QString& type,
-                            const QString& resource ) = 0;
+  virtual void fromKMailRefresh( const QString& type,
+                                 const QString& resource ) = 0;
   virtual void fromKMailAddSubresource( const QString& type,
                                         const QString& resource,
                                         bool writable ) = 0;
   virtual void fromKMailDelSubresource( const QString& type,
                                         const QString& resource ) = 0;
 
+  virtual void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
+                                         const QString& type,
+                                         const QString& folder ) = 0;
 protected:
   /// Do the connection to KMail.
   bool connectToKMail() const;

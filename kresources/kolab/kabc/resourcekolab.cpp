@@ -375,7 +375,7 @@ void KABC::ResourceKolab::fromKMailDelIncidence( const QString& type,
   mSilent = silent;
 }
 
-void KABC::ResourceKolab::slotRefresh( const QString& type,
+void KABC::ResourceKolab::fromKMailRefresh( const QString& type,
                                        const QString& /*subResource*/ )
 {
   // Check if this is a contact
@@ -445,6 +445,21 @@ void KABC::ResourceKolab::fromKMailDelSubresource( const QString& type,
   }
 
   emit signalSubresourceRemoved( this, type, subResource );
+}
+
+
+
+void KABC::ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
+                                                    const QString& /* type */,
+                                                    const QString& folder )
+{
+  for( QMap<Q_UINT32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
+    loadContact( it.data(), folder, it.key() );
+  }
+  if ( !addressBook() ){
+    kdDebug(5650) << "asyncLoadResult() : addressBook() returning NULL pointer.\n";
+  }else
+    addressBook()->emitAddressBookChanged();
 }
 
 QStringList KABC::ResourceKolab::subresources() const

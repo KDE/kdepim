@@ -58,9 +58,11 @@ k_dcop:
                               Q_UINT32 sernum, int format, const QString& xml );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& xml );
-  void slotRefresh( const QString& type, const QString& resource );
+  void fromKMailRefresh( const QString& type, const QString& resource );
   void fromKMailAddSubresource( const QString& type, const QString& resource );
   void fromKMailDelSubresource( const QString& type, const QString& resource );
+  void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map, const QString& type,
+                                 const QString& folder );
 
 public:
   KMailConnection( ResourceKolabBase* resource, const QCString& objId );

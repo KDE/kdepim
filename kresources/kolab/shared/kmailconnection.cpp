@@ -96,14 +96,17 @@ bool KMailConnection::connectToKMail()
                               "fromKMailDelIncidence(QString,QString,QString)" ) )
       kdError(5650) << "DCOP connection to incidenceDeleted failed" << endl;
     if ( !connectKMailSignal( "signalRefresh(QString,QString)",
-                              "slotRefresh(QString,QString)" ) )
+                              "fromKMailRefresh(QString,QString)" ) )
       kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
     if ( !connectKMailSignal( "subresourceAdded(QString,QString)",
                               "fromKMailAddSubresource(QString,QString)" ) )
-      kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
+      kdError(5650) << "DCOP connection to subresourceAdded failed" << endl;
     if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
                               "fromKMailDelSubresource(QString,QString)" ) )
-      kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
+      kdError(5650) << "DCOP connection to subresourceDeleted failed" << endl;
+    if ( !connectKMailSignal( "asyncLoadResult(QMap<Q_UINT32, QString>, QString, QString)",
+                              "fromKMailAsyncLoadResult(QMap<Q_UINT32, QString>, QString, QString)" ) )
+      kdError(5650) << "DCOP connection to asyncLoadResult failed" << endl;
   }
 
   return ( mKMailIcalIfaceStub != 0 );
@@ -131,11 +134,11 @@ void KMailConnection::fromKMailDelIncidence( const QString& type,
   mResource->fromKMailDelIncidence( type, folder, xml );
 }
 
-void KMailConnection::slotRefresh( const QString& type, const QString& folder )
+void KMailConnection::fromKMailRefresh( const QString& type, const QString& folder )
 {
-//   kdDebug(5650) << "KMailConnection::slotRefresh( " << type << ", "
+//   kdDebug(5650) << "KMailConnection::fromKMailRefresh( " << type << ", "
 //                 << folder << " )\n";
-  mResource->slotRefresh( type, folder );
+  mResource->fromKMailRefresh( type, folder );
 }
 
 void KMailConnection::fromKMailAddSubresource( const QString& type,
@@ -158,6 +161,13 @@ void KMailConnection::fromKMailDelSubresource( const QString& type,
 //   kdDebug(5650) << "KMailConnection::fromKMailDelSubresource( " << type << ", "
 //                 << resource << " )\n";
   mResource->fromKMailDelSubresource( type, resource );
+}
+
+void KMailConnection::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map, 
+                                                const QString& type,
+                                                const QString& folder )
+{
+  mResource->fromKMailAsyncLoadResult( map, type, folder );
 }
 
 bool KMailConnection::connectKMailSignal( const QCString& signal,

@@ -550,8 +550,8 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
   mUidMap.remove( uid );
 }
 
-void ResourceKolab::slotRefresh( const QString& type,
-                                 const QString& /*subResource*/ )
+void ResourceKolab::fromKMailRefresh( const QString& type,
+                                      const QString& /*subResource*/ )
 {
   // TODO: Only load the specified subResource
   if ( type == "Calendar" )
@@ -640,6 +640,17 @@ QStringList ResourceKolab::subresources() const
 {
   return mEventSubResources.keys() + mTodoSubResources.keys()
     + mJournalSubResources.keys();
+}
+
+void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
+                                              const QString& type,
+                                              const QString& folder )
+{
+  const bool silent = mSilent;
+  mSilent = true;
+  for( QMap<Q_UINT32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it )
+    addIncidence( type.latin1(), it.data(), folder, it.key() );
+  mSilent = silent;
 }
 
 bool ResourceKolab::subresourceActive( const QString& subresource ) const

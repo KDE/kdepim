@@ -269,8 +269,8 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
   mSilent = silent;
 }
 
-void ResourceKolab::slotRefresh( const QString& type,
-                                 const QString& /*subResource*/ )
+void ResourceKolab::fromKMailRefresh( const QString& type,
+                                      const QString& /*subResource*/ )
 {
   if ( type == kmailContentsType )
     load(); // ### should call loadSubResource(subResource) probably
@@ -339,6 +339,26 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
 
   emit signalSubresourceRemoved( this, type, subResource );
 }
+
+void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
+                                              const QString& type,
+                                              const QString& folder )
+{
+  // We are only interested in notes
+  if ( type != attachmentMimeType ) return;
+  // Populate with the new entries
+  const bool silent = mSilent;
+  mSilent = true;
+  for( QMap<Q_UINT32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
+    KCal::Journal* journal = addNote( it.data(), folder, it.key() );
+    if ( !journal )
+      kdDebug(5500) << "loading note " << it.key() << " failed" << endl;
+    else
+      manager()->registerNote( this, journal );
+  }
+  mSilent = silent;
+}
+
 
 QStringList ResourceKolab::subresources() const
 {
