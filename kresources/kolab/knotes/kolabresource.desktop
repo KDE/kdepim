@@ -1,18 +1,23 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=IMAP server via KMail
+Name=IMAP Server via KMail
 Name[bg]=Сървър IMAP чрез KMail
+Name[ca]=Servidor IMAP mitjançant KMail
 Name[da]=IMAP-server via KMail
 Name[es]=Servidor IMAP por medio de KMail
+Name[he]=שרת IMAP דרך KMail
+Name[it]=Server IMAP via KMail
 Name[nl]=IMAP-server via KMail
 Name[pt]=Servidor IMAP via KMail
-Name[pt_BR]=Servidor IMAP via KMail
+Name[pt_BR]=Servidor IMAP via Kmail
 Name[ru]=Доступ к серверу IMAP через KMail
 Name[sr]=IMAP сервер преко KMail-а
 Name[sr@Latn]=IMAP сервер преко KMail-а
 Name[sv]=IMAP-server via Kmail
 Name[tr]=KMail aracılığı ile IMAP sunucu
 Name[uk]=Сервер IMAP через KMail
+Name[xx]=xxIMAP server via KMailxx
+Name[zh_CN]=通过 KMail 访问 IMAP 服务器
 X-KDE-Library=knotes_kolab
 Type=Service
 ServiceTypes=KResources/Plugin

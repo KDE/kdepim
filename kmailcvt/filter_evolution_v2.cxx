@@ -26,7 +26,7 @@
 
 /** Default constructor. */
 FilterEvolution_v2::FilterEvolution_v2(void) : 
-  Filter(i18n("Import Evolution 2.x local Mails and Folder Structure"),
+  Filter(i18n("Import Evolution 2.x Local Mails and Folder Structure"),
 	 "Danny Kukawka",
 	 i18n("<p><b>Evolution 2.x import filter</b></p>"
               "<p>Select the base directory of your local Evolution mailfolder (usually ~/.evolution/mail/local/).</p>"

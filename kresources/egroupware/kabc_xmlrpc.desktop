@@ -1,18 +1,23 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=eGroupware server (via XML-RPC)
+Name=eGroupware Server (via XML-RPC)
 Name[be]=Сэрвэр eGroupware (праз XML-RPC)
 Name[bg]=Сървър eGroupware (чрез XML-RPC)
+Name[ca]=Servidor eGroupware (via XML-RPC)
 Name[es]=Servidor eGroupware (por medio de XML-RPC)
 Name[et]=eGroupware server (XML-RPC vahendusel)
 Name[fr]=Serveur eGroupware (via XML-RPC)
+Name[it]=Server eGroupware (via XML-RPC)
 Name[nl]=eGroupware-server (via XML-RPC)
 Name[pt]=Servidor eGroupware (via XML-RPC)
 Name[pt_BR]=Servidor eGroupware (via XML-RPC)
 Name[ru]=Сервер eGroupware (через XML-RPC)
+Name[sr]=eGroupware сервер (преко XML-RPC)
+Name[sr@Latn]=eGroupware сервер (преко XML-RPC)
 Name[sv]=eGroupware-server (via XML-RPC)
-Name[tr]=eGroupware sunucu (XML-RPC)
+Name[tr]=eGroupware sunucusu (XML-RPC ile)
 Name[uk]=Сервер eGroupware (через XML-RPC)
+Name[xx]=xxeGroupware server (via XML-RPC)xx
 X-KDE-Library=kabc_xmlrpc
 Type=Service
 ServiceTypes=KResources/Plugin

@@ -1,18 +1,24 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Groupware server
+Name=Groupware Server
 Name[bg]=Сървър Groupware
 Name[br]=Servijer strollant
+Name[ca]=Servidor Groupware
 Name[es]=Servidor de Groupware
 Name[et]=Grupitöö server
 Name[fr]=Serveur de travail collaboratif
+Name[it]=Server Groupware
 Name[nl]=Groupware=server
 Name[pt]=Servidor de Groupware
-Name[pt_BR]=Servidor de Groupware
+Name[pt_BR]=Servidor Groupware
 Name[ru]=Сервер Groupware
+Name[sr]=Groupware сервер
+Name[sr@Latn]=Groupware сервер
 Name[sv]=Grupprogramserver
-Name[tr]=Groupware sunucu
+Name[tr]=Grupyazılımı(Groupware) sunucusu
 Name[uk]=Сервер Groupware
+Name[xx]=xxGroupware serverxx
+Name[zh_CN]=群件服务器
 X-KDE-Library=kabc_groupware
 Type=Service
 ServiceTypes=KResources/Plugin

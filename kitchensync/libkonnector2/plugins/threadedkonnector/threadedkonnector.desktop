@@ -4,7 +4,7 @@ Type=Service
 ServiceTypes=KResources/Plugin
 X-KDE-Library=libthreadedkonnector
 
-Name=Demo konnector for a threaded implementation
+Name=Demo Konnector for a Threaded Implementation
 Name[bs]=Demo konnector za implementaciju threadova
 Name[ca]=Demostració de konnector per a una implementació amb fils
 Name[cy]=Kysylltydd arddangosol ar gyfer weithredoliant edafeddedig
@@ -33,7 +33,7 @@ Name[sr@Latn]=Demonstracioni konnector za nitnu implementaciju
 Name[sv]=Demonstration av en Konnector för trådad implementering
 Name[ta]=இணைக்கப்பட்ட நடைமுறைக்கான இணைப்பான் காட்சி
 Name[tg]=Коннектори намоиш барои амаликунии торҳо
-Name[tr]=Geçirilmiş yürütme için demo konnector
+Name[tr]=Çoklu(threaded) uygulama için örnek konnector
 Name[uk]=Konnector для демонстрації реалізації через нитки
 Name[xx]=xxDemo konnector for a threaded implementationxx
 Name[zh_CN]=线程实现的 konnector 演示
