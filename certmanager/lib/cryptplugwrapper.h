@@ -784,123 +784,6 @@ public:
 
 
     /*! \ingroup groupConfigSign
-    \brief Sets whether signatures and signed data should be send
-                as opaque signed or
-                as multipart/signed message parts.
-    */
-    void setSignatureCompoundMode( SignatureCompoundMode );
-
-    /*! \ingroup groupConfigSign
-    \brief Returns whether signatures and signed data will be send
-                   as opaque signed or
-                   as multipart/signed message parts.
-    */
-    SignatureCompoundMode signatureCompoundMode();
-
-    /*! \ingroup groupConfigSign
-    \brief Sets which certificates should be sent with the
-                message.
-    */
-    void setSendCertificates( SendCertificates );
-    /*! \ingroup groupConfigSign
-    \brief Returns which certificates should be sent with the
-                message.
-    */
-    SendCertificates sendCertificates();
-
-    /*! \ingroup groupConfigSign
-    \brief Specifies whether email should be automatically
-                signed, signed after confirmation, signed after
-                confirmation for each part or not signed at all.
-    */
-    void setSignEmail( SignEmail );
-
-    /*! \ingroup groupConfigSign
-    \brief Returns whether email should be automatically
-                signed, signed after confirmation, signed after
-                confirmation for each part or not signed at all.
-    */
-    SignEmail signEmail();
-
-    /*! \ingroup groupConfigSign
-    \brief Specifies whether sent email messages should be stored
-            with or without their signatures.
-    */
-    void setSaveSentSignatures( bool );
-
-    /*! \ingroup groupConfigSign
-    \brief Returns whether sent email messages should be stored
-                with or without their signatures.
-    */
-    bool saveSentSignatures();
-
-    /*! \ingroup groupConfigSign
-    \brief Specifies whether a warning should be emitted if the
-                email address of the sender is not contained in the
-                certificate.
-    */
-    void setWarnNoCertificate( bool );
-
-    /*! \ingroup groupConfigSign
-    \brief Returns whether a warning should be emitted if the
-                email address of the sender is not contained in the
-                certificate.
-    */
-    bool warnNoCertificate();
-
-    /*! \ingroup groupConfigSign
-    \brief Specifies how often the PIN is requested when
-                accessing the secret signature key.
-    */
-    void setNumPINRequests( PinRequests );
-
-    /*! \ingroup groupConfigSign
-    \brief Returns how often the PIN is requested when
-                accessing the secret signature key.
-    */
-    PinRequests numPINRequests();
-
-    /*! \ingroup groupConfigSign
-      \brief Specifies the interval in minutes the PIN must be reentered if
-      numPINRequests() is PinRequest_AfterMinutes.
-    */
-    void setNumPINRequestsInterval( int );
-
-
-    /*! \ingroup groupConfigSign
-      \brief Returns the interval in minutes the PIN must be reentered if
-      numPINRequests() is PinRequest_AfterMinutes.
-    */
-    int numPINRequestsInterval();
-
-
-    /*! \ingroup groupConfigSign
-    \brief Specifies whether the certificate path should be
-                followed to the root certificate or whether locally stored
-                certificates may be used.
-    */
-    void setCheckSignatureCertificatePathToRoot( bool );
-
-    /*! \ingroup groupConfigSign
-    \brief Returns whether the certificate path should be
-                followed to the root certificate or whether locally stored
-                certificates may be used.
-    */
-    bool checkSignatureCertificatePathToRoot();
-
-    /*! \ingroup groupConfigSign
-    \brief Specifies whether certificate revocation lists should
-                be used.
-    */
-    void setSignatureUseCRLs( bool );
-
-    /*! \ingroup groupConfigSign
-    \brief Returns whether certificate revocation lists should
-                be used.
-    */
-    bool signatureUseCRLs();
-
-    /*! \ingroup groupConfigSign
       \brief Specifies whether a warning should be emitted if the
       signature certificate expires in the near future.
     */
@@ -911,20 +794,6 @@ public:
       the signature certificate expires in the near future.
     */
     bool signatureCertificateExpiryNearWarning( void );
-
-    /*! \ingroup groupConfigSign
-      \brief Returns the number of days that are left until the
-      specified certificate expires.
-
-      Negative values show how many days ago the certificate DID expire,
-      a zero value means the certificate expires today,
-      special value CertStatus_EXPIRES_NEVER means there is
-      no expire date stored in this certificate.
-
-      \param certificate the certificate to check
-    */
-    int signatureCertificateDaysLeftToExpiry( const char* certificate );
-
 
     /*! \ingroup groupConfigSign
       \brief Specifies the number of days which a signature certificate must
@@ -953,19 +822,6 @@ public:
     bool caCertificateExpiryNearWarning( void );
 
     /*! \ingroup groupConfigSign
-      \brief Returns the number of days that are left until the
-      CA certificate of the specified certificate expires.
-
-      Negative values show how many days ago the certificate DID expire,
-      a zero value means the certificate expires today,
-      special value CertStatus_EXPIRES_NEVER means there is
-      no expire date stored in this certificate.
-
-      \param certificate the certificate to check
-    */
-    int caCertificateDaysLeftToExpiry( const char* certificate );
-
-    /*! \ingroup groupConfigSign
       \brief Specifies the number of days which a CA certificate must
       be valid before it is considered to expire in the near
       future.
@@ -990,19 +846,6 @@ public:
       the root certificate expires in the near future.
     */
     bool rootCertificateExpiryNearWarning( void );
-
-    /*! \ingroup groupConfigSign
-      \brief Returns the number of days that are left until the
-      root certificate of the specified certificate expires.
-
-      Negative values show how many days ago the certificate DID expire,
-      a zero value means the certificate expires today,
-      special value CertStatus_EXPIRES_NEVER means there is
-      no expire date stored in this certificate.
-
-      \param certificate the certificate to check
-    */
-    int rootCertificateDaysLeftToExpiry( const char* certificate );
 
     /*! \ingroup groupConfigSign
       \brief Specifies the number of days which a root certificate must
@@ -1096,20 +939,6 @@ public:
 
 
     /*! \ingroup groupConfigCrypt
-    \brief Specifies whether the certificate path should be
-                followed to the root certificate or whether locally stored
-                certificates may be used.
-    */
-    void setCheckEncryptionCertificatePathToRoot( bool );
-
-    /*! \ingroup groupConfigCrypt
-    \brief Returns whether the certificate path should be
-                followed to the root certificate or whether locally stored
-                certificates may be used.
-    */
-    bool checkEncryptionCertificatePathToRoot();
-
-    /*! \ingroup groupConfigCrypt
       \brief Specifies whether a warning should be emitted if the
       certificate of the receiver expires in the near future.
     */
@@ -1120,17 +949,6 @@ public:
       certificate of the receiver expires in the near future.
     */
     bool receiverCertificateExpiryNearWarning();
-
-    /*! \ingroup groupConfigCrypt
-      \brief Returns the number of days until the specified receiver
-      certificate expires.
-
-      Negative values show how many days ago the certificate DID expire,
-      a zero value means the certificate expires today,
-      special value CertStatus_EXPIRES_NEVER means there is
-      no expire date stored in this certificate.
-    */
-    int receiverCertificateDaysLeftToExpiry( const char* certificate );
 
     /*! \ingroup groupConfigCrypt
       \brief Specifies the number of days which a receiver certificate
@@ -1156,18 +974,6 @@ public:
       certificate in the chain expires in the near future.
     */
     bool certificateInChainExpiryNearWarning();
-
-    /*! \ingroup groupConfigCrypt
-      \brief Returns the number of days until the first certificate in
-      the chain of the receiver certificate expires.
-
-      Negative values show how many days ago the certificate DID expire,
-      a zero value means the certificate expires today,
-      special value CertStatus_EXPIRES_NEVER means there is
-      no expire date stored in this certificate.
-    */
-    int certificateInChainDaysLeftToExpiry( const char* certificate );
-
 
     /*! \ingroup groupConfigCrypt
       \brief Specifies the number of days which a certificate in the chain
@@ -1236,12 +1042,6 @@ public:
     int encryptionCRLNearExpiryInterval();
 
 
-    /*! \ingroup groupConfigCrypt
-      \brief Returns the number of days the currently active certification
-      list is still valid.
-    */
-    int encryptionCRLsDaysLeftToExpiry();
-
     /*! \ingroup groupConfigDir
     \brief Specifies whether certificates should be retrieved
                 from a directory server, only locally, or both.
@@ -1253,33 +1053,6 @@ public:
                 from a directory server, only locally, or both.
     */
     CertificateSource certificateSource();
-
-    /*! \ingroup groupConfigDir
-    \brief Specifies whether CRLs (certificate revocation lists)
-           should be retrieved from a directory server, only
-           locally, or both.
-    */
-    void setCRLSource( CertificateSource );
-
-    /*! \ingroup groupConfigDir
-    \brief Returns whether certificates should be retrieved
-                from a directory server, only locally, or both.
-    */
-    CertificateSource crlSource();
-
-
-    /*! \ingroup groupCertHand
-    \brief Returns \c true if and only if the
-            certificates in the certificate chain starting at
-            \c certificate are valid.
-
-    If \c level is non-null, the parameter contains
-            the degree of trust on a backend-specific scale. In an X.509
-            implementation, this will either be \c 1
-            (valid up to the root certificate) or \c 0
-            (not valid up to the root certificate).
-    */
-    bool certificateValidity( const char* certificate, int* level );
 
 
     /*! \ingroup groupSignAct

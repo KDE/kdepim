@@ -455,84 +455,6 @@ bool initialize( void );
 */
 bool hasFeature( Feature );
 
-/*! \ingroup groupConfigSign
-   \brief Returns the number of days that are left until the
-   specified certificate expires.
-
-   Negative values show how many days ago the certificate DID expire,
-   a zero value means the certificate expires today,
-   special value CRYPTPLUG_CERT_DOES_NEVER_EXPIRE means there is
-   no expire date stored in this certificate.
-
-   \param certificate the certificate to check
-*/
-int signatureCertificateDaysLeftToExpiry( const char* certificate );
-
-/*! \ingroup groupConfigSign
-  \brief Returns the number of days that are left until the
-  CA certificate of the specified certificate expires.
-
-   Negative values show how many days ago the certificate DID expire,
-   a zero value means the certificate expires today,
-   special value CRYPTPLUG_CERT_DOES_NEVER_EXPIRE means there is
-   no expire date stored in this certificate.
-
-  \param certificate the certificate to check
-*/
-int caCertificateDaysLeftToExpiry( const char* certificate );
-
-/*! \ingroup groupConfigSign
-   \brief Returns the number of days that are left until the
-   root certificate of the specified certificate expires.
-
-   Negative values show how many days ago the certificate DID expire,
-   a zero value means the certificate expires today,
-   special value CRYPTPLUG_CERT_DOES_NEVER_EXPIRE means there is
-   no expire date stored in this certificate.
-
-   \param certificate the certificate to check
-*/
-int rootCertificateDaysLeftToExpiry( const char* certificate );
-
-
-/*! \ingroup groupConfigCrypt
-  \brief Returns the number of days until the specified receiver
-  certificate expires.
-
-   Negative values show how many days ago the certificate DID expire,
-   a zero value means the certificate expires today,
-   special value CRYPTPLUG_CERT_DOES_NEVER_EXPIRE means there is
-   no expire date stored in this certificate.
-*/
-int receiverCertificateDaysLeftToExpiry( const char* certificate );
-
-
-/*! \ingroup groupConfigCrypt
-  \brief Returns the number of days until the first certificate in
-  the chain of the receiver certificate expires.
-
-   Negative values show how many days ago the certificate DID expire,
-   a zero value means the certificate expires today,
-   special value CRYPTPLUG_CERT_DOES_NEVER_EXPIRE means there is
-   no expire date stored in this certificate.
-*/
-int certificateInChainDaysLeftToExpiry( const char* certificate );
-
-
-/*! \ingroup groupCertHand
-   \brief Returns \c true if and only if the
-          certificates in the certificate chain starting at
-          \c certificate are valid.
-
-   If \c level is non-null, the parameter contains
-          the degree of trust on a backend-specific scale. In an X.509
-          implementation, this will either be \c 1
-          (valid up to the root certificate) or \c 0
-          (not valid up to the root certificate).
-*/
-bool certificateValidity( const char* certificate, int* level );
-
-
 /*! \ingroup groupSignCryptAct
    \brief Information record returned by signing and by encrypting
    functions - this record should be used together with a
@@ -1237,12 +1159,6 @@ endListCertificates( struct CertIterator* );
     Import a certificate from memory.
   */
   GpgME::ImportResult importCertificateFromMem( const char* data, size_t length );
-
-protected:
-int CryptPlug::caFirstLastChainCertDaysLeftToExpiry( bool bStopAtFirst,
-						     const char* certificate );
-
-
 }; // class CryptPlug
 
 class SMIMECryptPlug : public CryptPlug {
