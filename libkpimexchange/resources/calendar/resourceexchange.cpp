@@ -68,12 +68,13 @@ public:
 ResourceExchange::ResourceExchange( const KConfig *config )
   : ResourceCalendar( config )
 {
+    mCache = 0L;
   kdDebug() << "Creating ResourceExchange" << endl;
   if (config ) {
-    mAccount = new ExchangeAccount( 
-            config->readEntry( "ExchangeHost" ), 
-            config->readEntry( "ExchangeAccount" ), 
-            config->readEntry( "ExchangeMailbox" ), 
+    mAccount = new ExchangeAccount(
+            config->readEntry( "ExchangeHost" ),
+            config->readEntry( "ExchangeAccount" ),
+            config->readEntry( "ExchangeMailbox" ),
             decryptStr( config->readEntry( "ExchangePassword" ) ) );
     mCachedSeconds = config->readNumEntry( "ExchangeCacheTimeout", 600 );
   } else {
@@ -186,9 +187,9 @@ void ResourceExchange::slotMonitorNotify( const QValueList<long>& IDs, const QVa
    * 3. Event modified that we have in cache
    * 4. Something else happened that isn't relevant to us
    * Update cache, then notify whoever's watching us
-   * We may be able to find (1) and (3) by looking at the 
+   * We may be able to find (1) and (3) by looking at the
    *   DAV:getlastmodified property
-   * (2) is trickier: we might have to resort to checking 
+   * (2) is trickier: we might have to resort to checking
    * all uids in the cache
    * Or: put monitors on every event in the cache, so that
    * we know when one gets deleted or modified
@@ -204,6 +205,8 @@ void ResourceExchange::slotMonitorError( int errorCode, const QString& moreInfo 
 
 void ResourceExchange::addEvent(Event *anEvent)
 {
+    if( !mCache )
+        return;
   kdDebug() << "ResourceExchange::addEvent" << endl;
 
   // FIXME: first check of upload finished successfully, only then
@@ -212,7 +215,7 @@ void ResourceExchange::addEvent(Event *anEvent)
 
   uploadEvent( anEvent );
 //  insertEvent(anEvent);
- 
+
   anEvent->registerObserver( this );
 //  setModified( true );
 }
@@ -224,6 +227,8 @@ void ResourceExchange::uploadEvent( Event* event )
 
 void ResourceExchange::deleteEvent(Event *event)
 {
+    if ( !mCache )
+        return;
   kdDebug(5800) << "ResourceExchange::deleteEvent" << endl;
 
   mClient->removeSynchronous( event );
@@ -246,7 +251,7 @@ Event *ResourceExchange::event( const QString &uid )
 void ResourceExchange::subscribeEvents( const QDate& start, const QDate& end )
 {
   kdDebug(5800) << "ResourceExchange::subscribeEvents()" << endl;
-  // FIXME: possible race condition if several subscribe events are run close 
+  // FIXME: possible race condition if several subscribe events are run close
   // to each other
   mClient->download( start, end, false );
 }
@@ -255,7 +260,7 @@ void ResourceExchange::downloadedEvent( KCal::Event* event, const KURL& url )
 {
   kdDebug() << "Downloaded event: " << event->summary() << " from url " << url.prettyURL() << endl;
     // FIXME: add watches to the monitor for these events
-    // KURL url = 
+    // KURL url =
     //  mMonitor->addWatch( url, KPIM::ExchangeMonitor::Update, 0 );
 //    emit eventsAdded( events );
 }
@@ -277,6 +282,8 @@ void ResourceExchange::unsubscribeEvents( const QDate& start, const QDate& end )
 
 void ResourceExchange::addTodo(Todo *todo)
 {
+    if( !mCache)
+        return;
   mCache->addTodo( todo );
 
   todo->registerObserver( this );
@@ -286,6 +293,8 @@ void ResourceExchange::addTodo(Todo *todo)
 
 void ResourceExchange::deleteTodo(Todo *todo)
 {
+    if( !mCache )
+        return;
   mCache->deleteTodo( todo );
 
 //  setModified( true );
@@ -345,7 +354,7 @@ void ResourceExchange::update(IncidenceBase *incidence)
 void ResourceExchange::insertEvent(const Event *anEvent)
 {
   kdDebug() << "ResourceExchange::insertEvent" << endl;
- 
+
 }
 */
 // taking a QDate, this function will look for an eventlist in the dict
@@ -353,7 +362,7 @@ void ResourceExchange::insertEvent(const Event *anEvent)
 QPtrList<Event> ResourceExchange::rawEventsForDate(const QDate &qd, bool sorted)
 {
   // kdDebug() << "ResourceExchange::rawEventsForDate(" << qd.toString() << "," << sorted << ")" << endl;
- 
+
   // If the events for this date are not in the cache, or if they are old,
   // get them again
   QDateTime now = QDateTime::currentDateTime();
@@ -445,13 +454,17 @@ void ResourceExchange::addJournal(Journal *journal)
 
 Journal *ResourceExchange::journal(const QDate &date)
 {
+    if( !mCache)
+        return 0;
 //  kdDebug(5800) << "ResourceExchange::journal() " << date.toString() << endl;
-  return mCache->journal( date );
+    return mCache->journal( date );
 }
 
 Journal *ResourceExchange::journal(const QString &uid)
 {
-  return mCache->journal( uid );
+    if( !mCache)
+        return 0;
+    return mCache->journal( uid );
 }
 
 QPtrList<Journal> ResourceExchange::journals()
