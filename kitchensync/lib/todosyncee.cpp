@@ -4,6 +4,13 @@
 
 using namespace KSync;
 
+/* A test for the template
+void testIt() {
+    TodoSyncee* syncee = new TodoSyncee();
+    syncee->setSyncMode( Syncee::FirstSync );
+    delete syncee;
+}
+*/
 TodoSyncEntry::TodoSyncEntry( KCal::Todo* todo )
     : SyncEntry(), mTodo( todo )
 {

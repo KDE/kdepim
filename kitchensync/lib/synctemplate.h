@@ -14,12 +14,15 @@ namespace KSync {
     class SyncTemplate : public Syncee {
     public:
         typedef QPtrList<Entry> PtrList;
-        SyncTemplate() : Syncee()  { };
+        SyncTemplate() : Syncee()  {
+            mList.setAutoDelete( true );
+        };
         ~SyncTemplate() { };
 /*        QString type() const { return QString::fromLatin1(typeName); }*/
         /**
          * basic clone implementation
          */
+        QString type() const { return QString::fromLatin1("SyncTemplate"); }
         Syncee* clone() {
             SyncTemplate* temp = new SyncTemplate();
             temp->setSyncMode( syncMode() );
@@ -58,7 +61,10 @@ namespace KSync {
             mList.append( tempEntry );
         }
         void removeEntry( SyncEntry* entry ) {
-            mList.remove( entry );
+            Entry* tempEntry = dynamic_cast<Entry*> ( entry );
+            if ( tempEntry == 0l )
+                return;
+            mList.remove( tempEntry );
         }
 
     protected:

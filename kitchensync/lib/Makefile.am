@@ -8,7 +8,8 @@ libksync_la_SOURCES = \
   syncer.cpp syncui.cpp syncuikde.cpp kontainer.cpp \
   syncalgorithm.cpp standardsync.cpp \
   addressbooksyncee.cpp unknownsyncee.cpp \
-  opiedesktopsyncee.cpp  todosyncee.cpp
+  opiedesktopsyncee.cpp  todosyncee.cpp \
+  eventsyncee.cpp
  
 
 METASOURCES = AUTO
