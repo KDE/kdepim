@@ -242,6 +242,7 @@ bool MALConduit::skip()
 #else
 			pInfo->httpProxy = new char[ proxyServer.length() + 1 ];
 			strncpy( pInfo->httpProxy, proxyServer.latin1(), proxyServer.length() );
+			pInfo->httpProxy[proxyServer().length()] = '\0';			
 			if (proxyPort>0 && proxyPort<65536) pInfo->httpProxyPort = proxyPort;
 			else pInfo->httpProxyPort = 80;
 #endif
@@ -254,11 +255,13 @@ bool MALConduit::skip()
 #else
 				pInfo->proxyUsername = new char[ MALConduitSettings::proxyUser().length() + 1 ];
 				strncpy( pInfo->proxyUsername, MALConduitSettings::proxyUser().latin1(), MALConduitSettings::proxyUser().length() );
+				pInfo->proxyUsername[MALConduitSettings::proxyUser().length()] = '\0';
 //				pInfo->proxyUsername = MALConduitSettings::proxyUser().latin1();
 				if (!MALConduitSettings::proxyPassword().isEmpty()) {
 //						pInfo->proxyPassword = MALConduitSettings::proxyPassword().latin1();
 					pInfo->proxyPassword = new char[ MALConduitSettings::proxyPassword().length() + 1 ];
 					strncpy( pInfo->proxyPassword, MALConduitSettings::proxyPassword().latin1(), MALConduitSettings::proxyPassword().length() );
+					pInfo->proxyPassword[MALConduitSettings::proxyPassword().length()] = '\0';
 				}
 #endif
 			}
