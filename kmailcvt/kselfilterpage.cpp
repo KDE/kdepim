@@ -35,7 +35,11 @@ KSelFilterPage::~KSelFilterPage() {
 
 void KSelFilterPage::filterSelected(int i)
 {
-	_desc->setText(filterList.at(i)->info());
+	QString info = filterList.at(i)->info();
+	QString author = filterList.at(i)->author();
+	if(!author.isEmpty())
+		info += i18n("<p><i>Written by %1.</i></p>").arg(author);
+	_desc->setText(info);
 }
 
 void KSelFilterPage::addFilter(Filter *f)

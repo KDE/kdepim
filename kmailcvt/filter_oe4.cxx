@@ -30,9 +30,7 @@
 
 FilterOE4::FilterOE4() : Filter(i18n("Import Folders From Outlook Express 4"),
       "Stephan B. Nedregard/Hans Dijkema",
-      i18n("<p>Stephan B. Nedregard kindly contributed the Outlook Express 4 "
-      "import code.</p>"
-      "<p>Select the Outlook Express directory on your system. "
+      i18n("<p>Select the Outlook Express directory on your system. "
       "This import filter will search for folders (the '.mbx' files).</p>"
       "<p><b>NOTE:</b> You will not be able to revert to your original folder "
       "structure, only the folders themselves are imported. But you will "
