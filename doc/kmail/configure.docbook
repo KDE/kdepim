@@ -1563,6 +1563,18 @@ of key words can be modified.</para>
 	  </listitem>
 	</varlistentry>
 
+	<varlistentry id="configure-smime-certificate-http-requests">
+	  <term>
+	    <guilabel>Do not perform any HTTP requests</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	     Entirely disables the use of <acronym>HTTP</acronym> for 
+             <acronym>&smime;</acronym>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
 	<varlistentry id="configure-smime-certificate-http-ignore-distribution-point">
 	  <term>
 	    <guilabel>Ignore HTTP CRL Distribution Point of certificates</guilabel>
@@ -1570,26 +1582,14 @@ of key words can be modified.</para>
 	  <listitem>
 	    <para>
 	     When looking for the location of a <acronym>CRL</acronym>, 
-             <quote>the "to be tested"</quote>certificate usually contains 
-             so called CRL Distribution Point (<acronym>DP</acronym>) entries 
+             <quote>the "to-be-tested"</quote>certificate usually contains 
+             what are known as CRL Distribution Point (<acronym>DP</acronym>) entries,
              which are <acronym>URLs</acronym> describing the way to access 
              the <acronym>URL</acronym>. The first found <acronym>DP</acronym>
              entry is used.  
              With this option all entries using the <acronym>HTTP</acronym>
              scheme are ignored when looking for a suitable 
              <acronym>DP</acronym>.
-	    </para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry id="configure-smime-certificate-http-requests">
-	  <term>
-	    <guilabel>Don't perform any HTTP requests</guilabel>
-	  </term>
-	  <listitem>
-	    <para>
-	     Entirely disables the use of <acronym>HTTP</acronym> for 
-             <acronym>&smime;</acronym>.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -1623,6 +1623,18 @@ of key words can be modified.</para>
 	  </listitem>
 	</varlistentry>
 
+	<varlistentry id="configure-smime-certificate-ldap-requests">
+	  <term>
+	    <guilabel>Do not perform any LDAP requests</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	     Entirely disables the use of <acronym>LDAP</acronym> for 
+             <acronym>&smime;</acronym>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
 	<varlistentry id="configure-smime-certificate-ldap-distribution-point">
 	  <term>
 	    <guilabel>Ignore LDAP CRL Distribution Point of certificates</guilabel>
@@ -1630,8 +1642,8 @@ of key words can be modified.</para>
 	  <listitem>
 	    <para>
 	     When looking for the location of a <acronym>CRL</acronym>, 
-             the <quote>"to be tested"</quote> certificate usually contains 
-             so called CRL Distribution Point (<acronym>DP</acronym>) entries 
+             the <quote>"to-be-tested"</quote> certificate usually contains 
+             what are known as CRL Distribution Point (<acronym>DP</acronym>) entries,
              which are <acronym>URLs</acronym> describing the way to access 
              the <acronym>URL</acronym>. 
              The first found <acronym>DP</acronym> entry is used.  
@@ -1642,21 +1654,9 @@ of key words can be modified.</para>
 	  </listitem>
 	</varlistentry>
 
-	<varlistentry id="configure-smime-certificate-ldap-requests">
-	  <term>
-	    <guilabel>Don't perform any LDAP requests</guilabel>
-	  </term>
-	  <listitem>
-	    <para>
-	     Entirely disables the use of <acronym>LDAP</acronym> for 
-             <acronym>&smime;</acronym>.
-	    </para>
-	  </listitem>
-	</varlistentry>
-
 	<varlistentry id="configure-smime-certificate-ldap-proxy-host">
 	  <term>
-	    <guilabel>Proxy host for LDAP requests</guilabel>
+	    <guilabel>Primary host for LDAP requests</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
@@ -1664,13 +1664,13 @@ of key words can be modified.</para>
              <acronym>LDAP</acronym> requests go to that server first. 
              More precisely, this setting overrides any specified host 
              and port part in a <acronym>LDAP URL</acronym> and will also 
-             be used if host and port have been ommitted from the 
+             be used if host and port have been omitted from the 
              <acronym>URL</acronym>. Other <acronym>LDAP</acronym> servers 
              will be used only if the connection to the 
              <emphasis>proxy</emphasis> failed.
              The syntax is <acronym>HOST</acronym> or 
              <acronym>HOST:PORT</acronym>. If <acronym>PORT</acronym> is 
-             ommitted, <quote>port 389</quote> 
+             omitted, <quote>port 389</quote> 
              (standard <acronym>LDAP</acronym> port) is used.
 	    </para>
 	  </listitem>
