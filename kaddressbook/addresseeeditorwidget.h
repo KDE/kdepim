@@ -47,6 +47,7 @@ class EmailEditWidget;
 class GeoWidget;
 class ImageWidget;
 class PhoneEditWidget;
+class SoundWidget;
 
 namespace KPIM
 {
@@ -127,7 +128,6 @@ class AddresseeEditorWidget : public ExtensionWidget
     KComboBox *mFormattedNameBox;
     AddressEditWidget *mAddressEditWidget;
     EmailEditWidget *mEmailWidget;
-    ImageWidget *mImageWidget;
     PhoneEditWidget *mPhoneEditWidget;
     KLineEdit *mURLEdit;
     KLineEdit *mIMAddressEdit;
@@ -135,7 +135,6 @@ class AddresseeEditorWidget : public ExtensionWidget
     KSqueezedTextLabel *mNameLabel;
     
     // Tab2
-    GeoWidget *mGeoWidget;
     KLineEdit *mDepartmentEdit;
     KLineEdit *mOfficeEdit;
     KLineEdit *mProfessionEdit;
@@ -149,6 +148,11 @@ class AddresseeEditorWidget : public ExtensionWidget
     QSpinBox *mTimeZoneSpin;
     QSpinBox *mGeoLat;
     QSpinBox *mGeoLon;
+
+    // Tab3
+    GeoWidget *mGeoWidget;
+    ImageWidget *mImageWidget;
+    SoundWidget *mSoundWidget;
 };
 
 #endif

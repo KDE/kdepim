@@ -32,7 +32,7 @@ libkaddressbookpart_la_SOURCES = \
  incsearchwidget.cpp jumpbuttonbar.cpp kaddressbook.cpp \
  kaddressbook_part.cpp kaddressbookiface.skel kaddressbookmain.cpp \
  kaddressbookview.cpp ldapsearchdialog.cpp \
- nameeditdialog.cpp phoneeditwidget.cpp undo.cpp undocmds.cpp \
+ nameeditdialog.cpp phoneeditwidget.cpp soundwidget.cpp undo.cpp undocmds.cpp \
  viewconfigurefieldspage.cpp viewconfigurefilterpage.cpp \
  viewconfigurewidget.cpp viewmanager.cpp
 
@@ -46,7 +46,7 @@ noinst_HEADERS = \
  geowidget.h imagewidget.h importdialog.h incsearchwidget.h \
  jumpbuttonbar.h kabprefs.h kaddressbook.h kaddressbook_part.h \
  kaddressbookmain.h kaddressbookview.h ldapsearchdialog.h \
- nameeditdialog.h phoneeditwidget.h \
+ nameeditdialog.h phoneeditwidget.h soundwidget.h \
  typecombo.h undo.h undocmds.h viewconfigurefieldspage.h \
  viewconfigurefilterpage.h viewconfigurewidget.h viewmanager.h
 
