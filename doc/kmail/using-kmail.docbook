@@ -735,7 +735,9 @@ the program with the parts of the mail: <symbol>&percnt;0</symbol>,
 the message parts. For common messages <symbol>&percnt;0</symbol> is the
 text, <symbol>&percnt;1</symbol> the first attachment and so
 on. Additionally, the whole message is fed into the program's
-<acronym>stdin</acronym>.</para>
+<acronym>stdin</acronym>. In addition, every occurence of
+<symbol>&percnt;{foo}</symbol> is replaced by the content of the foo
+header.</para>
 
 <!-- fixme: still correct? -->
 <warning><para>This currently only works if the message has
@@ -758,7 +760,10 @@ even this command will work (within its limits):
 <para>This will feed the message to a program. If that program returns
 output, the entire message (including the headers) will be replaced
 with this output. If the program does not return output, the message
-will not change.  Specify the full path to the program.</para>
+will not change.  Specify the full path to the program. The same
+substitutions (<symbol>&percnt;n</symbol>,
+<symbol>&percnt;{foo}</symbol> as with <guilabel>execute
+command</guilabel> are performed on the command line.</para>
 <warning><para>Be cautious with this action, as it will easily mess up
 your messages if the filter program does return garbage or extra
 lines.</para></warning>
