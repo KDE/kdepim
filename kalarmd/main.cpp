@@ -15,14 +15,14 @@
 static const char* kalarmdVersion = "0.9";
 static const KCmdLineOptions options[] =
 {
-   {0,0,0}
+   {0L,0L,0L}
 };
 
 int main(int argc, char **argv)
 {
   KAboutData aboutData("kalarmd",I18N_NOOP("AlarmDaemon"),
       kalarmdVersion,I18N_NOOP("KOrganizer/KAlarm Alarm Daemon"),KAboutData::License_GPL,
-      "(c) 1997-1999 Preston Brown\n(c) 2000-2001 Cornelius Schumacher\n(c) 2001 David Jarvie",0,
+      "(c) 1997-1999 Preston Brown\n(c) 2000-2001 Cornelius Schumacher\n(c) 2001 David Jarvie",0L,
       "http://korganizer.kde.org");
   aboutData.addAuthor("Cornelius Schumacher",I18N_NOOP("Maintainer"),
                       "schumacher@kde.org");

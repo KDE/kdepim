@@ -13,7 +13,7 @@
 
 AlarmApp::AlarmApp() :
   KUniqueApplication(),
-  mAd(0)
+  mAd(0L)
 {
 }
 
@@ -30,7 +30,7 @@ int AlarmApp::newInstance()
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  mAd = new AlarmDaemon(0, "ad");
+  mAd = new AlarmDaemon(0L, "ad");
 
   return 0;
 }

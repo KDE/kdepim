@@ -108,7 +108,7 @@ class AlarmDaemon : public QObject, virtual public AlarmDaemonIface
 {
     Q_OBJECT
   public:
-    AlarmDaemon(QObject *parent = 0, const char *name = 0);
+    AlarmDaemon(QObject *parent = 0L, const char *name = 0L);
     virtual ~AlarmDaemon();
 
     const ClientInfo* getClientInfo(const QString& appName);
@@ -140,7 +140,7 @@ class AlarmDaemon : public QObject, virtual public AlarmDaemonIface
     void    removeCal(const QString& urlString)
                        { removeCal_(expandURL(urlString)); }
     void    resetMsgCal(const QString& appname, const QString& urlString)
-                       { resetMsgCal_(appname, /*expandURL*/(urlString)); }
+                       { resetMsgCal_(appname, expandURL(urlString)); }
     void    registerApp(const QString& appName, const QString& appTitle,
                         const QString& dcopObject, bool commandLineNotify,
                         bool displayCalendarName);

@@ -171,7 +171,6 @@ void AlarmDaemon::reloadCal_(ADCalendar* cal)
 void AlarmDaemon::resetMsgCal_(const QString& appname, const QString& urlString)
 {
   kdDebug() << "AlarmDaemon::resetMsgCal_(): '" << urlString << "'" << endl;
-kdDebug()<<" ---"<<appname<<"---"<<endl;
 
   reloadCal_(appname, urlString, true);
   ADCalendar::clearEventsHandled(urlString);
@@ -248,7 +247,6 @@ QString AlarmDaemon::readConfig()
   QStringList clients = QStringList::split(',', clientConfig.readEntry(CLIENTS_KEY), true);
   bool writeNewClients = false;
   QString newClients;
-kdDebug()<<"Nclients="<<clients.count()<<endl;
   for (int i = 0;  i < clients.count();  ++i)
   {
     kdDebug() << "AlarmDaemon::readConfig(): client: " << clients[i] << endl;
@@ -352,7 +350,6 @@ void AlarmDaemon::writeConfigClient(const QString& appName, const ClientInfo& ci
   }
 
   QString groupKey = QString(CLIENT_KEY) + appName;
-kdDebug()<<"Deleting group: "<<groupKey<<endl;
   clientConfig.deleteGroup(groupKey, true);
 
   clientConfig.setGroup(groupKey);
@@ -365,9 +362,7 @@ kdDebug()<<"Deleting group: "<<groupKey<<endl;
   for (ADCalendar* cal = mCalendars.first();  cal;  cal = mCalendars.next())
   {
     if (cal->appName() == appName)
-{kdDebug()<<"Adding calendar: "<<QString(CALENDAR_KEY"%1").arg(i+1)<<"="<<(QString("%1,").arg(cal->actionType()) + cal->urlString())<<endl;
       clientConfig.writeEntry(QString(CALENDAR_KEY"%1").arg(++i), QString("%1,").arg(cal->actionType()) + cal->urlString());
-}
   }
 
   // Set the default client if it's currently null
@@ -625,7 +620,6 @@ bool AlarmDaemon::notifyEvent(const ADCalendar* calendar, const QString& eventID
           kdDebug() << "AlarmDaemon::notifyEvent(): '" << calendar->appName() << "' not found" << endl;
           return true;
         }
-kdDebug()<<"notifyEvent: "<<execStr.latin1()<<endl;
         if (client->commandLineNotify)
         {
           // Use the command line to tell the client about the alarm
@@ -675,7 +669,7 @@ void AlarmDaemon::checkIfSessionStarted()
     // Session startup has now completed. Cancel the timer.
     mSessionStarted = true;
     delete mSessionStartTimer;
-    mSessionStartTimer = 0;
+    mSessionStartTimer = 0L;
 
     // Notify clients of pending alarms.
     for (ADCalendar* cal = mCalendars.first();  cal;  cal = mCalendars.next())
@@ -792,7 +786,7 @@ void AlarmDaemon::setToolTipStartTimer()
   // Count the number of currently loaded calendars whose names should be displayed
   int nLoaded = 0;
   int nForDisplay = 0;
-  ADCalendar* firstForDisplay = 0;
+  ADCalendar* firstForDisplay = 0L;
   for (ADCalendar* cal = mCalendars.first();  cal;  cal = mCalendars.next())
   {
     if (cal->loaded())
@@ -903,7 +897,7 @@ bool ADCalendar::loadFile(bool quiet)
     }
   }
   else if (!quiet)
-    KMessageBox::error(0, i18n("Cannot download calendar from %1.").arg(url.prettyURL()));
+    KMessageBox::error(0L, i18n("Cannot download calendar from %1.").arg(url.prettyURL()));
   return loaded_;
 }
 

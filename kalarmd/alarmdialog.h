@@ -25,14 +25,14 @@ struct EventData
 class AlarmDialog : public KDialogBase {
     Q_OBJECT
   public:
-    AlarmDialog(QWidget *parent=0,const char *name=0);
+    AlarmDialog(QWidget *parent=0L, const char *name=0L);
     virtual ~AlarmDialog();
 
     void appendEvent(const Calendar*, Event *event);
 
     void eventNotification();
 
-    int  clearEvents(const Calendar* = 0);
+    int  clearEvents(const Calendar* = 0L);
 
   public slots:
     void slotOk();

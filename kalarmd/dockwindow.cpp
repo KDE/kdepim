@@ -20,8 +20,8 @@ AlarmDockWindow::AlarmDockWindow(AlarmDaemon& ad, const QString& defltClient,
   : KSystemTray(parent, name),
     alarmDaemon(ad),
     defaultClient(defltClient),
-    nClientIds(0),
-    nCalendarIds(0)
+    nClientIds(0L),
+    nCalendarIds(0L)
 {
   KGlobal::iconLoader()->addAppDir("kalarmd");
   dPixmap1 = BarIcon("kalarmd");
@@ -35,7 +35,7 @@ AlarmDockWindow::AlarmDockWindow(AlarmDaemon& ad, const QString& defltClient,
 
   alarmsEnabledId = contextMenu()->insertItem(i18n("Alarms Enabled"),
                this, SLOT(toggleAlarmsEnabled()));
-  autostartId = contextMenu()->insertItem(i18n("Auto start at login"),
+  autostartId = contextMenu()->insertItem(i18n("Start automatically at login"),
                &alarmDaemon, SLOT(toggleAutostart()));
   contextMenu()->setItemChecked(alarmsEnabledId, true);
   contextMenu()->setItemChecked(autostartId, true);

@@ -13,7 +13,7 @@ class AlarmDockWindow : public KSystemTray
     Q_OBJECT
   public:
     AlarmDockWindow(AlarmDaemon&, const QString& defaultClient,
-                    QWidget *parent = 0, const char *name = 0);
+                    QWidget *parent = 0L, const char *name = 0L);
     virtual ~AlarmDockWindow();
 
     bool alarmsOn()     { return contextMenu()->isItemChecked(alarmsEnabledId); }
