@@ -21,6 +21,7 @@
 #include <kapplication.h>
 #include <kprinter.h>
 #include <klocale.h>
+#include <kglobal.h>
 #include <kdebug.h>
 #include <kprogress.h>
 #include <kabc/addressee.h>
@@ -210,7 +211,7 @@ namespace KABPrinting
 
         QString text =
             i18n("Printed on %1 by KAddressBook (http://www.kde.org)")
-            .arg(QDateTime::currentDateTime().toString());
+            .arg(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
 
         p.setPen(Qt::black);
         p.drawText(0, fm.height(), text);

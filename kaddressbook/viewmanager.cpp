@@ -95,7 +95,7 @@ void ViewManager::readConfig()
   if (mViewNameList.size() == 0)
   {
     // Add a default
-    mViewNameList << "Default Table View";
+    mViewNameList << i18n("Default Table View");
   }
 
   mFilterList = Filter::restore(mConfig, "Filter");
