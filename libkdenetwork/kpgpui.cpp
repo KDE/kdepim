@@ -270,11 +270,11 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   }
 
   QHBoxLayout * hlay = new QHBoxLayout( topLayout ); // inherits spacing
-  mSearchEdit = new QLineEdit( page );
-  hlay->addWidget( new QLabel( mSearchEdit, i18n("&Search for:"), page ) );
-  hlay->addWidget( mSearchEdit, 1 );
+  QLineEdit * le = new QLineEdit( page );
+  hlay->addWidget( new QLabel( le, i18n("&Search for:"), page ) );
+  hlay->addWidget( le, 1 );
 
-  connect( mSearchEdit, SIGNAL(textChanged(const QString&)),
+  connect( le, SIGNAL(textChanged(const QString&)),
 	   this, SLOT(slotSearch(const QString&)) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
 

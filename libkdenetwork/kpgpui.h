@@ -181,7 +181,6 @@ class KeySelectionDialog: public KeySelectionDialogSuper
     bool checkKeys( const QValueList<QListViewItem*>& ) const;
 
   private:
-    QLineEdit *mSearchEdit;
     KListView *mListView;
     QCheckBox *mRememberCB;
     QPixmap *mKeyGoodPix, *mKeyBadPix, *mKeyUnknownPix, *mKeyValidPix;
