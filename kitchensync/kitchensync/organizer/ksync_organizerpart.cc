@@ -273,7 +273,7 @@ KAlendarSyncEntry* OrganizerPart::meta()
                     }
                 }
                 if (!found )
-                    delE.append( (KCal::Event*)Event2 );
+                    delE.append( (KCal::Event*)Event2->clone() );
             }
             // ////////////////////////////////////////////////////////////////////////////////////
             // /////////////////////////////////// ToDo //////////////////////////////////////////

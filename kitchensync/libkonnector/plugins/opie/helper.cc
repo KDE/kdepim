@@ -30,6 +30,7 @@ QDateTime Base::fromUTC( time_t time )
     QDateTime dt;
     dt.setDate( QDate( lt->tm_year + 1900, lt->tm_mon + 1, lt->tm_mday ) );
     dt.setTime( QTime( lt->tm_hour, lt->tm_min, lt->tm_sec ) );
+    kdDebug() << "From " << time << " To " << dt.toString() << endl;
     return dt;
 }
 time_t Base::toUTC( const QDateTime& dt )
