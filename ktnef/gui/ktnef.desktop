@@ -1,17 +1,16 @@
 [Desktop Entry]
 Name=TNEF File Viewer
-Name[es]=Visor de archivos TNEF
+Name[es]=Vista de árbol TNEF
+Name[hu]=TNEF fájlnézegető
 Name[sv]=TNEF-filvisning
 Exec=ktnef %i %m -caption "%c"
 Icon=ktnef
 Type=Application
 DocPath=ktnef/ktnef.html
 Comment=A viewer/extractor for TNEF files
-Comment[da]=En fremviser/udtrækker for TNEF-filer
-Comment[es]=Un visor/estractor de archivos TNEF
-Comment[sk]=Prehliadač/extraktor súborov TNEF
-Comment[sv]=Visning och export av TNEF-filer
-Comment[uk]=Переглядач/екстрактор файлів TNEF
+Comment[es]=A visor/extractor para archivos TNEF
+Comment[hu]=Nézegetőprogram TNEF fájlokhoz
+Comment[sv]=Visning och uppackning av TNEF-filer
 Terminal=0
 MimeType=application/ms-tnef;
 Categories=Qt;KDE;Utility
