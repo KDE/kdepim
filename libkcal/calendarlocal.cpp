@@ -56,12 +56,14 @@ void CalendarLocal::init()
   mOldestDate = 0L;
   mNewestDate = 0L;
 
-  mRecursList.setAutoDelete(TRUE);
+  mRecursList.setAutoDelete(true);
   // solves the leak?
-  mTodoList.setAutoDelete(TRUE);
+  mTodoList.setAutoDelete(true);
 
   mCalDict = new QIntDict<QPtrList<Event> > (BIGPRIME);
-  mCalDict->setAutoDelete(TRUE);
+  mCalDict->setAutoDelete(true);
+  
+  mJournalList.setAutoDelete(true);
 }
 
 
@@ -717,6 +719,14 @@ void CalendarLocal::addJournal(Journal *journal)
   mJournalList.append(journal);
 
   journal->registerObserver( this );
+
+  setModified( true );
+}
+
+void CalendarLocal::deleteJournal(Journal *journal)
+{
+  mJournalList.findRef(journal);
+  mJournalList.remove();
 
   setModified( true );
 }
