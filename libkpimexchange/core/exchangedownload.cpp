@@ -142,7 +142,6 @@ void ExchangeDownload::download( const QDate& start, const QDate& end, bool show
 }
 
 // Original query TODO: make query configurable
-#if 0
 QString ExchangeDownload::dateSelectQuery( const QDate& start, const QDate& end )
 {
   QString startString;
@@ -156,8 +155,9 @@ QString ExchangeDownload::dateSelectQuery( const QDate& start, const QDate& end 
         "AND \"urn:schemas:calendar:dtstart\" < '" + endString + "'";
   return sql;
 }
-#endif
 
+#if 0
+// That's the "new" code that breaks with Exchange. It was meant for Opengroupware, but that got its own resource anyway
 QString ExchangeDownload::dateSelectQuery( const QDate& start, const QDate& end )
 {
   QString startString;
@@ -174,7 +174,7 @@ QString ExchangeDownload::dateSelectQuery( const QDate& start, const QDate& end 
         "AND \"urn:schemas:calendar:dtstart\" < '" + endString + "'";
   return sql;
 }
-
+#endif
 
 void ExchangeDownload::slotSearchResult( KIO::Job *job )
 {
