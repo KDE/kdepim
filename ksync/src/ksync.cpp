@@ -75,18 +75,18 @@ void KSync::initActions()
   createStandardStatusBarAction();
   setStandardToolBarMenuEnabled(true);
     
-  fileNewWindow->setStatusText(i18n("Opens a new application window"));
-  fileNew->setStatusText(i18n("Creates a new document"));
-  fileOpen->setStatusText(i18n("Opens an existing document"));
-  fileOpenRecent->setStatusText(i18n("Opens a recently used file"));
-  fileSave->setStatusText(i18n("Saves the actual document"));
-  fileSaveAs->setStatusText(i18n("Saves the actual document as..."));
-  fileClose->setStatusText(i18n("Closes the actual document"));
-  filePrint ->setStatusText(i18n("Prints out the actual document"));
-  fileQuit->setStatusText(i18n("Quits the application"));
-  editCut->setStatusText(i18n("Cuts the selected section and puts it to the clipboard"));
-  editCopy->setStatusText(i18n("Copies the selected section to the clipboard"));
-  editPaste->setStatusText(i18n("Pastes the clipboard contents to actual position"));
+  fileNewWindow->setToolTip(i18n("Opens a new application window"));
+  fileNew->setToolTip(i18n("Creates a new document"));
+  fileOpen->setToolTip(i18n("Opens an existing document"));
+  fileOpenRecent->setToolTip(i18n("Opens a recently used file"));
+  fileSave->setToolTip(i18n("Saves the actual document"));
+  fileSaveAs->setToolTip(i18n("Saves the actual document as..."));
+  fileClose->setToolTip(i18n("Closes the actual document"));
+  filePrint ->setToolTip(i18n("Prints out the actual document"));
+  fileQuit->setToolTip(i18n("Quits the application"));
+  editCut->setToolTip(i18n("Cuts the selected section and puts it to the clipboard"));
+  editCopy->setToolTip(i18n("Copies the selected section to the clipboard"));
+  editPaste->setToolTip(i18n("Pastes the clipboard contents to actual position"));
 
   // use the absolute path to your ksyncui.rc file for testing purpose in createGUI();
   createGUI();
