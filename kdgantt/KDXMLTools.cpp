@@ -374,21 +374,21 @@ bool readBoolNode( const QDomElement& element, bool& value )
 bool readColorNode( const QDomElement& element, QColor& value )
 {
     bool ok = true;
-    int red, green, blue;
+    int red=0, green=0, blue=0;
     if( element.hasAttribute( "Red" ) ) {
         bool redOk = false;
         red = element.attribute( "Red" ).toInt( &redOk );
-        ok = ok & redOk;
+        ok = ok && redOk;
     }
     if( element.hasAttribute( "Green" ) ) {
         bool greenOk = false;
         green = element.attribute( "Green" ).toInt( &greenOk );
-        ok = ok & greenOk;
+        ok = ok && greenOk;
     }
     if( element.hasAttribute( "Blue" ) ) {
         bool blueOk = false;
         blue = element.attribute( "Blue" ).toInt( &blueOk );
-        ok = ok & blueOk;
+        ok = ok && blueOk;
     }
 
     if( ok )
@@ -402,7 +402,7 @@ bool readBrushNode( const QDomElement& element, QBrush& brush )
 {
     bool ok = true;
     QColor tempColor;
-    Qt::BrushStyle tempStyle;
+    Qt::BrushStyle tempStyle = Qt::NoBrush;
     QPixmap tempPixmap;
     QDomNode node = element.firstChild();
     while( !node.isNull() ) {
@@ -410,13 +410,13 @@ bool readBrushNode( const QDomElement& element, QBrush& brush )
         if( !element.isNull() ) { // was really an element
             QString tagName = element.tagName();
             if( tagName == "Color" ) {
-                ok = ok & readColorNode( element, tempColor );
+                ok = ok && readColorNode( element, tempColor );
             } else if( tagName == "Style" ) {
 		QString value;
-                ok = ok & readStringNode( element, value );
+                ok = ok && readStringNode( element, value );
 		tempStyle = stringToBrushStyle( value );
             } else if( tagName == "Pixmap" ) {
-                ok = ok & readPixmapNode( element, tempPixmap );
+                ok = ok && readPixmapNode( element, tempPixmap );
             } else {
                 qDebug( "Unknown tag in brush" );
             }
@@ -447,15 +447,15 @@ bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
             QString tagName = element.tagName();
             if( tagName == "Format" ) {
                 QString formatName;
-                ok = ok & readStringNode( element, formatName );
+                ok = ok && readStringNode( element, formatName );
 #ifndef NDEBUG
                 if( formatName != "XPM.GZ" )
                     qDebug( "Unsupported pixmap format in XML file" );
 #endif
             } else if( tagName == "Length" ) {
-                ok = ok & readIntNode( element, tempLength );
+                ok = ok && readIntNode( element, tempLength );
             } else if( tagName == "Data" ) {
-                ok = ok & readStringNode( element, tempData );
+                ok = ok && readStringNode( element, tempData );
             } else {
                 qDebug( "Unknown tag in Pixmap" );
             }
@@ -494,7 +494,7 @@ bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
             if( image.isNull() )
                 pixmap.resize( 0, 0 ); // This is _not_ an error, we just read a NULL pixmap!
             else
-                ok = ok & pixmap.convertFromImage( image, 0 );
+                ok = pixmap.convertFromImage( image, 0 ) && ok;
         } else
             pixmap.resize( 0, 0 ); // This is _not_ an error, we just read a empty pixmap!
     }
@@ -506,21 +506,21 @@ bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
 bool readPenNode( const QDomElement& element, QPen& pen )
 {
     bool ok = true;
-    int tempWidth;
+    int tempWidth = 0;
     QColor tempColor;
-    Qt::PenStyle tempStyle;
+    Qt::PenStyle tempStyle = Qt::NoPen;
     QDomNode node = element.firstChild();
     while( !node.isNull() ) {
         QDomElement element = node.toElement();
         if( !element.isNull() ) { // was really an element
             QString tagName = element.tagName();
             if( tagName == "Width" ) {
-                ok = ok & readIntNode( element, tempWidth );
+                ok = ok && readIntNode( element, tempWidth );
             } else if( tagName == "Color" ) {
-                ok = ok & readColorNode( element, tempColor );
+                ok = ok && readColorNode( element, tempColor );
             } else if( tagName == "Style" ) {
 		QString value;
-                ok = ok & readStringNode( element, value );
+                ok = ok && readStringNode( element, value );
 		tempStyle = stringToPenStyle( value );
             } else {
                 qDebug( "Unknown tag in brush" );
@@ -551,17 +551,17 @@ bool readFontNode( const QDomElement& element, QFont& font )
         if( !element.isNull() ) { // was really an element
             QString tagName = element.tagName();
             if( tagName == "Family" ) {
-                ok = ok & readStringNode( element, family );
+                ok = ok && readStringNode( element, family );
             } else if( tagName == "PointSize" ) {
-                ok = ok & readIntNode( element, pointSize );
+                ok = ok && readIntNode( element, pointSize );
             } else if( tagName == "PixelSize" ) {
-                ok = ok & readIntNode( element, pixelSize );
+                ok = ok && readIntNode( element, pixelSize );
             } else if( tagName == "Weight" ) {
-                ok = ok & readIntNode( element, weight );
+                ok = ok && readIntNode( element, weight );
             } else if( tagName == "Italic" ) {
-                ok = ok & readBoolNode( element, italic );
+                ok = ok && readBoolNode( element, italic );
             } else if( tagName == "CharSet" ) {
-                ok = ok & readIntNode( element, charSet );
+                ok = ok && readIntNode( element, charSet );
             } else {
                 qDebug( "Unknown tag in color map" );
             }
@@ -594,13 +594,13 @@ bool readRectNode( const QDomElement& element, QRect& value )
         if( !element.isNull() ) { // was really an element
             QString tagName = element.tagName();
             if( tagName == "Width" ) {
-                ok = ok & readIntNode( element, width );
+                ok = ok && readIntNode( element, width );
             } else if( tagName == "Height" ) {
-                ok = ok & readIntNode( element, height );
+                ok = ok && readIntNode( element, height );
             } else if( tagName == "X" ) {
-                ok = ok & readIntNode( element, x );
+                ok = ok && readIntNode( element, x );
             } else if( tagName == "Y" ) {
-                ok = ok & readIntNode( element, y );
+                ok = ok && readIntNode( element, y );
             } else {
                 qDebug( "Unknown tag in rect" );
             }
@@ -631,9 +631,9 @@ bool readDateTimeNode( const QDomElement& element, QDateTime& datetime )
         if( !element.isNull() ) { // was really an element
             QString tagName = element.tagName();
             if( tagName == "Date" ) {
-                ok = ok & readDateNode( element, tempDate );
+                ok = ok && readDateNode( element, tempDate );
             } else if( tagName == "Time" ) {
-                ok = ok & readTimeNode( element, tempTime );
+                ok = ok && readTimeNode( element, tempTime );
             } else {
                 qDebug( "Unknown tag in datetime" );
             }
@@ -653,21 +653,21 @@ bool readDateTimeNode( const QDomElement& element, QDateTime& datetime )
 bool readDateNode( const QDomElement& element, QDate& value )
 {
     bool ok = true;
-    int year, month, day;
+    int year = 1978, month = 7, day = 13;
     if( element.hasAttribute( "Year" ) ) {
         bool yearOk = false;
         year = element.attribute( "Year" ).toInt( &yearOk );
-        ok = ok & yearOk;
+        ok = ok && yearOk;
     }
     if( element.hasAttribute( "Month" ) ) {
         bool monthOk = false;
         month = element.attribute( "Month" ).toInt( &monthOk );
-        ok = ok & monthOk;
+        ok = ok && monthOk;
     }
     if( element.hasAttribute( "Day" ) ) {
         bool dayOk = false;
         day = element.attribute( "Day" ).toInt( &dayOk );
-        ok = ok & dayOk;
+        ok = ok && dayOk;
     }
 
     if( ok )
@@ -681,26 +681,26 @@ bool readDateNode( const QDomElement& element, QDate& value )
 bool readTimeNode( const QDomElement& element, QTime& value )
 {
     bool ok = true;
-    int hour, minute, second, msec;
+    int hour = 23, minute = 0, second = 0, msec = 0;
     if( element.hasAttribute( "Hour" ) ) {
         bool hourOk = false;
         hour = element.attribute( "Hour" ).toInt( &hourOk );
-        ok = ok & hourOk;
+        ok = ok && hourOk;
     }
     if( element.hasAttribute( "Minute" ) ) {
         bool minuteOk = false;
         minute = element.attribute( "Minute" ).toInt( &minuteOk );
-        ok = ok & minuteOk;
+        ok = ok && minuteOk;
     }
     if( element.hasAttribute( "Second" ) ) {
         bool secondOk = false;
         second = element.attribute( "Second" ).toInt( &secondOk );
-        ok = ok & secondOk;
+        ok = ok && secondOk;
     }
     if( element.hasAttribute( "Millisecond" ) ) {
         bool msecOk = false;
         msec = element.attribute( "Millisecond" ).toInt( &msecOk );
-        ok = ok & msecOk;
+        ok = ok && msecOk;
     }
 
     if( ok )
