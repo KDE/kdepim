@@ -4,6 +4,7 @@
   <!ENTITY kpilotver "4.4.3">
   <!ENTITY package "kdepim">
   <!ENTITY USB "<acronym>USB</acronym>">
+  <!ENTITY PalmOne '<trademark class="registered">PalmOne</trademark>'>
   <!ENTITY Sony '<trademark class="registered">Sony</trademark>'>
   <!ENTITY Clie "<productname><trademark>Clie</trademark></productname>">
   <!ENTITY FreeBSD '<trademark class="registered">FreeBSD</trademark>'>
@@ -85,7 +86,7 @@
 <para>
 &kpilot; &kpilotver;
 is the &kde; version of the Desktop &HotSync; software for
-the &ThreeCom; &PalmPilot; and similar products.
+&PalmOne; handhelds, the &ThreeCom; &PalmPilot; and similar products.
 </para>
 </abstract>
 
