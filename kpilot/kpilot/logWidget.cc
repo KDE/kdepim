@@ -168,8 +168,13 @@ LogWidget::LogWidget(QWidget * parent) :
 			KPILOT_VERSION);
 		fSplash = new QLabel(this);
 		fSplash->setPixmap(splash);
+		fSplash->setAlignment(AlignCenter);
 		QTimer::singleShot(3000,this,SLOT(hideSplash()));
 		grid->addMultiCellWidget(fSplash,1,3,1,2);
+		grid->addColSpacing(0,10);
+		grid->setColStretch(1,50);
+		grid->setColStretch(2,50);
+		grid->addColSpacing(3,10);
 	}
 
 	(void) logw_id;
@@ -352,6 +357,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.18.2.2  2002/04/13 11:40:24  adridg
+// Simplification of logging code, display pilot-link version on startup
+//
 // Revision 1.18.2.1  2002/04/04 20:28:28  adridg
 // Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
 // when using PILOT_VERSION. kpilotTest defaults to list, like the options
