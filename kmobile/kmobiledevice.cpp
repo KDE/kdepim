@@ -1,4 +1,4 @@
-/* This file is part of the KDE libraries
+/*  This file is part of the KDE KMobile library
     Copyright (C) 2003 Helge Deller <deller@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -47,11 +47,6 @@ KMobileDevice::KMobileDevice(QObject *obj, const char *name, const QStringList &
 	: KLibFactory(obj,name),
            m_config(0L), d(0L)
 {
-  connect( this, SIGNAL( connectionChanged(bool) ),
-	this, SLOT( slotConnectionChanged(bool) ) );
-  connect( this, SIGNAL( message(int,const QString &) ),
-	this, SLOT( slotMessage(int, const QString &) ) ); 
-
   setClassType(Unclassified);
   setCapabilities(hasNothing);
   m_deviceName = i18n("Unknown Device");
@@ -60,9 +55,11 @@ KMobileDevice::KMobileDevice(QObject *obj, const char *name, const QStringList &
 
   // set the config file name
   m_configFileName = args[0];
-  Q_ASSERT(!m_configFileName.isEmpty());
-  m_config = new KConfig(m_configFileName);
-  PRINT_DEBUG << QString("New configfile is %1\n").arg(m_configFileName);
+  if (m_configFileName.isEmpty()) 
+	m_config = new KConfig();
+  else
+	m_config = new KConfig(m_configFileName);
+  PRINT_DEBUG << QString("name of config file is %1\n").arg(m_configFileName);
 }
 
 KMobileDevice::~KMobileDevice()
@@ -326,24 +323,6 @@ void KMobileDevice::mimetype( const QString & )
 void KMobileDevice::special( const QByteArray & )
 {
   emit error(KIO::ERR_UNSUPPORTED_ACTION, QString::null);
-}
-
-
-
-
-
-void KMobileDevice::slotConnectionChanged( bool conn_established )
-{
-  PRINT_DEBUG << QString("KMobile: Connection to %1 via %2 %3.\n")
-		.arg(deviceName())     // e.g. "Nokia 6310", "Opie"
-		.arg(m_connectionName) // e.g. "IRDA", "USB", "Cable", "gnokii", "gammu", ...
-		.arg(conn_established ? "ESTABLISHED":"LOST");
-}
-
-void KMobileDevice::slotMessage( int msgLevel, const QString &msg )
-{
-  PRINT_DEBUG << QString("KMobile: <%1>: %2.\n")
-		.arg(msgLevel).arg(msg);
 }
 
 #include "kmobiledevice.moc"

@@ -1,6 +1,21 @@
-/*
- * Copyright (C) 2003 Helge Deller <deller@kde.org>
- */
+/*  This file is part of the KDE KMobile library
+    Copyright (C) 2003 Helge Deller <deller@kde.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License version 2 as published by the Free Software Foundation.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+
+*/
 
 #include <qiconview.h>
 #include <qstringlist.h>
@@ -41,10 +56,10 @@ bool KMobileView::addNewDevice(KConfig *config, KService::Ptr service)
 
    KMobileItem *it;
    it = new KMobileItem(this, config, service);
-   it->driverAvailable();
+   bool available = it->driverAvailable();
    it->configSave();
    it->writeKonquMimeFile();
-   return true;
+   return available;
 }
 
 void KMobileView::saveAll()
@@ -83,11 +98,16 @@ KMobileItem *KMobileView::findDevice( const QString &deviceName ) const
    return 0L;
 }
 
-void KMobileView::slotDoubleClicked( QIconViewItem * item )
+bool KMobileView::startKonqueror( const QString &devName )
 {
    KProcess *proc = new KProcess;
-   *proc << "kfmclient" << "openProfile" << "webbrowsing" << "mobile:/"+item->text();
-   proc->start();
+   *proc << "kfmclient" << "openProfile" << "webbrowsing" << "mobile:/"+devName;
+   return proc->start();
+}
+
+void KMobileView::slotDoubleClicked( QIconViewItem * item )
+{
+   startKonqueror(item->text());
 }
 
 

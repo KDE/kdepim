@@ -1,6 +1,11 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
 <kpartgui name="kmobile" version="1">
  <MenuBar>
+  <Menu name="file" noMerge="1"><text>&amp;File</text>
+    <Action name="file_close"/>
+    <Separator/>
+    <Action name="file_quit"/>
+  </Menu>
   <Menu name="Device">
     <text>&amp;Device</text>
     <Action name="device_add" />

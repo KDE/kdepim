@@ -13,11 +13,7 @@ class KConfig;
 class KMobileItem;
 
 /**
- * This is the main view class for kmobile.  Most of the non-menu,
- * non-toolbar, and non-statusbar (e.g., non frame) GUI code should go
- * here.
- *
- * This kmobile uses an HTML component as an example.
+ * This is the main view class for kmobile.
  *
  * @short Main view
  * @author Helge Deller <deller@kde.org>
@@ -31,6 +27,7 @@ public:
     virtual ~KMobileView();
 
     bool addNewDevice(KConfig *config, KService::Ptr service);
+    bool startKonqueror(const QString &devName);
 
     /**
      * DCOP implementation

@@ -11,7 +11,8 @@ INCLUDES         = $(all_includes)
 kmobile_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 kmobile_LDADD   = $(LIB_KFILE) $(LIB_KABC) libkmobiledevice.la
 kmobile_SOURCES = main.cpp kmobile.cpp kmobileview.cpp kmobileitem.cpp\
-		      pref.cpp kmobileiface.skel kmobile_selectiondialog.ui
+			pref.cpp kmobileiface.skel kmobile_selectiondialog.ui \
+			systemtray.cpp
 
 KDE_ICON = kmobile
 

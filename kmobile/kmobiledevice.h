@@ -1,4 +1,4 @@
-/* This file is part of the KDE kmobile library.
+/*  This file is part of the KDE kmobile library.
     Copyright (C) 2003 Helge Deller <deller@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -201,9 +201,9 @@ public:
     /**
      * helper functions for the kmobile device drivers
      */
-     void createDirEntry(KIO::UDSEntry& entry, const QString& name,
+    void createDirEntry(KIO::UDSEntry& entry, const QString& name,
 		const QString& url, const QString& mime) const;
-     void createFileEntry(KIO::UDSEntry& entry, const QString& name,
+    void createFileEntry(KIO::UDSEntry& entry, const QString& name,
 		const QString& url, const QString& mime, 
 		const unsigned long size = 0) const;
     /**
@@ -415,7 +415,15 @@ signals:
      */
     void infoMessage( const QString &msg );
 
-    enum MessageBoxType { QuestionYesNo = 1, WarningYesNo = 2, WarningContinueCancel = 3, WarningYesNoCancel = 4, Information = 5, SSLMessageBox = 6 };
+    /**
+     * Call to signal successful completion of any command
+     * (besides openConnection and closeConnection)
+     */
+    void finished();
+
+
+    enum MessageBoxType { QuestionYesNo = 1, WarningYesNo = 2, WarningContinueCancel = 3, 
+		WarningYesNoCancel = 4, Information = 5, SSLMessageBox = 6 };
 
     /**
      * Call this to show a message box from the slave (it will in fact be handled
@@ -454,12 +462,6 @@ signals:
 signals:
     virtual void connectionChanged( bool conn_established );
 
-private slots:
-    // called whenever the connection status changes
-    void slotConnectionChanged( bool connected );
-
-    void slotMessage( int msgLevel, const QString &msg );
-
 protected:
     // only available to sub-classed device drivers:
     void setClassType( enum ClassType ct );
@@ -468,7 +470,7 @@ protected:
     QString configFileName() const { return m_configFileName; };
 
 protected:
-    QMutex  m_mutex;
+    QMutex  m_mutex;		// mutex to syncronize DCOP accesses to this device
     QString m_configFileName;
     KConfig *m_config;		// this is where this device should store it's configuration
     enum ClassType m_classType;

@@ -12,6 +12,7 @@
 #include "kmobileview.h"
 
 class KToggleAction;
+class SystemTray;
 
 /**
  * This class serves as the main window for KMobile.  It handles the
@@ -33,10 +34,7 @@ public:
      */
     virtual ~KMobile();
 
-    /**
-     * Use this method to load whatever file/URL you have
-     */
-//    void load(const KURL& url);
+    KMobileView * mainView() { return m_view; };
 
 protected:
     /**
@@ -58,6 +56,10 @@ public slots:
     void restoreAll();
 
 private slots:
+    void dockApplication();
+    void slotQuit();
+    void showMinimized();
+
     void fileSave();
     void optionsShowToolbar();
     void optionsShowStatusbar();
@@ -80,10 +82,14 @@ private:
     void setupAccel();
     void setupActions();
 
+    bool queryExit();
+    bool queryClose();
+
 private:
     KConfig *m_config;
 
     KMobileView *m_view;
+    SystemTray *m_systemTray;
 
     KToggleAction *m_toolbarAction;
     KToggleAction *m_statusbarAction;

@@ -1,6 +1,21 @@
-/*
- * Copyright (C) 2003 Helge Deller <deller@kde.org>
- */
+/*  This file is part of the KDE KMobile library
+    Copyright (C) 2003 Helge Deller <deller@kde.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License version 2 as published by the Free Software Foundation.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+
+*/
 
 #include "kmobile.h"
 #include <kuniqueapplication.h>
@@ -16,13 +31,13 @@ static const char *version = "0.1";
 
 static KCmdLineOptions options[] =
 {
-//    { "+[URL]", I18N_NOOP( "Document to open." ), 0 },
+    { "minimized", I18N_NOOP( "Minimize on startup to system tray." ), 0 },
     { 0, 0, 0 }
 };
 
 int main(int argc, char **argv)
 {
-    KAboutData about("kmobile", I18N_NOOP("kmobile"), version, description,
+    KAboutData about("kmobile", I18N_NOOP("KMobile"), version, description,
                      KAboutData::License_GPL, "(C) 2003 Helge Deller", 0, 0, "deller@kde.org");
     about.addAuthor( "Helge Deller", 0, "deller@kde.org" );
     KCmdLineArgs::init(argc, argv, &about);
@@ -32,6 +47,8 @@ int main(int argc, char **argv)
     // register ourselves as a dcop client
     app.dcopClient()->registerAs(app.name(), false);
 
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
     // see if we are starting with session management
     if (app.isRestored())
     {
@@ -40,7 +57,8 @@ int main(int argc, char **argv)
     else
     {
         KMobile *widget = new KMobile;
-        widget->show();
+	if (!args->isSet("minimized"))
+		widget->show();
     }
 
     return app.exec();

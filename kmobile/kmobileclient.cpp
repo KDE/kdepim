@@ -1,6 +1,21 @@
-/*
- * Copyright (C) 2003 Helge Deller <deller@kde.org>
- */
+/*  This file is part of the KDE KMobile library
+    Copyright (C) 2003 Helge Deller <deller@kde.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License version 2 as published by the Free Software Foundation.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+
+*/
 
 #include <qstringlist.h>
 
@@ -37,8 +52,11 @@ bool KMobileClient::isKMobileAvailable()
 {
   bool available = isApplicationRegistered(m_kmobileApp);
   PRINT_DEBUG << QString("KMobile DCOP server: %1\n").arg(available?"available.":"not available");
-  if (!available)
+  if (!available) {
 	startKMobileApplication();
+	// check again...
+	available = isApplicationRegistered(m_kmobileApp);
+  }
   return available;
 }
 
@@ -46,7 +64,9 @@ bool KMobileClient::startKMobileApplication()
 {
   QByteArray data;
   QDataStream arg(data, IO_WriteOnly);
-  arg << QString("kmobile") << QStringList();
+  QStringList params;
+  params << "--minimized";
+  arg << QString("kmobile") << params;
   QCString replyType; 
   QByteArray replyData;
   bool ok = call("klauncher", "klauncher", "kdeinit_exec_wait(QString,QStringList)", data, replyType, replyData);

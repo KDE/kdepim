@@ -4,6 +4,7 @@ DONE:
 - show per-device icons in konqueror (same as in the kmobile view)
 - fix mimetypes and their location under /share/mimelnk
 - kioslaves: cellphone:/, organizer:/, pda:/, (camera:/ not activated)
+- system tray plugin
 
 TODO:
 -----

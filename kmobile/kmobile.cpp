@@ -1,6 +1,21 @@
-/*
- * Copyright (C) 2003 Helge Deller <deller@kde.org>
- */
+/*  This file is part of the KDE KMobile library
+    Copyright (C) 2003 Helge Deller <deller@kde.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License version 2 as published by the Free Software Foundation.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+
+*/
 
 #include <qdragobject.h>
 #include <kprinter.h>
@@ -16,6 +31,7 @@
 #include <kaccel.h>
 #include <kio/netaccess.h>
 #include <kfiledialog.h>
+#include <kmessagebox.h>
 #include <kconfig.h>
 
 #include <kedittoolbar.h>
@@ -31,6 +47,8 @@
 
 #include "kmobile.h"
 #include "pref.h"
+
+#include "systemtray.h"
 
 #include "kmobileitem.h"
 #include "kmobile_selectiondialog.h"
@@ -62,6 +80,11 @@ KMobile::KMobile()
 
     // restore all configured devices
     restoreAll();
+
+    // setup the system tray
+    m_systemTray = new SystemTray(this, "systemTray");
+    m_systemTray->show();
+    connect(m_systemTray, SIGNAL(quitSelected()), this, SLOT(slotQuit()));
 }
 
 KMobile::~KMobile()
@@ -71,7 +94,7 @@ KMobile::~KMobile()
 
 void KMobile::setupActions()
 {
-    KStdAction::save(this, SLOT(fileSave()), actionCollection());
+    KStdAction::close(this, SLOT(dockApplication()), actionCollection());
     KStdAction::quit(kapp, SLOT(quit()), actionCollection());
 
     m_toolbarAction = KStdAction::showToolbar(this, SLOT(optionsShowToolbar()), actionCollection());
@@ -86,7 +109,7 @@ void KMobile::setupActions()
 		this, SLOT(addDevice()), actionCollection(), "device_add");
     new KAction( KGuiItem( i18n("&Remove Device"), "edittrash", i18n("Remove this device") ),
 		"Delete", this,  SLOT(removeDevice()), actionCollection(), "device_remove");
-    new KAction(i18n("Re&name Device..."), 0, 0,
+    new KAction(i18n("Re&name Device..."), 0, Key_F2,
 		this, SLOT(renameDevice()), actionCollection(), "device_rename");
     new KAction(i18n("&Configure Device..."), "configure", 0,
 		this, SLOT(configDevice()), actionCollection(), "device_configure");
@@ -94,6 +117,35 @@ void KMobile::setupActions()
     createGUI();
 
     connect( kapp, SIGNAL(aboutToQuit()), this, SLOT(saveAll()) );
+}
+
+
+void KMobile::dockApplication()
+{
+    // dock to system tray
+    hide();
+}
+
+bool KMobile::queryClose()
+{
+    dockApplication();
+    return false;
+}
+
+bool KMobile::queryExit()
+{
+    dockApplication();
+    return false;
+}
+
+void KMobile::slotQuit()
+{
+    kapp->quit();
+}
+
+void KMobile::showMinimized()
+{
+    dockApplication();
 }
 
 
@@ -177,16 +229,19 @@ void KMobile::newToolbarConfig()
 void KMobile::optionsPreferences()
 {
     // popup some sort of preference dialog, here
+#if 0
     KMobilePreferences dlg;
     if (dlg.exec())
     {
         // redo your settings
     }
+#endif
 }
 
 
 void KMobile::renameDevice()
 {
+    // rename the current selected device
     QIconViewItem *item = m_view->currentItem();
     if (item)
        item->rename();
@@ -244,7 +299,14 @@ void KMobile::addDevice()
   ptr = list[index];
 
   // add the new device to the list
-  m_view->addNewDevice(m_config, ptr);
+  if (!m_view->addNewDevice(m_config, ptr)) {
+	KMessageBox::error(this, 
+		QString("<qt>KMobile could not load the <b>%1</b> Device Driver.<p>"
+		     "Please use the Skeleton- or Gnokii Device Driver during development.<p>"
+		     "This driver will still be visible, but you won't be able to access it "
+		     "from Konqueror or any other application.</qt>").arg(ptr->name()),
+		kapp->name());
+  }
 
   saveAll();
 }
@@ -323,6 +385,7 @@ KMobileDevice * KMobileFactory::chooseDeviceDialog( QWidget *parent,
 
 void KMobile::removeDevice()
 {
+    // remove the current selected device
     QIconViewItem *item = m_view->currentItem();
     if (item)
        m_view->removeDevice( item->text() );
@@ -330,6 +393,7 @@ void KMobile::removeDevice()
 
 void KMobile::configDevice()
 {
+    // configure the current selected device
     QIconViewItem *item = m_view->currentItem();
     if (item)
        m_view->configDevice( item->text() );
