@@ -280,30 +280,35 @@ void ResourceCached::loadCache()
 {
   mUidMap.clear();
 
-  // load uid map
-  QFile mapFile( uidMapFile() );
-  if ( mapFile.open( IO_ReadOnly ) ) {
-    QDataStream stream( &mapFile );
-    stream >> mUidMap;
-    mapFile.close();
-  } else {
-    kdError() << "Can't open uid map file '" << mapFile.name() << "'" << endl;
-  }
+  if ( KStandardDirs::exists( cacheFile() ) ) {
+    // load uid map
+    QFile mapFile( uidMapFile() );
+    if ( mapFile.open( IO_ReadOnly ) ) {
+      QDataStream stream( &mapFile );
+      stream >> mUidMap;
+      mapFile.close();
+    } else {
+      kdError(5800) << "Can't read uid map file '" << mapFile.name() << "'" << endl;
+    }
 
-  // load cache
-  mCalendar.load( cacheFile() );
+    // load cache
+    mCalendar.load( cacheFile() );
+  }
 }
 
 void ResourceCached::saveCache()
 {
+  kdDebug(5800) << "ResourceCached::saveCache()" << endl;
+
   // save uid map
   QFile mapFile( uidMapFile() );
   if ( mapFile.open( IO_WriteOnly ) ) {
+    kdDebug() << "Save uid map file '" << mapFile.name() << "'" << endl;
     QDataStream stream( &mapFile );
     stream << mUidMap;
     mapFile.close();
   } else {
-    kdError() << "Can't open uid map file '" << mapFile.name() << "'" << endl;
+    kdError(5800) << "Can't write uid map file '" << mapFile.name() << "'" << endl;
   }
 
   // save cache

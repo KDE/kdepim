@@ -112,7 +112,7 @@ bool CalendarLocal::addEvent( Event *event )
 
 void CalendarLocal::deleteEvent( Event *event )
 {
-  kdDebug(5800) << "CalendarLocal::deleteEvent" << endl;
+//  kdDebug(5800) << "CalendarLocal::deleteEvent" << endl;
 
   if ( mEvents.remove( event->uid() ) ) {
     setModified( true );

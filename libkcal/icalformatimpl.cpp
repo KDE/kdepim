@@ -691,7 +691,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   for ( alarmIt = incidence->alarms().begin();
         alarmIt != incidence->alarms().end(); ++alarmIt ) {
     if ( (*alarmIt)->enabled() ) {
-      kdDebug(5800) << "Write alarm for " << incidence->summary() << endl;
+//      kdDebug(5800) << "Write alarm for " << incidence->summary() << endl;
       icalcomponent_add_component( parent, writeAlarm( *alarmIt ) );
     }
   }
