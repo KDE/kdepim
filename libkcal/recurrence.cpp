@@ -36,7 +36,11 @@ using namespace KCal;
 static QDate infiniteEndDate(7000,1,1);   // end date for infinite recurrences - a little bit in the future...
 
 
+#ifdef LIBKCAL_BACK_COMPAT
 Recurrence::Recurrence(Incidence *parent, int compatVersion)
+#else
+Recurrence::Recurrence(Incidence *parent)
+#endif
 : recurs(rNone),   // by default, it's not a recurring event
   rWeekStart(1),   // default is Monday
   rDays(7),

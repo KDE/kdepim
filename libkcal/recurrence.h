@@ -22,6 +22,8 @@
 #define KCAL_RECURRENCE_H
 // $Id$
 
+#define LIBKCAL_BACK_COMPAT
+
 #include <qstring.h>
 #include <qbitarray.h>
 #include <qptrlist.h>
@@ -49,7 +51,11 @@ class Recurrence {
     };
 
     /** Constructs a new recurrence with variables initialized to "sane" values. */
+#ifdef LIBKCAL_BACK_COMPAT
     Recurrence(Incidence *parent, int compatVersion = -1);
+#else
+    Recurrence(Incidence *parent);
+#endif
     Recurrence(const Recurrence&, Incidence *parent);
     ~Recurrence();
 
