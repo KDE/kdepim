@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg><kcfgfile name="kpilotrc"/> 
+  <group name="memofile-conduit">
+    <entry name="Directory" type="Path">
+        <label>What directory do you want to sync your PDA's memos with?</label>
+        <default>~/MyMemos/</default>
+    </entry>
+    <entry name="SyncPrivate" type="Bool">
+        <label>Do you want to sync your private records to the filesystem?</label>
+        <default>true</default>
+    </entry>
+	
+  </group>
+	
+</kcfg>

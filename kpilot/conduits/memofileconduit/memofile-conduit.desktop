@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=Memo File
+Comment=This conduit syncs your palm pilot's memos with a local directory.
+Implemented=file
+ServiceTypes=KPilotConduit
+X-KDE-Library=conduit_memofile

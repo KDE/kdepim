@@ -29,6 +29,7 @@ SUBDIRS = \
           timeconduit \
           sysinfoconduit \
 	  notepadconduit \
+	  memofileconduit \
           $(MAL_SUBDIR) $(ABC_SUBDIR)
 
 ###
