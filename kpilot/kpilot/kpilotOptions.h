@@ -55,6 +55,7 @@ private:
 	QCheckBox* fOverwriteRemote;
 	QCheckBox *fSyncLastPC;
 	QCheckBox *fForceFirstTime;
+	QCheckBox *fPreferFastSync;
 } ;
 
 class KPilotOptionsGeneral : public setupDialogPage

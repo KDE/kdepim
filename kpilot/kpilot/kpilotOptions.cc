@@ -548,7 +548,13 @@ KPilotOptionsSync::KPilotOptionsSync(setupDialog *s,KConfig& config) :
 		config.readBoolEntry("SyncLastPC",true));
 	grid->addWidget(fSyncLastPC,3,1);
 
-	grid->setRowStretch(4,100);
+	fPreferFastSync = new QCheckBox(
+		i18n("Prefer Fast-Sync to Hot-Sync"),this);
+	fPreferFastSync -> setChecked(
+		config.readBoolEntry("PreferFastSync",false));
+	grid->addWidget(fPreferFastSync,4,1);
+
+	grid->setRowStretch(5,100);
 	grid->setColStretch(2,100);
 	grid->addColSpacing(2,SPACING);
 }
@@ -563,6 +569,7 @@ KPilotOptionsSync::KPilotOptionsSync(setupDialog *s,KConfig& config) :
 		(bool)fOverwriteRemote->isChecked());
 	c.writeEntry("ForceFirst",(bool)fForceFirstTime->isChecked());
 	c.writeEntry("SyncLastPC",(bool)fSyncLastPC->isChecked());
+	c.writeEntry("PreferFastSync",(bool)fPreferFastSync->isChecked());
 
 	c.sync();
 
@@ -673,6 +680,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.15  2000/11/17 08:31:59  adridg
+// Minor changes
+//
 // Revision 1.14  2000/11/14 23:03:28  adridg
 // Feature creep: ForceFirst and SyncLastPC
 //
