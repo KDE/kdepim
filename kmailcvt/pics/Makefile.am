@@ -1,3 +1,3 @@
-pics_DATA = step1.png step2.png
+pics_DATA = step1.png
 picsdir = $(kde_datadir)/kmailcvt/pics
 

@@ -23,7 +23,7 @@
 
 KImportPage::KImportPage(QWidget *parent, const char *name ) : KImportPageDlg(parent,name) {
 
-	mIntroSidebar->setPixmap(locate("data", "kmailcvt/pics/step2.png"));
+	mIntroSidebar->setPixmap(locate("data", "kmailcvt/pics/step1.png"));
 }
 
 KImportPage::~KImportPage() {
