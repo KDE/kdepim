@@ -106,12 +106,12 @@ COMBINEDHEADERS =					\
 	$(srcdir)/icalenums.h		\
 	$(srcdir)/icaltypes.h		\
 	$(srcdir)/icalrecur.h		\
-	icalderivedvalue.h				\
-	icalderivedparameter.h				\
-	icalvalue.h					\
-	icalparameter.h					\
-	icalderivedproperty.h				\
-	icalproperty.h					\
+	icalderivedvalue.h		\
+	icalderivedparameter.h		\
+	icalderivedproperty.h		\
+	$(srcdir)/icalvalue.h		\
+	$(srcdir)/icalparameter.h	\
+	$(srcdir)/icalproperty.h	\
 	$(srcdir)/icalattendee.h	\
 	$(srcdir)/pvl.h			\
 	$(srcdir)/icalcomponent.h	\
