@@ -327,8 +327,8 @@ ExpenseConduit::doSync()
 	QString mCSVname=config.readEntry("CSVFileName");
 	
 	PilotRecord* rec;
+	KShellProcess * shproc;
     
-	KShellProcess shproc;
         int recordcount=0;
 	int index=0;
 	int syscall=0;
@@ -341,16 +341,18 @@ ExpenseConduit::doSync()
 		DEBUGCONDUIT << fname << " Postgres database requested" << endl;
 // next three lines just for debug purposes - Remove for final creates a dump of table.		
 		char sqlcmd[300];
+		shproc = new KShellProcess;
 		sprintf(sqlcmd,"echo \"%s\"|psql -h %s -U %s -c \"select * from %s;\" %s >testpg.txt",mDBpasswd.latin1(),mDBsrv.latin1(),mDBlogin.latin1(),mDBtable.latin1(),mDBnm.latin1());
-		shproc.clearArguments();
-		shproc << sqlcmd;
-		shproc.start(KShellProcess::Block, KShellProcess::NoCommunication);
-		while (shproc.isRunning())
+		shproc->clearArguments();
+		(*shproc) << sqlcmd;
+		shproc->start(KShellProcess::Block, KShellProcess::NoCommunication);
+		while (shproc->isRunning())
 			{
-			DEBUGCONDUIT << fname << " " << shproc.pid() << " still running" << endl;
+			DEBUGCONDUIT << fname << " " << shproc->pid() << " still running" << endl;
 			}
 		// DEBUGCONDUIT << fname << shproc.args() << endl;
 		// DEBUGCONDUIT << fname << sqlcmd << endl;
+		delete shproc;
 	}
 
 	if (mDBType=="2")
@@ -471,10 +473,11 @@ ExpenseConduit::doSync()
  '%s', '%s', '%s', '%s', '%s');\" %s",mDBpasswd.latin1(),mDBsrv.latin1(),mDBlogin.latin1(),mDBtable.latin1(),dtstng,e.amount,epmsg,e.vendor,etmsg,e.city,amesg,nmsg,mDBnm.latin1());
 			// DEBUGCONDUIT << fname << " " << sqlcmd << endl;
 		        //	DEBUGCONDUIT << fname << " " << proc.args() << endl;
-			shproc.clearArguments();
-			shproc << sqlcmd;
-			shproc.start(KShellProcess::Block, KShellProcess::NoCommunication);
-			DEBUGCONDUIT << fname << " " << shproc.pid() << " finished OK " << endl;
+			shproc = new KShellProcess;
+			shproc->clearArguments();
+			(*shproc) << sqlcmd;
+			shproc->start(KShellProcess::Block, KShellProcess::NoCommunication);
+			DEBUGCONDUIT << fname << " " << shproc->pid() << " finished OK " << endl;
 			DEBUGCONDUIT << fname << " " << syscall << endl;
 			}
 
@@ -522,6 +525,10 @@ ExpenseConduit::doTest()
 }
 
 // $Log$
+// Revision 1.12  2001/03/23 15:49:05  molnarc
+//
+// more cleanup
+//
 // Revision 1.11  2001/03/23 15:29:39  molnarc
 //
 // clean up some debug
