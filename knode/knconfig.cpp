@@ -590,6 +590,7 @@ KNConfig::ReadNewsGeneral::ReadNewsGeneral()
   m_arkCrossposts=conf->readBoolEntry("markCrossposts", true);
   s_martScrolling=conf->readBoolEntry("smartScrolling", true);
   t_otalExpand=conf->readBoolEntry("totalExpand", true);
+  d_efaultExpand=conf->readBoolEntry("defaultExpand", false);
   s_howLines=conf->readBoolEntry("showLines3", true);
   s_howScore=conf->readBoolEntry("showScore3", true);
   s_howThreads = conf->readBoolEntry("showThreads", true);
@@ -623,6 +624,7 @@ void KNConfig::ReadNewsGeneral::save()
   conf->writeEntry("markCrossposts", m_arkCrossposts);
   conf->writeEntry("smartScrolling", s_martScrolling);
   conf->writeEntry("totalExpand", t_otalExpand);
+  conf->writeEntry("defaultExpand", d_efaultExpand);
   conf->writeEntry("showLines3", s_howLines);
   conf->writeEntry("showScore3", s_howScore);
   conf->writeEntry("showThreads", s_howThreads);

@@ -473,6 +473,7 @@ class ReadNewsGeneral : public Base {
 
     bool smartScrolling()            { return s_martScrolling; }
     bool totalExpandThreads()        { return t_otalExpand; }
+    bool defaultToExpandedThreads()  { return d_efaultExpand; }
     bool showLines()                 { return s_howLines; }
     bool showScore()                 { return s_howScore; }
 
@@ -491,6 +492,7 @@ class ReadNewsGeneral : public Base {
           m_arkCrossposts,
           s_martScrolling,
           t_otalExpand,
+          d_efaultExpand,
           s_howLines,
           s_howScore,
           s_howThreads,
@@ -518,6 +520,7 @@ class ReadNewsGeneralWidget : public BaseWidget {
                 *m_arkCrossCB,
                 *s_martScrollingCB,
                 *e_xpThrCB,
+                *d_efaultExpandCB,
                 *l_inesCB,
                 *s_coreCB;
     KIntSpinBox *m_arkSecs,

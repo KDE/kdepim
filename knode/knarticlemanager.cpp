@@ -184,7 +184,8 @@ void KNArticleManager::showHdrs(bool clear)
   if(!g_roup && !f_older) return;
 
   bool setFirstChild=true;
-  bool showThreads= knGlobals.cfgManager->readNewsGeneral()->showThreads();
+  bool showThreads=knGlobals.cfgManager->readNewsGeneral()->showThreads();
+  bool expandThreads=knGlobals.cfgManager->readNewsGeneral()->defaultToExpandedThreads();
 
   if(clear)
     v_iew->clear();
@@ -235,15 +236,23 @@ void KNArticleManager::showHdrs(bool clear)
 
         if( !art->listItem() && art->filterResult() ) {
 
-          if( (ref=art->displayedReference()) ) {
-            if( ref->listItem() && ( ref->listItem()->isOpen() || ref->listItem()->childCount()>0 ) ) {
-              art->setListItem(new KNHdrViewItem(ref->listItem()));
+          if (!expandThreads) {
+
+            if( (ref=art->displayedReference()) ) {
+
+              if( ref->listItem() && ( ref->listItem()->isOpen() || ref->listItem()->childCount()>0 ) ) {
+                art->setListItem(new KNHdrViewItem(ref->listItem()));
+                art->initListItem();
+              }
+
+            }
+            else {
+              art->setListItem(new KNHdrViewItem(v_iew));
               art->initListItem();
             }
-          }
-          else {
-            art->setListItem(new KNHdrViewItem(v_iew));
-            art->initListItem();
+
+          } else {  // expandThreads == true
+            createThread(art);
           }
 
         }
@@ -271,6 +280,9 @@ void KNArticleManager::showHdrs(bool clear)
       v_iew->setActive(current->listItem(),true);
       setFirstChild=false;
     }
+
+    if(expandThreads)
+      setAllThreadsOpen(true);
 
     if (g_roup->isLocked() && (0!=pthread_mutex_unlock(knGlobals.netAccess->nntpMutex())))
       kdDebug(5003) << "failed to unlock nntp mutex" << endl;
