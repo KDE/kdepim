@@ -351,8 +351,6 @@ void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
 bool ResourceKolab::addEvent( KCal::Event* event, const QString& _subresource,
                               Q_UINT32 sernum )
 {
-  event->registerObserver( this );
-
   // Find out if this event was previously stored in KMail
   bool newEvent = _subresource.isEmpty();
 
@@ -378,8 +376,10 @@ bool ResourceKolab::addEvent( KCal::Event* event, const QString& _subresource,
   } else {
     /* KMail got back to us, add to the cache unless there are pending updates. */
     mCalendar.addEvent( event );
+    event->registerObserver( this );
     if ( !subResource.isEmpty() && sernum != 0 ) {
       mUidMap[ event->uid() ] = StorageReference( subResource, sernum );
+      event->setReadOnly( !mEventSubResources[ subResource ].writable() );
     }
     if ( KCal::IncidenceBase *update = mPendingUpdates.find( event->uid() ) ) {
       mSilent = false; // we do want to tell KMail
@@ -453,8 +453,6 @@ void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
 bool ResourceKolab::addTodo( KCal::Todo* todo, const QString& _subresource,
                              Q_UINT32 sernum )
 {
-  todo->registerObserver( this );
-
   // Find out if this todo was previously stored in KMail
   bool newTodo = _subresource.isEmpty();
 
@@ -479,8 +477,10 @@ bool ResourceKolab::addTodo( KCal::Todo* todo, const QString& _subresource,
   } else {
     /* KMail got back to us, add to the cache unless there are pending updates. */
     mCalendar.addTodo( todo );
+    todo->registerObserver( this );
     if ( !subResource.isEmpty() && sernum != 0 ) {
       mUidMap[ todo->uid() ] = StorageReference( subResource, sernum );
+      todo->setReadOnly( !mTodoSubResources[ subResource ].writable() );
     }
     if ( KCal::IncidenceBase *update = mPendingUpdates.find( todo->uid() ) ) {
       mSilent = false; // we do want to tell KMail
@@ -542,8 +542,6 @@ void ResourceKolab::addJournal( const QString& xml, const QString& subresource,
 bool ResourceKolab::addJournal( KCal::Journal* journal,
                                 const QString& _subresource, Q_UINT32 sernum )
 {
-  journal->registerObserver( this );
-
   // Find out if this journal was previously stored in KMail
   bool newJournal = _subresource.isEmpty();
 
@@ -570,8 +568,10 @@ bool ResourceKolab::addJournal( KCal::Journal* journal,
   } else {
     /* KMail got back to us, add to the cache unless there are pending updates. */
     mCalendar.addJournal( journal );
+    journal->registerObserver( this );
     if ( !subResource.isEmpty() && sernum != 0 ) {
       mUidMap[ journal->uid() ] = StorageReference( subResource, sernum );
+      journal->setReadOnly( !mJournalSubResources[ subResource ].writable() );
     }
     if ( KCal::IncidenceBase *update = mPendingUpdates.find( journal->uid() ) ) {
       mSilent = false; // we do want to tell KMail
