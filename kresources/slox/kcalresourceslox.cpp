@@ -183,7 +183,7 @@ bool KCalResourceSlox::doLoad()
 
   // The SLOX contacts are loaded asynchronously, so make sure that they are
   // actually loaded.
-  KABC::StdAddressBook::self()->asyncLoad();
+  KABC::StdAddressBook::self( true )->asyncLoad();
 
 #if 1
   requestEvents();

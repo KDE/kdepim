@@ -517,7 +517,7 @@ void HtmlExport::formatAttendees( QTextStream *ts, Incidence *event )
   if (attendees.count()) {
     *ts << "<em>";
 #ifndef KORG_NOKABC
-    KABC::AddressBook *add_book = KABC::StdAddressBook::self();
+    KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
     KABC::Addressee::List addressList;
     addressList = add_book->findByEmail(event->organizer().email());
     KABC::Addressee o = addressList.first();

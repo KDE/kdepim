@@ -294,7 +294,7 @@ void CertificateWizardImpl::slotHelpClicked()
 
 void CertificateWizardImpl::slotSetValuesFromWhoAmI()
 {
-  const KABC::Addressee a = KABC::StdAddressBook::self()->whoAmI();
+  const KABC::Addressee a = KABC::StdAddressBook::self( true )->whoAmI();
   if ( a.isEmpty() )
     return;
   const KABC::Address adr = a.address(KABC::Address::Work);
@@ -368,7 +368,7 @@ void CertificateWizardImpl::createPersonalDataPage()
   }
 
   // enable button only if administrator wants to allow it
-  if (KABC::StdAddressBook::self()->whoAmI().isEmpty() ||
+  if (KABC::StdAddressBook::self( true )->whoAmI().isEmpty() ||
       !config.readBoolEntry("ShowSetWhoAmI", true))
     insertAddressButton->setEnabled( false );
 

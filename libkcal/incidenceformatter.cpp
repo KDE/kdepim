@@ -112,7 +112,7 @@ static QString linkPerson( const QString& email, QString name,
   // Make the search, if there is an email address to search on,
   // and either name or uid is missing
   if ( !email.isEmpty() && ( name.isEmpty() || uid.isEmpty() ) ) {
-    KABC::AddressBook *add_book = KABC::StdAddressBook::self();
+    KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
     KABC::Addressee::List addressList = add_book->findByEmail( email );
     KABC::Addressee o = addressList.first();
     if ( !o.isEmpty() && addressList.size() < 2 ) {

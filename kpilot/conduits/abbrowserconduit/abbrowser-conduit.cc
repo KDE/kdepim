@@ -217,7 +217,7 @@ bool AbbrowserConduit::_loadAddressBook()
 	{
 		case AbbrowserSettings::eAbookResource:
 			DEBUGCONDUIT<<"Loading standard addressbook"<<endl;
-			aBook = StdAddressBook::self();
+			aBook = StdAddressBook::self( true );
 			break;
 		case AbbrowserSettings::eAbookFile:
 		{ // initialize the abook with the given file

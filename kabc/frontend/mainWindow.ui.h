@@ -32,7 +32,7 @@ class AddresseeItem : public QListViewItem
 
 void MainWindow::init()
 {
-  mAddressBook = KABC::StdAddressBook::self();
+  mAddressBook = KABC::StdAddressBook::self( true );
   
   mCurrentItem = 0;
 

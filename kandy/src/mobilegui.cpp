@@ -495,7 +495,7 @@ void MobileGui::readKabc()
 
   mSyncer->mKabEntries.clear();
 
-  KABC::AddressBook *addressBook = KABC::StdAddressBook::self();
+  KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
   KABC::AddressBook::Iterator it;
   int kabIndex = 0;
 
@@ -716,7 +716,7 @@ void MobileGui::writeKabc()
   if ( mKabState != MODIFIED )
     return;
 
-  KABC::AddressBook *addressBook = KABC::StdAddressBook::self();
+  KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
   KABC::Ticket *ticket = addressBook->requestSaveTicket();
 
   if ( !ticket ) {
