@@ -42,7 +42,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2003-09-15</date>
+<date>2003-10-01</date>
 <releaseinfo>0.09.06</releaseinfo>
 
 <abstract>
@@ -1512,6 +1512,33 @@ triggering date-only alarms, &ie; ones for which the <guilabel>Any
 time</guilabel> option was selected. On the date when they are due,
 such alarms will be output at the earliest opportunity during the
 24 hours starting from the start-of-day time.</para>
+</listitem>
+
+<listitem><para>If you set up yearly recurrences for February 29th,
+specify how these are to be handled in non-leap years by selecting one
+of the following options:</para>
+
+<itemizedlist>
+<listitem><para><guilabel>February 28th</guilabel>: the alarm will
+occur on February 29th in leap years, and on February 28th in
+non-leap years.</para>
+</listitem>
+
+<listitem><para><guilabel>March 1st</guilabel>: the alarm will
+occur on February 29th in leap years, and on March 1st in
+non-leap years.</para>
+</listitem>
+
+<listitem><para><guilabel>Do not repeat</guilabel>: the alarm will
+occur on February 29th in leap years, but will be suppressed in
+non-leap years.</para>
+</listitem>
+</itemizedlist>
+
+<note><para>Changing this option will not cause the next scheduled
+recurrence of any existing alarms to be re-evaluated. It will only
+affect new alarms, or existing alarms after they are next
+triggered.</para></note>
 </listitem>
 
 <listitem><para><guilabel>Confirm alarm deletions</guilabel>: Specify
