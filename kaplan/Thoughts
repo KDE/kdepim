@@ -12,6 +12,9 @@ Misc:
   The KParts Technology only provides actions for the current part. It might be desireable to have common
   actions that are always available.
 
+- Status Bar
+  We need a more sophisticated handling (progressbar, etc)
+  
 Communication/Interaction:
 ==========================
 
