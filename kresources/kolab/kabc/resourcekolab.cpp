@@ -170,7 +170,8 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
     return false;
   }
 
-  kdDebug(5650) << "Contacts kolab resource: got " << lst.count() << " contacts in " << subResource << endl;
+  if ( !lst.isEmpty() )
+    kdDebug(5650) << "Contacts kolab resource: got " << lst.count() << " contacts in " << subResource << endl;
 
   for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
     loadContact( it.data(), subResource, it.key() );
@@ -544,6 +545,16 @@ QMap<QString, QString> KABC::ResourceKolab::uidToResourceMap() const
   for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
     map[ mapIt.key() ] = mapIt.data().resource();
   return map;
+}
+
+void KABC::ResourceKolab::setSubresourceActive( const QString &subresource, bool active )
+{
+  if ( mSubResources.contains( subresource ) ) {
+    mSubResources[ subresource ].setActive( active );
+    load();
+  } else {
+    kdDebug(5650) << "setSubresourceCompletionWeight: subresource " << subresource << " not found" << endl;
+  }
 }
 
 #include "resourcekolab.moc"
