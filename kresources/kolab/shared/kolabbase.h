@@ -44,6 +44,10 @@ namespace KCal {
   class Incidence;
 }
 
+namespace KABC {
+  class Addressee;
+}
+
 namespace Kolab {
 
 class KolabBase {
@@ -99,11 +103,17 @@ public:
   virtual QString saveXML() const = 0;
 
 protected:
-  // Read all known fields from this ical incidence
+  /// Read all known fields from this ical incidence
   void setFields( const KCal::Incidence* );
 
-  // Save all known fields into this ical incidence
+  /// Save all known fields into this ical incidence
   void saveTo( KCal::Incidence* ) const;
+
+  /// Read all known fields from this contact
+  void setFields( const KABC::Addressee* );
+
+  /// Save all known fields into this contact
+  void saveTo( KABC::Addressee* ) const;
 
   // This just makes the initial dom tree with version and doctype
   static QDomDocument domTree();

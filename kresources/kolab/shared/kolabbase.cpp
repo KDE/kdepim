@@ -32,6 +32,8 @@
 */
 
 #include "kolabbase.h"
+
+#include <kabc/addressee.h>
 #include <libkcal/journal.h>
 #include <qfile.h>
 
@@ -68,6 +70,51 @@ void KolabBase::saveTo( KCal::Incidence* incidence ) const
   incidence->setCreated( creationDate() );
   incidence->setLastModified( lastModified() );
   incidence->setSecrecy( sensitivity() );
+  // TODO: Attachments
+}
+
+void KolabBase::setFields( const KABC::Addressee* addressee )
+{
+  // An addressee does not have a creation date, so somehow we should
+  // make one, if this is a new entry
+
+  setUid( addressee->uid() );
+  setBody( addressee->note() );
+  setCategories( addressee->categories().join( "," ) );
+  setLastModified( addressee->revision() );
+  switch( addressee->secrecy().type() ) {
+  case KABC::Secrecy::Private:
+    setSensitivity( Private );
+    break;
+  case KABC::Secrecy::Confidential:
+    setSensitivity( Confidential );
+    break;
+  default:
+    setSensitivity( Public );
+  }
+
+  // TODO: Attachments
+}
+
+void KolabBase::saveTo( KABC::Addressee* addressee ) const
+{
+  addressee->setUid( uid() );
+  addressee->setNote( body() );
+  addressee->setCategories( QStringList::split( ',', categories() ) );
+  addressee->setRevision( lastModified() );
+
+  switch( sensitivity() ) {
+  case Private:
+    addressee->setSecrecy( KABC::Secrecy( KABC::Secrecy::Private ) );
+    break;
+  case Confidential:
+    addressee->setSecrecy( KABC::Secrecy( KABC::Secrecy::Confidential ) );
+    break;
+  default:
+    addressee->setSecrecy( KABC::Secrecy( KABC::Secrecy::Public ) );
+    break;
+  }
+
   // TODO: Attachments
 }
 
