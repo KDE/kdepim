@@ -1,17 +1,17 @@
 Source: kdepim
-Build-Depends: automake, autoconf, libtool, kdelibs-dev (>= 4:2.1.2-0), debhelper (>> 3.0.0), gettext, bison | byacc, libpisock-dev, flex
+Build-Depends: automake, libtool, kdelibs-dev (>= 4:2.1.2-0), debhelper (>> 3.0.0), gettext, bison | byacc, libpisock-dev, flex
 Section: x11
 Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
-Standards-Version: 3.5.3
+Standards-Version: 3.5.4
 
 Package: korganizer
 Architecture: any
 Section: x11
 Replaces: kdepim, kdepim-common
 Depends: ${shlibs:Depends}, kdepim-libs, kdebase-libs
-Suggests: kdebase, abbrowser, kpilot
-Conflicts: kdepim, task-kdepim
+Suggests: abbrowser, kpilot
+Enhances: kdebase, kpilot
 Description: Personal organizer based on QT and KDE 
  A complete calendar and scheduling program. KOrganizer supports
  information interchange with other calendar applications through the
@@ -37,8 +37,8 @@ Architecture: any
 Section: utils
 Replaces: kdepim, kdepim-common
 Depends: ${shlibs:Depends}, kdepim-libs, kdebase-libs
-Suggests: kdebase, korganizer
-Conflicts: kdepim, task-kdepim
+Suggests: korganizer
+Enhances: kdebase
 Description: Address book reader
  Address book reader for KDE
 
@@ -47,6 +47,7 @@ Architecture: any
 Section: utils
 Depends: ${shlibs:Depends}, pilot-link, kdepim-libs, kdebase-libs
 Suggests: kdebase, korganizer, kab, knotes
+Enhances: kdebase
 Description: Palm Pliot sync tool for KDE
  Palm Pilot sync tool for KDE
 
