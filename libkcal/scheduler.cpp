@@ -236,18 +236,22 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
   Incidence::List::ConstIterator incit = existingIncidences.begin();
   for ( ; incit != existingIncidences.end() ; ++incit ) {
     Incidence* const i = *incit;
+    kdDebug(5800) << "Considering this found event ("
+                  << ( i->isReadOnly() ? "readonly" : "readwrite" )
+                  << ") :" << mFormat->toString( i ) << endl;
     if ( i->revision() <= inc->revision() ) {
       if ( i->revision() == inc->revision() &&
            i->lastModified() > inc->lastModified() ) {
         // This isn't an update - the found incidence was modified more recently
+        kdDebug(5800) << "This isn't an update - the found incidence was modified more recently" << endl;
         deleteTransaction(incidence);
         return false;
       }
-      //kdDebug(5800) << "Considering this found event:" << mFormat->toString( i ) << endl;
       // The new incidence might be an update for the found one
       if ( !i->isReadOnly() ) {
         bool isUpdate = true;
         if ( status == ScheduleMessage::RequestNew ) {
+          kdDebug(5800) << "looking in " << i->uid() << "'s attendees" << endl;
           // This is supposed to be a new request - however we want to update
           // the existing one to handle the "clicking more than once on the invitation" case.
           // So check the attendee status of the attendee.
@@ -271,6 +275,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
       }
     } else {
       // This isn't an update - the found incidence has a bigger revision number
+      kdDebug(5800) << "This isn't an update - the found incidence has a bigger revision number" << endl;
       deleteTransaction(incidence);
       return false;
     }
@@ -279,6 +284,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
   // Move the uid to be the schedulingID and make a unique UID
   inc->setSchedulingID( inc->uid() );
   inc->setUid( CalFormat::createUniqueId() );
+  kdDebug(5800) << "Storing new incidence with scheduling uid=" << inc->schedulingID() << " and uid=" << inc->uid() << endl;
 
   mCalendar->addIncidence(inc);
   deleteTransaction(incidence);
