@@ -31,7 +31,7 @@
 
 #include "resourceimap.h"
 
-#include <resourcemanager.h>
+#include <knotes/resourcemanager.h>
 
 #include <libkcal/icalformat.h>
 
