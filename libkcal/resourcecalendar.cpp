@@ -68,6 +68,12 @@ bool ResourceCalendar::addIncidence( Incidence *incidence )
   return incidence->accept( v );
 }
 
+bool ResourceCalendar::deleteIncidence( Incidence *incidence )
+{
+  Incidence::DeleteVisitor<ResourceCalendar> v( this );
+  return incidence->accept( v );
+}
+
 Incidence::List ResourceCalendar::rawIncidences()
 {
   return Calendar::mergeIncidenceList( rawEvents(), rawTodos(), journals() );

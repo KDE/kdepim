@@ -119,6 +119,11 @@ class ResourceCalendar : public KRES::Resource
     virtual bool addIncidence( Incidence * );
 
     /**
+      Delete incidence from resource.
+    */
+    virtual bool deleteIncidence( Incidence * );
+
+    /**
       Add event to resource.
     */
     virtual bool addEvent( Event *event ) = 0;

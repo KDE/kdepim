@@ -298,7 +298,7 @@ void ResourceCached::loadCache()
 
 void ResourceCached::saveCache()
 {
-  kdDebug(5800) << "ResourceCached::saveCache()" << endl;
+  kdDebug(5800) << "ResourceCached::saveCache(): " << cacheFile() << endl;
 
   // save uid map
   QFile mapFile( uidMapFile() );
@@ -313,6 +313,11 @@ void ResourceCached::saveCache()
 
   // save cache
   mCalendar.save( cacheFile() );
+}
+
+void ResourceCached::clearCache()
+{
+  mCalendar.close();
 }
 
 void ResourceCached::setRemoteUid( const QString &localUid, const QString &remoteUid )

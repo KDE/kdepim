@@ -258,6 +258,11 @@ class ResourceCached : public ResourceCalendar,
     void saveCache();
 
     /**
+      Clear cache.
+    */
+    void clearCache();
+
+    /**
       Stores the remote uid for the given local uid.
      */
     void setRemoteUid( const QString &localUid, const QString &remoteUid );
