@@ -64,7 +64,7 @@ void KNListView::slotSortList(int col)
 { 				
 	if(col==sCol) sAsc=!sAsc;
 	else {
-		emit sortingChanged(sCol, col);
+		emit sortingChanged(col);
 		sCol=col;
 		sAsc=true;
 	

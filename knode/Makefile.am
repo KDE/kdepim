@@ -47,7 +47,7 @@ noinst_HEADERS = knaccmailsettings.h      knglobals.h              knrangefilter
 	knfilterconfigwidget.h   knnntpclient.h           knusersettings.h \
 	knfilterdialog.h         knode.h                  knuserwidget.h \
 	knfiltermanager.h        knodeview.h              knviewheader.h \
-	knfiltersettings.h       knpostcomsettings.h      menu_ids.h \
+	knfiltersettings.h       knpostcomsettings.h \
 	knfocuswidget.h          knposttechsettings.h     resource.h \
 	knfolder.h               knprotocolclient.h       utilities.h \
 	knfoldermanager.h        knpurgeprogressdialog.h
@@ -60,7 +60,7 @@ appsdir = $(kde_appsdir)/Internet
 apps_DATA = KNode.desktop
 
 rcdir = $(kde_datadir)/knode
-rc_DATA = headers.rc
+rc_DATA = headers.rc knodeui.rc
 
 KDE_ICON = AUTO
 

@@ -32,17 +32,14 @@
 #include "knfiltersettings.h"
 
 
-KNFilterManager::KNFilterManager()
+KNFilterManager::KNFilterManager(KSelectAction *filterMenu)
+ : fset(0), currFilter(0), menu(filterMenu)
 {
-	currFilter=0;
-	fset=0;	
 	fList.setAutoDelete(true);
-	menu=new QPopupMenu();
-	menu->setCheckable(true);
-	connect(menu, SIGNAL(activated(int)), this,
-		SLOT(slotMenuActivated(int)));
+
+	connect(menu, SIGNAL(activated(int)), this,	SLOT(slotMenuActivated(int)));
 	
-	loadFilters();
+	loadFilters();	
 }
 
 
@@ -216,16 +213,14 @@ bool KNFilterManager::nameIsOK(KNArticleFilter *f)
 
 KNArticleFilter* KNFilterManager::setFilter(const int id)
 {
-	
 	KNArticleFilter *bak=currFilter;
 	
 	currFilter=byID(id);	
 	
-	if(currFilter) {
-		if(bak) menu->setItemChecked(bak->id(), false);
-		menu->setItemChecked(currFilter->id(), true);
-	}
-	else currFilter=bak;
+	if(currFilter)
+	  menu->setCurrentItem(currFilter->id());
+	else
+	  currFilter=bak;
 	
 	return currFilter;		
 }
@@ -241,14 +236,14 @@ void KNFilterManager::updateMenu()
   while (it != menuOrder.end()) {
 	 	if ((*it)!=-1) {
 			if ((f=byID((*it))))
-				menu->insertItem(f->name(), f->id());
+				menu->popupMenu()->insertItem(f->name(), f->id());
 		}
-		else menu->insertSeparator();
+		else menu->popupMenu()->insertSeparator();
 		++it;
   }
 	
 	if(currFilter)
-		menu->setItemChecked(currFilter->id(), true);
+		menu->setCurrentItem(currFilter->id());
 }
 
 

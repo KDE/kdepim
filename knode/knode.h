@@ -61,14 +61,14 @@ private:
 
 class KNodeApp : public KTMainWindow
 {
-  	Q_OBJECT
+    Q_OBJECT
 
 	public:
   				
-  	KNodeApp();
-  	~KNodeApp();
+    KNodeApp();
+    ~KNodeApp();
   	  	
-  	//GUI
+    //GUI
   	void setStatusMsg(const QString& = QString::null, int id=SB_MAIN);
     void setStatusHelpMsg(const QString& text);
     void setCursorBusy(bool b=true);
@@ -90,6 +90,7 @@ class KNodeApp : public KTMainWindow
     void folderDisplayed(bool b);
     void savedArticleSelected(bool b);
     void savedArticleDisplayed(bool b);
+    void messageDisplayed(bool b);
 
     //Member-Access
     KNAccountManager* accManager()				{ return AManager; }
@@ -98,7 +99,6 @@ class KNodeApp : public KTMainWindow
     KNFolderManager* foManager()					{ return FoManager; }
     KNSavedArticleManager* sArtManager()	{ return SAManager; }
     KNFilterManager* fiManager() 					{ return FiManager; }
-    KAccel *accel()												{ return acc; }
 
     //network
     void jobDone(KNJobData *j);
@@ -107,56 +107,40 @@ class KNodeApp : public KTMainWindow
 	protected:
 
 	  //init && update
-		void initMenuBar();
- 	  void initPopups();
- 	  void initToolBar();
- 	  void initStatusBar();
- 	  void initView();
- 	  void initAccel();
- 	   	        	
-    void ViewToolBar();
-    void ViewStatusBar();
-  	void setMenuAccels();
-
-  	void updateMenus(int *idArr, bool e);
-  	void updateAccels(const char **idArr, bool e);
+	  void initView();
+	  void initStatusBar();
+	  void initActions();
+ 	  void initPopups();      	
   	
   	void saveOptions();
   	void readOptions();
-  	
-  	void showSettings();  	  	
-
-  	
+  	 	
   	//exit
     void cleanup();
     bool queryExit();
 
-    //menuBar
-    QPopupMenu 	*file_menu,
-    						*groups_menu, *groups_menu_folders,
-    						*message_menu, *message_menu_thread,
-     						*message_menu_mark,
-    						*goto_menu,
-    						*view_menu, *view_menu_sort,
-    						*help_menu;
+	  //actions
+    KAction  *actFileSave, *actFilePrint, *actNetSendPending, *actNetStop,
+             *actEditCopy, *actEditFind, *actEditFindNext,
+             *actAccProperties, *actAccSubscribeGrps, *actAccLoadHdrs, *actAccDelete,
+             *actGrpProperties, *actGrpLoadHdrs, *actGrpExpire, *actGrpResort, *actGrpAllRead,
+             *actGrpAllUnread, *actGrpUnsubscribe, *actFolderCompact, *actFolderEmpty,
+             *actArtPostNew, *actArtPostReply, *actArtMailReply, *actArtForward,
+             *actArtRead, *actArtUnread, *actArtOwnWindow, *actArtEdit, *actArtDelete,
+             *actArtCancel, *actArtSendNow, *actArtSendLater, *actArtSearch,
+             *actThreadRead, *actThreadUnread, *actThreadSetScore, *actThreadWatch,
+             *actThreadIgnore, *actThreadToggle,
+             *actSetExpandAll,*actSetCollapseAll;
+    KSelectAction *actSetFilters, *actSetSort;
+    KToggleAction *actSetShowThreads, *actSetShowAllHdrs;
 
-   	QPopupMenu *test_menu; //DEBUG
-   	
    	//popups
    	QPopupMenu 	*accPopup, *groupPopup, *folderPopup,
    							*fetchPopup, *savedPopup;
-   	
-   	KAccel *acc;
-   	
-   	KToolBar *tb0;
+
    	KNodeView *view;
     KNProgress *progBar;
    	int progr;
-   	
-    bool bViewToolbar;
-  	bool bViewStatusbar;
-//    KMenuBar::menuPosition menu_bar_pos;
-//    KToolBar::BarPosition tool_bar_pos;  	
 		
     KNNetAccess	*NAcc;
     KNAccountManager *AManager;
@@ -166,37 +150,58 @@ class KNodeApp : public KTMainWindow
     KNSavedArticleManager *SAManager;
     KNFilterManager *FiManager;
 
-
 	public slots:
   	void slotSaveYourself()				{ cleanup(); }
 
   protected slots:
-  	//callback
-  	void slotMainCallback(int id_);
-  	  	
-  	//menus  	  	
-  	void slotFileSaveAs();
-  	void slotFileQuit();
+
+  	//action-slots	  	
+  	void slotFileSave();                // file menu
   	void slotFilePrint();
+  	void slotNetSendPending();
+  	void slotNetStop();
+  	void slotFileQuit();
+
+  	void slotEditCopy();                // edit menu
+  	void slotEditFind();
+  	void slotEditFindNext();
   	  	
-  	void slotArtNew();
+  	void slotAccProperties();           // account menu
+  	void slotAccSubscribeGrps();
+  	void slotAccLoadHdrs();
+  	void slotAccDelete();
+  	
+  	void slotGrpProperties();           // group menu
+  	void slotGrpLoadHdrs();
+  	void slotGrpExpire();
+  	void slotGrpResort();
+   	void slotGrpAllRead();
+  	void slotGrpAllUnread();  	
+   	void slotGrpUnsubscribe();
+  	void slotFolderCompact();
+  	void slotFolderEmpty();
+  	  	
+  	void slotArtNew();                  // article menu
   	void slotArtReply();
   	void slotArtRemail();
   	void slotArtForward();
   	void slotArtOwnWindow();
   	void slotArtMarkRead();
   	void slotArtMarkUnread();
+  	void slotArtEdit();
+  	void slotArtDelete();
+  	void slotArtCancel();
+  	void slotArtSendNow();
+  	void slotArtSendLater();
+  	void slotArtSearch();
   	void slotArtThrRead();
   	void slotArtThrUnread();
   	void slotArtThrScore();
   	void slotArtThrWatch();
   	void slotArtThrIgnore();
   	void slotArtThrToggle();
-  	void slotArtEdit();
-  	void slotArtDelete();
-  	void slotArtSearch();
   	  	
-  	void slotGotoNextArt();
+  	void slotGotoNextArt();              // go menu
   	void slotGotoPrevArt();  	
   	void slotGotoNextUnreadArt();
   	void slotReadThrough();
@@ -204,15 +209,23 @@ class KNodeApp : public KTMainWindow
   	void slotGotoNextGroup();
   	void slotGotoPrevGroup();
   	
+  	void slotToggleToolBar();            // settings menu
+  	void slotToggleStatusBar();
+  	void slotToggleShowThreads();
+  	void slotToggleShowAllHdrs();
   	void slotViewSort(int id);
   	void slotViewRefresh();
-  	void slotViewZoom();
+  	void slotViewExpand();
+  	void slotViewCollapse();
+  	void slotConfKeys();
+  	void slotConfToolbar();
+  	void slotSettings();  	  	
   	  	
   	//view-slots  	
 	 	void slotCollectionSelected(QListViewItem *it);
   	void slotHeaderSelected(QListViewItem *it);
   	void slotHeaderDoubleClicked(QListViewItem *it);
-  	void slotSortingChanged(int oldCol, int newCol);
+  	void slotSortingChanged(int newCol);
   	void slotArticlePopup(QListViewItem *it, const QPoint &p, int c);
   	void slotCollectionPopup(QListViewItem *it, const QPoint &p, int c);
 };

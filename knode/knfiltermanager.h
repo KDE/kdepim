@@ -22,25 +22,27 @@
 #include <qobject.h>
 #include <qpushbutton.h>
 #include <qsemimodal.h>
-#include <qpopupmenu.h>
+
+#include <kaction.h>
+
 #include "knarticlefilter.h"
 #include "knlistbox.h"
+
 
 class KNFilterSettings;
 
 class KNFilterManager : public QObject{
 
-
 	Q_OBJECT
 
 	public:
+	  KNFilterManager(KSelectAction *filterMenu);
 		KNFilterManager();
 		~KNFilterManager();
 		
 		KNArticleFilter* setFilter(const int id);
 		KNArticleFilter* currentFilter()	{ return currFilter; }
-		QPopupMenu* pUpMenu()							{ return menu; }
-	
+			
 		void startConfig(KNFilterSettings *fs);
 		void endConfig();
 		void newFilter();
@@ -58,7 +60,7 @@ class KNFilterManager : public QObject{
 		QList<KNArticleFilter> fList;
 		KNFilterSettings *fset;
 	  KNArticleFilter *currFilter;
-		QPopupMenu *menu;
+		KSelectAction *menu;
 		QValueList<int> menuOrder;		
 	
 	protected slots:

@@ -151,9 +151,7 @@ void KNArticleWidget::setFullHeaders(bool b)
 					
 void KNArticleWidget::toggleFullHeaders()
 {
-	fullHdrs=!fullHdrs;
-	for(KNArticleWidget *i=instances.first(); i; i=instances.next())
-			i->updateContents();
+  setFullHeaders(!fullHdrs);
 }
 
 

@@ -49,7 +49,7 @@ class KNListView : public QListView  {
 	
 		
 	signals:
-		void sortingChanged(int, int);
+		void sortingChanged(int);
 		void focusChanged(QFocusEvent*);	
 		
 	private:

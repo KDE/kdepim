@@ -270,6 +270,7 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
 
 void KNGroupManager::unsubscribeAccount(KNNntpAccount *a)
 {
+  #warning FIXME: what happens when one group is locked??
 	for(KNGroup *g=gList->first(); g; g=gList->next())
 		if(g->account()==a) unsubscribeGroup(g);	
 }
