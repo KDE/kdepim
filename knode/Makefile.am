@@ -1,9 +1,25 @@
 KDE_CXXFLAGS = $(USE_THREADS)
-INCLUDES= -I$(top_srcdir)/libkdenetwork -I$(top_srcdir)/libkdepim $(all_includes)
+
+INCLUDES=	-I$(top_srcdir)/libkdenetwork \
+		-I$(top_srcdir)/libkdepim \
+		 $(all_includes)
+
+noinst_LTLIBRARIES = libknodecommon.la
+
+kde_module_LTLIBRARIES = libknodepart.la
+libknodepart_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -version-info 1:0
+libknodepart_la_LIBADD	= $(LIB_KHTML) $(LIB_KSPELL) $(LIB_KABC) \
+			../libkdenetwork/libkdenetwork.la ../libkdepim/libkdepim.la \
+			../mimelib/libmimelib.la libknodecommon.la
 SUBDIRS = pics filters
 
 bin_PROGRAMS = knode
-knode_SOURCES =   knconfigmanager.cpp \
+
+knode_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+knode_LDADD   = -lkdeprint $(top_builddir)/libkdenetwork/libkdenetwork.la ../libkdepim/libkdepim.la libknodecommon.la $(LIB_KSPELL) $(LIB_KABC) $(LIB_KFILE) $(LIBRESOLV)
+
+
+libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   knconfig.cpp \
                   knconfigwidgets.cpp \
                   \
@@ -58,10 +74,12 @@ knode_SOURCES =   knconfigmanager.cpp \
                   \
                   knwidgets.cpp \
                   knlistview.cpp \
-                  knode.cpp \
-                  knapplication.cpp \
-                  main.cpp \
 		  knodecomposeriface.skel
+
+knode_SOURCES = knode.cpp knapplication.cpp main.cpp
+
+libknodepart_la_SOURCES = knode_part.cpp
+
 
 noinst_HEADERS =  knconfigmanager.h \
                   knconfig.h \
@@ -122,8 +140,7 @@ noinst_HEADERS =  knconfigmanager.h \
                   resource.h \
                   knglobals.h 
 
-knode_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-knode_LDADD   = -lkdeprint $(top_builddir)/libkdenetwork/libkdenetwork.la ../libkdepim/libkdepim.la -lkspell -lkabc $(LIB_KFILE) $(LIBRESOLV)
+
 knode_METASOURCES = AUTO
 
 appsdir = $(kde_appsdir)/Internet

@@ -23,16 +23,6 @@
 #include "knapplication.h"
 #include "knconvert.h"
 
-KNApplication::KNApplication()
- : KUniqueApplication()
-{
-}
-
-
-KNApplication::~KNApplication()
-{
-}
-
 
 int KNApplication::newInstance()
 {
@@ -91,6 +81,4 @@ int KNApplication::newInstance()
   return 0;
 }
 
-//--------------------------------
 
-#include "knapplication.moc"

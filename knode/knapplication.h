@@ -19,19 +19,16 @@
 
 #include <kuniqueapplication.h>
 
-
 class KNApplication : public KUniqueApplication
 {
-  Q_OBJECT
 
   public:
-    KNApplication();
-    ~KNApplication();
+    KNApplication(): KUniqueApplication() { };
+
 
     /** Create new instance of KNode. Make the existing
         main window active if KNode is already running */
     int newInstance();
 
 };
-
 #endif
