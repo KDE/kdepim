@@ -552,7 +552,11 @@ void ResourceIMAP::slotRefresh( const QString& type )
 
 QStringList ResourceIMAP::subresources() const
 {
-  return mEventResources + mTaskResources + mJournalResources;
+  QStringList calendar, tasks, journal;
+  if ( kmailSubresources( calendar, "Calendar" ) )
+    if ( kmailSubresources( tasks, "Task" ) )
+      kmailSubresources( journal, "Journal" );
+  return calendar + tasks + journal;
 }
 
 void ResourceIMAP::setSubresourceActive( const QString& subresource,
