@@ -326,8 +326,12 @@ void KNListView::contentsMousePressEvent(QMouseEvent *e)
     k_eepSelection = true;
 
   KListView::contentsMousePressEvent(e);
-  i=currentItem();
-  if(i && !selectMode && i->isSelected())
+  bool rootDecoClicked = i
+           && ( vp.x() <= header()->cellPos( header()->mapToActual( 0 ) ) +
+                treeStepSize() * ( i->depth() + ( rootIsDecorated() ? 1 : 0) ) + itemMargin() )
+           && ( vp.x() >= header()->cellPos( header()->mapToActual( 0 ) ) );
+
+  if(i && !selectMode && i->isSelected() && !rootDecoClicked)
     setActive(i, true);
 
   k_eepSelection = false;
