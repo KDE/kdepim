@@ -44,7 +44,8 @@
 
 
 
-KNConfig::Identity::Identity(bool g) : g_lobal(g)
+KNConfig::Identity::Identity(bool g)
+ :  u_seSigFile(false), u_seSigGenerator(false), g_lobal(g)
 {
   if(g_lobal) {
     KConfig *c=KGlobal::config();

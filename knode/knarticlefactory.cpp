@@ -59,7 +59,7 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
     return;
 
   QString sig;
-  KNLocalArticle *art=newArticle(0, sig, knGlobals.cfgManager->postNewsTechnical()->charset());
+  KNLocalArticle *art=newArticle(a, sig, knGlobals.cfgManager->postNewsTechnical()->charset());
   if(!art)
     return;
 
@@ -277,7 +277,7 @@ void KNArticleFactory::createForward(KNArticle *a)
 
   //create new article
   QString sig;
-  KNLocalArticle *art=newArticle(0, sig, chset);
+  KNLocalArticle *art=newArticle(knGlobals.grpManager->currentGroup(), sig, chset);
   if(!art)
     return;
 
@@ -497,7 +497,7 @@ void KNArticleFactory::createMail(KNHeaders::AddressField *address)
 
   //create new article
   QString sig;
-  KNLocalArticle *art=newArticle(0, sig, knGlobals.cfgManager->postNewsTechnical()->charset());
+  KNLocalArticle *art=newArticle(knGlobals.grpManager->currentGroup(), sig, knGlobals.cfgManager->postNewsTechnical()->charset());
   if(!art)
     return;
 
@@ -771,7 +771,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 }
 
 
-KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, QCString defChset, bool withXHeaders)
+KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QCString defChset, bool withXHeaders)
 {
   KNConfig::PostNewsTechnical *pnt=knGlobals.cfgManager->postNewsTechnical();
 
@@ -785,11 +785,15 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, QCString 
                       *defId=0,
                       *accId=0,
                       *id=0;
-  if(!g)
-    grpId=0;
-  else {
-    grpId=g->identity();
-    accId=g->account()->identity();
+
+  if (col) {
+    if (col->type() == KNCollection::CTgroup) {
+      grpId = (static_cast<KNGroup *>(col))->identity();
+      accId = (static_cast<KNGroup *>(col))->account()->identity();
+    } else
+      if (col->type() == KNCollection::CTnntpAccount) {
+        accId = (static_cast<KNNntpAccount *>(col))->identity();
+      }
   }
 
   defId=knGlobals.cfgManager->identity();

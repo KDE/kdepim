@@ -28,6 +28,7 @@
 
 class KNGroup;
 class KNFolder;
+class KNCollection;
 class KNComposer;
 class KNSendErrorDialog;
 class KNNntpAccount;
@@ -75,7 +76,8 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     void processJob(KNJobData *j); //reimplemented from KNJobConsumer
 
     //article generation
-    KNLocalArticle* newArticle(KNGroup *g, QString &sig, QCString defChset, bool withXHeaders=true);
+    // col: group or account
+    KNLocalArticle* newArticle(KNCollection *col, QString &sig, QCString defChset, bool withXHeaders=true);
 
     //cancel & supersede
     bool cancelAllowed(KNArticle *a);
