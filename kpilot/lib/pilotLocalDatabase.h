@@ -56,7 +56,17 @@ public:
 	PilotLocalDatabase( const QString& path,
 		const QString& name, bool useDefaultPath=true,
 		QObject *p=0L,const char *n=0L);
-	PilotLocalDatabase(const QString &name,
+	/**
+	* Opens the local database. A default path is used
+	* ($KDEHOME/share/apps/kpilot/DBBackup)
+	* and if the file is found there, it is opened.
+	* Since a backup messes up the state of the conduits (i.e.
+	* changes on the handheld might no longer be detected after
+	* a backup run, since the conduit assumes the database to have
+	* the state of the previous conduit run,  useConduitDBs=true
+	* opens the database in $KDEHOME/share/apps/kpilot/conduits
+	*/
+	PilotLocalDatabase(const QString &name, bool useConduitDBs=false,
 		QObject *p=0L,const char *n=0L);
 
 

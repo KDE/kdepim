@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -49,7 +49,7 @@ const int PilotAddress::APP_BUFFER_SIZE = 0xffff;
 
 PilotAddress::PilotAddress(struct AddressAppInfo &appInfo,
 	PilotRecord * rec) :
-	PilotAppCategory(rec), 
+	PilotAppCategory(rec),
 	fAppInfo(appInfo),
 	fAddressInfo()
 {
@@ -76,7 +76,7 @@ PilotAddress::PilotAddress(struct AddressAppInfo &appInfo) :
 
 PilotAddress::PilotAddress(const PilotAddress & copyFrom) :
 	PilotAppCategory(copyFrom),
-	fAppInfo(copyFrom.fAppInfo), 
+	fAppInfo(copyFrom.fAppInfo),
 	fAddressInfo()
 {
 	FUNCTIONSETUPL(4);
@@ -91,12 +91,12 @@ PilotAddress & PilotAddress::operator = (const PilotAddress & copyFrom)
 	return *this;
 }
 
-bool PilotAddress::operator==(const PilotAddress &compareTo) 
+bool PilotAddress::operator==(const PilotAddress &compareTo)
 {
 	FUNCTIONSETUPL(4);
 	// TODO: call == of PilotAppCategory. I don't think this is necessary, but I'm not so sure...
 //	if (!(PilotAppCategory)(this)->operator==(compareTo) ) return false;
-	
+
 	// now compare all the fields stored in the fAddressInfo.entry array of char*[19]
 	for (int i=0; i<MAXFIELDS; i++) {
 		// if one is NULL, and the other non-empty, they are not equal for sure
@@ -140,12 +140,12 @@ PilotAddress::~PilotAddress()
 bool PilotAddress::setCategory(const QString &label)
 {
 	FUNCTIONSETUPL(4);
-	if (label.isEmpty()) 
+	if (label.isEmpty())
 	{
 		setCat(0);
 		return true;
 	}
-	for (int catId = 0; catId < 16; catId++)
+	for (int catId = 1; catId < 16; catId++)
 	{
 		QString aCat = codec()->toUnicode(fAppInfo.category.name[catId]);
 
@@ -155,10 +155,10 @@ bool PilotAddress::setCategory(const QString &label)
 			return true;
 		}
 		else
-			// if empty, then no more labels; add it 
+			// if empty, then no more labels; add it
 		if (aCat.isEmpty())
 		{
-			qstrncpy(fAppInfo.category.name[catId], 
+			qstrncpy(fAppInfo.category.name[catId],
 				codec()->fromUnicode(label), 16);
 			setCat(catId);
 			return true;
@@ -170,7 +170,9 @@ bool PilotAddress::setCategory(const QString &label)
 
 QString PilotAddress::getCategoryLabel() const
 {
-	return codec()->toUnicode(fAppInfo.category.name[getCat()]);
+	int cat(getCat());
+	if (cat>0) return codec()->toUnicode(fAppInfo.category.name[cat]);
+	else return QString::null;
 }
 
 QString PilotAddress::getField(int field) const

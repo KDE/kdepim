@@ -26,7 +26,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -63,28 +63,28 @@ protected:			// Use protected since we will be subclassed
 
 
 public:
-	PilotAppCategory(void) : 
-		fAttrs(0), 
-		fId(0), 
-		fCategory(0) 
+	PilotAppCategory(void) :
+		fAttrs(0),
+		fId(0),
+		fCategory(0)
 	{} ;
 
-	PilotAppCategory(int a, recordid_t i, int c) : 
-		fAttrs(a), 
-		fId(i), 
-		fCategory(c) 
+	PilotAppCategory(int a, recordid_t i, int c) :
+		fAttrs(a),
+		fId(i),
+		fCategory(c)
 	{} ;
 
-	PilotAppCategory(PilotRecord* rec) : 
-		fAttrs((rec)?rec->getAttrib():0), 
-		fId((rec)?rec->getID():0), 
-		fCategory((rec)?rec->getCat():0) 
+	PilotAppCategory(PilotRecord* rec) :
+		fAttrs((rec)?rec->getAttrib():0),
+		fId((rec)?rec->getID():0),
+		fCategory((rec)?rec->getCat():0)
 	{} ;
 
 	PilotAppCategory(const PilotAppCategory &copyFrom) :
-		fAttrs(copyFrom.fAttrs), 
-		fId(copyFrom.fId), 
-		fCategory(copyFrom.fCategory) 
+		fAttrs(copyFrom.fAttrs),
+		fId(copyFrom.fId),
+		fCategory(copyFrom.fCategory)
 	{} ;
 
 	PilotAppCategory& operator=( const PilotAppCategory &r )
@@ -99,15 +99,15 @@ public:
 	{
 		return (fAttrs==compareTo.fAttrs && fId==compareTo.fId && fCategory==compareTo.fCategory);
 	} ;
-	
+
 	virtual ~PilotAppCategory(void) {};
 
 	/** @return a PilotRecord that contains all of the info of the
 	*  subclass.  Remember to delete the PilotRecord when finished.
 	*/
 	virtual PilotRecord* pack()
-	{ 
-		int len = 0xffff; 
+	{
+		int len = 0xffff;
 		void* buff = new unsigned char[len];
 		pack(buff, &len);
 		PilotRecord* rec =  new PilotRecord(buff, len, getAttrib(), getCat(), id());
@@ -127,14 +127,16 @@ public:
 public:
 	bool isSecret() const { return fAttrs & dlpRecAttrSecret ; } ;
 	bool isDeleted() const { return fAttrs & dlpRecAttrDeleted ; } ;
+	bool isArchived() const { return fAttrs & dlpRecAttrArchived ; } ;
 	void makeSecret() { fAttrs |= dlpRecAttrSecret; } ;
 	void makeDeleted() { fAttrs |= dlpRecAttrDeleted ; } ;
+	void makeArchived() { fAttrs |= dlpRecAttrArchived ; } ;
 	bool isModified() const { return fAttrs & dlpRecAttrDirty; }
 
 protected:
 	static QTextCodec *pilotCodec;
 public:
-	static QTextCodec *codec() 
+	static QTextCodec *codec()
 		{ if (pilotCodec) return pilotCodec; else return createCodec(0L); } ;
 	static QTextCodec *createCodec(const char *);
 	static QTextCodec *setupPilotCodec(const QString &);

@@ -46,7 +46,6 @@ static const char *pilotlocaldatabase_id =
 #include <kglobal.h>
 #include <kstandarddirs.h>
 
-
 #include "pilotLocalDatabase.h"
 
 PilotLocalDatabase::PilotLocalDatabase(const QString & path,
@@ -87,7 +86,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 }
 
 PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
-	QObject *p, const char *n) :
+	bool useConduitDBs, QObject *p, const char *n) :
 	PilotDatabase(p,n),
 	fPathName(QString::null),
 	fDBName(dbName),
@@ -98,14 +97,16 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
 	fPendingRec(-1)
 {
 	FUNCTIONSETUP;
-	if (fPathBase && !fPathBase->isEmpty())
+	if (fPathBase && !fPathBase->isEmpty() )
 	{
 		fPathName = *fPathBase;
+		if (useConduitDBs)
+			fPathName.replace(CSL1("DBBackup/"), CSL1("conduits/"));
 	}
 	else
 	{
 		fPathName = KGlobal::dirs()->saveLocation("data",
-			CSL1("kpilot/DBBackup/"));
+			CSL1("kpilot/")+(useConduitDBs?CSL1("conduits/"):CSL1("DBBackup/")));
 	}
 
 	fixupDBName();
@@ -423,7 +424,6 @@ int PilotLocalDatabase::deleteRecord(recordid_t id, bool all)
 		kdError() << k_funcinfo <<": DB not open"<<endl;
 		return -1;
 	}
-
 	if (all)
 	{
 		for (int i=0; i<fNumRecords; i++)
@@ -439,9 +439,9 @@ int PilotLocalDatabase::deleteRecord(recordid_t id, bool all)
 	else
 	{
 		int i=0;
-		while ( (i<fNumRecords) && (fRecords[i]->getID()!=id) )
+		while ( (i<fNumRecords) && (fRecords[i]) && (fRecords[i]->getID()!=id) )
 			i++;
-		if (fRecords[i]->getID() == id)
+		if ( (i<fNumRecords) && (fRecords[i]) && (fRecords[i]->getID() == id) )
 		{
 			delete fRecords[i];
 			for (int j=i+1; j<fNumRecords; j++)
@@ -506,7 +506,7 @@ int PilotLocalDatabase::cleanup()
 	int i, j;
 
 	for (i = 0; (i < fNumRecords) && (fRecords[i]);)
-		if (fRecords[i]->getAttrib() & dlpRecAttrDeleted)
+		if (fRecords[i]->getAttrib() & (dlpRecAttrDeleted|dlpRecAttrArchived))
 		{
 			delete fRecords[i];
 

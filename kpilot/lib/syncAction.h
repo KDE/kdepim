@@ -127,6 +127,7 @@ public:
 		ePCOverrides,
 		ePreviousSyncOverrides,
 		eDuplicate,
+		eDelete,
 		eCROffset=-1
 	};
 } ;

@@ -188,7 +188,10 @@ protected:
 	// added on the other side. The flag is set by the conduits
 	// when opening the local database, or the calendar/addressbook (if it is empty)
 	// This also implies a full sync
-	bool isFirstSync() const { return fFirstSync; };
+	bool isFirstSync() const {
+		return fFirstSync ||
+		(fSyncDirection==SyncAction::eCopyHHToPC) ||
+		(fSyncDirection==SyncAction::eCopyPCToHH); };
 
 	KConfig *fConfig;
 	PilotDatabase *fDatabase,*fLocalDatabase;

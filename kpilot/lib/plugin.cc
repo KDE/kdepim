@@ -42,6 +42,7 @@
 #include <dcopclient.h>
 #include <kapplication.h>
 #include <kmessagebox.h>
+#include <kstandarddirs.h>
 
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
@@ -171,7 +172,7 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 		<< name << endl;
 #endif
 
-	fLocalDatabase = new PilotLocalDatabase(name);
+	fLocalDatabase = new PilotLocalDatabase(name, true);
 
 	if (!fLocalDatabase)
 	{
@@ -212,12 +213,9 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 
 		// make sure the dir for the backup db really exists!
 		QFileInfo fi(dbpath);
-		if (!fi.exists()) {
-			QDir d(fi.dir(TRUE));
-#ifdef DEBUG
-			DEBUGCONDUIT << fname << ": Creating backup directory "<<d.absPath()<<endl;
-#endif
-			d.mkdir(d.absPath());
+		QString path(QFileInfo(dbpath).dir(TRUE).absPath());
+		if (!KStandardDirs::exists(path)) {
+			KStandardDirs::makeDir(path);
 		}
 		if (!fHandle->retrieveDatabase(dbpath, &dbinfo) )
 		{
@@ -226,7 +224,7 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 #endif
 			return false;
 		}
-		fLocalDatabase = new PilotLocalDatabase(name);
+		fLocalDatabase = new PilotLocalDatabase(name, true);
 		if (!fLocalDatabase || !fLocalDatabase->isDBOpen())
 		{
 #ifdef DEBUG
@@ -274,7 +272,7 @@ bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPat
 	}
 
 	fDatabase = new PilotLocalDatabase(localPath,dbName);
-	fLocalDatabase= new PilotLocalDatabase(dbName); // From default
+	fLocalDatabase= new PilotLocalDatabase(dbName, true); // From default
 	if (!fLocalDatabase || !fDatabase)
 	{
 #ifdef DEBUG
