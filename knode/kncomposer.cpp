@@ -78,7 +78,7 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, bool firstEdit, K
           this, SLOT(slotCancelEditor()));          
     
   // file menu
-  new KAction(i18n("&Send Now"),"mail_send", 0 , this, SLOT(slotSendNow()),
+  new KAction(i18n("&Send Now"),"mail_send", CTRL + Key_Return , this, SLOT(slotSendNow()),
               actionCollection(), "send_now");
   new KAction(i18n("Send &Later"), "queue", 0, this, SLOT(slotSendLater()),
               actionCollection(), "send_later");
