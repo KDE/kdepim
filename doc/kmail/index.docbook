@@ -17,16 +17,17 @@
 * document "check what the server supports"
 * document "pipelining..."
 * more about the "create folder" dialog
-* is it "message", "mail" or "email" ??? 
-* coherent wording for is section / tab / ...
 * better markup instead of 'quote'
-* <menuchoice><guimenu>xxx , or is <guimenu>xxx enough?
 * fix my adverb vs. adjective mistakes
+
+* coherent wording for is section / tab / ...
+* message vs. mail vs. email -> using "message" everywhere
+* window vs. dialog
+* <menuchoice><guimenu>xxx , or is <guimenu>xxx enough?
 * <guiicon> vs. <guibutton>
 * spelling: homepage vs. home page, popup vs pop up, frontend vs front end
 
 * in KMail: kmail vs. KMail
-
 -->
 
 <authorgroup>
@@ -50,7 +51,7 @@
 
 </authorgroup>
 
-<date>2002-01-31</date>
+<date>2002-02-01</date>
 <releaseinfo>1.04.00</releaseinfo>
 
 <copyright>
@@ -356,7 +357,7 @@ action="simul">&Ctrl;<keycap>N</keycap></keycombo>, select the
 <guiicon>New Message</guiicon> icon (the empty sheet of paper) or select
 the <menuchoice><guimenu>Message</guimenu><guimenuitem>New
 Message...</guimenuitem></menuchoice> menu item.  The
-<guilabel>Composer</guilabel> window will appear. Fill in the
+composer window will appear. Fill in the
 <guilabel>To:</guilabel> field with your email address and type
 something in the <guilabel>Subject</guilabel> field. Send the message by
 selecting <menuchoice><guimenu>Message</guimenu> <guimenuitem>Send</guimenuitem>
@@ -505,7 +506,7 @@ to using <keycombo action="simul">&Ctrl;<keycap>Left Arrow</keycap></keycombo> o
 <sect1 id="the-composer-window">
 <title>The Composer Window</title>
 
-<para>The <guilabel>Composer</guilabel> window is used to write new messages.
+<para>The composer window is used to write new messages.
 It can be invoked from the <menuchoice><guimenu>Message</guimenu></menuchoice>
 menu or from the <guiicon>New Message</guiicon> icon on the <guilabel>Mail
 Reader</guilabel> window button bar.</para>
@@ -514,7 +515,7 @@ Reader</guilabel> window button bar.</para>
 <title>Composing a Message</title>
 
 <para>To write your message, fill in the appropriate fields in the
-<guilabel>Composer</guilabel> window. Use the <guimenu>View</guimenu> menu
+composer window. Use the <guimenu>View</guimenu> menu
 to select which header fields are displayed. There are a variety of shortcuts to help
 you with writing your messages. The <guiicon>ellipsis</guiicon> buttons next to
 the <guilabel>To:</guilabel>, <guilabel>Cc:</guilabel>, and
@@ -561,7 +562,7 @@ to attach.</para>
 </listitem>
 <listitem>
 <para>Drag a file from the desktop or another directory into the
-<guilabel>Composer</guilabel> window.</para> 
+composer window.</para> 
 </listitem>
 <listitem>
 <para>Select one of the options in the
@@ -570,7 +571,7 @@ to attach.</para>
 </itemizedlist>
 
 <para>Once a file is attached to your message, it appears in the attachments
-pane at the bottom of the <guilabel>Composer</guilabel> window. You can use the
+pane at the bottom of the composer window. You can use the
 &RMB; on each attachment to <guimenuitem>View</guimenuitem>,
 <guimenuitem>Save</guimenuitem> or <guimenuitem>Remove</guimenuitem>
 the attachment.</para>
@@ -1321,7 +1322,7 @@ find a key for a recipient.</para>
 
 </variablelist>
 
-<para>On the <guilabel>Composer</guilabel> tab you can also check the
+<para>In the <guilabel>Composer</guilabel> section you can also check the
 <guilabel>Automatically sign messages using OpenPGP</guilabel> option. This means
 that all your messages will be signed before being sent. (So you don't have to
 set the signing option for each message manually.)</para>
@@ -1340,14 +1341,38 @@ url="http://www.cam.ac.uk.pgp.net/pgpnet/">http://www.cam.ac.uk.pgp.net/pgpnet/<
 <sect2 id="pgp-sign-your-messages">
 <title>Sign your Messages</title>
 
-<para>You compose your message as usual in the <guilabel>Composer</guilabel>
-window of &kmail;. Before you send the message, check the button with the
-underlining icon on it in the toolbar of the composer window. Then, you can send
-the message. To sign it, &kmail; needs to know your <application>PGP</application> passphrase. If you
-didn't select <guilabel>Keep passphrase in memory</guilabel> in the
-<guilabel>Security</guilabel> settings tab, &kmail; will ask you for it.  On the
+<para>You compose your message as usual in the composer
+window of &kmail;. Before you send the message, check the <guiicon>Sign Message</guiicon>
+icon the toolbar of the composer window. Then, you can send
+the message. The identity you are using the write the current message needs to 
+be connected to an <guilabel>OpenPGP Key</guilabel> in the <guilabel>Identity</guilabel>
+section of the <guilabel>Configure</guilabel> dialog.
+To sign the message, &kmail; needs to know your <application>PGP</application> 
+passphrase. If you didn't select <guilabel>Keep passphrase in memory</guilabel> in the
+<guilabel>Security</guilabel> section, &kmail; will ask you for it.  On the
 other hand, if you have already given the phrase to &kmail;, it will sign the
 message without any further prompt.</para>
+
+</sect2>
+
+<sect2 id="pgp-encrypt-your-messages">
+<title>Use Public Keys of other People - Encrypt your Messages</title>
+
+<para>To send an encrypted message to somebody of whom you have a public key,
+you simply create the message in the composer window. Before you send the
+message, check the button with the lock symbol in the toolbar of the composer
+window. Then send the message.</para>
+
+<para>&kmail; always uses the first key which matches the recipient's address to
+encrypt the message. If &kmail; can't find a matching key for a
+recipient, it will display a list containing all available keys. You
+can choose the appropriate key from the list or cancel the action.
+&kmail; might also inform you about errors throughout the encryption
+process.</para>
+
+<para>As mentioned above, you won't be able to read your own encrypted sent
+messages if you don't check <guilabel>Always encrypt to self</guilabel> in the
+setting's <guilabel>Security</guilabel> tab.</para>
 
 </sect2>
 
@@ -1355,10 +1380,10 @@ message without any further prompt.</para>
 <title>Send your Public Key</title>
 
 <para>Prepare a message to the person you want to send your public key to. Then
-choose in the <guilabel>Composer</guilabel> window's menu
+choose in the composer window's menu
 <menuchoice><guimenu>Attach</guimenu><guimenuitem>Attach My Public
-Key</guimenuitem></menuchoice>. This will attach your public key to the
-mail. Now you can send the mail.</para>
+Key</guimenuitem></menuchoice>. This will attach the public key you
+defined for the current identity to the message. Now you can send the message.</para>
 
 <para>Remember that it's not safe at all if you sign the message to make sure
 that the receiver will get the correct key. There can be a man-in-the-middle
@@ -1399,27 +1424,6 @@ to encrypt messages unless you have signed that key (use
 the key</replaceable></userinput>). With <application>GnuPG</application>,
 on the other hand, it's currently possible to encrypt messages with
 untrusted keys.</para>
-
-</sect2>
-
-<sect2 id="pgp-encrypt-your-messages">
-<title>Use Public Keys of other People - Encrypt your Messages</title>
-
-<para>To send an encrypted message to somebody of whom you have a public key,
-you simply create the message in the composer window. Before you send the
-message, check the button with the lock symbol in the toolbar of the composer
-window. Then send the message.</para>
-
-<para>&kmail; always uses the first key which matches the recipient's address to
-encrypt the message. If &kmail; can't find a matching key for a
-recipient, it will display a list containing all available keys. You
-can choose the appropriate key from the list or cancel the action.
-&kmail; might also inform you about errors throughout the encryption
-process.</para>
-
-<para>As mentioned above, you won't be able to read your own encrypted sent
-messages if you don't check <guilabel>Always encrypt to self</guilabel> in the
-setting's <guilabel>Security</guilabel> tab.</para>
 
 </sect2>
 
@@ -1660,7 +1664,7 @@ tab</link> of the <link linkend="configure-network">
 <title><guilabel>Signature</guilabel> Tab</title>
 
 <para>This tab allows you to specify a signature (footer/disclaimer)
-to be appended to each mail sent using this identity.</para>
+to be appended to each message sent using this identity.</para>
 
 <note><para>This type of signature has nothing to do with the
 (digital) signatures for which you can select the to-be-used key on
@@ -1676,10 +1680,10 @@ want to append signatures when using this identity.</para>
 <!-- fixme: move
 <para>Check the <guilabel>Automatically append signature</guilabel>
 option if you want the signature to be appended automatically to each
-mail you compose using this identity. Else, choose
+message you compose using this identity. Else, choose
 <menuchoice><guimenuitem>Append signature</guimenuitem></menuchoice> in
 the <link
-linkend="composer-attach-menu"><guilabel>Composer</guilabel>'s
+linkend="composer-attach-menu">composer</link>'s
 <guimenu>Attach</guimenu> menu</link> whenever you want to append the
 signature.</para>
 -->
@@ -1936,15 +1940,15 @@ or you turned off using the recipient's key in the <guilabel>Encryption Preferen
 setting of the <guilabel>Encryption Key Approval</guilabel> dialog.</para>
 
 <para><guilabel>Word wrap at column</guilabel> lets you turn word wrapping on
-and off in the <guilabel>Composer window</guilabel> and lets you set the column
+and off in the composer window and lets you set the column
 at which words will be wrapped (you probably should not need to change
 the default value, which is <userinput>78</userinput>).</para>
 
-<para>If you don't like the <guilabel>Composer</guilabel> you can use a
-different editor. Note that the <guilabel>Composer</guilabel> window will still open and
+<para>If you don't like the Composer you can use a
+different editor. Note that the composer window will still open and
 the external editor will open as soon as you type just one character in the body
 of the message. If you're done, save the text and exit the editor. The text will
-now appear in the <guilabel>Composer</guilabel> window, where you can send
+now appear in the composer window, where you can send
 it. Note that your editor may not return immediately, &eg; you have to
 use <userinput>gvim -f %f</userinput> for <application>gvim</application>.</para>
 
@@ -2038,7 +2042,7 @@ to leave this option off (although it has no effect if you only view
 plain text messages). By
 adding external references to their messages, people sending spam can
 detect that and when you have looked at their message. Note that this option
-has no effect on &Java;, Javascript and Plugins - these are disabled
+has no effect on &Java;, JavaScript and Plugins - these are disabled
 anyway and cannot be enabled at all.</para>
 
 <para><guilabel>Automatically send receive and read
@@ -2686,7 +2690,7 @@ they reply to.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Opens the <guilabel>Composer</guilabel> window so you can write a new
+<para>Opens the composer window so you can write a new
 mail. If the current folder holds a mailing list and has a <guilabel>Post 
 Address</guilabel> defined, this address will be default <guilabel>To:</guilabel>
 address.</para>
@@ -2755,7 +2759,7 @@ address.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Opens up the <guilabel>Composer</guilabel> window with the contents of the
+<para>Opens up the composer window with the contents of the
 selected message's <guilabel>Reply-To</guilabel> field in the
 <guilabel>To:</guilabel> field.</para>
 </listitem>
@@ -2770,11 +2774,11 @@ selected message's <guilabel>Reply-To</guilabel> field in the
 </menuchoice>
 </term>
 <listitem>
-<para>Opens up the <guilabel>Composer</guilabel> window and copies the contents
+<para>Opens up the composer window and copies the contents
 of the selected message's <guilabel>Reply-To:</guilabel> and
 <guilabel>To:</guilabel> fields into the <guilabel>To:</guilabel> field, and the
 <guilabel>Cc:</guilabel> field into the <guilabel>Cc:</guilabel> field of the
-<guilabel>Composer</guilabel> window.</para> 
+composer window.</para> 
 </listitem>
 </varlistentry>
 
@@ -2787,7 +2791,7 @@ of the selected message's <guilabel>Reply-To:</guilabel> and
 </menuchoice>
 </term>
 <listitem>
-<para>Opens up the <guilabel>Composer</guilabel> with the <guilabel>To:</guilabel>
+<para>Opens up the composer with the <guilabel>To:</guilabel>
 field set to the mailing list address. Of course this will only work
 if you configured the current folder to be associated with a mailing list.
 Otherwise the <guilabel>To:</guilabel> field will be empty.</para>
@@ -2803,7 +2807,7 @@ Otherwise the <guilabel>To:</guilabel> field will be empty.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Opens up the <guilabel>Composer</guilabel> to reply but does not quote the
+<para>Opens up the composer to reply but does not quote the
 text of the original message.</para>
 </listitem>
 </varlistentry>
@@ -3265,7 +3269,7 @@ position.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Opens up a new <guilabel>Composer</guilabel> window.</para>
+<para>Opens up a new composer window.</para>
 </listitem>
 </varlistentry>
 
@@ -3278,7 +3282,7 @@ position.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Closes this <guilabel>Composer</guilabel> window.</para>
+<para>Closes this composer window.</para>
 </listitem>
 </varlistentry>
 
@@ -3436,7 +3440,7 @@ first time.</para>
 <title><guimenu>View</guimenu> Menu</title>
 
 <para>This menu lets you toggle the display of the header fields and other
-options in this <guilabel>Composer</guilabel> window.</para>
+options in this composer window.</para>
 
 <para>Options available are:</para>
 
@@ -3957,7 +3961,7 @@ folders</guimenuitem></menuchoice> (by default this will also happen every time 
 HTML to plain text</guimenuitem></menuchoice>. For security reasons you should
 only do so for trusted messages. Note that plugins (like <trademark
 class="registered">Macromedia</trademark> <application>Flash</application>),
-&Java; and Javascript will not be displayed in &kmail; for security reasons
+&Java; and JavaScript will not be displayed in &kmail; for security reasons
 and there's no way to activate them.</para></answer>
 </qandaentry>
 
@@ -4089,7 +4093,7 @@ default charset you want to use for your own messages.</para></answer>
 <question><para>Spellchecking doesn't recognize non-english
 characters.</para></question>
 <answer><para>Before you can use spellchecking the first time, you have to
-configure it. You can do so in the <guilabel>Composer</guilabel> window's menu
+configure it. You can do so in the composer window's menu
 under <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Spellchecker...</guimenuitem></menuchoice>. You can set
 the dictionary and the encoding there.</para></answer>
@@ -4425,12 +4429,12 @@ revision of this documentation. </para>
 <!-- please keep in sync with the authors list on the webpage -->
 
 <!-- This is generated with "authors2xml.pl kmail/main.cpp"
- (except the "maintainer" comment: -->
+ (except the "maintainer" comment): -->
 <itemizedlist>
-<listitem><para>Michael Haeckel <email>haeckel@kde.org</email> (current maintainer)</para></listitem>
+<listitem><para>Michael H&auml;ckel <email>haeckel@kde.org</email> (current maintainer)</para></listitem>
 <listitem><para>Don Sanders <email>sanders@kde.org</email></para></listitem>
 <listitem><para>Stefan Taferner  <email>taferner@kde.org</email></para></listitem>
-<listitem><para>Ingo Kloecker <email>ingo.kloecker@epost.de</email></para></listitem>
+<listitem><para>Ingo Kl&ouml;cker <email>ingo.kloecker@epost.de</email></para></listitem>
 <listitem><para>Marc Mutz <email>mutz@kde.org</email></para></listitem>
 <listitem><para>Daniel Naber <email>daniel.naber@t-online.de</email></para></listitem>
 <listitem><para>Andreas Gungl <email>a.gungl@gmx.de</email></para></listitem>
