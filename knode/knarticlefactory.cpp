@@ -261,7 +261,14 @@ void KNArticleFactory::createForward(KNArticle *a)
   if(!a)
     return;
 
+
+  KNHeaders::ContentType *ct=a->contentType();
   QCString chset;
+  bool incAtt = ( ct->isMultipart() && ct->isSubtype("mixed") &&
+                  KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget,
+                  i18n("This article contains attachments. Do you want them to be forwarded too?"))
+                );
+
   if (knGlobals.cfgManager->postNewsTechnical()->useOwnCharset())
     chset = knGlobals.cfgManager->postNewsTechnical()->charset();
   else
@@ -303,6 +310,20 @@ void KNArticleFactory::createForward(KNArticle *a)
   fwd+=QString("\n`--------------- %1\n").arg(i18n("Forwarded message (end)"));
 
   //--------------------------- </Body> ----------------------------
+
+
+  //------------------------ <Attachments> -------------------------
+
+  if(incAtt) {
+    KNMimeContent::List al;
+
+    a->attachments(&al, false);
+    for(KNMimeContent *c=al.first(); c; c=al.next()) {
+      art->addContent( new KNMimeContent(c->head(), c->body()) );
+    }
+  }
+
+  //------------------------ </Attachments> ------------------------
 
 
   //open composer

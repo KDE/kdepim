@@ -644,6 +644,15 @@ KNMimeContent::KNMimeContent()
 }
 
 
+KNMimeContent::KNMimeContent(const QCString &h, const QCString &b)
+ : c_ontents(0), h_eaders(0), f_orceDefaultCS(false)
+{
+  d_efaultCS = cachedCharset("ISO-8859-1");
+  h_ead=h.copy();
+  b_ody=b.copy();
+}
+
+
 KNMimeContent::~KNMimeContent()
 {
   delete c_ontents;
@@ -1860,19 +1869,29 @@ void KNLocalArticle::setForceDefaultCS(bool b)
 
 
 KNAttachment::KNAttachment(KNMimeContent *c)
-  : c_ontent(c), l_oadHelper(0), i_sAttached(true), h_asChanged(false)
+  : c_ontent(c), l_oadHelper(0), i_sAttached(true)
 {
   KNHeaders::ContentType  *t=c->contentType();
   KNHeaders::CTEncoding   *e=c->contentTransferEncoding();
   KNHeaders::CDescription *d=c->contentDescription(false);
 
   n_ame=t->name();
-  setMimeType(t->mimeType());
 
   if(d)
     d_escription=d->asUnicodeString();
 
-  e_ncoding.setCte(e->cte());
+
+  setMimeType(t->mimeType());
+
+  if(e->cte()==KNHeaders::CEuuenc) {
+    setCte( KNHeaders::CEbase64 );
+    updateContentInfo();
+  }
+  else
+    e_ncoding.setCte( e->cte() );
+
+
+  h_asChanged=false; // has been set to "true" in setMimeType()
 }
 
 
@@ -1966,6 +1985,8 @@ void KNAttachment::updateContentInfo()
     c_ontent->contentTransferEncoding()->setCte(e_ncoding.cte());
 
   c_ontent->assemble();
+
+  h_asChanged=false;
 }
 
 

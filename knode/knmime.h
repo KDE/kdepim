@@ -146,6 +146,7 @@ class KNMimeContent : public KNMimeBase {
     typedef QList<KNMimeContent> List;
 
     KNMimeContent();
+    KNMimeContent(const QCString &h, const QCString &b);
     virtual ~KNMimeContent();
 
     //type
