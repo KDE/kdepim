@@ -59,7 +59,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
   kfd = new KFileDialog( evolDir, "", 0, "kfiledialog", true );
   kfd->setMode(KFile::Directory | KFile::LocalOnly); 
   kfd->exec();
-  QString mailDir  = kfd->selectedFile();
+  mailDir = kfd->selectedFile();
 
    if (mailDir.isEmpty()) {
     info->alert(i18n("No directory selected."));
@@ -92,7 +92,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
           temp_mailfile.endsWith(".ibex.index") || temp_mailfile.endsWith(".ibex.index.data") ) {}
       else {  
           info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
-          importMBox(info, mailDir + "/" + temp_mailfile , temp_mailfile, QString::null);
+          importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString::null);
       }
     }
   
@@ -159,8 +159,21 @@ void FilterEvolution_v2::importMBox(FilterInfo *info, const QString& mboxName, c
     QFileInfo filenameInfo(mboxName);
     
     info->setCurrent(0);
-    info->setFrom(mboxName);
-    info->setTo(targetDir);
+    if( mboxName.length() > 20 ) {
+        QString tmp_info = mboxName;
+	tmp_info = tmp_info.replace( mailDir, "../" );
+	if (tmp_info.contains(".sbd")) tmp_info.remove(".sbd");
+	info->setFrom( tmp_info );
+    }
+    else 
+        info->setFrom(mboxName);
+    if(targetDir.contains(".sbd")) {
+	QString tmp_info = targetDir;
+	tmp_info.remove(".sbd");
+	info->setTo(tmp_info);
+    }
+    else
+     	info->setTo(targetDir);
     
     while (!mbox.atEnd()) {
       KTempFile tmp;

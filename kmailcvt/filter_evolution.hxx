@@ -36,6 +36,8 @@ public:
   void import(FilterInfo *info);
 
 private:
+  QString mailDir;
+  
   void importDirContents(FilterInfo*, const QString&, const QString&, const QString&);
   void importMBox(FilterInfo*, const QString&, const QString&, const QString&);
 };
