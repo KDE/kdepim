@@ -11,8 +11,8 @@ METASOURCES = AUTO
 servicedir  = $(kde_servicesdir)
 service_DATA = vcal-conduit.desktop todo-conduit.desktop
 
-noinst_LTLIBRARIES = libvcalconduit_shared.la
 kde_module_LTLIBRARIES = conduit_vcal.la conduit_todo.la
+noinst_LTLIBRARIES = libvcalconduit_shared.la
 
 libvcalconduit_shared_la_SOURCES = vcalconduitSettings.kcfgc \
 	korganizerConduit.ui \
