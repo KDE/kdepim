@@ -60,8 +60,6 @@
 
 #include <netwm.h>
 
-extern QCString execArguments;
-
 #define       DAEMON_APP_NAME_DEF    "kalarmd"
 const char*   DCOP_OBJECT_NAME     = "display";
 const char*   GUI_DCOP_OBJECT_NAME = "tray";
@@ -403,7 +401,7 @@ int KAlarmApp::newInstance()
 					kdDebug(5950)<<"KAlarmApp::newInstance(): exec\n";
 					if (args->isSet("mail"))
 						USAGE(i18n("%1 incompatible with %2").arg(QString::fromLatin1("--mail")).arg(QString::fromLatin1("--exec")))
-					alMessage = execArguments;
+					alMessage = args->getOption("exec");
 					action = KAlarmEvent::COMMAND;
 				}
 				else if (args->isSet("mail"))
