@@ -276,6 +276,33 @@ free_fd_data_map (struct fd_data_map_s *fd_data_map)
 }
 
 
+static gpgme_error_t
+gpg_cancel (void *engine)
+{
+  engine_gpg_t gpg = engine;
+
+  if (!gpg)
+    return gpg_error (GPG_ERR_INV_VALUE);
+
+  if (gpg->status.fd[0] != -1)
+    _gpgme_io_close (gpg->status.fd[0]);
+  if (gpg->status.fd[1] != -1)
+    _gpgme_io_close (gpg->status.fd[1]);
+  if (gpg->colon.fd[0] != -1)
+    _gpgme_io_close (gpg->colon.fd[0]);
+  if (gpg->colon.fd[1] != -1)
+    _gpgme_io_close (gpg->colon.fd[1]);
+  if (gpg->fd_data_map)
+    {
+      free_fd_data_map (gpg->fd_data_map);
+      gpg->fd_data_map = NULL;
+    }
+  if (gpg->cmd.fd != -1)
+    _gpgme_io_close (gpg->cmd.fd);
+
+  return 0;
+}
+
 static void
 gpg_release (void *engine)
 {
@@ -283,6 +310,8 @@ gpg_release (void *engine)
 
   if (!gpg)
     return;
+
+  gpg_cancel (engine);
 
   while (gpg->arglist)
     {
@@ -302,18 +331,6 @@ gpg_release (void *engine)
   if (gpg->cmd.keyword)
     free (gpg->cmd.keyword);
 
-  if (gpg->status.fd[0] != -1)
-    _gpgme_io_close (gpg->status.fd[0]);
-  if (gpg->status.fd[1] != -1)
-    _gpgme_io_close (gpg->status.fd[1]);
-  if (gpg->colon.fd[0] != -1)
-    _gpgme_io_close (gpg->colon.fd[0]);
-  if (gpg->colon.fd[1] != -1)
-    _gpgme_io_close (gpg->colon.fd[1]);
-  if (gpg->fd_data_map)
-    free_fd_data_map (gpg->fd_data_map);
-  if (gpg->cmd.fd != -1)
-    _gpgme_io_close (gpg->cmd.fd);
   free (gpg);
 }
 
@@ -549,7 +566,7 @@ build_argv (engine_gpg_t gpg)
     argc++;
   if (!gpg->cmd.used)
     argc++;	/* --batch */
-  argc += 2; /* --comment */
+  argc += 1; /* --no-comment */
 
   argv = calloc (argc + 1, sizeof *argv);
   if (!argv)
@@ -608,16 +625,7 @@ build_argv (engine_gpg_t gpg)
         }
       argc++;
     }
-  argv[argc] = strdup ("--comment");
-  if (!argv[argc])
-    {
-      int saved_errno = errno;
-      free (fd_data_map);
-      free_argv (argv);
-      return gpg_error_from_errno (saved_errno);
-    }
-  argc++;
-  argv[argc] = strdup ("");
+  argv[argc] = strdup ("--no-comment");
   if (!argv[argc])
     {
       int saved_errno = errno;
@@ -1673,5 +1681,6 @@ struct engine_ops _gpgme_engine_ops_gpg =
     gpg_trustlist,
     gpg_verify,
     gpg_set_io_cbs,
-    gpg_io_event
+    gpg_io_event,
+    gpg_cancel
   };

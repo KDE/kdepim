@@ -1,6 +1,6 @@
 /* engine-gpgsm.c - GpgSM engine.
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004 g10 Code GmbH
  
    This file is part of GPGME.
 
@@ -40,6 +40,7 @@
 
 #include "assuan.h"
 #include "status-table.h"
+#include "debug.h"
 
 #include "engine-backend.h"
 
@@ -272,13 +273,13 @@ map_assuan_error (AssuanError err)
 }
 
 
-static void
-gpgsm_release (void *engine)
+static gpgme_error_t
+gpgsm_cancel (void *engine)
 {
   engine_gpgsm_t gpgsm = engine;
 
   if (!gpgsm)
-    return;
+    return gpg_error (GPG_ERR_INV_VALUE);
 
   if (gpgsm->status_cb.fd != -1)
     _gpgme_io_close (gpgsm->status_cb.fd);
@@ -289,7 +290,25 @@ gpgsm_release (void *engine)
   if (gpgsm->message_cb.fd != -1)
     _gpgme_io_close (gpgsm->message_cb.fd);
 
-  assuan_disconnect (gpgsm->assuan_ctx);
+  if (gpgsm->assuan_ctx)
+    {
+      assuan_disconnect (gpgsm->assuan_ctx);
+      gpgsm->assuan_ctx = NULL;
+    }
+
+  return 0;
+}
+
+
+static void
+gpgsm_release (void *engine)
+{
+  engine_gpgsm_t gpgsm = engine;
+
+  if (!gpgsm)
+    return;
+
+  gpgsm_cancel (engine);
 
   free (gpgsm->colon.attic.line);
   free (gpgsm);
@@ -427,40 +446,20 @@ gpgsm_new (void **engine, const char *lc_ctype, const char *lc_messages)
 	}
     }
 
-  if (ttyname_r (1, dft_ttyname, sizeof (dft_ttyname)))
+  if (isatty (1))
     {
-      err = gpg_error_from_errno (errno);
-      goto leave;
-    }
-  else
-    {
-      if (asprintf (&optstr, "OPTION ttyname=%s", dft_ttyname) < 0)
-        {
+      if (ttyname_r (1, dft_ttyname, sizeof (dft_ttyname)))
+	{
 	  err = gpg_error_from_errno (errno);
 	  goto leave;
 	}
-      err = assuan_transact (gpgsm->assuan_ctx, optstr, NULL, NULL, NULL,
-			     NULL, NULL, NULL);
-      free (optstr);
-      if (err)
+      else
 	{
-	  err = map_assuan_error (err);
-	  goto leave;
-	}
-
-      err = _gpgme_getenv ("TERM", &dft_ttytype);
-      if (err)
-	goto leave;
-      if (dft_ttytype)
-	{
-	  if (asprintf (&optstr, "OPTION ttytype=%s", dft_ttytype) < 0)
+	  if (asprintf (&optstr, "OPTION ttyname=%s", dft_ttyname) < 0)
 	    {
-	      free (dft_ttytype);
 	      err = gpg_error_from_errno (errno);
 	      goto leave;
 	    }
-	  free (dft_ttytype);
-
 	  err = assuan_transact (gpgsm->assuan_ctx, optstr, NULL, NULL, NULL,
 				 NULL, NULL, NULL);
 	  free (optstr);
@@ -469,40 +468,63 @@ gpgsm_new (void **engine, const char *lc_ctype, const char *lc_messages)
 	      err = map_assuan_error (err);
 	      goto leave;
 	    }
-	}
 
-      if (lc_ctype)
-	{
-	  if (asprintf (&optstr, "OPTION lc-ctype=%s", lc_ctype) < 0)
-	    err = gpg_error_from_errno (errno);
-	  else
+	  err = _gpgme_getenv ("TERM", &dft_ttytype);
+	  if (err)
+	    goto leave;
+	  if (dft_ttytype)
 	    {
+	      if (asprintf (&optstr, "OPTION ttytype=%s", dft_ttytype) < 0)
+		{
+		  free (dft_ttytype);
+		  err = gpg_error_from_errno (errno);
+		  goto leave;
+		}
+	      free (dft_ttytype);
+
 	      err = assuan_transact (gpgsm->assuan_ctx, optstr, NULL, NULL,
 				     NULL, NULL, NULL, NULL);
 	      free (optstr);
 	      if (err)
-		err = map_assuan_error (err);
+		{
+		  err = map_assuan_error (err);
+		  goto leave;
+		}
 	    }
 	}
-      if (err)
-	goto leave;
-
-      if (lc_messages)
-	{
-	  if (asprintf (&optstr, "OPTION lc-messages=%s", lc_messages) < 0)
-	    err = gpg_error_from_errno (errno);
-	  else
-	    {
-	      err = assuan_transact (gpgsm->assuan_ctx, optstr, NULL, NULL,
-				     NULL, NULL, NULL, NULL);
-	      free (optstr);
-	      if (err)
-		err = map_assuan_error (err);
-	    }
-	}
-      if (err)
-	goto leave;
     }
+
+  if (lc_ctype)
+    {
+      if (asprintf (&optstr, "OPTION lc-ctype=%s", lc_ctype) < 0)
+	err = gpg_error_from_errno (errno);
+      else
+	{
+	  err = assuan_transact (gpgsm->assuan_ctx, optstr, NULL, NULL,
+				 NULL, NULL, NULL, NULL);
+	  free (optstr);
+	  if (err)
+	    err = map_assuan_error (err);
+	}
+    }
+  if (err)
+    goto leave;
+  
+  if (lc_messages)
+    {
+      if (asprintf (&optstr, "OPTION lc-messages=%s", lc_messages) < 0)
+	err = gpg_error_from_errno (errno);
+      else
+	{
+	  err = assuan_transact (gpgsm->assuan_ctx, optstr, NULL, NULL,
+				 NULL, NULL, NULL, NULL);
+	  free (optstr);
+	  if (err)
+	    err = map_assuan_error (err);
+	}
+    }
+  if (err)
+    goto leave;
 
   if (!err
       && (_gpgme_io_set_close_notify (gpgsm->status_cb.fd,
@@ -671,6 +693,8 @@ status_handler (void *opaque, int fd)
 	  /* Try our best to terminate the connection friendly.  */
 	  /*	  assuan_write_line (gpgsm->assuan_ctx, "BYE"); */
 	  err = map_assuan_error (assuan_err);
+          DEBUG3 ("fd %d: error from assuan (%d) getting status line : %s \n",
+                  fd, assuan_err, gpg_strerror (err));
 	}
       else if (linelen >= 3
 	       && line[0] == 'E' && line[1] == 'R' && line[2] == 'R'
@@ -680,6 +704,8 @@ status_handler (void *opaque, int fd)
 	    err = map_assuan_error (atoi (&line[4]));
 	  else
 	    err = gpg_error (GPG_ERR_GENERAL);
+          DEBUG2 ("fd %d: ERR line - mapped to: %s\n",
+                  fd, err? gpg_strerror (err):"ok");
 	}
       else if (linelen >= 2
 	       && line[0] == 'O' && line[1] == 'K'
@@ -700,6 +726,8 @@ status_handler (void *opaque, int fd)
               err = gpgsm->colon.fnc (gpgsm->colon.fnc_value, NULL);
             }
 	  _gpgme_io_close (gpgsm->status_cb.fd);
+          DEBUG2 ("fd %d: OK line - final status: %s\n",
+                  fd, err? gpg_strerror (err):"ok");
 	  return err;
 	}
       else if (linelen > 2
@@ -773,6 +801,8 @@ status_handler (void *opaque, int fd)
 		    dst++;
 		}
 	    }
+          DEBUG2 ("fd %d: D line; final status: %s\n",
+                  fd, err? gpg_strerror (err):"ok");
         }
       else if (linelen > 2
 	       && line[0] == 'S' && line[1] == ' ')
@@ -795,6 +825,8 @@ status_handler (void *opaque, int fd)
 	    }
 	  else
 	    fprintf (stderr, "[UNKNOWN STATUS]%s %s", line + 2, rest);
+          DEBUG3 ("fd %d: S line (%s) - final status: %s\n",
+                  fd, line+2, err? gpg_strerror (err):"ok");
 	}
     }
   while (!err && assuan_pending_line (gpgsm->assuan_ctx));
@@ -1092,7 +1124,6 @@ gpgsm_export_ext (void *engine, const char *pattern[], unsigned int reserved,
 	      patlet++;
 	    }
 	  pat++;
-	  /* This will allocate one byte more than necessary.  */
 	  length++;
 	}
     }
@@ -1135,6 +1166,8 @@ gpgsm_export_ext (void *engine, const char *pattern[], unsigned int reserved,
 	      patlet++;
 	    }
 	  pattern++;
+          if (*pattern)
+            *linep++ = ' ';
 	}
     }
   *linep = '\0';
@@ -1226,6 +1259,16 @@ gpgsm_keylist (void *engine, const char *pattern, int secret_only,
   if (err)
     return err;
 
+
+  /* Use the validation mode if required.  We don't check for an error
+     yet because this is a pretty fresh gpgsm features. */
+  gpgsm_assuan_simple_command (gpgsm->assuan_ctx, 
+                               (mode & GPGME_KEYLIST_MODE_VALIDATE)?
+                               "OPTION with-validation=1":
+                               "OPTION with-validation=0" ,
+                               NULL, NULL);
+
+
   /* Length is "LISTSECRETKEYS " + p + '\0'.  */
   line = malloc (15 + strlen (pattern) + 1);
   if (!line)
@@ -1261,6 +1304,7 @@ gpgsm_keylist_ext (void *engine, const char *pattern[], int secret_only,
   /* Length is "LISTSECRETKEYS " + p + '\0'.  */
   int length = 15 + 1;
   char *linep;
+  int any_pattern = 0;
   int list_mode = 0;
 
   if (reserved)
@@ -1278,6 +1322,15 @@ gpgsm_keylist_ext (void *engine, const char *pattern[], int secret_only,
   if (err)
     return err;
 
+  /* Use the validation mode if required.  We don't check for an error
+     yet because this is a pretty fresh gpgsm features. */
+  gpgsm_assuan_simple_command (gpgsm->assuan_ctx, 
+                               (mode & GPGME_KEYLIST_MODE_VALIDATE)?
+                               "OPTION with-validation=1":
+                               "OPTION with-validation=0" ,
+                               NULL, NULL);
+
+
   if (pattern && *pattern)
     {
       const char **pat = pattern;
@@ -1294,7 +1347,6 @@ gpgsm_keylist_ext (void *engine, const char *pattern[], int secret_only,
 	      patlet++;
 	    }
 	  pat++;
-	  /* This will allocate one byte more than necessary.  */
 	  length++;
 	}
     }
@@ -1343,9 +1395,13 @@ gpgsm_keylist_ext (void *engine, const char *pattern[], int secret_only,
 		}
 	      patlet++;
 	    }
+          any_pattern = 1;
+          *linep++ = ' ';
 	  pattern++;
 	}
     }
+  if (any_pattern)
+    linep--;
   *linep = '\0';
 
   _gpgme_io_close (gpgsm->input_cb.fd);
@@ -1379,8 +1435,8 @@ gpgsm_sign (void *engine, gpgme_data_t in, gpgme_data_t out,
   if (err)
     return err;
 
-  /* We must do a reset becuase we need to reset the list of signers.  Note
-     that RESET does not reset OPTION commands. */
+  /* We must send a reset because we need to reset the list of
+     signers.  Note that RESET does not reset OPTION commands. */
   err = gpgsm_assuan_simple_command (gpgsm->assuan_ctx, "RESET", NULL, NULL);
   if (err)
     return err;
@@ -1530,5 +1586,6 @@ struct engine_ops _gpgme_engine_ops_gpgsm =
     NULL,		/* trustlist */
     gpgsm_verify,
     gpgsm_set_io_cbs,
-    gpgsm_io_event
+    gpgsm_io_event,
+    gpgsm_cancel
   };

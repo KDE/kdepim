@@ -1,6 +1,6 @@
 /* verify.c - Signature verification.
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004 g10 Code GmbH
 
    This file is part of GPGME.
  
@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <assert.h>
 
 #include "gpgme.h"
 #include "util.h"
@@ -36,6 +37,8 @@ typedef struct
   struct _gpgme_op_verify_result result;
 
   gpgme_signature_t current_sig;
+  int did_prepare_new_sig;
+  int only_newsig_seen;
 } *op_data_t;
 
 
@@ -146,6 +149,36 @@ calc_sig_summary (gpgme_signature_t sig)
   
 
 static gpgme_error_t
+prepare_new_sig (op_data_t opd)
+{
+  gpgme_signature_t sig;
+
+  if (opd->only_newsig_seen && opd->current_sig)
+    {
+      /* We have only seen the NEWSIG status and nothing else - we
+         better skip this signature therefore and reuse it for the
+         next possible signature. */
+      sig = opd->current_sig;
+      memset (sig, 0, sizeof *sig);
+      assert (opd->result.signatures == sig);
+    }
+  else
+    {
+      sig = calloc (1, sizeof (*sig));
+      if (!sig)
+        return gpg_error_from_errno (errno);
+      if (!opd->result.signatures)
+        opd->result.signatures = sig;
+      if (opd->current_sig)
+        opd->current_sig->next = sig;
+      opd->current_sig = sig;
+    }
+  opd->did_prepare_new_sig = 1;
+  opd->only_newsig_seen = 0;
+  return 0;
+}
+
+static gpgme_error_t
 parse_new_sig (op_data_t opd, gpgme_status_code_t code, char *args)
 {
   gpgme_signature_t sig;
@@ -157,14 +190,19 @@ parse_new_sig (op_data_t opd, gpgme_status_code_t code, char *args)
       end++;
     }
 
-  sig = calloc (1, sizeof (*sig));
-  if (!sig)
-    return gpg_error_from_errno (errno);
-  if (!opd->result.signatures)
-    opd->result.signatures = sig;
-  if (opd->current_sig)
-    opd->current_sig->next = sig;
-  opd->current_sig = sig;
+  if (!opd->did_prepare_new_sig)
+    {
+      gpg_error_t err;
+
+      err = prepare_new_sig (opd);
+      if (err)
+        return err;
+    }
+  assert (opd->did_prepare_new_sig);
+  opd->did_prepare_new_sig = 0;
+
+  assert (opd->current_sig);
+  sig = opd->current_sig;
 
   /* FIXME: We should set the source of the state.  */
   switch (code)
@@ -183,6 +221,10 @@ parse_new_sig (op_data_t opd, gpgme_status_code_t code, char *args)
 
     case GPGME_STATUS_BADSIG:
       sig->status = gpg_error (GPG_ERR_BAD_SIGNATURE);
+      break;
+
+    case GPGME_STATUS_REVKEYSIG:
+      sig->status = gpg_error (GPG_ERR_CERT_REVOKED);
       break;
 
     case GPGME_STATUS_ERRSIG:
@@ -475,26 +517,38 @@ _gpgme_verify_status_handler (void *priv, gpgme_status_code_t code, char *args)
 
   switch (code)
     {
+    case GPGME_STATUS_NEWSIG:
+      if (sig)
+        calc_sig_summary (sig);
+      err = prepare_new_sig (opd);
+      opd->only_newsig_seen = 1;
+      return err;
+
     case GPGME_STATUS_GOODSIG:
     case GPGME_STATUS_EXPSIG:
     case GPGME_STATUS_EXPKEYSIG:
     case GPGME_STATUS_BADSIG:
     case GPGME_STATUS_ERRSIG:
-      if (sig)
+    case GPGME_STATUS_REVKEYSIG:
+      if (sig && !opd->did_prepare_new_sig)
 	calc_sig_summary (sig);
+      opd->only_newsig_seen = 0;
       return parse_new_sig (opd, code, args);
 
     case GPGME_STATUS_VALIDSIG:
+      opd->only_newsig_seen = 0;
       return sig ? parse_valid_sig (sig, args)
 	: gpg_error (GPG_ERR_INV_ENGINE);
 
     case GPGME_STATUS_NODATA:
+      opd->only_newsig_seen = 0;
       if (!sig)
 	return gpg_error (GPG_ERR_NO_DATA);
       sig->status = gpg_error (GPG_ERR_NO_DATA);
       break;
 
     case GPGME_STATUS_UNEXPECTED:
+      opd->only_newsig_seen = 0;
       if (!sig)
 	return gpg_error (GPG_ERR_GENERAL);
       sig->status = gpg_error (GPG_ERR_NO_DATA);
@@ -503,6 +557,7 @@ _gpgme_verify_status_handler (void *priv, gpgme_status_code_t code, char *args)
     case GPGME_STATUS_NOTATION_NAME:
     case GPGME_STATUS_NOTATION_DATA:
     case GPGME_STATUS_POLICY_URL:
+      opd->only_newsig_seen = 0;
       return sig ? parse_notation (sig, code, args)
 	: gpg_error (GPG_ERR_INV_ENGINE);
 
@@ -511,15 +566,42 @@ _gpgme_verify_status_handler (void *priv, gpgme_status_code_t code, char *args)
     case GPGME_STATUS_TRUST_MARGINAL:
     case GPGME_STATUS_TRUST_FULLY:
     case GPGME_STATUS_TRUST_ULTIMATE:
+      opd->only_newsig_seen = 0;
       return sig ? parse_trust (sig, code, args)
 	: gpg_error (GPG_ERR_INV_ENGINE);
 
     case GPGME_STATUS_ERROR:
-      return sig ? parse_error (sig, args) : gpg_error (GPG_ERR_INV_ENGINE);
+      opd->only_newsig_seen = 0;
+      /* The error status is informational, so we don't return an
+         error code if we are not ready to process this status. */
+      return sig ? parse_error (sig, args) : 0;
 
     case GPGME_STATUS_EOF:
-      if (sig)
+      if (sig && !opd->did_prepare_new_sig)
 	calc_sig_summary (sig);
+      if (opd->only_newsig_seen && sig)
+        {
+          gpgme_signature_t sig2;
+          /* The last signature has no valid information - remove it
+             from the list. */
+          assert (!sig->next);
+          if (sig == opd->result.signatures)
+            opd->result.signatures = NULL;
+          else
+            {
+              for (sig2 = opd->result.signatures; sig2; sig2 = sig2->next)
+                if (sig2->next == sig)
+                  {
+                    sig2->next = NULL;
+                    break;
+                  }
+            }
+          /* Note that there is no need to release the members of SIG
+             because we won't be here if they have been set. */
+          free (sig);
+          opd->current_sig = NULL;
+        }
+      opd->only_newsig_seen = 0;
       break;
 
     default:

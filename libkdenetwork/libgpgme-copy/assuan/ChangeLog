@@ -1,3 +1,23 @@
+2004-06-08  Marcus Brinkmann  <marcus@g10code.de>
+
+	* assuan-buffer.c (assuan_write_line): If the line is longer than
+	the maximum line length, bail out early.
+
+2004-04-19  Werner Koch  <wk@gnupg.org>
+
+	* assuan-socket-connect.c: Include sys/types.h
+	* assuan-socket-server.c: Ditto
+	* assuan-domain-connect.c: Ditto.
+
+2004-02-18  Werner Koch  <wk@gnupg.org>
+
+	* assuan-handler.c (assuan_get_data_fp): Fail with ENOSYS if we
+	can't implement this.
+
+2004-02-13  Werner Koch  <wk@gnupg.org>
+
+	* assuan-domain-connect.c: Removed the unneeded alloca.h
+
 2003-08-13  Werner Koch  <wk@gnupg.org>
 
 	* assuan-inquire.c (assuan_inquire): Increase length of cmdbuf to

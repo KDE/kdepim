@@ -29,13 +29,13 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
-#ifdef __FreeBSD__
-#include <sys/uio.h>
-#endif
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
 #include <assert.h>
+#ifdef __FreeBSD__
+#include <sys/uio.h>
+#endif
 
 #include "assuan-defs.h"
 
@@ -474,4 +474,3 @@ assuan_domain_connect (ASSUAN_CONTEXT * r_ctx, int rendezvousfd, pid_t peer)
 
   return aerr;
 }
-

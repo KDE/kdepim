@@ -1,6 +1,6 @@
 /* gpgme.h - Public interface to GnuPG Made Easy.
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004 g10 Code GmbH
 
    This file is part of GPGME.
  
@@ -37,6 +37,9 @@
   typedef long ssize_t;
 #else
 # include <sys/types.h>
+#ifdef _WIN32
+typedef long ssize_t;
+#endif
 #endif
 
 #ifdef __cplusplus
@@ -51,14 +54,9 @@ extern "C" {
 
 /* Check for compiler features.  */
 #if __GNUC__
-#ifdef __GNUC_PATCHLEVEL__
 #define _GPGME_GCC_VERSION (__GNUC__ * 10000 \
                             + __GNUC_MINOR__ * 100 \
                             + __GNUC_PATCHLEVEL__)
-#else
-#define _GPGME_GCC_VERSION (__GNUC__ * 10000 \
-                            + __GNUC_MINOR__ * 100)
-#endif
 
 #if _GPGME_GCC_VERSION > 30100
 #define _GPGME_DEPRECATED	__attribute__ ((__deprecated__))
@@ -76,7 +74,7 @@ extern "C" {
    AM_PATH_GPGME macro) check that this header matches the installed
    library.  Warning: Do not edit the next line.  configure will do
    that for you!  */
-#define GPGME_VERSION "0.4.4"
+#define GPGME_VERSION "0.9.0"
 
 
 /* Some opaque data types used by GPGME.  */
@@ -307,6 +305,17 @@ typedef enum
 gpgme_protocol_t;
 
 
+/* The available keylist mode flags.  */
+typedef enum
+  {
+    GPGME_KEYLIST_MODE_LOCAL  = 1,
+    GPGME_KEYLIST_MODE_EXTERN = 2,
+    GPGME_KEYLIST_MODE_SIGS   = 4,
+    GPGME_KEYLIST_MODE_VALIDATE = 256
+  }
+gpgme_keylist_mode_t;
+
+
 /* The possible stati for the edit operation.  */
 typedef enum
   {
@@ -389,7 +398,9 @@ typedef enum
     GPGME_STATUS_EXPSIG,
     GPGME_STATUS_EXPKEYSIG,
     GPGME_STATUS_TRUNCATED,
-    GPGME_STATUS_ERROR
+    GPGME_STATUS_ERROR,
+    GPGME_STATUS_NEWSIG,
+    GPGME_STATUS_REVKEYSIG
   }
 gpgme_status_code_t;
 
@@ -478,7 +489,7 @@ struct _gpgme_key_sig
 {
   struct _gpgme_key_sig *next;
 
-  /* True if the signature is revoked.  */
+  /* True if the signature is a revocation signature.  */
   unsigned int revoked : 1;
 
   /* True if the signature is expired.  */
@@ -640,6 +651,12 @@ struct _gpgme_key
 
   /* Internal to GPGME, do not use.  */
   gpgme_user_id_t _last_uid;
+
+  /* The keylist mode that was active when listing the key.  */
+  /* Implementation note: We are using unsigned int here, and not
+     gpgme_keylist_mode_t, as the latter is currently an enum of
+     unknown size.  */
+  unsigned int keylist_mode;
 };
 typedef struct _gpgme_key *gpgme_key_t;
 
@@ -697,15 +714,6 @@ void gpgme_set_include_certs (gpgme_ctx_t ctx, int nr_of_certs);
 
 /* Return the number of certs to include in an S/MIME message.  */
 int gpgme_get_include_certs (gpgme_ctx_t ctx);
-
-/* The available keylist mode flags.  */
-typedef enum
-  {
-    GPGME_KEYLIST_MODE_LOCAL  = 1,
-    GPGME_KEYLIST_MODE_EXTERN = 2,
-    GPGME_KEYLIST_MODE_SIGS   = 4
-  }
-gpgme_keylist_mode_t;
 
 /* Set keylist mode in CTX to MODE.  */
 gpgme_error_t gpgme_set_keylist_mode (gpgme_ctx_t ctx,
@@ -999,6 +1007,10 @@ unsigned long gpgme_key_sig_get_ulong_attr (gpgme_key_t key, int uid_idx,
 
 /* Crypto Operations.  */
 
+/* Cancel a pending asynchronous operation.  */
+gpgme_error_t gpgme_cancel (gpgme_ctx_t ctx);
+
+
 struct _gpgme_invalid_key
 {
   struct _gpgme_invalid_key *next;
@@ -1052,6 +1064,12 @@ gpgme_error_t gpgme_op_encrypt_sign (gpgme_ctx_t ctx, gpgme_key_t recp[],
 struct _gpgme_op_decrypt_result
 {
   char *unsupported_algorithm;
+
+  /* Key should not have been used for encryption.  */
+  unsigned int wrong_key_usage : 1;
+
+  /* Internal to GPGME, do not use.  */
+  int _unused : 31;
 };
 typedef struct _gpgme_op_decrypt_result *gpgme_decrypt_result_t;
 
@@ -1181,7 +1199,8 @@ struct _gpgme_signature
   /* Signature exipration time or 0.  */
   unsigned long exp_timestamp;
 
-  int wrong_key_usage : 1;
+  /* Key should not have been used for signing.  */
+  unsigned int wrong_key_usage : 1;
 
   /* Internal to GPGME, do not use.  */
   int _unused : 31;

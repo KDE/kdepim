@@ -1,5 +1,5 @@
 /* memrchr.c - Replacement for memrchr.
- * Copyright (C) 2002 Free Software Foundation, Inc.
+ * Copyright (C) 2002, 2004 Free Software Foundation, Inc.
  *
  * This file is part of GnuPG.
  *
@@ -27,25 +27,13 @@
 void *
 memrchr (const void *block, int c, size_t size)
 {
-  unsigned char *p;
-  unsigned char l;
+  const unsigned char *p = block;
 
-  /* Deal with signed weird sizes and zero size */
-  if (size < 1) return 0;
-
-  l = c;
-
-  /* If size is 1, you want to look at the single byte pointed to
-     by *block ; if size is 2, you want to look at *block and *(block+1).
-     Hence, add (size-1), not size. */
-  p = ((unsigned char *)block) + (size - 1) ;
-
-  /* Must examine *block as well, so instead loop on the size, not
-     on a pointer comparison. */
-  for ( ; size>0 ; size --, p --) {
-    if (*p == c) {
-      return p;
+  if (size)
+    {
+      for (p += size - 1; size; p--, size--)
+        if (*p == c)
+          return (void *)p;
     }
-  }
-  return 0;
+  return NULL;
 }

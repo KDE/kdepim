@@ -1,3 +1,161 @@
+2004-06-02  Marcus Brinkmann  <marcus@g10code.de>
+
+	* libgpgme.vers: Remove C-style comment, which is not supported by
+	older binutils.
+
+2004-05-21  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme-config.in (Options): Support --api-version.
+
+	* libgpgme.vers: List all gpgme symbols under version GPGME_1.0.
+
+	* decrypt.c (_gpgme_decrypt_status_handler): Fix last change.
+	* verify.c (parse_error): Likewise.
+
+	* verify.c (parse_error): Do not skip location of where token.
+
+	* gpgme.h (gpgme_status_code_t): Add GPGME_STATUS_REVKEYSIG.
+	* verify.c (_gpgme_verify_status_handler): Add handling of
+	GPGME_STATUS_REVKEYSIG.
+	(parse_trust): Likewise.
+
+2004-05-21  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.h (struct _gpgme_decrypt_result): New fields
+	wrong_key_usage and _unused.
+	* decrypt.c (_gpgme_decrypt_status_handler): Don't skip over
+	character after a matched string, as in a protocol error this
+	could skip over the trailing binary zero.
+	Handle decrypt.keyusage error notifications.
+
+	* gpgme.h (struct _gpgme_key): New member keylist_mode.
+	* keylist.c (keylist_colon_handler): Set the keylist_mode of KEY.
+
+2004-04-29  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.h (struct _gpgme_signature): Change member WRONG_KEY_USAGE
+	to unsigned int.  Same for member _unused.
+
+	* keylist.c (set_mainkey_trust_info): Rewritten.
+	(set_subkey_capability): Handle 'd' (disabled).
+	(set_mainkey_capability): Rewritten.
+
+2004-04-22  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.m4: Quote first argument to AC_DEFUN.
+
+2004-04-21  Werner Koch  <wk@gnupg.org>
+
+	* key.c (gpgme_key_unref): Allow passing NULL like free does.
+	The rule of least surprise.
+
+2004-04-15  Werner Koch  <wk@gnupg.org>
+
+	* verify.c (prepare_new_sig, _gpgme_verify_status_handler): Remove
+	unused result.signatures items.
+
+	* keylist.c (gpgme_get_key): Return an error if FPR is NULL.
+
+2004-04-08  Werner Koch  <wk@gnupg.org>
+
+	* verify.c (_gpgme_verify_status_handler): Ignore the error status
+	if we can't process it.
+	* decrypt-verify.c (decrypt_verify_status_handler): Backed out
+	yesterday's hack.  It is not any longer required.
+
+2004-04-07  Werner Koch  <wk@gnupg.org>
+
+	* decrypt-verify.c (decrypt_verify_status_handler): Hack to cope
+	with meaningless error codes from the verify status function.
+
+2004-04-05  Werner Koch  <wk@gnupg.org>
+
+	* gpgme.h: Add GPGME_STATUS_NEWSIG.
+
+	* verify.c (parse_error): Compare only the last part of the where
+	token.
+	(prepare_new_sig): New.
+	(parse_new_sig): Use prepare_new_sig when required.
+	(_gpgme_verify_status_handler): Handle STATUS_NEWSIG.
+
+	* engine-gpgsm.c (gpgsm_keylist_ext): Send with-validation
+	option.  Fixed pattern construction.
+	(status_handler): Add debugging output.
+
+2004-03-23  Marcus Brinkmann  <marcus@g10code.de>
+
+	* engine-gpgsm.c (gpgsm_new): Protect _only_ tty related code with
+	isatty().  Submitted by Bernhard Herzog.
+
+2004-03-11  Marcus Brinkmann  <marcus@g10code.de>
+
+	* engine-gpgsm.c (gpgsm_new): Protect all tty related code with
+	isatty().
+
+	* rungpg.c (gpg_cancel): Set GPG->fd_data_map to NULL after
+	releasing it.
+	* engine-gpgsm.c (gpgsm_cancel): Only call assuan_disconnect if
+	GPGSM->assuan_ctx is not NULL.  Set it to NULL afterwards.
+
+2004-03-07  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme-config.in: Do not emit include and lib directory for
+	prefix "/usr" or "".
+
+2004-03-03  Werner Koch  <wk@gnupg.org>
+
+	* engine-gpgsm.c (gpgsm_export_ext): Properly insert a space
+	beween patterns.
+
+2004-02-18  Werner Koch  <wk@gnupg.org>
+
+	* gpgme-config.in: Ignore setting of --prefix.
+
+2004-02-25  Marcus Brinkmann  <marcus@g10code.de>
+
+	* rungpg.c (gpg_cancel): New function.
+	(gpg_release): Call it here.
+	(_gpgme_engine_ops_gpg): Add it here.
+	* engine-gpgsm.c (gpgsm_cancel): Fix last change.
+
+2004-02-24  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.c (gpgme_cancel): New function.
+	* engine-backend.h (struct engine_ops): New member cancel.
+	* engine.h (_gpgme_engine_cancel): New prototype.
+	* engine.c (_gpgme_engine_cancel): New function.
+	* engine-gpgsm.c (_gpgme_engine_ops_gpgsm): Add new member cancel.
+	(gpgsm_cancel): New function.
+	(gpgsm_release): Use it.
+	* rungpg.c (_gpgme_engine_ops_gpg): Add new member cancel.
+
+2004-02-17  Werner Koch  <wk@gnupg.org>
+
+	* gpgme.h: Add GPGME_KEYLIST_MODE_VALIDATE. 
+	* engine-gpgsm.c (gpgsm_keylist): Send this to gpgsm.
+
+2004-02-15  Werner Koch  <wk@gnupg.org>
+
+	* memrchr.c (memrchr): Fixed implementation.  Problem pointed out
+	by Adriaan de Groot.
+
+2004-02-01  Marcus Brinkmann  <marcus@g10code.de>
+
+	* rungpg.c (build_argv): Use --no-comment, not --comment "".
+
+	* data-compat.c (gpgme_data_new_from_filepart): Call fseeko if
+	available.
+	* data-stream.c (stream_seek): Likewise.
+
+2004-01-16  Werner Koch  <wk@gnupg.org>
+
+	* conversion.c (_gpgme_map_gnupg_error): Handle numerical codes as
+	used by GnuPG 1.9.x
+
+2004-01-13  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.h (struct _gpgme_key_sig): Fix comment on REVOKED.
+
 2004-01-12  Werner Koch  <wk@gnupg.org>
 
 	* sign.c: Include util.h for prototype of _gpgme_parse_timestamp.
@@ -4304,7 +4462,7 @@
 	* data.c (gpgme_data_rewind): Allow to rewind data_type_none.
 
 
- Copyright 2001, 2002 g10 Code GmbH
+ Copyright 2001, 2002, 2003, 2004 g10 Code GmbH
 
  This file is free software; as a special exception the author gives
  unlimited permission to copy and/or distribute it, with or without

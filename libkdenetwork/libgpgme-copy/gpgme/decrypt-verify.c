@@ -36,7 +36,7 @@ decrypt_verify_status_handler (void *priv, gpgme_status_code_t code,
   if (!err)
     err = _gpgme_decrypt_status_handler (priv, code, args);
   if (!err)
-    err = _gpgme_verify_status_handler (priv, code, args);
+      err = _gpgme_verify_status_handler (priv, code, args);
   return err;
 }
 

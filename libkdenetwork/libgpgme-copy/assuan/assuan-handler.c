@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 #include "assuan-defs.h"
 
@@ -594,10 +595,6 @@ assuan_get_active_fds (ASSUAN_CONTEXT ctx, int what,
   return n;
 }
 
-/* #################### DF: this won't compile on systems without funopen/fopencookie!
- * It looks like it's ok in the real gpgme since it's not used -> symbol gets removed
- */
-#if 0
 /* Return a FP to be used for data output.  The FILE pointer is valid
    until the end of a handler.  So a close is not needed.  Assuan does
    all the buffering needed to insert the status line as well as the
@@ -609,6 +606,7 @@ assuan_get_active_fds (ASSUAN_CONTEXT ctx, int what,
 FILE *
 assuan_get_data_fp (ASSUAN_CONTEXT ctx)
 {
+#if defined (HAVE_FOPENCOOKIE) || defined (HAVE_FUNOPEN)
   if (ctx->outbound.data.fp)
     return ctx->outbound.data.fp;
   
@@ -618,8 +616,11 @@ assuan_get_data_fp (ASSUAN_CONTEXT ctx)
 				   0, _assuan_cookie_write_flush);
   ctx->outbound.data.error = 0;
   return ctx->outbound.data.fp;
-}
+#else
+  errno = ENOSYS;
+  return NULL;
 #endif
+}
 
 
 /* Set the text used for the next OK reponse.  This string is
