@@ -121,6 +121,8 @@ class GroupwareUploadJob : public GroupwareJob
 
     QStringList mIncidencesForUpload;
     QStringList mIncidencesForDeletion;
+    
+    KURL mCurrentPutUrl;
 };
 
 }

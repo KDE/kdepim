@@ -103,6 +103,7 @@ void GroupwareUploadJob::uploadItem()
     const QString inc = mDataForUpload.front();
     //kdDebug(7000) << "Uploading to: " << inc << endl;
     //kdDebug(7000) << "Uploading: " << url.prettyURL() << endl;
+    mCurrentPutUrl = url;
     mUploadJob = KIO::storedPut( inc.utf8(), url, -1, true, false, false );
     mUploadJob->addMetaData( "PropagateHttpHeader", "true" );
     mUploadJob->addMetaData( "content-type", adaptor()->mimeType() );
@@ -135,8 +136,17 @@ void GroupwareUploadJob::slotUploadJobResult( KIO::Job *job )
 
     const QString& headers = job->queryMetaData( "HTTP-Headers" );
     const QString& etag = WebdavHandler::getEtagFromHeaders( headers );
-    adaptor()->idMapper()->setFingerprint( uid, etag );
 
+    QString remoteId = mCurrentPutUrl.path();
+    remoteId.truncate( remoteId.findRev( "/" )+1 );
+    remoteId = remoteId + etag.left( etag.findRev( ":" ) ) + ".ics";
+    adaptor()->idMapper()->setRemoteId( uid, remoteId );
+    adaptor()->idMapper()->setFingerprint( uid, etag );
+/*
+    kdDebug() << "Setting remoteID for: " << uid << " to: " << remoteId << endl;
+    kdDebug() << "Setting etag for: " << uid << " to: " << etag << endl;
+    kdDebug() << adaptor()->idMapper()->asString() << endl;
+*/
     mDataForUpload.pop_front();
   }
 
