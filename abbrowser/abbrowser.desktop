@@ -1,10 +1,16 @@
 # KDE Config File 
 [KDE Desktop Entry]
 Name=abbrowser
-Name[da]= NAME
+Name[eo]=Adresarorigardilo
+Name[et]=Aadressiraamatu lehitseja
+Name[hu]=Címjegyzék-nézegető
+Name[it]=Browser rubrica
+Name[ja]=アドレスブックブラウザー
+Name[no_NY]=Adresseboklesar
 Exec=abbrowser
 Icon=abbrowser.xpm
 Type=Application
 DocPath=abbrowser/abbrowser.html
 Terminal=0
 MiniIcon=abbrowser.xpm
+MapNotify=true

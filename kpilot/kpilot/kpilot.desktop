@@ -1,9 +1,13 @@
 # KDE Config File
 [KDE Desktop Entry]
 Name=KPilot
+Name[eo]=Palm-Piloto
+Name[es]=KPalm Pilot
+Name[pt_BR]=Ferramenta para PalmPilot
 Exec=kpilot
 Icon=kpilot.xpm
 Type=Application
 DocPath=kpilot/kpilot.html
 Terminal=0
 MiniIcon=kpilot.xpm
+MapNotify=true
