@@ -69,13 +69,11 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName, ExtraMap&
   while ( !n.isNull() ) {
     QDomElement e = n.toElement();
     if ( !e.isNull() ) {
-      kdDebug(5228) << "Tage Name" << e.tagName() << endl;
       if ( e.tagName() == QString::fromLatin1( "Contacts" ) ) { // we're looking for them
         QDomNode no = e.firstChild();
         while ( !no.isNull() ) {
           QDomElement el = no.toElement();
           if ( !el.isNull() ) {
-            kdDebug(5228) << "Contacts: " << el.tagName() << endl;
             KABC::Addressee adr;
             adr.setUid( kdeId( "AddressBookSyncEntry",  el.attribute("Uid" ) ) );
             adr.setFamilyName( el.attribute( "LastName" ) );
@@ -226,7 +224,6 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName, ExtraMap&
 }
 KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee, ExtraMap& map )
 {
-    kdDebug(5228 ) << "From KDE " << endl;
     //  ok lets write back the changes from the Konnector
     m_kde2opie.clear(); // clear the reference first
     Kontainer::ValueList newIds = syncee->ids( "AddressBookSyncEntry");

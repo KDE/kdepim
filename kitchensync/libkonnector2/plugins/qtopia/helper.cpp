@@ -187,7 +187,6 @@ QString Base::kdeId( const QString &appName,  const QString &_uid )
 {
     QString uid = _uid;
     if (_uid.stripWhiteSpace() == QString::fromLatin1("0") ) {
-        kdDebug() << "broken uid found!!! reassigning" << endl;
         uid = QString::number( newId() );
     }
 

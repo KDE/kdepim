@@ -110,7 +110,6 @@ KCal::Event* DateBook::toEvent( QDomElement e, ExtraMap& extraMap, const QString
     QString type = e.attribute("rtype");
     int freq = e.attribute("rfreq").toInt();
     bool hasEnd = e.attribute("rhasenddate").toInt();
-    //kdDebug(5229) << "HasEndDate: " << hasEnd << endl;
 
     KCal::Recurrence *rec = event->recurrence();
     start = e.attribute("created");
@@ -145,7 +144,6 @@ KCal::Event* DateBook::toEvent( QDomElement e, ExtraMap& extraMap, const QString
 
         if ( hasEnd ) {
             start = e.attribute("enddt");
-//            kdDebug(5229) << "has end " << start << endl;
             rec->setWeekly( freq,  bits, fromUTC( (time_t) start.toLong() ).date() );
         }else{
             rec->setWeekly( freq,  bits,  -1 );

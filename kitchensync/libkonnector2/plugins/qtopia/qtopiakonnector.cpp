@@ -175,7 +175,6 @@ QString QtopiaKonnector::metaId() const
 
 QIconSet QtopiaKonnector::iconSet() const
 {
-  kdDebug(5225) << "iconSet" << endl;
   QPixmap logo;
   logo.load( locate( "appdata", "pics/opie.png" ) );
   return QIconSet( logo );
@@ -188,7 +187,6 @@ QString QtopiaKonnector::iconName() const
 
 bool QtopiaKonnector::writeSyncees()
 {
-  kdDebug(5201) << " writing it now " << endl;
   d->socket->write( mSynceeList );
   return true;
 }

@@ -89,7 +89,7 @@ KSync::Merger* Device::opieCal(){
   cal[KSync::CalendarMerger::DtEnd ] = true;
 
   // todo stuff
-  QBitArray todo(KSync::CalendarMerger::Percent+1);
+  QBitArray todo(KSync::CalendarMerger::DueDateTime+1);
   todo[KSync::CalendarMerger::Organizer] = false;
   todo[KSync::CalendarMerger::ReadOnly] = false;
   todo[KSync::CalendarMerger::DtStart] = ( m_model == Opie );
@@ -112,6 +112,8 @@ KSync::Merger* Device::opieCal(){
   todo[KSync::CalendarMerger::StartDate] = ( m_model == Opie );
   todo[KSync::CalendarMerger::Completed] = true;
   todo[KSync::CalendarMerger::Percent] = true;
+  todo[KSync::CalendarMerger::StartDateTime] = false;
+  todo[KSync::CalendarMerger::DueDateTime] = false;
 
   mCMerger = new KSync::CalendarMerger(todo, cal );
 

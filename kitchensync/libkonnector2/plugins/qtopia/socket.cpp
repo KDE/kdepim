@@ -170,7 +170,6 @@ void QtopiaSocket::setDestIP( const QString& dest)
 void QtopiaSocket::setModel( const QString& model, const QString& name )
 {
     if( model == QString::fromLatin1("Sharp Zaurus ROM") ){
-	kdDebug(5225) << "Sharp Zaurus ROM match " << endl;
 	d->device->setDistribution( OpieHelper::Device::Zaurus );
     }else
 	d->device->setDistribution( OpieHelper::Device::Opie );
@@ -180,7 +179,6 @@ void QtopiaSocket::setModel( const QString& model, const QString& name )
 
 void QtopiaSocket::startUp()
 {
-    kdDebug(5225) << "Start Up " << endl;
     delete d->socket;
     d->socket = new QSocket(this, "Qtopia Socket" );
 
@@ -275,7 +273,6 @@ void QtopiaSocket::write( SynceeList list )
         return;
     }
 
-    kdDebug(5225) << "Writing information back now. Count is " << list.count() << endl;
 
     AddressBookSyncee *abSyncee = list.addressBookSyncee();
     if ( abSyncee ) writeAddressbook( abSyncee );
@@ -328,7 +325,6 @@ void QtopiaSocket::slotError( int err )
 {
     d->isSyncing = false;
     d->isConnecting = false;
-    kdDebug(5225) << "Error " << err << " for ip = " << d->dest << endl;
 
     emit error( StdError::connectionLost() );
 }
@@ -360,9 +356,6 @@ void QtopiaSocket::process()
     while ( d->socket->canReadLine() ) {
         QTextStream stream( d->socket );
         QString line = d->socket->readLine();
-        kdDebug() << "100O " << line << endl;
-        //kdDebug(5225) << line << endl;
-        //kdDebug(5225) << d->mode << endl;
         switch( d->mode ) {
         case QtopiaSocket::Private::Start:
             start(line);
@@ -678,7 +671,6 @@ void QtopiaSocket::pass( const QString& line)
         d->isConnecting = false;
     } else {
         emit prog( StdProgress::authenticated() );
-        kdDebug(5225) << "Konnected" << endl;
         d->mode = d->Noop;
         QTimer::singleShot(10000, this, SLOT(slotNOOP() ) );
     }
@@ -861,14 +853,12 @@ void QtopiaSocket::readTimeZones()
     KConfig conf("korganizerrc");
     conf.setGroup("Time & Date");
     d->tz = conf.readEntry("TimeZoneId", QString::fromLatin1("UTC") );
-    kdDebug(5225) << "TimeZone of Korg is " << d->tz << endl;
 }
 
 bool QtopiaSocket::downloadFile( const QString& str, QString& dest )
 {
     KURL uri = url( d->path + str );
     bool b = KIO::NetAccess::download( uri, dest, 0 );
-    kdDebug(5225) << "Getting " << str << " " << b << endl;
     return b;
 }
 
@@ -882,7 +872,6 @@ void QtopiaSocket::sendCommand( const QString& cmd )
   if ( !d->socket )
     kdError() << "No socket available" << endl;
 
-  kdDebug() << "100I: " << cmd << endl;
 
   QTextStream stream( d->socket );
   stream << cmd << endl;

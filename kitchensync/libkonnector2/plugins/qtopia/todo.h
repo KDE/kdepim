@@ -39,16 +39,17 @@ namespace KSync {
     class Syncee;
 }
 namespace OpieHelper {
-struct TodoExtraItem : public CustomExtraItem 
+struct TodoExtraItem : public CustomExtraItem
 {
   TodoExtraItem( bool c, int co )
-    : completed( c ), completion( co ) 
+    : completed( c ), completion( co )
     {}
+
   bool completed : 1;
   int  completion;
 };
 
-class ToDo  : public Base 
+class ToDo  : public Base
 {
 public:
   ToDo( CategoryEdit* edit = 0,
@@ -56,15 +57,20 @@ public:
         const QString& tz = QString::null,
         Device* dev = 0);
   ~ToDo();
-    
+
   bool toKDE( const QString &fileName, ExtraMap& map, KSync::CalendarSyncee* );
   KTempFile* fromKDE( KSync::CalendarSyncee* entry, ExtraMap& map  );
-  
+
 private:
   QStringList attributes()const;
   void setUid( KCal::Todo*,  const QString &uid );
   KCal::Todo* dom2todo( QDomElement, ExtraMap&, const QStringList& );
   QString todo2String( KCal::Todo*, ExtraMap&  );
+
+/* time conversions */
+private:
+  QString  dateToString( const QDate& );
+  QDate    stringToDate( const QString& );
 };
 }
 

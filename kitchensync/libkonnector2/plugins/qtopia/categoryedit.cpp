@@ -69,9 +69,7 @@ int CategoryEdit::addCategory( const QString &name, int id ){
     return addCategory( QString::null, name, id );
 }
 int CategoryEdit::addCategory( const QString &appName,  const QString &name,  int id ){
-    kdDebug(5226) << "add Category " << appName << " " << name << " " << id << endl;
     if ( id == 0 ) {
-        kdDebug(5226) << "need to generate one " << endl;
         // code from tt
         //generate uid
         id = -1 * (int) ::time(NULL );
@@ -85,7 +83,6 @@ int CategoryEdit::addCategory( const QString &appName,  const QString &name,  in
     OpieCategories categories(QString::number(id),  name,  appName);
     m_categories.remove( categories);
     m_categories.append( categories);
-    kdDebug(5226) << "new id is " << id << endl;
     return id;
 }
 /*

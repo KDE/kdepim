@@ -44,7 +44,6 @@ QString MetaCalendar::entryToString( KSync::CalendarSyncEntry* entry )
   else if ( dynamic_cast<KCal::Event*>( inc ) )
     str =  eventToString( dynamic_cast<KCal::Event*>( inc ) );
   else{
-    kdDebug(5227) << "Not Todo and not Event! Error in MetaCalendar::entryToString" << endl;
     str = QString::null;
   }
 
@@ -62,9 +61,15 @@ QString MetaCalendar::todoToString( KCal::Todo *todo )
   str += QString::number( todo->isCompleted() );
   str += QString::number( todo->percentComplete() );
   str += todo->summary();
-  if ( todo->hasDueDate() ) {
+  if ( todo->hasDueDate() )
     str += todo->dtDue().toString("dd.MM.yyyy");
-  }
+
+  if ( todo->hasStartDate() )
+    str += todo->dtStart().toString( "dd.MM.yyyy" );
+
+  if ( todo->isCompleted() && todo->hasCompletedDate() )
+    str += todo->completed().toString( "dd.MM.yyyy" );
+
 
   str += QString::number( todo->priority() );
   str += todo->description();

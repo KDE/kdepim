@@ -59,8 +59,6 @@ KCal::Todo* ToDo::dom2todo( QDomElement e, ExtraMap& extra,const QStringList& ls
             categories.append(cat );
     }
     if (!categories.isEmpty() ) {
-        kdDebug(5226) << "List " << list.join(";") << endl;
-        kdDebug(5226) << "TransLated " << categories.join(";") << endl;
         todo->setCategories( categories );
     }
 
@@ -72,6 +70,10 @@ KCal::Todo* ToDo::dom2todo( QDomElement e, ExtraMap& extra,const QStringList& ls
     setUid(todo,  e.attribute("Uid")  );
 
     dummy = e.attribute("Completed");
+
+    QDate comp = e.hasAttribute( "CompletedDate" ) ?
+                 stringToDate( e.attribute( "CompletedDate" ) ):
+                 QDate();
 
     /*
      * if setCompleted is called
@@ -100,23 +102,28 @@ KCal::Todo* ToDo::dom2todo( QDomElement e, ExtraMap& extra,const QStringList& ls
         todo->setPercentComplete( prog );
         extra.add("todo", "CompletionItem", e.attribute("Uid"),
                   new TodoExtraItem( Int, prog ) );
-    }else
+    }else {
+      if ( comp.isValid() )
+        todo->setCompleted( comp );
+      else
         todo->setCompleted(true );
+    }
 
 
 
-
-    kdDebug(5227) << "dummy completed " << todo->isCompleted()  << endl;
 
     dummy = e.attribute("Priority" );
     todo->setPriority(dummy.toInt( )  );
+
+
     dummy = e.attribute("HasDate" );
     bool status = dummy.toInt( );
     if(status){
-        kdDebug(5227) << "Has Due Date " << endl;
         todo->setHasDueDate(true );
         QDateTime time = QDateTime::currentDateTime();
         QDate date;
+
+
         dummy = e.attribute("DateDay" );
         int day= dummy.toInt( );
         int month = e.attribute("DateMonth").toInt( );
@@ -124,6 +131,7 @@ KCal::Todo* ToDo::dom2todo( QDomElement e, ExtraMap& extra,const QStringList& ls
         date.setYMD(year, month, day);
         time.setDate( date );
         todo->setDtDue( time );
+
         /*
          * libkcal does not set HasDueDate TRUE
          * if we supply a due date
@@ -133,7 +141,12 @@ KCal::Todo* ToDo::dom2todo( QDomElement e, ExtraMap& extra,const QStringList& ls
         todo->setHasDueDate( false );
     }
 
-    // time to add extra attributes
+    if ( e.hasAttribute( "StartDate" ) ) {
+      todo->setHasStartDate( true );
+      todo->setDtStart( stringToDate(e.attribute( "StartDate")) );
+    }
+
+    // time to add extra not used attributes
     extra.add("todo", e.attribute("Uid"),  e.attributes(), lst );
 
     return todo;
@@ -247,11 +260,16 @@ QString ToDo::todo2String( KCal::Todo* todo, ExtraMap& map )
 
       text.append( "Completed=\""+QString::number(comp) + "\" " );
       text.append( "Progress=\"" + QString::number(completed) + "\" ");
+
+      if ( comp && todo->hasCompletedDate() )
+        text.append( "CompletedDate=\"" +
+                     dateToString( todo->completed().date() ) + "\" ");
     }
 
     /* if it is not a Stock Zaurus we will right the summary */
     if ( device() && device()->distribution() != Device::Zaurus )
-        text.append( "Summary=\"" + escape( todo->summary() ) + "\" ");
+        text.append( appendText( "Summary=\"" +escape( todo->summary() )+"\" ",
+                                 "Summary=\"\" "));
 
     if ( todo->hasDueDate() ) {
         text.append( "HasDate=\"1\" ");
@@ -269,11 +287,18 @@ QString ToDo::todo2String( KCal::Todo* todo, ExtraMap& map )
      * fallback to the summary if both are empty you're lost!
      **/
     if ( device() && device()->distribution() != Device::Zaurus )
-        text.append( "Description=\"" +escape( todo->description() ) + "\" " );
+        text.append( appendText("Description=\"" +escape( todo->description() ) + "\" ",
+                                "Description=\"\" " ) );
     else{
-        QString desc = todo->description().isEmpty() ? todo->summary() : todo->description();
-        text.append( "Description=\"" +escape( desc ) );
+        QString desc = todo->description().isEmpty() ?
+                       todo->summary() : todo->description();
+        text.append( appendText("Description=\"" +escape( desc ) + "\" ",
+                                "Description=\"\" " ));
     }
+
+    if ( todo->hasStartDate() )
+      text.append( "StartDate=\"" + dateToString( todo->dtStart().date() )
+                   + "\" " );
 
 
     text.append("Uid=\"" +uid + "\" "  );
@@ -298,6 +323,25 @@ QStringList ToDo::attributes()const {
     lst << "Priority";
     lst << "Description";
     lst << "Uid";
+    lst << "StartDate";
+    lst << "CompletedDate";
 
     return lst;
+}
+
+QString  ToDo::dateToString( const QDate& date  ) {
+  return date.toString( "yyyyMMdd" );
+}
+
+QDate    ToDo::stringToDate( const QString& s ) {
+  // From OPimDateConversion
+  // Read ISO-Format (YYYYMMDD)
+  int year = s.mid( 0, 4 ).toInt();
+  int month = s.mid( 4, 2 ).toInt();
+  int day = s.mid( 6, 2 ).toInt();
+
+  QDate date;
+  date.setYMD( year, month, day );
+
+  return date;
 }
