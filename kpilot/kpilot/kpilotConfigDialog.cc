@@ -1,6 +1,7 @@
 /* kpilotConfigDialog.cc                KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2002-2004 by Adriaan de Groot
 **
 ** This file defines a specialization of KPilotDeviceLink
 ** that can actually handle some HotSync tasks, like backup
@@ -388,7 +389,7 @@ void ViewersConfigPage::load()
 	FUNCTIONSETUP;
 	KPilotSettings::self()->readConfig();
 
-	fConfigWidget->fInternalEditors->setChecked(KPilotSettings::internalEditors());
+	fConfigWidget->fInternalEditors->setChecked( false /* KPilotSettings::internalEditors() */ );
 	fConfigWidget->fUseSecret->setChecked(KPilotSettings::showSecrets());
 	fConfigWidget->fAddressGroup->setButton(KPilotSettings::addressDisplayMode());
 	fConfigWidget->fUseKeyField->setChecked(KPilotSettings::useKeyField());
