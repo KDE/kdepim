@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) $(all_includes)
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libemailfunctions $(all_includes)
 
 lib_LTLIBRARIES   = libkcal_resourceremote.la
 libkcal_resourceremote_la_LDFLAGS = $(all_libraries) -no-undefined \
