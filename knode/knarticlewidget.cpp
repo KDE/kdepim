@@ -313,7 +313,7 @@ void KNArticleWidget::slotURLRequest (const KURL &url, const KParts::URLArgs &ar
 	int pos;
 	
 	if (type.length()) {             // valid url
-		if(type=="http" || type=="ftp") {			
+		if(type=="http" || type=="https" || type=="ftp") {			
 		  openURL(urlText);	
  		}	else {
 			if(type=="mailto")
@@ -374,7 +374,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
 			case 'h' :	
 				if((parseURLs)&&
 					 (line[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'h'					
-					regExp="^http://[^\\s<>()\"|]+";
+					regExp="^https?://[^\\s<>()\"|]+";
 					if (regExp.match(line,idx,&matchLen)!=-1) {
 						result+=QString("<a href=\"%1\">%2</a>").arg(line.mid(idx,matchLen)).arg(line.mid(idx,matchLen));
 						idx+=matchLen-1;
@@ -777,8 +777,8 @@ void KNArticleWidget::createHtmlPage()
   			      var->prepareForDisplay();
   			      buffer+="<pre>";
   			      for(char *line=var->firstBodyLine(); line; line=var->nextBodyLine()) {
-  			        buffer+=line;
-  			        buffer+"\n";
+  			        buffer+=line;  			
+  			        buffer+="<br>\n";
   			      }
   			      buffer+="</pre>";
   			    }

@@ -58,7 +58,7 @@ QFile* KNSaveHelper::getFile()
     return 0;
 
   if (url.isLocalFile()) {
-    file = new QFile(url.url());
+    file = new QFile(url.path());
 		if(!file->open(IO_WriteOnly)) {
       displayExternalFileError();
       delete file;
