@@ -253,7 +253,7 @@ QValueList<recordid_t> PilotLocalDatabase::idList()
 	// now create the QValue list from the idarr:
 	for (int id=0; id<idlen; id++)
 	{
-		idlist.append(fRecords[id]->getID());
+		idlist.append(fRecords[id]->id());
 	}
 
 #ifdef SHADOW_LOCAL_DB
@@ -299,7 +299,7 @@ PilotRecord *PilotLocalDatabase::readRecordById(recordid_t id)
 
 	for (i = 0; i < fNumRecords; i++)
 	{
-		if (fRecords[i]->getID() == id)
+		if (fRecords[i]->id() == id)
 		{
 #ifdef SHADOW_LOCAL_DB
 			assert( shadowcount == i );
@@ -355,7 +355,7 @@ PilotRecord *PilotLocalDatabase::readNextRecInCategory(int category)
 #endif
 
 	while ((fCurrentRecord < fNumRecords)
-		&& (fRecords[fCurrentRecord]->getCat() != category))
+		&& (fRecords[fCurrentRecord]->category() != category))
 	{
 		fCurrentRecord++;
 	}
@@ -440,9 +440,9 @@ recordid_t PilotLocalDatabase::writeID(PilotRecord * rec)
 			": Last call was _NOT_ readNextModifiedRec()" << endl;
 		return 0;
 	}
-	fRecords[fPendingRec]->setID(rec->getID());
+	fRecords[fPendingRec]->setID(rec->id());
 	fPendingRec = -1;
-	return rec->getID();
+	return rec->id();
 }
 
 // Writes a new record to database (if 'id' == 0, it is assumed that this is a new record to be installed on pilot)
@@ -480,10 +480,10 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 	newRecord->setAttrib(newRecord->getAttrib() | dlpRecAttrDirty);
 
 	// First check to see if we have this record:
-	if (newRecord->getID() != 0)
+	if (newRecord->id() != 0)
 	{
 		for (i = 0; i < fNumRecords; i++)
-			if (fRecords[i]->getID() == newRecord->getID())
+			if (fRecords[i]->id() == newRecord->id())
 			{
 				delete fRecords[i];
 
@@ -493,7 +493,7 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 	}
 	// Ok, we don't have it, so just tack it on.
 	fRecords[fNumRecords++] = new PilotRecord(newRecord);
-	return newRecord->getID();
+	return newRecord->id();
 }
 
 // Deletes a record with the given recordid_t from the database, or all records, if all is set to true. The recordid_t will be ignored in this case
@@ -520,9 +520,9 @@ int PilotLocalDatabase::deleteRecord(recordid_t id, bool all)
 	else
 	{
 		int i=0;
-		while ( (i<fNumRecords) && (fRecords[i]) && (fRecords[i]->getID()!=id) )
+		while ( (i<fNumRecords) && (fRecords[i]) && (fRecords[i]->id()!=id) )
 			i++;
-		if ( (i<fNumRecords) && (fRecords[i]) && (fRecords[i]->getID() == id) )
+		if ( (i<fNumRecords) && (fRecords[i]) && (fRecords[i]->id() == id) )
 		{
 			delete fRecords[i];
 			for (int j=i+1; j<fNumRecords; j++)
@@ -687,8 +687,8 @@ void PilotLocalDatabase::closeDatabase()
 		pi_file_append_record(dbFile,
 			fRecords[i]->getData(),
 			fRecords[i]->getLen(),
-			fRecords[i]->getAttrib(), fRecords[i]->getCat(),
-			fRecords[i]->getID());
+			fRecords[i]->getAttrib(), fRecords[i]->category(),
+			fRecords[i]->id());
 	}
 
 	pi_file_close(dbFile);
