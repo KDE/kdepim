@@ -26,7 +26,7 @@
 </author>
 </authorgroup>
 
-<date>04/02/2001</date>
+<date>14/02/2001</date>
 <releaseinfo>1.2.0</releaseinfo>
 
 <copyright>
@@ -38,7 +38,7 @@
   
 <abstract>
 	
-<para>&kmail is &kde;'s powerful and user friendly email client.</para>
+<para>&kmail; is &kde;'s powerful and user friendly email client.</para>
 
 </abstract>
 
@@ -3360,7 +3360,7 @@ mail)</para></listitem>
 <title>How to obtain &kmail;</title>
 
 <para>&kmail; is part of the &kde; project <ulink
-url="http://www.kde.org">http://www.kde.org</ulink>.  &&kmail; can be found in the
+url="http://www.kde.org">http://www.kde.org</ulink>. &kmail; can be found in the
 kdenetwork package on <ulink
 url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>, the main
 &FTP; site of the &kde; project. </para>
@@ -3379,7 +3379,7 @@ in the base directory of the &kmail; distribution:</para>
 </screen>
 
 <para>Since &kmail; uses <application>autoconf</application> and
-<application>automake</application> you should have not trouble compiling
+<application>automake</application> you should have no trouble compiling
 it. Should you run into problems please report them to the &kde; mailing
 lists.</para>
 
