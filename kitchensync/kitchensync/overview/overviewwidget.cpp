@@ -9,7 +9,7 @@
 #include <error.h>
 #include <progress.h>
 
-#include <manipulatorpart.h>
+#include <actionpart.h>
 
 #include "overviewwidget.h"
 
@@ -86,12 +86,12 @@ void Widget::addProgress( Konnector *, const Progress& prog)
     m_edit->append( "<b>"+QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }
 
-void Widget::addProgress( ManipulatorPart *, const Progress& prog)
+void Widget::addProgress( ActionPart *, const Progress& prog)
 {
     m_edit->append( "<b>" + QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }
 
-void Widget::syncProgress( ManipulatorPart * part, int status, int )
+void Widget::syncProgress( ActionPart * part, int status, int )
 {
     OverViewProgressEntry* it;
     for ( it = m_messageList.first(); it; it = m_messageList.next() ) {
@@ -104,8 +104,8 @@ void Widget::syncProgress( ManipulatorPart * part, int status, int )
     OverViewProgressEntry* test = new OverViewProgressEntry( m_ab, "test" );
     m_messageList.append( test );
 
-    if ( !part->name().isEmpty() )  {
-        test->setText( part->name() );
+    if ( !part->title().isEmpty() )  {
+        test->setText( part->title() );
     }
     if ( part->pixmap() ) {
         test->setPixmap( *(part->pixmap()) );
@@ -121,7 +121,7 @@ void Widget::addError( Konnector *, const Error& prog )
     m_edit->append( "<b>"+ QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }
 
-void Widget::addError( ManipulatorPart*, const Error& prog )
+void Widget::addError( ActionPart *, const Error& prog )
 {
     m_edit->append( "<b>"+ QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }

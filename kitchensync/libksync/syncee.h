@@ -125,10 +125,27 @@ class Syncee
     void replaceEntry( SyncEntry *oldEntry, SyncEntry *newEntry );
 
     /**
-      Return the identifier which can be used to uniquely identify the Syncee
-      object.
+      Set identifier which can be used to uniquely identify the Syncee. A Syncee
+      with empty identifier is invalid. Without identifier the sync log can't be
+      written.
     */
-    virtual QString identifier() { return QString::null; }
+    void setIdentifier( const QString &identifier );
+
+    /**
+      Return the identifier which can be used to uniquely identify the Syncee
+      object. As long as the identifier is empty the Syncee doesn't have valid
+      data.
+    */
+    QString identifier() { return mIdentifier; }
+
+    /**
+      Return if the Syncee is valid. If a Syncee is invalid it means that it
+      doesn't have any valid data, e.g. because the Konnector doesn't support
+      this type of data.
+
+      By default the Syncee isn't valid if the identifier is empty.
+    */
+    virtual bool isValid();
 
     /**
       Return the name of a config file, which is used to store status

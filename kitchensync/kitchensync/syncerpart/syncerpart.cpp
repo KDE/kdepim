@@ -1,7 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -24,13 +24,14 @@
 #include "calendarsyncee.h"
 #include "addressbooksyncee.h"
 
+#include <konnectorview.h>
 #include <syncuikde.h>
 #include <konnector.h>
 #include <configwidget.h>
 #include <konnectormanager.h>
 #include <konnectorinfo.h>
 #include <mainwindow.h>
-#include <calendarsyncee.h>
+#include <engine.h>
 
 #include <kaboutdata.h>
 #include <kiconloader.h>
@@ -54,24 +55,9 @@ K_EXPORT_COMPONENT_FACTORY( libksync_syncerpart, SyncerPartFactory )
 using namespace KCal;
 using namespace KSync;
 
-class KonnectorCheckItem : public QCheckListItem
-{
-  public:
-    KonnectorCheckItem( Konnector *k, QListView *l )
-      : QCheckListItem( l, k->resourceName(), CheckBox ),
-        mKonnector( k )
-    {
-    }
-
-    Konnector *konnector() const { return mKonnector; }
-
-  private:
-    Konnector *mKonnector;
-};
-
 SyncerPart::SyncerPart( QWidget *parent, const char *name,
                         QObject *, const char *, const QStringList & )
-  : ManipulatorPart( parent, name ), m_widget( 0 )
+  : ActionPart( parent, name ), m_widget( 0 )
 {
   m_pixmap = KGlobal::iconLoader()->loadIcon( "package_toys", KIcon::Desktop,
                                               48 );
@@ -100,7 +86,7 @@ QString SyncerPart::type() const
   return QString::fromLatin1("SyncerPart");
 }
 
-QString SyncerPart::name() const
+QString SyncerPart::title() const
 {
   return i18n("Synchronizer");
 }
@@ -131,16 +117,12 @@ QWidget *SyncerPart::widget()
     m_widget = new QWidget;
     QBoxLayout *topLayout = new QVBoxLayout( m_widget );
     topLayout->setSpacing( KDialog::spacingHint() );
-    topLayout->setMargin( KDialog::spacingHint() );
 
     
     QBoxLayout *konnectorLayout = new QHBoxLayout( topLayout );
 
-    mKonnectorList = new QListView( m_widget );
-    mKonnectorList->addColumn( i18n("Konnector" ) );
-    konnectorLayout->addWidget( mKonnectorList, 1 );
-
-    updateKonnectorList();
+    mKonnectorView = new KonnectorView( m_widget );
+    konnectorLayout->addWidget( mKonnectorView, 1 );
 
     QFrame *konnectorFrame = new QFrame( m_widget );
     konnectorFrame->setFrameStyle( QFrame::Panel | QFrame::Sunken );
@@ -156,20 +138,6 @@ QWidget *SyncerPart::widget()
   return m_widget;
 }
 
-void SyncerPart::updateKonnectorList()
-{
-  kdDebug() << "SyncerPart::updateKonnectorList()" << endl;
-
-  KRES::Manager<Konnector> *manager = KonnectorManager::self();
-  
-  KRES::Manager<Konnector>::ActiveIterator it;
-  for( it = manager->activeBegin(); it != manager->activeEnd(); ++it ) {
-    kdDebug() << "Konnector: id: " << (*it)->identifier() << endl;
-    KonnectorCheckItem *item = new KonnectorCheckItem( *it, mKonnectorList );
-    item->setOn( true );
-  }
-}
-
 void SyncerPart::slotProgress( Konnector *k, const Progress &p )
 {
   logMessage( i18n("Got Progress from Konnector at address %1: %2").arg( (long)k ).arg( p.text() ) );
@@ -180,6 +148,7 @@ void SyncerPart::slotError( Konnector *k, const Error &e )
   logMessage( i18n("Got Progress from Konnector at address %1: %2").arg( (long)k ).arg( e.text() ) );
 }
 
+// FIXME: Move logging of all parts to common class
 void SyncerPart::logMessage( const QString &message )
 {
   QString text = "<b>" + QTime::currentTime().toString() + "</b>: ";
@@ -188,132 +157,36 @@ void SyncerPart::logMessage( const QString &message )
   mLogView->append( text );
 }
 
-void SyncerPart::actionSync()
+void SyncerPart::executeAction()
 {
   logMessage( i18n("Sync Action triggered") );
 
   mCalendarSyncer.clear();
   mAddressBookSyncer.clear();
 
-  mOpenedKonnectors.clear();
-  mProcessedKonnectors.clear();
-  mKonnectorCount = 0;
-
-  QListViewItemIterator it( mKonnectorList );
-  while ( it.current() ) {
-    KonnectorCheckItem *item = static_cast<KonnectorCheckItem *>( it.current() );
-    if ( item->isOn() ) {
-      Konnector *k = item->konnector();
-      logMessage( i18n("Connecting '%1'").arg( k->resourceName() ) );
-      if ( !k->connectDevice() ) {
-        logMessage( i18n("Error connecting device.") );
-      } else {
-        mOpenedKonnectors.append( k );
-        ++mKonnectorCount;
-      }
-    }
-    ++it;
-  }
-
+  Konnector::List konnectors = core()->engine()->konnectors();
   Konnector *k;
-  for ( k = mOpenedKonnectors.first(); k; k = mOpenedKonnectors.next() ) {
-    logMessage( i18n("Request Syncees") );
-    if ( !k->readSyncees() ) {
-      logMessage( i18n("Request failed.") );
+  for( k = konnectors.first(); k; k = konnectors.next() ) {
+    SynceeList syncees = k->syncees();
+
+    if ( syncees.count() == 0 ) {
+      logMessage( i18n("Syncee list is empty.") );
+      continue;
     }
-  }
-}
 
-void SyncerPart::slotSynceesRead( Konnector *k )
-{
-  logMessage( i18n("Syncees read from '%1'").arg( k->resourceName() ) );
+    CalendarSyncee *calendarSyncee = syncees.calendarSyncee();
+    if ( calendarSyncee ) mCalendarSyncer.addSyncee( calendarSyncee );
 
-  mProcessedKonnectors.append( k );
-
-  SynceeList syncees = k->syncees();
-
-  if ( syncees.count() == 0 ) {
-    logMessage( i18n("Syncee list is empty.") );
-    return;
+    AddressBookSyncee *addressBookSyncee = syncees.addressBookSyncee();
+    if ( addressBookSyncee ) mAddressBookSyncer.addSyncee( addressBookSyncee );
   }
 
-  CalendarSyncee *calendarSyncee = syncees.calendarSyncee();
-  if ( calendarSyncee ) mCalendarSyncer.addSyncee( calendarSyncee );
-  
-  AddressBookSyncee *addressBookSyncee = syncees.addressBookSyncee();
-  if ( addressBookSyncee ) mAddressBookSyncer.addSyncee( addressBookSyncee );
+  logMessage( i18n("Performing Sync") );
 
-  trySync();
-}
+  mCalendarSyncer.sync();
+  mAddressBookSyncer.sync();
 
-void SyncerPart::trySync()
-{
-  if ( mKonnectorCount == mProcessedKonnectors.count() ) {
-    logMessage( i18n("Performing Sync") );
-
-    mCalendarSyncer.sync();
-    mAddressBookSyncer.sync();
-
-    mProcessedKonnectors.clear();
-    
-    Konnector *konnector;
-    for( konnector = mOpenedKonnectors.first(); konnector;
-         konnector = mOpenedKonnectors.next() ) {
-      if ( konnector->writeSyncees() ) {
-        kdDebug() << "writeSyncees(): " << konnector->resourceName() << endl;
-      } else {
-        kdError() << "Error requesting to write Syncee: "
-                  << konnector->resourceName() << endl;
-      }
-    }
-  }
-}
-
-void SyncerPart::slotSynceeReadError( Konnector *k )
-{
-  logMessage( i18n("Error reading Syncees from '%1'")
-              .arg( k->resourceName() ) );
-  
-  --mKonnectorCount;
-
-  trySync();
-}
-
-void SyncerPart::slotSynceesWritten( Konnector *k )
-{
-  logMessage( i18n("Syncees written to '%1'").arg( k->resourceName() ) );
-
-  mProcessedKonnectors.append( k );
-
-  disconnectDevice( k );
-
-  tryFinishSync();
-}
-
-void SyncerPart::slotSynceeWriteError( Konnector *k )
-{
-  logMessage( i18n("Error writing Syncees to '%1'")
-              .arg( k->resourceName() ) );
-
-  --mKonnectorCount;
-
-  disconnectDevice( k );
-
-  tryFinishSync();
-}
-
-void SyncerPart::disconnectDevice( Konnector *k )
-{
-  if ( !k->disconnectDevice() ) {
-    logMessage( i18n("Error disconnecting device") );
-  }
-}
-
-void SyncerPart::tryFinishSync()
-{
-  if ( mKonnectorCount == mProcessedKonnectors.count() ) {
-    logMessage( i18n("Synchronization finished.") );
-  }
+  logMessage( i18n("Sync done") );
 }
 
 #include "syncerpart.moc"

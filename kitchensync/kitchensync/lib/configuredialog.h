@@ -19,71 +19,72 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KSYNC_CONFIGUREDIALOG
-#define KSYNC_CONFIGUREDIALOG
+#ifndef KSYNC_CONFIGUREDIALOG_H
+#define KSYNC_CONFIGUREDIALOG_H
 
 #include <kdialogbase.h>
 
 namespace KSync {
 
-  /**
-   * The ConfigureDialog of the KitchenSync Framework
-   * It'll contain all widgets of the ManipulatorPart
-   * @short The small ConfigurationDialog
-   * @see ManipulatorPart
-   * @author Zecke
-   * @version 0.1
-   */
-  class ConfigureDialog : public KDialogBase {
+/**
+ * The ConfigureDialog of the KitchenSync Framework
+ * It'll contain all widgets of the ActionPart
+ * @short The small ConfigurationDialog
+ * @see ManipulatorPart
+ * @author Zecke
+ * @version 0.1
+ */
+class ConfigureDialog : public KDialogBase
+{
     Q_OBJECT
-    
-      public:
+  public:
     /**
      * simple c'tor
      * @param parent The parent
      * @param name The name
      * @param modal if the dialog is modal
      */
-    ConfigureDialog( QWidget *parent=0, const char *name=0, bool modal=true );
+    ConfigureDialog( QWidget *parent = 0, const char *name = 0,
+                     bool modal = true );
     ~ConfigureDialog();
+
     virtual void show();
-    
+
     /**
      * add a widget to ConfigureDialog
      * @param wid The widget to be added. It'll be reparented
      * @param str The string shown as name
      * @param pix the QPixmap shown
      */
-    void addWidget(QWidget* wid ,const QString& str, QPixmap* pix);
+    void addWidget( QWidget *wid ,const QString &str, QPixmap *pix );
 
   signals:
     /**
      *ok
      */
-    void ok( );
+    void ok();
 
-    protected slots:
+  protected slots:
      virtual void slotOk();
      virtual void slotCancel();
-     
+
   protected:
      /**
       * Plugin sensitive. 
       */
      void apply(bool);
+
   private:
      /**
       * load and registers the plugins
       */
      void setup();
-     
+
      /**
       * unload the plugins
       */
      void unload();
-     
-  };
-  
+};  
 
 }
 

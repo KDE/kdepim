@@ -27,5 +27,5 @@ Name[uk]=Складова синхронізації
 Name[xx]=xxSynchronizer Partxx
 Name[zh_CN]=同步部件
 Icon=
-ServiceTypes=KitchenSync/Manipulator
+ServiceTypes=KitchenSync/ActionPart
 X-KDE-Library=libksync_syncerpart

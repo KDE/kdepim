@@ -32,8 +32,9 @@
 
 using namespace KSync;
 
-AddressBookSyncEntry::AddressBookSyncEntry( const KABC::Addressee &a ) :
-    SyncEntry()
+AddressBookSyncEntry::AddressBookSyncEntry( const KABC::Addressee &a,
+                                            Syncee *parent )
+  : SyncEntry( parent )
 {
   mAddressee = a;
 }
@@ -67,7 +68,9 @@ AddressBookSyncEntry *AddressBookSyncEntry::clone()
 
 QString AddressBookSyncEntry::timestamp()
 {
-  return mAddressee.revision().toString();
+  QDateTime r = mAddressee.revision();
+  if ( r.isValid() ) return r.toString();
+  else return "norevision";
 }
 
 QString AddressBookSyncEntry::type() const
@@ -276,11 +279,6 @@ void AddressBookSyncee::reset()
   mEntries.clear();
 }
 
-QString AddressBookSyncee::identifier()
-{
-  return mAddressBook->identifier();
-}
-
 AddressBookSyncEntry *AddressBookSyncee::firstEntry()
 {
   return mEntries.first();
@@ -338,7 +336,7 @@ void AddressBookSyncee::removeEntry( SyncEntry *entry )
 AddressBookSyncEntry *AddressBookSyncee::createEntry( const KABC::Addressee &a )
 {
   if ( !a.isEmpty() ) {
-    AddressBookSyncEntry *entry = new AddressBookSyncEntry( a );
+    AddressBookSyncEntry *entry = new AddressBookSyncEntry( a, this );
     entry->setSyncee( this );
     mEntries.append( entry );
     return entry;

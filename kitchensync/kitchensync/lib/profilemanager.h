@@ -18,108 +18,114 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+#ifndef KSYNC_PROFILEMANAGER_H
+#define KSYNC_PROFILEMANAGER_H
 
-#ifndef KSYNC_PROFILE_MANAGER_H
-#define KSYNC_PROFILE_MANAGER_H
-
-#include <qstring.h>
+#include "profileconfig.h"
 
 #include <profile.h>
 
+#include <qstring.h>
+
 namespace KSync {
 
+/**
+ * ProfileManager keeps track of the Profiles
+ * It allows you to retrieve and set the current.
+ * remove and add new/old Profiles
+ * Load and Save from KConfig
+ */
+class ProfileManager
+{
+  public:
     /**
-     * ProfileManager keeps track of the Profiles
-     * It allows you to retrieve and set the current.
-     * remove and add new/old Profiles
-     * Load and Save from KConfig
+     * Constructs an Empty ProfileManager
      */
-    class ProfileManager  {
-    public:
-        /**
-         * Constructs an Empty ProfileManager
-         */
-        ProfileManager();
+    ProfileManager();
 
-        /**
-         * Constructs a profile manager from a Profile List.
-         */
-        ProfileManager( const Profile::ValueList& list );
+    /**
+     * Constructs a profile manager from a Profile List.
+     */
+    ProfileManager( const Profile::List &list );
 
-        /**
-         * Destructs a profile manager
-         */
-        ~ProfileManager();
+    /**
+     * Destructs a profile manager
+     */
+    ~ProfileManager();
 
-        /**
-         * returns the current active Profile
-         */
-        Profile currentProfile()const;
+    /**
+     * returns the current active Profile
+     */
+    Profile currentProfile() const;
 
-        /**
-         * sets the current Profile
-         */
-        void setCurrentProfile( const Profile& profile );
+    /**
+     * sets the current Profile
+     */
+    void setCurrentProfile( const Profile &profile );
 
-        /**
-         * returns a list of all active profiles
-         */
-        Profile::ValueList profiles()const;
+    /**
+     * returns a list of all active profiles
+     */
+    Profile::List profiles() const;
 
-        /**
-         * set the Manager to use a list of Profiles
-         */
-        void setProfiles( const Profile::ValueList& list );
+    /**
+     * set the Manager to use a list of Profiles
+     */
+    void setProfiles( const Profile::List &list );
 
-        /**
-         * is finding a Profile by name
-         */
-        Profile byName( const QString& name );
+    /**
+     * is finding a Profile by name
+     */
+    Profile byName( const QString &name );
 
-        /**
-         * returns a profile list of of Profiles matching name
-         */
-        Profile::ValueList byName2( const QString& name );
+    /**
+     * returns a profile list of of Profiles matching name
+     */
+    // FIXME: byName2 is not a very expressive name
+    Profile::List byName2( const QString &name );
 
-        /*
-         * profile at index
-         */
-        Profile profile( int index )const;
+    /*
+     * profile at index
+     */
+    Profile profile( int index ) const;
 
-        /**
-         * the count of elements
-         */
-        int count()const;
+    /**
+     * the count of elements
+     */
+    int count() const;
 
-        /**
-         * loads a Profile List
-         */
-        void load();
+    /**
+     * loads a Profile List
+     */
+    void load();
 
-        /**
-         * saves current list including current Profile
-         */
-        void save();
+    /**
+     * saves current list including current Profile
+     */
+    void save();
 
-        /**
-         * add a Profile
-         */
-        void addProfile( const Profile& );
+    /**
+     * add a Profile
+     */
+    void addProfile( const Profile & );
 
-        /**
-         * replaces a profile
-         */
-        void replaceProfile( const Profile& );
+    /**
+     * replaces a profile
+     */
+    void replaceProfile( const Profile & );
 
-        /**
-         * removes a Profile
-         */
-        void removeProfile( const Profile& );
+    /**
+     * removes a Profile
+     */
+    void removeProfile( const Profile & );
 
-    private:
-        Profile m_cur;
-        Profile::ValueList m_list;
-    };
+  private:
+    ProfileConfig mProfileConfig;
+  
+    Profile mCurrentProfile;
+    Profile::List mProfiles;
+};
+
 }
 
 

@@ -26,8 +26,8 @@
 using namespace KSync;
 using namespace KCal;
 
-CalendarSyncEntry::CalendarSyncEntry( Incidence *incidence )
-  : mIncidence(incidence)
+CalendarSyncEntry::CalendarSyncEntry( Incidence *incidence, Syncee *parent )
+  : SyncEntry( parent ), mIncidence( incidence )
 {
 }
 
@@ -43,6 +43,7 @@ QString CalendarSyncEntry::id()
 
 QString CalendarSyncEntry::timestamp()
 {
+  // FIXME: last modified isn't sufficient to tell if an event has changed.
   return mIncidence->lastModified().toString();
 }
 
@@ -75,9 +76,8 @@ bool CalendarSyncEntry::equals( SyncEntry *entry )
 
 CalendarSyncEntry *CalendarSyncEntry::clone()
 {
-  return new CalendarSyncEntry( mIncidence );
+  return new CalendarSyncEntry( *this );
 }
-
 
 CalendarSyncee::CalendarSyncee()
   : mOwnCalendar( true ), mIteratingEvents( true )
@@ -110,16 +110,6 @@ void CalendarSyncee::clearEntries()
     delete it.data();
   }
   mEntries.clear();
-}
-
-void CalendarSyncee::setIdentifier( const QString &id )
-{
-  mIdentifier = id;
-}
-
-QString CalendarSyncee::identifier()
-{
-  return mIdentifier;
 }
 
 CalendarSyncEntry *CalendarSyncee::firstEntry()
@@ -221,7 +211,7 @@ CalendarSyncEntry *CalendarSyncee::createEntry( Incidence *incidence )
     it = mEntries.find( incidence );
     if ( it != mEntries.end() ) return it.data();
 
-    CalendarSyncEntry *entry = new CalendarSyncEntry(incidence);
+    CalendarSyncEntry *entry = new CalendarSyncEntry( incidence, this );
     mEntries.insert( incidence, entry );
     return entry;
   } else {
@@ -237,5 +227,6 @@ bool CalendarSyncee::writeBackup( const QString &filename )
 bool CalendarSyncee::restoreBackup( const QString &filename )
 {
   mCalendar->close();
+  clearEntries();
   return mCalendar->load( filename );
 }

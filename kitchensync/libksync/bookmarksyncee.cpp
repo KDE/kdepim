@@ -27,8 +27,8 @@
 
 using namespace KSync;
 
-BookmarkSyncEntry::BookmarkSyncEntry( KBookmark bm )
-  : mBookmark( bm )
+BookmarkSyncEntry::BookmarkSyncEntry( KBookmark bm, Syncee *parent )
+  : SyncEntry( parent ), mBookmark( bm )
 {
 }
 
@@ -74,7 +74,7 @@ bool BookmarkSyncEntry::equals( SyncEntry *entry )
 
 BookmarkSyncEntry *BookmarkSyncEntry::clone()
 {
-  return new BookmarkSyncEntry( mBookmark );
+  return new BookmarkSyncEntry( *this );
 }
 
 
@@ -205,7 +205,7 @@ KBookmarkGroup BookmarkSyncee::findGroup( KBookmarkGroup group )
 BookmarkSyncEntry *BookmarkSyncee::createEntry( KBookmark bm )
 {
   if ( !bm.isNull() ) {
-    BookmarkSyncEntry *entry = new BookmarkSyncEntry( bm );
+    BookmarkSyncEntry *entry = new BookmarkSyncEntry( bm, this );
     mEntries.append( entry );
     return entry;    
   } else {

@@ -28,5 +28,5 @@ Name[uk]=Резервна копія Konnector
 Name[xx]=xxKonnector Backupxx
 Name[zh_CN]=Konnector 备份
 Icon=
-ServiceTypes=KitchenSync/Manipulator
+ServiceTypes=KitchenSync/ActionPart
 X-KDE-Library=libksync_backup

@@ -1,7 +1,8 @@
 BEGIN:VCARD
 EMAIL;TYPE=PREF:hw@abc.de
-FN:Hans Wurst
-N:Wurst;Hans;;;
+FN:Haenschen Wuerstchen
+N:Wuerstchen;Haenschen;;;
+REV:2004-05-09T03:20:38Z
 UID:SYNCTEST3_ADDRESSEE_1
 VERSION:3.0
 END:VCARD

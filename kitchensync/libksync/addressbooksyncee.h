@@ -33,28 +33,29 @@ class AddressBookSyncEntry : public SyncEntry
 {
   public:
     typedef QPtrList<AddressBookSyncEntry> PtrList;
-    AddressBookSyncEntry( const KABC::Addressee & = KABC::Addressee() );
-    AddressBookSyncEntry( const AddressBookSyncEntry& );
+
+    AddressBookSyncEntry( const KABC::Addressee &, Syncee *parent );
+    AddressBookSyncEntry( const AddressBookSyncEntry & );
 
     QString name();
     QString id();
-    void setId(const QString& id );
+    void setId( const QString &id );
     QString timestamp();
-    QString type()const;
-    bool mergeWith( SyncEntry* );
+    QString type() const;
+    bool mergeWith( SyncEntry * );
 
     AddressBookSyncEntry *clone();
     bool equals( SyncEntry *entry );
 
     KABC::Addressee addressee() { return mAddressee; }
-    QString resource()const;
+    QString resource() const;
     void setResource( const QString &str );
 
   private:
     KABC::Addressee mAddressee;
     QString m_res;
     struct Data;
-    Data* data;
+    Data *data;
 };
 
 /**
@@ -116,8 +117,6 @@ class AddressBookSyncee : public Syncee
 
     void reset();
 
-    QString identifier();
-
     AddressBookSyncEntry *firstEntry();
     AddressBookSyncEntry *nextEntry();
 
@@ -131,14 +130,14 @@ class AddressBookSyncee : public Syncee
     SyncEntry::PtrList removed();
 //    Syncee *clone();
     QString type() const;
-    QString newId()const;
+    QString newId() const;
 
     bool writeBackup( const QString & ) { return false; }
     bool restoreBackup( const QString & ) { return false; }
 
   private:
     AddressBookSyncEntry *createEntry( const KABC::Addressee & );
-    SyncEntry::PtrList find( int state);
+    SyncEntry::PtrList find( int state );
 
     QPtrList<AddressBookSyncEntry> mEntries;
 

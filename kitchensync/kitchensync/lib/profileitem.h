@@ -24,16 +24,22 @@
 #include <qlistview.h>
 
 #include <profile.h>
+
 namespace KSync {
-    class ProfileItem : public QListViewItem {
-    public:
-        ProfileItem( QListView* parent, const Profile& prof );
-        ~ProfileItem();
-        Profile profile()const;
-        void setProfile(const Profile& );
-    private:
-        Profile m_prof;
-    };
+
+class ProfileItem : public QListViewItem
+{
+  public:
+    ProfileItem( QListView *parent, const Profile &prof );
+    ~ProfileItem();
+
+    Profile profile() const;
+    void setProfile( const Profile & );
+
+  private:
+    Profile m_prof;
+};
+
 }
 
 #endif

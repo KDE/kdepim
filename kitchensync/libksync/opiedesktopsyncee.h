@@ -46,7 +46,7 @@ class OpieDesktopSyncEntry  : public SyncEntry
                           const QString& file,
                           const QString& name,
                           const QString& type,
-                          const QString& size );
+                          const QString& size, Syncee * );
     ~OpieDesktopSyncEntry();
     OpieDesktopSyncEntry( const OpieDesktopSyncEntry& );
 

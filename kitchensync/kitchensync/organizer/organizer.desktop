@@ -32,5 +32,5 @@ Name[xh]=IndawanaYomququzeleli
 Name[xx]=xxOrganizerPartxx
 Name[zu]=Ingxenye Yokuhlela
 Icon=korganizer
-ServiceTypes=KitchenSync/Manipulator
+ServiceTypes=KitchenSync/ActionPart
 X-KDE-Library=liborganizerpart

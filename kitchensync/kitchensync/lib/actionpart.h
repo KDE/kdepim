@@ -3,6 +3,7 @@
 
     Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
 † † Copyright (c) 2002 Maximilian Reiﬂ <harlekin@handhelds.org>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,8 +20,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KSYNC_MANIPULATOR_H
-#define KSYNC_MANIPULATOR_H
+#ifndef KSYNC_ACTIONPART_H
+#define KSYNC_ACTIONPART_H
 
 #include <qpixmap.h>
 #include <qstring.h>
@@ -46,59 +47,68 @@ class Konnector;
 enum SyncStatus { SYNC_START=0, SYNC_PROGRESS=1,  SYNC_DONE=2,  SYNC_FAIL };
 
 /**
- * the ManipulatorPart is loaded into the KitchenSync
- * Shell. Every ManipulatorPart can provide a QWidget
- * and a config dialog.
- * It can access the MainWindow through core()
- * and will be asked to sync!
- * It needs to emit done() when ready with syncing
- */
-class ManipulatorPart : public KParts::Part
+  A part represents an action, like making a backup, syncing something or
+  just showing some data.
+
+  Parts can be put into profiles. When the user triggers the profile the
+  Konnectors are read if required, the actions of the parts are executed
+  in the sequence configured by the user and then the Konnectors are
+  written. If reading or writing the Konnectors is required is determined
+  by the parts in the profile.
+
+  A profile can have more than one part of the same type. This allows to
+  have profiles with action sequences like: show original data, make a
+  backup, sync, show the resulting data.
+
+  The ActionPart is loaded into the KitchenSync Shell. Each ActionPart has to
+  provide a QWidget and can provide a config dialog.
+*/
+class ActionPart : public KParts::Part
 {
     Q_OBJECT
   public:
     /**
-     * The simple constructor
-     * @param parent The parent
-     * @param name The name of the manipulator part
-     */
-    ManipulatorPart( QObject *parent = 0, const char *name  = 0 );
-    virtual ~ManipulatorPart();
+      The simple constructor
+
+      @param parent parent widget
+      @param name Qt name
+    */
+    ActionPart( QObject *parent = 0, const char *name  = 0 );
+    virtual ~ActionPart();
 
     /**
-     * @return the type of this part
-     * for example like "Addressbook"
-     */
+      @return the type of this part for example like "Addressbook"
+    */
     virtual QString type() const = 0;
 
     /**
-     * @return the progress made 0-100
-     */
+      @return the progress made 0-100
+    */
     virtual int syncProgress() const;
 
     /**
-     * the sync status
-     */
+      the sync status
+    */
     virtual int syncStatus() const;
 
     /**
-     * @return a user translatable string
+      @return a translated string which is used as title for this ActionPart.
      */
-    virtual QString name() const = 0;
+    virtual QString title() const = 0;
 
     /**
-     * @return a short description
-     */
+      @return a short description
+    */
     virtual QString description() const = 0;
 
     /**
-     * @return a pixmap for this part
-     */
+      @return a pixmap for this part
+    */
     virtual QPixmap *pixmap() = 0;
 
     /**
-     * return a iconName
-     */
+      return a iconName
+    */
     virtual QString iconName() const = 0;
 
     /**
@@ -107,31 +117,37 @@ class ManipulatorPart : public KParts::Part
     virtual bool hasGui() const;
 
     /**
-     * if the config part is visible
-     */
+      if the config part is visible
+    */
     virtual bool configIsVisible() const;
 
     /**
-     * @return if the part canSync data :)
-     */
+      @return if the part canSync data :)
+    */
     virtual bool canSync() const;
 
     /**
-     * @return a config widget. Always create a new one
-     * the ownership will be transferred
-     */
+      @return a config widget. Always create a new one
+      the ownership will be transferred
+    */
     virtual QWidget *configWidget();
 
     /**
-     * if you want to sync implement that method
-     * After successfully syncing you need to call done()
-     * which will emit a signal
-     * @param in The Syncee List coming from a KonnectorPlugin
-     * @param out The Syncee List which will be written to the Konnector
-     */
+      if you want to sync implement that method
+      After successfully syncing you need to call done()
+      which will emit a signal
+      @param in The Syncee List coming from a KonnectorPlugin
+      @param out The Syncee List which will be written to the Konnector
+    */
     virtual void sync( const SynceeList &in, SynceeList &out );
 
-    virtual void actionSync();
+    virtual void executeAction() = 0;
+
+    virtual void filterKonnectors( QPtrList<Konnector> & ) {}
+
+    virtual bool needsKonnectorRead() const { return false; }
+    
+    virtual bool needsKonnectorWrite() const { return false; }
 
   public slots:
     virtual void slotSynceesRead( Konnector * ) {}
@@ -168,24 +184,24 @@ class ManipulatorPart : public KParts::Part
 
   signals:
     // 0 - 100
-    void sig_progress( ManipulatorPart *, int );
-    void sig_progress( ManipulatorPart *, const Progress & );
-    void sig_error( ManipulatorPart *, const Error & );
+    void sig_progress( ActionPart *, int );
+    void sig_progress( ActionPart *, const Progress & );
+    void sig_error( ActionPart *, const Error & );
     // SYNC_START SYNC_SYNC SYNC_STOP
-    void sig_syncStatus( ManipulatorPart *, int );
+    void sig_syncStatus( ActionPart *, int );
 
   protected:
     /**
      * Connect to the PartChange signal
      * @see MainWindow for the slot signature
      */
-    /* ManipulatorPart* old,ManipulatorPart* ne */
+    /* ActionPart* old,ActionPart* ne */
     void connectPartChange( const char* slot);
 
-    /* ManipulatorPart* part,const Progress& */
+    /* ActionPart* part,const Progress& */
     void connectPartProgress( const char* slot );
 
-    /* ManipulatorPart* part, const Error& */
+    /* ActionPart* part, const Error& */
     void connectPartError( const char* slot );
 
     /* Konnector *,const Progress& */
@@ -194,7 +210,7 @@ class ManipulatorPart : public KParts::Part
     /* Konnector *, const Error& */
     void connectKonnectorError( const char* slot );
 
-    /* ManipulatorPart*,int status,int prog */
+    /* ActionPart*,int status,int prog */
     void connectSyncProgress( const char* slot );
 
     /* const Profile& */

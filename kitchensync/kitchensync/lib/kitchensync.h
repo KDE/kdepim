@@ -3,6 +3,7 @@
 
     Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
 † † Copyright (c) 2002 Maximilian Reiﬂ <harlekin@handhelds.org>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -22,18 +23,17 @@
 #ifndef KSYNC_KITCHENSYNC_H
 #define KSYNC_KITCHENSYNC_H
 
-#include <qptrlist.h>
-#include <qmap.h>
+#include "actionpart.h"
+#include "profilemanager.h"
+#include "actionpartservice.h"
+#include "core.h"
+#include "systemtray.h"
 
 #include <kdebug.h>
 #include <kparts/mainwindow.h>
 
-#include <manipulatorpart.h>
-#include <systemtray.h>
-
-#include "profilemanager.h"
-#include "manpartservice.h"
-#include "core.h"
+#include <qptrlist.h>
+#include <qmap.h>
 
 class QHBox;
 class QWidgetStack;
@@ -45,6 +45,7 @@ class PartBar;
 class KonnectorBar;
 class MainWindow;
 class ActionManager;
+class Engine;
 
 /**
   The KitchenSync UI Shell
@@ -88,6 +89,8 @@ class KitchenSync : public Core
     */
     ProfileManager *profileManager() const;
 
+    Engine *engine() const;
+
     /**
       @return a SyncUi
     */
@@ -99,9 +102,9 @@ class KitchenSync : public Core
     SyncAlgorithm *syncAlgorithm();
 
     /**
-      @return the all loaded ManipulatorParts
+      @return the all loaded ActionParts
     */
-    const QPtrList<ManipulatorPart> parts() const;
+    const QPtrList<ActionPart> parts() const;
 
   public slots:
     void initProfiles();
@@ -111,8 +114,7 @@ class KitchenSync : public Core
     void activateProfile();
 
   private:
-    void addPart( const ManPartService& );
-    void addModPart( ManipulatorPart * );
+    void addPart( const ActionPartService & );
     void initSystray ( void );
 
   private slots:
@@ -126,9 +128,8 @@ class KitchenSync : public Core
     */
     void configureProfiles();
     void configureCurrentProfile();
-    void initPlugins();
     void slotSync();
-    void slotActivated( ManipulatorPart * );
+    void slotActivated( ActionPart * );
     void slotKonnectorBar( bool );
 
     void slotPreferences();
@@ -140,11 +141,11 @@ class KitchenSync : public Core
     void slotKonnectorProg( Konnector *, const Progress & );
     void slotKonnectorErr( Konnector *, const Error & );
 
-    /* slots for the ManipulatorParts */
-    void slotPartProg( ManipulatorPart *, int );
-    void slotPartProg( ManipulatorPart *, const Progress & );
-    void slotPartErr( ManipulatorPart *, const Error & );
-    void slotPartSyncStatus( ManipulatorPart *, int );
+    /* slots for the ActionParts */
+    void slotPartProg( ActionPart *, int );
+    void slotPartProg( ActionPart *, const Progress & );
+    void slotPartErr( ActionPart *, const Error & );
+    void slotPartSyncStatus( ActionPart *, int );
 
   private:
     ActionManager *mActionManager;
@@ -152,16 +153,18 @@ class KitchenSync : public Core
     PartBar *m_bar;
     QWidgetStack *m_stack;
     // loaded parts
-    QPtrList<ManipulatorPart> m_parts;
-    QPtrListIterator<ManipulatorPart> *m_partsIt;
+    QPtrList<ActionPart> m_parts;
+    QPtrListIterator<ActionPart> *m_partsIt;
     bool m_isSyncing;
 
-    ManPartService::ValueList m_partsLst;
     KSyncSystemTray *m_tray;
 
     ProfileManager *m_profileManager;
     SyncUi *m_syncUi;
     SyncAlgorithm *m_syncAlg;
+
+    Engine *mEngine;
+    QMap<ActionPart *, QWidget *> mActionWidgetMap;
 };
 
 }

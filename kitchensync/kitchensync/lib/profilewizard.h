@@ -22,7 +22,7 @@
 #ifndef KSYNC_PROFILEWIZARD_H
 #define KSYNC_PROFILEWIZARD_H
 
-#include "manpartservice.h"
+#include "actionpartservice.h"
 #include "profile.h"
 
 #include <kdialogbase.h>
@@ -32,27 +32,38 @@ class KListView;
 
 namespace KSync {
 
+class ProfileCheckItem;
+
+// FIXME: This is not a wizard, but the ProfileConfigureDialog
 class ProfileWizard : public KDialogBase
 {
     Q_OBJECT
   public:
-    ProfileWizard( const ManPartService::ValueList & );
-    ProfileWizard( const Profile &, const ManPartService::ValueList & );
+    ProfileWizard( const ActionPartService::List &availableParts );
+    ProfileWizard( const Profile &,
+                   const ActionPartService::List &availableParts );
     ~ProfileWizard();
 
     Profile profile();
 
-    ManPartService::ValueList selectedManParts();
+    ActionPartService::List selectedActionParts();
 
-  protected:
+  protected slots:
     void slotOk();
+
+    void addPart();
+    void removePart();
+    void raisePart();
+    void lowerPart();
+
+    ProfileCheckItem *selectedItem();
 
   private:
     void initUI();
-    void initPartList( const ManPartService::ValueList & );
     void initProfile();
 
     Profile mProfile;
+    ActionPartService::List mAvailableParts;
     KLineEdit *mNameEdit;
     KListView *mPartListView;
 };

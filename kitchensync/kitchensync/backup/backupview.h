@@ -1,7 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
+    Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,33 +18,48 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KSYNC_PROFILEFILEMANAGER_H
-#define KSYNC_PROFILEFILEMANAGER_H
+#ifndef KSYNC_BACKUPVIEW_H
+#define KSYNC_BACKUPVIEW_H
 
-#include "profile.h"
+#include <klocale.h>
 
-class KConfig;
+#include <qptrlist.h>
+#include <qlistview.h>
 
 namespace KSync {
 
-/**
-  @internal
-  It's responsible for loading and saving a list
-  of profiles somewhere.... kconfig currently
-*/
-class ProfileFileManager
+class Konnector;
+class Syncee;
+
+class BackupView : public QWidget
 {
+   Q_OBJECT
   public:
-    ProfileFileManager();
-    ~ProfileFileManager();
-    QValueList<Profile> load();
-    void save( const QValueList<Profile>& );
+    BackupView( QWidget *parent, const char *name = 0 );
+
+    QString selectedBackup();
+
+    void updateBackupList();
+
+    void setBackupDir( const QString &dateStr );
+    void createBackupDir();
+
+    QString backupFile( Konnector *k, Syncee *s );
+
+  signals:
+    void backupDeleted( const QString & );
+
+  protected:
+
+    QString topBackupDir() const;
+
+  protected slots:
+    void deleteBackup();
 
   private:
-    void saveOne( KConfig* conf, const Profile& prof );
-    void saveManPart(KConfig* conf,  const ManPartService&);
-    Profile readOne( KConfig* );
-    void clear( KConfig* conf );
+    QListView *mBackupList;
+
+    QString mBackupDir;
 };
 
 }

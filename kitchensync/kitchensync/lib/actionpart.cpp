@@ -22,14 +22,14 @@
 
 #include <kdebug.h>
 
-#include "manipulatorpart.h"
+#include "actionpart.h"
 
 #include "core.h"
 
 using namespace KSync;
 
-ManipulatorPart::ManipulatorPart( QObject *parent, const char *name )
-  : KParts::Part(parent, name )
+ActionPart::ActionPart( QObject *parent, const char *name )
+  : KParts::Part( parent, name )
 {
     m_window = 0;
 
@@ -37,143 +37,141 @@ ManipulatorPart::ManipulatorPart( QObject *parent, const char *name )
         m_window = static_cast<KSync::Core *>( parent );
 }
 
-ManipulatorPart::~ManipulatorPart()
+ActionPart::~ActionPart()
 {
 }
 
-int ManipulatorPart::syncProgress() const
+int ActionPart::syncProgress() const
 {
     return m_prog;
 }
 
-int ManipulatorPart::syncStatus() const
+int ActionPart::syncStatus() const
 {
     return m_stat;
 }
 
-bool ManipulatorPart::hasGui() const
+bool ActionPart::hasGui() const
 {
     return false;
 }
 
-bool ManipulatorPart::configIsVisible() const
+bool ActionPart::configIsVisible() const
 {
     return false;
 }
 
-bool ManipulatorPart::canSync() const
+bool ActionPart::canSync() const
 {
     return false;
 }
 
-QWidget *ManipulatorPart::configWidget()
+QWidget *ActionPart::configWidget()
 {
     return 0;
 }
 
-void ManipulatorPart::sync( const SynceeList& , SynceeList& )
+void ActionPart::sync( const SynceeList& , SynceeList& )
 {
     done();
 }
 
-Core* ManipulatorPart::core()
+Core* ActionPart::core()
 {
     return m_window;
 }
 
-Core* ManipulatorPart::core() const
+Core* ActionPart::core() const
 {
     return m_window;
 }
 
-void ManipulatorPart::progress( int pro )
+void ActionPart::progress( int pro )
 {
     m_prog = pro;
     emit sig_progress( this, pro );
 }
 
-void ManipulatorPart::progress( const Progress& pro )
+void ActionPart::progress( const Progress& pro )
 {
     emit sig_progress( this,pro );
 }
 
-void ManipulatorPart::error( const Error& err )
+void ActionPart::error( const Error& err )
 {
     emit sig_error( this, err );
 }
 
-void ManipulatorPart::done()
+void ActionPart::done()
 {
     m_stat = SYNC_DONE;
     emit sig_syncStatus( this, m_stat );
 }
 
-void ManipulatorPart::slotConfigOk()
+void ActionPart::slotConfigOk()
 {
 }
 
-void ManipulatorPart::connectPartChange( const char* slot )
+void ActionPart::connectPartChange( const char *slot )
 {
-    connect( core(), SIGNAL( partChanged( ManipulatorPart * ) ), slot );
+    connect( core(), SIGNAL( partChanged( ActionPart * ) ), slot );
 }
 
-void ManipulatorPart::connectPartProgress( const char* slot )
+void ActionPart::connectPartProgress( const char *slot )
 {
-    connect( core(), SIGNAL(partProgress( ManipulatorPart*, const Progress& ) ),
+    connect( core(), SIGNAL( partProgress( ActionPart *, const Progress & ) ),
              slot );
 }
 
-void ManipulatorPart::connectPartError( const char* slot )
+void ActionPart::connectPartError( const char *slot )
 {
-    connect( core(), SIGNAL(partError( ManipulatorPart*, const Error& ) ),
+    connect( core(), SIGNAL( partError( ActionPart *, const Error & ) ),
              slot );
 }
 
-void ManipulatorPart::connectKonnectorProgress( const char* slot )
+void ActionPart::connectKonnectorProgress( const char *slot )
 {
-    connect( core(), SIGNAL(konnectorProgress( Konnector *, const Progress& ) ),
+    connect( core(),
+             SIGNAL( konnectorProgress( Konnector *, const Progress & ) ),
              slot );
 }
 
-void ManipulatorPart::connectKonnectorError( const char* slot )
+void ActionPart::connectKonnectorError( const char *slot )
 {
     connect( core(), SIGNAL( konnectorError( Konnector *, const Error & ) ),
              slot );
 }
 
-void ManipulatorPart::connectSyncProgress( const char* slot )
+void ActionPart::connectSyncProgress( const char *slot )
 {
-    connect( core(), SIGNAL(syncProgress( ManipulatorPart*, int, int ) ), slot );
+    connect( core(), SIGNAL( syncProgress( ActionPart *, int, int ) ), slot );
 }
 
-void ManipulatorPart::connectProfileChanged( const char* slot )
+void ActionPart::connectProfileChanged( const char *slot )
 {
     connect( core(), SIGNAL( profileChanged( const Profile & ) ), slot );
 }
 
-void ManipulatorPart::connectKonnectorDownloaded( const char* slot )
+void ActionPart::connectKonnectorDownloaded( const char *slot )
 {
-    connect( core(), SIGNAL(konnectorDownloaded( Konnector *, Syncee::PtrList ) ),
+    connect( core(),
+             SIGNAL( konnectorDownloaded( Konnector *, Syncee::PtrList ) ),
              slot );
 }
 
-void ManipulatorPart::connectStartSync( const char* slot )
+void ActionPart::connectStartSync( const char *slot )
 {
     connect( core(), SIGNAL( startSync() ), slot );
 }
 
-void ManipulatorPart::connectDoneSync( const char* slot )
+void ActionPart::connectDoneSync( const char *slot )
 {
     connect( core(), SIGNAL( doneSync() ), slot );
 }
 
-bool ManipulatorPart::confirmBeforeWriting() const
+bool ActionPart::confirmBeforeWriting() const
 {
     return core()->currentProfile().confirmSync();
 }
 
-void ManipulatorPart::actionSync()
-{
-}
-
-#include "manipulatorpart.moc"
+#include "actionpart.moc"

@@ -27,11 +27,9 @@
 #include <kdebug.h>
 #include <kparts/mainwindow.h>
 
-#include <manipulatorpart.h>
 #include <systemtray.h>
 
 #include "profilemanager.h"
-#include "manpartservice.h"
 #include "kitchensync.h"
 
 class KSelectAction;

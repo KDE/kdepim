@@ -65,8 +65,8 @@ void Syncer::sync()
   Syncee *s = mSyncees.first();
   while( s ) {
     if ( !s->loadLog() ) {
-      kdError() << "Unable to load sync log for Syncee '" << s->identifier()
-                << endl;
+      kdError() << "Syncer::sync(): Unable to load sync log for Syncee '"
+                << s->identifier() << "'" << endl;
     }
     s = mSyncees.next();
   }

@@ -21,7 +21,7 @@
 #ifndef KSYNC_DEBUGGER
 #define KSYNC_DEBUGGER
 
-#include <manipulatorpart.h>
+#include <actionpart.h>
 
 #include <synceelist.h>
 
@@ -40,7 +40,7 @@ class CustomComboBox;
 
 namespace KSync {
 
-class Debugger : public ManipulatorPart
+class Debugger : public ActionPart
 {
    Q_OBJECT
   public:
@@ -52,7 +52,7 @@ class Debugger : public ManipulatorPart
     static KAboutData *createAboutData();
 
     QString type() const;
-    QString name() const;
+    QString title() const;
     QString description() const;
     bool hasGui() const;
     QPixmap *pixmap();
@@ -61,7 +61,7 @@ class Debugger : public ManipulatorPart
 
     void logMessage( const QString & );
 
-    void actionSync();
+    void executeAction();
 
   protected:
     Konnector *currentKonnector();

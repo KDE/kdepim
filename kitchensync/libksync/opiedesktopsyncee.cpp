@@ -28,9 +28,10 @@ OpieDesktopSyncEntry::OpieDesktopSyncEntry( const QStringList& category,
                                             const QString& file,
                                             const QString& name,
                                             const QString& type,
-                                            const QString& size )
-    : SyncEntry(), mCategory( category ),  mFile( file ),
-      mName(name ), mType( type ), mSize( size )
+                                            const QString& size,
+                                            Syncee *parent )
+    : SyncEntry( parent ), mCategory( category ),  mFile( file ),
+      mName( name ), mType( type ), mSize( size )
 {
 }
 

@@ -38,8 +38,8 @@ void testIt() {
 }
 */
 
-TodoSyncEntry::TodoSyncEntry( KCal::Todo* todo )
-    : SyncEntry(), mTodo( todo )
+TodoSyncEntry::TodoSyncEntry( KCal::Todo *todo, Syncee *parent )
+    : SyncEntry( parent ), mTodo( todo )
 {
     if (!mTodo )
         mTodo = new KCal::Todo;

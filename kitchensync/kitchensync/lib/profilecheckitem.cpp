@@ -25,18 +25,30 @@
 using namespace KSync;
 
 ProfileCheckItem::ProfileCheckItem( QListView *parent,
-                                    const ManPartService &manpart )
-  : QCheckListItem( parent, "profile",  CheckBox ), m_manpart( manpart )
+                                    const ActionPartService &part )
+  : QListViewItem( parent ), m_part( part )
 {
-  setText( 0, m_manpart.name() );
-  setText( 1, m_manpart.comment() );
+  init();
+}
+
+ProfileCheckItem::ProfileCheckItem( QListView *parent, QListViewItem *after,
+                                    const ActionPartService &part )
+  : QListViewItem( parent, after ), m_part( part )
+{
+  init();
+}
+
+void ProfileCheckItem::init()
+{
+  setText( 0, m_part.name() );
+  setText( 1, m_part.comment() );
 }
 
 ProfileCheckItem::~ProfileCheckItem()
 {
 }
 
-ManPartService ProfileCheckItem::manpart() const
+ActionPartService ProfileCheckItem::actionPart() const
 {
-  return m_manpart;
+  return m_part;
 }

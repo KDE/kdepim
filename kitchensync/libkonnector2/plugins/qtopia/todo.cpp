@@ -158,7 +158,7 @@ KSync::TodoSyncee* ToDo::toKDE( const QString &fileName, ExtraMap& map )
             if ( e.tagName() == "Task" ) {
                 todo = dom2todo( e, map,attr );
                 KSync::TodoSyncEntry* entry;
-                entry = new KSync::TodoSyncEntry( todo );
+                entry = new KSync::TodoSyncEntry( todo, syncee );
                 syncee->addEntry( entry );
             } // if name == "Task"
         } // e.isNull

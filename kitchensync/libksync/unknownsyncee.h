@@ -52,14 +52,16 @@ class UnknownSyncEntry : public SyncEntry
       @param array the ByteArray
       @param path the path where the file was downloaded from
     */
-    UnknownSyncEntry( const QByteArray& array, const QString& path );
+    UnknownSyncEntry( const QByteArray& array, const QString& path,
+                      Syncee *parent );
 
     /**
       c'tor
       @param fileName the place where the temp file is stored
       @param path The path where the files comes from
     */
-    UnknownSyncEntry( const QString& fileName, const QString& path );
+    UnknownSyncEntry( const QString& fileName, const QString& path,
+                      Syncee *parent );
 
     /**
       c'tor

@@ -34,11 +34,12 @@ void SyncAlgorithm::setUi( SyncUi *ui )
 
 SyncEntry *SyncAlgorithm::deconflict( SyncEntry *syncEntry, SyncEntry *target )
 {
-  SyncEntry* entry = syncEntry; // default to this
-  if ( mUi ) entry = mUi->deconflict( syncEntry, target );
-  else kdWarning() << "SyncAlgorithm: No UI set." << endl;
-
-  return entry;
+  if ( mUi ) {
+    return mUi->deconflict( syncEntry, target );
+  } else {
+    kdWarning() << "SyncAlgorithm: No UI set." << endl;
+    return 0;
+  }
 }
 
 bool SyncAlgorithm::confirmDelete( SyncEntry *syncEntry, SyncEntry *target )

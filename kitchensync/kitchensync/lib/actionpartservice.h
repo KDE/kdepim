@@ -2,6 +2,7 @@
     This file is part of KitchenSync.
 
     Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,8 +19,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KSYNC_MANPARTSERVICE_H
-#define KSYNC_MANPARTSERVICE_H
+#ifndef KSYNC_ACTIONPARTSERVICE_H
+#define KSYNC_ACTIONPARTSERVICE_H
 
 #include <qvaluelist.h>
 #include <qstring.h>
@@ -29,43 +30,51 @@
 namespace KSync {
 
 /**
-  A ManPartServive saves a converted KService::Ptr of a ManipulatorPart
+  A ActionPartService saves a converted KService::Ptr of a ActionPart
 
   @see KService::Ptr
 */
-class ManPartService {
-
+class ActionPartService
+{
   public:
-    typedef QValueList<ManPartService> ValueList;
+    typedef QValueList<ActionPartService> List;
 
     /**
       Creates an empty service.
     */
-    ManPartService();
-    ManPartService( const KService::Ptr &service );
-    ManPartService( const ManPartService & );
-    ~ManPartService();
+    ActionPartService();
+    ActionPartService( const KService::Ptr &service );
+    ~ActionPartService();
 
-    bool operator==( const ManPartService & );
-    bool operator==( const ManPartService & ) const;
+    bool operator==( const ActionPartService & );
+    bool operator==( const ActionPartService & ) const;
 
+    QString id() const;
     QString name() const;
     QString comment() const;
     QString libname() const;
     QString icon() const;
 
+    void setId( const QString & );
     void setName( const QString & );
     void setComment( const QString & );
     void setLibname( const QString & );
     void setIcon( const QString & );
 
-    ManPartService &operator=( const ManPartService & );
+    ActionPartService &operator=( const ActionPartService & );
+
+    static const ActionPartService::List &availableParts();
+    static ActionPartService partForId( const QString & );
 
   private:
+    QString m_id;
     QString m_name;
     QString m_comment;
     QString m_icon;
     QString m_lib;
+
+    static bool mAvailablePartsRead;
+    static ActionPartService::List mAvailableParts;
 };
 
 }

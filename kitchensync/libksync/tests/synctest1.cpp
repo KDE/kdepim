@@ -92,11 +92,13 @@ int main( int argc, char **argv )
 
   helper.sync( &cal1, &cal2, "001", "Calendar, sync new, no history." );
 
-  event1->setSummary( "Modified event 1" );
+  event1->setSummary( "Modified Event 1" );
+  event1->setLastModified( event1->lastModified().addDays( 1 ) );
   
   helper.sync( &cal1, &cal2, "002", "Calendar, sync changed 1, no history" );
   
-  event2->setSummary( "Modified event 2" );
+  event2->setSummary( "Modified Event 2" );
+  event2->setLastModified( event2->lastModified().addDays( 1 ) );
   
   helper.sync( &cal1, &cal2, "003", "Calendar, sync changed 2, no history" );
   

@@ -108,10 +108,12 @@ bool LocalKonnector::readSyncees()
   if ( !mCalendarFile.isEmpty() ) {
     kdDebug() << "LocalKonnector::readSyncee(): calendar: " << mCalendarFile
               << endl;
+    mCalendar.close();
     if ( mCalendar.load( mCalendarFile ) ) {
       kdDebug() << "Read succeeded." << endl;
       mCalendarSyncee->reset();
       mCalendarSyncee->setIdentifier( mCalendarFile );
+      kdDebug() << "IDENTIFIER: " << mCalendarSyncee->identifier() << endl;
     } else {
       kdDebug() << "Read failed." << endl;
       return false;
@@ -131,10 +133,11 @@ bool LocalKonnector::readSyncees()
     kdDebug() << "Read succeeded." << endl;
 
     mAddressBookSyncee->reset();
+    mAddressBookSyncee->setIdentifier( mAddressBook.identifier() );
   
     KABC::AddressBook::Iterator it;
     for ( it = mAddressBook.begin(); it != mAddressBook.end(); ++it ) {
-      KSync::AddressBookSyncEntry entry( *it );
+      KSync::AddressBookSyncEntry entry( *it, mAddressBookSyncee );
       mAddressBookSyncee->addEntry( &entry );
     }
   }

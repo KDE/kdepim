@@ -30,8 +30,8 @@ namespace KSync {
 class TodoSyncEntry : public SyncEntry
 {
   public:
-    TodoSyncEntry( KCal::Todo* = 0);
-    TodoSyncEntry( const TodoSyncEntry& );
+    TodoSyncEntry( KCal::Todo *, Syncee *parent );
+    TodoSyncEntry( const TodoSyncEntry & );
     ~TodoSyncEntry();
     KCal::Todo* todo();
 

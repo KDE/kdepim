@@ -19,83 +19,107 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include "profilefilemanager.h"
 #include "profilemanager.h"
 
 using namespace KSync;
 
-ProfileManager::ProfileManager() {
-
-}
-ProfileManager::ProfileManager( const Profile::ValueList& list )
-    : m_list( list ) {
-}
-ProfileManager::~ProfileManager() {
-
+ProfileManager::ProfileManager()
+{
 }
 
-Profile ProfileManager::currentProfile() const {
-    return m_cur;
+ProfileManager::ProfileManager( const Profile::List &list )
+    : mProfiles( list )
+{
 }
-void ProfileManager::setCurrentProfile( const Profile& prof) {
-    m_cur = prof;
+
+ProfileManager::~ProfileManager()
+{
 }
-Profile::ValueList ProfileManager::profiles() const {
-    return m_list;
+
+Profile ProfileManager::currentProfile() const
+{
+    return mCurrentProfile;
 }
-void ProfileManager::setProfiles( const Profile::ValueList& list ) {
-    m_list = list;
-    m_cur = Profile(); // invalidate
+
+void ProfileManager::setCurrentProfile( const Profile &prof )
+{
+    mCurrentProfile = prof;
 }
-Profile ProfileManager::byName(const QString& name ) {
+
+Profile::List ProfileManager::profiles() const
+{
+    return mProfiles;
+}
+
+void ProfileManager::setProfiles( const Profile::List &list )
+{
+    mProfiles = list;
+    mCurrentProfile = Profile(); // invalidate
+}
+
+Profile ProfileManager::byName( const QString &name )
+{
     Profile prof;
 
-    Profile::ValueList::Iterator it;
-    for ( it = m_list.begin(); it != m_list.end(); ++it ) {
+    Profile::List::Iterator it;
+    for ( it = mProfiles.begin(); it != mProfiles.end(); ++it ) {
         if ( (*it).name() == name ) {
             prof = (*it);
             break;
         }
-    };
+    }
     return prof;
 }
-Profile::ValueList ProfileManager::byName2( const QString& name ) {
-    Profile::ValueList list;
-    Profile::ValueList::Iterator it;
-    for ( it = m_list.begin(); it != m_list.end(); ++it ) {
+
+Profile::List ProfileManager::byName2( const QString& name )
+{
+    Profile::List list;
+    Profile::List::Iterator it;
+    for ( it = mProfiles.begin(); it != mProfiles.end(); ++it ) {
         if ( (*it).name() == name )
             list.append( (*it) );
-    };
+    }
     return list;
 }
+
 /*
  * Load from KConfig
  * there is a Global group for the current Profile ( id )
  * and one Group for each Profile
  *
  */
-void ProfileManager::load() {
-    ProfileFileManager man;
-    m_list = man.load();
+void ProfileManager::load()
+{
+    mProfiles = mProfileConfig.load();
 }
 
-void ProfileManager::save() {
-    ProfileFileManager man;
-    man.save( m_list );
+void ProfileManager::save()
+{
+    mProfileConfig.save( mProfiles );
 }
-void ProfileManager::addProfile( const Profile& prof ) {
-    m_list.append( prof );
+
+void ProfileManager::addProfile( const Profile &prof )
+{
+    mProfiles.append( prof );
 }
-void ProfileManager::replaceProfile( const Profile& prod ) {
-    m_list.remove( prod );
-    m_list.append( prod );
+
+void ProfileManager::replaceProfile( const Profile &prod )
+{
+    mProfiles.remove( prod );
+    mProfiles.append( prod );
 }
-void ProfileManager::removeProfile( const Profile& prof ) {
-    m_list.remove( prof );
+
+void ProfileManager::removeProfile( const Profile &prof )
+{
+    mProfiles.remove( prof );
 }
-Profile ProfileManager::profile( int i)const {
-    return m_list[i];
+
+Profile ProfileManager::profile( int i ) const
+{
+    return mProfiles[i];
 }
-int ProfileManager::count() const {
-    return m_list.count();
+
+int ProfileManager::count() const
+{
+    return mProfiles.count();
 }

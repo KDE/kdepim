@@ -28,27 +28,28 @@
 #include <klocale.h>
 #include <klistview.h>
 #include <kmessagebox.h>
+#include <kinputdialog.h>
 
 #include <qlayout.h>
 #include <qlabel.h>
+#include <qpushbutton.h>
 
 using namespace KSync;
 
 ProfileWizard::ProfileWizard( const Profile &profile,
-                              const ManPartService::ValueList &parts )
+                              const ActionPartService::List &parts )
   : KDialogBase( Plain, i18n("Configure Profile"), Ok | Cancel, Ok, 0, "wiz" ),
-    mProfile( profile )
+    mProfile( profile ), mAvailableParts( parts )
 {
   initUI();
-  initPartList( parts );
   initProfile();
 }
 
-ProfileWizard::ProfileWizard( const ManPartService::ValueList &parts )
-  : KDialogBase( Plain, i18n("Configure Profile"), Ok | Cancel, Ok, 0, "wiz" )
+ProfileWizard::ProfileWizard( const ActionPartService::List &parts )
+  : KDialogBase( Plain, i18n("Configure Profile"), Ok | Cancel, Ok, 0, "wiz" ),
+    mAvailableParts( parts )
 {
   initUI();
-  initPartList( parts );
 }
 
 ProfileWizard::~ProfileWizard()
@@ -82,53 +83,57 @@ void ProfileWizard::initUI()
   mPartListView = new KListView( topWidget );
   mPartListView->addColumn( i18n("Name") );
   mPartListView->addColumn( i18n("Comment") );
+  mPartListView->setSortColumn( -1 ); // Disable sorting by the user
   topLayout->addWidget( mPartListView );
-}
 
-void ProfileWizard::initPartList( const ManPartService::ValueList &parts )
-{
-  ManPartService::ValueList::ConstIterator it;
-  for ( it = parts.begin(); it != parts.end(); ++it ) {
-    new ProfileCheckItem( mPartListView, *it );
-  }
+  QBoxLayout *buttonLayout = new QHBoxLayout( topLayout );
+
+  QPushButton *button = new QPushButton( i18n("Add..."), topWidget );
+  buttonLayout->addWidget( button );
+  connect( button, SIGNAL( clicked() ), SLOT( addPart() ) );
+
+  button = new QPushButton( i18n("Remove"), topWidget );
+  buttonLayout->addWidget( button );
+  connect( button, SIGNAL( clicked() ), SLOT( removePart() ) );
+
+  button = new QPushButton( i18n("Up"), topWidget );
+  buttonLayout->addWidget( button );
+  connect( button, SIGNAL( clicked() ), SLOT( raisePart() ) );
+
+  button = new QPushButton( i18n("Down"), topWidget );
+  buttonLayout->addWidget( button );
+  connect( button, SIGNAL( clicked() ), SLOT( lowerPart() ) );
 }
 
 void ProfileWizard::initProfile()
 {
   mNameEdit->setText( mProfile.name() );
 
-  ManPartService::ValueList selectedParts = mProfile.manParts();
+  ActionPartService::List selectedParts = mProfile.actionParts();
   
-  ManPartService::ValueList::ConstIterator itPart;
+  ActionPartService::List::ConstIterator itPart;
   for ( itPart = selectedParts.begin(); itPart != selectedParts.end();
         ++itPart ) {
-    QListViewItemIterator it( mPartListView );
-    for ( ; it.current(); ++it ) {
-      ProfileCheckItem *item = static_cast<ProfileCheckItem *>( it.current() );
-      if ( item->manpart() == *itPart ) {
-        item->setOn( true );
-        break;
-      }
-    }
+    new ProfileCheckItem( mPartListView, *itPart );
   }
 }
 
 Profile ProfileWizard::profile()
 {
   mProfile.setName( mNameEdit->text() );
-  mProfile.setManParts( selectedManParts() );
+  mProfile.setActionParts( selectedActionParts() );
   return mProfile;
 }
 
-ManPartService::ValueList ProfileWizard::selectedManParts()
+ActionPartService::List ProfileWizard::selectedActionParts()
 {
-  ManPartService::ValueList manparts;
+  ActionPartService::List actionParts;
   QListViewItemIterator it( mPartListView );
   for ( ; it.current(); ++it ) {
     ProfileCheckItem *item = static_cast<ProfileCheckItem *>( it.current() );
-    if ( item->isOn() ) manparts.append( item->manpart() );
+    actionParts.append( item->actionPart() );
   }
-  return manparts;
+  return actionParts;
 }
 
 void ProfileWizard::slotOk()
@@ -138,6 +143,61 @@ void ProfileWizard::slotOk()
   } else {
     accept();
   }
+}
+
+ProfileCheckItem *ProfileWizard::selectedItem()
+{
+  return static_cast<ProfileCheckItem *>( mPartListView->selectedItem() );
+}
+
+void ProfileWizard::addPart()
+{
+  QStringList partNames;
+
+  ActionPartService::List::ConstIterator it;
+  for( it = mAvailableParts.begin(); it != mAvailableParts.end(); ++it ) {
+    partNames.append( (*it).name() );
+  }
+
+  QString partName = KInputDialog::getItem( i18n("Select Action Part"),
+                        i18n("Selection the action part you want to add."),
+                        partNames, 0, false, 0, this );
+
+  for( it = mAvailableParts.begin(); it != mAvailableParts.end(); ++it ) {
+    if ( (*it).name() == partName ) {
+      ProfileCheckItem *item = selectedItem();
+      if ( item ) {
+        new ProfileCheckItem( mPartListView, item, *it );
+      } else {
+        new ProfileCheckItem( mPartListView, *it );
+      }
+    }
+  }
+}
+
+void ProfileWizard::removePart()
+{
+  ProfileCheckItem *item = selectedItem();
+  if ( item ) delete item;
+}
+
+void ProfileWizard::raisePart()
+{
+  ProfileCheckItem *item = selectedItem();
+  ProfileCheckItem *above;
+  above = static_cast<ProfileCheckItem *>( item->itemAbove() );
+  if ( above ) {
+    above = static_cast<ProfileCheckItem *>( above->itemAbove() );
+  }
+  item->moveItem( above );
+}
+
+void ProfileWizard::lowerPart()
+{
+  ProfileCheckItem *item = selectedItem();
+  ProfileCheckItem *below;
+  below = static_cast<ProfileCheckItem *>( item->nextSibling() );
+  if ( below ) item->moveItem( below );
 }
 
 #include "profilewizard.moc"

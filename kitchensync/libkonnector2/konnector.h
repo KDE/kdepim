@@ -54,20 +54,22 @@ class Konnector : public KRES::Resource
 {
     Q_OBJECT
   public:
+    typedef QPtrList<Konnector> List;
+  
     /**
       Construct Konnector from information in config file.
     */
     Konnector( const KConfig *config );
 
     /**
-      Write configuration to config file.
-    */
-    void writeConfig( KConfig *config );
-
-    /**
       Destruct Konnector object.
     */
     virtual ~Konnector();
+
+    /**
+      Write configuration to config file.
+    */
+    void writeConfig( KConfig *config );
 
     /**
       Get list of Syncees used by this Konnector. It will contain a Syncee for

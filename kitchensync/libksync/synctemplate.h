@@ -40,6 +40,7 @@ namespace KSync {
             mList.setAutoDelete( true );
         };
         ~SyncTemplate() { };
+
 /*        QString type() const { return QString::fromLatin1(typeName); }*/
         /**
          * basic clone implementation

@@ -44,6 +44,16 @@ Syncee::~Syncee()
   delete mStatusLog;
 }
 
+void Syncee::setIdentifier( const QString &identifier )
+{
+  mIdentifier = identifier;
+}
+
+bool Syncee::isValid()
+{
+  return !identifier().isEmpty();
+}
+
 SyncEntry *Syncee::findEntry( const QString &id )
 {
 //  kdDebug(5231) << "Syncee::findEntry() '" << id << "'" << endl;
@@ -65,7 +75,7 @@ void Syncee::replaceEntry( SyncEntry *oldEntry, SyncEntry *newEntry )
 
 bool Syncee::hasChanged( SyncEntry *entry )
 {
-  if ( entry->state() != SyncEntry::Undefined ) return true;
+//  if ( entry->state() != SyncEntry::Undefined ) return true;
   if ( entry->timestamp().isEmpty() ) return true;
   if ( !mStatusLog ) return true;
 
@@ -77,8 +87,9 @@ bool Syncee::hasChanged( SyncEntry *entry )
 
 bool Syncee::loadLog()
 {
-  if ( mIdentifier.isEmpty() ) {
-    kdDebug() << "Unable to load Sync log, identifier is empty." << endl;
+  if ( !isValid() ) {
+    kdDebug() << "Syncee::loadLog(): Unable to load Sync log, identifier is "
+                 "empty." << endl;
     return false;
   }
 

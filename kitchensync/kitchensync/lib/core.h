@@ -21,7 +21,7 @@
 #ifndef KSYNC_CORE_H
 #define KSYNC_CORE_H
 
-#include "manipulatorpart.h"
+#include "actionpart.h"
 #include "profile.h"
 
 #include <kdebug.h>
@@ -35,14 +35,15 @@ class ProfileManager;
 class KonnectorManager;
 class SyncUi;
 class SyncAlgorithm;
+class Engine;
 
 enum KonnectorMode { KONNECTOR_ONLINE = 0, KONNECTOR_OFFLINE };
 
 /**
- * The KitchenSync UI Shell
- * It's the MainWindow of the application. It'll load all parts
- * and do the basic communication between all parts
- */
+  The KitchenSync UI Shell
+  It's the main view of the application. It'll load all parts
+  and do the basic communication between all parts
+*/
 class Core : public QWidget
 {
    Q_OBJECT
@@ -61,6 +62,8 @@ class Core : public QWidget
      */
     virtual ProfileManager *profileManager() const = 0;
 
+    virtual Engine *engine() const = 0;
+
     /**
      * @return a SyncUi
      */
@@ -72,9 +75,9 @@ class Core : public QWidget
     virtual SyncAlgorithm *syncAlgorithm() = 0;
 
     /**
-     * @return the all loaded ManipulatorParts
+     * @return the all loaded ActionParts
      */
-    virtual const QPtrList<ManipulatorPart> parts() const = 0;
+    virtual const QPtrList<ActionPart> parts() const = 0;
 
   signals:
     /**
@@ -101,21 +104,21 @@ class Core : public QWidget
      * Whenever the currently activated parts changed
      * @param newPart the newly activated part
      */
-    void partChanged( ManipulatorPart *newPart );
+    void partChanged( ActionPart *newPart );
 
     /**
      * progress coming from one part
      * @param part where the progress comes from, 0 if from MainWindow
      * @param prog The progress
      */
-    void partProgress( ManipulatorPart *part, const Progress &prog );
+    void partProgress( ActionPart *part, const Progress &prog );
 
     /**
      * error coming from one part
      * @param part where the error comes from, 0 if from MainWindow
      * @param err The error
      */
-    void partError( ManipulatorPart *part, const Error &error );
+    void partError( ActionPart *part, const Error &error );
 
     /**
      * emitted when ever sync starts
@@ -125,9 +128,9 @@ class Core : public QWidget
     /**
      * emitted when a part is asked to sync
      */
-    void startSync( ManipulatorPart * );
+    void startSync( ActionPart * );
 
-    void syncProgress( ManipulatorPart *, int, int );
+    void syncProgress( ActionPart *, int, int );
     /**
      * emitted when done with syncing
      */
@@ -136,7 +139,7 @@ class Core : public QWidget
     /**
      * emitted when one part is done with syncing
      */
-    void doneSync( ManipulatorPart * );
+    void doneSync( ActionPart * );
 };
 
 }

@@ -22,18 +22,15 @@
 #ifndef KSYNC_MAINWINDOW_H
 #define KSYNC_MAINWINDOW_H
 
-#include <qptrlist.h>
-#include <qmap.h>
+#include "profilemanager.h"
+#include "kitchensync.h"
+#include "systemtray.h"
 
 #include <kdebug.h>
 #include <kparts/mainwindow.h>
 
-#include <manipulatorpart.h>
-#include <systemtray.h>
-
-#include "profilemanager.h"
-#include "manpartservice.h"
-#include "kitchensync.h"
+#include <qptrlist.h>
+#include <qmap.h>
 
 class PartBar;
 class QHBox;

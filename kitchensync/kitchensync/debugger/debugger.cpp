@@ -76,7 +76,7 @@ class CustomComboBox : public QComboBox
 
 Debugger::Debugger( QWidget *parent, const char *name,
                     QObject *, const char *,const QStringList & )
-  : ManipulatorPart( parent, name ), m_widget( 0 )
+  : ActionPart( parent, name ), m_widget( 0 )
 {
   m_pixmap = KGlobal::iconLoader()->loadIcon("package_settings", KIcon::Desktop, 48 );
 
@@ -100,7 +100,7 @@ QString Debugger::type() const
   return QString::fromLatin1("debugger");
 }
 
-QString Debugger::name() const
+QString Debugger::title() const
 {
   return i18n("Konnector Debugger");
 }
@@ -331,7 +331,7 @@ void Debugger::logMessage( const QString &message )
   mLogView->append( text );
 }
 
-void Debugger::actionSync()
+void Debugger::executeAction()
 {
   logMessage( i18n("actionSync()") );
 }

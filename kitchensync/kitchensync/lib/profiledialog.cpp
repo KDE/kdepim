@@ -36,11 +36,11 @@
 
 using namespace KSync;
 
-ProfileDialog::ProfileDialog( const Profile::ValueList& profiles,
-                              const ManPartService::ValueList& man )
+ProfileDialog::ProfileDialog( const Profile::List &profiles,
+                              const ActionPartService::List &parts )
   : KDialogBase( Plain, i18n("Configure Profiles"), Ok | Cancel, Ok, 0, 0, true,
                  false ),
-    m_lst( man )
+    mAvailableParts( parts )
 {
   QWidget *topWidget = plainPage();
 
@@ -86,17 +86,17 @@ ProfileDialog::~ProfileDialog()
 {
 }
 
-void ProfileDialog::initListView( const Profile::ValueList& profiles )
+void ProfileDialog::initListView( const Profile::List& profiles )
 {
-  Profile::ValueList::ConstIterator it;
+  Profile::List::ConstIterator it;
   for ( it = profiles.begin(); it != profiles.end(); ++it ) {
     new ProfileItem( mProfileList, (*it) );
   }
 }
 
-Profile::ValueList ProfileDialog::profiles() const
+Profile::List ProfileDialog::profiles() const
 {
-  Profile::ValueList profiles;
+  Profile::List profiles;
 
   QListViewItemIterator it( mProfileList );
   for ( ; it.current(); ++it ) {
@@ -114,7 +114,7 @@ void ProfileDialog::slotRemove()
 
 void ProfileDialog::slotAdd()
 {
-  ProfileWizard wiz( m_lst );
+  ProfileWizard wiz( mAvailableParts );
 
   if ( wiz.exec() ) {
     new ProfileItem( mProfileList, wiz.profile() );
@@ -127,7 +127,7 @@ void ProfileDialog::slotEdit()
       static_cast<ProfileItem *>( mProfileList->selectedItem() );
   if ( !item ) return;
 
-  ProfileWizard wiz( item->profile(), m_lst );
+  ProfileWizard wiz( item->profile(), mAvailableParts );
   if ( wiz.exec() ) {
     item->setProfile( wiz.profile() );
   }

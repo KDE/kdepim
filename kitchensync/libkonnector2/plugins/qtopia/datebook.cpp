@@ -235,7 +235,7 @@ KSync::EventSyncee* DateBook::toKDE( const QString& fileName, ExtraMap& extraMap
                             KCal::Event* event = toEvent( e, extraMap, attr );
                             if (event != 0 ) {
                                 KSync::EventSyncEntry* entry;
-                                entry = new KSync::EventSyncEntry( event );
+                                entry = new KSync::EventSyncEntry( event, syncee );
                                 syncee->addEntry( entry );
                             }
                         }

@@ -36,8 +36,8 @@ namespace KSync {
     class IncidenceTemplate : public SyncEntry {
     public:
         typedef QPtrList<Entry> PtrList;
-        IncidenceTemplate(Entry* entry)
-            : SyncEntry(), mIncidence( entry ) {
+        IncidenceTemplate( Entry *entry, Syncee *parent )
+            : SyncEntry( parent ), mIncidence( entry ) {
             if (!entry )
                 mIncidence = new Entry;
 

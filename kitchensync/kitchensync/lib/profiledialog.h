@@ -23,7 +23,7 @@
 #define KSYNC_PROFILEDIALOG_H
 
 #include "profile.h"
-#include "manpartservice.h"
+#include "actionpartservice.h"
 
 #include <kdialogbase.h>
 
@@ -35,10 +35,10 @@ class ProfileDialog : public KDialogBase
 {
     Q_OBJECT
   public:
-    ProfileDialog( const Profile::ValueList &,
-                   const ManPartService::ValueList & );
+    ProfileDialog( const Profile::List &,
+                   const ActionPartService::List &availableParts );
     ~ProfileDialog();
-    Profile::ValueList profiles()const;
+    Profile::List profiles()const;
 
   private slots:
     void slotRemove();
@@ -46,8 +46,8 @@ class ProfileDialog : public KDialogBase
     void slotEdit();
 
   private:
-    void initListView( const Profile::ValueList& );
-    ManPartService::ValueList m_lst;
+    void initListView( const Profile::List & );
+    ActionPartService::List mAvailableParts;
     KListView *mProfileList;
 };
 

@@ -1,7 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,15 +18,13 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KSYNC_SYNCERPART
-#define KSYNC_SYNCERPART
+#ifndef KSYNC_SYNCERPART_H
+#define KSYNC_SYNCERPART_H
 
-#include <manipulatorpart.h>
+#include <actionpart.h>
 
 #include <synceelist.h>
 #include <syncer.h>
-
-#include <libkcal/calendarlocal.h>
 
 #include <klocale.h>
 
@@ -40,7 +38,9 @@ class QTextView;
 
 namespace KSync {
 
-class SyncerPart : public ManipulatorPart
+class KonnectorView;
+
+class SyncerPart : public ActionPart
 {
    Q_OBJECT
   public:
@@ -52,33 +52,19 @@ class SyncerPart : public ManipulatorPart
     static KAboutData *createAboutData();
 
     QString type() const;
-    QString name() const;
+    QString title() const;
     QString description() const;
     bool hasGui() const;
     QPixmap *pixmap();
     QString iconName() const;
     QWidget *widget();
 
+    bool needsKonnectorRead() const { return true; }
+    bool needsKonnectorWrite() const { return true; }
+
     void logMessage( const QString & );
 
-    void actionSync();
-
-  public slots:
-    void slotSynceesRead( Konnector * );
-
-    void slotSynceeReadError( Konnector * );
-
-    void slotSynceesWritten( Konnector * );
-
-    void slotSynceeWriteError( Konnector * );
-
-  protected:
-    void updateKonnectorList();
-
-    void trySync();
-    void tryFinishSync();
-    
-    void disconnectDevice( Konnector *k );
+    void executeAction();
 
   protected slots:
     void slotProgress( Konnector *, const Progress & );
@@ -88,16 +74,8 @@ class SyncerPart : public ManipulatorPart
     QPixmap m_pixmap;
     QWidget *m_widget;
 
-    QListView *mKonnectorList;
+    KonnectorView *mKonnectorView;
     QTextView *mLogView;
-
-    SynceeList mSynceeList;
-
-    QMap<QString,Konnector *> mKonnectorMap;
-
-    QPtrList<Konnector> mOpenedKonnectors;
-    QPtrList<Konnector> mProcessedKonnectors;
-    uint mKonnectorCount;
 
     Syncer mCalendarSyncer;
     Syncer mAddressBookSyncer;

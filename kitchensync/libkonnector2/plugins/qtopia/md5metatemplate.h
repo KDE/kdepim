@@ -65,7 +65,7 @@ namespace OpieHelper {
          * else it was added
          */
         for ( entryNew = (Entry*)newEntries->firstEntry();
-              entryNew != 0l;
+              entryNew != 0;
               entryNew = (Entry*)newEntries->nextEntry() ) {
             found = false;
 
@@ -103,12 +103,15 @@ namespace OpieHelper {
              * it was removed
              */
             if (!entryNew) {
+// FIXME: Provide a way to create SyncEntries for deleted entries.
+#if 0
                 entryNew = new Entry();
                 entryNew->setId( it.key() );
 
                 /* add entry first and then to setState */
                 newEntries->addEntry( entryNew );
                 entryNew->setState( KSync::SyncEntry::Removed );
+#endif
             }
         }
 
@@ -117,7 +120,7 @@ namespace OpieHelper {
     void MD5Template<Syncee, Entry>::saveMeta( Syncee* syncee, MD5Map& map) {
         map.clear();
         for ( Entry* entry = (Entry*)syncee->firstEntry();
-              entry != 0l; entry = (Entry*)syncee->nextEntry() ) {
+              entry != 0; entry = (Entry*)syncee->nextEntry() ) {
 
             /* only save meta for not deleted SyncEntries! */
             if ( entry->state() != KSync::SyncEntry::Removed ) {

@@ -22,127 +22,122 @@
 #ifndef PARTBAR_H
 #define PARTBAR_H
 
-#include <qlistbox.h>
 #include <klistbox.h>
 #include <kicontheme.h>
 
+#include <qlistbox.h>
 #include <qevent.h>
-
-//#include "manipulatorpart.h"
 
 namespace KSync {
 
-  /* forward declaration */
-    class PartBar;
-    class ManipulatorPart;
-  
-  /**
-   * An item for the PartBar
-   */
-  class PartBarItem : public QListBoxPixmap
-    {
-    public:
-      PartBarItem( PartBar*, ManipulatorPart * );
-      ~PartBarItem();
+class PartBar;
+class ActionPart;
 
-      /**
-       * the part to be embedded
-       */
-      ManipulatorPart* part();
+/**
+* An item for the PartBar
+*/
+class PartBarItem : public QListBoxPixmap
+{
+  public:
+    PartBarItem( PartBar *, ActionPart * );
+    ~PartBarItem();
 
-      /**
-       * sets the icon for the item.
-       * @param icon the icon to set
-       * @param group the icongroup
-       */
-      void setIcon( const QString& icon, KIcon::Group group = KIcon::Panel );
+    /**
+     * the part to be embedded
+     */
+    ActionPart *part();
 
-
-      /**
-       * @return the width of this item.
-       */
-      virtual int width( const QListBox * ) const;
-      
-      /**
-       * @return the height of this item.
-       */
-      virtual int height( const QListBox * ) const;
-
-      /**
-       * return the pixmap.
-       */
-      virtual const QPixmap * pixmap() const {
-	return m_Pixmap;
-      }
-
-    protected:
-      virtual void paint( QPainter *p);
-
-    private:
-      QPixmap* m_Pixmap;
-      ManipulatorPart* m_Part;
-      PartBar* m_Parents;
-    };
+    /**
+     * sets the icon for the item.
+     * @param icon the icon to set
+     * @param group the icongroup
+     */
+    void setIcon( const QString& icon, KIcon::Group group = KIcon::Panel );
 
 
-  //class KListBox;
+    /**
+     * @return the width of this item.
+     */
+    virtual int width( const QListBox * ) const;
 
-  /**
-   * PartBar is a widget that displays icons together.
-   * The the items of the PartBar emit the activated() signal.
-   */
-  class PartBar  : public QFrame
-    {
-      Q_OBJECT
-    public:
-      PartBar( QWidget *parent = 0, const char *name = 0, WFlags f = 0 );
-      ~PartBar() {};
+    /**
+     * @return the height of this item.
+     */
+    virtual int height( const QListBox * ) const;
 
-      virtual PartBarItem* insertItem( ManipulatorPart *part, int pos = -1 );
+    /**
+     * return the pixmap.
+     */
+    virtual const QPixmap * pixmap() const {
+      return m_Pixmap;
+    }
 
-      /**
-       * Allows to set a custom KListBox
-       * Items of the previous box will not be moved to the next box
-       */
-      virtual void setListBox(  KListBox*);
+  protected:
+    virtual void paint( QPainter *p);
 
-      /**
-       * @returns the KListBox that is used.
-       */
-      KListBox *listBox() const { return m_listBox; }
+  private:
+    QPixmap *m_Pixmap;
+    ActionPart *m_Part;
+    PartBar *m_Parents;
+};
 
-      /**
-       * removes all items
-       */
-      virtual void clear();
-      
-      /**
-       * @return a size hint.
-       */
-      virtual QSize sizeHint() const;
 
-      virtual QSize minimumSizeHint() const;
+/**
+* PartBar is a widget that displays icons together.
+* The the items of the PartBar emit the activated() signal.
+*/
+class PartBar  : public QFrame
+{
+    Q_OBJECT
+  public:
+    PartBar( QWidget *parent = 0, const char *name = 0, WFlags f = 0 );
+    ~PartBar() {};
 
-      /**
-       * @returns the current PartBarItem
-       */
-      PartBarItem *currentItem() const;
+    virtual PartBarItem *insertItem( ActionPart *part, int pos = -1 );
 
-      void selectPart( const QString & );
+    /**
+     * Allows to set a custom KListBox
+     * Items of the previous box will not be moved to the next box
+     */
+    virtual void setListBox(  KListBox * );
 
-    signals:
-      void activated( ManipulatorPart *part );
+    /**
+     * @returns the KListBox that is used.
+     */
+    KListBox *listBox() const { return m_listBox; }
 
-    protected slots:
-      virtual void slotSelected( QListBoxItem * );
+    /**
+     * removes all items
+     */
+    virtual void clear();
 
-    protected:
-      virtual void resizeEvent( QResizeEvent * );
+    /**
+     * @return a size hint.
+     */
+    virtual QSize sizeHint() const;
 
-    private:
-      KListBox *m_listBox;
-      PartBarItem *m_activeItem;
-    };
+    virtual QSize minimumSizeHint() const;
+
+    /**
+     * @returns the current PartBarItem
+     */
+    PartBarItem *currentItem() const;
+
+    void selectPart( const QString & );
+
+  signals:
+    void activated( ActionPart *part );
+
+  protected slots:
+    virtual void slotSelected( QListBoxItem * );
+
+  protected:
+    virtual void resizeEvent( QResizeEvent * );
+
+  private:
+    KListBox *m_listBox;
+    PartBarItem *m_activeItem;
+};
 
 }
 

@@ -4,13 +4,13 @@
 #include <klocale.h>
 #include <qpixmap.h>
 
-#include <manipulatorpart.h>
+#include <actionpart.h>
 
 namespace KSync {
 
 class OverviewWidget;
 
-class OverviewPart : public ManipulatorPart
+class OverviewPart : public ActionPart
 {
     Q_OBJECT
   public:
@@ -22,18 +22,20 @@ class OverviewPart : public ManipulatorPart
     static KAboutData *createAboutData();
 
     QString type() const;
-    QString name() const;
+    QString title() const;
     QString description() const;
     bool hasGui() const;
     QPixmap *pixmap();
     QString iconName() const;
     QWidget *widget();
 
+    void executeAction();
+
   private slots:
-    void slotPartChanged( ManipulatorPart * );
-    void slotPartProgress( ManipulatorPart *part, const Progress & );
-    void slotPartError( ManipulatorPart *, const Error & );
-    void slotSyncProgress( ManipulatorPart *, int, int );
+    void slotPartChanged( ActionPart * );
+    void slotPartProgress( ActionPart *part, const Progress & );
+    void slotPartError( ActionPart *, const Error & );
+    void slotSyncProgress( ActionPart *, int, int );
     void slotKonnectorProgress( Konnector *, const Progress & );
     void slotKonnectorError( Konnector *, const Error & );
     void slotProfileChanged( const Profile & );

@@ -18,10 +18,10 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KSYNC_BACKUP
-#define KSYNC_BACKUP
+#ifndef KSYNC_BACKUP_H
+#define KSYNC_BACKUP_H
 
-#include <manipulatorpart.h>
+#include <actionpart.h>
 
 #include <synceelist.h>
 
@@ -41,19 +41,22 @@ class CustomComboBox;
 
 namespace KSync {
 
-class Backup : public ManipulatorPart
+class KonnectorView;
+class BackupView;
+
+class Backup : public ActionPart
 {
    Q_OBJECT
   public:
     Backup( QWidget *parent, const char *name,
-              QObject *object=0, const char *name2 = 0, // make GenericFactory loading possible
-              const QStringList & = QStringList() );
+            QObject *object = 0, const char *name2 = 0, // make GenericFactory loading possible
+            const QStringList & = QStringList() );
     virtual ~Backup();
 
     static KAboutData *createAboutData();
 
     QString type() const;
-    QString name() const;
+    QString title() const;
     QString description() const;
     bool hasGui() const;
     QPixmap *pixmap();
@@ -62,41 +65,32 @@ class Backup : public ManipulatorPart
 
     void logMessage( const QString & );
 
-    void actionSync();
+    void executeAction();
+
+    bool needsKonnectorRead() const { return true; }
 
   protected:
     Konnector *currentKonnector();
 
-    void openKonnectors();
-
-    void updateKonnectorList();
     void updateRestoreList();
-
-    void createBackupDir();
 
     QString topBackupDir() const;
 
     void tryFinishBackup();
-    void tryFinishRestore();
 
     QString backupFile( Konnector *k, Syncee *s );
 
+    void backupKonnector( Konnector *k );
+
   protected slots:
-    void restoreBackup();
-    void deleteBackup();
-
-    void slotSynceesRead( Konnector *k );
-    void slotSynceeReadError( Konnector *k );
-
-    void slotSynceesWritten( Konnector *k );
-    void slotSynceesWriteError( Konnector *k );
-
+    void slotBackupDeleted( const QString & );
+    
   private:
     QPixmap m_pixmap;
     QWidget *m_widget;
 
-    QListView *mKonnectorList;
-    QListView *mRestoreView;
+    KonnectorView *mKonnectorList;
+    BackupView *mBackupView;
     QTextView *mLogView;
 
     QPtrList<Konnector> mOpenedKonnectors;

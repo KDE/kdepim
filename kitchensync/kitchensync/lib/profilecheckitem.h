@@ -24,19 +24,26 @@
 
 #include <qlistview.h>
 
-#include "manpartservice.h"
+#include "actionpartservice.h"
 
 namespace KSync {
 
-class ProfileCheckItem : public QCheckListItem
+// FIXME: Rename to ActionPartItem
+class ProfileCheckItem : public QListViewItem
 {
   public:
-    ProfileCheckItem( QListView *parent, const ManPartService & );
+    ProfileCheckItem( QListView *parent, const ActionPartService & );
+    ProfileCheckItem( QListView *parent, QListViewItem *after,
+                      const ActionPartService & );
     ~ProfileCheckItem();
     
-    ManPartService manpart() const;
+    ActionPartService actionPart() const;
+
+  protected:
+    void init();
+
   private:
-    ManPartService m_manpart;
+    ActionPartService m_part;
 };
 
 }

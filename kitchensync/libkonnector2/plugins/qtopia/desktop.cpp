@@ -86,7 +86,7 @@ KSync::OpieDesktopSyncee* Desktop::toSyncee( const QString& str) {
                                                     fileName,
                                                     name,
                                                     type,
-                                                    size );
+                                                    size, syncee );
             syncee->addEntry( entry );
         }
 
@@ -96,7 +96,7 @@ KSync::OpieDesktopSyncee* Desktop::toSyncee( const QString& str) {
                                              fileName,
                                              name,
                                              type,
-                                             size );
+                                             size, syncee );
     syncee->addEntry( entry );
     return syncee;
 }

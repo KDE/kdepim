@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=ServiceType
-X-KDE-ServiceType=KitchenSync/Manipulator
+X-KDE-ServiceType=KitchenSync/ActionPart
 Name=KitchenSync Manipulator
 Name[ca]=Manipulador KitchenSync
 Name[cs]=KitchenSync manipulátor

@@ -23,17 +23,23 @@
 
 using namespace KSync;
 
-ProfileItem::ProfileItem( QListView* parent,  const Profile& prof )
-    : QListViewItem(parent ) {
+ProfileItem::ProfileItem( QListView *parent,  const Profile &prof )
+    : QListViewItem( parent )
+{
     setProfile( prof );
 }
-ProfileItem::~ProfileItem() {
 
+ProfileItem::~ProfileItem()
+{
 }
-Profile ProfileItem::profile()const {
+
+Profile ProfileItem::profile() const
+{
     return m_prof;
 }
-void ProfileItem::setProfile( const Profile& prof ) {
+
+void ProfileItem::setProfile( const Profile &prof )
+{
     m_prof = prof;
-    setText(0, prof.name() );
+    setText( 0, prof.name() );
 }

@@ -24,17 +24,17 @@
 using namespace KSync;
 
 UnknownSyncEntry::UnknownSyncEntry( const QByteArray &array,
-                                    const QString &path )
-    : SyncEntry(), mArray( array ), mPath( path )
+                                    const QString &path, Syncee *parent )
+    : SyncEntry( parent ), mArray( array ), mPath( path )
 {
     mHasAccess = false;
     mMode = ByteArray;
     mTime = QDateTime::currentDateTime();
 }
 
-UnknownSyncEntry::UnknownSyncEntry(const QString &fileName,
-                                   const QString &path )
-    : SyncEntry(), mPath( path ), mFileName( fileName )
+UnknownSyncEntry::UnknownSyncEntry( const QString &fileName,
+                                    const QString &path, Syncee *parent )
+    : SyncEntry( parent ), mPath( path ), mFileName( fileName )
 {
     mHasAccess = false;
     mMode = Tempfile;

@@ -31,8 +31,8 @@ namespace KSync {
 class EventSyncEntry : public IncidenceTemplate<KCal::Event>
 {
   public:
-    EventSyncEntry(KCal::Event* ev = 0l) :
-        IncidenceTemplate<KCal::Event>( ev )
+    EventSyncEntry( KCal::Event *ev, Syncee *parent ) :
+        IncidenceTemplate<KCal::Event>( ev, parent )
     {
     }
 

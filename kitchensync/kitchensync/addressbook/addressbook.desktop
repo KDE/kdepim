@@ -2,5 +2,5 @@
 Type=Service
 Name= Addressbook Part
 Icon=addressbook
-ServiceTypes=KitchenSync/Manipulator
+ServiceTypes=KitchenSync/ActionPart
 X-KDE-Library=libaddressbookpart

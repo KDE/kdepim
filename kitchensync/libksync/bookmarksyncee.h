@@ -34,7 +34,7 @@ namespace KSync {
 class BookmarkSyncEntry : public SyncEntry
 {
   public:
-    BookmarkSyncEntry( KBookmark );
+    BookmarkSyncEntry( KBookmark, Syncee *parent );
   
     QString type() const;
     QString name();

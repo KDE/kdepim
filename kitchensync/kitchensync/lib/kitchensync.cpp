@@ -3,7 +3,7 @@
 
     Copyright (c) 2002,2003 Holger Freyther <zecke@handhelds.org>
 † † Copyright (c) 2002,2003 Maximilian Reiﬂ <harlekin@handhelds.org>
-    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -46,7 +46,7 @@
 #include "configuredialog.h"
 #include "partbar.h"
 #include "profiledialog.h"
-
+#include "engine.h"
 #include "konnectorbar.h"
 #include "syncalgo.h"
 #include "mainwindow.h"
@@ -83,7 +83,7 @@ kdbgstream operator<<( kdbgstream str, const Notify& no )
 }
 
 KitchenSync::KitchenSync( ActionManager *actionManager, QWidget *parent )
-  : Core( parent ), mActionManager( actionManager )
+  : Core( parent ), mActionManager( actionManager ), m_profileManager( 0 )
 {
   m_syncAlg = 0;
   m_syncUi = 0;
@@ -107,25 +107,34 @@ KitchenSync::KitchenSync( ActionManager *actionManager, QWidget *parent )
   m_stack = new QWidgetStack( this, "dummy" );
   topLayout->addWidget( m_stack );
 
-  QWidget *test = new QWidget(m_stack);
-  test->setBackgroundColor(Qt::red);
+  QWidget *test = new QWidget( m_stack );
+  test->setBackgroundColor( Qt::red );
   m_stack->addWidget( test, 0 );
   m_stack->raiseWidget( 0 );
   m_bar->setMaximumWidth( 100 );
   m_bar->setMinimumWidth( 100 );
 
-  connect( m_bar, SIGNAL( activated( ManipulatorPart * ) ),
-           SLOT( slotActivated( ManipulatorPart * ) ) );
+  connect( m_bar, SIGNAL( activated( ActionPart * ) ),
+           SLOT( slotActivated( ActionPart * ) ) );
 
   resize( 600, 400 );
 
   m_parts.setAutoDelete( true );
 
-  initPlugins();
-
-  // show systemtraypart
   initSystray();
   m_tray->show();
+
+  mEngine = new Engine( m_parts );
+
+  KonnectorManager *m = KonnectorManager::self();
+  connect( m, SIGNAL( synceesRead( Konnector * ) ),
+           mEngine, SLOT( slotSynceesRead( Konnector * ) ) );
+  connect( m, SIGNAL( synceeReadError( Konnector * ) ),
+           mEngine, SLOT( slotSynceeReadError( Konnector * ) ) );
+  connect( m, SIGNAL( synceesWritten( Konnector * ) ),
+           mEngine, SLOT( slotSynceesWritten( Konnector * ) ) );
+  connect( m, SIGNAL( synceeWriteError( Konnector * ) ),
+           mEngine, SLOT( slotSynceeWriteError( Konnector * ) ) );
 }
 
 KitchenSync::~KitchenSync()
@@ -134,9 +143,7 @@ KitchenSync::~KitchenSync()
 
   m_profileManager->save();
 
-#if 0
-  createGUI( 0 );
-#endif
+  delete m_profileManager;
 }
 
 void KitchenSync::readProfileConfig()
@@ -157,36 +164,31 @@ void KitchenSync::writeProfileConfig()
   }
 }
 
-/*
- * we search for all installed plugins here
- * and add them to the ManPartService List
- */
-void KitchenSync::initPlugins()
+void KitchenSync::addPart( const ActionPartService &service )
 {
-  KTrader::OfferList offers = KTrader::self()->query(
-      QString::fromLatin1("KitchenSync/Manipulator"), QString::null );
+    kdDebug() << "KitchenSync::addPart() " << service.name() << endl;
 
-  KTrader::OfferList::ConstIterator it;
-  for ( it = offers.begin(); it != offers.end(); ++it ) {
-    ManPartService ser( *it );
-    m_partsLst.append( ser );
-  }
+    ActionPart *part = KParts::ComponentFactory
+      ::createInstanceFromLibrary<ActionPart>( service.libname().local8Bit(),
+                                               this );
+  
+    if ( !part ) {
+      kdError() << "Unable to create part '" << service.name() << "'"
+                << endl;
+      return;
+    }
 
-}
-
-void KitchenSync::addModPart( ManipulatorPart *part )
-{
-    kdDebug() << "KitchenSync::addModPart() " << part->name() << endl;
-
+// We don't need this anymore. The Engine class takes care of the signals/slots.
+#if 0
     /* the usual signal and slots */
-    connect( part, SIGNAL(sig_progress(ManipulatorPart*, int ) ),
-             SLOT(slotPartProg(ManipulatorPart*, int ) ) );
-    connect( part, SIGNAL(sig_progress(ManipulatorPart*, const Progress& ) ),
-             SLOT(slotPartProg(ManipulatorPart*, const Progress& ) ) );
-    connect( part, SIGNAL(sig_error(ManipulatorPart*, const Error& ) ),
-             SLOT(slotPartErr(ManipulatorPart*, const Error& ) ) );
-    connect( part, SIGNAL(sig_syncStatus(ManipulatorPart*, int) ),
-             SLOT(slotPartSyncStatus( ManipulatorPart*, int ) ) );
+    connect( part, SIGNAL(sig_progress(ActionPart*, int ) ),
+             SLOT(slotPartProg(ActionPart*, int ) ) );
+    connect( part, SIGNAL(sig_progress(ActionPart*, const Progress& ) ),
+             SLOT(slotPartProg(ActionPart*, const Progress& ) ) );
+    connect( part, SIGNAL(sig_error(ActionPart*, const Error& ) ),
+             SLOT(slotPartErr(ActionPart*, const Error& ) ) );
+    connect( part, SIGNAL(sig_syncStatus(ActionPart*, int) ),
+             SLOT(slotPartSyncStatus( ActionPart*, int ) ) );
 
     KonnectorManager *m = KonnectorManager::self();
     connect( m, SIGNAL( synceesRead( Konnector * ) ),
@@ -197,15 +199,35 @@ void KitchenSync::addModPart( ManipulatorPart *part )
              part, SLOT( slotSynceesWritten( Konnector * ) ) );
     connect( m, SIGNAL( synceeWriteError( Konnector * ) ),
              part, SLOT( slotSynceeWriteError( Konnector * ) ) );
+#endif
 
     if ( part->hasGui() )  {
         kdDebug(5210) << "Part has GUI (" << part->name() << ")" << endl;
         int pos = -1;
-        m_stack->addWidget( part->widget() );
+        
+        QWidget *topWidget = new QWidget( m_stack );
+
+        QBoxLayout *frameLayout = new QHBoxLayout( topWidget );
+        frameLayout->addSpacing( KDialog::spacingHint() );
+
+        QBoxLayout *topLayout = new QVBoxLayout( frameLayout );
+        topLayout->setSpacing( KDialog::spacingHint() );
+
+        QLabel *label = new QLabel( "<h3>" + part->title() + "</h3>",
+                                    topWidget );
+        topLayout->addWidget( label );
+
+        QWidget *partWidget = part->widget();
+        partWidget->reparent( topWidget, 0, QPoint( 0, 0 ) );
+        topLayout->addWidget( partWidget );
+        
+        m_stack->addWidget( topWidget );
+
+        mActionWidgetMap.insert( part, topWidget );
 
         /* overview is special for us ;) */
         if ( part->type() == i18n("Overview") ) {
-            m_stack->raiseWidget( part->widget() );
+            m_stack->raiseWidget( mActionWidgetMap[ part ] );
             pos = 0;
         }
         m_bar->insertItem( part, pos );
@@ -224,16 +246,13 @@ void KitchenSync::slotSync()
 {
   emit partProgress( 0, Progress( i18n( "Starting sync" ) ) );
 
-  ManipulatorPart *part;
-  for ( part = m_parts.first(); part; part = m_parts.next() ) {
-    part->actionSync();
-  }
+  mEngine->go();
 }
 
-void KitchenSync::slotActivated( ManipulatorPart *part )
+void KitchenSync::slotActivated( ActionPart *part )
 {
     emit partChanged( part );
-    m_stack->raiseWidget( part->widget() );
+    m_stack->raiseWidget( mActionWidgetMap[ part ] );
 //    createGUI( part );
 }
 
@@ -262,11 +281,15 @@ Profile KitchenSync::currentProfile() const
     return m_profileManager->currentProfile();
 }
 
-ProfileManager* KitchenSync::profileManager() const
+ProfileManager *KitchenSync::profileManager() const
 {
     return m_profileManager;
 }
 
+Engine *KitchenSync::engine() const
+{
+  return mEngine;
+}
 
 #if 0
 // do we need to change the Konnector first?
@@ -289,9 +312,9 @@ void KitchenSync::slotSync( Konnector *konnector, SynceeList lis)
     m_outSyncee.clear();
     m_inSyncee = lis;
     kdDebug(5210) << "KitchenSync::Start sync" << endl;
-    m_partsIt = new QPtrListIterator<ManipulatorPart>( m_parts );
+    m_partsIt = new QPtrListIterator<ActionPart>( m_parts );
 
-    ManipulatorPart *part = m_partsIt->current();
+    ActionPart *part = m_partsIt->current();
     if ( part ) {
         kdDebug(5210) << "Syncing first " << endl;
         emit startSync( part );
@@ -309,7 +332,8 @@ void KitchenSync::slotSync( Konnector *konnector, SynceeList lis)
 
 void KitchenSync::configureProfiles()
 {
-    ProfileDialog dlg( m_profileManager->profiles(), m_partsLst ) ;
+    ProfileDialog dlg( m_profileManager->profiles(),
+                       ActionPartService::availableParts() );
     if ( dlg.exec() ) {
         m_profileManager->setProfiles( dlg.profiles() );
         m_profileManager->save();
@@ -349,8 +373,8 @@ void KitchenSync::activateProfile( const Profile &prof )
     delete m_partsIt;
     m_partsIt = 0;
 
-    ManPartService::ValueList lst = prof.manParts();
-    ManPartService::ValueList::Iterator it;
+    ActionPartService::List lst = prof.actionParts();
+    ActionPartService::List::Iterator it;
     for (it = lst.begin(); it != lst.end(); ++it ) {
         addPart( (*it) );
     }
@@ -358,14 +382,6 @@ void KitchenSync::activateProfile( const Profile &prof )
     emit profileChanged( prof );
 
     readProfileConfig();
-}
-
-void KitchenSync::addPart( const ManPartService &service )
-{
-    ManipulatorPart *part = KParts::ComponentFactory
-                            ::createInstanceFromLibrary<ManipulatorPart>( service.libname().local8Bit(),
-                                                         this );
-    if ( part ) addModPart( part );
 }
 
 /*
@@ -376,7 +392,7 @@ void KitchenSync::addPart( const ManPartService &service )
 void KitchenSync::configureCurrentProfile()
 {
     ConfigureDialog *dlg = new ConfigureDialog(this);
-    ManipulatorPart *part = 0;
+    ActionPart *part = 0;
     SyncConfig* conf = new SyncConfig( currentProfile().confirmDelete(), currentProfile().confirmSync() );
     dlg->addWidget( conf, i18n("General"), new QPixmap( KGlobal::iconLoader()->loadIcon("package_settings", KIcon::Desktop, 48 ) ) );
 
@@ -403,8 +419,8 @@ void KitchenSync::configureCurrentProfile()
 
 void KitchenSync::initProfileList()
 {
-    Profile::ValueList list = m_profileManager->profiles();
-    Profile::ValueList::Iterator it;
+    Profile::List list = m_profileManager->profiles();
+    Profile::List::Iterator it;
     QStringList lst;
     for ( it = list.begin(); it != list.end(); ++it ) {
         lst << (*it).name();
@@ -425,7 +441,7 @@ SyncAlgorithm *KitchenSync::syncAlgorithm()
     return m_syncAlg;
 }
 
-const QPtrList<ManipulatorPart> KitchenSync::parts() const
+const QPtrList<ActionPart> KitchenSync::parts() const
 {
     return m_parts;
 }
@@ -470,34 +486,34 @@ void KitchenSync::slotKonnectorErr( Konnector *konnector,
  * emitted when one part is done with syncing
  * go to the next part and continue
  */
-void KitchenSync::slotPartProg( ManipulatorPart* par, int prog )
+void KitchenSync::slotPartProg( ActionPart *par, int prog )
 {
     kdDebug(5210) << "PartProg: " << par << " " << prog << endl;
     if (prog != 2 ) return;
 
 }
 
-void KitchenSync::slotPartProg( ManipulatorPart* part, const Progress& prog)
+void KitchenSync::slotPartProg( ActionPart *part, const Progress &prog )
 {
     emit partProgress( part, prog );
     emit syncProgress( part, 1, 0 );
 }
 
-void KitchenSync::slotPartErr( ManipulatorPart* part, const Error& err )
+void KitchenSync::slotPartErr( ActionPart *part, const Error &err )
 {
     emit partError( part, err );
     emit syncProgress( part, 3, 0 );
 }
 
-void KitchenSync::slotPartSyncStatus( ManipulatorPart* par, int err )
+void KitchenSync::slotPartSyncStatus( ActionPart *par, int err )
 {
     kdDebug(5210) << "SyncStatus: " << par << " " << err << endl;
 #if 0
     emit doneSync( par );
     emit syncProgress( par, 2, 0 );
-    // done() from ManipulatorPart now go on to the next ManipulatorPart...
-    ++(*m_partsIt);
-    ManipulatorPart* part = m_partsIt->current();
+    // done() from ActionPart now go on to the next ActionPart...
+    ++( *m_partsIt );
+    ActionPart *part = m_partsIt->current();
     if ( part ) {
         kdDebug(5210) << "Syncing " << part->name() << endl;
         emit startSync( part );
@@ -515,7 +531,7 @@ void KitchenSync::slotPartSyncStatus( ManipulatorPart* par, int err )
 #endif
 }
 
-QWidget* KitchenSync::widgetStack()
+QWidget *KitchenSync::widgetStack()
 {
     return m_stack;
 }
