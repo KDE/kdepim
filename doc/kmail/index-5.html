@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>The KMail Handbook: Questions and answers</TITLE>
+<TITLE>The Kmail Handbook: Using other Mailbox files With Kmail</TITLE>
 <LINK HREF="index-6.html" REL=next>
 <LINK HREF="index-4.html" REL=previous>
 <LINK HREF="index.html#toc5" REL=contents>
@@ -11,20 +11,47 @@
 <A HREF="index-4.html">Previous</A>
 <A HREF="index.html#toc5">Contents</A>
 <HR>
-<H2><A NAME="s5">5. Questions and answers</A></H2>
+<H2><A NAME="sec-Importing"></A> <A NAME="s5">5. Using other Mailbox files With Kmail</A></H2>
 
+<P>This section is for all of the users that need to move email messages from their previous
+email client over to Kmail. Kmail stores its mail using the <B>mbox</B> format, one of the most widely used mailbox formats on UNIX
+systems. Mbox mailboxes store messages in one file, identifying where messages start and end with the
+FROM: header. For many Unix mailers, all you must do is move your mailboxes to <CODE>~/Mail</CODE> (or make
+&nbsp;Mail a symbolic link to the folder containing you mailboxes) and launch Kmail.  The mailboxes should now 
+show up correctly in Kmail.
+<P>If your old mailboxes are not in mbox format, see below for instructions on importing some other common
+formats.
 <P>
-<H2><A NAME="ss5.1">5.1 How do I use my Eudora Mailboxes with KMail?</A>
-</H2>
-
-<P>Make sure that your Eudora mailboxes have been compacted.  Copy the .mbx files (Windows Eudora) or Eudora
-mailbox files (Mac Eudora) to your <EM>&nbsp;/Mail</EM> directory. You don't need to worry about the index files. 
-Start KMail. The mailboxes should now appear in the Folders pane and the messages should be accessible in
+<DL>
+<DT><B>Eudora Lite/Eudora Pro</B><DD><P>Eudora uses the mbox format in its mail files. To use them with Kmail, make sure that your Eudora mailboxes have 
+been compacted, then copy the .mbx files (Windows Eudora) or Eudora mailbox files (Mac Eudora) to your 
+<CODE>~/Mail</CODE> directory. You don't need to copy the index files. 
+Once you start Kmail, the mailboxes should appear in the Folders pane and the messages should be accessible in
 the Headers Pane.
 <P>If messages do not appear in the Headers pane, your mailbox files may still contain Windows or Macintosh
 line feed characters.  Use your favorite text editor or scripting language to change the Windows or
 Macintosh line feeds to Unix line feeds.
 <P>
+<DT><B>MMDF</B><DD><P>This format is close enough to the mailbox format that Kmail should be able to use these mailboxes if you
+just copy them to your <CODE>~/Mail</CODE> directory. However, MMDF mailboxes have not been tested with Kmail,
+so your results may vary.  If you can get this format to work with Kmail, please let us know so we
+can include more specific directions in the next documentation release.
+<P>
+<DT><B>MH mailboxes</B><DD><P>MH mailboxes are directories containing files that correspond to each message in that mailbox. 
+A shell script to convert MH mailboxes to mbox mailboxes, <B>mh2kmail</B>, is included in the source 
+releases of Kmail, but not currently in the packaged releases. (This may change in the future.) Running
+this script on a MH folder will convert it to an mbox file.  We strongly suggest that you back up your MH
+mail folders before you use this script.
+<P>
+<DT><B>Maildir</B><DD><P>Maildir mailboxes, used by the Qmail mail-transfer agent, are not supported by Kmail at this time. 
+<P>
+<DT><B>Microsoft Outlook, Lotus Notes, BeOS Mail files, cc: Mail, Pegasys, etc...</B><DD><P>Other mail programs probably do not work with Kmail as they use specialized mail formats that Kmail cannot
+understand. However, there is no harm in trying! If the mailbox file looks similar to the mbox format, try
+copying the mailbox file (remember, the index file is not needed) to your <CODE>~/Mail</CODE> directory and
+see what happens.  If you get mailboxes from your favorite mail client to work in Kmail, please tell us
+how you did it so that we can include directions in a future revision of this documentation.
+<P>
+</DL>
 <P>
 <HR>
 <A HREF="index-6.html">Next</A>

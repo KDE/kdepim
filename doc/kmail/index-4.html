@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>The KMail Handbook: Menus and Keyboard Shortcuts</TITLE>
+<TITLE>The Kmail Handbook: Customizing Kmail </TITLE>
 <LINK HREF="index-5.html" REL=next>
 <LINK HREF="index-3.html" REL=previous>
 <LINK HREF="index.html#toc4" REL=contents>
@@ -11,216 +11,94 @@
 <A HREF="index-3.html">Previous</A>
 <A HREF="index.html#toc4">Contents</A>
 <HR>
-<H2><A NAME="sec-Menus"></A> <A NAME="s4">4. Menus and Keyboard Shortcuts</A></H2>
+<H2><A NAME="sec-Customizing"></A> <A NAME="s4">4. Customizing Kmail </A></H2>
 
-<P>Each menu item is discussed below. When there is a keyboard shorcut that performs a
-menu item function, it is listed after the menu item.
+<P>Kmail's settings window gives you a number of ways to customize Kmail to your needs.
 <P>
-<P>
-<H2><A NAME="ss4.1">4.1 The Main Mail Reader window</A>
+<H2><A NAME="ss4.1">4.1 Identity Tab</A>
 </H2>
 
+<P>The settings in the <B>Identity</B> tab are fairly straightforward. The <B>Name</B>
+and <B>Organization</B> fields should contain the appropriate information if you want this
+information to be automatically included in the headers of any message that you send.
+The <B>Email Address</B> and the <B>Reply-to Address</B> field should contain your email address. 
+The <B>Signature File</B> field contains the location of your signature file. You can skip setting the 
+signature file if you do not have one. If you do this, make sure that you also uncheck <B>Automatically
+Append Signature</B> in the <B>Composer</B> tab.
 <P>
-<H3>File menu</H3>
+<H2><A NAME="ss4.2">4.2 Network Tab</A>
+</H2>
 
-<P>
-<DL>
-<DT><B>New Composer (Ctrl+N)</B><DD><P>Creates a new Composer window.
-<P>
-<DT><B>New Mail Reader</B><DD><P>Creates a new Mail Reader window.
-<P>
-<DT><B>Save As... (Ctrl+S)</B><DD><P>Saves the currently displayed message. 
-<P>
-<DT><B>Print... (Ctrl+P)</B><DD><P>Prints the currently displayed message.
-<P>
-<DT><B>Check Mail (Ctrl+L)</B><DD><P>Checks mail in the active account.
-<P>
-<DT><B>Check Mail in... submenu</B><DD><P>Submenu that lets you check mail from a particular account.
-<P>
-<DT><B>Settings...</B><DD><P>Opens the Settings window. You can configure the settings for your identity, accounts, network, PGP, 
-the appearance of the composer and mail reader windows, and various other settings here.
-<P>
-<DT><B>Addressbook...</B><DD><P>Opens up the Addressbook.
-<P>
-<DT><B>Filters...</B><DD><P>Opens the Filters window.
-<P>
-<DT><B>Close (Ctrl+W)</B><DD><P>Closes current Mail Reader window.
-<P>
-<DT><B>Quit (Ctrl+Q)</B><DD><P>Exits KMail.
-<P>
-</DL>
-<P>
-<H3>Edit menu</H3>
-
-<P>
-<DL>
-<DT><B>Copy (Ctrl+C)</B><DD><P>Copies selected text to the clipboard.
-<P>
-</DL>
-<P>
-<H3>Folder menu</H3>
-
-<P>
-<DL>
-<DT><B>Create...</B><DD><P>Opens the New Folder dialog which lets you create new folders
-<P>
-<DT><B>Modify...</B><DD><P>Opens up the Modify Folder dialog which lets you change the settings for the selected folder.
-<P>
-<DT><B>Compact</B><DD><P>Compacts the folder file to reduce its disk space usage. Use this command if your mailboxes seem
-to be much larger than they ought to be.
-<P>
-<DT><B>Empty</B><DD><P>Moves all of the messages in the selected folder into the trash folder.  If the selected
-folder is the trash folder, the messages are permanently deleted.
+<P>The <B>Network</B> tab contains the settings that tell Kmail how to send and receive your
+email. Many of these settings can vary greatly depending on the setup of your system
+and on the kind of network that your mail server is located. If you do not know what
+setting to pick or what to put in a field, consult your Internet Service Provider
+(ISP) or System Administrator.
 <P> 
-<DT><B>Remove</B><DD><P>Removes the selected folder.
-<P>
-</DL>
-<P>
-<H3>Message menu</H3>
+The <B>Sending Mail</B> section provides two options for sending mail:
+sendmail and SMTP. Sendmail has a reputation of being difficult to set up, so if you
+do not already have a working sendmail configuration, choose SMTP and fill in the
+<B>Server</B> field with the name and domain of your mail server. You will probably
+not need to change the <B>Port</B> setting.
+<P>To set up an account so you can receive mail, press the <B>Add...</B> button in the
+<B>Incoming Mail</B> section. You will then be prompted for the type of account.
+Most users should select <B>POP3</B>. (IMAP accounts are not supported) After
+pressing <B>OK</B> you will be presented with the <B>Configure Account</B>
+window. First, fill in the <B>Name</B> field to name your account. <B>Login</B>,
+<B>Password</B>, and <B>Host</B> should be filled in with the appropriate
+information from your ISP or System Administrator. Again, you should not need to
+change the <B>Port</B> setting. Select <B>Delete mail from server</B> if
+you don't want to leave your mail on the server. Finally, you can set the default box to received your new
+messages.
+<P>  
+<H2><A NAME="ss4.3">4.3 Appearance Tab</A>
+</H2>
 
+<P>This tab lets you change the type and size of the display fonts in the <B>Main</B> and <B>Composer</B> windows.
 <P>
-<DL>
-<DT><B>Next (N)</B><DD><P>Selects the next message in the Headers pane.
-<P>
-<DT><B>Next Unread (+)</B><DD><P>Selects the next unread message in the Headers pane.
-<P>
-<DT><B>Previous (P)</B><DD><P>Selects the previous message in the Headers pane.
-<P>
-<DT><B>Previous Unread (-)</B><DD><P>Selects the previous unread message in the Headers pane.
-<P>
-<DT><B>Reply... (R)</B><DD><P>Opens up the Composer window with the contents of the selected message's Reply-To field 
-in the To: field.
-<P>
-<DT><B>Reply All... (A)</B><DD><P>Opens up the Composer window and copies the contents of the selected message's Reply-To and To
-fields into the To: field and the cc: and bcc: fields into the cc: and bcc: fields of
-the Composer window.
-<P>
-<DT><B>Forward (F)</B><DD><P>Forwards the message to a new recipient.
-<P>
-<DT><B>Edit (T)</B><DD><P>Edits the selected message if it is editable.
-<P>
-<DT><B>Set Status submenu</B><DD><P>Allows you to change the status of the selected message to one of the below:
-<UL>
-<LI>New</LI>
-<LI>Unread</LI>
-<LI>Read</LI>
-<LI>Replied</LI>
-<LI>Queued</LI>
-<LI>Sent</LI>
-</UL>
-<P>
-<DT><B>Mark All (K)</B><DD><P>Selects all of the messages in the current folder.
-<P>
-<DT><B>Move (M)</B><DD><P>Moves all of the selected messages to a new folder.
-<P>
-<DT><B>Copy (S)</B><DD><P>Copies the selected messages into a new folder.
-<P>
-<DT><B>Delete (D)</B><DD><P>Moves the selected messages into the trash folder.
-<P>
-<DT><B>Send Again...</B><DD><P>Sends the message again
-<P>
-<DT><B>Apply Filters (Ctrl+J)</B><DD><P>Applies your filters to the selected messages
-<P>
-<DT><B>View Source...</B><DD><P>Views the message and its complete headers in plain text format in a new window.
-</DL>
-<P>
-<H3>View menu</H3>
+<H2><A NAME="ss4.4">4.4 Composer Tab</A>
+</H2>
 
+<P>The <B>Phrases</B> section lets you define the automatically generated lines added to message replies, forwarded
+messages, and quoted text. There are special %-denoted characters that will insert certain values. These
+are shown at the top of the Phrases section: %D to insert the date, %S to insert the subject, %F to insert
+the sender, and %% to insert a percent sign. The <B>Indentation</B> field contains the character that
+will denote quoted text.
+<P>The <B>Appearance</B> section lets you control various options for your messages. <B>Automatically Append
+Signature</B> and <B>Automatically Sign Messages</B> let you toggle whether to automatically include
+your signature and PGP signature in all of your messages by default. <B>Word Wrap At Column</B> lets you
+turn word wrapping on and off in the <B>Composer window</B> and lets you set the column at which words will be
+wrapped.
 <P>
-<DL>
-<DT><B>Brief, Fancy, Standard, Long, and All Headers</B><DD><P>Changes the number of headers that are displayed and the formatting of the headers in 
-the Message pane.
 <P>
-<DT><B>Iconic, Smart, and Inlined Attachments</B><DD><P>Changes the way that attachments appear in the Message pane.
+<P>The <B>When Sending Mail</B> section lets you customize how and when messages are sent.
+<P>The <B>Default Sending options</B> lets you define what happens when a message is sent. If <B>send now</B> is
+selected, the message is sent to the mail server immediately, while if <B>send later</B> is selected,
+the message is queued in the <B>outbox</B> to be sent later with the <B>File | Send Queued</B>
+command or automatically when you check your mail, depending on the settings in the <B>Misc</B> tab.
+<P>The <B>Send messages options</B> let you select how your message will be encoded when it is sent. <B>Allow 8
+bits</B> means that Kmail will send your message in 8 bit ASCII, which means that all special characters
+such as accented letters will be sent as-is.  If <B>MIME-compliant (Quoted-printable)</B> is selected,
+then special characters will be encoded using standard MIME encodings, which may be more portable to
+other mailing systems than 8-bit ASCII.
 <P>
-</DL>
-<P>
-<H3>Help menu</H3>
-
-<P>
-<DL>
-<DT><B>Contents (F1)</B><DD><P>Invokes the KDE help system with the KMail help pages displayed.
-<P>
-<DT><B>About Kmail...</B><DD><P>Displays essential information about KMail.
-<P>
-<DT><B>About KDE...</B><DD><P>Displays information about KDE.
-<P>
-</DL>
-<P>
-<H2><A NAME="ss4.2">4.2 The Composer window</A>
+<H2><A NAME="ss4.5">4.5 Misc Tab</A>
 </H2>
 
 <P>
-<H3>File menu</H3>
-
-<P>
 <DL>
-<DT><B>Send (Ctrl+Enter)</B><DD><P>Queues the message in the outbox for sending it later.
+<DT><B>Empty Trash On Exit</B><DD><P>The trash folder is cleared of messages when you quit Kmail if this option is
+selected.
 <P>
-<DT><B>Send Now</B><DD><P>Sends the message immediately.
-<P>
-<DT><B>Insert File...</B><DD><P>Inserts the selected text file into the message, starting at the cursor.
-<P>
-<DT><B>Address Book</B><DD><P>Opens up the address book.
-<P>
-<DT><B>Print</B><DD><P>Prints the message.
-<P>
-<DT><B>New Composer (Ctrl+N)</B><DD><P>Opens up a new Composer window.
-<P>
-<DT><B>New Mail Reader</B><DD><P>Opens up a new Mail Reader window.
-<P>
-<DT><B>Close (Ctrl+W)</B><DD><P>Closes the Composer window.
-<P>
+<DT><B>Send Mail in outbox folder on Check</B><DD><P>All messages queued in the outbox folder will be sent whenever you check your mail.
 </DL>
 <P>
-<H3>Edit menu</H3>
+<H2><A NAME="ss4.6">4.6 PGP Tab</A>
+</H2>
 
+<P>This tab controls the PGP features. At a minimum, you must fill in the <B>PGP identity</B> field so that Kmail
+can properly interface with PGP or GNU Privacy Guard.
 <P>
-<DL>
-<DT><B>Cut (Ctrl+X), Copy (Ctrl+C>, Paste (Ctrl+V)</B><DD><P>These items are for cutting, copying, and pasting text. They work like in most editors.
-<P>
-<DT><B>Mark all</B><DD><P>Selects all of the text in your message.
-<P>
-<DT><B>Find (Ctrl+F)</B><DD><P>Finds words, phrases, or expressions in the message.
-<P>
-<DT><B>Replace (Ctrl+R)</B><DD><P>Lets you replace words, phrases, or expressions in your message with other words or phrases.
-<P>
-<DT><B>Spellcheck...</B><DD><P>Uses KSpell to check the spelling in the body of your message.
-<P>
-</DL>
-<P>
-<H3>Options menu</H3>
-
-<P>
-<DL>
-<DT><B>Urgent</B><DD><P>Sets the priority of the message to Urgent.
-<P>
-<DT><B>Confirm Delivery</B><DD><P>If you choose this option, you will receive a confirmation email once your message is
-successfully delivered to its destination mail server.
-<P>
-<DT><B>Confirm Read</B><DD><P>If you choose this option, you will receive a confirmation email once your message is
-downloaded and read by its recipient. 
-<P>
-<DT><B>Spellchecker...</B><DD><P>Allows you to configure Kspell, KDE's spellchecker.
-<P>
-</DL>
-<P>
-<H3>View menu</H3>
-
-<P>This menu lets you toggle the display of the header fields in the composer window.
-<P>
-<P>
-<H3>Help menu</H3>
-
-<P>
-<DL>
-<DT><B>Contents (F1)</B><DD><P>Invokes the KDE help system with the KMail help pages displayed.
-<P>
-<DT><B>About Kmail...</B><DD><P>Displays essential information about KMail.
-<P>
-<DT><B>About KDE...</B><DD><P>Displays information about KDE.
-<P>
-</DL>
 <P>
 <HR>
 <A HREF="index-5.html">Next</A>
