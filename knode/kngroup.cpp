@@ -491,7 +491,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 
       art=at(idx);
 
-      if(art->subject()->isEmpty()) continue;
+      if(art->isExpired()) continue;
 
       ts << art->messageID()->as7BitString(false) << '\t';
       ts << art->subject()->as7BitString(false) << '\t';
@@ -544,9 +544,10 @@ void KNGroup::saveDynamicData(int cnt,bool ovr)
 
       for(int idx=length()-cnt; idx<length(); idx++) {
         art=at(idx);
-        if(art->subject()->isEmpty()) continue;
+        if(art->isExpired()) continue;
         data.setData(art);
         f.writeBlock((char*)(&data), sizeof(data));
+        art->setChanged(false);
       }
       f.close();
     }
@@ -576,7 +577,7 @@ void KNGroup::syncDynamicData()
       for(int i=0; i<length(); i++) {
         art=at(i);
 
-        if(art->hasChanged() && !art->subject()->isEmpty()) {
+        if(art->hasChanged() && !art->isExpired()) {
 
           data.setData(art);
           f.at(i*sOfData);
@@ -585,7 +586,7 @@ void KNGroup::syncDynamicData()
           art->setChanged(false);
         }
 
-        if(art->isRead()) readCnt++;
+        if(art->isRead() && !art->isExpired()) readCnt++;
       }
 
       f.close();
