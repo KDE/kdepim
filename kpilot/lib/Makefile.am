@@ -12,7 +12,7 @@ INCLUDES = $(all_includes) $(PISOCK_INCLUDE)
 ### DEBUG_CERR. Define DEBUG to get debugging support anywhere.
 ###
 ### KDE_CXXFLAGS=-DDEBUG -DDEBUG_CERR
-KDE_CXXFLAGS=-DDEBUG -DDEBUG_CERR
+KDE_CXXFLAGS=-DDEBUG -DDEBUG_CERR 
 
 lib_LTLIBRARIES = libkpilot.la
 
@@ -23,8 +23,8 @@ libkpilot_la_SOURCES = options.cc uiDialog.cc plugin.cc syncAction.cc \
 	pilotMemo.cc pilotAddress.cc \
 	pilotDateEntry.cc pilotTodoEntry.cc
 
-libkpilot_la_LDFLAGS = $(all_libraries)
-libkpilot_la_LIBADD = $(PISOCK_LIB) $(KDE_EXTRA_RPATH)
+libkpilot_la_LDFLAGS = $(all_libraries) $(KDE_EXTRA_RPATH) $(KDE_RPATH)
+libkpilot_la_LIBADD = $(PISOCK_LIB)
 
 oldincludedir = $(includedir)/kpilot
 oldinclude_HEADERS = kpilotlink.h uiDialog.h plugin.h syncAction.h \

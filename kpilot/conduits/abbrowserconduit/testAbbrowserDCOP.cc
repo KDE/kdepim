@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 	testAddEntry.setNamePrefix("Dr.");
 	testAddEntry.setFirstName("John");
 	testAddEntry.setLastName("Doe");
-	testAddEntry.setName();
+	testAddEntry.setName(false);
 	testAddEntry.setEmail("dow@nowhere.com");
 	testAddEntry.setJobTitle("Computer Scientist");
 	testAddEntry.setCustomField("KPilot_id", QString::number(5000));
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
 	    else
 		{
 		e->setFirstName("Sally");
-		e->setName();
+		e->setName(false);
 		QByteArray sendChangeName;
 		QDataStream changeStream(sendChangeName, IO_WriteOnly);
 		changeStream << iter.currentKey();

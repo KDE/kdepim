@@ -109,22 +109,7 @@
                             <string>&lt;qt&gt;Use key fields to merge address books.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget row="0"  column="0" >
-                        <class>QCheckBox</class>
-                        <property stdset="1">
-                            <name>name</name>
-                            <cstring>fFirstTimeSync</cstring>
-                        </property>
-                        <property stdset="1">
-                            <name>text</name>
-                            <string>&amp;First Time syncing</string>
-                        </property>
-                        <property>
-                            <name>whatsThis</name>
-                            <string>&lt;qt&gt;Should be checked if your PDA has never been synced or backed up before.&lt;/qt&gt;</string>
-                        </property>
-                    </widget>
-                    <widget row="1"  column="0"  rowspan="1"  colspan="2" >
+                    <widget row="1"  column="0"  rowspan="1"  colspan="3" >
                         <class>QCheckBox</class>
                         <property stdset="1">
                             <name>name</name>
@@ -139,27 +124,70 @@
                             <string>&lt;qt&gt;Close Kaddressbook if the conduit had to start it at the beginning of the Sync.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <spacer row="4"  column="0" >
-                        <property>
+                    <widget row="3"  column="0" >
+                        <class>QCheckBox</class>
+                        <property stdset="1">
                             <name>name</name>
-                            <cstring>Spacer1</cstring>
+                            <cstring>fFormatName</cstring>
                         </property>
                         <property stdset="1">
-                            <name>orientation</name>
-                            <enum>Vertical</enum>
+                            <name>text</name>
+                            <string>Show name as Last, First?</string>
+                        </property>
+                    </widget>
+                    <widget row="4"  column="0"  rowspan="1"  colspan="2" >
+                        <class>QLabel</class>
+                        <property stdset="1">
+                            <name>name</name>
+
+                            <cstring>TextLabel1</cstring>
                         </property>
                         <property stdset="1">
-                            <name>sizeType</name>
-                            <enum>Expanding</enum>
+                            <name>text</name>
+                            <string>Handle conflict in addresses:</string>
+                        </property>
+                    </widget>
+                    <widget row="4"  column="2" >
+                        <class>QComboBox</class>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>User Choose</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Keep Both in Abbrowser</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>PDA Overrides</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Abbrowser Overrides</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Do Nothing</string>
+                            </property>
+                        </item>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>fConflictStrategy</cstring>
                         </property>
                         <property>
-                            <name>sizeHint</name>
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
+                            <name>whatsThis</name>
+                            <string>&lt;qt&gt;If you select &amp;quot;User Choose&amp;quot; here, the conduit will ask you what to do with every conflicting entry individually. Otherwise, it will apply your choice to every conflict.&lt;/qt&gt;</string>
                         </property>
-                    </spacer>
+                    </widget>
                 </grid>
             </widget>
             <widget>
