@@ -1,8 +1,7 @@
 <?xml version="1.0" ?>
 <!-- TODO:
-     + Change license to LGPL?
-     + Talk about next once it is implemented in the code
-     + Is docbook installed in the standard location so helpcenter sees it?
+     + Change license to GPL+QT exception
+     + Search for other TODOs
      END TODO -->
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN"
 "dtd/kdex.dtd" [
@@ -44,20 +43,19 @@
 </authorgroup>
 
 <copyright>
-<year>2002</year><year>2003</year><holder>Tuukka Pasanen</holder>
+<year>2002</year><year>2004</year><holder>Tuukka Pasanen</holder>
 </copyright>
 
 <copyright>
-<year>2003</year>
-<holder>Allen Winter</holder>
+<year>2003</year><year>2004</year><holder>Allen Winter</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2003-11-28</date>
-<releaseinfo>1.0.0</releaseinfo>
+<date>2004-04-15</date>
+<releaseinfo>1.1.1</releaseinfo>
 
 <abstract>
 <para>&konsolekalendar; is a command line interface to &kde; calendars.</para>
@@ -157,17 +155,30 @@ date/time.</para>
 </informalexample>
 </para>
 
-<!-- TODO -->
-<!-- <para><emphasis>Example:</emphasis> Shows the next event on the calendar from the current time forward:</para> -->
+<para>
+<informalexample><para>Show the next event(s) on the calendar from the current time forward:</para>
 
-<!-- <informalexample> -->
-<!-- <para> -->
-<!-- <prompt>%</prompt><userinput> -->
-<!-- <command>konsolekalendar</command> -->
-<!-- <option>- -next</option> -->
-<!-- </userinput> -->
-<!-- </para> -->
-<!-- </informalexample> -->
+<para>
+<screen>
+<prompt>%</prompt><userinput> <command>konsolekalendar</command> <option>--next</option>
+</userinput>
+</screen>
+</para>
+</informalexample>
+</para>
+
+<para>
+<informalexample><para>To view all events for the next 5 days run:</para>
+
+<para>
+<screen>
+<prompt>%</prompt><userinput> <command>konsolekalendar</command> <option>--show-next</option> <replaceable>5</replaceable>
+
+</userinput>
+</screen>
+</para>
+</informalexample>
+</para>
 
 </sect1>
 
@@ -175,7 +186,9 @@ date/time.</para>
 <title>Inserting Events</title>
 
 <para>&konsolekalendar; can insert events into a &kde; calendar or calendar
-resource using the <parameter>--add</parameter> command line argument.</para>
+resource using the <parameter>--add</parameter> command line argument.
+Events successfully inserted will be immediately shown by &kde; calendar
+applications (like &korganizer;).</para>
 
 <para>
 <informalexample><para>In the following example, an event starting on 2003-06-04 (June 4, 2003)
@@ -201,15 +214,6 @@ user's default calendar resource:</para>
 </informalexample>
 </para>
 
-<note><para>
-The current version of &konsolekalendar; does not support inserting
-<quote>free</quote> events (free events are events that
-take up no space in the day; &ie;, the time is not marked as busy).
-Birthdays, holidays, anniversaries, &etc; should ideally be inserted
-as free events.  We hope for the next &konsolekalendar; release
-to have a <quote>free</quote> event feature.
-</para></note>
-
 <para>
 <informalexample><para> Here a one week vacation is inserted into a shared <replaceable>vacation</replaceable> calendar:</para>
 
@@ -231,6 +235,9 @@ Calendar entries to be removed are specified exactly by their Unique-string
 identifier (<acronym>UID</acronym>) using the <parameter>--uid</parameter>
 option.  <acronym>UIDs</acronym> are found by first viewing the event,
 using the <parameter>--view</parameter> option.</para>
+
+<para>Events successfully deleted will be immediately removed from within &kde; calendar
+applications (&korganizer; for example).</para>
 
 <warning><para> When you delete something from the calendar you
 <emphasis>cannot</emphasis> undo it! In other words, when you delete an entry
@@ -259,8 +266,9 @@ using the <parameter>--view</parameter> option.</para>
 
 <para>
 Changing behaves in the same way as inserting: you can change an event's start date 
-and time, end date and time, description, and summary.
-</para>
+and time, end date and time, summary, location, and description.  Events
+successfully changed will be immediately shown modified within &kde; calendar
+applications (&korganizer;).</para>
 
 <para><emphasis>Example:</emphasis> Here we change the summary and description
 of a calendar entry with <acronym>UID</acronym> <replaceable>&konsolekalendar;-1887551750.196</replaceable>:</para>
@@ -336,33 +344,66 @@ scripts.</para>
 <para>The &konsolekalendar; Text Format is:
 <informalexample>
 <screen>
-Date and time information:
-1. row Date:	YYYY-MM-DD
-2. row 		HH:MM
+Date:\t&lt;Incidence Date&gt;(dddd yyyy-MM-dd)
+[\t&lt;Incidence Start Time&gt;(hh:mm) - &lt;Incidence End Time&gt;(hh:mm)]
 Summary:
-3. row Summary:
-4. row 		Summary text.
+\t&lt;Incidence Summary | "(no summary available)"&gt;
+Location:
+\t&lt;Incidence Location | "(no location available)"&gt;
 Description:
-5. row Description:
-6. row		Description text
+\t&lt;Incidence Description | "(no description available)"&gt;
 UID:
-7. row UID:
-8. row 		UID.
+\t&lt;Incidence UID&gt;
+--------------------------------------------------
 </screen>
 </informalexample>
 </para>
 
-<para>
+<para>For example:
 <informalexample>
 <screen>
-Date:   2003-11-01
-        8:00 - 9:00
+Date:   Tuesday 2003-11-01
+        08:00 - 09:00
 Summary:
         Staff Meeting
+Location:
+        Conference Room
 Description:
-        Meet in the big conference room with the entire staff.
+        Meet with the entire staff to discuss the project.
 UID:
         &konsolekalendar;-1128954167.1013
+--------------------------------------------------
+</screen>
+</informalexample>
+</para>
+
+</sect2>
+
+<sect2 id="short-format">
+<title>&konsolekalendar; Short Text Format</title>
+
+<para>Short Text Format provides a more compact, less verbose version of
+&konsolekalendar;'s native format.</para>
+
+<para>The &konsolekalendar; Short Text Format is:
+<informalexample>
+<screen>
+[--------------------------------------------------]
+{&lt;Incidence Date&gt;(dddd yyyy-MM-dd)]
+[&lt;Incidence Start Time&gt;(hh:mm) - &lt;Incidence End Time&gt;(hh:mm) | "\t"]
+\t&lt;Incidence Summary | \t&gt;[, &lt;Incidence Location&gt;]
+\t\t&lt;Incidence Description | "\t"&gt;
+</screen>
+</informalexample>
+</para>
+
+<para>For example:
+<informalexample>
+<screen>
+--------------------------------------------------
+Tuesday 2003-11-01
+08:00 - 09:00   Staff Meeting, Conference Room
+                Meet with the entire staff to discuss the project.
 </screen>
 </informalexample>
 </para>
@@ -383,15 +424,15 @@ Also, <acronym>CSV</acronym> format is easy to parse with follow-on scripts.</pa
 <para>The Comma-Separated Value (<acronym>CSV</acronym>) format is:
 <informalexample>
 <screen>
-YYYY-MM-DD,HH:MM,YYYY-MM-DD,HH:MM,Summary,Description,UID
+YYYY-MM-DD,HH:MM,YYYY-MM-DD,HH:MM,Summary,Location,Description,UID
 </screen>
 </informalexample>
 </para>
 
-<para>
+<para>For example:
 <informalexample>
 <screen>
-2003-11-01,08:00,2003-11-01,09:00,Staff Meeting,Meet in the big conference \
+2003-11-01,08:00,2003-11-01,09:00,Staff Meeting,Conference Room,Meet in the big conference \
 room with the entire staff.,&konsolekalendar;-1128954167.1013
 </screen>
 </informalexample>
@@ -471,7 +512,7 @@ identical events will not be inserted.</para>
   <entry>Print helpful runtime messages.</entry>
 </row>
 <row>
-  <entry><option>--dryrun</option></entry>
+  <entry><option>--dry-run</option></entry>
   <entry>Print what would have been done, but do not execute.  Do not change any
 files; do not insert, remove, modify any existing files, nor create any new files.</entry>
 </row>
@@ -517,6 +558,15 @@ files; do not insert, remove, modify any existing files, nor create any new file
   <entry>View all calendar entries.</entry>
 </row>
 <row>
+  <entry><option>--next</option></entry>
+  <entry>View next activity in calendar.</entry>
+</row>
+<row>
+  <entry><option>--show-next</option>
+  <replaceable>&nbsp;days</replaceable></entry>
+  <entry>Starting at specified date show next # days' activities.</entry>
+</row>
+<row>
   <entry><option>--uid</option>
   <replaceable>&nbsp;UID</replaceable></entry>
   <entry>View, delete, or change the event with this Unique-string IDentifier.</entry>
@@ -527,8 +577,11 @@ files; do not insert, remove, modify any existing files, nor create any new file
   <entry>Start at this day [YYYY-MM-DD].  Default date is Today</entry>
 </row>
 <row>
-  <entry><option>--time</option></entry>
-  <entry>Start at this time [HH:MM].  Default time is 07:00.</entry>
+  <entry><option>--time</option>
+  <replaceable>&nbsp;time</replaceable></entry>
+  <entry>Start at this time [HH:MM].  Default time for viewing is 07:00.
+         <para>To add or change a floating event, use the <option>--time float</option>
+         or the <option>--end-time float</option> options.</para></entry>
 </row>
 <row>
   <entry><option>--end-date</option>
@@ -538,7 +591,9 @@ files; do not insert, remove, modify any existing files, nor create any new file
 <row>
   <entry><option>--end-time</option>
   <replaceable>&nbsp;end-time</replaceable></entry>
-  <entry>End at this time [HH:MM].   Default time is 17:00</entry>
+  <entry>End at this time [HH:MM].   Default end-time for viewing is 17:00.
+         <para>To add or change a floating event, use the <option>--time float</option>
+         or the <option>--end-time float</option> options.</para></entry>
 </row>
 <row>
   <entry><option>--epoch-start</option>
@@ -559,6 +614,11 @@ files; do not insert, remove, modify any existing files, nor create any new file
   <entry><option>--description</option>
   <replaceable>&nbsp;description</replaceable></entry>
   <entry>Add description to event (works with add and change).</entry>
+</row>
+<row>
+  <entry><option>--location</option>
+  <replaceable>&nbsp;location</replaceable></entry>
+  <entry>Add location to event (works with add and change).</entry>
 </row>
 <row>
   <entry><emphasis>Export options:</emphasis></entry>
@@ -657,6 +717,29 @@ already exists in the calendar?</para>
 <para>&konsolekalendar; checks the specified start date and time, end date and time,
 and summary against all events in the calendar.  An event match is determined
 if all three values match to an existing event.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>Can a non-floating event be changed to a floating event?</para>
+</question>
+<answer>
+<para>Yes.  Use the <option>--time float</option> option with <option>--change</option>.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>Why are event <acronym>UIDs</acronym> printed in most export formats?</para>
+</question>
+<answer>
+<para>Because you need to specify <acronym>UIDs</acronym> to delete or
+change events.
+If you do not want to see event <acronym>UIDs</acronym> then use the
+<emphasis>short</emphasis> export type (<option>--export-type short</option>).
 </para>
 </answer>
 </qandaentry>
