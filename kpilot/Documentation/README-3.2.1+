@@ -1,0 +1,156 @@
+KPILOT 4.0.0 by Dan Pilone
+===========================
+	Additional work by Robert Ambrose, 
+	Preston Brown, Adriaan de Groot, 
+	and probably many more.
+
+	KPilot is software for syncing the 3Com Palm Pilot and IBM Workpad
+(UNTESTED!) with a machine running some flavor of unix. The actual PC->PP
+communcations was originally based on pilot-link.0.8.7. By default it
+attempts to connnect using /dev/pilot which should be a link to the actual
+serial port, however this is configurable in the settings dialog. 
+
+	Additional release notes can be found in the user documentation.
+The user documentation (translations in: en and de) can be found
+under kpilot/doc in this directory or in the KDE documentation directory 
+under kpilot. Or run kpilot --htmlhelp to start the KDE help browser.
+
+
+Current features include:
+		* Now a KDE2 application.
+		o Plug in conduit support, currently including
+			KOrganizer, todolist, null and PopMail
+	        o Hot-Sync daemon.  - Now hot-sync with just the push of the
+          	  Hot-Sync button on your cradle.  No need to launch KPilot.
+	        o Add/Delete/Edit memos.
+                o Add/Delete/Edit addresses.
+                o Full Category support for both memos and addresses.
+                o KPilot now respects secret data.
+                o More configuration options including port speed and 
+		  docking control.
+                o Now supports signature files for email.
+                o Drag and drop to docked icon for file install.
+                o International Support
+		o Full Backup/Restore capabilities of Palm Pilot
+		o File (prc,pdb) installation
+		o Email syncing capabilities (via POP3 & sendmail)
+	        o SmartSync backing up modified data even
+			for databases KPilot doesn't recognize
+	        o Import/Export to/from virtually any text format for
+			Addresses.
+	        o Import/Export to/from text files for memos
+		o Sort and display addresses in different ways
+		o A null conduit (programming example)
+		o Syncing with UNIX mailboxes
+		o Database dispositions (sync, backup only, or ignore)
+
+	(* = new in this release)
+
+INSTALLATION
+============
+	KPilot 4.0.0 _REQUIRES_ KDE 2 (http://www.kde.org/) and
+v2.2.0 or better of the QT widget set (http://www.troll.no/). 
+KPilot also _REQUIRES_ pilot-link, which is not distributed with 
+all the linux distro's out there. You may have to go looking.
+
+	If you have these packages, a simple (see *NOTE*):
+
+	./configure
+	make
+	make install
+
+	from the kpilot-4.0.0 directory should configure and install KPilot.  
+If you are using KPanel (the panel that comes with KDE) restarting it
+should insert an icon into the Utilities submenu.  If you are not using
+KPanel, the executable is named kpilot and will be installed in either
+/opt/kde/bin/ or /usr/local/kde/bin (whichever is appropriate for your
+system).
+
+	In some cases KPilot will not compile due to configuration
+differences; in this case a less simple
+
+	autoconf
+	automake
+	./configure
+	make
+	make install
+
+should do the trick. If this fails as well, you can subscribe to the
+KPilot mailing list and state the nature of the failure there.
+
+	*NOTE* that KPilot makes assumptions about where pilot-link and
+the Qt libraries are; in particular it is important to set QTDIR correctly
+(to the Qt 1.44 directories) when compiling KPilot. On many systems the
+command to do this will be
+
+	export QTDIR=/usr/lib/qt-2*
+
+but your mileage may vary. RedHat 6.2 systems ship with Qt 1.45 and Qt 2.1,
+in which case it is doubly important to set QTDIR properly.
+
+USING THE SOFTWARE
+==================
+	The user's documentation in the kpilot/doc directory is the
+best source for information on using KPilot.
+	When KPilot is run for the first time it will display the settings
+dialog.  The default device is /dev/pilot (which should be a link to the
+proper device for the pilot) though this is configurable. Please verify
+this is correct.  
+	IMPORTANT NOTE: the KPilot installation DOES NOT setup the serial
+link; your OS installation may also require special handling. See the
+section "Troubleshooting," below.
+	Other settings can be configured at this time but are
+not mandatory (though HIGHLY recommended).  The one setting that you might
+want to take notice of is "Local overrides pilot".  Setting this to true
+means that if both the local record and the pilot record are modified,
+during the next hot sync the local record will be considered the valid one
+and both will be set to that. By default the Pilot is considered to be the
+valid record and if both the local record and the pilot record have been
+modified the local is overwritten by the pilot copy.  
+	Hitting "OK" will continue to the main KPilot screen.
+	It is recommended you preform a full backup of your Pilot at this
+point so that all of the data visible in KPilot is accurate and any
+importing or exporting is properly merged the next time you hot-sync.  
+You can do a full backup of your Pilot by selecting Backup from the File
+Menu.
+
+TROUBLESHOOTING
+===============
+	The default serial device (/dev/pilot) does not exist on
+most systems. Be SURE to either (a) use the actual serial port the Pilot
+is attached to (i.e. /dev/ttyS0 for the device DOS calls COM1:) OR (b) set
+up the link to the actual serial port by running (as root) "ln -s
+/dev/ttySx /dev/pilot", where x is the number of the serial port. Note
+that some older Linux setups use /dev/cuax instead of /dev/ttySx.
+	If you're running Mandrake 7 and having trouble getting the
+daemon to start or KPilot can't connect to the daemon, check the system
+security setting. Sometimes local processes can't connect to *any*
+local ports.
+	More information is available in the user documentation.
+
+
+
+
+STANDARD DISCLAIMER, WARNINGS, ETC..
+====================================
+	THIS SOFTWARE HAS BUGS.  Use at your own risk.  It has not even
+been tested anywhere but on my machine and only with my Palm Pilot.  I
+have been using it against XCopilot for development then verifying it
+works with a real pilot with my Palm Pilot Professional running OS v2.0.4.  
+I make no claims that it will work, or even try to work.  I take no
+responsibility for any data loss, damage, etc. done by this software.  
+ie:  Should your pilot burst into flames while trying to sync a new game..
+sorry.
+	That being said, I _really_ want comments regarding the software
+as well as suggestions.  Bug fixes are even snazzier and code
+contributions are welcome.  :)  
+
+	Dan Pilone
+	pilone@slac.com
+	http://www.slac.com/pilone/kpilot_home/
+	July 20, 2000
+
+	Adriaan de Groot
+	adridg@cs.kun.nl
+	http://www.cs.kun.nl/~adridg/kpilot-bugs.html
+	July 20, 2000

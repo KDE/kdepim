@@ -1,3 +1,30 @@
+KPilot Developer's notes for december 2nd 2000
+===============================================
+
+Almost Sinterklaas, so I'd like to wish all the KPilot users in
+.nl a Happy Sinterklaas en Weg met de Kerstman. 
+
+UI Changes:
+
+* Added Heiko's Fast-Sync icon .. but it's ugly and hard to
+  distinguish from the regular icon. This needs fixing by an artist.
+* Added an ugly restore icon as well.
+* Added an undocumented config-file option. You can now add the
+  following line to kpilotrc in the null group if you really want to:
+
+	ToolbarIcons=list
+
+  where list is a comma-separated list of icons to appear on the
+  KPilot toolbar. You can choose from HotSync,FastSync,Backup and
+  Restore. The standard setting is:
+
+	ToolbarIcons=HotSync,Backup
+
+  That's not a lot but it should keep Heiko happy for a while and
+  it reminds us that we should move towards a more modern method
+  of setting up the UI -- or not?
+
+
 KPilot Developer's notes for november 25th 2000
 ===============================================
 
