@@ -110,7 +110,7 @@ static QString businit(void)
 	gn_error error;
 	char *aux;
 
-#if defined(LIBGNOKII_VERSION) && LIBGNOKII_VERSION >= LIBGNOKII_MAKE_VERSION(2,0,0)
+#if defined(LIBGNOKII_VERSION) 
 	if (gn_cfg_read_default()<0)
 #else
 	static char *BinDir;
