@@ -294,7 +294,7 @@ zero</action></para>
 <listitem>
 <para><action>Change the name or accumulated time</action> for the
 current task</para><para>There are two options for changing the time: Edit
-Absolute, in which the session and total names can be changed separately,
+Absolute, in which the session and total names can be changed separately;
 and Edit Relative, in which a certain change is added to or subtracted from
 both the session and total times.</para>
 </listitem>
@@ -331,7 +331,7 @@ configure &karm;</para>
 
 <para>The dialog has two tabbed panes: <guilabel>Saving</guilabel>,
 which configures the location of the save file, whether autosaving is
-enabled and the autosave interval, and <guilabel>Idle
+enabled and the autosave interval; and <guilabel>Idle
 Detection</guilabel> which, when set, pops up an alert when no activity
 has been detected for a specified amount of time.</para> </listitem>
 </varlistentry>
