@@ -56,6 +56,7 @@ namespace KCal
   private:
     KonsoleKalendarVariables *m_variables;
     bool m_firstEntry;
+    QString processField( QString field, QString dquote );
 
   };
 

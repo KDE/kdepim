@@ -198,6 +198,19 @@ bool KonsoleKalendarExports::exportAsTxtShort( QTextStream *ts,
   return true;
 }
 
+QString KonsoleKalendarExports::processField( QString field, QString dquote ) {
+
+  // little function that processes a field for CSV compliance:
+  //   1. Replaces double quotes by a pair of consecutive double quotes
+  //   2. Surrounds field with double quotes
+
+  QString double_dquote = dquote + dquote;
+  QString retField = dquote + field.replace( dquote, double_dquote ) + dquote;
+  return retField;
+}
+
+#define pF( x )  processField( ( x ), dquote )
+
 bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
                                           Event *event, QDate date ) {
 
@@ -205,25 +218,25 @@ bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
   //
   // startdate,starttime,enddate,endtime,summary,location,description,UID
 
-  QString delim = ",";  //TODO: the delim character can be an option??
+  QString delim = i18n( "," );
+  QString dquote = i18n( "\"" );
 
   if ( !event->doesFloat() ) {
-    *ts <<          date.toString("yyyy-MM-dd")
-        << delim << event->dtStart().time().toString("hh:mm")
-        << delim << date.toString("yyyy-MM-dd")
-        << delim << event->dtEnd().time().toString("hh:mm");
+    *ts <<          pF( date.toString("yyyy-MM-dd") )
+        << delim << pF( event->dtStart().time().toString("hh:mm") )
+        << delim << pF( date.toString("yyyy-MM-dd") )
+        << delim << pF( event->dtEnd().time().toString("hh:mm") );
   } else {
-    *ts <<          date.toString("yyyy-MM-dd")
-        << delim
-        << delim << date.toString("yyyy-MM-dd")
-        << delim;
+    *ts <<          pF( date.toString("yyyy-MM-dd") )
+        << delim << pF( "" )
+        << delim << pF( date.toString("yyyy-MM-dd") )
+        << delim << pF( "" );
   }
 
-  QString rdelim = "\\" + delim;
-  *ts << delim << event->summary().replace(delim,rdelim)
-      << delim << event->location().replace(delim,rdelim)
-      << delim << event->description().replace(delim,rdelim)
-      << delim << event->uid()
+  *ts << delim << pF( event->summary() )
+      << delim << pF( event->location() )
+      << delim << pF( event->description() )
+      << delim << pF( event->uid() )
       << endl;
 
   return true;
