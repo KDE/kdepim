@@ -32,7 +32,7 @@ CryptPlugWrapper* CryptPlugWrapperList::active() const
 {
   for ( QPtrListIterator<CryptPlugWrapper> it( *this ) ; it.current() ; ++it )
     if ( (*it)->active() )
-      return it;
+      return *it;
   return 0;
 }
 
@@ -263,6 +263,6 @@ CryptPlugWrapper * CryptPlugWrapperList::findForLibName( const QString & libName
 {
   for ( QPtrListIterator<CryptPlugWrapper> it( *this ) ; it.current() ; ++it )
     if ( (*it)->libName().find( libName, 0, false ) >= 0 )
-      return it;
+      return *it;
   return 0;
 }
