@@ -168,11 +168,8 @@ Wallet* KNServerInfo::wallet()
   else
     sd.setObject( mWallet, Wallet::openWallet(Wallet::NetworkWallet()) );
 
-  if (!mWallet) {
-    KMessageBox::error(knGlobals.topWidget, i18n("The wallet could not be opened. "
-        "This error is most probably caused by providing a wrong password."));
+  if (!mWallet)
     return 0;
-  }
 
   if (mWallet && !mWallet->hasFolder("knode"))
     mWallet->createFolder("knode");
