@@ -86,4 +86,33 @@ KABC::PhoneNumber::List::Iterator TypeCombo::selectedElement()
   return mTypeList.at( currentItem() );
 }
 
+void TypeCombo::insertType( const KABC::PhoneNumber::List &list, int type,
+                            const KABC::PhoneNumber &defaultObject )
+{
+  uint i;
+  for ( i = 0; i < list.count(); ++i ) {
+    if ( list[ i ].type() == type ) {
+      mTypeList.append( list[ i ] );
+      break;
+    }
+  }
+  if ( i == list.count() ) {
+    mTypeList.append( defaultObject );
+  }
+}
+
+void TypeCombo::insertTypeList( const KABC::PhoneNumber::List &list )
+{
+  uint i;
+  for ( i = 0; i < list.count(); ++i ) {
+    uint j;
+    for( j = 0; j < mTypeList.count(); ++j ) {
+      if ( list[ i ].id() == mTypeList[ j ].id() ) break;
+    }
+    if ( j == mTypeList.count() ) {
+      mTypeList.append( list[ i ] );
+    }
+  }
+}
+
 #include "typecombo.moc"

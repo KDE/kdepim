@@ -76,8 +76,6 @@ class PhoneEditWidget : public QWidget
     void updatePhoneNumber( TypeCombo *combo );
     void updateOtherEdit( TypeCombo *combo, TypeCombo *otherCombo );
 
-    void insertType( const KABC::PhoneNumber::List &list, int type );
-
     TypeCombo *mPrefCombo;
     TypeCombo *mSecondCombo;
     TypeCombo *mThirdCombo;

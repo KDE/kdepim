@@ -47,6 +47,10 @@ class TypeCombo : public KComboBox
 
     KABC::PhoneNumber::List::Iterator selectedElement();
 
+    void insertType( const KABC::PhoneNumber::List &list, int type,
+                     const KABC::PhoneNumber &defaultObject );
+    void insertTypeList( const KABC::PhoneNumber::List &list );
+
   private:
     KABC::PhoneNumber::List &mTypeList;
     QLineEdit *mLineEdit;

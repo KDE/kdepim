@@ -110,52 +110,33 @@ PhoneEditWidget::~PhoneEditWidget()
 {
 }
 
-void PhoneEditWidget::insertType( const KABC::PhoneNumber::List &list,
-                                  int type )
-{
-  uint i;
-  for ( i = 0; i < list.count(); ++i ) {
-    if ( list[ i ].type() == type ) {
-      mPhoneList.append( list[ i ] );
-      break;
-    }
-  }
-  if ( i == list.count() ) {
-    mPhoneList.append( PhoneNumber( "", type ) );
-  }
-}
-
 void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
 {
   mPhoneList.clear();
 
-  kdDebug() << "PhoneEditWidget::setPhoneNumbers(): count: "
-            << list.count() << endl;
-
   QValueList<int> defaultTypes;
-  insertType( list, KABC::PhoneNumber::Home );
-  insertType( list, KABC::PhoneNumber::Work );
-  insertType( list, KABC::PhoneNumber::Cell );
-  insertType( list, KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
-  insertType( list, KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax );
+  defaultTypes << KABC::PhoneNumber::Home;
+  defaultTypes << KABC::PhoneNumber::Work;
+  defaultTypes << KABC::PhoneNumber::Cell;
+  defaultTypes << ( KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax );
+  defaultTypes << ( KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
 
-  uint i;
-  for ( i = 0; i < list.count(); ++i ) {
-    uint j;
-    for( j = 0; j < mPhoneList.count(); ++j ) {
-      if ( list[ i ].id() == mPhoneList[ j ].id() ) break;
-    }
-    if ( j == mPhoneList.count() ) {
-      mPhoneList.append( list[ i ] );
-    }
+  // Insert default types and types for existing numbers.
+  // Doing this for mPrefCombo is enough because the list is shared by all
+  // combos.
+  QValueList<int>::ConstIterator it;
+  for( it = defaultTypes.begin(); it != defaultTypes.end(); ++it ) {
+    mPrefCombo->insertType( list, *it, PhoneNumber( "", *it ) );
   }
+
+  mPrefCombo->insertTypeList( list );
 
   updateCombos();
 
-  mPrefCombo->selectType( PhoneNumber::Home );
-  mSecondCombo->selectType( PhoneNumber::Work );
-  mThirdCombo->selectType( PhoneNumber::Cell );
-  mFourthCombo->selectType( PhoneNumber::Work | PhoneNumber::Fax );
+  mPrefCombo->selectType( defaultTypes[ 0 ] );
+  mSecondCombo->selectType( defaultTypes[ 1 ] );
+  mThirdCombo->selectType( defaultTypes[ 2 ] );
+  mFourthCombo->selectType( defaultTypes[ 3 ] );
 
   updateLineEdits();
 }
