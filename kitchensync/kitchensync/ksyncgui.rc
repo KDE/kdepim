@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kitchensync" version="4">
+<kpartgui name="kitchensync" version="5">
 <MenuBar>
   <Menu name="file"><text>&amp;File</text>
 	<Merge/>
@@ -22,3 +22,4 @@
    <Action name="select_kon"/>
    <Action name="select_prof"/>
 </ToolBar>
+</kpartgui>
