@@ -39,8 +39,8 @@
 
 #include "imagewidget.h"
 
-ImageWidget::ImageWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+ImageWidget::ImageWidget( bool readOnly, QWidget *parent, const char *name )
+  : QWidget( parent, name ), mReadOnly( readOnly )
 {
   QGridLayout *topLayout = new QGridLayout( this, 2, 1, KDialog::marginHint(),
                                             KDialog::spacingHint() );
@@ -58,6 +58,7 @@ ImageWidget::ImageWidget( QWidget *parent, const char *name )
 
   mPhotoUrl = new KURLRequester( photoBox );
   mPhotoUrl->setFilter( KImageIO::pattern() );
+  mPhotoUrl->setEnabled( !mReadOnly );
   boxLayout->addWidget( mPhotoUrl, 0, 1 );
   
   mUsePhotoUrl = new QCheckBox( i18n( "Store as URL" ), photoBox );
@@ -78,6 +79,7 @@ ImageWidget::ImageWidget( QWidget *parent, const char *name )
 
   mLogoUrl = new KURLRequester( logoBox );
   mLogoUrl->setFilter( KImageIO::pattern() );
+  mLogoUrl->setEnabled( !mReadOnly );
   boxLayout->addWidget( mLogoUrl, 0, 1 );
   
   mUseLogoUrl = new QCheckBox( i18n( "Store as URL" ), logoBox );
@@ -207,9 +209,9 @@ void ImageWidget::updateGUI()
 {
   KURLRequester *ptr = (KURLRequester*)sender();
 
-  if ( ptr == mPhotoUrl )
+  if ( ptr == mPhotoUrl && !mReadOnly )
     mUsePhotoUrl->setEnabled( true );
-  else if ( ptr == mLogoUrl )
+  else if ( ptr == mLogoUrl && !mReadOnly )
     mUseLogoUrl->setEnabled( true );
 }
 

@@ -115,7 +115,7 @@ void ExtensionManager::createExtensionWidgets()
   QStringList extensionNames( i18n( "None" ) );
 
   // add addressee editor as default
-  wdg = new AddresseeEditorWidget( mCore, true, this );
+  wdg = new AddresseeEditorWidget( mCore, true, true, this );
   wdg->hide();
   connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
            SIGNAL( modified( const KABC::Addressee::List& ) ) );

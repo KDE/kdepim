@@ -319,7 +319,7 @@ class KABCore : public KAB::Core
     void initGUI();
     void initActions();
 
-    AddresseeEditorDialog *createAddresseeEditorDialog( QWidget *parent,
+    AddresseeEditorDialog *createAddresseeEditorDialog( bool readOnly, QWidget *parent,
                                                         const char *name = 0 );
 
     QWidget *mWidget;

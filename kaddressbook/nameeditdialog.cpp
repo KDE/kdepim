@@ -45,7 +45,7 @@
 #include "nameeditdialog.h"
 
 NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
-                                QWidget *parent, const char *name )
+                                bool readOnly, QWidget *parent, const char *name )
   : KDialogBase( Plain, i18n( "Edit Contact Name" ), Help | Ok | Cancel,
                  Ok, parent, name, true )
 {
@@ -60,24 +60,28 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   mPrefixCombo = new KComboBox( page );
   mPrefixCombo->setDuplicatesEnabled( false );
   mPrefixCombo->setEditable( true );
+  mPrefixCombo->setEnabled( !readOnly );
   label->setBuddy( mPrefixCombo );
   layout->addMultiCellWidget( mPrefixCombo, 0, 0, 1, 2 );
 
   label = new QLabel( i18n( "Given name:" ), page );
   layout->addWidget( label, 1, 0 );
   mGivenNameEdit = new KLineEdit( page );
+  mGivenNameEdit->setReadOnly( readOnly );
   label->setBuddy( mGivenNameEdit );
   layout->addMultiCellWidget( mGivenNameEdit, 1, 1, 1, 2 );
 
   label = new QLabel( i18n( "Additional names:" ), page );
   layout->addWidget( label, 2, 0 );
   mAdditionalNameEdit = new KLineEdit( page );
+  mAdditionalNameEdit->setReadOnly( readOnly );
   label->setBuddy( mAdditionalNameEdit );
   layout->addMultiCellWidget( mAdditionalNameEdit, 2, 2, 1, 2 );
 
   label = new QLabel( i18n( "Family names:" ), page );
   layout->addWidget( label, 3, 0 );
   mFamilyNameEdit = new KLineEdit( page );
+  mFamilyNameEdit->setReadOnly( readOnly );
   label->setBuddy( mFamilyNameEdit );
   layout->addMultiCellWidget( mFamilyNameEdit, 3, 3, 1, 2 );
 
@@ -86,18 +90,21 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   mSuffixCombo = new KComboBox( page );
   mSuffixCombo->setDuplicatesEnabled( false );
   mSuffixCombo->setEditable( true );
+  mSuffixCombo->setEnabled( !readOnly );
   label->setBuddy( mSuffixCombo );
   layout->addMultiCellWidget( mSuffixCombo, 4, 4, 1, 2 );
 
   mFormattedNameCombo = new KComboBox( page );
+  mFormattedNameCombo->setEnabled( !readOnly );
   layout->addWidget( mFormattedNameCombo, 5, 0 );
   connect( mFormattedNameCombo, SIGNAL( activated( int ) ), SLOT( typeChanged( int ) ) );
 
   mFormattedNameEdit = new KLineEdit( page );
-  mFormattedNameEdit->setEnabled( type == CustomName );
+  mFormattedNameEdit->setEnabled( type == CustomName && !readOnly );
   layout->addWidget( mFormattedNameEdit, 5, 1 );
 
   mParseBox = new QCheckBox( i18n( "Parse name automatically" ), page );
+  mParseBox->setEnabled( !readOnly );
   connect( mParseBox, SIGNAL( toggled(bool) ), SLOT( parseBoxChanged(bool) ) );
   connect( mParseBox, SIGNAL( toggled(bool) ), SLOT( modified() ) );
   layout->addMultiCellWidget( mParseBox, 6, 6, 0, 1 );

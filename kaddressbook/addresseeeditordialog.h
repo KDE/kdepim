@@ -37,7 +37,8 @@ class AddresseeEditorDialog : public KDialogBase
   Q_OBJECT
   
   public:
-    AddresseeEditorDialog( KAB::Core *core, QWidget *parent, const char *name = 0 );
+    AddresseeEditorDialog( KAB::Core *core, bool readOnly,
+                           QWidget *parent, const char *name = 0 );
     ~AddresseeEditorDialog();
     
     void setAddressee( const KABC::Addressee& );

@@ -73,7 +73,7 @@ class EmailItem : public QListBoxText
     bool mPreferred;
 };
 
-EmailEditWidget::EmailEditWidget( QWidget *parent, const char *name )
+EmailEditWidget::EmailEditWidget( bool readOnly, QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
   QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(),
@@ -83,6 +83,7 @@ EmailEditWidget::EmailEditWidget( QWidget *parent, const char *name )
   topLayout->addWidget( label, 0, 0 );
 
   mEmailEdit = new KLineEdit( this );
+  mEmailEdit->setReadOnly( readOnly );
   connect( mEmailEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   connect( mEmailEdit, SIGNAL( textChanged( const QString& ) ),
@@ -91,6 +92,7 @@ EmailEditWidget::EmailEditWidget( QWidget *parent, const char *name )
   topLayout->addWidget( mEmailEdit, 0, 1 );
 
   QPushButton *editButton = new QPushButton( i18n( "Edit Email Addresses..." ), this);
+  editButton->setEnabled( !readOnly );
   connect( editButton, SIGNAL( clicked() ), SLOT( edit() ) );
   topLayout->addMultiCellWidget( editButton, 1, 1, 0, 1 );
 

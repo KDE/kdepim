@@ -39,7 +39,7 @@ class ImageWidget : public QWidget
   Q_OBJECT
 
   public:
-    ImageWidget( QWidget *parent, const char *name = 0 );
+    ImageWidget( bool readOnly, QWidget *parent, const char *name = 0 );
     ~ImageWidget();
 
     /**
@@ -80,6 +80,8 @@ class ImageWidget : public QWidget
     QCheckBox *mUseLogoUrl;
     QLabel *mPhotoLabel;
     QLabel *mLogoLabel;
+
+    bool mReadOnly;
 };
 
 #endif

@@ -52,7 +52,7 @@ class GeoWidget : public QWidget
   Q_OBJECT
 
   public:
-    GeoWidget( QWidget *parent, const char *name = 0 );
+    GeoWidget( bool readOnly, QWidget *parent, const char *name = 0 );
     ~GeoWidget();
 
     /**
@@ -77,6 +77,8 @@ class GeoWidget : public QWidget
 
     QCheckBox *mGeoIsValid;
     QPushButton *mExtendedButton;
+
+    bool mReadOnly;
 };
 
 class GeoDialog : public KDialogBase

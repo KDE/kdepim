@@ -634,7 +634,7 @@ void KABCore::newContact()
         mResourceMap.insert( addr.resource(), entry );
       }
     }
-    dialog = createAddresseeEditorDialog( mWidget );
+    dialog = createAddresseeEditorDialog( false, mWidget );
     dialog->setAddressee( addr );
   } else
     return;
@@ -705,26 +705,21 @@ void KABCore::editContact( const QString &uid )
         ResourceMapEntry &entry = mResourceMap[ addr.resource() ];
         entry.counter++;
       } else {
-        if ( addr.resource()->readOnly() ) {
-          KMessageBox::sorry( mWidget, i18n( "You have tried to edit a contact, "
-                                             "that is located on '%1', which is a read-only resource. This is not possible until you move "
-                                             "this contact to another resource by copy+paste." )
-                              .arg( addr.resource()->resourceName() ) );
-          return;
-        }
-        KABC::Ticket *ticket = mAddressBook->requestSaveTicket( addr.resource() );
-        if ( !ticket ) {
-          KMessageBox::error( mWidget, i18n( "Address book is locked by other process!" ) );
-          return;
-        } else {
-          ResourceMapEntry entry;
-          entry.ticket = ticket;
-          entry.counter = 1;
-          mResourceMap.insert( addr.resource(), entry );
+        if ( !addr.resource()->readOnly() ) {
+          KABC::Ticket *ticket = mAddressBook->requestSaveTicket( addr.resource() );
+          if ( !ticket ) {
+            KMessageBox::error( mWidget, i18n( "Address book is locked by other process!" ) );
+            return;
+          } else {
+            ResourceMapEntry entry;
+            entry.ticket = ticket;
+            entry.counter = 1;
+            mResourceMap.insert( addr.resource(), entry );
+          }
         }
       }
 
-      dialog = createAddresseeEditorDialog( mWidget );
+      dialog = createAddresseeEditorDialog( addr.resource()->readOnly(), mWidget );
 
       mEditorDict.insert( addr.uid(), dialog );
 
@@ -882,10 +877,10 @@ void KABCore::addressBookChanged()
   mViewManager->refreshView();
 }
 
-AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent,
+AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( bool readOnly, QWidget *parent,
                                                              const char *name )
 {
-  AddresseeEditorDialog *dialog = new AddresseeEditorDialog( this, parent,
+  AddresseeEditorDialog *dialog = new AddresseeEditorDialog( this, readOnly, parent,
                                                  name ? name : "editorDialog" );
   connect( dialog, SIGNAL( contactModified( const KABC::Addressee& ) ),
            SLOT( contactModified( const KABC::Addressee& ) ) );
@@ -902,7 +897,7 @@ void KABCore::slotEditorDestroyed( const QString &uid )
   KABC::Addressee addr = mAddressBook->findByUid( uid );
 
   if ( mResourceMap.find( addr.resource() ) == mResourceMap.end() ) {
-    KMessageBox::error( mWidget, i18n( "You have no permission for accessing the address book!" ) );
+    // read-only resource
     return;
   } else {
     ResourceMapEntry &entry = mResourceMap[ addr.resource() ];

@@ -67,7 +67,7 @@ class AddresseeEditorWidget : public KAB::ExtensionWidget
   Q_OBJECT
   
   public:
-    AddresseeEditorWidget( KAB::Core *core, bool isExtension,
+    AddresseeEditorWidget( KAB::Core *core, bool isExtension, bool readOnly,
                            QWidget *parent, const char *name = 0 );
     ~AddresseeEditorWidget();  
 
@@ -123,6 +123,7 @@ class AddresseeEditorWidget : public KAB::ExtensionWidget
     bool mDirty;
     bool mIsExtension;
     bool mBlockSignals;
+    bool mReadOnly;
 
     // GUI
     KPIM::CategorySelectDialog *mCategoryDialog;

@@ -29,12 +29,13 @@
 
 #include "secrecywidget.h"
 
-SecrecyWidget::SecrecyWidget( QWidget *parent, const char *name )
+SecrecyWidget::SecrecyWidget( bool readOnly, QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
   QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(),
                                          KDialog::spacingHint() );
   mSecrecyCombo = new KComboBox( this );
+  mSecrecyCombo->setEnabled( !readOnly );
   layout->addWidget( mSecrecyCombo );
 
   KABC::Secrecy::TypeList list = KABC::Secrecy::typeList();

@@ -47,14 +47,15 @@
 
 #include "phoneeditwidget.h"
 
-PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+PhoneEditWidget::PhoneEditWidget( bool readOnly, QWidget *parent, const char *name )
+  : QWidget( parent, name ), mReadOnly( readOnly )
 {
   QGridLayout *layout = new QGridLayout( this, 5, 2 );
   layout->setSpacing( KDialog::spacingHint() );
 
   mPrefCombo = new PhoneTypeCombo( mPhoneList, this );
   mPrefEdit = new KLineEdit( this );
+  mPrefEdit->setReadOnly( mReadOnly );
   mPrefEdit->setMinimumWidth( int(mPrefEdit->sizeHint().width() * 1.5) );
   mPrefCombo->setLineEdit( mPrefEdit );
   layout->addWidget( mPrefCombo, 0, 0 );
@@ -62,18 +63,21 @@ PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
 
   mSecondCombo = new PhoneTypeCombo( mPhoneList, this );
   mSecondEdit = new KLineEdit( this );
+  mSecondEdit->setReadOnly( mReadOnly );
   mSecondCombo->setLineEdit( mSecondEdit );
   layout->addWidget( mSecondCombo, 1, 0 );
   layout->addWidget( mSecondEdit, 1, 1 );
 
   mThirdCombo = new PhoneTypeCombo( mPhoneList, this );
   mThirdEdit = new KLineEdit( this );
+  mThirdEdit->setReadOnly( mReadOnly );
   mThirdCombo->setLineEdit( mThirdEdit );
   layout->addWidget( mThirdCombo, 2, 0 );
   layout->addWidget( mThirdEdit, 2, 1 );
 
   mFourthCombo = new PhoneTypeCombo( mPhoneList, this );
   mFourthEdit = new KLineEdit( this );
+  mFourthEdit->setReadOnly( mReadOnly );
   mFourthCombo->setLineEdit( mFourthEdit );
   layout->addWidget( mFourthCombo, 3, 0 );
   layout->addWidget( mFourthEdit, 3, 1 );
@@ -84,6 +88,7 @@ PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
 
   QPushButton *editButton = new QPushButton( i18n( "Edit Phone Numbers..." ),
                                              this );
+  editButton->setEnabled( !mReadOnly );
   layout->addMultiCellWidget( editButton, 4, 4, 0, 1 );
 
   connect( mPrefEdit, SIGNAL( textChanged( const QString& ) ),
@@ -264,7 +269,8 @@ void PhoneEditWidget::updatePhoneNumber( PhoneTypeCombo *combo )
   updateOtherEdit( combo, mThirdCombo );
   updateOtherEdit( combo, mFourthCombo );
 
-  emit modified();
+  if ( !mReadOnly )
+    emit modified();
 }
 
 void PhoneEditWidget::updateOtherEdit( PhoneTypeCombo *combo, PhoneTypeCombo *otherCombo )

@@ -53,7 +53,8 @@
 #include "addresseditwidget.h"
 
 
-AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
+AddressEditWidget::AddressEditWidget( bool readOnly,
+                                      QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
   QBoxLayout *layout = new QVBoxLayout( this, 4, 2 );
@@ -71,8 +72,12 @@ AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
 
   QPushButton *editButton = new QPushButton( i18n( "&Edit Addresses..." ),
                                              this );
+  editButton->setEnabled( !readOnly );
   connect( editButton, SIGNAL( clicked() ), SLOT( edit() ) );
-  connect( mAddressTextEdit, SIGNAL( clicked( int, int ) ), SLOT( edit() ) );
+
+  if ( !readOnly )
+    connect( mAddressTextEdit, SIGNAL( clicked( int, int ) ), SLOT( edit() ) );
+
   layout->addWidget( editButton );
 }
 

@@ -37,8 +37,8 @@
 
 #include "soundwidget.h"
 
-SoundWidget::SoundWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+SoundWidget::SoundWidget( bool readOnly, QWidget *parent, const char *name )
+  : QWidget( parent, name ), mReadOnly( readOnly )
 {
   QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(),
                                             KDialog::spacingHint() );
@@ -48,6 +48,7 @@ SoundWidget::SoundWidget( QWidget *parent, const char *name )
   topLayout->addWidget( mPlayButton, 0, 0 );
 
   mSoundUrl = new KURLRequester( this );
+  mSoundUrl->setEnabled( !mReadOnly );
   topLayout->addWidget( mSoundUrl, 0, 1 );
   
   mUseSoundUrl = new QCheckBox( i18n( "Store as URL" ), this );
@@ -146,7 +147,8 @@ void SoundWidget::loadSound()
 
 void SoundWidget::updateGUI()
 {
-  mUseSoundUrl->setEnabled( true );  
+  if ( !mReadOnly )
+    mUseSoundUrl->setEnabled( true );  
   mPlayButton->setEnabled( true );
 }
 

@@ -44,7 +44,7 @@ class PhoneEditWidget : public QWidget
   Q_OBJECT
 
   public:
-    PhoneEditWidget( QWidget *parent, const char *name = 0 );
+    PhoneEditWidget( bool readOnly, QWidget *parent, const char *name = 0 );
     ~PhoneEditWidget();
     
     void setPhoneNumbers( const KABC::PhoneNumber::List &list );
@@ -89,6 +89,7 @@ class PhoneEditWidget : public QWidget
     KLineEdit *mFourthEdit;
 
     KABC::PhoneNumber::List mPhoneList;
+    bool mReadOnly;
 };
   
 /**

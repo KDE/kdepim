@@ -53,7 +53,7 @@ class AddressEditWidget : public QWidget
   Q_OBJECT
 
   public:
-    AddressEditWidget( QWidget *parent, const char *name = 0 );
+    AddressEditWidget( bool readOnly, QWidget *parent, const char *name = 0 );
     ~AddressEditWidget();
 
     KABC::Address::List addresses();

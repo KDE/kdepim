@@ -38,7 +38,7 @@ class SoundWidget : public QWidget
   Q_OBJECT
 
   public:
-    SoundWidget( QWidget *parent, const char *name = 0 );
+    SoundWidget( bool readOnly, QWidget *parent, const char *name = 0 );
     ~SoundWidget();
 
     /**
@@ -66,6 +66,7 @@ class SoundWidget : public QWidget
     QPushButton *mPlayButton;
 
     KABC::Sound mSound;
+    bool mReadOnly;
 };
 
 #endif
