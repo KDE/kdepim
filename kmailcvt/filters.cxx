@@ -291,15 +291,7 @@ int kmail::dcopAddMessage(QString folderName,QString fileName)
    DCOPClient *c=kapp->dcopClient();
    res=c->call(kmApp,kmIface,kmFunc,kmData,type,kmRes);
    if (!res) { 
-     /*c->detach();
-     if (!fork()) {
-        if (execlp("kmail","kmail",NULL)==-1) {
-          exit(0);
-        }
-     }
-     c->attach();*/
-     KRun::runCommand("kmail");
-     sleep(5); // FIXME: nasty hack!
+     KApplication::startServiceByDesktopName("kmail", QString::null); // Will wait until kmail is started
      res=c->call(kmApp,kmIface,kmFunc,kmData,type,kmRes);
      if (!res) { return -3; }
    }
