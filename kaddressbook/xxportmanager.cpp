@@ -28,6 +28,7 @@
 #include <ktrader.h>
 
 #include "undocmds.h"
+#include "xxportselectdialog.h"
 
 #include "xxportmanager.h"
 
@@ -87,16 +88,12 @@ void XXPortManager::slotExport( const QString &identifier, const QString &data )
     return;
   }
 
-  QStringList list = mCore->selectedUIDs();
   KABC::AddresseeList addrList;
-  KABC::AddressBook::Iterator it;
-  for ( it = mCore->addressBook()->begin(); it != mCore->addressBook()->end(); ++it ) {
-    if ( list.count() != 0 ) {
-      if ( list.contains( (*it).uid() ) )
-        addrList.append( *it );
-    } else
-      addrList.append( *it );
-  }
+  XXPortSelectDialog dlg( mCore, mCore );
+  if ( dlg.exec() )
+    addrList = dlg.contacts();
+  else
+    return;
 
   if ( !obj->exportContacts( addrList, data ) )
     KMessageBox::error( mCore, i18n( "Unable to export contacts." ) );
