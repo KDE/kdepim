@@ -150,6 +150,18 @@ void *PilotDateEntry::pack(void *buf, int *len)
 	return buf;
 }
 
+/* setExceptions sets a new set of exceptions. Note that 
+	PilotDateEntry assumes ownership of the array and will
+	delete the old one. */
+void PilotDateEntry::setExceptions(struct tm *e) {
+	if (fAppointmentInfo.exception != e)
+	{
+		KPILOT_FREE(fAppointmentInfo.exception);
+	}
+	fAppointmentInfo.exception=e;
+}
+
+
 void PilotDateEntry::setDescription(const char *desc)
 {
 	FUNCTIONSETUP;
@@ -209,6 +221,9 @@ void PilotDateEntry::setNote(const char *note)
 
 
 // $Log$
+// Revision 1.3  2002/04/14 22:19:31  kainhofe
+// Added checks for ==NULL in the constructor
+//
 // Revision 1.2  2001/12/28 12:55:24  adridg
 // Fixed email addresses; added isBackup() to interface
 //

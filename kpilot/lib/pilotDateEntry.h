@@ -77,16 +77,16 @@ public:
   struct tm getEventEnd() const { return fAppointmentInfo.end; }
   const struct tm *getEventEnd_p() const { return &fAppointmentInfo.end; }
   void setEventEnd(struct tm& end) { fAppointmentInfo.end = end; }
-  
+
   int getAlarm() const { return fAppointmentInfo.alarm; }
   void setAlarm(int alarm) { fAppointmentInfo.alarm = alarm; }
   
   int getAdvance() const { return fAppointmentInfo.advance; }
   void setAdvance(int advance) { fAppointmentInfo.advance = advance; }
-  
+
   int getAdvanceUnits() const { return fAppointmentInfo.advanceUnits; }
   void setAdvanceUnits(int units) { fAppointmentInfo.advanceUnits = units; }
-  
+
   // The following need set routines written
   repeatTypes getRepeatType() const { return fAppointmentInfo.repeatType; }
   void setRepeatType(repeatTypes r) { fAppointmentInfo.repeatType = r; }
@@ -117,7 +117,7 @@ public:
   void setExceptionCount(int e) { fAppointmentInfo.exceptions = e; }
 
   const struct tm *getExceptions() const { return fAppointmentInfo.exception; }
-  void setExceptions(struct tm *e) { fAppointmentInfo.exception = e; }
+  void setExceptions(struct tm *e);
 
   void  setDescription(const char* desc);
   const char* getDescription() const { return fAppointmentInfo.description; }
@@ -129,11 +129,11 @@ public:
     return ((fAppointmentInfo.repeatType == repeatDaily) &&
             fAppointmentInfo.event);
   }
-  
+
 protected:
   void *pack(void *, int *);
   void unpack(const void *, int = 0) { }
-  
+
 private:
   struct Appointment fAppointmentInfo;
 
@@ -151,6 +151,9 @@ private:
 
 
 // $Log$
+// Revision 1.3  2002/01/21 23:14:03  adridg
+// Old code removed; extra abstractions added; utility extended
+//
 // Revision 1.2  2001/12/28 12:55:24  adridg
 // Fixed email addresses; added isBackup() to interface
 //
