@@ -1,1 +1,3 @@
 #MIN_CONFIG
+dnl Kaplan is not yet ready. Make sure it doesn't hit a release yet...
+DO_NOT_COMPILE="$DO_NOT_COMPILE kaplan"
