@@ -4,7 +4,7 @@
 #include <kabc/addressee.h>
 #include "printstyle.h"
 // this is bad style, but we do not have another common library by now:
-#include "../kab_printmethods.h"
+#include "../kabentrypainter.h"
 
 namespace KABPrinting {
 
