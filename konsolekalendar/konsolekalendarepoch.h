@@ -30,7 +30,20 @@ class KonsoleKalendarEpoch
     KonsoleKalendarEpoch();
     ~KonsoleKalendarEpoch();
 
+  /**
+   * Converts epoxh time to QT DateTime format
+   *
+   * @param epoch epoch time
+   */
+  
   static QDateTime epoch2QDateTime( uint epoch );
+
+  /**
+   * Converts QT DateTime to epoch format
+   *
+   * @param epoch epoch time
+   */
+  
   static uint QDateTime2epoch( QDateTime dt );
 
 };

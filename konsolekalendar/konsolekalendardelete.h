@@ -33,10 +33,19 @@ class KonsoleKalendarDelete
     KonsoleKalendarDelete( KonsoleKalendarVariables *variables );
     ~KonsoleKalendarDelete();
 
+   /**
+    * Delete event
+    */
+
     bool deleteEvent();
 
-    private:
-     KonsoleKalendarVariables *m_variables;
+  private:
+
+   /**
+    * What we need to delete
+    */
+   
+    KonsoleKalendarVariables *m_variables;
 };
 
 }

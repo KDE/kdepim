@@ -33,9 +33,18 @@ class KonsoleKalendarChange
     KonsoleKalendarChange( KonsoleKalendarVariables *variables );
     ~KonsoleKalendarChange();
 
+   /**
+    * Changes some event
+    */
+
     bool changeEvent();
 
-    private:
+ private:
+
+   /**
+    * Variables are here
+    */
+
      KonsoleKalendarVariables *m_variables;
 };
 

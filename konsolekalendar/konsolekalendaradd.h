@@ -29,12 +29,25 @@ public:
     KonsoleKalendarAdd( KonsoleKalendarVariables *variables );
     ~KonsoleKalendarAdd();
 
+  /**
+   * Adds one event
+   */
+
    bool addEvent();
+
+   /**
+    * Imports calendar file to Current calendar
+    */
 
    bool addImportedCalendar();
 
 
 private:
+
+   /**
+    * Variable to how to make it
+    */
+
    KonsoleKalendarVariables *m_variables;
    
 };
