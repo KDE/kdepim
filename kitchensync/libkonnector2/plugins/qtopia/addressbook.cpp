@@ -84,9 +84,22 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName, ExtraMap&
 			adr.insertPhoneNumber( businessFaxNum );
 			adr.insertPhoneNumber( businessMobile );
 			adr.insertPhoneNumber( businessPager  );
-                        QString email = el.attribute("Emails");
-                        if (!email.isEmpty() )
-                            adr.insertEmail( email, true ); // prefered
+
+			// Handle multiple mail addresses
+                        QString DefaultEmail = el.attribute("DefaultEmail");
+                        if ( !DefaultEmail.isEmpty() )
+                            adr.insertEmail( DefaultEmail, true ); // prefered
+                        QString Emails = el.attribute("Emails");
+			int emailCount = 1;
+			QString Email = Emails.section( ' ', 1, 1, QString::SectionSkipEmpty);
+			while ( !Email.isEmpty() ) {
+			    // Handle all the secondary emails ...
+                            if (Email != DefaultEmail)
+                                adr.insertEmail( Email, false );
+			    emailCount++;
+			    Email = Emails.section( ' ', emailCount, emailCount, QString::SectionSkipEmpty);
+			}
+
 
 			KABC::PhoneNumber homePhoneNum( el.attribute("HomePhone"),
 							KABC::PhoneNumber::Home );
@@ -202,10 +215,16 @@ KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee, ExtraMap& map
 
             KABC::PhoneNumber businessMobile = ab.phoneNumber(KABC::PhoneNumber::Work | KABC::PhoneNumber::Cell );
             *stream << "BusinessMobile=\"" << escape( businessMobile.number() ) << "\" ";
+
             *stream << "DefaultEmail=\"" << escape( ab.preferredEmail() ) << "\" ";
             QStringList list = ab.emails();
-            if ( list.count() > 0 )
-                *stream << "Emails=\"" << escape( list[0] ) << "\" ";
+            if ( list.count() > 0 ) {
+		QStringList::Iterator it = list.begin();
+                *stream << "Emails=\"" << escape( *it );
+		while (++it != list.end())
+		  *stream << ' ' << escape( *it );
+                *stream << "\" ";
+	    }
 
             KABC::PhoneNumber homePhoneNum = ab.phoneNumber(KABC::PhoneNumber::Home );
             *stream << "HomePhone=\"" << escape( homePhoneNum.number() ) << "\" ";
