@@ -223,7 +223,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 
 			fLogWidget->addMessage(
 				i18n("Daemon status is `%1'")
-				.arg(s));
+				.arg(s.isEmpty() ? i18n("not running") : s ));
 		}
 		fAppStatus=Normal;
 	}
