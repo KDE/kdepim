@@ -785,7 +785,7 @@ Journal *CalendarLocal::journal(const QString &uid)
   return 0;
 }
 
-QPtrList<Journal> CalendarLocal::journalList()
+QPtrList<Journal> CalendarLocal::journals()
 {
   QPtrList<Journal> list;
 

@@ -235,7 +235,7 @@ class Calendar {
     /**
       Return list of all Journal entries.
     */
-    virtual QPtrList<Journal> journalList() = 0;
+    virtual QPtrList<Journal> journals() = 0;
 
     /**
       Add an incidence to calendar.

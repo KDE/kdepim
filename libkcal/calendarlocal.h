@@ -95,7 +95,7 @@ class CalendarLocal : public Calendar, public IncidenceBase::Observer
     /** Return Journal with given UID */
     virtual Journal *journal(const QString &UID);
     /** Return list of all Journals stored in calendar */
-    QPtrList<Journal> journalList();
+    QPtrList<Journal> journals();
 
     /** Return all alarms, which ocur in the given time interval. */
     Alarm::List alarms( const QDateTime &from, const QDateTime &to );

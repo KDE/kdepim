@@ -34,14 +34,14 @@
 
 using namespace KCal;
 
-/** \internal */
 class AddIncidenceVisitor : public Incidence::Visitor {
   public:
     /** Add incidence to calendar \a calendar. */
-    AddIncidenceVisitor(Calendar *calendar) : mCalendar(calendar) {}
+    AddIncidenceVisitor( Calendar *calendar ) : mCalendar( calendar ) {}
     
-    bool visit(Event *e) { mCalendar->addEvent(e); return true; }
-    bool visit(Todo *t) { mCalendar->addTodo(t); return true; }
+    bool visit( Event *e ) { mCalendar->addEvent( e ); return true; }
+    bool visit( Todo *t ) { mCalendar->addTodo( t ); return true; }
+    bool visit( Journal *j ) { mCalendar->addJournal( j ); return true; }
 
   private:
     Calendar *mCalendar;
@@ -49,12 +49,12 @@ class AddIncidenceVisitor : public Incidence::Visitor {
 
 Calendar::Calendar()
 {
-  mTimeZoneId = QString::fromLatin1("UTC");
+  mTimeZoneId = QString::fromLatin1( "UTC" );
 
   init();
 }
 
-Calendar::Calendar(const QString &timeZoneId)
+Calendar::Calendar( const QString &timeZoneId )
 {
   mTimeZoneId = timeZoneId;
   

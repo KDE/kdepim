@@ -170,7 +170,7 @@ QString ICalFormat::toString( Calendar *cal )
   }
 
   // journals
-  QPtrList<Journal> journals = cal->journalList();
+  QPtrList<Journal> journals = cal->journals();
   Journal *j;
   for(j=journals.first();j;j=journals.next()) {
     component = mImpl->writeJournal(j);
