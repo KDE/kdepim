@@ -30,9 +30,6 @@
 static const char *pilotdaemon_id =
 	"$Id$";
 
-// Heck yeah.
-#define ENABLE_KROUPWARE
-
 #include "options.h"
 
 #include <stdlib.h>
@@ -69,10 +66,6 @@ static const char *pilotdaemon_id =
 #include "logFile.h"
 
 #include "kpilotConfig.h"
-
-#ifdef ENABLE_KROUPWARE
-#include "kroupware.h"
-#endif
 
 
 #include "kpilotDCOP_stub.h"
@@ -757,10 +750,6 @@ static void fillConduitNameMap()
 		conduitNameMap->insert( CSL1("internal_fileinstall"),
 		                        new QString(i18n("File Installer")) );
 	}
-	if ( l.find( CSL1("internal_kroupware") ) != l.end() ) {
-		conduitNameMap->insert( CSL1("internal_kroupware"),
-		                        new QString(i18n("Kroupware")) );
-	}
 
 	QStringList::ConstIterator end = l.end();
 	for (QStringList::ConstIterator i = l.begin(); i != end; ++i)
@@ -942,55 +931,6 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 	return true;
 }
 
-static int checkKroupware(ActionQueue *fSyncStack,
-	KPilotDeviceLink *pilotLink,
-	const QStringList &conduits,
-	QString &errreturn,
-	bool &syncWithKMail)
-{
-	FUNCTIONSETUP;
-	int _kroupwareParts = 0;
-#ifdef ENABLE_KROUPWARE
-
-	syncWithKMail =  (conduits.findIndex( CSL1("internal_kroupware") ) >= 0) ;
-	if (!syncWithKMail) return 0;
-
-	QString errmsg;
-	if (!KroupwareSync::startKMail(&errmsg))
-	{
-		errreturn = i18n("Could not start KMail. The "
-			"error message was: %1.").arg(errmsg);
-	}
-
-	if (conduits.findIndex( CSL1("vcal-conduit") ) >= 0 )
-		_kroupwareParts |= KroupwareSync::Cal ;
-	if (conduits.findIndex( CSL1("todo-conduit") ) >= 0 )
-		_kroupwareParts |= KroupwareSync::Todo ;
-	if (conduits.findIndex( CSL1("knotes-conduit") ) >= 0 )
-		_kroupwareParts |= KroupwareSync::Notes ;
-	if (conduits.findIndex( CSL1("abbrowser_conduit") ) >= 0 )
-		_kroupwareParts |= KroupwareSync::Address ;
-
-	fSyncStack->addAction(new KroupwareSync(true /* pre-sync */,
-		_kroupwareParts,pilotLink));
-#endif
-	return _kroupwareParts;
-}
-
-static void finishKroupware(ActionQueue *fSyncStack,
-	KPilotDeviceLink *pilotLink,
-	int kroupwareParts,
-	bool syncWithKMail)
-{
-#ifdef ENABLE_KROUPWARE
-	if (syncWithKMail)
-	{
-		fSyncStack->addAction(new KroupwareSync(false /* post-sync */ ,
-			kroupwareParts,pilotLink));
-	}
-#endif
-}
-
 static void queueInstaller(ActionQueue *fSyncStack,
 	FileInstaller *fInstaller,
 	const QStringList &c)
@@ -1028,8 +968,6 @@ static void queueConduits(ActionQueue *fSyncStack,
 
 	bool pcchanged=false; // If last PC to sync was a different one (implies full sync, normally)
 	QStringList conduits ; // list of conduits to run
-	bool syncWithKMail = false; // if kroupware sync is enabled
-	int _kroupwareParts = 0; // which parts to sync
 	QString s; // a generic string for stuff
 	KPilotUser *usr = 0L; // Pointer to user data on Pilot
 
@@ -1074,11 +1012,6 @@ static void queueConduits(ActionQueue *fSyncStack,
 	// Normal case: regular sync.
 	fSyncStack->queueInit(true);
 
-
-	// Add kroupware to the mix, if needed.
-	_kroupwareParts = checkKroupware(fSyncStack,pilotLink,conduits,s,syncWithKMail);
-	if (syncWithKMail) logMessage( i18n("Kroupware syncing is enabled.") );
-	if (!s.isEmpty()) logError(s);
 
 	conduits = KPilotSettings::installedConduits() ;
 
@@ -1137,8 +1070,6 @@ static void queueConduits(ActionQueue *fSyncStack,
 		break;
 #endif
 	}
-
-	finishKroupware(fSyncStack,pilotLink,_kroupwareParts,syncWithKMail);
 
 
 // Jump here to finalize the connections to the sync action
