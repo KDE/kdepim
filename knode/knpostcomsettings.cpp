@@ -55,7 +55,7 @@ KNPostComSettings::KNPostComSettings(QWidget *p) : KNSettingsWidget(p)
 
   QGroupBox *replyB=new QGroupBox(i18n("Reply"), this);
   topL->addWidget(replyB);
-  QGridLayout *replyL=new QGridLayout(replyB, 7,2, 8,5);
+  QGridLayout *replyL=new QGridLayout(replyB, 6,2, 8,5);
 
   replyL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
@@ -63,10 +63,6 @@ KNPostComSettings::KNPostComSettings(QWidget *p) : KNSettingsWidget(p)
   intro=new QLineEdit(replyB);
   replyL->addMultiCellWidget(intro, 2,2,0,1);
   replyL->addMultiCellWidget(new QLabel(i18n("Placeholders: %NAME=name, %EMAIL=email address,\n%DATE=date, %MSID=msgid"), replyB),3,3,0,1);
-
-  replyL->addWidget(new QLabel(i18n("begin quoted lines with"), replyB),4,0);
-  quot=new QLineEdit(replyB);
-  replyL->addWidget(quot,4,1);
 
   rewarpCB=new QCheckBox(i18n("rewarp quoted text automatically"), replyB);
   replyL->addMultiCellWidget(rewarpCB, 5,5,0,1);
@@ -132,7 +128,6 @@ void KNPostComSettings::init()
   rewarpCB->setChecked(conf->readBoolEntry("rewarp",true));
   ownSigCB->setChecked(conf->readBoolEntry("appSig",true));
   intro->setText(conf->readEntry("Intro","%NAME wrote:"));
-  quot->setText(conf->readEntry("QuotSign",">"));
   authSigCB->setChecked(conf->readBoolEntry("incSig",false));
   editor->setText(conf->readEntry("externalEditor","kwrite %f"));
   externCB->setChecked(conf->readBoolEntry("useExternalEditor",false));
@@ -149,7 +144,6 @@ void KNPostComSettings::apply()
   conf->writeEntry("rewarp",rewarpCB->isChecked());
   conf->writeEntry("appSig", ownSigCB->isChecked());
   conf->writeEntry("Intro", intro->text());
-  conf->writeEntry("QuotSign",quot->text());
   conf->writeEntry("incSig", authSigCB->isChecked());
   conf->writeEntry("externalEditor",editor->text());
   conf->writeEntry("useExternalEditor",externCB->isChecked());

@@ -149,7 +149,7 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
   frame = addHBoxPage(i18n("Cleanup"),i18n("Preserving disk space"), BarIcon("arrow_right"));
   widgets.append(new KNCleanupSettings(frame));
 
-  restoreWindowSize("settingsDlg", this, QSize(496,451));
+  restoreWindowSize("settingsDlg", this, QSize(508,424));
 }
 
 

@@ -92,12 +92,18 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
     bool cancelAllowed(KNFetchArticle *a, KNGroup *g);
     bool generateCancel(KNArticle *a, KNNntpAccount *acc);
     bool generateSupersede(KNArticle *a, KNNntpAccount *acc);
+
+    //part of the rewarp procedure...
+    int findBreakPos(const QString &text, int start);
+    void appendTextWPrefix(KNArticle *a, const QString &text, const QString &prefix);
         
     KNSavedArticle *c_urrentArticle;
     KNFolder *f_older, *fDrafts, *fOutbox, *fSent;
     KNUserEntry *defaultUser;
-    bool incSig, genMId;
-    QCString MIdhost, intro, quotSign;
+    int warpAt;
+    bool rewarp, incSig, genMId;
+    QCString MIdhost, intro;
+    QString quotSign;
     KNSendErrorDialog *sedlg;
     KNSearchDialog *sDlg;
     //KNArticleFilter *f_ilter;

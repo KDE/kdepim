@@ -93,8 +93,10 @@ void KNSavedArticleManager::readConfig()
   conf->setGroup("IDENTITY");
   defaultUser->load(conf);
   conf->setGroup("POSTNEWS");
-  incSig=conf->readBoolEntry("incSig",true);
-  quotSign=conf->readEntry("QuotSign",">").local8Bit();
+  warpAt = conf->readNumEntry("maxLength", 76);
+  rewarp = conf->readBoolEntry("rewarp",true);
+  incSig=conf->readBoolEntry("incSig",false);
+  quotSign=conf->readEntry("QuotSign",">");
   intro=conf->readEntry("Intro", "%NAME wrote:").local8Bit();
   KCharsets *c = KGlobal::charsets();
   KNArticleBase::setDefaultCharset(conf->readEntry("Charset",c->name(c->charsetForLocale())).upper().local8Bit());
@@ -225,6 +227,41 @@ void KNSavedArticleManager::post(KNGroup *g)
 
 
 
+//part of the rewarp procedure...
+int KNSavedArticleManager::findBreakPos(const QString &text, int start)
+{
+  int i;
+  for (i=start;i>=0;i--)
+    if (text[i].isSpace())
+      break;
+  if (i>0)
+    return i;
+  for (i=start;i<(int)text.length();i++)   // ok, the line is to long
+    if (text[i].isSpace())
+      break;
+  return i;
+}
+
+
+
+//part of the rewarp procedure...
+void KNSavedArticleManager::appendTextWPrefix(KNArticle *a, const QString &text, const QString &prefix)
+{
+  QString txt = text;
+  while (!txt.isEmpty()) {
+    if ((int)(prefix.length()+txt.length()) > warpAt) {
+      int breakPos=findBreakPos(txt,warpAt-prefix.length());
+      a->addBodyLine((prefix+txt.left(breakPos)).local8Bit());
+      txt.remove(0,breakPos+1);
+    } else {
+      a->addBodyLine((prefix+txt).local8Bit());
+      txt = QString::null;
+    }
+  }
+}
+
+
+
 void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
 {
   QCString tmp, refs, introStr;
@@ -277,14 +314,54 @@ void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
 
   art->addBodyLine(introStr);
   art->addBodyLine("");
+
   text=a->textContent();
   if(!text->mimeInfo()->isReadable()) text->decodeText();
-  for(char *line=text->firstBodyLine(); line; line=text->nextBodyLine()) {
-    if(!incSig && strncmp("-- ", line, 3)==0) break;
-    tmp=quotSign+" ";
-    tmp+=line;
-    art->addBodyLine(tmp);
+
+  // semi-intelligent rewarping...
+  if (rewarp) {
+    QString lastPrefix,thisPrefix,leftover,thisLine;   // we have to be unicode clean after 2.0 anyway
+
+    for(char *line=text->firstBodyLine(); line; line=text->nextBodyLine()) {
+      if(!incSig && strncmp("-- ", line, 3)==0) break;
+
+      thisPrefix = QString::null;
+      for (;*line;line++)
+        if ((*line=='>')||(*line=='|')||(*line==' ')||(*line==':')||(*line=='#')||(*line=='['))
+          thisPrefix.append(*line);
+        else break;
+
+      thisLine = QString(line).stripWhiteSpace();
+
+      if (!leftover.isEmpty()) {   // don't break paragraphs, tables and quote levels
+        if (thisLine.isEmpty() || (thisPrefix!=lastPrefix) || thisLine.contains("  ") || thisLine.contains('\t'))
+          appendTextWPrefix(art,leftover,"> "+lastPrefix);
+        else
+          thisLine.prepend(leftover+" ");
+        leftover = QString::null;
+      }
+
+      if ((int)(thisPrefix.length()+thisLine.length()) > warpAt-2) {
+        int breakPos=findBreakPos(thisLine,warpAt-thisPrefix.length()-2);
+        leftover = thisLine.right(thisLine.length()-breakPos-1);
+        thisLine.truncate(breakPos);
+      }
+
+      art->addBodyLine(("> "+thisPrefix+thisLine).local8Bit());
+
+      lastPrefix = thisPrefix;
+    }
+    if (!leftover.isEmpty())
+      appendTextWPrefix(art,leftover,"> "+lastPrefix);
+  } else {
+    for(char *line=text->firstBodyLine(); line; line=text->nextBodyLine()) {
+      if(!incSig && strncmp("-- ", line, 3)==0) break;
+      tmp="> ";
+      tmp+=line;
+      art->addBodyLine(tmp);
+    }
   }
+
   art->addBodyLine("");
   openInComposer(art,true);
 }
