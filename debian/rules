@@ -25,6 +25,7 @@ build-stamp:
 	if test ! -f configure; then \
 	  $(MAKE) -f admin/Makefile.common ;\
 	fi
+	-chmod 755 configure
 	$(COMPILER_FLAGS) \
 	./configure $(configkdepim)
 	$(MAKE)
@@ -35,6 +36,7 @@ clean: debian-clean
 
 debian-clean:
 	dh_testdir
+	-rm -f debian/libical* debian/debiandirs
 	#if test -d CVS; then \
 	#  $(MAKE) -f admin/Makefile.common cvs-clean ;\
 	#fi
