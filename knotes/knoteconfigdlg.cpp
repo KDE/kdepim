@@ -47,7 +47,6 @@ KNoteConfigDlg::KNoteConfigDlg( KNoteConfig *config, const QString& title,
 
     setIconListAllVisible( true );
 
-    config->readConfig();
     config->setVersion( KNOTES_VERSION );
 
     makeDisplayPage( defaults );
