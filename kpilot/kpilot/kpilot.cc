@@ -604,7 +604,7 @@ void KPilotInstaller::initMenu()
 		"should restore the Handheld from data on the PC."));
 	syncPopup->insert(a);
 
-	a = new KAction(i18n("&List only"),CSL1("list"),0,
+	a = new KAction(i18n("&List Only"),CSL1("list"),0,
 		this,SLOT(slotListSyncRequested()),
 		actionCollection(), "file_list");
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "

@@ -100,7 +100,7 @@ GNOKIIXXPort::GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *
 	this_filter = this;
 	m_progressDlg = NULL;
 	createImportAction( i18n( "Import From Nokia Mobile Phone..." ) );
-	createExportAction( i18n( "Export To Nokia Mobile Phone..." ) );
+	createExportAction( i18n( "Export to Nokia Mobile Phone..." ) );
 }
 
 /* import */
