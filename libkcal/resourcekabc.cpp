@@ -333,8 +333,9 @@ bool ResourceKABC::addEvent(Event*)
   return false;
 }
 
-void ResourceKABC::deleteEvent(Event*)
+bool ResourceKABC::deleteEvent(Event*)
 {
+  return false;
 }
 
 
@@ -343,11 +344,12 @@ Event *ResourceKABC::event( const QString &uid )
   return mCalendar.event( uid );
 }
 
-Event::List ResourceKABC::rawEventsForDate(const QDate &qd, bool sorted)
+Event::List ResourceKABC::rawEventsForDate( const QDate &date,
+                                             EventSortField sortField,
+                                             SortDirection sortDirection )
 {
-  return mCalendar.rawEventsForDate( qd, sorted );
+  return mCalendar.rawEventsForDate( date, sortField, sortDirection );
 }
-
 
 Event::List ResourceKABC::rawEvents( const QDate &start, const QDate &end,
                                           bool inclusive )
@@ -370,8 +372,9 @@ bool ResourceKABC::addTodo(Todo*)
   return false;
 }
 
-void ResourceKABC::deleteTodo(Todo*)
+bool ResourceKABC::deleteTodo(Todo*)
 {
+  return false;
 }
 
 
@@ -396,8 +399,9 @@ bool ResourceKABC::addJournal(Journal*)
   return false;
 }
 
-void ResourceKABC::deleteJournal(Journal*)
+bool ResourceKABC::deleteJournal(Journal*)
 {
+  return false;
 }
 
 Journal *ResourceKABC::journal(const QString &uid)

@@ -20,7 +20,14 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+/**
+   @file calendar.cpp
+   Provides the main "calendar" object class.
 
+   @author Preston Brown
+   @author Cornelius Schumacher
+   @author Reinhold Kainhofer
+*/
 #include <stdlib.h>
 
 #include <kdebug.h>
@@ -59,51 +66,10 @@ void Calendar::init()
   // Setup default filter, which does nothing
   mDefaultFilter = new CalFilter;
   mFilter = mDefaultFilter;
-  mFilter->setEnabled(false);
-
-  // initialize random numbers.  This is a hack, and not
-  // even that good of one at that.
-//  srandom(time(0));
+  mFilter->setEnabled( false );
 
   // user information...
-  setOwner( Person( i18n("Unknown Name"), i18n("unknown@nowhere") ) );
-
-#if 0
-  tmpStr = KOPrefs::instance()->mTimeZone;
-//  kdDebug(5800) << "Calendar::Calendar(): TimeZone: " << tmpStr << endl;
-  int dstSetting = KOPrefs::instance()->mDaylightSavings;
-  extern long int timezone;
-  struct tm *now;
-  time_t curtime;
-  curtime = time(0);
-  now = localtime(&curtime);
-  int hourOff = - ((timezone / 60) / 60);
-  if (now->tm_isdst)
-    hourOff += 1;
-  QString tzStr;
-  tzStr.sprintf("%.2d%.2d",
-		hourOff,
-		abs((timezone / 60) % 60));
-
-  // if no time zone was in the config file, write what we just discovered.
-  if (tmpStr.isEmpty()) {
-//    KOPrefs::instance()->mTimeZone = tzStr;
-  } else {
-    tzStr = tmpStr;
-  }
-
-  // if daylight savings has changed since last load time, we need
-  // to rewrite these settings to the config file.
-  if ((now->tm_isdst && !dstSetting) ||
-      (!now->tm_isdst && dstSetting)) {
-    KOPrefs::instance()->mTimeZone = tzStr;
-    KOPrefs::instance()->mDaylightSavings = now->tm_isdst;
-  }
-
-  setTimeZone(tzStr);
-#endif
-
-//  KOPrefs::instance()->writeConfig();
+  setOwner( Person( i18n( "Unknown Name" ), i18n( "unknown@nowhere" ) ) );
 }
 
 Calendar::~Calendar()
@@ -123,13 +89,13 @@ void Calendar::setOwner( const Person &owner )
   setModified( true );
 }
 
-void Calendar::setTimeZoneId(const QString &id)
+void Calendar::setTimeZoneId( const QString &timeZoneId )
 {
-  mTimeZoneId = id;
+  mTimeZoneId = timeZoneId;
   mLocalTime = false;
 
   setModified( true );
-  doSetTimeZoneId( id );
+  doSetTimeZoneId( timeZoneId );
 }
 
 QString Calendar::timeZoneId() const
@@ -140,7 +106,6 @@ QString Calendar::timeZoneId() const
 void Calendar::setLocalTime()
 {
   mLocalTime = true;
-  mTimeZone = 0;
   mTimeZoneId = "";
 
   setModified( true );
@@ -151,7 +116,7 @@ bool Calendar::isLocalTime() const
   return mLocalTime;
 }
 
-void Calendar::setFilter(CalFilter *filter)
+void Calendar::setFilter( CalFilter *filter )
 {
   if ( filter ) {
     mFilter = filter;
@@ -169,11 +134,13 @@ QStringList Calendar::incidenceCategories()
 {
   Incidence::List rawInc( rawIncidences() );
   QStringList categories, thisCats;
-  // TODO: For now just iterate over all incidences. In the future,
+  // @TODO: For now just iterate over all incidences. In the future,
   // the list of categories should be built when reading the file.
-  for ( Incidence::List::ConstIterator i = rawInc.constBegin(); i != rawInc.constEnd(); ++i ) {
+  for ( Incidence::List::ConstIterator i = rawInc.constBegin();
+        i != rawInc.constEnd(); ++i ) {
     thisCats = (*i)->categories();
-    for ( QStringList::ConstIterator si = thisCats.constBegin(); si != thisCats.constEnd(); ++si ) {
+    for ( QStringList::ConstIterator si = thisCats.constBegin();
+          si != thisCats.constEnd(); ++si ) {
       if ( categories.find( *si ) == categories.end() ) {
         categories.append( *si );
       }
@@ -182,9 +149,9 @@ QStringList Calendar::incidenceCategories()
   return categories;
 }
 
-Incidence::List Calendar::incidences( const QDate &qdt )
+Incidence::List Calendar::incidences( const QDate &date )
 {
-  return mergeIncidenceList( events( qdt ), todos( qdt ), journals( qdt ) );
+  return mergeIncidenceList( events( date ), todos( date ), journals( date ) );
 }
 
 Incidence::List Calendar::incidences()
@@ -199,8 +166,8 @@ Incidence::List Calendar::rawIncidences()
 
 Event::List Calendar::sortEvents( Event::List *eventList,
                                   EventSortField sortField,
-                                  SortDirection sortDirection ) {
-
+                                  SortDirection sortDirection )
+{
   Event::List eventListSorted;
   Event::List tempList, t;
   Event::List alphaList;
@@ -289,48 +256,51 @@ Event::List Calendar::sortEvents( Event::List *eventList,
 
 }
 
-Event::List Calendar::events( const QDate &date, bool sorted )
+Event::List Calendar::events( const QDate &date,
+                              EventSortField sortField,
+                              SortDirection sortDirection )
 {
-  Event::List el = rawEventsForDate( date, sorted );
-  mFilter->apply(&el);
+  Event::List el = rawEventsForDate( date, sortField, sortDirection );
+  mFilter->apply( &el );
   return el;
 }
 
 Event::List Calendar::events( const QDateTime &qdt )
 {
-  Event::List el = rawEventsForDate(qdt);
-  mFilter->apply(&el);
+  Event::List el = rawEventsForDate( qdt );
+  mFilter->apply( &el );
   return el;
 }
 
 Event::List Calendar::events( const QDate &start, const QDate &end,
-                                  bool inclusive)
+                              bool inclusive)
 {
-  Event::List el = rawEvents(start,end,inclusive);
-  mFilter->apply(&el);
+  Event::List el = rawEvents( start, end, inclusive );
+  mFilter->apply( &el );
   return el;
 }
 
-Event::List Calendar::events( EventSortField sortField, SortDirection sortDirection )
+Event::List Calendar::events( EventSortField sortField,
+                              SortDirection sortDirection )
 {
   Event::List el = rawEvents( sortField, sortDirection );
-  mFilter->apply(&el);
+  mFilter->apply( &el );
   return el;
 }
 
-bool Calendar::addIncidence(Incidence *i)
+bool Calendar::addIncidence( Incidence *incidence )
 {
-  Incidence::AddVisitor<Calendar> v(this);
+  Incidence::AddVisitor<Calendar> v( this );
 
-  return i->accept(v);
+  return incidence->accept(v);
 }
 
-bool Calendar::deleteIncidence( Incidence *i )
+bool Calendar::deleteIncidence( Incidence *incidence )
 {
-  if ( beginChange( i ) ) {
+  if ( beginChange( incidence ) ) {
     Incidence::DeleteVisitor<Calendar> v( this );
-    bool result = i->accept( v );
-    endChange( i );
+    bool result = incidence->accept( v );
+    endChange( incidence );
     return result;
   } else
     return false;
@@ -339,7 +309,8 @@ bool Calendar::deleteIncidence( Incidence *i )
 Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
                                            bool single )
 {
-  if ( !incidence || !incidence->doesRecur() ) return 0;
+  if ( !incidence || !incidence->doesRecur() )
+    return 0;
 
   Incidence *newInc = incidence->clone();
   newInc->recreate();
@@ -355,7 +326,8 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
     if ( duration > 0 ) {
       int doneduration = recur->durationTo( date.addDays(-1) );
       if ( doneduration >= duration ) {
-        kdDebug(5850) << "The dissociated event already occured more often that it was supposed to ever occur. ERROR!" << endl;
+        kdDebug(5850) << "The dissociated event already occured more often "
+                      << "than it was supposed to ever occur. ERROR!" << endl;
         recur->unsetRecurs();
       } else {
         recur->setDuration( duration - doneduration );
@@ -375,24 +347,26 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
     int daysTo = 0;
     if ( td->hasDueDate() ) {
       QDateTime due( td->dtDue() );
-      daysTo = due.date().daysTo( date ) ;
+      daysTo = due.date().daysTo( date );
       td->setDtDue( due.addDays( daysTo ), true );
       haveOffset = true;
     }
     if ( td->hasStartDate() ) {
       QDateTime start( td->dtStart() );
-      if ( !haveOffset ) daysTo = start.date().daysTo( date );
+      if ( !haveOffset )
+        daysTo = start.date().daysTo( date );
       td->setDtStart( start.addDays( daysTo ) );
       haveOffset = true;
     }
   }
   if ( addIncidence( newInc ) ) {
-    if (single) {
+    if ( single ) {
       incidence->addExDate( date );
     } else {
       recur = incidence->recurrence();
       if ( recur ) {
-        // Make sure the recurrence of the past events ends at the corresponding day
+        // Make sure the recurrence of the past events ends
+        // at the corresponding day
         recur->setEndDate( date.addDays(-1) );
       }
     }
@@ -403,22 +377,24 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
   return newInc;
 }
 
-Incidence *Calendar::incidence( const QString& uid )
+Incidence *Calendar::incidence( const QString &uid )
 {
   Incidence *i = event( uid );
-  if ( i ) return i;
+  if ( i )
+    return i;
   i = todo( uid );
-  if ( i ) return i;
+  if ( i )
+    return i;
   i = journal( uid );
   return i;
 }
 
-Incidence *Calendar::incidenceFromSchedulingID( const QString &UID )
+Incidence *Calendar::incidenceFromSchedulingID( const QString &sid )
 {
   Incidence::List incidences = rawIncidences();
   Incidence::List::iterator it = incidences.begin();
   for ( ; it != incidences.end(); ++it )
-    if ( (*it)->schedulingID() == UID )
+    if ( (*it)->schedulingID() == sid )
       // Touchdown, and the crowd goes wild
       return *it;
   // Not found
@@ -569,7 +545,8 @@ Todo::List Calendar::sortTodos( Todo::List *todoList,
   return todoListSorted;
 }
 
-Todo::List Calendar::todos( TodoSortField sortField, SortDirection sortDirection )
+Todo::List Calendar::todos( TodoSortField sortField,
+                            SortDirection sortDirection )
 {
   Todo::List tl = rawTodos( sortField, sortDirection );
   mFilter->apply( &tl );
@@ -578,8 +555,9 @@ Todo::List Calendar::todos( TodoSortField sortField, SortDirection sortDirection
 
 Todo::List Calendar::todos( const QDate &date )
 {
+  // @TODO: rewrite this for in-progress To-dos.  see doxy.
   Todo::List el = rawTodosForDate( date );
-  mFilter->apply(&el);
+  mFilter->apply( &el );
   return el;
 }
 
@@ -636,7 +614,8 @@ Journal::List Calendar::sortJournals( Journal::List *journalList,
   return journalListSorted;
 }
 
-Journal::List Calendar::journals( JournalSortField sortField, SortDirection sortDirection )
+Journal::List Calendar::journals( JournalSortField sortField,
+                                  SortDirection sortDirection )
 {
   Journal::List jl = rawJournals( sortField, sortDirection );
   mFilter->apply( &jl );
@@ -646,7 +625,7 @@ Journal::List Calendar::journals( JournalSortField sortField, SortDirection sort
 Journal::List Calendar::journals( const QDate &date )
 {
   Journal::List el = rawJournalsForDate( date );
-  mFilter->apply(&el);
+  mFilter->apply( &el );
   return el;
 }
 
@@ -657,7 +636,7 @@ void Calendar::setupRelations( Incidence *forincidence )
   QString uid = forincidence->uid();
 
   // First, go over the list of orphans and see if this is their parent
-  while( Incidence* i = mOrphans[ uid ] ) {
+  while ( Incidence* i = mOrphans[ uid ] ) {
     mOrphans.remove( uid );
     i->setRelatedTo( forincidence );
     forincidence->addRelation( i );
@@ -665,11 +644,11 @@ void Calendar::setupRelations( Incidence *forincidence )
   }
 
   // Now see about this incidences parent
-  if( !forincidence->relatedTo() && !forincidence->relatedToUid().isEmpty() ) {
-    // This incidence has a uid it is related to, but is not registered to it yet
+  if ( !forincidence->relatedTo() && !forincidence->relatedToUid().isEmpty() ) {
+    // This incidence has a uid it is related to but is not registered to it yet
     // Try to find it
     Incidence* parent = incidence( forincidence->relatedToUid() );
-    if( parent ) {
+    if ( parent ) {
       // Found it
       forincidence->setRelatedTo( parent );
       parent->addRelation( forincidence );
@@ -693,9 +672,9 @@ void Calendar::removeRelations( Incidence *incidence )
 
   Incidence::List relations = incidence->relations();
   Incidence::List::ConstIterator it;
-  for( it = relations.begin(); it != relations.end(); ++it ) {
+  for ( it = relations.begin(); it != relations.end(); ++it ) {
     Incidence *i = *it;
-    if( !mOrphanUids.find( i->uid() ) ) {
+    if ( !mOrphanUids.find( i->uid() ) ) {
       mOrphans.insert( uid, i );
       mOrphanUids.insert( i->uid(), i );
       i->setRelatedTo( 0 );
@@ -704,16 +683,17 @@ void Calendar::removeRelations( Incidence *incidence )
   }
 
   // If this incidence is related to something else, tell that about it
-  if( incidence->relatedTo() )
+  if ( incidence->relatedTo() )
     incidence->relatedTo()->removeRelation( incidence );
 
   // Remove this one from the orphans list
-  if( mOrphanUids.remove( uid ) )
+  if ( mOrphanUids.remove( uid ) )
     // This incidence is located in the orphans list - it should be removed
-    if( !( incidence->relatedTo() != 0 && mOrphans.remove( incidence->relatedTo()->uid() ) ) ) {
+    if ( !( incidence->relatedTo() != 0 &&
+            mOrphans.remove( incidence->relatedTo()->uid() ) ) ) {
       // Removing wasn't that easy
-      for( QDictIterator<Incidence> it( mOrphans ); it.current(); ++it ) {
-        if( it.current()->uid() == uid ) {
+      for ( QDictIterator<Incidence> it( mOrphans ); it.current(); ++it ) {
+        if ( it.current()->uid() == uid ) {
           mOrphans.remove( it.currentKey() );
           break;
         }
@@ -723,7 +703,8 @@ void Calendar::removeRelations( Incidence *incidence )
 
 void Calendar::registerObserver( Observer *observer )
 {
-  if( !mObservers.contains( observer ) ) mObservers.append( observer );
+  if( !mObservers.contains( observer ) )
+    mObservers.append( observer );
   mNewObserver = true;
 }
 
@@ -737,8 +718,8 @@ void Calendar::setModified( bool modified )
   if ( modified != mModified || mNewObserver ) {
     mNewObserver = false;
     Observer *observer;
-    for( observer = mObservers.first(); observer;
-         observer = mObservers.next() ) {
+    for ( observer = mObservers.first(); observer;
+          observer = mObservers.next() ) {
       observer->calendarModified( modified, this );
     }
     mModified = modified;
@@ -747,7 +728,6 @@ void Calendar::setModified( bool modified )
 
 void Calendar::incidenceUpdated( IncidenceBase *incidence )
 {
-//  kdDebug(5800) << "CalendarResources::incidenceUpdated( IncidenceBase * ): Not yet implemented\n";
   incidence->setSyncStatus( Event::SYNCMOD );
   incidence->setLastModified( QDateTime::currentDateTime() );
   // we should probably update the revision number here,
@@ -762,61 +742,67 @@ void Calendar::incidenceUpdated( IncidenceBase *incidence )
 
 void Calendar::notifyIncidenceAdded( Incidence *i )
 {
-  if ( !mObserversEnabled ) return;
+  if ( !mObserversEnabled )
+    return;
 
   Observer *observer;
-  for( observer = mObservers.first(); observer;
-       observer = mObservers.next() ) {
+  for ( observer = mObservers.first(); observer;
+        observer = mObservers.next() ) {
     observer->calendarIncidenceAdded( i );
   }
 }
 
 void Calendar::notifyIncidenceChanged( Incidence *i )
 {
-  if ( !mObserversEnabled ) return;
+  if ( !mObserversEnabled )
+    return;
 
   Observer *observer;
-  for( observer = mObservers.first(); observer;
-       observer = mObservers.next() ) {
+  for ( observer = mObservers.first(); observer;
+        observer = mObservers.next() ) {
     observer->calendarIncidenceChanged( i );
   }
 }
 
 void Calendar::notifyIncidenceDeleted( Incidence *i )
 {
-  if ( !mObserversEnabled ) return;
+  if ( !mObserversEnabled )
+    return;
 
   Observer *observer;
-  for( observer = mObservers.first(); observer;
-       observer = mObservers.next() ) {
+  for ( observer = mObservers.first(); observer;
+        observer = mObservers.next() ) {
     observer->calendarIncidenceDeleted( i );
   }
 }
 
-void Calendar::setLoadedProductId( const QString &id )
+void Calendar::setProductId( const QString &productId )
 {
-  mLoadedProductId = id;
+  mProductId = productId;
 }
 
-QString Calendar::loadedProductId()
+QString Calendar::productId()
 {
-  return mLoadedProductId;
+  return mProductId;
 }
 
-Incidence::List Calendar::mergeIncidenceList( const Event::List &e,
-                                              const Todo::List &t,
-                                              const Journal::List &j )
+Incidence::List Calendar::mergeIncidenceList( const Event::List &events,
+                                              const Todo::List &todos,
+                                              const Journal::List &journals )
 {
   Incidence::List incidences;
 
   Event::List::ConstIterator it1;
-  for( it1 = e.begin(); it1 != e.end(); ++it1 ) incidences.append( *it1 );
+  for ( it1 = events.begin(); it1 != events.end(); ++it1 )
+    incidences.append( *it1 );
 
   Todo::List::ConstIterator it2;
-  for( it2 = t.begin(); it2 != t.end(); ++it2 ) incidences.append( *it2 );
+  for ( it2 = todos.begin(); it2 != todos.end(); ++it2 )
+    incidences.append( *it2 );
 
   Journal::List::ConstIterator it3;
-  for( it3 = j.begin(); it3 != j.end(); ++it3 ) incidences.append( *it3 );
+  for ( it3 = journals.begin(); it3 != journals.end(); ++it3 )
+    incidences.append( *it3 );
 
   return incidences;
 }

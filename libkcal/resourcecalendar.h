@@ -145,7 +145,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Delete event from this resource.
     */
-    virtual void deleteEvent( Event * ) = 0;
+    virtual bool deleteEvent( Event * ) = 0;
 
     /**
       Retrieves an event on the basis of the unique string ID.
@@ -162,10 +162,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
-    //TODO: Deprecate
-    virtual Event::List rawEventsForDate( const QDate &date,
-                                          bool sorted = false ) = 0;
-    //virtual Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
+    virtual Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
       Get unfiltered events for date \a qdt.
@@ -228,7 +225,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Remove a todo from the todolist.
     */
-    virtual void deleteTodo( Todo * ) = 0;
+    virtual bool deleteTodo( Todo * ) = 0;
     /**
       Searches todolist for an event with this unique id.
 
@@ -253,7 +250,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Remove a Journal entry from calendar.
     */
-    virtual void deleteJournal( Journal * ) = 0;
+    virtual bool deleteJournal( Journal * ) = 0;
 
     /**
       Return Journal with given unique id.
@@ -286,7 +283,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Set time zone id used by this resource, e.g. "Europe/Berlin".
     */
-    virtual void setTimeZoneId( const QString &tzid ) = 0;
+    virtual void setTimeZoneId( const QString &timeZoneId ) = 0;
 
     /**
       If this resource has subresources, return a QStringList of them.

@@ -115,11 +115,11 @@ bool ResourceLocalDir::doLoad()
   mCalendar.close();
   QString dirName = mURL.path();
   bool success = true;
-  
+
   if ( !( KStandardDirs::exists( dirName ) || KStandardDirs::exists( dirName + "/") ) ) {
     kdDebug(5800) << "ResourceLocalDir::load(): Directory '" << dirName << "' doesn't exist yet. Creating it..." << endl;
-    
-    // Create the directory. Use 0775 to allow group-writable if the umask 
+
+    // Create the directory. Use 0775 to allow group-writable if the umask
     // allows it (permissions will be 0775 & ~umask). This is desired e.g. for
     // group-shared directories!
     success = KStandardDirs::makeDir( dirName, 0775 );
@@ -154,7 +154,7 @@ bool ResourceLocalDir::doLoad()
 bool ResourceLocalDir::doSave()
 {
   Incidence::List list;
- 
+
   list = addedIncidences();
   for (Incidence::List::iterator it = list.begin(); it != list.end(); ++it)
     doSave(*it);
@@ -202,25 +202,31 @@ void ResourceLocalDir::reload( const QString &file )
 }
 
 
-void ResourceLocalDir::deleteEvent(Event *event)
+bool ResourceLocalDir::deleteEvent(Event *event)
 {
   kdDebug(5800) << "ResourceLocalDir::deleteEvent" << endl;
   if ( deleteIncidenceFile(event) )
-    mCalendar.deleteEvent( event );
+    return( mCalendar.deleteEvent( event ) );
+  else
+    return( false );
 }
 
 
-void ResourceLocalDir::deleteTodo(Todo *todo)
+bool ResourceLocalDir::deleteTodo(Todo *todo)
 {
   if ( deleteIncidenceFile(todo) )
-    mCalendar.deleteTodo( todo );
+    return( mCalendar.deleteTodo( todo ) );
+  else
+    return( false );
 }
 
 
-void ResourceLocalDir::deleteJournal( Journal *journal )
+bool ResourceLocalDir::deleteJournal( Journal *journal )
 {
   if ( deleteIncidenceFile( journal ) )
-    mCalendar.deleteJournal( journal );
+    return( mCalendar.deleteJournal( journal ) );
+  else
+    return( false );
 }
 
 

@@ -99,7 +99,7 @@ bool FileStorage::load()
         kdDebug(5800) << "FileStorage::load() Fallback to VCalFormat" << endl;
         VCalFormat vCal;
         success = vCal.load( calendar(), mFileName );
-        calendar()->setLoadedProductId( vCal.productId() );
+        calendar()->setProductId( vCal.productId() );
       } else {
         return false;
       }
@@ -109,7 +109,7 @@ bool FileStorage::load()
     }
   } else {
 //    kdDebug(5800) << "---Success" << endl;
-    calendar()->setLoadedProductId( iCal.loadedProductId() );
+    calendar()->setProductId( iCal.loadedProductId() );
   }
 
   calendar()->setModified( false );

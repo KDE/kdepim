@@ -153,11 +153,11 @@ bool ResourceCached::addEvent(Event *event)
 }
 
 // probably not really efficient, but...it works for now.
-void ResourceCached::deleteEvent( Event *event )
+bool ResourceCached::deleteEvent( Event *event )
 {
   kdDebug(5800) << "ResourceCached::deleteEvent" << endl;
 
-  mCalendar.deleteEvent( event );
+  return mCalendar.deleteEvent( event );
 }
 
 
@@ -166,13 +166,14 @@ Event *ResourceCached::event( const QString &uid )
   return mCalendar.event( uid );
 }
 
-Event::List ResourceCached::rawEventsForDate( const QDate &qd, bool sorted )
+Event::List ResourceCached::rawEventsForDate( const QDate &qd,
+                                              EventSortField sortField,
+                                              SortDirection sortDirection )
 {
-  Event::List list = mCalendar.rawEventsForDate( qd, sorted );
+  Event::List list = mCalendar.rawEventsForDate( qd, sortField, sortDirection );
 
   return list;
 }
-
 
 Event::List ResourceCached::rawEvents( const QDate &start, const QDate &end,
                                        bool inclusive )
@@ -195,14 +196,14 @@ bool ResourceCached::addTodo( Todo *todo )
   return mCalendar.addTodo( todo );
 }
 
-void ResourceCached::deleteTodo( Todo *todo )
+bool ResourceCached::deleteTodo( Todo *todo )
 {
-  mCalendar.deleteTodo( todo );
+  return mCalendar.deleteTodo( todo );
 }
 
-void ResourceCached::deleteJournal( Journal *journal )
+bool ResourceCached::deleteJournal( Journal *journal )
 {
-  mCalendar.deleteJournal( journal );
+  return mCalendar.deleteJournal( journal );
 }
 
 

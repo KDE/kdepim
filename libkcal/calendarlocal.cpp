@@ -111,7 +111,7 @@ bool CalendarLocal::addEvent( Event *event )
   return true;
 }
 
-void CalendarLocal::deleteEvent( Event *event )
+bool CalendarLocal::deleteEvent( Event *event )
 {
 //  kdDebug(5800) << "CalendarLocal::deleteEvent" << endl;
 
@@ -119,8 +119,10 @@ void CalendarLocal::deleteEvent( Event *event )
     setModified( true );
     notifyIncidenceDeleted( event );
     mDeletedIncidences.append( event );
+    return true;
   } else {
     kdWarning() << "CalendarLocal::deleteEvent(): Event not found." << endl;
+    return false;
   }
 }
 
@@ -160,7 +162,7 @@ bool CalendarLocal::addTodo( Todo *todo )
   return true;
 }
 
-void CalendarLocal::deleteTodo( Todo *todo )
+bool CalendarLocal::deleteTodo( Todo *todo )
 {
   // Handle orphaned children
   removeRelations( todo );
@@ -169,6 +171,10 @@ void CalendarLocal::deleteTodo( Todo *todo )
     setModified( true );
     notifyIncidenceDeleted( todo );
     mDeletedIncidences.append( todo );
+    return true;
+  } else {
+    kdWarning() << "CalendarLocal::deleteTodo(): Todo not found." << endl;
+    return false;
   }
 }
 
@@ -352,8 +358,9 @@ void CalendarLocal::insertEvent( Event *event )
 #endif
 }
 
-
-Event::List CalendarLocal::rawEventsForDate( const QDate &qd, bool sorted )
+Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
+                                             EventSortField sortField,
+                                             SortDirection sortDirection )
 {
   Event::List eventList;
 
@@ -382,24 +389,7 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd, bool sorted )
     }
   }
 
-  if ( !sorted ) {
-    return eventList;
-  }
-
-  //  kdDebug(5800) << "Sorting events for date\n" << endl;
-  // now, we have to sort it based on dtStart.time()
-  Event::List eventListSorted;
-  Event::List::Iterator sortIt;
-  Event::List::Iterator eit;
-  for ( eit = eventList.begin(); eit != eventList.end(); ++eit ) {
-    sortIt = eventListSorted.begin();
-    while ( sortIt != eventListSorted.end() &&
-            (*eit)->dtStart().time() >= (*sortIt)->dtStart().time() ) {
-      ++sortIt;
-    }
-    eventListSorted.insert( sortIt, *eit );
-  }
-  return eventListSorted;
+  return sortEvents( &eventList, sortField, sortDirection );
 }
 
 Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
@@ -499,12 +489,16 @@ bool CalendarLocal::addJournal(Journal *journal)
   return true;
 }
 
-void CalendarLocal::deleteJournal( Journal *journal )
+bool CalendarLocal::deleteJournal( Journal *journal )
 {
   if ( mJournalList.removeRef( journal ) ) {
     setModified( true );
     notifyIncidenceDeleted( journal );
     mDeletedIncidences.append( journal );
+    return true;
+  } else {
+    kdWarning() << "CalendarLocal::deleteJournal(): Journal not found." << endl;
+    return false;
   }
 }
 

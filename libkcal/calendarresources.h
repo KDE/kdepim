@@ -19,6 +19,13 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+/**
+   @file calendarresources.h
+   Provides a Calendar composed of several Calendar Resources.
+
+   @author Cornelius Schumacher
+   @author Reinhold Kainhofer
+ */
 #ifndef KCAL_CALENDARRESOURCES_H
 #define KCAL_CALENDARRESOURCES_H
 
@@ -34,54 +41,78 @@
 
 class QWidget;
 
+/**
+   @namespace KCal
+   Namespace KCal is for global classes, objects and/or functions in libkcal.
+*/
 namespace KCal {
 
 class CalFormat;
 
 /**
-  This class provides a calendar composed of several calendar resources.
+   @class CalendarResources
+
+   This class provides a Calendar which is composed of other Calendars
+   known as "Resources".
+
+   Examples of Calendar Resources are:
+     - Calendars stored as local ICS formatted files
+     - a set of incidences (one-per-file) within a local directory
+     - birthdays and anniversaries contained in an addressbook
+
 */
-class LIBKCAL_EXPORT CalendarResources : public Calendar,
-                          public KRES::ManagerObserver<ResourceCalendar>
+class LIBKCAL_EXPORT CalendarResources :
+      public Calendar,
+      public KRES::ManagerObserver<ResourceCalendar>
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
+    /**
+       @class DestinationPolicy
+    */
     class DestinationPolicy
     {
       public:
-        DestinationPolicy( CalendarResourceManager *manager )
-          : mManager( manager ) {}
+        DestinationPolicy( CalendarResourceManager *manager ) :
+          mManager( manager ) {}
 
-        virtual ResourceCalendar *destination( Incidence * ) = 0;
+        virtual ResourceCalendar *destination( Incidence *incidence ) = 0;
 
       protected:
-        CalendarResourceManager *resourceManager() { return mManager; }
+        CalendarResourceManager *resourceManager()
+         { return mManager; }
 
       private:
         CalendarResourceManager *mManager;
     };
 
+    /**
+       @class StandardDestinationPolicy
+    */
     class StandardDestinationPolicy : public DestinationPolicy
     {
       public:
-        StandardDestinationPolicy( CalendarResourceManager *manager )
-          : DestinationPolicy( manager ) {}
+        StandardDestinationPolicy( CalendarResourceManager *manager ) :
+          DestinationPolicy( manager ) {}
 
-        ResourceCalendar *destination( Incidence * );
+        ResourceCalendar *destination( Incidence *incidence );
 
       private:
         class Private;
         Private *d;
     };
 
+    /**
+       @class AskDestinationPolicy
+    */
     class AskDestinationPolicy : public DestinationPolicy
     {
       public:
         AskDestinationPolicy( CalendarResourceManager *manager,
-                              QWidget *parent = 0 )
-          : DestinationPolicy( manager ), mParent( parent ) {}
+                              QWidget *parent = 0 ) :
+          DestinationPolicy( manager ), mParent( parent ) {}
 
-        ResourceCalendar *destination( Incidence * );
+        ResourceCalendar *destination( Incidence *incidence );
 
       private:
         QWidget *mParent;
@@ -90,11 +121,15 @@ class LIBKCAL_EXPORT CalendarResources : public Calendar,
         Private *d;
     };
 
+    /**
+       @class Ticket
+    */
     class Ticket
     {
         friend class CalendarResources;
       public:
-        ResourceCalendar *resource() const { return mResource; }
+        ResourceCalendar *resource() const
+          { return mResource; }
 
       private:
         Ticket( ResourceCalendar *r ) : mResource( r ) {}
@@ -105,195 +140,499 @@ class LIBKCAL_EXPORT CalendarResources : public Calendar,
         Private *d;
     };
 
-    /** constructs a new calendar, with variables initialized to sane values. */
-    CalendarResources( const QString &timeZoneId = QString::fromLatin1( "UTC" ),
-                       const QString &family = QString::fromLatin1("calendar") );
+    /**
+       Construct CalendarResource object using a Time Zone and a Family name.
+
+       @param timeZoneId is a string containing a Time Zone ID, which is
+       assumed to be valid. The Time Zone Id is used to set the time zone
+       for viewing Incidence dates.\n
+       On some systems, /usr/share/zoneinfo/zone.tab may be available for
+       reference.\n
+       @e Example: "Europe/Berlin"
+
+       @warning
+       Do Not pass an empty timeZoneId string as this may cause unintended
+       consequences when storing Incidences into the Calendar.
+
+       @param family is any QString representing a unique name.
+    */
+    CalendarResources(
+      const QString &timeZoneId = QString::fromLatin1( "UTC" ),
+      const QString &family = QString::fromLatin1( "calendar" ) );
+
+    /**
+       Destructor
+    */
     ~CalendarResources();
 
     /**
-      Read the resources settings from a config file. You have to call this
-      method before load().
-
-      @param config The KConfig object which points to the config file.
-                    If no object is given (null pointer) the standard config
-                    file is used.
-     */
-    void readConfig( KConfig *config = 0 );
-
-    /**
-      Loads all events from the resources. You have to add the resources first
-      or call readConfig() to load the system resources.
-     */
+       Loads all Incidences from the Resources.  The Resources must be added
+       first using either readConfig(KConfig *config), which adds the system
+       Resources, or manually using resourceAdded(ResourceCalendar *resource).
+    */
     void load();
 
     /**
-      Return ResourceManager used by this calendar.
+       Clear out the current Calendar, freeing all used memory etc.
     */
-    CalendarResourceManager *resourceManager() const
-    {
-      return mManager;
-    }
-
-    /**
-      Set the destinatinpolicy to add incidences always to the standard resource
-    */
-    void setStandardDestinationPolicy();
-    /**
-      Set the destinatinpolicy to ask to which resource incidences are added
-    */
-    void setAskDestinationPolicy();
-
-    /** clears out the current calendar, freeing all used memory etc. etc. */
     void close();
 
     /**
-      Request ticket for saving the calendar. If a ticket is returned the
-      calendar is locked for write access until save() or releaseSaveTicket() is
-      called.
+       Save this Calendar.
+       If the save is successfull, the Ticket is deleted.  Otherwise, the
+       caller must release the Ticket with releaseSaveTicket() to abandon
+       the save operation or call save() to try the save again.
+
+       @param ticket is a pointer to the Ticket object.
+       @param incidence is a pointer to the Incidence object.
+       If incidence is null, save the entire Calendar (all Resources)
+       else only the specified Incidence is saved.
+
+       @return true if the save was successful; false otherwise.
     */
-    Ticket *requestSaveTicket( ResourceCalendar * );
+    virtual bool save( Ticket *ticket, Incidence *incidence = 0 );
+
     /**
-      Save calendar if incidence == 0, else save only this incidence.
-      If save is successfull, the ticket is deleted. Otherwise
-      the caller has to release the ticket with releaseSaveTicket() to abandon
-      the save operation or to call save() to try to save again.
+       Sync changes in memory to persistant storage.
     */
-    virtual bool save( Ticket *, Incidence *incidence = 0 );
+    void save();
+
     /**
-      Release the save ticket. The calendar is unlocked without saving.
+       Determine if the Calendar is currently being saved.
+
+       @return true if the Calendar is currently being saved; false otherwise.
+    */
+    bool isSaving();
+
+    /**
+       Get the CalendarResourceManager used by this calendar.
+
+       @return a pointer to the CalendarResourceManage.
+    */
+    CalendarResourceManager *resourceManager() const
+      { return mManager; }
+
+    /**
+       Get the Resource associated with a specified Incidence.
+
+       @param incidence is a pointer to an Incidence whose Resource
+       is to be located.
+
+       @return a pointer to the Resource containing the Incidence.
+    */
+    ResourceCalendar *resource( Incidence *incidence );
+
+    /**
+       Read the Resources settings from a config file.
+
+       @param config The KConfig object which points to the config file.
+       If no object is given (null pointer) the standard config file is used.
+
+       @note Call this method <em>before</em> load().
+    */
+    void readConfig( KConfig *config = 0 );
+
+    /**
+       Set the destination policy such that Incidences are always added
+       to the standard Resource.
+    */
+    void setStandardDestinationPolicy();
+
+    /**
+       Set the destination policy such that Incidences are added to a
+       Resource which is queried.
+    */
+    void setAskDestinationPolicy();
+
+    /**
+       Request ticket for saving the Calendar.  If a ticket is returned the
+       Calendar is locked for write access until save() or releaseSaveTicket()
+       is called.
+
+       @param resource is a pointer to the ResourceCalendar object.
+
+       @return a pointer to a Ticket object indicating that the Calendar
+       is locked for write access; otherwise a null pointer.
+    */
+    Ticket *requestSaveTicket( ResourceCalendar *resource );
+
+    /**
+       Release the save Ticket. The Calendar is unlocked without saving.
+
+       @param ticket is a pointer to a Ticket object.
     */
     virtual void releaseSaveTicket( Ticket *ticket );
 
-    void save();
+    /**
+       Add a Resource to the Calendar.
+       This method must be public, because in-process added Resources
+       do not emit the corresponding signal, so this methodd has to be
+       called manually!
 
-    bool isSaving();
+       @param resource is a pointer to the ResourceCalendar to add.
+    */
+    void resourceAdded( ResourceCalendar *resource );
 
-    bool addIncidence( Incidence * );
+// Incidence Specific Methods //
+
+    /**
+       Insert an Incidence into the Calendar.
+
+       @param incidence is a pointer to the Incidence to insert.
+
+       @return true on success, false on error.
+    */
+    bool addIncidence( Incidence *incidence );
+
+    /**
+       Insert an Incidence into a Calendar Resource.
+
+       @param incidence is a pointer to the Incidence to insert.
+       @param resource is a pointer to the ResourceCalendar to be added to.
+
+       @return true on success, false on error.
+    */
     bool addIncidence( Incidence *incidence, ResourceCalendar *resource );
 
-    /** Add Event to calendar. */
-    bool addEvent(Event *anEvent) KDE_DEPRECATED;
-    /** Add Event to a resource. */
-    bool addEvent(Event *anEvent, ResourceCalendar *resource) KDE_DEPRECATED;
-    /** deletes an event from this calendar. */
-    void deleteEvent(Event *) KDE_DEPRECATED;
+    /**
+       Flag that a change to a Calendar Incidence is starting.
+
+       @param incidence is a pointer to the Incidence that will be changing.
+    */
+    bool beginChange( Incidence *incidence );
 
     /**
-      Retrieves an event on the basis of the unique string ID.
-    */
-    Event *event(const QString &UniqueStr);
-    /**
-      Return unfiltered list of all events in calendar.
-    */
-    Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+       Flag that a change to a Calendar Incidence has completed.
 
-    /*
-      Returns a QString with the text of the holiday (if any) that falls
-      on the specified date.
+       @param incidence is a pointer to the Incidence that was changed.
     */
-    QString getHolidayForDate(const QDate &qd);
+    bool endChange( Incidence *incidence );
+
+// Event Specific Methods //
 
     /**
-      Add a todo to the todolist.
-    */
-    bool addTodo( Todo *todo ) KDE_DEPRECATED;
-    /** Add Todo to a resource. */
-    bool addTodo(Todo *todo, ResourceCalendar *resource) KDE_DEPRECATED;
-    /**
-      Remove a todo from the todolist.
-    */
-    void deleteTodo( Todo * ) KDE_DEPRECATED;
-    /**
-      Searches todolist for an event with this unique string identifier,
-      returns a pointer or null.
-    */
-    Todo *todo( const QString &uid );
-    /**
-      Return list of all todos.
-    */
-    Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
-    /**
-      Returns list of todos due on the specified date.
-    */
-    Todo::List rawTodosForDate( const QDate &date );
+       Insert an Event into the Calendar.
 
-    /** Add a Journal entry to calendar */
-    bool addJournal(Journal *) KDE_DEPRECATED;
-    /** Remove journal entry. */
-    void deleteJournal( Journal * ) KDE_DEPRECATED;
-    /** Add Journal to a resource. */
-    bool addJournal(Journal *journal, ResourceCalendar *resource) KDE_DEPRECATED;
-    /** Return Journal with given UID */
-    Journal *journal(const QString &uid);
-    /**
-      Return list of all journals.
+       @param event is a pointer to the Event to insert.
+
+       @return true on success, false on error.
+
+       @note In most cases use
+       addIncidence( Incidence *incidence ) instead.
     */
-    Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    bool addEvent( Event *event );
+
     /**
-      Returns list of journals for the given date.
+       Insert an Event into a Calendar Resource.
+
+       @param event is a pointer to the Event to insert.
+       @param resource is a pointer to the ResourceCalendar to be added to.
+
+       @return true on success, false on error.
+
+       @note In most cases use
+       addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
     */
-    Journal::List rawJournalsForDate( const QDate &date );
+    bool addEvent( Event *event, ResourceCalendar *resource );
 
-    /** Return all alarms, which ocur in the given time interval. */
-    Alarm::List alarms( const QDateTime &from, const QDateTime &to );
-
-    /** Return all alarms, which ocur before given date. */
-    Alarm::List alarmsTo( const QDateTime &to );
-
-    /** Return Resource for given uid */
-    ResourceCalendar *resource(Incidence *);
-
-    bool beginChange( Incidence * );
-    bool endChange( Incidence * );
-
-  signals:
-    void signalResourceAdded( ResourceCalendar * );
-    void signalResourceModified( ResourceCalendar * );
-    void signalResourceDeleted( ResourceCalendar * );
-
-    void signalErrorMessage( const QString & );
-
-  public:
     /**
-      Builds and then returns a list of all events that match for the
-      date specified. useful for dayView, etc. etc.
+       Remove an Event from the Calendar.
+
+       @param event is a pointer to the Event to remove.
+
+       @note In most cases use
+       deleteIncidence( Incidence *incidence) instead.
     */
-    //TODO: Deprecate
-    Event::List rawEventsForDate( const QDate &date, bool sorted = false );
-    //Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    bool deleteEvent( Event *event );
+
     /**
-      Get unfiltered events for date \a qdt.
+       Return a sorted, unfiltered list of all Events.
+
+       @param sortField specifies the EventSortField.
+       @param sortDirection specifies the SortDirection.
+
+       @return the list of all unfiltered Events sorted as specified.
+    */
+    Event::List rawEvents(
+      EventSortField sortField = EventSortUnsorted,
+      SortDirection sortDirection = SortDirectionAscending );
+
+    /**
+       Return an unfiltered list of all Events which occur on the given
+       timestamp.
+
+       @param qdt request unfiltered Event list for this QDateTime only.
+
+       @return the list of unfiltered Events occuring on the specified
+       timestamp.
     */
     Event::List rawEventsForDate( const QDateTime &qdt );
+
     /**
-      Get unfiltered events in a range of dates. If inclusive is set to true,
-      only events are returned, which are completely included in the range.
+       Return an unfiltered list of all Events occurring within a date range.
+
+       @param start is the starting date.
+       @param end is the ending date.
+       @param inclusive if true only Events which are completely included
+       within the date range are returned.
+
+       @return the list of unfiltered Events occurring within the specified
+       date range.
     */
     Event::List rawEvents( const QDate &start, const QDate &end,
                            bool inclusive = false );
 
-  protected:
-    void connectResource( ResourceCalendar * );
+    /**
+       Return a sorted, unfiltered list of all Events which occur on the given
+       date.  The Events are sorted according to @a sortField and
+       @a sortDirection.
 
-  public:
-    // resourceAdded needs to be public, because in-process added
-    // resources don't emit the corresponding signal, so this method
-    // has to be called manually!
-    void resourceAdded( ResourceCalendar *resource );
+       @param date request unfiltered Event list for this QDate only.
+       @param sortField specifies the EventSortField.
+       @param sortDirection specifies the SortDirection.
+
+       @return the list of sorted, unfiltered Events occuring on @a date.
+    */
+    Event::List rawEventsForDate(
+      const QDate &date,
+      EventSortField sortField = EventSortUnsorted,
+      SortDirection sortDirection = SortDirectionAscending );
+
+    /**
+       Returns the Event associated with the given unique identifier.
+
+       @param uid is a unique identifier string.
+
+       @return a pointer to the Event.
+       A null pointer is returned if no such Event exists.
+    */
+    Event *event( const QString &uid );
+
+// Todo Specific Methods //
+
+    /**
+       Insert a Todo into a Calendar Resource.
+
+       @param todo is a pointer to the Todo to insert.
+
+       @return true on success, false on error.
+
+       @note In most cases use
+       addIncidence( Incidence *incidence ) instead.
+    */
+    bool addTodo( Todo *todo );
+
+    /**
+       Insert an Todo into a Calendar Resource.
+
+       @param todo is a pointer to the Todo to insert.
+       @param resource is a pointer to the ResourceCalendar to be added to.
+
+       @return true on success, false on error.
+
+       @note In most cases use
+       addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
+    */
+    bool addTodo( Todo *todo, ResourceCalendar *resource );
+
+    /**
+       Remove an Todo from the Calendar.
+
+       @param todo is a pointer to the Todo to remove.
+
+       @note In most cases use
+       deleteIncidence( Incidence *incidence ) instead.
+    */
+    bool deleteTodo( Todo *todo );
+
+    /**
+       Return a sorted, unfiltered list of all Todos for this Calendar.
+
+       @param sortField specifies the TodoSortField.
+       @param sortDirection specifies the SortDirection.
+
+       @return the list of all unfiltered Todos sorted as specified.
+    */
+    Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted,
+                         SortDirection sortDirection = SortDirectionAscending );
+
+    /**
+       Return an unfiltered list of all Todos which are in-progress
+       on the specifed date.  A Todo in-progress is one which is
+       not completed, and whose starting date <= @a date <= due date.
+
+       @param date request unfiltered Todos in-progress on this QDate.
+
+       @return the list of unfiltered Todos in-progress on the specified date.
+    */
+    //TODO: rewrite rawTodosForDate() according to the description above
+    Todo::List rawTodosForDate( const QDate &date );
+
+    /**
+       Returns the Todo associated with the given unique identifier.
+
+       @param uid is a unique identifier string.
+
+       @return a pointer to the Todo.
+       A null pointer is returned if no such Todo exists.
+    */
+    Todo *todo( const QString &uid );
+
+// Journal Specific Methods //
+
+    /**
+       Insert a Journal into the Calendar.
+
+       @param journal is a pointer to the Journal to insert.
+
+       @return true on success, false on error.
+
+       @note In most cases use
+       addIncidence( Incidence *incidence ) instead.
+    */
+    bool addJournal( Journal *journal );
+
+    /**
+       Insert a Journal into a Calendar Resource.
+
+       @param journal is a pointer to the Journal to insert.
+       @param resource is a pointer to the ResourceCalendar to be added to.
+
+       @return true on success, false on error.
+
+       @note In most cases use
+       addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
+    */
+    bool addJournal( Journal *journal, ResourceCalendar *resource );
+
+    /**
+       Remove a Journal from the Calendar.
+
+       @param journal is a pointer to the Journal to remove.
+
+       @note In most cases use
+       deleteIncidence( Incidence *incidence ) instead.
+    */
+    bool deleteJournal( Journal *journal );
+
+    /**
+       Return a sorted, unfiltered list of all Journals for this Calendar.
+
+       @param sortField specifies the JournalSortField.
+       @param sortDirection specifies the SortDirection.
+
+       @return the list of all unfiltered Journals sorted as specified.
+    */
+    Journal::List rawJournals(
+      JournalSortField sortField = JournalSortUnsorted,
+      SortDirection sortDirection = SortDirectionAscending );
+
+    /**
+       Return an unfiltered list of all Journals for on the specifed date.
+
+       @param date request unfiltered Journals for this QDate only.
+
+       @return the list of unfiltered Journals for the specified date.
+    */
+    Journal::List rawJournalsForDate( const QDate &date );
+
+    /**
+       Returns the Journal associated with the given unique identifier.
+
+       @param uid is a unique identifier string.
+
+       @return a pointer to the Journal.
+       A null pointer is returned if no such Journal exists.
+    */
+    Journal *journal( const QString &uid );
+
+// Alarm Specific Methods //
+
+    /**
+       Return a list of Alarms within a time range for this Calendar.
+
+       @param from is the starting timestamp.
+       @param to is the ending timestamp.
+
+       @return the list of Alarms for the for the specified time range.
+    */
+    Alarm::List alarms( const QDateTime &from, const QDateTime &to );
+
+    /**
+       Return a list of Alarms that occur before the specified timestamp.
+
+       @param to is the ending timestamp.
+
+       @return the list of Alarms occuring before the specified QDateTime.
+    */
+    Alarm::List alarmsTo( const QDateTime &to );
+
+  signals:
+    /**
+       Signal that the Resource has been modified.
+    */
+    void signalResourceModified( ResourceCalendar *resource );
+
+    /**
+       Signal that an Incidence has been inserted to the Resource.
+    */
+    void signalResourceAdded( ResourceCalendar *resource );
+
+    /**
+       Signal that an Incidence has been removed from the Resource.
+    */
+    void signalResourceDeleted( ResourceCalendar *resource );
+
+    /**
+       Signal an error message.
+    */
+    void signalErrorMessage( const QString &err );
+
   protected:
+    void connectResource( ResourceCalendar *resource );
     void resourceModified( ResourceCalendar *resource );
     void resourceDeleted( ResourceCalendar *resource );
 
-    virtual void doSetTimeZoneId( const QString& tzid );
+    /**
+       Let CalendarResource subclasses set the Time Zone ID.
 
-    int incrementChangeCount( ResourceCalendar * );
-    int decrementChangeCount( ResourceCalendar * );
+       First parameter is a string containing a Time Zone ID, which is
+       assumed to be valid. On some systems, /usr/share/zoneinfo/zone.tab
+       may be available for reference.\n
+       @e Example: "Europe/Berlin"
+
+       @warning
+       Do Not pass an empty timeZoneId string as this may cause unintended
+       consequences when storing Incidences into the Calendar.
+    */
+    virtual void doSetTimeZoneId( const QString &timeZoneId );
+
+    /**
+       Increment the number of times this Resource has been changed by 1.
+
+       @param resource is a pointer to the ResourceCalendar to be counted.
+
+       @return the new number of times this Resource has been changed.
+    */
+    int incrementChangeCount( ResourceCalendar *resource );
+
+    /**
+       Decrement the number of times this Resource has been changed by 1.
+
+       @param resource is a pointer to the ResourceCalendar to be counted.
+
+       @return the new number of times this Resource has been changed.
+    */
+    int decrementChangeCount( ResourceCalendar *resource );
 
   protected slots:
-    void slotLoadError( ResourceCalendar *r, const QString &err );
-    void slotSaveError( ResourceCalendar *r, const QString &err );
+    void slotLoadError( ResourceCalendar *resource, const QString &err );
+    void slotSaveError( ResourceCalendar *resource, const QString &err );
 
   private:
+    /**
+       Initialize the Resource object with starting values.
+    */
     void init( const QString &family );
 
     bool mOpen;

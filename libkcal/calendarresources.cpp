@@ -19,7 +19,13 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+/**
+   @file calendarresources.cpp
+   Provides a calendar composed of several calendar resources.
 
+   @author Cornelius Schumacher
+   @author Reinhold Kainhofer
+*/
 #include <stdlib.h>
 
 #include <qdatetime.h>
@@ -49,22 +55,24 @@
 
 using namespace KCal;
 
-ResourceCalendar *CalendarResources::StandardDestinationPolicy::destination( Incidence * )
+ResourceCalendar
+*CalendarResources::StandardDestinationPolicy::destination( Incidence * )
 {
   return resourceManager()->standardResource();
 }
 
-ResourceCalendar *CalendarResources::AskDestinationPolicy::destination( Incidence * )
+ResourceCalendar
+*CalendarResources::AskDestinationPolicy::destination( Incidence * )
 {
   QPtrList<KRES::Resource> list;
 
   CalendarResourceManager::ActiveIterator it;
-  for( it = resourceManager()->activeBegin();
-       it != resourceManager()->activeEnd(); ++it ) {
+  for ( it = resourceManager()->activeBegin();
+        it != resourceManager()->activeEnd(); ++it ) {
     if ( !(*it)->readOnly() ) {
       //Insert the first the Standard resource to get be the default selected.
       if ( resourceManager()->standardResource() == *it )
-        list.insert( 0,*it );
+        list.insert( 0, *it );
       else
         list.append( *it );
     }
@@ -75,7 +83,8 @@ ResourceCalendar *CalendarResources::AskDestinationPolicy::destination( Incidenc
   return static_cast<ResourceCalendar *>( r );
 }
 
-CalendarResources::CalendarResources( const QString &timeZoneId, const QString &family )
+CalendarResources::CalendarResources( const QString &timeZoneId,
+                                      const QString &family )
   : Calendar( timeZoneId )
 {
   init( family );
@@ -95,10 +104,7 @@ void CalendarResources::init( const QString &family )
 
 CalendarResources::~CalendarResources()
 {
-//  kdDebug(5800) << "CalendarResources::destructor" << endl;
-
   close();
-
   delete mManager;
 }
 
@@ -144,7 +150,7 @@ void CalendarResources::load()
   }
 
   QValueList<ResourceCalendar *>::ConstIterator it2;
-  for( it2 = failed.begin(); it2 != failed.end(); ++it2 ) {
+  for ( it2 = failed.begin(); it2 != failed.end(); ++it2 ) {
     (*it2)->setActive( false );
     emit signalResourceModified( *it2 );
   }
@@ -203,16 +209,18 @@ bool CalendarResources::isSaving()
   return false;
 }
 
-bool CalendarResources::addIncidence( Incidence *incidence, ResourceCalendar *resource )
+bool CalendarResources::addIncidence( Incidence *incidence,
+                                      ResourceCalendar *resource )
 {
   // FIXME: Use proper locking via begin/endChange!
   bool validRes = false;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    if ( (*it) == resource ) validRes = true;
+    if ( (*it) == resource )
+      validRes = true;
   }
   ResourceCalendar *oldResource = 0;
-  if ( mResourceMap.contains(incidence) ) {
+  if ( mResourceMap.contains( incidence ) ) {
     oldResource = mResourceMap[incidence];
   }
   mResourceMap[incidence] = resource;
@@ -225,8 +233,10 @@ bool CalendarResources::addIncidence( Incidence *incidence, ResourceCalendar *re
     endChange( incidence );
     return true;
   } else {
-    if ( oldResource ) mResourceMap[incidence] = oldResource;
-    else mResourceMap.remove( incidence );
+    if ( oldResource )
+      mResourceMap[incidence] = oldResource;
+    else
+      mResourceMap.remove( incidence );
   }
 
   return false;
@@ -261,41 +271,42 @@ bool CalendarResources::addIncidence( Incidence *incidence )
 
 bool CalendarResources::addEvent( Event *event )
 {
+  kdDebug(5800) << "CalendarResources::addEvent" << endl;
   return addIncidence( event );
 }
 
-bool CalendarResources::addEvent( Event *anEvent, ResourceCalendar *resource )
+bool CalendarResources::addEvent( Event *Event, ResourceCalendar *resource )
 {
-  return addIncidence( anEvent, resource );
+  return addIncidence( Event, resource );
 }
 
-void CalendarResources::deleteEvent( Event *event )
+bool CalendarResources::deleteEvent( Event *event )
 {
   kdDebug(5800) << "CalendarResources::deleteEvent" << endl;
 
+  bool status;
   if ( mResourceMap.find( event ) != mResourceMap.end() ) {
-    mResourceMap[event]->deleteEvent( event );
-    mResourceMap.remove( event );
+    status = mResourceMap[event]->deleteEvent( event );
+    if ( status )
+      mResourceMap.remove( event );
   } else {
+    status = false;
     CalendarResourceManager::ActiveIterator it;
     for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-      (*it)->deleteEvent( event );
+      status |= (*it)->deleteEvent( event );
     }
   }
 
-  setModified( true );
+  setModified( status );
+  return status;
 }
-
 
 Event *CalendarResources::event( const QString &uid )
 {
-//  kdDebug(5800) << "CalendarResources::event(): " << uid << endl;
-
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
     Event* event = (*it)->event( uid );
-    if ( event )
-    {
+    if ( event ) {
       mResourceMap[event] = *it;
       return event;
     }
@@ -308,48 +319,45 @@ Event *CalendarResources::event( const QString &uid )
 bool CalendarResources::addTodo( Todo *todo )
 {
   kdDebug(5800) << "CalendarResources::addTodo" << endl;
-
   return addIncidence( todo );
 }
 
-bool CalendarResources::addTodo(Todo *todo, ResourceCalendar *resource)
+bool CalendarResources::addTodo( Todo *todo, ResourceCalendar *resource )
 {
   return addIncidence( todo, resource );
 }
 
-void CalendarResources::deleteTodo( Todo *todo )
+bool CalendarResources::deleteTodo( Todo *todo )
 {
   kdDebug(5800) << "CalendarResources::deleteTodo" << endl;
 
-  Q_ASSERT(todo);
-
-  if ( mResourceMap.find(todo) != mResourceMap.end() ) {
-    mResourceMap[todo]->deleteTodo( todo );
-    mResourceMap.remove( todo );
+  bool status;
+  if ( mResourceMap.find( todo ) != mResourceMap.end() ) {
+    status = mResourceMap[todo]->deleteTodo( todo );
+    if ( status )
+      mResourceMap.remove( todo );
   } else {
     CalendarResourceManager::ActiveIterator it;
+    status = false;
     for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-      (*it)->deleteTodo( todo );
+      status |= (*it)->deleteTodo( todo );
     }
   }
 
-  setModified( true );
+  setModified( status );
+  return status;
 }
 
-Todo::List CalendarResources::rawTodos( TodoSortField sortField, SortDirection sortDirection )
+Todo::List CalendarResources::rawTodos( TodoSortField sortField,
+                                        SortDirection sortDirection )
 {
-//  kdDebug(5800) << "CalendarResources::rawTodos()" << endl;
-
   Todo::List result;
 
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-//    kdDebug(5800) << "Getting raw todos from '" << (*it)->resourceName()
-//                  << "'" << endl;
     Todo::List todos = (*it)->rawTodos( TodoSortUnsorted );
     Todo::List::ConstIterator it2;
     for ( it2 = todos.begin(); it2 != todos.end(); ++it2 ) {
-//      kdDebug(5800) << "Adding todo to result" << endl;
       result.append( *it2 );
       mResourceMap[ *it2 ] = *it;
     }
@@ -370,14 +378,12 @@ Todo *CalendarResources::todo( const QString &uid )
     }
   }
 
-  // not found
+  // Not found
   return 0;
 }
 
 Todo::List CalendarResources::rawTodosForDate( const QDate &date )
 {
-//  kdDebug(5800) << "CalendarResources::rawTodosforDate(date)" << endl;
-
   Todo::List result;
 
   CalendarResourceManager::ActiveIterator it;
@@ -392,7 +398,6 @@ Todo::List CalendarResources::rawTodosForDate( const QDate &date )
 
   return result;
 }
-
 
 Alarm::List CalendarResources::alarmsTo( const QDateTime &to )
 {
@@ -409,11 +414,9 @@ Alarm::List CalendarResources::alarmsTo( const QDateTime &to )
   return result;
 }
 
-Alarm::List CalendarResources::alarms( const QDateTime &from, const QDateTime &to )
+Alarm::List CalendarResources::alarms( const QDateTime &from,
+                                       const QDateTime &to )
 {
-//  kdDebug(5800) << "CalendarResources::alarms(" << from.toString() << " - "
-//                << to.toString() << ")" << endl;
-
   Alarm::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
@@ -427,39 +430,21 @@ Alarm::List CalendarResources::alarms( const QDateTime &from, const QDateTime &t
 
 /****************************** PROTECTED METHODS ****************************/
 
-
-// taking a QDate, this function will look for an eventlist in the dict
-// with that date attached -
-Event::List CalendarResources::rawEventsForDate( const QDate &qd, bool sorted )
+Event::List CalendarResources::rawEventsForDate( const QDate &date,
+                                                 EventSortField sortField,
+                                                 SortDirection sortDirection )
 {
-//  kdDebug(5800) << "CalendarResources::rawEventsForDate()" << endl;
-
   Event::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-//    kdDebug(5800) << "Getting events from '" << (*it)->resourceName() << "'"
-//                  << endl;
-    Event::List list = (*it)->rawEventsForDate( qd, sorted );
-
+    Event::List list = (*it)->rawEventsForDate( date );
     Event::List::ConstIterator it2;
-    if ( sorted ) {
-      Event::List::Iterator insertionPoint = result.begin();
-      for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
-        while ( insertionPoint != result.end() &&
-                (*insertionPoint)->dtStart().time() <= (*it2)->dtStart().time() )
-          insertionPoint++;
-        result.insert( insertionPoint, *it2 );
-        mResourceMap[ *it2 ] = *it;
-      }
-    } else {
-      for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
-        result.append( *it2 );
-        mResourceMap[ *it2 ] = *it;
-      }
+    for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
+      result.append( *it2 );
+      mResourceMap[ *it2 ] = *it;
     }
   }
-
-  return result;
+  return sortEvents( &result, sortField, sortDirection );
 }
 
 Event::List CalendarResources::rawEvents( const QDate &start, const QDate &end,
@@ -480,11 +465,11 @@ Event::List CalendarResources::rawEvents( const QDate &start, const QDate &end,
   return result;
 }
 
-Event::List CalendarResources::rawEventsForDate(const QDateTime &qdt)
+Event::List CalendarResources::rawEventsForDate( const QDateTime &qdt )
 {
   kdDebug(5800) << "CalendarResources::rawEventsForDate(qdt)" << endl;
 
-  // TODO: Remove the code duplication by the resourcemap iteration block.
+  // @TODO: Remove the code duplication by the resourcemap iteration block.
   Event::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
@@ -498,7 +483,8 @@ Event::List CalendarResources::rawEventsForDate(const QDateTime &qdt)
   return result;
 }
 
-Event::List CalendarResources::rawEvents( EventSortField sortField, SortDirection sortDirection )
+Event::List CalendarResources::rawEvents( EventSortField sortField,
+                                          SortDirection sortDirection )
 {
   kdDebug(5800) << "CalendarResources::rawEvents()" << endl;
 
@@ -518,29 +504,34 @@ Event::List CalendarResources::rawEvents( EventSortField sortField, SortDirectio
 
 bool CalendarResources::addJournal( Journal *journal )
 {
-  kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
-
+  kdDebug(5800) << "CalendarResources::addJournal" << endl;
   return addIncidence( journal );
 }
 
-void CalendarResources::deleteJournal( Journal *journal )
+bool CalendarResources::deleteJournal( Journal *journal )
 {
   kdDebug(5800) << "CalendarResources::deleteJournal" << endl;
 
-  if ( mResourceMap.find(journal)!=mResourceMap.end() ) {
-    mResourceMap[journal]->deleteJournal( journal );
-    mResourceMap.remove( journal );
+  bool status;
+  if ( mResourceMap.find( journal ) != mResourceMap.end() ) {
+    status = mResourceMap[journal]->deleteJournal( journal );
+    if ( status )
+      mResourceMap.remove( journal );
   } else {
     CalendarResourceManager::ActiveIterator it;
+    status = false;
     for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-      (*it)->deleteJournal( journal );
+      status |= (*it)->deleteJournal( journal );
     }
   }
 
-  setModified( true );
+  setModified( status );
+  return status;
 }
 
-bool CalendarResources::addJournal(Journal *journal, ResourceCalendar *resource)
+bool CalendarResources::addJournal( Journal *journal,
+                                    ResourceCalendar *resource
+  )
 {
   return addIncidence( journal, resource );
 }
@@ -558,11 +549,12 @@ Journal *CalendarResources::journal( const QString &uid )
     }
   }
 
-  // not found
+  // Not found
   return 0;
 }
 
-Journal::List CalendarResources::rawJournals( JournalSortField sortField, SortDirection sortDirection )
+Journal::List CalendarResources::rawJournals( JournalSortField sortField,
+                                              SortDirection sortDirection )
 {
   kdDebug(5800) << "CalendarResources::rawJournals()" << endl;
 
@@ -611,10 +603,10 @@ void CalendarResources::connectResource( ResourceCalendar *resource )
            SLOT( slotSaveError( ResourceCalendar *, const QString & ) ) );
 }
 
-ResourceCalendar *CalendarResources::resource(Incidence *inc)
+ResourceCalendar *CalendarResources::resource( Incidence *incidence )
 {
-  if ( mResourceMap.find( inc ) != mResourceMap.end() ) {
-    return mResourceMap[ inc ];
+  if ( mResourceMap.find( incidence ) != mResourceMap.end() ) {
+    return mResourceMap[ incidence ];
   }
   return 0;
 }
@@ -623,7 +615,8 @@ void CalendarResources::resourceAdded( ResourceCalendar *resource )
 {
   kdDebug(5800) << "Resource added: " << resource->resourceName() << endl;
 
-  if ( !resource->isActive() ) return;
+  if ( !resource->isActive() )
+    return;
 
   if ( resource->open() ) {
     resource->load();
@@ -648,36 +641,41 @@ void CalendarResources::resourceDeleted( ResourceCalendar *resource )
   emit signalResourceDeleted( resource );
 }
 
-void CalendarResources::doSetTimeZoneId( const QString &tzid )
+void CalendarResources::doSetTimeZoneId( const QString &timeZoneId )
 {
   // set the timezone for all resources. Otherwise we'll have those terrible
   // tz troubles ;-((
   CalendarResourceManager::Iterator i1;
   for ( i1 = mManager->begin(); i1 != mManager->end(); ++i1 ) {
-    (*i1)->setTimeZoneId( tzid );
+    (*i1)->setTimeZoneId( timeZoneId );
   }
 }
 
-CalendarResources::Ticket *CalendarResources::requestSaveTicket( ResourceCalendar *resource )
+CalendarResources::Ticket
+*CalendarResources::requestSaveTicket( ResourceCalendar *resource )
 {
   kdDebug(5800) << "CalendarResources::requestSaveTicket()" << endl;
 
   KABC::Lock *lock = resource->lock();
-  if ( !lock ) return 0;
-  if ( lock->lock() ) return new Ticket( resource );
-  else return 0;
+  if ( !lock )
+    return 0;
+  if ( lock->lock() )
+    return new Ticket( resource );
+  else
+    return 0;
 }
 
 bool CalendarResources::save( Ticket *ticket, Incidence *incidence )
 {
   kdDebug(5800) << "CalendarResources::save( Ticket *)" << endl;
 
-  if ( !ticket || !ticket->resource() ) return false;
+  if ( !ticket || !ticket->resource() )
+    return false;
 
   kdDebug(5800) << "tick " << ticket->resource()->resourceName() << endl;
 
     // @TODO: Check if the resource was changed at all. If not, don't save.
-  if ( ticket->resource()->save(incidence) ) {
+  if ( ticket->resource()->save( incidence ) ) {
     releaseSaveTicket( ticket );
     return true;
   }
@@ -726,7 +724,8 @@ bool CalendarResources::endChange( Incidence *incidence )
   kdDebug(5800) << "CalendarResource::endChange()" << endl;
 
   ResourceCalendar *r = resource( incidence );
-  if ( !r ) return false;
+  if ( !r )
+    return false;
 
   int count = decrementChangeCount( r );
 

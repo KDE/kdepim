@@ -72,7 +72,7 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     /** Add Event to calendar. */
     bool addEvent(Event *anEvent);
     /** deletes an event from this calendar. */
-    void deleteEvent(Event *);
+    bool deleteEvent(Event *);
 
     /**
       Retrieves an event on the basis of the unique string ID.
@@ -86,9 +86,7 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
-    //TODO: Deprecate
-    Event::List rawEventsForDate( const QDate &date, bool sorted = false );
-    //Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
       Get unfiltered events for date \a qdt.
     */
@@ -100,12 +98,6 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     Event::List rawEvents( const QDate &start, const QDate &end,
                            bool inclusive = false );
 
-    /*
-      Returns a QString with the text of the holiday (if any) that falls
-      on the specified date.
-    */
-    // QString getHolidayForDate(const QDate &qd);
-
     /**
       Add a todo to the todolist.
     */
@@ -113,7 +105,7 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     /**
       Remove a todo from the todolist.
     */
-    void deleteTodo( Todo * );
+    bool deleteTodo( Todo * );
     /**
       Searches todolist for an event with this unique string identifier,
       returns a pointer or null.
@@ -130,7 +122,7 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     /** Add a Journal entry to calendar */
     virtual bool addJournal(Journal *);
     /** Remove journal from the calendar. */
-    void deleteJournal( Journal * );
+    bool deleteJournal( Journal * );
     /** Return Journal with given UID */
     virtual Journal *journal(const QString &uid);
     /**
@@ -150,7 +142,7 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
 
     void dump() const;
 
-    void setTimeZoneId( const QString& tzid );
+    void setTimeZoneId( const QString &timeZoneId );
 
   protected:
     bool doOpen();

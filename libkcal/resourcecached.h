@@ -145,7 +145,7 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Deletes an event from this calendar.
     */
-    void deleteEvent(Event *);
+    bool deleteEvent(Event *);
 
     /**
       Retrieves an event on the basis of the unique string ID.
@@ -163,9 +163,7 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
-    //TODO: Deprecate
-    Event::List rawEventsForDate( const QDate &date, bool sorted = false );
-    //Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
 
     /**
       Get unfiltered events for date \a qdt.
@@ -185,7 +183,7 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Remove a todo from the todolist.
     */
-    void deleteTodo( Todo * );
+    bool deleteTodo( Todo * );
     /**
       Searches todolist for an event with this unique string identifier,
       returns a pointer or null.
@@ -206,7 +204,7 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Remove a Journal from the calendar
     */
-    virtual void deleteJournal( Journal * );
+    virtual bool deleteJournal( Journal * );
     /**
       Return Journal with given unique id.
     */
@@ -233,7 +231,7 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Set id of timezone, e.g. "Europe/Berlin"
     */
-    void setTimeZoneId( const QString& tzid );
+    void setTimeZoneId( const QString &timeZoneId );
 
     QString timeZoneId() const;
 
@@ -278,9 +276,9 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
 
   protected:
     // From Calendar::Observer
-    void calendarIncidenceAdded( KCal::Incidence * );
-    void calendarIncidenceChanged( KCal::Incidence * );
-    void calendarIncidenceDeleted( KCal::Incidence * );
+    void calendarIncidenceAdded( KCal::Incidence *incidence );
+    void calendarIncidenceChanged( KCal::Incidence *incidence );
+    void calendarIncidenceDeleted( KCal::Incidence *incidence );
 
     CalendarLocal mCalendar;
 

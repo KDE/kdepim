@@ -62,17 +62,17 @@ class LIBKCAL_EXPORT ResourceLocalDir : public ResourceCached
     KABC::Lock *lock();
 
     /** deletes an event from this calendar. */
-    void deleteEvent(Event *);
+    bool deleteEvent(Event *);
 
     /**
       Remove a todo from the todolist.
     */
-    void deleteTodo( Todo * );
+    bool deleteTodo( Todo * );
 
     /**
       Remove a journal from the journallist.
     */
-    void deleteJournal( Journal * );
+    bool deleteJournal( Journal * );
 
     void dump() const;
 

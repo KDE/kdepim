@@ -126,7 +126,7 @@ bool HtmlExport::save(QTextStream *ts)
   }
 
   createFooter( ts );
-  
+
   // Write HTML trailer
   *ts << "</body></html>\n";
 
@@ -183,7 +183,9 @@ void HtmlExport::createMonthView(QTextStream *ts)
 
         *ts << "</td></tr><tr><td valign=\"top\">";
 
-        Event::List events = mCalendar->events(start,true);
+        Event::List events = mCalendar->events( start,
+                                                EventSortStartDate,
+                                                SortDirectionAscending );
         if (events.count()) {
           *ts << "<table>";
           Event::List::ConstIterator it;
@@ -231,10 +233,12 @@ void HtmlExport::createEventList (QTextStream *ts)
   }
 
   *ts << "  </tr>\n";
-  
+
   for ( QDate dt = fromDate(); dt <= toDate(); dt = dt.addDays(1) ) {
     kdDebug(5850) << "Getting events for " << dt.toString() << endl;
-    Event::List events = mCalendar->events(dt,true);
+    Event::List events = mCalendar->events(dt,
+                                           EventSortStartDate,
+                                           SortDirectionAscending );
     if (events.count()) {
       *ts << "  <tr><td colspan=\"" << QString::number(columns)
           << "\" class=\"datehead\"><i>"
@@ -615,7 +619,7 @@ QString HtmlExport::cleanChars(const QString &text)
 
 QString HtmlExport::styleSheet() const
 {
-  if ( !mSettings->styleSheet().isEmpty() ) 
+  if ( !mSettings->styleSheet().isEmpty() )
     return mSettings->styleSheet();
 
   QString css;

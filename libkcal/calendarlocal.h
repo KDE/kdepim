@@ -83,7 +83,7 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
     /**
       Deletes an event from this calendar.
     */
-    void deleteEvent( Event *event );
+    bool deleteEvent( Event *event );
     /**
       Deletes all events from this calendar.
     */
@@ -105,7 +105,7 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
     /**
       Remove a todo from the todolist.
     */
-    void deleteTodo( Todo * );
+    bool deleteTodo( Todo * );
     /**
       Deletes all todos from this calendar.
     */
@@ -131,7 +131,7 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
     /**
       Remove a Journal from the calendar.
     */
-    void deleteJournal( Journal * );
+    bool deleteJournal( Journal * );
     /**
       Deletes all journals from this calendar.
     */
@@ -163,9 +163,7 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
-    //TODO: Deprecate
-    Event::List rawEventsForDate( const QDate &date, bool sorted = false );
-    //Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted );
+    Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
       Get unfiltered events for date \a qdt.
     */
