@@ -40,7 +40,7 @@ static const char *pilotlocaldatabase_id =
 #include <qstring.h>
 #include <qfile.h>
 
-
+#include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
 
 PilotLocalDatabase::PilotLocalDatabase(const QString & path,
@@ -59,8 +59,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 	(void) pilotlocaldatabase_id;
 }
 
-#if 0
-PilotLocalDatabase::PilotLocalDatabse(const QString &path,
+PilotLocalDatabase::PilotLocalDatabase(const QString &path,
 	PilotSerialDatabase *db) : 
 	PilotDatabase(checkDBName(db->name())),
 	fPathName(path),
@@ -74,7 +73,6 @@ PilotLocalDatabase::PilotLocalDatabse(const QString &path,
 
 	fRecordList.setAutoDelete(true);
 }
-#endif
 
 PilotLocalDatabase::~PilotLocalDatabase()
 {
@@ -373,13 +371,15 @@ void PilotLocalDatabase::openDatabase()
 	QCString fileName = QFile::encodeName(tempName);
 	dbFile = pi_file_open(const_cast < char *>((const char *) fileName));
 
+	makeNewDBInfo();
+
 	if (dbFile == 0L)
 	{
 		kdError() << __FUNCTION__
 			<< ": Failed to open " << tempName << endl;
 		return;
 	}
-	pi_file_get_info(dbFile, &fDBInfo);
+	pi_file_get_info(dbFile, fDBInfo);
 	pi_file_get_app_info(dbFile, &tmpBuffer, &fAppLen);
 	fAppInfo = new char[fAppLen];
 
@@ -410,7 +410,7 @@ void PilotLocalDatabase::closeDatabase()
 	QCString newName = QFile::encodeName(newName_);
 
 	dbFile = pi_file_create(const_cast < char *>((const char *)newName),
-		&fDBInfo);
+		fDBInfo);
 
 	pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
 
@@ -433,6 +433,9 @@ void PilotLocalDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.2  2001/06/21 21:58:12  adridg
+// Make it compile
+//
 // Revision 1.1.1.1  2001/06/21 19:50:09  adridg
 // KitchenSync is the next-gen KDE-PIM Handheld Device Synchronization
 // Framework, which aims to integrate all the Handheld sync tools in 

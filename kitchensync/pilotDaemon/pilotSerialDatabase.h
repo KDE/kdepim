@@ -76,10 +76,14 @@ private:
 	int         fSocket;
 	char        *fDBName;
 	int         fDBHandle;
-	DBInfo      *fDBInfo;
 };
 
 #endif
 
 
 // $Log$
+// Revision 1.1.1.1  2001/06/21 19:50:05  adridg
+// KitchenSync is the next-gen KDE-PIM Handheld Device Synchronization
+// Framework, which aims to integrate all the Handheld sync tools in 
+// KDE, such as KPilot and Kandy. (This is the *real* import).
+//

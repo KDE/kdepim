@@ -38,8 +38,12 @@
 class PilotDatabase
 {
 protected:
-	PilotDatabase(const QString &name) : fDBOpen(false),fName(name)  { }
-	virtual ~PilotDatabase() { }
+	PilotDatabase(const QString &name) : 
+		fDBInfo(0L),
+		fDBOpen(false),
+		fName(name)
+	{ }
+	virtual ~PilotDatabase() { freeDBInfo(); }
 
 public:
 	/** Reads the application block info, returns size. */
@@ -91,6 +95,10 @@ protected:
 
 	void setDBOpen(bool yesno) { fDBOpen = yesno; }
 
+	void freeDBInfo() { if (fDBInfo) { delete fDBInfo; fDBInfo=0L; } } ;
+	void makeNewDBInfo() { freeDBInfo(); fDBInfo= new DBInfo; } ;
+	struct DBInfo *fDBInfo;
+
 private:
 	bool fDBOpen;
 	QString fName;
@@ -100,3 +108,8 @@ private:
 
 
 // $Log$
+// Revision 1.1.1.1  2001/06/21 19:50:05  adridg
+// KitchenSync is the next-gen KDE-PIM Handheld Device Synchronization
+// Framework, which aims to integrate all the Handheld sync tools in 
+// KDE, such as KPilot and Kandy. (This is the *real* import).
+//

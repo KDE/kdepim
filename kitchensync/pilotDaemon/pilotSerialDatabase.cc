@@ -47,8 +47,7 @@ PilotSerialDatabase::PilotSerialDatabase(int sd,const char *dbName) :
 	PilotDatabase(QString(dbName)), 
 	fSocket(sd),
 	fDBName(0L), 
-	fDBHandle(-1),
-	fDBInfo(0L)
+	fDBHandle(-1)
 {
 	fDBName = new char[strlen(dbName) + 1];
 
@@ -273,6 +272,9 @@ int PilotSerialDatabase::recordCount() const
 
 
 // $Log$
+// Revision 1.2  2001/06/21 21:58:12  adridg
+// Make it compile
+//
 // Revision 1.1.1.1  2001/06/21 19:50:08  adridg
 // KitchenSync is the next-gen KDE-PIM Handheld Device Synchronization
 // Framework, which aims to integrate all the Handheld sync tools in 
