@@ -149,8 +149,11 @@ void KNArticle::setTimeT(time_t t)
 {
 	t_imeT=t;
 	if(t_imeString) {
-		delete[] t_imeString;
-		t_imeString=0;
+		//delete t_imeString;
+		//t_imeString=0;
+		DwDateTime dt;
+	  dt.FromUnixTime(t_imeT);
+		t_imeString->sprintf("%.2d.%.2d.%.2d (%.2d:%.2d)",dt.Day(),dt.Month(),(dt.Year()%100),dt.Hour(),dt.Minute());
 	}
 }
 
