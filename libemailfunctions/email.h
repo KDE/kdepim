@@ -27,6 +27,11 @@
 
 #include <kdepimmacros.h>
 
+/** @file */
+
+/** 
+    Namespace KPIM packages up all kinds of functions specific to KDE PIM
+*/
 namespace KPIM {
 
 enum EmailParseResult { AddressOk, AddressEmpty, UnexpectedEnd,

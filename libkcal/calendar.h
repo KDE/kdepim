@@ -41,6 +41,11 @@
 
 class KConfig;
 
+/** @file */
+
+/** 
+    Namespace KCal is for Calendaring-related definitions. 
+*/
 namespace KCal {
 
 /**
@@ -87,7 +92,7 @@ class CalFilter;
 /**
   This is the main "calendar" object class for KOrganizer.  It holds
   information like all appointments/events, user information, etc. etc.
-  one calendar is associated with each CalendarView (@see calendarview.h).
+  one calendar is associated with each CalendarView ( @see calendarview.h ).
   This is an abstract base class defining the interface to a calendar. It is
   implemented by subclasses like @see CalendarLocal, which use different
   methods to store and access the data.
