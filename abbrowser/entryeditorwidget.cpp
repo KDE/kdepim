@@ -623,9 +623,9 @@ AddressDialog::AddressDialog( QWidget *parent,
     i18n( "Cayman Islands" ), i18n( "Central African Republic" ),
     i18n( "Chad" ), i18n( "Chile" ), i18n( "China" ), i18n( "Colombia" ),
     i18n( "Comoros" ), i18n( "Congo" ), i18n( "Congo, Dem. Rep." ),
-    i18n( "Costa Rica" ), i18n( "Cote d'Ivoire" ), i18n( "Croatia" ),
+    i18n( "Costa Rica" ), i18n( "Croatia" ),
     i18n( "Cuba" ), i18n( "Cyprus" ), i18n( "Czech Republic" ),
-    i18n( "Denmark" ), i18n( "Deutschland" ), i18n( "Djibouti" ),
+    i18n( "Denmark" ), i18n( "Djibouti" ),
     i18n( "Dominica" ), i18n( "Dominican Republic" ), i18n( "Ecuador" ),
     i18n( "Egypt" ), i18n( "El Salvador" ), i18n( "Equatorial Guinea" ),
     i18n( "Eritrea" ), i18n( "Estonia" ), i18n( "England" ),
@@ -727,18 +727,19 @@ AddressDialog::AddressDialog( QWidget *parent,
   lay->addWidget( new QLabel( i18n("Country"), gb ), 5, 0 );
   cbCountry = new QComboBox( true, gb );
   QString curCountry;
+  QStringList sCountryList;
   int cbNum = -1;
   if (ce->find( entryField + "Country" ))
     curCountry = *ce->find( entryField + "Country" );
   for (int i =0; sCountry[i] != ""; ++i )
-    cbCountry->insertItem( sCountry[i] );
-  for (int i =0; sCountry[i] != ""; ++i )
-    if ( sCountry[i] == curCountry)
-      cbNum = i;
+    sCountryList.append( sCountry[i] );
+  sCountryList.sort();
+  cbCountry->insertStringList( sCountryList );
+  cbNum = sCountryList.findIndex( curCountry );
   cbCountry->setAutoCompletion( true );
   lay->addWidget( cbCountry, 5, 1 );
 
-  QString language = KGlobal::locale()->language();
+  QString country = KGlobal::locale()->country();
   // Try to guess the country the user is in depending
   // on their preferred language.
   // Imperfect but the best I could do.
@@ -763,13 +764,11 @@ AddressDialog::AddressDialog( QWidget *parent,
 
   int langNum = -1;
   if (cbNum == -1) {
-    for (langNum =0; language != GuessLanguage[langNum]; ++langNum )
+    for (langNum =0; country != GuessLanguage[langNum]; ++langNum )
       if (GuessLanguage[langNum] == "")
 	break;
     if (GuessLanguage[langNum] != "")
-      for (cbNum=0; sCountry[cbNum] != i18n( GuessCountry[langNum] ); ++cbNum )
-	if (sCountry[cbNum] == "")
-	  break;
+      cbNum = sCountryList.findIndex( i18n( GuessCountry[langNum] ) );
     if (sCountry[cbNum] == "")
       cbNum = -1;
   }

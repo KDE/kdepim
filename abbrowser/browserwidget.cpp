@@ -1099,10 +1099,12 @@ void PabListView::paintEmptyArea( QPainter * p, const QRect & rect )
 // This class is pretty much just eye candy :-)
 // (might be useful for people who can't type quickly or 
 // don't realize how good the built in incremental searching is)
-void PabListView::incSearch( const QString &value )
+void PabListView::incSearch( const QString &search )
 {
-  if (value == "")
+  if (search.isEmpty())
     return;
+  
+  QString value = search.lower();
   QListViewItem *citem = currentItem();
 
   if (ascending) {
