@@ -87,6 +87,7 @@ extern "C" {
 
 #define IMAP_PROTOCOL "imap"
 #define IMAP_SSL_PROTOCOL "imaps"
+#define IMAP_TIMEOUT_IN_SECONDS 60
 
 using namespace KIO;
 
@@ -739,7 +740,7 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, ulong relay)
       closeConnection();
       return FALSE;
     }
-    if (!waitForResponse(600))
+    if (!waitForResponse( IMAP_TIMEOUT_IN_SECONDS ))
     {
       error(ERR_SERVER_TIMEOUT, myHost);
       setState(ISTATE_CONNECT);
@@ -2359,7 +2360,7 @@ ssize_t IMAP4Protocol::myRead(void *data, ssize_t len)
     return copyLen;
   }
   if (!isConnectionValid()) return 0;
-  waitForResponse(600);
+  waitForResponse( IMAP_TIMEOUT_IN_SECONDS );
   return read(data, len);
 }
 
