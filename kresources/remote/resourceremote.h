@@ -29,11 +29,13 @@
 #include <kconfig.h>
 #include <kdirwatch.h>
 
-#include "incidence.h"
-#include "calendarlocal.h"
-#include "icalformat.h"
+#include <libkdepim/progressmanager.h>
 
-#include "resourcecached.h"
+#include <libkcal/incidence.h>
+#include <libkcal/calendarlocal.h>
+#include <libkcal/icalformat.h>
+
+#include <libkcal/resourcecached.h>
 
 namespace KIO {
 class FileCopyJob;
@@ -97,6 +99,12 @@ class ResourceRemote : public ResourceCached
     */
     int reloadPolicy() const;
 
+    void setUseProgressManager( bool useProgressManager );
+    bool useProgressManager() const;
+
+    void setUseCacheFile( bool useCacheFile );
+    bool useCacheFile() const;
+
     /**
       Return name of file used as cache for remote file.
     */
@@ -116,6 +124,8 @@ class ResourceRemote : public ResourceCached
     void slotLoadJobResult( KIO::Job * );
     void slotSaveJobResult( KIO::Job * );
 
+    void slotPercent( KIO::Job *, unsigned long percent );
+
   protected:
     bool doOpen();
 
@@ -125,7 +135,7 @@ class ResourceRemote : public ResourceCached
     /** this method should be called whenever a Event is modified directly
      * via it's pointer.  It makes sure that the calendar is internally
      * consistent. */
-    virtual void update(IncidenceBase *incidence);
+    virtual void update( IncidenceBase *incidence );
  
   private:
     void init();
@@ -135,12 +145,17 @@ class ResourceRemote : public ResourceCached
 
     int mReloadPolicy;
 
+    bool mUseProgressManager;
+    bool mUseCacheFile;
+
     ICalFormat mFormat;
 
     bool mOpen;
 
     KIO::FileCopyJob *mDownloadJob;
     KIO::FileCopyJob *mUploadJob;
+    
+    KPIM::ProgressItem *mProgress;
     
     KABC::Lock *mLock;
 

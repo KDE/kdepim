@@ -28,10 +28,6 @@
 #include <kdebug.h>
 #include <kstandarddirs.h>
 
-#include "vcaldrag.h"
-#include "vcalformat.h"
-#include "icalformat.h"
-
 #include "resourceremote.h"
 
 #include "resourceremoteconfig.h"

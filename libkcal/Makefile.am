@@ -28,7 +28,6 @@ libkcal_la_SOURCES = \
         compat.cpp \
 	resourcecalendar.cpp resourcelocal.cpp resourcelocalconfig.cpp \
 	resourcelocaldir.cpp resourcelocaldirconfig.cpp \
-        resourceremote.cpp resourceremoteconfig.cpp \
         calendarresources.cpp \
         qtopiaformat.cpp \
 	resourcecached.cpp \
@@ -43,10 +42,10 @@ libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
   incidencebase.h incidence.h journal.h listbase.h period.h person.h \
   qtopiaformat.h recurrence.h resourcecached.h resourcecalendar.h \
   resourcelocalconfig.h resourcelocaldirconfig.h resourcelocaldir.h \
-  resourcelocal.h resourceremoteconfig.h resourceremote.h scheduler.h \
+  resourcelocal.h scheduler.h \
   todo.h vcaldrag.h vcalformat.h
 
-kde_module_LTLIBRARIES = kcal_local.la kcal_localdir.la kcal_remote.la kcal_kabc.la
+kde_module_LTLIBRARIES = kcal_local.la kcal_localdir.la kcal_kabc.la
 
 kcal_local_la_SOURCES = resourcelocal_plugin.cpp
 kcal_local_la_LDFLAGS = -module $(KDE_PLUGIN)
@@ -55,10 +54,6 @@ kcal_local_la_LIBADD  = libkcal.la
 kcal_localdir_la_SOURCES = resourcelocaldir_plugin.cpp
 kcal_localdir_la_LDFLAGS = -module $(KDE_PLUGIN)
 kcal_localdir_la_LIBADD  = libkcal.la
-
-kcal_remote_la_SOURCES = resourceremote_plugin.cpp
-kcal_remote_la_LDFLAGS = -module $(KDE_PLUGIN)
-kcal_remote_la_LIBADD  = libkcal.la
 
 kcal_kabc_la_SOURCES = resourcekabc.cpp resourcekabcconfig.cpp
 kcal_kabc_la_LDFLAGS = -module $(KDE_PLUGIN)
@@ -69,7 +64,7 @@ convertqtopia_SOURCES = convertqtopia.cpp
 convertqtopia_LDADD = libkcal.la
 
 servicedir = $(kde_servicesdir)/kresources/kcal
-service_DATA = local.desktop localdir.desktop remote.desktop kabc.desktop
+service_DATA = local.desktop localdir.desktop kabc.desktop
 
 METASOURCES = AUTO
 

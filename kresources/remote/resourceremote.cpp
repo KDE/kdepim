@@ -1,7 +1,7 @@
 /*
     This file is part of libkcal.
 
-    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -32,15 +32,13 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 
-#include "vcaldrag.h"
-#include "vcalformat.h"
-#include "icalformat.h"
-#include "exceptions.h"
-#include "incidence.h"
-#include "event.h"
-#include "todo.h"
-#include "journal.h"
-#include "filestorage.h"
+#include <libkcal/icalformat.h>
+#include <libkcal/exceptions.h>
+#include <libkcal/incidence.h>
+#include <libkcal/event.h>
+#include <libkcal/todo.h>
+#include <libkcal/journal.h>
+#include <libkcal/filestorage.h>
 
 #include <kabc/locknull.h>
 
@@ -52,8 +50,8 @@
 
 using namespace KCal;
 
-ResourceRemote::ResourceRemote( const KConfig* config )
-  : ResourceCached( config ), mLock( 0 )
+ResourceRemote::ResourceRemote( const KConfig *config )
+  : ResourceCached( config ), mUseProgressManager( true ), mUseCacheFile( true )
 {
   if ( config ) {
     readConfig( config );
@@ -63,7 +61,7 @@ ResourceRemote::ResourceRemote( const KConfig* config )
 }
 
 ResourceRemote::ResourceRemote( const KURL &downloadUrl, const KURL &uploadUrl )
-  : ResourceCached( 0 )
+  : ResourceCached( 0 ), mUseProgressManager( false ), mUseCacheFile( false )
 {
   mDownloadUrl = downloadUrl;
   
@@ -90,6 +88,8 @@ void ResourceRemote::init()
 {
   mDownloadJob = 0;
   mUploadJob = 0;
+
+  mProgress = 0;
 
   setType( "remote" );
 
@@ -151,6 +151,26 @@ int ResourceRemote::reloadPolicy() const
   return mReloadPolicy;
 }
 
+void ResourceRemote::setUseProgressManager( bool useProgressManager )
+{
+  mUseProgressManager = useProgressManager;
+}
+
+bool ResourceRemote::useProgressManager() const
+{
+  return mUseProgressManager;
+}
+
+void ResourceRemote::setUseCacheFile( bool useCacheFile )
+{
+  mUseCacheFile = useCacheFile;
+}
+
+bool ResourceRemote::useCacheFile() const
+{
+  return mUseCacheFile;
+}
+
 QString ResourceRemote::cacheFile()
 {
   QString file = locateLocal( "cache", "kcal/kresources/" + identifier() );
@@ -186,13 +206,33 @@ bool ResourceRemote::load()
 
   mCalendar.close();
 
-  mCalendar.load( cacheFile() );
+  if ( mUseCacheFile ) {
+    mCalendar.load( cacheFile() );
+  }
 
-  mDownloadJob = KIO::file_copy( mDownloadUrl, KURL( cacheFile() ), -1, true );
+  kdDebug() << "Download from: " << mDownloadUrl << endl;
+
+  mDownloadJob = KIO::file_copy( mDownloadUrl, KURL( cacheFile() ), -1, true,
+                                 false, !mUseProgressManager );
   connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotLoadJobResult( KIO::Job * ) ) );
+  if ( mUseProgressManager ) {
+    connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
+             SLOT( slotPercent( KIO::Job *, unsigned long ) ) );
+    mProgress = KPIM::ProgressManager::createProgressItem(
+        "kcalremote", i18n("Downloading Calendar") );
+
+    mProgress->setProgress( 0 );
+  }
 
   return true;
+}
+
+void ResourceRemote::slotPercent( KIO::Job *, unsigned long percent )
+{
+  kdDebug() << "ResourceRemote::slotPercent(): " << percent << endl;
+
+  mProgress->setProgress( percent );
 }
 
 void ResourceRemote::slotLoadJobResult( KIO::Job *job )
@@ -209,6 +249,10 @@ void ResourceRemote::slotLoadJobResult( KIO::Job *job )
   }
 
   mDownloadJob = 0;
+  if ( mProgress ) {
+    mProgress->setComplete();
+    mProgress = 0;
+  }
 
   emit resourceLoaded( this );
 }
