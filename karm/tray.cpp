@@ -18,6 +18,7 @@
 #include <qpixmap.h>
 #include <qpopupmenu.h>
 #include <kapplication.h>
+#include <kglobalsettings.h>
 #include <kconfig.h>
 #include <ksystemtray.h>
 #include <kglobal.h>
@@ -134,7 +135,7 @@ void KarmTray::updateToolTip(QPtrList<Task> activeTasks)
   QFontMetrics fm( QToolTip::font() );
   const QString continued = i18n( ", ..." );
   const int buffer = fm.boundingRect( continued ).width();
-  const int desktopWidth = KApplication::desktop()->size().width();
+  const int desktopWidth = KGlobalSettings::desktopGeometry(this).width();
   const int maxWidth = desktopWidth - buffer;
 
   QString qTip;
