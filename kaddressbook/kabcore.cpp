@@ -585,15 +585,13 @@ bool KABCore::modified() const
 void KABCore::contactModified( const KABC::Addressee &addr )
 {
   Command *command = 0;
-  QString uid;
 
   // check if it exists already
   KABC::Addressee origAddr = mAddressBook->findByUid( addr.uid() );
-  if ( origAddr.isEmpty() )
+  if ( origAddr.isEmpty() ) {
     command = new PwNewCommand( mAddressBook, addr );
-  else {
+  } else {
     command = new PwEditCommand( mAddressBook, origAddr, addr );
-    uid = addr.uid();
   }
 
   UndoStack::instance()->push( command );
