@@ -47,12 +47,12 @@ const char *doc_conduit_id = "$Id$";
 QString dirToString(eSyncDirectionEnum dir) {
 	switch(dir) {
 //		case eSyncAll: return "eSyncAll";
-		case eSyncPDAToPC: return "eSyncPDAToPC";
-		case eSyncPCToPDA: return "eSyncPCToPDA";
-		case eSyncNone: return "eSyncNone";
-		case eSyncConflict: return "eSyncConflict";
-		case eSyncDelete: return "eSyncDelete";
-		default: return "ERROR";
+		case eSyncPDAToPC: return CSL1("eSyncPDAToPC");
+		case eSyncPCToPDA: return CSL1("eSyncPCToPDA");
+		case eSyncNone: return CSL1("eSyncNone");
+		case eSyncConflict: return CSL1("eSyncConflict");
+		case eSyncDelete: return CSL1("eSyncDelete");
+		default: return CSL1("ERROR");
 	}
 }
 
@@ -162,7 +162,7 @@ bool DOCConduit::textChanged(QString docfn)
 	QFile docfile(docfn);
 	if (docfile.open(IO_ReadOnly)){
 		docmd5.update(docfile);
-		QString thisDigest(docmd5.hexDigest().data());
+		QString thisDigest(docmd5.hexDigest() /* .data() */);
 #ifdef DEBUG
 		DEBUGCONDUIT<<"New digest is "<<thisDigest<<endl;
 #endif
@@ -187,7 +187,7 @@ QString DOCConduit::constructPDBFileName(QString name) {
 	QString fn;
 	QDir dr(fPDBDir);
 	QFileInfo pth(dr, name);
-	if (!name.isEmpty()) fn=pth.absFilePath()+".pdb";
+	if (!name.isEmpty()) fn=pth.absFilePath()+CSL1(".pdb");
 	return fn;
 }
 QString DOCConduit::constructDOCFileName(QString name) {
@@ -195,7 +195,7 @@ QString DOCConduit::constructDOCFileName(QString name) {
 	QString fn;
 	QDir dr(fDOCDir);
 	QFileInfo pth(dr, name);
-	if (!name.isEmpty()) fn=pth.absFilePath()+".txt";
+	if (!name.isEmpty()) fn=pth.absFilePath()+CSL1(".txt");
 	return fn;
 }
 
@@ -242,10 +242,10 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 				kdWarning()<<i18n("Unable to delete the text file \"%1\" on the PC").arg(sinfo.docfilename)<<endl;
 			}
 			QString bmkfilename = sinfo.docfilename;
-			if (bmkfilename.endsWith(".txt")){
+			if (bmkfilename.endsWith(CSL1(".txt"))){
 				bmkfilename.remove(bmkfilename.length()-4, 4);
 			}
-			bmkfilename+=PDBBMK_SUFFIX;
+			bmkfilename+=CSL1(PDBBMK_SUFFIX);
 			if (!QFile::remove(bmkfilename)) {
 #ifdef DEBUG
 				DEBUGCONDUIT<<"Could not remove bookmarks file "<<bmkfilename<<" for database "<<sinfo.handheldDB<<endl;
@@ -253,18 +253,22 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 			}
 		}
 		if (!sinfo.pdbfilename.isEmpty() && fKeepPDBLocally) {
-			PilotLocalDatabase*database=new PilotLocalDatabase(fPDBDir, sinfo.dbinfo.name, false);
+			PilotLocalDatabase*database=new PilotLocalDatabase(fPDBDir, 
+				QString::fromLatin1(sinfo.dbinfo.name), false);
 			if (database) {
 				if ( database->deleteDatabase() !=0 ) {
-					kdWarning()<<i18n("Unable to delete database \"%1\" on the PC").arg(sinfo.dbinfo.name)<<endl;
+					kdWarning()<<i18n("Unable to delete database \"%1\" on the PC")
+						.arg(QString::fromLatin1(sinfo.dbinfo.name))<<endl;
 				}
 				KPILOT_DELETE(database);
 			}
 		}
 		if (!fLocalSync) {
-			PilotDatabase *database=new PilotSerialDatabase(pilotSocket(), sinfo.dbinfo.name);
+			PilotDatabase *database=new PilotSerialDatabase(pilotSocket(), 
+				QString::fromLatin1(sinfo.dbinfo.name));
 			if ( database->deleteDatabase() !=0 ) {
-				kdWarning()<<i18n("Unable to delete database \"%1\" from the handheld").arg(sinfo.dbinfo.name)<<endl;
+				kdWarning()<<i18n("Unable to delete database \"%1\" from the handheld")
+					.arg(QString::fromLatin1(sinfo.dbinfo.name))<<endl;
 			}
 			KPILOT_DELETE(database);
 		}
@@ -314,7 +318,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 			QFile docfile(docconverter.docFilename());
 			if (docfile.open(IO_ReadOnly)) {
 				docmd5.update(docfile);
-				QString thisDigest(docmd5.hexDigest().data());
+				QString thisDigest(docmd5.hexDigest() /* .data() */);
 				fConfig->writeEntry(docconverter.docFilename(), thisDigest);
 				fConfig->sync();
 #ifdef DEBUG
@@ -328,16 +332,19 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 		}
 		
 		if (!postSyncAction(database, sinfo, res)) 
-			emit logError(i18n("Unable to install the locally created PalmDOC %1 to the handheld.").arg(sinfo.dbinfo.name));
+			emit logError(i18n("Unable to install the locally created PalmDOC %1 to the handheld.")
+				.arg(QString::fromLatin1(sinfo.dbinfo.name)));
 		if (!res)
-			emit logError(i18n("Conversion of PalmDOC \"%1\" failed.").arg(sinfo.dbinfo.name));
+			emit logError(i18n("Conversion of PalmDOC \"%1\" failed.")
+				.arg(QString::fromLatin1(sinfo.dbinfo.name)));
 //		disconnect(&docconverter, SIGNAL(logError(const QString &)), SIGNAL(logError(const QString &)));
 //		disconnect(&docconverter, SIGNAL(logMessage(const QString &)), SIGNAL(logMessage(const QString &)));
 //		KPILOT_DELETE(database);
 	}
 	else
 	{
-		emit logError(i18n("Unable to open or create the database %1").arg(sinfo.dbinfo.name));
+		emit logError(i18n("Unable to open or create the database %1")
+			.arg(QString::fromLatin1(sinfo.dbinfo.name)));
 	}
 	return res;
 }
@@ -361,20 +368,22 @@ void DOCConduit::syncNextDB() {
 #endif
 
 	// if creator and/or type don't match, go to next db
-	if (!isCorrectDBTypeCreator(dbinfo) || fDBNames.contains(dbinfo.name))
+	if (!isCorrectDBTypeCreator(dbinfo) || 
+		fDBNames.contains(QString::fromLatin1(dbinfo.name)))
 	{
 		QTimer::singleShot(0, this, SLOT(syncNextDB()));
 		return;
 	}
 
-	QString docfilename=constructDOCFileName(dbinfo.name);
-	QString pdbfilename=constructPDBFileName(dbinfo.name);
+	QString docfilename=constructDOCFileName(QString::fromLatin1(dbinfo.name));
+	QString pdbfilename=constructPDBFileName(QString::fromLatin1(dbinfo.name));
 
-	docSyncInfo syncInfo(dbinfo.name, docfilename, pdbfilename, eSyncNone);
+	docSyncInfo syncInfo(QString::fromLatin1(dbinfo.name), 
+		docfilename, pdbfilename, eSyncNone);
 	syncInfo.dbinfo=dbinfo;
 	needsSync(syncInfo);
 	fSyncInfoList.append(syncInfo);
-	fDBNames.append(dbinfo.name);
+	fDBNames.append(QString::fromLatin1(dbinfo.name));
 	
 	QTimer::singleShot(0, this, SLOT(syncNextDB()));
 	return;
@@ -396,7 +405,7 @@ void DOCConduit::syncNextDOC()
 	
 	// if docnames isn't initialized, get a list of all *.txt files in fDOCDir
 	if (docnames.isEmpty()/* || dociterator==docnames.end() */) {
-		docnames=QDir(fDOCDir, "*.txt").entryList() ;
+		docnames=QDir(fDOCDir, CSL1("*.txt")).entryList() ;
 		dociterator=docnames.begin();
 	}
 	if (dociterator==docnames.end()) {
@@ -418,15 +427,16 @@ void DOCConduit::syncNextDOC()
 	// Include all "extensions" except the last. This allows full stops inside the database name (e.g. abbreviations)
 	// first fill everything with 0, so we won't have a buffer overflow.
 	memset(&dbinfo.name[0], 0, 33);
-	strncpy(&dbinfo.name[0], fl.baseName(TRUE), 30);
+	strncpy(&dbinfo.name[0], fl.baseName(TRUE).latin1(), 30);
 
-	bool alreadySynced=fDBNames.contains(dbinfo.name);
+	bool alreadySynced=fDBNames.contains(fl.baseName(TRUE));
 	if (!alreadySynced) {
-		docSyncInfo syncInfo(dbinfo.name, docfilename, pdbfilename, eSyncNone);
+		docSyncInfo syncInfo(QString::fromLatin1(dbinfo.name), 
+			docfilename, pdbfilename, eSyncNone);
 		syncInfo.dbinfo=dbinfo;
 		needsSync(syncInfo);
 		fSyncInfoList.append(syncInfo);
-		fDBNames.append(dbinfo.name);
+		fDBNames.append(QString::fromLatin1(dbinfo.name));
 	} else {
 #ifdef DEBUG
 		DEBUGCONDUIT<<docfilename<<" has already been synced, skipping it."<<endl;
@@ -454,7 +464,7 @@ void DOCConduit::checkPDBFiles() {
 	// Walk through all files in the pdb directory and check if it has already been synced.
 	// if docnames isn't initialized, get a list of all *.pdb files in fPDBDir
 	if (docnames.isEmpty()/* || dociterator==docnames.end() */) {
-		docnames=QDir(fPDBDir, "*.pdb").entryList() ;
+		docnames=QDir(fPDBDir, CSL1("*.pdb")).entryList() ;
 		dociterator=docnames.begin();
 	}
 	if (dociterator==docnames.end()) {
@@ -480,13 +490,13 @@ void DOCConduit::checkPDBFiles() {
 			// Include all "extensions" except the last. This allows full stops inside the database name (e.g. abbreviations)
 			// first fill everything with 0, so we won't have a buffer overflow.
 			memset(&dbinfo.name[0], 0, 33);
-			strncpy(&dbinfo.name[0], dbname, 30);
+			strncpy(&dbinfo.name[0], dbname.latin1(), 30);
 
-			docSyncInfo syncInfo(dbinfo.name, constructDOCFileName(dbname), pdbfilename, eSyncNone);
+			docSyncInfo syncInfo(dbname, constructDOCFileName(dbname), pdbfilename, eSyncNone);
 			syncInfo.dbinfo=dbinfo;
 			needsSync(syncInfo);
 			fSyncInfoList.append(syncInfo);
-			fDBNames.append(dbinfo.name);
+			fDBNames.append(dbname);
 		} else {
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Could not install database "<<dbname<<" ("<<pdbfilename<<") to the handheld"<<endl;
@@ -614,7 +624,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 	FUNCTIONSETUP;
 	sinfo.direction = eSyncNone;
 	
-	PilotDatabase*docdb=openDOCDatabase(sinfo.dbinfo.name);
+	PilotDatabase*docdb=openDOCDatabase(QString::fromLatin1(sinfo.dbinfo.name));
 	if (!fDBListSynced.contains(sinfo.handheldDB)) {
 		// the database wasn't included on last sync, so it has to be new.
 #ifdef DEBUG
@@ -791,11 +801,13 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 	}
 	if (fKeepPDBLocally)
 	{
-		return new PilotLocalDatabase(fPDBDir, dbinfo.name, false);
+		return new PilotLocalDatabase(fPDBDir, 
+			QString::fromLatin1(dbinfo.name), false);
 	}
 	else
 	{
-		return new PilotSerialDatabase(pilotSocket(), dbinfo.name);
+		return new PilotSerialDatabase(pilotSocket(), 
+			QString::fromLatin1(dbinfo.name));
 	}
 }
 
@@ -815,7 +827,7 @@ bool DOCConduit::postSyncAction(PilotDatabase * database, docSyncInfo &sinfo, bo
 				DEBUGCONDUIT<<"Resetting sync flags for database "<<sinfo.dbinfo.name<<endl;
 #endif
 			if (fKeepPDBLocally && !fLocalSync) {
-				PilotSerialDatabase*db=new PilotSerialDatabase(pilotSocket(), sinfo.dbinfo.name);
+				PilotSerialDatabase*db=new PilotSerialDatabase(pilotSocket(), QString::fromLatin1(sinfo.dbinfo.name));
 #ifdef DEBUG
 				DEBUGCONDUIT<<"Middle 1 Resetting sync flags for database "<<sinfo.dbinfo.name<<endl;
 #endif

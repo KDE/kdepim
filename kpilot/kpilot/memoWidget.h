@@ -69,8 +69,8 @@ public:
   
 	// Pilot Component Methods:
 	/* virtual */ void initialize();
-	bool preHotSync(QString &);
-	void postHotSync();
+	/* virtual */ bool preHotSync(QString &);
+	/* virtual */ void postHotSync();
 
 	// Added by David Bishop, please move to correct location!
 	bool saveAsXML(const QString &fileName,const QPtrList<PilotListItem> &menu_item );
@@ -97,7 +97,7 @@ public slots:
 	*/
 	void slotShowMemo(int);
 	void slotUpdateButtons();
-	void slotTextChanged();
+	// void slotTextChanged();
 	void slotImportMemo();
 	void slotExportMemo();
 	void slotDeleteMemo(); // Delets the currently selected memo(s)
@@ -115,6 +115,8 @@ private:
 	QListBox*		fListBox;
 
 	QPushButton *fExportButton,*fDeleteButton;
+	
+	int lastSelectedMemo;
 };
 
 

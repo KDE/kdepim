@@ -78,7 +78,10 @@ private:
 	
 	EConflictResolution getEntryResolution(const KABC::Addressee & abEntry, const PilotAddress &backupAddress, const PilotAddress & pilotAddress);
 	EConflictResolution getFieldResolution(const QString &entry, const QString &field, const QString &palm, const QString &backup, const QString &pc);
-	EConflictResolution ResolutionDialog(QString Title, QString Text, QStringList &lst, QString remember="", bool*rem=0L) const;
+	EConflictResolution ResolutionDialog(QString Title, 
+		QString Text, 
+		QStringList &lst, 
+		QString remember=QString::null, bool*rem=0L) const;
 
 	int _conflict(const QString &entry, const QString &field, const QString &pc, const QString &backup, 
 			const QString &palm, bool & mergeNeeded, QString & mergedStr);
@@ -222,6 +225,5 @@ private:
 	
 	void showAdresses(PilotAddress & pilotAddress, const PilotAddress & backupAddress, KABC::Addressee & abEntry);
 } ;
-
 
 #endif

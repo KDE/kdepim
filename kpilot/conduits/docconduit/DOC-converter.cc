@@ -244,7 +244,7 @@ int DOCConverter::findBmkInline(QString &text, bmkList &fBmks) {
 	FUNCTIONSETUP;
 //	bmkList res;
 	int nr=0;
-	QRegExp rx("<\\*(.*)\\*>");
+	QRegExp rx(CSL1("<\\*(.*)\\*>"));
 
 	rx.setMinimal(TRUE);
 	int pos = 0;
@@ -264,14 +264,14 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 	int nr=0;
 	
 	QString bmkfilename = docfilename;
-	if (bmkfilename.endsWith(".txt")){
+	if (bmkfilename.endsWith(CSL1(".txt"))){
 		bmkfilename.remove(bmkfilename.length()-4, 4);
 	}
 	QString oldbmkfilename=bmkfilename;
-	bmkfilename+=BMK_SUFFIX;
+	bmkfilename+=CSL1(BMK_SUFFIX);
 	QFile bmkfile(bmkfilename);
 	if (!bmkfile.open(IO_ReadOnly)) 	{
-		bmkfilename=oldbmkfilename+PDBBMK_SUFFIX;
+		bmkfilename=oldbmkfilename+CSL1(PDBBMK_SUFFIX);
 		bmkfile.setName(bmkfilename);
 		if (!bmkfile.open(IO_ReadOnly)) {
 			DEBUGCONDUIT<<"Unable to open bookmarks file "<<bmkfilename<<" for reading the bookmarks of "<<docdb ->dbPathName()<<endl;
@@ -283,9 +283,9 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 
 	QTextStream bmkstream(&bmkfile);
 	QString line;
-	while ( (line=bmkstream.readLine()) && (!line.isNull()) ) {
-		if (!line.isEmpty() && !line.startsWith("#") ) {
-			QStringList bmkinfo=QStringList::split(",", line);
+	while ( !(line=bmkstream.readLine()).isEmpty() && (!line.isNull()) ) {
+		if (!line.isEmpty() && !line.startsWith(CSL1("#")) ) {
+			QStringList bmkinfo=QStringList::split(CSL1(","), line);
 			int fieldnr=bmkinfo.count();
 			// We use the same syntax for the entries as MakeDocJ bookmark files:
 			//   <bookmark>,<string-to-search>,<bookmark-name-string>,<starting-bookmark>,<ending-bookmark>
@@ -302,7 +302,7 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 						DEBUGCONDUIT<<"Bookmark \""<<name<<"\" set at position "<<pos<<endl;
 						fBmks.append(new docBookmark(name, pos));
 					}
-				} else if (bookmark=="-" || bookmark=="+") {
+				} else if (bookmark==CSL1("-") || bookmark==CSL1("+")) {
 					if (fieldnr>1) {
 						QString patt(bmkinfo[1]);
 						QString name(patt);
@@ -320,7 +320,7 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 						// The third entry in the line (optional) denotes the index of a capture subexpression (if an integer) or the bookmark text as regexp (if a string)
 						DEBUGCONDUIT<<"RegExp Bookmark, pattern="<<patt<<", name="<<name<<endl;
 						if (bmk) {
-							if (bookmark=="-") {
+							if (bookmark==CSL1("-")) {
 								bmk->from=1;
 								bmk->to=1;
 							} else {
@@ -547,10 +547,10 @@ bool DOCConverter::convertPDBtoDOC()
 	// TODO: for the ztxt conduit there might be annotations after the bookmarks, so the upper bound needs to be adapted.
 	int upperBmkRec=docdb->recordCount();
 	QString bmkfilename = docfile.name();
-	if (bmkfilename.endsWith(".txt")){
+	if (bmkfilename.endsWith(CSL1(".txt"))){
 		bmkfilename.remove(bmkfilename.length()-4, 4);
 	}
-	bmkfilename+=PDBBMK_SUFFIX;
+	bmkfilename+=CSL1(PDBBMK_SUFFIX);
 	QFile bmkfile(bmkfilename);
 	if (!bmkfile.open(IO_WriteOnly))
 	{

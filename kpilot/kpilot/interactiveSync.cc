@@ -441,7 +441,7 @@ nextFile:
 		return;
 	}
 
-	QFileInfo databaseInfo(dbi.name);
+	QFileInfo databaseInfo(QString::fromLatin1(dbi.name));
 	addSyncLogEntry(databaseInfo.fileName());
 	emit logProgress(i18n("Restoring %1...").arg(databaseInfo.fileName()),
 		(100*fP->fDBIndex) / (fP->fDBList.count()+1)) ;

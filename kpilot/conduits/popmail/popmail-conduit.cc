@@ -1,4 +1,3 @@
-
 /* popmail-conduit.cc			KPilot
 **
 ** Copyright (C) 1998-2001 Dan Pilone
@@ -59,6 +58,7 @@ static const char *popmail_conduit_id=
 
 #include <qdir.h>
 #include <qtextstream.h>
+#include <qtextcodec.h>
 
 #include <kapplication.h>
 #include <kmessagebox.h>
@@ -68,7 +68,7 @@ static const char *popmail_conduit_id=
 #include <dcopclient.h>
 #include <ktempfile.h>
 
-#include "pilotRecord.h"
+#include "pilotAppCategory.h"
 #include "pilotSerialDatabase.h"
 
 #include "passworddialog.h"
@@ -150,8 +150,8 @@ void showResponseResult(int const ret,
 		//
 		if (buffer && buffer[0])
 		{
-			msg.append("\n");
-			msg.append(buffer);
+			msg.append(CSL1("\n"));
+			msg.append(QString::fromLocal8Bit(buffer));
 #ifdef DEBUG
 			DEBUGCONDUIT << func
 				<< ": " << buffer
@@ -294,7 +294,7 @@ PopMailConduit::doSync()
 	int mode=0;
 	int sent_count=0,received_count=0;
 
-	addSyncLogEntry("Mail ");
+	addSyncLogEntry(CSL1("Mail "));
 
 	mode=fConfig->readNumEntry(PopmailConduitFactory::syncOutgoing);
 #ifdef DEBUG
@@ -326,34 +326,25 @@ PopMailConduit::doSync()
 	//
 	if ((sent_count>0) || (received_count>0))
 	{
-		char buffer[128];
-		if ((sent_count>0) && (received_count>0))
+		QString msg = CSL1("[ ");
+		if (sent_count>0)
 		{
-			/* TODO_I18N */
-			sprintf(buffer,"[ Sent %d message%c",
-				sent_count,(sent_count>1) ? 's' : 0);
-			addSyncLogEntry(buffer);
-			sprintf(buffer,", Received %d message%c",
-				received_count,(received_count>1) ? 's' : 0);
-			addSyncLogEntry(buffer);
+			msg.append(i18n("Sent one message",
+				"Sent %n messages",sent_count));
+			if (received_count>0)
+			{
+				msg.append(CSL1(" ; "));
+			}
 		}
-		if ((sent_count>0) && !(received_count>0))
+		if (received_count>0)
 		{
-			/* TODO_I18N */
-			sprintf(buffer,"[ Sent %d message%c",
-				sent_count,(sent_count>1) ? 's' : 0);
-			addSyncLogEntry(buffer);
+			msg.append(i18n("Received one message",
+				"Received %n messages",received_count));
 		}
-		if (!(sent_count>0) && (received_count>0))
-		{
-			sprintf(buffer,"[ Received %d message%c",
-				received_count,(received_count>1) ? 's' : 0);
-			addSyncLogEntry(buffer);
-		}
-		
-		addSyncLogEntry(" ] ");
+		msg.append(CSL1(" ] "));
+		addSyncLogEntry(msg);
 	}
-	addSyncLogEntry("OK\n");
+	addSyncLogEntry(CSL1("OK\n"));
 }
 
 
@@ -442,7 +433,7 @@ QString getFQDomainName (const KConfig& config)
 
 	// Has the user given an explicit domain name?
 	int useExplicitDomainName = 0;
-	if (!config.readEntry("explicitDomainName", "").isEmpty())
+	if (!config.readEntry("explicitDomainName", QString::null).isEmpty())
 		useExplicitDomainName = 1;
 
 	// Or was it given in the MAILDOMAIN environment variable?
@@ -450,7 +441,7 @@ QString getFQDomainName (const KConfig& config)
 		useExplicitDomainName = 2;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": EDN=" << config.readEntry("explicitDomainName", "") << endl;
+	DEBUGCONDUIT << fname << ": EDN=" << config.readEntry("explicitDomainName", QString::null) << endl;
 	DEBUGCONDUIT << fname << ": useEDN=" << useExplicitDomainName << endl;
 #endif
 
@@ -462,14 +453,14 @@ QString getFQDomainName (const KConfig& config)
 		} else {
 			// Use explicitly configured FQDN.
 			// The domain name can also be the name of an environment variable.
-			fqDomainName = config.readEntry("explicitDomainName", "$MAILDOMAIN");
+			fqDomainName = config.readEntry("explicitDomainName", CSL1("$MAILDOMAIN"));
 #ifdef DEBUG
 			DEBUGCONDUIT << fname << ": got from config" << endl;
 #endif
 		}
 
 		// Get FQDN from environment, from given variable.
-		if (fqDomainName.left(1) == "$") {
+		if (fqDomainName.left(1) == CSL1("$")) {
 			QString envVar = fqDomainName.mid (1);
 			char* envDomain = getenv (envVar.latin1());
 			if (envDomain) {
@@ -508,9 +499,9 @@ QString getFQDomainName (const KConfig& config)
 
 // Extracts email address from: "Firstname Lastname <mailbox@domain.tld>"
 QString extractAddress (const QString& address) {
-	int pos = address.find (QRegExp ("<.+>"));
+	int pos = address.find (QRegExp (CSL1("<.+>")));
 	if (pos != -1) {
-		return address.mid (pos+1, address.find (">", pos)-pos-1);
+		return address.mid (pos+1, address.find (CSL1(">"), pos)-pos-1);
 	} else
 		return address;
 }
@@ -599,7 +590,7 @@ int PopMailConduit::sendViaSMTP ()
 	QTextOStream	logStream (&logBuffer);		// Log stream, use with: log << stuff;
 
 	// Read user-defined parameters
-	smtpSrv = fConfig->readEntry ("SMTPServer", "localhost");
+	smtpSrv = fConfig->readEntry ("SMTPServer", CSL1("localhost"));
 	smtpPort = fConfig->readNumEntry ("SMTPPort", 25);
 
 	//
@@ -649,16 +640,16 @@ int PopMailConduit::sendViaSMTP ()
 	ret = getResponse (&kSocket, recvBuffer.data(), recvBuffer.size());
 
 	// Receive server handshake initiation
-	if (ret<0 || QString(recvBuffer).find("220") == -1) {
+	if (ret<0 || QString(recvBuffer).find(CSL1("220")) == -1) {
 		showMessage (i18n("SMTP server failed to announce itself")+
-					 "\n\n"+logBuffer);
+					 CSL1("\n\n")+logBuffer);
 		return -1;
 	}
 
 	// Send EHLO, expect "250- ... Hello"
 	sendBuffer.sprintf ("EHLO %s\r\n", domainName.latin1());
 	if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
-						 QRegExp("^250"),
+						 QRegExp(CSL1("^250")),
 						 i18n("Couldn't EHLO to SMTP server")))
 		return -1;
 
@@ -694,12 +685,12 @@ int PopMailConduit::sendViaSMTP ()
 		// Send "MAIL FROM: <...>", with the user-defined sender address
 		QString sender = fConfig->readEntry("EmailAddress");
 		QString fromAddress = extractAddress (sender);
-		fromAddress.replace (QRegExp("\\s"), ""); // Remove whitespaces
+		fromAddress.replace (QRegExp(CSL1("\\s")), QString::null); // Remove whitespaces
 
 		// Send MAIL and receive response, expecting 250
         sendBuffer.sprintf ("MAIL FROM: <%s>\r\n", fromAddress.latin1());
 		if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
-							 QRegExp("^250"),
+							 QRegExp(CSL1("^250")),
 							 i18n("Couldn't start sending new mail.")))
 		{
 			return handledCount;
@@ -715,7 +706,7 @@ int PopMailConduit::sendViaSMTP ()
 			recipients += QCString(",") + QCString (theMail.cc);
 		if (QCString(theMail.bcc).length()>1)
 			recipients += QCString(",") + QCString (theMail.bcc);
-		recipients.replace (QRegExp("\\s"), ""); // Remove whitespaces
+		recipients.replace (QRegExp(CSL1("\\s")), ""); // Remove whitespaces
 
 		// Send to all recipients
 		int rpos=0;
@@ -735,7 +726,7 @@ int PopMailConduit::sendViaSMTP ()
 			// Send "RCPT TO: <...>", expect 25*
 			sendBuffer.sprintf ("RCPT TO: <%s>\r\n", recipient.data());
 			if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
-								 QRegExp("^25"),
+								 QRegExp(CSL1("^25")),
 								 i18n("The recipient doesn't exist!")))
 				return handledCount;
 		}
@@ -743,7 +734,7 @@ int PopMailConduit::sendViaSMTP ()
 		// Send "DATA",
 		sendBuffer.sprintf("DATA\r\n");
 		if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
-							 QRegExp("^354"),
+							 QRegExp(CSL1("^354")),
 							 i18n("Unable to start writing mail body\n")))
             return handledCount;
 
@@ -753,7 +744,7 @@ int PopMailConduit::sendViaSMTP ()
 
 		// Send message body
 		if (theMail.body) {
-			sendBuffer = QString::fromLatin1 (theMail.body)+"\r\n";
+			sendBuffer = QString::fromLatin1 (theMail.body)+CSL1("\r\n");
 			write (kSocket.socket(), sendBuffer.latin1(), sendBuffer.length());
 		}
 
@@ -777,7 +768,7 @@ int PopMailConduit::sendViaSMTP ()
 	    // Send end-of-mail
 		sendBuffer.sprintf(".\r\n");
 		if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
-							 QRegExp("^250"),
+							 QRegExp(CSL1("^250")),
 							 i18n("Unable to send message")))
             return -1;
 
@@ -793,7 +784,7 @@ int PopMailConduit::sendViaSMTP ()
 
 	sendBuffer.sprintf("QUIT\r\n");
 	sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
-					 QRegExp("^221"),
+					 QRegExp(CSL1("^221")),
 					 i18n("QUIT command to SMTP server failed.\n"));
 
 	return handledCount;
@@ -859,8 +850,8 @@ int PopMailConduit::sendViaSendmail()
 	  sendf = popen(sendmailCmd.latin1(), "w");
 	  if(!sendf)
 	    {
- 	      KMessageBox::error(0L, "Cannot talk to sendmail!",
-				   "Error Sending Mail");
+ 	      KMessageBox::error(0L, TODO_I18N("Cannot talk to sendmail!"),
+				   TODO_I18N("Error Sending Mail"));
 		kdWarning() << k_funcinfo
 			<< ": Could not start sendmail." << endl;
 		kdWarning() << k_funcinfo << ": " << count
@@ -868,8 +859,9 @@ int PopMailConduit::sendViaSendmail()
 			<< endl ;
 	      return -1;
 	    }
-	  currentDest = "Mailing: ";
-	  currentDest += theMail.to;
+	  // TODO: Is currentDest used at all?
+	  currentDest = CSL1("Mailing: ");
+	  currentDest += PilotAppCategory::codec()->toUnicode(theMail.to);
 	  writeMessageToFile(sendf, theMail);
 	  pclose(sendf);
 	  // Mark it as filed...
@@ -900,15 +892,16 @@ int PopMailConduit::sendViaSendmail()
 QString PopMailConduit::getKMailOutbox() const
 {
 	FUNCTIONSETUP;
-	QString outbox;
-	
 	// Read-only config file. This is code
 	// suggested by Don Sanders. It must be
 	// kept up-to-date with what KMail does.
 	//
-	KSimpleConfig c("kmailrc",true);
+	// TODO: Completely broken since KMail disposed of this
+	// setting in KDE 3.0. No idea how to fix short of i18n("outbox").
+	KSimpleConfig c(CSL1("kmailrc"),true);
 	c.setGroup("General");
-	outbox = c.readEntry("outboxFolder",QString::null);
+
+	QString outbox = c.readEntry("outboxFolder",QString::null);
 	if (outbox.isEmpty())
 	{
 		KConfigGroupSaver gs(fConfig,PopmailConduitFactory::group);
@@ -1541,7 +1534,8 @@ int PopMailConduit::doPopQuery()
 	//
 	// [ The standard says otherwise ]
 	//
-	QString msg(buffer+offset);
+	// Surely POP3 speaks latin1?
+	QString msg(QString::fromLatin1(buffer+offset));
 	if (msg.find( fConfig->readEntry("PopUser")) != -1) // with username
 	{
 		sscanf(buffer+offset, "%*s %*s %*s %d %*s", &msgcount);
@@ -1941,7 +1935,7 @@ int PopMailConduit::doUnixStyle()
 	KConfigGroupSaver cfgs(fConfig,PopmailConduitFactory::group);
 
 	fDatabase=new PilotSerialDatabase(pilotSocket(),
-		"MailDB",this,"MailDB");
+		CSL1("MailDB"),this,"MailDB");
 
 	if (!fDatabase || !fDatabase->isDBOpen())
 	{

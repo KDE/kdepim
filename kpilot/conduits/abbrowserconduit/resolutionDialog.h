@@ -33,13 +33,17 @@ class KPilotDeviceLink;
 class QButtonGroup;
 class QCheckBox;
 class QTimer;
-
 class ResolutionDlg : public KDialogBase
 { 
     Q_OBJECT
 
 public:
-	ResolutionDlg( QWidget* parent=0, KPilotDeviceLink*fH=0L, QString caption="", QString Text="", QStringList lst=QStringList(), QString remember="");
+	ResolutionDlg( QWidget* parent=0, 
+		KPilotDeviceLink*fH=0L, 
+		QString caption=QString::null, 
+		QString Text=QString::null, 
+		QStringList lst=QStringList(), 
+		QString remember=QString::null);
 	~ResolutionDlg();
 public slots:
 	void _tickle();

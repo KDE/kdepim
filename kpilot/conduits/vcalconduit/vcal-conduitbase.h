@@ -158,5 +158,4 @@ protected:
    virtual VCalConduitPrivateBase* newVCalPrivate(KCal::CalendarLocal *fCalendar)=0;
 } ;
 
-
 #endif

@@ -296,7 +296,7 @@ error:
 {
 	FUNCTIONSETUP;
 
-	KConfig korgcfg( locate( "config", "korganizerrc" ) );
+	KConfig korgcfg( locate( "config", CSL1("korganizerrc") ) );
 	// this part taken from adcalendarbase.cpp:
 	korgcfg.setGroup( "Time & Date" );
 	QString tz(korgcfg.readEntry( "TimeZoneId" ) );

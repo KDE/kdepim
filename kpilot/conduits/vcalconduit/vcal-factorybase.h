@@ -63,5 +63,4 @@ protected:
 		const QStringList &args = QStringList() )=0;
 } ;
 
-
 #endif

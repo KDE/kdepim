@@ -144,4 +144,3 @@ VCalConduitFactory::~VCalConduitFactory()
 
 	return 0L;
 }
-

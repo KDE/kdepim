@@ -682,13 +682,13 @@ QString PilotDaemon::syncTypeString(int i) const
 		
 		_syncWithKMail = true;
 		
-		if (conduits.findIndex( "vcal-conduit" ) >= 0 )
+		if (conduits.findIndex( CSL1("vcal-conduit") ) >= 0 )
 			_kroupwareParts |= KroupwareSync::Cal ;
-		if (conduits.findIndex( "todo-conduit" ) >= 0 )
+		if (conduits.findIndex( CSL1("todo-conduit") ) >= 0 )
 			_kroupwareParts |= KroupwareSync::Todo ;
-		if (conduits.findIndex( "knotes-conduit" ) >= 0 )
+		if (conduits.findIndex( CSL1("knotes-conduit") ) >= 0 )
 			_kroupwareParts |= KroupwareSync::Notes ;
-		if (conduits.findIndex( "abbrowser_conduit" ) >= 0 )
+		if (conduits.findIndex( CSL1("abbrowser_conduit") ) >= 0 )
 			_kroupwareParts |= KroupwareSync::Address ;
 	}
 	c.setGroup(QString::null);

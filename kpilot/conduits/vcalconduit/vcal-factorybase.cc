@@ -42,5 +42,3 @@ const char * const VCalConduitFactoryBase::calendarFile = "CalFile" ;
 //const char * const VCalConduitFactoryBase::firstTime = "FirstTime" ;
 //const char * const VCalConduitFactoryBase::deleteOnPilot = "DeleteOnPilot" ;
 //const char * const VCalConduitFactoryBase::alwaysFullSync = "AlwaysFullSync";
-
-

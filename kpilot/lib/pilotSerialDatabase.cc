@@ -33,6 +33,7 @@
 #include <pi-dlp.h>
 
 #include <qfile.h>
+
 #include <klocale.h>
 #include <kdebug.h>
 
@@ -67,8 +68,7 @@ PilotSerialDatabase::~PilotSerialDatabase()
 QString PilotSerialDatabase::dbPathName() const
 {
 	QString s = CSL1("Pilot:");
-	// This latin1() is ok. Pilot database names are latin1.
-	s.append(QString::fromLatin1(fDBName));
+	s.append(fDBName);
 	return s;
 }
 
@@ -304,7 +304,10 @@ bool PilotSerialDatabase::createDatabase(long creator, long type, int cardno, in
 	
 	// if the database is already open, we cannot create it again. How about completely resetting it? (i.e. deleting it and the createing it again)
 	if (isDBOpen()) return true;
-	int res=dlp_CreateDB(fDBSocket, creator, type, cardno, flags, version, getDBName(), &db);
+	// The latin1 seems ok, database names are latin1.
+	int res=dlp_CreateDB(fDBSocket, 
+		creator, type, cardno, flags, version, 
+		getDBName().latin1(), &db);
 	if (res<0) {
 		kdError() <<k_funcinfo
 			<< i18n("Cannot create database %1 on the handheld").arg(getDBName())<<endl;

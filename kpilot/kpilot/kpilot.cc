@@ -503,7 +503,7 @@ void KPilotInstaller::initMenu()
 		actionCollection(), "file_fastsync");
 #endif
 #ifdef DEBUG
-	p = new KAction(TODO_I18N("List only"),"list",0,
+	p = new KAction(TODO_I18N("List only"),CSL1("list"),0,
 		this,SLOT(slotListSyncRequested()),
 		actionCollection(), "file_list");
 #endif

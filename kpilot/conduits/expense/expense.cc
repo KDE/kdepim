@@ -48,6 +48,7 @@
 #include <qobject.h>
 #include <qdatetime.h>
 #include <qtextstream.h>
+#include <qtextcodec.h>
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -61,6 +62,7 @@
 
 #include "pilotSerialDatabase.h"
 #include "pilotRecord.h"
+#include "pilotAppCategory.h"
 
 #include "setupDialog.h"
 #include "expense.moc"
@@ -214,7 +216,7 @@ ExpenseConduit::~ExpenseConduit()
 		return false;
 	}
 
-	fDatabase=new PilotSerialDatabase(pilotSocket(),"ExpenseDB",
+	fDatabase=new PilotSerialDatabase(pilotSocket(),CSL1("ExpenseDB"),
 		this,"ExpenseDB");
 
 	fConfig->setGroup("Expense-conduit");
@@ -322,14 +324,14 @@ void ExpenseConduit::csvOutput(QTextStream *out,Expense *e)
 	// can't have in csv files
 	//
 	//
-	QString tmpatt=e->attendees;
+	QString tmpatt=PilotAppCategory::codec()->toUnicode(e->attendees);
 	QString tmpatt2=tmpatt.simplifyWhiteSpace();
 
 	(*out) << tmpatt2 << "," ;
 
 	// remove extra formatting from notes -
 	// can't have in csv files
-	QString tmpnotes=e->note;
+	QString tmpnotes=PilotAppCategory::codec()->toUnicode(e->note);
 	QString tmpnotes2=tmpnotes.simplifyWhiteSpace();
 
 	(*out) << tmpnotes2 << endl;
@@ -404,19 +406,19 @@ void ExpenseConduit::dumpPostgresTable()
 	// Remove for final creates a dump of table.
 	//
 	//
-	QString query = QString("select * from \"%1\";").arg(fDBtable);
+	QString query = CSL1("select * from \"%1\";").arg(fDBtable);
 	
-	QString cmd = "echo ";
+	QString cmd = CSL1("echo ");
 	cmd += KShellProcess::quote(fDBpasswd);
-	cmd += "|psql -h ";
+	cmd += CSL1("|psql -h ");
 	cmd += KShellProcess::quote(fDBsrv);
-	cmd += " -U ";
+	cmd += CSL1(" -U ");
 	cmd += KShellProcess::quote(fDBlogin);
-	cmd += " -c ";
+	cmd += CSL1(" -c ");
 	cmd += KShellProcess::quote(query);
-	cmd += " ";
+	cmd += CSL1(" ");
 	cmd += KShellProcess::quote(fDBnm);
-	cmd += " > ~/testpg.txt";
+	cmd += CSL1(" > ~/testpg.txt");
 
 	KShellProcess shproc;
 	shproc.clearArguments();
@@ -439,13 +441,13 @@ void ExpenseConduit::postgresOutput(Expense *e)
 	int tmpday=e->date.tm_mday;
 	int tmpmon=e->date.tm_mon+1;
 	sprintf(dtstng,"%d-%d-%d",tmpyr,tmpmon,tmpday);
-	QString tmpnotes=e->note;
+	QString tmpnotes=PilotAppCategory::codec()->toUnicode(e->note);
 	QString tmpnotes2=tmpnotes.simplifyWhiteSpace();
-	const char* nmsg=tmpnotes2.latin1();
+	const char* nmsg=tmpnotes2.local8Bit();
 
-	QString tmpatt=e->attendees;
+	QString tmpatt=PilotAppCategory::codec()->toUnicode(e->attendees);
 	QString tmpatt2=tmpatt.simplifyWhiteSpace();
-	const char* amesg=tmpatt2.latin1();
+	const char* amesg=tmpatt2.local8Bit();
 	const char* etmsg=get_entry_type(e->type);
 	const char* epmsg=get_pay_type(e->payment);
 
@@ -458,15 +460,15 @@ void ExpenseConduit::postgresOutput(Expense *e)
 		dtstng,
 		e->amount,epmsg,e->vendor,etmsg,e->city,amesg,nmsg);
 
-	QString cmd = "echo ";
+	QString cmd = CSL1("echo ");
 	cmd += KShellProcess::quote(fDBpasswd);
-	cmd += "|psql -h ";
+	cmd += CSL1("|psql -h ");
 	cmd += KShellProcess::quote(fDBsrv);
-	cmd += " -U ";
+	cmd += CSL1(" -U ");
 	cmd += KShellProcess::quote(fDBlogin);
-	cmd += " -c ";
+	cmd += CSL1(" -c ");
 	cmd += KShellProcess::quote(query);
-	cmd += " ";
+	cmd += CSL1(" ");
 	cmd += KShellProcess::quote(fDBnm);
 
 	KShellProcess shproc;

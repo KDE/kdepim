@@ -156,7 +156,8 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 	DEBUGCONDUIT<<"Creating database "<<fDBName<<endl;
 #endif
 	
-	memcpy(&fDBInfo.name[0], fDBName, 34*sizeof(char));
+	// Database names seem to be latin1.
+	memcpy(&fDBInfo.name[0], fDBName.latin1(), 34*sizeof(char));
 	fDBInfo.creator=creator;
 	fDBInfo.type=type;
 	fDBInfo.more=0;
@@ -580,7 +581,8 @@ void PilotLocalDatabase::closeDatabase()
 	pi_file *dbFile;
 	int i;
 
-	if (isDBOpen() == false) {
+	if (isDBOpen() == false) 
+	{
 #ifdef DEBUG
 		DEBUGCONDUIT<<"Database "<<fDBName<<" is not open. Cannot close and write it"<<endl;
 #endif

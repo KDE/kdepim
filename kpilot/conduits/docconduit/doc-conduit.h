@@ -122,7 +122,14 @@ class docSyncInfo
 {
 public:
 	docSyncInfo(QString hhDB=QString(), QString docfn=QString(), QString pdbfn=QString(), eSyncDirectionEnum dir=eSyncNone)
-		{handheldDB=hhDB; docfilename=docfn; pdbfilename=pdbfn; direction=dir; fPCStatus=eStatNone; fPalmStatus=eStatNone;};
+	{
+		handheldDB=hhDB; 
+		docfilename=docfn; 
+		pdbfilename=pdbfn; 
+		direction=dir; 
+		fPCStatus=eStatNone; 
+		fPalmStatus=eStatNone;
+	};
 	~docSyncInfo(){};
 	QString handheldDB, docfilename, pdbfilename;
 	DBInfo dbinfo;

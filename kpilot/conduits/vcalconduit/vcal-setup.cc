@@ -123,8 +123,7 @@ void VCalWidgetSetup::slotBrowseCalendar()
 {
 	FUNCTIONSETUP;
 
-	QString fileName = KFileDialog::getOpenFileName("::calendar", "*.vcs *ics|ICalendars",this);
+	QString fileName = KFileDialog::getOpenFileName(CSL1("::calendar"), CSL1("*.vcs *ics|ICalendars"),this);
 	if(fileName.isNull()) return;
 	fConfigWidget->fCalendarFile->setText(fileName);
 }
-

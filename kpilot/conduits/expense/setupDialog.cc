@@ -61,11 +61,15 @@ ExpenseWidgetSetup::ExpenseWidgetSetup(QWidget *w, const char *n,
 #if defined(DEBUG) && !defined(NDEBUG)
 	DEBUGCONDUIT << fname
 		<< "Size of tabw="
-		<< fConfigWidget->tabWidget->size()
+		<< fConfigWidget->tabWidget->size().width()
+		<< ","
+		<< fConfigWidget->tabWidget->size().height()
 		<< endl;
 	DEBUGCONDUIT << fname
 		<< "Size of conw="
-		<< fConfigWidget->size()
+		<< fConfigWidget->size().width()
+		<< ","
+		<< fConfigWidget->size().height()
 		<< endl;
 #endif
 
@@ -209,7 +213,7 @@ void ExpenseWidgetSetup::slotCSVBrowse()
 {
         FUNCTIONSETUP;
 
-	QString fileName = KFileDialog::getOpenFileName(0L, "*.csv");
+	QString fileName = KFileDialog::getOpenFileName(QString::null, CSL1("*.csv"));
 	if(fileName.isNull()) return;
 	fConfigWidget->fCSVFilename->setText(fileName);
 }

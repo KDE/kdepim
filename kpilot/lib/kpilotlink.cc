@@ -26,8 +26,6 @@
 */
 static const char *kpilotlink_id = "$Id$";
 
-#include "kpilotlink.moc"
-
 #include "options.h"
 
 #include <pi-source.h>
@@ -61,6 +59,8 @@ static const char *kpilotlink_id = "$Id$";
 #include <kmessagebox.h>
 
 #include "pilotUser.h"
+
+#include "kpilotlink.moc"
 
 
 

@@ -89,8 +89,8 @@ public:
 protected:
 	virtual const QString getTitle(PilotAppCategory*de);
 	
-	virtual const QString configGroup() { return ToDoConduitFactory::group; };
-	virtual const QString dbname() { return "ToDoDB"; };
+	virtual const QString configGroup() { return QString::fromLatin1(ToDoConduitFactory::group); };
+	virtual const QString dbname() { return CSL1("ToDoDB"); };
 	virtual void preSync() {_setAppInfo(); };
 	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::CalendarLocal *fCalendar) { return new TodoConduitPrivate(fCalendar);};
 
@@ -117,6 +117,5 @@ protected:
 	struct ToDoAppInfo fTodoAppInfo;
 	bool categoriesSynced;
 } ;
-
 
 #endif

@@ -53,7 +53,7 @@ public:
 
 	QString getText() {
 		fText.Decompress();
-		return QString((const char *) fText.text());
+		return QString::fromLatin1((const char *) fText.text());
 	};
 	void setText(QString newtext, bool compressed = false) {
 		fText.setText((const unsigned char *) newtext.latin1(),

@@ -44,7 +44,7 @@ class docBookmark;
 class docBookmark {
 public:
 	static bool compare_pos;
-	docBookmark():bmkName(""), position(0) { };
+	docBookmark():bmkName(), position(0) { };
 	docBookmark(QString name, long int pos):bmkName(name), position(pos) { };
 	docBookmark(const docBookmark &bmk):bmkName(bmk.bmkName),position(bmk.position){};
 	virtual ~ docBookmark() { };

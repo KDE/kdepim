@@ -52,7 +52,7 @@ public:
 	static const char *firstSync() { return fFirstSync; } ;
 	static const char *fullSyncOnPCChange() {return fFullSyncOnPCChange; } ;
 	static const char *otherField() { return fOtherField; } ;
-	static const QString custom() {return fCustom; };
+	static const QString custom() {return QString::fromLatin1(fCustom); };
 	
 protected:
 	virtual QObject* createObject( QObject* parent = 0,

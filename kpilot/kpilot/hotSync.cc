@@ -341,7 +341,7 @@ FileInstallAction::~FileInstallAction()
 {
 	FUNCTIONSETUP;
 
-	// KPILOT_DELETE(fTimer);
+	KPILOT_DELETE(fTimer);
 }
 
 /* virtual */ bool FileInstallAction::exec()

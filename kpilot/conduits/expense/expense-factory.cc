@@ -136,4 +136,3 @@ ExpenseConduitFactory::~ExpenseConduitFactory()
 	}
 	return 0L;
 }
-

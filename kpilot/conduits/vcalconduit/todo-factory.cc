@@ -140,4 +140,3 @@ ToDoConduitFactory::~ToDoConduitFactory()
 
 	return 0L;
 }
-

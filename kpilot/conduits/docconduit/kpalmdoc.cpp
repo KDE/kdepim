@@ -60,5 +60,8 @@ int main(int argc, char **argv)
 	PalmDOCDialog *dlg=new PalmDOCDialog();
 	dlg->show();
 	return app.exec();
+	
+	/* NOTREACHED */
+	(void) kpalmdoc_id;
 }
 

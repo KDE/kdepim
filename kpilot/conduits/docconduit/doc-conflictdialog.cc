@@ -58,7 +58,7 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 //			resolutionTable->setColumnStretchable(i, true);
 		}
 		QStringList headers;
-		headers<<i18n("Database name")<<i18n("Resolution")<<"";
+		headers<<i18n("Database name")<<i18n("Resolution")<<CSL1("");
 		resolutionTable->setColumnLabels(headers);
 		resolutionTable->setSorting(false);
 		
@@ -81,8 +81,12 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 			
 			QString text=si.handheldDB;
 			if  (cE.conflict) {
-				text="<qt><b><font color=red>"+text+"</font></b></qt>";
+				text=CSL1("<qt><b><font color=red>")
+					+ text
+					+ CSL1("</font></b></qt>");
+#ifdef DEBUG
 				DEBUGCONDUIT<<"We have a conflict for database "<<si.handheldDB<<endl;
+#endif
 				hasConflicts=true;
 			}
 			cE.dbname=text;
