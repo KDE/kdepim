@@ -194,7 +194,7 @@ bool ResourceIMAP::loadAllTasks()
       Incidence* i = parseIncidence( *it );
       if ( i ) {
         if ( i->type() == "Todo" ) {
-          addTodo( static_cast<Todo*>( i )/*, itR.key()*/ );
+          addTodo( static_cast<Todo*>( i ), itR.key() );
         } else {
           kdDebug() << "Unknown incidence type " << i->type();
           delete i;
@@ -232,7 +232,7 @@ bool ResourceIMAP::loadAllJournals()
       Incidence* i = parseIncidence( *it );
       if ( i ) {
         if ( i->type() == "Journal" ) {
-          addJournal( static_cast<Journal*>( i )/*, itR.key()*/ );
+          addJournal( static_cast<Journal*>( i ), itR.key() );
         } else {
           kdDebug() << "Unknown incidence type " << i->type();
           delete i;
@@ -294,8 +294,7 @@ bool ResourceIMAP::addEvent( Event *anEvent, const QString& subresource )
 // probably not really efficient, but...it works for now.
 void ResourceIMAP::deleteEvent(Event *event)
 {
-  kdDebug(5800) << "ResourceIMAP::deleteEvent" << endl;
-  Q_ASSERT( mUidmap.contains( mCurrentUID ) );
+  Q_ASSERT( mUidmap.contains( event->uid() ) );
 
   // Call kmail ...
   if ( !mSilent ) {
@@ -348,14 +347,26 @@ Event::List ResourceIMAP::rawEvents()
 
 bool ResourceIMAP::addTodo(Todo *todo)
 {
-  mCalendar.addTodo(todo);
+  return addTodo( todo, QString::null );
+}
+
+bool ResourceIMAP::addTodo( Todo *todo, const QString& subresource )
+{
+  mCalendar.addTodo( todo );
   todo->registerObserver( this );
+
+  // Register for the subresource
+  QString resource = subresource;
+  if ( subresource.isEmpty() )
+    // TODO: Do something a bit more clever
+    resource = mTaskResources.begin().key();
+  mUidmap[ todo->uid() ] = resource;
 
   if ( mSilent ) return true;
 
   mCurrentUID = todo->uid();
   QString vCal = mFormat.createScheduleMessage( todo, Scheduler::Request );
-  bool rc = kmailAddIncidence( "Task", "FIXME", mCurrentUID, vCal );
+  bool rc = kmailAddIncidence( "Task", resource, mCurrentUID, vCal );
   mCurrentUID = QString::null;
 
   if ( !rc )
@@ -366,12 +377,16 @@ bool ResourceIMAP::addTodo(Todo *todo)
 
 void ResourceIMAP::deleteTodo(Todo *todo)
 {
-  // call kmail ...
+  Q_ASSERT( mUidmap.contains( todo->uid() ) );
+
+  // Call kmail ...
   if ( !mSilent ) {
     mCurrentUID = todo->uid();
-    kmailDeleteIncidence( "Task", "FIXME", mCurrentUID );
+    kmailDeleteIncidence( "Task", mUidmap[ mCurrentUID ], mCurrentUID );
     mCurrentUID = QString::null;
   }
+
+  mUidmap.erase( todo->uid() );
   mCalendar.deleteTodo(todo);
 }
 
@@ -398,19 +413,31 @@ Todo::List ResourceIMAP::rawTodosForDate( const QDate &date )
  * Journal handling
  */
 
-bool ResourceIMAP::addJournal(Journal *journal)
+bool ResourceIMAP::addJournal( Journal *journal )
+{
+  return addJournal( journal, QString::null );
+}
+
+bool ResourceIMAP::addJournal( Journal *journal, const QString& subresource )
 {
   // kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString()
   //               << endl;
   mCalendar.addJournal(journal);
   journal->registerObserver( this );
 
+  // Register for the subresource
+  QString resource = subresource;
+  if ( subresource.isEmpty() )
+    // TODO: Do something a bit more clever
+    resource = mJournalResources.begin().key();
+  mUidmap[ journal->uid() ] = resource;
+
   if ( mSilent ) return true;
 
   // call kmail ..
   mCurrentUID = journal->uid();
   QString vCal = mFormat.createScheduleMessage( journal, Scheduler::Request );
-  bool rc = kmailAddIncidence( "Journal", "FIXME", mCurrentUID, vCal );
+  bool rc = kmailAddIncidence( "Journal", resource, mCurrentUID, vCal );
   mCurrentUID = QString::null;
 
   if ( !rc )
@@ -424,11 +451,16 @@ void ResourceIMAP::deleteJournal(Journal *journal)
   if( !journal )
     return;
 
+  Q_ASSERT( mUidmap.contains( journal->uid() ) );
+
+  // Call kmail ...
   if ( !mSilent ) {
     mCurrentUID = journal->uid();
-    kmailDeleteIncidence( "Journal", "FIXME", mCurrentUID );
+    kmailDeleteIncidence( "Journal", mUidmap[ mCurrentUID ], mCurrentUID );
     mCurrentUID = QString::null;
   }
+
+  mUidmap.erase( journal->uid() );
   mCalendar.deleteJournal(journal);
 }
 

@@ -97,6 +97,7 @@ public:
      Add a todo to the todolist.
   */
   bool addTodo( Todo *todo );
+  bool addTodo( Todo *todo, const QString& resource );
   /**
      Remove a todo from the todolist.
   */
@@ -115,7 +116,8 @@ public:
   */
   Todo::List rawTodosForDate( const QDate &date );
   /** Add a Journal entry to calendar */
-  virtual bool addJournal(Journal *);
+  bool addJournal(Journal *);
+  bool addJournal(Journal *,  const QString& resource);
   /**
      Remove a journal entry from the journal.
   */
