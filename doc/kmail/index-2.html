@@ -1,64 +1,91 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>The KMail Handbook: How to get started...</TITLE>
-<META HTTP-EQUIV="content-type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="keywords" CONTENT="KDE Mail Client">
-<META NAME="description" CONTENT="KMail">
+<TITLE>The KMail Handbook: Getting Started</TITLE>
+<LINK HREF="index-3.html" REL=next>
+<LINK HREF="index-1.html" REL=previous>
+<LINK HREF="index.html#toc2" REL=contents>
 </HEAD>
-<BODY BGCOLOR="#ffffff" LINK="#aa0000" TEXT="#000000" > 
-<FONT FACE="Helvetica">
-<A HREF="http://www.kde.org/"><IMG SRC="logotp3.gif" BORDER="0" ALT="The K Desktop Environment"></A>
-<HR WIDTH="100%" SIZE=2 ALIGN="CENTER" NOSHADE>
-
- 
-<P ALIGN="RIGHT">
-
+<BODY>
 <A HREF="index-3.html">Next</A>
 <A HREF="index-1.html">Previous</A>
-<A HREF="index.html#toc2">Table of Contents</A>
-</P>
-<H3><A NAME="s2">2. How to get started...</A></H3>
+<A HREF="index.html#toc2">Contents</A>
+<HR>
+<H2><A NAME="sec-GettingStarted"></A> <A NAME="s2">2. Getting Started</A></H2>
 
-<P>This will be a very short introduction to kmail and its usage so you can start
-working with it right away! For more in depth information see the Features section.
+<P>This is a short introduction to KMail and its usage so you can start
+working with it right away. For more in-depth information see the 
+<A HREF="index-3.html#sec-UsingKmail">Using KMail</A> section.
+<P>Invoking KMail for the first time creates a Mail directory containing the initial
+files (inbox, outbox, sent-mail, and trash) in your home directory.  KMail then pops up
+the Settings window where you must enter some initial information so KMail will 
+be able to properly retrieve and send your messages. 
+<P>The Settings window consists of six tabs: Identity, Network, Appearance, Composer,
+Misc, and PGP. To begin sending and receiving email you will only have to change the
+settings in the Identity and Network tabs.
 <P>
-<H3><A NAME="ss2.1">2.1 KMail's first invokation....</A>
-</H3>
+<H2><A NAME="ss2.1">2.1 Setting your Identity</A>
+</H2>
 
-<P>Invoking kmail for the first time it will create a Directory and some files
-in your home directory. 
-This is the "&nbsp;/Mail" directory which holds the initial folders (outbox,sent-mail,trash 
-&amp; inbox).
+<P>The settings in the Identity tab are fairly straightforward. Fill in the <EM>Name</EM>
+and <EM>Organization</EM> fields with the appropriate information if you want this
+information to be automatically included in the headers of any message that you send.
+Next, fill in the <EM>Email Address</EM> and the <EM>Reply-to Address</EM> field 
+with your email address. Finally, set the location of your signature file in the
+<EM>Signature File</EM> field. You can skip setting the signature file if you do not
+have one, but every time you compose a new message, KMail will ask you for your
+signature file.
 <P>
-<H4>Ok,looks good...what now?</H4>
+<H2><A NAME="ss2.2">2.2 Setting up your Account</A>
+</H2>
 
-<P>The main screen is devided into 3 parts:
-<P>1. The folder widget (upper left widget).
-<P>2. The mail header widget (upper right widget).
-<P>3. The reader widget (lower widget).
-<P>Clicking a folder will open it and display the messages in the header widget.
-Most likely there won't be any messages visible on kmail's first start.
-Clicking one of the headers will make the message appear in the reader widget.
+<P>The Network tab contains the settings that tell KMail how to send and receive your
+email. Many of these settings can vary greatly depending on the setup of your system
+and on the kind of network that your mail server is located. If you do not know what
+setting to pick or what to put in a field, consult your Internet Service Provider
+(ISP) or System Administrator.
 <P>
-<H4>Setting up kmail</H4>
+<H3>Sending Mail</H3>
 
-<P>Please select "Settings" from the "File" - menu. In this Tabdialog you now have to 
-enter some initial information so kmail can work correctly. In addition you can  
-specify some preferences to adjust kmail to your needs.
+<P> 
+The <EM>Sending Mail</EM> section provides two options for sending mail:
+sendmail and SMTP. Sendmail has a reputation of being difficult to set up, so if you
+do not already have a working sendmail configuration, choose SMTP and fill in the
+<EM>Server</EM> field with the name and domain of your mail server. You will probably
+not need to change the <EM>Port</EM> setting.
 <P>
-<P>
-<P ALIGN="RIGHT">
+<H3>Receiving Mail</H3>
 
+<P>To set up an account so you can receive mail, press the <EM>Add...</EM> button in the
+<EM>Incoming Mail</EM> section. You will then be prompted for the type of account.
+Most users should select <EM>POP3</EM>. (IMAP accounts are not supported) After
+pressing <EM>Ok</EM> you will be presented with the <EM>Configure Account</EM>
+window. First, fill in the <EM>Name</EM> field to name your account. <EM>Login</EM>,
+<EM>Password</EM>, and <EM>Host</EM> should be filled in with the appropriate
+information from your ISP or System Administrator. Again, you should not need to
+change the <EM>Port</EM> setting. Finally, select <EM>Delete mail from server</EM> if
+you don't want to leave your mail on the server. Leave the account's mailbox set to
+inbox for now, although you may want to change it if you add more accounts later.
+<P>You are now ready to send and receive mail!
+<P>
+<H2><A NAME="ss2.3">2.3 Testing Your Setup</A>
+</H2>
+
+<P>First, we will send an email to test our configuration. To send an email, hit 
+Control-N, or select the <EM>New Composer</EM> menu item.  The <EM>Composer</EM> 
+window will appear. Fill in the <EM>To:</EM> field with your email address and type
+something in the <EM>subject</EM> field.  Send the mail by selecting <EM>Send</EM>
+from the <EM>File</EM> menu.
+<P>To check your email, select the <EM>Check Mail...</EM> menu item from the 
+<EM>File</EM> menu. A window will pop up and indicate how much mail is being 
+downloaded. If you receive the message you just sent, then congratulations! You have
+successfully set up your email account. If, however, you receive any error messages
+while testing your setup, make sure that your network connection is working and
+recheck your settings by selecting <EM>Settings...</EM> from the <EM>File</EM> menu.
+<P>
+<HR>
 <A HREF="index-3.html">Next</A>
 <A HREF="index-1.html">Previous</A>
-<A HREF="index.html#toc2">Table of Contents</A>
-</P>
-<CENTER>
-<HR WIDTH="100%" SIZE=3 ALIGN=CENTER NOSHADE>
-</CENTER>    
-</FONT>
-
- 
+<A HREF="index.html#toc2">Contents</A>
 </BODY>
 </HTML>

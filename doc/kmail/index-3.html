@@ -1,55 +1,265 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>The KMail Handbook: Features and Details</TITLE>
-<META HTTP-EQUIV="content-type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="keywords" CONTENT="KDE Mail Client">
-<META NAME="description" CONTENT="KMail">
+<TITLE>The KMail Handbook: Using KMail</TITLE>
+<LINK HREF="index-4.html" REL=next>
+<LINK HREF="index-2.html" REL=previous>
+<LINK HREF="index.html#toc3" REL=contents>
 </HEAD>
-<BODY BGCOLOR="#ffffff" LINK="#aa0000" TEXT="#000000" > 
-<FONT FACE="Helvetica">
-<A HREF="http://www.kde.org/"><IMG SRC="logotp3.gif" BORDER="0" ALT="The K Desktop Environment"></A>
-<HR WIDTH="100%" SIZE=2 ALIGN="CENTER" NOSHADE>
-
- 
-<P ALIGN="RIGHT">
-
+<BODY>
 <A HREF="index-4.html">Next</A>
 <A HREF="index-2.html">Previous</A>
-<A HREF="index.html#toc3">Table of Contents</A>
-</P>
-<H3><A NAME="s3">3. Features and Details</A></H3>
+<A HREF="index.html#toc3">Contents</A>
+<HR>
+<H2><A NAME="sec-UsingKmail"></A> <A NAME="s3">3. Using KMail</A></H2>
 
-<H3><A NAME="ss3.1">3.1 Folders and Accounts</A>
-</H3>
+<H2><A NAME="ss3.1">3.1 The Mail Reader Window</A>
+</H2>
 
-<P>KMail allows you to have multiple folders and accounts. The philosophy is that you have certain accounts connected to certain folders. You can easily create, modify &amp; delete folders and accounts via the menubar items.
+<P>The Mail Reader window is the window that appears when KMail is started. The Mail reader window 
+is divided into three panes:
 <P>
 <P>
-<H3><A NAME="ss3.2">3.2 Drag and Drop</A>
-</H3>
+<DL>
+<DT><B>Folders Pane (upper left pane)</B><DD><P>This pane contains a list of your Message Folders. (other email programs call them 
+mailboxes) To select a folder, simply click on it. The messages contained in the folder
+will now appear in the Headers Pane. See the 
+<A HREF="#sec-Folders">Folders Section</A> 
+for more information about how to use folders.  
+<P>
+<DT><B>Headers Pane (upper right pane)</B><DD><P>This pane lists header information (message Status, Sender, Subject, and the Date the message 
+was sent) for the messages in the currently selected folder. Clicking on a header will
+select that message and display it in the Message Pane. You can also select a series of
+messages by clicking on one message, holding down the SHIFT key, and clicking on
+another message. The two messages you just clicked on will be selected, along with all
+the messages in between. You may sort the messages by clicking on the column that you wish to
+sort.
+<P>
+<DT><B>Message Pane (lower pane)</B><DD><P>Displays the header and body of the currently selected message. You can scroll through
+the message page by page using PAGE UP and PAGE DOWN, or line by line using the up and
+down arrow keys. You can also use the following key shortcuts to skip through your 
+messages without having to use the mouse:
+<UL>
+<LI>N - Next message</LI>
+<LI>P - Previous message</LI>
+<LI>+ - Next unread message</LI>
+<LI>- - Previous unread message</LI>
+</UL>
+</DL>
+<P>
+<P>
+<H2><A NAME="ss3.2">3.2 The Composer Window</A>
+</H2>
 
-<P>KMail makes use of the KDE Drag and Drop protocol. This means that you can darg
-and drop message form the header widget to your desktop or drop attachments on the composer to be automatically attached.
+<P>The composer window is where you write new messages. It can be invoked from the File Menu or from the
+document icon on the Mail reader window button bar. If you have not set the location of your signature
+file, you will be prompted before the composer window opens.
 <P>
 <P>
-<H3><A NAME="ss3.3">3.3 Pretty good privacy</A>
-</H3>
+<H3>Composing a Message</H3>
 
-<P>Sorry but this feature is not yet implemented.
-<P>
-<P>
-<P ALIGN="RIGHT">
+<P>To write your message, fill in the appropriate fields in the composer window.  There are a variety of
+shortcuts to help you with writing you messages.  The ellipses buttons next to the <EM>To:</EM>, 
+<EM>cc:</EM>, and <EM>Bcc:</EM> fields will call up the addressbook so that you can select addresses 
+from there instead of trying to remember them. When you are finished with your message, hit the Send
+button (the envelope) to queue or send the message.
+<H3>Attachments</H3>
 
+<P>You can attach files to you message by using one of the methods below:
+<UL>
+<LI>Push the <EM>Attach file</EM> button (the paperclip) and select the file you wish to attach.</LI>
+<LI>Drag a file from the desktop or another directory into the composer window.</LI>
+</UL>
+<P>
+<P>
+<H2><A NAME="sec-Folders"></A> <A NAME="ss3.3">3.3 Message Folders</A>
+</H2>
+
+<P>Message Folders are used to organize your email messages. When you first start KMail the 
+inbox, outbox, sent-mail, and trash folders are created. These folders each have special 
+functions:
+<P>
+<UL>
+<LI><EM>inbox:</EM> where KMail puts your new messages when you ask it to check your mail. </LI>
+<LI><EM>outbox:</EM> where messages are put while they are waiting to be delivered. </LI>
+<LI><EM>sent-mail:</EM> contains copies of all messages that you have sent. </LI>
+<LI><EM>trash:</EM> contains all messages that you have deleted.</LI>
+</UL>
+<P>
+<P>You may find that the standard folders are fine for your needs. However, if you
+receive a large number of messages a day, you will probably need folders to help you organize 
+your messages. To create a new folder, go to the <EM>Folder</EM> menu and select <EM>Create..</EM>. A
+window will then prompt you for the name of the folder and allow you to associate or
+disassociate the folder with certain accounts. If you ever need to change the settings for a folder,
+select the folder you wish to modify in the Folders Pane and select
+<EM>Modify...</EM> from the <EM>Folder</EM> menu. KMail will then prompt you for the changes you wish to
+make to the selected folder.
+<P>To move messages from one folder into another, select the message(s) you want to move and press the M key
+or select <EM>Move...</EM> from the <EM>Message</EM> menu. A list of folders will appear.  Select the
+folder from the list that you want to move the messages to and hit <EM>Ok</EM>.  Messages can also be
+moved by dragging a message from the Headers pane into the Folders pane.
+<P>You may find that your folders are taking up a lot of disk space after they have been used for a while 
+even though they may not have very many messages in them.  To fix this problem, select the folder and 
+choose <EM>Compact</EM> from the <EM>Folder</EM> menu.
+<P>If you want to clear all of the messages out of a folder choose <EM>Empty</EM> from the <EM>Folder</EM>
+menu. All the messages in the selected folder will be moved to the <EM>trash</EM> folder. If the
+selected folder is the <EM>trash</EM> folder, all of the messages will be permanently deleted.
+<P>KMail does not currently support hierarchical folders.
+<P>
+<P>
+<H2><A NAME="ss3.4">3.4 The Addressbook</A>
+</H2>
+
+<P>The addressbook is a place to store your commonly used email addresses.  You can call up the addressbook
+from the File menu, the addressbook button on the Main window, or the addressbook button in the composer
+window.
+<P>To add addresses to the addressbook, type an email address into the lower section of the window and hit
+the <EM>Add</EM> button.  The address will then appear in the list.  To remove an address, select it from
+the list and hit the remove button. 
+<P>Addresses can also be added to the addressbook from the <EM>Mail Reader</EM> window by right-clicking on
+an email address in the <EM>To:</EM> or <EM>From:</EM> fields and selecting <EM>Add to Addressbook</EM>.
+<P>
+<P>
+<H2><A NAME="ss3.5">3.5 Filters</A>
+</H2>
+
+<P>After using KMail for a while, you may find that you have trouble sorting out the new messages in 
+your inbox when they arrive. Filters allow you to automatically perform certain actions on
+messages in a folder. For example, if I am subscribed to the KDE User List, I could create a 
+folder for the list (I'll call it KDE-User) and use a filter to automatically transfer new 
+messages from my inbox to my KDE-User folder if they are from the KDE User List.  This is how
+to create this filter:
+<P>
+<OL>
+<LI>Think of a unique way of identifying the messages you want to filter. The unique property
+of my KDE User List messages is that they always contain the phrase "KDE User List" in the
+<EM>To:</EM> field. If I wanted to be even more specific, I could use the email address of the
+KDE User List.</LI>
+<LI>Select <EM>Filter...</EM> from the File menu.</LI>
+<LI>Press the <EM>New</EM> button to create an empty filter.</LI>
+<LI>Select the empty filter from the list. (It will appear as a pair of angled brackets:
+&lt;&gt;).</LI>
+<LI>The right side of the Filter window contains two sections: matching criteria and actions.
+In the matching criteria area, select "To:" from the first pull-down menu, "Contains" from the
+second pull-down menu, and type "KDE User List" in the text field.</LI>
+<LI>Skip down to the actions section. Select "Transfer" from the first pull-down menu. A new
+pull-down menu containing a list of folders will appear. Select the folder that you want the
+filtered messages to be transferred to. For my example, I would select "KDE-User" from the
+pull-down menu.</LI>
+<LI>Select "Skip Rest" from the next pull-down menu.</LI>
+<LI>To save and try out your new filter, hit the OK button.  This will also dismiss the window.</LI>
+</OL>
+<P>You may find that you need to use more complicated criteria to properly filter your messages.
+For example, you may only want to save the KDE User List messages that are written by your friend
+Fred Johnson &lt;fj@anywhere.com&gt;. This is where the rest of the matching criteria section comes
+into play:
+<P>
+<OL>
+<LI>Open up the Filter Rules window and select the filter you just created.</LI>
+<LI>Since you want to filter all messages that have "KDE User List" in the <EM>To:</EM> field
+AND that are from Fred, select the AND option from the pull down menu between the two criteria
+sections.</LI>
+<LI>Now, go to the bottom criteria section and select the following from the pull-down menus: 
+"From:", "Contains." Now, type "fj@anywhere.com" in the text field.</LI>
+<LI>Select "Skip Rest" from the next pull-down menu.</LI>
+</OL>
+<P>You now have a filter that transfers all messages by Fred Johnson that you receive from the KDE
+User List.
+<P>The actions section of the Filter Rules window lets you perform up to eight actions in one
+filter. You can you the "Skip Rest" option to skip the rest of the actions in the list.  Only the transfer action and the skip rest action are supported at this time, 
+but expect to see more action options available in future releases of KMail.
+<P>If you ever need to remove a filter, select it and press the <EM>Delete</EM> button.
+<P>
+<P>
+<H2><A NAME="ss3.6">3.6 Multiple Accounts</A>
+</H2>
+
+<P>Multiple accounts are used to check mail from more than one email address and/or mailserver. Select 
+<EM>Settings...</EM> from the <EM>File</EM> menu and click on the <EM>Network</EM> tab to add or change 
+your account settings. See the 
+<A HREF="#sec-Customizing">Customizing KMail</A> section for more information on the settings in the
+<EM>Network</EM> tab.
+<P>To check mail from a particular account, use the <EM>Check Mail in...</EM> submenu to select the account
+to use to check your mail. It not currently possible to tell which account is active, so if you have
+created multiple accounts, use the <EM>Check Mail in...</EM> submenu instead of the <EM>Check Mail</EM>
+menu item.
+<P>
+<P>
+<H2><A NAME="ss3.7">3.7 Pretty good privacy</A>
+</H2>
+
+<P>This section still needs to be written.
+<P>
+<H2><A NAME="sec-Customizing"></A> <A NAME="ss3.8">3.8 Customizing KMail </A>
+</H2>
+
+<P>KMail's settings window gives you a number of ways to customize KMail to your needs.
+<P>
+<H3>Identity Tab</H3>
+
+<P>The settings in the Identity tab are fairly straightforward. The <EM>Name</EM>
+and <EM>Organization</EM> fields should contain the appropriate information if you want this
+information to be automatically included in the headers of any message that you send.
+The <EM>Email Address</EM> and the <EM>Reply-to Address</EM> field should contain your email address. 
+The <EM>Signature File</EM> field contains the location of your signature file. You can skip setting the 
+signature file if you do not have one, but every time you compose a new message, KMail will ask you 
+for your signature file.
+<P>
+<H3>Network Tab</H3>
+
+<P>The Network tab contains the settings that tell KMail how to send and receive your
+email. Many of these settings can vary greatly depending on the setup of your system
+and on the kind of network that your mail server is located. If you do not know what
+setting to pick or what to put in a field, consult your Internet Service Provider
+(ISP) or System Administrator.
+<P> 
+The <EM>Sending Mail</EM> section provides two options for sending mail:
+sendmail and SMTP. Sendmail has a reputation of being difficult to set up, so if you
+do not already have a working sendmail configuration, choose SMTP and fill in the
+<EM>Server</EM> field with the name and domain of your mail server. You will probably
+not need to change the <EM>Port</EM> setting.
+<P>To set up an account so you can receive mail, press the <EM>Add...</EM> button in the
+<EM>Incoming Mail</EM> section. You will then be prompted for the type of account.
+Most users should select <EM>POP3</EM>. (IMAP accounts are not supported) After
+pressing <EM>Ok</EM> you will be presented with the <EM>Configure Account</EM>
+window. First, fill in the <EM>Name</EM> field to name your account. <EM>Login</EM>,
+<EM>Password</EM>, and <EM>Host</EM> should be filled in with the appropriate
+information from your ISP or System Administrator. Again, you should not need to
+change the <EM>Port</EM> setting. Select <EM>Delete mail from server</EM> if
+you don't want to leave your mail on the server. Finally, you can set the default box to received your new
+messages.
+<P>  
+<H3>Appearance Tab</H3>
+
+<P>This tab lets you change the type and size of the display font in the Composer window.
+<P>
+<H3>Composer Tab</H3>
+
+<P>The Phrases section lets you define the automatically generated lines added to message replies, forwarded
+messages, and quoted text. There are special %-denoted characters that will insert certain values. These
+are shown at the top of the Phrases section: %D to insert the date, %S to insert the subject, %F to insert
+the sender, and %% to insert a percent sign. The <EM>Indentation</EM> field contains the character that
+will denote quoted text.
+<P>The Appearance section lets you control various display options for your message.
+<P>
+<H3>Misc Tab</H3>
+
+<P>
+<DL>
+<DT><B>Empty Trash On Exit</B><DD><P>The trash folder is cleared of messages when you quit KMail if this option is
+selected.
+<P>
+<DT><B>Send Mail in outbox folder on Check</B><DD><P>All messages queued in the outbox folder will be sent whenever you check your mail.
+</DL>
+<P>
+<H3>PGP Tab</H3>
+
+<P>This tab controls the PGP features.
+<P>
+<P>
+<HR>
 <A HREF="index-4.html">Next</A>
 <A HREF="index-2.html">Previous</A>
-<A HREF="index.html#toc3">Table of Contents</A>
-</P>
-<CENTER>
-<HR WIDTH="100%" SIZE=3 ALIGN=CENTER NOSHADE>
-</CENTER>    
-</FONT>
-
- 
+<A HREF="index.html#toc3">Contents</A>
 </BODY>
 </HTML>

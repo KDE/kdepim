@@ -1,205 +1,230 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>The KMail Handbook: The Menu Entries</TITLE>
-<META HTTP-EQUIV="content-type" CONTENT="text/html; charset=iso-8859-1">
-<META NAME="keywords" CONTENT="KDE Mail Client">
-<META NAME="description" CONTENT="KMail">
+<TITLE>The KMail Handbook: Menus and Keyboard Shortcuts</TITLE>
+<LINK HREF="index-5.html" REL=next>
+<LINK HREF="index-3.html" REL=previous>
+<LINK HREF="index.html#toc4" REL=contents>
 </HEAD>
-<BODY BGCOLOR="#ffffff" LINK="#aa0000" TEXT="#000000" > 
-<FONT FACE="Helvetica">
-<A HREF="http://www.kde.org/"><IMG SRC="logotp3.gif" BORDER="0" ALT="The K Desktop Environment"></A>
-<HR WIDTH="100%" SIZE=2 ALIGN="CENTER" NOSHADE>
-
- 
-<P ALIGN="RIGHT">
-
+<BODY>
 <A HREF="index-5.html">Next</A>
 <A HREF="index-3.html">Previous</A>
-<A HREF="index.html#toc4">Table of Contents</A>
-</P>
-<H3><A NAME="s4">4. The Menu Entries</A></H3>
+<A HREF="index.html#toc4">Contents</A>
+<HR>
+<H2><A NAME="sec-Menus"></A> <A NAME="s4">4. Menus and Keyboard Shortcuts</A></H2>
+
+<P>Each menu item is discussed below. When there is a keyboard shorcut that performs a
+menu item function, it is listed after the menu item.
+<P>
+<P>
+<H2><A NAME="ss4.1">4.1 The Main Mail Reader window</A>
+</H2>
 
 <P>
-<H3><A NAME="ss4.1">4.1 The Main Dialog</A>
-</H3>
+<H3>File menu</H3>
 
 <P>
-<H4>File</H4>
+<DL>
+<DT><B>New Composer (Ctrl+N)</B><DD><P>Creates a new Composer window.
+<P>
+<DT><B>New Mail Reader</B><DD><P>Creates a new Mail Reader window.
+<P>
+<DT><B>Save As... (Ctrl+S)</B><DD><P>Saves the currently displayed message. 
+<P>
+<DT><B>Print... (Ctrl+P)</B><DD><P>Prints the currently displayed message.
+<P>
+<DT><B>Check Mail (Ctrl+L)</B><DD><P>Checks mail in the active account.
+<P>
+<DT><B>Check Mail in... submenu</B><DD><P>Submenu that lets you check mail from a particular account.
+<P>
+<DT><B>Settings...</B><DD><P>Opens the Settings window. You can configure the settings for your identity, accounts, network, PGP, 
+the appearance of the composer and mail reader windows, and various other settings here.
+<P>
+<DT><B>Addressbook...</B><DD><P>Opens up the Addressbook.
+<P>
+<DT><B>Filters...</B><DD><P>Opens the Filters window.
+<P>
+<DT><B>Close (Ctrl+W)</B><DD><P>Closes current Mail Reader window.
+<P>
+<DT><B>Quit (Ctrl+Q)</B><DD><P>Exits KMail.
+<P>
+</DL>
+<P>
+<H3>Edit menu</H3>
 
 <P>
-<H4>New Composer</H4>
-
-<P>Creates a new Composer Dialog.
+<DL>
+<DT><B>Copy (Ctrl+C)</B><DD><P>Copies selected text to the clipboard.
 <P>
-<H4>New Mailreader</H4>
-
-<P>Creates a new Mailreader Dialog.
+</DL>
 <P>
-<H4>Settings</H4>
-
-<P>You can set your preferences and network setup here.
-<P>
-<H4>Close</H4>
-
-<P>Closes current Mailreader Dialog. KMail exists if only one Mailreader Dialog is open.
-<P>
-<H4>Quit</H4>
-
-<P>Ends kmail.
-<P>
-<P>
-<P>
-<H4>Edit</H4>
+<H3>Folder menu</H3>
 
 <P>
-<H4>Undo</H4>
-
-<P>Undoes last action.
+<DL>
+<DT><B>Create...</B><DD><P>Opens the New Folder dialog which lets you create new folders
 <P>
-<H4>Cut</H4>
-
-<P>Cuts out marked text
+<DT><B>Modify...</B><DD><P>Opens up the Modify Folder dialog which lets you change the settings for the selected folder.
 <P>
-<H4>Copy</H4>
-
-<P>Copies marked stuff
+<DT><B>Compact</B><DD><P>Compacts the folder file to reduce its disk space usage. Use this command if your mailboxes seem
+to be much larger than they ought to be.
 <P>
-<H4>Paste</H4>
-
-<P>Pastes marked stuff
+<DT><B>Empty</B><DD><P>Moves all of the messages in the selected folder into the trash folder.  If the selected
+folder is the trash folder, the messages are permanently deleted.
+<P> 
+<DT><B>Remove</B><DD><P>Removes the selected folder.
 <P>
-<H4>Find</H4>
-
-<P>Finds expressions
+</DL>
 <P>
-<P>
-<P>
-<H4>Message</H4>
+<H3>Message menu</H3>
 
 <P>
+<DL>
+<DT><B>Next (N)</B><DD><P>Selects the next message in the Headers pane.
 <P>
-<H4>Folder</H4>
+<DT><B>Next Unread (+)</B><DD><P>Selects the next unread message in the Headers pane.
+<P>
+<DT><B>Previous (P)</B><DD><P>Selects the previous message in the Headers pane.
+<P>
+<DT><B>Previous Unread (-)</B><DD><P>Selects the previous unread message in the Headers pane.
+<P>
+<DT><B>Reply... (R)</B><DD><P>Opens up the Composer window with the contents of the selected message's Reply-To field 
+in the To: field.
+<P>
+<DT><B>Reply All... (A)</B><DD><P>Opens up the Composer window and copies the contents of the selected message's Reply-To and To
+fields into the To: field and the cc: and bcc: fields into the cc: and bcc: fields of
+the Composer window.
+<P>
+<DT><B>Forward (F)</B><DD><P>Forwards the message to a new recipient.
+<P>
+<DT><B>Edit (T)</B><DD><P>Edits the selected message if it is editable.
+<P>
+<DT><B>Set Status submenu</B><DD><P>Allows you to change the status of the selected message to one of the below:
+<UL>
+<LI>New</LI>
+<LI>Unread</LI>
+<LI>Read</LI>
+<LI>Replied</LI>
+<LI>Queued</LI>
+<LI>Sent</LI>
+</UL>
+<P>
+<DT><B>Mark All (K)</B><DD><P>Selects all of the messages in the current folder.
+<P>
+<DT><B>Move (M)</B><DD><P>Moves all of the selected messages to a new folder.
+<P>
+<DT><B>Copy (S)</B><DD><P>Copies the selected messages into a new folder.
+<P>
+<DT><B>Delete (D)</B><DD><P>Moves the selected messages into the trash folder.
+<P>
+<DT><B>Send Again...</B><DD><P>Sends the message again
+<P>
+<DT><B>Apply Filters (Ctrl+J)</B><DD><P>Applies your filters to the selected messages
+<P>
+<DT><B>View Source...</B><DD><P>Views the message and its complete headers in plain text format in a new window.
+</DL>
+<P>
+<H3>View menu</H3>
 
 <P>
+<DL>
+<DT><B>Brief, Fancy, Standard, Long, and All Headers</B><DD><P>Changes the number of headers that are displayed and the formatting of the headers in 
+the Message pane.
 <P>
+<DT><B>Iconic, Smart, and Inlined Attachments</B><DD><P>Changes the way that attachments appear in the Message pane.
 <P>
-<H4>Help</H4>
+</DL>
+<P>
+<H3>Help menu</H3>
 
 <P>
-<H4>Help</H4>
-
-<P>Invokes the KDE help system with the KMail help pages displayed.
-<H4>About </H4>
-
-<P>Displays essential information about KMail.
+<DL>
+<DT><B>Contents (F1)</B><DD><P>Invokes the KDE help system with the KMail help pages displayed.
 <P>
-<H3><A NAME="ss4.2">4.2 The Composer Dialog</A>
-</H3>
-
+<DT><B>About Kmail...</B><DD><P>Displays essential information about KMail.
 <P>
-<H4>File</H4>
-
+<DT><B>About KDE...</B><DD><P>Displays information about KDE.
 <P>
-<H4>Send</H4>
+</DL>
+<P>
+<H2><A NAME="ss4.2">4.2 The Composer window</A>
+</H2>
 
 <P>
-<H4>Send later</H4>
+<H3>File menu</H3>
 
 <P>
-<H4>Address Book</H4>
+<DL>
+<DT><B>Send (Ctrl+Enter)</B><DD><P>Queues the message in the outbox for sending it later.
+<P>
+<DT><B>Send Now</B><DD><P>Sends the message immediately.
+<P>
+<DT><B>Insert File...</B><DD><P>Inserts the selected text file into the message, starting at the cursor.
+<P>
+<DT><B>Address Book</B><DD><P>Opens up the address book.
+<P>
+<DT><B>Print</B><DD><P>Prints the message.
+<P>
+<DT><B>New Composer (Ctrl+N)</B><DD><P>Opens up a new Composer window.
+<P>
+<DT><B>New Mail Reader</B><DD><P>Opens up a new Mail Reader window.
+<P>
+<DT><B>Close (Ctrl+W)</B><DD><P>Closes the Composer window.
+<P>
+</DL>
+<P>
+<H3>Edit menu</H3>
 
 <P>
-<H4>Print</H4>
+<DL>
+<DT><B>Cut (Ctrl+X), Copy (Ctrl+C>, Paste (Ctrl+V)</B><DD><P>These items are for cutting, copying, and pasting text. They work like in most editors.
+<P>
+<DT><B>Mark all</B><DD><P>Selects all of the text in your message.
+<P>
+<DT><B>Find (Ctrl+F)</B><DD><P>Finds words, phrases, or expressions in the message.
+<P>
+<DT><B>Replace (Ctrl+R)</B><DD><P>Lets you replace words, phrases, or expressions in your message with other words or phrases.
+<P>
+<DT><B>Spellcheck...</B><DD><P>Uses KSpell to check the spelling in the body of your message.
+<P>
+</DL>
+<P>
+<H3>Options menu</H3>
 
 <P>
-<H4>New Composer</H4>
+<DL>
+<DT><B>Urgent</B><DD><P>Sets the priority of the message to Urgent.
+<P>
+<DT><B>Confirm Delivery</B><DD><P>If you choose this option, you will receive a confirmation email once your message is
+successfully delivered to its destination mail server.
+<P>
+<DT><B>Confirm Read</B><DD><P>If you choose this option, you will receive a confirmation email once your message is
+downloaded and read by its recipient. 
+<P>
+<DT><B>Spellchecker...</B><DD><P>Allows you to configure Kspell, KDE's spellchecker.
+<P>
+</DL>
+<P>
+<H3>View menu</H3>
+
+<P>This menu lets you toggle the display of the header fields in the composer window.
+<P>
+<P>
+<H3>Help menu</H3>
 
 <P>
-<H4>New Mailreader</H4>
-
+<DL>
+<DT><B>Contents (F1)</B><DD><P>Invokes the KDE help system with the KMail help pages displayed.
 <P>
-<H4>Close</H4>
-
+<DT><B>About Kmail...</B><DD><P>Displays essential information about KMail.
 <P>
+<DT><B>About KDE...</B><DD><P>Displays information about KDE.
 <P>
-<H4>Edit</H4>
-
+</DL>
 <P>
-<H4>Cut</H4>
-
-<P>
-<H4>Copy</H4>
-
-<P>
-<H4>Paste</H4>
-
-<P>
-<H4>Mark all</H4>
-
-<P>
-<H4>Find</H4>
-
-<P>
-<P>
-<H4>Message</H4>
-
-<P>
-<H4>Recipients</H4>
-
-<P>
-<H4>Insert File</H4>
-
-<P>
-<H4>Priority</H4>
-
-<P>
-<P>
-<H4>Attach</H4>
-
-<P>
-<H4>File</H4>
-
-<P>
-<H4>Signature</H4>
-
-<P>
-<H4>Encoding</H4>
-
-<P>
-<P>
-<H4>Options</H4>
-
-<P>
-<H4>Toogle Toolbar</H4>
-
-<P>
-<H4>Change Font</H4>
-
-<P>
-<P>
-<H4>Help</H4>
-
-<P>
-<H4>Help</H4>
-
-<P>
-<H4>About</H4>
-
-<P>
-<P>
-<P>
-<P ALIGN="RIGHT">
-
+<HR>
 <A HREF="index-5.html">Next</A>
 <A HREF="index-3.html">Previous</A>
-<A HREF="index.html#toc4">Table of Contents</A>
-</P>
-<CENTER>
-<HR WIDTH="100%" SIZE=3 ALIGN=CENTER NOSHADE>
-</CENTER>    
-</FONT>
-
- 
+<A HREF="index.html#toc4">Contents</A>
 </BODY>
 </HTML>

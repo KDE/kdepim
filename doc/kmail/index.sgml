@@ -9,10 +9,10 @@
 <!-- Title information -->
 
 <title>The KMail Handbook
-<author>Markus Wuebben
-<date>Version 0.6, June 7 1998
-<abstract>This documentation was last updated for kmail version 0.6. 
-Please make any comments and additions to the author.
+<author>David Rugge, Markus Wuebben
+<date>December 6, 1998
+<abstract>This documentation was last updated for KMail version 1.0.7. 
+Please make any comments and additions to the authors.
 </abstract>
 
 <!-- Table of contents -->
@@ -21,226 +21,1093 @@ Please make any comments and additions to the author.
 <!-- Begin the document -->
 
 
-<sect>Introduction
+<sect>Introduction<label id="sec-Intro">
 
 <p>
-The kmail Team welcomes you to <tt> KMail</tt>. The comfortable mailer for the K Desktop Environment. We set our goal towards making a beautiful & intuitive mailer on the one hand side but on the other making it as powerfull as possible. Please enjoy using kmail. Bug reports & suggestions should go to one of the developers or to the kmail mailing list.
+The KMail Team welcomes you to <em>KMail</em>, a user-friendly mailer for the
+K Desktop Environment. Our goal is to make a mailer that is beautiful and intuitive
+without sacrificing power. 
 <p>
-We hope you will enjoy this Mailer,
+If have never set up an email client on a Unix system before, we suggest that you read through 
+the <ref id="sec-GettingStarted" name="Getting Started"> section first so that your setup goes smoothly.
 <p>
-<tt>Markus Wubben</tt>
+Bug reports & suggestions should go to one of the <ref id="sec-Developers" name="developers">.
 <p>
-<htmlurl url="mailto:markus.wuebben@kde.org" name="markus.wuebben@kde.org">
+We hope you will enjoy KMail,
 <p>
-
-<sect>How to get started...
+David Rugge <htmlurl url="mailto:davidrugge@mindspring.com" name="&lt;davidrugge@mindspring.com&gt">
 <p>
-This will be a very short introduction to kmail and its usage so you can start
-working with it right away! For more in depth information see the Features section.
-
-<sect1> KMail's first invokation....
-<p>
-Invoking kmail for the first time it will create a Directory and some files
-in your home directory. 
-This is the "~/Mail" directory which holds the initial folders (outbox,sent-mail,trash 
-& inbox).
-<p>
-<sect2> Ok,looks good...what now?
-<p>
-The main screen is devided into 3 parts:<p>
-1. The folder widget (upper left widget).<p>
-2. The mail header widget (upper right widget).<p>
-3. The reader widget (lower widget).<p>
-Clicking a folder will open it and display the messages in the header widget.
-Most likely there won't be any messages visible on kmail's first start.
-Clicking one of the headers will make the message appear in the reader widget.
-
-<sect2> Setting up kmail
-<p>
-Please select "Settings" from the "File" - menu. In this Tabdialog you now have to 
-enter some initial information so kmail can work correctly. In addition you can  
-specify some preferences to adjust kmail to your needs.
-
-<p>
-<sect> Features and Details
-<sect1>Folders and Accounts
-<p>
-KMail allows you to have multiple folders and accounts. The philosophy is that you have certain accounts connected to certain folders. You can easily create, modify & delete folders and accounts via the menubar items.
+Markus Wuebben <htmlurl url="mailto:markus.wuebben@kde.org" name="&lt;markus.wuebben@kde.org&gt;">
 <p>
 
-<sect1>Drag and Drop
+<sect>Getting Started<label id="sec-GettingStarted">
 <p>
-KMail makes use of the KDE Drag and Drop protocol. This means that you can darg
-and drop message form the header widget to your desktop or drop attachments on the composer to be automatically attached.
+This is a short introduction to KMail and its usage so you can start
+working with it right away. For more in-depth information see the 
+<ref id="sec-UsingKmail" name="Using KMail"> section.
+<p>
+Invoking KMail for the first time creates a Mail directory containing the initial
+files (inbox, outbox, sent-mail, and trash) in your home directory.  KMail then pops up
+the Settings window where you must enter some initial information so KMail will 
+be able to properly retrieve and send your messages. 
+<p>
+The Settings window consists of six tabs: Identity, Network, Appearance, Composer,
+Misc, and PGP. To begin sending and receiving email you will only have to change the
+settings in the Identity and Network tabs.
+
+<sect1>Setting your Identity
+<p>
+The settings in the Identity tab are fairly straightforward. Fill in the <em>Name</em>
+and <em>Organization</em> fields with the appropriate information if you want this
+information to be automatically included in the headers of any message that you send.
+Next, fill in the <em>Email Address</em> and the <em>Reply-to Address</em> field 
+with your email address. Finally, set the location of your signature file in the
+<em>Signature File</em> field. You can skip setting the signature file if you do not
+have one, but every time you compose a new message, KMail will ask you for your
+signature file.
+<p>
+<sect1>Setting up your Account
+<p>
+The Network tab contains the settings that tell KMail how to send and receive your
+email. Many of these settings can vary greatly depending on the setup of your system
+and on the kind of network that your mail server is located. If you do not know what
+setting to pick or what to put in a field, consult your Internet Service Provider
+(ISP) or System Administrator.
+
+<sect2>Sending Mail
+<p> 
+The <em>Sending Mail</em> section provides two options for sending mail:
+sendmail and SMTP. Sendmail has a reputation of being difficult to set up, so if you
+do not already have a working sendmail configuration, choose SMTP and fill in the
+<em>Server</em> field with the name and domain of your mail server. You will probably
+not need to change the <em>Port</em> setting.
+
+<sect2>Receiving Mail
+<p>
+To set up an account so you can receive mail, press the <em>Add...</em> button in the
+<em>Incoming Mail</em> section. You will then be prompted for the type of account.
+Most users should select <em>POP3</em>. (IMAP accounts are not supported) After
+pressing <em>Ok</em> you will be presented with the <em>Configure Account</em>
+window. First, fill in the <em>Name</em> field to name your account. <em>Login</em>,
+<em>Password</em>, and <em>Host</em> should be filled in with the appropriate
+information from your ISP or System Administrator. Again, you should not need to
+change the <em>Port</em> setting. Finally, select <em>Delete mail from server</em> if
+you don't want to leave your mail on the server. Leave the account's mailbox set to
+inbox for now, although you may want to change it if you add more accounts later.
+<p>
+You are now ready to send and receive mail!
+
+<sect1>Testing Your Setup
+<p>
+First, we will send an email to test our configuration. To send an email, hit 
+Control-N, or select the <em>New Composer</em> menu item.  The <em>Composer</em> 
+window will appear. Fill in the <em>To:</em> field with your email address and type
+something in the <em>subject</em> field.  Send the mail by selecting <em>Send</em>
+from the <em>File</em> menu.
+<p>
+To check your email, select the <em>Check Mail...</em> menu item from the 
+<em>File</em> menu. A window will pop up and indicate how much mail is being 
+downloaded. If you receive the message you just sent, then congratulations! You have
+successfully set up your email account. If, however, you receive any error messages
+while testing your setup, make sure that your network connection is working and
+recheck your settings by selecting <em>Settings...</em> from the <em>File</em> menu.
+
+<sect>Using KMail<label id="sec-UsingKmail">
+
+<sect1>The Mail Reader Window
+<p>
+The Mail Reader window is the window that appears when KMail is started. The Mail reader window 
+is divided into three panes:
 <p>
 
+<descrip>
+<tag>Folders Pane (upper left pane)</tag>
+This pane contains a list of your Message Folders. (other email programs call them 
+mailboxes) To select a folder, simply click on it. The messages contained in the folder
+will now appear in the Headers Pane. See the <ref id="sec-Folders" name="Folders Section"> 
+for more information about how to use folders.  
+<p>
+<tag>Headers Pane (upper right pane)</tag>
+This pane lists header information (message Status, Sender, Subject, and the Date the message 
+was sent) for the messages in the currently selected folder. Clicking on a header will
+select that message and display it in the Message Pane. You can also select a series of
+messages by clicking on one message, holding down the SHIFT key, and clicking on
+another message. The two messages you just clicked on will be selected, along with all
+the messages in between. You may sort the messages by clicking on the column that you wish to
+sort.
+<p>
+<tag>Message Pane (lower pane)</tag>
+Displays the header and body of the currently selected message. You can scroll through
+the message page by page using PAGE UP and PAGE DOWN, or line by line using the up and
+down arrow keys. You can also use the following key shortcuts to skip through your 
+messages without having to use the mouse:
+<itemize>
+<item>N - Next message
+<item>P - Previous message
+<item>+ - Next unread message
+<item>- - Previous unread message
+</itemize>
+</descrip>
+<p>
+
+<sect1>The Composer Window
+<p>
+The composer window is where you write new messages. It can be invoked from the File Menu or from the
+document icon on the Mail reader window button bar. If you have not set the location of your signature
+file, you will be prompted before the composer window opens.
+<p>
+
+<sect2>Composing a Message
+<p>
+To write your message, fill in the appropriate fields in the composer window.  There are a variety of
+shortcuts to help you with writing you messages.  The ellipses buttons next to the <em>To:</em>, 
+<em>cc:</em>, and <em>Bcc:</em> fields will call up the addressbook so that you can select addresses 
+from there instead of trying to remember them. When you are finished with your message, hit the Send
+button (the envelope) to queue or send the message.
+<sect2>Attachments
+<p>
+You can attach files to you message by using one of the methods below:
+<itemize>
+<item>Push the <em>Attach file</em> button (the paperclip) and select the file you wish to attach.
+<item>Drag a file from the desktop or another directory into the composer window.
+</itemize>
+<p>
+
+<sect1>Message Folders<label id="sec-Folders">
+<p>
+Message Folders are used to organize your email messages. When you first start KMail the 
+inbox, outbox, sent-mail, and trash folders are created. These folders each have special 
+functions:
+
+<itemize>
+<item><em>inbox:</em> where KMail puts your new messages when you ask it to check your mail. 
+<item><em>outbox:</em> where messages are put while they are waiting to be delivered. 
+<item><em>sent-mail:</em> contains copies of all messages that you have sent. 
+<item><em>trash:</em> contains all messages that you have deleted.
+</itemize>
+
+<p>
+You may find that the standard folders are fine for your needs. However, if you
+receive a large number of messages a day, you will probably need folders to help you organize 
+your messages. To create a new folder, go to the <em>Folder</em> menu and select <em>Create..</em>. A
+window will then prompt you for the name of the folder and allow you to associate or
+disassociate the folder with certain accounts. If you ever need to change the settings for a folder,
+select the folder you wish to modify in the Folders Pane and select
+<em>Modify...</em> from the <em>Folder</em> menu. KMail will then prompt you for the changes you wish to
+make to the selected folder.
+<p>
+To move messages from one folder into another, select the message(s) you want to move and press the M key
+or select <em>Move...</em> from the <em>Message</em> menu. A list of folders will appear.  Select the
+folder from the list that you want to move the messages to and hit <em>Ok</em>.  Messages can also be
+moved by dragging a message from the Headers pane into the Folders pane.
+<p>
+You may find that your folders are taking up a lot of disk space after they have been used for a while 
+even though they may not have very many messages in them.  To fix this problem, select the folder and 
+choose <em>Compact</em> from the <em>Folder</em> menu.
+<p>
+If you want to clear all of the messages out of a folder choose <em>Empty</em> from the <em>Folder</em>
+ menu. All the messages in the selected folder will be moved to the <em>trash</em> folder. If the
+ selected folder is the <em>trash</em> folder, all of the messages will be permanently deleted.
+<p>
+KMail does not currently support hierarchical folders.
+<p>
+
+<sect1>The Addressbook
+<p>
+The addressbook is a place to store your commonly used email addresses.  You can call up the addressbook
+from the File menu, the addressbook button on the Main window, or the addressbook button in the composer
+window.
+<p>
+To add addresses to the addressbook, type an email address into the lower section of the window and hit
+the <em>Add</em> button.  The address will then appear in the list.  To remove an address, select it from
+the list and hit the remove button. 
+<p>
+Addresses can also be added to the addressbook from the <em>Mail Reader</em> window by right-clicking on
+an email address in the <em>To:</em> or <em>From:</em> fields and selecting <em>Add to Addressbook</em>.
+<p>
+
+<sect1>Filters
+<p>
+After using KMail for a while, you may find that you have trouble sorting out the new messages in 
+your inbox when they arrive. Filters allow you to automatically perform certain actions on
+messages in a folder. For example, if I am subscribed to the KDE User List, I could create a 
+folder for the list (I'll call it KDE-User) and use a filter to automatically transfer new 
+messages from my inbox to my KDE-User folder if they are from the KDE User List.  This is how
+to create this filter:
+<p>
+<enum>
+<item>Think of a unique way of identifying the messages you want to filter. The unique property
+of my KDE User List messages is that they always contain the phrase "KDE User List" in the
+<em>To:</em> field. If I wanted to be even more specific, I could use the email address of the
+KDE User List.
+<item>Select <em>Filter...</em> from the File menu.
+<item>Press the <em>New</em> button to create an empty filter.
+<item>Select the empty filter from the list. (It will appear as a pair of angled brackets:
+&lt;&gt).
+<item>The right side of the Filter window contains two sections: matching criteria and actions.
+In the matching criteria area, select "To:" from the first pull-down menu, "Contains" from the
+second pull-down menu, and type "KDE User List" in the text field.
+<item>Skip down to the actions section. Select "Transfer" from the first pull-down menu. A new
+pull-down menu containing a list of folders will appear. Select the folder that you want the
+filtered messages to be transferred to. For my example, I would select "KDE-User" from the
+pull-down menu.
+<item>Select "Skip Rest" from the next pull-down menu.
+<item>To save and try out your new filter, hit the OK button.  This will also dismiss the window.
+</enum>
+<p>
+You may find that you need to use more complicated criteria to properly filter your messages.
+For example, you may only want to save the KDE User List messages that are written by your friend
+Fred Johnson &lt;fj@anywhere.com&gt;. This is where the rest of the matching criteria section comes
+into play:
+<p>
+<enum>
+<item>Open up the Filter Rules window and select the filter you just created.
+<item>Since you want to filter all messages that have "KDE User List" in the <em>To:</em> field
+AND that are from Fred, select the AND option from the pull down menu between the two criteria
+sections.
+<item>Now, go to the bottom criteria section and select the following from the pull-down menus: 
+"From:", "Contains." Now, type "fj@anywhere.com" in the text field.
+<item>Select "Skip Rest" from the next pull-down menu.
+</enum>
+<p>
+You now have a filter that transfers all messages by Fred Johnson that you receive from the KDE
+User List.
+<p>
+The actions section of the Filter Rules window lets you perform up to eight actions in one
+filter. You can you the "Skip Rest" option to skip the rest of the actions in the list.  Only the transfer action and the skip rest action are supported at this time, 
+but expect to see more action options available in future releases of KMail.
+<p>
+If you ever need to remove a filter, select it and press the <em>Delete</em> button.
+<p>
+
+<sect1>Multiple Accounts
+<p>
+Multiple accounts are used to check mail from more than one email address and/or mailserver. Select 
+<em>Settings...</em> from the <em>File</em> menu and click on the <em>Network</em> tab to add or change 
+your account settings. See the <ref id="sec-Customizing" name="Customizing KMail"> section for more information on the settings in the
+<em>Network</em> tab.
+<p>
+To check mail from a particular account, use the <em>Check Mail in...</em> submenu to select the account
+to use to check your mail. It not currently possible to tell which account is active, so if you have
+created multiple accounts, use the <em>Check Mail in...</em> submenu instead of the <em>Check Mail</em>
+menu item.
+<p>
+ 
 <sect1>Pretty good privacy
 <p>
-Sorry but this feature is not yet implemented.
+This section still needs to be written.
+
+<sect1>Customizing KMail <label id="sec-Customizing">
+<p>
+KMail's settings window gives you a number of ways to customize KMail to your needs.
+<p>
+<sect2>Identity Tab
+<p>
+The settings in the Identity tab are fairly straightforward. The <em>Name</em>
+and <em>Organization</em> fields should contain the appropriate information if you want this
+information to be automatically included in the headers of any message that you send.
+The <em>Email Address</em> and the <em>Reply-to Address</em> field should contain your email address. 
+The <em>Signature File</em> field contains the location of your signature file. You can skip setting the 
+signature file if you do not have one, but every time you compose a new message, KMail will ask you 
+for your signature file.
+<p>
+<sect2>Network Tab
+<p>
+The Network tab contains the settings that tell KMail how to send and receive your
+email. Many of these settings can vary greatly depending on the setup of your system
+and on the kind of network that your mail server is located. If you do not know what
+setting to pick or what to put in a field, consult your Internet Service Provider
+(ISP) or System Administrator.
+<p> 
+The <em>Sending Mail</em> section provides two options for sending mail:
+sendmail and SMTP. Sendmail has a reputation of being difficult to set up, so if you
+do not already have a working sendmail configuration, choose SMTP and fill in the
+<em>Server</em> field with the name and domain of your mail server. You will probably
+not need to change the <em>Port</em> setting.
+<p>
+To set up an account so you can receive mail, press the <em>Add...</em> button in the
+<em>Incoming Mail</em> section. You will then be prompted for the type of account.
+Most users should select <em>POP3</em>. (IMAP accounts are not supported) After
+pressing <em>Ok</em> you will be presented with the <em>Configure Account</em>
+window. First, fill in the <em>Name</em> field to name your account. <em>Login</em>,
+<em>Password</em>, and <em>Host</em> should be filled in with the appropriate
+information from your ISP or System Administrator. Again, you should not need to
+change the <em>Port</em> setting. Select <em>Delete mail from server</em> if
+you don't want to leave your mail on the server. Finally, you can set the default box to received your new
+messages.
+<p>  
+<sect2>Appearance Tab
+<p>
+This tab lets you change the type and size of the display font in the Composer window.
+<p>
+<sect2>Composer Tab
+<p>
+The Phrases section lets you define the automatically generated lines added to message replies, forwarded
+messages, and quoted text. There are special %-denoted characters that will insert certain values. These
+are shown at the top of the Phrases section: %D to insert the date, %S to insert the subject, %F to insert
+the sender, and %% to insert a percent sign. The <em>Indentation</em> field contains the character that
+will denote quoted text.
+<p>
+The Appearance section lets you control various display options for your message.
+<p>
+<sect2>Misc Tab
+<p>
+<descrip>
+<tag>Empty Trash On Exit</tag>
+The trash folder is cleared of messages when you quit KMail if this option is
+selected.
+<p>
+<tag>Send Mail in outbox folder on Check</tag>
+All messages queued in the outbox folder will be sent whenever you check your mail.
+</descrip>
+<p>
+<sect2>PGP Tab
+<p>
+This tab controls the PGP features.
 <p>
 
-<sect>The Menu Entries
+<sect>Menus and Keyboard Shortcuts<label id="sec-Menus">
 <p>
-<sect1>The Main Dialog
-<p>
-<sect2>File
-<p>
-<sect2>New Composer
-<p>
-Creates a new Composer Dialog.
-<p>
-<sect2>New Mailreader
-<p>
-Creates a new Mailreader Dialog.
-<p>
-<sect2>Settings
-<p>
-You can set your preferences and network setup here.
-<p>
-<sect2>Close
-<p>
-Closes current Mailreader Dialog. KMail exists if only one Mailreader Dialog is open.
-<p>
-<sect2>Quit
-<p>
-Ends kmail.
-<p>
+Each menu item is discussed below. When there is a keyboard shorcut that performs a
+menu item function, it is listed after the menu item.
 <p>
 
-<sect2>Edit
+<sect1>The Main Mail Reader window
 <p>
-<sect2>Undo
+<sect2>File menu
 <p>
-Undoes last action.
+<descrip>
+<tag>New Composer (Ctrl+N)</tag>
+Creates a new Composer window.
 <p>
-<sect2>Cut
+<tag>New Mail Reader</tag>
+Creates a new Mail Reader window.
 <p>
-Cuts out marked text
+<tag>Save As... (Ctrl+S)</tag>
+Saves the currently displayed message. 
 <p>
-<sect2>Copy
+<tag>Print... (Ctrl+P)</tag>
+Prints the currently displayed message.
 <p>
-Copies marked stuff
+<tag>Check Mail (Ctrl+L)</tag>
+Checks mail in the active account.
 <p>
-<sect2>Paste
+<tag>Check Mail in... submenu</tag>
+Submenu that lets you check mail from a particular account.
 <p>
-Pastes marked stuff
+<tag>Settings...</tag>
+Opens the Settings window. You can configure the settings for your identity, accounts, network, PGP, 
+the appearance of the composer and mail reader windows, and various other settings here.
 <p>
-<sect2>Find
+<tag>Addressbook...</tag>
+Opens up the Addressbook.
 <p>
-Finds expressions
+<tag>Filters...</tag>
+Opens the Filters window.
 <p>
+<tag>Close (Ctrl+W)</tag>
+Closes current Mail Reader window.
 <p>
+<tag>Quit (Ctrl+Q)</tag>
+Exits KMail.
+<p>
+</descrip>
 
-<sect2>Message
+<sect2>Edit menu
 <p>
+<descrip>
+<tag>Copy (Ctrl+C)</tag>
+Copies selected text to the clipboard.
+<p>
+</descrip>
 
-<sect2>Folder
+<sect2>Folder menu
 <p>
+<descrip>
+<tag>Create...</tag>
+Opens the New Folder dialog which lets you create new folders
+<p>
+<tag>Modify...</tag>
+Opens up the Modify Folder dialog which lets you change the settings for the selected folder.
+<p>
+<tag>Compact</tag>
+Compacts the folder file to reduce its disk space usage. Use this command if your mailboxes seem
+to be much larger than they ought to be.
+<p>
+<tag>Empty</tag>
+Moves all of the messages in the selected folder into the trash folder.  If the selected
+folder is the trash folder, the messages are permanently deleted.
+<p> 
+<tag>Remove</tag>
+Removes the selected folder.
+<p>
+</descrip>
 
+<sect2>Message menu
+<p>
+<descrip>
+<tag>Next (N)</tag>
+Selects the next message in the Headers pane.<p>
+<tag>Next Unread (+)</tag>
+Selects the next unread message in the Headers pane.<p>
+<tag>Previous (P)</tag>
+Selects the previous message in the Headers pane.<p>
+<tag>Previous Unread (-)</tag>
+Selects the previous unread message in the Headers pane.<p>
+<tag>Reply... (R)</tag>
+Opens up the Composer window with the contents of the selected message's Reply-To field 
+in the To: field.<p>
+<tag>Reply All... (A)</tag>
+Opens up the Composer window and copies the contents of the selected message's Reply-To and To
+fields into the To: field and the cc: and bcc: fields into the cc: and bcc: fields of
+the Composer window.<p>
+<tag>Forward (F)</tag>
+Forwards the message to a new recipient.<p>
+<tag>Edit (T)</tag>
+Edits the selected message if it is editable.<p>
+<tag>Set Status submenu</tag>
+Allows you to change the status of the selected message to one of the below:
+<itemize>
+	<item>New
+	<item>Unread
+	<item>Read
+	<item>Replied
+	<item>Queued
+	<item>Sent
+</itemize>
+<p>
+<tag>Mark All (K)</tag>
+Selects all of the messages in the current folder.<p>
+<tag>Move (M)</tag>
+Moves all of the selected messages to a new folder.<p>
+<tag>Copy (S)</tag>
+Copies the selected messages into a new folder.<p>
+<tag>Delete (D)</tag>
+Moves the selected messages into the trash folder.<p>
+<tag>Send Again...</tag>
+Sends the message again<p>
+<tag>Apply Filters (Ctrl+J)</tag>
+Applies your filters to the selected messages<p>
+<tag>View Source...</tag>
+Views the message and its complete headers in plain text format in a new window.
+</descrip>
 
-<sect2>Help
+<sect2>View menu
 <p>
-<sect2>Help
+<descrip>
+<tag>Brief, Fancy, Standard, Long, and All Headers</tag>
+Changes the number of headers that are displayed and the formatting of the headers in 
+the Message pane.
 <p>
+<tag>Iconic, Smart, and Inlined Attachments</tag>
+Changes the way that attachments appear in the Message pane.
+<p>
+</descrip>
+
+<sect2>Help menu
+<p>
+<descrip>
+<tag>Contents (F1)</tag>
 Invokes the KDE help system with the KMail help pages displayed.
-<sect2>About 
 <p>
+<tag>About Kmail...</tag>
 Displays essential information about KMail.
+<p>
+<tag>About KDE...</tag>
+Displays information about KDE.
+<p>
+</descrip>
 
-<sect1>The Composer Dialog
+<sect1>The Composer window
 <p>
-<sect2>File
+<sect2>File menu
 <p>
-<sect2>Send
+<descrip>
+<tag>Send (Ctrl+Enter)</tag>
+Queues the message in the outbox for sending it later.<p>
+<tag>Send Now</tag>
+Sends the message immediately.
 <p>
-<sect2>Send later
+<tag>Insert File...</tag>
+Inserts the selected text file into the message, starting at the cursor.
 <p>
-<sect2>Address Book
+<tag>Address Book</tag>
+Opens up the address book.
 <p>
-<sect2>Print
+<tag>Print</tag>
+Prints the message.
 <p>
-<sect2>New Composer
+<tag>New Composer (Ctrl+N)</tag>
+Opens up a new Composer window.
 <p>
-<sect2>New Mailreader
+<tag>New Mail Reader</tag>
+Opens up a new Mail Reader window.
 <p>
-<sect2>Close
+<tag>Close (Ctrl+W)</tag>
+Closes the Composer window.
 <p>
+</descrip>
+
+<sect2>Edit menu
 <p>
-<sect2>Edit
+<descrip>
+<tag>Cut (Ctrl+X), Copy (Ctrl+C>, Paste (Ctrl+V)</tag>
+These items are for cutting, copying, and pasting text. They work like in most editors.
 <p>
-<sect2>Cut
+<tag>Mark all</tag>
+Selects all of the text in your message.
 <p>
-<sect2>Copy
+<tag>Find (Ctrl+F)</tag>
+Finds words, phrases, or expressions in the message.
 <p>
-<sect2>Paste
+<tag>Replace (Ctrl+R)</tag>
+Lets you replace words, phrases, or expressions in your message with other words or phrases.
 <p>
-<sect2>Mark all
+<tag>Spellcheck...</tag>
+Uses KSpell to check the spelling in the body of your message.
 <p>
-<sect2>Find
+</descrip>
+
+<sect2>Options menu
 <p>
+<descrip>
+<tag>Urgent</tag>
+Sets the priority of the message to Urgent.
 <p>
-<sect2>Message
+<tag>Confirm Delivery</tag>
+If you choose this option, you will receive a confirmation email once your message is
+successfully delivered to its destination mail server.
 <p>
-<sect2>Recipients
+<tag>Confirm Read</tag>
+If you choose this option, you will receive a confirmation email once your message is
+downloaded and read by its recipient. 
 <p>
-<sect2>Insert File
+<tag>Spellchecker...</tag>
+Allows you to configure Kspell, KDE's spellchecker.
 <p>
-<sect2>Priority
+</descrip>
+
+<sect2>View menu
 <p>
+This menu lets you toggle the display of the header fields in the composer window.
 <p>
-<sect2>Attach
+
+<sect2>Help menu
 <p>
-<sect2>File
+<descrip>
+<tag>Contents (F1)</tag>
+Invokes the KDE help system with the KMail help pages displayed.
 <p>
-<sect2>Signature
+<tag>About Kmail...</tag>
+Displays essential information about KMail.
 <p>
-<sect2>Encoding
+<tag>About KDE...</tag>
+Displays information about KDE.
 <p>
-<p>
-<sect2>Options
-<p>
-<sect2>Toogle Toolbar
-<p>
-<sect2>Change Font
-<p>
-<p>
-<sect2>Help
-<p>
-<sect2>Help
-<p>
-<sect2>About
-<p>
-<p>
+</descrip>
 
 <sect>Questions and answers
 <p>
+<sect1>How do I use my Eudora Mailboxes with KMail?
+<p>
+Make sure that your Eudora mailboxes have been compacted.  Copy the .mbx files (Windows Eudora) or Eudora
+mailbox files (Mac Eudora) to your <em>~/Mail</em> directory. You don't need to worry about the index files. 
+Start KMail. The mailboxes should now appear in the Folders pane and the messages should be accessible in
+the Headers Pane.
+<p>
+If messages do not appear in the Headers pane, your mailbox files may still contain Windows or Macintosh
+line feed characters.  Use your favorite text editor or scripting language to change the Windows or
+Macintosh line feeds to Unix line feeds.
+<p>
+
+<sect>Change Log
+<p>
+<tscreen>
+<verb>
+1998-11-10  Harri Porten  <porten@kde.org>
+
+	* Removed hardcoded localkdedir()
+
+	* Let KApplication() do the job of creating ~/.kde/share/config
+
+1998-10-31  Stefan Taferner  <taferner@kde.org> (KMail-1.0.6)
+
+	* Fixed: crash when fetching new mail and inbox folder
+	is not accessible.
+
+1998-10-21  Lars Knoll <knoll@mpi-hd.mpg.de>
+	* fixed a bug in the support for pgp-2.6
+
+1998-10-08  Stefan Taferner  <taferner@kde.org> (KMail-1.0.5)
+
+	* Sorting messages: replaced sorting algorithm, which caused
+	random hangs, with stock qsort -- hopefully working now ;-)
+
+	* Fixed: folder list went out of scope (current item pointing to
+	nowhere) when folder was deleted.
+
+	* Composer: fixed broken confirm-close dialog.
+
+	* Increased version to better match upcoming Kde-1.1 release.
+
+	* Added call to kapp->quit() when last window is closed.
+
+1998-10-05  Lars Knoll <knoll@mpi-hd.mpg.de>
+	* Added new pgp classes. They should fix a lot of problems
+	with the current support of pgp5.0 and pgp2.6, and fix all
+	security problems with the old versions of kpgp, since all
+	comunication with pgp (including the passphrase) is done via
+	pipes.
+	
+1998-09-26  Stefan Taferner  <taferner@kde.org> (KMail-0.8.1)
+
+	* Fixed crash upon close of a main- or composer window.
+	Bug seems to be introduced by changed behaviour of KTMainWindow.
+	Still KMail crashes when you click on any message afterwards.
+
+	* Addressbook: finally fixed bug in not reading last line.
+	Thanks to all who reported!
+
+	* Replaced occurances of KTopLevelWidget with KTMainWindow.
+
+1998-09-21  Markus Wuebben  <markus@office.DInet.de>
+
+	* added a short cut for mail checking
+
+1998-09-12  Markus Wuebben  <markus@kde.org>
+
+	* some nice little fixes
+
+1998-09-11  Juraj Bednar    <bednar@isternet.sk>
+
+	* finally wrote PGP replying and forwarding decryption
+	* PGP 5.0i should work now with no problems (should ;-)
+
+Sun Sep  6 19:20:34 1998  Markus Wuebben  <mason@HoneyBunny.uni-dortmund.de>
+
+	* kmacctpop.cpp (setPasswd): Fixed password problem.
+
+Sun Sep  6 18:28:45 1998  Markus Wuebben  <markus@kde.org>
+
+	* kmreaderwin.cpp :  Finally fixed attachment problem
+
+1998-07-31  Markus Wuebben  <markus@kde.org>
+
+	* kmsettings.cpp / kmmainwin.cpp Implemented send mail on check.
+	* kmacctlocal.cpp (processNewMail): Added message box
+	warning if mail folder was not found.
+
+	* kmmainwin.cpp Added editing of message in outbox folder.
+	* kmfolderdlg.cpp Removed out of index warning
+	
+
+1998-07-23  Stefan Taferner  <taferner@kde.org>
+
+	* Added message status "Read". This status is set to
+	messages which are loaded with check-mail that have
+	status set to "R".
+	
+	These messages appear whith blue text, but without
+	the green ball to the left, in the message list.
+
+1998-07-22  Markus Wuebben  <markus@kde.org>
+
+	* main.cpp Applied session management patch.
+ 	* kmfolder.cpp Applied fseek patch for solaris
+
+1998-07-03  Stefan Taferner  <taferner@kde.org>
+
+	* PGP: fixed crash when no ~/.pgp/pubring.pgp is installed
+	and signed message is selected.
+
+1998-06-30  Stefan Taferner  <taferner@kde.org> (KMail-0.7.9)
+
+	* PGP: removed dialog asking for pass phrase when only
+	signed message was given, added missing asking for pass
+	phrase when encrypted/signed message is sent.
+
+	* Composer: fixed bug that showed busy pointer all the
+	time with auto-append-signature set and no signature file
+	given.
+
+	* Composer: removed mSendImmediate which seems unused
+	in the composer nowadays. Simplified code of slotSend,
+	slotSendNow, and slotSendLater (to be easier consistent).
+
+1998-06-29  Stefan Taferner  <taferner@kde.org> (KMail-0.7.8)
+
+	* Config: writeConfig() was not called when windows
+	got closed. Now it is.
+
+1998-06-27  Markus Wuebben <markus@kde.org>
+
+	* kmcomposewin.cpp (applyChanges): add false to applyChanges to
+	avoid segfault on ALPHAs.
+
+1998-06-24  Stefan Taferner  <taferner@kde.org>
+
+	* Pgp detection simplified and bugfixed.
+
+	* Folder status messages for index creation and
+	compacting folder reduced from every 100th to every 10th.
+
+1998-06-23  Markus Wuebben  <markus@kde.org> (KMail-0.7.7)
+
+	* removed various unnecessary assert()s. and replaced them
+	with if()s. Especially in functions that return void this
+	is very helpfull and makes kmail more stable.
+
+	* Checked return values with if()s for some functions to
+	make sure that we run into to trouble with those problems.
+	
+1998-06-23  Stefan Taferner  <taferner@kde.org> (KMail-0.7.7)
+
+	* Removed lots of old debug messages.
+
+	* Composer: answering the confirmation is no longer
+	ignored.
+
+	* Finetuning: added missing pixmaps to makefile and
+	repainted pixmap for queued and sent messages.
+
+	* Composer: changed behaviour of email completion a bit.
+	Now it is possible to add multiple recipients with comma
+	separated and complete also those after the first one.
+	Drawback: email addresses with comma in them are not
+	handled properly currently.
+
+	* Pop leave-on-server: due to the fact that we need another
+	field in the pop settings dialog "download-all-msgs"
+	the leave-on-server checkbox currently also toggles
+	the download-all-msgs feature.
+	So:  download-all-msgs = !leave-on-server
+
+	* Folders are now marked red after download if they
+	contain new or unread messages. As a feature, folders
+ 	that receive old messages are not marked.
+
+	* Fixed problems in pop code downloading old messages
+	also. The "download" dialog is a bit misleading because
+	it should say now "checking message:" instead of
+	"downloading message:" because old messages are counted
+	here also.
+
+1998-06-22  Markus Wuebben  <markus@kde.org> (KMail-0.7.6)
+
+	* fixed a whole bunch of stuff that made kmail segfault.
+
+1998-06-21  Mario Weilguni   <mweilguni@kde.org>
+
+	* small fix for quicker response in kmnewiostatus.cpp
+
+	* "Delete folder" dialog now defaults to "No" (compliant to 
+	KDE standards)
+
+1998-06-20  Markus Wuebben  <markus@kde.org>
+
+	* kmsender.cpp (cleanup): Fixed the sendQueued problem.
+	If only one message from the outbox couldnt get sent all
+	following messages got deleted from the outbox. This is fixed now.
+	
+
+1998-06-19  Stefan Taferner  <taferner@kde.org> (KMail-0.7.6)
+
+	* Folder: fixed broken locking on systems without
+	flock(). Thanks to Werner Ertle <wer@christl.hl.siemens.de>
+	who sent me the patch.
+
+1998-06-18  Stefan Taferner  <taferner@kde.org> (KMail-0.7.5)
+
+	* Deleting folders crashed kmail. Fixed.
+
+	* Folder-compacting: added busy pointer and progress
+	output in the status bar (idea from Mario).	
+
+	* Reader: removed ':' from the characters that mark
+	quoted text to catch smileys at the beginning of the
+	line ;-)
+
+	* Main window configuration (geometry, etc.) is now
+	stored again.
+
+	* Composer: changed completion key from Ctrl-. to Ctrl-T
+	as kfile has.
+
+1998-06-18  Mario Weilguni   <mweilguni@kde.org>
+
+	* Dialog for folder selection: Escape now closes dialog,
+	remembers last folder, has a default pushbutton
+
+1998-06-17  Stefan Taferner  <taferner@kde.org> (KMail-0.7.4)
+
+	* Message-list: now the first unread/new message is
+	displayed when opening a folder.
+
+	* Message-status: now messages change status from
+	"new" to "unread" when the user changes folder (and
+	not when the folder is closed somewhere within KMail).
+
+	* Reader: worked around problem of current HTML widget
+	with long lines (without '\n')
+
+1998-06-16  Stefan Taferner  <taferner@kde.org> (KMail-0.7.3)
+
+	* Headers: Improved switching between folders to do
+	less paints to avoid flickering where possible.
+
+	* Warnings: changed warning messages of QPixmap and
+	QPainter to debug messages to avoid lots of message
+	boxes from broken KToolbar code when changing color 
+	scheme.
+
+	* Composer (email-address-completion)
+	Changed email-address completion to be case insensitive.
+	I think this is more useful in the general case.
+
+	* Composer: fixed broken Tab handling. Replaced
+	Tab-completion in the email-address header lines 
+	(To, From, Cc, etc.) with Ctrl-. completion.
+
+	* Filters: removed some debug statements that slowed
+	down filtering a lot.
+
+	* kmmsgbase.cpp: added isUnread() method.
+
+	* Message-list: improved next/prev_unread_message methods.
+	Improved code that ensures that current item is visible
+	and added it to several places in the headers code.
+
+1998-06-15  Stefan Taferner  <taferner@kde.org>
+
+	* kmfilteraction.cpp (process): Removed patch for kmfilter
+	action "Move" of 1998-06-14.
+	Fixed bug in kmfilteraction "Move" action.
+
+	* Fonts: reader- and composer-window now change
+	their font when the settings are changed.
+
+	* Shutdown: improved handling of window-close and
+	KMail shutdown- and crash-handling.
+	
+
+1998-06-14  Markus Wuebben  <markus@kde.org>
+
+	* kmfilteraction.cpp (process): Applied patch for kmfilter
+	actionmove.
+
+1998-06-13  Mario Weilguni   <mweilguni@kde.org> (KMail-0.7.2)
+
+	* key for next_unread_message and prev_unread_message added
+
+1998-06-12  Stefan Taferner  <taferner@kde.org>
+
+	* Folder loading: moved status message in index
+	creation to a more suitable place. Should be lots
+	faster now.
+
+	* Composer: Now path of last filedialog for attachments
+	is stored.
+
+	* Fonts: improved font settings. The HTML widget
+	unfortunately only honors the font family. Added new
+	functions (kfontutils.h) for easy font to/from string
+	conversion.
+
+1998-06-12  Mario Weilguni   <mweilguni@kde.org> (KMail-0.7.1)
+	* new sort algorithm - quicksort instead of bubble-sort
+
+1998-06-11  Stefan Taferner  <taferner@kde.org> (KMail-0.7.0)
+
+	* Initial start now opens the settings dialog. Don't
+	be alerted, this will happen once for everybody now ;-)
+
+	* Fonts: implemented font setting for HTML widget,
+	list of messages, and composer.
+
+	* Drag &ero; Drop: implemented drag &ero; drop of messages to
+	folders. Dropping into HTML widget crashes KMail. 
+	Could be a bug of the HTML widget, however.
+
+	* Move-message: improved folder selection dialog.
+
+	* Message-list: now cleared properly when the current
+	folder is deleted.
+
+1998-06-11  Markus Wuebben  <markus@kde.org> (KMail-0.6.9)
+
+	* KMail now uses KFileDialog only!
+
+1998-06-11  Mario Weilguni   <mweilguni@kde.org> (KMail-0.6.9)
+	
+	* "P" and "N" (next and previous mail) will cause the header
+	list to be scrolled if the new item is not visible
+
+	* fixed some code to prevent compiler warning
+
+	* panner position is now (again) restored
+	
+1998-06-07  Stefan Taferner  <taferner@kde.org> (KMail-0.6.8)
+
+	* Folders: changed message about index-recreation
+	to debug from warning.
+
+	* Message/Headers: Email addresses like <joe@home.org>
+	(with the <> around the address) no longer lead to
+	an empty field in the message list.
+
+	* Headers: Removed extra space in header line(s).
+
+	* Headers: Empty Subject moved From and Date one column
+	left. Fixed (hopefully).
+
+	* Composer: Send again did not decode quoted-printable
+	sent messages. Fixed.
+
+	* PGP: KMail did not ask for mantra upon first reading of
+	an encrypted message. Applied patch, from Michael Vogel 
+	<icarus@hades.pop-celle.de>, which hopefully works :-)
+
+1998-05-13  Stefan Taferner  <taferner@kde.org> (KMail-0.6.7)
+
+	* Filters: Bugfix: when deleting a folder that was the target
+	of a filter the next get-mails crashed.
+
+	* Filter Dialog: Deleting filter rules did not work. Fixed.
+
+1998-05-09  Markus Wuebben  <markus@kde.org>
+
+	* kmsettings.cpp (KMAccountSettings):
+	Fixed "Delete mail from server". The row was too low.
+	* kmmainwin.cpp
+	Added a single account mail check option.
+
+1998-04-29  Markus Wuebben  <markus@kde.org>
+
+	* Reader: Fixed the url parsing which made kmail 
+	loop.
+
+1998-04-28  Stefan Taferner  <taferner@kde.org> (KMail-0.6.6)
+
+	* Folders: Emptying of the trash folder resulted in an infinite 
+	loop. Fixed now.
+
+1998-04-04  Stefan Taferner  <taferner@kde.org> (Kde Beta-4)
+
+	* Filters: Removed warning dialog. Filters are working ok for
+	me for several weeks now.
+
+	* Folders: After I finally also deleted lots of important messages
+	by mistake I now changed the behaviour of Folder->Empty to
+	move the messages into trash instead of deleting them ;-)
+	This made the "Are you sure" dialog now obsolete, IMO.
+
+1998-03-31  Stefan Taferner  <taferner@kde.org> (KMail-0.6.5)
+
+	* Folders: fixed bug introduced on 1998-03-26: open failed on
+	folders where lock() returned an error.
+
+1998-03-28  Stefan Taferner  <taferner@kde.org>
+
+	* Headers: when opening a folder the contents was not automatically
+	sorted, now is.
+
+	* Pop: new messages retrieved from pop accounts were not
+	marked new. Now fixed.
+
+1998-03-26  Stefan Taferner  <taferner@kde.org>
+
+	* Folders: when opening and locking a folder there were
+	cases (in fact most of the time) when the folder seemed
+	to be not locked but was. Now this is handled better.
+
+1998-03-24  Stefan Taferner  <taferner@kde.org>  (KMail-0.6.4)
+
+	* Message: decoding of quoted-printable RFC1522 strings
+	was broken for strings that started with a decoded character.
+
+1998-03-18  Stefan Taferner  <taferner@kde.org>
+
+	* Reader: improved detection of urls and email addresses
+	to ignore special characters at the end, e.g. "." or ")".
+
+	* Messagelist: finally fixed sorting of messages. Also
+	implemented ascending/descending/none sorting (use multiple
+	clicks on the column headers to switch). Sorting order "none"
+	is what was IMO missing for the trash folder :-)
+
+1998-03-17  Stefan Taferner  <taferner@kde.org>  (KMail-0.6.3)
+
+	* Composer: in menu view, when 'all headers' view is 
+	activated, then the individual header line menu entries are 
+	disabled now.
+
+	* Folders: changed creation of folders to -rw-------
+	instead of the default -rw-r--r--. Same for the initial
+	creation of ~/Mail.
+
+	* Attachments: temporary files (when viewing attachments)
+	are now also created with permissions -rw-------.
+	
+1998-03-15  Stefan Taferner  <taferner@kde.org>  (KMail-0.6.2)
+
+	* Startup: added option -check which does mail checking
+	upon startup. Also options that start with a '-' but which
+	are unknown are now skipped.
+
+1998-03-09  Stefan Taferner  <taferner@kde.org>  (KMail-0.6.1)
+
+	* Reader: '_' was not considered part of a smart-detected email
+	address (auto detection of @).
+
+	* Reader: attachments of type message/rfc822 are now shown
+	in an external reader window if open or view from the attachment
+	popup menu is chosen.
+
+	* Composer: finally got insertion of tabs into message
+	working.
+
+(many changes are missing here, sorry)
+	
+1998-02-14  Stefan Taferner  <taferner@kde.org>
+
+	* Startup: when recovering dead letters the auto signature was 
+	appended twice. Fixed now.
+
+	* Composer: fixed broken inserting of files.
+
+	* kFileToString(): fixed handling of files with zero length.
+
+Initial version: 0.5.7
+</verb>
+</tscreen>
 
 <sect>Epilogue
 <p>
 
-<sect1>Developers
+<sect1>Developers<label id="sec-Developers">
 <p>
-<tt><htmlurl url="mailto:taferner@alpin.or.at" 
-name="Stefan Taferner"></tt><p>
-
-<tt><htmlurl url="mailto:markus.wuebben@kde.org" 
-name="Markus Wuebben"></tt><p>
+Stefan Taferner <htmlurl url="mailto:taferner@alpin.or.at" name="&lt;taferner@alpin.or.at&gt;">
+<p>
+Markus Wuebben <htmlurl url="mailto:markus.wuebben@kde.org" name="&lt;markus.wuebben@kde.org&gt;">
+<p>
 
 <bf>Based on the work of:</bf><p>
 
-<tt><htmlurl url="mailto:lynx@topaz.hknet.com" 
-name="Lynx"></tt><p>
-
-<tt><htmlurl url="mailto:Stephan.Meyer@pobox.com" 
-name="Stephan Meyer"></tt><p>
-
-<sect1>Authors
+Lynx <htmlurl url="mailto:lynx@topaz.hknet.com" name="&lt;lynx@topaz.hknet.com&gt;">
 <p>
 
-<tt><htmlurl url="mailto:markus.wuebben@kde.org" 
-name="Markus Wuebben"></tt><p>
+Stephen Meyer <htmlurl url="mailto:Stephan.Meyer@pobox.com" name="&lt;Stephan.Meyer@pobox.com&gt;">
+<p>
 
-<tt><htmlurl url="mailto:rwilliams@kde.org" 
-name="Robert Williams"> - Editor</tt><p>
+<sect1>Documentation
+<p>
+<p>
+David Rugge <htmlurl url="mailto:davidrugge@mindspring.com" name="&lt;davidrugge@mindspring.com&gt">
+<p>
+Markus Wuebben <htmlurl url="mailto:markus.wuebben@kde.org" name="&lt;markus.wuebben@kde.org&gt;">
+<p>
+Robert Williams - Editor <htmlurl url="mailto:rwilliams@kde.org" 
+name="&lt;rwilliams@kde.org&gt;">
+<p>
 
 </article>
