@@ -11,11 +11,11 @@
 #include <kparts/genericfactory.h>
 
 
-#include <ksync_mainwindow.h>
+#include <mainwindow.h>
 
 #include <addressbooksyncee.h>
 
-#include "ksync_addressbookpart.h"
+#include "addressbookpart.h"
 
 typedef KParts::GenericFactory< KSync::AddressBookPart> AddressBookPartFactory;
 K_EXPORT_COMPONENT_FACTORY( libaddressbookpart,  AddressBookPartFactory );
@@ -321,4 +321,5 @@ KABC::Resource* AddressBookPart::resource( const QString& type ) {
     }
     return 0;
 }
-#include "ksync_addressbookpart.moc"
+
+#include "addressbookpart.moc"

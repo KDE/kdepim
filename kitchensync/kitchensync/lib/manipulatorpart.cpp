@@ -37,7 +37,7 @@
 
 #include "manipulatorpart.h"
 
-#include "ksync_mainwindow.h"
+#include "mainwindow.h"
 
 using namespace KSync;
 

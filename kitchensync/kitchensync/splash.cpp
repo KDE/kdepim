@@ -37,7 +37,7 @@
 #include <kstandarddirs.h>
 #include <kglobalsettings.h>
 
-#include "ksync_splash.h"
+#include "splash.h"
 
 using namespace KSync;
 

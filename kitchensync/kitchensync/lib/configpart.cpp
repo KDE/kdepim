@@ -41,7 +41,7 @@
 
 #include <klocale.h>
 
-#include "ksync_configpart.h"
+#include "configpart.h"
 
 using namespace KSync;
 

@@ -4,7 +4,7 @@
 
 #include <qlistview.h>
 
-#include <ksync_profile.h>
+#include <profile.h>
 namespace KSync {
     class ProfileItem : public QListViewItem {
     public:

@@ -1,7 +1,7 @@
 
 #include <kapplication.h>
 
-#include "ksync_profile.h"
+#include "profile.h"
 
 using namespace KSync;
 

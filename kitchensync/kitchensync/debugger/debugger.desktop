@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Service
+Name=Konnector Debugger
+Icon=
+ServiceTypes=KitchenSync/Manipulator
+X-KDE-Library=libksync_debugger

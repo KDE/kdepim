@@ -49,8 +49,8 @@
 #include <error.h>
 #include <progress.h>
 
-//#include "ksync_mainwindow.h"
-#include "ksync_profile.h"
+//#include "mainwindow.h"
+#include "profile.h"
 
 namespace KSync {
 

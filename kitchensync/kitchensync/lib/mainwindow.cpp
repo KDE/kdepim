@@ -46,39 +46,41 @@
 #include <progress.h>
 
 #include "syncconfig.h"
-#include "ksync_configuredialog.h"
+#include "configuredialog.h"
 #include "partbar.h"
 #include "profiledialog.h"
 
 #include "konnectorbar.h"
 #include "konnectordialog.h"
-#include "ksync_mainwindow.h"
+#include "mainwindow.h"
 #include "syncalgo.h"
 
 using namespace KSync;
 
 namespace {
-    struct MainProgress
-    {
-        static Error noKonnector();
-        static Error noPush();
-    };
-    
-    Error MainProgress::noKonnector()
-    {
-        return Error(i18n("There is no current Konnector") );
-    }
-    
-    Error MainProgress::noPush()
-    {
-        return Error(i18n("The current Konnector does not support pushing") );
-    }
-    
-    kdbgstream operator<<( kdbgstream str, const Notify& no )
-    {
-        str << no.code() << " " << no.text();
-        return str;
-    }
+
+struct MainProgress
+{
+    static Error noKonnector();
+    static Error noPush();
+};
+
+Error MainProgress::noKonnector()
+{
+    return Error(i18n("There is no current Konnector") );
+}
+
+Error MainProgress::noPush()
+{
+    return Error(i18n("The current Konnector does not support pushing") );
+}
+
+kdbgstream operator<<( kdbgstream str, const Notify& no )
+{
+    str << no.code() << " " << no.text();
+    return str;
+}
+
 }
 
 KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
@@ -846,4 +848,4 @@ void KSyncMainWindow::slotKonnectorBar( bool b )
     }
 }
 
-#include "ksync_mainwindow.moc"
+#include "mainwindow.moc"

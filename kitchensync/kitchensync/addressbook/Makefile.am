@@ -4,7 +4,7 @@ kde_module_LTLIBRARIES = libaddressbookpart.la
 libaddressbookpart_la_LDFLAGS = $(all_libraries) $(LIB_KPARTS) $(KDE_PLUGIN) $(LIB_KABC)
 libaddressbookpart_la_LIBADD =  ../lib/libkitchensyncui.la  
 
-libaddressbookpart_la_SOURCES = addressbookbase.ui dummy.cc ksync_addressbookpart.cc
+libaddressbookpart_la_SOURCES = addressbookbase.ui addressbookpart.cpp
 
 METASOURCES = AUTO
 

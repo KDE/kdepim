@@ -4,7 +4,7 @@
 
 #include <kwizard.h>
 
-#include <ksync_profile.h>
+#include <profile.h>
 #include "manpartservice.h"
 
 class ProfileWizardIntro;

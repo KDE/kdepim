@@ -5,9 +5,10 @@
 #include <konnectormanager.h>
 #include <konnectorinfo.h>
 
-#include <ksync_mainwindow.h>
+#include <mainwindow.h>
+
 #include "overviewwidget.h"
-#include "ksync_overviewpart.h"
+#include "overviewpart.h"
 
 typedef KParts::GenericFactory< KSync::OverviewPart> OverviewPartFactory;
 K_EXPORT_COMPONENT_FACTORY( liboverviewpart, OverviewPartFactory );
@@ -157,4 +158,4 @@ void OverviewPart::slotDoneSync()
     kdDebug(5210) << "Done Sync " << endl;
 }
 
-#include "ksync_overviewpart.moc"
+#include "overviewpart.moc"

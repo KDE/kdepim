@@ -31,16 +31,21 @@
 #include <kdebug.h>
 #include <kiconloader.h>
 
-#include "ksync_systemtray.h"
+#include "systemtray.h"
 
 using namespace KSync;
 
 KSyncSystemTray::KSyncSystemTray(QWidget* parent,  const char* name)
-    : KSystemTray(parent,name) {
+    : KSystemTray(parent,name)
+{
 
     ksyncIconConnected =   KGlobal::iconLoader()->loadIcon( "connect_established", KIcon::Small );
     ksyncIconDisconnected = KGlobal::iconLoader()->loadIcon( "connect_no", KIcon::Small );
     setState( false );
+}
+
+KSyncSystemTray::~KSyncSystemTray()
+{
 }
 
 //void KSyncSystemTray::mousePressEvent( QMouseEvent *mEvent ) {
@@ -53,11 +58,12 @@ KSyncSystemTray::KSyncSystemTray(QWidget* parent,  const char* name)
 //    } else {}
 //}
 
-void setName( QString& name ) {
+void setName( QString & )
+{
 }
 
-void KSyncSystemTray::setState( bool connected )  {
-
+void KSyncSystemTray::setState( bool connected )
+{
     if ( connected ) {
         setPixmap(ksyncIconConnected);
     } else {
@@ -65,7 +71,4 @@ void KSyncSystemTray::setState( bool connected )  {
     }
 }
 
-
-KSyncSystemTray::~KSyncSystemTray() {
-}
-#include "ksync_systemtray.moc"
+#include "systemtray.moc"

@@ -40,9 +40,9 @@
 #include <kdebug.h>
 #include <kparts/mainwindow.h>
 
-
 #include <manipulatorpart.h>
-#include <ksync_systemtray.h>
+#include <systemtray.h>
+
 #include "profilemanager.h"
 #include "konnectorprofilemanager.h"
 #include "manpartservice.h"

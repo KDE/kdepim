@@ -4,7 +4,7 @@
 
 #include <qstring.h>
 
-#include <ksync_profile.h>
+#include <profile.h>
 
 namespace KSync {
 

@@ -38,8 +38,9 @@
 #include <kuniqueapplication.h>
 #include <stdlib.h>
 
-#include <ksync_mainwindow.h>
-#include "ksync_splash.h"
+#include <mainwindow.h>
+
+#include "splash.h"
 
 
 static KCmdLineOptions options[] =

@@ -14,11 +14,12 @@
 #include <todosyncee.h>
 #include <syncer.h>
 
-#include <ksync_mainwindow.h>
-#include "ksync_organizerpart.h"
+#include <mainwindow.h>
 
-//#include "ksync_return.h"
-//#include "ksync_sync.h"
+#include "organizerpart.h"
+
+//#include "return.h"
+//#include "sync.h"
 
 typedef KParts::GenericFactory< KSync::OrganizerPart> OrganizerPartFactory;
 K_EXPORT_COMPONENT_FACTORY( liborganizerpart, OrganizerPartFactory );
@@ -468,4 +469,5 @@ QString OrganizerPart::path( Data d, const QString& path ) {
     }
     return str;
 }
-#include "ksync_organizerpart.moc"
+
+#include "organizerpart.moc"

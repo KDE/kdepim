@@ -38,7 +38,7 @@
 #include <config.h>
 #include <klocale.h>
 
-#include "ksync_configuredialog.h"
+#include "configuredialog.h"
 
 using namespace KSync;
 
@@ -98,4 +98,5 @@ void ConfigureDialog::unload() {
 void ConfigureDialog::apply(bool ) {
 
 }
-#include "ksync_configuredialog.moc"
+
+#include "configuredialog.moc"
