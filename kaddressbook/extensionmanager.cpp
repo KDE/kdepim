@@ -86,7 +86,7 @@ void ExtensionManager::setActiveExtension( int id )
   if ( id == 0 ) {
     hide();
     mCurrentExtensionWidget = 0;
-  } else {
+  } else if ( id > 0 ) {
     if ( mCurrentExtensionWidget )
       mCurrentExtensionWidget->hide();
 
@@ -158,6 +158,7 @@ void ExtensionManager::createExtensionWidgets()
   }
 
   mActionExtensions->setItems( extensionNames );
+  mCurrentExtensionWidget = 0;
 }
 
 #include "extensionmanager.moc"
