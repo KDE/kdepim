@@ -620,8 +620,8 @@ void KNArticleWidget::createHtmlPage()
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
   KNConfig::ReadNewsViewer *rnv=knGlobals.cfgManager->readNewsViewer();
 
-  //----------------------------------- <Header> ---------------------------------------
 
+  //----------------------------------- <Header> ---------------------------------------
 
   QString html, hLine;
   html=QString("<qt><table width=\"100%\" cellpadding=0 cellspacing=1><tr><td width=40 bgcolor=\"%1\"></td><td width=\"1%\"><headerblock><table cellpadding=0 cellspacing=0>")
@@ -761,7 +761,7 @@ void KNArticleWidget::createHtmlPage()
     if(text->contentType()->isHTMLText()) {
       QString htmlTxt;
       text->decodedText(htmlTxt);
-      setText(htmlTxt);             // is this correct? what happens to the headers? (CG)
+      html+=htmlTxt+"</bodyblock>";
     }
     else {
       QChar firstChar;
@@ -818,7 +818,11 @@ void KNArticleWidget::createHtmlPage()
     html+="</bodyblock>";
   }
 
-  //attachment table
+  //------------------------------------- </Body> --------------------------------------
+
+
+  //----------------------------------  <Attachments> ----------------------------------
+
   if(a_tt) {
     int attCnt=0;
     QString path;
@@ -850,7 +854,8 @@ void KNArticleWidget::createHtmlPage()
             if(ct->isHTMLText())
               html+=tmp;
             else
-              html+="<pre>"+toHtmlString(tmp,true,false,true)+"</pre>";
+              //html+="<pre>"+toHtmlString(tmp,true,false,true)+"</pre>";
+              html+="<pre>"+tmp+"</pre>";
           }
           html+="</td></tr>";
         }
@@ -860,7 +865,7 @@ void KNArticleWidget::createHtmlPage()
     }
   }
 
-  //------------------------------------- </Body> --------------------------------------
+  //----------------------------------  </Attachments> ---------------------------------
 
 
   //display html
@@ -947,8 +952,8 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
           else {
             //article not in local group => create a new (orphant) article.
             //It will be deleted by the displaying widget/window
-            a=new KNRemoteArticle(g);
-            a->messageID()->from7BitString(refMid, QFont::Latin1, false);
+            a=new KNRemoteArticle(g); //we need "g" to access the nntp-account
+            a->messageID()->from7BitString(refMid, QFont::Latin1, true);
             awin=new KNArticleWindow(a);
             awin->show();
           }
