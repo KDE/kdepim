@@ -85,6 +85,8 @@ void ExtensionManager::setActiveExtension( int id )
 {
   if ( id == 0 ) {
     hide();
+    if ( mCurrentExtensionWidget )
+      mCurrentExtensionWidget->hide();
     mCurrentExtensionWidget = 0;
   } else if ( id > 0 ) {
     if ( mCurrentExtensionWidget )
