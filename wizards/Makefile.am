@@ -2,7 +2,7 @@ METASOURCES = AUTO
 
 INCLUDES = -I$(top_srcdir)/libkdepim -I$(top_srcdir)/libkcal \
            -I$(top_srcdir)/kresources/imap/shared -I$(top_srcdir) \
-           $(all_includes)
+           -I$(top_srcdir)/knotes $(all_includes)
 
 bin_PROGRAMS = groupwarewizard egroupwarewizard sloxwizard kolabwizard
 kde_module_LTLIBRARIES = libegroupwarewizard.la libsloxwizard.la libkolabwizard.la
@@ -15,6 +15,8 @@ groupwarewizard_SOURCES = groupwarewizard.cpp main.cpp overviewpage.cpp
 # Kolab
 libkolabwizard_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 libkolabwizard_la_LIBADD = $(top_builddir)/kresources/imap/kcal/libkcal_imap.la \
+                           $(top_builddir)/kresources/imap/kabc/libkabc_imap.la \
+                           $(top_builddir)/kresources/imap/knotes/libknotes_imap.la \
                            $(top_builddir)/libkcal/libkcal.la \
                            $(top_builddir)/libkdepim/libkdepim.la
 libkolabwizard_la_SOURCES = kolabwizard.cpp kmailchanges.cpp kolabconfig.kcfgc

@@ -22,9 +22,12 @@
 #include "kolabwizard.h"
 #include "kolabconfig.h"
 
-#include "kresources/imap/kcal/resourceimap.h"
-
 #include <libkcal/resourcecalendar.h>
+#include <kabc/resource.h>
+
+#include "kresources/imap/kcal/resourceimap.h"
+#include "kresources/imap/kabc/resourceimap.h"
+#include "kresources/imap/knotes/resourceimap.h"
 
 #include <klineedit.h>
 #include <klocale.h>
@@ -34,27 +37,68 @@
 #include <qlabel.h>
 
 
-class CreateImapResource : public KConfigPropagator::Change
+class CreateCalenderImapResource : public KConfigPropagator::Change
 {
   public:
-    CreateImapResource()
-      : KConfigPropagator::Change( i18n("Create IMAP Resource") )
+    CreateCalenderImapResource()
+      : KConfigPropagator::Change( i18n("Create Calender IMAP Resource") )
     {
     }
 
     void apply()
     {
-      kdDebug() << "Create IMAP Resource" << endl;
+      kdDebug() << "Creating Calender IMAP Resource" << endl;
 
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
       QString server = KolabConfig::self()->server();
       KCal::ResourceIMAP *r = new KCal::ResourceIMAP( server );
-      r->setResourceName( i18n("Kolab") );
+      r->setResourceName( i18n("Kolab Server") );
       m.add( r );
       m.writeConfig();
     }
 };
+
+class CreateContactImapResource : public KConfigPropagator::Change
+{
+  public:
+    CreateContactImapResource()
+      : KConfigPropagator::Change( i18n("Create Contact IMAP Resource") )
+    {
+    }
+
+    void apply()
+    {
+      KRES::Manager<KABC::Resource> m( "contact" );
+      m.readConfig();
+      KABC::ResourceIMAP *r = new KABC::ResourceIMAP( 0 );
+      r->setResourceName( i18n("Kolab Server") );
+      m.add( r );
+      m.writeConfig();
+    }
+
+};
+
+class CreateNotesImapResource : public KConfigPropagator::Change
+{
+  public:
+    CreateNotesImapResource()
+      : KConfigPropagator::Change( i18n("Create Notes IMAP Resource") )
+    {
+    }
+
+    void apply()
+    {
+      KRES::Manager<ResourceNotes> m( "notes" );
+      m.readConfig();
+      KNotesIMAP::ResourceIMAP *r = new KNotesIMAP::ResourceIMAP( 0 );
+      r->setResourceName( i18n("Kolab Server") );
+      m.add( r );
+      m.writeConfig();
+    }
+
+};
+
 
 class KolabPropagator : public KConfigPropagator
 {
@@ -101,7 +145,9 @@ class KolabPropagator : public KConfigPropagator
         if ( (*it)->type() == "imap" ) break;
       }
       if ( it == m.end() ) {
-        changes.append( new CreateImapResource );
+        changes.append( new CreateCalenderImapResource );
+        changes.append( new CreateContactImapResource );
+        changes.append( new CreateNotesImapResource );
       }
     }
 };
