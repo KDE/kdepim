@@ -43,6 +43,9 @@ class MainWindow : public KMainWindow, virtual public KarmDCOPIface
     QString hastodo( const QString &storage ) const;
     QString addtodo( const QString &storage );
 
+  public slots:
+    void quit();
+
   protected slots:
     void keyBindings();
     void startNewSession();
@@ -51,7 +54,6 @@ class MainWindow : public KMainWindow, virtual public KarmDCOPIface
     void updateStatusBar();
     void save();
     void exportcsvHistory();
-    void quit();
     void print();
     void slotSelectionChanged();
     void contextMenuRequest( QListViewItem*, const QPoint&, int );
