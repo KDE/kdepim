@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -35,7 +35,7 @@
 #include "EmpathViewFactory.h"
 #include "Empath.h"
 #include <rmm/BodyPart.h>
-    
+
 EmpathViewFactory::EmpathViewFactory()
 {
     // Empty.
@@ -150,7 +150,7 @@ EmpathXMLMessage::_encode()
         outputCursor += addrEnd - addrStart; }
 
     QCString encodedData;
-    
+
     // Check size isn't 0.
     unsigned int size = messageData_.size();
 
@@ -175,19 +175,19 @@ EmpathXMLMessage::_encode()
     QCString quoteTwo(col.utf8());
 
     const char * input(messageData_.data());
-    
+
     const char * inputStart = input;
     const char * inputEnd = input + size;
 
     char * inputCursor = const_cast<char *>(input);
-    
+
     // Allocate an output buffer. When full, it will be dumped into
     // encodedData and reused.
     register char * outputBuf = new char[32768]; // 32k buffer. Will be reused.
 
     const char * outputEnd = outputBuf + 32768;
     register char * outputCursor = outputBuf;
-    
+
     // Temporary counter + pointers.
     register int len = 0;
     register char * addrStart = 0;
@@ -208,7 +208,7 @@ EmpathXMLMessage::_encode()
             encodedData += outputBuf;
             outputCursor = outputBuf;
         }
-        
+
         switch (*inputCursor) {
 
             case '<': toOutput("&lt;", 4); break;
@@ -256,7 +256,7 @@ EmpathXMLMessage::_encode()
 
                 // Mark up signature separator.
                 // Handle '\n--[ ]\n'.
- 
+
                 if  (
                         // We must be sure we can look back 1 and forward 3.
                         safeToLookBack() && (inputCursor <  inputEnd - 2) &&
@@ -285,19 +285,19 @@ EmpathXMLMessage::_encode()
                 }
                 else
                     inputToOutput();
-        
+
                 break;
-                  
+
             case '>':
 
                 cerr << ">" << endl;
                 // Mark up quoted line if that's what we have.
-         
+
                 // First char on line?
                 if (safeToLookBack() && *(inputCursor - 1) == '\n') {
-                    
+
                     cerr << "quoting" << endl;
-                    
+
                     quoteDepth = 0;
 
                     // While we have '>' or ' ' then we're still in
@@ -316,7 +316,7 @@ EmpathXMLMessage::_encode()
                     }
 
                     toOutput("<font color=\"#", 14);
-                    
+
                     // Set the colour according to whether there's an odd
                     // or even quote depth.
                     //
@@ -330,9 +330,9 @@ EmpathXMLMessage::_encode()
                     {
                         toOutput(quoteTwo, 6);
                     }
-                    
+
                     toOutput("\">", 2);
-                    
+
                     // Write some funky HTML-style versions of '>'.
                     for (len = 0 ; len < quoteDepth; len++)
                         toOutput("&gt; ", 5);
@@ -341,21 +341,21 @@ EmpathXMLMessage::_encode()
                     // Remember that we need to mark down next time we
                     // see '\n'.
                     markDownQuotedLine = true;
-                   
+
                     inputCursor--;
-                    
+
                 } else {
                     toOutput("&gt;", 4);
                 }
-                
+
                 break;
 
             case '@': // Address matching.
-            
+
                 // First check to see if this is an address of the form
                 // "Rik Hemsley"@dev.null.
                 if (safeToLookBack() && *(inputCursor - 1) == '"') {
-                    
+
                     while (
 
                         // Don't go back further than the start of the input.
@@ -372,7 +372,7 @@ EmpathXMLMessage::_encode()
                     }
 
                     ++addrStart;
-                
+
                 }
                 else
                 {
@@ -380,7 +380,7 @@ EmpathXMLMessage::_encode()
 
                     // Work backwards from one before '@' until we're sure
                     // that we've found the start of the address.
-  
+
                     addrStart = inputCursor - 1;
 
                     while (
@@ -407,7 +407,7 @@ EmpathXMLMessage::_encode()
 
                 // Now work forwards from one after '@' until we're sure
                 // that we're clear of the inputEnd of the address.
-                
+
                 addrEnd = inputCursor + 1;
 
                 while (
@@ -455,7 +455,7 @@ EmpathXMLMessage::_encode()
 
                 // Start the markup.
                 toOutput("<a href=\"mailto:", 16);
-                
+
                 writeAddress();
 
                 // End of this part of the markup.
@@ -477,7 +477,7 @@ EmpathXMLMessage::_encode()
 
         ++inputCursor;
     }
-    
+
     nulTerminate();
     encodedData += outputBuf;
     delete [] outputBuf;

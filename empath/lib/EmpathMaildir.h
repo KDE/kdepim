@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -41,6 +41,7 @@
 #include "rmm/Message.h"
 
 class EmpathFolder;
+class EmpathIndex;
 
 /**
  * @internal
@@ -49,38 +50,42 @@ class EmpathFolder;
 class EmpathMaildir : public QObject
 {
     Q_OBJECT
-        
+
     public:
-        
+
         EmpathMaildir(const QString & basePath, const EmpathURL & url);
 
         bool createdOK() const { return createdOK_; }
 
         virtual ~EmpathMaildir();
-        
+
         void init();
-        
+
         const QString & basePath() const    { return basePath_; }
         const EmpathURL & url() const       { return url_; }
         const QString & path() const        { return path_; }
-        
+
         EmpathSuccessMap mark(const QStringList &, EmpathIndexRecord::Status);
-        
+
         QString writeMessage(RMM::Message);
-        
+
         RMM::Message message(const QString &);
-        
+
         EmpathSuccessMap removeMessage (const QStringList &);
-        
+
         void sync();
-        
+
+        EmpathIndex * index();
+
     protected slots:
-        
+
         void s_timerBeeped();
-        
+
     private:
-        
+
         EmpathMaildir();
+
+        EmpathIndex * index_;
 
         void        _markNewMailAsSeen();
         void        _tagAsDisappearedOrAddToIndex();
@@ -98,10 +103,10 @@ class EmpathMaildir : public QObject
 
         bool        _checkDirs();
         bool        _touched();
-       
+
         QDateTime    mtime_;
         QDict<bool>  disappeared_;
-        
+
         QTimer       timer_;
 
         QStringList cachedEntryList_;

@@ -56,15 +56,14 @@ main(int argc, char ** argv)
         KAboutData::License_GPL,
         "(c) 1999-2000, The Empath Team",
         0,
-        "http://without.netpedia.net",
+        0,
         "kde-pim@kde.org"
     );
 
     aboutData.addAuthor(
         "Rik Hemsley",
         I18N_NOOP("Design and coding"),
-        "rik@kde.org",
-        "http://without.netpedia.net"
+        "rik@kde.org"
     );
 
     aboutData.addAuthor(

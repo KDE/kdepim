@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -59,7 +59,7 @@ EmpathFilterEventHandler::forwardAddress() const
 {
     return forwardAddress_;
 }
-        
+
     void
 EmpathFilterEventHandler::setMoveFolder(const EmpathURL & folder)
 {
@@ -98,28 +98,28 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
 {
     EmpathFolder * folder = empath->folder(id);
     if (folder == 0) return;
-    
+
     switch (actionType_) {
 
         case MoveFolder:
-            empath->move(id, moveCopyFolder_);
+// FIXME need to get feedback            empath->move(id, moveCopyFolder_);
             break;
-            
+
         case CopyFolder:
-            empath->copy(id, moveCopyFolder_);
+// FIXME need to get feedback            empath->copy(id, moveCopyFolder_);
             break;
 
         case Forward:
-            empath->s_forward(id);
+// FIXME need to get feedback            empath->s_forward(id);
             break;
-            
+
         case Delete:
-            empath->remove(id);
+// FIXME need to get feedback            empath->remove(id);
             break;
-    
+
         case Ignore:
             break;
-            
+
         default:
             break;
     }
@@ -139,7 +139,7 @@ EmpathFilterEventHandler::load(const QString & filterID)
         case MoveFolder:
             setMoveFolder(EmpathURL(c->readEntry("Folder")));
             break;
-            
+
         case CopyFolder:
 
             setCopyFolder(EmpathURL(c->readEntry("Folder")));
@@ -173,16 +173,16 @@ EmpathFilterEventHandler::save(const QString & filterID)
 
         case MoveFolder:
         case CopyFolder:
-            
+
             c->writeEntry("Folder", moveCopyFolder_.asString());
             break;
-        
+
         case Forward:
-        
+
             c->writeEntry("Address", forwardAddress_);
-        
+
             break;
-        
+
         case Delete:
         case Ignore:
         default:
@@ -195,9 +195,9 @@ EmpathFilterEventHandler::save(const QString & filterID)
 EmpathFilterEventHandler::description() const
 {
     QString action;
-    
+
     switch (actionType_) {
-        
+
         case MoveFolder:
             action = i18n("Move to folder");
             action += " ";
@@ -205,7 +205,7 @@ EmpathFilterEventHandler::description() const
             action += "/";
             action += moveCopyFolder_.folderPath();
             break;
-            
+
         case CopyFolder:
             action = i18n("Copy to folder");
             action += " ";
@@ -217,22 +217,22 @@ EmpathFilterEventHandler::description() const
         case Delete:
             action = i18n("Delete");
             break;
-            
+
         case Ignore:
             action = i18n("Ignore");
             break;
-            
+
         case Forward:
             action = i18n("Forward to");
             action += " ";
             action += forwardAddress_;
             break;
-            
+
         default:
             action = i18n("No action defined");
             break;
     }
-    
+
     return action;
 }
 

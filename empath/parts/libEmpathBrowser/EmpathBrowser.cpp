@@ -35,8 +35,7 @@
 
 // Local includes
 #include "EmpathBrowser.h"
-#include "EmpathFolder.h"
-#include "EmpathIndex.h"
+#include "EmpathCustomEvents.h"
 #include "Empath.h"
 
 extern "C"
@@ -95,6 +94,11 @@ EmpathBrowserPart::EmpathBrowserPart(
     widget_ = new EmpathBrowser(parent);
     widget_->setFocusPolicy(QWidget::StrongFocus);
     setWidget(widget_);
+
+    insertChildClient(widget_->folderListWidget());
+    insertChildClient(widget_->messageListWidget());
+    insertChildClient(widget_->messageViewWidget());
+
     setXMLFile("EmpathBrowser.rc");
     enableAllActions(false);
 }
@@ -121,6 +125,7 @@ EmpathBrowserPart::_initActions()
 EmpathBrowser::EmpathBrowser(QWidget * parent)
     : QWidget(parent, "Browser")
 {
+    setBackgroundColor(red);
     QSplitter * hSplit = new QSplitter(this, "hSplit");
 
     KLibFactory * folderListFactory =
@@ -205,17 +210,9 @@ EmpathBrowser::~EmpathBrowser()
     void
 EmpathBrowser::s_showFolder(const EmpathURL & url)
 {
+    empathDebug(url.asString());
     currentFolder_ = url;
-
-    EmpathFolder * f(empath->folder(currentFolder_));
-
-    if (0 == f) {
-        empathDebug("Can't find folder `" + currentFolder_.asString() + "'");
-        return;
-    }
-    
-    QDict<EmpathIndexRecord> d(f->index()->dict());
-    emit(setIndex(d));
+    emit(setIndex(currentFolder_));
 }
 
     void
@@ -224,21 +221,32 @@ EmpathBrowser::s_changeView(const QString & id)
     empathDebug("s_changeView(" + id + ")");
     EmpathURL u(currentFolder_);
     u.setMessageID(id);
-    empath->retrieve(u, this, SLOT(s_retrieveJobComplete(EmpathRetrieveJob)));
+    empath->retrieve(u, this);
 }
 
-    void
-EmpathBrowser::s_retrieveJobComplete(EmpathRetrieveJob j)
+    bool
+EmpathBrowser::event(QEvent * e)
 {
-    if (!j.success()) {
-        qDebug("!j.success()");
-        return;
+    switch (e->type()) {
+
+        case EmpathMessageRetrievedEventT:
+            {
+                EmpathMessageRetrievedEvent * ev =
+                    static_cast<EmpathMessageRetrievedEvent *>(e);
+
+                if (ev->success()) {
+                    RMM::Message m = ev->message();
+                    emit(changeView(m));
+                }
+            }
+            return true;
+            break;
+
+        default:
+            break;
     }
-    qDebug("RetrievalComplete");
 
-    RMM::Message m(j.message());
-
-    emit(changeView(m));
+    return QWidget::event(e);
 }
 
     void
@@ -325,30 +333,14 @@ EmpathBrowser::s_view(const QString &)
 EmpathBrowser::s_toggleHideRead()
 {
     emit(toggleHideRead());
-
-    EmpathFolder * f(empath->folder(currentFolder_));
-
-    if (0 == f) {
-        empathDebug("Can't find folder `" + currentFolder_.asString() + "'");
-        return;
-    }
-
-    emit(setIndex(f->index()->dict()));
+    emit(setIndex(currentFolder_));
 }
 
     void
 EmpathBrowser::s_toggleThread()
 {
     emit(toggleThread());
-
-    EmpathFolder * f(empath->folder(currentFolder_));
-
-    if (0 == f) {
-        empathDebug("Can't find folder `" + currentFolder_.asString() + "'");
-        return;
-    }
-
-    emit(setIndex(f->index()->dict()));
+    emit(setIndex(currentFolder_));
 }
 
     void
@@ -415,8 +407,8 @@ EmpathBrowser::_connectUp()
         messageViewWidget_, SLOT(s_setMessage(RMM::Message &)));
 
     QObject::connect(
-        this,               SIGNAL(setIndex(const QDict<EmpathIndexRecord> &)),
-        messageListWidget_, SLOT(s_setIndex(const QDict<EmpathIndexRecord> &)));
+        this,               SIGNAL(setIndex(const EmpathURL &)),
+        messageListWidget_, SLOT(s_setIndex(const EmpathURL &)));
 
     QObject::connect(
         this,               SIGNAL(toggleHideRead()),

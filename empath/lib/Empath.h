@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -72,12 +72,12 @@ class Empath : public QObject
             SetupFilters,
             SetupWizard
         };
-    
+
         /** 
          * Creates an Empath object.
          */
         static void start();
-        
+
         /**
          * Use this to kill off Empath. You should delete the UI first. This
          * allows you to bring down the UI quickly, before Empath dies.
@@ -85,7 +85,7 @@ class Empath : public QObject
          * up, synced, and destructed. You may delete your KApplication.
          */
         void shutdown();
-        
+
         /**
          * This must be called after the constructor. You can construct
          * a ui first, but don't try to access any mailboxes or filters
@@ -114,22 +114,22 @@ class Empath : public QObject
          * @return The folder being used for queued messages. 
          */
         EmpathURL outbox() const { return outbox_; } 
-        
+
         /**
          * @return The folder being used for sent messages. 
          */
         EmpathURL sent() const { return sent_; } 
-        
+
         /**
          * @return The folder being used for draft messages. 
          */
         EmpathURL drafts() const { return drafts_; } 
-        
+
         /**
          * @return The folder being used for 'deleted' messages. 
          */
         EmpathURL trash() const { return trash_; } 
-        
+
         /**
          * @internal
          * This is used by generateUnique.
@@ -145,20 +145,20 @@ class Empath : public QObject
          * This is used by generateUnique.
          */
         QString     hostName() const { return hostName_; }
-        
+
         /**
          * Pass the message referred to in the URL through the filtering
          * mechanism.
          */
         void filter(const EmpathURL &);
-       
+
         /**
          * Call this when you change the type of server for outgoing
          * messages. The old server will be deleted and the new one
          * will be used from then on.
          */
         void updateOutgoingServer();
-    
+
         /**
          * Get a previously requested message.
          * @return A pointer to an RMM::Message, unless the message can't
@@ -170,110 +170,116 @@ class Empath : public QObject
          * Gets a pointer to the folder specified in the url, or 0.
          */
         EmpathFolder * folder(const EmpathURL &);
-        
+
         /**
          * Gets a pointer to the mailbox specified in the url, or 0.
          */
         EmpathMailbox * mailbox(const EmpathURL &);
-        
+
         /**
          * Queue a new message for sending later.
          */
         void queue(RMM::Message &);
-        
+
         /**
          * Send a message. If the user set queueing as the default,
          * it'll be queued, surprisingly.
          */
         void send(RMM::Message &);
-        
+
         /**
          * Attempt to send all queued messages.
          */
         void sendQueued();
-        
+
         /**
          * @internal
          */
         static Empath * EMPATH;
-        
+
         /**
          * Generate an unique filename
          */
         QString generateUnique();
 
         void cacheMessage(const EmpathURL &, RMM::Message);
-        
+
         EmpathMailboxList * mailboxList();
         EmpathFilterList  * filterList();
-        
+
     protected:
 
         Empath();
         ~Empath();
-       
+
     public:
-        
+
+        EmpathJobID readIndex(
+            const EmpathURL &,
+            QObject * = 0,
+            int = 0
+        );
+
         EmpathJobID createFolder(
             const EmpathURL &,
-            QObject * = 0L,
-            const char * = 0L
+            QObject * = 0,
+            int = 0
         );
 
         EmpathJobID removeFolder(
             const EmpathURL &,
-            QObject * = 0L,
-            const char * = 0L
+            QObject * = 0,
+            int = 0
         );
-        
+
         /**
          * Ask for a message to be copied from one folder to another.
          */
         EmpathJobID copy(
             const EmpathURL & src,
             const EmpathURL & dest,
-            QObject * = 0L,
-            const char * = 0L
+            QObject * = 0,
+            int = 0
         );
-         
+
         /**
          * Ask for a message to be moved from one folder to another.
          */
         EmpathJobID move(
             const EmpathURL & src,
             const EmpathURL & dest,
-            QObject * = 0L,
-            const char * = 0L
+            QObject * = 0,
+            int = 0
         );
-        
+
         /**
          * Ask for a message to be retrieved.
          */
         EmpathJobID retrieve(
             const EmpathURL & messageURL,
-            QObject * = 0L,
-            const char * = 0L
+            QObject * = 0,
+            int = 0
         );
-        
+
         /**
          * Write a new message to the specified folder.
          */
         EmpathJobID write(
             RMM::Message & msg,
             const EmpathURL & folder,
-            QObject * = 0L,
-            const char * = 0L
+            QObject * = 0,
+            int = 0
         );
-        
+
         /**
          * Remove given message.
          */
         EmpathJobID remove(
             const EmpathURL & messageURL,
-            QObject * = 0L,
-            const char * = 0L
+            QObject * = 0,
+            int = 0
         );
-        
+
         /**
          * Remove messages. The mailbox and folder are given in the URL.
          * The QStringList is used to pass the message ids.
@@ -281,20 +287,20 @@ class Empath : public QObject
         EmpathJobID remove(
             const EmpathURL & folder,
             const QStringList & ids,
-            QObject * = 0L,
-            const char * = 0L
+            QObject * = 0,
+            int = 0
         );
-       
+
         /**
          * Mark a message with a particular status (Read, Marked, ...)
          */
         EmpathJobID mark(
             const EmpathURL & messageURL,
             EmpathIndexRecord::Status,
-            QObject * = 0L,
-            const char * = 0L
+            QObject * = 0,
+            int = 0
         );
-        
+
         /**
          * Mark many messages with a particular status.
          * The mailbox and folder to use are given in the URL. The QStringList
@@ -304,8 +310,8 @@ class Empath : public QObject
             const EmpathURL & folder,
             const QStringList & ids,
             EmpathIndexRecord::Status,
-            QObject * = 0L,
-            const char * = 0L
+            QObject * = 0,
+            int = 0
         );
 
     public slots:
@@ -314,7 +320,7 @@ class Empath : public QObject
          * Check mail in all boxes.
          */
         void s_checkMail();
-        
+
         /**
          * Use when folders have changed and any displayed lists need updating.
          */
@@ -326,10 +332,10 @@ class Empath : public QObject
          * specified in the URL.
          */
         void s_configureMailbox(const EmpathURL &, QWidget *);
-       
+
         ///////////////////////////////////////////////////////////////////
         // Message composition.
-        
+
         /**
          * Compose a new message.
          */
@@ -354,7 +360,7 @@ class Empath : public QObject
 
         ///////////////////////////////////////////////////////////////////
         // Async methods.
-        
+
         void saveMessage(const EmpathURL &, QWidget *);
 
 
@@ -373,7 +379,7 @@ class Empath : public QObject
 
         //////////////////////////////////////////////////////////////////
         // Internal.
-          
+
         /**
          * @internal
          */
@@ -383,7 +389,7 @@ class Empath : public QObject
          * @internal
          */
         void s_newMailArrived();
-        
+
         /**
          * @internal
          */
@@ -398,7 +404,7 @@ class Empath : public QObject
          * @internal
          */
 //        void s_messageReadyForSave(bool, const EmpathURL &, QString);
-        
+
     signals:
 
         /**
@@ -418,7 +424,7 @@ class Empath : public QObject
          * Please ask the user to configure this mailbox.
          */
         void configureMailbox(const EmpathURL &, QWidget *);
-        
+
         /**
          * Please ask the user to enter a path to save this message
          * under.
@@ -460,38 +466,38 @@ class Empath : public QObject
          * Usually connected to a slot in the UI module.
          */
         void about(QWidget *);
-        
+
         /**
          * Signals that a new task has started.
          * Usually connected to a slot in the UI module.
          */
         void newTask(EmpathTask *);
-        
+
     private:
 
         EmpathJobScheduler  * _jobScheduler();
         EmpathMailSender    * _sender();
-        
+
         void _saveHostName();
         void _setStartTime();
 
         EmpathURL inbox_, outbox_, sent_, drafts_, trash_;
-    
+
         QString         hostName_;
         unsigned int    processID_;
         Q_UINT32        startupSeconds_;
         QString         startupSecondsStr_;
         QString         pidStr_;
-        
+
         QCache<EmpathCachedMessage> cache_;
 
         // Order dependency
         EmpathMailboxList       * mailboxList_;
         EmpathFilterList        * filterList_;
-        
+
         EmpathMailSender        * sender_;
         EmpathJobScheduler      * jobScheduler_;
-        
+
         unsigned long int seq_;
         // End order dependency
 };

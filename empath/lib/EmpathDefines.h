@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -30,13 +30,13 @@
 
 #   include <stdio.h>
 #   include <iostream.h>
-   
+
 #   define empathDebug(a) \
         fprintf(stderr, "%s, line %d\n", __PRETTY_FUNCTION__, __LINE__); \
         cerr << QString((a)).ascii() << endl;
 
 #else
-        
+
 #       define empathDebug(a)
 
 #endif

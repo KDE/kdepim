@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -34,9 +34,9 @@ EmpathMailbox::EmpathMailbox(const QString & name)
         autoCheckInterval_(0)
 {
     pixmapName_ = "menu-mailbox";
-    
+
     folderList_.setAutoDelete(true);
-    
+
     _connectUp();
 }
 
@@ -49,9 +49,9 @@ EmpathMailbox::~EmpathMailbox()
 EmpathMailbox::setAutoCheck(bool yn)
 {
     autoCheck_ = yn;
-    
+
     timer_.stop();
-    
+
     if (autoCheck_)
         timer_.start(autoCheckInterval_ * 60000);
 }
@@ -75,32 +75,6 @@ EmpathMailbox::setName(const QString & s)
     emit(rename(this, oldName));
 }
 
-    unsigned int
-EmpathMailbox::messageCount() const
-{
-    unsigned int c = 0;
-    
-    EmpathFolderListIterator it(folderList_);
-    
-    for (; it.current(); ++it)
-        c += it.current()->index()->count();
-
-    return c;
-}
-
-    unsigned int
-EmpathMailbox::unreadMessageCount() const
-{
-    unsigned int c = 0;
-    
-    EmpathFolderListIterator it(folderList_);
-    
-    for (; it.current(); ++it)
-        c += it.current()->index()->countUnread();
-
-    return c;
-}
-
     void
 EmpathMailbox::s_countUpdated(unsigned int, unsigned int)
 {
@@ -115,11 +89,11 @@ EmpathMailbox::folder(const EmpathURL & url)
     // If the first char is '/', remove it.
     if (fp.at(0) == '/')
         fp.remove(0, 1);
-    
+
     // If the last char is '/', remove it.
     if (fp.at(fp.length() - 1) == '/')
         fp.remove(fp.length() - 1, 1);
-    
+
     return folderList_[fp];
 }
 

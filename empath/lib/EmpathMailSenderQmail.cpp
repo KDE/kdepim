@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -63,25 +63,25 @@ EmpathMailSenderQmail::setQmailLocation(const QString & location)
 EmpathMailSenderQmail::sendOne(RMM::Message message, const QString & id)
 {
     currentID_ = id;
-    
+
     error_ = false;
 
     messageAsString_ = message.asString();
     empathDebug(messageAsString_);
-    
+
     qmailProcess_.clearArguments();
 
     KConfig * c = KGlobal::config();
 
     c->setGroup("Sending");
-    
+
     qmailProcess_ << c->readEntry("QmailLocation");
 
     if (!qmailProcess_.start(KProcess::NotifyOnExit, KProcess::All)) {
         empathDebug("Couldn't start qmail process");
         return;
     }
-    
+
     messagePos_ = 0;
     wroteStdin(&qmailProcess_);
 }
@@ -106,10 +106,8 @@ EmpathMailSenderQmail::wroteStdin(KProcess *)
 
     QCString s = messageAsString_.mid(messagePos_, blockSize);
 
-    kapp->processEvents();
-    
     empathDebug("Writing \"" + s + "\" to process");
-    
+
     messagePos_ += blockSize;
 
     qmailProcess_.writeStdin((char *)s.data(), s.length());
@@ -119,13 +117,13 @@ EmpathMailSenderQmail::wroteStdin(KProcess *)
 EmpathMailSenderQmail::qmailExited(KProcess *)
 {
     empathDebug("qmail exited");
-    
+
     error_ = (!qmailProcess_.normalExit() || qmailProcess_.exitStatus() != 0);
-    
+
     if (error_) errorStr_ = "qmail exited abnormally";
-    
+
     written_ = !error_;
-    
+
     //sendCompleted(currentID_, !error_);
 }
 
@@ -133,9 +131,9 @@ EmpathMailSenderQmail::qmailExited(KProcess *)
 EmpathMailSenderQmail::qmailReceivedStderr(KProcess *, char * buf, int)
 {
     QString eatBuf;
-    
+
     eatBuf = buf + '\n';
-    
+
     // eat
     empathDebug("Process send stderr:");
     empathDebug(eatBuf);

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -42,7 +42,7 @@ typedef QListIterator<EmpathFilter> EmpathFilterListIterator;
 class EmpathFilterList : public QList<EmpathFilter>
 {
     public:
-    
+
         /**
          * @internal
          */
@@ -62,14 +62,14 @@ class EmpathFilterList : public QList<EmpathFilter>
          * Called by Empath on startup.
          */
         void saveConfig();
-        
+
         /**
          * Filter the given message.
          * Goes through the list and asks each filter to look at the given
          * URL.
          */
         void filter(const EmpathURL &);
-        
+
         /**
          * Raise the priority of a filter by one.
          */
@@ -78,7 +78,7 @@ class EmpathFilterList : public QList<EmpathFilter>
          * Lower the priority of a filter by one.
          */
         void lowerPriority(EmpathFilter *);
-        
+
         /**
          * Remove the given filter, if it exists.
          */
@@ -87,7 +87,7 @@ class EmpathFilterList : public QList<EmpathFilter>
          * Append the given filter.
          */
         void append(EmpathFilter *);
-            
+
         const char * className() const { return "EmpathFilterList"; }
 };
 

@@ -47,6 +47,15 @@ class EmpathBrowser : public QWidget
         
         EmpathBrowser(QWidget * parent);
         ~EmpathBrowser();
+        
+        KParts::ReadWritePart * folderListWidget()
+        { return folderListWidget_; }
+        KParts::ReadWritePart * messageListWidget()
+        { return messageListWidget_; }
+        KParts::ReadOnlyPart  * messageViewWidget()
+        { return messageViewWidget_ ; }
+
+        bool event(QEvent *);
 
     protected slots:
 
@@ -67,12 +76,10 @@ class EmpathBrowser : public QWidget
         void s_toggleHideRead();
         void s_toggleThread();
 
-        void s_retrieveJobComplete(EmpathRetrieveJob);
-
     signals:
 
         void changeView(RMM::Message &);
-        void setIndex(const QDict<EmpathIndexRecord> &);
+        void setIndex(const EmpathURL &);
         void toggleHideRead();
         void toggleThread();
 

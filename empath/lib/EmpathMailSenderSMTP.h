@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -53,17 +53,17 @@ class EmpathMailSenderSMTP : public EmpathMailSenderImpl
          * Set the server name and port to connect to.
          */
         void setServer(const QString & name, const Q_UINT32 port);
-        
+
         /**
          * Send one message.
          */
         void sendOne(RMM::Message message, const QString & id);
-        
+
         virtual void saveConfig();
         virtual void loadConfig();
-        
+
     protected slots:
-        
+
         void s_jobError(int, int, const char *);
         void s_jobFinished(int);
         void s_jobCanceled(int);
@@ -73,7 +73,7 @@ class EmpathMailSenderSMTP : public EmpathMailSenderImpl
 
         QString     serverName_;
         Q_UINT32    serverPort_;
-        
+
         KIO::Job  * job_;
         QString currentID_;
 };

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -44,11 +44,11 @@ class EmpathFilterEventHandler : public QObject
     Q_OBJECT
 
     public:
-        
+
         enum ActionType { MoveFolder, CopyFolder, Delete, Ignore, Forward };
-    
+
         EmpathFilterEventHandler();
-        
+
         virtual ~EmpathFilterEventHandler();
 
         /**
@@ -76,7 +76,7 @@ class EmpathFilterEventHandler : public QObject
          * Handle the given message now !
          */
         void handleMessage    (const EmpathURL &);
-        
+
         /**
          * Load settings. Called by the containing filter.
          */

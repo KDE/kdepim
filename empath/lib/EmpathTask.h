@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -38,52 +38,52 @@
 class EmpathTask : public QObject
 {
     Q_OBJECT
-        
+
     public:
-        
+
         EmpathTask(const QString &);
         ~EmpathTask();
-        
+
         /**
          * Set the maximum number of steps this task will take to complete.
          */
         void setMax(int);
-        
+
         /**
          * Set the current number of steps this task has taken.
          */
         void setPos(int);
-        
+
         /**
          * Signal that another item has been processed (increment the
          * position).
          */
         void doneOne();
-        
+
         /**
          * Signal that the task has completed. You may go away now.
          */
         void done();
-        
+
         int max() { return max_; }
         int pos() { return pos_; }
-        
+
         bool isDone() { return done_; }
-    
+
         void timerEvent(QTimerEvent *);
-        
+
         QString name() { return name_; }
-        
+
     signals:
-        
+
         void maxChanged(int);
         void posChanged(int);
         void addOne();
         void finished();
         void newTask(EmpathTask *);
-        
+
     private:
-        
+
         QTime startTime_;
         QString name_;
         int max_;

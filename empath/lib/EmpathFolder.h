@@ -34,7 +34,6 @@
 #include "EmpathURL.h"
 #include "rmm/Message.h"
 
-class EmpathIndex;
 class EmpathMailbox;
 
 /**
@@ -62,7 +61,7 @@ class EmpathFolder : public QObject
          * Create and set the URL this maps to.
          */
         EmpathFolder(const EmpathURL & url);
-        
+
         virtual ~EmpathFolder();
 
         /**
@@ -76,33 +75,6 @@ class EmpathFolder : public QObject
         EmpathFolder * parent() const;
 
         /**
-         */
-        QString writeMessage(RMM::Message &);
-
-        /**
-         */
-        RMM::Message retrieveMessage(const QString & messageID);
-
-        /**
-         */
-        bool removeMessage(const QString & id);
-
-        /**
-         */
-        EmpathSuccessMap removeMessage(const QStringList & idList);
-
-        /**
-         */
-        bool markMessage(const QString & id, EmpathIndexRecord::Status);
-        
-        /**
-         */
-        EmpathSuccessMap markMessage(
-            const QStringList &,
-            EmpathIndexRecord::Status
-        );
-
-        /**
          * Set the name of a pixmap to use in the GUI.
          */
         void setPixmap(const QString &);
@@ -111,7 +83,7 @@ class EmpathFolder : public QObject
          * Get the name of the pixmap used in the GUI.
          */
         const QString &      pixmapName()    const { return pixmapName_;    }
-        
+
         /**
          * The URL to the folder, e.g. empath://Mailbox1/Folder1/Folder2
          */
@@ -123,14 +95,11 @@ class EmpathFolder : public QObject
          */
         Q_UINT32 id() const { return id_; }
 
-        EmpathIndex * index() { return index_; }
-
-        QStringList allIndexKeys();
-
         /**
          * Call this when an item has disappeared from the index.
          */
         void itemGone(const QString & s) { emit(itemLeft(s));        }
+
         /**
          * Call this when a new item appears in the index.
          */
@@ -138,7 +107,7 @@ class EmpathFolder : public QObject
 
         void setContainer(bool);
         bool isContainer() const;
-        
+
     protected slots:
 
         void s_itemGone(const QString & key) { itemGone(key); }
@@ -157,7 +126,7 @@ class EmpathFolder : public QObject
          * Signals a new message has arrived with given id.
          */
         void itemArrived(const QString &);
-        
+
         /**
          * Signals a message has gone away (with given id).
          */
@@ -165,11 +134,11 @@ class EmpathFolder : public QObject
 
     private:
 
-        EmpathFolder(const EmpathFolder &) : QObject() {}
+        EmpathFolder(const EmpathFolder &);
+        EmpathFolder & operator = (const EmpathFolder &);
 
         Q_UINT32    id_;
         QString     pixmapName_;
-        EmpathIndex * index_;
         EmpathURL   url_;
         bool        container_;
 };

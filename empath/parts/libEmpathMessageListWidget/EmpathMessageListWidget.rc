@@ -29,5 +29,6 @@
         <Separator/>
         <Action name="goNextUnread"/>
     </Menu>
+    <Merge />
 </MenuBar>
 </kpartgui>

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -59,21 +59,13 @@ EmpathMailSender::~EmpathMailSender()
     void
 EmpathMailSender::send(RMM::Message message)
 {
-    empath->write(
-        message,
-        empath->outbox(),
-        this,
-        SLOT(s_writtenNowSend(EmpathWriteJob)));
+    empath->write(message, empath->outbox(), this);
 }
 
     void
 EmpathMailSender::queue(RMM::Message message)
 {
-    empath->write(
-        message,
-        empath->outbox(),
-        this,
-        SLOT(s_writtenNowQueue(EmpathWriteJob)));
+    empath->write(message, empath->outbox(), this);
 }
 
     void
@@ -86,11 +78,11 @@ EmpathMailSender::s_writtenNowSend(EmpathWriteJob job)
         // Warn user that message could not be written to queue
         // folder.
         empathDebug("Couldn't queue message - folder won't accept !");
-    
+
         QMessageBox::critical(0, "Empath",
             i18n("Couldn't queue message ! Writing backup"),
             i18n("OK"));
-    
+
         _emergencyBackup(job.message());
     }
 }
@@ -105,11 +97,11 @@ EmpathMailSender::s_writtenNowQueue(EmpathWriteJob job)
         // Warn user that message could not be written to queue
         // folder.
         empathDebug("Couldn't queue message - folder won't accept !");
-    
+
         QMessageBox::critical(0, "Empath",
             i18n("Couldn't queue message ! Writing backup"),
             i18n("OK"));
-    
+
         _emergencyBackup(job.message());
     }
 }
@@ -134,10 +126,10 @@ EmpathMailSender::_startNextSend()
         return;
 
     EmpathURL url(empath->outbox());
-    
+
     url.setMessageID(*(sendQueue_.head()));
 
-    empath->retrieve(url, this, SLOT(s_retrievedNowSend(EmpathRetrieveJob)));
+    empath->retrieve(url, this);
 }
 
     void
@@ -146,7 +138,7 @@ EmpathMailSender::sendCompleted(const QString & id, bool)
     EmpathURL url(empath->outbox());
     url.setMessageID(id);
 
-    empath->move(url, empath->sent(), this, SLOT(s_movedToSent(EmpathMoveJob)));
+    empath->move(url, empath->sent(), this);
 
     sendQueue_.dequeue();
 }
@@ -170,44 +162,44 @@ EmpathMailSender::_emergencyBackup(RMM::Message message)
     QFile f(tempName);
 
     if (!f.open(IO_WriteOnly)) {
-        
+
         empathDebug("Couldn't open the temporary file " + tempName);
-        
+
         empathDebug("EMERGENCY BACKUP COULD NOT BE WRITTEN !");
-        
+
         empathDebug("PLEASE CONTACT PROGRAM MAINTAINER !");
-        
+
         QMessageBox::critical(0, "Empath",
             i18n("Couldn't write the backup file ! Message has been LOST !"),
             i18n("OK"));
-        
+
         return;
     }
 
     QCString text(message.asString());
-    
+
     f.writeBlock(text.data(), text.length());
-    
+
     f.flush();
-    
+
     f.close();
-    
+
     if (f.status() != IO_Ok) {
-        
+
         empathDebug("Couldn't successfully write the temporary file " +
             tempName);
-        
+
         empathDebug("EMERGENCY BACKUP COULD NOT BE VERIFIED !");
-        
+
         empathDebug("PLEASE CONTACT PROGRAM MAINTAINER !");
-        
+
         QMessageBox::critical(0, "Empath",
         i18n("Couldn't write the backup file ! Message may have been LOST !"),
             i18n("OK"));
-        
+
         return;
     }
-    
+
     QMessageBox::information(0, "Empath",
         i18n("Message backup written to") + " " + tempName,
         i18n("OK"));
@@ -218,25 +210,25 @@ EmpathMailSender::update()
 {
     delete impl_;
     impl_ = 0L;
-    
+
     KConfig * c = KGlobal::config();
 
     c->setGroup("General");
-    
+
     OutgoingServerType st =
         (OutgoingServerType)
         (c->readUnsignedNumEntry("OutgoingServerType"));
-    
+
     switch (st) {
-        
+
         case Qmail:
             impl_ = new EmpathMailSenderQmail;
             break;
-        
+
         case SMTP:
             impl_ = new EmpathMailSenderSMTP;
             break;
-            
+
         case Sendmail:
         default:
             impl_ = new EmpathMailSenderSendmail;
@@ -249,7 +241,7 @@ EmpathMailSender::update()
     void
 EmpathMailSender::saveConfig()
 { impl_->saveConfig(); }
-    
+
     void
 EmpathMailSender::loadConfig()
 { impl_->loadConfig(); }

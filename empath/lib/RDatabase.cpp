@@ -1,10 +1,10 @@
 /*
   RDatabase - A persistent QAsciiDict<QByteArray>.
-  
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
- 
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
   License as published by the Free Software Foundation; either
@@ -66,7 +66,7 @@ Database::error() const
 {
   return error_;
 }
-    
+
   bool
 Database::ok() const
 {
@@ -88,7 +88,7 @@ Database::_open()
     _setError("Cannot open index file");
     return;
   }
- 
+
   if (!dataFile_.open(IO_ReadWrite)) {
     _setError("Cannot open data file");
     return;
@@ -101,7 +101,7 @@ Database::_open()
 
   indexStream_  .setDevice(&indexFile_);
   dataStream_   .setDevice(&dataFile_);
-  
+
   _loadIndex();
 }
 
@@ -112,7 +112,7 @@ Database::_loadIndex()
     return;
 
   index_.clear();
-  
+
   indexFile_.reset();
   indexStream_ >> offset_ >> unreadCount_;
   // For some reason this doesn't save/retrieve properly.
@@ -120,7 +120,7 @@ Database::_loadIndex()
 
   QString key;
   Q_UINT32 ofs;
-  
+
   while (!indexStream_.eof()) {
     indexStream_ >> key >> ofs;
     index_.insert(key, new Q_UINT32(ofs));
@@ -140,7 +140,7 @@ Database::_saveIndex()
   indexStream_ << offset_ << unreadCount_;
 
   IndexIterator it(index_);
-  
+
   for (; it.current(); ++it)
     indexStream_ << it.currentKey() << *(it.current());
 
@@ -159,11 +159,11 @@ Database::_close()
       return;
     }
   }
-  
+
   if (dataFile_.isOpen()) {
     dataFile_.flush();
     dataFile_.close();
-    
+
     if (dataFile_.status() != IO_Ok) {
       _setError("Cannot close data file");
       return;
@@ -180,10 +180,10 @@ Database::insert(const QString & key, const QByteArray & data)
     _setError("Record `" + key + "' exists");
     return false;
   }
-  
+
   index_.insert(key, new Q_UINT32(dataFileSize_));
   indexDirty_ = true;
-  
+
   bool seekOK = dataFile_.at(dataFileSize_);
 
   if (!seekOK) {
@@ -266,14 +266,14 @@ Database::replace(const QString & key, const QByteArray & data, bool & ow)
   ok_ = true;
 
   Q_UINT32 * ofs = index_[key];
-  
+
   if (ofs == 0) {
 
     ow = false;
 
     index_.insert(key, new Q_UINT32(dataFileSize_));
     indexDirty_ = true;
-  
+
     bool seekOK = dataFile_.at(dataFileSize_);
 
     if (!seekOK) {
@@ -292,7 +292,7 @@ Database::replace(const QString & key, const QByteArray & data, bool & ow)
   ow = true;
 
   QByteArray originalRecord;
-  
+
   bool seekOK = dataFile_.at(dataFileSize_);
 
   if (!seekOK) {
@@ -308,7 +308,7 @@ Database::replace(const QString & key, const QByteArray & data, bool & ow)
   dataStream_ >> originalRecordLength;
 
 #else
-  
+
   dataStream_ >> originalRecord;
 
   if (originalRecord.isNull()) {
@@ -321,17 +321,17 @@ Database::replace(const QString & key, const QByteArray & data, bool & ow)
 #endif
 
   Q_UINT32 newRecordLength = data.size();
-  
+
 
   // If the replacement is larger than the original, we remove
   // the key for original, and add the new record at the end of the
   // data file.
 
   if (newRecordLength > originalRecordLength) {
-  
+
     index_.replace(key, new Q_UINT32(dataFileSize_));
     indexDirty_ = true;
-    
+
     bool seekOK = dataFile_.at(dataFileSize_);
 
     if (!seekOK) {
@@ -340,15 +340,15 @@ Database::replace(const QString & key, const QByteArray & data, bool & ow)
     }
 
     dataStream_ << data;
-  
+
     dataFileSize_ = dataFile_.at();
-   
+
     return true;
   }
 
   // The replacement is the same size as, or smaller than, the original.
   // We may overwrite the original.
-  
+
   seekOK = dataFile_.at(*ofs);
 
   if (!seekOK) {
@@ -378,12 +378,12 @@ Database::reorganise()
   // new one. Next write the index to the new index file.
   // Lastly, remove the old files and rename the new ones with
   // the original names.
-  
+
   // TODO: Sort the index by offset, to reduce seeks.
-  
+
   QString indexFilename = indexFile_.name();
   QString dataFilename = dataFile_.name();
-  
+
   QFile indexf(indexFilename + "_");
   QFile dataf(dataFilename + "_");
 
@@ -426,7 +426,7 @@ Database::reorganise()
     }
 
     cursor = dataf.at();
-    
+
     dstr << data;
     istr << it.currentKey() << cursor;
   }
@@ -441,7 +441,7 @@ Database::reorganise()
     _setError("Could not flush and close temporary index file");
     return;
   }
-  
+
   if (dataf.status() != IO_Ok) {
     _setError("Could not flush and close temporary data file");
     return;
@@ -454,9 +454,9 @@ Database::reorganise()
   dataFile_.remove();
 
   QDir d;
-  
+
   bool renamed = d.rename(indexFilename + "_", indexFilename, true);
-  
+
   if (!renamed) {
     _setError
       ("Could not rename `" + indexFilename + "_' to `" + indexFilename + "'");
@@ -464,7 +464,7 @@ Database::reorganise()
   }
 
   renamed = d.rename(dataFilename + "_", dataFilename, true);
-  
+
   if (!renamed) {
     _setError
       ("Could not rename `" + dataFilename + "_' to `" + dataFilename + "'");
@@ -478,7 +478,7 @@ Database::reorganise()
 
   indexLoaded_ = false;
   _loadIndex();
-  
+
   if (!dataFile_.open(IO_ReadWrite)) {
     _setError("Could not reopen data file");
     return;
@@ -495,7 +495,7 @@ Database::lastModified() const
 Database::clear()
 {
   index_.clear();
- 
+
   indexFile_.remove();
   dataFile_.remove();
 
@@ -506,12 +506,12 @@ Database::clear()
 
   indexLoaded_ = false;
   _loadIndex();
-  
+
   if (!dataFile_.open(IO_ReadWrite)) {
     _setError("Could not reopen data file");
     return;
   }
- 
+
   touched_ = QDateTime::currentDateTime();
 }
 

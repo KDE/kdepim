@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -57,9 +57,9 @@ EmpathMailSenderSMTP::setServer(const QString & _name, const Q_UINT32 _port)
 EmpathMailSenderSMTP::sendOne(RMM::Message m, const QString & id)
 {
     currentID_ = id;
-    
+
     KConfig c(KGlobal::dirs()->findResource("config", "kcmemailrc"), true);
-    
+
     QString sender = c.readEntry("EmailAddress");
 
     QString recipient;
@@ -70,14 +70,14 @@ EmpathMailSenderSMTP::sendOne(RMM::Message m, const QString & id)
         // XXX: We're not sending to anyone ?
         return;
     }
-    
+
     RMM::Address address = addressList.at(0);
-    
+
     if (address.type() == RMM::Address::AddressTypeGroup) {
         // FIXME: Handle sending to a group.
         return;
     }
-    
+
     recipient = address.localPart();
     recipient += '@';
     recipient += address.domain();
@@ -86,7 +86,7 @@ EmpathMailSenderSMTP::sendOne(RMM::Message m, const QString & id)
         serverName_ + ':' + QString().setNum(serverPort_) +
         '/' +
         sender + ',' + recipient;
-    
+
 //    job_->put(putStr.ascii(), 0, false, false, 0);
 }
 
@@ -94,7 +94,7 @@ EmpathMailSenderSMTP::sendOne(RMM::Message m, const QString & id)
 EmpathMailSenderSMTP::saveConfig()
 {
     KConfig * c = KGlobal::config();
-    
+
     c->setGroup("Sending");
     c->writeEntry("SMTPServerLocation", serverName_);
     c->writeEntry("SMTPServerPort", serverPort_);
@@ -115,13 +115,13 @@ EmpathMailSenderSMTP::s_jobError(int, int, const char *)
 {
 //    sendCompleted(currentID_, false);
 }
-    
+
     void
 EmpathMailSenderSMTP::s_jobFinished(int)
 {
 //    sendCompleted(currentID_, true);
 }
-    
+
     void
 EmpathMailSenderSMTP::s_jobCanceled(int)
 {

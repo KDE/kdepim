@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -48,23 +48,23 @@ EmpathFilter::~EmpathFilter()
 EmpathFilter::save()
 {
     KConfig * config = KGlobal::config();
-    
+
     config->setGroup(QString::fromUtf8("Filter_") + name_);
 
     config->writeEntry(QString::fromUtf8("MatchExpressions"), matchExprs_.count());
     config->writeEntry(QString::fromUtf8("SourceFolder"),    url_.asString());
     config->writeEntry(QString::fromUtf8("Priority"),  priority_);
-    
+
     EmpathMatcherListIterator it(matchExprs_);
-    
+
     int c = 0;
-    
+
     for (; it.current() ; ++it)
         it.current()->save(name_, c++);
 
     if (fEventHandler_ != 0)
         fEventHandler_->save(name_);
-    
+
     config->sync();
 }
 
@@ -72,19 +72,19 @@ EmpathFilter::save()
 EmpathFilter::load()
 {
     KConfig * config = KGlobal::config();
-    
+
     config->setGroup(QString::fromUtf8("Filter_") + name_);
-    
+
     url_ = config->readEntry(QString::fromUtf8("SourceFolder"));
-    
+
     Q_UINT32 numMatchExprs =
         config->readUnsignedNumEntry(QString::fromUtf8("MatchExpressions"));
-    
+
     for (Q_UINT32 i = 0 ; i < numMatchExprs ; ++i)
         loadMatchExpr(i);
 
     loadEventHandler();
-    
+
     priority_ =
         config->readUnsignedNumEntry(QString::fromUtf8("Priority"), 100);
 }
@@ -101,13 +101,13 @@ EmpathFilter::loadMatchExpr(Q_UINT32 matchExprID)
 EmpathFilter::loadEventHandler()
 {
     EmpathFilterEventHandler * handler = new EmpathFilterEventHandler;
-    
+
     if (handler->load(name_)) {
-        
+
         fEventHandler_ = handler;
-    
+
     } else {
-    
+
         fEventHandler_ = 0;
         delete handler;
     }
@@ -146,7 +146,7 @@ EmpathFilter::description() const
         return i18n("This filter does nothing");
 
     QString desc;
-    
+
     desc += i18n("When new mail arrives in");
     desc += QString::fromUtf8(" ");
     desc += url_.asString();
@@ -178,10 +178,10 @@ EmpathFilter::filter(const EmpathURL & id)
         empathDebug(QString::fromUtf8("Event handler not defined"));
         return;
     }
-    
+
     if (!match(id))
         return;
-    
+
     fEventHandler_->handleMessage(id);
 }
 
@@ -189,11 +189,11 @@ EmpathFilter::filter(const EmpathURL & id)
 EmpathFilter::match(const EmpathURL & id)
 {
     EmpathMatcherListIterator it(matchExprs_);
-    
+
     for (; it.current(); ++it)
         if (it.current()->match(id))
             return true;
-    
+
     return false;
 }
 

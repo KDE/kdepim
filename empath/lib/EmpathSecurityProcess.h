@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -41,9 +41,9 @@
 class EmpathSecurityProcess : public QObject
 {
     Q_OBJECT
-    
+
     public:
-        
+
         ~EmpathSecurityProcess();
 
         /**
@@ -59,26 +59,26 @@ class EmpathSecurityProcess : public QObject
          */
         static void encryptAndSign
             (const QCString & s, const QCString & r, QObject * parent);
-        
+
         /**
          * Decrypt s.
          * A connection will be made to parent's slot 's_decryptDone()'
          */
         static void decrypt
             (const QCString & s, QObject * parent);
-        
+
     protected slots:
 
         void s_pgpFinished(KProcess *);
         void s_pgpSentOutput(KProcess *, char *, int);
         void s_pgpSentError(KProcess *, char *, int);
-        
+
     signals:
-        
+
         void done(bool, QCString);
-        
+
     private:
-        
+
         EmpathSecurityProcess();
 
         void _encrypt            (const QCString &, const QCString &, QObject *);
@@ -86,7 +86,7 @@ class EmpathSecurityProcess : public QObject
         void _decrypt            (const QCString &, QObject *);
 
         KShellProcess p;
-        
+
         QCString outputStr_;
         QCString errorStr_;
 };

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -63,7 +63,7 @@ EmpathMailSenderSendmail::setSendmailLocation(const QString & location)
 EmpathMailSenderSendmail::sendOne(RMM::Message message, const QString & id)
 {
     currentID_ = id;
-    
+
     error_ = false;
 
     empathDebug("Message text:");
@@ -77,7 +77,7 @@ EmpathMailSenderSendmail::sendOne(RMM::Message message, const QString & id)
     c->setGroup("Sending");
 
     QString sendmailLocation = c->readEntry("SendmailLocation");
-    
+
     if (sendmailLocation.isEmpty()) {
         empathDebug("No location configured for sendmail. Using default");
         sendmailLocation = "/usr/sbin/sendmail";
@@ -111,14 +111,12 @@ EmpathMailSenderSendmail::wroteStdin(KProcess *)
     int blockSize =
         messagePos_ + 1024 > messageAsString_.length() ?
             messageAsString_.length() - messagePos_ : 1024;
-    
-    QCString s = messageAsString_.mid(messagePos_, blockSize);
 
-    kapp->processEvents();
+    QCString s = messageAsString_.mid(messagePos_, blockSize);
 
     // Remember the current pos in the message string
     messagePos_ += blockSize;
-    
+
     sendmailProcess_.writeStdin((char *)s.data(), s.length());
 }
 
@@ -127,13 +125,13 @@ EmpathMailSenderSendmail::sendmailExited(KProcess *)
 {
     error_ = (  !sendmailProcess_.normalExit() ||
                 sendmailProcess_.exitStatus() != 0);
-    
+
     if (error_) errorStr_ = "sendmail exited abnormally";
-    
+
     written_ = !error_;
-    
+
     messageAsString_ = "";
-    
+
 //    sendCompleted(currentID_, !error_);
 }
 
@@ -142,9 +140,9 @@ EmpathMailSenderSendmail::sendmailReceivedStderr(
         KProcess *, char * buf, int)
 {
     QString eatBuf;
-    
+
     eatBuf = buf + '\n';
-    
+
     // eat
     empathDebug("Process send stderr:");
     empathDebug(eatBuf);

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -49,7 +49,7 @@
 class EmpathComposer : public QObject
 {
     Q_OBJECT
-    
+
     public:
 
         enum HeaderStyle { Visible, Invisible };
@@ -61,7 +61,7 @@ class EmpathComposer : public QObject
 
             return THIS;
         }
-      
+
         /**
          * Create a new composeform with the given parameters 
          */
@@ -70,19 +70,19 @@ class EmpathComposer : public QObject
             EmpathComposeForm::ComposeType,
             const EmpathURL &
         );
-        
+
         /**
          * Convert a composeform to a message, so that it can be sent.
          */
         RMM::Message message(EmpathComposeForm);
-        
+
         static EmpathComposer * THIS;
- 
+
     protected:
 
         EmpathComposer();
         ~EmpathComposer();
- 
+
     signals:
 
         /**
@@ -90,26 +90,26 @@ class EmpathComposer : public QObject
          * UI.
          */
         void composeFormComplete(EmpathComposeForm);
-        
+
     protected slots:
 
         void s_retrieveJobFinished(EmpathRetrieveJob);
-   
+
     private:
-        
+
         void _reply     (EmpathJobID, RMM::Message);
         void _forward   (EmpathJobID, RMM::Message);
         void _bounce    (EmpathJobID, RMM::Message);
 
         void _initVisibleHeaders(EmpathComposeForm &);
-        
+
         QString _referenceHeaders(RMM::Message m);
         QString _stdHeaders();
 
         QString _signature();
-        
+
         QMap<EmpathJobID, EmpathComposeForm> jobList_;
-       
+
         QString referenceHeaders_;
 
         void _quote(QString &);

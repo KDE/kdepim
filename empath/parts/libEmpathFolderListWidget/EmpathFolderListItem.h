@@ -44,6 +44,8 @@ class EmpathFolderListItem : public QObject, public QListViewItem
         
         const EmpathURL & url() const { return url_; }
 
+        EmpathFolderListItem * child(const QString &);
+
         QString key(int, bool) const;
         
         void tag(bool) { tagged_ = true; }
@@ -67,6 +69,8 @@ class EmpathFolderListItem : public QObject, public QListViewItem
     
         EmpathURL url_;
         bool tagged_;
+
+        QList<EmpathFolderListItem> childList_;
 };
 
 #endif

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -56,7 +56,7 @@ class EmpathURL
          * Default ctor.
          */
         EmpathURL();
-    
+
         /**
          * Ctor with mailbox, folder and message ID.
          */
@@ -75,9 +75,9 @@ class EmpathURL
          * Copy ctor.
          */
         EmpathURL(const EmpathURL & url);
-        
+
         EmpathURL & operator = (const EmpathURL & url);
-        
+
         EmpathURL & operator = (const QString &);
 
         bool operator == (const EmpathURL & b) const;
@@ -88,7 +88,7 @@ class EmpathURL
         QString mailboxName() const;
         QString folderPath() const;
         QString messageID() const;
-        
+
         EmpathURL withoutMessageID() const;
 
         /**
@@ -96,7 +96,7 @@ class EmpathURL
          * parse error.
          */
         bool isValid() const { return isValid_; }
-        
+
         /**
          * This will always return true, theoretically.
          */
@@ -106,7 +106,7 @@ class EmpathURL
                     folderPath_.isEmpty()  &&
                     messageID_.isEmpty();
         }
-        
+
         /**
          * Returns true if there is a folder part to this URL.
          */
@@ -114,17 +114,17 @@ class EmpathURL
         {
             return !folderPath_.isEmpty() && messageID_.isEmpty();
         }
-        
+
         /**
          * Returns true if there's a message id at the end of this URL.
          */
         bool isMessage() const { return !messageID_.isEmpty(); }
-        
+
         /**
          * Returns the assembled representation of this URL.
          */
         QString asString() const { return strRep_; }
-        
+
         void setMailboxName(const QString & mailboxName);
         void setFolderPath(const QString & folderPath);
         void setMessageID(const QString & messageID);
@@ -135,7 +135,7 @@ class EmpathURL
          * Returns the folder path, by creating a string list using each folder
          * and subfolder name.
          */
-        QStrList folderPathList();
+        QStringList folderPathList();
 
     private:
 

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -73,7 +73,7 @@ class EmpathAttachmentSpec
                 charset_        (charset)
         {
         }
-                
+
         EmpathAttachmentSpec(const EmpathAttachmentSpec & a)
             :
                 filename_       (a.filename_),
@@ -84,19 +84,19 @@ class EmpathAttachmentSpec
                 charset_        (a.charset_)
         {
         }
-    
+
             EmpathAttachmentSpec &
         operator = (const EmpathAttachmentSpec & a)
         {    
             if (this == &a) return *this;
-            
+
             filename_       = a.filename_;
             description_    = a.description_;
             encoding_       = a.encoding_;
             type_           = a.type_;
             subType_        = a.subType_;
             charset_        = a.charset_;
-            
+
             return *this;
         }
 
@@ -113,28 +113,28 @@ class EmpathAttachmentSpec
                 subType_    == other.subType_   &&
                 charset_    == other.charset_);
         } 
-        
+
         QString filename()      const { return filename_;       }
         QString description()   const { return description_;    }
         EncodingType encoding() const { return encoding_;       }
         QString type()          const { return type_;           }
         QString subType()       const { return subType_;        }
         QString charset()       const { return charset_;        }
-        
+
         void setFilename    (const QString & s) { filename_     = s; }
         void setDescription (const QString & s) { description_  = s; }
         void setEncoding    (EncodingType t)    { encoding_     = t; }
         void setType        (const QString & s) { type_         = s; }
         void setSubType     (const QString & s) { subType_      = s; }
         void setCharset     (const QString & s) { charset_      = s; }
-        
+
         /**
          * @internal
          */
         const char * className() const { return "EmpathAttachmentSpec"; }
-        
+
     private:
-        
+
         QString filename_;
         QString description_;
         EncodingType encoding_;

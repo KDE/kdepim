@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -97,7 +97,7 @@ EmpathJobInfo::EmpathJobInfo(
     current_.url1       = url;
     current_.xinfo      = extraInfo;
     current_.message    = msg;
-    
+
     haveOriginal_ = false;
 }
 
@@ -112,7 +112,7 @@ EmpathJobInfo::EmpathJobInfo(
     current_.url1       = folder;
     current_.xinfo      = extraInfo;
     current_.IDList     = messageIDList;
-    
+
     haveOriginal_ = false;
 }
 
@@ -132,7 +132,7 @@ EmpathJobInfo::EmpathJobInfo(
 
     if (current_.IDList.isEmpty())
         current_.IDList << folder.messageID();
-    
+
     haveOriginal_ = false;
 }
 
@@ -149,7 +149,7 @@ EmpathJobInfo::EmpathJobInfo(
     current_.status = status;
 
     current_.IDList << url.messageID();
-    
+
     haveOriginal_ = false;
 }
 
@@ -166,7 +166,7 @@ EmpathJobInfo::EmpathJobInfo(
 
     if (current_.IDList.isEmpty())
         current_.IDList << folder.messageID();
-    
+
     haveOriginal_ = false;
 }
 

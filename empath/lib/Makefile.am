@@ -21,6 +21,7 @@ EmpathJob.cpp \
 EmpathJobScheduler.cpp \
 EmpathComposeForm.cpp \
 EmpathComposer.cpp \
+EmpathCustomEvents.cpp \
 EmpathFilter.cpp \
 EmpathFilterEventHandler.cpp \
 EmpathFilterList.cpp \

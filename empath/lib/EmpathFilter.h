@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -55,7 +55,7 @@ class EmpathFilter : public QObject
     Q_OBJECT
 
     public:
-        
+
         /**
          * Create a new filter with the specified name.
          * You must use empath->filterList().append(filter) to make
@@ -76,17 +76,17 @@ class EmpathFilter : public QObject
          * in the filter list.
          */
         void save();
-        
+
         /**
          * Rename this filter. Names must be unique.
          */
         void setName(const QString & name) { name_ = name; }
-        
+
         /**
          * The name of this filter.
          */
         QString name() { return name_; }
-        
+
         /**
          * Perform filtering on the given URL (pointing to an RMM::Message).
          */
@@ -101,23 +101,23 @@ class EmpathFilter : public QObject
          * Description of what this filter does, in a human readable form.
          */
         QString        description() const;
-        
+
         /**
          * Description of what the filter event handler will do, in a human
          * readable form.
          */
         QString        actionDescription() const;
-        
+
         /**
          * Tell this filter to use the specified event handler.
          */
         void        setEventHandler(EmpathFilterEventHandler *);
-        
+
         /**
          * Set the URL that this filter filters messages from.
          */
         void        setURL(const EmpathURL & url);
-        
+
         /**
          * The URL that this filter filters messages from.
          */
@@ -127,24 +127,24 @@ class EmpathFilter : public QObject
          * A list of all match expressions used by this filter.
          */
         QList<EmpathMatcher> *        matchExprList();
-        
+
         /**
          * Pointer to the event handler used when a match expression hits.
          */
         EmpathFilterEventHandler *    eventHandler();
-        
+
         /**
          * Alter the priority of this filter.
          */
         void        setPriority(Q_UINT32 priority)
         { priority_ = priority; }
-        
+
         /**
          * The priority of this filter.
          */
         Q_UINT32    priority()
         { return priority_; }
-        
+
     private:
 
         bool match(const EmpathURL & id);
@@ -153,11 +153,11 @@ class EmpathFilter : public QObject
 
         Q_UINT32 id_;
         Q_UINT32 priority_;
-        
+
         EmpathURL                    url_;
         QList<EmpathMatcher>        matchExprs_;
         EmpathFilterEventHandler    * fEventHandler_;
-        
+
         QString    name_;
 };
 

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -43,51 +43,57 @@ class EmpathJobScheduler : public QObject
 
         virtual ~EmpathJobScheduler();
 
+        EmpathJobID newReadIndexJob(
+            const EmpathURL &,
+            QObject *,
+            int
+        );
+
         EmpathJobID newWriteJob(
             RMM::Message &,
             const EmpathURL &,
             QObject *,
-            const char *
+            int
         );
 
         EmpathJobID newRetrieveJob(
             const EmpathURL &,
             QObject *,
-            const char *
+            int
         );
 
         EmpathJobID newCopyJob(
             const EmpathURL &,
             const EmpathURL &,
             QObject *,
-            const char *
+            int
         );
 
         EmpathJobID newMoveJob(
             const EmpathURL &,
             const EmpathURL &,
             QObject *,
-            const char *
+            int
         );
 
         EmpathJobID newRemoveJob(
             const EmpathURL &,
             QObject *,
-            const char *
+            int
         );
 
         EmpathJobID newRemoveJob(
             const EmpathURL &,
             const QStringList &,
             QObject *,
-            const char *
+            int
         );
 
         EmpathJobID newMarkJob(
             const EmpathURL &,
             EmpathIndexRecord::Status,
             QObject *,
-            const char *
+            int
         );
 
         EmpathJobID newMarkJob(
@@ -95,32 +101,24 @@ class EmpathJobScheduler : public QObject
             const QStringList &,
             EmpathIndexRecord::Status,
             QObject *,
-            const char *
+            int
         );
 
         EmpathJobID newCreateFolderJob(
             const EmpathURL &,
             QObject *,
-            const char *
+            int
         );
 
         EmpathJobID newRemoveFolderJob(
             const EmpathURL &,
             QObject *,
-            const char *
+            int
         );
 
     protected:
 
-        void timerEvent(QTimerEvent *);
-
-    private:
-
-        EmpathJobID _enqueue(EmpathJob *);
-
-        void _runQueue();
-
-        QQueue<EmpathJob> queue_;
+        bool event(QEvent *);
 };
 
 #endif

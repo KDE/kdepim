@@ -37,6 +37,7 @@
 #include <kparts/factory.h>
 
 // Local includes
+#include "EmpathSettingsDialog.h"
 #include "EmpathMainWindow.h"
 #include "EmpathTask.h"
 #include "Empath.h"
@@ -125,20 +126,27 @@ EmpathMainWindow::s_toolbarMoved(BarPosition pos)
     void
 EmpathMainWindow::_initActions()
 {
+    KStdAction::quit(
+        this,
+        SLOT(quit()),
+        actionCollection(),
+        "quit"
+    );
+
     KStdAction::preferences(
         this,
         SLOT(s_settings()),
         actionCollection(),
-        "settings"
-    );
-
-    KStdAction::saveOptions(
-        this,
-        SLOT(s_saveSettings()),
-        actionCollection(),
-        "saveSettings"
+        "config"
     );
 }
+
+    void
+EmpathMainWindow::s_settings()
+{
+    EmpathSettingsDialog::run();
+}
+
 
 // --------------------------------------------------------------------------
 

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -63,7 +63,7 @@ class EmpathMailSender : public QObject
         EmpathMailSender();
 
         virtual ~EmpathMailSender();
-        
+
         /**
          * Queue up a message for sending.
          */
@@ -93,17 +93,17 @@ class EmpathMailSender : public QObject
          * Called by Empath on startup.
          */
         virtual void loadConfig();
-        
+
         void sendCompleted(const QString &, bool);
 
         void update();
-    
+
     protected slots:
-            
+
         void s_writtenNowSend(EmpathWriteJob);
         void s_writtenNowQueue(EmpathWriteJob);
         void s_movedToSent(EmpathMoveJob);
-    
+
     private:
 
         void _startNextSend();

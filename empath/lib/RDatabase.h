@@ -1,10 +1,10 @@
 /*
   RDatabase - A persistent QAsciiDict<QByteArray>.
-  
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
- 
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
   License as published by the Free Software Foundation; either
@@ -65,7 +65,7 @@ class Database
      * Useful for debugging.
      */
     QString error() const;
-    
+
     /**
      * Check this after each transaction you care about.
      * If it's false, look at error() to see what went wrong. Error
@@ -94,7 +94,7 @@ class Database
      * (use QByteArray::isNull() to test) if the record didn't exist.
      */
     QByteArray retrieve(const QString & key) const;
-    
+
     /**
      * @return true if the key is in the index.
      */
@@ -133,7 +133,7 @@ class Database
     void increaseUnreadCount()  { ++unreadCount_; }
     void decreaseUnreadCount()  { --unreadCount_; }
     unsigned int unreadCount()  { return unreadCount_; }
-    
+
     void saveIndex() { _saveIndex(); }
 
   private:

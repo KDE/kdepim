@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -44,21 +44,21 @@
 class EmpathPOPCommand
 {
     public:
-        
+
         enum Type { Stat, Index, Get, Remove };
 
         EmpathPOPCommand(Type, int);
         ~EmpathPOPCommand(); 
-        
+
         QString command();
         Type    type();
         int messageNumber();
         QCString & data();
-        
+
         const char * className() const { return "EmpathPOPCommand"; }
 
     private:
-    
+
         QCString    data_;
         QString     command_;
         Type        type_;
@@ -71,17 +71,17 @@ class EmpathPOPCommand
 class EmpathPOPIndexEntry
 {
     public:
-        
+
         EmpathPOPIndexEntry(int, const QString &);
         ~EmpathPOPIndexEntry();
-        
+
         int        number();
         QString    id();
-        
+
         const char * className() const { return "EmpathPOPIndexEntry"; }
-        
+
     private:
-        
+
         int        number_;
         QString    id_;
 };
@@ -92,11 +92,11 @@ class EmpathPOPIndexEntry
 class EmpathPOPIndex : public QList<EmpathPOPIndexEntry>
 {
     public:
-        
+
         EmpathPOPIndex();
         ~EmpathPOPIndex();
         int compareItems(EmpathPOPIndexEntry * i1, EmpathPOPIndexEntry * i2);
-        
+
         const char * className() const { return "EmpathPOPIndex"; }
 };
 
@@ -115,7 +115,7 @@ class EmpathMailboxPOP3 : public EmpathMailbox
     public:
 
         EmpathMailboxPOP3(const QString & name);
-        
+
         ~EmpathMailboxPOP3();
 
         bool logging();
@@ -131,11 +131,11 @@ class EmpathMailboxPOP3 : public EmpathMailbox
         void s_jobData(int, const char *, int);
         void s_jobFinished(int);
         void s_jobCancelled(int);
-    
+
     public:
 
         // Set methods
-        
+
         void setServerAddress           (const QString &);
         void setServerPort              (Q_UINT32);
         void setUsername                (const QString &);
@@ -151,7 +151,7 @@ class EmpathMailboxPOP3 : public EmpathMailbox
         void setRetrieveIfHave          (bool);
 
         // Get methods
-        
+
         QString     serverAddress();
         Q_UINT32    serverPort();
         QString     username();
@@ -172,10 +172,10 @@ class EmpathMailboxPOP3 : public EmpathMailbox
         // It can either be in the Transaction or Authorisation state.
         // We, on the other hand, have another state -
         // Not connected to the server.
-    
+
         void _enqueue(EmpathPOPCommand::Type, int i);
         void _nextCommand();
-    
+
         // Order dependency
         QString     serverAddress_;
         Q_UINT32    serverPort_;
@@ -187,7 +187,7 @@ class EmpathMailboxPOP3 : public EmpathMailbox
         bool        logFileOpen_;
         Q_UINT32    authenticationTries_;
         // End order dependency
-        
+
         bool        useAPOP_;
         bool        loggingPolicy_;
         QString     logFilePath_;
@@ -203,12 +203,12 @@ class EmpathMailboxPOP3 : public EmpathMailbox
         QString     timeStamp_;
         QFile       logFile_;
         QCString    greeting_;
-        
+
 //        KIO::Job * job;
-        
+
         EmpathPOPIndex  index_;
         EmpathPOPQueue  commandQueue_;
-        
+
         unsigned int msgsInSpool_;
         unsigned int octetsInSpool_;
 };

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -42,10 +42,10 @@ class EmpathMatcher
             HasAttachments,
             AnyMessage
         };
-    
+
         EmpathMatcher();
         virtual ~EmpathMatcher();
-        
+
         /**
          * Called by containing filter to request config load.
          */
@@ -59,17 +59,17 @@ class EmpathMatcher
          * Attempt to match the given message.
          */
         bool match(const EmpathURL &);
-        
+
         /**
          * Nice description of this matcher.
          */
         QString description() const;
-        
+
         /**
          * Type of this expression.
          */
         MatchExprType type() const { return type_; }
-        
+
         /**
          * Change the type of this expression.
          */
@@ -79,39 +79,39 @@ class EmpathMatcher
          * Maximum size (used when set to match on size).
          */
         Q_UINT32 size() { return size_; }
-        
+
         /**
          * Header to match on (used when set to match on header).
          */
         const QString & matchHeader() { return matchHeader_; }
-        
+
         /**
          * Match expression (used when set to match using an expression)
          */
         const QString & matchExpr() { return matchExpr_; }
-        
+
         /**
          * Set the size of messages to match (> size).
          */
         void setSize(Q_UINT32 s) { size_ = s; }
-        
+
         /**
          * Set the header name to match upon.
          */
         void setMatchHeader(const QString & s) { matchHeader_ = s; }
-        
+
         /**
          * Set the match expression to use.
          */
         void setMatchExpr(const QString & s) { matchExpr_ = s; }
-    
+
         /**
          * @internal
          */
         const char * className() const { return "EmpathMatcher"; }
-        
+
     private:
-        
+
         MatchExprType type_;
         Q_UINT32 size_;
         QString matchHeader_;

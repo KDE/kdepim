@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -81,69 +81,81 @@ EmpathIndex::EmpathIndex(const EmpathURL & folder)
 
 EmpathIndex::~EmpathIndex()
 {
+    mutex_.lock();
     _write();
-}
-
-    void
-EmpathIndex::setFilename(const QString & filename)
-{
-    filename_ = filename;
-    _flush();
-}
-
-    void
-EmpathIndex::setFolder(const EmpathURL & folder)
-{
-    folder_ = folder;
-    _flush();
+    mutex_.unlock();
 }
 
     bool
 EmpathIndex::contains(const QString & key)
 {
+    mutex_.lock();
+
     _read();
     _resetIdleTimer();
-    return (0 != dict_.find(key));
+    bool found = (0 != dict_.find(key));
+
+    mutex_.unlock();
+
+    return found;
 }
 
     QDict<EmpathIndexRecord>
 EmpathIndex::dict()
 {
+    mutex_.lock();
+
     _read();
     _resetIdleTimer();
-    return dict_;
+    QDict<EmpathIndexRecord> retval = dict_;
+
+    mutex_.unlock();
+
+    return retval;
 }
 
     EmpathIndexRecord
 EmpathIndex::record(const QString & key)
 {
+    mutex_.lock();
+
     EmpathIndexRecord rec;
-   
-    if (!_read())
-        return rec;
 
-    EmpathIndexRecord * found = dict_[key];
+    if (_read()) {
 
-    if (0 != found)
-        rec = *found;
+        EmpathIndexRecord * found = dict_[key];
 
-    _resetIdleTimer();
+        if (0 != found)
+            rec = *found;
+
+        _resetIdleTimer();
+    }
+
+    mutex_.unlock();
+
     return rec;
 }
 
     unsigned int
 EmpathIndex::count()
 {
+    mutex_.lock();
+
     _read();
-    return count_;
     _resetIdleTimer();
+
+    mutex_.unlock();
+
+    return count_;
 }
 
     unsigned int
 EmpathIndex::countUnread()
 {
+    mutex_.lock();
     _read();
     return unreadCount_;
+    mutex_.unlock();
 }
 
     bool
@@ -151,7 +163,7 @@ EmpathIndex::_write()
 {
     if (!dirty_ && QFile::exists(filename_))
         return false;
-    
+
     QString tempFilename = filename_ + "." + QString::number(getpid());
 
     QFile f(tempFilename);
@@ -199,7 +211,7 @@ EmpathIndex::_write()
         dirty_ = false;
         QFile(tempFilename).remove();
     }
-    
+
     f.remove();
 
     return true;
@@ -214,7 +226,7 @@ EmpathIndex::_read()
     killTimers();
 
     dict_.clear();
-    
+
     count_ = unreadCount_ = 0;
 
     QFile f(filename_);
@@ -228,7 +240,7 @@ EmpathIndex::_read()
     QByteArray a = f.readAll();
 
     QDataStream d(a, IO_ReadOnly);
-    
+
     Q_UINT8 savedVersion;
     d >> savedVersion;
 
@@ -247,7 +259,7 @@ EmpathIndex::_read()
         unreadCount_ += (rec.status() & EmpathIndexRecord::Read) ? 0 : 1;
         ++count_;
     }
-    
+
     f.close();
 
     read_ = true;
@@ -259,62 +271,85 @@ EmpathIndex::_read()
     QStringList
 EmpathIndex::allKeys()
 {
+    empathDebug("Locking mutex");
+    mutex_.lock();
+
     QStringList l;
-    
-    if (!_read())
-        return l;
- 
-    QDictIterator<EmpathIndexRecord> it(dict_);
 
-    for (; it.current(); ++it)
-        l << it.currentKey();
+    if (_read()) {
 
-    _resetIdleTimer();
+        QDictIterator<EmpathIndexRecord> it(dict_);
+
+        for (; it.current(); ++it)
+            l << it.currentKey();
+
+        _resetIdleTimer();
+    }
+
+    empathDebug("Unlocking mutex");
+    mutex_.unlock();
+
     return l;
 }
 
     bool
 EmpathIndex::insert(const QString & key, EmpathIndexRecord & rec)
 {
-    if (!_read())
-        return false;
+    mutex_.lock();
 
-    if (key.isEmpty()) {
-        empathDebug("Key is empty !");
-        return false;
+    bool retval = false;
+
+    if (_read()) {
+
+        if (!key.isEmpty()) {
+
+            dict_.insert(key, new EmpathIndexRecord(rec));
+
+            _setDirty();
+            _resetIdleTimer();
+
+            retval = true;
+        }
     }
 
-    dict_.insert(key, new EmpathIndexRecord(rec));
-    
-    _setDirty();
-    _resetIdleTimer();
-    return true;
+    mutex_.unlock();
+
+    return retval;
 }
 
     bool
 EmpathIndex::replace(const QString & key, EmpathIndexRecord & rec)
 {
-    if (!_read())
-        return false;
+    mutex_.lock();
 
-    if (key.isEmpty()) {
-        empathDebug("Key is empty !");
-        return false;
+    bool retval = false;
+
+    if (_read()) {
+
+        if (!key.isEmpty()) {
+
+            // Save old record first.
+            EmpathIndexRecord oldrec = record(key);
+
+            dict_.replace(key, new EmpathIndexRecord(rec));
+
+            _setDirty();
+            _resetIdleTimer();
+
+            retval = true;
+        }
     }
 
-    // Save old record first.
-    EmpathIndexRecord oldrec = record(key);
+    mutex_.unlock();
 
-    dict_.replace(key, new EmpathIndexRecord(rec));
-
-    _setDirty();
-    _resetIdleTimer();
-    return true;
+    return retval;
 }
 
     bool
 EmpathIndex::remove(const QString & key)
-{  
+{
+    empathDebug(key);
+
     if (!_read())
         return false;
 
@@ -349,12 +384,12 @@ EmpathIndex::setStatus(const QString & key, EmpathIndexRecord::Status status)
         return false;
 
     EmpathIndexRecord * rec = dict_.find(key);
-    
+
     if (0 == rec) {
         empathDebug("Couldn't find record");
         return false;
     }
-    
+
     if (rec->status() != status) {
 
         rec->setStatus(status);
@@ -390,9 +425,11 @@ EmpathIndex::timerEvent(QTimerEvent *)
     void
 EmpathIndex::_flush()
 {
+    mutex_.lock();
     _write();
     dict_.clear();
     read_ = false;
+    mutex_.unlock();
 }
 
     QDateTime

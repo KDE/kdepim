@@ -1,7 +1,8 @@
 KDE_CXXFLAGS = -DQT_NO_ASCII_CAST -DKPARTS_VERSION
 
 INCLUDES = $(all_includes) -I$(top_srcdir)/empath/lib \
-  -I$(top_srcdir)/empath/parts/libEmpathListView
+  -I$(top_srcdir)/empath/parts/libEmpathListView \
+  -I$(top_srcdir)/librmm
 
 lib_LTLIBRARIES = libEmpathMessageListWidget.la
 
@@ -10,7 +11,8 @@ libEmpathMessageListWidget_la_LDFLAGS = \
 
 libEmpathMessageListWidget_la_LIBADD = \
 	$(LIB_KPARTS) $(LIB_KDEUI) $(LIB_KDECORE) \
-  $(top_builddir)/empath/parts/libEmpathListView/libEmpathListView.la
+  $(top_builddir)/empath/parts/libEmpathListView/libEmpathListView.la \
+  $(top_builddir)/empath/lib/libempathkernel.la
 
 METASOURCES = AUTO
 

@@ -1,0 +1,67 @@
+<!DOCTYPE UI><UI>
+<class>DisplaySettingsForm</class>
+<widget>
+    <class>QWidget</class>
+    <property stdset="1">
+        <name>name</name>
+        <cstring>DisplaySettingsForm</cstring>
+    </property>
+    <property stdset="1">
+        <name>geometry</name>
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>600</width>
+            <height>482</height>
+        </rect>
+    </property>
+    <property stdset="1">
+        <name>caption</name>
+        <string>Form1</string>
+    </property>
+    <vbox>
+        <property stdset="1">
+            <name>margin</name>
+            <number>11</number>
+        </property>
+        <property stdset="1">
+            <name>spacing</name>
+            <number>6</number>
+        </property>
+        <widget>
+            <class>QCheckBox</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>cb_thread</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>&amp;Thread messages</string>
+            </property>
+        </widget>
+        <spacer>
+            <property>
+                <name>name</name>
+                <cstring>Spacer1</cstring>
+            </property>
+            <property stdset="1">
+                <name>geometry</name>
+                <rect>
+                    <x>290</x>
+                    <y>37</y>
+                    <width>20</width>
+                    <height>434</height>
+                </rect>
+            </property>
+            <property stdset="1">
+                <name>orientation</name>
+                <enum>Vertical</enum>
+            </property>
+            <property stdset="1">
+                <name>sizeType</name>
+                <enum>Expanding</enum>
+            </property>
+        </spacer>
+    </vbox>
+</widget>
+</UI>

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -39,6 +39,7 @@
 #include <rmm/MessageID.h>
 
 class EmpathFolder;
+class EmpathIndex;
 
 /**
  * @short Mailbox base class
@@ -47,13 +48,13 @@ class EmpathFolder;
 class EmpathMailbox : public QObject
 {
     Q_OBJECT
-    
+
     public:
-        
+
         enum Type { Maildir, POP3, IMAP4 };
-        
+
         EmpathMailbox();
-    
+
         /**
          * Create a mailbox with the specified name.
          */
@@ -67,7 +68,7 @@ class EmpathMailbox : public QObject
         EmpathMailbox & operator = (const EmpathMailbox &);
 
         virtual ~EmpathMailbox();
-        
+
         bool operator == (const EmpathMailbox & other) const
         { return id_ == other.id_; }
 
@@ -81,23 +82,25 @@ class EmpathMailbox : public QObject
          * Trigger a config save for this box.
          */
         virtual void saveConfig() = 0;
-        
+
         /**
          * Trigger a config read for this box.
          */
         virtual void loadConfig() = 0;
- 
+
         /**
          * Synchronise the index for the folder specified in the url.
          */
         virtual void sync(const EmpathURL &) = 0;
 
+        virtual EmpathIndex * index(const EmpathURL &) = 0;
+
         virtual RMM::Message retrieveMessage(const EmpathURL & url) = 0;
 
         virtual QString writeMessage(RMM::Message &, const EmpathURL & f) = 0;
-        
+
         virtual bool removeMessage(const EmpathURL & url) = 0;
-        
+
         virtual EmpathSuccessMap removeMessage(
             const EmpathURL & folder,
             const QStringList & messageIDList) = 0;
@@ -114,13 +117,25 @@ class EmpathMailbox : public QObject
 
         virtual bool createFolder(const EmpathURL & url) = 0;
         virtual bool removeFolder(const EmpathURL & url) = 0;
-       
+
+        /**
+         * Get the count of messages contained within all folders
+         * owned by this box.
+         */
+        virtual unsigned int messageCount() const = 0;
+
+        /**
+         * Get the count of unread messages contained within all folders
+         * owned by this box.
+         */
+        virtual unsigned int unreadMessageCount() const = 0;
+
     public slots:
 
         virtual void s_checkMail()   = 0;
-        
+
         // End pure virtual methods
-    
+
     public:
 
         void        setID(unsigned int id)  { id_ = id; }
@@ -166,16 +181,6 @@ class EmpathMailbox : public QObject
          */
         const EmpathURL & url() const { return url_; }
         /**
-         * Get the count of messages contained within all folders
-         * owned by this box.
-         */
-        unsigned int messageCount() const;
-        /**
-         * Get the count of unread messages contained within all folders
-         * owned by this box.
-         */
-        unsigned int unreadMessageCount() const;
-        /**
          * Report the type of this mailbox.
          */
         Type type() const { return type_; }
@@ -204,16 +209,14 @@ class EmpathMailbox : public QObject
         void newMailArrived();
         void mailboxChangedByExternal();
         void countUpdated(unsigned int, unsigned int);
-        
+
     public slots:
 
         void s_countUpdated(unsigned int, unsigned int);
-        
-    protected:
-        
-        EmpathFolderList    folderList_;
 
-        EmpathIndex * index_;
+    protected:
+
+        EmpathFolderList    folderList_;
 
         EmpathURL url_;
 
@@ -224,7 +227,7 @@ class EmpathMailbox : public QObject
 
         bool autoCheck_;
         unsigned int autoCheckInterval_;
-        
+
         QTimer      timer_;
         QString     pixmapName_;
 

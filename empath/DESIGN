@@ -13,6 +13,10 @@
   clearer. You should hopefully end up with the impression that the design
   is actually quite simple !
 
+  ** NOTE The design is changing slightly to use threads. Because Empath
+          was designed to do as much stuff async as possible, this does
+          not have a huge impact on the general structure, but watch out !
+
 ===============================================================================
               Contents 
 -------------------------------------------------------------------------------

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -78,7 +78,7 @@ EmpathSecurityProcess::decrypt(const QCString & s, QObject * parent)
 {
     EmpathSecurityProcess * p = new EmpathSecurityProcess;
     CHECK_PTR(p);
-    
+
     p->_decrypt(s, parent);
 }
 
@@ -110,14 +110,14 @@ EmpathSecurityProcess::_encrypt(
     QObject::connect(
         this,    SIGNAL(done(bool, QCString)),
         parent,    SLOT(s_encryptDone(bool, QCString)));
-    
+
     if (!p.start(KProcess::NotifyOnExit, KProcess::All)) {
         empathDebug("Couldn't start pgp process");
         emit(done(false, ""));
         delete this;
     }
 }
-    
+
     void
 EmpathSecurityProcess::_encryptAndSign(
     const QCString &, const QCString & recipient, QObject * parent)
@@ -141,12 +141,12 @@ EmpathSecurityProcess::_encryptAndSign(
             static_cast<QWidget *>(0L)
         );
 #endif
-    
+
     if (!ok || passphrase.isEmpty()) {
         emit(done(false, ""));
         delete this;
     }
-    
+
     if (!p.start(KProcess::NotifyOnExit, KProcess::All)) {
         empathDebug("Couldn't start pgp process");
         emit(done(false, ""));
@@ -161,11 +161,11 @@ EmpathSecurityProcess::_decrypt(
     const QCString &, QObject * parent)
 {
     p    << "pgpv -f -z";
-    
+
     QObject::connect(
         this,    SIGNAL(done(bool, QCString)),
         parent,    SLOT(s_decryptDone(bool, QCString)));
-    
+
     if (!p.start(KProcess::NotifyOnExit, KProcess::All)) {
         empathDebug("Couldn't start pgp process");
         emit(done(false, ""));

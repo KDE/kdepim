@@ -51,7 +51,6 @@
 #include "EmpathMailboxPOP3.h"
 #include "EmpathMailboxMaildir.h"
 #include "EmpathMailboxList.h"
-#include "EmpathConfig.h"
 #include "EmpathSetupWizard.h"
 
 EmpathSetupWizard::EmpathSetupWizard()
@@ -399,15 +398,13 @@ EmpathFolderInfoPage::saveConfig()
 {
     KConfig * c = KGlobal::config();
     
-    using namespace EmpathConfig;
-    
-    c->setGroup(GROUP_FOLDERS);
+    c->setGroup("Folders");
 
-    c->writeEntry(FOLDER_INBOX,     le_inbox_   ->text());
-    c->writeEntry(FOLDER_OUTBOX,    le_outbox_  ->text());
-    c->writeEntry(FOLDER_DRAFTS,    le_drafts_  ->text());
-    c->writeEntry(FOLDER_SENT,      le_sent_    ->text());
-    c->writeEntry(FOLDER_TRASH,     le_trash_   ->text());
+    c->writeEntry("Inbox",     le_inbox_   ->text());
+    c->writeEntry("Outbox",    le_outbox_  ->text());
+    c->writeEntry("Drafts",    le_drafts_  ->text());
+    c->writeEntry("Sent",      le_sent_    ->text());
+    c->writeEntry("Trash",     le_trash_   ->text());
 
     EmpathMailbox * _m =
         empath->mailboxList()->createNew(EmpathMailbox::Maildir);

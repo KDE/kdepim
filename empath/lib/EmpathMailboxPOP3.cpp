@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -47,11 +47,11 @@ EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
 {
     type_ = POP3;
     typeString_ = "POP3";
-    
+
 //    job = new KIOJob();
-    
+
 //    job->setGUImode(KIOJob::NONE);
-    
+
     commandQueue_.setAutoDelete(true);
 }
 
@@ -64,26 +64,26 @@ EmpathMailboxPOP3::~EmpathMailboxPOP3()
 EmpathMailboxPOP3::init()
 {
     loadConfig();
-    
+
 //    QObject::connect(
 //        job,    SIGNAL(sigFinished(int)),
 //        this,   SLOT(s_jobFinished(int)));
-    
+
 //    QObject::connect(
 //        job,    SIGNAL(sigCanceled(int)),
 //        this,   SLOT(s_jobCancelled(int)));
-  
+
 //    QObject::connect(
 //        job,    SIGNAL(sigError(int, int, const char *)),
 //        this,   SLOT(s_jobError(int, int, const char *)));
-    
+
 //    QObject::connect(
 //        job,    SIGNAL(sigData(int, const char *, int)),
 //        this,   SLOT(s_jobData(int, const char *, int)));
-    
+
     EmpathURL url(url_);
     url.setFolderPath(i18n("Inbox"));
-    
+
     EmpathFolder * folder_inbox = new EmpathFolder(url);
     folderList_.insert(url.folderPath(), folder_inbox);
 }
@@ -99,7 +99,7 @@ EmpathMailboxPOP3::alreadyHave()
 EmpathMailboxPOP3::_enqueue(EmpathPOPCommand::Type t, int i)
 {
     commandQueue_.enqueue(new EmpathPOPCommand(t, i));
-    
+
     if (commandQueue_.count() == 1)
         _nextCommand();
 }
@@ -115,9 +115,9 @@ EmpathMailboxPOP3::_nextCommand()
 
     QString prefix =
         "pop://" + username_ + ":" + password_ + "@" + serverAddress_ + "/";
-    
+
     QString command = prefix + commandQueue_.head()->command();
-    
+
     empathDebug("Doing `" + command + "'");
 //    job->get(command.ascii());
 }
@@ -149,7 +149,7 @@ EmpathMailboxPOP3::path()
     return url_;
 }
 
-    
+
 //////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// KIOJOB SLOTS /////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -172,18 +172,18 @@ EmpathMailboxPOP3::s_jobFinished(int id)
         empathDebug("Command queue empty !");
         return;
     }
-    
+
     switch (commandQueue_.head()->type()) {
-            
+
         case EmpathPOPCommand::Stat:
             // STUB
 //            commandQueue_.head()->jobInfo().done(false);
             break;
-        
+
         case EmpathPOPCommand::Index:
             {
                 EmpathPOPIndexIterator it(index_);
-               
+
                 EmpathURL messageURL(url_);
 
                 for (; it.current(); ++it) {
@@ -194,7 +194,7 @@ EmpathMailboxPOP3::s_jobFinished(int id)
 //                commandQueue_.head()->jobInfo().done(true);
             }
             break;
-        
+
         case EmpathPOPCommand::Get:
             {
                 QCString data = commandQueue_.head()->data();
@@ -204,13 +204,13 @@ EmpathMailboxPOP3::s_jobFinished(int id)
 
 //                commandQueue_.head()->jobInfo().done(true);
             }
-            
+
             break;
-        
+
         case EmpathPOPCommand::Remove:
 //            commandQueue_.head()->jobInfo().done(true);
             break;
-        
+
         default:
             break;
     }
@@ -232,7 +232,7 @@ EmpathMailboxPOP3::s_jobError(int id, int errorID, const char * text)
 EmpathMailboxPOP3::s_jobData(int, const char * data, int)
 {
     empathDebug("data == `" + QString(data) + "'");
-    
+
     QCString s(data);
     if (s.isEmpty()) {
         empathDebug("Data is empty !");
@@ -244,23 +244,23 @@ EmpathMailboxPOP3::s_jobData(int, const char * data, int)
         empathDebug("Command queue empty !");
         return;
     }
-    
+
     switch (commandQueue_.head()->type()) {
-            
+
         case EmpathPOPCommand::Stat:
             {
                 int i = s.find(' ');
-            
+
                 msgsInSpool_ = s.left(i).toInt();
-            
+
                 octetsInSpool_ = s.mid(i + 1).toInt();
             }
             break;
-        
+
         case EmpathPOPCommand::Index:
             {
                 int i = s.find(' ');
-            
+
                 EmpathPOPIndexEntry * e =
                     new EmpathPOPIndexEntry(
                         QString(s).left(i).toInt(),
@@ -268,16 +268,16 @@ EmpathMailboxPOP3::s_jobData(int, const char * data, int)
                 index_.append(e);
             }
             break;
-        
+
         case EmpathPOPCommand::Get:
-            
+
             commandQueue_.head()->data().append(s);
-            
+
             break;
-        
+
         case EmpathPOPCommand::Remove:
             break;
-        
+
         default:
             break;
     }
@@ -307,7 +307,7 @@ EmpathMailboxPOP3::removeMessage(const EmpathURL & /* url */)
     // STUB
     return false;
 }
-        
+
     EmpathSuccessMap
 EmpathMailboxPOP3::removeMessage(
     const EmpathURL & /* folder */,
@@ -350,7 +350,7 @@ EmpathMailboxPOP3::removeFolder(const EmpathURL &)
     // We don't do this.
     return false;
 }
- 
+
 //////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////// CONFIG ///////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -359,7 +359,7 @@ EmpathMailboxPOP3::removeFolder(const EmpathURL &)
 EmpathMailboxPOP3::saveConfig()
 {
     KConfig * c = KGlobal::config();
-    
+
     c->setGroup("Mailbox_" + url_.mailboxName());
 
     c->writeEntry("Type",           (unsigned long)type_);
@@ -379,16 +379,16 @@ EmpathMailboxPOP3::saveConfig()
 EmpathMailboxPOP3::loadConfig()
 {
     KConfig * c = KGlobal::config();
-    
+
     c->setGroup("Mailbox_" + url_.mailboxName());
 
     serverAddress_          = c->readEntry              ("Address");
     serverPort_             = c->readUnsignedNumEntry   ("Port", 110);
-    
+
     c->setDollarExpansion(true);
     username_               = c->readEntry              ("Username", "$USER");
     c->setDollarExpansion(false);
-    
+
     password_               = c->readEntry              ("Password", "");
     logging_                = c->readBoolEntry          ("LoggingPolicy",false);
     logFilePath_            = c->readEntry              ("LogFilePath", "");
@@ -399,7 +399,7 @@ EmpathMailboxPOP3::loadConfig()
 }
 
 // Set methods
-        
+
     void
 EmpathMailboxPOP3::setServerAddress(const QString & serverAddress)
 {
@@ -461,7 +461,7 @@ EmpathMailboxPOP3::setRetrieveIfHave(bool yn)
 }
 
 // Get methods
-        
+
     QString
 EmpathMailboxPOP3::serverAddress()
 {
@@ -543,14 +543,14 @@ EmpathPOPCommand::EmpathPOPCommand(EmpathPOPCommand::Type t, int n)
         msgNo_(n)
 {
     switch (t) {
-        
+
         case Stat:      command_ = "stat";      break;
         case Index:     command_ = "index";     break;
         case Get:       command_ = "download";  break;
         case Remove:    command_ = "remove";    break;
         default:                                break;
     }
-    
+
     command_ += '/';
 
     if (n != -1)
@@ -628,4 +628,26 @@ EmpathPOPIndex::compareItems(EmpathPOPIndexEntry * i1, EmpathPOPIndexEntry * i2)
 {
     return i1->number() - i2->number();
 }
+
+    unsigned int
+EmpathMailboxPOP3::messageCount() const
+{
+    empathDebug("STUB");
+    return 0;
+}
+
+    unsigned int
+EmpathMailboxPOP3::unreadMessageCount() const
+{
+    empathDebug("STUB");
+    return 0;
+}
+
+    EmpathIndex *
+EmpathMailboxPOP3::index(const EmpathURL &)
+{
+    empathDebug("STUB");
+    return 0;
+}
+
 // vim:ts=4:sw=4:tw=78

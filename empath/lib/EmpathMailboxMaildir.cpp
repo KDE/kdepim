@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -62,7 +62,7 @@ EmpathMailboxMaildir::init()
         return;
 
     initialised_ = true;
-    
+
     loadConfig();
 }
 
@@ -70,21 +70,22 @@ EmpathMailboxMaildir::init()
 EmpathMailboxMaildir::sync(const EmpathURL & url)
 {
     EmpathMaildirListIterator it(boxList_);
-    
+
     for (; it.current(); ++it)
         if (it.current()->url().folderPath() == url.folderPath()) {
             it.current()->sync();
             break;
         }
 }
-    
+
     void
 EmpathMailboxMaildir::_setupDefaultFolders()
 {
+    empathDebug("");
     KConfig * c(KGlobal::config());
 
     c->setGroup("Folders");
-    
+
     QStringList folders;
 
     folders
@@ -97,18 +98,24 @@ EmpathMailboxMaildir::_setupDefaultFolders()
     QStringList::ConstIterator it;
 
     for (it = folders.begin(); it != folders.end(); ++it) {
- 
+
         QString folderPath = path_ + "/" + *it;
 
         QDir d(folderPath);
-        
-        if (d.exists())
-            continue;
 
-        if (!d.exists() && !d.mkdir(folderPath)) {
+        if (d.exists()) {
+            empathDebug("Folder " + folderPath + " exists. Not creating.");
+            continue;
+        }
+
+        if (!d.mkdir(folderPath)) {
             empathDebug("Couldn't make " + path_ + " !!!!!");
             continue;
         }
+
+        d.mkdir(folderPath + "/cur");
+        d.mkdir(folderPath + "/new");
+        d.mkdir(folderPath + "/tmp");
 
         EmpathURL u(url_.mailboxName(), *it, QString::null);
 
@@ -116,10 +123,10 @@ EmpathMailboxMaildir::_setupDefaultFolders()
 
         boxList_.append(new EmpathMaildir(path_, u));
     }
-    
+
     saveConfig();
 }
-    
+
     bool
 EmpathMailboxMaildir::newMail() const
 {
@@ -131,12 +138,12 @@ EmpathMailboxMaildir::newMail() const
 EmpathMailboxMaildir::saveConfig()
 {
     KConfig * c = KGlobal::config();
-    
+
     c->setGroup("Mailbox_" + url_.mailboxName());
-    
+
     c->writeEntry("Type", (unsigned int)type_);
     c->writeEntry("Path", path_);
-    
+
     c->writeEntry("Check",     autoCheck_);
     c->writeEntry("CheckInterval",  autoCheckInterval_);
 }
@@ -145,17 +152,17 @@ EmpathMailboxMaildir::saveConfig()
 EmpathMailboxMaildir::loadConfig()
 {
     KConfig * c = KGlobal::config();
-    
+
     c->setGroup("Mailbox_" + url_.mailboxName());
-    
+
     autoCheck_          = c->readUnsignedNumEntry("Check");
     autoCheckInterval_  = c->readUnsignedNumEntry("CheckInterval");
-    
+
     folderList_.clear();
     boxList_.clear();
-    
+
     path_ = c->readEntry("Path");
-    
+
     while (path_.at(path_.length() - 1) == '/')
         path_.truncate(path_.length() - 1);
 
@@ -165,7 +172,7 @@ EmpathMailboxMaildir::loadConfig()
     }
 
     QDir d(path_);
-    
+
     if (!d.exists())
         if (!d.mkdir(path_)) {
             empathDebug("Couldn't make directory `" + path_ + "' !");
@@ -178,7 +185,7 @@ EmpathMailboxMaildir::loadConfig()
     QStringList::ConstIterator it(folderList.begin());
 
     for (; it != folderList.end(); ++it) {
-        
+
         EmpathURL url(*it);
 
         QString path = path_ + "/" + url.folderPath();
@@ -186,7 +193,7 @@ EmpathMailboxMaildir::loadConfig()
         if (QDir(path).exists()) {
 
             EmpathFolder * f = new EmpathFolder(url);
-    
+
             folderList_.insert(url.folderPath(), f);
 
             if (QDir(path + "/cur").exists())
@@ -195,16 +202,16 @@ EmpathMailboxMaildir::loadConfig()
                 f->setContainer(true);
         }
     }
-    
+
     emit(updateFolderLists());
 
     _recursiveReadFolders(path_);
     _setupDefaultFolders();
-    
+
     emit(updateFolderLists());
 
     folderList.clear();
- 
+
     for (EmpathFolderListIterator it(folderList_); it.current(); ++it)
         folderList << it.current()->url().asString();
 
@@ -215,14 +222,14 @@ EmpathMailboxMaildir::loadConfig()
 
     EmpathTask * t = new EmpathTask(i18n("Reading folders"));
     t->setMax(boxList_.count());
-    
+
     for (EmpathMaildirListIterator it(boxList_); it.current(); ++it) {
         it.current()->init();
         t->doneOne();
     }
 
     t->done();
-    
+
     // Is this now needed ?
 //    emit(syncFolderLists());
 }
@@ -233,60 +240,68 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
     // We need to look at the maildir base directory, and go recursively
     // through subdirs. Any subdir that has cur, tmp and new is a Maildir
     // folder.
-    
+
+    empathDebug(currentDir);
+
     QDir d(
         currentDir,
         QString::null,
         QDir::Unsorted,
         QDir::Dirs | QDir::Readable);
-    
-    if (d.count() == 0)
+
+    if (d.count() == 0) {
+        empathDebug("Dir is empty");
         return;
-    
+    }
+
     QStringList l(d.entryList());
-    
+
     QStringList::ConstIterator it(l.begin());
-    
+
     bool hasCur, hasNew, hasTmp;
     hasCur = hasNew = hasTmp = false;
-    
+
     for (; it != l.end(); ++it) {
 
         if ((*it).at(0) == '.')
             continue;
-        
+
         if (*it == "cur") {
             hasCur = true;
             continue;
         }
-        
+
         if (*it == "new") {
             hasNew = true;
             continue;
         }
-        
+
         if (*it == "tmp") {
             hasTmp = true;
             continue;
         }
-        
+
         _recursiveReadFolders(currentDir + "/" + *it);
     }
- 
+
     if (currentDir == path_)
         return;
 
     bool isMaildir = hasCur && hasNew && hasTmp;
 
+    if (isMaildir) { empathDebug("isMaildir"); }
+    else { empathDebug("not Maildir"); }
+
     EmpathURL url(
         url_.mailboxName(),
         currentDir.right(currentDir.length() - path_.length()),
         QString::null);
-    
+
     if (0 == folderList_[url.folderPath()]) {
 
+        empathDebug("Creating folder " + url.asString());
         EmpathFolder * f = new EmpathFolder(url);
-        
+
         folderList_.insert(url.folderPath(), f);
 
         if (!isMaildir)
@@ -294,8 +309,6 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
         else
             boxList_.append(new EmpathMaildir(path_, url));
     }
-
-    kapp->processEvents();
 }
 
     void
@@ -303,7 +316,7 @@ EmpathMailboxMaildir::s_checkMail()
 {
     sync(url_);
 }
-    
+
     void
 EmpathMailboxMaildir::setPath(const QString & path)
 {
@@ -315,11 +328,11 @@ EmpathMailboxMaildir::setPath(const QString & path)
 EmpathMailboxMaildir::_box(const EmpathURL & id)
 {
     EmpathMaildirListIterator it(boxList_);
-    
+
     for (; it.current(); ++it)
         if (it.current()->url().folderPath() == id.folderPath())
             return it.current();
-    
+
     return 0;
 }
 
@@ -330,33 +343,33 @@ EmpathMailboxMaildir::_recursiveRemove(const QString & dir)
 
     // First remove all dirs.
     d.setFilter(QDir::Dirs | QDir::NoSymLinks);
-    
+
     QStringList l(d.entryList());
-    
+
     QStringList::Iterator it(l.begin());
-    
+
     for (; it != l.end(); ++it) {
-        
+
         if (*it == ".") continue;
         if (*it == "..") continue;
-        
+
         if (!_recursiveRemove(dir + "/" + *it))
             return false;
     }
-    
+
     // Now remove all files.
     d.setFilter(QDir::NoSymLinks | QDir::Files | QDir::Hidden);
-    
+
     l = d.entryList();
-    
+
     it = l.begin();
-    
+
     for (; it != l.end(); ++it)
         if (!QFile::remove(dir + "/" + *it)) {
             empathDebug("Couldn't remove " + dir + "/" + *it);
             return false;
         }
-    
+
     bool removedDirOK = d.rmdir(dir);
 
     if (!removedDirOK) {
@@ -369,12 +382,15 @@ EmpathMailboxMaildir::_recursiveRemove(const QString & dir)
     RMM::Message
 EmpathMailboxMaildir::retrieveMessage(const EmpathURL & url)
 {
+    empathDebug(url.asString());
     RMM::Message retval;
 
     EmpathMaildir * box = _box(url);
 
-    if (box == 0)
+    if (box == 0) {
+        empathDebug("!box !");
         return retval;
+    }
 
     retval = box->message(url.messageID());
 
@@ -400,7 +416,7 @@ EmpathMailboxMaildir::removeMessage(const EmpathURL & url)
 {
     return removeMessage(url, url.messageID())[url.messageID()];
 }
-        
+
     EmpathSuccessMap
 EmpathMailboxMaildir::removeMessage(
     const EmpathURL & folder,
@@ -458,7 +474,7 @@ EmpathMailboxMaildir::createFolder(const EmpathURL & url)
     }
 
     folderList_.insert(url.folderPath(), new EmpathFolder(url.folderPath()));
-    
+
     boxList_.append(m);
     m->init();
 
@@ -477,6 +493,31 @@ EmpathMailboxMaildir::removeFolder(const EmpathURL & url)
 
     return true;
 }
- 
+
+    unsigned int
+EmpathMailboxMaildir::messageCount() const
+{
+    empathDebug("STUB");
+    return 0;
+}
+
+    unsigned int
+EmpathMailboxMaildir::unreadMessageCount() const
+{
+    empathDebug("STUB");
+    return 0;
+}
+
+    EmpathIndex *
+EmpathMailboxMaildir::index(const EmpathURL & folder)
+{
+    EmpathMaildir * box = _box(folder);
+
+    if (box == 0)
+        return 0L;
+
+    return box->index();
+}
+
 
 // vim:ts=4:sw=4:tw=78

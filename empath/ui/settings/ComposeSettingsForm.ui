@@ -1,0 +1,203 @@
+<!DOCTYPE UI><UI>
+<class>ComposeSettingsForm</class>
+<widget>
+    <class>QWidget</class>
+    <property stdset="1">
+        <name>name</name>
+        <cstring>ComposeSettingsForm</cstring>
+    </property>
+    <property stdset="1">
+        <name>geometry</name>
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>600</width>
+            <height>484</height>
+        </rect>
+    </property>
+    <property stdset="1">
+        <name>caption</name>
+        <string>Form4</string>
+    </property>
+    <vbox>
+        <property stdset="1">
+            <name>margin</name>
+            <number>11</number>
+        </property>
+        <property stdset="1">
+            <name>spacing</name>
+            <number>6</number>
+        </property>
+        <widget>
+            <class>QLayoutWidget</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>Layout6</cstring>
+            </property>
+            <grid>
+                <property stdset="1">
+                    <name>margin</name>
+                    <number>0</number>
+                </property>
+                <property stdset="1">
+                    <name>spacing</name>
+                    <number>6</number>
+                </property>
+                <widget row="2"  column="0" >
+                    <class>QLabel</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>l_forward</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>&amp;Forward</string>
+                    </property>
+                    <property>
+                        <name>buddy</name>
+                        <cstring>le_forward</cstring>
+                    </property>
+                </widget>
+                <widget row="1"  column="0" >
+                    <class>QLabel</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>l_replyAll</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>Reply to &amp;all</string>
+                    </property>
+                    <property>
+                        <name>buddy</name>
+                        <cstring>le_replyAll</cstring>
+                    </property>
+                </widget>
+                <widget row="0"  column="1" >
+                    <class>QLineEdit</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>le_reply</cstring>
+                    </property>
+                </widget>
+                <widget row="0"  column="0" >
+                    <class>QLabel</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>l_reply</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>&amp;Reply</string>
+                    </property>
+                    <property>
+                        <name>buddy</name>
+                        <cstring>le_reply</cstring>
+                    </property>
+                </widget>
+                <widget row="2"  column="1" >
+                    <class>QLineEdit</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>le_forward</cstring>
+                    </property>
+                </widget>
+                <widget row="1"  column="1" >
+                    <class>QLineEdit</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>le_replyAll</cstring>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget>
+            <class>QCheckBox</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>cb_wrap</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>&amp;Word wrap</string>
+            </property>
+        </widget>
+        <widget>
+            <class>QLayoutWidget</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>Layout7</cstring>
+            </property>
+            <hbox>
+                <property stdset="1">
+                    <name>margin</name>
+                    <number>0</number>
+                </property>
+                <property stdset="1">
+                    <name>spacing</name>
+                    <number>6</number>
+                </property>
+                <widget>
+                    <class>QLabel</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>l_wrapColumn</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>Wrap &amp;column</string>
+                    </property>
+                    <property>
+                        <name>buddy</name>
+                        <cstring>sb_wrapColumn</cstring>
+                    </property>
+                </widget>
+                <widget>
+                    <class>QSpinBox</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>sb_wrapColumn</cstring>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <spacer>
+            <property>
+                <name>name</name>
+                <cstring>Spacer4</cstring>
+            </property>
+            <property stdset="1">
+                <name>geometry</name>
+                <rect>
+                    <x>290</x>
+                    <y>155</y>
+                    <width>20</width>
+                    <height>318</height>
+                </rect>
+            </property>
+            <property stdset="1">
+                <name>orientation</name>
+                <enum>Vertical</enum>
+            </property>
+            <property stdset="1">
+                <name>sizeType</name>
+                <enum>Expanding</enum>
+            </property>
+        </spacer>
+    </vbox>
+</widget>
+<connections>
+    <connection>
+        <sender>cb_wrap</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>sb_wrapColumn</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>cb_wrap</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>l_wrapColumn</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
+</UI>

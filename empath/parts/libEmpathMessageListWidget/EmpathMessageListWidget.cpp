@@ -37,6 +37,8 @@
 #include "EmpathMessageListWidget.h"
 #include "EmpathMessageListItem.h"
 #include "EmpathIndexRecord.h"
+#include "EmpathCustomEvents.h"
+#include "Empath.h"
  
 extern "C"
 {
@@ -156,10 +158,10 @@ CTA(i18n("Thread Messages"), "thread", 0, SLOT(s_toggleThread()));
 }
 
     void
-EmpathMessageListPart::s_setIndex(const QDict<EmpathIndexRecord> & l)
+EmpathMessageListPart::s_setIndex(const EmpathURL & url)
 { 
     qDebug("EmpathMessageListPart::setIndex");
-    widget_->setIndex(l);
+    widget_->setIndex(url);
 }
 
 
@@ -525,12 +527,12 @@ EmpathMessageListWidget::s_toggleThread()
 }
 
     void
-EmpathMessageListWidget::setIndex(const QDict<EmpathIndexRecord> & l)
+EmpathMessageListWidget::setIndex(const EmpathURL & url)
 {
     qDebug("EmpathMessageListWidget::setIndex");
-    filling_ = false;
-    index_ = l;
-    _fillDisplay();
+    waitingForIndex_ = url;
+    empathDebug("Asking empath to read index for " + url.asString());
+    empath->readIndex(url, this);
 }
 
     void
@@ -927,6 +929,39 @@ EmpathMessageListWidget::_setSelected(EmpathMessageListItem * item, bool b)
         selected_.remove(item);
         QListView::setSelected(item, false);
     }
+}
+
+    bool
+EmpathMessageListWidget::event(QEvent * e)
+{
+    empathDebug("");
+
+    switch (e->type()) {
+
+        case EmpathIndexReadEventT:
+            empathDebug("indexreadevent");
+            {
+                EmpathIndexReadEvent * ev =
+                    static_cast<EmpathIndexReadEvent *>(e);
+
+                if (ev->success() && (ev->folder() == waitingForIndex_)) {
+
+                    filling_ = false;
+                    index_ = ev->index()->dict();
+                    empathDebug("Dict count: " +
+                            QString::number(index_.count()));
+                    _fillDisplay();
+                }
+            }
+
+            return true;
+            break;
+
+        default:
+            break;
+    }
+
+    return EmpathListView::event(e);
 }
 
     void

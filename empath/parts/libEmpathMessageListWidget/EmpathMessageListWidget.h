@@ -38,6 +38,7 @@
 // Local includes
 #include "EmpathIndexRecord.h"
 #include "EmpathListView.h"
+#include "EmpathURL.h"
 
 class EmpathMessageListPart;
 class EmpathMessageListItem;
@@ -65,7 +66,7 @@ class EmpathMessageListWidget : public EmpathListView
         QString     firstSelected();
         QStringList selection();
         
-        void setIndex(const QDict<EmpathIndexRecord> &);
+        void setIndex(const EmpathURL &);
 
         KActionCollection * actionCollection() { return actionCollection_; }
  
@@ -73,6 +74,8 @@ class EmpathMessageListWidget : public EmpathListView
         
         virtual void setSelected(QListViewItem *, bool);
         virtual void clearSelection();
+
+        virtual bool event(QEvent *);
 
     public slots:
 
@@ -203,6 +206,8 @@ class EmpathMessageListWidget : public EmpathListView
         int lastHeaderClicked_;
         bool hideRead_;
         // End order dependency
+
+        EmpathURL waitingForIndex_;
 };
 
 class EmpathMessageListPartFactory : public KLibFactory
@@ -239,7 +244,7 @@ class EmpathMessageListPart : public KParts::ReadOnlyPart
 
     protected slots:
 
-        void s_setIndex(const QDict<EmpathIndexRecord> &);
+        void s_setIndex(const EmpathURL &);
 
         void s_messageCompose();
         void s_messageView();

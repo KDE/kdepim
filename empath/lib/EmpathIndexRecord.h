@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -67,7 +67,7 @@ class EmpathIndexRecord
         {
             date_.setTime_t(0);
         }
-            
+
         /**
          * Copy ctor.
          */
@@ -126,7 +126,7 @@ class EmpathIndexRecord
         {
             if (this == &i) // Avoid a = a.
                 return *this;
-            
+
             id_             = i.id_;
             subject_        = i.subject_;
             senderName_     = i.senderName_;
@@ -206,7 +206,7 @@ class EmpathIndexRecord
             rec.hasAttachments_ = static_cast<bool>(hasAttachmentsAsInt);
             rec.timeZone_       = static_cast<int>(timeZoneAsInt);
             rec.size_           = static_cast<unsigned int>(sizeAsInt);
-            
+
             return s;
         }
 
@@ -215,13 +215,13 @@ class EmpathIndexRecord
          */
         QString id() const
         { return id_; }
-        
+
         /**
          * The subject of the related message.
          */
         QString subject() const
         { return subject_; }
- 
+
         /**
          * The name of the sender of the related message. This is usually
          * the first sender mentioned in 'From:' but may be that referenced
@@ -229,14 +229,14 @@ class EmpathIndexRecord
          */
         QString senderName() const
         { return senderName_; }
- 
+
         /**
          * The address of the sender of the related message.
          * @see senderName
          */
         QString senderAddress() const
         { return senderAddress_; }
-        
+
         /**
          * The date of sending of the related message.
          */
@@ -248,49 +248,49 @@ class EmpathIndexRecord
          */
         int timeZone() const
         { return timeZone_; }
-        
+
         /**
          * The status of the related message (Read, Marked, ...).
          */
         Status status() const
         { return status_; }
-        
+
         /**
          * The size of the related message.
          */
         unsigned int size() const
         { return size_; }
-        
+
         /**
          * The message-id of the related message.
          */
         QString messageID() const
         { return messageID_; }
-        
+
         /**
          * The message-id of the previous message (for threading).
          */
         QString parentID() const
         { return parentID_; }
-        
+
         /**
          * Find out if there's a previous message (for threading).
          */
         bool hasParent() const
         { return !parentID_.isEmpty(); }
-        
+
         /**
          * Does this message have more than one part ?
          */
         bool hasAttachments() const
         { return hasAttachments_; }
-        
+
         /**
          * Change the status of this record.
          */
         void setStatus(Status s)
         { status_ = s; }
-        
+
         /**
          * @internal
          */
@@ -308,14 +308,14 @@ class EmpathIndexRecord
 
         bool operator ! () const
         { return isNull(); }
-        
+
         /**
          * @internal
          */
         const char * className() const { return "EmpathIndexRecord"; }
-        
+
     private:
-        
+
         // Order dependency
         QString         id_;
         QString         subject_;
@@ -328,7 +328,7 @@ class EmpathIndexRecord
         QString         messageID_;
         QString         parentID_;
         bool            hasAttachments_;
-        
+
         bool            tagged_;
 };
 

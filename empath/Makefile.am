@@ -49,10 +49,6 @@ data_DATA = empath.desktop
 datadir = $(kde_appsdir)
 EXTRA_DIST = $(data_DATA)
 
-install-data-local: 
-	$(mkinstalldirs) $(kde_datadir)/empath
-	$(INSTALL_DATA) $(srcdir)/empath_logo.png $(kde_datadir)/empath/empath_logo.png
-
 #############################################################################
 # How to uninstall
 #############################################################################

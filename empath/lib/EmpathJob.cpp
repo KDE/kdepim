@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -21,121 +21,30 @@
 */
 
 // Local includes
+#include "EmpathCustomEvents.h"
 #include "EmpathDefines.h"
 #include "Empath.h"
 #include "EmpathJob.h"
 #include "EmpathFolder.h"
 #include "EmpathMailbox.h"
+#include "EmpathIndex.h"
 
-EmpathJobID EmpathJob::ID_ = 0;
+int EmpathJob::ID = 0;
 
-EmpathJob::EmpathJob(ActionType t)
-    :
-    QObject(),
-#ifdef USE_QPTHREAD
-    QpThread(),
-#endif
-    id_(ID_++),
-    type_(t),
-    success_(false),
-    finished_(false)
+EmpathJob::EmpathJob(QObject * parent, int tag, ActionType t)
+    :   parent_(parent),
+        tag_(tag),
+        type_(t),
+        id_(ID++)
 {
-    // Empty.
-}
-
-EmpathJob::EmpathJob(const EmpathJob & other)
-    :
-    QObject(),
-#ifdef USE_QPTHREAD
-    QpThread(),
-#endif
-    id_(other.id_),
-    type_(other.type_),
-    success_(other.success_),
-    successMap_(other.successMap_)
-{
-    // Empty.
 }
 
 // ------------------------------------------------------------------------
 
-EmpathWriteJob::EmpathWriteJob(const EmpathWriteJob & j)
-    :
-    EmpathSingleJob(j),
-    message_    (j.message_),
-    folder_     (j.folder_),
-    messageID_  (j.messageID_)
+EmpathReadIndexJob::~EmpathReadIndexJob()
 {
     // Empty.
 }
-
-EmpathCopyJob::EmpathCopyJob(const EmpathCopyJob & j)
-    :
-    EmpathMultiJob(j),
-    source_         (j.source_),
-    destination_    (j.destination_)
-{
-    // Empty.
-}
-
-EmpathMoveJob::EmpathMoveJob(const EmpathMoveJob & j)
-    :
-    EmpathMultiJob(j),
-    source_         (j.source_),
-    destination_    (j.destination_)
-{
-    // Empty.
-}
-
-EmpathRemoveJob::EmpathRemoveJob(const EmpathRemoveJob & j)
-    :
-    EmpathSingleJob(j),
-    successMap_ (j.successMap_),
-    url_        (j.url_),
-    folder_     (j.folder_),
-    IDList_     (j.IDList_)
-{
-    // Empty.
-}
-
-EmpathRetrieveJob::EmpathRetrieveJob(const EmpathRetrieveJob & j)
-    :
-    EmpathSingleJob(j),
-    url_        (j.url_),
-    message_    (j.message_)
-{
-    // Empty.
-}
-
-EmpathMarkJob::EmpathMarkJob(const EmpathMarkJob & j)
-    :
-    EmpathSingleJob(j),
-    successMap_ (j.successMap_),
-    url_        (j.url_),
-    folder_     (j.folder_),
-    IDList_     (j.IDList_),
-    flags_      (j.flags_)
-{
-    // Empty.
-}
-
-EmpathCreateFolderJob::EmpathCreateFolderJob(const EmpathCreateFolderJob & j)
-    :
-    EmpathSingleJob(j),
-    folder_(j.folder_)
-{
-    // Empty.
-}
-
-EmpathRemoveFolderJob::EmpathRemoveFolderJob(const EmpathRemoveFolderJob & j)
-    :
-    EmpathSingleJob(j),
-    folder_(j.folder_)
-{
-    // Empty.
-}
-
-// ------------------------------------------------------------------------
 
 EmpathWriteJob::~EmpathWriteJob()
 {
@@ -179,12 +88,26 @@ EmpathRemoveFolderJob::~EmpathRemoveFolderJob()
 
 // ------------------------------------------------------------------------
 
+EmpathReadIndexJob::EmpathReadIndexJob(
+    QObject * parent,
+    int i,
+    const EmpathURL & folder
+)
+    :
+    EmpathJob(parent, i, ReadIndex),
+    folder_(folder)
+{
+    // Empty.
+}
+
 EmpathWriteJob::EmpathWriteJob(
+    QObject * parent,
+    int i,
     RMM::Message & message,
     const EmpathURL & folder
 )
     :
-    EmpathSingleJob(WriteMessage),
+    EmpathJob(parent, i, RetrieveMessage),
     message_(message),
     folder_(folder)
 {
@@ -192,11 +115,13 @@ EmpathWriteJob::EmpathWriteJob(
 }
 
 EmpathCopyJob::EmpathCopyJob(
+    QObject * parent,
+    int i,
     const EmpathURL & source,
     const EmpathURL & destination
 )
     :
-    EmpathMultiJob(CopyMessage),
+    EmpathJob(parent, i, CopyMessage),
     source_(source),
     destination_(destination)
 {
@@ -204,11 +129,13 @@ EmpathCopyJob::EmpathCopyJob(
 }
 
 EmpathMoveJob::EmpathMoveJob(
+    QObject * parent,
+    int i,
     const EmpathURL & source,
     const EmpathURL & destination
 )
     :
-    EmpathMultiJob(MoveMessage),
+    EmpathJob(parent, i, MoveMessage),
     source_(source),
     destination_(destination)
 {
@@ -216,11 +143,13 @@ EmpathMoveJob::EmpathMoveJob(
 }
 
 EmpathRemoveJob::EmpathRemoveJob(
+    QObject * parent,
+    int i,
     const EmpathURL & folder,
     const QStringList & IDList
 )
     :
-    EmpathSingleJob(RemoveMessage),
+    EmpathJob(parent, i, RemoveMessage),
     folder_(folder),
     IDList_(IDList)
 {
@@ -228,32 +157,38 @@ EmpathRemoveJob::EmpathRemoveJob(
 }
 
 EmpathRemoveJob::EmpathRemoveJob(
+    QObject * parent,
+    int i,
     const EmpathURL & url
 )
     :
-    EmpathSingleJob(RemoveMessage),
+    EmpathJob(parent, i, RemoveMessage),
     url_(url)
 {
     // Empty.
 }
 
 EmpathRetrieveJob::EmpathRetrieveJob(
+    QObject * parent,
+    int i,
     const EmpathURL & url
 )
     :
-    EmpathSingleJob(RetrieveMessage),
+    EmpathJob(parent, i, RetrieveMessage),
     url_(url)
 {
     // Empty.
 }
 
 EmpathMarkJob::EmpathMarkJob(
+    QObject * parent,
+    int i,
     const EmpathURL & folder,
     const QStringList & IDList,
     EmpathIndexRecord::Status flags
 )
     :
-    EmpathSingleJob(MarkMessage),
+    EmpathJob(parent, i, MarkMessage),
     folder_(folder),
     IDList_(IDList),
     flags_(flags)
@@ -262,11 +197,13 @@ EmpathMarkJob::EmpathMarkJob(
 }
 
 EmpathMarkJob::EmpathMarkJob(
+    QObject * parent,
+    int i,
     const EmpathURL & url,
     EmpathIndexRecord::Status flags
 )
     :
-    EmpathSingleJob(MarkMessage),
+    EmpathJob(parent, i, MarkMessage),
     url_(url),
     flags_(flags)
 {
@@ -274,20 +211,24 @@ EmpathMarkJob::EmpathMarkJob(
 }
 
 EmpathCreateFolderJob::EmpathCreateFolderJob(
+    QObject * parent,
+    int i,
     const EmpathURL & folder
 )
     :
-    EmpathSingleJob(CreateFolder),
+    EmpathJob(parent, i, CreateFolder),
     folder_(folder)
 {
     // Empty.
 }
 
 EmpathRemoveFolderJob::EmpathRemoveFolderJob(
+    QObject * parent,
+    int i,
     const EmpathURL & folder
 )
     :
-    EmpathSingleJob(CreateFolder),
+    EmpathJob(parent, i, RemoveFolder),
     folder_(folder)
 {
     // Empty.
@@ -295,233 +236,175 @@ EmpathRemoveFolderJob::EmpathRemoveFolderJob(
 
 // ------------------------------------------------------------------------
 
-void EmpathWriteJob::run()
+void EmpathReadIndexJob::run()
 {
-    EmpathFolder * f = empath->folder(folder_);
+    empathDebug("");
+    EmpathMailbox * m = empath->mailbox(folder_);
 
-    if (!f) {
-        setSuccess(false);
-        _done();
-        return;
+    if (0 != m) {
+        index_ = m->index(folder_);
+        setSuccess(true);
     }
 
-    messageID_ = f->writeMessage(message_);
-    setSuccess(!messageID_.isNull());
-    _done();
+    empathDebug("posting event");
+
+    if (parent())
+        postEvent(
+                parent(), new EmpathIndexReadEvent(index_, folder_, success()));
+
+    empathDebug("finished");
+}
+
+void EmpathWriteJob::run()
+{
+    EmpathMailbox * m = empath->mailbox(folder_);
+
+    if (0 != m) {
+        messageID_ = m->writeMessage(message_, folder_);
+        setSuccess(!messageID_.isNull());
+    }
+
+    if (parent())
+        postEvent(parent(), new EmpathMessageWrittenEvent(messageID_, message_, folder_, success()));
 }
 
 void EmpathCopyJob::run()
 {
-    EmpathRetrieveJob retrieve(source_);
+    EmpathRetrieveJob retrieve(parent(), 0, source_);
+
     retrieve.run();
 
-    if (!retrieve.success()) {
-        setSuccess(false);
-        _done();
-        return;
+    while (retrieve.running())
+        msleep(10);
+
+    if (retrieve.success()) {
+
+        RMM::Message msg = retrieve.message();
+
+        EmpathWriteJob write(parent(), 0, msg, destination_);
+
+        write.run();
+
+        while (write.running())
+            msleep(10);
+
+        setSuccess(write.success());
     }
 
-    RMM::Message msg = retrieve.message();
-    EmpathWriteJob write(msg, destination_);
-    write.run();
-
-    setSuccess(write.success());
-    _done();
+    if (parent())
+        postEvent(parent(),
+                new EmpathMessageCopiedEvent(source_, destination_, success()));
 }
 
 void EmpathMoveJob::run()
 {
-    EmpathRetrieveJob retrieve(source_);
+    EmpathRetrieveJob retrieve(parent(), 0, source_);
+
     retrieve.run();
 
-    if (!retrieve.success()) {
-        setSuccess(false);
-        _done();
-        return;
+    while (retrieve.running())
+        msleep(10);
+
+    if (retrieve.success()) {
+
+        RMM::Message msg = retrieve.message();
+
+        EmpathWriteJob write(parent(), 0, msg, destination_);
+
+        write.run();
+
+        if (write.success()) {
+
+            EmpathRemoveJob remove(parent(), 0, source_);
+
+            remove.run();
+
+            while (remove.running())
+                msleep(10);
+
+            setSuccess(remove.success());
+        }
     }
 
-    RMM::Message msg = retrieve.message();
-
-    EmpathWriteJob write(msg, destination_);
-    write.run();
-
-    if (!write.success()) {
-        setSuccess(false);
-        _done();
-        return;
-    }
-
-    EmpathRemoveJob remove(source_);
-    remove.run();
-
-    setSuccess(remove.success());
-    _done();
+    if (parent())
+        postEvent(parent(),
+                new EmpathMessageMovedEvent(source_, destination_, success()));
 }
 
 void EmpathRemoveJob::run()
 {
-    if (IDList_.isEmpty()) {
-
-        EmpathFolder * f = empath->folder(url_);
-
-        if (0 == f) {
-            empathDebug(QString::fromUtf8("Folder `") + url_.asString() + QString::fromUtf8("' does not exist ?"));
-            setSuccess(false);
-            _done();
-            return;
-        }
-
-        setSuccess(f->removeMessage(url_.messageID()));
-
-    } else {
-
-        EmpathFolder * f = empath->folder(folder_);
-
-        if (0 == f) {
-            empathDebug(QString::fromUtf8("Folder `") + url_.asString() + QString::fromUtf8("' does not exist ?"));
-            setSuccess(false);
-            _done();
-            return;
-        }
-
-        setSuccessMap(f->removeMessage(IDList_));
-    }
-
-    _done();
+    setSuccess(false);
 }
 
 void EmpathRetrieveJob::run()
 {
+    empathDebug(url_.asString());
     RMM::Message cached = empath->message(url_);
 
     if (!cached.isNull()) {
 
         message_ = cached;
         setSuccess(true);
-        _done();
-        return;
+
+    } else {
+
+        EmpathMailbox * m = empath->mailbox(url_);
+
+        if (0 != m) {
+
+            message_ = m->retrieveMessage(url_);
+
+            if (message_.isNull()) {
+                empathDebug("message is null");
+            }
+
+            setSuccess(!(message_.isNull()));
+
+            if (success())
+                empath->cacheMessage(url_, message_);
+        } else {
+            empathDebug("!m !");
+        }
     }
 
-    EmpathFolder * f = empath->folder(url_);
-
-    if (0 == f) {
-        empathDebug(QString::fromUtf8("Folder `") + url_.asString() + QString::fromUtf8("' does not exist ?"));
-        setSuccess(false);
-        _done();
-        return;
+    if (success()) {
+        empathDebug("success");
+    }
+    else {
+        empathDebug("fail");
     }
 
-    message_ = f->retrieveMessage(url_.messageID());
-
-    if (!message_.isNull())
-        empath->cacheMessage(url_, message_);
-
-    setSuccess(!message_.isNull());
-    _done();
+    if (parent())
+        postEvent(parent(),
+                new EmpathMessageRetrievedEvent(url_, message_, success()));
 }
 
 void EmpathMarkJob::run()
 {
-    if (IDList_.isEmpty()) {
-
-        EmpathFolder * f = empath->folder(url_);
-    
-        if (0 == f) {
-            empathDebug(QString::fromUtf8("Folder `") + url_.asString() + QString::fromUtf8("' does not exist ?"));
-            setSuccess(false);
-            _done();
-            return;
-        }
-
-       setSuccess(f->markMessage(url_.messageID(), flags_));
-
-    } else {
-
-        EmpathFolder * f = empath->folder(folder_);
-     
-        if (0 == f) {
-            empathDebug(QString::fromUtf8("Folder `") + url_.asString() + QString::fromUtf8("' does not exist ?"));
-            setSuccess(false);
-            _done();
-            return;
-        }
-
-       setSuccessMap(f->markMessage(IDList_, flags_));
-    }
-    
-    _done();
+    setSuccess(false);
 }
 
 void EmpathCreateFolderJob::run()
 {
     EmpathMailbox * m = empath->mailbox(folder_);
 
-    if (!m) {
-      
-        empathDebug(QString::fromUtf8("Mailbox `") + folder_.asString() + QString::fromUtf8("' does not exist ?"));
-        setSuccess(false);
-        _done();
-        return;
-    }
+    if (0 != m)
+        setSuccess(m->createFolder(folder_));
 
-    setSuccess(m->createFolder(folder_));
-    _done();
+    if (parent())
+        postEvent(parent(), new EmpathFolderCreatedEvent(folder_, success()));
+
 }
 
 void EmpathRemoveFolderJob::run()
 {
     EmpathMailbox * m = empath->mailbox(folder_);
 
-    if (!m) {
-        empathDebug(QString::fromUtf8("Mailbox `") + folder_.asString() + QString::fromUtf8("' does not exist ?"));
-        setSuccess(false);
-        _done();
-        return;
-    }
+    if (0 != m)
+        setSuccess(m->removeFolder(folder_));
 
-    setSuccess(m->removeFolder(folder_));
-    _done();
+    if (parent())
+        postEvent(parent(), new EmpathFolderRemovedEvent(folder_, success()));
 }
-
-// ------------------------------------------------------------------------
-
-EmpathSingleJob::EmpathSingleJob(ActionType t) 
-    : EmpathJob(t)
-{
-    // Empty.
-}
-
-EmpathSingleJob::EmpathSingleJob(const EmpathSingleJob & j)
-    : EmpathJob(j)
-{
-    // Empty.
-}
-
-
-EmpathSingleJob::~EmpathSingleJob()
-{
-    // Empty.
-}
-
-// ------------------------------------------------------------------------
-
-EmpathMultiJob::EmpathMultiJob(ActionType t) 
-    : EmpathJob(t)
-{
-    // Empty.
-}
-
-EmpathMultiJob::EmpathMultiJob(const EmpathMultiJob & j)
-    : EmpathJob(j)
-{
-    // Empty.
-}
-
-
-EmpathMultiJob::~EmpathMultiJob()
-{
-    // Empty.
-}
-
 
 // vim:ts=4:sw=4:tw=78

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -48,7 +48,7 @@ EmpathQuotedText::rewrap(uint maxLineLength)
     QValueList<EmpathQuotedText::Part>::Iterator pit;
 
     for (pit = quotedParts_.begin(); pit != quotedParts_.end(); ++pit) {
-        
+
         EmpathQuotedText::Part & part = *pit;
 
         uint maxLength = maxLineLength - (part.depth + part.depth);
@@ -56,19 +56,19 @@ EmpathQuotedText::rewrap(uint maxLineLength)
         QStringList wrapped;
 
         QString overflow;
-        
+
         QStringList::Iterator lit;
 
         for (lit = part.lines.begin(); lit != part.lines.end(); ++lit)  {
-            
+
             QString line(overflow + *lit);
 
             if (line.length() > maxLength) {
-                
+
                 int breakPos = line.findRev(' ', maxLength);
 
                 if (breakPos != -1) {
-                
+
                     overflow = line.mid(breakPos + 1);
 
                     wrapped << line.left(breakPos);
@@ -85,7 +85,7 @@ EmpathQuotedText::rewrap(uint maxLineLength)
                 overflow = QString::null;
             }
         }
-        
+
         (*pit).lines = wrapped;
     }
 }
@@ -94,7 +94,7 @@ EmpathQuotedText::rewrap(uint maxLineLength)
 EmpathQuotedText::quote()
 {
     parse();
-    
+
     QValueList<EmpathQuotedText::Part>::Iterator pit;
 
     for (pit = quotedParts_.begin(); pit != quotedParts_.end(); ++pit) 
@@ -121,7 +121,7 @@ EmpathQuotedText::_parse()
     for (it = lines.begin(); it != lines.end(); ++it) {
 	
         QString line(*it);
-        
+
         empathDebug("Line        : `" + line + "'");
 
         int quoteEnd = line.find(endOfQuotes);
@@ -148,12 +148,12 @@ EmpathQuotedText::_parse()
         empathDebug("depth       : " + QString::number(depth));
         empathDebug("remainder   : `" + line.mid(quoteEnd == 0 ? 0 : quoteEnd + 2) + "'");
         tempLines << line.mid(quoteEnd == 0 ? 0 : quoteEnd + 2);
-        
+
         oldDepth = depth;
 
         firstTime = false;
     }
- 
+
     Part part;
     part.depth = oldDepth;
     part.lines = tempLines;
@@ -166,7 +166,7 @@ EmpathQuotedText::_assemble()
     strRep_ = QString::null;
 
     QStringList::ConstIterator lit;
-    
+
     QValueList<EmpathQuotedText::Part>::ConstIterator pit;
 
     for (pit = quotedParts_.begin(); pit != quotedParts_.end(); ++pit) {

@@ -47,6 +47,7 @@ class EmpathMainWindow : public KParts::MainWindow
 
         void s_toolbarMoved(BarPosition);
         void s_newTask(EmpathTask *);
+        void s_settings();
 
     private:
     

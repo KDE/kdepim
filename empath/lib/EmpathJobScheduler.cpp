@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -16,12 +16,13 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
+    along with handler program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 // Local includes
 #include "EmpathJobScheduler.h"
+#include "EmpathDefines.h"
 
 #include "config.h"
 
@@ -36,176 +37,114 @@ EmpathJobScheduler::~EmpathJobScheduler()
 }
 
     EmpathJobID
+EmpathJobScheduler::newReadIndexJob(
+    const EmpathURL & url,
+    QObject * handler,
+    int i
+)
+{
+    empathDebug("Creating new EmpathReadIndexJob for url " + url.asString());
+    EmpathReadIndexJob * j = new EmpathReadIndexJob(handler, i, url);
+    int id = j->id();
+    j->run();
+    return id;
+}
+
+
+    EmpathJobID
 EmpathJobScheduler::newWriteJob(
     RMM::Message & message,
     const EmpathURL & url,
-    QObject * o,
-    const char * slot
+    QObject * handler,
+    int i
 )
 {
-    EmpathWriteJob * j = new EmpathWriteJob(message, url);
-
-    if (0 != o)
-        if (0 != slot)
-            QObject::connect(
-                j,  SIGNAL(done(EmpathWriteJob)),
-                o,  slot);
-        else
-            QObject::connect(
-                j,  SIGNAL(done(EmpathWriteJob)),
-                o,  SLOT(s_writeJobFinished(EmpathWriteJob)));
-
-    _enqueue(j);
-
-    return j->id();
+    EmpathWriteJob * j = new EmpathWriteJob(handler, i, message, url);
+    int id = j->id();
+    j->run();
+    return id;
 }
 
     EmpathJobID
 EmpathJobScheduler::newRetrieveJob(
     const EmpathURL & url,
-    QObject * o,
-    const char * slot
+    QObject * handler,
+    int i
 )
 {
-    EmpathRetrieveJob * j = new EmpathRetrieveJob(url);
-    
-    if (0 != o)
-        if (0 != slot)
-            QObject::connect(
-                j,  SIGNAL(done(EmpathRetrieveJob)),
-                o,  slot);
-        else
-            QObject::connect(
-                j,  SIGNAL(done(EmpathRetrieveJob)),
-                o,  SLOT(s_retrieveJobFinished(EmpathRetrieveJob)));
-
-    _enqueue(j);
-
-    return j->id();
+    EmpathRetrieveJob * j = new EmpathRetrieveJob(handler, i, url);
+    int id = j->id();
+    j->run();
+    return id;
 }
 
     EmpathJobID
 EmpathJobScheduler::newCopyJob(
     const EmpathURL & source,
     const EmpathURL & destination,
-    QObject * o,
-    const char * slot
+    QObject * handler,
+    int i
 )
 {
-    EmpathCopyJob * j = new EmpathCopyJob(source, destination);
-    
-    if (0 != o)
-        if (0 != slot)
-            QObject::connect(
-                j,  SIGNAL(done(EmpathCopyJob)),
-                o,  slot);
-        else
-            QObject::connect(
-                j,  SIGNAL(done(EmpathCopyJob)),
-                o,  SLOT(s_copyJobFinished(EmpathCopyJob)));
-
-    _enqueue(j);
-
-    return j->id();
+    EmpathCopyJob * j = new EmpathCopyJob(handler, i, source, destination);
+    int id = j->id();
+    j->run();
+    return id;
 }
 
     EmpathJobID
 EmpathJobScheduler::newMoveJob(
     const EmpathURL & source,
     const EmpathURL & destination,
-    QObject * o,
-    const char * slot
+    QObject * handler,
+    int i
 )
 {
-    EmpathMoveJob * j = new EmpathMoveJob(source, destination);
-    
-    if (0 != o)
-        if (0 != slot)
-            QObject::connect(
-                j,  SIGNAL(done(EmpathMoveJob)),
-                o,  slot);
-        else
-            QObject::connect(
-                j,  SIGNAL(done(EmpathMoveJob)),
-                o,  SLOT(s_moveJobFinished(EmpathMoveJob)));
-
-    _enqueue(j);
-
-    return j->id();
+    EmpathMoveJob * j = new EmpathMoveJob(handler, i, source, destination);
+    int id = j->id();
+    j->run();
+    return id;
 }
 
     EmpathJobID
 EmpathJobScheduler::newRemoveJob(
     const EmpathURL & url,
-    QObject * o,
-    const char * slot
+    QObject * handler,
+    int i
 )
 {
-    EmpathRemoveJob * j = new EmpathRemoveJob(url);
-    
-    if (0 != o)
-        if (0 != slot)
-            QObject::connect(
-                j,  SIGNAL(done(EmpathRemoveJob)),
-                o,  slot);
-        else
-            QObject::connect(
-                j,  SIGNAL(done(EmpathRemoveJob)),
-                o,  SLOT(s_removeJobFinished(EmpathRemoveJob)));
-
-    _enqueue(j);
-
-    return j->id();
+    EmpathRemoveJob * j = new EmpathRemoveJob(handler, i, url);
+    int id = j->id();
+    j->run();
+    return id;
 }
 
     EmpathJobID
 EmpathJobScheduler::newRemoveJob(
     const EmpathURL & folder,
     const QStringList & idList,
-    QObject * o,
-    const char * slot
+    QObject * handler,
+    int i
 )
 {
-    EmpathRemoveJob * j = new EmpathRemoveJob(folder, idList);
-    
-    if (0 != o)
-        if (0 != slot)
-            QObject::connect(
-                j,  SIGNAL(done(EmpathRemoveJob)),
-                o,  slot);
-        else
-            QObject::connect(
-                j,  SIGNAL(done(EmpathRemoveJob)),
-                o,  SLOT(s_removeJobFinished(EmpathRemoveJob)));
-
-    _enqueue(j);
-
-    return j->id();
+    EmpathRemoveJob * j = new EmpathRemoveJob(handler, i, folder, idList);
+    int id = j->id();
+    j->run();
+    return id;
 }
 
     EmpathJobID
 EmpathJobScheduler::newMarkJob(
     const EmpathURL & url,
     EmpathIndexRecord::Status status,
-    QObject * o,
-    const char * slot
+    QObject * handler,
+    int i
 )
 {
-    EmpathMarkJob * j = new EmpathMarkJob(url, status);
-    
-    if (0 != o)
-        if (0 != slot)
-            QObject::connect(
-                j,  SIGNAL(done(EmpathMarkJob)),
-                o,  slot);
-        else
-            QObject::connect(
-                j,  SIGNAL(done(EmpathMarkJob)),
-                o,  SLOT(s_markJobFinished(EmpathMarkJob)));
-
-    _enqueue(j);
-
-    return j->id();
+    EmpathMarkJob * j = new EmpathMarkJob(handler, i, url, status);
+    int id = j->id();
+    j->run();
+    return id;
 }
 
     EmpathJobID
@@ -213,107 +152,46 @@ EmpathJobScheduler::newMarkJob(
     const EmpathURL & folder,
     const QStringList & idList,
     EmpathIndexRecord::Status status,
-    QObject * o,
-    const char * slot
+    QObject * handler,
+    int i
 )
 {
-    EmpathMarkJob * j = new EmpathMarkJob(folder, idList, status);
-    
-    if (0 != o)
-        if (0 != slot)
-            QObject::connect(
-                j,  SIGNAL(done(EmpathMarkJob)),
-                o,  slot);
-        else
-            QObject::connect(
-                j,  SIGNAL(done(EmpathMarkJob)),
-                o,  SLOT(s_markJobFinished(EmpathMarkJob)));
-
-    _enqueue(j);
-
-    return j->id();
+    EmpathMarkJob * j = new EmpathMarkJob(handler, i, folder, idList, status);
+    int id = j->id();
+    j->run();
+    return id;
 }
 
     EmpathJobID
 EmpathJobScheduler::newCreateFolderJob(
     const EmpathURL & url,
-    QObject * o,
-    const char * slot
+    QObject * handler,
+    int i
 )
 {
-    EmpathCreateFolderJob * j = new EmpathCreateFolderJob(url);
-    
-    if (0 != o)
-        if (0 != slot)
-            QObject::connect(
-                j,  SIGNAL(done(EmpathCreateFolderJob)),
-                o,  slot);
-        else
-            QObject::connect(
-                j,  SIGNAL(done(EmpathCreateFolderJob)),
-                o,  SLOT(s_createFolderJobFinished(EmpathCreateFolderJob)));
-
-    _enqueue(j);
-
-    return j->id();
+    EmpathCreateFolderJob * j = new EmpathCreateFolderJob(handler, i, url);
+    int id = j->id();
+    j->run();
+    return id;
 }
 
     EmpathJobID
 EmpathJobScheduler::newRemoveFolderJob(
     const EmpathURL & url,
-    QObject * o,
-    const char * slot
+    QObject * handler,
+    int i
 )
 {
-    EmpathRemoveFolderJob * j = new EmpathRemoveFolderJob(url);
-    
-    if (0 != o)
-        if (0 != slot)
-            QObject::connect(
-                j,  SIGNAL(done(EmpathRemoveFolderJob)),
-                o,  slot);
-        else
-            QObject::connect(
-                j,  SIGNAL(done(EmpathRemoveFolderJob)),
-                o,  SLOT(s_removeFolderJobFinished(EmpathRemoveFolderJob)));
-
-    _enqueue(j);
-
-    return j->id();
+    EmpathRemoveFolderJob * j = new EmpathRemoveFolderJob(handler, i, url);
+    int id = j->id();
+    j->run();
+    return id;
 }
 
-    EmpathJobID
-EmpathJobScheduler::_enqueue(EmpathJob * j)
+    bool
+EmpathJobScheduler::event(QEvent * e)
 {
-    queue_.enqueue(j);
-    startTimer(0);
-    return j->id();
-}
-
-    void
-EmpathJobScheduler::timerEvent(QTimerEvent *)
-{
-    killTimers();
-    _runQueue();
-}
-
-    void
-EmpathJobScheduler::_runQueue()
-{
-    if (!queue_.isEmpty()) {
-
-        EmpathJob * j = queue_.dequeue();
-
-        if (!j->finished())
-            j->run();
-
-        else {
-
-            delete j;
-            j = 0;
-            _runQueue();
-        }
-    }
+    return QObject::event(e);
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -44,10 +44,10 @@ class EmpathMailboxList : public QObject, public QDict<EmpathMailbox>
     Q_OBJECT
 
     public:
-    
+
         EmpathMailboxList();
         ~EmpathMailboxList();
-        
+
         /**
          * @internal
          */
@@ -56,7 +56,7 @@ class EmpathMailboxList : public QObject, public QDict<EmpathMailbox>
          * @internal
          */
         void saveConfig() const;
-        
+
         /**
          * Remove the given mailbox from the list.
          */
@@ -71,11 +71,11 @@ class EmpathMailboxList : public QObject, public QDict<EmpathMailbox>
         EmpathMailbox * createNew(EmpathMailbox::Type);
 
     protected slots:
-        
+
         void s_rename(EmpathMailbox *, const QString &);    
 
     signals:
-        
+
         /**
          * Emitted when the on-screen folder lists are out of sync and need to
          * be updated.
@@ -88,7 +88,7 @@ class EmpathMailboxList : public QObject, public QDict<EmpathMailbox>
          * Append the given mailbox to the list.
          */
         void _append(EmpathMailbox * mailbox);
- 
+
         QString uniqueName();
 };
 

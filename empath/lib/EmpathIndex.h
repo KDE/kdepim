@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -28,6 +28,7 @@
 #include <qdict.h>
 #include <qdatetime.h>
 #include <qobject.h>
+#include <qthread.h>
 
 // Local includes
 #include "EmpathIndexRecord.h"
@@ -42,9 +43,9 @@ class EmpathIndex : public QObject
     Q_OBJECT
 
     public:
-        
+
         EmpathIndex(const EmpathURL & folder);
-								
+
         ~EmpathIndex();
 
         /**
@@ -57,16 +58,6 @@ class EmpathIndex : public QObject
          */
         bool contains(const QString & key);
 
-        /**
-         * Set the index to talk to the given folder.
-         */
-        void setFolder(const EmpathURL & folder);
- 
-        /**
-         * Set the index to use the given filename.
-         */
-        void setFilename(const QString &);
-        
         /**
          * Clear out.
          */
@@ -122,15 +113,15 @@ class EmpathIndex : public QObject
         void countUpdated(unsigned int c, unsigned int uc);
 
     private:
-        
+
         EmpathIndex();
-        
+
         bool _read();
         bool _write();
         void _flush();
         void _resetIdleTimer();
         void _setDirty();
-        
+
         QString filename_;
         QDict<EmpathIndexRecord> dict_;
 
@@ -142,6 +133,8 @@ class EmpathIndex : public QObject
         unsigned int count_;
         unsigned int unreadCount_;
         // End order dependency
+
+        QMutex mutex_;
 };
 
 #endif

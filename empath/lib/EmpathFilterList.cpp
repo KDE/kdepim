@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -44,18 +44,18 @@ EmpathFilterList::~EmpathFilterList()
 EmpathFilterList::saveConfig()
 {
     EmpathFilterListIterator it(*this);
-    
+
     QStringList list;
 
     for (; it.current() ; ++it) {
         it.current()->save();
         list << it.current()->name();
     }
-    
+
     KConfig * c = KGlobal::config();
 
     c->setGroup("General");
-    
+
     c->writeEntry("FilterList", list, ',');
 }
 
@@ -63,16 +63,16 @@ EmpathFilterList::saveConfig()
 EmpathFilterList::loadConfig()
 {
     KConfig * c = KGlobal::config();
-    
+
     c->setGroup("General");
-    
+
     QStrList list;
     c->readListEntry("FilterList", list, ',');
-    
+
     EmpathFilter * filter;
-    
+
     QStrListIterator it(list);
-    
+
     for (; it.current() ; ++it) {
         filter = new EmpathFilter(it.current());
         filter->load();
@@ -85,7 +85,7 @@ EmpathFilterList::filter(const EmpathURL & id)
 {
     empathDebug(id.asString());
     EmpathFilterListIterator it(*this);
-    
+
     for (; it.current(); ++it)
         if (it.current()->url() == id.withoutMessageID())
             it.current()->filter(id);
@@ -96,17 +96,17 @@ EmpathFilterList::raisePriority(EmpathFilter * f)
 {
     // Remember highest priority is 0, and higher numbers make lower priority.
     EmpathFilterListIterator it(*this);
-    
+
     // If the priority is the highest possible, ignore.
     if (f->priority() == 0)
         return;
-    
+
     // Swap this item's priority with the one next to it, that currently has
     // a higher priority.
     for (; it.current(); ++it)
         if (it.current()->priority() == f->priority() - 1)
             it.current()->setPriority(it.current()->priority() + 1);
-    
+
     f->setPriority(f->priority() - 1);
 }
 
@@ -115,17 +115,17 @@ EmpathFilterList::lowerPriority(EmpathFilter * f)
 {
     // Remember highest priority is 0, and higher numbers make lower priority.
     EmpathFilterListIterator it(*this);
-    
+
     // If the priority is the lowest possible, ignore.
     if (f->priority() == count() - 1)
         return;
-    
+
     // Swap this item's priority with the one next to it, that currently has
     // a lower priority.
     for (; it.current(); ++it)
         if (it.current()->priority() == f->priority() + 1)
             it.current()->setPriority(it.current()->priority() - 1);
-    
+
     f->setPriority(f->priority() + 1);
 }
 
@@ -133,12 +133,12 @@ EmpathFilterList::lowerPriority(EmpathFilter * f)
 EmpathFilterList::remove(EmpathFilter * f)
 {
     EmpathFilterListIterator it(*this);
-    
+
     // For each item that has a lower priority than this one, shift it up.
     for (; it.current(); ++it)
         if (it.current()->priority() > f->priority())
             it.current()->setPriority(it.current()->priority() - 1);
-        
+
     QList<EmpathFilter>::remove(f);
 }
 

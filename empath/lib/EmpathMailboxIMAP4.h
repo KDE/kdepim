@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -41,7 +41,7 @@ class EmpathMailboxIMAP4 : public EmpathMailbox
     public:
 
         EmpathMailboxIMAP4(const QString & name);
-        
+
         EmpathMailboxIMAP4(
                 const QString &    name,
                 const QString &    serverAddress,
@@ -55,11 +55,11 @@ class EmpathMailboxIMAP4 : public EmpathMailbox
 
 
         ~EmpathMailboxIMAP4 ();
-    
+
 #include "EmpathMailboxAbstract.h"
-        
+
         // Set methods
-        
+
         /**
          * Set the server address to connect to.
          */
@@ -90,12 +90,12 @@ class EmpathMailboxIMAP4 : public EmpathMailbox
         void setMailCheckInterval       (Q_UINT32);
 
         // Get methods
-        
+
         QString        serverAddress();
         Q_UINT32       serverPort();
         QString        username();
         QString        password();
-    
+
     private:
 
         QString             serverAddress_;

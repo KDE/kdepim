@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -56,9 +56,9 @@ EmpathMailboxList::remove(const EmpathURL & u)
         empathDebug("Couldn't remove mailbox");
         return false;
     }
-    
+
     saveConfig();
-    
+
     emit(updateFolderLists());
 
     return true;
@@ -74,6 +74,7 @@ EmpathMailboxList::folder(const EmpathURL & url) const
     void
 EmpathMailboxList::loadConfig()
 {
+    empathDebug("");
     QObject::connect(
         this,   SIGNAL(updateFolderLists()),
         empath, SLOT(s_updateFolderLists()));
@@ -81,20 +82,20 @@ EmpathMailboxList::loadConfig()
     QDict<EmpathMailbox>::clear();
 
     KConfig * c(KGlobal::config());
-    
+
     c->setGroup("General");
-    
+
     QStringList l;
     l = c->readListEntry("MailboxList");
-    
+
     EmpathMailbox::Type mailboxType = EmpathMailbox::Maildir;
-    
+
     QStringList::ConstIterator it(l.begin());
-    
+
     for (; it != l.end() ; ++it) {
-        
+
         c->setGroup("Mailbox_" + *it);
-        
+
         mailboxType =
             static_cast<EmpathMailbox::Type>(c->readUnsignedNumEntry("Type"));
 
@@ -106,7 +107,7 @@ EmpathMailboxList::loadConfig()
             empathDebug("Couldn't create mailbox !");
             continue;
         }
-        
+
         m->init();
     }
 }
@@ -115,16 +116,16 @@ EmpathMailboxList::loadConfig()
 EmpathMailboxList::saveConfig() const
 {
     EmpathMailboxListIterator it(*this);
-    
+
     QStringList l;
-    
+
     for (; it.current(); ++it) {
         l << it.current()->name();
         it.current()->saveConfig();
     }
-    
+
     KConfig * c = KGlobal::config();
-    
+
     c->setGroup("General");
     c->writeEntry("MailboxList", l);
     c->sync();
@@ -137,11 +138,11 @@ EmpathMailboxList::uniqueName()
 
     int idx = 0;
     bool taken = true;
-    
+
     while (taken) {
-        
+
         taken = false;
-        
+
         EmpathMailboxListIterator it(*this);
 
         for (; it.current(); ++it)
@@ -159,7 +160,7 @@ EmpathMailboxList::uniqueName()
 EmpathMailboxList::createNew(EmpathMailbox::Type t)
 {
     EmpathMailbox * m(0);
-    
+
     switch (t) {
 
         case EmpathMailbox::Maildir:
@@ -209,7 +210,7 @@ EmpathMailboxList::_append(EmpathMailbox * mailbox)
             ") already exists ! I can't add this.");
         return;
     }
-    
+
     QDict<EmpathMailbox>::insert(mailbox->name(), mailbox);
 
     QObject::connect(

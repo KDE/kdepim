@@ -105,6 +105,8 @@ EmpathFolderListPart::EmpathFolderListPart(
     setWidget(widget_);
     setXMLFile("EmpathFolderListWidget.rc");
     enableAllActions(false);
+    connect(widget_, SIGNAL(showFolder(const EmpathURL &)),
+            this,    SIGNAL(showFolder(const EmpathURL &)));
 }
 
 EmpathFolderListPart::~EmpathFolderListPart()
@@ -137,7 +139,7 @@ EmpathFolderListWidget::EmpathFolderListWidget(QWidget * parent)
     addColumn(i18n("Total"));
     
     setAllColumnsShowFocus(true);
-    setRootIsDecorated(false);
+    setRootIsDecorated(true);
     setSorting(0);
 
     dropItem = 0;
@@ -235,6 +237,7 @@ EmpathFolderListWidget::_addMailbox(EmpathMailbox * mailbox)
     }
     
     EmpathFolderListIterator fit(mailbox->folderList());
+    empathDebug("There are " + QString::number(mailbox->folderList().count()) + " folders");
 
     for (; fit.current(); ++fit)
         if (fit.current()->parent() == 0)
@@ -249,14 +252,17 @@ EmpathFolderListWidget::_addChildren(
 {
     EmpathFolderListItem * newItem;
     
+    empathDebug(item->url().asString());
     EmpathFolderListItem * found = find(item->url());
 
     if (found != 0) {
         
         newItem = found;
+        empathDebug("found");
 
     } else {
     
+        empathDebug("creating new");
         newItem = new EmpathFolderListItem(parent, item->url());
     
         QObject::connect(newItem, SIGNAL(opened()), SLOT(s_openChanged()));

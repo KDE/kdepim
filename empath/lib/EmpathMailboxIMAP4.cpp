@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -59,7 +59,7 @@ EmpathMailboxIMAP4::loadConfig()
 }
 
 // Set methods
-        
+
     void
 EmpathMailboxIMAP4::setServerAddress(const QString & serverAddress)
 {
@@ -86,7 +86,7 @@ EmpathMailboxIMAP4::setPassword(const QString & password)
 }
 
 // Get methods
-        
+
     QString
 EmpathMailboxIMAP4::serverAddress()
 {
@@ -137,7 +137,7 @@ EmpathMailboxIMAP4::removeMessage(const EmpathURL & /* url */)
     // STUB
     return false;
 }
- 
+
     bool
 EmpathMailboxIMAP4::createFolder(const EmpathURL &)
 {
@@ -151,7 +151,7 @@ EmpathMailboxIMAP4::removeFolder(const EmpathURL &)
     // STUB
     return false;
 }
- 
+
     RMM::Message
 EmpathMailboxIMAP4::retrieveMessage(const EmpathURL & /* url */)
 {
@@ -199,5 +199,25 @@ EmpathMailboxIMAP4::removeMessage(
     return retval;
 }
 
+    unsigned int
+EmpathMailboxIMAP4::messageCount() const
+{
+    empathDebug("STUB");
+    return 0;
+}
+
+    unsigned int
+EmpathMailboxIMAP4::unreadMessageCount() const
+{
+    empathDebug("STUB");
+    return 0;
+}
+
+    EmpathIndex *
+EmpathMailboxIMAP4::index(const EmpathURL &)
+{
+    empathDebug("STUB");
+    return 0;
+}
 
 // vim:ts=4:sw=4:tw=78

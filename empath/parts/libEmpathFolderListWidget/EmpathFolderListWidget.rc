@@ -1,3 +1,12 @@
 <!DOCTYPE kpartgui>
 <kpartgui name="EmpathFolderListWidget">
+<MenuBar>
+    <Menu name="folder"><text>&amp;Folder</text>
+        <Action name="create"/>
+        <Action name="remove"/>
+        <Action name="empty"/>
+        <Action name="rename"/>
+    </Menu>
+    <Merge />
+</MenuBar>
 </kpartgui>

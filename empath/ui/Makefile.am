@@ -1,6 +1,8 @@
+SUBDIRS = settings
 KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS) -DQT_NO_ASCII_CAST
 
 INCLUDES = \
+	-I$(top_srcdir)/empath/ui/settings \
 	-I$(top_srcdir)/empath/lib \
 	-I$(top_srcdir)/librmm \
 	$(all_includes)
@@ -15,6 +17,7 @@ rcdir = $(kde_datadir)/empath
 rc_DATA = EmpathMainWindow.rc
 
 libempathui_la_LIBADD = \
+	$(top_builddir)/empath/ui/settings/libEmpathSettingsDialog.la \
   $(LIB_KPARTS) $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KIO) $(LIB_KDECORE) \
 	$(top_builddir)/empath/lib/libempathkernel.la
 

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -90,7 +90,7 @@ class EmpathJobInfo
             const QStringList & messageIDList,
             RMM::MessageStatus status,
             const QString & extraInfo = QString::null);
-    
+
         // Mark message
         EmpathJobInfo(
             ActionType t,
@@ -117,7 +117,7 @@ class EmpathJobInfo
         RMM::Message message();
         QString messageID();
         RMM::MessageStatus status();
-        
+
         void setType(ActionType t);
         void setMessageID(const QString & s);
         void setMessage(RMM::Message &);
@@ -137,7 +137,7 @@ class EmpathJobInfo
         bool haveOriginal_;
 
         ActionType nextActionRequired();
-        
+
     private:
 
         EmpathJobInfoPrivate current_;

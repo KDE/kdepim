@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -39,7 +39,8 @@ enum ActionType {
     IgnoreMessage,
     ForwardMessage,
     CreateFolder,
-    RemoveFolder
+    RemoveFolder,
+    ReadIndex
 };
 
 enum MatchExprType {
@@ -49,7 +50,7 @@ enum MatchExprType {
     HasAttachments,
     AnyMessage
 };
- 
+
 enum MessagePriority {
     Highest,
     High,

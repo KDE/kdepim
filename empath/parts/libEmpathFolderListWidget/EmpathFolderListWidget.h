@@ -151,7 +151,9 @@ class EmpathFolderListPart : public KParts::ReadWritePart
     protected slots:
 
     signals:
- 
+
+        void showFolder(const EmpathURL & url);
+
     protected:
 
         virtual bool openFile() { return false; }

@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -26,10 +26,10 @@
 // #include or you'll turn some stuff into private: without knowing.
 
 public:
-    
+
     virtual void
 init();
-    
+
     virtual bool
 newMail() const;
 
@@ -38,7 +38,7 @@ saveConfig();
 
     virtual void
 loadConfig();
-        
+
     virtual void
 sync(const EmpathURL &);
 
@@ -50,7 +50,7 @@ writeMessage(RMM::Message &, const EmpathURL & folder);
 
     virtual bool
 removeMessage(const EmpathURL & url);
-        
+
     virtual EmpathSuccessMap
 removeMessage(const EmpathURL & folder, const QStringList & messageIDList);
 
@@ -69,7 +69,16 @@ createFolder(const EmpathURL & url);
 
     virtual bool
 removeFolder(const EmpathURL & url);
-        
+
+    virtual unsigned int
+messageCount() const;
+
+    virtual unsigned int
+unreadMessageCount() const;
+
+    virtual EmpathIndex *
+index(const EmpathURL &);
+
 public slots:
 
 virtual void s_checkMail();

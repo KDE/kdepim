@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -47,8 +47,8 @@
 #include "EmpathTask.h"
 #include "config.h"
 
-#ifdef USE_QPTHREAD
-#include <qpthr/qp.h>
+#ifndef QT_THREAD_SUPPORT
+#error Empath needs Qt thread support
 #endif
 
 Empath * Empath::EMPATH = 0;
@@ -59,7 +59,7 @@ Empath::start()
     if (0 == EMPATH)
         EMPATH = new Empath;
 }
-        
+
     void
 Empath::shutdown()
 {
@@ -75,10 +75,6 @@ Empath::Empath()
         jobScheduler_   (0L),
         seq_            (0)
 {
-#ifdef USE_QPTHREAD
-    (void)new QpInit;
-#endif
-    
     // Don't do dollar expansion by default.
     // Possible security hole.
     KGlobal::config()->setDollarExpansion(false);    
@@ -97,9 +93,10 @@ Empath::Empath()
     void
 Empath::init()
 {
+    empathDebug("");
     processID_ = int(getpid());
     pidStr_.setNum(processID_);
-    
+
     _saveHostName();
     _setStartTime();
 
@@ -112,7 +109,7 @@ Empath::init()
     sent_   .setMailboxName(s);
     drafts_ .setMailboxName(s);
     trash_  .setMailboxName(s);
-    
+
     KConfig * c = KGlobal::config();
 
     c->setGroup(QString::fromUtf8("Folders"));
@@ -131,7 +128,7 @@ Empath::init()
 
     trash_  .setFolderPath
         (c->readEntry(QString::fromUtf8("Trash"),   i18n("Trash")));
-   
+
     mailboxList()->loadConfig();
 }
 
@@ -169,7 +166,7 @@ Empath::message(const EmpathURL & source)
             cache_.remove(it.currentKey());
             break; // One at a time.
         }
-    
+
     EmpathCachedMessage * cached = cache_[source.asString()];
 
     if (cached == 0)
@@ -191,7 +188,7 @@ Empath::cacheMessage(const EmpathURL & url, RMM::Message m)
 
     cached->ref();
 }
-        
+
     EmpathMailboxList *
 Empath::mailboxList()
 {
@@ -245,32 +242,42 @@ Empath::folder(const EmpathURL & url)
 { EmpathMailbox * m = mailbox(url); return (m == 0 ? 0 : m->folder(url)); }
 
     EmpathJobID
-Empath::copy(const EmpathURL & from, const EmpathURL & to, QObject * o, const char * slot)
-{ return _jobScheduler()->newCopyJob(from, to, o, slot); }
+Empath::copy(const EmpathURL & from, const EmpathURL & to, QObject * o, int i)
+{ return _jobScheduler()->newCopyJob(from, to, o, i); }
 
     EmpathJobID
-Empath::move(const EmpathURL & from, const EmpathURL & to, QObject * o, const char * slot)
-{ return _jobScheduler()->newMoveJob(from, to, o, slot); }
+Empath::move(const EmpathURL & from, const EmpathURL & to, QObject * o, int i)
+{ return _jobScheduler()->newMoveJob(from, to, o, i); }
 
     EmpathJobID
-Empath::retrieve(const EmpathURL & url, QObject * o, const char * slot)
-{ return _jobScheduler()->newRetrieveJob(url, o, slot); }
+Empath::retrieve(const EmpathURL & url, QObject * o, int i)
+{ return _jobScheduler()->newRetrieveJob(url, o, i); }
 
     EmpathJobID
-Empath::write(RMM::Message & msg, const EmpathURL & folder, QObject * o, const char * slot)
-{ return _jobScheduler()->newWriteJob(msg, folder, o, slot); } 
+Empath::write(RMM::Message & msg, const EmpathURL & folder, QObject * o, int i)
+{ return _jobScheduler()->newWriteJob(msg, folder, o, i); }
 
     EmpathJobID
-Empath::remove(const EmpathURL & url, QObject * o, const char * slot)
-{ return _jobScheduler()->newRemoveJob(url, o, slot); }
+Empath::remove(const EmpathURL & url, QObject * o, int i)
+{ return _jobScheduler()->newRemoveJob(url, o, i); }
 
     EmpathJobID
-Empath::remove(const EmpathURL & f, const QStringList & IDList, QObject * o, const char * slot)
-{ return _jobScheduler()->newRemoveJob(f, IDList, o, slot); }
+Empath::remove(
+    const EmpathURL & f,
+    const QStringList & IDList,
+    QObject * o,
+    int i
+)
+{ return _jobScheduler()->newRemoveJob(f, IDList, o, i); }
 
     EmpathJobID
-Empath::mark(const EmpathURL & url, EmpathIndexRecord::Status s, QObject * o, const char * slot)
-{ return _jobScheduler()->newMarkJob(url, s, o, slot); }
+Empath::mark(
+    const EmpathURL & url,
+    EmpathIndexRecord::Status s,
+    QObject * o,
+    int i
+)
+{ return _jobScheduler()->newMarkJob(url, s, o, i); }
 
     EmpathJobID
 Empath::mark(
@@ -278,17 +285,21 @@ Empath::mark(
     const QStringList & l,
     EmpathIndexRecord::Status s,
     QObject * o,
-    const char * slot
+    int i
 )
-{ return _jobScheduler()->newMarkJob(f, l, s, o, slot); }
+{ return _jobScheduler()->newMarkJob(f, l, s, o, i); }
 
     EmpathJobID
-Empath::createFolder(const EmpathURL & url, QObject * o, const char * slot) 
-{ return _jobScheduler()->newCreateFolderJob(url, o, slot); }
+Empath::readIndex(const EmpathURL & url, QObject * o, int i)
+{ return _jobScheduler()->newReadIndexJob(url, o, i); }
 
     EmpathJobID
-Empath::removeFolder(const EmpathURL & url, QObject * o, const char * slot)
-{ return _jobScheduler()->newRemoveFolderJob(url, o, slot); }
+Empath::createFolder(const EmpathURL & url, QObject * o, int i)
+{ return _jobScheduler()->newCreateFolderJob(url, o, i); }
+
+    EmpathJobID
+Empath::removeFolder(const EmpathURL & url, QObject * o, int i)
+{ return _jobScheduler()->newRemoveFolderJob(url, o, i); }
 
     void
 Empath::send(RMM::Message & m)
@@ -361,7 +372,7 @@ Empath::s_checkMail()
     void
 Empath::s_updateFolderLists()
 { emit(updateFolderLists()); }
-    
+
     void
 Empath::s_syncFolderLists()
 { emit(syncFolderLists()); }
@@ -379,7 +390,7 @@ Empath::_setStartTime()
 {
     struct timeval timeVal;
     struct timezone timeZone;
-    
+
     gettimeofday(&timeVal, &timeZone);
     startupSeconds_ = timeVal.tv_sec;
     startupSecondsStr_.setNum(startupSeconds_);

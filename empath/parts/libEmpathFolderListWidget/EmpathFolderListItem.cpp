@@ -179,4 +179,18 @@ EmpathFolderListItem::setOpen(bool o)
     QListViewItem::setOpen(o);
 }
 
+    EmpathFolderListItem *
+EmpathFolderListItem::child(const QString & name)
+{
+    QListIterator<EmpathFolderListItem> it(childList_);
+
+    for (; it.current(); ++it)
+        if (it.current()->name() == name)
+            return it.current();
+
+    EmpathURL url(url_);
+    url.setFolderPath(url.folderPath() + "/" + name);
+    return new EmpathFolderListItem(this, url);
+}
+
 // vim:ts=4:sw=4:tw=78

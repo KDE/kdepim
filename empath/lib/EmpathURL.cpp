@@ -1,10 +1,10 @@
 /*
     Empath - Mailer for KDE
-    
+
     Copyright 1999, 2000
         Rik Hemsley <rik@kde.org>
         Wilco Greven <j.w.greven@student.utwente.nl>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -80,12 +80,12 @@ EmpathURL::_parse()
         isValid_ = false;
         return;
     }
-    
+
     isValid_ = true;
     strRep_.remove(0, 9);
     bool hadTrailingSlash(strRep_.at(strRep_.length() - 1) == '/');
     _cleanUp(strRep_);
-    
+
     if (strRep_.contains('/') == 0) {
         // empath://mailbox_name
         mailboxName_    = strRep_;
@@ -93,17 +93,17 @@ EmpathURL::_parse()
         messageID_      = QString::null;
         return;
     }
-    
+
     unsigned int endOfMailboxName  = strRep_.find('/');
     mailboxName_ = strRep_.left(endOfMailboxName);
-            
+
     if (hadTrailingSlash) {
         // empath://mailbox-name/folder/path/
         folderPath_ = strRep_.mid(endOfMailboxName + 1);
         messageID_  = QString::null;
         return;
     }
-    
+
     // empath://mailbox-name/folder/path/message-id
     unsigned int endOfFolderPath  = strRep_.findRev('/');
 
@@ -149,7 +149,7 @@ EmpathURL::operator == (const EmpathURL & b) const
 EmpathURL::operator == (const QString & s) const
 {
     EmpathURL url(s);
-    
+
     return (*this == url);
 }
 
@@ -183,12 +183,10 @@ EmpathURL::_assemble()
     strRep_ = "empath://" + s;
 }
 
-    QStrList
+    QStringList
 EmpathURL::folderPathList()
 {
-    QStrList sl_f;
-    RMM::tokenise(folderPath_.latin1(), "/", sl_f);
-    return sl_f;
+    return QStringList::split('/', folderPath_);
 }
 
     EmpathURL
@@ -231,10 +229,10 @@ EmpathURL::_stripSlashes(const QString & s) const
     QString stripped(s);
     while (stripped.at(0) == '/')
         stripped.remove(0, 1);
-    
+
     while (stripped.at(s.length()) == '/')
         stripped.remove(s.length() - 1, 1);
-    
+
     return stripped;
 }
 
