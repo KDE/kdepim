@@ -35,6 +35,7 @@
 #include "icaltime.h"
 #include "icalduration.h"
 #include "icalperiod.h"
+#include "icalparser.h"
 
 #include <stdlib.h>  /* for malloc */
 #include <stdarg.h> /* for va_list, etc */
@@ -137,17 +138,7 @@ icalcomponent_vanew (icalcomponent_kind kind, ...)
 
 icalcomponent* icalcomponent_new_from_string(char* str)
 {
-    icalcomponent_kind kind;
-
-    icalerror_check_arg_rz( (str!=0), "str");
-
-    kind = icalenum_string_to_component_kind(str);
-
-    if (kind == ICAL_NO_COMPONENT){
-	return 0;
-    }
-    
-    return icalcomponent_new(kind);
+    return icalparser_parse_string(str);
 }
 
 icalcomponent* icalcomponent_new_clone(icalcomponent* component)
@@ -268,7 +259,7 @@ icalcomponent_as_ical_string (icalcomponent* component)
    icalerror_check_arg_rz( (component!=0), "component");
    icalerror_check_arg_rz( (kind!=ICAL_NO_COMPONENT), "component kind is ICAL_NO_COMPONENT");
    
-   kind_string  = icalenum_component_kind_to_string(kind);
+   kind_string  = icalcomponent_kind_to_string(kind);
 
    icalerror_check_arg_rz( (kind_string!=0),"Unknown kind of component");
 
@@ -305,7 +296,7 @@ icalcomponent_as_ical_string (icalcomponent* component)
    
    icalmemory_append_string(&buf, &buf_ptr, &buf_size, "END:");
    icalmemory_append_string(&buf, &buf_ptr, &buf_size, 
-			    icalenum_component_kind_to_string(kind));
+			    icalcomponent_kind_to_string(kind));
    icalmemory_append_string(&buf, &buf_ptr, &buf_size, newline);
 
    out_buf = icalmemory_tmp_copy(buf);
@@ -369,8 +360,8 @@ int icalcomponent_property_sorter(void *a, void *b)
     kinda = icalproperty_isa((icalproperty*)a);
     kindb = icalproperty_isa((icalproperty*)b);
 
-    ksa = icalenum_property_kind_to_string(kinda);
-    ksb = icalenum_property_kind_to_string(kindb);
+    ksa = icalproperty_kind_to_string(kinda);
+    ksb = icalproperty_kind_to_string(kindb);
 
     return strcmp(ksa,ksb);
 }
@@ -535,7 +526,9 @@ icalcomponent_add_component (icalcomponent* parent, icalcomponent* child)
     impl = (struct icalcomponent_impl*)parent;
     cimpl = (struct icalcomponent_impl*)child;
 
-    icalerror_assert( (cimpl->parent ==0),"The child component has already been added to a parent component. Remove the component with icalcomponent_remove_component before calling icalcomponent_add_component");
+    if (cimpl->parent !=0) {
+        icalerror_set_errno(ICAL_USAGE_ERROR);
+    }
 
     cimpl->parent = parent;
 
@@ -678,7 +671,8 @@ icalcomponent* icalcomponent_get_first_real_component(icalcomponent *c)
 
 	if(kind == ICAL_VEVENT_COMPONENT ||
 	   kind == ICAL_VTODO_COMPONENT ||
-	   kind == ICAL_VJOURNAL_COMPONENT ){
+	   kind == ICAL_VJOURNAL_COMPONENT ||
+           kind == ICAL_VFREEBUSY_COMPONENT ){
 	    return comp;
 	}
     }
@@ -963,10 +957,7 @@ void icalcomponent_convert_errors(icalcomponent* component)
 		
 		rst.debug = icalproperty_get_xlicerror(p);
 		icalcomponent_add_property(component,
-					   icalproperty_new_requeststatus(
-					       icalreqstattype_as_string(rst)
-					       )
-		    );
+					   icalproperty_new_requeststatus(rst));
 		
 		icalcomponent_remove_property(component,p);
 	    }
@@ -1473,6 +1464,10 @@ icalcomponent* icalcomponent_new_vtodo()
 icalcomponent* icalcomponent_new_vjournal()
 {
     return icalcomponent_new(ICAL_VJOURNAL_COMPONENT);
+}
+icalcomponent* icalcomponent_new_valarm()
+{
+    return icalcomponent_new(ICAL_VALARM_COMPONENT);
 }
 icalcomponent* icalcomponent_new_vfreebusy()
 {

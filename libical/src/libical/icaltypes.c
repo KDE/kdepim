@@ -186,9 +186,9 @@ struct icaltriggertype icaltriggertype_from_string(const char* str)
 }
 
 
-struct icalreqstattype icalreqstattype_from_string(char* str)
+struct icalreqstattype icalreqstattype_from_string(const char* str)
 {
-  char *p1,*p2;
+  const char *p1,*p2;
   struct icalreqstattype stat;
   int major, minor;
 
@@ -203,14 +203,14 @@ struct icalreqstattype icalreqstattype_from_string(char* str)
   sscanf(str, "%d.%d",&major, &minor);
 
   if (major <= 0 || minor < 0){
-    icalerror_set_errno(ICAL_BADARG_ERROR);
+    icalerror_set_errno(ICAL_MALFORMEDDATA_ERROR);
     return stat;
   }
 
   stat.code = icalenum_num_to_reqstat(major, minor);
 
   if (stat.code == ICAL_UNKNOWN_STATUS){
-    icalerror_set_errno(ICAL_BADARG_ERROR);
+    icalerror_set_errno(ICAL_MALFORMEDDATA_ERROR);
     return stat;
   }
   
@@ -236,7 +236,7 @@ struct icalreqstattype icalreqstattype_from_string(char* str)
   
 }
 
-char* icalreqstattype_as_string(struct icalreqstattype stat)
+const char* icalreqstattype_as_string(struct icalreqstattype stat)
 {
   char *temp;
 

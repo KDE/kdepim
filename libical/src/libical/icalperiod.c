@@ -52,7 +52,7 @@ struct icalperiodtype icalperiodtype_from_string (const char* str)
 {
     
     struct icalperiodtype p, null_p;
-    char *s = strdup(str);
+    char *s = icalmemory_strdup(str);
     char *start, *end = s;
     icalerrorstate es;
 

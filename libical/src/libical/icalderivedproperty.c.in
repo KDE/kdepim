@@ -48,6 +48,10 @@
 struct icalproperty_impl*
 icalproperty_new_impl (icalproperty_kind kind);
 
+/* This map associates the property kinds with the string
+   representation of the property name and the kind of VALUE that the
+   property uses as a default */
+
 struct  icalproperty_map {
 	icalproperty_kind kind;
 	const char *name;
@@ -55,7 +59,7 @@ struct  icalproperty_map {
 
 };
 
-static struct icalproperty_map property_map[1];
+extern struct icalproperty_map property_map[];
 
 const char* icalproperty_kind_to_string(icalproperty_kind kind)
 {
@@ -96,6 +100,21 @@ icalproperty_kind icalproperty_string_to_kind(const char* string)
 }
 
 
+icalvalue_kind icalproperty_value_kind_to_kind(icalvalue_kind kind)
+{
+    int i;
+
+    for (i=0; property_map[i].kind  != ICAL_NO_PROPERTY; i++) {
+	if ( property_map[i].value == kind ) {
+	    return property_map[i].kind;
+	}
+    }
+
+    return ICAL_NO_VALUE;
+}
+
+
+
 icalvalue_kind icalproperty_kind_to_value_kind(icalproperty_kind kind)
 {
     int i;
@@ -110,13 +129,61 @@ icalvalue_kind icalproperty_kind_to_value_kind(icalproperty_kind kind)
 }
 
 
+/* This map associates the property enumerations with the king of
+   property that they are used in and the string representation of the
+   enumeration */
+
 struct icalproperty_enum_map {
     icalproperty_kind prop;
     int prop_enum;
     const char* str;
 }; 
 
-static struct icalproperty_enum_map enum_map[1];
+extern struct icalproperty_enum_map enum_map[];
+
+
+const char* icalproperty_enum_to_string(int e)
+{
+    icalerror_check_arg_rz(e >= ICALPROPERTY_FIRST_ENUM,"e");
+    icalerror_check_arg_rz(e <= ICALPROPERTY_LAST_ENUM,"e");
+
+    return enum_map[e-ICALPROPERTY_FIRST_ENUM].str;
+}
+
+int icalproperty_string_to_enum(const char* str)
+{
+    int i;
+
+    icalerror_check_arg_rz(str!=0,"str")
+
+    while(*str == ' '){
+	str++;
+    }
+
+    for (i=ICALPROPERTY_FIRST_ENUM; i != ICALPROPERTY_LAST_ENUM; i++) {
+	if ( strcmp(enum_map[i-ICALPROPERTY_FIRST_ENUM].str, str) == 0) {
+	    return enum_map[i-ICALPROPERTY_FIRST_ENUM].prop_enum;
+	}
+    }
+
+    return 0;
+}
+
+int icalproperty_enum_belongs_to_property(icalproperty_kind kind, int e)
+{
+    int i;
+
+
+    for (i=ICALPROPERTY_FIRST_ENUM; i != ICALPROPERTY_LAST_ENUM; i++) {
+        if(enum_map[i-ICALPROPERTY_FIRST_ENUM].prop_enum == e && 
+           enum_map[i-ICALPROPERTY_FIRST_ENUM].prop == kind ){
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 
 const char* icalproperty_method_to_string(icalproperty_method method)
 {

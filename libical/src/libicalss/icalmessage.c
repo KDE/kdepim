@@ -353,10 +353,7 @@ icalcomponent* icalmessage_new_error_reply(icalcomponent* c,
 	rs.debug = debug;
 	
 	icalcomponent_add_property(inner, 
-				   icalproperty_new_requeststatus(
-				       icalreqstattype_as_string(rs)
-				       ) 
-	    );
+				   icalproperty_new_requeststatus(rs));
     } else { /*  code == ICAL_UNKNOWN_STATUS */ 
 
 	/* Copy all of the request status properties */

@@ -43,7 +43,8 @@ struct icalvalue_impl {
     char id[5];
     int size;
     icalproperty* parent;
-    
+    const char* x_value;
+
     union data {
 	struct icalattachtype v_attach;		
 	/* void *v_binary; */ /* use v_attach */
@@ -67,6 +68,8 @@ struct icalvalue_impl {
 	/*struct icaltimetype v_datetime;*/
 	/*struct icaltimetype v_datetimedate;*/
 	
+        struct icalreqstattype v_requeststatus;
+
 	/* struct icalrecurrencetype was once included
 	   directly ( not referenced ) in this union, but it
 	   contributes 2000 bytes to every value, so now it is
@@ -74,10 +77,16 @@ struct icalvalue_impl {
 	
 	struct icalrecurrencetype *v_recur;
 	struct icaltriggertype v_trigger;
+
+        int v_enum;
+        /* v_enum takes care of several enumerated types including: 
 	icalproperty_method v_method;
 	icalproperty_status v_status;
+        icalproperty_action v_action;
         icalproperty_class v_class;
 	icalproperty_transp v_transp;
+        */
+
     } data;
 };
 

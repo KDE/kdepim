@@ -39,4 +39,22 @@ typedef void icalvalue;
 
 
 
+void icalvalue_set_x(icalvalue* value, const char* v);
+icalvalue* icalvalue_new_x(const char* v);
+const char* icalvalue_get_x(icalvalue* value);
+
+icalvalue* icalvalue_new_recur (struct icalrecurrencetype v);
+void icalvalue_set_recur(icalvalue* value, struct icalrecurrencetype v);
+struct icalrecurrencetype icalvalue_get_recur(icalvalue* value);
+
+icalvalue* icalvalue_new_trigger (struct icaltriggertype v);
+void icalvalue_set_trigger(icalvalue* value, struct icaltriggertype v);
+struct icaltriggertype icalvalue_get_trigger(icalvalue* value);
+
+icalvalue* icalvalue_new_datetimeperiod (struct icaldatetimeperiodtype v);
+void icalvalue_set_datetimeperiod(icalvalue* value, struct icaldatetimeperiodtype v);
+struct icaldatetimeperiodtype icalvalue_get_datetimeperiod(icalvalue* value);
+
+void icalvalue_reset_kind(icalvalue* value);
+
 /* Everything below this line is machine generated. Do not edit. */

@@ -260,11 +260,13 @@ const char* icallangbind_property_eval_string(icalproperty* prop, char* sep)
 
 }
 
-
-icalproperty* icallangbind_property_new_from_string(const char* str)
+#include "fcntl.h"
+int icallangbind_string_to_open_flag(const char* str)
 {
-
+    if (strcmp(str,"r") == 0) {return O_RDONLY;}
+    else if (strcmp(str,"r+") == 0) {return O_RDWR;}
+    else if (strcmp(str,"w") == 0) {return O_WRONLY;}
+    else if (strcmp(str,"a") == 0) {return O_WRONLY|O_APPEND;}
+    else return -1;
 }
-
-
 

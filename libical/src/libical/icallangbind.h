@@ -45,4 +45,5 @@ icalcomponent* icallangbind_get_next_component(icalcomponent *c,
 const char* icallangbind_property_eval_string(icalproperty* prop, char* sep);
 
 
+int icallangbind_string_to_open_flag(const char* str);
 #endif /*__ICALLANGBIND_H__*/

@@ -160,7 +160,7 @@ icalparameter* icalparameter_new_from_string(const char *str)
 
     icalerror_check_arg_rz(str != 0,"str");
 
-    cpy = strdup(str);
+    cpy = icalmemory_strdup(str);
 
     if (cpy == 0){
         icalerror_set_errno(ICAL_NEWFAILED_ERROR);
@@ -247,7 +247,7 @@ icalparameter_as_ical_string (icalparameter* parameter)
     if(impl->string !=0){
         icalmemory_append_string(&buf, &buf_ptr, &buf_size, impl->string); 
     } else if (impl->data != 0){
-        char* str = icalparameter_enum_to_string(impl->data);
+        const char* str = icalparameter_enum_to_string(impl->data);
         icalmemory_append_string(&buf, &buf_ptr, &buf_size, str); 
     } else {
         icalerror_set_errno(ICAL_MALFORMEDDATA_ERROR);

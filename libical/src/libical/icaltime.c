@@ -90,7 +90,7 @@ struct set_tz_save set_tz(const char* tzid)
     savetz.new_env_str = 0;
 
     if(getenv("TZ") != 0){
-	orig_tzid = (char*)strdup(getenv("TZ"));
+	orig_tzid = (char*)icalmemory_strdup(getenv("TZ"));
 
 	if(orig_tzid == 0){
             icalerror_set_errno(ICAL_NEWFAILED_ERROR);

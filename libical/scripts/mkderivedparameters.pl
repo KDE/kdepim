@@ -2,71 +2,6 @@
 
 require "readvaluesfile.pl";
 
-sub create_value_kind_map {
-  # Create the icalparameter_value to icalvalue_kind conversion table
-  print "struct  icalparameter_value_kind_map value_kind_map[] = {\n";
-  
-  foreach $enum (@{$params{'VALUE'}->{'enums'}}){
-    next if $enum eq 'NO' or $enum eq 'ERROR';
-    $uc = join("",map {uc(lc($_));}  split(/-/,$enum));    
-    print "    {ICAL_VALUE_${uc},ICAL_${uc}_VALUE},\n";
-  }
-  
-  print "    {ICAL_VALUE_X,ICAL_X_VALUE},\n";
-  print "    {ICAL_VALUE_NONE,ICAL_NO_VALUE}\n};\n\n";
-}
-
-sub create_kind_map {
-  #Create the parameter Name map
-  print "static struct icalparameter_kind_map parameter_map[] = { \n";
-
-  foreach $param (sort keys %params) {
-    
-    next if !$param;
-    
-    next if $param eq 'NO' or $prop eq 'ANY';
-
-    my $lc = join("",map {lc($_);}  split(/-/,$param));    
-    my $uc = join("",map {uc(lc($_));}  split(/-/,$param));    
-
-
-    print "    {ICAL_${uc}_PARAMETER,\"$param\"},\n";
-
-  }
-
-  print "    { ICAL_NO_PARAMETER, \"\"}\n};\n\n";
-}
-
-sub create_map {
-  # Create the parameter value map
-
-  print "static struct icalparameter_map icalparameter_map[] = {\n";
-  print "{ICAL_ANY_PARAMETER,0,\"\"},\n";
-
-  foreach $param (sort keys %params) {
-    
-    next if !$param;
-    
-    next if $param eq 'NO' or $prop eq 'ANY';
-
-    my $type = $params{$param}->{"C"};
-    my $uc = join("",map {uc(lc($_));}  split(/-/,$param));    
-    my @enums = @{$params{$param}->{'enums'}};
-
-    if(@enums){
-
-      foreach $e (@enums){
-	my $uce = join("",map {uc(lc($_));}  split(/-/,$e));    
-
-	print "    {ICAL_${uc}_PARAMETER,ICAL_${uc}_${uce},\"$e\"},\n";
-      }
-
-    }
-  }
-
-  print "    {ICAL_NO_PARAMETER,0,\"\"}};\n\n";
-}
-
 use Getopt::Std;
 getopts('chspi:');
 
@@ -87,24 +22,8 @@ if ($opt_i) {
     if (/Do not edit/){
       last;
     }
-    if ($opt_c) {
-      if (/ICAL_PARAMETER_VALUE_KIND_MAP/) {
-         create_value_kind_map();
-      }
-      else {
-        if (/ICAL_PARAMETER_KIND_MAP/) {
-          create_kind_map();
-        } else {
-          if (/ICAL_PARAMETER_MAP/) {
-            create_map();
-          } else {
-            print;
-          }
-        }
-      }
-    } else {
-      print;
-    }
+
+    print;
 
   }    
 
@@ -187,6 +106,69 @@ if($opt_h){
 
 }
 
+if ($opt_c){
+
+  # Create the icalparameter_value to icalvalue_kind conversion table
+  print "struct  icalparameter_value_kind_map value_kind_map[] = {\n";
+  
+  foreach $enum (@{$params{'VALUE'}->{'enums'}}){
+    next if $enum eq 'NO' or $enum eq 'ERROR';
+    $uc = join("",map {uc(lc($_));}  split(/-/,$enum));    
+    print "    {ICAL_VALUE_${uc},ICAL_${uc}_VALUE},\n";
+  }
+  
+  print "    {ICAL_VALUE_X,ICAL_X_VALUE},\n";
+  print "    {ICAL_VALUE_NONE,ICAL_NO_VALUE}\n};\n\n";
+  
+  #Create the parameter Name map
+  print "static struct icalparameter_kind_map parameter_map[] = { \n";
+
+  foreach $param (sort keys %params) {
+    
+    next if !$param;
+    
+    next if $param eq 'NO' or $prop eq 'ANY';
+
+    my $lc = join("",map {lc($_);}  split(/-/,$param));    
+    my $uc = join("",map {uc(lc($_));}  split(/-/,$param));    
+
+
+    print "    {ICAL_${uc}_PARAMETER,\"$param\"},\n";
+
+  }
+
+  print "    { ICAL_NO_PARAMETER, \"\"}\n};\n\n";
+  
+  # Create the parameter value map
+
+  print "static struct icalparameter_map icalparameter_map[] = {\n";
+  print "{ICAL_ANY_PARAMETER,0,\"\"},\n";
+
+  foreach $param (sort keys %params) {
+    
+    next if !$param;
+    
+    next if $param eq 'NO' or $prop eq 'ANY';
+
+    my $type = $params{$param}->{"C"};
+    my $uc = join("",map {uc(lc($_));}  split(/-/,$param));    
+    my @enums = @{$params{$param}->{'enums'}};
+
+    if(@enums){
+
+      foreach $e (@enums){
+	my $uce = join("",map {uc(lc($_));}  split(/-/,$e));    
+
+	print "    {ICAL_${uc}_PARAMETER,ICAL_${uc}_${uce},\"$e\"},\n";
+      }
+
+    }
+  }
+
+  print "    {ICAL_NO_PARAMETER,0,\"\"}};\n\n";
+
+}
+
 foreach $param  (keys %params){
 
   my $type = $params{$param}->{'C'};
@@ -206,7 +188,7 @@ foreach $param  (keys %params){
 
      $charorenum = "    icalerror_check_arg_rz( (param!=0), \"param\");\n    return ($type)((struct icalparameter_impl*)param)->string;";
     
-     $set_code = "((struct icalparameter_impl*)param)->string = strdup(v);";
+     $set_code = "((struct icalparameter_impl*)param)->string = icalmemory_strdup(v);";
 
      $pointer_check = "icalerror_check_arg_rz( (v!=0),\"v\");"; 
      $pointer_check_v = "icalerror_check_arg_rv( (v!=0),\"v\");"; 

@@ -448,7 +448,7 @@ char** get_required_attendees(icalproperty* event)
 
 	if ( icalparameter_get_role(parameter) == ICAL_ROLE_REQPARTICIPANT) 
 	{
-	    attendees[c++] = strdup(icalproperty_get_attendee(p));
+	    attendees[c++] = icalmemory_strdup(icalproperty_get_attendee(p));
 
             if (c >= max) {
                 max *= 2; 
@@ -567,8 +567,7 @@ void test_values()
     assert(ICAL_DURATION_VALUE == 
            icalparameter_value_to_value_kind(ICAL_VALUE_DURATION));
     assert(ICAL_INTEGER_VALUE == icalparameter_value_to_value_kind(ICAL_VALUE_INTEGER));
-    assert(ICAL_TIME_VALUE == 
-           icalparameter_value_to_value_kind(ICAL_VALUE_TIME));
+
     assert(ICAL_URI_VALUE == 
            icalparameter_value_to_value_kind(ICAL_VALUE_URI));
     assert(ICAL_FLOAT_VALUE == 
@@ -1242,6 +1241,23 @@ void test_recur()
 
 }
 
+void test_expand_recurrence(){
+
+    time_t arr[10];
+    time_t now = 931057385;
+    int i;
+    icalrecur_expand_recurrence( "FREQ=MONTHLY;BYDAY=MO,WE", now,
+                                 5, arr );
+
+    printf("Start %s",ctime(&now) );
+    for (i=0; i<5; i++)
+        {
+            printf("i=%d  %s\n", i, ctime(&arr[i]) );
+        }
+            
+}
+
+
 
 enum byrule {
     NO_CONTRACTION = -1,
@@ -1453,64 +1469,73 @@ void test_strings(){
 
 void test_requeststat()
 {
-  icalrequeststatus s;
-  struct icalreqstattype st, st2;
-  char temp[1024];
+    icalproperty *p;
+    icalrequeststatus s;
+    struct icalreqstattype st, st2;
+    char temp[1024];
+    
+    s = icalenum_num_to_reqstat(2,1);
+    
+    assert(s == ICAL_2_1_FALLBACK_STATUS);
+    
+    assert(icalenum_reqstat_major(s) == 2);
+    assert(icalenum_reqstat_minor(s) == 1);
+    
+    printf("2.1: %s\n",icalenum_reqstat_desc(s));
+    
+    st.code = s;
+    st.debug = "booga";
+    st.desc = 0;
+    
+    printf("%s\n",icalreqstattype_as_string(st));
+    
+    st.desc = " A non-standard description";
+    
+    printf("%s\n",icalreqstattype_as_string(st));
+    
+    
+    st.desc = 0;
+    
+    sprintf(temp,"%s\n",icalreqstattype_as_string(st));
+    
+    
+    st2 = icalreqstattype_from_string("2.1;Success but fallback taken  on one or more property  values.;booga");
+    
+    /*    printf("%d --  %d --  %s -- %s\n",*/
+    assert(icalenum_reqstat_major(st2.code) == 2);
+    assert(icalenum_reqstat_minor(st2.code) == 1);
+    assert(regrstrcmp( icalenum_reqstat_desc(st2.code),"Success but fallback taken  on one or more property  values.")==0);
+    
+    st2 = icalreqstattype_from_string("2.1;Success but fallback taken  on one or more property  values.;booga");
+    printf("%s\n",icalreqstattype_as_string(st2));
+    
+    st2 = icalreqstattype_from_string("2.1;Success but fallback taken  on one or more property  values.;");
+    printf("%s\n",icalreqstattype_as_string(st2));
+    
+    st2 = icalreqstattype_from_string("2.1;Success but fallback taken  on one or more property  values.");
+    printf("%s\n",icalreqstattype_as_string(st2));
+    
+    st2 = icalreqstattype_from_string("2.1;");
+    printf("%s\n",icalreqstattype_as_string(st2));
+    assert(regrstrcmp(icalreqstattype_as_string(st2),"2.1;Success but fallback taken  on one or more property  values.")==0);
+    
+    st2 = icalreqstattype_from_string("2.1");
+    printf("%s\n",icalreqstattype_as_string(st2));
+    assert(regrstrcmp(icalreqstattype_as_string(st2),"2.1;Success but fallback taken  on one or more property  values.")==0);
+    
+    p = icalproperty_new_from_string("REQUEST-STATUS:2.1;Success but fallback taken  on one or more property  values.;booga");
 
-  s = icalenum_num_to_reqstat(2,1);
+    printf("%s\n",icalproperty_as_ical_string(p));
+    assert(regrstrcmp(icalproperty_as_ical_string(p),"REQUEST-STATUS\n :2.1;Success but fallback taken  on one or more property  values.;booga\n")==0);
 
-  assert(s == ICAL_2_1_FALLBACK_STATUS);
-
-  assert(icalenum_reqstat_major(s) == 2);
-  assert(icalenum_reqstat_minor(s) == 1);
-
-  printf("2.1: %s\n",icalenum_reqstat_desc(s));
-
-  st.code = s;
-  st.debug = "booga";
-  st.desc = 0;
-
-  printf("%s\n",icalreqstattype_as_string(st));
-
-  st.desc = " A non-standard description";
-
-  printf("%s\n",icalreqstattype_as_string(st));
-
-
-  st.desc = 0;
-
-  sprintf(temp,"%s\n",icalreqstattype_as_string(st));
-  
-
-  st2 = icalreqstattype_from_string("2.1;Success but fallback taken  on one or more property  values.;booga");
-
-  printf("%d --  %d --  %s -- %s\n",icalenum_reqstat_major(st2.code),
-         icalenum_reqstat_minor(st2.code),
-         icalenum_reqstat_desc(st2.code),
-         st2.debug);
-
-  st2 = icalreqstattype_from_string("2.1;Success but fallback taken  on one or more property  values.;booga");
-  printf("%s\n",icalreqstattype_as_string(st2));
-
-  st2 = icalreqstattype_from_string("2.1;Success but fallback taken  on one or more property  values.;");
-  printf("%s\n",icalreqstattype_as_string(st2));
-
-  st2 = icalreqstattype_from_string("2.1;Success but fallback taken  on one or more property  values.");
-  printf("%s\n",icalreqstattype_as_string(st2));
-
-  st2 = icalreqstattype_from_string("2.1;");
-  printf("%s\n",icalreqstattype_as_string(st2));
-
-  st2 = icalreqstattype_from_string("2.1");
-  printf("%s\n",icalreqstattype_as_string(st2));
-
-#ifndef ICAL_ERRORS_ARE_FATAL
-  st2 = icalreqstattype_from_string("16.4");
-  assert(st2.code == ICAL_UNKNOWN_STATUS);
-
-  st2 = icalreqstattype_from_string("1.");
-  assert(st2.code == ICAL_UNKNOWN_STATUS);
-#endif
+    icalerror_set_error_state(ICAL_MALFORMEDDATA_ERROR,ICAL_ERROR_NONFATAL);
+    st2 = icalreqstattype_from_string("16.4");
+    assert(st2.code == ICAL_UNKNOWN_STATUS);
+    
+    st2 = icalreqstattype_from_string("1.");
+    assert(st2.code == ICAL_UNKNOWN_STATUS);
+    icalerror_set_error_state(ICAL_MALFORMEDDATA_ERROR,ICAL_ERROR_DEFAULT);
+    
 }
 
 char ictt_str[1024];
@@ -1533,6 +1558,46 @@ char* ical_timet_string(time_t t)
 
     return ictt_str;
     
+}
+
+void test_dtstart(){
+    
+    struct icaltimetype tt,tt2;
+    
+    icalproperty *p;
+    
+
+    tt = icaltime_from_string("19970101");
+
+    assert(tt.is_date == 1);
+
+    p = icalproperty_new_dtstart(tt);
+
+    printf("%s\n",icalvalue_kind_to_string(icalvalue_isa(icalproperty_get_value(p))));
+    assert(icalvalue_isa(icalproperty_get_value(p))==ICAL_DATE_VALUE);
+
+    tt2 = icalproperty_get_dtstart(p);
+    assert(tt2.is_date == 1);
+
+    printf("%s\n",icalproperty_as_ical_string(p));
+
+
+    tt = icaltime_from_string("19970101T103000");
+
+    assert(tt.is_date == 0);
+
+    p = icalproperty_new_dtstart(tt);
+
+    printf("%s\n",icalvalue_kind_to_string(icalvalue_isa(icalproperty_get_value(p))));
+    assert(icalvalue_isa(icalproperty_get_value(p))==ICAL_DATETIME_VALUE);
+
+    tt2 = icalproperty_get_dtstart(p);
+    assert(tt2.is_date == 0);
+
+    printf("%s\n",icalproperty_as_ical_string(p));
+
+
+
 }
 
 void do_test_time(char* zone)
@@ -1841,7 +1906,7 @@ char* test_set_tz(const char* tzid)
 
    /* Put the new time zone into the environment */
     if(getenv("TZ") != 0){
-	tzstr = (char*)strdup(getenv("TZ"));
+	tzstr = (char*)icalmemory_strdup(getenv("TZ"));
 
 	if(tzstr == 0){
 	    icalerror_set_errno(ICAL_NEWFAILED_ERROR);
@@ -1895,7 +1960,7 @@ void test_time()
 
     stm = *(localtime(&tt));
 
-    orig_month = stm.tm_mon;
+     orig_month = stm.tm_mon;
 
     do_test_time(0);
 
@@ -2928,7 +2993,49 @@ void test_file_locks()
     assert(sec == final);
 }
 
+void test_action()
+{
+    icalcomponent *c;
+    icalproperty *p;
+    
+    static const char test_icalcomp_str[] =
+"BEGIN:VEVENT\n"
+"ACTION:EMAIL\n"
+"ACTION:PROCEDURE\n"
+"ACTION:AUDIO\n"
+"ACTION:FUBAR\n"
+"END:VEVENT\r\n";
 
+     
+    c = icalparser_parse_string ((char *) test_icalcomp_str);
+    if (!c) {
+	fprintf (stderr, "main(): could not parse the component\n");
+	exit (EXIT_FAILURE);
+    }
+    
+    printf("%s\n\n",icalcomponent_as_ical_string(c));
+
+    p = icalcomponent_get_first_property(c,ICAL_ACTION_PROPERTY);
+
+    assert(icalproperty_get_action(p) == ICAL_ACTION_EMAIL);
+
+    p = icalcomponent_get_next_property(c,ICAL_ACTION_PROPERTY);
+
+    assert(icalproperty_get_action(p) == ICAL_ACTION_PROCEDURE);
+
+    p = icalcomponent_get_next_property(c,ICAL_ACTION_PROPERTY);
+
+    assert(icalproperty_get_action(p) == ICAL_ACTION_AUDIO);
+
+    p = icalcomponent_get_next_property(c,ICAL_ACTION_PROPERTY);
+
+    assert(icalproperty_get_action(p) == ICAL_ACTION_X);
+    assert(regrstrcmp(icalvalue_get_x(icalproperty_get_value(p)), "FUBAR")==0);
+
+
+}
+
+        
 
 void test_trigger()
 {
@@ -3229,11 +3336,59 @@ void test_property_parse()
 }
 
 
+void test_value_parameter() 
+{
+
+    icalcomponent *c;
+    icalproperty *p;
+    icalparameter *param;
+    
+    static const char test_icalcomp_str[] =
+"BEGIN:VEVENT\n"
+"DTSTART;VALUE=DATE-TIME:19971123T123000\n"
+"DTSTART;VALUE=DATE:19971123\n"
+"DTSTART;VALUE=FOO:19971123T123000\n"
+"END:VEVENT\n";
+     
+    c = icalparser_parse_string ((char *) test_icalcomp_str);
+    if (!c) {
+	fprintf (stderr, "main(): could not parse the component\n");
+	exit (EXIT_FAILURE);
+    }
+
+    printf("%s",icalcomponent_as_ical_string(c));
+
+    p = icalcomponent_get_first_property(c,ICAL_DTSTART_PROPERTY);
+    param = icalproperty_get_first_parameter(p,ICAL_VALUE_PARAMETER);
+    assert(icalparameter_get_value(param) == ICAL_VALUE_DATETIME);
+
+    p = icalcomponent_get_next_property(c,ICAL_DTSTART_PROPERTY);
+    param = icalproperty_get_first_parameter(p,ICAL_VALUE_PARAMETER);
+    assert(icalparameter_get_value(param) == ICAL_VALUE_DATE);
+
+}
+
+
+void test_x_property() 
+{
+    icalproperty *p;
+    
+    p= icalproperty_new_from_string(
+       "X-LIC-PROPERTY: This is a note");
+
+    printf("%s\n",icalproperty_as_ical_string(p));
+
+    assert(icalproperty_isa(p) == ICAL_X_PROPERTY);
+    assert(regrstrcmp(icalproperty_get_x_name(p),"X-LIC-PROPERTY")==0);
+    assert(regrstrcmp(icalproperty_get_x(p)," This is a note")==0);
+
+}
+
 int main(int argc, char *argv[])
 {
     int c;
     extern char *optarg;
-    extern int optind, optopt;
+    extern int optopt;
     int errflg=0;
     char* program_name = strrchr(argv[0],'/');
     int ttime=0, trecur=0,tspan=0, tmisc=0, tgauge = 0, tfile = 0,
@@ -3324,6 +3479,11 @@ int main(int argc, char *argv[])
 	printf("\n------------Test period ----------------\n");
 	test_period();
     }	
+
+    if(ttime==1 || ttime==7){
+	printf("\n------------Test DTSTART ----------------\n");
+        test_dtstart();
+    }
 	
 
 	    
@@ -3341,6 +3501,13 @@ int main(int argc, char *argv[])
 	printf("\n------------Test parameter bug---------\n");
 	test_recur_parameter_bug();
     }
+
+    if(trecur==1 || trecur==5){
+	printf("\n------------Test Array Expansion---------\n");
+	test_expand_recurrence();
+    }
+
+    
 
 
     if(tspan==1 || tspan==2){
@@ -3402,7 +3569,6 @@ int main(int argc, char *argv[])
 	test_rdate();
     }
 
-
     if(tmisc == 1 || tmisc  == 6){
 
 	printf("\n------------Test language binding---------------\n");
@@ -3415,6 +3581,27 @@ int main(int argc, char *argv[])
 	printf("\n------------Test property parser---------------\n");
 	test_property_parse();
     }
+
+    if(tmisc == 1 || tmisc  == 8){
+	printf("\n------------Test Action ------------------\n");
+	test_action();
+    }
+
+    if(tmisc == 1 || tmisc  == 9){
+	printf("\n------------Test Value Parameter ------------------\n");
+	test_value_parameter();
+    }
+
+    if(tmisc == 1 || tmisc  == 10){
+	printf("\n------------Test X property ------------------\n");
+	test_x_property();
+    }
+
+    if(tmisc == 1 || tmisc  == 11){
+	printf("\n-----------Test request status-------\n");
+	test_requeststat();
+    }
+
 
     if(tbasic == 1 || tbasic  == 2){
 	printf("\n------------Test Values---------------\n");
@@ -3450,8 +3637,6 @@ int main(int argc, char *argv[])
 	test_iterators();
 	
 	
-	printf("\n-----------Test request status-------\n");
-	test_requeststat();
 	
 	printf("\n------------Test strings---------------\n");
 	test_strings();

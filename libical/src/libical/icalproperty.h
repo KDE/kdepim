@@ -31,6 +31,8 @@
 #define ICALPROPERTY_H
 
 #include <time.h>
+
+
 #include "icalderivedparameter.h"
 
 #include "icalvalue.h"  
@@ -45,9 +47,9 @@ icalproperty* icalproperty_new(icalproperty_kind kind);
 
 icalproperty* icalproperty_new_clone(icalproperty * prop);
 
-icalproperty* icalproperty_new_from_string(char* str);
+icalproperty* icalproperty_new_from_string(const char* str);
 
-char* icalproperty_as_ical_string(icalproperty* prop);
+const char* icalproperty_as_ical_string(icalproperty* prop);
 
 void  icalproperty_free(icalproperty* prop);
 
@@ -80,17 +82,19 @@ const char* icalproperty_get_value_as_string(icalproperty* prop);
 
 /* Deal with X properties */
 
-void icalproperty_set_x_name(icalproperty* prop, char* name);
-char* icalproperty_get_x_name(icalproperty* prop);
+void icalproperty_set_x_name(icalproperty* prop, const char* name);
+const char* icalproperty_get_x_name(icalproperty* prop);
 
 /* Return the name of the property -- the type name converted to a
    string, or the value of _get_x_name if the type is and X property */
-char* icalproperty_get_name (icalproperty* prop);
+const char* icalproperty_get_name (icalproperty* prop);
 
+icalvalue_kind icalparameter_value_to_value_kind(icalparameter_value value);
 
 /* Convert kinds to string and get default value type */
 
 icalvalue_kind icalproperty_kind_to_value_kind(icalproperty_kind kind);
+icalvalue_kind icalproperty_value_kind_to_kind(icalvalue_kind kind);
 const char* icalproperty_kind_to_string(icalproperty_kind kind);
 icalproperty_kind icalproperty_string_to_kind(const char* string);
 
@@ -98,8 +102,15 @@ icalproperty_method icalproperty_string_to_method(const char* str);
 const char* icalproperty_method_to_string(icalproperty_method method);
 
 
+const char* icalproperty_enum_to_string(int e);
+int icalproperty_string_to_enum(const char* str);
+
 const char* icalproperty_status_to_string(icalproperty_status);
 icalproperty_status icalproperty_string_to_status(const char* string);
+
+int icalproperty_enum_belongs_to_property(icalproperty_kind kind, int e);
+
+
 
 
 #endif /*ICALPROPERTY_H*/

@@ -57,7 +57,7 @@ void icalparameter_set_parent(icalparameter* param,
 icalproperty* icalparameter_get_parent(icalparameter* value);
 
 
-void icalproperty_set_x_name(icalproperty* prop, char* name);
+void icalproperty_set_x_name(icalproperty* prop, const char* name);
 
 struct icalproperty_impl 
 {
@@ -70,11 +70,13 @@ struct icalproperty_impl
 	icalcomponent *parent;
 };
 
-void icalproperty_add_parameters(struct icalproperty_impl *impl,va_list args)
+void icalproperty_add_parameters(struct icalproperty_impl *prop,va_list args)
 {
 
     void* vp;
-    
+
+    struct icalproperty_impl *impl = (struct icalproperty_impl*)prop;
+  
     while((vp = va_arg(args, void*)) != 0) {
 
 	if (icalvalue_isa_value(vp) != 0 ){
@@ -170,7 +172,7 @@ icalproperty_new_clone(icalproperty* prop)
 
 }
 
-icalproperty* icalproperty_new_from_string(char* str)
+icalproperty* icalproperty_new_from_string(const char* str)
 {
 
     size_t buf_size = 1024;
@@ -261,7 +263,7 @@ icalproperty_free (icalproperty* prop)
 }
 
 
-char*
+const char*
 icalproperty_as_ical_string (icalproperty* prop)
 {   
     icalparameter *param;
@@ -710,7 +712,7 @@ const char* icalproperty_get_value_as_string(icalproperty* prop)
 }
 
 
-void icalproperty_set_x_name(icalproperty* prop, char* name)
+void icalproperty_set_x_name(icalproperty* prop, const char* name)
 {
     struct icalproperty_impl *impl = (struct icalproperty_impl*)prop;
 
@@ -729,7 +731,7 @@ void icalproperty_set_x_name(icalproperty* prop, char* name)
 
 }
                               
-char* icalproperty_get_x_name(icalproperty* prop){
+const char* icalproperty_get_x_name(icalproperty* prop){
 
     struct icalproperty_impl *impl = (struct icalproperty_impl*)prop;
 
@@ -740,7 +742,7 @@ char* icalproperty_get_x_name(icalproperty* prop){
 
 
 /* From Jonathan Yue <jonathan.yue@cp.net>    */
-char* icalproperty_get_name (icalproperty* prop)
+const char* icalproperty_get_name (icalproperty* prop)
 {
 
     const char* property_name = 0;

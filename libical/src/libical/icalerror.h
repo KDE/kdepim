@@ -47,6 +47,7 @@ typedef enum icalerrorenum {
     
     ICAL_BADARG_ERROR,
     ICAL_NEWFAILED_ERROR,
+    ICAL_ALLOCATION_ERROR,
     ICAL_MALFORMEDDATA_ERROR, 
     ICAL_PARSE_ERROR,
     ICAL_INTERNAL_ERROR, /* Like assert --internal consist. prob */
