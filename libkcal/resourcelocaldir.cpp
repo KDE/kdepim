@@ -316,7 +316,13 @@ void ResourceLocalDir::dump() const
 bool ResourceLocalDir::deleteIncidenceFile(Incidence *incidence)
 {
   QFile file( mURL.path() + "/" + incidence->uid() );
-  return file.remove();
+  if ( !file.exists() )
+    return true;
+
+  mDirWatch.stopScan();
+  bool removed = file.remove();
+  mDirWatch.startScan();
+  return removed;
 }
 
 #include "resourcelocaldir.moc"
