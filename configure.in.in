@@ -42,3 +42,5 @@ AC_LANG_RESTORE
 ])
 
 AC_MSG_RESULT($kdepim_cv_have_libqpthr)
+
+DO_NOT_COMPILE="$DO_NOT_COMPILE empath abbrowser kab2 ldif vCard rmm libldif twister"
