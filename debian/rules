@@ -61,8 +61,6 @@ binary-arch: build
 	dh_undocumented
 	dh_installman -a
 	dh_movefiles -pkpilot --sourcedir=debian/korganizer
-	dh_movefiles -plibical0 --sourcedir=debian/korganizer
-	dh_movefiles -plibical-dev --sourcedir=debian/korganizer
 	dh_movefiles -pkandy --sourcedir=debian/korganizer
 	dh_movefiles -pkdepim-libs --sourcedir=debian/korganizer
 	dh_movefiles -pkdepim-dev --sourcedir=debian/korganizer
@@ -74,15 +72,13 @@ binary-arch: build
 	dh_installchangelogs -pkdepim-libs
 	dh_installchangelogs -pkdepim-dev
 	dh_installchangelogs -pkandy
-	dh_installchangelogs -plibical0 libical/ChangeLog
-	dh_installchangelogs -plibical-dev libical/ChangeLog
 	dh_strip -a
 	dh_compress -a -X.docbook -X.css -X-license -X.dcl -X.bz2
 	dh_fixperms -a
 	dh_makeshlibs -a -V
 	dh_perl -a
 	dh_installdeb -a
-	dh_shlibdeps -a -l`pwd`/debian/kdepim-libs/usr/lib:`pwd`/debian/libical0/usr/lib
+	dh_shlibdeps -a -l`pwd`/debian/kdepim-libs/usr/lib
 	dh_gencontrol -a
 	dh_md5sums -a
 	dh_builddeb -a

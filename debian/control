@@ -59,38 +59,16 @@ Description: Mobile phone utility for KDE
 Package: kdepim-libs
 Architecture: any
 Section: libs
-Replaces: libical, korganizer (<< 4:2.2.1-1)
+Replaces: korganizer (<< 4:2.2.1-1)
 Depends: ${shlibs:Depends}
 Description: KDE libraries amd modules for kdepim
  This package contains the different interface modules and libraries
  provided by the kdepim package.  These includes interfaces to imap.
 
-Package: libical0
-Architecture: any
-Section: libs
-Replaces: libical, kdepim-libs (<< 4:2.2.1-1)
-Depends: ${shlibs:Depends}
-Description: An implementation of basic iCAL protocols
- Libical is an Open Source implementation of the iCalendar protocols
- and protocol data units. The iCalendar specification describes how
- calendar clients can communicate with calendar servers so users can
- store their calendar data and arrange meetings with other users.
- .
- Libical implements RFC2445, RFC2446 and some of RFC2447 and the CAP
- draft.
-
-Package: libical-dev
-Architecture: any
-Section: devel
-Replaces: kdepim-dev (<< 4:2.2.1-1)
-Depends: libical0 (= ${Source-Version})
-Description: An implementation of basic iCAL protocols (Development files)
- Development headers and libraries for libical
-
 Package: kdepim-dev
 Architecture: any
 Section: devel
-Depends: kdepim-libs (= ${Source-Version}), libical-dev (= ${Source-Version}), kdelibs-dev
+Depends: kdepim-libs (= ${Source-Version}), kdelibs-dev
 Description: KDE PIM applications (development files)
  KDE PIM application development files
  You need these files to compile some PIM related KDE apps.

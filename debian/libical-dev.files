@@ -1,9 +1,0 @@
-usr/lib/libical.so
-usr/lib/libical.a
-usr/lib/libicalss.so
-usr/lib/libicalss.a
-usr/lib/libicalvcal.so
-usr/lib/libicalvcal.a
-usr/include/ical.h
-usr/include/icalss.h
-usr/include/libicalvcal/*
