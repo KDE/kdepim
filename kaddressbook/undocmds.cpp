@@ -11,6 +11,7 @@
 
 #include "undocmds.h"
 #include "addresseeutil.h"
+#include "addresseeconfig.h"
 
 /////////////////////////////////
 // PwDelete Methods
@@ -54,6 +55,8 @@ void PwDeleteCommand::redo()
     a = mDocument->findByUid(*iter);
     mDocument->removeAddressee(a);
     mAddresseeList.append(a);
+    AddresseeConfig cfg(a);
+    cfg.remove();
   }
 }
 

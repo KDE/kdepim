@@ -32,6 +32,8 @@
 #include <kabc/addressee.h>
 #include <kabc/phonenumber.h>
 
+#include "addresseeconfig.h"
+
 class QButtonGroup;
 class QToolButton;
 class QListView;
@@ -49,10 +51,7 @@ class NameEditDialog : public KDialogBase
   Q_OBJECT
 
   public:
-    NameEditDialog(const QString &familyName, const QString &givenName,
-                   const QString &prefix, const QString &suffix,
-                   const QString &additionalName, 
-                   QWidget *parent, const char *name = 0);
+    NameEditDialog( const KABC::Addressee &addr, QWidget *parent, const char *name = 0);
     ~NameEditDialog();
    
     QString familyName() const;
@@ -71,6 +70,8 @@ class NameEditDialog : public KDialogBase
     KLineEdit *mGivenNameEdit;
     KLineEdit *mAdditionalNameEdit;
     QCheckBox *mParseBox;
+
+    AddresseeConfig mAddresseeConfig;
 };
 
 /////////////////////////////////////////

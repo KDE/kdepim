@@ -498,8 +498,8 @@ bool AddresseeEditorWidget::dirty()
 void AddresseeEditorWidget::nameTextChanged(const QString &text)
 {
   // use the addressee class to parse the name for us
-  KConfig *config = kapp->config();
-  if ( config->readBoolEntry( "AutomaticNameParsing" ) ) {
+  AddresseeConfig config( mAddressee );
+  if ( config.automaticNameParsing() ) {
     if ( !mAddressee.formattedName().isEmpty() ) {
       QString fn = mAddressee.formattedName();
       mAddressee.setNameFromString(text);
@@ -541,9 +541,7 @@ void AddresseeEditorWidget::nameBoxChanged()
 void AddresseeEditorWidget::nameButtonClicked()
 {
   // show the name dialog.
-  NameEditDialog dialog(mAddressee.familyName(), mAddressee.givenName(),
-                        mAddressee.prefix(), mAddressee.suffix(),
-                        mAddressee.additionalName(), this, "NameDialog");
+  NameEditDialog dialog( mAddressee, this );
   
   if (dialog.exec())
   {

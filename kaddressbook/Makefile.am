@@ -35,7 +35,7 @@ libkaddressbookpart_la_SOURCES = kaddressbook.cpp kaddressbookiface.skel \
   filtereditdialog.cpp filtereditwidget.cpp filter.cpp \
   filterselectionwidget.cpp configureviewfilterpage.cpp \
   actionmanager.cpp \
-  incsearchwidget_base.ui incsearchwidget.cpp 
+  incsearchwidget_base.ui incsearchwidget.cpp addresseeconfig.cpp
 
 kaddressbook_METASOURCES = AUTO
 
@@ -52,7 +52,7 @@ noinst_HEADERS = kaddressbook.h undo.h kaddressbookview.h undocmds.h \
   addresseeeditorsupportwidgets.h kaddressbookprinter.h \
   actionmanager.h \
   filtereditdialog.h filtereditwidget.h filter.h filterselectionwidget.h \
-  configureviewfilterpage.h kabentrypainter.h
+  configureviewfilterpage.h kabentrypainter.h addresseeconfig.h
 
 rcdir = $(kde_datadir)/kaddressbook
 rc_DATA = kaddressbookui.rc

@@ -233,11 +233,7 @@ void EmailEditDialog::selectionChanged(int index)
 /////////////////////////////////////
 // NameEditDialog
 
-NameEditDialog::NameEditDialog(const QString &familyName, 
-                               const QString &givenName,
-                               const QString &prefix, const QString &suffix,
-                               const QString &additionalName, 
-                               QWidget *parent, const char *name)
+NameEditDialog::NameEditDialog( const KABC::Addressee &addr, QWidget *parent, const char *name )
   : KDialogBase(KDialogBase::Plain, i18n("Edit Contact Name"),
                 KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
                 parent, name, true)
@@ -283,9 +279,9 @@ NameEditDialog::NameEditDialog(const QString &familyName,
   layout->addMultiCellWidget( mParseBox, 5, 5, 0, 1 );
   
   // Fill in the values
-  mFamilyNameEdit->setText(familyName);
-  mGivenNameEdit->setText(givenName);
-  mAdditionalNameEdit->setText(additionalName);
+  mFamilyNameEdit->setText(addr.familyName());
+  mGivenNameEdit->setText(addr.givenName());
+  mAdditionalNameEdit->setText(addr.additionalName());
   
   // Prefix and suffix combos
   QStringList sTitle;
@@ -309,12 +305,11 @@ NameEditDialog::NameEditDialog(const QString &familyName,
   mPrefixCombo->insertStringList(sTitle);
   mSuffixCombo->insertStringList(sSuffix);
   
-  mPrefixCombo->setCurrentText(prefix);
-  mSuffixCombo->setCurrentText(suffix);
+  mPrefixCombo->setCurrentText(addr.prefix());
+  mSuffixCombo->setCurrentText(addr.suffix());
 
-  KConfig *config = kapp->config();
-  config->setGroup( "General" );
-  mParseBox->setChecked( config->readBoolEntry( "AutomaticNameParsing", true ) );
+  mAddresseeConfig.setAddressee( addr );
+  mParseBox->setChecked( mAddresseeConfig.automaticNameParsing() );
 }
     
 NameEditDialog::~NameEditDialog() 
@@ -348,9 +343,7 @@ QString NameEditDialog::additionalName() const
 
 void NameEditDialog::parseBoxChanged( bool value )
 {
-  KConfig *config = kapp->config();
-  config->setGroup( "General" );
-  config->writeEntry( "AutomaticNameParsing", value );
+  mAddresseeConfig.setAutomaticNameParsing( value );
 }
 
 ///////////////////////////
