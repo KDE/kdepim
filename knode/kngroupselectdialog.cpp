@@ -84,8 +84,8 @@ void KNGroupSelectDialog::updateItemState(CheckItem *it)
 }
 
 
-    
-QString KNGroupSelectDialog::selectedGroups()
+
+QString KNGroupSelectDialog::selectedGroups()const
 {
   QString ret;
   QListViewItemIterator it(selView);

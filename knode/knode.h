@@ -85,9 +85,9 @@ class KNMainWindow : public KDockMainWindow
     void configChanged();
 
     /** access to GUI-elements */
-    KNListView*       collectionView()  { return c_olView; }
-    KNListView*       headerView()      { return h_drView; }
-    KNArticleWidget*  articleView()     { return a_rtView; }
+    KNListView*       collectionView()const  { return c_olView; }
+    KNListView*       headerView()const      { return h_drView; }
+    KNArticleWidget*  articleView()const     { return a_rtView; }
 
   protected:
 

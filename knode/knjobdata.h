@@ -40,7 +40,7 @@ class KNJobConsumer {
 
     /** Returns TRUE if we are waiting for at least one job
 	to be completed */
-    bool jobsPending()  { return (j_obs.count()>0); }
+    bool jobsPending()const  { return (j_obs.count()>0); }
 
   protected:
     /** The actual work is done here */
@@ -65,7 +65,7 @@ class KNJobItem {
 
 
 class KNJobData {
-  
+
   public:
 
     friend class KNJobConsumer;
@@ -79,21 +79,21 @@ class KNJobData {
                     JTpostArticle,
                     JTmail,
                     JTfetchSource   };
-    
+
     KNJobData(jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem *i);
     ~KNJobData();
-    
+
     jobType type() const                  { return t_ype; }
-    
+
     bool net() const                      { return (t_ype!=JTLoadGroups); }
     KNServerInfo* account() const         { return a_ccount; }
     KNJobItem* data() const               { return d_ata; }
-    
+
     const QString& errorString() const    { return e_rrorString; }
     bool success() const                  { return e_rrorString.isEmpty(); }
     bool canceled() const                 { return c_anceled; }
     bool authError() const                { return a_uthError; }
-    
+
     void setErrorString(const QString& s) { e_rrorString=s; }
     void cancel()                         { c_anceled=true; }
     void setAuthError(bool b)             { a_uthError=b; }
@@ -109,7 +109,7 @@ class KNJobData {
     bool c_anceled;
     bool a_uthError;
     KNJobConsumer *c_onsumer;
-        
+
 };
 
 

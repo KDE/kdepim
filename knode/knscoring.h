@@ -70,7 +70,7 @@ public:
   virtual QStringList getDefaultHeaders() const;
 
   void configure();
-  bool canColors() { return true; }
+  bool canColors()const { return true; }
 };
 
 #endif

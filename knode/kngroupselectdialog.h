@@ -27,10 +27,10 @@ class KNGroupSelectDialog : public KNGroupBrowser {
   public:
     KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, const QString &act);
     ~KNGroupSelectDialog();
-    
-    QString selectedGroups();
+
+    QString selectedGroups()const;
     void itemChangedState(CheckItem *it, bool s);
-    
+
   protected:
     void updateItemState(CheckItem *it);
     QListView *selView;
@@ -40,8 +40,8 @@ class KNGroupSelectDialog : public KNGroupBrowser {
     /** deactivates the button when a root item is selected */
     void slotSelectionChanged();
     void slotArrowBtn1();
-    void slotArrowBtn2(); 
-            
+    void slotArrowBtn2();
+
 };
 
 
