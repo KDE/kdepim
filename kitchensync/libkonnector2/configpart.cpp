@@ -295,7 +295,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
         QLineEdit *edit;
         m_devGroup.clear();
         for ( QMap<QString,  QString>::ConstIterator it = specs.begin(); it != specs.end(); ++it ) {
-            lbl = new QLabel(i18n(it.key() ), m_grpDevice );
+            lbl = new QLabel(it.key() , m_grpDevice );
             edit = new QLineEdit(m_grpDevice,  it.key().latin1() );
             edit->setText( it.data() );
             lbl->setBuddy(edit);
