@@ -70,8 +70,11 @@ QString Konnector::registerKonnector(const QString &Device )
 	return QString::null;
       }
       plugin->setUDI( randStr );
-      connect(plugin, SIGNAL(sync(QString, QPtrLsit<KSyncEntry> ) ), this, SLOT(slotSync(QString,  QPtrList<KSyncEntry> ) ) );
-      connect(plugin, SIGNAL(errorKonnector(QString, int, QString) ), this, SLOT(slotError(QString,int,QString)) );
+      connect(plugin, SIGNAL(sync(const QString&, QPtrLsit<KSyncEntry> ) ),
+              this, SLOT(slotSync(const QString&,  QPtrList<KSyncEntry> ) ) );
+
+      connect(plugin, SIGNAL(errorKonnector(const QString&, int, const QString&) ),
+              this, SLOT(slotError(const QString&,int, const QString&)) );
       d->m_konnectors.insert(randStr, plugin  );
       return randStr;
     }
@@ -92,7 +95,11 @@ QString Konnector::registerKonnector(const KDevice &Device )
     return QString::null;
   }
   plugin->setUDI(randStr);
-  connect(plugin, SIGNAL(sync(QString, QPtrLsit<KSyncEntry> ) ), this, SLOT(slotSync(QString, QPtrList<KSyncEntry> ) ) );
+  connect(plugin, SIGNAL(sync(const QString&, QPtrLsit<KSyncEntry> ) ),
+              this, SLOT(slotSync(const QString&,  QPtrList<KSyncEntry> ) ) );
+
+  connect(plugin, SIGNAL(errorKonnector(const QString&, int, const QString&) ),
+              this, SLOT(slotError(const QString&,int, const QString&)) );
   d->m_konnectors.insert(randStr, plugin  );
   return randStr;
 }
@@ -222,12 +229,12 @@ KonnectorPlugin* Konnector::pluginByUDI(const QString &udi )
    }
   return plugin;
 }
-void Konnector::slotSync(QString udi,  QPtrList<KSyncEntry> entry)
+void Konnector::slotSync(const QString &udi,  QPtrList<KSyncEntry> entry)
 {
   emit wantsToSync(udi, entry );
 }
 
-void Konnector::slotError(QString udi, int mode, QString info)
+void Konnector::slotError(const QString &udi, int mode, const QString &info)
 {
   emit konnectorError(udi, mode, info );
 

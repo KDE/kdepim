@@ -173,8 +173,8 @@ private:
     KonnectorPlugin* pluginByUDI(const QString &udi );
 
 private slots:
-    void slotSync(QString, QPtrList<KSyncEntry> entry );
-    void slotError(QString, int, QString);
+    void slotSync(const QString&, QPtrList<KSyncEntry> entry );
+    void slotError(const QString&, int, const QString&);
 };
 
 #endif
