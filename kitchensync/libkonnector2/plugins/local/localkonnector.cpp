@@ -1,9 +1,35 @@
-#include <kgenericfactory.h>
+/*
+    This file is part of KitchenSync.
+
+    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+*/
+
+#include "localkonnector.h"
+
+#include "localkonnectorconfig.h"
+
+#include <calendarsyncee.h>
 
 #include <konnectorinfo.h>
 #include <kapabilities.h>
 
-#include "localkonnector.h"
+#include <kconfig.h>
+#include <kgenericfactory.h>
 
 typedef KGenericFactory<KSync::LocalKonnector, QObject> LocalKonnectorPlugin;
 K_EXPORT_COMPONENT_FACTORY( liblocalkonnector, LocalKonnectorPlugin );
@@ -12,8 +38,11 @@ using namespace KSync;
 
 
 LocalKonnector::LocalKonnector( QObject* obj, const char* name,const QStringList )
-    : Konnector( obj, name )
+    : Konnector( obj, name ), mConfigWidget( 0 )
 {
+  KConfig cfg( "localkonnectorrc" );
+  mCalendarFile = cfg.readEntry( "CalendarFile" );
+  mAddressBookFile = cfg.readEntry( "AddressBookFile" );
 }
 
 LocalKonnector::~LocalKonnector()
@@ -44,6 +73,9 @@ void LocalKonnector::setCapabilities( const KSync::Kapabilities& caps )
 
 bool LocalKonnector::startSync()
 {
+    Syncee::PtrList syncees;
+    if ( !mCalendar.load( mCalendarFile ) ) return false;
+    syncees.append( new CalendarSyncee( &mCalendar ) );    
     return true;
 }
 
@@ -87,16 +119,20 @@ void LocalKonnector::download( const QString& )
 KSync::ConfigWidget *LocalKonnector::configWidget( const KSync::Kapabilities& cap, QWidget* parent,
                                                    const char* name )
 {
-  return 0;
+  return configWidget( parent, name );
 }
 
 KSync::ConfigWidget *LocalKonnector::configWidget( QWidget* parent, const char* name )
 {
-  return 0;
+  if ( !mConfigWidget ) {
+    mConfigWidget = new LocalKonnectorConfig( parent );
+  }
+  return mConfigWidget;
 }
 
-void LocalKonnector::write( Syncee::PtrList lst )
+void LocalKonnector::write( Syncee::PtrList syncees )
 {
+  mCalendar.save( mCalendarFile );
 }
 
 
