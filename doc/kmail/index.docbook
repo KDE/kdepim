@@ -20,8 +20,8 @@
 </author>
 </authorgroup>
 
-<date>03/08/2000</date>
-<releaseinfo>1.01.62</releaseinfo>
+<date>06/08/2000</date>
+<releaseinfo>1.01.63</releaseinfo>
 
 <abstract>
 	
@@ -239,8 +239,8 @@ sheet of paper) or
 select the <menuchoice><guimenu>File</guimenu><guimenuitem>New Composer</guimenuitem></menuchoice> menu item.  
 The <guilabel>Composer</guilabel> 
 window will appear. Fill in the <guilabel>To:</guilabel> field with your email address and type
-something in the <guilabel>Subject</guilabel> field.  Send the mail by selecting 
-<menuchoice><guimenu>File</guimenu><guimenuitem>Send</guimenuitem></menuchoice>.</para>
+something in the <guilabel>Subject</guilabel> field. Send the mail by selecting 
+<menuchoice><guimenu>Message</guimenu><guimenuitem>Send</guimenuitem></menuchoice>.</para>
 
 <para>To check your email, select <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail...</guimenuitem></menuchoice>
 In the lower right corner of the main window, a progress bar will indicate how much mail is being 
@@ -483,7 +483,7 @@ selected folder is the trash folder, all of the messages will be permanently del
 <title>The Address Book</title>
 
 <para>The address book is a place to store your commonly used email addresses.  You can call up the address book
-from the <menuchoice><guimenu>File</guimenu></menuchoice> menu, the address book button on the Main window, or the addressbook button in the
+from the <menuchoice><guimenu>File</guimenu></menuchoice> menu, the address book button on the Main window, or the address book button in the
 <guilabel>Composer</guilabel> window.</para>
 
 <para>To add addresses to the address book, type an email address into the lower section of the window and hit
@@ -814,7 +814,7 @@ for colors and font sizes.</para>
 address books, whereas <guilabel>Traditional KMail</guilabel> is a very simple one
 and <guilabel>Abbrowser</guilabel> is an advanced one. Please note the comments
 under the selection that tell you the packages you need to use the advanced variants.
-The addressbooks' data is independent, i.e. you will not see addresses in the
+The address books' data is independent, i.e. you will not see addresses in the
 <guilabel>Abbrowser</guilabel> if you only entered them in the <guilabel>Traditional KMail</guilabel>
 address book.</para>
 
@@ -1079,6 +1079,13 @@ according to how you have moved and deleted them in &kmail;.</para>
 </varlistentry>
 
 <varlistentry>
+<term>Address Book...</term>
+<listitem>
+<para>Opens up the <link linkend="theaddressbook">Address Book</link>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term>Close (<keycombo><keycap>Ctrl</keycap><keycap>W</keycap></keycombo>)</term>
 <listitem>
 <para>Closes the current <guilabel>Mail Reader</guilabel> window or exits
@@ -1216,7 +1223,7 @@ folder is the trash folder, the messages are permanently deleted.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Remove</term>
+<term>Remove...</term>
 <listitem>
 <para>Removes the selected folder.</para>
 </listitem>
@@ -1424,13 +1431,6 @@ folder can be edited.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Address Book...</term>
-<listitem>
-<para>Opens up the <link linkend="theaddressbook">Address Book</link>.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
 <term>Configure Toolbars...</term>
 <listitem>
 <para>Opens a window that lets you choose which icons are visible in the toolbar.</para>
@@ -1451,6 +1451,15 @@ folder can be edited.</para>
 <term>Contents (<keycap>F1</keycap>)</term>
 <listitem>
 <para>Invokes the KDE help system with the &kmail; help pages displayed.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>What's This? (<keycombo><keycap>Shift</keycap><keycap>F1</keycap></keycombo>)</term>
+<listitem>
+<para>Selecting this option changes the cursor to an arrow with a question mark.
+Now if you click on any component of the control panel pane, you get short 
+context sensitive help about that item (sorry, not implemented yet).</para>
 </listitem>
 </varlistentry>
 
@@ -1489,7 +1498,7 @@ see if the bug has been reported already.</para>
 <title>The Composer Window</title>
 
 <sect2 id="filemenu2">
-<title>File Menu</title>
+<title>Message Menu</title>
 
 <para><variablelist>
 
@@ -1529,7 +1538,7 @@ see if the bug has been reported already.</para>
 </varlistentry>
 
 <varlistentry>
-<term>New Composer (<keycombo><keycap>Ctrl</keycap><keycap>N</keycap></keycombo>)</term>
+<term>New Composer... (<keycombo><keycap>Ctrl</keycap><keycap>N</keycap></keycombo>)</term>
 <listitem>
 <para>Opens up a new <guilabel>Composer</guilabel> window.</para>
 </listitem>
@@ -1623,13 +1632,13 @@ use it for the first time.</para>
 <sect2 id="viewmenu2">
 <title>View Menu</title>
 
-<para>This menu lets you toggle the display of the header fields in the 
+<para>This menu lets you toggle the display of the header fields (like Subject, Cc, Bcc, ...) in this 
 <guilabel>Composer</guilabel> window.</para>
 </sect2>
 
 
 <sect2 id="optionsmenu">
-<title>Message Options Menu</title>
+<title>Options Menu</title>
 
 <para><variablelist>
 
@@ -1731,7 +1740,7 @@ by the receiver's mail client in order to work.</para>
 <varlistentry>
 <term>Configure Toolbars...</term>
 <listitem>
-<para>Opens a window that allows you to decide which icons appear in the toolbars.</para>
+<para>Opens a window that allows you to decide which icons appear in the toolbar.</para>
 </listitem>
 </varlistentry>
 
