@@ -607,22 +607,7 @@ void KABCore::newContact()
 {
   AddresseeEditorDialog *dialog = 0;
 
-  QPtrList<KABC::Resource> kabcResources = mAddressBook->resources();
-
-  QPtrList<KRES::Resource> kresResources;
-  QPtrListIterator<KABC::Resource> it( kabcResources );
-  KABC::Resource *resource;
-  while ( ( resource = it.current() ) != 0 ) {
-    ++it;
-    if ( !resource->readOnly() ) {
-      KRES::Resource *res = static_cast<KRES::Resource*>( resource );
-      if ( res )
-        kresResources.append( res );
-    }
-  }
-
-  KRES::Resource *res = KRES::SelectDialog::getResource( kresResources, mWidget );
-  resource = static_cast<KABC::Resource*>( res );
+  KABC::Resource* resource = requestResource( mWidget );
 
   if ( resource ) {
     KABC::Addressee addr;
@@ -1115,7 +1100,7 @@ void KABCore::initActions()
                                actionCollection(), "edit_delete" );
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
-  
+
   mActionStoreAddresseeIn = new KAction( i18n( "St&ore Contact in..." ), "", 0,
                                       this, SLOT( storeContactIn() ),
                                       actionCollection(), "edit_store_in" );
