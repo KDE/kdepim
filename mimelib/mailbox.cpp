@@ -363,7 +363,7 @@ void DwMailbox::Parse()
 
     // Check validity
 
-    if (mLocalPart.length() > 0 && mDomain.length() > 0) {
+    if (mLocalPart.length() > 0) {
         mIsValid = 1;
     }
     else {
