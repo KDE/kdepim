@@ -61,6 +61,7 @@ knode_SOURCES =   knconfigmanager.cpp \
                   \
                   knlistbox.cpp \
                   knlistview.cpp \
+                  kndnd.cpp \
                   knfocuswidget.cpp \
                   knodeview.cpp \
                   knode.cpp \
@@ -125,6 +126,7 @@ noinst_HEADERS =  knconfigmanager.h \
                   \
                   knlistbox.h \
                   knlistview.h \
+                  kndnd.h \
                   knfocuswidget.h \
                   knodeview.h \
                   knode.h \

@@ -19,6 +19,7 @@
 
 #include <qlist.h>
 
+
 class KNListView;
 class KNCleanUp;
 class KNFolder;
@@ -45,10 +46,10 @@ class KNFolderManager
 
     //folder handling
     void newFolder(KNFolder *p);
-    void deleteFolder(KNFolder *f);
-    void removeFolder(KNFolder *f);
+    bool deleteFolder(KNFolder *f);
     void emptyFolder(KNFolder *f);
-    void showProperties(KNFolder *f);
+    void renameFolder(KNFolder *f, bool isNew=false);
+    bool moveFolder(KNFolder *f, KNFolder *p);
 
     //unsent articles
     int unsentForAccount(int accId);
@@ -68,9 +69,13 @@ class KNFolderManager
         
     KNFolder  *c_urrentFolder;
     QList<KNFolder> f_List;
+    int l_astId;
     KNListView *v_iew;
     KNArticleManager *a_rtManager;
 
 };
+
+
+
 
 #endif

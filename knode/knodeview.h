@@ -42,6 +42,7 @@ class KNFilterManager;
 class KNFilterSelectAction;
 class KNNetAccess;
 class KNRemoteArticle;
+class KNLocalArticle;
 
 
 class KNodeView : public QSplitter
@@ -78,6 +79,7 @@ class KNodeView : public QSplitter
 
     void getSelectedArticles(QList<KNRemoteArticle> &l);
     void getSelectedThreads(QList<KNRemoteArticle> &l);
+    void getSelectedArticles(QList<KNLocalArticle> &l);
 
     //GUI
     QSplitter       *s_ecSplitter;
@@ -113,7 +115,11 @@ class KNodeView : public QSplitter
     void slotCollectionRMB(QListViewItem *i, const QPoint &p, int);
     void slotArticleMousePressed(int button, QListViewItem *item, const QPoint &p, int c);
     void slotHdrViewSortingChanged(int i);
-    
+
+    //DnD
+    void slotCollectionViewDrop(const char *type, QListViewItem *i);
+    void slotHeaderViewDrop(const char *type, QListViewItem *i);
+
     //network slots
     void slotNetworkActive(bool b);
     
@@ -150,9 +156,13 @@ class KNodeView : public QSplitter
               *a_ctGrpSetAllUnread;
   
     //collection-view - folder
-    KAction   *a_ctFolCompact,
-              *a_ctFolEmpty,
-              *a_ctFolProperties;
+    KAction   *a_ctFolNew,
+              *a_ctFolNewChild,
+              *a_ctFolDelete,
+              *a_ctFolRename,
+              *a_ctFolCompact,
+              *a_ctFolEmpty;
+
         
     //header-view - list-handling
     KSelectAction         *a_ctArtSortHeaders;
@@ -211,9 +221,12 @@ class KNodeView : public QSplitter
     void slotGrpSetAllRead();
     void slotGrpSetAllUnread();
     
+    void slotFolNew();
+    void slotFolNewChild();
+    void slotFolDelete();
+    void slotFolRename();
     void slotFolCompact();
     void slotFolEmpty();
-    void slotFolProperties();
 
     void slotArtSortHeaders(int i);
     void slotArtSortHeadersKeyb();

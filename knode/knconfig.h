@@ -280,7 +280,7 @@ class Appearance : public Base {
 #define COL_CNT 13
 #define FNT_CNT 4
 #define HEX_CNT 4
-#define ICON_CNT 14
+#define ICON_CNT 15
 
   friend class AppearanceWidget;
 
@@ -296,8 +296,8 @@ class Appearance : public Base {
     enum IconIndex    { greyBall=0,       redBall=1,      greyBallChkd=2,
                         redBallChkd=3,    newFups=4,      eyes=5,
                         mail=6,           posting=7,      canceledPosting=8,
-                        nntp=9,           group=10,       folder=11,
-                        sendErr=12,       null=13 };
+                        savedRemote=9,    nntp=10,        group=11,
+                        folder=12,        sendErr=13,     null=14 };
     Appearance();
     ~Appearance();
 

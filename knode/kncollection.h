@@ -31,23 +31,30 @@ class KNCollection {
 
     KNCollection(KNCollection *p);
     virtual ~KNCollection();
+
+    // type
+    virtual collectionType type()=0;
+
+    // list item handling
+    KNCollectionViewItem* listItem()  { return l_istItem; }
+    void setListItem(KNCollectionViewItem *i);
     virtual void updateListItem();
-    
-    // trys to read information, returns false if it fails to do so
+
+    // info
+    virtual QString path()=0;
     virtual bool readInfo(const QString &confPath)=0;
     virtual void saveInfo()=0;    
-    
-    //get
-    virtual collectionType type()=0;
-    virtual QString path()=0;
-    KNCollection* parent()            { return p_arent; }
-    virtual const QString& name()     { return n_ame; }
-    KNCollectionViewItem* listItem()  { return l_istItem; }
-    int count()                       { return c_ount; }
 
-    //set
+    // parent
+    KNCollection* parent()                    { return p_arent; }
+    virtual void setParent(KNCollection *p)   { p_arent=p; }
+
+    // name
+    virtual const QString& name()     { return n_ame; }
     void setName(const QString &s)    { n_ame=s; }
-    void setListItem(KNCollectionViewItem *i);
+
+    // count
+    int count()                       { return c_ount; }
     void setCount(int i)              { c_ount=i; }
     void incCount(int i)              { c_ount+=i; }
     void decCount(int i)              { c_ount-=i; }

@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
                         0,
                         "http://knode.sourceforge.net/");
                         
-  aboutData.addAuthor("Christian Thurner",I18N_NOOP("Maintainer"),"cthurner@freepage.de");
+  aboutData.addAuthor("Christian Thurner",I18N_NOOP("Maintainer"),"cthurner@web.de");
   aboutData.addAuthor("Christian Gebauer",0,"gebauer@bigfoot.com");
   aboutData.addAuthor("Dirk Mueller",0,"mueller@kde.org");
   aboutData.addAuthor("Mathias Waack",0,"mathias@atoll-net.de");

@@ -15,6 +15,8 @@
 */
 
 #include <qlistview.h>
+#include <qdir.h>
+#include <qhbox.h>
 
 #include <klocale.h>
 #include <kiconloader.h>
@@ -58,6 +60,8 @@ KNFolderManager::KNFolderManager(KNListView *v, KNArticleManager *a) : v_iew(v),
   f=new KNFolder(3, i18n("Sent"), "sent");
   f_List.append(f);
 
+  l_astId=3;
+
   //custom folders
   loadCustomFolders();
 
@@ -96,23 +100,111 @@ KNFolder* KNFolderManager::folder(int i)
 }
 
 
-void KNFolderManager::newFolder(KNFolder *)
+void KNFolderManager::newFolder(KNFolder *p)
 {
+  KNFolder *f=new KNFolder(++l_astId, i18n("New folder"), p);
+  f_List.append(f);
+  renameFolder(f, true);
 }
 
 
-void KNFolderManager::deleteFolder(KNFolder *)
+bool KNFolderManager::deleteFolder(KNFolder *f)
 {
+  if(f->lockedArticles()>0)
+    return false;
+
+  QList<KNFolder> del;
+  del.setAutoDelete(false);
+  KNFolder *fol;
+  KNCollection *p;
+
+  for(fol=f_List.first(); fol; fol=f_List.next()) {
+    p=fol->parent();
+    while(p) {
+      if(p==f) {
+        if(fol->lockedArticles()>0)
+          return false;
+        del.append(fol);
+        break;
+      }
+      p=p->parent();
+    }
+  }
+
+  del.append(f);
+  for(fol=del.first(); fol; fol=del.next()) {
+    if(c_urrentFolder==fol)
+      c_urrentFolder=0;
+    fol->killYourself();
+    f_List.removeRef(fol); // deletes fol
+  }
+
+  return true;
 }
 
 
-void KNFolderManager::removeFolder(KNFolder *)
+void KNFolderManager::renameFolder(KNFolder *f, bool isNew)
 {
+  if(!f || f->id()<=3)
+    return;
+
+
+  KDialogBase *dlg =
+  new KDialogBase(
+    knGlobals.topWidget, 0,true,
+    isNew ?  i18n("New folder") : i18n("Rename folder"),
+    KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Ok
+  );
+
+  QHBox *page = dlg->makeHBoxMainWidget();
+
+  QLabel *label = new QLabel(i18n("&Name:"),page);
+  QLineEdit *edit = new QLineEdit(page);
+  edit->setText(f->name());
+
+  label->setBuddy(edit);
+  edit->setFocus();
+  restoreWindowSize("renameFolder", dlg, QSize(325,66));
+
+  if(dlg->exec()) {
+    f->setName(edit->text());
+    if(!f->listItem())
+      showListItems();
+    else
+      f->updateListItem();
+  }
+  else if(isNew)
+    f_List.removeRef(f);
+
+  delete dlg;
 }
 
 
-void KNFolderManager::showProperties(KNFolder *)
+bool KNFolderManager::moveFolder(KNFolder *f, KNFolder *p)
 {
+  if(!f || p==f->parent()) // nothing to be done
+    return true;
+
+  // is "p" a child of "f" ?
+  KNCollection *p2=p?p->parent():0;
+  while(p2) {
+    if(p2==f)
+      break;
+    p2=p2->parent();
+  }
+
+  if( (p2 && p2==f) || f==p || f->id()<=3 ) //  no way ;-)
+    return false;
+
+  // reparent
+  f->setParent(p);
+  f->saveInfo();
+
+  // recreate list-item
+  delete f->listItem();
+  showListItems();
+
+  return true;
 }
 
 
@@ -171,7 +263,42 @@ void KNFolderManager::syncFolders()
 
 int KNFolderManager::loadCustomFolders()
 {
-  return 0;
+  int cnt=0;
+  QString dir(KGlobal::dirs()->saveLocation("appdata","folders/"));
+  KNFolder *f;
+
+  if (dir == QString::null) {
+    displayInternalFileError();
+    return 0;
+  }
+
+  QDir d(dir);
+  QStringList entries(d.entryList("*.info"));
+  for(QStringList::Iterator it=entries.begin(); it != entries.end(); it++) {
+    f=new KNFolder();
+    if(f->readInfo(d.absFilePath(*it))) {
+      if(f->id()>l_astId)
+        l_astId=f->id();
+      f_List.append(f);
+      cnt++;
+    }
+    else
+      delete f;
+  }
+
+  // set parents
+  if(cnt>0) {
+    QList<KNFolder> l(f_List);
+    l.setAutoDelete(false);
+    for(f=l.first(); f; f=l.next()) {
+      if(f->parentId()>-1)
+        f->setParent( folder(f->parentId()) );
+      else
+        f->setParent(0);
+    }
+  }
+
+  return cnt;
 }
 
 
@@ -198,43 +325,3 @@ void KNFolderManager::createListItem(KNFolder *f)
   it->setPixmap(0, knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::folder));
   f->updateListItem();
 }
-
-
-/*void KNFolderManager::compactFolder(KNFolder *f)
-{
-  KNCleanUp cup;
-  if(!f) f=c_urrentFolder;
-  if(!f) return;
-  cup.folder(f);
-}
-
-
-void KNFolderManager::compactAll(KNCleanupProgress *p)
-{
-  KNCleanUp cup;
-  
-  if (dlg) {
-    knGlobals.top->blockUI(true);
-    dlg->init(i18n("Compacting folders ..."), fList->count());
-  }
-
-  for(KNFolder *var=fList->first(); var; var=fList->next()) {
-    if(dlg) {
-      dlg->setInfo(var->name());
-      kapp->processEvents();
-    }
-    cup.folder(var);
-    kdDebug(5003) << var->name() << " => " << cup.deleted() << " deleted , " << cup.left() << " left" << endl;
-    if(dlg) dlg->progress();
-  }
-  if (dlg) {
-    knGlobals.top->blockUI(false);
-    kapp->processEvents();
-  }
-  
-  KConfig *c=KGlobal::config();
-  c->setGroup("EXPIRE");
-  c->writeEntry("lastCompact", QDateTime::currentDateTime());
-}
-*/
-

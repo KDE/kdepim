@@ -1,4 +1,4 @@
-/*
+ /*
     knode.h
 
     KNode, the KDE newsreader

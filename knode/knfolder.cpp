@@ -15,6 +15,7 @@
 */
 
 #include <qtextstream.h>
+#include <qfileinfo.h>
 
 #include <kmessagebox.h>
 #include <ksimpleconfig.h>
@@ -34,13 +35,24 @@
 #include "knarticlewidget.h"
 #include "knarticlewindow.h"
 
-KNFolder::KNFolder(int id, const QString &name, KNCollection *parent)
+
+KNFolder::KNFolder()
+  : KNArticleCollection(0), i_d(-1), p_arentId(-1), i_ndexDirty(false)
+{
+}
+
+
+KNFolder::KNFolder(int id, const QString &name, KNFolder *parent)
   : KNArticleCollection(parent) , i_d(id), i_ndexDirty(false)
 {
+  QString fname=path()+QString("custom_%2").arg(i_d);
+
   n_ame=name;
-  QString fname=path()+QString("%1_%2.").arg(n_ame).arg(i_d);
-  m_boxFile.setName(fname+"mbox");
-  i_ndexFile.setName(fname+"idx");
+  m_boxFile.setName(fname+".mbox");
+  i_ndexFile.setName(fname+".idx");
+  i_nfoPath=fname+".info";
+
+  p_arentId=parent?parent->id():-1;
 
   if(i_ndexFile.exists())
     c_ount=i_ndexFile.size()/sizeof(DynData);
@@ -49,13 +61,17 @@ KNFolder::KNFolder(int id, const QString &name, KNCollection *parent)
 }
 
 
-KNFolder::KNFolder(int id, const QString &name, const QString &prefix, KNCollection *parent)
+KNFolder::KNFolder(int id, const QString &name, const QString &prefix, KNFolder *parent)
   : KNArticleCollection(parent) , i_d(id), i_ndexDirty(false)
 {
+  QString fname=path()+QString("%1_%2").arg(prefix).arg(i_d);
+
   n_ame=name;
-  QString fname=path()+QString("%1_%2.").arg(prefix).arg(i_d);
-  m_boxFile.setName(fname+"mbox");
-  i_ndexFile.setName(fname+"idx");
+  m_boxFile.setName(fname+".mbox");
+  i_ndexFile.setName(fname+".idx");
+  i_nfoPath=fname+".info";
+
+  p_arentId=parent?parent->id():-1;
 
   if(i_ndexFile.exists())
     c_ount=i_ndexFile.size()/sizeof(DynData);
@@ -72,8 +88,10 @@ KNFolder::~KNFolder()
 
 void KNFolder::updateListItem()
 {
-  if(l_istItem)
-    l_istItem->setNumber(1,c_ount);
+  if(l_istItem) {
+    l_istItem->setText(0, n_ame);
+    l_istItem->setNumber(1, c_ount);
+  }
 }
 
 
@@ -86,27 +104,48 @@ QString KNFolder::path()
 }
 
 
-bool KNFolder::readInfo(const QString &)
+bool KNFolder::readInfo(const QString &infoPath)
 {
-//#warning IMPLEMENT ME
-  return true;
+  if(infoPath.isEmpty())
+    return false;
+
+  i_nfoPath=infoPath;
+
+  KSimpleConfig info(i_nfoPath);
+  n_ame=info.readEntry("name");
+  i_d=info.readNumEntry("id", -1);
+  p_arentId=info.readNumEntry("parentId", -1);
+
+  if(i_d>-1) {
+    QFileInfo fi(infoPath);
+    QString fname=fi.dirPath(true)+"/"+fi.baseName();
+    closeFiles();
+    clearList();
+
+    m_boxFile.setName(fname+".mbox");
+    i_ndexFile.setName(fname+".idx");
+    c_ount=i_ndexFile.exists() ? (i_ndexFile.size()/sizeof(DynData)) : 0;
+  }
+
+  return (i_d!=-1);
 }
 
 
 void KNFolder::saveInfo()
 {
-//#warning IMPLEMENT ME
-  /*QString dir(path());
-  if (dir!=QString::null) {
-    int pId=-1;
-    //if(p_arent) pId=p_arent->id();
-    KSimpleConfig info(dir+QString("folder%1.info").arg(i_d));
-    
-    info.writeEntry("foldername", n_ame);
+  if(!i_nfoPath.isEmpty() && i_d>3) {  // do never save infos for standard-folders !!
+    KSimpleConfig info(i_nfoPath);
+    info.writeEntry("name", n_ame);
     info.writeEntry("id", i_d);
-    info.writeEntry("parentId", pId);
-    info.writeEntry("count", c_ount);
-  }*/
+    info.writeEntry("parentId", p_arentId);
+  }
+}
+
+
+void KNFolder::setParent(KNCollection *p)
+{
+  p_arent = p;
+  p_arentId = p ? (static_cast<KNFolder*>(p))->id() : -1;
 }
 
 
@@ -456,9 +495,28 @@ void KNFolder::deleteAll()
   clearList();
   c_ount=0;
   syncIndex(true);
-  saveInfo();
-
   updateListItem();
+}
+
+
+void KNFolder::killYourself()
+{
+  if(l_ockedArticles>0)
+    return;
+
+  KNLocalArticle *a;
+  for(int idx=0; idx<len; idx++) {
+    a=at(idx);
+    knGlobals.artFactory->deleteComposerForArticle(a);
+    KNArticleWindow::closeAllWindowsForArticle(a);
+    KNArticleWidget::articleRemoved(a);
+  }
+
+  clearList();
+
+  m_boxFile.remove();
+  i_ndexFile.remove();
+  QFile::remove(i_nfoPath);
 }
 
 

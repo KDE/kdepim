@@ -435,8 +435,9 @@ class KNLocalArticle : public KNArticle {
     bool canceled()               { return f_lags.get(5); }
     void setCanceled(bool b=true) { f_lags.set(5, b); }
 
-    //sending status
+    // status
     bool pending()                { return ( (doPost() && !posted()) || (doMail() && !mailed()) ); }
+    bool isSavedRemoteArticle()   {  return ( !doPost() && !doMail() && editDisabled() ); }
 
     //edit
     bool editDisabled()               { return f_lags.get(6); }

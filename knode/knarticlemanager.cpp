@@ -601,6 +601,38 @@ void KNArticleManager::setScore(KNRemoteArticle::List &l, int score)
 }
 
 
+void KNArticleManager::moveToFolder(KNRemoteArticle::List &l, KNFolder *f)
+{
+  if(!f) return;
+
+  KNRemoteArticle *rem;
+  KNLocalArticle *loc;
+  KNLocalArticle::List l2;
+
+  for(rem=l.first(); rem; rem=l.next()) {
+    if(!rem->hasContent())
+      continue;
+    loc=new KNLocalArticle(0);
+    loc->setEditDisabled(true);
+    loc->setContent(rem->encodedContent());
+    loc->parse();
+    l2.append(loc);
+  }
+
+  if(!l2.isEmpty())
+    if(!f->saveArticles(&l2))
+      displayInternalFileError();
+}
+
+
+void KNArticleManager::moveToFolder(KNLocalArticle::List &l, KNFolder *f)
+{
+  if(!f) return;
+  if(!f->saveArticles(&l))
+    displayInternalFileError();
+}
+
+
 void KNArticleManager::createHdrItem(KNRemoteArticle *a)
 {
   a->setListItem(new KNHdrViewItem(v_iew));

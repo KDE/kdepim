@@ -16,10 +16,12 @@
 
 #include <qheader.h>
 #include <qpixmap.h>
+
 #include <kapp.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <kmessagebox.h>
 
 #include "knglobals.h"
 #include "knconfigmanager.h"
@@ -27,22 +29,25 @@
 #include "knlistview.h"
 #include "knmime.h"
 #include "knhdrviewitem.h"
+#include "kndnd.h"
 
 
 
-KNLVItemBase::KNLVItemBase(KNLVItemBase *item) : QListViewItem(item), active(false)
+KNLVItemBase::KNLVItemBase(KNLVItemBase *item)
+  : QListViewItem(item), a_ctive(false), h_over(false)
 {
 }
 
 
-KNLVItemBase::KNLVItemBase(KNListView *view) : QListViewItem(view), active(false)
+KNLVItemBase::KNLVItemBase(KNListView *view)
+  : QListViewItem(view), a_ctive(false), h_over(false)
 {
 }
 
 
 KNLVItemBase::~KNLVItemBase()
 {
-  if(active) {
+  if(a_ctive) {
     QListView *lv=listView();
     // no need to check necessary, a KNLVItemBase objects can only be added to KNListViews
     if(lv) (static_cast<KNListView*>(lv))->activeRemoved();
@@ -59,31 +64,29 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
   p->setFont(fontForColumn(column, p->font()));
 
   QPen pen=p->pen();
-  if (isSelected()||active) {
+  if (isSelected()||a_ctive) {
     pen.setColor(cg.highlightedText());
-    if (active)
+    if (a_ctive)
       base=app->activeItemColor();
     else
       base=app->selectedItemColor();
   } else {
-    if (this->greyOut())
+    if(this->greyOut())
       pen.setColor(greyColor());
     else
       pen.setColor(normalColor());
     base=cg.base();
   }
+
   p->setPen(pen);
       
   p->fillRect(0,0,width, height(), QBrush(base));
   
   if(column==0) {
-    
-    if(this->firstColBold()) {
-      QFont font=p->font();
-      font.setBold(true); 
-      p->setFont(font);
-    }
-  
+    QFont font=p->font();
+    font.setBold( this->firstColBold() );
+    font.setUnderline(h_over);
+    p->setFont(font);
     const QPixmap *pm;
     
     for(int i=0; i<4; i++) {
@@ -177,8 +180,9 @@ QString KNLVItemBase::shortString(QString text, int, int width, QFontMetrics fm)
 //==============================================================================
 
 
-KNListView::KNListView(QWidget *parent, const char *name)
-  : QListView(parent,name), sAsc(true), sCol(-1), activeItem(0)
+KNListView::KNListView(QWidget *parent, const char *name, KNDragHandler *dh)
+  : QListView(parent,name), s_ortAsc(true), s_ortCol(-1), a_ctiveItem(0), d_handler(dh),
+    d_ragMousePressed(false), d_ragHoverItem(0), d_ropError(QString::null)
 {
   connect(header(), SIGNAL(clicked(int)),
           this, SLOT(slotSortList(int)));
@@ -189,11 +193,15 @@ KNListView::KNListView(QWidget *parent, const char *name)
   header()->setMovingEnabled(true);
   setFrameStyle(NoFrame);
   setSelectionMode(QListView::Extended);
+
+  if(dh)
+    dh->setWidget(this);
 }
 
 
 KNListView::~KNListView()
 {
+  delete d_handler;
 }
 
 
@@ -203,11 +211,11 @@ void KNListView::setActive(QListViewItem *i, bool activate)
 
   if (!item || (item->isActive() == activate))
     return;
-    
-  if (activeItem) {
-    activeItem->setActive(false);
-    repaintItem(activeItem);
-    activeItem=0;
+
+  if (a_ctiveItem) {
+    a_ctiveItem->setActive(false);
+    repaintItem(a_ctiveItem);
+    a_ctiveItem=0;
   }
 
   item->setActive(activate);
@@ -215,29 +223,38 @@ void KNListView::setActive(QListViewItem *i, bool activate)
   if (activate) {
     clearSelection();
     setSelected(item,true);
-    activeItem = item;
+    a_ctiveItem = item;
     emit(itemSelected(item));
   } else
     repaintItem(item);
 }
-  
+
 
 void KNListView::clear()
 {
-  activeItem=0;
+  a_ctiveItem=0;
   QListView::clear();
+}
+
+
+void KNListView::triggerDropError(const QString &e)
+{
+  /* show a message-box with a little delay, so
+     the drop-operation can be completed first */
+  d_ropError=e;
+  QTimer::singleShot(50, this, SLOT(slotShowDropError()));
 }
 
 
 void KNListView::slotSortList(int col)
 {
-  if(col==sCol) sAsc=!sAsc;
+  if(col==s_ortCol) s_ortAsc=!s_ortAsc;
   else {
     emit sortingChanged(col);
-    sCol=col;
+    s_ortCol=col;
   }
-      
-  setSorting(col, sAsc);
+
+  setSorting(col, s_ortAsc);
   
   if(currentItem()!=0) ensureItemVisible(currentItem());  
 }
@@ -253,22 +270,157 @@ void KNListView::contentsMousePressEvent(QMouseEvent *e)
 {
   if (!e) return;
 
-  bool selectMode=(( e->state() & ShiftButton ) || ( e->state() & ControlButton ));
+  bool selectMode=(
+                    ( ( e->state() & ShiftButton ) || ( e->state() & ControlButton ) ) &&
+                    selectionMode()!=Single
+                  );
 
   QPoint vp = contentsToViewport( e->pos() );
   QListViewItem * i = itemAt( vp );
+  //QRect ir=itemRect(i);
+  //kdDebug(5003) << "treeStepSize = " << this->treeStepSize() << "  depth = " << i->depth() << endl;
 
   if ( (e->button() == RightButton) && i && (i->isSelected()) ) {
     emit rightButtonPressed( i, viewport()->mapToGlobal(vp), -1 );
 	  return;
 	}
 
-  QListView::contentsMousePressEvent(e);
-  i=currentItem();
-  if (i && !selectMode && i->isSelected())
-    setActive(i, true);
+	// select item ?
+  if(!i || !i->isSelected() || selectMode) {
+    QListView::contentsMousePressEvent(e);
+    i=currentItem();
+    if(i && !selectMode && i->isSelected())
+      setActive(i, true);
+  }
+  // open item ?
+  else if(i) {
+    if( vp.x() >= header()->sectionPos(0) &&
+        vp.x() < ((i->depth()+1)*treeStepSize() + header()->sectionPos(0))
+      )
+      QListView::contentsMousePressEvent(e);
+  }
+
+
+  if(i && !selectMode && i->isSelected() && e->button()==LeftButton) {
+    d_ragStartPos=e->pos();
+    d_ragMousePressed=true;
+  }
+
 }
 
+
+void KNListView::contentsMouseMoveEvent(QMouseEvent *e)
+{
+  if( d_handler && d_ragMousePressed && (e->pos() - d_ragStartPos).manhattanLength() > 8 ) {
+    d_ragMousePressed=false;
+     kdDebug(5003) << "KNListView::contentsMouseMoveEvent() : start drag" << endl;
+    d_handler->startDrag(currentItem());
+  }
+}
+
+
+void KNListView::contentsMouseReleaseEvent(QMouseEvent *e)
+{
+  //kdDebug(5003) << "KNListView::contentsMouseReleaseEvent()" << endl;
+  if(e->button()==LeftButton)
+    d_ragMousePressed=false;
+
+  bool selectMode=(
+                    ( ( e->state() & ShiftButton ) || ( e->state() & ControlButton ) ) &&
+                    selectionMode()!=Single
+                  );
+
+  QPoint vp = contentsToViewport( e->pos() );
+  QListViewItem * i = itemAt( vp );
+
+  if(i && !selectMode && i->isSelected())
+    setActive(i, true);
+
+  QListView::contentsMouseReleaseEvent(e);
+}
+
+
+void KNListView::contentsDragEnterEvent(QDragEnterEvent *e)
+{
+  kdDebug(5003) << "KNListView::contentsDragEnterEvent()" << endl;
+  if(!e) return;
+
+  if(d_handler && d_handler->accept(e)) {
+    e->accept(rect());
+  }
+  else {
+    e->ignore(rect());
+  }
+}
+
+
+void KNListView::contentsDragMoveEvent(QDragMoveEvent *e)
+{
+  if(!e) return;
+  QPoint vp = contentsToViewport( e->pos() );
+  QListViewItem *i=itemAt(vp);
+  //kdDebug(5003) << "KNListView::contentsDragMoveEvent() : type = " << e->format(0) << endl;
+
+  if(d_ragHoverItem!=i && d_ragHoverItem) {
+    d_ragHoverItem->hover(false);
+    repaintItem(d_ragHoverItem);
+    d_ragHoverItem=0;
+  }
+
+
+  if( d_handler && d_handler->accept(e, i) ) {
+    if(i && d_ragHoverItem!=i) {
+      d_ragHoverItem=static_cast<KNLVItemBase*>(i);
+      d_ragHoverItem->hover(true);
+      repaintItem(d_ragHoverItem);
+    }
+    e->accept(QRect(0,0,0,0));
+  }
+  else {
+    d_ragHoverItem=0;
+    e->ignore(QRect(0,0,0,0));
+  }
+}
+
+
+void KNListView::contentsDragLeaveEvent(QDragLeaveEvent *e)
+{
+  if(d_ragHoverItem) {
+    d_ragHoverItem->hover(false);
+    repaintItem(d_ragHoverItem);
+  }
+  d_ragHoverItem=0;
+
+  d_ragMousePressed=false;
+}
+
+
+void KNListView::contentsDropEvent(QDropEvent *e)
+{
+  if(!e) return;
+  QPoint vp = contentsToViewport( e->pos() );
+  QListViewItem *i=itemAt(vp);
+
+  kdDebug(5003) << "KNListView::contentsDropEvent() : type = " << e->format(0) << endl;
+
+  if( d_handler && d_handler->accept(e, i) )
+    e->acceptAction(true);
+  else
+    e->ignore();
+
+  if(d_ragHoverItem) {
+    d_ragHoverItem->hover(false);
+    repaintItem(d_ragHoverItem);
+  }
+  d_ragHoverItem=0;
+
+  if(e->isAccepted()) {
+    kapp->processEvents();
+    emit( dropReceived(e->format(0), i) );
+  }
+
+  d_ragMousePressed=false;
+}
 
 
 void KNListView::keyPressEvent(QKeyEvent *e)
@@ -308,6 +460,16 @@ void KNListView::focusOutEvent(QFocusEvent *e)
   QListView::focusOutEvent(e);
   emit focusChanged(e);
 }
+
+
+void KNListView::slotShowDropError()
+{
+  if(!d_ropError.isEmpty()) {
+    KMessageBox::error(knGlobals.topWidget, d_ropError);
+    d_ropError=QString::null;
+  }
+}
+
 
 
 //--------------------------------

@@ -203,7 +203,6 @@ void KNCleanUp::compactFolder(KNFolder *f)
     }
 
     f->syncIndex(true);
-    f->saveInfo();
     newMBoxFile.close();
     f->closeFiles();
 

@@ -22,6 +22,7 @@
 #include <kaction.h>
 
 class KNListView;
+class KNDragHandler;
 
 
 class KNLVItemBase : public QListViewItem  {
@@ -31,8 +32,10 @@ class KNLVItemBase : public QListViewItem  {
     KNLVItemBase(KNLVItemBase *item);    // static_cast in ~KNLVItemBase fails.
     ~KNLVItemBase();
 
-    void setActive(bool b)  { active = b; };
-    bool isActive()         { return active; }
+    void setActive(bool b)  { a_ctive = b; };
+    bool isActive()         { return a_ctive; }
+
+    void hover(bool b)      { h_over=b; }
 
     void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
     int width(const QFontMetrics &fm, const QListView *lv, int column);
@@ -49,7 +52,7 @@ class KNLVItemBase : public QListViewItem  {
     virtual const QFont& fontForColumn(int, const QFont &font)    { return font; }
 
   private:
-    bool active;
+    bool a_ctive, h_over;
 
 };
 
@@ -61,36 +64,53 @@ class KNListView : public QListView  {
   friend class KNLVItemBase;
 
   public:
-    KNListView(QWidget *parent, const char *name=0);
+    KNListView(QWidget *parent, const char *name=0, KNDragHandler *dh=0);
     ~KNListView();
 
-    int sortColumn()                { return sCol; }
-    bool ascending()                { return sAsc; }
-    void setColAsc(int c, bool a)   { sCol=c; sAsc=a; }
+    int sortColumn()                { return s_ortCol; }
+    bool ascending()                { return s_ortAsc; }
+    void setColAsc(int c, bool a)   { s_ortCol=c; s_ortAsc=a; }
 
     void setActive(QListViewItem *item, bool activate);
     void clear();
+
+    void triggerDropError(const QString &e);
 
   public slots:
     void slotSortList(int col);
     void slotSizeChanged(int,int,int);
       
   protected:
-    void activeRemoved()            { activeItem = 0; }
+    void activeRemoved()            { a_ctiveItem = 0; }
     void contentsMousePressEvent(QMouseEvent *e);
+    void contentsMouseMoveEvent(QMouseEvent *e);
+    void contentsMouseReleaseEvent(QMouseEvent *e);
+    void contentsDragEnterEvent(QDragEnterEvent *e);
+    void contentsDragMoveEvent(QDragMoveEvent *e);
+    void contentsDragLeaveEvent(QDragLeaveEvent *e);
+    void contentsDropEvent(QDropEvent *e);
     void keyPressEvent(QKeyEvent *e);
     void focusInEvent(QFocusEvent *e);
     void focusOutEvent(QFocusEvent *e);
-    bool sAsc;
-    int sCol; 
-      
+
+    bool s_ortAsc;
+    int s_ortCol;
+    KNLVItemBase *a_ctiveItem;
+    KNDragHandler *d_handler;
+    QPoint d_ragStartPos;
+    bool d_ragMousePressed;
+    KNLVItemBase *d_ragHoverItem;
+    QString d_ropError;
+
+  protected slots:
+    void slotShowDropError();
+
   signals:
     void itemSelected(QListViewItem*);
     void sortingChanged(int);
     void focusChanged(QFocusEvent*);
+    void dropReceived(const char*,QListViewItem*);
 
-  private:
-    KNLVItemBase *activeItem;
 };
 
 

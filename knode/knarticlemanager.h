@@ -103,15 +103,17 @@ class KNArticleManager : public QObject {
     //pgp signature check
     void verifyPGPSignature(KNArticle* a);
 
-    //article handling - RemoteArticles
+    //article handling
     void setAllRead(bool r=true);
     void setRead(KNRemoteArticle::List &l, bool r=true);
+
     void toggleWatched(KNRemoteArticle::List &l);
     void toggleIgnored(KNRemoteArticle::List &l);
     void setScore(KNRemoteArticle::List &l, int score=-1);
 
-    //article handling - LocalArticles
-    //soon to come ..
+    void moveToFolder(KNRemoteArticle::List &l, KNFolder *f);
+    void moveToFolder(KNLocalArticle::List &l, KNFolder *f);
+
 
   protected:  
     void createHdrItem(KNRemoteArticle *a);

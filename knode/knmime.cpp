@@ -1779,19 +1779,27 @@ void KNLocalArticle::updateListItem()
   int idx=0;
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
 
-  if(doPost()) {
-    tmp+=n_ewsgroups.asUnicodeString();
-    if(canceled())
-      i_tem->setPixmap(idx++, app->icon(KNConfig::Appearance::canceledPosting));
-    else
-      i_tem->setPixmap(idx++, app->icon(KNConfig::Appearance::posting));
+  if(isSavedRemoteArticle()) {
+    i_tem->setPixmap(0, app->icon(KNConfig::Appearance::savedRemote));
+    tmp=n_ewsgroups.asUnicodeString();
   }
+  else {
 
-  if(doMail()) {
-    i_tem->setPixmap(idx++, app->icon(KNConfig::Appearance::mail));
-    if(doPost())
-      tmp+=" / ";
-    tmp+=t_o.asUnicodeString();
+    if(doPost()) {
+      tmp+=n_ewsgroups.asUnicodeString();
+      if(canceled())
+        i_tem->setPixmap(idx++, app->icon(KNConfig::Appearance::canceledPosting));
+      else
+        i_tem->setPixmap(idx++, app->icon(KNConfig::Appearance::posting));
+    }
+
+    if(doMail()) {
+      i_tem->setPixmap(idx++, app->icon(KNConfig::Appearance::mail));
+      if(doPost())
+        tmp+=" / ";
+      tmp+=t_o.asUnicodeString();
+    }
+
   }
 
   i_tem->setText(1, tmp);

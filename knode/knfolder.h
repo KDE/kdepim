@@ -27,8 +27,9 @@ class KNFolder : public KNArticleCollection  {
   friend class KNCleanUp; 
 
   public:
-    KNFolder(int id, const QString &name, KNCollection *parent=0);
-    KNFolder(int id, const QString &name, const QString &prefix, KNCollection *parent=0);
+    KNFolder();
+    KNFolder(int id, const QString &name, KNFolder *parent=0);
+    KNFolder(int id, const QString &name, const QString &prefix, KNFolder *parent=0);
     ~KNFolder();
 
     //type
@@ -37,6 +38,7 @@ class KNFolder : public KNArticleCollection  {
     //id
     int id()                            { return i_d; }
     void setId(int i)                   { i_d=i; }
+    int parentId()                      { return p_arentId; }
 
     //list item handling
     void updateListItem();
@@ -50,12 +52,16 @@ class KNFolder : public KNArticleCollection  {
     KNLocalArticle* at(int i)           { return static_cast<KNLocalArticle*>(list[i]); }
     KNLocalArticle* byId(int id);
 
+    //parent
+    void setParent(KNCollection *p);
+
     //load, save and delete
     bool loadHdrs();
     bool loadArticle(KNLocalArticle *a);
     bool saveArticles(KNLocalArticle::List *l);
     void removeArticles(KNLocalArticle::List *l, bool del=true);
     void deleteAll();
+    void killYourself();
 
     //index synchronization
     void syncIndex(bool force=false);
@@ -64,9 +70,11 @@ class KNFolder : public KNArticleCollection  {
     protected:
       void closeFiles();
       int i_d;            //unique id
+      int p_arentId;      //-1 for toplevel
       bool i_ndexDirty;   //do we need to sync?
       KNFile m_boxFile;
       QFile i_ndexFile;
+      QString i_nfoPath;
 
       /* helper-class: stores index-data of an article */
       class DynData {

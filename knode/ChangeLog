@@ -1,3 +1,8 @@
+changes between 0.4 and 0.6
+- support for customizable folders
+- DnD between folders and groups
+
+
 changes between 0.3.3 and 0.4
 - full support for non iso-8859-x charsets
 - basic PGP/GnuPG support
