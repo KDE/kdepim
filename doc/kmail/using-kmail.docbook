@@ -651,7 +651,7 @@ folder</guilabel>. Here is a list of all possible actions:</para>
 <term><guilabel>file into folder</guilabel></term>
 <listitem>
 <para>This will file the message into another folder, removing it from
-it's current folder if necessary. You currently 
+its current folder if necessary. You currently 
 cannot use <acronym>IMAP</acronym> folders as a target.</para>
 <!-- fixme: still correct? -->
 </listitem>
@@ -1368,7 +1368,7 @@ a tool, and restart the wizard again.
 
 <para>If you have marked at least one tool you're able to select some actions 
 to be done in &kmail; with regard to spam messages. To let &kmail; detect spam 
-messages you definitly should mark the <guilabel>Pipe messages through the 
+messages you definitely should mark the <guilabel>Pipe messages through the 
 anti spam tools</guilabel> option. If you want to let messages detected as 
 spam be moved into a certain folder, then please select this folder and 
 mark the <guilabel>Move detected spam messages to the selected folder</guilabel> 
@@ -1377,7 +1377,7 @@ option.
 
 <para>If you want to be able to manually mark messages as spam or not spam 
 (ham) you should check the <guilabel>Classify messages manually as spam / 
-not spam</guilabel> option. Note that you can achive optically the same 
+not spam</guilabel> option. Note that you can achieve optically the same 
 result when you only change the status of the appropriate messages. 
 But if any of the tools you selected before supports bayesian filtering 
 (i.e. a method to detect spam based on statistical analysis of the 
@@ -1392,7 +1392,7 @@ may want to inspect the result of this process in the
 <link linkend="filter-dialog">Filter Dialog</link>. Having checked the 
 <guilabel>Classify messages manually as spam / not spam</guilabel> option 
 the wizard will create toolbar buttons for marking messages as spam or
-as ham. Keep in mind that classifying messages as spam will also move that 
+as ham. Keep in mind that classifying messages as spam will also move those 
 messages to the folder you had specified for spam messages.
 </para>
 
@@ -1410,16 +1410,16 @@ tool is used. That allows updating of the configuration for the wizard both
 from administrator's or user's side.
 </para>
 
-<para>The detection of spam messages is achived by creating 
+<para>The detection of spam messages is achieved by creating 
 <guilabel>pipe through</guilabel> actions per tool within a 
 special filter. Another filter contains rules to check for detected spam 
-messages and actions to mark them and (optionally depending on the choise 
+messages and actions to mark them and (optionally depending on the choice 
 in the wizard) to move them into a folder. Both filters are configured to 
 be applied on incoming messages and on manual filtering.
 </para>
 
 <para>Two filters are needed for the classification of ham and spam. They 
-contain actions tomark the messages appropriatly. As written above, the filter 
+contain actions to mark the messages appropriately. As written above, the filter 
 for classification as spam has another action to move the message into a 
 predefined folder. Given that the selected tools support bayesian filtering, 
 the wizard will create additional filter actions to pass the messages to the 
