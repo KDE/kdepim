@@ -20,6 +20,8 @@
 */
 
 #include "calendarimap.h"
+#include "calendarimap.moc"
+
 #include "calendarlocal.h"
 // Just for some enums
 #include "scheduler.h"
