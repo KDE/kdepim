@@ -44,6 +44,11 @@
 
 #include <dcopclient.h>
 
+#include <pi-memo.h>
+
+#include "pilotMemo.h"
+#include "pilotSerialDatabase.h"
+
 #include "setup_base.h"
 #include "KNotesIface_stub.h"
 
@@ -189,14 +194,27 @@ public:
 	KNotesActionPrivate() :
 		fDCOP(0L),
 		fKNotes(0L),
-		fTimer(0L)
+		fTimer(0L),
+		fDatabase(0L),
+		fCounter(0)
 	{ } ;
 
+	// These are  the notes that we got from KNotes
 	QMap <int,QString> fNotes;
+	// This iterates through that list; it's in here because
+	// we use slots to process one item at a time and need
+	// to keep track of where we are between slot calls.
 	QMap <int,QString>::ConstIterator fIndex;
+	// The DCOP client for this application, and the KNotes stub.
 	DCOPClient *fDCOP;
 	KNotesIface_stub *fKNotes;
+	// The timer for invoking process() to do some more work.
 	QTimer *fTimer;
+	// The database we're working with (MemoDB)
+	PilotSerialDatabase *fDatabase;
+	// Some counter that needs to be preserved between calls to
+	// process(). Typically used to note hom much work is done.
+	int fCounter;
 } ;
 
 KNotesAction::KNotesAction(KPilotDeviceLink *o,
@@ -223,6 +241,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 
 	KPILOT_DELETE(fP->fTimer);
 	KPILOT_DELETE(fP->fKNotes);
+	KPILOT_DELETE(fP->fDatabase);
 	KPILOT_DELETE(fP);
 }
 
@@ -236,6 +255,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	fP->fKNotes = new KNotesIface_stub("knotes","KNotesIface");
 
 	fP->fNotes = fP->fKNotes->notes();
+	fP->fDatabase = new PilotSerialDatabase(pilotSocket(),"MemoDB",this,"MemoDB");
 
 	if (isTest())
 	{
@@ -244,7 +264,8 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	else
 	{
 		fP->fTimer = new QTimer(this);
-		fStatus = NewNotesToPilot;
+		fStatus = Init;
+		fP->fCounter = 0;
 		fP->fIndex = fP->fNotes.begin();
 
 		connect(fP->fTimer,SIGNAL(timeout()),SLOT(process()));
@@ -280,11 +301,35 @@ void KNotesAction::listNotes()
 {
 	switch(fStatus)
 	{
+	case Init: getAppInfo(); break;
 	case NewNotesToPilot : addNewNoteToPilot(); break;
+	case Cleanup : cleanupMemos(); break;
 	default : 
 		fP->fTimer->stop();
 		emit syncDone(this);
 	}
+}
+
+void KNotesAction::getAppInfo()
+{
+	FUNCTIONSETUP;
+
+#define APP_INFO_BLOCK_SIZE  (8192)
+
+	unsigned char buffer[APP_INFO_BLOCK_SIZE];
+	int appInfoSize = fP->fDatabase->readAppBlock(buffer,APP_INFO_BLOCK_SIZE);
+	struct MemoAppInfo memoInfo;
+
+	if (appInfoSize<0)
+	{
+		fStatus=Error;
+		return;
+	}
+
+	unpack_MemoAppInfo(&memoInfo,buffer,appInfoSize);
+	PilotDatabase::listAppInfo(&memoInfo.category);
+
+	fStatus=NewNotesToPilot;
 }
 
 void KNotesAction::addNewNoteToPilot()
@@ -293,7 +338,15 @@ void KNotesAction::addNewNoteToPilot()
 
 	if (fP->fIndex == fP->fNotes.end())
 	{
-		fStatus = Done;
+		if (fP->fCounter)
+		{
+			addSyncLogEntry(i18n("Added one new memo.",
+				"Added %n new memos.",
+				fP->fCounter));
+		}
+
+		fP->fCounter = 0;
+		fStatus = Cleanup;
 		return;
 	}
 
@@ -308,9 +361,33 @@ void KNotesAction::addNewNoteToPilot()
 			<< " is new to the Pilot."
 			<< endl;
 #endif
+
+		QString text = fP->fIndex.data() + "\n" ;
+		text.append(fP->fKNotes->text(fP->fIndex.key()));
+
+		const char *c = text.latin1();
+		PilotMemo *a = new PilotMemo((void *)(const_cast<char *>(c)));
+		PilotRecord *r = a->pack();
+
+		fP->fDatabase->writeRecord(r);
+
+		delete r;
+		delete a;
+		
+		fP->fCounter++;
 	}
 
 	++(fP->fIndex);
+}
+
+void KNotesAction::cleanupMemos()
+{
+	FUNCTIONSETUP;
+
+	// Tell KNotes we're up-to-date
+	fP->fKNotes->sync("kpilot");
+
+	fStatus=Done;
 }
 
 bool KNotesAction::knotesRunning() const
@@ -338,6 +415,9 @@ bool KNotesAction::knotesRunning() const
 
 
 // $Log$
+// Revision 1.2  2001/10/10 13:40:07  cschumac
+// Compile fixes.
+//
 // Revision 1.1  2001/10/08 22:27:42  adridg
 // New ui, moved to lib-based conduit
 //

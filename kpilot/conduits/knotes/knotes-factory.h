@@ -50,6 +50,7 @@ public:
 
 	enum Status { Init,
 		NewNotesToPilot,
+		Cleanup,
 		Done } ;
 	virtual QString statusString() const;
 
@@ -68,7 +69,9 @@ protected:
 	* For actual processing. These are called by process
 	* and it is critical that fP->fIndex is set properly.
 	*/
+	void getAppInfo();
 	void addNewNoteToPilot();
+	void cleanupMemos();
 
 protected slots:
 	void process();
@@ -122,6 +125,9 @@ void *init_libknotesconduit();
 } ;
 
 // $Log$
+// Revision 1.1  2001/10/08 22:27:41  adridg
+// New ui, moved to lib-based conduit
+//
 // Revision 1.1  2001/10/04 23:51:55  adridg
 // Nope. One more really final commit to get the alpha to build. Dirk, otherwise just remove the conduits/ subdir from kdepim/kpilot/Makefile.am
 //
