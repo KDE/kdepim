@@ -58,6 +58,13 @@ public:
     int storeAddress( int index, const KABC::Addressee &adr, bool append = false );
 
     /*
+     * Calendar support
+     */
+    int numCalendarEntries();
+    int readCalendarEntry( int index, KCal::Event &entry );
+    int storeCalendarEntry( int index, const KCal::Event &entry );
+
+    /*
      * Notes support
      */
     int numNotes();

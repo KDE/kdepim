@@ -1,5 +1,5 @@
 /*  This file is part of the KDE mobile library.
-    Copyright (C) 2003 Helge Deller <deller@kde.org>
+    Copyright (C) 2003-2005 Helge Deller <deller@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -68,8 +68,9 @@ static char *lockfile = NULL;
 static char model[GN_MODEL_MAX_LENGTH+1], revision[GN_REVISION_MAX_LENGTH+1], imei[GN_IMEI_MAX_LENGTH+1];
 static QString PhoneProductId;
 
-static struct gn_statemachine state;
+static gn_statemachine state;
 static gn_data data;
+static gn_calnote_list calnote_list;
 
 
 /**
@@ -376,6 +377,7 @@ static gn_error read_phone_entry_highlevel( int index, const gn_memory_type memt
 
   // try to split Name into FamilyName and GivenName
   s = QString(entry.name).simplifyWhiteSpace();
+  a->setFormattedName(s);
   if (s.find(',')!=-1) {
   	addrlist = QStringList::split(',', s);
 	if (addrlist.count()==2) {
@@ -545,12 +547,15 @@ QString KMobileGnokii::iconFileName() const
 // this String is used to have a unique identification for syncronisation.
 QString KMobileGnokii::deviceUniqueID()
 { 
-  return QString::fromLocal8Bit(imei);
+  return QString("GNOKII-IMEI-%1").arg(QString::fromLocal8Bit(imei));
 }
 
-/*
- * Addressbook / Phonebook support
- */
+
+
+/**********************************************************************************
+ * Addressbook / Phonebook support                                                *
+ **********************************************************************************/
+
 int KMobileGnokii::numAddresses()
 {
   if (!connectDevice(NULL))
@@ -604,13 +609,250 @@ int KMobileGnokii::readAddress( int index, KABC::Addressee &addr )
 
 int KMobileGnokii::storeAddress( int, const KABC::Addressee &, bool )
 {
-  /* this is a read-only device */
+  /* XXX: this is a read-only device */
   return KIO::ERR_WRITE_ACCESS_DENIED;
 }
 
-/*
- * Notes support
- */
+
+
+/**********************************************************************************
+ * Calendar support                                                               *
+ **********************************************************************************/
+
+static void QDateTime_2_timestamp( const QDateTime &qdt, gn_timestamp &ts )
+{
+  ts.year = qdt.date().year();
+  ts.month = qdt.date().month();
+  ts.day = qdt.date().day();
+  ts.hour = qdt.time().hour();
+  ts.minute = qdt.time().minute();
+  ts.second = qdt.time().second();
+  ts.timezone = 0;
+}
+
+static QDateTime timestamp_2_QDateTime( const gn_timestamp &ts )
+{
+  return QDateTime(	QDate(ts.year, ts.month, ts.day),
+			QTime(ts.hour, ts.minute, ts.second)    );
+}
+
+static void print_calnote( const gn_calnote &entry )
+{
+  gn_timestamp ts = entry.time;
+  kdWarning()	<< "location=" << entry.location       /* The number of the note in the phone memory */
+		<< "  type=" <<  entry.type                /* The type of the note */
+		<< "  gn_timestamp=" <<         /* The time of the note */  
+		" year=" << ts.year <<
+		" month=" << ts.month <<
+		" day=" << ts.day <<
+		" hour=" << ts.hour <<
+		" minute=" << ts.minute <<
+		" second=" << ts.second <<
+		" TZ=" << ts.timezone 
+		<< "  gn_calnote_alarm="<< entry.alarm.enabled   /* The alarm of the note */
+		<< "  text=" << entry.text		   /* The text of the note */
+		<< "  number=" << entry.phone_number	/* For Call only: the phone number */
+		<< "  recurr=" << entry.recurrence << endl << endl;
+}
+
+
+
+
+int KMobileGnokii::numCalendarEntries()
+{
+  gn_data_clear(&data);
+  gn_calnote entry;
+
+  memset(&entry, 0, sizeof(entry));
+  data.calnote = &entry;
+  entry.location = 1;
+  data.calnote_list = &calnote_list;
+
+  gn_error error = gn_sm_functions(GN_OP_GetCalendarNote, &data, &state);
+  switch (error) {
+	case GN_ERR_NONE:
+	case GN_ERR_INVALIDLOCATION:
+        case GN_ERR_EMPTYLOCATION:
+		return calnote_list.number;
+	default:
+		GNOKII_CHECK_ERROR(error);
+        	return 0;
+  }
+}
+
+int KMobileGnokii::readCalendarEntry( int index, KCal::Event &event )
+{
+  if (index < 0 || index >= GN_CALNOTE_MAX_NUMBER)
+	return KIO::ERR_DOES_NOT_EXIST;
+
+  gn_data_clear(&data);
+  gn_calnote entry;
+
+  memset(&entry, 0, sizeof(entry));
+  entry.location = index+1;
+  data.calnote = &entry;
+  data.calnote_list = &calnote_list;
+  
+  gn_error error = gn_sm_functions(GN_OP_GetCalendarNote, &data, &state);
+  GNOKII_CHECK_ERROR(error);
+  if (error != GN_ERR_NONE)
+	return gn_error2kio_error(error);
+
+  print_calnote( entry );
+
+  QDateTime dt_start = timestamp_2_QDateTime(entry.time);
+  QDateTime dt_end = dt_start.addSecs( 60*60 ); // XXX: assume one hour
+  event.setDtStart( dt_start );
+  event.setDtEnd( dt_end );
+  event.setSummary( QString::fromUtf8(entry.text) );
+
+  // type:
+  switch (entry.type) {
+  case GN_CALNOTE_MEETING:
+		event.setCategories(i18n("MEETING"));
+		break;
+  case GN_CALNOTE_CALL:
+		event.setCategories(i18n("PHONE CALL"));
+		event.setDescription(QString::fromUtf8(entry.phone_number));
+		break;
+  case GN_CALNOTE_BIRTHDAY:
+		event.setCategories(i18n("BIRTHDAY"));
+		break;
+  case GN_CALNOTE_REMINDER:
+		event.setCategories(i18n("REMINDER"));
+		break;
+  default:
+		kdWarning() << "unknown calendar GN_CALNOTE_XXXX type #" << entry.type << endl;
+  }
+
+  // alarm:
+  if (entry.alarm.enabled) {
+    QDateTime at = timestamp_2_QDateTime(entry.alarm.timestamp);
+    if (at.isValid() && dt_start.isValid()) {
+      int seconds = abs(at.secsTo(dt_start));
+      seconds %= 60*60*24; /* max. 1 day in advance... */
+      KCal::Alarm *eventalarm = event.newAlarm();
+      eventalarm->setStartOffset(KCal::Duration(seconds));
+    }
+  }
+
+  // recurrence:
+  switch (entry.recurrence) {
+  case GN_CALNOTE_NEVER:
+		break;
+  case GN_CALNOTE_DAILY:
+		event.recurrence()->setDaily(1,-1);
+		break;
+  case GN_CALNOTE_WEEKLY:
+  case GN_CALNOTE_2WEEKLY:
+		event.recurrence()->setDaily( 7 + (entry.recurrence==GN_CALNOTE_2WEEKLY ? 7:0) , -1);
+		break;
+  case GN_CALNOTE_MONTHLY:
+		event.recurrence()->setMonthly(KCal::Recurrence::rMonthlyPos, 1, -1);
+		break;
+  case GN_CALNOTE_YEARLY:
+		event.recurrence()->setYearly(KCal::Recurrence::rYearlyPos, 1, -1);
+		break;
+  default: // hourly
+		event.recurrence()->setHourly(entry.recurrence, -1);
+		break;
+  }
+
+  return 0;
+}
+
+int KMobileGnokii::storeCalendarEntry( int index, const KCal::Event &event )
+{
+  if (index < 0 || index >= GN_CALNOTE_MAX_NUMBER)
+	return KIO::ERR_DOES_NOT_EXIST;
+
+  gn_error error;
+  gn_calnote entry;
+
+  gn_data_clear(&data);
+  memset(&entry, 0, sizeof(entry));
+  entry.location = index+1;
+  data.calnote = &entry;
+  data.calnote_list = &calnote_list;
+
+  // read first
+  error = gn_sm_functions(GN_OP_GetCalendarNote, &data, &state);
+  // GNOKII_CHECK_ERROR(error);
+
+  QDateTime_2_timestamp( event.dtStart(), entry.time );
+  strncpy(entry.text, event.summary().utf8(), sizeof(entry.text)-1);
+
+  // type:
+  entry.type = GN_CALNOTE_MEETING;
+  if (event.categories().findIndex(i18n("MEETING")) != -1) {
+	entry.type = GN_CALNOTE_MEETING;
+  } else if (event.categories().findIndex(i18n("PHONE CALL")) != -1) {
+	entry.type = GN_CALNOTE_CALL;
+  	strncpy(entry.phone_number, event.description().utf8(), sizeof(entry.phone_number)-1);
+  } else if (event.categories().findIndex(i18n("BIRTHDAY")) != -1) {
+	entry.type = GN_CALNOTE_BIRTHDAY;
+  } else { // assume i18n("REMINDER")
+	entry.type = GN_CALNOTE_REMINDER;
+  }
+
+  // alarm:
+  entry.alarm.enabled = 0;
+  if (event.isAlarmEnabled()) {
+	const KCal::Alarm *eventalarm = *event.alarms().at(0);
+	if (eventalarm) {
+		if (eventalarm->hasTime()) {
+
+		   QDateTime_2_timestamp( eventalarm->time(), entry.alarm.timestamp );
+		} else
+		if (eventalarm->hasStartOffset()) {
+		   QDateTime dt = event.dtStart();
+		   dt = dt.addSecs(-eventalarm->startOffset().asSeconds());
+		   QDateTime_2_timestamp( dt, entry.alarm.timestamp );
+		}
+	}
+  }
+
+  // recurrence:
+  switch (event.recurrence()->recurType()) {
+  case KCal::Recurrence::rNone:
+  default:
+		entry.recurrence = GN_CALNOTE_NEVER;
+		break;
+  case KCal::Recurrence::rHourly:
+		entry.recurrence = (gn_calnote_recurrence) (event.recurrence()->frequency());
+		break;
+  case KCal::Recurrence::rDaily:
+		entry.recurrence = GN_CALNOTE_DAILY;
+		break;
+  case KCal::Recurrence::rWeekly:
+		entry.recurrence = (gn_calnote_recurrence) (GN_CALNOTE_WEEKLY * event.recurrence()->frequency());
+		break;
+  case KCal::Recurrence::rMonthlyPos:
+  case KCal::Recurrence::rMonthlyDay:
+		entry.recurrence = GN_CALNOTE_MONTHLY;
+		break;
+  case KCal::Recurrence::rYearlyMonth:
+  case KCal::Recurrence::rYearlyDay:
+  case KCal::Recurrence::rYearlyPos:
+		entry.recurrence = GN_CALNOTE_YEARLY;
+		break;
+  }
+
+  print_calnote( entry );
+
+return 0; // XXX
+
+  error = gn_sm_functions(GN_OP_WriteCalendarNote, &data, &state);
+  GNOKII_CHECK_ERROR(error);
+
+  return 0;
+}
+
+
+/**********************************************************************************
+ * Notes support                                                                  *
+ **********************************************************************************/
+
 int KMobileGnokii::numNotes()
 {
   return 100; /* we simulate one address */
