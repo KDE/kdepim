@@ -286,6 +286,9 @@ class Calendar : public QObject, public CustomProperties,
                                                const Todo::List &,
                                                const Journal::List & );
 
+    virtual bool beginChange( Incidence * );
+    virtual bool endChange( Incidence * );
+
   signals:
     void calendarChanged();
     void calendarSaved();

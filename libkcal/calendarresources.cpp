@@ -632,6 +632,8 @@ void CalendarResources::doSetTimeZoneId( const QString &tzid )
 
 CalendarResources::Ticket *CalendarResources::requestSaveTicket( ResourceCalendar *resource )
 {
+  kdDebug() << "CalendarResources::requestSaveTicket()" << endl;
+
   KABC::Lock *lock = resource->lock();
   if ( !lock ) return 0;
   if ( lock->lock() ) return new Ticket( resource );
@@ -654,6 +656,88 @@ void CalendarResources::releaseSaveTicket( Ticket *ticket )
 {
   ticket->resource()->lock()->unlock();
   delete ticket;
+}
+
+bool CalendarResources::beginChange( Incidence *incidence )
+{
+  kdDebug() << "CalendarResources::beginChange()" << endl;
+
+  ResourceCalendar *r = resource( incidence );
+  if ( !r ) {
+    r = mDestinationPolicy->destination( incidence );
+    if ( !r ) {
+      kdError() << "Unable to get destination resource." << endl;
+      return false;
+    }
+    mResourceMap[ incidence ] = r;
+  }
+    
+  int count = incrementChangeCount( r );
+  if ( count == 1 ) {
+    Ticket *ticket = requestSaveTicket( r );
+    if ( !ticket ) {
+      kdDebug() << "CalendarResources::beginChange(): unable to get ticket."
+                << endl;
+      decrementChangeCount( r );
+      return false;
+    } else {
+      mTickets[ r ] = ticket;
+    }
+  }
+
+  return true;
+}
+
+bool CalendarResources::endChange( Incidence *incidence )
+{
+  kdDebug() << "CalendarResource::endChange()" << endl;
+
+  ResourceCalendar *r = resource( incidence );
+  if ( !r ) return false;
+  
+  int count = decrementChangeCount( r );
+  
+  if ( count == 0 ) {
+    bool ok = save( mTickets[ r ] );
+    if ( ok ) {
+      mTickets.remove( r );
+    } else {
+      return false;
+    }
+  }
+  
+  return true;
+}
+
+int CalendarResources::incrementChangeCount( ResourceCalendar *r )
+{
+  if ( !mChangeCounts.contains( r ) ) {
+    mChangeCounts.insert( r, 0 );
+  }
+
+  int count = mChangeCounts[ r ];
+  ++count;
+  mChangeCounts[ r ] = count;
+  
+  return count;
+}
+
+int CalendarResources::decrementChangeCount( ResourceCalendar *r )
+{
+  if ( !mChangeCounts.contains( r ) ) {
+    kdError() << "No change count for resource." << endl;
+    return 0;
+  }
+
+  int count = mChangeCounts[ r ];
+  --count;
+  if ( count < 0 ) {
+    kdError() << "Can't decrement change count. It already is 0." << endl;
+    count = 0;
+  }
+  mChangeCounts[ r ] = count;
+  
+  return count;
 }
 
 #include "calendarresources.moc"

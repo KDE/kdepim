@@ -216,6 +216,9 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     /** Return Resource for given uid */
     ResourceCalendar *resource(Incidence *);
 
+    bool beginChange( Incidence * );
+    bool endChange( Incidence * );
+
   protected:
     /**
       The observer interface. So far not implemented.
@@ -246,6 +249,9 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
 
     virtual void doSetTimeZoneId( const QString& tzid );
 
+    int incrementChangeCount( ResourceCalendar * );
+    int decrementChangeCount( ResourceCalendar * );
+
   private:
     void init();
 
@@ -259,6 +265,9 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     AskDestinationPolicy *mAskPolicy;
 
     KConfig *mConfig;
+
+    QMap<ResourceCalendar *, Ticket *> mTickets;
+    QMap<ResourceCalendar *, int> mChangeCounts;
 };
 
 }

@@ -358,4 +358,14 @@ Incidence::List Calendar::mergeIncidenceList( const Event::List &e,
   return incidences;
 }
 
+bool Calendar::beginChange( Incidence * )
+{
+  return true;
+}
+
+bool Calendar::endChange( Incidence * )
+{
+  return true;
+}
+
 #include "calendar.moc"
