@@ -421,8 +421,7 @@ void Content::decodedText(QString &s, bool trimText,
 
   if (trimText && removeTrailingNewlines) {
     int i;
-	unsigned int strLength(s.length());
-    for (i=strLength-1; i>=0; i--)
+    for (i=s.length()-1; i>=0; i--)
       if (!s[i].isSpace())
         break;
     s.truncate(i+1);
@@ -448,8 +447,7 @@ void Content::decodedText(QStringList &l, bool trimText,
 
   if (trimText && removeTrailingNewlines) {
     int i;
-	unsigned int unicodeLength(unicode.length());
-    for (i=unicodeLength-1; i>=0; i--)
+    for (i=unicode.length()-1; i>=0; i--)
       if (!unicode[i].isSpace())
         break;
     unicode.truncate(i+1);
