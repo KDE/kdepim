@@ -1,2 +1,2 @@
-kalarmdicondir = $(kde_datadir)/kalarmd/icons
+kalarmdicondir = $(kde_datadir)/kalarmdgui/icons
 kalarmdicon_ICON = AUTO                                                                                                                                         
