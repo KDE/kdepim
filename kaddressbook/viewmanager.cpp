@@ -399,6 +399,8 @@ void ViewManager::modifyView()
         emit(setCurrentFilterName(filterName));
       }
 
+      refreshIncrementalSearchCombo();
+
       mActiveView->refresh();
 
       // cleanup
