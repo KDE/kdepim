@@ -218,7 +218,7 @@ void KNSavedArticleManager::post(KNGroup *g)
   if(knGlobals.appManager->defaultUser()->isValid()) {
     KNSavedArticle *art=newArticle(g->account());
     if(!art) return;
-    art->setDestination(g->name().local8Bit().copy());
+    art->setDestination(g->groupname().copy());
     openInComposer(art,true);
   }
   else KMessageBox::sorry(knGlobals.topWidget, i18n("Please set your name and a valid e-mail address first."));
