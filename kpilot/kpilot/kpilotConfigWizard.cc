@@ -139,7 +139,9 @@ void ConfigWizard::accept()
 }
 
 // Devices to probe:
-//
+// Linux: /dev/pilot (symlink), /dev/ttyS* (serial + irda), /dev/tts/[012345...] (with devfs), 
+//        /dev/ttyUSB*, /dev/usb/tts/[012345...]
+// *BSD: /dev/pilot, /dev/cuaa[01]   (serial), /dev/ucom* (usb)
 
 void ConfigWizard::probeHandheld()
 {
