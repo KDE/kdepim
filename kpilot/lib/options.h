@@ -78,11 +78,6 @@
 // For ostream
 #include <iostream>
 // For QString, and everything else needs it anyway.
-#if defined(DEBUG) && defined(DEBUG_CERR)
-#ifdef QT_NO_CAST_ASCII
-#undef QT_NO_CAST_ASCII
-#endif
-#endif
 #include <qstring.h>
 // Dunno, really. Probably because everything needs it.
 #include <klocale.h>
@@ -194,9 +189,7 @@ class KConfig;
 QString qstringExpansion(const QString &);
 QString charExpansion(const char *);
 
-// class QStringList;
-// ostream& operator <<(ostream&,const QStringList &);
-// kdbgstream& operator <<(kdbgstream&,const QStringList &);
+inline ostream& operator <<(ostream &o,const QString &s) { return (o << s.latin1()); } ;
 
 /**
  * Convert a struct tm from the pilot-link package to a QDateTime
