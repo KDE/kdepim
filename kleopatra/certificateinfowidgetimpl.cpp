@@ -24,6 +24,8 @@
 #include <qtextedit.h>
 #include <qheader.h>
 #include <qpushbutton.h>
+#include <qcursor.h>
+#include <qapplication.h>
 
 #include <klocale.h>
 #include <kdialogbase.h>
@@ -110,7 +112,7 @@ void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo
     CryptPlugWrapper::CertificateInfo info;
     for( CryptPlugWrapper::CertificateInfoList::ConstIterator it = lst.begin();
 	 it != lst.end(); ++it ) {
-      if( (*it).userid[0] == issuer && !items.contains(info.userid[0]) ) {
+      if( (*it).userid[0] == issuer && !items.contains( info.userid[0] ) ) {
 	info = (*it);
 	found = true;
 	break;
@@ -128,8 +130,8 @@ void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo
   }
   item = 0;
   for( QStringList::Iterator it = items.begin(); it != items.end(); ++it ) {
-    if( item ) item = new QListViewItem( item, *it );
-    else item = new QListViewItem( pathView, *it );
+    if( item ) item = new QListViewItem( item, (*it) );
+    else item = new QListViewItem( pathView, (*it) );
     item->setOpen( true );
   }
 }
@@ -157,11 +159,19 @@ void CertificateInfoWidgetImpl::slotShowCertPathDetails( QListViewItem* item )
   }
 }
 
+
+
 void CertificateInfoWidgetImpl::slotImportCertificate()
 {
   if( !_manager ) return;
-  if( _manager->importCertificateWithFingerprint( _info.fingerprint ) ) {
-    KMessageBox::error( this, i18n("Error importing certificate"), i18n("Import error") );
-  }
+  QApplication::setOverrideCursor( QCursor::WaitCursor );
+  int retval = _manager->importCertificateWithFingerprint( _info.fingerprint );
+  QApplication::restoreOverrideCursor();
+
+  if( retval == -1 ) {
+    KMessageBox::error( this, i18n("Error importing certificate.\nYou probably need to import the issuer certificate %1 first.").arg( _info.issuer ), i18n("Import error") );    
+  } else if( retval ) {
+    KMessageBox::error( this, i18n("Error importing certificate.\nCryptPlug returned %1.").arg(retval), i18n("Import error") );
+  } 
 }
 #include "certificateinfowidgetimpl.moc"
