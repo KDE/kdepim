@@ -1,1 +1,4 @@
 AC_CHECK_FUNCS([inet_aton inet_addr])
+if test $ac_cv_func_inet_aton = no; then
+  AC_CHECK_LIB(nsl, inet_aton, [])
+fi
