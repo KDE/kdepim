@@ -102,6 +102,12 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     KSelectAction* setCharsetAction()   { return a_ctSetCharset; }
     KAction* setCharsetKeyboardAction() { return a_ctSetCharsetKeyb; }
 
+  public slots:
+    void slotKeyUp();
+    void slotKeyDown();
+    void slotKeyPrior();
+    void slotKeyNext();
+
   protected:
     void processJob(KNJobData *j);
     void focusInEvent(QFocusEvent *e);
@@ -125,7 +131,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     bool h_tmlDone, r_ot13;
     QTimer *t_imer;
     QCString o_verrideCS;
-    bool f_orceCS;
+    bool f_orceCS, emuKMail;
       
     KPopupMenu *u_rlPopup, *a_ttPopup;
     QPopupMenu *b_odyPopup;
@@ -176,6 +182,8 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
   signals:
     void focusChanged(QFocusEvent*);
     void focusChangeRequest(QWidget*);
+    void keyLeftPressed();
+    void keyRightPressed();
 
   //----------------------- Static members -------------------------
   public:

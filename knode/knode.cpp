@@ -105,6 +105,9 @@ KNMainWindow::KNMainWindow()
   connect(a_rtDock, SIGNAL(iMBeingClosed()), SLOT(slotArticleDockHidden()));
   connect(a_rtDock, SIGNAL(hasUndocked()), SLOT(slotArticleDockHidden()));
   connect(a_rtView, SIGNAL(focusChangeRequest(QWidget *)), SLOT(slotDockWidgetFocusChangeRequest(QWidget *)));
+  // KMail emulation...
+  connect(a_rtView, SIGNAL(keyLeftPressed()), SLOT(slotNavPrevArt()));
+  connect(a_rtView, SIGNAL(keyRightPressed()), SLOT(slotNavNextArt()));
 
   //collection view
   c_olDock = createDockWidget(i18n("Group View"), UserIcon("group"), 0,
@@ -143,6 +146,13 @@ KNMainWindow::KNMainWindow()
           SLOT(slotCollectionViewDrop(QDropEvent*, QListViewItem*)));
   connect(c_olView, SIGNAL(itemRenamed(QListViewItem*)),
           SLOT(slotCollectionRenamed(QListViewItem*)));
+  // KMail emulation...
+  connect(c_olView, SIGNAL(keyLeftPressed()), SLOT(slotNavPrevArt()));
+  connect(c_olView, SIGNAL(keyRightPressed()), SLOT(slotNavNextArt()));
+  connect(c_olView, SIGNAL(keyUpPressed()), a_rtView, SLOT(slotKeyUp()));
+  connect(c_olView, SIGNAL(keyDownPressed()), a_rtView, SLOT(slotKeyDown()));
+  connect(c_olView, SIGNAL(keyPriorPressed()), a_rtView, SLOT(slotKeyPrior()));
+  connect(c_olView, SIGNAL(keyNextPressed()), a_rtView, SLOT(slotKeyNext()));
 
   //header view
   h_drDock = createDockWidget(i18n("Header View"), SmallIcon("text_block"), 0,
@@ -180,6 +190,13 @@ KNMainWindow::KNMainWindow()
           SLOT(slotArticleMMB(QListViewItem *)));
   connect(h_drView, SIGNAL(sortingChanged(int)),
           SLOT(slotHdrViewSortingChanged(int)));
+  // KMail emulation...
+  connect(h_drView, SIGNAL(keyLeftPressed()), SLOT(slotNavPrevArt()));
+  connect(h_drView, SIGNAL(keyRightPressed()), SLOT(slotNavNextArt()));
+  connect(h_drView, SIGNAL(keyUpPressed()), a_rtView, SLOT(slotKeyUp()));
+  connect(h_drView, SIGNAL(keyDownPressed()), a_rtView, SLOT(slotKeyDown()));
+  connect(h_drView, SIGNAL(keyPriorPressed()), a_rtView, SLOT(slotKeyPrior()));
+  connect(h_drView, SIGNAL(keyNextPressed()), a_rtView, SLOT(slotKeyNext()));
 
   //actions
   initActions();
@@ -261,10 +278,6 @@ KNMainWindow::KNMainWindow()
 
 KNMainWindow::~KNMainWindow()
 {
-  disconnect(a_rtDock, SIGNAL(iMBeingClosed()), this, SLOT(slotDockWidgetStatusChanged()));
-  disconnect(h_drDock, SIGNAL(iMBeingClosed()), this, SLOT(slotDockWidgetStatusChanged()));
-  disconnect(c_olDock, SIGNAL(iMBeingClosed()), this, SLOT(slotDockWidgetStatusChanged()));
-
   delete a_ccel;
 
   h_drView->clear(); //avoid some random crashes in KNHdrViewItem::~KNHdrViewItem()
@@ -1358,10 +1371,16 @@ void KNMainWindow::slotDockWidgetFocusChangeRequest(QWidget *w)
 void KNMainWindow::slotNavNextArt()
 {
   kdDebug(5003) << "KNMainWindow::slotNavNextArt()" << endl;
-  QListViewItem *it=h_drView->currentItem();
+  KNHdrViewItem *it= static_cast<KNHdrViewItem*>(h_drView->currentItem());
 
-  if(it) it=it->itemBelow();
-  else it=h_drView->firstChild();
+  if (it) {
+    if (it->isActive()) {  // take current article, if not selected
+      if (it->isExpandable())
+        it->setOpen(true);
+      it=static_cast<KNHdrViewItem*>(it->itemBelow());
+    }
+  } else
+    it=static_cast<KNHdrViewItem*>(h_drView->firstChild());
 
   if(it)
     h_drView->setActive(it, true);
@@ -1371,10 +1390,12 @@ void KNMainWindow::slotNavNextArt()
 void KNMainWindow::slotNavPrevArt()
 {
   kdDebug(5003) << "KNMainWindow::slotNavPrevArt()" << endl;
-  QListViewItem *it=h_drView->currentItem();
+  KNHdrViewItem *it= static_cast<KNHdrViewItem*>(h_drView->currentItem());
 
-  if(it) it=it->itemAbove();
-  else it=h_drView->firstChild();
+  if (it && it->isActive()) {  // take current article, if not selected
+    if (it) it=static_cast<KNHdrViewItem*>(it->itemAbove());
+    else it=static_cast<KNHdrViewItem*>(h_drView->firstChild());
+  }
 
   if(it)
     h_drView->setActive(it, true);

@@ -341,11 +341,46 @@ void KNListView::keyPressEvent(QKeyEvent *e)
     case Key_Delete:
       e->ignore(); // don't eat them
     break;
-
     case Key_Enter:
     case Key_Return:
       setActive(i, true);
     break;
+    case Key_Left:
+      if (knGlobals.cfgManager->readNewsNavigation()->emulateKMail())
+        emit(keyLeftPressed());
+      else
+        KListView::keyPressEvent(e);
+      break;
+    case Key_Right:
+      if (knGlobals.cfgManager->readNewsNavigation()->emulateKMail())
+        emit(keyRightPressed());
+      else
+        KListView::keyPressEvent(e);
+      break;
+    case Key_Up:
+      if (knGlobals.cfgManager->readNewsNavigation()->emulateKMail())
+        emit(keyUpPressed());
+      else
+        KListView::keyPressEvent(e);
+      break;
+    case Key_Down:
+      if (knGlobals.cfgManager->readNewsNavigation()->emulateKMail())
+        emit(keyDownPressed());
+      else
+        KListView::keyPressEvent(e);
+      break;
+    case Key_Next:
+      if (knGlobals.cfgManager->readNewsNavigation()->emulateKMail())
+        emit(keyNextPressed());
+      else
+        KListView::keyPressEvent(e);
+      break;
+    case Key_Prior:
+      if (knGlobals.cfgManager->readNewsNavigation()->emulateKMail())
+        emit(keyPriorPressed());
+      else
+        KListView::keyPressEvent(e);
+      break;
 
     default:
       KListView::keyPressEvent (e);

@@ -1046,7 +1046,7 @@ void KNConfig::ReadNewsNavigationWidget::apply()
   if(!d_irty)
     return;
 
-  d_ata->e_muKMail = e_muKMailCB,
+  d_ata->e_muKMail = e_muKMailCB->isChecked();
   d_ata->m_arkAllReadGoNext = m_arkAllReadGoNextCB->isChecked();
   d_ata->m_arkThreadReadGoNext = m_arkThreadReadGoNextCB->isChecked();
   d_ata->m_arkThreadReadCloseThread = m_arkThreadReadCloseThreadCB->isChecked();

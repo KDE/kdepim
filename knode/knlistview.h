@@ -85,7 +85,7 @@ class KNListView : public KListView  {
   public slots:
     void slotSortList(int col);
     void slotSizeChanged(int,int,int);
-      
+
   protected:
     void activeRemoved()            { a_ctiveItem = 0; }
     void contentsMousePressEvent(QMouseEvent *e);
@@ -113,6 +113,13 @@ class KNListView : public KListView  {
     void sortingChanged(int);
     void focusChanged(QFocusEvent*);
     void focusChangeRequest(QWidget*);
+
+    void keyPriorPressed();
+    void keyNextPressed();
+    void keyLeftPressed();
+    void keyRightPressed();
+    void keyUpPressed();
+    void keyDownPressed();
 
 };
 

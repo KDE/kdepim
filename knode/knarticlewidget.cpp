@@ -139,7 +139,7 @@ QByteArray KNMimeSource::encodedData(const char *) const
 
 
 KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, const char *name )
-    : KTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false), a_ctions(actColl)
+    : KTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false), emuKMail(false), a_ctions(actColl)
 {
   i_nstances.append(this);
   setNotifyClick( true );
@@ -268,6 +268,18 @@ void KNArticleWidget::keyPressEvent(QKeyEvent *e)
     case Key_Next:
       scrollBy( 0, visibleHeight()-offs);
       break;
+    case Key_Left:
+      if (emuKMail)
+        emit(keyLeftPressed());
+      else
+        QTextBrowser::keyPressEvent(e);
+      break;
+    case Key_Right:
+      if (emuKMail)
+        emit(keyRightPressed());
+      else
+        QTextBrowser::keyPressEvent(e);
+      break;
     default:
       QTextBrowser::keyPressEvent(e);
   }
@@ -364,6 +376,8 @@ void KNArticleWidget::applyConfig()
 
   if(!knGlobals.cfgManager->readNewsGeneral()->autoMark())
     t_imer->stop();
+
+  emuKMail = ((this==knGlobals.artWidget) && knGlobals.cfgManager->readNewsNavigation()->emulateKMail());
 
   updateContents();
 }
@@ -786,6 +800,32 @@ void KNArticleWidget::setArticle(KNArticle *a)
         createHtmlPage();
     }
   }
+}
+
+
+void KNArticleWidget::slotKeyUp()
+{
+  scrollBy( 0, -10 );
+}
+
+
+void KNArticleWidget::slotKeyDown()
+{
+  scrollBy( 0, 10 );
+}
+
+
+void KNArticleWidget::slotKeyPrior()
+{
+  int offs = (visibleHeight() < 30) ? visibleHeight() : 30;
+  scrollBy( 0, -visibleHeight()+offs);
+}
+
+
+void KNArticleWidget::slotKeyNext()
+{
+  int offs = (visibleHeight() < 30) ? visibleHeight() : 30;
+  scrollBy( 0, visibleHeight()-offs);
 }
 
 
