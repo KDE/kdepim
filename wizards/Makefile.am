@@ -101,5 +101,5 @@ messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kdepimwizards.pot
 
 egroupwarewizard.lo: ../kresources/egroupware/kabc_egroupwareprefs.h ../kresources/egroupware/kcal_egroupwareprefs.h ../kresources/egroupware/knotes_egroupwareprefs.h
-exchangewizard.lo: ../kresources/lib/kabc_groupwareprefs.h ../kresources/lib/kcal_groupwareprefs.h
+exchangewizard.lo: ../kresources/lib/kresources_groupwareprefs.h
 sloxwizard.lo: ../kresources/slox/kabcsloxprefs.h ../kresources/slox/kcalsloxprefs.h
