@@ -61,6 +61,8 @@ KAddressBookMain::KAddressBookMain()
 
   statusBar()->show();
 
+  setStandardToolBarMenuEnabled(true);
+  
   createGUI( "kaddressbookui.rc", false );
 
   mActionManager->initActionViewList();
