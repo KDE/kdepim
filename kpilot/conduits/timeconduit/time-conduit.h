@@ -30,8 +30,6 @@
 
 #include <plugin.h>
 
-#include <kapplication.h>
-
 class TimeConduit : public ConduitAction
 {
 Q_OBJECT

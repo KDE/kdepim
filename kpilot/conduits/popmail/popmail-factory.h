@@ -30,8 +30,6 @@
 
 #include <klibloader.h>
 
-#include "plugin.h"
-
 class KInstance;
 class KAboutData;
 

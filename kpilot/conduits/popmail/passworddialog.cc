@@ -50,6 +50,7 @@ static const char *passworddialog_id="$Id$";
 #include <qlayout.h>
 #include <qdialog.h>
 #include <qaccel.h>
+#include <qlineedit.h>
 #include <qmessagebox.h>
 #include <qcheckbox.h>
 

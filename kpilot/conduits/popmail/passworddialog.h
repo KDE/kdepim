@@ -39,7 +39,8 @@
 #endif
 
 #include <qdialog.h>
-#include <qlineedit.h>
+
+class QLineEdit;
 
 class PasswordDialog : public QDialog
 {
@@ -48,7 +49,7 @@ class PasswordDialog : public QDialog
 public:
     PasswordDialog( QString head, QWidget* parent=0, const char* name=0, bool modal=false, WFlags f=0 );
     
-    const char *password();			// Gibt das Paswort zurueck
+    const char *password();			// returns the password entered
     
 private:
     QString _head;

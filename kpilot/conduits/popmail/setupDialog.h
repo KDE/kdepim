@@ -33,7 +33,6 @@
 */
 
 
-#include <qwidget.h>
 #include "plugin.h"
 
 class PopMailWidget; // From setup-dialog.ui

@@ -30,8 +30,6 @@
 
 #include <plugin.h>
 
-#include <kapplication.h>
-
 class SysInfoConduit : public ConduitAction
 {
 	Q_OBJECT

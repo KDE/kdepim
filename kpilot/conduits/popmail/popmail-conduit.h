@@ -34,8 +34,6 @@
 */
 
 
-#include <stdio.h>
-
 #include "plugin.h"
 
 class KSocket;
