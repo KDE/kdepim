@@ -189,55 +189,71 @@ int KFolderTreeItem::countUnreadRecursive()
 void KFolderTreeItem::paintCell( QPainter * p, const QColorGroup & cg,
                                   int column, int width, int align )
 {
-  QListView *lv = listView();
-  QString oldText = text(column);
-
-  // set an empty text so that we can have our own implementation (see further down)
-  // but still benefit from KListView::paintCell
-  setText( column, "" );
-
-  KListViewItem::paintCell( p, cg, column, width, align );
-
   KFolderTree *ft = static_cast<KFolderTree*>(listView());
-  int r = lv ? lv->itemMargin() : 1;
-  const QPixmap *icon = pixmap( column );
-  int marg = lv ? lv->itemMargin() : 1;
-
-  QString t;
-  QRect br;
-  setText( column, oldText );
-  if ( isSelected() )
-    p->setPen( cg.highlightedText() );
-  else
-    p->setPen( ft->paintInfo().colFore );
-
-  if ( icon ) {
-    r += icon->width() + lv->itemMargin();
-  }
-  t = text( column );
-  if ( !t.isEmpty() )
-  {
-    // use a bold-font for the folder- and the unread-columns
-    if ( countUnreadRecursive() > 0 &&
-        (column == 0 || column == ft->unreadIndex()) )
+  /* The below is exceedingly silly, but Ingo insists that the unread
+   * count that is shown in parenthesis after the folder name must
+   * be configurable in color. That means that paintCell needs to do
+   * two painting passes which flickers. Since that flicker is not
+   * needed when there is the unread column, special case that. */
+  if ( ft->isUnreadActive() ) {
+    if ( (column == 0 || column == ft->unreadIndex())
+          && countUnreadRecursive() > 0 )
     {
       QFont f = p->font();
       f.setWeight(QFont::Bold);
       p->setFont(f);
     }
-    p->drawText( r, 0, width-marg-r, height(),
-        align | AlignVCenter, t, -1, &br );
-    if (!isSelected())
-      p->setPen( ft->paintInfo().colUnread );
-    if (column == 0) {
-      // draw the unread-count if the unread-column is not active
-      QString unread = QString::null;
-      if ( !ft->isUnreadActive() && mUnread > 0 )
-        unread = " (" + QString::number(mUnread) + ")";
-      p->drawText( br.right(), 0, width-marg-br.right(), height(),
-          align | AlignVCenter, unread );
+    KListViewItem::paintCell( p, cg, column, width, align );
+  } else {
+    QListView *lv = listView();
+    QString oldText = text(column);
+
+    // set an empty text so that we can have our own implementation (see further down)
+    // but still benefit from KListView::paintCell
+    setText( column, "" );
+
+    KListViewItem::paintCell( p, cg, column, width, align );
+
+    int r = lv ? lv->itemMargin() : 1;
+    const QPixmap *icon = pixmap( column );
+    int marg = lv ? lv->itemMargin() : 1;
+
+    QString t;
+    QRect br;
+    setText( column, oldText );
+    if ( isSelected() )
+      p->setPen( cg.highlightedText() );
+    else
+      p->setPen( ft->paintInfo().colFore );
+
+    if ( icon ) {
+      r += icon->width() + lv->itemMargin();
     }
-  } // end !t.isEmpty()
+    t = text( column );
+    if ( !t.isEmpty() )
+    {
+      // use a bold-font for the folder- and the unread-columns
+      if ( countUnreadRecursive() > 0 &&
+          (column == 0 || column == ft->unreadIndex()) )
+      {
+        QFont f = p->font();
+        f.setWeight(QFont::Bold);
+        p->setFont(f);
+      }
+      p->drawText( r, 0, width-marg-r, height(),
+          align | AlignVCenter, t, -1, &br );
+      if (!isSelected())
+        p->setPen( ft->paintInfo().colUnread );
+      if (column == 0) {
+        // draw the unread-count if the unread-column is not active
+        QString unread = QString::null;
+        if ( !ft->isUnreadActive() && mUnread > 0 )
+          unread = " (" + QString::number(mUnread) + ")";
+        p->drawText( br.right(), 0, width-marg-br.right(), height(),
+            align | AlignVCenter, unread );
+      }
+    } // end !t.isEmpty()
+  }
 }
 
 
