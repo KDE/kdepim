@@ -135,7 +135,9 @@ class CalendarResources : public Calendar,
     */
     Ticket *requestSaveTicket( ResourceCalendar * );
     /**
-      Save calendar. If save is successfull, the ticket is deleted.
+      Save calendar. If save is successfull, the ticket is deleted. Otherwise
+      the caller has to release the ticket with releaseSaveTicket() to abandon
+      the save operation or to call save() to try to save again.
     */
     virtual bool save( Ticket * );
     /**
