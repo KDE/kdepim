@@ -38,6 +38,22 @@
 
 #include "locationwidget.h"
 
+class LocationFactory : public ExtensionFactory
+{
+  public:
+    ExtensionWidget *create( ViewManager *vm, QWidget *parent )
+    {
+      return new LocationWidget( vm, parent );
+    }
+};
+
+extern "C" {
+  void *init_libkaddrbk_location()
+  {
+    return ( new LocationFactory );
+  }
+}
+
 LocationWidget::LocationWidget( ViewManager *vm, QWidget *parent )
   : ExtensionWidget( vm, parent )
 {

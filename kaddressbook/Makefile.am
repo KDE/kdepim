@@ -3,7 +3,7 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/details -I$(top_srcdir)/kaddressbook/feat
 	-I$(top_srcdir) -I$(top_builddir)/kaddressbook/printing \
 	-I$(top_builddir)/kaddressbook/details $(all_includes) 
 
-SUBDIRS = details features printing views . pics csv-templates
+SUBDIRS = details printing views . features pics csv-templates
 
 SRCDOC_DEST=$(kde_htmldir)/en/kaddressbook
 
@@ -18,7 +18,6 @@ kde_module_LTLIBRARIES = libkaddressbookpart.la
 libkaddressbookpart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 libkaddressbookpart_la_LIBADD  = $(top_builddir)/libkdepim/libkdepim.la \
 	./details/libdetails.la \
-	./features/libextensions.la \
 	./printing/libprinter.la \
 	./views/libviews.la \
 	$(LIB_KPARTS) $(LIB_KHTML) \
@@ -28,7 +27,7 @@ libkaddressbookpart_la_SOURCES = \
  actionmanager.cpp addhostdialog.cpp addresseditwidget.cpp addresseeconfig.cpp \
  addresseeeditordialog.cpp addresseeeditorwidget.cpp addresseeutil.cpp \
  addviewdialog.cpp configureviewdialog.cpp configureviewfilterpage.cpp \
- emaileditwidget.cpp filter.cpp filtereditdialog.cpp \
+ emaileditwidget.cpp extensionwidget.cpp filter.cpp filtereditdialog.cpp \
  filterselectionwidget.cpp importdialog.cpp incsearchwidget.cpp \
  jumpbuttonbar.cpp kabprefs.cpp kaddressbook.cpp \
  kaddressbook_part.cpp kaddressbookiface.skel kaddressbookmain.cpp \
@@ -69,5 +68,8 @@ appsdir = $(kde_appsdir)/Utilities
 apps_DATA = kaddressbook.desktop
 
 KDE_ICON = kaddressbook
+
+servicetypedir = $(kde_servicetypesdir)
+servicetype_DATA = kaddressbook_extension.desktop kaddressbook_view.desktop
 
 include $(top_srcdir)/admin/Doxyfile.am

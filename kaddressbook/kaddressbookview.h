@@ -28,6 +28,7 @@
 #include <qwidget.h>
 
 #include <kabc/field.h>
+#include <klibloader.h>
 
 #include "filter.h"
 #include "viewmanager.h"
@@ -250,6 +251,19 @@ class KAddressBookView : public QWidget
     KABC::Field::List mFieldList;
     
     QWidget *mViewWidget;
+};
+
+class ViewFactory : public KLibFactory
+{
+  public:
+    virtual KAddressBookView *create( ViewManager *parent, QWidget *parent ) = 0;
+
+  protected:
+    virtual QObject* createObject( QObject*, const char*, const char*,
+                                   const QStringList & )
+    {
+      return 0;
+    }
 };
 
 #endif

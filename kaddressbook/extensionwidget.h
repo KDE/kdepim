@@ -27,6 +27,7 @@
 #include <qwidget.h>
 
 #include <kabc/addressbook.h>
+#include <klibloader.h>
 
 #include "viewmanager.h"
 
@@ -77,6 +78,19 @@ class ExtensionWidget : public QWidget
 
   private:
     ViewManager *mViewManager;
+};
+
+class ExtensionFactory : public KLibFactory
+{
+  public:
+    virtual ExtensionWidget *create( ViewManager *vm, QWidget *parent ) = 0;
+
+  protected:
+    virtual QObject* createObject( QObject*, const char*, const char*,
+                                   const QStringList & )
+    {
+      return 0;
+    }
 };
 
 #endif

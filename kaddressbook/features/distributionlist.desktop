@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+X-KDE-Library=libkaddrbk_distributionlist
+Name=Plugin for managing distribution lists
+Type=Service
+ServiceTypes=KAddressBook/Extension

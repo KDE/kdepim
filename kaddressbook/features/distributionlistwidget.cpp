@@ -44,6 +44,22 @@
 
 #include "distributionlistwidget.h"
 
+class DistributionListFactory : public ExtensionFactory
+{
+  public:
+    ExtensionWidget *create( ViewManager *vm, QWidget *parent )
+    {
+      return new DistributionListWidget( vm, parent );
+    }
+};
+
+extern "C" {
+  void *init_libkaddrbk_distributionlist()
+  {
+    return ( new DistributionListFactory );
+  }
+}
+
 class ContactItem : public QListViewItem
 {
   public:

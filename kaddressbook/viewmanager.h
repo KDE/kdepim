@@ -29,6 +29,7 @@
 #include <qwidget.h>
 
 #include <kabc/field.h>
+#include <ktrader.h>
 
 #include "filter.h"
 
@@ -46,7 +47,6 @@ class KConfig;
 namespace KABC { class AddressBook; }
 
 class AddresseeEditorWidget;
-class DistributionListWidget;
 class ExtensionWidget;
 class JumpButtonBar;
 class KAddressBookView;
@@ -131,7 +131,6 @@ class ViewManager : public QWidget
       Returns the address book.
      */
     KABC::AddressBook *addressBook();
-
 
   public slots:
     /**
@@ -328,6 +327,14 @@ class ViewManager : public QWidget
     void importVCard( const QString &, bool );
 
   private:
+    KTrader::OfferList availablePlugins( const QString &type );
+  
+    ExtensionWidget *loadExtension( KService::Ptr, QWidget *parent );
+    ExtensionWidget *loadExtension( const QString&, QWidget *parent  );
+
+    KAddressBookView *loadView( KService::Ptr, QWidget *parent  );
+    KAddressBookView *loadView( const QString&, QWidget *parent  );
+
     /**
       Create a view wrapper for each type of view we know about.
      */

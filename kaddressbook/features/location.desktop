@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+X-KDE-Library=libkaddrbk_location
+Name=Plugin for displaying the location of a postal address
+Type=Service
+ServiceTypes=KAddressBook/Extension

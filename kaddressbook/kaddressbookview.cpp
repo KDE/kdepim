@@ -25,9 +25,9 @@
 #include <qlayout.h>
 
 #include <kabc/addressbook.h>
+#include <kabc/distributionlistdialog.h>
 #include <kconfig.h>
 #include <kdebug.h>
-#include "distributionlistwidget.h"
 #include <klocale.h>
 
 #include "kaddressbookview.h"
@@ -77,7 +77,7 @@ QString KAddressBookView::selectedEmails()
       QString m = QString::null;
 
       if ( addr.emails().count() > 1 )
-        m = EmailSelector::getEmail( addr.emails(), addr.preferredEmail(), this );
+        m = KABC::EmailSelector::getEmail( addr.emails(), addr.preferredEmail(), this );
 
       email = addr.fullEmail( m );
         

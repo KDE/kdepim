@@ -38,7 +38,7 @@
     <Menu noMerge="1" name="settings"><text>&amp;Settings</text>
       <Action name="options_show_jump_bar"/>
       <Action name="options_show_inc_search"/>
-      <Action name="options_show_features"/>
+      <Action name="options_show_extensions"/>
       <Action name="options_show_details"/>
       <Action name="options_show_filter_selector"/>
       <Action name="options_show_toolbar"/>

@@ -36,7 +36,7 @@
     </Menu>
 
     <Menu noMerge="1" name="settings"><text>&amp;Settings</text>
-      <Action name="options_show_features"/>
+      <Action name="options_show_extensions"/>
       <Action name="options_show_jump_bar"/>
       <Action name="options_show_details"/>
       <Action name="options_show_statusbar"/>
