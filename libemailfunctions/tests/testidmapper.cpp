@@ -27,7 +27,7 @@ int main( int argc, char **argv )
 {
   QApplication app( argc, argv );
 
-  KPIM::IdMapper mapper;
+  KPIM::IdMapper mapper( "test.uidmap" ) ;
 
   mapper.setRemoteId( "foo", "bar" );
   mapper.setRemoteId( "yes", "klar" );
@@ -35,20 +35,20 @@ int main( int argc, char **argv )
 
   qDebug( "full:\n%s", mapper.asString().latin1() );
 
-  mapper.save( "test.uidmap" );
+  mapper.save();
 
   mapper.clear();
   qDebug( "empty:\n%s", mapper.asString().latin1() );
 
-  mapper.load( "test.uidmap" );
+  mapper.load();
   qDebug( "full again:\n%s", mapper.asString().latin1() );
 
-  mapper.save( "test.uidmap" );
+  mapper.save();
 
   mapper.clear();
   qDebug( "empty:\n%s", mapper.asString().latin1() );
 
-  mapper.load( "test.uidmap" );
+  mapper.load();
   qDebug( "full again:\n%s", mapper.asString().latin1() );
   return 0;
 }
