@@ -156,7 +156,7 @@ public:
   virtual int signKey( const KeyID& keyID, const char *passphrase );
 
 private:
-  Key* parsePublicKeyData( const QCString& output, Key* key = 0 );
+  Key* parseKeyData( const QCString& output, int& offset, Key* key = 0 );
   KeyList parseKeyList( const QCString&, bool );
 };
 
