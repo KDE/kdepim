@@ -32,11 +32,8 @@
 #include <klocale.h>
 #include <kparts/genericfactory.h>
 
-#include "actionmanager.h"
-#include "kaddressbook.h"
+#include "kabcore.h"
 #include "kaddressbookiface.h"
-#include "kaddressbooktableview.h"
-#include "viewmanager.h"
 
 #include "kaddressbook_part.h"
 
@@ -67,21 +64,16 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
 
   KGlobal::iconLoader()->addAppDir( "kaddressbook" );
 
-  mWidget = new KAddressBook( canvas );
-  mWidget->readConfig();
-  topLayout->addWidget( mWidget );
-  mWidget->viewManager()->setActiveExtension( 0 );
-
-  mWidget->show();
-
-  mActionManager = new ActionManager( this, mWidget, true, this );
+  mCore = new KABCore( this, true, canvas );
+  mCore->restoreSettings();
+  topLayout->addWidget( mCore );
 
   setXMLFile( "kaddressbook_part.rc" );
 }
 
 KAddressbookPart::~KAddressbookPart()
 {
-  mWidget->save();
+  mCore->save();
   closeURL();
 }
 
@@ -110,27 +102,27 @@ KAboutData *KAddressbookPart::createAboutData()
 
 void KAddressbookPart::addEmail( QString addr )
 {
-  mWidget->addEmail( addr );
+  mCore->addEmail( addr );
 }
 
 ASYNC KAddressbookPart::showContactEditor( QString uid )
 {
-  mWidget->showContactEditor( uid );
+  mCore->editContact( uid );
 }
 
 void KAddressbookPart::newContact()
 {
-  mWidget->newContact();
+  mCore->newContact();
 }
 
 QString KAddressbookPart::getNameByPhone( QString phone )
 {
-  return mWidget->getNameByPhone( phone );
+  return mCore->getNameByPhone( phone );
 }
 
 void KAddressbookPart::save()
 {
-  mWidget->save();
+  mCore->save();
 }
 
 void KAddressbookPart::exit()
@@ -138,15 +130,11 @@ void KAddressbookPart::exit()
   delete this;
 }
 
-void KAddressbookPart::updateEditMenu()
-{
-}
-
 bool KAddressbookPart::openFile()
 {
   kdDebug(5720) << "KAddressbookPart:openFile()" << endl;
 
-  mWidget->show();
+  mCore->show();
   return true;
 }
 
@@ -154,8 +142,6 @@ void KAddressbookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
 {
   kdDebug(5720) << "KAddressbookPart::guiActivateEvent" << endl;
   KParts::ReadOnlyPart::guiActivateEvent( e );
-
-  mActionManager->initActionViewList();
 }
 
 KAddressbookBrowserExtension::KAddressbookBrowserExtension( KAddressbookPart *parent )

@@ -22,12 +22,13 @@
 */
 
 #include "configurewidget.h"
+#include "kabcore.h"
 
 #include "extensionwidget.h"
 
-ExtensionWidget::ExtensionWidget( ViewManager *vm, QWidget *parent,
-                                    const char *name )
-  : QWidget( parent, name ), mViewManager( vm )
+ExtensionWidget::ExtensionWidget( KABCore *core, QWidget *parent,
+                                  const char *name )
+  : QWidget( parent, name ), mCore( core )
 {
 }
 
@@ -35,46 +36,41 @@ ExtensionWidget::~ExtensionWidget()
 {
 }
 
-KABC::AddressBook *ExtensionWidget::addressBook() const
+KABCore *ExtensionWidget::core() const
 {
-  return mViewManager->addressBook();
+  return mCore;
 }
 
-ViewManager *ExtensionWidget::viewManager() const
+bool ExtensionWidget::contactsSelected() const
 {
-  return mViewManager;
+  return mCore->selectedUIDs().count() != 0;
 }
 
-bool ExtensionWidget::addresseesSelected() const
-{
-  return mViewManager->selectedUids().count() != 0;
-}
-
-KABC::Addressee::List ExtensionWidget::selectedAddressees()
+KABC::Addressee::List ExtensionWidget::selectedContacts()
 {
   KABC::Addressee::List list;
 
-  QStringList uids = mViewManager->selectedUids();
+  QStringList uids = mCore->selectedUIDs();
   QStringList::Iterator it;
   for ( it = uids.begin(); it != uids.end(); ++it )
-    list.append( addressBook()->findByUid( *it ) );
+    list.append( mCore->addressBook()->findByUid( *it ) );
 
   return list;
 }
 
-void ExtensionWidget::addresseeSelectionChanged()
+void ExtensionWidget::contactsSelectionChanged()
 {
   // do nothing
 }
 
 QString ExtensionWidget::title() const
 {
-  return "";
+  return "<bug!!!>";
 }
 
 QString ExtensionWidget::identifier() const
 {
-  return "empty_widget";
+  return "<bug!!!>";
 }
 
 ConfigureWidget *ExtensionFactory::configureWidget( QWidget*, const char* )

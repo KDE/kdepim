@@ -25,33 +25,17 @@
 #define VIEWMANAGER_H
 
 #include <qdict.h>
-#include <qstringlist.h>
 #include <qwidget.h>
+#include <kaddressbookview.h>
 
-#include <kabc/field.h>
-#include <ktrader.h>
-
-#include "filter.h"
-#include "kaddressbookview.h"
-
-class QComboBox;
 class QDropEvent;
-class QHBox;
-class QLineEdit;
-class QResizeEvent;
-class QSplitter;
-class QTabWidget;
 class QWidgetStack;
 
-class KConfig;
+class KABCore;
+class KAction;
+class KSelectAction;
 
 namespace KABC { class AddressBook; }
-
-class AddresseeEditorWidget;
-class ExtensionWidget;
-class IncSearchWidget;
-class JumpButtonBar;
-class ViewContainer;
 
 /**
   The view manager manages the views and everything related to them. The
@@ -66,210 +50,26 @@ class ViewManager : public QWidget
   Q_OBJECT
 
   public:
-    ViewManager( KABC::AddressBook *doc, KConfig *config,
-                 QWidget *parent = 0, const char *name = 0 );
+    ViewManager( KABCore *core, QWidget *parent, const char *name = 0 );
     ~ViewManager();
 
-    /**
-      Sets the given view active. This usually means raising the
-      view to the top of the widget stack and telling it
-      to refresh.
-     */
-    void setActiveView( const QString &name );
+    void restoreSettings();
+    void saveSettings();
 
-    /**
-      Destroys all the currently loaded views. It is important that
-      after calling this method you call setActiveView before
-      the user has a chance to interact with the gui, since no
-      views will be loaded.
-     */
     void unloadViews();
 
-    /**
-      Returns a list of all the defined views. This list is guaranteed
-      to always contain at least one view. This list is the 'defined' views,
-      not necessarily the loaded views. However the view will be loaded if
-      it becomes active.
-     */
-    const QStringList &viewNames();
-
-    /**
-      Return a list of all the uids of selected contacts.
-     */
     QStringList selectedUids() const;
-
-    /**
-      Used to enable or disable the jump button bar.
-
-      @param visible True for the widget to be visible, false otherwise
-     */
-    void setJumpButtonBarVisible( bool visible );
-
-    /**
-      Used to enable or disable the details widget.
-
-      @param visible True for the widget to be visible, false otherwise
-     */
-    void setDetailsVisible( bool visible );
-
-    /**
-      Return if the quick edit currently is shown or not.
-     */
-    bool isQuickEditVisible()const;
-
-    /**
-      Set the list of filters, which are defined for the application.
-     */
-    void setFilters( const Filter::List &list );
-
-    /**
-      @return The list of filters defined for the application.
-     */
-    const Filter::List &filters() const;
-
-    /**
-      @return The name list of all filters defined for the application.
-     */
-    QStringList filterNames();
-
-    /**
-      @return The name list of all registered extension widgets.
-     */
-    QStringList extensionNames();
-
-    /**
-      Returns the address book.
-     */
-    KABC::AddressBook *addressBook()const;
-
-    /**
-      Returns the current global search field.
-     */
-    KABC::Field *currentSearchField()const;
-
-    /**
-      @return KConfig for kaddressbookrc, useful for when KAddressBook
-      is used as a KPart
-     */
-    static KConfig *config();
+    QStringList selectedEmails() const;
 
   public slots:
-    /**
-      Reads the config file.
-     */
-    void readConfig();
-
-    /**
-      Writes the config file.
-     */
-    void writeConfig();
-
-    /**
-      Sends an email to all the selected addressees. This is done by
-      asking the view for a string of "To:'s" and then asking
-      KDE to open the mailer with the information.
-     */
-    virtual void sendMail();
-
-    /**
-      Open a composer with a message to this person.
-     */
-    void sendMail( const QString& email );
-
-    /** Open a composer with the selected contact's vcard attached. */
-    void mailVCard();
-
-    /** Open a composer with those contacts' vcards attached. */
-    void mailVCard(const QStringList& uids);
-
-    /**
-      Open a browser window displaying the URL given.
-     */
-    void browse( const QString& url );
-
-    /**
-      This slot will delete all the selected entries. This method should
-      be called just 'delete' to be consistant with the other edit methods,
-      but good 'ol C++ wouldn't like that -mpilone
-     */
-    void deleteAddressees();
-
-    /**
-      Copy a contact from the view into the clipboard. This method will
-      copy all selected contacts into the clipboard at once.
-     */
-    void copy();
-
-    /**
-      Cut a contact from the view into the clipboard. This method will
-      cut all selected contacts into the clpboard at once.
-     */
-    void cut();
-
-    /**
-      Paste a contact into the addressbook from the clipboard.
-     */
-    void paste();
-
-    /**
-      Selects the given addressee or all addressees if uid == QString::null
-     */
     void setSelected( const QString &uid = QString::null, bool selected = true );
 
-    /**
-      Refreshes the active view.
-
-      @param uid Only refresh the selected uid. If it is QStrign::null, the
-                 entire view will be refreshed.
-     */
-    void refresh( const QString &uid = QString::null );
-
-    /**
-      Launches the ConfigureView dialog for the active view.
-     */
-    void modifyView();
-
-    /**
-      Deletes the current view and makes another view active.
-     */
+    void refreshView( const QString &uid = QString::null );
+    void editView();
     void deleteView();
-
-    /**
-      Displays the add view dialog. If the user confirms, the view
-      will be added.
-     */
     void addView();
 
-    /**
-      Called whenever a filter is activated.
-     */
-    void filterActivated( int index );
-
-    /**
-      The address book has been modified and needs to be saved.
-     */
-    void slotModified();
-
-    /**
-      Set the active widget of the extension bar.
-
-      @param id 0: hide extension bar, otherwise an extension widget is shown
-                   according to the list that is returned by
-                   @ref extensionNames()
-     */
-    void setActiveExtension( int id );
-
-    /**
-      Set users contact.
-     */
-    void setUsersContact();
-
   protected slots:
-    /**
-      Handle events on the incremental search widget.
-     */
-    void incSearch( const QString& text );
-
     /**
       Called whenever the user drops something in the active view.
       This method will try to decode what was dropped, and if it was
@@ -283,20 +83,6 @@ class ViewManager : public QWidget
       and create a drag object.
      */
     void startDrag();
-
-    /**
-      Called whenever an addressee is selected in the view. This method
-      should update the quick edit. The selected() signal will already
-      be emitted, so it does not have to be re-emitted from this method.
-     */
-    void addresseeSelected( const QString &uid );
-
-    /**
-      Called whenever the currently displayed extension bar widget is modified.
-      This method will emit the modified signal and then tell the view to
-      refresh.
-     */
-    void extensionWidgetModified( KABC::Addressee::List );
 
   signals:
     /**
@@ -315,68 +101,39 @@ class ViewManager : public QWidget
     void modified();
 
     /**
-      Emitted whenever the view configuration changes. This can happen
-      if a user adds a new view or removes a view.
-
-      @param newActive This is the view that should be made active. If this
-                       is QString::null, than the current active can remain
-                       that way.
+      Emitted whenever a url is dragged on a view.
      */
-    void viewConfigChanged( const QString &newActive );
+    void urlDropped( const KURL&, bool );
 
-    /**
-      Emitted whenever the filter combo bar should reread the filter name
-      list from the viewmanager.
-     */
-    void filtersEdited();
-
-    /**
-      Emitted whenever the filter combo bar should change its
-      current filter.
-
-      @param name Is the name of the new filter.
-                  name.isEmpty() for no filter.
-     */
-    void currentFilterChanged( const QString &name );
-
-    /**
-      Import a VCard that has been dragged.
-     */
-    void importVCard( const KURL&, bool );
-
-    /**
-      Emitted whenever the extension names need to be updated
-      in the action manager.
-     */
-    void extensionsReloaded();
+  private slots:
+    void setActiveView( const QString &name );
+    void setActiveFilter( int index );
+    void configureFilters();
 
   private:
-    void loadExtensions();
-
     void createViewFactories();
+    QStringList filterNames() const;    
+    int filterPosition( const QString &name ) const;
+    QStringList viewNames() const;
+    int viewPosition( const QString &name ) const;
+    void initActions();
     void initGUI();
+
+    KABCore *mCore;
 
     Filter mCurrentFilter;
     Filter::List mFilterList;
 
-    KABC::AddressBook *mAddressBook;
-
-    KConfig *mConfig;
-
     QDict<KAddressBookView> mViewDict;
     QDict<ViewFactory> mViewFactoryDict;
     QStringList mViewNameList;
-    QWidgetStack *mViewWidgetStack;
 
-    ExtensionWidget *mCurrentExtensionWidget;
-    JumpButtonBar *mJumpButtonBar;
-    IncSearchWidget *mIncSearchWidget;
+    QWidgetStack *mViewWidgetStack;
     KAddressBookView *mActiveView;
-    ViewContainer *mDetails;
-    QHBox *mExtensionBar;
-    QPtrList<ExtensionWidget> mExtensionWidgetList;
-    QSplitter *mDetailsSplitter;
-    QSplitter *mExtensionBarSplitter;
+
+    KAction *mActionDeleteView;
+    KSelectAction *mActionSelectFilter;
+    KSelectAction *mActionSelectView;
 };
 
 #endif

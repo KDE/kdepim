@@ -30,14 +30,14 @@
 
 class AddresseeEditorWidget;
 class QWidget;
-class ViewManager;
+class KABCore;
 
 class AddresseeEditorDialog : public KDialogBase
 {
   Q_OBJECT
   
   public:
-    AddresseeEditorDialog( ViewManager *vm, QWidget *parent, const char *name = 0 );
+    AddresseeEditorDialog( KABCore *core, QWidget *parent, const char *name = 0 );
     ~AddresseeEditorDialog();
     
     void setAddressee( const KABC::Addressee& );
@@ -46,7 +46,7 @@ class AddresseeEditorDialog : public KDialogBase
     bool dirty();
     
   signals:
-    void addresseeModified( const KABC::Addressee& );
+    void contactModified( const KABC::Addressee& );
     void editorDestroyed( const QString& );
     
   protected slots:

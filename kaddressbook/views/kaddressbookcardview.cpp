@@ -42,19 +42,19 @@
 class CardViewFactory : public ViewFactory
 {
   public:
-    KAddressBookView *view( ViewManager *vm, QWidget *parent, const char *name )
+    KAddressBookView *view( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
-      return new KAddressBookCardView( vm->addressBook(), parent, name );
+      return new KAddressBookCardView( ab, parent, name );
     }
 
     QString type() const { return "Card"; }
     
     QString description() const { return i18n( "Rolodex style cards represent contacts." ); }
     
-    ViewConfigureWidget *configureWidget( ViewManager *vm, QWidget *parent,
+    ViewConfigureWidget *configureWidget( KABC::AddressBook *ab, QWidget *parent,
                                           const char *name = 0 )
     {
-      return new ConfigureCardViewWidget( vm, parent, name );
+      return new ConfigureCardViewWidget( ab, parent, name );
     }
 };
 

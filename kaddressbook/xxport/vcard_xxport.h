@@ -1,5 +1,5 @@
 /*
-    This file is part of KAddressBook.
+    This file is part of KAddressbook.
     Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
@@ -21,47 +21,23 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef LOCATIONCONFIG_H
-#define LOCATIONCONFIG_H
+#ifndef VCARD_XXPORT_H
+#define VCARD_XXPORT_H
 
-#include "configurewidget.h"
+#include <xxportobject.h>
 
-namespace KABC {
-class AddressBook;
-}
-
-class KLineEdit;
-class KListView;
-
-class QListViewItem;
-class QPushButton;
-
-class LocationConfigWidget : public ConfigureWidget
+class VCardXXPort : public XXPortObject
 {
   Q_OBJECT
 
   public:
-    LocationConfigWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
-    ~LocationConfigWidget();
+    VCardXXPort( KABCore *core, QObject *parent, const char *name = 0 );
 
-    void restoreSettings( KConfig *cfg );
-    void saveSettings( KConfig *cfg );
+    QString identifier() const { return "vcard"; }
 
-  private slots:
-    void add();
-    void remove();
-    void edit();
-    void selectionChanged( QListViewItem* );
-    void inputChanged( const QString& );
-
-  private:
-    KLineEdit *mNameEdit;
-    KLineEdit *mURLEdit;
-    KListView *mListView;
-
-    QPushButton *mAddButton;
-    QPushButton *mEditButton;
-    QPushButton *mRemoveButton;
+  public slots:
+    bool exportContacts( const KABC::AddresseeList &list, const QString &data );
+    KABC::AddresseeList importContacts( const QString &data ) const;
 };
 
 #endif

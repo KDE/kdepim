@@ -31,6 +31,8 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+#include "kabcore.h"
+
 #include "jumpbuttonbar.h"
 
 class JumpButton : public QPushButton
@@ -63,8 +65,8 @@ QString JumpButton::character() const
   return mCharacter;
 }
 
-JumpButtonBar::JumpButtonBar( ViewManager *parent, const char *name )
-  : QWidget( parent, name ), mViewManager( parent )
+JumpButtonBar::JumpButtonBar( KABCore *core, QWidget *parent, const char *name )
+  : QWidget( parent, name ), mCore( core )
 {
   mButtonLayout = new QGridLayout( this, 10, 3 );
   mButtonLayout->setAlignment( Qt::AlignTop );
@@ -104,11 +106,11 @@ void JumpButtonBar::recreateButtons()
   mCharacters.clear();
 
   QString character;
-  KABC::AddressBook *ab = mViewManager->addressBook();
+  KABC::AddressBook *ab = mCore->addressBook();
   KABC::AddressBook::Iterator it;
   for ( it = ab->begin(); it != ab->end(); ++it ) {
     KABC::Field *field = 0;
-    field = mViewManager->currentSearchField();
+    field = mCore->currentSearchField();
     if ( field && !field->value( *it ).isEmpty() )
       character = field->value( *it )[ 0 ];
 

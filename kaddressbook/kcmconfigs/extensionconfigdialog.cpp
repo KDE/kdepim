@@ -25,6 +25,8 @@
 
 #include <klocale.h>
 
+#include "configurewidget.h"
+
 #include "extensionconfigdialog.h"
 
 ExtensionConfigDialog::ExtensionConfigDialog( ExtensionFactory *factory, KConfig *config,

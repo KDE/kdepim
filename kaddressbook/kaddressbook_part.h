@@ -33,7 +33,7 @@ class KAboutData;
 class KAddressbookBrowserExtension;
 class KInstance;
 
-class KAddressBook;
+class KABCore;
 class ActionManager;
 
 class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBookIface
@@ -54,15 +54,13 @@ class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBook
     virtual QString getNameByPhone( QString phone );
     virtual void save();
     virtual void exit();
-    virtual void updateEditMenu();
 
   protected:
     virtual bool openFile();
     virtual void guiActivateEvent( KParts::GUIActivateEvent* );
     
   private:
-    KAddressBook *mWidget;
-    ActionManager *mActionManager;
+    KABCore *mCore;
     KAddressbookBrowserExtension *mExtension;
 };
 

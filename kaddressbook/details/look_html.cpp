@@ -45,10 +45,7 @@ KABHtmlView::KABHtmlView( QWidget *parent, const char *name )
   QStyleSheetItem *link = sheet->item( "a" );
   link->setColor( KGlobalSettings::linkColor() );
 
-  int h,s,v;
-  mBaseColor = KGlobalSettings::alternateBackgroundColor();
-  mBaseColor.hsv( &h, &s, &v );
-  mBaseColor.setHsv( h, int( s * ( 10 / 6.0 ) ), int( v * ( 93 / 99.0 ) ) );
+  mBaseColor = KGlobalSettings::baseColor();
   mTextColor = KGlobalSettings::textColor();
 }
 

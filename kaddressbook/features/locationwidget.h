@@ -29,22 +29,25 @@
 
 class KComboBox;
 class KHTMLPart;
-class QPushButton;
 
 namespace KABC {
 class Address;
 class AddressBook;
 }
 
+class QPushButton;
+
+class KABCore;
+
 class LocationWidget : public ExtensionWidget
 {
     Q_OBJECT
 
   public:
-    LocationWidget( ViewManager*, QWidget *parent, const char *name = 0 );
+    LocationWidget( KABCore *core, QWidget *parent, const char *name = 0 );
     virtual ~LocationWidget();
 
-    void addresseeSelectionChanged();
+    void contactsSelectionChanged();
 
     QString title() const;
     QString identifier() const;

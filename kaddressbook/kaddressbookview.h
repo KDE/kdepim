@@ -37,8 +37,6 @@ class KConfig;
 
 class QDropEvent;
 
-class ViewManager;
-
 namespace KABC { class AddressBook; }
 
 /**
@@ -240,7 +238,7 @@ class KAddressBookView : public QWidget
 class ViewFactory : public KLibFactory
 {
   public:
-    virtual KAddressBookView *view( ViewManager *vm, QWidget *parent,
+    virtual KAddressBookView *view( KABC::AddressBook *ab, QWidget *parent,
                                     const char *name = 0 ) = 0;
     /**
       @return The type of the view. This is normally a small one word
@@ -264,7 +262,7 @@ class ViewFactory : public KLibFactory
       If this method is over loaded the base classes method should
       <B>not</B> be called.
      */
-    virtual ViewConfigureWidget *configureWidget( ViewManager *vm,
+    virtual ViewConfigureWidget *configureWidget( KABC::AddressBook *ab,
                                                   QWidget *parent,
                                                   const char *name = 0 ); 
 

@@ -94,6 +94,11 @@ void IncSearchWidget::setFields( const KABC::Field::List &list )
   announceFieldChanged();
 }
 
+KABC::Field::List IncSearchWidget::fields() const
+{
+  return mFieldList;
+}
+
 KABC::Field *IncSearchWidget::currentField()const
 {
   if ( mFieldCombo->currentItem() == -1 || mFieldCombo->currentItem() == 0 )

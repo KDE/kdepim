@@ -37,9 +37,9 @@
 
 #include "viewconfigurewidget.h"
 
-ViewConfigureWidget::ViewConfigureWidget( ViewManager *vm, QWidget *parent,
+ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent,
                                           const char *name )
-  : ConfigureWidget( vm, parent, name )
+  : ConfigureWidget( ab, parent, name )
 {
   QVBoxLayout *topLayout = new QVBoxLayout( this );
 
@@ -52,7 +52,7 @@ ViewConfigureWidget::ViewConfigureWidget( ViewManager *vm, QWidget *parent,
                          KIcon::Desktop ) );
 
   // Add the select fields page 
-  mFieldsPage = new ViewConfigureFieldsPage( viewManager()->addressBook(), page );
+  mFieldsPage = new ViewConfigureFieldsPage( addressBook(), page );
 
   // Add the second page, the filter selection
   page = addPage( i18n( "Default Filter" ), QString::null, KGlobal::iconLoader()

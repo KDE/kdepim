@@ -37,6 +37,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
+#include "kabcore.h"
 #include "locationconfig.h"
 
 #include "locationwidget.h"
@@ -44,9 +45,9 @@
 class LocationFactory : public ExtensionFactory
 {
   public:
-    ExtensionWidget *extension( ViewManager *vm, QWidget *parent, const char *name )
+    ExtensionWidget *extension( KABCore *core, QWidget *parent, const char *name )
     {
-      return new LocationWidget( vm, parent, name );
+      return new LocationWidget( core, parent, name );
     }
 
     ConfigureWidget *configureWidget( QWidget *parent, const char *name )
@@ -69,8 +70,8 @@ extern "C" {
   }
 }
 
-LocationWidget::LocationWidget( ViewManager *vm, QWidget *parent, const char *name )
-  : ExtensionWidget( vm, parent, name )
+LocationWidget::LocationWidget( KABCore *core, QWidget *parent, const char *name )
+  : ExtensionWidget( core, parent, name )
 {
   QGridLayout *topLayout = new QGridLayout( this, 2, 4, KDialog::marginHint(),
                                             KDialog::spacingHint() );
@@ -107,15 +108,15 @@ LocationWidget::~LocationWidget()
 {
 }
 
-void LocationWidget::addresseeSelectionChanged()
+void LocationWidget::contactsSelectionChanged()
 {
   mAddressList.clear();
 
   int pos = mAddressTypeCombo->currentItem();
   mAddressTypeCombo->clear();
 
-  if ( addresseesSelected() ) {
-    KABC::Addressee::List list = selectedAddressees();
+  if ( contactsSelected() ) {
+    KABC::Addressee::List list = selectedContacts();
     mAddressList = list[0].addresses();
   }
 

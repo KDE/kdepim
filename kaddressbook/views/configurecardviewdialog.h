@@ -1,6 +1,3 @@
-#ifndef CONFIGURECARDVIEWDIALOG_H
-#define CONFIGURECARDVIEWDIALOG_H
-
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -23,6 +20,9 @@
     with any edition of Qt, and distribute the resulting executable,    
     without including the source code for Qt in the source distribution.
 */                                                                      
+
+#ifndef CONFIGURECARDVIEWDIALOG_H
+#define CONFIGURECARDVIEWDIALOG_H
 
 #include "viewconfigurewidget.h"
 
@@ -48,7 +48,7 @@ class CardViewLookAndFeelPage;
 class ConfigureCardViewWidget : public ViewConfigureWidget
 {
   public:
-    ConfigureCardViewWidget( ViewManager *vm, QWidget *parent, const char *name );
+    ConfigureCardViewWidget( KABC::AddressBook *ab, QWidget *parent, const char *name );
     virtual ~ConfigureCardViewWidget();
     
     virtual void restoreSettings( KConfig* );

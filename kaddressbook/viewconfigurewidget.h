@@ -50,7 +50,7 @@ class ViewConfigureWidget : public ConfigureWidget
   Q_OBJECT
     
   public:
-    ViewConfigureWidget( ViewManager *vm, QWidget *parent, const char *name = 0 );
+    ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
     virtual ~ViewConfigureWidget();
     
     /**

@@ -21,8 +21,6 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include "configuretableviewdialog.h"
-
 #include <qstring.h>
 #include <qwidget.h>
 #include <qlayout.h>
@@ -38,10 +36,12 @@
 #include <kiconloader.h>
 #include <kconfig.h>
 
-ConfigureTableViewWidget::ConfigureTableViewWidget( ViewManager *vm,
+#include "configuretableviewdialog.h"
+
+ConfigureTableViewWidget::ConfigureTableViewWidget( KABC::AddressBook *ab,
                                                     QWidget *parent, 
                                                     const char *name )
-  : ViewConfigureWidget( vm, parent, name )
+  : ViewConfigureWidget( ab, parent, name )
 {
   QWidget *page = addPage( i18n( "Look & Feel" ), QString::null,
                            KGlobal::iconLoader()->loadIcon( "looknfeel",

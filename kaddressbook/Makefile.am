@@ -3,7 +3,7 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/details -I$(top_srcdir)/kaddressbook/feat
 	-I$(top_srcdir) -I$(top_builddir)/kaddressbook/printing \
 	-I$(top_builddir)/kaddressbook/details $(all_includes) 
 
-SUBDIRS = details printing . views features kcmconfigs pics csv-templates
+SUBDIRS = details printing . views features kcmconfigs xxport pics csv-templates
 
 SRCDOC_DEST=$(kde_htmldir)/en/kaddressbook
 
@@ -24,29 +24,29 @@ libkaddressbookpart_la_LIBADD  = $(top_builddir)/libkdepim/libkdepim.la \
 	./libkabcommon.la
 
 libkaddressbookpart_la_SOURCES = \
- actionmanager.cpp addresseditwidget.cpp addresseeconfig.cpp \
+ addresseditwidget.cpp addresseeconfig.cpp \
  addresseeeditordialog.cpp addresseeeditorwidget.cpp addresseeutil.cpp \
- addviewdialog.cpp emaileditwidget.cpp extensionwidget.cpp filter.cpp \
+ addviewdialog.cpp emaileditwidget.cpp extensionmanager.cpp extensionwidget.cpp filter.cpp \
  filtereditdialog.cpp filterselectionwidget.cpp geowidget.cpp imagewidget.cpp \
- importdialog.cpp incsearchwidget.cpp jumpbuttonbar.cpp kaddressbook.cpp \
+ incsearchwidget.cpp jumpbuttonbar.cpp kabcore.cpp \
  kaddressbook_part.cpp kaddressbookiface.skel kaddressbookmain.cpp \
  kaddressbookview.cpp keywidget.cpp ldapsearchdialog.cpp nameeditdialog.cpp \
  phoneeditwidget.cpp secrecywidget.cpp soundwidget.cpp undo.cpp undocmds.cpp \
  viewconfigurefieldspage.cpp viewconfigurefilterpage.cpp \
- viewconfigurewidget.cpp viewmanager.cpp
+ viewconfigurewidget.cpp viewmanager.cpp xxportobject.cpp xxportmanager.cpp
 
 kaddressbook_METASOURCES = AUTO
 
 noinst_HEADERS = \
- actionmanager.h addresseditwidget.h addresseeconfig.h \
+ addresseditwidget.h addresseeconfig.h \
  addresseeeditordialog.h addresseeeditorwidget.h addresseeutil.h \
- addviewdialog.h configurewidget.h emaileditwidget.h filter.h \
+ addviewdialog.h configurewidget.h emaileditwidget.h extensionmanager.h filter.h \
  filtereditdialog.h filterselectionwidget.h geowidget.h imagewidget.h \
- importdialog.h incsearchwidget.h jumpbuttonbar.h kabprefs.h kaddressbook.h \
+ incsearchwidget.h jumpbuttonbar.h kabcore.h kabprefs.h \
  kaddressbook_part.h kaddressbookmain.h kaddressbookview.h keywidget.h \
  ldapsearchdialog.h nameeditdialog.h phoneeditwidget.h secrecywidget.h \
  soundwidget.h typecombo.h undo.h undocmds.h viewconfigurefieldspage.h \
- viewconfigurefilterpage.h viewconfigurewidget.h viewmanager.h
+ viewconfigurefilterpage.h viewconfigurewidget.h viewmanager.h xxportmanager.h
 
 rcdir = $(kde_datadir)/kaddressbook
 rc_DATA = kaddressbookui.rc
@@ -71,7 +71,7 @@ apps_DATA = kaddressbook.desktop
 KDE_ICON = kaddressbook
 
 servicetypedir = $(kde_servicetypesdir)
-servicetype_DATA = kaddressbook_extension.desktop kaddressbook_view.desktop dcopaddressbook.desktop
+servicetype_DATA = kaddressbook_extension.desktop kaddressbook_view.desktop kaddressbook_xxport.desktop dcopaddressbook.desktop
 
 noinst_LTLIBRARIES = libkabcommon.la
 

@@ -46,6 +46,7 @@ class AddressEditWidget;
 class EmailEditWidget;
 class GeoWidget;
 class ImageWidget;
+class KABCore;
 class KeyWidget;
 class PhoneEditWidget;
 class SecrecyWidget;
@@ -64,13 +65,14 @@ class AddresseeEditorWidget : public ExtensionWidget
   Q_OBJECT
   
   public:
-    AddresseeEditorWidget( ViewManager *, QWidget *parent, const char *name = 0 );
+    AddresseeEditorWidget( KABCore *core, bool isExtension,
+                           QWidget *parent, const char *name = 0 );
     ~AddresseeEditorWidget();  
 
     void setAddressee( const KABC::Addressee& );
     const KABC::Addressee &addressee();
 
-    void addresseeSelectionChanged();
+    void contactsSelectionChanged();
   
     void load();
     void save();
@@ -113,16 +115,18 @@ class AddresseeEditorWidget : public ExtensionWidget
     void setupTab1();
     void setupTab2();
     void setupTab3();
-    
+
     KABC::Addressee mAddressee;
     int mFormattedNameType;
     bool mDirty;
-    
+    bool mIsExtension;
+    bool mBlockSignals;
+
     // GUI
     KPIM::CategorySelectDialog *mCategoryDialog;
     KPIM::CategoryEditDialog *mCategoryEditDialog;
     QTabWidget *mTabWidget;
-    
+
     // Tab1
     KLineEdit *mNameEdit;
     KLineEdit *mRoleEdit;
@@ -136,7 +140,7 @@ class AddresseeEditorWidget : public ExtensionWidget
     KLineEdit *mCategoryEdit;
     SecrecyWidget *mSecrecyWidget;
     KSqueezedTextLabel *mNameLabel;
-    
+
     // Tab2
     KLineEdit *mDepartmentEdit;
     KLineEdit *mOfficeEdit;

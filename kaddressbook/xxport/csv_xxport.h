@@ -1,6 +1,6 @@
 /*
-    This file is part of KAddressBook.
-    Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
+    This file is part of KAddressbook.
+    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,52 +21,26 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef INCSEARCHWIDGET_H
-#define INCSEARCHWIDGET_H
+#ifndef CSV_XXPORT_H
+#define CSV_XXPORT_H
 
-#include <qcombobox.h>
-#include <qwidget.h>
+#include <xxportobject.h>
 
-#include <klineedit.h>
-
-namespace KABC {
-class Field;
-}
-
-class IncSearchWidget : public QWidget
+class CSVXXPort : public XXPortObject
 {
   Q_OBJECT
 
   public:
-    IncSearchWidget( QWidget *parent, const char *name = 0 );
-    ~IncSearchWidget();
+    CSVXXPort( KABCore *core, QObject *parent, const char *name = 0 );
 
-    void setFields( const KABC::Field::List &list );
-    KABC::Field::List fields() const;
+    QString identifier() const { return "csv"; }
 
-    KABC::Field *currentField()const;
-
-  signals:
-    /**
-      This signal is emmited whenever the text in the input
-      widget is changed. You can get the sorting field by
-      @ref currentField.
-     */
-    void doSearch( const QString& text );
-
-    /**
-      This signal is emmited whenever the search field changes.
-     */
-    void fieldChanged();
-
-  private slots:
-    void announceDoSearch();
-    void announceFieldChanged();
+  public slots:
+    bool exportContacts( const KABC::AddresseeList &list, const QString &data );
+    KABC::AddresseeList importContacts( const QString &data ) const;
 
   private:
-    QComboBox* mFieldCombo;
-    KLineEdit* mSearchText;
-    KABC::Field::List mFieldList;
+    void doExport( QFile *fp, const KABC::AddresseeList &list );
 };
 
 #endif

@@ -21,17 +21,17 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include "addresseeeditordialog.h"
-
 #include <qlayout.h>
 
 #include <kdebug.h>
 #include <klocale.h>
 
 #include "addresseeeditorwidget.h"
-#include "viewmanager.h"
+#include "kabcore.h"
 
-AddresseeEditorDialog::AddresseeEditorDialog( ViewManager *vm, QWidget *parent,
+#include "addresseeeditordialog.h"
+
+AddresseeEditorDialog::AddresseeEditorDialog( KABCore *core, QWidget *parent,
                                               const char *name )
   : KDialogBase( KDialogBase::Plain, i18n( "Edit Contact" ), 
                  KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Apply,
@@ -43,8 +43,8 @@ AddresseeEditorDialog::AddresseeEditorDialog( ViewManager *vm, QWidget *parent,
   
   QVBoxLayout *layout = new QVBoxLayout( page );
 
-  mEditorWidget = new AddresseeEditorWidget( vm, page );
-  connect( mEditorWidget, SIGNAL( modified( KABC::Addressee::List ) ),
+  mEditorWidget = new AddresseeEditorWidget( core, false, page );
+  connect( mEditorWidget, SIGNAL( modified( const KABC::Addressee::List& ) ),
            SLOT( widgetModified() ) );
   layout->addWidget( mEditorWidget );
   
@@ -79,7 +79,7 @@ void AddresseeEditorDialog::slotApply()
 {
   if ( mEditorWidget->dirty() ) {
     mEditorWidget->save();
-    emit addresseeModified( mEditorWidget->addressee() );
+    emit contactModified( mEditorWidget->addressee() );
   }
 
   enableButton( KDialogBase::Apply, false );
@@ -101,7 +101,6 @@ void AddresseeEditorDialog::widgetModified()
 {
   enableButton( KDialogBase::Apply, true );
 }
-  
   
 void AddresseeEditorDialog::slotCancel()
 {

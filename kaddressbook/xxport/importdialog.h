@@ -25,6 +25,7 @@
 #define IMPORTDIALOG_H
 
 #include <libkdepim/kimportdialog.h>
+#include <kabc/addressbook.h>
 
 class QWidget;
 
@@ -39,6 +40,8 @@ class ContactImportDialog : public KImportDialog
 {
   public:
     ContactImportDialog( KABC::AddressBook *ab, QWidget *parent );
+
+    KABC::Addressee::List contacts() const;
 
     void convertRow();
     
@@ -84,6 +87,7 @@ class ContactImportDialog : public KImportDialog
     QPtrList<KImportColumn> mCustomList;
 
     KABC::AddressBook *mAddressBook;
+    KABC::Addressee::List mContacts;
 };
 
 #endif

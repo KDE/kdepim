@@ -27,8 +27,6 @@
 #include <qsizepolicy.h>
 #include <qwidget.h>
 
-#include "viewmanager.h"
-
 class QChar;
 class QGridLayout;
 class QResizeEvent;
@@ -36,6 +34,8 @@ class QResizeEvent;
 namespace KABC {
 class Field;
 }
+
+class KABCore;
 
 /**
   Used to draw the jump button bar on the right of the view.
@@ -45,7 +45,7 @@ class JumpButtonBar : public QWidget
   Q_OBJECT
   
   public:
-    JumpButtonBar( ViewManager *parent, const char *name = 0 );
+    JumpButtonBar( KABCore *core, QWidget *parent, const char *name = 0 );
     ~JumpButtonBar();
     
     QSizePolicy sizePolicy() const;    
@@ -70,7 +70,7 @@ class JumpButtonBar : public QWidget
   private:
     void sortListLocaleAware( QStringList &list );
 
-    ViewManager *mViewManager;
+    KABCore *mCore;
 
     QGridLayout *mButtonLayout;
     QStringList mCharacters;

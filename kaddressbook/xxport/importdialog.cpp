@@ -86,6 +86,11 @@ ContactImportDialog::ContactImportDialog( KABC::AddressBook *ab, QWidget *parent
   registerColumns();
 }
 
+KABC::Addressee::List ContactImportDialog::contacts() const
+{
+  return mContacts;
+}
+
 void ContactImportDialog::convertRow()
 {
   KABC::Addressee a;
@@ -154,5 +159,5 @@ void ContactImportDialog::convertRow()
     ++counter;
   }
   
-  mAddressBook->insertAddressee( a );
+  mContacts.append( a );
 }

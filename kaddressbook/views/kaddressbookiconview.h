@@ -1,6 +1,3 @@
-#ifndef KADDRESSBOOKICONVIEW_H
-#define KADDRESSBOOKICONVIEW_H
-
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -23,6 +20,9 @@
     with any edition of Qt, and distribute the resulting executable,    
     without including the source code for Qt in the source distribution.
 */                                                                      
+
+#ifndef KADDRESSBOOKICONVIEW_H
+#define KADDRESSBOOKICONVIEW_H
 
 #include <qstring.h>
 #include <kiconview.h>

@@ -41,9 +41,9 @@
 class IconViewFactory : public ViewFactory
 {
   public:
-    KAddressBookView *view( ViewManager *vm, QWidget *parent, const char *name )
+    KAddressBookView *view( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
-      return new KAddressBookIconView( vm->addressBook(), parent, name );
+      return new KAddressBookIconView( ab, parent, name );
     }
 
     QString type() const { return "Icon"; }

@@ -1,6 +1,6 @@
 /*
-    This file is part of KAddressBook.
-    Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
+    This file is part of KAddressbook.
+    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,52 +21,47 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef INCSEARCHWIDGET_H
-#define INCSEARCHWIDGET_H
+#ifndef XXPORTMANAGER_H
+#define XXPORTMANAGER_H
 
-#include <qcombobox.h>
-#include <qwidget.h>
+#include <qdict.h>
+#include <qobject.h>
 
-#include <klineedit.h>
+#include <kurl.h>
 
-namespace KABC {
-class Field;
-}
+#include "xxportobject.h"
 
-class IncSearchWidget : public QWidget
+class KABCore;
+
+class XXPortManager : public QObject
 {
   Q_OBJECT
 
   public:
-    IncSearchWidget( QWidget *parent, const char *name = 0 );
-    ~IncSearchWidget();
+    XXPortManager( KABCore *core, QObject *parent, const char *name = 0 );
+    ~XXPortManager();
 
-    void setFields( const KABC::Field::List &list );
-    KABC::Field::List fields() const;
+    void restoreSettings();
+    void saveSettings();
 
-    KABC::Field *currentField()const;
+    static KURL importURL;
 
+  public slots:
+    void importVCard( const KURL &url );
+  
   signals:
-    /**
-      This signal is emmited whenever the text in the input
-      widget is changed. You can get the sorting field by
-      @ref currentField.
-     */
-    void doSearch( const QString& text );
+    void modified();
 
-    /**
-      This signal is emmited whenever the search field changes.
-     */
-    void fieldChanged();
-
-  private slots:
-    void announceDoSearch();
-    void announceFieldChanged();
+  protected slots:
+    void slotImport( const QString&, const QString& );
+    void slotExport( const QString&, const QString& );
 
   private:
-    QComboBox* mFieldCombo;
-    KLineEdit* mSearchText;
-    KABC::Field::List mFieldList;
+    void loadPlugins();
+
+    QDict<XXPortObject> mXXPortObjects;
+
+    KABCore *mCore;
 };
 
 #endif

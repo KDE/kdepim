@@ -34,6 +34,7 @@ class QComboBox;
 class QListView;
 
 class DistributionListView;
+class KABCore;
 
 namespace KABC {
 class AddressBook;
@@ -45,10 +46,10 @@ class DistributionListWidget : public ExtensionWidget
     Q_OBJECT
 
   public:
-    DistributionListWidget( ViewManager*, QWidget *parent, const char *name = 0 );
+    DistributionListWidget( KABCore*, QWidget *parent, const char *name = 0 );
     virtual ~DistributionListWidget();
 
-    void addresseeSelectionChanged();
+    void contactsSelectionChanged();
 
     QString title() const;
     QString identifier() const;

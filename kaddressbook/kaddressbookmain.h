@@ -30,10 +30,9 @@
 #include <kapplication.h>
 #include <kmainwindow.h>
 
-#include "kaddressbook.h"
 #include "kaddressbookiface.h"
 
-class ActionManager;
+class KABCore;
 
 /**
   This class serves as the main window for KAddressBook.  It handles the
@@ -84,8 +83,7 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
     void slotNewToolbarConfig();
     
   private:
-    KAddressBook *mWidget;
-    ActionManager *mActionManager;
+    KABCore *mCore;
 };
 
 #endif

@@ -32,11 +32,13 @@
 #include <klistview.h>
 #include <klocale.h>
 
+#include "kabcore.h"
+
 #include "locationconfig.h"
 
-LocationConfigWidget::LocationConfigWidget( ViewManager *vm, QWidget *parent,
+LocationConfigWidget::LocationConfigWidget( KABC::AddressBook *ab, QWidget *parent,
                                             const char *name )
-  : ConfigureWidget( vm, parent, name )
+  : ConfigureWidget( ab, parent, name )
 {
   QGridLayout *layout = new QGridLayout( this, 3, 3, KDialog::marginHint(),
                                          KDialog::spacingHint() );

@@ -21,13 +21,13 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "viewmanager.h"
+#include <kabc/addressbook.h>
 
 #include "configurewidget.h"
 
-ConfigureWidget::ConfigureWidget( ViewManager *vm, QWidget *parent,
+ConfigureWidget::ConfigureWidget( KABC::AddressBook *ab, QWidget *parent,
                                   const char *name )
-  : QWidget( parent, name ), mViewManager( vm )
+  : QWidget( parent, name ), mAddressBook( ab )
 {
 }
 
@@ -45,7 +45,7 @@ void ConfigureWidget::saveSettings( KConfig* )
   // should be reimplemented in the views, extensions etc.
 }
 
-ViewManager *ConfigureWidget::viewManager()
+KABC::AddressBook *ConfigureWidget::addressBook() const
 {
-  return mViewManager;
+  return mAddressBook;
 }

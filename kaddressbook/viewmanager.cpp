@@ -21,66 +21,40 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qapplication.h>
-#include <qclipboard.h>
-#include <qcombobox.h>
-#include <qdragobject.h>
-#include <qevent.h>
-#include <qhbox.h>
-#include <qlabel.h>
 #include <qlayout.h>
-#include <qlineedit.h>
-#include <qsplitter.h>
-#include <qtabwidget.h>
-#include <qvbox.h>
 #include <qwidgetstack.h>
 
+#include <libkdepim/kvcarddrag.h>
 #include <kabc/addressbook.h>
-#include <kabc/addresseelist.h>
-#include <kabc/field.h>
-#include <kabc/stdaddressbook.h>
 #include <kabc/vcardconverter.h>
-#include <kapplication.h>
+#include <kactionclasses.h>
 #include <kconfig.h>
 #include <kdebug.h>
-#include <kglobal.h>
+#include <kdeversion.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kmultipledrag.h>
-#include <libkdepim/kvcarddrag.h>
-#include <kstandarddirs.h>
+#include <ktrader.h>
 #include <kurldrag.h>
-#include <errno.h>
-#include <ktempfile.h>
-#include <qdir.h>
 
-#include "addresseeeditorwidget.h"
-#include "addresseeutil.h"
 #include "addviewdialog.h"
-#include "detailsviewcontainer.h"
-#include "extensionwidget.h"
-#include "filterselectionwidget.h"
-#include "incsearchwidget.h"
-#include "jumpbuttonbar.h"
-#include "undo.h"
-#include "undocmds.h"
-#include "viewconfigurewidget.h"
+#include "addresseeutil.h"
+#include "filtereditdialog.h"
+#include "kabcore.h"
 
 #include "viewmanager.h"
 
-ViewManager::ViewManager( KABC::AddressBook *ab, KConfig *config,
-                          QWidget *parent, const char *name )
-  : QWidget( parent, name ), mAddressBook( ab ), mConfig( config )
+ViewManager::ViewManager( KABCore *core, QWidget *parent, const char *name )
+  : QWidget( parent, name ), mCore( core ), mActiveView( 0 )
 {
   initGUI();
+  initActions();
 
   mViewDict.setAutoDelete( true );
-//  mViewFactoryDict.setAutoDelete( true );
+  mViewFactoryDict.setAutoDelete( true );
 
   createViewFactories();
-
-  mActiveView = 0;
 }
 
 ViewManager::~ViewManager()
@@ -89,71 +63,55 @@ ViewManager::~ViewManager()
   mViewFactoryDict.clear();
 }
 
-void ViewManager::readConfig()
+void ViewManager::restoreSettings()
 {
-  mConfig->reparseConfiguration();
-
-  KConfigGroupSaver viewSaver( mConfig, "Views" );
-  mViewNameList = mConfig->readListEntry( "Names" );
+  KConfigGroupSaver viewSaver( mCore->config(), "Views" );
+  mViewNameList = mCore->config()->readListEntry( "Names" );
+  QString activeViewName = mCore->config()->readEntry( "Active" );
 
   if ( mViewNameList.size() == 0 )  // Add a default
-    mViewNameList.append( i18n("Default Table View") );
+    mViewNameList.append( i18n( "Default Table View" ) );
 
-  mFilterList = Filter::restore( mConfig, "Filter" );
-  mCurrentFilter = Filter();
+  mActionSelectView->setItems( mViewNameList );
 
-  emit filtersEdited();
+  // Filter
+  mFilterList = Filter::restore( mCore->config(), "Filter" );
 
-  KConfigGroupSaver filterSaver( mConfig, "Filter" );
-  if ( mConfig->hasKey( "Active" ) )
-    emit currentFilterChanged( mConfig->readEntry( "Active" ) );
+  mActionSelectFilter->setItems( filterNames() );
+
+  KConfigGroupSaver filterSaver( mCore->config(), "Filter" );
+  if ( mCore->config()->hasKey( "Active" ) ) {
+    uint pos = mCore->config()->readNumEntry( "Active", 0 );
+    mActionSelectFilter->setCurrentItem( pos );
+  }
 
   // Tell the views to reread their config, since they may have
   // been modified by global settings
   QDictIterator<KAddressBookView> it( mViewDict );
   for ( it.toFirst(); it.current(); ++it ) {
-    KConfigGroupSaver saver( mConfig, it.currentKey() );
-    it.current()->readConfig( mConfig );
+    KConfigGroupSaver saver( mCore->config(), it.currentKey() );
+    it.current()->readConfig( mCore->config() );
   }
 
-  QValueList<int> splitterSize;
-  KConfigGroupSaver splitterSaver( mConfig, "Splitter" );
-  splitterSize = mConfig->readIntListEntry( "ExtensionsSplitter" );
-  if ( splitterSize.count() == 0 ) {
-    splitterSize.append( width() / 2 );
-    splitterSize.append( width() / 2 );
-  }
-  mExtensionBarSplitter->setSizes( splitterSize );
-
-  splitterSize = mConfig->readIntListEntry( "DetailsSplitter" );
-  if ( splitterSize.count() == 0 ) {
-    splitterSize.append( height() / 2 );
-    splitterSize.append( height() / 2 );
-  }
-  mDetailsSplitter->setSizes( splitterSize );
-
-  loadExtensions();
+  setActiveView( activeViewName );
 }
 
-void ViewManager::writeConfig()
+void ViewManager::saveSettings()
 {
   QDictIterator<KAddressBookView> it( mViewDict );
   for ( it.toFirst(); it.current(); ++it ) {
-    KConfigGroupSaver saver( mConfig, it.currentKey() );
-    (*it)->writeConfig( mConfig );
+    KConfigGroupSaver saver( mCore->config(), it.currentKey() );
+    (*it)->writeConfig( mCore->config() );
   }
 
-  Filter::save( mConfig, QString( "Filter" ), mFilterList );
-  KConfigGroupSaver filterSaver( mConfig, "Filter" );
-  mConfig->writeEntry( "Active", mCurrentFilter.name() );
+  Filter::save( mCore->config(), "Filter", mFilterList );
+  KConfigGroupSaver filterSaver( mCore->config(), "Filter" );
+  mCore->config()->writeEntry( "Active", mActionSelectFilter->currentItem() );
 
   // write the view name list
-  KConfigGroupSaver viewSaver( mConfig, "Views" );
-  mConfig->writeEntry( "Names", mViewNameList );
-
-  KConfigGroupSaver splitterSaver( mConfig, "Splitter" );
-  mConfig->writeEntry( "ExtensionsSplitter", mExtensionBarSplitter->sizes() );
-  mConfig->writeEntry( "DetailsSplitter", mDetailsSplitter->sizes() );
+  KConfigGroupSaver viewSaver( mCore->config(), "Views" );
+  mCore->config()->writeEntry( "Names", mViewNameList );
+  mCore->config()->writeEntry( "Active", mActiveView->name() );
 }
 
 QStringList ViewManager::selectedUids() const
@@ -161,135 +119,9 @@ QStringList ViewManager::selectedUids() const
   return mActiveView->selectedUids();
 }
 
-void ViewManager::sendMail()
+QStringList ViewManager::selectedEmails() const
 {
-  sendMail( mActiveView->selectedEmails() );
-}
-
-void ViewManager::sendMail( const QString& email )
-{
-  kapp->invokeMailer( email, "" );
-}
-
-void ViewManager::mailVCard()
-{
-  QStringList uids = mActiveView->selectedUids();
-  if ( !uids.isEmpty() )
-    mailVCard( uids );
-}
-
-void ViewManager::mailVCard(const QStringList& uids)
-{
-  QStringList urls;
-  // Create a temp dir, so that we can put the files in it with proper names
-  KTempFile tempDir;
-  if ( tempDir.status() != 0 ) {
-    kdWarning() << strerror( tempDir.status() ) << endl;
-    return;
-  }
-
-  QString dirName = tempDir.name();
-  tempDir.unlink();
-  QDir().mkdir(dirName,true);
-
-  for( QStringList::ConstIterator it = uids.begin(); it != uids.end(); ++it ) {
-    KABC::Addressee a = mAddressBook->findByUid( (*it) );
-
-    if ( a.isEmpty() )
-      continue;
-
-    QString name = a.givenName() + "_" + a.familyName() + ".vcf";
-
-    QString fileName = dirName + "/" + name;
-
-    QFile outFile(fileName);
-    if ( outFile.open(IO_WriteOnly) )
-    {    // file opened successfully
-      KABC::VCardConverter converter;
-      QString vcard;
-
-      converter.addresseeToVCard( a, vcard );
-
-      QTextStream t( &outFile );        // use a text stream
-      t.setEncoding( QTextStream::UnicodeUTF8 );
-      t << vcard;
-
-      outFile.close();
-
-      urls.append( fileName );
-    }
-  }
-
-  kapp->invokeMailer(QString::null, QString::null, QString::null,
-                     QString::null, // subject
-                     QString::null, // body
-                     QString::null,
-                     urls); // attachments
-}
-
-void ViewManager::browse( const QString& url )
-{
-  kapp->invokeBrowser( url );
-}
-
-void ViewManager::deleteAddressees()
-{
-  QStringList uidList = mActiveView->selectedUids();
-
-  if ( uidList.size() > 0 ) {
-    PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uidList );
-    UndoStack::instance()->push( command );
-    RedoStack::instance()->clear();
-
-    // now if we deleted anything, refresh
-    mActiveView->refresh();
-    emit selected( QString::null );
-    addresseeSelected( QString::null );
-
-    emit modified();
-  }
-}
-
-void ViewManager::paste()
-{
-  QClipboard *cb = QApplication::clipboard();
-  PwPasteCommand *command = new PwPasteCommand( mAddressBook, cb->text() );
-  UndoStack::instance()->push( command );
-  RedoStack::instance()->clear();
-
-  modified();
-  mActiveView->refresh();
-}
-
-void ViewManager::copy()
-{
-  QStringList uidList = mActiveView->selectedUids();
-  KABC::Addressee::List addrList;
-
-  QStringList::Iterator it;
-  for ( it = uidList.begin(); it != uidList.end(); ++it )
-    addrList.append( mAddressBook->findByUid( *it ) );
-
-  QString clipText = AddresseeUtil::addresseesToClipboard( addrList );
-
-  kdDebug(5720) << "ViewManager::copy: " << clipText << endl;
-
-  QClipboard *cb = QApplication::clipboard();
-  cb->setText( clipText );
-}
-
-void ViewManager::cut()
-{
-  QStringList uidList = mActiveView->selectedUids();
-
-  if ( uidList.size() > 0 ) {
-    PwCutCommand *command = new PwCutCommand( mAddressBook, uidList );
-    UndoStack::instance()->push( command );
-    RedoStack::instance()->clear();
-
-    mActiveView->refresh();
-    emit modified();
-  }
+  return mActiveView->selectedEmails();
 }
 
 void ViewManager::setSelected( const QString &uid, bool selected )
@@ -320,7 +152,7 @@ void ViewManager::setActiveView( const QString &name )
 
   // Check if we found the view. If we didn't, then we need to create it
   if ( view == 0 ) {
-    KConfig *config = ViewManager::config();
+    KConfig *config = mCore->config();
     KConfigGroupSaver saver( config, name );
     QString type = config->readEntry( "Type", "Table" );
 
@@ -328,7 +160,7 @@ void ViewManager::setActiveView( const QString &name )
 
     ViewFactory *factory = mViewFactoryDict.find( type );
     if ( factory )
-      view = factory->view( this, mViewWidgetStack, name.latin1() );
+      view = factory->view( mCore->addressBook(), mViewWidgetStack, name.latin1() );
 
     if ( view ) {
       mViewDict.insert( name, view );
@@ -338,8 +170,6 @@ void ViewManager::setActiveView( const QString &name )
       // The manager just relays the signals
       connect( view, SIGNAL( selected( const QString& ) ),
                SIGNAL( selected( const QString & ) ) );
-      connect( view, SIGNAL( selected( const QString& ) ),
-               SLOT( addresseeSelected( const QString& ) ) );
       connect( view, SIGNAL( executed( const QString& ) ),
                SIGNAL( executed( const QString& ) ) );
       connect( view, SIGNAL( modified() ), SIGNAL( modified() ) );
@@ -356,33 +186,33 @@ void ViewManager::setActiveView( const QString &name )
     // Set the proper filter in the view. By setting the combo
     // box, the activated slot will be called, which will push
     // the filter to the view and refresh it.
-    if ( view->defaultFilterType() == KAddressBookView::None )
-      emit currentFilterChanged( "" );
-    else if ( view->defaultFilterType() == KAddressBookView::Active )
-      emit currentFilterChanged( mCurrentFilter.name() );
-    else {
-      QString filterName = view->defaultFilterName();
-      emit currentFilterChanged( filterName );
+    if ( view->defaultFilterType() == KAddressBookView::None ) {
+      mActionSelectFilter->setCurrentItem( 0 );
+      setActiveFilter( 0 );
+    } else if ( view->defaultFilterType() == KAddressBookView::Active ) {
+      setActiveFilter( mActionSelectFilter->currentItem() );
+    } else {
+      uint pos = filterPosition( view->defaultFilterName() );
+      mActionSelectFilter->setCurrentItem( pos );
+      setActiveFilter( pos );
     }
 
     // Update the inc search widget to show the fields in the new active
     // view.
-    mIncSearchWidget->setFields( mActiveView->fields() );
+    mCore->setSearchFields( mActiveView->fields() );
     mActiveView->refresh();
 
   } else
     kdDebug(5720) << "ViewManager::setActiveView: unable to find view\n";
 }
 
-void ViewManager::refresh( const QString &uid )
+void ViewManager::refreshView( const QString &uid )
 {
-  if ( mActiveView ) {
+  if ( mActiveView )
     mActiveView->refresh( uid );
-    addresseeSelected( uid );
-  }
 }
 
-void ViewManager::modifyView()
+void ViewManager::editView()
 {
   if ( !mActiveView )
     return;
@@ -392,34 +222,36 @@ void ViewManager::modifyView()
 
   if ( factory ) {
     // Save the filters so the dialog has the latest set
-    Filter::save( mConfig, "Filter", mFilterList );
+    Filter::save( mCore->config(), "Filter", mFilterList );
 
-    wdg = factory->configureWidget( this, 0 );
+    wdg = factory->configureWidget( mCore->addressBook(), 0 );
   }
 
   if ( wdg ) {
     ViewConfigureDialog dlg( wdg, mActiveView->name(), this );
 
-    KConfigGroupSaver saver( mConfig, mActiveView->name() );
-    dlg.restoreSettings( mConfig );
+    KConfigGroupSaver saver( mCore->config(), mActiveView->name() );
+    dlg.restoreSettings( mCore->config() );
 
     if ( dlg.exec() ) {
-      dlg.saveSettings( mConfig );
-      mActiveView->readConfig( mConfig );
+      dlg.saveSettings( mCore->config() );
+      mActiveView->readConfig( mCore->config() );
 
       // Set the proper filter in the view. By setting the combo
       // box, the activated slot will be called, which will push
       // the filter to the view and refresh it.
-      if ( mActiveView->defaultFilterType() == KAddressBookView::None )
-        emit currentFilterChanged( "" );
-      else if ( mActiveView->defaultFilterType() == KAddressBookView::Active )
-        emit currentFilterChanged( mCurrentFilter.name() );
-      else {
-        QString filterName = mActiveView->defaultFilterName();
-        emit currentFilterChanged( filterName );
+      if ( mActiveView->defaultFilterType() == KAddressBookView::None ) {
+        mActionSelectFilter->setCurrentItem( 0 );
+        setActiveFilter( 0 );
+      } else if ( mActiveView->defaultFilterType() == KAddressBookView::Active ) {
+        setActiveFilter( mActionSelectFilter->currentItem() );
+      } else {
+        uint pos = filterPosition( mActiveView->defaultFilterName() );
+        mActionSelectFilter->setCurrentItem( pos );
+        setActiveFilter( pos );
       }
 
-      mIncSearchWidget->setFields( mActiveView->fields() );
+      mCore->setSearchFields( mActiveView->fields() );
       mActiveView->refresh();
     }
   }
@@ -434,7 +266,7 @@ void ViewManager::deleteView()
     mViewNameList.remove( mActiveView->name() );
 
     // remove the view from the config file
-    KConfig *config = ViewManager::config();
+    KConfig *config = mCore->config();
     config->deleteGroup( mActiveView->name() );
 
     mViewDict.remove( mActiveView->name() );
@@ -442,7 +274,12 @@ void ViewManager::deleteView()
 
     // we are in an invalid state now, but that should be fixed after
     // we emit the signal
-    emit viewConfigChanged( QString::null );
+    mActionSelectView->setItems( mViewNameList );
+    if ( mViewNameList.count() > 0 ) {
+      mActionSelectView->setCurrentItem( 0 );
+      setActiveView( mViewNameList[ 0 ] );
+    }
+    mActionDeleteView->setEnabled( mViewNameList.count() > 0 );
   }
 }
 
@@ -471,15 +308,19 @@ void ViewManager::addView()
     mViewNameList.append( newName );
 
     // write the view to the config file,
-    KConfig *config = ViewManager::config();
+    KConfig *config = mCore->config();
     config->deleteGroup( newName );
     KConfigGroupSaver saver( config, newName );
     config->writeEntry( "Type", type );
 
     // try to set the active view
-    emit viewConfigChanged( newName );
+    mActionSelectView->setItems( mViewNameList );
+    mActionSelectView->setCurrentItem( mViewNameList.findIndex( newName ) );
+    setActiveView( newName );
 
-    modifyView();
+    editView();
+
+    mActionDeleteView->setEnabled( mViewNameList.count() > 0 );
   }
 }
 
@@ -509,128 +350,6 @@ void ViewManager::createViewFactories()
   }
 }
 
-void ViewManager::initGUI()
-{
-  mCurrentExtensionWidget = 0;
-
-  QHBoxLayout *topLayout = new QHBoxLayout( this );
-  topLayout->setSpacing( KDialogBase::spacingHint() );
-
-  mExtensionBarSplitter = new QSplitter( this );
-  mExtensionBarSplitter->setOrientation( Qt::Vertical );
-
-  mDetailsSplitter = new QSplitter( mExtensionBarSplitter );
-
-  QVBox *viewSpace = new QVBox( mDetailsSplitter );
-  mIncSearchWidget = new IncSearchWidget( viewSpace );
-  connect( mIncSearchWidget, SIGNAL( doSearch( const QString& ) ),
-           SLOT( incSearch( const QString& ) ) );
-
-  mViewWidgetStack = new QWidgetStack( viewSpace );
-  viewSpace->setStretchFactor( mViewWidgetStack, 1 );
-
-  mDetails = new ViewContainer( mDetailsSplitter );
-  connect( mDetails, SIGNAL( sendEmail( const QString& ) ),
-           SLOT( sendMail( const QString& ) ) );
-  connect( mDetails, SIGNAL( browse( const QString& ) ),
-           SLOT( browse( const QString& ) ) );
-
-  mJumpButtonBar = new JumpButtonBar( this );
-  connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QString& ) ),
-           SLOT( incSearch( const QString& ) ) );
-  connect( mIncSearchWidget, SIGNAL( fieldChanged() ),
-           mJumpButtonBar, SLOT( recreateButtons() ) );
-
-  // Setup the feature bar widget.
-  mExtensionBar = new QHBox( mExtensionBarSplitter );
-
-  loadExtensions();
-
-  topLayout->addWidget( mExtensionBarSplitter );
-  topLayout->setStretchFactor( mExtensionBarSplitter, 100 );
-  topLayout->addWidget( mJumpButtonBar );
-  topLayout->setStretchFactor( mJumpButtonBar, 1 );
-}
-
-void ViewManager::incSearch( const QString& text )
-{
-  if ( !mActiveView )
-    return;
-
-  mActiveView->setSelected( QString::null, false );
-
-  if ( !text.isEmpty() ) {
-    KABC::Field *field = mIncSearchWidget->currentField();
-
-#if KDE_VERSION >= 319
-    KABC::AddresseeList list( mAddressBook->allAddressees() );
-    if (  field ) {
-      list.sortByField( field );
-      KABC::AddresseeList::Iterator it;
-      for ( it = list.begin(); it != list.end(); ++it ) {
-        if ( field->value( *it ).startsWith( text ) ) {
-          mActiveView->setSelected( (*it).uid(), true );
-          return;
-        }
-      }
-    } else {
-      KABC::AddresseeList::Iterator it;
-      for ( it = list.begin(); it != list.end(); ++it ) {
-        KABC::Field::List fieldList = mActiveView->fields();
-        KABC::Field::List::ConstIterator fieldIt;
-        for ( fieldIt = fieldList.begin(); fieldIt != fieldList.end(); ++fieldIt ) {
-          if ( (*fieldIt)->value( *it ).startsWith( text ) ) {
-            mActiveView->setSelected( (*it).uid(), true );
-            return;
-          }
-        }
-      }
-    }
-#else
-    KABC::AddressBook::Iterator it;
-    for ( it = mAddressBook->begin(); it != mAddressBook->end(); ++it ) {
-      if ( field ) {
-        if ( field->value( *it ).startsWith( text ) ) {
-          mActiveView->setSelected( (*it).uid(), true );
-          return;
-        }
-      } else {
-        KABC::Field::List fieldList = mActiveView->fields();
-        KABC::Field::List::ConstIterator fieldIt;
-        for ( fieldIt = fieldList.begin(); fieldIt != fieldList.end(); ++fieldIt ) {
-          if ( (*fieldIt)->value( *it ).startsWith( text ) ) {
-            mActiveView->setSelected( (*it).uid(), true );
-            return;
-          }
-        }
-      }
-    }
-#endif
-  }
-}
-
-void ViewManager::setJumpButtonBarVisible( bool visible )
-{
-  if ( visible )
-    mJumpButtonBar->show();
-  else
-    mJumpButtonBar->hide();
-}
-
-void ViewManager::setDetailsVisible( bool visible )
-{
-  if ( visible )
-    mDetails->show();
-  else
-    mDetails->hide();
-}
-
-bool ViewManager::isQuickEditVisible()const
-{
-  return ( mCurrentExtensionWidget &&
-      mCurrentExtensionWidget->identifier() == "contact_editor" );
-}
-
 void ViewManager::dropped( QDropEvent *e )
 {
   kdDebug(5720) << "ViewManager::dropped: got a drop event" << endl;
@@ -645,10 +364,10 @@ void ViewManager::dropped( QDropEvent *e )
       QString questionString = i18n( "Import one contact into your addressbook?", "Import %n contacts into your addressbook?", c );
       if ( KMessageBox::questionYesNo( this, questionString, i18n( "Import Contacts?" ) ) == KMessageBox::Yes ) {
         for ( ; it != urls.end(); ++it )
-          emit importVCard( *it, false );
+          emit urlDropped( *it, false );
       }
     } else if ( c == 1 )
-      emit importVCard( *it, true );
+      emit urlDropped( *it, true );
   } else if ( KVCardDrag::decode( e, vcards ) ) {
     KABC::Addressee addr;
     KABC::VCardConverter converter;
@@ -656,9 +375,9 @@ void ViewManager::dropped( QDropEvent *e )
     QStringList::Iterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
       if ( converter.vCardToAddressee( (*it).stripWhiteSpace(), addr ) ) {
-        KABC::Addressee a = mAddressBook->findByUid( addr.uid() );
+        KABC::Addressee a = mCore->addressBook()->findByUid( addr.uid() );
         if ( a.isEmpty() ) {
-          mAddressBook->insertAddressee( addr );
+          mCore->addressBook()->insertAddressee( addr );
           emit modified();
         }
       }
@@ -677,7 +396,7 @@ void ViewManager::startDrag()
   QStringList uidList = selectedUids();
   QStringList::Iterator iter;
   for ( iter = uidList.begin(); iter != uidList.end(); ++iter )
-    addrList.append( mAddressBook->findByUid( *iter ) );
+    addrList.append( mCore->addressBook()->findByUid( *iter ) );
 
   KMultipleDrag *drag = new KMultipleDrag( this );
   drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToClipboard(addrList), this ) );
@@ -695,206 +414,102 @@ void ViewManager::startDrag()
   drag->dragCopy();
 }
 
-void ViewManager::addresseeSelected( const QString &uid )
+void ViewManager::setActiveFilter( int index )
 {
-  KABC::Addressee addr = mAddressBook->findByUid( uid );
-  if ( !mDetails->isHidden() )
-    mDetails->setAddressee( addr );
+  Filter currentFilter;
 
-  if ( mCurrentExtensionWidget )
-    mCurrentExtensionWidget->addresseeSelectionChanged();
-}
-
-void ViewManager::extensionWidgetModified( KABC::Addressee::List list )
-{
-  if ( mCurrentExtensionWidget &&
-                   mCurrentExtensionWidget->identifier() == "contact_editor" ) {
-    AddresseeEditorWidget *wdg =
-               static_cast<AddresseeEditorWidget*>( mCurrentExtensionWidget );
-    if ( wdg ) {
-      wdg->save();
-      mAddressBook->insertAddressee( wdg->addressee() );
-    }
-  }
-
-  if ( list.count() == 0 )
-    mActiveView->refresh();
+  if ( ( index - 1 ) < 0 )
+    currentFilter = Filter();
   else
-    mActiveView->refresh( list[0].uid() );
-
-  emit modified();
-}
-
-void ViewManager::filterActivated( int index )
-{
-  if ( index < 0 )
-    mCurrentFilter = Filter();
-  else
-    mCurrentFilter = mFilterList[ index ];
+    currentFilter = mFilterList[ index - 1 ];
 
   // Check if we have a view. Since the filter combo is created before
   // the view, this slot could be called before there is a valid view.
   if ( mActiveView ) {
-    mActiveView->setFilter( mCurrentFilter );
+    mActiveView->setFilter( currentFilter );
     mActiveView->refresh();
+    emit selected( QString::null );
   }
 }
 
-void ViewManager::slotModified()
+void ViewManager::configureFilters()
 {
-  modified();
+  FilterDialog dlg( this );
+
+  dlg.setFilters( mFilterList );
+
+  if ( dlg.exec() )
+    mFilterList = dlg.filters();
+
+  uint pos = mActionSelectFilter->currentItem();
+  mActionSelectFilter->setItems( filterNames() );
+  mActionSelectFilter->setCurrentItem( pos );
+  setActiveFilter( pos );
 }
 
-void ViewManager::setActiveExtension( int id )
+QStringList ViewManager::filterNames() const
 {
-  if ( id == 0 ) {
-    mExtensionBar->hide();
-    mCurrentExtensionWidget = 0;
-  } else {
-    if ( mCurrentExtensionWidget )
-      mCurrentExtensionWidget->hide();
+  QStringList names( i18n( "None" ) );
 
-    mCurrentExtensionWidget = mExtensionWidgetList.at( id - 1 );
-    if ( mCurrentExtensionWidget ) {
-      mExtensionBar->show();
-      mCurrentExtensionWidget->show();
-    } else {
-      mExtensionBar->hide();
-      mCurrentExtensionWidget = 0;
-    }
-  }
-}
-
-KConfig* ViewManager::config()
-{
-  static KConfig *mConfig = 0;
-  if ( !mConfig )
-    mConfig = new KConfig( locateLocal( "config", "kaddressbookrc" ) );
-  return mConfig;
-}
-
-
-QStringList ViewManager::extensionNames()
-{
-  QStringList list;
-  list.append( i18n( "None" ) );
-
-  ExtensionWidget *wdg = 0;
-  for ( wdg = mExtensionWidgetList.first(); wdg; wdg = mExtensionWidgetList.next() )
-    list.append( wdg->title() );
-
-  return list;
-}
-
-void ViewManager::setUsersContact()
-{
-  QStringList uidList = selectedUids();
-
-  if ( uidList.count() > 1 ) {
-    KMessageBox::sorry( this, i18n( "Please select only one contact." ) );
-    return;
-  }
-
-  QString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>" ) );
-  KABC::Addressee addr = mAddressBook->findByUid( uidList[ 0 ] );
-  if ( KMessageBox::questionYesNo( this, text.arg( addr.assembledName() ) ) == KMessageBox::Yes )
-    KABC::StdAddressBook::setUsersContact( addr.uid() );
-}
-
-KABC::AddressBook *ViewManager::addressBook()const
-{
-  return mAddressBook;
-}
-
-KABC::Field *ViewManager::currentSearchField()const
-{
-  return mIncSearchWidget->currentField();
-}
-
-const QStringList &ViewManager::viewNames()
-{
-  return mViewNameList;
-}
-
-void ViewManager::setFilters( const Filter::List &list )
-{
-  mFilterList = list;
-  emit filtersEdited();
-}
-
-const Filter::List &ViewManager::filters() const
-{
-  return mFilterList;
-}
-
-QStringList ViewManager::filterNames()
-{
-  QStringList names;
-
-  Filter::List::Iterator it;
+  Filter::List::ConstIterator it;
   for ( it = mFilterList.begin(); it != mFilterList.end(); ++it )
     names.append( (*it).name() );
 
   return names;
 }
 
-void ViewManager::loadExtensions()
+int ViewManager::filterPosition( const QString &name ) const
 {
-  // clear extension widget list
-  mExtensionWidgetList.setAutoDelete( true );
-  QPtrListIterator<ExtensionWidget> wdgIt( mExtensionWidgetList );
-  ExtensionWidget *wdg = 0;
-  while ( ( wdg = wdgIt.current() ) != 0 )
-    mExtensionWidgetList.remove( wdg );
+  int pos = 0;
 
-  mExtensionWidgetList.setAutoDelete( false );
+  Filter::List::ConstIterator it;
+  for ( it = mFilterList.begin(); it != mFilterList.end(); ++it, ++pos )
+    if ( name == (*it).name() )
+      return pos + 1;
 
-  // add addressee editor as default
-  wdg = new AddresseeEditorWidget( this, mExtensionBar );
-  wdg->hide();
-  connect( wdg, SIGNAL( modified( KABC::Addressee::List ) ),
-           SLOT( extensionWidgetModified( KABC::Addressee::List ) ) );
-  mExtensionWidgetList.append( wdg );
+  return 0;
+}
 
-  // load the other extensions
-  KConfig *config = ViewManager::config();
-  KConfigGroupSaver saver( config, "Extensions_General" );
-  QStringList activeExtensions = config->readListEntry( "activeExtensions" );
+void ViewManager::initActions()
+{
+  mActionSelectView = new KSelectAction( i18n( "Select View" ), 0, mCore->actionCollection(), "select_view" );
+#if KDE_VERSION >= 309
+  mActionSelectView->setMenuAccelsEnabled( false );
+#endif
+  connect( mActionSelectView, SIGNAL( activated( const QString& ) ),
+           SLOT( setActiveView( const QString& ) ) );
 
-  KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/Extension" );
-  KTrader::OfferList::ConstIterator it;
-  for ( it = plugins.begin(); it != plugins.end(); ++it ) {
-    if ( !(*it)->hasServiceType( "KAddressBook/Extension" ) )
-      continue;
+  new KAction( i18n( "Modify View..." ), "configure", 0, this,
+               SLOT( editView() ), mCore->actionCollection(), "view_modify" );
 
-    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library() );
-    if ( !factory ) {
-      kdDebug(5720) << "ViewManager::loadExtensions(): Factory creation failed" << endl;
-      continue;
-    }
+  new KAction( i18n( "Add View..." ), "window_new", 0, this,
+               SLOT( addView() ), mCore->actionCollection(), "view_add" );
 
-    ExtensionFactory *extensionFactory = static_cast<ExtensionFactory*>( factory );
+  mActionDeleteView = new KAction( i18n( "Delete View" ), "view_remove", 0,
+                                   this, SLOT( deleteView() ),
+                                   mCore->actionCollection(), "view_delete" );
 
-    if ( !extensionFactory ) {
-      kdDebug(5720) << "ViewManager::loadExtensions(): Cast failed" << endl;
-      continue;
-    }
+  new KAction( i18n( "Refresh View" ), "reload", 0, this,
+               SLOT( refreshView() ), mCore->actionCollection(),
+               "view_refresh" );
 
-    if ( !activeExtensions.contains( extensionFactory->identifier() ) )
-      continue;
+  new KAction( i18n( "Edit &Filters..." ), "filter", 0, this,
+               SLOT( configureFilters() ), mCore->actionCollection(),
+               "options_edit_filters" );
 
-    wdg = extensionFactory->extension( this, mExtensionBar );
-    if ( wdg ) {
-      wdg->hide();
-      connect( wdg, SIGNAL( modified( KABC::Addressee::List ) ),
-               SLOT( extensionWidgetModified( KABC::Addressee::List ) ) );
-      mExtensionWidgetList.append( wdg );
-    }
-  }
+  mActionSelectFilter = new KSelectAction( i18n( "Select Filter" ), 0, mCore->actionCollection(), "select_filter" );
+#if KDE_VERSION >= 309
+  mActionSelectFilter->setMenuAccelsEnabled( false );
+#endif
+  connect( mActionSelectFilter, SIGNAL( activated( int ) ),
+           SLOT( setActiveFilter( int ) ) );
+}
 
-  emit extensionsReloaded();
-
-  mIncSearchWidget->setFocus();
+void ViewManager::initGUI()
+{
+  QHBoxLayout *layout = new QHBoxLayout( this );
+  mViewWidgetStack = new QWidgetStack( this );
+  layout->addWidget( mViewWidgetStack );
 }
 
 #include "viewmanager.moc"

@@ -45,7 +45,7 @@ class LookAndFeelPage;
 class ConfigureTableViewWidget : public ViewConfigureWidget
 {
   public:
-    ConfigureTableViewWidget( ViewManager *vm, QWidget *parent, const char *name );
+    ConfigureTableViewWidget( KABC::AddressBook *ab, QWidget *parent, const char *name );
     virtual ~ConfigureTableViewWidget();
     
     virtual void restoreSettings( KConfig* );

@@ -21,10 +21,6 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include "configurecardviewdialog.h"
-#include "configurecardviewdialog.moc"
-#include "colorlistbox.h"
-
 #include <qstring.h>
 #include <qlayout.h>
 #include <qlabel.h>
@@ -35,6 +31,7 @@
 #include <qtabwidget.h>
 #include <qwhatsthis.h>
 
+#include <kdebug.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
 #include <klocale.h>
@@ -43,14 +40,16 @@
 #include <kfontdialog.h>
 #include <kpushbutton.h>
 
-#include <kdebug.h>
+#include "colorlistbox.h"
+
+#include "configurecardviewdialog.h"
 
 /////////////////////////////////
 // ConfigureCardViewDialog
 
-ConfigureCardViewWidget::ConfigureCardViewWidget( ViewManager *vm, QWidget *parent, 
+ConfigureCardViewWidget::ConfigureCardViewWidget( KABC::AddressBook *ab, QWidget *parent, 
                                                   const char *name )
-  : ViewConfigureWidget( vm, parent, name )
+  : ViewConfigureWidget( ab, parent, name )
 {
   QWidget *page = addPage( i18n( "Look & Feel" ), QString::null,
                            DesktopIcon( "looknfeel" ) );
@@ -316,3 +315,5 @@ void CardViewLookNFeelPage::updateFontLabel( QFont fnt, QLabel *l )
   l->setFont( fnt );
   l->setText(  QString( fnt.family() + " %1" ).arg( fnt.pointSize() ) );
 }
+
+#include "configurecardviewdialog.moc"

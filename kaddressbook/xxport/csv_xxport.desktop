@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+X-KDE-Library=libkaddrbk_csv_xxport
+Name=KAB CSV XXPort Plugin
+Comment=Plugin to import and export contacts in csv format
+Type=Service
+ServiceTypes=KAddressBook/XXPort

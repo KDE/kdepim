@@ -39,17 +39,18 @@
 #include <kabc/addresseedialog.h>
 #include <kabc/distributionlist.h>
 #include <kabc/vcardconverter.h>
-
 #include <libkdepim/kvcarddrag.h>
+
+#include "kabcore.h"
 
 #include "distributionlistwidget.h"
 
 class DistributionListFactory : public ExtensionFactory
 {
   public:
-    ExtensionWidget *extension( ViewManager *vm, QWidget *parent, const char *name )
+    ExtensionWidget *extension( KABCore *core, QWidget *parent, const char *name )
     {
-      return new DistributionListWidget( vm, parent, name );
+      return new DistributionListWidget( core, parent, name );
     }
 
     QString identifier() const
@@ -105,9 +106,9 @@ class ContactItem : public QListViewItem
     QString mEmail;
 };
 
-DistributionListWidget::DistributionListWidget( ViewManager *vm, QWidget *parent,
+DistributionListWidget::DistributionListWidget( KABCore *core, QWidget *parent,
                                                 const char *name )
-  : ExtensionWidget( vm, parent, name ), mManager( 0 )
+  : ExtensionWidget( core, parent, name ), mManager( 0 )
 {
   QGridLayout *topLayout = new QGridLayout( this, 3, 4, KDialog::marginHint(),
                                             KDialog::spacingHint() );
@@ -153,7 +154,7 @@ DistributionListWidget::DistributionListWidget( ViewManager *vm, QWidget *parent
   topLayout->addWidget( mRemoveContactButton, 2, 3 );
   connect( mRemoveContactButton, SIGNAL( clicked() ), SLOT( removeContact() ) );
 
-  mManager = new KABC::DistributionListManager( addressBook() );
+  mManager = new KABC::DistributionListManager( core->addressBook() );
   mManager->load();
 
   updateNameCombo();
@@ -243,7 +244,7 @@ void DistributionListWidget::addContact()
   if ( !list )
     return;
 
-  KABC::Addressee::List addrList = selectedAddressees();
+  KABC::Addressee::List addrList = selectedContacts();
   KABC::Addressee::List::Iterator it;
   for ( it = addrList.begin(); it != addrList.end(); ++it )
     list->insertEntry( *it );
@@ -351,9 +352,9 @@ void DistributionListWidget::dropEvent( QDropEvent *e )
   }
 }
 
-void DistributionListWidget::addresseeSelectionChanged()
+void DistributionListWidget::contactsSelectionChanged()
 {
-  mAddContactButton->setEnabled( addresseesSelected() && mNameCombo->count() > 0 );
+  mAddContactButton->setEnabled( contactsSelected() && mNameCombo->count() > 0 );
 }
 
 QString DistributionListWidget::title() const

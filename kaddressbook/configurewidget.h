@@ -28,12 +28,14 @@
 
 #include <kconfig.h>
 
-class ViewManager;
+namespace KABC {
+class AddressBook;
+}
 
 class ConfigureWidget : public QWidget
 {
   public:
-    ConfigureWidget( ViewManager *vm, QWidget *parent, const char *name = 0 );
+    ConfigureWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
     ~ConfigureWidget();
 
     /**
@@ -54,12 +56,12 @@ class ConfigureWidget : public QWidget
 
 
     /**
-      Returns a pointer to the view manager of this widget.
+      Returns a pointer to the address book of this widget.
      */
-    ViewManager *viewManager();
+    KABC::AddressBook *addressBook() const;
 
   private:
-    ViewManager *mViewManager;
+    KABC::AddressBook *mAddressBook;
 };
 
 #endif

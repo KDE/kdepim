@@ -148,11 +148,11 @@ QWidget *KAddressBookView::viewWidget()
   return mViewWidget;
 }
 
-ViewConfigureWidget *ViewFactory::configureWidget( ViewManager *vm,
+ViewConfigureWidget *ViewFactory::configureWidget( KABC::AddressBook *ab,
                                                    QWidget *parent,
                                                    const char *name )
 {
-  return new ViewConfigureWidget( vm, parent, name );
+  return new ViewConfigureWidget( ab, parent, name );
 }
 
 #include "kaddressbookview.moc"

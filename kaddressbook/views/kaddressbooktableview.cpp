@@ -37,9 +37,9 @@
 class TableViewFactory : public ViewFactory
 {
   public:
-    KAddressBookView *view( ViewManager *vm, QWidget *parent, const char *name )
+    KAddressBookView *view( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
-      return new KAddressBookTableView( vm->addressBook(), parent, name );
+      return new KAddressBookTableView( ab, parent, name );
     }
 
     QString type() const { return "Table"; }
@@ -47,10 +47,10 @@ class TableViewFactory : public ViewFactory
     QString description() const { return i18n( "A listing of contacts in a table. Each cell of "
                                   "the table holds a field of the contact." ); }
 
-    ViewConfigureWidget *configureWidget( ViewManager *vm, QWidget *parent,
+    ViewConfigureWidget *configureWidget( KABC::AddressBook *ab, QWidget *parent,
                                           const char *name = 0 )
     {
-      return new ConfigureTableViewWidget( vm, parent, name );
+      return new ConfigureTableViewWidget( ab, parent, name );
     }
 };
 

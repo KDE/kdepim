@@ -29,40 +29,38 @@
 #include <kabc/addressbook.h>
 #include <klibloader.h>
 
-#include "viewmanager.h"
-
 class ConfigureWidget;
+class KABCore;
 
 class ExtensionWidget : public QWidget
 {
   Q_OBJECT
   
   public:
-    ExtensionWidget( ViewManager *vm, QWidget *parent, const char *name = 0 );
+    ExtensionWidget( KABCore *core, QWidget *parent, const char *name = 0 );
     ~ExtensionWidget();
 
-    KABC::AddressBook *addressBook() const;
     /**
-      @return A pointer to the view manager
+      @return A pointer to the core object
     */
-    ViewManager *viewManager() const;
+    KABCore *core() const;
 
     /**
       Returns whether there are selected contacts in the view.
      */
-    bool addresseesSelected() const;
+    bool contactsSelected() const;
 
     /**
       Returns a list of contacts that are selected in the view.
       Use @ref addresseesSelected() to test if there exists selected
       contacts.
      */
-    KABC::Addressee::List selectedAddressees();
+    KABC::Addressee::List selectedContacts();
 
     /**
       This method is called whenever the selection in the view changed.
      */
-    virtual void addresseeSelectionChanged();
+    virtual void contactsSelectionChanged();
 
     /**
       This method should be reimplemented and return the i18ned title of this
@@ -76,16 +74,16 @@ class ExtensionWidget : public QWidget
     virtual QString identifier() const;
 
   signals:
-    void modified( KABC::Addressee::List );
+    void modified( const KABC::Addressee::List &list );
 
   private:
-    ViewManager *mViewManager;
+    KABCore *mCore;
 };
 
 class ExtensionFactory : public KLibFactory
 {
   public:
-    virtual ExtensionWidget *extension( ViewManager *vm, QWidget *parent,
+    virtual ExtensionWidget *extension( KABCore *core, QWidget *parent,
                                         const char *name = 0 ) = 0;
 
     virtual ConfigureWidget *configureWidget( QWidget *parent,

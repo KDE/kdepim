@@ -55,6 +55,7 @@
 #include "emaileditwidget.h"
 #include "geowidget.h"
 #include "imagewidget.h"
+#include "kabcore.h"
 #include "kabprefs.h"
 #include "keywidget.h"
 #include "nameeditdialog.h"
@@ -64,9 +65,10 @@
 
 #include "addresseeeditorwidget.h"
 
-AddresseeEditorWidget::AddresseeEditorWidget( ViewManager *vm, QWidget *parent, 
-                                              const char *name )
-  : ExtensionWidget( vm, parent, name )
+AddresseeEditorWidget::AddresseeEditorWidget( KABCore *core, bool isExtension,
+                                              QWidget *parent, const char *name )
+  : ExtensionWidget( core, parent, name ), mIsExtension( isExtension ),
+    mBlockSignals( false )
 {
   kdDebug(5720) << "AddresseeEditorWidget()" << endl;
 
@@ -85,9 +87,9 @@ AddresseeEditorWidget::~AddresseeEditorWidget()
   kdDebug(5720) << "~AddresseeEditorWidget()" << endl;
 }  
   
-void AddresseeEditorWidget::addresseeSelectionChanged()
+void AddresseeEditorWidget::contactsSelectionChanged()
 {
-  KABC::Addressee::List list = selectedAddressees();
+  KABC::Addressee::List list = selectedContacts();
 
   mAddressee = list[ 0 ];
   load();
@@ -452,6 +454,7 @@ void AddresseeEditorWidget::load()
   // CS: This doesn't seem to work.
   bool block = signalsBlocked();
   blockSignals( true ); 
+  mBlockSignals = true; // used for internal signal blocking
 
   mNameEdit->setText( mAddressee.assembledName() );
   
@@ -504,6 +507,7 @@ void AddresseeEditorWidget::load()
   mProfessionEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Profession" ) );
   
   blockSignals( block );
+  mBlockSignals = false;
 
   mDirty = false;
 }
@@ -708,7 +712,11 @@ void AddresseeEditorWidget::emitModified()
   mDirty = true;
 
   KABC::Addressee::List list;
-  list.append( mAddressee );
+
+  if ( mIsExtension && !mBlockSignals ) {
+    save();
+    list.append( mAddressee );
+  }
 
   emit modified( list );
 }
