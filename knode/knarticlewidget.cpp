@@ -25,6 +25,8 @@
 #include <qpainter.h>
 #include <qtimer.h>
 #include <qurl.h>
+#include <qbuffer.h>
+#include <qbitmap.h>
 
 #include <kprinter.h>
 #include <kiconloader.h>
@@ -39,6 +41,8 @@
 #include <kapplication.h>
 #include <kpgpblock.h>
 #include <kstringhandler.h>
+
+#include <libkdepim/kxface.h>
 
 #include "resource.h"
 #include "knarticlewidget.h"
@@ -58,6 +62,7 @@
 #include <kstandarddirs.h>
 #include <kbookmarkmanager.h>
 #include <kaddrbook.h>
+#include <ktempfile.h>
 
 #define PUP_OPEN    1000
 #define PUP_SAVE    2000
@@ -222,6 +227,10 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, KXMLGUIClient* guiC
   r_ot13=false;
   a_ctToggleRot13->setChecked(false);
   applyConfig();
+
+  t_mpFile = new KTempFile(locateLocal("tmp", "knode"), ".png");
+  t_mpFile->close();
+  t_mpFile->setAutoDelete(true);
 }
 
 
@@ -242,6 +251,7 @@ KNArticleWidget::~KNArticleWidget()
   delete t_imer;
   delete f_inddialog;
   delete u_mailtoPopup;
+  delete t_mpFile;
 }
 
 void KNArticleWidget::setText( const QString& text, const QString& context )
@@ -1073,6 +1083,22 @@ void KNArticleWidget::createHtmlPage()
 
   QString headerHtml;
   int headerLines=0;
+  int headerCols=3;
+
+  QString xfhead;
+  KMime::Headers::Base *temp = a_rticle->getHeaderByType("X-Face");
+  if (temp)
+    xfhead = temp->asUnicodeString();
+  QString xface = "";
+  if ( !xfhead.isEmpty() )
+  {
+    KPIM::KXFace xf;
+    xf.toBitmap(xfhead).convertToImage().save(t_mpFile->name(), "PNG");
+    xface = QString::fromLatin1(
+        "<td rowspan=\"4\" width=\"48\" height=\"48\"><img border=\"1\" src=\"%1\"></td>")
+        .arg(t_mpFile->name());
+    ++headerCols;
+  }
 
   if(a_ctToggleFullHdrs->isChecked()) {
     QCString head = a_rticle->head();
@@ -1083,9 +1109,11 @@ void KNArticleWidget::createHtmlPage()
       if (header) {
         if (headerLines > 0)
           headerHtml += "<tr>";
-        headerHtml+=QString("<td align=right><articlefont><b>%1</b></articlefont></td><td width=\"100%\"><articlefont>%2</articlefont></td></tr>")
+        headerHtml+=QString("<td align=right><articlefont><b>%1</b></articlefont></td><td width=\"100%\"><articlefont>%2</articlefont></td>%3</tr>")
                       .arg(toHtmlString(header->type())+":")
-                      .arg(toHtmlString(header->asUnicodeString(),true, false, false, true));
+                      .arg(toHtmlString(header->asUnicodeString(),true, false, false, true))
+                      .arg(xface);
+        xface = "";
         delete header;
         headerLines++;
       }
@@ -1122,7 +1150,8 @@ void KNArticleWidget::createHtmlPage()
       } else
         headerHtml+=toHtmlString(hb->asUnicodeString(),true, false, false, true);
 
-      headerHtml += dh->headerCloseTag()+"</articlefont></td></tr>";
+      headerHtml += dh->headerCloseTag()+"</articlefont></td>"+xface+"</tr>";
+      xface = "";
       headerLines++;
     }
   }
@@ -1135,8 +1164,8 @@ void KNArticleWidget::createHtmlPage()
     if (headerLines > 0) {
       html+=QString("<tr><td width=\"40\" bgcolor=\"%1\" rowspan=\"%2\"></td>"+headerHtml)
            .arg(app->headerDecoHexcode()).arg(headerLines);
-      html+=QString("<tr><td colspan=\"3\" bgcolor=\"%1\"><articlefont>")
-            .arg(app->headerDecoHexcode());
+      html+=QString("<tr><td colspan=\"%1\" bgcolor=\"%2\"><articlefont>")
+          .arg(headerCols).arg(app->headerDecoHexcode());
     } else {
       html+=QString("<tr><td bgcolor=\"%1\"><articlefont>")
           .arg(app->headerDecoHexcode());

@@ -30,6 +30,7 @@ class KActionCollection;
 class KToggleAction;
 class KSelectAction;
 class KPopupMenu;
+class KTempFile;
 
 class KNArticle;
 class KNArticleCollection;
@@ -208,6 +209,9 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
   protected:
     static QPtrList<KNArticleWidget> *i_nstances;
     static QPtrList<KNArticleWidget> *instances();
+
+  private:
+    KTempFile *t_mpFile;
 
 };
 
