@@ -14,6 +14,7 @@ Exec=kalarm -caption "%c" %i
 Icon=kalarm
 DocPath=kalarm/index.html
 GenericName=Reminder Message Scheduler
+GenericName[af]=herhindering boodskap skeduleerder
 GenericName[ar]=مجدول ومذكر رسائل
 GenericName[bs]=Zakazivanje podsjetnika
 GenericName[cs]=Plánovač alarmů a připomenutí

@@ -11,6 +11,7 @@ Name[zu]=Fakela uzwelo
 Exec=empath
 Icon=empath
 GenericName=Mail Client
+GenericName[af]=pos kliënt
 GenericName[ar]=البريد الألكتروني
 GenericName[az]=Poçt Alıcısı
 GenericName[be]=Паштовы кліент

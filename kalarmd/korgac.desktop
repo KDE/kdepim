@@ -45,6 +45,7 @@ Exec=korgac --miniicon korganizer
 Icon=korganizer
 Type=Application
 GenericName=KOrganizer alarm daemon client
+GenericName[af]=korganizer alarm bediener kliënt
 GenericName[ar]=عميل مراقب تنبيهات KOrganizer
 GenericName[bg]=КОрганайзер алармен клиент демон
 GenericName[bs]=Klijent KOrganizer/KAlarm alarm demona

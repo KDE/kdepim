@@ -5,6 +5,7 @@ Exec=kab_server --name %n --path %b
 Terminal=0
 BinaryPattern=kab_server
 GenericName=KDE Addressbook
+GenericName[af]=kde adresboek
 GenericName[ar]=دفتر عناوين كيدي
 GenericName[az]=KDE Ünvan dəftəri
 GenericName[be]=Адрасная кніга
