@@ -158,11 +158,6 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
     if ( !url.isLocalFile() )
       KIO::NetAccess::removeTempFile( fileName );
 
-    if ( addrList.count() > 0 ) {
-      QString text = i18n( "One contact had been imported successfully.", "%n contacts had been imported successfully.", addrList.count() );
-      KMessageBox::information( parentWidget(), text, QString::null, "successful_imported" );
-    }
-
   } else {
     QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>" );
     KMessageBox::error( parentWidget(), text.arg( url.url() ), caption );

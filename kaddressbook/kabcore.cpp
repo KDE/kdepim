@@ -636,6 +636,11 @@ void KABCore::addEmail( QString aStr )
   }
 }
 
+void KABCore::addVCard( const QString& fileName, bool showPreview )
+{
+  mXXPortManager->importVCard( KURL( fileName ), showPreview );
+}
+
 void KABCore::editContact( const QString &uid )
 {
   if ( mExtensionManager->isQuickEditVisible() )

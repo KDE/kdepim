@@ -21,12 +21,16 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <qlayout.h>
+
 #include <kabc/addressbook.h>
 #include <kabc/resource.h>
 #include <kdebug.h>
+#include <kdialogbase.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktrader.h>
+#include <libkdepim/addresseeview.h>
 
 #include "kabcore.h"
 #include "undocmds.h"
@@ -36,8 +40,17 @@
 
 KURL XXPortManager::importURL = KURL();
 
+
+class PreviewDialog : public KDialogBase
+{
+  public:
+    PreviewDialog( const KABC::Addressee &addr,
+                   QWidget *parent, const char *name = 0 );
+};
+
+
 XXPortManager::XXPortManager( KABCore *core, QObject *parent, const char *name )
-  : QObject( parent, name ), mCore( core )
+  : QObject( parent, name ), mCore( core ), mShowPreview( false )
 {
   loadPlugins();
 }
@@ -56,8 +69,15 @@ void XXPortManager::saveSettings()
 
 void XXPortManager::importVCard( const KURL &url )
 {
+  importVCard( url, false );
+}
+
+void XXPortManager::importVCard( const KURL &url, bool showPreview )
+{
   importURL = url;
+  mShowPreview = showPreview;
   slotImport( "vcard", "<empty>" );
+  mShowPreview = false;
   importURL = KURL();
 }
 
@@ -75,15 +95,22 @@ void XXPortManager::slotImport( const QString &identifier, const QString &data )
 
   KABC::AddresseeList list = obj->importContacts( data );
   KABC::AddresseeList::Iterator it;
+  bool imported = false;
   for ( it = list.begin(); it != list.end(); ++it ) {
+    if ( mShowPreview ) {
+      PreviewDialog dlg( *it, mCore );
+      if ( !dlg.exec() )
+        continue;
+    }
     (*it).setResource( resource );
     // We use a PwNewCommand so the user can undo it.
     PwNewCommand *command = new PwNewCommand( mCore->addressBook(), *it );
     UndoStack::instance()->push( command );
     RedoStack::instance()->clear();
+    imported = true;
   }
 
-  if ( list.count() > 0 )
+  if ( imported )
     emit modified();
 }
 
@@ -139,6 +166,23 @@ void XXPortManager::loadPlugins()
                this, SLOT( slotImport( const QString&, const QString& ) ) );
     }
   }
+}
+
+
+PreviewDialog::PreviewDialog( const KABC::Addressee &addr, QWidget *parent,
+                              const char *name )
+  : KDialogBase( Plain, i18n( "Contact Preview" ), Ok | Cancel, Ok, parent,
+                 name, true, true )
+{
+  QWidget *page = plainPage();
+  QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );
+  
+  KPIM::AddresseeView *view = new KPIM::AddresseeView( page );
+  view->setAddressee( addr );
+
+  layout->addWidget( view );
+
+  resize( 400, 300 );
 }
 
 #include "xxportmanager.moc"

@@ -86,6 +86,11 @@ void KAddressbookPart::addEmail( QString addr )
   mCore->addEmail( addr );
 }
 
+void KAddressbookPart::addVCard( const QString& fileName, bool showPreview )
+{
+  mCore->addVCard( fileName, showPreview );
+}
+
 ASYNC KAddressbookPart::showContactEditor( QString uid )
 {
   mCore->editContact( uid );

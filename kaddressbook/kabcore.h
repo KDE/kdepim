@@ -220,6 +220,7 @@ class KABCore : public QWidget
       DCOP METHODS.
      */
     void addEmail( QString addr );
+    void addVCard( const QString& fileName, bool showPreview );
     void newContact();
     QString getNameByPhone( const QString& phone );
     /**

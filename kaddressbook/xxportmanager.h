@@ -48,6 +48,7 @@ class XXPortManager : public QObject
 
   public slots:
     void importVCard( const KURL &url );
+    void importVCard( const KURL &url, bool showPreview );
   
   signals:
     void modified();
@@ -62,6 +63,7 @@ class XXPortManager : public QObject
     QDict<XXPortObject> mXXPortObjects;
 
     KABCore *mCore;
+    bool mShowPreview;
 };
 
 #endif
