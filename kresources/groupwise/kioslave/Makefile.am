@@ -6,7 +6,7 @@ noinst_HEADERS = groupwise.h
 METASOURCES = AUTO
 
 kdelnkdir = $(kde_servicesdir)
-kdelnk_DATA = groupwise.protocol
+kdelnk_DATA = groupwise.protocol groupwises.protocol
 
 kde_module_LTLIBRARIES =  kio_groupwise.la
 

@@ -71,14 +71,15 @@ int kdemain( int argc, char **argv )
     exit( -1 );
   }
   
-  Groupwise slave( argv[2], argv[3] );
+  Groupwise slave( argv[1], argv[2], argv[3] );
   slave.dispatchLoop();
   
   return 0;
 }
 
-Groupwise::Groupwise( const QCString &pool, const QCString &app )
-: SlaveBase( "groupwise", pool, app )
+Groupwise::Groupwise( const QCString &protocol, const QCString &pool,
+  const QCString &app )
+  : SlaveBase( protocol, pool, app )
 {
 }
 
@@ -116,7 +117,7 @@ void Groupwise::get( const KURL &url )
 QString Groupwise::soapUrl( const KURL &url )
 {
   // FIXME: Get SSL from parameter
-  bool useSsl = false;
+  bool useSsl = url.protocol() == "groupwises";
 
   QString u;
   if ( useSsl ) u = "https";

@@ -1,0 +1,7 @@
+[Protocol]
+DocPath=kioslave/groupwise.html
+exec=kio_groupwise
+input=none
+output=filesystem
+protocol=groupwises
+reading=true
