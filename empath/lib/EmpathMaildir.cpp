@@ -98,7 +98,6 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
         QFileInfo fiIndex(path_ + "/.empathIndex");
         
         if (fiDir.lastModified() < fiIndex.lastModified()) {
-            empathDebug("sync: Not modified");
             empath->s_infoMessage(
                 i18n("Finished reading mailbox") + " " + url_.asString());
             return;

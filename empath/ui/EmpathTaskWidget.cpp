@@ -46,8 +46,8 @@ EmpathTaskWidget::EmpathTaskWidget(QWidget * parent, const char * name)
     px.resize(width(), 20);
 
     KPixmapEffect::gradient(px,
-        QApplication::palette().normal().background(),
         QApplication::palette().normal().base(),
+        QApplication::palette().normal().background(),
         KPixmapEffect::VerticalGradient);
     
     l = new QLabel(this);
@@ -83,8 +83,8 @@ EmpathTaskWidget::resizeEvent(QResizeEvent *)
     KPixmap px;
     px.resize(width(), 20);
     KPixmapEffect::gradient(px,
-        QApplication::palette().normal().background(),
         QApplication::palette().normal().base(),
+        QApplication::palette().normal().background(),
         KPixmapEffect::VerticalGradient);
     l->setPixmap(px);
     l->resize(width(), 20);

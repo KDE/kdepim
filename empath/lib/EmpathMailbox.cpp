@@ -130,14 +130,12 @@ EmpathMailbox::folder(const EmpathURL & url)
     
     EmpathFolderListIterator it(folderList_);
     for (; it.current(); ++it) {
-        empathDebug("Comparing \"" + it.current()->url().folderPath() +
-            "\" to \"" + fp + "\"");
         if (it.current()->url().folderPath() == fp) {
-            empathDebug("... found !");
             return it.current();
         }
     }
     
+    empathDebug("nothing found!");
     return 0;
 }
 
