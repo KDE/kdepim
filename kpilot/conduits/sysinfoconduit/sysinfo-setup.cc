@@ -32,6 +32,7 @@
 #include <qradiobutton.h>
 #include <qcheckbox.h>
 #include <qbuttongroup.h>
+#include <qlistview.h>
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kurlrequester.h>
@@ -40,6 +41,34 @@
 
 #include "sysinfo-factory.h"
 #include "sysinfo-setup.moc"
+
+typedef struct { const char *name; const char *key; } sysinfoEntry_t;
+
+const sysinfoEntry_t sysinfoEntries[] =
+{
+	{ I18N_NOOP("Hardware information"),
+		SysInfoConduitFactory::fHardwareInfo },
+	{ I18N_NOOP("User information"),
+		SysInfoConduitFactory::fUserInfo },
+	{ I18N_NOOP("Memory information"),
+		SysInfoConduitFactory::fMemoryInfo },
+	{ I18N_NOOP("Storage info (SD card, memory stick, ...)"),
+		SysInfoConduitFactory::fStorageInfo },
+	{ I18N_NOOP("List of databases on handheld (takes long!)"),
+		SysInfoConduitFactory::fDBList },
+	{ I18N_NOOP("Number of addresses, todos, events and memos"),
+		SysInfoConduitFactory::fRecordNumber },
+	{ I18N_NOOP("Synchronization information"),
+		SysInfoConduitFactory::fSyncInfo },
+	{ I18N_NOOP("Version of KPilot, pilot-link and KDE"),
+		SysInfoConduitFactory::fKDEVersion },
+	{ I18N_NOOP("PalmOS version"),
+		SysInfoConduitFactory::fPalmOSVersion },
+	{ I18N_NOOP("Debug information (for KPilot developers)"),
+		SysInfoConduitFactory::fDebugInfo },
+	{ 0L,0L }
+} ;
+
 
 SysInfoWidgetConfig::SysInfoWidgetConfig(QWidget *w, const char *n) :
 	ConduitConfigBase(w,n),
@@ -60,26 +89,16 @@ void SysInfoWidgetConfig::commit(KConfig *fConfig)
 		fConfigWidget->fTemplateFile->url());
 	fConfig->writeEntry(SysInfoConduitFactory::fOutputType,
 		fConfigWidget->fOutputType->id(fConfigWidget->fOutputType->selected()));
-	fConfig->writeEntry(SysInfoConduitFactory::fHardwareInfo,
-		fConfigWidget->fHardwareInfo->isChecked());
-	fConfig->writeEntry(SysInfoConduitFactory::fUserInfo,
-		fConfigWidget->fUserInfo->isChecked());
-	fConfig->writeEntry(SysInfoConduitFactory::fMemoryInfo,
-		fConfigWidget->fMemoryInfo->isChecked());
-	fConfig->writeEntry(SysInfoConduitFactory::fStorageInfo,
-		fConfigWidget->fStorageInfo->isChecked());
-	fConfig->writeEntry(SysInfoConduitFactory::fDBList,
-		fConfigWidget->fDBList->isChecked());
-	fConfig->writeEntry(SysInfoConduitFactory::fRecordNumber,
-		fConfigWidget->fRecordNumber->isChecked());
-	fConfig->writeEntry(SysInfoConduitFactory::fSyncInfo,
-		fConfigWidget->fSyncInfo->isChecked());
-	fConfig->writeEntry(SysInfoConduitFactory::fKDEVersion,
-		fConfigWidget->fKDEVersion->isChecked());
-	fConfig->writeEntry(SysInfoConduitFactory::fPalmOSVersion,
-		fConfigWidget->fPalmOSVersion->isChecked());
-	fConfig->writeEntry(SysInfoConduitFactory::fDebugInfo,
-		fConfigWidget->fDebugInfo->isChecked());
+
+	QListViewItem *i = fConfigWidget->fPartsList->firstChild();
+	QCheckListItem *ci = dynamic_cast<QCheckListItem *>(i);
+
+	while(ci)
+	{
+		fConfig->writeEntry(ci->text(1),ci->isOn());
+		i=i->nextSibling();
+		ci = dynamic_cast<QCheckListItem *>(i);
+	}
 }
 
 void SysInfoWidgetConfig::load(KConfig *fConfig)
@@ -89,16 +108,16 @@ void SysInfoWidgetConfig::load(KConfig *fConfig)
 	fConfigWidget->fOutputFile->setURL(fConfig->readEntry(SysInfoConduitFactory::fOutputFile));
 	fConfigWidget->fTemplateFile->setURL(fConfig->readEntry(SysInfoConduitFactory::fTemplateFile));
 	fConfigWidget->fOutputType->setButton(fConfig->readNumEntry(SysInfoConduitFactory::fOutputType, 0));
-	fConfigWidget->fHardwareInfo->setChecked(fConfig->readBoolEntry(SysInfoConduitFactory::fHardwareInfo, true));
-	fConfigWidget->fUserInfo->setChecked(fConfig->readBoolEntry(SysInfoConduitFactory::fUserInfo, true));
-	fConfigWidget->fMemoryInfo->setChecked(fConfig->readBoolEntry(SysInfoConduitFactory::fMemoryInfo, true));
-	fConfigWidget->fStorageInfo->setChecked(fConfig->readBoolEntry(SysInfoConduitFactory::fStorageInfo, true));
-	fConfigWidget->fDBList->setChecked(fConfig->readBoolEntry(SysInfoConduitFactory::fDBList, true));
-	fConfigWidget->fRecordNumber->setChecked(fConfig->readBoolEntry(SysInfoConduitFactory::fRecordNumber, true));
-	fConfigWidget->fSyncInfo->setChecked(fConfig->readBoolEntry(SysInfoConduitFactory::fSyncInfo, true));
-	fConfigWidget->fKDEVersion->setChecked(fConfig->readBoolEntry(SysInfoConduitFactory::fKDEVersion, true));
-	fConfigWidget->fPalmOSVersion->setChecked(fConfig->readBoolEntry(SysInfoConduitFactory::fPalmOSVersion, true));
-	fConfigWidget->fDebugInfo->setChecked(fConfig->readBoolEntry(SysInfoConduitFactory::fDebugInfo, true));
+
+	const sysinfoEntry_t *p = sysinfoEntries;
+	QCheckListItem *i = 0L;
+	while (p && p->name)
+	{
+		i = new QCheckListItem(fConfigWidget->fPartsList,i18n(p->name),QCheckListItem::CheckBox);
+		i->setOn(fConfig->readBoolEntry(p->key,false));
+		i->setText(1,QString::fromLatin1(p->key));
+		p++;
+	}
 }
 
 SysInfoWidgetSetup::SysInfoWidgetSetup(QWidget *w, const char *n,

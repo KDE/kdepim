@@ -10,7 +10,7 @@
             <x>0</x>
             <y>0</y>
             <width>330</width>
-            <height>315</height>
+            <height>200</height>
         </rect>
     </property>
     <property name="caption">
@@ -131,91 +131,11 @@
                 <attribute name="title">
                     <string>Parts included</string>
                 </attribute>
-                <vbox>
+                <grid>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QCheckBox">
-                        <property name="name">
-                            <cstring>fHardwareInfo</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Hardware information</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox">
-                        <property name="name">
-                            <cstring>fUserInfo</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;User information</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox">
-                        <property name="name">
-                            <cstring>fMemoryInfo</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Memory information</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox">
-                        <property name="name">
-                            <cstring>fStorageInfo</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Storage info (SD card, memory stick, ...)</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox">
-                        <property name="name">
-                            <cstring>fDBList</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;List of databases on handheld (takes long!)</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox">
-                        <property name="name">
-                            <cstring>fRecordNumber</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Number of addresses, todos, events and memos</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox">
-                        <property name="name">
-                            <cstring>fSyncInfo</cstring>
-                        </property>
-                        <property name="text">
-                            <string>S&amp;ynchronization information</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox">
-                        <property name="name">
-                            <cstring>fKDEVersion</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Version of &amp;KPilot, pilot-link and KDE</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox">
-                        <property name="name">
-                            <cstring>fPalmOSVersion</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;PalmOS version</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox">
-                        <property name="name">
-                            <cstring>fDebugInfo</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Debug information (for KPilot developers)</string>
-                        </property>
-                    </widget>
-                    <spacer>
+                    <spacer row="1" column="0">
                         <property name="name">
                             <cstring>spacer4</cstring>
                         </property>
@@ -228,11 +148,27 @@
                         <property name="sizeHint">
                             <size>
                                 <width>21</width>
-                                <height>101</height>
+                                <height>20</height>
                             </size>
                         </property>
                     </spacer>
-                </vbox>
+                    <widget class="QListView" row="0" column="0">
+                        <column>
+                            <property name="text">
+                                <string>Output Type</string>
+                            </property>
+                            <property name="clickable">
+                                <bool>true</bool>
+                            </property>
+                            <property name="resizable">
+                                <bool>true</bool>
+                            </property>
+                        </column>
+                        <property name="name">
+                            <cstring>fPartsList</cstring>
+                        </property>
+                    </widget>
+                </grid>
             </widget>
         </widget>
     </grid>
