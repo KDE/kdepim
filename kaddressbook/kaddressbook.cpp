@@ -333,6 +333,9 @@ void KAddressBook::importVCard( const QString &file, bool showDialog )
       ok = converter.vCardToAddressee( data, a, KABC::VCardConverter::v3_0 );
     } else if ( data.contains( "VERSION:2.1" ) ) {
       ok = converter.vCardToAddressee( data, a, KABC::VCardConverter::v2_1 );
+    } else {
+      KMessageBox::sorry( this, i18n( "Not supported vCard version!" ) );
+      return;
     }
 
     if ( !a.isEmpty() && ok ) {
