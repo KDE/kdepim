@@ -933,7 +933,7 @@ class PrivacyWidget : public BaseWidget {
   Q_OBJECT
  
   public:
-    PrivacyWidget(Privacy *p, QWidget *p=0, const char *n=0);
+    PrivacyWidget(Privacy *p, QWidget *_p=0, const char *n=0);
     ~PrivacyWidget();
     void apply();   // overrides BaseWidget::apply()
  
