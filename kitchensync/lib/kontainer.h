@@ -9,14 +9,16 @@ class Kontainer {
 public:
 	/**
 	 * Convinience typedef
-     */
-	typedef QValueList<Kontainer> List;
-	
-	friend bool operator== ( const Kontainer &a ,  const Kontainer &b );
+         */
+    typedef QValueList<Kontainer> ValueList;
+
+    friend bool operator== ( const Kontainer &a ,  const Kontainer &b );
     Kontainer(const QString& = QString::null,
               const QString& = QString::null );
     Kontainer(const Kontainer & );
+
     ~Kontainer();
+
     QString first()const;
     QString second()const;
     Kontainer &operator=( const Kontainer& );

@@ -1,16 +1,13 @@
-#SUBDIRS = test
+INCLUDES = -I$(top_srcdir)/libkcal $(all_includes)
 
-lib_LTLIBRARIES= libksyncentries.la
+lib_LTLIBRARIES   = libksync.la
+libksync_la_LDFLAGS =  $(all_libraries) -no-undefined -version-info 0:0:0 -module
+libksync_la_LIBADD  = $(top_builddir)/libkcal/libkcal.la -lkabc $(LIB_QT)
 
-INCLUDES = -I$(top_srcdir) $(all_includes)
-
-libksyncentries_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -version-info 0:0 -no-undefined
-libksyncentries_la_SOURCES = kontainer.cc kunknownsyncentry.cpp ksyncentry.cpp kalendarsyncentry.cpp kaddressbooksyncentry.cpp opiedesktopsyncentry.cpp
-libksyncentries_la_LIBADD = $(LIB_QT)  $(top_builddir)/libkcal/libkcal.la -lkabc
-
-#servicesdir = $(kde_servicesdir)/kded
-#services_DATA = ksharedfile.desktop
+libksync_la_SOURCES = \
+  syncer.cpp syncui.cpp syncuikde.cpp kontainer.cpp \
+  syncalgorithm.cpp standardsync.cpp \
+  addressbooksyncee.cpp
+ 
 
 METASOURCES = AUTO
-
-include_HEADERS = kontainer.h ksyncentry.h kunknownsyncentry.h kalendarsyncentry.h kaddressbooksyncentry.h opiedesktopsyncentry.h

@@ -31,7 +31,9 @@
  *
  */
 
-class KAddressbookSyncEntry : public KSyncEntry{
+namespace KSync {
+
+class KAddressbookSyncEntry : public SyncEntry{
  public:
     KAddressbookSyncEntry();
     KAddressbookSyncEntry(KABC::AddressBook * );
@@ -79,7 +81,7 @@ class KAddressbookSyncEntry : public KSyncEntry{
     QString m_oldId;
     QString m_time;
 };
-
+};
 #endif
 
 
