@@ -456,7 +456,7 @@ bool KNotesAction::syncMemoToKNotes()
 	{
 		return true;
 	}
-	
+
 	PilotMemo *memo = new PilotMemo(rec);
 	NoteAndMemo m = NoteAndMemo::findMemo(fP->fIdList,memo->id());
 
@@ -466,18 +466,32 @@ bool KNotesAction::syncMemoToKNotes()
 		// has changed on the Pilot.
 		//
 		//
-		fP->fKNotes->setName(m.note(),memo->shortTitle());
-		fP->fKNotes->setText(m.note(),memo->text());
+		if (memo->isDeleted())
+		{
+			fP->fKNotes->killNote(m.note());
+		}
+		else
+		{
+			fP->fKNotes->setName(m.note(),memo->shortTitle());
+			fP->fKNotes->setText(m.note(),memo->text());
+		}
 	}
 	else
 	{
-		int i = fP->fKNotes->newNote(memo->shortTitle(),memo->text());
-		fP->fIdList.append(NoteAndMemo(i,memo->id()));
+		if (memo->isDeleted())
+		{
+			// Do nothing, it's new and deleted at the same time
+		}
+		else
+		{
+			int i = fP->fKNotes->newNote(memo->shortTitle(),memo->text());
+			fP->fIdList.append(NoteAndMemo(i,memo->id()));
+		}
 	}
 
 	if (memo) delete memo;
 	if (rec) delete rec;
-	
+
 	return false;
 }
 
@@ -491,6 +505,18 @@ void KNotesAction::cleanupMemos()
 
 	if (fConfig)
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname 
+			<< ": Writing "
+			<< fP->fIdList.count()
+			<< " pairs to the config file."
+			<< endl;
+		DEBUGCONDUIT << fname
+			<< ": The config file is read-only: "
+			<< fConfig->isReadOnly()
+			<< endl;
+#endif
+
 		KConfigGroupSaver g(fConfig,KNotesConduitFactory::group);
 
 		QValueList<int> notes;
@@ -510,6 +536,8 @@ void KNotesAction::cleanupMemos()
 	}
 
 	fStatus=Done;
+	fDatabase->cleanup();
+	fDatabase->resetSyncFlags();
 }
 
 
@@ -530,6 +558,9 @@ void KNotesAction::cleanupMemos()
 
 
 // $Log$
+// Revision 1.10  2002/05/19 15:01:49  adridg
+// Patches for the KNotes conduit
+//
 // Revision 1.9  2002/05/15 17:15:33  gioele
 // kapp.h -> kapplication.h
 // I have removed KDE_VERSION checks because all that files included "options.h"
