@@ -183,6 +183,10 @@ KNConfig::Appearance::Appearance()
   QColor defCol=kapp->palette().active().base();
   c_olors[background]=c->readColorEntry("backgroundColor",&defCol);
   c_olorNames[background]=i18n("Background");
+  
+  defCol=KGlobalSettings::alternateBackgroundColor();
+  c_olors[alternateBackground]=c->readColorEntry("alternateBackgroundColor",&defCol);
+  c_olorNames[alternateBackground]=i18n("Alternate Background");
 
   defCol=kapp->palette().active().background();
   c_olors[header]=c->readColorEntry("headerColor",&defCol);
@@ -289,6 +293,7 @@ void KNConfig::Appearance::save()
 
   c->writeEntry("customColors", u_seColors);
   c->writeEntry("backgroundColor", c_olors[background]);
+  c->writeEntry("alternateBackgroundColor", c_olors[alternateBackground]);
   c->writeEntry("headerColor", c_olors[header]);
   c->writeEntry("textColor", c_olors[normalText]);
   c->writeEntry("quote1Color", c_olors[quoted1]);
@@ -319,6 +324,15 @@ QColor KNConfig::Appearance::backgroundColor()
     return c_olors[background];
   else
     return kapp->palette().active().base();
+}
+
+
+QColor KNConfig::Appearance::alternateBackgroundColor()
+{
+  if(u_seColors)
+    return c_olors[alternateBackground];
+  else
+    return KGlobalSettings::alternateBackgroundColor();
 }
 
 
@@ -492,6 +506,9 @@ QColor KNConfig::Appearance::defaultColor(int i)
     case background:
       return kapp->palette().active().base();
     break;
+    
+    case alternateBackground:
+      return KGlobalSettings::alternateBackgroundColor();
 
     case header:
       return kapp->palette().active().background();

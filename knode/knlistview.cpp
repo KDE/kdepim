@@ -310,6 +310,15 @@ void KNListView::slotSizeChanged(int section, int, int newSize)
   viewport()->repaint( header()->sectionPos(section), 0, newSize, visibleHeight(), false);
 }
 
+bool KNListView::event( QEvent *e )
+{
+  // we don't want to have the alternate list background restored
+  // to the system defaults!
+  if (e->type() == QEvent::ApplicationPaletteChange)
+    return QListView::event(e);
+  else
+    return KListView::event(e);
+}
 
 void KNListView::contentsMousePressEvent(QMouseEvent *e)
 {

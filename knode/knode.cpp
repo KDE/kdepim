@@ -526,10 +526,11 @@ void KNMainWindow::configChanged()
 
   QPalette p = palette();
   p.setColor(QColorGroup::Base, app->backgroundColor());
-  p.setColor(QColorGroup::Text, app->textColor());
+  p.setColor(QColorGroup::Text, app->textColor());  
   c_olView->setPalette(p);
-  c_olView->setAlternateBackground(app->backgroundColor());
+  c_olView->setAlternateBackground(app->backgroundColor());  
   h_drView->setPalette(p);
+  h_drView->setAlternateBackground(app->alternateBackgroundColor());  
 
   if (knGlobals.cfgManager->readNewsGeneral()->showScore()) {
     if (!h_drView->header()->isResizeEnabled(2)) {
@@ -550,7 +551,7 @@ void KNMainWindow::configChanged()
     h_drView->header()->setResizeEnabled(false,3);
   }
 
-  a_rtManager->updateListViewItems();
+  a_rtManager->updateListViewItems();  
 }
 
 

@@ -304,7 +304,7 @@ Q_OBJECT
 
 class Appearance : public Base {
 
-#define COL_CNT 13
+#define COL_CNT 14
 #define FNT_CNT 5
 #define HEX_CNT 4
 #define ICON_CNT 18
@@ -312,9 +312,9 @@ class Appearance : public Base {
   friend class AppearanceWidget;
 
   public:
-    enum ColorIndex   { background=0, header=1, normalText=2, quoted1=3, quoted2=4,
-                        quoted3=5, url=6, unreadThread=7, readThread=8, unreadArticle=9,
-                        readArticle=10, activeItem=11, selectedItem=12 };
+    enum ColorIndex   { background=0, alternateBackground=1, header=2, normalText=3, quoted1=4,
+                        quoted2=5, quoted3=6, url=7, unreadThread=8, readThread=9,
+                        unreadArticle=10, readArticle=11, activeItem=12, selectedItem=13 };
 
     enum HexIndex     { quoted1Hex=0, quoted2Hex=1, quoted3Hex=2, headerHex=3 };
 
@@ -332,6 +332,7 @@ class Appearance : public Base {
     void save();
 
     QColor backgroundColor();
+    QColor alternateBackgroundColor();
     QColor textColor();
     QColor quoteColor1();
     QColor quoteColor2();

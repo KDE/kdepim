@@ -92,6 +92,11 @@ class KNListView : public KListView  {
 
   protected:
     void activeRemoved()            { a_ctiveItem = 0; }
+    /**
+     * Reimplemented to avoid that KListview reloads the alternate 
+     * background on palette changes. ;-)     
+     */
+    virtual bool event(QEvent *e);
     void contentsMousePressEvent(QMouseEvent *e);
     void contentsMouseDoubleClickEvent(QMouseEvent *e);
     void keyPressEvent(QKeyEvent *e);
