@@ -159,6 +159,19 @@ public:
   /**
    * Even more convenient, but also a bit slower and more memory
    * intensive, since it allocates storage for the worst case and then
+   * shrinks the result QCString to the actual size again.
+   *
+   * For use with small @p src.
+   *
+   * This method only works for codecs whose output is in the 8bit
+   * domain (ie. not in the binary domain). Codecs that do not fall
+   * into this category will return a null QCString.
+   **/
+  virtual QCString encodeToQCString( const QByteArray & src, bool withCRLF=false ) const;
+
+  /**
+   * Even more convenient, but also a bit slower and more memory
+   * intensive, since it allocates storage for the worst case and then
    * shrinks the result QByteArray to the actual size again.
    *
    * For use with small @p src.

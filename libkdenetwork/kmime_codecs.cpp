@@ -136,6 +136,28 @@ QByteArray Codec::encode( const QByteArray & src, bool withCRLF ) const
   return result;
 }
 
+QCString Codec::encodeToQCString( const QByteArray & src, bool withCRLF ) const
+{
+  // allocate buffer for the worst case (remember to add one for the trailing NUL)
+  QCString result( maxEncodedSizeFor( src.size(), withCRLF ) + 1 );
+
+  // set up iterators:
+  QByteArray::ConstIterator iit = src.begin();
+  QByteArray::ConstIterator iend = src.end();
+  QByteArray::Iterator oit = result.begin();
+  QByteArray::ConstIterator oend = result.end() - 1;
+
+  // encode
+  if ( !encode( iit, iend, oit, oend, withCRLF ) )
+    kdFatal() << name() << " codec lies about it's mEncodedSizeFor()"
+	      << endl;
+
+  // shrink result to actual size:
+  result.truncate( oit - result.begin() );
+
+  return result;
+}
+
 QByteArray Codec::decode( const QByteArray & src, bool withCRLF ) const
 {
   // allocate buffer for the worst case:
