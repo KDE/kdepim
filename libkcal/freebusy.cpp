@@ -196,7 +196,7 @@ void FreeBusy::sortList()
       }
     }
     //Move tmpPeriod to sortedList
-    Period tmpPeriod( (*earlyPeriod).start(), (*earlyPeriod).end() );
+    Period tmpPeriod = (*earlyPeriod);
     sortedList.append( tmpPeriod );
     mBusyPeriods.remove( earlyPeriod );
   }
@@ -210,3 +210,12 @@ void FreeBusy::addPeriod(const QDateTime &start, const QDateTime &end)
 
   sortList();
 }
+
+void FreeBusy::addPeriod( const QDateTime &start, const Duration &dur )
+{
+  Period p(start, dur);
+  mBusyPeriods.append( p );
+
+  sortList();
+}
+

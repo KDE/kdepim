@@ -54,6 +54,7 @@ class FreeBusy : public IncidenceBase
     QValueList<Period> busyPeriods() const;
 
     void addPeriod( const QDateTime &start, const QDateTime &end );
+    void addPeriod( const QDateTime &start, const Duration &dur );
     void sortList();
     
   private:
