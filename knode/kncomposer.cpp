@@ -2109,49 +2109,61 @@ void KNComposer::Editor::dropEvent(QDropEvent *ev)
 
 void KNComposer::Editor::keyPressEvent ( QKeyEvent *e)
 {
-    if ( e->key()==Key_Return )
-    {
+    if( e->key() == Key_Return ) {
         int line, col;
-        bool quote =false;
-        getCursorPosition(&line,&col);
-        QString lineText = text(line);
-        QString simplified = lineText;
-        simplified = simplified.replace( QRegExp( "\\s" ), "" ).replace( "|", ">" );
-        if ( simplified.at(0).isSpace() ||simplified.at(0)=='|' || simplified.at(0)=='>')
-            quote = true;
-        if ( quote )
-        {
-            unsigned int i = 0;
-            for ( i = 0; i < lineText.length(); i ++ )
-            {
-                if (!( lineText.at(i).isSpace() || lineText.at(i)=='|' || lineText.at(i)=='>'))
+        getCursorPosition( &line, &col );
+        QString lineText = text( line );
+        // returns line with additional trailing space (bug in Qt?), cut it off
+        lineText.truncate( lineText.length() - 1 );
+        // special treatment of quoted lines only if the cursor is neither at
+        // the begin nor at the end of the line
+        if( ( col > 0 ) && ( col < int( lineText.length() ) ) ) {
+            bool isQuotedLine = false;
+            uint bot = 0; // bot = begin of text after quote indicators
+            while( bot < lineText.length() ) {
+                if( ( lineText[bot] == '>' ) || ( lineText[bot] == '|' ) ) {
+                    isQuotedLine = true;
+                    ++bot;
+                }
+                else if( lineText[bot].isSpace() ) {
+                    ++bot;
+                }
+                else {
                     break;
+                }
             }
 
-            //execute kedit::keyPressevent
-            KEdit::keyPressEvent ( e);
+            KEdit::keyPressEvent( e );
 
-
-            //insert quotes when we found quote before end of line
-            // quote + text
-            if ( i != lineText.length())
-            {
-                insertAt( lineText.left( i ) , line+1, 0 );
-                setCursorPosition( line+1 , i );
-            }
-            else
-            {
-                //typographic => remove previous quote when we have 2 enter.
-                removeParagraph( line );
-                insertParagraph( "", line );
-                setCursorPosition( line+1 , 0 );
+            // duplicate quote indicators of the previous line before the new
+            // line if the line actually contained text (apart from the quote
+            // indicators) and the cursor is behind the quote indicators
+            if( isQuotedLine
+                && ( bot != lineText.length() )
+                && ( col >= int( bot ) ) ) {
+                QString newLine = text( line + 1 );
+                // remove leading white space from the new line and instead
+                // add the quote indicators of the previous line
+                unsigned int leadingWhiteSpaceCount = 0;
+                while( ( leadingWhiteSpaceCount < newLine.length() )
+                       && newLine[leadingWhiteSpaceCount].isSpace() ) {
+                    ++leadingWhiteSpaceCount;
+                }
+                newLine = newLine.replace( 0, leadingWhiteSpaceCount,
+                                           lineText.left( bot ) );
+                removeParagraph( line + 1 );
+                insertParagraph( newLine, line + 1 );
+                // place the cursor at the begin of the new line since
+                // we assume that the user split the quoted line in order
+                // to add a comment to the first part of the quoted line
+                setCursorPosition( line + 1 , 0 );
             }
         }
         else
-            KEdit::keyPressEvent ( e);
+            KEdit::keyPressEvent( e );
     }
     else
-        KEdit::keyPressEvent ( e);
+        KEdit::keyPressEvent( e );
 }
 
 
