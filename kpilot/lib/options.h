@@ -128,7 +128,7 @@ inline std::ostream& operator <<(std::ostream &o, const QCString &s) { if (s.isE
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 #endif
 
-#define KPILOT_VERSION	"4.4.6 (Kiel)"
+#define KPILOT_VERSION	"4.4.7 (baby)"
 
 // * KPilot debugging code looks like:
 //
