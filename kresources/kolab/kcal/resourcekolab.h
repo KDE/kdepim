@@ -128,6 +128,7 @@ protected slots:
    void slotEmitResourceChanged();
 
 private:
+  void removeIncidences( const QCString& incidenceType );
   void resolveConflict( KCal::Incidence*, const QString& subresource, Q_UINT32 sernum );
   void addIncidence( const char* mimetype, const QString& xml,
                      const QString& subResource, Q_UINT32 sernum );
