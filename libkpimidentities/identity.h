@@ -135,11 +135,11 @@ public:
 
 protected:
   /** Read configuration from config. Group must be preset (or use
-      @ref KConfigGroup). Called from @ref IdentityManager. */
+      @see KConfigGroup). Called from @see IdentityManager. */
   void readConfig( const KConfigBase * );
 
-  /** Write configuration to config. Group must be preset (or use @ref
-      KConfigGroup). Called from @ref IdentityManager. */
+  /** Write configuration to config. Group must be preset (or use @see
+      KConfigGroup). Called from @see IdentityManager. */
   void writeConfig( KConfigBase * ) const;
 
 public:
@@ -159,7 +159,7 @@ public:
 protected:
   /** Set whether this identity is the default identity. Since this
       affects all other identites, too (most notably, the old default
-      identity), only the @ref IdentityManager can change this.
+      identity), only the @see IdentityManager can change this.
       You should use
       <pre>
       kmkernel->identityManager()->setAsDefault( name_of_default )
@@ -204,7 +204,7 @@ public:
   Kleo::CryptoMessageFormat preferredCryptoMessageFormat() const { return mPreferredCryptoMessageFormat; }
   void setPreferredCryptoMessageFormat( Kleo::CryptoMessageFormat format ) { mPreferredCryptoMessageFormat = format; }
 
-  /** email address (without the user name - only name@host) */
+  /** email address (without the user name - only name\@host) */
   QString emailAddr() const { return mEmailAddr; }
   void setEmailAddr(const QString&);
 
