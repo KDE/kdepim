@@ -192,7 +192,7 @@ void LogWidget::addProgress(const QString &s,int i)
 
 	if ((i >= 0) && (i <= 100))
 	{
-		fProgress->setProgress(i);
+		fProgress->setValue(i);
 	}
 }
 
@@ -318,6 +318,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.12  2002/01/21 23:58:55  aseigo
+// KProgress updates
+//
 // Revision 1.11  2001/12/31 14:41:06  harald
 // Make it compile
 //
