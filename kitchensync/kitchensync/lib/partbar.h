@@ -79,6 +79,7 @@ class PartBarItem : public QListBoxPixmap
     QPixmap *m_Pixmap;
     ActionPart *m_Part;
     PartBar *m_Parents;
+    QPixmap mArrowPixmap;
 };
 
 

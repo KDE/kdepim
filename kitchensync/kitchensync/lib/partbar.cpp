@@ -23,6 +23,7 @@
 #include <qpainter.h>
 #include <qdrawutil.h>
 
+#include <kglobal.h>
 #include <kiconloader.h>
 #include <kdebug.h>
 
@@ -40,6 +41,8 @@ PartBarItem::PartBarItem( PartBar *parent, ActionPart *part )
   setCustomHighlighting( true );
   setText( part->title() );
   //tooltip(part->description() );
+
+  mArrowPixmap = KGlobal::iconLoader()->loadIcon( "1downarrow", KIcon::Small );
 }
 
 PartBarItem::~PartBarItem()
@@ -63,7 +66,9 @@ int PartBarItem::width( const QListBox *listbox) const
 int PartBarItem::height( const QListBox *listbox) const
 {
   int min = 0;
-  min = listbox->fontMetrics().lineSpacing() + pixmap()->height() + 6;
+  min = listbox->fontMetrics().lineSpacing() + pixmap()->height() + 
+        mArrowPixmap.height() + 10;
+
   return min;
 }
 
@@ -74,6 +79,12 @@ void PartBarItem::paint(QPainter *p)
   static const int margin = 3;
   int y = margin;
   const QPixmap *pm = pixmap();
+
+  int x = (w - mArrowPixmap.width()) / 2;
+  x = QMAX( x, margin );
+  p->drawPixmap( x, y, mArrowPixmap );
+
+  y += mArrowPixmap.height() + 2;
 
   if ( !pm->isNull() ) {
     int x = (w - pm->width()) / 2;
@@ -90,8 +101,9 @@ void PartBarItem::paint(QPainter *p)
   }
   // draw sunken
   if ( isCurrent() || isSelected() ) {
-    qDrawShadePanel( p, 1, 0, w -2, height(box),
-		     box->colorGroup(), true, 1, 0 );
+    int top = mArrowPixmap.height() + 2;
+    qDrawShadePanel( p, 1, top, w - 2, height( box ) - top,
+                     box->colorGroup(), true, 1, 0 );
   }
 }
 
