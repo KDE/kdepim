@@ -1,6 +1,5 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
  *
- *  This file is part of KMail, the KDE mail client.
  *  Copyright (c) 2001-2003 Carsten Pfeiffer <pfeiffer@kde.org>
  *  Copyright (c) 2003 Zack Rusin <zack@kde.org>
  *

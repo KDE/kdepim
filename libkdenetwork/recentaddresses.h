@@ -1,6 +1,5 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
  *
- *  This file is part of KMail, the KDE mail client.
  *  Copyright (c) 2001-2003 Carsten Pfeiffer <pfeiffer@kde.org>
  *  Copyright (c) 2003 Zack Rusin <zack@kde.org>
  *
@@ -28,8 +27,8 @@
  *  you do not wish to do so, delete this exception statement from
  *  your version.
  */
-#ifndef KMRECENTADDR_H
-#define KMRECENTADDR_H
+#ifndef RECENTADDRESSES_H
+#define RECENTADDRESSES_H
 
 #include <qstringlist.h>
 #include <kabc/addressee.h>
