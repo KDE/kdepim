@@ -160,6 +160,8 @@ public:
 				<< info.ID[i] << " <"
 				<< info.name[i] << ">" << endl;
 		}
+#else
+		Q_UNUSED(info);
 #endif
 	}
 };
