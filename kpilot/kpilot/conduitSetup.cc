@@ -297,78 +297,76 @@ CConduitSetup::slotOk()
 				<< endl;
 		}
 
-	KService::Ptr conduit = KService::serviceByName(iter);
-	if (!conduit)
-	{
-		kdDebug() << fname << ": No service associated with "
-			<< iter
-			<< endl;
-		continue;
-	}
-
-	if (debug_level & SYNC_TEDIOUS)
-	{
-		kdDebug() << fname << ": Got service." << endl ;
-		kdDebug() << fname << ": Current conduit service from "
-			<< (*conduit).desktopEntryPath()
-			<< " says exec="
-			<< (*conduit).exec()
-			<< endl;
-	}
-	QString currentConduit;
-	if (conduitPath.isNull())
-	{
-		currentConduit=KGlobal::dirs()->findResource("exe",
-			(*conduit).exec());
-		if (currentConduit.isNull())
+		KService::Ptr conduit = KService::serviceByName(iter);
+		if (!conduit)
 		{
-			currentConduit=(*conduit).exec();
+			kdDebug() << fname << ": No service associated with "
+				<< iter
+				<< endl;
+			continue;
+		}
+
+		if (debug_level & SYNC_TEDIOUS)
+		{
+			kdDebug() << fname << ": Got service." << endl ;
+			kdDebug() << fname << ": Current conduit service from "
+				<< (*conduit).desktopEntryPath()
+				<< " says exec="
+				<< (*conduit).exec()
+				<< endl;
+		}
+		QString currentConduit;
+		if (conduitPath.isNull())
+		{
+			currentConduit=KGlobal::dirs()->findResource("exe",
+				(*conduit).exec());
+			if (currentConduit.isNull())
+			{
+				currentConduit=(*conduit).exec();
+			}
+		}
+		else
+		{
+			currentConduit=conduitPath+'/'+ (*conduit).exec();
+		}
+		currentConduit+=" --info";
+		if (debug_level)
+		{
+			currentConduit+=" --debug ";
+			currentConduit+=QString().setNum(debug_level);
+		}
+		if (debug_level&SYNC_TEDIOUS)
+		{
+			kdDebug() << fname << ": Conduit startup command line is:\n"
+				<< fname << ": " << currentConduit << endl;
+		}
+
+	      len=0;
+	      conduitpipe = popen(currentConduit.latin1(), "r");
+	      if(conduitpipe)
+		{
+			len = fread(dbName, 1, 255, conduitpipe);
+		      pclose(conduitpipe);
+		}
+	      conduitpipe=0;
+	      dbName[len] = 0L;
+	      if (len == 0)
+		{
+		  QString tmpMessage;
+		  tmpMessage = i18n("The conduit %1 did not identify "
+					"what database it supports. "
+					"\nPlease check with the conduits "
+					"author to correct it.").arg(iter);
+
+		  KMessageBox::error(this, tmpMessage, i18n("Conduit error."));
+		}
+	      else
+	      {
+		config->writeEntry(dbName, (*conduit).desktopEntryName());
 		}
 	}
-	else
-	{
-		currentConduit=conduitPath+'/'+ (*conduit).exec();
-	}
-	currentConduit+=" --info";
-	if (debug_level)
-	{
-		currentConduit+=" --debug ";
-		currentConduit+=QString().setNum(debug_level);
-	}
-	if (debug_level&SYNC_TEDIOUS)
-	{
-		kdDebug() << fname << ": Conduit startup command line is:\n"
-			<< fname << ": " << currentConduit << endl;
-	}
-
-      len=0;
-      conduitpipe = popen(currentConduit.latin1(), "r");
-      if(conduitpipe)
-	{
-		len = fread(dbName, 1, 255, conduitpipe);
-	      pclose(conduitpipe);
-	}
-      conduitpipe=0;
-      dbName[len] = 0L;
-      if (len == 0)
-	{
-	  QString tmpMessage;
-	  tmpMessage = i18n("The conduit %1 did not identify "
-				"what database it supports. "
-				"\nPlease check with the conduits "
-				"author to correct it.").arg(iter);
-
-	  KMessageBox::error(this, tmpMessage, i18n("Conduit error."));
-	}
-      else
-      {
-	config->writeEntry(dbName, (*conduit).desktopEntryName());
-	}
-    }
-  config->sync();
-  delete config;
-// delete this;
-
+	config->sync();
+	delete config;
 	slotCancel();
 }
 
