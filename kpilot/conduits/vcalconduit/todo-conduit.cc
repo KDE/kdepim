@@ -149,8 +149,8 @@ FUNCTIONSETUP;
 	if (!reading)
 	{
 		reading=true;
-                fAllTodosIterator = fAllTodos.begin();
-                if ( fAllTodosIterator != fAllTodos.end() ) e=*fAllTodosIterator;
+		fAllTodosIterator = fAllTodos.begin();
+		if ( fAllTodosIterator != fAllTodos.end() ) e=*fAllTodosIterator;
 	}
 	else
 	{
@@ -159,15 +159,19 @@ FUNCTIONSETUP;
 	while (fAllTodosIterator != fAllTodos.end() &&
 		e && e->syncStatus()!=KCal::Incidence::SYNCMOD)
 	{
-		++fAllTodosIterator;
-		e=*fAllTodosIterator;
+		e = (++fAllTodosIterator != fAllTodos.end()) ? *fAllTodosIterator : 0L;
+
 #ifdef DEBUG
-if (e)
-DEBUGCONDUIT<< e->summary()<<" had SyncStatus="<<e->syncStatus()<<endl;
+	if(e)
+		DEBUGCONDUIT<< e->summary()<<" had SyncStatus="<<e->syncStatus()<<endl;
 #endif
+
 	}
-        if ( fAllTodosIterator == fAllTodos.end() ) return 0;
-	else return *fAllTodosIterator;
+
+	if ( fAllTodosIterator == fAllTodos.end() ) 
+		return 0;
+	else 
+		return *fAllTodosIterator;
 }
 
 
