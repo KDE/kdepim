@@ -119,10 +119,10 @@ EmpathEnvelopeWidget::_addHeader(RMM::RHeader & header)
     if (!headerSpecList_.isEmpty()) {
         QObject::connect(
             newHsw, SIGNAL(lineUp()),
-            headerSpecList_.getLast(), SLOT(setFocus()));
+            headerSpecList_.getLast(), SLOT(s_setFocus()));
         QObject::connect(
             headerSpecList_.getLast(), SIGNAL(lineDown()),
-            newHsw, SLOT(setFocus()));
+            newHsw, SLOT(s_setFocus()));
     }
     
     headerSpecList_.append(newHsw); 

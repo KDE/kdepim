@@ -56,10 +56,23 @@
 #include "EmpathConfigPOP3Dialog.h"
 
 EmpathUI::EmpathUI()
-    : QObject()
+    : QObject((QObject *)0L, "EmpathUI")
 {
-    _wizard();
+    // If no mailboxes are configured, then show the setup wizard.
+
+    KConfig * c(KGlobal::config());
     
+    using namespace EmpathConfig;
+    
+    c->setGroup(GROUP_GENERAL);
+    
+    QStringList l = c->readListEntry(GEN_MAILBOX_LIST);
+    
+    if (l.isEmpty()) {
+        EmpathSetupWizard wiz;
+        wiz.exec();
+    }
+
     _connectUp();
 
     EmpathMainWindow * w = new EmpathMainWindow;
@@ -69,6 +82,7 @@ EmpathUI::EmpathUI()
 
 EmpathUI::~EmpathUI()
 {
+    // Empty.
 }
 
     void    
@@ -84,7 +98,7 @@ EmpathUI::s_setup(Empath::SetupType t, QWidget * parent)
 
         case Empath::SetupDisplay:
             {
-                EmpathIdentitySettingsDialog d(parent);
+                EmpathDisplaySettingsDialog d(parent);
                 d.loadData();
                 d.exec();
             }
@@ -129,6 +143,12 @@ EmpathUI::s_setup(Empath::SetupType t, QWidget * parent)
                 d.exec();
             }
             break;
+
+        case Empath::SetupWizard:
+            {
+                EmpathSetupWizard wiz;
+                wiz.exec();
+            }
 
         default:
             empathDebug("Setup what ?");
@@ -221,23 +241,4 @@ EmpathUI::_connectUp()
         this,   SLOT(s_setup(Empath::SetupType, QWidget *)));
 }
 
-    void
-EmpathUI::_wizard()
-{
-    // If no mailboxes are configured, then show the setup wizard.
-
-    KConfig * c(KGlobal::config());
-    
-    using namespace EmpathConfig;
-    
-    c->setGroup(GROUP_GENERAL);
-    
-    QStringList l = c->readListEntry(GEN_MAILBOX_LIST);
-    
-    if (l.isEmpty()) {
-        EmpathSetupWizard wiz;
-        wiz.exec();
-    }
-}
- 
 // vim:ts=4:sw=4:tw=78

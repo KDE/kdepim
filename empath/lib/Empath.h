@@ -70,7 +70,8 @@ class Empath : public QObject
             SetupComposing,
             SetupSending,
             SetupAccounts,
-            SetupFilters
+            SetupFilters,
+            SetupWizard
         };
     
         /** 
@@ -466,7 +467,7 @@ class Empath : public QObject
          * review. In other words, bring up the settings dialog.
          * Usually connected to a slot in the UI module.
          */
-        void setup(SetupType t, QWidget *);
+        void setup(Empath::SetupType, QWidget *);
         /**
          * Signals that we want to see who's responsible for this stuff.
          * Usually connected to a slot in the UI module.

@@ -60,7 +60,6 @@ class EmpathUI : public QObject
     private:
 
         void _connectUp();
-        void _wizard();
 };
 
 #endif

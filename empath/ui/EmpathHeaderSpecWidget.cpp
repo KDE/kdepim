@@ -146,4 +146,10 @@ EmpathHeaderSpecWidget::keyPressEvent(QKeyEvent * e)
         }
 }
 
+    void
+EmpathHeaderSpecWidget::s_setFocus()
+{
+    headerBodyWidget_->setFocus();
+}
+
 // vim:ts=4:sw=4:tw=78

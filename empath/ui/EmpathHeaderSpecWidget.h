@@ -64,6 +64,10 @@ class EmpathHeaderSpecWidget : public QHBox
        
         void focusInEvent   (QFocusEvent *);
         void keyPressEvent  (QKeyEvent *);
+
+    protected slots:
+
+        void s_setFocus();   
         
     private:
 

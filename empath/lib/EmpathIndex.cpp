@@ -44,6 +44,7 @@ EmpathIndex::EmpathIndex()
         unreadCount_(0),
         initialised_(false)
 {
+    mtime_ = QDateTime::currentDateTime();
 }
 
 EmpathIndex::EmpathIndex(const EmpathURL & folder)
@@ -176,6 +177,7 @@ EmpathIndex::_open()
     
     count_ = unreadCount_ = 0;
 
+    mtime_ = dbf_->lastModified();
     return true;
 }
 
@@ -226,6 +228,7 @@ EmpathIndex::insert(const QString & key, EmpathIndexRecord & rec)
     if (!(rec.status() & RMM::Read))
         ++unreadCount_;
     
+    mtime_ = QDateTime::currentDateTime();
     return true;
 }
 
@@ -254,6 +257,7 @@ EmpathIndex::replace(const QString & key, EmpathIndexRecord & rec)
         return false;
     }
 
+    mtime_ = QDateTime::currentDateTime();
     return true;
 }
 
@@ -272,12 +276,15 @@ EmpathIndex::remove(const QString & key)
         // FIXME
      //   if (!(status & RMM::Read))
      //       --unreadCount_;
+        
+        mtime_ = QDateTime::currentDateTime();
     
     } else {
         empathDebug("Could not delete record");
     }
     
     return ok;
+    
 }
 
     void
@@ -291,6 +298,8 @@ EmpathIndex::clear()
     dbf_->clear();
 
     count_ = unreadCount_ = 0;
+    
+    mtime_ = QDateTime::currentDateTime();
 }
 
     void
@@ -311,12 +320,14 @@ EmpathIndex::setStatus(const QString & key, RMM::MessageStatus status)
     rec.setStatus(status);
 
     replace(key, rec);
+
+    mtime_ = QDateTime::currentDateTime();
 }
     
     QDateTime
 EmpathIndex::lastModified() const
 {
-    return dbf_->lastModified();
+    return mtime_;
 }	 
 
     bool

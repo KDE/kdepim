@@ -116,22 +116,27 @@ EmpathMailboxMaildir::_runJob(EmpathJobInfo & jobInfo)
 
                 EmpathMaildir * m = _box(jobInfo.from());
                 
-                if ((m == 0) || (jobInfo.IDList().count() == 0)) {
+                if (m == 0) {
+
+                    empathDebug("jobInfo.IDList().count() == 0 ?");
                     
-                    QStringList::ConstIterator it(jobInfo.IDList().begin());
+                    QStringList idList = jobInfo.IDList();
+
+                    QStringList::ConstIterator it;
                     
-                    for (; it != jobInfo.IDList().end(); ++it)
+                    for (it = idList.begin(); it != idList.end(); ++it)
                         jobInfo.setSuccess(*it, false);
                     
                     jobInfo.done(false);
 
                     return;
                 }
-                
+
                 jobInfo.setSuccessMap(
                     m->mark(jobInfo.IDList(), jobInfo.status()));
-
+                
                 jobInfo.done(true);
+
             }
             break;
 

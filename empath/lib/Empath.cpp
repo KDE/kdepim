@@ -77,7 +77,7 @@ Empath::shutdown()
 }
 
 Empath::Empath()
-    :   QObject(),
+    :   QObject((QObject *)0L, "Empath"),
         mailSender_(0),
         seq_(0)
 {

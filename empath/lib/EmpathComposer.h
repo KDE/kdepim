@@ -112,7 +112,7 @@ class EmpathComposer : public QObject
         
     protected slots:
 
-        void s_jobComplete(EmpathJobInfo &);
+        void s_jobComplete(EmpathJobInfo);
    
     private:
         

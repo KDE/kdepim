@@ -88,7 +88,6 @@ EmpathMessageViewWidget::s_jobComplete(EmpathJobInfo ji)
 {
     empathDebug("My id is: `view" + QString().setNum(id_) + "'");
 
-    empathDebug("Given id: " + ji.xinfo());
     if (!ji.success() || (ji.xinfo() != ("view" + QString().setNum(id_))))
         return;
 
