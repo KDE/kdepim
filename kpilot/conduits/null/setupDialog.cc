@@ -46,6 +46,11 @@
 #ifndef QLAYOUT_H
 #include <qlayout.h>
 #endif
+#ifndef QTOOLTIP_H
+#include <qtooltip.h>
+#endif
+
+
 #ifndef _KCONFIG_H
 #include <kconfig.h>
 #endif
@@ -79,15 +84,6 @@ NullOptions::NullOptions(QWidget *parent) :
 	KConfig& config=KPilotConfig::getConfig(NullGroup);
 
 	addPage(new NullPage(this,config));
-	/*
-	   addPage(new setupInfoPage(this,
-	     "NULL Conduit",
-	     "Adriaan de Groot",
-	     i18n("A totally useless conduit used "
-	          "as a programming example.\n"
-	          "You can attach it to databases you don't want "
-	          "to synchronize.")));
-	 */
 	addPage(new setupInfoPage(this));
 	setupDialog::setupWidget();
 }
@@ -97,13 +93,9 @@ int NullPage::commitChanges(KConfig& config)
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
-	if (debug_level)
-	{
-		kdDebug() << fname << ": Wrote null-conduit message:\n" <<
-			fname << ": " << textField->text() << endl;
-	}
-#endif
+	DEBUGCONDUIT << fname << ": Wrote null-conduit message:" << endl;
+	DEBUGCONDUIT << fname << ": " << textField->text() << endl;
+
 	config.writeEntry("Text", textField->text());
 
 	return 0;
@@ -128,20 +120,27 @@ NullPage::NullPage(setupDialog *parent, KConfig& config) :
 
 	grid->addMultiCellWidget(generalLabel,1,1,1,2);
 
-	textFieldLabel=new QLabel(i18n("Log message:"),this);
-	textFieldLabel->adjustSize();
-
+	textFieldLabel=new QLabel(i18n("&Log message:"),this);
 	textField=new QLineEdit(this);
-	textField->setText(config.readEntry("Text","NULL conduit was here!"));
-	textField->adjustSize();
+	textField->setText(config.readEntry("Text",
+		i18n("NULL conduit was here!")));
+	QToolTip::add(textField,
+		i18n("Enter a message here. This message will be entered into\n"
+		     "the Pilot's HotSync log when the NULL conduit runs."));
+	textFieldLabel->setBuddy(textField);
 
 	grid->addWidget(textFieldLabel,2,1);
 	grid->addWidget(textField,2,2);
 
-	dbLabel=new QLabel(i18n("Databases:"),this);
+	dbLabel=new QLabel(i18n("&Databases:"),this);
 	dbLabel->adjustSize();
 	dbField=new QLineEdit(this);
 	dbField->setText(config.readEntry("DB"));
+	QToolTip::add(dbField,
+		i18n("Enter a list of database names here. The NULL conduit\n"
+		     "will be run for each of these databases, effectively\n"
+		     "preventing them from being HotSynced."));
+	dbLabel->setBuddy(dbField);
 
 	grid->addWidget(dbLabel,3,1);
 	grid->addWidget(dbField,3,2);
@@ -151,6 +150,9 @@ NullPage::NullPage(setupDialog *parent, KConfig& config) :
 
 
 // $Log$
+// Revision 1.17  2001/04/16 13:36:03  adridg
+// Removed --enable-final borkage
+//
 // Revision 1.16  2001/04/01 17:31:11  adridg
 // --enable-final and #include fixes
 //

@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
 		KPILOT_VERSION);
 
 	a.addAuthor("Adriaan de Groot",
-		"NULL Conduit author",
+		I18N_NOOP("NULL Conduit author"),
 		"adridg@sci.kun.nl");
 
 	NullConduit conduit(a.getMode());
@@ -141,7 +141,7 @@ NullConduit::doSync()
 	QString m=config.readEntry("Text");
 	addSyncLogMessage(m.latin1());
 
-	kdDebug() << fname << ": Message from null-conduit:\n"
+	DEBUGCONDUIT << fname << ": Message from null-conduit:\n"
 		<< fname << ": " << m
 		<< endl;
 }
@@ -176,6 +176,9 @@ NullConduit::dbInfo()
 
 
 // $Log$
+// Revision 1.20  2001/04/16 13:36:03  adridg
+// Removed --enable-final borkage
+//
 // Revision 1.19  2001/04/01 17:31:11  adridg
 // --enable-final and #include fixes
 //
