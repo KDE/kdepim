@@ -118,7 +118,6 @@ TotalTimeLogEvent::TotalTimeLogEvent( Task *task, long total, long change)
 
 QString TotalTimeLogEvent::toXML()
 {
-        std::cout << "pre\n";
   return   QS("<new_total_time")
          + QS(" date=\"") + QString(eventTime.toString()) + QS("\"")
          + QS(" task=\"") + fullName + QS("\"")
