@@ -1,3 +1,30 @@
+KPilot Developer's notes for january 27th 2002
+==============================================
+
+Found my Pilot again, made tea, thought about Dag's and Neil's comments
+on ColdSync (I still believe that ColdSync has the drawback that it's not
+meant to be a library you can build on, it resembles the pilot-xfer tools
+much more than anything else). Grepped for dlp_ in the sources. They seem
+fairly isolated, which is good -- maybe we *can* move to some other Pilot
+access method.
+
+Looked at some old sources. *uuuuugly*. PilotRecord, PilotAppCategory,
+PilotTodoEntry, etc. could use a good dose of sanity.
+
+2002-01-21  Adriaan de Groot
+* conduits/vcalconduit/*
+  - Some serious rewriting going on.
+* kpilot/hotSync.cc
+  - Removed old KPilotLink code
+  - Moved calls from dlp_OpenConduit to KPilotDeviceLink::openConduit()
+* lib/syncAction.h lib/kpilotlink.{h,cc}
+  - Added openConduit to abstract the underlying lib interface more.
+* kpilot/logWidget.cc
+  - suppress empty log lines.
+* lib/pilotLocalDatabase.{h,cc}
+  - Added a hook for UserCheck to set the default search path for
+    databases opened by name only.
+
 KPilot Developer's notes for january 20th 2002
 ==============================================
 
