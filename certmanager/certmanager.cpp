@@ -389,8 +389,8 @@ void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {
     showKeyListError( this, res.error() );
   else if ( res.isTruncated() )
     KMessageBox::information( this,
-			      i18n("The server returned truncated output.\n"
-				   "Please use a more specific search string "
+			      i18n("The server returned truncated output;\n"
+				   "please use a more-specific search string "
 				   "to get all results.") );
 
   mLineEditAction->setEnabled( true );
@@ -604,7 +604,7 @@ void CertManager::slotDirmngrExited() {
    This slot will import CRLs from a file.
 */
 void CertManager::importCRLFromFile() {
-  QString filter = QString("*.crl *.arl *-crl.der *-arl.der|") + i18n("Certificate Revokation List (*.crl *.arl *-crl.der *-arl.der)");
+  QString filter = QString("*.crl *.arl *-crl.der *-arl.der|") + i18n("Certificate Revocation List (*.crl *.arl *-crl.der *-arl.der)");
   KURL url = KFileDialog::getOpenURL( QString::null,
                                       filter,
                                       this,
@@ -711,7 +711,7 @@ void CertManager::slotDeleteCertificate() {
 			     "the certificates:</p>"
 			     "<p><b>%1</b><p></qt>", keys.size() )
 			.arg( i18n("Operation not supported by the backend.") ),
-			i18n("Certificates Deletion Failed") );
+			i18n("Certificate Deletion Failed") );
   Kleo::MultiDeleteJob * job = new Kleo::MultiDeleteJob( Kleo::CryptPlugFactory::instance()->smime() );
   assert( job );
 
@@ -852,8 +852,8 @@ void CertManager::slotCertificateExportResult( const GpgME::Error & err, const Q
 void CertManager::slotExportSecretKey() {
   Kleo::KeySelectionDialog dlg( i18n("Secret Key Export"),
 				i18n("Select the secret key to export "
-				     "(<b>Warning: The PKCS#12 format is insecure. "
-				     "Exporting secret keys is discouraged</b>):"),
+				     "(<b>Warning: The PKCS#12 format is insecure; "
+				     "exporting secret keys is discouraged</b>):"),
 				std::vector<GpgME::Key>(),
 				Kleo::KeySelectionDialog::SecretKeys|Kleo::KeySelectionDialog::SMIMEKeys,
 				false /* no multiple selection */,
@@ -873,7 +873,7 @@ static void showSecretKeyExportError( QWidget * parent, const GpgME::Error & err
 			   "the secret key:</p>"
 			   "<p><b>%1</b></p></qt>")
     .arg( QString::fromLocal8Bit( err.asString() ) );
-  KMessageBox::error( parent, msg, i18n("Secret Key Export Failed") );
+  KMessageBox::error( parent, msg, i18n("Secret-Key Export Failed") );
 }
 
 void CertManager::startSecretKeyExport( const QString & fingerprint ) {

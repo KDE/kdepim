@@ -174,8 +174,8 @@ send it to the Certificate Authority (CA) directly. Please check with
 your local help desk if you are unsure what to select here.&lt;/p&gt;&lt;p&gt;
 Once you are done with your settings, click 
 &lt;em&gt;Generate Certificate&lt;/em&gt; in order to generate your certificate.&lt;/p&gt;
-&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; If you choose to send via email directly, 
-a kmail composer will be opened. You can add detail information for the CA
+&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; if you choose to send via email directly, 
+a kmail composer will be opened; you can add detailed information for the CA
 there.&lt;/p&gt;&lt;qt&gt;</string>
                 </property>
                 <property name="alignment">
@@ -338,7 +338,7 @@ there.&lt;/p&gt;&lt;qt&gt;</string>
                     <string>&lt;qt&gt;
 Your signature key pair is now ready to be sent to the CA (certification authority) which will generate a certificate for you and send it back via email (unless you have selected storage in a file). Please review the certificate shown below.
 &lt;p&gt;
-If you want to change anything, press Back and make your changes. Otherwise press Finish to send the signature key pair to the CA.
+If you want to change anything, press Back and make your changes; otherwise, press Finish to send the signature key pair to the CA.
 &lt;/qt&gt;</string>
                 </property>
                 <property name="alignment">
