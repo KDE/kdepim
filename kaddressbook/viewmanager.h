@@ -45,7 +45,6 @@ class ViewWrapper;
 class KAddressBookView;
 class JumpButtonBar;
 class AddresseeEditorWidget;
-class FilterSelectionWidget;
 
 /** The view manager manages the views and everything related to them. The
 * manager will load the views at startup and display a view when told to
@@ -103,16 +102,6 @@ class ViewManager : public QWidget
       Return if the quick edit currently is shown or not.
     */
     bool isQuickEditVisible();
-
-    /** Used to show or hide the filter selection widget.
-    *
-    * @param visible True for the widget to be visible, false otherwise
-    */
-    void setFilterSelectorVisible(bool visible);
-
-    /** @return True if the filter selector is visible, false otherwise.
-    */
-    bool isFilterSelectorVisible();
 
     /** @return The list of filters defined for the application.
     */
@@ -240,6 +229,15 @@ class ViewManager : public QWidget
     /** Update the IncSearchWidget (in the toolbars) with a new list
         of fields. */
     void setIncSearchFields(const QStringList&);
+
+    /** Update the select_filter action. */
+    void setFilterNames(const QStringList&);
+
+    /** Set the current filter by its name. Ignored if the name does not exist. */
+    void setCurrentFilterName(const QString&);
+
+    /** Set the current filter. 0 for none. */
+    void setCurrentFilter(int index);
   private:
     /** Create a view wrapper for each type of view we know about
     */
@@ -262,11 +260,10 @@ class ViewManager : public QWidget
     QWidgetStack *mViewWidgetStack;
     KABC::Field::List mIncrementalSearchFields;
     KABC::Field *mCurrentIncSearchField;
-//    QWidget *mIncrementalSearchWidget;
     JumpButtonBar *mJumpButtonBar;
     AddresseeEditorWidget *mQuickEdit;
-    FilterSelectionWidget *mFilterSelector;
     Filter::List mFilterList;
+    Filter currentFilter;
 };
 
 #endif

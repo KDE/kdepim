@@ -36,7 +36,6 @@
 #include "prefsdialog.h"
 #include "ldapsearchdialogimpl.h"
 #include "viewmanager.h"
-// #include "kaddressbookprinter.h"
 #include "printing/printingwizard.h"
 #include "filter.h"
 #include "incsearchwidget.h"

@@ -68,9 +68,7 @@ ActionManager::ActionManager(KXMLGUIClient *client, KAddressBook *widget,
     mActiveViewName = config->readEntry("Active");
     config->setGroup("MainWindow");
     mActionJumpBar->setChecked(config->readBoolEntry("JumpBar", false));
-//    mActionIncSearch->setChecked(config->readBoolEntry("IncSearch", true));
     mActionQuickEdit->setChecked(config->readBoolEntry("QuickEdit", false));
-    mActionFilter->setChecked(config->readBoolEntry("FilterSelector", true));
 
     // Set the defaults
     addresseeSelected(false);
@@ -95,9 +93,7 @@ ActionManager::~ActionManager()
 
     config->setGroup("MainWindow");
     config->writeEntry("JumpBar", mActionJumpBar->isChecked());
-//    config->writeEntry("IncSearch", mActionIncSearch->isChecked());
     config->writeEntry("QuickEdit", mActionQuickEdit->isChecked());
-    config->writeEntry("FilterSelector", mActionFilter->isChecked());
 }
 
 void ActionManager::setReadWrite(bool rw)
@@ -197,14 +193,6 @@ void ActionManager::initReadOnlyActions()
                                        this, SLOT(quickToolsAction()),
                                        mACollection,
                                        "options_show_jump_bar");
-//     mActionIncSearch = new KToggleAction(i18n("Show Incremental Search"), "find",
-//                                          0, this, SLOT(quickToolsAction()),
-//                                          mACollection,
-//                                          "options_show_inc_search");
-    mActionFilter = new KToggleAction(i18n("Show Filter Selector"), "filter",
-                                      0, this, SLOT(quickToolsAction()),
-                                      mACollection,
-                                      "options_show_filter_selector");
     mActionQuickEdit = new KToggleAction(i18n("Show Quick Edit"), "edit",
                                          0, this, SLOT(quickToolsAction()),
                                          mACollection,
@@ -212,6 +200,20 @@ void ActionManager::initReadOnlyActions()
     (void) new KAction(i18n("Edit &Filters"), "filter",
                        0, mWidget, SLOT(configureFilters()),
                        mACollection, "options_edit_filters");
+    mActionSelectFilter = new KSelectAction(i18n("Select Filter"), "select_filter",
+                                            0,
+                                            this, SLOT(slotFilterActivated(int)),
+                                            mACollection, "select_filter");
+    connect(mActionSelectFilter, SIGNAL(activated(int)),
+            SLOT(slotFilterActivated(int)));
+    connect(this, SIGNAL(filterActivated(int)),
+            mViewManager, SLOT(filterActivated(int)));
+    connect(mViewManager, SIGNAL(setFilterNames(const QStringList&)),
+            SLOT(setFilterNames(const QStringList&)));
+    connect(mViewManager, SIGNAL(setCurrentFilterName(const QString&)),
+            SLOT(setCurrentFilterName(const QString&)));
+    connect(mViewManager, SIGNAL(setCurrentFilter(int index)),
+            SLOT(setCurrentFilter(int index)));
 }
 
 void ActionManager::initReadWriteActions()
@@ -353,9 +355,39 @@ void ActionManager::selectViewAction()
 void ActionManager::quickToolsAction()
 {
     mViewManager->setJumpButtonBarVisible(mActionJumpBar->isChecked());
-//    mViewManager->setIncrementalSearchVisible(mActionIncSearch->isChecked());
     mViewManager->setQuickEditVisible(mActionQuickEdit->isChecked());
-    mViewManager->setFilterSelectorVisible(mActionFilter->isChecked());
 }
+
+void ActionManager::setFilterNames(const QStringList& list)
+{
+    QStringList items;
+    items.append(i18n("None"));
+    items+=list;
+    mActionSelectFilter->setItems(items);
+}
+
+void ActionManager::slotFilterActivated(int index)
+{
+    kdDebug() << "ActionManager::slotFilterActivated: Filter "
+              << index << " activated." << endl;
+    emit(filterActivated(index-1));
+}
+
+void ActionManager::setCurrentFilterName(const QString& name)
+{
+    QStringList items=mActionSelectFilter->items();
+    int index=items.findIndex(name);
+    if(index!=-1)
+    {
+        setCurrentFilter(index);
+    }
+}
+
+void ActionManager::setCurrentFilter(int index)
+{
+    mActionSelectFilter->setCurrentItem(index);
+}
+
+
 
 #include "actionmanager.moc"

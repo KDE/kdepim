@@ -58,6 +58,15 @@ class ActionManager : public QObject
     */
     void addresseeSelected(bool selected);
 
+    /** Called to set the filter list. */
+    void setFilterNames(const QStringList&);
+
+    /** Set the current filter by its name. Ignored if the name does not exist. */
+    void setCurrentFilterName(const QString&);
+
+    /** Set the current filter. 0 for none. */
+    void setCurrentFilter(int index);
+
     /** Called whenever the addressbook is modified.
     *
     * @see KAddressBook
@@ -83,6 +92,12 @@ class ActionManager : public QObject
   private slots:
     void clipboardDataChanged();
 
+    /** Catch changes in the filter selection. */
+    void slotFilterActivated(int);
+
+signals:
+    /** Announce filter selection changes. */
+    void filterActivated(int);
   private:
     /** Create all the read only actions. These are all the actions that
     * cannot modify the addressbook.
@@ -120,9 +135,8 @@ class ActionManager : public QObject
     QPtrList<KAction> mActionViewList;
     KToggleAction *mActiveActionView;
     KToggleAction *mActionJumpBar;
-//    KToggleAction *mActionIncSearch;
     KToggleAction *mActionQuickEdit;
-    KToggleAction *mActionFilter;
+    KSelectAction *mActionSelectFilter;
 };
 
 #endif

@@ -29,6 +29,8 @@
     <Menu name="view"><text>&amp;View</text>
       <ActionList name="view_loadedviews"/> 
       <Separator/>
+      <Action name="select_filter"/>
+      <Separator/>
       <Action name="view_modify"/>
       <Action name="view_delete"/>
       <Action name="view_add"/>
@@ -38,8 +40,6 @@
     
     <Menu noMerge="1" name="settings"><text>&amp;Settings</text>
       <Action name="options_show_jump_bar"/>
-      <Action name="options_show_inc_search"/>
-      <Action name="options_show_filter_selector"/>
       <Action name="options_show_quick_edit"/>
       <Action name="options_show_toolbar"/>
       <Action name="options_show_statusbar"/>
@@ -85,6 +85,10 @@
     <Action name="view_modify"/>
     <Separator/>
     <Action name="view_refresh"/>
+  </ToolBar>
+
+  <ToolBar name="filterToolBar" noMerge="1"><text>Filter Toolbar</text>
+    <Action name="select_filter"/>
   </ToolBar>
   
 </kpartgui>

@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>418</width>
-            <height>46</height>
+            <height>51</height>
         </rect>
     </property>
     <property name="caption">
@@ -36,12 +36,9 @@
                 <set>AlignVCenter|AlignRight</set>
             </property>
         </widget>
-        <widget class="QLineEdit">
+        <widget class="KLineEdit">
             <property name="name">
                 <cstring>leIncSearch</cstring>
-            </property>
-            <property name="toolTip" stdset="0">
-                <string>Enter text here to search incrementally</string>
             </property>
         </widget>
         <widget class="QComboBox">

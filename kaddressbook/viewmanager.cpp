@@ -102,8 +102,9 @@ void ViewManager::readConfig()
   filtersChanged(mFilterList);
   mConfig->setGroup("Filter");
   if (mConfig->hasKey("Active"))
-    mFilterSelector->setCurrentFilterName(mConfig->readEntry("Active"));
-
+  {
+      emit(setCurrentFilterName(mConfig->readEntry("Active")));
+  }
   // Tell the views to reread their config, since they may have
   // been modified by global settings
   QDictIterator<KAddressBookView> iter(mViewDict);
@@ -125,7 +126,7 @@ void ViewManager::writeConfig()
     }
     Filter::save(mConfig, QString("Filter"), mFilterList);
     mConfig->setGroup("Filter");
-    mConfig->writeEntry("Active", mFilterSelector->currentFilterName());
+    mConfig->writeEntry("Active", currentFilter.name());
     // write the view name list
     mConfig->setGroup("Views");
     mConfig->writeEntry("Names", mViewNameList);
@@ -281,29 +282,17 @@ void ViewManager::setActiveView(const QString &name)
       // box, the activated slot will be called, which will push
       // the filter to the view and refresh it.
       if (view->defaultFilterType() == KAddressBookView::None)
-        mFilterSelector->setCurrentItem(0);
+      {
+          emit(setCurrentFilter(0));
+      }
       else if (view->defaultFilterType() == KAddressBookView::Active)
       {
-        filterActivated(mFilterSelector->currentItem());
+          emit(setCurrentFilterName(currentFilter.name()));
       }
       else   // KAddressBookView::Specific
       {
-        // We need to check that the view has a valid filter name
         QString filterName = view->defaultFilterName();
-        bool found = false;
-        for (unsigned int i = 0; (i < mFilterSelector->count()) && !found; i++)
-        {
-          if (mFilterSelector->text(i) == filterName)
-            found = true;
-        }
-        if (found)
-          mFilterSelector->setCurrentFilterName(filterName);
-        else
-        {
-          // We couldn't find the filter the user wanted, so just keep the
-          // active one
-          filterActivated(mFilterSelector->currentItem());
-        }
+        emit(setCurrentFilterName(filterName));
       }
 
       // Update the inc search combo to show the fields in the new active
@@ -455,9 +444,6 @@ void ViewManager::initGUI()
     topRowLayout->setMargin(3);
     layout->addLayout(topRowLayout);
     layout->setStretchFactor(topRowLayout, 0);
-    // Filter selector
-    mFilterSelector = new FilterSelectionWidget(this, "mFilterSelector");
-    topRowLayout->addWidget(mFilterSelector);
     QHBox *hBox = new QHBox(this, "hBox");
     layout->addWidget(hBox);
     layout->setStretchFactor(hBox, 1);
@@ -477,8 +463,6 @@ void ViewManager::initGUI()
     // Connect the slots and signals
     connect(mJumpButtonBar, SIGNAL(jumpToLetter(const QChar &)),
             this, SLOT(jumpToLetter(const QChar &)));
-    connect(mFilterSelector, SIGNAL(filterActivated(int)),
-            SLOT(filterActivated(int)));
 }
 
 
@@ -540,19 +524,6 @@ void ViewManager::setQuickEditVisible(bool visible)
 bool ViewManager::isQuickEditVisible()
 {
   return !mQuickEdit->isHidden();
-}
-
-void ViewManager::setFilterSelectorVisible(bool visible)
-{
-  if (visible)
-    mFilterSelector->show();
-  else
-    mFilterSelector->hide();
-}
-
-bool ViewManager::isFilterSelectorVisible()
-{
-  return !mFilterSelector->isHidden();
 }
 
 void ViewManager::dropped(QDropEvent *e)
@@ -619,7 +590,8 @@ void ViewManager::filtersChanged(const Filter::List &list)
     names << (*iter).name();
 
   // Update the combo
-  mFilterSelector->setFilterNames(names);
+  emit(setFilterNames(names));
+  currentFilter=Filter();
 }
 
 void ViewManager::filterActivated(int index)
@@ -629,10 +601,17 @@ void ViewManager::filterActivated(int index)
   if (!mActiveView)
     return;
 
+
   if (index < 0)
-    mActiveView->setFilter(Filter());
+  {
+      currentFilter=Filter();
+      mActiveView->setFilter(Filter());
+  }
   else
-    mActiveView->setFilter(mFilterList[index]);
+  {
+      currentFilter=mFilterList[index];
+      mActiveView->setFilter(currentFilter);
+  }
 
   mActiveView->refresh();
 }

@@ -130,6 +130,7 @@ class KAddressBook : public QWidget
     /** Make the incremental search widget known. Not elegant, but works.
      */
     void setIncSearchWidget(IncSearchWidget*);
+
   protected:
     AddresseeEditorDialog *createAddresseeEditorDialog( QWidget *parent,
                                                         const char *name = 0 );

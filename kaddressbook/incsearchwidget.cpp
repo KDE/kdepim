@@ -1,8 +1,8 @@
 #include <qlayout.h>
-#include <qlineedit.h>
 #include <qcombobox.h>
 #include <kdialog.h>
 #include <kdebug.h>
+#include <klineedit.h>
 #include "incsearchwidget.h"
 
 IncSearchWidget::IncSearchWidget(QWidget *parent, const char *name)
