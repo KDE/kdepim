@@ -1,7 +1,0 @@
-?package(kaddressbook):\
-	needs=X11\
-	section=Apps/Tools\
-	hints="KDE"\
-	kderemove="y"\
-	title="KAddressbook"\
-	command="/usr/bin/kaddressbook"

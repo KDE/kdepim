@@ -1,1 +1,0 @@
-SUBDIRS = assuan gpgme

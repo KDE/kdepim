@@ -1,7 +1,0 @@
-- Rename SyncEntry::name to SyncEntry::label
-- Remove SyncEntry::setId
-- Remove SyncEntry::type, if possible
-- Remove Syncee::type, if possible
-- Move Syncee::added/modified/removed elsewhere. A Syncee shouldn't have a
-  reason to reimplement these functions.
-- Implement syncing of deleted items

@@ -1,7 +1,0 @@
-2002-02-08 Holger Freyther <freyther@kde.org>
-	* KLockFile/KSharedFile is usable
-	* need to kill some bugs
-	
-2002-01-15 Holger Freyther <freyther@kde.org>
-	* checkin the first klockfile
-	* adds TODO

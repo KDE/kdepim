@@ -1,7 +1,0 @@
-?package(knotes):\
-	needs=X11\
-	section=Apps/Tools\
-	hints="KDE"\
-	kderemove="y"\
-	title="KNotes"\
-	command="/usr/bin/knotes"

@@ -1,7 +1,0 @@
-?package(karm):\
-	needs=X11\
-	section=Apps/Tools\
-	hints="KDE"\
-	kderemove="y"\
-	title="KArm"\
-	command="/usr/bin/karm"

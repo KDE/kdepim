@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=ServiceType
-X-KDE-ServiceType=KABC/IMProtocol
-Name=KAddressbook Instant Messaging Protocol
-[PropertyDef::X-KDE-InstantMessagingKABCField]
-Type=QString
-

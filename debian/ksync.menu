@@ -1,7 +1,0 @@
-?package(ksync):\
-	needs=X11\
-	section=Apps/Tools\
-	hints="KDE"\
-	kderemove="y"\
-	title="KSync"\
-	command="/usr/bin/ksync"

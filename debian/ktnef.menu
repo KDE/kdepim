@@ -1,7 +1,0 @@
-?package(ktnef):\
-	needs=X11\
-	section=Apps/Tools\
-	hints="KDE"\
-	kderemove="y"\
-	title="KTnef"\
-	command="/usr/bin/ktnef"
