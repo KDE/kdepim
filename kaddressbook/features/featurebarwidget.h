@@ -1,6 +1,6 @@
 /*                                                                      
     This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mirko Boehm <mirko@kde.org>
+    Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>                   
                                                                         
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,24 +21,60 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#ifndef FEATUREDISTRIBUTIONLISTVIEW_H
-#define FEATUREDISTRIBUTIONLISTVIEW_H
+#ifndef FEATUREBARWIDGET_H
+#define FEATUREBARWIDGET_H
 
-#include <klistview.h>
+#include <qwidget.h>
 
-class FeatureDistributionListView : public KListView
+#include <kabc/addressbook.h>
+
+#include "viewmanager.h"
+
+class FeatureBarWidget : public QWidget
 {
-    Q_OBJECT
-public:
-    FeatureDistributionListView( QWidget *parent, const char* name = 0 );
+  Q_OBJECT
+  
+  public:
+    FeatureBarWidget( KABC::AddressBook *ab, ViewManager *vm, QWidget *parent,
+                      const char *name = 0 );
+    ~FeatureBarWidget();
 
-protected:
-    void dragEnterEvent( QDragEnterEvent *e );
-    void dropEvent( QDropEvent *e );
-    void viewportDragMoveEvent( QDragMoveEvent *e );
-    void viewportDropEvent( QDropEvent *e );
+    KABC::AddressBook *addressBook() const;
 
-signals:
-    void dropped( QDropEvent *e );
+    /**
+      Returns whether there are selected contacts in the view.
+     */
+    bool addresseesSelected() const;
+
+    /**
+      Returns a list of contacts that are selected in the view.
+      Use @ref addresseesSelected() to test if there exists selected
+      contacts.
+     */
+    KABC::Addressee::List selectedAddressees();
+
+    /**
+      This method is called whenever the selection in the view changed.
+     */
+    virtual void addresseeSelectionChanged();
+
+    /**
+      This method should be reimplemented and return the i18ned title of this
+      widget.
+     */
+    virtual QString title() const;
+
+    /**
+      This method should be reimplemented and return a unique identifier.
+     */
+    virtual QString identifier() const;
+
+  signals:
+    void modified( KABC::Addressee::List );
+
+  private:
+    KABC::AddressBook *mAddressBook;
+    ViewManager *mViewManager;
 };
+
 #endif

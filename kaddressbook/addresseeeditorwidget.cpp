@@ -59,9 +59,10 @@
 
 #include "addresseeeditorwidget.h"
 
-AddresseeEditorWidget::AddresseeEditorWidget( QWidget *parent, 
-                                            const char *name)
-  : QWidget( parent, name )
+AddresseeEditorWidget::AddresseeEditorWidget( KABC::AddressBook *ab,
+                                              ViewManager *vm, QWidget *parent, 
+                                              const char *name )
+  : FeatureBarWidget( ab, vm, parent, name )
 {
   initGUI();
   mCategoryDialog = 0;
@@ -78,7 +79,15 @@ AddresseeEditorWidget::~AddresseeEditorWidget()
   kdDebug() << "~AddresseeEditorWidget()" << endl;
 }  
   
-void AddresseeEditorWidget::setAddressee(const KABC::Addressee &a)
+void AddresseeEditorWidget::addresseeSelectionChanged()
+{
+  KABC::Addressee::List list = selectedAddressees();
+
+  mAddressee = list[0];
+  load();
+}
+
+void AddresseeEditorWidget::setAddressee( const KABC::Addressee &a )
 {
   mAddressee = a;
   load();
@@ -651,12 +660,13 @@ void AddresseeEditorWidget::editCategories()
 
 void AddresseeEditorWidget::emitModified()
 {
-//  kdDebug() << "AddresseeEditorWidget::emitModified()" << endl;
-
   mDirty = true;
-  emit modified();
-}
 
+  KABC::Addressee::List list;
+  list.append( mAddressee );
+
+  emit modified( list );
+}
 
 void AddresseeEditorWidget::dateChanged(QDate)
 {
@@ -685,6 +695,16 @@ void AddresseeEditorWidget::pageChanged(QWidget *wdg)
 {
   if ( wdg )
     KAcceleratorManager::manage( wdg );
+}
+
+QString AddresseeEditorWidget::title() const
+{
+  return i18n( "Contact Editor" );
+}
+
+QString AddresseeEditorWidget::identifier() const
+{
+  return i18n( "contact_editor" );
 }
 
 #include "addresseeeditorwidget.moc"

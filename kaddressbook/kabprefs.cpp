@@ -31,8 +31,10 @@ KABPrefs *KABPrefs::sInstance = 0;
 KABPrefs::KABPrefs()
 {
   KPrefs::setCurrentGroup( "Views" );
-  
   addItemBool( "HonorSingleClick", &mHonorSingleClick, false );
+
+  KPrefs::setCurrentGroup( "General" );
+  addItemBool( "AutomaticNameParsing", &mAutomaticNameParsing, true );
 }
 
 KABPrefs::~KABPrefs()

@@ -77,7 +77,7 @@ class ActionManager : public QObject
 
     /** Called whenever the view selection changes.
     */
-    void selectViewAction();
+    void slotViewSelected();
 
     /** Called whenever the view configuration changes. This usually means
     * a view was added or deleted.
@@ -95,7 +95,7 @@ class ActionManager : public QObject
     void clipboardDataChanged();
 
     /** Catch changes in the filter selection. */
-    void slotFilterActivated(int);
+    void slotFilterActivated();
 
   signals:
     /** Announce filter selection changes. */
@@ -135,12 +135,11 @@ class ActionManager : public QObject
     KAction *mActionRedo;
     KAction *mActionSave;
     KAction *mActionDeleteView;
-    QPtrList<KAction> mActionViewList;
-    KToggleAction *mActiveActionView;
     KToggleAction *mActionJumpBar;
     KSelectAction *mActionFeatures;
     KToggleAction *mActionDetails;
     KSelectAction *mActionSelectFilter;
+    KSelectAction *mActionViewList;
 };
 
 #endif

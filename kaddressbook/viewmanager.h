@@ -41,6 +41,8 @@ class QSplitter;
 class QTabWidget;
 class QHBox;
 class KConfig;
+class FeatureBarWidget;
+
 namespace KABC { class AddressBook; }
 
 class ViewWrapper;
@@ -48,7 +50,7 @@ class ViewContainer;
 class KAddressBookView;
 class JumpButtonBar;
 class AddresseeEditorWidget;
-class FeatureDistributionList;
+class DistributionListWidget;
 
 /** The view manager manages the views and everything related to them. The
 * manager will load the views at startup and display a view when told to
@@ -108,6 +110,8 @@ class ViewManager : public QWidget
     /** @return The list of filters defined for the application.
     */
     const Filter::List &filters() const { return mFilterList; }
+
+    QStringList featureList();
 
   public slots:
     /** Reads the config file.
@@ -219,12 +223,11 @@ class ViewManager : public QWidget
     */
     void addresseeSelected(const QString &uid);
 
-    /** Called whenever the currently displayed addressee in the details views
-        is modified.
+    /** Called whenever the currently displayed feature bar widget is modified.
         This method will emit the modified signal and then tell the view to
         refresh.
     */
-    void addresseeModified();
+    void featureBarWidgetModified( KABC::Addressee::List );
 
   signals:
     /** Called whenever the user selects an entry in the view.
@@ -290,11 +293,11 @@ class ViewManager : public QWidget
     KAddressBookView *mActiveView;
     ViewContainer *mDetails;
     JumpButtonBar *mJumpButtonBar;
-    AddresseeEditorWidget *mQuickEdit;
     QSplitter *mQSpltDetails;
     QSplitter *mQSpltFeatures;
     QHBox *mFeatureBar;
-    FeatureDistributionList *mFeatDistList;
+    QPtrList<FeatureBarWidget> mFeatureBarWidgetList;
+    FeatureBarWidget *mCurrentFeatureBarWidget;
 };
 
 #endif

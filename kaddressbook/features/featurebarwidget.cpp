@@ -1,6 +1,6 @@
 /*                                                                      
     This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mirko Boehm <mirko@kde.org>
+    Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>                   
                                                                         
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,39 +21,51 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include <qdragobject.h>
+#include "featurebarwidget.h"
 
-#include "featuredistributionlistview.h"
-
-FeatureDistributionListView::FeatureDistributionListView(QWidget *parent,
-                                                         const char* name)
-    : KListView(parent, name)
+FeatureBarWidget::FeatureBarWidget( KABC::AddressBook *ab, ViewManager *vm,
+                                    QWidget *parent, const char *name )
+  : QWidget( parent, name ), mAddressBook( ab ), mViewManager( vm )
 {
-  setDragEnabled( true );
-  setAcceptDrops( true );
-  setAllColumnsShowFocus( true );
 }
 
-void FeatureDistributionListView::dragEnterEvent( QDragEnterEvent* e )
+FeatureBarWidget::~FeatureBarWidget()
 {
-  bool canDecode = QTextDrag::canDecode( e );
-  e->accept( canDecode );
 }
 
-void FeatureDistributionListView::viewportDragMoveEvent( QDragMoveEvent *e )
+KABC::AddressBook *FeatureBarWidget::addressBook() const
 {
-  bool canDecode = QTextDrag::canDecode( e );
-  e->accept( canDecode );
+  return mAddressBook;
 }
 
-void FeatureDistributionListView::viewportDropEvent( QDropEvent *e )
+bool FeatureBarWidget::addresseesSelected() const
 {
-  emit dropped( e );
+  return mViewManager->selectedUids().count() != 0;
 }
 
-void FeatureDistributionListView::dropEvent( QDropEvent *e )
+KABC::Addressee::List FeatureBarWidget::selectedAddressees()
 {
-  emit dropped( e );
+  KABC::Addressee::List list;
+
+  QStringList uids = mViewManager->selectedUids();
+  QStringList::Iterator it;
+  for ( it = uids.begin(); it != uids.end(); ++it )
+    list.append( mAddressBook->findByUid( *it ) );
+
+  return list;
 }
 
-#include "featuredistributionlistview.moc"
+void FeatureBarWidget::addresseeSelectionChanged()
+{
+  // do nothing
+}
+
+QString FeatureBarWidget::title() const
+{
+  return "";
+}
+
+QString FeatureBarWidget::identifier() const
+{
+  return "empty_widget";
+}

@@ -61,7 +61,8 @@
 #include "addresseeutil.h"
 #include "addresseeeditorwidget.h"
 #include "filterselectionwidget.h"
-#include "featuredistributionlist.h"
+#include "distributionlistwidget.h"
+#include "featurebarwidget.h"
 
 ////////////////////////////////////////
 // View Manager
@@ -512,7 +513,6 @@ void ViewManager::initGUI()
   mViewWidgetStack = new QWidgetStack( mQSpltDetails, "mViewWidgetStack" );
 
   mDetails = new ViewContainer( mQSpltDetails );
-  connect( mDetails, SIGNAL(addresseeChanged()), SLOT(addresseeModified()) );
   connect( mDetails, SIGNAL(sendEmail(const QString&)),
             SLOT(sendMail(const QString&)) );
   connect( mDetails, SIGNAL(browse(const QString&)),
@@ -527,11 +527,21 @@ void ViewManager::initGUI()
    */
   mFeatureBar = new QHBox( mQSpltFeatures );
 
-  mQuickEdit = new AddresseeEditorWidget( mFeatureBar, "mQuickEdit" );
-  connect( mQuickEdit, SIGNAL(modified()), SLOT(addresseeModified()) );
+  /**
+    Add all feature bar widgets. In future versions we'll load them
+    as plugins.
+   */
+  FeatureBarWidget *wdg = new AddresseeEditorWidget( mDocument, this, mFeatureBar );
+  connect( wdg, SIGNAL( modified( KABC::Addressee::List ) ),
+           SLOT( featureBarWidgetModified( KABC::Addressee::List ) ) );
+  mFeatureBarWidgetList.append( wdg );
 
-  mFeatDistList = new FeatureDistributionList( mDocument, mFeatureBar );
-  connect( mFeatDistList, SIGNAL(modified()), SLOT(slotModified()) );
+  wdg = new DistributionListWidget( mDocument, this, mFeatureBar );
+  connect( wdg, SIGNAL( modified( KABC::Addressee::List ) ),
+           SLOT( featureBarWidgetModified( KABC::Addressee::List ) ) );
+  mFeatureBarWidgetList.append( wdg );
+
+  mCurrentFeatureBarWidget = 0;
 
   l->addWidget( mQSpltFeatures );
   l->setStretchFactor( mQSpltFeatures, 100 );
@@ -592,10 +602,10 @@ void ViewManager::setDetailsVisible(bool visible)
   }
 }
 
-// WORK_TO_DO: obsolete
 bool ViewManager::isQuickEditVisible()
 {
-  return mQuickEdit->isVisible();
+  return ( mCurrentFeatureBarWidget &&
+      mCurrentFeatureBarWidget->identifier() == "contact_editor" );
 }
 
 void ViewManager::dropped(QDropEvent *e)
@@ -669,25 +679,29 @@ void ViewManager::startDrag()
 
 void ViewManager::addresseeSelected(const QString &uid)
 {
-  KABC::Addressee a = mDocument->findByUid(uid);
-  mQuickEdit->setAddressee(a);
-  mDetails->setAddressee(a);
+  KABC::Addressee a = mDocument->findByUid( uid );
+  mDetails->setAddressee( a );
+
+  if ( mCurrentFeatureBarWidget )
+    mCurrentFeatureBarWidget->addresseeSelectionChanged();
 }
 
-void ViewManager::addresseeModified()
+void ViewManager::featureBarWidgetModified( KABC::Addressee::List list )
 {
-  KABC::Addressee a;
+  if ( mCurrentFeatureBarWidget &&
+                   mCurrentFeatureBarWidget->identifier() == "contact_editor" ) {
+    AddresseeEditorWidget *wdg =
+               static_cast<AddresseeEditorWidget*>( mCurrentFeatureBarWidget );
+    if ( wdg ) {
+      wdg->save();
+      mDocument->insertAddressee( wdg->addressee() );
+    }
+  }
 
-  // WORK_TO_DO: obsolete after port of Quick Edit to be a Details View Style
-  mQuickEdit->save();
-  a = mQuickEdit->addressee();
-
-  // save the changes:
-  // WORK_TO_DO: check for emittances during build up
-  // a = mDetails->addressee();
-
-  mDocument->insertAddressee( a );
-  mActiveView->refresh( a.uid() );
+  if ( list.count() == 0 )
+    mActiveView->refresh();
+  else
+    mActiveView->refresh( list[0].uid() );
 
   emit modified();
 }
@@ -731,20 +745,33 @@ void ViewManager::showFeatures( int id )
 {
   if ( id == 0 ) {
     mFeatureBar->hide();
+    mCurrentFeatureBarWidget = 0;
   } else {
-    switch( id ) {
-      default:
-      case 1:
-        mQuickEdit->show();
-        mFeatDistList->hide();
-        break;
-      case 2:
-        mQuickEdit->hide();
-        mFeatDistList->show();
-        break;
+    FeatureBarWidget *wdg;
+    for ( wdg = mFeatureBarWidgetList.first(); wdg; wdg = mFeatureBarWidgetList.next() )
+      wdg->hide();
+
+    wdg = mFeatureBarWidgetList.at( id - 1 );
+    if ( wdg ) {
+      mCurrentFeatureBarWidget = wdg;
+      mCurrentFeatureBarWidget->show();
     }
+
     mFeatureBar->show();
   }
+}
+
+QStringList ViewManager::featureList()
+{
+  QStringList list;
+
+  list.append( i18n( "None" ) );
+
+  FeatureBarWidget *wdg;
+  for ( wdg = mFeatureBarWidgetList.first(); wdg; wdg = mFeatureBarWidgetList.next() )
+    list.append( wdg->title() );
+
+  return list;
 }
 
 #include "viewmanager.moc"

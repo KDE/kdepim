@@ -4,9 +4,8 @@ INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook $(all_includes)
 
 libfeatures_la_METASOURCES = AUTO
 
-libfeatures_la_SOURCES = \
- featuredistributionlist.cpp featuredistributionlistview.cpp
+libfeatures_la_SOURCES = featurebarwidget.cpp \
+  distributionlistwidget.cpp
 
 noinst_HEADERS = \
- featuredistributionlist.h featuredistributionlistview.h
- 
+  distributionlistwidget.h

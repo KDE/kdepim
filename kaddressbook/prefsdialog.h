@@ -28,8 +28,10 @@
 
 #include <kdialogbase.h>
 
-class QCheckBox;
+class AddresseePage;
 class LDAPOptionsWidget;
+class QCheckBox;
+class ViewPage;
 
 class PrefsDialog : public KDialogBase
 {
@@ -48,14 +50,39 @@ class PrefsDialog : public KDialogBase
     void configChanged();
     
   protected:
-    void setupLdapPage();
+    void setupPages();
   
     void slotApply();
     void slotOk();
     
   private:
+    AddresseePage *mAddresseePage;
     LDAPOptionsWidget *mLdapWidget;
+    ViewPage *mViewPage;
+};
+
+class ViewPage : public QWidget
+{
+  public:
+    ViewPage( QWidget *parent = 0, const char *name = 0 );
+
+    void saveSettings();
+    void restoreSettings();
+
+  private:
     QCheckBox *mViewsSingleClickBox;
+};
+
+class AddresseePage : public QWidget
+{
+  public:
+    AddresseePage( QWidget *parent = 0, const char *name = 0 );
+
+    void saveSettings();
+    void restoreSettings();
+
+  private:
+    QCheckBox *mNameParsing;
 };
 
 #endif

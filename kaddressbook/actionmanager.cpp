@@ -75,8 +75,6 @@ ActionManager::ActionManager(KXMLGUIClient *client, KAddressBook *widget,
     modified(false);
     quickToolsAction();
 
-    mActionViewList.setAutoDelete(true);
-
     // Connect to the signals from the undo/redo stacks so we can update the
     // edit menu
     connect(UndoStack::instance(), SIGNAL(changed()), SLOT(updateEditMenu()));
@@ -168,6 +166,14 @@ void ActionManager::initReadOnlyActions()
     mActionRedo->setEnabled( false );
 
     // View menu
+    mActionViewList = new KSelectAction( i18n("Select View"), 0,
+                                            0,
+                                            this, SLOT( slotViewSelected() ),
+                                            mACollection, "select_view" );
+#if KDE_VERSION >= 309
+    mActionViewList->setMenuAccelsEnabled( false );
+#endif
+
     new KAction(i18n("Modify View..."), "configure", 0, mViewManager,
                 SLOT(modifyView()), mACollection,
                 "view_modify");
@@ -194,12 +200,11 @@ void ActionManager::initReadOnlyActions()
     mActionFeatures = new KSelectAction( i18n("Show Features Bar"),
                                          0, mACollection,
                                          "options_show_features" );
+
+    mActionFeatures->setItems( mViewManager->featureList() );
+
     connect( mActionFeatures, SIGNAL( activated( int ) ),
              mViewManager, SLOT( showFeatures( int ) ) );
-    QStringList features;
-    features << i18n("None") << i18n("Contact Editor")
-             << i18n("Distribution Lists");
-    mActionFeatures->setItems( features );
 
     mActionJumpBar = new KToggleAction(i18n("Show Jump Bar"), "next", 0,
                                        this, SLOT(quickToolsAction()),
@@ -213,13 +218,13 @@ void ActionManager::initReadOnlyActions()
                        0, mWidget, SLOT(configureFilters()),
                        mACollection, "options_edit_filters");
     mActionSelectFilter = new KSelectAction(i18n("Select Filter"), 0,
+                                            0,
+                                            this, SLOT(slotFilterActivated()),
                                             mACollection, "select_filter");
 #if KDE_VERSION >= 309
     mActionSelectFilter->setMenuAccelsEnabled( false );
 #endif
 
-    connect(mActionSelectFilter, SIGNAL(activated(int)),
-            SLOT(slotFilterActivated(int)));
     connect(this, SIGNAL(filterActivated(int)),
             mViewManager, SLOT(filterActivated(int)));
     connect(mViewManager, SIGNAL(setFilterNames(const QStringList&)),
@@ -284,48 +289,28 @@ void ActionManager::modified(bool mod)
 
 void ActionManager::initActionViewList()
 {
-    // Create the view actions, and set the active view
-    // Find the last active view
-    QStringList viewNameList = mViewManager->viewNames();
-    KToggleAction *viewAction = 0;
+  // Create the view actions, and set the active view
+  QStringList viewNameList = mViewManager->viewNames();
 
-    // Just incast there is no active view!
-    if (mActiveViewName.isEmpty() ||
-        (viewNameList.contains(mActiveViewName) == 0))
-        mActiveViewName = *(viewNameList).at(0);
+  // Just incast there is no active view!
+  if ( mActiveViewName.isEmpty() ||
+     ( viewNameList.contains( mActiveViewName ) == 0 ) )
+    mActiveViewName = *( viewNameList ).at( 0 );
 
-    // unplug the current ones
-    mGUIClient->factory()->unplugActionList(mGUIClient, "view_loadedviews");
+  // delete the current ones
+  mActionViewList->clear();
 
-    // delete the current ones
-    mActionViewList.clear();
-    mActiveActionView = 0L;
+  // Now find the active one and raise it to the top
+  mActionViewList->setItems( viewNameList );
 
-    // Now find the active one, check the menu item, and raise it to the top
-    QStringList::Iterator iter;
-    QString viewName;
-    for (iter = viewNameList.begin(); iter != viewNameList.end(); ++iter)
-    {
-        viewName = *iter;
-
-        viewAction = new KToggleAction(viewName, QString::null, this,
-                                       SLOT(selectViewAction()), mACollection,
-                                       viewName.latin1());
-
-        if (mActiveViewName == viewName)
-        {
-            mViewManager->setActiveView(viewName);
-
-            viewAction->setChecked(true);
-            mActiveActionView = viewAction;
-        }
-
-        mActionViewList.append(viewAction);
+  QStringList::Iterator iter;
+  int i;
+  for ( iter = viewNameList.begin(), i = 0; iter != viewNameList.end(); ++iter, ++i ) {
+    if ( mActiveViewName == (*iter) ) {
+      mActionViewList->setCurrentItem( i );
+      mViewManager->setActiveView( (*iter) );
     }
-
-    // Now append all the actions to the menu.
-    mGUIClient->factory()->plugActionList(mGUIClient, "view_loadedviews",
-                                          mActionViewList);
+  }
 }
 
 void ActionManager::viewConfigChanged(const QString &newActive)
@@ -342,29 +327,10 @@ void ActionManager::viewConfigChanged(const QString &newActive)
     mActionDeleteView->setEnabled(mViewManager->viewNames().size() > 1);
 }
 
-void ActionManager::selectViewAction()
+void ActionManager::slotViewSelected()
 {
-    // See if we can find the selected action
-    KToggleAction *action = 0;
-
-    QString activatedName = sender()->name();
-    QPtrListIterator<KAction> iter(mActionViewList);
-    for (iter.toFirst(); iter.current(); ++iter)
-    {
-        action = dynamic_cast<KToggleAction*>(*iter);
-
-        if (action->name() != activatedName)
-            action->setChecked(false);
-        else
-        {
-            mActiveActionView = action;
-            mActiveActionView->setChecked(true);
-            mActiveViewName = mActiveActionView->name();
-
-            // Last, tell the main widget to set the view.
-            mViewManager->setActiveView(mActiveViewName);
-        }
-    }
+  mActiveViewName = mActionViewList->currentText();
+  mViewManager->setActiveView( mActiveViewName );
 }
 
 void ActionManager::quickToolsAction()
@@ -386,9 +352,9 @@ void ActionManager::setFilterNames(const QStringList& list)
     setCurrentFilterName( current );
 }
 
-void ActionManager::slotFilterActivated(int index)
+void ActionManager::slotFilterActivated()
 {
-    emit filterActivated(index-1);
+  emit filterActivated( mActionSelectFilter->currentItem() - 1 );
 }
 
 void ActionManager::setCurrentFilterName(const QString& name)

@@ -24,9 +24,10 @@
     without including the source code for Qt in the source distribution.
 */
 
-class QWidget;
-class QToolButton;
+class QButtonGroup;
 class QString;
+class QToolButton;
+class QWidget;
 
 class KLineEdit;
 class KListBox;

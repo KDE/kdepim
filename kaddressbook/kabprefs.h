@@ -36,6 +36,7 @@ class KABPrefs : public KPimPrefs
     static KABPrefs *instance();
     
     bool mHonorSingleClick;
+    bool mAutomaticNameParsing;
 
     void setCategoryDefaults();
     

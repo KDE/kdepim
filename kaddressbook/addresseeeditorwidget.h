@@ -24,12 +24,13 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include <qwidget.h>
 #include <qdatetime.h>
 
 #include <kdialogbase.h>
 #include <kjanuswidget.h>
 #include <kabc/addressee.h>
+
+#include "featurebarwidget.h"
 
 class QCheckBox;
 class QTabWidget;
@@ -53,24 +54,30 @@ namespace KPIM
 
 namespace KABC { class AddressBook; }
 
-class AddresseeEditorWidget : public QWidget
+class AddresseeEditorWidget : public FeatureBarWidget
 {
   Q_OBJECT
   
   public:
-    AddresseeEditorWidget( QWidget *parent, const char *name = 0 );
+    AddresseeEditorWidget( KABC::AddressBook *, ViewManager *, QWidget *parent,
+                           const char *name = 0 );
     ~AddresseeEditorWidget();  
 
-    void setAddressee(const KABC::Addressee &a);
+    void setAddressee( const KABC::Addressee& );
     const KABC::Addressee &addressee();
+
+    void addresseeSelectionChanged();
   
     void load();
     void save();
     
     bool dirty();
+
+    QString title() const;
+    QString identifier() const;
     
   signals:
-    void modified();
+    void modified( KABC::Addressee::List );
   
   protected slots:
     void textChanged(const QString &);

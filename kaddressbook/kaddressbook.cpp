@@ -23,8 +23,6 @@
 #include <kprotocolinfo.h>
 #include <kprinter.h>
 #include <kabc/stdaddressbook.h>
-#include <kabc/distributionlistdialog.h>
-#include <kabc/distributionlist.h>
 #include <kabc/field.h>
 #include <kabc/resourceselectdialog.h>
 
@@ -143,9 +141,8 @@ ASYNC KAddressBook::showContactEditor ( QString uid )
 
 void KAddressBook::editAddressee(QString uid)
 {
-  if ( mViewManager->isQuickEditVisible() ) {
+  if ( mViewManager->isQuickEditVisible() )
     return;
-  }
 
   // First, locate the contact entry
   if (uid == QString::null)
@@ -195,8 +192,10 @@ void KAddressBook::newAddressee()
 AddresseeEditorDialog *KAddressBook::createAddresseeEditorDialog( QWidget *parent,
                                                                   const char *name )
 {
-  AddresseeEditorDialog *dialog = new AddresseeEditorDialog( parent,
-                                                             name ? name : "editorDialog" );
+  AddresseeEditorDialog *dialog =
+          new AddresseeEditorDialog( mDocument, mViewManager, parent,
+                                     name ? name : "editorDialog" );
+
   connect(dialog, SIGNAL(addresseeModified(const KABC::Addressee &)),
           SLOT(addresseeModified(const KABC::Addressee &)));
   connect(dialog, SIGNAL( editorDestroyed( const QString & ) ),

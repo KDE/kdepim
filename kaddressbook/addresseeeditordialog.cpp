@@ -29,8 +29,11 @@
 #include <kdebug.h>
 
 #include "addresseeeditorwidget.h"
+#include "viewmanager.h"
 
-AddresseeEditorDialog::AddresseeEditorDialog(QWidget *parent, const char *name)
+AddresseeEditorDialog::AddresseeEditorDialog( KABC::AddressBook *ab,
+                                              ViewManager *vm, QWidget *parent,
+                                              const char *name )
   : KDialogBase(KDialogBase::Plain, i18n("Edit Contact"), 
                 KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Apply,
                 KDialogBase::Ok, parent, name, false)
@@ -39,11 +42,12 @@ AddresseeEditorDialog::AddresseeEditorDialog(QWidget *parent, const char *name)
   
   QVBoxLayout *layout = new QVBoxLayout(page);
 
-  mEditorWidget = new AddresseeEditorWidget( page );
-  connect(mEditorWidget, SIGNAL(modified()), this, SLOT(widgetModified()));
+  mEditorWidget = new AddresseeEditorWidget( ab, vm, page );
+  connect( mEditorWidget, SIGNAL( modified( KABC::Addressee::List ) ),
+           SLOT( widgetModified() ) );
   layout->addWidget( mEditorWidget );
   
-  enableButton(KDialogBase::Apply, false);
+  enableButton( KDialogBase::Apply, false );
 }
 
 AddresseeEditorDialog::~AddresseeEditorDialog()
@@ -55,9 +59,9 @@ AddresseeEditorDialog::~AddresseeEditorDialog()
 
 void AddresseeEditorDialog::setAddressee(const KABC::Addressee &a)
 {
-  enableButton(KDialogBase::Apply, false);
+  enableButton( KDialogBase::Apply, false );
   
-  mEditorWidget->setAddressee(a);
+  mEditorWidget->setAddressee( a );
 }
 
 KABC::Addressee AddresseeEditorDialog::addressee()
@@ -77,7 +81,7 @@ void AddresseeEditorDialog::slotApply()
     emit addresseeModified(mEditorWidget->addressee());
   }
 
-  enableButton(KDialogBase::Apply, false);
+  enableButton( KDialogBase::Apply, false );
   
   KDialogBase::slotApply();
 }
@@ -94,7 +98,7 @@ void AddresseeEditorDialog::slotOk()
 
 void AddresseeEditorDialog::widgetModified()
 {
-  enableButton(KDialogBase::Apply, true);
+  enableButton( KDialogBase::Apply, true );
 }
   
   
