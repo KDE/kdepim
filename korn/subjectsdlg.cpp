@@ -203,7 +203,7 @@ void KornSubjectsDlg::deleteMessage()
 			deleteDeleteProgress();
 		_deleteMailsProgress = new QProgressDialog(this, "bla", TRUE);
 		_deleteMailsProgress->setMinimumDuration(0);
-		_deleteMailsProgress->setLabelText(i18n("Deleting mails. Please wait..."));
+		_deleteMailsProgress->setLabelText(i18n("Deleting mail; please wait...."));
 
 		// Initially show it
 		_deleteMailsProgress->setTotalSteps(1000);
