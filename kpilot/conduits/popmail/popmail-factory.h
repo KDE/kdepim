@@ -57,13 +57,13 @@ private:
 } ;
 #endif
 
-class PopmailConduitFactory : public KLibFactory
+class PopMailConduitFactory : public KLibFactory
 {
 Q_OBJECT
 
 public:
-	PopmailConduitFactory(QObject * = 0L,const char * = 0L);
-	virtual ~PopmailConduitFactory();
+	PopMailConduitFactory(QObject * = 0L,const char * = 0L);
+	virtual ~PopMailConduitFactory();
 
 	static KAboutData *about() { return fAbout; } ;
 
@@ -91,7 +91,7 @@ private:
 extern "C"
 {
 
-void *init_libpopmailconduit();
+void *init_conduit_popmail();
 
 } ;
 

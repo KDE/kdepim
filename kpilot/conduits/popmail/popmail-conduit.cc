@@ -298,7 +298,7 @@ PopMailConduit::doSync()
 
 	addSyncLogEntry(CSL1("Mail "));
 
-	mode=fConfig->readNumEntry(PopmailConduitFactory::syncOutgoing());
+	mode=fConfig->readNumEntry(PopMailConduitFactory::syncOutgoing());
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Outgoing mail mail disposition "
@@ -310,7 +310,7 @@ PopMailConduit::doSync()
 		sent_count=sendPendingMail(mode);
 	}
 
-	mode=fConfig->readNumEntry(PopmailConduitFactory::syncIncoming());
+	mode=fConfig->readNumEntry(PopMailConduitFactory::syncIncoming());
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Sending mail mode " << mode << endl;
 #endif
@@ -906,7 +906,7 @@ QString PopMailConduit::getKMailOutbox() const
 	QString outbox = c.readEntry("outboxFolder");
 	if (outbox.isEmpty())
 	{
-		KConfigGroupSaver gs(fConfig,PopmailConduitFactory::group());
+		KConfigGroupSaver gs(fConfig,PopMailConduitFactory::group());
 		outbox = fConfig->readEntry("outboxFolder");
 	}
 
@@ -1937,7 +1937,7 @@ int PopMailConduit::doUnixStyle()
 
 	if (!fConfig) return false;
 
-	KConfigGroupSaver cfgs(fConfig,PopmailConduitFactory::group());
+	KConfigGroupSaver cfgs(fConfig,PopMailConduitFactory::group());
 
 	fDatabase=new PilotSerialDatabase(pilotSocket(),
 		CSL1("MailDB"),this,"MailDB");

@@ -196,7 +196,7 @@ void PopMailSendPage::readSettings(KConfig &config)
 	fFirewallFQDN->setText(config.readEntry("explicitDomainName", CSL1("$MAILDOMAIN")));
 	fKMailSendImmediate->setChecked(config.readBoolEntry("SendImmediate",
 		true));
-	setMode(SendMode(config.readNumEntry(PopmailConduitFactory::syncOutgoing,SEND_NONE)));
+	setMode(SendMode(config.readNumEntry(PopMailConduitFactory::syncOutgoing,SEND_NONE)));
 }
 
 /* virtual */ int PopMailSendPage::commitChanges(KConfig& config)
@@ -220,7 +220,7 @@ void PopMailSendPage::readSettings(KConfig &config)
 	config.writeEntry("SMTPPort", fSMTPPort->text());
 	config.writeEntry("explicitDomainName", fFirewallFQDN->text());
 
-	config.writeEntry(PopmailConduitFactory::syncOutgoing, (int)getMode());
+	config.writeEntry(PopMailConduitFactory::syncOutgoing, (int)getMode());
 
 	config.writeEntry("SendImmediate", fKMailSendImmediate->isChecked());
 	return 0;
@@ -456,7 +456,7 @@ void PopMailReceivePage::readSettings(KConfig &config)
 	fPopPass->setEnabled(config.readNumEntry("StorePass", 0));
 	fStorePass->setChecked(config.readNumEntry("StorePass", 0));
 	setMode(RetrievalMode(
-		config.readNumEntry(PopmailConduitFactory::syncIncoming,RECV_NONE)));
+		config.readNumEntry(PopMailConduitFactory::syncIncoming,RECV_NONE)));
 }
 
 /* virtual */ int PopMailReceivePage::commitChanges(KConfig& config)
@@ -484,7 +484,7 @@ void PopMailReceivePage::readSettings(KConfig &config)
 		config.writeEntry("PopPass",QString::null);
 	}
 
-	config.writeEntry(PopmailConduitFactory::syncIncoming, (int)getMode());
+	config.writeEntry(PopMailConduitFactory::syncIncoming, (int)getMode());
 	config.sync();
 
 	return 0;
@@ -602,7 +602,7 @@ PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p,const char *n) :
 {
 	FUNCTIONSETUP;
 	fConduitName = i18n("Popmail");
-	UIDialog::addAboutPage(fConfigWidget->fTabWidget,PopmailConduitFactory::about());
+	UIDialog::addAboutPage(fConfigWidget->fTabWidget,PopMailConduitFactory::about());
 	fWidget=fConfigWidget;
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
@@ -623,9 +623,9 @@ PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p,const char *n) :
 void PopMailWidgetConfig::commit(KConfig *fConfig)
 {
 	FUNCTIONSETUP;
-	KConfigGroupSaver s(fConfig,PopmailConduitFactory::group());
+	KConfigGroupSaver s(fConfig,PopMailConduitFactory::group());
 #define WR(a,b,c) fConfig->writeEntry(c,fConfigWidget->a->b);
-	WR(fSendMode,currentItem(),PopmailConduitFactory::syncIncoming());
+	WR(fSendMode,currentItem(),PopMailConduitFactory::syncIncoming());
 	WR(fEmailFrom,text(),"EmailAddress");
 	WR(fSignature,url(),"Signature");
 	WR(fLeaveMail,isChecked(),"LeaveMail");
@@ -635,9 +635,9 @@ void PopMailWidgetConfig::commit(KConfig *fConfig)
 void PopMailWidgetConfig::load(KConfig *fConfig)
 {
 	FUNCTIONSETUP;
-	KConfigGroupSaver s(fConfig,PopmailConduitFactory::group());
+	KConfigGroupSaver s(fConfig,PopMailConduitFactory::group());
 #define RD(a,b,c,d,e) fConfigWidget->a->b(fConfig->read##c##Entry(d,e))
-	RD(fSendMode,setCurrentItem,Num,PopmailConduitFactory::syncIncoming(),(int)NoSend);
+	RD(fSendMode,setCurrentItem,Num,PopMailConduitFactory::syncIncoming(),(int)NoSend);
 	RD(fEmailFrom,setText,,"EmailAddress",QString::null);
 	RD(fSignature,setURL,,"Signature",CSL1("$HOME/.signature"));
 	RD(fLeaveMail,setChecked,Bool,"LeaveMail",true);

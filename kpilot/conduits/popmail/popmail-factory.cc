@@ -45,18 +45,18 @@ extern "C"
 
 void *init_conduit_popmail()
 {
-	return new PopmailConduitFactory;
+	return new PopMailConduitFactory;
 }
 
 } ;
 
 
-/* static */ const char * const PopmailConduitFactory::fGroup = "Popmail-conduit" ;
-const char * const PopmailConduitFactory::fSyncIncoming = "SyncIncoming" ;
-const char * const PopmailConduitFactory::fSyncOutgoing = "SyncOutgoing" ;
+/* static */ const char * const PopMailConduitFactory::fGroup = "Popmail-conduit" ;
+const char * const PopMailConduitFactory::fSyncIncoming = "SyncIncoming" ;
+const char * const PopMailConduitFactory::fSyncOutgoing = "SyncOutgoing" ;
 
-KAboutData *PopmailConduitFactory::fAbout = 0L;
-PopmailConduitFactory::PopmailConduitFactory(QObject *p, const char *n) :
+KAboutData *PopMailConduitFactory::fAbout = 0L;
+PopMailConduitFactory::PopMailConduitFactory(QObject *p, const char *n) :
 	KLibFactory(p,n)
 {
 	FUNCTIONSETUP;
@@ -82,7 +82,7 @@ PopmailConduitFactory::PopmailConduitFactory(QObject *p, const char *n) :
 		"http://www/iki.fi/magi/");
 }
 
-PopmailConduitFactory::~PopmailConduitFactory()
+PopMailConduitFactory::~PopMailConduitFactory()
 {
 	FUNCTIONSETUP;
 
@@ -90,7 +90,7 @@ PopmailConduitFactory::~PopmailConduitFactory()
 	KPILOT_DELETE(fAbout);
 }
 
-/* virtual */ QObject *PopmailConduitFactory::createObject( QObject *p,
+/* virtual */ QObject *PopMailConduitFactory::createObject( QObject *p,
 	const char *n,
 	const char *c,
 	const QStringList &a)
@@ -177,7 +177,7 @@ PopmailWidgetSetup::PopmailWidgetSetup(QWidget *w, const char *n,
 	t->addTab(fRecvPage,i18n("Retrieve Mail"));
 
 	setTabWidget(t);
-	addAboutPage(false,PopmailConduitFactory::about());
+	addAboutPage(false,PopMailConduitFactory::about());
 
 	t->adjustSize();
 	fConduitName=i18n("POP/Mail");
@@ -194,7 +194,7 @@ PopmailWidgetSetup::~PopmailWidgetSetup()
 
 	if (!fConfig) return;
 
-	KConfigGroupSaver s(fConfig,PopmailConduitFactory::group);
+	KConfigGroupSaver s(fConfig,PopMailConduitFactory::group);
 
 	fSendPage->commitChanges(*fConfig);
 	fRecvPage->commitChanges(*fConfig);
@@ -206,7 +206,7 @@ PopmailWidgetSetup::~PopmailWidgetSetup()
 
 	if (!fConfig) return;
 
-	KConfigGroupSaver s(fConfig,PopmailConduitFactory::group);
+	KConfigGroupSaver s(fConfig,PopMailConduitFactory::group);
 
 	fSendPage->readSettings(*fConfig);
 	fRecvPage->readSettings(*fConfig);
