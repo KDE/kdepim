@@ -10,15 +10,13 @@
 
 namespace
 {
+    const char* description = I18N_NOOP("KDE Time tracker tool.");
 
-const char* description = I18N_NOOP("KDE Time tracker tool.");
-
-void cleanup( int )
-{
-    kdDebug() << i18n("Just caught a software interrupt.") << endl;
-    kapp->exit();
-}
-
+    void cleanup( int )
+    {
+        kdDebug() << i18n("Just caught a software interrupt.") << endl;
+        kapp->exit();
+    }
 }
 
 int main( int argc, char *argv[] )
@@ -45,9 +43,9 @@ int main( int argc, char *argv[] )
 	myApp.setMainWidget( karm );
 	karm->show();
 	signal( SIGQUIT, cleanup );
-        signal( SIGINT, cleanup );
+    signal( SIGINT, cleanup );
 	int ret = myApp.exec();
 
-        delete karm;
+    delete karm;
 	return ret;
 }
