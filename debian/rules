@@ -34,17 +34,6 @@ debian-clean:
 binary-indep: build
 	dh_testroot
 	dh_testdir
-	dh_clean -k
-	dh_installdocs -i
-	dh_installchangelogs -i
-	cp debian/README.task debian/tmp/usr/share/doc/task-kdepim/README
-	dh_compress -i
-	dh_fixperms -i
-	dh_installdeb -i
-	dh_shlibdeps -i
-	dh_gencontrol -i
-	dh_md5sums -i
-	dh_builddeb -i
 
 binary-arch: build
 	dh_testdir

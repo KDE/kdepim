@@ -5,18 +5,6 @@ Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
 Standards-Version: 3.1.1
 
-Package: task-kdepim
-Architecture: all
-Section: x11
-Replaces: kdepim, kdepim-common
-Depends: korganizer, abbrowser, kpilot
-Suggests: kdebase
-Description: Personal Information Management for KDE (common files)
- Personal Information Management (PIM) for KDE
- .
- This package is an empty package that depends on all of the programs
- that make up the KDE PIM package. These include korganizer and abbrowser.
-
 Package: korganizer
 Architecture: any
 Section: x11
