@@ -37,7 +37,7 @@
 
 #include "adcalendar.h"
 
-ADCalendar::ADCalendar(const QString& url, const QString& appname, Type type)
+ADCalendar::ADCalendar(const QString& url, const QCString& appname, Type type)
   : ADCalendarBase(url, appname, type),
     available_( false ),
     enabled_(true)
@@ -45,7 +45,7 @@ ADCalendar::ADCalendar(const QString& url, const QString& appname, Type type)
   loadFile();
 }
 
-ADCalendar *ADCalendarFactory::create(const QString& url, const QString& appname,
+ADCalendar *ADCalendarFactory::create(const QString& url, const QCString& appname,
                                       ADCalendarBase::Type type)
 {
   return new ADCalendar(url, appname, type);
@@ -83,7 +83,7 @@ void ADCalendar::setEventHandled(const Event* event, const QValueList<QDateTime>
 {
   if (event)
   {
-    kdDebug() << "ADCalendar::setEventHandled(" << event->VUID() << ")\n";
+    kdDebug(5900) << "ADCalendar::setEventHandled(" << event->VUID() << ")\n";
     EventsMap::Iterator it = eventsHandled_.find(event->VUID());
     if (it != eventsHandled_.end())
     {
@@ -125,7 +125,7 @@ void ADCalendar::setEventPending(const QString& ID)
   if (actionType() == KALARM  &&  !eventsPending_.containsRef(&ID))
   {
     eventsPending_.append(&ID);
-    kdDebug() << "ADCalendar::setEventPending(): " << ID << endl;
+    kdDebug(5900) << "ADCalendar::setEventPending(): " << ID << endl;
   }
 }
 

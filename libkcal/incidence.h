@@ -25,7 +25,6 @@
 //
 
 #include <qdatetime.h>
-#include <qobject.h>
 #include <qstringlist.h>
 #include <qvaluelist.h>
 
@@ -45,7 +44,6 @@ class Journal;
 */
 class Incidence : public IncidenceBase
 {
-    Q_OBJECT
   public:
     /**
       This class provides the interface for a visitor of calendar components. It
@@ -102,11 +100,6 @@ class Incidence : public IncidenceBase
       modification date and revision number.
     */
     void recreate();
-
-    /** Sets the time the incidence was last modified. */
-    void setLastModified(const QDateTime &lm);
-    /** Return the time the incidence was last modified. */
-    QDateTime lastModified() const;
 
     /** set creation date */
     void setCreated(QDateTime);
@@ -188,24 +181,9 @@ class Incidence : public IncidenceBase
     /** return human-readable name of secrecy class */
     static QString secrecyName(int);
 
-    /** Set Pilot Id. */
-    void setPilotId(int id);
-    /** Return Pilot Id. */
-    int pilotId() const;
-
-    /** pilot syncronization states */
-    enum { SYNCNONE = 0, SYNCMOD = 1, SYNCDEL = 3 };
-    /** Set synchronisation satus. */
-    void setSyncStatus(int stat);
-    /** Return synchronisation satus. */
-    int syncStatus() const;
-
     /** returns TRUE if the date specified is one on which the event will
      * recur. */
     bool recursOn(const QDate &qd) const;
-
-    /** Emit an eventUpdated() signal. */
-    void emitEventUpdated(Incidence *i) { emit eventUpdated(i); }
 
     // VEVENT and VTODO, but not VJOURNAL (move to EventBase class?):
 
@@ -239,7 +217,6 @@ class Incidence : public IncidenceBase
     int mRevision;
 
     // base components of jounal, event and todo
-    QDateTime mLastModified;
     QDateTime mCreated;
     QString mDescription;
     QString mSummary;
@@ -253,10 +230,6 @@ class Incidence : public IncidenceBase
 
     int mSecrecy;
     int mPriority;                        // 1 = highest, 2 = less, etc.
-
-    // PILOT SYNCHRONIZATION STUFF
-    int mPilotId;                         // unique id for pilot sync
-    int mSyncStatus;                      // status (for sync)
 
     QPtrList<Alarm> mAlarms;
     Recurrence *mRecurrence;

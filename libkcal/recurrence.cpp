@@ -329,7 +329,7 @@ void Recurrence::setDaily(int _rFreq, int _rDuration)
   rMonthPositions.clear();
   rMonthDays.clear();
   rYearNums.clear();
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
 void Recurrence::setDaily(int _rFreq, const QDate &_rEndDate)
@@ -343,7 +343,7 @@ void Recurrence::setDaily(int _rFreq, const QDate &_rEndDate)
   rMonthPositions.clear();
   rMonthDays.clear();
   rYearNums.clear();
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
 int Recurrence::frequency() const
@@ -392,7 +392,7 @@ void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
   rDuration = _rDuration;
   rMonthPositions.clear();
   rMonthDays.clear();
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
 void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays, 
@@ -408,7 +408,7 @@ void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
   rMonthPositions.clear();
   rMonthDays.clear();
   rYearNums.clear();
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
 void Recurrence::setMonthly(short type, int _rFreq, int _rDuration)
@@ -419,7 +419,7 @@ void Recurrence::setMonthly(short type, int _rFreq, int _rDuration)
   rFreq = _rFreq;
   rDuration = _rDuration;
   rYearNums.clear();
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
 void Recurrence::setMonthly(short type, int _rFreq, 
@@ -432,7 +432,7 @@ void Recurrence::setMonthly(short type, int _rFreq,
   rEndDate = _rEndDate;
   rDuration = 0; // set to 0 because there is an end date
   rYearNums.clear();
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
 void Recurrence::addMonthlyPos(short _rPos, const QBitArray &_rDays)
@@ -447,7 +447,7 @@ void Recurrence::addMonthlyPos(short _rPos, const QBitArray &_rDays)
   tmpPos->rPos = _rPos;
   tmpPos->rDays = _rDays;
   rMonthPositions.append(tmpPos);
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
 void Recurrence::addMonthlyDay(short _rDay)
@@ -456,7 +456,7 @@ void Recurrence::addMonthlyDay(short _rDay)
   int *tmpDay = new int;
   *tmpDay = _rDay;
   rMonthDays.append(tmpDay);
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
 void Recurrence::setYearly(int type, int _rFreq, int _rDuration)
@@ -468,7 +468,7 @@ void Recurrence::setYearly(int type, int _rFreq, int _rDuration)
   rDuration = _rDuration;
   rMonthPositions.clear();
   rMonthDays.clear();
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
 void Recurrence::setYearly(int type, int _rFreq, const QDate &_rEndDate)
@@ -481,7 +481,7 @@ void Recurrence::setYearly(int type, int _rFreq, const QDate &_rEndDate)
   rDuration = 0;
   rMonthPositions.clear();
   rMonthDays.clear();
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
 const QPtrList<int> &Recurrence::yearNums() const
@@ -497,7 +497,7 @@ void Recurrence::addYearlyNum(short _rNum)
   *tmpNum = _rNum;
   rYearNums.append(tmpNum);
   
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
 /***************************** PROTECTED FUNCTIONS ***************************/

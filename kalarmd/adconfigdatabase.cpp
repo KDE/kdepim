@@ -40,9 +40,9 @@
 #define CLIENT_DATA_FILE "clients"
 
 // Config file key strings
-const QString ADConfigDataBase::CLIENT_KEY("Client_");
+const QCString ADConfigDataBase::CLIENT_KEY("Client_");
 const QString ADConfigDataBase::CLIENTS_KEY("Clients");
-const QString ADConfigDataBase::GUI_KEY("Gui_");
+const QCString ADConfigDataBase::GUI_KEY("Gui_");
 const QString ADConfigDataBase::GUIS_KEY("Guis");
 const QString ADConfigDataBase::CALENDAR_KEY("Calendar");
 
@@ -63,7 +63,7 @@ ADConfigDataBase::ADConfigDataBase(bool daemon)
 QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClients, bool& deletedCalendars,
                                          ADCalendarBaseFactory *calFactory)
 {
-  kdDebug() << "ADConfigDataBase::readConfigData()" << endl;
+  kdDebug(5900) << "ADConfigDataBase::readConfigData()" << endl;
   deletedClients   = false;
   deletedCalendars = false;
   if (mClientDataFile.isEmpty())
@@ -75,14 +75,15 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
   }
   KSimpleConfig clientConfig(mClientDataFile);
   clientConfig.setGroup("General");
-  QStringList clients = QStringList::split(',', clientConfig.readEntry(CLIENTS_KEY), true);
+  QStrList clients;
+  clientConfig.readListEntry(CLIENTS_KEY, clients);
 
   // Delete any clients which are no longer in the config file
   for (ClientList::Iterator cl = mClients.begin();  cl != mClients.end();  )
   {
     bool found = false;
     for (unsigned int i = 0;  i < clients.count();  ++i)
-      if (clients[i] == (*cl).appName)
+      if (clients.at(i) == (*cl).appName)
       {
         found = true;
         break;
@@ -112,30 +113,33 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
   QString newClients;
   for (unsigned int i = 0;  i < clients.count();  ++i)
   {
-    kdDebug() << "ADConfigDataBase::readConfigData(): client: " << clients[i] << endl;
-    if (clients[i].isEmpty() || KStandardDirs::findExe(clients[i]) == QString::null)
+    kdDebug(5900) << "ADConfigDataBase::readConfigData(): client: "
+                  << clients.at(i) << endl;
+    QCString client = clients.at(i);
+    if ( client.isEmpty() ||
+         KStandardDirs::findExe( client ) == QString::null )
     {
       // Null client name, or application doesn't exist
       if (mIsAlarmDaemon)
       {
-        if (!clients[i].isEmpty())
-          clientConfig.deleteGroup(CLIENT_KEY + clients[i], true);
+        if (!client.isEmpty())
+          clientConfig.deleteGroup(CLIENT_KEY + client, true);
         writeNewClients = true;
       }
     }
     else
     {
-      QString groupKey = QString(CLIENT_KEY) + clients[i];
+      QString groupKey = CLIENT_KEY + client;
 
       // Get this client's details from its own config section
-      ClientInfo info = getClientInfo( clients[i] );
+      ClientInfo info = getClientInfo( client );
       if ( !info.isValid() ) {
         clientConfig.setGroup(groupKey);
-        QString title = clientConfig.readEntry("Title", clients[i]);   // read app title (default = app name)
-        QString dcopObject = clientConfig.readEntry("DCOP object");
+        QString title = clientConfig.readEntry( "Title", client );   // read app title (default = app name)
+        QCString dcopObject = clientConfig.readEntry("DCOP object").local8Bit();
         int type = clientConfig.readNumEntry("Notification type", 0);
         bool displayCalName = clientConfig.readBoolEntry("Display calendar names", true);
-        info = ClientInfo( clients[i], title, dcopObject, type, displayCalName,
+        info = ClientInfo( client, title, dcopObject, type, displayCalName,
                            sessionStarting );
         mClients.append( info );
       }
@@ -146,7 +150,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
       QMap<QString, QString> entries = clientConfig.entryMap(groupKey);
       for (QMap<QString, QString>::ConstIterator it = entries.begin();  it != entries.end();  ++it)
       {
-        kdDebug() << "ADConfigDataBase::readConfigData(): " << it.key() << "=" << it.data() << endl;
+        kdDebug(5900) << "ADConfigDataBase::readConfigData(): " << it.key() << "=" << it.data() << endl;
         if (it.key().startsWith(CALENDAR_KEY))
         {
           bool ok;
@@ -170,10 +174,10 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
                 else
                 {
                   // Add the calendar to the client's list
-                  cal = calFactory->create(calname, clients[i],
+                  cal = calFactory->create(calname, client,
                                static_cast<ADCalendarBase::Type>(it.data().left(comma).toInt()));
                   mCalendars.append(cal);
-                  kdDebug() << "ADConfigDataBase::readConfigData(): calendar " << cal->urlString() << endl;
+                  kdDebug(5900) << "ADConfigDataBase::readConfigData(): calendar " << cal->urlString() << endl;
                 }
               }
             }
@@ -183,7 +187,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
 
       if (!newClients.isEmpty())
         newClients += ',';
-      newClients += clients[i];
+      newClients += client;
     }
   }
   return writeNewClients ? newClients : QString::null;
@@ -194,7 +198,7 @@ void ADConfigDataBase::deleteConfigCalendar(const ADCalendarBase*)
 }
 
 /* Return the ClientInfo structure for the specified client application */
-ClientInfo ADConfigDataBase::getClientInfo(const QString& appName) 
+ClientInfo ADConfigDataBase::getClientInfo(const QCString& appName) 
 {
   ClientList::Iterator it;
   for( it = mClients.begin(); it != mClients.end(); ++it ) {
@@ -204,7 +208,7 @@ ClientInfo ADConfigDataBase::getClientInfo(const QString& appName)
   return ClientInfo();
 }
 
-void ADConfigDataBase::removeClientInfo( const QString &appName )
+void ADConfigDataBase::removeClientInfo( const QCString &appName )
 {
   ClientList::Iterator it;
   for( it = mClients.begin(); it != mClients.end(); ++it ) {

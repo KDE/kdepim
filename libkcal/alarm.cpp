@@ -21,6 +21,8 @@
 
 // $Id$
 
+#include <kdebug.h>
+
 #include "incidence.h"
 
 #include "alarm.h"
@@ -31,16 +33,11 @@ Alarm::Alarm(Incidence *parent)
 {
   mParent = parent;
 
-  mAlarmReadOnly = false;
-
-  mAudioAlarmFile = "";
-  mProgramAlarmFile = "";
-  mMailAlarmAddress = "";
-  mAlarmText = "";
-
   mAlarmSnoozeTime = 5;
   mAlarmRepeatCount = 0;
   mAlarmEnabled = false;
+
+  mHasTime = false;
 }
 
 Alarm::~Alarm()
@@ -49,81 +46,81 @@ Alarm::~Alarm()
 
 void Alarm::setAudioFile(const QString &audioAlarmFile)
 {
-  if (mAlarmReadOnly) return;
   mAudioAlarmFile = audioAlarmFile;
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
-const QString &Alarm::audioFile() const
+QString Alarm::audioFile() const
 {
   return mAudioAlarmFile;
 }
 
 void Alarm::setProgramFile(const QString &programAlarmFile)
 {
-  if (mAlarmReadOnly) return;
   mProgramAlarmFile = programAlarmFile;
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
-const QString &Alarm::programFile() const
+QString Alarm::programFile() const
 {
   return mProgramAlarmFile;
 }
 
 void Alarm::setMailAddress(const QString &mailAlarmAddress)
 {
-  if (mAlarmReadOnly) return;
   mMailAlarmAddress = mailAlarmAddress;
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
-const QString &Alarm::mailAddress() const
+QString Alarm::mailAddress() const
 {
   return mMailAlarmAddress;
 }
 
 void Alarm::setMailSubject(const QString &mailAlarmSubject)
 {
-  if (mAlarmReadOnly) return;
   mMailAlarmSubject = mailAlarmSubject;
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
-const QString &Alarm::mailSubject() const
+QString Alarm::mailSubject() const
 {
   return mMailAlarmSubject;
 }
 
 void Alarm::setText(const QString &alarmText)
 {
-  if (mAlarmReadOnly) return;
   mAlarmText = alarmText;
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
-const QString &Alarm::text() const
+QString Alarm::text() const
 {
   return mAlarmText;
 }
 
 void Alarm::setTime(const QDateTime &alarmTime)
 {
-  if (mAlarmReadOnly) return;
   mAlarmTime = alarmTime;
-  mParent->emitEventUpdated(mParent);
+  mHasTime = true;
+
+  mParent->updated();
 }
 
-const QDateTime &Alarm::time() const
+QDateTime Alarm::time() const
 {
   return mAlarmTime;
 }
 
+bool Alarm::hasTime() const
+{
+  return mHasTime;
+}
+
 void Alarm::setSnoozeTime(int alarmSnoozeTime)
 {
-  if (mAlarmReadOnly) return;
   mAlarmSnoozeTime = alarmSnoozeTime;
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
 int Alarm::snoozeTime() const
@@ -133,39 +130,33 @@ int Alarm::snoozeTime() const
 
 void Alarm::setRepeatCount(int alarmRepeatCount)
 {
-  if (mAlarmReadOnly) return;
+  kdDebug(5800) << "Alarm::setRepeatCount(): " << alarmRepeatCount << endl;
+
   mAlarmRepeatCount = alarmRepeatCount;
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
 int Alarm::repeatCount() const
 {
+  kdDebug(5800) << "Alarm::repeatCount(): " << mAlarmRepeatCount << endl;
   return mAlarmRepeatCount;
 }
 
 void Alarm::toggleAlarm()
 {
-  if (mAlarmReadOnly) return;
   if (mAlarmEnabled) {
     mAlarmEnabled = false;
   } else {
     mAlarmEnabled = true;
-//    QString alarmStr(QString::number(KOPrefs::instance()->mAlarmTime));
-// TODO: Fix default alarm time
-    QString alarmStr("10");
-    int pos = alarmStr.find(' ');
-    if (pos >= 0)
-      alarmStr.truncate(pos);
-    mAlarmTime = mAlarmStart.addSecs(-60 * alarmStr.toUInt());
   }
-  mParent->emitEventUpdated(mParent);
+
+  mParent->updated();
 }
 
 void Alarm::setEnabled(bool enable)
 {
-  if (mAlarmReadOnly) return;
   mAlarmEnabled = enable;
-  mParent->emitEventUpdated(mParent);
+  mParent->updated();
 }
 
 bool Alarm::enabled() const
@@ -173,3 +164,15 @@ bool Alarm::enabled() const
   return mAlarmEnabled;
 }
 
+void Alarm::setOffset( const Duration &offset )
+{
+  mOffset = offset;
+  mHasTime = false;
+  
+  mParent->updated();
+}
+
+Duration Alarm::offset() const
+{
+  return mOffset;
+}

@@ -37,6 +37,7 @@
 
 #include <libkcal/calendarlocal.h>
 
+#include "alarmguiiface_stub.h"
 #include "alarmapp.h"
 
 #include "alarmdaemon.h"
@@ -47,9 +48,10 @@ const int LOGIN_DELAY( 5 );
 
 AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
   : QObject(parent, name), DCOPObject(name),
-    mSessionStartTimer(0L)
+    mSessionStartTimer(0L),
+    mEnabled( true )
 {
-  kdDebug() << "AlarmDaemon::AlarmDaemon()" << endl;
+  kdDebug(5900) << "AlarmDaemon::AlarmDaemon()" << endl;
 
   bool splash = kapp->dcopClient()->isApplicationRegistered("ksplash");
   if (splash  ||  static_cast<AlarmApp*>(kapp)->startedAtLogin())
@@ -59,7 +61,7 @@ AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
     // restored by the session (where applicable).
     // If ksplash can be detected as running, start a 1-second timer;
     // otherwise, wait a few seconds.
-    kdDebug() << "AlarmDaemon::AlarmDaemon(): session start\n";
+    kdDebug(5900) << "AlarmDaemon::AlarmDaemon(): session start\n";
     mSessionStartTimer = new QTimer(this);
     connect(mSessionStartTimer, SIGNAL(timeout()), SLOT(checkIfSessionStarted()));
     mSessionStartTimer->start(splash ? 1000 : LOGIN_DELAY * 1000);
@@ -84,19 +86,19 @@ AlarmDaemon::~AlarmDaemon()
  */
 void AlarmDaemon::quit()
 {
-  kdDebug() << "AlarmDaemon::quit()" << endl;
+  kdDebug(5900) << "AlarmDaemon::quit()" << endl;
   exit(0);
 }
 
 void AlarmDaemon::dumpDebug()
 {
-  kdDebug() << "AlarmDaemon::dumpDebug()" << endl;
+  kdDebug(5900) << "AlarmDaemon::dumpDebug()" << endl;
   
   for( ADCalendarBase *cal = mCalendars.first(); cal; cal = mCalendars.next() ) {
     cal->dump();
   }
   
-  kdDebug() << "AlarmDaemon::dumpDebug() done" << endl;  
+  kdDebug(5900) << "AlarmDaemon::dumpDebug() done" << endl;  
 }
 
 /*
@@ -104,7 +106,7 @@ void AlarmDaemon::dumpDebug()
  */
 void AlarmDaemon::enableCal_(const QString& urlString, bool enable)
 {
-  kdDebug() << "AlarmDaemon::enableCal_(" << urlString << ")" << endl;
+  kdDebug(5900) << "AlarmDaemon::enableCal_(" << urlString << ")" << endl;
 
   ADCalendarBase* cal = getCalendar(urlString);
   if (cal)
@@ -118,9 +120,9 @@ void AlarmDaemon::enableCal_(const QString& urlString, bool enable)
  * DCOP call to add a new calendar file to the list of monitored calendars.
  * If the calendar file is already in the list, the request is ignored.
  */
-void AlarmDaemon::addCal_(const QString& appname, const QString& urlString, bool msgCal)
+void AlarmDaemon::addCal_(const QCString& appname, const QString& urlString, bool msgCal)
 {
-  kdDebug() << "AlarmDaemon::addCal_(" << urlString << "): " << (msgCal ? "KALARM" : "KORGANIZER") << endl;
+  kdDebug(5900) << "AlarmDaemon::addCal_(" << urlString << "): " << (msgCal ? "KALARM" : "KORGANIZER") << endl;
 
   ADCalendarBase* cal = getCalendar(urlString);
   if (cal)
@@ -146,19 +148,19 @@ void AlarmDaemon::addCal_(const QString& appname, const QString& urlString, bool
 
   if (cal->loaded())
     notifyGui((msgCal ? ADD_MSG_CALENDAR : ADD_CALENDAR), cal->urlString(), appname);
-  kdDebug() << "AlarmDaemon::addCal_(): calendar added" << endl;
+  kdDebug(5900) << "AlarmDaemon::addCal_(): calendar added" << endl;
 
   setTimerStatus();
-  checkAlarms(cal);
+//  checkAlarms(cal);
 }
 
 /*
  * DCOP call to reload the specified calendar.
  * The calendar is first added to the list of monitored calendars if necessary.
  */
-void AlarmDaemon::reloadCal_(const QString& appname, const QString& urlString, bool msgCal)
+void AlarmDaemon::reloadCal_(const QCString& appname, const QString& urlString, bool msgCal)
 {
-  kdDebug() << "AlarmDaemon::reloadCal_(" << urlString << "): " << (msgCal ? "KALARM" : "KORGANIZER") << endl;
+  kdDebug(5900) << "AlarmDaemon::reloadCal_(" << urlString << "): " << (msgCal ? "KALARM" : "KORGANIZER") << endl;
 
   if (!urlString.isEmpty())
   {
@@ -179,16 +181,16 @@ void AlarmDaemon::reloadCal_(const QString& appname, const QString& urlString, b
  */
 void AlarmDaemon::reloadCal_(ADCalendarBase* cal)
 {
-  kdDebug() << "AlarmDaemon::reloadCal_(): calendar" << endl;
+  kdDebug(5900) << "AlarmDaemon::reloadCal_(): calendar" << endl;
 
   if (cal)
   {
     cal->close();
     if (cal->loadFile())
-      kdDebug() << "AlarmDaemon::reloadCal_(): calendar reloaded" << endl;
+      kdDebug(5900) << "AlarmDaemon::reloadCal_(): calendar reloaded" << endl;
     notifyGuiCalStatus(cal);
     setTimerStatus();
-    checkAlarms(cal);
+//    checkAlarms(cal);
   }
 }
 
@@ -196,9 +198,9 @@ void AlarmDaemon::reloadCal_(ADCalendarBase* cal)
  * DCOP call to reload the specified calendar and reset the data associated with it.
  * The calendar is first added to the list of monitored calendars if necessary.
  */
-void AlarmDaemon::resetMsgCal_(const QString& appname, const QString& urlString)
+void AlarmDaemon::resetMsgCal_(const QCString& appname, const QString& urlString)
 {
-  kdDebug() << "AlarmDaemon::resetMsgCal_(" << urlString << ")\n";
+  kdDebug(5900) << "AlarmDaemon::resetMsgCal_(" << urlString << ")\n";
 
   reloadCal_(appname, urlString, true);
   ADCalendar::clearEventsHandled(urlString);
@@ -207,14 +209,14 @@ void AlarmDaemon::resetMsgCal_(const QString& appname, const QString& urlString)
 /* Remove a calendar file from the list of monitored calendars */
 void AlarmDaemon::removeCal_(const QString& urlString)
 {
-  kdDebug() << "AlarmDaemon::removeCal_(" << urlString << ")\n";
+  kdDebug(5900) << "AlarmDaemon::removeCal_(" << urlString << ")\n";
 
   ADCalendarBase* cal = getCalendar(urlString);
   if (cal)
   {
     deleteConfigCalendar(cal);
     mCalendars.remove(cal);
-    kdDebug() << "AlarmDaemon::removeCal_(): calendar removed" << endl;
+    kdDebug(5900) << "AlarmDaemon::removeCal_(): calendar removed" << endl;
     notifyGui(DELETE_CALENDAR, urlString);
     setTimerStatus();
   }
@@ -224,11 +226,11 @@ void AlarmDaemon::removeCal_(const QString& urlString)
  * DCOP call to add an application to the list of client applications,
  * and add it to the config file.
  */
-void AlarmDaemon::registerApp(const QString& appName, const QString& appTitle,
-                              const QString& dcopObject, int notificationType,
+void AlarmDaemon::registerApp(const QCString& appName, const QString& appTitle,
+                              const QCString& dcopObject, int notificationType,
                               bool displayCalendarName)
 {
-  kdDebug() << "AlarmDaemon::registerApp(" << appName << ", " << appTitle << ")\n";
+  kdDebug(5900) << "AlarmDaemon::registerApp(" << appName << ", " << appTitle << ")\n";
   if (!appName.isEmpty())
   {
     if (KStandardDirs::findExe(appName) == QString::null)
@@ -255,7 +257,7 @@ void AlarmDaemon::registerApp(const QString& appName, const QString& appTitle,
       enableAutoStart(true);
       notifyGui(CHANGE_CLIENT);
       setTimerStatus();
-      checkAlarms(appName);
+//      checkAlarms(appName);
     }
   }
 }
@@ -265,7 +267,7 @@ void AlarmDaemon::registerApp(const QString& appName, const QString& appTitle,
  */
 void AlarmDaemon::enableAutoStart(bool on)
 {
-  kdDebug() << "AlarmDaemon::enableAutoStart(" << (int)on << ")\n";
+  kdDebug(5900) << "AlarmDaemon::enableAutoStart(" << (int)on << ")\n";
   KConfig* config = kapp->config();
   config->setGroup("General");
   config->writeEntry("Autostart", on);
@@ -280,6 +282,8 @@ void AlarmDaemon::enableAutoStart(bool on)
  */
 void AlarmDaemon::checkAlarmsSlot()
 {
+  kdDebug(5901) << "AlarmDaemon::checkAlarmsSlot()" << endl;
+
   if (mAlarmTimerSyncing)
   {
     // We've synced to the minute boundary. Now set timer to 1 minute intervals.
@@ -295,27 +299,32 @@ void AlarmDaemon::checkAlarmsSlot()
  */
 void AlarmDaemon::checkAlarms()
 {
-  // Leave immediately if alarms are off
-  if (mEnabled)
-  {
-    for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
-      checkAlarms(static_cast<ADCalendar*>(cal));
+  kdDebug(5901) << "AlarmDaemon::checkAlarms()" << endl;
+
+  if ( !mEnabled ) return;
+
+  QDateTime now = QDateTime::currentDateTime();
+
+  ADCalendarBase *cal;
+  for( cal = mCalendars.first(); cal; cal = mCalendars.next() ) {
+    checkAlarms( cal, mLastCheck.addSecs( 1 ), now );
   }
+  
+  mLastCheck = now;
 }
 
 /*
  * Check if any alarms are pending for any enabled calendar
  * belonging to a specified client, and display the pending alarms.
  */
-void AlarmDaemon::checkAlarms(const QString& appName)
+void AlarmDaemon::checkAlarms(const QCString& appName)
 {
-  if (mEnabled)
+  if ( !mEnabled ) return;
+
+  for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
   {
-    for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
-    {
-      if (cal->appName() == appName)
-        checkAlarms(static_cast<ADCalendar*>(cal));
-    }
+    if (cal->appName() == appName)
+      checkAlarms( cal, mLastCheck.addSecs( 1 ), QDateTime::currentDateTime() );
   }
 }
 
@@ -324,46 +333,46 @@ void AlarmDaemon::checkAlarms(const QString& appName)
  * display the pending alarms.
  * Reply = true if there were any KORGANIZER type alarms.
  */
-void AlarmDaemon::checkAlarms(ADCalendarBase* cal)
+void AlarmDaemon::checkAlarms( ADCalendarBase* cal, const QDateTime &from, const QDateTime &to)
 {
-  if (mEnabled  &&  cal->loaded()  &&  cal->enabled())
-  {
-    QPtrList<Event> alarmEvents;
-    switch (cal->actionType())
-    {
-      case ADCalendar::KORGANIZER:
-        if (cal->checkNonRecurringAlarms(alarmEvents)
-        ||  cal->checkRecurringAlarms(alarmEvents, true))
-        {
-          for (Event* event = alarmEvents.first();  event;  event = alarmEvents.next())
-          {
-            kdDebug() << "AlarmDaemon::checkAlarms(): KORGANIZER event " << event->VUID() << endl;
-            notifyEvent(cal, event->VUID());
-          }
-        }
-        break;
+  kdDebug(5901) << "AlarmDaemons::checkAlarms(): '" << cal->urlString() << "'" << endl;
+  
+  if ( !mEnabled  ||  !cal->loaded()  ||  !cal->enabled() ) return;
 
-      case ADCalendar::KALARM:
-        if (cal->checkAlarmsPast(alarmEvents))
-        {
-          kdDebug()<<"Kalarm alarms="<<alarmEvents.count()<<endl;
-          for (Event* event = alarmEvents.first();  event;  event = alarmEvents.next())
-          {
-            const QString& eventID = event->VUID();
-            kdDebug() << "AlarmDaemon::checkAlarms(): KALARM event " << eventID  << endl;
-            QValueList<QDateTime> alarmtimes;
-            checkEventAlarms(*event, alarmtimes);
-            if (!cal->eventHandled(event, alarmtimes))
-            {
-              if (notifyEvent(cal, eventID))
-                cal->setEventHandled(event, alarmtimes);
-              else
-                cal->setEventPending(eventID);
-            }
+  kdDebug(5901) << "  From: " << from.toString() << "  To: " << to.toString() << endl;
+
+  QPtrList<Event> alarmEvents;
+  Alarm::List alarms;
+  Alarm::List::ConstIterator it;
+  switch ( cal->actionType() ) {
+    case ADCalendar::KORGANIZER:
+      alarms = cal->alarms( from, to );
+      for ( it = alarms.begin();  it != alarms.end();  ++it ) {
+        kdDebug(5901) << "AlarmDaemon::checkAlarms(): KORGANIZER event "
+                      << (*it)->parent()->VUID() << endl;
+        notifyEvent(cal, (*it)->parent()->VUID());
+      }
+      break;
+
+    case ADCalendar::KALARM:
+      alarms = cal->alarmsTo( QDateTime::currentDateTime() );
+      kdDebug(5901) << "Kalarm alarms=" << alarms.count() << endl;
+      for ( it = alarms.begin(); it != alarms.end(); ++it ) {
+        Event *event = dynamic_cast<Event *>( (*it)->parent() );
+        if ( event ) {
+          const QString& eventID = event->VUID();
+          kdDebug(5901) << "AlarmDaemon::checkAlarms(): KALARM event " << eventID  << endl;
+          QValueList<QDateTime> alarmtimes;
+          checkEventAlarms(*event, alarmtimes);
+          if (!cal->eventHandled(event, alarmtimes)) {
+            if (notifyEvent(cal, eventID))
+              cal->setEventHandled(event, alarmtimes);
+            else
+              cal->setEventPending(eventID);
           }
         }
-        break;
-    }
+      }
+      break;
   }
 }
 
@@ -389,12 +398,12 @@ void AlarmDaemon::checkEventAlarms(const Event& event, QValueList<QDateTime>& al
  */
 bool AlarmDaemon::notifyEvent(const ADCalendarBase* calendar, const QString& eventID)
 {
-  kdDebug() << "AlarmDaemon::notifyEvent(" << eventID << ")\n";
+  kdDebug(5900) << "AlarmDaemon::notifyEvent(" << eventID << ")\n";
   if (calendar)
   {
     ClientInfo client = getClientInfo(calendar->appName());
     if (!client.isValid())
-      kdDebug() << "AlarmDaemon::notifyEvent(): unknown client" << endl;
+      kdDebug(5900) << "AlarmDaemon::notifyEvent(): unknown client" << endl;
     else
     {
       if (client.waitForRegistration)
@@ -405,7 +414,7 @@ bool AlarmDaemon::notifyEvent(const ADCalendarBase* calendar, const QString& eve
         // able to restore its session.
         // And don't contact a client which was started by the login session
         // until it's ready to handle DCOP calls.
-        kdDebug() << "AlarmDaemon::notifyEvent(): wait for session startup" << endl;
+        kdDebug(5900) << "AlarmDaemon::notifyEvent(): wait for session startup" << endl;
         return false;
       }
       if (!kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(calendar->appName())))
@@ -418,7 +427,7 @@ bool AlarmDaemon::notifyEvent(const ADCalendarBase* calendar, const QString& eve
         QString execStr = locate("exe", calendar->appName());
         if (execStr.isEmpty())
         {
-          kdDebug() << "AlarmDaemon::notifyEvent(): '" << calendar->appName() << "' not found" << endl;
+          kdDebug(5900) << "AlarmDaemon::notifyEvent(): '" << calendar->appName() << "' not found" << endl;
           return true;
         }
         if (client.notificationType == ClientInfo::COMMAND_LINE_NOTIFY)
@@ -429,30 +438,27 @@ bool AlarmDaemon::notifyEvent(const ADCalendarBase* calendar, const QString& eve
           execStr += " --calendarURL ";
           execStr += calendar->urlString();
           system(QFile::encodeName(execStr));
-          kdDebug() << "AlarmDaemon::notifyEvent(): used command line" << endl;
+          kdDebug(5900) << "AlarmDaemon::notifyEvent(): used command line" << endl;
           return true;
         }
         system(QFile::encodeName(execStr));
-        kdDebug() << "AlarmDaemon::notifyEvent(): started " << execStr.latin1() << endl;
+        kdDebug(5900) << "AlarmDaemon::notifyEvent(): started " << QFile::encodeName(execStr) << endl;
       }
-      // Use DCOP to tell the client about the alarm
-      QByteArray data;
-      QDataStream arg(data, IO_WriteOnly);
-      arg << calendar->urlString() << eventID;
-      if (!kapp->dcopClient()->send(static_cast<const char*>(calendar->appName()),
-                                    static_cast<const char*>(client.dcopObject),
-                                    "handleEvent(const QString&,const QString&)",
-                                    data))
-        kdDebug() << "AlarmDaemon::notifyEvent(): dcop send failed" << endl;
+      
+      AlarmGuiIface_stub stub( calendar->appName(), client.dcopObject );
+      stub.handleEvent( calendar->urlString(), eventID );
+      if ( !stub.ok() ) {
+        kdDebug(5900) << "AlarmDaemon::notifyEvent(): dcop send failed" << endl;
+      }
     }
   }
   return true;
 }
 
 /* Notify the specified client of any pending alarms */
-void AlarmDaemon::notifyPendingEvents(const QString& appname)
+void AlarmDaemon::notifyPendingEvents(const QCString& appname)
 {
-  kdDebug() << "AlarmDaemon::notifyPendingEvents(" << appname << ")\n";
+  kdDebug(5900) << "AlarmDaemon::notifyPendingEvents(" << appname << ")\n";
   for (ADCalendarBase* cal = mCalendars.first(); cal; cal = mCalendars.next())
   {
     if (cal->appName() == appname
@@ -484,7 +490,7 @@ void AlarmDaemon::checkIfSessionStarted()
   if (!kapp->dcopClient()->isApplicationRegistered("ksplash"))
   {
     // Session startup has now presumably completed. Cancel the timer.
-    kdDebug() << "AlarmDaemon::checkIfSessionStarted(): startup complete\n";
+    kdDebug(5900) << "AlarmDaemon::checkIfSessionStarted(): startup complete\n";
     delete mSessionStartTimer;
 
     // Notify clients which are not yet running of pending alarms
@@ -522,13 +528,13 @@ void AlarmDaemon::setTimerStatus()
     mAlarmTimer->start(1000 * firstInterval);
     mAlarmTimerSyncing = (firstInterval != 60);
     connect(mAlarmTimer, SIGNAL(timeout()), SLOT(checkAlarmsSlot()));
-    kdDebug() << "Started alarm timer" << endl;
+    kdDebug(5900) << "Started alarm timer" << endl;
   }
   else if (mAlarmTimer->isActive() && !nLoaded)
   {
     mAlarmTimer->disconnect();
     mAlarmTimer->stop();
-    kdDebug() << "Stopped alarm timer" << endl;
+    kdDebug(5900) << "Stopped alarm timer" << endl;
   }
 }
 
@@ -536,9 +542,9 @@ void AlarmDaemon::setTimerStatus()
  * DCOP call to add an application to the list of GUI applications,
  * and add it to the config file.
  */
-void AlarmDaemon::registerGui(const QString& appName, const QString& dcopObject)
+void AlarmDaemon::registerGui(const QCString& appName, const QCString& dcopObject)
 {
-  kdDebug() << "AlarmDaemon::registerGui(" << appName << ")\n";
+  kdDebug(5900) << "AlarmDaemon::registerGui(" << appName << ")\n";
   if (!appName.isEmpty())
   {
     const GuiInfo* g = getGuiInfo(appName);
@@ -563,7 +569,12 @@ void AlarmDaemon::notifyGuiCalStatus(const ADCalendarBase* cal)
 /*
  * Send a DCOP message to all GUI interface applications, notifying them of a change.
  */
-void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL, const QString& appName)
+void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL)
+{
+  notifyGui( change, calendarURL, "" );
+}
+
+void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL, const QCString& appName)
 {
   QString changeType;
   switch (change)
@@ -581,14 +592,14 @@ void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL, co
       kdError() << "AlarmDaemon::guiNotify(): " << change << endl;
       return;
   }
-  kdDebug() << "AlarmDaemon::notifyGui(" << changeType << ")\n";
+  kdDebug(5900) << "AlarmDaemon::notifyGui(" << changeType << ")\n";
 
   for (GuiMap::ConstIterator g = mGuis.begin();  g != mGuis.end();  ++g)
   {
     const QString& dcopObject = g.data().dcopObject;
     if (kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(g.key())))
     {
-      kdDebug()<<"AlarmDaemon::notifyGui() sending:" << g.key()<<" ->" << dcopObject <<endl;
+      kdDebug(5900)<<"AlarmDaemon::notifyGui() sending:" << g.key()<<" ->" << dcopObject <<endl;
       QByteArray data;
       QDataStream arg(data, IO_WriteOnly);
       arg << changeType << calendarURL << appName;
@@ -596,13 +607,13 @@ void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL, co
                                     static_cast<const char*>( dcopObject),
                                     "alarmDaemonUpdate(const QString&,const QString&,const QString&)",
                                     data))
-        kdDebug() << "AlarmDaemon::guiNotify(): dcop send failed:" << g.key() << endl;
+        kdDebug(5900) << "AlarmDaemon::guiNotify(): dcop send failed:" << g.key() << endl;
     }
   }
 }
 
 /* Return the GuiInfo structure for the specified GUI application */
-const AlarmDaemon::GuiInfo* AlarmDaemon::getGuiInfo(const QString& appName) const
+const AlarmDaemon::GuiInfo* AlarmDaemon::getGuiInfo(const QCString& appName) const
 {
   if (!appName.isEmpty())
   {
@@ -619,18 +630,18 @@ void AlarmDaemon::dumpAlarms()
                                QTime( 0, 0 ) );
   QDateTime end = start.addDays( 1 ).addSecs( -1 );
 
-  kdDebug() << "AlarmDeamon::dumpAlarms() from " << start.toString()
+  kdDebug(5900) << "AlarmDeamon::dumpAlarms() from " << start.toString()
             << " to " << end.toString() << endl;
 
   CalendarList cals = calendars();
   ADCalendarBase *cal;
   for( cal = cals.first(); cal; cal = cals.next() ) {
-    kdDebug() << "  Cal: " << cal->urlString() << endl;
+    kdDebug(5900) << "  Cal: " << cal->urlString() << endl;
     Alarm::List alarms = cal->alarms( start, end );
     Alarm::List::ConstIterator it;
     for( it = alarms.begin(); it != alarms.end(); ++it ) {
       Alarm *a = *it;
-      kdDebug() << "    " << a->parent()->summary() << " ("
+      kdDebug(5900) << "    " << a->parent()->summary() << " ("
                 << a->time().toString() << ")" << endl;
     }
   }

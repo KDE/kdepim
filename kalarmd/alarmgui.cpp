@@ -59,7 +59,7 @@ AlarmGui::AlarmGui(QObject *parent, const char *name)
     mRevisingAlarmDialog(false),
     mDrawAlarmDialog(false)
 {
-  kdDebug() << "AlarmGui::AlarmGui()" << endl;
+  kdDebug(5900) << "AlarmGui::AlarmGui()" << endl;
 
   readDaemonConfig();
   bool deletedClients;
@@ -89,9 +89,11 @@ AlarmGui::~AlarmGui()
 /*
  * DCOP call from the alarm daemon to notify a change.
  */
-void AlarmGui::alarmDaemonUpdate(const QString& change, const QString& calendarURL, const QString& appName)
+void AlarmGui::alarmDaemonUpdate(const QString& change,
+                                 const QString& calendarURL,
+                                 const QCString& appName)
 {
-  kdDebug() << "AlarmGui::alarmDaemonUpdate()\n";
+  kdDebug(5900) << "AlarmGui::alarmDaemonUpdate()\n";
   if (change == "STATUS")
   {
     readDaemonConfig();
@@ -127,7 +129,7 @@ void AlarmGui::alarmDaemonUpdate(const QString& change, const QString& calendarU
       {
         cal = new ADCalendarGui(calendarURL, appName, ADCalendarBase::KORGANIZER);
         mCalendars.append(cal);
-        kdDebug() << "AlarmGui::alarmDaemonUpdate(): KORGANIZER calendar added" << endl;
+        kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): KORGANIZER calendar added" << endl;
         recreateMenu = true;
       }
     }
@@ -142,21 +144,21 @@ void AlarmGui::alarmDaemonUpdate(const QString& change, const QString& calendarU
       }
       cal = new ADCalendarGui(calendarURL, appName, ADCalendarBase::KALARM);
       mCalendars.append(cal);
-      kdDebug() << "AlarmGui::alarmDaemonUpdate(): KALARM calendar added" << endl;
+      kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): KALARM calendar added" << endl;
       recreateMenu = true;
     }
     else
     {
       if (!cal)
       {
-        kdDebug() << "AlarmGui::alarmDaemonUpdate(): unknown calendar: " << calendarURL << endl;
+        kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): unknown calendar: " << calendarURL << endl;
         return;
       }
       if (change == "DELETE_CALENDAR")
       {
         removeDialogEvents(cal);
         mCalendars.remove(cal);
-        kdDebug() << "AlarmGui::alarmDaemonUpdate(): calendar removed" << endl;
+        kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): calendar removed" << endl;
         recreateMenu = true;
       }
       else if (change == "CHANGE_CALENDAR")
@@ -164,7 +166,7 @@ void AlarmGui::alarmDaemonUpdate(const QString& change, const QString& calendarU
         removeDialogEvents(cal);
         cal->close();
         if (cal->loadFile())
-          kdDebug() << "AlarmGui::alarmDaemonUpdate(): calendar reloaded" << endl;
+          kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): calendar reloaded" << endl;
       }
       else if (change == "CALENDAR_UNAVAILABLE")
       {
@@ -186,7 +188,7 @@ void AlarmGui::alarmDaemonUpdate(const QString& change, const QString& calendarU
       }
       else
       {
-        kdDebug() << "AlarmGui::alarmDaemonUpdate(): unknown change type: " << change << endl;
+        kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): unknown change type: " << change << endl;
         return;
       }
     }
@@ -207,12 +209,12 @@ void AlarmGui::handleEvent(const QString& calendarURL, const QString& eventID)
 
 void AlarmGui::registerWithDaemon()
 {
-  kdDebug()<<"AlarmGui::registerWithDaemon()\n";
+  kdDebug(5900)<<"AlarmGui::registerWithDaemon()\n";
   QByteArray data;
   QDataStream arg(data, IO_WriteOnly);
   arg << QString(kapp->aboutData()->appName()) << QString(DCOP_OBJECT_NAME);
   if (!kapp->dcopClient()->send(DAEMON_APP_NAME, DAEMON_DCOP_OBJECT, "registerGui(QString,QString)", data))
-     kdDebug() << "KAlarmApp::startDaemon(): registerGui dcop send failed" << endl;
+     kdDebug(5900) << "KAlarmApp::startDaemon(): registerGui dcop send failed" << endl;
 }
 
 // Read the Alarm Daemon's config file
@@ -223,7 +225,7 @@ void AlarmGui::readDaemonConfig()
   KSimpleConfig kalarmdConfig(mDaemonDataFile, true);
   kalarmdConfig.setGroup("General");
   mAutostartDaemon = kalarmdConfig.readBoolEntry("Autostart", true);
-  kdDebug()<<"AlarmGui::readDaemonConfig(): "<<mDaemonDataFile<<" auto="<<(int)mAutostartDaemon<<endl;
+  kdDebug(5900)<<"AlarmGui::readDaemonConfig(): "<<mDaemonDataFile<<" auto="<<(int)mAutostartDaemon<<endl;
 }
 
 /*
@@ -241,8 +243,12 @@ void AlarmGui::checkDefaultClient()
   {
     // Default client isn't in the list of clients.
     // Replace it with the first client in the list.
-    mDefaultClient = mClients.count() ? (*mClients.begin()).appName : QString();
-    config->writeEntry("Default Client", mDefaultClient);
+    if ( mClients.count() > 0 ) {
+      mDefaultClient = mClients[ 0 ].appName;
+    } else {
+      mDefaultClient = "";
+    }
+    config->writeEntry("Default Client", QString::fromLocal8Bit(mDefaultClient));
     config->sync();
   }
 }
@@ -257,7 +263,8 @@ void AlarmGui::setDefaultClient(int menuIndex)
       mDefaultClient = (*client).appName;
       KConfig* config = kapp->config();
       config->setGroup("General");
-      config->writeEntry("Default Client", mDefaultClient);
+      config->writeEntry("Default Client",
+                         QString::fromLocal8Bit(mDefaultClient));
       config->sync();
     }
   }
@@ -271,7 +278,7 @@ bool AlarmGui::isDaemonRunning(bool updateDockWindow)
     return newstatus;
   if (newstatus != mDaemonRunning)
   {
-//kdDebug() << "AlarmGui::isDaemonRunning(): "<<(int)mDaemonRunning<<"->"<<(int)newstatus<<endl;
+//kdDebug(5900) << "AlarmGui::isDaemonRunning(): "<<(int)mDaemonRunning<<"->"<<(int)newstatus<<endl;
     mDaemonRunning = newstatus;
     mDocker->setDaemonStatus(newstatus);
     mDaemonStatusTimer.changeInterval(DAEMON_TIMER_INTERVAL*1000);
@@ -302,7 +309,7 @@ void AlarmGui::setFastDaemonCheck()
 /* Schedule the alarm dialog for redisplay after a specified number of minutes */
 void AlarmGui::suspend(int minutes)
 {
-//  kdDebug() << "AlarmGui::suspend() " << minutes << " minutes" << endl;
+//  kdDebug(5900) << "AlarmGui::suspend() " << minutes << " minutes" << endl;
   connect(&mSuspendTimer, SIGNAL(timeout()), SLOT(showAlarmDialog()));
   mSuspendTimer.start(1000*60*minutes, true);
 }

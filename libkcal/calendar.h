@@ -24,7 +24,6 @@
 #ifndef CALENDAR_H
 #define CALENDAR_H
 
-#include <qobject.h>
 #include <qstring.h>
 #include <qdatetime.h>
 #include <qptrlist.h>
@@ -52,8 +51,7 @@ class CalFilter;
   * implemented by subclasses like @see CalendarLocal, which use different
   * methods to store and access the data.
   */
-class Calendar : public QObject {
-    Q_OBJECT
+class Calendar {
   public:
     /** constructs a new calendar, with variables initialized to sane values. */
     Calendar();
@@ -191,21 +189,6 @@ class Calendar : public QObject {
     virtual Alarm::List alarms( const QDateTime &from,
                                 const QDateTime &to ) = 0;
 
-  signals:
-    /** emitted at regular intervals to indicate that the events in the
-      list have triggered an alarm. */
-    void alarmSignal(QPtrList<Event> &);
-    /** emitted whenever an event in the calendar changes.  Emits a pointer
-      to the changed event. */
-    void calUpdated(Incidence *);
-  
-  public slots:
-    /** checks to see if any alarms are pending, and if so, returns a list
-     * of those events that have alarms. */
-    virtual void checkAlarms() = 0;
-    /** Update configuration values from KOPrefs */
-    void updateConfig();
-   
   protected:
     /**
       Get events, which occur on the given date.

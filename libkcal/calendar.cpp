@@ -51,7 +51,6 @@ class AddIncidenceVisitor : public Incidence::Visitor {
 };
 
 Calendar::Calendar()
-  : QObject()
 {
   init();
 }
@@ -251,53 +250,6 @@ void Calendar::setEmail(const QString &e)
 void Calendar::showDialogs(bool d)
 {
   mDialogsOn = d;
-}
-
-// don't ever call this unless a kapp exists!
-void Calendar::updateConfig()
-{
-//  kdDebug(5800) << "Calendar::updateConfig()" << endl;
-
-  bool updateFlag = FALSE;
-  
-  // TODO: update Organizer in all events
-#if 0
-  mOwner = KOPrefs::instance()->mName;
-
-  // update events to new organizer (email address) 
-  // if it has changed...
-  QString configEmail = KOPrefs::instance()->mEmail;
-
-  if (mOwnerEmail != configEmail) {
-    QString oldEmail = mOwnerEmail;
-    //    oldEmail.detach();
-    mOwnerEmail = configEmail;
-    Event *firstEvent, *currEvent;
-    bool atFirst = TRUE;
-
-    firstEvent = last();
-    // gotta skip over the first one, which is same as first. 
-    // I know, bad coding.
-    for (currEvent = prev(); currEvent; currEvent = prev()) {
-//      kdDebug(5800) << "in Calendar::updateConfig(), currEvent summary: " << currEvent->getSummary() << endl;
-      if ((currEvent == firstEvent) && !atFirst) {
-	break;
-      }
-      if (currEvent->getOrganizer() == oldEmail) {
-	currEvent->setReadOnly(FALSE);
-	currEvent->setOrganizer(mOwnerEmail);
-        updateFlag = TRUE;
-      }
-      atFirst = FALSE;
-    }
-  }
-#endif
-
-// TODO: Fix time zone setting
-//  setTimeZone(KOPrefs::instance()->mTimeZone.local8Bit());
-
-  if (updateFlag)
-    emit calUpdated((Event *) 0L);
 }
 
 void Calendar::setFilter(CalFilter *filter)

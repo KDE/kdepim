@@ -33,8 +33,7 @@ using namespace KCal;
 
 Incidence::Incidence() :
   IncidenceBase(),
-  mRelatedTo(0), mSecrecy(SecrecyPublic), mPriority(3), mPilotId(0),
-  mSyncStatus(SYNCMOD)
+  mRelatedTo(0), mSecrecy(SecrecyPublic), mPriority(3)
 {
   mRecurrence = new Recurrence(this);
 
@@ -47,7 +46,6 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
 {
 // TODO: reenable attributes currently commented out.
   mRevision = i.mRevision;
-  mLastModified = i.mLastModified;
   mCreated = i.mCreated;
   mDescription = i.mDescription;
   mSummary = i.mSummary;
@@ -61,8 +59,6 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
   mResources = i.mResources;
   mSecrecy = i.mSecrecy;
   mPriority = i.mPriority;
-  mPilotId = i.mPilotId;
-  mSyncStatus = i.mSyncStatus;
 //  QPtrList<Alarm> mAlarms;    QPtrList<Alarm> mAlarms;
 //  Recurrence *mRecurrence;      Recurrence *mRecurrence;
   mRecurrence = new Recurrence(this);
@@ -94,20 +90,6 @@ void Incidence::setReadOnly( bool readOnly )
 {
   IncidenceBase::setReadOnly( readOnly );
   recurrence()->setRecurReadOnly( readOnly);
-  for (Alarm* alarm = mAlarms.first(); alarm; alarm = mAlarms.next())
-    alarm->setAlarmReadOnly( readOnly );
-}
-
-void Incidence::setLastModified(const QDateTime &lm)
-{
-  // DON'T! emit eventUpdated because we call this from
-  // Calendar::updateEvent().
-  mLastModified = lm;
-}
-
-QDateTime Incidence::lastModified() const
-{
-  return mLastModified;
 }
 
 void Incidence::setCreated(QDateTime created)
@@ -125,7 +107,8 @@ void Incidence::setRevision(int rev)
 {
   if (mReadOnly) return;
   mRevision = rev;
-  emit eventUpdated(this);
+  
+  updated();
 }
 
 int Incidence::revision() const
@@ -143,7 +126,7 @@ void Incidence::setDescription(const QString &description)
 {
   if (mReadOnly) return;
   mDescription = description;
-  emit eventUpdated(this);
+  updated();
 }
 
 QString Incidence::description() const
@@ -156,7 +139,7 @@ void Incidence::setSummary(const QString &summary)
 {
   if (mReadOnly) return;
   mSummary = summary;
-  emit eventUpdated(this);
+  updated();
 }
 
 QString Incidence::summary() const
@@ -168,7 +151,7 @@ void Incidence::setCategories(const QStringList &categories)
 {
   if (mReadOnly) return;
   mCategories = categories;
-  emit eventUpdated(this);
+  updated();
 }
 
 // TODO: remove setCategories(QString) function
@@ -185,7 +168,7 @@ void Incidence::setCategories(const QString &catStr)
     *it = (*it).stripWhiteSpace();
   }
 
-  emit eventUpdated(this);
+  updated();
 }
 
 QStringList Incidence::categories() const
@@ -233,7 +216,7 @@ QPtrList<Incidence> Incidence::relations() const
 void Incidence::addRelation(Incidence *event)
 {
   mRelations.append(event);
-  emit eventUpdated(this);
+  updated();
 }
 
 void Incidence::removeRelation(Incidence *event)
@@ -255,7 +238,7 @@ void Incidence::setExDates(const DateList &exDates)
 
   recurrence()->setRecurExDatesCount(mExDates.count());
 
-  emit eventUpdated(this);
+  updated();
 }
 
 void Incidence::addExDate(const QDate &date)
@@ -265,7 +248,7 @@ void Incidence::addExDate(const QDate &date)
 
   recurrence()->setRecurExDatesCount(mExDates.count());
 
-  emit eventUpdated(this);
+  updated();
 }
 
 DateList Incidence::exDates() const
@@ -289,7 +272,7 @@ void Incidence::setAttachments(const QStringList &attachments)
 {
   if (mReadOnly) return;
   mAttachments = attachments;
-  emit eventUpdated(this);
+  updated();
 }
 
 QStringList Incidence::attachments() const
@@ -301,7 +284,7 @@ void Incidence::setResources(const QStringList &resources)
 {
   if (mReadOnly) return;
   mResources = resources;
-  emit eventUpdated(this);
+  updated();
 }
 
 QStringList Incidence::resources() const
@@ -314,7 +297,7 @@ void Incidence::setPriority(int priority)
 {
   if (mReadOnly) return;
   mPriority = priority;
-  emit eventUpdated(this);
+  updated();
 }
 
 int Incidence::priority() const
@@ -326,7 +309,7 @@ void Incidence::setSecrecy(int sec)
 {
   if (mReadOnly) return;
   mSecrecy = sec;
-  emit eventUpdated(this);
+  updated();
 }
 
 int Incidence::secrecy() const
@@ -368,31 +351,6 @@ QStringList Incidence::secrecyList()
 }
 
 
-void Incidence::setPilotId(int id)
-{
-  if (mReadOnly) return;
-  mPilotId = id;
-  //emit eventUpdated(this);
-}
-
-int Incidence::pilotId() const
-{
-  return mPilotId;
-}
-
-void Incidence::setSyncStatus(int stat)
-{
-  if (mReadOnly) return;
-  mSyncStatus = stat;
-  //  emit eventUpdated(this);
-}
-
-int Incidence::syncStatus() const
-{
-  return mSyncStatus;
-}
-
-
 QPtrList<Alarm> Incidence::alarms() const
 {
   return mAlarms;
@@ -402,26 +360,26 @@ Alarm* Incidence::newAlarm()
 {
   Alarm* alarm = new Alarm(this);
   mAlarms.append(alarm);
-//  emit eventUpdated(this);
+//  updated();
   return alarm;
 }
 
 void Incidence::addAlarm(Alarm *alarm)
 {
   mAlarms.append(alarm);
-  emit eventUpdated(this);
+  updated();
 }
 
 void Incidence::removeAlarm(Alarm *alarm)
 {
   mAlarms.removeRef(alarm);
-  emit eventUpdated(this);
+  updated();
 }
 
 void Incidence::clearAlarms()
 {
   mAlarms.clear();
-  emit eventUpdated(this);
+  updated();
 }
 
 bool Incidence::isAlarmEnabled() const

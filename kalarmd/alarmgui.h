@@ -63,7 +63,7 @@ class AlarmGui : public QObject, public ADConfigData, virtual public AlarmGuiIfa
     bool              isDaemonRunning(bool updateDockWindow = true);
     
     bool              autostartDaemon() const  { return mAutostartDaemon; }
-    const QString&    defaultClient() const    { return mDefaultClient; }
+    QCString          defaultClient() const    { return mDefaultClient; }
     void              setDefaultClient(int menuIndex);
     void              setFastDaemonCheck();
     void              readDaemonConfig();
@@ -76,8 +76,11 @@ class AlarmGui : public QObject, public ADConfigData, virtual public AlarmGuiIfa
 
   private:
     // DCOP interface
-    void              alarmDaemonUpdate(const QString& change, const QString& calendarURL, const QString& appName);
-    void              handleEvent(const QString& calendarURL, const QString& eventID);
+    void              alarmDaemonUpdate(const QString& change,
+                                        const QString& calendarURL,
+                                        const QCString& appName);
+    void              handleEvent(const QString& calendarURL,
+                                  const QString& eventID);
 
   private:
     void              checkDefaultClient();
@@ -93,7 +96,7 @@ class AlarmGui : public QObject, public ADConfigData, virtual public AlarmGuiIfa
     QTimer            mDaemonStatusTimer;   // timer for checking daemon status
     int               mDaemonStatusTimerCount; // countdown for fast status checking
     QString           mDaemonDataFile;      // path of daemon's config file
-    QString           mDefaultClient;       // daemon client application to call on left click
+    QCString          mDefaultClient;       // daemon client application to call on left click
     bool              mDaemonRunning;       // whether the alarm daemon is currently running
     bool              mAutostartDaemon;     // alarm daemon autostart status
     bool              mRevisingAlarmDialog; // true while mAlarmDialog is being revised

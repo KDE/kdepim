@@ -59,7 +59,7 @@ void Event::setDtEnd(const QDateTime &dtEnd)
   setHasEndDate(true);
   setHasDuration(false);
   
-  emit eventUpdated(this);
+  updated();
 }
 
 QDateTime Event::dtEnd() const
@@ -108,7 +108,7 @@ void Event::setTransparency(int transparency)
 {
   if (mReadOnly) return;
   mTransparency = transparency;
-  emit eventUpdated(this);
+  updated();
 }
 
 int Event::transparency() const

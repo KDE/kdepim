@@ -33,8 +33,8 @@ class ADConfigDataBase
     explicit ADConfigDataBase(bool daemon);
     virtual ~ADConfigDataBase() {}
 
-    ClientInfo  getClientInfo(const QString& appName);
-    void        removeClientInfo( const QString &appName );
+    ClientInfo  getClientInfo(const QCString& appName);
+    void        removeClientInfo( const QCString &appName );
     ClientList  clients() const { return mClients; }
     int         clientCount() const     { return mClients.count(); }
 
@@ -50,12 +50,11 @@ class ADConfigDataBase
     static QString    expandURL(const QString& urlString);
     const QString&    clientDataFile() const  { return mClientDataFile; }
 
-    static const QString CLIENT_KEY;
+    static const QCString CLIENT_KEY;
     static const QString CLIENTS_KEY;
-    static const QString GUI_KEY;
+    static const QCString GUI_KEY;
     static const QString GUIS_KEY;
     static const QString CALENDAR_KEY;
-
   
     ClientList        mClients;             // client application names and data
     CalendarList      mCalendars;           // the calendars being monitored

@@ -31,10 +31,10 @@
 class ADCalendarGui : public ADCalendarBase
 {
   public:
-    ADCalendarGui(const QString& url, const QString& appname, Type);
+    ADCalendarGui(const QString& url, const QCString& appname, Type);
     ~ADCalendarGui()  { }
 
-    bool           loadFile()          { return loadFile_(kapp->aboutData()->programName()); }
+    bool           loadFile() { return loadFile_(kapp->aboutData()->appName()); }
 
     void setEnabled( bool e ) { mEnabled = e; }
     bool enabled() const { return mEnabled; }
@@ -56,7 +56,7 @@ class ADCalendarGui : public ADCalendarBase
 class ADCalendarGuiFactory : public ADCalendarBaseFactory
 {
   public:
-    ADCalendarGui *create(const QString& url, const QString& appname,
+    ADCalendarGui *create(const QString& url, const QCString& appname,
                           ADCalendarBase::Type);
 };
 

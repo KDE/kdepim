@@ -36,8 +36,8 @@
 
 #include "calclient.h"
 
-ClientInfo::ClientInfo(const QString &_appName, const QString& titl,
-                       const QString& dcopObj, int notifyType, bool disp,
+ClientInfo::ClientInfo(const QCString &_appName, const QString& titl,
+                       const QCString& dcopObj, int notifyType, bool disp,
                        bool wait)
   : appName( _appName ),
     title(titl),

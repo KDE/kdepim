@@ -22,7 +22,7 @@
 #include "adcalendar_gui.h"
 
 
-ADCalendarGui::ADCalendarGui(const QString& url, const QString& appname,
+ADCalendarGui::ADCalendarGui(const QString& url, const QCString& appname,
                              Type type)
   : ADCalendarBase(url, appname, type),
     mAvailable(false),
@@ -34,7 +34,7 @@ ADCalendarGui::ADCalendarGui(const QString& url, const QString& appname,
 }
 
 ADCalendarGui *ADCalendarGuiFactory::create(const QString& url,
-                                            const QString& appname,
+                                            const QCString& appname,
                                             ADCalendarBase::Type type)
 {
   return new ADCalendarGui(url, appname, type);

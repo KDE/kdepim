@@ -44,7 +44,7 @@ AlarmApp::~AlarmApp()
 
 int AlarmApp::newInstance()
 {
-  kdDebug() << "kalarmd:AlarmApp::newInstance()" << endl;
+  kdDebug(5900) << "kalarmd:AlarmApp::newInstance()" << endl;
 
   // Check if we already have a running alarm daemon widget
   if (mAd) return 0;

@@ -43,28 +43,31 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void    checkAlarmsSlot();
     void    checkIfSessionStarted();
 
+    void    checkAlarms();
+
   private:
     // DCOP interface
     void    enableAutoStart(bool enable);
     void    enableCal(const QString& urlString, bool enable)
                        { enableCal_(expandURL(urlString), enable); }
-    void    reloadCal(const QString& appname, const QString& urlString)
+    void    reloadCal(const QCString& appname, const QString& urlString)
                        { reloadCal_(appname, expandURL(urlString), false); }
-    void    reloadMsgCal(const QString& appname, const QString& urlString)
+    void    reloadMsgCal(const QCString& appname, const QString& urlString)
                        { reloadCal_(appname, expandURL(urlString), true); }
-    void    addCal(const QString& appname, const QString& urlString)
+    void    addCal(const QCString& appname, const QString& urlString)
                        { addCal_(appname, expandURL(urlString), false); }
-    void    addMsgCal(const QString& appname, const QString& urlString)
+    void    addMsgCal(const QCString& appname, const QString& urlString)
                        { addCal_(appname, expandURL(urlString), true); }
     void    removeCal(const QString& urlString)
                        { removeCal_(expandURL(urlString)); }
-    void    resetMsgCal(const QString& appname, const QString& urlString)
+    void    resetMsgCal(const QCString& appname, const QString& urlString)
                        { resetMsgCal_(appname, expandURL(urlString)); }
-    void    registerApp(const QString& appName, const QString& appTitle,
-                        const QString& dcopObject, int notificationType,
+    void    registerApp(const QCString& appName, const QString& appTitle,
+                        const QCString& dcopObject, int notificationType,
                         bool displayCalendarName);
-    void    registerGui(const QString& appName, const QString& dcopObject);
+    void    registerGui(const QCString& appName, const QCString& dcopObject);
     void    quit();
+    void    forceAlarmCheck() { checkAlarms(); }
     void    dumpDebug();
     void    dumpAlarms();
 
@@ -85,29 +88,28 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     struct GuiInfo
     {
       GuiInfo()  { }
-      explicit GuiInfo(const QString &dcopObj) : dcopObject(dcopObj) { }
-      QString  dcopObject;     // DCOP object name
+      explicit GuiInfo(const QCString &dcopObj) : dcopObject(dcopObj) { }
+      QCString  dcopObject;     // DCOP object name
     };
     typedef QMap<QString, GuiInfo> GuiMap;  // maps GUI client names against their data
 
     void        enableCal_(const QString& urlString, bool enable);
-    void        addCal_(const QString& appname, const QString& urlString, bool msgCal);
-    void        reloadCal_(const QString& appname, const QString& urlString, bool msgCal);
+    void        addCal_(const QCString& appname, const QString& urlString, bool msgCal);
+    void        reloadCal_(const QCString& appname, const QString& urlString, bool msgCal);
     void        reloadCal_(ADCalendarBase*);
-    void        resetMsgCal_(const QString& appname, const QString& urlString);
+    void        resetMsgCal_(const QCString& appname, const QString& urlString);
     void        removeCal_(const QString& urlString);
-    void        checkAlarms();
-    void        checkAlarms(ADCalendarBase*);
-    void        checkAlarms(const QString& appName);
+    void        checkAlarms(ADCalendarBase*, const QDateTime &from, const QDateTime &to);
+    void        checkAlarms(const QCString& appName);
     void        checkEventAlarms(const Event& event, QValueList<QDateTime>& alarmtimes);
-    void        notifyPendingEvents(const QString& appname);
+    void        notifyPendingEvents(const QCString& appname);
     bool        notifyEvent(const ADCalendarBase*, const QString& eventID);
     void        notifyGuiCalStatus(const ADCalendarBase*);
-    void        notifyGui(GuiChangeType, const QString& calendarURL = QString::null,
-                          const QString &appname=QString::null);
-//    void        writeConfigClientGui(const QString& appName, const QString& dcopObject);
-    const GuiInfo* getGuiInfo(const QString &appName) const;
-    void        addConfigClient(KSimpleConfig&, const QString& appName, const QString& key);
+    void        notifyGui(GuiChangeType, const QString& calendarURL = QString::null);
+    void        notifyGui(GuiChangeType, const QString& calendarURL, const QCString &appname);
+//    void        writeConfigClientGui(const QCString& appName, const QString& dcopObject);
+    const GuiInfo* getGuiInfo(const QCString &appName) const;
+    void        addConfigClient(KSimpleConfig&, const QCString& appName, const QString& key);
     bool        isSessionStarted();
     void        setTimerStatus();
 
@@ -118,6 +120,8 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     bool              mEnabled;             // true if the alarm daemon is enabled
     bool              mAlarmTimerSyncing;   // true while alarm timer interval < 1 minute
     bool              mSessionStarted;      // true once session startup is complete
+
+    QDateTime mLastCheck;
 };
 
 #endif

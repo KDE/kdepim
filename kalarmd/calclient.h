@@ -44,15 +44,15 @@ struct ClientInfo
       COMMAND_LINE_NOTIFY = 2   // start client and use command line arguments to notify about events
     };
     ClientInfo() : mValid( false ) { }
-    ClientInfo(const QString &appName, const QString &title,
-               const QString &dcopObj, int notifyType, bool disp,
+    ClientInfo(const QCString &appName, const QString &title,
+               const QCString &dcopObj, int notifyType, bool disp,
                bool wait=false);
 
     void             setNotificationType(int type);
 
-    QString          appName;
+    QCString         appName;
     QString          title;             // application title for display purposes
-    QString          dcopObject;        // object to receive DCOP messages (if applicable)
+    QCString         dcopObject;        // object to receive DCOP messages (if applicable)
     NotificationType notificationType;  // whether and how to notify events if client app isn't running
     bool             displayCalName;    // true to display calendar name in tooltip
     // Data which is not used by all alarm daemon applications

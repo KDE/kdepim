@@ -25,57 +25,60 @@
 
 #include <qstring.h>
 
+#include "duration.h"
+
 namespace KCal {
 
 class Incidence;
 
 /**
-    This class represents an alarm notification. */
+  This class represents an alarm notification.
+*/
 class Alarm {
   public:
     typedef QValueList<Alarm *> List;
   
-    /** constructs a new event with variables initialized to "sane" values. */
+    /** Constructs a new alarm with variables initialized to "sane" values. */
     Alarm(Incidence *parent);
     /** Destruct Alarm object. */
     ~Alarm();
 
-    /** Set time the alarm should occur on. */
-    void setAlarmStart(QDateTime start) { mAlarmStart = start; }
-    /** Set, if the alarm is read-only or can be changed. */
-    void setAlarmReadOnly(bool readOnly ) { mAlarmReadOnly = readOnly; }
-    /** Get the alarm read-only status. */
-    bool alarmReadOnly() const { return mAlarmReadOnly; }
-
     /** set the event to have this file as the noise for the alarm. */
     void setAudioFile(const QString &audioAlarmFile);
     /** return the name of the audio file for the alarm */
-    const QString &audioFile() const;
+    QString audioFile() const;
 
     /** set this program to run when an alarm is triggered */
     void setProgramFile(const QString &programAlarmFile);
     /** return the name of the program to run when an alarm is triggered */
-    const QString &programFile() const;
+    QString programFile() const;
 
     /** send mail to this address when an alarm goes off */
     void setMailAddress(const QString &mailAlarmAddress);
     /** return the address to send mail to when an alarm goes off */
-    const QString &mailAddress() const;
+    QString mailAddress() const;
 
     /** set the subject line of the mail */
     void setMailSubject(const QString &mailAlarmSubject);
     /** return the subject line of the mail  */
-    const QString &mailSubject() const;
+    QString mailSubject() const;
 
     /** set the text to display when an alarm goes off */
     void setText(const QString &alarmText);
     /** return the text string that displays when an alarm goes off */
-    const QString &text() const;
+    QString text() const;
 
     /** set the time to trigger an alarm */
     void setTime(const QDateTime &alarmTime);
     /** return the date/time when an alarm goes off */
-    const QDateTime &time() const;
+    QDateTime time() const;
+    /** Return true, if the alarm has an explicit date/time. */
+    bool hasTime() const;
+
+    /** Set offset of alarm in time relative to the start of the event. */
+    void setOffset( const Duration & );
+    /** Return offset of alarm in time relative to the start of the event. */    
+    Duration offset() const;
 
     /** set the interval between snoozes for the alarm */
     void setSnoozeTime(int alarmSnoozeTime);
@@ -100,20 +103,22 @@ class Alarm {
     Incidence *parent() const  { return mParent; }
 
   private:
-    QString mAudioAlarmFile;              // url/filename of sound to play
-    QString mProgramAlarmFile;            // filename of program to run
-    QString mMailAlarmAddress;            // who to mail for reminder
-    QString mMailAlarmSubject;            // subject of email
-    QString mAlarmText;                   // text to display/mail for alarm
+    QString mAudioAlarmFile;     // url/filename of sound to play
+    QString mProgramAlarmFile;   // filename of program to run
+    QString mMailAlarmAddress;   // who to mail for reminder
+    QString mMailAlarmSubject;   // subject of email
+    QString mAlarmText;          // text to display/mail for alarm
 
-    QDateTime mAlarmTime;                 // time at which to display the alarm
-    int mAlarmSnoozeTime;                 // number of minutes after alarm to
-                                          // snooze before ringing again
-    int mAlarmRepeatCount;                // number of times for alarm to repeat
-                                          // after the initial time
+    int mAlarmSnoozeTime;        // number of minutes after alarm to
+                                 // snooze before ringing again
+    int mAlarmRepeatCount;       // number of times for alarm to repeat
+                                 // after the initial time
     QDateTime mAlarmStart;
-    bool mAlarmReadOnly;
     bool mAlarmEnabled;
+
+    QDateTime mAlarmTime;        // time at which to display the alarm
+    bool mHasTime;
+    Duration mOffset;
 
     Incidence *mParent;
 };

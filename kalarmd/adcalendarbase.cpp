@@ -38,30 +38,35 @@
 
 ADCalendarBase::EventsMap ADCalendarBase::eventsHandled_;
 
-ADCalendarBase::ADCalendarBase(const QString& url, const QString& appname, Type type)
+ADCalendarBase::ADCalendarBase(const QString& url, const QCString& appname, Type type)
   : urlString_(url),
     appName_(appname),
     actionType_(type),
     loaded_(false),
     mUnregistered(false)
 {
+  KConfig cfg( locate( "config", "korganizerrc" ) );
+  cfg.setGroup( "Time & Date" );
+  QString tz = cfg.readEntry( "TimeZoneId" );
+  kdDebug(5900) << "ADCalendarBase(): tz: " << tz << endl;
+  setTimeZoneId( cfg.readEntry( "TimeZoneId" ) );
 }
 
 /*
  * Load the calendar file.
  */
-bool ADCalendarBase::loadFile_(const QString& appName)
+bool ADCalendarBase::loadFile_(const QCString& appName)
 {
   loaded_ = false;
   KURL url(urlString_);
   QString tmpFile;
   if (KIO::NetAccess::download(url, tmpFile))
   {
-    kdDebug() << "--- Downloaded to " << tmpFile << endl;
+    kdDebug(5900) << "--- Downloaded to " << tmpFile << endl;
     loaded_ = load(tmpFile);
     KIO::NetAccess::removeTempFile(tmpFile);
     if (!loaded_)
-      kdDebug() << "ADCalendarBase::loadFile_(): Error loading calendar file '" << tmpFile << "'\n";
+      kdDebug(5900) << "ADCalendarBase::loadFile_(): Error loading calendar file '" << tmpFile << "'\n";
     else
     {
       // Remove all now non-existent events from the handled list
@@ -90,13 +95,13 @@ bool ADCalendarBase::loadFile_(const QString& appName)
 
 void ADCalendarBase::dump() const
 {
-  kdDebug() << "  <calendar>" << endl;
-  kdDebug() << "    <url>" << urlString() << "</url>" << endl;
-  kdDebug() << "    <appname>" << appName() << "</appname>" << endl;
-  if ( loaded() ) kdDebug() << "    <loaded/>" << endl;
-  kdDebug() << "    <actiontype>" << int(actionType()) << "</actiontype>" << endl;
-  if (enabled() ) kdDebug() << "    <enabled/>" << endl;
-  else kdDebug() << "    <disabled/>" << endl;
-  if (available()) kdDebug() << "    <available/>" << endl;
-  kdDebug() << "  </calendar>" << endl;  
+  kdDebug(5900) << "  <calendar>" << endl;
+  kdDebug(5900) << "    <url>" << urlString() << "</url>" << endl;
+  kdDebug(5900) << "    <appname>" << appName() << "</appname>" << endl;
+  if ( loaded() ) kdDebug(5900) << "    <loaded/>" << endl;
+  kdDebug(5900) << "    <actiontype>" << int(actionType()) << "</actiontype>" << endl;
+  if (enabled() ) kdDebug(5900) << "    <enabled/>" << endl;
+  else kdDebug(5900) << "    <disabled/>" << endl;
+  if (available()) kdDebug(5900) << "    <available/>" << endl;
+  kdDebug(5900) << "  </calendar>" << endl;  
 }

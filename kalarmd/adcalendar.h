@@ -27,7 +27,7 @@
 class ADCalendar : public ADCalendarBase
 {
   public:
-    ADCalendar(const QString& url, const QString& appname, Type);
+    ADCalendar(const QString& url, const QCString& appname, Type);
     ~ADCalendar()  { }
     ADCalendar *create(const QString& url, const QString& appname, Type);
 
@@ -46,7 +46,7 @@ class ADCalendar : public ADCalendarBase
 
     static void    clearEventsHandled(const QString& calendarURL);
 
-    bool           loadFile()          { return loadFile_(QString()); }
+    bool           loadFile()          { return loadFile_(""); }
 
   public:
     bool              available_;
@@ -58,7 +58,7 @@ class ADCalendar : public ADCalendarBase
 class ADCalendarFactory : public ADCalendarBaseFactory
 {
   public:
-    ADCalendar *create(const QString& url, const QString& appname,
+    ADCalendar *create(const QString& url, const QCString& appname,
                        ADCalendarBase::Type);
 };
 

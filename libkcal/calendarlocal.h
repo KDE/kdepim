@@ -35,10 +35,9 @@
 namespace KCal {
 
 /**
-    This class provides a calendar stored as a local file.
+  This class provides a calendar stored as a local file.
 */
-class CalendarLocal : public Calendar {
-    Q_OBJECT
+class CalendarLocal : public Calendar, public IncidenceBase::Observer {
   public:
     /** constructs a new calendar, with variables initialized to sane values. */
     CalendarLocal();
@@ -79,20 +78,7 @@ class CalendarLocal : public Calendar {
                              bool inclusive=false);
     /** Return all events in calendar */
     QPtrList<Event> getAllEvents();
-    /** checks to see if any todos are due now, and if so, returns the list
-     * of those todos that have alarms. */
-    bool checkTodos(QPtrList<Todo> &, bool append = false);
-    /** checks to see if any non-recurring alarms are due now, and if so,
-     * returns the list of those events that have alarms. */
-    bool checkNonRecurringAlarms(QPtrList<Event> &, bool append = false);
-    /** checks to see if any recurring alarms are due now, and if so,
-     * returns the list of those events that have alarms. */
-    bool checkRecurringAlarms(QPtrList<Event> &, bool append = false);
-    /** checks to see if any alarms are due now or have already passed, and
-     * if so, returns the list of those events that have alarms.
-     * Does not return recurring events. */
-    bool checkAlarmsPast(QPtrList<Event> &, bool append = false);
-  
+
     /*
       Returns a QString with the text of the holiday (if any) that falls
       on the specified date.
@@ -125,28 +111,18 @@ class CalendarLocal : public Calendar {
     /** Return all alarms, which ocur in the given time interval. */
     Alarm::List alarms( const QDateTime &from, const QDateTime &to );
 
-  signals:
-    /** emitted at regular intervals to indicate that the events in the
-      list have triggered an alarm. */
-    //void alarmSignal(QPtrList<Incidence> &);
-    void alarmSignal(QPtrList<Event> &);
-    void alarmSignal(QPtrList<Todo> &);
-    /** emitted whenever an event in the calendar changes.  Emits a pointer
-      to the changed event. */
-    void calUpdated(Incidence *);
-  
-  public slots:
-    /** checks to see if any alarms or todos are pending, and if so, returns a list
-     * of those events that have alarms. */
-    void checkAlarms();
-   
-  protected slots:
+    /** Return all alarms, which ocur before given date. */
+    Alarm::List alarmsTo( const QDateTime &to );
+
+  protected:
     /** this method should be called whenever a Event is modified directly
      * via it's pointer.  It makes sure that the calendar is internally
      * consistent. */
-    void updateEvent(Incidence *incidence);
+    void update(IncidenceBase *incidence);
   
-  protected:
+    /** Notification function of IncidenceBase::Observer. */
+    void incidenceUpdated( IncidenceBase *i ) { update( i ); }
+  
     /** inserts an event into its "proper place" in the calendar. */
     void insertEvent(const Event *anEvent);
   

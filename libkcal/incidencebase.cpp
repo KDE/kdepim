@@ -32,12 +32,13 @@
 using namespace KCal;
 
 IncidenceBase::IncidenceBase() :
-  mReadOnly(false), mFloats(true), mDuration(0), mHasDuration(false)
+  mReadOnly(false), mFloats(true), mDuration(0), mHasDuration(false),
+  mPilotId(0), mSyncStatus(SYNCMOD)
 {
   setVUID(CalFormat::createUniqueId());
 }
 
-IncidenceBase::IncidenceBase(const IncidenceBase &i) : QObject()
+IncidenceBase::IncidenceBase(const IncidenceBase &i)
 {
   mReadOnly = i.mReadOnly;
   mDtStart = i.mDtStart;
@@ -47,6 +48,9 @@ IncidenceBase::IncidenceBase(const IncidenceBase &i) : QObject()
   mVUID = i.mVUID;
   mAttendees = i.attendees();
   mFloats = i.mFloats;
+  mLastModified = i.mLastModified;
+  mPilotId = i.mPilotId;
+  mSyncStatus = i.mSyncStatus;
 }
 
 IncidenceBase::~IncidenceBase()
@@ -56,12 +60,24 @@ IncidenceBase::~IncidenceBase()
 void IncidenceBase::setVUID(const QString &VUID)
 {
   mVUID = VUID;
-  emit eventUpdated(this);
+  updated();
 }
 
 QString IncidenceBase::VUID() const
 {
   return mVUID;
+}
+
+void IncidenceBase::setLastModified(const QDateTime &lm)
+{
+  // DON'T! updated() because we call this from
+  // Calendar::updateEvent().
+  mLastModified = lm;
+}
+
+QDateTime IncidenceBase::lastModified() const
+{
+  return mLastModified;
 }
 
 void IncidenceBase::setOrganizer(const QString &o)
@@ -73,7 +89,7 @@ void IncidenceBase::setOrganizer(const QString &o)
   if (mOrganizer.left(7).upper() == "MAILTO:")
     mOrganizer = mOrganizer.remove(0,7);
 
-  emit eventUpdated(this);
+  updated();
 }
 
 QString IncidenceBase::organizer() const
@@ -90,7 +106,7 @@ void IncidenceBase::setDtStart(const QDateTime &dtStart)
 {
 //  if (mReadOnly) return;
   mDtStart = dtStart;
-  emit eventUpdated(this);
+  updated();
 }
 
 QDateTime IncidenceBase::dtStart() const
@@ -123,7 +139,7 @@ void IncidenceBase::setFloats(bool f)
 {
   if (mReadOnly) return;
   mFloats = f;
-  emit eventUpdated(this);
+  updated();
 }
 
 
@@ -136,7 +152,7 @@ void IncidenceBase::addAttendee(Attendee *a)
     a->setName(a->name().remove(0,7));
 
   mAttendees.append(a);
-  emit eventUpdated(this);
+  updated();
 }
 
 #if 0
@@ -144,7 +160,7 @@ void IncidenceBase::removeAttendee(Attendee *a)
 {
   if (mReadOnly) return;
   mAttendees.removeRef(a);
-  emit eventUpdated(this);
+  updated();
 }
 
 void IncidenceBase::removeAttendee(const char *n)
@@ -213,4 +229,39 @@ void IncidenceBase::setHasDuration(bool)
 bool IncidenceBase::hasDuration() const
 {
   return mHasDuration;
+}
+
+void IncidenceBase::setSyncStatus(int stat)
+{
+  if (mReadOnly) return;
+  mSyncStatus = stat;
+}
+
+int IncidenceBase::syncStatus() const
+{
+  return mSyncStatus;
+}
+
+void IncidenceBase::setPilotId( int id )
+{
+  if (mReadOnly) return;
+  
+  mPilotId = id;
+}
+
+int IncidenceBase::pilotId() const
+{
+  return mPilotId;
+}
+
+void IncidenceBase::registerObserver( IncidenceBase::Observer *observer )
+{
+  mObserver = observer;
+}
+
+void IncidenceBase::updated()
+{
+  if ( mObserver ) {
+    mObserver->incidenceUpdated( this );
+  }
 }

@@ -33,11 +33,11 @@ class ADCalendarBase : public CalendarLocal
 {
   public:
     enum Type { KORGANIZER = 0, KALARM = 1 };
-    ADCalendarBase(const QString& url, const QString& appname, Type);
+    ADCalendarBase(const QString& url, const QCString& appname, Type);
     ~ADCalendarBase()  { }
 
     const QString&  urlString() const   { return urlString_; }
-    const QString&  appName() const     { return appName_; }
+    const QCString&  appName() const     { return appName_; }
     bool            loaded() const      { return loaded_; }
     Type            actionType() const  { return actionType_; }
 
@@ -64,7 +64,7 @@ class ADCalendarBase : public CalendarLocal
     void dump() const;
 
   protected:
-    bool            loadFile_(const QString& appNamebool);
+    bool            loadFile_(const QCString& appName);
 
   private:
     ADCalendarBase(const ADCalendarBase&);             // prohibit copying
@@ -87,7 +87,7 @@ class ADCalendarBase : public CalendarLocal
 
   private:
     QString           urlString_;     // calendar file URL
-    QString           appName_;       // name of application owning this calendar
+    QCString          appName_;       // name of application owning this calendar
     Type              actionType_;    // action to take on event
     bool              loaded_;        // true if calendar file is currently loaded
 
@@ -99,7 +99,7 @@ typedef QPtrList<ADCalendarBase> CalendarList;
 class ADCalendarBaseFactory
 {
   public:
-    virtual ADCalendarBase *create(const QString& url, const QString& appname,
+    virtual ADCalendarBase *create(const QString& url, const QCString& appname,
                                    ADCalendarBase::Type) = 0;
 };
 

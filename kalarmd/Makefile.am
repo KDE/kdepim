@@ -1,21 +1,32 @@
-# set the include path for X, qt and KDE, and versit library for vCalendar
 INCLUDES= -I$(top_srcdir) $(all_includes)
+
+# This does not work, because configure generates a $(LINK) as command in the
+# Makefile, which is not defined.
+#
+#lib_LTLIBRARIES = libkalarmd.la
+#
+#libkalarmd_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+#libkalarmd_la_LIBADD  = $(LIB_KDECORE)
+#libkalarmd_la_SOURCES =  alarmdaemoniface.stub
 
 bin_PROGRAMS = kalarmd kalarmdgui
 kalarmd_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kalarmd_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
 kalarmd_SOURCES = alarmdaemon.cpp main.cpp alarmapp.cpp \
-	alarmdaemoniface.skel alarmdaemoniface.stub \
         adcalendarbase.cpp adcalendar.cpp adconfigdatabase.cpp calclient.cpp \
-        adconfigdatarw.cpp
+        adconfigdatarw.cpp \
+        alarmdaemoniface.skel alarmdaemoniface.stub \
+        alarmguiiface.stub
 
 kalarmdgui_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kalarmdgui_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
 kalarmdgui_SOURCES = guimain.cpp guiapp.cpp alarmdialog.cpp \
-	dockwindow.cpp alarmguiiface.skel alarmguiiface.stub \
+	dockwindow.cpp \
 	koeventviewer.cpp alarmgui.cpp adconfigdatabase.cpp \
-        alarmdaemoniface.stub calclient.cpp \
-        adcalendarbase.cpp adcalendar_gui.cpp
+        calclient.cpp \
+        adcalendarbase.cpp adcalendar_gui.cpp \
+        alarmdaemoniface.stub \
+        alarmguiiface.skel alarmguiiface.stub
 
 noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
 	guiapp.h alarmgui.h alarmguiiface.h alarmdialog.h \

@@ -29,8 +29,11 @@ class AlarmGuiIface : virtual public DCOPObject
 {
     K_DCOP
   k_dcop:
-    virtual ASYNC alarmDaemonUpdate(const QString& change, const QString& calendarURL, const QString& appName) = 0;
-    virtual ASYNC handleEvent(const QString& calendarURL, const QString& eventID) = 0;
+    virtual ASYNC alarmDaemonUpdate(const QString& change,
+                                    const QString& calendarURL,
+                                    const QCString& appName) = 0;
+    virtual ASYNC handleEvent(const QString& calendarURL,
+                              const QString& eventID) = 0;
 };
 
 #endif

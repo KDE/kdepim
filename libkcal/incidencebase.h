@@ -25,7 +25,6 @@
 //
 
 #include <qdatetime.h>
-#include <qobject.h>
 #include <qstringlist.h>
 #include <qvaluelist.h>
 
@@ -38,18 +37,27 @@ typedef QValueList<QDate> DateList;
 /**
   This class provides the base class common to all calendar components.
 */
-class IncidenceBase : public QObject
+class IncidenceBase
 {
-    Q_OBJECT
   public:
+    class Observer {
+      public:
+        virtual void incidenceUpdated( IncidenceBase * ) = 0;
+    };
+  
     IncidenceBase();
     IncidenceBase(const IncidenceBase &);
-    ~IncidenceBase();
+    virtual ~IncidenceBase();
 
     /** set the unique text string for the event */
     void setVUID(const QString &);
     /** get the unique text string for the event */
     QString VUID() const;
+
+    /** Sets the time the incidence was last modified. */
+    void setLastModified(const QDateTime &lm);
+    /** Return the time the incidence was last modified. */
+    QDateTime lastModified() const;
 
     /** sets the organizer for the event */
     void setOrganizer(const QString &o);
@@ -98,9 +106,21 @@ class IncidenceBase : public QObject
     /** Return the Attendee with this email */
     Attendee* attendeeByMail(const QString &);
 
-  signals:
-    /** Emitted by the member functions, when the Incidence has been updated. */
-    void eventUpdated(IncidenceBase *);
+    /** pilot syncronization states */
+    enum { SYNCNONE = 0, SYNCMOD = 1, SYNCDEL = 3 };
+    /** Set synchronisation satus. */
+    void setSyncStatus(int stat);
+    /** Return synchronisation status. */
+    int syncStatus() const;
+
+    /** Set Pilot Id. */
+    void setPilotId(int id);
+    /** Return Pilot Id. */
+    int pilotId() const;
+
+    void registerObserver( Observer * );
+
+    void updated();
 
   protected:
     bool mReadOnly;
@@ -110,12 +130,19 @@ class IncidenceBase : public QObject
     QDateTime mDtStart;
     QString mOrganizer;
     QString mVUID;
+    QDateTime mLastModified;
     QPtrList<Attendee> mAttendees;
 
     bool mFloats;
 
     int mDuration;
     bool mHasDuration;
+
+    // PILOT SYNCHRONIZATION STUFF
+    int mPilotId;                         // unique id for pilot sync
+    int mSyncStatus;                      // status (for sync)
+    
+    Observer *mObserver;
 };
 
 }

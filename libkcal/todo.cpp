@@ -77,7 +77,7 @@ void Todo::setDtDue(const QDateTime &dtDue)
   for (Alarm* alarm = alarms.first(); alarm; alarm = alarms.next())
     alarm->setAlarmStart(mDtDue);*/
 
-  emit eventUpdated(this);
+  updated();
 }
 
 QDateTime Todo::dtDue() const
@@ -109,7 +109,7 @@ void Todo::setHasDueDate(bool f)
 {
   if (mReadOnly) return;
   mHasDueDate = f;
-  emit eventUpdated(this);
+  updated();
 }
 
 
@@ -122,7 +122,7 @@ void Todo::setHasStartDate(bool f)
 {
   if (mReadOnly) return;
   mHasStartDate = f;
-  emit eventUpdated(this);
+  updated();
 }
 
 #if 0
@@ -152,14 +152,14 @@ void Todo::setStatus(const QString &statStr)
   else
     kdDebug(5800) << "error setting status, unknown status!" << endl;
 
-  emit eventUpdated(this);
+  updated();
 }
 
 void Todo::setStatus(int status)
 {
   if (mReadOnly) return;
   mStatus = status;
-  emit eventUpdated(this);
+  updated();
 }
 
 int Todo::status() const

@@ -23,6 +23,7 @@
 
 #include <qstring.h>
 #include <qdatetime.h>
+#include <qevent.h>
 
 #include "exceptions.h"
 #include "event.h"

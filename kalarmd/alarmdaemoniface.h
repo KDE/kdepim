@@ -31,18 +31,19 @@ class AlarmDaemonIface : virtual public DCOPObject
   k_dcop:
     virtual ASYNC enableAutoStart(bool enable) = 0;
     virtual ASYNC enableCal(const QString& urlString, bool enable) = 0;
-    virtual ASYNC addCal(const QString& appname, const QString& urlString) = 0;
-    virtual ASYNC addMsgCal(const QString& appname, const QString& urlString) = 0;
-    virtual ASYNC reloadCal(const QString& appname, const QString& urlString) = 0;
-    virtual ASYNC reloadMsgCal(const QString& appname, const QString& urlString) = 0;
+    virtual ASYNC addCal(const QCString& appname, const QString& urlString) = 0;
+    virtual ASYNC addMsgCal(const QCString& appname, const QString& urlString) = 0;
+    virtual ASYNC reloadCal(const QCString& appname, const QString& urlString) = 0;
+    virtual ASYNC reloadMsgCal(const QCString& appname, const QString& urlString) = 0;
     virtual ASYNC removeCal(const QString& urlString) = 0;
-    virtual ASYNC resetMsgCal(const QString& appname, const QString& urlString) = 0;
-    virtual ASYNC registerApp(const QString& appName, const QString& appTitle,
-                             const QString& dcopObject, int notificationType,
+    virtual ASYNC resetMsgCal(const QCString& appname, const QString& urlString) = 0;
+    virtual ASYNC registerApp(const QCString& appName, const QString& appTitle,
+                             const QCString& dcopObject, int notificationType,
                              bool displayCalendarName) = 0;
-    virtual ASYNC registerGui(const QString& appName, const QString& dcopObject) = 0;
+    virtual ASYNC registerGui(const QCString& appName, const QCString& dcopObject) = 0;
     virtual ASYNC quit() = 0;
 
+    virtual ASYNC forceAlarmCheck() = 0;
     virtual ASYNC dumpDebug() = 0;
     virtual ASYNC dumpAlarms() = 0;
 };
