@@ -261,6 +261,7 @@ bool ResourceExchange::addEvent(Event *anEvent)
 bool ResourceExchange::uploadEvent( Event *event )
 {
   mClient->uploadSynchronous( event );
+  return true;
 }
 
 void ResourceExchange::deleteEvent(Event *event)

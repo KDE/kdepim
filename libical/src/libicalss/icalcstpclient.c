@@ -169,24 +169,24 @@ int icalcstpc_next_input(icalcstpc* cstp, char* line)
     default:
         break;
     }
+    return 1;
 }
 
 /* After icalcstpc_next_input returns a 0, there are responses
    ready. use these to get them */
-icalcstpc_response icalcstpc_first_response(icalcstpc* cstp)
-{
-    struct icalcstpc_impl *impl = (struct icalcstpc_impl *)cstp;
-
-}
-
-
-icalcstpc_response icalcstpc_next_response(icalcstpc* cstp)
+void icalcstpc_first_response(icalcstpc* cstp)
 {
     struct icalcstpc_impl *impl = (struct icalcstpc_impl *)cstp;
 }
 
 
-int icalcstpc_set_timeout(icalcstpc* cstp, int sec)
+void icalcstpc_next_response(icalcstpc* cstp)
+{
+    struct icalcstpc_impl *impl = (struct icalcstpc_impl *)cstp;
+}
+
+
+void icalcstpc_set_timeout(icalcstpc* cstp, int sec)
 {
     struct icalcstpc_impl *impl = (struct icalcstpc_impl *)cstp;
 }

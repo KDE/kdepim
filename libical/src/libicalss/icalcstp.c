@@ -94,6 +94,7 @@ int icalcstp_line_is_endofdata(char* line)
 
 int icalcstp_line_is_mime(char* line)
 {
+    return 1;
 }
 
 

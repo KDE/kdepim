@@ -526,6 +526,7 @@ icalcomponent* icaldirset_fetch_match(icaldirset* set, icalcomponent *c)
 {
     fprintf(stderr," icaldirset_fetch_match is not implemented\n");
     assert(0);
+    return(0);
 }
 
 

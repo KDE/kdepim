@@ -62,7 +62,7 @@ icalcstpc* icalcstpc_new();
 
 void icalcstpc_free(icalcstpc* cstpc);
 
-int icalcstpc_set_timeout(icalcstpc* cstp, int sec);
+void icalcstpc_set_timeout(icalcstpc* cstp, int sec);
 
 
 /* Get the next string to send to the server */
@@ -73,8 +73,8 @@ int icalcstpc_next_input(icalcstpc* cstp, char * line);
 
 /* After icalcstpc_next_input returns a 0, there are responses
    ready. use these to get them */
-icalcstpc_response icalcstpc_first_response(icalcstpc* cstp);
-icalcstpc_response icalcstpc_next_response(icalcstpc* cstp);
+void icalcstpc_first_response(icalcstpc* cstp);
+void icalcstpc_next_response(icalcstpc* cstp);
 
 /* Issue a command */
 icalerrorenum icalcstpc_abort(icalcstpc* cstp);
