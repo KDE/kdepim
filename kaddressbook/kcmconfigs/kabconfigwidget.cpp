@@ -35,6 +35,7 @@
 #include <kmessagebox.h>
 #include <ktrader.h>
 
+#include "extensionconfigdialog.h"
 #include "extensionwidget.h"
 #include "kabprefs.h"
 
@@ -47,8 +48,7 @@ class ExtensionItem : public QCheckListItem
 
     void setService( const KService::Ptr &ptr );
     bool configWidgetAvailable() const;
-    ConfigureWidget *configWidget( QWidget *parent ) const;
-    QString libraryName() const;
+    ExtensionFactory *factory() const;
 
     virtual QString text( int column ) const;
 
@@ -159,7 +159,7 @@ void KABConfigWidget::restoreExtensionSettings()
 
     ExtensionItem *item = new ExtensionItem( mExtensionView, (*it)->name() );
     item->setService( *it );
-    if ( activeExtensions.contains( (*it)->library() ) )
+    if ( activeExtensions.contains( item->factory()->identifier() ) )
       item->setOn( true );
   }
 }
@@ -178,12 +178,13 @@ void KABConfigWidget::saveExtensionSettings()
     ExtensionItem *item = static_cast<ExtensionItem*>( it.current() );
     if ( item ) {
       if ( item->isOn() )
-        activeExtensions.append( item->libraryName() );
+        activeExtensions.append( item->factory()->identifier() );
     }
     ++it;
   }
 
   config.writeEntry( "activeExtensions", activeExtensions );
+  config.sync();
 }
 
 void KABConfigWidget::configureExtension()
@@ -192,11 +193,13 @@ void KABConfigWidget::configureExtension()
   if ( !item )
     return;
 
-  ConfigureWidget *wdg = item->configWidget( this );
-  if ( !wdg ) {
-    KMessageBox::sorry( this, i18n( "No configure dialog available for this plugin." ) );
-    return;
-  }
+  KConfig config( "kaddressbookrc" );
+  config.setGroup( QString( "Extensions_%1" ).arg( item->factory()->identifier() ) );
+
+  ExtensionConfigDialog dlg( item->factory(), &config, this );
+  dlg.exec();
+
+  config.sync();
 }
 
 void KABConfigWidget::selectionChanged( QListViewItem *i )
@@ -239,22 +242,13 @@ bool ExtensionItem::configWidgetAvailable() const
   return extensionFactory->configureWidgetAvailable();
 }
 
-ConfigureWidget *ExtensionItem::configWidget( QWidget *parent ) const
+ExtensionFactory *ExtensionItem::factory() const
 {
   KLibFactory *factory = KLibLoader::self()->factory( mPtr->library() );
   if ( !factory )
     return 0;
 
-  ExtensionFactory *extensionFactory = static_cast<ExtensionFactory*>( factory );
-  if ( !extensionFactory )
-    return 0;
-
-  return extensionFactory->configureWidget( parent );
-}
-
-QString ExtensionItem::libraryName() const
-{
-  return mPtr->library();
+  return static_cast<ExtensionFactory*>( factory );
 }
 
 QString ExtensionItem::text( int column ) const

@@ -51,6 +51,11 @@ class DistributionListFactory : public ExtensionFactory
     {
       return new DistributionListWidget( vm, parent, name );
     }
+
+    QString identifier() const
+    {
+      return "distribution_list_editor";
+    }
 };
 
 extern "C" {

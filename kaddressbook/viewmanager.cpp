@@ -793,9 +793,6 @@ void ViewManager::loadExtensions()
     if ( !(*it)->hasServiceType( "KAddressBook/Extension" ) )
       continue;
 
-    if ( !activeExtensions.contains( (*it)->library() ) )
-      continue;
-
     KLibFactory *factory = KLibLoader::self()->factory( (*it)->library() );
     if ( !factory ) {
       kdDebug(5720) << "ViewManager::loadExtensions(): Factory creation failed" << endl;
@@ -808,6 +805,9 @@ void ViewManager::loadExtensions()
       kdDebug(5720) << "ViewManager::loadExtensions(): Cast failed" << endl;
       continue;
     }
+
+    if ( !activeExtensions.contains( extensionFactory->identifier() ) )
+      continue;
 
     wdg = extensionFactory->extension( this, mExtensionBar );
     if ( wdg ) {

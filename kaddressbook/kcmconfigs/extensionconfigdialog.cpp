@@ -23,58 +23,33 @@
 
 #include <qlayout.h>
 
-#include <kaboutdata.h>
-#include <kdebug.h>
 #include <klocale.h>
 
-#include "kabconfigwidget.h"
+#include "extensionconfigdialog.h"
 
-#include "kcmkabconfig.h"
-
-extern "C"
+ExtensionConfigDialog::ExtensionConfigDialog( ExtensionFactory *factory, KConfig *config,
+                                              QWidget *parent, const char *name )
+  : KDialogBase( Plain, i18n( "Extension Settings" ), Ok | Cancel, Ok, parent,
+                 name, true, true ), mWidget( 0 ), mConfig( config )
 {
-  KCModule *create_kabconfig( QWidget *parent, const char * ) {
-    return new KCMKabConfig( parent, "kcmkabconfig" );
-  }
+  QFrame *page = plainPage();
+  QGridLayout *layout = new QGridLayout( page, 1, 1, marginHint(), spacingHint() );
+
+  mWidget = factory->configureWidget( page, "ExtensionConfigWidget" );
+  layout->addWidget( mWidget, 0, 0 );
+
+  mWidget->restoreSettings( mConfig );
 }
 
-KCMKabConfig::KCMKabConfig( QWidget *parent, const char *name )
-  : KCModule( parent, name )
+ExtensionConfigDialog::~ExtensionConfigDialog()
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
-  mConfigWidget = new KABConfigWidget( this, "mConfigWidget" );
-  layout->addWidget( mConfigWidget );
-
-  connect( mConfigWidget, SIGNAL( changed( bool ) ), SIGNAL( changed( bool ) ) );
-
-  load();
 }
 
-void KCMKabConfig::load()
+void ExtensionConfigDialog::slotOk()
 {
-  mConfigWidget->restoreSettings();
+  mWidget->saveSettings( mConfig );
+
+  KDialogBase::slotOk();
 }
 
-void KCMKabConfig::save()
-{
-  mConfigWidget->saveSettings();
-}
-
-void KCMKabConfig::defaults()
-{
-  mConfigWidget->defaults();
-}
-
-const KAboutData* KCMKabConfig::aboutData() const
-{
-  KAboutData *about = new KAboutData( I18N_NOOP( "kcmkabconfig" ),
-                                      I18N_NOOP( "KAddressBook Configure Dialog" ),
-                                      0, 0, KAboutData::License_GPL,
-                                      I18N_NOOP( "(c), 2003 Tobias Koenig" ) );
-
-  about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
-
-  return about;
-}
-
-#include "kcmkabconfig.moc"
+#include "extensionconfigdialog.moc"

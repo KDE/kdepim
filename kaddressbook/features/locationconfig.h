@@ -1,6 +1,6 @@
 /*
     This file is part of KAddressBook.
-    Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,47 +21,43 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef LOCATIONWIDGET_H
-#define LOCATIONWIDGET_H
+#include "configurewidget.h"
 
+#ifndef LOCATIONCONFIG_H
+#define LOCATIONCONFIG_H
 
-#include "extensionwidget.h"
+class KLineEdit;
+class KListView;
 
-class KComboBox;
-class KHTMLPart;
+class QListViewItem;
 class QPushButton;
 
-namespace KABC {
-class Address;
-class AddressBook;
-}
-
-class LocationWidget : public ExtensionWidget
+class LocationConfigWidget : public ConfigureWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 
   public:
-    LocationWidget( ViewManager*, QWidget *parent, const char *name = 0 );
-    virtual ~LocationWidget();
+    LocationConfigWidget( ViewManager *vm, QWidget *parent, const char *name = 0 );
+    ~LocationConfigWidget();
 
-    void addresseeSelectionChanged();
-
-    QString title() const;
-    QString identifier() const;
+    void restoreSettings( KConfig *cfg );
+    void saveSettings( KConfig *cfg );
 
   private slots:
-    void loadLocationPage();
+    void add();
+    void remove();
+    void edit();
+    void selectionChanged( QListViewItem* );
+    void inputChanged( const QString& );
 
   private:
-    QString createUrl( const KABC::Address& );
+    KLineEdit *mNameEdit;
+    KLineEdit *mURLEdit;
+    KListView *mListView;
 
-    KABC::Address::List mAddressList;
-    QMap<QString, QString> mURLs;
-    KComboBox *mAddressTypeCombo;
-    KComboBox *mURLTypeCombo;
-    KHTMLPart *mHTMLPart;
-
-    QPushButton *mLoadButton;
+    QPushButton *mAddButton;
+    QPushButton *mEditButton;
+    QPushButton *mRemoveButton;
 };
 
 #endif

@@ -93,6 +93,12 @@ class ExtensionFactory : public KLibFactory
 
     virtual bool configureWidgetAvailable() { return false; }
 
+    /**
+      This method should return the same identifier like the config
+      widget.
+     */
+    virtual QString identifier() const = 0;
+
   protected:
     virtual QObject* createObject( QObject*, const char*, const char*,
                                    const QStringList & )

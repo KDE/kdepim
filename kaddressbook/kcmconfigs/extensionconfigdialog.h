@@ -21,60 +21,28 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include <qlayout.h>
+#ifndef EXTENSIONCONFIGDIALOG_H
+#define EXTENSIONCONFIGDIALOG_H
 
-#include <kaboutdata.h>
-#include <kdebug.h>
-#include <klocale.h>
+#include <kdialogbase.h>
 
-#include "kabconfigwidget.h"
+#include "extensionwidget.h"
 
-#include "kcmkabconfig.h"
-
-extern "C"
+class ExtensionConfigDialog : public KDialogBase
 {
-  KCModule *create_kabconfig( QWidget *parent, const char * ) {
-    return new KCMKabConfig( parent, "kcmkabconfig" );
-  }
-}
+  Q_OBJECT
 
-KCMKabConfig::KCMKabConfig( QWidget *parent, const char *name )
-  : KCModule( parent, name )
-{
-  QVBoxLayout *layout = new QVBoxLayout( this );
-  mConfigWidget = new KABConfigWidget( this, "mConfigWidget" );
-  layout->addWidget( mConfigWidget );
+  public:
+    ExtensionConfigDialog( ExtensionFactory *factory, KConfig *config,
+                           QWidget *parent, const char *name = 0 );
+    ~ExtensionConfigDialog();
 
-  connect( mConfigWidget, SIGNAL( changed( bool ) ), SIGNAL( changed( bool ) ) );
+  protected slots:
+    void slotOk();
 
-  load();
-}
+  private:
+    ConfigureWidget *mWidget;
+    KConfig *mConfig;
+};
 
-void KCMKabConfig::load()
-{
-  mConfigWidget->restoreSettings();
-}
-
-void KCMKabConfig::save()
-{
-  mConfigWidget->saveSettings();
-}
-
-void KCMKabConfig::defaults()
-{
-  mConfigWidget->defaults();
-}
-
-const KAboutData* KCMKabConfig::aboutData() const
-{
-  KAboutData *about = new KAboutData( I18N_NOOP( "kcmkabconfig" ),
-                                      I18N_NOOP( "KAddressBook Configure Dialog" ),
-                                      0, 0, KAboutData::License_GPL,
-                                      I18N_NOOP( "(c), 2003 Tobias Koenig" ) );
-
-  about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
-
-  return about;
-}
-
-#include "kcmkabconfig.moc"
+#endif
