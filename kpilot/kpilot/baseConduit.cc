@@ -158,6 +158,48 @@ int BaseConduit::addSyncLogMessage(const char *s)
 }
 
 
+int BaseConduit::readAppInfo(unsigned char *buffer)
+{
+	FUNCTIONSETUP;
+
+	int len = 0;
+	int recvlen;
+
+	CStatusMessages::write(fDaemonSocket->socket(),
+		CStatusMessages::READ_APP_INFO);
+	if (read(fDaemonSocket->socket(),&len,sizeof(int)))
+	{
+		// Sanity check
+		//
+		//
+		if ((len<0) || (len>16000))
+		{
+			kdError() << __FUNCTION__
+				<< ": Got crazy length for READ_APP_INFO"
+				<< endl;
+			return 0;
+		}
+
+		if ((recvlen=read(fDaemonSocket->socket(),buffer,len))!=len)
+		{
+			kdWarning() << __FUNCTION__
+				<< ": Expected length "
+				<< len
+				<< " and read "
+				<< recvlen
+				<< endl;
+		}
+
+		return recvlen;
+	}
+	else
+	{
+		kdWarning() << __FUNCTION__
+			<< ": Got no response to READ_APP_INFO"
+			<< endl;
+		return 0;
+	}
+}
 // Returns 0L if no more modified records.  User must delete
 // the returned record when finished with it.
 PilotRecord* 
@@ -352,6 +394,9 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.16  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.15  2001/02/08 08:13:44  habenich
 // exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
 //

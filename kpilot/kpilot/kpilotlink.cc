@@ -402,6 +402,14 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 
 	switch(message)
 	{
+	case CStatusMessages::READ_APP_INFO :
+		{
+		unsigned char *buf = new unsigned char[BUFSIZ];
+		int appLen = fCurrentDB->readAppBlock(buf,BUFSIZ);
+		write(cSocket->socket(),&appLen,sizeof(int));
+		write(cSocket->socket(),buf,appLen);
+		delete buf;
+		}
 	case CStatusMessages::WRITE_RECORD :
 		{
 		tmpRec = readRecord(cSocket);
@@ -1650,6 +1658,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 #endif
 
 // $Log$
+// Revision 1.37  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.36  2001/02/08 13:17:19  adridg
 // Fixed crash when conduits run during a backup and exit after the
 // end of that backup (because the event loop is blocked by the backup

@@ -137,6 +137,8 @@ protected:
    */
   PilotRecord* readRecordById(recordid_t id);
 
+	int readAppInfo(unsigned char *buffer);
+
   /**
    * Writes a record to the current database.  If rec->getID() == 0,
    * a new ID will be assigned and returned.  Else, rec->getID() is
@@ -198,4 +200,7 @@ private:
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.15  2001/02/06 08:05:19  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//
