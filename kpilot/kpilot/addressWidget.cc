@@ -256,7 +256,7 @@ void AddressWidget::setupWidget()
 	connect(fCatList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));
 	QToolTip::add(fCatList,
-		i18n("Select the category of addresses to display here."));
+		i18n("<qt>Select the category of addresses to display here.</qt>"));
 
 	label = new QLabel(i18n("Category:"), this);
 	label->setBuddy(fCatList);
@@ -269,9 +269,9 @@ void AddressWidget::setupWidget()
 	connect(fListBox, SIGNAL(selected(int)),
 		this, SLOT(slotEditRecord()));
 	QToolTip::add(fListBox,
-		i18n("This list displays all the addresses "
+		i18n("<qt>This list displays all the addresses "
 			"in the selected category. Click on "
-			"one to display it to the right."));
+			"one to display it to the right.</qt>"));
 
 	label = new QLabel(i18n("Address Info:"), this);
 	grid->addWidget(label, 0, 2);
@@ -286,19 +286,19 @@ void AddressWidget::setupWidget()
 	grid->addWidget(fEditButton, 2, 0);
 	connect(fEditButton, SIGNAL(clicked()), this, SLOT(slotEditRecord()));
 	QToolTip::add(fEditButton,
-		i18n("You can edit an address when it is selected."));
+		i18n("<qt>You can edit an address when it is selected.</qt>"));
 
 	button = new QPushButton(i18n("New Record"), this);
 	grid->addWidget(button, 2, 1);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotCreateNewRecord()));
-	QToolTip::add(button, i18n("Add a new address to the address book."));
+	QToolTip::add(button, i18n("<qt>Add a new address to the address book.</qt>"));
 
 	fDeleteButton = new QPushButton(i18n("Delete Record"), this);
 	grid->addWidget(fDeleteButton, 3, 0);
 	connect(fDeleteButton, SIGNAL(clicked()),
 		this, SLOT(slotDeleteRecord()));
 	QToolTip::add(fDeleteButton,
-		i18n("Delete the selected address from the address book."));
+		i18n("<qt>Delete the selected address from the address book.</qt>"));
 }
 
 void AddressWidget::updateWidget()
@@ -774,6 +774,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.44  2001/12/10 22:08:55  adridg
+// Remove bad setBackground -- thx Martin J
+//
 // Revision 1.43  2001/10/17 08:46:08  adridg
 // Minor cleanups
 //

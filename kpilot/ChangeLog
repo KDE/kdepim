@@ -109,6 +109,31 @@ thing you know, I'll be using KPilot to sync my Pilot. Ewwwww.
 *Every* sync, KPilot tells me that the name in the pilot is different
 from the name in KPilot. Gotta fix that.
 
+2001-12-30  Aaron J Seigo
+* kpilot/logWidget.cc
+* kpilot/kpilot.cc
+  - Paint the KPilot version number in the splash screen.
+
+2001-12-30  Adriaan de Groot
+* conduits/vcalconduit/vcal-conduit.cc
+* conduits/vcalconduit/vcalBase.cc
+  - Removed some __FUNCTION__ things, added #ifdef DEBUG to debug code.
+    In some other files, too.
+  - The code in vcalBase.cc is in heavy need of an invocation of indent.
+    It's horrible and ugly in other ways, too, but this is a start.
+
+2001-12-31  Adriaan de Groot
+
+Some general polishing of ToolTips &c.
+
+* kpilot/*
+  - Added Kristof's icon for the file installer. It's still a preliminary
+    version, though.
+  - TODO: after reconfiguring the username, re-initialize all components
+    in kpilot, to get the new databases.
+  - Switched the ToolTips in the address viewer to use <qt>
+  - TODO: ditch the toolbar; perhaps add the select-kind-of-sync
+    functionality to the logWidget.
 
 KPilot Developer's notes for december 27th 2001
 ===============================================

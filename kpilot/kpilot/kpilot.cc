@@ -319,9 +319,9 @@ void KPilotInstaller::initComponents()
 		defaultDBPath), 
 		i18n("Address Viewer"));
 
+	ADDICONPAGE(i18n("File Installer"),"kpilot/kpilot-fileinstaller.png");
 	fFileInstallWidget = new FileInstallWidget(
-		getManagingWidget()->addVBoxPage(i18n("File Installer")),
-		defaultDBPath);
+		w,defaultDBPath);
 	addComponentPage(fFileInstallWidget, i18n("File Installer"));
 
 #undef ADDICONPAGE
@@ -856,6 +856,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.67  2001/12/31 09:38:09  adridg
+// Splash patch by Aaron
+//
 // Revision 1.66  2001/11/18 16:59:55  adridg
 // New icons, DCOP changes
 //
