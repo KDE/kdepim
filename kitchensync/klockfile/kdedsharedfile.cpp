@@ -21,6 +21,8 @@
 
 #include <kmessagebox.h>
 
+#include <kdepimmacros.h>
+
 class FileLockObject {
  public:
   FileLockObject(){

@@ -71,6 +71,8 @@ static const char *conduitconfigdialog_id =
 #define CONDUIT_LIBRARY (3)
 #define CONDUIT_ORDER	(4)
 
+#include "kdepimmacros.h"
+
 extern "C"
 {
 	KDE_EXPORT KCModule *create_kpilotconfig( QWidget *parent, const char * )

@@ -40,6 +40,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include <kdepimmacros.h>
+
 namespace KABC {
 
 class ResourceMemory : public ResourceCached
@@ -54,7 +56,6 @@ class ResourceMemory : public ResourceCached
 };
 
 }
-
 
 extern "C" {
 KDE_EXPORT int kdemain( int argc, char **argv );
