@@ -29,6 +29,8 @@
 
 #include "options.h"
 
+#include <time.h> // Needed by pilot-link include
+
 #include <pi-appinfo.h>
 
 #include "pilotDatabase.moc"
@@ -66,3 +68,6 @@ PilotDatabase::PilotDatabase(QObject *o,const char *n) :
 
 
 // $Log$
+// Revision 1.1  2001/10/10 21:47:14  adridg
+// Shared files moved from ../kpilot/ and polished
+//
