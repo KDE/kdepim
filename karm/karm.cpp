@@ -8,6 +8,7 @@
 #include <qlayout.h>
 #include <qtextstream.h>
 #include <qfile.h>
+#include <qtimer.h>
 
 #include <kapp.h>
 #include <kconfig.h>

@@ -7,6 +7,7 @@
 
 #include <qdatetime.h>
 #include <qobject.h>
+#include <qstringlist.h>
 
 #include "attendee.h"
 #include "korecurrence.h"
