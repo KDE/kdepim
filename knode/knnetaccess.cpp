@@ -131,7 +131,7 @@ void KNNetAccess::addJob(KNJobData *job)
 // type==0 => all jobs
 void KNNetAccess::stopJobsNntp(int type)
 {
-  if ((currentNntpJob) && ((type==0)||(currentNntpJob->type()==type))) {       // stop active job
+  if ((currentNntpJob && !currentNntpJob->canceled()) && ((type==0)||(currentNntpJob->type()==type))) {   // stop active job
     currentNntpJob->cancel();
     triggerAsyncThread(nntpOutPipe[1]);
   }
@@ -155,7 +155,7 @@ void KNNetAccess::stopJobsNntp(int type)
 // type==0 => all jobs
 void KNNetAccess::stopJobsSmtp(int type)
 {
-  if ((currentSmtpJob) && ((type==0)||(currentSmtpJob->type()==type))) {       // stop active job
+  if ((currentSmtpJob && !currentSmtpJob->canceled()) && ((type==0)||(currentSmtpJob->type()==type))) {    // stop active job
     currentSmtpJob->cancel();
     triggerAsyncThread(smtpOutPipe[1]);
   }

@@ -205,8 +205,10 @@ KNodeApp::KNodeApp()
     view->collectionView->setCurrentItem(view->collectionView->firstChild());
   view->collectionView->setFocus();
 
-  if (is_first_start)  // open the config dialog on the first start
+  if (is_first_start) {  // open the config dialog on the first start
+    show();              // the settings dialog must appear in front of the main window!
     slotSettings();
+  }
 }
 
 

@@ -25,6 +25,7 @@
 KNNntpAccount::KNNntpAccount()
   : KNCollection(0), KNServerInfo(), u_nsentCount(0), f_etchDescriptions(true)
 {
+  l_astNewFetch = QDate::currentDate();
 }
 
 
