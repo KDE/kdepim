@@ -1,7 +1,7 @@
 /*
 † † † † † † † †=.            This file is part of the OPIE Project
-† † † † † † †.=l.            Copyright (c)  2002 Holger Freyther <zecke@handhelds.org>
-† † † † † †.>+-=                            2002 Maximilian Reiﬂ <harlekin@handhelds.org>
+† † † † † † †.=l.            Copyright (c)  2002,2003 Holger Freyther <zecke@handhelds.org>
+† † † † † †.>+-=                            2002,2003 Maximilian Reiﬂ <harlekin@handhelds.org>
 †_;:, † † .> † †:=|.         This library is free software; you can
 .> <`_, † > †. † <=          redistribute it and/or  modify it under
 :`=1 )Y*s>-.-- † :           the terms of the GNU Library General Public
@@ -44,6 +44,7 @@
 #include <kmessagebox.h>
 #include <kfiledialog.h>
 #include <kdebug.h>
+#include <kiconloader.h>
 
 #include <kparts/componentfactory.h>
 #include <kpopupmenu.h>
@@ -592,7 +593,7 @@ void KSyncMainWindow::slotConfigCur() {
     ConfigureDialog *dlg = new ConfigureDialog(this);
     ManipulatorPart *part = 0l;
     SyncConfig* conf = new SyncConfig( currentProfile().confirmDelete(), currentProfile().confirmSync() );
-    dlg->addWidget( conf, i18n("Configure Synchronisation"), new QPixmap() );
+    dlg->addWidget( conf, i18n("Configure Synchronisation"), new QPixmap( KGlobal::iconLoader()->loadIcon("package_settings", KIcon::Desktop, 48 ) ) );
 
     for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
         if( part->configIsVisible() )
