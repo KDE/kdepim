@@ -52,6 +52,7 @@
 #include <qpushbutton.h>
 #include <qlayout.h>
 #include <qheader.h>
+#include <qtimer.h>
 
 #include <assert.h>
 
