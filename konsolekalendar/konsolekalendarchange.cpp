@@ -3,6 +3,7 @@
            -------------------
     begin                : Sun May 25 2003
     copyright            : (C) 2003 by Tuukka Pasanen
+    copyright            : (C) 2003 by Allen Winter
     email                : illuusio@mailcity.com
  ***************************************************************************/
 
@@ -15,9 +16,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "konsolekalendarchange.h"
+#include <stdlib.h>
 #include <iostream>
 
+#include <kdebug.h>
+#include <klocale.h>
+
+#include "konsolekalendarchange.h"
 
 using namespace KCal;
 using namespace std;
@@ -35,18 +40,21 @@ bool KonsoleKalendarChange::changeEvent()
 {
   Event::List eventList( m_variables->
                          getCalendar()->
-                         rawEventsForDate(
-                           m_variables->getDate()
-                         ) );
+                         rawEventsForDate( m_variables->getStartDateTime() ) );
 
   Event::List::ConstIterator it;
+  //
+  // TODO:
+  // I don't really remember what that heck i've been thinking:)
+  // Needs to be redone
+  //
+
   for( it = eventList.begin(); it != eventList.end(); ++it ) {
     Event *singleEvent = *it;
-    cout << "---- change---" << endl;
+
     cout <<  singleEvent->dtStartStr().remove(0, (singleEvent->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
     cout << " - ";
     cout << singleEvent->dtEndStr().remove(0, (singleEvent->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
-    cout << "---- change ---" << endl;
 
     singleEvent->setSummary( m_variables->getSummary() );
     m_variables->getCalendar()->addEvent( singleEvent );

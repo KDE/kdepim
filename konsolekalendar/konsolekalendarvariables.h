@@ -5,7 +5,8 @@
         konsolekalendarvariables.h  -  description
            -------------------
     begin                : Sun Jan 6 2002
-    copyright            : (C) 2002 by Tuukka Pasanen
+    copyright            : (C) 2002-2003 by Tuukka Pasanen
+    copyright            : (C) 2003 by Allen Winter
     email                : illuusio@mailcity.com
  ***************************************************************************/
 
@@ -21,8 +22,8 @@
 #include <qdatetime.h>
 #include <qstring.h>
 
-#include "calendarlocal.h"
-#include "event.h"
+#include <libkcal/calendarlocal.h>
+#include <libkcal/event.h>
 
 
    /*
@@ -46,35 +47,28 @@ class KonsoleKalendarVariables
     KonsoleKalendarVariables();
     ~KonsoleKalendarVariables();
 
-    void setDate( QDateTime date );
-    QDateTime getDate();
-    bool isDate();
-    void isDate( bool is );
+    void setStartDateTime( QDateTime start );
+    QDateTime getStartDateTime();
+    bool isStartDateTime();
 
-    
-    void setStartDate( QDateTime start );
-    QDateTime getStartDate();
-    bool isStartDate();
-    void isStartDate( bool is );
+    void setEndDateTime( QDateTime end );
+    QDateTime getEndDateTime();
+    bool isEndDateTime();
 
-    
-    void setEndDate( QDateTime end );
-    QDateTime getEndDate();
-    bool isEndDate();
-    void isEndDate( bool is );
-    
     void setNext( bool next );
     bool isNext();
 
     void setVerbose( bool verbose );
     bool isVerbose();
 
+    void setDryRun( bool dryrun );
+    bool isDryRun();
+
     void setCalendarFile( QString calendar );
     QString getCalendarFile();
 
     void setImportFile( QString calendar );
     QString getImportFile();
-
 
     void setDescription( QString description );
     QString getDescription();
@@ -84,11 +78,14 @@ class KonsoleKalendarVariables
     QString getSummary();
     bool isSummary();
 
-
-    bool isAll();
-
     void setAll( bool all );
     bool getAll();
+    bool isAll();
+
+    void setFloating( bool floating );
+    bool getFloating();
+
+    void printSpecs( QString mode );
 
     QDate parseDate( QString string );
     QTime parseTime( QString str );
@@ -126,21 +123,21 @@ class KonsoleKalendarVariables
     char findSeparator( const QString &str, int &pos, int &seppos );
     void skipWhiteSpace( const QString &str, int &pos );
 
-    QDateTime m_date;
-    bool m_bIsDate;
-    QDateTime m_startDate;
-    QDateTime m_endDate;
-    bool m_bIsStartDate;
+    QDateTime m_startDateTime;
+    QDateTime m_endDateTime;
+    bool m_bIsStartDateTime;
+    bool m_bIsEndDateTime;
     QString m_calendar;
     QString m_import;
     QString m_description;
     QString m_summary;
     bool m_bSummary;
-    bool m_bIsEndDate;
     bool m_bNext;
     bool m_bVerbose;
+    bool m_bDryRun;
     bool m_bAll;
     bool m_bDescription;
+    bool m_bFloating;
     int str_length;
     int m_export_type;
     // We can use this from everywhere

@@ -3,6 +3,7 @@
            -------------------
     begin                : Sun May 25 2003
     copyright            : (C) 2002 by Tuukka Pasanen
+    copyright            : (C) 2003 by Allen Winter
     email                : illuusio@mailcity.com
  ***************************************************************************/
 
@@ -23,9 +24,11 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include "calendarlocal.h"
-#include "calendar.h"
-#include "event.h"
+#include <libkcal/calendarlocal.h>
+#include <libkcal/calendar.h>
+#include <libkcal/event.h>
+#include <libkcal/htmlexport.h>
+
 
 #include "konsolekalendarexports.h"
 
@@ -58,8 +61,6 @@ void KonsoleKalendarExports::exportAsTxt( Event *event ){
   cout << I18N_NOOP("Description:") << endl;  
   cout << "\t" << event->description().local8Bit() << endl;
   cout << "-----------------" << endl;
-
-  
 }
 
 void KonsoleKalendarExports::exportAsTxtKorganizer( Event *event ){

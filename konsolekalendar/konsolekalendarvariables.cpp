@@ -2,7 +2,8 @@
         konsolekalendarvariables.cpp  -  description
            -------------------
     begin                : Sun Jan 6 2002
-    copyright            : (C) 2002 by Tuukka Pasanen
+    copyright            : (C) 2002-2003 by Tuukka Pasanen
+    copyright            : (C) 2003 by Allen Winter
     email                : illuusio@mailcity.com
  ***************************************************************************/
 
@@ -15,93 +16,69 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <klocale.h>
+#include <kdebug.h>
+
 #include <qdatetime.h>
 #include <qstring.h>
-#include <kdebug.h>
-#include "konsolekalendarvariables.h"
 
 #include <stdlib.h>
 #include <iostream>
 #include <stdio.h>
+
+#include "konsolekalendarvariables.h"
 
 using namespace KCal;
 using namespace std;
 
 KonsoleKalendarVariables::KonsoleKalendarVariables()
 {
-  m_bIsDate = true;
-  m_bIsStartDate = false;
-  m_bIsEndDate = false;
+  m_bIsStartDateTime = false;
+  m_bIsEndDateTime = false;
   m_bNext = false;
   m_bVerbose = false;
+  m_bDryRun = false;
+  m_bDescription = false;
   m_description = "Default description";
-  m_summary = "Default summary";	 
+  m_bSummary = false;
+  m_summary = "Default summary";
+  m_bFloating = true;
 }
 
 KonsoleKalendarVariables::~KonsoleKalendarVariables()
 {
 }
 
-void KonsoleKalendarVariables::setDate(QDateTime date)
+void KonsoleKalendarVariables::setStartDateTime(QDateTime start)
 {
-  m_date = date;
+  m_bIsStartDateTime = true;
+  m_startDateTime = start;
+}
+
+QDateTime KonsoleKalendarVariables::getStartDateTime()
+{
+  return m_startDateTime;
 }
   
-QDateTime KonsoleKalendarVariables::getDate()
+bool KonsoleKalendarVariables::isStartDateTime()
 {
-  return m_date;
+  return m_bIsStartDateTime;
 }
 
-void KonsoleKalendarVariables::isDate( bool is )
+void KonsoleKalendarVariables::setEndDateTime(QDateTime end)
 {
-  m_bIsDate = is;
-}
-      
-bool KonsoleKalendarVariables::isDate()
-{
-  return m_bIsDate;
+  m_bIsEndDateTime = true;
+  m_endDateTime = end;
 }
 
-void KonsoleKalendarVariables::setStartDate(QDateTime start)
+QDateTime KonsoleKalendarVariables::getEndDateTime()
 {
-  m_startDate = start;
+  return m_endDateTime;
 }
 
-QDateTime KonsoleKalendarVariables::getStartDate()
+bool KonsoleKalendarVariables::isEndDateTime()
 {
-  return m_startDate;
-}
-
-void KonsoleKalendarVariables::isStartDate( bool is )
-{
-  m_bIsStartDate = is;
-}
-
-    
-bool KonsoleKalendarVariables::isStartDate()
-{
-  return m_bIsStartDate;
-}
-
-void KonsoleKalendarVariables::setEndDate(QDateTime end)
-{
-  m_endDate = end;
-}
-
-QDateTime KonsoleKalendarVariables::getEndDate()
-{
-  return m_endDate;
-}
-
-void KonsoleKalendarVariables::isEndDate( bool is )
-{
-  m_bIsStartDate = is;
-}
-
-
-bool KonsoleKalendarVariables::isEndDate()
-{
-  return m_bIsEndDate;
+  return m_bIsEndDateTime;
 }
 
 void KonsoleKalendarVariables::setNext(bool next)
@@ -122,6 +99,16 @@ void KonsoleKalendarVariables::setVerbose(bool verbose)
 bool KonsoleKalendarVariables::isVerbose()
 {
   return m_bVerbose;
+}
+
+void KonsoleKalendarVariables::setDryRun(bool dryrun)
+{
+  m_bDryRun = dryrun;
+}
+
+bool KonsoleKalendarVariables::isDryRun()
+{
+  return m_bDryRun;
 }
 
 void KonsoleKalendarVariables::setCalendarFile(QString calendar)
@@ -214,6 +201,33 @@ bool KonsoleKalendarVariables::isSummary()
   return m_bSummary;
 }
 
+void KonsoleKalendarVariables::setFloating(bool floating)
+{
+  m_bFloating = floating;
+}
+
+bool KonsoleKalendarVariables::getFloating()
+{
+  return m_bFloating;
+}
+
+void KonsoleKalendarVariables::printSpecs(QString mode)
+{
+  if( mode.upper() != "VIEW" ) {
+    cout << i18n("  What:  ").local8Bit() << getSummary().local8Bit() << endl;
+    cout << i18n("  Begin: ").local8Bit() << getStartDateTime().toString(Qt::TextDate).local8Bit() << endl;
+    cout << i18n("  End:   ").local8Bit() << getEndDateTime().toString(Qt::TextDate).local8Bit() << endl;
+    if( getFloating() == true ) {
+      cout << i18n("  No Time Associated with Event").local8Bit() << endl;
+    }
+    if( getSummary() != getDescription() ) {
+      cout << i18n("  Desc:  ").local8Bit() << getDescription().local8Bit() << endl;
+    }
+  } else {
+    cout << i18n("  Begin: ").local8Bit() << getStartDateTime().toString(Qt::TextDate).local8Bit() << endl;
+    cout << i18n("  End:   ").local8Bit() << getEndDateTime().toString(Qt::TextDate).local8Bit() << endl;
+  }    
+}
 
 QTime KonsoleKalendarVariables::parseTime( QString str )
 {

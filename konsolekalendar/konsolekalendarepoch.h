@@ -4,9 +4,8 @@
 /***************************************************************************
         konsolekalendarepoch.h  -  Epoch parsing routines
            -------------------
-    begin                : Sun Jan 6 2002
-    copyright            : (C) 2002 by Tuukka Pasanen
-    email                : illuusio@mailcity.com
+    begin                : Sun Jan 6 2003
+    copyright            : (C) 2003 by Allen Winter
  ***************************************************************************/
 
 /***************************************************************************
@@ -22,18 +21,6 @@
 #include <qstring.h>
 
 #include <iostream>
-#include <qdatetime.h>
-
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
 
 namespace KCal {
 
@@ -43,8 +30,8 @@ class KonsoleKalendarEpoch
     KonsoleKalendarEpoch();
     ~KonsoleKalendarEpoch();
 
-  static QDateTime epoch2QDateTime( time_t epoch );
-  static time_t QDateTime2epoch( QDateTime dt );
+  static QDateTime epoch2QDateTime( uint epoch );
+  static uint QDateTime2epoch( QDateTime dt );
 
 };
 
