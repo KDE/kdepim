@@ -271,16 +271,17 @@ KTempFile* DateBook::fromKDE( KSync::EventSyncee* syncee )
 }
 QString DateBook::event2string( KCal::Event *event )
 {
+    bool doesFloat = event->doesFloat();
     QString str;
     str.append( "<event ");
     str.append( "description=\"" +escape( event->summary() ) + "\" ");
     str.append( "location=\"" + escape( event->location() ) + "\" ");
     str.append( "categories=\"" +  categoriesToNumber( event->categories() ) + "\" ");
     str.append( "uid=\"" +  konnectorId("EventSyncEntry", event->uid() ) + "\" ");
-    str.append( "start=\"" + QString::number( toUTC( event->dtStart() ) ) + "\" ");
-    str.append( "end=\"" +  QString::number(  toUTC( event->dtEnd() ) ) + "\" ");
+    str.append( "start=\"" +startDate( event->dtStart(), doesFloat ) + "\" ");
+    str.append( "end=\"" +  endDate( event->dtEnd(), doesFloat) + "\" ");
     str.append( "note=\"" + escape( event->description() ) + "\" "); //use escapeString copied from TT
-    if ( event->doesFloat() )
+    if ( doesFloat )
         str.append( "type=\"AllDay\" ");
     // recurrence
     KCal::Recurrence *rec = event->recurrence();
@@ -386,3 +387,25 @@ QString DateBook::event2string( KCal::Event *event )
     str.append( " />" );
     return str;
 }
+/*
+ * Qtopia etwartet AllDay events in einer Zeitspanne von 00:00:00
+ * bis 23:59:59... but in korg bdays are from 00:00:00 - 00:00:00 (
+ * no time associated )
+ * He'll help Qtopia here if it's an all day event we will produce
+ * a better time...
+ */
+QString DateBook::startDate( const QDateTime& _dt,  bool allDay ) {
+    QDateTime dt = _dt;
+    if (allDay )
+        dt.setTime( QTime(0, 0, 0 ) );
+
+    return QString::number( toUTC( dt ) );
+}
+QString DateBook::endDate( const QDateTime& _dt,  bool allDay ) {
+    QDateTime dt = _dt;
+    if (allDay )
+        dt.setTime( QTime(23, 59, 59 ) );
+
+    return QString::number( toUTC(dt ) );
+}
+

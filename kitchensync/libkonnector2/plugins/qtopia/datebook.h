@@ -30,6 +30,8 @@ namespace OpieHelper {
         KSync::EventSyncee* toKDE( const QString & fileName );
         KTempFile* fromKDE( KSync::EventSyncee* syncee );
     private:
+        QString endDate( const QDateTime& time, bool allDay );
+        QString startDate( const QDateTime& time, bool allDay );
         QString event2string( KCal::Event *event );
         KCal::Event* toEvent( QDomElement );
     };
