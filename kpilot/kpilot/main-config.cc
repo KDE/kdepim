@@ -35,18 +35,19 @@ static const char *config_id="$Id$";
 
 #include <stdlib.h>
 
+#include <qcombobox.h>
+#include <qvbox.h>
+
+
 #include <kapp.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 
+#include "kpilotConfigDialog.h"
 #include "kpilotConfig.h"
-#include "conduitSetup.h"
-#include "kpilotOptions.h"
 
 KCmdLineOptions kpilotoptions[] =
 {
-	{ "c",0,0 },
-	{ "config-conduits", I18N_NOOP("Configure KPilot conduits."),0 },
 	{ "debug <level>", I18N_NOOP("Set debug level."), "0" },
 	{ 0,0,0 }
 } ;
@@ -74,49 +75,29 @@ int main(int argc, char **argv)
 	KApplication::addCmdLineOptions();
 	KCmdLineArgs *p=KCmdLineArgs::parsedArgs();
 
-	KPilotConfig::getDebugLevel(p);
-
 	KApplication a;
 
-	if (p->isSet("config-conduits"))
+	KPilotConfig::getDebugLevel(p);
+
+	int r=0;
+
+	KDialogBase *d = new KPilotConfigDialog(0L,"configDialog",true);
+	r = d->exec();
+
+	if (r)
 	{
-		CConduitSetup *cs = new CConduitSetup(0L);
-		int r = cs->exec();
-		if (!r)
-		{
-			DEBUGKPILOT << fname
-				<< ": Conduit config was cancelled."
-				<< endl;
-			return 1;	// Dialog cancelled
-		}
-		else
-		{
-			DEBUGKPILOT << fname
-				<< ": Conduit config was okayed."
-				<< endl;
-			return 0;
-		}
+		DEBUGKPILOT << fname
+			<< ": Configuration was okayed."
+			<< endl;
 	}
 	else
 	{
-		KPilotOptions* options = new KPilotOptions(0L);
-		int r = options->exec();
-
-		if (!r)
-		{
-			DEBUGKPILOT << fname
-				<< ": Configuration was cancelled."
-				<< endl;
-			return 1;
-		}
-		else
-		{
-			DEBUGKPILOT << fname
-				<< ": Configuration was okayed."
-				<< endl;
-			return 0;
-		}
+		DEBUGKPILOT << fname
+			<< ": Configuration was cancelled."
+			<< endl;
 	}
+
+	return r;
 
 	/* NOTREACHED */
 	(void) config_id;
@@ -124,3 +105,8 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.1  2001/09/05 21:53:51  adridg
+// Major cleanup and architectural changes. New applications kpilotTest
+// and kpilotConfig are not installed by default but can be used to test
+// the codebase. Note that nothing else will actually compile right now.
+//

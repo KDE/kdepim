@@ -44,62 +44,8 @@ static const char *test_id="$Id$";
 #include "logWidget.h"
 #include "kpilotConfig.h"
 
-#include "main-test.moc"
+#include "hotSync.h"
 
-KPilotTestLink *KPilotTestLink::fTestLink = 0L;
-
-KPilotTestLink::KPilotTestLink(DeviceType t,const QString &p) :
-	KPilotDeviceLink()
-{
-	FUNCTIONSETUP;
-
-	ASSERT(fTestLink==0L);
-
-	fTestLink = this;
-
-	connect(this,SIGNAL(deviceReady()),
-		this,SLOT(enumerateDatabases()));
-	reset(t,p);
-}
-
-KPilotTestLink *KPilotTestLink::getTestLink(DeviceType t,const QString &p)
-{
-	FUNCTIONSETUP;
-
-	if (fTestLink) return fTestLink;
-
-	fTestLink = new KPilotTestLink(t,p);
-	return fTestLink;
-}
-
-void KPilotTestLink::enumerateDatabases()
-{
-	FUNCTIONSETUP;
-
-	int i;
-	int dbindex=0;
-	int count=0;
-	struct DBInfo db;
-
-	while ((i=dlp_ReadDBList(pilotSocket(),0,dlpDBListRAM,
-		dbindex,&db)) > 0)
-	{
-		count++;
-		dbindex=db.index+1;
-
-		DEBUGKPILOT << fname
-			<< ": Read database "
-			<< db.name
-			<< endl;
-
-		emit logMessage(i18n("Syncing database %1...").arg(db.name));
-
-		kapp->processEvents();
-	}
-
-	emit logMessage(i18n("HotSync finished."));
-	KPilotDeviceLink::close();
-}
 
 static KCmdLineOptions kpilotoptions[] =
 {
@@ -107,6 +53,8 @@ static KCmdLineOptions kpilotoptions[] =
 #ifdef DEBUG
 	{ "debug <level>", I18N_NOOP("Set debugging level"), "0" },
 #endif
+	{ "backup", I18N_NOOP("Backup instead of list DBs"), 0},
+	{ "restore", I18N_NOOP("Restore Pilot from backup"), 0},
 	{ 0,0,0}
 } ;
 
@@ -138,9 +86,9 @@ int main(int argc, char **argv)
 	KPilotDeviceLink::DeviceType deviceType = 
 		KPilotDeviceLink::OldStyleUSB;
 
+	KApplication  a;
 	KPilotConfig::getDebugLevel(p);
 
-	KApplication  a;
 
 	LogWidget *w = new LogWidget(0L);
 	w->resize(300,300);
@@ -148,12 +96,34 @@ int main(int argc, char **argv)
 	w->setShowTime(true);
 	a.setMainWidget(w);
 
-	KPilotTestLink *t = KPilotTestLink::getTestLink(deviceType,devicePath);
+	KPilotDeviceLink *t = KPilotDeviceLink::init(0,"deviceLink");
+	SyncAction *l = 0L;
+
+	if (p->isSet("backup"))
+	{
+		l = new BackupAction(t);
+	}
+	else if (p->isSet("restore"))
+	{
+		l = new RestoreAction(t);
+	}
+	else
+	{
+		l = new TestLink(t);
+	}
 
 	QObject::connect(t,SIGNAL(logError(const QString &)),
 		w,SLOT(addError(const QString &)));
 	QObject::connect(t,SIGNAL(logMessage(const QString &)),
 		w,SLOT(addMessage(const QString &)));
+	QObject::connect(t,SIGNAL(deviceReady()),
+		l,SLOT(exec()));
+	QObject::connect(l,SIGNAL(syncDone(SyncAction *)),
+		w,SLOT(syncDone()));
+	QObject::connect(l,SIGNAL(syncDone(SyncAction *)),
+		t,SLOT(close()));
+
+	t->reset(deviceType,devicePath);
 
 	return a.exec();
 
@@ -162,6 +132,9 @@ int main(int argc, char **argv)
 }
 
 // $Log$
+// Revision 1.3  2001/09/16 13:37:48  adridg
+// Large-scale restructuring
+//
 // Revision 1.2  2001/09/06 22:05:00  adridg
 // Enforce singleton-ness
 //
