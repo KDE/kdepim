@@ -318,13 +318,18 @@ void HtmlExport::createTodoList ( QTextStream *ts )
   // FIXME: Sort list by priorities. This is brute force and should be
   // replaced by a real sorting algorithm.
   Todo::List todoList;
-  for ( int i = 1; i <= 5; ++i ) {
+  for ( int i = 1; i <= 9; ++i ) {
     for( it = rawTodoList.begin(); it != rawTodoList.end(); ++it ) {
       if ( (*it)->priority() == i && checkSecrecy( *it ) ) {
         todoList.append( *it );
       }
     }
   }
+  for( it = rawTodoList.begin(); it != rawTodoList.end(); ++it ) {
+    if ( (*it)->priority() == 0 && checkSecrecy( *it ) ) {
+      todoList.append( *it );
+    }
+ }
 
   int columns = 3;
   *ts << "<table border=\"0\" cellpadding=\"3\" cellspacing=\"3\">\n";
