@@ -412,7 +412,8 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   // kdDebug() << "got dtstart: " << dtend << " becomes in timezone " << dt.toString() << endl;
 
   QString transparent = prop.namedItem( "transparent" ).toElement().text();
-  event->setTransparency( transparent.toInt() );
+  event->setTransparency( transparent.toInt() > 0 ? KCal::Event::Transparent
+			  : KCal::Event::Opaque );
   // kdDebug() << "Got transparent: " << transparent << endl;
 
   QString description = QString::fromUtf8( prop.namedItem( "textdescription" ).toElement().text() );
