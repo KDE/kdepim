@@ -19,7 +19,7 @@
 #define _MAPIHD_H_
 
 #include "filters.hxx"
-#include "harray.hxx"
+#include <qmemarray.h> 
 #include <string>
 #include <stdio.h>
 
@@ -93,7 +93,7 @@
  class pabfields_t
  {
    private:
-     harray<mapitag_t> tags,context_tags;
+     QMemArray<mapitag_t> tags,context_tags;
      pabrec            *m_R;
      QString givenName,email,
              title,firstName,additionalName,lastName,

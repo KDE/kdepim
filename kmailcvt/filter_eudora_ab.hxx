@@ -26,12 +26,12 @@ class filter_eudora_ab : public filter
     QString CAP;
     int     LINES;
   private:
-    harray<QString> keys;
-    harray<QString> emails;
-    harray<QString> names;
-    harray<QString> phones;
-    harray<QString> adr;
-    harray<QString> comments;
+    QStringList keys;
+    QStringList emails;
+    QStringList names;
+    QStringList phones;
+    QStringList adr;
+    QStringList comments;
   public:
     filter_eudora_ab();
    ~filter_eudora_ab();

@@ -21,7 +21,6 @@
 
 #include "filter_oe5.hxx"
 #include "oe5_2mbox.h"
-#include "harray.hxx"
 
 #include <stdlib.h>
 #include <sys/types.h>

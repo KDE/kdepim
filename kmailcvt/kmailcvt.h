@@ -18,8 +18,6 @@
 #ifndef KMAILCVT2_H
 #define KMAILCVT2_H
 
-#define KMAILCVT_DCOP
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

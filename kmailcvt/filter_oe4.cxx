@@ -21,7 +21,6 @@
 
 #include "filter_oe4.hxx"
 #include "oe4_2mbox.h"
-#include "harray.hxx"
 
 #include <kfiledialog.h>
 #include <stdlib.h>

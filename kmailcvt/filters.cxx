@@ -18,7 +18,6 @@
 #include "filters.hxx"
 #include "kmailcvt.h"
 
-#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -153,8 +152,6 @@ kmail::~kmail()
 
 bool  kmail::kmailMessage(filterInfo *info,char *folder,char *_msg,unsigned long & added)
 {
-#ifdef KMAILCVT_DCOP
-
   QString folderName(folder);
   QString msg(_msg);
   const QByteArray kmData;
@@ -201,7 +198,7 @@ bool  kmail::kmailMessage(filterInfo *info,char *folder,char *_msg,unsigned long
 
   return true;
 
-#else
+/* OLD code -- kept for
 
 FILE *f,*msg;
 QString FOLDER;
@@ -224,7 +221,7 @@ char  buf[4096];
   fclose(msg);
 return true;
 
-#endif
+*/
 }
 
 void kmail::kmailStop(filterInfo *info)

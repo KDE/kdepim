@@ -151,13 +151,14 @@ pabrec_entry e=pr_unknown;
 return e;
 }
 
-pabfields_t::pabfields_t(pabrec & R,filterInfo *info,QWidget */*parent*/)
+pabfields_t::pabfields_t(pabrec & R,filterInfo *info,QWidget * /*parent*/)
 {
   // Skip the first two words, because they're always the
   // same 000c 0014 ==> 0014 gives us the types, so we
   // parse from 0014 till the next offset and order the tags.
 
-  int         mb,me,i,k;
+  int         mb,me;
+  uint        i,k;
   content_t   _tag,_order;
 
   mb=R[1];
@@ -168,15 +169,15 @@ pabfields_t::pabfields_t(pabrec & R,filterInfo *info,QWidget */*parent*/)
     _order=R.read(mb);mb+=sizeof(_order);
 
     {mapitag_t mt(_tag,_order);
-      tags[tags.len()]=mt;
-      context_tags[context_tags.len()]=mt;
+     tags[tags.size()]=mt;
+     context_tags[context_tags.size()]=mt;
     }
   }
-  sort(tags);
+  tags.sort();
 
   // get the right entries now
 
-  for(i=2,k=0;i<R.N() && k<tags.len();i++,k++) {
+  for(i=2,k=0;i<R.N() && k<tags.size();i++,k++) {
     if (!isUsed(k)) { i-=1; }
     else {pabrec_entry e;
           QString      E;

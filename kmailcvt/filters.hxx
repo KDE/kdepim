@@ -23,16 +23,15 @@
 #endif
 
 
-
+#include <stdio.h>
 
 #include <qcombobox.h>
 #include <qprogressbar.h>
-#include <kabc/addressbook.h>
 #include <qlistbox.h>
 #include <qlabel.h>
-#include "harray.hxx"
-#include <string>
-#include <stdio.h>
+
+#include <kabc/addressbook.h>
+
 #include "kimportpagedlg.h"
 
 class filterInfo

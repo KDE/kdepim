@@ -16,7 +16,6 @@
  ***************************************************************************/
 
 #include "filter_eudora_ab.hxx"
-#include "harray.hxx"
 
 #include <stdlib.h>
 #include <sys/types.h>
@@ -34,7 +33,6 @@ filter_eudora_ab::filter_eudora_ab() : filter(i18n("Import Filter for Eudora Lig
 {
   CAP=i18n("Import Filter for Eudora Light Addressbook");
   LINES=0;
-  printf("name\n");
 }
 
 filter_eudora_ab::~filter_eudora_ab()
@@ -69,8 +67,8 @@ FILE   *F;
      info->current(i18n("Currently converting Eudora Light addresses to address book"));
      convert(F,info);
      {int i,N;
-       LINES=keys.len();
-       for(i=0,N=keys.len();i<N;i++) {
+       LINES=keys.size();
+       for(i=0,N=keys.size();i<N;i++) {
       /*   printf("%s %s %s %s %s %s\n",keys[i].latin1(),emails[i].latin1(),
                                    names[i].latin1(),adr[i].latin1(),
                                    phones[i].latin1(),comments[i].latin1()
@@ -105,7 +103,7 @@ FILE   *F;
          }
        }
        {QString msg;
-          msg=i18n("Added %1 keys").arg(keys.len());
+          msg=i18n("Added %1 keys").arg(keys.size());
           info->log(msg);
        }
      }
@@ -225,8 +223,6 @@ return result;
 
 int filter_eudora_ab::find(QString key)
 {
-int i,N;
-  for(i=0,N=keys.len();i<N && key!=keys[i];i++);
-return i;
+  return keys.findIndex(key);
 }
 

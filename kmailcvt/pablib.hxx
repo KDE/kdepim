@@ -21,7 +21,6 @@
 
 #include "filters.hxx"
 #include "mapihd.h"
-#include "harray.hxx"
 #include <stdio.h>
 #include <klocale.h>
 
