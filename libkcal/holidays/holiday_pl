@@ -3,25 +3,25 @@
 : by Krzysztof P. Jasiutowicz <kpjas@promail.pl>
 :
 
-small      "Nowy Rok"              weekend on 1.1.
+small      "Nowy Rok"              on 1.1.
 small      "Trzech Króli"          weekend on 6.1.
 : small      "¦ledzik"             on easter minus 47 days
 small      "Popielec"              on easter minus 46 days
 small      "Dzieñ Kobiet"          on 8.3.
 small      "Wielki Pi±tek"         weekend on easter minus  2 days
-small      "Wielkanoc"             weekend on easter
+small      "Wielkanoc"             weekend on easter length 2 days
 small      "Lany Poniedzia³ek"     weekend on easter plus 1 day
 small      "Niedziela Palmowa"     on easter minus 7 days
 small      "Zielone ¦wi±tki"       weekend on easter plus 49 days
-small      "Bo¿e Cia³o"            on easter plus 53 days
-small      "Wniebowziêcie NMP"     weekend on 15.8
-small      "Pierwszy Maj"          weekend on 1.5.
-small      "Trzeci Maj"            weekend on 1.5.
-small      "Wszystkich ¦wiêtych"   weekend on 1.11.
+small      "Bo¿e Cia³o"            on easter plus 60 days
+small      "Wniebowziêcie NMP"     on 15.8
+small      "¦wiêto Pracy"          on 1.5.
+small      "¦wiêto Konstytucji"    on 3.5.
+small      "Wszystkich ¦wiêtych"   on 1.11.
 small      "Zaduszki"              on 2.11.
-small      "¦wiêto Niepodleg³o¶ci" weekend on 11.11.
+small      "¦wiêto Niepodleg³o¶ci" on 11.11.
 small      "Wigilia"               on 24.12.
-small      "Bo¿e Narodzenie"       weekend on 25.12. length 2 days
+small      "Bo¿e Narodzenie"       on 25.12. length 2 days
 small      "Sylwester"             on 31.12.
 
 small      "Dzieñ Babci"           weekend on 21.1.
