@@ -106,6 +106,8 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
 
 	connect(h_drView, SIGNAL(selectionChanged(QListViewItem*)),
 	  this, SLOT(slotArticleSelected(QListViewItem*)));
+	connect(h_drView, SIGNAL(doubleClicked(QListViewItem*)),
+	  this, SLOT(slotArticleDoubleClicked(QListViewItem*)));
   connect(h_drView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
     this, SLOT(slotArticleRMB(QListViewItem*, const QPoint&, int)));
   connect(h_drView, SIGNAL(sortingChanged(int)),
@@ -571,11 +573,27 @@ void KNodeView::slotArticleSelected(QListViewItem *i)
   }
 
   enabled=( s_electedArticle && s_electedArticle->type()==KNMimeBase::ATlocal );
-  if(a_ctArtSendOutbox->isEnabled() != enabled) {
-    a_ctArtSendOutbox->setEnabled(enabled);
+  if(a_ctArtDelete->isEnabled() != enabled) {
     a_ctArtDelete->setEnabled(enabled);
     a_ctArtSendNow->setEnabled(enabled);
     a_ctArtSendLater->setEnabled(enabled);
+  }
+}
+
+
+void KNodeView::slotArticleDoubleClicked(QListViewItem *it)
+{
+  if(!it)
+    return;
+
+  KNArticle *art=(static_cast<KNHdrViewItem*>(it))->art;
+
+  if(art->type()==KNMimeBase::ATremote) {
+    KNArticleWindow *w=new KNArticleWindow(art);
+    w->show();
+  }
+  else if(art->type()==KNMimeBase::ATlocal) {
+    a_rtFactory->edit( static_cast<KNLocalArticle*>(art) );
   }
 }
 
@@ -598,7 +616,7 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
     switch(c->type()) {
       case KNCollection::CTnntpAccount :
         s_electedAccount=static_cast<KNNntpAccount*>(c);
-        if(!i->isOpen() && i->isExpandable())
+        if(!i->isOpen())
           i->setOpen(true);
       break;
 
@@ -776,7 +794,8 @@ void KNodeView::slotNavNextUnreadArt()
   if ((!current->isSelected())&&(!art->isRead()))   // take current article, if unread & not selected
     next=current;
   else {
-    if(art->hasUnreadFollowUps()) h_drView->setOpen(current, true);
+    if(next->isExpandable() && !next->isOpen())
+        h_drView->setOpen(next, true);
     next=static_cast<KNHdrViewItem*>(current->itemBelow());
   }
 
@@ -784,8 +803,9 @@ void KNodeView::slotNavNextUnreadArt()
     art=static_cast<KNRemoteArticle*>(next->art);
     if(!art->isRead()) break;
     else {
-      if(art->hasUnreadFollowUps()>0) h_drView->setOpen(next, true);
-      next=static_cast<KNHdrViewItem*>(current->itemBelow());
+      if(next->isExpandable() && !next->isOpen())
+        h_drView->setOpen(next, true);
+      next=static_cast<KNHdrViewItem*>(next->itemBelow());
     }
   }
 
