@@ -111,6 +111,7 @@
 #include <pi-expense.h>
 #include <stdlib.h>
 #include <qcstring.h>
+#include <qdatetime.h>
 #include <qtextstream.h>
 #include <stdio.h>
 #include <string.h>
@@ -228,8 +229,14 @@ ExpenseConduit::doSync()
 				<< endl;
 				QFile fp(mCSVname);
 				fp.open(IO_ReadWrite|IO_Append);	
-				
-				const char* mesg=e.amount;
+				int tmpyr=e.date.tm_year;
+				char* dtstng;
+				int tmpday=e.date.tm_mday;
+				int tmpmon=e.date.tm_mon;
+				sprintf(dtstng,"%i-%i-%i",tmpyr,tmpmon,tmpday);
+				const char* mesg=dtstng;
+				fp.writeBlock(mesg,qstrlen(mesg));	
+				mesg=e.amount;
 				fp.writeBlock(mesg,qstrlen(mesg));	
 				const char* delim=",";
 				fp.writeBlock(delim,qstrlen(delim));	
@@ -290,6 +297,13 @@ ExpenseConduit::doTest()
 }
 
 // $Log$
+// Revision 1.4  2001/03/15 21:10:07  molnarc
+//
+//
+// CJM - now it saves a csv file to the path in kpilotrc if
+//       the path exists. csv file needs some work, but its
+//       a start.
+//
 // Revision 1.3  2001/03/09 09:46:14  adridg
 // Large-scale #include cleanup
 //
