@@ -164,6 +164,8 @@ KOrganizer::~KOrganizer()
   // Take this window out of the window list.
   windowList->removeWindow(this);
 
+  delete mCalendarView;
+
   kdDebug() << "~KOrganizer() done" << endl;
 }
 
