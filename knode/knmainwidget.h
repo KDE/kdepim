@@ -249,6 +249,7 @@ protected:
     *a_ctAccSubscribe,
     *a_ctAccExpireAll,
     *a_ctAccGetNewHdrs,
+    *a_ctAccGetNewHdrsAll,
     *a_ctAccDelete,
     *a_ctAccPostNewArticle;
 
@@ -335,6 +336,7 @@ protected slots:
   void slotAccSubscribe();
   void slotAccExpireAll();
   void slotAccGetNewHdrs();
+  void slotAccGetNewHdrsAll();
   void slotAccDelete();
   void slotAccPostNewArticle();
 

@@ -632,6 +632,8 @@ void KNMainWidget::initActions()
                               SLOT(slotAccExpireAll()), actionCollection(), "account_expire_all");
   a_ctAccGetNewHdrs         = new KAction(i18n("&Get New Articles in All Groups"), "mail_get", 0, this,
                               SLOT(slotAccGetNewHdrs()), actionCollection(), "account_dnlHeaders");
+  a_ctAccGetNewHdrsAll      = new KAction(i18n("&Get New Articles in All Accounts"), "mail_get2", 0, this,
+                                          SLOT(slotAccGetNewHdrsAll()), actionCollection(), "account_dnlAllHeaders");
   a_ctAccDelete             = new KAction(i18n("&Delete Account"), "editdelete", 0, this,
                               SLOT(slotAccDelete()), actionCollection(), "account_delete");
   a_ctAccPostNewArticle     = new KAction(i18n("&Post to Newsgroup..."), "mail_new", Key_P , this,
@@ -1221,6 +1223,7 @@ void KNMainWidget::slotCollectionSelected(QListViewItem *i)
     a_ctAccSubscribe->setEnabled(enabled);
     a_ctAccExpireAll->setEnabled(enabled);
     a_ctAccGetNewHdrs->setEnabled(enabled);
+    a_ctAccGetNewHdrsAll->setEnabled(enabled);
     a_ctAccDelete->setEnabled(enabled);
     a_ctAccPostNewArticle->setEnabled(enabled);
   }
@@ -1697,6 +1700,13 @@ void KNMainWidget::slotAccDelete()
   }
 }
 
+void KNMainWidget::slotAccGetNewHdrsAll()
+{
+  kdDebug(5003) << "KNMainWindow::slotAccGetNewHdrsAll()" << endl;
+
+  for (KNNntpAccount *account = a_ccManager->first(); account; account = a_ccManager->next() )
+    g_rpManager->checkAll(account);
+}
 
 void KNMainWidget::slotAccPostNewArticle()
 {
