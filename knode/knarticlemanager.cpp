@@ -14,6 +14,7 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
+
 #include <pthread.h>
 
 #include <qheader.h>
@@ -236,7 +237,7 @@ void KNArticleManager::showHdrs(bool clear)
   knGlobals.top->secureProcessEvents();
 
   if(g_roup) {
-    KNRemoteArticle *art; //, *ref;
+    KNRemoteArticle *art, *ref;
 
     if (g_roup->isLocked()) {
       if (0!=pthread_mutex_lock(knGlobals.netAccess->nntpMutex())) {
@@ -263,10 +264,20 @@ void KNArticleManager::showHdrs(bool clear)
       art=g_roup->at(i);
       art->setThreadMode(s_howThreads);
       if (s_howThreads) {
-        if( ( !art->listItem() && art->filterResult() ) &&
-            ( art->idRef()==0 || !g_roup->byId(art->idRef())->filterResult() ) ) {
-          art->setListItem(new KNHdrViewItem(v_iew));
-          art->initListItem();
+        if( !art->listItem() && art->filterResult() ) {
+          if(art->idRef()!=0)
+            ref=g_roup->byId(art->idRef());
+          else
+            ref=0;
+
+          if( !ref || !ref->filterResult() ) {
+            art->setListItem(new KNHdrViewItem(v_iew));
+            art->initListItem();
+          }
+          else if(ref->listItem() && ( ref->listItem()->isOpen() || ref->listItem()->childCount()>0 ) ) {
+            art->setListItem(new KNHdrViewItem(ref->listItem()));
+            art->initListItem();
+          }
         }
         else if(art->listItem())
           art->updateListItem();
