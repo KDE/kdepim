@@ -32,6 +32,7 @@
 #include <qdatastream.h>
 
 // Local includes
+#include <config.h>
 #include "KAddressBookInterface.h"
 #include "Entity.h"
 #include "Field.h"
