@@ -28,7 +28,7 @@
 
 KNKeySettings::KNKeySettings(QWidget *parent) : KNSettingsWidget(parent)
 {
-	kc=new KKeyChooser(knGlobals.top->actionCollection()->keyDict(), this);
+	kc=new KKeyChooser(& knGlobals.top->actionCollection()->keyMap(), this);
 	
 	stdBtn=new QPushButton(i18n("Reset"), this);
 	stdBtn->setFixedSize(stdBtn->sizeHint());
