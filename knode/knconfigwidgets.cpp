@@ -499,13 +499,13 @@ KNConfig::NntpAccountConfDialog::~NntpAccountConfDialog()
 
 void KNConfig::NntpAccountConfDialog::slotOk()
 {
-  if (n_ame->text().isEmpty() || s_erver->text().isEmpty()) {
+  if (n_ame->text().isEmpty() || s_erver->text().stripWhiteSpace().isEmpty()) {
     KMessageBox::sorry(this, i18n("Please enter an arbitrary name for the account and the\nhostname of the news server."));
     return;
   }
 
   a_ccount->setName(n_ame->text());
-  a_ccount->setServer(s_erver->text());
+  a_ccount->setServer(s_erver->text().stripWhiteSpace());
   a_ccount->setPort(p_ort->text().toInt());
   a_ccount->setHold(h_old->value());
   a_ccount->setTimeout(t_imeout->value());
