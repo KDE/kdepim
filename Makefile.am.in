@@ -11,7 +11,7 @@ COMPILE_AFTER_libkcal = kalarm kalarmd kitchensync konsolekalendar korganizer ks
 COMPILE_BEFORE_libkcal = libical
 COMPILE_BEFORE_kaplan = kaddressbook knotes korganizer
 
-AUTOMAKE_OPTIONS = foreign 1.4
+AUTOMAKE_OPTIONS = foreign 1.5
 DISTCLEANFILES = inst-apps
 
 $(top_srcdir)/acinclude.m4: $(top_srcdir)/admin/acinclude.m4.in $(top_srcdir)/admin/libtool.m4.in
