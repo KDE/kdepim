@@ -268,20 +268,21 @@ void KNArticleFactory::createForward(KNArticle *a)
 
   //--------------------------- <Body> -----------------------------
 
-  QString fwd=QString("\n,-------------- %1\n\n").arg(i18n("Forwarded message (begin)"));
+  QString fwd=QString("\n,--------------- %1\n\n").arg(i18n("Forwarded message (begin)"));
 
-  fwd+=( i18n("Subject")+": "+a->subject()->asUnicodeString()+"\n");
-  fwd+=( i18n("From")+": "+a->from()->asUnicodeString()+"\n");
-  fwd+=( i18n("Date")+": "+a->date()->asUnicodeString()+"\n\n");
+  fwd+=( i18n(" Subject")+": "+a->subject()->asUnicodeString()+"\n");
+  fwd+=( i18n(" From")+": "+a->from()->asUnicodeString()+"\n");
+  fwd+=( i18n(" Date")+": "+a->date()->asUnicodeString()+"\n\n");
 
   KNMimeContent *text=a->textContent();
   if(text) {
-    QString decoded;
-    text->decodedText(decoded);
-    fwd+=decoded;
+    QStringList decodedLines;
+    text->decodedText(decodedLines);
+    for(QStringList::Iterator it=decodedLines.begin(); it!=decodedLines.end(); ++it)
+      fwd+=" "+(*it)+"\n";
   }
 
-  fwd+=QString("\n`-------------- %1\n").arg(i18n("Forwarded message (end)"));
+  fwd+=QString("\n`--------------- %1\n").arg(i18n("Forwarded message (end)"));
 
   //--------------------------- </Body> ----------------------------
 

@@ -330,6 +330,13 @@ void KNodeView::saveOptions()
 
 bool KNodeView::cleanup()
 {
+  if( a_rtFactory->jobsPending() &&
+      KMessageBox::No==KMessageBox::warningYesNo(knGlobals.top, i18n(
+"KNode is currently sending articles. If you quit now you might loose these \
+articles.\nDo you want to continue anyway?"))
+    )
+    return false;
+
   if(!a_rtFactory->closeComposeWindows())
     return false;
 
@@ -527,7 +534,7 @@ void KNodeView::initActions()
                               SLOT(slotArtSetThreadUnread()), a_ctions, "thread_unread");
   a_ctSetArtScore           = new KAction(i18n("Set Sc&ore..."), "rotate", Key_S , this,
                               SLOT(slotArtSetArtScore()), a_ctions, "article_setScore");
-  a_ctArtSetThreadScore     = new KAction(i18n("Set Score of &thread..."), "rotate", CTRL+Key_S , this,
+  a_ctArtSetThreadScore     = new KAction(i18n("Set Score of &thread..."), "rotate", ALT+Key_S , this,
                               SLOT(slotArtSetThreadScore()), a_ctions, "thread_setScore");
   a_ctArtToggleIgnored      = new KAction(i18n("&Ignore"), "bottom", Key_I , this,
                               SLOT(slotArtToggleIgnored()), a_ctions, "thread_ignore");
@@ -1299,8 +1306,14 @@ void KNodeView::slotArtToggleIgnored()
     return;
 
   KNRemoteArticle::List l;
-  (static_cast<KNRemoteArticle*>(a_rtView->article()))->thread(&l);
-  a_rtManager->toggleIgnored(&l);
+  KNRemoteArticle *art;
+  for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
+    if(i->isSelected()) {
+      art=static_cast<KNRemoteArticle*> ((static_cast<KNHdrViewItem*>(i))->art);
+      l.clear();
+      art->thread(&l);
+      a_rtManager->toggleIgnored(&l);
+    }
 }
 
 
@@ -1312,8 +1325,14 @@ void KNodeView::slotArtToggleWatched()
     return;
 
   KNRemoteArticle::List l;
-  (static_cast<KNRemoteArticle*>(a_rtView->article()))->thread(&l);
-  a_rtManager->toggleWatched(&l);
+  KNRemoteArticle *art;
+  for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
+    if(i->isSelected()) {
+      art=static_cast<KNRemoteArticle*> ((static_cast<KNHdrViewItem*>(i))->art);
+      l.clear();
+      art->thread(&l);
+      a_rtManager->toggleWatched(&l);
+    }
 }
 
 

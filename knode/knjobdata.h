@@ -36,6 +36,10 @@ class KNJobConsumer {
        calling "processJob" */
     void jobDone(KNJobData *j);
 
+    /* Returns TRUE if we are waiting for at least one job
+       to be completed */
+    bool jobsPending()  { return (j_obs.count()>0); }
+
   protected:
     /* The actual work is done here */
     virtual void processJob(KNJobData *j);
