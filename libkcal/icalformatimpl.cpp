@@ -75,6 +75,9 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
     icalcomponent_add_property(vtodo,icalproperty_new_completed(completed));
   }
   
+  icalcomponent_add_property(vtodo,
+      icalproperty_new_percentcomplete(todo->percentComplete()));
+      
   return vtodo;
 }
 
@@ -634,6 +637,10 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
       case ICAL_COMPLETED_PROPERTY:  // completion date
         icaltime = icalproperty_get_completed(p);
         todo->setCompleted(readICalDateTime(icaltime));
+        break;
+
+      case ICAL_PERCENTCOMPLETE_PROPERTY:  // Percent completed
+        todo->setPercentComplete(icalproperty_get_percentcomplete(p));
         break;
 
       case ICAL_RELATEDTO_PROPERTY:  // releated todo (parent)

@@ -15,8 +15,8 @@ Todo::Todo()
   mHasDueDate = false;
   mHasStartDate = false;
   
-  mIsCompleted = false;
   mHasCompletedDate = false;
+  mPercentComplete = 0;
 }
 
 Todo::~Todo()
@@ -159,12 +159,14 @@ QString Todo::statusStr() const
 
 bool Todo::isCompleted() const
 {
-  return mIsCompleted;
+  if (mPercentComplete == 100) return true;
+  else return false;
 }
 
 void Todo::setCompleted(bool completed)
 {
-  mIsCompleted = completed;
+  if (completed) mPercentComplete = 100;
+  else mPercentComplete = 0;
 }
 
 QDateTime Todo::completed() const
@@ -179,12 +181,21 @@ QString Todo::completedStr() const
 
 void Todo::setCompleted(const QDateTime &completed)
 {
-  mCompleted = completed;
-  setCompleted(true);
   mHasCompletedDate = true;
+  mPercentComplete = 100;
 }
 
 bool Todo::hasCompletedDate() const
 {
   return mHasCompletedDate;
+}
+
+int Todo::percentComplete() const
+{
+  return mPercentComplete;
+}
+
+void Todo::setPercentComplete(int v)
+{
+  mPercentComplete = v;
 }

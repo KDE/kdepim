@@ -58,6 +58,17 @@ class Todo : public Incidence
     bool isCompleted() const;
     /// set completed state of this todo
     void setCompleted(bool);
+    
+    /**
+      Return how many percent of the task are completed. Returns a value
+      between 0 and 100.
+    */
+    int percentComplete() const;
+    /**
+      Set how many percent of the task are completed. Valid values are in the
+      range from 0 to 100.
+    */
+    void setPercentComplete(int);
 
     /// return date and time when todo was completed
     QDateTime completed() const;
@@ -78,9 +89,10 @@ class Todo : public Incidence
 
 //    int  mStatus;                         // confirmed/delegated/tentative/etc
 
-    bool mIsCompleted;
     QDateTime mCompleted;
     bool mHasCompletedDate;
+
+    int mPercentComplete;
 };
 
 }
