@@ -51,6 +51,8 @@ namespace KPIM {
 class ProgressItem;
 }
 
+class SloxAccounts;
+
 /**
   This class provides a calendar stored as a remote file.
 */
@@ -160,8 +162,7 @@ class KCalResourceSlox : public KCal::ResourceCached
 
     WebdavHandler mWebdavHandler;
 
-    QString mOwner;
-    QString mWriteRights;
+    SloxAccounts *mAccounts;
 };
 
 #endif

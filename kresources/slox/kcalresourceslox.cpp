@@ -106,6 +106,8 @@ void KCalResourceSlox::init()
   mLoadEventsProgress = 0;
   mLoadTodosProgress = 0;
 
+  mAccounts = 0;
+
   setType( "slox" );
 
   mOpen = false;
@@ -122,6 +124,13 @@ void KCalResourceSlox::readConfig( const KConfig *config )
   mWebdavHandler.setUserId( mPrefs->user() );
 
   ResourceCached::readConfig( config );
+
+  KURL url = mPrefs->url();
+  url.setUser( mPrefs->user() );
+  url.setPass( mPrefs->password() );
+
+  delete mAccounts;
+  mAccounts = new SloxAccounts( url ); 
 }
 
 void KCalResourceSlox::writeConfig( KConfig *config )
@@ -163,11 +172,13 @@ bool KCalResourceSlox::doLoad()
   if ( mLoadEventsJob || mLoadTodosJob ) {
     kdWarning() << "KCalResourceSlox::load(): download still in progress."
                 << endl;
+    loadError( "Download still in progress." );
     return false;
   }
   if ( mUploadJob ) {
     kdWarning() << "KCalResourceSlox::load(): upload still in progress."
                 << endl;
+    loadError( "Upload still in progress." );
     return false;
   }
 
@@ -400,8 +411,12 @@ void KCalResourceSlox::createIncidenceAttributes( QDomDocument &doc,
     Attendee::List attendees = incidence->attendees();
     Attendee::List::ConstIterator it;
     for( it = attendees.begin(); it != attendees.end(); ++it ) {
-      QString userId = SloxAccounts::self()->lookupId( (*it)->email() );
-      WebdavHandler::addSloxElement( doc, members, "S:member", userId );
+      if ( mAccounts ) {
+        QString userId = mAccounts->lookupId( (*it)->email() );
+        WebdavHandler::addSloxElement( doc, members, "S:member", userId );
+      } else {
+        kdError() << "KCalResourceSlox: No accounts set." << endl;
+      }
     }
   }
 
@@ -473,7 +488,9 @@ void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
     QDomElement memberElement = n.toElement();
     if ( memberElement.tagName() == "member" ) {
       QString member = memberElement.text();
-      KABC::Addressee account = SloxAccounts::self()->lookupUser( member );
+      KABC::Addressee account;
+      if ( mAccounts ) account = mAccounts->lookupUser( member );
+      else kdError() << "KCalResourceSlox: no accounts set" << endl;
       QString name;
       QString email;
       Attendee *a = incidence->attendeeByUid( member );

@@ -32,30 +32,19 @@
 #include <qfile.h>
 #include <qdom.h>
 
-QString SloxAccounts::mServer;
-QString SloxAccounts::mDomain;
-
-SloxAccounts *SloxAccounts::mSelf = 0;
-KStaticDeleter<SloxAccounts> selfDeleter;
-
-SloxAccounts *SloxAccounts::self()
+SloxAccounts::SloxAccounts( const KURL &baseUrl )
+  : mBaseUrl( baseUrl )
 {
-  if ( !mSelf ) {
-    selfDeleter.setObject( mSelf, new SloxAccounts );
-  }
-  return mSelf;
-}
-
-SloxAccounts::SloxAccounts()
-{
-  kdDebug() << "SloxAccounts()" << endl;
-
-#if 0
-  KABC::AddressBook *ab = KABC::StdAddressBook::self();
-  ab->asyncLoad();
-#endif
+  kdDebug() << "SloxAccounts(): " << baseUrl << endl;
 
   mDownloadJob = 0;
+
+  QString server = mBaseUrl.host();
+
+  QStringList l = QStringList::split( '.', server );
+
+  if ( l.count() < 2 ) mDomain = server;
+  else mDomain = l[ l.count() - 2 ] + "." + l[ l.count() - 1 ];
 
   readAccounts();
 }
@@ -67,16 +56,6 @@ SloxAccounts::~SloxAccounts()
   if ( mDownloadJob ) mDownloadJob->kill();
 }
 
-void SloxAccounts::setServer( const QString &server )
-{
-  mServer = server;
-
-  QStringList l = QStringList::split( '.', server );
-
-  if ( l.count() < 2 ) mDomain = server;
-  else mDomain = l[ l.count() - 2 ] + "." + l[ l.count() - 1 ];
-}
-
 void SloxAccounts::insertUser( const QString &id, const KABC::Addressee &a )
 {
   kdDebug() << "SloxAccount::insertUser() " << id << endl;
@@ -85,7 +64,7 @@ void SloxAccounts::insertUser( const QString &id, const KABC::Addressee &a )
 
   QString email = a.preferredEmail();
   
-  QString url = "http://" + mServer + "/servlet/webdav.freebusy?username=";
+  QString url = "http://" + mBaseUrl.host() + "/servlet/webdav.freebusy?username=";
   url += id + "&server=" + mDomain;
 
   KCal::FreeBusyUrlStore::self()->writeUrl( email, url );
@@ -130,18 +109,11 @@ void SloxAccounts::requestAccounts()
     return;
   }
 
-  KURL url( "http://" + mServer + "/servlet/webdav.groupuser?" +
-            "user=*&group=*&groupres=*&res=*&details=t" );
+  KURL url = mBaseUrl;
+  url.addPath( "/servlet/webdav.groupuser" );
+  url.setQuery( "?user=*&group=*&groupres=*&res=*&details=t" );
 
   kdDebug() << "SloxAccounts::requestAccounts() URL: " << url << endl;
-
-  KConfig cfg( "sloxrc" );
-  cfg.setGroup( "General" );
-  QString user = cfg.readEntry( "User" );
-  QString password = KStringHandler::obscure( cfg.readEntry( "Password" ) );
-  
-  url.setUser( user );
-  url.setPass( password );
 
   mDownloadJob = KIO::file_copy( url, cacheFile(), -1, true );
   connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
@@ -165,7 +137,14 @@ void SloxAccounts::slotResult( KIO::Job *job )
 
 QString SloxAccounts::cacheFile() const
 {
-  return locateLocal( "cache", "slox/accounts" );
+  QString url = mBaseUrl.url();
+  url.replace( "/", "_" );
+
+  QString file = locateLocal( "cache", "slox/accounts_" + url );
+
+  kdDebug() << "SloxAccounts::cacheFile(): " << file << endl;
+
+  return file;
 }
 
 void SloxAccounts::readAccounts()

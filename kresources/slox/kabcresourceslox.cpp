@@ -48,8 +48,6 @@ ResourceSlox::ResourceSlox( const KConfig *config )
   if ( config ) {
     readConfig( config );
   }
-
-  initSlox();
 }
 
 ResourceSlox::ResourceSlox( const KURL &url,
@@ -61,8 +59,6 @@ ResourceSlox::ResourceSlox( const KURL &url,
   mPrefs->setUrl( url.url() );
   mPrefs->setUser( user );
   mPrefs->setPassword( password );
-
-  initSlox();
 }
 
 void ResourceSlox::init()
@@ -75,13 +71,6 @@ void ResourceSlox::init()
   mProgress = 0;
   
   setReadOnly( true );
-}
-
-void ResourceSlox::initSlox()
-{
-  SloxAccounts::setServer( KURL( mPrefs->url() ).host() );
-
-  SloxAccounts::self();
 }
 
 ResourceSlox::~ResourceSlox()
