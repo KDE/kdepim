@@ -176,7 +176,11 @@ rare cases.</para></note>
 <term><guilabel>BCC address</guilabel></term>
 <listitem>
 <para>Optionally enter an address to which blind copies of your messages
-should be sent to.</para>
+should be sent to. Note that a BCC is only send to this address, when
+<menuchoice><guimenu>View</guimenu><guimenuitem>BCC</guimenuitem></menuchoice> 
+is activated while composing a message. If you want to send a BCC regardless 
+of this setting, you should look at the <guilabel>Headers</guilabel> tab of the
+<guilabel>Composer</guilabel> page.</para>
 </listitem>
 </varlistentry>
 
@@ -210,7 +214,10 @@ page</link>.</para></note>
 <term><guilabel>Sent-mail folder</guilabel></term>
 <listitem>
 <para>Select the folder into which messages should be filed after sending
-when using this identity.</para>
+when using this identity. IMAP users should consider changing this to an 
+IMAP folder, so their sent-mail is stored on a server instead of being 
+stored in a local folder. This way they can access these messages at a 
+different location.</para>
 
 <tip><para>You can exercise more fine-grained control over where to
 file sent messages by creating a corresponding <link
@@ -224,7 +231,10 @@ messages.</para></tip>
 <term><guilabel>Drafts folder</guilabel></term>
 <listitem>
 <para>Select the folder into which drafts should be filed when using 
-this identity.</para>
+this identity. IMAP users should consider changing this to an 
+IMAP folder, so their drafts are stored on a server instead of being 
+stored in a local folder. This way they can easily continue to work
+on their drafts at a different location.</para>
 </listitem>
 </varlistentry>
 
@@ -289,8 +299,7 @@ text.</para>
 <para>To read the text from the output of a command you select
 <guilabel>Obtain signature text from Output of
 Command</guilabel>. Enter the command (preferably with full path) in
-the <guilabel>Specify command</guilabel> edit field or hit the button
-to the right of it to browse your filesystem.</para>
+the <guilabel>Specify command</guilabel> edit field.</para>
 
 <para>As a third option, you can enter the signature text directly in
 &kmail;'s configuration dialog. To do this, select <guilabel>Obtain
@@ -443,19 +452,19 @@ HTML messages might imitate the look of a signed and encrypted message, so
 you should be aware of the fact that you are reading a HTML message. The HTML
 status bar itself cannot be influenced by the HTML code of the message.</para>
 
-<para>The <guilabel>Window Layout</guilabel> section lets you choose between
-several layouts of the main window that differ with regard to the size
-of the folder list and to the position of the MIME tree. Let the mouse pointer 
-rest over the icons and you will see a tooltip that explains
-the differences between the layouts.</para>
+<para>The <guilabel>Window Layout</guilabel> section lets you choose the 
+layout of the main window. You can choose where you want the 
+<guilabel>Message Preview Pane</guilabel> or choose not to have 
+it at all.</para>
 
-<para>The <guilabel>Show MIME Tree</guilabel> option lets you choose when
-the MIME tree will be shown: the MIME tree is a part of the main window that
-lets you access all attachments of a message. <guilabel>Never</guilabel> will
-disable the MIME tree (note that you can still access attachments as icons),
-<guilabel>Always</guilabel> will show a MIME tree even if the message does not
-have an attachment. <guilabel>Smart</guilabel> will display the MIME tree
-only if it makes sense, &ie; if the current message has at least one attachment.</para>
+<para>The <guilabel>Message Structure Viewer</guilabel> option lets you choose when
+the structure viewer will be shown: the structure viewer is a part of the main window that
+lets you access all parts of a message. <guilabel>Show never</guilabel> will
+disable the structure viewer (note that you can still access attachments as icons),
+<guilabel>Show always</guilabel> will show the structure viewer even if there is only
+one plaintext part. <guilabel>Show only for non-plaintext messages</guilabel> will 
+display the structure viewer only if it makes sense, &ie; if the current message
+has attachments or has HTML parts.</para>
 
 </sect2>
 
