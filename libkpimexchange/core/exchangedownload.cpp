@@ -282,7 +282,7 @@ void ExchangeDownload::readAppointment( const KURL& url )
 
 void ExchangeDownload::slotPropFindResult( KIO::Job * job )
 {
-  kdDebug() << "slotPropFindResult" << endl;
+  // kdDebug() << "slotPropFindResult" << endl;
 
   int error = job->error(); 
   if ( error )
@@ -307,13 +307,13 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
     return;
   }
   event->setUid( QString::fromUtf8( uidElement.text() ) );
-  kdDebug() << "Got UID: " << uidElement.text() << endl;
+  // kdDebug() << "Got UID: " << uidElement.text() << endl;
 
   QString timezoneid = prop.namedItem( "timezoneid" ).toElement().text();
-  kdDebug() << "DEBUG: timezoneid = " << timezoneid << endl;
+  // kdDebug() << "DEBUG: timezoneid = " << timezoneid << endl;
 
   QString timezone = prop.namedItem( "timezone" ).toElement().text();
-  kdDebug() << "DEBUG: timezone = " << timezone << endl;
+  // kdDebug() << "DEBUG: timezone = " << timezone << endl;
 
   // mFormat is used for parsing recurrence rules.
   mFormat->setTimeZone( mCalendar->timeZoneId(), !mCalendar->isLocalTime() );
@@ -321,24 +321,25 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   QString lastModified = prop.namedItem( "lastmodified" ).toElement().text();
   QDateTime dt = utcAsZone( QDateTime::fromString( lastModified, Qt::ISODate ), mCalendar->timeZoneId() );
   event->setLastModified( dt );
-  kdDebug() << "Got lastModified:" << lastModified << ", " << dt.toString() << endl;
+  // kdDebug() << "Got lastModified:" << lastModified << ", " << dt.toString() << endl;
 
   QString organizer = QString::fromUtf8( prop.namedItem( "organizer" ).toElement().text() );
   event->setOrganizer( organizer );
-  kdDebug() << "Got organizer: " << organizer << endl;
+  // kdDebug() << "Got organizer: " << organizer << endl;
 
   // Trying to find attendees, not working yet
   QString contact = QString::fromUtf8( prop.namedItem( "contact" ).toElement().text() );
 //  event->setOrganizer( organizer );
-  kdDebug() << "DEBUG: Got contact: " << contact << endl;
+  // kdDebug() << "DEBUG: Got contact: " << contact << endl;
 
   // This looks promising for finding attendees
+  // FIXME: get this to work
   QString to = QString::fromUtf8( prop.namedItem( "to" ).toElement().text() );
-  kdDebug() << "DEBUG: Got to: " << to << endl;
+  // kdDebug() << "DEBUG: Got to: " << to << endl;
   QStringList attn = QStringList::split( ",", to ); // This doesn't work: there can be commas between ""
   QStringList::iterator it;
   for ( it = attn.begin(); it != attn.end(); ++it ) {
-    kdDebug() << "    attendee: " << (*it) << endl;
+    // kdDebug() << "    attendee: " << (*it) << endl;
     QString name = "";
     // KCal::Attendee* a = new KCal::Attendee( name, email );
 
@@ -347,48 +348,48 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
 
   QString readonly = prop.namedItem( "isreadonly" ).toElement().text();
   event->setReadOnly( readonly != "0" );
-  kdDebug() << "Got readonly: " << readonly << ":" << (readonly != "0") << endl;
+  // kdDebug() << "Got readonly: " << readonly << ":" << (readonly != "0") << endl;
 
   QString created = prop.namedItem( "created" ).toElement().text();
   dt = utcAsZone( QDateTime::fromString( created, Qt::ISODate ), mCalendar->timeZoneId() );
   event->setCreated( dt );
-  kdDebug() << "got created: " << dt.toString() << endl;
+  // kdDebug() << "got created: " << dt.toString() << endl;
 
   QString dtstart = prop.namedItem( "dtstart" ).toElement().text();
   dt = utcAsZone( QDateTime::fromString( dtstart, Qt::ISODate ), mCalendar->timeZoneId() );
   event->setDtStart( dt );
-  kdDebug() << "got dtstart: " << dtstart << " becomes in timezone " << dt.toString() << endl;
+  // kdDebug() << "got dtstart: " << dtstart << " becomes in timezone " << dt.toString() << endl;
 
   QString alldayevent = prop.namedItem( "alldayevent" ).toElement().text();
   bool floats = alldayevent.toInt() != 0;
   event->setFloats( floats );
-  kdDebug() << "Got alldayevent: \"" << alldayevent << "\":" << floats << endl;
+  // kdDebug() << "Got alldayevent: \"" << alldayevent << "\":" << floats << endl;
 
   QString dtend = prop.namedItem( "dtend" ).toElement().text();
   dt = utcAsZone( QDateTime::fromString( dtend, Qt::ISODate ), mCalendar->timeZoneId() );
   // Outlook thinks differently about floating event timing than libkcal
   if ( floats ) dt = dt.addDays( -1 );
   event->setDtEnd( dt );
-  kdDebug() << "got dtstart: " << dtend << " becomes in timezone " << dt.toString() << endl;
+  // kdDebug() << "got dtstart: " << dtend << " becomes in timezone " << dt.toString() << endl;
 
   QString transparent = prop.namedItem( "transparent" ).toElement().text();
   event->setTransparency( transparent.toInt() );
-  kdDebug() << "Got transparent: " << transparent << endl;
+  // kdDebug() << "Got transparent: " << transparent << endl;
 
   QString description = QString::fromUtf8( prop.namedItem( "textdescription" ).toElement().text() );
   event->setDescription( description );
-  kdDebug() << "Got description: " << description << endl;
+  // kdDebug() << "Got description: " << description << endl;
 
   QString subject = QString::fromUtf8( prop.namedItem( "subject" ).toElement().text() );
   event->setSummary( subject );
-  kdDebug() << "Got summary: " << subject << endl;
+  // kdDebug() << "Got summary: " << subject << endl;
 
   QString location = QString::fromUtf8( prop.namedItem( "location" ).toElement().text() );
   event->setLocation( location );
-  kdDebug() << "Got location: " << location << endl;
+  // kdDebug() << "Got location: " << location << endl;
 
   QString rrule = prop.namedItem( "rrule" ).toElement().text();
-  kdDebug() << "Got rrule: " << rrule << endl;
+  // kdDebug() << "Got rrule: " << rrule << endl;
   if ( ! rrule.isNull() ) {
     // Timezone should be handled automatically 
     // because we used mFormat->setTimeZone() earlier
@@ -405,7 +406,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
     categories.append( QString::fromUtf8( item.text() ) );
   }
   event->setCategories( categories );
-  kdDebug() << "Got categories: " << categories.join( ", " ) << endl;
+  // kdDebug() << "Got categories: " << categories.join( ", " ) << endl;
 
 
   QDomElement exdate = prop.namedItem( "exdate" ).toElement();
@@ -415,7 +416,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
     QDomElement item = list.item(i).toElement();
     QDate date = utcAsZone( QDateTime::fromString( item.text(), Qt::ISODate ), mCalendar->timeZoneId() ).date();
     exdates.append( date );
-    kdDebug() << "Got exdate: " << date.toString() << endl;
+    // kdDebug() << "Got exdate: " << date.toString() << endl;
   }
   event->setExDates( exdates );
 
@@ -433,7 +434,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
     case 3: event->setSecrecy( KCal::Incidence::SecrecyConfidential ); break;
     default: kdWarning() << "Unknown sensitivity: " << sensitivity << endl;
   }
-  kdDebug() << "Got sensitivity: " << sensitivity << endl;
+  // kdDebug() << "Got sensitivity: " << sensitivity << endl;
 
     /** point at some other event to which the event relates */
     //void setRelatedTo(Incidence *relatedTo);
