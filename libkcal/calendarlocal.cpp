@@ -122,6 +122,7 @@ bool CalendarLocal::save(const QString &fileName,CalFormat *format)
   if (format) {
     success = format->save(fileName);
   } else {
+    if ( !mFormat ) mFormat = new ICalFormat( this );
     success = mFormat->save(fileName);
   }
 
