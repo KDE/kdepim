@@ -30,6 +30,7 @@
 
 #include "konsolekalendar.h"
 #include "konsolekalendarepoch.h"
+#include "konsolekalendarexports.h"
 
 using namespace KCal;
 using namespace std;
@@ -59,8 +60,8 @@ static KCmdLineOptions options[] =
   { "all", I18N_NOOP("Show all calendar entries"), 0 },
   { "create", I18N_NOOP("Create new calendar file if one does not exist"), 0 },
   { "add", I18N_NOOP("Add an event"), 0 },
-  { "change", I18N_NOOP("Change an event (currently not implemented)"), 0 },
-  { "delete", I18N_NOOP("Delete an event (currently not implemented)"), 0 },
+  { "change", I18N_NOOP("Change an event"), 0 },
+  { "delete", I18N_NOOP("Delete an event"), 0 },
 
   KCmdLineLastOption
 };
@@ -472,6 +473,10 @@ int main(int argc, char *argv[])
     }
 
     if( view ) {
+      //here for testing
+      //should be moved to KonsoleKalendar in future
+      KonsoleKalendarExports exporter(&variables);
+	    
       konsolekalendar->showInstance();
     }
 
