@@ -36,14 +36,22 @@
 </affiliation>
 <contrib>Developer</contrib>
 </othercredit>
+<othercredit role="developer">
+<firstname>Daniel</firstname>
+<surname>Molkentin</surname>
+<affiliation>
+<address><email>molkentin@kde.org</email></address>
+</affiliation>
+<contrib>Developer</contrib>
+</othercredit>
 
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2002-08-22</date>
-<releaseinfo>0.00.00</releaseinfo>
+<date>2004-01-17</date>
+<releaseinfo>0.9</releaseinfo>
 
 <abstract>
 <para>
@@ -177,6 +185,61 @@ certificates in each CRL.
 </para>
 </sect1>
 
+<sect1 id="admin"><title>Administrators Guide</title>
+<sect2>
+<title>Customization of the Certificate Creation Wizard</title>
+<para>
+&kgpgcertmanager; allows to customize the fields that the user
+is allowed to enter in order to create his certificate.
+</para>
+<para>
+Create a group called CertificateCreationWizard in the system-wide 
+<filename>kgpgcertmanagerrc</filename>. If you want a custom order of attributes or
+if you only want certain items to appear, create a key called <varname>DNAttributeOrder</varname>. 
+The argument is one more more of <varname>CN,SN,GN,L,T,OU,O,PC,C,SP,DC,BC,EMAIL</varname> If you want to 
+preempt fields with a certain value, write something like Attribute=value. If you want the attribute
+to be treated as a required one, follow it with a bang (e.g. <varname>CN!,L,OU,O!,C!,EMAIL!</varname>,
+which happens to be the default configuration).
+</para><para>
+Using the <acronym>KIOSK</acronym> modes modifiers <varname>$e</varname> allows for retrieving
+the values from environment variables or from an evaluated script or binary. If you want 
+to additionally disallow editing of the respective field, use the modifier <varname>$i</varname>.
+If you want to disallow the use <guibutton>Insert My Address</guibutton> button, set 
+<varname>ShowSetWhoAmI</varname> to false.
+</para>
+
+<tip><para>
+Due to the nature of the &kde; <acronym>KIOSK</acronym> framework, using immutable flag 
+(<varname>$i</varname>) makes it impossible for the user to override the flag. This is 
+indented behavior. <varname>$i</varname> and <varname>$e</varname> can be used with any 
+other config key in &kde; applications.
+</para></tip>
+
+<para>The following example outlines possible customizations:</para>
+
+<para>
+<programlisting>
+[CertificateCreationWizard] 
+;Disallow to copy personal data from the addressbook, don't allow local override
+ShowSetWhoAmI[$i]=false
+
+;sets the user name to $USER
+CN[$e]=$USER
+
+;sets the company name to "My Company", disallows editing
+OU[$i]=My Company
+
+;sets the department name to a value returned by a script
+O[$ei]=$(lookup_dept_from_ip)
+
+; sets country to DE, but allows for changes by the user
+C=DE
+</programlisting>
+
+</para>
+</sect2>
+</sect1>
+
 <sect1 id="help"><title>Help</title>
 
 
@@ -193,9 +256,9 @@ help menu.</para>
 <title>Credits and License</title>
 
 <para>&kgpgcertmanager; copyright 2002 Steffen Hansen, Kalle Dalheimer
-and Jesper Pedersen.</para>
+and Jesper Pedersen., copyright 2004 Daniel Molkentin</para>
 
-<para>Documentation copyright 2002 Steffen Hansen</para>
+<para>Documentation copyright 2002 Steffen Hansen, copyright 2004 Daniel Molkentin</para>
 
 <itemizedlist>
 <title>Contributors</title>
@@ -207,6 +270,9 @@ and Jesper Pedersen.</para>
 </listitem>
 <listitem>
 <para>Jesper Pedersen <email>blackie@kde.org</email></para>
+</listitem>
+<listitem>
+<para>Daniel Molkentin <email>molkentin@kde.org</email></para>
 </listitem>
 </itemizedlist>
 
