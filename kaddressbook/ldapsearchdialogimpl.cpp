@@ -80,8 +80,8 @@ public:
  *  The dialog will by default be modeless, unless you set 'modal' to
  *  TRUE to construct a modal dialog.
  */
-LDAPSearchDialogImpl::LDAPSearchDialogImpl( QWidget* parent, const char* name, bool modal, WFlags fl )
-  : LDAPSearchDialog( parent, name, modal, fl )
+LDAPSearchDialogImpl::LDAPSearchDialogImpl( KABC::AddressBook *ab, QWidget* parent, const char* name, bool modal, WFlags fl )
+  : LDAPSearchDialog( parent, name, modal, fl ), mAddressBook( ab )
 {
   numHosts = 0;
   bOK = false;
@@ -274,54 +274,35 @@ void LDAPSearchDialogImpl::slotError( const QString& err )
 
 void LDAPSearchDialogImpl::slotAddSelectedContacts()
 {
-  // Disable because of view restructuring.
-#if 0
   ContactListItem* cli = static_cast<ContactListItem*>( resultListView->firstChild() );
-  while( cli ) {
-    if( cli->isSelected() ) {
-      // Insert into addressbook
-      qDebug("Adding %s", cli->text(0).latin1() );
-      ContactEntry ce;
-      {
-	// Name
-	ce.insert( QString::fromUtf8("X-FileAs"), 
-		   new QString( QString::fromUtf8( cli->_attrs["cn"].first()) ) );
-	ce.insert( QString::fromUtf8("N"), 
-		   new QString( QString::fromUtf8( cli->_attrs["cn"].first()) ) );
-	ce.insert( QString::fromUtf8(".AUXCONTACT-N"), 
-		   new QString( QString::fromUtf8( cli->_attrs["cn"].first()) ) );
-	ce.insert( QString::fromUtf8("X-FirstName"), 
-		   new QString( QString::fromUtf8( cli->_attrs["cn"].first()) ) );
+  while ( cli ) {
+    if ( cli->isSelected() ) {
+      KABC::Addressee addr;
+
+      // name
+      addr.setNameFromString( QString::fromUtf8( cli->_attrs["cn"].first() ) );
+
+      // email
+      KLdapAttrValue lst = cli->_attrs["mail"];
+      KLdapAttrValue::ConstIterator it = lst.begin();
+      bool pref = true;
+      if ( it != lst.end() ) {
+        addr.insertEmail( QString::fromUtf8( *it ), pref );
+        pref = false;
+        ++it;
       }
-      {
-	// EMAIL
-	KLdapAttrValue lst = cli->_attrs["mail"];
-	KLdapAttrValue::ConstIterator it = lst.begin();
-	if( it != lst.end() ) {
-	  ce.insert( QString::fromLatin1("EMAIL"), new QString( QString::fromUtf8( *it ) ) );
-	  ++it;
-	  if( it != lst.end() ) {
-	    ce.insert( QString::fromLatin1("X-E-mail2"), new QString(QString::fromUtf8( *it )) );
-	    ++it;
-	    if( it != lst.end() ) {
-	      ce.insert(QString::fromLatin1("X-E-mail3"), new QString(QString::fromUtf8( *it )) );
-	    }
-	  }
-	}
-      }
-      {
-	// Phone
-	ce.insert( QString::fromLatin1("X-HomePhone"), 
-		   new QString(QString::fromUtf8( cli->_attrs["telePhonenumber"].first() )) );
-      }
-      ce.touch();
-      _adrBook->change( QString::fromUtf8( cli->_attrs["cn"].first()), &ce );
-    } else {
-      // Do nothing
+
+      // phone
+      addr.insertPhoneNumber( QString::fromUtf8( cli->_attrs["telePhonenumber"].first() ) );
+
+      if ( mAddressBook )
+        mAddressBook->insertAddressee( addr );
     }
+
     cli = static_cast<ContactListItem*>( cli->nextSibling() );
   }
-#endif
+
+  emit addresseesAdded();
 }
 
 /*!

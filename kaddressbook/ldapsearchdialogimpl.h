@@ -23,6 +23,8 @@
 
 #include <qptrlist.h>
 
+#include <kabc/addressbook.h>
+
 #include "ldapsearchdialog.h"
 #include "kldapclient.h"
 
@@ -33,11 +35,14 @@ class LDAPSearchDialogImpl : public LDAPSearchDialog
   Q_OBJECT
 
 public:
-  LDAPSearchDialogImpl( QWidget* parent, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
+  LDAPSearchDialogImpl( KABC::AddressBook *ab, QWidget* parent, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
   ~LDAPSearchDialogImpl();
   bool isOK() const { return bOK; }
 
   void rereadConfig();
+
+signals:
+  void addresseesAdded();
 
 protected slots:
   void slotAddResult( const KLdapObject& obj );
@@ -48,8 +53,10 @@ protected slots:
   void slotAddSelectedContacts();
   void slotSendMail();
   void slotError( const QString& );
+
 protected:
   QString selectedEMails() const;
+
 private:
   QString makeFilter( const QString& query, const QString& attr );
 
@@ -58,6 +65,7 @@ private:
   int numHosts;
   QPtrList<KLdapClient> ldapclientlist;
   bool bOK;
+  KABC::AddressBook *mAddressBook;
 };
 
 #endif // LDAPSEARCHDIALOGIMPL_H

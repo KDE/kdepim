@@ -539,9 +539,11 @@ void KAddressBook::configure()
 
 void KAddressBook::slotOpenLDAPDialog()
 {
-  if( !mLdapSearchDialog )
-    mLdapSearchDialog = new LDAPSearchDialogImpl(this);
-  else
+  if( !mLdapSearchDialog ) {
+    mLdapSearchDialog = new LDAPSearchDialogImpl( mDocument, this);
+    connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ), mViewManager,
+            SLOT( refresh() ) );
+  } else
     mLdapSearchDialog->rereadConfig();
 
   if( mLdapSearchDialog->isOK() )
