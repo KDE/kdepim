@@ -257,8 +257,8 @@ speeds to see if they work.
 many different languages.
 If your device uses a different encoding than
 ISO-latin1, you will need to select the
-correct encoding from the list in order to have &kpilot;
-display national characters correctly.
+correct encoding from the list in order to
+display special characters correctly.
 If you can enter Russian in your &PalmPilot;,
 select CP1251, for instance.
 </para>
@@ -576,10 +576,10 @@ These settings change the way in which the data is shown.
 <varlistentry>
 <term><guilabel>Make internal viewers editable</guilabel></term>
 <listitem><para>
-The internal viewers can be read only and editable. The editable mode allows you
+The internal viewers can be read only or editable. The editable mode allows you
 to add new records, delete or edit the existing records and sync your
 modifications back to the &handheld;. Check
-here to set the internal viewers to editable mode, uncheck to set them to read
+this box to set the internal viewers to editable mode, uncheck to set them to read
 only mode.</para>
 <warning><para>
 On some &kpilot; versions, it is not possible check this box, and therefore to
@@ -1299,9 +1299,10 @@ book.
 <varlistentry>
 <term><guilabel>Store archived records in the KDE addressbook</guilabel></term>
 <listitem><para>
-Check this box to save a copy of the archived records from your
-&handheld; on the <acronym>PC</acronym>, in order to have all your contacts in
-you &kde; desktop as well as in your &handheld;.
+The &handheld; offers an option to archive deleted addresses in your desktop.
+If that option is selected, check this box to keep the deleted addresses from
+your &handheld; in your <acronym>PC</acronym> addressbook. These addresses will
+be no longer synchronized with your handheld.
 </para></listitem>
 </varlistentry>
 
@@ -1514,9 +1515,9 @@ frequency options. It can be  set for <guilabel>Every Sync</guilabel>,
 <guilabel>Once per Hour</guilabel>, <guilabel>Once a Day</guilabel>, 
 <guilabel>Once a Week</guilabel> or <guilabel>Once a Month</guilabel>.
 The conduit only runs when you hit &HotSync; on your &handheld;, so
-<guilabel>Once per Hour</guilabel>, for instance, really means
-<quote>Synchronize with the MAL server on every &HotSync; that is at least one
-hour after than the last MAL sync</quote>.
+<guilabel>Once per Hour</guilabel>, for instance, really means that
+KPilot will only try to synchronise with the MAL servers if it is more than an
+hour since the last MAL sync.
 </para>
 
 <para>
