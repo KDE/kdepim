@@ -25,6 +25,8 @@
 
 #include <gpgme.h>
 
+#include <string.h>
+
 GpgME::Key GpgME::Key::null;
 
 namespace GpgME {
@@ -214,6 +216,22 @@ namespace GpgME {
   }
   const char * Key::chainID() const {
     return d->key ? d->key->chain_id : 0 ;
+  }
+
+  const char * Key::keyID() const {
+    if ( !d->key || !d->key->subkeys || !d->key->subkeys->fpr )
+      return 0;
+    const int len = strlen( d->key->subkeys->fpr );
+    if ( len < 16 )
+      return 0;
+    return d->key->subkeys->fpr + len - 16; // return the last 8 bytes (in hex notation)
+  }
+
+  const char * Key::shortKeyID() const {
+    if ( const char * kid = keyID() )
+      return kid + 8 ;
+    else
+      return 0;
   }
 
   //

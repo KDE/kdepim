@@ -83,6 +83,9 @@ namespace GpgME {
     const char * issuerName() const;
     const char * chainID() const;
 
+    const char * keyID() const;
+    const char * shortKeyID() const;
+
   private:
     gpgme_key_t impl() const;
     class Private;
