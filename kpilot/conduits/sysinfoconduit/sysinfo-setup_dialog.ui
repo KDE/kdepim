@@ -126,7 +126,7 @@
                     <cstring>tab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Parts included</string>
+                    <string>Parts Included</string>
                 </attribute>
                 <grid>
                     <property name="name">

@@ -93,7 +93,7 @@ the Python-conduit settings.</comment>
                             <cstring>TextLabel1_2</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;Python Expression:</string>
+                            <string>&amp;Python expression:</string>
                         </property>
                         <property name="buddy" stdset="0">
                             <cstring>fExpression</cstring>

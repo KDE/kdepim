@@ -44,7 +44,7 @@
                         <cstring>TextLabel1_2</cstring>
                     </property>
                     <property name="text">
-                        <string>Item Name</string>
+                        <string>Item name:</string>
                     </property>
                 </widget>
                 <widget class="QLineEdit">
@@ -98,7 +98,7 @@
                         <cstring>TextLabel8</cstring>
                     </property>
                     <property name="text">
-                        <string>Highlight Color:</string>
+                        <string>Highlight color:</string>
                     </property>
                 </widget>
                 <widget class="QTimeEdit" row="4" column="5">
@@ -423,7 +423,7 @@
                                 <cstring>TextLabel7</cstring>
                             </property>
                             <property name="text">
-                                <string>Displayed Text:</string>
+                                <string>Displayed text:</string>
                             </property>
                         </widget>
                         <widget class="QLineEdit">
@@ -460,7 +460,7 @@
                                 <cstring>TextLabel9</cstring>
                             </property>
                             <property name="text">
-                                <string>Text Color:</string>
+                                <string>Text color:</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignRight</set>

@@ -73,7 +73,7 @@
                 <cstring>textLabel1_2</cstring>
             </property>
             <property name="text">
-                <string>&amp;Default Sync:</string>
+                <string>&amp;Default sync:</string>
             </property>
             <property name="buddy" stdset="0">
                 <cstring>fSpecialSync</cstring>

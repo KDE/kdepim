@@ -75,7 +75,7 @@ Press "Finish" to setup KPilot according to the settings in this configuration W
                         <cstring>radioButton4</cstring>
                     </property>
                     <property name="text">
-                        <string>No Sync, Just Backup</string>
+                        <string>No sync, just backup</string>
                     </property>
                 </widget>
             </vbox>

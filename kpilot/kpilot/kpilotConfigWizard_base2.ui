@@ -46,10 +46,10 @@
                 <cstring>groupBox2</cstring>
             </property>
             <property name="title">
-                <string>Handheld and User Name</string>
+                <string>Handheld &amp;&amp; User Name</string>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>You can either let KPilot detect these values automatically (for this you need your handheld ready and connected to the PC)  or enter them manually. 
+                <string>You can either let KPilot detect these values automatically (for this you need your handheld ready and connected to the PC)  or enter them manually.
 Please enter the user name exactly as set on the handheld. The device means a system device on your PC, like /dev/pilot, or /dev/ttyUSB0 or /dev/ttyUSB1 for usb on Linux, or /dev/ttyS1 for serial devices.</string>
             </property>
             <grid>
@@ -72,7 +72,7 @@ Please enter the user name exactly as set on the handheld. The device means a sy
                         <cstring>fProbeButton</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Automatically detect the handheld and the user name...</string>
+                        <string>&amp;Automatically Detect Handheld and User Name...</string>
                     </property>
                 </widget>
                 <widget class="QLineEdit" row="1" column="1">

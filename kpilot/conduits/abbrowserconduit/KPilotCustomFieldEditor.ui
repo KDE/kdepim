@@ -15,7 +15,7 @@
         </rect>
     </property>
     <property name="caption">
-        <string>KPilot custom fields</string>
+        <string>KPilot Custom Fields</string>
     </property>
     <vbox>
         <property name="name">
@@ -29,7 +29,7 @@
                 <cstring>mCustomFieldsGroups</cstring>
             </property>
             <property name="title">
-                <string>KPilot custom fields</string>
+                <string>KPilot Custom Fields</string>
             </property>
             <property name="whatsThis" stdset="0">
                 <string>On your handheld, each address also provides four custom fields for your personal use. KPilot can sync these either to birthdate, URL, IM address, or just store them as a custom field on your PC with no special meaning. In the last case, you can change the values here. Note, however, that for all other settings the values entered here will have no effect.</string>
@@ -131,7 +131,7 @@
                 <bool>true</bool>
             </property>
             <property name="title">
-                <string>KPilot's private (meta-sync) settings</string>
+                <string>KPilot's Private (meta-sync) Settings</string>
             </property>
             <grid>
                 <property name="name">
@@ -198,7 +198,7 @@
                         <cstring>mMetaSyncSettingsWarning</cstring>
                     </property>
                     <property name="text">
-                        <string>These values indicate the state of the record for KPilot, and connect an entry on the handheld with an entry on the PC. 
+                        <string>These values indicate the state of the record for KPilot, and connect an entry on the handheld with an entry on the PC.
 Do NOT change these values: doing so will almost certainly result in data loss when you next do a sync.</string>
                     </property>
                     <property name="alignment">
