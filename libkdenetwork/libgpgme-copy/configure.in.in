@@ -310,6 +310,9 @@ if test "$GPGSM" != "no"; then
   AC_CHECK_FUNCS(memrchr)
 fi
 
+# More assuan checks.
+AC_CHECK_HEADERS([sys/uio.h])
+
 echo "
 	GPGME v${VERSION} has been configured as follows:
 
