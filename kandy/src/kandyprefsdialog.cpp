@@ -42,9 +42,13 @@ KandyPrefsDialog::KandyPrefsDialog(QWidget *parent, char *name, bool modal) :
 
 KandyPrefsDialog::~KandyPrefsDialog()
 {
+  delete serialDevice;
+  delete openOnStartup;
+  delete startupTerminal;
+  delete startupMobile;
 }
 
-
+#include <kdebug.h>
 void KandyPrefsDialog::setupSerialTab()
 {
   QFrame *topFrame = addPage(i18n("Serial Interface"),0,
@@ -54,14 +58,14 @@ void KandyPrefsDialog::setupSerialTab()
   topLayout->setSpacing(spacingHint());
   topLayout->setMargin(marginHint());
   
-  KPrefsWidString *serialDevice =
+  serialDevice =
       new KPrefsWidString(i18n("Serial Device"),
                           &(KandyPrefs::instance()->mSerialDevice),this,
                           topFrame);
   topLayout->addWidget(serialDevice->label(),0,0);
   topLayout->addWidget(serialDevice->lineEdit(),0,1);
 
-  KPrefsWidBool *openOnStartup = 
+  openOnStartup = 
        new KPrefsWidBool(i18n("Open Modem On Startup"),
                          &(KandyPrefs::instance()->mStartupModem),this,
                          topFrame);
@@ -79,13 +83,13 @@ void KandyPrefsDialog::setupWindowsTab()
   topLayout->setSpacing(spacingHint());
   topLayout->setMargin(marginHint());
   
-  KPrefsWidBool *startupTerminal = 
+  startupTerminal = 
        new KPrefsWidBool(i18n("Open Terminal Window On Startup"),
                          &(KandyPrefs::instance()->mStartupTerminalWin),this,
                          topFrame);
   topLayout->addWidget(startupTerminal->checkBox(),0,0);
   
-  KPrefsWidBool *startupMobile = 
+  startupMobile = 
        new KPrefsWidBool(i18n("Open Mobile Window On Startup"),
                          &(KandyPrefs::instance()->mStartupMobileWin),this,
                          topFrame);
