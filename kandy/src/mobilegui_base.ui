@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
 <class>MobileGui_base</class>
 <widget class="QWidget">
     <property name="name">
@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>623</width>
-            <height>415</height>
+            <width>865</width>
+            <height>473</height>
         </rect>
     </property>
     <property name="caption">
@@ -54,22 +54,6 @@
                 </property>
                 <property name="text">
                     <string>Model:</string>
-                </property>
-            </widget>
-            <widget class="QLabel">
-                <property name="name">
-                    <cstring>TextLabel2</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>11</x>
-                        <y>63</y>
-                        <width>88</width>
-                        <height>16</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string>GSM version:</string>
                 </property>
             </widget>
             <widget class="QLabel">
@@ -166,6 +150,22 @@
                 </property>
                 <property name="text">
                     <string>Manufacturer:</string>
+                </property>
+            </widget>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>TextLabel2</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>11</x>
+                        <y>63</y>
+                        <width>88</width>
+                        <height>16</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>GSM version:</string>
                 </property>
             </widget>
         </widget>
@@ -451,7 +451,7 @@
                         <cstring>textLabel1</cstring>
                     </property>
                     <property name="text">
-                        <string>Address books</string>
+                        <string>Address Books</string>
                     </property>
                 </widget>
                 <spacer row="0" column="0">
