@@ -24,7 +24,7 @@ AC_LANG_RESTORE
 ac_use_exchange="no"
 AC_ARG_ENABLE(exchange,
         [  --disable-exchange      disable Microsoft Exchange 2000 support for korganizer [default=enable]], ac_use_exchange=$enableval, ac_use_exchange=yes)
-AM_CONDITIONAL(include_exchange_SUBDIR, test "$ac_use_exchange" = "yes" && test "ac_has_recent_webdav" = "yes")
+AM_CONDITIONAL(include_exchange_SUBDIR, test "x$ac_use_exchange" = "xyes" && test "x$ac_has_recent_webdav" = "xyes")
 
 if test "x$ac_use_exchange" != "xyes" || test "x$ac_has_recent_webdav" != "xyes"; then
         DO_NOT_COMPILE="$DO_NOT_COMPILE libkpimexchange"
