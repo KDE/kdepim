@@ -43,7 +43,7 @@ Compat *CompatFactory::createCompat( const QString &productId )
       if ( versionStop >= 0 ) {
         QString version = productId.mid( versionStart + 1,
                                          versionStop - versionStart - 1 );
-        kdDebug(5800) << "Found KOrganizer version: " << version << endl;
+//        kdDebug(5800) << "Found KOrganizer version: " << version << endl;
         
         int versionNum = version.section( ".", 0, 0 ).toInt() * 10000 +
                          version.section( ".", 1, 1 ).toInt() * 100 +
@@ -53,9 +53,9 @@ Compat *CompatFactory::createCompat( const QString &productId )
         if ( releaseStop > versionStop ) {
           release = productId.mid( versionStop+1, releaseStop-versionStop-1 );
         }
-        kdDebug(5800) << "KOrganizer release: \"" << release << "\"" << endl;
+//        kdDebug(5800) << "KOrganizer release: \"" << release << "\"" << endl;
                          
-        kdDebug(5800) << "Numerical version: " << versionNum << endl;
+//        kdDebug(5800) << "Numerical version: " << versionNum << endl;
         
         if ( versionNum < 30100 ) {
           compat = new CompatPre31;

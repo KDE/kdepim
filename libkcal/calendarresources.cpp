@@ -108,6 +108,8 @@ void CalendarResources::readConfig( KConfig *config )
 
 void CalendarResources::load()
 {
+  kdDebug(5800) << "CalendarResources::load()" << endl;
+
   if ( !mManager->standardResource() ) {
     kdDebug(5800) << "Warning! No standard resource yet." << endl;
   }

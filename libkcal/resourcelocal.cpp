@@ -49,6 +49,12 @@
 
 using namespace KCal;
 
+class ResourceLocal::Private
+{
+  public:
+    QDateTime mLastModified;
+};
+
 ResourceLocal::ResourceLocal( const KConfig* config )
   : ResourceCached( config ), mLock( 0 )
 {
@@ -98,6 +104,8 @@ void ResourceLocal::writeConfig( KConfig* config )
 
 void ResourceLocal::init()
 {
+  d = new ResourceLocal::Private;
+
   setType( "file" );
 
   mOpen = false;
@@ -121,6 +129,8 @@ ResourceLocal::~ResourceLocal()
   close();
 
   delete mLock;
+
+  delete d;
 }
 
 bool ResourceLocal::doOpen()
@@ -132,18 +142,32 @@ bool ResourceLocal::doOpen()
   return true;
 }
 
+QDateTime ResourceLocal::readLastModified()
+{
+  QFileInfo fi( mURL.path() );
+  return fi.lastModified();
+}
+
 bool ResourceLocal::load()
 {
   if ( !mOpen ) return true;
-  
-  return mCalendar.load( mURL.path() );
+
+  bool success = mCalendar.load( mURL.path() );
+
+  d->mLastModified = readLastModified();
+
+  return success;
 }
 
 bool ResourceLocal::save()
 {
   if ( !mOpen ) return true;
 
-  return mCalendar.save( mURL.path() );
+  bool success = mCalendar.save( mURL.path() );
+
+  d->mLastModified = readLastModified();
+
+  return success;
 }
 
 KABC::Lock *ResourceLocal::lock()
@@ -153,7 +177,15 @@ KABC::Lock *ResourceLocal::lock()
 
 void ResourceLocal::reload()
 {
+  kdDebug(5800) << "ResourceLocal::reload()" << endl;
+
   if ( !mOpen ) return;
+
+  if ( d->mLastModified == readLastModified() ) {
+    kdDebug(5800) << "ResourceLocal::reload(): file not modified since last read."
+              << endl;
+    return;
+  }
 
   mCalendar.close();
   mCalendar.load( mURL.path() );

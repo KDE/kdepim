@@ -114,7 +114,7 @@ void CalendarLocal::deleteAllEvents()
 
 Event *CalendarLocal::event( const QString &uid )
 {
-  kdDebug(5800) << "CalendarLocal::event(): " << uid << endl;
+//  kdDebug(5800) << "CalendarLocal::event(): " << uid << endl;
   return mEvents[ uid ];
 }
 
