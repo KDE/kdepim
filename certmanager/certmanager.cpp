@@ -236,7 +236,7 @@ void CertManager::createActions() {
 
   connectEnableOperationSignal( this, action );
 
-  action = new KAction( i18n("Stop Operation"), "stop", 0,
+  action = new KAction( i18n("Stop Operation"), "stop", Key_Escape,
 			this, SIGNAL(stopOperations()),
 			actionCollection(), "view_stop_operations" );
   action->setEnabled( false );
