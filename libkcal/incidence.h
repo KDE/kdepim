@@ -29,9 +29,10 @@
 #include <qstringlist.h>
 #include <qvaluelist.h>
 
-#include "attendee.h"
 #include "recurrence.h"
 #include "alarm.h"
+
+#include "incidencebase.h"
 
 namespace KCal {
 
@@ -39,12 +40,10 @@ class Event;
 class Todo;
 class Journal;
 
-typedef QValueList<QDate> DateList;
-
 /**
   This class provides the base class common to all calendar components.
 */
-class Incidence : public QObject
+class Incidence : public IncidenceBase
 {
     Q_OBJECT
   public:
@@ -95,17 +94,14 @@ class Incidence : public QObject
 
     virtual Incidence *clone() = 0;
 
+    void setReadOnly( bool );
+
     /**
       Recreate event. The event is made a new unique event, but already stored
       event information is preserved. Sets uniquie id, creation date, last
       modification date and revision number.
     */
     void recreate();
-
-    /** sets the event to be read only or not */
-    void setReadOnly(bool readonly);
-    /** returns the event's read only status */
-    bool isReadOnly() const { return mReadOnly; }
 
     /** Sets the time the incidence was last modified. */
     void setLastModified(const QDateTime &lm);
@@ -117,57 +113,13 @@ class Incidence : public QObject
     /** return time and date of cration. */
     QDateTime created() const;
 
-    /** set the unique text string for the event */
-    void setVUID(const QString &);
-    /** get the unique text string for the event */
-    QString VUID() const;
-
     /** set the number of revisions this event has seen */
     void setRevision(int rev);
     /** return the number of revisions this event has seen */
     int revision() const;
 
-    /** sets the organizer for the event */
-    void setOrganizer(const QString &o);
-    QString organizer() const;
-
-    /** for setting the event's starting date/time with a QDateTime. */
+    /** Set starting date/time. */
     void setDtStart(const QDateTime &dtStart);
-    /** returns an event's starting date/time as a QDateTime. */
-    QDateTime dtStart() const;
-    /** returns an event's starting time as a string formatted according to the
-     users locale settings */
-    QString dtStartTimeStr() const;
-    /** returns an event's starting date as a string formatted according to the
-     users locale settings */
-    QString dtStartDateStr(bool shortfmt=true) const;
-    /** returns an event's starting date and time as a string formatted according
-     to the users locale settings */
-    QString dtStartStr() const;
-
-    virtual void setDuration(int seconds);
-    int duration() const;
-    void setHasDuration(bool);
-    bool hasDuration() const;
-
-    /** returns TRUE or FALSE depending on whether the event "floats,"
-     * or doesn't have a time attached to it, only a date. */
-    bool doesFloat() const;
-    /** sets the event's float value. */
-    void setFloats(bool f);
-
-    /** Add Attendee to this incidence. */
-    void addAttendee(Attendee *a);
-//    void removeAttendee(Attendee *a);
-//    void removeAttendee(const char *n);
-    /** Remove all Attendees. */
-    void clearAttendees();
-    /** Return list of attendees. */
-    QPtrList<Attendee> attendees() const { return mAttendees; };
-    /** Return number of attendees. */
-    int attendeeCount() const { return mAttendees.count(); };
-    /** Return the Attendee with this email */
-    Attendee* attendeeByMail(const QString &);
 
     /** sets the event's lengthy description. */
     void setDescription(const QString &description);
@@ -283,22 +235,8 @@ class Incidence : public QObject
     /** Return the recurrence rule associated with this incidence. If there is none, returns an appropriate (non-0) object. */
     Recurrence *recurrence() const;
 
-  signals:
-    /** Emitted by the memebr functions, when the Incidence has been updated. */
-    void eventUpdated(Incidence *);
-
-  protected:
-    QDate strToDate(const QString &dateStr);
-
-    bool mReadOnly;
-
   private:
-    // base components
-    QDateTime mDtStart;
-    QString mOrganizer;
-    QString mVUID;
     int mRevision;
-    QPtrList<Attendee> mAttendees;
 
     // base components of jounal, event and todo
     QDateTime mLastModified;
@@ -319,11 +257,6 @@ class Incidence : public QObject
     // PILOT SYNCHRONIZATION STUFF
     int mPilotId;                         // unique id for pilot sync
     int mSyncStatus;                      // status (for sync)
-
-    bool mFloats;                         // floating means date without time
-
-    int mDuration;
-    bool mHasDuration;
 
     QPtrList<Alarm> mAlarms;
     Recurrence *mRecurrence;

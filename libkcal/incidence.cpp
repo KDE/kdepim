@@ -27,41 +27,26 @@
 #include "calformat.h"
 
 #include "incidence.h"
+#include "incidence.moc"
 
 using namespace KCal;
 
 Incidence::Incidence() :
-  mReadOnly(false), mRelatedTo(0), mSecrecy(SecrecyPublic), mPriority(3), mPilotId(0),
-  mSyncStatus(SYNCMOD), mFloats(true), mDuration(0), mHasDuration(false)
+  IncidenceBase(),
+  mRelatedTo(0), mSecrecy(SecrecyPublic), mPriority(3), mPilotId(0),
+  mSyncStatus(SYNCMOD)
 {
   mRecurrence = new Recurrence(this);
 
   recreate();
 
-//  setOrganizer(KOPrefs::instance()->mEmail);
-  setOrganizer("Fix me");
-  if (organizer().isEmpty())
-    setOrganizer("x-none");
-
-  mSummary = "";
-  mDescription = "";
-
   mAlarms.setAutoDelete(true);
 }
 
-Incidence::Incidence(const Incidence &i) : QObject()
+Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
 {
 // TODO: reenable attributes currently commented out.
-  mReadOnly = i.mReadOnly;
-  kdDebug() << endl;
-  mDtStart = i.mDtStart;
-  mDuration = i.mDuration;
-  mHasDuration = i.mHasDuration;
-  mOrganizer = i.mOrganizer;
-  mVUID = i.mVUID;
   mRevision = i.mRevision;
-//  QPtrList<Attendee> mAttendees;     QPtrList<Attendee> mAttendees;
-  mAttendees = i.attendees();
   mLastModified = i.mLastModified;
   mCreated = i.mCreated;
   mDescription = i.mDescription;
@@ -78,7 +63,6 @@ Incidence::Incidence(const Incidence &i) : QObject()
   mPriority = i.mPriority;
   mPilotId = i.mPilotId;
   mSyncStatus = i.mSyncStatus;
-  mFloats = i.mFloats;
 //  QPtrList<Alarm> mAlarms;    QPtrList<Alarm> mAlarms;
 //  Recurrence *mRecurrence;      Recurrence *mRecurrence;
   mRecurrence = new Recurrence(this);
@@ -106,12 +90,12 @@ void Incidence::recreate()
   setLastModified(QDateTime::currentDateTime());
 }
 
-void Incidence::setReadOnly(bool readonly)
+void Incidence::setReadOnly( bool readOnly )
 {
-  mReadOnly = readonly;
-  recurrence()->setRecurReadOnly(mReadOnly);
+  IncidenceBase::setReadOnly( readOnly );
+  recurrence()->setRecurReadOnly( readOnly);
   for (Alarm* alarm = mAlarms.first(); alarm; alarm = mAlarms.next())
-    alarm->setAlarmReadOnly(mReadOnly);
+    alarm->setAlarmReadOnly( readOnly );
 }
 
 void Incidence::setLastModified(const QDateTime &lm)
@@ -137,17 +121,6 @@ QDateTime Incidence::created() const
   return mCreated;
 }
 
-void Incidence::setVUID(const QString &VUID)
-{
-  mVUID = VUID;
-  emit eventUpdated(this);
-}
-
-QString Incidence::VUID() const
-{
-  return mVUID;
-}
-
 void Incidence::setRevision(int rev)
 {
   if (mReadOnly) return;
@@ -160,132 +133,13 @@ int Incidence::revision() const
   return mRevision;
 }
 
-void Incidence::setOrganizer(const QString &o)
-{
-  // we don't check for readonly here, because it is
-  // possible that by setting the organizer we are changing
-  // the event's readonly status...
-  mOrganizer = o;
-  if (mOrganizer.left(7).upper() == "MAILTO:")
-    mOrganizer = mOrganizer.remove(0,7);
-
-  emit eventUpdated(this);
-}
-
-QString Incidence::organizer() const
-{
-  return mOrganizer;
-}
-
 
 void Incidence::setDtStart(const QDateTime &dtStart)
 {
-//  if (mReadOnly) return;
-  mDtStart = dtStart;
-  recurrence()->setRecurStart(mDtStart);
-  emit eventUpdated(this);
+  recurrence()->setRecurStart( dtStart);
+  IncidenceBase::setDtStart( dtStart );
 }
 
-QDateTime Incidence::dtStart() const
-{
-  return mDtStart;
-}
-
-QString Incidence::dtStartTimeStr() const
-{
-  return KGlobal::locale()->formatTime(dtStart().time());
-}
-
-QString Incidence::dtStartDateStr(bool shortfmt) const
-{
-  return KGlobal::locale()->formatDate(dtStart().date(),shortfmt);
-}
-
-QString Incidence::dtStartStr() const
-{
-  return KGlobal::locale()->formatDateTime(dtStart());
-}
-
-
-bool Incidence::doesFloat() const
-{
-  return mFloats;
-}
-
-void Incidence::setFloats(bool f)
-{
-  if (mReadOnly) return;
-  mFloats = f;
-  emit eventUpdated(this);
-}
-
-
-void Incidence::addAttendee(Attendee *a)
-{
-//  kdDebug() << "Incidence::addAttendee()" << endl;
-  if (mReadOnly) return;
-//  kdDebug() << "Incidence::addAttendee() weiter" << endl;
-  if (a->name().left(7).upper() == "MAILTO:")
-    a->setName(a->name().remove(0,7));
-
-  mAttendees.append(a);
-  emit eventUpdated(this);
-}
-
-#if 0
-void Incidence::removeAttendee(Attendee *a)
-{
-  if (mReadOnly) return;
-  mAttendees.removeRef(a);
-  emit eventUpdated(this);
-}
-
-void Incidence::removeAttendee(const char *n)
-{
-  Attendee *a;
-
-  if (mReadOnly) return;
-  for (a = mAttendees.first(); a; a = mAttendees.next())
-    if (a->getName() == n) {
-      mAttendees.remove();
-      break;
-    }
-}
-#endif
-
-void Incidence::clearAttendees()
-{
-  if (mReadOnly) return;
-  mAttendees.clear();
-}
-
-#if 0
-Attendee *Incidence::getAttendee(const char *n) const
-{
-  QPtrListIterator<Attendee> qli(mAttendees);
-
-  qli.toFirst();
-  while (qli) {
-    if (qli.current()->getName() == n)
-      return qli.current();
-    ++qli;
-  }
-  return 0L;
-}
-#endif
-
-Attendee *Incidence::attendeeByMail(const QString &email)
-{
-  QPtrListIterator<Attendee> qli(mAttendees);
-
-  qli.toFirst();
-  while (qli) {
-    if (qli.current()->email() == email)
-      return qli.current();
-    ++qli;
-  }
-  return 0L;
-}
 
 void Incidence::setDescription(const QString &description)
 {
@@ -586,26 +440,3 @@ Recurrence *Incidence::recurrence() const
 {
   return mRecurrence;
 }
-
-void Incidence::setDuration(int seconds)
-{
-  mDuration = seconds;
-  setHasDuration(true);
-}
-
-int Incidence::duration() const
-{
-  return mDuration;
-}
-
-void Incidence::setHasDuration(bool)
-{
-  mHasDuration = true;
-}
-
-bool Incidence::hasDuration() const
-{
-  return mHasDuration;
-}
-
-#include "incidence.moc"

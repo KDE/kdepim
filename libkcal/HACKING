@@ -1,0 +1,8 @@
+Coding Style
+============
+
+- No Tabs.
+- Indent with 2 spaces.
+- Put Spaces between brackets and arguments of functions.
+- For if, else, while and similar statements put the bracktes on the same line
+  as the statement.

@@ -11,8 +11,8 @@ libkcal_la_LIBADD  = $(LIB_QT) versit/libversit.la $(LIB_KFILE) \
                      $(top_builddir)/libical/src/libicalss/libicalss.la
 
 libkcal_la_SOURCES = \
-        incidence.cpp journal.cpp todo.cpp event.cpp attendee.cpp \
-        recurrence.cpp alarm.cpp \
+        incidencebase.cpp incidence.cpp journal.cpp todo.cpp event.cpp \
+        freebusy.cpp attendee.cpp recurrence.cpp alarm.cpp \
         calendar.cpp calendarlocal.cpp \
         calformat.cpp vcalformat.cpp icalformat.cpp icalformatimpl.cpp \
 	vcaldrag.cpp \
