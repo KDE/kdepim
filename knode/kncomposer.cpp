@@ -1790,9 +1790,7 @@ bool KNComposer::Editor::eventFilter(QObject* o, QEvent* e)
   if (e->type() == QEvent::KeyPress) {
     QKeyEvent *k = static_cast<QKeyEvent*>(e);
     if (k->key()==Key_Tab) {
-      int col, row;
-      getCursorPosition(&row, &col);
-      insertAt("\t", row, col);
+      insert("\t");
       return true;
     }
   }
