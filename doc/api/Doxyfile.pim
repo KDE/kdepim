@@ -190,5 +190,5 @@ ENABLE_PREPROCESSING   = NO
 CLASS_DIAGRAMS         = NO
 HAVE_DOT               = NO
 IGNORE_PREFIX          = K
-EXTRACT_ALL            = YES
+EXTRACT_ALL            = NO
 
