@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg>
+  <kcfgfile name="kitchensyncrc"/>
+
+  <group name="Profiles">
+    <entry type="Int" key="CurrentProfile">
+      <default>0</default>
+    </entry>
+  </group>
+
+</kcfg>

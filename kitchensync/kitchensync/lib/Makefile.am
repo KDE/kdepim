@@ -11,7 +11,7 @@ libkitchensyncui_la_SOURCES = partbar.cpp actionpart.cpp \
     profilecheckitem.cpp  profilewizard.cpp \
     profileitem.cpp profiledialog.cpp  \
     synchelper.cpp konnectorbar.cpp syncconfig.cpp engine.cpp \
-    konnectorview.cpp
+    konnectorview.cpp prefs.cpp prefs_base.kcfgc
     
 libkitchensyncui_la_LDFLAGS = $(all_libraries) -no-undefined 
 libkitchensyncui_la_LIBADD = \

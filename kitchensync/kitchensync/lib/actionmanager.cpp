@@ -25,6 +25,8 @@
 #include <kglobal.h>
 #include <kconfig.h>
 
+#include "prefs.h"
+
 #include "actionmanager.h"
 
 using namespace KSync;
@@ -83,17 +85,11 @@ void ActionManager::setProfiles( const QStringList &profiles )
 
 void ActionManager::readConfig()
 {
-  KConfig *cfg = KGlobal::config();
-  cfg->setGroup( "Profiles" );
-  int currentProfile = cfg->readNumEntry( "CurrentProfile", 0 );
-  m_profAct->setCurrentItem( currentProfile );
+  m_profAct->setCurrentItem( Prefs::instance()->currentProfile() );
 }
 
 void ActionManager::writeConfig()
 {
-  KConfig *cfg = KGlobal::config();
-  cfg->setGroup( "Profiles" );
-  int currentProfile = m_profAct->currentItem();
-  cfg->writeEntry( "CurrentProfile", currentProfile );
-  cfg->sync();
+  Prefs::instance()->setCurrentProfile( m_profAct->currentItem() );
+  Prefs::instance()->writeConfig();
 }
