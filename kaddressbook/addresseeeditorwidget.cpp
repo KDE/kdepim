@@ -380,6 +380,10 @@ void AddresseeEditorWidget::load()
   bool block = signalsBlocked();
   blockSignals(true); 
 
+  // delete all entries from mFormattedNameBox, otherwise name parsing
+  // won't work in QuickEdit mode
+  mFormattedNameBox->clear();
+
   mNameEdit->setText(mAddressee.realName());
   mRoleEdit->setText(mAddressee.role());
   mOrgEdit->setText(mAddressee.organization());
@@ -403,12 +407,12 @@ void AddresseeEditorWidget::load()
   mOfficeEdit->setText(mAddressee.custom("KADDRESSBOOK", "X-Office"));
   mProfessionEdit->setText(mAddressee.custom("KADDRESSBOOK", "X-Profession"));
   
-  blockSignals(block);
-
   KConfig *config = kapp->config();
   config->setGroup( "General" );
   mParseBox->setChecked( config->readBoolEntry( "AutomaticNameParsing", true ) );
   
+  blockSignals(block);
+
   mDirty = false;
 }
 
@@ -526,17 +530,14 @@ void AddresseeEditorWidget::nameBoxChanged()
   addr.setNameFromString( mNameEdit->text() );
 
   int pos = mFormattedNameBox->currentItem();
-  bool isEmpty = ( mFormattedNameBox->count() == 0 );
   mFormattedNameBox->clear();
   QStringList options;
-  options << addr.givenName() + QString(" ") + addr.familyName()
-          << mAddressee.formattedName()
+  options << mAddressee.formattedName()
+          << addr.realName()
+          << addr.givenName() + QString(" ") + addr.familyName()
           << addr.familyName() + QString(", ") + addr.givenName();
   mFormattedNameBox->insertStringList(options);
-  if ( isEmpty )
-    mFormattedNameBox->setCurrentText( mAddressee.formattedName() );
-  else
-    mFormattedNameBox->setCurrentItem( pos );
+  mFormattedNameBox->setCurrentItem( pos );
 }
 
 void AddresseeEditorWidget::nameButtonClicked()
