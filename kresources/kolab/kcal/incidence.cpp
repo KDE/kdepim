@@ -228,8 +228,6 @@ void Incidence::saveRecurrence( QDomElement& element ) const
   }
   if ( !mRecurrence.dayNumber.isEmpty() )
     writeString( e, "daynumber", mRecurrence.dayNumber );
-  if ( !mRecurrence.date.isEmpty() )
-    writeString( e, "date", mRecurrence.date );
   if ( !mRecurrence.month.isEmpty() )
     writeString( e, "month", mRecurrence.month );
   if ( !mRecurrence.rangeType.isEmpty() ) {
@@ -263,8 +261,6 @@ void Incidence::loadRecurrence( const QDomElement& element )
         mRecurrence.days.append( e.text() );
       else if ( tagName == "daynumber" )
         mRecurrence.dayNumber = e.text();
-      else if ( tagName == "date" )
-        mRecurrence.date = e.text();
       else if ( tagName == "month" )
         mRecurrence.month = e.text();
       else if ( tagName == "range" ) {
@@ -498,7 +494,7 @@ void Incidence::setRecurrence( KCal::Recurrence* recur )
     const QPtrList<int> &monthDays = recur->monthDays();
     // ####### Kolab XML limitation: only the first month day is used
     if ( !monthDays.isEmpty() )
-      mRecurrence.date = QString::number( *monthDays.getFirst() );
+      mRecurrence.dayNumber = QString::number( *monthDays.getFirst() );
     break;
   }
   case KCal::Recurrence::rYearlyMonth: // (day n of Month Y)
@@ -507,7 +503,7 @@ void Incidence::setRecurrence( KCal::Recurrence* recur )
     mRecurrence.type = "monthday";
     QPtrList<int> rmd = recur->monthDays();
     int day = !rmd.isEmpty() ? day = *rmd.first() : day = recur->parent()->dtStart().date().day();
-    mRecurrence.date = QString::number( day );
+    mRecurrence.dayNumber = QString::number( day );
     QPtrList<int> months = recur->yearNums();
     if ( !months.isEmpty() )
       mRecurrence.month = s_monthName[ *months.first() ];
@@ -689,12 +685,12 @@ void Incidence::saveTo( KCal::Incidence* incidence )
         recur->addMonthlyPos( mRecurrence.dayNumber.toInt(), daysListToBitArray( mRecurrence.days ) );
       } else if ( mRecurrence.type == "daynumber" ) {
         recur->setMonthly( KCal::Recurrence::rMonthlyDay, mRecurrence.interval, -1 );
-        recur->addMonthlyDay( mRecurrence.date.toInt() );
+        recur->addMonthlyDay( mRecurrence.dayNumber.toInt() );
       } else kdWarning() << "Unhandled monthly recurrence type " << mRecurrence.type << endl;
     } else if ( mRecurrence.cycle == "yearly" ) {
       if ( mRecurrence.type == "monthday" ) {
         recur->setYearly( KCal::Recurrence::rYearlyMonth, mRecurrence.interval, -1 );
-        recur->setYearlyByDate( mRecurrence.date.toInt(),
+        recur->setYearlyByDate( mRecurrence.dayNumber.toInt(),
                                 KCal::Recurrence::rMar1, // whichever
                                 mRecurrence.interval,
                                 -1 );
