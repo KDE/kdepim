@@ -1,13 +1,10 @@
-KArm is a time tracker for busy people who need to keep track of the amount
-of time they spend on various tasks.
+KArm tracks time spent on various tasks. It is useful for tracking hours to be
+billed to different clients or just to find out what percentage of your day is
+spent playing Doom or reading Slashdot.
 
-In KArm you can enter a list of "tasks", start KArm's clock, and it will
-count the number of minutes you spend on the highlighted task.
-
-In my day, I may have to work on several different projects and keep track
-separately of how much time I spent working on each project. If you are
-like me, then KArm is for you.
-
+KArm was originaly written by Sirtaj Singh Kang. The word "karm" means "work"
+in the author's native Punjabi.
+			    
 KArm was inspired by Harald Tveit Alvestrand's very useful utility called
 titrax, the only failing of which is that it is based on the Xt toolkit. One
 day KArm will do all that titrax does, but not today.
