@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "filters.hxx"
+class QFile;
 
 #ifndef __FILTER_EUDORA_AB__
 #define __FILTER_EUDORA_AB__
@@ -28,7 +29,7 @@ class FilterEudoraAb : public Filter, protected FilterFactory< FilterEudoraAb >
    ~FilterEudoraAb();
 
     void import(FilterInfo *info);
-    void convert(FILE *f,FilterInfo *info);
+    void convert(QFile& f,FilterInfo *info);
 
   protected:
     QString get(const QString& line, const QString& key) const;

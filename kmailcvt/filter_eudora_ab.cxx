@@ -17,7 +17,6 @@
 
 #include "filter_eudora_ab.hxx"
 
-#include <qdir.h>
 
 #include <klocale.h>
 #include <kfiledialog.h>
@@ -38,19 +37,18 @@ void FilterEudoraAb::import(FilterInfo *info)
 {
   QString file;
   QWidget *parent=info->parent();
-  FILE   *F;
 
   if (!kabStart(info)) return;
 
-  file=KFileDialog::getOpenFileName(QDir::homeDirPath() ,"*.txt *.TXT *.Txt",parent);
+  file=KFileDialog::getOpenFileName(QDir::homeDirPath() ,"*.[tT][xX][tT]",parent);
   if (file.length()==0) 
   {
     info->alert(i18n("No address book chosen"));
     return;
   }
 
-  F=fopen(file.latin1(),"rt");
-  if (F==NULL) {
+  QFile F(file);
+  if (! F.open(IO_ReadOnly)) {
     info->alert(i18n("Unable to open file '%1'").arg(file));
     return;
   }
@@ -105,30 +103,25 @@ void FilterEudoraAb::import(FilterInfo *info)
 
   kabStop(info);
   info->current(i18n("Finished converting Eudora Light addresses to KAddressBook"));
-  fclose(F);
+  F.close();
   info->overall(100);
 }
 
 #define LINELEN 10240
 
-void FilterEudoraAb::convert(FILE *f,FilterInfo *info)
+void FilterEudoraAb::convert(QFile& f,FilterInfo *info)
 {
-  QString line;
-  char _line[LINELEN+1];
-  int  i,e;
+  QCString line(LINELEN+1);
+  int  e;
   int LINE=0;
-  while(fgets(_line,LINELEN,f)!=NULL) { LINES+=1; }
-  rewind(f);
-  while(fgets(_line,LINELEN,f)!=NULL) {
+  while(f.readLine(line.data(),LINELEN)) { LINES+=1; }
+  f.reset();
+  while(f.readLine(line.data(),LINELEN)) {
 
     LINE+=1;
     info->current(100 * LINE / LINES );
 
-    for(i=0;_line[i]!='\n' && _line[i]!='\0';i++);
-    _line[i]='\0';
-    line=_line;
-
-    if (line.startsWith("alias")) {
+    if (line.left(5) == "alias") {
       QString k = key(line); 
       e=find(k);
       keys[e]=k;
@@ -138,7 +131,7 @@ void FilterEudoraAb::convert(FILE *f,FilterInfo *info)
         info->log(msg);
       }
     }
-    else if (line.startsWith("note")) { 
+    else if (line.left(4) == "note") { 
       QString k = key(line); 
       e=find(k);
       keys[e]=k;
