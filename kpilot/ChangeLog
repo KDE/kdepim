@@ -1,3 +1,60 @@
+KPilot Developer's notes for november 25th 2000
+===============================================
+
+Spent most of the week at a conference, but managed to get
+the KNotes conduit almost fully functional. New memos (KNotes)
+are copied to the desktop (Pilot). Memos changed on the pilot
+are changed on the desktop. However, not all deleted memos are
+deleted on the other side, nor are modified memos copied
+from the desktop to the Pilot.
+
+I don't know what the desired action for KPilot is in the
+cases of deleted memos. Any suggestions? There's now a config
+option in the KNotes conduit setup, but maybe that should be
+subsumed by the global Local Overrides Pilot setting. Anyway,
+if a memo is deleted on the Pilot the corresponding KNote is
+deleted as well.
+
+If KNotes is running and the KNotes conduit makes changes,
+these aren't picked up by KNotes. There are also some
+obvious race conditions caused by the conduit writing KNotes
+config files. This basically means that we need to talk to 
+the KNotes maintainer to resolve these coordination problems.
+
+As for the code, I wrote this:
+	class KNotesOptions : public setupDialog { Q_OBJECT
+	protected: static const QString KNotesGroup; };
+[with better layout, of course] But there's a static QString
+there, and I read somewhere that Static Objects Are Evil (tm).
+I could use a const char * there, since it's just the name of
+a group in the config file, but what's the consensus on things
+like this?
+
+I did handle some more of Heiko's patches. From last week's list:
+	- Some phone number magic I don't understand yet
+	- Some changes in the address import function
+	- getShowPhone() -- don't understand that yet either
+	- Fix bad repeat-n-times handling in vcal-conduit
+This leaves just the Fast Sync capability still unimplemented.
+
+Given the release schedule that has been discussed recently
+(and we really do want to have KPilot in KDE 2.1, so as to add
+a nifty feature to the desktop as a whole) I think feature creep
+should be abandoned for the time being and we should try to
+fix as many bugs in what we have before the release (around the
+middle of december, IIRC). This means testing, lots of it. So
+people, take the plunge, give it a try, compile the latest kdepim
+CVS stuff with KPilot in it and then complain when your Pilot
+catches fire, OK? O yeah .. when you *do* give it a try, make
+sure you do something like:
+
+	$ export LD_LIBRARY_PATH=$QTDIR/lib:
+	$ kpilot --debug 1023
+
+To make sure none of the conduits crashes with library loading 
+problems and with all the debugging messages turned on.
+
+
 KPilot Developer's notes for november 19th 2000
 ===============================================
 
