@@ -50,6 +50,7 @@
 #include <qfileinfo.h>
 
 #include <map>
+#include <memory>
 
 #include <cassert>
 
@@ -426,6 +427,11 @@ bool Kleo::ChiasmusBackend::checkForSMIME( QString * reason ) const {
 }
 
 bool Kleo::ChiasmusBackend::checkForChiasmus( QString * reason ) const {
+
+  // kills the protocol instance when we return false:
+  std::auto_ptr<Protocol> tmp( mProtocol );
+  mProtocol = 0;
+
   const CryptoConfigEntry * path = config()->entry( "Chiasmus", "General", "path" );
   assert( path ); assert( path->argType() == CryptoConfigEntry::ArgType_Path );
   const QString chiasmus = path->urlValue().path();
@@ -451,6 +457,7 @@ bool Kleo::ChiasmusBackend::checkForChiasmus( QString * reason ) const {
   }
 
   // FIXME: more checks?
+  mProtocol = tmp.release();
   return true;
 }
 
