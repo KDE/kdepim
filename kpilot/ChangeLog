@@ -1,6 +1,20 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-09-26  Adriaan de Groot
+* Put up new tarballs on kpilot.org.
+* Patched up the KNotes conduit a little - notes listed as modified
+  but unknown to the Pilot are now added as new.
+* Bumped version to 4.4.5. Polished the splash a little.
+* Fixed 71122, finally. There wasn't any code at all in the conduit
+  for deleting memos.
+
+
+2004-09-22  Adriaan de Groot
+* Added some cheap RTTI to PilotDatabase, so you can call
+  dbType() to find out if it's really a local or a serial DB.
+* Stared at the doc conduit for a long time. Did whitespace first.
+
 2004-09-18  Adriaan de Groot & Reinhold Kainhofer
 * Deprecated a bunch of poorly-named functions in lib/, and
   moved everything to the new names. Finally, no more getCat(),
