@@ -100,9 +100,6 @@ class CalFormat {
     QString mLoadedProductId;         // PRODID string loaded from calendar file
 
   private:
-    QPtrList<Event> mEventsRelate;    // events with relations
-    QPtrList<Event> mTodosRelate;     // todos with relations
-
     ErrorFormat *mException;
 
     static QString mApplication;      // name of application for unique ID strings
