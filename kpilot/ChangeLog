@@ -1,6 +1,12 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2005-01-30  Adriaan de Groot
+* Fixed one nasty random crash thanks to vanRijn, probably fixed
+  the KNotes HHtoPC problem, tagged 4.4.7, released it. This
+  is the last version to support KDE 3.2 at all, since KDE PIM
+  moved to KDE 3.3 ages ago and KDE 3.4 is at the door.
+
 2005-01-12  Adriaan de Groot
 * Made KNotes conduit work when KNotes is embedded in kontact, too.
 * One branch of the check-username code wasn't setting the username properly.
