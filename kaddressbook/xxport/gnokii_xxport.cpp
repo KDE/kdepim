@@ -339,21 +339,25 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		
 		// try to split Name into FamilyName and GivenName
 		s = GN_FROM(entry.name).simplifyWhiteSpace();
-		if (s.find(',')!=-1) {
-		  addrlist = QStringList::split(',', s);
-		  if (addrlist.count()==2) {
-			a->setFamilyName(addrlist[0]);
-			a->setGivenName(addrlist[1]);
-		  } else
-			a->setGivenName(s);
-		} else {
+		a->setFormattedName(s); // set formatted name as in Phone
+		if (s.find(',') == -1) {
+		  // assumed format: "givenname [... familyname]"
 		  addrlist = QStringList::split(' ', s);
-		  if (addrlist.count()>=2) {
-			a->setFamilyName(addrlist[0]);
-			addrlist.remove(addrlist.first());
-			a->setGivenName(addrlist.join(" "));
-		  } else
+		  if (addrlist.count() == 1) {
+			// only one string -> put it in the GivenName
 			a->setGivenName(s);
+		  } else {
+			// multiple strings -> split them.
+			a->setFamilyName(addrlist.last().simplifyWhiteSpace());
+			addrlist.remove(addrlist.last());
+			a->setGivenName(addrlist.join(" ").simplifyWhiteSpace());
+		  }
+		} else {
+		  // assumed format: "familyname, ... givenname"
+		  addrlist = QStringList::split(',', s);
+		  a->setFamilyName(addrlist.first().simplifyWhiteSpace());
+		  addrlist.remove(addrlist.first());
+		  a->setGivenName(addrlist.join(" ").simplifyWhiteSpace());
 		}
 
 		a->insertCustom(APP, "X_GSM_CALLERGROUP", s.setNum(entry.caller_group));
@@ -394,9 +398,20 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		   case GN_PHONEBOOK_ENTRY_Postal:
 			addrlist = QStringList::split(';', s, true);
 			addr = new KABC::Address(KABC::Address::Work);
-			if (addrlist.count() <= 1 ) {
-				addr->setExtended(s);
+			if (addrlist.count() <= 1) {
+				addrlist = QStringList::split(',', s, true);
+				if (addrlist.count() > 1 ) {
+					// assumed format: "Locality, ZIP, Country"
+					addr->setLocality(addrlist[0]);
+					addr->setPostalCode(addrlist[1]);
+					if (!addrlist[2].isEmpty())
+						addr->setCountry(i18n(GN_TO(addrlist[2])));
+				} else {
+					// no idea about the format, just store it.
+					addr->setLocality(s);
+				}
 			} else {
+				// assumed format: "POBox; Extended; Street; Locality; Region; ZIP [;Country]
 				addr->setPostOfficeBox(addrlist[0]);
 				addr->setExtended(addrlist[1]);
 				addr->setStreet(addrlist[2]);
@@ -773,14 +788,14 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 
 	if (memstat.free >= (int) list.count()) {
 		if (KMessageBox::No == KMessageBox::questionYesNo(parentWidget(),
-			i18n("<qt>Do you want the selected Contacts to be <b>added</b> to "
-			     "the Mobile Phonebook or should they <b>replace</b> all existing "
-			     "Phonebook Entries ?<br><br>"
+			i18n("<qt>Do you want the selected Contacts to be <b>appended</b> to "
+			     "the current Mobile Phonebook or should they <b>replace</b> all "
+			     "currently existing Phonebook Entries ?<br><br>"
 			     "Please note, that in case you choose to Replace the Phonebook "
 			     "Entries, every Contact in your Phone will be deleted and only "
 			     "the new exported Contacts will be available from inside your Phone.</qt>"),
 			i18n("Export to mobile phone"),
-			KGuiItem(i18n("&Add to current Phonebook")),
+			KGuiItem(i18n("&Append to current Phonebook")),
 			KGuiItem(i18n("&Replace current Phonebook with new Contacts")) ) )
 				overwrite_phone_entries = true;
 	}
@@ -883,13 +898,26 @@ try_next_phone_entry:
 finish:
 	m_progressDlg->setLabel(i18n("Export to Phone finished."));
 	this_filter->processEvents();
-	if (!failedList.isEmpty())
-		GNOKII_DEBUG(QString("Failed to export: %1\n").arg(failedList.join(", ")));
 
 	GNOKII_DEBUG("GNOKII export filter finished.\n");
 
 	busterminate();
 	delete m_progressDlg;
+
+	if (!failedList.isEmpty()) {
+		GNOKII_DEBUG(QString("Failed to export: %1\n").arg(failedList.join(", ")));
+		KMessageBox::informationList(parentWidget(),
+                        i18n("<qt>The following Contacts could not be exported to the Mobile Phone. "
+			     "Possible Reasons for this Problem might be:<br><ul>"
+			     "<li>The Contacts contains more Information per Entry than the Phone can store.</li>"
+			     "<li>Your Phone does not allow to store multiple Addresses, eMails, Homepages, ...</li>"
+			     "<li>other Storage Size related problems.</li>"
+			     "</ul>"
+			     "To avoid those kind of Problems in the Future please reduce the amount of different "
+			     "Fields in the above Contacts.</qt>"),
+			failedList,
+			i18n("Mobile Phone Export") );
+	}
 
 #endif
 
