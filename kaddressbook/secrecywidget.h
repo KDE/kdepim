@@ -34,11 +34,13 @@ class SecrecyWidget : public QWidget
   Q_OBJECT
 
   public:
-    SecrecyWidget( bool readOnly, QWidget *parent, const char *name = 0 );
+    SecrecyWidget( QWidget *parent, const char *name = 0 );
     ~SecrecyWidget();
 
     void setSecrecy( const KABC::Secrecy &secrecy );
     KABC::Secrecy secrecy() const;
+
+    void setReadOnly( bool readOnly );
 
   signals:
     void changed();

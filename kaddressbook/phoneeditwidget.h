@@ -1,5 +1,3 @@
-#ifndef PHONEEDITWIDGET_H
-#define PHONEEDITWIDGET_H
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -23,6 +21,9 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#ifndef PHONEEDITWIDGET_H
+#define PHONEEDITWIDGET_H
+
 #include <kdialogbase.h>
 
 #include "addresseeconfig.h"
@@ -44,7 +45,7 @@ class PhoneEditWidget : public QWidget
   Q_OBJECT
 
   public:
-    PhoneEditWidget( bool readOnly, QWidget *parent, const char *name = 0 );
+    PhoneEditWidget( QWidget *parent, const char *name = 0 );
     ~PhoneEditWidget();
     
     void setPhoneNumbers( const KABC::PhoneNumber::List &list );
@@ -52,6 +53,8 @@ class PhoneEditWidget : public QWidget
 
     void updateTypeCombo( const KABC::PhoneNumber::List&, KComboBox* );
     KABC::PhoneNumber currentPhoneNumber( KComboBox*, int );
+
+    void setReadOnly( bool readOnly );
 
   signals:
     void modified();
@@ -82,6 +85,7 @@ class PhoneEditWidget : public QWidget
     PhoneTypeCombo *mSecondCombo;
     PhoneTypeCombo *mThirdCombo;
     PhoneTypeCombo *mFourthCombo;
+    QPushButton *mEditButton;
     
     KLineEdit *mPrefEdit;
     KLineEdit *mSecondEdit;
@@ -91,7 +95,7 @@ class PhoneEditWidget : public QWidget
     KABC::PhoneNumber::List mPhoneList;
     bool mReadOnly;
 };
-  
+
 /**
   Dialog for editing lists of phonenumbers.
 */

@@ -31,7 +31,7 @@
 
 #include "addresseeeditordialog.h"
 
-AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core *core, bool readOnly,
+AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core *core,
                                               QWidget *parent, const char *name )
   : KDialogBase( KDialogBase::Plain, i18n( "Edit Contact" ), 
                  KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Apply,
@@ -40,14 +40,14 @@ AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core *core, bool readOnly,
   kdDebug(5720) << "AddresseeEditorDialog()" << endl;
 
   QWidget *page = plainPage();
-  
+
   QVBoxLayout *layout = new QVBoxLayout( page );
 
-  mEditorWidget = new AddresseeEditorWidget( core, false, readOnly, page );
+  mEditorWidget = new AddresseeEditorWidget( core, false, page );
   connect( mEditorWidget, SIGNAL( modified( const KABC::Addressee::List& ) ),
            SLOT( widgetModified() ) );
   layout->addWidget( mEditorWidget );
-  
+
   enableButton( KDialogBase::Apply, false );
 }
 
@@ -61,7 +61,7 @@ AddresseeEditorDialog::~AddresseeEditorDialog()
 void AddresseeEditorDialog::setAddressee( const KABC::Addressee &addr )
 {
   enableButton( KDialogBase::Apply, false );
-  
+
   mEditorWidget->setAddressee( addr );
 }
 
@@ -83,16 +83,16 @@ void AddresseeEditorDialog::slotApply()
   }
 
   enableButton( KDialogBase::Apply, false );
-  
+
   KDialogBase::slotApply();
 }
 
 void AddresseeEditorDialog::slotOk()
 {
   slotApply();
-  
+
   KDialogBase::slotOk();
-  
+
   // Destroy this dialog
   delayedDestruct();
 }
@@ -101,13 +101,13 @@ void AddresseeEditorDialog::widgetModified()
 {
   enableButton( KDialogBase::Apply, true );
 }
-  
+
 void AddresseeEditorDialog::slotCancel()
 {
   KDialogBase::slotCancel();
-  
+
   // Destroy this dialog
   delayedDestruct();
 }
-    
+
 #include "addresseeeditordialog.moc"

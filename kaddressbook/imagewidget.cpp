@@ -40,10 +40,15 @@
 
 #include "imagewidget.h"
 
-ImageLabel::ImageLabel( const QString &title, bool readOnly, QWidget *parent )
-  : QLabel( title, parent ), mReadOnly( readOnly )
+ImageLabel::ImageLabel( const QString &title, QWidget *parent )
+  : QLabel( title, parent ), mReadOnly( false )
 {
   setAcceptDrops( true );
+}
+
+void ImageLabel::setReadOnly( bool readOnly )
+{
+  mReadOnly = readOnly;
 }
 
 void ImageLabel::startDrag()
@@ -84,9 +89,8 @@ void ImageLabel::mouseMoveEvent( QMouseEvent *event )
 }
 
 
-ImageWidget::ImageWidget( const QString &title, bool readOnly,
-                          QWidget *parent, const char *name )
-  : QWidget( parent, name ), mReadOnly( readOnly )
+ImageWidget::ImageWidget( const QString &title, QWidget *parent, const char *name )
+  : QWidget( parent, name ), mReadOnly( false )
 {
   QHBoxLayout *topLayout = new QHBoxLayout( this, KDialog::marginHint(),
                                             KDialog::spacingHint() );
@@ -95,7 +99,7 @@ ImageWidget::ImageWidget( const QString &title, bool readOnly,
                                             KDialog::spacingHint() );
   boxLayout->setRowStretch( 3, 1 );
 
-  mImageLabel = new ImageLabel( i18n( "Picture" ), mReadOnly, box );
+  mImageLabel = new ImageLabel( i18n( "Picture" ), box );
   mImageLabel->setFixedSize( 50, 70 );
   mImageLabel->setScaledContents( true );
   mImageLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
@@ -103,7 +107,6 @@ ImageWidget::ImageWidget( const QString &title, bool readOnly,
 
   mImageUrl = new KURLRequester( box );
   mImageUrl->setFilter( KImageIO::pattern() );
-  mImageUrl->setEnabled( !mReadOnly );
   boxLayout->addWidget( mImageUrl, 0, 1 );
 
   mUseImageUrl = new QCheckBox( i18n( "Store as URL" ), box );
@@ -134,6 +137,13 @@ ImageWidget::ImageWidget( const QString &title, bool readOnly,
 
 ImageWidget::~ImageWidget()
 {
+}
+
+void ImageWidget::setReadOnly( bool readOnly )
+{
+  mReadOnly = readOnly;
+  mImageLabel->setReadOnly( mReadOnly );
+  mImageUrl->setEnabled( !mReadOnly );
 }
 
 void ImageWidget::setImage( const KABC::Picture &photo )

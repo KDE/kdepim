@@ -32,6 +32,7 @@
 #include <qtoolbutton.h>
 #include <qtooltip.h>
 
+#include <kabc/resource.h>
 #include <kaccelmanager.h>
 #include <kapplication.h>
 #include <kconfig.h>
@@ -66,10 +67,9 @@
 #include "addresseeeditorwidget.h"
 
 AddresseeEditorWidget::AddresseeEditorWidget( KAB::Core *core, bool isExtension, 
-                                              bool readOnly,
                                               QWidget *parent, const char *name )
   : KAB::ExtensionWidget( core, parent, name ), mIsExtension( isExtension ),
-    mBlockSignals( false ), mReadOnly( readOnly )
+    mBlockSignals( false ), mReadOnly( false )
 {
   kdDebug(5720) << "AddresseeEditorWidget()" << endl;
 
@@ -92,13 +92,16 @@ void AddresseeEditorWidget::contactsSelectionChanged()
 {
   KABC::Addressee::List list = selectedContacts();
 
-  mAddressee = list[ 0 ];
-  load();
+  setAddressee( list[ 0 ] );
 }
 
 void AddresseeEditorWidget::setAddressee( const KABC::Addressee &addr )
 {
   mAddressee = addr;
+
+  bool readOnly = ( !addr.resource() ? false : addr.resource()->readOnly() );
+  setReadOnly( readOnly );
+
   load();
 }
 
@@ -155,7 +158,6 @@ void AddresseeEditorWidget::setupTab1()
   button = new QPushButton( i18n( "Name..." ), tab1 );
   QToolTip::add( button, i18n( "Edit the contact's name" ) );
   mNameEdit = new KLineEdit( tab1, "mNameEdit" );
-  mNameEdit->setReadOnly( mReadOnly );
   connect( mNameEdit, SIGNAL( textChanged( const QString& ) ), 
            SLOT( nameTextChanged( const QString& ) ) );
   connect( button, SIGNAL( clicked() ), SLOT( nameButtonClicked() ) );
@@ -166,7 +168,6 @@ void AddresseeEditorWidget::setupTab1()
   layout->addWidget( mNameLabel, 0, 2 );
   label = new QLabel( i18n( "Role:" ), tab1 );
   mRoleEdit = new KLineEdit( tab1 );
-  mRoleEdit->setReadOnly( mReadOnly );
   connect( mRoleEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mRoleEdit );
@@ -176,7 +177,6 @@ void AddresseeEditorWidget::setupTab1()
   // Organization
   label = new QLabel( i18n( "Organization:" ), tab1 );
   mOrgEdit = new KLineEdit( tab1 );
-  mOrgEdit->setReadOnly( mReadOnly );
   label->setBuddy( mOrgEdit );
   connect( mOrgEdit, SIGNAL( textChanged( const QString& ) ), 
            SLOT( textChanged( const QString& ) ) );
@@ -201,7 +201,7 @@ void AddresseeEditorWidget::setupTab1()
                     KIcon::Desktop, KIcon::SizeMedium ) );
   layout->addMultiCellWidget( label, 0, 1, 3, 3 );
   
-  mPhoneEditWidget = new PhoneEditWidget( mReadOnly, tab1 );
+  mPhoneEditWidget = new PhoneEditWidget( tab1 );
   connect( mPhoneEditWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
   layout->addMultiCellWidget( mPhoneEditWidget, 0, 3, 4, 6 ); 
 
@@ -215,7 +215,7 @@ void AddresseeEditorWidget::setupTab1()
                                                      KIcon::SizeMedium ) );
   layout->addMultiCellWidget( label, 5, 6, 0, 0 );
   
-  mAddressEditWidget = new AddressEditWidget( mReadOnly, tab1 );
+  mAddressEditWidget = new AddressEditWidget( tab1 );
   connect( mAddressEditWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
   layout->addMultiCellWidget( mAddressEditWidget, 5, 9, 1, 2 );
 
@@ -226,7 +226,7 @@ void AddresseeEditorWidget::setupTab1()
                                                      KIcon::SizeMedium ) );
   layout->addMultiCellWidget( label, 5, 6, 3, 3 );
 
-  mEmailWidget = new EmailEditWidget( mReadOnly, tab1 );
+  mEmailWidget = new EmailEditWidget( tab1 );
   connect( mEmailWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
   layout->addMultiCellWidget( mEmailWidget, 5, 6, 4, 6 );
 
@@ -241,7 +241,6 @@ void AddresseeEditorWidget::setupTab1()
 
   label = new QLabel( i18n( "URL:" ), tab1 );
   mURLEdit = new KLineEdit( tab1 );
-  mURLEdit->setReadOnly( mReadOnly );
   connect( mURLEdit, SIGNAL( textChanged( const QString& ) ), 
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mURLEdit );
@@ -250,7 +249,6 @@ void AddresseeEditorWidget::setupTab1()
 
   label = new QLabel( i18n( "&IM address:" ), tab1 );
   mIMAddressEdit = new KLineEdit( tab1 );
-  mIMAddressEdit->setReadOnly( mReadOnly );
   connect( mIMAddressEdit, SIGNAL( textChanged( const QString& ) ), 
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mIMAddressEdit );
@@ -267,16 +265,15 @@ void AddresseeEditorWidget::setupTab1()
   categoryBox->setSpacing( KDialogBase::spacingHint() );
   
   // Categories
-  button = new QPushButton( i18n( "Categories" ), categoryBox );
-  button->setEnabled( !mReadOnly );
-  connect( button, SIGNAL( clicked() ), SLOT( categoryButtonClicked() ) );
+  mCategoryButton = new QPushButton( i18n( "Categories" ), categoryBox );
+  connect( mCategoryButton, SIGNAL( clicked() ), SLOT( categoryButtonClicked() ) );
 
   mCategoryEdit = new KLineEdit( categoryBox );
   mCategoryEdit->setReadOnly( true );
   connect( mCategoryEdit, SIGNAL( textChanged( const QString& ) ), 
            SLOT( textChanged( const QString& ) ) );
 
-  mSecrecyWidget = new SecrecyWidget( mReadOnly, categoryBox );
+  mSecrecyWidget = new SecrecyWidget( categoryBox );
   connect( mSecrecyWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
 
   layout->addMultiCellWidget( categoryBox, 11, 11, 0, 6 );
@@ -311,7 +308,6 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( i18n( "Department:" ), tab2 );
   layout->addWidget( label, 0, 1 );
   mDepartmentEdit = new KLineEdit( tab2 );
-  mDepartmentEdit->setReadOnly( mReadOnly );
   connect( mDepartmentEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mDepartmentEdit );
@@ -320,7 +316,6 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( i18n( "Office:" ), tab2 );
   layout->addWidget( label, 1, 1 );
   mOfficeEdit = new KLineEdit( tab2 );
-  mOfficeEdit->setReadOnly( mReadOnly );
   connect( mOfficeEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mOfficeEdit );
@@ -329,7 +324,6 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( i18n( "Profession:" ), tab2 );
   layout->addWidget( label, 2, 1 );
   mProfessionEdit = new KLineEdit( tab2 );
-  mProfessionEdit->setReadOnly( mReadOnly );
   connect( mProfessionEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mProfessionEdit );
@@ -338,7 +332,6 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( i18n( "Manager\'s name:" ), tab2 );
   layout->addWidget( label, 0, 3 );
   mManagerEdit = new KLineEdit( tab2 );
-  mManagerEdit->setReadOnly( mReadOnly );
   connect( mManagerEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mManagerEdit );
@@ -347,7 +340,6 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( i18n( "Assistant's name:" ), tab2 );
   layout->addWidget( label, 1, 3 );
   mAssistantEdit = new KLineEdit( tab2 );
-  mAssistantEdit->setReadOnly( mReadOnly );
   connect( mAssistantEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mAssistantEdit );
@@ -367,7 +359,6 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( i18n( "Nick name:" ), tab2 );
   layout->addWidget( label, 4, 1 );
   mNicknameEdit = new KLineEdit( tab2 );
-  mNicknameEdit->setReadOnly( mReadOnly );
   connect( mNicknameEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mNicknameEdit );
@@ -376,7 +367,6 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( i18n( "Spouse's name:" ), tab2 );
   layout->addWidget( label, 5, 1 );
   mSpouseEdit = new KLineEdit( tab2 );
-  mSpouseEdit->setReadOnly( mReadOnly );
   connect( mSpouseEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mSpouseEdit );
@@ -385,7 +375,6 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( i18n( "Birthday:" ), tab2 );
   layout->addWidget( label, 4, 3 );
   mBirthdayPicker = new KDateEdit( tab2 );
-  mBirthdayPicker->setEnabled( !mReadOnly );
   mBirthdayPicker->setHandleInvalid( true );
   connect( mBirthdayPicker, SIGNAL( dateChanged( QDate ) ),
            SLOT( dateChanged( QDate ) ) );
@@ -399,7 +388,6 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( i18n( "Anniversary:" ), tab2 );
   layout->addWidget( label, 5, 3 );
   mAnniversaryPicker = new KDateEdit( tab2 );
-  mAnniversaryPicker->setEnabled( !mReadOnly );
   mAnniversaryPicker->setHandleInvalid( true );
   connect( mAnniversaryPicker, SIGNAL( dateChanged( QDate ) ),
            SLOT( dateChanged( QDate ) ) );
@@ -419,7 +407,6 @@ void AddresseeEditorWidget::setupTab2()
   label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
   layout->addWidget( label, 7, 0 );
   mNoteEdit = new QTextEdit( tab2 );
-  mNoteEdit->setReadOnly( mReadOnly );
   mNoteEdit->setWordWrap( QTextEdit::WidgetWidth );
   mNoteEdit->setMinimumSize( mNoteEdit->sizeHint() );
   connect( mNoteEdit, SIGNAL( textChanged() ), SLOT( emitModified() ) );
@@ -443,14 +430,14 @@ void AddresseeEditorWidget::setupTab3()
   
   //////////////////////////////////////
   // Geo
-  mGeoWidget = new GeoWidget( mReadOnly, tab3 );
+  mGeoWidget = new GeoWidget( tab3 );
   mGeoWidget->setMinimumSize( mGeoWidget->sizeHint() );
   connect( mGeoWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
   layout->addWidget( mGeoWidget, 0, 0, Qt::AlignTop );
 
   //////////////////////////////////////
   // Sound
-  mSoundWidget = new SoundWidget( mReadOnly, tab3 );
+  mSoundWidget = new SoundWidget( tab3 );
   mSoundWidget->setMinimumSize( mSoundWidget->sizeHint() );
   connect( mSoundWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
   layout->addWidget( mSoundWidget, 0, 1, Qt::AlignTop );
@@ -462,12 +449,12 @@ void AddresseeEditorWidget::setupTab3()
 
   //////////////////////////////////////
   // Images
-  mPhotoWidget = new ImageWidget( KABC::Addressee::photoLabel(), mReadOnly, tab3 );
+  mPhotoWidget = new ImageWidget( KABC::Addressee::photoLabel(), tab3 );
   mPhotoWidget->setMinimumSize( mPhotoWidget->sizeHint() );
   connect( mPhotoWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
   layout->addWidget( mPhotoWidget, 2, 0 );
 
-  mLogoWidget = new ImageWidget( KABC::Addressee::logoLabel(), mReadOnly, tab3 );
+  mLogoWidget = new ImageWidget( KABC::Addressee::logoLabel(), tab3 );
   mLogoWidget->setMinimumSize( mLogoWidget->sizeHint() );
   connect( mLogoWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
   layout->addWidget( mLogoWidget, 2, 1 );
@@ -782,6 +769,36 @@ QString AddresseeEditorWidget::title() const
 QString AddresseeEditorWidget::identifier() const
 {
   return i18n( "contact_editor" );
+}
+
+void AddresseeEditorWidget::setReadOnly( bool readOnly )
+{
+  mReadOnly = readOnly;
+
+  mNameEdit->setReadOnly( readOnly );
+  mRoleEdit->setReadOnly( readOnly );
+  mOrgEdit->setReadOnly( readOnly );
+  mPhoneEditWidget->setReadOnly( readOnly );
+  mAddressEditWidget->setReadOnly( readOnly );
+  mEmailWidget->setReadOnly( readOnly );
+  mURLEdit->setReadOnly( readOnly );
+  mIMAddressEdit->setReadOnly( readOnly );
+  mCategoryButton->setEnabled( !readOnly );
+  mSecrecyWidget->setReadOnly( readOnly );
+  mDepartmentEdit->setReadOnly( readOnly );
+  mOfficeEdit->setReadOnly( readOnly );
+  mProfessionEdit->setReadOnly( readOnly );
+  mManagerEdit->setReadOnly( readOnly );
+  mAssistantEdit->setReadOnly( readOnly );
+  mNicknameEdit->setReadOnly( readOnly );
+  mSpouseEdit->setReadOnly( readOnly );
+  mBirthdayPicker->setEnabled( !readOnly );
+  mAnniversaryPicker->setEnabled( !readOnly );
+  mNoteEdit->setReadOnly( mReadOnly );
+  mGeoWidget->setReadOnly( readOnly );
+  mSoundWidget->setReadOnly( readOnly );
+  mPhotoWidget->setReadOnly( readOnly );
+  mLogoWidget->setReadOnly( readOnly );
 }
 
 #include "addresseeeditorwidget.moc"

@@ -40,7 +40,9 @@ class ImageLabel : public QLabel
   Q_OBJECT
 
   public:
-    ImageLabel( const QString &title, bool readOnly, QWidget *parent );
+    ImageLabel( const QString &title, QWidget *parent );
+
+    void setReadOnly( bool readOnly );
 
   signals:
     void changed();
@@ -63,8 +65,7 @@ class ImageWidget : public QWidget
   Q_OBJECT
 
   public:
-    ImageWidget( const QString &title, bool readOnly,
-                 QWidget *parent, const char *name = 0 );
+    ImageWidget( const QString &title, QWidget *parent, const char *name = 0 );
     ~ImageWidget();
 
     /**
@@ -76,6 +77,8 @@ class ImageWidget : public QWidget
       Returns a photo object.
      */
     KABC::Picture image() const;
+
+    void setReadOnly( bool readOnly );
 
   signals:
     void changed();

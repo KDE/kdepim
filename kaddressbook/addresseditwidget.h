@@ -53,7 +53,7 @@ class AddressEditWidget : public QWidget
   Q_OBJECT
 
   public:
-    AddressEditWidget( bool readOnly, QWidget *parent, const char *name = 0 );
+    AddressEditWidget( QWidget *parent, const char *name = 0 );
     ~AddressEditWidget();
 
     KABC::Address::List addresses();
@@ -62,6 +62,8 @@ class AddressEditWidget : public QWidget
 
     void updateTypeCombo( const KABC::Address::List&, KComboBox* );
     KABC::Address currentAddress( KComboBox*, int );
+
+    void setReadOnly( bool readOnly );
 
   signals:
     void modified();

@@ -46,11 +46,13 @@ class EmailEditWidget : public QWidget
   Q_OBJECT
 
   public:
-    EmailEditWidget( bool readOnly, QWidget *parent, const char *name = 0 );
+    EmailEditWidget( QWidget *parent, const char *name = 0 );
     ~EmailEditWidget();
 
     void setEmails( const QStringList &list );
     QStringList emails();
+
+    void setReadOnly( bool readOnly );
 
   signals:
     void modified();
@@ -61,6 +63,7 @@ class EmailEditWidget : public QWidget
 
   private:
     KLineEdit *mEmailEdit;
+    QPushButton *mEditButton;
     QStringList mEmailList;
 };
 

@@ -67,7 +67,7 @@ class AddresseeEditorWidget : public KAB::ExtensionWidget
   Q_OBJECT
   
   public:
-    AddresseeEditorWidget( KAB::Core *core, bool isExtension, bool readOnly,
+    AddresseeEditorWidget( KAB::Core *core, bool isExtension,
                            QWidget *parent, const char *name = 0 );
     ~AddresseeEditorWidget();  
 
@@ -118,6 +118,8 @@ class AddresseeEditorWidget : public KAB::ExtensionWidget
     void setupTab2();
     void setupTab3();
 
+    void setReadOnly( bool );
+
     KABC::Addressee mAddressee;
     int mFormattedNameType;
     bool mDirty;
@@ -140,6 +142,7 @@ class AddresseeEditorWidget : public KAB::ExtensionWidget
     PhoneEditWidget *mPhoneEditWidget;
     KLineEdit *mURLEdit;
     KLineEdit *mIMAddressEdit;
+    QPushButton *mCategoryButton;
     KLineEdit *mCategoryEdit;
     SecrecyWidget *mSecrecyWidget;
     KSqueezedTextLabel *mNameLabel;

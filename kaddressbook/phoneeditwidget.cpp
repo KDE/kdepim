@@ -47,15 +47,14 @@
 
 #include "phoneeditwidget.h"
 
-PhoneEditWidget::PhoneEditWidget( bool readOnly, QWidget *parent, const char *name )
-  : QWidget( parent, name ), mReadOnly( readOnly )
+PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
+  : QWidget( parent, name )
 {
   QGridLayout *layout = new QGridLayout( this, 5, 2 );
   layout->setSpacing( KDialog::spacingHint() );
 
   mPrefCombo = new PhoneTypeCombo( mPhoneList, this );
   mPrefEdit = new KLineEdit( this );
-  mPrefEdit->setReadOnly( mReadOnly );
   mPrefEdit->setMinimumWidth( int(mPrefEdit->sizeHint().width() * 1.5) );
   mPrefCombo->setLineEdit( mPrefEdit );
   layout->addWidget( mPrefCombo, 0, 0 );
@@ -63,21 +62,18 @@ PhoneEditWidget::PhoneEditWidget( bool readOnly, QWidget *parent, const char *na
 
   mSecondCombo = new PhoneTypeCombo( mPhoneList, this );
   mSecondEdit = new KLineEdit( this );
-  mSecondEdit->setReadOnly( mReadOnly );
   mSecondCombo->setLineEdit( mSecondEdit );
   layout->addWidget( mSecondCombo, 1, 0 );
   layout->addWidget( mSecondEdit, 1, 1 );
 
   mThirdCombo = new PhoneTypeCombo( mPhoneList, this );
   mThirdEdit = new KLineEdit( this );
-  mThirdEdit->setReadOnly( mReadOnly );
   mThirdCombo->setLineEdit( mThirdEdit );
   layout->addWidget( mThirdCombo, 2, 0 );
   layout->addWidget( mThirdEdit, 2, 1 );
 
   mFourthCombo = new PhoneTypeCombo( mPhoneList, this );
   mFourthEdit = new KLineEdit( this );
-  mFourthEdit->setReadOnly( mReadOnly );
   mFourthCombo->setLineEdit( mFourthEdit );
   layout->addWidget( mFourthCombo, 3, 0 );
   layout->addWidget( mFourthEdit, 3, 1 );
@@ -86,10 +82,8 @@ PhoneEditWidget::PhoneEditWidget( bool readOnly, QWidget *parent, const char *na
   mFourthCombo->hide();
   mFourthEdit->hide();
 
-  QPushButton *editButton = new QPushButton( i18n( "Edit Phone Numbers..." ),
-                                             this );
-  editButton->setEnabled( !mReadOnly );
-  layout->addMultiCellWidget( editButton, 4, 4, 0, 1 );
+  mEditButton = new QPushButton( i18n( "Edit Phone Numbers..." ), this );
+  layout->addMultiCellWidget( mEditButton, 4, 4, 0, 1 );
 
   connect( mPrefEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( slotPrefEditChanged() ) );
@@ -100,7 +94,7 @@ PhoneEditWidget::PhoneEditWidget( bool readOnly, QWidget *parent, const char *na
   connect( mFourthEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( slotFourthEditChanged() ) );
 
-  connect( editButton, SIGNAL( clicked() ), SLOT( edit() ) );
+  connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
 
   connect( mPrefCombo, SIGNAL( activated( int ) ),
            SLOT( updatePrefEdit() ) );
@@ -114,6 +108,17 @@ PhoneEditWidget::PhoneEditWidget( bool readOnly, QWidget *parent, const char *na
 
 PhoneEditWidget::~PhoneEditWidget()
 {
+}
+
+void PhoneEditWidget::setReadOnly( bool readOnly )
+{
+  mReadOnly = readOnly;
+
+  mPrefEdit->setReadOnly( mReadOnly );
+  mSecondEdit->setReadOnly( mReadOnly );
+  mThirdEdit->setReadOnly( mReadOnly );
+  mFourthEdit->setReadOnly( mReadOnly );
+  mEditButton->setEnabled( !mReadOnly );
 }
 
 void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )

@@ -38,7 +38,7 @@ class SoundWidget : public QWidget
   Q_OBJECT
 
   public:
-    SoundWidget( bool readOnly, QWidget *parent, const char *name = 0 );
+    SoundWidget( QWidget *parent, const char *name = 0 );
     ~SoundWidget();
 
     /**
@@ -50,6 +50,8 @@ class SoundWidget : public QWidget
       Returns the sound object.
      */
     KABC::Sound sound() const;
+
+    void setReadOnly( bool readOnly );
 
   signals:
     void changed();

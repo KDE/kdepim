@@ -35,27 +35,27 @@ namespace KAB { class Core; }
 class AddresseeEditorDialog : public KDialogBase
 {
   Q_OBJECT
-  
+
   public:
-    AddresseeEditorDialog( KAB::Core *core, bool readOnly,
+    AddresseeEditorDialog( KAB::Core *core,
                            QWidget *parent, const char *name = 0 );
     ~AddresseeEditorDialog();
-    
+
     void setAddressee( const KABC::Addressee& );
     KABC::Addressee addressee();
-    
+
     bool dirty();
-    
+
   signals:
     void contactModified( const KABC::Addressee& );
     void editorDestroyed( const QString& );
-    
+
   protected slots:
     virtual void slotApply();
     virtual void slotOk();
     virtual void slotCancel();
     void widgetModified();
-  
+
   private:
     AddresseeEditorWidget *mEditorWidget;
 };

@@ -44,8 +44,8 @@
 
 #include "geowidget.h"
 
-GeoWidget::GeoWidget( bool readOnly, QWidget *parent, const char *name )
-  : QWidget( parent, name ), mReadOnly( readOnly )
+GeoWidget::GeoWidget( QWidget *parent, const char *name )
+  : QWidget( parent, name ), mReadOnly( false )
 {
   QLabel *label = 0;
 
@@ -60,7 +60,6 @@ GeoWidget::GeoWidget( bool readOnly, QWidget *parent, const char *name )
   topLayout->addMultiCellWidget( label, 0, 3, 0, 0 );
 
   mGeoIsValid = new QCheckBox( i18n( "Use geo data" ), this );
-  mGeoIsValid->setEnabled( !mReadOnly );
   topLayout->addMultiCellWidget( mGeoIsValid, 0, 0, 1, 2 );
 
   label = new QLabel( i18n( "Latitude:" ), this );
@@ -104,6 +103,13 @@ GeoWidget::GeoWidget( bool readOnly, QWidget *parent, const char *name )
 
 GeoWidget::~GeoWidget()
 {
+}
+
+void GeoWidget::setReadOnly( bool readOnly )
+{
+  mReadOnly = readOnly;
+
+  mGeoIsValid->setEnabled( !mReadOnly );
 }
 
 void GeoWidget::setGeo( const KABC::Geo &geo )

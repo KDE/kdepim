@@ -52,7 +52,7 @@ class GeoWidget : public QWidget
   Q_OBJECT
 
   public:
-    GeoWidget( bool readOnly, QWidget *parent, const char *name = 0 );
+    GeoWidget( QWidget *parent, const char *name = 0 );
     ~GeoWidget();
 
     /**
@@ -64,6 +64,8 @@ class GeoWidget : public QWidget
       Returns a geo object.
      */
     KABC::Geo geo() const;
+
+    void setReadOnly( bool readOnly );
 
   signals:
     void changed();

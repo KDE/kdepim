@@ -629,7 +629,7 @@ void KABCore::newContact()
     if ( !KABLock::self( mAddressBook )->lock( addr.resource() ) )
       return;
 
-    dialog = createAddresseeEditorDialog( false, mWidget );
+    dialog = createAddresseeEditorDialog( mWidget );
     dialog->setAddressee( addr );
   } else
     return;
@@ -701,7 +701,7 @@ void KABCore::editContact( const QString &uid )
         if ( !KABLock::self( mAddressBook )->lock( addr.resource() ) )
           return;
 
-      dialog = createAddresseeEditorDialog( addr.resource()->readOnly(), mWidget );
+      dialog = createAddresseeEditorDialog( mWidget );
 
       mEditorDict.insert( addr.uid(), dialog );
 
@@ -865,10 +865,10 @@ void KABCore::addressBookChanged()
   mViewManager->refreshView();
 }
 
-AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( bool readOnly, QWidget *parent,
+AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent,
                                                              const char *name )
 {
-  AddresseeEditorDialog *dialog = new AddresseeEditorDialog( this, readOnly, parent,
+  AddresseeEditorDialog *dialog = new AddresseeEditorDialog( this, parent,
                                                  name ? name : "editorDialog" );
   connect( dialog, SIGNAL( contactModified( const KABC::Addressee& ) ),
            SLOT( contactModified( const KABC::Addressee& ) ) );

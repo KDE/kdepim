@@ -77,8 +77,7 @@ class TabPressEater : public QObject
 };
 
 
-AddressEditWidget::AddressEditWidget( bool readOnly,
-                                      QWidget *parent, const char *name )
+AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
   QBoxLayout *layout = new QVBoxLayout( this, 4, 2 );
@@ -94,19 +93,25 @@ AddressEditWidget::AddressEditWidget( bool readOnly,
   mAddressTextEdit->setMinimumHeight( 20 );
   layout->addWidget( mAddressTextEdit );
 
-  QPushButton *editButton = new QPushButton( i18n( "&Edit Addresses..." ),
-                                             this );
-  editButton->setEnabled( !readOnly );
-  connect( editButton, SIGNAL( clicked() ), SLOT( edit() ) );
+  mEditButton = new QPushButton( i18n( "&Edit Addresses..." ), this );
+  connect( mEditButton, SIGNAL( clicked() ), this, SLOT( edit() ) );
 
-  if ( !readOnly )
-    connect( mAddressTextEdit, SIGNAL( clicked( int, int ) ), SLOT( edit() ) );
+  connect( mAddressTextEdit, SIGNAL( clicked( int, int ) ), SLOT( edit() ) );
 
-  layout->addWidget( editButton );
+  layout->addWidget( mEditButton );
 }
 
 AddressEditWidget::~AddressEditWidget()
 {
+}
+
+void AddressEditWidget::setReadOnly( bool readOnly )
+{
+  mEditButton->setEnabled( !readOnly );
+
+  disconnect( mAddressTextEdit, SIGNAL( clicked( int, int ) ), this, SLOT( edit() ) );
+  if ( !readOnly )
+    connect( mAddressTextEdit, SIGNAL( clicked( int, int ) ), this, SLOT( edit() ) );
 }
 
 KABC::Address::List AddressEditWidget::addresses()
