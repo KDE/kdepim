@@ -1,0 +1,8 @@
+usr/share/apps/abbrowser/*
+usr/share/icons/hicolor/32x32/apps/abbrowser.png
+usr/share/icons/locolor/16x16/apps/abbrowser.png
+usr/share/applnk/Utilities/abbrowser.desktop
+usr/bin/abbrowser
+usr/share/man/man1/abbrowser*
+usr/share/doc/kdepim/abbrowser/*
+usr/share/doc/kde/HTML/en/abbrowser/*
