@@ -28,11 +28,12 @@
 #include <options.h>
 
 #include <qtimer.h>
-#include <kmessagebox.h>
-#include <kdialog.h>
 #include <qlayout.h>
 #include <qlabel.h>
+#include <kmessagebox.h>
+#include <kdialog.h>
 #include <ktextedit.h>
+#include <kdialogbase.h>
 
 #include <pilotRecord.h>
 #include <pilotLocalDatabase.h>
