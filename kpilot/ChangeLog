@@ -1,6 +1,19 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-10-01  Adriaan de Groot
+* Merged nice patch from Adrian S for HotPlug.
+* Moved tickle stuff into a separate thread, so that it doesn't
+  require a Qt event loop to keep the Pilot awake.
+* Added tickles in the right (?) places in the abbrowser - around
+  the loading part.
+* Discovered that UserCheck used KMessageBox::question*() instead of
+  a version with timeouts. Fixed that by adding a qYNCancel() to
+  InteractiveSync, and updated both qYN*() methods there to use
+  KDE 3.3 KMessageBox support.
+* Merged InteractiveAction with SyncAction, cleaning up the inheritance
+  tree and making it possible to conduits to use the question* methods.
+
 2004-09-26  Adriaan de Groot
 * Put up new tarballs on kpilot.org.
 * Patched up the KNotes conduit a little - notes listed as modified
