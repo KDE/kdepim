@@ -33,7 +33,7 @@
 
 	</abstract>
 
-	<date>2000-05-21</date>
+	<date>2000-05-22</date>
 
 	<releaseinfo><!-- information about this particular version --></releaseinfo>
 
@@ -99,7 +99,7 @@ working with it right away. For more in-depth information see the
 
 <para>Invoking KMail for the first time creates a directory called "Mail" containing the initial
 files (inbox, outbox, sent-mail, and trash) in your home directory.  Use
-<emphasis remap="bf">File &verbar; Settings...</emphasis> to enter some initial information so KMail will 
+<emphasis remap="bf">File | Settings...</emphasis> to enter some initial information so KMail will 
 be able to properly retrieve and send your messages. <!-- fixme: does it pop up
 automatically? --></para>
 
@@ -153,7 +153,7 @@ a message is sent. If <emphasis remap="bf">Send now</emphasis> is
 selected, the message is sent to the mail server immediately, while if 
 <emphasis remap="bf">Send later</emphasis> is selected,
 the message is queued in the <emphasis remap="bf">outbox</emphasis> to be sent later with the
-<emphasis remap="bf">File &verbar; Send Queued</emphasis>
+<emphasis remap="bf">File | Send Queued</emphasis>
 command or automatically when you check your mail, depending on the settings in the
 <emphasis remap="bf">Miscellaneous</emphasis> tab.</para>
 
@@ -206,7 +206,7 @@ want to get all mails, not only the new ones.
 
 <para>Select <emphasis remap="bf">Exclude from "Check Mail"</emphasis> if you
 don't want to check this account whenever you use <emphasis remap="bf">Check mail...</emphasis>.
-You can still check for new mail on this account with <emphasis remap="bf">File &verbar; Check Mail in...</emphasis>.</para>
+You can still check for new mail on this account with <emphasis remap="bf">File | Check Mail in...</emphasis>.</para>
 
 <para>Select <emphasis remap="bf">Enable interval mail checking</emphasis> if you
 want KMail to check for new mail automatically. The interval can be specified below.</para>
@@ -226,18 +226,18 @@ inbox for now, although you may want to change it if you add more accounts later
 <para>First, we will send an email to test our configuration. To send an email, hit 
 Ctrl+N, select the <emphasis remap="bf">Compose new message</emphasis> icon (the empty
 sheet of paper) or
-select the <emphasis remap="bf">File &verbar; New Composer</emphasis> menu item.  
+select the <emphasis remap="bf">File | New Composer</emphasis> menu item.  
 The <emphasis remap="bf">Composer</emphasis> 
 window will appear. Fill in the <emphasis remap="bf">To:</emphasis> field with your email address and type
 something in the <emphasis remap="bf">Subject</emphasis> field.  Send the mail by selecting 
-<emphasis remap="bf">File &verbar; Send</emphasis>.</para>
+<emphasis remap="bf">File | Send</emphasis>.</para>
 
-<para>To check your email, select <emphasis remap="bf">File &verbar; Check Mail...</emphasis>
+<para>To check your email, select <emphasis remap="bf">File | Check Mail...</emphasis>
 In the lower right corner of the main window, a progress bar will indicate how much mail is being 
 downloaded. If you receive the message you just sent, then congratulations!
 If, however, you receive any error messages while testing your setup, make sure that your
 network connection is working and recheck your settings by selecting
-<emphasis remap="bf">File &verbar; Settings...</emphasis></para>
+<emphasis remap="bf">File | Settings...</emphasis></para>
 </sect1>
 </chapter>
 
@@ -310,7 +310,7 @@ having to use the mouse:
 </variablelist>
 </para>
 
-<para>Messages can have several status flags, which can be changed from the <emphasis remap="bf">Message &verbar; Set
+<para>Messages can have several status flags, which can be changed from the <emphasis remap="bf">Message | Set
 Status</emphasis> submenu. The status flags are described below:</para>
 
 <para><itemizedlist>
@@ -409,7 +409,7 @@ menu. PGP key attachments are handled like file attachments.</para>
 <title>Checking the Spelling of your Message</title>
 
 <para>To check the spelling of your message, select <emphasis remap="bf">Edit
-&verbar; Spelling...</emphasis>. KMail uses KSpell to check spelling, which is
+| Spelling...</emphasis>. KMail uses KSpell to check spelling, which is
 the KDE frontend to the the ispell or aspell spelling checker.</para>
 </sect2>
 </sect1>
@@ -440,25 +440,25 @@ These folders each have special functions:</para>
 
 <para>You may find that the standard folders are fine for your needs. Eventually, though, you will probably 
 need folders to help you organize your messages. To create a new folder, select 
-<emphasis remap="bf">Folder &verbar; Create...</emphasis> 
+<emphasis remap="bf">Folder | Create...</emphasis> 
 A window will then prompt you for the name of the folder. If you don't want it to be a top level folder,
 you may choose the folder under which it will appear.
 If you ever need to change the settings for a folder,
 select the folder you wish to modify in the Folders Pane and select 
-<emphasis remap="bf">Folder &verbar; Modify...</emphasis>.</para>
+<emphasis remap="bf">Folder | Modify...</emphasis>.</para>
 
 <para>To move messages from one folder into another, select the message(s) you want to move and press the M key
-or select <emphasis remap="bf">Message &verbar; Move to</emphasis>. A list of folders will appear.  Select the
+or select <emphasis remap="bf">Message | Move to</emphasis>. A list of folders will appear.  Select the
 folder from the list that you want to move the messages to.  Messages can also be
 moved by dragging them from the Headers pane into the Folders pane.</para>
 
 <para>You may find that your folders are taking up a lot of disk space after they have been used for a while 
 even though they may not have very many messages in them.  To fix this problem, select the folder and 
-choose <emphasis remap="bf">Folder &verbar; Compact</emphasis>. Note that you can also select
+choose <emphasis remap="bf">Folder | Compact</emphasis>. Note that you can also select
 <emphasis remap="bf">Compact all folders on exit</emphasis> in the <emphasis remap="bf">Settings</emphasis> 
 dialog.</para>
 
-<para>If you want to clear all of the messages out of a folder choose <emphasis remap="bf">Folder &verbar; Empty</emphasis>. 
+<para>If you want to clear all of the messages out of a folder choose <emphasis remap="bf">Folder | Empty</emphasis>. 
 All the messages in the selected folder will be moved to the <emphasis remap="bf">trash</emphasis> folder. If the
 selected folder is the <emphasis remap="bf">trash</emphasis> folder, all of the messages will be permanently deleted.</para>
 
@@ -500,7 +500,7 @@ in future releases of KMail. -->
 
 <para>Usually, filters are used on incoming messages, but they can also be applied to a message or group of
 messages.  To selectively filter messages in a message folder, select the messages you want to filter and
-type Ctrl+J or select <emphasis remap="bf">Message &verbar; Apply Filters</emphasis>. Note that this will apply all
+type Ctrl+J or select <emphasis remap="bf">Message | Apply Filters</emphasis>. Note that this will apply all
 of your filters to that message; there is no way to apply only certain filters to a message.</para>
 
 <para>If you ever need to remove a filter, select it from the <emphasis remap="bf">Filter Rules</emphasis> window and press the 
@@ -583,7 +583,7 @@ sections.</para>
 <title>Multiple Accounts</title>
 
 <para>Multiple accounts are used to check mail from more than one email address and/or mail server. Select 
-<emphasis remap="bf">File &verbar; Settings...</emphasis> and click on the <emphasis remap="bf">Network</emphasis>
+<emphasis remap="bf">File | Settings...</emphasis> and click on the <emphasis remap="bf">Network</emphasis>
 tab to add or change 
 your account settings. See the <link linkend="secgettingstarted">Getting started</link> section for more 
 information on the settings in the <emphasis remap="bf">Network</emphasis> tab.</para>
@@ -687,7 +687,7 @@ that it was signed by you.</para>
 
 <para>Prepare a message to the person you want to send your public key to. Then
 choose in the <emphasis remap="bf">Composer</emphasis> window's menu 
-<emphasis remap="bf">Attach &verbar; Attach My Public Key</emphasis>. This
+<emphasis remap="bf">Attach | Attach My Public Key</emphasis>. This
 will attach your public key to the mail. Now you can send the mail.</para>
 
 <para>Remember, that it's not save at all, if you sign the message to make sure,
@@ -786,9 +786,9 @@ for colors and font sizes.</para>
 
 <para>The <emphasis remap="bf">Phrases</emphasis> section lets you define the automatically generated
 lines added to message replies, forwarded
-messages, and quoted text. There are special &percnt;-denoted characters that will insert certain values. These
-are shown at the top of the Phrases section: &percnt;D to insert the date, &percnt;S to insert the subject,
-&percnt;F to insert the sender, and &percnt;&percnt; to insert a percent sign, &percnt;_ inserts a
+messages, and quoted text. There are special %-denoted characters that will insert certain values. These
+are shown at the top of the Phrases section: %D to insert the date, %S to insert the subject,
+%F to insert the sender, and %% to insert a percent sign, %_ inserts a
 space. The <emphasis remap="bf">Indentation</emphasis> field contains the character that
 will denote quoted text (you will probably want to use the default).</para>
 
@@ -864,7 +864,7 @@ email client over to KMail. KMail stores its mail using the <emphasis remap="bf"
 one of the most widely used mailbox formats on UNIX
 systems. Mbox mailboxes store messages in one file, identifying where messages start and end with the
 FROM: header. For many Unix mailers, all you must do is move your mailboxes to
-<literal remap="tt">&tilde;/Mail</literal> (or make
+<literal remap="tt">~/Mail</literal> (or make
  Mail a symbolic link to the folder containing you mailboxes) and launch KMail.  The mailboxes should now 
 show up correctly in KMail.</para>
 
@@ -877,7 +877,7 @@ formats.</para>
 <listitem>
 <para>Eudora uses the mbox format in its mail files. To use them with KMail, make sure that your Eudora mailboxes have 
 been compacted, then copy the .mbx files (Windows Eudora) or Eudora mailbox files (Mac Eudora) to your 
-<literal remap="tt">&tilde;/Mail</literal> directory. You don't need to copy the index files. 
+<literal remap="tt">~/Mail</literal> directory. You don't need to copy the index files. 
 Once you start KMail, the mailboxes should appear in the Folders pane and the messages should be accessible in
 the Headers Pane.</para>
 <para>If messages do not appear in the Headers pane, your mailbox files may still contain Windows or Macintosh
@@ -890,7 +890,7 @@ command or a scripting language to change the Windows or Macintosh line feeds to
 <term>MMDF</term>
 <listitem>
 <para>This format is close enough to the mailbox format that KMail should be able to use these mailboxes if you
-just copy them to your <literal remap="tt">&tilde;/Mail</literal> directory. However, MMDF mailboxes have
+just copy them to your <literal remap="tt">~/Mail</literal> directory. However, MMDF mailboxes have
 not been tested with KMail,
 so your results may vary.  If you can get this format to work with KMail, please let us know so we
 can include more specific directions in the next documentation release.</para>
@@ -923,7 +923,7 @@ mail folders before you use this script.</para>
 <para>Select the messages to export</para>
 </listitem>
 <listitem>
-<para>Select <emphasis remap="bf">FILE &verbar; SAVE MESSAGES AS</emphasis></para>
+<para>Select <emphasis remap="bf">FILE | SAVE MESSAGES AS</emphasis></para>
 </listitem>
 <listitem>
 <para>Mark the <emphasis remap="bf">UNIX FORMAT</emphasis> and <emphasis remap="bf">SAVE RAW</emphasis> boxes</para>
@@ -935,7 +935,7 @@ mail folders before you use this script.</para>
 </para>
 <para>In Linux/KDE:
 <orderedlist><listitem>
-<para>Move previously saves file to correct <literal remap="tt">&tilde;/Mail</literal> folder</para>
+<para>Move previously saves file to correct <literal remap="tt">~/Mail</literal> folder</para>
 </listitem>
 <listitem>
 <para>Rename file without .txt extension</para>
@@ -949,8 +949,8 @@ mail folders before you use this script.</para>
 <varlistentry>
 <term>Netscape Mail</term>
 <listitem>
-<para>Copy your Netscape Mailfiles from <literal remap="tt">&tilde;/nsmail/</literal> to
-<literal remap="tt">&tilde;/Mail</literal>
+<para>Copy your Netscape Mailfiles from <literal remap="tt">~/nsmail/</literal> to
+<literal remap="tt">~/Mail</literal>
 folder. The mailboxes will show up in KMail the next time you restart it.</para>
 </listitem>
 </varlistentry>
@@ -974,7 +974,7 @@ a text editor that lets you save the files in Unix format.</para>
 <para> Other mail programs probably do not work with KMail as they use
 proprietary mail formats that KMail cannot understand. However, there is no harm
 in trying! If the mailbox file looks similar to the mbox format, try copying the
-mailbox file (remember, the index file is not needed) to your <literal remap="tt">&tilde;/Mail</literal>
+mailbox file (remember, the index file is not needed) to your <literal remap="tt">~/Mail</literal>
 directory and see what happens.  If you get mailboxes from your favorite mail
 client to work in KMail, please tell us how you did it so that we can include
 directions in a future revision of this documentation. </para>
@@ -1535,7 +1535,7 @@ Ctrl while dragging the text, it will not be moved, but copied.</para>
 <term>Spelling...</term>
 <listitem>
 <para>Uses KSpell to check the spelling in the body of your message. Note
-that you have to configure KSpell with Settings &verbar; Spellchecker... if you
+that you have to configure KSpell with Settings | Spellchecker... if you
 use it for the first time.</para>
 </listitem>
 </varlistentry>
@@ -1711,7 +1711,7 @@ you must not select. </para>
 <para>The text footer is called a signature file. What you need to do is
 open up a text editor (like kedit) and type in what you want to appear in
 the footer. Save the file under a name like signature or footer. Go into
-KMail and select <emphasis remap="bf">File &verbar; Settings...</emphasis>
+KMail and select <emphasis remap="bf">File | Settings...</emphasis>
 Look in the <emphasis remap="bf">Identity</emphasis> tab for the
 <emphasis remap="bf">Signature file</emphasis> field. Click on the
 ellipses button and select the file you just created. Now KMail will
