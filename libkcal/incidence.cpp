@@ -30,7 +30,8 @@ using namespace KCal;
 
 Incidence::Incidence() :
   IncidenceBase(),
-  mRelatedTo(0), mSecrecy(SecrecyPublic), mPriority(3), mRecurrence(0)
+  mRelatedTo(0), mStatus(StatusNone), mSecrecy(SecrecyPublic),
+  mPriority(3), mRecurrence(0)
 {
   recreate();
 
@@ -54,6 +55,8 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
   mExDateTimes = i.mExDateTimes;
   mAttachments = i.mAttachments;
   mResources = i.mResources;
+  mStatusString = i.mStatusString;
+  mStatus = i.mStatus;
   mSecrecy = i.mSecrecy;
   mPriority = i.mPriority;
   mLocation = i.mLocation;
@@ -131,6 +134,8 @@ bool Incidence::operator==( const Incidence& i2 ) const
         exDateTimes() == i2.exDateTimes() &&
         attachments() == i2.attachments() &&
         resources() == i2.resources() &&
+        mStatus == i2.mStatus &&
+        ( mStatus == StatusNone || stringCompare( mStatusString, i2.mStatusString ) ) &&
         secrecy() == i2.secrecy() &&
         priority() == i2.priority() &&
         stringCompare( location(), i2.location() );
@@ -429,6 +434,51 @@ int Incidence::priority() const
   return mPriority;
 }
 
+void Incidence::setStatus(Incidence::Status status)
+{
+  if (mReadOnly || status == StatusX) return;
+  mStatus = status;
+  mStatusString = QString::null;
+  updated();
+}
+
+void Incidence::setCustomStatus(const QString &status)
+{
+  if (mReadOnly) return;
+  mStatus = status.isEmpty() ? StatusNone : StatusX;
+  mStatusString = status;
+  updated();
+}
+
+Incidence::Status Incidence::status() const
+{
+  return mStatus;
+}
+
+QString Incidence::statusStr() const
+{
+  if (mStatus == StatusX)
+    return mStatusString;
+  return statusName(mStatus);
+}
+
+QString Incidence::statusName(Incidence::Status status)
+{
+  switch (status) {
+    case StatusTentative:    return i18n("Tentative");
+    case StatusConfirmed:    return i18n("Confirmed");
+    case StatusCompleted:    return i18n("Completed");
+    case StatusNeedsAction:  return i18n("Needs-Action");
+    case StatusCanceled:     return i18n("Canceled");
+    case StatusInProcess:    return i18n("In-Process");
+    case StatusDraft:        return i18n("Draft");
+    case StatusFinal:        return i18n("Final");
+    case StatusX:
+    case StatusNone:
+    default:                 return QString::null;
+  }
+}
+
 void Incidence::setSecrecy(int sec)
 {
   if (mReadOnly) return;
@@ -451,16 +501,12 @@ QString Incidence::secrecyName(int secrecy)
   switch (secrecy) {
     case SecrecyPublic:
       return i18n("Public");
-      break;
     case SecrecyPrivate:
       return i18n("Private");
-      break;
     case SecrecyConfidential:
       return i18n("Confidential");
-      break;
     default:
       return i18n("Undefined");
-      break;
   }
 }
 

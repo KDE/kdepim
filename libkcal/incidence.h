@@ -112,6 +112,14 @@ class Incidence : public IncidenceBase
         T *mResource;
     };
 
+    /** Enumeration for describing an event's status.  */
+    enum Status {
+        StatusNone, StatusTentative, StatusConfirmed, StatusCompleted,
+        StatusNeedsAction, StatusCanceled, StatusInProcess, StatusDraft,
+        StatusFinal,
+        StatusX   // indicates a non-standard status string
+    };
+
     /** enumeration for describing an event's secrecy. */
     enum { SecrecyPublic = 0, SecrecyPrivate = 1, SecrecyConfidential = 2 };
 
@@ -334,6 +342,30 @@ class Incidence : public IncidenceBase
     static QString secrecyName( int );
 
     /**
+      Sets the incidence status to a standard status value. See
+      separate enum. Note that StatusX cannot be specified.
+    */
+    void setStatus( Status status );
+    /**
+      Sets the incidence status to a non-standard status value.
+      @param status non-standard status string. If empty,
+      the incidence status will be set to StatusNone.
+    */
+    void setCustomStatus( const QString &status );
+    /**
+      Return the event's status.
+    */
+    Status status() const;
+    /**
+      Return the event's status string.
+    */
+    QString statusStr() const;
+    /**
+      Return human-readable translated name of status value.
+    */
+    static QString statusName( Status );
+
+    /**
       Returns true if the date specified is one on which the incidence will
       recur.
     */
@@ -426,6 +458,8 @@ class Incidence : public IncidenceBase
     Attachment::List mAttachments;
     QStringList mResources;
 
+    QString mStatusString;
+    Status  mStatus;
     int mSecrecy;
     int mPriority;                        // 1 = highest, 2 = less, etc.
 

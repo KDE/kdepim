@@ -564,9 +564,29 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
         incidence->location().utf8()));
   }
 
-// TODO:
   // status
-//  addPropValue(parent, VCStatusProp, incidence->getStatusStr().utf8());
+  icalproperty_status status = ICAL_STATUS_NONE;
+  switch (incidence->status()) {
+    case Incidence::StatusTentative:    status = ICAL_STATUS_TENTATIVE;  break;
+    case Incidence::StatusConfirmed:    status = ICAL_STATUS_CONFIRMED;  break;
+    case Incidence::StatusCompleted:    status = ICAL_STATUS_COMPLETED;  break;
+    case Incidence::StatusNeedsAction:  status = ICAL_STATUS_NEEDSACTION;  break;
+    case Incidence::StatusCanceled:     status = ICAL_STATUS_CANCELLED;  break;
+    case Incidence::StatusInProcess:    status = ICAL_STATUS_INPROCESS;  break;
+    case Incidence::StatusDraft:        status = ICAL_STATUS_DRAFT;  break;
+    case Incidence::StatusFinal:        status = ICAL_STATUS_FINAL;  break;
+    case Incidence::StatusX: {
+      icalproperty* p = icalproperty_new_status(ICAL_STATUS_X);
+      icalvalue_set_x(icalproperty_get_value(p), incidence->statusStr().utf8());
+      icalcomponent_add_property(parent, p);
+      break;
+    }
+    case Incidence::StatusNone:
+    default:
+      break;
+  }
+  if (status != ICAL_STATUS_NONE)
+    icalcomponent_add_property(parent, icalproperty_new_status(status));
 
   // secrecy
   const char *classStr;
@@ -1490,15 +1510,28 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
         incidence->setLocation(QString::fromUtf8(text));
         break;
 
-#if 0
-  // status
-  if ((vo = isAPropertyOf(vincidence, VCStatusProp)) != 0) {
-    incidence->setStatus(s = fakeCString(vObjectUStringZValue(vo)));
-    deleteStr(s);
-  }
-  else
-    incidence->setStatus("NEEDS ACTION");
-#endif
+      case ICAL_STATUS_PROPERTY: {  // status
+        Incidence::Status stat;
+        switch (icalproperty_get_status(p)) {
+          case ICAL_STATUS_TENTATIVE:   stat = Incidence::StatusTentative; break;
+          case ICAL_STATUS_CONFIRMED:   stat = Incidence::StatusConfirmed; break;
+          case ICAL_STATUS_COMPLETED:   stat = Incidence::StatusCompleted; break;
+          case ICAL_STATUS_NEEDSACTION: stat = Incidence::StatusNeedsAction; break;
+          case ICAL_STATUS_CANCELLED:   stat = Incidence::StatusCanceled; break;
+          case ICAL_STATUS_INPROCESS:   stat = Incidence::StatusInProcess; break;
+          case ICAL_STATUS_DRAFT:       stat = Incidence::StatusDraft; break;
+          case ICAL_STATUS_FINAL:       stat = Incidence::StatusFinal; break;
+          case ICAL_STATUS_X:
+            incidence->setCustomStatus(QString::fromUtf8(icalvalue_get_x(icalproperty_get_value(p))));
+            stat = Incidence::StatusX;
+            break;
+          case ICAL_STATUS_NONE:
+          default:                      stat = Incidence::StatusNone; break;
+        }
+        if (stat != Incidence::StatusX)
+          incidence->setStatus(stat);
+        break;
+      }
 
       case ICAL_PRIORITY_PROPERTY:  // priority
         intvalue = icalproperty_get_priority(p);
