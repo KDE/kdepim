@@ -26,6 +26,8 @@
 #include "utilities.h"
 
 
+// **** window geometry managing *********************************************
+
 void saveWindowSize(const QString &name, const QSize &s)
 {
   KConfig *c=KGlobal::config();
@@ -45,6 +47,7 @@ void restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize
 }
 
 
+// **** scramble password strings **********************************************
 
 const QString encryptStr(const QString& aStr)
 {
@@ -62,12 +65,13 @@ const QString encryptStr(const QString& aStr)
 }
 
 
-
 const QString decryptStr(const QString& aStr)
 {
   return encryptStr(aStr);
 }
 
+
+// **** rot13 *******************************************************************
 
 QString rot13(const QString &s)
 {
@@ -87,11 +91,105 @@ QString rot13(const QString &s)
 }
 
 
+// **** text rewraping *********************************************************
+
+int findBreakPos(const QString &text, int start)
+{
+  int i;
+  for(i=start;i>=0;i--)
+    if(text[i].isSpace())
+      break;
+  if(i>0)
+    return i;
+  for(i=start;i<(int)text.length();i++)   // ok, the line is to long
+    if(text[i].isSpace())
+      break;
+  return i;
+}
+
+
+void appendTextWPrefix(QString &result, const QString &text, int wrapAt, const QString &prefix)
+{
+  QString txt=text;
+  int breakPos;
+
+  while(!txt.isEmpty()) {
+
+    if((int)(prefix.length()+txt.length()) > wrapAt) {
+      breakPos=findBreakPos(txt,wrapAt-prefix.length());
+      result+=(prefix+txt.left(breakPos)+"\n");
+      txt.remove(0,breakPos+1);
+    } else {
+      result+=(prefix+txt+"\n");
+      txt=QString::null;
+    }
+  }
+}
+
+
+QString rewrapStringList(QStringList text, int wrapAt, QChar quoteChar, bool stopAtSig, bool alwaysSpace)
+{
+  QString quoted, lastPrefix, thisPrefix, leftover, thisLine;
+  int breakPos;
+
+  for(QStringList::Iterator line=text.begin(); line!=text.end(); ++line) {
+
+    if(stopAtSig && (*line)=="-- ")
+      break;
+
+    thisLine=(*line);
+    if (!alwaysSpace && (thisLine[0]==quoteChar))
+      thisLine.prepend(quoteChar);  // second quote level without space
+    else
+      thisLine.prepend(quoteChar+' ');
+
+    thisPrefix=QString::null;
+    QChar c;
+    for(int idx=0; idx<(int)(thisLine.length()); idx++) {
+      c=thisLine.at(idx);
+      if( (c==' ') ||
+          (c==quoteChar) || (c=='>') ||(c=='|') || (c==':') || (c=='#') || (c=='[') || (c=='{'))
+        thisPrefix.append(c);
+      else
+        break;
+    }
+
+    thisLine.remove(0,thisPrefix.length());
+    thisLine = thisLine.stripWhiteSpace();
+
+    if(!leftover.isEmpty()) {   // don't break paragraphs, tables and quote levels
+      if(thisLine.isEmpty() || (thisPrefix!=lastPrefix) || thisLine.contains("  ") || thisLine.contains('\t'))
+        appendTextWPrefix(quoted, leftover, wrapAt, lastPrefix);
+      else
+        thisLine.prepend(leftover+" ");
+      leftover=QString::null;
+    }
+
+    if((int)(thisPrefix.length()+thisLine.length()) > wrapAt) {
+      breakPos=findBreakPos(thisLine,wrapAt-thisPrefix.length());
+      if(breakPos < (int)(thisLine.length())) {
+        leftover=thisLine.right(thisLine.length()-breakPos-1);
+        thisLine.truncate(breakPos);
+      }
+    }
+
+    quoted+=thisPrefix+thisLine+"\n";
+    lastPrefix=thisPrefix;
+  }
+
+  if (!leftover.isEmpty())
+    appendTextWPrefix(quoted, leftover, wrapAt, lastPrefix);
+
+  return quoted;
+}
+
+
+// **** misc. message-boxes **********************************************************
+
 void displayInternalFileError(QWidget *w)
 {
   KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to load/save configuration!\nWrong permissions on home directory?\nYou should close KNode now, to avoid data loss!"));
 }
-
 
 
 void displayExternalFileError(QWidget *w)
@@ -100,16 +198,13 @@ void displayExternalFileError(QWidget *w)
 }
 
 
-
 void displayRemoteFileError(QWidget *w)
 {
   KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to save remote file!"));
 }
 
 
-
 void displayTempFileError(QWidget *w)
 {
   KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to create temporary file!"));
 }
-

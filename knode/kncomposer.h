@@ -49,7 +49,8 @@ class KNComposer : public KMainWindow  {
     // firstEdit==true: place the cursor at the end of the article
     KNComposer(KNLocalArticle *a, const QString &text=QString::null, const QString &sig=QString::null, const QString &unwraped=QString::null, bool firstEdit=false);
     ~KNComposer();
-    void setConfig();
+    void setConfig(bool onlyFonts);
+    void setMessageMode(MessageMode mode);
 
     //get result
     bool hasValidData();
@@ -101,24 +102,21 @@ class KNComposer : public KMainWindow  {
     QList<KNAttachment> d_elAttList;
     bool a_ttChanged;
 
-
   //------------------------------ <Actions> -----------------------------
 
     KAction       *a_ctExternalEditor,
                   *a_ctSpellCheck,
                   *a_ctRemoveAttachment,
                   *a_ctAttachmentProperties;
-    KToggleAction *a_ctShowToolbar, *a_ctShowStatusbar;
-    KSelectAction *a_ctSetType, *a_ctSetCharset;
-
+    KToggleAction *a_ctShowToolbar, *a_ctShowStatusbar,
+                  *a_ctDoPost, *a_ctDoMail, *a_ctWordWrap;
+    KSelectAction *a_ctSetCharset;
 
   protected slots:
     void slotSendNow();
     void slotSendLater();     
     void slotSaveAsDraft();   
     void slotArtDelete();
-    void slotSetCharset(const QString &s);
-    void slotSetType(int i);
     void slotAppendSig();
     void slotInsertFile();
     void slotInsertFileBoxed();
@@ -126,6 +124,10 @@ class KNComposer : public KMainWindow  {
     void slotSignArticle();
     void slotRemoveAttachment();
     void slotAttachmentProperties();
+    void slotToggleDoPost();
+    void slotToggleDoMail();
+    void slotSetCharset(const QString &s);
+    void slotToggleWordWrap();
     void slotUndoRewrap();
     void slotExternalEditor();
     void slotSpellcheck();

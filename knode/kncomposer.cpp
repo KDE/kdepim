@@ -65,15 +65,18 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   //statusbar
   KStatusBar *sb=statusBar();
-  sb->insertItem(QString::null, 1,1);
+  sb->insertItem(QString::null, 1,1);                 // type
   sb->setItemAlignment (1,AlignLeft | AlignVCenter);
-  sb->insertItem(QString::null, 2,1);
+  sb->insertItem(QString::null, 2,1);                 // charset
   sb->setItemAlignment (2,AlignLeft | AlignVCenter);
-  sb->insertItem(QString::null, 3,0);
+  sb->insertItem(QString::null, 3,0);                 // column
   sb->setItemAlignment (3,AlignCenter | AlignVCenter);
-  sb->insertItem(QString::null, 4,0);
-  sb->setItemAlignment (4,AlignCenter | AlignVCenter);
+  sb->insertItem(QString::null, 4,0);                 // column
+  sb->setItemAlignment (5,AlignCenter | AlignVCenter);
+  sb->insertItem(QString::null, 5,0);                 // line
+  sb->setItemAlignment (6,AlignCenter | AlignVCenter);
   connect(v_iew->e_dit, SIGNAL(CursorPositionChanged()), SLOT(slotUpdateStatusBar()));
+  connect(v_iew->e_dit, SIGNAL(toggle_overwrite_signal()), SLOT(slotUpdateStatusBar()));
 
   //------------------------------- <Actions> --------------------------------------
 
@@ -89,20 +92,6 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   new KAction(i18n("D&elete"),"editdelete", 0 , this,
     SLOT(slotArtDelete()), actionCollection(), "art_delete");
-
-  QStringList types;
-  types.append(i18n("&News Article"));
-  types.append(i18n("E-&Mail"));
-  types.append(i18n("News &Article && E-Mail"));
-  a_ctSetType = new KSelectAction(i18n("Message &Type"), 0, actionCollection(), "set_type");
-  a_ctSetType->setItems(types);
-  connect(a_ctSetType, SIGNAL(activated(int)),
-    this, SLOT(slotSetType(int)));
-
-  a_ctSetCharset = new KSelectAction(i18n("C&harset"), 0, actionCollection(), "set_charset");
-  a_ctSetCharset->setItems(knGlobals.cfgManager->postNewsTechnical()->composerCharsets());
-  connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
-    this, SLOT(slotSetCharset(const QString&)));
 
   KStdAction::close(this, SLOT(close()),actionCollection());
 
@@ -155,6 +144,22 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   a_ctAttachmentProperties  = new KAction(i18n("&Properties..."), 0, this,
                                           SLOT(slotAttachmentProperties()), actionCollection(), "attachment_properties");
+
+  //options menu
+
+  a_ctDoPost = new KToggleAction(i18n("Send &News Article"), "filenew", 0 , this,
+	                 SLOT(slotToggleDoPost()), actionCollection(), "send_news");			
+	
+  a_ctDoMail = new KToggleAction(i18n("Send E-&Mail"), "mail_generic" , 0 , this,
+	                 SLOT(slotToggleDoMail()), actionCollection(), "send_mail");
+	
+  a_ctSetCharset = new KSelectAction(i18n("Set &Charset"), 0, actionCollection(), "set_charset");
+  a_ctSetCharset->setItems(knGlobals.cfgManager->postNewsTechnical()->composerCharsets());
+  connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
+  this, SLOT(slotSetCharset(const QString&)));
+
+  a_ctWordWrap	= new KToggleAction(i18n("&Word Wrap"), 0 , this,
+	                    SLOT(slotToggleWordWrap()), actionCollection(), "toggle_wordwrap");			
 
   //tools menu
 
@@ -212,7 +217,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   initData(text,firstEdit);
 
   //apply configuration
-  setConfig();
+  setConfig(false);
 
   if(firstEdit)    // now we place the cusor at the end of the quoted text
     v_iew->e_dit->setCursorPosition(v_iew->e_dit->numLines()-1,0);
@@ -253,11 +258,14 @@ KNComposer::~KNComposer()
 }
 
 
-void KNComposer::setConfig()
+void KNComposer::setConfig(bool onlyFonts)
 {
-  v_iew->e_dit->setWordWrap(knGlobals.cfgManager->postNewsComposer()->wordWrap()?
-                            QMultiLineEdit::FixedColumnWidth : QMultiLineEdit::NoWrap);
-  v_iew->e_dit->setWrapColumnOrWidth(knGlobals.cfgManager->postNewsComposer()->maxLineLength());
+  if (!onlyFonts) {
+    v_iew->e_dit->setWordWrap(knGlobals.cfgManager->postNewsComposer()->wordWrap()?
+                              QMultiLineEdit::FixedColumnWidth : QMultiLineEdit::NoWrap);
+    v_iew->e_dit->setWrapColumnOrWidth(knGlobals.cfgManager->postNewsComposer()->maxLineLength());
+    a_ctWordWrap->setChecked(knGlobals.cfgManager->postNewsComposer()->wordWrap());
+  }
 
   QFont fnt=knGlobals.cfgManager->appearance()->composerFont();
   KGlobal::charsets()->setQFont(fnt, c_harset);
@@ -266,6 +274,29 @@ void KNComposer::setConfig()
   v_iew->g_roups->setFont(fnt);
   v_iew->f_up2->setFont(fnt);
   v_iew->e_dit->setFont(fnt);
+
+  slotUpdateStatusBar();
+}
+
+
+void KNComposer::setMessageMode(MessageMode mode)
+{
+  m_ode = mode;
+  a_ctDoPost->setChecked(m_ode!=mail);
+  a_ctDoMail->setChecked(m_ode!=news);
+  v_iew->setMessageMode(m_ode);
+
+  if (m_ode == news_mail) {
+    QString s = v_iew->e_dit->textLine(0);
+    if (!s.contains(i18n("<posted & mailed>")))
+      v_iew->e_dit->insertAt(i18n("<posted & mailed>\n\n"),0,0);
+  } else {
+    if (v_iew->e_dit->textLine(0)==i18n("<posted & mailed>")) {
+      v_iew->e_dit->removeLine(0);
+      if (v_iew->e_dit->textLine(0).isEmpty())
+        v_iew->e_dit->removeLine(0);
+    }
+  }
 
   slotUpdateStatusBar();
 }
@@ -552,9 +583,7 @@ void KNComposer::initData(const QString &text, bool firstEdit)
       m_ode = news;
     else
       m_ode = mail;
-
-  a_ctSetType->setCurrentItem((int)(m_ode));
-  slotSetType((int)(m_ode));
+  setMessageMode(m_ode);
 
   if(a_rticle->contentType()->isMultipart()) {
     v_iew->showAttachmentView();
@@ -590,12 +619,25 @@ void KNComposer::insertFile(QString fileName, bool clear, bool box, QString boxT
     if (box)
       temp = QString::fromLatin1(",----[ %1 ]\n").arg(boxTitle);
 
-    while(!file.atEnd()) {
-      if (box)
-        temp+="| ";
-      temp+=ts.readLine();
-      if (!file.atEnd())
-        temp+="\n";
+    if (box && (v_iew->e_dit->wordWrap()!=QMultiLineEdit::NoWrap)) {
+      int wrapAt = v_iew->e_dit->wrapColumnOrWidth();
+      QStringList lst;
+      QString line;
+      while(!file.atEnd()) {
+        line=ts.readLine();
+        if (!file.atEnd())
+          line+="\n";
+        lst.append(line);
+      }
+      temp+=rewrapStringList(lst, wrapAt, '|', false, true);
+    } else {
+      while(!file.atEnd()) {
+        if (box)
+          temp+="| ";
+        temp+=ts.readLine();
+        if (!file.atEnd())
+          temp+="\n";
+      }
     }
 
     if (box)
@@ -663,40 +705,6 @@ void KNComposer::slotArtDelete()
 {
   r_esult=CRdelAsk;
   emit composerDone(this);
-}
-
-
-void KNComposer::slotSetType(int i)
-{
-  m_ode = (MessageMode)(i);
-  v_iew->setMessageMode(m_ode);
-
-  if (m_ode == news_mail) {
-    QString s = v_iew->e_dit->textLine(0);
-    if (!s.contains(i18n("<posted & mailed>"))) {
-      v_iew->e_dit->insertLine(i18n("<posted & mailed>"),0);
-      if (!s.isEmpty())
-        v_iew->e_dit->insertLine("",1);
-    }
-  } else {
-    if (v_iew->e_dit->textLine(0)==i18n("<posted & mailed>")) {
-      v_iew->e_dit->removeLine(0);
-      if (v_iew->e_dit->textLine(0).isEmpty())
-        v_iew->e_dit->removeLine(0);
-    }
-  }
-
-  slotUpdateStatusBar();
-}
-
-
-void KNComposer::slotSetCharset(const QString &s)
-{
-  if(s.isEmpty())
-    return;
-
-  c_harset=s.latin1();
-  setConfig(); //adjust fonts
 }
 
 
@@ -795,6 +803,60 @@ void KNComposer::slotAttachmentProperties()
     delete d;
     a_ttChanged=true;
   }
+}
+
+
+void KNComposer::slotToggleDoPost()
+{
+  if (a_ctDoPost->isChecked()) {
+    if (a_ctDoMail->isChecked())
+      m_ode=news_mail;
+    else
+      m_ode=news;
+  } else {
+    if (a_ctDoMail->isChecked())
+      m_ode=mail;
+    else {     // invalid
+      a_ctDoPost->setChecked(true); //revert
+      return;
+    }
+  }
+  setMessageMode(m_ode);
+}
+
+
+void KNComposer::slotToggleDoMail()
+{
+  if (a_ctDoMail->isChecked()) {
+    if (a_ctDoPost->isChecked())
+      m_ode=news_mail;
+    else
+      m_ode=mail;
+  } else {
+    if (a_ctDoPost->isChecked())
+      m_ode=news;
+    else {     // invalid
+      a_ctDoMail->setChecked(true); //revert
+      return;
+    }
+  }
+  setMessageMode(m_ode);
+}
+
+
+void KNComposer::slotSetCharset(const QString &s)
+{
+  if(s.isEmpty())
+    return;
+
+  c_harset=s.latin1();
+  setConfig(true); //adjust fonts
+}
+
+
+void KNComposer::slotToggleWordWrap()
+{
+  v_iew->e_dit->setWordWrap(a_ctWordWrap->isChecked()? QMultiLineEdit::FixedColumnWidth : QMultiLineEdit::NoWrap);
 }
 
 
@@ -933,11 +995,17 @@ void KNComposer::slotUpdateStatusBar()
                 break;
     default  :  typeDesc = i18n("News Article & E-Mail");
   }
+  QString overwriteDesc;
+  if (v_iew->e_dit->isOverwriteMode())
+    overwriteDesc = i18n(" OVR ");
+  else
+    overwriteDesc = i18n(" INS ");
 
   statusBar()->changeItem(i18n(" Type: %1 ").arg(typeDesc), 1);
   statusBar()->changeItem(i18n(" Charset: %1 ").arg(c_harset), 2);
-  statusBar()->changeItem(i18n(" Column: %1 ").arg(v_iew->e_dit->currentColumn()), 3);
-  statusBar()->changeItem(i18n(" Line: %1 ").arg(v_iew->e_dit->currentLine()), 4);
+  statusBar()->changeItem(overwriteDesc, 3);
+  statusBar()->changeItem(i18n(" Column: %1 ").arg(v_iew->e_dit->currentColumn()), 4);
+  statusBar()->changeItem(i18n(" Line: %1 ").arg(v_iew->e_dit->currentLine()), 5);
 }
 
 
@@ -1365,6 +1433,7 @@ void KNComposer::ComposerView::hideExternalNotification()
 KNComposer::Editor::Editor(QWidget *parent, char *name)
   : KEdit(parent, name)
 {
+  setOverwriteEnabled(true);
   installEventFilter(this);
 }
 
@@ -1507,7 +1576,7 @@ void KNComposer::Editor::slotRemoveBox()
     int c = currentColumn();
 
     QString s = KEdit::textLine(l);   // test if we are in a box
-    if (!((s.left(2) == "| ")||(s.left(5)!=",----")||(s.left(5)!="`----")))
+    if (!((s.left(2) == "| ")||(s.left(5)==",----")||(s.left(5)=="`----")))
       return;
 
     setAutoUpdate(false);

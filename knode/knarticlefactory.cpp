@@ -204,56 +204,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
     notRewraped=quoted;     // store the original text in here, the user can request it in the composer
     quoted=attribution;
 
-    int wrapAt=knGlobals.cfgManager->postNewsComposer()->maxLineLength(), idx=0, breakPos=0;
-    QString lastPrefix, thisPrefix, leftover, thisLine;
-    char c;
-
-    for(line=text.begin(); line!=text.end(); ++line) {
-
-      if(!incSig && (*line)=="-- ")
-        break;
-
-      thisLine=(*line);
-      if (thisLine[0]=='>')
-        thisLine.prepend('>');  // second quote level without space
-      else
-        thisLine.prepend("> ");
-
-      thisPrefix=QString::null;
-      idx=0;
-      for(QChar uc=thisLine.at(idx); uc!=(char)(0); uc=thisLine.at(++idx)) {
-        c=uc.latin1();
-        if( (c=='>') || (c=='|') || (c==' ') || (c==':') || (c=='#') || (c=='[') )
-          thisPrefix.append(uc);
-        else
-          break;
-      }
-
-      thisLine.remove(0,thisPrefix.length());
-      thisLine = thisLine.stripWhiteSpace();
-
-      if(!leftover.isEmpty()) {   // don't break paragraphs, tables and quote levels
-        if(thisLine.isEmpty() || (thisPrefix!=lastPrefix) || thisLine.contains("  ") || thisLine.contains('\t'))
-          appendTextWPrefix(quoted, leftover, lastPrefix);
-        else
-          thisLine.prepend(leftover+" ");
-        leftover=QString::null;
-      }
-
-      if((int)(thisPrefix.length()+thisLine.length()) > wrapAt) {
-        breakPos=findBreakPos(thisLine,wrapAt-thisPrefix.length());
-        if(breakPos < (int)(thisLine.length())) {
-          leftover=thisLine.right(thisLine.length()-breakPos-1);
-          thisLine.truncate(breakPos);
-        }
-      }
-
-      quoted+=thisPrefix+thisLine+"\n";
-      lastPrefix=thisPrefix;
-    }
-
-    if (!leftover.isEmpty())
-      appendTextWPrefix(quoted, leftover, lastPrefix);
+    quoted += rewrapStringList(text, knGlobals.cfgManager->postNewsComposer()->maxLineLength(), '>', incSig, false);
   }
 
   //-------------------------- </Body> -----------------------------
@@ -680,7 +631,7 @@ KNComposer* KNArticleFactory::findComposer(KNLocalArticle *a)
 void KNArticleFactory::configChanged()
 {
   for(KNComposer *c=c_ompList.first(); c; c=c_ompList.next())
-    c->setConfig();
+    c->setConfig(false);
 }
 
 
@@ -915,41 +866,6 @@ bool KNArticleFactory::cancelAllowed(KNArticle *a)
   }
 
   return false;
-}
-
-
-int KNArticleFactory::findBreakPos(const QString &text, int start)
-{
-  int i;
-  for(i=start;i>=0;i--)
-    if(text[i].isSpace())
-      break;
-  if(i>0)
-    return i;
-  for(i=start;i<(int)text.length();i++)   // ok, the line is to long
-    if(text[i].isSpace())
-      break;
-  return i;
-}
-
-
-void KNArticleFactory::appendTextWPrefix(QString &result, const QString &text, const QString &prefix)
-{
-  QString txt=text;
-  int wrapAt=knGlobals.cfgManager->postNewsComposer()->maxLineLength(), breakPos;
-
-  while(!txt.isEmpty()) {
-
-    if((int)(prefix.length()+txt.length()) > wrapAt) {
-      breakPos=findBreakPos(txt,wrapAt-prefix.length());
-      result+=(prefix+txt.left(breakPos)+"\n");
-      txt.remove(0,breakPos+1);
-    }
-    else {
-      result+=(prefix+txt+"\n");
-      txt=QString::null;
-    }
-  }
 }
 
 

@@ -22,6 +22,8 @@
 
 class QWidget;
 class QString;
+class QChar;
+class QStringList;
 class QSize;
 
 // clone of QSortedList...
@@ -45,6 +47,9 @@ void restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize
 const QString encryptStr(const QString& aStr);
 const QString decryptStr(const QString& aStr);
 QString rot13(const QString &s);
+
+// used for rewarping a text when replying to a message or inserting a file into a box
+QString rewrapStringList(QStringList text, int wrapAt, QChar quoteChar, bool stopAtSig, bool alwaysSpace);
 
 void displayInternalFileError(QWidget *w=0);   // use this for all internal files
 void displayExternalFileError(QWidget *w=0);   // use this for all external files
