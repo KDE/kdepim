@@ -368,6 +368,7 @@ void KNComposer::applyChanges()
     text->clearBody();
     for(int idx=0; idx < view->edit->numLines(); idx++)
       text->addBodyLine(view->edit->textLine(idx).latin1());
+    text->mimeInfo()->setDecoded(true);
   }
 
 }

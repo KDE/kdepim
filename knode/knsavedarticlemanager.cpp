@@ -712,8 +712,7 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
   else usr=knGlobals.appManager->defaultUser();
   tmp+=usr->email()+">";      
   art->setHeader(KNArticleBase::HTfrom, tmp, true);
-  
-  
+
   art->assemble();
     
   return true;  
@@ -1005,35 +1004,7 @@ bool KNSavedArticleManager::generateSupersede(KNArticle *a, KNNntpAccount *acc)
     ca->removeHeader("Message-Id");
   
   ca->parse();
-  /*/x-headers
-  QString dir(KGlobal::dirs()->saveLocation("appdata"));
-  if (dir==QString::null)
-    displayInternalFileError();
-  else {
-    KNFile f(dir+"xheaders");
-    if(f.open(IO_ReadOnly)) {
-      while(!f.atEnd())
-        a->addHeaderLine(f.readLine(), true);   
-      f.close();
-    }   
-  }*/
 
-  /*ca->setSubject(a->headerLine("Subject"));
-  ca->setDestination(a->headerLine("Newsgroups"));
-  QCString ref = a->headerLine("References");
-  if (!ref.isEmpty())
-    ca->references()->setLine(ref); 
-
-  
-    
-  KNMimeContent *body=a->mainContent();
-  if(!body->mimeInfo()->isReadable()) body->prepareForDisplay();
-  for(char *line=body->firstBodyLine(); line; line=body->nextBodyLine()) {
-    if(!incSig && strncmp("-- ", line, 3)==0) break;
-    ca->addBodyLine(line);
-  }*/
-    
-  
   openInComposer(ca);
       
   return true;

@@ -807,21 +807,27 @@ DwString KNMimeContent::encodedData()
     data+="\r\n";
   }
   data+="\r\n";
-  
+
   if(b_ody) {
     if( mInfo->ctMediaType()==MTtext &&
         (mInfo->ctEncoding()==ECquotedPrintable || mInfo->ctEncoding()==ECbase64) &&
         mInfo->isReadable() ) {
-      
-      src="";
-      for(line=b_ody->first(); line; line=b_ody->next()) {
-        src+=line;
-        src+="\r\n";
+      if(mInfo->ctEncoding()==ECquotedPrintable) {
+        for(line=b_ody->first(); line; line=b_ody->next()) {
+          src=line;
+          DwEncodeQuotedPrintable(src, dst);
+          data+=dst+"\r\n";
+        }
+      } else {         // Base64 (bad idea)
+        src="";
+        for(line=b_ody->first(); line; line=b_ody->next()) {
+          src+=line;
+          src+="\r\n";
+        }
+        DwEncodeBase64(src, dst);
+        data+=dst;
       }
-      if(mInfo->ctEncoding()==ECquotedPrintable) DwEncodeQuotedPrintable(src, dst);
-      else DwEncodeBase64(src, dst);
-      data+=dst;
-    }       
+    }
     else {
       for(line=b_ody->first(); line; line=b_ody->next()) {
         data+=line;
