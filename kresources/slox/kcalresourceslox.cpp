@@ -861,7 +861,12 @@ void KCalResourceSlox::doClose()
   cancelLoadEvents();
   cancelLoadTodos();
 
-  mCalendar.close();
+  if ( mUploadJob ) {
+    kdError() << "KCalResourceSlox::doClose() Still saving" << endl;
+  } else {
+    mCalendar.close();
+  }
+
   mOpen = false;
 }
 
