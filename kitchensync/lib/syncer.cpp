@@ -223,6 +223,10 @@ void Syncer::addSyncee(Syncee *syncee)
   mSyncees.append(syncee);
 }
 
+void Syncer::clear() {
+    mSyncees.clear();
+}
+
 void Syncer::sync()
 {
   Syncee *target = mSyncees.last();

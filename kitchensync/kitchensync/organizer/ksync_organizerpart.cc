@@ -20,6 +20,7 @@
 
 #include <eventsyncee.h>
 #include <todosyncee.h>
+#include <syncer.h>
 
 #include "organizerbase.h"
 #include <ksync_mainwindow.h>
@@ -150,7 +151,19 @@ void OrganizerPart::processEntry( const Syncee::PtrList& in,
     // set the sync MODE FIXME
     //}
     /* 6.  sync */
-
+    Syncer sync( core()->syncUi(), core()->syncAlgorithm() );
+    if (evSyncee ) {
+        sync.addSyncee(evSyncee);
+        sync.addSyncee(events);
+        sync.sync();
+        sync.clear();
+    }
+    if (toSyncee ) {
+        sync.addSyncee( toSyncee );
+        sync.addSyncee( todos );
+        sync.sync();
+        sync.clear();
+    }
 
     /* 7. write back meta */
     if ( met )
@@ -290,14 +303,50 @@ void OrganizerPart::doMetaIntern( Syncee* syncee,
         }
     }
 };
-void OrganizerPart::writeMeta( EventSyncee*,
-                               TodoSyncee*,
-                               const QString& ) {
-
+/**
+ * let's save it
+ */
+void OrganizerPart::writeMeta( EventSyncee* evSyncee,
+                               TodoSyncee* toSyncee,
+                               const QString& path) {
+    QString str = QDir::homeDirPath();
+    str += "/.kitchensync/meta/konnector-" + path;
+    if (!QFile::exists( str ) ) {
+        KonnectorProfile kon = core()->konnectorProfile();
+        QDir dir;
+        dir.mkdir( str + "/.kitchensync");
+        dir.mkdir( str + "/.kitchensync/meta");
+        dir.mkdir( str + "/.kitchensync/meta/konnector-" + kon.uid() );
+    }
+    KSimpleConfig conf( str );
+    writeMetaIntern( evSyncee, &conf, "events-");
+    writeMetaIntern( toSyncee, &conf, "todos-");
 }
-void OrganizerPart::save( EventSyncee*,
-                          TodoSyncee*,
-                          const QString& ) {
-
+void OrganizerPart::writeMetaIntern( Syncee* syncee,
+                                     KSimpleConfig* conf,
+                                     const QString& key ) {
+    SyncEntry* entry;
+    for (entry = syncee->firstEntry(); entry; entry= syncee->nextEntry() ) {
+        conf->setGroup( key + entry->id() );
+        conf->writeEntry( "time", entry->timestamp() );
+    }
+}
+void OrganizerPart::save( EventSyncee* evSyncee,
+                          TodoSyncee* toSyncee,
+                          const QString& path) {
+    KCal::CalendarLocal* loc = new KCal::CalendarLocal();
+    EventSyncEntry* evEntry=0l;
+    TodoSyncEntry* toEntry=0l;
+    for ( evEntry = (EventSyncEntry*)evSyncee->firstEntry();
+          evEntry;
+          evEntry = (EventSyncEntry*)evSyncee->nextEntry() ) {
+        loc->addEvent( evEntry->incidence() );
+    }
+    for ( toEntry = (TodoSyncEntry*)toSyncee->firstEntry();
+          toEntry;
+          toEntry = (TodoSyncEntry*)toSyncee->nextEntry() ) {
+        loc->addTodo( toEntry->todo() );
+    }
+    loc->save( path );
 }
 #include "ksync_organizerpart.moc"

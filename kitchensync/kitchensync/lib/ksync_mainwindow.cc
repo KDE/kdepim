@@ -44,6 +44,9 @@
 #include <kparts/componentfactory.h>
 #include <kpopupmenu.h>
 
+#include <syncer.h>
+#include <syncuikde.h>
+
 #include <kapabilities.h>
 #include <kdevice.h>
 #include <konnector.h>
@@ -57,7 +60,7 @@
 
 #include "konnectordialog.h"
 #include "ksync_mainwindow.h"
-
+#include "syncalgo.h"
 
 using namespace KSync;
 
@@ -66,6 +69,8 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   KParts::MainWindow( widget, name, f ){
 
   m_konnector = 0;
+  m_syncAlg = 0l;
+  m_syncUi = 0l;
   initActions();
   setXMLFile("ksyncgui.rc");
   setInstance( KGlobal::instance() );
@@ -460,8 +465,14 @@ void KSyncMainWindow::addPart( const ManPartService& service ) {
     if (part )
         addModPart( part );
 }
-void KSyncMainWindow::switchProfile( const KonnectorProfile& prof ) {
+void KSyncMainWindow::switchProfile( KonnectorProfile& prof ) {
     KonnectorProfile ole = m_konprof->current();
+
+    if (prof.udi().isEmpty() ) {
+        QString udi =m_konnector->registerKonnector( prof.device() );
+        prof.setUdi( udi );
+        m_konnector->setCapabilities( udi, prof.kapabilities() );
+    }
 
     emit konnectorChanged( ole.udi() );
     emit konnectorChanged( ole );
@@ -532,4 +543,17 @@ void KSyncMainWindow::initKonnectorList() {
     }
     m_konAct->setItems( lst );
 }
+SyncUi* KSyncMainWindow::syncUi() {
+    if (!m_syncUi ) {
+        m_syncUi = new SyncUiKde(this);
+    }
+    return m_syncUi;
+}
+SyncAlgorithm* KSyncMainWindow::syncAlgorithm() {
+    if (!m_syncAlg ) {
+        m_syncAlg = new PIMSyncAlg( syncUi() );
+    }
+    return m_syncAlg;
+}
+
 #include "ksync_mainwindow.moc"

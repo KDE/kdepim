@@ -54,6 +54,8 @@ class KSelectAction;
 
 namespace KSync {
     class KonnectorManager;
+    class SyncUi;
+    class SyncAlgorithm;
     // no idea why we have this window
 //    enum SyncStatus {SYNC_START=0, SYNC_SYNC, SYNC_STOP };
     enum KonnectorMode { KONNECTOR_ONLINE=0,  KONNECTOR_OFFLINE };
@@ -74,7 +76,8 @@ namespace KSync {
         ProfileManager *profileManager()const;
         KonnectorProfile konnectorProfile() const;
         KonnectorProfileManager* konnectorManager() const;
-
+        SyncUi* syncUi();
+        SyncAlgorithm* syncAlgorithm();
 
 
     private:
@@ -102,6 +105,8 @@ namespace KSync {
         KSelectAction* m_konAct;
         KSelectAction* m_profAct;
         ProfileManager* m_prof;
+        SyncUi *m_syncUi;
+        SyncAlgorithm* m_syncAlg;
         QString m_currentId;
         // udi + Identify
         QMap<QString, QString> m_ids;
@@ -117,7 +122,7 @@ namespace KSync {
         void initProfileList();
         void initKonnectorList();
         void switchProfile( const Profile& prof );
-        void switchProfile( const KonnectorProfile& prof );
+        void switchProfile( KonnectorProfile& prof );
         void slotConfigProf();
         void slotConfigCur();
         void initKonnector();

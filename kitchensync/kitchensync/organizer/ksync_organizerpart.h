@@ -47,6 +47,7 @@ namespace KSync {
     void doMeta( EventSyncee*, TodoSyncee*,  const QString& path);
     void doMetaIntern( Syncee*, KSimpleConfig*, const QString& key);
     void writeMeta( EventSyncee*, TodoSyncee*, const QString& path );
+    void writeMetaIntern( Syncee*, KSimpleConfig*, const QString& key );
     void save( EventSyncee*, TodoSyncee*, const QString& path );
   };
 };

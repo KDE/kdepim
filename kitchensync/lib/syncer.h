@@ -427,6 +427,11 @@ class Syncer
     void addSyncee(Syncee *);
 
     /**
+     * removes all Syncee added with addSyncee from the Syncer
+     */
+    void clear();
+
+    /**
       Sync all data sets. After execution of this functions all data sets,
       which have been added to Syncer contain the same set of data.
 

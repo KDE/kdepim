@@ -8,9 +8,6 @@
 namespace KSync {
 
     class SyncEntry;
-
-
-
     class SyncUiKde : public SyncUi
     {
     public:
