@@ -680,6 +680,7 @@ void ConduitConfigWidget::selected(QListViewItem *p)
 		{
 			p->setSelected(false);
 			fCurrentConduit->setSelected(true);
+			fConduitList->setCurrentItem(fCurrentConduit);
 			return;
 		}
 	}
