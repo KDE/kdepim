@@ -95,6 +95,7 @@ sub checkfile()
       if ( $error > 5 ) {
         system( "diff -u $file.ref $outfile" ); 
       }
+      system( "touch FAILED" );
       exit 1;
     }
   } else {
