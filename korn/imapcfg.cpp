@@ -99,6 +99,7 @@ QWidget *KImapCfg::makeWidget( QWidget *parent )
 
 	_savePass = new QCheckBox( i18n( "Save password"), aGroup );
 	slay->addWidget(_savePass, 4, 1);
+	_savePass->setChecked( ! d->password().isEmpty() );
 
 	_pwdEdit->setEnabled(_savePass->isChecked());
 	connect( _savePass, SIGNAL(toggled(bool)), _pwdEdit,
