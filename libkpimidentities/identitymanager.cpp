@@ -433,7 +433,7 @@ void IdentityManager::createDefaultIdentity() {
     emailAddress = emailSettings.getSetting( KEMailSettings::EmailAddress );
 
     if ( !fullName.isEmpty() && !emailAddress.isEmpty() ) {
-      mShadowIdentities << newFromControlCenter( i18n("Default") );
+      newFromControlCenter( i18n("Default") );
       done = true;
     } else {
       // If KEmailSettings doesn't have name and address, generate something from KUser
