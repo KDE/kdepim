@@ -7,7 +7,7 @@ INCLUDES = -I$(top_srcdir)/libical/src/libical \
 
 lib_LTLIBRARIES   = libkcal.la
 libkcal_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 2:0:0
-libkcal_la_LIBADD  = $(LIB_QT) versit/libversit.la $(LIB_KFILE) \
+libkcal_la_LIBADD  = versit/libversit.la $(LIB_KIO) \
                      $(top_builddir)/libical/src/libical/libical.la \
                      $(top_builddir)/libical/src/libicalss/libicalss.la \
                      -lkresources -lkabc
@@ -35,20 +35,19 @@ libkcal_la_SOURCES = \
 kde_module_LTLIBRARIES = kcal_localdir.la kcal_remote.la kcal_kabc.la
 
 kcal_localdir_la_SOURCES = resourcelocaldir.cpp resourcelocaldirconfig.cpp
-kcal_localdir_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
-kcal_localdir_la_LIBADD  = libkcal.la -lkresources
+kcal_localdir_la_LDFLAGS = -module $(KDE_PLUGIN)
+kcal_localdir_la_LIBADD  = libkcal.la
 
 kcal_remote_la_SOURCES = resourceremote.cpp resourceremoteconfig.cpp
-kcal_remote_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
-kcal_remote_la_LIBADD  = libkcal.la -lkresources
+kcal_remote_la_LDFLAGS = -module $(KDE_PLUGIN)
+kcal_remote_la_LIBADD  = libkcal.la
 
 kcal_kabc_la_SOURCES = resourcekabc.cpp resourcekabcconfig.cpp
-kcal_kabc_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
-kcal_kabc_la_LIBADD  = libkcal.la -lkresources -lkabc
+kcal_kabc_la_LDFLAGS = -module $(KDE_PLUGIN)
+kcal_kabc_la_LIBADD  = libkcal.la
 
 EXTRA_PROGRAMS = convertqtopia
 convertqtopia_SOURCES = convertqtopia.cpp
-convertqtopia_LDFLAGS = $(all_libraries)
 convertqtopia_LDADD = libkcal.la
 
 servicedir = $(kde_servicesdir)/kresources/kcal
