@@ -89,6 +89,7 @@ int main(int argc, char *argv[])
   if (!KAddressBookApp::start()) exit(0);
 
   KAddressBookApp app;
+  KGlobal::locale()->insertCatalogue("libkdepim");
 
   return app.exec();
 }
