@@ -246,7 +246,8 @@ void DwEntity::Assemble(DwHeaders& aHeaders, DwBody& aBody)
     {
         if ( (mString[len-1] == '\n') &&
              mHeaders->HasContentType() &&
-             (mHeaders->ContentType().Type()    == DwMime::kTypeMultipart) )
+             (mHeaders->ContentType().Type()    == DwMime::kTypeMultipart) &&
+	     aBody.FirstBodyPart() )
         {
             /* this is the case when we should not add an DW_EOL since
                another newline is already added by DwBody::Assemble()
@@ -256,6 +257,10 @@ void DwEntity::Assemble(DwHeaders& aHeaders, DwBody& aBody)
                empty line makes the mail invalid for a verification
                (the signature was computed based on the same content,
                but with a single newline).
+
+	       We check for the existence of the first body part since
+	       we treat the body as opaque in case a failure to parse
+	       multipart-subtypes occurs.
             */
         }
         else
