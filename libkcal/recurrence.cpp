@@ -371,6 +371,11 @@ const QPtrList<Recurrence::rMonthPos> &Recurrence::monthPositions() const
   return rMonthPositions;
 }
 
+const QPtrList<Recurrence::rMonthPos> &Recurrence::yearMonthPositions() const
+{
+  return rMonthPositions;
+}
+
 const QPtrList<int> &Recurrence::monthDays() const
 {
   return rMonthDays;
