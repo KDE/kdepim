@@ -64,7 +64,8 @@ public:
 	int   getCat() const { return fCat; }
 	void  setCat(int cat) { fCat = cat; }
 
-	recordid_t getID() const { return fID; }
+	inline recordid_t id() const { return fID; }
+	recordid_t getID() const KDE_DEPRECATED { return id(); }
 	void setID(recordid_t id) { fID = id; }
 
 private:
@@ -78,8 +79,14 @@ public:
 	inline bool isDeleted() const { return fAttrib & dlpRecAttrDeleted; };
 	inline bool isSecret() const { return fAttrib & dlpRecAttrSecret; } ;
 	inline bool isArchived() const { return fAttrib & dlpRecAttrArchived; } ;
-	inline void makeDeleted() { fAttrib |= dlpRecAttrDeleted; } ;
-	inline void makeSecret() { fAttrib |= dlpRecAttrSecret; } ;
+	inline void setDeleted(bool d=true) {
+		if (d) { fAttrib |= dlpRecAttrDeleted; }
+		else   { fAttrib &= ~dlpRecAttrDeleted; } }
+	inline void setSecret(bool s=true) {
+		if (s) { fAttrib |= dlpRecAttrSecret; }
+		else   { fAttrib &= ~dlpRecAttrSecret; } }
+	inline void makeDeleted() KDE_DEPRECATED { setDeleted(true); }
+	inline void makeSecret() KDE_DEPRECATED { setSecret(true); } ;
 
 	/**
 	* This is an interface for tracking down memory leaks
