@@ -220,57 +220,68 @@ KPilotInstaller::initStatusBar()
 
 void KPilotInstaller::initIcons()
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
-	KGlobal::iconLoader()->addAppDir("kpilot");
-	icon_hotsync = KGlobal::iconLoader()->loadIcon("hotsync",
+	DEBUGKPILOT << fname
+		<< ": Getting Icon Loader"
+		<< endl;
+
+	KIconLoader *il = KGlobal::iconLoader();
+
+	DEBUGKPILOT << fname
+		<< ": Got Icon Loader @"
+		<< (int) il
+		<< endl;
+
+	il->addAppDir("kpilot");
+
+	DEBUGKPILOT << fname
+		<< ": Added apps dir to Icon Loader"
+		<< endl;
+
+	icon_hotsync = il->loadIcon("hotsync",
 		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
+
+	DEBUGKPILOT << fname
+		<< ": Got first icon."
+		<< endl;
+
 	if (icon_hotsync.isNull())
 	{
-#ifdef DEBUG
-		kdDebug() << fname << ": Hot-Sync icon not found." << endl;
-#endif
+		kdWarning() << fname << ": Hot-Sync icon not found." << endl;
 		icon_hotsync=QPixmap((const char **)hotsync_icon);
 	}
 
-	icon_backup = KGlobal::iconLoader()->loadIcon("backup",
+	icon_backup = il->loadIcon("backup",
 		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
 	if (icon_backup.isNull())
 	{
-#ifdef DEBUG
-		kdDebug() << fname << ": Backup icon not found." << endl;
-#endif
+		kdWarning() << fname << ": Backup icon not found." << endl;
 		icon_backup =QPixmap((const char **)toolbar_backup);
 	}
 
-	icon_fastsync = KGlobal::iconLoader()->loadIcon("fastsync",
+	icon_fastsync = il->loadIcon("fastsync",
 		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
 	if (icon_fastsync.isNull())
 	{
-#ifdef DEBUG
-		kdDebug() << fname << ": Fast-Sync icon not found." << endl;
-#endif
+		kdWarning() << fname << ": Fast-Sync icon not found." << endl;
 		icon_fastsync = QPixmap((const char **)fastsync_xpm);
 	}
 
-	icon_restore = KGlobal::iconLoader()->loadIcon("restore",
+	icon_restore = il->loadIcon("restore",
 		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
 	if (icon_restore.isNull())
 	{
-#ifdef DEBUG
-		kdDebug() << fname << ": Restore icon not found." << endl;
-#endif
+		kdWarning() << fname << ": Restore icon not found." << endl;
 		icon_restore = QPixmap((const char **)toolbar_restore);
 	}
 
-	icon_quit = KGlobal::iconLoader()->loadIcon("exit",
+	icon_quit = il->loadIcon("exit",
 		KIcon::Toolbar,0,KIcon::DefaultState,0,true);
 
 	if (icon_quit.isNull())
 	{
-#ifdef DEBUG
-		kdDebug() << fname << ": Quit icon not found." << endl;
-#endif
+		kdWarning() << fname << ": Quit icon not found." << endl;
 	}
 }
 

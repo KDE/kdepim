@@ -292,12 +292,25 @@ PilotDaemon::PilotDaemon() :
 
 void PilotDaemon::showTray()
 {
-	if (!tray) return;
+	FUNCTIONSETUP;
+
+	if (!tray) 
+	{
+		DEBUGDAEMON << fname
+			<< ": No tray icon to display!"
+			<< endl;
+
+		return;
+	}
 
 	// Copied from Klipper
 	KWin::setSystemTrayWindowFor( tray->winId(), 0 );
 	tray->setGeometry(-100, -100, 42, 42 );
 	tray->show();
+
+	DEBUGDAEMON << fname
+		<< ": Tray icon displayed."
+		<< endl;
 }
 
 void
@@ -998,17 +1011,37 @@ int main(int argc, char* argv[])
 	KApplication::addCmdLineOptions();
 	KCmdLineArgs *p=KCmdLineArgs::parsedArgs();
 
+#ifdef DEBUG
 	debug_level=atoi(p->getOption("debug"));
+	if (debug_level)
+	{
+		DEBUGDAEMON << fname
+			<< ": Debug level set to "
+			<< debug_level
+			<< endl;
+	}
+#endif
 
 	KApplication a(true,true);
 
-	KConfig& c=KPilotLink::getConfig();
-
-	if (c.readNumEntry("Configured",0)<KPilotLink::ConfigurationVersion)
+	// A block just to keep variables local.
+	//
+	//
 	{
-		kdWarning() << fname << ": Is still not configured for use."
+	KConfig& c=KPilotLink::getConfig();
+	int v = c.readNumEntry("Configured",0);
+
+	if (v < KPilotLink::ConfigurationVersion)
+	{
+		kdError() << fname << ": Is still not configured for use."
 			<< endl;
 		return 1;
+	}
+
+	DEBUGDAEMON << fname
+		<< ": Configuration version "
+		<< v
+		<< endl;
 	}
 
 
@@ -1019,7 +1052,7 @@ int main(int argc, char* argv[])
 		kdError() << fname 
 			<< ": Failed to start up daemon"
 			<< endl;
-		exit(2);
+		return 2;
 	}
 	
 	signal(SIGHUP, signalHandler);
@@ -1033,3 +1066,4 @@ int main(int argc, char* argv[])
 
 	return a.exec();
 }
+
