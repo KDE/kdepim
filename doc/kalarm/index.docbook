@@ -42,7 +42,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2004-03-08</date>
+<date>2004-04-26</date>
 <releaseinfo>1.01.00</releaseinfo>
 
 <abstract>
@@ -798,18 +798,18 @@ to acknowledge multiple copies of the same message should you not
 wish, or be unable, to acknowledge a message at the time it
 appears.</para>
 
-<para>When an alarm message window is displayed, do one of the
-following:</para>
+<para>The alarm message window provides the following options:</para>
 
 <itemizedlist>
 <listitem>
-<para>Acknowledge it by clicking the <guibutton>Close</guibutton>
-button. This closes the window (after a prompt for confirmation, if
-you selected <guilabel>Confirm acknowledgment</guilabel>).</para>
+<para>Acknowledge the alarm by clicking the
+<guibutton>Close</guibutton> button. This closes the window (after a
+prompt for confirmation, if you selected
+<guilabel>Confirm acknowledgment</guilabel>).</para>
 </listitem>
 
 <listitem>
-<para>Display options to defer the alarm by clicking the
+<para>Display options to defer the alarm until later by clicking the
 <guibutton>Defer...</guibutton> button. Then select
 <guilabel>Defer to date/time</guilabel> to enter the date and time
 when the message is to be redisplayed, or select <guilabel>Defer for
@@ -825,11 +825,22 @@ available for alarms which are displayed at login due to the
 <guilabel>Repeat at login</guilabel> option having been
 selected.</para></note>
 </listitem>
-</itemizedlist>
 
+<listitem>
+<para>Stop playing the alarm's sound file by clicking the button
+showing the <quote>stop playing</quote> symbol. Clicking it has no
+effect on the alarm message window.</para>
+
+<note><para>This button only appears when the alarm has a sound file
+specified.</para></note>
+</listitem>
+
+<listitem>
 <para>The button showing the <guiicon>&kalarm;</guiicon> icon provides a
 convenient way to activate &kalarm;. Clicking it has no effect on the
 alarm message window.</para>
+</listitem>
+</itemizedlist>
 
 <para>The alarm message window may be displayed in two different
 modes, depending on your preferences. You can choose the mode in the
