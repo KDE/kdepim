@@ -4,7 +4,7 @@ YFLAGS =-d -v -p ss
 LFLAGS = -Pss 
 LEX_OUTPUT_ROOT = lex.ss
 
-all: icalss.h
+all: icalss.h icalssyacc.c
 
 INCLUDES =			\
 	-I$(top_builddir)	\
