@@ -314,7 +314,7 @@ Settings</guimenu><guimenuitem>Configure Date &amp;
 Time...</guimenuitem></menuchoice>.  &korganizer; has to be restarted
 for changes done in &kcontrol; to take effect.</para>
 
-<!-- Filters and Catagories should be mentioned here, refering to detail -->
+<!-- Filters and Categories should be mentioned here, referring to detail -->
 
 </chapter>
 
@@ -570,7 +570,7 @@ and <guibutton>Cancel</guibutton>.</para>
 </sect3>
 </sect2>
 
-<sect2 id="entering-data-events-attachements">
+<sect2 id="entering-data-events-attachments">
 <title><guilabel>Attachments</guilabel> tab</title>
 
 <para>Some tasks require attachments. You can <guilabel>add</guilabel>, 
@@ -666,7 +666,7 @@ where the task will take place.</para></listitem>
 <varlistentry>
 <term><guilabel>Date &amp; Time</guilabel></term>
 <listitem><para>By default these boxes are not checked by The &korganizer;. 
-Tasks are expected not to have a start and due date. Check one ot both boxes and 
+Tasks are expected not to have a start and due date. Check one of both boxes and 
 change these dates as desired. Enter the dates directly or use the 
 <link linkend="glossary" endterm="gloss-calendar-widget">Calendar Widget</link>. 
 Choose time from quarter hour intervals, or enter the desired time directly into 
@@ -840,7 +840,7 @@ and <guibutton>Cancel</guibutton>.</para>
 </sect3>
 </sect2>
 
-<sect2 id="entering-data-to-do-attachements">
+<sect2 id="entering-data-to-do-attachments">
 <title><guilabel>Attachments</guilabel> tab</title>
 
 <para>Some tasks require attachments. You can <guilabel>add</guilabel>, 
@@ -1669,7 +1669,7 @@ automatically.</para>
 </listitem>
 <listitem><para><guilabel>Username</guilabel></para>
 <para>Enter the login information relative to your account on the server</para>
-<para><guilabel>Kolab2 server specificity:</guilabel> Registered your UID (Unique IDentifier), by default your UID would be similar to your email address on the <guilabel>Kolab2 server</guilabel> but it may also be different. In the last case enter your UID. Ask about your UID to the server administrator if you dont know it.</para>
+<para><guilabel>Kolab2 server specificity:</guilabel> Registered your UID (Unique IDentifier), by default your UID would be similar to your email address on the <guilabel>Kolab2 server</guilabel> but it may also be different. In the last case enter your UID. Ask about your UID to the server administrator if you don't know it.</para>
 </listitem>
 <listitem><para><guilabel>Password</guilabel></para>
 <para>Enter here your password (server login password).</para>
@@ -1695,7 +1695,7 @@ It is not recommended to store your password in the configuration file for secur
 </listitem>
 <listitem><para><guilabel>Use full email address for retrieval</guilabel></para>
 <para>This setting lets you change the name of the file which will be fetched from the server. If you check this option, it will download a free/busy file called <userinput>user@domain.ifb</userinput>, else it will fetch <userinput>user.ifb</userinput>. Ask the server Administrator if you are not sure about how to configure this option.</para>
-<para><guilabel>Kolab2 server specificity:</guilabel> If you are configuring KOrganiser as a component to a <guilabel>KDE Kolab client (Kontact/Kolab)</guilabel> you have to check this option.</para>
+<para><guilabel>Kolab2 server specificity:</guilabel> If you are configuring &korganizer; as a component to a <guilabel>KDE Kolab client (Kontact/Kolab)</guilabel> you have to check this option.</para>
 </listitem>
 <listitem><para><guilabel>Server URL</guilabel></para>
 <para>Enter the URL for the server on which your Free/Busy information shall be fetched. Ask the server administrator for this information.</para>
@@ -1703,7 +1703,7 @@ It is not recommended to store your password in the configuration file for secur
 </listitem>
 <listitem><para><guilabel>Username</guilabel></para>
 <para>Enter the login information relative to your account on the server</para>
-<para><guilabel>Kolab2 server specificity:</guilabel> Registered your UID (Unique IDentifier), by default your UID would be similar to your email address on the <guilabel>Kolab2 server</guilabel> but it may also be different. In the last case enter your UID. Ask about your UID to the server administrator if you dont know it.</para>
+<para><guilabel>Kolab2 server specificity:</guilabel> Registered your UID (Unique IDentifier), by default your UID would be similar to your email address on the <guilabel>Kolab2 server</guilabel> but it may also be different. In the last case enter your UID. Ask about your UID to the server administrator if you don't know it.</para>
 </listitem>
 <listitem><para><guilabel>Password</guilabel></para>
 <para>Enter here your password (server login password).</para>
@@ -2696,7 +2696,7 @@ changes will be remembered and &korganizer; will close the
 <varlistentry>
 <term><guibutton>Apply</guibutton></term>
 <listitem><para>When you click the <guibutton>Apply</guibutton> button, your
-changes will be remembered, and the window will remain onscreen for further
+changes will be remembered, and the window will remain on screen for further
 editing.</para></listitem>
 </varlistentry>
 <varlistentry>

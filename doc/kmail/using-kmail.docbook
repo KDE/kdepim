@@ -230,7 +230,7 @@ installed encryption programs you can choose between:
 <varlistentry>
 <term><guilabel>Any</guilabel></term>
 <listitem>
-<para>KMail will use a format which is understood by all recipients of the
+<para>&kmail; will use a format which is understood by all recipients of the
 message. The preferred format of the recipients can be specified in the
 KDE Address Book.</para></listitem>
 </varlistentry>
@@ -484,7 +484,7 @@ than into a special sent-mail folder.</para>
 
 <para>Here you can select what should happen with old messages in this
 folder. If you enable <guilabel>Expire old messages in this folder</guilabel>
-then KMail will regularly, depending on your choice, either delete old 
+then &kmail; will regularly, depending on your choice, either delete old 
 messages or move old messages to another folder. You can also start
 expiration of old messages manually via <menuchoice><guimenu>Folder</guimenu><guisubmenu>Expire</guisubmenu></menuchoice> and via
 <menuchoice><guimenu>File</guimenu><guisubmenu>Expire
@@ -501,9 +501,9 @@ cannot be restored, so be careful with this setting.</para></warning>
 <para>If you are going to use the folder for a mailing list then you should
 check <guilabel>Folder holds a mailing list</guilabel> to associate this folder
 with the mailing list. Next you should
-click on <guilabel>Detect Automatically</guilabel>. KMail will then try
+click on <guilabel>Detect Automatically</guilabel>. &kmail; will then try
 to guess some information about the mailing list from the currently selected
-message. If KMail could not determine some addresses then you can add
+message. If &kmail; could not determine some addresses then you can add
 the missing information manually. To do this first select the 
 <guilabel>Address type</guilabel> for which you want to add an address.
 You can choose between:</para>
@@ -579,7 +579,7 @@ go to the list archives, by selecting the appropriate
 <guilabel>Invoke Handler</guilabel>. If there is an email address and an
 address of a webpage for the desired action then you will have to select
 the <guilabel>Preferred handler</guilabel> prior to clicking on 
-<guilabel>Invoke Handler</guilabel>. Select <guilabel>KMail</guilabel> if you
+<guilabel>Invoke Handler</guilabel>. Select <guilabel>KMail;</guilabel> if you
 want to send a message to the email address and select 
 <guilabel>Browser</guilabel> if you want to go to the webpage.</para>
 
@@ -2039,10 +2039,10 @@ standard setup. Modifying existing filters is not yet possible.
 <para>The wizard scans for known anti-spam tools on your computer. 
 It is as well possible to use results of spam checks made by your provider
 by evaluating some header information which has been added to the messages.
-You can let the wizard prepare KMail to use one or many of them in parallel.
+You can let the wizard prepare &kmail; to use one or many of them in parallel.
 However, note that anti-spam tool operations are usually time consuming.
-KMail can appear to be frozen during the scan of the messages for spam, 
-you may encounter problems with the responsiveness of KMail. Please consider 
+&kmail; can appear to be frozen during the scan of the messages for spam, 
+you may encounter problems with the responsiveness of &kmail;. Please consider 
 deleting the filter rules created by the wizard if the filtering becomes 
 too slow for you. 
 Here are some recommendations regarding the supported tools:</para>
