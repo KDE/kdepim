@@ -19,8 +19,8 @@
 */
 
 // KDE includes
+#include <kglobal.h>
 #include <kconfig.h>
-#include <kapp.h>
 
 // Local includes
 #include "Empath.h"
@@ -56,7 +56,7 @@ EmpathFilterList::save()
 	}
 	
 	empathDebug("Saving number of filters");
-	KConfig * config = kapp->getConfig();
+	KConfig * config = KGlobal::config();
 	config->setGroup(EmpathConfig::GROUP_GENERAL);
 	
 	config->writeEntry(EmpathConfig::KEY_FILTER_LIST, list);
@@ -67,7 +67,7 @@ EmpathFilterList::load()
 {
 	empathDebug("load() called");
 	
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
 	QStrList list;

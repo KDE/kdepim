@@ -20,13 +20,11 @@
 
 #ifndef RMM_DEFINES_H
 #define RMM_DEFINES_H
-
 #ifndef NDEBUG
 #include <qcstring.h>
-#include <kdebug.h>
-#define rmmDebug(a) kdebug(KDEBUG_INFO, 0,  "%s: %s\n", className(), QCString((a)).data())
+#include <iostream.h>
+# define rmmDebug(a) cerr << className() << ": " << QCString((a)).data() << endl;
 #else
-#define rmmDebug(a)
+# define rmmDebug(a)
 #endif
-
-#endif
+#endif // Included this file

@@ -33,8 +33,8 @@
 #include <qfileinfo.h>
 
 // KDE includes
+#include <kglobal.h>
 #include <kconfig.h>
-#include <kapp.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -86,7 +86,7 @@ Empath::s_saveConfig()
 {
 	filterList_.save();
 	mailboxList_.saveConfig();
-	kapp->getConfig()->sync();
+	KGlobal::config()->sync();
 }
 
 	void
@@ -95,7 +95,7 @@ Empath::updateOutgoingServer()
 	delete mailSender_;
 	mailSender_ = 0;
 	
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
 	OutgoingServerType st =

@@ -29,62 +29,47 @@
 #include <RMM_Defines.h>
 #include <RMM_Envelope.h>
 
-class RBody;
-
 class RBodyPart : public REntity {
 	
 	public:
 	
+#include "generated/RBodyPart_generated.h"
+		
 		enum PartType {
 			Basic,
 			Mime
 		};
 	
-		RBodyPart();
-		RBodyPart(const RBodyPart &);
-		RBodyPart(const QCString & s);
-
-		RBodyPart & operator = (const RBodyPart & part);
-		
-		QCString data();
-
-		virtual ~RBodyPart();
-		void parse();
-		void assemble();
-		void createDefault();
+		virtual QCString data();
 		
 		RMM::MimeType mimeType();
 		RMM::MimeSubType mimeSubType();
 		
 		REnvelope &			envelope();
-		void	setEnvelope(REnvelope);
+		void				setEnvelope(REnvelope);
 		QList<RBodyPart> &	body();
-		void	setBody(QList<RBodyPart> &);
-		void	setData(const QCString &);
 		
-		void addPart(RBodyPart *);
-		void removePart(RBodyPart *);
+		void			setBody(QList<RBodyPart> &);
+		void			setData(const QCString &);
 		
-		void setMimeType(RMM::MimeType);
-		void setMimeType(const QCString &);
-		void setMimeSubType(RMM::MimeSubType);
-		void setMimeSubType(const QCString &);
+		void			addPart(RBodyPart *);
+		void			removePart(RBodyPart *);
+		
+		void			setMimeType(RMM::MimeType);
+		void			setMimeType(const QCString &);
+		void			setMimeSubType(RMM::MimeSubType);
+		void			setMimeSubType(const QCString &);
 
-		QCString description();
-		RMM::DispType disposition();
+		QCString		description();
+		RMM::DispType	disposition();
 		
-		void setDescription(const QCString &);
-		void setDisposition(RMM::DispType);
-		
-		RMM::CteType encoding();
-		void setEncoding(RMM::CteType);
-		Q_UINT32	size();
-		
-		PartType	type();
-		
-		RBodyPart	decode();
-		
-		const char * className() const { return "RBodyPart"; }
+		void			setDescription(const QCString &);
+		void			setDisposition(RMM::DispType);
+		RMM::CteType	encoding();
+		void			setEncoding(RMM::CteType);
+		Q_UINT32		size();
+		PartType		type();
+		RBodyPart		decode();
 
 	protected:
 		

@@ -41,8 +41,8 @@ EmpathTaskWidget::EmpathTaskWidget(QWidget * parent, const char * name)
 	KPixmap px;
 	px.resize(width(), 20);
 	px.gradientFill(
-		kapp->palette()->color(QPalette::Normal, QColorGroup::Background),
-		kapp->palette()->color(QPalette::Normal, QColorGroup::Base));
+		kapp->palette().color(QPalette::Normal, QColorGroup::Background),
+		kapp->palette().color(QPalette::Normal, QColorGroup::Base));
 	
 	l = new QLabel(this);
 	CHECK_PTR(l);
@@ -77,8 +77,8 @@ EmpathTaskWidget::resizeEvent(QResizeEvent * e)
 	KPixmap px;
 	px.resize(width(), 20);
 	px.gradientFill(
-		kapp->palette()->color(QPalette::Normal, QColorGroup::Background),
-		kapp->palette()->color(QPalette::Normal, QColorGroup::Base));
+		kapp->palette().color(QPalette::Normal, QColorGroup::Background),
+		kapp->palette().color(QPalette::Normal, QColorGroup::Base));
 	l->setPixmap(px);
 	l->resize(width(), 20);
 }

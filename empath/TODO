@@ -24,14 +24,6 @@ Highest priority first.
 
 * Implement simple (to one host) SMTP sending.
 
-* EmpathComposeWidget uses the fancy Netscape-alike thing where when you add
-  headers, more widgets are created. What needs to happen is that when the user
-  uses header names that aren't in the order of the base list, next time they
-  get what they did before:
-  e.g. user enters the to body, presses enter, changes Cc: to Reply-To: We then
-  remember that they wanted Reply-To: next and next time when they press enter
-  after To:, they get Reply-To:
-  
 * Make printing work. HTML view will do it itself, though a little weirdly.
   Will there be a general KDE printing i/f ? Do I make stuff ps first ?
   
@@ -43,28 +35,14 @@ Highest priority first.
 ===============================================================================
 Little things I need to do. Highest priority first.
 
-* Think about and possibly redesign the compose widget.
+* Find out where the bug that adds whitespace to the start of a copied message
+  comes from.
 
-* Sort out layout in filter dialogs.
+* Make filters work again, and fix their config dialogs.
 
-* Allow priority ordering in filter manager dialog.
-
-* Find out why sometimes when you select a message for the first time it isn't
-  shown.
+* Word wrap in message view widget
   
-* When you bring up the popup menu over the message list, the item is selected
-  but not shown. Need to allow it to be shown if it is clicked with the left
-  button immediately afterwards.
-  
-* Disable menu entries where appropriate.
-
-* Allow sort order in folder widget
-
-* Find out why compose widget sometimes resizes to very small.
-
-* Allow user to save, print etc the various parts of a message. When pressing
-  'Message->Print', ask which part they want to print, unless there's only one.
-  EmpathMessageStructureWidget will be useful for this.
+* Disable menu entries where appropriate. (started)
 
 * Make forwarding work properly. If only one plain body part -> just
   add some text stating this is forwarded, else attach as message/rfc822 ?
@@ -73,14 +51,16 @@ Little things I need to do. Highest priority first.
 
 * Use inbox, outbox etc icons where appropriate ?
 
-* Make clicking on a URL work both in HTML view and about box.
-
 * Make From: bit in header view widget active as HTML label - basically need
   some way to be able to mail to or add to non-existant address book.
   
 ===============================================================================
 
-Bugs in Qt (possibly)
+Bugs in Qt/KDE (possibly)
+
+* Sometimes KTMainWindows get resized to a weird size on init, and are fixed.
+
+* Sometimes KMenuBar doesn't show some entries until the mouse passes over them.
 
 * DnD doesn't work right. Me or Qt ? Probably me.
 

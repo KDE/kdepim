@@ -24,7 +24,10 @@
 // KDE includes
 #include <kmsgbox.h>
 #include <klocale.h>
+#include <kglobal.h>
+#include <kconfig.h>
 #include <kfiledialog.h>
+#include <kapp.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -38,35 +41,51 @@
 #include "EmpathConfig.h"
 #include "Empath.h"
 
-EmpathComposeWindow::EmpathComposeWindow(
-	ComposeType t,
-	const EmpathURL & m)
+EmpathComposeWindow::EmpathComposeWindow()
 	: KTMainWindow()
 {
 	empathDebug("ctor");
+	composeWidget_	=
+		new EmpathComposeWidget(this, "composeWidget");
+	CHECK_PTR(composeWidget_);
+	
+	_init();
+}
 
-	menu	= menuBar();
-	CHECK_PTR(menu);
-
-	status	= statusBar();
-	CHECK_PTR(status);
-
+EmpathComposeWindow::EmpathComposeWindow(ComposeType t, const EmpathURL & m)
+	: KTMainWindow()
+{
+	empathDebug("ctor");
 	composeWidget_	=
 		new EmpathComposeWidget(t, m, this, "composeWidget");
 	CHECK_PTR(composeWidget_);
 	
-	setView(composeWidget_, false);
+	_init();
+}
 
+EmpathComposeWindow::EmpathComposeWindow(const QString & recipient)
+	: KTMainWindow()
+{
+	empathDebug("ctor");
+	composeWidget_	=
+		new EmpathComposeWidget(recipient, this, "composeWidget");
+	CHECK_PTR(composeWidget_);
+
+	_init();
+}
+
+	void
+EmpathComposeWindow::_init()
+{
+	hide();
 	setupMenuBar();
 	setupToolBar();
 	setupStatusBar();
-	
+	composeWidget_->init();
 	setCaption(i18n("Compose Message - ") + kapp->getCaption());
-	
+	setView(composeWidget_, false);
 	updateRects();
 	show();
-	kapp->processEvents();
-	composeWidget_->init();
 }
 
 EmpathComposeWindow::~EmpathComposeWindow()
@@ -97,6 +116,11 @@ EmpathComposeWindow::setupToolBar()
 			this, SLOT(s_fileSaveAs()), true, i18n("Save"));
 	
 	tb->insertSeparator();
+	
+	KToolBar * tb2 = new KToolBar(this, "tooly2", i + 4 );
+	CHECK_PTR(tb2);
+
+	this->addToolBar(tb2, 1);
 		
 	id_confirmDelivery_		= 8;
 	id_confirmReading_		= 9;
@@ -104,50 +128,50 @@ EmpathComposeWindow::setupToolBar()
 	id_digitallySign_		= 11;
 	id_encrypt_				= 12;
 	
-	tb->insertButton(
+	tb2->insertButton(
 		empathIcon("confirm-delivery.png"),
 		id_confirmDelivery_, SIGNAL(toggled(bool)),
 		this, SLOT(s_confirmDelivery(bool)), true, i18n("Confirm Delivery"));
 	
-	tb->insertButton(
+	tb2->insertButton(
 		empathIcon("confirm-reading.png"),
 		id_confirmReading_, SIGNAL(toggled(bool)),
 		this, SLOT(s_confirmReading(bool)), true, i18n("Confirm Reading"));
 	
-	tb->insertButton(
+	tb2->insertButton(
 		empathIcon("encrypt.png"),
 		id_encrypt_, SIGNAL(toggled(bool)),
 		this, SLOT(s_encrypt(bool)), true, i18n("Encrypt"));
 	
-	tb->insertButton(
+	tb2->insertButton(
 		empathIcon("dig-sign.png"),
 		id_digitallySign_, SIGNAL(toggled(bool)),
 		this, SLOT(s_digSign(bool)), true, i18n("Digitally Sign"));
 
-	tb->insertButton(
+	tb2->insertButton(
 		empathIcon("sign.png"),
 		id_addSignature_, SIGNAL(toggled(bool)),
 		this, SLOT(s_sign(bool)), true, i18n("Add Signature"));
 	
-	KConfig * c(kapp->getConfig());
+	KConfig * c(KGlobal::config());
 
-	tb->setToggle(id_confirmDelivery_);
-	tb->setToggle(id_confirmReading_);
-	tb->setToggle(id_digitallySign_);
-	tb->setToggle(id_encrypt_);
-	tb->setToggle(id_addSignature_);
+	tb2->setToggle(id_confirmDelivery_);
+	tb2->setToggle(id_confirmReading_);
+	tb2->setToggle(id_digitallySign_);
+	tb2->setToggle(id_encrypt_);
+	tb2->setToggle(id_addSignature_);
 	
 	c->setGroup(EmpathConfig::GROUP_COMPOSE);
 	
-	tb->setButton(id_confirmDelivery_,
+	tb2->setButton(id_confirmDelivery_,
 		c->readBoolEntry(EmpathConfig::KEY_CONFIRM_DELIVERY, false));
-	tb->setButton(id_confirmReading_,
+	tb2->setButton(id_confirmReading_,
 		c->readBoolEntry(EmpathConfig::KEY_CONFIRM_READ, false));
-	tb->setButton(id_digitallySign_,
+	tb2->setButton(id_digitallySign_,
 		c->readBoolEntry(EmpathConfig::KEY_ADD_DIG_SIG, false));
-	tb->setButton(id_encrypt_,
+	tb2->setButton(id_encrypt_,
 		c->readBoolEntry(EmpathConfig::KEY_ENCRYPT, false));
-	tb->setButton(id_addSignature_,
+	tb2->setButton(id_addSignature_,
 		c->readBoolEntry(EmpathConfig::KEY_ADD_SIG, false));
 }
 
@@ -155,7 +179,7 @@ EmpathComposeWindow::setupToolBar()
 EmpathComposeWindow::setupStatusBar()
 {
 	empathDebug("setting up status bar");
-	status->message(i18n("Empath Compose Window"));
+	statusBar()->message(i18n("Empath Compose Window"));
 }
 
 // File menu slots
@@ -425,6 +449,14 @@ EmpathComposeWindow::s_digitallySign(bool)
 EmpathComposeWindow::s_encrypt(bool)
 {
 	empathDebug("s_encrypt() called");
+}
+
+	void
+EmpathComposeWindow::bugReport()
+{
+	empathDebug("bugReport() called");
+	composeWidget_->bugReport();
+	setCaption(i18n("Bug Report - ") + kapp->getCaption());
 }
 
 #include "EmpathComposeWindowMenus.cpp"

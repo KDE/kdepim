@@ -36,29 +36,17 @@
 class RDateTime : public RHeaderBody {
 
 	public:
-
-		RDateTime();
-		RDateTime(const RDateTime & dt);
-		RDateTime(const QCString & s);
-		RDateTime & operator = (RDateTime & dt);
 		
-		QDateTime qdt() { parse(); return qdate_; }
+#include "generated/RDateTime_generated.h"
 
 		friend QDataStream & operator >> (QDataStream & s, RDateTime & dt);
 		friend QDataStream & operator << (QDataStream & s, RDateTime & dt);
 
-		virtual ~RDateTime();
-
-		void parse();
-		void assemble();
-
+		QDateTime qdt() { parse(); return qdate_; }
 		void	setTimeZone	(const QCString &);
-		
+	
 		QCString 	timeZone();
 		Q_UINT32	asUnixTime();
-
-		void		createDefault();
-		const char * className() const { return "RDateTime"; }
 
 	private:
 

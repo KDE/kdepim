@@ -62,11 +62,10 @@ RDateTime::RDateTime(const RDateTime & t)
 }
 
 	RDateTime &
-RDateTime::operator = (RDateTime & t)
+RDateTime::operator = (const RDateTime & t)
 {
 	rmmDebug("operator =");
     if (this == &t) return *this; // Don't do a = a.
-	t.parse();
 	qdate_	= t.qdate_;
 	zone_	= t.zone_;
 	
@@ -75,6 +74,22 @@ RDateTime::operator = (RDateTime & t)
 	parsed_ = true;
 	assembled_ = false;
 	return *this;
+}
+
+	RDateTime &
+RDateTime::operator = (const QCString & s)
+{
+	RHeaderBody::operator = (s);
+	return *this;
+}
+
+	bool
+RDateTime::operator == (RDateTime & dt)
+{
+	parse();
+	dt.parse();
+
+	return (qdate_ == dt.qdate_ && zone_ == dt.zone_);
 }
 
 	QDataStream &
@@ -104,7 +119,7 @@ RDateTime::timeZone()
 }
 
 	void
-RDateTime::parse()
+RDateTime::_parse()
 {
 	if (parsed_) return;
 
@@ -179,12 +194,8 @@ RDateTime::parse()
 }
 
 	void
-RDateTime::assemble()
+RDateTime::_assemble()
 {
-	parse();
-	if (assembled_) return;
-	
-	rmmDebug("assemble() called");
 	if (!qdate_.isValid()) {
 		rmmDebug("I'm not VALID !");
 		return;
@@ -203,12 +214,9 @@ RDateTime::assemble()
 	strRep_ += QCString().setNum(d.year());
 	strRep_ += ' ';
 	strRep_ += t.toString().ascii();
+
 	if (!zone_.isEmpty())
 		strRep_ += ' ' + zone_;
-	
-	rmmDebug("assembled to \"" + strRep_ + "\"");
-	
-	assembled_ = true;
 }
 
 	void

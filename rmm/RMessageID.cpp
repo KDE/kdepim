@@ -59,19 +59,13 @@ RMessageID::~RMessageID()
 	bool
 RMessageID::operator == (RMessageID & msgID)
 {
-	return (
-		localPart_	== msgID.localPart() &&
-		domain_		== msgID.domain());
-}
+	parse();
+	msgID.parse();
 
-	bool
-RMessageID::operator != (RMessageID & msgID)
-{
 	return (
-		localPart_	!= msgID.localPart() ||
-		domain_		!= msgID.domain());
+		localPart_	== msgID.localPart_ &&
+		domain_		== msgID.domain_);
 }
-
 
 	RMessageID &
 RMessageID::operator = (const RMessageID & messageID)
@@ -150,10 +144,8 @@ RMessageID::setDomain(const QCString & domain)
 }
 
 	void
-RMessageID::parse()
+RMessageID::_parse()
 {
-	rmmDebug("parse() called");
-	if (parsed_) return;
 	if (strRep_.isEmpty()) {
 		rmmDebug("But there's nothing to parse !");
 		return;
@@ -174,18 +166,12 @@ RMessageID::parse()
 	
 	if (domain_.right(1) == ">")
 		domain_.remove(domain_.length() - 1, 1);
-	
-	parsed_ = true;
-	assembled_ = false;
 }
 
 	void
-RMessageID::assemble()
+RMessageID::_assemble()
 {
-	rmmDebug("assemble() called");
-	if (assembled_) return;
 	strRep_ = "<" + localPart_ + "@" + domain_ + ">";
-	assembled_ = true;
 }
 
 	void

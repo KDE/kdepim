@@ -20,11 +20,11 @@
 
 // System includes
 #include <unistd.h>
-#include <iostream.h>
 
 // KDE includes
 #include <kapp.h>
 #include <kconfig.h>
+#include <kglobal.h>
 
 // Local includes
 #include "lib/Empath.h"
@@ -34,13 +34,12 @@
 EmpathMain(int argc, char * argv[])
 {
 	if (getuid() == 0 || geteuid() == 0) {
-		cerr << "Please don't run Empath as root, or suid root." << endl;
 		exit(1);
 	}
 
 	KApplication app(argc, argv, "empath");
 	
-	app.getConfig()->setDollarExpansion(false);
+	KGlobal::config()->setDollarExpansion(false);
 	
 	Empath		e;
 	EmpathUI	ui;
@@ -50,9 +49,6 @@ EmpathMain(int argc, char * argv[])
 
 	e.init();
 
-	cerr << "========================================================" << endl;
-	cerr << "Entering event loop" << endl;
-	cerr << "========================================================" << endl;
 	return app.exec();
 }
 

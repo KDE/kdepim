@@ -70,13 +70,18 @@ RParameterList::operator = (const QCString & s)
 	return *this;
 }
 
-	void
-RParameterList::parse()
+	bool
+RParameterList::operator == (RParameterList & l)
 {
-	rmmDebug("parse() called");
-	rmmDebug("strRep_ = " + strRep_);
-	if (parsed_) return;
+	parse();
+	l.parse();
 
+	return false; // XXX: Write this
+}
+
+	void
+RParameterList::_parse()
+{
 	clear();
 	
 	QStrList l;
@@ -91,16 +96,11 @@ RParameterList::parse()
 		p->parse();
 		QList::append(p);
 	}
-	parsed_		= true;
-	assembled_	= false;
 }
 
 	void
-RParameterList::assemble()
+RParameterList::_assemble()
 {
-	parse();
-	if (assembled_) return;
-	rmmDebug("assemble() called");
 	bool firstTime = true;
 	
 	RParameterListIterator it(*this);
@@ -118,9 +118,6 @@ RParameterList::assemble()
 
 		strRep_ += it.current()->asString();
 	}
-	
-	rmmDebug("assembled to: \"" + strRep_ + "\"");
-	assembled_ = true;
 }
 
 	void

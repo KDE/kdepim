@@ -28,22 +28,27 @@
 #include <RMM_Token.h>
 
 RAddressList::RAddressList()
-	:	QList<RAddress>(),
-		RHeaderBody()
+	:	RHeaderBody()
 {
 	rmmDebug("ctor");
-	setAutoDelete(true);
+	list_.setAutoDelete(true);
 	assembled_	= false;
 }
 
 
 RAddressList::RAddressList(const RAddressList & list)
-	:	QList<RAddress>(list),
-		RHeaderBody()
+	:	RHeaderBody(list)
 {
 	rmmDebug("ctor");
-	setAutoDelete(true);
+	list_.setAutoDelete(true);
+	list_ = list.list_;
 	assembled_	= false;
+}
+
+RAddressList::RAddressList(const QCString & s)
+	:	RHeaderBody(s)
+{
+	rmmDebug("ctor");
 }
 
 RAddressList::~RAddressList()
@@ -57,20 +62,44 @@ RAddressList::operator = (const RAddressList & al)
 	rmmDebug("operator =");
     if (this == &al) return *this; // Don't do a = a.
 	
-	QList<RAddress>::operator	= (al);
-	RHeaderBody::operator		= (al);
+	list_ = al.list_;
+	RHeaderBody::operator = (al);
 
 	assembled_	= false;
 	return *this;
 }
+	
+	RAddressList &
+RAddressList::operator = (const QCString & s)
+{
+	RHeaderBody::operator = (s);
+	return *this;
+}
+
+	bool
+RAddressList::operator == (RAddressList & al)
+{
+	parse();
+	if (al.list_.count() != list_.count()) return false;
+	return true; // FIXME: Duh ? This isn't right.
+}
+		
+	RAddress *
+RAddressList::at(int i)
+{
+	return list_.at(i);
+}
+
+	unsigned int
+RAddressList::count()
+{
+	return list_.count();
+}
 
 	void
-RAddressList::parse()
+RAddressList::_parse()
 {
-	rmmDebug("parse() called");
-	if (parsed_) return;
-
-	clear();
+	list_.clear();
 
 	QStrList l;
 	RTokenise(strRep_, ",\n\r", l);
@@ -80,8 +109,8 @@ RAddressList::parse()
 		rmmDebug("new RAddress");
 		RAddress * a = new RAddress;
 		CHECK_PTR(a);
-		a->set(strRep_);
-		append(a);
+		*a = strRep_;
+		list_.append(a);
 		
 	} else {
 
@@ -91,24 +120,18 @@ RAddressList::parse()
 			rmmDebug("new RAddress");
 			RAddress * a = new RAddress;
 			CHECK_PTR(a);
-			a->set(lit.current());
-			append(a);
+			*a = lit.current();
+			list_.append(a);
 		}
 	}
-	
-	parsed_		= true;
-	assembled_	= false;
 }
 
 	void
-RAddressList::assemble()
+RAddressList::_assemble()
 {
-	parse();
-	if (assembled_) return;
-
 	bool firstTime = true;
 	
-	RAddressListIterator it(*this);
+	RAddressListIterator it(list_);
 
 	strRep_ = "";
 	
@@ -123,8 +146,6 @@ RAddressList::assemble()
 
 		strRep_ += it.current()->asString();
 	}
-	
-	assembled_ = true;
 }
 
 
@@ -135,8 +156,7 @@ RAddressList::createDefault()
 	if (count() == 0) {
 		RAddress * a = new RAddress;
 		a->createDefault();
-		rmmDebug("AAAAAAAPPPENDING a");
-		append(a);
+		list_.append(a);
 	}
 }
 

@@ -23,6 +23,7 @@
 
 // KDE includes
 #include <klocale.h>
+#include <krun.h>
 
 // Local includes
 #include <RMM_Message.h>
@@ -336,11 +337,9 @@ EmpathMessageViewWidget::s_URLSelected(const char * url, int button)
 	
 	} else {
 
-		// It's an URL we don't handle. Pass to a KFM.
-
-//		KFM *kfm = new KFM();
-//		kfm->openURL(fixedURL);
-//		delete kfm;
+		// It's an URL we don't handle. Pass to KRun.
+		
+		new KRun(fixedURL);
 	}
 }
 

@@ -39,24 +39,11 @@ class RCte : public RHeaderBody {
 
 	public:
 
-		RCte();
-		RCte(const RCte & cte);
-		RCte(const QCString & s);
-		RCte & operator = (const RCte &);
-		RCte & operator = (const QCString &);
-
-		virtual ~RCte();
-
-		void parse();
-		void assemble();
-		
-		void createDefault();
+#include "generated/RCte_generated.h"
 		
 		RMM::CteType mechanism();
 		void setMechanism(RMM::CteType);
 		
-		const char * className() const { return "RCte"; }
-
 	private:
 
 		RMM::CteType mechanism_;

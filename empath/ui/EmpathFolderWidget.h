@@ -73,6 +73,8 @@ class EmpathFolderWidget : public QListView
 	protected:
 	
 		void dragMoveEvent	(QDragMoveEvent *);
+		void dragEnterEvent	(QDragMoveEvent *);
+		void dragLeaveEvent	(QDragMoveEvent *);
 		void dropEvent		(QDropEvent *);
 
 	private:

@@ -21,6 +21,8 @@
 #ifndef EMPATH_H
 #define EMPATH_H
 
+#include <sys/types.h>
+
 // Qt includes
 #include <qstring.h>
 #include <qobject.h>
@@ -148,6 +150,8 @@ class Empath : public QObject
 		 */
 		EmpathTask		* addTask(const QString & name);
 		
+		void compose(const QString & recipient = QString::null);
+		
 		/**
 		 * Queue a new message for sending later.
 		 */
@@ -228,6 +232,8 @@ class Empath : public QObject
 		void s_setupFilters();
 		
 		void s_about();
+		
+		void s_bugReport();
 	
 	signals:
 	
@@ -238,6 +244,7 @@ class Empath : public QObject
 		void updateFolderLists();
 		void newMailArrived();
 		void newComposer(ComposeType, const EmpathURL &);
+		void newComposer(const QString &);
 		
 		void setupDisplay();
 		void setupIdentity();
@@ -245,6 +252,8 @@ class Empath : public QObject
 		void setupComposing();
 		void setupAccounts();
 		void setupFilters();
+		
+		void bugReport();
 
 		void about();
 		
@@ -279,7 +288,12 @@ inline void Empath::s_setupFilters()			{ emit(setupFilters());		}
 inline void Empath::s_newMailArrived() 			{ emit(newMailArrived());	}
 inline void Empath::s_newTask(EmpathTask * t)	{ emit(newTask(t));			}
 inline void Empath::s_about()					{ emit(about());			}
+inline void Empath::s_bugReport()				{ emit(bugReport());		}
 inline void Empath::filter(const EmpathURL & m)	{ filterList_.filter(m);	}
+
+inline void 
+Empath::compose(const QString & recipient)
+{ emit(newComposer(recipient)); }
 
 inline void 
 Empath::s_compose()

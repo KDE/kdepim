@@ -97,6 +97,26 @@ RHeader::operator = (const RHeader & h)
 	return *this;
 }
 
+	bool
+RHeader::operator == (RHeader & h)
+{
+	parse();
+	h.parse();
+	
+	if (headerBody_ != 0 && h.headerBody_ != 0)
+		return (
+			*headerBody_	== *h.headerBody_	&&
+			headerName_		== h.headerName_	&&
+			headerType_		== h.headerType_);
+	
+	if (headerBody_ == 0 && h.headerBody_ == 0)
+		return (
+			headerName_ == h.headerName_ &&
+			headerType_ == h.headerType_);
+	
+	return false;
+}
+
 	QCString
 RHeader::headerName()
 {
@@ -140,11 +160,8 @@ RHeader::setBody(RHeaderBody * b)
 }
 
 	void
-RHeader::parse()
+RHeader::_parse()
 {
-	rmmDebug("parse() called");
-	if (parsed_) return;
-	rmmDebug("strRep_ == \"" + strRep_ + "\"");
 	int split = strRep_.find(':');
 
 	ASSERT(headerBody_ == 0);
@@ -195,21 +212,11 @@ RHeader::parse()
 	*b = hb;
 	headerBody_ = b;
 	headerBody_->parse();
-
-	rmmDebug("strRep == " + strRep_);
-	parsed_		= true;
-	assembled_	= false;
 }
 
 	void
-RHeader::assemble()
+RHeader::_assemble()
 {
-	rmmDebug("assemble() called");
-	if (assembled_) {
-		rmmDebug("Already assembled");
-		return;
-	}
-
 	if ((int)headerType_ > 42)
 		headerType_ = RMM::HeaderUnknown;
 	
@@ -226,9 +233,6 @@ RHeader::assemble()
 	} else {
 		rmmDebug("headerBody is 0 !!!!");
 	}
-
-	rmmDebug("assembled to: \"" + strRep_ + "\"");
-	assembled_ = true;
 }
 
 	void

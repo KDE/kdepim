@@ -28,6 +28,7 @@
 
 // KDE includes
 #include <kapp.h>
+#include <kglobal.h>
 #include <kconfig.h>
 
 // Local includes
@@ -95,7 +96,7 @@ EmpathEditorProcess::go()
 	struct stat statbuf;
 	fstat(fd, &statbuf);
 
-	KConfig * config = kapp->getConfig();
+	KConfig * config = KGlobal::config();
 	config->setGroup(EmpathConfig::GROUP_COMPOSE);
 	QString externalEditor =
 		config->readEntry(EmpathConfig::KEY_EXTERNAL_EDITOR);

@@ -55,17 +55,8 @@ class REnvelope : public RMessageComponent
 {
 	public:
 
-		REnvelope();
-		REnvelope(const REnvelope & envelope);
-		REnvelope(const QCString & s);
-
-		virtual ~REnvelope();
-		REnvelope & operator = (const REnvelope &);
-		REnvelope & operator = (const QCString &);
-
-		void parse();
-		void assemble();
-
+#include "generated/REnvelope_generated.h"
+		
 		/**
 		 * Find out if this header exists in the envelope.
 		 */
@@ -75,9 +66,6 @@ class REnvelope : public RMessageComponent
 		 */
 		bool has(const QCString & headerName);
 
-		void set(const QCString & s)
-		{ RMessageComponent::set(s); }
-		
 		QCString asString();
 		
 		/**
@@ -88,7 +76,6 @@ class REnvelope : public RMessageComponent
 		void addHeader(RHeader);
 		void addHeader(const QCString &);
 		void _createDefault(RMM::HeaderType t);
-		void createDefault();
 		
 		/**
 		 * @short Provides the 'default' sender.
@@ -166,8 +153,6 @@ class REnvelope : public RMessageComponent
 		RAddressList 		to();
 		RText 				xref();
 		
-		const char * className() const { return "REnvelope"; }
-
 	private:
 
 		RHeaderList headerList_;

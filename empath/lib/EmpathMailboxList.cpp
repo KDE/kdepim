@@ -22,9 +22,9 @@
 #include <qstring.h>
 
 // KDE includes
+#include <kglobal.h>
 #include <kconfig.h>
 #include <klocale.h>
-#include <kapp.h>
 
 // Local includes
 #include "EmpathMailbox.h"
@@ -57,7 +57,7 @@ EmpathMailboxList::append(EmpathMailbox * mailbox)
 	empathDebug("Saving mailbox list count = " + QString().setNum(count()));
 
 	// Save the number of mailboxes into the config.
-	KConfig * config_ = kapp->getConfig();
+	KConfig * config_ = KGlobal::config();
 	
 	// Save the config group.
 	KConfigGroupSaver cgs(config_, EmpathConfig::GROUP_GENERAL);
@@ -132,7 +132,7 @@ EmpathMailboxList::init()
 	void
 EmpathMailboxList::readConfig()
 {
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
 	QStrList l;
@@ -213,7 +213,7 @@ EmpathMailboxList::saveConfig() const
 		it.current()->saveConfig();
 	}
 	
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	c->writeEntry(EmpathConfig::KEY_MAILBOX_LIST, l);

@@ -69,12 +69,20 @@ RParameter::operator = (const RParameter & p)
 	return *this;
 }
 
-	void
-RParameter::parse()   
+	bool
+RParameter::operator == (RParameter & p)
 {
-	if (parsed_) return;
-	rmmDebug("parse() called");
+	parse();
+	p.parse();
+
+	return (
+		attribute_	== p.attribute_ &&
+		value_		== p.value_);
+}
 	
+	void
+RParameter::_parse()   
+{
 	int split = strRep_.find('=');
 	
 	if (split == -1) {
@@ -87,19 +95,12 @@ RParameter::parse()
 	
 	rmmDebug("attribute == \"" + attribute_ + "\"");
 	rmmDebug("value     == \"" + value_ + "\"");
-	
-	parsed_		= true;
-	assembled_	= false;
 }
 
 	void
-RParameter::assemble()
+RParameter::_assemble()
 {
-	parse();
-	if (assembled_) return;
-	rmmDebug("assemble() called");
 	strRep_ = attribute_ + "=" + value_;
-	assembled_ = true;
 }
 
 	void

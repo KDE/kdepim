@@ -27,6 +27,7 @@
 
 // KDE includes
 #include <kconfig.h>
+#include <kglobal.h>
 #include <kapp.h>
 
 // Local includes
@@ -48,7 +49,7 @@ EmpathFolderListItem::EmpathFolderListItem(
 {
 	empathDebug("ctor with mailbox");
 
-	KConfig * c(kapp->getConfig());
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	QStringList l = c->readListEntry(EmpathConfig::KEY_FOLDER_ITEMS_OPEN, ',');
@@ -84,7 +85,7 @@ EmpathFolderListItem::EmpathFolderListItem(
 {
 	empathDebug("ctor with folder \"" + url_.asString() + "\"");
 
-	KConfig * c(kapp->getConfig());
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 
 	QStringList l = c->readListEntry(EmpathConfig::KEY_FOLDER_ITEMS_OPEN);
@@ -134,24 +135,30 @@ EmpathFolderListItem::~EmpathFolderListItem()
 	QString
 EmpathFolderListItem::key(int column, bool) const
 {
-	QString tmpString;
-	
-	if (url_.hasFolder()) {
-	
-		EmpathFolder * f(empath->folder(url_));
-		
-		if (f != 0)
-			tmpString.sprintf("%08i", f->id());
-	
-	} else {
-	
-		EmpathMailbox * m(empath->mailbox(url_));
-		
-		if (m != 0)
-			tmpString.sprintf("%08i", m->id());
+	if (!url_.hasFolder() && column != 1) {
+		return text(column);
 	}
-
-	return tmpString;
+	
+	KConfig * c(KGlobal::config());
+		
+	c->setGroup(EmpathConfig::GROUP_SENDING);
+		
+	if (url_ == c->readEntry(EmpathConfig::KEY_INBOX_FOLDER))
+		return "0";
+		
+	if (url_ == c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER))
+		return "1";
+		
+	if (url_ == c->readEntry(EmpathConfig::KEY_SENT_FOLDER))
+		return "2";
+		
+	if (url_ == c->readEntry(EmpathConfig::KEY_DRAFTS_FOLDER))
+		return "3";
+		
+	if (url_ == c->readEntry(EmpathConfig::KEY_TRASH_FOLDER))
+		return "4";
+	
+	return text(column);
 }
 
 	void
@@ -161,7 +168,7 @@ EmpathFolderListItem::setup()
 	
 	widthChanged();
 	
-	int th = QFontMetrics(empathGeneralFont()).height();
+	int th = QFontMetrics(kapp->generalFont()).height();
 	
 	if (!pixmap(0))
 		setHeight(th);

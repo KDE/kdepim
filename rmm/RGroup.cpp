@@ -73,6 +73,18 @@ RGroup::operator = (const QCString & s)
 	return *this;
 }
 
+	bool
+RGroup::operator == (RGroup & g)
+{
+	parse();
+	g.parse();
+
+	return (
+		mailboxList_	== g.mailboxList_	&&
+		name_			== g.name_			&&
+		phrase_			== g.phrase_);
+}
+
 	QDataStream &
 operator >> (QDataStream & s, RGroup & group)
 {
@@ -126,15 +138,13 @@ RGroup::mailboxList()
 }
 
 	void
-RGroup::parse()
+RGroup::_parse()
 {
-	rmmDebug("parse() called");
 }
 
 	void
-RGroup::assemble()
+RGroup::_assemble()
 {
-	rmmDebug("assemble() called");
 }
 
 	void

@@ -26,21 +26,6 @@ EmpathComposeWindow::setupMenuBar()
 	
 	fileMenu_->insertSeparator();
 
-	fileMenu_->insertItem(empathIcon("mini-save.png"), i18n("Save &As"),
-		this, SLOT(s_fileSaveAs()));
-	
-	fileMenu_->insertSeparator();
-	
-	fileMenu_->insertItem(i18n("Attach &File"),
-		this, SLOT(s_fileAttachFile()));
-	
-	fileMenu_->insertSeparator();
-
-	fileMenu_->insertItem(empathIcon("empath-print.png"), i18n("&Print"),
-		this, SLOT(s_filePrint()));
-	
-	fileMenu_->insertSeparator();
-
 	fileMenu_->insertItem(empathIcon("blank.png"), i18n("&Close"),
 		this, SLOT(s_fileClose()));
 
@@ -109,11 +94,11 @@ EmpathComposeWindow::setupMenuBar()
 	helpMenu_->insertItem(i18n("About &KDE"),
 			kapp, SLOT(aboutKDE()));
 	
-	menu->insertItem(i18n("&File"), fileMenu_);
-	menu->insertItem(i18n("&Edit"), editMenu_);
-	menu->insertItem(i18n("&Message"), messageMenu_);
-	menu->insertSeparator();
-	menu->insertItem(i18n("&Help"), helpMenu_);
+	menuBar()->insertItem(i18n("&File"), fileMenu_);
+	menuBar()->insertItem(i18n("&Edit"), editMenu_);
+	menuBar()->insertItem(i18n("&Message"), messageMenu_);
+	menuBar()->insertSeparator();
+	menuBar()->insertItem(i18n("&Help"), helpMenu_);
 }
 
 

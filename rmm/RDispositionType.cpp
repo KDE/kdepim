@@ -18,20 +18,23 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <qstring.h>
-
-#include <RMM_Enum.h>
-#include <RMM_Token.h>
-#include <RMM_Parameter.h>
 #include <RMM_DispositionType.h>
+#include <RMM_Token.h>
 
 RDispositionType::RDispositionType()
+	:	RHeaderBody()
 {
 	rmmDebug("ctor");
 }
 
 RDispositionType::RDispositionType(const RDispositionType & t)
 	:	RHeaderBody(t)
+{
+	rmmDebug("ctor");
+}
+
+RDispositionType::RDispositionType(const QCString & s)
+	:	RHeaderBody(s)
 {
 	rmmDebug("ctor");
 }
@@ -51,6 +54,24 @@ RDispositionType::operator = (const RDispositionType & t)
 	return *this;
 }
 
+	RDispositionType &
+RDispositionType::operator = (const QCString & s)
+{
+	RHeaderBody::operator = (s);
+	return *this;
+}
+
+	bool
+RDispositionType::operator == (RDispositionType & dt)
+{
+	parse();
+	dt.parse();
+	
+	return (
+		parameterList_	== dt.parameterList_	&&
+		dispType_		== dt.dispType_			&&
+		filename_		== dt.filename_);
+}
 
 RDispositionType::~RDispositionType()
 {
@@ -62,11 +83,6 @@ RDispositionType::type()
 {
 	parse();
     return dispType_;
-}
-
-	void
-RDispositionType::set(RMM::DispType t)
-{
 }
 
 	QCString
@@ -86,12 +102,12 @@ RDispositionType::setFilename(const QCString & s)
 }
 
 	void
-RDispositionType::parse()
+RDispositionType::_parse()
 {
 }
 
 	void
-RDispositionType::assemble()
+RDispositionType::_assemble()
 {
 }
 	

@@ -62,6 +62,20 @@ RMimeType::operator = (const RMimeType & t)
 	return *this;
 }
 
+	bool
+RMimeType::operator == (RMimeType & t)
+{
+	parse();
+	t.parse();
+	
+	return (
+		boundary_		== t.boundary_	&&
+		name_			== t.name_		&&
+		type_			== t.type_		&&
+		subType_		== t.subType_	&&
+		parameterList_	== t.parameterList_);
+}
+
 	RMM::MimeType
 RMimeType::type()
 {
@@ -120,15 +134,13 @@ RMimeType::setName(const QCString & s)
 }
 
 	void
-RMimeType::parse()
+RMimeType::_parse()
 {
-	rmmDebug("parse() called");
 }
 
 	void
-RMimeType::assemble()
+RMimeType::_assemble()
 {
-	rmmDebug("assemble() called");
 }
 
 	void

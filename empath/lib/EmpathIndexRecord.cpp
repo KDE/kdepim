@@ -115,12 +115,12 @@ EmpathIndexRecord::niceDate(bool twelveHour)
 	QString dts;
 	
 	// If the dates differ, then print the day of week..
-	if (then.daysTo(now) != 0)
+	if (then.daysTo(now) != 0) {
 		dts += then.date().dayName(then.date().dayOfWeek()) + " ";
-	
 	// Print the day of month.
-	dts += QString().setNum(then.date().day()) + " ";
-		
+		dts += QString().setNum(then.date().day()) + " ";
+	}
+
 	// If the months differ, print month name.
 	if (then.date().month() != now.date().month())
 		dts += then.date().monthName(then.date().month()) + " ";

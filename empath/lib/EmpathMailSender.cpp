@@ -18,9 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+// KDE includes
+#include <kglobal.h>
 #include <kconfig.h>
-#include <kapp.h>
 
+// Local includes
 #include "EmpathConfig.h"
 #include "EmpathMailSender.h"
 #include "EmpathFolder.h"
@@ -54,7 +56,7 @@ EmpathMailSender::send(RMessage & message)
 	void
 EmpathMailSender::sendQueued()
 {
-	KConfig * c(kapp->getConfig());
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_SENDING);
 	
 	EmpathURL queueURL(c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER));
@@ -116,7 +118,7 @@ EmpathMailSender::sendQueued()
 	void
 EmpathMailSender::queue(RMessage & message)
 {
-	KConfig * c(kapp->getConfig());
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_SENDING);
 	
 	EmpathURL queueURL(c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER));

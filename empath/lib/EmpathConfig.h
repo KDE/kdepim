@@ -77,6 +77,7 @@ class EmpathConfig
 		static const QString		KEY_SIG_PATH;
 		
 		// COMPOSING
+		static const QString		KEY_EXTRA_HEADERS;
 		static const QString		KEY_PHRASE_REPLY_SENDER;
 		static const QString		KEY_PHRASE_REPLY_ALL;
 		static const QString		KEY_PHRASE_FORWARD;
@@ -95,6 +96,7 @@ class EmpathConfig
 		static const QString		KEY_CC_OTHER;
 		static const QString		KEY_CC_OTHER_ADDRESS;
 		static const QString		KEY_SEND_POLICY;
+		static const QString		KEY_INBOX_FOLDER;
 		static const QString		KEY_QUEUE_FOLDER;
 		static const QString		KEY_SENT_FOLDER;
 		static const QString		KEY_TRASH_FOLDER;

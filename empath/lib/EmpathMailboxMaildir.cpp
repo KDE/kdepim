@@ -29,8 +29,8 @@
 #include <qapplication.h>
 
 // KDE includes
+#include <kglobal.h>
 #include <klocale.h>
-#include <kapp.h>
 #include <kconfig.h>
 
 // Local includes
@@ -159,7 +159,7 @@ EmpathMailboxMaildir::saveConfig()
 {
 	empathDebug("saveConfig() called - my name is " + url_.asString());
 	
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_MAILBOX + url_.mailboxName());
 	
 	c->writeEntry(EmpathConfig::KEY_MAILBOX_TYPE, type_);
@@ -175,7 +175,7 @@ EmpathMailboxMaildir::readConfig()
 {
 	empathDebug("readConfig() called");
 
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_MAILBOX + url_.mailboxName());
 	
 	checkMail_ = c->readUnsignedNumEntry(EmpathConfig::KEY_CHECK_MAIL);

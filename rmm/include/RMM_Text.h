@@ -31,19 +31,8 @@ class RText : public RHeaderBody {
 
 	public:
 
-		RText();
-		RText(const RText &);
-		RText(const QCString &);
-		RText & operator = (const RText &);
+#include "generated/RText_generated.h"		
 
-		virtual ~RText();
-
-		void parse();
-		void assemble();
-
-		const char * className() const { return "RText"; }
-		
-		void createDefault();
 };
 
 #endif //RTEXT_H

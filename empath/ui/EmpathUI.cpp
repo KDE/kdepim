@@ -19,6 +19,9 @@
 */
 
 // KDE includes
+#include <kglobal.h>
+#include <kconfig.h>
+#include <kiconloader.h>
 #include <kapp.h>
 
 // Local includes
@@ -44,9 +47,21 @@ EmpathUI::EmpathUI()
 {
 	empathDebug("ctor");
 	
+	KConfig * c(KGlobal::config());
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
+	
+	QString iconSetPath(c->readEntry(EmpathConfig::KEY_ICON_SET, "standard"));
+
+	KGlobal::iconLoader()->insertDirectory(0, kapp->kde_datadir() + "/empath/pics/" + iconSetPath);
+	KGlobal::iconLoader()->insertDirectory(0, kapp->kde_datadir() + "/empath/pics/mime");
+	
 	QObject::connect(
 		empath,	SIGNAL(newComposer(ComposeType, const EmpathURL &)),
 		this,	SLOT(s_newComposer(ComposeType, const EmpathURL &)));
+	
+	QObject::connect(
+		empath,	SIGNAL(newComposer(const QString &)),
+		this,	SLOT(s_newComposer(const QString &)));
 	
 	QObject::connect(
 		empath,	SIGNAL(setupDisplay()),
@@ -75,6 +90,10 @@ EmpathUI::EmpathUI()
 	QObject::connect(
 		empath,	SIGNAL(about()),
 		this,	SLOT(s_about()));
+		
+	QObject::connect(
+		empath,	SIGNAL(bugReport()),
+		this,	SLOT(s_bugReport()));
 	
 	EmpathMainWindow * mainWindow = new EmpathMainWindow("mainWindow");
 	kapp->setMainWidget(mainWindow);
@@ -96,10 +115,20 @@ EmpathUI::s_newComposer(ComposeType t, const EmpathURL & m)
 	c->show();
 }
 
+	void	
+EmpathUI::s_newComposer(const QString & recipient)
+{
+	empathDebug("s_newComposer(" + recipient + ") called");
+
+	EmpathComposeWindow * c = new EmpathComposeWindow(recipient);
+	CHECK_PTR(c);
+	c->show();
+}
+
 	void
 EmpathUI::_showTipOfTheDay() const
 {
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
@@ -153,5 +182,13 @@ EmpathUI::s_setupFilters()
 EmpathUI::s_about()
 {
 	EmpathAboutBox::create();
+}
+
+	void
+EmpathUI::s_bugReport()
+{
+	EmpathComposeWindow * c = new EmpathComposeWindow();
+	CHECK_PTR(c);
+	c->bugReport();
 }
 

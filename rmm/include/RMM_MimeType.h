@@ -33,18 +33,8 @@
 class RMimeType : public RHeaderBody {
 
 	public:
-
-		RMimeType();
-		RMimeType(const RMimeType & mt);
-		RMimeType(const QCString & s) : RHeaderBody(s) { }
-
-		virtual ~RMimeType();
-
-		RMimeType & operator = (const RMimeType &);
-
-		void parse();
-		void assemble();
-		void createDefault();
+		
+#include "generated/RMimeType_generated.h"
 
 		QCString boundary();
 		QCString name();
@@ -59,8 +49,6 @@ class RMimeType : public RHeaderBody {
 
 		void setBoundary(const QCString & boundary);
 		void setName(const QCString & name);
-
-		const char * className() const { return "RMimeType"; }
 
 	private:
 

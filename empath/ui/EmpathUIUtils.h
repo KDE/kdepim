@@ -31,9 +31,5 @@
 
 QPixmap empathMimeIcon(const QString & name);
 QPixmap empathIcon(const QString & name);
-QFont	empathFixedFont();
-QFont	empathGeneralFont();
-QColor	empathTextColour();
-QColor	empathWindowColour();
 
 #endif

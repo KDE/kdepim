@@ -55,17 +55,30 @@ RText::operator = (const RText & r)
 	return *this;
 }
 
-	void
-RText::parse()
+	RText &
+RText::operator = (const QCString & s)
 {
-	rmmDebug("parse() called");
+	RHeaderBody::operator = (s);
+	return *this;
+}
+
+	bool
+RText::operator == (RText & t)
+{
+	parse();
+	t.parse();
+
+	return (RHeaderBody::operator == (t));
 }
 
 	void
-RText::assemble()
+RText::_parse()
 {
-	rmmDebug("assemble() called");
-	rmmDebug("strRep_ = \"" + strRep_ + "\"");
+}
+
+	void
+RText::_assemble()
+{
 }
 
 	void

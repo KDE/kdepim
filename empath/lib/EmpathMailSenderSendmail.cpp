@@ -22,6 +22,7 @@
 #include <qcstring.h>
 
 // KDE includes
+#include <kglobal.h>
 #include <kconfig.h>
 #include <kapp.h>
 
@@ -69,7 +70,7 @@ EmpathMailSenderSendmail::sendOne(RMessage & message)
 
 	sendmailProcess_.clearArguments();
 
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_SENDING);
 
 	QString sendmailLocation = c->readEntry(EmpathConfig::KEY_SENDMAIL_LOCATION);
@@ -174,7 +175,7 @@ EmpathMailSenderSendmail::sendmailReceivedStderr(
 	void
 EmpathMailSenderSendmail::saveConfig()
 {
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_SENDING);
 	c->writeEntry(EmpathConfig::KEY_SENDMAIL_LOCATION, sendmailLocation_);
 }
@@ -182,7 +183,7 @@ EmpathMailSenderSendmail::saveConfig()
 	void
 EmpathMailSenderSendmail::readConfig()
 {
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_SENDING);
 	sendmailLocation_ =
 		c->readEntry(EmpathConfig::KEY_SENDMAIL_LOCATION, "/usr/lib/sendmail");

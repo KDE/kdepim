@@ -32,33 +32,16 @@
 class RContentType : public RHeaderBody {
 
 	public:
-
-		RContentType();
-		RContentType(const RContentType & ct);
-		RContentType(const QCString & s);
-		RContentType & operator = (const RContentType & ct);
 		
-//		friend QDataStream & operator >> (
-//			QDataStream & s, RContentType & ct);
-		
-//		friend QDataStream & operator << (
-//			QDataStream & s, const RContentType & ct);
-
-		virtual ~RContentType();
-
-		void parse();
-		void assemble();
-
-		void createDefault();
+#include "generated/RContentType_generated.h"
 
 		void setType(const QCString &);
 		void setSubType(const QCString &);
 		void setParameterList(RParameterList &);
+		
 		QCString type();
 		QCString subType();
 		RParameterList & parameterList();
-		
-		const char * className() const { return "RContentType"; }
 
 	private:
 

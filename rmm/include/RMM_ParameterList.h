@@ -37,20 +37,9 @@ typedef QListIterator<RParameter> RParameterListIterator;
 class RParameterList : public QList<RParameter>, public RHeaderBody {
 
 	public:
+		
+#include "generated/RParameterList_generated.h"
 
-		RParameterList();
-		RParameterList(const RParameterList &);
-		RParameterList(const QCString &);
-		RParameterList & operator = (const RParameterList &);
-		RParameterList & operator = (const QCString &);
-
-		virtual ~RParameterList();
-
-		void parse();
-		void assemble();
-		void createDefault();
-
-		const char * className() const { return "RParameterList"; }
 };
 
 #endif //RPARAMETERLIST_H

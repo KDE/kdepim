@@ -22,6 +22,7 @@
 #include <klocale.h>
 #include <klineeditdlg.h>
 #include <kapp.h>
+#include <kglobal.h>
 #include <kconfig.h>
 #include <kquickhelp.h>
 
@@ -409,7 +410,7 @@ EmpathAccountsSettingsDialog::s_OK()
 {
 	hide();
 	s_apply();
-	kapp->getConfig()->sync();
+	KGlobal::config()->sync();
 	delete this;
 }
 
@@ -424,8 +425,8 @@ EmpathAccountsSettingsDialog::s_apply()
 {
 	if (applied_) {
 		//pb_apply_->setText(i18n("&Apply"));
-		kapp->getConfig()->rollback(true);
-		kapp->getConfig()->reparseConfiguration();
+		KGlobal::config()->rollback(true);
+		KGlobal::config()->reparseConfiguration();
 		applied_ = false;
 	} else {
 	//	pb_apply_->setText(i18n("&Revert"));
@@ -439,7 +440,7 @@ EmpathAccountsSettingsDialog::s_apply()
 EmpathAccountsSettingsDialog::s_cancel()
 {
 	if (!applied_)
-		kapp->getConfig()->rollback(true);
+		KGlobal::config()->rollback(true);
 	delete this;
 }
 

@@ -32,36 +32,17 @@
 class RMessageID : public RHeaderBody {
 
 	public:
-
-		RMessageID();
-		RMessageID(const RMessageID &);
-		RMessageID(const QCString & s);
-		bool operator == (RMessageID &);
-		bool operator != (RMessageID &);
-		RMessageID & operator = (const RMessageID &);
-		RMessageID & operator = (const QCString &);
-
-		friend QDataStream & operator >> (
-			QDataStream & s, RMessageID & mid);
 		
-		friend QDataStream & operator << (
-			QDataStream & s, RMessageID & mid);
-		
-		virtual ~RMessageID();
+#include "generated/RMessageID_generated.h"
 
-		void parse();
-		void assemble();
-		
-		void createDefault();
+		friend QDataStream & operator >> (QDataStream &, RMessageID &);
+		friend QDataStream & operator << (QDataStream &, RMessageID &);
 
-		QCString localPart();
-		QCString domain();
-		void setLocalPart(const QCString & localPart);
-		void setDomain(const QCString & domain);
+		QCString	localPart();
+		QCString	domain();
+		void		setLocalPart(const QCString & localPart);
+		void		setDomain(const QCString & domain);
 		
-		const char * className() const { return "RMessageID"; }
-		
-
 	private:
 
 		static int seq_;

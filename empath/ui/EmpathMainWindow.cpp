@@ -26,6 +26,8 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <kmsgbox.h>
+#include <kconfig.h>
+#include <kglobal.h>
 #include <kapp.h>
 
 // Local includes
@@ -50,7 +52,7 @@ EmpathMainWindow::EmpathMainWindow(const char * name)
 	// Resize to previous size.
 	// XXX: Use session management instead once it's been reworked.
 	
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	int x = c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_X_SIZE, 600);
@@ -71,9 +73,9 @@ EmpathMainWindow::EmpathMainWindow(const char * name)
 
 	setView(mainWidget_, false);
 	
-	setupMenuBar();
-	setupToolBar();
-	setupStatusBar();
+	_setupMenuBar();
+	_setupToolBar();
+	_setupStatusBar();
 	
 	setCaption(kapp->getCaption());
 
@@ -86,7 +88,7 @@ EmpathMainWindow::~EmpathMainWindow()
 {
 	empathDebug("dtor");
 
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	c->writeEntry(EmpathConfig::KEY_MAIN_WINDOW_X_SIZE, width());
@@ -94,7 +96,7 @@ EmpathMainWindow::~EmpathMainWindow()
 }
 
 	void
-EmpathMainWindow::setupToolBar()
+EmpathMainWindow::_setupToolBar()
 {
 	empathDebug("setting up tool bar");
 
@@ -104,7 +106,7 @@ EmpathMainWindow::setupToolBar()
 	KToolBar * tb = new KToolBar(this, "tooly", i + 4 );
 	CHECK_PTR(tb);
 
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	KToolBar::BarPosition pos =
@@ -147,7 +149,7 @@ EmpathMainWindow::setupToolBar()
 }
 
 	void
-EmpathMainWindow::setupStatusBar()
+EmpathMainWindow::_setupStatusBar()
 {
 	empathDebug("setting up status bar");
 	status_->message("Ready");
@@ -164,6 +166,13 @@ EmpathMainWindow::queryExit()
 	s_fileQuit();
 
 	return false;
+}
+
+	void
+EmpathMainWindow::closeEvent(QCloseEvent * e)
+{
+	e->accept();
+	s_fileQuit();
 }
 
 // File menu slots
@@ -227,56 +236,50 @@ EmpathMainWindow::s_folderDelete()
 	void
 EmpathMainWindow::s_messageNew()
 {
-	empathDebug("s_messageNew called");
 	empath->s_compose();
 }
 
 	void
 EmpathMainWindow::s_messageReply()
 {
-	empathDebug("s_messageReply called");
+	if (!_messageSelected()) return;
 	empath->s_reply(messageListWidget_->firstSelectedMessage());
 }
 
 	void
 EmpathMainWindow::s_messageReplyAll()
 {
-	empathDebug("s_messageReplyAll called");
+	if (!_messageSelected()) return;
 	empath->s_replyAll(messageListWidget_->firstSelectedMessage());
 }
 
 	void
 EmpathMainWindow::s_messageForward()
 {
-	empathDebug("s_messageForward called");
+	if (!_messageSelected()) return;
 	empath->s_forward(messageListWidget_->firstSelectedMessage());
 }
 
 	void
 EmpathMainWindow::s_messageBounce()
 {
-	empathDebug("s_messageBounce called");
+	if (!_messageSelected()) return;
 	empath->s_bounce(messageListWidget_->firstSelectedMessage());
 }
 
 	void
 EmpathMainWindow::s_messageDelete()
 {
-	empathDebug("s_messageDelete called");
+	if (!_messageSelected()) return;
 	empath->remove(messageListWidget_->firstSelectedMessage());
 }
 
 	void
 EmpathMainWindow::s_messageSaveAs()
 {
-	empathDebug("s_messageSaveAs called");
+	if (!_messageSelected()) return;
 	
 	RMessage * m = _getFirstSelectedMessage();
-	
-	if (m == 0) {
-		KMsgBox::message(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
-		return;
-	}
 	
 	RMessage message(*m);
 
@@ -311,14 +314,9 @@ EmpathMainWindow::s_messageSaveAs()
 	void
 EmpathMainWindow::s_messageCopyTo()
 {
-	empathDebug("s_messageCopyTo called");
+	if (!_messageSelected()) return;
 
 	RMessage * m(_getFirstSelectedMessage());
-	
-	if (m == 0) {
-		KMsgBox::message(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
-		return;
-	}
 	
 	RMessage message(*m);
 	
@@ -372,21 +370,21 @@ EmpathMainWindow::s_messageMoveTo()
 	void
 EmpathMainWindow::s_messagePrint()
 {
-	empathDebug("s_messagePrint called");
+	if (!_messageSelected()) return;
 //	mainWidget_->messageViewWidget()->s_print();
 }
 
 	void
 EmpathMainWindow::s_messageFilter()
 {
-	empathDebug("s_messageFilter called");
+	if (!_messageSelected()) return;
 	empath->filter(messageListWidget_->firstSelectedMessage());
 }
 
 	void
 EmpathMainWindow::s_messageView()
 {
-	empathDebug("s_messageView called");
+	if (!_messageSelected()) return;
 	
 	EmpathMessageViewWindow * messageViewWindow =
 		new EmpathMessageViewWindow(
@@ -424,7 +422,7 @@ EmpathMainWindow::clearStatusMessage()
 	void
 EmpathMainWindow::s_toolbarMoved(BarPosition pos)
 {
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	c->writeEntry(EmpathConfig::KEY_MAIN_WINDOW_TOOLBAR_POSITION, (int)pos);
 }
@@ -478,4 +476,18 @@ EmpathMainWindow::s_editInvertSelection()
 	messageListWidget_->selectInvert();
 }
 
+	bool
+EmpathMainWindow::_messageSelected()
+{
+	RMessage * m(_getFirstSelectedMessage());
+	
+	if (m == 0) {
+		KMsgBox::message(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
+		return false;
+	}
+	
+	return true;
+}
+
 #include "EmpathMainWindowMenus.cpp"
+

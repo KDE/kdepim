@@ -24,6 +24,7 @@
 
 // KDE includes
 #include <klocale.h>
+#include <kglobal.h>
 #include <kconfig.h>
 #include <kapp.h>
 #include <kquickhelp.h>
@@ -414,7 +415,7 @@ EmpathDisplaySettingsDialog::s_chooseFixedFont()
 	void
 EmpathDisplaySettingsDialog::saveData()
 {
-	KConfig * c(kapp->getConfig());
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 #define CWE c->writeEntry
 	CWE( EmpathConfig::KEY_FIXED_FONT,			l_sampleFixed_->font());
@@ -436,24 +437,24 @@ EmpathDisplaySettingsDialog::saveData()
 	void
 EmpathDisplaySettingsDialog::loadData()
 {
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	QFont font; QColor col;
 
-	font = empathFixedFont();
+	font = kapp->fixedFont();
 	
 	l_sampleFixed_->setFont(
 		c->readFontEntry(EmpathConfig::KEY_FIXED_FONT, &font));
 	
 	cb_underlineLinks_->setChecked(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS, true));
 	
-	col = empathWindowColour();
+	col = kapp->palette().color(QPalette::Normal, QColorGroup::Base);
 	
 	kcb_quoteColourOne_->setColor(
 		c->readColorEntry(EmpathConfig::KEY_QUOTE_COLOUR_ONE, &col));
 	
-	col = empathTextColour();
+	col = kapp->palette().color(QPalette::Normal, QColorGroup::Text);
 	
 	kcb_quoteColourTwo_->setColor(
 		c->readColorEntry(EmpathConfig::KEY_QUOTE_COLOUR_TWO, &col));
@@ -499,11 +500,9 @@ EmpathDisplaySettingsDialog::loadData()
 	
 	QStringList el = d.entryList();
 
-	QValueListConstIterator<QString> it = el.begin();
-
-	for (; it != el.end() ; ++it) {
+	for (QStringList::ConstIterator it = el.begin(); it != el.end() ; ++it) {
 		
-		if (it->at(0) == ".")
+		if ((*it).at(0) == ".")
 			continue;
 		
 		if (*it == "mime")
@@ -525,7 +524,7 @@ EmpathDisplaySettingsDialog::s_OK()
 	hide();
 	if (!applied_)
 		s_apply();
-	kapp->getConfig()->sync();
+	KGlobal::config()->sync();
 	delete this;
 }
 
@@ -540,8 +539,8 @@ EmpathDisplaySettingsDialog::s_apply()
 {
 	if (applied_) {
 		pb_apply_->setText(i18n("&Apply"));
-		kapp->getConfig()->rollback(true);
-		kapp->getConfig()->reparseConfiguration();
+		KGlobal::config()->rollback(true);
+		KGlobal::config()->reparseConfiguration();
 		loadData();
 		applied_ = false;
 	} else {
@@ -555,7 +554,7 @@ EmpathDisplaySettingsDialog::s_apply()
 	void
 EmpathDisplaySettingsDialog::s_default()
 {
-	l_sampleFixed_->setFont(empathFixedFont());
+	l_sampleFixed_->setFont(kapp->fixedFont());
 	cb_underlineLinks_->setChecked(true);
 	kcb_quoteColourOne_->setColor(Qt::darkBlue);
 	kcb_quoteColourTwo_->setColor(Qt::darkGreen);
@@ -574,7 +573,7 @@ EmpathDisplaySettingsDialog::s_default()
 EmpathDisplaySettingsDialog::s_cancel()
 {
 	if (!applied_)
-		kapp->getConfig()->rollback(true);
+		KGlobal::config()->rollback(true);
 	delete this;
 }
 

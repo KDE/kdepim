@@ -7,7 +7,7 @@ bin_PROGRAMS = empath
 empath_SOURCES = main.cpp
 
 empath_LDADD = \
-	ui/libempathui.a lib/libempath.a rmm/librmm.a \
+	./ui/libempathui.a ./lib/libempath.a ./rmm/librmm.a \
 	-lkhtml -lkfile -lkdeui -lkdecore -lqt
 
 empath_LDFLAGS = $(all_libraries) $(KDE_RPATH)

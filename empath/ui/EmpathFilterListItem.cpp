@@ -24,6 +24,9 @@
 #include <qfontmetrics.h>
 #include <qpixmap.h>
 
+// KDE includes
+#include <kapp.h>
+
 // Local includes
 #include "EmpathUIUtils.h"
 #include "EmpathFilterListItem.h"
@@ -60,7 +63,7 @@ EmpathFilterListItem::setup()
 	
 	widthChanged();
 	int ph = pixmap(0)->height();
-	int th = QFontMetrics(empathGeneralFont()).height();
+	int th = QFontMetrics(kapp->generalFont()).height();
 	setHeight((ph > th ? ph : th) + 8);
 }
 

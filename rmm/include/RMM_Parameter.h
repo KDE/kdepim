@@ -34,28 +34,14 @@ class RParameter : public RMessageComponent {
 
 	public:
 
-		RParameter();
-		RParameter(const RParameter & p);
-		RParameter(const QCString & s);
-
-		virtual ~RParameter();
-
-		RParameter & operator = (const RParameter &);
-		RParameter & operator = (const QCString &);
-
-		void parse();
-		void assemble();
-
+#include "generated/RParameter_generated.h"
+		
 		QCString attribute();
 		QCString value();
 
 		void setAttribute	(const QCString & attribute);
 		void setValue		(const QCString & value);
 		
-		void createDefault();
-		
-		const char * className() const { return "RParameter"; }
-
 	private:
 
 		QCString attribute_;

@@ -35,36 +35,18 @@ class RGroup : public RAddress {
 
 	public:
 
-		RGroup();
-		RGroup(const RGroup & group);
-		RGroup(const QCString & s);
-		RGroup & operator = (const RGroup & group);
-		RGroup & operator = (const QCString & s);
-
-		friend QDataStream & operator >> (
-			QDataStream & s, RGroup & group);
+#include "generated/RGroup_generated.h"
 		
-		friend QDataStream & operator << (
-			QDataStream & s, RGroup & group);
-
-		virtual ~RGroup();
-
-		void parse();
-		void assemble();
-
-		void createDefault();
+		friend QDataStream & operator >> (QDataStream & s, RGroup & group);
+		friend QDataStream & operator << (QDataStream & s, RGroup & group);
 
 		QCString name();
-
 		QCString phrase();
 
 		void setName(const QCString & name);
-
 		void setPhrase(const QCString & phrase);
 
 		RMailboxList & mailboxList();
-
-		const char * className() const { return "RGroup"; }
 
 	private:
 

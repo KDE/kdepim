@@ -23,6 +23,7 @@
 // KDE includes
 #include <klocale.h>
 #include <kconfig.h>
+#include <kglobal.h>
 #include <kapp.h>
 #include <kquickhelp.h>
 
@@ -46,7 +47,6 @@ EmpathSendingSettingsDialog::create()
 	EmpathSendingSettingsDialog * d = new EmpathSendingSettingsDialog(0, 0);
 	CHECK_PTR(d);
 	d->show();
-	kapp->processEvents();
 	d->loadData();
 }
 
@@ -372,6 +372,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 
 	// Layouts
 	
+	empathDebug("Doing layout");
 	topLevelLayout_				= new QGridLayout(this, 4, 1, 10, 10);
 	CHECK_PTR(topLevelLayout_);
 
@@ -400,9 +401,6 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	
 	copiesGroupLayout_		= new QGridLayout(w_copies_,	1, 2, 0, 10);
 	CHECK_PTR(copiesGroupLayout_);
-
-	copiesGroupLayout_->setColStretch(0, 1);
-	copiesGroupLayout_->setColStretch(1, 1);
 
 	topLevelLayout_->addWidget(rgb_queuing_,	0, 0);
 	topLevelLayout_->addWidget(rgb_server_,		1, 0);
@@ -435,12 +433,13 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	
 	setMinimumSize(minimumSizeHint());
 	resize(minimumSizeHint());
+	empathDebug("Done layout");
 }
 
 	void
 EmpathSendingSettingsDialog::saveData()
 {
-	KConfig * c	= kapp->getConfig();
+	KConfig * c	= KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_SENDING);
 	
 #define CWE c->writeEntry
@@ -479,7 +478,7 @@ EmpathSendingSettingsDialog::saveData()
 	void
 EmpathSendingSettingsDialog::loadData()
 {
-	KConfig * c	= kapp->getConfig();
+	KConfig * c	= KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_SENDING);
 	
 	OutgoingServerType t =
@@ -523,7 +522,7 @@ EmpathSendingSettingsDialog::s_OK()
 	hide();
 	if (!applied_)
 		s_apply();
-	kapp->getConfig()->sync();
+	KGlobal::config()->sync();
 	delete this;
 }
 
@@ -538,8 +537,8 @@ EmpathSendingSettingsDialog::s_apply()
 {
 	if (applied_) {
 		pb_apply_->setText(i18n("&Apply"));
-		kapp->getConfig()->rollback(true);
-		kapp->getConfig()->reparseConfiguration();
+		KGlobal::config()->rollback(true);
+		KGlobal::config()->reparseConfiguration();
 		loadData();
 		applied_ = false;
 	} else {
@@ -567,7 +566,7 @@ EmpathSendingSettingsDialog::s_default()
 EmpathSendingSettingsDialog::s_cancel()
 {
 	if (!applied_)
-		kapp->getConfig()->rollback(true);
+		KGlobal::config()->rollback(true);
 	delete this;
 }
 

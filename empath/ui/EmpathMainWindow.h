@@ -102,6 +102,10 @@ class EmpathMainWindow : public KTMainWindow
 		
 		// Debugging
 		void s_dumpWidgetList();
+		
+	protected:
+		
+		void closeEvent(QCloseEvent *);
 
 	private:
 	
@@ -128,15 +132,12 @@ class EmpathMainWindow : public KTMainWindow
 		EmpathAboutBox				* aboutBox_;
 
 		// Setup methods
-		void setupMenuBar();
-
-		void setupToolBar();
-
-		void setupStatusBar();
-
-		// Other methods
+		void _setupMenuBar();
+		void _setupToolBar();
+		void _setupStatusBar();
 
 		bool queryExit();
+		bool _messageSelected();
 		
 		RMessage * _getFirstSelectedMessage() const;
 };

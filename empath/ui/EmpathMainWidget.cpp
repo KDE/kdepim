@@ -21,6 +21,10 @@
 // Qt includes
 #include <qheader.h>
 
+// KDE includes
+#include <kconfig.h>
+#include <kglobal.h>
+
 // Local includes
 #include "EmpathConfig.h"
 #include "EmpathMainWidget.h"
@@ -64,7 +68,7 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name)
 	vSplit->activate(messageListWidget_, messageViewWidget_);
 	hSplit->activate(leftSideWidget_, vSplit);
 	
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	vSplit->setSeparatorPos(
@@ -78,7 +82,7 @@ EmpathMainWidget::~EmpathMainWidget()
 {
 	empathDebug("dtor");
 	
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	c->writeEntry(

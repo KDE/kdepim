@@ -21,8 +21,6 @@
 #ifndef RMM_MESSAGE_COMPONENT_H
 #define RMM_MESSAGE_COMPONENT_H
 
-#include <sys/types.h>
-
 #include <qstring.h>
 #include <RMM_Defines.h>
 
@@ -42,17 +40,17 @@ class RMessageComponent {
 
 		virtual ~RMessageComponent();
 
-		RMessageComponent & operator = (const QCString & s);
+		virtual RMessageComponent & operator = (const RMessageComponent & m);
+		virtual RMessageComponent & operator = (const QCString & s);
 		
-		RMessageComponent & operator = (const RMessageComponent & m);
+		virtual bool operator == (RMessageComponent &);
+		virtual bool operator == (const QCString &);
 
 		virtual void parse() = 0L;
-
 		virtual void assemble() = 0L;
-		
+		virtual void _parse() = 0L;
+		virtual void _assemble() = 0L;
 		virtual void createDefault() = 0L;
-
-		void set(const QCString & s) { parsed_ = false; strRep_ = s.data(); }
 
 		QCString asString() { assemble(); return strRep_; }
 

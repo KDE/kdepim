@@ -21,6 +21,7 @@
 // KDE includes
 #include <kiconloader.h>
 #include <kapp.h>
+#include <kglobal.h>
 #include <kconfig.h>
 
 // Local includes
@@ -31,40 +32,12 @@
 	QPixmap
 empathMimeIcon(const QString & name)
 {
-	QPixmap p(kapp->kde_datadir() + "/empath/pics/mime/" + name);
-	return p;
+	return KGlobal::iconLoader()->loadIcon(name);
 }
 
 	QPixmap
 empathIcon(const QString & name)
 {
-	KConfig * c = kapp->getConfig();
-	c->setGroup(EmpathConfig::GROUP_DISPLAY);
-	QString iconSet = c->readEntry(EmpathConfig::KEY_ICON_SET, "8bit");
-	QPixmap p(kapp->kde_datadir() + "/empath/pics/" + iconSet + "/" + name);
-	return p;
+	return KGlobal::iconLoader()->loadIcon(name);
 }
 
-	QFont
-empathFixedFont()
-{
-	return kapp->fixedFont();
-}
-
-	QFont
-empathGeneralFont()
-{
-	return kapp->generalFont();
-}
-	
-	QColor
-empathTextColour()
-{
-	return qApp->palette()->color(QPalette::Normal, QColorGroup::Text);
-}
-
-	QColor
-empathWindowColour()
-{
-	return qApp->palette()->color(QPalette::Normal, QColorGroup::Base);
-}

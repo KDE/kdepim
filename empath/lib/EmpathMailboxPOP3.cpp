@@ -23,9 +23,9 @@
 #include <qdir.h>
 
 // KDE includes
+#include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
-#include <kapp.h>
 #include <kio_job.h>
 
 // Local includes
@@ -239,7 +239,7 @@ EmpathMailboxPOP3::s_getNewMail()
 EmpathMailboxPOP3::saveConfig()
 {
 	empathDebug("Saving config");
-	KConfig * config_ = kapp->getConfig();
+	KConfig * config_ = KGlobal::config();
 	config_->setGroup(EmpathConfig::GROUP_MAILBOX + url_.mailboxName());
 #define CWE config_->writeEntry
 	CWE(EmpathConfig::KEY_MAILBOX_TYPE,					(int)type_);
@@ -263,7 +263,7 @@ EmpathMailboxPOP3::saveConfig()
 EmpathMailboxPOP3::readConfig()
 {
 	empathDebug("Reading config");
-	KConfig * config_ = kapp->getConfig();
+	KConfig * config_ = KGlobal::config();
 	config_->setGroup(EmpathConfig::GROUP_MAILBOX + url_.mailboxName());
 	
 // For some reason, this just DOES NOT WORK here ! Need to do setGroup !

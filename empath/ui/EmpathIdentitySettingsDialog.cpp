@@ -27,6 +27,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kapp.h>
+#include <kglobal.h>
 #include <kfiledialog.h>
 #include <kquickhelp.h>
 
@@ -203,7 +204,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 	CHECK_PTR(mle_sigPreview_);
 
 	mle_sigPreview_->setReadOnly(true);
-	mle_sigPreview_->setFont(empathFixedFont());
+	mle_sigPreview_->setFont(kapp->fixedFont());
 	mle_sigPreview_->setText(i18n("No signature set"));
 	
 	mle_sigPreview_->setMinimumHeight(h * 3);
@@ -332,7 +333,7 @@ EmpathIdentitySettingsDialog::s_chooseSig()
 EmpathIdentitySettingsDialog::saveData()
 {
 	empathDebug("saveData() called");
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_IDENTITY);
 
 #define CWE c->writeEntry
@@ -348,7 +349,7 @@ EmpathIdentitySettingsDialog::saveData()
 EmpathIdentitySettingsDialog::loadData()
 {
 	empathDebug("loadData() called");
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_IDENTITY);
 	
 	le_chooseName_->setText(c->readEntry(EmpathConfig::KEY_NAME));
@@ -403,7 +404,7 @@ EmpathIdentitySettingsDialog::s_OK()
 {
 	if (!applied_)
 		s_apply();
-	kapp->getConfig()->sync();
+	KGlobal::config()->sync();
 	delete this;
 }
 
@@ -418,8 +419,8 @@ EmpathIdentitySettingsDialog::s_apply()
 {
 	if (applied_) {
 		pb_apply_->setText(i18n("&Apply"));
-		kapp->getConfig()->rollback(true);
-		kapp->getConfig()->reparseConfiguration();
+		KGlobal::config()->rollback(true);
+		KGlobal::config()->reparseConfiguration();
 		loadData();
 		applied_ = false;
 	} else {
@@ -446,7 +447,7 @@ EmpathIdentitySettingsDialog::s_default()
 EmpathIdentitySettingsDialog::s_cancel()
 {
 	if (!applied_)
-		kapp->getConfig()->rollback(true);
+		KGlobal::config()->rollback(true);
 	delete this;
 }
 

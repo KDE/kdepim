@@ -77,3 +77,37 @@ RMessage::operator = (const RMessage & m)
 	return *this;
 }
 
+	RMessage &
+RMessage::operator = (const QCString & s)
+{
+	RBodyPart::operator = (s);
+	return *this;
+}
+
+	bool
+RMessage::operator == (RMessage & m)
+{
+	parse();
+	m.parse();
+
+	return (RBodyPart::operator == (m));
+}
+
+	void
+RMessage::_parse()
+{
+	RBodyPart::_parse();
+}
+
+	void
+RMessage::_assemble()
+{
+	RBodyPart::_assemble();
+}
+
+	void
+RMessage::createDefault()
+{
+	RBodyPart::createDefault();
+}
+

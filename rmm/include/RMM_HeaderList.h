@@ -24,7 +24,6 @@
 #include <qlist.h>
 
 #include <RMM_Header.h>
-#include <RMM_Enum.h>
 #include <RMM_Defines.h>
 
 typedef QListIterator<RHeader> RHeaderListIterator;

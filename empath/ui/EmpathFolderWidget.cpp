@@ -26,7 +26,7 @@
 #include <klocale.h>
 #include <klineeditdlg.h>
 #include <kconfig.h>
-#include <kapp.h>
+#include <kglobal.h>
 
 // Local includes
 #include "EmpathUIUtils.h"
@@ -50,6 +50,7 @@ EmpathFolderWidget::EmpathFolderWidget(
 	empathDebug("ctor");
 	
 	setAcceptDrops(true);
+	viewport()->setAcceptDrops(true);
 	
 	addColumn(i18n("Folder name"));
 	addColumn(i18n("Unread"));
@@ -57,7 +58,7 @@ EmpathFolderWidget::EmpathFolderWidget(
 	
 	setAllColumnsShowFocus(true);
 	setRootIsDecorated(true);
-	setSorting(-1); // Don't sort this.
+	setSorting(1); // Don't sort this.
 
 	QObject::connect(this, SIGNAL(currentChanged(QListViewItem *)),
 			this, SLOT(s_currentChanged(QListViewItem *)));
@@ -425,7 +426,17 @@ EmpathFolderWidget::s_setUpAccounts()
 }
 
 	void
-EmpathFolderWidget::dragMoveEvent(QDragMoveEvent * e)
+EmpathFolderWidget::dragMoveEvent(QDragMoveEvent *)
+{
+}
+	
+	void
+EmpathFolderWidget::dragLeaveEvent(QDragMoveEvent *)
+{
+}
+
+	void
+EmpathFolderWidget::dragEnterEvent(QDragMoveEvent * e)
 {
 	if (itemAt(e->pos()) != 0) {
 		itemAt(e->pos())->setSelected(true);
@@ -476,9 +487,158 @@ EmpathFolderWidget::s_openChanged()
 		l.append(it.current()->url().asString());
 	}
 	
-	KConfig * c(kapp->getConfig());
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	c->writeEntry(EmpathConfig::KEY_FOLDER_ITEMS_OPEN, l, ',');
 }
+#if 0
+	void
+EmpathFolderWidget::contentsDragEnterEvent(QDragEnterEvent * e)
+{
+	if (!QUriDrag::canDecode(e)) {
+		e->ignore();
+		return;
+	}
+}
 
+	void
+EmpathFolderWidget::contentsDragMoveEvent(QDragMoveEvent * e)
+{
+	if (!QUriDrag::canDecode(e)) {
+		e->ignore();
+		return;
+	}
+	
+	QPoint vp = contentsToViewport(e->pos());
+	
+	QRect inside_margin(
+		autoscroll_margin, autoscroll_margin,
+		visibleWidth()	- autoscroll_margin * 2,
+		visibleHeight()	- autoscroll_margin * 2);
+	
+	QListViewItem * i = itemAt(vp);
+	
+	if (!i) {
+		e->ignore();
+		autoOpenTimer.stop();
+		dropItem = 0;
+		return;
+	}
+	
+	setSelected(i, true);
+	
+	if (!insideMargin.contains(vp)) {
+		startAutoScroll();
+		e->accept(QRect(0,0,0,0));
+		autoOpenTimer.stop();
+	} else {
+		e->accept();
+		
+		if (i != dropItem) {
+			autoOpenTimer.stop();
+			dropItem = i;
+			autoOpenTimer.start(autoOpenTime);
+		}
+		
+		switch (e->action()) {
+			
+			case QDropEvent::Copy:
+				break;
+				
+			case QDropEvent::Move:
+				e->acceptAction();
+				break;
+				
+			case QDropEvent::Link:
+				e->acceptAction();
+				break;
+				
+			default:
+				break;
+		}
+	}
+}
+
+	void
+EmpathFolderWidget::contentsDragLeaveEvent(QDragLeaveEvent *)
+{
+	autoOpenTimer.stop();
+	stopAutoScroll();
+	dropItem = 0;
+	
+	setCurrentItem(oldCurrent);
+	setSelected(oldCurrent, true);
+}
+
+	void
+EmpathFolderWidget::contentsDropEvent(QDropEvent * e)
+{
+	
+	autoOpenTimer.stop();
+	stopAutoScroll();
+	
+	if (!QUriDrag::canDecode(e)) {
+		e->ignore();
+		return;
+	}
+	
+	QListViewItem * item = itemAt(contentsToViewport(e->pos()));
+	
+	if (!item) {
+		e->ignore();
+		return;
+	}
+	
+	QStrList l;
+	
+	l.setAutoDelete(false);
+	
+	QUriDrag::decode(e, l);
+	
+	QString s;
+	
+	switch (e->action()) {
+		
+		case QDropEvent::Copy:
+			s = "Copy";
+			break;
+	
+		case QDropEvent::Move:
+			s = "Move";
+			break;
+	
+		case QDropEvent::Link:
+			s = "Link";
+			break;
+	
+		default:
+			str = "Unknown";
+			break;
+	}
+	
+	str += "\n\n";
+	
+	e->accept();
+
+}
+
+
+	void
+EmpathFolderWidget::contentsMousePressEvent(QMouseEvent * e)
+{
+	QListView::contentsMousePressEvent(e);
+	pressPos = e->pos();
+}
+
+	void
+EmpathFolderWidget::contentsMouseMoveEvent(QMouseEvent * e)
+{
+	if ((e->pos() - pressPos).manhattanLength() > 4) {
+		QListViewItem * item = itemAt(contentsToViewport(pressPos));
+		if (item) {
+		}
+	}
+}
+
+#endif

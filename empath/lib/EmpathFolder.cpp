@@ -28,15 +28,12 @@
 #include "EmpathIndex.h"
 #include "EmpathUtilities.h"
 
-uID EmpathFolder::ID = 0;
-
 EmpathFolder::EmpathFolder()
 	:	QObject(),
 		messageCount_(0),
 		unreadMessageCount_(0)
 {
 	empathDebug("default ctor !");
-	id_ = ID++;
 	pixmapName_ = "mini-folder-grey.png";
 }
 
@@ -48,7 +45,6 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
 {
 	empathDebug("ctor with url == \"" + url_.asString() + "\"");
 	messageList_.setFolder(this);
-	id_ = ID++;
 	QObject::connect(this, SIGNAL(countUpdated(int, int)),
 		empath->mailbox(url_), SLOT(s_countUpdated(int, int)));
 	pixmapName_ = "mini-folder-grey.png";
@@ -58,7 +54,6 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
 EmpathFolder::operator == (const EmpathFolder & other) const
 {
 	empathDebug("operator == () called");
-	return id_ == other.id_;
 }
 
 EmpathFolder::~EmpathFolder()

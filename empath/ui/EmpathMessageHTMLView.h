@@ -53,10 +53,15 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
 		 */
 		void toHTML(QCString &);
 		bool show(const QCString & s, bool markup = true);
+		
+	protected slots:
+		
+		void s_popupMenu(const char *, const QPoint &);
 
 	private:
 		
 		bool busy_;
+		QPopupMenu popup_;
 };
 
 #endif

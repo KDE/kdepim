@@ -20,31 +20,12 @@
 
 #ifndef EMPATHDEFINES_H
 #define EMPATHDEFINES_H
-
-// Qt includes
 #include <qstring.h>
-
-// KDE includes
-#include <kdebug.h>
-
+#include <iostream.h>
 #ifndef NDEBUG
-#define empathDebug(a) kdebug(KDEBUG_INFO, 0,  "%s: %s\n", className(), QString((a)).data())
-// Enable Qt debuggers
-# define CHECK_STATE
-# define CHECK_RANGE
-# define CHECK_NULL
-# undef NO_DEBUG
-# undef NO_CHECK
+# define empathDebug(a) cerr << className() << ": " << QString((a)).data() << endl;
 #else
-# undef DEBUG
-# undef CHECK_STATE
-# undef CHECK_RANGE
-# undef CHECK_NULL
-# define NO_CHECK
 # define empathDebug(a)
 #endif
-
-typedef Q_UINT32 uID;
-
 #endif // included this file
 

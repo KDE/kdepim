@@ -60,6 +60,12 @@ RHeaderBody::operator = (const QCString & s)
 	return *this;
 }
 
+	bool
+RHeaderBody::operator == (RHeaderBody & hb)
+{
+	return (RMessageComponent::operator == (hb));
+}
+
 
 RHeaderBody::~RHeaderBody()
 {
@@ -67,13 +73,13 @@ RHeaderBody::~RHeaderBody()
 }
 
 	void
-RHeaderBody::parse()
+RHeaderBody::_parse()
 {
 	rmmDebug("WARNING PARSE CALLED");
 }
 
 	void
-RHeaderBody::assemble()
+RHeaderBody::_assemble()
 {
 	rmmDebug("WARNING ASSEMBLE CALLED");
 }

@@ -25,9 +25,9 @@
 
 // KDE includes
 #include <kprocess.h>
+#include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
-#include <kapp.h>
 
 // Local includes
 #include "EmpathComposeWidget.h"
@@ -40,6 +40,16 @@
 #include "RMM_DateTime.h"
 #include "RMM_MailboxList.h"
 #include "RMM_Mailbox.h"
+#include "RMM_Address.h"
+
+EmpathComposeWidget::EmpathComposeWidget(
+		QWidget *			parent,
+		const char *		name)
+	:
+		QWidget(parent, name)
+{
+	empathDebug("ctor");
+}
 
 EmpathComposeWidget::EmpathComposeWidget(
 		ComposeType			t,
@@ -52,14 +62,26 @@ EmpathComposeWidget::EmpathComposeWidget(
 		url_(m)
 {
 	empathDebug("ctor");
+}
 
+EmpathComposeWidget::EmpathComposeWidget(
+		const QString &		recipient,
+		QWidget *			parent,
+		const char *		name)
+	:
+		QWidget(parent, name),
+		recipient_(recipient),
+		composeType_(ComposeNormal)
+{
+	empathDebug("ctor");
+}
+
+	void
+EmpathComposeWidget::_init()
+{
 	headerEditWidget_		=
 		new EmpathHeaderEditWidget(this, "headerEditWidget");
 	CHECK_PTR(headerEditWidget_);
-
-	subjectSpecWidget_		=
-		new EmpathSubjectSpecWidget(this, "subjectSpecWidget");
-	CHECK_PTR(subjectSpecWidget_);
 
 	l_priority_			=
 		new QLabel(i18n("Priority:"), this, "l_priority_");
@@ -84,44 +106,29 @@ EmpathComposeWidget::EmpathComposeWidget(
 		new QMultiLineEdit(this, "editorWidget");
 	CHECK_PTR(editorWidget_);
 	
-	KConfig * c(kapp->getConfig());
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	editorWidget_->setFont(c->readFontEntry(EmpathConfig::KEY_FIXED_FONT));
 
-	layout_	= new QGridLayout(this, 3, 1, 2, 0, "layout_");
+	layout_	= new QGridLayout(this, 2, 2, 2, 0, "layout_");
 	CHECK_PTR(layout_);
 
-	layout_->setColStretch(0, 7);
-
-	layout_->setRowStretch(0, 0);
-	layout_->setRowStretch(1, 0);
-	layout_->setRowStretch(2, 10);
-
-
-	midLayout_ = new QGridLayout(1, 3, 10);
+	midLayout_ = new QGridLayout(1, 2, 10);
 	CHECK_PTR(midLayout_);
-	layout_->addLayout(midLayout_, 1, 0);
 
-	midLayout_->setColStretch(0, 1);
-	midLayout_->addWidget(subjectSpecWidget_,	0, 0);
-	midLayout_->addWidget(l_priority_,			0, 1);
-	midLayout_->addWidget(cmb_priority_,		0, 2);
-	midLayout_->activate();
+	midLayout_->addWidget(l_priority_,			0, 0);
+	midLayout_->addWidget(cmb_priority_,		0, 1);
+	layout_->addLayout(midLayout_, 0, 1);
 
-	empathDebug("Adding header edit");
 	layout_->addWidget(headerEditWidget_,	0, 0);
-	empathDebug("Adding editor");
-	layout_->addWidget(editorWidget_,		2, 0);
+	layout_->addMultiCellWidget(editorWidget_,	1, 1, 0, 1);
 
+	midLayout_->activate();
 	layout_->activate();
 
 	headerEditWidget_->setFocus();
-}
 
-	void
-EmpathComposeWidget::_init()
-{
 	switch (composeType_) {
 
 		case ComposeReply:		_reply();		break; 
@@ -135,7 +142,8 @@ EmpathComposeWidget::_init()
 		return;
 	}
 	
-	KConfig * c(kapp->getConfig());
+	headerEditWidget_->setTo(recipient_);
+	
 	c->setGroup(EmpathConfig::GROUP_COMPOSE);
 
 	if (c->readBoolEntry(EmpathConfig::KEY_USE_EXTERNAL_EDITOR, false)) {
@@ -156,7 +164,7 @@ EmpathComposeWidget::message()
 	empathDebug("message called");
 
 	QCString s;
-	s += headerEditWidget_->envelope();
+	s += headerEditWidget_->envelope().ascii();
 
 	if (composeType_ == ComposeReply || composeType_ == ComposeReplyAll) {
 		
@@ -197,7 +205,7 @@ EmpathComposeWidget::message()
 	// message body text.
 	
 	
-	KConfig * c(kapp->getConfig());
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_IDENTITY);
 	
 	s += QCString("From: ");
@@ -209,7 +217,7 @@ EmpathComposeWidget::message()
 	
 	s +=
 		QCString("Subject: ") +
-		QCString(subjectSpecWidget_->getSubject().ascii());
+		QCString(headerEditWidget_->subject().ascii());
 	s += "\n";
 	
 	RDateTime dt;
@@ -246,10 +254,8 @@ EmpathComposeWidget::message()
 	}
 
 	
-	empathDebug("MESSAGE DATA: ");
 	empathDebug(s);
 	RMessage msg(s);
-	empathDebug("MESSAGE DATA: ");
 	empathDebug(msg.asString());
 
 	return msg;
@@ -299,7 +305,7 @@ EmpathComposeWidget::_reply(bool toAll)
 		else
 			to = message.envelope().to().at(0)->asString();
 		
-		headerEditWidget_->setToText(to);
+		headerEditWidget_->setTo(to);
 	}
 	
 	if (toAll) {
@@ -307,14 +313,15 @@ EmpathComposeWidget::_reply(bool toAll)
 		if (message.envelope().has(RMM::HeaderReplyTo)) {
 		
 			to = message.envelope().replyTo().asString();
-			headerEditWidget_->setToText(to);
+			headerEditWidget_->setTo(to);
 		
 		} else if (message.envelope().has(RMM::HeaderFrom)) {
 		
 			to = message.envelope().from().at(0).asString();
-			headerEditWidget_->setToText(to);
+			headerEditWidget_->setTo(to);
 		}
-		
+	
+	
 		if (message.envelope().has(RMM::HeaderCc)) {
 
 			if (message.envelope().cc().count() != 0) {
@@ -328,30 +335,40 @@ EmpathComposeWidget::_reply(bool toAll)
 					cc += message.envelope().cc().at(i).asString();
 				}
 
-				headerEditWidget_->setCcText(cc);
 			}
 		}
+	
+		KConfig * c(KGlobal::config());
+		c->setGroup(EmpathConfig::GROUP_IDENTITY);
+		
+		RAddress me(c->readEntry(EmpathConfig::KEY_EMAIL).ascii());
+		
+		if (!(me == *(message.envelope().to().at(0))))
+			if (!cc.isEmpty())
+				cc += message.envelope().to().asString();
+		
+		headerEditWidget_->setCc(cc);
 	}
 
 	
-	subjectSpecWidget_->setFocus();
+	headerEditWidget_->setFocus();
 	
 	// Fill in the subject.
 	QString s = message.envelope().subject().asString();
 	empathDebug("Subject was \"" + s + "\""); 
 
 	if (s.isEmpty())
-		subjectSpecWidget_->setSubject(
+		headerEditWidget_->setSubject(
 			i18n("Re: (no subject given)"));
 	else
 		if (s.find(QRegExp("^[Rr][Ee]:")) != -1)
-			subjectSpecWidget_->setSubject(s);
+			headerEditWidget_->setSubject(s);
 		else
-			subjectSpecWidget_->setSubject("Re: " + s);
+			headerEditWidget_->setSubject("Re: " + s);
 	
 	// Now quote original message if we need to.
 	
-	KConfig * c(kapp->getConfig());
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_COMPOSE);
 	
 	empathDebug("Quoting original if necessary");
@@ -409,13 +426,13 @@ EmpathComposeWidget::_forward()
 	empathDebug("Subject was \"" + s + "\""); 
 
 	if (s.isEmpty())
-		subjectSpecWidget_->setSubject(
+		headerEditWidget_->setSubject(
 			i18n("Fwd: (no subject given)"));
 	else
 		if (s.find(QRegExp("^[Ff][Ww][Dd]:")) != -1)
-			subjectSpecWidget_->setSubject(s);
+			headerEditWidget_->setSubject(s);
 		else
-			subjectSpecWidget_->setSubject("Fwd: " + s);
+			headerEditWidget_->setSubject("Fwd: " + s);
 }
 
 	void
@@ -428,5 +445,22 @@ EmpathComposeWidget::s_editorDone(bool ok, QCString text)
 	
 	editorWidget_->setText(text);
 	editorWidget_->setEnabled(true);
+}
+
+	void
+EmpathComposeWidget::bugReport()
+{
+	headerEditWidget_->setTo("rik@kde.org");
+	QString errorStr_;
+	errorStr_ = i18n("- What were you trying to do when the problem occured ?");
+	errorStr_ += "\n\n\n\n";
+	errorStr_ += i18n("- What actually happened ?");
+	errorStr_ += "\n\n\n\n";
+	errorStr_ += i18n("- Exactly what did you do that caused the problem to manifest itself ?");
+	errorStr_ += "\n\n\n\n";
+	errorStr_ += i18n("- Do you have a suggestion as to how this behaviour can be corrected ?");
+	errorStr_ += "\n\n\n\n";
+	errorStr_ += i18n("- If you saw an error message, please try to reproduce it here");
+	editorWidget_->setText(errorStr_);
 }
 

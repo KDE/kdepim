@@ -23,8 +23,8 @@
 
 // KDE includes
 #include <klocale.h>
+#include <kglobal.h>
 #include <kconfig.h>
-#include <kapp.h>
 
 // Local includes
 #include "EmpathFilterEventHandler.h"
@@ -176,7 +176,7 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
 	bool
 EmpathFilterEventHandler::load(const QString & filterID)
 {
-	KConfig * config = kapp->getConfig();
+	KConfig * config = KGlobal::config();
 	config->setGroup(EmpathConfig::GROUP_FILTER + filterID);
 	actionType_ =
 		(ActionType)
@@ -218,7 +218,7 @@ EmpathFilterEventHandler::load(const QString & filterID)
 EmpathFilterEventHandler::save(const QString & filterID)
 {
 	empathDebug("save(" + filterID + ") called");
-	KConfig * config = kapp->getConfig();
+	KConfig * config = KGlobal::config();
 	config->setGroup(EmpathConfig::GROUP_FILTER + filterID);
 	config->writeEntry(
 		EmpathConfig::KEY_FILTER_EVENT_HANDLER_TYPE, (int)actionType_);

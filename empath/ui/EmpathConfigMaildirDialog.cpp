@@ -22,6 +22,7 @@
 #include <kfiledialog.h>
 #include <klocale.h>
 #include <kapp.h>
+#include <kglobal.h>
 #include <kconfig.h>
 
 // Local includes
@@ -174,7 +175,7 @@ EmpathConfigMaildirDialog::s_OK()
 	hide();
 	if (!applied_)
 		s_apply();
-	kapp->getConfig()->sync();
+	KGlobal::config()->sync();
 
 	// That's it
 	accept();
@@ -203,7 +204,7 @@ EmpathConfigMaildirDialog::loadData()
 EmpathConfigMaildirDialog::s_cancel()
 {
 	if (!applied_)
-		kapp->getConfig()->rollback(true);
+		KGlobal::config()->rollback(true);
 	reject();
 }
 
@@ -212,8 +213,8 @@ EmpathConfigMaildirDialog::s_apply()
 {
 	if (applied_) {
 		pb_apply_->setText(i18n("&Apply"));
-		kapp->getConfig()->rollback(true);
-		kapp->getConfig()->reparseConfiguration();
+		KGlobal::config()->rollback(true);
+		KGlobal::config()->reparseConfiguration();
 		loadData();
 		applied_ = false;
 	} else {

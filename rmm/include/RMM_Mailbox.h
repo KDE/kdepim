@@ -36,35 +36,21 @@ class RMailbox : public RAddress {
 
 	public:
 
-		RMailbox();
-		RMailbox(const RMailbox & m);
-		RMailbox(const QCString & s);
-		RMailbox & operator = (const RMailbox &);
-		RMailbox & operator = (const QCString &);
+#include "generated/RMailbox_generated.h"
 		
-		friend QDataStream & operator >> (
-			QDataStream & s, RMailbox & mailbox);
+		friend QDataStream & operator >> (QDataStream & s, RMailbox & mailbox);
 		
-		friend QDataStream & operator << (
-			QDataStream & s, RMailbox & mailbox);
-
-		virtual ~RMailbox();
-
-		void parse();
-		void assemble();
-
-		void createDefault();
+		friend QDataStream & operator << (QDataStream & s, RMailbox & mailbox);
 
 		void setPhrase(const QCString & phrase);
 		void setRoute(const QCString & route);
 		void setLocalPart(const QCString & localPart);
 		void setDomain(const QCString & domain);
+
 		QCString phrase();
 		QCString route();
 		QCString localPart();
 		QCString domain();
-		
-		const char * className() const { return "RMailbox"; }
 
 	private:
 

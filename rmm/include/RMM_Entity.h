@@ -36,21 +36,23 @@ class REntity : public RMessageComponent
 	public:
 
 		REntity();
-		REntity(const REntity & entity);
+		REntity(const REntity &);
 		REntity(const QCString & s) : RMessageComponent(s) { }
 
 		virtual ~REntity();
 
-		REntity & operator = (const REntity & entity);
+		virtual REntity & operator = (const REntity &);
+
+		virtual REntity & operator = (const QCString & s)
+		{ RMessageComponent::operator = (s); return *this; }
 
 		virtual void parse() = 0L;
 		virtual void assemble() = 0L;
 		virtual void createDefault() = 0L;
 		
-		void set(const QCString & s) { RMessageComponent::set(s); }
-		QCString asString() { return RMessageComponent::asString(); }
+		virtual QCString asString() { return RMessageComponent::asString(); }
 		
-		const char * className() const { return "REntity"; }
+		virtual const char * className() const { return "REntity"; }
 };
 
 #endif

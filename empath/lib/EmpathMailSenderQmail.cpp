@@ -22,6 +22,7 @@
 #include <qcstring.h>
 
 // KDE includes
+#include <kglobal.h>
 #include <kconfig.h>
 #include <kapp.h>
 
@@ -69,7 +70,7 @@ EmpathMailSenderQmail::sendOne(RMessage & message)
 	
 	qmailProcess_.clearArguments();
 
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_SENDING);
 	
 	empathDebug("qmail location is" +
@@ -156,7 +157,7 @@ EmpathMailSenderQmail::qmailReceivedStderr(KProcess *, char * buf, int buflen)
 	void
 EmpathMailSenderQmail::saveConfig()
 {
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_SENDING);
 	c->writeEntry(EmpathConfig::KEY_QMAIL_LOCATION, qmailLocation_);
 }
@@ -164,7 +165,7 @@ EmpathMailSenderQmail::saveConfig()
 	void
 EmpathMailSenderQmail::readConfig()
 {
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_SENDING);
 	qmailLocation_ =
 		c->readEntry(EmpathConfig::KEY_QMAIL_LOCATION, "/var/qmail/bin/qmail-inject");

@@ -140,19 +140,14 @@ class EmpathMessageListWidget : public QListView
 
 		EmpathMainWindow	* parent_;
 		QPopupMenu			messageMenu_;
+		QPopupMenu			multipleMessageMenu_;
 		QPopupMenu			messageMarkMenu_;
 		
 		EmpathIndexRecordList masterList_;
 		QList<EmpathMessageListItem> itemList_;
 
-		QPixmap px_;
-		QPixmap pxRead_;
-		QPixmap pxMarked_;
-		QPixmap pxReplied_;
-		QPixmap pxReadMarked_;
-		QPixmap pxReadReplied_;
-		QPixmap pxMarkedReplied_;
-		QPixmap pxReadMarkedReplied_;
+		QPixmap	px_xxx_, px_Sxx_, px_xMx_, px_xxR_,
+				px_SMx_, px_SxR_, px_xMR_, px_SMR_;
 
 		bool wantScreenUpdates_;
 		
@@ -166,6 +161,13 @@ class EmpathMessageListWidget : public QListView
 		int messageMenuItemMark;
 		int messageMenuItemMarkRead;
 		int messageMenuItemMarkReplied;
+		int messageMenuItemView;
+		int messageMenuItemReply;
+		int messageMenuItemReplyAll;
+		int messageMenuItemForward;
+		int messageMenuItemDelete;
+		int messageMenuItemSaveAs;
+
 		int sortColumn_;
 		bool sortAscending_;
 		
@@ -181,6 +183,8 @@ class EmpathMessageListWidget : public QListView
 		
 		bool maybeDrag_;
 		QPoint dragStart_;
+		
+		Q_UINT32 nSelected_;
 };
 
 #endif

@@ -60,7 +60,22 @@ RMessageComponent::operator = (const QCString & s)
 	return *this;
 }
 
-	
+	bool
+RMessageComponent::operator == (RMessageComponent & mc)
+{
+	parse();
+	mc.parse();
+
+	return (strRep_ == mc.strRep_);
+}
+
+	bool
+RMessageComponent::operator == (const QCString & s)
+{
+	parse();
+	return (strRep_ == s);
+}
+
 RMessageComponent::RMessageComponent(const QCString & s)
 	:	strRep_(s),
 		parsed_(false)

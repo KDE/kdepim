@@ -33,26 +33,8 @@ class RHeaderBody : public RMessageComponent {
 
 	public:
 		
-		RHeaderBody();
-		RHeaderBody(const RHeaderBody & headerBody);
-		RHeaderBody(const QCString & s);
-
-		virtual ~RHeaderBody();
-
-		virtual void parse();
-
-		virtual void assemble();
-
-		virtual void createDefault();
-			
-		virtual RHeaderBody & operator = (const RHeaderBody & h);
-		virtual RHeaderBody & operator = (const QCString & s);
-
-		QCString asString() { return RMessageComponent::asString(); }
+#include "generated/RHeaderBody_generated.h"
 		
-		const char * className() const { return "RHeaderBody"; }
-
-	friend class RHeader; // FIXME: Hack. Remove.
 };
 
 #endif

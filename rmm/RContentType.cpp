@@ -69,13 +69,28 @@ RContentType::operator = (const RContentType & ct)
 	return *this;
 }
 
-	void
-RContentType::parse()
+	RContentType &
+RContentType::operator = (const QCString & s)
 {
-	rmmDebug("parse() called");
-	rmmDebug("strRep_ == \"" + strRep_ + "\"");
-	if (parsed_) return;
+	RHeaderBody::operator = (s);
+	return *this;
+}
 
+	bool
+RContentType::operator == (RContentType & ct)
+{
+	parse();
+	ct.parse();
+	
+	return (
+		type_			== ct.type_		&&
+		subType_		== ct.subType_	&&
+		parameterList_	== ct.parameterList_);
+}
+
+	void
+RContentType::_parse()
+{
 	QCString ts;
 	int i = strRep_.find(";");
 	
@@ -102,16 +117,11 @@ RContentType::parse()
 	
 	rmmDebug("type_ == " + type_);
 	rmmDebug("subType_ == " + subType_);
-	parsed_		= true;
-	assembled_	= false;
 }
 
 	void
-RContentType::assemble()
+RContentType::_assemble()
 {
-	parse();
-	if (assembled_) return;
-	
 	strRep_ = type_ + "/" + subType_;
 	
 	parameterList_.assemble();
@@ -121,10 +131,6 @@ RContentType::assemble()
 	strRep_ += QCString(";\n    ");
 	
 	strRep_ += parameterList_.asString();
-
-	rmmDebug("assembled to: \"" + strRep_ + "\"");
-	
-	assembled_ = true;
 }
 
 	void

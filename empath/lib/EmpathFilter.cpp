@@ -20,8 +20,8 @@
 
 // KDE includes
 #include <klocale.h>
+#include <kglobal.h>
 #include <kconfig.h>
-#include <kapp.h>
 
 // Local includes
 #include "EmpathMatcher.h"
@@ -48,7 +48,7 @@ EmpathFilter::save()
 {
 	empathDebug("save() called");
 	
-	KConfig * config = kapp->getConfig();
+	KConfig * config = KGlobal::config();
 	config->setGroup(EmpathConfig::GROUP_FILTER + name_);
 	
 	config->writeEntry(EmpathConfig::KEY_NUM_MATCH_EXPRS_FOR_FILTER,
@@ -80,7 +80,7 @@ EmpathFilter::save()
 	void
 EmpathFilter::load()
 {
-	KConfig * config = kapp->getConfig();
+	KConfig * config = KGlobal::config();
 	config->setGroup(EmpathConfig::GROUP_FILTER + name_);
 	
 	url_ = config->readEntry(EmpathConfig::KEY_FILTER_FOLDER);

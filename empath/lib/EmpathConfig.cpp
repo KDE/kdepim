@@ -344,6 +344,12 @@ EmpathConfig::KEY_CONFIRM_READ = "ConfirmReading";
 
 	const QString
 EmpathConfig::KEY_ENCRYPT = "Encrypt";
+	
+	const QString
+EmpathConfig::KEY_INBOX_FOLDER = "InboxFolder";
+	
+	const QString
+EmpathConfig::KEY_DRAFTS_FOLDER = "InboxFolder";
 
 	const QString
 EmpathConfig::KEY_QUEUE_FOLDER = "QueueFolder";
@@ -374,4 +380,7 @@ EmpathConfig::KEY_LOCAL_MAILBOX_PATH = "MailboxPath";
 
 	const QString
 EmpathConfig::KEY_ADDRESSBOOK_FILENAME = "AddressbookFilename";
+
+	const QString
+EmpathConfig::KEY_EXTRA_HEADERS = "ExtraHeaders";
 

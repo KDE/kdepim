@@ -21,8 +21,8 @@
 #ifndef RMM_ENUM_H
 #define RMM_ENUM_H
 
-#include <qcstring.h>
 #include <qstring.h>
+#include <qcstring.h>
 
 class RMM
 {

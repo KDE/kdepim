@@ -123,6 +123,22 @@ RAddress::operator = (const QCString & s)
 	return *this;
 }
 
+	bool
+RAddress::operator == (RAddress & a)
+{
+	parse();
+
+	a.parse();
+	
+	if (mailbox_ != 0 && a.mailbox_ != 0)
+		return *mailbox_ == *a.mailbox_;
+	
+	else if	(group_ != 0 && a.group_ != 0)
+		return *group_ == *a.group_;
+	
+	else
+		return true;
+}
 
 	RGroup *
 RAddress::group()
@@ -139,12 +155,8 @@ RAddress::mailbox()
 }
 
 	void
-RAddress::parse()
+RAddress::_parse()
 {
-	rmmDebug("parse() called");
-	
-	if (parsed_) return;
-	
 	delete mailbox_;
 	mailbox_	= 0;
 	delete group_;
@@ -171,31 +183,19 @@ RAddress::parse()
 		CHECK_PTR(mailbox_);
 		mailbox_->parse();
 	}
-	
-	parsed_		= true;
-	assembled_	= false;
 }
 
 	void
-RAddress::assemble()
+RAddress::_assemble()
 {
-	parse();
-	rmmDebug("assemble() called");
-
-	if (mailbox_ != 0) {
-
+	if (mailbox_ != 0)
 		strRep_ = mailbox_->asString();
-
-	} else if (group_ != 0) {
-
-		strRep_ = group_->asString();
-
-	} else {
-			strRep_ = "foo@bar";
-	}
 	
-	rmmDebug("Assembled to: \"" + strRep_ + "\"");
-	assembled_ = true;
+	else if (group_ != 0)
+		strRep_ = group_->asString();
+	
+	else
+		strRep_ = "foo@bar";
 }
 
 	void

@@ -20,6 +20,7 @@
 
 // KDE includes
 #include <klocale.h>
+#include <kglobal.h>
 #include <kconfig.h>
 #include <kapp.h>
 #include <kquickhelp.h>
@@ -66,10 +67,6 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 	rgb_when_		= new RikGroupBox(i18n("When to send"), 8, this, "rgb_when");
 	CHECK_PTR(rgb_when_);
 	
-	rgb_phrases_->setMinimumHeight(h * 3 + (6 * 10));
-	rgb_msg_->setMinimumHeight(h * 4 + (7 * 10));
-	rgb_when_->setMinimumHeight(h * 2 + (7 * 10));
-
 	w_phrases_	= new QWidget(rgb_phrases_,	"w_phrases");
 	CHECK_PTR(w_phrases_);
 	
@@ -83,6 +80,12 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 	rgb_msg_->setWidget(w_msg_);
 	rgb_when_->setWidget(w_when_);
 
+	l_extra_	= new QLabel(i18n("Extra headers to edit:"), this, "l_extra");
+	CHECK_PTR(l_extra_);
+	
+	le_extra_	= new QLineEdit(this, "le_extra");
+	CHECK_PTR(le_extra_);
+	
 	// Phrases
 	
 	l_reply_	=
@@ -325,9 +328,9 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 
 	// Layouts
 	
-	topLevelLayout_				= new QGridLayout(this, 5, 1, 10, 10);
+	topLevelLayout_				= new QGridLayout(this, 5, 2, 10, 10);
 	CHECK_PTR(topLevelLayout_);
-
+	
 	topLevelLayout_->setRowStretch(0, 3);
 	topLevelLayout_->setRowStretch(1, 4);
 	topLevelLayout_->setRowStretch(2, 2);
@@ -347,13 +350,14 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 	whenGroupLayout_		= new QGridLayout(w_when_,		2, 1, 0, 10);
 	CHECK_PTR(whenGroupLayout_);
 	
-	externalLayout_ = new QGridLayout(1, 2);
-	
-	topLevelLayout_->addWidget(rgb_phrases_,	0, 0);
-	topLevelLayout_->addWidget(rgb_msg_,		1, 0);
-	topLevelLayout_->addWidget(rgb_when_,		2, 0);
-	topLevelLayout_->addLayout(externalLayout_,	3, 0);
-	topLevelLayout_->addWidget(buttonBox_,		4, 0);
+	topLevelLayout_->addWidget(l_extra_,				0, 0);
+	topLevelLayout_->addWidget(le_extra_,				0, 1);
+	topLevelLayout_->addMultiCellWidget(rgb_phrases_,	1, 1, 0, 1);
+	topLevelLayout_->addMultiCellWidget(rgb_msg_,		2, 2, 0, 1);
+	topLevelLayout_->addMultiCellWidget(rgb_when_,		3, 3, 0, 1);
+	topLevelLayout_->addWidget(cb_externalEditor_,		4, 0);
+	topLevelLayout_->addWidget(le_externalEditor_,		4, 1);
+	topLevelLayout_->addMultiCellWidget(buttonBox_,		5, 5, 0, 1);
 
 	phrasesGroupLayout_->addWidget(l_reply_,	0, 0);
 	phrasesGroupLayout_->addWidget(l_replyAll_,	1, 0);
@@ -378,10 +382,6 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 	
 	whenGroupLayout_->activate();
 	
-	externalLayout_->addWidget(cb_externalEditor_, 0, 0);
-	externalLayout_->addWidget(le_externalEditor_, 0, 1);
-	externalLayout_->activate();
-	
 	topLevelLayout_->activate();
 	
 	setMinimumSize(minimumSizeHint());
@@ -391,7 +391,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 	void
 EmpathComposeSettingsDialog::saveData()
 {
-	KConfig * c	= kapp->getConfig();
+	KConfig * c	= KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_COMPOSE);
 #define CWE c->writeEntry
 	CWE( EmpathConfig::KEY_PHRASE_REPLY_SENDER,		le_reply_->text());
@@ -413,7 +413,7 @@ EmpathComposeSettingsDialog::saveData()
 	void
 EmpathComposeSettingsDialog::loadData()
 {
-	KConfig * c	= kapp->getConfig();
+	KConfig * c	= KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_COMPOSE);
 	
 	le_reply_->setText(
@@ -460,7 +460,7 @@ EmpathComposeSettingsDialog::s_OK()
 	hide();
 	if (!applied_)
 		s_apply();
-	kapp->getConfig()->sync();
+	KGlobal::config()->sync();
 	delete this;
 }
 
@@ -475,8 +475,8 @@ EmpathComposeSettingsDialog::s_apply()
 {
 	if (applied_) {
 		pb_apply_->setText(i18n("&Apply"));
-		kapp->getConfig()->rollback(true);
-		kapp->getConfig()->reparseConfiguration();
+		KGlobal::config()->rollback(true);
+		KGlobal::config()->reparseConfiguration();
 		loadData();
 		applied_ = false;
 	} else {
@@ -508,7 +508,7 @@ EmpathComposeSettingsDialog::s_default()
 EmpathComposeSettingsDialog::s_cancel()
 {
 	if (!applied_)
-		kapp->getConfig()->rollback(true);
+		KGlobal::config()->rollback(true);
 	delete this;
 }
 

@@ -63,7 +63,7 @@ class EmpathFolder : public QObject
 		Q_UINT32	unreadMessageCount()	const
 		{ return messageList_.countUnread(); }
 
-		uID id() const { return id_; }
+		Q_UINT32 id() const { return id_; }
 
 		EmpathIndex & messageList() { return messageList_; }
 
@@ -95,9 +95,8 @@ class EmpathFolder : public QObject
 	private:
 
 		EmpathFolder(const EmpathFolder &) : QObject() {}
-		
-		static uID ID;
-		uID id_;
+
+		Q_UINT32 id_;
 
 		Q_UINT32 messageCount_;
 		Q_UINT32 unreadMessageCount_;

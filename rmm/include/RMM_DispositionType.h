@@ -21,7 +21,8 @@
 #ifndef RMM_RDISPOSITIONTYPE_H
 #define RMM_RDISPOSITIONTYPE_H
 
-#include <qstring.h>
+#include <qcstring.h>
+
 #include <RMM_Enum.h>
 #include <RMM_HeaderBody.h>
 #include <RMM_Defines.h>
@@ -31,35 +32,20 @@
 class RDispositionType : public RHeaderBody {
 
 	public:
-
-		RDispositionType();
-		RDispositionType(const RDispositionType & t);
-		RDispositionType(const QCString & s) : RHeaderBody(s) { }
-		RDispositionType & operator = (const RDispositionType & t);
-
-		virtual ~RDispositionType();
-
-		void parse();
-		void assemble();
-
-		void set(RMM::DispType);
-		void set(const QCString & s) { RHeaderBody::set(s); }
-
-		QCString filename();
-		void setFilename(const QCString &);
-		void addParameter(RParameter & p);
-		RParameterList & parameterList();
-		RMM::DispType type();
 		
-		void createDefault();
-		
-		const char * className() const { return "RDispositionType"; }
+#include "generated/RDispositionType_generated.h"
+
+		QCString			filename();
+		void				setFilename(const QCString &);
+		void				addParameter(RParameter & p);
+		RParameterList &	parameterList();
+		RMM::DispType		type();
 
 	private:
 
-		RParameterList	parameterList_;
-		RMM::DispType	dispType_;
-		QCString		filename_;
+		RParameterList		parameterList_;
+		RMM::DispType		dispType_;
+		QCString			filename_;
 };
 
 #endif //RDISPOSITIONTYPE_H

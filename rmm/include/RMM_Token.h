@@ -18,8 +18,8 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef RX_TOKEN_H
-#define RX_TOKEN_H
+#ifndef RMM_TOKEN_H
+#define RMM_TOKEN_H
 
 #include <qstrlist.h>
 

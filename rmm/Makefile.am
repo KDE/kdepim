@@ -5,7 +5,6 @@ noinst_LIBRARIES = librmm.a
 librmm_a_SOURCES = \
 RAddress.cpp \
 RAddressList.cpp \
-RBody.cpp \
 RBodyPart.cpp \
 RContentType.cpp \
 RCte.cpp \

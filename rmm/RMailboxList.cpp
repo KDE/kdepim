@@ -40,6 +40,12 @@ RMailboxList::RMailboxList(const RMailboxList & l)
 	list_ = l.list_;
 }
 
+RMailboxList::RMailboxList(const QCString & s)
+	:	RHeaderBody(s)
+{
+	rmmDebug("ctor");
+}
+
 RMailboxList::~RMailboxList()
 {
 	rmmDebug("dtor");
@@ -65,14 +71,18 @@ RMailboxList::operator = (const QCString & s)
 	return *this;
 }
 
-	void
-RMailboxList::parse()
+	bool
+RMailboxList::operator == (RMailboxList & l)
 {
-	rmmDebug("parse() called");
-	if (parsed_) return;
-	// XXX Currently just adapted slightly from RAddressList - adjust further ?
-	rmmDebug("strRep_ = " + strRep_);
+	parse();
+	l.parse();
 
+	return false; // XXX: Write this
+}
+
+	void
+RMailboxList::_parse()
+{
 	list_.clear();
 
 	QStrList ltemp;
@@ -120,18 +130,11 @@ RMailboxList::parse()
 			list_.append(m);
 		}
 	}
-	
-	parsed_ = true;
-	assembled_ = false;
 }
 
 	void
-RMailboxList::assemble()
+RMailboxList::_assemble()
 {
-	rmmDebug("assemble() called");
-	parse();
-	if (assembled_) return;
-	// XXX Just ripped from RAddressList - adjust further ?
 	bool firstTime = true;
 	
 	RMailboxListIterator it(list_);
@@ -147,10 +150,6 @@ RMailboxList::assemble()
 
 		strRep_ += it.current()->asString();
 	}
-	
-	rmmDebug("assembled to: \"" + strRep_ + "\"");
-	
-	assembled_ = true;
 }
 
 	void

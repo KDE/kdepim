@@ -29,20 +29,9 @@
 class RMechanism : public RHeaderBody {
 
 	public:
-
-		RMechanism();
-		RMechanism(const RMechanism & rMechanism);
-		RMechanism(const QCString & s) : RHeaderBody(s) { }
-		RMechanism & operator = (const RMechanism &);
-
-		virtual ~RMechanism();
-
-		void parse();
-		void assemble();
 		
-		void createDefault();
+#include "generated/RMechanism_generated.h"
 
-		const char * className() const { return "RMechanism"; }
 };
 
 #endif //RMECHANISM_H

@@ -35,25 +35,12 @@ class RMailbox;
 class RAddress : public RHeaderBody {
 
 	public:
+	
+#include "generated/RAddress_generated.h"
 
-		RAddress();
-		RAddress(const RAddress &);
-		RAddress(const QCString & s);
-		virtual RAddress & operator = (const RAddress & a);
-		virtual RAddress & operator = (const QCString & s);
+		RGroup		* group();
+		RMailbox	* mailbox();
 
-		virtual ~RAddress();
-
-		void parse();
-		void assemble();
-
-		RGroup * group();
-		RMailbox * mailbox();
-
-		void createDefault();
-
-		const char * className() const { return "RAddress"; }
-		
 	private:
 		
 		RMailbox	* mailbox_;

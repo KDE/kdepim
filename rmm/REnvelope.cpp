@@ -43,6 +43,7 @@ REnvelope::REnvelope(const QCString & s)
 	:	RMessageComponent(s)
 {
 	rmmDebug("ctor with QCString(" + s + ")");
+//	headerList_.setAutoDelete(true);
 	parsed_ = false;
 	assembled_ = false;
 }
@@ -71,6 +72,15 @@ REnvelope::operator = (const QCString & s)
 	return *this;
 }
 
+	bool
+REnvelope::operator == (REnvelope & e)
+{
+	parse();
+	e.parse();
+
+	return false; // XXX: Need to write this...
+}
+
 REnvelope::~REnvelope()
 {
 	rmmDebug("dtor");
@@ -84,12 +94,8 @@ REnvelope::asString()
 }
 
 	void
-REnvelope::parse()
+REnvelope::_parse()
 {
-	rmmDebug("parse() called");
-	rmmDebug("strRep_ : " + strRep_);
-	if (parsed_) return;
-
 	const char * c = strRep_.data();
 	const char * start = c;
 	const char * end = (char *)(c + strlen(c));
@@ -141,18 +147,11 @@ REnvelope::parse()
 	}
 
 	delete [] rstart;
-
-	parsed_		= true;
-	assembled_	= false;
 }
 
 	void
-REnvelope::assemble()
+REnvelope::_assemble()
 {
-	parse();
-	rmmDebug("assemble() called");
-	if (assembled_) return;
-
 	strRep_ = "";
 
 	RHeaderListIterator it(headerList_);
@@ -161,7 +160,6 @@ REnvelope::assemble()
 		strRep_ += it.current()->asString();
 		strRep_ += '\n';
 	}
-	assembled_ = true;
 }
 
 	void
@@ -335,255 +333,171 @@ REnvelope::get(RMM::HeaderType h)
 
 	RText
 REnvelope::approved()
-{
-	return *(RText *)get(RMM::HeaderApproved);
-}
+{ return *(RText *)get(RMM::HeaderApproved); }
 
 	RAddressList 
 REnvelope::bcc()
-{
-	return *(RAddressList *)get(RMM::HeaderBcc);
-}
+{ return *(RAddressList *)get(RMM::HeaderBcc); }
 
 	RMailboxList
 REnvelope::cc()
-{
-	return *(RMailboxList *)get(RMM::HeaderCc);
-}
+{ return *(RMailboxList *)get(RMM::HeaderCc); }
 
 	RText 
 REnvelope::comments()
-{
-	return *(RText *)get(RMM::HeaderComments);
-}
+{ return *(RText *)get(RMM::HeaderComments); }
 
 	RText 
 REnvelope::contentDescription()
-{
-	return *(RText *)get(RMM::HeaderContentDescription);
-}
+{ return *(RText *)get(RMM::HeaderContentDescription); }
 
 	RDispositionType 
 REnvelope::contentDisposition()
-{
-	return *(RDispositionType *)(RMM::HeaderContentDisposition);
-}
+{ return *(RDispositionType *)(RMM::HeaderContentDisposition); }
 
 	RMessageID 
 REnvelope::contentID()
-{
-	return *(RMessageID *)get(RMM::HeaderContentID);
-}
+{ return *(RMessageID *)get(RMM::HeaderContentID); }
 
 	RText 
 REnvelope::contentMD5()
-{
-	return *(RText *)get(RMM::HeaderContentMD5);
-}
+{ return *(RText *)get(RMM::HeaderContentMD5); }
 
 	RContentType 
 REnvelope::contentType()
-{
-	return *(RContentType *)get(RMM::HeaderContentType);
-}
+{ return *(RContentType *)get(RMM::HeaderContentType); }
 
 	RText 
 REnvelope::control()
-{
-	return *(RText *)get(RMM::HeaderControl);
-}
+{ return *(RText *)get(RMM::HeaderControl); }
 
 	RCte 
 REnvelope::contentTransferEncoding()
-{
-	return *(RCte *)get(RMM::HeaderContentTransferEncoding);
-}
+{ return *(RCte *)get(RMM::HeaderContentTransferEncoding); }
 
 	RDateTime 
 REnvelope::date()
-{
-	return *(RDateTime *)get(RMM::HeaderDate);
-}
+{ return *(RDateTime *)get(RMM::HeaderDate); }
 
 	RText 
 REnvelope::distribution()
-{
-	return *(RText *)get(RMM::HeaderDistribution);
-}
+{ return *(RText *)get(RMM::HeaderDistribution); }
 
 	RText 
 REnvelope::encrypted()
-{
-	return *(RText *)get(RMM::HeaderEncrypted);
-}
+{ return *(RText *)get(RMM::HeaderEncrypted); }
 
 	RDateTime 
 REnvelope::expires()
-{
-	return *(RDateTime *)get(RMM::HeaderExpires);
-}
+{ return *(RDateTime *)get(RMM::HeaderExpires); }
 
 	RText 
 REnvelope::followupTo()
-{
-	return *(RText *)get(RMM::HeaderFollowupTo);
-}
+{ return *(RText *)get(RMM::HeaderFollowupTo); }
 
 	RMailboxList 
 REnvelope::from()
-{
-	return *(RMailboxList *)get(RMM::HeaderFrom);
-}
+{ return *(RMailboxList *)get(RMM::HeaderFrom); }
 
 	RText 
 REnvelope::inReplyTo()
-{
-	return *(RText *)get(RMM::HeaderInReplyTo);
-}
+{ return *(RText *)get(RMM::HeaderInReplyTo); }
 
 	RText 
 REnvelope::keywords()
-{
-	return *(RText *)get(RMM::HeaderKeywords);
-}
+{ return *(RText *)get(RMM::HeaderKeywords); }
 
 	RText 
 REnvelope::lines()
-{
-	return *(RText *)get(RMM::HeaderLines);
-}
+{ return *(RText *)get(RMM::HeaderLines); }
 
 	RMessageID 
 REnvelope::messageID()
-{
-	return *(RMessageID *)get(RMM::HeaderMessageID);
-}
+{ return *(RMessageID *)get(RMM::HeaderMessageID); }
 
 	RText 
 REnvelope::mimeVersion()
-{
-	return *(RText *)get(RMM::HeaderMimeVersion);
-}
+{ return *(RText *)get(RMM::HeaderMimeVersion); }
 
 	RText 
 REnvelope::newsgroups()
-{
-	return *(RText *)get(RMM::HeaderNewsgroups);
-}
+{ return *(RText *)get(RMM::HeaderNewsgroups); }
 
 	RText 
 REnvelope::organization()
-{
-	return *(RText *)get(RMM::HeaderOrganization);
-}
+{ return *(RText *)get(RMM::HeaderOrganization); }
 
 	RText 
 REnvelope::path()
-{
-	return *(RText *)get(RMM::HeaderPath);
-}
+{ return *(RText *)get(RMM::HeaderPath); }
 
 	RText 
 REnvelope::received()
-{
-	return *(RText *)get(RMM::HeaderReceived);
-}
+{ return *(RText *)get(RMM::HeaderReceived); }
 
 	RText 
 REnvelope::references()
-{
-	return *(RText *)get(RMM::HeaderReferences);
-}
+{ return *(RText *)get(RMM::HeaderReferences); }
 
 	RAddressList 
 REnvelope::replyTo()
-{
-	return *(RAddressList *)get(RMM::HeaderReplyTo);
-}
+{ return *(RAddressList *)get(RMM::HeaderReplyTo); }
 
 	RAddressList 
 REnvelope::resentBcc()
-{
-	return *(RAddressList *)get(RMM::HeaderResentBcc);
-}
+{ return *(RAddressList *)get(RMM::HeaderResentBcc); }
 
 	RAddressList 
 REnvelope::resentCc()
-{
-	return *(RAddressList *)get(RMM::HeaderResentCc);
-}
+{ return *(RAddressList *)get(RMM::HeaderResentCc); }
 
 	RDateTime 
 REnvelope::resentDate()
-{
-	return *(RDateTime *)get(RMM::HeaderResentDate);
-}
+{ return *(RDateTime *)get(RMM::HeaderResentDate); }
 
 	RMailboxList 
 REnvelope::resentFrom()
-{
-	return *(RMailboxList *)get(RMM::HeaderResentFrom);
-}
+{ return *(RMailboxList *)get(RMM::HeaderResentFrom); }
 
 	RMessageID 
 REnvelope::resentMessageID()
-{
-	return *(RMessageID *)get(RMM::HeaderResentMessageID);
-}
+{ return *(RMessageID *)get(RMM::HeaderResentMessageID); }
 
 	RAddressList 
 REnvelope::resentReplyTo()
-{
-	return *(RAddressList *)get(RMM::HeaderResentReplyTo);
-}
+{ return *(RAddressList *)get(RMM::HeaderResentReplyTo); }
 
 	RMailbox 
 REnvelope::resentSender()
-{
-	return *(RMailbox *)get(RMM::HeaderResentSender);
-}
+{ return *(RMailbox *)get(RMM::HeaderResentSender); }
 
 	RAddressList 
 REnvelope::resentTo()
-{
-	return *(RAddressList *)get(RMM::HeaderResentTo);
-}
+{ return *(RAddressList *)get(RMM::HeaderResentTo); }
 
 	RText 
 REnvelope::returnPath()
-{
-	return *(RText *)get(RMM::HeaderReturnPath);
-}
+{ return *(RText *)get(RMM::HeaderReturnPath); }
 
 	RMailbox 
 REnvelope::sender()
-{
-	return *(RMailbox *)get(RMM::HeaderSender);
-}
+{ return *(RMailbox *)get(RMM::HeaderSender); }
 
 	RText 
 REnvelope::subject()
-{
-	return *(RText *)get(RMM::HeaderSubject);
-}
+{ return *(RText *)get(RMM::HeaderSubject); }
 
 	RText 
 REnvelope::summary()
-{
-	return *(RText *)get(RMM::HeaderSummary);
-}
+{ return *(RText *)get(RMM::HeaderSummary); }
 
 	RAddressList 
 REnvelope::to()
-{
-	return *(RAddressList *)get(RMM::HeaderTo);
-}
+{ return *(RAddressList *)get(RMM::HeaderTo); }
 
 	RText 
 REnvelope::xref()
-{
-	return *(RText *)get(RMM::HeaderXref);
-}
+{ return *(RText *)get(RMM::HeaderXref); }
 
 	RMailbox
 REnvelope::firstSender()

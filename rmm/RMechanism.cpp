@@ -34,6 +34,12 @@ RMechanism::RMechanism(const RMechanism & m)
 	rmmDebug("ctor");
 }
 
+RMechanism::RMechanism(const QCString & s)
+	:	RHeaderBody(s)
+{
+	rmmDebug("ctor");
+}
+
 RMechanism::~RMechanism()
 {
 	rmmDebug("dtor");
@@ -49,16 +55,30 @@ RMechanism::operator = (const RMechanism & m)
 	return *this;
 }
 
-	void
-RMechanism::parse()
+	RMechanism &
+RMechanism::operator = (const QCString & s)
 {
-	rmmDebug("parse() called");
+	RHeaderBody::operator = (s);
+	return *this;
+}
+
+	bool
+RMechanism::operator == (RMechanism & m)
+{
+	parse();
+	m.parse();
+
+	return (RHeaderBody::operator == (m));
 }
 
 	void
-RMechanism::assemble()
+RMechanism::_parse()
 {
-	rmmDebug("assemble() called");
+}
+
+	void
+RMechanism::_assemble()
+{
 }
 
 	void

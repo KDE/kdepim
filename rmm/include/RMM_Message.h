@@ -31,16 +31,8 @@
 class RMessage : public RBodyPart {
 
 	public:
-
-		RMessage();
-		RMessage(const RMessage &);
-		RMessage(const QCString & s);
-
-		virtual ~RMessage();
-
-		RMessage & operator = (const RMessage & message);
 		
-		friend QDataStream & operator << (QDataStream & str, RMessage & m);
+#include "generated/RMessage_generated.h"
 
 		QCString recipientListAsPlainString();
 
@@ -51,9 +43,7 @@ class RMessage : public RBodyPart {
 
 		void setStatus(RMM::MessageStatus status);
 		RMM::MessageStatus status();
-
-		const char * className() const { return "RMessage"; }
-
+		
 	protected:
 		
 		RMM::MessageStatus	status_;

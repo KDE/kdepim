@@ -1,5 +1,5 @@
 	void
-EmpathMainWindow::setupMenuBar()
+EmpathMainWindow::_setupMenuBar()
 {
 	empathDebug("setting up menu bar");
 
@@ -161,6 +161,11 @@ EmpathMainWindow::setupMenuBar()
 	helpMenu_->insertItem(
 		i18n("About &KDE"),
 		kapp, SLOT(aboutKDE()));
+	
+	helpMenu_->insertSeparator();
+
+	helpMenu_->insertItem(i18n("&Send bug report"),
+		empath, SLOT(s_bugReport()));
 	
 	menu_->insertItem(i18n("&File"), fileMenu_);
 	menu_->insertItem(i18n("&Edit"), editMenu_);

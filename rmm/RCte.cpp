@@ -67,13 +67,18 @@ RCte::operator = (const QCString & s)
 	return *this;
 }
 
-	void
-RCte::parse()
+	bool
+RCte::operator == (RCte & c)
 {
-	rmmDebug("parse() called");
-	if (parsed_) return;
-	rmmDebug("strRep_ = " + strRep_);
-	
+	parse();
+	c.parse();
+
+	return (mechanism_ == c.mechanism_);
+}
+
+	void
+RCte::_parse()
+{
 	strRep_		= strRep_.stripWhiteSpace();
 	
 	if (!stricmp(strRep_, "7bit"))
@@ -88,17 +93,11 @@ RCte::parse()
 		mechanism_ = RMM::CteTypeXtension;
 	else 
 		mechanism_ = RMM::CteTypeBinary;
-	
-	parsed_		= true;
-	assembled_	= false;
 }
 
 	void
-RCte::assemble()
+RCte::_assemble()
 {
-	parse();
-	if (assembled_) return;
-	rmmDebug("assemble() called");
 	switch (mechanism_) {
 
 		case RMM::CteType7bit:
@@ -125,7 +124,6 @@ RCte::assemble()
 			strRep_ = "binary";
 			break;
 	}
-	assembled_ = true;
 }
 
 	void

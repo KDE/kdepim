@@ -21,6 +21,7 @@
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
+#include <kglobal.h>
 #include <kconfig.h>
 
 // Local includes
@@ -269,7 +270,7 @@ EmpathFilterManagerDialog::s_OK()
 {
 	hide();
 	s_apply();
-	kapp->getConfig()->sync();
+	KGlobal::config()->sync();
 	delete this;
 }
 
@@ -284,8 +285,8 @@ EmpathFilterManagerDialog::s_apply()
 {
 	if (applied_) {
 		pb_apply_->setText(i18n("&Apply"));
-		kapp->getConfig()->rollback(true);
-		kapp->getConfig()->reparseConfiguration();
+		KGlobal::config()->rollback(true);
+		KGlobal::config()->reparseConfiguration();
 		applied_ = false;
 	} else {
 		pb_apply_->setText(i18n("&Revert"));
@@ -299,7 +300,7 @@ EmpathFilterManagerDialog::s_apply()
 EmpathFilterManagerDialog::s_cancel()
 {
 	if (!applied_)
-		kapp->getConfig()->rollback(true);
+		KGlobal::config()->rollback(true);
 	delete this;
 }
 

@@ -55,8 +55,14 @@ class EmpathComposeWidget : public QWidget
 		/**
 		 * Standard ctor
 		 */
+		EmpathComposeWidget(QWidget * parent = 0, const char * name = 0);
+
 		EmpathComposeWidget(
 			ComposeType t, const EmpathURL &,
+			QWidget * parent = 0, const char * name = 0);
+	
+		EmpathComposeWidget(
+			const QString &,
 			QWidget * parent = 0, const char * name = 0);
 		
 		/**
@@ -76,6 +82,8 @@ class EmpathComposeWidget : public QWidget
 		
 		void init() { _init(); }
 		
+		void bugReport();
+		
 	protected slots:
 		
 		void	s_editorDone(bool ok, QCString text);
@@ -87,20 +95,21 @@ class EmpathComposeWidget : public QWidget
 		void	_forward();
 		void	spawnExternalEditor(const QCString & text);
 
-		QMultiLineEdit					* editorWidget_;
-		EmpathHeaderEditWidget			* headerEditWidget_;
-		EmpathSubjectSpecWidget			* subjectSpecWidget_;
-		QListView						* lv_attachments_;
-		QComboBox						* cmb_priority_;
-		QLabel							* l_priority_;
-		QGridLayout						* layout_;
-		QGridLayout						* midLayout_;
-		QSplitter						* vSplit;
-		QSplitter						* hSplit;
+		QMultiLineEdit				* editorWidget_;
+		EmpathHeaderEditWidget		* headerEditWidget_;
+		EmpathSubjectSpecWidget		* subjectSpecWidget_;
+		QListView					* lv_attachments_;
+		QComboBox					* cmb_priority_;
+		QLabel						* l_priority_;
+		QGridLayout					* layout_;
+		QGridLayout					* midLayout_;
+		QSplitter					* vSplit;
+		QSplitter					* hSplit;
 
 		Q_UINT32				horizPannerAbsSeparator;
 		ComposeType				composeType_;
 		EmpathURL				url_;
+		QString					recipient_;
 };
 
 #endif

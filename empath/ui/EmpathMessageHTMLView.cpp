@@ -30,6 +30,8 @@
 #include <klocale.h>
 #include <kcursor.h>
 #include <kapp.h>
+#include <kconfig.h>
+#include <kglobal.h>
 
 // Local includes
 #include "RMM_Message.h"
@@ -50,7 +52,7 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 	empathDebug("ctor");
 	qInitPngIO();
 	
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	QString iconSet = c->readEntry(EmpathConfig::KEY_ICON_SET);
 	
@@ -58,19 +60,22 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 	// Begin welcome message
 	write("<HTML>");
 	write("<BODY BGCOLOR=\"#");
-	write(QColorToHTML(empathWindowColour()));
+	write(QColorToHTML(
+			kapp->palette().color(QPalette::Normal, QColorGroup::Base)));
 	write("\">");
 	write("<TT><FONT COLOR=\"#");
-	write(QColorToHTML(empathTextColour()));
+	write(QColorToHTML(
+			kapp->palette().color(QPalette::Normal, QColorGroup::Text)));
 	write("\">");
 	write (i18n("Welcome to Empath").ascii());
 	write ("</FONT></TT></HTML>");
 	// End welcome message
 	parse();
 	end();
+
 	QObject::connect(
-		this, SIGNAL(rightButtonPressed(const QPoint &)),
-		this, SLOT(s_rightButtonPressed(const QPoint &)));
+		this, SIGNAL(popupMenu(const char *, const QPoint &)),
+		this, SLOT(s_popupMenu(const char *, const QPoint &)));
 	
 	empathDebug("ctor finished");
 }
@@ -90,10 +95,10 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool markup)
 
 	setCursor(waitCursor);
 	
-	KConfig * config(kapp->getConfig());
+	KConfig * config(KGlobal::config());
 	config->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
-	QFont defaultFixed(empathFixedFont());
+	QFont defaultFixed(kapp->fixedFont());
 	
 	QFont f =
 		config->readFontEntry(
@@ -106,17 +111,18 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool markup)
 	int fsizes[7] = { fs, fs, fs, fs, fs, fs, fs };
 	setFontSizes(fsizes);
 	
-	setStandardFont(empathGeneralFont().family().ascii());
+	setStandardFont(kapp->generalFont().family().ascii());
 
 	setURLCursor(KCursor::handCursor());
 	setFocusPolicy(QWidget::StrongFocus);
 	
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
-	setDefaultBGColor(empathWindowColour());
+	setDefaultBGColor(
+		kapp->palette().color(QPalette::Normal, QColorGroup::Base));
 	setDefaultTextColors(
-		empathTextColour(),
+		kapp->palette().color(QPalette::Normal, QColorGroup::Text),
 		c->readColorEntry(EmpathConfig::KEY_LINK_COLOUR),
 		c->readColorEntry(EmpathConfig::KEY_VISITED_LINK_COLOUR));
 	
@@ -125,7 +131,8 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool markup)
 	if (s.isEmpty()) {
 		write(
 			"<HTML><BODY BGCOLOR=" +
-			QColorToHTML(empathWindowColour()) +
+			QColorToHTML(
+				kapp->palette().color(QPalette::Normal, QColorGroup::Base)) +
 			"><PRE>" +
 			i18n("This part is empty").ascii() +
 			"</PRE></BODY></HTML>");
@@ -143,7 +150,8 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool markup)
 		toHTML(html);
 		write(
 			"<HTML><BODY BGCOLOR=" +
-			QColorToHTML(empathWindowColour()) +
+			QColorToHTML(
+				kapp->palette().color(QPalette::Normal, QColorGroup::Base)) +
 			"><PRE>" +
 			html +
 			"</PRE></BODY></HTML>");
@@ -164,7 +172,7 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool markup)
 	void
 EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 {
-	KConfig * config(kapp->getConfig());
+	KConfig * config(KGlobal::config());
 	config->setGroup(EmpathConfig::GROUP_DISPLAY);
 
 	QColor quote1, quote2;
@@ -476,8 +484,8 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 				bufpos -= (pos - startAddress);
 
 				// Now replace from the cursor with <A HREF...
-				strcpy(bufpos, "<A HREF=\"mailto:");
-				bufpos += 16;
+				strcpy(bufpos, "<A HREF=\"empath://mailto:");
+				bufpos += 25;
 
 				// Now add the start address after the markup
 				strncpy(bufpos, startAddress, pos - startAddress + 1);
@@ -518,5 +526,37 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 	delete [] buf;
 	buf = 0;
 	str = outStr.data();
+}
+
+	void
+EmpathMessageHTMLWidget::s_popupMenu(const char * c, const QPoint & p)
+{
+	if (c == 0)
+		return;
+	
+	popup_.clear();
+	
+	QString s(c);
+	
+	empathDebug("URL clicked was: \"" + s + "\"");
+	
+	if (s.left(16) == "empath://mailto:") {
+		popup_.insertItem(empathIcon("mini-compose.png"),
+			i18n("New message to"), empath, SLOT(s_compose()));
+	}
+	
+	if (s.left(7) == "http://"	||
+		s.left(6) == "ftp://"	||
+		s.left(8) == "https://"	||
+		s.left(9) == "gopher://") {
+		
+		popup_.insertItem(empathIcon("mini-view.png"), i18n("Browse"),
+			parent(), SLOT(s_URLSelected()));
+		
+		popup_.insertItem(empathIcon("mini-view.png"), i18n("Bookmark"),
+			parent(), SLOT(s_URLSelected()));
+	}
+	
+	popup_.exec(QCursor::pos());
 }
 

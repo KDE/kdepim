@@ -32,23 +32,18 @@ typedef QListIterator<RAddress> RAddressListIterator;
  * @short Simple encapsulation of a list of RAddress, which is also an
  * RHeaderBody.
  */
-class RAddressList : public QList<RAddress>, public RHeaderBody {
+class RAddressList : public RHeaderBody {
 
 	public:
 
-		RAddressList();
-		RAddressList(const RAddressList &);
-		RAddressList(const QCString & s) : RHeaderBody(s) { }
-		RAddressList & operator = (const RAddressList &);
+#include "generated/RAddressList_generated.h"
+		
+		RAddress * at(int);
+		unsigned int count();
 
-		virtual ~RAddressList();
-
-		virtual void parse();
-		virtual void assemble();
-
-		void createDefault();
-
-		const char * className() const { return "RAddressList"; }
+	private:
+		
+		QList<RAddress> list_;
 };
 
 #endif //RADDRESSLIST_H

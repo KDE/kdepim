@@ -36,7 +36,7 @@ EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(
 {
 	empathDebug("ctor");
 	
-	layout_		= new QGridLayout(this, 1, 2, 0, 10);
+	layout_		= new QGridLayout(this, 1, 2, 2, 10);
 	CHECK_PTR(layout_);
 	le_address_	= new QLineEdit(this, "le_address");
 	CHECK_PTR(le_address_);
@@ -46,6 +46,9 @@ EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(
 	pb_browse_->setPixmap(empathIcon("point.png")), 
    	
 	pb_browse_->setFixedWidth(le_address_->sizeHint().height());
+	
+	le_address_->setFixedHeight(le_address_->sizeHint().height());
+	pb_browse_->setFixedHeight(le_address_->sizeHint().height());
 
 	layout_->setColStretch(0, 10);
 	layout_->setColStretch(1, 0);
@@ -99,6 +102,6 @@ EmpathAddressSelectionWidget::s_lostFocus()
 EmpathAddressSelectionWidget::s_browseClicked()
 {
 	empathDebug("s_browseClicked() called");
-	KMsgBox::message(0, "Empath", i18n("Sorry, the addressbook isn't ready for use yet."), KMsgBox::EXCLAMATION, i18n("OK"));
+	KMsgBox::message(this, "Empath", i18n("Sorry, the addressbook isn't ready for use yet."), KMsgBox::EXCLAMATION, i18n("OK"));
 }
 

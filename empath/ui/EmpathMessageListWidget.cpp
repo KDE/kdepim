@@ -34,6 +34,8 @@
 #include <kfiledialog.h>
 #include <kiconloader.h>
 #include <kapp.h>
+#include <kglobal.h>
+#include <kconfig.h>
 
 // Local includes
 #include "EmpathMessageList.h"
@@ -49,7 +51,8 @@ QListViewItem * EmpathMessageListWidget::lastSelected_ = 0;
 
 EmpathMessageListWidget::EmpathMessageListWidget(
 		QWidget * parent, const char * name)
-	:	QListView(parent, name)
+	:	QListView(parent, name),
+		nSelected_(0)
 {
 	parent_ = (EmpathMainWindow *)parent;
 	wantScreenUpdates_ = false;
@@ -70,18 +73,18 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 	addColumn("Date");
 	addColumn("Size");
 	
-	px_						= empathIcon("tree.png");
-	pxRead_					= empathIcon("tree-read.png");
-	pxMarked_				= empathIcon("tree-marked.png");
-	pxReplied_				= empathIcon("tree-replied.png");
-	pxReadMarked_			= empathIcon("tree-read-marked.png");
-	pxReadReplied_			= empathIcon("tree-read-replied.png");
-	pxMarkedReplied_		= empathIcon("tree-marked-replied.png");
-	pxReadMarkedReplied_	= empathIcon("tree-read-marked-replied.png");
+	px_xxx_	= empathIcon("tree.png");
+	px_Sxx_	= empathIcon("tree-read.png");
+	px_xMx_	= empathIcon("tree-marked.png");
+	px_xxR_	= empathIcon("tree-replied.png");
+	px_SMx_	= empathIcon("tree-read-marked.png");
+	px_SxR_	= empathIcon("tree-read-replied.png");
+	px_xMR_	= empathIcon("tree-marked-replied.png");
+	px_SMR_	= empathIcon("tree-read-marked-replied.png");
 
 	empathDebug("Restoring column sizes");
 	
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
 	for (int i = 0 ; i < 4 ; i++) {
@@ -119,7 +122,7 @@ EmpathMessageListWidget::~EmpathMessageListWidget()
 	empathDebug("Saving column sizes and positions");
 	empathDebug("XXX: Sort this so that positions can be restored");
 	
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
 	for (int i = 0 ; i < 4 ; i++) {
@@ -201,8 +204,8 @@ EmpathMessageListWidget::addItem(EmpathIndexRecord * item)
 	QListIterator<EmpathMessageListItem> it(itemList_);
 	
 	for (; it.current(); ++it) {
-		empathDebug("Looking at message id \"" +
-			it.current()->messageID().asString() + "\"");
+//		empathDebug("Looking at message id \"" +
+//			it.current()->messageID().asString() + "\"");
 		if (it.current()->messageID() == item->parentID()) {
 			parentItem = it.current();
 			break;
@@ -458,7 +461,17 @@ EmpathMessageListWidget::s_rightButtonPressed(
 {
 	if (item == 0) return;
 	wantScreenUpdates_ = false;
-	setSelected(item, true);
+	
+	if (nSelected_ == 0) {
+		setSelected(item, true);
+		nSelected_ = 1;
+	}
+	
+	if (nSelected_ != 1) {
+		multipleMessageMenu_.exec(pos);
+		wantScreenUpdates_ = true;
+		return;
+	}
 	
 	EmpathMessageListItem * i = (EmpathMessageListItem *)item;
 
@@ -532,29 +545,29 @@ EmpathMessageListWidget::setStatus(
 	empathDebug("setStatus() called with " + QString().setNum(status));
 	
 	item->setStatus(status);
-	
+
 	if (status & RMM::Read)
 		if (status & RMM::Marked)
 			if (status & RMM::Replied)
-				item->setPixmap(0, pxReadMarkedReplied_);
+				item->setPixmap(0, px_SMR_);
 			else
-				item->setPixmap(0, pxReadMarked_);
+				item->setPixmap(0, px_SMx_);
 		else
 			if (status & RMM::Replied)
-				item->setPixmap(0, pxReadReplied_);
+				item->setPixmap(0, px_SxR_);
 			else
-				item->setPixmap(0, pxRead_);
+				item->setPixmap(0, px_Sxx_);
 	else
 		if (status & RMM::Marked)
 			if (status & RMM::Replied)
-				item->setPixmap(0, pxMarkedReplied_);
+				item->setPixmap(0, px_xMR_);
 			else
-				item->setPixmap(0, pxMarked_);
+				item->setPixmap(0, px_xMx_);
 		else
 			if (status & RMM::Replied)
-				item->setPixmap(0, pxReplied_);
+				item->setPixmap(0, px_xxR_);
 			else
-				item->setPixmap(0, px_);
+				item->setPixmap(0, px_xxx_);
 	
 	return;
 }
@@ -588,7 +601,7 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	
 	EmpathIndexIterator it(f->messageList());
 	
-	KConfig * c(kapp->getConfig());
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	empathDebug("....................");
@@ -688,7 +701,7 @@ EmpathMessageListWidget::s_headerClicked(int i)
 	
 	setSorting(i, sortType_);
 	
-	KConfig * c(kapp->getConfig());
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	c->writeEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, i);
@@ -700,7 +713,8 @@ EmpathMessageListWidget::s_headerClicked(int i)
 	void
 EmpathMessageListWidget::_setupMessageMenu()
 {
-	messageMenu_.insertItem(empathIcon("mini-view.png"), i18n("View"),
+	messageMenuItemView =
+		messageMenu_.insertItem(empathIcon("mini-view.png"), i18n("View"),
 		this, SLOT(s_messageView()));
 	
 	messageMenu_.insertSeparator();
@@ -722,19 +736,48 @@ EmpathMessageListWidget::_setupMessageMenu()
 		
 	messageMenu_.insertSeparator();
 
+	messageMenuItemReply =
 	messageMenu_.insertItem(empathIcon("mini-reply.png"), i18n("Reply"),
 		this, SLOT(s_messageReply()));
 
+	messageMenuItemReplyAll =
 	messageMenu_.insertItem(empathIcon("mini-reply.png"),i18n("Reply to A&ll"),
 		this, SLOT(s_messageReplyAll()));
 
+	messageMenuItemForward =
 	messageMenu_.insertItem(empathIcon("mini-forward.png"), i18n("Forward"),
 		this, SLOT(s_messageForward()));
 
+	messageMenuItemDelete =
 	messageMenu_.insertItem(empathIcon("mini-delete.png"), i18n("Delete"),
 		this, SLOT(s_messageDelete()));
 
+	messageMenuItemSaveAs =
 	messageMenu_.insertItem(empathIcon("mini-save.png"), i18n("Save As"),
+		this, SLOT(s_messageSaveAs()));
+	
+	multipleMessageMenu_.insertItem(
+		empathIcon("tree-marked.png"), i18n("Tag"),
+		this, SLOT(s_messageMark()));
+	
+	multipleMessageMenu_.insertItem(
+		empathIcon("tree-read.png"), i18n("Mark as Read"),
+		this, SLOT(s_messageMarkRead()));
+	
+	multipleMessageMenu_.insertItem(
+		empathIcon("tree-replied.png"), i18n("Mark as Replied"),
+		this, SLOT(s_messageMarkReplied()));
+
+	multipleMessageMenu_.insertItem(
+		empathIcon("mini-forward.png"), i18n("Forward"),
+		this, SLOT(s_messageForward()));
+
+	multipleMessageMenu_.insertItem(
+		empathIcon("mini-delete.png"), i18n("Delete"),
+		this, SLOT(s_messageDelete()));
+
+	multipleMessageMenu_.insertItem(
+		empathIcon("mini-save.png"), i18n("Save As"),
 		this, SLOT(s_messageSaveAs()));
 }
 
@@ -761,7 +804,7 @@ EmpathMarkAsReadTimer::go(EmpathMessageListItem * i)
 	// Don't bother if it's already read.
 	if (i->status() & RMM::Read) return;
 
-	KConfig * c(kapp->getConfig());
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	if (!c->readBoolEntry(EmpathConfig::KEY_MARK_AS_READ)) return;
@@ -903,6 +946,8 @@ EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 		
 		s_currentChanged(item);
 		
+		nSelected_ = 1;
+		
 		return;
 	}
 		
@@ -911,8 +956,10 @@ EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 		empathDebug("CASE 3");
 		setMultiSelection(true);
 		
-		if (!item->isSelected())
+		if (!item->isSelected()) {
 			lastSelected_ = item;
+			nSelected_++;
+		}
 
 		setSelected(item, !(item->isSelected()));
 
@@ -947,6 +994,8 @@ EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 			lastSelected_ = item;
 		}
 		
+		nSelected_ = 1;
+		
 		return;
 	}
 	
@@ -966,6 +1015,7 @@ EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 			// selection.
 			empathDebug("CASE 5");
 			clearSelection();
+			nSelected_ = 0;
 		}
 			
 		QListViewItem * i = lastSelected_;
@@ -977,6 +1027,7 @@ EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 			while (i && i != item) {
 				
 				setSelected(i, true);
+				nSelected_++;
 
 				i = i->itemBelow();
 			}
@@ -986,6 +1037,7 @@ EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 			while (i && i != item) {
 				
 				setSelected(i, true);
+				nSelected_++;
 
 				i = i->itemAbove();
 			}
@@ -998,6 +1050,7 @@ EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 		}
 
 		setSelected(item, true);
+		nSelected_++;
 		return;
 	}
 	QListView::contentsMousePressEvent(e);
@@ -1014,7 +1067,7 @@ EmpathMessageListWidget::mouseMoveEvent(QMouseEvent * e)
 {
 	empathDebug("Mouse move event in progress");
 	
-	return; // We're broken. Sod it.
+	return; // XXX: Still broken.
 	
 	if (!maybeDrag_) {
 		QListView::contentsMouseMoveEvent(e);
@@ -1053,14 +1106,13 @@ EmpathMessageListWidget::mouseMoveEvent(QMouseEvent * e)
 	empathDebug("Starting a drag");
 	char * c = new char[i->id().length() + 1];
 	strcpy(c, i->id().ascii());
-	QTextDrag * u  = new QTextDrag(c, this, "urlDrag");
+	QTextDrag * u  = new QTextDrag(c, this);
 	CHECK_PTR(u);
 	
 	u->setPixmap(empathIcon("tree.png")); 
 	
 	empathDebug("Starting the drag copy");
-	u->dragCopy();
-	QWidget::mouseMoveEvent(e);
+	u->drag();
 }
 
 	void
@@ -1069,13 +1121,18 @@ EmpathMessageListWidget::selectTagged()
 	clearSelection();
 	setMultiSelection(true);
 	setUpdatesEnabled(false);
+	
+	nSelected_ = 0;
+	
 	wantScreenUpdates_ = false;
 
 	QListIterator<EmpathMessageListItem> it(itemList_);
 	
 	for (; it.current(); ++it)
-		if (it.current()->status() & RMM::Marked)
+		if (it.current()->status() & RMM::Marked) {
+			nSelected_++;
 			it.current()->setSelected(true);
+		}
 	
 	wantScreenUpdates_ = true;
 	setUpdatesEnabled(true);
@@ -1088,13 +1145,18 @@ EmpathMessageListWidget::selectRead()
 	clearSelection();
 	setMultiSelection(true);
 	setUpdatesEnabled(false);
+	
+	nSelected_ = 0;
+	
 	wantScreenUpdates_ = false;
 
 	QListIterator<EmpathMessageListItem> it(itemList_);
 	
 	for (; it.current(); ++it)
-		if (it.current()->status() & RMM::Read)
+		if (it.current()->status() & RMM::Read) {
+			nSelected_++;
 			it.current()->setSelected(true);
+		}
 	
 	wantScreenUpdates_ = true;
 	setUpdatesEnabled(true);
@@ -1106,11 +1168,16 @@ EmpathMessageListWidget::selectAll()
 {
 	setMultiSelection(true);
 	setUpdatesEnabled(false);
+	
+	nSelected_ = 0;
+	
 	QListIterator<EmpathMessageListItem> it(itemList_);
 	wantScreenUpdates_ = false;
 	
-	for (; it.current(); ++it)
+	for (; it.current(); ++it) {
 		it.current()->setSelected(true);
+		nSelected_++;
+	}
 	
 	wantScreenUpdates_ = true;
 	setUpdatesEnabled(true);
@@ -1123,13 +1190,21 @@ EmpathMessageListWidget::selectInvert()
 	clearSelection();
 	setMultiSelection(true);
 	setUpdatesEnabled(false);
+	
+	nSelected_ = 0;
+	
 	wantScreenUpdates_ = false;
 
 	QListIterator<EmpathMessageListItem> it(itemList_);
 	
-	for (; it.current(); ++it)
-		it.current()->setSelected(!it.current()->isSelected());
-
+	for (; it.current(); ++it) {
+		if (!it.current()->isSelected()) {
+			it.current()->setSelected(true);
+			nSelected_++;
+		} else
+			it.current()->setSelected(false);
+	}
+	
 	wantScreenUpdates_ = true;
 	setUpdatesEnabled(true);
 	triggerUpdate();

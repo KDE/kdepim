@@ -8,6 +8,7 @@
 #include <kconfig.h>
 #include <klocale.h>
 #include <kapp.h>
+#include <kglobal.h>
 #include <kpixmap.h>
 
 // Local includes
@@ -39,7 +40,7 @@ EmpathHeaderViewWidget::useEnvelope(REnvelope & e)
 {
 	empathDebug("useEnvelope()");
 	headerList_.clear();
-	KConfig * c(kapp->getConfig());
+	KConfig * c(KGlobal::config());
 	// FIXME Must be QStringList when available.
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
@@ -58,7 +59,7 @@ EmpathHeaderViewWidget::useEnvelope(REnvelope & e)
 		headerList_.append(h->headerBody()->asString());
 	}
 	
-	int th = QFontMetrics(empathGeneralFont()).height();
+	int th = QFontMetrics(kapp->generalFont()).height();
 	setFixedHeight(th * l.count() + 4);
 	
 	paintEvent(0);
@@ -75,10 +76,10 @@ EmpathHeaderViewWidget::paintEvent(QPaintEvent * e)
 	KPixmap px;
 	px.resize(width(), height());
 	px.gradientFill(
-		qApp->palette()->color(QPalette::Normal, QColorGroup::Base),
-		qApp->palette()->color(QPalette::Normal, QColorGroup::Background));
+		kapp->palette().color(QPalette::Normal, QColorGroup::Base),
+		kapp->palette().color(QPalette::Normal, QColorGroup::Background));
 	
-	int th = QFontMetrics(empathGeneralFont()).height();
+	int th = QFontMetrics(kapp->generalFont()).height();
 	
 	int i(0);
 	
@@ -145,8 +146,8 @@ EmpathHeaderViewWidget::mouseMoveEvent(QMouseEvent * e)
 		KPixmap px;
 		px.resize(30, height());
 		px.gradientFill(
-			qApp->palette()->color(QPalette::Normal, QColorGroup::Base),
-			qApp->palette()->color(QPalette::Normal, QColorGroup::Background));		
+			kapp->palette().color(QPalette::Normal, QColorGroup::Base),
+			kapp->palette().color(QPalette::Normal, QColorGroup::Background));		
 		p.drawPixmap(width() - 30, 0, px);
 		p.drawPixmap(width() - 26, 2, clipIcon_);
 		glowing_ = false;

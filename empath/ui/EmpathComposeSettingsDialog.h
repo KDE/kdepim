@@ -79,7 +79,6 @@ class EmpathComposeSettingsDialog : public QDialog
 		QGridLayout			* phrasesGroupLayout_;
 		QGridLayout			* messageGroupLayout_;
 		QGridLayout			* whenGroupLayout_;
-		QGridLayout			* externalLayout_;
 
 		RikGroupBox			* rgb_phrases_;
 		RikGroupBox			* rgb_msg_;
@@ -89,10 +88,12 @@ class EmpathComposeSettingsDialog : public QDialog
 		QWidget				* w_msg_;
 		QWidget				* w_when_;
 
+		QLabel				* l_extra_;
 		QLabel				* l_reply_;
 		QLabel				* l_replyAll_;
 		QLabel				* l_forward_;
 
+		QLineEdit			* le_extra_;
 		QLineEdit			* le_reply_;
 		QLineEdit			* le_replyAll_;
 		QLineEdit			* le_forward_;

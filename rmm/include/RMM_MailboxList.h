@@ -35,24 +35,12 @@ typedef QListIterator<RMailbox> RMailboxListIterator;
 class RMailboxList : public RHeaderBody {
 
 	public:
-
-		RMailboxList();
-		RMailboxList(const RMailboxList & rMailboxList);
-		RMailboxList(const QCString & s);
-		RMailboxList & operator = (const RMailboxList &);
-		RMailboxList & operator = (const QCString &);
-
-		virtual ~RMailboxList();
+		
+#include "generated/RMailboxList_generated.h"
 
 		int count();
 		RMailbox at(int);
 		void append(RMailbox);
-		void parse();
-		void assemble();
-		
-		void createDefault();
-		
-		const char * className() const { return "RMailboxList"; }
 		
 	private:
 		

@@ -22,9 +22,9 @@
 #include <qregexp.h>
 
 // KDE includes
+#include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
-#include <kapp.h>
 
 // Local includes
 #include "Empath.h"
@@ -47,7 +47,7 @@ EmpathMatcher::save(const QString & parentid, Q_UINT32 id)
 {
 	empathDebug("save(" + parentid + ", " + QString().setNum(id) + ") called");	
 	
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	
 	c->setGroup(EmpathConfig::GROUP_EXPR +
 		parentid +
@@ -85,7 +85,7 @@ EmpathMatcher::load(const QString & parentName, Q_UINT32 id)
 	empathDebug("load(" + parentName + ", " +
 		QString().setNum(id) + ") called");
 	
-	KConfig * c = kapp->getConfig();
+	KConfig * c = KGlobal::config();
 	
 	c->setGroup(EmpathConfig::GROUP_EXPR + parentName + "_" +
 		QString().setNum(id));

@@ -35,8 +35,6 @@
 #include "EmpathURL.h"
 
 class EmpathComposeWidget;
-class EmpathSettingsDialog;
-class RMessage;
 
 /**
  * Holds a compose widget.
@@ -47,8 +45,12 @@ class EmpathComposeWindow : public KTMainWindow
 
 	public:
 		
+		EmpathComposeWindow();
 		EmpathComposeWindow(ComposeType t, const EmpathURL &);
+		EmpathComposeWindow(const QString &);
 		~EmpathComposeWindow();
+		
+		void bugReport();
 
 	protected slots:
 
@@ -89,16 +91,8 @@ class EmpathComposeWindow : public KTMainWindow
 		void s_encrypt			(bool);
 
 	private:
-	
-		// General
-		KApplication	* parentApp;
-		KStdAccel		* accel;
-
-		KMenuBar		* menu;
-		KToolBar		* tool;
-		KStatusBar		* status;
 		
-		KConfig			* config;
+		void _init();
 	
 		QPopupMenu		* fileMenu_;
 		QPopupMenu		* editMenu_;
@@ -108,7 +102,6 @@ class EmpathComposeWindow : public KTMainWindow
 		// Empath stuff
 
 		EmpathComposeWidget		* composeWidget_;
-		EmpathSettingsDialog	* settingsDialog_;
 		
 		// Setup methods
 		void setupMenuBar();

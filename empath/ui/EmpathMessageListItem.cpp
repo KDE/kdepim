@@ -21,6 +21,9 @@
 // Qt includes
 #include <qstring.h>
 
+// KDE includes
+#include <kapp.h>
+
 // Local includes
 #include "EmpathMessageListWidget.h"
 #include "EmpathMessageListItem.h"
@@ -120,7 +123,7 @@ EmpathMessageListItem::setup()
 	
 	widthChanged();
 	int ph = pixmap(0) ? pixmap(0)->height() : 0;
-	int th = QFontMetrics(empathGeneralFont()).height();
+	int th = QFontMetrics(kapp->generalFont()).height();
 	setHeight(QMAX(ph, th));
 }
 

@@ -92,6 +92,37 @@ RBodyPart::operator = (const RBodyPart & part)
 
 	return *this;
 }
+	
+	RBodyPart &
+RBodyPart::operator = (const QCString & part)
+{
+	REntity::operator = (part);
+	return *this;
+}
+
+	bool
+RBodyPart::operator == (RBodyPart & part)
+{
+	parse();
+	
+	part.parse();
+	
+	bool equal = (
+		envelope_			== part.envelope_			&&
+		data_				== part.data_				&&
+		encoding_			== part.encoding_			&&
+		mimeType_			== part.mimeType_			&&
+		mimeSubType_		== part.mimeSubType_		&&
+		contentDescription_	== part.contentDescription_	&&
+		disposition_		== part.disposition_		&&
+		boundary_			== part.boundary_			&&
+		type_				== part.type_				&&
+		preamble_			== part.preamble_			&&
+		epilogue_			== part.epilogue_);
+	
+	return (equal && false);
+	//body_				== part.body_				&&
+}
 
 	RMM::MimeType
 RBodyPart::mimeType()
@@ -136,10 +167,8 @@ RBodyPart::setMimeSubType(const QCString & s)
 }
 
 	void
-RBodyPart::parse()
+RBodyPart::_parse()
 {
-	if (parsed_) return;
-	rmmDebug("parse() called");
 	rmmDebug("=== RBodyPart parse start =====================================");
 	
 	body_.clear();
@@ -231,7 +260,9 @@ RBodyPart::parse()
 			return;
 		}
 
-		preamble_ = strRep_.mid(endOfHeaders + 2, i - endOfHeaders);
+		preamble_ =
+			strRep_.mid(endOfHeaders + 2, i - endOfHeaders).stripWhiteSpace();
+
 		rmmDebug("preamble == \"" + preamble_ + "\"");
 
 		int oldi(i + boundary_.length());
@@ -263,27 +294,17 @@ RBodyPart::parse()
 	mimeType_		= RMM::mimeTypeStr2Enum(contentType.type());
 	mimeSubType_	= RMM::mimeSubTypeStr2Enum(contentType.subType());
 
-	parsed_		= true;
-	assembled_	= false;
-	rmmDebug("done parse");
 	rmmDebug("=== RBodyPart parse end   =====================================");
 }
 
 	void
-RBodyPart::assemble()
+RBodyPart::_assemble()
 {
-	parse();
-	if (assembled_) return;
-
-	rmmDebug("assemble() called");
-
 	strRep_ = envelope_.asString();
 	strRep_ += "\n";
 	strRep_ += preamble_;
 	strRep_ += data_;
 	strRep_ += epilogue_;
-
-	assembled_ = true;
 }
 
 	void

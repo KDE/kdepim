@@ -50,7 +50,8 @@ RMailbox::RMailbox(const QCString & s)
 	rmmDebug("ctor");
 }
 
-RMailbox & RMailbox::operator = (const RMailbox & mailbox)
+	RMailbox &
+RMailbox::operator = (const RMailbox & mailbox)
 {
 	rmmDebug("operator =");
 	if (this == &mailbox) return *this; // Avoid a = a
@@ -66,7 +67,8 @@ RMailbox & RMailbox::operator = (const RMailbox & mailbox)
 	return *this;
 }
 
-RMailbox & RMailbox::operator = (const QCString & s)
+	RMailbox &
+RMailbox::operator = (const QCString & s)
 {
 	rmmDebug("operator = (" + s + ")");
 	
@@ -76,6 +78,18 @@ RMailbox & RMailbox::operator = (const QCString & s)
 	return *this;
 }
 
+	bool
+RMailbox::operator == (RMailbox & m)
+{
+	parse();
+	m.parse();
+
+	return (
+		phrase_ 	== m.phrase_	&&
+		route_		== m.route_		&&
+		localPart_	== m.localPart_	&&
+		domain_		== m.domain_);
+}
 
 	QDataStream &
 operator >> (QDataStream & s, RMailbox & mailbox)
@@ -160,12 +174,8 @@ RMailbox::setDomain(const QCString & s)
 }
 
 	void
-RMailbox::parse()
+RMailbox::_parse()
 {
-	rmmDebug("parse() called");
-	if (parsed_) return;
-	rmmDebug("strRep == \"" + strRep_ + "\"");
-
 	if (strRep_.find('@') == -1) { // Must contain '@' somewhere. (RFC822)
 		rmmDebug("This is NOT a valid mailbox");
 		return;
@@ -241,17 +251,12 @@ RMailbox::parse()
 	rmmDebug("route:     \""	+ route_		+ "\"");
 	rmmDebug("localpart: \""	+ localPart_	+ "\"");
 	rmmDebug("domain:    \""	+ domain_		+ "\"");
-	
-	parsed_ = true;
-	assembled_ = false;
 }
 
 
 	void
-RMailbox::assemble()
+RMailbox::_assemble()
 {
-	parse();
-	if (assembled_) return;
 	strRep_ = "";
 	rmmDebug("assemble() called");
 	if (localPart_.isEmpty()) // This is 'phrase route-addr' style
@@ -259,8 +264,6 @@ RMailbox::assemble()
 	else
 		strRep_ = localPart_ + "@" + domain_;
 	rmmDebug("assembled to \"" + strRep_ + "\""); 
-	
-	assembled_ = true;
 }
 
 	void
