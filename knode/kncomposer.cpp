@@ -144,8 +144,9 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   new KAction(i18n("Attach &File..."), "attach", 0, this, SLOT(slotAttachFile()),
                    actionCollection(), "attach_file");
 
-  a_ctPGPsign = new KToggleAction(i18n("Sign Article with &PGP"), 0, this, SLOT(slotSignArticle()),
-                            actionCollection(), "sign_article");
+  a_ctPGPsign = new KToggleAction(i18n("Sign Article with &PGP"), 
+		   "signature", this, SLOT(slotSignArticle()),
+                   actionCollection(), "sign_article");
 
   a_ctRemoveAttachment = new KAction(i18n("&Remove"), 0, this,
                                     SLOT(slotRemoveAttachment()), actionCollection(), "remove_attachment");
@@ -604,7 +605,7 @@ bool KNComposer::applyChanges()
           if(!ok) // no suitable codec found => try local settings and hope the best ;-)
               codec=KGlobal::locale()->codecForEncoding();
 
-	  block.setText( codec->fromUnicode(text) );
+	  block.setText( codec->fromUnicode(tmpText) );
           kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
 	  if( block.clearsign( signingKey, codec->name() ) ) {
 	      QCString result = block.text();
