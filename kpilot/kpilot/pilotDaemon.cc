@@ -53,6 +53,7 @@ static const char *pilotdaemon_id =
 #include <kurldrag.h>
 #include <kservice.h>
 #include <kapplication.h>
+#include <khelpmenu.h>
 
 #include "pilotAppCategory.h"
 
@@ -78,6 +79,7 @@ static const char *pilotdaemon_id =
 
 #include "pilotDaemon.moc"
 
+static KAboutData *aboutData = 0L;
 
 PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 	KSystemTray(0, "pilotDaemon"),
@@ -158,12 +160,11 @@ void PilotDaemonTray::setupWidget()
 
 	KPopupMenu *menu = contextMenu();
 
-	menu->insertItem(i18n("&About"), this, SLOT(slotShowAbout()));
 	menuKPilotItem = menu->insertItem(i18n("Start &KPilot"), daemon,
 		SLOT(slotRunKPilot()));
-
 	menuConfigureConduitsItem = menu->insertItem(i18n("&Configure KPilot..."),
 		daemon, SLOT(slotRunConfig()));
+	menu->insertSeparator();
 
 	KPopupMenu *synctype = new KPopupMenu(menu,"sync_type_menu");
 #define MI(a) synctype->insertItem(SyncAction::syncModeName(SyncAction::a),(int)(SyncAction::a));
@@ -172,8 +173,14 @@ void PilotDaemonTray::setupWidget()
 	MI(eBackup);
 #undef MI
 	connect(synctype,SIGNAL(activated(int)),daemon,SLOT(requestSync(int)));
-
 	menu->insertItem(i18n("Next &Sync"),synctype);
+
+	KHelpMenu *help = new KHelpMenu(menu,aboutData);
+	menu->insertItem(
+		KGlobal::iconLoader()->loadIconSet("help",KIcon::Small,0,true),
+		i18n("&Help"),help->menu(),false /* no whatsthis */);
+
+
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Finished getting icons" << endl;
@@ -1273,6 +1280,7 @@ int main(int argc, char **argv)
 	about.addAuthor("Reinhold Kainhofer",
 		I18N_NOOP("Developer"),
 		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
+	aboutData = &about;
 
 
 	KCmdLineArgs::init(argc, argv, &about);
