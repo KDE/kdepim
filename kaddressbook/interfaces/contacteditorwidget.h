@@ -49,6 +49,13 @@ class ContactEditorWidget : public QWidget
     virtual int logicalHeight() const { return 1; }
 
     /**
+      Return logical wide of the widget. This is used to calculate how
+      much horizontal space relative to other widgets this widget will use
+      in the summary view.
+    */
+    virtual int logicalWidth() const { return 1; }
+
+    /**
       Load the contacts data into the GUI.
      */
     virtual void loadContact( KABC::Addressee *addr ) = 0;

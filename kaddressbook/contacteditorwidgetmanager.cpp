@@ -30,6 +30,7 @@
 
 // include non-plugin contact editor widgets
 #include "customfieldswidget.h"
+#include "freebusywidget.h"
 #include "geowidget.h"
 #include "imagewidget.h"
 #include "soundwidget.h"
@@ -96,6 +97,7 @@ void ContactEditorWidgetManager::reload()
   }
 
   // add all non-plugin contact editor factories
+  mFactories.append( new FreeBusyWidgetFactory );
   mFactories.append( new ImageWidgetFactory );
   mFactories.append( new SoundWidgetFactory );
   mFactories.append( new GeoWidgetFactory );
@@ -113,10 +115,17 @@ ContactEditorTabPage::ContactEditorTabPage( QWidget *parent, const char *name )
 
 void ContactEditorTabPage::addWidget( KAB::ContactEditorWidget *widget )
 {
+  if ( widget->logicalWidth() == 2 ) {
+    mWidgets.prepend( widget );
+    connect( widget, SIGNAL( changed() ), SIGNAL( changed() ) );
+    return;
+  }
+
   // insert it in descending order
   KAB::ContactEditorWidget::List::Iterator it;
   for ( it = mWidgets.begin(); it != mWidgets.end(); ++it ) {
-    if ( widget->logicalHeight() > (*it)->logicalHeight() ) {
+    if ( widget->logicalHeight() > (*it)->logicalHeight() &&
+         (*it)->logicalWidth() == 1 ) {
       --it;
       break;
     }
@@ -153,6 +162,19 @@ void ContactEditorTabPage::updateLayout()
 
   int row = 0;
   for ( it = mWidgets.begin(); it != mWidgets.end(); ++it ) {
+    if ( (*it)->logicalWidth() == 2 ) {
+      mLayout->addMultiCellWidget( *it, row, row + (*it)->logicalHeight() - 1, 0, 1 );
+      row += (*it)->logicalHeight();
+
+      if ( it != mWidgets.fromLast() ) {
+        QFrame *frame = new QFrame( this );
+        frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
+        mLayout->addMultiCellWidget( frame, row, row, 0, 1 );
+        row++;
+      }
+      continue;
+    }
+
     // fill left side
     int leftHeight = (*it)->logicalHeight();
 

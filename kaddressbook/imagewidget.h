@@ -112,6 +112,8 @@ class ImageWidget : public KAB::ContactEditorWidget
     void storeContact( KABC::Addressee *addr );
     void setReadOnly( bool readOnly );
 
+    int logicalWidth() const { return 2; }
+
   private:
     ImageBaseWidget *mPhotoWidget;
     ImageBaseWidget *mLogoWidget;
