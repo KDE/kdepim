@@ -85,9 +85,8 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
     {
       int skip;
       char *aCStr = addLine->getValue ().data ();
-      QDict < QString > *aList;
+      QDict < QString > *aList = 0;
 
-      aList = NULL;
       skip = mimeHdrLine::parseSeparator (';', aCStr);
       if (skip > 0)
       {
@@ -140,6 +139,7 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
         else
         {
           additionalHdrLines.append (addLine);
+          aList = new QDict < QString >;
         }
 //        cout << addLine->getLabel().data() << ": '" << mimeValue.data() << "'" << endl;
 
