@@ -26,6 +26,7 @@ debian/tmp/usr/share/icons/hicolor/22x22/apps/kpilot.png
 debian/tmp/usr/share/icons/hicolor/32x32/apps/kpilot.png
 debian/tmp/usr/share/icons/hicolor/48x48/apps/kpilot.png
 debian/tmp/usr/share/icons/hicolor/48x48/apps/kpilotDaemon.png
+debian/tmp/usr/share/icons/locolor/16x16/apps/kpilot.png
 debian/tmp/usr/share/services/expense-conduit.desktop
 debian/tmp/usr/share/services/knotes-conduit.desktop
 debian/tmp/usr/share/services/null-conduit.desktop

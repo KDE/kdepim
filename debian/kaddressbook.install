@@ -16,6 +16,7 @@ debian/tmp/usr/share/apps/kaddressbook/icons/locolor/22x22/actions/page.png
 debian/tmp/usr/share/apps/kaddressbook/kaddressbook_part.rc
 debian/tmp/usr/share/apps/kaddressbook/kaddressbookui.rc
 debian/tmp/usr/share/apps/kaddressbook/printing/detailed-style.png
+debian/tmp/usr/share/apps/kaddressbook/printing/mike-style.png
 debian/tmp/usr/share/doc/kde/HTML/en/kaddressbook/common
 debian/tmp/usr/share/doc/kde/HTML/en/kaddressbook/index.cache.bz2
 debian/tmp/usr/share/doc/kde/HTML/en/kaddressbook/index.docbook
