@@ -1,3 +1,10 @@
+kdepim (4:2.1-20010106-1) unstable; urgency=low
+ 
+  * New upstream cvs version
+  * Updating build-depends
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Sat, 06 Jan 2001 23:30:00 -0700
+
 kdepim (4:2.1-20010101-1) unstable; urgency=low
  
   * New upstream cvs version
