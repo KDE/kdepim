@@ -250,7 +250,7 @@ KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn, 0,1);
 
-  d_elBtn=new QPushButton(i18n("&Delete..."), this);
+  d_elBtn=new QPushButton(i18n("&Delete"), this);
   connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(d_elBtn, 1,1);
 
@@ -1213,7 +1213,7 @@ KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget(DisplayedHeaders *d, QW
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn, 0,1);
 
-  d_elBtn=new QPushButton(i18n("&Delete..."), this);
+  d_elBtn=new QPushButton(i18n("&Delete"), this);
   connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(d_elBtn, 1,1);
 
@@ -1536,7 +1536,7 @@ KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn,1,1);
 
-  d_elBtn=new QPushButton(i18n("&Delete..."), this);
+  d_elBtn=new QPushButton(i18n("&Delete"), this);
   connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(d_elBtn,2,1);
 
