@@ -72,40 +72,9 @@ QString rtExpand(const QString &s, bool richText)
 	}
 	else
 		return s;
+
+	Q_UNUSED(options_id);
 }
-
-#if 0
-QString qstringExpansion(const QString & s)
-{
-	QString t;
-
-	for (unsigned i = 0; i < s.length(); i++)
-	{
-		t += s[i];
-		t += ' ';
-		t += QString::number((int) s[i].unicode());
-		t += ' ';
-	}
-
-	return t;
-}
-
-QString charExpansion(const char *s)
-{
-	QString t;
-
-	while (*s)
-	{
-		t += QChar(*s);
-		t += ' ';
-		t += QString::number(*s);
-		t += ' ';
-		s++;
-	}
-
-	return t;
-}
-#endif
 
 QDateTime readTm(const struct tm &t)
 {
@@ -154,7 +123,5 @@ struct tm writeTm(const QDate &dt)
 
   return t;
 }
-
-int const fname = ((int) options_id);
 
 

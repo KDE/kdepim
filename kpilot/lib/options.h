@@ -41,7 +41,6 @@
 // #define QT_NO_ASCII_CAST		(1)
 // #define QT_NO_CAST_ASCII		(1)
 
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -67,9 +66,8 @@
 // so DEBUG_CERR changes them into cerr again. Odd and disturbing.
 //
 
-using namespace std;
-
 #ifdef DEBUG_CERR
+using namespace std;
 #define DEBUGFUNC	std::cerr
 #else
 #define DEBUGFUNC	kdDebug()
@@ -160,18 +158,7 @@ QString rtExpand(const QString &s, bool richText=true);
 #else
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
 // In particular it doesn't give functions a local variable fname,
-// like FUNCTIONSETUP does in the debugging case. Since code like
-//
-// DEBUGKPILOT << fname << ": Help! I'm descructing" << endl;
-//
-// is still visible in KPilot (it isn't all bracketed by #ifdef DEBUG
-// and it doesn't *need* to be, that's the whole point of kdDebug())
-// we still need *something* with the name fname. So we'll declare a
-// single extern fname here.
-//
-// fname gets a weird type that is
-// incompatible with kdWarning() and kdError(), leading to warnings
-// if you mix them. Use k_funcinfo instead.
+// like FUNCTIONSETUP does in the debugging case.
 //
 //
 #define FUNCTIONSETUP
