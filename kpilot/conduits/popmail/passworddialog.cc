@@ -46,7 +46,6 @@ static const char *passworddialog_id="$Id$";
 #include <stdio.h>
 
 #include <qapplication.h>
-#include <qpushbutton.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qdialog.h>
@@ -59,6 +58,8 @@ static const char *passworddialog_id="$Id$";
 
 #include <klocale.h>
 #include <kapplication.h>
+#include <kstdguiitem.h>
+#include <kpushbutton.h>
 
 PasswordDialog::PasswordDialog(QString head, QWidget* parent, const char* name, bool modal, WFlags wflags)
    : QDialog(parent, name, modal, wflags)
@@ -108,10 +109,10 @@ PasswordDialog::PasswordDialog(QString head, QWidget* parent, const char* name, 
    // Die Buttons "Ok" & "Cancel" erzeugen
    //
    QPushButton *b1, *b2;
-   b1 = new QPushButton(i18n("OK"), this);
+   b1 = new KPushButton(KStdGuiItem::ok(), this);
    b1->setGeometry( 10, 90, 80, 30 );
    
-   b2 = new QPushButton(i18n("Cancel"), this);
+   b2 = new KPushButton(KStdGuiItem::cancel(), this);
    b2->setGeometry( 110, 90, 80, 30 );
    
    // Buttons mit Funktionaliataet belegen

@@ -200,19 +200,18 @@ void ActionManager::initActions()
     if ( mMainWindow->hasDocument() ) {
       new KAction( i18n("&New"), "filenew", CTRL+Key_N, this,
                    SLOT( file_new() ), mACollection, "korganizer_openNew" );
-      new KAction( i18n("&Open"), "fileopen", CTRL+Key_O, this,
-                   SLOT( file_open() ), mACollection, "korganizer_open" );
+      KStdAction::open( this, SLOT( file_open() ), mACollection, "korganizer_open" );
       mRecent = new KRecentFilesAction( i18n("Open &Recent"), 0, 0, this,
                                         SLOT( file_openRecent( const KURL & ) ),
                                         mACollection, "korganizer_openRecent" );
       new KAction( i18n("Re&vert"), "revert", 0, this,
                    SLOT( file_revert() ), mACollection, "korganizer_revert" );
-      new KAction( i18n("Save &As..."), "filesaveas", 0, this,
+      KStdAction::saveAs( this,
                    SLOT( file_saveas() ), mACollection, "korganizer_saveAs" );
-      new KAction( i18n("&Close"), "fileclose", CTRL+Key_W, this,
+      KStdAction::close( this,
                    SLOT( file_close() ), mACollection, "korganizer_close" );
     }
-    new KAction( i18n("&Save"), "filesave", CTRL+Key_S, this,
+    KStdAction::save( this,
                  SLOT( file_save() ), mACollection, "korganizer_save" );
   } else {
     KStdAction::openNew(this, SLOT(file_new()), mACollection);
@@ -269,16 +268,14 @@ void ActionManager::initActions()
 #endif
 
   if (mIsPart) {
-    new KAction(i18n("&Print..."), "fileprint", CTRL+Key_P, mCalendarView,
-                SLOT(print()), mACollection, "korganizer_print" );
+    KStdAction::print(mCalendarView, SLOT(print()), mACollection, "korganizer_print" );
   } else {
     KStdAction::print(mCalendarView, SLOT(print()), mACollection);
   }
 
 #if 1
   if (mIsPart) {
-    new KAction(i18n("Print Previe&w..."), "filequickprint", 0, mCalendarView,
-                SLOT(printPreview()), mACollection, "korganizer_quickprint" );
+    KStdAction::printPreview(mCalendarView, SLOT(printPreview()), mACollection, "korganizer_quickprint" );
   } else {
     KStdAction::printPreview(mCalendarView, SLOT(printPreview()),
                              mACollection);
@@ -452,7 +449,7 @@ void ActionManager::initActions()
   action->setEnabled(false);
   connect(mCalendarView,SIGNAL(groupEventsSelected(bool)),
           action,SLOT(setEnabled(bool)));
-  action = new KAction(i18n("Cancel"),0,
+  action = new KAction(KStdGuiItem::cancel(),0,
                        mCalendarView,SLOT(schedule_cancel()),
                        mACollection,"cancel");
   action->setEnabled(false);

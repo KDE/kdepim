@@ -27,12 +27,12 @@
 #include <klineedit.h>
 #include <kprocess.h>
 #include <kapplication.h>
+#include <kpushbutton.h>
 
 #include <kmime_util.h>
 
 #include "knconvert.h"
 #include "resource.h"
-#include <qpushbutton.h>
 
 
 bool KNConvert::needToConvert(const QString &oldVersion)
@@ -60,7 +60,7 @@ KNConvert::KNConvert(const QString &version)
   s_tartBtn->setDefault(true);
   btnL->addStretch(1);
   btnL->addWidget(s_tartBtn);
-  c_ancelBtn=new QPushButton(i18n("Cancel"), this);
+  c_ancelBtn=new KPushButton(KStdGuiItem::cancel(), this);
   btnL->addWidget(c_ancelBtn);
 
   connect(s_tartBtn, SIGNAL(clicked()), this, SLOT(slotStart()));

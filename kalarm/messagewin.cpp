@@ -49,6 +49,7 @@
 #include <knotifyclient.h>
 #include <kaudioplayer.h>
 #include <kdebug.h>
+#include <kpushbutton.h>
 
 #include "kalarmapp.h"
 #include "alarmcalendar.h"
@@ -355,7 +356,7 @@ QSize MessageWin::initView()
 	grid->setColStretch(0, 1);     // keep the buttons right-adjusted in the window
 
 	// Close button
-	QPushButton* okButton = new QPushButton(KStdGuiItem::close().text(), topWidget);
+	KPushButton* okButton = new KPushButton(KStdGuiItem::close(), topWidget);
 	// Prevent accidental acknowledgement of the message if the user is typing when the window appears
 	okButton->clearFocus();
 	okButton->setFocusPolicy(QWidget::ClickFocus);    // don't allow keyboard selection

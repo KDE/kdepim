@@ -157,7 +157,6 @@ IMAPProgressDialog::IMAPProgressDialog( QWidget* parent, const char* name, bool 
     bottomLayout->addStretch();
 
     KPushButton* pbClose = new KPushButton( KStdGuiItem::close(), this );
-    pbClose->setText( i18n( "Close" ) );
     bottomLayout->addWidget( pbClose );
 
     connect(pbClose, SIGNAL(clicked()), this, SLOT(close())  );

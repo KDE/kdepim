@@ -204,7 +204,7 @@ void KOEventEditor::newEvent( const QString &summary,
                               const QString &attachment )
 {
   init();
-  
+
   mEvent = 0;
 
   loadDefaults();
@@ -372,7 +372,7 @@ int KOEventEditor::msgItemDelete()
 {
   return KMessageBox::warningContinueCancel(this,
       i18n("This item will be permanently deleted."),
-      i18n("KOrganizer Confirmation"),i18n("Delete"));
+      i18n("KOrganizer Confirmation"),KGuiItem(i18n("Delete"),"editdelete"));
 }
 
 void KOEventEditor::slotLoadTemplate()
