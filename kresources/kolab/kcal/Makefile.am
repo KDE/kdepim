@@ -18,8 +18,5 @@ kcal_kolab_la_SOURCES = resourcekolab_plugin.cpp
 kcal_kolab_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN) -no-undefined
 kcal_kolab_la_LIBADD = libkcalkolab.la
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kcal_kolab.pot
-
 servicedir = $(kde_servicesdir)/kresources/kcal
 service_DATA = kolab.desktop
