@@ -181,6 +181,11 @@ private:
 	*/
 	PilotDaemonTray *fTray;
 
+	/**
+	* Set or change the tooltip displayed by the tray icon.
+	*/
+	void updateTrayStatus(const QString &s=QString::null);
+
 	FileInstaller *fInstaller;
 
 protected slots:
@@ -209,6 +214,9 @@ private:
 
 
 // $Log$
+// Revision 1.33  2002/02/02 11:46:02  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.32  2002/01/25 21:43:13  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //

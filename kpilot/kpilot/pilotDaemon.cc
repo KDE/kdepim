@@ -65,6 +65,8 @@ static const char *pilotdaemon_id =
 #endif
 #include <qstack.h>
 #include <qtimer.h>
+#include <qtooltip.h>
+
 
 #ifndef _KUNIQUEAPP_H
 #include <kuniqueapp.h>
@@ -390,6 +392,8 @@ void PilotDaemon::showTray()
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Tray icon displayed." << endl;
 #endif
+
+	updateTrayStatus();
 }
 
 /* DCOP ASYNC */ void PilotDaemon::reloadSettings()
@@ -491,6 +495,8 @@ void PilotDaemon::showTray()
 			fTray = 0L;
 		}
 	}
+	
+	updateTrayStatus();
 }
 
 /* DCOP */ QString PilotDaemon::statusString()
@@ -606,6 +612,8 @@ bool PilotDaemon::setupPilotLink()
 #endif
 
 	fNextSyncType = mode;
+	
+	updateTrayStatus();
 }
 
 QString PilotDaemon::syncTypeString(int i) const
@@ -707,6 +715,8 @@ QString PilotDaemon::syncTypeString(int i) const
 		this, SLOT(endHotSync()));
 
 	QTimer::singleShot(0,fSyncStack,SLOT(exec()));
+	
+	updateTrayStatus();
 }
 
 /* slot */ void PilotDaemon::logMessage(const QString & s)
@@ -717,6 +727,7 @@ QString PilotDaemon::syncTypeString(int i) const
 #endif
 
 	getKPilot().logMessage(s);
+	updateTrayStatus(s);
 }
 
 /* slot */ void PilotDaemon::logProgress(const QString & s, int i)
@@ -727,6 +738,7 @@ QString PilotDaemon::syncTypeString(int i) const
 #endif
 
 	getKPilot().logProgress(s, i);
+	if (!s.isEmpty()) updateTrayStatus(s);
 }
 
 /* slot */ void PilotDaemon::endHotSync()
@@ -759,6 +771,8 @@ QString PilotDaemon::syncTypeString(int i) const
 	}
 
 	fPostSyncAction = None;
+	
+	updateTrayStatus();
 }
 
 
@@ -794,6 +808,18 @@ void PilotDaemon::slotRunKPilot()
 			<< kpilotDCOP << " (pid " << kpilotPID << ")" << endl;
 #endif
 	}
+}
+
+void PilotDaemon::updateTrayStatus(const QString &s)
+{
+	if (!fTray) return;
+
+	QToolTip::remove(fTray);
+	QToolTip::add(fTray,
+		i18n("<qt>%1<br/>%2</qt>")
+			.arg(statusString())
+			.arg(s)
+		);
 }
 
 
@@ -877,6 +903,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.60  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.59.2.3  2002/05/09 22:29:33  adridg
 // Various small things not important for the release
 //
