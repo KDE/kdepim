@@ -2,6 +2,9 @@ KPilot news. This file lists only major releases &c.
 For more detailed information and musings, see the
 ChangeLog or the README files.
 
+* January 18, 2004: KDE 3.2 released, with KPilot 4.4.0. I'd
+  say 4.4.0 is dead in the water, there's too much new useful
+  stuff in 4.4.1 (for the PIM release).
 * August 19, 2002: License change for the lib part of KPilot to
   LGPL and an exception made in the COPYING file for libmal to
   allow the AvantGo (tm) conduit to use that library.
