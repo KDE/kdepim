@@ -257,15 +257,16 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		if (s.find(',')!=-1) {
 		  addrlist = QStringList::split(',', s);
 		  if (addrlist.count()==2) {
-			a->setFamilyName(addrlist[0].simplifyWhiteSpace());
-			a->setGivenName(addrlist[1].simplifyWhiteSpace());
+			a->setFamilyName(addrlist[0]);
+			a->setGivenName(addrlist[1]);
 		  } else
 			a->setGivenName(s);
 		} else {
 		  addrlist = QStringList::split(' ', s);
-		  if (addrlist.count()==2) {
-			a->setFamilyName(addrlist[1].simplifyWhiteSpace());
-			a->setGivenName(addrlist[0].simplifyWhiteSpace());
+		  if (addrlist.count()>=2) {
+			a->setFamilyName(addrlist[0]);
+			addrlist.remove(addrlist.first());
+			a->setGivenName(addrlist.join(" "));
 		  } else
 			a->setGivenName(s);
 		}
@@ -306,23 +307,21 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 			a->insertEmail(s);
 			break;
 		   case GN_PHONEBOOK_ENTRY_Postal:
-			addrlist = QStringList::split(',', s, true);
+			s = s.simplifyWhiteSpace();
+			addrlist = QStringList::split(';', s, true);
 			addr = new KABC::Address(KABC::Address::Work);
-			switch (addrlist.count()) {
-			 case 4:	addr->setStreet(addrlist[0].simplifyWhiteSpace());
-						addr->setLocality(addrlist[1].simplifyWhiteSpace());
-						addr->setPostalCode(addrlist[2].simplifyWhiteSpace());
-						country = addrlist[3].simplifyWhiteSpace();
-						if (!country.isEmpty())
-							addr->setCountry(i18n(country.utf8()));
-						break;
-			 case 3:	addr->setLocality(addrlist[0].simplifyWhiteSpace());
-						addr->setPostalCode(addrlist[1].simplifyWhiteSpace());
-						country = addrlist[2].simplifyWhiteSpace();
-						if (!country.isEmpty())
-							addr->setCountry(i18n(country.utf8()));
-						break;
-			 default:	addr->setStreet(s.simplifyWhiteSpace());
+			if (addrlist.count() <= 1 ) {
+				addr->setExtended(s);
+			} else {
+				addr->setPostOfficeBox(addrlist[0]);
+				addr->setExtended(addrlist[1]);
+				addr->setStreet(addrlist[2]);
+				addr->setLocality(addrlist[3]);
+				addr->setRegion(addrlist[4]);
+				addr->setPostalCode(addrlist[5]);
+				country = addrlist[6];
+				if (!country.isEmpty())
+					addr->setCountry(i18n(country.utf8()));
 			}
 			a->insertAddress(*addr);
 			delete addr;
@@ -358,10 +357,14 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 			break;
 		  } // switch()
 		} // if(subentry)
-		
-		addrList->append(*a);
+
+		// add only if entry was valid
+		if (strlen(entry.name) || strlen(entry.number) || entry.subentries_count)
+			addrList->append(*a);
+
 		// did we read all valid phonebook-entries ?
 		num_read++;
+		delete a;
 		if (num_read >= memstat.used)
 			break;	// yes, all were read
 		else
@@ -526,8 +529,17 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 		const KABC::Address *Addr = &(*it2);
 		if (Addr->isEmpty()) continue;
 		subentry->entry_type  = GN_PHONEBOOK_ENTRY_Postal;
-		s = QString("%1, %2, %3, %4").arg(Addr->street()).arg(Addr->locality())
-				.arg(Addr->postalCode()).arg(Addr->country());
+		QStringList a;
+		QChar sem(';');
+		QString sem_repl(QString::fromLatin1(","));
+      		a.append( Addr->postOfficeBox().replace( sem, sem_repl ) );
+		a.append( Addr->extended()     .replace( sem, sem_repl ) );
+		a.append( Addr->street()       .replace( sem, sem_repl ) );
+		a.append( Addr->locality()     .replace( sem, sem_repl ) );
+		a.append( Addr->region()       .replace( sem, sem_repl ) );
+		a.append( Addr->postalCode()   .replace( sem, sem_repl ) );
+		a.append( Addr->country()      .replace( sem, sem_repl ) );
+		s = a.join(sem);
 		strncpy(subentry->data.number, s.latin1(), sizeof(subentry->data.number)-1);
 		entry.subentries_count++;
 		subentry++;
@@ -595,7 +607,7 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 
 	GNOKII_DEBUG("GNOKII export filter started.\n");
 
-	const gn_memory_type memtype = GN_MT_ME;	// internal phone memory
+	gn_memory_type memtype = GN_MT_ME;	// internal phone memory
 
 	int phone_count;	// num entries in phone
 	bool overwrite_phone_entries = false;
@@ -605,8 +617,15 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 	// get number of entries in this phone memory
 	gn_memory_status memstat;
 	error = read_phone_memstat(memtype, &memstat);
-	if (error != GN_ERR_NONE)
-		goto finish;
+	if (error == GN_ERR_NONE) {
+		GNOKII_DEBUG("Writing to internal phone memory.\n");
+	} else {
+		memtype = GN_MT_SM;	// try SIM card instead
+		error = read_phone_memstat(memtype, &memstat);
+		if (error != GN_ERR_NONE)
+			goto finish;
+		GNOKII_DEBUG("Writing to SIM card memory.\n");
+	}
 	phone_count = memstat.used;
 
 	if (memstat.free >= (int) list.count()) {
