@@ -228,32 +228,30 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
                    i18n( "Enter the name of the task here. "
                          "This name is for your eyes only."));
   QWhatsThis::add( _absoluteRB,
-                   i18n( "If you select this radio button, you specify that "
-                         "you want to enter the time as absolute values. For "
-                         "example: the time for this task is 20 hours and 15 "
-                         "minutes.\n\n"
-                         "The time is specified for the cumulated time and "
-                         "the session time separately."));
+                   i18n( "Use this option to set the time spent on this task "
+                         "to an absolute value.\n\nFor example, if you have "
+                         "worked exactly four hours on this task during the current "
+                         "session, you would set the Session time to 4 hr." ) );
   QWhatsThis::add( _relativeRB,
-                   i18n( "If you select this radio button, you specify that "
-                         "you want to add or subtract time for the task. For "
-                         "example: I've worked 2 hours and 20 minutes more on "
-                         "this task (without having the timer running.)\n\n"
-                         "This time will be added or subtracted for both the "
-                         "session time and the cumulated time."));
+                   i18n( "Use this option to change the time spent on this task "
+                         "relative to its current value.\n\nFor example, if you worked "
+                         "on this task for one hour without the timer running, you "
+                         "would add 1 hr." ) );
   QWhatsThis::add( _timeTW,
-                   i18n( "This is the overall time this task has been "
-                         "running."));
+                   i18n( "This is the time the task has been "
+                         "running since all times were reset."));
   QWhatsThis::add( _sessionTW,
                    i18n( "This is the time the task has been running this "
                          "session."));
   QWhatsThis::add( _diffTW, i18n( "Specify how much time to add or subtract "
                                   "to the overall and session time"));
-}
 
-void EditTaskDialog::enterWhatsThis() 
-{
-  QWhatsThis::enterWhatsThisMode ();
+  QWhatsThis::add( _desktopCB, 
+                   i18n( "Use this option to automatically start the timer "
+                         "on this task when you switch to the specified desktop(s)." ) );
+  QWhatsThis::add( groupBox, 
+                   i18n( "Select the desktop(s) that will automatically start the "
+                         "timer on this task." ) );
 }
 
   

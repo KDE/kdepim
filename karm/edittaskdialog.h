@@ -59,8 +59,6 @@ class EditTaskDialog : public KDialogBase
     void slotRelativePressed();
     void slotAutoTrackingPressed();
 
-    void enterWhatsThis();
-
   private:
     QLineEdit* _name;
     KArmTimeWidget* _timeTW;
