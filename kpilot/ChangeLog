@@ -1,6 +1,13 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-03-17  Adriaan de Groot
+* Ripped out all the dead and broken and useless code in the mail 
+  conduit, fixed up the code that was left, reduced the size of the
+  setup dialog, and ended up with something that actually works again.
+  Fixed bugs  60579 and 77948.
+* Yet another patch from Jörn, added him to credits, too.
+
 2004-03-15  Adriaan de Groot
 * Patches from David Mott and Jörn Ahrens today. Excellent!
 * Worked on the docs and website some.
