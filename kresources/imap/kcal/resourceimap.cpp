@@ -31,16 +31,14 @@ using namespace KCal;
 ResourceIMAP::ResourceIMAP( const QString &server )
   : ResourceCalendar( 0 ),
     ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-libkcal" ),
-    mServer( server ),
-    mSilent( false )
+    mServer( server )
 {
   init();
 }
 
 ResourceIMAP::ResourceIMAP( const KConfig* config )
   : ResourceCalendar( config ),
-    ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-libkcal" ),
-    mSilent( false )
+    ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-libkcal" )
 {
   init();
 
@@ -266,11 +264,7 @@ void ResourceIMAP::deleteEvent(Event *event)
 {
   const QString uid = event->uid();
   Q_ASSERT( mUidmap.contains( uid ) );
-
-  // Call kmail ...
-  if ( !mSilent )
-    kmailDeleteIncidence( "Calendar", mUidmap[ uid ], uid );
-
+  kmailDeleteIncidence( "Calendar", mUidmap[ uid ], uid );
   mUidmap.erase( uid );
   mCalendar.deleteEvent(event);
 }
@@ -346,11 +340,7 @@ void ResourceIMAP::deleteTodo(Todo *todo)
 {
   const QString uid = todo->uid();
   Q_ASSERT( mUidmap.contains( uid ) );
-
-  // Call kmail ...
-  if ( !mSilent )
-    kmailDeleteIncidence( "Task", mUidmap[ uid ], uid );
-
+  kmailDeleteIncidence( "Task", mUidmap[ uid ], uid );
   mUidmap.erase( uid );
   mCalendar.deleteTodo(todo);
 }
@@ -416,11 +406,7 @@ void ResourceIMAP::deleteJournal(Journal *journal)
 
   const QString uid = journal->uid();
   Q_ASSERT( mUidmap.contains( journal->uid() ) );
-
-  // Call kmail ...
-  if ( !mSilent )
-    kmailDeleteIncidence( "Journal", mUidmap[ uid ], uid );
-
+  kmailDeleteIncidence( "Journal", mUidmap[ uid ], uid );
   mUidmap.erase( uid );
   mCalendar.deleteJournal(journal);
 }

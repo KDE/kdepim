@@ -28,6 +28,7 @@ using namespace ResourceIMAPBase;
 
 
 ResourceIMAPShared::ResourceIMAPShared( const QCString& objId )
+  : mSilent( false )
 {
   mConnection = new KMailConnection( this, objId );
 }
@@ -42,13 +43,13 @@ bool ResourceIMAPShared::kmailIncidences( QStringList& lst,
                                           const QString& type,
                                           const QString& resource ) const
 {
-  return mConnection->kmailIncidences( lst, type, resource );
+  return mSilent || mConnection->kmailIncidences( lst, type, resource );
 }
 
 bool ResourceIMAPShared::kmailSubresources( QStringList& lst,
                                             const QString& type ) const
 {
-  return mConnection->kmailSubresources( lst, type );
+  return mSilent || mConnection->kmailSubresources( lst, type );
 }
 
 bool ResourceIMAPShared::kmailAddIncidence( const QString& type,
@@ -56,21 +57,22 @@ bool ResourceIMAPShared::kmailAddIncidence( const QString& type,
                                             const QString& uid,
                                             const QString& incidence )
 {
-  return mConnection->kmailAddIncidence( type, resource, uid, incidence );
+  return mSilent ||
+    mConnection->kmailAddIncidence( type, resource, uid, incidence );
 }
 
 bool ResourceIMAPShared::kmailDeleteIncidence( const QString& type,
                                                const QString& resource,
                                                const QString& uid )
 {
-  return mConnection->kmailDeleteIncidence( type, resource, uid );
+  return mSilent || mConnection->kmailDeleteIncidence( type, resource, uid );
 }
 
 bool ResourceIMAPShared::kmailUpdate( const QString& type,
                                       const QString& resource,
                                       const QStringList& lst )
 {
-  return mConnection->kmailUpdate( type, resource, lst );
+  return mSilent || mConnection->kmailUpdate( type, resource, lst );
 }
 
 bool ResourceIMAPShared::kmailUpdate( const QString& type,
@@ -78,7 +80,7 @@ bool ResourceIMAPShared::kmailUpdate( const QString& type,
                                       const QString& uid,
                                       const QString& incidence )
 {
-  return mConnection->kmailUpdate( type, resource, uid, incidence );
+  return mSilent || mConnection->kmailUpdate( type, resource, uid, incidence );
 }
 
 bool ResourceIMAPShared::connectToKMail() const

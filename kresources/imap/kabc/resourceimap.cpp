@@ -68,8 +68,7 @@ extern "C"
 
 KABC::ResourceIMAP::ResourceIMAP( const KConfig *config )
   : KABC::Resource( config ),
-    ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-KABC" ),
-    mSilent( false )
+    ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-KABC" )
 {
   FormatFactory *factory = FormatFactory::self();
   mFormat = factory->format( "vcard" );
@@ -217,11 +216,8 @@ void KABC::ResourceIMAP::insertAddressee( const Addressee& addr )
 
 void KABC::ResourceIMAP::removeAddressee( const Addressee& addr )
 {
-  if ( !mSilent ) {
-    kmailDeleteIncidence( "Contact", mUidmap[ addr.uid() ], addr.uid() );
-    mUidmap.remove( addr.uid() );
-  }
-
+  kmailDeleteIncidence( "Contact", mUidmap[ addr.uid() ], addr.uid() );
+  mUidmap.remove( addr.uid() );
   Resource::removeAddressee( addr );
 }
 
@@ -233,7 +229,7 @@ bool KABC::ResourceIMAP::addIncidence( const QString& type,
 				       const QString& vCard )
 {
   if( type == "Contact" ) {
-    bool silent = mSilent;
+    const bool silent = mSilent;
     mSilent = true;
 
     KABC::Addressee addr = mConverter.parseVCard( vCard );
@@ -255,10 +251,11 @@ void KABC::ResourceIMAP::deleteIncidence( const QString& type,
 					  const QString& uid )
 {
   if( type == "Contact" ) {
-    bool silent = mSilent;
+    const bool silent = mSilent;
     mSilent = true;
 
     mAddrMap.remove( uid );
+    mUidmap.remove( uid );
     addressBook()->emitAddressBookChanged();
 
     mSilent = silent;
@@ -268,7 +265,7 @@ void KABC::ResourceIMAP::deleteIncidence( const QString& type,
 void KABC::ResourceIMAP::slotRefresh( const QString& type )
 {
   if( type == "Contact" ) {
-    bool silent = mSilent;
+    const bool silent = mSilent;
     mSilent = true;
 
     load();

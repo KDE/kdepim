@@ -84,8 +84,6 @@ private:
     // Parse a journal from a string
     KCal::Journal* parseJournal( const QString& str );
     KCal::CalendarLocal mCalendar;
-
-    bool mSilent;
 };
 
 }

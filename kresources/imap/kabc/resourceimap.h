@@ -115,8 +115,6 @@ protected:
 
   virtual void doClose();
 
-  bool mSilent;
-
   FormatPlugin* mFormat;
   QStringList mDeletedAddressees;
   QCString mAppId;

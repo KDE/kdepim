@@ -66,6 +66,8 @@ class ResourceIMAPShared {
     bool kmailUpdate( const QString& type, const QString& resource,
                       const QString& uid, const QString& incidence );
 
+    bool mSilent;
+
   private:
     mutable KMailConnection* mConnection;
 };
