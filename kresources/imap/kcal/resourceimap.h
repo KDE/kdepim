@@ -45,157 +45,157 @@ class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer,
 {
   Q_OBJECT
 
-  public:
-    ResourceIMAP( const QString &server );
-    ResourceIMAP( const KConfig * );
-    virtual ~ResourceIMAP();
+public:
+  ResourceIMAP( const QString &server );
+  ResourceIMAP( const KConfig * );
+  virtual ~ResourceIMAP();
 
-    virtual void writeConfig( KConfig* config );
+  virtual void writeConfig( KConfig* config );
 
-    bool load();
+  bool load();
 
-    bool save();
+  bool save();
 
-    KABC::Lock *lock();
+  KABC::Lock *lock();
 
-    /** Add Event to calendar. */
-    bool addEvent(Event *anEvent);
-    /** deletes an event from this calendar. */
-    void deleteEvent(Event *);
+  /** Add Event to calendar. */
+  bool addEvent(Event *anEvent);
+  /** deletes an event from this calendar. */
+  void deleteEvent(Event *);
 
-    /**
-      Retrieves an event on the basis of the unique string ID.
-    */
-    Event *event(const QString &UniqueStr);
-    /**
-      Return filtered list of all events in calendar.
-    */
+  /**
+     Retrieves an event on the basis of the unique string ID.
+  */
+  Event *event(const QString &UniqueStr);
+  /**
+     Return filtered list of all events in calendar.
+  */
 //    Event::List events();
-    /**
-      Return unfiltered list of all events in calendar.
-    */
-    Event::List rawEvents();
-    /**
-      Builds and then returns a list of all events that match for the
-      date specified. useful for dayView, etc. etc.
-    */
-    Event::List rawEventsForDate( const QDate &date, bool sorted = false );
-    /**
-      Get unfiltered events for date \a qdt.
-    */
-    Event::List rawEventsForDate( const QDateTime &qdt );
-    /**
-      Get unfiltered events in a range of dates. If inclusive is set to true,
-      only events are returned, which are completely included in the range.
-    */
-    Event::List rawEvents( const QDate &start, const QDate &end,
-                               bool inclusive = false );
+  /**
+     Return unfiltered list of all events in calendar.
+  */
+  Event::List rawEvents();
+  /**
+     Builds and then returns a list of all events that match for the
+     date specified. useful for dayView, etc. etc.
+  */
+  Event::List rawEventsForDate( const QDate &date, bool sorted = false );
+  /**
+     Get unfiltered events for date \a qdt.
+  */
+  Event::List rawEventsForDate( const QDateTime &qdt );
+  /**
+     Get unfiltered events in a range of dates. If inclusive is set to true,
+     only events are returned, which are completely included in the range.
+  */
+  Event::List rawEvents( const QDate &start, const QDate &end,
+                         bool inclusive = false );
 
-    /*
-      Returns a QString with the text of the holiday (if any) that falls
-      on the specified date.
-    */
-    // QString getHolidayForDate(const QDate &qd);
+  /*
+    Returns a QString with the text of the holiday (if any) that falls
+    on the specified date.
+  */
+  // QString getHolidayForDate(const QDate &qd);
 
-    /**
-      Add a todo to the todolist.
-    */
-    bool addTodo( Todo *todo );
-    /**
-      Remove a todo from the todolist.
-    */
-    void deleteTodo( Todo * );
-    /**
-      Searches todolist for an event with this unique string identifier,
-      returns a pointer or null.
-    */
-    Todo *todo( const QString &uid );
-    /**
-      Return list of all todos.
-    */
-    Todo::List rawTodos();
-    /**
-      Returns list of todos due on the specified date.
-    */
-    Todo::List rawTodosForDate( const QDate &date );
-    /** Add a Journal entry to calendar */
-    virtual bool addJournal(Journal *);
-    /**
-      Remove a journal entry from the journal.
-    */
-    void deleteJournal( Journal * );
-    /** Return Journal for given date */
-    virtual Journal *journal(const QDate &);
-    /** Return Journal with given UID */
-    virtual Journal *journal(const QString &UID);
-    /** Return list of all Journals stored in calendar */
-    Journal::List journals();
+  /**
+     Add a todo to the todolist.
+  */
+  bool addTodo( Todo *todo );
+  /**
+     Remove a todo from the todolist.
+  */
+  void deleteTodo( Todo * );
+  /**
+     Searches todolist for an event with this unique string identifier,
+     returns a pointer or null.
+  */
+  Todo *todo( const QString &uid );
+  /**
+     Return list of all todos.
+  */
+  Todo::List rawTodos();
+  /**
+     Returns list of todos due on the specified date.
+  */
+  Todo::List rawTodosForDate( const QDate &date );
+  /** Add a Journal entry to calendar */
+  virtual bool addJournal(Journal *);
+  /**
+     Remove a journal entry from the journal.
+  */
+  void deleteJournal( Journal * );
+  /** Return Journal for given date */
+  virtual Journal *journal(const QDate &);
+  /** Return Journal with given UID */
+  virtual Journal *journal(const QString &UID);
+  /** Return list of all Journals stored in calendar */
+  Journal::List journals();
 
-    /** Return all alarms, which ocur in the given time interval. */
-    Alarm::List alarms( const QDateTime &from, const QDateTime &to );
+  /** Return all alarms, which ocur in the given time interval. */
+  Alarm::List alarms( const QDateTime &from, const QDateTime &to );
 
-    /** Return all alarms, which ocur before given date. */
-    Alarm::List alarmsTo( const QDateTime &to );
+  /** Return all alarms, which ocur before given date. */
+  Alarm::List alarmsTo( const QDateTime &to );
 
 
-    /** this method should be called whenever a Event is modified directly
-     * via it's pointer.  It makes sure that the calendar is internally
-     * consistent. */
-    void update(IncidenceBase *incidence);
+  /** this method should be called whenever a Event is modified directly
+   * via it's pointer.  It makes sure that the calendar is internally
+   * consistent. */
+  void update(IncidenceBase *incidence);
 
-    friend class ResourceIMAPConfig;
+  friend class ResourceIMAPConfig;
 
-    // Public because needed in MultiCalendar::load()
-    bool doOpen();
+  // Public because needed in MultiCalendar::load()
+  bool doOpen();
 
-    void setTimeZoneId( const QString& tzid );
+  void setTimeZoneId( const QString& tzid );
 
-    /**
-      If this resource has subresources, return a QStringList of them.
-      In the normal case, resources do not have subresources, so this is
-      by default just empty.
-    */
-    virtual QStringList subresources() const;
+  /**
+     If this resource has subresources, return a QStringList of them.
+     In the normal case, resources do not have subresources, so this is
+     by default just empty.
+  */
+  virtual QStringList subresources() const;
 
-    // Listen to KMail changes in the amount of sub resources
-    void subresourceAdded( const QString& type, const QString& id );
-    void subresourceDeleted( const QString& type, const QString& id );
+  // Listen to KMail changes in the amount of sub resources
+  void subresourceAdded( const QString& type, const QString& id );
+  void subresourceDeleted( const QString& type, const QString& id );
 
 public slots:
-    /**
-      (De-)activate a subresource.
-    */
-    virtual void setSubresourceActive( const QString& subresource,
-                                       bool active );
+  /**
+     (De-)activate a subresource.
+  */
+  virtual void setSubresourceActive( const QString& subresource,
+                                     bool active );
 
 protected:
-    /** Notification function of IncidenceBase::Observer. */
-    virtual void incidenceUpdated( IncidenceBase *i ) { update( i ); }
-    /** Append alarms of incidence in interval to list of alarms. */
+  /** Notification function of IncidenceBase::Observer. */
+  virtual void incidenceUpdated( IncidenceBase *i ) { update( i ); }
+  /** Append alarms of incidence in interval to list of alarms. */
 
-    virtual bool addIncidence( const QString& type, const QString& ical );
-    virtual void deleteIncidence( const QString& type, const QString& uid );
-    virtual void slotRefresh( const QString& type );
+  virtual bool addIncidence( const QString& type, const QString& ical );
+  virtual void deleteIncidence( const QString& type, const QString& uid );
+  virtual void slotRefresh( const QString& type );
 
-  private:
-    void init();
+private:
+  void init();
 
-    bool loadAllEvents();
-    bool loadAllTasks();
-    bool loadAllJournals();
+  bool loadAllEvents();
+  bool loadAllTasks();
+  bool loadAllJournals();
 
-    KCal::Incidence* parseIncidence( const QString& str );
+  KCal::Incidence* parseIncidence( const QString& str );
 
-    QString mServer;
-    ICalFormat mFormat;
-    bool mSilent;
-    QString mCurrentUID;
+  QString mServer;
+  ICalFormat mFormat;
+  bool mSilent;
+  QString mCurrentUID;
 
-    // The default calendar
-    CalendarLocal mCalendar;
+  // The default calendar
+  CalendarLocal mCalendar;
 
-    // The subresources
-    QMap<QString, CalendarLocal> mSubresources;
+  // The subresources
+  QMap<QString, CalendarLocal> mSubresources;
 };
 
 }
