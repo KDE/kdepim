@@ -199,7 +199,7 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
     mIncidencesForDownload.clear();
     QDomDocument doc = mListEventsJob->response();
 
-//    kdDebug(7000) << " Doc: " << doc.toString() << endl;
+    //kdDebug(7000) << " Doc: " << doc.toString() << endl;
 
     QDomNodeList entries = doc.elementsByTagNameNS( "DAV:", "href" );
     QDomNodeList fingerprints = doc.elementsByTagNameNS( "DAV:", "getetag" );
@@ -214,6 +214,8 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
       e = node.toElement();
       i++;
       KURL url ( entry );
+      kdDebug(5006) << "url: " << url.path() << endl;
+      kdDebug(5006) << "node: " << e.text() << endl;
       idMapper().setFingerprint( url.path(), e.text() );
     }
 

@@ -72,7 +72,6 @@ QDomDocument WebdavHandler::createItemsAndVersionsPropsRequest()
   QDomElement root = WebdavHandler::addDavElement(  doc, doc, "propfind" );
   QDomElement prop = WebdavHandler::addDavElement(  doc, root, "prop" );
   WebdavHandler::addDavElement(  doc, prop, "getetag" );
-  prop.appendChild( doc.createElementNS( "http://apache.org/dav/props/", "executable" ) );
   return doc;
 }
 QDomDocument WebdavHandler::createAllPropsRequest()

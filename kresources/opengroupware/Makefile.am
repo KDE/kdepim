@@ -10,8 +10,7 @@ libkcal_opengroupware_la_SOURCES = kcal_resourceopengroupware.cpp \
 libkcal_opengroupware_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) \
                                -version-info 1:0:0 -no-undefined
 libkcal_opengroupware_la_LIBADD = \
-  $(top_builddir)/libkcal/libkcal.la $(top_builddir)/libkdepim/libkdepim.la \
-  $(top_builddir)/libemailfunctions/libemailfunctions.la
+  $(top_builddir)/libkcal/libkcal.la $(top_builddir)/libkdepim/libkdepim.la 
 
 kde_module_LTLIBRARIES = kcal_opengroupware.la
 
