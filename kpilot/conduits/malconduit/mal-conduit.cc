@@ -213,7 +213,9 @@ bool MALConduit::skip()
 		return false;
 	}
 
+#ifndef LIBMAL20
 	pInfo->lowres = 1;
+#endif
 
 	QString proxyServer( MALConduitSettings::proxyServer() );
 	int proxyPort( MALConduitSettings::proxyPort() );
