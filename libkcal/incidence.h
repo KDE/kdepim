@@ -136,11 +136,11 @@ class Incidence : public IncidenceBase
     /** point at some other event to which the event relates. This function should
      *  only be used when constructing a calendar before the related Event
      *  exists. */
-    void setRelatedToVUID(const QString &);
+    void setRelatedToUid(const QString &);
     /** what event does this one relate to? This function should
      *  only be used when constructing a calendar before the related Event
      *  exists. */
-    QString relatedToVUID() const;
+    QString relatedToUid() const;
     /** point at some other event to which the event relates */
     void setRelatedTo(Incidence *relatedTo);
     /** what event does this one relate to? */
@@ -222,7 +222,7 @@ class Incidence : public IncidenceBase
     QString mSummary;
     QStringList mCategories;
     Incidence *mRelatedTo;
-    QString mRelatedToVUID;
+    QString mRelatedToUid;
     QPtrList<Incidence> mRelations;
     DateList mExDates;
     QStringList mAttachments;

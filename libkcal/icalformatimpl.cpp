@@ -112,7 +112,7 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
 
 icalcomponent *ICalFormatImpl::writeEvent(Event *event)
 {
-  kdDebug(5800) << "Write Event '" << event->summary() << "' (" << event->VUID()
+  kdDebug(5800) << "Write Event '" << event->summary() << "' (" << event->uid()
               << ")" << endl;
 
   QString tmpStr;
@@ -186,7 +186,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
   // unique id
   icalcomponent_add_property(parent,icalproperty_new_uid(
-      incidence->VUID().local8Bit()));
+      incidence->uid().local8Bit()));
 
   // revision
   icalcomponent_add_property(parent,icalproperty_new_sequence(
@@ -284,7 +284,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   // related event
   if (incidence->relatedTo()) {
     icalcomponent_add_property(parent,icalproperty_new_relatedto(
-        incidence->relatedTo()->VUID().local8Bit()));
+        incidence->relatedTo()->uid().local8Bit()));
   }
 
   // pilot sync stuff
@@ -299,7 +299,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   // recurrence rule stuff
   Recurrence *recur = incidence->recurrence();
   if (recur->doesRecur()) {
-    kdDebug(5800) << "Write recurrence for '" << incidence->summary() << "' (" << incidence->VUID()
+    kdDebug(5800) << "Write recurrence for '" << incidence->summary() << "' (" << incidence->uid()
               << ")" << endl;
     icalcomponent_add_property(parent,writeRecurrenceRule(recur));
   }
@@ -759,7 +759,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 
       case ICAL_RELATEDTO_PROPERTY:  // releated todo (parent)
         text = icalproperty_get_relatedto(p);
-        todo->setRelatedToVUID(text);
+        todo->setRelatedToUid(text);
         mTodosRelate.append(todo);
         break;
 
@@ -877,7 +877,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
 
       case ICAL_RELATEDTO_PROPERTY:  // releated event (parent)
         text = icalproperty_get_relatedto(p);
-        event->setRelatedToVUID(text);
+        event->setRelatedToUid(text);
         mEventsRelate.append(event);
         break;
 
@@ -1020,7 +1020,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_UID_PROPERTY:  // unique id
         text = icalproperty_get_uid(p);
-        incidence->setVUID(text);
+        incidence->setUid(text);
         break;
 
       case ICAL_SEQUENCE_PROPERTY:  // sequence
@@ -1823,7 +1823,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
   while (c) {
 //    kdDebug(5800) << "----Todo found" << endl;
     Todo *todo = readTodo(c);
-    if (!mCalendar->getTodo(todo->VUID())) mCalendar->addTodo(todo);
+    if (!mCalendar->getTodo(todo->uid())) mCalendar->addTodo(todo);
     c = icalcomponent_get_next_component(calendar,ICAL_VTODO_COMPONENT);
   }
 
@@ -1832,7 +1832,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
   while (c) {
 //    kdDebug(5800) << "----Event found" << endl;
     Event *event = readEvent(c);
-    if (!mCalendar->getEvent(event->VUID())) mCalendar->addEvent(event);
+    if (!mCalendar->getEvent(event->uid())) mCalendar->addEvent(event);
     c = icalcomponent_get_next_component(calendar,ICAL_VEVENT_COMPONENT);
   }
 
@@ -1841,7 +1841,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
   while (c) {
 //    kdDebug(5800) << "----Journal found" << endl;
     Journal *journal = readJournal(c);
-    if (!mCalendar->journal(journal->VUID())) mCalendar->addJournal(journal);
+    if (!mCalendar->journal(journal->uid())) mCalendar->addJournal(journal);
     c = icalcomponent_get_next_component(calendar,ICAL_VJOURNAL_COMPONENT);
   }
 
@@ -1920,11 +1920,11 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
   // Post-Process list of events with relations, put Event objects in relation
   Event *ev;
   for ( ev=mEventsRelate.first(); ev != 0; ev=mEventsRelate.next() ) {
-    ev->setRelatedTo(mCalendar->getEvent(ev->relatedToVUID()));
+    ev->setRelatedTo(mCalendar->getEvent(ev->relatedToUid()));
   }
   Todo *todo;
   for ( todo=mTodosRelate.first(); todo != 0; todo=mTodosRelate.next() ) {
-    todo->setRelatedTo(mCalendar->getTodo(todo->relatedToVUID()));
+    todo->setRelatedTo(mCalendar->getTodo(todo->relatedToUid()));
   }
 
   return true;

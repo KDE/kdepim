@@ -51,10 +51,10 @@ class IncidenceBase
 
     virtual QCString type() const = 0;
 
-    /** set the unique text string for the event */
-    void setVUID(const QString &);
-    /** get the unique text string for the event */
-    QString VUID() const;
+    /** Set the unique id for the event */
+    void setUid(const QString &);
+    /** Return the unique id for the event */
+    QString uid() const;
 
     /** Sets the time the incidence was last modified. */
     void setLastModified(const QDateTime &lm);
@@ -131,7 +131,7 @@ class IncidenceBase
     // base components
     QDateTime mDtStart;
     QString mOrganizer;
-    QString mVUID;
+    QString mUid;
     QDateTime mLastModified;
     QPtrList<Attendee> mAttendees;
 

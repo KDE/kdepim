@@ -51,7 +51,7 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
   mCategories = i.mCategories;
 //  Incidence *mRelatedTo;          Incidence *mRelatedTo;
   mRelatedTo = 0;
-  mRelatedToVUID = i.mRelatedToVUID;
+  mRelatedToUid = i.mRelatedToUid;
 //  QPtrList<Incidence> mRelations;    QPtrList<Incidence> mRelations;
   mExDates = i.mExDates;
   mAttachments = i.mAttachments;
@@ -78,7 +78,7 @@ void Incidence::recreate()
 {
   setCreated(QDateTime::currentDateTime());
 
-  setVUID(CalFormat::createUniqueId());
+  setUid(CalFormat::createUniqueId());
 
   setRevision(0);
 
@@ -180,15 +180,15 @@ QString Incidence::categoriesStr()
   return mCategories.join(",");
 }
 
-void Incidence::setRelatedToVUID(const QString &relatedToVUID)
+void Incidence::setRelatedToUid(const QString &relatedToUid)
 {
   if (mReadOnly) return;
-  mRelatedToVUID = relatedToVUID;
+  mRelatedToUid = relatedToUid;
 }
 
-QString Incidence::relatedToVUID() const
+QString Incidence::relatedToUid() const
 {
-  return mRelatedToVUID;
+  return mRelatedToUid;
 }
 
 void Incidence::setRelatedTo(Incidence *relatedTo)

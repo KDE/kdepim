@@ -34,7 +34,7 @@ IncidenceBase::IncidenceBase() :
   mReadOnly(false), mFloats(true), mDuration(0), mHasDuration(false),
   mPilotId(0), mSyncStatus(SYNCMOD), mObserver(0)
 {
-  setVUID(CalFormat::createUniqueId());
+  setUid(CalFormat::createUniqueId());
 }
 
 IncidenceBase::IncidenceBase(const IncidenceBase &i)
@@ -44,7 +44,7 @@ IncidenceBase::IncidenceBase(const IncidenceBase &i)
   mDuration = i.mDuration;
   mHasDuration = i.mHasDuration;
   mOrganizer = i.mOrganizer;
-  mVUID = i.mVUID;
+  mUid = i.mUid;
   mAttendees = i.attendees();
   mFloats = i.mFloats;
   mLastModified = i.mLastModified;
@@ -56,15 +56,15 @@ IncidenceBase::~IncidenceBase()
 {
 }
 
-void IncidenceBase::setVUID(const QString &VUID)
+void IncidenceBase::setUid(const QString &uid)
 {
-  mVUID = VUID;
+  mUid = uid;
   updated();
 }
 
-QString IncidenceBase::VUID() const
+QString IncidenceBase::uid() const
 {
-  return mVUID;
+  return mUid;
 }
 
 void IncidenceBase::setLastModified(const QDateTime &lm)

@@ -47,7 +47,7 @@ ADCalendar *ADCalendarFactory::create(const QString& url, const QCString& appnam
  */
 bool ADCalendar::eventHandled(const Event* event, const QValueList<QDateTime>& alarmtimes)
 {
-  EventsMap::ConstIterator it = eventsHandled_.find(event->VUID());
+  EventsMap::ConstIterator it = eventsHandled_.find(event->uid());
   if (it == eventsHandled_.end())
     return false;
 
@@ -73,8 +73,8 @@ void ADCalendar::setEventHandled(const Event* event, const QValueList<QDateTime>
 {
   if (event)
   {
-    kdDebug(5900) << "ADCalendar::setEventHandled(" << event->VUID() << ")\n";
-    EventsMap::Iterator it = eventsHandled_.find(event->VUID());
+    kdDebug(5900) << "ADCalendar::setEventHandled(" << event->uid() << ")\n";
+    EventsMap::Iterator it = eventsHandled_.find(event->uid());
     if (it != eventsHandled_.end())
     {
       // Update the existing entry for the event
@@ -82,9 +82,9 @@ void ADCalendar::setEventHandled(const Event* event, const QValueList<QDateTime>
       it.data().eventSequence = event->revision();
     }
     else
-      eventsHandled_.insert(event->VUID(),EventItem(urlString(),
-                                                    event->revision(),
-                                                    alarmtimes));
+      eventsHandled_.insert(event->uid(),EventItem(urlString(),
+                                                   event->revision(),
+                                                   alarmtimes));
   }
 }
 

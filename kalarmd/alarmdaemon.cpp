@@ -370,8 +370,8 @@ void AlarmDaemon::checkAlarms( ADCalendarBase* cal, const QDateTime &from, const
       alarms = cal->alarms( from, to );
       for ( it = alarms.begin();  it != alarms.end();  ++it ) {
         kdDebug(5901) << "AlarmDaemon::checkAlarms(): KORGANIZER event "
-                      << (*it)->parent()->VUID() << endl;
-        notifyEvent(cal, (*it)->parent()->VUID());
+                      << (*it)->parent()->uid() << endl;
+        notifyEvent(cal, (*it)->parent()->uid());
       }
       break;
 
@@ -382,7 +382,7 @@ void AlarmDaemon::checkAlarms( ADCalendarBase* cal, const QDateTime &from, const
         for ( it = alarms.begin(); it != alarms.end(); ++it ) {
           Event *event = dynamic_cast<Event *>( (*it)->parent() );
           if ( event ) {
-            const QString& eventID = event->VUID();
+            const QString& eventID = event->uid();
             kdDebug(5901) << "AlarmDaemon::checkAlarms(): KALARM event " << eventID  << endl;
             QValueList<QDateTime> alarmtimes;
             checkEventAlarms(*event, alarmtimes);

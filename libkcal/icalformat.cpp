@@ -271,7 +271,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage(const QString &messageText)
   
   icalcomponent *calendarComponent = mImpl->createCalendarComponent();
 
-  Incidence *existingIncidence = mCalendar->getEvent(incidence->VUID());
+  Incidence *existingIncidence = mCalendar->getEvent(incidence->uid());
   if (existingIncidence) {
     // TODO: check, if cast is required, or if it can be done by virtual funcs.
     if (existingIncidence->type() == "Todo") {

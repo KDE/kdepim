@@ -127,7 +127,7 @@ bool Scheduler::acceptPublish(Incidence *incidence,ScheduleMessage::Status statu
 {
   switch (status) {
     case ScheduleMessage::PublishNew:
-      if (!mCalendar->getEvent(incidence->VUID())) {
+      if (!mCalendar->getEvent(incidence->uid())) {
         mCalendar->addIncidence(incidence);
         deleteTransaction(incidence);
       }
@@ -153,7 +153,7 @@ bool Scheduler::acceptRequest(Incidence *incidence,ScheduleMessage::Status statu
       return true;
     case ScheduleMessage::RequestUpdate:
       Event *even;
-      even = mCalendar->getEvent(incidence->VUID());
+      even = mCalendar->getEvent(incidence->uid());
       if (even) {
         mCalendar->deleteEvent(even);
       }
@@ -181,7 +181,7 @@ bool Scheduler::acceptCancel(Incidence *incidence,ScheduleMessage::Status status
   eventList=mCalendar->getEvents(incidence->dtStart().date(),incidence->dtStart().date(),false);
   Event *ev;
   for ( ev = eventList.first(); ev; ev = eventList.next() ) {
-    if (ev->VUID()==incidence->VUID()) {
+    if (ev->uid()==incidence->uid()) {
       //get matching attendee in calendar
       kdDebug() << "Scheduler::acceptTransaction match found!" << endl;
       mCalendar->deleteEvent(ev);
@@ -207,7 +207,7 @@ bool Scheduler::acceptDeclineCounter(Incidence *incidence,ScheduleMessage::Statu
 bool Scheduler::acceptReply(Incidence *incidence,ScheduleMessage::Status status)
 {
   bool ret = false;
-  Event *ev = mCalendar->getEvent(incidence->VUID());
+  Event *ev = mCalendar->getEvent(incidence->uid());
   if (ev) {
     //get matching attendee in calendar
     kdDebug(5800) << "Scheduler::acceptTransaction match found!" << endl;

@@ -201,7 +201,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
 
   // unique id
   addPropValue(vtodo, VCUniqueStringProp,
-	       anEvent->VUID().local8Bit());
+	       anEvent->uid().local8Bit());
 
   // revision
   tmpStr.sprintf("%i", anEvent->revision());
@@ -270,7 +270,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   // related event
   if (anEvent->relatedTo()) {
     addPropValue(vtodo, VCRelatedToProp,
-	         anEvent->relatedTo()->VUID().local8Bit());
+	         anEvent->relatedTo()->uid().local8Bit());
   }
 
   // categories
@@ -357,7 +357,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 
   // unique id
   addPropValue(vevent, VCUniqueStringProp,
-	       anEvent->VUID().local8Bit());
+	       anEvent->uid().local8Bit());
 
   // revision
   tmpStr.sprintf("%i", anEvent->revision());
@@ -607,7 +607,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   // related event
   if (anEvent->relatedTo()) {
     addPropValue(vevent, VCRelatedToProp,
-	         anEvent->relatedTo()->VUID().local8Bit());
+	         anEvent->relatedTo()->uid().local8Bit());
   }
 
   // pilot sync stuff
@@ -638,7 +638,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
   // while the UID property is preferred, it is not required.  We'll use the
   // default Event UID if none is given.
   if (vo) {
-    anEvent->setVUID(s = fakeCString(vObjectUStringZValue(vo)));
+    anEvent->setUid(s = fakeCString(vObjectUStringZValue(vo)));
     deleteStr(s);
   }
 
@@ -785,7 +785,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
 
   // related todo
   if ((vo = isAPropertyOf(vtodo, VCRelatedToProp)) != 0) {
-    anEvent->setRelatedToVUID(s = fakeCString(vObjectUStringZValue(vo)));
+    anEvent->setRelatedToUid(s = fakeCString(vObjectUStringZValue(vo)));
     deleteStr(s);
     mTodosRelate.append(anEvent);
   }
@@ -849,7 +849,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   // while the UID property is preferred, it is not required.  We'll use the
   // default Event UID if none is given.
   if (vo) {
-    anEvent->setVUID(s = fakeCString(vObjectUStringZValue(vo)));
+    anEvent->setUid(s = fakeCString(vObjectUStringZValue(vo)));
     deleteStr(s);
   }
 
@@ -1323,7 +1323,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
 
   // related event
   if ((vo = isAPropertyOf(vevent, VCRelatedToProp)) != 0) {
-    anEvent->setRelatedToVUID(s = fakeCString(vObjectUStringZValue(vo)));
+    anEvent->setRelatedToUid(s = fakeCString(vObjectUStringZValue(vo)));
     deleteStr(s);
     mEventsRelate.append(anEvent);
   }
@@ -1578,11 +1578,11 @@ void VCalFormat::populate(VObject *vcal)
   // Post-Process list of events with relations, put Event objects in relation
   Event *ev;
   for ( ev=mEventsRelate.first(); ev != 0; ev=mEventsRelate.next() ) {
-    ev->setRelatedTo(mCalendar->getEvent(ev->relatedToVUID()));
+    ev->setRelatedTo(mCalendar->getEvent(ev->relatedToUid()));
   }
   Todo *todo;
   for ( todo=mTodosRelate.first(); todo != 0; todo=mTodosRelate.next() ) {
-    todo->setRelatedTo(mCalendar->getTodo(todo->relatedToVUID()));
+    todo->setRelatedTo(mCalendar->getTodo(todo->relatedToUid()));
   }
 }
 

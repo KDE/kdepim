@@ -285,7 +285,7 @@ Event *CalendarLocal::getEvent(const QString &uid)
     eventList = dictIt.current();
     for (anEvent = eventList->first(); anEvent;
 	 anEvent = eventList->next()) {
-      if (anEvent->VUID() == uid) {
+      if (anEvent->uid() == uid) {
 	return anEvent;
       }
     }
@@ -293,7 +293,7 @@ Event *CalendarLocal::getEvent(const QString &uid)
   }
   for (anEvent = mRecursList.first(); anEvent;
        anEvent = mRecursList.next()) {
-    if (anEvent->VUID() == uid) {
+    if (anEvent->uid() == uid) {
       return anEvent;
     }
   }
@@ -325,7 +325,7 @@ Todo *CalendarLocal::getTodo(const QString &UniqueStr)
   Todo *aTodo;
   for (aTodo = mTodoList.first(); aTodo;
        aTodo = mTodoList.next())
-    if (aTodo->VUID() == UniqueStr)
+    if (aTodo->uid() == UniqueStr)
       return aTodo;
   // not found
   return 0;
@@ -731,12 +731,12 @@ Journal *CalendarLocal::journal(const QDate &date)
   }
 }
 
-Journal *CalendarLocal::journal(const QString &UID)
+Journal *CalendarLocal::journal(const QString &uid)
 {
   QMap<QDate,Journal *>::ConstIterator it = mJournalMap.begin();
   QMap<QDate,Journal *>::ConstIterator end = mJournalMap.end();
   for(;it != end; ++it) {
-    if ((*it)->VUID() == UID) return *it;
+    if ((*it)->uid() == uid) return *it;
   }
   return 0;
 }

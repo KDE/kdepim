@@ -18,7 +18,7 @@ QString CalendarSyncEntry::name()
 
 QString CalendarSyncEntry::id()
 {
-  return mIncidence->VUID();
+  return mIncidence->uid();
 }
 
 QString CalendarSyncEntry::timestamp()
@@ -34,7 +34,7 @@ bool CalendarSyncEntry::equals(KSyncEntry *entry)
     return false;
   }
 
-  if (mIncidence->VUID() != calEntry->incidence()->VUID()) return false;
+  if (mIncidence->uid() != calEntry->incidence()->uid()) return false;
   if (mIncidence->lastModified() != calEntry->incidence()->lastModified())
     return false;
 
