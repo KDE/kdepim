@@ -1,0 +1,6 @@
+Beginnings of a vCard 3.0 parser based on the same principles as rmm uses.
+
+Will end up allocating lots of objects for large amounts of cards, but I don't
+think that this will be too much of a problem. It's small and blindingly fast,
+and not finished yet :)
+
