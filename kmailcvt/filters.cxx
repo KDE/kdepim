@@ -274,15 +274,6 @@ void kmail::kmailStop(filterInfo *info)
   info->log("kmail has adopted the (new) folders and messages");
 }
 
-bool kmail::kmailFolder(filterInfo *info,char *folder, FILE *fldr)
-{
-  Q_UNUSED(folder);
-  Q_UNUSED(fldr);
-  info->alert(cap,"kmailFolder: Not implemented yet");
-  return false;
-//return kmailMessage(info,folder,fldr);
-}
-
 //////////////////////////////////////////////////////////////////////////////////
 //
 // This is the kab class, it provides the interface to KAddressBook.
