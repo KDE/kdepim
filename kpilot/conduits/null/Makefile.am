@@ -1,6 +1,9 @@
 INCLUDES= @all_includes@ -I$(top_srcdir)/kpilot/kpilot -I$(top_srcdir)/kpilog/kpilot/libpilot/include
 METASOURCES = AUTO
 
+servicedir = $(kde_servicesdir)
+service_DATA = null-conduit.desktop
+
 ####### This part is very kpilot specific
 # you can add here more. This one gets installed
 noinst_PROGRAMS = null_conduit
