@@ -237,35 +237,26 @@ void AddresseeEditorWidget::setupTab1()
   bar = new KSeparator( KSeparator::HLine, tab1 );
   layout->addMultiCellWidget( bar, 7, 7, 3, 6 );
 
+  QHBoxLayout *homePageLayout = new QHBoxLayout( 0, 11, 7 );
+
   label = new QLabel( tab1 );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "homepage", KIcon::Desktop,
                                                      KIcon::SizeMedium ) );
-  layout->addMultiCellWidget( label, 8, 9, 3, 3 );
+  homePageLayout->addWidget( label );
 
   label = new QLabel( i18n( "%1:" ).arg( KABC::Addressee::urlLabel() ), tab1 );
   mURLEdit = new KLineEdit( tab1 );
   connect( mURLEdit, SIGNAL( textChanged( const QString& ) ), 
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mURLEdit );
-  layout->addWidget( label, 8, 4 );
-  layout->addMultiCellWidget( mURLEdit, 8, 8, 5, 6 );
+  homePageLayout->addWidget( label );
+  homePageLayout->addWidget( mURLEdit );
+  layout->addMultiCellLayout( homePageLayout, 8, 8, 3, 6 );
 
   mIMWidget = new IMEditWidget( tab1, mAddressee );
   connect( mIMWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
-  layout->addMultiCellWidget( mIMWidget, 9,10, 4, 6 );
+  layout->addMultiCellWidget( mIMWidget, 9, 10, 4, 6 );
 
-/*  label = new QLabel( i18n( "&IM address:" ), tab1 );
-  mIMAddressEdit = new KLineEdit( tab1 );
-  connect( mIMAddressEdit, SIGNAL( textChanged( const QString& ) ), 
-           SLOT( textChanged( const QString& ) ) );
-  label->setBuddy( mIMAddressEdit );
-  layout->addWidget( label, 9, 4 );
-  layout->addMultiCellWidget( mIMAddressEdit, 9, 9, 5, 6 );
-  
-//johnflux
-  label = new QLabel( i18n( "&IM address:" ), tab1 );
-  layout->addMultiCellWidget(label, 10,10,4,6);
-  */
   layout->addColSpacing( 6, 50 );
   
   bar = new KSeparator( KSeparator::HLine, tab1 );
