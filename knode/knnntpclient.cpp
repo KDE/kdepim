@@ -60,6 +60,7 @@ void KNNntpClient::doListGroups()
 {
 	QStrList *target=(QStrList*)job->data();
 	char *s;
+	//QStrList tmpList;
 	
 	sendSignal(TSdownloadGrouplist);
 	errorPrefix = i18n("The grouplist could not be retrieved.\nThe following error occured:\n");
@@ -76,6 +77,7 @@ void KNNntpClient::doListGroups()
   progressValue = 1000;		
   sendSignal(TSprogressUpdate);
 	
+
 	char *line=target->first();	
 	while (line) {
 		s = strchr(line,' ');
@@ -93,6 +95,8 @@ void KNNntpClient::doListGroups()
 			line = target->next();
 		}
 	}
+	
+	target->sort();
 }
 
 
