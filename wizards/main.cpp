@@ -1,6 +1,7 @@
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
+#include <kglobal.h>
 
 #include "groupwarewizard.h"
 
@@ -18,6 +19,8 @@ int main( int argc, char **argv )
   KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;
+
+  KGlobal::locale()->insertCatalogue( "kdepimwizards" );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 

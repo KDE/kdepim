@@ -1,4 +1,4 @@
-/*
+  /*
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
@@ -42,7 +42,7 @@ int main(int argc,char **argv)
 
   KApplication app;
 
-  KGlobal::locale()->insertCatalogue( "wizards" );
+  KGlobal::locale()->insertCatalogue( "kdepimwizards" );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 

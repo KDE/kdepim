@@ -42,7 +42,7 @@ int main(int argc,char **argv)
 
   KApplication app;
 
-  KGlobal::locale()->insertCatalogue( "wizards" );
+  KGlobal::locale()->insertCatalogue( "kdepimwizards" );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
