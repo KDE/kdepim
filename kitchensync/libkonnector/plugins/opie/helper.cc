@@ -6,7 +6,7 @@
 using namespace OpieHelper;
 
 Base::Base( CategoryEdit* edit,
-            KonnectorUIDHelper* helper,
+            KSync::KonnectorUIDHelper* helper,
             const QString &tz,
             bool metaSyncing )
 {
@@ -110,6 +110,7 @@ QStringList Base::categoriesToNumberList( const QStringList &list, const QString
     QValueList<OpieCategories>::ConstIterator catIt;
     QValueList<OpieCategories> categories = m_edit->categories();
     bool found = false;
+
     for ( QStringList::ConstIterator listIt = list.begin(); listIt != list.end(); ++listIt ) {
         for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
             if ( (*catIt).name() == (*listIt) ) { // the same name
@@ -134,35 +135,27 @@ QString Base::konnectorId( const QString &appName,  const QString &uid )
         id =  m_helper->konnectorId( appName,  uid );
         //                        konnector kde
         if (id.isEmpty() ) { // generate new id
-            kdDebug() << "Id is empty" << endl;
             id2 = QString::number( newId() );
             id = QString::fromLatin1("Konnector-") + id2;
-            kdDebug() << "Id is " << id << endl;
         }else if ( id.startsWith( "Konnector-" ) ) { // not converted
-            kdDebug() << "prev " << id << endl;
             id2 =  id.mid( 10 );
-            kdDebug() << "mid " << id << endl;
         }
         m_kde2opie.append( Kontainer( id,     uid ) );
     }
-    kdDebug() << "id " <<  id2 << endl;
     return id2;
 }
 QString Base::kdeId( const QString &appName,  const QString &uid )
 {
     QString ret;
     if ( m_helper == 0 ) {
-        kdDebug() << "m_helper == 0" << endl;
         ret = QString::fromLatin1("Konnector-")  + uid;
     }
     else{ // only if meta
-        kdDebug() << "Ret else wet" << endl;
         ret = m_helper->kdeId( appName, "Konnector-"+uid,  "Konnector-"+uid);
     }
-    kdDebug() << "AppName " << appName << " kon " << ret << endl;
     return ret;
 }
-// code copyrighted by tt
+// code copyrighted by tt FIXME
 int Base::newId()
 {
     QMap<int,  bool> ids;

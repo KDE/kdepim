@@ -6,25 +6,12 @@
 
 #include <libkcal/todo.h>
 
-namespace OpieHelper {
-    class MetaTodo;
-    class MetaTodoReturn {
-        friend class MetaTodo;
-    public:
-        MetaTodoReturn();
-        MetaTodoReturn( const MetaTodoReturn& );
-        ~MetaTodoReturn();
-        QPtrList<KCal::Todo> added();
-        QPtrList<KCal::Todo> removed();
-        QPtrList<KCal::Todo> modified();
-        MetaTodoReturn &operator=( const MetaTodoReturn& );
-    private:
-        QPtrList<KCal::Todo> m_add;
-        QPtrList<KCal::Todo> m_del;
-        QPtrList<KCal::Todo> m_mod;
-    };
+#include <todosyncee.h>
 
-    class MetaTodo {
+#include "metatemplate.h"
+
+namespace OpieHelper {
+    class MetaTodo : public MetaTemplate<KSync::TodoSyncee, KSync::TodoSyncEntry> {
     public:
         MetaTodo();
         ~MetaTodo();
@@ -32,8 +19,7 @@ namespace OpieHelper {
          * doMeta searches for differences between a new and
          * old set of Todo Events
          */
-        MetaTodoReturn doMeta(QPtrList<KCal::Todo> &New,
-                              QPtrList<KCal::Todo> &old);
+        virtual bool test( KSync::TodoSyncEntry*, KSync::TodoSyncEntry* );
     };
 };
 

@@ -5,7 +5,6 @@
 #include <qfile.h>
 
 #include <kapplication.h>
-#include <opiedesktopsyncentry.h>
 #include <koperations.h>
 #include <kgenericfactory.h>
 #include <qsocket.h>
@@ -18,14 +17,12 @@
 #include <kstandarddirs.h>
 #include <qregexp.h>
 
-#include <kunknownsyncentry.h>
-#include <kalendarsyncentry.h>
 
 #include <idhelper.h>
 
 #include "opiesocket.h"
 #include "opiecategories.h"
-#include "opiehelper.h"
+//#include "opiehelper.h"
 
 #include "categoryedit.h"
 #include "datebook.h"
@@ -34,6 +31,9 @@
 #include "metatodo.h"
 #include "metaevent.h"
 #include "metaaddress.h"
+
+
+using namespace KSync;
 
 class OpieSocket::OpieSocketPrivate{
 public:
@@ -55,7 +55,7 @@ public:
     int getMode;
     enum Call{NOTSTARTED=0, HANDSHAKE=0, ABOOK, TODO, CALENDAR, TRANSACTIONS, FILES, DESKTOPS};
     enum Status {START=0, USER=1, PASS, CALL, NOOP, DONE , CONNECTED};
-    KSyncEntry::List m_sync;
+    Syncee::PtrList m_sync;
     QValueList<OpieCategories> m_categories;
     QString partnerId;
     QStringList files;
@@ -219,11 +219,11 @@ void OpieSocket::write(const QString &path, const QByteArray &array )
     temp.unlink();
 }
 // write back to my iPAQ
-void OpieSocket::write(KSyncEntry::List lis)
+void OpieSocket::write(Syncee::PtrList lis)
 {
 // ok the list
 //    kdDebug(5202) << "Write back" << endl;
-    lis.setAutoDelete( TRUE );
+/*    lis.setAutoDelete( TRUE );
     KSyncEntry* entry;
     KURL url;
     url.setProtocol("ftp" );
@@ -310,8 +310,10 @@ void OpieSocket::write(KSyncEntry::List lis)
     stream << "call QPE/System stopSync()" << endl;
     d->isSyncing = false; // do it in the write back later on
     lis.clear();
+*/
+    lis.clear();
 }
-void OpieSocket::write(KOperations::List )
+void OpieSocket::write(KOperations::ValueList )
 {
 //    kdDebug(5202) << "write KOperations not implemented yet" << endl;
 }
@@ -439,8 +441,8 @@ void OpieSocket::manageCall(const QString &line )
     }
     if( line.startsWith("CALL QPE/Desktop docLinks(QString)" ) ){
 	kdDebug(5202 ) << "CALL docLinks desktop entry" << endl;
-        OpieHelperClass helper;
-	helper.toOpieDesktopEntry( line, &d->m_sync, d->edit  );
+        // FIXME      OpieHelperClass helper;
+//	helper.toOpieDesktopEntry( line, &d->m_sync, d->edit  );
     }
     switch( d->getMode ){
 	case d->HANDSHAKE: {
@@ -621,7 +623,7 @@ void OpieSocket::writeCategory()
 void OpieSocket::doCal()
 {
  // Calendar
-    QString todo,  tmpFileName;
+/*    QString todo,  tmpFileName;
     KURL url;
     url.setProtocol("ftp" );
     url.setUser( d->user );
@@ -703,10 +705,11 @@ void OpieSocket::doCal()
     d->m_sync.append( calEntry );
     KIO::NetAccess::removeTempFile( tmpFileName );
     KIO::NetAccess::removeTempFile( todo );
-
+*/
 }
 void OpieSocket::doAddressbook()
 {
+    /*
     KURL url;
     url.setProtocol("ftp" );
     url.setUser( d->user );
@@ -752,6 +755,7 @@ void OpieSocket::doAddressbook()
         entry->setSyncMode( KSyncEntry::SYNC_NORMAL );
     d->m_sync.append( entry  );
     KIO::NetAccess::removeTempFile( tmpFileName );
+    */
 }
 
 namespace {

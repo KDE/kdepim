@@ -7,7 +7,7 @@
 
 #include <kdebug.h>
 
-#include <kalendarsyncentry.h>
+#include <eventsyncee.h>
 
 
 #include "datebook.h"
@@ -33,7 +33,7 @@ int week ( const QDate &start ) {
 };
 
 DateBook::DateBook( CategoryEdit* edit,
-                    KonnectorUIDHelper* helper,
+                    KSync::KonnectorUIDHelper* helper,
                     const QString& tz,
                     bool meta )
     : Base( edit,  helper,  tz, meta )
@@ -45,10 +45,142 @@ DateBook::~DateBook()
 {
 
 }
-QPtrList<KCal::Event> DateBook::toKDE( const QString& fileName )
+/**
+ * Converts an Opie Event to a KDE one
+ */
+KCal::Event* DateBook::toEvent( QDomElement e) {
+    kdDebug(5202) << "inside event" << endl;
+    KCal::Event* event = new KCal::Event();
+    QStringList list = QStringList::split(";",  e.attribute("Categories") );
+    QStringList categories;
+    for ( uint i = 0; i < list.count(); i++ ) {
+        kdDebug(5202) << list[i]<< " categories " << m_edit->categoryById( list[i],  "Calendar") << endl;
+        categories.append(m_edit->categoryById(list[i], "Calendar") );
+    }
+    if (!categories.isEmpty() ) {
+        event->setCategories( categories );
+    }
+    //event->setDescription(e.attribute("Description") );
+    event->setSummary( e.attribute("description") );
+    event->setUid( kdeId( "event",  e.attribute("uid") ) );
+    event->setDescription( e.attribute("note") );
+    event->setLocation( e.attribute("location") );
+    // time
+
+    QString start = e.attribute("start");
+    kdDebug(5202) << "Start " << fromUTC( (time_t) start.toLong() ).toString() << endl;
+    event->setDtStart( fromUTC( (time_t) start.toLong() ) );
+
+    QString end = e.attribute("end");
+    kdDebug(5202) << "End " << fromUTC( (time_t) end.toLong() ).toString() << endl;
+    event->setDtEnd( fromUTC( (time_t) end.toLong() ) );
+
+    // type
+    if ( e.attribute("type") == "AllDay" ) {
+        event->setFloats( true );
+    }else{
+        event->setFloats( false );
+    }
+
+    // alarm
+    KCal::Alarm *al = new KCal::Alarm( event );
+    al->setText( event->description() );
+    al->setOffset( e.attribute("alarm").toInt() * -60 );
+    al->setAudioFile( e.attribute("sound") );
+    event->addAlarm( al );
+
+    // Recurrence damn I feared to do that
+    QString type = e.attribute("rtype");
+    int freq = e.attribute("rfreq").toInt();
+    bool hasEnd = e.attribute("rhasenddate");
+
+    KCal::Recurrence *rec = event->recurrence();
+    start = e.attribute("created");
+    rec->setRecurStart( fromUTC( (time_t) start.toLong() ) );
+
+    if ( type == "Daily" ) {
+        if ( hasEnd ) {
+            start = e.attribute("enddt");
+            rec->setDaily(freq,  fromUTC( (time_t) start.toLong() ).date() );
+        }else{
+            rec->setDaily( freq,  -1 );
+        }
+        // weekly
+    }else if ( type == "Weekly") {
+        int days = e.attribute("rweekdays").toInt();
+        QBitArray bits( 7 );
+        bits.fill( false );
+        if ( Monday & days )
+            bits.setBit( 0 );
+        if ( Tuesday & days )
+            bits.setBit( 1 );
+        if ( Wednesday & days )
+            bits.setBit( 2 );
+        if ( Thursday & days )
+            bits.setBit( 3 );
+        if ( Friday & days )
+            bits.setBit( 4 );
+        if ( Saturday & days )
+            bits.setBit( 5 );
+        if ( Sunday & days )
+            bits.setBit( 6 );
+
+        if ( hasEnd ) {
+            start = e.attribute("enddt");
+            rec->setWeekly( freq,  bits, fromUTC( (time_t) start.toLong() ).date() );
+        }else{
+            rec->setWeekly( freq,  bits,  -1 );
+        }
+    // monthly
+    }else if ( type == "MonthlyDay" ) {
+        // monthly day the  1st Saturday of the month
+        int rposition = e.attribute("rposition").toInt();
+        if ( hasEnd ) {
+            start = e.attribute("enddt");
+            rec->setMonthly( KCal::Recurrence::rMonthlyPos,
+                             freq,fromUTC( (time_t) start.toLong() ).date() );
+        }else{
+            rec->setMonthly( KCal::Recurrence::rMonthlyPos,
+                             freq,  -1 );
+        }
+        QBitArray array( 7);
+        array.fill( false );
+        QDate date = event->dtStart().date();
+        array.setBit( date.dayOfWeek() - 1 );
+        rec->addMonthlyPos( rposition, array );
+
+    }else if ( type == "MonthlyDate" ) {
+        // int rposition = e.attribute("rposition").toInt();
+        if ( hasEnd ) {
+            start = e.attribute("enddt");
+            rec->setMonthly( KCal::Recurrence::rMonthlyDay,
+                             freq,fromUTC( (time_t) start.toLong() ).date() );
+        }else{
+            rec->setMonthly( KCal::Recurrence::rMonthlyDay,
+                             freq,  -1 );
+        }
+        QDate date = event->dtStart().date();
+        rec->addMonthlyDay( date.day() );
+
+    }else if ( type == "Yearly" ) {
+        if (hasEnd ) {
+            start = e.attribute("enddt");
+            rec->setYearly( KCal::Recurrence::rYearlyDay,
+                            freq,
+                            fromUTC( (time_t) start.toLong() ).date() );
+        }else{
+            rec->setYearly( KCal::Recurrence::rYearlyDay,
+                            freq, -1 );
+        }
+        rec->addYearlyNum( event->dtStart().date().dayOfYear() );
+    }
+    return event;
+}
+
+KSync::EventSyncee* DateBook::toKDE( const QString& fileName )
 {
     kdDebug(5202) << "To KDE " << endl;
-    QPtrList<KCal::Event> m_list;
+    KSync::EventSyncee* syncee = new KSync::EventSyncee();
 
     QFile file( fileName );
     if ( file.open( IO_ReadOnly ) ) {
@@ -56,158 +188,49 @@ QPtrList<KCal::Event> DateBook::toKDE( const QString& fileName )
         QDomDocument doc("mydocument");
         if ( doc.setContent( &file ) ) {
             kdDebug(5202) << "setContent" << endl;
-            KCal::Event *event;
             QDomElement docElem = doc.documentElement();
             kdDebug(5202) << "TagName docElem " << docElem.tagName() << endl;
             QDomNode n = docElem.firstChild();
             QString dummy;
-            int Int;
-            bool ok;
             while (!n.isNull() ) {
                 QDomElement el = n.toElement();
                 if (!el.isNull() ) {
                     kdDebug(5202) << "e " << el.tagName() << endl;
                     kdDebug(5202) << "e.isNull not" << endl;
+
                     if ( el.tagName() == "events") {
+
                         QDomNode no = el.firstChild();
                         while (!no.isNull() ) {
                             QDomElement e = no.toElement();
+
                             if (!e.isNull() ) {
                                 if (e.tagName() == "event") {
-                                    kdDebug(5202) << "inside event" << endl;
-                                    event = new KCal::Event();
-                                    QStringList list = QStringList::split(";",  e.attribute("Categories") );
-                                    QStringList categories;
-                                    for ( uint i = 0; i < list.count(); i++ ) {
-                                        kdDebug(5202) << list[i]<< " categories " << m_edit->categoryById( list[i],  "Calendar") << endl;
-                                        categories.append(m_edit->categoryById(list[i], "Calendar") );
+                                    KCal::Event* event = toEvent( e );
+                                    if (event != 0 ) {
+                                        KSync::EventSyncEntry* entry;
+                                        entry = new KSync::EventSyncEntry( event );
+                                        syncee->addEntry( entry );
                                     }
-                                    if (!categories.isEmpty() ) {
-                                        event->setCategories( categories );
-                                    }
-                                    //event->setDescription(e.attribute("Description") );
-                                    event->setSummary( e.attribute("description") );
-                                    event->setUid( kdeId( "event",  e.attribute("uid") ) );
-                                    event->setDescription( e.attribute("note") );
-                                    event->setLocation( e.attribute("location") );
-                                    // time
-                                    bool ok;
-                                    QString start = e.attribute("start");
-                                    kdDebug(5202) << "Start " << fromUTC( (time_t) start.toLong() ).toString() << endl;
-                                    event->setDtStart( fromUTC( (time_t) start.toLong() ) );
-                                    QString end = e.attribute("end");
-                                    kdDebug(5202) << "End " << fromUTC( (time_t) end.toLong() ).toString() << endl;
-                                    event->setDtEnd( fromUTC( (time_t) end.toLong() ) );
-                                    if ( e.attribute("type") == "AllDay" ) {
-                                        event->setFloats( true );
-                                    }else{
-                                        event->setFloats( false );
-                                    }
-                                    KCal::Alarm *al = new KCal::Alarm( event );
-                                    al->setText( event->description() );
-                                    al->setOffset( e.attribute("alarm").toInt() * -60 );
-                                    al->setAudioFile( e.attribute("sound") );
-                                    event->addAlarm( al );
-
-                                    // Recurrence damn I feared to do that
-                                    QString type = e.attribute("rtype");
-                                    int freq = e.attribute("rfreq").toInt();
-                                    bool hasEnd = e.attribute("rhasenddate");
-
-                                    KCal::Recurrence *rec = event->recurrence();
-                                    start = e.attribute("created");
-                                    rec->setRecurStart( fromUTC( (time_t) start.toLong() ) );
-                                    if ( type == "Daily" ) {
-                                        if ( hasEnd ) {
-                                            start = e.attribute("enddt");
-                                            rec->setDaily(freq,  fromUTC( (time_t) start.toLong() ).date() );
-                                        }else{
-                                            rec->setDaily( freq,  -1 );
-                                        }
-                                    }else if ( type == "Weekly") {
-                                        int days = e.attribute("rweekdays").toInt();
-                                        QBitArray bits( 7 );
-                                        bits.fill( false );
-                                        if ( Monday & days )
-                                            bits.setBit( 0 );
-                                        if ( Tuesday & days )
-                                            bits.setBit( 1 );
-                                        if ( Wednesday & days )
-                                            bits.setBit( 2 );
-                                        if ( Thursday & days )
-                                            bits.setBit( 3 );
-                                        if ( Friday & days )
-                                            bits.setBit( 4 );
-                                        if ( Saturday & days )
-                                            bits.setBit( 5 );
-                                        if ( Sunday & days )
-                                            bits.setBit( 6 );
-
-                                        if ( hasEnd ) {
-                                            start = e.attribute("enddt");
-                                            rec->setWeekly( freq,  bits, fromUTC( (time_t) start.toLong() ).date() );
-                                        }else{
-                                            rec->setWeekly( freq,  bits,  -1 );
-                                        }
-
-                                    }else if ( type == "MonthlyDay" ) {
-                                        // monthly day the  1st Saturday of the month
-                                        int rposition = e.attribute("rposition").toInt();
-                                        if ( hasEnd ) {
-                                            start = e.attribute("enddt");
-                                            rec->setMonthly( KCal::Recurrence::rMonthlyPos,
-                                                             freq,fromUTC( (time_t) start.toLong() ).date() );
-                                        }else{
-                                            rec->setMonthly( KCal::Recurrence::rMonthlyPos,
-                                                             freq,  -1 );
-                                        }
-                                        QBitArray array( 7);
-                                        array.fill( false );
-                                        QDate date = event->dtStart().date();
-                                        array.setBit( date.dayOfWeek() - 1 );
-                                        rec->addMonthlyPos( rposition, array );
-                                    }else if ( type == "MonthlyDate" ) {
-                                        int rposition = e.attribute("rposition").toInt();
-                                        if ( hasEnd ) {
-                                            start = e.attribute("enddt");
-                                            rec->setMonthly( KCal::Recurrence::rMonthlyDay,
-                                                             freq,fromUTC( (time_t) start.toLong() ).date() );
-                                        }else{
-                                            rec->setMonthly( KCal::Recurrence::rMonthlyDay,
-                                                             freq,  -1 );
-                                        }
-                                        QDate date = event->dtStart().date();
-                                        rec->addMonthlyDay( date.day() );
-                                    }else if ( type == "Yearly" ) {
-                                        if (hasEnd ) {
-                                            start = e.attribute("enddt");
-                                            rec->setYearly( KCal::Recurrence::rYearlyDay,
-                                                            freq,
-                                                            fromUTC( (time_t) start.toLong() ).date() );
-                                        }else{
-                                            rec->setYearly( KCal::Recurrence::rYearlyDay,
-                                                            freq, -1 );
-                                        }
-                                        rec->addYearlyNum( event->dtStart().date().dayOfYear() );
-                                    }
-                                    m_list.append( event );
                                 }
                             }
                             no = no.nextSibling();
                         }
                     }
                     n = n.nextSibling();
-                } // n.isNULL
+                }// n.isNULL
             }
         }
     }
-    return m_list;
+    return syncee;
 }
-QByteArray DateBook::fromKDE( KAlendarSyncEntry* entry )
+
+QByteArray DateBook::fromKDE( KSync::EventSyncee* syncee )
 {
     m_kde2opie.clear();
-    Kontainer::List newIds = entry->ids( "event");
-    for ( Kontainer::List::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
+    Kontainer::ValueList newIds = syncee->ids( "event");
+    Kontainer::ValueList::ConstIterator idIt;
+    for ( idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
         m_helper->addId("event",  (*idIt).first(),  (*idIt).second() );
     }
     QByteArray array;
@@ -217,10 +240,14 @@ QByteArray DateBook::fromKDE( KAlendarSyncEntry* entry )
         stream.setEncoding( QTextStream::UnicodeUTF8 );
         stream <<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
         stream << "<!DOCTYPE DATEBOOK><DATEBOOK>" << endl;
-        QPtrList<KCal::Event> list = entry->calendar()->getAllEvents();
+        KSync::EventSyncEntry *entry;
         KCal::Event *event;
         stream << "<events>" << endl;
-        for ( event = list.first(); event != 0; event = list.next() ) {
+        for ( entry = (KSync::EventSyncEntry*) syncee->firstEntry();
+              entry != 0;
+              entry = (KSync::EventSyncEntry*) syncee->nextEntry() )
+        {
+            event = entry->incidence();
             stream << event2string( event ) << endl;
         }
         stream << "</events>" << endl;
@@ -307,7 +334,7 @@ QString DateBook::event2string( KCal::Event *event )
     	    if ( sound != "loud" && sound != "silent" ) {
         	if ( sound.isEmpty() )
                 	sound = QString::fromLatin1("silent");
-	        else	
+	        else
     	            sound = QString::fromLatin1("loud");
     	    }
     	    str.append( "sound=\"" +  sound + "\" ");

@@ -8,7 +8,6 @@
 
 #include <kdebug.h>
 
-#include <kalendarsyncentry.h>
 #include <idhelper.h>
 #include "opiecategories.h"
 #include "todo.h"

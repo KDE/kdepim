@@ -12,7 +12,11 @@
 #include <qvaluelist.h>
 
 #include <kontainer.h>
+#include <syncer.h>
+
 #include <idhelper.h>
+
+
 #include "categoryedit.h"
 
 namespace OpieHelper {
@@ -20,7 +24,7 @@ namespace OpieHelper {
     class Base {
     public:
         Base( CategoryEdit* edit =0,
-              KonnectorUIDHelper* helper = 0,
+              KSync::KonnectorUIDHelper* helper = 0,
               const QString &tz = QString::null,
               bool metaSyncing = FALSE);
         virtual ~Base();
@@ -31,7 +35,7 @@ namespace OpieHelper {
         // off tt code
         int newId();
         CategoryEdit* edit() { return m_edit; };
-        KonnectorUIDHelper* helper() { return m_helper; };
+        KSync::KonnectorUIDHelper* helper() { return m_helper; };
         bool isMetaSyncingEnabled()const;
         void setMetaSyncingEnabled(bool meta);
         // returns a ; separated list of real ids
@@ -42,8 +46,8 @@ namespace OpieHelper {
         QString konnectorId( const QString &appName,  const QString &uid );
         QString kdeId( const QString &appName, const QString &uid );
         CategoryEdit *m_edit;
-        KonnectorUIDHelper *m_helper;
-        Kontainer::List m_kde2opie;
+        KSync::KonnectorUIDHelper *m_helper;
+        Kontainer::ValueList m_kde2opie;
         bool m_metaSyncing : 1;
         QString m_tz;
     private:

@@ -15,8 +15,10 @@
 #include "opiesocket.h"
 #include "opiekonnector.h"
 
-typedef KGenericFactory<OpiePlugin, QObject>  OpieKonnectorPlugin;
+typedef KGenericFactory<KSync::OpiePlugin, QObject>  OpieKonnectorPlugin;
 K_EXPORT_COMPONENT_FACTORY( libopiekonnector,  OpieKonnectorPlugin );
+
+using namespace KSync;
 
 class OpiePlugin::OpiePluginPrivate{
  public:
@@ -37,8 +39,8 @@ OpiePlugin::OpiePlugin(QObject *obj, const char *name, const QStringList )
     d = new OpiePluginPrivate;
     d->socket = new OpieSocket(this, "opiesocket");
 
-    connect(d->socket, SIGNAL(sync(KSyncEntry::List ) ),
-	    this, SLOT(slotSync(KSyncEntry::List ) ) );
+    connect(d->socket, SIGNAL(sync(Syncee::PtrList ) ),
+	    this, SLOT(slotSync(Syncee::PtrList ) ) );
 
     connect(d->socket, SIGNAL(errorKonnector(int, QString ) ),
 	    this, SLOT(slotErrorKonnector(int, QString) ) );
@@ -128,11 +130,11 @@ void OpiePlugin::slotWrite(const QString &path, const QByteArray &array )
 {
     d->socket->write(path, array );
 }
-void OpiePlugin::slotWrite(KSyncEntry::List entry)
+void OpiePlugin::slotWrite(Syncee::PtrList entry)
 {
     d->socket->write(entry );
 };
-void OpiePlugin::slotSync(KSyncEntry::List entry )
+void OpiePlugin::slotSync(Syncee::PtrList entry )
 {
     emit sync( d->udi, entry );
 }
@@ -140,7 +142,7 @@ void OpiePlugin::slotErrorKonnector( int mode, QString error )
 {
     emit errorKonnector(d->udi, mode, error );
 }
-void OpiePlugin::slotWrite(KOperations::List operations )
+void OpiePlugin::slotWrite(KOperations::ValueList operations )
 {
     d->socket->write(operations );
 }
@@ -149,7 +151,7 @@ void OpiePlugin::slotChanged( bool b)
     kdDebug(5202) << "State changed Opiekonnector" << endl;
     emit  stateChanged( d->udi,  b );
 }
-KSyncEntry* OpiePlugin::retrEntry( const QString& path )
+Syncee* OpiePlugin::retrEntry( const QString& path )
 {
     return d->socket->retrEntry( path );
 }

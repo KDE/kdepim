@@ -10,37 +10,6 @@ namespace {
 
 };
 
-MetaAddressReturn::MetaAddressReturn()
-{
-
-}
-MetaAddressReturn::~MetaAddressReturn()
-{
-
-}
-MetaAddressReturn::MetaAddressReturn( const MetaAddressReturn& ole )
-{
-    (*this) = ole;
-}
-QValueList<KABC::Addressee> MetaAddressReturn::added()
-{
-    return m_add;
-}
-QValueList<KABC::Addressee> MetaAddressReturn::modified()
-{
-    return m_mod;
-}
-QValueList<KABC::Addressee> MetaAddressReturn::removed()
-{
-    return m_rem;
-}
-MetaAddressReturn &MetaAddressReturn::operator=( const MetaAddressReturn& ole )
-{
-    m_add = ole.m_add;
-    m_mod = ole.m_mod;
-    m_rem = ole.m_rem;
-    return *this;
-}
 
 MetaAddress::MetaAddress()
 {
@@ -50,50 +19,60 @@ MetaAddress::~MetaAddress()
 {
 
 }
-MetaAddressReturn MetaAddress::doMeta( const QValueList<KABC::Addressee>& newE,
-                                       const QValueList<KABC::Addressee>& old )
+KSync::AddressBookSyncee* MetaAddress::doMeta(KSync::AddressBookSyncee* newE,
+                                              KSync::AddressBookSyncee* old )
 {
-    QValueList<KABC::Addressee> add;
-    QValueList<KABC::Addressee> mod;
-    QValueList<KABC::Addressee> rem;
-    QValueList<KABC::Addressee>::ConstIterator it;
-    QValueList<KABC::Addressee>::ConstIterator oldIt;
+    KSync::AddressBookSyncEntry* entryNew;
+    KSync::AddressBookSyncEntry* entryOld;
+    KABC::Addressee oldAb;
+    KABC::Addressee newAb;
     bool found;
-    for ( it = newE.begin(); it != newE.end(); ++it ) {
+
+    /**
+     * Now we will search for some meta info........
+     * Go through all from newE and check their pendant
+     * from old. If test fails it was modified.
+     * If not found it was added.
+     * Then we will go through old and search for removed
+     * entries
+     */
+    for ( entryNew = newE->firstEntry(); entryNew != 0l; entryNew = newE->nextEntry() ) {
+        found  = false; // we did not find anything
+        newAb = entryNew->addressee();
+        for ( entryOld = old->firstEntry(); entryOld != 0l; entryOld = old->nextEntry() ) {
+            oldAb = entryOld->addressee();
+            if ( newAb.uid() == oldAb.uid() ) {
+                found = true;
+                // found the old one. Let's test for differences
+                if ( test( newAb, oldAb ) )
+                    entryNew->setState( KSync::SyncEntry::Modified );
+                break; // we found it so we don't need to search further
+            }
+
+        };
+        if (!found )  // it was not found. So it's new
+            entryNew->setState( KSync::SyncEntry::Added );
+
+    }
+    // now find the deleted once and clone them
+    for ( entryOld = old->firstEntry(); entryOld != 0l; entryOld = old->nextEntry() ) {
         found = false;
-        for ( oldIt = old.begin(); oldIt != old.end(); ++oldIt ) {
-            if ( (*oldIt).uid() == (*it).uid() ) {
-                if ( test( (*it),  (*oldIt ) ) ) {
-                    KABC::Addressee adr( (*it) ); // copy just in case
-                    mod.append( adr );
-                }
+        oldAb = entryOld->addressee();
+        for ( entryNew = newE->firstEntry(); entryNew != 0l; entryNew = newE->nextEntry() ) {
+            newAb = entryNew->addressee();
+            if ( oldAb.uid() == newAb.uid() ) {
                 found = true;
                 break;
             }
         }
         if (!found ) {
-            KABC::Addressee adr( (*it) );
-            add.append( adr );
+            KSync::AddressBookSyncEntry* remEntry = new KSync::AddressBookSyncEntry( oldAb );
+            remEntry->setState( KSync::SyncEntry::Removed );
+            newE->addEntry( remEntry );
         }
     }
-    for ( oldIt = old.begin(); oldIt != old.end(); ++oldIt ) {
-        found = false;
-        for ( it = newE.begin(); it != newE.end(); ++it ) {
-            if ( (*it).uid() == (*oldIt).uid() ) {
-                found = true;
-                break;
-            }
-        }
-        if ( !found ) {
-            KABC::Addressee adr( (*oldIt) );
-            rem.append( adr );
-        }
-    }
-    MetaAddressReturn ret;
-    ret.m_add = add;
-    ret.m_mod = mod;
-    ret.m_rem = rem;
-    return ret;
+    delete old;
+    return newE;
 };
 
 namespace{

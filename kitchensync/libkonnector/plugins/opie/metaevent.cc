@@ -1,6 +1,8 @@
 
 #include <kdebug.h>
 
+#include <eventsyncee.h>
+
 #include "metaevent.h"
 
 using namespace OpieHelper;
@@ -8,40 +10,10 @@ using namespace OpieHelper;
 
 namespace {
 
-    bool test( KCal::Event*,  KCal::Event* );
+    bool testOle( KCal::Event*,  KCal::Event* );
+
 };
 
-MetaEventReturn::MetaEventReturn()
-{
-
-}
-MetaEventReturn::MetaEventReturn( const MetaEventReturn& ole )
-{
-    (*this) = ole;
-}
-MetaEventReturn::~MetaEventReturn()
-{
-
-}
-QPtrList<KCal::Event> MetaEventReturn::added()
-{
-    return m_add;
-}
-QPtrList<KCal::Event> MetaEventReturn::modified()
-{
-    return m_mod;
-}
-QPtrList<KCal::Event> MetaEventReturn::removed()
-{
-    return m_del;
-}
-MetaEventReturn &MetaEventReturn::operator=( const MetaEventReturn &ole )
-{
-    m_add = ole.m_add;
-    m_del = ole.m_del;
-    m_mod = ole.m_mod;
-    return *this;
-}
 
 MetaEvent::MetaEvent()
 {
@@ -51,52 +23,12 @@ MetaEvent::~MetaEvent()
 {
 
 }
-// same as in MetaTodo
-// search new, modifief, removed
-MetaEventReturn MetaEvent::doMeta( QPtrList<KCal::Event> &newE,
-                                   QPtrList<KCal::Event> &old )
-{
-    QPtrList<KCal::Event> add;
-    QPtrList<KCal::Event> rem;
-    QPtrList<KCal::Event> mod;
-    KCal::Event *New;
-    KCal::Event *ole;
-    bool found = false;
-    for ( New = newE.first(); New != 0; New = newE.next() ) {
-        found = false;
-        for ( ole = old.first(); ole != 0; ole = old.next() ) {
-            if ( New->uid() == ole->uid() ) {
-                found = true;
-                if ( test( New,  ole ) )
-                    mod.append( (KCal::Event*) (New->clone() ) );
-                break;
-            }
-        }
-        if (!found ) {
-            KCal::Event *event = static_cast<KCal::Event*> (New->clone() );
-            add.append( event );
-        }
-    }
-    for ( ole = old.first(); ole != 0; ole = old.next() ) {
-        found = false;
-        for ( New = newE.first(); New != 0; New = newE.next() ) {
-            if ( New->uid() == ole->uid() ) {
-                found = true;
-                break;
-            }
-        }
-        if (!found )
-            rem.append( (KCal::Event*)(ole->clone() ) );
-    }
-    MetaEventReturn ret;
-    ret.m_add = add;
-    ret.m_del = rem;
-    ret.m_mod = mod;
-    return ret;
+bool MetaEvent::test ( KSync::EventSyncEntry* newE,  KSync::EventSyncEntry* old ) {
+    return testOle( newE->incidence(),  old->incidence() );
 }
 
 namespace {
-    bool test( KCal::Event* fi,  KCal::Event* se)
+    bool testOle( KCal::Event* fi,  KCal::Event* se)
     {
         bool ret = false;
         kdDebug() << "summary  " << fi->summary() << endl;
