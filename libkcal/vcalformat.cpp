@@ -347,7 +347,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
 
   if (anEvent->pilotId()) {
     // pilot sync stuff
-    tmpStr.sprintf("%i",anEvent->pilotId());
+    tmpStr.sprintf("%lu",anEvent->pilotId());
     addPropValue(vtodo, KPilotIdProp, tmpStr.local8Bit());
     tmpStr.sprintf("%i",anEvent->syncStatus());
     addPropValue(vtodo, KPilotStatusProp, tmpStr.local8Bit());
@@ -640,7 +640,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 
   if (anEvent->pilotId()) {
     // pilot sync stuff
-    tmpStr.sprintf("%i",anEvent->pilotId());
+    tmpStr.sprintf("%lu",anEvent->pilotId());
     addPropValue(vevent, KPilotIdProp, tmpStr.local8Bit());
     tmpStr.sprintf("%i",anEvent->syncStatus());
     addPropValue(vevent, KPilotStatusProp, tmpStr.local8Bit());
