@@ -11,7 +11,7 @@ After that you can use &kpilot;
 to synchronize your &PalmPilot; with
 your &kde; desktop or view
 data from your &PalmPilot; with the
-<link linkend="builtin">builtin viewers</link>.
+<link linkend="builtin">built-in viewers</link>.
 </para>
 
 <para>
@@ -61,9 +61,74 @@ general group of configuration options superfluous.
 <title>Using the Wizard</title>
 
 <para>
-This is stuff Reinhold made.
-I don't know anything about it.
+The configuration wizard helps you to set up &kpilot; to communicate
+with the &PalmPilot; and to configure the conduits as a group. It's a great
+start for new users, and you can always fine tune your preferences later.
 </para>
+
+<para>
+After starting the wizard, you are prompted to select how your &PalmPilot;
+will connect to the <acronym>PC</acronym>. The connection can be trough serial
+port, USB port, infrared, Bluetooth, network or the generic
+<filename class="devicefile">/dev/pilot</filename> device. Selecting the correct
+connection method is essential if you want the wizard to probe for the device.
+</para>
+
+<screenshot>
+<screeninfo>The First Configuring Wizard Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="wizard-connection.png" format="PNG"/></imageobject>
+<textobject><phrase>Configuring Wizard: The Connection Type Dialog</phrase></textobject>
+<caption><para>Configuring Wizard: The Connection Type Dialog</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+In the pilot info dialog, please type your <guilabel>User Name</guilabel>. It
+should match the one from the &PalmPilot;. Next, you can type the file name of
+the <guilabel>Device</guilabel> you will use to connect the &PalmPilot; (for
+instance, &quot;<filename class="devicefile">/dev/pilot</filename>&quot;.)
+Alternatively, you can &HotSync; and click the <guibutton>Probe</guibutton>
+button. The Wizard will try to match the correct <guilabel>Device</guilabel> and
+<guilabel>User Name</guilabel>.
+</para>
+
+<para>
+<emphasis>Attention:</emphasis> if the
+<guilabel>Device</guilabel> does not have the right permissions, the wizard will
+not be able to find it. Normal users must be able to read/write the correct
+device. The console command to make a device read/write for all users is 
+<userinput><command>chmod</command> <parameter>666</parameter>
+<replaceable>device</replaceable></userinput> where
+<replaceable>device</replaceable> is the correct port.
+</para>
+
+<screenshot>
+<screeninfo>The Second Configuring Wizard Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="wizard-general.png" format="PNG"/></imageobject>
+<textobject><phrase>Configuring Wizard: The Pilot Info Dialog</phrase></textobject>
+<caption><para>Configuring Wizard: The Pilot Info Dialog</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+KPilot has the ability to sync with other applications. The programs that
+perform these actions are called conduits. The sync dialog configures in one
+step all applicable &kpilot; conduits to sync with widely used
+<acronym>PIM</acronym> suites. You can fine tune these settings later in the
+<link linkend="conduits">conduits configuration</link>.
+</para>
+
+<screenshot>
+<screeninfo>The Third Configuring Wizard Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="wizard-conduits.png" format="PNG"/></imageobject>
+<textobject><phrase>Configuring Wizard: The Sync Dialog</phrase></textobject>
+<caption><para>Configuring Wizard: The Sync Dialog</para></caption>
+</mediaobject>
+</screenshot>
+
 
 </sect1>
 
