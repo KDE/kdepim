@@ -1,3 +1,4 @@
+// -*- c-basic-offset: 2; tab-width: 2 -*-
 /***************************************************************************
                           knarticlewidget.cpp  -  description
                              -------------------
@@ -67,7 +68,6 @@ int KNArticleWidget::htmlFontSize;
 KNArticleWidget::browserType KNArticleWidget::browser;
 QList<KNArticleWidget> KNArticleWidget::instances;
 
-
 void KNArticleWidget::readOptions()
 {
   KConfig *c = KGlobal::config();   	
@@ -98,7 +98,6 @@ void KNArticleWidget::readOptions()
 		hexColors[i]= QString("#%1%2%3").arg(col.red(),2,16).arg(col.green(),2,16).arg(col.blue(),2,16);
 	}
 }
-
 
 void KNArticleWidget::saveOptions()
 {
@@ -239,7 +238,8 @@ void KNArticleWidget::scrollDown()
 void KNArticleWidget::focusInEvent(QFocusEvent *e)
 {
 	emit focusChanged(e);
-	repaint(false);
+  QVBox::focusInEvent(e);
+//	repaint(false);
 }
 
 
@@ -247,7 +247,9 @@ void KNArticleWidget::focusInEvent(QFocusEvent *e)
 void KNArticleWidget::focusOutEvent(QFocusEvent *e)
 {
 	emit focusChanged(e);
-	repaint(false);
+
+  QVBox::focusOutEvent(e);
+//	repaint(false);
 }
 
 
@@ -343,9 +345,6 @@ void KNArticleWidget::slotURLRequest (const KURL &url, const KParts::URLArgs &ar
 	}
 }
 
-
-
-
 QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool beautification)
 {
 	QString result;
@@ -366,8 +365,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
 			case '\t':  result+="&nbsp;&nbsp;"; break;
 			
 			case 32 :	
-				if(line[idx+1].latin1()==32)  {
-					while(line[idx]==' ') {
+				if(line[idx+1].isSpace())  {
+					while(line[idx].isSpace()) {
 						result+="&nbsp;";
 						idx++;
 					}
@@ -580,8 +579,9 @@ void KNArticleWidget::createHtmlPage()
   actPrint->setEnabled(true);
 
 	p_art->begin(KURL("file:/"));
-	p_art->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\"><table width=\"100%\" cols=3 cellpadding=0 style=\"padding-left: 3px\">\n")
-									.arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]));
+	p_art->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\">"
+                       "<table width=\"100%\" cols=3 cellpadding=0 style=\"padding-left: 3px\">\n")
+               .arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]));
 									
  	QString buffer,hLine;									
 	int rowCount=0, pos, refCnt=0;
@@ -629,10 +629,6 @@ void KNArticleWidget::createHtmlPage()
 		}	
 	}	
 
-	p_art->begin(KURL("file:/"));
-	p_art->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\"><table width=\"100%%\" cellpadding=2><tr><td width=50 bgcolor=\"%4\">&nbsp;</td><td>")
-									.arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]).arg(hexColors[FG_COL]));
-									
   if (!rowCount)
 	  buffer += QString("<tr><td width=40 bgcolor=\"%1\">&nbsp;</td><td colspan=\"2\"></td></tr>")
 	                    .arg(hexColors[FG_COL]);
