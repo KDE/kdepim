@@ -3,11 +3,14 @@ INCLUDES= -I$(top_srcdir) $(all_includes)
 # This does not work, because configure generates a $(LINK) as command in the
 # Makefile, which is not defined.
 #
-#lib_LTLIBRARIES = libkalarmd.la
-#
-#libkalarmd_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-#libkalarmd_la_LIBADD  = $(LIB_KDECORE)
-#libkalarmd_la_SOURCES =  alarmdaemoniface.stub
+lib_LTLIBRARIES = libkalarmd.la
+
+libkalarmd_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+libkalarmd_la_LIBADD  = $(LIB_KDECORE)
+libkalarmd_la_SOURCES =  alarmdaemoniface.stub dummy.cpp
+
+dummy.cpp:
+	touch dummy.cpp
 
 bin_PROGRAMS = kalarmd kalarmdgui
 kalarmd_LDFLAGS = $(all_libraries) $(KDE_RPATH)
