@@ -20,12 +20,8 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathIndexRecord.h"
-#endif
-
-#ifndef EMPATHMESSAGEDESCRIPTION_H
-#define EMPATHMESSAGEDESCRIPTION_H
+#ifndef EMPATH_INDEX_RECORD_H
+#define EMPATH_INDEX_RECORD_H
 
 // Qt includes
 #include <qstring.h>
@@ -55,12 +51,41 @@ class EmpathIndexRecord
         /**
          * @internal
          */
-        EmpathIndexRecord();
+        EmpathIndexRecord()
+            :   id_             (QString::null),
+                subject_        (""),
+                senderName_     (""),
+                senderAddress_  (""),
+                timeZone_       (0),
+                status_         (Status(0)),
+                size_           (0),
+                messageID_      (""),
+                parentID_       (""),
+                hasAttachments_ (false),
+                tagged_         (false)
+        {
+            date_.setTime_t(0);
+        }
             
         /**
          * Copy ctor.
          */
-        EmpathIndexRecord(const EmpathIndexRecord &);
+        EmpathIndexRecord(const EmpathIndexRecord & i)
+            :   id_             (i.id_),
+                subject_        (i.subject_),
+                senderName_     (i.senderName_),
+                senderAddress_  (i.senderAddress_),
+                date_           (i.date_),
+                timeZone_       (i.timeZone_),
+                status_         (i.status_),
+                size_           (i.size_),
+                messageID_      (i.messageID_),
+                parentID_       (i.parentID_),
+                hasAttachments_ (i.hasAttachments_),
+                tagged_         (i.tagged_)
+        {
+            // Empty.
+        }
 
         /**
          * The big mega-ctor.
@@ -71,26 +96,114 @@ class EmpathIndexRecord
                 const QString &     senderName,
                 const QString &     senderAddress,
                 const QDateTime &   date,
-                int                 timezone,
+                int                 timeZone,
                 Status              status,
                 unsigned int        size,
                 const QString &     messageID,
-                const QString &     parentMessageID,
-                bool                hasAttachments);
+                const QString &     parentID,
+                bool                hasAttachments)
+            :
+                id_             (id),
+                subject_        (subject),
+                senderName_     (senderName),
+                senderAddress_  (senderAddress),
+                date_           (date),
+                timeZone_       (timeZone),
+                status_         (status),
+                size_           (size),
+                messageID_      (messageID),
+                parentID_       (parentID),
+                hasAttachments_ (hasAttachments),
+                tagged_         (false)
+        {
+            if (!subject_)
+                subject_ = QString::fromUtf8("");
+        }
 
-        EmpathIndexRecord & operator = (const EmpathIndexRecord &);
-        
-        ~EmpathIndexRecord();
-        
+
+        EmpathIndexRecord & operator = (const EmpathIndexRecord & i)
+        {
+            if (this == &i) // Avoid a = a.
+                return *this;
+            
+            id_             = i.id_;
+            subject_        = i.subject_;
+            senderName_     = i.senderName_;
+            senderAddress_  = i.senderAddress_;
+            date_           = i.date_;
+            timeZone_       = i.timeZone_,
+            status_         = i.status_;
+            size_           = i.size_;
+            messageID_      = i.messageID_;
+            parentID_       = i.parentID_;
+            hasAttachments_ = i.hasAttachments_;
+            tagged_         = i.tagged_;
+
+            return *this;
+        }
+
+
+        ~EmpathIndexRecord()
+        {
+            // Empty.
+        }
+
+
         /**
          * Stream the index record out to a QDataStream.
          */
-        friend QDataStream & operator << (QDataStream &, EmpathIndexRecord &);
-        
+        friend QDataStream & operator << (
+            QDataStream & s,
+            EmpathIndexRecord & rec
+        )
+        {
+            s   << rec.id_
+                << (Q_INT8)(rec.tagged_)
+                << rec.subject_
+                << rec.senderName_
+                << rec.senderAddress_
+                << rec.date_
+                << rec.timeZone_
+                << (Q_INT8)(rec.status_)
+                << rec.size_
+                << rec.messageID_
+                << rec.parentID_
+                << (Q_INT8)(rec.hasAttachments_);
+
+            return s;
+        }
+
         /**
          * Stream the index record in from a QDataStream.
          */
-        friend QDataStream & operator >> (QDataStream &, EmpathIndexRecord &);
+        friend QDataStream & operator >> (
+             QDataStream & s,
+             EmpathIndexRecord & rec
+        )
+        {
+            Q_INT8 statusAsInt;
+            Q_INT8 taggedAsInt;
+            Q_INT8 hasAttachmentsAsInt;
+
+            s   >> rec.id_
+                >> taggedAsInt
+                >> rec.subject_
+                >> rec.senderName_
+                >> rec.senderAddress_
+                >> rec.date_
+                >> rec.timeZone_
+                >> statusAsInt
+                >> rec.size_
+                >> rec.messageID_
+                >> rec.parentID_
+                >> hasAttachmentsAsInt;
+
+            rec.status_ = static_cast<EmpathIndexRecord::Status>(statusAsInt);
+            rec.tagged_ = static_cast<bool>(taggedAsInt);
+            rec.hasAttachments_ = static_cast<bool>(hasAttachmentsAsInt);
+            
+            return s;
+        }
 
         /**
          * The unique id of this record.

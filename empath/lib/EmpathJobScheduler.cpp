@@ -287,6 +287,7 @@ EmpathJobScheduler::_enqueue(EmpathJob * j)
 {
     queue_.enqueue(j);
     startTimer(0);
+    return j->id();
 }
 
     void

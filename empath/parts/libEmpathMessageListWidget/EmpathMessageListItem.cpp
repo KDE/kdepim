@@ -87,7 +87,7 @@ EmpathMessageListItem::cancelAutoMarkTimer()
 }
 
     void
-EmpathMessageListItem::timerEvent(QTimerEvent * e)
+EmpathMessageListItem::timerEvent(QTimerEvent *)
 {
     killTimers();
     setStatus(

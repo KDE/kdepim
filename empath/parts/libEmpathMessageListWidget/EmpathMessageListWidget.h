@@ -66,6 +66,8 @@ class EmpathMessageListWidget : public EmpathListView
         
         virtual void setSelected(QListViewItem *, bool);
         virtual void clearSelection();
+
+        virtual bool openFile() { return false; }
  
     public slots:
 

@@ -613,8 +613,8 @@ EmpathMessageListWidget::s_startDrag(const QList<QListViewItem> & items)
     
     while (it.current()) {
         
-        EmpathMessageListItem * i =
-            static_cast<EmpathMessageListItem *>(it.current());
+//        EmpathMessageListItem * i =
+//            static_cast<EmpathMessageListItem *>(it.current());
 
         // TODO
 //        EmpathURL messageURL(url_.mailboxName(), url_.folderPath(), i->id());

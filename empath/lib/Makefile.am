@@ -27,7 +27,6 @@ EmpathFilterEventHandler.cpp \
 EmpathFilterList.cpp \
 EmpathFolder.cpp \
 EmpathIndex.cpp \
-EmpathIndexRecord.cpp \
 EmpathMailSender.cpp \
 EmpathMailSenderQmail.cpp \
 EmpathMailSenderSMTP.cpp \

@@ -5,7 +5,7 @@ INCLUDES = $(all_includes) -I$(top_srcdir)/rmm
 lib_LTLIBRARIES = libEmpathMessageViewWidget.la
 
 libEmpathMessageViewWidget_la_LDFLAGS = \
-	$(all_libraries) -version-info 1:0:0 -module -DKPARTS_VERSION
+	$(all_libraries) -version-info 1:0:0 -module -no-undefined -DKPARTS_VERSION
 
 libEmpathMessageViewWidget_la_LIBADD = \
 	$(LIB_KPARTS) $(LIB_KDEUI) $(LIB_KDECORE) \
