@@ -18,8 +18,6 @@
     Boston, MA 02111-1307, USA.
 */
 
-// $Id$
-
 #include <qdatetime.h>
 #include <qstring.h>
 #include <qptrlist.h>

@@ -19,7 +19,6 @@
 */
 #ifndef KCAL_FREEBUSY_H
 #define KCAL_FREEBUSY_H
-// $Id$
 //
 // FreeBusy - information about free/busy times
 //

@@ -19,7 +19,6 @@
 */
 #ifndef JOURNAL_H
 #define JOURNAL_H
-// $Id$
 //
 // Journal component, representing a VJOURNAL object
 //

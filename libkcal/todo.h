@@ -19,7 +19,6 @@
 */
 #ifndef TODO_H
 #define TODO_H
-// $Id$
 //
 // Todo component, representing a VTODO object
 //

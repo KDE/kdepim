@@ -20,7 +20,6 @@
 
 #ifndef KCAL_EXCEPTIONS_H
 #define KCAL_EXCEPTIONS_H
-// $Id$
 //
 // Exception classes of libkcal.
 //

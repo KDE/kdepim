@@ -19,8 +19,6 @@
     Boston, MA 02111-1307, USA.
 */
 
-// $Id$
-
 #ifndef _VCALFORMAT_H
 #define _VCALFORMAT_H
 

@@ -20,9 +20,6 @@
 
 #ifndef _ATTENDEE_H
 #define _ATTENDEE_H
-// $Id$
-//
-// Attendee class
 
 #include <qstring.h>
 

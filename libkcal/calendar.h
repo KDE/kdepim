@@ -19,8 +19,6 @@
     Boston, MA 02111-1307, USA.
 */
 
-// $Id$
-
 #ifndef CALENDAR_H
 #define CALENDAR_H
 

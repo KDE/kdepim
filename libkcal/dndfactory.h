@@ -19,8 +19,6 @@
     Boston, MA 02111-1307, USA.
 */
 
-// $Id$
-
 #ifndef KCAL_DNDFACTORY_H
 #define KCAL_DNDFACTORY_H
 

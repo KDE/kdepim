@@ -18,7 +18,6 @@
     Boston, MA 02111-1307, USA.
 */
 
-// $Id$
 //
 // IMIPScheduler - iMIP implementation of iTIP methods
 //

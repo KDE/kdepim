@@ -19,7 +19,6 @@
 */
 #ifndef IMIPSCHEDULER_H
 #define IMIPSCHEDULER_H
-// $Id$
 //
 // iMIP implementation of iTIP methods
 //

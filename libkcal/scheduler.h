@@ -19,7 +19,6 @@
 */
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
-// $Id$
 
 // iTIP transactions base class
 

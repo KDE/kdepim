@@ -19,7 +19,6 @@
 */
 #ifndef ICALFORMAT_H
 #define ICALFORMAT_H
-// $Id$
 
 #include <qstring.h>
 

@@ -19,7 +19,6 @@
 */
 #ifndef DUMMYSCHEDULER_H
 #define DUMMYSCHEDULER_H
-// $Id$
 //
 // Dummy implementation of iTIP methods
 //

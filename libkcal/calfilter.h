@@ -18,8 +18,6 @@
     Boston, MA 02111-1307, USA.
 */
 
-// $Id$
-
 #ifndef _CALFILTER_H
 #define _CALFILTER_H
 

@@ -18,8 +18,6 @@
     Boston, MA 02111-1307, USA.
 */
 
-// $Id$
-
 #include <qdir.h>
 #include <qfile.h>
 #include <qtextstream.h>

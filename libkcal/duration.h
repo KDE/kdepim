@@ -22,7 +22,6 @@
 
 #include <qdatetime.h>
 
-
 namespace KCal {
 
 class Duration
