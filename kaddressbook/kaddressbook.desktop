@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Address Manager
+Name=KAddressBook
+GenericName=Address Manager
 Name[af]=Adres Bestuurder
 Name[ar]=مدير العناوين
 Name[be]=Кіраваньне адрасамі
@@ -37,6 +38,7 @@ Name[pt]=Gestor de Endereços
 Name[pt_BR]=Gerenciador de Endereços
 Name[ro]=Manager de adrese
 Name[ru]=Адресная книга
+Name[se]=Čujuhusgieđahalli
 Name[sk]=Správca adries
 Name[sl]=Upravitelj naslovov
 Name[sr]=Менаџер адреса
