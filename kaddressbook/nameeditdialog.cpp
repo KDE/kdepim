@@ -1,25 +1,25 @@
-/*                                                                      
-    This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
-                                                                        
+/*
+    This file is part of KAddressBook.
+    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include <qlayout.h>
 #include <qlabel.h>
@@ -54,7 +54,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   layout->setSpacing( spacingHint() );
   layout->addColSpacing( 2, 100 );
   QLabel *label;
-  
+
   label = new QLabel( i18n( "Honorific prefixes:" ), page );
   layout->addWidget( label, 0, 0 );
   mPrefixCombo = new KComboBox( page );
@@ -62,7 +62,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   mPrefixCombo->setEditable( true );
   label->setBuddy( mPrefixCombo );
   layout->addMultiCellWidget( mPrefixCombo, 0, 0, 1, 2 );
-  
+
   label = new QLabel( i18n( "Given name:" ), page );
   layout->addWidget( label, 1, 0 );
   mGivenNameEdit = new KLineEdit( page );
@@ -74,13 +74,13 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   mAdditionalNameEdit = new KLineEdit( page );
   label->setBuddy( mAdditionalNameEdit );
   layout->addMultiCellWidget( mAdditionalNameEdit, 2, 2, 1, 2 );
-  
+
   label = new QLabel( i18n( "Family names:" ), page );
   layout->addWidget( label, 3, 0 );
   mFamilyNameEdit = new KLineEdit( page );
   label->setBuddy( mFamilyNameEdit );
   layout->addMultiCellWidget( mFamilyNameEdit, 3, 3, 1, 2 );
-  
+
   label = new QLabel( i18n( "Honorific suffixes:" ), page );
   layout->addWidget( label, 4, 0 );
   mSuffixCombo = new KComboBox( page );
@@ -130,10 +130,10 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   sSuffix += i18n( "Sr." );
   sSuffix += config.readListEntry( "Suffixes" );
   sSuffix.sort();
-  
+
   mPrefixCombo->insertStringList( sTitle );
   mSuffixCombo->insertStringList( sSuffix );
-  
+
   mPrefixCombo->setCurrentText( addr.prefix() );
   mSuffixCombo->setCurrentText( addr.suffix() );
 
@@ -157,34 +157,34 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
 
   updateTypeCombo();
   mFormattedNameCombo->setCurrentItem( type );
-
+  mPrefixCombo->lineEdit()->setFocus();
   mChanged = false;
 }
-    
-NameEditDialog::~NameEditDialog() 
+
+NameEditDialog::~NameEditDialog()
 {
 }
-    
+
 QString NameEditDialog::familyName() const
 {
   return mFamilyNameEdit->text();
 }
-    
+
 QString NameEditDialog::givenName() const
 {
   return mGivenNameEdit->text();
 }
-    
+
 QString NameEditDialog::prefix() const
 {
   return mPrefixCombo->currentText();
 }
-    
+
 QString NameEditDialog::suffix() const
 {
   return mSuffixCombo->currentText();
 }
-    
+
 QString NameEditDialog::additionalName() const
 {
   return mAdditionalNameEdit->text();
