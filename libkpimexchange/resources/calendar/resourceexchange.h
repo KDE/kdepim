@@ -25,8 +25,7 @@
 
 #include <libkcal/calendar.h>
 #include <libkcal/calendarlocal.h>
-
-#include "resourcecalendar.h"
+#include <libkcal/resourcecalendar.h>
 
 #include "exchangemonitor.h"
 
