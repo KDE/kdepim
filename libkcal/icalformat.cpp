@@ -80,13 +80,8 @@ bool ICalFormat::load( Calendar *calendar, const QString &fileName)
     return false;
   }
   QTextStream ts( &file );
-  // We need to do the unfolding (removing the "\n " in the ics file)
-  // before interpreting the contents as UTF-8. So, first read in the
-  // file as latin1, unfold, and only then convert to UTF-8.
   ts.setEncoding( QTextStream::Latin1 );
   QString text = ts.read();
-  text.replace( QRegExp("\n[ \t]"), "");
-  text = QString::fromUtf8( text.latin1() );
   file.close();
 
   if ( text.stripWhiteSpace().isEmpty() ) // empty files are valid
@@ -139,7 +134,7 @@ bool ICalFormat::fromString( Calendar *cal, const QString &text )
   // TODO: Handle more than one VCALENDAR or non-VCALENDAR top components
   icalcomponent *calendar;
 
-  calendar = icalcomponent_new_from_string( text.utf8().data() );
+  calendar = icalcomponent_new_from_string( (char*)text.latin1() );
   //  kdDebug(5800) << "Error: " << icalerror_perror() << endl;
   if (!calendar) {
     kdDebug(5800) << "ICalFormat::load() parse error" << endl;
