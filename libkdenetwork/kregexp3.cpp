@@ -31,6 +31,12 @@
 
 #include "kregexp3.h"
 
+// #define DEBUG_KREGEXP3
+
+#ifdef DEBUG_KREGEXP3
+#include <kdebug.h>
+#endif
+
 QString KRegExp3::replace( const QString & str,
 			   const QString & replacementStr,
 			   int start, bool global )
@@ -48,41 +54,55 @@ QString KRegExp3::replace( const QString & str,
   QRegExp bbrx("\\\\");
   QRegExp brx("\\");
 
-  //  qDebug( "Analyzing replacementStr: \"" + replacementStr + "\"");
+#ifdef DEBUG_KREGEXP3
+  kdDebug() << "Analyzing replacementStr: \"" + replacementStr + "\"" << endl;
+#endif
 
   oldpos = 0;
   pos = 0;
   while ( true ) {
     pos = rx.search( replacementStr, pos );
     
-    //qDebug( QString("  Found match at pos %1").arg(pos) );
+#ifdef DEBUG_KREGEXP3
+    kdDebug() << QString("  Found match at pos %1").arg(pos) << endl;
+#endif
 
     if ( pos < 0 ) {
       literalStrs << replacementStr.mid( oldpos )
 	.replace( bbrx, "\\" )
 	.replace( brx, "" );
-      //qDebug( QString("  No more matches. Last literal is \"") + literalStrs.last() + QString("\"") );
+#ifdef DEBUG_KREGEXP3
+      kdDebug() << "  No more matches. Last literal is \"" + literalStrs.last() + "\"" << endl;
+#endif
       break;
     } else {
       literalStrs << replacementStr.mid( oldpos, pos-oldpos )
 	.replace( bbrx, "\\" )
 	.replace( brx, "" );
-      //qDebug( QString("  Inserting \"") + literalStrs.last() + QString("\" as literal.") );
-      //qDebug( "    Searching for corresponding digit(s):" );
+#ifdef DEBUG_KREGEXP3
+      kdDebug() << QString("  Inserting \"") + literalStrs.last() + "\" as literal." << endl;
+      kdDebug() << "    Searching for corresponding digit(s):" << endl;
+#endif
       for ( int i = 1 ; i < 4 ; i++ )
 	if ( !rx.cap(i).isEmpty() ) {
 	  backRefs << rx.cap(i).toInt();
-	  //  qDebug( QString("      Found %1 at position %2 in the capturedTexts.")
-	  //  .arg(backRefs.last()).arg(i) );
+#ifdef DEBUG_KREGEXP3
+	  kdDebug() << QString("      Found %1 at position %2 in the capturedTexts.")
+            .arg(backRefs.last()).arg(i) << endl;
+#endif
 	  break;
 	}
       pos += rx.matchedLength();
-      //      qDebug( QString("  Setting new pos to %1.").arg(pos) );
+#ifdef DEBUG_KREGEXP3
+      kdDebug() << QString("  Setting new pos to %1.").arg(pos) << endl;
+#endif
       oldpos = pos;
     }
   }
 
-  //  qDebug( "Finished the analysis of replacementStr!" );
+#ifdef DEBUG_KREGEXP3
+  kdDebug() << "Finished the analysis of replacementStr!" << endl;
+#endif
   Q_ASSERT( literalStrs.count() == backRefs.count() + 1 );
 
   //-------- actual construction of the
@@ -97,37 +117,53 @@ QString KRegExp3::replace( const QString & str,
   if ( start < 0 )
     start += str.length();
 
-  //qDebug( "Constructing the resultant string starts now:" );
+#ifdef DEBUG_KREGEXP3
+  kdDebug() << "Constructing the resultant string starts now:" << endl;
+#endif
   
-  while ( true ) {
+  while ( pos < str.length() ) {
     pos = search( str, pos );
 
-    //qDebug( QString("  Found match at pos %1").arg(pos) );
+#ifdef DEBUG_KREGEXP3
+    kdDebug() << QString("  Found match at pos %1").arg(pos) << endl;
+#endif
 
     if ( pos < 0 ) {
       result += str.mid( oldpos );
-      //qDebug( "   No more matches. Adding trailing part from str:" );
-      //qDebug( "    result == \"" + result + "\"" );
+#ifdef DEBUG_KREGEXP3
+      kdDebug() << "   No more matches. Adding trailing part from str:" << endl;
+      kdDebug() << "    result == \"" + result + "\"" << endl;
+#endif
       break;
     } else {
       result += str.mid( oldpos, pos-oldpos );
-      //qDebug( "   Adding unchanged part from str:" );
-      //qDebug( "    result == \"" + result + "\"" );
+#ifdef DEBUG_KREGEXP3
+      kdDebug() << "   Adding unchanged part from str:" << endl;
+      kdDebug() << "    result == \"" + result + "\"" << endl;
+#endif
       for ( sIt = literalStrs.begin(), iIt = backRefs.begin() ;
             iIt != backRefs.end() ; ++sIt, ++iIt ) {
 	result += (*sIt);
-	//qDebug( "   Adding literal replacement part:" );
-	//qDebug( "    result == \"" + result + "\"" );
+#ifdef DEBUG_KREGEXP3
+	kdDebug() << "   Adding literal replacement part:" << endl;
+	kdDebug() << "    result == \"" + result + "\"" << endl;
+#endif
 	result += cap( (*iIt) );
-	//qDebug( "   Adding captured string:" );
-	//qDebug( "    result == \"" + result + "\"" );
+#ifdef DEBUG_KREGEXP3
+	kdDebug() << "   Adding captured string:" << endl;
+	kdDebug() << "    result == \"" + result + "\"" << endl;
+#endif
       }
       result += (*sIt);
-      //qDebug( "   Adding literal replacement part:" );
-      //qDebug( "    result == \"" + result + "\"" );
+#ifdef DEBUG_KREGEXP3
+      kdDebug() << "   Adding literal replacement part:" << endl;
+      kdDebug() << "    result == \"" + result + "\"" << endl;
+#endif
     }
     pos += matchedLength();
-    //qDebug( QString("  Setting new pos to %1.").arg(pos) );
+#ifdef DEBUG_KREGEXP3
+    kdDebug() << QString("  Setting new pos to %1.").arg(pos) << endl;
+#endif
     oldpos = pos;
 
     if ( !global ) {
