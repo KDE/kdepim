@@ -1,4 +1,4 @@
-SUBDIRS = interfaces common printing . views features editors kcmconfigs xxport pics csv-templates \
+SUBDIRS = interfaces common printing editors . views features kcmconfigs xxport pics csv-templates \
           thumbnailcreator
 SRCDOC_DEST = $(kde_htmldir)/en/kaddressbook
 
@@ -8,6 +8,7 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces \
           -I$(top_srcdir)/kaddressbook/views \
           -I$(top_srcdir)/kaddressbook/printing \
           -I$(top_srcdir)/kaddressbook/common \
+	  -I$(top_srcdir)/kaddressbook/editors \
           -I$(top_builddir)/kaddressbook/common \
           -I$(top_srcdir) -I$(top_srcdir)/libkdepim \
           $(all_includes)
