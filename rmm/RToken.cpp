@@ -19,11 +19,13 @@
    Boston, MA 02111-1307, USA.
 */
 
+#include <qvaluelist.h>
 #include <string.h>
 #include <stddef.h>
 #include <qstring.h>
 #include <qstrlist.h>
 
+#include <RMM_Mailbox.h>
 #include <RMM_Defines.h>
 #include <RMM_Enum.h>
 
@@ -154,5 +156,15 @@ RTokenise(
     return l.count();
 }
 
+QValueList<RMailbox>& operator += (QValueList<RMailbox> &vlist, QStrList &strlist)
+{
+	for (char *iter=strlist.first(); iter!=0; iter=strlist.next())
+		vlist.append(RMailbox(iter));
+	return vlist;
 }
+
+
+} // namespace
+
+
 // vim:ts=4:sw=4:tw=78

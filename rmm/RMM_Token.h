@@ -2,6 +2,8 @@
 #define RMM_TOKEN_H
 
 #include <qstrlist.h>
+#include <qvaluelist.h>
+#include <RMM_Mailbox.h>
 
 namespace RMM {
 
@@ -11,6 +13,9 @@ namespace RMM {
         QStrList & l,
         bool skipComments = true,
         bool quotedTokens = true);
+
+    QValueList<RMailbox>& operator += (QValueList<RMailbox> &vlist, QStrList &strlist);
+
 }
 
 #endif

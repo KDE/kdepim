@@ -106,12 +106,24 @@ RAddress::_parse()
     // RFC822: group: phrase ":" [#mailbox] ";"
     // -> If a group, MUST end in ";".
 
-    if (strRep_.right(1) == ";") { // This is a group !
-
-        // TODO
-        rmmDebug("I'm a group.");
-        rmmDebug("Not implemented !");
-
+    if (strRep_.right(1) == ";")
+    { // This is a group !
+		// TOUNDO :)
+		
+		// phrase_ lasts from 0 to start
+		// the address tokens comes at start+ till
+		// the end.  We need to remove the semicolon too
+		int start=strRep_.find(':');
+		phrase_ = strRep_.left(start);
+				
+		// ok. Got the group name.  Lets get the address.
+		QCString address(strRep_.mid(start+1, strRep_.length()-1));
+		
+		QStrList list;
+		RTokenise(address, ",", list, true, false); //Tokenise?  What a brit :)
+		
+		mailboxList_+=list;
+        
     } else {
 
         RMailbox m(strRep_);
@@ -124,10 +136,14 @@ RAddress::_parse()
     void
 RAddress::_assemble()
 {
-    if (type() == RAddress::Group) {
+    if (type() == RAddress::Group)
+    {
+         strRep_ = phrase_;
+         strRep_ += ": ";
+         for (QValueList<RMailbox>::Iterator it=mailboxList_.begin(); it!= mailboxList_.end(); ++it)
+              strRep_ += (*it).asString(), strRep_+= ", ";
+         strRep_[strRep_.length()-1]=';';
 
-        // TODO
-        rmmDebug("assembling group not implemented");
 
     } else {
         
