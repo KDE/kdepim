@@ -389,7 +389,7 @@ void KAddressBook::exportCSV()
           if (!first)
             t << ",";
 
-          t << "\"" << (*fieldIter)->value( a ) << "\"";
+          t << "\"" << (*fieldIter)->value( a ).replace( QRegExp("\n"), "\\n" ) << "\"";
           first = false;
         }
       }

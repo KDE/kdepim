@@ -13,6 +13,7 @@
 #include <qvbox.h>
 #include <qlabel.h>
 #include <qradiobutton.h>
+#include <qregexp.h>
 
 #include <kdebug.h>
 #include <kurlrequester.h>
@@ -606,6 +607,14 @@ void KImportDialog::addColumn(KImportColumn *col)
 
 void KImportDialog::setData( uint row, uint col, const QString &value )
 {
+  QString val;
+  for ( uint i = 0; i < value.length(); ++i ) {
+    if ( value[i] == '\\' && value[i+1] == 'n' )
+      val.append( "\n" );
+    else
+      val.append( value[i] );
+  }
+
   if ( row >= mData.count() ) {
     mData.resize( row + 1 );
   }
@@ -619,7 +628,7 @@ void KImportDialog::setData( uint row, uint col, const QString &value )
     rowVector->resize( col + 1 );
   }
   
-  rowVector->at( col ) = value;
+  rowVector->at( col ) = val;
 }
 
 QString KImportDialog::data( uint row, uint col )

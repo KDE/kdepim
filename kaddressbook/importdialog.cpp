@@ -90,21 +90,21 @@ void ContactImportDialog::convertRow()
   
   a.setOrganization(mCompany->convert());
   
-  KABC::Address addr(KABC::Address::Home);
-  addr.setStreet(mAddressHomeStreet->convert());
-  addr.setLocality(mAddressHomeCity->convert());
-  addr.setRegion(mAddressHomeState->convert());
-  addr.setPostalCode(mAddressHomeZip->convert());
-  addr.setCountry(mAddressHomeCountry->convert());
-  a.insertAddress(addr);
+  KABC::Address addrHome(KABC::Address::Home);
+  addrHome.setStreet(mAddressHomeStreet->convert());
+  addrHome.setLocality(mAddressHomeCity->convert());
+  addrHome.setRegion(mAddressHomeState->convert());
+  addrHome.setPostalCode(mAddressHomeZip->convert());
+  addrHome.setCountry(mAddressHomeCountry->convert());
+  a.insertAddress(addrHome);
   
-  addr.setType(KABC::Address::Work);
-  addr.setStreet(mAddressBusinessStreet->convert());
-  addr.setLocality(mAddressBusinessCity->convert());
-  addr.setRegion(mAddressBusinessState->convert());
-  addr.setPostalCode(mAddressBusinessZip->convert());
-  addr.setCountry(mAddressBusinessCountry->convert());
-  a.insertAddress(addr);
+  KABC::Address addrWork(KABC::Address::Work);
+  addrWork.setStreet(mAddressBusinessStreet->convert());
+  addrWork.setLocality(mAddressBusinessCity->convert());
+  addrWork.setRegion(mAddressBusinessState->convert());
+  addrWork.setPostalCode(mAddressBusinessZip->convert());
+  addrWork.setCountry(mAddressBusinessCountry->convert());
+  a.insertAddress(addrWork);
   
   mDocument->insertAddressee(a);
 }
