@@ -21,6 +21,7 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#include <qcheckbox.h>
 #include <qtabwidget.h>
 #include <qlayout.h>
 #include <qlabel.h>
@@ -31,8 +32,10 @@
 #include <qlistbox.h>
 #include <qhbox.h>
 
+#include <kapplication.h>
 #include <kglobal.h>
 #include <kiconloader.h>
+#include <kconfig.h>
 #include <klocale.h>
 #include <kdialogbase.h>
 #include <kseparator.h>
@@ -120,12 +123,17 @@ void AddresseeEditorWidget::setupTab1()
   // First name
   button = new QPushButton( i18n("Name..."), tab1 );
   QToolTip::add(button, i18n("Edit the contact's name"));
+  QHBoxLayout *nameLayout = new QHBoxLayout;
   mNameEdit = new KLineEdit( tab1, "mNameEdit" );
   connect( mNameEdit, SIGNAL( textChanged(const QString & )), 
            SLOT( nameTextChanged(const QString & )));
   connect( button, SIGNAL( clicked()), this, SLOT( nameButtonClicked()));
+  mParseBox = new QCheckBox( i18n( "Parse name automatically" ), tab1 );
+  nameLayout->addWidget( mNameEdit );
+  nameLayout->addWidget( mParseBox );
+  nameLayout->setStretchFactor( mNameEdit, 1 );
   layout->addWidget( button, 0, 1 );
-  layout->addWidget( mNameEdit, 0, 2 );
+  layout->addLayout( nameLayout, 0, 2 );
   
   label = new QLabel( i18n("Role:"), tab1 );
   mRoleEdit = new KLineEdit( tab1, "mRoleEdit" );
@@ -395,6 +403,10 @@ void AddresseeEditorWidget::load()
   mProfessionEdit->setText(mAddressee.custom("KADDRESSBOOK", "X-Profession"));
   
   blockSignals(block);
+
+  KConfig *config = kapp->config();
+  config->setGroup( "General" );
+  mParseBox->setChecked( config->readBoolEntry( "AutomaticNameParsing", true ) );
   
   mDirty = false;
 }
@@ -478,6 +490,10 @@ void AddresseeEditorWidget::save()
         ++addressIter)
     mAddressee.insertAddress(*addressIter);
 
+  KConfig *config = kapp->config();
+  config->setGroup( "General" );
+  config->writeEntry( "AutomaticNameParsing", mParseBox->isChecked() );
+
   mDirty = false;
 }
 
@@ -491,7 +507,8 @@ void AddresseeEditorWidget::nameTextChanged(const QString &text)
   // Update the formatted name combo
   
   // use the addressee class to parse the name for us
-  mAddressee.setNameFromString(text);
+  if ( mParseBox->isChecked() )
+    mAddressee.setNameFromString(text);
 
   nameBoxChanged();  
 
@@ -500,14 +517,21 @@ void AddresseeEditorWidget::nameTextChanged(const QString &text)
 
 void AddresseeEditorWidget::nameBoxChanged()
 {
-  // Rebuild the formatted name combo
+  /* 
+   * Dummy addressee for parsing the name even if automatic parsing is
+   * disabled
+   */
+  KABC::Addressee addr;
+  addr.setNameFromString( mNameEdit->text() );
+
+  int pos = mFormattedNameBox->currentItem();
   mFormattedNameBox->clear();
   QStringList options;
-  options << mAddressee.givenName() + QString(" ") + mAddressee.familyName()
-          << mAddressee.realName()
-          << mAddressee.familyName() + QString(", ") + mAddressee.givenName();
+  options << addr.givenName() + QString(" ") + addr.familyName()
+          << mAddressee.formattedName()
+          << addr.familyName() + QString(", ") + addr.givenName();
   mFormattedNameBox->insertStringList(options);
-  mFormattedNameBox->setCurrentText(mAddressee.formattedName());
+  mFormattedNameBox->setCurrentItem( pos );
 }
 
 void AddresseeEditorWidget::nameButtonClicked()
@@ -526,11 +550,10 @@ void AddresseeEditorWidget::nameButtonClicked()
     mAddressee.setAdditionalName(dialog.additionalName());
 
     // Update the name edit.
-    QString name = mAddressee.givenName() + " " + mAddressee.additionalName() +
-            " " + mAddressee.familyName();
+    bool block = mNameEdit->signalsBlocked();
     mNameEdit->blockSignals( true );
-    mNameEdit->setText( name );
-    mNameEdit->blockSignals( false );
+    mNameEdit->setText( mAddressee.realName() );
+    mNameEdit->blockSignals( block );
 
     // Update the combo box.
     nameBoxChanged();

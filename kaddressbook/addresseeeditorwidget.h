@@ -30,6 +30,7 @@
 #include <kdialogbase.h>
 #include <kabc/addressee.h>
 
+class QCheckBox;
 class QTabWidget;
 class QTextEdit;
 class QSpinBox;
@@ -107,6 +108,7 @@ class AddresseeEditorWidget : public QWidget
     
     // Tab1
     KLineEdit *mNameEdit;
+    QCheckBox *mParseBox;
     KLineEdit *mRoleEdit;
     KLineEdit *mOrgEdit;
     KComboBox *mFormattedNameBox;
