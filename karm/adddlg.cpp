@@ -128,14 +128,14 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg, DesktopListType* des
   // The "Choose Desktop" checkbox
   lay1->addSpacing(10);
   lay1->addStretch(1);
-  _desktopCB = new QCheckBox(i18n("&Auto tracking in desktop"), page);
+  _desktopCB = new QCheckBox(i18n("&Auto tracking"), page);
   _desktopCB->setEnabled(true);
   lay1->addWidget(_desktopCB);
   QGroupBox* groupBox;
   {
     int lines = (int)(desktopCount/2);
     if (lines*2 != desktopCount) lines++; 
-      groupBox = new QButtonGroup(lines, QGroupBox::Horizontal, i18n(""), page);
+      groupBox = new QButtonGroup(lines, QGroupBox::Horizontal, i18n("in desktop"), page, "_desktopsGB");
   }
   lay1->addWidget(groupBox);
 
@@ -143,7 +143,7 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg, DesktopListType* des
 	
   lay1->addLayout(lay6);
   for (int i=0; i<desktopCount; i++) {
-    _deskBox.push_back(new QCheckBox(groupBox));
+    _deskBox.push_back(new QCheckBox(groupBox,QString::number(i)));
     _deskBox[i]->setText(QString::number(i+1));
     _deskBox[i]->setChecked(false);
 
