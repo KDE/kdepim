@@ -74,7 +74,7 @@ apidox:
 	@set fnord $(MAKEFLAGS); amf=$$2; if test -n '$(SUBDIRS)'; then \
 	    list='$(SUBDIRS)'; \
 	    for subdir in $$list; do \
-		if grep '^include .*Doxyfile.am' $(srcdir)/$$subdir/Makefile.am; then \
+		if grep '^include .*Doxyfile.am' $(srcdir)/$$subdir/Makefile.am > /dev/null ; then \
 		echo "Making apidox in $$subdir"; \
 		if test "$$subdir" != "."; then \
 			(cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) GENERATE_FLAG=no apidox) || exit 1; \
