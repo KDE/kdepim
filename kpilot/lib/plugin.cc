@@ -393,3 +393,36 @@ bool PluginUtility::isModal(const QStringList &a)
 	QCStringList apps = dcop->registeredApplications();
 	return apps.contains(n);
 }
+
+ConduitConfigImplementation::ConduitConfigImplementation(QWidget *w, const char *n,
+	const QStringList &a,
+	ConduitConfigBase *(*f)(QWidget *, const char *)) :
+	ConduitConfig(w,n,a)
+{
+	FUNCTIONSETUP;
+	fConfigWidget=f(widget(),n);
+	fConfigWidget->widget()->adjustSize();
+	fConfigWidget->widget()->show();
+	fConduitName=fConfigWidget->conduitName();
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Created conduit " << fConduitName << endl;
+#endif
+	widget()->adjustSize();
+	adjustSize();
+}
+
+ConduitConfigImplementation::~ConduitConfigImplementation()
+{
+	FUNCTIONSETUP;
+}
+
+void ConduitConfigImplementation::readSettings()
+{
+	if (fConfig) fConfigWidget->load(fConfig);
+}
+
+void ConduitConfigImplementation::commitChanges()
+{
+	if (fConfig) fConfigWidget->commit(fConfig);
+}
+

@@ -117,7 +117,7 @@ public:
 	void setConfig(KConfig *c) { fConfig=c; } ;
 
 	virtual void readSettings() = 0 ;
-	/* and commit changes, too! */
+	/* virtual void commit() = 0 ; --- from UIDialog */
 
 	// User-readable name of the conduit. Should match
 	// the other conduitName() methods in other classes
@@ -126,6 +126,30 @@ public:
 protected:
 	KConfig *fConfig;
 	QString fConduitName;
+} ;
+
+/**
+* This is a generic implementation of the ConduitConfig
+* dialog that takes a function pointer - to a ConduitConfigBase
+* constructor or its static equivalent - and creates a
+* dialog embedding that ConduitConfigBase object.
+*/
+class ConduitConfigImplementation : public ConduitConfig
+{
+public:
+	ConduitConfigImplementation(QWidget *,
+		const char *,
+		const QStringList &,
+		ConduitConfigBase *(*f)(QWidget *, const char *));
+	virtual ~ConduitConfigImplementation();
+
+	virtual void readSettings();
+
+protected:
+	virtual void commitChanges();
+
+protected:
+	ConduitConfigBase *fConfigWidget;
 } ;
 
 /**
