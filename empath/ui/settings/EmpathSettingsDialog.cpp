@@ -46,6 +46,7 @@
 #include "ComposeSettingsForm.h"
 #include "DisplaySettingsForm.h"
 #include "SendingSettingsForm.h"
+#include "AccountsSettingsForm.h"
 
 EmpathSettingsDialog * EmpathSettingsDialog::instance_ = 0L;
 
@@ -84,6 +85,9 @@ EmpathSettingsDialog::EmpathSettingsDialog()
 
     sendingSettingsForm  =
         new SendingSettingsForm(addVBoxPage(i18n("Sending")));
+
+    accountsSettingsForm =
+        new AccountsSettingsForm(addVBoxPage(i18n("Accounts")));
 
     _load();
 }
@@ -314,6 +318,11 @@ EmpathSettingsDialog::_sendingDefaults()
     sendingSettingsForm->cb_copysent->setChecked(true);
     sendingSettingsForm->cb_copyto->setChecked(false);
     sendingSettingsForm->le_copyto->setText("");
+}
+
+    void
+EmpathSettingsDialog::_accountsDefaults()
+{
 }
 
     void

@@ -73,7 +73,7 @@ main(int argc, char ** argv)
     );
 
     aboutData.addAuthor(
-        "kraftw",
+        "qwertz",
         I18N_NOOP("Empath logo")
     );
  

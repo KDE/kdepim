@@ -50,12 +50,14 @@ EmpathFolderCombo::s_update()
     for (; mit.current(); ++mit) {
 
         if (mit.current()->type() != EmpathMailbox::POP3) {
-            insertItem(mit.current()->url().asString());
 
             EmpathFolderListIterator fit(mit.current()->folderList());
 
-            for (; fit.current(); ++fit)
-              insertItem(fit.current()->url().asString());
+            for (; fit.current(); ++fit) {
+                EmpathURL url = fit.current()->url();
+                if (url.isFolder())
+                    insertItem(url.mailboxName() + "/" + url.folderPath());
+            }
         }
     }
 
@@ -65,7 +67,7 @@ EmpathFolderCombo::s_update()
 EmpathFolderCombo::s_activated(const QString & s)
 {
     empathDebug(s);
-    emit(folderSelected(EmpathURL(s)));
+    emit(folderSelected(EmpathURL("empath://" + s + "/")));
 }
 
 // vim:ts=4:sw=4:tw=78

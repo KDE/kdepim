@@ -85,7 +85,6 @@ EmpathMailboxMaildir::sync(const EmpathURL & url)
     void
 EmpathMailboxMaildir::_setupDefaultFolders()
 {
-    empathDebug("");
     KConfig * c(KGlobal::config());
 
     c->setGroup("Folders");
@@ -107,10 +106,8 @@ EmpathMailboxMaildir::_setupDefaultFolders()
 
         QDir d(folderPath);
 
-        if (d.exists()) {
-            empathDebug("Folder " + folderPath + " exists. Not creating.");
+        if (d.exists())
             continue;
-        }
 
         if (!d.mkdir(folderPath)) {
             empathDebug("Couldn't make " + path_ + " !!!!!");
@@ -170,10 +167,8 @@ EmpathMailboxMaildir::loadConfig()
     while (path_.at(path_.length() - 1) == '/')
         path_.truncate(path_.length() - 1);
 
-    if (path_.isEmpty()) {
-        empathDebug("My path is empty :(");
-        return;
-    }
+    if (path_.isEmpty()) // FIXME Shouldn't work like this
+        path_ = QDir::homeDirPath() + "/.empath";
 
     QDir d(path_);
 
@@ -245,8 +240,6 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
     // through subdirs. Any subdir that has cur, tmp and new is a Maildir
     // folder.
 
-    empathDebug(currentDir);
-
     // Cheat like fuck.
     struct stat s;
     stat(QFile::encodeName(currentDir), &s);
@@ -259,10 +252,8 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
         QDir::Unsorted,
         QDir::Dirs | QDir::Readable);
 
-    if (d.count() == 0) {
-        empathDebug("Dir is empty");
+    if (d.count() == 0)
         return;
-    }
 
     QStringList l(d.entryList());
 
@@ -299,9 +290,6 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
 
     bool isMaildir = hasCur && hasNew && hasTmp;
 
-    if (isMaildir) { empathDebug("isMaildir"); }
-    else { empathDebug("not Maildir"); }
-
     EmpathURL url(
         url_.mailboxName(),
         currentDir.right(currentDir.length() - path_.length()),
@@ -309,7 +297,6 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
 
     if (0 == folderList_[url.folderPath()]) {
 
-        empathDebug("Creating folder " + url.asString());
         EmpathFolder * f = new EmpathFolder(url);
 
         folderList_.insert(url.folderPath(), f);
@@ -523,8 +510,10 @@ EmpathMailboxMaildir::index(const EmpathURL & folder)
 {
     EmpathMaildir * box = _box(folder);
 
-    if (box == 0)
+    if (box == 0) {
+        empathDebug("Couldn't find box " + folder.asString());
         return 0L;
+    }
 
     return box->index();
 }

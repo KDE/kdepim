@@ -1,0 +1,73 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="EmpathView" version="1">
+<MenuBar>
+
+    <Menu name="folder"><text>F&amp;older</text>
+        <Action name="create"/>
+        <Action name="remove"/>
+        <Action name="empty"/>
+        <Action name="rename"/>
+    </Menu>
+
+    <Menu name="message"><text>&amp;Message</text>
+        <Action name="messageCompose"/>
+        <Action name="messageView"/>
+        <Action name="messageReply"/>
+        <Action name="messageReplyAll"/>
+        <Action name="messageForward"/>
+        <Separator/>
+        <Action name="messagePrint"/>
+        <Action name="messageCopyTo"/>
+        <Separator/>
+        <Action name="messageFilter"/>
+        <Action name="messageMoveTo"/>
+        <Action name="messageBounce"/>
+        <Action name="messageDelete"/>
+    </Menu>
+
+    <Menu name="thread"><text>&amp;Thread</text>
+        <Action name="threadExpand"/>
+        <Action name="threadCollapse"/>
+    </Menu>
+
+    <Menu name="go"><text>&amp;Go</text>
+        <Action name="goPrevious"/>
+        <Action name="goNext"/>
+        <Separator/>
+        <Action name="goNextUnread"/>
+    </Menu>
+
+    <Menu name="settings"><text>&amp;Settings</text>
+        <Action name="config"/>
+    </Menu>
+
+    <Separator />
+    <Merge />
+
+</MenuBar>
+
+<ToolBar fullWidth="true" name="mainToolBar" newline="true">
+    <Action name="messageCompose"/>
+    <Action name="messageView"/>
+    <Action name="messageReply"/>
+    <Action name="messageReplyAll"/>
+    <Action name="messageForward"/>
+    <Separator/>
+    <Action name="messagePrint"/>
+    <Action name="messageCopyTo"/>
+    <Separator/>
+    <Action name="messageFilter"/>
+    <Action name="messageMoveTo"/>
+    <Action name="messageBounce"/>
+    <Action name="messageDelete"/>
+    <Separator/>
+    <Action name="threadExpand"/>
+    <Action name="threadCollapse"/>
+    <Separator/>
+    <Action name="goPrevious"/>
+    <Action name="goNext"/>
+    <Action name="goNextUnread"/>
+</ToolBar>
+
+</kpartgui>
+

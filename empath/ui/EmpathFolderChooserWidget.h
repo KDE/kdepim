@@ -20,25 +20,42 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef EMPATH_MESSAGE_HEADER_VIEW_WIDGET_H
-#define EMPATH_MESSAGE_HEADER_VIEW_WIDGET_H
+#ifndef EMPATH_FOLDER_CHOOSER_WIDGET_H
+#define EMPATH_FOLDER_CHOOSER_WIDGET_H
 
 // Qt includes
-#include <qlabel.h>
+#include <qwidget.h>
+
+class QLineEdit;
+class QPushButton;
 
 // Local includes
-#include <rmm/Envelope.h>
+#include "EmpathURL.h"
 
-class EmpathMessageHeaderViewWidget : public QLabel
+class EmpathFolderChooserWidget : public QWidget
 {
     Q_OBJECT
-        
-    public:
-        
-        EmpathMessageHeaderViewWidget(QWidget * parent);
-        virtual ~EmpathMessageHeaderViewWidget();
     
-        void useEnvelope(RMM::Envelope &);
+    public:
+    
+        EmpathFolderChooserWidget(QWidget * parent = 0);
+        virtual ~EmpathFolderChooserWidget();
+
+        EmpathURL url() const;
+        
+        void setURL(const EmpathURL & url);
+
+
+    protected slots:
+    
+        void        s_browse();
+    
+    private:
+
+        QLineEdit   * le_folderName_;
+        QPushButton * pb_selectFolder_;
+
+        EmpathURL    url_;
 };
 
 #endif

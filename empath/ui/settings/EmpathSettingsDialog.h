@@ -30,6 +30,7 @@ class IdentitySettingsForm;
 class DisplaySettingsForm;
 class ComposeSettingsForm;
 class SendingSettingsForm;
+class AccountsSettingsForm;
 
 class EmpathSettingsDialog : public KDialogBase
 {
@@ -71,11 +72,13 @@ class EmpathSettingsDialog : public KDialogBase
         void _composeDefaults();
         void _displayDefaults();
         void _sendingDefaults();
+        void _accountsDefaults();
 
         IdentitySettingsForm    * identitySettingsForm;
         DisplaySettingsForm     * displaySettingsForm;
         ComposeSettingsForm     * composeSettingsForm;
         SendingSettingsForm     * sendingSettingsForm;
+        AccountsSettingsForm    * accountsSettingsForm;
 };
 
 #endif

@@ -81,6 +81,13 @@ EmpathMailboxList::loadConfig()
 
     QDict<EmpathMailbox>::clear();
 
+    EmpathMailbox * m = createNew(EmpathMailbox::Maildir);
+
+    m->setName(i18n("Local"));
+    empathDebug("Created local mailbox");
+
+    m->init();
+
     KConfig * c(KGlobal::config());
 
     c->setGroup("General");

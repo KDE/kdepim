@@ -66,12 +66,19 @@ class EmpathMessageViewWidget : public QWidget
         void filter();
 #endif
 
+    protected:
+
+        bool event(QEvent *);
 
     private:
+
+        void _showMessage(RMM::Message &);
         
         EmpathMessageTextViewWidget         * textView_;
         EmpathMessageHeaderViewWidget       * headerView_;
         EmpathMessageAttachmentViewWidget   * attachmentView_;
+
+        EmpathURL waitingForURL_;
 };
 
 class EmpathMessageViewPartFactory : public KLibFactory
@@ -108,9 +115,9 @@ class EmpathMessageViewPart : public KParts::ReadOnlyPart
     protected slots:
 
         void s_changeView(const EmpathURL &);
+
     protected:
 
-        virtual bool event(QEvent *);
         virtual bool openFile();
 
         void enableAllActions(bool);

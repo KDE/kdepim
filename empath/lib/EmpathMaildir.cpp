@@ -72,11 +72,11 @@ EmpathMaildir::~EmpathMaildir()
 EmpathMaildir::init()
 {
     // FIXME don't read this when we're not in a thread.
-    QDir d(path_ + "/cur", QString::null, QDir::Unsorted, QDir::Files);
+    QDir d(_cur(), QString::null, QDir::Unsorted, QDir::Files);
 
     cachedEntryList_ = d.entryList();
 
-    mtime_ = QFileInfo(path_ + "/cur").lastModified();
+    mtime_ = QFileInfo(_cur()).lastModified();
 
     createdOK_ = _checkDirs();
 }
@@ -84,11 +84,8 @@ EmpathMaildir::init()
     void
 EmpathMaildir::sync()
 {
-    if (!_touched()) {
+    if (!_touched())
         return;
-    }
-
-    empathDebug("Clearing disappeared");
 
     disappeared_.clear();
 
@@ -110,10 +107,6 @@ EmpathMaildir::message(const QString & id)
     RMM::Message retval;
 
     QCString s = _messageData(id);
-    qDebug("Message data:");
-    qDebug("-----------------------------------------------------------------------------");
-    qDebug(s);
-    qDebug("-----------------------------------------------------------------------------");
 
     if (s.isEmpty()) {
         empathDebug("Cannot load data for \"" + id + "\"");
@@ -172,11 +165,11 @@ EmpathMaildir::removeMessage(const QStringList & l)
     bool
 EmpathMaildir::_removeMessage(const QString & id)
 {
-    QDir d(path_ + "/cur/", id + "*", QDir::Unsorted);
+    QDir d(_cur(), id + "*", QDir::Unsorted);
 
     if (d.count() != 1) return false;
 
-    QFile f(path_ + "/cur/" + d[0]);
+    QFile f(_cur() + d[0]);
 
     return f.remove();
 }
@@ -202,8 +195,8 @@ EmpathMaildir::_mark(const QString & id, EmpathIndexRecord::Status msgStat)
     else
         newFilename.replace(QRegExp(":2,.*"), ":2," + statusFlags);
 
-    QString oldName = path_ + "/cur/" + filename;
-    QString newName = path_ + "/cur/" + newFilename;
+    QString oldName = _cur() + filename;
+    QString newName = _cur() + newFilename;
 
     bool renameOK = QDir().rename(oldName, newName);
 
@@ -242,7 +235,7 @@ EmpathMaildir::_messageData(const QString & filename, bool isFullName)
         filename_ = matchingEntries[0];
     }
 
-    QFile f(path_ + "/cur/" + filename_);
+    QFile f(_cur() + filename_);
 
     if (!f.open(IO_ReadOnly)) {
 
@@ -263,7 +256,7 @@ EmpathMaildir::_markNewMailAsSeen()
 {
     empathDebug("");
     QDir dn(
-        path_ + "/new",
+        _new(),
         QString::null,
         QDir::Unsorted,
         QDir::Files | QDir::Writable);
@@ -278,8 +271,8 @@ EmpathMaildir::_markNewMailAsSeen()
     void
 EmpathMaildir::_markAsSeen(const QString & name)
 {
-    QString oldName = path_ + "/new/" + name;
-    QString newName = path_ + "/cur/" + name;
+    QString oldName = _new() + name;
+    QString newName = _cur() + name;
 
     if (!QDir().rename(oldName, newName)) {
         empathDebug("Couldn't rename `" + oldName + "' to `" + newName + "'");
@@ -292,7 +285,7 @@ EmpathMaildir::_clearTmp()
     QDate now = QDate::currentDate();
 
     QDir tmpDir(
-        path_ + "/tmp/",
+        _tmp(),
         QString::null,
         QDir::Unsorted,
         QDir::Files | QDir::Writable);
@@ -315,18 +308,18 @@ EmpathMaildir::_checkDirs()
         return false;
     }
 
-    if (!d.exists(path_ + "/cur") && !d.mkdir(path_ + "/cur")) {
-        empathDebug("Couldn't create " + path_ + "/cur");
+    if (!d.exists(_cur()) && !d.mkdir(_cur())) {
+        empathDebug("Couldn't create " + _cur());
         return false;
     }
 
-    if (!d.exists(path_ + "/new") && !d.mkdir(path_ + "/new")) {
-        empathDebug("Couldn't create " + path_ + "/new");
+    if (!d.exists(_new()) && !d.mkdir(_new())) {
+        empathDebug("Couldn't create " + _new());
         return false;
     }
 
-    if (!d.exists(path_ + "/tmp") && !d.mkdir(path_ + "/tmp")) {
-        empathDebug("Couldn't create " + path_ + "/tmp");
+    if (!d.exists(_tmp()) && !d.mkdir(_tmp())) {
+        empathDebug("Couldn't create " + _tmp());
         return false;
     }
 
@@ -345,7 +338,7 @@ EmpathMaildir::_write(RMM::Message msg)
     QString flags =
         _generateFlagsString(EmpathIndexRecord::Status(msg.status()));
 
-    QString path   = path_ + "/tmp/" + canonName;
+    QString path   = _tmp() + canonName;
 
     QFile f(path);
 
@@ -382,7 +375,7 @@ EmpathMaildir::_write(RMM::Message msg)
 
     QString linkName(canonName + ":2," + flags);
 
-    QString linkPath(path_ + "/new/" + linkName);
+    QString linkPath(_new() + linkName);
 
     if (::link(QFile::encodeName(path), QFile::encodeName(linkPath)) != 0) {
 
@@ -422,17 +415,17 @@ EmpathMaildir::s_timerBeeped()
     bool
 EmpathMaildir::_touched()
 {
-    QFileInfo fiDir(path_ + "/cur/");
+    QFileInfo fiDir(_cur());
 
     if (fiDir.lastModified() > index_->lastSync()) {
-        empathDebug("Index is older than " + path_ + "/cur");
+        empathDebug("Index is older than " + _cur());
         return true;
     }
 
-    fiDir = (path_ + "/new/");
+    fiDir = _new();
 
     if (fiDir.lastModified() > index_->lastSync()) {
-        empathDebug("Index is older than " + path_ + "/new");
+        empathDebug("Index is older than " + _new());
         return true;
     }
 
@@ -455,6 +448,8 @@ EmpathMaildir::_tagAsDisappearedOrAddToIndex()
 
     QString s;
     QRegExp re_flags(":2,[A-Z]*$");
+
+    empathDebug("There are " + QString::number(fileList.count()) + " files to look at");
 
     for (; it != fileList.end(); ++it) {
 
@@ -533,11 +528,13 @@ EmpathMaildir::_removeDisappeared()
     QStringList &
 EmpathMaildir::_entryList()
 {
-    QDateTime currentMtime = QFileInfo(path_ + "/cur").lastModified();
+    QDateTime currentMtime = QFileInfo(_cur()).lastModified();
 
     if (currentMtime != mtime_) {
 
-        QDir d(path_ + "/cur", QString::null, QDir::Unsorted, QDir::Files);
+        QDir d(_cur(), QString::null, QDir::Unsorted, QDir::Files);
+
+        empathDebug("Looking at path '" + d.absPath() + "'");
 
         cachedEntryList_ = d.entryList();
 
@@ -550,8 +547,9 @@ EmpathMaildir::_entryList()
     EmpathIndex *
 EmpathMaildir::index()
 {
-   sync();
-   return index_;
+    empathDebug("");
+    sync();
+    return index_;
 }
 
 // vim:ts=4:sw=4:tw=78

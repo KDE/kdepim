@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Service
+Comment=empath view
+Name=EmpathView
+ServiceTypes=KParts/ReadWritePart
+X-KDE-Library=libEmpathView

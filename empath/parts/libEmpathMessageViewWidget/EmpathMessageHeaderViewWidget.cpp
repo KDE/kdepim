@@ -22,7 +22,6 @@
 
 // Qt includes
 #include <qstrlist.h>
-#include <qlabel.h>
 
 // KDE includes
 #include <kconfig.h>
@@ -36,10 +35,10 @@
 #include <rmm/DateTime.h>
 
 EmpathMessageHeaderViewWidget::EmpathMessageHeaderViewWidget(QWidget * parent)
-    :   QWidget(parent, "EmpathMessageHeaderViewWidget")
+    :   QLabel(parent, "EmpathMessageHeaderViewWidget")
 {
     qDebug("Header view ctor");
-    // Empty.
+    setTextFormat(Qt::RichText);
 }
 
 EmpathMessageHeaderViewWidget::~EmpathMessageHeaderViewWidget()
@@ -50,9 +49,6 @@ EmpathMessageHeaderViewWidget::~EmpathMessageHeaderViewWidget()
     void
 EmpathMessageHeaderViewWidget::useEnvelope(RMM::Envelope & e)
 {
-    QVBoxLayout * layout_ = new QVBoxLayout(this);
-    layout_->setAutoAdd(true);
-
     KConfig * c(KGlobal::config());
 
     c->setGroup("EmpathMessageHeaderViewWidget");
@@ -68,6 +64,10 @@ EmpathMessageHeaderViewWidget::useEnvelope(RMM::Envelope & e)
         l.append("Subject");
     }
 
+    qDebug("%d headers to view", l.count());
+
+    QString text;
+
     QStrListIterator it(l);
     
     for (; it.current() ; ++it) {
@@ -77,23 +77,24 @@ EmpathMessageHeaderViewWidget::useEnvelope(RMM::Envelope & e)
     
         RMM::Header h(e.get(s));
 
-        QString displayText = QString::fromUtf8(h.headerName()) + ": ";
+        text += "<b>";
+        text += QString::fromUtf8(h.headerName()) + ": ";
+        text += "</b>";
     
         if (RMM::headerTypesTable[h.headerType()] == RMM::ClassDateTime) {
 
-            RMM::DateTime * date =
-                static_cast<RMM::DateTime *>(h.headerBody());
+            RMM::DateTime * date = static_cast<RMM::DateTime *>(h.headerBody());
 
-            displayText +=
-                KGlobal::locale()->formatDateTime(date->qdt()).ascii();
+            text += KGlobal::locale()->formatDateTime(date->qdt());
 
         } else
-            displayText += h.headerBody()->asString();
+            // FIXME
+            text += QString::fromUtf8(h.headerBody()->asString());
 
-        new QLabel(displayText, this);
+        text += "<br>";
     }
 
-    setFixedHeight(sizeHint().height());
+    setText(text);
 }
 
 // vim:ts=4:sw=4:tw=78

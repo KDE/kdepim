@@ -53,7 +53,7 @@ class EmpathMainWindow : public KParts::MainWindow
     
         void _initActions();
 
-        KParts::ReadWritePart * browser_;
+        KParts::ReadWritePart * view_;
 
         QWidgetStack * progressStack_;
 };

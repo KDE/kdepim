@@ -23,6 +23,7 @@
 // Qt includes
 #include <qfile.h>
 #include <qcstring.h>
+#include <qlayout.h>
 
 // KDE includes
 #include <kglobal.h>
@@ -34,6 +35,7 @@
 #include <kiconloader.h>
 
 // Local includes
+#include "Empath.h"
 #include "EmpathCustomEvents.h"
 #include "EmpathMessageViewWidget.h"
 #include "EmpathMessageTextViewWidget.h"
@@ -153,11 +155,15 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 )
     :   QWidget(parent, name)
 {
-    (new QVBoxLayout(this))->setAutoAdd(true);
+    QVBoxLayout * layout = new QVBoxLayout(this);
     
     headerView_     = new EmpathMessageHeaderViewWidget(this);
     textView_       = new EmpathMessageTextViewWidget(this);
     attachmentView_ = new EmpathMessageAttachmentViewWidget(this);
+
+    layout->addWidget(headerView_);
+    layout->addWidget(textView_);
+    layout->addWidget(attachmentView_);
 
     attachmentView_->hide();
 }
@@ -168,11 +174,42 @@ EmpathMessageViewWidget::~EmpathMessageViewWidget()
 }
 
     void
-EmpathMessageViewWidget::setMessage(const EmpathURL & /* url */)
+EmpathMessageViewWidget::setMessage(const EmpathURL & url)
 {
-    // FIXME: Go get message !
-    RMM::Message message;
+    empathDebug(url.asString());
+    textView_->setXML(QString("Waiting for " + url.asString()));
+    waitingForURL_ = url;
+    empath->retrieve(url, this);
+}
 
+    bool
+EmpathMessageViewWidget::event(QEvent * e)
+{
+    switch (e->type()) {
+
+        case EmpathMessageRetrievedEventT:
+            {
+                EmpathMessageRetrievedEvent * ev =
+                    static_cast<EmpathMessageRetrievedEvent *>(e);
+
+                if (ev->success()) {
+                    RMM::Message m = ev->message();
+                    _showMessage(m);
+                }
+            }
+            return true;
+            break;
+
+        default:
+            break;
+    }
+
+    return QWidget::event(e);
+}
+
+    void
+EmpathMessageViewWidget::_showMessage(RMM::Message & message)
+{
     KSimpleConfig * config = new KSimpleConfig("empathrc", true);
 
     config->setGroup("Display");
@@ -192,7 +229,6 @@ EmpathMessageViewWidget::setMessage(const EmpathURL & /* url */)
         attachmentView_->hide();
         s = QString::fromUtf8(message.asXML(quote1, quote2));
         textView_->setXML(s);
-        qDebug(message.asXML(quote1, quote2));
         return;
     }
     
@@ -201,7 +237,6 @@ EmpathMessageViewWidget::setMessage(const EmpathURL & /* url */)
         attachmentView_->hide();
         s = QString::fromUtf8(message.body().at(0)->asXML(quote1, quote2));
         textView_->setXML(s);
-        qDebug(message.asXML(quote1, quote2));
         return;
     }
     
@@ -290,47 +325,13 @@ EmpathMessageViewPart::enableAllActions(bool enable)
     bool
 EmpathMessageViewPart::openFile()
 {
-    QFile f(m_file);
-    f.open(IO_ReadOnly);
-    QCString s = QCString(f.readAll());
-
-    // TODO
-//    RMM::Message m(s);
-//    w->setMessage(m);
-
-    enableAllActions(true);
-    return true;
+    return false;
 }
 
     void
 EmpathMessageViewPart::s_changeView(const EmpathURL & url)
 {
     w->setMessage(url);
-}
-
-    bool
-EmpathMessageViewPart::event(QEvent * e)
-{
-    switch (e->type()) {
-
-        case EmpathMessageRetrievedEventT:
-            {
-                EmpathMessageRetrievedEvent * ev =
-                    static_cast<EmpathMessageRetrievedEvent *>(e);
-
-                if (ev->success()) {
-                    RMM::Message m = ev->message();
-// TODO: view the message !                    emit(changeView(m));
-                }
-            }
-            return true;
-            break;
-
-        default:
-            break;
-    }
-
-    return KParts::ReadOnlyPart::event(e);
 }
 
 // -------------------------------------------------------------------------

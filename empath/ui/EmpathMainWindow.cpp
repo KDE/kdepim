@@ -86,35 +86,35 @@ EmpathMainWindow::EmpathMainWindow()
 
     _initActions();
 
-    KLibFactory * browserFactory =
-        KLibLoader::self()->factory("libEmpathBrowser");
+    KLibFactory * viewFactory =
+        KLibLoader::self()->factory("libEmpathView");
 
-    if (0 != browserFactory) {
+    if (0 != viewFactory) {
 
-        browser_ =
+        view_ =
             static_cast<KParts::ReadWritePart *>
                 (
-                    browserFactory->create(
+                    viewFactory->create(
                         this,
-                        "empath browser part",
+                        "empath view part",
                         "KParts::ReadWritePart"
                     )
                 );
 
     } else {
         
-        empathDebug("Argh. Can't load browser part.");
+        empathDebug("Argh. Can't load view part.");
         return;
     }
 
-    setCentralWidget(browser_->widget());
-    createGUI(browser_);
+    setCentralWidget(view_->widget());
+    createGUI(view_);
 
     EmpathFolderCombo * fc = new EmpathFolderCombo(toolBar());
     toolBar()->insertWidget(0, 200, fc);
 
     connect(fc,         SIGNAL(folderSelected(const EmpathURL &)),
-            browser_,   SLOT(s_showFolder(const EmpathURL &)));
+            view_,   SLOT(s_showFolder(const EmpathURL &)));
 
     show();
 }

@@ -85,6 +85,10 @@ class EmpathMaildir : public QObject
 
         EmpathMaildir();
 
+        QString _cur() { return path_ + "/cur/"; }
+        QString _new() { return path_ + "/new/"; }
+        QString _tmp() { return path_ + "/tmp/"; }
+
         EmpathIndex * index_;
 
         void        _markNewMailAsSeen();

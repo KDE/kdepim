@@ -1,19 +1,12 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
 <kpartgui name="EmpathMainWindow" version="1">
 <MenuBar>
-    <Menu name="message"><text>&amp;Message</text>
+
+    <Menu name="file"><text>&amp;File</text>
         <Action name="quit"/>
-        <Merge />
     </Menu>
-    <Menu name="settings"><text>&amp;Settings</text>
-        <Action name="config"/>
-    </Menu>
-    <Separator />
-    <Merge />
+
 </MenuBar>
 
-<ToolBar fullWidth="true" name="mainToolBar" newline="true">
- <Action name="compose"/>
-  <Merge />
-</ToolBar>
 </kpartgui>
+

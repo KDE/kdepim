@@ -8,7 +8,7 @@ libEmpathMessageViewWidget_la_LDFLAGS = \
 	$(all_libraries) -version-info 1:0:0 -module -no-undefined -DKPARTS_VERSION
 
 libEmpathMessageViewWidget_la_LIBADD = \
-	$(LIB_KPARTS) $(LIB_KDEUI) $(LIB_KDECORE) \
+	$(LIB_KPARTS) \
 	$(top_builddir)/empath/lib/libempathkernel.la \
 	$(top_builddir)/librmm/librmm.la
 

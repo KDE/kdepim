@@ -1,3 +1,4 @@
+
 /*
     Empath - Mailer for KDE
     
@@ -20,25 +21,39 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef EMPATH_MESSAGE_HEADER_VIEW_WIDGET_H
-#define EMPATH_MESSAGE_HEADER_VIEW_WIDGET_H
+#ifndef EMPATH_FOLDER_CHOOSER_DIALOG_H
+#define EMPATH_FOLDER_CHOOSER_DIALOG_H
 
-// Qt includes
-#include <qlabel.h>
+// KDE includes
+#include <kdialog.h>
 
 // Local includes
-#include <rmm/Envelope.h>
+#include "EmpathURL.h"
 
-class EmpathMessageHeaderViewWidget : public QLabel
+class EmpathFolder;
+class EmpathFolderListWidget;
+
+class EmpathFolderChooserDialog : public KDialog
 {
     Q_OBJECT
-        
+
     public:
-        
-        EmpathMessageHeaderViewWidget(QWidget * parent);
-        virtual ~EmpathMessageHeaderViewWidget();
-    
-        void useEnvelope(RMM::Envelope &);
+
+        EmpathFolderChooserDialog(QWidget * parent = 0);
+
+        ~EmpathFolderChooserDialog();
+
+        EmpathURL selected() const;
+
+    protected slots:
+
+        void s_OK();
+        void s_cancel();
+        void s_help();
+
+    private:
+
+        EmpathFolderListWidget * folderWidget_;
 };
 
 #endif

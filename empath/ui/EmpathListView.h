@@ -20,25 +20,37 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef EMPATH_MESSAGE_HEADER_VIEW_WIDGET_H
-#define EMPATH_MESSAGE_HEADER_VIEW_WIDGET_H
+#ifdef __GNUG__
+# pragma interface "EmpathListView.h"
+#endif
+
+#ifndef EMPATHLISTVIEW_H
+#define EMPATHLISTVIEW_H
 
 // Qt includes
-#include <qlabel.h>
+#include <qlistview.h>
+#include <qlist.h>
 
-// Local includes
-#include <rmm/Envelope.h>
-
-class EmpathMessageHeaderViewWidget : public QLabel
+/**
+ * @short Base class for list views in Empath. Allows some funky stuff.
+ * 
+ * @author Wilco Greven
+ */
+class EmpathListView : public QListView
 {
     Q_OBJECT
-        
+
     public:
-        
-        EmpathMessageHeaderViewWidget(QWidget * parent);
-        virtual ~EmpathMessageHeaderViewWidget();
-    
-        void useEnvelope(RMM::Envelope &);
+
+        EmpathListView(QWidget * parent = 0, const char * name = 0);
+        virtual ~EmpathListView();
+
+        enum Area { Item, OpenClose, Void };
+
+        QListViewItem * itemAt(const QPoint &, Area &) const;
+
+        QList<QListViewItem> thread(QListViewItem *);
+        QList<QListViewItem> subThread(QListViewItem *);
 };
 
 #endif
