@@ -42,7 +42,7 @@ QString KNMimeBase::decodeRFC2047String(const QCString &src, const char **usedCS
   QCString result, str;
   QCString declaredCS;
   char *pos, *dest, *beg, *end, *mid, *endOfLastEncWord=0;
-  char encoding, ch;
+  char encoding;
   bool valid, onlySpacesSinceLastWord=false;
   const int maxLen=400;
   int i;
@@ -97,23 +97,23 @@ QString KNMimeBase::decodeRFC2047String(const QCString &src, const char **usedCS
         if (onlySpacesSinceLastWord)
           dest=endOfLastEncWord;
 
-        ch = *pos;
-        *pos = '\0';
-        str = QCString(mid, (int)(mid - pos - 1));
-        if (encoding == 'Q')
-        {
-          // decode quoted printable text
-          for (i=str.length()-1; i>=0; i--)
-            if (str[i]=='_') str[i]=' ';
-          str = KCodecs::quotedPrintableDecode(str);
+        if (mid < pos) {
+          str = QCString(mid, (int)(pos - mid + 1));
+          if (encoding == 'Q')
+          {
+            // decode quoted printable text
+            for (i=str.length()-1; i>=0; i--)
+              if (str[i]=='_') str[i]=' ';
+            str = KCodecs::quotedPrintableDecode(str);
+          }
+          else
+          {
+            str = KCodecs::base64Decode(str);
+          }
+          for (i=0; str[i]; i++) {
+            *dest++ = str[i];
+          }
         }
-        else
-        {
-          str = KCodecs::base64Decode(str);
-        }
-        *pos = ch;
-        for (i=0; str[i]; i++)
-          *dest++ = str[i];
 
         endOfLastEncWord=dest;
         onlySpacesSinceLastWord=true;
@@ -122,8 +122,6 @@ QString KNMimeBase::decodeRFC2047String(const QCString &src, const char **usedCS
       }
       else
       {
-        //result += "=?";
-        //pos = beg -1; // because pos gets increased shortly afterwards
         pos = beg - 2;
         *dest++ = *pos++;
         *dest++ = *pos;
