@@ -27,6 +27,7 @@
 #include <qptrlist.h>
 
 #include <kdebug.h>
+#include <klocale.h>
 #include <kurl.h>
 
 #include "vcaldrag.h"
@@ -47,16 +48,28 @@
 
 using namespace KCal;
 
+class LocalDirFactory : public KRES::PluginFactory
+{
+  public:
+    KRES::Resource *resource( const KConfig *config )
+    {
+      return new ResourceLocalDir( config );
+    }
+
+    KRES::ConfigWidget *configWidget( QWidget *parent )
+    {
+      return new ResourceLocalDirConfig( parent, "ResourceLocalDirConfig" );
+    }
+};
+
 extern "C"
 {
-  KRES::ConfigWidget *config_widget( QWidget *parent ) {
-    return new ResourceLocalDirConfig( parent, "Configure Dir-Based Calendar" );
-  }
-
-  KRES::Resource *resource( const KConfig *config ) {
-    return new ResourceLocalDir( config );
+  void *init_kcal_localdir()
+  {
+    return ( new LocalDirFactory() );
   }
 }
+
 
 ResourceLocalDir::ResourceLocalDir( const KConfig* config )
   : ResourceCalendar( config )

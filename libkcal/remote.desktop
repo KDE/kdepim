@@ -1,14 +1,15 @@
 [Desktop Entry]
-Type=Service
-
-[Misc]
 Encoding=UTF-8
 Name=Calendar in remote file
+Name[da]=Kalender i ekstern fil
+Name[el]=Ημερολόγιο σε απομακρυσμένο κατάλογο
 Name[es]=Calendario en un archivo remoto
 Name[hu]=Távoli fájlban tárolt naptár
+Name[pt_BR]=Calendário em arquivo remoto
 Name[sk]=Kalendár vo vzdialenom súbore
 Name[sv]=Kalender i fjärrfil
-
-[Plugin]
-Type=remote
 X-KDE-Library=kcal_remote
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=calendar
+X-KDE-ResourceType=remote

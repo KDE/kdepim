@@ -45,7 +45,7 @@ class Journal;
 /**
   @internal
 */
-class ResourceCalendar : public QObject, public KRES::Resource
+class ResourceCalendar : public KRES::Resource
 { 
     Q_OBJECT
   public:

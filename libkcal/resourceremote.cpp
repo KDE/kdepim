@@ -29,6 +29,7 @@
 #include <kdebug.h>
 #include <kurl.h>
 #include <kio/job.h>
+#include <klocale.h>
 #include <kstandarddirs.h>
 
 #include "vcaldrag.h"
@@ -49,16 +50,28 @@
 
 using namespace KCal;
 
+class RemoteFactory : public KRES::PluginFactory
+{
+  public:
+    KRES::Resource *resource( const KConfig *config )
+    {
+      return new ResourceRemote( config );
+    }
+
+    KRES::ConfigWidget *configWidget( QWidget *parent )
+    {
+      return new ResourceRemoteConfig( parent, "ResourceRemoteConfig" );
+    }
+};
+
 extern "C"
 {
-  KRES::ConfigWidget *config_widget( QWidget *parent ) {
-    return new ResourceRemoteConfig( parent, "Configure Remote Calendar" );
-  }
-
-  KRES::Resource *resource( const KConfig *config ) {
-    return new ResourceRemote( config );
+  void *init_kcal_remote()
+  {
+    return ( new RemoteFactory() );
   }
 }
+
 
 ResourceRemote::ResourceRemote( const KConfig* config )
   : ResourceCalendar( config )

@@ -1,15 +1,16 @@
 [Desktop Entry]
-Type=Service
-
-[Misc]
 Encoding=UTF-8
 Name=Calendar on IMAP-server via kmail
+Name[da]=Kalender på IMAP-server via kmail
+Name[el]=Ημερολόγιο σε εξυπηρετητή IMAP μέσω του kmail
 Name[es]=Calendario en un servidor IMAP vía kmail
 Name[hu]=IMAP-kiszolgálón tárolt naptár a KMailen keresztül
+Name[pt_BR]=Calendário no IMAP-server via kmail
 Name[sk]=Kalendár na IMAP-servry cez kmail
 Name[sv]=Kalender på en IMAP-server via Kmail
 Name[zh_CN]=在 IMAP 服务器上用 kmail 访问的日历
-
-[Plugin]
-Type=imap
-X-KDE-Library=resourcecalendarimap
+X-KDE-Library=kcal_imap
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=calendar
+X-KDE-ResourceType=imap

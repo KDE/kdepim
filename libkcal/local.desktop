@@ -1,18 +1,18 @@
 [Desktop Entry]
-Type=Service
-
-[Misc]
 Encoding=UTF-8
 Name=Calendar in local file
 Name[be]=Каляндар у лякальным файле
 Name[da]=Kalender i lokal fil
+Name[el]=Ημερολόγιο σε τοπικό αρχείο
 Name[es]=Calendario en archivo local
 Name[hu]=Helyi fájlban tárolt naptár
+Name[pt_BR]=Calendário em arquivo local
 Name[ru]=Календарь в локальном файле
 Name[sk]=Kalendár v lokálnom súbore
 Name[sv]=Kalender i lokal fil
 Name[zh_CN]=本地文件中的日历
-
-[Plugin]
-Type=file
 X-KDE-Library=libkcal
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=calendar
+X-KDE-ResourceType=file

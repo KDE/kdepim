@@ -24,6 +24,7 @@
 #include <dcopclient.h>
 #include <kapplication.h>
 #include <kdcopservicestarter.h>
+#include <klocale.h>
 
 #include <libkcal/vcaldrag.h>
 #include <libkcal/vcalformat.h>
@@ -45,17 +46,30 @@ using namespace KCal;
 
 static const QCString dcopObjectId = "KMailICalIface";
 
+class IMAPFactory : public KRES::PluginFactory
+{
+  public:
+    KRES::Resource *resource( const KConfig *config )
+    {
+      KGlobal::locale()->insertCatalogue( "kcal_imap" );
+      return new ResourceIMAP( config );
+    }
+
+    KRES::ConfigWidget *configWidget( QWidget *parent )
+    {
+      KGlobal::locale()->insertCatalogue( "kcal_imap" );
+      return new ResourceIMAPConfig( parent, "ResourceIMAPConfig" );
+    }
+};
 
 extern "C"
 {
-  KRES::ConfigWidget *config_widget( QWidget *parent ) {
-    return new ResourceIMAPConfig( parent, "Configure IMAP-Based Calendar" );
-  }
-
-  KRES::Resource *resource( const KConfig *config ) {
-    return new ResourceIMAP( config );
+  void *init_kcal_imap()
+  {
+    return ( new IMAPFactory() );
   }
 }
+
 
 ResourceIMAP::ResourceIMAP( const KConfig* config )
   : ResourceCalendar( config ),

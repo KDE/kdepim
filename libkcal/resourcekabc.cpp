@@ -53,16 +53,28 @@
 
 using namespace KCal;
 
+class KABCFactory : public KRES::PluginFactory
+{
+  public:
+    KRES::Resource *resource( const KConfig *config )
+    {
+      return new ResourceKABC( config );
+    }
+
+    KRES::ConfigWidget *configWidget( QWidget *parent )
+    {
+      return new ResourceKABCConfig( parent, "ResourceKABCConfig" );
+    }
+};
+
 extern "C"
 {
-  KRES::ConfigWidget *config_widget( QWidget *parent ) {
-    return new ResourceKABCConfig( parent, "Configure addressbook birthdays" );
-  }
-
-  KRES::Resource *resource( const KConfig *config ) {
-    return new ResourceKABC( config );
+  void *init_kcal_kabc()
+  {
+    return ( new KABCFactory() );
   }
 }
+
 
 ResourceKABC::ResourceKABC( const KConfig* config )
   : ResourceCalendar( config )
@@ -224,18 +236,13 @@ void ResourceKABC::doClose()
 }
 
 
-bool ResourceKABC::addEvent(Event *event)
+bool ResourceKABC::addEvent(Event*)
 {
-  // read only!
   return false;
-  //mCalendar.addEvent( event );
 }
 
-void ResourceKABC::deleteEvent(Event *event)
+void ResourceKABC::deleteEvent(Event*)
 {
-  // read only!
-  //kdDebug(5800) << "ResourceKABC::deleteEvent" << endl;
-  //mCalendar.deleteEvent( event );
 }
 
 
@@ -266,17 +273,13 @@ QPtrList<Event> ResourceKABC::rawEvents()
   return mCalendar.rawEvents();
 }
 
-bool ResourceKABC::addTodo(Todo *todo)
+bool ResourceKABC::addTodo(Todo*)
 {
-  //read  only!
   return false;
-  //mCalendar.addTodo( todo );
 }
 
-void ResourceKABC::deleteTodo(Todo *todo)
+void ResourceKABC::deleteTodo(Todo*)
 {
-  // read only!
-  //mCalendar.deleteTodo( todo );
 }
 
 
@@ -296,11 +299,8 @@ QPtrList<Todo> ResourceKABC::todos( const QDate &date )
 }
 
 
-bool ResourceKABC::addJournal(Journal *journal)
+bool ResourceKABC::addJournal(Journal*)
 {
-  // read only!
-  //kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
-  //return mCalendar.addJournal( journal );
   return false;
 }
 
