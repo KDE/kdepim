@@ -933,7 +933,7 @@ static void queueConduits(ActionQueue *fSyncStack,
 		fSyncStack->queueConduits( conduits,e);
 		QString s = i18n("Conduit flags: ");
 		s.append(ConduitProxy::flagsForMode(e).join(" "));
-		logMessage(s);
+		// logMessage(s);
 	}
 }
 
