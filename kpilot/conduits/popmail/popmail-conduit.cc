@@ -58,7 +58,7 @@ extern time_t parsedate(char * p);
 // belong in the class interface]
 //
 //
-void showMessage(QString &message)
+void showMessage(const QString &message)
 { 
   KMessageBox::error(0L, message, i18n("Error retrieving mail"));
 }
@@ -258,13 +258,13 @@ PopMailConduit::doSync()
 {
 	FUNCTIONSETUP;
 
-	KConfig* config = KPilotLink::getConfig(PopMailOptions::PopGroup);
+	KConfig& config = KPilotLink::getConfig(PopMailOptions::PopGroup);
 	int mode=0;
 	int sent_count=0,received_count=0;
 
 	addSyncLogMessage("Mail ");
 
-	mode=config->readNumEntry("SyncOutgoing");
+	mode=config.readNumEntry("SyncOutgoing");
 	if(mode)
 	{
 		if (debug_level)
@@ -274,7 +274,7 @@ PopMailConduit::doSync()
 		sent_count=sendPendingMail(mode);
 	}
 
-	mode=config->readNumEntry("SyncIncoming");
+	mode=config.readNumEntry("SyncIncoming");
 	if(mode)
 	{
 		if (debug_level)
@@ -318,8 +318,6 @@ PopMailConduit::doSync()
 		addSyncLogMessage(" ] ");
 	}
 	addSyncLogMessage("OK\n");
-
-	delete config;
 }
 
 QWidget*
@@ -383,16 +381,16 @@ int PopMailConduit::sendViaSMTP()
   int i = 0;
   struct Mail theMail;
   QString smtpSrv;
-  int smtpPort;
+  int smtpPort=25;
   QString currentDest, msg;
   PilotRecord* pilotRec;
   KSocket* smtpSocket;
   char buffer[0xffff];
   int ret;
   
-  KConfig* config = KPilotLink::getConfig(PopMailOptions::PopGroup);
-  smtpSrv = config->readEntry("SMTPServer","localhost");
-  smtpPort = config->readNumEntry("SMTPPort",25);
+  KConfig& config = KPilotLink::getConfig(PopMailOptions::PopGroup);
+  smtpSrv = config.readEntry("SMTPServer","localhost");
+  smtpPort = config.readNumEntry("SMTPPort",25);
   
 	if (debug_level & SYNC_MINOR)
 	{
@@ -482,7 +480,7 @@ int PopMailConduit::sendViaSMTP()
 	  currentDest += theMail.to;
 
 
-          QString fromAddress = config->readEntry("EmailAddress");
+          QString fromAddress = config.readEntry("EmailAddress");
         sprintf(buffer,"MAIL FROM: %s\r\n",fromAddress.latin1());
           write(smtpSocket->socket(), buffer, strlen(buffer));
 
@@ -546,8 +544,8 @@ int PopMailConduit::sendViaSMTP()
                write(smtpSocket->socket(), buffer, strlen(buffer));
 	  }
           //insert the real signature file from disk
-          if(!config->readEntry("Signature").isEmpty()) {
-             QFile f(config->readEntry("Signature"));
+          if(!config.readEntry("Signature").isEmpty()) {
+             QFile f(config.readEntry("Signature"));
              if ( f.open(IO_ReadOnly) ) {    // file opened successfully
                 sprintf(buffer,"\r\n-- \r\n");
                 write(smtpSocket->socket(), buffer, strlen(buffer));
@@ -609,9 +607,9 @@ int PopMailConduit::sendViaSendmail()
   QString currentDest;
   PilotRecord* pilotRec;
   
-  KConfig* config = KPilotLink::getConfig(PopMailOptions::PopGroup);
+  KConfig& config = KPilotLink::getConfig(PopMailOptions::PopGroup);
 
-  sendmailCmd = config->readEntry("SendmailCmd");
+  sendmailCmd = config.readEntry("SendmailCmd");
   
 //   pilotLink->addSyncLogEntry("Reading outgoing mail...");
 
@@ -693,10 +691,10 @@ PopMailConduit::sendMessage(FILE* sendf, struct Mail& theMail)
 {
 	FUNCTIONSETUP;
 
-	KConfig *config=KPilotLink::getConfig(PopMailOptions::PopGroup); 
+	KConfig& config=KPilotLink::getConfig(PopMailOptions::PopGroup); 
   QTextStream mailPipe(sendf, IO_WriteOnly);
   
-  QString fromAddress = config->readEntry("EmailAddress");
+  QString fromAddress = config.readEntry("EmailAddress");
   mailPipe << "From: " << fromAddress << "\r\n";
   mailPipe << "To: " << theMail.to << "\r\n";
   if(theMail.cc)
@@ -727,13 +725,13 @@ PopMailConduit::sendMessage(FILE* sendf, struct Mail& theMail)
 	}
 
   //insert the real signature file from disk
-  if(!config->readEntry("Signature").isEmpty()) {
+  if(!config.readEntry("Signature").isEmpty()) {
 	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname << ": Reading signature" << endl;
 	}
 
-      QFile f(config->readEntry("Signature"));
+      QFile f(config.readEntry("Signature"));
       if ( f.open(IO_ReadOnly) ) {    // file opened successfully
          mailPipe << "-- \r\n";
          QTextStream t( &f );        // use a text stream
@@ -1020,7 +1018,7 @@ int PopMailConduit::doPopQuery()
 	FUNCTIONSETUP;
 
 	KSocket* popSocket;
-	KConfig* config = KPilotLink::getConfig(PopMailOptions::PopGroup); 
+	KConfig& config = KPilotLink::getConfig(PopMailOptions::PopGroup); 
 	char buffer[0xffff];
 	int offset;
 	int flags=0;
@@ -1031,20 +1029,20 @@ int PopMailConduit::doPopQuery()
 	// the config file.
 	//
 	//
-	if (config->readNumEntry("LeaveMail") == 0)
+	if (config.readNumEntry("LeaveMail") == 0)
 	{
 		flags |= POP_DELE ;
 	}
 
-	popSocket = new KSocket(config->readEntry("PopServer").latin1(),
-		config->readNumEntry("PopPort")); 
+	popSocket = new KSocket(config.readEntry("PopServer").latin1(),
+		config.readNumEntry("PopPort")); 
 	CHECK_PTR(popSocket);
 
 	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname 
 			<< ": Attempted to connect to POP3 server "
-			<< config->readEntry("PopServer")
+			<< config.readEntry("PopServer")
 			<< endl;
 	}
 
@@ -1083,7 +1081,7 @@ int PopMailConduit::doPopQuery()
 	}
 
 
-	sprintf(buffer, "USER %s\r\n", config->readEntry("PopUser").latin1());
+	sprintf(buffer, "USER %s\r\n", config.readEntry("PopUser").latin1());
 	write(popSocket->socket(), buffer, strlen(buffer));
 	if (getPOPResponse(popSocket,"USER command to POP server failed",
 		buffer,1024)<0)
@@ -1092,7 +1090,7 @@ int PopMailConduit::doPopQuery()
 		return -1;
 	}
 
-	if(config->readNumEntry("StorePass", 0))
+	if(config.readNumEntry("StorePass", 0))
 	{
 		if (debug_level & SYNC_TEDIOUS)
 		{
@@ -1102,7 +1100,7 @@ int PopMailConduit::doPopQuery()
 		}
 
 		sprintf(buffer, "PASS %s\r\n", 
-			config->readEntry("PopPass").latin1());
+			config.readEntry("PopPass").latin1());
 	}
 	else
 	{
@@ -1159,7 +1157,7 @@ int PopMailConduit::doPopQuery()
 	// [ The standard says otherwise ]
 	//
 	QString msg(buffer+offset);
-	if (msg.find( config->readEntry("PopUser")) != -1) // with username
+	if (msg.find( config.readEntry("PopUser")) != -1) // with username
 	{
 		sscanf(buffer+offset, "%*s %*s %*s %d %*s", &msgcount);
 	}
@@ -1305,7 +1303,7 @@ int PopMailConduit::doPopQuery()
 	{
 		kdDebug() << fname << ": Read " << count << " lines." << endl;
 	}
-	strcpy(buf,line);
+	strncpy(buf,line,bufsiz);
 	return count;
 }
 
@@ -1447,9 +1445,9 @@ int PopMailConduit::doUnixStyle()
 	PilotRecord *pilotRec=0L;
 
 	{
-		KConfig *config=KPilotLink::getConfig(PopMailOptions::PopGroup); 
+		KConfig& config=KPilotLink::getConfig(PopMailOptions::PopGroup); 
 	
-		filename=config->readEntry("UNIX Mailbox");
+		filename=config.readEntry("UNIX Mailbox");
 		if (filename.isEmpty()) return 0;
 
 		if (debug_level & SYNC_MINOR)
@@ -1471,7 +1469,6 @@ int PopMailConduit::doUnixStyle()
 			kdDebug() << fname << ": Mailbox found." << endl;
 		}
 
-		delete config;
 	}
 
 	mailbox=fopen(filename.latin1(),"r");

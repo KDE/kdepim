@@ -45,6 +45,9 @@
 #include <kstddirs.h>
 #include <kdebug.h>
 #endif
+#ifndef STANDALONE
+#include <kpilotlink.h>
+#endif
 
 
 #include "kpilotOptions.moc"
@@ -61,8 +64,8 @@ static const char *id="$Id$";
 // Privacy and Secrecy settings
 //
 //
-KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig *c) :
-	setupDialogPage(i18n("DB Specials"),p,c)
+KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig& c) :
+	setupDialogPage(i18n("DB Specials"),p)
 {
 	FUNCTIONSETUP;
 	QLabel *l1,*l2;
@@ -79,7 +82,7 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig *c) :
 
 	fuseSecret->adjustSize();
 	grid->addWidget(fuseSecret,0,fieldCol);
-	fuseSecret->setChecked(c->readNumEntry("ShowSecrets"));
+	fuseSecret->setChecked(c.readNumEntry("ShowSecrets"));
 
 
 
@@ -97,10 +100,10 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig *c) :
 	grid->addWidget(l2,2,labelCol);
 	grid->addWidget(fSkipDB,2,fieldCol);
 
-	c->setGroup(QString());
-	fBackupOnly->setText(c->readEntry("BackupForSync",
+	c.setGroup(QString::null);
+	fBackupOnly->setText(c.readEntry("BackupForSync",
 		"Arng,PmDB,lnch"));
-	fSkipDB->setText(c->readEntry("SkipSync",
+	fSkipDB->setText(c.readEntry("SkipSync",
 		"AvGo"));
 
 
@@ -109,15 +112,15 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig *c) :
 }
 
 
-int KPilotOptionsPrivacy::commitChanges(KConfig *config)
+int KPilotOptionsPrivacy::commitChanges(KConfig& config)
 {
 	FUNCTIONSETUP;
 
-	config->setGroup(QString::null);
+	config.setGroup(QString::null);
 
-	config->writeEntry("ShowSecrets",fuseSecret->isChecked());
-	config->writeEntry("BackupForSync",fBackupOnly->text());
-	config->writeEntry("SkipSync",fSkipDB->text());
+	config.writeEntry("ShowSecrets",fuseSecret->isChecked());
+	config.writeEntry("BackupForSync",fBackupOnly->text());
+	config.writeEntry("SkipSync",fSkipDB->text());
 
 	return 0;
 }
@@ -126,8 +129,8 @@ int KPilotOptionsPrivacy::commitChanges(KConfig *config)
 /* static */ QString KPilotOptionsAddress::fGroupName=
 	QString("Address Widget");
 
-KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig *c) :
-	setupDialogPage(i18n("Address"),w,c)
+KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig& c) :
+	setupDialogPage(i18n("Address"),w)
 {
 	FUNCTIONSETUP;
 
@@ -141,7 +144,7 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig *c) :
 	// in preparation to making it a separate conduit entirely.
 	//
 	//
-	c->setGroup(fGroupName);
+	c.setGroup(fGroupName);
 
 	vl=new QVBoxLayout(this,10);
 
@@ -162,7 +165,7 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig *c) :
 	grid->addWidget(currentLabel,1,0);
 
 	fIncomingFormat = new QLineEdit(formatGroup);
-	fIncomingFormat->setText(c->readEntry("IncomingFormat", 
+	fIncomingFormat->setText(c.readEntry("IncomingFormat", 
 		"%LN,%FN,%CO,%P1,%P2,%P3,%P4,%P5,"
 		"%AD,%CI,%ST,%ZI,%CT,%TI,"
 		"%C1,%C2,%C3,%C4"));
@@ -176,7 +179,7 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig *c) :
 	grid->addWidget(currentLabel,2,0);
 
 	fOutgoingFormat = new QLineEdit(formatGroup);
-	fOutgoingFormat->setText(c->readEntry("OutgoingFormat", 
+	fOutgoingFormat->setText(c.readEntry("OutgoingFormat", 
 		"%LN,%FN,%CO,%P1,%P2,%P3,%P4,%P5,"
 		"%AD,%CI,%ST,%ZI,%CT,%TI,"
 		"%C1,%C2,%C3,%C4"));
@@ -187,7 +190,7 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig *c) :
 	fUseKeyField = new QCheckBox(i18n("Use &Key Field"), 
 		formatGroup);
 	fUseKeyField->adjustSize();
-	fUseKeyField->setChecked(c->readNumEntry("UseKeyField", 0));
+	fUseKeyField->setChecked(c.readNumEntry("UseKeyField", 0));
 	grid->addWidget(fUseKeyField,3,1);
 
 
@@ -218,7 +221,7 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig *c) :
 
 
 
-	setRadio(c->readNumEntry("AddressDisplay",0));
+	setRadio(c.readNumEntry("AddressDisplay",0));
 
 }
 
@@ -226,33 +229,30 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig *c) :
 
 	
 
-int KPilotOptionsAddress::commitChanges(KConfig *c)
+int KPilotOptionsAddress::commitChanges(KConfig& c)
 {
 	FUNCTIONSETUP;
 
-	c->setGroup(fGroupName);
+	c.setGroup(fGroupName);
 
-	c->writeEntry("AddressDisplay",getRadio());
+	c.writeEntry("AddressDisplay",getRadio());
 	if (debug_level & UI_TEDIOUS) { cerr << fname << 
 		": Selected display mode " << getRadio() << '\n' ; }
 
-	c->writeEntry("IncomingFormat", fIncomingFormat->text());
-	c->writeEntry("OutgoingFormat", fOutgoingFormat->text());
-	c->writeEntry("UseKeyField", (int)fUseKeyField->isChecked());
+	c.writeEntry("IncomingFormat", fIncomingFormat->text());
+	c.writeEntry("OutgoingFormat", fOutgoingFormat->text());
+	c.writeEntry("UseKeyField", (int)fUseKeyField->isChecked());
 
 	return 0;
 }
 
-/* static */ int KPilotOptionsAddress::getDisplayMode(KConfig *c)
+/* static */ int KPilotOptionsAddress::getDisplayMode(KConfig& c)
 {
 	FUNCTIONSETUP;
 
-	if (c==NULL) c=KGlobal::config();
-	if (c==NULL) return 0;
+	c.setGroup(fGroupName);
 
-	c->setGroup(fGroupName);
-
-	return c->readNumEntry("AddressDisplay",0);
+	return c.readNumEntry("AddressDisplay",0);
 }
 
 void KPilotOptionsAddress::setRadio(int s)
@@ -285,8 +285,8 @@ int KPilotOptionsAddress::getRadio() const
 //
 //
 
-KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
-	setupDialogPage(i18n("General"),w,config)
+KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig& config) :
+	setupDialogPage(i18n("General"),w)
 {
 	FUNCTIONSETUP;
 
@@ -369,12 +369,12 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 
 	QGridLayout *grid=new QGridLayout(this,nRows,nCols,10);
 	
-	config->setGroup(QString::null);
+	config.setGroup(QString::null);
 	currentLabel = new QLabel(i18n("Pilot Device: "), this);
 	currentLabel->adjustSize();
 
 	fPilotDevice = new QLineEdit(this);
-	fPilotDevice->setText(config->readEntry("PilotDevice", pilotPort));
+	fPilotDevice->setText(config.readEntry("PilotDevice", pilotPort));
 	fPilotDevice->resize(100, fPilotDevice->height());
 	grid->addWidget(currentLabel,0,labelCol);
 	grid->addWidget(fPilotDevice,0,fieldCol);
@@ -387,7 +387,8 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	fPilotSpeed->insertItem("38400");
 	fPilotSpeed->insertItem("57600");
 	fPilotSpeed->insertItem("115200");
-	value=config->readNumEntry("PilotSpeed", pilotRate);
+	value=config.readNumEntry("PilotSpeed", pilotRate);
+
 	if (debug_level & UI_TEDIOUS)
 	{
 		cerr << fname << ": Read pilot speed "
@@ -401,7 +402,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	currentLabel = new QLabel(i18n("Pilot User: "), this);
 	currentLabel->adjustSize();
 	fUserName = new QLineEdit(this);
-	fUserName->setText(config->readEntry("UserName", userName));
+	fUserName->setText(config.readEntry("UserName", userName));
 	fUserName->resize(200, fUserName->height());
 	grid->addWidget(currentLabel,1,labelCol);
 	grid->addMultiCellWidget(fUserName,1,1,fieldCol,fieldCol+2);
@@ -410,7 +411,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	currentLabel->adjustSize();
 	fSyncFiles = new QCheckBox(i18n("Sync &Files"), this);
 	fSyncFiles->adjustSize();
-	fSyncFiles->setChecked(config->readNumEntry("SyncFiles", 1));
+	fSyncFiles->setChecked(config.readNumEntry("SyncFiles", 1));
 	grid->addWidget(currentLabel,2,labelCol);
 	grid->addMultiCellWidget(fSyncFiles,2,2,fieldCol,fieldCol+2);
 
@@ -418,7 +419,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 		i18n("Local &overrides Pilot."), this);
 	fOverwriteRemote->adjustSize();
 	fOverwriteRemote->setChecked(
-		config->readNumEntry("OverwriteRemote", 0));
+		config.readNumEntry("OverwriteRemote", 0));
 	grid->addMultiCellWidget(fOverwriteRemote,3,3,fieldCol,fieldCol+2);
 
 	fStartDaemonAtLogin = new QCheckBox(
@@ -426,7 +427,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 		this);
 	fStartDaemonAtLogin->adjustSize();
 	fStartDaemonAtLogin->setChecked(
-		config->readNumEntry("StartDaemonAtLogin", 0));
+		config.readNumEntry("StartDaemonAtLogin", 0));
 	grid->addMultiCellWidget(fStartDaemonAtLogin,4,4,fieldCol,fieldCol+2);
 	t = locate("apps","Utilities/KPilotDaemon.desktop");
 	if (t.isNull())
@@ -439,7 +440,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 		i18n("Start KPilot at Hot-Sync."), this);
 	fStartKPilotAtHotSync->adjustSize();
 	fStartKPilotAtHotSync->setChecked(
-		config->readNumEntry("StartKPilotAtHotSync", 0));
+		config.readNumEntry("StartKPilotAtHotSync", 0));
 	grid->addMultiCellWidget(fStartKPilotAtHotSync,5,5,fieldCol,fieldCol+2);
 
 	fDockDaemon = new QCheckBox(
@@ -447,7 +448,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 			"(Only available with KWM.)"), 
 				this);
 	fDockDaemon->adjustSize();
-	fDockDaemon->setChecked(config->readNumEntry("DockDaemon", 0));
+	fDockDaemon->setChecked(config.readNumEntry("DockDaemon", 0));
 	grid->addMultiCellWidget(fDockDaemon,6,6,fieldCol,fieldCol+2);
 
 	grid->activate();
@@ -461,7 +462,7 @@ KPilotOptionsGeneral::~KPilotOptionsGeneral()
 
 
 
-int KPilotOptionsGeneral::commitChanges(KConfig *config)
+int KPilotOptionsGeneral::commitChanges(KConfig& config)
 {
 	FUNCTIONSETUP;
 
@@ -485,18 +486,18 @@ int KPilotOptionsGeneral::commitChanges(KConfig *config)
 		}
 	}
 
-	config->setGroup(QString::null);
-	config->writeEntry("PilotDevice", fPilotDevice->text());
-	config->writeEntry("PilotSpeed", fPilotSpeed->currentItem());
-	config->writeEntry("UserName", fUserName->text());
-	config->writeEntry("SyncFiles", (int)fSyncFiles->isChecked());
-	config->writeEntry("OverwriteRemote", 
+	config.setGroup(QString::null);
+	config.writeEntry("PilotDevice", fPilotDevice->text());
+	config.writeEntry("PilotSpeed", fPilotSpeed->currentItem());
+	config.writeEntry("UserName", fUserName->text());
+	config.writeEntry("SyncFiles", (int)fSyncFiles->isChecked());
+	config.writeEntry("OverwriteRemote", 
 		(int)fOverwriteRemote->isChecked());
-	config->writeEntry("StartDaemonAtLogin", 
+	config.writeEntry("StartDaemonAtLogin", 
 		(int)fStartDaemonAtLogin->isChecked());
-	config->writeEntry("StartKPilotAtHotSync", 
+	config.writeEntry("StartKPilotAtHotSync", 
 		(int)fStartKPilotAtHotSync->isChecked());
-	config->writeEntry("DockDaemon", (int)fDockDaemon->isChecked());
+	config.writeEntry("DockDaemon", (int)fDockDaemon->isChecked());
 
 	if (fStartDaemonAtLogin->isChecked())
 	{
@@ -530,7 +531,7 @@ int KPilotOptionsGeneral::commitChanges(KConfig *config)
 
 /* static */ int KPilotOptions::fConfigVersion = 400 ;
 
-/* static */ bool KPilotOptions::isNewer(KConfig *c)
+/* static */ bool KPilotOptions::isNewer(KConfig& c)
 {
 	int r=setupDialog::getConfigurationVersion(c);
 	return r < fConfigVersion ;
@@ -552,8 +553,11 @@ KPilotOptions::KPilotOptions(QWidget* parent) :
 	setConfigurationVersion(fConfigVersion);
 
 
-	KConfig *config=KGlobal::config();
-	config->reparseConfiguration();
+#ifdef STANDALONE
+	KConfig& config = *(KGlobal::config());
+#else
+	KConfig& config=KPilotLink::getConfig();
+#endif
 
 	addPage(new KPilotOptionsGeneral(this,config));
 	addPage(new  KPilotOptionsAddress(this,config));
@@ -619,6 +623,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.11  2000/11/04 14:04:38  habenich
+// using pilot-link environment for speed and device\nusing passwd file entry for real name
+//
 // Revision 1.10  2000/10/26 10:10:09  adridg
 // Many fixes
 //

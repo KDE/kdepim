@@ -39,15 +39,18 @@ public:
 	/**
 	* Make a page for a setup dialog. Use the
 	* given tab name, which should already be
-	* translated by i18n(). The KConfig * can
+	* translated by i18n(). 
+	*
+	* Subclasses will have the KConfig& parameter
+	* which can
 	* be used so that the page can read its 
 	* configuration from the file. The group of
 	* the configuration file is set by the dialog,
 	* and pages should not change it.
 	*/
 	setupDialogPage(const QString &tabname,
-		setupDialog *parent,
-		KConfig *c=0L);
+		setupDialog *parent /* , Add for subclasses
+		KConfig& c */ );
 		
 
 	/**
@@ -60,7 +63,7 @@ public:
 	* the group is a property of the dialog,
 	* not of the page.
 	*/
-	virtual int commitChanges(KConfig *);
+	virtual int commitChanges(KConfig&);
 
 	/**
 	* If the user cancels a setup dialog, this
@@ -69,7 +72,19 @@ public:
 	* the page -- just in case you have a page that
 	* makes changes to something before the user OKs it.
 	*/
-	virtual int cancelChanges(KConfig *);
+	virtual int cancelChanges(KConfig&);
+
+	/** Before committing changes, the dialog calls
+	* validateChanges() on all the pages to see if the
+	* information is consistent (whatever the pages think
+	* that is). If there is a page with a non-valid state,
+	* the dialog complains and the dialog is *NOT* closed.
+	*
+	* Returns 0 if all is well.
+	* Returns non-0 if the data is inconsistent and the
+	*	dialog can't be sensibly closed.
+	*/
+	virtual int validateChanges(KConfig&);
 
 	/**
 	* @return The tab name given to the constructor
@@ -174,7 +189,7 @@ public:
 	* A convenience function; returns the stored configuration
 	* number from a config file.
 	*/
-	static int getConfigurationVersion(KConfig *c,
+	static int getConfigurationVersion(KConfig& c,
 		const QString &group=QString::null);
 
 public slots:
@@ -292,6 +307,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.3  2000/07/30 10:01:55  adridg
+// Completed KDE2 layout
+//
 // Revision 1.2  2000/07/24 04:10:00  pilone
 // 	First round of KDE 2.0 changes...almost there..
 //

@@ -32,29 +32,23 @@ TodoSetup::TodoSetup(QWidget *parent)
   : setupDialog(parent,TodoGroup,TodoConduit::version())
 {
 	FUNCTIONSETUP;
-	KConfig *config=KPilotLink::getConfig(TodoGroup);
+	KConfig& config=KPilotLink::getConfig(TodoGroup);
 	addPage(new TodoSetupPage(this,config));
-	/*
-	addPage(new setupInfoPage(this,
-		    TodoConduit::version(),
-		    i18n("By Preston Brown")
-	       ));
-	*/
 	addPage(new setupInfoPage(this));
 	setupDialog::setupWidget();
 }
 
 
-int TodoSetupPage::commitChanges(KConfig *config)
+int TodoSetupPage::commitChanges(KConfig& config)
 {
-	config->writeEntry("CalFile", fCalendarFile->text());
+	config.writeEntry("CalFile", fCalendarFile->text());
 	if (fPromptYesNo->isChecked())
 	{
-		config->writeEntry("FirstTime", "true");
+		config.writeEntry("FirstTime", "true");
 	}
 	else
 	{
-		config->writeEntry("FirstTime", "false");
+		config.writeEntry("FirstTime", "false");
 	}
 
 	return 0;
@@ -70,8 +64,8 @@ void TodoSetupPage::slotBrowse()
   fCalendarFile->setText(fileName);
 }
 
-TodoSetupPage::TodoSetupPage(setupDialog *parent,KConfig *config) :
-	setupDialogPage(i18n("ToDo File"),parent,config)
+TodoSetupPage::TodoSetupPage(setupDialog *parent,KConfig& config) :
+	setupDialogPage(i18n("ToDo File"),parent)
 {
 	FUNCTIONSETUP;
 
@@ -85,7 +79,7 @@ TodoSetupPage::TodoSetupPage(setupDialog *parent,KConfig *config) :
   currentLabel->adjustSize();
   
   fCalendarFile = new QLineEdit(this);
-  fCalendarFile->setText(config->readEntry("CalFile", ""));
+  fCalendarFile->setText(config.readEntry("CalFile", ""));
   fCalendarFile->resize(200, fCalendarFile->height());
 
   fBrowseButton = new QPushButton(i18n("Browse"), this);
@@ -98,7 +92,7 @@ TodoSetupPage::TodoSetupPage(setupDialog *parent,KConfig *config) :
 
   fPromptYesNo = new QCheckBox(i18n("&Prompt before changing data."), this);
   fPromptYesNo->adjustSize();
-  fPromptYesNo->setChecked(config->readBoolEntry("FirstTime", TRUE));
+  fPromptYesNo->setChecked(config.readBoolEntry("FirstTime", TRUE));
 
 	grid->addWidget(fPromptYesNo,1,1);
 }

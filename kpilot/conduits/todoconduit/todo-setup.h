@@ -22,9 +22,9 @@ class TodoSetupPage : public setupDialogPage
 	Q_OBJECT
 
 public:
-	TodoSetupPage(setupDialog *,KConfig *);
+	TodoSetupPage(setupDialog *,KConfig&);
 
-	virtual int commitChanges(KConfig *);
+	virtual int commitChanges(KConfig&);
 
 public slots:
 	void slotBrowse();

@@ -19,11 +19,13 @@ static const char *id="$Id$";
 #include "options.h"
 
 #include <stream.h>
+
 #include <qfileinf.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
 #include <qvbox.h>
 #include <qmultilineedit.h>
+
 #include <kmessagebox.h>
 #include <kconfig.h>
 #include <kapp.h>
@@ -31,19 +33,12 @@ static const char *id="$Id$";
 #include <kfiledialog.h>
 #include <kaboutdata.h>
 #include <kaboutapplication.h>
+#include <kdebug.h>
 
 #include "gsetupDialog.moc"
 #include "kpilotlink.h"
  
-// Handle code differences between the standalone and
-// the kpilot version of this file.
-//
-//
-#ifdef USE_STANDALONE
-#define CONFIG	KGlobal::config()
-#else
 #define CONFIG	KPilotLink::getConfig()
-#endif
 
 
 //---------------------------------------------------
@@ -55,8 +50,7 @@ static const char *id="$Id$";
 //
 setupDialogPage::setupDialogPage(
 	const QString &s,
-	setupDialog *parent,
-	KConfig *c) :
+	setupDialog *parent) :
 	QWidget(parent),
 	fTabName(s)
 {
@@ -65,21 +59,30 @@ setupDialogPage::setupDialogPage(
 	parentSetup=parent;
 }
 
-/* virtual */ int setupDialogPage::commitChanges(KConfig *c)
+/* virtual */ int setupDialogPage::commitChanges(KConfig& c)
 {
 	FUNCTIONSETUP;
+	// Avoid unused-parameter warning
+	(void) c;
 
 	return 0;
 }
 
-/* virtual */ int setupDialogPage::cancelChanges(KConfig *c)
+/* virtual */ int setupDialogPage::cancelChanges(KConfig& c)
 {
 	FUNCTIONSETUP;
+	// Avoid unused-parameter warning
+	(void) c;
 
 	return 0;
 }
 
 
+/* virtual */ int setupDialogPage::validateChanges(KConfig &)
+{
+	// (void) c;
+	return 0;
+}
 
 //---------------------------------------------------
 //
@@ -130,10 +133,9 @@ void setupDialog::commitChanges()
 	QListIterator<setupDialogPage> i(pages);
 	int r;
 
-	KConfig *config=CONFIG;
-	config->setGroup(groupName());
+	KConfig& config=CONFIG;
+	config.setGroup(groupName());
 
-#if 0
 	r=0;
 	for (i.toFirst(); i.current(); ++i)
 	{
@@ -141,8 +143,8 @@ void setupDialog::commitChanges()
 		// set the group back to the dialog's group.
 		//
 		//
-		config->setGroup(groupName()); 
-		r|=i.current()->validateChanges(config);
+		config.setGroup(groupName()); 
+		r |= i.current()->validateChanges(config);
 		if (r)
 		{
 			kdDebug() << ": Tab page "
@@ -155,11 +157,11 @@ void setupDialog::commitChanges()
 	{
 		kdDebug() << ": Validation failed." << endl;
 	}
-#endif
 
+	config.setGroup(groupName()); 
 	if (fConfigVersion)
 	{
-		config->writeEntry("Configured",fConfigVersion);
+		config.writeEntry("Configured",fConfigVersion);
 	}
 
 	for (i.toFirst(); i.current(); ++i)
@@ -168,15 +170,13 @@ void setupDialog::commitChanges()
 		// set the group back to the dialog's group.
 		//
 		//
-		config->setGroup(groupName()); 
+		config.setGroup(groupName()); 
 		i.current()->commitChanges(config);
-		config->sync();
 	}
 
-	config->sync();
+	config.sync();
 	setResult(1);
 
-	delete config;
 
 	if (quitOnClose)
 	{
@@ -190,8 +190,8 @@ void setupDialog::cancelChanges()
 	FUNCTIONSETUP;
 	QListIterator<setupDialogPage> i(pages);
 
-	KConfig *config=CONFIG;
-	config->setGroup(groupName());
+	KConfig& config=CONFIG;
+	config.setGroup(groupName());
 
 	for (i.toFirst(); i.current(); ++i)
 	{
@@ -199,13 +199,12 @@ void setupDialog::cancelChanges()
 		// set the group back to the dialog's group.
 		//
 		//
-		config->setGroup(groupName()); 
+		config.setGroup(groupName()); 
 		i.current()->cancelChanges(config);
 	}
 
 	setResult(0);
 
-	delete config;
 
 	if (quitOnClose)
 	{
@@ -320,15 +319,12 @@ int setupDialog::addPage(setupDialogPage *p)
 	return QueryFileExists;
 }
 
-/* static */ int setupDialog::getConfigurationVersion(KConfig *c,
+/* static */ int setupDialog::getConfigurationVersion(KConfig& c,
 	const QString &g)
 {
-	int r;
+	c.setGroup(g);
 
-	if (c==0L) return 0;
-	c->setGroup(g);
-
-	return c->readNumEntry("Configured",0);
+	return c.readNumEntry("Configured",0);
 }
 
 

@@ -32,9 +32,9 @@ class KPilotOptionsPrivacy : public setupDialogPage
 	Q_OBJECT
 
 public:
-	KPilotOptionsPrivacy(setupDialog *,KConfig *);
+	KPilotOptionsPrivacy(setupDialog *,KConfig&);
 
-	virtual int commitChanges(KConfig *);
+	virtual int commitChanges(KConfig&);
 
 private:
 	QCheckBox *fuseSecret;
@@ -47,10 +47,10 @@ class KPilotOptionsGeneral : public setupDialogPage
 	Q_OBJECT
 
 public:
-	KPilotOptionsGeneral(setupDialog *parent,KConfig*);
+	KPilotOptionsGeneral(setupDialog *parent,KConfig&);
 	virtual ~KPilotOptionsGeneral();
 
-	virtual int commitChanges(KConfig *);
+	virtual int commitChanges(KConfig&);
 
 private:
 	QLineEdit* fPilotDevice;
@@ -76,12 +76,12 @@ class KPilotOptionsAddress : public setupDialogPage
 	Q_OBJECT
 
 public:
-	KPilotOptionsAddress(setupDialog *parent,KConfig*);
+	KPilotOptionsAddress(setupDialog *parent,KConfig&);
 
-	virtual int commitChanges(KConfig *);
+	virtual int commitChanges(KConfig&);
 
 public:
-	static int getDisplayMode(KConfig *c=NULL);
+	static int getDisplayMode(KConfig&);
 
 protected:
 	void setRadio(int);
@@ -110,7 +110,7 @@ class KPilotOptions : public setupDialog
 public:
 	KPilotOptions(QWidget* parent);
 
-	static bool isNewer(KConfig *);
+	static bool isNewer(KConfig&);
 
 private:
 	static int fConfigVersion;

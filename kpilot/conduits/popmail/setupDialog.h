@@ -33,8 +33,8 @@ class PopMailSendPage : public setupDialogPage
 	Q_OBJECT
 
 public:
-	PopMailSendPage(setupDialog *parent,KConfig *);
-	virtual int commitChanges(KConfig *);
+	PopMailSendPage(setupDialog *parent,KConfig& );
+	virtual int commitChanges(KConfig& );
 
 public slots:
 	/**
@@ -78,8 +78,8 @@ class PopMailReceivePage : public setupDialogPage
 	Q_OBJECT
 
 public:
-	PopMailReceivePage(setupDialog *,KConfig *);
-	virtual int commitChanges(KConfig *);
+	PopMailReceivePage(setupDialog *,KConfig& );
+	virtual int commitChanges(KConfig& );
 
 public slots:
 	void browseMailbox();

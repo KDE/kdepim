@@ -25,8 +25,8 @@
 #include "vcal-setup.moc"
 #include "kpilot.h"
 
-VCalSetupPage::VCalSetupPage(setupDialog *parent,KConfig *config) :
-	setupDialogPage(i18n("Calendar"),parent,config)
+VCalSetupPage::VCalSetupPage(setupDialog *parent,KConfig& config) :
+	setupDialogPage(i18n("Calendar"),parent)
 {
 	FUNCTIONSETUP;
 
@@ -40,7 +40,7 @@ VCalSetupPage::VCalSetupPage(setupDialog *parent,KConfig *config) :
 			    this);
 
 	fCalendarFile = new QLineEdit(this);
-	fCalendarFile->setText(config->readEntry("CalFile", ""));
+	fCalendarFile->setText(config.readEntry("CalFile", ""));
 	fCalendarFile->resize(200, fCalendarFile->height());
 
 	fBrowseButton = new QPushButton(i18n("Browse"), this);
@@ -55,23 +55,23 @@ VCalSetupPage::VCalSetupPage(setupDialog *parent,KConfig *config) :
 	fPromptYesNo = new QCheckBox(i18n("&Prompt before changing data."), 
 		this);
 	fPromptYesNo->adjustSize();
-	fPromptYesNo->setChecked(config->readBoolEntry("FirstTime", TRUE));
+	fPromptYesNo->setChecked(config.readBoolEntry("FirstTime", TRUE));
 
 	grid->addWidget(fPromptYesNo,1,1);
 }
 
-int VCalSetupPage::commitChanges(KConfig *config)
+int VCalSetupPage::commitChanges(KConfig& config)
 {
 	FUNCTIONSETUP;
 
-	config->writeEntry("CalFile", fCalendarFile->text());
+	config.writeEntry("CalFile", fCalendarFile->text());
 	if (fPromptYesNo->isChecked())
 	{
-		config->writeEntry("FirstTime", "true");
+		config.writeEntry("FirstTime", "true");
 	}
 	else
 	{
-		config->writeEntry("FirstTime", "false");
+		config.writeEntry("FirstTime", "false");
 	}
 
 	return 0;
@@ -96,12 +96,9 @@ VCalSetup::VCalSetup(QWidget *parent) :
 	setupDialog(parent,VCalGroup,VCalConduit::version())
 {
 	FUNCTIONSETUP;
-	KConfig *config=KPilotLink::getConfig(VCalGroup);
+	KConfig& config=KPilotLink::getConfig(VCalGroup);
 	addPage(new VCalSetupPage(this,config));
-	addPage(new setupInfoPage(this /*,
-		VCalConduit::version(),
-		i18n("By D. Pilone, P. Brown & H.J. Steehouwer") */
-		));
+	addPage(new setupInfoPage(this));
 
 	setupDialog::setupWidget();
 }

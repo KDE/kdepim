@@ -193,7 +193,7 @@ public:
 	* Callers should delete this object when no longer needed.
 	*/
 #ifdef KDE2
-	static KConfig *getConfig(const QString &group=QString::null);
+	static KConfig& getConfig(const QString &group=QString::null);
 #else
 	static KConfig *getConfig(const QString &group=QString());
 #endif
@@ -201,6 +201,7 @@ public:
 	* Reads the configuration version from a standard location.
 	*/
 	static int getConfigVersion(KConfig *);
+	static int getConfigVersion(KConfig&);
 
 private:
 	/**

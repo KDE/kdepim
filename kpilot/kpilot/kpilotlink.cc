@@ -105,14 +105,21 @@ const int CStatusMessages::LOG_MESSAGE = 17;
 // (increase) this number.
 //
 //
-/* static */ const int KPilotLink::ConfigurationVersion = 320;
+/* static */ const int KPilotLink::ConfigurationVersion = 400;
 
 int KPilotLink::getConfigVersion(KConfig *config)
 {
+
+	if (!config)	return 0;
+	else		return getConfigVersion(*config);
+}
+
+int KPilotLink::getConfigVersion(KConfig& config)
+{
 	FUNCTIONSETUP;
 
-	config->setGroup(QString::null);
-	int version=config->readNumEntry("Configured",0);
+	config.setGroup(QString::null);
+	int version=config.readNumEntry("Configured",0);
 	if (version<ConfigurationVersion)
 	{
 		kdDebug() << fname << ": Config file has old version "
@@ -141,10 +148,9 @@ void KPilotLink::readConfig()
 	// the last synced users data.
 	//
 	//
-	KConfig* config = getConfig();
-	int version = getConfigVersion(config);
-	getPilotUser().setUserName(config->readEntry("UserName").latin1());
-	delete config;
+	KConfig& config = getConfig();
+	// int version = getConfigVersion(config);
+	getPilotUser().setUserName(config.readEntry("UserName").latin1());
 }
 
 KPilotLink::KPilotLink()
@@ -512,7 +518,7 @@ KPilotLink::registeredConduit(const QString &dbName)
 {
 	FUNCTIONSETUP;
 
-	KConfig* config = getConfig("Database Names");
+	KConfig& config = getConfig("Database Names");
 
 	if (debug_level & SYNC_MINOR)
 	{
@@ -520,7 +526,7 @@ KPilotLink::registeredConduit(const QString &dbName)
 			<< dbName << endl;
 	}
 
-	QString result = config->readEntry(dbName);
+	QString result = config.readEntry(dbName);
 	if (result.isNull())
 	{
 		if (debug_level & SYNC_MINOR)
@@ -528,13 +534,11 @@ KPilotLink::registeredConduit(const QString &dbName)
 			kdDebug() << fname << ": Not found." << endl;
 		}
 
-		delete config;
 		return result;
 	}
 
-	config->setGroup("Conduit Names");
-	QStringList installed = config->readListEntry("InstalledConduits");
-	delete config;
+	config.setGroup("Conduit Names");
+	QStringList installed = config.readListEntry("InstalledConduits");
 
 	if (debug_level & SYNC_TEDIOUS)
 	{
@@ -1225,10 +1229,9 @@ KPilotLink::syncNextDB()
 
   // Confine config reads to a local block
   {
-    KConfig* c = getConfig();
-    skip=c->readEntry("SkipSync");
-    backupOnly=c->readEntry("BackupForSync");
-    delete c;
+    KConfig& c = getConfig();
+    skip=c.readEntry("SkipSync");
+    backupOnly=c.readEntry("BackupForSync");
   }
 
   if (debug_level & SYNC_TEDIOUS)
@@ -1403,11 +1406,10 @@ KPilotLink::syncDatabase(DBInfo* database)
   // Move this functionality into mode ...
   //
   //
-  KConfig* config = getConfig();
-  config->setGroup(QString());
+  KConfig& config = getConfig();
+  config.setGroup(QString());
   // If local changes should modify pilot changes, switch the order.
-  int localOverride = config->readNumEntry("OverwriteRemote");
-  delete config;
+  int localOverride = config.readNumEntry("OverwriteRemote");
 
   if(localOverride)
     {
@@ -1462,16 +1464,14 @@ void KPilotLink::endHotSync()
 
 void KPilotLink::checkPilotUser()
 {
-  KConfig* config = getConfig();
-  config->setGroup(QString());
-  if (config->readBoolEntry("AlwaysTrustPilotUser"))
+  KConfig& config = getConfig();
+  if (config.readBoolEntry("AlwaysTrustPilotUser"))
     {
-      delete config;
       return;
     }
 
   QString guiUserName;
-  guiUserName = config->readEntry("UserName");
+  guiUserName = config.readEntry("UserName");
   
   if (guiUserName != getPilotUser().getUserName())
     {
@@ -1488,22 +1488,28 @@ void KPilotLink::checkPilotUser()
 				    message,
 				    i18n("Pilot User Changed"))==KMessageBox::Yes)
 	{
-	  config->writeEntry("UserName", getPilotUser().getUserName());
+	  config.writeEntry("UserName", getPilotUser().getUserName());
 	}
       else
 	{
 	  // The gui was right.
 	  getPilotUser().setUserName(guiUserName.latin1());
-	  cout << "Pilot User set to " << getPilotUser().getUserName() << endl;
+	  kdDebug() << "Pilot User set to " << getPilotUser().getUserName() << endl;
 	}
     }
-  delete config;
 }
 
 
-KConfig *KPilotLink::getConfig(const QString &s)
+static KConfig* theconfig = 0L;
+KConfig& KPilotLink::getConfig(const QString &s)
 {
 	FUNCTIONSETUP;
+
+	if (theconfig)
+	{
+		theconfig->setGroup(s);
+		return *theconfig;
+	}
 
 	/**
 	* This causes a crash if no instance has been created
@@ -1514,7 +1520,6 @@ KConfig *KPilotLink::getConfig(const QString &s)
 	QString existingConfig=
 		KGlobal::dirs()->findResource("config", "kpilotrc");
 
-	KConfig* config = 0L;
 	
 	if (existingConfig.isNull())
 	{
@@ -1524,22 +1529,21 @@ KConfig *KPilotLink::getConfig(const QString &s)
 				<< ": Making a new config file"
 				<< endl;
 		}
-		config=new KConfig("kpilotrc",false,false);
+		theconfig=new KConfig("kpilotrc",false,false);
 	}
 	else
 	{
-		config=new KConfig(existingConfig);
+		theconfig=new KConfig(existingConfig,false,false);
 	}
 
-	if (config == 0L)
+	if (theconfig == 0L)
 	{
 		kdDebug() << fname << ": No configuration was found."
 			<< endl;
-		return config;
 	}
 
-	config->setGroup(s);
-	return config;
+	theconfig->setGroup(s);
+	return *theconfig;
 }
 
 PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)

@@ -26,9 +26,9 @@ class VCalSetupPage : public setupDialogPage
 	Q_OBJECT
 
 public:
-	VCalSetupPage(setupDialog *,KConfig *);
+	VCalSetupPage(setupDialog *,KConfig&);
 
-	virtual int commitChanges(KConfig *);
+	virtual int commitChanges(KConfig&);
 
 public slots:
 	void slotBrowse();

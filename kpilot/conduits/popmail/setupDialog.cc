@@ -39,8 +39,8 @@ static const char *id=
 #include "setupDialog.moc"
 #include "kpilot.h"
 
-PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig *config) :
-	setupDialogPage(i18n("Sending Mail"),parent,config)
+PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig& config) :
+	setupDialogPage(i18n("Sending Mail"),parent)
 {
 	FUNCTIONSETUP;
 	QGridLayout *grid=new QGridLayout(this,6,3,SPACING);
@@ -73,7 +73,7 @@ PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig *config) :
 			    this);
 
 	fEmailFrom = new QLineEdit(this);
-	fEmailFrom->setText(config->readEntry("EmailAddress", "$USER"));
+	fEmailFrom->setText(config.readEntry("EmailAddress", "$USER"));
 	fEmailFrom->resize(200, fEmailFrom->height());
 
 	grid->addWidget(currentLabel,1,0);
@@ -84,7 +84,7 @@ PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig *config) :
 	currentLabel->adjustSize();
 
 	fSignature = new QLineEdit(this);
-	fSignature->setText(config->readEntry("Signature", ""));
+	fSignature->setText(config.readEntry("Signature", ""));
 	fSignature->resize(200, fSignature->height());
 	
 	fSignatureBrowse=new QPushButton(i18n("Browse"),this);
@@ -101,7 +101,7 @@ PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig *config) :
 	currentLabel->adjustSize();
 	
 	fSendmailCmd = new QLineEdit(this);
-	fSendmailCmd->setText(config->readEntry("SendmailCmd", 
+	fSendmailCmd->setText(config.readEntry("SendmailCmd", 
 		"/usr/lib/sendmail -t -i"));
 	fSendmailCmd->resize(300, fSendmailCmd->height());
 
@@ -112,7 +112,7 @@ PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig *config) :
 	currentLabel->adjustSize();
 	
 	fSMTPServer = new QLineEdit(this);
-	fSMTPServer->setText(config->readEntry("SMTPServer", "mail"));
+	fSMTPServer->setText(config.readEntry("SMTPServer", "mail"));
 	fSMTPServer->resize(200, fSendmailCmd->height());
 
 	grid->addWidget(currentLabel,6,0);
@@ -122,17 +122,17 @@ PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig *config) :
 	currentLabel->adjustSize();
 	
 	fSMTPPort = new QLineEdit(this);
-	fSMTPPort->setText(config->readEntry("SMTPPort", "25"));
+	fSMTPPort->setText(config.readEntry("SMTPPort", "25"));
 	fSMTPPort->resize(200, fSendmailCmd->height());
 
 	grid->addWidget(currentLabel,7,0);
 	grid->addWidget(fSMTPPort,7,1);
 
-	setMode(PopMailConduit::SendMode(config->readNumEntry("SyncOutgoing",
+	setMode(PopMailConduit::SendMode(config.readNumEntry("SyncOutgoing",
 		PopMailConduit::SEND_NONE)));
 }
 
-/* virtual */ int PopMailSendPage::commitChanges(KConfig *config)
+/* virtual */ int PopMailSendPage::commitChanges(KConfig& config)
 {
 	FUNCTIONSETUP;
 
@@ -140,17 +140,17 @@ PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig *config) :
 	if (parentSetup->queryFile(i18n("Signature File %1 is missing."),
 		fSignature->text())!=KMessageBox::No)
 	{
-		config->writeEntry("Signature", fSignature->text());
+		config.writeEntry("Signature", fSignature->text());
 	}
 
-	config->writeEntry("EmailAddress", fEmailFrom->text());
+	config.writeEntry("EmailAddress", fEmailFrom->text());
 
 
-	config->writeEntry("SendmailCmd", fSendmailCmd->text());
-	config->writeEntry("SMTPServer", fSMTPServer->text());
-	config->writeEntry("SMTPPort", fSMTPPort->text());
+	config.writeEntry("SendmailCmd", fSendmailCmd->text());
+	config.writeEntry("SMTPServer", fSMTPServer->text());
+	config.writeEntry("SMTPPort", fSMTPPort->text());
 
-	config->writeEntry("SyncOutgoing", (int)getMode());
+	config.writeEntry("SyncOutgoing", (int)getMode());
 
 	return 0;
 }
@@ -238,8 +238,8 @@ void PopMailSendPage::browseSignature()
 
 
 PopMailReceivePage::PopMailReceivePage(setupDialog *parent,
-	KConfig *config) :
-	setupDialogPage(i18n("Receiving Mail"),parent,config)
+	KConfig& config) :
+	setupDialogPage(i18n("Receiving Mail"),parent)
 {
 	FUNCTIONSETUP;
 	QLabel *currentLabel;
@@ -289,7 +289,7 @@ PopMailReceivePage::PopMailReceivePage(setupDialog *parent,
 		defaultMailbox=QString("/var/spool/mail/")+QString(u);
 	}
 	fMailbox=new QLineEdit(this);
-	fMailbox->setText(config->readEntry("UNIX Mailbox",defaultMailbox));
+	fMailbox->setText(config.readEntry("UNIX Mailbox",defaultMailbox));
 	fMailbox->resize(200,fMailbox->height());
 	}
 	fMailboxBrowse=new QPushButton(i18n("Browse"),this);
@@ -311,7 +311,7 @@ PopMailReceivePage::PopMailReceivePage(setupDialog *parent,
 	currentLabel->adjustSize();
 	
 	fPopServer = new QLineEdit(this);
-	fPopServer->setText(config->readEntry("PopServer", "pop"));
+	fPopServer->setText(config.readEntry("PopServer", "pop"));
 	fPopServer->resize(200, fPopServer->height());
 	
 	grid->addWidget(currentLabel,3,0);
@@ -321,7 +321,7 @@ PopMailReceivePage::PopMailReceivePage(setupDialog *parent,
 	currentLabel->adjustSize();
 	
 	fPopPort = new QLineEdit(this);
-	fPopPort->setText(config->readEntry("PopPort", "110"));
+	fPopPort->setText(config.readEntry("PopPort", "110"));
 	fPopPort->resize(200, fPopPort->height());
 	
 	grid->addWidget(currentLabel,4,0);
@@ -331,7 +331,7 @@ PopMailReceivePage::PopMailReceivePage(setupDialog *parent,
 	currentLabel->adjustSize();
 	
 	fPopUser = new QLineEdit(this);
-	fPopUser->setText(config->readEntry("PopUser", "$USER"));
+	fPopUser->setText(config.readEntry("PopUser", "$USER"));
 	fPopUser->resize(200, fPopUser->height());
 	
 	grid->addWidget(currentLabel,5,0);
@@ -339,7 +339,7 @@ PopMailReceivePage::PopMailReceivePage(setupDialog *parent,
 
 	fLeaveMail = new QCheckBox(i18n("&Leave mail on server."), this);
 	fLeaveMail->adjustSize();
-	fLeaveMail->setChecked(config->readNumEntry("LeaveMail", 1));
+	fLeaveMail->setChecked(config.readNumEntry("LeaveMail", 1));
 	
 	grid->addWidget(fLeaveMail,6,1);
 
@@ -348,10 +348,10 @@ PopMailReceivePage::PopMailReceivePage(setupDialog *parent,
 	
 	fPopPass = new QLineEdit(this);
 	fPopPass->setEchoMode(QLineEdit::Password);
-	fPopPass->setText(config->readEntry("PopPass", ""));
+	fPopPass->setText(config.readEntry("PopPass", ""));
 	fPopPass->resize(200, fPopPass->height());
 	
-	fPopPass->setEnabled(config->readNumEntry("StorePass", 0));
+	fPopPass->setEnabled(config.readNumEntry("StorePass", 0));
 
 	grid->addWidget(currentLabel,7,0);
 	grid->addWidget(fPopPass,7,1);
@@ -360,27 +360,27 @@ PopMailReceivePage::PopMailReceivePage(setupDialog *parent,
 	fStorePass = new QCheckBox(i18n("Save &Pop password."), this);
 	connect(fStorePass, SIGNAL(clicked()), this, SLOT(togglePopPass()));
 	fStorePass->adjustSize();
-	fStorePass->setChecked(config->readNumEntry("StorePass", 0));
+	fStorePass->setChecked(config.readNumEntry("StorePass", 0));
 	togglePopPass();
 	
 	grid->addWidget(fStorePass,8,1);
 
 	setMode(PopMailConduit::RetrievalMode(
-		config->readNumEntry("SyncIncoming",
+		config.readNumEntry("SyncIncoming",
 			PopMailConduit::RECV_NONE)));
 }
 
-/* virtual */ int PopMailReceivePage::commitChanges(KConfig *config)
+/* virtual */ int PopMailReceivePage::commitChanges(KConfig& config)
 {
 	FUNCTIONSETUP;
-	config->writeEntry("UNIX Mailbox", fMailbox->text());
+	config.writeEntry("UNIX Mailbox", fMailbox->text());
 
-	config->writeEntry("PopServer", fPopServer->text().latin1());
-	config->writeEntry("PopPort", atoi(fPopPort->text().latin1()));
-	config->writeEntry("PopUser", fPopUser->text().latin1());
-	config->writeEntry("LeaveMail", (int)fLeaveMail->isChecked());
-	config->writeEntry("StorePass", (int)fStorePass->isChecked());
-	config->sync(); 
+	config.writeEntry("PopServer", fPopServer->text().latin1());
+	config.writeEntry("PopPort", atoi(fPopPort->text().latin1()));
+	config.writeEntry("PopUser", fPopUser->text().latin1());
+	config.writeEntry("LeaveMail", (int)fLeaveMail->isChecked());
+	config.writeEntry("StorePass", (int)fStorePass->isChecked());
+	config.sync(); 
 	//
 	// Make sure permissions are safe (still not a good idea)
 	//
@@ -388,15 +388,15 @@ PopMailReceivePage::PopMailReceivePage(setupDialog *parent,
 	{
 		chmod(KGlobal::dirs()->findResource("config", "kpilotrc")
 			.latin1(), 0600);
-		config->writeEntry("PopPass", fPopPass->text().latin1());
+		config.writeEntry("PopPass", fPopPass->text().latin1());
 	}
 	else
 	{
-		config->writeEntry("PopPass",QString::null);
+		config.writeEntry("PopPass",QString::null);
 	}
 
-	config->writeEntry("SyncIncoming", (int)getMode());
-	config->sync();
+	config.writeEntry("SyncIncoming", (int)getMode());
+	config.sync();
 
 	return 0;
 }
@@ -532,8 +532,8 @@ PopMailOptions::setupWidget()
 {
 	FUNCTIONSETUP;
 
-	KConfig* config = KPilotLink::getConfig();
-	config->setGroup(PopGroup);
+	KConfig& config = KPilotLink::getConfig();
+	config.setGroup(PopGroup);
 
 
 	addPage(new PopMailSendPage(this,config));

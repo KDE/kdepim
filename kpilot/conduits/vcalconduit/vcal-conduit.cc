@@ -107,17 +107,11 @@ void VCalConduit::getCalendar()
 			<< endl;
 	}
 
-	kdDebug() << fname << ": Mode = "
-		<< getMode() 
-		<< " (Sync=" << (int) BaseConduit::HotSync << ")"
-		<< " (Backup=" << (int) BaseConduit::Backup << ")"
-		<< endl;
-
 	if ((getMode() == BaseConduit::HotSync) || 
 		(getMode() == BaseConduit::Backup)) 
 	{
-		char *s=calName.ascii();
-		fCalendar = Parse_MIME_FromFileName(s);
+		const char *s=calName.ascii();
+		fCalendar = Parse_MIME_FromFileName((char *)s);
 
 		if (debug_level & SYNC_MINOR)
 		{
@@ -563,7 +557,11 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   vo = isAPropertyOf(vevent, KPilotStatusProp);
   // TURN OFF MODIFIED
   if (vo) {
-    int voStatus = atol(fakeCString(vObjectUStringZValue(vo)));
+    // This variable is unused and Cornelius suspects it's
+    // totally useless (ie. no side effects in fakeCString).
+    //
+    //
+    // int voStatus = atol(fakeCString(vObjectUStringZValue(vo)));
     setVObjectUStringZValue_(vo, fakeUnicode("0", 0));
   } else
   {
