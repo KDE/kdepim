@@ -1,9 +1,0 @@
-Test backend(s) for kab2.
-
-A 'backend' is used to do the actual data storage and retrieval. This may
-involve something as simple as reading/writing text files, or storing KConfig
-entries, using a GDBM database, or even talking to an LDAP server.
-
-See the README in each subdir for notes on each implementation.
-
-Comments, questions etc. should be directed to Rik <rik@kde.org>
