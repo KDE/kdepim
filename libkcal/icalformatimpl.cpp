@@ -338,6 +338,7 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
     icalproperty_add_parameter(p,icalparameter_new_cn(attendee->name().local8Bit()));
   }
 
+
   icalproperty_add_parameter(p,icalparameter_new_rsvp(
           attendee->RSVP() ? ICAL_RSVP_TRUE : ICAL_RSVP_FALSE ));
 
@@ -385,6 +386,12 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
       break;
   }
   icalproperty_add_parameter(p,icalparameter_new_role(role));
+
+  if (!attendee->uid().isEmpty()) {
+  icalparameter* icalparameter_uid = icalparameter_new_x(attendee->uid());
+  icalparameter_set_xname(icalparameter_uid,"X-UID");
+  icalproperty_add_parameter(p,icalparameter_uid);
+  }
 
   return p;
 }
@@ -911,6 +918,7 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
   QString email = QString::fromLocal8Bit(icalproperty_get_attendee(attendee));
 
   QString name;
+  QString uid = QString::null;
   p = icalproperty_get_first_parameter(attendee,ICAL_CN_PARAMETER);
   if (p) {
     name = QString::fromLocal8Bit(icalparameter_get_cn(p));
@@ -975,7 +983,19 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
     }
   }
 
-  return new Attendee( name, email, rsvp, status, role );
+  p = icalproperty_get_first_parameter(attendee,ICAL_X_PARAMETER);
+  uid = icalparameter_get_xvalue(p);
+  // This should be added, but there seems to be a libical bug here.
+  /*while (p) {
+   // if (icalparameter_get_xname(p) == "X-UID") {
+    uid = icalparameter_get_xvalue(p);
+    p = icalproperty_get_next_parameter(attendee,ICAL_X_PARAMETER);
+  } */
+
+
+
+
+  return new Attendee( name, email, rsvp, status, role, uid );
 }
 
 void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)

@@ -30,13 +30,14 @@
 using namespace KCal;
 
 Attendee::Attendee(const QString &name, const QString &email, bool _rsvp, Attendee::PartStat s,
-                   Attendee::Role r) :
+                   Attendee::Role r,const QString &u) :
   Person(name,email)
 {
   mFlag = TRUE;
   mRSVP = _rsvp;
   mStatus = s;
   mRole = r;
+  mUid = u;
 }
 
 #if 0
@@ -125,6 +126,16 @@ Attendee::Role Attendee::role() const
 QString Attendee::roleStr() const
 {
   return roleName(mRole);
+}
+
+void Attendee::setUid(QString uid)
+{
+mUid = uid;
+}
+
+QString Attendee::uid()
+{
+return mUid;
 }
 
 QString Attendee::roleName( Attendee::Role r )

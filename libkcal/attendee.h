@@ -51,7 +51,7 @@ class Attendee : public Person
     */
     Attendee(const QString& name, const QString &email,
              bool rsvp=false, PartStat status=NeedsAction,
-             Role role=ReqParticipant);
+             Role role=ReqParticipant,const QString& u=QString::null);
 //    Attendee(const Attendee &);
     /** Destruct Attendee */
     virtual ~Attendee();
@@ -64,6 +64,10 @@ class Attendee : public Person
     QString roleStr() const;
     static QString roleName( Role );
     static QStringList roleList();
+
+    /** Holds the uid of the attendee, if applicable **/
+    QString uid();
+    void setUid (QString);
 
     /** Set status. See enum for definitions of possible values */
     void setStatus(PartStat s);
@@ -83,6 +87,7 @@ class Attendee : public Person
     bool mRSVP;
     Role mRole;
     PartStat mStatus;
+    QString mUid;
 
     // used to tell whether we have need to mail this person or not.
     bool mFlag;
