@@ -117,7 +117,7 @@ private:
 	* in memory --- not the list on the screen.
 	* @see fAddressList
 	*/
-	int getAllAddresses(PilotDatabase *addressDB,KConfig& );
+	int getAllAddresses(PilotDatabase *addressDB);
 	char *createTitle(PilotAddress *,int displayMode);
 
 	/**
@@ -153,6 +153,9 @@ public:
 
 
 // $Log$
+// Revision 1.17  2001/09/06 22:33:43  adridg
+// Cruft cleanup
+//
 // Revision 1.16  2001/08/27 22:51:41  adridg
 // MartinJ's beautification of the address viewer
 //

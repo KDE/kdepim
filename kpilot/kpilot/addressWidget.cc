@@ -88,9 +88,6 @@ static const char *addresswidget_id="$Id$";
 #ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
 #endif
-#ifndef _KPILOT_KPILOTOPTIONS_H
-#include "kpilotOptions.h"
-#endif
 #ifndef _KPILOT_LISTITEMS_H
 #include "listItems.h"
 #endif
@@ -128,18 +125,14 @@ AddressWidget::~AddressWidget()
     	FUNCTIONSETUP;
 }
 
-int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig& config)
+int AddressWidget::getAllAddresses(PilotDatabase *addressDB)
 {
 	FUNCTIONSETUP;
 
 	int currentRecord = 0;
 	PilotRecord* pilotRec;
 	PilotAddress* address;
-	bool showSecrets=0;
-
-	config.setGroup(QString::null);
-	showSecrets = (bool) config.readNumEntry("ShowSecrets");
-
+	bool showSecrets= KPilotConfig::getConfig().getShowSecrets();
 
 
 	DEBUGKPILOT << fname 
@@ -182,8 +175,6 @@ AddressWidget::initialize()
 	unsigned char buffer[BUFFERSIZE];
 	int appLen;
 
-	KConfig& config = KPilotConfig::getConfig();
-
 	fAddressList.clear();
 
 	if(addressDB->isDBOpen())
@@ -192,7 +183,7 @@ AddressWidget::initialize()
 		unpack_AddressAppInfo(&fAddressAppInfo, buffer, appLen);
 
 		populateCategories(fCatList,&fAddressAppInfo.category);
-		getAllAddresses(addressDB,config);
+		getAllAddresses(addressDB);
 
 	}
 	else
@@ -303,8 +294,10 @@ AddressWidget::updateWidget()
 {
 	FUNCTIONSETUP;
 
-	int addressDisplayMode = KPilotOptionsAddress::getDisplayMode(
-		KPilotConfig::getConfig());
+	int addressDisplayMode = KPilotConfig::getConfig()
+		.setAddressGroup()
+		.getAddressDisplayMode();
+
 	int listIndex = 0;
 
 #ifdef DEBUG
@@ -1008,6 +1001,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.37  2001/09/06 22:33:43  adridg
+// Cruft cleanup
+//
 // Revision 1.36  2001/08/27 22:51:41  adridg
 // MartinJ's beautification of the address viewer
 //

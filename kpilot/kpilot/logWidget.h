@@ -51,6 +51,7 @@ public:
 public slots:
 	void addMessage(const QString &);
 	void addError(const QString &);
+	void syncDone();
 
 private:
 	QTextView *fLog;

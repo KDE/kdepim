@@ -135,9 +135,7 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 	// ShowSecrets tells us to also list memos with an attribute of "Secret"
 	// or "Private"
 	//
-	KConfig& config = KPilotConfig::getConfig();
-	bool showSecrets=false;
-	showSecrets = config.readBoolEntry("ShowSecrets");
+	bool showSecrets=KPilotConfig::getConfig().getShowSecrets();
 
 	fMemoList.clear();
 
@@ -566,6 +564,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.36  2001/09/06 22:33:43  adridg
+// Cruft cleanup
+//
 // Revision 1.35  2001/08/19 19:12:55  adridg
 // Fixed up some kdWarnings that were generated because connect() was called too soon
 //

@@ -55,6 +55,7 @@ LogWidget::LogWidget(QWidget *parent) :
 		"during the current HotSync"));
 	grid->addWidget(fLog,1,1);
 
+	fLog->setText(i18n("<qt><B>HotSync Log</B></qt>"));
 	(void) logw_id;
 }
 
@@ -90,6 +91,11 @@ void LogWidget::addError(const QString &s)
 	t.append("</B></qt>");
 
 	fLog->append(s);
+}
+
+void LogWidget::syncDone()
+{
+	addMessage(i18n("<b>HotSync Finished!</b>"));
 }
 
 void LogWidget::initialize()
