@@ -50,13 +50,15 @@ namespace Kleo {
     void setKey( const GpgME::Key & key );
     const GpgME::Key & key() const { return mKey; }
 
-    enum { RTTI = 86172450 };
+    enum { RTTI_MASK = 0xFFFFFFF0, RTTI = 0x2C1362E0 };
 
     //
     // only boring stuff below:
     //
     /*! \reimp for covariant return */
     KeyListView * listView() const;
+    /*! \reimp for covariant return */
+    KeyListViewItem * nextSibling() const;
     /*! \reimp */
     QString text( int col ) const;
     /*! \reimp */
@@ -72,6 +74,91 @@ namespace Kleo {
     GpgME::Key mKey;
   };
 
+  class SubkeyKeyListViewItem : public KeyListViewItem {
+  public:
+    SubkeyKeyListViewItem( KeyListView * parent, const GpgME::Subkey & subkey );
+    SubkeyKeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::Subkey & subkey );
+    SubkeyKeyListViewItem( KeyListViewItem * parent, const GpgME::Subkey & subkey );
+    SubkeyKeyListViewItem( KeyListViewItem * parent, KeyListViewItem * after, const GpgME::Subkey & subkey );
+
+    void setSubkey( const GpgME::Subkey & subkey );
+    const GpgME::Subkey & subkey() const { return mSubkey; }
+
+    enum { RTTI = KeyListViewItem::RTTI + 1 };
+
+    //
+    // only boring stuff below:
+    //
+    /*! \reimp */
+    QString text( int col ) const;
+    /*! \reimp */
+    const QPixmap * pixmap( int col ) const;
+    /*! \reimp */
+    int compare( QListViewItem * other, int col, bool ascending ) const;
+    /*! \reimp */
+    int rtti() const { return RTTI; }
+
+  private:
+    GpgME::Subkey mSubkey;
+  };
+
+  class UserIDKeyListViewItem : public KeyListViewItem {
+  public:
+    UserIDKeyListViewItem( KeyListView * parent, const GpgME::UserID & userid );
+    UserIDKeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::UserID & userid );
+    UserIDKeyListViewItem( KeyListViewItem * parent, const GpgME::UserID & userid );
+    UserIDKeyListViewItem( KeyListViewItem * parent, KeyListViewItem * after, const GpgME::UserID & userid );
+
+    void setUserID( const GpgME::UserID & userid );
+    const GpgME::UserID userID() const { return mUserID; }
+
+    enum { RTTI = KeyListViewItem::RTTI + 2 };
+
+    //
+    // only boring stuff below:
+    //
+    /*! \reimp */
+    QString text( int col ) const;
+    /*! \reimp */
+    const QPixmap * pixmap( int col ) const;
+    /*! \reimp */
+    int compare( QListViewItem * other, int col, bool ascending ) const;
+    /*! \reimp */
+    int rtti() const { return RTTI; }
+
+  private:
+    GpgME::UserID mUserID;
+  };
+
+  class SignatureKeyListViewItem : public KeyListViewItem {
+  public:
+    SignatureKeyListViewItem( KeyListView * parent, const GpgME::UserID::Signature & sig );
+    SignatureKeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::UserID::Signature & sig );
+    SignatureKeyListViewItem( KeyListViewItem * parent, const GpgME::UserID::Signature & sig );
+    SignatureKeyListViewItem( KeyListViewItem * parent, KeyListViewItem * after, const GpgME::UserID::Signature & sig );
+
+    void setSignature( const GpgME::UserID::Signature & sig );
+    const GpgME::UserID::Signature & signature() const { return mSignature; }
+
+    enum { RTTI = KeyListViewItem::RTTI + 3 };
+
+    //
+    // only boring stuff below:
+    //
+    /*! \reimp */
+    QString text( int col ) const;
+    /*! \reimp */
+    const QPixmap * pixmap( int col ) const;
+    /*! \reimp */
+    int compare( QListViewItem * other, int col, bool ascending ) const;
+    /*! \reimp */
+    int rtti() const { return RTTI; }
+
+  private:
+    GpgME::UserID::Signature mSignature;
+  };
+
+
   class KeyListView : public KListView {
     Q_OBJECT
   public:
@@ -85,23 +172,31 @@ namespace Kleo {
   signals:
     void doubleClicked( Kleo::KeyListViewItem*, const QPoint&, int );
     void returnPressed( Kleo::KeyListViewItem* );
+    void selectionChanged( Kleo::KeyListViewItem* );
+    void contextMenuRequested( Kleo::KeyListViewItem*, const QPoint&, int );
 
   public slots:
-    void slotAddKey( const GpgME::Key & key );
-
-  private slots:
-    void slotEmitDoubleClicked( QListViewItem*, const QPoint&, int );
-    void slotEmitReturnPressed( QListViewItem* );
+    virtual void slotAddKey( const GpgME::Key & key );
 
     //
     // Only boring stuff below:
     //
+  private slots:
+    void slotEmitDoubleClicked( QListViewItem*, const QPoint&, int );
+    void slotEmitReturnPressed( QListViewItem* );
+    void slotEmitSelectionChanged( QListViewItem* );
+    void slotEmitContextMenuRequested( QListViewItem*, const QPoint&, int );
+
   public:
     /*! \reimp for covariant return */
     KeyListViewItem * selectedItem() const;
+    /*! \reimp for covariant return */
+    KeyListViewItem * firstChild() const;
 
   private:
     const ColumnStrategy * mColumnStrategy;
+    class Private;
+    Private * d;
   };
 
   class KeyListView::ColumnStrategy {
@@ -113,6 +208,18 @@ namespace Kleo {
     virtual QString text( const GpgME::Key & key, int column ) const = 0;
     virtual const QPixmap * pixmap( const GpgME::Key &, int ) const { return 0; }
     virtual int compare( const GpgME::Key & key1, const GpgME::Key & key2, const int column ) const;
+
+    virtual QString subkeyText( const GpgME::Subkey &, int ) const { return QString::null; }
+    virtual const QPixmap * subkeyPixmap( const GpgME::Subkey &, int ) const { return 0; }
+    virtual int subkeyCompare( const GpgME::Subkey & subkey1, const GpgME::Subkey & subkey2, const int column ) const;
+
+    virtual QString userIDText( const GpgME::UserID &, int ) const { return QString::null; }
+    virtual const QPixmap * userIDPixmap( const GpgME::UserID &, int ) const { return 0; }
+    virtual int userIDCompare( const GpgME::UserID & userID1, const GpgME::UserID & userID2, const int column ) const;
+
+    virtual QString signatureText( const GpgME::UserID::Signature &, int ) const { return QString::null; }
+    virtual const QPixmap * signaturePixmap( const GpgME::UserID::Signature &, int ) const { return 0; }
+    virtual int signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, const int column ) const;
   };
 
 }
