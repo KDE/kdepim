@@ -90,12 +90,12 @@ EmailParam::_parse()
 
 	for (; it.current(); ++it) {
 	
-		if (stricmp(it.current()->name(), "TYPE") == 0) {
+		if (qstricmp(it.current()->name(), "TYPE") == 0) {
 			emailType_ = it.current()->value();
 			continue;
 		}
 		
-		if (stricmp(it.current()->name(), "PREF") == 0) {
+		if (qstricmp(it.current()->name(), "PREF") == 0) {
 			pref_ = true;
 		}
 	}

@@ -126,12 +126,12 @@ VCard::_parse()
 		firstPart	= firstPart.right(firstPart.length() - split - 1);
 	}
 	
-	if (strnicmp(firstPart, "BEGIN", 5) != 0) { // No BEGIN !
+	if (qstrnicmp(firstPart, "BEGIN", 5) != 0) { // No BEGIN !
 		vDebug("No BEGIN");
 		return;
 	}
 	
-	if (strnicmp(valuePart, "VCARD", 5) != 0) { // Not a vcard !
+	if (qstrnicmp(valuePart, "VCARD", 5) != 0) { // Not a vcard !
 		vDebug("No VCARD");
 		return;
 	}
@@ -199,10 +199,10 @@ VCard::_parse()
 		firstPart	= firstPart.right(firstPart.length() - split - 1);
 	}
 	
-	if (stricmp(firstPart, "END") != 0) // No END !
+	if (qstricmp(firstPart, "END") != 0) // No END !
 		return;
 	
-	if (stricmp(valuePart, "VCARD") != 0) // Not a vcard !
+	if (qstricmp(valuePart, "VCARD") != 0) // Not a vcard !
 		return;
 }
 

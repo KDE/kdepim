@@ -74,13 +74,13 @@ ClassValue::~ClassValue()
 	void
 ClassValue::_parse()
 {
-	if (stricmp(strRep_, "PUBLIC") == 0)
+	if (qstricmp(strRep_, "PUBLIC") == 0)
 		classType_ = Public;
 		
-	else if (stricmp(strRep_, "PRIVATE") == 0)
+	else if (qstricmp(strRep_, "PRIVATE") == 0)
 		classType_ = Private;
 	
-	else if (stricmp(strRep_, "CONFIDENTIAL") == 0)
+	else if (qstricmp(strRep_, "CONFIDENTIAL") == 0)
 		classType_ = Confidential;
 	
 	else classType_ = Other;
