@@ -117,7 +117,7 @@ void SimpleAlarmDaemon::checkCalendar( const QString &calFile )
 
     KConfig cfg( locate( "config", "korganizerrc" ) );
     cfg.setGroup( "Time & Date" );
-    QString tz = cfg.readEntry( "TimeZoneId", "" );
+    QString tz = cfg.readEntry( "TimeZoneId" );
     kdDebug() << "TimeZone: " << tz << endl;
     cal->setTimeZoneId( tz );
 

@@ -47,7 +47,7 @@ ADCalendarBase::ADCalendarBase(const QString& url, const QCString& appname, Type
   {
     KConfig cfg( locate( "config", "korganizerrc" ) );
     cfg.setGroup( "Time & Date" );
-    QString tz = cfg.readEntry( "TimeZoneId", "" );
+    QString tz = cfg.readEntry( "TimeZoneId" );
     kdDebug(5900) << "ADCalendarBase(): tz: " << tz << endl;
     if( tz.isEmpty() ) {
       // Set a reasonable default timezone is none
