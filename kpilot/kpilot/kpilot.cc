@@ -66,9 +66,8 @@ static const char *kpilot_id =
 #include <qcombobox.h>
 #endif
 
-#ifndef QWIDGETSTACK_H
-#include <qwidgetstack.h>
-#endif
+#include <qvbox.h>
+#include <kjanuswidget.h>
 
 #ifndef _KURL_H_
 #include <kurl.h>
@@ -184,7 +183,6 @@ KPilotInstaller::KPilotInstaller() :
 
 	readConfig();
 	setupWidget();
-	showTitlePage(QString::null, true);
 
 	/* NOTREACHED */
 	(void) kpilot_id;
@@ -271,7 +269,10 @@ void KPilotInstaller::setupWidget()
 
 	setCaption("KPilot");
 	setMinimumSize(500, 405);
-	fManagingWidget = new QWidgetStack(this);
+
+
+	fManagingWidget = new KJanusWidget(this,"mainWIdget",
+		KJanusWidget::IconList);
 	fManagingWidget->setMinimumSize(500, 330);
 	fManagingWidget->show();
 	setCentralWidget(fManagingWidget);
@@ -296,53 +297,23 @@ void KPilotInstaller::initComponents()
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Creating title screen." << endl;
-#endif
-
-	QLabel *titleScreen = new QLabel(getManagingWidget());
-	QString splashPath =
-		KGlobal::dirs()->findResource("data",
-		"kpilot/kpilot-splash.png");
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Found splash at " << splashPath << endl;
-#endif
-
-	if (!splashPath.isEmpty() && QFile::exists(splashPath))
-	{
-		titleScreen->setPixmap(QPixmap(splashPath));
-	}
-	else
-	{
-		titleScreen->setText(i18n("<center>Welcome to KPilot.<BR>"
-				"The title image could not be found.</center>"));
-	}
-
-	titleScreen->setAlignment(AlignCenter);
-	titleScreen->setBackgroundColor(QColor("black"));
-	titleScreen->setGeometry(0, 0,
-		getManagingWidget()->geometry().width(),
-		getManagingWidget()->geometry().height());
-	fManagingWidget->addWidget(titleScreen, 0);
-
 	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": Creating component pages." << endl;
 #endif
+	fLogWidget = new LogWidget(getManagingWidget()->addVBoxPage(i18n("Log File")));
+	addComponentPage(fLogWidget, i18n("HotSync"));
 
-	addComponentPage(new MemoWidget(getManagingWidget(), defaultDBPath),
+	addComponentPage(new MemoWidget(getManagingWidget()->addVBoxPage(i18n("Memo Viewer")), defaultDBPath),
 		i18n("Memo Viewer"));
-	addComponentPage(new AddressWidget(getManagingWidget(),
+	addComponentPage(new AddressWidget(getManagingWidget()->addVBoxPage(i18n("Address Viewer")),
 			defaultDBPath), i18n("Address Viewer"));
 
-	fFileInstallWidget = new FileInstallWidget(getManagingWidget(),
+	fFileInstallWidget = new FileInstallWidget(getManagingWidget()->addVBoxPage(i18n("File Installer")),
 		defaultDBPath);
 	addComponentPage(fFileInstallWidget, i18n("File Installer"));
 
-	fLogWidget = new LogWidget(getManagingWidget());
-	addComponentPage(fLogWidget, i18n("Sync Log"));
 }
 
 void KPilotInstaller::initStatusBar()
@@ -378,30 +349,31 @@ void KPilotInstaller::initIcons()
 
 
 
-void KPilotInstaller::slotShowTitlePage()
-{
-	FUNCTIONSETUP;
-	showTitlePage();
-}
-
-void KPilotInstaller::slotSelectComponent(PilotComponent * p)
-{
-	FUNCTIONSETUP;
-	fManagingWidget->raiseWidget(static_cast < QWidget * >(p));
-}
-
-
-void KPilotInstaller::showTitlePage(const QString & msg, bool)
+void KPilotInstaller::slotSelectComponent(PilotComponent * c)
 {
 	FUNCTIONSETUP;
 
-	fManagingWidget->raiseWidget((int) 0);
+	QWidget *p = static_cast <QWidget *>(c);
+	if (!p) { kdWarning() << k_funcinfo << ": Not a widget." << endl; return;}
 
-	if (!msg.isNull())
+	QObject *o = p->parent();
+	if (!o) { kdWarning() << k_funcinfo << ": No parent." << endl; return; }
+
+	QWidget *parent = dynamic_cast<QWidget *>(o);
+	if (!parent) { kdWarning() << k_funcinfo << ": No widget parent." << endl; return; }
+
+	int index = fManagingWidget->pageIndex(parent);
+
+	if (index < 0)
 	{
-		fStatusBar->changeItem(msg, 0);
+		kdWarning() << k_funcinfo << ": Index " << index << endl;
+		return;
 	}
+
+	fManagingWidget->showPage(index);
 }
+
+
 
 
 void KPilotInstaller::slotBackupRequested()
@@ -473,7 +445,10 @@ void KPilotInstaller::setupSync(int kind, const QString & message)
 	{
 		return;
 	}
-	showTitlePage(message);
+	if (!message.isEmpty())
+	{
+		fStatusBar->changeItem(message,0);
+	}
 	getDaemon().requestSync(kind);
 }
 
@@ -509,11 +484,6 @@ void KPilotInstaller::initMenu()
 	p = KStdAction::quit(this, SLOT(quit()), actionCollection());
 
 	// View actions
-	pt = new KToggleAction(i18n("&KPilot"), "kpilot", 0,
-		this, SLOT(slotShowTitlePage()),
-		actionCollection(), "view_kpilot");
-	pt->setExclusiveGroup("view_menu");
-	pt->setChecked(true);
 
 	// Options actions
 	m_statusbarAction
@@ -571,7 +541,7 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 	// The first component added gets id 1, while the title
 	// screen -- added elsewhere -- has id 0.
 	//
-	fManagingWidget->addWidget(p, fP->list().count());
+	// fManagingWidget->addWidget(p, fP->list().count());
 
 
 	const char *componentname = p->name("(none)");
@@ -671,7 +641,6 @@ void KPilotInstaller::slotConfigureKPilot()
 	// Display the (modal) options page.
 	//
 	//
-	showTitlePage();
 
 	KPilotConfigDialog *options = new KPilotConfigDialog(this,
 		"configDialog", true);
@@ -723,7 +692,6 @@ void KPilotInstaller::slotConfigureConduits()
 
 	ConduitConfigDialog *conSetup = 0L;
 
-	showTitlePage();
 	conSetup = new ConduitConfigDialog(this,0L,true);
 	conSetup->exec();
 	delete conSetup;
@@ -965,6 +933,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.64  2001/10/17 08:46:08  adridg
+// Minor cleanups
+//
 // Revision 1.63  2001/09/30 19:51:56  adridg
 // Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
 //

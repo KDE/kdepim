@@ -34,10 +34,10 @@
 
 class QPopupMenu;
 class QComboBox;
-class QWidgetStack;
 class KAction;
 class KToggleAction;
 class KProgress;
+class KJanusWidget;
 
 class PilotDaemonDCOP_stub;
 class PilotComponent;
@@ -65,17 +65,8 @@ public:
 	*/
 	static const char *version(int kind);
 
-	/**
-	* Set the main widget to showing the kpilot
-	* logo. This is useful if you're messing around with
-	* the component list -- the logo always remains and
-	* can hide whatever is going on in the background.
-	*/
-	void showTitlePage(const QString& statusMsg=QString::null,
-		bool force=false);
 
 
-    // bool getQuitAfterCopyComplete() const { return fQuitAfterCopyComplete; }
 
 
 	// Adds 'name' to the pull down menu of components
@@ -100,7 +91,7 @@ public:
 
 protected:
 	void closeEvent(QCloseEvent *e);
-	QWidgetStack *getManagingWidget() { return fManagingWidget; }
+	KJanusWidget *getManagingWidget() { return fManagingWidget; }
       
 	/**
 	* Provide access to the daemon's DCOP interface
@@ -126,7 +117,6 @@ public slots:
 	void slotBackupRequested();
 	void slotHotSyncRequested();
 	void slotFastSyncRequested();
-	void slotShowTitlePage();
 	void optionsShowStatusbar();
 	void optionsShowToolbar();
 	void optionsConfigureKeys();
@@ -185,7 +175,7 @@ private:
 	KProgress       *fProgress;
 	KToolBar*       fToolBar;
 	bool            fQuitAfterCopyComplete; // Used for GUI-less interface
-	QWidgetStack    *fManagingWidget;
+	KJanusWidget    *fManagingWidget;
 	bool            fKillDaemonOnExit;
 	bool fDaemonWasRunning;
 
@@ -227,38 +217,20 @@ signals:
  
 
 // $Log$
-// Revision 1.32  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.31  2001/09/23 21:44:56  adridg
-// Myriad small changes
+// Revision 1.33  2001/09/30 16:58:45  adridg
+// Cleaned up preHotSync interface, removed extra includes, added private-d-ptr.
 //
 // Revision 1.30  2001/09/23 18:25:50  adridg
 // New config architecture
 //
-// Revision 1.29  2001/09/07 20:48:13  adridg
-// Stripped away last crufty IPC, added logWidget
-//
-// Revision 1.28  2001/08/27 22:54:27  adridg
-// Decruftifying; improve DCOP link between daemon & viewer
-//
 // Revision 1.27  2001/08/19 19:25:57  adridg
-// Removed kpilotlink dependency from kpilot; added DCOP interfaces to make that possible. Also fixed a connect() type mismatch that was harmless but annoying.
+// Removed kpilotlink dependency from kpilot; added DCOP interfaces to make 
+// that possible. Also fixed a connect() type mismatch that was harmless 
+// but annoying.
 //
-// Revision 1.26  2001/06/13 21:32:35  adridg
-// Dead code removal and replacing complicated stuff w/ QWidgetStack
-//
-// Revision 1.25  2001/04/23 06:30:38  adridg
-// XML UI updates
-//
-// Revision 1.24  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
 //
 // Revision 1.23  2001/04/14 15:21:35  adridg
 // XML GUI and ToolTips
-//
-// Revision 1.22  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
 //
 // Revision 1.21  2001/03/04 22:22:29  adridg
 // DCOP cooperation between daemon & kpilot for d&d file install
@@ -266,14 +238,8 @@ signals:
 // Revision 1.20  2001/03/02 13:07:18  adridg
 // Completed switch to KAction
 //
-// Revision 1.19  2001/03/01 01:02:48  adridg
-// Started changing to KAction
-//
 // Revision 1.18  2001/02/25 12:39:35  adridg
 // Fixed component names (src incompatible)
-//
-// Revision 1.17  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
 //
 // Revision 1.16  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.

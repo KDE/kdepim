@@ -31,6 +31,7 @@
 
 #include "pilotComponent.h"
 
+class QLabel;
 class QTextView;
 
 class LogWidget : public PilotComponent
@@ -53,9 +54,13 @@ public slots:
 	void addError(const QString &);
 	void syncDone();
 
+private slots:
+	void hideSplash();
+
 private:
 	QTextView *fLog;
 	bool fShowTime;
+	QLabel *fSplash;
 } ;
 
 #endif

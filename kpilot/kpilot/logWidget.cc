@@ -31,17 +31,25 @@ static const char *logw_id =
 
 #include "options.h"
 
+#include <qfile.h>
 #include <qlayout.h>
 #include <qtextview.h>
 #include <qtooltip.h>
 #include <qdatetime.h>
+#include <qlabel.h>
+#include <qpixmap.h>
+
+#include <kglobal.h>
+#include <kstddirs.h>
+
 
 #include "logWidget.moc"
 
 LogWidget::LogWidget(QWidget * parent) :
 	PilotComponent(parent, "component_log", QString::null),
 	fLog(0L), 
-	fShowTime(false)
+	fShowTime(false),
+	fSplash(0L)
 {
 	FUNCTIONSETUP;
 	QGridLayout *grid = new QGridLayout(this, 3, 3, SPACING);
@@ -59,6 +67,20 @@ LogWidget::LogWidget(QWidget * parent) :
 	grid->addWidget(fLog, 1, 1);
 
 	fLog->setText(i18n("<qt><B>HotSync Log</B></qt>"));
+
+	QString splashPath =
+		KGlobal::dirs()->findResource("data",
+			"kpilot/kpilot-splash.png");
+
+	if (!splashPath.isEmpty() && QFile::exists(splashPath))
+	{
+		fLog->hide();
+		fSplash = new QLabel(this);
+		fSplash->setPixmap(QPixmap(splashPath));
+		QTimer::singleShot(5000,this,SLOT(hideSplash()));
+		grid->addWidget(fSplash,1,1);
+	}
+
 	(void) logw_id;
 }
 
@@ -110,4 +132,17 @@ void LogWidget::syncDone()
 void LogWidget::initialize()
 {
 	FUNCTIONSETUP;
+}
+
+void LogWidget::hideSplash()
+{
+	FUNCTIONSETUP;
+
+	if (fSplash)
+	{
+		fSplash->hide();
+		fLog->show();
+		
+		KPILOT_DELETE(fSplash);
+	}
 }
