@@ -113,7 +113,7 @@ void SysInfoWidgetConfig::commit(KConfig *fConfig)
 {
 	FUNCTIONSETUP;
 	KConfigGroupSaver s(fConfig,SysInfoConduitFactory::fGroup);
-	fConfig->writeEntry(SysInfoConduitFactory::fOutputFile,
+	fConfig->writePathEntry(SysInfoConduitFactory::fOutputFile,
 		fConfigWidget->fOutputFile->url());
 	fConfig->writeEntry(SysInfoConduitFactory::fTemplateFile,
 		fConfigWidget->fTemplateFile->url());
@@ -141,8 +141,8 @@ void SysInfoWidgetConfig::load(KConfig *fConfig)
 {
 	FUNCTIONSETUP;
 	KConfigGroupSaver s(fConfig,SysInfoConduitFactory::fGroup);
-	fConfigWidget->fOutputFile->setURL(fConfig->readEntry(SysInfoConduitFactory::fOutputFile));
-	fConfigWidget->fTemplateFile->setURL(fConfig->readEntry(SysInfoConduitFactory::fTemplateFile));
+	fConfigWidget->fOutputFile->setURL(fConfig->readPathEntry(SysInfoConduitFactory::fOutputFile));
+	fConfigWidget->fTemplateFile->setURL(fConfig->readPathEntry(SysInfoConduitFactory::fTemplateFile));
 	fConfigWidget->fOutputType->setButton(fConfig->readNumEntry(SysInfoConduitFactory::fOutputType, 0));
 
 	const sysinfoEntry_t *p = sysinfoEntries;

@@ -172,7 +172,7 @@ void AbbrowserConduit::readConfig()
 	// General page
 	fAbookType = (eAbookTypeEnum)fConfig->readNumEntry(
 		AbbrowserConduitFactory::fAbookType, 0);
-	fAbookFile = fConfig->readEntry(
+	fAbookFile = fConfig->readPathEntry(
 		AbbrowserConduitFactory::fAbookFile);
 	fArchive=fConfig->readBoolEntry(
 		AbbrowserConduitFactory::fArchive, true);

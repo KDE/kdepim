@@ -174,8 +174,8 @@ void SysInfoConduit::readConfig()
 {
 	FUNCTIONSETUP;
 	KConfigGroupSaver g(fConfig, SysInfoConduitFactory::fGroup);
-	fOutputFile=fConfig->readEntry(SysInfoConduitFactory::fOutputFile);
-	fTemplateFile=fConfig->readEntry(SysInfoConduitFactory::fTemplateFile);
+	fOutputFile=fConfig->readPathEntry(SysInfoConduitFactory::fOutputFile);
+	fTemplateFile=fConfig->readPathEntry(SysInfoConduitFactory::fTemplateFile);
 	fOutputType=(eOutputTypeEnum)(fConfig->readNumEntry(SysInfoConduitFactory::fOutputType), 0);
 	fHardwareInfo=fConfig->readBoolEntry(SysInfoConduitFactory::fHardwareInfo, true);
 	fUserInfo=fConfig->readBoolEntry(SysInfoConduitFactory::fUserInfo, true);

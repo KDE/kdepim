@@ -222,7 +222,7 @@ error:
 {
 	fConfig->setGroup(configGroup());
 
-	fCalendarFile = fConfig->readEntry(VCalConduitFactoryBase::calendarFile);
+	fCalendarFile = fConfig->readPathEntry(VCalConduitFactoryBase::calendarFile);
 	SyncAction::eConflictResolution res=(SyncAction::eConflictResolution)fConfig->readNumEntry(
 		VCalConduitFactoryBase::conflictResolution, SyncAction::eUseGlobalSetting);
 	if (res!=SyncAction::eUseGlobalSetting) fConflictResolution=res;

@@ -436,7 +436,7 @@ QString getFQDomainName (const KConfig& config)
 
 	// Has the user given an explicit domain name?
 	int useExplicitDomainName = 0;
-	if (!config.readEntry("explicitDomainName", QString::null).isEmpty())
+	if (!config.readEntry("explicitDomainName").isEmpty())
 		useExplicitDomainName = 1;
 
 	// Or was it given in the MAILDOMAIN environment variable?
@@ -444,7 +444,7 @@ QString getFQDomainName (const KConfig& config)
 		useExplicitDomainName = 2;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": EDN=" << config.readEntry("explicitDomainName", QString::null) << endl;
+	DEBUGCONDUIT << fname << ": EDN=" << config.readEntry("explicitDomainName") << endl;
 	DEBUGCONDUIT << fname << ": useEDN=" << useExplicitDomainName << endl;
 #endif
 
@@ -752,8 +752,8 @@ int PopMailConduit::sendViaSMTP ()
 		}
 
 		//insert the real signature file from disk
-		if (!fConfig->readEntry ("Signature").isEmpty()) {
-			QFile f (fConfig->readEntry ("Signature"));
+		if (!fConfig->readPathEntry ("Signature").isEmpty()) {
+			QFile f (fConfig->readPathEntry ("Signature"));
 			if ( f.open (IO_ReadOnly) ) {    // file opened successfully
 				sendBuffer.sprintf ("\r\n-- \r\n");
 				write (kSocket.socket(), sendBuffer.latin1(), sendBuffer.length());
@@ -814,7 +814,7 @@ int PopMailConduit::sendViaSendmail()
   QString currentDest;
   PilotRecord* pilotRec;
 
-  sendmailCmd = fConfig->readEntry("SendmailCmd");
+  sendmailCmd = fConfig->readPathEntry("SendmailCmd");
 
   // Should probably read the prefs..
   // But, let's just get the mail..
@@ -904,7 +904,7 @@ QString PopMailConduit::getKMailOutbox() const
 	KSimpleConfig c(CSL1("kmailrc"),true);
 	c.setGroup("General");
 
-	QString outbox = c.readEntry("outboxFolder",QString::null);
+	QString outbox = c.readEntry("outboxFolder");
 	if (outbox.isEmpty())
 	{
 		KConfigGroupSaver gs(fConfig,PopmailConduitFactory::group);
@@ -1099,14 +1099,14 @@ PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	}
 
   //insert the real signature file from disk
-  if(!fConfig->readEntry("Signature").isEmpty()) {
+  if(!fConfig->readPathEntry("Signature").isEmpty()) {
 #ifdef DEBUG
 	{
 		DEBUGCONDUIT << fname << ": Reading signature" << endl;
 	}
 #endif
 
-      QFile f(fConfig->readEntry("Signature"));
+      QFile f(fConfig->readPathEntry("Signature"));
       if ( f.open(IO_ReadOnly) ) {    // file opened successfully
          mailPipe << "-- \r\n";
          QTextStream t( &f );        // use a text stream

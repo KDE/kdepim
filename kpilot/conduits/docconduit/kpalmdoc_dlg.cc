@@ -79,9 +79,9 @@ void ConverterDlg::readSettings()
 
 	// General Page:
 	dlg->fTXTDir->setURL(fConfig->
-		readEntry("TXT directory", QString::null));
+		readEntry("TXT directory"));
 	dlg->fPDBDir->setURL(fConfig->
-		readEntry("PDB directory", QString::null));
+		readEntry("PDB directory"));
 	bool dir=fConfig->
 		readBoolEntry("Sync directories", false);
 	dlg->fDirectories->setChecked(dir);

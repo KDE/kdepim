@@ -161,9 +161,9 @@ DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 	KConfigGroupSaver s(fConfig, DOCConduitFactory::fGroup);
 
 	fConfigWidget->fTXTDir->setURL(fConfig->
-		readEntry(DOCConduitFactory::fTXTDir, QString::null));
+		readEntry(DOCConduitFactory::fTXTDir));
 	fConfigWidget->fPDBDir->setURL(fConfig->
-		readEntry(DOCConduitFactory::fPDBDir, QString::null));
+		readEntry(DOCConduitFactory::fPDBDir));
 	fConfigWidget->fkeepPDBLocally->setChecked(fConfig->
 		readBoolEntry(DOCConduitFactory::fKeepPDBLocally, true));
 	fConfigWidget->fConflictResolution->setButton(fConfig->

@@ -73,17 +73,17 @@ void KroupwareSync::cleanupConfig()
   KPilotConfigSettings &c = KPilotConfig::getConfig();
   c.setGroup("todoOptions");
   if ( c.hasKey( "CalFileBackup") ) {
-    QString fn = c.readEntry( "CalFileBackup" , QString::null );
+    QString fn = c.readPathEntry( "CalFileBackup" );
     if ( fn != CSL1("empty") ) {
-      c.writeEntry( "CalFile" ,fn );
+      c.writePathEntry( "CalFile" ,fn );
       c.writeEntry( "CalFileBackup" , "empty" );
     }
   }
   c.setGroup("vcalOptions");
   if ( c.hasKey( "CalFileBackup") ) {
-    QString fn = c.readEntry( "CalFileBackup" , QString::null );
+    QString fn = c.readPathEntry( "CalFileBackup" );
     if ( fn != CSL1("empty") ) {
-      c.writeEntry( "CalFile" ,fn );
+      c.writePathEntry( "CalFile" ,fn );
       c.writeEntry( "CalFileBackup" , "empty" );
     }
   }
@@ -126,18 +126,18 @@ void KroupwareSync::start_syncCal_TodosWithKMail( bool cal, bool todos )
     if ( todos ) {
       logMessage( TODO_I18N("Syncing todos with KMail" ));
       c.setGroup("todoOptions");
-      QString fn = c.readEntry( "CalFile" , QString::null );
-      c.writeEntry( "CalFileBackup" ,fn );
-      c.writeEntry( "CalFile" ,filename );
+      QString fn = c.readPathEntry( "CalFile" );
+      c.writePathEntry( "CalFileBackup" ,fn );
+      c.writePathEntry( "CalFile" ,filename );
     }
     else
       logMessage( CSL1("Not syncing todos with KMail" ));
     if ( cal ) {
       logMessage( TODO_I18N("Syncing calendar with KMail" ));
       c.setGroup("vcalOptions");
-      QString fn = c.readEntry( "CalFile" , QString::null );
-      c.writeEntry( "CalFileBackup" ,fn );
-      c.writeEntry( "CalFile" ,filename );
+      QString fn = c.readPathEntry( "CalFile" );
+      c.writePathEntry( "CalFileBackup" ,fn );
+      c.writePathEntry( "CalFile" ,filename );
     }
     else
       logMessage( CSL1("Not syncing calendar with KMail" ));
@@ -168,7 +168,7 @@ void KroupwareSync::start_syncAddWithKMail()
     KPilotConfigSettings &c = KPilotConfig::getConfig();
     logMessage(CSL1("Calling addresses over DCOP succeeded"));
     c.setGroup("Abbrowser-conduit");
-    c.writeEntry( "KMailTempFile" , filename );
+    c.writepathEntry( "KMailTempFile" , filename );
     c.sync();
   }
 }
@@ -187,16 +187,16 @@ void KroupwareSync::end_syncCal_TodosWithKMail( bool cal, bool todos)
  if ( todos ) {
    logMessage( TODO_I18N("Rewriting Todos to KMail..." ));
    c.setGroup("todoOptions");
-   filename = c.readEntry( "CalFile" , QString::null );
-   c.writeEntry( "CalFile" ,c.readEntry( "CalFileBackup", QString::null ) );
+   filename = c.readPathEntry( "CalFile" );
+   c.writePathEntry( "CalFile" ,c.readPathEntry( "CalFileBackup" ) );
    c.writeEntry( "CalFileBackup" ,"empty");
  }
  if ( cal ) {
    logMessage( TODO_I18N("Rewriting Calendar to KMail" ));
    c.setGroup("vcalOptions");
-   filename = c.readEntry( "CalFile" , QString::null );
-   QString tf = c.readEntry( "CalFileBackup", QString::null ) ;
-   c.writeEntry( "CalFile" , tf  );
+   filename = c.readPathEntry( "CalFile" );
+   QString tf = c.readPathEntry( "CalFileBackup" ) ;
+   c.writePathEntry( "CalFile" , tf  );
    c.writeEntry( "CalFileBackup" ,"empty");
  }
  c.sync();
@@ -231,7 +231,7 @@ void KroupwareSync::end_syncAddWithKMail()
   DCOPClient *client = kapp->dcopClient();
   KPilotConfigSettings &c = KPilotConfig::getConfig();
   c.setGroup("Abbrowser-conduit");
-  QString filename = c.readEntry( "KMailTempFile" );
+  QString filename = c.readPathEntry( "KMailTempFile" );
   c.writeEntry( "KMailTempFile" , "empty" );
   c.sync();
   QByteArray  data, reply_data;

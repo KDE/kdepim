@@ -115,8 +115,8 @@ void DOCConduit::readConfig()
 
 	KConfigGroupSaver g(fConfig, DOCConduitFactory::fGroup);
 
-	fTXTDir = fConfig->readEntry(DOCConduitFactory::fTXTDir, QString::null);
-	fPDBDir = fConfig->readEntry(DOCConduitFactory::fPDBDir, QString::null);
+	fTXTDir = fConfig->readEntry(DOCConduitFactory::fTXTDir);
+	fPDBDir = fConfig->readEntry(DOCConduitFactory::fPDBDir);
 	fKeepPDBLocally =
 		fConfig->readBoolEntry(DOCConduitFactory::fKeepPDBLocally, true);
 	eConflictResolution =

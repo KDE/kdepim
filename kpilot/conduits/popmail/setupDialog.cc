@@ -227,8 +227,8 @@ PopMailSendPage::PopMailSendPage(QWidget *parent) :
 void PopMailSendPage::readSettings(KConfig &config)
 {
 	fEmailFrom->setText(config.readEntry("EmailAddress", CSL1("$USER")));
-	fSignature->setText(config.readEntry("Signature", QString::null));
-	fSendmailCmd->setText(config.readEntry("SendmailCmd",
+	fSignature->setText(config.readPathEntry("Signature"));
+	fSendmailCmd->setText(config.readPathEntry("SendmailCmd",
 		CSL1("/usr/lib/sendmail -t -i")));
 	fSMTPServer->setText(config.readEntry("SMTPServer", CSL1("mail")));
 	fSMTPPort->setText(QString::number(config.readNumEntry("SMTPPort", 25)));
@@ -248,13 +248,13 @@ void PopMailSendPage::readSettings(KConfig &config)
 #endif
 
 	{
-			config.writeEntry("Signature", fSignature->text());
+			config.writePathEntry("Signature", fSignature->text());
 	}
 
 	config.writeEntry("EmailAddress", fEmailFrom->text());
 
 
-	config.writeEntry("SendmailCmd", fSendmailCmd->text());
+	config.writePathEntry("SendmailCmd", fSendmailCmd->text());
 	config.writeEntry("SMTPServer", fSMTPServer->text());
 	config.writeEntry("SMTPPort", fSMTPPort->text());
 	config.writeEntry("explicitDomainName", fFirewallFQDN->text());
@@ -491,7 +491,7 @@ void PopMailReceivePage::readSettings(KConfig &config)
 	fPopPort->setText(config.readEntry("PopPort", CSL1("110")));
 	fPopUser->setText(config.readEntry("PopUser", CSL1("$USER")));
 	fLeaveMail->setChecked(config.readNumEntry("LeaveMail", 1));
-	fPopPass->setText(config.readEntry("PopPass", QString::null));
+	fPopPass->setText(config.readEntry("PopPass"));
 	fPopPass->setEnabled(config.readNumEntry("StorePass", 0));
 	fStorePass->setChecked(config.readNumEntry("StorePass", 0));
 	setMode(RetrievalMode(

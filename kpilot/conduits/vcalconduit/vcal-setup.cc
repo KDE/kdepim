@@ -84,7 +84,7 @@ VCalWidgetSetup::~VCalWidgetSetup()
 	fConfig->writeEntry(VCalConduitFactoryBase::calendarType,
 		fConfigWidget->fSyncDestination->id(
 			fConfigWidget->fSyncDestination->selected()));
-	fConfig->writeEntry(VCalConduitFactoryBase::calendarFile,
+	fConfig->writePathEntry(VCalConduitFactoryBase::calendarFile,
 		fConfigWidget->fCalendarFile->url());
 
 	fConfig->writeEntry(VCalConduitFactoryBase::archive,
@@ -106,8 +106,8 @@ VCalWidgetSetup::~VCalWidgetSetup()
 	// General page
 	fConfigWidget->fSyncDestination->setButton(
 		fConfig->readNumEntry(VCalConduitFactoryBase::calendarType, 0));
-	fConfigWidget->fCalendarFile->setURL( fConfig->readEntry(
-		VCalConduitFactoryBase::calendarFile,QString::null));
+	fConfigWidget->fCalendarFile->setURL( fConfig->readPathEntry(
+		VCalConduitFactoryBase::calendarFile));
 
 	fConfigWidget->fArchive->setChecked(
 		fConfig->readBoolEntry(VCalConduitFactoryBase::archive, true));

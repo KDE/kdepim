@@ -73,7 +73,7 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	fConfig->writeEntry(AbbrowserConduitFactory::fAbookType,
 		fConfigWidget->fSyncDestination->id(
 			fConfigWidget->fSyncDestination->selected()));
-	fConfig->writeEntry(AbbrowserConduitFactory::fAbookFile,
+	fConfig->writePathEntry(AbbrowserConduitFactory::fAbookFile,
 		fConfigWidget->fAbookFile->url());
 	fConfig->writeEntry(AbbrowserConduitFactory::fArchive,
 		fConfigWidget->fArchive->isChecked());
@@ -114,7 +114,7 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	fConfigWidget->fSyncDestination->setButton(
 		fConfig->readNumEntry(AbbrowserConduitFactory::fAbookType, 0));
 	fConfigWidget->fAbookFile->setURL(
-		fConfig->readEntry(AbbrowserConduitFactory::fAbookFile));
+		fConfig->readPathEntry(AbbrowserConduitFactory::fAbookFile));
 	fConfigWidget->fArchive->setChecked(
 		fConfig->readBoolEntry(AbbrowserConduitFactory::fArchive, true));
 

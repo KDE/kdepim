@@ -127,7 +127,7 @@ MALWidgetSetup::~MALWidgetSetup()
 	
 	// Proxy settings
 	fConfigWidget->proxyType->setButton(fConfig->readNumEntry(MALConduitFactory::proxyType(), 0));
-	fConfigWidget->proxyServerName->setEditText(fConfig->readEntry(MALConduitFactory::proxyServer(), QString()));
+	fConfigWidget->proxyServerName->setEditText(fConfig->readEntry(MALConduitFactory::proxyServer()));
 	
 	int proxyPortNr=fConfig->readNumEntry(MALConduitFactory::proxyPort(), 0);
 	if (proxyPortNr>0 && proxyPortNr<65536) 
@@ -136,8 +136,8 @@ MALWidgetSetup::~MALWidgetSetup()
 		fConfigWidget->proxyCustomPort->setEnabled(true);
 		fConfigWidget->proxyCustomPort->setValue(proxyPortNr);
 	}
-	fConfigWidget->proxyUserName->setText(fConfig->readEntry(MALConduitFactory::proxyUser(), QString()));
-	fConfigWidget->proxyPassword->setText(fConfig->readEntry(MALConduitFactory::proxyPassword(), QString()));
+	fConfigWidget->proxyUserName->setText(fConfig->readEntry(MALConduitFactory::proxyUser()));
+	fConfigWidget->proxyPassword->setText(fConfig->readEntry(MALConduitFactory::proxyPassword()));
 
 	// MAL Server settings (not yet possible!!!)
 	fConfigWidget->malServerName->setEditText(fConfig->readEntry(MALConduitFactory::malServer(), "sync.avantgo.com"));
@@ -149,7 +149,7 @@ MALWidgetSetup::~MALWidgetSetup()
 		fConfigWidget->malCustomPort->setEnabled(true);
 		fConfigWidget->malCustomPort->setValue(proxyPortNr);
 	}
-	fConfigWidget->malUserName->setText(fConfig->readEntry(MALConduitFactory::malUser(), QString()));
-	fConfigWidget->malPassword->setText(fConfig->readEntry(MALConduitFactory::malPassword(), QString()));
+	fConfigWidget->malUserName->setText(fConfig->readEntry(MALConduitFactory::malUser()));
+	fConfigWidget->malPassword->setText(fConfig->readEntry(MALConduitFactory::malPassword()));
 }
 

@@ -119,18 +119,18 @@ void MALConduit::readConfig()
 	
 	// Proxy settings
 	eProxyType=(eProxyTypeEnum) fConfig->readNumEntry(MALConduitFactory::proxyType(), (int) eProxyNone );
-	fProxyServer=fConfig->readEntry(MALConduitFactory::proxyServer(), QString::null);
+	fProxyServer=fConfig->readEntry(MALConduitFactory::proxyServer());
 	
 	fProxyPort=fConfig->readNumEntry(MALConduitFactory::proxyPort(), 0);
-	fProxyUser=fConfig->readEntry(MALConduitFactory::proxyUser(), QString::null);
-	fProxyPassword=fConfig->readEntry(MALConduitFactory::proxyPassword(), QString::null);
+	fProxyUser=fConfig->readEntry(MALConduitFactory::proxyUser());
+	fProxyPassword=fConfig->readEntry(MALConduitFactory::proxyPassword());
 
 	// MAL Server settings (not yet possible!!!)
 	fMALServer=fConfig->readEntry(MALConduitFactory::malServer(), "sync.avantgo.com");
 	fMALPort=fConfig->readNumEntry(MALConduitFactory::malPort(), 0);
 	
-	fMALUser=fConfig->readEntry(MALConduitFactory::malUser(), QString::null);
-	fMALPassword=fConfig->readEntry(MALConduitFactory::malPassword(), QString::null);
+	fMALUser=fConfig->readEntry(MALConduitFactory::malUser());
+	fMALPassword=fConfig->readEntry(MALConduitFactory::malPassword());
 }
 
 
