@@ -38,10 +38,10 @@
 
 typedef QValueList<recordid_t> RecordIDList;
 
-/** This is a base class for record-based conduits. The data on the PC is represented 
+/** This is a base class for record-based conduits. The data on the PC is represented
  *  by an object derived from the RecordConduit::PCData class, and each entry on the PC by
- *  an object derived from RecordConduit::PCEntry. Only very few methods of this class 
- *  need to be implemented, mostly just the functions to copy a PC entry to a handheld 
+ *  an object derived from RecordConduit::PCEntry. Only very few methods of this class
+ *  need to be implemented, mostly just the functions to copy a PC entry to a handheld
  *  entry and vice versa. All the sync logic is already present in this class and does
  *  not need to be implemented by child classes. */
 class RecordConduit : public ConduitAction
@@ -63,7 +63,7 @@ public:
 		virtual ~PCEntry() {}
 		/** Return the uid of the entry on the PC */
 		virtual QString uid() const = 0;
-		/** Return the palm record id uid of the entry (this record id should be 
+		/** Return the palm record id uid of the entry (this record id should be
 		 *  stored somewhere together with the entry on the pc to make it possible to
 		 *  link an entry on the handheld and one on the PC together. */
 		virtual recordid_t recid() const = 0;
@@ -86,12 +86,12 @@ public:
 	class PCData
 	{
 	public:
-		class Iterator 
+		class Iterator
 		{
 		public:
 			Iterator() {};
 			virtual ~Iterator() {};
-			/** Reimplement this to return the PCEntry at the current position. 
+			/** Reimplement this to return the PCEntry at the current position.
 			Use new for this. Caller is responsible for deleting the object. */
 			virtual PCEntry * operator*() { return 0; }
 			virtual void operator++() {}
@@ -104,7 +104,7 @@ public:
 		/*************************************************************
 		 * pure virtuals, must be implemented by childclasses
 		 *************************************************************/
-		 
+
 		/** Load the data from the PC (e.g. contacts from the addressbook).
 		 *  @return true if successful, false if not */
 		virtual bool loadData() = 0;
@@ -117,21 +117,21 @@ public:
 		/** Return true if the data on the pc (e.g. addressbook, calendar etc.) is empty
 		*/
 		virtual bool isEmpty() const = 0;
-		/** reset the data pointer to the beginning of the data, e.g. reset an 
+		/** reset the data pointer to the beginning of the data, e.g. reset an
 		 *  iterator to begin()
 		*/
 		virtual Iterator begin() = 0;
 		/** Return true if the pc data is at the end of its list.
 		*/
 		virtual bool atEnd( const Iterator & ) = 0;
-		/** Return next entry in the data. 
+		/** Return next entry in the data.
 		*/
 		virtual bool increase( Iterator &it ) { ++it; return true; }
-		/** Return next modified entry in the data. 
+		/** Return next modified entry in the data.
 		*/
 		virtual bool increaseNextModified( Iterator &it ) { return increase( it ); }
-		/** Find the Palm Entry in the pc data 
-		 *  @return the match of the record found in the data on the PC, 
+		/** Find the Palm Entry in the pc data
+		 *  @return the match of the record found in the data on the PC,
 		 *  or an initialized empty entry if no match is found on the PC */
 		virtual PCEntry *findByUid( QString uid ) const = 0;
 		virtual bool makeArchived( PCEntry *addr );
@@ -139,11 +139,11 @@ public:
 		/** Update the entry given. If it doesn't exist yet, add it
 		 */
 		virtual bool updateEntry( const PCEntry* entry ) = 0;
-		/** Remove the entry given from the PC. 
+		/** Remove the entry given from the PC.
 		 */
 		virtual bool removeEntry( const PCEntry* entry ) = 0;
-		/** Remove the entry with the given id. The default implementation 
-		 *  searches the entry, and then calls removeEntry( PCEntry* ). Child 
+		/** Remove the entry with the given id. The default implementation
+		 *  searches the entry, and then calls removeEntry( PCEntry* ). Child
 		 *  classes might reimplement this to speed things up.
 		 */
 		virtual bool removeEntry( const QString &uid ) { return removeEntry( findByUid( uid ) ); }
@@ -151,7 +151,7 @@ public:
 		/*************************************************************
 		 * non-pure virtuals, might be reimplemented by childclasses
 		 *************************************************************/
-		 
+
 		/** Clean up after the sync has been done and the changes were saved
 		 *  @return true if cleanup was successful */
 		virtual bool cleanup() { return true; }
@@ -163,19 +163,19 @@ public:
 		/** Return whether the data was changed
 		*/
 		virtual bool changed() const { return mChanged; }
-		/** Set the changed flag on the pc data. 
+		/** Set the changed flag on the pc data.
 		 *  @return the previous state of the changed flag */
 		virtual bool setChanged( bool changed ) { bool old = mChanged; mChanged = changed; return old; }
-		
+
 		/** Return the number of entries on the PC (-1 for unknown)
 		 */
 		virtual int count() const { return -1; }
-		
+
 	protected:
 		RecordConduit *mConduit;
 		bool mChanged;
-	}; 
-	
+	};
+
 
 /*********************************************************************
                 S Y N C   S T R U C T U R E
@@ -188,40 +188,40 @@ protected slots:
 	void slotDeleteUnsyncedPCRecords();
 	void slotDeleteUnsyncedHHRecords();
 	void slotCleanup();
-        
-protected: 
+
+protected:
 	static void setArchiveDeleted( bool archiveDeleted ) { mArchiveDeleted = archiveDeleted; }
 	static bool archiveDeleted() { return mArchiveDeleted; }
 
 	/************* INTERFACE for child classes ******************/
-		
+
 		/*************************************************************
 		 * pure virtuals, must be implemented by childclasses
 		 *************************************************************/
-	
+
 	/** Initialize the PC Data object, must be a child class of RecordConduit::PCData
 	*/
 	virtual PCData*initializePCData() = 0;
-	/** return the name of the databases synced by this conduit 
+	/** return the name of the databases synced by this conduit
 	*/
 	virtual QString dbName() const = 0;
-	/** Create a Palm entry from the raw palm record 
+	/** Create a Palm entry from the raw palm record
 	*/
 	virtual PilotAppCategory *createPalmEntry( PilotRecord *rec ) = 0;
-	/** Read the config. You need to call at least setArchiveDeleted(bool) 
+	/** Read the config. You need to call at least setArchiveDeleted(bool)
 	 *  and setConflictResolution(SyncAction::ConflictResolution)
 	 */
 	virtual void readConfig() = 0;
-	
-	
+
+
 	/** Create a buffer for the appInfo and pack it inside. Also, remember to
-	 *  set appLen to the size of the buffer! By default, nothing is done, and 
+	 *  set appLen to the size of the buffer! By default, nothing is done, and
 	 *  the return value will be 0 (appinfo not supported by default, you need
 	 *  to implement this in your child class!).
 	 *  @param appLen Receives the length of the allocated buffer */
 	virtual unsigned char *doPackAppInfo( int */*appLen*/ ) { return 0; }
-	/** Read the appInfo from the buffer provided to this method. By default, 
-	 *  nothing is done, and the return value will be false (appinfo not supported 
+	/** Read the appInfo from the buffer provided to this method. By default,
+	 *  nothing is done, and the return value will be false (appinfo not supported
 	 *  by default, you need to implement this in your child class!).
 	 *  @param buffer Buffer containing the appInfo in packed format
 	 *  @param appLen specifies the length of buffer */
@@ -231,12 +231,12 @@ protected:
 	 *  method in your childclass!
 	 *  @param n # of the desired category name */
 	virtual QString category( int /*n*/ ) const { return QString::null; }
-	
+
 		/* ******************************************************************* *
                    C O P Y   R E C O R D S
 		 * ******************************************************************* */
- 	/** Flags for the _equal() method, that specify which parts of the 
-	 *  record need to be checked. Flags and category are pre-defined, 
+ 	/** Flags for the _equal() method, that specify which parts of the
+	 *  record need to be checked. Flags and category are pre-defined,
 	 *  but each conduit can define its own flags and reimplement findFlags().
 	 */
 	enum eqFlags {
@@ -245,10 +245,10 @@ protected:
 		eqFlagsAll=0xFFFF,
 		eqFlagsAlmostAll=eqFlagsAll && ~(eqFlagsFlags|eqFlagsCategory)
 	};
-	/** Check if the entry from the Handheld matches the entry from the PC (but 
-	 *  check only those fields of the records that are specified by the flag 
-	 *  argument. By default, all fields should be checked, but in some cases 
-	 *  (like finding an approximately equal entry, reimplement findFlags() to 
+	/** Check if the entry from the Handheld matches the entry from the PC (but
+	 *  check only those fields of the records that are specified by the flag
+	 *  argument. By default, all fields should be checked, but in some cases
+	 *  (like finding an approximately equal entry, reimplement findFlags() to
 	 *  use different flags in that case) only some parts should be checked.
 	 *  @param palmEntry The entry from the handheld
 	 *  @param pcEntry The entry on the PC side
@@ -259,14 +259,14 @@ protected:
 	/** Copy all fields from the PC entry to the handheld entry.
 	 *  @param toPalmEntry Entry on the handheld that will receive the values.
 	 *  @param fromPCEntry Entry on the PC that should be copied to the handheld entry.
-	 *  @return wheter copying was successful (ie. both pointers are valid, and 
+	 *  @return wheter copying was successful (ie. both pointers are valid, and
 	 *  copying went fine.
 	 */
 	virtual bool _copy( PilotAppCategory *toPalmEntry, const PCEntry *fromPCEntry ) = 0;
 	/** Copy all fields from the handheld entry to the PC entry.
-	 *  @param toPalmEntry Entry on the handheld that should be copied to the PC entry. 
-	 *  @param fromPCEntry Entry on the PC that will receive the values from the handheld entry.
-	 *  @return wheter copying was successful (ie. both pointers are valid, and 
+	 *  @param toPCEntry Entry on the handheld that should be copied to the PC entry.
+	 *  @param fromPalmEntry Entry on the PC that will receive the values from the handheld entry.
+	 *  @return wheter copying was successful (ie. both pointers are valid, and
 	 *  copying went fine.
 	 */
 	virtual bool _copy( PCEntry *toPCEntry, const PilotAppCategory *fromPalmEntry ) = 0;
@@ -275,44 +275,44 @@ protected:
 		     C O N F L I C T   R E S O L U T I O N   a n d   M E R G I N G
 		 * ******************************************************************* */
  	/** The entry on the pc and on the handheld were both changed, and an automatic
-	 *  conflict resolution is not possible, so do a suitable resolution (ask the 
+	 *  conflict resolution is not possible, so do a suitable resolution (ask the
 	 *  user or apply some pre-defined method (e.g. one side always overrides etc).
 	 */
-	virtual bool smartMergeEntry( PCEntry *pcEntry, PilotAppCategory *backupEntry, 
+	virtual bool smartMergeEntry( PCEntry *pcEntry, PilotAppCategory *backupEntry,
 		PilotAppCategory *palmEntry ) = 0;
-	
 
-		
+
+
 		/*************************************************************
 		 * non-pure virtuals, might be reimplemented by childclasses if
 		 * the defaults are not suitable and better/faster ways are available
 		 * or the conduit needs to do some special actions.
 		 *************************************************************/
-	
+
 	/** Do the preperations before the sync algorithm starts. */
 	virtual bool doPrepare() { return true; }
-	/** Return the list of category names on the handheld. The default 
+	/** Return the list of category names on the handheld. The default
 	 *  implementation is slow, because it just calls category(n) for 0<n<16.
-	 *  This method should be reimplemented by child classes when a faster 
+	 *  This method should be reimplemented by child classes when a faster
 	 *  algorithm is available. For conduits that don't support categories at
 	 *  all, this might also reimplemented to automatically return an empty list.
 	 */
 	virtual const QStringList categories() const;
    /** Specifies which parts of the record shall be checked when searching
 	 *  for matches of the handheld data in the PC data. By default, everything
-	 *  except flags and categories are checked. Child classes that desire 
+	 *  except flags and categories are checked. Child classes that desire
 	 *  other comparisons (i.e. compare just an enty date if only one entry per
 	 *  date is allowed, like for diaries, etc) should reimplement this method.
 	 */
 	virtual int findFlags() const;
-	/** Do some cleanup after the sync, e.g. write sync time to the config, 
+	/** Do some cleanup after the sync, e.g. write sync time to the config,
 	 *  write some version to the config, whatever you like in your conduit.
 	 */
 	virtual void doPostSync() {};
 
-	
-	
-	
+
+
+
 // ----------------------------------------------------------------------- //
 
 
@@ -358,11 +358,11 @@ protected:
          These functions modify the Handheld and the addressbook
  * ******************************************************************* */
 protected:
-	bool syncEntry( PCEntry *pcEntry, PilotAppCategory *backupEntry, 
+	bool syncEntry( PCEntry *pcEntry, PilotAppCategory *backupEntry,
 		PilotAppCategory *palmEntry );
-	virtual bool pcCopyToPalm( PCEntry *pcEntry, PilotAppCategory *backupEntry, 
+	virtual bool pcCopyToPalm( PCEntry *pcEntry, PilotAppCategory *backupEntry,
 		PilotAppCategory *palmEntry );
-	virtual bool palmCopyToPC( PCEntry *pcEntry, PilotAppCategory *backupEntry, 
+	virtual bool palmCopyToPC( PCEntry *pcEntry, PilotAppCategory *backupEntry,
 		PilotAppCategory *palmEntry );
 
 /* ******************************************************************* *
@@ -371,9 +371,9 @@ protected:
  * ******************************************************************* */
 	bool palmSaveEntry( PilotAppCategory *palmEntry, PCEntry *pcEntry );
 	bool backupSaveEntry( PilotAppCategory *backup );
-	bool pcSaveEntry( PCEntry *pcEntry, PilotAppCategory *backupEntry, 
+	bool pcSaveEntry( PCEntry *pcEntry, PilotAppCategory *backupEntry,
 		PilotAppCategory *palmEntry );
-	bool pcDeleteEntry( PCEntry *pcEntry, PilotAppCategory *backupEntry, 
+	bool pcDeleteEntry( PCEntry *pcEntry, PilotAppCategory *backupEntry,
 		PilotAppCategory *palmEntry );
 
 
