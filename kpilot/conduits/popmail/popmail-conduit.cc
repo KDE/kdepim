@@ -35,7 +35,6 @@ static const char *popmail_conduit_id=
 	"$Id$";
 
 #include "options.h"
-#include <config.h>
 
 #include <qsocket.h>
 #include <qregexp.h>
