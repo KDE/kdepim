@@ -617,6 +617,12 @@ int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
 	return dlp_ReadDBList(pilotSocket(),0,dlpDBListRAM,index,dbinfo);
 }
 
+int KPilotDeviceLink::findDatabase(char*name, struct DBInfo*dbinfo) 
+{
+	FUNCTIONSETUP;
+	return dlp_FindDBInfo(pilotSocket(), 0, 0, name, dlpDBListRAM, 0, dbinfo);
+}
+
 bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName, 
 	DBInfo *info)
 {
@@ -673,6 +679,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.8.2.2  2002/04/09 21:51:50  adridg
+// Extra debugging, pilot-link 0.10.1 still needs workaround
+//
 // Revision 1.8.2.1  2002/04/04 20:28:28  adridg
 // Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
 // when using PILOT_VERSION. kpilotTest defaults to list, like the options
