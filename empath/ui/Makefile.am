@@ -9,7 +9,7 @@ INCLUDES = \
 
 lib_LTLIBRARIES = libempathui.la
 
-libempathui_la_LDFLAGS = $(all_libraries) \
+libempathui_la_LDFLAGS = -lqt-mt $(all_libraries) \
     -version-info 1:0:0 -module -no-undefined
 
 rcdir = $(kde_datadir)/empath
