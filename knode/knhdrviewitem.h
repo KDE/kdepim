@@ -36,6 +36,8 @@ class KNHdrViewItem : public KListViewItem  {
     void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
     int width(const QFontMetrics &fm, const QListView *lv, int column);
 
+    virtual QString text( int col ) const;
+
     void expandChildren();
 
     void setActive( bool b )  { mActive = b; }

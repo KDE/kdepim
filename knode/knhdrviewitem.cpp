@@ -78,7 +78,7 @@ int KNHdrViewItem::compare( QListViewItem *i, int col, bool ) const
        return text( col ).localeAwareCompare( i->text(col) );
 
     case 2:
-       if (art->type()==KMime::Base::ATremote) {
+       if (art->type() == KMime::Base::ATremote) {
          diff = static_cast<KNRemoteArticle*>( art )->score() - static_cast<KNRemoteArticle*>( otherArticle )->score();
          return (diff < 0 ? -1 : diff > 0 ? 1 : 0);
        } else
@@ -110,6 +110,7 @@ void KNHdrViewItem::paintCell( QPainter *p, const QColorGroup &cg, int column, i
 {
   int xText = 0, xPM = 3, yPM = 0;
   QColor base;
+  const KPaintInfo *paintInfo = static_cast<KNHeaderView*>( listView() )->paintInfo();
 
   QPen pen = p->pen();
   if (isSelected() || mActive) {
@@ -131,7 +132,7 @@ void KNHdrViewItem::paintCell( QPainter *p, const QColorGroup &cg, int column, i
 
   p->fillRect( 0, 0, width, height(), QBrush(base) );
 
-  if (column == 0) {
+  if ( column == paintInfo->subCol ) {
     QFont font = p->font();
     font.setBold( firstColBold() );
     p->setFont( font );
@@ -180,9 +181,10 @@ void KNHdrViewItem::paintCell( QPainter *p, const QColorGroup &cg, int column, i
 int KNHdrViewItem::width( const QFontMetrics &fm, const QListView *, int column )
 {
   int ret = fm.boundingRect( text(column) ).width();
+  const KPaintInfo *paintInfo = static_cast<KNHeaderView*>( listView() )->paintInfo();
 
   // all pixmaps are drawn in the first column
-  if (column == 0) {
+  if ( column == paintInfo->subCol ) {
     const QPixmap *pm;
     for (int i = 0; i < 4; ++i) {
       pm = pixmap( i );
@@ -192,6 +194,37 @@ int KNHdrViewItem::width( const QFontMetrics &fm, const QListView *, int column 
   }
 
   return ret;
+}
+
+
+QString KNHdrViewItem::text( int col ) const
+{
+  if ( !art )
+    return QString::null;
+  KNHeaderView *hv = static_cast<KNHeaderView*>( listView() );
+
+  if ( col == hv->paintInfo()->subCol ) {
+    return art->subject()->asUnicodeString();
+  }
+
+  if ( col == hv->paintInfo()->sizeCol ) {
+    if ( art->lines()->numberOfLines() != -1 )
+      return QString::number( art->lines()->numberOfLines() );
+    else
+      return QString::null;
+  }
+
+  if ( col == hv->paintInfo()->scoreCol ) {
+    if ( art->type() == KMime::Base::ATremote )
+      return QString::number( static_cast<KNRemoteArticle*>( art )->score() );
+    else
+      return QString::null;
+  }
+
+  if ( col == hv->paintInfo()->dateCol ) {
+    return hv->mDateFormatter.dateString( art->date()->qdt() );
+  } else
+    return KListViewItem::text( col );
 }
 
 

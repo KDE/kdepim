@@ -16,7 +16,10 @@
 #define KNHEADERVIEW_H
 
 #include <klistview.h>
+#include <kfoldertree.h>
+#include <kmime_util.h>
 
+class KPopupMenu;
 
 class KNHeaderView : public KListView  {
 
@@ -41,8 +44,9 @@ class KNHeaderView : public KListView  {
     bool nextUnreadThread();
 
     void readConfig();
-    void configChanged();
     void writeConfig();
+
+    const KPaintInfo* paintInfo() const { return &mPaintInfo; }
 
   signals:
     void itemSelected( QListViewItem* );
@@ -57,6 +61,8 @@ class KNHeaderView : public KListView  {
     void incCurrentArticle();
     void decCurrentArticle();
     void selectCurrentArticle();
+
+    void toggleColumn( int column, int mode = -1 );
 
   protected:
     void activeRemoved()            { mActiveItem = 0; }
@@ -79,10 +85,14 @@ class KNHeaderView : public KListView  {
     bool mSortByThreadChangeDate;
     int mDelayedCenter;
     KNHdrViewItem *mActiveItem;
+    KPaintInfo mPaintInfo;
+    KMime::DateFormatter mDateFormatter;
+    KPopupMenu *mPopup;
 
   private slots:
     void slotCenterDelayed();
     void slotSizeChanged( int, int, int );
+    void resetCurrentTime();
 
 };
 

@@ -570,6 +570,8 @@ KNConfig::ReadNewsGeneral::ReadNewsGeneral()
   s_howUnread=conf->readBoolEntry("showUnread", true);
   s_howThreads = conf->readBoolEntry("showThreads", true);
   a_utoCheckPgpSigs = conf->readBoolEntry("autoCheckPgpSigs",false);
+  mDateFormat = (KMime::DateFormatter::FormatType) conf->readNumEntry( "dateFormat", KMime::DateFormatter::Localized );
+  mDateCustomFormat = conf->readEntry( "customDateFormat" );
 
   conf->setGroup("CACHE");
   c_ollCacheSize=conf->readNumEntry("collMemSize", 2048);
@@ -605,6 +607,8 @@ void KNConfig::ReadNewsGeneral::save()
   conf->writeEntry("showUnread", s_howUnread);
   conf->writeEntry("showThreads", s_howThreads);
   conf->writeEntry("autoCheckPgpSigs", a_utoCheckPgpSigs);
+  conf->writeEntry( "dateFormat", mDateFormat );
+  conf->writeEntry( "customDateFormat", mDateCustomFormat );
 
   conf->setGroup("CACHE");
   conf->writeEntry("collMemSize", c_ollCacheSize);

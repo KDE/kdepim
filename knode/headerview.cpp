@@ -19,6 +19,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kdeversion.h>
+#include <kpopupmenu.h>
 
 #include "knglobals.h"
 #include "knconfigmanager.h"
@@ -37,6 +38,12 @@ KNHeaderView::KNHeaderView(QWidget *parent, const char *name) :
   mDelayedCenter( -1 ),
   mActiveItem( 0 )
 {
+  mPaintInfo.subCol    = addColumn( i18n("Subject"), 310 );
+  mPaintInfo.senderCol = addColumn( i18n("From"), 115 );
+  mPaintInfo.scoreCol  = addColumn( i18n("Score"), 42 );
+  mPaintInfo.sizeCol   = addColumn( i18n("Lines"), 42 );
+  mPaintInfo.dateCol   = addColumn( i18n("Date"), 102 );
+
   setDropVisualizer( false );
   setDropHighlighter( false );
   setItemsRenameable( false );
@@ -50,19 +57,22 @@ KNHeaderView::KNHeaderView(QWidget *parent, const char *name) :
   setShadeSortColumn ( true );
 #endif
   setRootIsDecorated( true );
-  setSorting( 4 /* date */ );
+  setSorting( mPaintInfo.dateCol );
   header()->setMovingEnabled( true );
-
-  addColumn( i18n("Subject"), 310 );
-  addColumn( i18n("From"), 115 );
-  addColumn( i18n("Score"), 42 );
-  addColumn( i18n("Lines"), 42 );
-  addColumn( i18n("Date"), 102 );
 
   // due to our own column text squeezing we need to repaint on column resizing
   disconnect( header(), SIGNAL(sizeChange(int, int, int)) );
   connect( header(), SIGNAL(sizeChange(int, int, int)),
            SLOT(slotSizeChanged(int, int, int)) );
+
+  // column selection RMB menu
+  mPopup = new KPopupMenu( this );
+  mPopup->insertTitle( i18n("View Columns") );
+  mPopup->setCheckable( true );
+  mPopup->insertItem( i18n("Line count"),  KPaintInfo::COL_SIZE );
+  mPopup->insertItem( i18n("Score"), KPaintInfo::COL_SCORE );
+
+  connect( mPopup, SIGNAL(activated(int)), this, SLOT(toggleColumn(int)) );
 
   installEventFilter(this);
 }
@@ -70,23 +80,29 @@ KNHeaderView::KNHeaderView(QWidget *parent, const char *name) :
 
 KNHeaderView::~KNHeaderView()
 {
-  writeConfig();
+  // ### crash because KNConfigManager is already deleted here
+  // writeConfig();
 }
 
 
 void KNHeaderView::readConfig()
 {
-  KConfig *conf = knGlobals.config();
-  conf->setGroup( "HeaderView" );
-  mSortByThreadChangeDate = conf->readBoolEntry( "sortByThreadChangeDate", false );
-  restoreLayout( conf, "HeaderView" );
+  static bool initDone = false;
+  if ( !initDone ) {
+    initDone = true;
+    KConfig *conf = knGlobals.config();
+    conf->setGroup( "HeaderView" );
+    mSortByThreadChangeDate = conf->readBoolEntry( "sortByThreadChangeDate", false );
+    restoreLayout( conf, "HeaderView" );
+  }
 
-  configChanged();
-}
+  KNConfig::ReadNewsGeneral *rngConf = knGlobals.configManager()->readNewsGeneral();
+  toggleColumn( KPaintInfo::COL_SIZE, rngConf->showLines() );
+  toggleColumn( KPaintInfo::COL_SCORE, rngConf->showScore() );
 
+  mDateFormatter.setCustomFormat( rngConf->dateCustomFormat() );
+  mDateFormatter.setFormat( rngConf->dateFormat() );
 
-void KNHeaderView::configChanged()
-{
   KNConfig::Appearance *app = knGlobals.configManager()->appearance();
   QPalette p = palette();
   p.setColor( QColorGroup::Base, app->backgroundColor() );
@@ -94,25 +110,6 @@ void KNHeaderView::configChanged()
   setPalette( p );
   setAlternateBackground( app->alternateBackgroundColor() );
   setFont( app->articleListFont() );
-
-  if ( knGlobals.configManager()->readNewsGeneral()->showScore() ) {
-    if ( !header()->isResizeEnabled( 2 ) ) {
-      header()->setResizeEnabled( true, 2 );
-      header()->setLabel( 2, i18n("Score"), 42 );
-    }
-  } else {
-    header()->setLabel( 2, QString::null, 0 );
-    header()->setResizeEnabled( false, 2 );
-  }
-  if ( knGlobals.configManager()->readNewsGeneral()->showLines() ) {
-    if ( !header()->isResizeEnabled( 3 ) ) {
-      header()->setResizeEnabled( true, 3 );
-      header()->setLabel( 3, i18n("Lines"), 42 );
-    }
-  } else {
-    header()->setLabel( 3, QString::null, 0 );
-    header()->setResizeEnabled( false, 3 );
-  }
 }
 
 
@@ -122,6 +119,10 @@ void KNHeaderView::writeConfig()
   conf->setGroup( "HeaderView" );
   conf->writeEntry( "sortByThreadChangeDate", mSortByThreadChangeDate );
   saveLayout( conf, "HeaderView" );
+
+  KNConfig::ReadNewsGeneral *rngConf = knGlobals.configManager()->readNewsGeneral();
+  rngConf->setShowLines( mPaintInfo.showSize );
+  rngConf->setShowScore( mPaintInfo.showScore );
 }
 
 
@@ -194,7 +195,7 @@ void KNHeaderView::setSorting( int column, bool ascending )
 {
   if ( column == mSortCol ) {
     mSortAsc = ascending;
-    if ( column == 4 && ascending )
+    if ( column == mPaintInfo.dateCol && ascending )
       mSortByThreadChangeDate = !mSortByThreadChangeDate;
   } else {
     mSortCol = column;
@@ -207,9 +208,9 @@ void KNHeaderView::setSorting( int column, bool ascending )
     ensureItemVisible( currentItem() );
 
   if ( mSortByThreadChangeDate )
-    setColumnText( 4, i18n("Date (thread changed)") );
+    setColumnText( mPaintInfo.dateCol , i18n("Date (thread changed)") );
   else
-    setColumnText( 4, i18n("Date") );
+    setColumnText( mPaintInfo.dateCol, i18n("Date") );
 }
 
 
@@ -378,6 +379,50 @@ bool KNHeaderView::nextUnreadThread()
 }
 
 
+void KNHeaderView::toggleColumn( int column, int mode )
+{
+  bool *show = 0;
+  int  *col  = 0;
+  int  width = 0;
+
+  switch ( static_cast<KPaintInfo::ColumnIds>( column ) )
+  {
+    case KPaintInfo::COL_SIZE:
+      show  = &mPaintInfo.showSize;
+      col   = &mPaintInfo.sizeCol;
+      width = 42;
+      break;
+    case KPaintInfo::COL_SCORE:
+      show  = &mPaintInfo.showScore;
+      col   = &mPaintInfo.scoreCol;
+      width = 42;
+      break;
+    default:
+      return;
+  }
+
+  if ( mode == -1 )
+    *show = !*show;
+  else
+    *show = mode;
+
+  mPopup->setItemChecked( column, *show );
+
+  if (*show) {
+    header()->setResizeEnabled( true, *col );
+    setColumnWidth( *col, width );
+  }
+  else {
+    header()->setResizeEnabled( false, *col );
+    header()->setStretchEnabled( false, *col );
+    hideColumn( *col );
+  }
+
+  if ( mode == -1 )
+    writeConfig();
+}
+
+
 bool KNHeaderView::event( QEvent *e )
 {
   // we don't want to have the alternate list background restored
@@ -472,6 +517,16 @@ bool KNHeaderView::eventFilter(QObject *o, QEvent *e)
     if (!hasFocus())  // focusChangeRequest was successful
       return true;
   }
+
+  // right click on header
+  if ( e->type() == QEvent::MouseButtonPress &&
+       static_cast<QMouseEvent*>(e)->button() == RightButton &&
+       o->isA("QHeader") )
+  {
+    mPopup->popup( static_cast<QMouseEvent*>(e)->globalPos() );
+    return true;
+  }
+
   return KListView::eventFilter(o, e);
 }
 
@@ -487,6 +542,13 @@ void KNHeaderView::focusOutEvent(QFocusEvent *e)
 {
   QListView::focusOutEvent(e);
   emit focusChanged(e);
+}
+
+
+void KNHeaderView::resetCurrentTime()
+{
+  mDateFormatter.reset();
+  QTimer::singleShot( 1000, this, SLOT(resetCurrentTime()) );
 }
 
 

@@ -165,16 +165,12 @@ bool KNRemoteArticle::removeHeader(const char *type)
 void KNRemoteArticle::initListItem()
 {
   if(!i_tem) return;
-  i_tem->setText(0, s_ubject.asUnicodeString());
 
   if(f_rom.hasName())
     i_tem->setText(1, f_rom.name());
   else
     i_tem->setText(1, QString(f_rom.email()));
 
-  i_tem->setText(3, QString("%1").arg(lines()->numberOfLines()));
-
-  i_tem->setText(4, KGlobal::locale()->formatDateTime(d_ate.qdt(), true));
   updateListItem();
 }
 
@@ -211,8 +207,6 @@ void KNRemoteArticle::updateListItem()
     else
       i_tem->setPixmap(2, app->icon(KNConfig::Appearance::null));
   }
-
-  i_tem->setText(2, QString("%1").arg(s_core));
 
   i_tem->setExpandable( (threadMode() && hasVisibleFollowUps()) );
 
@@ -366,8 +360,6 @@ void KNLocalArticle::updateListItem()
   if(!i_tem)
     return;
 
-  i_tem->setText(0, s_ubject.asUnicodeString());
-
   QString tmp;
   int idx=0;
   KNConfig::Appearance *app=knGlobals.configManager()->appearance();
@@ -399,12 +391,6 @@ void KNLocalArticle::updateListItem()
   }
 
   i_tem->setText(1, tmp);
-  i_tem->setText(2, QString::null);
-  if (lines()->numberOfLines()!=-1)
-    i_tem->setText(3, QString("%1").arg(lines()->numberOfLines()));
-  else
-    i_tem->setText(3, QString::null);
-  i_tem->setText(4, KGlobal::locale()->formatDateTime(d_ate.qdt(), true));
 }
 
 

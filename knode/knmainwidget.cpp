@@ -537,7 +537,7 @@ void KNMainWidget::openURL(const KURL &url)
 // update fonts and colors
 void KNMainWidget::configChanged()
 {
-  h_drView->configChanged();
+  h_drView->readConfig();
   c_olView->readConfig();
   a_rtManager->updateListViewItems();
 }

@@ -22,6 +22,7 @@
 
 #include <kdialogbase.h>
 #include <kcmodule.h>
+#include <kmime_util.h>
 
 #include "knwidgets.h"
 
@@ -506,6 +507,12 @@ class ReadNewsGeneral : public Base {
     bool autoCheckPgpSigs()const          { return a_utoCheckPgpSigs; }
     void setAutoCheckPgpSigs(bool b) { d_irty=true; a_utoCheckPgpSigs=b;}
 
+    KMime::DateFormatter::FormatType dateFormat() const { return mDateFormat; }
+    QString dateCustomFormat() const { return mDateCustomFormat; }
+
+    void setShowLines( bool show ) { d_irty = true; s_howLines = show; }
+    void setShowScore( bool show ) { d_irty = true; s_howScore = show; }
+
   protected:
     bool  a_utoCheck,
           a_utoMark,
@@ -523,6 +530,9 @@ class ReadNewsGeneral : public Base {
           m_arkSecs,
           c_ollCacheSize,
           a_rtCacheSize;
+
+    KMime::DateFormatter::FormatType mDateFormat;
+    QString mDateCustomFormat;
 
 };
 
