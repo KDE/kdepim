@@ -285,7 +285,12 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 			<< ": Adding " << s << " to restore list." << endl;
 #endif
 
+		memset(dbi.name,0,sizeof(dbi.name));
+#if KDE_VERSION < 310
+		strncpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name));
+#else
 		strlcpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name));
+#endif
 
 		f = pi_file_open(dbi.name);
 		if (!f)
@@ -486,6 +491,9 @@ nextFile:
 
 
 // $Log$
+// Revision 1.14.4.1  2002/12/12 13:27:17  lunakl
+// strcpy -> strlcpy
+//
 // Revision 1.14  2002/08/23 22:03:21  adridg
 // See ChangeLog - exec() becomes bool, debugging added
 //
