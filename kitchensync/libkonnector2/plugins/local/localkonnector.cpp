@@ -139,6 +139,7 @@ bool LocalKonnector::readSyncees()
 
       mAddressBookSyncee->reset();
       mAddressBookSyncee->setIdentifier( mAddressBook.identifier() );
+      kdDebug() << "IDENTIFIER: " << mAddressBookSyncee->identifier() << endl;
 
       KABC::AddressBook::Iterator it;
       for ( it = mAddressBook.begin(); it != mAddressBook.end(); ++it ) {
