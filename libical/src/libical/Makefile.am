@@ -28,8 +28,8 @@ ICALSCRIPTS = $(top_srcdir)/scripts
 
 lib_LTLIBRARIES = libical.la
 
-AM_YFLAGS = -d -v -t -pyy
-AM_LFLAGS = -Pyy
+AM_YFLAGS = -d -v -t -pical_yy
+AM_LFLAGS = -Pical_yy
 
 INCLUDES =			\
 	-I$(top_builddir)	\
