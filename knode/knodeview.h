@@ -94,8 +94,8 @@ class KNodeView : public QSplitter
     void initActions();
     void initPopups(KNMainWindow *w);
 
-    /*virtual void paletteChange ( const QPalette & );
-    virtual void fontChange ( const QFont & );*/
+    virtual void paletteChange ( const QPalette & );
+    virtual void fontChange ( const QFont & );
 
     //GUI
     QSplitter       *s_ecSplitter;

@@ -369,7 +369,7 @@ void KNodeView::configChanged()
   c_olView->setFont(app->groupListFont());
   a_rtManager->setViewFont();
 
-  QPalette p = c_olView->palette();
+  QPalette p = palette();
   p.setColor(QColorGroup::Base, app->backgroundColor());
   c_olView->setPalette(p);
   h_drView->setPalette(p);
@@ -525,22 +525,20 @@ void KNodeView::initPopups(KNMainWindow *w)
 }
 
 
-/*#warning FIXME
 void KNodeView::paletteChange ( const QPalette & )
 {
-  updateAppearance();
-  KNArticleWidget::readOptions();
-  KNArticleWidget::updateInstances();
+  knGlobals.cfgManager->appearance()->updateHexcodes();
+  KNArticleWidget::configChanged();
+  configChanged();
 }
 
 
 void KNodeView::fontChange ( const QFont & )
 {
-  updateAppearance();
-  KNArticleWidget::readOptions();
-  KNArticleWidget::updateInstances();
-
-} */
+  knGlobals.artFactory->configChanged();
+  KNArticleWidget::configChanged();
+  configChanged();
+}
 
 
 void KNodeView::slotArticleSelected(QListViewItem *i)

@@ -280,6 +280,7 @@ class Appearance : public Base {
 
     const char* headerDecoHexcode()       { return h_excodes[headerHex]; }
     const char* quotedTextHexcode(int i)  { return h_excodes[i]; }
+    void updateHexcodes();
 
     QFont articleFont();
     QFont composerFont();
@@ -290,7 +291,6 @@ class Appearance : public Base {
 
 
   protected:
-    void updateHexcodes();
     const QColor& color(int i)           { return c_olors[i]; }
     const QString& colorName(int i)      { return c_olorNames[i]; }
     int colorCount()                     { return COL_CNT; }
