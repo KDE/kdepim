@@ -40,5 +40,5 @@ Name[zh_CN]=电子邮件信息
 ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_rfc822
 MimeType=message/rfc822
-PreferredGrous=Technical
+PreferredGroups=Technical
 PreferredItems=From,To,Subject,Date,Content-Type
