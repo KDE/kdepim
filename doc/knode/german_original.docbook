@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
-  <!ENTITY knode "<application>KNode</application>">
-  <!ENTITY kappname "&knode;">
-  <!ENTITY % addindex "IGNORE">
-  <!ENTITY % German "INCLUDE">
+<!ENTITY knode "<application>KNode</application>">
+<!ENTITY kappname "&knode;">
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % German "INCLUDE">
 
 
 ]>
@@ -22,8 +22,8 @@
 
 <author>
 <firstname>Thomas</firstname><surname>Schütz</surname>
-<affilitiation><address><email>Thomas.Schuetz@gmx.li</email></address>
-</affilitiation>
+<affiliation><address><email>Thomas.Schuetz@gmx.li</email></address>
+</affiliation>
 </author>
 
 <othercredit role="developer">
@@ -279,16 +279,16 @@ Dialog für die Einstellungen aufgerufen.
 
 <screenshot>
 <screeninfo>Die Einrichtung von &knode;</screeninfo>
-	<mediaobject>
-	  <imageobject>
-	    <imagedata fileref="knode-start.png" format="PNG"/>
-	  </imageobject>
-          <textobject>
-          <phrase>&knode; nach dem ersten Start</phrase>
-          </textobject>
-	  <caption><para>&knode; nach dem ersten Start</para></caption>
+<mediaobject>
+  <imageobject>
+    <imagedata fileref="knode-start.png" format="PNG"/>
+  </imageobject>
+  <textobject>
+  <phrase>&knode; nach dem ersten Start</phrase>
+  </textobject>
+  <caption><para>&knode; nach dem ersten Start</para></caption>
 
-	</mediaobject>
+</mediaobject>
 </screenshot>
 
 <para>
@@ -347,15 +347,15 @@ Dialog.</para>
 
 <screenshot>
 <screeninfo>Dialog für das Eintrage der Benutzerdaten</screeninfo>
-	<mediaobject>
-	  <imageobject>
-	    <imagedata fileref="knode-identity.png" format="PNG"/>
-	  </imageobject>
-          <textobject>
-	  <phrase>Die Eingabe der persönlichen Daten</phrase>
-	  </textobject>
-	  <caption><para>Die Eingabe der persönlichen Daten</para></caption>
-	</mediaobject>
+<mediaobject>
+  <imageobject>
+    <imagedata fileref="knode-identity.png" format="PNG"/>
+  </imageobject>
+  <textobject>
+  <phrase>Die Eingabe der persönlichen Daten</phrase>
+  </textobject>
+  <caption><para>Die Eingabe der persönlichen Daten</para></caption>
+</mediaobject>
 </screenshot>
 
 <para>Der Dialog ist zweigeteilt: Links erscheint eine Baumansicht, in
@@ -1196,12 +1196,10 @@ den Standardwert für die ignorierten, d.h. uninteressanten Diskussionen, einste
 Wenn ein Artikel interessant ist, erhält er einen Wert, der größer als 0 ist. Hier
 können Sie diesen Wert ändern.
 </para>
-<para>
-<tip>
+<tip><para>
 Verwenden Sie die Taste <keycap>W</keycap>(Watch), um eine Diskussion zu überwachen,
 bzw. die Taste <keycap>I</keycap>(Ignore), um eine Diskussion zu ignorieren.
-</tip>
-</para>
+</para></tip>
 </sect3>
 </sect2>
 
@@ -4827,15 +4825,14 @@ sich so zum Beispiel in grellem Lila darstellen und fallen sofort ins Auge.
 </para>
 <para>
 Wenn Sie nach dem Editieren den Editor verlassen oder den Menüpunkt <menuchoice><guimenu>
-Bewertung</guimenu> <menuitem>Neuberechnung der Bewertung</menuitem></menuchoice>
+Bewertung</guimenu> <guimenuitem>Neuberechnung der Bewertung</guimenuitem></menuchoice>
 anwählen, werden die Regeln auf die vorhandenen <glossterm>Artikel</glossterm> angewandt.
 Außerdem werden Sie automatisch auf alle neuen <glossterm>Artikel</glossterm> angewandt.
 Bewertungen machen am meisten Sinn im Zusammenhang mit Filtern, d.h. Sie vergeben eine
 Bewertung und filtern die so bewerteten Artikel aus der Anzeige heraus.
 </para>
 </sect2>
-*********
-<!-- CHANGED -->
+<!-- CHANGED ****** -->
 <sect2 id="group-identity">
 <title>Lokale Identitäten</title>
 <anchor id="anc-group-identity"/>
@@ -5692,9 +5689,9 @@ aktiven Artikels wird in einem eigenen Fenster angezeigt.
 <guimenu>Artikel</guimenu>
 <guimenuitem>Artikel bearbeiten</guimenuitem>
 </menuchoice></term> <listitem><para><action>Öffnet den Artikel-Editor
-zum Bearbeiten der aktiven Nachricht. Es können nur Nachrichten in den
+zum Bearbeiten der aktiven Nachricht.</action> Es können nur Nachrichten in den
 Ordnern <guilabel>Ausgang</guilabel> und <guilabel>Entwürfe</guilabel>
-bearbeitet werden.</action></para></listitem>
+bearbeitet werden.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -5704,18 +5701,18 @@ bearbeitet werden.</action></para></listitem>
 </shortcut>
 <guimenu>Artikel</guimenu> <guimenuitem>Artikel löschen</guimenuitem>
 </menuchoice></term> <listitem><para><action>Löscht die aktive
-Nachricht. Es können nur Nachrichten in den Ordnern
+Nachricht.</action> Es können nur Nachrichten in den Ordnern
 <guilabel>Ausgang</guilabel> und <guilabel>Entwürfe</guilabel>
-gelöscht werden.</action></para></listitem>
+gelöscht werden.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice> <guimenu>Artikel</guimenu> <guimenuitem>Sofort
 versenden</guimenuitem> </menuchoice></term>
-<listitem><para><action>Versendet die aktive Nachricht. Es können
+<listitem><para><action>Versendet die aktive Nachricht.</action> Es können
 nur Nachrichten in den Ordnern <guilabel>Ausgang</guilabel> und
 <guilabel>Entwürfe</guilabel> bearbeitet
-werden.</action></para></listitem>
+werden.</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -5920,8 +5917,8 @@ das Programm &knode; aufgerufen.</action></para></listitem>
 <varlistentry>
 <term><menuchoice> <guimenu>Datei</guimenu> <guimenuitem>Später
 versenden</guimenuitem> </menuchoice></term>
-<listitem><para><action>Legt den bearbeiteten Artikel im Ordner
-<guilabel>Ausgang</guilabel> ab.</action>
+<listitem><para>Legt den bearbeiteten Artikel im Ordner
+<guilabel>Ausgang</guilabel> ab.
 </para>
 </listitem>
 </varlistentry>
@@ -5929,8 +5926,8 @@ versenden</guimenuitem> </menuchoice></term>
 <varlistentry>
 <term><menuchoice> <guimenu>Datei</guimenu> <guimenuitem>Als Entwurf
 speichern</guimenuitem> </menuchoice></term>
-<listitem><para><action>Legt den bearbeiteten Artikel im Ordner
-<guilabel>Entwürfe</guilabel> ab.</action>
+<listitem><para>Legt den bearbeiteten Artikel im Ordner
+<guilabel>Entwürfe</guilabel> ab.
 </para>
 </listitem>
 </varlistentry>
@@ -5971,9 +5968,9 @@ Fenster.</action></para></listitem>
 <keycap>Umschalt</keycap>
 <keycap>Z</keycap></keycombo></shortcut>
 <guimenu>Bearbeiten</guimenu> <guimenuitem>Wiederherstellen</guimenuitem>
-</menuchoice></term> <listitem><para><action>Hebt die Wirkung von
+</menuchoice></term> <listitem><para>Hebt die Wirkung von
 <guimenuitem>Rückgängig</guimenuitem> wieder auf.
-</action></para></listitem>
+</para></listitem>
 </varlistentry>
 
 <varlistentry>

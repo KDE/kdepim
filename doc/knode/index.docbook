@@ -1842,7 +1842,7 @@ Articles labeled with this symbol are read and the body was fetched from the
 server.</para></listitem> 
 
 <listitem><para><inlinemediaobject><imageobject><imagedata fileref="redball.png"
-format="png"/> </imageobject></inlinemediaobject> Articles labeled with
+format="PNG"/> </imageobject></inlinemediaobject> Articles labeled with
 this symbol are unread and the body has not yet been fetched.</para></listitem>
 
 <listitem><para><inlinemediaobject><imageobject><imagedata
@@ -1851,12 +1851,12 @@ Articles labled with this symbol are unread but the body has already been
 already fetched.</para></listitem>
 
 <listitem><para><inlinemediaobject><imageobject><imagedata fileref="newsubs.png"
-format="png"/></imageobject></inlinemediaobject> Articles labeled with this
+format="PNG"/></imageobject></inlinemediaobject> Articles labeled with this
 symbol are part of a thread with new and unread articles in
 it.</para></listitem>
 
 <listitem><para><inlinemediaobject><imageobject><imagedata fileref="eyes.png"
-format="png"/></imageobject></inlinemediaobject> Articles labled with
+format="PNG"/></imageobject></inlinemediaobject> Articles labled with
 this symbol are parts of a guarded thread. This corresponds to a score of
 100.</para></listitem>
 
