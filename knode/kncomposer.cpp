@@ -45,6 +45,7 @@ using KRecentAddress::RecentAddresses;
 #include <syntaxhighlighter.h>
 #include <qcursor.h>
 #include <kurldrag.h>
+#include <kcompletionbox.h>
 
 using Syntaxhighlighter::DictSpellChecker;
 using Syntaxhighlighter::SpellChecker;
@@ -65,9 +66,10 @@ using Syntaxhighlighter::SpellChecker;
 #include <spellingfilter.h>
 #include <qcursor.h>
 
-KNLineEdit::KNLineEdit(bool useCompletion,
+KNLineEdit::KNLineEdit(KNComposer::ComposerView *_composerView, bool useCompletion,
                        QWidget *parent, const char *name)
-    : KNLineEditInherited(parent,useCompletion,name)
+    : KNLineEditInherited(parent,useCompletion,name)    , composerView(_composerView)
+
 {
 }
 
@@ -81,8 +83,31 @@ void KNLineEdit::loadAddresses()
         addAddress( *it );
 }
 
-KNLineEditSpell::KNLineEditSpell(QWidget * parent, const char * name)
-    :QLineEdit( parent,name )
+void KNLineEdit::keyPressEvent(QKeyEvent *e)
+{
+    // ---sven's Return is same Tab and arrow key navigation start ---
+    if ((e->key() == Key_Enter || e->key() == Key_Return) &&
+        !completionBox()->isVisible())
+    {
+        composerView->focusNextPrevEdit(this,TRUE);
+      return;
+    }
+    if (e->key() == Key_Up)
+    {
+        composerView->focusNextPrevEdit(this,FALSE); // Go up
+      return;
+    }
+    if (e->key() == Key_Down)
+    {
+        composerView->focusNextPrevEdit(this,TRUE); // Go down
+      return;
+    }
+    // ---sven's Return is same Tab and arrow key navigation end ---
+  KNLineEditInherited::keyPressEvent(e);
+}
+
+KNLineEditSpell::KNLineEditSpell( KNComposer::ComposerView *_composerView, bool useCompletion,QWidget * parent, const char * name)
+    :KNLineEdit( _composerView, useCompletion, parent,name )
 {
 }
 
@@ -1664,7 +1689,9 @@ KNComposer::ComposerView::ComposerView(KNComposer *composer, const char *n)
   hdrL->setColStretch(1,1);
 
   //To
-  t_o=new KNLineEdit(true, hdrFrame);
+  t_o=new KNLineEdit(this, true, hdrFrame);
+  mEdtList.append(t_o);
+
   l_to=new QLabel(t_o, i18n("T&o:"), hdrFrame);
   t_oBtn=new QPushButton(i18n("&Browse..."), hdrFrame);
   hdrL->addWidget(l_to, 0,0);
@@ -1690,7 +1717,9 @@ KNComposer::ComposerView::ComposerView(KNComposer *composer, const char *n)
   hdrL->addMultiCellWidget(f_up2, 2,2, 1,2);
 
   //subject
-  s_ubject=new KNLineEditSpell(hdrFrame);
+  s_ubject=new KNLineEditSpell(this, false, hdrFrame);
+  mEdtList.append(s_ubject);
+
   QLabel *l=new QLabel(s_ubject, i18n("S&ubject:"), hdrFrame);
   hdrL->addWidget(l, 3,0);
   hdrL->addMultiCellWidget(s_ubject, 3,3, 1,2);
@@ -1698,7 +1727,7 @@ KNComposer::ComposerView::ComposerView(KNComposer *composer, const char *n)
           parent(), SLOT(slotSubjectChanged(const QString&)));
 
   //Editor
-  e_dit=new Editor(composer, main);
+  e_dit=new Editor(this, composer, main);
   e_dit->setMinimumHeight(50);
 
   KConfig *config = kapp->config();
@@ -1752,6 +1781,31 @@ KNComposer::ComposerView::~ComposerView()
 }
 
 
+void KNComposer::ComposerView::focusNextPrevEdit(const QWidget* aCur, bool aNext)
+{
+  QWidget* cur;
+
+  if (!aCur)
+  {
+    cur=mEdtList.last();
+  }
+  else
+  {
+    for (cur=mEdtList.first(); aCur!=cur && cur; cur=mEdtList.next())
+      ;
+    if (!cur) return;
+    if (aNext) cur = mEdtList.next();
+    else cur = mEdtList.prev();
+  }
+  if (cur)
+  {
+      if ( cur->isVisible() )
+          cur->setFocus();
+  }
+  else if (aNext) e_dit->setFocus();
+}
+
+
 void KNComposer::ComposerView::setMessageMode(KNComposer::MessageMode mode)
 {
   if (mode != KNComposer::news) {
@@ -1769,6 +1823,7 @@ void KNComposer::ComposerView::setMessageMode(KNComposer::MessageMode mode)
     g_roups->show();
     f_up2->show();
     g_roupsBtn->show();
+
   } else {
     l_groups->hide();
     l_fup2->hide();
@@ -1877,18 +1932,53 @@ void KNComposer::ComposerView::hideExternalNotification()
 
 //=====================================================================================
 
-
-KNComposer::Editor::Editor(KNComposer *_composer, QWidget *parent, char *name)
-    : KEdit(parent, name), m_composer( _composer )
+#include <kcursor.h>
+KNComposer::Editor::Editor(KNComposer::ComposerView *_composerView, KNComposer *_composer, QWidget *parent, char *name)
+    : KEdit(parent, name), m_composer( _composer ), m_composerView(_composerView)
 {
   setOverwriteEnabled(true);
   spell = 0L;
+  installEventFilter(this);
+  KCursor::setAutoHideCursor( this, true, true );
+
 }
 
 
 KNComposer::Editor::~Editor()
 {
+    removeEventFilter(this);
     delete spell;
+}
+
+//-----------------------------------------------------------------------------
+bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
+{
+  if (o == this)
+    KCursor::autoHideEventFilter(o, e);
+
+  if (e->type() == QEvent::KeyPress)
+  {
+    QKeyEvent *k = (QKeyEvent*)e;
+    // ---sven's Arrow key navigation start ---
+    // Key Up in first line takes you to Subject line.
+    if (k->key() == Key_Up && k->state() != ShiftButton && currentLine() == 0
+      && lineOfChar(0, currentColumn()) == 0)
+    {
+      deselect();
+      m_composerView->focusNextPrevEdit(0, false); //take me up
+      return TRUE;
+    }
+    // ---sven's Arrow key navigation end ---
+
+    if (k->key() == Key_Backtab && k->state() == ShiftButton)
+    {
+      deselect();
+      m_composerView->focusNextPrevEdit(0, false);
+      return TRUE;
+    }
+
+  }
+  return KEdit::eventFilter(o, e);
 }
 
 

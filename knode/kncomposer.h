@@ -51,18 +51,8 @@ namespace Syntaxhighlighter {
   class DictSpellChecker;
 }
 
-//-----------------------------------------------------------------------------
-class KNLineEdit : public KABC::AddressLineEdit
-{
-    Q_OBJECT
-    typedef KABC::AddressLineEdit KNLineEditInherited;
-public:
-    KNLineEdit(bool useCompletion, QWidget *parent = 0,
-               const char *name = 0);
-protected:
-    // Inherited. Always called by the parent when this widget is created.
-    virtual void loadAddresses();
-};
+
+
 
 
 class KNComposer : public KMainWindow  {
@@ -222,30 +212,24 @@ class KNComposer : public KMainWindow  {
 
 };
 
-class KNLineEditSpell : public QLineEdit
-{
-    Q_OBJECT
-public:
-    KNLineEditSpell(QWidget * parent, const char * name = 0);
-    void highLightWord( unsigned int length, unsigned int pos );
-    void spellCheckDone( const QString &s );
-    void spellCheckerMisspelling( const QString &text, const QStringList &, unsigned int pos);
-    void spellCheckerCorrected( const QString &old, const QString &corr, unsigned int pos);
-};
 
+
+class KNLineEditSpell;
+class KNLineEdit;
 
 class KNComposer::ComposerView  : public QSplitter {
 
   public:
     ComposerView(KNComposer *_composer, const char *n=0);
     ~ComposerView();
-
+    void focusNextPrevEdit(const QWidget* aCur, bool aNext);
     void setMessageMode(KNComposer::MessageMode mode);
     void showAttachmentView();
     void hideAttachmentView();
     void showExternalNotification();
     void hideExternalNotification();
     void restartBackgroundSpellCheck();
+    QPtrList<QWidget> mEdtList;
 
     QLabel      *l_to,
                 *l_groups,
@@ -280,7 +264,7 @@ class KNComposer::Editor : public KEdit {
   Q_OBJECT
 
   public:
-    Editor(KNComposer *_composer, QWidget *parent=0, char *name=0);
+    Editor(KNComposer::ComposerView *_composerView, KNComposer *_composer, QWidget *parent=0, char *name=0);
     ~Editor();
     QStringList processedText();
 
@@ -315,8 +299,11 @@ protected slots:
     virtual void contentsDropEvent(QDropEvent *);
     virtual void contentsContextMenuEvent( QContextMenuEvent *e );
     virtual void keyPressEvent ( QKeyEvent *e);
+
+    virtual bool eventFilter(QObject*, QEvent*);
 private:
     KNComposer *m_composer;
+    KNComposer::ComposerView *m_composerView;
     KSpell *spell;
 
 };
@@ -370,6 +357,34 @@ class KNComposer::AttachmentPropertiesDlg : public KDialogBase {
   protected slots:
     void accept();
     void slotMimeTypeTextChanged(const QString &text);
+};
+
+//-----------------------------------------------------------------------------
+class KNLineEdit : public KABC::AddressLineEdit
+{
+    Q_OBJECT
+    typedef KABC::AddressLineEdit KNLineEditInherited;
+public:
+
+    KNLineEdit(KNComposer::ComposerView *_composerView, bool useCompletion, QWidget *parent = 0,
+               const char *name = 0);
+protected:
+    // Inherited. Always called by the parent when this widget is created.
+    virtual void loadAddresses();
+    void keyPressEvent(QKeyEvent *e);
+private:
+    KNComposer::ComposerView *composerView;
+};
+
+class KNLineEditSpell : public KNLineEdit
+{
+    Q_OBJECT
+public:
+    KNLineEditSpell(KNComposer::ComposerView *_composerView, bool useCompletion,QWidget * parent, const char * name = 0);
+    void highLightWord( unsigned int length, unsigned int pos );
+    void spellCheckDone( const QString &s );
+    void spellCheckerMisspelling( const QString &text, const QStringList &, unsigned int pos);
+    void spellCheckerCorrected( const QString &old, const QString &corr, unsigned int pos);
 };
 
 #endif
