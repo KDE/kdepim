@@ -789,7 +789,7 @@ void KNComposer::slotAttachFile()
 
   if(QFile::exists(path)) {
     if (!v_iew->v_iewOpen) {
-      saveWindowSize("composer", size());
+      ::saveWindowSize("composer", size());
       v_iew->showAttachmentView();
     }
     (void) new AttachmentViewItem(v_iew->a_ttView, new KNAttachment(path));
@@ -813,7 +813,7 @@ void KNComposer::slotRemoveAttachment()
     delete it;
 
     if(v_iew->a_ttView->childCount()==0) {
-      saveWindowSize("composerAtt", size());
+      ::saveWindowSize("composerAtt", size());
       v_iew->hideAttachmentView();
     }
 
@@ -1835,14 +1835,14 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg(KNAttachment *a, QW
 
   //finish GUI
   setFixedHeight(sizeHint().height());
-  restoreWindowSize("attProperties", this, QSize(300,250));
+  ::restoreWindowSize("attProperties", this, QSize(300,250));
   setHelp("anc-knode-editor-advanced");
 }
 
 
 KNComposer::AttachmentPropertiesDlg::~AttachmentPropertiesDlg()
 {
-  saveWindowSize("attProperties", this->size());
+  ::saveWindowSize("attProperties", this->size());
 }
 
 
