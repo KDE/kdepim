@@ -1,6 +1,6 @@
 #include <qlayout.h>
-#include <qlabel.h>
 #include <qcombobox.h>
+#include <qlabel.h>
 #include <kdialog.h>
 #include <kdebug.h>
 #include <klineedit.h>
@@ -9,9 +9,9 @@
 IncSearchWidget::IncSearchWidget(QWidget *parent, const char* /*name*/)
     : IncSearchWidgetBase(parent, "kde toolbar widget")
 {
-    // style the label too
+    setName("kde toolbar widget");
     labelIncSearch->setName("kde toolbar widget");
-    layout()->setMargin(KDialog::marginHint());
+    layout()->setMargin(0);
     layout()->setSpacing(KDialog::spacingHint());
     connect(leIncSearch, SIGNAL(textChanged(const QString&)),
             SLOT(incSearchTextChanged(const QString&)));
