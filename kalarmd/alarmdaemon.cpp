@@ -238,12 +238,12 @@ void AlarmDaemon::removeCal_(const QString& urlString)
  * DCOP call to add an application to the list of client applications,
  * and add it to the config file.
  */
-void AlarmDaemon::registerApp(const QCString& appName, const QString& appTitle,
+void AlarmDaemon::registerApp_(const QCString& appName, const QString& appTitle,
                               const QCString& dcopObject, int notificationType,
-                              bool displayCalendarName)
+                              bool displayCalendarName, bool reregister)
 {
-  kdDebug(5900) << "AlarmDaemon::registerApp(" << appName << ", " << appTitle << ", "
-                <<  dcopObject << ", " << notificationType << ")" << endl;
+  kdDebug(5900) << "AlarmDaemon::registerApp_(" << appName << ", " << appTitle << ", "
+                <<  dcopObject << ", " << notificationType << ", " << reregister << ")" << endl;
   if (!appName.isEmpty())
   {
     if (KStandardDirs::findExe(appName) == QString::null)
@@ -254,11 +254,13 @@ void AlarmDaemon::registerApp(const QCString& appName, const QString& appTitle,
       if (c.isValid())
       {
         // The application is already in the clients list.
-        // Mark all its calendar files as unregistered and remove it from the list.
-        for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
-        {
-          if (cal->appName() == appName)
-            cal->setUnregistered( true );
+        if (!reregister) {
+          // Mark all its calendar files as unregistered and remove it from the list.
+          for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
+          {
+            if (cal->appName() == appName)
+              cal->setUnregistered( true );
+          }
         }
         removeClientInfo(appName);
       }
