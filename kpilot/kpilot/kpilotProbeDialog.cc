@@ -280,10 +280,7 @@ void ProbeDialog::connection( KPilotDeviceLink*lnk)
 
 void ProbeDialog::retrieveDBList()
 {
-	// @TODO: Retrieve list of databases on the handheld:
 	QPtrList<DBInfo> dbs = mActiveLink->getDBList();
-//	QStringList creators;
-//	QStringList dbnames;
 	mDBs.clear();
 	dbs.setAutoDelete( true );
 	char buff[7];
