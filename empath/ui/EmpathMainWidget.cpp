@@ -55,7 +55,7 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent)
 
     messageListWidget_  = new EmpathMessageListWidget(vSplit);
 
-    EmpathMessageViewWidget * messageViewWidget =
+    messageViewWidget_ =
         new EmpathMessageViewWidget(EmpathURL(), vSplit);
 
     QObject::connect(
