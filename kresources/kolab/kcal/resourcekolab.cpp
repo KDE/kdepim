@@ -386,6 +386,7 @@ bool ResourceKolab::addEvent( KCal::Event* event, const QString& _subresource,
     mCalendar.addEvent( event );
     if ( !subResource.isEmpty() && sernum != 0 ) {
       mUidMap[ event->uid() ] = StorageReference( subResource, sernum );
+      event->setReadOnly( !mEventSubResources[ subResource ].writable() );
     }
     if ( KCal::IncidenceBase *update = mPendingUpdates.find( event->uid() ) ) {
       mSilent = false; // we do want to tell KMail
@@ -487,6 +488,7 @@ bool ResourceKolab::addTodo( KCal::Todo* todo, const QString& _subresource,
     mCalendar.addTodo( todo );
     if ( !subResource.isEmpty() && sernum != 0 ) {
       mUidMap[ todo->uid() ] = StorageReference( subResource, sernum );
+      todo->setReadOnly( !mTodoSubResources[ subResource ].writable() );
     }
     if ( KCal::IncidenceBase *update = mPendingUpdates.find( todo->uid() ) ) {
       mSilent = false; // we do want to tell KMail
@@ -578,6 +580,7 @@ bool ResourceKolab::addJournal( KCal::Journal* journal,
     mCalendar.addJournal( journal );
     if ( !subResource.isEmpty() && sernum != 0 ) {
       mUidMap[ journal->uid() ] = StorageReference( subResource, sernum );
+      journal->setReadOnly( !mJournalSubResources[ subResource ].writable() );
     }
     if ( KCal::IncidenceBase *update = mPendingUpdates.find( journal->uid() ) ) {
       mSilent = false; // we do want to tell KMail
