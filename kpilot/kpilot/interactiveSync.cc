@@ -179,6 +179,7 @@ CheckUser::~CheckUser()
 		}
 	}
 
+	config.sync();
 	emit syncDone(this);
 }
 
@@ -468,6 +469,9 @@ nextFile:
 
 
 // $Log$
+// Revision 1.7  2001/12/29 15:45:02  adridg
+// Lots of little changes for the syncstack
+//
 // Revision 1.6  2001/10/08 22:20:18  adridg
 // Changeover to libkpilot, prepare for lib-based conduits
 //
