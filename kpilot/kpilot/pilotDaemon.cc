@@ -1239,7 +1239,7 @@ void PilotDaemon::slotRunConfig()
 	{
 		// KPilot not running
 		KProcess *p = new KProcess;
-		*p << "kpilot" << "-c";
+		*p << "kpilot" << "-s";
 
 		p->start();
 	}
