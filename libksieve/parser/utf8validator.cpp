@@ -35,52 +35,56 @@
 #include <qglobal.h>
 #include <qcstring.h>
 
-namespace {
-
-  inline bool is8Bit( signed char ch ) {
+#ifndef KDE_USE_FINAL
+// duplicated code from lexer.cpp
+static inline bool is8Bit( signed char ch ) {
     return ch < 0;
-  }
+}
+#endif
 
-  inline bool isUtf8TupelIndicator( unsigned char ch ) {
+static inline bool isUtf8TupelIndicator( unsigned char ch ) {
     return (ch & 0xE0) == 0xC0; // 110x xxxx
-  }
-  inline bool isUtf8OverlongTupel( unsigned char ch ) {
+}
+
+static inline bool isUtf8OverlongTupel( unsigned char ch ) {
     return (ch & 0xFE) == 0xC0;
-  }
+}
 
-  inline bool isUtf8TripleIndicator( unsigned char ch ) {
+static inline bool isUtf8TripleIndicator( unsigned char ch ) {
     return (ch & 0xF0) == 0xE0; // 1110 xxxx
-  }
-  inline bool isUtf8OverlongTriple( unsigned char ch1, unsigned char ch2 ) {
+}
+
+static inline bool isUtf8OverlongTriple( unsigned char ch1, unsigned char ch2 ) {
     return (ch1 & 0xFF) == 0xE0  &&  (ch2 & 0xE0) == 0x80 ;
-  }
+}
 
-  inline bool isUtf8QuartetIndicator( unsigned char ch ) {
+static inline bool isUtf8QuartetIndicator( unsigned char ch ) {
     return (ch & 0xF8) == 0xF0; // 1111 0xxx
-  }
-  inline bool isUtf8OverlongQuartet( unsigned char ch1, unsigned char ch2 ) {
+}
+
+static inline bool isUtf8OverlongQuartet( unsigned char ch1, unsigned char ch2 ) {
     return (ch1 & 0xFF) == 0xF0  &&  (ch2 & 0xF0) == 0x80 ;
-  }
+}
 
-  inline bool isUtf8QuintetIndicator( unsigned char ch ) {
+static inline bool isUtf8QuintetIndicator( unsigned char ch ) {
     return (ch & 0xFC) == 0xF8; // 1111 10xx
-  }
-  inline bool isUtf8OverlongQuintet( unsigned char ch1, unsigned char ch2 ) {
+}
+
+static inline bool isUtf8OverlongQuintet( unsigned char ch1, unsigned char ch2 ) {
     return (ch1 & 0xFF) == 0xF8  &&  (ch2 & 0xF8) == 0x80 ;
-  }
+}
 
-  inline bool isUtf8SextetIndicator( unsigned char ch ) {
+static inline bool isUtf8SextetIndicator( unsigned char ch ) {
     return (ch & 0xFE) == 0xFC; // 1111 110x
-  }
-  inline bool isUtf8OverlongSextet( unsigned char ch1, unsigned char ch2 ) {
+}
+
+static inline bool isUtf8OverlongSextet( unsigned char ch1, unsigned char ch2 ) {
     return (ch1 & 0xFF) == 0xFC  &&  (ch2 & 0xFC) == 0x80 ;
-  }
+}
 
-  inline bool isUtf8Continuation( unsigned char ch ) {
+static inline bool isUtf8Continuation( unsigned char ch ) {
     return (ch & 0xC0) == 0x80;
-  }
-
-} // anon namespace
+}
 
 bool KSieve::isValidUtf8( const char * s, unsigned int len ) {
   for ( unsigned int i = 0 ; i < len ; ++i ) {

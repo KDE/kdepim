@@ -1,5 +1,3 @@
-# final breaks anonymous namespace use:
-KDE_OPTIONS = nofinal
 SUBDIRS = ksieve shared parser . tests
 
 INCLUDES = $(all_includes)

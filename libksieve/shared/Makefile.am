@@ -1,6 +1,3 @@
-# final breaks anonymous namespaces use:
-KDE_OPTIONS = nofinal
-
 INCLUDES = -I$(top_srcdir)/libksieve $(all_includes)
 
 noinst_LTLIBRARIES = libksieve_shared.la

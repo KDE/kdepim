@@ -113,54 +113,53 @@ namespace KSieve {
 } // namespace KSieve
 
 
-namespace {
-  // none except a-zA-Z0-9_
-  static const unsigned char iTextMap[16] = {
+// none except a-zA-Z0-9_
+static const unsigned char iTextMap[16] = {
     0x00, 0x00, 0x00, 0x00, // CTLs:        none
     0x00, 0x00, 0xFF, 0xC0, // SP ... '?':  0-9
     0x7F, 0xFF, 0xFF, 0xE1, // '@' ... '_': A-Z_
     0x7F, 0xFF, 0xFF, 0xE0  // '`' ... DEL: a-z
-  };
+};
 
-  // SP, HT, CR, LF, {}[]();,#/
-  // ### exclude '['? Why would one want to write identifier["foo"]?
-  static const unsigned char delimMap[16] = {
+// SP, HT, CR, LF, {}[]();,#/
+// ### exclude '['? Why would one want to write identifier["foo"]?
+static const unsigned char delimMap[16] = {
     0x00, 0x64, 0x00, 0x00, // CTLs:        CR, HT, LF
     0x90, 0xC9, 0x00, 0x10, // SP ... '?':  SP, #(),;
     0x00, 0x00, 0x00, 0x16, // '@' ... '_': []
     0x00, 0x00, 0x00, 0x16  // '`' ... DEL: {}
-  };
+};
 
-  // All except iText, delim, "*:
-  static const unsigned char illegalMap[16] = {
+// All except iText, delim, "*:
+static const unsigned char illegalMap[16] = {
     0xFF, 0x9B, 0xFF, 0xFF,
     0x4F, 0x16, 0x00, 0x0F,
     0x80, 0x00, 0x00, 0x0A,
     0x80, 0x00, 0x00, 0x0A
-  };
+};
 
-  inline bool isOfSet( const unsigned char map[16], unsigned char ch ) {
+static inline bool isOfSet( const unsigned char map[16], unsigned char ch ) {
     assert( ch < 128 );
     return ( map[ ch/8 ] & 0x80 >> ch%8 );
-  }
+}
 
-  inline bool isIText( unsigned char ch ) {
+static inline bool isIText( unsigned char ch ) {
     return ch <= 'z' && isOfSet( iTextMap, ch );
-  }
+}
 
-  inline bool isDelim( unsigned char ch ) {
+static inline bool isDelim( unsigned char ch ) {
     return ch <= '}' && isOfSet( delimMap, ch );
-  }
+}
 
-  inline bool isIllegal( unsigned char ch ) {
+static inline bool isIllegal( unsigned char ch ) {
     return ch >= '~' || isOfSet( illegalMap, ch );
-  }
+}
 
-  inline bool is8Bit( signed char ch ) {
+static inline bool is8Bit( signed char ch ) {
     return ch < 0;
-  }
+}
 
-  inline QString removeDotStuffAndCRLF( const QString & s ) {
+static QString removeDotStuffAndCRLF( const QString & s ) {
     const bool dotstuffed = s.startsWith("..");
     const bool CRLF = s.endsWith("\r\n");
     const bool LF = !CRLF && s.endsWith("\n");
@@ -169,9 +168,7 @@ namespace {
     const int e = CRLF ? 2 : LF ? 1 : 0 ; // what to chop off at the end
 
     return s.mid( b, s.length() - b - e );
-  }
-
-} // anon namespace
+}
 
 namespace KSieve {
 
