@@ -29,7 +29,7 @@ libkabcommon_la_LIBADD = $(top_builddir)/kaddressbook/interfaces/libkabinterface
                          $(top_builddir)/libkdepim/libkdepim.la
 
 lib_LTLIBRARIES = libkaddressbook.la
-libkaddressbook_la_SOURCES = addresseeconfig.cpp addresseeeditordialog.cpp \
+libkaddressbook_la_SOURCES = addresseeconfig.cpp kmailIface.stub addresseeeditordialog.cpp \
     addresseeeditorwidget.cpp addresseeutil.cpp addresseditwidget.cpp \
     addviewdialog.cpp emaileditwidget.cpp extensionmanager.cpp \
     filter.cpp filtereditdialog.cpp filterselectionwidget.cpp geowidget.cpp \
@@ -63,6 +63,9 @@ noinst_HEADERS = \
     soundwidget.h typecombo.h undo.h undocmds.h viewconfigurefieldspage.h \
     viewconfigurefilterpage.h viewconfigurewidget.h viewmanager.h xxportmanager.h \
     xxportselectdialog.h advancedcustomfields.h
+
+kmailIface_DIR = $(top_srcdir)/kmail
+kmailIface_DCOPIDLNG = true
 
 kaddressbook_METASOURCES = AUTO
 
