@@ -48,8 +48,6 @@ int main(int argc, char* argv[])
   select(serialPort + 1, &set, 0L, 0L, 0L);
   close(serialPort);
   return 0;
-#ifdef DEBUG
 	/* NOTREACHED */
 	(void) id;
-#endif
 }

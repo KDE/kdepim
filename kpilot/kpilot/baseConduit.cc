@@ -42,7 +42,7 @@ static const char *id="$Id$";
 BaseConduit::BaseConduit(eConduitMode mode)
   : QObject(), fMode(mode), fDaemonSocket(0L)//, fReportData(false)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	if((mode == BaseConduit::HotSync) || 
 		(mode == BaseConduit::Backup))
@@ -60,7 +60,7 @@ BaseConduit::BaseConduit(eConduitMode mode)
 		fDaemonSocket = new KSocket("localhost", KPILOTLINK_PORT); 
 		if (fDaemonSocket == 0L)
 		{
-			kdError() << fname
+			kdError() << __FUNCTION__
 				<< ": Can't create socket"
 				<< endl ;
 			fMode=BaseConduit::Error;
@@ -68,7 +68,7 @@ BaseConduit::BaseConduit(eConduitMode mode)
 		}
 		if (fDaemonSocket->socket()<0)
 		{
-			kdError() << fname
+			kdError() << __FUNCTION__
 				<< ": Socket is not connected"
 				<< endl ;
 			fMode=BaseConduit::Error;
@@ -156,7 +156,7 @@ int BaseConduit::addSyncLogMessage(const char *s)
 PilotRecord* 
 BaseConduit::readNextModifiedRecord()
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
   int result = 0;
 
@@ -183,7 +183,7 @@ BaseConduit::readNextModifiedRecord()
     }
   else
     {
-      kdWarning() << fname << ": Failure on read" << endl;
+      kdWarning() << __FUNCTION__ << ": Failure on read" << endl;
       return 0L;
     }
 }
@@ -311,14 +311,14 @@ BaseConduit::getRecord(KSocket* in)
 
 /* virtual */ QPixmap BaseConduit::icon() const
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	KGlobal::iconLoader()->addAppDir("kpilot");
 	QPixmap p = KGlobal::iconLoader()->loadIcon("conduit",
 		KIcon::Toolbar,0,KIcon::DefaultState,0,true);
 	if (p.isNull())
 	{
-		kdWarning() << fname 
+		kdWarning() << __FUNCTION__ 
 			<< ": Conduit icon not found."
 			<< endl;
 		p = QPixmap((const char **)kpilot_conduit);
@@ -345,6 +345,9 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.12  2000/12/21 00:42:50  adridg
+// Mostly debugging changes -- added EFUNCTIONSETUP and more #ifdefs. KPilot should now compile -DNDEBUG or with DEBUG undefined
+//
 // Revision 1.11  2000/12/06 22:22:51  adridg
 // Debug updates
 //

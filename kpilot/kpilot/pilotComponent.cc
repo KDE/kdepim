@@ -47,15 +47,18 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 	if (fCatList->currentItem()==0)
 	{
 		currentCatID=-1;
+#ifdef DEBUG
 		if (debug_level & UI_MINOR)
 		{
 			kdDebug() << fname <<
 				": Category 'All' selected.\n" ;
 		}
+#endif
 	}
 	else
 	{
 		QString selectedCategory=fCatList->text(fCatList->currentItem());
+#ifdef DEBUG
 		if (debug_level & UI_MINOR)
 		{
 			kdDebug() << fname << 
@@ -63,12 +66,14 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 				" selected, text=" <<
 				selectedCategory << endl ;
 		}
+#endif
 
 		currentCatID=0;
 		while(strcmp(info->name[currentCatID], 
 		       selectedCategory.local8Bit()) && 
 			(currentCatID < fCatList->count()))
 		{
+#ifdef DEBUG
 			if (debug_level & UI_TEDIOUS)
 			{
 				kdDebug() << fname <<
@@ -77,12 +82,14 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 					info->name[currentCatID]
 					<< endl ;
 			}
+#endif
 
 			currentCatID++;
 		}
 
 		if (currentCatID < fCatList->count())
 		{
+#ifdef DEBUG
 			if (debug_level&UI_MINOR)
 			{
 				kdDebug() << fname << 
@@ -91,10 +98,11 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 					info->name[currentCatID]
 					<< endl ;
 			}
+#endif
 		}
 		else
 		{
-			kdDebug() << fname 
+			kdWarning() << __FUNCTION__ 
 				<< ": Selected category didn't match "
 				"any name!\n" ;
 			currentCatID=-1;
@@ -126,6 +134,7 @@ void PilotComponent::populateCategories(QComboBox *c,
 	{
 		if(strlen(info->name[i]))
 		{
+#ifdef DEBUG
 			if (debug_level & UI_MINOR)
 			{
 				kdDebug() << fname
@@ -135,6 +144,7 @@ void PilotComponent::populateCategories(QComboBox *c,
 				<< (int)info->ID[i] 
 				<< endl;
 			}
+#endif
 			c->insertItem(info->name[i]);
 		}
 	}

@@ -136,10 +136,12 @@ void CConduitSetup::conduitExecuted(QListViewItem *p)
 	*conduitSetup << execPath.local8Bit() << "--setup" ;
 	*conduitSetup << "-geometry"
 		<< QString("+%1+%2").arg(x()+20).arg(y()+20);
+#ifdef DEBUG
 	if (debug_level)
 	{
 		*conduitSetup << "--debug" << QString::number(debug_level);
 	}
+#endif
 
 	connect(conduitSetup,
 		SIGNAL(processExited(KProcess *)),
@@ -155,7 +157,7 @@ void CConduitSetup::conduitExecuted(QListViewItem *p)
 
 	if (p!=conduitSetup)
 	{
-		kdDebug() << fname << ": Process other than setup exited?"
+		DEBUGKPILOT << fname << ": Process other than setup exited?"
 			<< endl;
 		return;
 	}
@@ -313,18 +315,6 @@ void CConduitSetup::writeInstalledConduits()
 		}
 #endif
 
-#if 0
-		KService::Ptr conduit = 
-			KService::serviceByDesktopName(p->text(CONDUIT_DESKTOP));
-		if (!conduit)
-		{
-			kdDebug() << fname << ": No service associated with "
-				<< iter
-				<< endl;
-			continue;
-		}
-#endif
-
 #ifdef DEBUG
 		if (debug_level & SYNC_TEDIOUS)
 		{
@@ -346,12 +336,12 @@ void CConduitSetup::writeInstalledConduits()
 
 
 		currentConduit+=" --info";
+#ifdef DEBUG
 		if (debug_level)
 		{
 			currentConduit+=" --debug ";
 			currentConduit+=QString().setNum(debug_level);
 		}
-#ifdef DEBUG
 		if (debug_level&SYNC_TEDIOUS)
 		{
 			kdDebug() << fname << ": Conduit startup command line is:\n"
@@ -436,4 +426,7 @@ void CConduitSetup::warnSetupRunning()
 	kdDebug() << fname << ": " << msg << endl;
 #endif
 	KMessageBox::error(this,msg,i18n("Conduit Setup error"));
+
+	/* NOTREACHED */
+	(void) id;
 }

@@ -94,7 +94,7 @@ public:
 	* Run the conduit app. This is probably the
 	* last thing main() does before returning.
 	*/
-	int exec(bool withDCOP=false,bool withGUI=false);
+	int exec(bool withDCOP=false,bool withGUI=true);
 
 
 protected:
@@ -114,6 +114,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.10  2000/12/22 07:47:04  adridg
+// Added DCOP support to conduitApp. Breaks binary compatibility.
+//
 // Revision 1.9  2000/10/29 22:11:06  adridg
 // Added debug-merge feature to conduits
 //

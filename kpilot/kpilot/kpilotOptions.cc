@@ -27,6 +27,7 @@
 #include <qchkbox.h>
 #include <qgrpbox.h>
 #include <qbttngrp.h>
+#include <qvbuttongroup.h>
 #include <qradiobt.h>
 #include <qlineedit.h>
 #include <qcombobox.h>
@@ -136,7 +137,6 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig& c) :
 	QLabel *currentLabel;
 	QVBoxLayout *vl;	// Layout for page as a whole
 	QGridLayout *grid;	// Layout inside group box
-	QVBoxLayout *advl;	// Layout for address display
 
 	// The address widget uses a different group from all
 	// the rest of the `standard' KPilot options -- perhaps
@@ -199,19 +199,16 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig& c) :
 
 
 
-	displayGroup=new QButtonGroup(i18n("Address Display"),
+	displayGroup=new QVButtonGroup(i18n("Address Display"),
 		this,"bg");
-	advl=new QVBoxLayout(displayGroup,10);
 
 	fNormalDisplay=new QRadioButton(i18n("Last,First"),
 		displayGroup);
 	fNormalDisplay->adjustSize();
-	advl->addWidget(fNormalDisplay);
 
 	fCompanyDisplay=new QRadioButton(i18n("Company,Last"),
 		displayGroup);
 	fCompanyDisplay->adjustSize();
-	advl->addWidget(fCompanyDisplay);
 
 	displayGroup->adjustSize();
 	vl->addWidget(displayGroup);
@@ -501,6 +498,7 @@ int KPilotOptionsGeneral::commitChanges(KConfig& config)
 
 	if (fStartDaemonAtLogin->isChecked())
 	{
+#ifdef DEBUG
 		if (debug_level & UI_MAJOR)
 		{
 			kdDebug() << fname
@@ -508,15 +506,18 @@ int KPilotOptionsGeneral::commitChanges(KConfig& config)
 				<< endl;
 		}
 		KIO::NetAccess::copy(src,dest);
+#endif
 	}
 	else
 	{
+#ifdef DEBUG
 		if (debug_level & UI_MAJOR)
 		{
 			kdDebug() << fname
 				<< ": Deleting daemon autostart file (ignore errors)"
 				<< endl;
 		}
+#endif
 		KIO::NetAccess::del(dest);
 	}
 
@@ -595,12 +596,12 @@ KPilotOptionsSync::KPilotOptionsSync(setupDialog *s,KConfig& config) :
 
 /* static */ bool KPilotOptions::isNewer(KConfig& c)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	int r=setupDialog::getConfigurationVersion(c);
 	if (r<fConfigVersion)
 	{
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Old configuration file (version "
 			<< r
 			<< ") found." << endl;
@@ -695,6 +696,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.17  2000/12/21 00:42:50  adridg
+// Mostly debugging changes -- added FUNCTIONSETUP and more #ifdefs. KPilot should now compile -DNDEBUG or with DEBUG undefined
+//
 // Revision 1.16  2000/11/26 18:17:03  adridg
 // Groundwork for FastSync
 //

@@ -31,11 +31,24 @@
 #error "This is KPilot for KDE2"
 #endif
 
-#include <klocale.h>
-
+// Turn OFF as much debugging as possible
+//
+//
 #ifdef NDEBUG
 #undef DEBUG
 #endif
+
+// Define TEST_DEBUG to check whether all the
+// calls to kdWarning and kdError use __FUNCTION__
+// as they should, instead of the lazier (and incorrect)
+// fname.
+//
+//
+#define TEST_DEBUG
+
+#include <klocale.h>
+#include <kdebug.h>
+
 
 // KPilot will move towards the *standard* way of doing
 // debug messages soon. This means that we need some
@@ -47,6 +60,7 @@
 #define DEBUGCONDUIT	kdDebug(5512)
 
 
+#ifdef DEBUG
 // These are three-bit fields, basically we're defining
 // 1<<n; 3<<n; 7<<n for some n.
 //
@@ -73,7 +87,6 @@ extern int debug_level;
 #define SYNC_MINOR	(256+512)
 #define SYNC_TEDIOUS	(512)
 
-#ifdef DEBUG
 #define DEBUG_FUNCTIONS	(1)
 #define EFUNCTIONSETUP	static const char *fname=__FUNCTION__; \
 			if (debug_level & DEBUG_FUNCTIONS) { kdDebug() << \
@@ -99,8 +112,14 @@ void listStrList(kdbgstream&,const QStringList&);
 // For debugging purposes it's also used by FUNCTIONSETUP.
 //
 //
-#define EFUNCTIONSETUP static const char *fname=__FUNCTION__
-#define FUNCTIONSETUP EFUNCTIONSETUP
+#define FUNCTIONSETUP
+#ifdef TEST_DEBUG
+class debugName { public: debugName(int i) : j(i) {} ; int j; } ;
+extern const debugName fname;
+kndbgstream operator << (kndbgstream s, const debugName&);
+#else
+extern const int fname;
+#endif
 #endif
 
 

@@ -37,9 +37,7 @@ public:
 		HotSync, 
 		Setup,
 		Backup, 
-#ifdef DEBUG
 		Test,
-#endif
 		DBInfo
 	};
 
@@ -84,14 +82,12 @@ public:
    */
   virtual const char* dbInfo() { return "<none>"; }
 
-#ifdef DEBUG
 	/**
 	* Run a test on this conduit, with full debugging turned on.
 	* This may be reimplemented in some conduits to do actual
 	* tests.
 	*/
 	virtual void doTest() { } ;
-#endif
 
 	/**
 	 * Returns an icon for the window manager

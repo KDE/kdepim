@@ -20,6 +20,8 @@
 
 static const char *id="$Id$";
 
+#include "options.h"
+
 #include <time.h>
 #include <iostream.h>
 #include <pi-macros.h>
@@ -33,10 +35,8 @@ static const char *id="$Id$";
 #include <kapp.h>
 #include <kmessagebox.h>
 #include <kfiledialog.h>
-#include <kdebug.h>
 
 #include "kpilot.h"
-#include "options.h"
 #include "memoWidget.moc"
 #include "pi-dlp.h"
 
@@ -113,6 +113,7 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 			{
 				memo = new PilotMemo(pilotRec);
 				fMemoList.append(memo);
+#ifdef DEBUG
 				if (debug_level & UI_TEDIOUS)
 				{
 					kdDebug() << fname <<
@@ -120,25 +121,30 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 						<< currentRecord
 						<< endl ;
 				}
+#endif
 			}
 			else
 			{
+#ifdef DEBUG
 				if (debug_level&UI_TEDIOUS)
 				{
 					kdDebug() << fname <<
 						": Skipped secret record " <<
 						currentRecord << endl ;
 				}
+#endif
 			}
 		}
 		else
 		{
+#ifdef DEBUG
 			if (debug_level&UI_TEDIOUS)
 			{
 				kdDebug() << fname << 
 					": Skipped deleted record " <<
 					currentRecord << endl ;
 			}
+#endif
 		}
 
 		delete pilotRec;
@@ -161,7 +167,7 @@ MemoWidget::initialize()
 		KPilotLink::getPilotLink()->openLocalDatabase("MemoDB");
 	if (memoDB==NULL || !memoDB->isDBOpen())
 	{
-		kdDebug() << fname << 
+		kdWarning() << __FUNCTION__ << 
 			": Can't open local database MemoDB\n" ;
 
 		populateCategories(fCatList,0L);
@@ -308,11 +314,8 @@ MemoWidget::slotDeleteMemo()
 		// sending it to the Pilot?
 		//
 		//
-		if (debug_level)
-		{
-			kdDebug() << fname <<
-				": Refusing to delete new memo.\n";
-		}
+		kdWarning() << __FUNCTION__ <<
+			": Refusing to delete new memo.\n";
 
 		KMessageBox::error(this, i18n("Hot-Sync Required"), 
 			i18n("Cannot delete new memo until \r\n" 
@@ -325,11 +328,13 @@ MemoWidget::slotDeleteMemo()
 				      i18n("Delete currently selected memo?"),
 				      i18n("Delete Memo?")) == KMessageBox::No)
 	{
+#ifdef DEBUG
 		if (debug_level)
 		{
 			kdDebug() << fname <<
 				": Used decided not to delete memo.\n" ;
 		}
+#endif
 		return;
 	}
 
@@ -352,7 +357,7 @@ MemoWidget::updateWidget()
 
 	if (fCatList->currentItem()==-1)
 	{
-		kdDebug() << fname <<
+		DEBUGKPILOT << fname <<
 			": No category selected.\n";
 		return ;
 	}
@@ -384,21 +389,25 @@ MemoWidget::updateWidget()
 			fListBox->insertItem(fMemoList.current()->shortTitle());
 
 			fLookupTable[currentEntry++] = listIndex;
+#ifdef DEBUG
 			if (debug_level & UI_TEDIOUS)
 			{
 				kdDebug() << fname << ": Added memo "
 					<< fMemoList.current()->getTitle()
 					<< endl;
 			}
+#endif
 		}
 		else
 		{
+#ifdef DEBUG
 			if (debug_level & UI_TEDIOUS)
 			{
 				kdDebug() << fname << ": Skipped memo "
 					<< fMemoList.current()->getTitle()
 					<< endl;
 			}
+#endif
 		}
 
 		listIndex++;

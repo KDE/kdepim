@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 	a.addAuthor("Adriaan de Groot",I18N_NOOP("Maintainer"));
   VCalConduit conduit(a.getMode());
   a.setConduit(&conduit);
-  return a.exec();
+  return a.exec(false,true);
 
 	/* NOTREACHED */
 	(void) id;
@@ -123,15 +123,10 @@ void VCalConduit::getCalendar()
 	QString calName = config.readEntry("CalFile");
 	first = getFirstTime(config);
 
-#ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
-	{
-		kdDebug() << fname
-			<< ": Got calendar file " << calName
-			<< ( first ? " (first time!)" : "" )
-			<< endl;
-	}
-#endif
+	DEBUGCONDUIT << fname
+		<< ": Got calendar file " << calName
+		<< ( first ? " (first time!)" : "" )
+		<< endl;
 
 	if ((getMode() == BaseConduit::HotSync) || 
 		(getMode() == BaseConduit::Backup)) 
@@ -139,15 +134,9 @@ void VCalConduit::getCalendar()
 		const char *s=calName.local8Bit();
 		fCalendar = Parse_MIME_FromFileName((char *)s);
 
-#ifdef DEBUG
-		if (debug_level & SYNC_MINOR)
-		{
-			kdDebug() << fname
-				<< ": Got calendar!"
-				<< endl;
-		}
-#endif
-
+		DEBUGCONDUIT << fname
+			<< ": Got calendar!"
+			<< endl;
 
 		if(fCalendar == 0L) 
 		{
@@ -157,12 +146,12 @@ void VCalConduit::getCalendar()
 				"filename and try again.")
 				.arg(calName);
 
-			kdError() << fname
+			kdError() << __FUNCTION__
 				<< message << endl;
 
 			KMessageBox::error(0, "vCalendar Conduit Fatal Error",
 			    message);                                                 
-			exit(-1);
+			exit(1);
 		}
 	}
 }
@@ -213,7 +202,7 @@ void VCalConduit::doSync()
 	getCalendar();
 	if (fCalendar==0L)
 	{
-		kdError() << fname << ": No calendar to sync with."
+		kdError() << __FUNCTION__ << ": No calendar to sync with."
 			<< endl;
 		return;
 	}
@@ -239,7 +228,7 @@ void VCalConduit::doSync()
 			} 
 			else 
 			{
-				kdWarning() << fname
+				kdWarning() << __FUNCTION__
 					<< "weird! we asked for a modified "
 					   "record and got one that wasn't"
 					<< endl;
@@ -273,7 +262,7 @@ void VCalConduit::repeatForever(
 	int rFreq,
 	VObject *vevent)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	const char *s = "<no description>";
 
@@ -289,7 +278,7 @@ void VCalConduit::repeatForever(
 
 	dateEntry->setRepeatFrequency(rFreq);
 	dateEntry->setRepeatForever();
-	kdWarning() << fname
+	kdWarning() << __FUNCTION__
 		<< ": repeat duration is forever for "
 		<< s
 		<< endl;
@@ -302,7 +291,7 @@ void VCalConduit::repeatUntil(
 	int rDuration,
 	PeriodConstants period)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 	time_t end_time = mktime(start);
 	struct tm rEnd = *start;
 
@@ -333,7 +322,7 @@ void VCalConduit::repeatUntil(
 		dateEntry->setRepeatEnd(rEnd);
 		break;
 	default:
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Unknown repeat period "
 			<< (int) period
 			<< endl;
@@ -789,7 +778,7 @@ void VCalConduit::setNote(VObject *vevent,const char *s)
 		//
 		if (!vo)
 		{
-			kdError() << fname
+			kdError() << __FUNCTION__
 				<< ": No object for note property."
 				<< endl;
 			return;
@@ -1490,6 +1479,7 @@ void VCalConduit::doLocalSync()
     }
   }
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname
@@ -1498,6 +1488,7 @@ void VCalConduit::doLocalSync()
 			<< " records total."
 			<< endl;
 	}
+#endif
 
   // anything that is left on the pilot but that is not found in the
   // vCalendar has to be deleted.  We know this because we have added
@@ -1586,11 +1577,13 @@ void VCalConduit::doLocalSync()
   
 	if (LocalOverridesPilot)
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_MAJOR)
 		{
-			cerr << fname << ": Deleting records from pilot."
+			kdDebug() << fname << ": Deleting records from pilot."
 				<< endl;
 		}
+#endif
 
 		for (int *j = deletedList.first(); j; j = deletedList.next()) 
 		{
@@ -1714,6 +1707,9 @@ int VCalConduit::numFromDay(const QString &day)
 } 
 
 // $Log$
+// Revision 1.17  2000/12/30 20:27:42  adridg
+// Dag's Patches for Repeating Events
+//
 // Revision 1.16  2000/12/09 12:51:07  adridg
 // New patches
 //

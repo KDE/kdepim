@@ -44,6 +44,9 @@ class AddressWidget : public PilotComponent
 
 	void slotUpdateButtons();	// Enable/disable buttons
 
+signals:
+	void recordChanged(PilotAddress *);
+
     protected:
       char* getFieldBySymbol(PilotAddress* rec, const char* symbol);
       void setFieldBySymbol(PilotAddress* rec, const char* symbol, const char* text);

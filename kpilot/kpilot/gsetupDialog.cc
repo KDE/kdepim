@@ -66,10 +66,8 @@ setupDialogPage::setupDialogPage(
 	(void) c;
 
 	return 0;
-#ifdef DEBUG
 	/* NOTREACHED */
 	(void) id;
-#endif
 }
 
 /* virtual */ int setupDialogPage::cancelChanges(KConfig& c)
@@ -217,7 +215,7 @@ void setupDialog::cancelChanges()
 
 void setupDialog::setupWidget()
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 	int x=0;
 	int y=0;
 	QListIterator<setupDialogPage> i(pages);
@@ -226,7 +224,7 @@ void setupDialog::setupWidget()
 
 	if (pages.count()==0)
 	{
-		kdWarning() << fname << ": setupDialog doesn't "
+		kdWarning() << __FUNCTION__ << ": setupDialog doesn't "
 			"have any pages." << endl;
 		return;
 	}
@@ -262,11 +260,11 @@ void setupDialog::setupWidget()
 
 int setupDialog::addPage(setupDialogPage *p)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	if (p==0L) 
 	{
-		kdError() << fname << ": NULL page passed to addPage"
+		kdError() << __FUNCTION__ << ": NULL page passed to addPage"
 			<< endl;
 		return -1;
 	}

@@ -159,10 +159,8 @@ bool
 FileInstallWidget::saveData()
     {
     return true;
-#ifdef DEBUG
 	/* NOTREACHED */
 	(void) id;
-#endif
     }
 
 void 

@@ -70,7 +70,7 @@ KPilotInstaller::KPilotInstaller()
     fQuitAfterCopyComplete(false), fManagingWidget(0L), fPilotLink(0L),
     fPilotCommandSocket(0L), fPilotStatusSocket(0L), fKillDaemonOnExit(false)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	KConfig& config = KPilotLink::getConfig();
 	// Log a warning if the config file is too old.
@@ -99,7 +99,7 @@ KPilotInstaller::KPilotInstaller()
     initPilotLink();
 	if (!fPilotCommandSocket)
 	{
-		kdError() << fname << ": Couldn't connect to daemon -- quitting"
+		kdError() << __FUNCTION__ << ": Couldn't connect to daemon -- quitting"
 			<< endl;
 		exit(1);
 	}
@@ -220,7 +220,7 @@ KPilotInstaller::initStatusBar()
 
 void KPilotInstaller::initIcons()
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	DEBUGKPILOT << fname
 		<< ": Getting Icon Loader"
@@ -248,7 +248,7 @@ void KPilotInstaller::initIcons()
 
 	if (icon_hotsync.isNull())
 	{
-		kdWarning() << fname << ": Hot-Sync icon not found." << endl;
+		kdWarning() << __FUNCTION__ << ": Hot-Sync icon not found." << endl;
 		icon_hotsync=QPixmap((const char **)hotsync_icon);
 	}
 
@@ -256,7 +256,7 @@ void KPilotInstaller::initIcons()
 		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
 	if (icon_backup.isNull())
 	{
-		kdWarning() << fname << ": Backup icon not found." << endl;
+		kdWarning() << __FUNCTION__ << ": Backup icon not found." << endl;
 		icon_backup =QPixmap((const char **)toolbar_backup);
 	}
 
@@ -264,7 +264,7 @@ void KPilotInstaller::initIcons()
 		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
 	if (icon_fastsync.isNull())
 	{
-		kdWarning() << fname << ": Fast-Sync icon not found." << endl;
+		kdWarning() << __FUNCTION__ << ": Fast-Sync icon not found." << endl;
 		icon_fastsync = QPixmap((const char **)fastsync_xpm);
 	}
 
@@ -272,7 +272,7 @@ void KPilotInstaller::initIcons()
 		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
 	if (icon_restore.isNull())
 	{
-		kdWarning() << fname << ": Restore icon not found." << endl;
+		kdWarning() << __FUNCTION__ << ": Restore icon not found." << endl;
 		icon_restore = QPixmap((const char **)toolbar_restore);
 	}
 
@@ -281,7 +281,7 @@ void KPilotInstaller::initIcons()
 
 	if (icon_quit.isNull())
 	{
-		kdWarning() << fname << ": Quit icon not found." << endl;
+		kdWarning() << __FUNCTION__ << ": Quit icon not found." << endl;
 	}
 }
 
@@ -361,7 +361,7 @@ KPilotInstaller::initToolBar()
 void
 KPilotInstaller::slotModeSelected(int selected)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 	int current = 0 ;
 
 #ifdef DEBUG
@@ -374,7 +374,7 @@ KPilotInstaller::slotModeSelected(int selected)
 
 	if((unsigned int)selected >= fVisibleWidgetList.count())
 	{
-		kdWarning() << fname << ": Illegal component #" 
+		kdWarning() << __FUNCTION__ << ": Illegal component #" 
 			<< selected << " selected.\n" << endl;
 		return;
 	}
@@ -424,18 +424,18 @@ void KPilotInstaller::showTitlePage(const QString& msg,bool force)
 void
 KPilotInstaller::initPilotLink()
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	if(fPilotLink)
 	{
-		kdWarning() << fname << ": Pilot Link already created?\n" ;
+		kdWarning() << __FUNCTION__ << ": Pilot Link already created?\n" ;
 		return;
 	}
 
 	fPilotLink = new KPilotLink();
 	if (fPilotLink==NULL)
 	{
-		kdError() << fname << ": Can't allocate fPilotLink.\n";
+		kdError() << __FUNCTION__ << ": Can't allocate fPilotLink.\n";
 		KMessageBox::error(this,
 				   i18n("Allocating PilotLink failed."),
 				   i18n("Cannot create link to Daemon"));
@@ -466,13 +466,13 @@ KPilotInstaller::initPilotLink()
 
 void KPilotInstaller::initCommandSocket()
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	MessageDialog *messageDialog=0L;
 
 	if (fPilotCommandSocket)
 	{
-		kdWarning() << fname 
+		kdWarning() << __FUNCTION__ 
 			<< ": We already have a command socket"
 			<< endl;
 		return;
@@ -491,7 +491,7 @@ void KPilotInstaller::initCommandSocket()
 		PILOTDAEMON_COMMAND_PORT);
 	if (fPilotCommandSocket==NULL)
 	{
-		kdError() << fname << ": Can't allocate fPilotCommandSocket.\n";
+		kdError() << __FUNCTION__ << ": Can't allocate fPilotCommandSocket.\n";
 		KMessageBox::error(this,
 				   i18n("Allocating fPilotCommandSocket failed."),
 				   i18n("Cannot create link to Daemon"));
@@ -585,7 +585,7 @@ void KPilotInstaller::initCommandSocket()
 				PILOTDAEMON_COMMAND_PORT);
 			if (!fPilotCommandSocket)
 			{
-				kdError() << fname
+				kdError() << __FUNCTION__
 					<< ": Couldn't allocate KSocket"
 					<< endl;
 				continue;
@@ -616,7 +616,7 @@ void KPilotInstaller::initCommandSocket()
 			
 		if(!fPilotCommandSocket)
 		{
-			kdError() << fname 
+			kdError() << __FUNCTION__ 
 				<< ": Can't connect to daemon"
 				<< endl ;
 
@@ -650,7 +650,7 @@ void KPilotInstaller::initCommandSocket()
 			}
 			else
 			{
-				kdError() << fname
+				kdError() << __FUNCTION__
 					<< ": Couldn't create options window."
 					<< endl;
 			}
@@ -690,7 +690,7 @@ void KPilotInstaller::initCommandSocket()
 
 int KPilotInstaller::testSocket(KSocket *s)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	char buf[12];
 	int r=0;
@@ -708,7 +708,7 @@ int KPilotInstaller::testSocket(KSocket *s)
 	if (r<0)
 	{
 		int e=errno;
-		kdError() << fname  
+		kdError() << __FUNCTION__  
 			<< ": (" << strerror(e) << ")" 
 			<< endl;
 	}
@@ -721,7 +721,7 @@ int KPilotInstaller::testSocket(KSocket *s)
 void
 KPilotInstaller::initStatusLink()
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	fPilotStatusSocket = new KSocket("localhost", 
 		PILOTDAEMON_STATUS_PORT);
@@ -741,7 +741,7 @@ KPilotInstaller::initStatusLink()
 	}
 	else
 	{
-		kdError() << fname <<
+		kdError() << __FUNCTION__ <<
 			": Failed to connect socket to daemon.\n";
 	}
 }
@@ -753,7 +753,7 @@ KPilotInstaller::initStatusLink()
 void
 KPilotInstaller::slotDaemonStatus(KSocket* daemon)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	ifstream in(daemon->socket());
 	int status;
@@ -808,7 +808,7 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
 		}
 		break;
 	default :
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Unknown command "
 			<< status
 			<< " received."
@@ -972,7 +972,7 @@ KPilotInstaller::addComponentPage(QWidget* widget, QString name)
 
 void KPilotInstaller::menuCallback(int item)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	KPilotOptions* options = 0L;
 	CConduitSetup* conSetup = 0L;
@@ -1016,7 +1016,7 @@ void KPilotInstaller::menuCallback(int item)
 		options = new KPilotOptions(this);
 		if (options==NULL)
 		{
-			kdError() << fname << 
+			kdError() << __FUNCTION__ << 
 				": Can't allocate KPilotOptions object\n";
 			break;
 		}
@@ -1178,7 +1178,7 @@ int run_mode=0;
 
 int main(int argc, char** argv)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
         KAboutData about("kpilot", I18N_NOOP("KPilot"),
                          "4.0b",
@@ -1255,7 +1255,7 @@ int main(int argc, char** argv)
 
 	if (KPilotLink::getConfigVersion(c)<KPilotLink::ConfigurationVersion)
 	{
-		kdWarning() << fname << ": Is still not configured for use."
+		kdWarning() << __FUNCTION__ << ": Is still not configured for use."
 			<< endl;
 		return 1;
 	}

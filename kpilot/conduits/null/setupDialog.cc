@@ -63,11 +63,13 @@ int NullPage::commitChanges(KConfig& config)
 {
 	FUNCTIONSETUP;
 
+#ifdef DEBUG
 	if (debug_level)
 	{
 		kdDebug() << fname << ": Wrote null-conduit message:\n" <<
 			fname << ": " << textField->text() << endl;
 	}
+#endif
 	config.writeEntry("Text", textField->text());
 
 	return 0;
@@ -115,6 +117,9 @@ NullPage::NullPage(setupDialog *parent, KConfig& config) :
 
 
 // $Log$
+// Revision 1.10  2000/11/13 08:52:31  adridg
+// Much getConfig() grief averted
+//
 // Revision 1.9  2000/11/02 23:10:32  adridg
 // Added attach-to-database feature
 //

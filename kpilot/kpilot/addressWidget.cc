@@ -137,7 +137,7 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig *config)
 			address = new PilotAddress(pilotRec);
 			if (address == 0L)
 			{
-				kdWarning() << fname << ": Couldn't allocate "
+				kdWarning() << __FUNCTION__ << ": Couldn't allocate "
 					"record " << currentRecord++ <<
 					endl;
 				break;
@@ -190,7 +190,7 @@ AddressWidget::initialize()
 	else
 	{
 		populateCategories(fCatList,0L);
-		kdWarning() << fname 
+		kdWarning() << __FUNCTION__ 
 			<< ": Could not open local AddressDB" << endl;
 	}
 
@@ -350,7 +350,7 @@ char *AddressWidget::createTitle(PilotAddress *address,int displayMode)
 	char *title = new char[255];
 	if (title == 0L)
 	{
-		kdWarning() << fname 
+		kdWarning() << __FUNCTION__ 
 			<< ": Cannot allocate title string." << endl;
 		return 0L;
 	}
@@ -446,13 +446,13 @@ AddressWidget::slotEditRecord()
     if(fAddressList.at(item)->id() == 0x0)
       {
 	KMessageBox::error(0L, 
-		       i18n("Cannot edit new records until \r\n"
-			    "Hot-Synced with pilot."),
+		       i18n("Cannot edit new records until\n"
+			    "Hot-Synced with Pilot."),
 		       i18n("Hot-Sync Required"));
 			 
 	return;
       }
-    AddressEditor* editor = new AddressEditor(fAddressList.at(item));
+    AddressEditor* editor = new AddressEditor(fAddressList.at(item),this);
     connect(editor, SIGNAL(recordChangeComplete(PilotAddress*)),
 	    this, SLOT(slotUpdateRecord(PilotAddress*)));
     editor->show();
@@ -498,6 +498,8 @@ AddressWidget::slotUpdateRecord(PilotAddress* address)
   int currentRecord = fListBox->currentItem();
   updateWidget();
   fListBox->setCurrentItem(currentRecord);
+
+	emit(recordChanged(address));
 }
 
 void
@@ -511,17 +513,19 @@ AddressWidget::slotDeleteRecord()
   item = (int)fLookupTable[item];
   if(fAddressList.at(item)->id() == 0x0)
     {
-      KMessageBox::error(0L, 
-			 i18n("Cannot delete new records until \r\n Hot-Synced with pilot."), 
+      KMessageBox::error(this, 
+			 i18n("Cannot delete new records until\n"
+			      "Hot-Synced with pilot."), 
 			 i18n("Hot-Sync Required"));
       return;
     }
-  if(KMessageBox::questionYesNo(0L, i18n("Delete currently selected record?"),
+  if(KMessageBox::questionYesNo(this, i18n("Delete currently selected record?"),
 				i18n("Delete Record?")) == KMessageBox::No)
     return;
   PilotAddress* address = fAddressList.at(item);
   address->setAttrib(address->getAttrib() | dlpRecAttrDeleted);
   writeAddress(address);
+	emit(recordChanged(address));
   initialize();
 }
 
@@ -597,12 +601,9 @@ AddressWidget::slotImportAddressList()
     QFile inFile(fileName);
     if(inFile.open(IO_ReadOnly) == FALSE)
  	{
-	if (debug_level)
-	{
-		kdDebug() << fname << ": Can't open file "
+		kdWarning() << __FUNCTION__ << ": Can't open file "
 			<< fileName
 			<< " read-only.\n";
-	}
  	// show error!
 	KMessageBox::error(0L,
 			   i18n("Can't open the address file for import:")+fileName,
@@ -621,12 +622,14 @@ AddressWidget::slotImportAddressList()
 	delim[0] = importFormat[3];
 	delim[1] = 0L;
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname << ": Input format is " << importFormat <<
 			endl;
 		kdDebug() << fname << ": Delimiter is " << delim << endl;
 	}
+#endif
 
     while(inputStream.eof() == false)
 	{
@@ -734,6 +737,7 @@ AddressWidget::setFieldBySymbol(PilotAddress* rec, const char* symbol, const cha
 	//     else if(strcasecmp(symbol, "%NO") == 0)
 	// 	rec->setField(entryNote, text);
 
+#ifdef DEBUG
 	if ((debug_level & SYNC_MINOR) && rc)
 	{
 		kdDebug() << fname << ": Unknown field "
@@ -747,6 +751,7 @@ AddressWidget::setFieldBySymbol(PilotAddress* rec, const char* symbol, const cha
 			<< text
 			<< endl;
 	}
+#endif
 }
 
 char*
@@ -820,7 +825,7 @@ AddressWidget::writeAddress(PilotAddress* which,PilotDatabase *addressDB)
 	//
 	if (!myDB->isDBOpen())
 	{
-		kdDebug() << fname << ": Address database is not open.\n";
+		DEBUGKPILOT << fname << ": Address database is not open.\n";
 		return;
 	}
 
@@ -858,6 +863,7 @@ AddressWidget::slotExportAddressList()
  	{
 		QString message = i18n("Can't open the "
 			"address file %1 for export").arg(fileName);
+		kdWarning() << __FUNCTION__ << ": " << message << endl;
 		KMessageBox::error(0L,
 			i18n("Export Address Error"),
 			message);
@@ -886,6 +892,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.21  2000/12/21 00:42:50  adridg
+// Mostly debugging changes -- added FUNCTIONSETUP and more #ifdefs. KPilot should now compile -DNDEBUG or with DEBUG undefined
+//
 // Revision 1.20  2000/12/13 16:59:27  adridg
 // Removed dead code, i18n stupidities
 //

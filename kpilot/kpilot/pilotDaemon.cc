@@ -61,6 +61,15 @@ static const char *id="$Id$";
 #include "statusMessages.h"
 #include "kpilot.h"
 
+
+
+// Define OWN_CRASHHANDLER if you want the daemon to handle crashes
+// by itself, like KPilot 3.x did.
+//
+//
+#undef OWN_CRASHHANDLER
+
+
 PilotDaemonTray::PilotDaemonTray(PilotDaemon *p) :
 	KSystemTray(0,"pilotDaemon"), 
 	daemon(p)
@@ -907,16 +916,21 @@ void PilotDaemon::slotRunKPilot()
 	KProcess *k=new KProcess();
 
 	*k << "kpilot";
+#ifdef DEBUG
 	if (debug_level)
 	{
 		*k << "--debug" ;
 		*k << QString::number(debug_level);
 	}
+#endif
 
 	k->start(KProcess::DontCare);
 }
 
 PilotDaemon* gPilotDaemon=0L;
+
+
+#ifdef OWN_CRASHHANDLER
 int crashFlag=0;
 
 void signalHandler(int s)
@@ -926,15 +940,12 @@ void signalHandler(int s)
 
 	crashFlag++;
 
-	if (debug_level)
-	{
-		// In (crashed) cases like this I think we
-		// can't use kdError() safely, so this is
-		// the one instance of cerr left ...
-		//	
-		//
-		cerr << fname << ": Caught signal " << s << endl;
-	}
+	// In (crashed) cases like this I think we
+	// can't use kdError() safely, so this is
+	// the one instance of cerr left ...
+	//	
+	//
+	cerr << fname << ": Caught signal " << s << endl;
 
 	// Suppose the daemon crashes. We get here
 	// with crashFlag=1. We set the alarm and it goes
@@ -985,6 +996,7 @@ void signalHandler(int s)
 
 	exit(-1);
 }
+#endif
 
 
 
@@ -1033,7 +1045,8 @@ int main(int argc, char* argv[])
 
 	if (v < KPilotLink::ConfigurationVersion)
 	{
-		kdError() << fname << ": Is still not configured for use."
+		kdError() << __FUNCTION__ 
+			<< ": Is still not configured for use."
 			<< endl;
 		return 1;
 	}
@@ -1049,21 +1062,29 @@ int main(int argc, char* argv[])
 
 	if (gPilotDaemon->status()==PilotDaemon::ERROR)
 	{
-		kdError() << fname 
+		kdError() << __FUNCTION__ 
 			<< ": Failed to start up daemon"
 			<< endl;
 		return 2;
 	}
 	
+#ifdef OWN_CRASHHANDLER
 	signal(SIGHUP, signalHandler);
 	signal(SIGINT, signalHandler);
 	signal(SIGPIPE, signalHandler);
 	signal(SIGSEGV, signalHandler);
 	signal(SIGQUIT, signalHandler);
 	signal(SIGTERM, signalHandler);
+#endif
 
 	gPilotDaemon->showTray();
 
 	return a.exec();
+
+	/* NOTREACHED */
+	(void) id;
 }
 
+
+
+// $Log: $

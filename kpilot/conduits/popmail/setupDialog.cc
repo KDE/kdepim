@@ -206,11 +206,13 @@ void PopMailSendPage::browseSignature()
 
 	QString filename=fSignature->text();
 
+#ifdef DEBUG
 	if (debug_level & UI_TEDIOUS)
 	{
 		kdDebug() << fname << ": Signature currently "
 			<< fSignature->text() << endl;
 	}
+#endif
 
 	if (filename.isEmpty()) 
 	{
@@ -223,11 +225,13 @@ void PopMailSendPage::browseSignature()
 
 	filename = QFileDialog::getOpenFileName(filename,"*");
 
+#ifdef DEBUG
 	if (debug_level & UI_MINOR)
 	{
 		kdDebug() << fname << ": Signature selected "
 			<< filename << endl;
 	}
+#endif
 
 	if (!filename.isEmpty())
 	{
@@ -460,11 +464,13 @@ void PopMailReceivePage::setMode(PopMailConduit::RetrievalMode m)
 
 	QString filename=fMailbox->text();
 
+#ifdef DEBUG
 	if (debug_level & UI_TEDIOUS)
 	{
 		kdDebug() << fname << ": Mailbox currently "
 			<< fMailbox->text() << endl;
 	}
+#endif
 
 	if (filename.isEmpty()) 
 	{
@@ -477,11 +483,13 @@ void PopMailReceivePage::setMode(PopMailConduit::RetrievalMode m)
 
 	filename = QFileDialog::getOpenFileName(filename,"*");
 
+#ifdef DEBUG
 	if (debug_level & UI_MINOR)
 	{
 		kdDebug() << fname << ": Mailbox selected "
 			<< filename << endl;
 	}
+#endif
 
 	if (!filename.isEmpty())
 	{

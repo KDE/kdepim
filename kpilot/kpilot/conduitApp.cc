@@ -48,11 +48,11 @@ static KCmdLineOptions conduitoptions[] =
 		"with this conduit"), 0L },
 	{ "hotsync", I18N_NOOP("HotSync the databases associated "
 		"with this conduit"), 0L },
-#ifdef DEBUG
 	{ "test",I18N_NOOP("Test this conduit (possibly unimplemented)")
 		,0L },
-#endif
+#ifdef DEBUG
 	{ "debug <level>", I18N_NOOP("Set debugging level"), "0" },
+#endif
 	{ 0,0,0 }
 } ;
 
@@ -90,6 +90,9 @@ ConduitApp::ConduitApp(
 		I18N_NOOP("Project Leader"),
 		"pilone@slac.com",
 		"http://www.slac.com/pilone/kpilot_home/");
+
+	/* NOTREACHED */
+	(void) id;
 }
 
 
@@ -173,14 +176,14 @@ ConduitApp::setConduit(BaseConduit* conduit)
 bool
 ConduitApp::setupDCOP()
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	// Can only happen if we call setupDCOP from somewhere
 	// before exec(). That would be very strange ....
 	//
 	if (!fApp)
 	{
-		kdError() << fname
+		kdError() << __FUNCTION__
 			<< "No KApplication object!"
 			<< endl;
 		return false;
@@ -189,7 +192,7 @@ ConduitApp::setupDCOP()
 	DCOPClient *p = fApp->dcopClient();
 	if (!p)
 	{
-		kdError() << fname
+		kdError() << __FUNCTION__
 			<< "Couldn't get DCOP connection."
 			<< endl;
 		return false;
@@ -218,14 +221,14 @@ ConduitApp::setupDCOP()
 #define CheckArg(s,m)	if (args->isSet(s)) \
 		{ if (fMode==BaseConduit::None) \
 		{ fMode=BaseConduit::m; } else \
-		{ kdError() << fname \
+		{ kdError() << __FUNCTION__ \
 			<< ": More than one mode given (mode now " \
 			<< (int)fMode << ')' << endl; \
 			fMode=BaseConduit::Error; } }
 
 BaseConduit::eConduitMode ConduitApp::getMode()
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	if (fMode!=BaseConduit::None) return fMode;
 
@@ -234,13 +237,11 @@ BaseConduit::eConduitMode ConduitApp::getMode()
 	CheckArg("setup",Setup);
 	CheckArg("hotsync",HotSync);
 	CheckArg("backup",Backup);
-#ifdef DEBUG
 	CheckArg("test",Test);
-#endif
 
 	if (fMode==BaseConduit::None)
 	{
-		kdError() << fname 
+		kdError() << __FUNCTION__ 
 			<< ": You must specify a mode for the conduit."
 			<< endl;
 		fMode=BaseConduit::Error;
@@ -263,7 +264,7 @@ BaseConduit::eConduitMode ConduitApp::getMode()
 
 int ConduitApp::exec(bool withDCOP,bool withGUI)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	QWidget *widget = 0L;
 
@@ -292,9 +293,12 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 	case BaseConduit::DBInfo : cout << fConduit->dbInfo(); break;
 	case BaseConduit::HotSync : fConduit->doSync(); break;
 	case BaseConduit::Backup : fConduit->doBackup(); break;
+	case BaseConduit::Test : 
 #ifdef DEBUG
-	case BaseConduit::Test : debug_level=-1; fConduit->doTest(); break;
+		debug_level=-1; 
 #endif
+		fConduit->doTest(); 
+		break;
 	case BaseConduit::Setup :
 		{
 		QPixmap icon = fConduit->icon();
@@ -308,13 +312,13 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 		return fApp->exec();
 		}
 	case BaseConduit::Error :
-		kdError() << fname << ": ConduitApp is in Error state."
+		kdError() << __FUNCTION__ << ": ConduitApp is in Error state."
 			<< endl;
 		break;
 	default :
-		kdWarning() << fname << ": ConduitApp has state " 
-			<< (int) fMode  << endl 
-			<< fname << ": where it is strange to call me."
+		kdWarning() << __FUNCTION__ << ": ConduitApp has state " 
+			<< (int) fMode 
+			<< ": where it is strange to call me."
 			<< endl;
 	}
 
@@ -326,6 +330,9 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.15  2000/12/22 07:47:04  adridg
+// Added DCOP support to conduitApp. Breaks binary compatibility.
+//
 // Revision 1.14  2000/12/21 00:42:50  adridg
 // Mostly debugging changes -- added EFUNCTIONSETUP and more #ifdefs. KPilot should now compile -DNDEBUG or with DEBUG undefined
 //

@@ -92,13 +92,13 @@ const QString KPilotLink::BACKUP_DIR = "/share/apps/kpilot/DBBackup/";
 
 /* static */ int KPilotLink::getConfigVersion(KConfig& config)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	config.setGroup(QString::null);
 	int version=config.readNumEntry("Configured",0);
 	if (version<ConfigurationVersion)
 	{
-		kdWarning() << fname << ": Config file has old version "
+		kdWarning() << __FUNCTION__ << ": Config file has old version "
 			<< version
 			<< endl;
 	}
@@ -214,7 +214,7 @@ KPilotLink::~KPilotLink()
 void
 KPilotLink::initPilotSocket(const QString& devicePath)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	struct pi_sockaddr addr;
 	int ret;
@@ -226,7 +226,7 @@ KPilotLink::initPilotSocket(const QString& devicePath)
 
 	if (fPilotPath.isEmpty())
 	{
-		kdWarning() << fname << ": No point in trying empty device."
+		kdWarning() << __FUNCTION__ << ": No point in trying empty device."
 			<< endl;
 
 		msg=i18n("The Pilot device is not configured yet.");
@@ -300,10 +300,10 @@ errInit:
 	// number as well, right?
 	//
 	//
-	kdError() << fname << ": " << msg << endl;
+	kdError() << __FUNCTION__ << ": " << msg << endl;
 	if (e)
 	{
-		kdError() << fname 
+		kdError() << __FUNCTION__ 
 			<< ": (" << strerror(e) << ")" << endl;
 	}
 
@@ -374,11 +374,11 @@ int KPilotLink::writeResponse(KSocket *k,int m)
 
 void KPilotLink::slotConduitDone(KProcess *p)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	if (!p || !fConduitProcess)
 	{
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Called without a running conduit and process!"
 			<< endl;
 		return;
@@ -386,7 +386,7 @@ void KPilotLink::slotConduitDone(KProcess *p)
 
 	if (p != fConduitProcess)
 	{
-		kdWarning() << fname 
+		kdWarning() << __FUNCTION__ 
 			<< ": Process with id "
 			<< p->pid()
 			<< " exited while waiting on "
@@ -406,7 +406,7 @@ void KPilotLink::slotConduitDone(KProcess *p)
 
 	if (fConduitRunStatus != Done)
 	{
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": It seems that a conduit has crashed."
 			<< endl;
 
@@ -420,7 +420,7 @@ void KPilotLink::slotConduitDone(KProcess *p)
 void
 KPilotLink::slotConduitRead(KSocket* cSocket)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
   int message;
   PilotRecord* tmpRec = 0L;
@@ -538,7 +538,7 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 		}
 		break;
 	default :
-		kdWarning() << fname << ": Unknown status message " 
+		kdWarning() << __FUNCTION__ << ": Unknown status message " 
 			<< message
 			<< endl;
 	}
@@ -547,11 +547,11 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 void
 KPilotLink::slotConduitClosed(KSocket* theSocket)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	if (fConduitRunStatus != Connected)
 	{
-		kdWarning() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Strange -- unconnected conduit closed"
 			<< endl;
 	}
@@ -710,7 +710,7 @@ KPilotLink::compare(struct db * d1, struct db * d2)
 bool
 KPilotLink::doFullRestore()
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
   DIR * dir = NULL;
   struct dirent * dirent;
@@ -793,7 +793,7 @@ KPilotLink::doFullRestore()
 	
       if (dlp_OpenConduit(getCurrentPilotSocket()) < 0) 
 	{
-	  kdWarning() << fname << ": Exiting on cancel. "
+	  kdWarning() << __FUNCTION__ << ": Exiting on cancel. "
 	    "All data not restored."
 	       << endl;
 	  exit(1);
@@ -831,7 +831,7 @@ KPilotLink::doFullRestore()
 bool
 KPilotLink::createLocalDatabase(DBInfo* info)
 {
-  EFUNCTIONSETUP;
+  FUNCTIONSETUP;
 
   char temp[256];
   char name[256];
@@ -871,14 +871,14 @@ KPilotLink::createLocalDatabase(DBInfo* info)
   f = pi_file_create(name, info);
   if (f==0) 
     {
-      kdWarning() << fname << ": Failed, unable to create file"
+      kdWarning() << __FUNCTION__ << ": Failed, unable to create file"
 	   << endl;
       return false;
     }
 
   if(pi_file_retrieve(f, getCurrentPilotSocket(), 0)<0)
     {
-      kdWarning() << fname << ": Failed, unable to back up database"
+      kdWarning() << __FUNCTION__ << ": Failed, unable to back up database"
 	   << endl;
       pi_file_close(f);
       return false;
@@ -939,7 +939,7 @@ KPilotLink::doFullBackup()
 void 
 KPilotLink::installFiles(const QString &path)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
   struct pi_file * f;
   int fileNum = 0;
@@ -958,7 +958,7 @@ KPilotLink::installFiles(const QString &path)
 
   if(getConnected() == false)
     {
-      kdWarning() << fname << ": No HotSync started!" << endl;
+      kdWarning() << __FUNCTION__ << ": No HotSync started!" << endl;
       return;
     }
 
@@ -999,7 +999,7 @@ KPilotLink::installFiles(const QString &path)
 
       if (f==0) 
 	{
-	  kdWarning() << fname << ": Unable to open file." << endl;
+	  kdWarning() << __FUNCTION__ << ": Unable to open file." << endl;
 
 	  QString message;
 
@@ -1013,7 +1013,7 @@ KPilotLink::installFiles(const QString &path)
 	{
 	  if(pi_file_install(f, getCurrentPilotSocket(), 0) <0)
 	    {
-	      kdWarning() << fname << ": failed to install." << endl;
+	      kdWarning() << __FUNCTION__ << ": failed to install." << endl;
 	      KMessageBox::error(fOwningWidget,
 				 i18n("Cannot install file on Pilot"),
 				 i18n("Install File Error"));
@@ -1170,7 +1170,7 @@ KPilotLink::quickHotSync()
 void
 KPilotLink::doConduitBackup()
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 	QString displaymessage;
 
   struct DBInfo info;
@@ -1213,7 +1213,7 @@ KPilotLink::doConduitBackup()
   fCurrentDB->resetDBIndex();
   if(fConduitProcess->isRunning())
     {
-      kdWarning() << fname << ": Waiting for conduit to die.. " << endl;
+      kdWarning() << __FUNCTION__ << ": Waiting for conduit to die.. " << endl;
     }
   // Eek! Busy waiting w/no event loop?
   // Well, some kind of event loop now,
@@ -1285,7 +1285,7 @@ int KPilotLink::findDisposition(const QString &dbList,
 void
 KPilotLink::syncNextDB()
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	QString message;
   QString skip;
@@ -1372,7 +1372,7 @@ KPilotLink::syncNextDB()
 	}
       else
 	{
-	  kdWarning() << fname << ": Sync " 
+	  kdWarning() << __FUNCTION__ << ": Sync " 
 	       << info.name << " failed."
 	       << endl;
 
@@ -1411,7 +1411,7 @@ KPilotLink::syncNextDB()
   fCurrentDB->resetDBIndex();
   if(fConduitProcess->isRunning())
     {
-      kdWarning() << fname << ": Waiting for conduit to die.. " << endl;
+      kdWarning() << __FUNCTION__ << ": Waiting for conduit to die.. " << endl;
     }
 
   // This is busy waiting, but make sure that
@@ -1551,7 +1551,7 @@ void KPilotLink::endHotSync()
 
 void KPilotLink::checkPilotUser()
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
   KConfig& config = getConfig();
   if (config.readBoolEntry("AlwaysTrustPilotUser"))
@@ -1584,7 +1584,7 @@ void KPilotLink::checkPilotUser()
 	  // The gui was right.
 	  getPilotUser().setUserName(guiUserName.latin1());
 
-	  kdWarning() << fname 
+	  kdWarning() << __FUNCTION__ 
 	  	<< ": Pilot User set to " 
 		<< getPilotUser().getUserName() << endl;
 	}
@@ -1595,7 +1595,7 @@ void KPilotLink::checkPilotUser()
 static KConfig *theconfig = 0L;
 KConfig& KPilotLink::getConfig(const QString &s)
 {
-	EFUNCTIONSETUP;
+	FUNCTIONSETUP;
 
 	if (theconfig)
 	{
@@ -1632,7 +1632,7 @@ KConfig& KPilotLink::getConfig(const QString &s)
 
 	if (theconfig == 0L)
 	{
-		kdWarning() << fname << ": No configuration was found."
+		kdWarning() << __FUNCTION__ << ": No configuration was found."
 			<< endl;
 	}
 
@@ -1647,6 +1647,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.25  2000/12/21 00:42:50  adridg
+// Mostly debugging changes -- added EFUNCTIONSETUP and more #ifdefs. KPilot should now compile -DNDEBUG or with DEBUG undefined
+//
 // Revision 1.24  2000/12/20 19:42:18  bero
 // Fix build with -DNDEBUG
 //

@@ -14,11 +14,11 @@ static const char *id="$Id$";
 #include <kdebug.h>
 #include "options.h"
 
+#ifdef DEBUG
 // The daemon also has a debug level
 //
 //
 int debug_level=0;
-#ifdef DEBUG
 const char *tabs="\t\t\t\t\t\t";
 
 void listConfig(kdbgstream& s,KConfig &c)
@@ -50,10 +50,8 @@ void listConfig(kdbgstream& s,KConfig &c)
 				<< endl;
 		}
 	}
-#ifdef DEBUG
 	/* NOTREACHED */
 	(void) id;
-#endif
 }
 
 void listStrList(kdbgstream& s,const QStringList& l)
@@ -68,4 +66,14 @@ void listStrList(kdbgstream& s,const QStringList& l)
 		s << fname << ": " << *i << endl;
 	}
 }
+#else
+#ifdef TEST_DEBUG
+debugName const fname((int) id);
+kndbgstream operator << (kndbgstream s, const debugName&)
+{
+	return s;
+}
+#else
+const int fname = (int) id;
+#endif
 #endif

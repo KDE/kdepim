@@ -89,28 +89,28 @@ void showMessage(const QString &message)
 void showResponseResult(int const ret,
 	const char *message,
 	const char *buffer,
-	const char *fname)
+	const char *func)
 {
 	QString msg(i18n(message));
 
 	if (ret==TIMEOUT)
 	{
 		msg.append(i18n(" (Timed out)"));
-		kdDebug() << fname
+		DEBUGCONDUIT << func
 			<< ": " << message
 			<< endl;
 	}
 	if (ret==PERROR)
 	{
-		kdDebug() << fname
+		kdWarning() << func
 			<< ": " << message
+			<< perror
 			<< endl ;
-		perror(fname);
 	}
 
 	if (ret>=0)
 	{
-		kdDebug() << fname
+		DEBUGCONDUIT << func
 			<< ": " << message
 			<< endl;
 
@@ -121,7 +121,7 @@ void showResponseResult(int const ret,
 		{
 			msg.append("\n");
 			msg.append(buffer);
-			kdDebug() << fname
+			DEBUGCONDUIT << func
 				<< ": " << buffer
 				<< endl;
 		}
@@ -182,7 +182,7 @@ static int getPOPResponse(KSocket *s,const char *message,
 
 	if (ret==TIMEOUT)
 	{
-		showResponseResult(ret,message,buffer,fname);
+		showResponseResult(ret,message,buffer,__FUNCTION__);
 		return TIMEOUT;
 	}
 
@@ -202,7 +202,7 @@ static int getPOPResponse(KSocket *s,const char *message,
 	//
 	if(buffer[i] != '+')
 	{
-		showResponseResult(ret,message,buffer+i,fname);
+		showResponseResult(ret,message,buffer+i,__FUNCTION__);
 		return BADPOP;
 	}
 
@@ -267,20 +267,24 @@ PopMailConduit::doSync()
 	mode=config.readNumEntry("SyncOutgoing");
 	if(mode)
 	{
+#ifdef DEBUG
 		if (debug_level)
 		{
 			kdDebug() << fname << ": Sending pending mail" << endl;
 		}
+#endif
 		sent_count=sendPendingMail(mode);
 	}
 
 	mode=config.readNumEntry("SyncIncoming");
 	if(mode)
 	{
+#ifdef DEBUG
 		if (debug_level)
 		{
 			kdDebug() << fname << ": Querying pop server." << endl;
 		}
+#endif
 		received_count=retrieveIncoming(mode);
 	}
 
@@ -342,12 +346,14 @@ int PopMailConduit::sendPendingMail(int mode)
 		count=sendViaSendmail();
 	}
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname << ": Sent "
 			<< count << " messages"
 			<< endl;
 	}
+#endif
 
 	return count;
 }
@@ -392,6 +398,7 @@ int PopMailConduit::sendViaSMTP()
   smtpSrv = config.readEntry("SMTPServer","localhost");
   smtpPort = config.readNumEntry("SMTPPort",25);
   
+#ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname
@@ -399,13 +406,14 @@ int PopMailConduit::sendViaSMTP()
 			<< smtpSrv << " on port " << smtpPort
 			<< endl;
 	}
+#endif
 
 	smtpSocket = new KSocket(smtpSrv.latin1(),smtpPort); 
 	CHECK_PTR(smtpSocket);
 	if(smtpSocket->socket() < 0)
 	{
 		showResponseResult(PERROR,"Cannot connect to SMTP server",
-			0L,fname);
+			0L,__FUNCTION__);
 		delete smtpSocket;
 		return -1;
 	}
@@ -418,7 +426,7 @@ int PopMailConduit::sendViaSMTP()
 	if ((ret<0) || (strstr(buffer,"220")==0L))
 	{
 		showResponseResult(ret,"SMTP server failed to announce itself",
-			buffer,fname);
+			buffer,__FUNCTION__);
 		delete smtpSocket;
 		return -1;
 	}
@@ -438,18 +446,20 @@ int PopMailConduit::sendViaSMTP()
 	//
 	getdomainname(buffer+1024,1024);
 	sprintf(buffer, "EHLO %s\r\n",buffer+1024);
+#ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname
 			<< ": " << buffer
 			;
 	}
+#endif
 	write(smtpSocket->socket(), buffer, strlen(buffer));
 	ret=getResponse(smtpSocket,buffer,1024);
 	if ((ret < 0 ) || (strstr(buffer,"Hello")==0L))
 	{
 		showResponseResult(ret,"Couldn't EHLO to SMTP server",
-			buffer,fname);
+			buffer,__FUNCTION__);
 		//
 		// Should we QUIT from SMTP server?
 		//
@@ -619,27 +629,33 @@ int PopMailConduit::sendViaSendmail()
     {
       FILE* sendf; // for talking to sendmail
 
+#ifdef DEBUG
 	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname << ": Reading " << i << "th message" << endl;
 	}
+#endif
       pilotRec = readNextRecordInCategory(1);
 	if(pilotRec == 0L)
 	{
+#ifdef DEBUG
 		if (debug_level)
 		{
 			kdDebug() << fname << ": Got a NULL record from "
 				"readNextRecord" << endl;
 		}
+#endif
 		break;
 	}
       if((pilotRec->getAttrib() & dlpRecAttrDeleted) 
                || (pilotRec->getAttrib() & dlpRecAttrArchived))
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_TEDIOUS )
 		{
 			kdDebug() << fname << ": Skipping deleted record." << endl;
 		}
+#endif
 		delete pilotRec;
 	}
       else
@@ -651,7 +667,7 @@ int PopMailConduit::sendViaSendmail()
 	    {
  	      KMessageBox::error(0L, "Cannot talk to sendmail!",
 				   "Error Sending Mail");
-		kdDebug() << fname 
+		kdWarning() << __FUNCTION__ 
 			<< ": Could not start sendmail.\n"
 			<< fname << ": " << count 
 			<< " messages sent OK"
@@ -674,11 +690,13 @@ int PopMailConduit::sendViaSendmail()
     }
 //   free_MailAppInfo(&mailAppInfo);
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname << ": Sent " << count << " messages"
 			<< endl;
 	}
+#endif
 
 	return count;
 }
@@ -709,27 +727,33 @@ PopMailConduit::sendMessage(FILE* sendf, struct Mail& theMail)
   mailPipe << "\r\n";
 
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname << ": To: " << theMail.to << endl;
 	}
+#endif
 
 
 	if(theMail.body)
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_MINOR)
 		{
 			kdDebug() << fname << ": Sent body." << endl;
 		}
+#endif
 		mailPipe << theMail.body << "\r\n";
 	}
 
   //insert the real signature file from disk
   if(!config.readEntry("Signature").isEmpty()) {
+#ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname << ": Reading signature" << endl;
 	}
+#endif
 
       QFile f(config.readEntry("Signature"));
       if ( f.open(IO_ReadOnly) ) {    // file opened successfully
@@ -743,10 +767,12 @@ PopMailConduit::sendMessage(FILE* sendf, struct Mail& theMail)
    }
     mailPipe << "\r\n";
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname << ": Done" << endl;
 	}
+#endif
 }
 
 /* static */ char*
@@ -888,6 +914,7 @@ void PopMailConduit::retrievePOPMessages(KSocket *popSocket,int const msgcount,
 
 		sscanf(buffer+ret, "%*s %*d %d", &len);
 
+#ifdef DEBUG
 		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() << fname
@@ -895,10 +922,11 @@ void PopMailConduit::retrievePOPMessages(KSocket *popSocket,int const msgcount,
 				<< " is " << len << " bytes long"
 				<< endl;
 		}
+#endif
 
 		if (len > 16000) 
 		{
-			kdDebug() << fname
+			kdWarning() << __FUNCTION__
 				<< ": Skipped long message " << i
 				<< endl;
 			continue; 
@@ -1038,6 +1066,7 @@ int PopMailConduit::doPopQuery()
 		config.readNumEntry("PopPort")); 
 	CHECK_PTR(popSocket);
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname 
@@ -1045,12 +1074,13 @@ int PopMailConduit::doPopQuery()
 			<< config.readEntry("PopServer")
 			<< endl;
 	}
+#endif
 
 	if(popSocket->socket() < 0)
 	{
 		showResponseResult(PERROR,
 			"Cannot connect to POP server -- no socket",
-			0L,fname);
+			0L,__FUNCTION__);
 		delete popSocket;
 		return -1;
 	}
@@ -1060,6 +1090,7 @@ int PopMailConduit::doPopQuery()
 	popSocket->enableRead(true);
 	popSocket->enableWrite(true);
 
+#ifdef DEBUG
 	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname 
@@ -1067,6 +1098,7 @@ int PopMailConduit::doPopQuery()
 			<< popSocket->socket()
 			<< endl ;
 	}
+#endif
 
 	// The following code is based _HEAVILY_ :) 
 	// on pilot-mail.c by Kenneth Albanowski
@@ -1092,12 +1124,14 @@ int PopMailConduit::doPopQuery()
 
 	if(config.readNumEntry("StorePass", 0))
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() << fname 
 				<< ": Reading password from config."
 				<< endl;
 		}
+#endif
 
 		sprintf(buffer, "PASS %s\r\n", 
 			config.readEntry("PopPass").latin1());
@@ -1118,9 +1152,11 @@ int PopMailConduit::doPopQuery()
 		}
 		else
 		{
+#ifdef DEBUG
 			kdDebug() << fname
 				<< ": Password dialog was canceled." 
 				<< endl;
+#endif
 			delete passDialog;
 			disconnectPOP(popSocket);
 			delete popSocket;
@@ -1166,6 +1202,7 @@ int PopMailConduit::doPopQuery()
 		sscanf(buffer+offset, "%*s %d %*s", &msgcount);
 	}
 
+#ifdef DEBUG
 	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname
@@ -1177,6 +1214,7 @@ int PopMailConduit::doPopQuery()
 			<< msgcount << " messages."
 			<< endl;
 	}
+#endif
 
 	if(msgcount < 1)
 	{
@@ -1208,10 +1246,12 @@ int PopMailConduit::doPopQuery()
 	while (!feof(f))
 	{
 		if (fgets(buffer,buffersize,f)==0L) break;
+#ifdef DEBUG
 		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() <<  fname << ": Got line " << buffer ;
 		}
+#endif
 
 		s=buffer;
 		while (isspace(*s)) s++;
@@ -1246,34 +1286,41 @@ int PopMailConduit::doPopQuery()
 	//
 	if (expectFrom)
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() << fname << ": Looking for From line." << endl;
 		}
+#endif
 
 		skipBlanks(f,line,LINESIZE);
 		if (strncmp(line,"From ",5))
 		{
-			kdDebug() << fname << ": No leading From line." << endl;
+			kdWarning() << __FUNCTION__
+				<< ": No leading From line." << endl;
 			return 0;
 		}
 
+#ifdef DEBUG
 		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() << fname << ": Found it." << endl;
 		}
+#endif
 	}
 
 	while ((skipBlanks(f,line,LINESIZE)==0) && !feof(f))
 	{
 		if ((line[0]=='.') && (line[1]=='\n') && (line[2] == 0))
 		{
+#ifdef DEBUG
 			if (debug_level & SYNC_TEDIOUS)
 			{
 				kdDebug() << fname << ": Found end-of-headers " 
 					"and end-of-message."
 					<< endl;
 			}
+#endif
 			// End of message *and* end-of headers.
 			return -count;
 		}
@@ -1285,11 +1332,13 @@ int PopMailConduit::doPopQuery()
 		//
 		if (line[0]=='\n')
 		{
+#ifdef DEBUG
 			if (debug_level & SYNC_TEDIOUS)
 			{
 				kdDebug() << fname << ": Found end-of-headers" 
 					<< endl;
 			}
+#endif
 			// End of headers
 			header(t,0);
 			return count;
@@ -1299,10 +1348,12 @@ int PopMailConduit::doPopQuery()
 		count++;
 	}
 
+#ifdef DEBUG
 	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname << ": Read " << count << " lines." << endl;
 	}
+#endif
 	strncpy(buf,line,bufsiz);
 	return count;
 }
@@ -1314,10 +1365,12 @@ int PopMailConduit::doPopQuery()
 	int count=0;
 	int linelen=0;
 
+#ifdef DEBUG
 	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname << ": Buffer @" << (int) buf << endl;
 	}
+#endif
 
 	while(!feof(f) && (bufsize > 80))
 	{
@@ -1330,6 +1383,7 @@ int PopMailConduit::doPopQuery()
 			return count;
 		}
 
+#ifdef DEBUG
 		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() << fname << ": Got line ["  
@@ -1337,6 +1391,7 @@ int PopMailConduit::doPopQuery()
 				<< ']'
 				<< buf;
 		}
+#endif
 
 		if ((buf[0]=='.') && ((buf[1]=='\n') || (buf[1]=='\r')))
 		{
@@ -1383,7 +1438,8 @@ int PopMailConduit::doPopQuery()
 	messageLength=readHeaders(mailbox,buffer,bufferSize,&t,1);
 	if (messageLength == 0)
 	{
-		kdDebug() << fname << ": Bad headers in message." << endl;
+		kdWarning() << __FUNCTION__ 
+			<< ": Bad headers in message." << endl;
 		return 0;
 	}
 
@@ -1391,6 +1447,7 @@ int PopMailConduit::doPopQuery()
 	if (messageLength>0)
 	{
 		messageLength=strlen(buffer);
+#ifdef DEBUG
 		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() << fname << ": Message so far:" << endl
@@ -1400,12 +1457,14 @@ int PopMailConduit::doPopQuery()
 			kdDebug() << fname << ": Buffer @" << (int) buffer 
 				<< endl;
 		}
+#endif
 
 		if (readBody(mailbox,
 			buffer+messageLength,
 			bufferSize-messageLength) < 0)
 		{
-			kdDebug() << fname << ": Bad body for message." << endl;
+			kdWarning() << __FUNCTION__
+				<< ": Bad body for message." << endl;
 			return 0;
 		}
 	}
@@ -1450,32 +1509,37 @@ int PopMailConduit::doUnixStyle()
 		filename=config.readEntry("UNIX Mailbox");
 		if (filename.isEmpty()) return 0;
 
+#ifdef DEBUG
 		if (debug_level & SYNC_MINOR)
 		{
 			kdDebug() << fname << ": Trying to read mailbox "
 				<< filename << endl;
 		}
+#endif
 
 		QFileInfo info(filename);
 		if (!info.exists()) 
 		{
-			kdDebug() << fname << ": Mailbox doesn't exist."
+			kdWarning() << fname << ": Mailbox doesn't exist."
 				<< endl;
 			return -1;
 		}
 
+#ifdef DEBUG
 		if (debug_level & SYNC_MINOR)
 		{
 			kdDebug() << fname << ": Mailbox found." << endl;
 		}
+#endif
 
 	}
 
 	mailbox=fopen(filename.latin1(),"r");
 	if (mailbox==0L)
 	{
-		kdDebug() << fname << ": Can't open mailbox." << endl;
-		perror(fname);
+		kdWarning() << fname << ": Can't open mailbox:" 
+			<< perror
+			<< endl;
 		return -1;
 	}
 
@@ -1485,16 +1549,18 @@ int PopMailConduit::doUnixStyle()
 		if  (pilotRec && writeRecord(pilotRec)>0)
 		{
 			messageCount++;
+#ifdef DEBUG
 			if (debug_level & SYNC_MAJOR)
 			{
 				kdDebug() << fname << ": Read message "
 					<< messageCount << " from mailbox." 
 					<< endl;
 			}
+#endif
 		}
 		else
 		{
-			kdDebug() << fname << ": Message "
+			kdWarning() << fname << ": Message "
 				<< messageCount << " couldn't be written."
 				<< endl;
 			showMessage(i18n("Error writing mail message to Pilot"));
@@ -1502,6 +1568,7 @@ int PopMailConduit::doUnixStyle()
 		delete pilotRec;
 	}
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname << ": Wrote "
@@ -1509,6 +1576,7 @@ int PopMailConduit::doUnixStyle()
 			<< " messages to pilot." 
 			<< endl;
 	}
+#endif
 
 	return messageCount;
 }
