@@ -3,6 +3,21 @@ TODO LIST (Moved again to the file TODO)
 KPilot Developer's notes for May 15th, 2003
 ===========================================
 
+2003-5-19  Reinhold Kainhofer
+* This weekend I wrote this new conduit for KPilot, called 
+  sysinfoconduit. It writes all important Palm system information 
+	to a text or html file. For an example, see 
+	http://reinhold.kainhofer.com/Linux/KPilot/KPilotSysInfo.html. 
+	The output is completely customizable via templates. Currently, 
+	txt and html templates are available, but the user can provide 
+	his/her own template in the conduit configuration dialog. The 
+	current html template uses css for the markup, and passes the 
+	w3c html validator without warnings.
+	Hopefully, the debug output section will help us kpilot developers 
+	track down problems easier (the users can send us the output of 
+	this conduit, and we can let it write out all important stuff we 
+	need/want to see).
+
 2003-5-11  Adriaan de Groot
 * kpilotDCOP.h Changed enum values so that you can distinguish
   between call failed and normal operation.
