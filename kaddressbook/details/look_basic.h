@@ -25,7 +25,7 @@
 #define LOOK_KABBASIC_H
 
 #include <kabc/addressbook.h>
-#include <qwidget.h>
+#include <qvbox.h>
 
 class KConfig;
 
@@ -41,7 +41,7 @@ class KConfig;
   The paintEvent() has to paint the whole widget, since repaint()
   calls will not delete the widgets background.
  */
-class KABBasicLook : public QWidget
+class KABBasicLook : public QVBox
 {
   Q_OBJECT
 

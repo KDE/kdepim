@@ -8,6 +8,7 @@ libprinter_la_METASOURCES = AUTO
 libprinter_la_SOURCES = \
 	detailledstyle.cpp  \
 	ds_appearance.ui \
+	kabentrypainter.cpp \
 	mikesstyle.cpp \
 	ringbinderstyle.cpp \
 	printingwizard.cpp \
@@ -18,7 +19,7 @@ libprinter_la_SOURCES = \
 	stylepage.cpp
 
 EXTRA_DIST = \
-	detailledstyle.cpp detailledstyle.h \
+	detailledstyle.cpp detailledstyle.h kabentrypainter.h \
 	mikesstyle.cpp mikesstyle.h ringbinderstyle.h \
 	printingwizard.cpp printingwizard.h \
 	printprogress.cpp printprogress.h \

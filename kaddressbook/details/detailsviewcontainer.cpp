@@ -32,7 +32,8 @@
 #include <kdialog.h>
 
 #include "look_basic.h"
-#include "look_details.h"
+//#include "look_details.h"
+#include "look_html.h"
 
 #include "detailsviewcontainer.h"
 
@@ -77,7 +78,8 @@ KABBasicLook *ViewContainer::currentLook()
 
 void ViewContainer::registerLooks()
 {
-  mLookFactories.append( new KABDetailedViewFactory( mDetailsStack ) );
+  mLookFactories.append( new KABHtmlViewFactory( mDetailsStack ) );
+//  mLookFactories.append( new KABDetailedViewFactory( mDetailsStack ) );
   mStyleCombo->clear();
 
   for ( uint i = 0; i < mLookFactories.count(); ++i )

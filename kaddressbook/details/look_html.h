@@ -1,6 +1,6 @@
 /*                                                                      
     This file is part of KAddressBook.
-    Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
+    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
                                                                         
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,54 +21,55 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include <kdebug.h>
+#ifndef LOOK_HTML_H
+#define LOOK_HTML_H
+
+#include <klocale.h>
 
 #include "look_basic.h"
 
-KABBasicLook::KABBasicLook( QWidget *parent, const char *name )
-  : QVBox( parent, name ), mReadOnly( false )
+namespace KABC { class Addressee; }
+class KTextBrowser;
+
+class KABHtmlView : public KABBasicLook
 {
-}
+  Q_OBJECT
 
-void KABBasicLook::setReadOnly( bool state )
+  public:
+    /**
+      The constructor.
+     */
+    KABHtmlView( QWidget *parent = 0, const char* name = 0 );
+
+    /**
+      The virtual destructor.
+     */
+    virtual ~KABHtmlView();
+
+    /**
+      Set the addressee.
+     */
+    void setAddressee( const KABC::Addressee& );
+
+  private:
+    KTextBrowser *mTextBrowser;
+};
+
+class KABHtmlViewFactory : public KABLookFactory
 {
-  mReadOnly = state;
-}
+  public:
+    KABHtmlViewFactory( QWidget *parent = 0, const char *name = 0 )
+      : KABLookFactory( parent, name ) {}
 
-bool KABBasicLook::isReadOnly() const
-{
-  return mReadOnly;
-}
+    KABBasicLook *create()
+    {
+      return new KABHtmlView( mParent, mName );
+    }
 
-void KABBasicLook::setAddressee( const KABC::Addressee &addr )
-{
-  if ( mAddressee == addr )
-    return;
+    QString description()
+    {
+      return i18n( "Html table style." );
+    }
+};
 
-  mAddressee = addr;
-  repaint( false );
-}
-
-KABC::Addressee KABBasicLook::addressee()
-{
-  return mAddressee;
-}
-
-void KABBasicLook::restoreSettings( KConfig* )
-{
-}
-
-void KABBasicLook::saveSettings( KConfig* )
-{
-}
-
-KABLookFactory::KABLookFactory( QWidget *parent, const char *name )
-  : mParent( parent ), mName( name )
-{
-}
-
-KABLookFactory::~KABLookFactory()
-{
-}
-
-#include "look_basic.moc"
+#endif
