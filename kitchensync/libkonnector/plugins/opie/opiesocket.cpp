@@ -3,6 +3,7 @@
 #include <qdom.h>
 #include <qfile.h>
 
+#include <kapplication.h>
 #include <opiedesktopsyncentry.h>
 #include <koperations.h>
 #include <kgenericfactory.h>
@@ -38,6 +39,7 @@ public:
     enum Status {START=0, USER=1, PASS, CALL, NOOP, DONE , CONNECTED};
     QPtrList<KSyncEntry> m_sync;
     QValueList<OpieCategories> m_categories;
+    QString partnerId;
 };
 
 OpieSocket::OpieSocket(QObject *obj, const char *name )
@@ -340,9 +342,12 @@ void OpieSocket::manageCall(const QString &line )
                 url.setHost( d->dest.toString() );
                 url.setPort( 4242 );
                 url.setPath(d->path + "/Settings/meinPartner");
-                KIO::NetAccess::download( url,  file );
-                if ( file.isEmpty() )
+                if ( !KIO::NetAccess::download( url,  file ) )
                     newPartner();
+                else{
+                    readPartner(file);
+                    KIO::NetAccess::removeTempFile( file );
+                }
 
             }
 	    kdDebug() << "desktops entries" << endl;
@@ -412,7 +417,56 @@ QString OpieSocket::categoryById(const QString &id, const QString &app )
     //kdDebug() << "CategoryById: " << category << endl;
     return category;
 }
+// we never synced with him though
+// generate a id and store it on the device
+void OpieSocket::newPartner()
+{
+    d->partnerId = randomString( 10 );
+    kdDebug() << "New Sync  " << d->partnerId << endl;
+    QString fileN = QString::fromLatin1("/tmp/opiekonnector-") + d->partnerId;
+    QFile file( fileN );
+    if ( file.open( IO_WriteOnly ) ) {
+        QTextStream stream(&file );
+        stream << "opie-" << d->partnerId << endl;
+        file.close();
+        KURL url;
+        url.setProtocol("ftp" );
+        url.setUser( d->user );
+        url.setPass( d->pass );
+        url.setHost( d->dest.toString() );
+        url.setPort( 4242 );
+        url.setPath(d->path + "/Settings/meinPartner");
+        KIO::NetAccess::upload( fileN,  url );
+    }
+}
+void OpieSocket::readPartner( const QString &fileName )
+{
+    QFile file( fileName );
+    if ( file.open(IO_ReadOnly ) ) {
+        QTextStream stream ( &file );
+        QString string;
+        stream >> string;
+        if ( string.left( 5 ) == QString::fromLatin1("opie-") )
+            d->partnerId = string.mid( 6 );
+    }
+    kdDebug() << "Known Partner " << d->partnerId << endl;
+}
+QString OpieSocket::randomString( int length )
+{
+    if ( kapp )
+        return kapp->randomString( length );
 
-
-
+    // from KApplication
+    QString str;
+    while (--length)
+    {
+        int r=random() % 62;
+        r+=48;
+        if (r>57) r+=7;
+        if (r>90) r+=6;
+        str += char(r);
+        // so what if I work backwards?
+    }
+    return str;
+}
 

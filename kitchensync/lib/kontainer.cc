@@ -28,3 +28,10 @@ Kontainer &Kontainer::operator=( const Kontainer &con )
     m_second = con.m_second;
     return *this;
 }
+
+bool operator== ( const Kontainer &a ,  const Kontainer &b ) {
+    if ( a.first() == b.first() &&  a.second() == b.second() )
+        return true;
+
+    return false;
+}

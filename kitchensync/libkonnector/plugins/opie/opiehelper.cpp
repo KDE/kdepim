@@ -11,7 +11,7 @@
 #include <kabc/phonenumber.h>
 #include <kabc/address.h>
 
-#include <todo.h>
+#include <libkcal/todo.h>
 
 #include "opiehelper.h"
 
@@ -21,7 +21,7 @@ QString categoryById(const QString &id, const QString &app, QValueList<OpieCateg
   QValueList<OpieCategories>::Iterator it;
   QString category;
   for( it = cate.begin(); it != cate.end(); ++it ){
-    kdDebug() << "it :" << (*it).id() << "id:" << id << "ende"<<endl; 
+    kdDebug() << "it :" << (*it).id() << "id:" << id << "ende"<<endl;
     if( id.stripWhiteSpace() == (*it).id().stripWhiteSpace() ){
       //if( app == (*it).app() ){
       kdDebug() << "found category" << endl;
@@ -39,7 +39,7 @@ QString categoryById(const QString &id, const QString &app, QValueList<OpieCateg
     kdDebug() << "Addressee" << endl;
     kdDebug() << "Name " << test.name() << endl;
     kdDebug() << "UID" << test.uid() << endl;
-    kdDebug() << "LastName" << test.familyName() << endl; 
+    kdDebug() << "LastName" << test.familyName() << endl;
   }
 
 };
@@ -71,7 +71,7 @@ void OpieHelper::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *e
     QString name, category, type, fileName, size;
     QStringList::Iterator it;
     it = list.begin(); // desktopentry;
- 
+
     list.remove( it );
     // yuyuyi
     OpieDesktopSyncEntry *entr;
@@ -151,7 +151,7 @@ void OpieHelper::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *e
 	  if(ok ){
 	    bool status = Int;
 	    if( status ){
-	      todo->setCompleted(true); 
+	      todo->setCompleted(true);
 	    }else
 	      todo->setCompleted( false );
 	  }else
@@ -271,9 +271,9 @@ void OpieHelper::toAddressbook(const QString &timeStamp, const QString &fileName
 			business.setLocality( el.attribute("BusinessCity"  ) );
 			business.setRegion  ( el.attribute("BusinessState" ) );
 			business.setPostalCode( el.attribute("BusinessZip")  );
-			
+
 			adr.insertAddress( business );
-			
+
 			KABC::Address home( KABC::Address::Home );
 			home.setStreet( el.attribute("HomeStreet") );
 			home.setLocality( el.attribute("HomeCity") );
@@ -281,7 +281,7 @@ void OpieHelper::toAddressbook(const QString &timeStamp, const QString &fileName
 			home.setPostalCode( el.attribute("HomeZip") );
 			adr.insertAddress( home );
 			//el.attribute("Birthday");
-			
+
 			adr.setNickName( el.attribute("Nickname") );
 			adr.setNote( el.attribute("Notes") );
 

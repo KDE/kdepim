@@ -47,6 +47,7 @@ int main(int argc, char *argv[] )
     QHostAddress adr;
     adr.setAddress("192.168.0.10" );
     caps.setDestIP(adr );
+    caps.setMetaSyncingEnabled( true );
     konnector->setCapabilities( outp, caps );
     konnector->startSync( outp );
     if(outp.isEmpty() ){

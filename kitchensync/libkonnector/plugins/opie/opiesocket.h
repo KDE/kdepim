@@ -33,6 +33,9 @@ Q_OBJECT
   void errorKonnector(int, QString );
 
  private:
+    void newPartner();
+    void readPartner( const QString & );
+    QString randomString( int len );
   class OpieSocketPrivate;
   OpieSocketPrivate *d;
 
