@@ -113,7 +113,6 @@ class Alarm {
                                  // snooze before ringing again
     int mAlarmRepeatCount;       // number of times for alarm to repeat
                                  // after the initial time
-    QDateTime mAlarmStart;
     bool mAlarmEnabled;
 
     QDateTime mAlarmTime;        // time at which to display the alarm
