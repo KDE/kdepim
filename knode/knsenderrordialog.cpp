@@ -38,7 +38,8 @@ KNSendErrorDialog::KNSendErrorDialog() : QSemiModal(knGlobals.top, 0, true)
 	jobs=new KNListBox(this);
 	error=new QLabel(this);
 	error->setFrameStyle(QFrame::Box | QFrame::Sunken);
-	closeBtn=new QPushButton(i18n("Close"), this);
+	closeBtn=new QPushButton(i18n("&Close"), this);
+	closeBtn->setDefault(true);
 		
 	connect(jobs, SIGNAL(highlighted(int)), this, SLOT(slotJobHighlighted(int)));
 	connect(closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseBtnClicked()));
@@ -47,7 +48,7 @@ KNSendErrorDialog::KNSendErrorDialog() : QSemiModal(knGlobals.top, 0, true)
 	QHBoxLayout *btnL=new QHBoxLayout();
 	topL->addWidget(jobs, 1);
 	topL->addWidget(error);
-	topL->addSpacing(20);
+	topL->addSpacing(5);
 	topL->addLayout(btnL);
 	btnL->addStretch(1);
 	btnL->addWidget(closeBtn);
@@ -74,6 +75,7 @@ void KNSendErrorDialog::appendJob(KNJobData *job)
 	jobList.append(job);
 	it=new KNLBoxItem(art->subject(), job, &pm);
 	jobs->insertItem(it);	
+	jobs->setCurrentItem(it);
 }
 
 

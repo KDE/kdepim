@@ -757,8 +757,8 @@ void KNSavedArticleManager::jobDone(KNJobData *job)
 		fSent->addArticle(art);
 		if(f_older==fSent) showHdrs();
 	  actSendOutbox->setEnabled(!fOutbox->isEmpty());
+    delete job;	
 	}
-	delete job;
 }
 
 
