@@ -99,7 +99,7 @@ void KNConfigManager::slotDialogDone()
 
 
 KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
-  : KDialogBase(TreeList, i18n("Preferences"), Ok|Apply|Cancel|Help, Ok, p, n, false, true), m_anager(m)
+  : KDialogBase(TreeList, i18n("Configure"), Ok|Apply|Cancel|Help, Ok, p, n, false, true), m_anager(m)
 {
   setShowIconsInTreeList(true);
   //  setRootIsDecorated(false);
