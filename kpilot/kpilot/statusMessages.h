@@ -22,6 +22,8 @@ public:
   static const int READ_REC_BY_ID;
   static const int NO_SUCH_RECORD;
   static const int REC_DATA;
+
+	static const int LOG_MESSAGE;	// Used by conduit log-message protocol
 };
 
 

@@ -1,4 +1,4 @@
-// conduitApp.hc
+// conduitApp.h
 //
 // Copyright (C) 1998,1999 Dan Pilone
 //
@@ -15,19 +15,20 @@
 #include <kapp.h>
 #include "baseConduit.h"
 
-// Debug level is set -- among other things --
-// by the constructor for conduit apps.
-//
-//
-extern int debug_level;
-
 class ConduitApp : protected KApplication
 {
   Q_OBJECT
 
 public:
-  ConduitApp(int& argc, char** argv);
-  ConduitApp(int& argc, char** argv, const QString& rAppName);
+  // ConduitApp(int& argc, char** argv);
+	ConduitApp(int& argc, 
+		char** argv, 
+#ifdef KDE2
+		const QCString& rAppName,
+#else
+		const QString& rAppName,
+#endif
+		const char *banner);
 
   void setConduit(BaseConduit* conduit);
   void quit() { KApplication::quit(); }
@@ -36,8 +37,7 @@ public:
   BaseConduit::eConduitMode getMode() { return fMode; }
 
 protected:
-	BaseConduit::eConduitMode handleOptions(int&,char**);
-	void usage();
+	BaseConduit::eConduitMode handleOptions(const char *,int&,char**);
 
 private:
   BaseConduit* fConduit;

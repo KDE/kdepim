@@ -18,10 +18,15 @@ class QLabel;
 class QCheckBox;
 class QLineEdit;
 class QComboBox;
-class KFM;
 class QRadioButton;
 class QGroupBox;
+class QButtonGroup;
 
+
+// This config page is now being used for
+// "special db settings," not just privacy settings.
+//
+//
 class KPilotOptionsPrivacy : public setupDialogPage
 {
 	Q_OBJECT
@@ -30,10 +35,10 @@ public:
 	KPilotOptionsPrivacy(setupDialog *,KConfig *);
 
 	virtual int commitChanges(KConfig *);
-	virtual const char *tabName();
 
 private:
 	QCheckBox *fuseSecret;
+	QLineEdit *fBackupOnly,*fSkipDB;
 } ;
 
 
@@ -46,7 +51,6 @@ public:
 	virtual ~KPilotOptionsGeneral();
 
 	virtual int commitChanges(KConfig *);
-	virtual const char *tabName();
 
 public slots:
 	void slotSetupDaemon();
@@ -64,8 +68,6 @@ private:
 	QCheckBox* fDockDaemon;
 
 	QCheckBox* fOverwriteRemote;
-
-	KFM* fKFM;
 } ;
 
 class KPilotOptionsAddress : public setupDialogPage
@@ -76,10 +78,8 @@ public:
 	KPilotOptionsAddress(setupDialog *parent,KConfig*);
 
 	virtual int commitChanges(KConfig *);
-	virtual const char *tabName();
 
 public:
-	static const char *groupName();
 	static int getDisplayMode(KConfig *c=NULL);
 
 protected:
@@ -88,13 +88,16 @@ protected:
 
 private:
 	QButtonGroup *displayGroup;
-	QRadioButton *fNormalDisplay,*fCompanyDisplay;
+	QRadioButton *fNormalDisplay;
+	QRadioButton *fCompanyDisplay;
 
 	// Address Prefs:
 	QGroupBox *formatGroup;
 	QLineEdit* fIncomingFormat;
 	QLineEdit* fOutgoingFormat;
 	QCheckBox* fUseKeyField;
+
+	static QString fGroupName;
 } ;
 
 

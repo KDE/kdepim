@@ -25,19 +25,22 @@
 #include <qgrpbox.h>
 #include <qbttngrp.h>
 #include <qradiobt.h>
+#include <qlineedit.h>
 
 #include <kapp.h>
 #include <kconfig.h>
-#include <kwm.h>
-#include <kfm.h>
-#include <kmsgbox.h>
+#include <kwin.h>
+#include <kmessagebox.h>
 
 
 #include "kpilotOptions.moc"
 #include "kpilot.h"
+#include "options.h"
 
 
 static char *id="$Id$";
+
+
 
 // --------------------------------------------------
 //
@@ -47,7 +50,7 @@ static char *id="$Id$";
 //
 //
 KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig *c) :
-	setupDialogPage(p,c)
+	setupDialogPage(i18n("DB Specials"),p,c)
 {
 	FUNCTIONSETUP;
 
@@ -61,7 +64,7 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig *c) :
 		fuseSecret->setChecked(c->readNumEntry("ShowSecrets"));
 	}
 
-	if (debug_level>TEDIOUS)
+	if (debug_level & UI_TEDIOUS)
 	{
 		cerr << fname << ": Read value "
 			<< c->readNumEntry("ShowSecrets")
@@ -69,6 +72,42 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig *c) :
 		cerr << fname << ": Checkbox value "
 			<< fuseSecret->isChecked() << endl;
 	}
+
+	QLabel *l1,*l2;
+	int h;
+
+	l1=new QLabel(i18n("Backup Only:"),this);
+	l2=new QLabel(i18n("Skip:"),this);
+
+	l1->adjustSize();
+	l2->adjustSize();
+
+	if (l1->width() > l2->width())
+	{
+		h=l1->width();
+	}
+	else
+	{
+		h=l2->width();
+	}
+
+	fBackupOnly=new QLineEdit(this);
+	fSkipDB=new QLineEdit(this);
+
+	fBackupOnly->resize(250,fBackupOnly->height());
+	fSkipDB->resize(250,fSkipDB->height());
+
+	l1->move(10,BELOW(fuseSecret)+SPACING);
+	fBackupOnly->move(h+10+SPACING,l1->y()-4);
+	l2->move(10,BELOW(fBackupOnly));
+	fSkipDB->move(fBackupOnly->x(),l2->y()-4);
+
+	c->setGroup(0L);
+	fBackupOnly->setText(c->readEntry("BackupForSync",
+		"Arng,PmDB,lnch"));
+	fSkipDB->setText(c->readEntry("SkipSync",
+		"AvGo"));
+
 }
 
 
@@ -76,42 +115,30 @@ int KPilotOptionsPrivacy::commitChanges(KConfig *config)
 {
 	FUNCTIONSETUP;
 
-	if (fuseSecret)
-	{
-		config->setGroup(0L);
-		config->writeEntry("ShowSecrets",fuseSecret->isChecked());
+	config->setGroup(0L);
 
-		if (debug_level>TEDIOUS)
-		{
-			cerr << fname << ": Wrote value " 
-				<< fuseSecret->isChecked()
-				<< " to file." << endl;
-			cerr << fname << ": Got value "
-				<< config->readNumEntry("ShowSecrets")
-				<< " from file." << endl;
-		}
-	}
+	config->writeEntry("ShowSecrets",fuseSecret->isChecked());
+	config->writeEntry("BackupForSync",fBackupOnly->text());
+	config->writeEntry("SkipSync",fSkipDB->text());
 
 	return 0;
 }
 
-/* virtual */ const char *KPilotOptionsPrivacy::tabName()
-{
-	return i18n("Privacy");
-}
 
+/* static */ QString KPilotOptionsAddress::fGroupName=
+	QString("Address Widget");
 
 KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig *c) :
-	setupDialogPage(w,c)
+	setupDialogPage(i18n("Address"),w,c)
 {
 	FUNCTIONSETUP;
 
-	c->setGroup(groupName());
+	c->setGroup(fGroupName);
 
 	QLabel *currentLabel;
 
-	formatGroup=new QGroupBox(klocale->translate("Address Formats"),this);
-	currentLabel = new QLabel(klocale->translate("Import Format:"),
+	formatGroup=new QGroupBox(i18n("Address Formats"),this);
+	currentLabel = new QLabel(i18n("Import Format:"),
 		formatGroup);
 	currentLabel->adjustSize();
 	currentLabel->move(10, 20);
@@ -124,7 +151,7 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig *c) :
 	fIncomingFormat->resize(250, fIncomingFormat->height());
 	fIncomingFormat->move(110, 10);
 
-	currentLabel = new QLabel(klocale->translate("Export Format:"),
+	currentLabel = new QLabel(i18n("Export Format:"),
 		formatGroup);
 	currentLabel->adjustSize();
 	currentLabel->move(10, 55);
@@ -137,7 +164,7 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig *c) :
 	fOutgoingFormat->resize(250, fIncomingFormat->height());
 	fOutgoingFormat->move(110, 50);
 
-	fUseKeyField = new QCheckBox(klocale->translate("Use &Key Field"), 
+	fUseKeyField = new QCheckBox(i18n("Use &Key Field"), 
 		formatGroup);
 	fUseKeyField->adjustSize();
 	fUseKeyField->setChecked(c->readNumEntry("UseKeyField", 0));
@@ -149,13 +176,13 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig *c) :
 
 
 
-	displayGroup=new QButtonGroup(klocale->translate("Address Display"),
+	displayGroup=new QButtonGroup(i18n("Address Display"),
 		this,"bg");
 	displayGroup->move(10,BELOW(formatGroup));
 
-	fNormalDisplay=new QRadioButton(klocale->translate("Last,First"),
+	fNormalDisplay=new QRadioButton(i18n("Last,First"),
 		displayGroup);
-	fCompanyDisplay=new QRadioButton(klocale->translate("Company,Last"),
+	fCompanyDisplay=new QRadioButton(i18n("Company,Last"),
 		displayGroup);
 
 	fNormalDisplay->move(10,20);
@@ -172,24 +199,21 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig *c) :
 
 
 	setRadio(c->readNumEntry("AddressDisplay",0));
+
 }
 
 
 
 	
-/* static */ const char * KPilotOptionsAddress::groupName()
-{
-	return "Address Widget";
-}
 
 int KPilotOptionsAddress::commitChanges(KConfig *c)
 {
 	FUNCTIONSETUP;
 
-	c->setGroup(groupName());
+	c->setGroup(fGroupName);
 
 	c->writeEntry("AddressDisplay",getRadio());
-	if (debug_level>TEDIOUS) { cerr << fname << 
+	if (debug_level & UI_TEDIOUS) { cerr << fname << 
 		": Selected display mode " << getRadio() << '\n' ; }
 
 	c->writeEntry("IncomingFormat", fIncomingFormat->text());
@@ -203,10 +227,10 @@ int KPilotOptionsAddress::commitChanges(KConfig *c)
 {
 	FUNCTIONSETUP;
 
-	if (c==NULL) c=kapp->getConfig();
+	if (c==NULL) c=KGlobal::config();
 	if (c==NULL) return 0;
 
-	c->setGroup(groupName());
+	c->setGroup(fGroupName);
 
 	return c->readNumEntry("AddressDisplay",0);
 }
@@ -233,11 +257,6 @@ int KPilotOptionsAddress::getRadio() const
 	return 0;
 }
 
-/* virtual */ const char *KPilotOptionsAddress::tabName()
-{
-	return i18n("Address");
-}
-
 // --------------------------------------------------
 //
 // KPilotOptionsGeneral
@@ -247,8 +266,7 @@ int KPilotOptionsAddress::getRadio() const
 //
 
 KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
-	setupDialogPage(w,config),
-	fKFM(0L)
+	setupDialogPage(i18n("General"),w,config)
 {
 	FUNCTIONSETUP;
 
@@ -274,7 +292,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	fPilotSpeed->insertItem("57600");
 	fPilotSpeed->insertItem("115200");
 	value=config->readNumEntry("PilotSpeed", 0);
-	if (debug_level>TEDIOUS)
+	if (debug_level & UI_TEDIOUS)
 	{
 		cerr << fname << ": Read pilot speed "
 			<< value << " from config." << endl;
@@ -313,23 +331,23 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 		config->readNumEntry("StartDaemonAtLogin", 0));
 	fStartDaemonAtLogin->move(10, 180);
 
-	{
-		KFM *fKFM=new KFM();
-		if (fKFM==NULL)
-		{
-			cerr << fname << ": Can't allocate KFM object.\n";
-		}
+// 	{
+// 		KFM *fKFM=new KFM();
+// 		if (fKFM==NULL)
+// 		{
+// 			cerr << fname << ": Can't allocate KFM object.\n";
+// 		}
 
-		if (fKFM==NULL || fKFM->isKFMRunning()!=true)
-		{
-			fStartDaemonAtLogin->setEnabled(false);
-		}
-		if (fKFM!=NULL)
-		{
-			delete fKFM;
-			fKFM=NULL;
-		}
-	}
+// 		if (fKFM==NULL || fKFM->isKFMRunning()!=true)
+// 		{
+// 			fStartDaemonAtLogin->setEnabled(false);
+// 		}
+// 		if (fKFM!=NULL)
+// 		{
+// 			delete fKFM;
+// 			fKFM=NULL;
+// 		}
+// 	}
 	connect(fStartDaemonAtLogin, SIGNAL(clicked()), 
 		this, SLOT(slotSetupDaemon()));
 
@@ -349,27 +367,20 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	fDockDaemon->move(10, 220);
 
 	{
-		KWM* kwm = new KWM();
-		if (kwm!=NULL)
-		{
-			if(kwm->isKWMInitialized() == false)
-			fDockDaemon->setEnabled(false);
-			delete kwm;
-		}
+// 		KWM* kwm = new KWM();
+// 		if (kwm!=NULL)
+// 		{
+// 			if(kwm->isKWMInitialized() == false)
+// 			fDockDaemon->setEnabled(false);
+// 			delete kwm;
+// 		}
 	}
-
 
 }
 
 KPilotOptionsGeneral::~KPilotOptionsGeneral()
 {
 	FUNCTIONSETUP;
-
-	if (fKFM)
-	{
-		delete fKFM;
-		fKFM=0L;
-	}
 }
 
 
@@ -392,66 +403,50 @@ int KPilotOptionsGeneral::commitChanges(KConfig *config)
 		(int)fStartKPilotAtHotSync->isChecked());
 	config->writeEntry("DockDaemon", (int)fDockDaemon->isChecked());
 
+	config->writeEntry("Configured",KPilotInstaller::ConfigurationVersion);
+
 	return 0;
 }
 
 void
 KPilotOptionsGeneral::slotSetupDaemon()
 {
-	FUNCTIONSETUP;
+// 	FUNCTIONSETUP;
 
-  QString destDir = getenv("HOME");
+//   QString destDir = getenv("HOME");
   
 
-  if(fStartDaemonAtLogin->isChecked())
-    {
-	if (fKFM==NULL) fKFM = new KFM;
-	if (fKFM==NULL)
-	{
-		KMsgBox::message(this,klocale->translate("Setup Daemon"),
-			klocale->translate("Cannot connect to KFM."),
-			KMsgBox::STOP);
-		return ;
-	}
+//   if(fStartDaemonAtLogin->isChecked())
+//     {
+// 	if (fKFM==NULL) fKFM = new KFM;
+// 	if (fKFM==NULL)
+// 	{
+// 		KMsgBox::message(this,i18n("Setup Daemon"),
+// 			i18n("Cannot connect to KFM."),
+// 			KMsgBox::STOP);
+// 		return ;
+// 	}
 
-      if(fKFM!=NULL && fKFM->isOK() == false)
-	{
-	  KMsgBox::message(0L, klocale->translate("Setup Daemon"), 
-			   klocale->translate("Cannot connect to KFM."), 
-			   KMsgBox::STOP);
-	  delete fKFM;
-	  fKFM = NULL;
-	  return;
-	}
-      connect(fKFM, SIGNAL(finished()), this, SLOT(slotKFMFinished()));
-      QString destDir = getenv("HOME");
-      fKFM->copy(kapp->kde_appsdir() + "/Utilities/KPilotDaemon.kdelnk", destDir + "/Desktop/Autostart/KPilotDaemon.kdelnk");
-      // memory leak..
-    }
-  else
-      {
-	unlink(destDir + "/Desktop/Autostart/KPilotDaemon.kdelnk");
-      }
+//       if(fKFM!=NULL && fKFM->isOK() == false)
+// 	{
+// 	  KMsgBox::message(0L, i18n("Setup Daemon"), 
+// 			   i18n("Cannot connect to KFM."), 
+// 			   KMsgBox::STOP);
+// 	  delete fKFM;
+// 	  fKFM = NULL;
+// 	  return;
+// 	}
+//       connect(fKFM, SIGNAL(finished()), this, SLOT(slotKFMFinished()));
+//       QString destDir = getenv("HOME");
+//       fKFM->copy(kapp->kde_appsdir() + "/Utilities/KPilotDaemon.kdelnk", destDir + "/Desktop/Autostart/KPilotDaemon.kdelnk");
+//       // memory leak..
+//     }
+//   else
+//       {
+// 	unlink(destDir + "/Desktop/Autostart/KPilotDaemon.kdelnk");
+//       }
 }
 
-
-void KPilotOptionsGeneral::slotKFMFinished()
-{
-	FUNCTIONSETUP;
-
-	if (fKFM!=NULL)
-	{
-		delete fKFM;
-		fKFM=NULL;
-	}
-}
-
-
-
-/* virtual */ const char *KPilotOptionsGeneral::tabName()
-{
-	return "General";
-}
 
 // ----------------------------------------------------
 //
@@ -466,7 +461,7 @@ KPilotOptions::KPilotOptions(QWidget* parent) :
 		TRUE) 				// modal dialog
 {
 	FUNCTIONSETUP;
-	KConfig *config=kapp->getConfig();
+	KConfig *config=KGlobal::config();
 
 	addPage(new KPilotOptionsGeneral(this,config));
 	addPage(new  KPilotOptionsAddress(this,config));

@@ -1,9 +1,36 @@
+// pilotSerialDatabase.cc
+//
+// Copyright (C) 1998,1999 Dan Pilone
+//
+// This file is distributed under the Gnu General Public Licence (GPL).
+// The GPL should have been included with this file in a file called
+// COPYING. 
+//
+// This is pilotSerialDatabase.cc for KDE 2 / KPilot 4.
+//
+// TODO:
+//
+//
+
+#include "options.h"
+
+#ifdef KDE2
+#include <time.h>
+#include <stream.h>
+#include <pi-dlp.h>
+#include <kmessagebox.h>
+#include <klocale.h>
+
+#include "pilotSerialDatabase.h"
+#include "kpilotlink.h"
+#else
 #include <iostream.h>
 #include <string.h>
 #include <kmsgbox.h>
 #include "kpilotlink.h"
 #include "pilotSerialDatabase.h"
 #include "pi-dlp.h"
+#endif
 
 PilotSerialDatabase::PilotSerialDatabase(KPilotLink* pilotLink, const char* dbName)
   : PilotDatabase(), fDBName(0L), fDBHandle(-1), fPilotLink(pilotLink)
@@ -171,7 +198,13 @@ void PilotSerialDatabase::openDatabase()
 
     if(dlp_OpenDB(getPilotLink()->getCurrentPilotSocket(), 0, dlpOpenReadWrite, getDBName(), &db) < 0)
 	{
+#ifdef KDE2
+	KMessageBox::error(getPilotLink()->getOwningWidget(),
+		i18n("Cannot open database"),
+		i18n("Pilot database error"));
+#else
 	KMsgBox::message(getPilotLink()->getOwningWidget(), "Cannot open database!", "ERROR!", KMsgBox::STOP);
+#endif
 	return;
 	}
     setDBHandle(db);

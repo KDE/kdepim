@@ -27,11 +27,13 @@
 #include <ksimpleconfig.h>
 #include <kapp.h>
 #include <kprocess.h>
-#include <kmsgbox.h>
+#include <kmessagebox.h>
 #include "conduitSetup.moc"
 
 #include "kpilot.h"
+#include "options.h"
 
+static const char *id="$Id$";
 
 CConduitSetup::CConduitSetup(QWidget *parent, char *name) 
   : QDialog(parent,name,TRUE) //,TRUE,WStyle_Customize | WStyle_NormalBorder )
@@ -244,7 +246,7 @@ CConduitSetup::slotDone()
 		currentConduit+=" --debug ";
 		currentConduit+=QString().setNum(debug_level);
 	}
-	if (debug_level>TEDIOUS)
+	if (debug_level&SYNC_TEDIOUS)
 	{
 		cerr << fname << ": Conduit startup command line is:\n"
 			<< fname << ": " << currentConduit << endl;
@@ -258,13 +260,12 @@ CConduitSetup::slotDone()
       if (len == 0)
 	{
 	  QString tmpMessage;
-	  tmpMessage = klocale->translate("The conduit ");
+	  tmpMessage = i18n("The conduit ");
 	  tmpMessage = tmpMessage + iter.current();
-	  tmpMessage = tmpMessage + klocale->translate(" did not identify what database it supports. "
+	  tmpMessage = tmpMessage + i18n(" did not identify what database it supports. "
 						       "\nPlease check with the conduits author to correct it.");
 	  
-	  KMsgBox::message(0L, klocale->translate("Conduit error."), 
-			   tmpMessage, KMsgBox::STOP);
+	  KMessageBox::error(0L, tmpMessage, i18n("Conduit error."));
 	}
       else
 	config->writeEntry(dbName, iter.current());
@@ -380,26 +381,26 @@ CConduitSetup::slotSetupConduit()
 {
 	FUNCTIONSETUP;
 
+	QString numericArg;
+
+
 	if(fSetupConduitProcess.isRunning())
 	{
-		KMsgBox::message(this, 
-			klocale->translate("Setup already in progress."), 
-			klocale->translate(
-			"A conduit is already being set up.\n"
-			"Please complete that setup before starting another."),
-			KMsgBox::STOP);
+		KMessageBox::message(this, 
+				     i18n("A conduit is already being set up.\n"
+					  "Please complete that setup before starting another."),
+				     i18n("Setup already in progress"));
 		return;
 	}
 	QString conduitName =   kapp->kde_datadir() + "/kpilot/conduits/";
 	conduitName = conduitName + 
 		fInstalledConduits->text(fInstalledConduits->currentItem());
 
-	if (debug_level > UI_ACTIONS)
+	if (debug_level & SYNC_TEDIOUS)
 	{
 		cerr << fname << ": Starting setup for conduit "
 			<< conduitName << endl;
 	}
-
 	fSetupConduitProcess.clearArguments();
 	fSetupConduitProcess << conduitName;
 	// Changed now that conduits use GNU-style long options
@@ -409,7 +410,37 @@ CConduitSetup::slotSetupConduit()
 	if (debug_level)
 	{
 		fSetupConduitProcess << "--debug";
-		fSetupConduitProcess << QString(debug_level);
+		numericArg.setNum(debug_level);
+		fSetupConduitProcess << numericArg ;
+
 	}
+
+
+
+	// Next try to place the conduit setup screen "close"
+	// to the current mouse position.
+	//
+	//
+	QPoint p=pos();
+
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		cerr << fname << ": My position is "
+			<< p.x() << ',' << p.y()
+			<< endl;
+	}
+
+	// We use long-style options, but KDE
+	// uses short (Xt) style options, so
+	// that's why we use "-geometry" and not
+	// --geometry.
+	//
+	//
+	fSetupConduitProcess << "-geometry";
+	fSetupConduitProcess <<
+		QString("+")+numericArg.setNum(p.x()+20)+
+		QString("+")+numericArg.setNum(p.y()+20) ;
+
+
 	fSetupConduitProcess.start(KProcess::DontCare);
 }

@@ -32,7 +32,7 @@ class PilotAppCategory
 //     virtual void *internalPack(unsigned char *) = 0;
 //     virtual void *pack(int *) = 0;
     virtual void *pack(void *, int *) = 0;
-    virtual void unpack(void *, int = 0) = 0;
+    virtual void unpack(const void *, int = 0) = 0;
     
     
     public:

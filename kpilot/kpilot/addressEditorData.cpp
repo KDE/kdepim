@@ -1,3 +1,4 @@
+#include <klocale.h>
 #include <kapp.h>
 #include "addressEditor.moc"
 
@@ -98,9 +99,9 @@ void AddressEditor::initLayout(void) {
 	fOkButton = new QPushButton ( tmp0, "QButton1");
 
 	fCancelButton = new QPushButton ( tmp0, "QButton2");
-	setCaption(klocale->translate("Address Editor"));
+	setCaption(i18n("Address Editor"));
 	setGeometry(0, 0, 570, 360);
-	tmp0->setCaption( klocale->translate("Address Editor"));
+	tmp0->setCaption( i18n("Address Editor"));
 	tmp0->setGeometry( 0, 0, 570, 360 );
 	tmp0->setMinimumSize( 0, 0 );
 	tmp0->setMaximumSize( 32767, 32767 );
@@ -115,7 +116,7 @@ void AddressEditor::initLayout(void) {
 	tmp1->setSizeIncrement( 0, 0 );
 	tmp1->setLineWidth( 1 );
 	tmp1->setMidLineWidth( 0 );
-	tmp1->setText( klocale->translate("Last Name:") );
+	tmp1->setText( i18n("Last Name:") );
 	tmp1->setMargin( -1 );
 	tmp1->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp1->setAutoResize( FALSE );
@@ -128,7 +129,7 @@ void AddressEditor::initLayout(void) {
 	tmp2->setSizeIncrement( 0, 0 );
 	tmp2->setLineWidth( 1 );
 	tmp2->setMidLineWidth( 0 );
-	tmp2->setText( klocale->translate("First Name:") );
+	tmp2->setText( i18n("First Name:") );
 	tmp2->setMargin( -1 );
 	tmp2->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp2->setAutoResize( FALSE );
@@ -141,7 +142,7 @@ void AddressEditor::initLayout(void) {
 	tmp3->setSizeIncrement( 0, 0 );
 	tmp3->setLineWidth( 1 );
 	tmp3->setMidLineWidth( 0 );
-	tmp3->setText( klocale->translate("Title:") );
+	tmp3->setText( i18n("Title:") );
 	tmp3->setMargin( -1 );
 	tmp3->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp3->setAutoResize( FALSE );
@@ -154,7 +155,7 @@ void AddressEditor::initLayout(void) {
 	tmp4->setSizeIncrement( 0, 0 );
 	tmp4->setLineWidth( 1 );
 	tmp4->setMidLineWidth( 0 );
-	tmp4->setText( klocale->translate("Company:") );
+	tmp4->setText( i18n("Company:") );
 	tmp4->setMargin( -1 );
 	tmp4->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp4->setAutoResize( FALSE );
@@ -167,7 +168,7 @@ void AddressEditor::initLayout(void) {
 	tmp5->setSizeIncrement( 0, 0 );
 	tmp5->setLineWidth( 1 );
 	tmp5->setMidLineWidth( 0 );
-	tmp5->setText( klocale->translate("Phone 1:") );
+	tmp5->setText( i18n("Phone 1:") );
 	tmp5->setMargin( -1 );
 	tmp5->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp5->setAutoResize( FALSE );
@@ -180,7 +181,7 @@ void AddressEditor::initLayout(void) {
 	tmp6->setSizeIncrement( 0, 0 );
 	tmp6->setLineWidth( 1 );
 	tmp6->setMidLineWidth( 0 );
-	tmp6->setText( klocale->translate("Phone 2:") );
+	tmp6->setText( i18n("Phone 2:") );
 	tmp6->setMargin( -1 );
 	tmp6->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp6->setAutoResize( FALSE );
@@ -193,7 +194,7 @@ void AddressEditor::initLayout(void) {
 	tmp7->setSizeIncrement( 0, 0 );
 	tmp7->setLineWidth( 1 );
 	tmp7->setMidLineWidth( 0 );
-	tmp7->setText(klocale->translate("Phone 3:") );
+	tmp7->setText(i18n("Phone 3:") );
 	tmp7->setMargin( -1 );
 	tmp7->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp7->setAutoResize( FALSE );
@@ -206,7 +207,7 @@ void AddressEditor::initLayout(void) {
 	tmp8->setSizeIncrement( 0, 0 );
 	tmp8->setLineWidth( 1 );
 	tmp8->setMidLineWidth( 0 );
-	tmp8->setText(klocale->translate("Phone 4:"));
+	tmp8->setText(i18n("Phone 4:"));
 	tmp8->setMargin( -1 );
 	tmp8->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp8->setAutoResize( FALSE );
@@ -219,7 +220,7 @@ void AddressEditor::initLayout(void) {
 	tmp9->setSizeIncrement( 0, 0 );
 	tmp9->setLineWidth( 1 );
 	tmp9->setMidLineWidth( 0 );
-	tmp9->setText( klocale->translate("Phone 5:"));
+	tmp9->setText( i18n("Phone 5:"));
 	tmp9->setMargin( -1 );
 	tmp9->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp9->setAutoResize( FALSE );
@@ -232,7 +233,7 @@ void AddressEditor::initLayout(void) {
 	tmp10->setSizeIncrement( 0, 0 );
 	tmp10->setLineWidth( 1 );
 	tmp10->setMidLineWidth( 0 );
-	tmp10->setText(klocale->translate("Address:"));
+	tmp10->setText(i18n("Address:"));
 	tmp10->setMargin( -1 );
 	tmp10->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp10->setAutoResize( FALSE );
@@ -245,7 +246,7 @@ void AddressEditor::initLayout(void) {
 	tmp11->setSizeIncrement( 0, 0 );
 	tmp11->setLineWidth( 1 );
 	tmp11->setMidLineWidth( 0 );
-	tmp11->setText(klocale->translate("City:"));
+	tmp11->setText(i18n("City:"));
 	tmp11->setMargin( -1 );
 	tmp11->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp11->setAutoResize( FALSE );
@@ -258,7 +259,7 @@ void AddressEditor::initLayout(void) {
 	tmp12->setSizeIncrement( 0, 0 );
 	tmp12->setLineWidth( 1 );
 	tmp12->setMidLineWidth( 0 );
-	tmp12->setText(klocale->translate("State:"));
+	tmp12->setText(i18n("State:"));
 	tmp12->setMargin( -1 );
 	tmp12->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp12->setAutoResize( FALSE );
@@ -271,7 +272,7 @@ void AddressEditor::initLayout(void) {
 	tmp13->setSizeIncrement( 0, 0 );
 	tmp13->setLineWidth( 1 );
 	tmp13->setMidLineWidth( 0 );
-	tmp13->setText(klocale->translate("Zip Code:"));
+	tmp13->setText(i18n("Zip Code:"));
 	tmp13->setMargin( -1 );
 	tmp13->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp13->setAutoResize( FALSE );
@@ -284,7 +285,7 @@ void AddressEditor::initLayout(void) {
 	tmp14->setSizeIncrement( 0, 0 );
 	tmp14->setLineWidth( 1 );
 	tmp14->setMidLineWidth( 0 );
-	tmp14->setText(klocale->translate("Country:"));
+	tmp14->setText(i18n("Country:"));
 	tmp14->setMargin( -1 );
 	tmp14->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp14->setAutoResize( FALSE );
@@ -297,7 +298,7 @@ void AddressEditor::initLayout(void) {
 	tmp15->setSizeIncrement( 0, 0 );
 	tmp15->setLineWidth( 1 );
 	tmp15->setMidLineWidth( 0 );
-	tmp15->setText(klocale->translate("Custom 1:"));
+	tmp15->setText(i18n("Custom 1:"));
 	tmp15->setMargin( -1 );
 	tmp15->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp15->setAutoResize( FALSE );
@@ -310,7 +311,7 @@ void AddressEditor::initLayout(void) {
 	tmp16->setSizeIncrement( 0, 0 );
 	tmp16->setLineWidth( 1 );
 	tmp16->setMidLineWidth( 0 );
-	tmp16->setText(klocale->translate("Custom 2:"));
+	tmp16->setText(i18n("Custom 2:"));
 	tmp16->setMargin( -1 );
 	tmp16->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp16->setAutoResize( FALSE );
@@ -323,7 +324,7 @@ void AddressEditor::initLayout(void) {
 	tmp17->setSizeIncrement( 0, 0 );
 	tmp17->setLineWidth( 1 );
 	tmp17->setMidLineWidth( 0 );
-	tmp17->setText(klocale->translate("Custom 3:"));
+	tmp17->setText(i18n("Custom 3:"));
 	tmp17->setMargin( -1 );
 	tmp17->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp17->setAutoResize( FALSE );
@@ -336,7 +337,7 @@ void AddressEditor::initLayout(void) {
 	tmp18->setSizeIncrement( 0, 0 );
 	tmp18->setLineWidth( 1 );
 	tmp18->setMidLineWidth( 0 );
-	tmp18->setText(klocale->translate("Custom 4:"));
+	tmp18->setText(i18n("Custom 4:"));
 	tmp18->setMargin( -1 );
 	tmp18->setAlignment( AlignLeft | AlignVCenter | ExpandTabs );
 	tmp18->setAutoResize( FALSE );
@@ -545,7 +546,7 @@ void AddressEditor::initLayout(void) {
 	fOkButton->setMaximumSize( 32767, 32767 );
 	fOkButton->setMouseTracking( FALSE);
 	fOkButton->setSizeIncrement( 0, 0 );
-	fOkButton->setText(klocale->translate("OK"));
+	fOkButton->setText(i18n("OK"));
 	fOkButton->setAutoResize( FALSE );
 	fOkButton->setAutoRepeat( FALSE );
 	connect(fOkButton, SIGNAL(clicked()), this, SLOT(commitChanges()));
@@ -556,7 +557,7 @@ void AddressEditor::initLayout(void) {
 	fCancelButton->setMaximumSize( 32767, 32767 );
 	fCancelButton->setMouseTracking( FALSE);
 	fCancelButton->setSizeIncrement( 0, 0 );
-	fCancelButton->setText(klocale->translate("Cancel"));
+	fCancelButton->setText(i18n("Cancel"));
 	fCancelButton->setAutoResize( FALSE );
 	fCancelButton->setAutoRepeat( FALSE );
 	connect(fCancelButton, SIGNAL(clicked()), this, SLOT(cancel()));

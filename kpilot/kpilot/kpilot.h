@@ -18,10 +18,9 @@
 #include <qlist.h>
 #include <qpopmenu.h>
 
-#include <kfm.h>
 #include <kapp.h>
 #include <klocale.h>
-#include <ktopwidget.h>
+#include <ktmainwindow.h>
 #include <kprogress.h>
 #include <kprocess.h>
 
@@ -31,61 +30,12 @@ class QComboBox;
 #include "fileInstallWidget.h"
 #include "memoWidget.h"
 
-// Global variables that all conduits and apps should respect.
-// In old C-style:
-//
-//
-extern int debug_level;
-#define NO_DEBUG	(0)
-#define UI_ACTIONS 	(4)
-#define TEDIOUS		(16)
 
-
-// These are three-bit fields, basically we're defining
-// 1<<n; 3<<n; 7<<n for some n.
-//
-// This allows better selection of what you want debugged.
-//
-//
-#define DEBUG_FUNCTIONS	(1)
-#define UI_MAJOR	(2)
-#define UI_MINOR	(2+4)
-#define UI_TEDIOUS	(2+4+8)
-
-#define DB_MAJOR	(16)
-#define DB_MINOR	(16+32)
-#define DB_TEDIOUS	(16+32+64)
-
-#define SYNC_MAJOR	(128)
-#define SYNC_MINOR	(128+256)
-#define SYNC_TEDIOUS	(128+256+512)
-
-#define FUNCTIONSETUP	static char *fname=__FUNCTION__; \
-			if (debug_level & DEBUG_FUNCTIONS) { cerr << \
-				fname << \
-				": Entered\t(" << __FILE__ << ':' << \
-				__LINE__ << ")\n"; } 
-
-// Some layout macros
-//
-// SPACING is a generic distance between visual elements;
-// 10 seems reasonably good even at high resolutions.
-//
-// Give RIGHT and BELOW a QWidget. In all likelihood
-// these will disappear soon with a new layout style in
-// KPilot 3.2.
-//
-#define SPACING		(10)
-#define BELOW(a)	a->y()+a->height()+SPACING
-#define RIGHT(a)	a->x()+a->width()+SPACING
+#include "options.h"
 
 
 
-
-
-
-
-class KPilotInstaller : public KTopLevelWidget
+class KPilotInstaller : public KTMainWindow
     {
     Q_OBJECT
 
@@ -120,6 +70,15 @@ class KPilotInstaller : public KTopLevelWidget
     // Adds 'name' to the pull down menu of components
     void addComponentPage(QWidget* widget, QString name);
 
+
+	/**
+	* This number can be changed every time a new
+	* KPilot version is released that absolutely requires
+	* the user to take a look at the configuration of
+	* KPilot.
+	*/
+	static const int ConfigurationVersion;
+
     protected:
       void closeEvent(QCloseEvent *e);
       void setQuitAfterCopyComplete(bool quit) { fQuitAfterCopyComplete = quit; }
@@ -128,11 +87,16 @@ class KPilotInstaller : public KTopLevelWidget
       // Not sure if this is the way to go or not... might want to make the link
       // persist...
       void initPilotLink();
+      void initCommandSocket();
+
       void initStatusLink(); // Seperate so the components can be initialized
       KPilotLink* getPilotLink() { return fPilotLink; }
       void destroyPilotLink() { if (fPilotLink) {delete fPilotLink; fPilotLink = 0L; /* delete fLinkProcess; fLinkProcess = 0L; */ } }
       void doRestore();
       void doBackup();
+
+protected:
+	int testSocket(KSocket *);
 
 private:
       void initMenu();

@@ -1,15 +1,41 @@
-/* *******************************************************
-   KPilot - Hot-Sync Software for Unix.
-   Copyright 1998 by Dan Pilone
-   This code is released under the GNU PUBLIC LICENSE.
-   Please see the file 'COPYING' included in the KPilot
-   distribution.
-   *******************************************************
- */
+// kpilotLink.h
+//
+// Copyright (C) 1998,1999 Dan Pilone
+// Copyright (C) 2000 Adriaan de Groot
+//
+// This file is distributed under the Gnu General Public Licence (GPL).
+// The GPL should have been included with this file in a file called
+// COPYING. 
+//
+// This is the version of kpilotLink.h for KDE2 / KPilot 4.
+//
+//
+
 
 #ifndef __KPILOT_LINK
 #define __KPILOT_LINK
 
+#if (QT_VERSION > 199)
+#include <qobject.h>
+
+class QWidget;
+class KStatusBar;
+class KConfig;
+class KSocket;
+class KServerSocket;
+class KProgress;
+class KProcess;
+
+class PilotRecord;
+class MessageDialog;
+
+#include "pilotUser.h"
+// #include "pi-file.h"
+#include "pilotDatabase.h"
+#include "pilotSerialDatabase.h"
+#include "pilotLocalDatabase.h"
+
+#else
 #include <qobject.h>
 #include <qlist.h>
 #include <kurl.h>
@@ -24,6 +50,7 @@
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
 #include "messageDialog.h"
+#endif
 
 /**
   * This class is an attempt to provide some wrapper around the pilot-link
@@ -58,14 +85,19 @@ public:
    * Creates a pilot link that can sync to the pilot.
    * devicePath = path to serial port.  Defaults to /dev/pilot
    */
-  KPilotLink(QWidget* owner, KStatusBar* statusBar = 0L, char* devicePath = 0L);
+  KPilotLink(QWidget* owner, KStatusBar* statusBar = 0L, 
+#ifdef KDE2
+		const QString &devicePath = QString::null);
+#else
+		const QString &devicePath = QString());
+#endif
   ~KPilotLink();
   
   /**
    * Commands sent from KPilot requesting the daemon
    * to perform those actions.
    */
-  enum Commands { Backup, Restore, HotSync, InstallFile };
+  enum Commands { Backup, Restore, HotSync, InstallFile, TestConnection };
   
   /**
    * Static method to get the current link..
@@ -122,7 +154,7 @@ public:
   /**
    * Installs all files found in installPath on the pilot
    */
-  void installFiles(QString installPath);
+  void installFiles(const QString &installPath);
   
   /* CONDUIT SYNCING SUPPORT */
 
@@ -136,7 +168,7 @@ public:
    * Checks to see if there is a conduit registered for database dbName.
    * returns the name if yes, NULL if no.
    */
-  QString registeredConduit(QString dbName);
+  QString registeredConduit(const QString &dbName);
 
   /**
    * Uses BACKUP_DIR/username as local source, and compares records versus those on the pilot
@@ -145,6 +177,20 @@ public:
    */
   bool syncDatabase(DBInfo* database);
   
+	/**
+	* Returns a (new) pointer to the KPilot configuration object.
+	* This is used to put all the KPilot configuration --
+	* including conduits and such -- into one rc file and
+	* not spread out among config files for each conduit.
+	*
+	* Callers should delete this object when no longer needed.
+	*/
+#ifdef KDE2
+	static KConfig *getConfig(const QString &group=QString::null);
+#else
+	static KConfig *getConfig(const QString &group=QString());
+#endif
+
 private:
   PilotRecord* readRecord(KSocket*);
   void writeRecord(KSocket*, PilotRecord*);
@@ -154,6 +200,7 @@ private:
    * by using syncDatabase() to back it up into the BACKUP_DIR.  Uses
    * fNextDBIndex as the next DB to sync, and increments it.
    */
+	int findNextDB(struct DBInfo *);
   void syncNextDB();
   void doConduitBackup();
 
@@ -167,12 +214,18 @@ public:
   /**
    * Opens database "database" on Pilot and returns the id to reference it:
    */
-  PilotDatabase* openDatabase(char* database) { return new PilotSerialDatabase(this, database); }
+  PilotSerialDatabase* openDatabase(char* database) { return new PilotSerialDatabase(this, database); }
 
   /**
    * Opens database "database" locally and returns the handle to it:
    */
-  PilotDatabase* openLocalDatabase(char* database) { return new PilotLocalDatabase(kapp->localkdedir() +  BACKUP_DIR + getPilotUser().getUserName() + "/", database); }
+  PilotLocalDatabase* openLocalDatabase(const QString &database);
+	// { 
+	//	return new PilotLocalDatabase(kapp->localkdedir() +  
+	//		BACKUP_DIR + 
+	//		getPilotUser().getUserName() + 
+	//		"/", database); 
+	// }
 
   /**
    * Closes database 'database'.
@@ -180,9 +233,12 @@ public:
   void closeDatabase(PilotDatabase* database) { delete database; }
   
   /**
-   * Write a log entry to the pilot
+   * Write a log entry to the pilot. Note that the library
+   * function takes a char *, not const char * (which is
+   * highly dubious).
    */
-  void addSyncLogEntry(char* entry) { dlp_AddSyncLogEntry(getCurrentPilotSocket(), entry); }
+  void addSyncLogEntry(const char* entry) 
+	{ dlp_AddSyncLogEntry(getCurrentPilotSocket(), (char *)entry); }
   
   void createNewProgressBar(QString title, QString text, int min, int max, int value);
   void updateProgressBar(int value) const;
@@ -191,7 +247,7 @@ public:
   /**
    * Displays a dialog showing error message.
    */
-  void showMessage(QString message) const;
+  void showMessage(const QString &message) const;
   
 protected:
   void setConnected(bool connected) { fConnected = connected; }
@@ -220,6 +276,14 @@ private:
   void syncFlags();          // Sets last hotsync time on pilot
   bool createLocalDatabase(DBInfo* info); // Creates a new local DB in BACKUP_DIR
   
+	/**
+	* findDisposition is used to see if the database 
+	* d is named in the (comma separated) list s.
+	* This is currently based only on the creator of
+	* the database.
+	*/
+	int findDisposition(const QString &s,const struct DBInfo *d);
+
   int compare(struct db* d1, struct db* d2); // Compares two database infos..
   void initConduitSocket();         // Sets up fConduitSocket
   void initPilotSocket(const char* devicePath);

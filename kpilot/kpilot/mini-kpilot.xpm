@@ -1,15 +1,12 @@
 /* XPM */
-static char *mini-kpilot[] = {
-/* width height num_colors chars_per_pixel */
-"    17    24        6            1",
-/* colors */
+static char*mini[]={
+"17 24 6 1",
 ". c #808080",
-"# c #000000",
+"c c #bebebe",
 "a c #727272",
 "b c #7a8a74",
-"c c #bebebe",
 "d c #00ffff",
-/* pixels */
+"# c #000000",
 ".................",
 ".................",
 "..#aaaaaaaaaaaaa.",
@@ -33,5 +30,4 @@ static char *mini-kpilot[] = {
 "..daa#aaaaa#aa#a.",
 "..#aaaaaacaaaaa#.",
 "...aaaaaaaaaaaa#.",
-"................."
-};
+"................."};

@@ -1,7 +1,33 @@
-// $Id$
+// gsetupDialog.cc
+//
+// Copyright (C) 2000 Adriaan de Groot
+//
+// This file is distributed under the Gnu General Public Licence (GPL).
+// The GPL should have been included with this file in a file called
+// COPYING.
+//
+// This is the version of gsetupDialog.cc for KDE 2 / KPilot 4.
+// We have tried to keep it source compatible with the KDE 1 / KPilot 3
+// version.
 
+static const char *id="$Id$";
+
+#include "options.h"
+
+#ifdef KDE2
 #include <stream.h>
+#include <qfileinf.h>
+#include <qlabel.h>
+#include <kmessagebox.h>
+#include <kconfig.h>
+#include <kapp.h>
+#include <klocale.h>
+#include <kfiledialog.h>
 
+#include "gsetupDialog.moc"
+#include "kpilotlink.h"
+#else
+#include <stream.h>
 // Note that we're using QFileDialog instead
 // of KFileDialog *only* because my own kdeui
 // library is broken.
@@ -12,13 +38,14 @@
 #include <qtstream.h>
 #include <qdir.h>
 #include <qlabel.h>
-
+ 
 #include <kconfig.h>
 #include <kmsgbox.h>
 #include <kiconloader.h>
-
-#include "kpilot.h"
 #include "gsetupDialog.moc"
+#include "kpilot.h"
+#endif
+ 
 
 
 //---------------------------------------------------
@@ -28,9 +55,16 @@
 // and its virtual functions all do nothing.
 //
 //
-setupDialogPage::setupDialogPage(setupDialog *parent,
+setupDialogPage::setupDialogPage(
+#ifdef KDE2
+	const QString &s,
+#else
+	const char *s,
+#endif
+	setupDialog *parent,
 	KConfig *c) :
-	QWidget(parent)
+	QWidget(parent),
+	fTabName(s)
 {
 	FUNCTIONSETUP;
 
@@ -47,14 +81,10 @@ setupDialogPage::setupDialogPage(setupDialog *parent,
 /* virtual */ int setupDialogPage::cancelChanges(KConfig *c)
 {
 	FUNCTIONSETUP;
+
 	return 0;
 }
 
-
-/* virtual */ const char *setupDialogPage::tabName()
-{
-	return NULL;
-}
 
 
 //---------------------------------------------------
@@ -64,20 +94,32 @@ setupDialogPage::setupDialogPage(setupDialog *parent,
 //
 //
 setupDialog::setupDialog(QWidget *parent,
-	const char *name, const char *caption, bool modal) :
+#ifdef KDE2
+	const QString &name,
+	const QString &caption,
+#else
+	const char *name, 
+	const char *caption, 
+#endif
+	bool modal) :
 	QTabDialog(parent,name,modal),
+	fGroupName(name),
 	pageCount(0),
 	quitOnClose(!modal)
 {
 	FUNCTIONSETUP;
 
-	if (modal && debug_level>UI_ACTIONS)
+	if (modal && debug_level & UI_TEDIOUS)
 	{
 		cerr << fname << ": This is a modal dialog." << endl;
 	}
 
 	setCancelButton();
+#ifdef KDE2
+	setCaption(caption.isNull() ? name : caption);
+#else
 	setCaption(caption!=0L ? caption : name);
+#endif
 	connect(this,SIGNAL(applyButtonPressed()),
                 this, SLOT(commitChanges()));
 	connect(this, SIGNAL(cancelButtonPressed()),
@@ -85,30 +127,28 @@ setupDialog::setupDialog(QWidget *parent,
 }
 
 
-/* virtual */ const char *setupDialog::groupName()
-{
-	return NULL;
-}
-
 void setupDialog::commitChanges()
 {
 	FUNCTIONSETUP;
-	int i;
+	QListIterator<setupDialogPage> i(pages);
 
-	KConfig *config=kapp->getConfig();
+	KConfig *config=KPilotLink::getConfig();
 	config->setGroup(groupName());
 
-	for (i=0; i<pageCount; i++)
+	for (i.toFirst(); i.current(); ++i)
 	{
-		config->setGroup(groupName()); // in case pages change it
-		if (pages[i])
-		{
-			pages[i]->commitChanges(config);
-		}
+		// in case pages change it (which they shouldn't)
+		// set the group back to the dialog's group.
+		//
+		//
+		config->setGroup(groupName()); 
+		i.current()->commitChanges(config);
 	}
 
 	config->sync();
 	setResult(1);
+
+	delete config;
 
 	if (quitOnClose)
 	{
@@ -120,20 +160,24 @@ void setupDialog::commitChanges()
 void setupDialog::cancelChanges()
 {
 	FUNCTIONSETUP;
-	int i;
+	QListIterator<setupDialogPage> i(pages);
 
-	KConfig *config=kapp->getConfig();
+	KConfig *config=KPilotLink::getConfig();
 	config->setGroup(groupName());
 
-	for (i=0; i<pageCount; i++)
+	for (i.toFirst(); i.current(); ++i)
 	{
-		if (pages[i])
-		{
-			pages[i]->cancelChanges(config);
-		}
+		// in case pages change it (which they shouldn't)
+		// set the group back to the dialog's group.
+		//
+		//
+		config->setGroup(groupName()); 
+		i.current()->commitChanges(config);
 	}
 
 	setResult(0);
+
+	delete config;
 
 	if (quitOnClose)
 	{
@@ -147,29 +191,33 @@ void setupDialog::setupWidget()
 	FUNCTIONSETUP;
 	int x=0;
 	int y=0;
-	int i;
+	QListIterator<setupDialogPage> i(pages);
 
-	if (pageCount==0 && debug_level)
+
+
+	if (pages.count()==0 && debug_level)
 	{
 		cerr << fname << ": setupDialog doesn't "
 			"have any pages." << endl;
 		return;
 	}
 
-	if (debug_level>UI_ACTIONS)
+	if (debug_level & UI_MINOR)
 	{
-		cerr << fname << ": setupDialog has " << pageCount
+		cerr << fname << ": setupDialog has " << pages.count()
 			<< " pages." << endl;
 	}
 
-	for (i=0; i<pageCount; i++)
+	for (i.toFirst(); i.current(); ++i)
 	{
-		pages[i]->adjustSize();
-		if (pages[i]->width() > x) x=pages[i]->width();
-		if (pages[i]->height() > y) y=pages[i]->height();
+		setupDialogPage *p=i.current();
+
+		p->adjustSize();
+		if (p->width() > x) x=p->width();
+		if (p->height() > y) y=p->height();
 	}
 
-	if (debug_level>TEDIOUS)
+	if (debug_level & UI_TEDIOUS)
 	{
 		cerr << fname << ": setupDialog has size "
 			<< x << 'x' << y << endl;
@@ -192,33 +240,25 @@ int setupDialog::addPage(setupDialogPage *p)
 		}
 		return -1;
 	}
-	if (pageCount>=setupDialog_MAX_OPTIONS_PAGES)
-	{
-		if (debug_level)
-		{
-			cerr << fname << ": Maximum number of pages ("
-				<< setupDialog_MAX_OPTIONS_PAGES
-				<< ") reached." << endl;
-		}
-		return -1;
-	}
 
 	addTab(p,p->tabName());
 
-	pages[pageCount++]=p;
-	return pageCount;
+	pages.append(p);
+	return pages.count();
 }
 
 
 
-int setupDialog::queryFile(const QString& filelabel,
-	const QString& filename)
+/* static */ int setupDialog::queryFile(
+	QWidget *parent,
+	const QString& filelabel,
+	const char *filename)
 {
 	FUNCTIONSETUP;
 
-	if (filename.isEmpty()) return 0;
+	if (filename==0L) return 0;
 
-	if (debug_level>TEDIOUS)
+	if (debug_level & UI_TEDIOUS)
 	{
 		cerr << fname << ": Checking for existence of "
 			<< filelabel << ' ' << filename << endl;
@@ -245,11 +285,17 @@ int setupDialog::queryFile(const QString& filelabel,
 		msg+=filename;
 		msg+='"';
 		msg+='\n';
-		msg+=i18n("Really use this file name?");
+		msg+=i18n("Really use this file?");
 
-		int rc=KMsgBox::yesNo(this,
+#ifdef KDE2
+		int rc=KMessageBox::questionYesNo(parent,
+			msg,
+			filelabel);
+#else
+		int rc=KMsgBox::yesNo(parent,
 			filelabel,msg,
 			KMsgBox::STOP);
+#endif
 
 		
 		if (debug_level)
@@ -272,11 +318,17 @@ int setupDialog::queryFile(const QString& filelabel,
 
 
 setupInfoPage::setupInfoPage(setupDialog *parent,
+#ifdef KDE2
+	const QString &title,
+	const QString &authors,
+	const QString &comment,
+#else
 	const char *title,
 	const char *authors,
 	const char *comment,
+#endif
 	const char *programpath) :
-	setupDialogPage(parent)
+	setupDialogPage(i18n("About"),parent)
 {
 	FUNCTIONSETUP;
 	QLabel *ttllabel,*authlabel,*comlabel;
@@ -285,7 +337,12 @@ setupInfoPage::setupInfoPage(setupDialog *parent,
 	int left;
 
 	infoPixmap=new QLabel(this);
+#ifdef KDE2
+	infoPixmap->setPixmap(l.loadIcon("information.xpm",
+		KIcon::Desktop));
+#else
 	infoPixmap->setPixmap(l.loadIcon("information.xpm"));
+#endif
 	infoPixmap->adjustSize();
 	infoPixmap->move(10,14);
 	left=RIGHT(infoPixmap);
@@ -319,7 +376,3 @@ setupInfoPage::setupInfoPage(setupDialog *parent,
 
 }
 
-/* virtual */ const char *setupInfoPage::tabName()
-{
-	return i18n("About");
-}

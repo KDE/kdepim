@@ -1,15 +1,21 @@
 #include <iostream.h>
 #include <qdir.h>
 #include <qfile.h>
+#include <kglobal.h>
+#include <kstddirs.h>
 #include <kapp.h>
 #include "logFile.h"
 
 CLogFile::CLogFile(const char* dataBase, bool writeMode)
 {
-  QString fileName = kapp->localkdedir();
-  fileName += "/share/apps/kpilot/DBBackup/";
-  fileName += dataBase;
-  fileName += ".log";
+  
+  QString dbName = dataBase;
+  dbName += ".log";
+  QString fileName = KGlobal::dirs()->findDirs("pilotdbs", dbName).first();
+  // kapp->localkdedir();
+//   fileName += "/share/apps/kpilot/DBBackup/";
+//   fileName += dataBase;
+//   fileName += ".log";
 
   fLogFile.setName(fileName);
   if(writeMode)

@@ -1,11 +1,29 @@
+// baseConduit.h
+//
+// Copyright (C) 1998,1999 Dan Pilone
+// Copyright (C) 2000 Adriaan de Groot
+//
+// This file is distributed under the Gnu General Public Licence (GPL).
+// The GPL should have been included with this file in a file called
+// COPYING.
+//
+// This is baseConduit.h for KDE 2 / KPilot 4.
+ 
+ 
+ 
+// REVISION HISTORY
+//
+// 3.1b9        By Dan Pilone
+// 3.1.14	By Adriaan de Groot. Added addSyncLogMessage.
+//		Some code cleanup.
+
 #ifndef __BASE_CONDUIT_H
 #define __BASE_CONDUIT_H
 
-#include <fstream.h>
+#include <qobject.h>
 #include <qstring.h>
 #include "pilotRecord.h"
 
-class PilotRecord;
 class KSocket;
 
 class BaseConduit : public QObject
@@ -17,8 +35,8 @@ public:
 
   /**
    * The mode that this conduit should be running in will be passed to the
-   * constructor.   After the constructor returns the appropriate virtual method will
-   * be called (ie: setup, hotsync, backup, etc).
+   * constructor.   After the constructor returns the appropriate 
+   * virtual method will be called (ie: setup, hotsync, backup, etc).
    */
   BaseConduit(eConduitMode mode);
   virtual ~BaseConduit();
@@ -55,6 +73,13 @@ public:
    * ie: MemoDB, DatebookDB, etc.
    */
   virtual const char* dbInfo() { return "<none>"; }
+
+
+	/**
+	 * Returns an icon for the window manager
+	 * when the conduit is in "setup" mode.
+	 */
+	 virtual QPixmap *icon() const;
 
 protected:
 
@@ -93,6 +118,16 @@ protected:
    * Mode for this instance of the conduit
    */
   eConduitMode fMode;
+
+	/**
+	* Adds a message to the sync log by talking to
+	* the daemon; the message s should not contain
+	* any `weird' characters, no \r or \n, and must be
+	* null-terminated. In addition, s must be no longer
+	* than 30 characters.
+	* Returns 1 on success, 0 on failure.
+	*/
+	int addSyncLogMessage(const char *s);
 
 private:
   KSocket* fDaemonSocket;

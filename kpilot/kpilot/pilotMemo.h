@@ -25,14 +25,14 @@ public:
   ~PilotMemo() { if (fText) delete fText; if (fTitle) delete fTitle;}
   
   const char *text(void) const { return fText; }
-  void setText(char* text) { unpack(text, 0); }
+  void setText(const char* text) { unpack(text, 0); }
   const char* getTitle(void) const { return fTitle; }
   PilotRecord* pack() { return PilotAppCategory::pack(); }
   
 protected:
   //     void *pack(int *i);
   void *pack(void *, int *);
-  void unpack(void *, int = 0);
+  void unpack(const void *, int = 0);
   
 private:
   char *fText;

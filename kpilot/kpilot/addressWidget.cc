@@ -8,7 +8,7 @@
 
 // $Revision$
 
-static char *id="$Id:";
+static char *id="$Id$";
 
 
 // REVISION HISTORY 
@@ -23,14 +23,18 @@ static char *id="$Id:";
 #include <kfiledialog.h>
 #include <iostream.h>
 #include <pi-macros.h>
+#include <string.h>
+#include <stdlib.h>
+
 #include <qlist.h>
 #include <qlistbox.h>
 #include <qfile.h>
 #include <qpushbt.h>
-#include <string.h>
-#include <stdlib.h>
+#include <qtextstream.h>
+
 #include <kapp.h>
-#include <kmsgbox.h>
+#include <kmessagebox.h>
+
 #include "strToken.h"
 #include "addressWidget.moc"
 #include "pi-dlp.h"
@@ -38,6 +42,7 @@ static char *id="$Id:";
 #include "kpilot.h"
 #include "addressEditor.h"
 #include "kpilotOptions.h"
+#include "options.h"
 
 
 // This is the size of several (automatic) buffers,
@@ -158,7 +163,7 @@ AddressWidget::initialize()
 	unsigned char buffer[BUFFERSIZE];
 	int appLen;
 
-	KConfig* config = kapp->getConfig();
+	KConfig* config = KGlobal::config();
 
 	fCatList->clear();
 	fCatList->insertItem(i18n("All"));
@@ -436,10 +441,11 @@ AddressWidget::slotEditRecord()
     item = fLookupTable[item];
     if(fAddressList.at(item)->id() == 0x0)
       {
-	KMsgBox::message(0L, i18n("Hot-Sync Required"), 
-			 i18n("Cannot edit new records until \r\n"
-			 	"Hot-Synced with pilot."), 
-			 KMsgBox::STOP);
+	KMessageBox::error(0L, 
+		       i18n("Cannot edit new records until \r\n"
+			    "Hot-Synced with pilot."),
+		       i18n("Hot-Sync Required"));
+			 
 	return;
       }
     AddressEditor* editor = new AddressEditor(fAddressList.at(item));
@@ -501,13 +507,13 @@ AddressWidget::slotDeleteRecord()
   item = (int)fLookupTable[item];
   if(fAddressList.at(item)->id() == 0x0)
     {
-      KMsgBox::message(0L, i18n("Hot-Sync Required"), 
-		       i18n("Cannot delete new records until \r\n Hot-Synced with pilot."), 
-		       KMsgBox::STOP);
+      KMessageBox::error(0L, 
+			 i18n("Cannot delete new records until \r\n Hot-Synced with pilot."), 
+			 i18n("Hot-Sync Required"));
       return;
     }
-  if(KMsgBox::yesNo(0L, i18n("Delete Record?"), 
-		    i18n("Delete currently selected record?")) == 2)
+  if(KMessageBox::questionYesNo(0L, i18n("Delete currently selected record?"),
+				i18n("Delete Record?")) == KMessageBox::No)
     return;
   PilotAddress* address = fAddressList.at(item);
   address->setAttrib(address->getAttrib() | dlpRecAttrDeleted);
@@ -563,16 +569,25 @@ AddressWidget::slotImportAddressList()
     char nextField[255];
     bool useKeyField;
 
-    KConfig* config = kapp->getConfig();
+    KConfig* config = KGlobal::config();
     PilotAddress* currentAddress;
 
-    QString fileName = KFileDialog::getSaveFileName();
+    QString fileName = KFileDialog::getOpenFileName();
     if(fileName == 0L)
  	return;
     QFile inFile(fileName);
     if(inFile.open(IO_ReadOnly) == FALSE)
  	{
+	if (debug_level)
+	{
+		cerr << fname << ": Can't open file "
+			<< fileName
+			<< " read-only.\n";
+	}
  	// show error!
+	KMessageBox::error(0L,
+			   i18n("Can't open the address file for import:")+fileName,
+			   i18n("Import Address Error"));
  	return;
  	}
     QTextStream inputStream(&inFile);
@@ -580,11 +595,22 @@ AddressWidget::slotImportAddressList()
     useKeyField = config->readNumEntry("UseKeyField");
     QString nextRecord;
 
-    while(inputStream.eof() == false)
-	{
+	// Moved this out of the while loop since it should be constant.
+	//
+	//
 	strcpy(importFormat, config->readEntry("IncomingFormat"));
 	delim[0] = importFormat[3];
- 	delim[1] = 0L;
+	delim[1] = 0L;
+
+	if (debug_level & SYNC_MINOR)
+	{
+		cerr << fname << ": Input format is " << importFormat <<
+			endl;
+		cerr << fname << ": Delimiter is " << delim << endl;
+	}
+
+    while(inputStream.eof() == false)
+	{
 
 	
 	StrTokenizer* formatTokenizer = new StrTokenizer(importFormat, delim);
@@ -592,14 +618,26 @@ AddressWidget::slotImportAddressList()
 	const char* nextToken = formatTokenizer->getNextField();
 
  	nextRecord = inputStream.readLine();
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		cerr << fname << ": Read line " << nextRecord;
+	}
+
  	if(inputStream.eof() || (nextRecord == ""))
+	{
  	    break;
+	}
+
 	dataTokenizer = new StrTokenizer(nextRecord, delim);
 	strcpy(nextField, dataTokenizer->getNextField());
  	if(useKeyField)
+	{
 	    currentAddress = findAddress(nextField, nextToken);
+	}
 	else
+	{
 	    currentAddress = 0L;
+	}
  	if(currentAddress == 0L)
  	    {
  	    currentAddress = new PilotAddress();
@@ -632,48 +670,63 @@ AddressWidget::findAddress(const char* text, const char* symbol)
 
 void
 AddressWidget::setFieldBySymbol(PilotAddress* rec, const char* symbol, const char* text)
-    {
-    	FUNCTIONSETUP;
+{
+	FUNCTIONSETUP;
+	int rc=-1;
 
-    if(strcasecmp(symbol, "%LN") == 0)
+	if((rc=strcasecmp(symbol, "%LN")) == 0)
 	rec->setField(entryLastname, text);
-    else if(strcasecmp(symbol, "%FN") == 0)
+	else if((rc=strcasecmp(symbol, "%FN")) == 0)
 	rec->setField(entryFirstname, text);
-    else if(strcasecmp(symbol, "%CO") == 0)
+	else if((rc=strcasecmp(symbol, "%CO")) == 0)
 	rec->setField(entryCompany, text);
-    else if(strcasecmp(symbol, "%P1") == 0)
+	else if((rc=strcasecmp(symbol, "%P1")) == 0)
 	rec->setField(entryPhone1, text);
-    else if(strcasecmp(symbol, "%P2") == 0)
+	else if((rc=strcasecmp(symbol, "%P2")) == 0)
 	rec->setField(entryPhone2, text);
-    else if(strcasecmp(symbol, "%P3") == 0)
+	else if((rc=strcasecmp(symbol, "%P3")) == 0)
 	rec->setField(entryPhone3, text);
-    else if(strcasecmp(symbol, "%P4") == 0)
+	else if((rc=strcasecmp(symbol, "%P4")) == 0)
 	rec->setField(entryPhone4, text);
-    else if(strcasecmp(symbol, "%P5") == 0)
+	else if((rc=strcasecmp(symbol, "%P5")) == 0)
 	rec->setField(entryPhone5, text);
-    else if(strcasecmp(symbol, "%AD") == 0)
+	else if((rc=strcasecmp(symbol, "%AD")) == 0)
 	rec->setField(entryAddress, text);
-    else if(strcasecmp(symbol, "%CI") == 0)
+	else if((rc=strcasecmp(symbol, "%CI")) == 0)
 	rec->setField(entryCity, text);
-    else if(strcasecmp(symbol, "%ST") == 0)
+	else if((rc=strcasecmp(symbol, "%ST")) == 0)
 	rec->setField(entryState, text);
-    else if(strcasecmp(symbol, "%ZI") == 0)
+	else if((rc=strcasecmp(symbol, "%ZI")) == 0)
 	rec->setField(entryZip, text);
-    else if(strcasecmp(symbol, "%CT") == 0)
+	else if((rc=strcasecmp(symbol, "%CT")) == 0)
 	rec->setField(entryCountry, text);
-    else if(strcasecmp(symbol, "%TI") == 0)
+	else if((rc=strcasecmp(symbol, "%TI")) == 0)
 	rec->setField(entryTitle, text);
-    else if(strcasecmp(symbol, "%C1") == 0)
+	else if((rc=strcasecmp(symbol, "%C1")) == 0)
 	rec->setField(entryCustom1, text);
-    else if(strcasecmp(symbol, "%C2") == 0)
+	else if((rc=strcasecmp(symbol, "%C2")) == 0)
 	rec->setField(entryCustom2, text);
-    else if(strcasecmp(symbol, "%C3") == 0)
+	else if((rc=strcasecmp(symbol, "%C3")) == 0)
 	rec->setField(entryCustom3, text);
-    else if(strcasecmp(symbol, "%C4") == 0)
+	else if((rc=strcasecmp(symbol, "%C4")) == 0)
 	rec->setField(entryCustom4, text);
-//     else if(strcasecmp(symbol, "%NO") == 0)
-// 	rec->setField(entryNote, text);
-    }
+	//     else if(strcasecmp(symbol, "%NO") == 0)
+	// 	rec->setField(entryNote, text);
+
+	if ((debug_level & SYNC_MINOR) && rc)
+	{
+		cerr << fname << ": Unknown field "
+			<< symbol << endl;
+	}
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		cerr << fname << ": Set field " 
+			<< symbol
+			<< " to "
+			<< text
+			<< endl;
+	}
+}
 
 char*
 AddressWidget::getFieldBySymbol(PilotAddress* rec, const char* symbol)
@@ -722,16 +775,48 @@ AddressWidget::getFieldBySymbol(PilotAddress* rec, const char* symbol)
     }
 
 void
-AddressWidget::writeAddress(PilotAddress* which)
-    {
-    	FUNCTIONSETUP;
+AddressWidget::writeAddress(PilotAddress* which,PilotDatabase *addressDB)
+{
+	FUNCTIONSETUP;
 
-    PilotDatabase* addressDB = KPilotLink::getPilotLink()->openLocalDatabase("AddressDB");
-    PilotRecord* pilotRec = which->pack();
-    addressDB->writeRecord(pilotRec);
-    delete pilotRec;
-    KPilotLink::getPilotLink()->closeDatabase(addressDB);
-    }
+	// Open a database (myDB) only if needed,
+	// i.e. only if the passed-in addressDB
+	// isn't valid.
+	//
+	//
+	PilotDatabase *myDB=addressDB;
+	bool usemyDB=false;
+
+	if (myDB==0L || !myDB->isDBOpen())
+	{
+		myDB=KPilotLink::getPilotLink()->
+			openLocalDatabase("AddressDB");
+		usemyDB=true;
+	}
+
+	// Still no valid address database...
+	//
+	//
+	if (!myDB->isDBOpen())
+	{
+		cerr << fname << ": Address database is not open.\n";
+		return;
+	}
+
+
+	// Do the actual work.
+	PilotRecord* pilotRec = which->pack();
+	myDB->writeRecord(pilotRec);
+	delete pilotRec;
+
+	// Clean up in the case that we allocated our own DB.
+	//
+	//
+	if (usemyDB)
+	{
+		KPilotLink::getPilotLink()->closeDatabase(myDB);
+	}
+}
 
 void
 AddressWidget::slotExportAddressList()
@@ -741,7 +826,7 @@ AddressWidget::slotExportAddressList()
     char exportFormat[255];
     char delim[2];
     char* nextToken;
-    KConfig* config = kapp->getConfig();
+    KConfig* config = KGlobal::config();
     PilotAddress* currentAddress;
 
     QString fileName = KFileDialog::getSaveFileName();

@@ -9,7 +9,7 @@ PilotMemo::PilotMemo(PilotRecord* rec)
     unpack(rec->getData(), 1);
     }
 
-void PilotMemo::unpack(void *text, int firstTime) 
+void PilotMemo::unpack(const void *text, int firstTime) 
 {
   if (!firstTime && fText)
     {

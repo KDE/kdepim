@@ -54,7 +54,7 @@ class AddressWidget : public PilotComponent
 private:
       void setupWidget();
       void updateWidget(); // Called with the lists have changed..
-      void writeAddress(PilotAddress* which);
+      void writeAddress(PilotAddress* which,PilotDatabase *db=0L);
 
 	/**
 	* setupCategories extracts the category names

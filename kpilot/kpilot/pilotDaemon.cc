@@ -16,6 +16,8 @@
 //
 //		Remaining questions are marked with QADE.
 
+static char *id="$Id$";
+
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -26,6 +28,8 @@
 #include <fstream.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <getopt.h>
+
 #include <qdir.h>
 #include "pilotDaemon.moc"
 #include <kapp.h>
@@ -40,12 +44,44 @@
 #include "hotsync.h"
 #include "busysync.h"
 #include "statusMessages.h"
+#include "options.h"
 #include "kpilot.h"
 
-// The daemon also has a debug level
-//
-//
-int debug_level=0;
+static struct option longOptions[]=
+{
+	{ "debug",1,0L,'d' },
+	{ "help",0,0L,1 },
+	{ 0L,0,0L,0 }
+} ;
+
+void handleOptions(int& argc, char **argv)
+{
+	FUNCTIONSETUP;
+
+	static const char *banner=
+		"\t\tKPilotDaemon v" VERSION "\n"
+		"Copyright (C) 1998,1999 Dan Pilone\n"
+		"Copyright (C) 2000 Adriaan de Groot\n\n";
+
+	int c,li;
+
+	while((c=getopt_long(argc,argv,"d:",longOptions,&li))>0)
+	{
+		switch(c)
+		{
+		case 'd' : debug_level=atoi(optarg);
+			if (debug_level)
+			{
+				cerr << fname << ": Debug level set to "
+					<< debug_level << endl;
+			}
+			break;
+		case 1 : usage(banner,longOptions); exit(0);
+		default : usage(banner,longOptions); exit(1);
+		}
+	}
+}
+
 
 const int PilotDaemon::COMMAND_PORT = PILOTDAEMON_COMMAND_PORT;
 const int PilotDaemon::STATUS_PORT = PILOTDAEMON_STATUS_PORT;
@@ -130,36 +166,71 @@ DockingLabel::slotKFMCopyComplete()
   fDaemon->sendStatus(CStatusMessages::FILE_INSTALL_REQUEST);
 }
 
-PilotDaemon::PilotDaemon()
-  : KTopLevelWidget(), fMonitorProcess(0L), fCurrentSocket(0L),
+int PilotDaemon::getPilotSpeed(KConfig *config)
+{
+	FUNCTIONSETUP;
+
+	int speed = config->readNumEntry("PilotSpeed", 0);
+
+	// Translate the speed entry in the
+	// config file to something we can
+	// put in the environment (for who?)
+	//
+	//
+	char *speedname=0L;
+
+	switch(speed)
+	{
+	case 0:
+		speedname="PILOTRATE=9600";
+		break;
+	case 1:
+		speedname="PILOTRATE=19200";
+		break;
+	case 2:
+		speedname="PILOTRATE=38400";
+		break;
+	case 3:
+		speedname="PILOTRATE=57600";
+		break;
+	case 4:
+		speedname="PILOTRATE=115200";
+		break;
+	default :
+		speedname="PILOTRATE=9600";
+	}
+
+	if (debug_level & SYNC_MINOR)
+	{
+		cerr << fname
+			<< ": Speed set to "
+			<< speedname << " ("
+			<< speed << ')'
+			<< endl;
+	}
+
+	putenv(speedname);
+
+	return speed;
+}
+
+PilotDaemon::PilotDaemon() : 
+	KTopLevelWidget(), 
+	fStatus(INIT),
+  	fMonitorProcess(0L), fCurrentSocket(0L),
     fCommandSocket(0L), fStatusSocket(0L), fQuit(false), fPilotLink(0L),
     fDockingLabel(0L), fStartKPilot(false), fWaitingForKPilot(false)
 {
 	FUNCTIONSETUP;
 
-  KSimpleConfig* config = new KSimpleConfig(kapp->localconfigdir() + "/kpilotrc");
-  config->setGroup(0L);
+	KConfig* config = KPilotLink::getConfig();
+	config->setGroup(0L);
   
   fPilotDevice = config->readEntry("PilotDevice");
-  int speed = config->readNumEntry("PilotSpeed", 0);
-  switch(speed)
-    {
-    case 0:
-      putenv("PILOTRATE=9600");
-      break;
-    case 1:
-      putenv("PILOTRATE=19200");
-      break;
-    case 2:
-      putenv("PILOTRATE=38400");
-      break;
-    case 3:
-      putenv("PILOTRATE=57600");
-      break;
-    case 4:
-      putenv("PILOTRATE=115200");
-      break;
-    }
+
+
+	getPilotSpeed(config);
+
   fStartKPilot = (bool) config->readNumEntry("StartKPilotAtHotSync", 0);
   delete config;
   fStatusConnections.setAutoDelete(true);
@@ -169,8 +240,10 @@ PilotDaemon::PilotDaemon()
   testDir(kapp->localkdedir() + "/share/apps/kpilot/DBBackup");
   setupWidget();
   setupConnections();
+	if (fStatus == ERROR) return;
   setupSubProcesses();
 }
+
 
 void
 PilotDaemon::testDir(QString name)
@@ -190,29 +263,11 @@ PilotDaemon::reloadSettings()
 {
 	FUNCTIONSETUP;
 
-  KSimpleConfig* config = new KSimpleConfig(kapp->localconfigdir() + "/kpilotrc");
+  KConfig* config = KPilotLink::getConfig();
   config->setGroup(0L);
   
   fPilotDevice = config->readEntry("PilotDevice");
-  int speed = config->readNumEntry("PilotSpeed", 0);
-  switch(speed)
-    {
-    case 0:
-      putenv("PILOTRATE=9600");
-      break;
-    case 1:
-      putenv("PILOTRATE=19200");
-      break;
-    case 2:
-      putenv("PILOTRATE=38400");
-      break;
-    case 3:
-      putenv("PILOTRATE=57600");
-      break;
-    case 4:
-      putenv("PILOTRATE=115200");
-      break;
-    }
+	getPilotSpeed(config);
   fStartKPilot = (bool) config->readNumEntry("StartKPilotAtHotSync", 0);
   delete config;
 
@@ -226,7 +281,7 @@ PilotDaemon::reloadSettings()
 	}
 	else
 	{
-		cerr << fname << ": Not listener to kill (which is OK)."
+		cerr << fname << ": No listener to kill (which is OK)."
 			<< endl;
 	}
 
@@ -239,16 +294,33 @@ PilotDaemon::setupConnections()
 {
 	FUNCTIONSETUP;
 
-  fPilotLink = new KPilotLink(0L, 0L, fPilotDevice.data());
-  connect(fPilotLink, SIGNAL(databaseSyncComplete()),
-	  this, SLOT(slotDBBackupFinished()));
-  connect(this, SIGNAL(endHotSync()), this, SLOT(slotEndHotSync()));
-  fCommandSocket = new KServerSocket(PilotDaemon::COMMAND_PORT);
-  connect(fCommandSocket, SIGNAL(accepted(KSocket*)), 
-	  this, SLOT(slotAccepted(KSocket*)));
-  fStatusSocket = new KServerSocket(PilotDaemon::STATUS_PORT);
-  connect(fStatusSocket, SIGNAL(accepted(KSocket*)),
-	  this, SLOT(slotAddStatusConnection(KSocket*)));
+	fCommandSocket = new KServerSocket(PilotDaemon::COMMAND_PORT);
+	connect(fCommandSocket, SIGNAL(accepted(KSocket*)), 
+		this, SLOT(slotAccepted(KSocket*)));
+	fStatusSocket = new KServerSocket(PilotDaemon::STATUS_PORT);
+	connect(fStatusSocket, SIGNAL(accepted(KSocket*)),
+		this, SLOT(slotAddStatusConnection(KSocket*)));
+
+	if ((fCommandSocket == 0L) || (fStatusSocket == 0L) ||
+		(fCommandSocket->socket() < 0 ) ||
+		(fStatusSocket->socket() < 0))
+	{
+		cerr << fname
+			<< ": Couldn't create sockets for daemon"
+			<< endl;
+		if (fCommandSocket) delete fCommandSocket;
+		if (fStatusSocket) delete fStatusSocket;
+		fCommandSocket=0L;
+		fStatusSocket=0L;
+
+		fStatus=ERROR;
+		return;
+	}
+
+	fPilotLink = new KPilotLink(0L, 0L, fPilotDevice.data());
+	connect(fPilotLink, SIGNAL(databaseSyncComplete()),
+		this, SLOT(slotDBBackupFinished()));
+	connect(this, SIGNAL(endHotSync()), this, SLOT(slotEndHotSync()));
 }
 
 void
@@ -276,7 +348,7 @@ PilotDaemon::setupWidget()
 {
 	FUNCTIONSETUP;
 
-  KSimpleConfig* config = new KSimpleConfig(kapp->localconfigdir() + "/kpilotrc");
+  KConfig* config = KPilotLink::getConfig();
   config->setGroup(0L);
   if(config->readNumEntry("DockDaemon", 0))
     {
@@ -300,8 +372,8 @@ PilotDaemon::slotShowAbout()
 {
 	FUNCTIONSETUP;
 
-  KMsgBox::message(0L, i18n("KPilot Daemon v3.0"), 
-		   i18n("KPilot Hot-Sync Daemon v3.0 \n"
+  KMsgBox::message(0L, i18n("KPilot Daemon v3.2"), 
+		   i18n("KPilot Hot-Sync Daemon v3.2 \n"
 			"By: Dan Pilone.\n"
 			"Email: pilone@slac.com"),
 		   KMsgBox::INFORMATION);
@@ -380,13 +452,20 @@ PilotDaemon::slotDBBackupFinished()
 {
 	FUNCTIONSETUP;
 
-  cout << "DB Syncing finished." << endl;
-  KSimpleConfig* config = new KSimpleConfig(kapp->localconfigdir() + "/kpilotrc");
-  config->setGroup(0L);
-  if(config->readNumEntry("SyncFiles"))
-    getPilotLink()->installFiles(kapp->localkdedir() + "/share/apps/kpilot/pending_install/");
-  delete config;
-  emit(endHotSync());
+	if (debug_level & SYNC_MAJOR)
+	{
+		cerr << fname << ": DB Syncing finished." << endl;
+	}
+
+	KConfig* config = KPilotLink::getConfig();
+	config->setGroup(0L);
+	if(config->readNumEntry("SyncFiles"))
+	{
+		getPilotLink()->installFiles(kapp->localkdedir() + 
+			"/share/apps/kpilot/pending_install/");
+	}
+	delete config;
+	emit(endHotSync());
 }
 
 void 
@@ -394,7 +473,7 @@ PilotDaemon::slotProcFinished(KProcess*)
 {
 	FUNCTIONSETUP;
 
-  startHotSync();
+	startHotSync();
 }
 
 void
@@ -407,12 +486,37 @@ PilotDaemon::slotEndHotSync()
 		QPixmap icon(hotsync_icon);
 		fDockingLabel->setPixmap(icon);
 	}
-  getPilotLink()->endHotSync();
-  sendStatus(CStatusMessages::SYNC_COMPLETED);
-  if(!quit())
-    fMonitorProcess->start(KProcess::NotifyOnExit);
-  else
-    kapp->quit();
+
+	KPilotLink *p=getPilotLink();
+
+	if (p)
+	{
+		if (debug_level & SYNC_MAJOR)
+		{
+			cerr << fname
+				<< ": Ending hot-sync now"
+				<< endl;
+		}
+
+		p->endHotSync();
+	}
+	else
+	{
+		cerr << fname
+			<< ": No link to pilot!"
+			<< endl;
+	}
+
+	sendStatus(CStatusMessages::SYNC_COMPLETED);
+
+	if(!quit())
+	{
+		fMonitorProcess->start(KProcess::NotifyOnExit);
+	}
+	else
+	{
+		kapp->quit();
+	}
 }
 
 void
@@ -420,14 +524,23 @@ PilotDaemon::slotAccepted(KSocket* connection)
 {
 	FUNCTIONSETUP;
 
-  if(fCurrentSocket)
-    {
-      KMsgBox::message(0L, klocale->translate("Too Many Connections"),
-		       klocale->translate("Error: Only one command connection at a time."), 
-		       KMsgBox::STOP);
-      delete connection;
-      return;
-    }
+	if(fCurrentSocket)
+	{
+		KMsgBox::message(0L, i18n("Too Many Connections"),
+			i18n("Error: Only one command connection at a time."), 
+			KMsgBox::STOP);
+		delete connection;
+		return;
+	}
+
+	if (debug_level & SYNC_MAJOR)
+	{
+		cerr << fname 
+			<< ": Accepted command connection "
+			<< (int) connection
+			<< endl;
+	}
+
   fCurrentSocket = connection;
   connect(fCurrentSocket, SIGNAL(closeEvent(KSocket*)),
 	  this, SLOT(slotConnectionClosed(KSocket*)));
@@ -472,11 +585,24 @@ PilotDaemon::slotCommandReceived(KSocket*)
     case KPilotLink::InstallFile:
       getPilotLink()->installFiles(kapp->localkdedir() + "/share/apps/kpilot/pending_install/");
       break;
+	case KPilotLink::TestConnection :
+		if (debug_level & SYNC_MAJOR)
+		{
+			cerr  << fname
+				<< ": Connection tests OK"
+				<< endl ;
+		}
+		break;
     default:
-      cerr << "Unknown command!" << endl;
+      cerr << fname << ": Unknown command!" << command << endl;
       break;
     }
-  cerr << "PilotDaemon: Done reading." << endl;
+
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		cerr << fname
+			<< ": Done reading." << endl;
+	}
 }
 
 void
@@ -484,9 +610,27 @@ PilotDaemon::slotConnectionClosed(KSocket* connection)
 {
 	FUNCTIONSETUP;
 
-  delete connection;
-  fCurrentSocket = 0L;
-  emit(endHotSync());
+	delete connection;
+	if (fCurrentSocket != connection)
+	{
+		cerr << fname 
+			<< ": Connection other than current was closed?"
+			<< endl;
+	}
+	else
+	{
+		if (debug_level & SYNC_TEDIOUS)
+		{
+			cerr << fname 
+				<< ": Connection "
+				<< (int) connection
+				<< " closed"
+				<< endl;
+		}
+
+		fCurrentSocket = 0L;
+	}
+	emit(endHotSync());
 }
 
 void
@@ -494,9 +638,17 @@ PilotDaemon::slotAddStatusConnection(KSocket* connection)
 {
 	FUNCTIONSETUP;
 
+	if (debug_level & SYNC_MAJOR)
+	{
+		cerr << fname 
+			<< ": Accepted status connection "
+			<< (int) connection
+			<< endl;
+	}
   fStatusConnections.append(connection);
   connect(connection, SIGNAL(closeEvent(KSocket*)),
 	  this, SLOT(slotRemoveStatusConnection(KSocket*)));
+	connection->enableRead(true);
   if(fWaitingForKPilot)
     {
       fWaitingForKPilot = false;
@@ -509,7 +661,16 @@ PilotDaemon::slotRemoveStatusConnection(KSocket* connection)
 {
 	FUNCTIONSETUP;
 
-  fStatusConnections.remove(connection); // will be deleted by list.
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		cerr << fname 
+			<< ": Connection "
+			<< (int) connection
+			<< " closed"
+			<< endl;
+	}
+
+	fStatusConnections.remove(connection); // will be deleted by list.
 }
 
 void
@@ -554,11 +715,64 @@ PilotDaemon::sendStatus(const int status)
 {
 	FUNCTIONSETUP;
 
-  for(fStatusConnections.first(); fStatusConnections.current(); fStatusConnections.next())
-    {
-      ofstream out(fStatusConnections.current()->socket());
-      out.write(&status, sizeof(int));
-    }
+	KSocket *c;
+	int updateCount=0;
+
+	if (debug_level & SYNC_MINOR)
+	{
+		cerr << fname 
+			<< ": Sending status " << status
+			<< endl;
+	}
+
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		for(fStatusConnections.first() ; 
+			(c=fStatusConnections.current()) ; 
+			fStatusConnections.next())
+		{
+			cerr << fname << ": Will send to connection "
+				<< (int) c
+				<< endl;
+		}
+	}
+
+	for(fStatusConnections.first() ; 
+		(c=fStatusConnections.current()) ; 
+		fStatusConnections.next())
+	{
+		if (debug_level & SYNC_TEDIOUS)
+		{
+			cerr << fname
+				<< ": Sending to connection "
+				<< (int) c
+				<< endl;
+		}
+
+		if (c->socket()<0)
+		{
+			cerr << fname
+				<< ": Connection "
+				<< (int) c 
+				<< " has no valid socket"
+				<< endl;
+		}
+		else
+		{
+			ofstream out(c->socket());
+			out.write(&status, sizeof(int));
+			updateCount++;
+		}
+	}
+
+	if (debug_level & SYNC_MINOR)
+	{
+		cerr << fname
+			<< ": Completed status update for "
+			<< updateCount
+			<< " connections"
+			<< endl;
+	}
 }
 
 void
@@ -587,42 +801,98 @@ PilotDaemon::~PilotDaemon()
   
 }
 
-PilotDaemon* gPilotDaemon;
+PilotDaemon* gPilotDaemon=0L;
+int crashFlag=0;
 
 void signalHandler(int s)
 {
 	FUNCTIONSETUP;
 
-	cerr << fname << ": Caught signal " << s << endl;
 
-	KMsgBox::message(0L, i18n("Signal Caught"), 
-		i18n("Warning!  KPilotDaemon is shutting down."
-			"  If this is not\nintentional, please send"
-			" mail to kpilot-list@slac.com describing\n"
-			"what happened."), 
-		KMsgBox::EXCLAMATION);
+	crashFlag++;
 
-	gPilotDaemon->getMonitorProcess()->kill();
+	if (debug_level)
+	{
+		cerr << fname << ": Caught signal " << s << endl;
+	}
+
+	// Suppose the daemon crashes. We get here
+	// with crashFlag=1. We set the alarm and it goes
+	// off, which gets us here with crashFlag=2.
+	// This second time around, there's no message,
+	// we just try to kill the monitor. If something 
+	// goes wrong *there* too, and we get back here
+	// a *third* time, give up.
+	//
+	//
+	if ( crashFlag>2 ) exit(-1);
+
+	// Often popping up the message for the user
+	// gets KApplication into a weird state so
+	// that the user can't even exit the app
+	// properly. We'll *force* the app to exit
+	// by causing another signal soon.
+	//
+	//
+	alarm(10);
+	signal(SIGALRM,signalHandler);
+
+
+	// If the user has already seen the message,
+	// and we're coming here because the alarm goes
+	// off, skip the message.
+	//
+	//
+	if (crashFlag==1)
+	{
+		QString msg(
+			i18n("Warning!  KPilotDaemon is shutting down."
+				"  If this is not\nintentional, please send"
+				" mail to kpilot-list@slac.com describing\n"
+				"what happened.") ) ;
+
+		msg += i18n(" This window will self-destruct in 10 seconds.");
+
+		KMsgBox::message(0L, i18n("Signal Caught"), 
+			msg,
+			KMsgBox::EXCLAMATION);
+	}
+
+
+	if (gPilotDaemon)
+	{
+		KProcess *m=gPilotDaemon->getMonitorProcess();
+		if (m)
+		{
+			cerr << fname << ": Killing monitor" << endl;
+			m->kill();
+		}
+	}
+
+
 	exit(-1);
 }
+
 
 
 int main(int argc, char* argv[])
 {
 	FUNCTIONSETUP;
 
+
 	KApplication a(argc, argv, "pilotDaemon");
+	handleOptions(argc,argv);
+
+
+
 	gPilotDaemon = new PilotDaemon();
 
-	if ((argv[1]!=0) && (strcmp(argv[1],"--debug")==0) &&
-		(argv[2]!=0))
+	if (gPilotDaemon->status()==PilotDaemon::ERROR)
 	{
-		debug_level=atoi(argv[2]);
-		if (debug_level)
-		{
-			cerr << fname << ": debug_level set to "
-				<< debug_level << endl;
-		}
+		cerr << fname 
+			<< ": Failed to start up daemon"
+			<< endl;
+		exit(2);
 	}
 	
 	signal(SIGHUP, signalHandler);

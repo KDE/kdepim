@@ -2,6 +2,7 @@
 #define __LOG_FILE_H
 
 #include <time.h>
+#include <qtextstream.h>
 #include "pi-macros.h"
 
 class CLogFile

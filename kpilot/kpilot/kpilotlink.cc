@@ -5,6 +5,10 @@
 // This file is distributed under the Gnu General Public Licence (GPL).
 // The GPL should have been included with this file in a file called
 // COPYING. 
+//
+// This is the version of kpilotLink.cc for KDE2 / KPilot 4.
+//
+//
 
 
 
@@ -14,9 +18,44 @@
 // 3.1b10	By Adriaan de Groot: comments added all over the place,
 //
 //		Remaining questions are marked with QADE.
+//
+// 3.1.14	Added an additional protocol message to the pilot link
+//		protocol. If a conduit sends CStatusMessage::LOG_MESSAGE,
+//		it must next write 4 bytes (in int format) with the length
+//		of the log message to be added, followed by the actual
+//		log message.
 
+static const char *id="$Id$";
 
+#include "options.h"
 
+#ifdef KDE2
+#include "statusMessages.h"
+#include "kpilotlink.h"
+#include "messageDialog.h"
+#include "pi-source.h"
+#include "pi-socket.h"
+#include "pi-dlp.h"
+#include "pi-file.h"
+
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stream.h>
+#include <qdir.h>
+#include <kconfig.h>
+#include <klocale.h>
+#include <ksock.h>
+#include <kmessagebox.h>
+#include <kprocess.h>
+#include <kstatusbar.h>
+#include <kapp.h>
+#include <kprogress.h>
+
+#include "kpilotlink.moc"
+#else
 #include <sys/stat.h>
 #include <iostream.h>
 #include <string.h>
@@ -38,6 +77,21 @@
 #include "pi-file.h"
 #include "messageDialog.h"
 #include "kpilot.h"
+
+#include "kpilotlink.moc"
+#endif
+
+// This is to force source compatibility between the KDE1 and KDE2
+// versions. For some things we define macros:
+//
+//
+#ifdef KDE2
+#define LOCALCONFIG	QString("/home/adridg/.kde/share/config")
+#define LOCALKDE	QString("/home/adridg/.kde")
+#else
+#define LOCALCONFIG	kapp->localconfigdir()
+#define LOCALKDE	kapp->localkdedir()
+#endif
 
 KPilotLink* KPilotLink::fKPilotLink = 0L;
 
@@ -62,6 +116,8 @@ const int CStatusMessages::REC_DATA = 12;
 const int CStatusMessages::READ_REC_BY_ID = 13;
 const int CStatusMessages::NEXT_REC_IN_CAT = 14;
 
+const int CStatusMessages::LOG_MESSAGE = 17;
+
 
 KPilotLink::KPilotLink()
   : fConnected(false), fCurrentPilotSocket(-1), fSlowSyncRequired(false), 
@@ -71,14 +127,15 @@ KPilotLink::KPilotLink()
     fKPilotLink = this;
     
     // When KPilot starts up we want to be able to find the last synced users data.
-    KSimpleConfig* config = new KSimpleConfig(kapp->localconfigdir() + "/kpilotrc");
+    KConfig* config = getConfig();
     config->setGroup(0L);
     getPilotUser().setUserName(config->readEntry("UserName"));
     delete config;
 }
 
 
-KPilotLink::KPilotLink(QWidget* owner, KStatusBar* statusBar, char* devicePath)
+KPilotLink::KPilotLink(QWidget* owner, KStatusBar* statusBar, 
+	const QString &devicePath)
   : fConnected(false), fCurrentPilotSocket(-1), fSlowSyncRequired(false), 
     fOwningWidget(owner), fStatusBar(statusBar), fProgressDialog(0L), 
     fConduitSocket(0L), fCurrentDB(0L), fNextDBIndex(0), fConduitProcess(0L),
@@ -87,10 +144,10 @@ KPilotLink::KPilotLink(QWidget* owner, KStatusBar* statusBar, char* devicePath)
     fKPilotLink = this;
     initPilotSocket(devicePath);
     initConduitSocket();
-    fMessageDialog = new MessageDialog(klocale->translate("Sync Status"));
+    fMessageDialog = new MessageDialog(i18n("Sync Status"));
 
     // When KPilot starts up we want to find the last synced users data.
-    KSimpleConfig* config = new KSimpleConfig(kapp->localconfigdir() + "/kpilotrc");
+    KConfig* config = getConfig();
     config->setGroup(0L);
     getPilotUser().setUserName(config->readEntry("UserName"));
     delete config;
@@ -106,33 +163,64 @@ KPilotLink::~KPilotLink()
     endHotSync();
 }
 
+
 void
 KPilotLink::initPilotSocket(const char* devicePath)
 {
-  struct pi_sockaddr addr;
-  int ret;
+	FUNCTIONSETUP;
+
+	struct pi_sockaddr addr;
+	int ret;
   
-  pi_close(getCurrentPilotSocket());
-  fPilotPath = devicePath;
+	  pi_close(getCurrentPilotSocket());
+	  fPilotPath = devicePath;
   
-  if (!(fPilotMasterSocket = pi_socket(PI_AF_SLP, PI_SOCK_STREAM, PI_PF_PADP))) 
-    {
-      KMsgBox::message(fOwningWidget, klocale->translate("Error Initializing?"), 
-		       klocale->translate("Cannot create socket."), KMsgBox::STOP);
-      perror("pi_socket");
-      fPilotMasterSocket = -1;
-      return;
-    }
-  addr.pi_family = PI_AF_SLP;
-  strcpy(addr.pi_device,fPilotPath);
-  
-  ret = pi_bind(fPilotMasterSocket, (struct sockaddr*)&addr, sizeof(addr));
-  if(ret == -1) 
-    {
-      KMsgBox::message(fOwningWidget, klocale->translate("Error Initializing?"), 
-		       klocale->translate("Cannot connect to pilot.\r\n(check pilot path)"), KMsgBox::STOP);
-      exit(1);
-    }
+	if (!(fPilotMasterSocket = 
+		pi_socket(PI_AF_SLP, PI_SOCK_STREAM, PI_PF_PADP))) 
+	{
+		cerr << fname << ": Cannot create socket"
+			<< endl;
+
+#ifdef KDE2
+		KMessageBox::error(fOwningWidget,
+			i18n("Cannot create socket for communicating "
+				"with the Pilot"),
+			i18n("Error Initializing")
+			);
+#else
+		KMsgBox::message(fOwningWidget, i18n("Error Initializing"), 
+			i18n("Cannot create socket."), KMsgBox::STOP);
+#endif
+		perror(fname);
+		fPilotMasterSocket = -1;
+		return;
+	}
+
+	addr.pi_family = PI_AF_SLP;
+	strcpy(addr.pi_device,fPilotPath);
+	ret = pi_bind(fPilotMasterSocket, 
+		(struct sockaddr*)&addr, sizeof(addr));
+	if(ret == -1) 
+	{
+		cerr << fname << ": Cannot bind() to pilot"
+			<< endl;
+
+#ifdef KDE2
+		KMessageBox::error(fOwningWidget,
+			i18n("Cannot connect socket to Pilot "
+				"(check Pilot path)"),
+			i18n("Error Initializing")
+			);
+#else
+		KMsgBox::message(fOwningWidget, 
+			i18n("Error Initializing"), 
+			i18n("Cannot connect to pilot "
+			"(check pilot path)."), KMsgBox::STOP);
+#endif
+
+		perror(fname);
+		exit(1);
+	}
 }
 
 void
@@ -184,6 +272,8 @@ KPilotLink::writeRecord(KSocket* theSocket, PilotRecord* rec)
 void
 KPilotLink::slotConduitRead(KSocket* cSocket)
 {
+	FUNCTIONSETUP;
+
   int message;
   PilotRecord* tmpRec = 0L;
 
@@ -260,45 +350,78 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
       else
 	write(cSocket->socket(), &CStatusMessages::NO_SUCH_RECORD, sizeof(int));
     }
+	else if (message == CStatusMessages::LOG_MESSAGE)
+	{
+		int i;
+		char *s;
+		read(cSocket->socket(),&i,sizeof(int));
+		s=new char[i+1];
+		memset(s,0,i);
+		read(cSocket->socket(),s,i);
+		s[i]=0;
+		if (debug_level & SYNC_TEDIOUS)
+		{
+			cerr << fname << ": Message length "
+				<< i << " => "
+				<< s
+				<< endl;
+		}
+		addSyncLogEntry(s);
+		delete s;
+	}
       
   else
-     cout <<"ERROR: Unknown status message." << endl;
+	{
+		cerr << fname << ": Unknown status message " 
+			<< message
+			<< endl;
+	}
 }
 
 void
 KPilotLink::slotConduitClosed(KSocket* theSocket)
 {
-//   cout << "Got conduit disconnection. " << endl;
-  // Get rid of this conduit connection
-  disconnect(theSocket, SIGNAL(readEvent(KSocket*)),
-	     this, SLOT(slotConduitRead(KSocket*)));
-  disconnect(theSocket, SIGNAL(closeEvent(KSocket*)),
-	     this, SLOT(slotConduitClosed(KSocket*)));
-  delete theSocket;
-  closeDatabase(fCurrentDB);
-  // Get our backup copy.
-  if(slowSyncRequired()) // We are in the middle of backing up, continue
-    doConduitBackup();
-  else // We are just doing a normal sync, so go for it.
-    {
-      syncDatabase(&fCurrentDBInfo);
-      // Start up the next one
-      syncNextDB();
-    }
+	FUNCTIONSETUP;
+
+	disconnect(theSocket, SIGNAL(readEvent(KSocket*)),
+		this, SLOT(slotConduitRead(KSocket*)));
+	disconnect(theSocket, SIGNAL(closeEvent(KSocket*)),
+		this, SLOT(slotConduitClosed(KSocket*)));
+	delete theSocket;
+
+	closeDatabase(fCurrentDB);
+
+	// Get our backup copy.
+	if(slowSyncRequired()) // We are in the middle of backing up, continue
+	{
+	    doConduitBackup();
+	}
+	else // We are just doing a normal sync, so go for it.
+	{
+		syncDatabase(&fCurrentDBInfo);
+		// Start up the next one
+		syncNextDB();
+	}
 }
 
 QString
-KPilotLink::registeredConduit(QString dbName)
+KPilotLink::registeredConduit(const QString &dbName)
 {
-  QString conduitPath = kapp->kde_datadir() + "/kpilot/conduits/";
-  KSimpleConfig* config = new KSimpleConfig(kapp->localconfigdir() + "/kpilotconduits");
-
-  config->setGroup("Database Names");
+  KConfig* config = getConfig("Database Names");
   QString result = config->readEntry(dbName);
   delete config;
-  if(result.isNull())
-    return result;
-  return conduitPath + "/" + result;
+
+#ifdef KDE2
+	// No datadir, so look elsewhere for conduits --
+	// conduits can be executables anywhere in your path.
+	//
+	return result;
+#else
+  QString conduitPath = kapp->kde_datadir() + "/kpilot/conduits/";
+
+  if(result.isNull()) return result;
+  else return conduitPath + "/" + result;
+#endif
 }
 
 
@@ -314,20 +437,23 @@ KPilotLink::slotConduitConnected(KSocket* theSocket)
 }
 
 // Requires the text is displayed in item 0
-void
-KPilotLink::showMessage(QString message) const
-    {
-    if(fStatusBar)
+void KPilotLink::showMessage(const QString &message) const
+{
+	if(fStatusBar)
 	{
-	fStatusBar->changeItem(message.data(), 0);
-	kapp->processEvents();
+#ifdef KDE2
+		fStatusBar->changeItem(message,0);
+#else
+		fStatusBar->changeItem(message.data(), 0);
+		kapp->processEvents();
+#endif
 	}
-    }
+}
 
 int 
 KPilotLink::compare(struct db * d1, struct db * d2)
     {
-    /* types of 'appl' sort later then other types */
+    /* types of 'appl' sort later than other types */
     if(d1->creator == d2->creator)
 	if(d1->type != d2->type) 
 	    {
@@ -341,7 +467,9 @@ KPilotLink::compare(struct db * d1, struct db * d2)
 
 bool
 KPilotLink::doFullRestore()
-    {
+{
+	FUNCTIONSETUP;
+
     DIR * dir;
     struct dirent * dirent;
     struct DBInfo info;
@@ -349,17 +477,32 @@ KPilotLink::doFullRestore()
     int dbcount = 0;
     int i,j,max,size;
     struct pi_file * f;
-    char dirname[256];
     char message[256];
 
+#ifdef KDE2
+	i=KMessageBox::questionYesNo(
+		fOwningWidget,
+		i18n("Replace all data on pilot with local data?"),
+		i18n("Full Restore"));
+	if (i != KMessageBox::Yes) return false;
+#else
     if(KMsgBox::yesNo(0L, klocale->translate("Full Restore"), 
 		      klocale->translate("Replace all data on pilot with local data?")) == 2)
       return false;
+#endif
 
-    strcpy(dirname, kapp->localkdedir().data());
+#ifdef KDE2
+	QString dirname(LOCALKDE);
+	dirname+=BACKUP_DIR;
+	dirname+=getPilotUser().getUserName();
+	dirname+='/';
+#else
+    char dirname[256];
+    strcpy(dirname, LOCALKDE.data());
     strcat(dirname, BACKUP_DIR.data());
     strcat(dirname, getPilotUser().getUserName());
     strcat(dirname, "/");
+#endif
 
     dir = opendir(dirname);
     
@@ -373,7 +516,7 @@ KPilotLink::doFullRestore()
 	
 	db[dbcount] = (struct db*)malloc(sizeof(struct db));
 	
-	sprintf(db[dbcount]->name, "%s/%s", dirname, dirent->d_name);
+	sprintf(db[dbcount]->name, "%s/%s", (const char *)dirname, dirent->d_name);
 	
 	f = pi_file_open(db[dbcount]->name);
   	if (f==0) 
@@ -444,10 +587,13 @@ KPilotLink::doFullRestore()
 	
 	if (dlp_OpenConduit(getCurrentPilotSocket()) < 0) 
 	    {
-	    puts("Exiting on cancel. All data not restored.");
+		cerr << fname << ": Exiting on cancel. "
+			"All data not restored."
+			<< endl;
 	    exit(1);
 	    }
-	showMessage(klocale->translate("Restoring databases to Palm Pilot. Slow sync required."));
+	showMessage(i18n("Restoring databases to Palm Pilot. "
+		"Slow sync required."));
 	addSyncLogEntry("Restoring all data...");
 
   	f = pi_file_open(db[i]->name);
@@ -478,46 +624,76 @@ KPilotLink::doFullRestore()
 
 bool
 KPilotLink::createLocalDatabase(DBInfo* info)
-    {
-    char temp[256];
-    char name[256];
-    int j;
-    struct pi_file* f;
-    char fullBackupDir[256];
+{
+	FUNCTIONSETUP;
 
-    strcpy(fullBackupDir, kapp->localkdedir().data());
-    strcat(fullBackupDir, BACKUP_DIR.data());
-    strcat(fullBackupDir, getPilotUser().getUserName());
-    strcat(fullBackupDir, "/");
-    mkdir(fullBackupDir, 0700);
+	char temp[256];
+	char name[256];
+	int j;
+	struct pi_file* f;
+#ifdef KDE2
+	QString fullBackupDir(LOCALKDE);
+	fullBackupDir+=BACKUP_DIR;
+	fullBackupDir+=getPilotUser().getUserName();
+	fullBackupDir+='/';
+#else
+	// This is a buffer overflow waiting to happen...
+	//
+	//
+	char fullBackupDir[256];
 
-    strcpy(temp, info->name);
-    j = -1;
-    // Fix the filename, incase there is a forward slash in it.
-    while(temp[++j])
-	if(temp[j] == '/')
-	    temp[j] = '_';
-    sprintf(name, "%s/%s", fullBackupDir, info->name);
-    if (info->flags & dlpDBFlagResource)
-	strcat(name,".prc");
-    else
-	strcat(name,".pdb");
-    
-    /* Ensure that DB-open flag is not kept */
-    info->flags &= 0xff;
-    
-    f = pi_file_create(name, info);
-    if (f==0) 
+	strcpy(fullBackupDir, kapp->localkdedir().data());
+	strcat(fullBackupDir, BACKUP_DIR.data());
+	strcat(fullBackupDir, getPilotUser().getUserName());
+	strcat(fullBackupDir, "/");
+#endif
+
+	mkdir(fullBackupDir, 0700);
+
+	strcpy(temp, info->name);
+	j = -1;
+	// Fix the filename, incase there is a forward slash in it.
+	while(temp[++j])
 	{
-	printf("Failed, unable to create file\n");
-	return false;
+		if(temp[j] == '/') temp[j] = '_';
 	}
-    
-    if(pi_file_retrieve(f, getCurrentPilotSocket(), 0)<0)
-	printf("Failed, unable to back up database\n");
-    pi_file_close(f);
-    return true;
-    }
+
+	sprintf(name, "%s/%s", (const char *)fullBackupDir, info->name);
+	if (info->flags & dlpDBFlagResource)
+	{
+		strcat(name,".prc");
+	}
+	else
+	{
+		strcat(name,".pdb");
+	}
+
+	if (debug_level & DB_TEDIOUS)
+	{
+		cerr << fname << ": Creating local database "
+			<< name << endl;
+	}
+	/* Ensure that DB-open flag is not kept */
+	info->flags &= 0xff;
+
+	f = pi_file_create(name, info);
+	if (f==0) 
+	{
+		cerr << fname << ": Failed, unable to create file"
+			<< endl;
+		return false;
+	}
+
+	if(pi_file_retrieve(f, getCurrentPilotSocket(), 0)<0)
+	{
+		cerr << fname << ": Failed, unable to back up database"
+			<< endl;
+		pi_file_close(f);
+		return false;
+	}
+	pi_file_close(f);
+	return true;
+}
 
 
 void
@@ -529,7 +705,7 @@ KPilotLink::doFullBackup()
     setSlowSyncRequired(true);
     fMessageDialog->setMessage("Starting Sync.");
     fMessageDialog->show();
-    showMessage(klocale->translate("Backing up Palm Pilot... Slow sync required."));
+    showMessage(i18n("Backing up Palm Pilot... Slow sync required."));
     addSyncLogEntry("Backing up all data...");
     for(;;) 
 	{
@@ -537,9 +713,16 @@ KPilotLink::doFullBackup()
 
 	if (dlp_OpenConduit(getCurrentPilotSocket())<0) 
 	    {
+#ifdef KDE2
+		KMessageBox::error(fOwningWidget,
+			i18n("Exiting on cancel.\n"
+				"<B>Not</B> all the data was backed up."),
+			i18n("Backup"));
+#else
 	    KMsgBox::message(fOwningWidget, klocale->translate("Backup"), 
 			     klocale->translate("Exiting on canel.\n All Data NOT backed up"), 
 			     KMsgBox::STOP);
+#endif
 	    addSyncLogEntry("FAILED.\n");
 	    return;
 	    }
@@ -553,8 +736,16 @@ KPilotLink::doFullBackup()
 	fMessageDialog->setMessage(message);
   	
 	if(createLocalDatabase(&info) == false)
+	{
+#ifdef KDE2
+		KMessageBox::error(fOwningWidget,
+			i18n("Could not backup data!"),
+			i18n("Backup failed"));
+#else
 	    KMsgBox::message(fOwningWidget, klocale->translate("Backup"), 
 			     klocale->translate("Could not backup data!"), KMsgBox::STOP);
+#endif
+	}
 	}
     addSyncLogEntry("OK.\n");
     // Set up so the conduits can run through the DB's and backup.  doConduitBackup()
@@ -565,65 +756,123 @@ KPilotLink::doFullBackup()
     }
 
 void 
-KPilotLink::installFiles(QString path)
+KPilotLink::installFiles(const QString &path)
 {
 	FUNCTIONSETUP;
 
-    struct pi_file * f;
-    QString errorMessage;
-    int fileNum = 0;
+	struct pi_file * f;
+	int fileNum = 0;
+	QDir installDir(path);
+#ifdef KDE2
+	QString actualPath=installDir.path() + "/";
+#else
+	QString actualPath(path);
+	actualPath += "/";
+#endif
 
-    path += "/";
-    QDir installDir(path);
+#ifdef KDE2
+	QStringList fileNameList = installDir.entryList();
+	QValueListIterator<QString> fileList(fileNameList.begin());
+	// This seems to be based on the assumption that
+	// . and .. are first in the list; I'd use something
+	// like fileNameList.remove(".") myself.
+	//
+	//
+	++fileList;
+	++fileList;
+	if (*(fileList) == 0L) return;
+
+// Now we do something ugly -- to keep the KDE1 and KDE2
+// sources compatible, define CURRENTFILE to give us the
+// current file from the iterator under both versions.
+//
+//
+#define CURRENTFILE (*(fileList))
+#define COUNT fileNameList.count()
+#else
     const QStrList* fileNameList = installDir.entryList();
     QListIterator<char> fileList(*fileNameList);
     ++fileList; ++fileList; // Skip . & ..
     if(fileList.current() == 0L)
       return;
-    createNewProgressBar(klocale->translate("Installing Files"), 
-			 klocale->translate("Percentage of files installed:"), 0, fileList.count(), 0);
-    showMessage("Installing files...");
+#define CURRENTFILE (fileList.current())
+#define COUNT fileNameList->count()
+#endif
+    createNewProgressBar(i18n("Installing Files"), 
+			 i18n("Percentage of files installed:"), 
+			0, COUNT, 0);
+    showMessage(i18n("Installing files..."));
     if(getConnected() == false)
 	{
-	cerr << "KPilotLink::installFiles() No HotSync started!" << endl;
+	cerr << fname << ": No HotSync started!" << endl;
 	return;
 	}
     updateProgressBar(0);
 	if (debug_level & SYNC_MINOR)
 	{
 		cerr << fname << ": Installing from directory "
-			<< path << endl;
+			<< actualPath << endl;
 	}
 
-    while(fileList.current())
+    while(CURRENTFILE)
 	{
 		if (debug_level & SYNC_MAJOR)
 		{
 			cerr << fname << ": Installing file "
-				<< fileList.current() << endl;
+				<< CURRENTFILE << endl;
 		}
 
 	updateProgressBar(fileNum++);
- 	f = pi_file_open((path + fileList.current()).data());
+
+	// Block to isolate extra QString
+	//
+	//
+	{
+		QString fullPath(actualPath);
+		fullPath+=CURRENTFILE;
+
+		// Yuckyness to avoid warning when
+		// passing QString to pi library.
+		//
+		//
+		f = pi_file_open((char *)((const char *)fullPath));
+	}
 
 	if (f==0) 
 	    {
 		cerr << fname << ": Unable to open file." << endl;
 
-	    errorMessage.sprintf("Unable to open '%s'!\n", fileList.current());
-	    KMsgBox::message(fOwningWidget, klocale->translate("Missing file?"), errorMessage, KMsgBox::STOP);
+		QString message;
+#ifdef KDE2
+		message=i18n("Unable to open file &quot;%1&quot;!")
+				.arg(CURRENTFILE);
+		KMessageBox::error(fOwningWidget,
+			message,
+			i18n("Missing File"));
+#else
+		message=i18n("Unable to open file: ");
+		message+=CURRENTFILE;
+		KMsgBox::message(fOwningWidget, 
+			i18n("Missing file?"), message, KMsgBox::STOP);
+#endif
 	    }
 	else
 	    {
-//  	    cout << "Installing " << fileList.current() << "..." << flush;
+//  	    cout << "Installing " << CURRENTFILE << "..." << flush;
 	    if(pi_file_install(f, getCurrentPilotSocket(), 0) <0)
 	    {
 		cerr << fname << ": failed to install." << endl;
+#ifdef KDE2
+		KMessageBox::error(fOwningWidget,
+			i18n("Cannot install file on Pilot"),
+			i18n("Install File Error"));
+#else
 		KMsgBox::message(fOwningWidget, klocale->translate("Missing file?"), "Cannot install file.", KMsgBox::STOP);
+#endif
 	    }
  	    else
 	    {
-	      unlink((path + fileList.current()).data());
+	      unlink(actualPath + CURRENTFILE);
 	    }
 	    pi_file_close(f);
 	    }
@@ -634,6 +883,7 @@ KPilotLink::installFiles(QString path)
     addSyncLogEntry("File install complete.\n");
     destroyProgressBar();
     }
+#undef CURRENTFILE
   
 
 void KPilotLink::syncFlags()
@@ -709,8 +959,10 @@ KPilotLink::startHotSync()
     //   signal(SIGINT, SigHandler);
     //   signal(SIGSEGV, SigHandler);
     
-    createNewProgressBar(klocale->translate("Waiting to Sync"), klocale->translate("Reading user information..."), 0, 10, 0);
-    updateProgressBar(0);
+	createNewProgressBar(i18n("Waiting to Sync"), 
+		i18n("Reading user information..."), 
+		0, 10, 0);
+	updateProgressBar(0);
 
     // BAD HACK!
     for(int i = 0; i < 100000; i++);
@@ -750,8 +1002,8 @@ KPilotLink::startHotSync()
 	}
     updateProgressBar(10);
     destroyProgressBar();
-    showMessage("Hot-Sync started.");
-    addSyncLogEntry("Sync started with KPilot-v3.1\n");
+    showMessage(i18n("Hot-Sync started."));
+    addSyncLogEntry(i18n("Sync started with KPilot-v3.2\n"));
     fNextDBIndex = 0;
     fCurrentDB = 0L;
     }
@@ -819,9 +1071,15 @@ KPilotLink::doConduitBackup()
 		cerr << fname << ": Waiting for conduit to die.. " << endl;
 	}
 	// Eek! Busy waiting w/no event loop?
+	// Well, some kind of event loop now,
+	// but it's still kinda dodgy.
 	//
 	//
-  while(fConduitProcess->isRunning());
+	while(fConduitProcess->isRunning())
+	{
+		sleep(1);
+		kapp->processEvents();
+	}
 
   fConduitProcess->clearArguments();
   *fConduitProcess << conduitName;
@@ -829,9 +1087,53 @@ KPilotLink::doConduitBackup()
 	if (debug_level)
 	{
 		*fConduitProcess << "--debug";
-		*fConduitProcess << QString(debug_level);
+#ifdef KDE2
+		*fConduitProcess << QString::number(debug_level);
+#else
+		QString d;
+		d.setNum(debug_level);
+		*fConduitProcess << d;
+#endif
 	}
   fConduitProcess->start(KProcess::DontCare);
+}
+
+int KPilotLink::findNextDB(DBInfo *info)
+{
+	FUNCTIONSETUP;
+
+	do
+	{
+		if(dlp_ReadDBList(getCurrentPilotSocket(), 0, 0x80, 
+			fNextDBIndex, info) < 0)
+		{
+		  fMessageDialog->hide();
+		  emit(databaseSyncComplete());
+		  return 0;
+		}
+		fNextDBIndex = info->index + 1;
+	}
+	while(info->flags & dlpDBFlagResource);
+
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		cerr << fname << ": Found database with:\n"
+			<< fname << ": Index=" << fNextDBIndex
+			<< endl;
+	}
+
+	return 1;
+}
+
+int KPilotLink::findDisposition(const QString &dbList,
+	const struct DBInfo *currentDB)
+{
+	FUNCTIONSETUP;
+	char *m=printlong(currentDB->creator);
+	int r=dbList.find(m);
+
+	if (r==0 || (r>0 && dbList[r-1]==',')) return 1;
+	return 0;
 }
 
 void
@@ -839,71 +1141,141 @@ KPilotLink::syncNextDB()
 {
 	FUNCTIONSETUP;
 
-  char message[256];
-  struct DBInfo info;
-  do
-    {
-//       cout << "KPilotLink::syncNextDB() - looking for first DB.." << endl;
-      if(dlp_ReadDBList(getCurrentPilotSocket(), 0, 0x80, fNextDBIndex, &info) < 0)
+	char message[256];
+	QString skip;
+	QString backupOnly;
+	DBInfo info;
+
+	// Confine config reads to a local block
 	{
-	  fMessageDialog->hide();
-	  emit(databaseSyncComplete());
-	  return;
+		KConfig* c = getConfig();
+		c->setGroup(0L);
+		skip=c->readEntry("SkipSync");
+		backupOnly=c->readEntry("BackupForSync");
+		delete c;
 	}
-      fNextDBIndex = info.index + 1;
-    }
-  while(info.flags & dlpDBFlagResource);
-  
+
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		cerr << fname << ": Special dispositions\n"
+			<< fname << ": BackupOnly=" << backupOnly << endl
+			<< fname << ": Skip=" << skip << endl ;
+	}
+	if (!findNextDB(&info)) return;
+
 	if (debug_level & SYNC_MAJOR)
 	{
 		cerr << fname << ": Syncing " << info.name << endl;
 	}
 
-//   cout << info.name << ": ";
-  QString conduitName = registeredConduit(info.name);
-  while(conduitName.isNull())
-    {
-	if (debug_level & SYNC_MINOR)
+
+
+	QString conduitName = registeredConduit(info.name);
+	while(conduitName.isNull())
 	{
-		cerr << fname << ": No registered conduit." << endl;
+		if (debug_level & SYNC_MINOR)
+		{
+			cerr << fname << ": No registered conduit for " 
+				<< info.name << endl;
+		}
+
+		sprintf(message, "Syncing: %s .. ", info.name);
+		fMessageDialog->setMessage(message);
+		addSyncLogEntry(message);
+
+		// Find out if this database has a special disposition
+		//
+		//
+		if (debug_level & SYNC_MINOR)
+		{
+			char *m=printlong(info.creator);
+			cerr << fname << ": Looking for disposition of "
+				<< m
+				<< endl;
+		}
+		if (findDisposition(skip,&info)) goto nextDB;
+		if (findDisposition(backupOnly,&info)) 
+		{
+			if (!createLocalDatabase(&info))
+			{
+#ifdef KDE2
+				QString message(i18n("Could not backup data "
+					"for database &quot;%1&quot;")
+					.arg(info.name));
+				KMessageBox::error(fOwningWidget,
+					message,
+					i18n("Backup for Sync"));
+#else
+				KMsgBox::message(fOwningWidget,
+					i18n("Backup for Sync"),
+					i18n("Could not backup data for "
+						"database ")+
+					QString(info.name));
+#endif
+			}
+			goto nextDB;
+		}
+
+		if(syncDatabase(&info))
+		{
+			if (debug_level & SYNC_TEDIOUS)
+			{
+				cerr << fname << ": Sync OK" << endl;
+			}
+			addSyncLogEntry("OK.\n");
+		}
+		else
+		{
+			cerr << fname << ": Sync " 
+				<< info.name << " failed."
+				<< endl;
+
+			addSyncLogEntry("FAILED!\n");
+		}
+
+nextDB:
+		if (!findNextDB(&info)) return;
+
+		conduitName = registeredConduit(info.name);
+		if (debug_level & SYNC_MAJOR)
+		{
+			cerr << fname << ": Syncing " << info.name << endl;
+		}
 	}
 
-//       cout << "No registered conduit.  Syncing " << info.name 
-// 	   << " the old fashioned way.. " << endl;
-      sprintf(message, "Syncing: %s .. ", info.name);
-      fMessageDialog->setMessage(message);
-      addSyncLogEntry(message);
-      if(syncDatabase(&info))
-	addSyncLogEntry("OK.\n");
-      else
-	addSyncLogEntry("FAILED!\n");
-      do
-	{
-	  if(dlp_ReadDBList(getCurrentPilotSocket(), 0, 0x80, fNextDBIndex, &info) < 0)
-	    {
-	      emit(databaseSyncComplete());
-	      fMessageDialog->hide();
-	      return;
-	    }
-	  fNextDBIndex = info.index + 1;
-	} while(info.flags & dlpDBFlagResource);
-//       cout << info.name << ": ";
-      conduitName = registeredConduit(info.name);
-    }
+	// Fire up the conduit responsible for this db and when it's finished
+	// we'll get called again.
+	sprintf(message, "%s: Running conduit", info.name);
+	fMessageDialog->setMessage(message);
+	fCurrentDBInfo = info;
 
-  // Fire up the conduit responsible for this db and when it's finished
-  // we'll get called again.
-  sprintf(message, "%s: Running conduit", info.name);
-  fMessageDialog->setMessage(message);
-  fCurrentDBInfo = info;
-  fCurrentDB = openDatabase(info.name);
-  fCurrentDB->resetDBIndex();
-  if(fConduitProcess->isRunning())
-    cout << "Waiting for conduit to die.. " << endl;
-  while(fConduitProcess->isRunning());
-  fConduitProcess->clearArguments();
-  *fConduitProcess << conduitName;
-  fConduitProcess->start(KProcess::DontCare);
+	if (debug_level & SYNC_MAJOR)
+	{
+		cerr << fname << ": " 
+			<< message << endl;
+	}
+
+
+	fCurrentDB = openDatabase(info.name);
+	fCurrentDB->resetDBIndex();
+	if(fConduitProcess->isRunning())
+	{
+		cerr << fname << ": Waiting for conduit to die.. " << endl;
+	}
+
+	// This is busy waiting, but make sure that
+	// (Qt) signals do get delivered and the
+	// display is maintained.
+	//
+	while(fConduitProcess->isRunning())
+	{
+		sleep(1);
+		kapp->processEvents();
+	}
+
+	fConduitProcess->clearArguments();
+	*fConduitProcess << conduitName;
+	fConduitProcess->start(KProcess::DontCare);
 }
 
 bool 
@@ -921,26 +1293,54 @@ KPilotLink::syncDatabase(DBInfo* database)
     if(firstDB->isDBOpen() && (secondDB->isDBOpen() == false))
 	{
 	// Must be a new Database...
-	showMessage("No previous copy.  Copying data from pilot...");
+	showMessage(i18n("No previous copy.  Copying data from pilot..."));
 	closeDatabase(firstDB); // So we can reopen it to copy it
 	closeDatabase(secondDB);
 	if(createLocalDatabase(database) == false)
+	{
+#ifdef KDE2
+		KMessageBox::error(fOwningWidget,
+			i18n("Could not create local copy of database "
+				"&quot;%1&quot;").arg(database->name),
+			i18n("Backup"));
+
+#else
 	    KMsgBox::message(fOwningWidget, klocale->translate("Backup"), klocale->translate("Could not backup data!"), KMsgBox::EXCLAMATION);
+#endif
+		// Why continue here? The database isn't open, so
+		// we'll just get another error message shortly.
+		//
+		//
+		return false;
+	}
 	firstDB = openDatabase(database->name);
 	secondDB = openLocalDatabase(database->name);
-	showMessage("Hot-Syncing Pilot. Looking for modified data...");
+	showMessage(i18n("Hot-Syncing Pilot. Looking for modified data..."));
 	}
     if((secondDB->isDBOpen() == false) || (firstDB->isDBOpen() == false))
        {
        closeDatabase(firstDB);
        closeDatabase(secondDB);
+#ifdef KDE2
+	QString message(i18n("Cannot find database &quot;%1&quot;")
+		.arg(database->name));
+	KMessageBox::error(fOwningWidget,
+		message,
+		i18n("Error Syncing Database"));
+#else
        char message[255];
        strcpy(message, "Cannot find ");
        strcat(message, database->name);
        KMsgBox::message(fOwningWidget, klocale->translate("Error syncing."), message, KMsgBox::EXCLAMATION);
+#endif
        return false;
        }
-    KSimpleConfig* config = new KSimpleConfig(kapp->localconfigdir() + "/kpilotrc");
+
+
+// Move this functionality into mode ...
+//
+//
+    KConfig* config = getConfig();
     config->setGroup(0L);
     // If local changes should modify pilot changes, switch the order.
     int localOverride = config->readNumEntry("OverwriteRemote");
@@ -952,9 +1352,13 @@ KPilotLink::syncDatabase(DBInfo* database)
 	firstDB = secondDB;
 	secondDB = tmp;
 	}
-    int len = firstDB->readAppBlock(buffer, 0xffff);
-    if(len > 0)
-	secondDB->writeAppBlock(buffer, len);
+
+	int len = firstDB->readAppBlock(buffer, 0xffff);
+	if(len > 0)
+	{
+		secondDB->writeAppBlock(buffer, len);
+	}
+
     firstDB->resetDBIndex();
     while((pilotRec = firstDB->readNextModifiedRec()) != 0L)
       {
@@ -995,7 +1399,7 @@ void KPilotLink::endHotSync()
 
 void KPilotLink::checkPilotUser()
 {
-  KSimpleConfig* config = new KSimpleConfig(kapp->localconfigdir() + "/kpilotrc");
+  KConfig* config = getConfig();
   config->setGroup(0L);
   if (config->readBoolEntry("AlwaysTrustPilotUser"))
     {
@@ -1008,11 +1412,31 @@ void KPilotLink::checkPilotUser()
   
   if (guiUserName != getPilotUser().getUserName())
     {
+#ifdef KDE2
+	QString message(i18n(
+		"The Palm Pilot thinks the user name is &quot;%1&quot;, "
+		"however KPilot says you are &quot;%2&quot;.\n"
+		"Should I assume the Pilot is right and set the "
+		"user name for KPilot to &quot;%1&quot;? "
+		"(Otherwise I'll use &quot;%2&quot; for now)")
+		.arg(getPilotUser().getUserName())
+		.arg(guiUserName));
+	
+	if (KMessageBox::warningYesNo(0L,
+		message,
+		i18n("Pilot User Changed"))==KMessageBox::Yes)
+	// The if-block starts at the end of the #if KDE2 block
+	//
+	//
+#else
       QString message;
       message.sprintf("The Palm Pilot thinks the user name is %s, however KPilot says you are %s.\r\n  Should I assume the Pilot is right?",
 		      getPilotUser().getUserName(), guiUserName.data());
       if (KMsgBox::yesNo(0, "Different User?", message) == 1)
-	  config->writeEntry("UserName", getPilotUser().getUserName());
+#endif
+	{
+		config->writeEntry("UserName", getPilotUser().getUserName());
+	}
       else
 	{
 	  // The gui was right.
@@ -1023,4 +1447,28 @@ void KPilotLink::checkPilotUser()
   delete config;
 }
 
-#include "kpilotlink.moc"
+
+/* static */ KConfig *KPilotLink::getConfig(const QString &s)
+{
+	FUNCTIONSETUP;
+
+	KConfig* config = new KConfig(LOCALCONFIG + "/kpilotrc");
+	if (!s.isNull()) config->setGroup(s);
+	return config;
+}
+
+PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
+{
+	QString dbPath(LOCALKDE);
+	dbPath+=BACKUP_DIR;
+	dbPath+=getPilotUser().getUserName();
+	dbPath+='/';
+
+	return new PilotLocalDatabase(dbPath,database);
+}
+        // {
+        //      return new PilotLocalDatabase(kapp->localkdedir() +
+        //              BACKUP_DIR +
+        //              getPilotUser().getUserName() +
+        //              "/", database);
+        // }                                                                    

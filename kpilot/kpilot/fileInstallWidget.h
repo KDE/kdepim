@@ -11,10 +11,8 @@
 #define __FILE_INSTALL_WIDGET_H
 
 #include "pilotComponent.h"
-#include <kfm.h>
 #include <qlistbox.h>
 #include <qlist.h>
-#include <drag.h>
 #include <kurl.h>
 
 class KPilotInstaller;
@@ -48,35 +46,19 @@ class FileInstallWidget : public PilotComponent
     bool getSaveFileList() { return fSaveFileList; }
     void getFilesForInstall(QStrList& fileList);
     void saveInstallList();
+    void dropEvent(QDropEvent* drop);
 
     KPilotInstaller* getPilotInstallerApp() { return fKPilotInstaller; }
 
     private:
     QListBox*   fListBox;
     QList<KURL> fFileList;
-    KFM*        fKFM;
     bool        fSaveFileList;
 
-	/**
-	* Puts an error message on the screen if
-	* KFM cannot be started.
-	*/
-	void noKFM();
-	/**
-	* Initialises a new instance of KFM if necessary.
-	* @returns 0 on success
-	* @returns -1 on error
-	*/
-	int initKFM();
-    KFM* getKFM() { return fKFM; }
-    void freeKFM() { if(fKFM) delete fKFM; fKFM = 0L; }
-
     KPilotInstaller* fKPilotInstaller;
-//     bool               fHotSyncEnabled;
 
  protected slots:
     void kfmFileCopyComplete();
-    void slotDropEvent(KDNDDropZone* drop);
     void slotClearButton();
     void slotAddFile();
     };

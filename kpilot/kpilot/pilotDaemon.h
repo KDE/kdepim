@@ -1,19 +1,25 @@
-/* *******************************************************
-   KPilot - Hot-Sync Software for Unix.
-   Copyright 1998 by Dan Pilone
-   This code is released under the GNU PUBLIC LICENSE.
-   Please see the file 'COPYING' included in the KPilot
-   distribution.
-   *******************************************************
- */
+// pilotDaemon.h
+//
+// Copyright (C) 1998,1999 Dan Pilone
+// Copyright (C) 2000 Adriaan de Groot
+//
+// This file is distributed under the Gnu General Public Licence (GPL).
+// The GPL should have been included with this file in a file called
+// COPYING. 
+
+// $Revision$
+
+
 
 #include <qpopmenu.h>
-#include <ktopwidget.h>
-#include <kprocess.h>
-#include <ksock.h>
-#include <drag.h>
-#include <kfm.h>
+#include <ktmainwindow.h>
 #include <kpilotlink.h>
+
+
+class KConfig;
+class KSocket;
+class KFM;
+class KProcess;
 
 class PilotDaemon;
 
@@ -32,7 +38,7 @@ private:
 
  private slots:
  void mousePressEvent(QMouseEvent* e);
-  void slotDropEvent(KDNDDropZone* drop);
+  void slotDropEvent(QDropEvent* drop);
   void slotKFMCopyComplete();
 };
 
@@ -44,7 +50,7 @@ private:
 // KPilotLink then you need to connect to the command port _BEFORE_ the 
 // hot sync begins. (ie: before the user presses the button...)
 
-class PilotDaemon : public KTopLevelWidget
+class PilotDaemon : public KTMainWindow
 {
   friend class DockingLabel;
 
@@ -53,9 +59,15 @@ class PilotDaemon : public KTopLevelWidget
 public:
   // This was done as two separate ports so that you can have multiple status
   // listeners
-  static const int COMMAND_PORT;
-  static const int STATUS_PORT;
-  enum DaemonStatus { HOTSYNC_START, HOTSYNC_END, FILE_INSTALL_REQ };
+  static const int COMMAND_PORT = PILOTDAEMON_COMMAND_PORT;
+  static const int STATUS_PORT = PILOTDAEMON_STATUS_PORT;
+  enum DaemonStatus 
+  	{ 
+		HOTSYNC_START, HOTSYNC_END, FILE_INSTALL_REQ, 
+		ERROR, INIT 
+	};
+
+	DaemonStatus status() const { return fStatus; } ;
 
   PilotDaemon();
   ~PilotDaemon();
@@ -63,7 +75,12 @@ public:
 
   KProcess* getMonitorProcess() { return fMonitorProcess; }
 
+protected:
+	DaemonStatus fStatus;
+
 private:
+	int getPilotSpeed(KConfig *);
+
   void setupWidget();
   void setupSubProcesses();
   void setupConnections();

@@ -35,7 +35,7 @@ class PilotAddress : public PilotAppCategory
     protected:
     //void *pack(int *i);
     void *pack(void *, int *);
-    void unpack(void *, int = 0) { }
+    void unpack(const void *, int = 0) { }
 
     private:
 //     int fSize;

@@ -24,34 +24,40 @@ static const char *id="$Id$";
 
 #include <sys/types.h>
 #include <dirent.h>
+#include <getopt.h>
 #include <iostream.h>
 #include <fstream.h>
-#include <qfile.h>
-#include <qlist.h>
-#include <qstring.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <kurl.h>
-#include <kmsgbox.h>
-#include <kstatusbar.h>
+
+#include <qfile.h>
+#include <qlist.h>
+#include <qstring.h>
 #include <qlistbox.h>
 #include <qcombobox.h>
 
-#include <kwm.h>
-#include <kpilotOptions.h>
+#include <kurl.h>
+#include <kmessagebox.h>
+#include <kstatusbar.h>
+#include <kconfig.h>
+#include <kwin.h>
 #include <kprocess.h>
+#include <ksock.h>
+#include <kcombobox.h>
+#include <kmenubar.h>
+
+#include "kpilotOptions.h"
 #include "kpilot.moc"
 #include "kpilotlink.h"
 #include "messageDialog.h"
 #include "addressWidget.h"
 #include "kpilot_on_pp.h"
-#include "hotsync.h"
 #include "statusMessages.h"
 #include "conduitSetup.h"
 #include "pilotDaemon.h"
+#include "options.h"
 
-int debug_level=NO_DEBUG;
 
 const int KPilotInstaller::ID_FILE_QUIT = 1;
 const int KPilotInstaller::ID_FILE_SETTINGS = 2;
@@ -71,21 +77,45 @@ const int KPilotInstaller::ID_CONDUITS_SETUP = 8;
 // Remember to catch this in the menu handler.
 const int KPilotInstaller::ID_COMBO = 1000;
 
+// This is a number indicating what configuration version
+// we're dealing with. Whenever new configuration options are
+// added that make it imperative for the user to take a
+// look at the configuration of KPilot (for example the
+// skipDB setting really needs user attention) we can change
+// (increase) this number.
+//
+//
+const int KPilotInstaller::ConfigurationVersion = 320;
+
 KPilotInstaller::KPilotInstaller()
-  : KTopLevelWidget(), fMenuBar(0L), fStatusBar(0L), fToolBar(0L), 
+  : KTMainWindow(), fMenuBar(0L), fStatusBar(0L), fToolBar(0L), 
     fQuitAfterCopyComplete(false), fManagingWidget(0L), fPilotLink(0L),
     fPilotCommandSocket(0L), fPilotStatusSocket(0L), fKillDaemonOnExit(false)
-    {
+{
 	FUNCTIONSETUP;
 
-    KConfig* config = kapp->getConfig();
-    if(config->readNumEntry("Configured", 0) != 3)
+	int cfg_version;
+
+	KConfig* config = KGlobal::config();
+	config->setGroup(0L);
+	cfg_version=config->readNumEntry("Configured", 0);
+
+	if(cfg_version < ConfigurationVersion)
 	{
-	// If we haven't been configured, force the user to set things up.
-	config->writeEntry("Configured", 3);
-	KPilotOptions* options = new KPilotOptions(this);
-	options->show();
-	delete options;
+		if (debug_level & UI_MAJOR)
+		{
+			cerr << fname << ": Read config version "
+				<< cfg_version 
+				<< " require "
+				<< ConfigurationVersion
+				<< endl;
+		}
+
+		// If we haven't been configured, 
+		// force the user to set things up.
+		KPilotOptions* options = new KPilotOptions(this);
+		options->show();
+		delete options;
 	}
     if(config->readNumEntry("NextUniqueID", 0) == 0)
       {
@@ -94,6 +124,12 @@ KPilotInstaller::KPilotInstaller()
 	config->sync();
       }
     initPilotLink();
+	if (!fPilotCommandSocket)
+	{
+		cerr << fname << ": Couldn't connect to daemon -- quitting"
+			<< endl;
+		exit(1);
+	}
     setupWidget();
     initComponents();
     initStatusLink();  // This is separate to allow components to initialize
@@ -102,29 +138,35 @@ KPilotInstaller::KPilotInstaller()
     }
 
 KPilotInstaller::~KPilotInstaller()
-    {
+{
 	FUNCTIONSETUP;
 
-      delete fPilotStatusSocket;
-      if(fKillDaemonOnExit)
+	if (fPilotStatusSocket) delete fPilotStatusSocket;
+	fPilotStatusSocket=0L;
+
+	if(fKillDaemonOnExit && fPilotCommandSocket &&
+		(fPilotCommandSocket->socket()>=0))
 	{
-	  ofstream out(fPilotCommandSocket->socket());
-	  out << -3 << endl;
+		ofstream out(fPilotCommandSocket->socket());
+		out << -3 << endl;
 	}
-//      if(fMenuBar)
-//    	delete fMenuBar;
-//      if(fStatusBar)
-//    	delete fStatusBar;
-//      if(fToolBar)
-//    	delete fToolBar;
-    }
+
+	if (fPilotCommandSocket) delete fPilotCommandSocket;
+	fPilotCommandSocket=0L;
+}
+
+#include "kpilot.xpm"
 
 void
 KPilotInstaller::setupWidget()
     {
 	FUNCTIONSETUP;
+	QPixmap icon((const char **)kpilot);
 
-    KWM::setIcon(winId(), kapp->getIcon());
+	// FIXME: We need to load the mini icon
+	KWin::setIcons(winId(), icon, icon);
+
+    // KWM::setIcon(winId(), kapp->getIcon());
     setCaption("KPilot");
     setMinimumSize(500,405);
     setMaximumSize(500,405);
@@ -178,6 +220,12 @@ KPilotInstaller::initStatusBar()
 	setStatusBar(fStatusBar);
 }
 
+// These are XPM files disguised as .h files
+// 
+//
+#include "hotsync.h"
+#include "toolbar_backup.xpm"
+
 void
 KPilotInstaller::initToolBar()
   {
@@ -187,11 +235,30 @@ KPilotInstaller::initToolBar()
   QPixmap icon(hotsync_icon);
 
   fToolBar->insertButton(icon, 0, SIGNAL(clicked()), this, SLOT(doHotSync()),
-			 TRUE, "Hot-Sync");
-  icon.load(kapp->kde_toolbardir() + "/exit.xpm");
-  
-  fToolBar->insertButton( icon, 0, SIGNAL(clicked()), this, SLOT(quit()),
-			  TRUE, "Quit");
+			 TRUE, i18n("Hot-Sync"));
+
+	// This next button exactly mirrors
+	// the functionality of the menu back
+	// "backup" choice.
+	//
+	//
+	{
+		QPixmap bicon((const char **)toolbar_backup);
+		fToolBar->insertButton(bicon,ID_FILE_BACKUP,
+			SIGNAL(clicked(int)),this,SLOT(menuCallback(int)),
+			TRUE, i18n("Full Backup"));
+	}
+
+
+
+	// KDE2 style guide says "No quit toolbar button"
+	//
+	//
+	// icon.load(kapp->kde_toolbardir() + "/exit.xpm");
+	// 
+	// fToolBar->insertButton( icon, 0, 
+	//	SIGNAL(clicked()), this, SLOT(quit()),
+	//	TRUE, i18n("Quit"));
 
 	conduitCombo=new QComboBox(fToolBar,"conduitCombo");
 	conduitCombo->insertItem(i18n("Pilot Application"));
@@ -217,7 +284,7 @@ KPilotInstaller::slotModeSelected(int selected)
 {
 	FUNCTIONSETUP;
 
-	if (debug_level>TEDIOUS)
+	if (debug_level& UI_TEDIOUS)
 	{
 		cerr << fname << ": Responding to callback " << selected
 			<< endl;
@@ -257,7 +324,6 @@ void
 KPilotInstaller::initPilotLink()
 {
 	FUNCTIONSETUP;
-	MessageDialog *messageDialog=NULL;
 
 	if(fPilotLink)
 	{
@@ -269,97 +335,17 @@ KPilotInstaller::initPilotLink()
 	if (fPilotLink==NULL)
 	{
 		cerr << fname << ": Can't allocate fPilotLink.\n";
-		KMsgBox::message(this,
-			klocale->translate("Cannot create link to Daemon"),
-			klocale->translate("Allocating PilotLink failed."),
-			KMsgBox::STOP);
+		KMessageBox::error(this,
+				   i18n("Allocating PilotLink failed."),
+				   i18n("Cannot create link to Daemon"));
 		return;
 	}
 
-	// There's no reference to kconfig in this function
-	//
-	// KConfig* config = kapp->getConfig();
-	// config->setGroup(0L);
 
-if(fPilotCommandSocket == NULL)
-{
-	fPilotCommandSocket = new KSocket("localhost", 
-		PILOTDAEMON_COMMAND_PORT);
-	if (fPilotCommandSocket==NULL)
+	if(fPilotCommandSocket == NULL)
 	{
-		cerr << fname << ": Can't allocate fPilotCommandSocket.\n";
-		KMsgBox::message(this,
-			klocale->translate("Cannot create link to Daemon"),
-			klocale->translate(
-				"Allocating fPilotCommandSocket failed."),
-			KMsgBox::STOP);
-
-		delete fPilotLink;
-		fPilotLink=NULL;
-		return;
+		initCommandSocket();
 	}
-
-	if(fPilotCommandSocket->socket() < 0)
-	{
-		// It wasn't running...
-		messageDialog = 
-			new MessageDialog(version(0));
-
-		if (messageDialog!=NULL)
-		{
-			messageDialog->setMessage(
-				klocale->translate("Starting Sync Daemon. "
-					"Please Wait."));
-
-			messageDialog->show();
-			kapp->processEvents();
-		}
-
-		delete fPilotCommandSocket;
-		fPilotCommandSocket=NULL;
-	
-
-		KProcess pilotDaemon;
-		pilotDaemon << "kpilotDaemon";
-		pilotDaemon.start(KProcess::DontCare);
-		sleep(4);
-
-		fPilotCommandSocket = new KSocket("localhost", 
-			PILOTDAEMON_COMMAND_PORT);
-		if(fPilotCommandSocket->socket() < 0)
-		{
-			KMsgBox::message(this, 
-				klocale->translate("Cannot connect to Daemon"), 
-				klocale->translate("Cannot start KPilot "
-					"Daemon.  Check settings."
-					"Restart KPilot manually."), 
-				KMsgBox::STOP);
-
-			KPilotOptions* options = new KPilotOptions(this);
-			options->show(); // It's modal..
-			delete options;
-	// if(KMsgBox::yesNo(0L, klocale->translate("Restart?"), 
-	//	klocale->translate("Restart KPilot?")) == 2)
-	// {
-	//	exit(1);
-	// }
-	// else
-	// {
-	// 	execl("kpilot", "kpilot", 0);
-	// 	exit(1);
-	// }
-		}
-
-		fKillDaemonOnExit = true;
-
-		if (messageDialog!=NULL)
-		{
-			messageDialog->hide();
-			delete messageDialog;
-		}
-	}
-	fLinkCommand[0] = 0L;
-}
 	else 
 	{
 		// We were called after a reconfigure
@@ -374,7 +360,186 @@ if(fPilotCommandSocket == NULL)
 		out << "-2" << endl;
 	}
 }
-    
+
+void KPilotInstaller::initCommandSocket()
+{
+	FUNCTIONSETUP;
+
+	MessageDialog *messageDialog=0L;
+
+	if (fPilotCommandSocket)
+	{
+		return;
+	}
+
+	if (debug_level & SYNC_MINOR)
+	{
+		cerr << fname
+			<< ": Creating command socket"
+			<< endl ;
+	}
+
+	fPilotCommandSocket = new KSocket("localhost", 
+		PILOTDAEMON_COMMAND_PORT);
+	if (fPilotCommandSocket==NULL)
+	{
+		cerr << fname << ": Can't allocate fPilotCommandSocket.\n";
+		KMessageBox::error(this,
+				   i18n("Allocating fPilotCommandSocket failed."),
+				   i18n("Cannot create link to Daemon"));
+
+		delete fPilotLink;
+		fPilotLink=NULL;
+		return;
+	}
+
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		cerr << fname
+			<< ": Got socket " 
+			<< fPilotCommandSocket->socket()
+			<< endl ;
+	}
+
+	
+	if((fPilotCommandSocket->socket() < 0) ||
+		!testSocket(fPilotCommandSocket))
+	{
+		int i;
+
+		if (debug_level & SYNC_MAJOR)
+		{
+			cerr << fname
+				<< ": Starting daemon"
+				<< endl;
+		}
+
+		// It wasn't running...
+		messageDialog = 
+			new MessageDialog(version(0));
+
+		if (messageDialog!=NULL)
+		{
+			messageDialog->show();
+			kapp->processEvents();
+			messageDialog->setMessage(
+				i18n("Starting Sync Daemon. "
+					"Please Wait."));
+
+			kapp->processEvents();
+		}
+
+		delete fPilotCommandSocket;
+		fPilotCommandSocket=0L;
+	
+
+		KProcess pilotDaemon;
+		pilotDaemon << "kpilotDaemon";
+		if (debug_level)
+		{
+			QString s;
+			s.setNum(debug_level);
+
+			pilotDaemon << "--debug";
+			pilotDaemon << s;
+		}
+			
+		kapp->processEvents();
+
+		pilotDaemon.start(KProcess::DontCare);
+
+		// While the daemon is starting up,
+		// we'll do some busy-waiting and
+		// keep trying to connect to it.
+		//
+		//
+		for (i=0; i<4; i++)
+		{
+			kapp->processEvents();
+			sleep(1);
+			kapp->processEvents();
+
+			fPilotCommandSocket = new KSocket("localhost", 
+				PILOTDAEMON_COMMAND_PORT);
+			if ((fPilotCommandSocket->socket() >= 0) &&
+				testSocket(fPilotCommandSocket))
+			{
+				break;
+			}
+			else
+			{
+				delete fPilotCommandSocket;
+				fPilotCommandSocket=0L;
+			}
+		}
+
+			
+		if(!fPilotCommandSocket)
+		{
+			if (debug_level)
+			{
+				cerr << fname << ": Can't connect to daemon"
+					<< endl ;
+			}
+
+			KMessageBox::error(this, 
+					   i18n("Cannot start KPilot Daemon. "
+						"Check settings and "
+						"restart KPilot manually."),
+					   i18n("Cannot connect to Daemon"));
+					   
+
+			KPilotOptions* options = new KPilotOptions(this);
+			options->show(); // It's modal..
+			if (debug_level & UI_TEDIOUS)
+			{
+				cerr << fname << ": User said "
+					<< options->result()
+					<< endl;
+			}
+			delete options;
+		}
+
+		fKillDaemonOnExit = true;
+
+		if (messageDialog!=NULL)
+		{
+			messageDialog->hide();
+			delete messageDialog;
+		}
+	}
+
+	fLinkCommand[0] = 0L;
+}
+
+
+int KPilotInstaller::testSocket(KSocket *s)
+{
+	FUNCTIONSETUP;
+
+	char buf[12];
+	int r=0;
+	int fd=0;
+
+	if (!s) return 0;
+
+	fd=s->socket();
+	if (fd<0) return 0;
+
+	sprintf(buf,"%d\n",KPilotLink::TestConnection);
+
+	signal(SIGPIPE,SIG_IGN);
+	r=write(fd,buf,strlen(buf));
+	if (r<0)
+	{
+		perror(fname);
+	}
+	signal(SIGPIPE,SIG_DFL);
+	
+	return (r>=0);
+}
+
+
 void
 KPilotInstaller::initStatusLink()
 {
@@ -384,7 +549,7 @@ KPilotInstaller::initStatusLink()
 		PILOTDAEMON_STATUS_PORT);
 	if (fPilotStatusSocket->socket()!=-1)
 	{
-		if (debug_level>TEDIOUS)
+		if (debug_level& SYNC_TEDIOUS)
 		{
 			cerr << fname <<
 				": Connected socket successfully.\n";
@@ -422,7 +587,7 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
       fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setEnabled(false);
       if(fLinkCommand[0] == 0L)
 	doHotSync();
-      fStatusBar->changeItem(klocale->translate("Hot-Sync in progress..."), 0);
+      fStatusBar->changeItem(i18n("Hot-Sync in progress..."), 0);
       ofstream out(fPilotCommandSocket->socket());
       out << fLinkCommand << flush;
     }
@@ -431,7 +596,7 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
       fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setEnabled(true);
       fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setCurrentItem(fLastWidgetSelected);
       slotModeSelected(fLastWidgetSelected);
-      fStatusBar->changeItem(klocale->translate("Hot-Sync complete."), 0);
+      fStatusBar->changeItem(i18n("Hot-Sync complete."), 0);
       fLinkCommand[0] = 0L;
       for(fPilotComponentList.first(); fPilotComponentList.current(); fPilotComponentList.next())
 	//fPilotComponentList.current()->postHotSync();
@@ -449,8 +614,11 @@ KPilotInstaller::doBackup()
 {
 	FUNCTIONSETUP;
 
-  fStatusBar->changeItem(klocale->translate("Backing up pilot. Please press the hot-sync button."), 0);
-  sprintf(fLinkCommand, "%d\n", KPilotLink::Backup);
+	fStatusBar->changeItem(
+		i18n("Backing up pilot. Please press the hot-sync button."), 
+		0);
+
+	sprintf(fLinkCommand, "%d\n", KPilotLink::Backup);
 }
 
 void
@@ -458,7 +626,7 @@ KPilotInstaller::doRestore()
 {
 	FUNCTIONSETUP;
 
-  fStatusBar->changeItem(klocale->translate("Restoring pilot. Please press the hot-sync button."), 0);
+  fStatusBar->changeItem(i18n("Restoring pilot. Please press the hot-sync button."), 0);
   sprintf(fLinkCommand, "%d\n", KPilotLink::Restore);
 }
   
@@ -503,12 +671,12 @@ KPilotInstaller::initMenu()
 	FUNCTIONSETUP;
 
     QPopupMenu* fileMenu = new QPopupMenu;
-    fileMenu->insertItem(klocale->translate("&Settings"), KPilotInstaller::ID_FILE_SETTINGS);
+    fileMenu->insertItem(i18n("&Settings"), KPilotInstaller::ID_FILE_SETTINGS);
     fileMenu->insertSeparator(-1);
-    fileMenu->insertItem(klocale->translate("&Backup"), KPilotInstaller::ID_FILE_BACKUP);
-    fileMenu->insertItem(klocale->translate("&Restore"), KPilotInstaller::ID_FILE_RESTORE);
+    fileMenu->insertItem(i18n("&Backup"), KPilotInstaller::ID_FILE_BACKUP);
+    fileMenu->insertItem(i18n("&Restore"), KPilotInstaller::ID_FILE_RESTORE);
     fileMenu->insertSeparator(-1);
-    fileMenu->insertItem(klocale->translate("&Quit"), KPilotInstaller::ID_FILE_QUIT);
+    fileMenu->insertItem(i18n("&Quit"), KPilotInstaller::ID_FILE_QUIT);
     connect(fileMenu, SIGNAL (activated(int)), SLOT (menuCallback(int)));
     
 	conduitMenu = new QPopupMenu;
@@ -518,17 +686,16 @@ KPilotInstaller::initMenu()
 	connect(conduitMenu, SIGNAL(activated(int)), 
 		SLOT(menuCallback(int)));
 
-	QPopupMenu *helpMenu = kapp->getHelpMenu(true,
-		QString(version(0)) +
+	QPopupMenu *theHelpMenu = KTMainWindow::helpMenu(QString(version(0)) +
 		i18n("\n\nCopyright (C) 1998-2000 Dan Pilone") +
 		i18n("\n\nProgramming by:\n") +
 		authors()) ;
     
     this->fMenuBar = new KMenuBar(this);
-    this->fMenuBar->insertItem(klocale->translate("&File"), fileMenu);
-    this->fMenuBar->insertItem(klocale->translate("&Conduits"), conduitMenu);
+    this->fMenuBar->insertItem(i18n("&File"), fileMenu);
+    this->fMenuBar->insertItem(i18n("&Conduits"), conduitMenu);
     this->fMenuBar->insertSeparator();
-    this->fMenuBar->insertItem(klocale->translate("&Help"), helpMenu);
+    this->fMenuBar->insertItem(i18n("&Help"), theHelpMenu);
     this->fMenuBar->show();
     setMenu(this->fMenuBar);
     }
@@ -540,13 +707,24 @@ KPilotInstaller::fileInstalled(int )
 
 void
 KPilotInstaller::quit()
-    {
+{
 	FUNCTIONSETUP;
 
-    for(fPilotComponentList.first(); fPilotComponentList.current(); fPilotComponentList.next())
-	fPilotComponentList.current()->saveData();
-    kapp->quit();
-    }
+	for(fPilotComponentList.first(); 
+		fPilotComponentList.current(); 
+		fPilotComponentList.next())
+	{
+		fPilotComponentList.current()->saveData();
+	}
+
+	if (fPilotStatusSocket) delete fPilotStatusSocket;
+	fPilotStatusSocket=0L;
+
+	if (fPilotCommandSocket) delete fPilotCommandSocket;
+	fPilotCommandSocket=0L;
+
+	kapp->quit();
+}
 
 // Adds 'name' to the pull down menu of components
 void
@@ -571,7 +749,7 @@ void KPilotInstaller::menuCallback(int item)
 	KPilotOptions* options = 0L;
 	CConduitSetup* conSetup = 0L;
 
-	if (debug_level>TEDIOUS)
+	if (debug_level & UI_TEDIOUS)
 	{
 		cerr << fname << ": Responding to callback " << item
 			<< endl;
@@ -588,11 +766,10 @@ void KPilotInstaller::menuCallback(int item)
 	switch(item)
 	{
 	case KPilotInstaller::ID_HELP_ABOUT:
-		KMsgBox::message(0L, version(0), 
-			i18n("Hot-Sync Software for Unix\n"
+		KMessageBox::information(0L,i18n("Hot-Sync Software for Unix\n"
 				"By: Dan Pilone\n"
-				"Email: pilone@slac.com"), 
-			KMsgBox::INFORMATION);
+				"Email: pilone@slac.com"),
+				     version(0));
 		break;
 
 	case KPilotInstaller::ID_HELP_HELP:
@@ -614,13 +791,13 @@ void KPilotInstaller::menuCallback(int item)
 			break;
 		}
 
-		if (debug_level>UI_ACTIONS)
+		if (debug_level & UI_MINOR)
 		{
 			cerr << fname << ": Running options dialog." 
-			<< endl;
+				<< endl;
 		}
 		options->show();
-		if (debug_level>UI_ACTIONS)
+		if (debug_level & UI_MINOR)
 		{
 			cerr << fname << ": dialog result "
 			<< options->result() << endl;
@@ -628,7 +805,7 @@ void KPilotInstaller::menuCallback(int item)
 
 		if (options->result())
 		{
-			if (debug_level>TEDIOUS)
+			if (debug_level & UI_TEDIOUS)
 			{
 				cerr << fname << ": Updating link." << endl;
 			}
@@ -646,7 +823,7 @@ void KPilotInstaller::menuCallback(int item)
 			fPilotComponentList.current(); 
 			fPilotComponentList.next())
 			{
-				if (debug_level>TEDIOUS)
+				if (debug_level & UI_TEDIOUS)
 				{
 					cerr << fname 
 						<< ": Updating components." 
@@ -659,7 +836,7 @@ void KPilotInstaller::menuCallback(int item)
 
 		delete options;
 		options=NULL;
-		if (debug_level>UI_ACTIONS)
+		if (debug_level & UI_MINOR)
 		{
 			cerr << fname << ": Done with options." << endl;
 		}
@@ -681,7 +858,7 @@ void KPilotInstaller::menuCallback(int item)
 		break;
 	}
 
-	if (debug_level>TEDIOUS)
+	if (debug_level & UI_TEDIOUS)
 	{
 		cerr << fname << ": Done responding to item " << item
 			<< endl;
@@ -693,11 +870,11 @@ KPilotInstaller::slotSyncDone(KProcess*)
 {
 	FUNCTIONSETUP;
 
-  fStatusBar->changeItem(klocale->translate("Updating display..."), 0);
+  fStatusBar->changeItem(i18n("Updating display..."), 0);
   kapp->processEvents();
   for(fPilotComponentList.first(); fPilotComponentList.current(); fPilotComponentList.next())
     fPilotComponentList.current()->postHotSync();
-  fStatusBar->changeItem(klocale->translate("Hot-Sync complete."),0);
+  fStatusBar->changeItem(i18n("Hot-Sync complete."),0);
 }
 
 void 
@@ -708,18 +885,24 @@ KPilotInstaller::testDir(QString name)
     DIR *dp;
     dp = opendir(name);
     if(dp == 0L)
+	{
 	::mkdir (name, S_IRWXU);
+	}
     else
+    	{
 	closedir( dp );
+	}
     }
     
 /* static */ const char *KPilotInstaller::version(int kind)
 {
-	// I don't think the program title needs to be translated. (ADE)
-	//
-	//
-	if (kind) return id;
-	else return "KPilot v3.1b12";
+  // I don't think the program title needs to be translated. (ADE)
+  //
+  //
+  if (kind) 
+    return ::id;
+  else 
+    return "KPilot v4.0b";
 }
 
 static char authorsbuf[256]={0};
@@ -729,11 +912,61 @@ static char authorsbuf[256]={0};
 	{
 		sprintf(authorsbuf,"%s%s",
 			"Dan Pilone, Adriaan de Groot\n",
-			i18n("and many others."));
+			i18n("and many others.").data());
 	}
 
 	return authorsbuf;
 }
+
+static struct option longOptions[]=
+{
+	{ "debug",1,0L,'d' },
+	{ "htmlhelp",0,0L, 2 },
+	{ "help",0,0L,1 },
+	{ "setup",0,0L,'s' },
+	{ 0L,0,0L,0 }
+} ;
+
+// "Regular" mode == 0
+// setup mode == 1
+//
+// This is only changed by the --setup flag --
+// kpilot still does a setup the first time it is run.
+//
+//
+int run_mode=0;
+			 
+
+void handleOptions(int& argc, char **argv)
+{
+	FUNCTIONSETUP;
+	static const char *banner=
+		"KPilot v4.0b\n"
+		"Copyright (C) 1998,1999 Dan Pilone\n"
+		"Copyright (C) 2000 Adriaan de Groot\n\n";
+
+	int c,li;
+
+	while((c=getopt_long(argc,argv,"d:s",longOptions,&li))>0)
+	{
+		switch(c)
+		{
+		case 'd' : debug_level=atoi(optarg);
+			if (debug_level)
+			{
+				cerr << fname << ": Debug level set to "
+					<< debug_level << endl;
+			}
+			break;
+		case 's' : run_mode='s';
+			break;
+		case 2 : kapp->invokeHTMLHelp("kpilot/index.html", "");
+		case 1 : usage(banner,longOptions); exit(0);
+		default : usage(banner,longOptions); exit(1);
+		}
+	}
+}
+
 
 int main(int argc, char** argv)
 {
@@ -741,22 +974,28 @@ int main(int argc, char** argv)
 
 	// QStrList fileList;
 
-	// This is an ugly hack - --debug must be the first argument.
-	// But until KApplication supports general --debug flags, we'll
-	// have to work this way.
-	//
-	//
-	if (argv[1]!=NULL && strcmp(argv[1],"--debug")==0 && argv[2]!=NULL)
+
+	KApplication a(argc, argv, "kpilot");
+	handleOptions(argc,argv);
+
+	if (run_mode=='s')
 	{
-		debug_level=atoi(argv[2]);
-		if (debug_level)
+		if (debug_level & UI_MAJOR)
 		{
-			cerr << fname << ":Debug level set to " << 
-				debug_level << '\n' ;
+			cerr << fname << ": Running setup first."
+				<< " (mode " << run_mode << ')'
+				<< endl ;
+		}
+
+		KPilotOptions* options = new KPilotOptions(0L);
+		options->show();
+		if (! options->result())
+		{
+			return 0;
 		}
 	}
 
-	KApplication a(argc, argv, "kpilot");
+
 	KPilotInstaller *tp = new KPilotInstaller();
 
 	a.setMainWidget(tp);

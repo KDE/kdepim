@@ -18,6 +18,7 @@
 //
 //		Remaining questions are marked with QADE.
 
+static const char *id="$Id$";
 
 
 
@@ -31,10 +32,11 @@
 #include <qfile.h>
 #include <qpushbt.h>
 #include <kapp.h>
-#include <kmsgbox.h>
+#include <kmessagebox.h>
 #include <kfiledialog.h>
 
 #include "kpilot.h"
+#include "options.h"
 #include "memoWidget.moc"
 #include "pi-dlp.h"
 
@@ -60,6 +62,7 @@ MemoWidget::MemoWidget(KPilotInstaller* installer, QWidget* parent)
 	setGeometry(0, 0, 
 		parent->geometry().width(), parent->geometry().height());
 	setupWidget();
+	initialize();
 	fMemoList.setAutoDelete(true);
 	installer->addComponentPage(this, "Memos");
 }
@@ -86,7 +89,7 @@ void MemoWidget::initializeCategories(PilotDatabase *memoDB)
 	// hand.
 	//
 	//
-	fCatList->insertItem(klocale->translate("All"));
+	fCatList->insertItem(i18n("All"));
 
 	unsigned char buffer[PILOT_BUFFER_SIZE];
 
@@ -98,7 +101,7 @@ void MemoWidget::initializeCategories(PilotDatabase *memoDB)
 		if(strlen(fMemoAppInfo.category.name[i]))
 		{
 			fCatList->insertItem(fMemoAppInfo.category.name[i]);
-			if (debug_level>=UI_ACTIONS)
+			if (debug_level & UI_MINOR)
 			{
 				cerr << fname << 
 					": Added category " <<
@@ -124,7 +127,7 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 	// ShowSecrets tells us to also list memos with an attribute of "Secret"
 	// or "Private"
 	//
-	KConfig* config = kapp->getConfig();
+	KConfig* config = KGlobal::config();
 	bool showSecrets=false;
 	config->setGroup(NULL);
 	showSecrets = (bool) config->readNumEntry("ShowSecrets");
@@ -147,24 +150,31 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 			{
 				memo = new PilotMemo(pilotRec);
 				fMemoList.append(memo);
+				if (debug_level & UI_TEDIOUS)
+				{
+					cerr << fname <<
+						": Added memo "
+						<< currentRecord
+						<< endl ;
+				}
 			}
 			else
 			{
-				if (debug_level>TEDIOUS)
+				if (debug_level&UI_TEDIOUS)
 				{
 					cerr << fname <<
-						" skipped secret record " <<
-						currentRecord << '\n' ;
+						": Skipped secret record " <<
+						currentRecord << endl ;
 				}
 			}
 		}
 		else
 		{
-			if (debug_level>TEDIOUS)
+			if (debug_level&UI_TEDIOUS)
 			{
 				cerr << fname << 
-					" skipped deleted record " <<
-					currentRecord << '\n' ;
+					": Skipped deleted record " <<
+					currentRecord << endl ;
 			}
 		}
 
@@ -205,11 +215,13 @@ MemoWidget::initialize()
 void
 MemoWidget::preHotSync(char*)
 {
+	FUNCTIONSETUP;
 }
 
 void
 MemoWidget::postHotSync()
 {
+	FUNCTIONSETUP;
 	fMemoList.clear();
 	initialize();
 }
@@ -217,6 +229,7 @@ MemoWidget::postHotSync()
 bool
 MemoWidget::saveData()
 {
+	FUNCTIONSETUP;
 	return true;
 }
 
@@ -242,7 +255,7 @@ MemoWidget::setupWidget()
 	connect(fCatList, SIGNAL(activated(int)), 
 		this, SLOT(slotSetCategory(int)));
 
-	label = new QLabel(klocale->translate("Memos:"), this);
+	label = new QLabel(i18n("Memos:"), this);
 	label->move(10, 30);
 
 	fListBox = new QListBox(this);
@@ -250,7 +263,7 @@ MemoWidget::setupWidget()
 	connect(fListBox, SIGNAL(highlighted(int)), 
 		this, SLOT(slotShowMemo(int)));
 
-	label = new QLabel(klocale->translate("Memo Text:"), this);
+	label = new QLabel(i18n("Memo Text:"), this);
 	label->move(290, 0);
 
 	fTextWidget = new QMultiLineEdit(this, "textArea");
@@ -258,15 +271,15 @@ MemoWidget::setupWidget()
 	connect(fTextWidget, SIGNAL(textChanged()), 
 		this, SLOT(slotTextChanged()));
 
-	button = new QPushButton(klocale->translate("Import Memo"), this);
+	button = new QPushButton(i18n("Import Memo"), this);
 	button->move(10, 220);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotImportMemo()));
 
-	button = new QPushButton(klocale->translate("Export Memo"), this);
+	button = new QPushButton(i18n("Export Memo"), this);
 	button->move(110, 220);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotExportMemo()));
 
-	button = new QPushButton(klocale->translate("Delete Memo"), this);
+	button = new QPushButton(i18n("Delete Memo"), this);
 	button->move(60, 250);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotDeleteMemo()));
 }
@@ -274,6 +287,7 @@ MemoWidget::setupWidget()
 void 
 MemoWidget::slotSetCategory(int)
 {
+	FUNCTIONSETUP;
 	updateWidget();
 }
 
@@ -286,11 +300,8 @@ MemoWidget::slotDeleteMemo()
 
 	if(item == -1)
 	{
-		if (debug_level>TEDIOUS)
-		{
-			cerr << fname <<
-				": No current item selected\n" ;
-		}
+		cerr << fname <<
+			": No current item selected\n" ;
 		return;
 	}
 
@@ -308,16 +319,16 @@ MemoWidget::slotDeleteMemo()
 				": Refusing to delete new memo.\n";
 		}
 
-		KMsgBox::message(this, klocale->translate("Hot-Sync Required"), 
-			klocale->translate("Cannot delete new memo until \r\n" 
-				"Hot-Synced with pilot."), 
-			KMsgBox::STOP);
+		KMessageBox::error(this, i18n("Hot-Sync Required"), 
+			i18n("Cannot delete new memo until \r\n" 
+				"Hot-Synced with pilot."));
 		return;
 	}
 
-
-	if(KMsgBox::yesNo(this, klocale->translate("Delete Memo?"), 
-		klocale->translate("Delete currently selected memo?")) == 2)
+	
+	if(KMessageBox::questionYesNo(this,  
+				      i18n("Delete currently selected memo?"),
+				      i18n("Delete Memo?")) == KMessageBox::No)
 	{
 		if (debug_level)
 		{
@@ -375,7 +386,7 @@ MemoWidget::updateWidget()
 	if (fCatList->currentItem()==0)
 	{
 		currentCatID=-1;
-		if (debug_level>=UI_ACTIONS)
+		if (debug_level&UI_MINOR)
 		{
 			cerr << fname <<
 				": Category 'All' selected.\n" ;
@@ -384,7 +395,7 @@ MemoWidget::updateWidget()
 	else
 	{
 		QString selectedCategory=fCatList->text(fCatList->currentItem());
-		if (debug_level>=UI_ACTIONS)
+		if (debug_level&UI_MINOR)
 		{
 			cerr << fname << 
 				": List item " << fCatList->currentItem() <<
@@ -397,7 +408,7 @@ MemoWidget::updateWidget()
 		       selectedCategory) && 
 			(currentCatID < fCatList->count()))
 		{
-			if (debug_level>TEDIOUS)
+			if (debug_level&UI_TEDIOUS)
 			{
 				cerr << fname <<
 					": Didn't match category " <<
@@ -411,7 +422,7 @@ MemoWidget::updateWidget()
 
 		if (currentCatID < fCatList->count())
 		{
-			if (debug_level>=UI_ACTIONS)
+			if (debug_level&UI_MINOR)
 			{
 				cerr << fname << 
 					": Matched category " <<
@@ -445,6 +456,21 @@ MemoWidget::updateWidget()
 			// List will delete it.
 			fListBox->insertItem(fMemoList.current()->getTitle());
 			fLookupTable[currentEntry++] = listIndex;
+			if (debug_level & UI_TEDIOUS)
+			{
+				cerr << fname << ": Added memo "
+					<< fMemoList.current()->getTitle()
+					<< endl;
+			}
+		}
+		else
+		{
+			if (debug_level & UI_TEDIOUS)
+			{
+				cerr << fname << ": Skipped memo "
+					<< fMemoList.current()->getTitle()
+					<< endl;
+			}
 		}
 
 		listIndex++;
@@ -465,17 +491,20 @@ MemoWidget::slotShowMemo(int which)
 
 void
 MemoWidget::writeMemo(PilotMemo* which)
-    {
-    PilotDatabase* memoDB = KPilotLink::getPilotLink()->openLocalDatabase("MemoDB");
-    PilotRecord* pilotRec = which->pack();
-    memoDB->writeRecord(pilotRec);
-    delete pilotRec;
-    KPilotLink::getPilotLink()->closeDatabase(memoDB);
-    }
+{
+	FUNCTIONSETUP;
+	PilotDatabase* memoDB = 
+		KPilotLink::getPilotLink()->openLocalDatabase("MemoDB");
+	PilotRecord* pilotRec = which->pack();
+	memoDB->writeRecord(pilotRec);
+	delete pilotRec;
+	KPilotLink::getPilotLink()->closeDatabase(memoDB);
+}
     
 void
 MemoWidget::slotTextChanged()
 {
+  FUNCTIONSETUP;
   PilotMemo* currentMemo;
 
   if(fListBox->currentItem() >= 0)
@@ -483,9 +512,9 @@ MemoWidget::slotTextChanged()
       currentMemo = fMemoList.at(fLookupTable[fListBox->currentItem()]);
       if(currentMemo->id() == 0x0)
 	{
-	  KMsgBox::message(0L, klocale->translate("Hot-Sync Required"), 
-			   klocale->translate("Cannot edit new memo until \r\n Hot-Synced with pilot."), 
-			   KMsgBox::STOP);
+	  KMessageBox::error(0L,
+			     i18n("Cannot edit new memo until \r\n Hot-Synced with pilot."), 
+			     i18n("Hot-Sync Required"));
 	  slotShowMemo(fListBox->currentItem());
 	  return;
 	}
@@ -497,6 +526,7 @@ MemoWidget::slotTextChanged()
 void
 MemoWidget::slotImportMemo()
     {
+    FUNCTIONSETUP;
     int i = 0;
     int nextChar;
     int currentCatID = -1;
@@ -536,6 +566,7 @@ MemoWidget::slotImportMemo()
 void
 MemoWidget::slotExportMemo()
     {
+    FUNCTIONSETUP;
     int item = fListBox->currentItem();
     const char* data;
 
