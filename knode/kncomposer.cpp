@@ -19,6 +19,7 @@
 #include <qclipboard.h>
 #include <qdragobject.h>
 #include <qapplication.h>
+#include <kspelldlg.h>
 
 #include <kaccel.h>
 #include <kcharsets.h>
@@ -1118,8 +1119,6 @@ void KNComposer::slotSpellcheck()
           v_iew->e_dit, SLOT(misspelling (const QString &, const QStringList &, unsigned int)));
   connect(s_pellChecker, SIGNAL(corrected (const QString &, const QString &, unsigned int)),
           v_iew->e_dit, SLOT(corrected (const QString &, const QString &, unsigned int)));
-    connect (s_pellChecker, SIGNAL (done(const QString &)),
-          this, SLOT (slotSpellResult (const QString&)));
 }
 
 void KNComposer::slotUpdateStatusBar()
@@ -1341,15 +1340,24 @@ void KNComposer::slotSpellStarted( KSpell *)
   s_pellChecker->check(mSpellingFilter->filteredText());
 }
 
-
 void KNComposer::slotSpellDone(const QString &newtext)
 {
   a_ctExternalEditor->setEnabled(true);
   a_ctSpellCheck->setEnabled(true);
   v_iew->e_dit->spellcheck_stop();
-  if(s_pellChecker->dlgResult()==0)
-    v_iew->e_dit->setText(newtext);
+
+  int dlgResult = s_pellChecker->dlgResult();
+  if ( dlgResult == KS_CANCEL )
+  {
+
+      kdDebug() << "spelling: canceled - restoring text from SpellingFilter" << endl;
+      kdDebug()<<" mSpellingFilter->originalText() :"<<mSpellingFilter->originalText()<<endl;
+    v_iew->e_dit->setText(mSpellingFilter->originalText());
+
+    //v_iew->e_dit->setModified(mWasModifiedBeforeSpellCheck);
+  }
   s_pellChecker->cleanUp();
+  DictSpellChecker::dictionaryChanged();
 
   delete s_pellChecker;
   s_pellChecker=0;
@@ -1375,7 +1383,7 @@ void KNComposer::slotSpellFinished()
     KMessageBox::error(this, i18n("ISpell seems to have crashed."));
   }
 }
-#include <kspelldlg.h>
+#if 0
 //-----------------------------------------------------------------------------
 void KNComposer::slotSpellResult(const QString &)
 {
@@ -1384,8 +1392,11 @@ void KNComposer::slotSpellResult(const QString &)
   int dlgResult = s_pellChecker->dlgResult();
   if ( dlgResult == KS_CANCEL )
   {
-    kdDebug() << "spelling: canceled - restoring text from SpellingFilter" << endl;
+
+      kdDebug() << "spelling: canceled - restoring text from SpellingFilter" << endl;
+      kdDebug()<<" mSpellingFilter->originalText() :"<<mSpellingFilter->originalText()<<endl;
     v_iew->e_dit->setText(mSpellingFilter->originalText());
+
     //v_iew->e_dit->setModified(mWasModifiedBeforeSpellCheck);
   }
   s_pellChecker->cleanUp();
@@ -1393,7 +1404,7 @@ void KNComposer::slotSpellResult(const QString &)
 
   //emit v_iew->e_dit->spellcheck_done( dlgResult );
 }
-
+#endif
 
 void KNComposer::slotDragEnterEvent(QDragEnterEvent *ev)
 {

@@ -136,7 +136,6 @@ class KNComposer : public KMainWindow  {
     void slotUndoRewrap();
     void slotExternalEditor();
     void slotSpellcheck();
-    void slotSpellResult(const QString &);
 
     void slotUpdateStatusBar();
     void slotUpdateCursorPos();
