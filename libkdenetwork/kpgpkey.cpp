@@ -103,7 +103,7 @@ Key::Key(const KeyID& keyid, const QString& uid, const bool secret) :
 
 Key::~Key()
 {
-  kdDebug(5100) << "Kpgp::Key: Deleting key " << primaryUserID() << endl;
+  //kdDebug(5100) << "Kpgp::Key: Deleting key " << primaryUserID() << endl;
   mUserIDs.setAutoDelete(true);
   mUserIDs.clear();
   mSubkeys.setAutoDelete(true);
