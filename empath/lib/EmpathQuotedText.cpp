@@ -176,7 +176,7 @@ EmpathQuotedText::_assemble()
 
         QString quoting;
 
-        for (int i = 0; i < (*pit).depth; i++)
+        for (unsigned int i = 0; i < (*pit).depth; i++)
             quoting += "> ";
 
         for (lit = (*pit).lines.begin(); lit != (*pit).lines.end(); ++lit)
