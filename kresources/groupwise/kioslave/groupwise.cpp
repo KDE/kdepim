@@ -22,11 +22,15 @@
 
 #include "groupwiseserver.h"
 
+#include <libkdepim/kabcresourcecached.h>
+
 #include <libkcal/freebusy.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/scheduler.h>
 #include <libkcal/resourcelocal.h>
 #include <libkcal/calendarresources.h>
+
+#include <kabc/vcardconverter.h>
 
 #include <kinstance.h>
 #include <kdebug.h>
@@ -36,6 +40,21 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdlib.h>
+
+namespace KABC {
+
+class ResourceMemory : public ResourceCached
+{
+  public:
+    ResourceMemory() : ResourceCached( 0 ) {}
+    
+    Ticket *requestSaveTicket() { return 0; }
+    bool load() { return true; }
+    bool save( Ticket * ) { return true; }
+    void releaseSaveTicket( Ticket * ) {}
+};
+
+}
 
 extern "C" {
 int kdemain( int argc, char **argv );
@@ -83,9 +102,11 @@ void Groupwise::get( const KURL &url )
     getFreeBusy( url );
   } else if ( path.startsWith( "/calendar/" ) ) {
     getCalendar( url );
+  } else if ( path.startsWith( "/addressbook/" ) ) {
+    getAddressbook( url );
   } else {
-    QString error = i18n("Unknown path. Known paths are '/freebusy/' and "
-      "'/calendar/'.");
+    QString error = i18n("Unknown path. Known paths are '/freebusy/', "
+      "'/calendar/' and '/addressbook/'.");
     errorMessage( error );
   }
   
@@ -214,6 +235,68 @@ void Groupwise::getCalendar( const KURL &url )
   data( ical.utf8() );
 
   finished();
+}
+
+void Groupwise::getAddressbook( const KURL &url )
+{
+  QString u = soapUrl( url );
+
+  QString user = url.user();
+  QString pass = url.pass();
+
+  debugMessage( "URL: " + u );
+  debugMessage( "User: " + user );
+  debugMessage( "Password: " + pass );
+
+  QString query = url.query();
+  if ( query.isEmpty() || query == "?" ) {
+    errorMessage( i18n("No addressbook ids given.") );
+  } else {
+    QStringList ids;
+
+    query = query.mid( 1 );
+    QStringList queryItems = QStringList::split( "&", query );
+    QStringList::ConstIterator it;
+    for( it = queryItems.begin(); it != queryItems.end(); ++it ) {
+      QStringList item = QStringList::split( "=", (*it) );
+      if ( item.count() == 2 && item[ 0 ] == "addressbookid" ) {
+        ids.append( item[ 1 ] );
+      }
+    }
+    
+    debugMessage( "IDs: " + ids.join( "," ) );
+
+    KABC::ResourceMemory resource;
+
+    GroupwiseServer server( u, user, pass, 0 );
+
+    kdDebug() << "Login" << endl;
+    if ( !server.login() ) {
+      errorMessage( i18n("Unable to login.") );
+    } else {
+      kdDebug() << "Read Addressbook" << endl;
+      if ( !server.readAddressBooksSynchronous( ids, &resource ) ) {
+        errorMessage( i18n("Unable to read addressbook data.") );
+      }
+      kdDebug() << "Logout" << endl;
+      server.logout();
+    }
+
+    KABC::Addressee::List addressees;
+    KABC::Resource::Iterator it2;
+    for( it2 = resource.begin(); it2 != resource.end(); ++it2 ) {
+      kdDebug() << "ADDRESSEE: " << (*it2).fullEmail() << endl;
+      addressees.append( *it2 );
+    }
+
+    KABC::VCardConverter conv;
+
+    QString vcard = conv.createVCards( addressees );
+
+    data( vcard.utf8() );
+
+    finished();
+  }
 }
 
 void Groupwise::errorMessage( const QString &msg )
