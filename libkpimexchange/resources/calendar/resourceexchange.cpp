@@ -28,6 +28,7 @@
 
 #include <kdebug.h>
 #include <kapplication.h>
+#include <kstringhandler.h>
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/calendar.h>
@@ -75,7 +76,7 @@ ResourceExchange::ResourceExchange( const KConfig *config )
             config->readEntry( "ExchangeHost" ),
             config->readEntry( "ExchangeAccount" ),
             config->readEntry( "ExchangeMailbox" ),
-            decryptStr( config->readEntry( "ExchangePassword" ) ) );
+			KStringHandler::obscure( config->readEntry( "ExchangePassword" ) ) );
     mCachedSeconds = config->readNumEntry( "ExchangeCacheTimeout", 600 );
     mAutoMailbox = config->readBoolEntry( "ExchangeAutoMailbox", true );
   } else {
@@ -96,7 +97,7 @@ void ResourceExchange::writeConfig( KConfig* config )
   config->writeEntry( "ExchangeHost", mAccount->host() );
   config->writeEntry( "ExchangeAccount", mAccount->account() );
   config->writeEntry( "ExchangeMailbox", mAccount->mailbox() );
-  config->writeEntry( "ExchangePassword", encryptStr( mAccount->password() ) );
+  config->writeEntry( "ExchangePassword", KStringHandler::obscure( mAccount->password() ) );
   config->writeEntry( "ExchangeCacheTimeout", mCachedSeconds );
   config->writeEntry( "ExchangeAutoMailbox", mAutoMailbox );
 }
