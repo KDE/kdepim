@@ -34,6 +34,7 @@
 #include <kdialogbase.h>
 
 class QTabWidget;
+class QPushButton;
 class KAboutData;
 
 class UIDialog : public KDialogBase
@@ -53,6 +54,10 @@ protected:
 	* data instead of the global KInstance about data.
 	*/
 	void addAboutPage(bool aboutbutton=false,KAboutData *data=0L);
+public:
+	static QPushButton *addAboutPage(QTabWidget *,
+		KAboutData *data=0L,
+		bool aboutbutton=false);
 
 protected slots:
 	void showAbout();

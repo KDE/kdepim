@@ -73,12 +73,16 @@ UIDialog::~UIDialog()
 	FUNCTIONSETUP;
 }
 
-void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
+/* static */ QPushButton *UIDialog::addAboutPage(QTabWidget *tw,
+	KAboutData *ad,
+	bool aboutbutton)
 {
 	FUNCTIONSETUP;
-	Q_ASSERT(tabWidget());
+	
+	Q_ASSERT(tw);
 
-	QWidget *w = new QWidget(tabWidget(), "aboutpage");
+	QWidget *w = new QWidget(tw, "aboutpage");
+	QPushButton *but = 0L;
 
 	QString s;
 	QLabel *text;
@@ -172,10 +176,8 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 
 	if (aboutbutton)
 	{
-		QPushButton *but = new QPushButton(i18n("More About"),
-			w);
+		but = new QPushButton(i18n("More About"),w);
 
-		connect(but, SIGNAL(clicked()), this, SLOT(showAbout()));
 		but->adjustSize();
 		grid->addWidget(but, 4, 2);
 		grid->setRowStretch(3, 100);
@@ -252,13 +254,13 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 
 	QSize sz = w->size();
 
-	if (sz.width() < tabWidget()->size().width())
+	if (sz.width() < tw->size().width())
 	{
-		sz.setWidth(tabWidget()->size().width());
+		sz.setWidth(tw->size().width());
 	}
-	if (sz.height() < tabWidget()->size().height())
+	if (sz.height() < tw->size().height())
 	{
-		sz.setHeight(tabWidget()->size().height());
+		sz.setHeight(tw->size().height());
 	}
 
 #ifdef DEBUG
@@ -270,9 +272,19 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 		<< endl;
 #endif
 
-	tabWidget()->resize(sz);
-	tabWidget()->addTab(w, i18n("About"));
+	tw->resize(sz);
+	tw->addTab(w, i18n("About"));
+	return but;
+}
 
+void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
+{
+	FUNCTIONSETUP;
+	QPushButton *but = addAboutPage(tabWidget(),ad,aboutbutton);
+	if (but)
+	{
+		connect(but, SIGNAL(clicked()), this, SLOT(showAbout()));
+	}
 }
 
 void UIDialog::setTabWidget(QTabWidget * w)
