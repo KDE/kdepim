@@ -476,7 +476,7 @@ void ResourceIMAP::update(IncidenceBase *incidencebase)
   QString vCal = mFormat.createScheduleMessage( incidencebase,
                                                 Scheduler::Request );
   mKMailIcalIfaceStub->deleteIncidence( type, mCurrentUID );
-  mKMailIcalIfaceStub->addIncidence( "Journal", mCurrentUID, vCal );
+  mKMailIcalIfaceStub->addIncidence( type, mCurrentUID, vCal );
   mCurrentUID = QString::null;
 
   if ( !mKMailIcalIfaceStub->ok() ) {
