@@ -39,11 +39,14 @@ ADCalendarBase::ADCalendarBase(const QString& url, const QCString& appname, Type
     loaded_(false),
     mUnregistered(false)
 {
-  KConfig cfg( locate( "config", "korganizerrc" ) );
-  cfg.setGroup( "Time & Date" );
-  QString tz = cfg.readEntry( "TimeZoneId" );
-  kdDebug(5900) << "ADCalendarBase(): tz: " << tz << endl;
-  setTimeZoneId( cfg.readEntry( "TimeZoneId" ) );
+  if (appName_ == "korganizer")
+  {
+    KConfig cfg( locate( "config", "korganizerrc" ) );
+    cfg.setGroup( "Time & Date" );
+    QString tz = cfg.readEntry( "TimeZoneId" );
+    kdDebug(5900) << "ADCalendarBase(): tz: " << tz << endl;
+    setTimeZoneId( cfg.readEntry( "TimeZoneId" ) );
+  }
 }
 
 /*
