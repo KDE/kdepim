@@ -1028,8 +1028,6 @@ static KCmdLineOptions kpilotoptions[] = {
 	{"setup",
 		I18N_NOOP("Setup the Pilot device, conduits and other parameters"),
 		0L},
-	{"c", 0, 0},
-	{"conduit-setup", I18N_NOOP("Deprecated, use \"setup\" instead"), 0L},
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif
@@ -1101,7 +1099,12 @@ int main(int argc, char **argv)
 	}
 	KUniqueApplication a(true, true);
 
-	if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
+
+	if (p->isSet("setup"))
+	{
+		run_mode = KPilotConfig::ConfigureKPilot;
+	}
+	else if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 	{
 		kdWarning() << ": KPilot configuration version "
 			<< KPilotConfig::ConfigurationVersion
@@ -1114,12 +1117,6 @@ int main(int argc, char **argv)
 		if (run_mode == KPilotConfig::Cancel) return 1;
 	}
 
-	if (p->isSet("setup") || p->isSet("conduit-setup"))
-	{
-		if ((run_mode == KPilotConfig::Normal) ||
-			(run_mode == KPilotConfig::WizardAndContinue))
-			run_mode = KPilotConfig::ConfigureKPilot;
-	}
 
 	if ( (run_mode == KPilotConfig::ConfigureKPilot) ||
 		(run_mode == KPilotConfig::ConfigureAndContinue) ||
