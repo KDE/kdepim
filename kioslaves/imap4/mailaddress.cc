@@ -25,6 +25,7 @@
 #include "mailaddress.h"
 #include "rfcdecoder.h"
 #include "mimehdrline.h"
+#include <kmime_util.h>
 
 mailAddress::mailAddress ()
 {
@@ -202,6 +203,7 @@ mailAddress::getStr ()
 
   if (!rawFullName.isEmpty ())
   {
+    KMime::addQuotes( rawFullName, false );
     retVal = rawFullName + " ";
   }
   if (!user.isEmpty ())
