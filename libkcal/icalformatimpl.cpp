@@ -1075,6 +1075,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 
       case ICAL_DUE_PROPERTY:  // due date
         icaltime = icalproperty_get_due(p);
+        readTzidParameter(p,icaltime);
         if (icaltime.is_date) {
           todo->setDtDue(QDateTime(readICalDate(icaltime),QTime(0,0,0)));
           todo->setFloats(true);
@@ -1088,6 +1089,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 
       case ICAL_COMPLETED_PROPERTY:  // completion date
         icaltime = icalproperty_get_completed(p);
+        readTzidParameter(p,icaltime);
         todo->setCompleted(readICalDateTime(icaltime));
         break;
 
@@ -1272,6 +1274,8 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
 
       case ICAL_FREEBUSY_PROPERTY:  //Any FreeBusy Times
         icalperiod = icalproperty_get_freebusy(p);
+        readTzidParameter(p,icalperiod.start);
+        readTzidParameter(p,icalperiod.end);
         period_start = readICalDateTime(icalperiod.start);
         period_end = readICalDateTime(icalperiod.end);
         freebusy->addPeriod(period_start, period_end);
@@ -1432,6 +1436,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_CREATED_PROPERTY:
         icaltime = icalproperty_get_created(p);
+        readTzidParameter(p,icaltime);
         incidence->setCreated(readICalDateTime(icaltime));
         break;
 
@@ -1442,6 +1447,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_LASTMODIFIED_PROPERTY:  // last modification date
         icaltime = icalproperty_get_lastmodified(p);
+        readTzidParameter(p,icaltime);
         incidence->setLastModified(readICalDateTime(icaltime));
         break;
 
@@ -1502,6 +1508,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_EXDATE_PROPERTY:
         icaltime = icalproperty_get_exdate(p);
+        readTzidParameter(p,icaltime);
         if (icaltime.is_date) {
           incidence->addExDate(readICalDate(icaltime));
         } else {
