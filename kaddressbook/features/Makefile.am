@@ -11,14 +11,14 @@ service_DATA = distributionlist.desktop location.desktop merge.desktop
 
 libkaddrbk_distributionlist_la_SOURCES = distributionlistwidget.cpp
 libkaddrbk_distributionlist_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
-libkaddrbk_distributionlist_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbookpart.la
+libkaddrbk_distributionlist_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
 
 libkaddrbk_location_la_SOURCES = locationwidget.cpp locationconfig.cpp
 libkaddrbk_location_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
-libkaddrbk_location_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbookpart.la
+libkaddrbk_location_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
 
 libkaddrbk_merge_la_SOURCES = mergewidget.cpp
 libkaddrbk_merge_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
-libkaddrbk_merge_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbookpart.la
+libkaddrbk_merge_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
 
 METASOURCES = AUTO

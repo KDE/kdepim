@@ -9,7 +9,7 @@ INCLUDES = $(all_includes)
 lib_LTLIBRARIES = libkpimexchange.la
 
 libkpimexchange_la_SOURCES = dummy.cpp
-libkpimexchange_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:0 -module
+libkpimexchange_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:0
 libkpimexchange_la_LIBADD = core/libkpimexchangecore.la \
 			    $(LIB_KIO) $(top_builddir)/libkcal/libkcal.la 
 
