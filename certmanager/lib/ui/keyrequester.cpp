@@ -56,6 +56,7 @@
 
 #include <kleo/cryptobackend.h>
 #include <kleo/keylistjob.h>
+#include <kleo/dn.h>
 
 // gpgme++
 #include <gpgmepp/key.h>
@@ -75,6 +76,8 @@
 #include <qstring.h>
 #include <qstringlist.h>
 #include <qlabel.h>
+#include <qregexp.h>
+
 #include <assert.h>
 
 Kleo::KeyRequester::KeyRequester( const CryptoBackend * backend,
@@ -142,7 +145,10 @@ const GpgME::Key & Kleo::KeyRequester::key() const {
 }
 
 void Kleo::KeyRequester::setKeys( const std::vector<GpgME::Key> & keys ) {
-  mKeys = keys;
+  mKeys.clear();
+  for ( std::vector<GpgME::Key>::const_iterator it = keys.begin() ; it != keys.end() ; ++it )
+    if ( !it->isNull() )
+      mKeys.push_back( *it );
   updateKeys();
 }
 
@@ -185,11 +191,27 @@ void Kleo::KeyRequester::updateKeys() {
   if ( mKeys.size() > 1 )
     setMultipleKeysEnabled( true );
 
-  const QString s = fingerprints().join(", ");
+  QStringList labelTexts;
+  QString toolTipText;
+  for ( std::vector<GpgME::Key>::const_iterator it = mKeys.begin() ; it != mKeys.end() ; ++it ) {
+    if ( it->isNull() )
+      continue;
+    const QString fpr = it->subkey(0).fingerprint();
+    labelTexts.push_back( fpr.right(8) );
+    toolTipText += fpr.right(8) + ": ";
+    if ( const char * uid = it->userID(0).id() )
+      if ( it->protocol() == GpgME::Context::OpenPGP )
+	toolTipText += QString::fromUtf8( uid );
+      else
+	toolTipText += Kleo::DN( uid ).prettyDN();
+    else
+      toolTipText += i18n("<unknown>");
+    toolTipText += '\n';
+  }
 
-  mLabel->setText( s );
+  mLabel->setText( labelTexts.join(", ") );
   QToolTip::remove( mLabel );
-  QToolTip::add( mLabel, s );
+  QToolTip::add( mLabel, toolTipText );
 }
 
 static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
@@ -207,6 +229,18 @@ void Kleo::KeyRequester::startKeyListJob( const QStringList & fingerprints ) {
     return;
 
   mTmpKeys.clear();
+
+  unsigned int count = 0;
+  for ( QStringList::const_iterator it = fingerprints.begin() ; it != fingerprints.end() ; ++it )
+    if ( !(*it).stripWhiteSpace().isEmpty() )
+      ++count;
+
+  if ( !count ) {
+    // don't fall into the trap that an empty pattern means
+    // "return all keys" :)
+    setKey( GpgME::Key::null );
+    return;
+  }
 
   KeyListJob * job = mBackend->keyListJob( false ); // local, no sigs
   if ( !job ) {
@@ -254,7 +288,7 @@ void Kleo::KeyRequester::slotDialogButtonClicked() {
   if ( !mBackend )
     return;
   KeySelectionDialog dlg( mDialogCaption, mDialogMessage, mBackend,
-			  mKeys, false, mKeyUsage, mMulti );
+			  mKeys, mKeyUsage, mMulti );
   if ( dlg.exec() == QDialog::Accepted )
     if ( mMulti )
       setKeys( dlg.selectedKeys() );
