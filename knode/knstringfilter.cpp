@@ -2,7 +2,7 @@
     knstringfilter.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -33,7 +33,7 @@ KNStringFilter& KNStringFilter::operator=(const KNStringFilter &sf)
   con=sf.con;
   data=sf.data.copy();
   regExp=sf.regExp;
-    
+
   return (*this);
 }
 
@@ -61,23 +61,16 @@ bool KNStringFilter::doFilter(const QString &s)
 // replace placeholders
 void KNStringFilter::expand(KNGroup *g)
 {
-  KNConfig::Identity  *id=0,
-                      *defId=knGlobals.configManager()->identity(),
-                      *grpId=(g!=0)?g->identity():0,
-                      *accId=(g!=0)?g->account()->identity():0;
+  KNConfig::Identity *id = (g) ? g->identity() : 0;
+
+  if (!id) {
+    id = (g) ? g->account()->identity() : 0;
+    if (!id)
+      id = knGlobals.configManager()->identity();
+  }
 
   expanded = data;
-
-  if ((grpId) && grpId->hasName())
-    id=grpId;
-  else
-    id= ((accId) && accId->hasName())? accId:defId;
   expanded.replace(QRegExp("%MYNAME"), id->name());
-
-  if ((grpId) && grpId->hasEmail())
-    id=grpId;
-  else
-    id= ((accId) && accId->hasEmail())? accId:defId;
   expanded.replace(QRegExp("%MYEMAIL"), id->email());
 }
 
@@ -108,11 +101,11 @@ KNStringFilterWidget::KNStringFilterWidget(const QString& title, QWidget *parent
   fType=new QComboBox(this);
   fType->insertItem(i18n("Does Contain"));
   fType->insertItem(i18n("Does NOT Contain"));
-  
+
   fString=new KLineEdit(this);
-  
+
   regExp=new QCheckBox(i18n("Regular expression"), this);
-  
+
   QGridLayout *topL=new QGridLayout(this, 3,3, 8,5 );
   topL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
   topL->addWidget(fType, 1,0);
@@ -136,7 +129,7 @@ KNStringFilter KNStringFilterWidget::filter()
   ret.con=(fType->currentItem()==0);
   ret.data=fString->text();
   ret.regExp=regExp->isChecked();
-  
+
   return ret;
 }
 
@@ -170,3 +163,4 @@ void KNStringFilterWidget::setStartFocus()
 
 #include "knstringfilter.moc"
 
+// kate: space-indent on; indent-width 2;

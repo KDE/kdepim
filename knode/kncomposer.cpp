@@ -2,7 +2,7 @@
     kncomposer.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -696,9 +696,9 @@ bool KNComposer::hasValidData()
     if ( acc ) {
       KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
       KNGroup *grp = knGlobals.groupManager()->group( grps->firstGroup(), acc );
-      if ( grp && grp->identity() && grp->identity()->hasSigningKey() )
+      if (grp && grp->identity())
         signingKey = grp->identity()->signingKey();
-      else if ( acc->identity() && acc->identity()->hasSigningKey() )
+      else if (acc->identity())
         signingKey = acc->identity()->signingKey();
     }
 
@@ -822,9 +822,9 @@ bool KNComposer::applyChanges()
       if ( acc ) {
           KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
           KNGroup *grp = knGlobals.groupManager()->group( grps->firstGroup(), acc );
-          if ( grp && grp->identity() && grp->identity()->hasSigningKey() )
+          if (grp && grp->identity())
               signingKey = grp->identity()->signingKey();
-          else if ( acc->identity() && acc->identity()->hasSigningKey() )
+          else if (acc->identity())
               signingKey = acc->identity()->signingKey();
       }
       // now try to sign the article
@@ -2639,3 +2639,5 @@ void KNComposer::AttachmentPropertiesDlg::slotMimeTypeTextChanged(const QString 
 //--------------------------------
 
 #include "kncomposer.moc"
+
+// kate: space-indent on; indent-width 2;

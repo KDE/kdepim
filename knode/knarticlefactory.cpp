@@ -580,9 +580,9 @@ void KNArticleFactory::edit(KNLocalArticle *a)
     if(acc) {
       KMime::Headers::Newsgroups *grps=a->newsgroups();
       KNGroup *grp=knGlobals.groupManager()->group(grps->firstGroup(), acc);
-      if (grp && grp->identity() && grp->identity()->hasSignature())
+      if (grp && grp->identity())
         id=grp->identity();
-      else if (acc->identity() && acc->identity()->hasSignature())
+      else if (acc->identity())
         id=acc->identity();
     }
   }
@@ -785,22 +785,25 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
   }
 
   KNLocalArticle *art=new KNLocalArticle(0);
-  KNConfig::Identity  *grpId=0,
-                      *defId=0,
-                      *accId=0,
-                      *id=0;
+  KNConfig::Identity *tmpId=0, *id=0;
 
   if (col) {
     if (col->type() == KNCollection::CTgroup) {
-      grpId = (static_cast<KNGroup *>(col))->identity();
-      accId = (static_cast<KNGroup *>(col))->account()->identity();
+      id = (static_cast<KNGroup *>(col))->identity();
+      tmpId = (static_cast<KNGroup *>(col))->account()->identity();
     } else
       if (col->type() == KNCollection::CTnntpAccount) {
-        accId = (static_cast<KNNntpAccount *>(col))->identity();
+        id = (static_cast<KNNntpAccount *>(col))->identity();
       }
   }
 
-  defId=knGlobals.configManager()->identity();
+  // determine active innermost non-empty identity
+  if (!id) {
+    if (tmpId)
+      id = tmpId;
+    else
+      id = knGlobals.configManager()->identity();
+  }
 
   //Message-id
   if(pnt->generateMessageID())
@@ -811,18 +814,10 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
   from->setRFC2047Charset(pnt->charset());
 
   //name
-  if(grpId && grpId->hasName())
-    id=grpId;
-  else
-    id=((accId) && accId->hasName())? accId:defId;
   if(id->hasName())
     from->setName(id->name());
 
   //email
-  if(grpId && grpId->hasEmail())
-    id=grpId;
-  else
-    id=((accId) && accId->hasEmail())? accId:defId;
   if(id->hasEmail()&&id->emailIsValid())
     from->setEmail(id->email().latin1());
   else {
@@ -832,10 +827,6 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
   }
 
   //Reply-To
-  if(grpId && grpId->hasReplyTo())
-    id=grpId;
-  else
-    id=((accId) && accId->hasReplyTo())? accId:defId;
   if(id->hasReplyTo()) {
     art->replyTo()->fromUnicodeString(id->replyTo(), pnt->charset());
     if (!art->replyTo()->hasEmail())   // the header is invalid => drop it
@@ -843,10 +834,6 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
   }
 
   //Mail-Copies-To
-  if(grpId && grpId->hasMailCopiesTo())
-    id=grpId;
-  else
-    id=((accId) && accId->hasMailCopiesTo())? accId:defId;
   if(id->hasMailCopiesTo()) {
     art->mailCopiesTo()->fromUnicodeString(id->mailCopiesTo(), pnt->charset());
     if (!art->mailCopiesTo()->isValid())   // the header is invalid => drop it
@@ -854,10 +841,6 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
   }
 
   //Organization
-  if(grpId && grpId->hasOrga())
-    id=grpId;
-  else
-    id=((accId) && accId->hasOrga())? accId:defId;
   if(id->hasOrga())
     art->organization()->fromUnicodeString(id->orga(), pnt->charset());
 
@@ -888,10 +871,6 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
   }
 
   //Signature
-  if(grpId && grpId->hasSignature())
-    id=grpId;
-  else
-    id=((accId) && accId->hasSignature())? accId:defId;
   if(id->hasSignature())
     sig=id->getSignature();
   else
@@ -949,24 +928,21 @@ and cancel (or supersede) it there."));
     KNConfig::Identity  *defId=knGlobals.configManager()->identity(),
                         *gid=g->identity(),
                         *accId=g->account()->identity();
-    bool ownArticle=true;
+    bool ownArticle = false;
 
-    if(gid && gid->hasName())
-      ownArticle=( gid->name()==remArt->from()->name() );
-    else
-      if (accId && accId->hasName())
-        ownArticle=( accId->name()==remArt->from()->name() );
-      else
-        ownArticle=( defId->name()==remArt->from()->name() );
+    if (gid && gid->hasName())
+      ownArticle |= ( gid->name() == remArt->from()->name() );
+    if (accId && accId->hasName())
+      ownArticle |= ( accId->name() == remArt->from()->name() );
+    ownArticle |= ( defId->name() == remArt->from()->name() );
 
     if(ownArticle) {
+      ownArticle = false;
       if(gid && gid->hasEmail())
-        ownArticle=( gid->email().latin1()==remArt->from()->email() );
-      else
-        if (accId && accId->hasEmail())
-          ownArticle=( accId->email().latin1()==remArt->from()->email() );
-        else
-          ownArticle=( defId->email().latin1()==remArt->from()->email() );
+        ownArticle |= ( gid->email().latin1() == remArt->from()->email() );
+      if (accId && accId->hasEmail())
+        ownArticle |= ( accId->email().latin1() == remArt->from()->email() );
+      ownArticle |= ( defId->email().latin1() == remArt->from()->email() );
     }
 
     if(!ownArticle) {
@@ -1062,7 +1038,7 @@ void KNArticleFactory::slotSendErrorDialogDone()
 //======================================================================================================
 
 
-KNSendErrorDialog::KNSendErrorDialog() 
+KNSendErrorDialog::KNSendErrorDialog()
   : KDialogBase(knGlobals.topWidget, 0, true, i18n("Errors While Sending"), Close, Close, true)
 {
   p_ixmap=knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::sendErr);
@@ -1073,9 +1049,9 @@ KNSendErrorDialog::KNSendErrorDialog()
                                        .arg(i18n("The unsent articles are stored in the \"Outbox\" folder.")), page);
   j_obs=new KNDialogListBox(true, page);
   e_rror=new QLabel(QString::null, page);
-  
+
   connect(j_obs, SIGNAL(highlighted(int)), this, SLOT(slotHighlighted(int)));
-  
+
   KNHelper::restoreWindowSize("sendDlg", this, QSize(320,250));
 }
 
@@ -1106,3 +1082,5 @@ void KNSendErrorDialog::slotHighlighted(int idx)
 
 //-------------------------------
 #include "knarticlefactory.moc"
+
+// kate: space-indent on; indent-width 2;
