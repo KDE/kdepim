@@ -167,7 +167,7 @@ void CalendarLocal::addEvent(Event *anEvent)
   if (anEvent->organizer() != getEmail()) {
     kdDebug() << "Event " << anEvent->summary() << " Organizer: " << anEvent->organizer()
               << " Email: " << getEmail() << endl;
-    anEvent->setReadOnly(true);
+//    anEvent->setReadOnly(true);
   }
   connect(anEvent,SIGNAL(eventUpdated(Incidence *)),this,SLOT(updateEvent(Incidence *)));
   emit calUpdated(anEvent);

@@ -541,7 +541,7 @@ void AlarmDaemon::checkAlarms(const QString& appName)
  */
 bool AlarmDaemon::checkAlarms(ADCalendar* cal, bool showDialog)
 {
-  kdDebug() << "AlarmDaemon::checkAlarms(ADCalendar*)"<<endl;
+//  kdDebug() << "AlarmDaemon::checkAlarms(ADCalendar*)"<<endl;
   bool korgAlarms = false;
   if (mDocker->alarmsOn()  &&  cal->loaded()  &&  cal->enabled())
   {
