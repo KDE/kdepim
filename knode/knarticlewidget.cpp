@@ -360,6 +360,15 @@ void KNArticleWidget::applyConfig()
   setPaper( QBrush( app->backgroundColor() ) );
   setColor( app->textColor() );
 
+  QPalette newPalette(palette());
+  QColorGroup newColorGroup(newPalette.active());
+  newColorGroup.setColor(QColorGroup::Link, app->linkColor());
+  newPalette.setActive(newColorGroup);
+  newColorGroup = newPalette.inactive();
+  newColorGroup.setColor(QColorGroup::Link, app->linkColor());
+  newPalette.setInactive(newColorGroup);
+  setPalette(newPalette);
+
   if(!knGlobals.cfgManager->readNewsGeneral()->autoMark())
     t_imer->stop();
 
