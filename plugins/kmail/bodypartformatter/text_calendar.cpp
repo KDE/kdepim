@@ -38,6 +38,8 @@
 #include <libkcal/icalformat.h>
 #include <libkcal/attendee.h>
 
+#include <kmail/callback.h>
+
 #include <kglobal.h>
 #include <klocale.h>
 #include <kstringhandler.h>
@@ -437,14 +439,60 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return dynamic_cast<Incidence*>( message->event() );
     }
 
-    void setStatusOnMyself( Incidence* incidence,
-                            Attendee::PartStat status ) const
+    void setStatusOnMyself( Incidence* incidence, Attendee::PartStat status,
+                            const QString& receiver ) const
     {
-      // TODO: Find myself instead of just taking the first
-      Attendee* myself = *incidence->attendees().begin();
-      myself->setStatus( status );
-      myself->setRSVP( false );
-      // TODO: Clear out all others
+      Attendee::List attendees = incidence->attendees();
+      Attendee::List::ConstIterator it;
+      Attendee* myself = 0;
+      // Find myself. There will always be all attendees listed, even if
+      // only I need to answer it.
+      if ( attendees.count() == 1 )
+        // Only one attendee, that must be me
+        myself = *attendees.begin();
+      else {
+        for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+          if( (*it)->email() == receiver ) {
+            // We are the current one, and even the receiver, note
+            // this and quit searching.
+            myself = (*it);
+            break;
+          }
+
+#if 0
+          // This is postponed until we have shared identities.
+          // And then it might be unnecessary
+          if ( (*it)->email() == KOPrefs::instance()->email() ) {
+            // If we are the current one, note that. Still continue to
+            // search in case we find the receiver himself.
+            myself = (*it);
+          }
+#endif
+        }
+        // TODO: If still not found, ask about it
+      }
+
+      Q_ASSERT( myself );
+      Attendee* newMyself = 0;
+      if( myself ) {
+        myself->setStatus( status );
+
+        // No more request response
+        myself->setRSVP(false);
+
+        newMyself = new Attendee( myself->name(),
+                                  receiver.isEmpty() ? myself->email() :
+                                  receiver,
+                                  myself->RSVP(),
+                                  myself->status(),
+                                  myself->role(),
+                                  myself->uid() );
+      }
+
+      // Make sure only ourselves is in the event
+      incidence->clearAttendees();
+      if( newMyself )
+        incidence->addAttendee( newMyself );
     }
 
     bool mail( const QString& message ) const
@@ -459,7 +507,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return true;
     }
 
-    bool handleAccept( const QString& iCal ) const
+    bool handleAccept( const QString& iCal, KMail::Callback& callback ) const
     {
       // First, save it for KOrganizer to handle
       QString location = locateLocal( "data", "korganizer/income.accepted/", true );
@@ -481,31 +529,31 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       ICalFormat format;
       Incidence* incidence = icalToString( iCal, format );
       if( !incidence ) return false;
-      setStatusOnMyself( incidence, Attendee::Accepted );
+      setStatusOnMyself( incidence, Attendee::Accepted, callback.receiver() );
       return mail( format.createScheduleMessage( incidence,
                                                  Scheduler::Reply ) );
     }
 
-    bool handleDecline( const QString& iCal ) const
+    bool handleDecline( const QString& iCal, KMail::Callback& callback ) const
     {
       // Produce a decline message
       ICalFormat format;
       Incidence* incidence = icalToString( iCal, format );
       if( !incidence ) return false;
-      setStatusOnMyself( incidence, Attendee::Declined );
+      setStatusOnMyself( incidence, Attendee::Declined, callback.receiver() );
       return mail( format.createScheduleMessage( incidence,
                                                  Scheduler::Reply ) );
     }
 
     bool handleClick( KMail::Interface::BodyPart *part,
-                      const QString &path, KMail::Callback& ) const
+                      const QString &path, KMail::Callback& c ) const
     {
       QString iCal = part->asText();
 
       if ( path == "accept" )
-        return handleAccept( iCal );
+        return handleAccept( iCal, c );
       else if ( path == "decline" )
-        return handleDecline( iCal );
+        return handleDecline( iCal, c );
       return false;
     }
 

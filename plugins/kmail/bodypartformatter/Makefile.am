@@ -20,7 +20,7 @@ libkmail_bodypartformatter_text_calendar_la_SOURCES = text_calendar.cpp
 libkmail_bodypartformatter_text_calendar_la_LDFLAGS = \
   $(all_libraries) -module $(KDE_PLUGIN)
 libkmail_bodypartformatter_text_calendar_la_LIBADD  = $(LIB_QT) $(LIB_KABC) \
-  $(top_builddir)/libkcal/libkcal.la
+  $(top_builddir)/libkcal/libkcal.la $(top_builddir)/kmail/libkmailprivate.la
 
 linkdir = $(kde_datadir)/kmail/plugins/bodypartformatter
 link_DATA = text_vcard.desktop text_calendar.desktop
