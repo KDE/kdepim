@@ -14,6 +14,7 @@
 #include <kglobal.h>
 #include <kmenubar.h>
 #include <kconfig.h>
+#include <kaccel.h>
 
 #include "undo.h"
 #include "browserwidget.h"
@@ -42,8 +43,10 @@ Pab::Pab()
   p->insertItem(i18n("&Quit"), kapp, SLOT(quit()), CTRL+Key_Q);
   
   edit = new QPopupMenu;
-  undoId = edit->insertItem(i18n("Undo"), this, SLOT(undo()));
-  redoId = edit->insertItem(i18n("Redo"), this, SLOT(redo()));
+  undoId = edit->insertItem(i18n("Undo"), this, SLOT(undo()), 
+			    KStdAccel::key(KStdAccel::Undo));
+  redoId = edit->insertItem(i18n("Redo"), this, SLOT(redo()),
+			    KStdAccel::key(KStdAccel::Redo));
   edit->insertSeparator();
   edit->insertItem(i18n("Cut"), view, SLOT(cut()), CTRL+Key_X);
   edit->insertItem(i18n("Copy"), view, SLOT(copy()), CTRL+Key_C);

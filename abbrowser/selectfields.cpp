@@ -63,10 +63,14 @@ SelectFields::SelectFields( QStringList oldFields,
   QLabel *lCustomField = new QLabel( i18n( "Custom Field" ), this );
   hb1->addWidget( lCustomField );
   leCustomField = new QLineEdit( this );
+  hb1->addWidget( leCustomField );
   QObject::connect( leCustomField, SIGNAL( returnPressed() ), 
 		    this, SLOT( addCustom() ));
 
-  hb1->addWidget( leCustomField );
+  QPushButton *pbAddCustom = new QPushButton( i18n( "Add" ), this );
+  QObject::connect( pbAddCustom, SIGNAL( clicked() ), this, SLOT( addCustom() ));
+  hb1->addWidget( pbAddCustom );
+
   gl->addMultiCell( hb1, 2, 2, 0, 2, QGridLayout::AlignRight );
 
   QFrame *bar1 = new QFrame( this, "horizontal divider 1" );
