@@ -25,6 +25,12 @@
 
 </authorgroup>
 
+<abstract>
+<para>This version of the &korganizer; workshop <quote>Exchange
+Plugin</quote> was released on November 3, 2002. See the
+<filename>ChangeLog</filename> for details.</para>
+</abstract>
+
 <keywordset>
 <keyword>kdepim</keyword>
 <keyword>KOrganizer</keyword>
@@ -243,11 +249,6 @@ Your help in improving the Exchange plugin is greatly appreciated.
 
 <sect1 id="exchange-plugin-credits">
 <title>Credits and license</title>
-
-<para>
-This version of the &korganizer; workshop <quote>Exchange Plugin</quote>
-was released on November 3, 2002. See the <filename>ChangeLog</filename> for details.
-</para>
 
 <para>Contributors:</para>
 
