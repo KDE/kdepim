@@ -96,8 +96,15 @@ void TodoEditor::fillFields()
 
 	fDescription->setText(fTodo->getDescription());
 	fCompleted->setChecked(fTodo->getComplete());
-	fHasEndDate->setChecked(!fTodo->getIndefinite());
-	fEndDate->setDate(readTm(fTodo->getDueDate()).date());
+	if (fTodo->getIndefinite())
+	{
+		fHasEndDate->setChecked(false);
+	}
+	else
+	{
+		fHasEndDate->setChecked(true);
+		fEndDate->setDate(readTm(fTodo->getDueDate()).date());
+	}
 	fPriority->setCurrentItem(fTodo->getPriority());
 //	fCategory->setCurrentItem(fTodo->getCategory()));
 	fNote->setText(fTodo->getNote());
@@ -129,7 +136,7 @@ void TodoEditor::initLayout()
 	fHasEndDate = new QCheckBox(i18n("Has &end date:"), p, "fHasEndDate" );
 	grid->addMultiCellWidget( fHasEndDate, 2, 2, 0, 1 );
 
-	fEndDate = new KDateWidget(QDate::currentDate(), "fEndDate" );
+	fEndDate = new KDateWidget(QDate::currentDate(), p, "fEndDate" );
 	fEndDate->setEnabled( FALSE );
 	grid->addMultiCellWidget( fEndDate, 3, 3, 0, 1 );
 

@@ -124,8 +124,9 @@ PilotTodoListItem::~PilotTodoListItem()
 #endif
 }
 
-virtual void PilotTodoListItem::stateChange ( bool on)
+void PilotTodoListItem::stateChange ( bool on)
 {
 	// FUNCTIONSETUP;
 	QCheckListItem::stateChange(on);
+
 }
