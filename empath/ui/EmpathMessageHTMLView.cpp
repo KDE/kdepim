@@ -53,10 +53,7 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
     :   KHTMLWidget(_parent, _name),
         busy_(false)
 {
-    KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
-    QString iconSet = c->readEntry(EmpathConfig::KEY_ICON_SET);
-    
+    setFrameStyle(QFrame::NoFrame);
     begin();
     // Begin welcome message
     write("<HTML>");
@@ -90,20 +87,18 @@ EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
 
     setCursor(waitCursor);
     
-    KConfig * config(KGlobal::config());
-    config->setGroup(EmpathConfig::GROUP_DISPLAY);
+    KConfig * c(KGlobal::config());
+
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_DISPLAY);
     
     QFont defaultFixed(KGlobal::fixedFont());
     
-    QFont f =
-        config->readFontEntry(
-            EmpathConfig::KEY_FIXED_FONT, &defaultFixed);
-    
+    QFont f = c->readFontEntry(UI_FIXED_FONT, &defaultFixed);
 
     int fs = f.pointSize();
     int fsizes[7] = { fs, fs, fs, fs, fs, fs, fs };
-    KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
 
     setFixedFont(f.family());
     setFontSizes(fsizes);
@@ -114,9 +109,9 @@ EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
         kapp->palette().color(QPalette::Normal, QColorGroup::Base));
     setDefaultTextColors(
         kapp->palette().color(QPalette::Normal, QColorGroup::Text),
-        c->readColorEntry(EmpathConfig::KEY_LINK_COLOUR),
-        c->readColorEntry(EmpathConfig::KEY_VISITED_LINK_COLOUR));
-    setUnderlineLinks(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS));
+        c->readColorEntry(UI_LINK, &DFLT_LINK),
+        c->readColorEntry(UI_VLINK, &DFLT_VLINK));
+    setUnderlineLinks(c->readBoolEntry(UI_UNDERLINE_LINKS, DFLT_UNDER_LINKS));
 
     if (s.isEmpty()) {
         write(
@@ -145,20 +140,9 @@ EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
         toHTML(html);
         
         write("<HTML><BODY BGCOLOR="+bg+"><PRE>"+html+"</PRE></BODY></HTML>");
-    
-        QFile f("/tmp/message.html");
-        f.open(IO_WriteOnly);
-        QTextStream t(&f);
         
-        t << "<HTML><BODY BGCOLOR=" << bg << "><PRE>" <<
-            html << "</PRE></BODY></HTML>";
-        
-        f.close();
-
     } else {
         
-        empathDebug("No markup required");
-
         write("<HTML><BODY><PRE>" + s + "</PRE></BODY></HTML>");
     }
     
@@ -170,21 +154,19 @@ EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
     void
 EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
 {
-    QCString str(_str.ascii());
+    QCString str(_str.latin1());
+
     KConfig * config(KGlobal::config());
-    config->setGroup(EmpathConfig::GROUP_DISPLAY);
 
-    QColor color1(Qt::darkBlue);
-    QColor color2(Qt::darkGreen);
+    using namespace EmpathConfig;
 
-    QColor quote1(config->readColorEntry(
-        EmpathConfig::KEY_QUOTE_COLOUR_ONE, &color1));
+    config->setGroup(GROUP_DISPLAY);
 
-    QColor quote2(config->readColorEntry(
-        EmpathConfig::KEY_QUOTE_COLOUR_TWO, &color2));
+    QColor quote1(config->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
+    QColor quote2(config->readColorEntry(UI_QUOTE_TWO, &DFLT_Q_2));
 
-    QCString quoteOne = QColorToHTML(quote1).ascii();
-    QCString quoteTwo = QColorToHTML(quote2).ascii();
+    QCString quoteOne = QColorToHTML(quote1).latin1();
+    QCString quoteTwo = QColorToHTML(quote2).latin1();
     
     register char * buf = new char[32768]; // 32k buffer. Will be reused.
     QCString outStr;
@@ -540,7 +522,7 @@ EmpathMessageHTMLWidget::s_popupMenu(QString s, const QPoint &)
     empathDebug("URL clicked was: \"" + s + "\"");
     
     if (s.left(16) == "empath://mailto:") {
-        popup_.insertItem(empathIcon("mini-compose"),
+        popup_.insertItem(empathIcon("menu-compose"),
             i18n("New message to"), empath, SLOT(s_compose()));
     }
     
@@ -550,10 +532,10 @@ EmpathMessageHTMLWidget::s_popupMenu(QString s, const QPoint &)
         s.left(9) == "gopher://")
     {
         
-        popup_.insertItem(empathIcon("mini-view"), i18n("Browse"),
+        popup_.insertItem(empathIcon("menu-view"), i18n("Browse"),
             parent(), SLOT(s_URLSelected()));
         
-        popup_.insertItem(empathIcon("mini-view"), i18n("Bookmark"),
+        popup_.insertItem(empathIcon("menu-view"), i18n("Bookmark"),
             parent(), SLOT(s_URLSelected()));
     }
     

@@ -45,12 +45,7 @@ EmpathMailboxIMAP4::getMail()
 }
 
     void
-EmpathMailboxIMAP4::s_getNewMail()
-{
-    // STUB
-}
-    void
-EmpathMailboxIMAP4::s_checkNewMail()
+EmpathMailboxIMAP4::s_checkMail()
 {
     // STUB
 }

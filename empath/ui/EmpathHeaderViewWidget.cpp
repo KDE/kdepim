@@ -48,8 +48,8 @@ EmpathHeaderViewWidget::EmpathHeaderViewWidget(
     :    QWidget(parent, name),
         glowing_(false)
 {
-    clipIcon_ = empathIcon("clip");
-    clipGlow_ = empathIcon("clip-glow");
+    clipIcon_ = empathIcon("misc-clip");
+    clipGlow_ = empathIcon("misc-clip-glow");
     setMouseTracking(true);
     setFixedHeight(0);
 }
@@ -63,12 +63,15 @@ EmpathHeaderViewWidget::~EmpathHeaderViewWidget()
 EmpathHeaderViewWidget::useEnvelope(RMM::REnvelope & e)
 {
     headerList_.clear();
+    
     KConfig * c(KGlobal::config());
-    // FIXME Must be QStringList when available.
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
+    
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_DISPLAY);
     
     QStrList l;
-    c->readListEntry(EmpathConfig::KEY_SHOW_HEADERS, l, ',');
+    c->readListEntry(UI_SHOW_HEADERS, l, ',');
     
     QStrListIterator it(l);
     

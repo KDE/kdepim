@@ -26,22 +26,12 @@
 #define EMPATHMATCHPROPERTIESDIALOG_H
 
 // Qt includes
-#include <qwidget.h>
 #include <qdialog.h>
-#include <qradiobutton.h>
 #include <qbuttongroup.h>
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
 #include <qcombobox.h>
-#include <qpushbutton.h>
 #include <qlineedit.h>
 #include <qspinbox.h>
 
-// KDE includes
-#include <kbuttonbox.h>
-
-class RikGroupBox;
 class EmpathMatcher;
 
 class EmpathMatchPropertiesDialog : public QDialog
@@ -63,40 +53,16 @@ class EmpathMatchPropertiesDialog : public QDialog
 
     private:
         
-        EmpathMatcher    * matcher_;
+        EmpathMatcher * matcher_;
 
-        QButtonGroup    * bg_choices_;
+        QButtonGroup * bg_choices_;
 
-        QGridLayout        * mainLayout_;
-        QGridLayout        * layout_;
-        QGridLayout        * size_subLayout_;
-        QGridLayout        * exprBody_subLayout_;
-        QGridLayout        * exprHeader_subLayout_;
+        QLineEdit * le_exprBody_;
+        QLineEdit * le_exprHeader_;
 
-        KButtonBox        * buttonBox_;
+        QComboBox * cb_header_;
 
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_cancel_;
-        QPushButton        * pb_help_;
-
-        RikGroupBox        * rgb_choices_;
-
-        QWidget            * w_choices_;
-
-        QRadioButton    * rb_size_;
-        QRadioButton    * rb_exprBody_;
-        QRadioButton    * rb_exprHeader_;
-        QRadioButton    * rb_attached_;
-        QRadioButton    * rb_all_;
-
-        QLineEdit        * le_exprBody_;
-        QLineEdit        * le_exprHeader_;
-
-        QComboBox        * cb_header_;
-
-        QSpinBox        * sb_size_;
-        
-        int idx_size_, idx_exprBody_, idx_exprHeader_, idx_attached_, idx_all_;
+        QSpinBox * sb_size_;
 };
 
 #endif

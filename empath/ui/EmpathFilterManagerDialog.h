@@ -41,18 +41,17 @@
 #include "EmpathFilterListItem.h"
 #include "EmpathDefines.h"
 
-class RikGroupBox;
-
 class EmpathFilterManagerDialog : public QDialog
 {
     Q_OBJECT
 
     public:
     
-        static void create();
+        EmpathFilterManagerDialog(QWidget * parent = 0);
         ~EmpathFilterManagerDialog();
+
+        void loadData();
         void saveData();
-        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
         
     protected slots:
         
@@ -69,40 +68,30 @@ class EmpathFilterManagerDialog : public QDialog
         
     private:
 
-        EmpathFilterManagerDialog(QWidget * parent = 0, const char * name = 0);
-
         void            update();
 
-        RikGroupBox        * rgb_filters_;
+        QListView   * lv_filters_;
 
-        QWidget            * w_filters_;
-
-        QGridLayout        * mainLayout_;
-        QGridLayout        * filtersLayout_;
-
-        QListView        * lv_filters_;
-
-        QLabel            * l_about_;
+        QLabel      * l_about_;
         
-        QPushButton        * pb_addFilter_;
-        QPushButton        * pb_editFilter_;
-        QPushButton        * pb_removeFilter_;
-        QPushButton        * pb_moveUp_;
-        QPushButton        * pb_moveDown_;
-        QPushButton        * pb_editAction_;
+        QPushButton * pb_addFilter_;
+        QPushButton * pb_editFilter_;
+        QPushButton * pb_removeFilter_;
+        QPushButton * pb_moveUp_;
+        QPushButton * pb_moveDown_;
+        QPushButton * pb_editAction_;
 
-        KButtonBox        * filtersButtonBox_;
+        KButtonBox  * filtersButtonBox_;
 
         QList<EmpathFilterListItem> filterList_;
 
-        KButtonBox        * buttonBox_;
-        QPushButton        * pb_help_;
-        QPushButton        * pb_apply_;
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_cancel_;
+        KButtonBox  * buttonBox_;
+        QPushButton * pb_help_;
+        QPushButton * pb_apply_;
+        QPushButton * pb_OK_;
+        QPushButton * pb_cancel_;
         
-        static bool        exists_;
-        bool            applied_;
+        bool        applied_;
 };
 
 #endif

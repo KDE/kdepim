@@ -39,7 +39,7 @@ EmpathPathSelectWidget::EmpathPathSelectWidget
     le_path_    = new QLineEdit(initialPath, this);
     pb_select_  = new QPushButton(this);
     
-    pb_select_->setPixmap(empathIcon("browse"));
+    pb_select_->setPixmap(empathIcon("misc-browse"));
     pb_select_->setFixedWidth(pb_select_->sizeHint().height());
 
     QObject::connect(pb_select_, SIGNAL(clicked()), this, SLOT(s_browse()));
@@ -50,7 +50,7 @@ EmpathPathSelectWidget::~EmpathPathSelectWidget()
 }
 
     QString
-EmpathPathSelectWidget::selected() const
+EmpathPathSelectWidget::path() const
 {
     return le_path_->text();
 }
@@ -59,6 +59,7 @@ EmpathPathSelectWidget::selected() const
 EmpathPathSelectWidget::setPath(const QString & s)
 {
     le_path_->setText(s);
+    emit(changed(s));
 }
         
     void

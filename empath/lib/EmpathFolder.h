@@ -133,6 +133,9 @@ class EmpathFolder : public QObject
         void itemCome(const QString & s) { emit(itemArrived(s));    }
         
         void setStatus(const QString & id, RMM::MessageStatus);
+
+        void setContainer(bool);
+        bool isContainer() const;
         
     protected slots:
         
@@ -167,6 +170,7 @@ class EmpathFolder : public QObject
         QString     pixmapName_;
         EmpathIndex * index_;
         EmpathURL   url_;
+        bool        container_;
 };
 
 #endif

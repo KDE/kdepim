@@ -63,7 +63,6 @@ class EmpathConfigPOP3Widget : public KTabCtl
 
         EmpathConfigPOP3Server  * serverWidget_;
         EmpathConfigPOP3Logging * loggingWidget_;
-        EmpathConfigPOP3General * generalWidget_;
 };
 
 #endif

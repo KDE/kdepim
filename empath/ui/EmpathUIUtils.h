@@ -29,6 +29,8 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 
+const int dialogSpace = 6;
+
 QPixmap empathMimeIcon(const QString & name);
 QPixmap empathIcon(const QString & name);
 

@@ -13,16 +13,15 @@ EmpathComposeWindow::setupMenuBar()
 
     // File menu
     
-    fileMenu_->insertItem(empathIcon("mini-send"), i18n("&Send Message"),
+    fileMenu_->insertItem(empathIcon("menu-send"), i18n("&Send Message"),
         this, SLOT(s_fileSendMessage()));
     
-    fileMenu_->insertItem(empathIcon("mini-sendlater"), i18n("Send &Later"),
+    fileMenu_->insertItem(empathIcon("menu-sendlater"), i18n("Send &Later"),
         this, SLOT(s_fileSendLater()));
     
     fileMenu_->insertSeparator();
 
-    fileMenu_->insertItem(empathIcon("blank"), i18n("&Close"),
-        this, SLOT(s_fileClose()));
+    fileMenu_->insertItem(i18n("&Close"), this, SLOT(s_fileClose()));
 
     // Edit menu
     
@@ -35,13 +34,13 @@ EmpathComposeWindow::setupMenuBar()
     
     editMenu_->insertSeparator();
 #endif
-    editMenu_->insertItem(empathIcon("empath-cut"), i18n("Cu&t"),
+    editMenu_->insertItem(empathIcon("cut"), i18n("Cu&t"),
         this, SLOT(s_editCut()));
     
-    editMenu_->insertItem(empathIcon("empath-copy"), i18n("&Copy"),
+    editMenu_->insertItem(empathIcon("copy"), i18n("&Copy"),
         this, SLOT(s_editCopy()));
     
-    editMenu_->insertItem(empathIcon("empath-paste"), i18n("&Paste"),
+    editMenu_->insertItem(empathIcon("paste"), i18n("&Paste"),
         this, SLOT(s_editPaste()));
     
 //    editMenu_->insertItem(empathIcon("blank"), i18n("&Delete"),
@@ -49,8 +48,7 @@ EmpathComposeWindow::setupMenuBar()
 
     editMenu_->insertSeparator();
     
-    editMenu_->insertItem(empathIcon("blank"), i18n("&Select All"),
-        this, SLOT(s_editSelectAll()));
+    editMenu_->insertItem(i18n("&Select All"), this, SLOT(s_editSelectAll()));
     
 #if 0
     editMenu_->insertSeparator();
@@ -64,23 +62,23 @@ EmpathComposeWindow::setupMenuBar()
     
     // Attachment menu
     
-    attachmentMenu_->insertItem(empathIcon(""), i18n("&Add attachment"),
+    attachmentMenu_->insertItem(i18n("&Add attachment"),
         composeWidget_, SLOT(s_addAttachment()));
     
-    attachmentMenu_->insertItem(empathIcon(""), i18n("&Edit attachment"),
+    attachmentMenu_->insertItem(i18n("&Edit attachment"),
         composeWidget_, SLOT(s_editAttachment()));
     
-    attachmentMenu_->insertItem(empathIcon(""), i18n("&Remove attachment"),
+    attachmentMenu_->insertItem(i18n("&Remove attachment"),
         composeWidget_, SLOT(s_removeAttachment()));
     
     // Message Menu
-    messageMenu_->insertItem(empathIcon("mini-compose"), i18n("&New"),
+    messageMenu_->insertItem(empathIcon("menu-compose"), i18n("&New"),
         empath, SLOT(s_compose()));
 
-    messageMenu_->insertItem(empathIcon("mini-save"), i18n("Save &As"),
+    messageMenu_->insertItem(empathIcon("menu-save"), i18n("Save &As"),
         this, SLOT(s_messageSaveAs()));
 
-    messageMenu_->insertItem(empathIcon("copy"), i18n("&Copy to..."),
+    messageMenu_->insertItem(empathIcon("menu-copy"), i18n("&Copy to..."),
         this, SLOT(s_messageCopyTo()));
 
     priorityMenu_->insertItem(i18n("Highest"),  Highest);
@@ -101,9 +99,6 @@ EmpathComposeWindow::setupMenuBar()
     helpMenu_->insertItem(
         i18n("About &Qt"),
         this, SLOT(s_aboutQt()));
-    
-    helpMenu_->insertItem(i18n("About &KDE"),
-            kapp, SLOT(aboutKDE()));
     
     menuBar()->insertItem(i18n("&File"), fileMenu_);
     menuBar()->insertItem(i18n("&Edit"), editMenu_);

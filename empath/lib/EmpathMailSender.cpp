@@ -60,13 +60,11 @@ EmpathMailSender::send(RMM::RMessage & message)
 
     KConfig * c(KGlobal::config());
 
-    using namespace ::EmpathConfig;
+    using namespace EmpathConfig;
 
-    EmpathURL queueURL(c->readEntry(KEY_QUEUE_FOLDER));
-    c->setGroup(EmpathConfig::GROUP_SENDING);
+    EmpathURL queueURL(c->readEntry(FOLDER_OUTBOX));
+    c->setGroup(GROUP_SENDING);
 
-    using namespace ::std;
-    
     empath->write(queueURL, message, "message->pending");
 }
 
@@ -75,10 +73,10 @@ EmpathMailSender::queue(RMM::RMessage & message)
 {
     KConfig * c(KGlobal::config());
 
-    using namespace ::EmpathConfig;
+    using namespace EmpathConfig;
     
     c->setGroup(GROUP_SENDING);
-    EmpathURL queueURL(c->readEntry(KEY_QUEUE_FOLDER));
+    EmpathURL queueURL(c->readEntry(FOLDER_OUTBOX));
     
     using namespace ::std;
 
@@ -90,12 +88,10 @@ EmpathMailSender::sendQueued()
 {
     KConfig * c(KGlobal::config());
     
-    using namespace ::EmpathConfig;
+    using namespace EmpathConfig;
     
     c->setGroup(GROUP_SENDING);
-    EmpathURL queueURL(c->readEntry(KEY_QUEUE_FOLDER));
-    
-    using namespace ::std;
+    EmpathURL queueURL(c->readEntry(FOLDER_OUTBOX));
     
     EmpathFolder * queueFolder(empath->folder(queueURL));
     
@@ -123,12 +119,10 @@ EmpathMailSender::_startNextSend()
  
     KConfig * c(KGlobal::config());
     
-    using namespace ::EmpathConfig;
+    using namespace EmpathConfig;
     
     c->setGroup(GROUP_SENDING);
-    EmpathURL queueURL(c->readEntry(KEY_QUEUE_FOLDER));
-    
-    using namespace ::std;
+    EmpathURL queueURL(c->readEntry(FOLDER_OUTBOX));
     
     EmpathURL url(queueURL);
     
@@ -148,9 +142,8 @@ EmpathMailSender::sendCompleted(const QString & id, bool)
     KConfig * c(KGlobal::config());
     
     using namespace EmpathConfig;
-    EmpathURL queueURL  (c->readEntry(KEY_QUEUE_FOLDER));
-    EmpathURL sentURL   (c->readEntry(KEY_SENT_FOLDER));
-    using namespace std;
+    EmpathURL queueURL  (c->readEntry(FOLDER_OUTBOX));
+    EmpathURL sentURL   (c->readEntry(FOLDER_SENT));
 
     EmpathURL url(queueURL);
     url.setMessageID(id);
@@ -184,6 +177,8 @@ EmpathMailSender::operationComplete(
     
         RMM::RMessage message(*m);
     
+        empath->finishedWithMessage(url);
+
         sendOne(message, url.messageID());
 
     } else if ((t == WriteMessage) && (xinfo == "message->pending")) {

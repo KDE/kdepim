@@ -30,7 +30,6 @@
 #include "EmpathConfigPOP3Widget.h"
 #include "EmpathConfigPOP3Server.h"
 #include "EmpathConfigPOP3Logging.h"
-#include "EmpathConfigPOP3General.h"
 #include "Empath.h"
 
 EmpathConfigPOP3Widget::EmpathConfigPOP3Widget
@@ -40,10 +39,8 @@ EmpathConfigPOP3Widget::EmpathConfigPOP3Widget
 {
     serverWidget_   = new EmpathConfigPOP3Server(url_, this);
     loggingWidget_  = new EmpathConfigPOP3Logging(url, this);
-    generalWidget_  = new EmpathConfigPOP3General(url, this);
     
     addTab(serverWidget_,   i18n("Server"));
-    addTab(generalWidget_,  i18n("General"));
     addTab(loggingWidget_,  i18n("Logging"));
     
     loadData();
@@ -70,7 +67,6 @@ EmpathConfigPOP3Widget::saveData()
     EmpathMailboxPOP3 * m = (EmpathMailboxPOP3 *)mailbox;
 
     serverWidget_->saveData();
-    generalWidget_->saveData();
     loggingWidget_->saveData();
     m->saveConfig();
 }
@@ -92,7 +88,6 @@ EmpathConfigPOP3Widget::loadData()
 
     m->loadConfig();
     serverWidget_->loadData();
-    generalWidget_->loadData();
     loggingWidget_->loadData();
 }
 

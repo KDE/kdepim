@@ -45,7 +45,7 @@ class EmpathMessageViewWindow : public KTMainWindow
 
     public:
         
-        EmpathMessageViewWindow(const EmpathURL & url, const char * name = 0L);
+        EmpathMessageViewWindow(const EmpathURL & url);
         ~EmpathMessageViewWindow();
 
     protected slots:

@@ -43,8 +43,8 @@
 
 // Local includes
 #include "EmpathDefines.h"
+#include "EmpathPathSelectWidget.h"
 
-class RikGroupBox;
 class EmpathAddressSelectionWidget;
 class EmpathFolderChooserWidget;
 
@@ -54,13 +54,11 @@ class EmpathSendingSettingsDialog : public QDialog
 
     public:
         
-        static void create();
-
+        EmpathSendingSettingsDialog(QWidget * parent = 0);
         ~EmpathSendingSettingsDialog();
 
         void saveData();
         void loadData();
-        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
         
     protected slots:
 
@@ -72,57 +70,30 @@ class EmpathSendingSettingsDialog : public QDialog
 
     private:
 
-        EmpathSendingSettingsDialog(QWidget * parent = 0, const char * name = 0);
+        EmpathFileSelectWidget * efsw_sendmail_;
+        EmpathFileSelectWidget * efsw_qmail_;
+        QLineEdit * le_smtpServer_;
 
-        QButtonGroup        * serverButtonGroup_;
+        QCheckBox * cb_copyOther_;
         
-        QGridLayout            * topLevelLayout_;
+        QRadioButton * rb_sendmail_;
+        QRadioButton * rb_qmail_;
+        QRadioButton * rb_smtp_;
 
-        QGridLayout            * serverGroupLayout_;
-        QGridLayout            * copiesGroupLayout_;
-        QGridLayout            * queuingGroupLayout_;
+        QSpinBox * sb_smtpPort_;
 
-        RikGroupBox            * rgb_queuing_;
-        RikGroupBox            * rgb_server_;
-        RikGroupBox            * rgb_copies_;
+        QButtonGroup * bg_server_;
         
-        QLabel                * l_queueFolder_;
-        QLabel                * l_sentFolder_;
-        EmpathFolderChooserWidget    * fcw_queueFolder_;
-        EmpathFolderChooserWidget    * fcw_sentFolder_;
-    
-        QWidget                * w_queuing_;
-        QWidget                * w_server_;
-        QWidget                * w_copies_;
+        EmpathAddressSelectionWidget * asw_copyOther_;
 
-        QLineEdit            * le_sendmail_;
-        QLineEdit            * le_qmail_;
-        QLineEdit            * le_smtpServer_;
-
-        QCheckBox            * cb_copyOther_;
+        KButtonBox    * buttonBox_;
+        QPushButton   * pb_help_;
+        QPushButton   * pb_default_;
+        QPushButton   * pb_apply_;
+        QPushButton   * pb_OK_;
+        QPushButton   * pb_cancel_;
         
-        QPushButton            * pb_sendmailBrowse_;
-        QPushButton            * pb_qmailBrowse_;
-
-        QRadioButton        * rb_sendmail_;
-        QRadioButton        * rb_qmail_;
-        QRadioButton        * rb_smtp_;
-
-        QLabel                * l_smtpServerPort_;
-
-        QSpinBox            * sb_smtpPort_;
-        
-        EmpathAddressSelectionWidget    * asw_copyOther_;
-
-        KButtonBox        * buttonBox_;
-        QPushButton        * pb_help_;
-        QPushButton        * pb_default_;
-        QPushButton        * pb_apply_;
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_cancel_;
-        
-        static bool        exists_;
-        bool            applied_;
+        bool          applied_;
 
 };
 

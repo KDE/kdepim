@@ -35,6 +35,7 @@
 #include "EmpathConfigPOP3Server.h"
 #include "EmpathMailboxPOP3.h"
 #include "EmpathPasswordEditWidget.h"
+#include "EmpathUIUtils.h"
 
 EmpathConfigPOP3Server::EmpathConfigPOP3Server
     (const EmpathURL & url, QWidget * parent)
@@ -54,21 +55,18 @@ EmpathConfigPOP3Server::EmpathConfigPOP3Server
 
     // Layout
     
-    QVBoxLayout * topLevelLayout  = new QVBoxLayout(this, 10, 10);
+    QGridLayout * layout =
+        new QGridLayout(this, 4, 2, dialogSpace, dialogSpace);
 
-    QHBoxLayout * layout0 = new QHBoxLayout(topLevelLayout);
-    layout0->addWidget(l_inServer);
-    layout0->addWidget(le_inServer_);
+    layout->addWidget(l_inServer,       0, 0);
+    layout->addWidget(l_inServerPort,   1, 0);
+    layout->addWidget(l_uname,          2, 0);
+    layout->addWidget(l_pass,           3, 0);
     
-    QHBoxLayout * layout1 = new QHBoxLayout(topLevelLayout);
-    layout1->addWidget(l_inServerPort);
-    layout1->addWidget(sb_inServerPort_);
-
-    QHBoxLayout * layout2 = new QHBoxLayout(topLevelLayout);
-    layout2->addWidget(l_uname);
-    layout2->addWidget(le_uname_);
-
-    topLevelLayout->addWidget(epew_pass_);
+    layout->addWidget(le_inServer_,     0, 1);
+    layout->addWidget(sb_inServerPort_, 1, 1);
+    layout->addWidget(le_uname_,        2, 1);
+    layout->addWidget(epew_pass_,       3, 1);
 }
 
 EmpathConfigPOP3Server::~EmpathConfigPOP3Server()

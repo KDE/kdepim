@@ -136,7 +136,7 @@ EmpathMailboxPOP3::getMail()
 }
 
     void
-EmpathMailboxPOP3::s_checkNewMail()
+EmpathMailboxPOP3::s_checkMail()
 {
     _enqueue(EmpathPOPCommand::Stat, -1, QString::null, QString::null);
     
@@ -385,67 +385,48 @@ EmpathMailboxPOP3::_mark(
 //////////////////////////////////////////////////////////////////////////////
 
     void
-EmpathMailboxPOP3::s_getNewMail()
-{
-    empathDebug("getNewMail()");
-}
-
-    void
 EmpathMailboxPOP3::saveConfig()
 {
-    empathDebug("Saving config");
-    KConfig * config_ = KGlobal::config();
+    KConfig * c = KGlobal::config();
     using namespace EmpathConfig;
-    config_->setGroup(GROUP_MAILBOX + url_.mailboxName());
-#define CWE config_->writeEntry
-    CWE(KEY_MAILBOX_TYPE,                   (unsigned long)type_);
-    CWE(KEY_POP3_SERVER_ADDRESS,            serverAddress_);
-    CWE(KEY_POP3_SERVER_PORT,               serverPort_);
-    CWE(KEY_POP3_USERNAME,                  username_);
-    CWE(KEY_POP3_PASSWORD,                  password_);
-    CWE(KEY_POP3_APOP,                       useAPOP_);
-    CWE(KEY_POP3_LOGGING_POLICY,            logging_);
-    CWE(KEY_POP3_LOG_FILE_PATH,             logFilePath_);
-    CWE(KEY_POP3_LOG_FILE_DISPOSAL_POLICY,  logFileDisposalPolicy_);
-    CWE(KEY_POP3_MAX_LOG_FILE_SIZE,         maxLogFileSize_);
-    CWE(KEY_POP3_CHECK_FOR_NEW_MAIL,        checkMail_);
-    CWE(KEY_POP3_MAIL_CHECK_INTERVAL,       checkMailInterval_);
-    CWE(KEY_POP3_RETRIEVE_IF_HAVE,          retrieveIfHave_);
-#undef CWE
+    
+    c->setGroup(GROUP_MAILBOX + url_.mailboxName());
+
+    c->writeEntry(M_TYPE,           (unsigned long)type_);
+    c->writeEntry(M_ADDRESS,        serverAddress_);
+    c->writeEntry(M_PORT,           serverPort_);
+    c->writeEntry(M_USERNAME,       username_);
+    c->writeEntry(M_PASSWORD,       password_);
+    c->writeEntry(M_LOGGING,        logging_);
+    c->writeEntry(M_LOG_PATH,       logFilePath_);
+    c->writeEntry(M_LOG_DISPOSAL,   logFileDisposalPolicy_);
+    c->writeEntry(M_MAX_LOG_SIZE,   maxLogFileSize_);
+    c->writeEntry(M_CHECK,          autoCheck_);
+    c->writeEntry(M_CHECK_INT,      autoCheckInterval_);
 }
 
     void
 EmpathMailboxPOP3::loadConfig()
 {
-    empathDebug("Reading config");
-    KConfig * config_ = KGlobal::config();
+    KConfig * c = KGlobal::config();
     using namespace EmpathConfig;
-    config_->setGroup(GROUP_MAILBOX + url_.mailboxName());
     
-#define CRE config_->readEntry
-#define CRUNE config_->readUnsignedNumEntry
-#define CRBE config_->readBoolEntry
-    
-    empathDebug("Config group is now \"" + QString(config_->group()) + "\"");
+    c->setGroup(GROUP_MAILBOX + url_.mailboxName());
 
-    serverAddress_          = CRE(KEY_POP3_SERVER_ADDRESS, i18n("<unknown>"));
-    serverPort_             = CRUNE(KEY_POP3_SERVER_PORT, 110);
-    config_->setDollarExpansion(true);
-    username_               = CRE(KEY_POP3_USERNAME, "$USER");
-    config_->setDollarExpansion(false);
-    password_               = CRE(KEY_POP3_PASSWORD, "");
-    useAPOP_                = CRBE(KEY_POP3_APOP, true);
-    logging_                = CRBE(KEY_POP3_LOGGING_POLICY,    false);
-    logFilePath_            = CRE(KEY_POP3_LOG_FILE_PATH, "");
-    logFileDisposalPolicy_  = CRBE(KEY_POP3_LOG_FILE_DISPOSAL_POLICY, false);
-    maxLogFileSize_         = CRUNE(KEY_POP3_MAX_LOG_FILE_SIZE,    10);
-    checkMail_              = CRBE(KEY_POP3_CHECK_FOR_NEW_MAIL, true);
-    checkMailInterval_      = CRUNE(KEY_POP3_MAIL_CHECK_INTERVAL, 5);
-    retrieveIfHave_         = CRBE(KEY_POP3_RETRIEVE_IF_HAVE, false);
+    serverAddress_          = c->readEntry              (M_ADDRESS);
+    serverPort_             = c->readUnsignedNumEntry   (M_PORT, 110);
     
-#undef CRE
-#undef CRUNE
-#undef CRBE
+    c->setDollarExpansion(true);
+    username_               = c->readEntry              (M_USERNAME, "$USER");
+    c->setDollarExpansion(false);
+    
+    password_               = c->readEntry              (M_PASSWORD, "");
+    logging_                = c->readBoolEntry          (M_LOGGING,false);
+    logFilePath_            = c->readEntry              (M_LOG_PATH, "");
+    logFileDisposalPolicy_  = c->readBoolEntry          (M_LOG_DISPOSAL, false);
+    maxLogFileSize_         = c->readUnsignedNumEntry   (M_MAX_LOG_SIZE,    10);
+    autoCheck_              = c->readBoolEntry          (M_CHECK, true);
+    autoCheckInterval_      = c->readUnsignedNumEntry   (M_CHECK_INT, 5);
 }
 
 // Set methods

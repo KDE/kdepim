@@ -18,6 +18,10 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+#pragma interface "EmpathMessageViewWidget.h"
+#endif
+
 #ifndef EMPATHMESSAGEVIEWWIDGET_H
 #define EMPATHMESSAGEVIEWWIDGET_H
 
@@ -37,19 +41,16 @@
 class EmpathMessageStructureWidget;
 class EmpathMessageHTMLWidget;
 class EmpathHeaderViewWidget;
-namespace RMM {
-    class RBodyPart;
-}
+
+namespace RMM { class RBodyPart; }
+
 class EmpathMessageViewWidget : public QWidget
 {
     Q_OBJECT
 
     public:
         
-        EmpathMessageViewWidget(
-            const EmpathURL & url,
-            QWidget * parent = 0,
-            const char * name = 0);
+        EmpathMessageViewWidget(const EmpathURL & url, QWidget * parent = 0);
         
         ~EmpathMessageViewWidget();
         

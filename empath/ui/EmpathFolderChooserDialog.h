@@ -29,11 +29,7 @@
 // Qt includes
 #include <qwidget.h>
 #include <qdialog.h>
-#include <qlayout.h>
 #include <qpushbutton.h>
-
-// KDE includes
-#include <kbuttonbox.h>
 
 // Local includes
 #include "EmpathURL.h"
@@ -47,7 +43,7 @@ class EmpathFolderChooserDialog : public QDialog
 
     public:
 
-        EmpathFolderChooserDialog(QWidget * parent = 0, const char * name = 0);
+        EmpathFolderChooserDialog(QWidget * parent = 0);
 
         ~EmpathFolderChooserDialog();
 
@@ -61,15 +57,7 @@ class EmpathFolderChooserDialog : public QDialog
 
     private:
 
-        QGridLayout        * mainLayout_;
-
-        KButtonBox        * buttonBox_;
-
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_cancel_;
-        QPushButton        * pb_help_;
-
-        EmpathFolderWidget        * folderWidget_;
+        EmpathFolderWidget * folderWidget_;
 };
 
 #endif

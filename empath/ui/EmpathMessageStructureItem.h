@@ -53,7 +53,7 @@ class EmpathMessageStructureItem : public QListViewItem
         
         RMM::RBodyPart * part() { return &part_; }
 
-        const char * className() const { return "EmpathStructureListItem"; }
+        const char * className() const { return "EmpathMessageStructureItem"; }
         
     private:
 

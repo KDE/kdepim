@@ -63,24 +63,20 @@ EmpathIndex::EmpathIndex(const EmpathURL & folder)
         unreadCount_(0),
         initialised_(false)
 {
-    empathDebug(folder.asString());
     QString resDir =
         KGlobal::dirs()->saveLocation("indices", folder.mailboxName(), true);
 
-    QDir d(resDir);
-    
-    if (!d.exists()) {
-        if (!d.mkdir(resDir)) {
-            empathDebug("Cannot make index dir " + resDir);
-            return;
-        }
-    }
-    
-    QString legalName = folder.folderPath().replace(QRegExp("/"), "_");
-    
-    // filename_ = resDir + "/" + legalName;
-    filename_ = "/tmp/" + legalName;
+    QString path = resDir + "/" + folder.folderPath();
 
+    bool ok = KGlobal::dirs()->makeDir(path);
+
+    if (!ok) {
+        empathDebug("KStdDirs wouldn't make dir `" + path + "'");
+        return;
+    }
+
+    filename_ = path + "/index";
+    
     QFileInfo fi(filename_);
 
     if (!fi.exists())
@@ -193,7 +189,7 @@ EmpathIndex::_open()
     }
 
     dbf_ = gdbm_open(
-        filename_.local8Bit().data(), blockSize_, GDBM_WRCREAT, 0600, NULL);
+        filename_.utf8().data(), blockSize_, GDBM_WRCREAT, 0600, NULL);
     
     if (dbf_ == 0) {
         empathDebug(gdbm_strerror(gdbm_errno));

@@ -35,7 +35,6 @@
 
 
 class EmpathFilter;
-class RikGroupBox;
 class EmpathFolderChooserWidget;
 
 class EmpathFilterEditDialog : public QDialog
@@ -63,9 +62,6 @@ class EmpathFilterEditDialog : public QDialog
 
         void            update();
 
-        RikGroupBox     * rgb_matches_;
-
-        QWidget         * w_matches_;
         QListBox        * lb_matches_;
         QLabel          * l_action_;
         QLineEdit       * le_name_;

@@ -36,7 +36,6 @@
 
 // Local includes
 #include "EmpathAccountsSettingsDialog.h"
-#include "RikGroupBox.h"
 #include "EmpathServerTypeDialog.h"
 #include "EmpathMailboxList.h"
 #include "EmpathMailbox.h"
@@ -44,24 +43,8 @@
 #include "EmpathUIUtils.h"
 #include "Empath.h"
     
-bool EmpathAccountsSettingsDialog::exists_ = false;
-
-    void
-EmpathAccountsSettingsDialog::create()
-{
-    if (exists_)
-        return;
-
-    exists_ = true;
-    EmpathAccountsSettingsDialog * d = new EmpathAccountsSettingsDialog;
-    CHECK_PTR(d);
-    d->show();
-    kapp->processEvents();
-}
-
-
 EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(QWidget * parent)
-    :   QDialog(parent, "AccountsSettingsDialog", false)
+    :   QDialog(parent, "AccountsSettings", true)
 {
     setCaption(i18n("Accounts Settings"));
 
@@ -74,16 +57,16 @@ EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(QWidget * parent)
 
     lv_accts_->addColumn(i18n("Account Name"));
     lv_accts_->addColumn(i18n("Type"));
-    lv_accts_->addColumn(i18n("Timer"));
     lv_accts_->setAllColumnsShowFocus(true);
     lv_accts_->setFrameStyle(QFrame::Box | QFrame::Sunken);
 
     // List editing buttons
     KButtonBox * ctrlButtons = new KButtonBox(this, KButtonBox::VERTICAL);
  
-    QPushButton * pb_new    = ctrlButtons->addButton(i18n("&New"));
-    QPushButton * pb_edit   = ctrlButtons->addButton(i18n("&Edit"));
-    QPushButton * pb_remove = ctrlButtons->addButton(i18n("&Remove"));
+    QPushButton * pb_newPOP     = ctrlButtons->addButton(i18n("New &POP3"));
+    QPushButton * pb_newIMAP    = ctrlButtons->addButton(i18n("New &IMAP4"));
+    QPushButton * pb_edit       = ctrlButtons->addButton(i18n("&Edit"));
+    pb_remove_    = ctrlButtons->addButton(i18n("&Remove"));
     
     ctrlButtons->layout();
 
@@ -102,7 +85,7 @@ EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(QWidget * parent)
     buttonBox_->layout();
 
     // Layout
-    QVBoxLayout * mainLayout = new QVBoxLayout(this);
+    QVBoxLayout * mainLayout = new QVBoxLayout(this, dialogSpace);
     QHBoxLayout * topLayout = new QHBoxLayout;
     
     topLayout->addWidget(lv_accts_);
@@ -112,9 +95,10 @@ EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(QWidget * parent)
     mainLayout->addWidget(buttonBox_);
 
     // Connections
-    QObject::connect(pb_new,        SIGNAL(clicked()),    SLOT(s_new()));
+    QObject::connect(pb_newPOP,     SIGNAL(clicked()),    SLOT(s_newPOP()));
+    QObject::connect(pb_newIMAP,    SIGNAL(clicked()),    SLOT(s_newIMAP()));
     QObject::connect(pb_edit,       SIGNAL(clicked()),    SLOT(s_edit()));
-    QObject::connect(pb_remove,     SIGNAL(clicked()),    SLOT(s_remove())); 
+    QObject::connect(pb_remove_,    SIGNAL(clicked()),    SLOT(s_remove())); 
 
     QObject::connect(pb_OK_,        SIGNAL(clicked()),    SLOT(s_OK()));
     QObject::connect(pb_cancel_,    SIGNAL(clicked()),    SLOT(s_cancel()));
@@ -122,30 +106,46 @@ EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(QWidget * parent)
 
     QObject::connect(
         empath, SIGNAL(updateFolderLists()), SLOT(s_updateMailboxList()));
+    
+    QObject::connect(
+        lv_accts_, SIGNAL(currentChanged(QListViewItem *)),
+        this, SLOT(s_currentChanged(QListViewItem *)));
 
-    s_updateMailboxList();
+    QWhatsThis::add(pb_newPOP, i18n(
+            "A POP3 mailbox is accessed over a network.\n"
+            "You can access one on your own machine if\n"
+            "you have a POP3 server program. POP3 mailboxes\n"
+            "are read-only. That is, you can only <b>get</b>\n"
+            "messages from them, you can't put mail back into\n"
+            "them.\n\n"
+            "POP3 is the most common mailbox format used by\n"
+            "ISPs (Internet Service Providers). It provides\n"
+            "a simple mechanism for retrieving messages.\n\n"
+            "Note that as 'mbox' format mailboxes are not\n"
+            "supported, using a local POP3 server is the only\n"
+            "way to retrieve mail from these boxes.\n"));
+
+    QWhatsThis::add(pb_newIMAP, i18n(
+            "An IMAP4 mailbox is accessed over a network.\n"
+            "You can access one on your own machine if you\n"
+            "have an IMAP4 server program."));
 }
 
 EmpathAccountsSettingsDialog::~EmpathAccountsSettingsDialog()
 {
-    exists_ = false;
+    // Empty.
 }
 
     void
-EmpathAccountsSettingsDialog::s_new()
+EmpathAccountsSettingsDialog::s_newPOP()
 {
-    EmpathServerTypeDialog serverTypeDialog(this, "serverTypeDialog");
-    
-    if (serverTypeDialog.exec() != QDialog::Accepted)
-        return;
+    empath->mailboxList().createNew(EmpathMailbox::POP3);
+}
 
-    EmpathMailbox * m =
-        empath->mailboxList().createNew(serverTypeDialog.accountType());
-
-    if (m == 0) {
-        empathDebug("Cannot create new mailbox");
-        return;
-    }
+    void
+EmpathAccountsSettingsDialog::s_newIMAP()
+{
+    empath->mailboxList().createNew(EmpathMailbox::IMAP4);
 }
 
     void
@@ -164,11 +164,19 @@ EmpathAccountsSettingsDialog::s_edit()
 }
 
     void
+EmpathAccountsSettingsDialog::loadData()
+{
+    s_updateMailboxList();
+}
+
+    void
 EmpathAccountsSettingsDialog::s_updateMailboxList()
 {
     lv_accts_->clear();
 
-    for (EmpathMailboxListIterator it(empath->mailboxList()); it.current();++it)
+    EmpathMailboxListIterator it(empath->mailboxList());
+
+    for (; it.current(); ++it)
         new EmpathAccountListItem(lv_accts_, it.current());
 }
 
@@ -182,8 +190,8 @@ EmpathAccountListItem::EmpathAccountListItem
 
     setText(0, m->name());
     setText(1, m->typeAsString());
-    setText(2, m->checkMail() ?
-        QString().setNum(m->checkMailInterval()) : QString::null);
+    setText(2, m->autoCheck() ?
+        QString().setNum(m->autoCheckInterval()) : QString::null);
 
     setPixmap(0, empathIcon("settings-accounts"));
 }
@@ -202,7 +210,7 @@ EmpathAccountsSettingsDialog::s_OK()
     hide();
     s_apply();
     KGlobal::config()->sync();
-    delete this;
+    accept();
 }
 
     void
@@ -223,7 +231,20 @@ EmpathAccountsSettingsDialog::s_cancel()
 {
     if (!applied_)
         KGlobal::config()->rollback(true);
-    delete this;
+    reject();
+}
+
+
+    void
+EmpathAccountsSettingsDialog::s_currentChanged(QListViewItem * item)
+{
+    if (!item == 0)
+        return;
+    
+    if (item->text(1) == "Maildir")
+        pb_remove_->setEnabled(false);
+    else
+        pb_remove_->setEnabled(true);
 }
 
 // vim:ts=4:sw=4:tw=78

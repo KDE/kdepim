@@ -34,7 +34,6 @@
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
 
-class RikGroupBox;
 class EmpathMailboxPOP3;
 class EmpathPasswordEditWidget;
 

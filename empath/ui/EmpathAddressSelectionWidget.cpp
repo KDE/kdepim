@@ -42,9 +42,8 @@ EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(QWidget * parent)
     le_address_ = new QLineEdit(this, "le_address");
     pb_browse_  = new QPushButton(this, "pb_browse");
 
-    pb_browse_->setPixmap(empathIcon("point"));
-    pb_browse_->setFixedHeight(le_address_->sizeHint().height());
-    pb_browse_->setFixedWidth(pb_browse_->height());
+    pb_browse_->setPixmap(empathIcon("misc-point")), 
+    pb_browse_->setFixedWidth(pb_browse_->sizeHint().width());
 
     QObject::connect(le_address_, SIGNAL(textChanged(const QString&)),
             this, SLOT(s_textChanged(const QString&)));

@@ -33,7 +33,6 @@
 #include "EmpathUIUtils.h"
 #include "EmpathDefines.h"
 #include "EmpathAttachmentEditDialog.h"
-#include "RikGroupBox.h"
 
     const QString
 EmpathAttachmentEditDialog::charsetTypes_[] = { 
@@ -145,99 +144,50 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
         const char * name)
     :    QDialog(parent, name, true)
 {
-    empathDebug("ctor");
-    
     setCaption(i18n("Attachment Edit"));
     
-    QLineEdit    tempLineEdit((QWidget *)0);
-    Q_UINT32 h    = tempLineEdit.sizeHint().height();
-    
-    buttonBox_    = new KButtonBox(this);
-    CHECK_PTR(buttonBox_);
+    KButtonBox * buttonBox    = new KButtonBox(this);
 
-    buttonBox_->setMaximumHeight(h);
-    
     // Bottom button group
-    pb_help_    = buttonBox_->addButton(i18n("&Help"));    
-    buttonBox_->addStretch();
-    pb_OK_        = buttonBox_->addButton(i18n("&OK"));
+    pb_help_    = buttonBox->addButton(i18n("&Help"));    
+    buttonBox->addStretch();
+    pb_OK_        = buttonBox->addButton(i18n("&OK"));
     pb_OK_->setDefault(true);
-    pb_cancel_    = buttonBox_->addButton(i18n("&Cancel"));
+    pb_cancel_    = buttonBox->addButton(i18n("&Cancel"));
     
-    buttonBox_->layout();
+    buttonBox->layout();
 
-    QObject::connect(pb_OK_, SIGNAL(clicked()),
-            this, SLOT(s_OK()));
-    
-    QObject::connect(pb_cancel_, SIGNAL(clicked()),
-            this, SLOT(s_cancel()));
-    
-    QObject::connect(pb_help_, SIGNAL(clicked()),
-            this, SLOT(s_help()));
+    QObject::connect(pb_OK_,        SIGNAL(clicked()),  SLOT(s_OK())); 
+    QObject::connect(pb_cancel_,    SIGNAL(clicked()),  SLOT(s_cancel()));
+    QObject::connect(pb_help_,      SIGNAL(clicked()),  SLOT(s_help()));
 
-    rgb_main_    = new RikGroupBox(QString::null, 8, this, "rgb_main");
-    CHECK_PTR(rgb_main_);
+    QLabel * l_filename    = new QLabel(i18n("Filename"), this, "l_filename");
+    QLabel * l_description = new QLabel(i18n("Description"), this, "l_descrip");
+    le_filename_   = new QLineEdit(this, "le_filename");
     
-    w_main_        = new QWidget(rgb_main_, "w_main");
-    CHECK_PTR(w_main_);
+    QWhatsThis::add(le_filename_, i18n("Pick a file to attach !"));
     
-    rgb_main_->setWidget(w_main_);
-
-    rgb_encoding_= new RikGroupBox(i18n("Encoding"), 8, w_main_, "rgb_enc");
-    CHECK_PTR(rgb_encoding_);
-    
-    w_encoding_    = new QWidget(rgb_encoding_, "w_enc");
-    CHECK_PTR(w_encoding_);
-    
-    rgb_encoding_->setWidget(w_encoding_);
-    
-    l_filename_        = new QLabel(i18n("Filename"), w_main_, "l_filename");
-    CHECK_PTR(l_filename_);
-
-    l_description_    = new QLabel(i18n("Description"), w_main_, "l_descrip");
-    CHECK_PTR(l_description_);
-    
-    le_filename_    = new QLineEdit(w_main_, "le_filename");
-    CHECK_PTR(le_filename_);
-    
-    QWhatsThis::add(le_filename_, i18n(
-            "Pick a file to attach !"));
-    
-    le_description_    = new QLineEdit(w_main_, "le_description");
-    CHECK_PTR(le_description_);
+    le_description_ = new QLineEdit(this, "le_description");
     
     QWhatsThis::add(le_description_, i18n(
             "Write your own description of the attachment here.\n"
             "For example, ``Here's that file you didn't want''"));
     
-    pb_browse_ = new QPushButton(w_main_);
-    CHECK_PTR(pb_browse_);
-    
-    pb_browse_->setPixmap(empathIcon("browse"));
-    pb_browse_->setFixedSize(h, h);
-    
-    QObject::connect(
-        pb_browse_,    SIGNAL(clicked()),
-        this,        SLOT(s_browse()));
-
     bg_encoding_ =
-        new QButtonGroup(w_encoding_, "bg_encoding");
-    CHECK_PTR(bg_encoding_);
+        new QButtonGroup(this, "bg_encoding");
 
     bg_encoding_->hide();
     bg_encoding_->setExclusive(true);
 
     rb_base64_    =
-        new QRadioButton(i18n("Base 64"), w_encoding_, "rb_base64_");
-    CHECK_PTR(rb_base64_);
+        new QRadioButton(i18n("Base 64"), this, "rb_base64_");
     
     QWhatsThis::add(rb_base64_, i18n(
             "Encode the attachment using base 64.\n"
             "This is generally the best encoding type to use"));
 
     rb_qp_        =
-        new QRadioButton(i18n("Quoted printable"), w_encoding_, "rb_qp");
-    CHECK_PTR(rb_qp_);
+        new QRadioButton(i18n("Quoted printable"), this, "rb_qp");
     
     QWhatsThis::add(rb_qp_, i18n(
             "Encode the attachment as quoted-printable.\n"
@@ -246,8 +196,7 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
             "as it doesn't make text completely unreadable."));
 
     rb_8bit_    =
-        new QRadioButton(i18n("8 Bit"), w_encoding_, "rb_8bit_");
-    CHECK_PTR(rb_8bit_);
+        new QRadioButton(i18n("8 Bit"), this, "rb_8bit_");
     
     QWhatsThis::add(rb_8bit_, i18n(
             "Encode the attachment using 8 bit.\n"
@@ -255,8 +204,7 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
             "and it's fine for just sending text."));
 
     rb_7bit_    =
-        new QRadioButton(i18n("7 bit"), w_encoding_, "rb_7bit_");
-    CHECK_PTR(rb_7bit_);
+        new QRadioButton(i18n("7 bit"), this, "rb_7bit_");
     
     QWhatsThis::add(rb_7bit_, i18n(
             "Encode the attachment as 7 bit.\n"
@@ -266,11 +214,6 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
             "with 8 bit, or being read by a dumb MUA.\n"
             "If you don't understand this, don't worry."));
 
-    rb_base64_    ->setFixedHeight(h);
-    rb_8bit_    ->setFixedHeight(h);
-    rb_7bit_    ->setFixedHeight(h);
-    rb_qp_        ->setFixedHeight(h);
-    
     rb_base64_    ->setChecked(true);
     rb_8bit_    ->setChecked(false);
     rb_7bit_    ->setChecked(false);
@@ -285,38 +228,32 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
         bg_encoding_, SIGNAL(clicked(int)),
         this, SLOT(s_encodingChanged(int)));
 
-    l_type_        = new QLabel(i18n("Type"), w_main_, "l_type");
-    CHECK_PTR(l_type_);
+    QLabel * l_type       = new QLabel(i18n("Type"), this, "l_type");
 
-    l_subType_    = new QLabel(i18n("SubType"), w_main_, "l_subType");
-    CHECK_PTR(l_subType_);
+    QLabel * l_subType    = new QLabel(i18n("SubType"), this, "l_subType");
     
-    cb_type_        = new QComboBox(w_main_, "cb_type");
-    CHECK_PTR(cb_type_);
+    cb_type_ = new QComboBox(this, "cb_type");
     
     QWhatsThis::add(cb_type_, i18n(
             "Specify the major type of the attachment."));
     
     cb_type_->insertItem("text",        0);
-    cb_type_->insertItem("message",        1);
-    cb_type_->insertItem("application",    2);
-    cb_type_->insertItem("image",        3);
-    cb_type_->insertItem("video",        4);
-    cb_type_->insertItem("audio",        5);
+    cb_type_->insertItem("message",     1);
+    cb_type_->insertItem("application", 2);
+    cb_type_->insertItem("image",       3);
+    cb_type_->insertItem("video",       4);
+    cb_type_->insertItem("audio",       5);
     
-    cb_subType_        = new QComboBox(true, w_main_, "cb_subType");
-    CHECK_PTR(cb_subType_);
+    cb_subType_        = new QComboBox(true, this, "cb_subType");
     
     QWhatsThis::add(cb_subType_, i18n(
             "Specify the minor type of the attachment.\n"
             "You may make up your own here, but precede\n"
             "it with 'X-'."));
 
-    l_charset_        = new QLabel(i18n("Charset"), w_main_, "l_charset");
-    CHECK_PTR(l_charset_);
+    QLabel * l_charset_ = new QLabel(i18n("Charset"), this, "l_charset");
     
-    cb_charset_        = new QComboBox(w_main_, "cb_charset");
-    CHECK_PTR(cb_charset_);
+    cb_charset_        = new QComboBox(this, "cb_charset");
     
     QWhatsThis::add(cb_charset_, i18n(
             "Choose the character set that this attachment\n"
@@ -324,53 +261,11 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
     
     // Layouts
 
-    layout_                = new QGridLayout(this,            2, 1, 10, 10);
-    CHECK_PTR(layout_);
-    
-    mainLayout_            = new QGridLayout(w_main_,        5, 5, 10, 10);
-    CHECK_PTR(mainLayout_);
-
-    encodingLayout_        = new QGridLayout(w_encoding_,    2, 2, 10, 10);
-    CHECK_PTR(encodingLayout_);
-    
-    layout_->addWidget(rgb_main_,    0, 0);
-    layout_->addWidget(buttonBox_,    1, 0);
-    
-    mainLayout_->addWidget(l_filename_,                0, 0);
-    mainLayout_->addMultiCellWidget(le_filename_,    0, 0, 1, 3);
-    mainLayout_->addWidget(pb_browse_,                0, 4);
-    
-    mainLayout_->addWidget(l_description_,            1, 0);
-    mainLayout_->addMultiCellWidget(le_description_,1, 1, 1, 4);
-    
-    mainLayout_->addWidget(l_type_,                    2, 0);
-    mainLayout_->addWidget(cb_type_,                2, 1);
-    mainLayout_->addWidget(l_subType_,                2, 2);
-    mainLayout_->addMultiCellWidget(cb_subType_,    2, 2, 3, 4);
-    
-    mainLayout_->addMultiCellWidget(rgb_encoding_,    3, 3, 0, 4);
-
-    mainLayout_->addWidget(l_charset_,                4, 0);
-    mainLayout_->addMultiCellWidget(cb_charset_,    4, 4, 1, 4);
-    
-    encodingLayout_->addWidget(rb_base64_,    0, 0);
-    encodingLayout_->addWidget(rb_qp_,        0, 1);
-    encodingLayout_->addWidget(rb_8bit_,    1, 0);
-    encodingLayout_->addWidget(rb_7bit_,    1, 1);
-    
-    mainLayout_->activate();
-    encodingLayout_->activate();
-    
-    layout_->activate();
-    
     QObject::connect(
         cb_type_, SIGNAL(activated(int)),
         this, SLOT(s_typeChanged(int)));
     
     _init();
-
-    setMinimumSize(minimumSizeHint());
-    resize(minimumSizeHint());
 }
 
 EmpathAttachmentEditDialog::~EmpathAttachmentEditDialog()
@@ -386,13 +281,13 @@ EmpathAttachmentEditDialog::_init()
     
     int i;
     
-    i = 0; do txtST_.append(textSubTypes_        [i++]);    while (i != nTxt);
-    i = 0; do msgST_.append(messageSubTypes_    [i++]);    while (i != nMsg);
-    i = 0; do appST_.append(applicationSubTypes_[i++]);    while (i != nApp);
-    i = 0; do imgST_.append(imageSubTypes_        [i++]);    while (i != nImg);
-    i = 0; do vidST_.append(videoSubTypes_        [i++]);    while (i != nVid);
-    i = 0; do audST_.append(audioSubTypes_        [i++]);    while (i != nAud);
-    i = 0; do chrT_ .append(charsetTypes_        [i++]);    while (i != nChr);
+    i = 0; do txtST_.append(textSubTypes_       [i++]); while (i != nTxt);
+    i = 0; do msgST_.append(messageSubTypes_    [i++]); while (i != nMsg);
+    i = 0; do appST_.append(applicationSubTypes_[i++]); while (i != nApp);
+    i = 0; do imgST_.append(imageSubTypes_      [i++]); while (i != nImg);
+    i = 0; do vidST_.append(videoSubTypes_      [i++]); while (i != nVid);
+    i = 0; do audST_.append(audioSubTypes_      [i++]); while (i != nAud);
+    i = 0; do chrT_ .append(charsetTypes_       [i++]); while (i != nChr);
     
     s_typeChanged(2);
     cb_type_->setCurrentItem(2);
@@ -415,6 +310,7 @@ EmpathAttachmentEditDialog::s_cancel()
     void
 EmpathAttachmentEditDialog::s_help()
 {
+    // STUB
 }
 
     void
@@ -448,32 +344,13 @@ EmpathAttachmentEditDialog::s_typeChanged(int idx)
 
     switch (idx) {
         
-        case 0:
-            cb_subType_->insertStringList(txtST_);
-            break;
-
-        case 1:
-            cb_subType_->insertStringList(msgST_);
-            break;
-
-        case 2:
-            cb_subType_->insertStringList(appST_);
-            break;
-
-        case 3:
-            cb_subType_->insertStringList(imgST_);
-            break;
-
-        case 4:
-            cb_subType_->insertStringList(vidST_);
-            break;
-
-        case 5:
-            cb_subType_->insertStringList(audST_);
-            break;
-
-        default:
-            break;
+        case 0: cb_subType_->insertStringList(txtST_);  break;
+        case 1: cb_subType_->insertStringList(msgST_);  break;
+        case 2: cb_subType_->insertStringList(appST_);  break;
+        case 3: cb_subType_->insertStringList(imgST_);  break;
+        case 4: cb_subType_->insertStringList(vidST_);  break;
+        case 5: cb_subType_->insertStringList(audST_);  break;
+        default:                                        break;
     }
 }
 

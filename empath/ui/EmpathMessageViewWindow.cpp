@@ -41,15 +41,11 @@
 
 #include <RMM_Message.h>
 
-EmpathMessageViewWindow::EmpathMessageViewWindow(
-        const EmpathURL & url, const char * name)
-    :    KTMainWindow(name),
+EmpathMessageViewWindow::EmpathMessageViewWindow(const EmpathURL & url)
+    :   KTMainWindow("MessageViewWindow"),
         url_(url)
 {
-    empathDebug("ctor");
-    
-    messageView_ = new EmpathMessageViewWidget(url_, this, "messageView");
-    CHECK_PTR(messageView_);
+    messageView_ = new EmpathMessageViewWidget(url_, this);
     
     setView(messageView_, false);
     
@@ -66,37 +62,25 @@ EmpathMessageViewWindow::EmpathMessageViewWindow(
 
 EmpathMessageViewWindow::~EmpathMessageViewWindow()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     void
 EmpathMessageViewWindow::setupMenuBar()
 {
-    empathDebug("setting up menu bar");
+    fileMenu_    = new QPopupMenu;
+    editMenu_    = new QPopupMenu;
+    messageMenu_ = new QPopupMenu;
+    helpMenu_    = new QPopupMenu;
 
-    fileMenu_    = new QPopupMenu();
-    CHECK_PTR(fileMenu_);
-
-    editMenu_    = new QPopupMenu();
-    CHECK_PTR(editMenu_);
-
-    messageMenu_    = new QPopupMenu();
-    CHECK_PTR(messageMenu_);
-    
-    helpMenu_    = new QPopupMenu();
-    CHECK_PTR(helpMenu_);
-
-    // File menu
-    empathDebug("setting up file menu");
+    // File
     
     fileMenu_->insertItem(i18n("&Close"),
         this, SLOT(s_fileClose()));
 
-    // Edit menu
+    // Edit
     
-    empathDebug("setting up edit menu");
-
-    editMenu_->insertItem(empathIcon("empath-copy"), i18n("&Copy"),
+    editMenu_->insertItem(empathIcon("copy"), i18n("&Copy"),
         this, SLOT(s_editCopy()));
     
     editMenu_->insertSeparator();
@@ -107,21 +91,22 @@ EmpathMessageViewWindow::setupMenuBar()
     editMenu_->insertItem(empathIcon("find"), i18n("Find &Again"),
         this, SLOT(s_editFindAgain()));
     
-    // Message Menu
-    empathDebug("setting up message menu");
+    // Message
 
-    messageMenu_->insertItem(empathIcon("mini-view"), i18n("&View source"),
+    messageMenu_->insertItem(empathIcon("menu-view"), i18n("&View source"),
         messageView_, SLOT(s_switchView()));
     
-    messageMenu_->insertItem(empathIcon("mini-view"), i18n("&New"),
+    messageMenu_->insertItem(empathIcon("menu-compose"), i18n("&New"),
         this, SLOT(s_messageNew()));
 
-    messageMenu_->insertItem(empathIcon("mini-save"), i18n("Save &As"),
+    messageMenu_->insertItem(empathIcon("menu-save"), i18n("Save &As"),
         this, SLOT(s_messageSaveAs()));
 
-    messageMenu_->insertItem(empathIcon("editcopy"), i18n("&Copy to..."),
+    messageMenu_->insertItem(empathIcon("menu-copy"), i18n("&Copy to..."),
         this, SLOT(s_messageCopyTo()));
     
+    // Help
+
     helpMenu_->insertItem(
         i18n("&Contents"),
         this, SLOT(s_help()));
@@ -135,10 +120,6 @@ EmpathMessageViewWindow::setupMenuBar()
         i18n("About &Qt"),
         this, SLOT(s_aboutQt()));
     
-    helpMenu_->insertItem(
-        i18n("About &KDE"),
-        kapp, SLOT(aboutKDE()));
-    
     menuBar()->insertItem(i18n("&File"), fileMenu_);
     menuBar()->insertItem(i18n("&Edit"), editMenu_);
     menuBar()->insertItem(i18n("&Message"), messageMenu_);
@@ -149,42 +130,38 @@ EmpathMessageViewWindow::setupMenuBar()
     void
 EmpathMessageViewWindow::setupToolBar() 
 {
-    empathDebug("setting up tool bar");
-
-    QPixmap p = empathIcon("compose");
+    QPixmap p = empathIcon("toolbar-compose");
     int i = QMAX(p.width(), p.height());
 
     KToolBar * tb = new KToolBar(this, "tooly", i + 4);
-    CHECK_PTR(tb);
     
     this->addToolBar(tb, 0);
 
-    tb->insertButton(empathIcon("compose"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("toolbar-compose"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageNew()), true, i18n("Compose"));
     
-    tb->insertButton(empathIcon("reply"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("toolbar-reply"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageReply()), true, i18n("Reply"));
     
-    tb->insertButton(empathIcon("forward"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("toolbar-forward"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageForward()), true, i18n("Forward"));
     
-    tb->insertButton(empathIcon("delete"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("toolbar-delete"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageDelete()), true, i18n("Delete"));
     
-    tb->insertButton(empathIcon("save"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("toolbar-save"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageSaveAs()), true, i18n("Save"));
 }
 
     void
 EmpathMessageViewWindow::setupStatusBar()
 {
-    empathDebug("setting up status bar");
+    // Empty.
 }
 
     void
 EmpathMessageViewWindow::s_fileClose()
 {
-    empathDebug("s_fileClose called");
     delete this;
 }
 
@@ -193,25 +170,25 @@ EmpathMessageViewWindow::s_fileClose()
     void
 EmpathMessageViewWindow::s_editCopy()
 {
-    empathDebug("s_editCopy called");
+    // STUB
 }
 
     void
 EmpathMessageViewWindow::s_editFindInMessage()
 {
-    empathDebug("s_editFindInMessage called");
+    // STUB
 }
 
     void
 EmpathMessageViewWindow::s_editFind()
 {
-    empathDebug("s_editFind called");
+    // STUB
 }
 
     void
 EmpathMessageViewWindow::s_editFindAgain()
 {
-    empathDebug("s_editFindAgain called");
+    // STUB
 }
 
 // Message menu slots
@@ -225,20 +202,16 @@ EmpathMessageViewWindow::s_messageNew()
     void
 EmpathMessageViewWindow::s_messageSaveAs()
 {
-    empath->saveMessage(url_);
+    empath->saveMessage(url_, this);
 }
 
     void
 EmpathMessageViewWindow::s_messageCopyTo()
 {
-    empathDebug("s_messageCopyTo called");
+    EmpathFolderChooserDialog fcd(this);
 
-    EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
-
-    if (fcd.exec() != QDialog::Accepted) {
-        empathDebug("copy cancelled");
+    if (fcd.exec() != QDialog::Accepted)
         return;
-    }
 
     empath->copy(url_, fcd.selected());
 }
@@ -246,42 +219,36 @@ EmpathMessageViewWindow::s_messageCopyTo()
     void
 EmpathMessageViewWindow::s_messageForward()
 {
-    empathDebug("s_messageForward called");
     empath->s_forward(url_);
 }
 
     void
 EmpathMessageViewWindow::s_messageBounce()
 {
-    empathDebug("s_messageBounce called");
     empath->s_bounce(url_);
 }
 
     void
 EmpathMessageViewWindow::s_messageDelete()
 {
-    empathDebug("s_messageDelete called");
     empath->remove(url_);
 }
 
     void
 EmpathMessageViewWindow::s_messagePrint()
 {
-    empathDebug("s_messagePrint called");
     messageView_->s_print();
 }
 
     void
 EmpathMessageViewWindow::s_messageReply()
 {
-    empathDebug("s_messageReply called");
     empath->s_reply(url_);
 }
 
     void
 EmpathMessageViewWindow::s_messageReplyAll()
 {
-    empathDebug("s_messageReplyAll called");
     empath->s_replyAll(url_);
 }
 

@@ -47,12 +47,16 @@ class EmpathPathSelectWidget : public QHBox
 
         virtual ~EmpathPathSelectWidget();
 
-        virtual QString selected() const;
+        virtual QString path() const;
         virtual void setPath(const QString &);
         
     protected slots:
     
         virtual void s_browse() = 0;
+
+    signals:
+
+        virtual void changed(const QString &);
     
     protected:
 

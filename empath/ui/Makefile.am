@@ -16,7 +16,6 @@ EmpathComposeWindow.cpp \
 EmpathConfigIMAP4Dialog.cpp \
 EmpathConfigMaildirDialog.cpp \
 EmpathConfigPOP3Dialog.cpp \
-EmpathConfigPOP3General.cpp \
 EmpathConfigPOP3Logging.cpp \
 EmpathConfigPOP3Server.cpp \
 EmpathConfigPOP3Widget.cpp \
@@ -49,11 +48,11 @@ EmpathMessageViewWindow.cpp \
 EmpathMessageWidget.cpp \
 EmpathPathSelectWidget.cpp \
 EmpathPasswordEditWidget.cpp \
-EmpathSendingSettingsDialog.cpp \
-EmpathServerTypeDialog.cpp \
 EmpathSubjectSpecWidget.cpp \
+EmpathSendingSettingsDialog.cpp \
+EmpathSetupWizard.cpp \
+EmpathSeparatorWidget.cpp \
 EmpathTaskWidget.cpp \
 EmpathUI.cpp \
-EmpathUIUtils.cpp \
-RikGroupBox.cpp
+EmpathUIUtils.cpp
 

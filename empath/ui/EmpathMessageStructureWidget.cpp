@@ -60,7 +60,7 @@ EmpathMessageStructureWidget::EmpathMessageStructureWidget
         this,
         SLOT(s_rightButtonPressed(QListViewItem *, const QPoint &, int)));
     
-    popup_.insertItem(empathIcon("mini-save"),
+    popup_.insertItem(empathIcon("menu-save"),
             i18n("Save &As"),
             this, SLOT(s_saveAs()));
     
@@ -128,8 +128,8 @@ EmpathMessageStructureWidget::s_saveAs()
 {
     QString saveFilePath =
         KFileDialog::getSaveFileName(
-            QString::null, QString::null, this, i18n("Empath: Save Message").ascii());
-    empathDebug(saveFilePath);
+            QString::null, QString::null,
+            this, i18n("Empath: Save Message").latin1());
     
     if (saveFilePath.isEmpty()) {
         empathDebug("No filename given");

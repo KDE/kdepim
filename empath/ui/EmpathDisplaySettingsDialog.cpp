@@ -25,6 +25,7 @@
 // Qt includes
 #include <qimage.h>
 #include <qdir.h>
+#include <qlayout.h>
 #include <qwhatsthis.h>
 
 // KDE includes
@@ -36,351 +37,216 @@
 #include <kstddirs.h>
 
 // Local includes
+#include "EmpathSeparatorWidget.h"
 #include "EmpathUIUtils.h"
 #include "EmpathDisplaySettingsDialog.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
-#include "RikGroupBox.h"
 
-bool EmpathDisplaySettingsDialog::exists_ = false;
-
-    void
-EmpathDisplaySettingsDialog::create()
-{
-    if (exists_) return;
-    exists_ = true;
-    EmpathDisplaySettingsDialog * d = new EmpathDisplaySettingsDialog;
-    d->loadData();
-    d->exec();
-}
-        
 EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
-    :   QDialog(parent, "DisplaySettings", false),
+    :   QDialog(parent, "DisplaySettings", true),
         applied_(false)
 {
-    empathDebug("ctor");
     setCaption(i18n("Display Settings"));
     
-    QLineEdit    tempLineEdit((QWidget *)0);
-    Q_UINT32 h    = tempLineEdit.sizeHint().height();
-    
-    rgb_list_    = new RikGroupBox(i18n("Message List"), 8, this, "rgb_list");
-    CHECK_PTR(rgb_list_);
-    
-    rgb_view_    = new RikGroupBox(i18n("Message Viewing"), 8, this, "rgb_view");
-    CHECK_PTR(rgb_view_);
-    
-    w_list_    = new QWidget(rgb_list_, "w_list");
-    CHECK_PTR(w_list_);
-    
-    w_view_    = new QWidget(rgb_view_, "w_view");
-    CHECK_PTR(w_view_);
-    
-    rgb_list_->setWidget(w_list_);
-    rgb_view_->setWidget(w_view_);
-
 ////////////////////////////////////////////////////////////////////////    
 // Message view
 // 
-    l_displayHeaders_ =
-        new QLabel(i18n("Display headers"), w_view_, "l_displayHeaders");
-    CHECK_PTR(l_displayHeaders_);
+    QLabel * l_displayHeaders =
+        new QLabel(i18n("Display headers"), this, "l_displayHeaders");
     
-    l_displayHeaders_->setFixedHeight(h);
+    le_displayHeaders_ = new QLineEdit(this, "le_displayHeaders");
     
-    le_displayHeaders_ =
-        new QLineEdit(w_view_, "le_displayHeaders");
-    CHECK_PTR(le_displayHeaders_);
+    QLabel * l_fixedFont =
+        new QLabel(i18n("Message font"), this, "l_fixedFont");
     
-    le_displayHeaders_->setFixedHeight(h);
     
-    QWhatsThis::add(le_displayHeaders_, i18n(
-            "Here you may enter the headers that you\n"
-            "want to appear in the block above the message\n"
-            "you are reading. The default is:\n"
-            "From,Date,Subject\n\n"
-            "You must separate the header names by commas (,).\n"
-            "This is not case-sensitive, i.e. you can write\n"
-            "DATE and 'Date', 'date', 'DaTe' etc will all work\n\n"
-            "Note that headers that you specify that do not appear\n"
-            "in the message envelope will not be shown at all.\n"
-            "This is to save space."));
+    l_sampleFixed_ = new QLabel(i18n("Sample"), this, "l_sampleFixed");
     
-    // Fixed font
-    
-    l_fixedFont_    =
-        new QLabel(i18n("Message font"), w_view_, "l_messageFont");
-    CHECK_PTR(l_fixedFont_);
-    
-    l_fixedFont_->setFixedHeight(h);
-    
-    l_sampleFixed_        =
-        new QLabel(i18n("Sample"), w_view_, "l_sampleFixed");
-    CHECK_PTR(l_sampleFixed_);
-    
-    pb_chooseFixedFont_        =
-        new QPushButton(i18n("Choose..."), w_view_, "pb_chooseFixedFont");
-    CHECK_PTR(pb_chooseFixedFont_);
-    
-    QObject::connect(pb_chooseFixedFont_, SIGNAL(clicked()),
-            this, SLOT(s_chooseFixedFont()));
-    
-    QWhatsThis::add(pb_chooseFixedFont_, i18n(
-            "Here you may set the font to use for displaying\n"
-            "messages. It's best to use a fixed-width font\n"
-            "as the rest of the world expects that. Doing\n"
-            "this allows people to line up text properly."));
-    
-    // underline links
+    pb_chooseFixedFont_ =
+        new QPushButton(i18n("Choose..."), this, "pb_chooseFixedFont");
     
     cb_underlineLinks_    =
-        new QCheckBox(i18n("&Underline Links"), w_view_, "cb_underlineLinks");
-    CHECK_PTR(cb_underlineLinks_);
+        new QCheckBox(i18n("&Underline Links"), this, "cb_underlineLinks");
     
-    cb_underlineLinks_->setFixedHeight(h);
+    QLabel * l_quoteColourOne =
+        new QLabel(i18n("Quote colour one"), this, "l_quoteColourOne");
     
-    QWhatsThis::add(cb_underlineLinks_, i18n(
-            "Choose whether to have links underlined.\n"
-            "Links are email addresses, http:// type\n"
-            "addresses, etc. If you're colour blind,\n"
-            "this is a smart move."));
-        
-    // Colours
-    
-    // Markup colour one
-    
-    l_quoteColourOne_    =
-        new QLabel(i18n("Quote colour one"), w_view_, "l_quoteColourOne");
-    CHECK_PTR(l_quoteColourOne_);
-    
-    l_quoteColourOne_->setFixedHeight(h);
-    
+    kcb_quoteColourOne_ = new KColorButton(this, "kcb_quoteColourOne");
 
-    kcb_quoteColourOne_    =
-        new KColorButton(w_view_, "kcb_quoteColourOne");
-    CHECK_PTR(kcb_quoteColourOne_);
+    QLabel * l_quoteColourTwo =
+        new QLabel(i18n("Quote colour two"), this, "l_quoteColourTwo");
+    
+    kcb_quoteColourTwo_ = new KColorButton(this, "kcb_quoteColourTwo");
 
-    QWhatsThis::add(kcb_quoteColourOne_, i18n(
-            "Choose the primary colour for quoted text.\n"
-            "Text can be quoted to multiple depths.\n"
-            "Text that's quoted to an odd number, e.g.\n"
-            "where the line begins with '\\>    ' or '\\> \\> \\> '\n"
-            "will be shown in this colour."));    
+    QLabel * l_linkColour =
+        new QLabel(i18n("Link Colour"), this, "l_linkColour");
     
-    // Markup colour two
-    
-    l_quoteColourTwo_    =
-        new QLabel(i18n("Quote colour two"), w_view_, "l_quoteColourTwo");
-    CHECK_PTR(l_quoteColourTwo_);
-    
-    l_quoteColourTwo_->setFixedHeight(h);
-        
-
-    kcb_quoteColourTwo_    =
-        new KColorButton(w_view_, "kcb_quoteColourTwo");
-    CHECK_PTR(kcb_quoteColourTwo_);
-
-    QWhatsThis::add(kcb_quoteColourTwo_, i18n(
-            "Choose the secondary colour for quoted text.\n"
-            "Text can be quoted to multiple depths.\n"
-            "Text that's quoted to an even number, e.g.\n"
-            "where the line begins with '&gt; &gt; ' or '&gt; &gt; &gt; &gt; '\n"
-            "will be shown in this colour."));
-    
-    // Link
-    
-    l_linkColour_    =
-        new QLabel(i18n("Link Colour"), w_view_, "l_linkColour");
-    CHECK_PTR(l_linkColour_);
-    
-    l_linkColour_->setFixedHeight(h);
-
-    kcb_linkColour_    =
-        new KColorButton(w_view_, "kcb_linkColour");
-    CHECK_PTR(kcb_linkColour_);
+    kcb_linkColour_ = new KColorButton(this, "kcb_linkColour");
             
-    QWhatsThis::add(kcb_linkColour_, i18n(
-            "Choose the colour that links in messages\n"
-            "are shown in. Links means URLs, including\n"
-            "mailto: URLs."));
+    QLabel * l_visitedColour =
+        new QLabel(i18n("Visited Link Colour"), this, "l_visitedColour");
     
-    // Visited link
-    
-    l_visitedLinkColour_    =
-        new QLabel(i18n("Visited Link Colour"), w_view_, "l_visitedColour");
-    CHECK_PTR(l_visitedLinkColour_);
-    
-    l_visitedLinkColour_->setFixedHeight(h);
-            
-    kcb_visitedLinkColour_    =
-        new KColorButton(w_view_, "kcb_visitedColour");
-    CHECK_PTR(kcb_visitedLinkColour_);
+    kcb_visitedLinkColour_ = new KColorButton(this, "kcb_visitedColour");
         
-    QWhatsThis::add(kcb_visitedLinkColour_, i18n(
-            "Choose the colour that visited links in messages\n"
-            "are shown in. Links means URLs, including\n"
-            "mailto: URLs."));
-    
-///////////////////////////////////////////////////////////////////
-// Message list
-// 
     cb_threadMessages_ =
-        new QCheckBox(i18n("Thread messages"), w_list_, "cb_threadMessages");
-    CHECK_PTR(cb_threadMessages_);
-    
-    QWhatsThis::add(cb_threadMessages_, i18n(
-            "If you select this, messages will be 'threaded'\n"
-            "this means that when one message is a reply to\n"
-            "another, it will be placed in a tree, where it\n"
-            "is a branch from the previous message."));
-    
-    cb_threadMessages_->setFixedHeight(h);
-    
-
-    l_sortColumn_ =
-        new QLabel(i18n("Message sort column"), w_list_, "l_sortColumn");
-    CHECK_PTR(l_sortColumn_);
-    
-    l_sortColumn_->setFixedHeight(h);
+        new QCheckBox(i18n("Thread messages"), this, "cb_threadMessages");
+   
+    QLabel * l_sortColumn =
+        new QLabel(i18n("Message sort column"), this, "l_sortColumn");
     
     cb_sortColumn_ =
-        new QComboBox(w_list_, "cb_sortColumn");
-    CHECK_PTR(cb_sortColumn_);
-    
-    cb_sortColumn_->setFixedHeight(h);
-    
-    cb_sortColumn_->insertItem(i18n("Subject"),    0);
-    cb_sortColumn_->insertItem(i18n("Sender"),    1);
+        new QComboBox(this, "cb_sortColumn");
+ 
+    cb_sortColumn_->insertItem(i18n("Subject"), 0);
+    cb_sortColumn_->insertItem(i18n("Sender"),  1);
     cb_sortColumn_->insertItem(i18n("Date"),    2);
     cb_sortColumn_->insertItem(i18n("Size"),    3);
 
-    QWhatsThis::add(cb_sortColumn_, i18n(
-            "Here you can specify which column the message\n"
-            "list will be sorted by, when you start the\n"
-            "program."));
-    
     cb_sortAscending_ =
-        new QCheckBox(i18n("Sort ascending"), w_list_, "cb_sortAscending");
-    CHECK_PTR(cb_sortAscending_);
-    
-    cb_sortAscending_->setFixedHeight(h);
-    
-    QWhatsThis::add(cb_sortAscending_, i18n(
-            "If you select this, the column you specified\n"
-            "above will be sorted ascending.\n"
-            "Guess what happens if you don't."));
-    
+        new QCheckBox(i18n("Sort ascending"), this, "cb_sortAscending");
+   
     cb_timer_ =
-        new QCheckBox(i18n("Mark messages as read after"), w_list_, "cb_timer");
-    CHECK_PTR(cb_timer_);
+        new QCheckBox(i18n("Mark messages as read after"), this, "cb_timer");
+   
+    sb_timer_ = new QSpinBox(0, 60, 1, this, "sb_timer");
     
-    cb_timer_->setFixedHeight(h);
+    sb_timer_->setSuffix(" s");
     
-    QWhatsThis::add(cb_timer_, i18n(
-            "If you check this, messages will be marked\n"
-            "as read after you've been looking at them for\n"
-            "the time specified"));
-    
-    sb_timer_ =
-        new QSpinBox(0, 60, 1, w_list_, "sb_timer");
-    CHECK_PTR(sb_timer_);
-    
-    sb_timer_->setFixedHeight(h);
-    sb_timer_->setSuffix(" " + i18n("seconds"));
-    
-    QWhatsThis::add(sb_timer_, i18n(
-            "If you check this, messages will be marked\n"
-            "as read after you've been looking at them for\n"
-            "the time specified"));
-
-///////////////////////////////////////////////////////////////////////////////
-// Button box
-
-    buttonBox_    = new KButtonBox(this);
-    CHECK_PTR(buttonBox_);
-
-    buttonBox_->setFixedHeight(h);
-    
-    pb_help_    = buttonBox_->addButton(i18n("&Help"));    
-    CHECK_PTR(pb_help_);
-    
-    pb_default_    = buttonBox_->addButton(i18n("&Default"));    
-    CHECK_PTR(pb_default_);
-    
-    buttonBox_->addStretch();
-    
-    pb_OK_        = buttonBox_->addButton(i18n("&OK"));
-    CHECK_PTR(pb_OK_);
-    
-    pb_OK_->setDefault(true);
-    
-    pb_apply_    = buttonBox_->addButton(i18n("&Apply"));
-    CHECK_PTR(pb_apply_);
-    
-    pb_cancel_    = buttonBox_->addButton(i18n("&Cancel"));
-    CHECK_PTR(pb_cancel_);
-    
-    buttonBox_->layout();
-    
-    QObject::connect(pb_OK_,        SIGNAL(clicked()),  SLOT(s_OK()));
-    QObject::connect(pb_default_,   SIGNAL(clicked()),  SLOT(s_default()));
-    QObject::connect(pb_apply_,     SIGNAL(clicked()),  SLOT(s_apply()));
-    QObject::connect(pb_cancel_,    SIGNAL(clicked()),  SLOT(s_cancel()));
-    QObject::connect(pb_help_,      SIGNAL(clicked()),  SLOT(s_help()));
-/////////////////////////////////////////////////////////////////////////////
+#include "EmpathDialogButtonBox.cpp"
 
     // Layouts
     
-    topLevelLayout_             = new QGridLayout(this, 4, 1, 10, 10);
-    CHECK_PTR(topLevelLayout_);
+    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
 
-    listGroupLayout_            = new QGridLayout(w_list_, 3, 2, 0, 10);
-    CHECK_PTR(listGroupLayout_);
-    
-    viewGroupLayout_            = new QGridLayout(w_view_, 7, 3, 0, 10);
-    CHECK_PTR(viewGroupLayout_);
+    EmpathSeparatorWidget * sep0 =
+        new EmpathSeparatorWidget(i18n("Message List"), this);
+    layout->addWidget(sep0);
 
-    topLevelLayout_->setRowStretch(0, 3);
-    topLevelLayout_->setRowStretch(1, 7);
-    topLevelLayout_->setRowStretch(3, 0);
+    QHBoxLayout * layout0 = new QHBoxLayout(layout);
+    layout0->addWidget(l_sortColumn);
+    layout0->addWidget(cb_sortColumn_);
     
-    topLevelLayout_->addMultiCellWidget(rgb_list_,        0, 0, 0, 0);
-    topLevelLayout_->addMultiCellWidget(rgb_view_,        1, 1, 0, 0);
-    topLevelLayout_->addMultiCellWidget(buttonBox_,       2, 2, 0, 0);
-    
-    listGroupLayout_->addWidget(l_sortColumn_,            0, 0);
-    listGroupLayout_->addWidget(cb_sortColumn_,           0, 1);
-    listGroupLayout_->addWidget(cb_sortAscending_,        1, 0);
-    listGroupLayout_->addWidget(cb_threadMessages_,       1, 1);
-    listGroupLayout_->addWidget(cb_timer_,                2, 0);
-    listGroupLayout_->addWidget(sb_timer_,                2, 1);
-    listGroupLayout_->activate();
-    
-    viewGroupLayout_->addWidget(l_displayHeaders_,              0, 0);
-    viewGroupLayout_->addMultiCellWidget(le_displayHeaders_,    0, 0, 1, 2);
-    viewGroupLayout_->addWidget(l_fixedFont_,                   1, 0);
-    viewGroupLayout_->addWidget(l_sampleFixed_,                 1, 1);
-    viewGroupLayout_->addWidget(pb_chooseFixedFont_,            1, 2);
-    viewGroupLayout_->addMultiCellWidget(l_quoteColourOne_,     2, 2, 0, 1);
-    viewGroupLayout_->addWidget(kcb_quoteColourOne_,            2, 2);
-    viewGroupLayout_->addMultiCellWidget(l_quoteColourTwo_,     3, 3, 0, 1);
-    viewGroupLayout_->addWidget(kcb_quoteColourTwo_,            3, 2);
-    viewGroupLayout_->addMultiCellWidget(l_linkColour_,         4, 4, 0, 1);
-    viewGroupLayout_->addWidget(kcb_linkColour_,                4, 2);
-    viewGroupLayout_->addMultiCellWidget(l_visitedLinkColour_,  5, 5, 0, 1);
-    viewGroupLayout_->addWidget(kcb_visitedLinkColour_,         5, 2);
-    viewGroupLayout_->addMultiCellWidget(cb_underlineLinks_,    6, 6, 0, 2);
-    viewGroupLayout_->activate();
+    QHBoxLayout * layout2 = new QHBoxLayout(layout);
+    layout2->addWidget(cb_timer_);
+    layout2->addWidget(sb_timer_);
 
-    topLevelLayout_->activate();
+    layout->addWidget(cb_sortAscending_);
+    layout->addWidget(cb_threadMessages_);
+
+    EmpathSeparatorWidget * sep1 =
+        new EmpathSeparatorWidget(i18n("Message view"), this);
+    layout->addWidget(sep1);
+
+    QHBoxLayout * layout3 = new QHBoxLayout(layout);
+    layout3->addWidget(l_displayHeaders);
+    layout3->addWidget(le_displayHeaders_);
+
+    QHBoxLayout * layout4 = new QHBoxLayout(layout);
+    layout4->addWidget(l_fixedFont);
+    layout4->addWidget(l_sampleFixed_);
+    layout4->addWidget(pb_chooseFixedFont_);
+
+    QGridLayout * layout5 = new QGridLayout(layout);
+
+    layout5->addWidget(kcb_quoteColourOne_,     0, 0);
+    layout5->addWidget(kcb_quoteColourTwo_,     1, 0);
+    layout5->addWidget(kcb_linkColour_,         2, 0);
+    layout5->addWidget(kcb_visitedLinkColour_,  3, 0);
+
+    int w = kcb_quoteColourOne_->sizeHint().width();
     
-    setMinimumSize(minimumSizeHint());
-    resize(minimumSizeHint());
+    kcb_quoteColourOne_     ->setFixedWidth(w);
+    kcb_quoteColourTwo_     ->setFixedWidth(w);
+    kcb_linkColour_         ->setFixedWidth(w);
+    kcb_visitedLinkColour_  ->setFixedWidth(w);
+
+    layout5->addWidget(l_quoteColourOne,    0, 1);
+    layout5->addWidget(l_quoteColourTwo,    1, 1);
+    layout5->addWidget(l_linkColour,        2, 1);
+    layout5->addWidget(l_visitedColour,     3, 1);
+
+    layout->addWidget(cb_underlineLinks_);
+
+    layout->addStretch(10);
+
+    layout->addWidget(buttonBox_);
+    
+    QWhatsThis::add(le_displayHeaders_, i18n(
+        "Here you may enter the headers that you\n"
+        "want to appear in the block above the message\n"
+        "you are reading. The default is:\n"
+        "From,Date,Subject\n\n"
+        "You must separate the header names by commas (,).\n"
+        "This is not case-sensitive, i.e. you can write\n"
+        "DATE and 'Date', 'date', 'DaTe' etc will all work\n\n"
+        "Note that headers that you specify that do not appear\n"
+        "in the message envelope will not be shown at all.\n"
+        "This is to save space."));
+
+   
+    QWhatsThis::add(pb_chooseFixedFont_, i18n(
+        "Here you may set the font to use for displaying\n"
+        "messages. It's best to use a fixed-width font\n"
+        "as the rest of the world expects that. Doing\n"
+        "this allows people to line up text properly."));
+
+    QWhatsThis::add(cb_timer_, i18n(
+        "If you check this, messages will be marked\n"
+        "as read after you've been looking at them for\n"
+        "the time specified"));
+
+    QWhatsThis::add(sb_timer_, i18n(
+        "Messages will be marked as read after you've\n"
+        "been looking at them for the time specified"));
+
+     QWhatsThis::add(cb_underlineLinks_, i18n(
+        "Choose whether to have links underlined.\n"
+        "Links are email addresses, http:// type\n"
+        "addresses, etc. If you're colour blind,\n"
+        "this is a smart move."));
+
+     QWhatsThis::add(kcb_quoteColourTwo_, i18n(
+        "Choose the secondary colour for quoted text.\n"
+        "Text can be quoted to multiple depths.\n"
+        "Text that's quoted to an even number, e.g.\n"
+        "where the line begins with '&gt; &gt; ' or '&gt; &gt; &gt; &gt; '\n"
+        "will be shown in this colour."));
+    
+     QWhatsThis::add(kcb_linkColour_, i18n(
+        "Choose the colour that links in messages\n"
+        "are shown in. Links means URLs, including\n"
+        "mailto: URLs."));
+
+     QWhatsThis::add(kcb_visitedLinkColour_, i18n(
+        "Choose the colour that visited links in messages\n"
+        "are shown in. Links means URLs, including\n"
+        "mailto: URLs."));
+
+     QWhatsThis::add(cb_threadMessages_, i18n(
+        "If you select this, messages will be 'threaded'\n"
+        "this means that when one message is a reply to\n"
+        "another, it will be placed in a tree, where it\n"
+        "is a branch from the previous message."));
+     
+    QWhatsThis::add(cb_sortColumn_, i18n(
+        "Here you can specify which column the message\n"
+        "list will be sorted by, when you start the\n"
+        "program."));
+
+    QWhatsThis::add(cb_sortAscending_, i18n(
+        "If you select this, the column you specified\n"
+        "above will be sorted ascending.\n"
+        "Guess what happens if you don't."));
+
+    QObject::connect(
+        pb_chooseFixedFont_,    SIGNAL(clicked()),
+        this,                   SLOT(s_chooseFixedFont()));   
 };
 
 EmpathDisplaySettingsDialog::~EmpathDisplaySettingsDialog()
 {
-    exists_ = false;
+    // Empty.
 }
 
     void
@@ -397,68 +263,52 @@ EmpathDisplaySettingsDialog::s_chooseFixedFont()
 EmpathDisplaySettingsDialog::saveData()
 {
     KConfig * c(KGlobal::config());
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
-#define CWE c->writeEntry
-  CWE(EmpathConfig::KEY_FIXED_FONT, l_sampleFixed_->font());
-  CWE(EmpathConfig::KEY_UNDERLINE_LINKS, cb_underlineLinks_->isChecked());
-  CWE(EmpathConfig::KEY_QUOTE_COLOUR_ONE, kcb_quoteColourOne_->color());
-  CWE(EmpathConfig::KEY_QUOTE_COLOUR_TWO, kcb_quoteColourTwo_->color());
-  CWE(EmpathConfig::KEY_LINK_COLOUR, kcb_linkColour_->color());
-  CWE(EmpathConfig::KEY_VISITED_LINK_COLOUR,kcb_visitedLinkColour_->color());
-  
-  CWE(EmpathConfig::KEY_THREAD_MESSAGES, cb_threadMessages_->isChecked());
-  CWE(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, cb_sortAscending_->isChecked());
-  CWE(EmpathConfig::KEY_SHOW_HEADERS, le_displayHeaders_->text());
-  CWE(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, cb_sortColumn_->currentItem());
-  CWE(EmpathConfig::KEY_MARK_AS_READ, cb_timer_->isChecked());
-  CWE(EmpathConfig::KEY_MARK_AS_READ_TIME, sb_timer_->value());
-#undef CWE
+    
+    using namespace EmpathConfig;
+    
+    c->setGroup(GROUP_DISPLAY);
+
+    c->writeEntry(UI_FIXED_FONT,      l_sampleFixed_->font());
+    c->writeEntry(UI_UNDERLINE_LINKS, cb_underlineLinks_->isChecked());
+    c->writeEntry(UI_QUOTE_ONE,       kcb_quoteColourOne_->color());
+    c->writeEntry(UI_QUOTE_TWO,       kcb_quoteColourTwo_->color());
+    c->writeEntry(UI_LINK,            kcb_linkColour_->color());
+    c->writeEntry(UI_VLINK,           kcb_visitedLinkColour_->color());
+    
+    c->writeEntry(UI_THREAD,          cb_threadMessages_->isChecked());
+    c->writeEntry(UI_SORT_ASCENDING,  cb_sortAscending_->isChecked());
+    c->writeEntry(UI_SHOW_HEADERS,    le_displayHeaders_->text());
+    c->writeEntry(UI_SORT_COLUMN,     cb_sortColumn_->currentItem());
+    c->writeEntry(UI_MARK_READ,       cb_timer_->isChecked());
+    c->writeEntry(UI_MARK_TIME,       sb_timer_->value());
 }
 
     void
 EmpathDisplaySettingsDialog::loadData()
 {
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
+    
+    using namespace EmpathConfig;
+    
+    c->setGroup(GROUP_DISPLAY);
     
     QFont f = KGlobal::fixedFont();
 
-    l_sampleFixed_->setFont(
-        c->readFontEntry(EmpathConfig::KEY_FIXED_FONT, &f));
-    
-    cb_underlineLinks_->setChecked(
-        c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS, true));
-    
-    QColor col = kapp->palette().color(QPalette::Normal, QColorGroup::Text);
-    
-    kcb_quoteColourOne_->setColor(
-        c->readColorEntry(EmpathConfig::KEY_QUOTE_COLOUR_ONE, &col));
-    
-    kcb_quoteColourTwo_->setColor(
-        c->readColorEntry(EmpathConfig::KEY_QUOTE_COLOUR_TWO, &col));
-    
-    kcb_linkColour_->setColor(
-        c->readColorEntry(EmpathConfig::KEY_LINK_COLOUR, &Qt::darkBlue));
-
-    kcb_visitedLinkColour_->setColor(
-        c->readColorEntry(EmpathConfig::KEY_VISITED_LINK_COLOUR, &Qt::darkCyan));
-    
-    cb_threadMessages_->setChecked(
-        c->readBoolEntry(EmpathConfig::KEY_THREAD_MESSAGES, true));
-    
-    cb_sortAscending_->setChecked(
-        c->readBoolEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true));
-    
-    le_displayHeaders_->setText(
-        c->readEntry(EmpathConfig::KEY_SHOW_HEADERS, i18n("From,Date,Subject")));
-    cb_sortColumn_->setCurrentItem(
-        c->readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 2));
-    
-    cb_timer_->setChecked(
-        c->readBoolEntry(EmpathConfig::KEY_MARK_AS_READ, true));
-    
-    sb_timer_->setValue(
-        c->readNumEntry(EmpathConfig::KEY_MARK_AS_READ_TIME, 2));
+    l_sampleFixed_->setFont(c->readFontEntry(UI_FIXED_FONT, &f));
+    cb_underlineLinks_->setChecked
+        (c->readBoolEntry(UI_UNDERLINE_LINKS, DFLT_UNDER_LINKS));
+    kcb_quoteColourOne_->setColor(c->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
+    kcb_quoteColourTwo_->setColor(c->readColorEntry(UI_QUOTE_TWO, &DFLT_Q_2));
+    kcb_linkColour_->setColor(c->readColorEntry(UI_LINK, &DFLT_LINK));
+    kcb_visitedLinkColour_->setColor(c->readColorEntry(UI_VLINK, &DFLT_VLINK));
+    cb_threadMessages_->setChecked(c->readBoolEntry(UI_THREAD, DFLT_THREAD));
+    cb_sortAscending_->setChecked
+        (c->readBoolEntry(UI_SORT_ASCENDING, DFLT_SORT_ASCENDING));
+    le_displayHeaders_->setText(c->readEntry(UI_SHOW_HEADERS, DFLT_HEADERS));
+    cb_sortColumn_->setCurrentItem
+        (c->readNumEntry(UI_SORT_COLUMN, DFLT_SORT_COL));
+    cb_timer_->setChecked(c->readBoolEntry(UI_MARK_READ, DFLT_MARK));
+    sb_timer_->setValue(c->readNumEntry(UI_MARK_TIME, DFLT_MARK_TIMER));
 }
 
     void
@@ -468,13 +318,13 @@ EmpathDisplaySettingsDialog::s_OK()
     if (!applied_)
         s_apply();
     KGlobal::config()->sync();
-    delete this;
+    accept();
 }
 
     void
 EmpathDisplaySettingsDialog::s_help()
 {
-    //empathInvokeHelp(QString::null, QString::null);
+    // STUB
 }
 
     void
@@ -497,18 +347,20 @@ EmpathDisplaySettingsDialog::s_apply()
     void
 EmpathDisplaySettingsDialog::s_default()
 {
+    using namespace EmpathConfig;
+
     l_sampleFixed_->setFont(KGlobal::fixedFont());
-    cb_underlineLinks_->setChecked(true);
-    kcb_quoteColourOne_->setColor(Qt::darkBlue);
-    kcb_quoteColourTwo_->setColor(Qt::darkGreen);
-    kcb_linkColour_->setColor(Qt::blue);
-    kcb_visitedLinkColour_->setColor(Qt::darkCyan);
-    cb_threadMessages_->setChecked(true);
-    cb_sortAscending_->setChecked(true);
-    le_displayHeaders_->setText(i18n("From,Date,Subject"));
-    cb_sortColumn_->setCurrentItem(2);
-    cb_timer_->setChecked(true);
-    sb_timer_->setValue(2);
+    cb_underlineLinks_->setChecked(DFLT_UNDER_LINKS);
+    kcb_quoteColourOne_->setColor(DFLT_Q_1);
+    kcb_quoteColourTwo_->setColor(DFLT_Q_2);
+    kcb_linkColour_->setColor(DFLT_LINK);
+    kcb_visitedLinkColour_->setColor(DFLT_VLINK);
+    cb_threadMessages_->setChecked(DFLT_THREAD);
+    cb_sortAscending_->setChecked(DFLT_SORT_ASCENDING);
+    le_displayHeaders_->setText(DFLT_HEADERS);
+    cb_sortColumn_->setCurrentItem(DFLT_SORT_COL);
+    cb_timer_->setChecked(DFLT_MARK);
+    sb_timer_->setValue(DFLT_MARK_TIMER);
     saveData();
 }
     
@@ -517,7 +369,7 @@ EmpathDisplaySettingsDialog::s_cancel()
 {
     if (!applied_)
         KGlobal::config()->rollback(true);
-    delete this;
+    reject();
 }
 
 // vim:ts=4:sw=4:tw=78

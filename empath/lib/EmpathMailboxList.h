@@ -69,9 +69,11 @@ class EmpathMailboxList : public QObject, public QDict<EmpathMailbox>
          */
         EmpathFolder * folder(const EmpathURL & folderURL) const;
 
-        void triggerMailCheck();
-
         EmpathMailbox * createNew(EmpathMailbox::Type);
+
+    protected slots:
+        
+        void s_rename(EmpathMailbox *, const QString &);    
 
     signals:
         
@@ -80,11 +82,6 @@ class EmpathMailboxList : public QObject, public QDict<EmpathMailbox>
          * be updated.
          */
         void updateFolderLists();
-
-        /**
-         * Tell each mailbox to get new mail now.
-         */
-        void checkMail();
 
     private:
 

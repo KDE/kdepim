@@ -47,27 +47,33 @@ EmpathFilterList::saveConfig()
 {
     EmpathFilterListIterator it(*this);
     
-    QStrList list;
+    QStringList list;
 
     for (; it.current() ; ++it) {
         it.current()->save();
-        list.append(it.current()->name().ascii());
+        list << it.current()->name();
     }
     
-    KConfig * config = KGlobal::config();
-    config->setGroup(EmpathConfig::GROUP_GENERAL);
+    KConfig * c = KGlobal::config();
+
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_GENERAL);
     
-    config->writeEntry(EmpathConfig::KEY_FILTER_LIST, list, ',');
+    c->writeEntry(F_LIST, list, ',');
 }
 
     void
 EmpathFilterList::loadConfig()
 {
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_GENERAL);
+    
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_GENERAL);
     
     QStrList list;
-    c->readListEntry(EmpathConfig::KEY_FILTER_LIST, list, ',');
+    c->readListEntry(F_LIST, list, ',');
     
     EmpathFilter * filter;
     

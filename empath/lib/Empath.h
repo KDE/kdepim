@@ -37,7 +37,7 @@
 #include "EmpathURL.h"
 #include "EmpathMailboxList.h"
 #include "EmpathFilterList.h"
-#include "EmpathCache.h"
+#include "EmpathCachedMessage.h"
 
 #include "RMM_Enum.h"
 #include "RMM_Message.h"
@@ -72,26 +72,7 @@ class Empath : public QObject
         };
        
         /** 
-         * This MUST be called, and it must be after Empath::start(),
-         * and before the empath object is used. Mailboxes, filters, etc
-         * are initialised by this method.
-         *
-         * This is separate from Empath::start to allow the UI to start up
-         * faster. On construction, the standard KDE UI loads its
-         * configuration, connects some signals to slots, and gets some
-         * windows onto the display. The empath object's initialisation may
-         * take some time, so this is done once the UI is already up but
-         * before the event loop begins. kapp->processEvents() is used
-         * to allow events to be processed even though the event loop has
-         * not yet been entered.
-         *
-         * Example: (see full implementation in main.cpp)
-         *
-         * new KApplication(argc, argv, "empath");
-         * Empath::start();
-         * new EmpathUI;
-         * empath->init();
-         * kapp->exec();
+         * Creates an Empath object.
          */
         static void start();
         
@@ -178,7 +159,9 @@ class Empath : public QObject
          * be found, when it returns 0.
          */
         RMM::RMessage   * message(const EmpathURL &);
-        
+
+        void finishedWithMessage(const EmpathURL &);
+
         /**
          * Gets a pointer to the folder specified in the url, or 0.
          */
@@ -201,11 +184,7 @@ class Empath : public QObject
          */
         EmpathTask      * addTask(const QString & name);
         
-        /**
-         * Compose a message.
-         */
-        void compose(const QString & recipient = QString::null);
-        
+       
         /**
          * Queue a new message for sending later.
          */
@@ -240,6 +219,11 @@ class Empath : public QObject
         ~Empath();
        
     public slots:
+
+        /**
+         * Check mail in all boxes.
+         */
+        void s_checkMail();
         
         /**
          * Connect to this to provide a message for the user.
@@ -256,7 +240,7 @@ class Empath : public QObject
          * Please ask the user to enter settings for the mailbox
          * specified in the URL.
          */
-        void s_configureMailbox(const EmpathURL &, QWidget * = 0);
+        void s_configureMailbox(const EmpathURL &, QWidget *);
        
         ///////////////////////////////////////////////////////////////////
         // Message composition.
@@ -264,7 +248,7 @@ class Empath : public QObject
         /**
          * Compose a new message.
          */
-        void s_compose();
+        void s_compose(const QString & recipient = QString::null);
         /**
          * Reply to the given message.
          */
@@ -291,7 +275,7 @@ class Empath : public QObject
         
         void createFolder(const EmpathURL &, QString extraInfo = QString::null);
 
-        void saveMessage(const EmpathURL &);
+        void saveMessage(const EmpathURL &, QWidget *);
         
         /**
          * Ask for a message to be copied from one folder to another.
@@ -365,31 +349,31 @@ class Empath : public QObject
         /**
          * Request that the UI bring up the settings for the display.
          */
-        void s_setupDisplay();
+        void s_setupDisplay(QWidget *);
         /**
          * Request that the UI bring up the settings for the user's identity.
          */
-        void s_setupIdentity();
+        void s_setupIdentity(QWidget *);
         /**
          * Request that the UI bring up the settings for sending messages.
          */
-        void s_setupSending();
+        void s_setupSending(QWidget *);
         /**
          * Request that the UI bring up the settings for composing messages.
          */
-        void s_setupComposing();
+        void s_setupComposing(QWidget *);
         /**
          * Request that the UI bring up the settings for the mailboxes.
          */
-        void s_setupAccounts();
+        void s_setupAccounts(QWidget *);
         /**
          * Request that the UI bring up the settings for the filters.
          */
-        void s_setupFilters();
+        void s_setupFilters(QWidget *);
         /**
          * Connect to this from anywhere to provide the about box.
          */
-        void s_about();
+        void s_about(QWidget *);
 
         //////////////////////////////////////////////////////////////////
         // Internal.
@@ -509,21 +493,22 @@ class Empath : public QObject
     signals:
 
         /**
+         * EmpathMailbox connects to this to be notified of
+         * checkMail requests.
+         */
+        void checkMail();
+
+        /**
          * Please ask the user to configure this mailbox.
          */
-        void configureMailbox(const EmpathURL &, QWidget * = 0);
+        void configureMailbox(const EmpathURL &, QWidget *);
         
         /**
          * Please ask the user to enter a path to save this message
          * under.
          */
-        void getSaveName(const EmpathURL &);
+        void getSaveName(const EmpathURL &, QWidget *);
         
-        /**
-         * Please ask the user to enter their information !
-         */
-        void setupWizard();
- 
         /**
          * A request for a message to be retrieved from a mailbox
          * has been completed. The string xinfo can be used to check if it
@@ -632,7 +617,8 @@ class Empath : public QObject
          * when replying.
          * Usually connected to a slot in the UI module.
          */
-        void newComposer(Empath::ComposeType, const EmpathURL &);
+        void newComposer
+            (Empath::ComposeType, const EmpathURL &);
         /**
          * Signals that we want to compose a message to the given
          * recipient.
@@ -644,37 +630,37 @@ class Empath : public QObject
          * review. In other words, bring up the display settings dialog.
          * Usually connected to a slot in the UI module.
          */
-        void setupDisplay();
+        void setupDisplay(QWidget *);
         /**
          * Signals that the display settings should be provided for
          * review. In other words, bring up the display settings dialog.
          * Usually connected to a slot in the UI module.
          */
-        void setupIdentity();
+        void setupIdentity(QWidget *);
         /**
          * Signals that the sending settings should be provided for
          * review. In other words, bring up the sending settings dialog.
          * Usually connected to a slot in the UI module.
          */
-        void setupSending();
+        void setupSending(QWidget *);
         /**
          * Signals that the composing settings should be provided for
          * review. In other words, bring up the composing settings dialog.
          * Usually connected to a slot in the UI module.
          */
-        void setupComposing();
+        void setupComposing(QWidget *);
         /**
          * Signals that the accounts settings should be provided for
          * review. In other words, bring up the accounts settings dialog.
          * Usually connected to a slot in the UI module.
          */
-        void setupAccounts();
+        void setupAccounts(QWidget *);
         /**
          * Signals that the filter settings should be provided for
          * review. In other words, bring up the filter settings dialog.
          * Usually connected to a slot in the UI module.
          */
-        void setupFilters();
+        void setupFilters(QWidget *);
         
         /**
          * Signals that we want to file a bug report.
@@ -686,7 +672,7 @@ class Empath : public QObject
          * Signals that we want to see who's responsible for this stuff.
          * Usually connected to a slot in the UI module.
          */
-        void about();
+        void about(QWidget *);
         
         /**
          * Signals that a new task has started.
@@ -710,7 +696,6 @@ class Empath : public QObject
         EmpathFilterList        filterList_;
         
         EmpathMailSender        * mailSender_;
-        EmpathCache             cache_;
 
         QString                 hostName_;
         pid_t                   processID_;
@@ -723,6 +708,7 @@ class Empath : public QObject
         QString startupSecondsStr_;
         QString pidStr_;
         
+        QDict<EmpathCachedMessage> cache_;
 };
 
 #endif

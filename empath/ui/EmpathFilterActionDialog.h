@@ -42,7 +42,6 @@
 class EmpathFilter;
 class EmpathFolderChooserWidget;
 class EmpathAddressSelectionWidget;
-class RikGroupBox;
 
 class EmpathFilterActionDialog : public QDialog
 {
@@ -65,42 +64,28 @@ class EmpathFilterActionDialog : public QDialog
 
     private:
 
-        QButtonGroup    * bg_choices_;
+        QButtonGroup * bg_choices_;
 
-        QGridLayout        * mainLayout_;
-        QGridLayout        * layout_;
-        QGridLayout        * mc_subLayout_;
-        QGridLayout        * ft_subLayout_;
+        KButtonBox * buttonBox_;
 
-        KButtonBox        * buttonBox_;
+        QPushButton * pb_OK_;
+        QPushButton * pb_cancel_;
+        QPushButton * pb_help_;
 
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_cancel_;
-        QPushButton        * pb_help_;
+        QCheckBox * cb_continue_;
 
-        RikGroupBox        * rgb_choices_;
+        QRadioButton * rb_moveFolder_;
+        QRadioButton * rb_copyFolder_;
+        QRadioButton * rb_delete_;
+        QRadioButton * rb_ignore_;
+        QRadioButton * rb_forwardTo_;
 
-        QWidget            * w_choices_;
+        EmpathFolderChooserWidget * fcw_moveFolder_;
+        EmpathFolderChooserWidget * fcw_copyFolder_;
 
-        QCheckBox        * cb_continue_;
+        EmpathAddressSelectionWidget * asw_address_;
 
-        QRadioButton    * rb_moveFolder_;
-        QRadioButton    * rb_delete_;
-        QRadioButton    * rb_ignore_;
-        QRadioButton    * rb_forwardTo_;
-
-        QLabel            * l_forwardTo_;
-        QLabel            * l_delete_;
-        QLabel            * l_ignore_;
-        QLabel            * l_moveFolder_;
-
-        QComboBox        * cb_moveOrCopy_;
-        
-        EmpathFolderChooserWidget        * fcw_moveFolder_;
-
-        EmpathAddressSelectionWidget    * asw_address_;
-
-        EmpathFilter    * filter_;
+        EmpathFilter * filter_;
 };
 
 #endif

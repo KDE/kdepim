@@ -44,7 +44,6 @@
 // Local includes
 #include "EmpathDefines.h"
 
-class RikGroupBox;
 class Empath;
 
 /**
@@ -56,13 +55,11 @@ class EmpathComposeSettingsDialog : public QDialog
 
     public:
         
-        static void create();
-
+        EmpathComposeSettingsDialog(QWidget * parent = 0);
         ~EmpathComposeSettingsDialog();
 
         void saveData();
         void loadData();
-        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
 
     protected slots:
 
@@ -74,56 +71,39 @@ class EmpathComposeSettingsDialog : public QDialog
 
     private:
 
-        EmpathComposeSettingsDialog(QWidget * parent = 0, const char * name = 0);
-
-        QButtonGroup        * buttonGroup_;
+        QButtonGroup    * buttonGroup_;
         
-        QGridLayout            * topLevelLayout_;
+        QLabel          * l_extra_;
+        QLabel          * l_reply_;
+        QLabel          * l_replyAll_;
+        QLabel          * l_forward_;
 
-        QGridLayout            * phrasesGroupLayout_;
-        QGridLayout            * messageGroupLayout_;
-        QGridLayout            * whenGroupLayout_;
-
-        RikGroupBox            * rgb_phrases_;
-        RikGroupBox            * rgb_msg_;
-        RikGroupBox            * rgb_when_;
+        QLineEdit       * le_extra_;
+        QLineEdit       * le_reply_;
+        QLineEdit       * le_replyAll_;
+        QLineEdit       * le_forward_;
     
-        QWidget                * w_phrases_;
-        QWidget                * w_msg_;
-        QWidget                * w_when_;
+        QSpinBox        * sb_wrap_;
 
-        QLabel                * l_extra_;
-        QLabel                * l_reply_;
-        QLabel                * l_replyAll_;
-        QLabel                * l_forward_;
-
-        QLineEdit            * le_extra_;
-        QLineEdit            * le_reply_;
-        QLineEdit            * le_replyAll_;
-        QLineEdit            * le_forward_;
+        QCheckBox       * cb_addSig_;
+        QCheckBox       * cb_digSign_;
+        QCheckBox       * cb_wrap_;
+        QCheckBox       * cb_quote_;
     
-        QSpinBox            * sb_wrap_;
-
-        QCheckBox            * cb_addSig_;
-        QCheckBox            * cb_digSign_;
-        QCheckBox            * cb_wrap_;
-        QCheckBox            * cb_quote_;
-    
-        QRadioButton        * rb_sendNow_;
-        QRadioButton        * rb_sendLater_;
+        QRadioButton    * rb_sendNow_;
+        QRadioButton    * rb_sendLater_;
         
-        QCheckBox            * cb_externalEditor_;
-        QLineEdit            * le_externalEditor_;
+        QCheckBox       * cb_externalEditor_;
+        QLineEdit       * le_externalEditor_;
 
-        KButtonBox        * buttonBox_;
-        QPushButton        * pb_help_;
-        QPushButton        * pb_default_;
-        QPushButton        * pb_apply_;
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_cancel_;
+        KButtonBox      * buttonBox_;
+        QPushButton     * pb_help_;
+        QPushButton     * pb_default_;
+        QPushButton     * pb_apply_;
+        QPushButton     * pb_OK_;
+        QPushButton     * pb_cancel_;
         
-        static bool        exists_;
-        bool            applied_;
+        bool applied_;
 
 };
 

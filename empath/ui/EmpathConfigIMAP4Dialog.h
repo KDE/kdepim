@@ -33,7 +33,6 @@
 // Local includes
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
-#include "RikGroupBox.h"
 
 class EmpathMailboxIMAP4;
 
@@ -52,7 +51,8 @@ class EmpathConfigIMAP4Dialog : public QDialog
 
         void fillInSavedData();
         
-        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
+        void closeEvent(QCloseEvent * e)
+        { e->accept(); if (parent() == 0) delete this; }
 
     protected slots:
 

@@ -29,6 +29,7 @@
 // KDE includes
 #include <klocale.h>
 #include <klineeditdlg.h>
+#include <kmessagebox.h>
 #include <kconfig.h>
 #include <kglobal.h>
 
@@ -101,11 +102,6 @@ EmpathFolderWidget::EmpathFolderWidget(
     folderPopup_.insertItem(i18n("Remove folder"),
         this, SLOT(s_removeFolder()));
     
-    folderPopup_.insertSeparator();
-    
-    folderPopup_.insertItem(i18n("Properties"),
-        this, SLOT(s_folderProperties()));
-    
     /////////
     
     mailboxPopup_.insertItem(i18n("New folder"),
@@ -127,12 +123,13 @@ EmpathFolderWidget::EmpathFolderWidget(
     void
 EmpathFolderWidget::update()
 {
-    setUpdatesEnabled(false);
-    
+    itemList_.clear();
+    clear();
+
     EmpathMailboxListIterator mit(empath->mailboxList());
 
     for (; mit.current(); ++mit)
-        _addMailbox(*mit.current());
+        _addMailbox(mit.current());
     
     QListIterator<EmpathFolderListItem> it(itemList_);
     
@@ -143,16 +140,13 @@ EmpathFolderWidget::update()
         } else {
             it.current()->s_update();
         }
-
-    setUpdatesEnabled(true);
-    triggerUpdate();
 }
 
     void
-EmpathFolderWidget::_addMailbox(const EmpathMailbox & mailbox)
+EmpathFolderWidget::_addMailbox(EmpathMailbox * mailbox)
 {
     EmpathFolderListItem * newItem;
-    EmpathFolderListItem * found = find(mailbox.url());
+    EmpathFolderListItem * found = find(mailbox->url());
 
     if (found != 0) {
         
@@ -161,34 +155,29 @@ EmpathFolderWidget::_addMailbox(const EmpathMailbox & mailbox)
         
     } else {
     
-        newItem =
-            new EmpathFolderListItem(this, mailbox.url());
-        CHECK_PTR(newItem);
+        newItem = new EmpathFolderListItem(this, mailbox->url());
         newItem->tag(true);
         
-        QObject::connect(
-            newItem, SIGNAL(opened()),
-            this, SLOT(s_openChanged()));
+        QObject::connect(newItem, SIGNAL(opened()), SLOT(s_openChanged()));
             
         itemList_.append(newItem);
     }
     
-    EmpathFolderListIterator fit(mailbox.folderList());
+    EmpathFolderListIterator fit(mailbox->folderList());
 
     for (; fit.current(); ++fit) {
 
         if (fit.current()->parent() == 0)
-            _addChildren(fit.current(), newItem);
+            _addChildren(mailbox, fit.current(), newItem);
     }
 }
 
     void
 EmpathFolderWidget::_addChildren(
+    EmpathMailbox * m,
     EmpathFolder * item,
     EmpathFolderListItem * parent)
 {
-    // Add this item first.
-
     EmpathFolderListItem * newItem;
     
     EmpathFolderListItem * found = find(item->url());
@@ -200,27 +189,19 @@ EmpathFolderWidget::_addChildren(
 
     } else {
     
-        newItem =
-            new EmpathFolderListItem(parent, item->url());
-        CHECK_PTR(newItem);
+        newItem = new EmpathFolderListItem(parent, item->url());
         newItem->tag(true);
     
-        QObject::connect(
-            newItem, SIGNAL(opened()),
-            this, SLOT(s_openChanged()));
+        QObject::connect(newItem, SIGNAL(opened()), SLOT(s_openChanged()));
 
         itemList_.append(newItem);
     }
 
-    EmpathMailbox * m = empath->mailbox(item->url());
-    if (m == 0) return;
-       
     EmpathFolderListIterator it(m->folderList());
 
-    for (; it.current(); ++it) {
+    for (; it.current(); ++it)
         if (it.current()->parent() == item)
-            _addChildren(it.current(), newItem);
-    }
+            _addChildren(m, it.current(), newItem);
 }
 
     void
@@ -228,12 +209,16 @@ EmpathFolderWidget::s_linkChanged(QListViewItem * item)
 {
     EmpathFolderListItem * i = (EmpathFolderListItem *)item;
     
-    if (!i->url().hasFolder()) { // Item is mailbox.
+    if (i->url().isMailbox()) {
         empathDebug("mailbox " + i->url().mailboxName() + " selected");
     } else {
 
         empathDebug("folder " + i->url().folderPath() + " selected");
-        emit(showFolder(i->url()));
+        EmpathFolder * f = empath->folder(i->url());
+        if (f == 0)
+            return;
+        if (!f->isContainer())
+            emit(showFolder(i->url()));
     }
 }    
 
@@ -272,18 +257,6 @@ EmpathFolderWidget::s_rightButtonPressed(
 }
 
     void
-EmpathFolderWidget::s_folderProperties()
-{
-    if (popupMenuOverType != Folder) {
-        empathDebug("The popup menu wasn't over a folder !");
-        return;
-    }
-    
-    empathDebug("Nothing to do for folder properties as yet");
-    return;
-}
-
-    void
 EmpathFolderWidget::s_mailboxCheck()
 {
     if (popupMenuOverType != Mailbox) {
@@ -295,7 +268,7 @@ EmpathFolderWidget::s_mailboxCheck()
     
     if (m == 0) return;
 
-    m->s_checkNewMail();
+    m->s_checkMail();
 }
 
     void
@@ -323,9 +296,13 @@ EmpathFolderWidget::s_newFolder()
 
     QString name = led.text();
     
-    if (name.isEmpty()) return;
+    if (name.isEmpty())
+        return;
         
     EmpathURL newFolderURL(popupMenuOver->url().asString() + "/" + name + "/");
+
+    if (currentItem() != 0)
+        setOpen(currentItem(), true);
 
     empath->createFolder(newFolderURL, "");
 }
@@ -333,7 +310,20 @@ EmpathFolderWidget::s_newFolder()
     void
 EmpathFolderWidget::s_removeFolder()
 {
-    empath->remove(popupMenuOver->url(), QString::null);
+    QString warning =
+        i18n("This will remove the folder %1 and ALL subfolders !");
+    QString folderPath = popupMenuOver->url().folderPath();
+    
+    int c =
+        KMessageBox::warningYesNo(
+            this,
+            warning.arg(folderPath),
+            i18n("Remove folder"),
+            i18n("Remove"),
+            i18n("Cancel"));
+
+    if (c == KMessageBox::Yes)
+        empath->remove(popupMenuOver->url(), QString::null);
 }
 
     void
@@ -367,7 +357,7 @@ EmpathFolderWidget::s_openChanged()
     using namespace EmpathConfig;
     c->setGroup(GROUP_DISPLAY);
     
-    c->writeEntry(KEY_FOLDER_ITEMS_OPEN, l, ',');
+    c->writeEntry(UI_FOLDERS_OPEN, l);
 }
 
     void 
@@ -382,7 +372,8 @@ EmpathFolderWidget::s_startDrag(const QList<QListViewItem> & items)
     EmpathFolderListItem * i = (EmpathFolderListItem *)items.getFirst();
     
     // We don't want to drag Mailboxes.
-    if (!i->url().hasFolder()) return;
+    if (i->url().isMailbox())
+        return;
              
     QStrList uriList;
 
@@ -392,7 +383,7 @@ EmpathFolderWidget::s_startDrag(const QList<QListViewItem> & items)
     empathDebug("Drag folder: " + i->url().asString());
     CHECK_PTR(u);
 
-    u->setPixmap(empathIcon("mini-folder-grey"));
+    u->setPixmap(empathIcon("folder-normal"));
 
     u->drag();
 }

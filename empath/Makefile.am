@@ -1,6 +1,6 @@
 APPSDIR = $(kde_appsdir)/Internet
 INCLUDES= $(all_includes) -I$(top_srcdir)/empath/rmm/include/ -I$(top_srcdir)/empath/lib/ -I$(top_srcdir)/empath/ui/
-SUBDIRS = doc pics toolbar tips templates rmm lib ui import
+SUBDIRS = pics rmm lib ui import
 
 bin_PROGRAMS = empath
 

@@ -42,7 +42,7 @@ EmpathFolderChooserWidget::EmpathFolderChooserWidget(QWidget * parent)
     le_folderName_      = new QLineEdit(this, "l_folderName_");
     pb_selectFolder_    = new QPushButton(this, "pb_selectFolder_");
 
-    pb_selectFolder_->setPixmap(empathIcon("browse"));
+    pb_selectFolder_->setPixmap(empathIcon("misc-browse"));
     pb_selectFolder_->setFixedWidth(pb_selectFolder_->sizeHint().height());
     
     QObject::connect(pb_selectFolder_, SIGNAL(clicked()),
@@ -57,7 +57,7 @@ EmpathFolderChooserWidget::~EmpathFolderChooserWidget()
 }
 
     EmpathURL
-EmpathFolderChooserWidget::selectedURL() const
+EmpathFolderChooserWidget::url() const
 {
     return url_;
 }

@@ -47,10 +47,8 @@
 EmpathComposeWindow::EmpathComposeWindow()
     : KTMainWindow()
 {
-    empathDebug("ctor");
     composeWidget_    =
         new EmpathComposeWidget(this, "composeWidget");
-    CHECK_PTR(composeWidget_);
     
     _init();
 }
@@ -59,10 +57,8 @@ EmpathComposeWindow::EmpathComposeWindow(
         Empath::ComposeType t, const EmpathURL & m)
     :    KTMainWindow()
 {
-    empathDebug("ctor");
     composeWidget_    =
         new EmpathComposeWidget(t, m, this, "composeWidget");
-    CHECK_PTR(composeWidget_);
     
     _init();
 }
@@ -70,10 +66,8 @@ EmpathComposeWindow::EmpathComposeWindow(
 EmpathComposeWindow::EmpathComposeWindow(const QString & recipient)
     : KTMainWindow()
 {
-    empathDebug("ctor");
     composeWidget_    =
         new EmpathComposeWidget(recipient, this, "composeWidget");
-    CHECK_PTR(composeWidget_);
 
     _init();
 }
@@ -104,112 +98,98 @@ EmpathComposeWindow::_init()
     composeWidget_->init();
     setCaption(i18n("Compose Message"));
     updateRects();
-
-    /*
-    // Resize to main window size for now.
-    KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
-    
-    int x = c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_X_SIZE, 600);
-    int y = c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_Y_SIZE, 400);
-    resize(x, y);
-*/
-  //  show();
 }
 
 EmpathComposeWindow::~EmpathComposeWindow()
 {
-    empathDebug("dtor");
+    // Empty.
 }
     
     void
 EmpathComposeWindow::setupToolBar() 
 {
-    empathDebug("setting up tool bar");
-
-    QPixmap p = empathIcon("compose");
+    QPixmap p = empathIcon("toolbar-compose");
     int i = QMAX(p.width(), p.height());
 
-    KToolBar * tb = new KToolBar(this, "tooly", i + 4 );
-    CHECK_PTR(tb);
+    KToolBar * tb = new KToolBar(this, "tooly", i + 4);
     
     tb->setFullWidth(false);
 
     this->addToolBar(tb, 0);
 
-    tb->insertButton(empathIcon("send"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("toolbar-send"), 0, SIGNAL(clicked()),
             this, SLOT(s_fileSendMessage()), true, i18n("Send"));
     
-    tb->insertButton(empathIcon("sendlater"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("toolbar-sendlater"), 0, SIGNAL(clicked()),
             this, SLOT(s_fileSendLater()), true, i18n("Send Later"));
     
-    tb->insertButton(empathIcon("save"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("toolbar-save"), 0, SIGNAL(clicked()),
             this, SLOT(s_fileSaveAs()), true, i18n("Save"));
     
     KToolBar * tb2 = new KToolBar(this, "tooly2", i + 4 );
-    CHECK_PTR(tb2);
 
     tb2->setFullWidth(false);
     
     this->addToolBar(tb2, 1);
         
-    id_confirmDelivery_        = 8;
-    id_confirmReading_        = 9;
+    id_confirmDelivery_     = 8;
+    id_confirmReading_      = 9;
     id_addSignature_        = 10;
-    id_digitallySign_        = 11;
-    id_encrypt_                = 12;
+    id_digitallySign_       = 11;
+    id_encrypt_             = 12;
     
     tb2->insertButton(
-        empathIcon("confirm-delivery"),
+        empathIcon("toolbar-confirm-delivery"),
         id_confirmDelivery_, SIGNAL(toggled(bool)),
         this, SLOT(s_confirmDelivery(bool)), true, i18n("Confirm Delivery"));
     
     tb2->insertButton(
-        empathIcon("confirm-reading"),
+        empathIcon("toolbar-confirm-reading"),
         id_confirmReading_, SIGNAL(toggled(bool)),
         this, SLOT(s_confirmReading(bool)), true, i18n("Confirm Reading"));
     
     tb2->insertButton(
-        empathIcon("encrypt"),
+        empathIcon("toolbar-encrypt"),
         id_encrypt_, SIGNAL(toggled(bool)),
         this, SLOT(s_encrypt(bool)), true, i18n("Encrypt"));
     
     tb2->insertButton(
-        empathIcon("dig-sign"),
+        empathIcon("toolbar-digsign"),
         id_digitallySign_, SIGNAL(toggled(bool)),
         this, SLOT(s_digitallySign(bool)), true, i18n("Digitally Sign"));
 
     tb2->insertButton(
-        empathIcon("sign"),
+        empathIcon("toolbar-sign"),
         id_addSignature_, SIGNAL(toggled(bool)),
         this, SLOT(s_addSignature(bool)), true, i18n("Add Signature"));
     
-    KConfig * c(KGlobal::config());
-
     tb2->setToggle(id_confirmDelivery_);
     tb2->setToggle(id_confirmReading_);
     tb2->setToggle(id_digitallySign_);
     tb2->setToggle(id_encrypt_);
     tb2->setToggle(id_addSignature_);
     
-    c->setGroup(EmpathConfig::GROUP_COMPOSE);
+    KConfig * c(KGlobal::config());
+
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_COMPOSE);
     
     tb2->setButton(id_confirmDelivery_,
-        c->readBoolEntry(EmpathConfig::KEY_CONFIRM_DELIVERY, false));
+        c->readBoolEntry(S_CONFIRM_DELIVER, false));
     tb2->setButton(id_confirmReading_,
-        c->readBoolEntry(EmpathConfig::KEY_CONFIRM_READ, false));
+        c->readBoolEntry(S_CONFIRM_READ, false));
     tb2->setButton(id_digitallySign_,
-        c->readBoolEntry(EmpathConfig::KEY_ADD_DIG_SIG, false));
-    tb2->setButton(id_encrypt_,
-        c->readBoolEntry(EmpathConfig::KEY_ENCRYPT, false));
+        c->readBoolEntry(C_ADD_DIG_SIG, false));
     tb2->setButton(id_addSignature_,
-        c->readBoolEntry(EmpathConfig::KEY_ADD_SIG, false));
+        c->readBoolEntry(C_ADD_SIG, false));
+    tb2->setButton(id_encrypt_,
+        c->readBoolEntry(S_ENCRYPT, false));
 }
 
     void
 EmpathComposeWindow::setupStatusBar()
 {
-    empathDebug("setting up status bar");
     statusBar()->message(i18n("Empath Compose Window"));
 }
 
@@ -218,8 +198,6 @@ EmpathComposeWindow::setupStatusBar()
     void
 EmpathComposeWindow::s_fileSendMessage()
 {
-    empathDebug("s_fileSendMessage called");
-
     if (!composeWidget_->haveTo()) {
         _askForRecipient();
         return;
@@ -240,8 +218,6 @@ EmpathComposeWindow::s_fileSendMessage()
     void
 EmpathComposeWindow::s_fileSendLater()
 {
-    empathDebug("s_fileSendLater called");
-    
     if (!composeWidget_->haveTo()) {
         _askForRecipient();
         return;
@@ -254,12 +230,8 @@ EmpathComposeWindow::s_fileSendLater()
     
     RMM::RMessage outMessage(composeWidget_->message());
 
-    empathDebug("Checking if message has attachments");
-    
 //    if (composeWidget_->messageHasAttachments())
 //        outMessage.addAttachmentList(composeWidget_->messageAttachments());
-
-    empathDebug("Sending message");
 
     empath->queue(outMessage);
 }
@@ -267,21 +239,20 @@ EmpathComposeWindow::s_fileSendLater()
     void
 EmpathComposeWindow::s_fileSaveAs()
 {
-    empathDebug("s_fileSaveAs called");
+    // STUB
     // FIXME: We need a URL to the message !
-    empath->saveMessage(EmpathURL());
+    empath->saveMessage(EmpathURL(), this);
 }
 
     void
 EmpathComposeWindow::s_filePrint()
 {
-    empathDebug("s_filePrint called");
+    // STUB
 }
 
     void
 EmpathComposeWindow::s_fileClose()
 {
-    empathDebug("s_fileClose called");
     // FIXME: Check if the user wants to save changes
     delete this;
 }
@@ -291,65 +262,61 @@ EmpathComposeWindow::s_fileClose()
     void
 EmpathComposeWindow::s_editUndo()
 {
-    empathDebug("s_editUndo called");
+    // STUB
 }
 
     void
 EmpathComposeWindow::s_editRedo()
 {
-    empathDebug("s_editRedo called");
+    // STUB
 }
 
     void
 EmpathComposeWindow::s_editCut()
 {
-    empathDebug("s_editCut called");
     emit(cut());
 }
 
     void
 EmpathComposeWindow::s_editCopy()
 {
-    empathDebug("s_editCopy called");
     emit(copy());
 }
 
     void
 EmpathComposeWindow::s_editPaste()
 {
-    empathDebug("s_editPaste called");
     emit(paste());
 }
 
     void
 EmpathComposeWindow::s_editDelete()
 {
-    empathDebug("s_editDelete called");
+    // STUB
 }
 
     void
 EmpathComposeWindow::s_editSelectAll()
 {
-    empathDebug("s_editSelectAll called");
     emit(selectAll());
 }
 
     void
 EmpathComposeWindow::s_editFindInMessage()
 {
-    empathDebug("s_editFindInMessage called");
+    // STUB
 }
 
     void
 EmpathComposeWindow::s_editFind()
 {
-    empathDebug("s_editFind called");
+    // STUB
 }
 
     void
 EmpathComposeWindow::s_editFindAgain()
 {
-    empathDebug("s_editFindAgain called");
+    // STUB
 }
 
 // Message menu slots
@@ -357,26 +324,18 @@ EmpathComposeWindow::s_editFindAgain()
     void
 EmpathComposeWindow::s_messageSaveAs()
 {
-    empathDebug("s_messageSaveAs called");
-
     RMM::RMessage message(composeWidget_->message());
     
     QString saveFilePath =
         KFileDialog::getSaveFileName(
             QString::null, QString::null, this,
-            i18n("Empath: Save Message").ascii());
+            i18n("Save Message").latin1());
 
-    empathDebug(saveFilePath);
-    
-    if (saveFilePath.isEmpty()) {
-        empathDebug("No filename given");
+    if (saveFilePath.isEmpty())
         return;
-    }
     
     QFile f(saveFilePath);
     if (!f.open(IO_WriteOnly)) {
-        // Warn user file cannot be opened.
-        empathDebug("Couldn't open file for writing");
         QMessageBox::information(this, "Empath",
             i18n("Sorry I can't write to that file. "
                 "Please try another filename."),
@@ -385,8 +344,6 @@ EmpathComposeWindow::s_messageSaveAs()
         return;
     }
 
-    empathDebug("Opened " + saveFilePath + " OK");
-    
     QDataStream d(&f);
     
     d << message.asString();
@@ -398,16 +355,12 @@ EmpathComposeWindow::s_messageSaveAs()
     void
 EmpathComposeWindow::s_messageCopyTo()
 {
-    empathDebug("s_messageCopyTo called");
-    
     RMM::RMessage message(composeWidget_->message());
     
-    EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
+    EmpathFolderChooserDialog fcd(this);
 
-    if (fcd.exec() != QDialog::Accepted) {
-        empathDebug("copy cancelled");
+    if (fcd.exec() != QDialog::Accepted)
         return;
-    }
 
     empath->write(fcd.selected(), message);
 }
@@ -415,13 +368,13 @@ EmpathComposeWindow::s_messageCopyTo()
     void
 EmpathComposeWindow::s_help()
 {
-    //empathInvokeHelp("", "");
+    // STUB
 }
 
     void
 EmpathComposeWindow::s_aboutEmpath()
 {
-    empath->s_about();
+    empath->s_about(this);
 }
 
     void
@@ -433,31 +386,31 @@ EmpathComposeWindow::s_aboutQt()
     void
 EmpathComposeWindow::s_confirmDelivery(bool)
 {
-    empathDebug("s_confirmDelivery() called");
+    // STUB
 }
     
     void
 EmpathComposeWindow::s_confirmReading(bool)
 {
-    empathDebug("s_confirmReading() called");
+    // STUB
 }
     
     void
 EmpathComposeWindow::s_addSignature(bool)
 {
-    empathDebug("s_addSignature() called");
+    // STUB
 }
     
     void
 EmpathComposeWindow::s_digitallySign(bool)
 {
-    empathDebug("s_digitallySign() called");
+    // STUB
 }
 
     void
 EmpathComposeWindow::s_encrypt(bool)
 {
-    empathDebug("s_encrypt() called");
+    // STUB
 }
 
     void

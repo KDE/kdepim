@@ -68,7 +68,7 @@ EmpathConfigPOP3Logging::EmpathConfigPOP3Logging
     
     // Layout
     
-    QVBoxLayout * topLevelLayout = new QVBoxLayout(this, 10, 10);
+    QVBoxLayout * topLevelLayout = new QVBoxLayout(this, dialogSpace);
 
     QHBoxLayout * layout0 = new QHBoxLayout(topLevelLayout);
     layout0->addWidget(cb_logConversation_);
@@ -107,7 +107,7 @@ EmpathConfigPOP3Logging::saveData()
     EmpathMailboxPOP3 * m = (EmpathMailboxPOP3 *)mailbox;
 
     m->setLoggingPolicy         (cb_logConversation_->isChecked());
-    m->setLogFilePath           (efsw_logFile_->selected());
+    m->setLogFilePath           (efsw_logFile_->path());
     m->setLogFileDisposalPolicy (cb_appendToLog_->isChecked());
     m->setMaxLogFileSize        (sb_maxLogFileSize_->value());
 }

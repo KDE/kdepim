@@ -79,7 +79,7 @@ class EmpathMessageListWidget : public EmpathListView
 
     public:
     
-        EmpathMessageListWidget(QWidget * parent = 0, const char * name = 0);
+        EmpathMessageListWidget(QWidget * parent = 0);
         
         virtual ~EmpathMessageListWidget();
         

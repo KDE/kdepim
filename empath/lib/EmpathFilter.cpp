@@ -52,19 +52,13 @@ EmpathFilter::save()
     empathDebug("save() called");
     
     KConfig * config = KGlobal::config();
-    config->setGroup(EmpathConfig::GROUP_FILTER + name_);
     
-    config->writeEntry(EmpathConfig::KEY_NUM_MATCH_EXPRS_FOR_FILTER,
-        matchExprs_.count());
-    
-    empathDebug("Saving url name == \"" + url_.asString() + "\"");
+    using namespace EmpathConfig;
+    config->setGroup(GROUP_FILTER + name_);
 
-    config->writeEntry(EmpathConfig::KEY_FILTER_FOLDER, url_.asString());
-    
-    empathDebug("Matchers to save: " + QString().setNum(matchExprs_.count()));
-    
-    empathDebug("Saving priority == " + QString().setNum(priority_));
-    config->writeEntry(EmpathConfig::KEY_FILTER_PRIORITY, priority_);
+    config->writeEntry(F_EXPRS,     matchExprs_.count());
+    config->writeEntry(F_FOLDER,    url_.asString());
+    config->writeEntry(F_PRIORITY,  priority_);
     
     EmpathMatcherListIterator it(matchExprs_);
     
@@ -84,26 +78,21 @@ EmpathFilter::save()
 EmpathFilter::load()
 {
     KConfig * config = KGlobal::config();
-    config->setGroup(EmpathConfig::GROUP_FILTER + name_);
     
-    url_ = config->readEntry(EmpathConfig::KEY_FILTER_FOLDER);
-    empathDebug("My url is \"" + url_.asString() + "\"");
+    using namespace EmpathConfig;
     
-    Q_UINT32 numMatchExprs =
-        config->readUnsignedNumEntry(
-            EmpathConfig::KEY_NUM_MATCH_EXPRS_FOR_FILTER);
+    config->setGroup(GROUP_FILTER + name_);
     
-    empathDebug("There are " + QString().setNum(numMatchExprs) +
-        " match expressions that act for this filter");
-
+    url_ = config->readEntry(F_FOLDER);
+    
+    Q_UINT32 numMatchExprs = config->readUnsignedNumEntry(F_EXPRS);
+    
     for (Q_UINT32 i = 0 ; i < numMatchExprs ; ++i)
         loadMatchExpr(i);
 
-    empathDebug("Loading event handler");
     loadEventHandler();
     
-    priority_ =
-        config->readUnsignedNumEntry(EmpathConfig::KEY_FILTER_PRIORITY, 100);
+    priority_ = config->readUnsignedNumEntry(F_PRIORITY, 100);
 }
 
     void

@@ -56,8 +56,6 @@ EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
         url_(url),
         basePath_(basePath)
 {
-    empathDebug(url_.asString());
-    
     path_ = basePath + "/" + url.folderPath();
     
     QObject::connect(&timer_, SIGNAL(timeout()),
@@ -93,13 +91,23 @@ EmpathMaildir::sync(bool force)
     if (!force && !_touched(f))
         return;
     
+    kapp->processEvents();
+
     _markNewMailAsSeen();
     
+    kapp->processEvents();
+    
     _tagOrAdd(f);
+    
+    kapp->processEvents();
 
     _removeUntagged(f);
     
+    kapp->processEvents();
+
     f->index()->setInitialised(true);
+    
+    kapp->processEvents();
 }
 
     bool
@@ -204,7 +212,7 @@ EmpathMaildir::removeMessage(const QString & id)
     if (!f.remove())
         return false;
     
-    folder->index()->remove(id.ascii());
+    folder->index()->remove(id.latin1());
 
     return true;
 }
@@ -306,7 +314,7 @@ EmpathMaildir::_markAsSeen(const QString & name)
 
     QString newName = path_ + "/cur/" + name + ":2,";
             
-    if (::rename(oldName.ascii(), newName.ascii()) != 0)
+    if (::rename(oldName.latin1(), newName.latin1()) != 0)
         perror("rename");
 }
 
@@ -419,10 +427,9 @@ EmpathMaildir::_write(RMM::RMessage & msg)
         return QString::null;
     }
 
-    // FIXME: Test this new idea of adding flags when linking
     QString linkTarget(path_ + "/new/" + canonName + ":2," + flags);
     
-    if (::link(path.ascii(), linkTarget.ascii()) != 0) {
+    if (::link(path.latin1(), linkTarget.latin1()) != 0) {
         empathDebug("Couldn't successfully link file - giving up");
         perror("link");
         f.close();
@@ -502,7 +509,7 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
 
     for (; it != fileList.end(); ++it) {
         
-        s = (*it).ascii();
+        s = (*it).latin1();
     
         RMM::MessageStatus status(RMM::MessageStatus(0));
         

@@ -42,7 +42,7 @@ class EmpathFolderChooserWidget : public QHBox
         EmpathFolderChooserWidget(QWidget * parent = 0);
         virtual ~EmpathFolderChooserWidget();
 
-        EmpathURL selectedURL() const;
+        EmpathURL url() const;
         
         void setURL(const EmpathURL & url);
 

@@ -184,7 +184,7 @@ EmpathURL::_assemble()
 EmpathURL::folderPathList()
 {
     QStrList sl_f;
-    RMM::RTokenise(folderPath_.ascii(), "/", sl_f);
+    RMM::RTokenise(folderPath_.latin1(), "/", sl_f);
     return sl_f;
 }
 

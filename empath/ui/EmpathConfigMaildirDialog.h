@@ -64,7 +64,8 @@ class EmpathConfigMaildirDialog : public QDialog
 
         void setMailbox(EmpathMailboxMaildir * mailbox);
         
-        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
+        void closeEvent(QCloseEvent * e)
+        { e->accept(); if (parent() == 0) delete this; }
         
     protected slots:
 
@@ -89,11 +90,6 @@ class EmpathConfigMaildirDialog : public QDialog
         QPushButton * pb_apply_;
         QPushButton * pb_default_;
 
-        // w_server
-        
-        QLabel      * l_mailboxPath_;
-        EmpathDirSelectWidget  * edsw_mailboxPath_;
-        
         QSpinBox    * sb_mailCheckInterval_;
 
         QCheckBox   * cb_mailCheckInterval_;

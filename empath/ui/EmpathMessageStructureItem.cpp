@@ -41,7 +41,6 @@ EmpathMessageStructureItem::EmpathMessageStructureItem(
         QListViewItem    (parent),
         part_            (part)
 {
-    empathDebug("ctor");
     _init();
 }
 
@@ -52,13 +51,12 @@ EmpathMessageStructureItem::EmpathMessageStructureItem(
         QListViewItem    (parent),
         part_            (part)
 {
-    empathDebug("ctor");
     _init();
 }
 
 EmpathMessageStructureItem::~EmpathMessageStructureItem()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     void
@@ -67,7 +65,7 @@ EmpathMessageStructureItem::_init()
     QString sizeStr;
     
     setPixmap(0,
-        empathMimeIcon(RMM::mimeTypeToIconName(
+        empathIcon("mime-" + RMM::mimeTypeToIconName(
                 part_.mimeType(), part_.mimeSubType())));
         
     setText(0, RMM::mimeTypeEnum2Str(part_.mimeType()));
@@ -100,8 +98,6 @@ EmpathMessageStructureItem::_init()
     void
 EmpathMessageStructureItem::setup()
 {
-    empathDebug("setup() called");
-    
     widthChanged();
     int ph = pixmap(0) ? pixmap(0)->height() : 0;
     int th = QFontMetrics(KGlobal::generalFont()).height();

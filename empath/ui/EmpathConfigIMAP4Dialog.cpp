@@ -52,13 +52,6 @@ EmpathConfigIMAP4Dialog::EmpathConfigIMAP4Dialog
     :   QDialog(parent, "ConfigIMAP4Dialog", true),
         url_(url)
 {
-    RikGroupBox * rgb_server =
-        new RikGroupBox(i18n("Server"), 8, this, "rgb_server");
-    
-    QWidget * w_server = new QWidget(rgb_server, "w_server");
-    
-    rgb_server->setWidget(w_server);
-    
     KButtonBox * buttonBox = new KButtonBox(this);
 
     // Widgets
@@ -69,23 +62,9 @@ EmpathConfigIMAP4Dialog::EmpathConfigIMAP4Dialog
     pb_Help_    = buttonBox->addButton(i18n("&Help"));    
 
     QLabel * l_notImp  =
-        new QLabel(i18n("Sorry not implemented yet"), w_server, "l_notImp");
+        new QLabel(i18n("Sorry not implemented yet"), this, "l_notImp");
 
     // Layouts
-    
-    QGridLayout * topLevelLayout = new QGridLayout(this, 1, 1, 10, 10);
-    
-    // Main layout of widget's main groupbox
-    QGridLayout * serverGroupLayout = new QGridLayout(w_server, 1, 1, 0, 10);
-    
-    serverGroupLayout->addWidget(l_notImp, 0, 0);
-    
-    topLevelLayout->addWidget(rgb_server, 0, 0);
-    topLevelLayout->addWidget(buttonBox, 1, 0);
-
-    serverGroupLayout->activate();
-    topLevelLayout->activate();
-    
     fillInSavedData();
 }
 

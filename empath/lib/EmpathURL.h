@@ -101,17 +101,25 @@ class EmpathURL
         /**
          * This will always return true, theoretically.
          */
-        bool hasMailbox() const { return !mailboxName_.isEmpty(); }
+        bool isMailbox() const
+        {
+            return !mailboxName_.isEmpty() &&
+                    folderPath_.isEmpty()  &&
+                    messageID_.isEmpty();
+        }
         
         /**
          * Returns true if there is a folder part to this URL.
          */
-        bool hasFolder() const { return !folderPath_.isEmpty(); }
+        bool isFolder() const
+        {
+            return !folderPath_.isEmpty() && messageID_.isEmpty();
+        }
         
         /**
          * Returns true if there's a message id at the end of this URL.
          */
-        bool hasMessageID() const { return !messageID_.isEmpty(); }
+        bool isMessage() const { return !messageID_.isEmpty(); }
         
         /**
          * Returns the assembled representation of this URL.

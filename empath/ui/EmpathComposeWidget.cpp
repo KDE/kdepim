@@ -32,6 +32,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
+#include <kstddirs.h>
 #include <kapp.h>
 
 // Local includes
@@ -96,7 +97,9 @@ EmpathComposeWidget::_init()
     
     KConfig * c = KGlobal::config();
     
-    c->setGroup(EmpathConfig::GROUP_COMPOSE);
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_COMPOSE);
     
     // If user wants us to wrap lines at a specific value, we can do that
     // in the editor to their specified width. This should give the user
@@ -106,19 +109,18 @@ EmpathComposeWidget::_init()
     // in the editor anyway to make editing easier. We must not wrap the
     // actual text we send though.
 
-    if (!c->readBoolEntry(EmpathConfig::KEY_WRAP_LINES, true))
+    if (!c->readBoolEntry(C_WRAP_LINES, true))
         editorWidget_->setWordWrap(QMultiLineEdit::DynamicWrap);
     
     else {
         
         editorWidget_->setWordWrap(QMultiLineEdit::FixedColumnWrap);
         editorWidget_->setWrapColumnOrWidth(
-            c->readUnsignedNumEntry(EmpathConfig::KEY_WRAP_COLUMN, 76));
+            c->readUnsignedNumEntry(C_WRAP_COLUMN, 76));
     }
         
-    KGlobal::config()->setGroup(EmpathConfig::GROUP_DISPLAY);
-    editorWidget_->setFont(
-        KGlobal::config()->readFontEntry(EmpathConfig::KEY_FIXED_FONT));
+    c->setGroup(GROUP_DISPLAY);
+    editorWidget_->setFont(c->readFontEntry(UI_FIXED_FONT));
  
     // Layouts.
     QVBoxLayout * layout    = new QVBoxLayout(this, 4);
@@ -157,11 +159,10 @@ EmpathComposeWidget::_init()
     
     KGlobal::config()->setGroup(EmpathConfig::GROUP_COMPOSE);
 
-    if (KGlobal::config()->readBoolEntry(
-            EmpathConfig::KEY_USE_EXTERNAL_EDITOR, false)) {
+    if (KGlobal::config()->readBoolEntry(EmpathConfig::C_USE_EXT_EDIT, false)) {
 
         editorWidget_->setEnabled(false);
-        _spawnExternalEditor(editorWidget_->text().ascii());
+        _spawnExternalEditor(editorWidget_->text().latin1());
     }
     
     headerSpecList_.first()->setFocus();
@@ -207,12 +208,12 @@ EmpathComposeWidget::_spawnExternalEditor(const QCString & text)
     void
 EmpathComposeWidget::_reply(bool toAll)
 {
-    empathDebug("Replying");
-    
     RMM::RMessage * m(empath->message(url_));
     if (m == 0) return;
     
     RMM::RMessage message(*m);
+
+    empath->finishedWithMessage(url_);
     
     QCString to, cc;
     
@@ -268,10 +269,9 @@ EmpathComposeWidget::_reply(bool toAll)
             }
         }
     
-        KConfig * c(KGlobal::config());
-        c->setGroup(EmpathConfig::GROUP_IDENTITY);
-        
-        RMM::RAddress me(c->readEntry(EmpathConfig::KEY_EMAIL).ascii());
+        KConfig c(KGlobal::dirs()->findResource("config", "kcmemailrc"), true);
+        c.setGroup("UserInfo");
+        RMM::RAddress me(c.readEntry("EmailAddress").latin1());
         
         if (!(me == *(message.envelope().to().at(0))))
             if (!cc.isEmpty())
@@ -301,7 +301,7 @@ EmpathComposeWidget::_reply(bool toAll)
 
     // Add the 'On (date) (name) wrote' bit
         
-    if (!c->readBoolEntry(EmpathConfig::KEY_AUTO_QUOTE)) {
+    if (!c->readBoolEntry(EmpathConfig::C_AUTO_QUOTE)) {
         editorWidget_->setFocus();
         return;
     }
@@ -311,8 +311,7 @@ EmpathComposeWidget::_reply(bool toAll)
     s.replace(QRegExp("\\n"), "\n> ");
 
     QString thingyWrote =
-        c->readEntry(
-            EmpathConfig::KEY_PHRASE_REPLY_SENDER, "") + '\n';
+        c->readEntry(EmpathConfig::C_PHRASE_REPLY_SENDER, "") + '\n';
     
     // Be careful here. We don't want to reveal people's
     // email addresses.
@@ -407,7 +406,7 @@ EmpathComposeWidget::_addExtraHeaders()
     c->setGroup(EmpathConfig::GROUP_COMPOSE);
     
     QStrList l;
-    c->readListEntry(EmpathConfig::KEY_EXTRA_HEADERS, l, ',');
+    c->readListEntry(EmpathConfig::C_EXTRA_HEADERS, l, ',');
     empathDebug("There are " + QString().setNum(l.count()) + " headers");
     
     QStrListIterator it(l);
@@ -440,7 +439,7 @@ EmpathComposeWidget::_addHeader(const QString & n, const QString & b)
 EmpathComposeWidget::_addInvisibleHeader(const QString & n, const QString & b)
 {
     RMM::RHeader * h =
-        new RMM::RHeader(QCString(n.ascii()) + ": " + QCString(b.ascii()));
+        new RMM::RHeader(QCString(n.latin1()) + ": " + QCString(b.latin1()));
     invisibleHeaders_.append(h);
 }
 
@@ -449,10 +448,10 @@ EmpathComposeWidget::_get(const QString & headerName)
 {
     QListIterator<EmpathHeaderSpecWidget> it(headerSpecList_);
     
-    QCString n(headerName.ascii() + ':');
+    QCString n(headerName.latin1() + ':');
     
     for (; it.current(); ++it)
-        if (stricmp(it.current()->headerName().ascii(), n) == 0) {
+        if (stricmp(it.current()->headerName().latin1(), n) == 0) {
             return it.current()->headerBody();
         }
     
@@ -464,14 +463,14 @@ EmpathComposeWidget::_set(const QString & headerName, const QString & val)
 {
     QListIterator<EmpathHeaderSpecWidget> it(headerSpecList_);
     
-    QCString n(headerName.ascii());
+    QCString n(headerName.latin1());
     n += ':';
     empathDebug("Setting \"" + QString(n) + "\"");
     empathDebug("Val = " + val);
     
     for (; it.current(); ++it) {
         empathDebug("looking at \"" + it.current()->headerName() + "\"");
-        if (stricmp(it.current()->headerName().ascii(), n) == 0) {
+        if (stricmp(it.current()->headerName().latin1(), n) == 0) {
             it.current()->setHeaderBody(val);
             return;
         }
@@ -510,7 +509,7 @@ EmpathComposeWidget::haveTo()
     QListIterator<EmpathHeaderSpecWidget> it(headerSpecList_);
 
     for (; it.current(); ++it)
-        if (stricmp(it.current()->headerName().ascii(), "To:") == 0 &&
+        if (stricmp(it.current()->headerName().latin1(), "To:") == 0 &&
             !it.current()->headerBody().isEmpty())
             return true;
     
@@ -523,7 +522,7 @@ EmpathComposeWidget::haveSubject()
     QListIterator<EmpathHeaderSpecWidget> it(headerSpecList_);
 
     for (; it.current(); ++it)
-        if (stricmp(it.current()->headerName().ascii(), "Subject:") == 0 &&
+        if (stricmp(it.current()->headerName().latin1(), "Subject:") == 0 &&
             !it.current()->headerBody().isEmpty())
             return true;
     
@@ -533,21 +532,18 @@ EmpathComposeWidget::haveSubject()
     void
 EmpathComposeWidget::s_addAttachment()
 {
-    empathDebug("addAttachment() called");
     attachmentWidget_->addAttachment();
 }
 
     void
 EmpathComposeWidget::s_editAttachment()
 {
-    empathDebug("editAttachment() called");
     attachmentWidget_->editAttachment();
 }
 
     void
 EmpathComposeWidget::s_removeAttachment()
 {
-    empathDebug("removeAttachment() called");
     attachmentWidget_->removeAttachment();
 }
 
@@ -576,16 +572,16 @@ EmpathComposeWidget::_envelope()
     QCString
 EmpathComposeWidget::_body()
 {
-    QCString s = editorWidget_->text().ascii();
+    QCString s = editorWidget_->text().latin1();
     
     KConfig * c(KGlobal::config());
 
     c->setGroup(EmpathConfig::GROUP_COMPOSE);
     
-    if (!c->readBoolEntry(EmpathConfig::KEY_ADD_SIG))
+    if (!c->readBoolEntry(EmpathConfig::C_ADD_SIG))
         return s;
 
-    QFile f(c->readEntry(EmpathConfig::KEY_SIG_PATH));
+    QFile f(c->readEntry(EmpathConfig::C_SIG_PATH));
     
     if (f.open(IO_ReadOnly)) {    
 
@@ -594,7 +590,7 @@ EmpathComposeWidget::_body()
         QCString sig;
     
         while (!t.eof())
-            sig += t.readLine().ascii() + QCString("\n");
+            sig += t.readLine().latin1() + QCString("\n");
     
         s += "\n" + sig;
     }
@@ -679,9 +675,9 @@ EmpathComposeWidget::_visibleHeaders()
         if (it.current()->headerBody().isEmpty())
             continue;
         
-        s += it.current()->headerName().ascii();
+        s += it.current()->headerName().latin1();
         s += " ";
-        s += it.current()->headerBody().ascii();
+        s += it.current()->headerBody().latin1();
         s += "\n";
     }
     
@@ -710,13 +706,13 @@ EmpathComposeWidget::_stdHeaders()
 {
     QCString s;
     
-    KConfig * c(KGlobal::config());
-    c->setGroup(EmpathConfig::GROUP_IDENTITY);
+    KConfig c(KGlobal::dirs()->findResource("config", "kcmemailrc"), true);
+    c.setGroup("UserInfo");
 
     s += QCString("From: ");
-    s += QCString(c->readEntry(EmpathConfig::KEY_NAME).ascii());
+    s += QCString(c.readEntry("FullName").latin1());
     s += QCString(" <");
-    s += QCString(c->readEntry(EmpathConfig::KEY_EMAIL).ascii());
+    s += QCString(c.readEntry("EmailAddress").latin1());
     s += QCString(">");
     s += "\n";
     

@@ -47,15 +47,15 @@ class EmpathAccountsSettingsDialog : public QDialog
 
     public:
         
-        static void create();
-
+        EmpathAccountsSettingsDialog(QWidget * = 0);
         ~EmpathAccountsSettingsDialog();
 
-        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
+        void loadData();
 
     protected slots:
 
-        void s_new();
+        void s_newPOP();
+        void s_newIMAP();
         void s_edit();
         void s_remove();
         
@@ -65,15 +65,15 @@ class EmpathAccountsSettingsDialog : public QDialog
         void s_apply();
         
         void s_updateMailboxList();
+        void s_currentChanged(QListViewItem *);
 
     private:
-        
-        EmpathAccountsSettingsDialog(QWidget * = 0);
   
-        QListView       * lv_accts_;
+        QListView * lv_accts_;
 
-        static bool     exists_;
-        bool            applied_;
+        bool applied_;
+
+        QPushButton * pb_remove_;
 };
 
 class EmpathAccountListItem : public QListViewItem

@@ -27,22 +27,23 @@
 
 // KDE includes
 #include <kglobal.h>
+#include <kconfig.h>
 #include <kstddirs.h>
 
 // Local includes
 #include "Empath.h"
+#include "EmpathConfig.h"
 #include "EmpathFolderList.h"
 #include "EmpathFolder.h"
 #include "EmpathDefines.h"
 #include "EmpathMailbox.h"
 #include "EmpathIndex.h"
 #include "EmpathUtilities.h"
-#include "EmpathIndexAllocator.h"
 
 EmpathFolder::EmpathFolder()
     :    QObject()
 {
-    pixmapName_ = "mini-folder-grey";
+    pixmapName_ = "folder-normal";
 }
 
 EmpathFolder::EmpathFolder(const EmpathURL & url)
@@ -54,7 +55,7 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
     QObject::connect(this, SIGNAL(countUpdated(Q_UINT32, Q_UINT32)),
         empath->mailbox(url_), SLOT(s_countUpdated(Q_UINT32, Q_UINT32)));
     
-    pixmapName_ = "mini-folder-grey";
+    pixmapName_ = "folder-normal";
 }
 
     bool
@@ -128,6 +129,18 @@ EmpathFolder::unreadMessageCount()
 EmpathFolder::setStatus(const QString & id, RMM::MessageStatus status)
 {
     index_->setStatus(id, status);
+}
+
+    bool
+EmpathFolder::isContainer() const
+{
+    return container_;
+}
+
+    void
+EmpathFolder::setContainer(bool b)
+{
+    container_ = b;
 }
 
 // vim:ts=4:sw=4:tw=78

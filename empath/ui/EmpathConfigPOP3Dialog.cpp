@@ -33,16 +33,20 @@
 #include "EmpathConfigPOP3Dialog.h"
 #include "EmpathConfigPOP3Widget.h"
 #include "EmpathMailboxPOP3.h"
+#include "EmpathUIUtils.h"
 
 bool EmpathConfigPOP3Dialog::exists_ = false;
 
     void
 EmpathConfigPOP3Dialog::create(const EmpathURL & url, QWidget * parent)
 {
-    if (exists_) return;
+    if (exists_)
+        return;
+
     exists_ = true;
+
     EmpathConfigPOP3Dialog * d = new EmpathConfigPOP3Dialog(url, parent);
-    CHECK_PTR(d);
+
     d->show();
     d->loadData();
 }
@@ -52,7 +56,9 @@ EmpathConfigPOP3Dialog::EmpathConfigPOP3Dialog
     :   QDialog(parent, "ConfigPOP3Dialog", true),
         url_(url)
 {
-    setCaption(i18n("Configuring mailbox") + " " + url_.mailboxName());
+    QString caption = i18n("Configuring mailbox %1");
+    
+    setCaption(caption.arg(url_.mailboxName()));
 
     settingsWidget_ = new EmpathConfigPOP3Widget(url_, this);
 
@@ -78,13 +84,12 @@ EmpathConfigPOP3Dialog::EmpathConfigPOP3Dialog
     QObject::connect(pb_Help_, SIGNAL(clicked()),
             this, SLOT(s_Help()));
 
-    QGridLayout * mainLayout = new QGridLayout(this, 2, 1, 10, 10);
+    QVBoxLayout * mainLayout =
+        new QVBoxLayout(this, dialogSpace);
 
-    mainLayout->setRowStretch(0, 7);
-    mainLayout->setRowStretch(1, 1);
-    
-    mainLayout->addWidget(settingsWidget_, 0, 0);
-    mainLayout->addWidget(buttonBox,       1, 0);
+    mainLayout->addWidget(settingsWidget_);
+    mainLayout->addStretch(10);
+    mainLayout->addWidget(buttonBox);
     
     mainLayout->activate();
 }
@@ -97,7 +102,6 @@ EmpathConfigPOP3Dialog::~EmpathConfigPOP3Dialog()
     void
 EmpathConfigPOP3Dialog::s_OK()
 {
-    empathDebug("s_OK called");
     settingsWidget_->saveData();
     accept();
 }
@@ -105,14 +109,13 @@ EmpathConfigPOP3Dialog::s_OK()
     void
 EmpathConfigPOP3Dialog::s_Cancel()
 {
-    empathDebug("s_Cancel called");
     reject();
 }
 
     void
 EmpathConfigPOP3Dialog::s_Help()
 {
-    empathDebug("s_Help called");
+    // STUB
 }
 
     void

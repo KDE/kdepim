@@ -54,10 +54,9 @@
     
 QListViewItem * EmpathMessageListWidget::lastSelected_ = 0;
 
-EmpathMessageListWidget::EmpathMessageListWidget(
-        QWidget * parent, const char * name)
-    :    EmpathListView            (parent, name),
-        wantScreenUpdates_    (false),
+EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
+    :   EmpathListView      (parent, "MessageListWidget"),
+        wantScreenUpdates_  (false),
         filling_            (false)
 {
     setFrameStyle(QFrame::NoFrame);
@@ -88,13 +87,14 @@ EmpathMessageListWidget::EmpathMessageListWidget(
     px_SMR_    = empathIcon("tree-read-marked-replied");
 
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_GENERAL);
+    
+    using namespace EmpathConfig;
+    
+    c->setGroup(GROUP_GENERAL);
     
     for (int i = 0 ; i < 4 ; i++) {
-        header()->setCellSize(i,
-                c->readUnsignedNumEntry(
-                    EmpathConfig::KEY_MESSAGE_LIST_SIZE_COLUMN +
-                    QString().setNum(i), 80));
+        header()->setCellSize
+    (i, c->readUnsignedNumEntry(UI_MSG_LIST_SIZE + QString().setNum(i), 80));
         setColumnWidthMode(i, QListView::Manual);
     }
 
@@ -131,17 +131,18 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 EmpathMessageListWidget::~EmpathMessageListWidget()
 {
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_GENERAL);
+    
+    using namespace EmpathConfig;
+    
+    c->setGroup(GROUP_GENERAL);
     
     for (int i = 0 ; i < 4 ; i++) {
 
-        c->writeEntry(
-            EmpathConfig::KEY_MESSAGE_LIST_SIZE_COLUMN + QString().setNum(i),
-            header()->cellSize(i));
+        c->writeEntry
+            (UI_MSG_LIST_SIZE + QString().setNum(i), header()->cellSize(i));
         
-        c->writeEntry(
-            EmpathConfig::KEY_MESSAGE_LIST_POS_COLUMN + QString().setNum(i),
-            header()->cellPos(i));
+        c->writeEntry
+            (UI_MSG_LIST_POS + QString().setNum(i), header()->cellPos(i));
     }
     
     c->sync();
@@ -340,7 +341,7 @@ EmpathMessageListWidget::s_messageDelete()
     void
 EmpathMessageListWidget::s_messageSaveAs()
 {
-    empath->saveMessage(firstSelectedMessage());
+    empath->saveMessage(firstSelectedMessage(), this);
 }
 
     void
@@ -365,11 +366,7 @@ EmpathMessageListWidget::s_messageFilter()
 EmpathMessageListWidget::s_messageView()
 {
     EmpathMessageViewWindow * messageViewWindow =
-        new EmpathMessageViewWindow(
-            firstSelectedMessage(),
-            i18n("Empath: Message View").ascii());
-    
-    CHECK_PTR(messageViewWindow);
+        new EmpathMessageViewWindow(firstSelectedMessage());
     
     messageViewWindow->show();
 }
@@ -548,10 +545,13 @@ EmpathMessageListWidget::s_headerClicked(int i)
     setSorting(i, sortType_);
     
     KConfig * c(KGlobal::config());
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
+
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_DISPLAY);
     
-    c->writeEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, i);
-    c->writeEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, sortType_);
+    c->writeEntry(UI_SORT_COLUMN, i);
+    c->writeEntry(UI_SORT_ASCENDING, sortType_);
     
     lastHeaderClicked_ = i;
 }
@@ -560,7 +560,7 @@ EmpathMessageListWidget::s_headerClicked(int i)
 EmpathMessageListWidget::_setupMessageMenu()
 {
     messageMenuItemView =
-        messageMenu_.insertItem(empathIcon("mini-view"), i18n("View"),
+        messageMenu_.insertItem(empathIcon("menu-view"), i18n("View"),
         this, SLOT(s_messageView()));
     
     messageMenu_.insertSeparator();
@@ -583,38 +583,38 @@ EmpathMessageListWidget::_setupMessageMenu()
     messageMenu_.insertSeparator();
 
     messageMenuItemReply =
-    messageMenu_.insertItem(empathIcon("mini-reply"), i18n("Reply"),
+    messageMenu_.insertItem(empathIcon("menu-reply"), i18n("Reply"),
         this, SLOT(s_messageReply()));
 
     messageMenuItemReplyAll =
-    messageMenu_.insertItem(empathIcon("mini-reply"),i18n("Reply to A&ll"),
+    messageMenu_.insertItem(empathIcon("menu-reply"),i18n("Reply to A&ll"),
         this, SLOT(s_messageReplyAll()));
 
     messageMenuItemForward =
-    messageMenu_.insertItem(empathIcon("mini-forward"), i18n("Forward"),
+    messageMenu_.insertItem(empathIcon("menu-forward"), i18n("Forward"),
         this, SLOT(s_messageForward()));
 
     messageMenuItemDelete =
-    messageMenu_.insertItem(empathIcon("mini-delete"), i18n("Delete"),
+    messageMenu_.insertItem(empathIcon("menu-delete"), i18n("Delete"),
         this, SLOT(s_messageDelete()));
 
     messageMenuItemSaveAs =
-    messageMenu_.insertItem(empathIcon("mini-save"), i18n("Save As"),
+    messageMenu_.insertItem(empathIcon("menu-save"), i18n("Save As"),
         this, SLOT(s_messageSaveAs()));
     
     multipleMessageMenu_.insertItem(i18n("Mark..."),
         this, SLOT(s_messageMarkMany()));
     
     multipleMessageMenu_.insertItem(
-        empathIcon("mini-forward"), i18n("Forward"),
+        empathIcon("menu-forward"), i18n("Forward"),
         this, SLOT(s_messageForward()));
 
     multipleMessageMenu_.insertItem(
-        empathIcon("mini-delete"), i18n("Delete"),
+        empathIcon("menu-delete"), i18n("Delete"),
         this, SLOT(s_messageDelete()));
 
     multipleMessageMenu_.insertItem(
-        empathIcon("mini-save"), i18n("Save As"),
+        empathIcon("menu-save"), i18n("Save As"),
         this, SLOT(s_messageSaveAs()));
 
     threadMenu_.insertItem(i18n("Expand"),
@@ -646,10 +646,15 @@ EmpathMarkAsReadTimer::go(EmpathMessageListItem * i)
     if (i->status() & RMM::Read) return;
 
     KConfig * c(KGlobal::config());
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
     
-    if (!c->readBoolEntry(EmpathConfig::KEY_MARK_AS_READ)) return;
-    int waitTime(c->readNumEntry(EmpathConfig::KEY_MARK_AS_READ_TIME, 2));
+    using namespace EmpathConfig;
+    
+    c->setGroup(GROUP_DISPLAY);
+    
+    if (!c->readBoolEntry(UI_MARK_READ)) return;
+
+    int waitTime(c->readNumEntry(UI_MARK_TIME, 2));
+
     timer_.start(waitTime * 1000, true);
 }
 
@@ -682,10 +687,9 @@ EmpathMessageListWidget::s_startDrag(const QList<QListViewItem> & items)
     }
 
     // char * c = new char[i->id().length() + 1];
-    // strcpy(c, i->id().ascii());
+    // strcpy(c, i->id().latin1());
     
     QUriDrag * u  = new QUriDrag(uriList, this);
-    CHECK_PTR(u);
 
     u->setPixmap(empathIcon("tree"));
 
@@ -806,14 +810,14 @@ EmpathMessageListWidget::s_itemCome(const QString & s)
     if (f == 0)
         return;
         
-    EmpathIndexRecord * i(f->index()->record(s.ascii()));
+    EmpathIndexRecord * i(f->index()->record(s.latin1()));
 
     if (i == 0) {
         empathDebug("Can't find index record for \"" + s + "\"");
         return;
     }
     
-    if (KGlobal::config()->readBoolEntry(EmpathConfig::KEY_THREAD_MESSAGES)) {
+    if (KGlobal::config()->readBoolEntry(EmpathConfig::UI_THREAD)) {
     
         addItem(i);
     
@@ -835,7 +839,7 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
     
     KGlobal::config()->setGroup(EmpathConfig::GROUP_DISPLAY);
 
-    if (KGlobal::config()->readBoolEntry(EmpathConfig::KEY_THREAD_MESSAGES))
+    if (KGlobal::config()->readBoolEntry(EmpathConfig::UI_THREAD))
         _fillThreading(f);
     else
         _fillNonThreading(f);
@@ -853,7 +857,6 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
     setRootIsDecorated(false);
 
     EmpathTask * t(empath->addTask(i18n("Sorting messages")));
-    CHECK_PTR(t);
     
     setSorting(-1);
 
@@ -879,12 +882,16 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
         t->doneOne();
         kapp->processEvents();
     }
+
+    KConfig * c(KGlobal::config());
+
+    using namespace EmpathConfig;
+    
+    c->setGroup(GROUP_DISPLAY);
     
     setSorting(
-        KGlobal::config()->
-            readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 2),
-        KGlobal::config()->
-            readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true));
+        c->readNumEntry(UI_SORT_COLUMN, DFLT_SORT_COL),
+        c->readNumEntry(UI_SORT_ASCENDING, DFLT_SORT_ASCENDING));
     
     t->done();
 
@@ -897,9 +904,7 @@ EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
 {
     setRootIsDecorated(true);
     
-    
     EmpathTask * t(empath->addTask(i18n("Sorting messages")));
-    CHECK_PTR(t);
 
     t->setMax(f->messageCount());
     
@@ -929,13 +934,16 @@ EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
         kapp->processEvents();
     }
     
-    sortType_ = KGlobal::config()->
-        readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true);
+    KConfig * c(KGlobal::config());
 
-    setSorting(
-        KGlobal::config()->
-        readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 3), sortType_);
+    using namespace EmpathConfig;
     
+    c->setGroup(GROUP_DISPLAY);
+    
+    setSorting(
+        c->readNumEntry(UI_SORT_COLUMN, DFLT_SORT_COL),
+        c->readNumEntry(UI_SORT_ASCENDING, DFLT_SORT_ASCENDING));
+ 
     t->done();
 
     empath->s_infoMessage(

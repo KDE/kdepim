@@ -61,7 +61,6 @@ class EmpathFolderWidget : public EmpathListView
 
         void s_rightButtonPressed(QListViewItem *, const QPoint &, 
             int, Area);
-        void s_folderProperties();
         void s_mailboxCheck();
         void s_mailboxProperties();
         void s_update();
@@ -88,8 +87,11 @@ class EmpathFolderWidget : public EmpathListView
 
         enum OverType { Folder, Mailbox };
         
-        void _addMailbox(const EmpathMailbox & mailbox);
-        void _addChildren(EmpathFolder * item, EmpathFolderListItem * parent);
+        void _addMailbox(EmpathMailbox * mailbox);
+        void _addChildren(
+            EmpathMailbox * m,
+            EmpathFolder * item,
+            EmpathFolderListItem * parent);
         
         EmpathFolderListItem * find(const EmpathURL &);
         

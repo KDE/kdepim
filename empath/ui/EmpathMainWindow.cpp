@@ -48,32 +48,29 @@
 #include "EmpathFolderChooserDialog.h"
 #include "Empath.h"
 
-EmpathMainWindow::EmpathMainWindow(const char * name)
-    :    KTMainWindow(name)
+EmpathMainWindow::EmpathMainWindow()
+    :    KTMainWindow("MainWindow")
 {
     // Resize to previous size.
     
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
+
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_DISPLAY);
     
-    int x = c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_X_SIZE, 600);
-    int y = c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_Y_SIZE, 400);
+    int x = c->readNumEntry(UI_MAIN_WIN_X, 600);
+    int y = c->readNumEntry(UI_MAIN_WIN_Y, 400);
     resize(x, y);
     
-    menu_    = menuBar();
-    CHECK_PTR(menu_);
+    menu_       = menuBar();
+    status_     = statusBar();    
 
-    status_    = statusBar();    
-    CHECK_PTR(status_);
-    
-    mainWidget_    =
-        new EmpathMainWidget(this, "mainWidget");
-    CHECK_PTR(mainWidget_);
+    mainWidget_ = new EmpathMainWidget(this);
     
     messageListWidget_ = mainWidget_->messageListWidget();
 
     setView(mainWidget_, false);
-    setIcon(empathIcon("empath"));
     kapp->setMainWidget(this);
     
     _setupMenuBar();
@@ -88,27 +85,32 @@ EmpathMainWindow::EmpathMainWindow(const char * name)
 EmpathMainWindow::~EmpathMainWindow()
 {
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
+
+    using namespace EmpathConfig;
     
-    c->writeEntry(EmpathConfig::KEY_MAIN_WINDOW_X_SIZE, width());
-    c->writeEntry(EmpathConfig::KEY_MAIN_WINDOW_Y_SIZE, height());
+    c->setGroup(GROUP_DISPLAY);
+    
+    c->writeEntry(UI_MAIN_WIN_X, width());
+    c->writeEntry(UI_MAIN_WIN_Y, height());
 }
 
     void
 EmpathMainWindow::_setupToolBar()
 {
-    QPixmap p = empathIcon("compose");
+    QPixmap p = empathIcon("toolbar-compose");
     int i = QMAX(p.width(), p.height());
 
     KToolBar * tb = new KToolBar(this, "tooly", i + 4 );
-    CHECK_PTR(tb);
 
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
+
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_DISPLAY);
     
     KToolBar::BarPosition pos =
         (KToolBar::BarPosition)
-        c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_TOOLBAR_POS);
+        c->readNumEntry(UI_MAIN_WIN_TOOL);
 
     if  (   pos != KToolBar::Top    &&
             pos != KToolBar::Left   &&
@@ -123,21 +125,21 @@ EmpathMainWindow::_setupToolBar()
     QObject::connect(tb, SIGNAL(moved(BarPosition)),
             this, SLOT(s_toolbarMoved(BarPosition)));
 
-    tb->insertButton(empathIcon("compose"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("toolbar-compose"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageNew()), true, i18n("Compose"));
     
-    tb->insertButton(empathIcon("reply"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("toolbar-reply"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageReply()), true, i18n("Reply"));
     
-    tb->insertButton(empathIcon("forward"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("toolbar-forward"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageForward()), true, i18n("Forward"));
     
     tb->insertSeparator();
     
-    tb->insertButton(empathIcon("delete"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("toolbar-delete"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageDelete()), true, i18n("Delete"));
     
-    tb->insertButton(empathIcon("save"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("toolbar-save"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageSaveAs()), true, i18n("Save"));
 }
 
@@ -279,7 +281,7 @@ EmpathMainWindow::s_messageSaveAs()
 {
     if (!_messageSelected()) return;
 
-    empath->saveMessage(messageListWidget_->firstSelectedMessage());
+    empath->saveMessage(messageListWidget_->firstSelectedMessage(), this);
 }
 
     void
@@ -287,7 +289,7 @@ EmpathMainWindow::s_messageCopyTo()
 {
     if (!_messageSelected()) return;
 
-    EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
+    EmpathFolderChooserDialog fcd(this);
 
     if (fcd.exec() != QDialog::Accepted)
         return;
@@ -298,7 +300,7 @@ EmpathMainWindow::s_messageCopyTo()
     void
 EmpathMainWindow::s_messageMoveTo()
 {
-    EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
+    EmpathFolderChooserDialog fcd(this);
 
     if (fcd.exec() != QDialog::Accepted)
         return;
@@ -327,10 +329,7 @@ EmpathMainWindow::s_messageView()
     if (!_messageSelected()) return;
     
     EmpathMessageViewWindow * messageViewWindow =
-        new EmpathMessageViewWindow(
-            messageListWidget_->firstSelectedMessage(), "Empath");
-
-    CHECK_PTR(messageViewWindow);
+        new EmpathMessageViewWindow(messageListWidget_->firstSelectedMessage());
 
     messageViewWindow->show();
 }
@@ -338,7 +337,13 @@ EmpathMainWindow::s_messageView()
     void
 EmpathMainWindow::s_help()
 {
-    //empathInvokeHelp("", "");
+    // STUB
+}
+
+    void
+EmpathMainWindow::s_about()
+{
+    empath->s_about(this);
 }
 
     void
@@ -363,8 +368,11 @@ EmpathMainWindow::clearStatusMessage()
 EmpathMainWindow::s_toolbarMoved(BarPosition pos)
 {
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
-    c->writeEntry(EmpathConfig::KEY_MAIN_WINDOW_TOOLBAR_POS, (int)pos);
+    
+    using namespace EmpathConfig;
+    
+    c->setGroup(GROUP_DISPLAY);
+    c->writeEntry(UI_MAIN_WIN_TOOL, (int)pos);
 }
 
     void
@@ -383,12 +391,6 @@ EmpathMainWindow::messageListWidget()
 EmpathMainWindow::s_dumpWidgetList()
 {
     // STUB
-}
-
-    RMM::RMessage *
-EmpathMainWindow::_getFirstSelectedMessage() const
-{
-    return empath->message(messageListWidget_->firstSelectedMessage());
 }
 
     void
@@ -418,16 +420,39 @@ EmpathMainWindow::s_editInvertSelection()
     bool
 EmpathMainWindow::_messageSelected()
 {
-    RMM::RMessage * m(_getFirstSelectedMessage());
-    
-    if (m == 0) {
+    if (messageListWidget_->firstSelectedMessage() == EmpathURL("orphaned")) {
         QMessageBox::information(this, "Empath",
             i18n("Please select a message first"), i18n("OK"));
         return false;
     }
-    
+
     return true;
 }
+
+    void
+EmpathMainWindow::s_setupDisplay()
+{ empath->s_setupDisplay(this); }
+
+        void
+EmpathMainWindow::s_setupIdentity()
+{ empath->s_setupIdentity(this); }
+
+        void
+EmpathMainWindow::s_setupComposing()
+{ empath->s_setupComposing(this); }
+
+        void
+EmpathMainWindow::s_setupSending()
+{ empath->s_setupSending(this); }
+
+        void
+EmpathMainWindow::s_setupAccounts()
+{ empath->s_setupAccounts(this); }
+
+        void
+EmpathMainWindow::s_setupFilters()
+{ empath->s_setupFilters(this); }
+
 
 #include "EmpathMainWindowMenus.cpp"
 

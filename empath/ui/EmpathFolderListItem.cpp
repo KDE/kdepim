@@ -51,9 +51,12 @@ EmpathFolderListItem::EmpathFolderListItem(
         tagged_(false)
 {
     KConfig * c(KGlobal::config());
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
     
-    QStringList l = c->readListEntry(EmpathConfig::KEY_FOLDER_ITEMS_OPEN, ',');
+    using namespace EmpathConfig;
+    
+    c->setGroup(GROUP_DISPLAY);
+    
+    QStringList l = c->readListEntry(UI_FOLDERS_OPEN, ',');
     
     QStringList::ConstIterator it(l.begin());
     for (; it != l.end(); it++)
@@ -86,9 +89,12 @@ EmpathFolderListItem::EmpathFolderListItem(
         tagged_(false)
 {
     KConfig * c(KGlobal::config());
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
+    
+    using namespace EmpathConfig;
+    
+    c->setGroup(GROUP_DISPLAY);
 
-    QStringList l = c->readListEntry(EmpathConfig::KEY_FOLDER_ITEMS_OPEN);
+    QStringList l = c->readListEntry(UI_FOLDERS_OPEN);
     
     QStringList::ConstIterator it(l.begin());
     for (; it != l.end(); it++)
@@ -103,12 +109,12 @@ EmpathFolderListItem::EmpathFolderListItem(
     }
 
     QObject::connect(
-        f,        SIGNAL(countUpdated(Q_UINT32, Q_UINT32)),
-        this,    SLOT(s_setCount(Q_UINT32, Q_UINT32)));
+        f,      SIGNAL(countUpdated(Q_UINT32, Q_UINT32)),
+        this,   SLOT(s_setCount(Q_UINT32, Q_UINT32)));
     
     QObject::connect(
-        this,    SIGNAL(update()),
-        f,        SLOT(s_update()));
+        this,   SIGNAL(update()),
+        f,      SLOT(s_update()));
     
     QString s = url_.folderPath();
     if (s.right(1) == "/")
@@ -128,27 +134,30 @@ EmpathFolderListItem::~EmpathFolderListItem()
     QString
 EmpathFolderListItem::key(int column, bool) const
 {
-    if (!url_.hasFolder() && column != 1) {
+    if (column != 0 || !url_.isFolder())
         return text(column);
-    }
+
+    QString s(url_.folderPath());
     
     KConfig * c(KGlobal::config());
         
-    c->setGroup(EmpathConfig::GROUP_SENDING);
-        
-    if (url_ == c->readEntry(EmpathConfig::KEY_INBOX_FOLDER))
+    using namespace EmpathConfig;
+    
+    c->setGroup(GROUP_FOLDERS);    
+
+    if (s == c->readEntry(FOLDER_INBOX))
         return "0";
         
-    if (url_ == c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER))
+    if (s == c->readEntry(FOLDER_OUTBOX))
         return "1";
         
-    if (url_ == c->readEntry(EmpathConfig::KEY_SENT_FOLDER))
+    if (s == c->readEntry(FOLDER_SENT))
         return "2";
         
-    if (url_ == c->readEntry(EmpathConfig::KEY_DRAFTS_FOLDER))
+    if (s == c->readEntry(FOLDER_DRAFTS))
         return "3";
         
-    if (url_ == c->readEntry(EmpathConfig::KEY_TRASH_FOLDER))
+    if (s == c->readEntry(FOLDER_TRASH))
         return "4";
     
     return text(column);

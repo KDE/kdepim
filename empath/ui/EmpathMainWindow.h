@@ -54,7 +54,7 @@ class EmpathMainWindow : public KTMainWindow
 
     public:
         
-        EmpathMainWindow(const char * name);
+        EmpathMainWindow();
         ~EmpathMainWindow();
 
         void statusMessage(const QString & messageText, int seconds);
@@ -100,8 +100,17 @@ class EmpathMainWindow : public KTMainWindow
         void s_messageFilter();
         void s_messageView();
 
+        // Configure menu slots
+        void s_setupDisplay();
+        void s_setupIdentity();
+        void s_setupComposing();
+        void s_setupSending();
+        void s_setupAccounts();
+        void s_setupFilters();
+
         // Help menu slots
         void s_help();
+        void s_about();
         void s_aboutQt();
         
         // Debugging
@@ -142,8 +151,6 @@ class EmpathMainWindow : public KTMainWindow
 
         bool queryExit();
         bool _messageSelected();
-        
-        RMM::RMessage * _getFirstSelectedMessage() const;
 };
 
 #endif

@@ -39,7 +39,6 @@
 
 // Local includes
 #include "EmpathDefines.h"
-#include "RikGroupBox.h"
 #include <RMM_Enum.h>
 
 class EmpathMessageMarkDialog : public QDialog
@@ -65,21 +64,15 @@ class EmpathMessageMarkDialog : public QDialog
 
     private:
 
-        KButtonBox        * buttonBox_;
+        KButtonBox      * buttonBox_;
         
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_Cancel_;
-        QPushButton        * pb_Help_;
+        QPushButton     * pb_OK_;
+        QPushButton     * pb_Cancel_;
+        QPushButton     * pb_Help_;
 
-        RikGroupBox        * rgb_type_;
-        RikGroupBox        * rgb_state_;
-    
-        QWidget            * w_type_;
-        QWidget            * w_state_;
-        
-        QLabel            * l_tagged_;
-        QLabel            * l_replied_;
-        QLabel            * l_read_;
+        QLabel          * l_tagged_;
+        QLabel          * l_replied_;
+        QLabel          * l_read_;
         
         QRadioButton    * rb_tagged_;
         QRadioButton    * rb_replied_;
@@ -91,10 +84,6 @@ class EmpathMessageMarkDialog : public QDialog
         
         QButtonGroup    * typeButtonGroup_;
         QButtonGroup    * stateButtonGroup_;
-    
-        QGridLayout        * topLevelLayout_;
-        QGridLayout        * typeGroupLayout_;
-        QGridLayout        * stateGroupLayout_;
 };
 
 #endif

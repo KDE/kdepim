@@ -44,13 +44,13 @@ EmpathFilterListItem::EmpathFilterListItem(
         QListViewItem(parent, _filter->name()),
         filter_(_filter)
 {
-    empathDebug("ctor");
-    setPixmap(0, empathIcon("filter"));
+    setPixmap(0, empathIcon("menu-filter"));
     setText(1, QString().setNum(filter_->priority()));
 }
 
 EmpathFilterListItem::~EmpathFilterListItem()
 {
+    // Empty.
 }
 
     QString
@@ -64,8 +64,6 @@ EmpathFilterListItem::key(int, bool) const
     void
 EmpathFilterListItem::setup()
 {
-    empathDebug("setup() called");
-    
     widthChanged();
     int ph = pixmap(0) ? pixmap(0)->height() : 0;
     int th = QFontMetrics(KGlobal::generalFont()).height();

@@ -24,6 +24,7 @@
 
 // KDE includes
 #include <kglobal.h>
+#include <kstddirs.h>
 #include <kconfig.h>
 #include <kapp.h>
 
@@ -58,11 +59,11 @@ EmpathMailSenderSMTP::setServer(const QString & _name, const Q_UINT32 _port)
    void
 EmpathMailSenderSMTP::sendOne(RMM::RMessage & m, const QString & id)
 {
-    empathDebug("sendOne() called");
-    
     currentID_ = id;
     
-    QString sender = KGlobal::config()->readEntry(EmpathConfig::KEY_EMAIL);
+    KConfig c(KGlobal::dirs()->findResource("config", "kcmemailrc"), true);
+    
+    QString sender = c.readEntry("EmailAddress");
 
     QString recipient;
 
@@ -95,19 +96,24 @@ EmpathMailSenderSMTP::sendOne(RMM::RMessage & m, const QString & id)
 EmpathMailSenderSMTP::saveConfig()
 {
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_SENDING);
-    c->writeEntry(EmpathConfig::KEY_SMTP_SERVER_LOCATION, serverName_);
-    c->writeEntry(EmpathConfig::KEY_SMTP_SERVER_PORT, serverPort_);
+    
+    using namespace EmpathConfig;
+    
+    c->setGroup(GROUP_SENDING);
+    c->writeEntry(S_SMTP, serverName_);
+    c->writeEntry(S_SMTP_PORT, serverPort_);
 }
 
     void
 EmpathMailSenderSMTP::loadConfig()
 {
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_SENDING);
-    serverName_ = c->readEntry(EmpathConfig::KEY_SMTP_SERVER_LOCATION,
-        "localhost");
-    serverPort_ = c->readUnsignedNumEntry(EmpathConfig::KEY_SMTP_SERVER_PORT, 25);
+
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_SENDING);
+    serverName_ = c->readEntry(S_SMTP, "localhost");
+    serverPort_ = c->readUnsignedNumEntry(S_SMTP_PORT, 25);
 }
 
     void

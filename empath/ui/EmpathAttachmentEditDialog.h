@@ -44,8 +44,6 @@
 
 #include "EmpathAttachmentSpec.h"
 
-class RikGroupBox;
-
 class EmpathAttachmentEditDialog : public QDialog
 {
     Q_OBJECT
@@ -74,52 +72,31 @@ class EmpathAttachmentEditDialog : public QDialog
         
         void    _init();
 
-        RikGroupBox        * rgb_main_;
-        RikGroupBox        * rgb_encoding_;
-
-        QWidget            * w_main_;
-        QWidget            * w_encoding_;
-        
         QButtonGroup    * bg_encoding_;
 
-        QGridLayout        * mainLayout_;
-        QGridLayout        * layout_;
-        QGridLayout        * encodingLayout_;
-
-        QLabel            * l_filename_;
-        QLabel            * l_description_;
+        QLineEdit       * le_filename_;
+        QLineEdit       * le_description_;
         
-        QLineEdit        * le_filename_;
-        QLineEdit        * le_description_;
-        
-        QPushButton        * pb_browse_;
-
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_cancel_;
-        QPushButton        * pb_help_;
+        QPushButton     * pb_OK_;
+        QPushButton     * pb_cancel_;
+        QPushButton     * pb_help_;
         
         QRadioButton    * rb_base64_;
         QRadioButton    * rb_8bit_;
         QRadioButton    * rb_7bit_;
         QRadioButton    * rb_qp_;
         
-        QLabel            * l_type_;
-        QComboBox        * cb_type_;
-        QLabel            * l_subType_;
-        QComboBox        * cb_subType_;
-        
-        QLabel            * l_charset_;
-        QComboBox        * cb_charset_;
+        QComboBox       * cb_type_;
+        QComboBox       * cb_subType_;
+        QComboBox       * cb_charset_;
 
-        KButtonBox        * buttonBox_;
-        
-        static const QString textSubTypes_            [];
-        static const QString messageSubTypes_        [];
-        static const QString applicationSubTypes_    [];
-        static const QString imageSubTypes_            [];
-        static const QString videoSubTypes_            [];
-        static const QString audioSubTypes_            [];
-        static const QString charsetTypes_            [];
+        static const QString textSubTypes_[];
+        static const QString messageSubTypes_[];
+        static const QString applicationSubTypes_[];
+        static const QString imageSubTypes_[];
+        static const QString videoSubTypes_[];
+        static const QString audioSubTypes_[];
+        static const QString charsetTypes_[];
         static const int nTxt, nMsg, nApp, nImg, nVid, nAud, nChr;
         
         QStringList txtST_, msgST_, appST_, imgST_, vidST_, audST_, chrT_;

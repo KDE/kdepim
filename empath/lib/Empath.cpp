@@ -94,13 +94,6 @@ Empath::init()
     
     mailboxList_.loadConfig();
     filterList_.loadConfig();
-    
-    KConfig * c = KGlobal::config();
-    c->setGroup("Identity");
-    
-    QString userName = c->readEntry(EmpathConfig::KEY_NAME);
-    if (!userName)
-        emit(setupWizard());
 }
 
 Empath::~Empath()
@@ -126,14 +119,9 @@ Empath::updateOutgoingServer()
     
     EmpathMailSender::OutgoingServerType st =
         (EmpathMailSender::OutgoingServerType)
-        (c->readUnsignedNumEntry(EmpathConfig::KEY_OUTGOING_SERVER_TYPE,
-                                 EmpathMailSender::Sendmail));
+        (c->readUnsignedNumEntry(EmpathConfig::S_TYPE));
     
     switch (st) {
-        
-        case EmpathMailSender::Sendmail:
-            mailSender_ = new EmpathMailSenderSendmail;
-            break;
         
         case EmpathMailSender::Qmail:
             mailSender_ = new EmpathMailSenderQmail;
@@ -143,9 +131,9 @@ Empath::updateOutgoingServer()
             mailSender_ = new EmpathMailSenderSMTP;
             break;
             
+        case EmpathMailSender::Sendmail:
         default:
-            mailSender_ = 0;
-            return;
+            mailSender_ = new EmpathMailSenderSendmail;
             break;
     }
 
@@ -161,18 +149,28 @@ Empath::message(const EmpathURL & source)
     
     // Try and get the message from the cache.
     
-    RMM::RMessage * message(cache_.retrieve(source.messageID()));
+    RMM::RMessage * message(cache_[source.asString()]->message());
     
-    if (message != 0) {
-        empathDebug("message \"" + source.asString() + "\" found in cache");
-        return message;
+    if (message == 0) {
+        empathDebug("Message \"" + source.asString() + "\" not in cache !");
+        return 0;
     }
     
-    empathDebug("message \"" + source.asString() + "\" not in cache");
+    return message;
+}
+
+    void
+Empath::finishedWithMessage(const EmpathURL & url)
+{
+    EmpathCachedMessage * m = cache_[url.asString()];
+
+    if (m == 0)
+        return;
+
+    m->deref();
     
-    // It's not in the cache. We don't have another source these days, due
-    // to the async code.
-    return 0;
+    if (m->refCount() == 0)
+        cache_.remove(url.asString());
 }
 
     EmpathMailbox *
@@ -368,7 +366,12 @@ Empath::generateUnique()
     void
 Empath::cacheMessage(const EmpathURL & url, RMM::RMessage * m)
 {
-    cache_.store(m, url.messageID());
+    EmpathCachedMessage * cached = cache_[url.asString()];
+
+    if (cached == 0)
+        cache_.insert(url.asString(), new EmpathCachedMessage(m));
+    else 
+        cached->ref();
 }
 
     void
@@ -467,12 +470,6 @@ Empath::s_removeFolderComplete(
 }
 
     void
-Empath::saveMessage(const EmpathURL & url)
-{
-    emit(getSaveName(url));
-}
-
-    void
 Empath::s_saveNameReady(const EmpathURL & url, QString name)
 {
     EmpathMailbox * m = mailbox(url);
@@ -543,34 +540,30 @@ Empath::s_messageReadyForSave(
 
     f.close();
     
-    empathDebug("Message saved OK");
-//    QMessageBox::information(this, "Empath",
-//        i18n("Message saved to") + " " + saveFilePath + " " + i18n("OK"),
-//        i18n("OK"));
+    QString okMessage("Message saved to %1 OK");
+    s_infoMessage(okMessage.arg(name));
 }
+
 
 void Empath::send(RMM::RMessage & m)     { mailSender_->send(m);     }
 void Empath::queue(RMM::RMessage & m)    { mailSender_->queue(m);    }
 void Empath::sendQueued()                { mailSender_->sendQueued();}
-void Empath::s_setupDisplay()            { emit(setupDisplay());     }
-void Empath::s_setupIdentity()           { emit(setupIdentity());    }
-void Empath::s_setupSending()            { emit(setupSending());     }
-void Empath::s_setupComposing()          { emit(setupComposing());   }
-void Empath::s_setupAccounts()           { emit(setupAccounts());    }
-void Empath::s_setupFilters()            { emit(setupFilters());     }
 void Empath::s_newMailArrived()          { emit(newMailArrived());   }
 void Empath::s_newTask(EmpathTask * t)   { emit(newTask(t));         }
-void Empath::s_about()                   { emit(about());            }
-void Empath::s_bugReport()               { emit(bugReport());        }
 void Empath::filter(const EmpathURL & m) { filterList_.filter(m);    }
+void Empath::s_bugReport()               { emit(bugReport());        }
+
+void Empath::s_setupDisplay(QWidget * parent)  { emit(setupDisplay(parent));   }
+void Empath::s_setupIdentity(QWidget * parent) { emit(setupIdentity(parent));  }
+void Empath::s_setupSending(QWidget * parent)  { emit(setupSending(parent));   }
+void Empath::s_setupComposing(QWidget * parent){ emit(setupComposing(parent)); }
+void Empath::s_setupAccounts(QWidget * parent) { emit(setupAccounts(parent));  }
+void Empath::s_setupFilters(QWidget * parent)  { emit(setupFilters(parent));   }
+void Empath::s_about(QWidget * parent)         { emit(about(parent));          }
 
     void 
-Empath::compose(const QString & recipient)
+Empath::s_compose(const QString & recipient)
 { emit(newComposer(recipient)); }
-
-    void 
-Empath::s_compose()
-{ emit(newComposer(ComposeNormal, EmpathURL())); }
 
     void
 Empath::s_reply(const EmpathURL & url)
@@ -589,12 +582,20 @@ Empath::s_bounce(const EmpathURL & url)
 { emit(newComposer(ComposeBounce, url)); }
 
     void
-Empath::s_infoMessage(const QString & s)
-{ emit(infoMessage(s)); }
+Empath::saveMessage(const EmpathURL & url, QWidget * parent)
+{ emit(getSaveName(url, parent)); }
 
     void
 Empath::s_configureMailbox(const EmpathURL & u, QWidget * w)
 { emit(configureMailbox(u, w)); }
 
+
+    void
+Empath::s_infoMessage(const QString & s)
+{ emit(infoMessage(s)); }
+
+    void
+Empath::s_checkMail()
+{ emit(checkMail()); }
 
 // vim:ts=4:sw=4:tw=78

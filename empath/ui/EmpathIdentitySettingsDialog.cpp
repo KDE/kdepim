@@ -22,309 +22,162 @@
 # pragma implementation "EmpathIdentitySettingsDialog.h"
 #endif
 
+// System includes
+#include <sys/utsname.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <pwd.h>
+
 // Qt includes
 #include <qfile.h>
 #include <qtextstream.h>
 #include <qpixmap.h>
 #include <qwhatsthis.h>
+#include <qlayout.h>
+#include <qfont.h>
 
 // KDE includes
 #include <klocale.h>
 #include <kconfig.h>
 #include <kapp.h>
+#include <kstddirs.h>
 #include <kglobal.h>
 #include <kfiledialog.h>
 
 // Local includes
 #include "EmpathIdentitySettingsDialog.h"
+#include "EmpathPathSelectWidget.h"
+#include "EmpathSeparatorWidget.h"
 #include "EmpathConfig.h"
 #include "EmpathUtilities.h"
 #include "EmpathUIUtils.h"
 #include "Empath.h"
-#include "RikGroupBox.h"
         
-bool EmpathIdentitySettingsDialog::exists_ = false;
-
-    void
-EmpathIdentitySettingsDialog::create()
-{
-    if (exists_) return;
-    exists_ = true;
-    EmpathIdentitySettingsDialog * d = new EmpathIdentitySettingsDialog(0, 0);
-    CHECK_PTR(d);
-    d->show();
-    kapp->processEvents();
-    d->loadData();
-}
-    
-EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
-        QWidget * parent,
-        const char * name)
-    :    QDialog(parent, name, false),
+EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(QWidget * parent)
+    :   QDialog(parent, "IdentitySettings", true),
         applied_(false)
 {
-    empathDebug("ctor");
     setCaption(i18n("Identity Settings"));
     
-    rgb_main_    = new RikGroupBox(QString::null, 8, this, "rgb_font");
-    CHECK_PTR(rgb_main_);
-    
-    w_main_        = new QWidget(rgb_main_, "w_main");
-    CHECK_PTR(w_main_);
-    
-    rgb_main_->setWidget(w_main_);
-    
-    rgb_sigPreview_    = new RikGroupBox(i18n("Signature Preview"), 8,
-            w_main_, "rgb_sigPreview");
-    CHECK_PTR(rgb_sigPreview_);
-    
-    w_sigPreview_    = new QWidget(rgb_sigPreview_, "w_sigPreview");
-    CHECK_PTR(w_sigPreview_);
 
-    rgb_sigPreview_->setWidget(w_sigPreview_);
+    QLabel * l_name     = new QLabel(i18n("Full name"),     this, "l_name");
+    QLabel * l_email    = new QLabel(i18n("Email address"), this, "l_email");
+    QLabel * l_replyTo  = new QLabel(i18n("Reply address"), this, "l_replyTo");
+    QLabel * l_org      = new QLabel(i18n("Organization"),  this, "l_org");
+    QLabel * l_sig      = new QLabel(i18n("Signature file"),this, "l_sig");
     
-    QLineEdit    tempLineEdit((QWidget *)0);
-    Q_UINT32 h    = tempLineEdit.sizeHint().height();
+    le_name_      = new QLineEdit(this, "le_Name");
+    le_email_     = new QLineEdit(this, "le_Email");
+    le_replyTo_   = new QLineEdit(this, "le_ReplyTo");
+    le_org_       = new QLineEdit(this, "le_Org");
+    efsw_sig_     = new EmpathFileSelectWidget(QString::null, this);
+    
+    pb_editSig_ = new QPushButton(i18n("Edit"), this, "pb_editSig");
 
-    l_name_    =
-        new QLabel(i18n("Your name"), w_main_, "l_name");
-    CHECK_PTR(l_name_);
+    mle_sig_ = new QMultiLineEdit(this, "mle_sig");
 
-    l_name_->setFixedHeight(h);
+    mle_sig_->setReadOnly(true);
+    mle_sig_->setFont(KGlobal::fixedFont());
+    mle_sig_->setText(i18n("No signature set"));
+    mle_sig_->setMinimumHeight(60);
     
-    le_chooseName_    =
-        new QLineEdit(w_main_, "le_chooseName");
-    CHECK_PTR(le_chooseName_);
+#include "EmpathDialogButtonBox.cpp"
+    
+    // Layout
+    
+    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
 
-    QWhatsThis::add(le_chooseName_, i18n(
-            "This should contain your real name,\n"
-            "unless you don't like people to know\n"
-            "your identity, in which case you're\n"
-            "probably a wannabe cracker, and are\n"
-            "called '3l33t d3wd'"));
+    QGridLayout * layout0 = new QGridLayout(layout);
+    
+    layout0->addWidget(l_name,      0, 0);
+    layout0->addWidget(l_email,     1, 0);
+    layout0->addWidget(l_replyTo,   2, 0);
+    layout0->addWidget(l_org,       3, 0);
 
-    le_chooseName_->setFixedHeight(h);
-    
-    l_email_    =
-        new QLabel(i18n("email address"), w_main_, "l_email");
-    CHECK_PTR(l_email_);
-    
-    l_email_->setFixedHeight(h);
-    
-    le_chooseEmail_    =
-        new QLineEdit(w_main_, "le_chooseEmail");
-    CHECK_PTR(le_chooseEmail_);
-    
-    QWhatsThis::add(le_chooseEmail_, i18n(
-            "This should contain your email address.\n"
-            "Type it correctly !"));
+    layout0->addWidget(le_name_,      0, 1);
+    layout0->addWidget(le_email_,     1, 1);
+    layout0->addWidget(le_replyTo_,   2, 1);
+    layout0->addWidget(le_org_,       3, 1);
 
-    le_chooseEmail_->setFixedHeight(h);
-    
-    l_replyTo_    =
-        new QLabel(i18n("Reply-to address (if different from email address)"),
-                w_main_, "l_replyTo");
-    CHECK_PTR(l_replyTo_);
-    
-    l_replyTo_->setFixedHeight(h);
-    
-    le_chooseReplyTo_    =
-        new QLineEdit(w_main_, "le_chooseReplyTo");
-    CHECK_PTR(le_chooseReplyTo_);
-    
-    QWhatsThis::add(le_chooseReplyTo_, i18n(
-            "If your 'real' email address isn't the\n"
-            "address you want people to reply to,\n"
-            "then simply fill this in."));
-            
-    le_chooseReplyTo_->setFixedHeight(h);
-    
-    l_org_    =
-        new QLabel(i18n("Organisation"), w_main_, "l_org");
-    CHECK_PTR(l_org_);
-    
-    l_org_->setFixedHeight(h);
-    
-    le_chooseOrg_    =
-        new QLineEdit(w_main_, "le_chooseOrg");
-    CHECK_PTR(le_chooseOrg_);
-    
-    QWhatsThis::add(le_chooseOrg_, i18n(
-            "This is supposed to contain the name of\n"
-            "the organisation you belong to. You can\n"
-            "type anything, or nothing. It doesn't\n"
-            "matter in the slightest."));
-    
-    le_chooseOrg_->setFixedHeight(h);
-    
-    l_sig_    =
-        new QLabel(i18n("Signature file"), w_main_, "l_sig");
-    CHECK_PTR(l_sig_);
-    
-    l_sig_->setFixedHeight(h);
-    
-    le_chooseSig_    =
-        new QLineEdit(w_main_, "le_chooseSig");
-    CHECK_PTR(le_chooseSig_);
-    
-    QWhatsThis::add(le_chooseSig_, i18n(
-            "The name of a file containing your 'signature'.\n"
-            "Your signature can be appended to the end of\n"
-            "each message you send. People generally like to\n"
-            "put some info about where they work, a quote,\n"
-            "and/or their website address here. Please try\n"
-            "to use less than four lines. It's netiquette.\n"));
+    QLabel * sep0 = new QLabel(this);
 
-    le_chooseSig_->setFixedHeight(h);
-    
-    pb_chooseSig_    =
-        new QPushButton(w_main_, "pb_chooseSig");
-    CHECK_PTR(pb_chooseSig_);
-    
-    pb_chooseSig_->setPixmap(empathIcon("browse"));
-    pb_chooseSig_->setFixedSize(h, h);
-    
-    QObject::connect(pb_chooseSig_, SIGNAL(clicked()),
-            this, SLOT(s_chooseSig()));
-    
-    pb_editSig_        =
-        new QPushButton(w_main_, "pb_editSig");
-    CHECK_PTR(pb_editSig_);
+    sep0->setFrameStyle(QFrame::HLine | QFrame::Sunken);
 
-    QWhatsThis::add(pb_chooseSig_, i18n(
-            "Press this to edit your signature.\n"
-            "Note that you just use the box below !\n"
-            "When you're done, press the button again\n"
-            "to save your signature."));
+    layout->addWidget(sep0);
+    
+    QHBoxLayout * layout1 = new QHBoxLayout;
+    
+    layout1->addWidget(l_sig);
+    layout1->addWidget(efsw_sig_);
+    layout1->addWidget(pb_editSig_);
 
-    pb_editSig_->setText(i18n("Edit"));
+    layout->addLayout(layout1);
+    layout->addWidget(mle_sig_);
     
-    pb_editSig_->setFixedSize(pb_editSig_->sizeHint());
+    layout->addSpacing(10);
+   
+    layout->addWidget(buttonBox_);
+ 
+    QString helpEmail = i18n(
+        "This should contain your email address.\n"
+        "Type it correctly !");
 
-    QObject::connect(pb_editSig_, SIGNAL(clicked()),
-            this, SLOT(s_editSig()));
+    QString helpName = i18n("This should contain your real name");
 
-    mle_sigPreview_    =
-        new QMultiLineEdit(w_sigPreview_, "mle_sigPreview");
-    CHECK_PTR(mle_sigPreview_);
+    QString helpReplyTo = i18n(
+        "If your 'real' email address isn't the\n"
+        "address you want people to reply to,\n"
+        "then simply fill this in.");
 
-    mle_sigPreview_->setReadOnly(true);
-    mle_sigPreview_->setFont(KGlobal::fixedFont());
-    mle_sigPreview_->setText(i18n("No signature set"));
-    
-    mle_sigPreview_->setMinimumHeight(h * 3);
-    
-///////////////////////////////////////////////////////////////////////////////
-// Button box
+    QString helpOrg = i18n(
+        "This is supposed to contain the name of\n"
+        "the organization you belong to. You can\n"
+        "type anything, or nothing. It doesn't\n"
+        "matter in the slightest.");
 
-    buttonBox_    = new KButtonBox(this);
-    CHECK_PTR(buttonBox_);
+    QString helpSig = i18n(
+        "The name of a file containing your 'signature'.\n"
+        "Your signature can be appended to the end of\n"
+        "each message you send. People generally like to\n"
+        "put some info about where they work, a quote,\n"
+        "and/or their website address here. Please try\n"
+        "to use less than four lines. It's netiquette.\n");
 
-    buttonBox_->setFixedHeight(h);
+    QWhatsThis::add(l_email,    helpEmail);
+    QWhatsThis::add(l_name,     helpName);
+    QWhatsThis::add(l_replyTo,  helpReplyTo);
+    QWhatsThis::add(l_org,      helpOrg);
+    QWhatsThis::add(l_sig,      helpSig);
+ 
+    QWhatsThis::add(le_email_,    helpEmail);
+    QWhatsThis::add(le_name_,     helpName);
+    QWhatsThis::add(le_replyTo_,  helpReplyTo);
+    QWhatsThis::add(le_org_,      helpOrg);
+    QWhatsThis::add(efsw_sig_,    helpSig);
+   
+    QWhatsThis::add(pb_editSig_, i18n(
+        "Press this to edit your signature.\n"
+        "Note that you just use the box below !\n"
+        "When you're done, press the button again\n"
+        "to save your signature."));
     
-    pb_help_    = buttonBox_->addButton(i18n("&Help"));    
-    CHECK_PTR(pb_help_);
-    
-    pb_default_    = buttonBox_->addButton(i18n("&Default"));    
-    CHECK_PTR(pb_default_);
-    
-    buttonBox_->addStretch();
-    
-    pb_OK_        = buttonBox_->addButton(i18n("&OK"));
-    CHECK_PTR(pb_OK_);
-    
-    pb_OK_->setDefault(true);
-    
-    pb_apply_    = buttonBox_->addButton(i18n("&Apply"));
-    CHECK_PTR(pb_apply_);
-    
-    pb_cancel_    = buttonBox_->addButton(i18n("&Cancel"));
-    CHECK_PTR(pb_cancel_);
-    
-    buttonBox_->layout();
-    
-    QObject::connect(pb_OK_,        SIGNAL(clicked()),    SLOT(s_OK()));
-    QObject::connect(pb_default_,    SIGNAL(clicked()),    SLOT(s_default()));
-    QObject::connect(pb_apply_,        SIGNAL(clicked()),    SLOT(s_apply()));
-    QObject::connect(pb_cancel_,    SIGNAL(clicked()),    SLOT(s_cancel()));
-    QObject::connect(pb_help_,        SIGNAL(clicked()),    SLOT(s_help()));
-/////////////////////////////////////////////////////////////////////////////
+    QObject::connect(
+        efsw_sig_,  SIGNAL(changed(const QString &)),
+        this,       SLOT(s_sigChanged(const QString &)));
 
-    // Layouts
-    
-    topLevelLayout_        = new QGridLayout(this, 2, 1, 10, 10);
-    CHECK_PTR(topLevelLayout_);
-
-    mainGroupLayout_    = new QGridLayout(w_main_, 11, 3, 0, 10);
-    CHECK_PTR(mainGroupLayout_);
-    
-    sigPreviewGroupLayout_    = new QGridLayout(w_sigPreview_, 1, 1, 0, 10);
-    CHECK_PTR(sigPreviewGroupLayout_);
-
-    sigPreviewGroupLayout_->addWidget(mle_sigPreview_, 0, 0);
-    sigPreviewGroupLayout_->activate();
-
-    topLevelLayout_->addWidget(rgb_main_, 0, 0);
-    topLevelLayout_->addWidget(buttonBox_, 1, 0);
-    
-    mainGroupLayout_->setColStretch(0, 9);
-    mainGroupLayout_->setColStretch(1, 0);
-    mainGroupLayout_->setColStretch(2, 3);
-    
-    mainGroupLayout_->setRowStretch(0, 0);
-    mainGroupLayout_->setRowStretch(1, 0);
-    mainGroupLayout_->setRowStretch(2, 0);
-    mainGroupLayout_->setRowStretch(3, 0);
-    mainGroupLayout_->setRowStretch(4, 0);
-    mainGroupLayout_->setRowStretch(5, 0);
-    mainGroupLayout_->setRowStretch(6, 0);
-    mainGroupLayout_->setRowStretch(7, 0);
-    mainGroupLayout_->setRowStretch(8, 0);
-    mainGroupLayout_->setRowStretch(9, 0);
-    mainGroupLayout_->setRowStretch(10, 10);
-
-    mainGroupLayout_->addMultiCellWidget(l_name_,            0, 0, 0, 2);
-    mainGroupLayout_->addMultiCellWidget(le_chooseName_,    1, 1, 0, 2);
-    mainGroupLayout_->addMultiCellWidget(l_email_,            2, 2, 0, 2);
-    mainGroupLayout_->addMultiCellWidget(le_chooseEmail_,    3, 3, 0, 2);
-    mainGroupLayout_->addMultiCellWidget(l_replyTo_,        4, 4, 0, 2);
-    mainGroupLayout_->addMultiCellWidget(le_chooseReplyTo_,    5, 5, 0, 2);
-    mainGroupLayout_->addMultiCellWidget(l_org_,            6, 6, 0, 2);
-    mainGroupLayout_->addMultiCellWidget(le_chooseOrg_,        7, 7, 0, 2);
-    mainGroupLayout_->addMultiCellWidget(l_sig_,            8, 8, 0, 2);
-    mainGroupLayout_->addWidget(le_chooseSig_,                9, 0);
-    mainGroupLayout_->addWidget(pb_chooseSig_,                9, 1);
-    mainGroupLayout_->addWidget(pb_editSig_,                9, 2);
-
-    mainGroupLayout_->addMultiCellWidget(rgb_sigPreview_,    10, 10, 0, 2);
-    
-    mainGroupLayout_->activate();
-    
-    topLevelLayout_->activate();
-    
-    rgb_main_->setMinimumSize(rgb_main_->minimumSizeHint());
-    rgb_sigPreview_->setMinimumSize(rgb_sigPreview_->minimumSizeHint());
-    setMinimumSize(minimumSizeHint());
-    resize(minimumSizeHint());
+    QObject::connect(pb_editSig_,   SIGNAL(clicked()),  SLOT(s_editSig()));
 }
 
 EmpathIdentitySettingsDialog::~EmpathIdentitySettingsDialog()
 {
-    exists_ = false;
+    // Empty.
 }
 
     void
-EmpathIdentitySettingsDialog::s_chooseSig()
+EmpathIdentitySettingsDialog::s_sigChanged(const QString & newPath)
 {
-    QString tempSig = KFileDialog::getOpenFileName();
-    
-    if (!tempSig.isEmpty()) {
-        sig_ = tempSig.data();
-        le_chooseSig_->setText(sig_);
-    }
-    
     // Preview the sig
-    QFile f(sig_);
+    QFile f(newPath);
     if (!f.open(IO_ReadOnly)) return;
     
     QTextStream t(&f);
@@ -335,43 +188,66 @@ EmpathIdentitySettingsDialog::s_chooseSig()
         s += t.readLine() + "\n";
     
     f.close();
-    mle_sigPreview_->setText(s);
+    mle_sig_->setText(s);
 }
 
     void
 EmpathIdentitySettingsDialog::saveData()
 {
-    empathDebug("saveData() called");
-    KConfig * c(KGlobal::config());
-    c->setGroup(EmpathConfig::GROUP_IDENTITY);
+    KConfig c(KGlobal::dirs()->findResource("config", "kcmemailrc"), true);
 
-#define CWE c->writeEntry
-    CWE( EmpathConfig::KEY_NAME,                le_chooseName_->text()        );
-    CWE( EmpathConfig::KEY_EMAIL,                le_chooseEmail_->text()        );
-    CWE( EmpathConfig::KEY_REPLY_TO,            le_chooseReplyTo_->text()    );
-    CWE( EmpathConfig::KEY_ORGANISATION,        le_chooseOrg_->text()        );
-    CWE( EmpathConfig::KEY_SIG_PATH,            le_chooseSig_->text()        );
-#undef CWE
+    c.setGroup("UserInfo");
+
+    c.writeEntry("FullName",        le_name_->text());
+    c.writeEntry("EmailAddress",    le_email_->text());
+    c.writeEntry("Organization",    le_org_->text());
+    c.writeEntry("ReplyAddr",       le_replyTo_->text());
+
+    KConfig * ec(KGlobal::config());
+    
+    using namespace EmpathConfig;
+    
+    ec->setGroup(GROUP_IDENTITY);
+    ec->writeEntry(C_SIG_PATH, efsw_sig_->path());
 }
 
     void
 EmpathIdentitySettingsDialog::loadData()
 {
-    empathDebug("loadData() called");
-    KConfig * c(KGlobal::config());
-    c->setGroup(EmpathConfig::GROUP_IDENTITY);
-    
-    le_chooseName_->setText        (c->readEntry(EmpathConfig::KEY_NAME));
-    le_chooseEmail_->setText    (c->readEntry(EmpathConfig::KEY_EMAIL));
-    le_chooseReplyTo_->setText    (c->readEntry(EmpathConfig::KEY_REPLY_TO));
-    le_chooseOrg_->setText        (c->readEntry(EmpathConfig::KEY_ORGANISATION));
-    le_chooseSig_->setText        (c->readEntry(EmpathConfig::KEY_SIG_PATH));
+    struct passwd * p = getpwuid(getuid());
 
-    if (!QString(le_chooseSig_->text()).isEmpty()) {
+    QString hostName;
+    
+    struct utsname utsName;
+    
+    if (uname(&utsName) == 0)
+        hostName = utsName.nodename;
+
+    QString name    = QString().fromLatin1(p->pw_gecos);
+    QString email   = QString().fromLatin1(p->pw_name) + "@" + hostName;
+    
+    KConfig c(KGlobal::dirs()->findResource("config", "kcmemailrc"), true);
+
+    c.setGroup("UserInfo");
+
+    le_name_      ->setText(c.readEntry("FullName", name));
+    le_email_     ->setText(c.readEntry("EmailAddress", email));
+    le_org_       ->setText(c.readEntry("Organization"));
+    le_replyTo_   ->setText(c.readEntry("ReplyAddr"));
+
+    KConfig * ec(KGlobal::config());
+
+    using namespace EmpathConfig;
+
+    ec->setGroup(GROUP_IDENTITY);
+    
+    efsw_sig_->setPath(ec->readEntry(C_SIG_PATH));
+
+    if (!QString(efsw_sig_->path()).isEmpty()) {
         
         // Preview the sig
         
-        QFile f(le_chooseSig_->text());
+        QFile f(efsw_sig_->path());
 
         if (f.open(IO_ReadOnly)) {
 
@@ -386,7 +262,7 @@ EmpathIdentitySettingsDialog::loadData()
 
             f.close();
 
-            mle_sigPreview_->setText(s);
+            mle_sig_->setText(s);
         }
     }
 }
@@ -397,7 +273,7 @@ EmpathIdentitySettingsDialog::s_editSig()
     QObject::disconnect(pb_editSig_, SIGNAL(clicked()),
             this, SLOT(s_editSig()));
 
-    mle_sigPreview_->setReadOnly(false);
+    mle_sig_->setReadOnly(false);
 
     pb_editSig_->setText(i18n("Save"));
 
@@ -411,15 +287,15 @@ EmpathIdentitySettingsDialog::s_saveSig()
     QObject::disconnect(pb_editSig_, SIGNAL(clicked()),
             this, SLOT(s_saveSig()));
 
-    mle_sigPreview_->setReadOnly(true);
+    mle_sig_->setReadOnly(true);
 
-    QFile f(le_chooseSig_->text());
+    QFile f(efsw_sig_->path());
 
     if (!f.open(IO_WriteOnly)) return;
 
     QTextStream t(&f);
 
-    t << mle_sigPreview_->text();
+    t << mle_sig_->text();
 
     pb_editSig_->setText(i18n("Edit"));
 
@@ -433,13 +309,13 @@ EmpathIdentitySettingsDialog::s_OK()
     if (!applied_)
         s_apply();
     KGlobal::config()->sync();
-    delete this;
+    accept();
 }
 
     void
 EmpathIdentitySettingsDialog::s_help()
 {
-    //empathInvokeHelp(QString::null, QString::null);
+    // STUB
 }
 
     void
@@ -462,12 +338,24 @@ EmpathIdentitySettingsDialog::s_apply()
     void
 EmpathIdentitySettingsDialog::s_default()
 {
-    le_chooseName_->setText(i18n("Empath user"));
-    le_chooseEmail_->setText(QString::null);
-    le_chooseReplyTo_->setText(QString::null);
-    le_chooseOrg_->setText(QString::null);
-    le_chooseSig_->setText(QString::null);
-    mle_sigPreview_->setText(QString::null);
+    struct passwd * p = getpwuid(getuid());
+
+    QString hostName;
+    
+    struct utsname utsName;
+    
+    if (uname(&utsName) == 0)
+        hostName = utsName.nodename;
+
+    QString name    = QString().fromLatin1(p->pw_gecos);
+    QString email   = QString().fromLatin1(p->pw_name) + "@" + hostName;
+    
+    le_name_    ->setText(name);
+    le_email_   ->setText(email);
+    le_replyTo_ ->setText(QString::null);
+    efsw_sig_   ->setPath(QString::null);
+    mle_sig_    ->setText(QString::null);
+
     saveData();
 }
     
@@ -476,7 +364,7 @@ EmpathIdentitySettingsDialog::s_cancel()
 {
     if (!applied_)
         KGlobal::config()->rollback(true);
-    delete this;
+    reject();
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -1,47 +1,40 @@
-Things you might want to VOLUNTEER for :)
-
 Highest priority first.
 
-* Write a configure test for gdbm - what to do if this fails ?
+* Make a general gdbm-like class from KSycoca stuff and use
+  this instead of gdbm.
 
 * Make forwarding work properly. If only one plain body part -> just
   add some text stating this is forwarded, else attach as message/rfc822 ?
+  Update: Wilco is working on this.
 
-* Drag and drop - Wilco is working on this
+* Drag and drop
+  Update: Wilco is working on this
+
+* Use open folder icons when appropriate ?
 
 * Nail down the parser (rmm). It's still buggy when creating message parts
-  yourself and trying to put them together.
+  yourself and trying to put them together. Sometimes a pure virtual method
+  gets called and I haven't tracked that down.
   
 * kioslaves need to be worked in for POP (working on), IMAP, and possibly SMTP
   (where a kioslave would have to be written !)
   
-* Find a way to both use a message cache, AND allow messages larger than the
-  maximum size for the cache. If I limit the cache to 1Mb to keep mem usage down
-  then I also end up refusing to show large messages ! If I resize the cache,
-  and then set it back down, the message will be deleted !
-  Working on this...
- 
-* Come up with an intelligent solution to the password storage problem.
-
 * Implement simple (to one host) SMTP sending.
 
-* Replace all the accel keys stuff once I'm sure it's not going to change.
+* Add (configurable) accelerator keys.
+
+* Provide an external interface that allows triggering a mail check,
+  retrieving a message, sending, etc. Will use DCOP, I think.
 
 * Make printing work. HTML view will do it itself, though a little weirdly.
   Will there be a general KDE printing i/f ? Do I make stuff ps first ?
-    
-* Use open folder icons when appropriate ?
-
-* Use inbox, outbox etc icons where appropriate ?
 
 * Make From: bit in header view widget active as HTML label - basically need
   some way to be able to mail to or add to (non-existant) address book.
-
-* Plug memory leaks. Basically this just means putting setAutoDelete() back
-  in various parts of rmm. I think this crashes because of a Qt bug.
+  Update: This wasn't done due to KHTMLLabel crashing things. Can now
+  go try it.
   
-* Implement locking of index files. Update: Should work ok with gdbm now.
-  
-* CORBA !
+* Plug memory leaks.
 
- (Work in progress...)
+* Release !
+

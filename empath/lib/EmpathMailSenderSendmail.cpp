@@ -77,9 +77,12 @@ EmpathMailSenderSendmail::sendOne(RMM::RMessage & message, const QString & id)
     sendmailProcess_.clearArguments();
 
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_SENDING);
 
-    QString sendmailLocation = c->readEntry(EmpathConfig::KEY_SENDMAIL_LOCATION);
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_SENDING);
+
+    QString sendmailLocation = c->readEntry(S_SENDMAIL);
     
     if (sendmailLocation.isEmpty()) {
         empathDebug("No location configured for sendmail");
@@ -88,7 +91,7 @@ EmpathMailSenderSendmail::sendOne(RMM::RMessage & message, const QString & id)
 
     empathDebug("sendmail location is" + sendmailLocation);
 
-    sendmailProcess_ << QString(c->readEntry(EmpathConfig::KEY_SENDMAIL_LOCATION));
+    sendmailProcess_ << QString(c->readEntry(S_SENDMAIL));
     sendmailProcess_ << "-t";
     sendmailProcess_ << "-oem";
     sendmailProcess_ << "-oi";
@@ -173,17 +176,18 @@ EmpathMailSenderSendmail::sendmailReceivedStderr(
 EmpathMailSenderSendmail::saveConfig()
 {
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_SENDING);
-    c->writeEntry(EmpathConfig::KEY_SENDMAIL_LOCATION, sendmailLocation_);
+    using namespace EmpathConfig;
+    c->setGroup(GROUP_SENDING);
+    c->writeEntry(S_SENDMAIL, sendmailLocation_);
 }
 
     void
 EmpathMailSenderSendmail::loadConfig()
 {
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_SENDING);
-    sendmailLocation_ =
-        c->readEntry(EmpathConfig::KEY_SENDMAIL_LOCATION, "/usr/lib/sendmail");
+    using namespace EmpathConfig;
+    c->setGroup(GROUP_SENDING);
+    sendmailLocation_ = c->readEntry(S_SENDMAIL, "/usr/lib/sendmail");
 }
 
 // vim:ts=4:sw=4:tw=78

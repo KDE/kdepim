@@ -2,7 +2,7 @@
 
 # Conversion of mbox to Maildir.
 # You must set $MAIL and $MAILDIR for this to work.
-# There are no locks, and it removes the spool after. Lovely !
+# There are no locks. Prevent all access to the mbox file before using.
  
 use Sys::Hostname;
 $host = hostname;

@@ -79,8 +79,7 @@ _mark(const EmpathURL &, const QStringList &, RMM::MessageStatus,
         
 public slots:
 
-virtual void s_checkNewMail();
-virtual void s_getNewMail();
+virtual void s_checkMail();
 
 private: // Prefer compiler warnings to public slots.
 

@@ -6,7 +6,7 @@ libempath_a_METASOURCES = AUTO
 
 libempath_a_SOURCES = \
 Empath.cpp \
-EmpathCache.cpp \
+EmpathCachedMessage.cpp \
 EmpathEditorProcess.cpp \
 EmpathFilter.cpp \
 EmpathFilterEventHandler.cpp \

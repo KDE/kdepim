@@ -26,43 +26,46 @@
 #define EMPATHSETUPWIZARD_H
 
 // Qt includes
-#include <qwizard.h>
+#include <qlabel.h>
 #include <qspinbox.h>
+#include <qcheckbox.h>
 #include <qlineedit.h>
 #include <qvalidator.h>
 
+// KDE includes
+#include <kwizard.h>
+
 class EmpathWelcomePage;
 class EmpathUserInfoPage;
-class EmpathAccountTypePage;
-class EmpathAccountSetupPage;
+class EmpathFolderInfoPage;
+class EmpathIMAPInfoPage;
+class EmpathPOPInfoPage;
 class EmpathReviewPage;
 
-class EmpathSetupWizard : public QWizard
+class EmpathSetupWizard : public KWizard
 {
     Q_OBJECT
 
     public:
         
-        static void create();
-
+        EmpathSetupWizard();
+        
         virtual ~EmpathSetupWizard();
+
+        bool appropriate(QWidget *) const;
         
     protected slots:
         
-        void s_userContinueOK(bool);
-        void s_accountSetupContinueOK(bool);
-        void s_setPop   (bool);
-        void s_setLocal (bool);
-        void s_setHelp  (bool);
+        void s_continueOK(QWidget *, bool);
+        void accept();
 
     private:
-        
-        EmpathSetupWizard();
 
         EmpathWelcomePage       * welcomePage_;
         EmpathUserInfoPage      * userPage_;
-        EmpathAccountTypePage   * accountTypePage_;
-        EmpathAccountSetupPage  * accountSetupPage_;
+        EmpathFolderInfoPage    * folderPage_;
+        EmpathIMAPInfoPage      * imapPage_;
+        EmpathPOPInfoPage       * popPage_;
         EmpathReviewPage        * reviewPage_;
 };
 
@@ -72,7 +75,7 @@ class EmpathWelcomePage : public QWidget
         
     public:
         
-        EmpathWelcomePage(QWidget * parent, const char * name = 0);
+        EmpathWelcomePage(QWidget *);
         virtual ~EmpathWelcomePage();
         
     private:
@@ -85,66 +88,127 @@ class EmpathUserInfoPage : public QWidget
         
     public:
         
-        EmpathUserInfoPage(QWidget * parent, const char * name = 0);
+        EmpathUserInfoPage(QWidget *);
         virtual ~EmpathUserInfoPage();
         
-        QString userName() { return le_name_->text(); }
-        QString address() { return le_address_->text(); }
+        QString user();
+        QString org();
+        QString address();
+        QString reply();
         
+        void saveConfig();
+
     protected slots:
         
         void s_textChanged(const QString &);
         
     signals:
     
-        void continueOK(bool);
+        void continueOK(QWidget *, bool);
         
     private:
+
+        void _validate();
         
-        QLineEdit * le_name_, * le_address_;
+        QLineEdit * le_name_;
+        QLineEdit * le_org_;
+        QLineEdit * le_address_;
+        QLineEdit * le_reply_;
 };
 
-class EmpathAccountTypePage : public QWidget
+class EmpathFolderInfoPage : public QWidget
 {
     Q_OBJECT
         
     public:
         
-        EmpathAccountTypePage(QWidget * parent, const char * name = 0);
-        virtual ~EmpathAccountTypePage();
+        EmpathFolderInfoPage(QWidget *);
+        virtual ~EmpathFolderInfoPage();
+
+        QString inbox();
+        QString outbox();
+        QString sent();
+        QString drafts();
+        QString trash();
+
+        void saveConfig();
+    
+    protected slots:
+        
+        void s_textChanged(const QString &);
+
+    signals:
+    
+        void continueOK(QWidget *, bool);
+
+    private:
+        
+        void _validate();
+
+        QLineEdit * le_inbox_;
+        QLineEdit * le_outbox_;
+        QLineEdit * le_drafts_;
+        QLineEdit * le_sent_;
+        QLineEdit * le_trash_;
 };
 
-class EmpathAccountSetupPage : public QWidget
+class EmpathIMAPInfoPage : public QWidget
 {
     Q_OBJECT
         
     public:
 
-        enum AccountType {
-          POP,
-          Local,
-          None
-        };
-        
-        EmpathAccountSetupPage(QWidget * parent, const char * name = 0);
-        virtual ~EmpathAccountSetupPage();
-        
-        void showPop();
-        void showLocal();
-        void showHelp();
+        EmpathIMAPInfoPage(QWidget *);
+        virtual ~EmpathIMAPInfoPage();
 
+        void saveConfig();
     
     signals:
     
         void continueOK(bool);
-      
-    private:
+};
 
-        // Widgets for POP setup.
-        QLineEdit * le_hostname_;
-        QLineEdit * le_username_;
-        QLineEdit * le_password_;
-        QSpinBox  * sb_port_;
+
+class EmpathPOPInfoPage : public QWidget
+{
+    Q_OBJECT
+        
+    public:
+
+        EmpathPOPInfoPage(QWidget *);
+        virtual ~EmpathPOPInfoPage();
+
+        void saveConfig();
+
+        bool enabled();
+        QString server();
+        unsigned int port(); 
+        QString username();
+        QString password();
+
+    protected slots:
+
+        void s_enableWidgets(bool);
+        void s_textChanged(const QString &);
+    
+    signals:
+    
+        void continueOK(QWidget *, bool);
+
+    private:
+        
+        void _validate();
+
+        QLabel      * l_server_;
+        QLabel      * l_port_;
+        QLabel      * l_user_;
+        QLabel      * l_pass_;
+
+        QCheckBox   * cb_use_;
+        QLineEdit   * le_server_;
+        QSpinBox    * sb_port_;
+        QLineEdit   * le_user_;
+        QLineEdit   * le_pass_;
 };
 
 class EmpathReviewPage : public QWidget
@@ -153,7 +217,7 @@ class EmpathReviewPage : public QWidget
         
     public:
         
-        EmpathReviewPage(QWidget * parent, const char * name = 0);
+        EmpathReviewPage(QWidget *);
         virtual ~EmpathReviewPage();
         
     private:
@@ -165,22 +229,9 @@ class EmpathAddressValidator : public QValidator
         
     public:
         
-        EmpathAddressValidator(QWidget * parent, const char * name = 0)
-            :   QValidator(parent, name)
-        {
-            // Empty.
-        }
-
-        QValidator::State validate(QString & s, int &) const
-        {
-            if (s.isEmpty())
-                return QValidator::Invalid;
-
-            if (s.contains('@'))
-                return QValidator::Acceptable;
-            
-            return QValidator::Valid;
-        }
+        EmpathAddressValidator(QWidget *);
+        ~EmpathAddressValidator();
+        QValidator::State validate(QString &, int &) const;
 };
 
 

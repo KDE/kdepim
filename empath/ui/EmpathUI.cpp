@@ -42,8 +42,9 @@
 
 // Local includes
 #include "Empath.h"
+#include "EmpathConfig.h"
 #include "EmpathUI.h"
-#include "EmpathUIUtils.h"
+#include "EmpathSetupWizard.h"
 #include "EmpathMainWindow.h"
 #include "EmpathComposeWindow.h"
 #include "EmpathDisplaySettingsDialog.h"
@@ -55,21 +56,167 @@
 #include "EmpathConfigMaildirDialog.h"
 #include "EmpathConfigIMAP4Dialog.h"
 #include "EmpathConfigPOP3Dialog.h"
-//#include "EmpathSetupWizard.h"
-#include "EmpathConfig.h"
 
 EmpathUI::EmpathUI()
     : QObject()
 {
-    qInitPngIO();
+    _wizard();
     
-    KConfig * c(KGlobal::config());
+//    qInitPngIO();
     
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
+    _connectUp();
+
+    kapp->setMainWidget(new EmpathMainWindow);
+}
+
+EmpathUI::~EmpathUI()
+{
+}
+
+    void
+EmpathUI::s_newComposer(Empath::ComposeType t, const EmpathURL & m)
+{
+    (new EmpathComposeWindow(t, m))->show();
+}
+
+    void    
+EmpathUI::s_newComposer(const QString & recipient)
+{
+    (new EmpathComposeWindow(recipient))->show();
+}
+
+    void
+EmpathUI::s_setupDisplay(QWidget * parent)
+{
+    EmpathDisplaySettingsDialog d(parent);
+    d.loadData();
+    d.exec();
+}
+    void
+EmpathUI::s_setupIdentity(QWidget * parent)
+{
+    EmpathIdentitySettingsDialog d(parent);
+    d.loadData();
+    d.exec();
+}
+
+    void
+EmpathUI::s_setupSending(QWidget * parent)
+{
+    EmpathSendingSettingsDialog d(parent);
+    d.loadData();
+    d.exec();
+}
+
+    void
+EmpathUI::s_setupComposing(QWidget * parent)
+{
+    EmpathComposeSettingsDialog d(parent);
+    d.loadData();
+    d.exec();
+}
+
+    void
+EmpathUI::s_setupAccounts(QWidget * parent)
+{
+    EmpathAccountsSettingsDialog d(parent);
+    d.loadData();
+    d.exec();
+}
+
+    void
+EmpathUI::s_setupFilters(QWidget * parent)
+{
+    EmpathFilterManagerDialog d(parent);
+    d.loadData();
+    d.exec();
+}
+
+    void
+EmpathUI::s_about(QWidget * parent)
+{
+    QMessageBox::information(
+        parent,
+        "Hey !",
+        i18n("Is it raining icepicks on your steel shore ?"),
+        i18n("Yes/No"));
+}
+
+    void
+EmpathUI::s_bugReport()
+{
+    EmpathComposeWindow * w = new EmpathComposeWindow;
+    w->bugReport();
+    w->show();
+}
+
+    void
+EmpathUI::s_infoMessage(const QString & s)
+{
+    QWidgetList * l = QApplication::topLevelWidgets();
     
+    if (l->isEmpty())
+        return;
+    
+    QWidgetListIt it(*l);
+    
+    for (; it.current(); ++it)
+        if (it.current()->inherits("KTMainWindow"))
+            ((KTMainWindow *)it.current())->statusBar()->message(s, 4000);
+    
+    delete l;
+    l = 0;
+}
+
+
+    void
+EmpathUI::s_getSaveName(const EmpathURL & url, QWidget * parent)
+{
+    QString saveFilePath =
+        KFileDialog::getSaveFileName(QString::null, QString::null, parent);
+    
+    if (saveFilePath.isEmpty())
+        return;
+   
+    empath->s_saveNameReady(url, saveFilePath);
+}
+
+    void
+EmpathUI::s_configureMailbox(const EmpathURL & url, QWidget * w)
+{
+    EmpathMailbox * mailbox = empath->mailbox(url);
+
+    if (mailbox == 0) {
+        empathDebug("Cannot find mailbox with url `" + url.asString() + "'");
+        return;
+    }
+ 
+    switch (mailbox->type()) {
+
+        case EmpathMailbox::Maildir:
+            EmpathConfigMaildirDialog::create(url, w);
+            break;
+
+        case EmpathMailbox::POP3:
+            EmpathConfigPOP3Dialog::create(url, w);
+            break;
+
+        case EmpathMailbox::IMAP4:
+            EmpathConfigIMAP4Dialog::create(url, w);
+            break;
+
+        default:
+            empathDebug("I can't configure a mailbox if I don't know its type");
+            break;
+    }
+}
+
+    void
+EmpathUI::_connectUp()
+{
     QObject::connect(
-        empath, SIGNAL(getSaveName(const EmpathURL &)),
-        this,   SLOT(s_getSaveName(const EmpathURL &)));
+        empath, SIGNAL(getSaveName(const EmpathURL &, QWidget *)),
+        this,   SLOT(s_getSaveName(const EmpathURL &, QWidget *)));
     
     QObject::connect(
         empath, SIGNAL(infoMessage(const QString &)),
@@ -88,169 +235,55 @@ EmpathUI::EmpathUI()
         this,   SLOT(s_configureMailbox(const EmpathURL &, QWidget *)));
 
     QObject::connect(
-        empath, SIGNAL(setupWizard()),      this, SLOT(s_setupWizard()));
+        empath, SIGNAL(setupDisplay(QWidget *)),
+        this,   SLOT(s_setupDisplay(QWidget *)));
+
     QObject::connect(
-        empath, SIGNAL(setupDisplay()),     this, SLOT(s_setupDisplay()));
+        empath, SIGNAL(setupIdentity(QWidget *)),
+        this,   SLOT(s_setupIdentity(QWidget *)));
+
     QObject::connect(
-        empath, SIGNAL(setupIdentity()),    this, SLOT(s_setupIdentity()));
+        empath, SIGNAL(setupSending(QWidget *)),
+        this,   SLOT(s_setupSending(QWidget *)));
+
     QObject::connect(
-        empath, SIGNAL(setupSending()),     this, SLOT(s_setupSending()));
+        empath, SIGNAL(setupComposing(QWidget *)),
+        this,   SLOT(s_setupComposing(QWidget *)));
+
     QObject::connect(
-        empath, SIGNAL(setupComposing()),   this, SLOT(s_setupComposing()));
+        empath, SIGNAL(setupAccounts(QWidget *)),
+        this,   SLOT(s_setupAccounts(QWidget *)));
+
     QObject::connect(
-        empath, SIGNAL(setupAccounts()),    this, SLOT(s_setupAccounts()));
+        empath, SIGNAL(setupFilters(QWidget *)),
+        this,   SLOT(s_setupFilters(QWidget *)));
+
     QObject::connect(
-        empath, SIGNAL(setupFilters()),     this, SLOT(s_setupFilters()));
+        empath, SIGNAL(about(QWidget *)),
+        this,   SLOT(s_about(QWidget *)));
+
     QObject::connect(
-        empath, SIGNAL(about()),            this, SLOT(s_about()));
-    QObject::connect(
-        empath, SIGNAL(bugReport()),        this, SLOT(s_bugReport()));
+        empath, SIGNAL(bugReport()),
+        this,   SLOT(s_bugReport()));
+}
+
+    void
+EmpathUI::_wizard()
+{
+    // If no mailboxes are configured, then show the setup wizard.
+
+    KConfig * c(KGlobal::config());
     
-    EmpathMainWindow * mainWindow = new EmpathMainWindow("mainWindow");
-    kapp->setMainWidget(mainWindow);
-}
-
-EmpathUI::~EmpathUI()
-{
-}
-
-    void    
-EmpathUI::s_newComposer(Empath::ComposeType t, const EmpathURL & m)
-{
-    EmpathComposeWindow * c = new EmpathComposeWindow(t, m);
-    CHECK_PTR(c);
-    c->show();
-}
-
-    void    
-EmpathUI::s_newComposer(const QString & recipient)
-{
-    EmpathComposeWindow * c = new EmpathComposeWindow(recipient);
-    CHECK_PTR(c);
-    c->show();
-}
-
-    void
-EmpathUI::s_setupDisplay()
-{
-    EmpathDisplaySettingsDialog::create();
-}
-    void
-EmpathUI::s_setupIdentity()
-{
-    EmpathIdentitySettingsDialog::create();
-}
-
-    void
-EmpathUI::s_setupSending()
-{
-    EmpathSendingSettingsDialog::create();
-}
-
-    void
-EmpathUI::s_setupComposing()
-{
-    EmpathComposeSettingsDialog::create();
-}
-
-    void
-EmpathUI::s_setupAccounts()
-{
-    EmpathAccountsSettingsDialog::create();
-}
-
-    void
-EmpathUI::s_setupFilters()
-{
-    EmpathFilterManagerDialog::create();
-}
-
-    void
-EmpathUI::s_about()
-{
-    QMessageBox::information(
-        (QWidget *)0,
-        "And the crowd had no idea why.",
-        i18n("Where were his ethics ?"),
-        i18n("Where were his manners ?"));
-}
-
-    void
-EmpathUI::s_bugReport()
-{
-    EmpathComposeWindow * c = new EmpathComposeWindow();
-    CHECK_PTR(c);
-    c->bugReport();
-}
-
-    void
-EmpathUI::s_infoMessage(const QString & s)
-{
-    QWidgetList * l = QApplication::topLevelWidgets();
+    using namespace EmpathConfig;
     
-    if (l->isEmpty()) return;
+    c->setGroup(GROUP_GENERAL);
     
-    QWidgetListIt it(*l);
+    QStringList l = c->readListEntry(GEN_MAILBOX_LIST);
     
-    for (; it.current(); ++it)
-        if (it.current()->inherits("KTMainWindow"))
-            ((KTMainWindow *)it.current())->statusBar()->message(s, 4000);
-    
-    delete l;
-    l = 0;
-}
-
-    void
-EmpathUI::s_sendEmail(const QString & name, const QString & email)
-{
-    empath->compose(name + " " + email);
-}
-
-    void
-EmpathUI::s_setupWizard()
-{
-//    EmpathSetupWizard::create();
-}
-
-    void
-EmpathUI::s_getSaveName(const EmpathURL & url)
-{
-    QString saveFilePath =
-        KFileDialog::getSaveFileName(QString::null, QString::null, 0, 0);
-    
-    if (saveFilePath.isEmpty())
-        return;
-   
-    empath->s_saveNameReady(url, saveFilePath);
-}
-
-    void
-EmpathUI::s_configureMailbox(const EmpathURL & url, QWidget * w)
-{
-    empathDebug("");
-    EmpathMailbox * mailbox = empath->mailbox(url);
-
-    if (mailbox == 0)
-        return;
- 
-    switch (mailbox->type()) {
-
-        case EmpathMailbox::Maildir:
-            EmpathConfigMaildirDialog::create(url, w);
-            break;
-
-        case EmpathMailbox::POP3:
-            EmpathConfigPOP3Dialog::create(url, w);
-            break;
-
-        case EmpathMailbox::IMAP4:
-            EmpathConfigIMAP4Dialog::create(url, w);
-            break;
-
-        default:
-            break;
+    if (l.isEmpty()) {
+        EmpathSetupWizard wiz;
+        wiz.exec();
     }
 }
-
-
+ 
 // vim:ts=4:sw=4:tw=78

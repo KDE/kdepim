@@ -27,12 +27,9 @@
 
 // Qt includes
 #include <qwidget.h>
-#include <qlabel.h>
 #include <qlineedit.h>
 #include <qmultilineedit.h>
-#include <qfont.h>
 #include <qpushbutton.h>
-#include <qlayout.h>
 #include <qdialog.h>
 
 // KDE includes
@@ -41,7 +38,7 @@
 // Local includes
 #include "EmpathDefines.h"
 
-class RikGroupBox;
+class EmpathFileSelectWidget;
 
 class EmpathIdentitySettingsDialog : public QDialog
 {
@@ -49,17 +46,15 @@ class EmpathIdentitySettingsDialog : public QDialog
 
     public:
         
-        static void create();
+        EmpathIdentitySettingsDialog(QWidget * parent = 0);
         ~EmpathIdentitySettingsDialog();
 
         void saveData();
         void loadData();
-    
-        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
 
     protected slots:
 
-        void s_chooseSig();
+        void s_sigChanged(const QString &);
         void s_editSig();
 
         void s_OK();
@@ -70,50 +65,23 @@ class EmpathIdentitySettingsDialog : public QDialog
         void s_saveSig();
 
     private:
-        
-        EmpathIdentitySettingsDialog(
-            QWidget * parent = 0, const char * name = 0);
     
-        QGridLayout    * topLevelLayout_;
-        QGridLayout    * mainGroupLayout_;
-        QGridLayout    * sigPreviewGroupLayout_;
-    
-        RikGroupBox    * rgb_main_;
-        QWidget        * w_main_;
+        QLineEdit    * le_name_;
+        QLineEdit    * le_email_;
+        QLineEdit    * le_replyTo_;
+        QLineEdit    * le_org_;
+        EmpathFileSelectWidget * efsw_sig_;
+        QMultiLineEdit    * mle_sig_;
+
+        QPushButton * pb_editSig_;
+
+        KButtonBox  * buttonBox_;
+        QPushButton * pb_help_;
+        QPushButton * pb_default_;
+        QPushButton * pb_apply_;
+        QPushButton * pb_OK_;
+        QPushButton * pb_cancel_;
         
-        RikGroupBox    * rgb_sigPreview_;
-        QWidget        * w_sigPreview_;
-
-        QLabel        * l_name_;
-        QLabel        * l_email_;
-        QLabel        * l_replyTo_;
-        QLabel        * l_org_;
-        QLabel        * l_sig_;
-        
-
-        QLineEdit    * le_chooseName_;
-        QLineEdit    * le_chooseEmail_;
-        QLineEdit    * le_chooseReplyTo_;
-        QLineEdit    * le_chooseOrg_;
-        QLineEdit    * le_chooseSig_;
-        QMultiLineEdit    * mle_sigPreview_;
-
-        QPushButton    * pb_chooseSig_;
-        QPushButton    * pb_editSig_;
-
-        QString            name_;
-        QString            email_;
-        QString            replyTo_;
-        QString            org_;
-        QString         sig_;
-        KButtonBox        * buttonBox_;
-        QPushButton        * pb_help_;
-        QPushButton        * pb_default_;
-        QPushButton        * pb_apply_;
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_cancel_;
-        
-        static bool        exists_;
         bool            applied_;
 };
 

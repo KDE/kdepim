@@ -37,27 +37,19 @@
 #include "EmpathMessageViewWidget.h"
 #include "EmpathMessageListWidget.h"
 
-EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name)
-    : QWidget(parent, name)
+EmpathMainWidget::EmpathMainWidget(QWidget * parent)
+    : QWidget(parent, "MainWidget")
 {
     hSplit = new QSplitter(this, "hSplit");
-    CHECK_PTR(hSplit);
     
     vSplit = new QSplitter(Qt::Vertical, hSplit, "vSplit");
-    CHECK_PTR(vSplit);
         
-    messageListWidget_ =
-        new EmpathMessageListWidget(vSplit, "messageListWidget");
-    CHECK_PTR(messageListWidget_);
+    messageListWidget_ = new EmpathMessageListWidget(vSplit);
 
-    messageViewWidget_ =
-        new EmpathMessageViewWidget(EmpathURL(),
-                vSplit, "messageViewWidget");
-    CHECK_PTR(messageViewWidget_);
+    messageViewWidget_ = new EmpathMessageViewWidget(EmpathURL(), vSplit);
 
     leftSideWidget_ =
         new EmpathLeftSideWidget(messageListWidget_, hSplit, "leftSideWidget");
-    CHECK_PTR(leftSideWidget_);
     
     hSplit->moveToFirst(leftSideWidget_);
 
@@ -68,14 +60,15 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name)
     
     messageListWidget_->setSignalUpdates(true);
     
-    KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
-    
     QValueList<int> vSizes;
     QValueList<int> hSizes;
     
-    vSizes.append(c->readNumEntry(EmpathConfig::KEY_MAIN_WIDGET_V_SEP, 30));
-    hSizes.append(c->readNumEntry(EmpathConfig::KEY_MAIN_WIDGET_H_SEP, 50));
+    KConfig * c = KGlobal::config();
+    using namespace EmpathConfig;
+    c->setGroup(EmpathConfig::GROUP_DISPLAY);
+    
+    vSizes.append(c->readNumEntry(UI_MAIN_W_V, width() / 2));
+    hSizes.append(c->readNumEntry(UI_MAIN_W_H, height() / 2));
     
     vSplit->setSizes(vSizes);
     hSplit->setSizes(hSizes);
@@ -84,13 +77,13 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name)
 EmpathMainWidget::~EmpathMainWidget()
 {
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
     
-    c->writeEntry(
-        EmpathConfig::KEY_MAIN_WIDGET_V_SEP, vSplit->sizes()[0]);
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_DISPLAY);
     
-    c->writeEntry(
-        EmpathConfig::KEY_MAIN_WIDGET_H_SEP, hSplit->sizes()[0]);
+    c->writeEntry(UI_MAIN_W_V, vSplit->sizes()[0]);
+    c->writeEntry(UI_MAIN_W_H, hSplit->sizes()[0]);
     
     c->sync();
 }

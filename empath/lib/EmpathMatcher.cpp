@@ -38,41 +38,38 @@
 
 EmpathMatcher::EmpathMatcher()
 {
-    empathDebug("ctor");
+    // Empty.
 }
 
 EmpathMatcher::~EmpathMatcher()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     void
 EmpathMatcher::save(const QString & parentid, Q_UINT32 id)
 {
-    empathDebug("save(" + parentid + ", " + QString().setNum(id) + ") called");    
-    
     KConfig * c = KGlobal::config();
     
-    c->setGroup(EmpathConfig::GROUP_EXPR +
-        parentid +
-        "_" +
-        QString().setNum(id));
+    using namespace EmpathConfig;
     
-    c->writeEntry(EmpathConfig::KEY_MATCH_EXPR_TYPE, (unsigned int)type_);
+    c->setGroup(GROUP_EXPR + parentid + "_" + QString().setNum(id));
+    
+    c->writeEntry(F_MATCH_TYPE, (unsigned int)type_);
     
     switch (type_) {
         
         case Size:
-            c->writeEntry(EmpathConfig::KEY_MATCH_SIZE, size_);
+            c->writeEntry(F_MATCH_SIZE, size_);
             break;
             
         case BodyExpr:
-            c->writeEntry(EmpathConfig::KEY_MATCH_EXPR, matchExpr_);
+            c->writeEntry(F_MATCH_EXPR, matchExpr_);
             break;
             
         case HeaderExpr:
-            c->writeEntry(EmpathConfig::KEY_MATCH_HEADER, matchHeader_);
-            c->writeEntry(EmpathConfig::KEY_MATCH_EXPR, matchExpr_);
+            c->writeEntry(F_MATCH_HEADER, matchHeader_);
+            c->writeEntry(F_MATCH_EXPR, matchExpr_);
             break;
             
         case HasAttachments:
@@ -86,35 +83,29 @@ EmpathMatcher::save(const QString & parentid, Q_UINT32 id)
     void
 EmpathMatcher::load(const QString & parentName, Q_UINT32 id)
 {
-    empathDebug("load(" + parentName + ", " +
-        QString().setNum(id) + ") called");
-    
     KConfig * c = KGlobal::config();
+
+    using namespace EmpathConfig;
     
-    c->setGroup(EmpathConfig::GROUP_EXPR + parentName + "_" +
-        QString().setNum(id));
+    c->setGroup(GROUP_EXPR + parentName + "_" + QString().setNum(id));
     
-    MatchExprType t =
-        (MatchExprType)
-        (c->readNumEntry(EmpathConfig::KEY_MATCH_EXPR_TYPE));
-    
-    empathDebug("I'm of type " + QString().setNum((int)t));
+    MatchExprType t = (MatchExprType)(c->readNumEntry(F_MATCH_TYPE));
     
     setType(t);
     
     switch (t) {
 
         case Size:
-            size_ = c->readNumEntry(EmpathConfig::KEY_MATCH_SIZE);
+            size_ = c->readNumEntry(F_MATCH_SIZE);
             break;
 
         case BodyExpr:
-            matchExpr_ = c->readEntry(EmpathConfig::KEY_MATCH_EXPR);
+            matchExpr_ = c->readEntry(F_MATCH_EXPR);
             break;
 
         case HeaderExpr:
-            matchExpr_ = c->readEntry(EmpathConfig::KEY_MATCH_EXPR);
-            matchHeader_ = c->readEntry(EmpathConfig::KEY_MATCH_HEADER);
+            matchExpr_ = c->readEntry(F_MATCH_EXPR);
+            matchHeader_ = c->readEntry(F_MATCH_HEADER);
             break;
 
         case HasAttachments:
@@ -138,15 +129,13 @@ EmpathMatcher::match(const EmpathURL & id)
         
         case Size:
             {
-                empathDebug("Matching message by size > " +
-                    QString().setNum(size_));
-
                 RMM::RMessage * m(empath->message(id));
-                if (m == 0) return false;
-
-                RMM::RMessage message(*m);
+                if (m == 0)
+                    return false;
                 
-                Q_UINT32 sizeOfMessage = message.size();
+                Q_UINT32 sizeOfMessage = m->size();
+
+                empath->finishedWithMessage(id);
 
                 empathDebug("size of message is " +
                     QString().setNum(sizeOfMessage));
@@ -158,12 +147,13 @@ EmpathMatcher::match(const EmpathURL & id)
             
         case BodyExpr:
             {
-                empathDebug("Matching message by body expr \"" + matchExpr_ + "\"");
                 RMM::RMessage * m(empath->message(id));
-                if (m == 0) return false;
                 
-                RMM::RMessage message(*m);
+                if (m == 0)
+                    return false;
                 
+                empath->finishedWithMessage(id);
+
                 QString s; // FIXME -- = m->firstPlainBodyPart ?
                 
                 QRegExp r(matchExpr_);
@@ -174,14 +164,14 @@ EmpathMatcher::match(const EmpathURL & id)
             
         case HeaderExpr:
             {
-                empathDebug("Matching message by header expr \"" + matchExpr_ + "\"");
-                
                 RMM::RMessage * m(empath->message(id));
-                if (m == 0) return false;
                 
-                RMM::RMessage message(*m);
+                if (m == 0)
+                    return false;
                 
-                QString s = message.envelope().asString();
+                QString s = m->envelope().asString();
+                empath->finishedWithMessage(id);
+
                 QRegExp r(matchExpr_);
                 if (!r.isValid()) return false;
                 return (s.find(r) != -1);
@@ -189,19 +179,20 @@ EmpathMatcher::match(const EmpathURL & id)
             break;
             
         case HasAttachments:    
-            empathDebug("Matching message by attachments");
             {
                 RMM::RMessage * m(empath->message(id));
-                if (m == 0) return false;
+                if (m == 0)
+                    return false;
                 
-                RMM::RMessage message(*m);
-                
-                return (message.type() == RMM::RBodyPart::Mime);
+                bool ok = m->type() == RMM::RBodyPart::Mime;
+
+                empath->finishedWithMessage(id);
+
+                return ok;
             }
             break;
             
         case AnyMessage:
-            empathDebug("I match any message. Matched !");
             return true;
             break;
             
@@ -221,29 +212,22 @@ EmpathMatcher::description() const
     switch (type_) {
         
         case Size:
-            desc = i18n("Message is larger than");
-            desc += " ";
-            desc += QString().setNum(size_);
-            desc += "Kb";    
+            desc =
+                i18n("Message is larger than %1 Kb")
+                .arg(size_);
             break;
             
         case BodyExpr:
-            desc = i18n("Expression");
-            desc += " '";
-            desc += matchExpr_;
-            desc += "' ";
-            desc += i18n("in message body");
+            desc =
+                i18n("Expression `%1' in message body")
+                .arg(matchExpr_);
             break;
             
         case HeaderExpr:
-            desc = i18n("Expression");
-            desc += " '";
-            desc += matchExpr_;
-            desc += "' ";
-            desc += i18n("in message header");
-            desc += " '";
-            desc += matchHeader_;
-            desc += "'";
+            desc =
+                i18n("Expression `%1' in message header `%2'")
+                .arg(matchExpr_)
+                .arg(matchHeader_);
             break;
             
         case HasAttachments:

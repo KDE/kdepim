@@ -38,7 +38,6 @@
 #include "EmpathConfigMaildirDialog.h"
 #include "EmpathPathSelectWidget.h"
 #include "EmpathMailboxMaildir.h"
-#include "RikGroupBox.h"
 #include "EmpathUIUtils.h"
 #include "Empath.h"
  
@@ -60,12 +59,15 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog
         url_(url),
         applied_(false)
 {
-    setCaption(i18n("Configuring mailbox") + " " + url_.mailboxName());
+    QString caption = i18n("Configuring mailbox %1");
+    setCaption(caption.arg(url_.mailboxName()));
 
     EmpathMailbox * mailbox = empath->mailbox(url);
 
-    if (mailbox == 0)
+    if (mailbox == 0) {
+        empathDebug("Mailbox is 0 !");
         return;
+    }
 
     if (mailbox->type() != EmpathMailbox::Maildir) {
         empathDebug("Not EmpathMaildirMailbox !")
@@ -73,11 +75,6 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog
     }
 
     EmpathMailboxMaildir * m = (EmpathMailboxMaildir *)mailbox;
-    
-    l_mailboxPath_  =
-        new QLabel(i18n("Location"), this, "l_mailboxPath");
-    
-    edsw_mailboxPath_ = new EmpathDirSelectWidget("", this);
     
     cb_mailCheckInterval_ =
         new QCheckBox(i18n("Check for new mail at interval (in minutes):"),
@@ -111,15 +108,11 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog
     QObject::connect(pb_cancel_,    SIGNAL(clicked()),  SLOT(s_cancel()));
     QObject::connect(pb_help_,      SIGNAL(clicked()),  SLOT(s_help()));
  
-    QVBoxLayout * v     = new QVBoxLayout(this, 10, 10);
+    QVBoxLayout * v = new QVBoxLayout(this, dialogSpace);
     
-    QHBoxLayout * b     = new QHBoxLayout(v);
-    b->addWidget(l_mailboxPath_);
-    b->addWidget(edsw_mailboxPath_);
-    
-    QHBoxLayout * b2    = new QHBoxLayout(v);
-    b2->addWidget(cb_mailCheckInterval_);
-    b2->addWidget(sb_mailCheckInterval_);
+    QHBoxLayout * b = new QHBoxLayout(v);
+    b->addWidget(cb_mailCheckInterval_);
+    b->addWidget(sb_mailCheckInterval_);
 
     v->addWidget(buttonBox);
     
@@ -128,7 +121,6 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog
 
 EmpathConfigMaildirDialog::~EmpathConfigMaildirDialog()
 {
-    empathDebug("");
     exists_ = false;
 }
 
@@ -139,7 +131,6 @@ EmpathConfigMaildirDialog::s_OK()
     if (!applied_)
         s_apply();
 
-    empathDebug("Syncing config");
     KGlobal::config()->sync();
 
     // That's it
@@ -152,8 +143,10 @@ EmpathConfigMaildirDialog::saveData()
 {
     EmpathMailbox * mailbox = empath->mailbox(url_);
 
-    if (mailbox == 0)
+    if (mailbox == 0) {
+        empathDebug("Mailbox is 0 !");
         return;
+    }
 
     if (mailbox->type() != EmpathMailbox::Maildir) {
         empathDebug("Not EmpathMaildirMailbox !")
@@ -162,9 +155,8 @@ EmpathConfigMaildirDialog::saveData()
 
     EmpathMailboxMaildir * m = (EmpathMailboxMaildir *)mailbox;
 
-    m->setPath              (edsw_mailboxPath_->selected());
-    m->setCheckMail         (cb_mailCheckInterval_->isChecked());
-    m->setCheckMailInterval (sb_mailCheckInterval_->value());
+    m->setAutoCheck         (cb_mailCheckInterval_->isChecked());
+    m->setAutoCheckInterval (sb_mailCheckInterval_->value());
 
     m->saveConfig();
 }
@@ -174,8 +166,10 @@ EmpathConfigMaildirDialog::loadData()
 {
     EmpathMailbox * mailbox = empath->mailbox(url_);
 
-    if (mailbox == 0)
+    if (mailbox == 0) {
+        empathDebug("Mailbox is 0 !");
         return;
+    }
 
     if (mailbox->type() != EmpathMailbox::Maildir) {
         empathDebug("Not EmpathMaildirMailbox !")
@@ -184,10 +178,9 @@ EmpathConfigMaildirDialog::loadData()
 
     EmpathMailboxMaildir * m = (EmpathMailboxMaildir *)mailbox;
 
-    edsw_mailboxPath_       ->setPath       (m->path());
-    cb_mailCheckInterval_   ->setChecked    (m->checkMail());
-    sb_mailCheckInterval_   ->setValue      (m->checkMailInterval());
-    sb_mailCheckInterval_   ->setEnabled    (m->checkMail());
+    cb_mailCheckInterval_   ->setChecked    (m->autoCheck());
+    sb_mailCheckInterval_   ->setValue      (m->autoCheckInterval());
+    sb_mailCheckInterval_   ->setEnabled    (m->autoCheck());
 }
 
     void
@@ -219,7 +212,6 @@ EmpathConfigMaildirDialog::s_apply()
     void
 EmpathConfigMaildirDialog::s_default()
 {
-    edsw_mailboxPath_->setPath(QString::null);
     cb_mailCheckInterval_->setChecked(true);
     sb_mailCheckInterval_->setValue(1);
 }

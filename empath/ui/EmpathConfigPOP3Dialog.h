@@ -50,7 +50,8 @@ class EmpathConfigPOP3Dialog : public QDialog
 
         ~EmpathConfigPOP3Dialog();
         
-        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
+        void closeEvent(QCloseEvent * e)
+        { e->accept(); if (parent() == 0) delete this; }
         
     protected slots:
 

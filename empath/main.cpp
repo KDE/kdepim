@@ -73,11 +73,13 @@ empathMain(int argc, char ** argv)
 {
     KApplication * app = new KApplication(argc, argv, "empath");
     
-    KGlobal::dirs()->addResourceType("indices", "/share/apps/empath/indices");
-    KGlobal::dirs()->addResourceType("cache", "/share/apps/empath/cache");
-    
     // Don't do dollar expansion by default.
+    // Possible security hole.
     KGlobal::config()->setDollarExpansion(false);    
+    
+    KGlobal::dirs()->addResourceType("indices", "share/apps/empath/indices");
+    KGlobal::dirs()->addResourceType("cache",   "share/apps/empath/cache");
+
 
     // Create the kernel.
     Empath::start();
@@ -91,19 +93,13 @@ empathMain(int argc, char ** argv)
     // Initialise the kernel.
     empath->init();
     
-    cerr << endl << "Empath initialised. Entering event loop." << endl;
-
     // Enter the event loop.
     app->exec();
-    
-    cerr << endl << "Empath exited event loop. Shutting down." << endl;
     
     delete ui;
     ui = 0;
     
     empath->shutdown();
-    
-    cerr << endl << "Empath shutdown complete." << endl;
 }
 
 // vim:ts=4:sw=4:tw=78

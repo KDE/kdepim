@@ -48,7 +48,7 @@ class EmpathMainWidget : public QWidget
 
     public:
         
-        EmpathMainWidget(QWidget * parent = 0, const char * name = 0);
+        EmpathMainWidget(QWidget * parent = 0);
         ~EmpathMainWidget();
         EmpathMessageListWidget * messageListWidget();
         EmpathMessageViewWidget * messageViewWidget();

@@ -43,7 +43,7 @@
 
 EmpathMailboxList::EmpathMailboxList()
 { 
-    QDict<EmpathMailbox>::setAutoDelete(true);
+    setAutoDelete(true);
 }
 
 EmpathMailboxList::~EmpathMailboxList()
@@ -76,18 +76,20 @@ EmpathMailboxList::folder(const EmpathURL & url) const
     void
 EmpathMailboxList::loadConfig()
 {
+    QObject::connect(
+        this,   SIGNAL(updateFolderLists()),
+        empath, SLOT(s_updateFolderLists()));
+
+    QDict<EmpathMailbox>::clear();
+
     KConfig * c(KGlobal::config());
     
     using namespace EmpathConfig;
     c->setGroup(GROUP_GENERAL);
     
     QStringList l;
-    l = c->readListEntry(KEY_MAILBOX_LIST);
+    l = c->readListEntry(GEN_MAILBOX_LIST);
     
-    QObject::connect(
-        this,   SIGNAL(updateFolderLists()),
-        empath, SLOT(s_updateFolderLists()));
-
     EmpathMailbox::Type mailboxType = EmpathMailbox::Maildir;
     
     QStringList::ConstIterator it(l.begin());
@@ -98,9 +100,11 @@ EmpathMailboxList::loadConfig()
         
         mailboxType =
             (EmpathMailbox::Type)
-            c->readUnsignedNumEntry(KEY_MAILBOX_TYPE);
+            c->readUnsignedNumEntry(M_TYPE);
 
         EmpathMailbox * m = createNew(mailboxType);
+
+        m->setName(*it);
 
         if (m == 0) {
             empathDebug("Couldn't create mailbox !");
@@ -127,7 +131,7 @@ EmpathMailboxList::saveConfig() const
     
     using namespace EmpathConfig;
     c->setGroup(GROUP_GENERAL);
-    c->writeEntry(KEY_MAILBOX_LIST, l);
+    c->writeEntry(GEN_MAILBOX_LIST, l);
     c->sync();
 }
 
@@ -185,27 +189,30 @@ EmpathMailboxList::createNew(EmpathMailbox::Type t)
     }
 
     _append(m);
-    m->init();
     return m;
+}
+
+    void
+EmpathMailboxList::s_rename(EmpathMailbox * mailbox, const QString & oldName)
+{
+    setAutoDelete(false);
+    QDict<EmpathMailbox>::remove(oldName);
+    QDict<EmpathMailbox>::insert(mailbox->name(), mailbox);
+    setAutoDelete(true);
+    emit(updateFolderLists());
 }
 
     void
 EmpathMailboxList::_append(EmpathMailbox * mailbox)
 {
-    if (find(mailbox->name())) {
-        empathDebug("Mailbox is already in list !");    
+    if (find(mailbox->name()))
         return;
-    }
     
     QDict<EmpathMailbox>::insert(mailbox->name(), mailbox);
 
     QObject::connect(
-        mailbox, SIGNAL(newMailArrived()),
-        empath, SLOT(s_newMailArrived()));
-
-    QObject::connect(
-        this, SIGNAL(checkMail()),
-        mailbox, SLOT(s_checkNewMail()));
+        mailbox,    SIGNAL(rename(EmpathMailbox *, const QString &)),
+        this,       SLOT(s_rename(EmpathMailbox *, const QString &)));
     
     emit(updateFolderLists());
 }

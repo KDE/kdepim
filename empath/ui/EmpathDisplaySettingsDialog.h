@@ -44,8 +44,6 @@
 // Local includes
 #include "EmpathDefines.h"
 
-class RikGroupBox;
-
 /**
  * Configure the appearance of various stuff.
  */
@@ -55,12 +53,11 @@ class EmpathDisplaySettingsDialog : public QDialog
 
     public:
         
-        static void create();
+        EmpathDisplaySettingsDialog(QWidget * = 0);
         ~EmpathDisplaySettingsDialog();
 
         void saveData();
         void loadData();
-        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
 
     protected slots:
         
@@ -74,28 +71,8 @@ class EmpathDisplaySettingsDialog : public QDialog
 
     private:
 
-        EmpathDisplaySettingsDialog(QWidget * = 0);
-
-        QButtonGroup    * buttonGroup_;
-
-        QGridLayout     * topLevelLayout_;
-        QGridLayout     * viewGroupLayout_;
-        QGridLayout     * listGroupLayout_;
-
-        RikGroupBox     * rgb_list_;
-        RikGroupBox     * rgb_view_;
-
-        QWidget         * w_list_;
-        QWidget         * w_view_;
-        
-        QLabel          * l_fixedFont_;
         QLabel          * l_sampleFixed_;
         QPushButton     * pb_chooseFixedFont_;
-        
-        QLabel          * l_quoteColourTwo_;
-        QLabel          * l_quoteColourOne_;
-        QLabel          * l_linkColour_;
-        QLabel          * l_visitedLinkColour_;
         
         KColorButton    * kcb_quoteColourTwo_;
         KColorButton    * kcb_quoteColourOne_;
@@ -106,10 +83,8 @@ class EmpathDisplaySettingsDialog : public QDialog
         
         QCheckBox       * cb_threadMessages_;
         
-        QLabel          * l_displayHeaders_;
         QLineEdit       * le_displayHeaders_;
 
-        QLabel          * l_sortColumn_;
         QComboBox       * cb_sortColumn_;
 
         QCheckBox       * cb_sortAscending_;
@@ -124,7 +99,6 @@ class EmpathDisplaySettingsDialog : public QDialog
         QCheckBox       * cb_timer_;
         QSpinBox        * sb_timer_;
         
-        static bool     exists_;
         bool            applied_;
 };
 

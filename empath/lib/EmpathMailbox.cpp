@@ -30,10 +30,11 @@
 #include "Empath.h"
 
 EmpathMailbox::EmpathMailbox(const QString & name)
-    :    url_(name, QString::null, QString::null)
+    :   url_(name, QString::null, QString::null),
+        autoCheck_(false),
+        autoCheckInterval_(0)
 {
-    empathDebug(name);
-    pixmapName_ = "mailbox";
+    pixmapName_ = "menu-mailbox";
     
     folderList_.setAutoDelete(true);
     
@@ -42,34 +43,37 @@ EmpathMailbox::EmpathMailbox(const QString & name)
 
 EmpathMailbox::~EmpathMailbox()
 {
+    // Empty.
 }
 
     void
-EmpathMailbox::setCheckMail(bool yn)
+EmpathMailbox::setAutoCheck(bool yn)
 {
-    checkMail_ = yn;
+    autoCheck_ = yn;
     
     timer_.stop();
     
-    if (checkMail_)
-        timer_.start(checkMailInterval_ * 60000);
+    if (autoCheck_)
+        timer_.start(autoCheckInterval_ * 60000);
 }
 
     void
-EmpathMailbox::setCheckMailInterval(Q_UINT32 checkMailInterval)
+EmpathMailbox::setAutoCheckInterval(Q_UINT32 i)
 {
-    checkMailInterval_ = checkMailInterval;
+    autoCheckInterval_ = i;
 
-    if (checkMail_) {
+    if (autoCheck_) {
         timer_.stop();
-        timer_.start(checkMailInterval_ * 60000);
+        timer_.start(autoCheckInterval_ * 60000);
     }
 }
 
     void
-EmpathMailbox::setName(const QString & name) 
+EmpathMailbox::setName(const QString & s) 
 {
-    url_.setMailboxName(name);
+    QString oldName = url_.mailboxName();
+    url_.setMailboxName(s);
+    emit(rename(this, oldName));
 }
 
     Q_UINT32
@@ -144,7 +148,7 @@ EmpathMailbox::write(
 EmpathMailbox::remove(const EmpathURL & url, QString xxinfo, QString xinfo)
 {
     _enqueue(
-        url.hasMessageID() ? RemoveMessage : RemoveFolder,
+        url.isMessage() ? RemoveMessage : RemoveFolder,
         url, xxinfo, xinfo);
 }
     
@@ -225,8 +229,6 @@ EmpathMailbox::_enqueue(Action * a)
     void
 EmpathMailbox::_runQueue()
 {
-    empathDebug("");
-    
     while (queue_.count() != 0) {
 
         Action * a = queue_.dequeue();
@@ -268,6 +270,14 @@ EmpathMailbox::_runQueue()
     void
 EmpathMailbox::_connectUp()
 {
+    QObject::connect(
+        empath, SIGNAL(checkMail()),
+        this,   SLOT(s_checkMail()));
+
+    QObject::connect(
+        this, SIGNAL(newMailArrived()),
+        empath, SLOT(s_newMailArrived()));
+
     QObject::connect(
         this,   SIGNAL(updateFolderLists()),
         empath, SLOT(s_updateFolderLists()));

@@ -1,107 +1,40 @@
--- How to use Maildir format mailboxes with the Empath mail client
+
+== How to copy messages to Empath's mailbox from an mbox spool
+
 -- Rik Hemsley <rik@kde.org>
--- 28th June 1999 
+-- 29 October 1999
 
-Note: I've converted the maildir man page to html. Find it as maildir.html.
+-----------------------------------------------------------------------------
 
-To use Empath with local mailboxes, they need to be in Maildir format.
+You need to know the following:
 
-I _highly_ recommend that you use Maildir format mailboxes. You can't
-actually use mbox, mh, mmdf or any other local storage type with Empath
-anyway. The main reason for using Maildir is safety. Maildir does not
-use locking and is safe to use over NFS. In fact, it's completely safe.
-If your machine / network goes down, you will NOT lose mail. If another
-process accesses your mailbox, it will NOT be corrupted.
+* Where your mbox spool is.
+* How to pause delivery to your mbox spool.
 
-A Maildir box is easy to identify. Instead of being a single file, it's
-a directory containing subdirectories called 'cur', 'new' and 'tmp'.
+Your mbox spool is usually in /var/spool/mail/(username)
 
-If you don't have your mail delivered to a Maildir box, this README will
-tell you how to convert your mbox format spool to a Maildir box and how to
-have mail delivered to this spool in future.
+On a SuSE Linux system:
 
-1. Manual mbox->maildir conversion. 
-	
-	Use the included utility 'mbox2maildir' to copy messages from
-	an mbox format file to a Maildir folder.
+You can stop delivery to your mbox spool like this:
+   
+   su -c '/etc/rc.d/init.d/sendmail stop'
+  
+You can restart delivery with this:
 
-	The utility is provided in 'empath/import/'.
+   su -c '/etc/rc.d/init.d/sendmail start'
 
-  Note: As well as the C++ program 'mbox2maildir', there's a perl alternative
-  called 'mbox2maildir.pl'. The usage is the same.
-	
-	To do the conversion, first make sure that the mbox file is not
-	going to be written to while you're using it. That means if your
-	mail server may write to the file, you should temporarily pause your
-	mail server or any other mail delivery programs (e.g. procmail)
-	and copy your mbox file to a new location.
-	
-	e.g. (for a RedHat Linux system)
+-----------------------------------------------------------------------------
 
-	=====================================================================
-	
-	su -c '/etc/rc.d/init.d/sendmail stop'
-	
-	cp /var/spool/mail/${USER} ~/my_mbox
-	
-	su -c '/etc/rc.d/init.d/sendmail start'
+Work through the following steps:
+   
+1. Start Empath and go through the steps in the setup wizard.
+   Exit Empath.
+  
+2. Stop deliveries to your mbox spool
 
-	=====================================================================
-	
-	Now if you don't already have a Maildir format box, do something
-	like the following:
-	
-	=====================================================================
+3. Run the following command, replacing mbox_spool with your spool filename:
+   mbox2maildir mbox_spool ~/.empath
 
-	OLD_UMASK=`umask`
-	
-	umask 077
-	
-	mkdir Maildir
-	mkdir Maildir/cur
-	mkdir Maildir/new
-	mkdir Maildir/tmp
+4. Restart deliveries to your mbox spool
 
-	umask ${OLD_UMASK}
-		
-	=====================================================================
-	
-	Next you need to run the conversion utility. Using the example above,
-	this should work fine:
-
-	=====================================================================
-	
-	import/mbox2maildir ~/my_mbox ~/Maildir
-
-	=====================================================================
-	
-	You should get output similar to this:
-	
-	=====================================================================
-	
-	Copying messages
-	From: /home/rik/my_mbox
-	To:   /home/rik/Maildir
-	..............................
-	Copied 30 messages OK
-	
-	=====================================================================
-
-2. Delivery to Maildir format box.
-
-	To do this you will need some form of 'Mail Delivery Agent' (MDA) that
-	can deliver to Maildir format boxes.
-	
-	This will likely mean using qmail (as a sendmail replacement) or
-	using something 'behind' sendmail to handle delivery, such as the
-	utility 'maildrop' which is similar to 'procmail', the traditional
-	mail delivery and filtering agent.
-	
-	Instructions for setting up and using qmail and maildrop are included
-	with the respective packages. It's a great deal easier to set up maildrop
-	than qmail, though I'd recommend moving your site to qmail if you don't
-	need sendmail's extra functionality and care about mail security and safety.
-
-    If users' home directories are mounted over NFS, then you are crazy
-    to use anything but Maildir. Think about it.
-
+------------------------------------------------------------------------------

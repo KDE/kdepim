@@ -64,34 +64,28 @@ EmpathMailSenderQmail::setQmailLocation(const QString & location)
     void
 EmpathMailSenderQmail::sendOne(RMM::RMessage & message, const QString & id)
 {
-    empathDebug("sendOne() called");
-    
     currentID_ = id;
     
     error_ = false;
 
-    empathDebug("Message text:");
     messageAsString_ = message.asString();
     empathDebug(messageAsString_);
     
     qmailProcess_.clearArguments();
 
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_SENDING);
+
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_SENDING);
     
-    empathDebug("qmail location is" +
-        QString(c->readEntry(EmpathConfig::KEY_QMAIL_LOCATION)));
+    qmailProcess_ << c->readEntry(S_QMAIL);
 
-    qmailProcess_ << c->readEntry(EmpathConfig::KEY_QMAIL_LOCATION);
-
-    empathDebug("Starting qmail process");
     if (!qmailProcess_.start(KProcess::NotifyOnExit, KProcess::All)) {
         empathDebug("Couldn't start qmail process");
         return;
     }
     
-    empathDebug("Starting piping message to qmail process");
-
     messagePos_ = 0;
     wroteStdin(&qmailProcess_);
 }
@@ -156,16 +150,18 @@ EmpathMailSenderQmail::saveConfig()
 {
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_SENDING);
-    c->writeEntry(EmpathConfig::KEY_QMAIL_LOCATION, qmailLocation_);
+    c->writeEntry(EmpathConfig::S_QMAIL, qmailLocation_);
 }
 
     void
 EmpathMailSenderQmail::loadConfig()
 {
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_SENDING);
-    qmailLocation_ =
-        c->readEntry(EmpathConfig::KEY_QMAIL_LOCATION, "/var/qmail/bin/qmail-inject");
+
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_SENDING);
+    qmailLocation_ = c->readEntry(S_QMAIL, "/var/qmail/bin/qmail-inject");
 }
 
 // vim:ts=4:sw=4:tw=78

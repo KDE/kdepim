@@ -49,7 +49,7 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
     
     address_ = false;
 
-    RMM::HeaderDataType t(RMM::headerNameToType(headerName_.ascii()));
+    RMM::HeaderDataType t(RMM::headerNameToType(headerName_.latin1()));
     
     if (t == RMM::AddressList    ||
         t == RMM::Address        ||

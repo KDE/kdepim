@@ -47,22 +47,28 @@ class EmpathUI : public QObject
         
     protected slots:
     
-        void s_setupWizard();
-        void s_setupDisplay();
-        void s_setupIdentity();
-        void s_setupSending();
-        void s_setupComposing();
-        void s_setupAccounts();
-        void s_setupFilters();
-        void s_about();
-        void s_bugReport();
-        void s_configureMailbox(const EmpathURL &, QWidget * = 0);
+        void s_setupDisplay     (QWidget *);
+        void s_setupIdentity    (QWidget *);
+        void s_setupSending     (QWidget *);
+        void s_setupComposing   (QWidget *);
+        void s_setupAccounts    (QWidget *);
+        void s_setupFilters     (QWidget *);
+        void s_about            (QWidget *);
+        
+        void s_configureMailbox(const EmpathURL &, QWidget *);
+
+        void s_getSaveName(const EmpathURL &, QWidget *);
+        
         void s_infoMessage(const QString &);
-        void s_getSaveName(const EmpathURL &);
         
         void s_newComposer(Empath::ComposeType, const EmpathURL &);
         void s_newComposer(const QString &);
-        void s_sendEmail(const QString &, const QString &);
+        void s_bugReport();
+
+    private:
+
+        void _connectUp();
+        void _wizard();
 };
 
 #endif

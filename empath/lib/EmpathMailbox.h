@@ -247,8 +247,7 @@ class EmpathMailbox : public QObject
 
     public slots:
 
-        virtual void s_checkNewMail()   = 0;
-        virtual void s_getNewMail()     = 0;
+        virtual void s_checkMail()   = 0;
         
         // End pure virtual methods
     
@@ -271,19 +270,19 @@ class EmpathMailbox : public QObject
         /**
          * Set whether this mailbox uses a timer.
          */
-        void setCheckMail(bool yn);
+        void setAutoCheck(bool yn);
         /**
          * Set the timer interval for this box.
          */
-        void setCheckMailInterval(Q_UINT32 checkMailInterval);
+        void setAutoCheckInterval(Q_UINT32);
         /**
          * Find out whether this mailbox uses a timer.
          */
-        bool checkMail() const { return checkMail_; }
+        bool autoCheck() const { return autoCheck_; }
         /**
          * Report the timer interval for this box.
          */
-        Q_UINT32 checkMailInterval() const { return checkMailInterval_; }
+        Q_UINT32 autoCheckInterval() const { return autoCheckInterval_; }
         /**
          * Get the name of this box.
          */
@@ -329,6 +328,7 @@ class EmpathMailbox : public QObject
 
     signals:
 
+        void rename(EmpathMailbox *, const QString &);
         void retrieveComplete(
             bool, const EmpathURL &, const EmpathURL &, QString, QString);
         void retrieveComplete(bool, const EmpathURL &, QString, QString);
@@ -360,8 +360,8 @@ class EmpathMailbox : public QObject
 
         Q_UINT32    newMessagesCount_;
 
-        bool        checkMail_;
-        Q_UINT32    checkMailInterval_;
+        bool        autoCheck_;
+        Q_UINT32    autoCheckInterval_;
         
         QTimer      timer_;
         QString     pixmapName_;

@@ -18,6 +18,10 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+#pragma implementation "EmpathMessageViewWidget.h"
+#endif
+
 // Qt includes
 #include <qstrlist.h>
 
@@ -38,31 +42,23 @@
 #include <RMM_BodyPart.h>
 #include <RMM_ContentType.h>
     
-EmpathMessageViewWidget::EmpathMessageViewWidget(
-        const EmpathURL & url,
-        QWidget *parent,
-        const char *name)
-    :    QWidget(parent, name),
+EmpathMessageViewWidget::EmpathMessageViewWidget
+    (const EmpathURL & url, QWidget *parent)
+    :   QWidget(parent, "MessageViewWidget"),
         url_(url),
         viewingSource_(false)
 {
-    empathDebug("ctor");
-
     structureWidget_ =
         new EmpathMessageStructureWidget(0, "structureWidget");
-    CHECK_PTR(structureWidget_);
     
     QVBoxLayout * layout = new QVBoxLayout(this);
-    CHECK_PTR(layout);
     
     layout->setAutoAdd(true);
     
     headerViewWidget_ =
         new EmpathHeaderViewWidget(this, "headerViewWidget");
-    CHECK_PTR(headerViewWidget_);
     
     messageWidget_ = new EmpathMessageHTMLWidget(this, "messageWidget");
-    CHECK_PTR(messageWidget_);
     
     QObject::connect(
         headerViewWidget_,  SIGNAL(clipClicked()),
@@ -92,9 +88,6 @@ EmpathMessageViewWidget::s_retrieveComplete(
 
     url_ = url;
 
-    empathDebug("Got operation complete signal");
-    empathDebug("b is " + QString(b ? "true" : "false")); 
-
     RMM::RMessage * m(empath->message(url_));
     
     if (m == 0) {
@@ -104,6 +97,9 @@ EmpathMessageViewWidget::s_retrieveComplete(
     }
     
     RMM::RBodyPart message(m->decode());
+
+    empath->finishedWithMessage(url);
+    
     structureWidget_->setMessage(message);
     
     // Ok I'm going to try and get the viewable body parts now.
@@ -218,20 +214,17 @@ EmpathMessageViewWidget::s_retrieveComplete(
     void
 EmpathMessageViewWidget::s_print()
 {
-    empathDebug("print() called");
-//    messageWidget_->print();
+    // STUB
 }
 
 EmpathMessageViewWidget::~EmpathMessageViewWidget()
 {
-    empathDebug("dtor");
     delete structureWidget_;
 }
 
     void
 EmpathMessageViewWidget::s_setMessage(const EmpathURL & url)
 {
-    empathDebug("setMessage() called with \"" + url.asString() + "\"");
     url_ = url;
     empath->retrieve(url_, "view");
 }
@@ -269,7 +262,6 @@ EmpathMessageViewWidget::s_clipClicked()
     void
 EmpathMessageViewWidget::s_partChanged(RMM::RBodyPart * part)
 {
-    empathDebug("s_partChanged() called");
     RMM::RBodyPart p(*part);
     QCString s(p.data());
     showText(s, true);
@@ -278,7 +270,6 @@ EmpathMessageViewWidget::s_partChanged(RMM::RBodyPart * part)
     void
 EmpathMessageViewWidget::s_switchView()
 {
-    empathDebug("s_switchView() called");
     if (viewingSource_) {
         
         empathDebug("Doing normal view");
@@ -298,6 +289,8 @@ EmpathMessageViewWidget::s_switchView()
         }
         
         QCString s(m->asString());
+
+        empath->finishedWithMessage(url_);
         showText(s, false);
     }
 }

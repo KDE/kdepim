@@ -32,7 +32,6 @@
 #include <kbuttonbox.h>
 
 // Local includes
-#include "RikGroupBox.h"
 #include "Empath.h"
 #include "EmpathDefines.h"
 #include "EmpathMatcher.h"
@@ -42,10 +41,11 @@
 #include "EmpathFilterEditDialog.h"
 #include "EmpathFilter.h"
 #include "EmpathFilterList.h"
+#include "EmpathUIUtils.h"
 
 EmpathFilterEditDialog::EmpathFilterEditDialog
     (EmpathFilter * filter, QWidget * parent)
-    :    QDialog(parent, "FilterEditDialog", true),
+    :   QDialog(parent, "FilterEditDialog", true),
         filter_(filter)
 {
     setCaption(i18n("Edit Filters"));
@@ -55,22 +55,15 @@ EmpathFilterEditDialog::EmpathFilterEditDialog
     
     le_name_ = new QLineEdit(this, "le_name");
     
-    rgb_matches_ = new RikGroupBox(
-            i18n("Match expressions"), 8, this, "rgb_matches");
-    
-    w_matches_ = new QWidget(rgb_matches_, "w_matches");
-
-    rgb_matches_->setWidget(w_matches_);
-
     QLabel * l_arrives =
         new QLabel(i18n("When new mail arrives in folder"), this, "l_arrives");
 
     fcw_arrives_ = new EmpathFolderChooserWidget(this);
     
-    lb_matches_ = new QListBox(w_matches_, "lb_matches");
+    lb_matches_ = new QListBox(this, "lb_matches");
 
     KButtonBox * exprButtonBox
-        = new KButtonBox(w_matches_, KButtonBox::VERTICAL);
+        = new KButtonBox(this, KButtonBox::VERTICAL);
 
     pb_addMatch_    = exprButtonBox->addButton(i18n("Add expression"));
     pb_editMatch_   = exprButtonBox->addButton(i18n("Edit expression"));
@@ -94,11 +87,10 @@ EmpathFilterEditDialog::EmpathFilterEditDialog
     
     buttonBox->layout();
 
-
-    QVBoxLayout * layout        = new QVBoxLayout(this);
+    QVBoxLayout * layout        = new QVBoxLayout(this, dialogSpace);
     QHBoxLayout * nameLayout    = new QHBoxLayout(layout);
     QHBoxLayout * arrivesLayout = new QHBoxLayout(layout);
-    QHBoxLayout * matchesLayout = new QHBoxLayout(w_matches_);
+    QHBoxLayout * matchesLayout = new QHBoxLayout(layout);
     QHBoxLayout * actionLayout  = new QHBoxLayout(layout);
 
     arrivesLayout   ->  addWidget(l_arrives);
@@ -112,6 +104,10 @@ EmpathFilterEditDialog::EmpathFilterEditDialog
 
     nameLayout      ->  addWidget(l_name);
     nameLayout      ->  addWidget(le_name_);
+
+    layout->addStretch(10);
+
+    layout->addWidget(buttonBox);
 
     update();
     
@@ -148,7 +144,7 @@ EmpathFilterEditDialog::s_OK()
     
     hide();
     filter_->setName(le_name_->text());
-    filter_->setURL(fcw_arrives_->selectedURL());
+    filter_->setURL(fcw_arrives_->url());
     filter_->save();
     accept();
 }

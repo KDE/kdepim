@@ -24,95 +24,74 @@
 
 // Qt includes
 #include <qlineedit.h>
+#include <qpushbutton.h>
+#include <qlayout.h>
 
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
+#include <kbuttonbox.h>
 
 // Local includes
-#include "EmpathDefines.h"
 #include "EmpathFolderChooserDialog.h"
+#include "EmpathFolderChooserWidget.h"
+#include "EmpathDefines.h"
 #include "EmpathFolder.h"
 #include "EmpathFolderWidget.h"
-#include "EmpathFolderChooserWidget.h"
+#include "EmpathUIUtils.h"
 
-EmpathFolderChooserDialog::EmpathFolderChooserDialog(
-        QWidget * parent,
-        const char * name)
-    :    QDialog(parent, name, true)
+EmpathFolderChooserDialog::EmpathFolderChooserDialog(QWidget * parent)
+    :    QDialog(parent, "FolderChooserDialog", true)
 {
-    empathDebug("ctor");
     setCaption(i18n("Folder Chooser"));
-    folderWidget_    =
-        new EmpathFolderWidget(this, "folderWidget");
-    CHECK_PTR(folderWidget_);
 
-    QLineEdit    tempLineEdit((QWidget *)0);
-    Q_UINT32 h    = tempLineEdit.sizeHint().height();
-    
-    buttonBox_    = new KButtonBox(this);
-    CHECK_PTR(buttonBox_);
+    folderWidget_ = new EmpathFolderWidget(this, "folderWidget");
+    KButtonBox * buttonBox  = new KButtonBox(this);
 
-    buttonBox_->setFixedHeight(h);
+    QPushButton * pb_help   = buttonBox->addButton(i18n("&Help"));    
+    buttonBox->addStretch();
+    QPushButton * pb_OK     = buttonBox->addButton(i18n("&OK"));
+    QPushButton * pb_cancel = buttonBox->addButton(i18n("&Cancel"));
     
-    // Bottom button group
-    pb_help_    = buttonBox_->addButton(i18n("&Help"));    
-    buttonBox_->addStretch();
-    pb_OK_        = buttonBox_->addButton(i18n("&OK"));
-    pb_cancel_    = buttonBox_->addButton(i18n("&Cancel"));
-    
-    buttonBox_->layout();
+    buttonBox->layout();
 
-    QObject::connect(pb_OK_, SIGNAL(clicked()),
-            this, SLOT(s_OK()));
-    
-    QObject::connect(pb_cancel_, SIGNAL(clicked()),
-            this, SLOT(s_cancel()));
-    
-    QObject::connect(pb_help_, SIGNAL(clicked()),
-            this, SLOT(s_help()));
+    QObject::connect(pb_OK,     SIGNAL(clicked()), SLOT(s_OK())); 
+    QObject::connect(pb_cancel, SIGNAL(clicked()), SLOT(s_cancel()));
+    QObject::connect(pb_help,   SIGNAL(clicked()), SLOT(s_help()));
 
-    mainLayout_ = new QGridLayout(this, 2, 1, 10, 10);
-    CHECK_PTR(mainLayout_);
+    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
 
-    mainLayout_->setRowStretch(0, 7);
-    mainLayout_->setRowStretch(1, 1);
-    
-    mainLayout_->addWidget(folderWidget_,    0, 0);
-    mainLayout_->addWidget(buttonBox_,        1, 0);
-    
-    mainLayout_->activate();
+    layout->addWidget(folderWidget_);
+    layout->addStretch(10);
+    layout->addWidget(buttonBox);
 }
 
 EmpathFolderChooserDialog::~EmpathFolderChooserDialog()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     void
 EmpathFolderChooserDialog::s_OK()
 {
-    empathDebug("s_OK called");
     accept();
 }
 
     void
 EmpathFolderChooserDialog::s_cancel()
 {
-    empathDebug("s_cancel called");
     reject();
 }
 
     void
 EmpathFolderChooserDialog::s_help()
 {
-    empathDebug("s_help called");
+    // STUB
 }
 
     EmpathURL
 EmpathFolderChooserDialog::selected() const
 {
-    empathDebug("selected() called");
     return folderWidget_->selected();
 }
 

@@ -41,8 +41,6 @@ EmpathEditorProcess::EmpathEditorProcess(const QCString & text)
     :   QObject(),
         text_(text)
 {
-    empathDebug("ctor");
-
     QObject::connect(&p, SIGNAL(receivedStdout(KProcess *, char *, int)),
             this, SLOT(s_debugExternalEditorOutput(KProcess *, char *, int)));
 
@@ -55,15 +53,12 @@ EmpathEditorProcess::EmpathEditorProcess(const QCString & text)
 
 EmpathEditorProcess::~EmpathEditorProcess()
 {
-    empathDebug("dtor");
     p.kill(SIGKILL);
 }
 
     void
 EmpathEditorProcess::go()
 {    
-    empathDebug("run() called");
-
     QString tempName("/tmp/" + empath->generateUnique());
 
     empathDebug("Opening file " + QString(tempName));
@@ -100,7 +95,7 @@ EmpathEditorProcess::go()
     using namespace EmpathConfig;
     
     config->setGroup(GROUP_COMPOSE);
-    QString externalEditor = config->readEntry(KEY_EXTERNAL_EDITOR);
+    QString externalEditor = config->readEntry(C_EXT_EDIT);
 
     p << externalEditor << tempName;
 
@@ -113,7 +108,6 @@ EmpathEditorProcess::go()
     void
 EmpathEditorProcess::s_composeFinished(KProcess *)
 {
-    empathDebug("s_composeFinished called (process exited)");
     // Find the process' filename in the process table.
     // Once we have the filename, we can re-read the text from that file and use
     // that text to send the new message. We must check if the file has been
@@ -125,19 +119,11 @@ EmpathEditorProcess::s_composeFinished(KProcess *)
 
     QDateTime modTime = finfo.lastModified();
 
-    empathDebug("modification time on file == " + modTime.toString());
-    empathDebug("modification time I held  == " + myModTime_.toString());
-
     if (myModTime_ == modTime) {
-
         // File was NOT modified.
-        empathDebug("The temporary file was NOT modified");
         emit(done(false, ""));
         return;
     }
-
-    // File was modified.
-    empathDebug("The temporary file WAS modified");
 
     // Create a new message and send it via the mail sender.
 
@@ -164,7 +150,7 @@ EmpathEditorProcess::s_composeFinished(KProcess *)
 EmpathEditorProcess::s_debugExternalEditorOutput(
     KProcess *, char * buffer, int)
 {
-    empathDebug("Received: " + QString(buffer));
+//    empathDebug("Received: " + QString(buffer));
 }
 
 // vim:ts=4:sw=4:tw=78
