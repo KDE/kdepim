@@ -68,7 +68,6 @@ binary-arch: build
 	dh_strip -a
 	dh_compress -a
 	dh_fixperms -a
-	dh_suidregister -a
 	dh_makeshlibs -a -V
 	dh_perl -a
 	dh_installdeb -a
