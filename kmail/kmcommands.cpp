@@ -552,7 +552,9 @@ KMShowMsgSrcCommand::KMShowMsgSrcCommand( QWidget *parent,
 void KMShowMsgSrcCommand::execute()
 {
   KMMessage *msg = retrievedMessage();
-  QString str = QString::fromLatin1( msg->asString() );
+  QString str = QTextCodec::codecForName(  msg->charset().isEmpty() ?
+                QCString( kmkernel->networkCodec()->mimeName() ) :
+                msg->charset() )->toUnicode( msg->asString() );
 
   MailSourceViewer *viewer = new MailSourceViewer(); // deletes itself upon close
   viewer->setCaption( i18n("Message as Plain Text") );
