@@ -28,13 +28,13 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "options.h"
-
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
+#include <pi-version.h>
 #include <pi-dlp.h>
+
 
 
 class KPilotSysInfo
@@ -59,7 +59,7 @@ public:
 	const unsigned long getLocale() const {return fSysInfo.locale;}
 	void setLocale(unsigned long newval)  {fSysInfo.locale=newval;}
 
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_11_0
+#if ( PILOT_LINK_VERSION < 1 ) && ( PILOT_LINK_MAJOR < 11 )
 // Older pilot-link versions < 0.11.x don't have prodID, but name instead,
 // and they also do not have the *Version members.
 	const int getProductIDLength() const { return fSysInfo.nameLength; }

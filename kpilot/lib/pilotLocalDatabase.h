@@ -29,8 +29,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "options.h"    /* for PI_SIZE_T */
-
 #include "pilotDatabase.h"
 
 // #define SHADOW_LOCAL_DB (1)
@@ -161,7 +159,7 @@ private:
 	struct DBInfo fDBInfo;
 	QString fPathName,fDBName;
 	char*       fAppInfo;
-	PI_SIZE_T   fAppLen;
+	size_t      fAppLen;
 	int         fNumRecords;
 	int         fCurrentRecord;
 	PilotRecord* fRecords[10000]; // Current max records in DB.. hope it's enough
