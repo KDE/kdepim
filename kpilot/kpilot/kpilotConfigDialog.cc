@@ -217,6 +217,14 @@ SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
 	fConduitName = i18n("HotSync");
 }
 
+#define MENU_ITEM_COUNT (5)
+static SyncAction::SyncMode syncTypeMap[MENU_ITEM_COUNT] = {
+	SyncAction::eHotSync,
+	SyncAction::eFastSync,
+	SyncAction::eFullSync,
+	SyncAction::eCopyHHToPC,
+	SyncAction::eCopyPCToHH } ;
+
 void SyncConfigPage::load()
 {
 	FUNCTIONSETUP;
@@ -224,7 +232,20 @@ void SyncConfigPage::load()
 
 	/* Sync tab */
 	int synctype=KPilotSettings::syncType();
-	fConfigWidget->fSpecialSync->setCurrentItem(synctype);
+	if (synctype<0) synctype=(int) SyncAction::eHotSync;
+	for (unsigned int i=0; i<MENU_ITEM_COUNT; ++i)
+	{
+		if (syncTypeMap[i] == synctype)
+		{
+			fConfigWidget->fSpecialSync->setCurrentItem(i);
+			synctype=-1;
+			break;
+		}
+	}
+	if (synctype != -1)
+	{
+		fConfigWidget->fSpecialSync->setCurrentItem(0); /* HotSync */
+	}
 
 	fConfigWidget->fFullBackupCheck->setChecked(KPilotSettings::fullSyncOnPCChange());
 	fConfigWidget->fConflictResolution->setCurrentItem(KPilotSettings::conflictResolution());
@@ -238,7 +259,18 @@ void SyncConfigPage::load()
 	FUNCTIONSETUP;
 
 	/* Sync tab */
-	KPilotSettings::setSyncType(fConfigWidget->fSpecialSync->currentItem());
+	int synctype = -1;
+	unsigned int selectedsync = fConfigWidget->fSpecialSync->currentItem();
+	if (selectedsync < MENU_ITEM_COUNT)
+	{
+		synctype = syncTypeMap[selectedsync];
+	}
+	if (synctype < 0)
+	{
+		synctype = SyncAction::eHotSync;
+	}
+
+	KPilotSettings::setSyncType(synctype);
 	KPilotSettings::setFullSyncOnPCChange(fConfigWidget->fFullBackupCheck->isChecked());
 	KPilotSettings::setConflictResolution(fConfigWidget->fConflictResolution->currentItem());
 	KPilotSettings::setScreenlockSecure(fConfigWidget->fScreenlockSecure->isChecked());
