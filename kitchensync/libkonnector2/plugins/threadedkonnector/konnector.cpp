@@ -21,8 +21,7 @@
 
 #include <kdebug.h>
 #include <kgenericfactory.h>
-#include <kstandarddirs.h>
-
+#include <kconfig.h>
 #include <kapabilities.h>
 #include <konnectorinfo.h>
 #include <konnectorplugin.h>
@@ -30,16 +29,21 @@
 #include "clientmanager.h"
 
 #include "konnector.h"
+#include "konnectorconfig.h"
 
 using namespace KSync;
 using namespace Threaded;
 
-typedef KGenericFactory<ThreadedPlugin, QObject> ThreadedKonnectorPlugin;
+extern "C"
+{
+  void *init_libthreadedkonnector()
+  {
+    return new KRES::PluginFactory<ThreadedPlugin,ThreadedKonnectorConfig>();
+  }
+}
 
-K_EXPORT_COMPONENT_FACTORY(libthreadedkonnector, ThreadedKonnectorPlugin);
-
-ThreadedPlugin::ThreadedPlugin( QObject* obj, const char* name, const QStringList )
-  : Konnector( obj, name ) {
+ThreadedPlugin::ThreadedPlugin( const KConfig *config )
+  : Konnector( config ) {
   kdDebug() << __PRETTY_FUNCTION__ << " this = " << this << endl;
 
 //   connect( &mClientManager, SIGNAL(signalThreadTerminated()),
@@ -104,16 +108,6 @@ KSync::KonnectorInfo ThreadedPlugin::info() const {
 
 void ThreadedPlugin::download( const QString& ) {
   kdDebug() << __PRETTY_FUNCTION__ << " this = " << this << endl;
-}
-
-ConfigWidget* ThreadedPlugin::configWidget( const Kapabilities& cap, QWidget* parent, const char* name ) {
-  kdDebug() << __PRETTY_FUNCTION__ << " this = " << this << endl;
-  return 0;
-}
-
-ConfigWidget* ThreadedPlugin::configWidget( QWidget* parent, const char* name ) {
-  kdDebug() << __PRETTY_FUNCTION__ << " this = " << this << endl;
-  return 0;
 }
 
 void ThreadedPlugin::slotFinished() {

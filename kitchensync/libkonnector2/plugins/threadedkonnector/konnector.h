@@ -22,9 +22,8 @@
 #ifndef THREADED_KONNECTOR_H
 #define THREADED_KONNECTOR_H
 
-#include <qobject.h>
-#include <qstring.h>
 #include <qiconset.h>
+#include <qptrlist.h>
 
 #include <konnectorplugin.h>
 
@@ -46,7 +45,7 @@ namespace Threaded {
      * @param name the name
      * @param strlist a QStringList which is not used but necessary for KGenericFactory
      */
-    ThreadedPlugin( QObject*, const char*, const QStringList = QStringList() );
+    ThreadedPlugin( const KConfig *config );
     ~ThreadedPlugin();
     
     /** return our capabilities() */
@@ -72,10 +71,6 @@ namespace Threaded {
     
     /** download a resource/url/foobar */
     void download( const QString& );
-    
-    /** configuration widgets */
-    KSync::ConfigWidget* configWidget( const KSync::Kapabilities&, QWidget*, const char* );
-    KSync::ConfigWidget* configWidget( QWidget*, const char* );
     
   protected:
 /*     QString metaId() const; */

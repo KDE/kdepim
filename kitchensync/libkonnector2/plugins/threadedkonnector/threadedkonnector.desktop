@@ -1,10 +1,17 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=Service
-ServiceTypes=KitchenSync/Konnector
+ServiceTypes=KResources/Plugin
 X-KDE-Library=libthreadedkonnector
 
 Name=Demo konnector for a threaded implementation
-Group=PDA
+Name[da]=Demo-konnector for en trådet implementation
+Name[es]=konnector de demostración para una implementación con hilos
+Name[sv]=Demonstration av en Konnector för trådad implementering
+Name[xx]=xxDemo konnector for a threaded implementationxx
+Group=Test
 Vendor=Mathias Fröhlich
-Id=Threaded
+Id=threadedkonnector
+
+X-KDE-ResourceFamily=konnector
+X-KDE-ResourceType=local
