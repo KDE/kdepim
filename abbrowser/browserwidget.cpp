@@ -771,8 +771,6 @@ void PabWidget::updateContact( QString addr, QString name )
 
 void PabWidget::addEmail(const QString& aStr)
 {
-  if (! aStr.length() ) return;
-
   int i, j, len;
   QString partA, partB, result;
   char endCh = '>';
@@ -810,91 +808,6 @@ void PabWidget::addEmail(const QString& aStr)
   updateContact( partB, result );
 }
 
-void PabWidget::showEntry( const QString& lastname, const QString& firstname )
-{
-  if ( !lastname.length() ) return;
-
-  ContactEntryList* cel = contactEntryList();
-
-  ContactEntryListIterator celIt(cel->entryList());
-  QStringList fnList;
-
-  // make a list of all lastname, firstname
-  while( celIt.current() ) {
-    ContactEntry *ce = celIt.current();
-    
-    const QString* fileas = ce->find( "X-FileAs" );
-
-    if ( fileas &&
-         fileas->contains(lastname, false) &&
-         fileas->contains(firstname, false) )
-
-        fnList << celIt.currentKey();
-
-    ++celIt;
-
-  }
-
-  if( fnList.count() ) {
-    ContactEntry *ce = cel->find( fnList.first() );
-
-    if( !ce ) return;
-    
-    showEntry( fnList.first(), ce );
-  }
-  
-}
-
-void PabWidget::showEntry( const QString& email )
-{
-  if ( !email.length() ) return;
-
-  ContactEntryList* cel = contactEntryList();
-
-  ContactEntryListIterator celIt(cel->entryList());
-  QStringList fnList;
-
-  // make a list of all lastname, firstname
-  while( celIt.current() ) {
-    ContactEntry *ce = celIt.current();
-    
-    const QString* email1 = ce->find( "EMAIL" ),
-      *email2 = ce->find( "X-E-mail2" ),
-      *email3 = ce->find( "X-E-mail3" );
-
-    if ( (email1 && email1->contains(email, false)) ||
-         (email2 && email2->contains(email, false)) ||
-         (email3 && email3->contains(email, false))
-         ) {
-
-      fnList << celIt.currentKey();
-    }
-
-    ++celIt;
-
-  }
-
-  if( fnList.count() ) {
-    ContactEntry *ce = cel->find( fnList.first() );
-
-    if( !ce ) return;
-    
-    showEntry( fnList.first(), ce );
-  }
-  
-}
-
-void PabWidget::showEntry( const QString& entryKey, ContactEntry *ce )
-{
-  QString title = i18n( "Address Book Entry Editor" );
-  
-  PabContactDialog *cd = new PabContactDialog( title, this, 0, entryKey, ce );
-  QObject::connect( cd, SIGNAL( change( QString, ContactEntry* ) ),
-                    this, SLOT( change( QString, ContactEntry* ) ));
-  cd->show();
-}
-
-
 void PabWidget::sendMail()
 {
   QString emailAddrs = selectedEmails();
@@ -909,14 +822,17 @@ void PabWidget::itemSelected( QListViewItem *item )
   PabListViewItem *plvi = dynamic_cast< PabListViewItem* >(item);
 
   if (plvi) {
+    QString title = i18n( "Address Book Entry Editor" );
     QString entryKey = plvi->entryKey();
     ContactEntry *ce = cel->find( entryKey );
     if (!ce) { // Another process deleted it(!)
       qDebug( "PabWidget::itemSelected Associated entry not found" );
       return;
     }
-
-    showEntry(entryKey, ce);
+    PabContactDialog *cd = new PabContactDialog( title, this, 0, entryKey, ce );
+    QObject::connect( cd, SIGNAL( change( QString, ContactEntry* ) ),
+		      this, SLOT( change( QString, ContactEntry* ) ));
+    cd->show();
   }
 
   item->setSelected( TRUE );

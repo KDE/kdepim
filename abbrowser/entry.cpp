@@ -149,12 +149,24 @@ ContactEntry* ContactEntryList::KabEntryToContactEntry( AddressBook::Entry entry
   // Get all Kontact Fields
   QStringList::Iterator it;
   for( it = entry.custom.begin(); it != entry.custom.end(); ++it )
-    if ((*it).find( "KMail:1." ) == 0) {
-      QTextIStream iStream(&(*it));
-      QString dummy = iStream.readLine();
-      ce->load( iStream );
-    }
-
+      {
+      if ((*it).find( "KMail:1." ) == 0)
+	  {
+	  QTextIStream iStream(&(*it));
+	  QString dummy = iStream.readLine();
+	  ce->load( iStream );
+	  }
+      /*      else if ((*it).find( "KPilot:4") == 0)
+	  {
+	  QString pilotStr = "KPilot4:";
+	  QString kpilotCustom = (*it).right(pilotStr.length());
+	  // in future, may need to parse kpilotCustom into seperate
+	  // tokens; for now, just folder
+	  ce->setFolder(kpilotCustom);
+	  }
+      */
+      }
+  
   // Use KAB fields where applicable (takes precedence)
   //  ce->insert( "N", new QString( entry.fn ));
   QString n = entry.nameprefix + " " +
@@ -249,7 +261,7 @@ AddressBook::Entry ContactEntryList::ContactEntryToKabEntry( ContactEntry *entry
     kabentry.user3 = *(entry->find( "X-Userfield3" ));
   if (entry->find( "X-Userfield4" ))
     kabentry.user4 = *(entry->find( "X-Userfield4" ));
-
+  
   QStringList::Iterator it;
   bool phBusiness = false;
   bool phMobile = false;
@@ -297,25 +309,42 @@ AddressBook::Entry ContactEntryList::ContactEntryToKabEntry( ContactEntry *entry
     kabentry.telephone.append( *(entry->find( "X-OtherPhone" )) );
   }
 
-  QString result;
-  QTextOStream oStream(&result);
-  oStream << "KMail:1.0\n";
-  entry->save( oStream );
-  bool found = false;
+  QString kmailResult;
+  QTextOStream mailoStream(&kmailResult);
+  mailoStream << "KMail:1.0\n";
+  entry->save( mailoStream );
+  bool kmailFound = false;
+  
+  /*QString kpilotResult;
+  QTextOStream kpilotoStream(&kpilotResult);
+  kpilotoStream << "KPilot4:" << entry->getFolder();
 
+  bool kpilotFound = false;
+
+  */
+  
+  
+  
   for( it = kabentry.custom.begin(); it != kabentry.custom.end(); ++it )
     if ((*it).find( "KMail:1." ) == 0) {
-      *it = result;
-      found = true;
-      break;
+      *it = kmailResult;
+      kmailFound = true;
     }
-  if (!found)
-    kabentry.custom.append( result );
-
+  /*    else if ((*it).find("KPilot4:") == 0)
+	{
+	kpilotFound = true;
+	*it = kpilotResult;
+	}
+  */
+  if (!kmailFound)
+      kabentry.custom.append( kmailResult );
+  //if (!kpilotFound)
+  //    kabentry.custom.append( kpilotResult );
+  
   return kabentry;
 }
 
-QStringList ContactEntryList::keys()
+QStringList ContactEntryList::keys() const
 {
   QStringList entryKeys;
   QDictIterator<ContactEntry> it(ceDict);
@@ -327,6 +356,19 @@ QStringList ContactEntryList::keys()
   return entryKeys;
 }
 
+QDict<ContactEntry> ContactEntryList::getDict() const
+    {
+    return ceDict;
+    }
+
+void ContactEntryList::emptyTrash()
+    {
+    for (QDictIterator<ContactEntry> it(ceDict);it.current();++it)
+	{
+	if (it.current()->inTrash())
+	    remove(it.currentKey());
+	}
+    }
 
 /*
 ContactEntryList::ContactEntryList( const QString &filename )
@@ -389,216 +431,4 @@ void ContactEntryList::load( const QString &filename )
 }
 */
 
-////////////////////////
-// ContactEntry methods
 
-ContactEntry::ContactEntry() 
-{
-  dict.setAutoDelete( true );
-}
-
-ContactEntry::ContactEntry( const ContactEntry &r )
-  : QObject()
-{
-  QDictIterator<QString> it( r.dict );
-  
-  while ( it.current() ) {
-    dict.replace( it.currentKey(), new QString( *it.current() ));
-    ++it;
-  }
-}
-
-ContactEntry& ContactEntry::operator=( const ContactEntry &r )
-{
-  if (this != &r) {
-    dict.clear();
-    QDictIterator<QString> it( r.dict );
-    
-    while ( it.current() ) {
-      dict.replace( it.currentKey(), new QString( *it.current() ));
-      ++it;
-    }
-  }
-  return *this;
-}
-
-/*
-ContactEntry::ContactEntry( const QString &filename )
-{
-  dict.setAutoDelete( true );
-  load( filename );
-}
-*/
-
-ContactEntry::ContactEntry( QTextStream &t )
-{
-  dict.setAutoDelete( true );
-  load( t );
-}
-
-QStringList ContactEntry::custom() const
-{
-  QStringList result;
-  QDictIterator<QString> it( dict );
-
-  while ( it.current() ) {
-    if (it.currentKey().find( "X-CUSTOM-", 0 ) == 0)
-      result << it.currentKey();
-    ++it;
-  }
-  return result;
-}
-
-/*
-void ContactEntry::save( const QString &filename )
-{
-  QFile f( filename );
-  if ( !f.open( IO_WriteOnly ) )
-    return;
-
-  QTextStream t( &f );
-  QDictIterator<QString> it( dict );
-
-  while ( it.current() ) {
-    if (it.currentKey().find( ".", 0 ) != 0) {
-      t << it.currentKey() << "\n";
-      t << *it.current() << "\n[EOR]\n";
-    }
-    ++it;
-  }
-  t << "[EOS]\n";
-  f.close();
-}
-*/
-
-void ContactEntry::save( QTextStream &t )
-{
-  QDictIterator<QString> it( dict );
-  QRegExp reg("\n");
-
-  while ( it.current() ) {
-    if ((it.currentKey().find( ".", 0 ) != 0) &&
-	(!(*it.current()).isEmpty())) {
-      t << " " << it.currentKey() << "\n";
-      QString tmp = *it.current();
-      tmp.replace( reg, "\n " );
-      t << " " << tmp << "\n[EOR]\n";
-    }
-    ++it;
-  }
-  t << "[EOS]\n";
-}
-
-/*
-void ContactEntry::load( const QString &filename )
-{
-  dict.clear();
-
-  QFile f( filename );
-  if ( !f.open( IO_ReadOnly ) )
-    return;
-
-  QTextStream t( &f );
-
-  while ( !t.eof() ) {
-    QString name = t.readLine();
-    if (name == "[EOS]")
-      break;
-    QString tmp = t.readLine();
-    QString value = "";
-    while (tmp != QString( "\n[EOR]" )) {
-      value += tmp;
-      tmp = "\n" + t.readLine();
-    }
-    if ((name != "") && (value != ""))
-      dict.replace( name, new QString( value ));
-  }
-  f.close();
-  emit changed();
-}
-*/
-
-void ContactEntry::load( QTextStream &t )
-{
-  while (!t.eof()) {
-    QString name = t.readLine();
-    if (name == "[EOS]")
-      break;
-    name = name.mid(1);
-    QString tmp = t.readLine();
-    QString value = "";
-    while (tmp != QString( "[EOR]" )) {
-      if (!value.isEmpty())
-	value += "\n";
-      value += tmp.mid(1);
-      tmp = t.readLine();
-    }
-    if ((name != "") && (value != ""))
-      dict.replace( name, new QString( value ));
-  }
-  emit changed();
-}
-
-void ContactEntry::insert( const QString key, const QString *item )
-{
-  if (item && (*item == ""))
-    return;
-  dict.insert( key, item );
-  emit changed();
-}
-
-void ContactEntry::replace( const QString key, const QString *item )
-{
-  QString *current = dict.find( key );
-  if (item) {
-    if (current) {
-      if (*item != *current) {
-	if (*item == "")
-	  dict.remove( key ); // temporary?
-	else
-	  dict.replace( key, item );
-	emit changed();
-      }
-    }
-    else { // (item && !current)
-      dict.replace( key, item );
-      emit changed();
-    }
-  }
-  else
-    qDebug("ContactEntry::replace( const QString, const QString* ) passed null item");
-  /*
-  if (item && (*item == ""))
-    dict.remove( key );
-  else
-    dict.replace( key, item );
-  emit changed();
-  */
-}
-
-bool ContactEntry::remove( const QString key )
-{
-  if (dict.remove( key ))
-    emit changed();
-}
-
-void ContactEntry::touch()
-{
-  emit changed();
-}
-
-const QString *ContactEntry::find ( const QString & key ) const
-{
-  return dict.find( key );
-}
-
-const QString *ContactEntry::operator[] ( const QString & key ) const
-{
-  return dict[key];
-}
-
-void ContactEntry::clear ()
-{
-  dict.clear();
-  emit changed();
-}

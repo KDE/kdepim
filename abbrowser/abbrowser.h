@@ -38,14 +38,18 @@ public:
 	ContactEntry *ce;
 
 public slots:
-	/**
+        void addEmail( QString addr );
+	/**	   
 	 * This is called whenever the user Drag n' Drops something into our
 	 * window
 	 */
         void newContact();
-        void addEmail( QString addr );
-        void showEntry( QString lastname, QString firstname );
-        void showEntryForEmailAddr( QString email );
+        QStringList getKeys() const;
+        QDict<ContactEntry> getEntryDict() const;
+        void changeEntry( QString key, ContactEntry changeEntry);
+        void removeEntry( QString key );
+        void addEntry( ContactEntry newEntry );
+		      
 	void saveCe();
 	void save();
 	void readConfig();

@@ -133,10 +133,7 @@ public:
   virtual QStringList *fields();
   virtual QString selectedEmails();
   virtual void updateContact( QString addr, QString name );
-  virtual void addEmail( const QString& aStr );
-  virtual void showEntry( const QString& lastname, const QString& firstname );
-  virtual void showEntry( const QString& email );
-  virtual void showEntry( const QString& entryKey, ContactEntry *ce );
+  virtual void addEmail(const QString& aStr);
 
 public slots:
   virtual void showSelectNameDialog();

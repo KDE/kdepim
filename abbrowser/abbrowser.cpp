@@ -83,18 +83,18 @@ Pab::Pab() : KMainWindow(0), DCOPObject("AbBrowserIface")
 			  this, SLOT(newContact()), // result
 			  true, i18n("Add a new entry"));      // tooltip text
   toolBar()->insertButton(BarIcon("edit"),   // icon
-			  0,                  // button id
+			  1,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(properties()), // result
 			  true, i18n("Change this entry"));      // tooltip text
   toolBar()->insertButton(BarIcon("editdelete"),   // icon
-			  0,                  // button id
+			  2,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(clear()), // result
 			  true, i18n("Remove this entry"));      // tooltip text
   toolBar()->insertSeparator();
   toolBar()->insertButton(BarIcon("mail_send"),   // icon
-			  0,                  // button id
+			  3,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(sendMail()), // result
 			  true, i18n("Send email"));      // tooltip text
@@ -109,10 +109,13 @@ Pab::Pab() : KMainWindow(0), DCOPObject("AbBrowserIface")
 
 void Pab::newContact()
 {
+ qDebug("Pab::newContact() start"); 
   ContactDialog *cd = new PabNewContactDialog( i18n( "Address Book Entry Editor" ), this, 0 );
   connect( cd, SIGNAL( add( ContactEntry* ) ), 
 	   view, SLOT( addNewEntry( ContactEntry* ) ));
   cd->show();
+  qDebug("Pab::newContact() stop"); 
+
 }
 
 void Pab::addEmail( QString addr )
@@ -121,16 +124,32 @@ void Pab::addEmail( QString addr )
   return;
 }
 
+void Pab::addEntry(ContactEntry newEntry)
+    {
+    view->addNewEntry(new ContactEntry(newEntry) );
+    }
 
-void Pab::showEntry( QString lastname, QString firstname )
-{
-  view->showEntry( lastname, firstname );
-}
+QStringList  Pab::getKeys() const
+    {
+    return document->keys();
+    }
 
-void Pab::showEntryForEmailAddr( QString email )
-{
-  view->showEntry( email );
-}
+QDict<ContactEntry> Pab::getEntryDict() const
+    {
+    return document->getDict();
+    }
+
+void  Pab::changeEntry( QString key, ContactEntry changeEntry)
+    {
+    document->replace(key, new ContactEntry(changeEntry));
+    view->pabListView()->getItem(key)->refresh();
+    }
+
+void  Pab::removeEntry( QString key )
+    {
+    document->remove(key);
+    delete view->pabListView()->getItem(key);
+    }
 
 void Pab::save()
 {
