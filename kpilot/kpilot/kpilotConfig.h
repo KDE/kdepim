@@ -37,7 +37,7 @@ class QLineEdit;
 class QComboBox;
 class QCheckBox;
 
-class KPilotConfigSettings : protected KSimpleConfig
+class KPilotConfigSettings : public KSimpleConfig
 {
 public:
 	KPilotConfigSettings(const QString &filename,bool readonly=false);
@@ -203,6 +203,9 @@ protected:
 
 
 // $Log$
+// Revision 1.8  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.7  2001/09/23 21:44:56  adridg
 // Myriad small changes
 //

@@ -778,6 +778,8 @@ QString PilotDaemon::syncTypeString(int i) const
 	{
 		kapp->quit();
 	}
+
+	QTimer::singleShot(5000,fPilotLink,SLOT(reset()));
 }
 
 
@@ -897,6 +899,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.51  2001/10/08 12:49:11  cschumac
+// kde3 compile fixes.
+//
 // Revision 1.50  2001/09/30 19:51:56  adridg
 // Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
 //

@@ -26,6 +26,9 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+static const char *conduitconfigdialog_id =
+	"$Id: $";
+
 #include "options.h"
 
 #include <qlistview.h>
@@ -42,6 +45,7 @@
 #include <kstddirs.h>
 #include <klibloader.h>
 
+#include "plugin.h"
 #include "kpilotConfig.h"
 
 #include "conduitConfigDialog_base.h"
@@ -157,6 +161,8 @@ ConduitConfigDialog::ConduitConfigDialog(QWidget * w, const char *n,
 	(void) new ConduitTip(fConfigWidget->available);
 
 	selected(0L);
+
+	(void) conduitconfigdialog_id;
 }
 
 ConduitConfigDialog::~ConduitConfigDialog()
@@ -322,7 +328,10 @@ void ConduitConfigDialog::configureConduit()
 				return;
 			}
 
-			QObject *o = f->create(this, 0L, "QWidget");
+			QStringList a;
+			a.append("modal");
+
+			QObject *o = f->create(this, 0L, "ConduitConfig",a);
 
 
 			if (!o)
@@ -337,7 +346,7 @@ void ConduitConfigDialog::configureConduit()
 				return;
 			}
 
-			KDialogBase *d = dynamic_cast<KDialogBase *>(o);
+			ConduitConfig *d = dynamic_cast<ConduitConfig *>(o);
 
 			if (!d)
 			{
@@ -351,6 +360,8 @@ void ConduitConfigDialog::configureConduit()
 				return;
 			}
 
+			d->setConfig(&KPilotConfig::getConfig());
+			d->readSettings();
 			d->exec();
 
 			delete d;
@@ -486,99 +497,15 @@ void ConduitConfigDialog::warnSetupRunning()
 {
 	FUNCTIONSETUP;
 
-	char dbName[255];
-	int len = 0;
 	QStringList activeConduits;
 	const QListViewItem *p = fConfigWidget->active->firstChild();
 	KPilotConfigSettings & config = KPilotConfig::getConfig();
 
 
-	config.setDatabaseGroup();
-
 
 	while (p)
 	{
-		FILE *conduitpipe;
-
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Current conduit = "
-			<< p->text(CONDUIT_NAME) << endl;
-		DEBUGKPILOT << fname
-			<< ": Current conduit service from "
-			<< p->text(CONDUIT_DESKTOP)
-			<< " says exec=" << p->text(CONDUIT_EXEC) << endl;
-#endif
-
-		QString currentConduit = findExecPath(p);
-
-		if (currentConduit.isNull())
-		{
-			warnNoExec(p);
-			goto nextConduit;
-		}
-
 		activeConduits.append(p->text(CONDUIT_DESKTOP));
-
-
-		currentConduit += " --info";
-#ifdef DEBUG
-		if (debug_level)
-		{
-			currentConduit += " --debug ";
-			currentConduit += QString().setNum(debug_level);
-		}
-
-		DEBUGKPILOT << fname
-			<< ": Conduit startup command line is: "
-			<< currentConduit << endl;
-#endif
-
-		len = 0;
-		conduitpipe = popen(currentConduit.local8Bit(), "r");
-		if (conduitpipe)
-		{
-			len = fread(dbName, 1, 255, conduitpipe);
-			pclose(conduitpipe);
-		}
-		conduitpipe = 0;
-		dbName[len] = 0L;
-		if (len == 0)
-		{
-			QString tmpMessage =
-				i18n("The conduit %1 did not identify "
-				"what database it supports. "
-				"\nPlease check with the conduits "
-				"author to correct it.").arg(p->
-				text(CONDUIT_NAME));
-
-			KMessageBox::error(this, tmpMessage,
-				i18n("Conduit error."));
-		}
-		else if (strcmp(dbName, "<none>") == 0)
-		{
-#ifdef DEBUG
-			DEBUGKPILOT << fname
-				<< ": Conduit "
-				<< p->text(0)
-				<< " supports no databases." << endl;
-#endif
-		}
-		else
-		{
-			QStringList l = QStringList::split(QChar(','),
-				QString(dbName));
-
-			QStringList::Iterator i;
-			const QString & m = p->text(CONDUIT_DESKTOP);
-
-			for (i = l.begin(); i != l.end(); ++i)
-			{
-				config.setDatabaseConduit((*i).
-					stripWhiteSpace(), m);
-			}
-		}
-nextConduit:
 		p = p->nextSibling();
 	}
 	config.setConduitGroup().setInstalledConduits(activeConduits);
@@ -589,3 +516,6 @@ nextConduit:
 
 
 // $Log$
+// Revision 1.1  2001/10/04 16:53:57  adridg
+// New files for newstyle config
+//

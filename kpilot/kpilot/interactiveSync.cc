@@ -60,150 +60,13 @@ static const char *interactivesync_id =
 
 #include "pilotUser.h"
 #include "kpilotConfig.h"
+#include "kpilotlink.h"
+
 #include "interactiveSync.moc"
 
 
-InteractiveAction::InteractiveAction(KPilotDeviceLink * p,
-	QWidget * visibleparent,
-	QObject * parent,
-	const char *name) :
-	SyncAction(p, parent, name),
-	fParent(visibleparent), 
-	fTickleTimer(0L), 
-	fTickleCount(0), 
-	fTickleTimeout(0)
-{
-	FUNCTIONSETUP;
-
-	(void) interactivesync_id;
-}
-
-InteractiveAction::~InteractiveAction()
-{
-	FUNCTIONSETUP;
-
-	KPILOT_DELETE(fTickleTimer);
-}
-
-
-void InteractiveAction::startTickle(unsigned timeout)
-{
-	FUNCTIONSETUP;
-	fTickleTimeout = timeout;
-	fTickleCount = 0;
-	if (!fTickleTimer)
-	{
-		fTickleTimer = new QTimer(this);
-		QObject::connect(fTickleTimer, SIGNAL(timeout()),
-			this, SLOT(tickle()));
-	}
-	else
-	{
-		fTickleTimer->stop();
-	}
-
-	fTickleTimer->start(1000, false);
-}
-
-void InteractiveAction::stopTickle()
-{
-	FUNCTIONSETUP;
-	if (fTickleTimer)
-	{
-		fTickleTimer->stop();
-	}
-}
-
-void InteractiveAction::tickle()
-{
-	FUNCTIONSETUP;
-	fTickleCount++;
-
-	// Note that if fTickleTimeout == 0 then this
-	// test will never be true until unsigned wraps
-	// around, which is 2^32 seconds, which is a long time.
-	//
-	// This is intentional.
-	//
-	//
-	if (fTickleCount == fTickleTimeout)
-	{
-		emit timeout();
-	}
-	else
-	{
-		if (pi_tickle(pilotSocket()))
-		{
-			kdWarning() << k_funcinfo
-				<< "Couldn't tickle Pilot!" << endl;
-		}
-	}
-}
-
-int InteractiveAction::questionYesNo(const QString & text,
-	const QString & caption, unsigned timeout)
-{
-	FUNCTIONSETUP;
-
-	KDialogBase *dialog =
-		new KDialogBase(caption.isNull()? i18n("Question") : caption,
-		KDialogBase::Yes | KDialogBase::No,
-		KDialogBase::Yes, KDialogBase::No,
-		fParent, "questionYesNo", true, true,
-		i18n("Yes"), i18n("No"));
-
-	// The following code is taken from KDialogBase.cc,
-	// part of the KDE 2.2 libraries. Copyright 2001
-	// by Waldo Bastian.
-	//
-	//
-	QVBox *topcontents = new QVBox(dialog);
-
-	topcontents->setSpacing(KDialog::spacingHint() * 2);
-	topcontents->setMargin(KDialog::marginHint() * 2);
-
-	QWidget *contents = new QWidget(topcontents);
-	QHBoxLayout *lay = new QHBoxLayout(contents);
-
-	lay->setSpacing(KDialog::spacingHint() * 2);
-
-	lay->addStretch(1);
-	QLabel *label1 = new QLabel( contents);
-#if QT_VERSION < 300
-	label1->setPixmap(QMessageBox::standardIcon(QMessageBox::Information,
-        	kapp->style().guiStyle()));
-#else
-	label1->setPixmap(QMessageBox::standardIcon(QMessageBox::Information));
-#endif
-	lay->add( label1 );
-	QLabel *label2 = new QLabel( text, contents);
-	label2->setMinimumSize(label2->sizeHint());
-	lay->add(label2);
-	lay->addStretch(1);
-
-	QSize extraSize = QSize(50, 30);
-
-	dialog->setMainWidget(topcontents);
-	dialog->enableButtonSeparator(false);
-	dialog->incInitialSize(extraSize);
-
-	QTimer *timer = new QTimer(dialog);
-
-	QObject::connect(timer, SIGNAL(timeout()),
-		dialog, SLOT(slotCancel()));
-	int result = dialog->exec();
-
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": Dialog returned " << result << endl;
-#endif
-
-	delete dialog;
-
-	return result;
-}
-
-CheckUser::CheckUser(KPilotDeviceLink * p, QWidget * vp, QObject * o):
-	InteractiveAction(p, vp, o, "userCheck")
+CheckUser::CheckUser(KPilotDeviceLink * p, QWidget * vp):
+	InteractiveAction(p, vp, "userCheck")
 {
 	FUNCTIONSETUP;
 }
@@ -343,9 +206,8 @@ bool operator < (const db & a, const db & b) {
 	return a.maxblock < b.maxblock;
 }
 
-RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible, 
-	QObject * o) :
-	InteractiveAction(p, visible, o, "restoreAction")
+RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
+	InteractiveAction(p, visible, "restoreAction")
 {
 	FUNCTIONSETUP;
 
@@ -606,6 +468,9 @@ nextFile:
 
 
 // $Log$
+// Revision 1.5  2001/09/30 19:51:56  adridg
+// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
+//
 // Revision 1.4  2001/09/29 16:24:30  adridg
 // Layout + Typos
 //

@@ -28,6 +28,9 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+static const char *kpilotconfigdialog_id = 
+	"$Id: $";
+
 #include "options.h"
 
 #include <qcombobox.h>
@@ -60,6 +63,8 @@ KPilotConfigDialog::KPilotConfigDialog(QWidget * w, const char *n,
 		this, SLOT(changePortType(int)));
 
 	addAboutPage(false);
+
+	(void) kpilotconfigdialog_id;
 }
 
 KPilotConfigDialog::~KPilotConfigDialog()
@@ -191,6 +196,9 @@ void KPilotConfigDialog::setAddressDisplay(int i)
 }
 
 // $Log$
+// Revision 1.4  2001/09/30 19:51:56  adridg
+// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
+//
 // Revision 1.3  2001/09/29 16:26:18  adridg
 // The big layout change
 //

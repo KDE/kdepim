@@ -42,6 +42,10 @@ static const char *test_id =
 #include <klocale.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <kservice.h>
+#include <kservicetype.h>
+#include <kuserprofile.h>
+#include <klibloader.h>
 
 #include "logWidget.h"
 #include "kpilotConfig.h"
@@ -57,30 +61,16 @@ static KCmdLineOptions kpilotoptions[] = {
 	{"test", I18N_NOOP("List DBs (default)"), 0},
 	{"backup", I18N_NOOP("Backup instead of list DBs"), 0},
 	{"restore", I18N_NOOP("Restore Pilot from backup"), 0},
+	{ "list-conduits", I18N_NOOP("List available conduits"), 0},
+	{ "exec-conduit <filename>",
+		I18N_NOOP("Run conduit from desktop file <filename>"),
+		0 },
 	{0, 0, 0}
 };
 
-int main(int argc, char **argv)
+int syncTest(KCmdLineArgs *p)
 {
 	FUNCTIONSETUP;
-	KAboutData about("kpilotTest",
-		I18N_NOOP("KPilotTest"),
-		KPILOT_VERSION,
-		"KPilot Tester",
-		KAboutData::License_GPL, "(C) 2001, Adriaan de Groot");
-	about.addAuthor("Adriaan de Groot",
-		I18N_NOOP("KPilot Maintainer"),
-		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
-
-	KCmdLineArgs::init(argc, argv, &about);
-#ifdef DEBUG
-	KCmdLineArgs::addCmdLineOptions(debug_options, "debug", "debug");
-#endif
-	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilottest", 0L,
-		"debug");
-	KApplication::addCmdLineOptions();
-
-	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
 
 	QString devicePath = p->getOption("port");
 
@@ -92,17 +82,12 @@ int main(int argc, char **argv)
 	KPilotDeviceLink::DeviceType deviceType =
 		KPilotDeviceLink::OldStyleUSB;
 
-	KApplication a;
-
-	KPilotConfig::getDebugLevel(p);
-
-
 	LogWidget *w = new LogWidget(0L);
 
 	w->resize(300, 300);
 	w->show();
 	w->setShowTime(true);
-	a.setMainWidget(w);
+	kapp->setMainWidget(w);
 
 	KPilotDeviceLink *t = KPilotDeviceLink::init(0, "deviceLink");
 	SyncAction *head = 0L;
@@ -141,13 +126,182 @@ int main(int argc, char **argv)
 
 	t->reset(deviceType, devicePath);
 
-	return a.exec();
+	return kapp->exec();
 
 	/* NOTREACHED */
 	(void) test_id;
 }
 
+int listConduits(KCmdLineArgs *p)
+{
+	FUNCTIONSETUP;
+
+	KServiceTypeProfile::OfferList offers =
+		KServiceTypeProfile::offers("KPilotConduit");
+
+	// Now actually fill the two list boxes, just make 
+	// sure that nothing gets listed in both.
+	//
+	//
+	QValueListIterator < KServiceOffer > availList(offers.begin());
+	while (availList != offers.end())
+	{
+		KSharedPtr < KService > o = (*availList).service();
+
+		cout << o->desktopEntryName() << endl;
+		cout << "\t" << o->name()  << endl;
+		if (!o->library().isEmpty())
+		{
+			cout << "\tIn "
+				<< o->library()
+				<< endl;
+		}
+
+		++availList;
+	}
+
+	return 0;
+}
+
+int execConduit(KCmdLineArgs *p)
+{
+	FUNCTIONSETUP;
+
+	// get --exec-conduit value
+	QString s = p->getOption("exec-conduit");
+	if (s.isEmpty()) return 1;
+
+	// query that service
+	KSharedPtr < KService > o = KService::serviceByDesktopName(s);
+	if (!o) return 1;
+
+	// load the lib
+#ifdef DEBUG
+	DEBUGKPILOT << fname
+		<< ": Loading desktop "
+		<< s
+		<< " with lib "
+		<< o->library()
+		<< endl;
+#endif
+
+	KLibFactory *f = KLibLoader::self()->factory(o->library());
+	if (!f)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Can't load library "
+			<< o->library()
+			<< endl;
+		return 1;
+	}
+
+	QString devicePath = p->getOption("port");
+
+	if (devicePath.isEmpty())
+	{
+		devicePath = "/dev/pilot";
+	}
+
+	KPilotDeviceLink::DeviceType deviceType =
+		KPilotDeviceLink::OldStyleUSB;
+
+	LogWidget *w = new LogWidget(0L);
+
+	w->resize(300, 300);
+	w->show();
+	w->setShowTime(true);
+	kapp->setMainWidget(w);
+
+	KPilotDeviceLink *t = KPilotDeviceLink::init(0, "deviceLink");
+	SyncAction *head = 0L;
+
+	QStringList l;
+	l.append("test");
+	QObject *object = f->create(t,0L,"SyncAction",l);
+
+	if (!object)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Can't create SyncAction."
+			<< endl;
+		return 1;
+	}
+
+	head = dynamic_cast<SyncAction *>(object);
+
+	if (!head)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Can't cast to SyncAction."
+			<< endl;
+		return 1;
+	}
+
+	QObject::connect(t, SIGNAL(logError(const QString &)),
+		w, SLOT(addError(const QString &)));
+	QObject::connect(t, SIGNAL(logMessage(const QString &)),
+		w, SLOT(addMessage(const QString &)));
+	QObject::connect(t, SIGNAL(deviceReady()), head, SLOT(exec()));
+	QObject::connect(head, SIGNAL(syncDone(SyncAction *)),
+		w, SLOT(syncDone()));
+	QObject::connect(head, SIGNAL(syncDone(SyncAction *)),
+		t, SLOT(close()));
+
+	t->reset(deviceType, devicePath);
+
+	return kapp->exec();
+}
+
+int main(int argc, char **argv)
+{
+	FUNCTIONSETUP;
+	KAboutData about("kpilotTest",
+		I18N_NOOP("KPilotTest"),
+		KPILOT_VERSION,
+		"KPilot Tester",
+		KAboutData::License_GPL, "(C) 2001, Adriaan de Groot");
+	about.addAuthor("Adriaan de Groot",
+		I18N_NOOP("KPilot Maintainer"),
+		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
+
+	KCmdLineArgs::init(argc, argv, &about);
+#ifdef DEBUG
+	KCmdLineArgs::addCmdLineOptions(debug_options, "debug", "debug");
+#endif
+	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilottest", 0L,
+		"debug");
+	KApplication::addCmdLineOptions();
+
+	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
+
+
+	KApplication a;
+
+	KPilotConfig::getDebugLevel(p);
+
+	if (p->isSet("backup") || p->isSet("restore") || p->isSet("test"))
+	{
+		return syncTest(p);
+	}
+
+	if (p->isSet("list-conduits"))
+	{
+		return listConduits(p);
+	}
+
+	if (p->isSet("exec-conduit"))
+	{
+		return execConduit(p);
+	}
+
+	return 0;
+}
+
+
 // $Log$
+// Revision 1.8  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.7  2001/09/24 22:22:49  adridg
 // Modified to handle new interactive SyncActions
 //

@@ -54,7 +54,8 @@ static const char *hotsync_id =
 
 #include "hotSync.moc"
 
-TestLink::TestLink(KPilotDeviceLink * p) : SyncAction(p, 0, "testLink")
+TestLink::TestLink(KPilotDeviceLink * p) : 
+	SyncAction(p, "testLink")
 {
 	FUNCTIONSETUP;
 
@@ -91,8 +92,8 @@ TestLink::TestLink(KPilotDeviceLink * p) : SyncAction(p, 0, "testLink")
 	emit syncDone(this);
 }
 
-BackupAction::BackupAction(KPilotDeviceLink * p):
-SyncAction(p, 0, "backupAction")
+BackupAction::BackupAction(KPilotDeviceLink * p) :
+	SyncAction(p, "backupAction")
 {
 	FUNCTIONSETUP;
 
@@ -317,7 +318,7 @@ void BackupAction::endBackup()
 FileInstallAction::FileInstallAction(KPilotDeviceLink * p,
 	const QString & d,
 	const QStringList & l) :
-	SyncAction(p, 0, "fileInstall"),
+	SyncAction(p, "fileInstall"),
 	fDir(d), 
 	fList(l), 
 	fDBIndex(-1), 
@@ -1631,6 +1632,9 @@ void CleanupAction::exec()
 
 
 // $Log$
+// Revision 1.9  2001/09/30 19:51:56  adridg
+// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
+//
 // Revision 1.8  2001/09/30 17:11:10  adridg
 // fname unknown with DEBUG turned off
 //

@@ -18,7 +18,7 @@ bin_PROGRAMS = kpilot kpilotDaemon
 
 METASOURCES = AUTO
 
-INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH)
+INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH) -I../lib
 
 ###
 ### On some platforms, such as stock RH 7.1, the KDE libraries are built without
@@ -31,10 +31,10 @@ KDE_CXXFLAGS =-DDEBUG -DDEBUG_CERR -O3
 ### Non-automake variables
 ###
 
-kpilot_SOURCES	= options.cc \
+kpilot_SOURCES	= \
 	pilotDaemonDCOP.stub kpilotDCOP.skel \
 	kpilot.cc kpilotConfig.cc \
-	uiDialog.cc kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
+	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
 	pilotComponent.cc logWidget.cc memoWidget.cc addressWidget.cc \
 	addressEditor.cc \
 	fileInstaller.cc fileInstallWidget.cc \
@@ -42,33 +42,33 @@ kpilot_SOURCES	= options.cc \
 	pilotRecord.cc pilotLocalDatabase.cc pilotAddress.cc pilotMemo.cc
 
 
-kpilotDaemon_SOURCES = options.cc \
+kpilotDaemon_SOURCES = \
 	pilotDaemonDCOP.skel kpilotDCOP.stub \
 	pilotDaemon.cc kpilotConfig.cc \
-	kpilotlink.cc hotSync.cc interactiveSync.cc \
+	hotSync.cc interactiveSync.cc \
 	fileInstaller.cc
 
-kpilotTest_SOURCES = options.cc kpilotConfig.cc kpilotlink.cc \
+kpilotTest_SOURCES = kpilotConfig.cc \
 	logWidget.cc pilotComponent.cc \
 	hotSync.cc interactiveSync.cc main-test.cc
 
-kpilotConfig_SOURCES = options.cc kpilotConfig.cc \
-	uiDialog.cc kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
+kpilotConfig_SOURCES = kpilotConfig.cc \
+	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
 	conduitConfigDialog_base.ui conduitConfigDialog.cc \
 	listCat.cc conduitSetup.cc main-config.cc
 
 
-kpilot_LDFLAGS = $(all_libraries) -L/usr/local/lib -L. $(KDE_RPATH)
-kpilotDaemon_LDFLAGS = $(all_libraries) -L/usr/local/lib -L. $(KDE_RPATH)
-kpilotTest_LDFLAGS = $(all_libraries) -L/usr/local/lib -L. $(KDE_RPATH)
-kpilotConfig_LDFLAGS = $(all_libraries) -L/usr/local/lib -L. $(KDE_RPATH)
+kpilot_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
+kpilotDaemon_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
+kpilotTest_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
+kpilotConfig_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-kpilot_LDADD		= $(LIB_KFILE) $(LIBPISOCK)
-kpilotDaemon_LDADD	= $(LIB_KFILE) $(LIBPISOCK)
-kpilotTest_LDADD	= $(LIB_KDEUI) $(LIBPISOCK)
-kpilotConfig_LDADD      = $(LIB_KFILE)
+kpilot_LDADD		= $(LIB_KFILE) $(LIBPISOCK) -lkpilot
+kpilotDaemon_LDADD	= $(LIB_KFILE) $(LIBPISOCK) -lkpilot
+kpilotTest_LDADD	= $(LIB_KFILE) $(LIBPISOCK) -lkpilot
+kpilotConfig_LDADD      = $(LIB_KFILE) -lkpilot
 
 appsdir = $(kde_appsdir)/Utilities
 servicetypedir = $(kde_servicetypesdir)

@@ -37,7 +37,7 @@ class QTimer;
 #include <qstring.h>
 #include <qstringlist.h>
 
-#include "kpilotlink.h"
+#include "syncAction.h"
 
 class TestLink : public SyncAction
 {
@@ -112,12 +112,15 @@ private:
 class CleanupAction : public SyncAction
 {
 public:
-	CleanupAction(KPilotDeviceLink *p) : SyncAction(p) { } ;
+	CleanupAction(KPilotDeviceLink * p) : SyncAction(p) { } ;
 
 	virtual void exec();
 } ;
 
 // $Log$
+// Revision 1.4  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.3  2001/09/24 22:17:41  adridg
 // () Removed lots of commented out code from previous incarnations.
 // () Added a cleanup action.
