@@ -41,6 +41,7 @@
 
 #include <qstring.h>
 #include <qfile.h>
+#include <assert.h>
 
 using namespace Kolab;
 
