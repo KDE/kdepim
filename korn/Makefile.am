@@ -124,7 +124,7 @@ srcdoc:
 	kdoc -p -u "/~ssk/src/korn/" -n korn -d /home/ssk/web/src/korn *.h \
 		-lqt -lkdeui -lkdecore
 
-messages:
+messages: rc.cpp
 	$(XGETTEXT) *.{h,cpp} -o $(podir)/korn.pot
 
 KDE_ICON = korn
