@@ -4,6 +4,9 @@
 **
 ** This file defines the file install widget, which is the thing
 ** that accepts file drags for later installation into the Pilot.
+**
+** This file also defines the log window widget, which logs
+** sync-messages during a HotSync.
 */
 
 /*
@@ -33,50 +36,51 @@
 #include "pilotComponent.h"
 #endif
 
+class QMultiLineEdit;
+
 class KPilotInstaller;
 class FileInstaller;
 
 class FileInstallWidget : public PilotComponent
-    {
-    Q_OBJECT
-    
-public:
-    FileInstallWidget(QWidget* parent, const QString& dbPath);
-    ~FileInstallWidget() { }
+{
+Q_OBJECT
 
-    // Pilot Component Methods:
-      void initialize();
-      void preHotSync(char* command);
-      void postHotSync();
-    bool saveData();
+public:
+	FileInstallWidget(QWidget* parent, const QString& dbPath);
+	~FileInstallWidget() { }
+
+	// Pilot Component Methods:
+	void initialize();
+	void preHotSync(char* command);
+	void postHotSync();
 
 
 signals:
-    void fileInstallWidgetDone();
+	void fileInstallWidgetDone();
 
 protected:
-    void setSaveFileList(bool saveIt) { fSaveFileList = saveIt; }
-    bool getSaveFileList() { return fSaveFileList; }
-    void dragEnterEvent(QDragEnterEvent* event);
-    void dropEvent(QDropEvent* drop);
+	void setSaveFileList(bool saveIt) { fSaveFileList = saveIt; }
+	bool getSaveFileList() { return fSaveFileList; }
 
-    KPilotInstaller* getPilotInstallerApp() { return fKPilotInstaller; }
+	/* virtual */ void dragEnterEvent(QDragEnterEvent* event);
+	/* virtual */ void dropEvent(QDropEvent* drop);
 
-	// /* virtual */ void resizeEvent(QResizeEvent *);
+	KPilotInstaller* getPilotInstallerApp() { return fKPilotInstaller; }
 
 private:
-    QListBox*   fListBox;
-    bool        fSaveFileList;
+	QListBox*   fListBox;
+	bool        fSaveFileList;
 
-    KPilotInstaller* fKPilotInstaller;
+	KPilotInstaller* fKPilotInstaller;
 	FileInstaller *fInstaller;
 
- protected slots:
-    void slotClearButton();
-    void slotAddFile();
+protected slots:
+	void slotClearButton();
+	void slotAddFile();
+
 public slots:
 	void refreshFileInstallList();
-    };
+};
 
 #else
 #ifdef DEBUG
@@ -86,6 +90,9 @@ public slots:
 
 
 // $Log$
+// Revision 1.13  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.12  2001/04/14 15:21:35  adridg
 // XML GUI and ToolTips
 //

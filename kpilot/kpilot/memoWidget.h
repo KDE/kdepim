@@ -66,7 +66,6 @@ public:
 	void initialize();
 	void preHotSync(char*);
 	void postHotSync();
-	bool saveData();
   
 	typedef enum { 
 		MAX_MEMO_LEN = 8192 
@@ -112,6 +111,9 @@ private:
 
 
 // $Log$
+// Revision 1.14  2001/06/11 07:35:19  adridg
+// Cleanup before the freeze
+//
 // Revision 1.13  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //

@@ -235,17 +235,6 @@ MemoWidget::postHotSync()
 	initialize();
 }
 
-bool
-MemoWidget::saveData()
-{
-	FUNCTIONSETUP;
-	return true;
-#ifdef DEBUG
-	/* NOTREACHED */
-	(void) memowidget_id;
-#endif
-}
-
 
 // void MemoWidget::setupWidget()
 //
@@ -577,6 +566,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.35  2001/08/19 19:12:55  adridg
+// Fixed up some kdWarnings that were generated because connect() was called too soon
+//
 // Revision 1.34  2001/06/13 22:51:38  cschumac
 // Minor fixes reviewed on the mailing list.
 //

@@ -119,9 +119,6 @@ AddressWidget::AddressWidget(QWidget* parent, const QString& path) :
 {
 	FUNCTIONSETUP;
 
-	setGeometry(0, 0, 
-		parent->geometry().width(), 
-		parent->geometry().height());
 	setupWidget();
 	fAddressList.setAutoDelete(true);
 }
@@ -194,25 +191,6 @@ AddressWidget::initialize()
 		appLen = addressDB->readAppBlock(buffer, BUFFERSIZE);
 		unpack_AddressAppInfo(&fAddressAppInfo, buffer, appLen);
 
-		/* GDS: I needed this to learn; will comment out
-		 * once abbrowser-conduit is done
-		qDebug("AddressWidget::initialize() fAddressAppInfo");
-		// GDS: want to understand the fAddressAppInfo structure..
-		int lp=0;
-		for (int lp=0;lp < 19+3;lp++)
-		    qDebug("\tlabel[%d] = %s", lp,
-			   fAddressAppInfo.labels[lp]);
-		for (lp=0;lp < 8;lp++)
-		    qDebug("\tphoneLabels[%d] = %s", lp,
-			   fAddressAppInfo.phoneLabels[lp]);
-
-		qDebug("phoneLabel[entryPhone1] = %s",
-		       fAddressAppInfo.phoneLabels[entryPhone1]);
-		qDebug("phoneLabel[entryPhone2] = %s",
-		       fAddressAppInfo.phoneLabels[entryPhone2]);
-		qDebug("phoneLabel[entryPhone3] = %s",
-		       fAddressAppInfo.phoneLabels[entryPhone3]);
-		*/
 		populateCategories(fCatList,&fAddressAppInfo.category);
 		getAllAddresses(addressDB,config);
 
@@ -242,14 +220,6 @@ AddressWidget::postHotSync()
 
 	fAddressList.clear();
 	initialize();
-}
-
-bool
-AddressWidget::saveData()
-{
-	FUNCTIONSETUP;
-
-	return true;
 }
 
 
@@ -888,21 +858,17 @@ AddressWidget::setFieldBySymbol(PilotAddress* rec, const char* symbol, const cha
 	// 	rec->setField(entryNote, text);
 	else
 	{
-		kdWarning(KPILOT_AREA) << fname
+		kdWarning(KPILOT_AREA) << __FUNCTION__
 			<< ": Unknown field "
 			<< symbol 
 			<< endl;
 	}
 
-#ifdef DEBUG
-	{
-		kdDebug() << fname << ": Set field " 
+	DEBUGKPILOT << fname << ": Set field " 
 			<< symbol
 			<< " to "
 			<< text
 			<< endl;
-	}
-#endif
 }
 
 const char*
@@ -1042,6 +1008,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.36  2001/08/27 22:51:41  adridg
+// MartinJ's beautification of the address viewer
+//
 // Revision 1.35  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //

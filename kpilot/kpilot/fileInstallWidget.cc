@@ -59,14 +59,17 @@ static const char *fileinstallwidget_id="$Id$";
 #ifndef QTOOLTIP_H
 #include <qtooltip.h>
 #endif
+#ifndef QMULTILINEEDIT_H
+#include <qmultilineedit.h>
+#endif
 
 #ifndef _KFILEDIALOG_H
 #include <kfiledialog.h>
 #endif
 
-#ifndef _KPILOT_KPILOTLINK_H
-#include "kpilotlink.h"
-#endif
+// #ifndef _KPILOT_KPILOTLINK_H
+// #include "kpilotlink.h"
+// #endif
 #ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
 #endif
@@ -82,10 +85,6 @@ FileInstallWidget::FileInstallWidget( QWidget* parent,
 	PilotComponent(parent,"component_files",path), 
 	fSaveFileList(false) 
 {
-	setGeometry(0, 0, 
-		parent->geometry().width(), 
-		parent->geometry().height());
-
 	QGridLayout *grid = new QGridLayout(this,5,5,SPACING);
 
 	QLabel* label = new QLabel(i18n("Files To Install:"), this);
@@ -117,14 +116,6 @@ FileInstallWidget::FileInstallWidget( QWidget* parent,
 
 	setAcceptDrops(true);
 }
-
-#if 0
-void FileInstallWidget::resizeEvent( QResizeEvent *e )
-{
-	FUNCTIONSETUP;
-
-}
-#endif
 
 void FileInstallWidget::dragEnterEvent(QDragEnterEvent* event)
 {
@@ -172,27 +163,12 @@ FileInstallWidget::slotAddFile()
 void
 FileInstallWidget::preHotSync(char* command)
 {
-	char buffer[10];
-	KConfig &config = KPilotConfig::getConfig();
-	if(config.readBoolEntry("SyncFiles",false))
-	{
-		sprintf(buffer, "%d\n", KPilotLink::InstallFile);
-		strcat(command, buffer);
-	}
 }
 
 void
 FileInstallWidget::postHotSync()
 {
 	refreshFileInstallList();
-}
-
-bool 
-FileInstallWidget::saveData()
-{
-	return true;
-	/* NOTREACHED */
-	(void) fileinstallwidget_id;
 }
 
 
@@ -205,6 +181,9 @@ FileInstallWidget::refreshFileInstallList()
 
 
 // $Log$
+// Revision 1.17  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.16  2001/04/14 15:21:35  adridg
 // XML GUI and ToolTips
 //

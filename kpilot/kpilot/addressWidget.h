@@ -60,7 +60,6 @@ public:
 	void initialize();
 	void preHotSync(char*);
 	void postHotSync();
-	bool saveData();
 
 public slots:
 	/**
@@ -154,6 +153,9 @@ public:
 
 
 // $Log$
+// Revision 1.16  2001/08/27 22:51:41  adridg
+// MartinJ's beautification of the address viewer
+//
 // Revision 1.15  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //
