@@ -37,7 +37,7 @@ ExtensionConfigDialog::ExtensionConfigDialog( KAB::ExtensionFactory *factory, KC
   QFrame *page = plainPage();
   QGridLayout *layout = new QGridLayout( page, 1, 1, marginHint(), spacingHint() );
 
-  mWidget = factory->configureWidget( page, "ExtensionConfigWidget" );
+  mWidget = (KAB::ConfigureWidget*)factory->configureWidget( page, "ExtensionConfigWidget" );
   layout->addWidget( mWidget, 0, 0 );
 
   mWidget->restoreSettings( mConfig );
