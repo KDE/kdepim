@@ -21,34 +21,34 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "featurebarwidget.h"
+#include "extensionwidget.h"
 
-FeatureBarWidget::FeatureBarWidget( ViewManager *vm, QWidget *parent,
+ExtensionWidget::ExtensionWidget( ViewManager *vm, QWidget *parent,
                                     const char *name )
   : QWidget( parent, name ), mViewManager( vm )
 {
 }
 
-FeatureBarWidget::~FeatureBarWidget()
+ExtensionWidget::~ExtensionWidget()
 {
 }
 
-KABC::AddressBook *FeatureBarWidget::addressBook() const
+KABC::AddressBook *ExtensionWidget::addressBook() const
 {
   return mViewManager->addressBook();
 }
 
-ViewManager *FeatureBarWidget::viewManager() const
+ViewManager *ExtensionWidget::viewManager() const
 {
   return mViewManager;
 }
 
-bool FeatureBarWidget::addresseesSelected() const
+bool ExtensionWidget::addresseesSelected() const
 {
   return mViewManager->selectedUids().count() != 0;
 }
 
-KABC::Addressee::List FeatureBarWidget::selectedAddressees()
+KABC::Addressee::List ExtensionWidget::selectedAddressees()
 {
   KABC::Addressee::List list;
 
@@ -60,19 +60,19 @@ KABC::Addressee::List FeatureBarWidget::selectedAddressees()
   return list;
 }
 
-void FeatureBarWidget::addresseeSelectionChanged()
+void ExtensionWidget::addresseeSelectionChanged()
 {
   // do nothing
 }
 
-QString FeatureBarWidget::title() const
+QString ExtensionWidget::title() const
 {
   return "";
 }
 
-QString FeatureBarWidget::identifier() const
+QString ExtensionWidget::identifier() const
 {
   return "empty_widget";
 }
 
-#include "featurebarwidget.moc"
+#include "extensionwidget.moc"

@@ -43,7 +43,7 @@ AddresseeIconView::AddresseeIconView(QWidget *parent, const char *name)
 {
   setSelectionMode(QIconView::Extended);
   setResizeMode(QIconView::Adjust);
-  setWordWrapIconText(true);
+  setWordWrapIconText( true );
   setGridX( 100 );
   setItemsMovable(false);
   setSorting(true, true);

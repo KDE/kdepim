@@ -85,7 +85,7 @@ class ContactItem : public QListViewItem
 };
 
 DistributionListWidget::DistributionListWidget( ViewManager *vm, QWidget *parent )
-  : FeatureBarWidget( vm, parent ), mManager( 0 )
+  : ExtensionWidget( vm, parent ), mManager( 0 )
 {
   QGridLayout *topLayout = new QGridLayout( this, 3, 4, KDialog::marginHint(),
                                             KDialog::spacingHint() );

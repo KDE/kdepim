@@ -1,10 +1,10 @@
-noinst_LTLIBRARIES = libfeatures.la
+noinst_LTLIBRARIES = libextensions.la
 
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook $(all_includes) 
 
-libfeatures_la_METASOURCES = AUTO
+libextensions_la_METASOURCES = AUTO
 
-libfeatures_la_SOURCES = featurebarwidget.cpp \
+libextensions_la_SOURCES = extensionwidget.cpp \
   distributionlistwidget.cpp \
   locationwidget.cpp
 

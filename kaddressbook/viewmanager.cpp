@@ -63,7 +63,7 @@
 #include "filterselectionwidget.h"
 #include "distributionlistwidget.h"
 #include "locationwidget.h"
-#include "featurebarwidget.h"
+#include "extensionwidget.h"
 
 ViewManager::ViewManager( KABC::AddressBook *ab, KConfig *config,
                           QWidget *parent, const char *name )
@@ -110,12 +110,12 @@ void ViewManager::readConfig()
 
   QValueList<int> splitterSize;
   mConfig->setGroup( "Splitter" );
-  splitterSize = mConfig->readIntListEntry( "FeaturesSplitter" );
+  splitterSize = mConfig->readIntListEntry( "ExtensionsSplitter" );
   if ( splitterSize.count() == 0 ) {
     splitterSize.append( width() / 2 );
     splitterSize.append( width() / 2 );
   }
-  mFeatureBarSplitter->setSizes( splitterSize );
+  mExtensionBarSplitter->setSizes( splitterSize );
 
   splitterSize = mConfig->readIntListEntry( "DetailsSplitter" );
   if ( splitterSize.count() == 0 ) {
@@ -142,7 +142,7 @@ void ViewManager::writeConfig()
   mConfig->writeEntry( "Names", mViewNameList );
 
   mConfig->setGroup( "Splitter" );
-  mConfig->writeEntry( "FeaturesSplitter", mFeatureBarSplitter->sizes() );
+  mConfig->writeEntry( "ExtensionsSplitter", mExtensionBarSplitter->sizes() );
   mConfig->writeEntry( "DetailsSplitter", mDetailsSplitter->sizes() );
 }
 
@@ -437,15 +437,15 @@ void ViewManager::createViewWrappers()
 
 void ViewManager::initGUI()
 {
-  mCurrentFeatureBarWidget = 0;
+  mCurrentExtensionWidget = 0;
 
   QHBoxLayout *l = new QHBoxLayout( this );
   l->setSpacing( KDialogBase::spacingHint() );
 
-  mFeatureBarSplitter = new QSplitter( this );
-  mFeatureBarSplitter->setOrientation( Qt::Vertical );
+  mExtensionBarSplitter = new QSplitter( this );
+  mExtensionBarSplitter->setOrientation( Qt::Vertical );
 
-  mDetailsSplitter = new QSplitter( mFeatureBarSplitter );
+  mDetailsSplitter = new QSplitter( mExtensionBarSplitter );
 
   mViewWidgetStack = new QWidgetStack( mDetailsSplitter );
 
@@ -460,32 +460,32 @@ void ViewManager::initGUI()
            SLOT( jumpToLetter( const QChar& ) ) );
 
   // Setup the feature bar widget.
-  mFeatureBar = new QHBox( mFeatureBarSplitter );
+  mExtensionBar = new QHBox( mExtensionBarSplitter );
 
   /**
     Add all feature bar widgets. In future versions we'll load them
     as plugins.
    */
-  FeatureBarWidget *wdg = new AddresseeEditorWidget( this, mFeatureBar );
+  ExtensionWidget *wdg = new AddresseeEditorWidget( this, mExtensionBar );
   wdg->hide();
   connect( wdg, SIGNAL( modified( KABC::Addressee::List ) ),
-           SLOT( featureBarWidgetModified( KABC::Addressee::List ) ) );
-  mFeatureBarWidgetList.append( wdg );
+           SLOT( extensionWidgetModified( KABC::Addressee::List ) ) );
+  mExtensionWidgetList.append( wdg );
 
-  wdg = new DistributionListWidget( this, mFeatureBar );
+  wdg = new DistributionListWidget( this, mExtensionBar );
   wdg->hide();
   connect( wdg, SIGNAL( modified( KABC::Addressee::List ) ),
-           SLOT( featureBarWidgetModified( KABC::Addressee::List ) ) );
-  mFeatureBarWidgetList.append( wdg );
+           SLOT( extensionWidgetModified( KABC::Addressee::List ) ) );
+  mExtensionWidgetList.append( wdg );
 
-  wdg = new LocationWidget( this, mFeatureBar );
+  wdg = new LocationWidget( this, mExtensionBar );
   wdg->hide();
   connect( wdg, SIGNAL( modified( KABC::Addressee::List ) ),
-           SLOT( featureBarWidgetModified( KABC::Addressee::List ) ) );
-  mFeatureBarWidgetList.append( wdg );
+           SLOT( extensionWidgetModified( KABC::Addressee::List ) ) );
+  mExtensionWidgetList.append( wdg );
 
-  l->addWidget( mFeatureBarSplitter );
-  l->setStretchFactor( mFeatureBarSplitter, 100 );
+  l->addWidget( mExtensionBarSplitter );
+  l->setStretchFactor( mExtensionBarSplitter, 100 );
   l->addWidget( mJumpButtonBar );
   l->setStretchFactor( mJumpButtonBar, 1 );
 }
@@ -511,6 +511,7 @@ void ViewManager::refreshIncrementalSearchCombo()
 void ViewManager::incSearch( const QString& text, int field )
 {
   mCurrentIncSearchField = mIncrementalSearchFields[ field ];
+
   mActiveView->incrementalSearch( text, mCurrentIncSearchField );
 }
 
@@ -537,8 +538,8 @@ void ViewManager::setDetailsVisible( bool visible )
 
 bool ViewManager::isQuickEditVisible()
 {
-  return ( mCurrentFeatureBarWidget &&
-      mCurrentFeatureBarWidget->identifier() == "contact_editor" );
+  return ( mCurrentExtensionWidget &&
+      mCurrentExtensionWidget->identifier() == "contact_editor" );
 }
 
 void ViewManager::dropped( QDropEvent *e )
@@ -614,16 +615,16 @@ void ViewManager::addresseeSelected( const QString &uid )
   KABC::Addressee addr = mAddressBook->findByUid( uid );
   mDetails->setAddressee( addr );
 
-  if ( mCurrentFeatureBarWidget )
-    mCurrentFeatureBarWidget->addresseeSelectionChanged();
+  if ( mCurrentExtensionWidget )
+    mCurrentExtensionWidget->addresseeSelectionChanged();
 }
 
-void ViewManager::featureBarWidgetModified( KABC::Addressee::List list )
+void ViewManager::extensionWidgetModified( KABC::Addressee::List list )
 {
-  if ( mCurrentFeatureBarWidget &&
-                   mCurrentFeatureBarWidget->identifier() == "contact_editor" ) {
+  if ( mCurrentExtensionWidget &&
+                   mCurrentExtensionWidget->identifier() == "contact_editor" ) {
     AddresseeEditorWidget *wdg =
-               static_cast<AddresseeEditorWidget*>( mCurrentFeatureBarWidget );
+               static_cast<AddresseeEditorWidget*>( mCurrentExtensionWidget );
     if ( wdg ) {
       wdg->save();
       mAddressBook->insertAddressee( wdg->addressee() );
@@ -673,29 +674,29 @@ void ViewManager::slotModified()
   modified();
 }
 
-void ViewManager::showFeatureBarWidget( int id )
+void ViewManager::showExtensionWidget( int id )
 {
   if ( id == 0 ) {
-    mFeatureBar->hide();
-    mCurrentFeatureBarWidget = 0;
+    mExtensionBar->hide();
+    mCurrentExtensionWidget = 0;
   } else {
-    if ( mCurrentFeatureBarWidget )
-      mCurrentFeatureBarWidget->hide();
+    if ( mCurrentExtensionWidget )
+      mCurrentExtensionWidget->hide();
 
-    mCurrentFeatureBarWidget = mFeatureBarWidgetList.at( id - 1 );
+    mCurrentExtensionWidget = mExtensionWidgetList.at( id - 1 );
 
-    mFeatureBar->show();
-    mCurrentFeatureBarWidget->show();
+    mExtensionBar->show();
+    mCurrentExtensionWidget->show();
   }
 }
 
-QStringList ViewManager::featureBarWidgetList()
+QStringList ViewManager::extensionWidgetList()
 {
   QStringList list;
   list.append( i18n( "None" ) );
 
-  FeatureBarWidget *wdg = 0;
-  for ( wdg = mFeatureBarWidgetList.first(); wdg; wdg = mFeatureBarWidgetList.next() )
+  ExtensionWidget *wdg = 0;
+  for ( wdg = mExtensionWidgetList.first(); wdg; wdg = mExtensionWidgetList.next() )
     list.append( wdg->title() );
 
   return list;

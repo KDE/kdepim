@@ -25,7 +25,7 @@
 #define LOCATIONWIDGET_H
 
 
-#include "featurebarwidget.h"
+#include "extensionwidget.h"
 
 class KComboBox;
 class KHTMLPart;
@@ -36,7 +36,7 @@ class Address;
 class AddressBook;
 }
 
-class LocationWidget : public FeatureBarWidget
+class LocationWidget : public ExtensionWidget
 {
     Q_OBJECT
 

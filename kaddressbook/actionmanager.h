@@ -157,7 +157,7 @@ class ActionManager : public QObject
     KAction *mActionSave;
     KAction *mActionDeleteView;
     KToggleAction *mActionJumpBar;
-    KSelectAction *mActionFeatures;
+    KSelectAction *mActionExtensions;
     KToggleAction *mActionDetails;
     KSelectAction *mActionSelectFilter;
     KSelectAction *mActionViewList;

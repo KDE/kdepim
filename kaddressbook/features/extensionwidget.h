@@ -21,8 +21,8 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#ifndef FEATUREBARWIDGET_H
-#define FEATUREBARWIDGET_H
+#ifndef EXTENSIONWIDGET_H
+#define EXTENSIONWIDGET_H
 
 #include <qwidget.h>
 
@@ -30,13 +30,13 @@
 
 #include "viewmanager.h"
 
-class FeatureBarWidget : public QWidget
+class ExtensionWidget : public QWidget
 {
   Q_OBJECT
   
   public:
-    FeatureBarWidget( ViewManager *vm, QWidget *parent, const char *name = 0 );
-    ~FeatureBarWidget();
+    ExtensionWidget( ViewManager *vm, QWidget *parent, const char *name = 0 );
+    ~ExtensionWidget();
 
     KABC::AddressBook *addressBook() const;
     /**

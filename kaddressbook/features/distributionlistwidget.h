@@ -27,7 +27,7 @@
 #include <kdialogbase.h>
 #include <klistview.h>
 
-#include "featurebarwidget.h"
+#include "extensionwidget.h"
 
 class QButtonGroup;
 class QComboBox;
@@ -40,7 +40,7 @@ class AddressBook;
 class DistributionListManager;
 }
 
-class DistributionListWidget : public FeatureBarWidget
+class DistributionListWidget : public ExtensionWidget
 {
     Q_OBJECT
 

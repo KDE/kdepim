@@ -61,7 +61,7 @@
 
 AddresseeEditorWidget::AddresseeEditorWidget( ViewManager *vm, QWidget *parent, 
                                               const char *name )
-  : FeatureBarWidget( vm, parent, name )
+  : ExtensionWidget( vm, parent, name )
 {
   kdDebug(5720) << "AddresseeEditorWidget()" << endl;
 

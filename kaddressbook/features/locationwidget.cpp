@@ -39,7 +39,7 @@
 #include "locationwidget.h"
 
 LocationWidget::LocationWidget( ViewManager *vm, QWidget *parent )
-  : FeatureBarWidget( vm, parent )
+  : ExtensionWidget( vm, parent )
 {
   QGridLayout *topLayout = new QGridLayout( this, 3, 2, KDialog::marginHint(),
                                             KDialog::spacingHint() );

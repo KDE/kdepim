@@ -30,7 +30,7 @@
 #include <kdialogbase.h>
 #include <kjanuswidget.h>
 
-#include "featurebarwidget.h"
+#include "extensionwidget.h"
 
 class QCheckBox;
 class QSpinBox;
@@ -54,7 +54,7 @@ namespace KPIM
 
 namespace KABC { class AddressBook; }
 
-class AddresseeEditorWidget : public FeatureBarWidget
+class AddresseeEditorWidget : public ExtensionWidget
 {
   Q_OBJECT
   

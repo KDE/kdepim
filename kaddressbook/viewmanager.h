@@ -47,7 +47,7 @@ namespace KABC { class AddressBook; }
 
 class AddresseeEditorWidget;
 class DistributionListWidget;
-class FeatureBarWidget;
+class ExtensionWidget;
 class JumpButtonBar;
 class KAddressBookView;
 class ViewContainer;
@@ -123,14 +123,15 @@ class ViewManager : public QWidget
     const Filter::List &filters() const;
 
     /**
-      @return The name list of all registered feature bar widgets.
+      @return The name list of all registered extension widgets.
      */
-    QStringList featureBarWidgetList();
+    QStringList extensionWidgetList();
 
     /**
       Returns the address book.
      */
     KABC::AddressBook *addressBook();
+
 
   public slots:
     /**
@@ -229,11 +230,11 @@ class ViewManager : public QWidget
     void slotModified();
 
     /**
-      Show widget of the feature bar.
-      @param id 0: hide feature bar, otherwise the according feature bar
+      Show widget of the extension bar.
+      @param id 0: hide extension bar, otherwise the according extension
                    widget is shown.
      */
-    void showFeatureBarWidget( int id );
+    void showExtensionWidget( int id );
 
   protected slots:
     /**
@@ -268,11 +269,11 @@ class ViewManager : public QWidget
     void addresseeSelected( const QString &uid );
 
     /**
-      Called whenever the currently displayed feature bar widget is modified.
+      Called whenever the currently displayed extension bar widget is modified.
       This method will emit the modified signal and then tell the view to
       refresh.
      */
-    void featureBarWidgetModified( KABC::Addressee::List );
+    void extensionWidgetModified( KABC::Addressee::List );
 
   signals:
     /**
@@ -356,14 +357,14 @@ class ViewManager : public QWidget
     QStringList mViewNameList;
     QWidgetStack *mViewWidgetStack;
 
-    FeatureBarWidget *mCurrentFeatureBarWidget;
+    ExtensionWidget *mCurrentExtensionWidget;
     JumpButtonBar *mJumpButtonBar;
     KAddressBookView *mActiveView;
     ViewContainer *mDetails;
-    QHBox *mFeatureBar;
-    QPtrList<FeatureBarWidget> mFeatureBarWidgetList;
+    QHBox *mExtensionBar;
+    QPtrList<ExtensionWidget> mExtensionWidgetList;
     QSplitter *mDetailsSplitter;
-    QSplitter *mFeatureBarSplitter;
+    QSplitter *mExtensionBarSplitter;
 };
 
 #endif

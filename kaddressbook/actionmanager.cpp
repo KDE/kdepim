@@ -65,7 +65,7 @@ ActionManager::ActionManager( KXMLGUIClient *client, KAddressBook *widget,
   mActiveViewName = config->readEntry( "Active" );
   config->setGroup( "MainWindow" );
   mActionJumpBar->setChecked( config->readBoolEntry( "JumpBar", false ) );
-  mActionFeatures->setCurrentItem( config->readNumEntry( "Features", 0 ) );
+  mActionExtensions->setCurrentItem( config->readNumEntry( "Extensions", 0 ) );
   mActionDetails->setChecked( config->readBoolEntry( "Details", true ) );
 
   // set the defaults
@@ -86,7 +86,7 @@ ActionManager::~ActionManager()
 
   config->setGroup( "MainWindow" );
   config->writeEntry( "JumpBar", mActionJumpBar->isChecked() );
-  config->writeEntry( "Features", mActionFeatures->currentItem() );
+  config->writeEntry( "Extensions", mActionExtensions->currentItem() );
   config->writeEntry( "Details", mActionDetails->isChecked() );
 
   config->sync();
@@ -184,11 +184,11 @@ void ActionManager::initReadOnlyActions()
   }
 
   // settings menu
-  mActionFeatures = new KSelectAction( i18n( "Show Features Bar" ), 0,
-                                       mACollection, "options_show_features" );
-  mActionFeatures->setItems( mViewManager->featureBarWidgetList() );
-  connect( mActionFeatures, SIGNAL( activated( int ) ),
-           mViewManager, SLOT( showFeatureBarWidget( int ) ) );
+  mActionExtensions = new KSelectAction( i18n( "Show Extension Bar" ), 0,
+                                       mACollection, "options_show_extensions" );
+  mActionExtensions->setItems( mViewManager->extensionWidgetList() );
+  connect( mActionExtensions, SIGNAL( activated( int ) ),
+           mViewManager, SLOT( showExtensionWidget( int ) ) );
 
   mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", 0,
                                       this, SLOT( quickToolsAction() ),
@@ -316,7 +316,7 @@ void ActionManager::slotViewSelected()
 void ActionManager::quickToolsAction()
 {
   mViewManager->setJumpButtonBarVisible( mActionJumpBar->isChecked() );
-  mViewManager->showFeatureBarWidget( mActionFeatures->currentItem() );
+  mViewManager->showExtensionWidget( mActionExtensions->currentItem() );
   mViewManager->setDetailsVisible( mActionDetails->isChecked() );
 }
 

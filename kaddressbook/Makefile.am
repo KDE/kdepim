@@ -18,7 +18,7 @@ kde_module_LTLIBRARIES = libkaddressbookpart.la
 libkaddressbookpart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 libkaddressbookpart_la_LIBADD  = $(top_builddir)/libkdepim/libkdepim.la \
 	./details/libdetails.la \
-	./features/libfeatures.la \
+	./features/libextensions.la \
 	./printing/libprinter.la \
 	./views/libviews.la \
 	$(LIB_KPARTS) $(LIB_KHTML) \
