@@ -10,7 +10,9 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces \
           -I$(top_srcdir)/kaddressbook/common \
           -I$(top_srcdir)/kaddressbook/editors \
           -I$(top_builddir)/kaddressbook/common \
-          -I$(top_srcdir) -I$(top_builddir)/libkdepim \
+          -I$(top_srcdir) \
+	  -I$(top_srcdir)/libkdepim \
+	  -I$(top_builddir)/libkdepim \
           -I$(top_buildir)/kaddressbook/editors \
           -I$(top_srcdir)/akregator/src \
           $(all_includes)
