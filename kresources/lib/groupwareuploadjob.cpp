@@ -289,7 +289,7 @@ kdDebug()<<"Found it in the list!"<<endl;
 
 void GroupwareUploadJob::slotItemUploaded( const QString &/*localId*/, const QString &remoteURL )
 {
-  kdDebug(5006) << "GroupwareUploadJob::slotItemUploaded, upload successful: "<< remoteURL << endl;
+  kdDebug() << "GroupwareUploadJob::slotItemUploaded, upload successful: "<< remoteURL << endl;
   const KURL &url( remoteURL );
 
   const QString &remote = url.path();
@@ -327,7 +327,7 @@ kdDebug()<<"Found it in the list!"<<endl;
 
 void GroupwareUploadJob::slotItemUploadedNew( const QString &/*localId*/, const QString &remoteURL )
 {
-  kdDebug(5006) << "GroupwareUploadJob::slotItemUploadedNew, upload successful: "<< remoteURL << endl;
+  kdDebug() << "GroupwareUploadJob::slotItemUploadedNew, upload successful: "<< remoteURL << endl;
   const KURL &url( remoteURL );
 
   const QString &remote = url.path();
