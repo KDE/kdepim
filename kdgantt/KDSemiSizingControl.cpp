@@ -399,3 +399,4 @@ QPixmap KDSemiSizingControl::pixmap( Direction direction ) {
     pix.setMask( bit );
     return pix;
 }
+#include "KDSemiSizingControl.moc"

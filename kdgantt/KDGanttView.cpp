@@ -44,7 +44,7 @@
 #include <qfile.h>
 #include <qheader.h>
 #include <qscrollview.h>
-#include <qapp.h>
+#include <qapplication.h>
 
 #ifndef KDGANTT_MASTER_CVS
 #include "KDGanttView.moc"
@@ -92,7 +92,7 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  ) : KDMinimizeSplit
 
     //connect( myListView, SIGNAL( ), this, SLOT( ) );
     myTimeTable = new KDTimeTableWidget (0,this);
- 
+
     spacerRight = new QWidget(  rightWidget );
     myTimeHeaderScroll = new QScrollView ( rightWidget );
     myTimeHeaderScroll->setHScrollBarMode( QScrollView::AlwaysOff );
@@ -109,7 +109,7 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  ) : KDMinimizeSplit
     setLineWidth( 2 );
     QObject::connect(myListView, SIGNAL (  expanded ( QListViewItem * ) ) , myTimeTable , SLOT( expandItem(QListViewItem * ))) ;
     QObject::connect(myListView, SIGNAL (collapsed ( QListViewItem * ) ) , myTimeTable , SLOT(collapseItem(QListViewItem * ))) ;
-      
+
     listViewIsVisible = true;
     chartIsEditable = true;
     editorIsEnabled = true;
@@ -134,7 +134,7 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  ) : KDMinimizeSplit
     connect(myTimeHeader, SIGNAL ( sizeChanged( int ) ) ,this, SLOT(slotHeaderSizeChanged()  )) ;
     connect(myTimeHeader, SIGNAL ( sizeChanged( int ) ) ,myTimeTable, SLOT(resetWidth( int ) )) ;
     connect(myListView, SIGNAL ( contentsMoving ( int, int ) ) ,myCanvasView, SLOT(  moveMyContent( int, int ))) ;
-   connect(myTimeTable, SIGNAL ( heightComputed ( int ) ) ,myCanvasView, SLOT(  setMyContentsHeight( int ))) ; 
+   connect(myTimeTable, SIGNAL ( heightComputed ( int ) ) ,myCanvasView, SLOT(  setMyContentsHeight( int ))) ;
    // the next three are for adding new ticks at left/right
     connect( myCanvasView->horizontalScrollBar(), SIGNAL (prevLine () ) ,this, SLOT(addTickLeft()));
     connect( myCanvasView->horizontalScrollBar(), SIGNAL (nextLine () ) ,this, SLOT(addTickRight()));
@@ -159,7 +159,7 @@ KDGanttView::~KDGanttView()
   Call setUpdateEnabled( false ) before inserting large amounts of gantt items
   to avoid flickering of the gantt view.
   After inserting, call  setUpdateEnabled( true ) to enable updating.
-  With calling setUpdateEnabled( true ), 
+  With calling setUpdateEnabled( true ),
   all the content is recomputed, resized and updated.
 
   Before calling show() for the first time, update is disabled.
@@ -183,7 +183,7 @@ void KDGanttView::setUpdateEnabled( bool enable )
 */
 void KDGanttView::show()
 {
-  myTimeTable->setBlockUpdating( false ); 
+  myTimeTable->setBlockUpdating( false );
   if (myCanvasView->horizontalScrollBar()->value() > 0 )
     myCanvasView->horizontalScrollBar()->setValue(myCanvasView->horizontalScrollBar()->value()-1  );
   else
@@ -227,7 +227,7 @@ QSize KDGanttView::sizeHint()
   //hintWid += myTimeHeader->mySizeHint+myCanvasView->verticalScrollBar()->width();
   hintWid += myCanvasView->sizeHint().width();
   // add 10 for the splitter-bars
-  // qDebug("sizehint %d %d ",hintWid+10, hintHeight ); 
+  // qDebug("sizehint %d %d ",hintWid+10, hintHeight );
   myTimeTable->setBlockUpdating( block );
   return QSize( hintWid+10, hintHeight );
 }
@@ -252,7 +252,7 @@ void KDGanttView::setShowLegendButton( bool show )
 
 /*!
   Returns whether the legend button is visible.
-  
+
   \return whether the legend button is visible
 */
 bool KDGanttView::showLegendButton() const
@@ -264,7 +264,7 @@ bool KDGanttView::showLegendButton() const
 /*!
   Specifies whether the listview header should be visible. By default,
   it is not visible.
-  
+
   \param visible true to make the header visible, false to make it invisible
 */
 void KDGanttView::setHeaderVisible( bool visible )
@@ -280,7 +280,7 @@ void KDGanttView::setHeaderVisible( bool visible )
 
 /*!
   Returns whether the listview header is be visible.
-  
+
   \return whether the header is visible
 */
 bool KDGanttView::headerVisible() const
@@ -308,7 +308,7 @@ void KDGanttView::slotSelectionChanged( QListViewItem* item )
   Signals itemLeftClicked() , itemMidClicked() are emitted as well.
 */
 void KDGanttView::slotmouseButtonClicked ( int button, QListViewItem * item, const QPoint & pos, int c )
-{ 
+{
   KDGanttViewItem* gItem = static_cast<KDGanttViewItem*>( item );
   emit lvMouseButtonClicked ( button , gItem,  pos,  c );
   emit mouseButtonClicked ( button , gItem,  pos,  c );
@@ -334,7 +334,7 @@ void KDGanttView::slotcontextMenuRequested ( QListViewItem * item, const QPoint 
     KDGanttViewItem* gItem = static_cast<KDGanttViewItem*>( item );
     emit lvContextMenuRequested ( gItem,  pos,  col );
      {
-      emit lvItemRightClicked( gItem );  
+      emit lvItemRightClicked( gItem );
       emit itemRightClicked( gItem );
     }
 }
@@ -343,7 +343,7 @@ void KDGanttView::slotcontextMenuRequested ( QListViewItem * item, const QPoint 
 */
 void KDGanttView::slotdoubleClicked ( QListViewItem * item )
 {
-   { 
+   {
     KDGanttViewItem* gItem = static_cast<KDGanttViewItem*>( item );
     emit lvItemDoubleClicked( gItem );
     emit itemDoubleClicked( gItem );
@@ -875,11 +875,11 @@ void KDGanttView::centerTimeline( const QDateTime& center )
   Makes sure that the specified QDateTime is in the center of the
   visible Gantt chart (if possible).
   If the KDGanttView is currently hidden, this method
-  resets the center one time again, after the next time  show() 
+  resets the center one time again, after the next time  show()
   is called. Use this method, if you want to center the timeline, when
   the KDGanttView is hidden. After calling of KDGanttView::show(), there
-  may be computations of the widgets and subwidgets size and of the 
-  automatically computed startdatetime. This method ensures 
+  may be computations of the widgets and subwidgets size and of the
+  automatically computed startdatetime. This method ensures
   the center of the timeline is to be properly reset after show().
 
   \sa center(), centerTimeline()
@@ -912,8 +912,8 @@ void KDGanttView::setTimelineToEnd()
 /*!
   Add \a num minor ticks of the current scale of the timeline
   to the start of the timeline.
-  The timeline is set not automatically at the start.  
-  Call \a setTimelineToStart() to ensure timeline at start after calling 
+  The timeline is set not automatically at the start.
+  Call \a setTimelineToStart() to ensure timeline at start after calling
   this method.
 
   \param num the number of minor ticks which should be added
@@ -928,7 +928,7 @@ void KDGanttView::addTicksLeft( int num )
   Add \a num minor ticks of the current scale of the timeline
   to the end of the timeline.
   The timeline is set not automatically at the end.
-  Call \a setTimelineToEnd() to ensure timeline at end after calling 
+  Call \a setTimelineToEnd() to ensure timeline at end after calling
   this method.
   \param num the number of minor ticks which should be added
   \sa addTicksLeft(),setTimelineToStart(), setTimelineToEnd()
@@ -1034,7 +1034,7 @@ bool KDGanttView::showHeaderPopupMenu() const
   This menu lets the user quickly add new items to the gantt view
   ( as root, as child or after an item ).
   It offers cut and paste of items to the user as well.
-  
+
   The default setting is, that the popup menu is not shown.
   It must be enabled by the program.
 
@@ -1272,7 +1272,7 @@ QColor KDGanttView::textColor() const
 }
 /*!
   Specifies the brush in which the 'showNoInformation' line of items should be drawn.
- 
+
   \param  brush the brush of the 'showNoInformation' lines
   \sa  KDGanttViewItem::showNoInformation(), KDGanttViewItem::setShowNoInformation(),
   KDGanttView::noInformationBrush()
@@ -1654,7 +1654,7 @@ void KDGanttView::setColumnBackgroundColor( const QDateTime& column,
 /*!
   Sets the background color for a time interval given by \a start and \a end.
   \a start may be later than \a end.
-  If there is already a background interval with same \a start and \a end 
+  If there is already a background interval with same \a start and \a end
   values defined, the values (i.e.  const QColor& color , Scale mini, Scale maxi)
   of this background interval are changed.
   Change the times of an already defined interval with \a changeBackgroundInterval().
@@ -1672,7 +1672,7 @@ void KDGanttView::setColumnBackgroundColor( const QDateTime& column,
   \param color the background color
   \param mini show the colour only in scales greater than this
   \param maxi show the colour only in scales lesser than this
-  \sa changeBackgroundInterval(), deleteBackgroundInterval(), 
+  \sa changeBackgroundInterval(), deleteBackgroundInterval(),
   columnBackgroundColor(), setWeekendBackgroundColor(),
   weekendBackgroundColor()
 */
@@ -1687,7 +1687,7 @@ void KDGanttView::setIntervalBackgroundColor( const QDateTime& start,
 
 /*!
   Change the times of an already defined backgroundcolor interval.
-  The new  values \a startnew and \a endnew must not be datetime 
+  The new  values \a startnew and \a endnew must not be datetime
   values of an already defined backgroundcolor interval!
   If so, nothing is changed and false is returned.
 
@@ -1695,11 +1695,11 @@ void KDGanttView::setIntervalBackgroundColor( const QDateTime& start,
   \param end enddatetime of time interval
   \param newstart the background color
   \param newend show the colour only in scales greater than this
-  \return true, if there is a backgroundcolor interval with values 
-  \a start and \a end found  and the new values \a startnew and \a endnew 
+  \return true, if there is a backgroundcolor interval with values
+  \a start and \a end found  and the new values \a startnew and \a endnew
   are not datetime values of an already defined backgroundcolor interval!
           false otherwise.
-  \sa changeBackgroundInterval(), deleteBackgroundInterval(), 
+  \sa changeBackgroundInterval(), deleteBackgroundInterval(),
   columnBackgroundColor(), setWeekendBackgroundColor(),
   weekendBackgroundColor()
 */
@@ -1717,10 +1717,10 @@ bool KDGanttView::changeBackgroundInterval( const QDateTime& oldstart,
 
 /*!
   Deletes an already defined backgroundcolor interval.
-  
+
   \param start startdatetime of time interval
   \param end enddatetime of time interval
-  \return true, if there is a backgroundcolor interval with values 
+  \return true, if there is a backgroundcolor interval with values
   \a start and \a end found  ( and hence deleted ).
   \sa changeBackgroundInterval(),  columnBackgroundColor()
 */
@@ -3319,7 +3319,7 @@ void KDGanttView::removeTaskLinkGroup(KDGanttViewTaskLinkGroup* group)
 
 void KDGanttView::editItem( KDGanttViewItem*  item)
 {
-  if ( ! item ) 
+  if ( ! item )
     return;
   if ( editorEnabled() ) {
     if ( item->editable() ) {
@@ -3488,14 +3488,14 @@ void KDGanttView::setSelected( KDGanttViewItem* item, bool selected )
 /*!
   Returns the pointer to the gantt item with name \a name.
   If no item found, 0 is returned.
-  If there are more than one item with the same name in the gantt view, 
-  the first item found will be returned. This may not be the first item in 
+  If there are more than one item with the same name in the gantt view,
+  the first item found will be returned. This may not be the first item in
   the listview.
 
   \param the name of the gantt item
   \return the pointer to the item with name \a name. O, if there is no item
   in the gantt view with this name.
-  
+
 */
 KDGanttViewItem* KDGanttView::getItemByName( const QString& name )
 {
@@ -3546,10 +3546,10 @@ int KDGanttView::childCount() const
   Removes all items from the Gantt view.
 */
 void KDGanttView::clear()
-{ 
+{
   bool block = myTimeTable->blockUpdating();
   myTimeTable->setBlockUpdating( true );
-  myListView->clear(); 
+  myListView->clear();
   myTimeTable->setBlockUpdating( block );
   myTimeTable->updateMyContent();
 }

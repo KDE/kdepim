@@ -139,3 +139,4 @@ void KDSizingControl::changeState()
   to change stretching for the widget. See the example
   test/semisizingcontrol
 */
+#include "KDSizingControl.moc"
