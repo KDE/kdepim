@@ -51,7 +51,7 @@ class VCalFormat : public CalFormat
 
       @param calendar Calendar object the loaded data is stored into.
       @param fileName Name of the vCalendar file on disk.
-      @return true on success, otherwise false  
+      @return true on success, otherwise false
     */
     bool load( Calendar *calendar, const QString &fileName );
     /**
@@ -59,19 +59,19 @@ class VCalFormat : public CalFormat
 
       @param calendar Calendar object holding data to be written
       @param fileName the name of the file
-      @return true on success, otherwise false  
+      @return true on success, otherwise false
     */
-    bool save(Calendar *,const QString &fileName);
-  
+    bool save(Calendar *calendar, const QString &fileName);
+
     /**
       Parse string and populate calendar with that information.
     */
-    bool fromString( Calendar *, const QString & );  
+    bool fromString( Calendar *, const QString & );
     /**
       Return calendar information as string.
     */
     QString toString( Calendar * );
-    
+
   protected:
     /** translates a VObject of the TODO type into a Event */
     Todo *VTodoToEvent(VObject *vtodo);
@@ -86,16 +86,16 @@ class VCalFormat : public CalFormat
     QString qDateToISO(const QDate &);
     /** takes a QDateTime and returns a string in format YYYYMMDDTHHMMSS */
     QString qDateTimeToISO(const QDateTime &, bool zulu=TRUE);
-    /** takes a string in the format YYYYMMDDTHHMMSS and returns a 
+    /** takes a string in the format YYYYMMDDTHHMMSS and returns a
      * valid QDateTime. */
     QDateTime ISOToQDateTime(const QString & dtStr);
-    /** takes a string in the format YYYYMMDD and returns a 
+    /** takes a string in the format YYYYMMDD and returns a
      * valid QDate. */
     QDate ISOToQDate(const QString & dtStr);
     /** takes a vCalendar tree of VObjects, and puts all of them that have
      * the "event" property into the dictionary, todos in the todo-list, etc. */
     void populate(VObject *vcal);
-  
+
     /** takes a number 0 - 6 and returns the two letter string of that day,
       * i.e. MO, TU, WE, etc. */
     const char *dayFromNum(int day);
@@ -104,10 +104,10 @@ class VCalFormat : public CalFormat
 
     Attendee::PartStat readStatus(const char *s) const;
     QCString writeStatus(Attendee::PartStat status) const;
-  
+
   private:
     Calendar *mCalendar;
-  
+
     Event::List mEventsRelate;           // events with relations
     Todo::List mTodosRelate;             // todos with relations
 

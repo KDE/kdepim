@@ -99,7 +99,7 @@ class Todo : public Incidence
     /**
       Set if the todo has a start date.
 
-      @param hasDueDate true if todo has a start date, otherwise false
+      @param hasStartDate true if todo has a start date, otherwise false
     */
     void setHasStartDate( bool hasStartDate );
 
@@ -127,6 +127,8 @@ class Todo : public Incidence
     QString dtStartTimeStr( bool first = false ) const;
     /** Returns an todo's starting date as a string formatted according to the
      users locale settings.
+     @param shortfmt If true, use short date format, if set to false use
+     long format.
      @param first If true, the startdate of the todo will be returned. If the
      todo recurs, the startdate of the first occurence will be returned.
      If false and the todo recurs, the relative startdate will be returned,

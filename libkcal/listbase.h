@@ -26,10 +26,10 @@
 namespace KCal {
 
 /**
-  This class provides a template for lists of pointers. It extends QValueList<T
-  *> by auto delete funtionality known from QPtrList.
+  This class provides a template for lists of pointers.
+  It extends QValueList<T *> by auto delete funtionality known from QPtrList.
 */
-template<class T> 
+template<class T>
 class ListBase : public QValueList<T *>
 {
   public:

@@ -180,9 +180,10 @@ class IncidenceBase : public CustomProperties
       Add Attendee to this incidence. IncidenceBase takes ownership of the
       Attendee object.
 
+      @param attendee a pointer to the attendee to add
       @param doUpdate If true the Observers are notified, if false they are not.
     */
-    void addAttendee( Attendee *a, bool doUpdate = true );
+    void addAttendee( Attendee *attendee, bool doUpdate = true );
     /**
       Remove all Attendees.
     */

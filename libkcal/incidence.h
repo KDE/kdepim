@@ -106,7 +106,7 @@ class Incidence : public IncidenceBase
       @param readonly If true, the incidence is set to readonly, if false the
                       incidence is set to readwrite.
     */
-    void setReadOnly( bool );
+    void setReadOnly( bool readonly );
 
     /**
       Recreate event. The event is made a new unique event, but already stored
