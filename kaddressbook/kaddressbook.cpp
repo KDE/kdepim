@@ -25,7 +25,6 @@
 #include <kabc/stdaddressbook.h>
 #include <kabc/distributionlisteditor.h>
 #include <kabc/distributionlist.h>
-#include <kabc/vcard21parser.h>
 #include <kabc/field.h>
 #include <kabc/resourceselectdialog.h>
 
