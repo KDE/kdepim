@@ -297,6 +297,9 @@ void KAddressBookCardView::incrementalSearch(const QString &value,
   {
     mCardView->setSelected(item, true);
     mCardView->ensureItemVisible(item);
+  } else {
+    for ( item = mCardView->firstItem(); item; item = item->nextItem() )
+      mCardView->setSelected( item, false );
   }
 }
 
