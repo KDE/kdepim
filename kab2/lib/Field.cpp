@@ -28,25 +28,23 @@ Field::Field()
 
 Field::Field(const QDomElement & e)
 {
-  name_ = e.attribute("name");
+  name_ = e.tagName();
 
-  QString mt(e.attribute("mimetype"));
+  // TODO: Get type and subtype from addressbook format.
 
-  if (!mt.isEmpty())
+  if
+    (
+     (type_.isEmpty()     || (type_ == "text")      ) &&
+     (subType_.isEmpty()  || (subType_ == "UCS-2")  )
+    )
   {
-    int sep = mt.find('/');
-
-    if (-1 == sep)
-      type_ = mt;
-
-    else
-    {
-      type_ = mt.left(sep);
-      subType_ = mt.mid(sep + 1);
-    }
+    QDataStream str(value_, IO_WriteOnly);
+    str << e.text();
   }
-
+  else
+  {
 //  value_ = decode it !
+  }
 }
 
 Field::Field(const QString & name)

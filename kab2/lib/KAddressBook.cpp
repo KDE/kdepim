@@ -281,21 +281,19 @@ KAddressBook::_readEntry(const QString & id)
 
   QDomElement docElem = doc.documentElement();
 
-  QDomElement e = docElem.firstChild().toElement();
-
-  if (e.isNull())
+  if (docElem.isNull())
   {
     qDebug("Can't parse file `" + filename + "'");
     return 0;
   }
 
-  if (e.tagName() != "kab:entry")
+  if (docElem.tagName() != "kab:entry")
   {
     qDebug("Can't parse file `" + filename + "'");
     return 0;
   }
 
-  return new Entry(e);
+  return new Entry(docElem);
 }
 
   bool

@@ -46,7 +46,7 @@ Entry::Entry(const QDomElement & e)
     {
       if (child.tagName() == "kab:child-list")
       {
-        QDomNode n2 = child;
+        QDomNode n2 = child.firstChild();
 
         while (!n2.isNull())
         {
@@ -55,6 +55,8 @@ Entry::Entry(const QDomElement & e)
           if (!child2.isNull())
             if (child2.tagName() == "kab:child")
               memberList_.append(child2.nodeValue());
+
+          n2 = n2.nextSibling();
         }
       }
       else
@@ -62,6 +64,8 @@ Entry::Entry(const QDomElement & e)
         fieldList_.append(Field(child));
       }
     }
+
+    n = n.nextSibling();
   }
 }
 

@@ -114,9 +114,9 @@ main(int argc, char ** argv)
 
     Entry e;
 
-    e.addField(Field("User", user));
-    e.addField(Field("Name", name));
-    e.addField(Field("Mail", mail));
+    e.addField(Field("username", user));
+    e.addField(Field("name", name));
+    e.addField(Field("email", mail));
 
     ab->insert(e);
   }
