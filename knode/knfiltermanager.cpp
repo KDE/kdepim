@@ -44,75 +44,25 @@
 
 
 KNFilterSelectAction::KNFilterSelectAction( const QString& text, const QString& pix,
-                                            int accel, QObject* parent, const char* name )
- : KAction(text,pix,accel,parent,name), currentItem(-42)
+                                            QObject* parent, char *name )
+ : KActionMenu(text,pix,parent,name), currentItem(-42)
 {
-  p_opup = new KPopupMenu;
-  p_opup->setCheckable(true);
-  connect(p_opup,SIGNAL(activated(int)),this,SLOT(slotMenuActivated(int)));
+  popupMenu()->setCheckable(true);
+  connect(popupMenu(),SIGNAL(activated(int)),this,SLOT(slotMenuActivated(int)));
+  setDelayed(false);
 }
 
 
 
 KNFilterSelectAction::~KNFilterSelectAction()
 {
-  delete p_opup;
 }
-
-
-
-int KNFilterSelectAction::plug(QWidget* widget, int index)
-{
-  if ( widget->inherits("QPopupMenu") ) {
-    QPopupMenu* menu = static_cast<QPopupMenu*>( widget );
-    int id;
-    if ( hasIconSet() )
-      id = menu->insertItem( iconSet(), text(), p_opup, -1, index );
-    else
-      id = menu->insertItem( text(), p_opup, -1, index );
-
-    menu->setItemEnabled( id, isEnabled() );
-    menu->setWhatsThis( id, whatsThis() );
-
-    addContainer( menu, id );
-    connect( menu, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );
-    return containerCount() - 1;
-  }
-  else if ( widget->inherits("KToolBar"))  {
-    KToolBar *bar = static_cast<KToolBar *>( widget );
-
-    int id_ = getToolButtonID();
-    bar->insertButton( icon(), id_, isEnabled(), plainText(), index);
-
-    KToolBarButton *btn = bar->getButton(id_);
-    btn->setPopup(p_opup);
-
-    QWhatsThis::add( btn, whatsThis() );
-    addContainer( bar, id_ );
-
-    connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );
-
-    return containerCount() - 1;
-  }
-
-  kdDebug(5003) << "Can not plug KFilterSelectAction in " << widget->className() << endl;
-  return -1;
-}
-
-
 
 void KNFilterSelectAction::setCurrentItem(int id)
 {
-  p_opup->setItemChecked(currentItem, false);
-  p_opup->setItemChecked(id, true);
+  popupMenu()->setItemChecked(currentItem, false);
+  popupMenu()->setItemChecked(id, true);
   currentItem = id;
-}
-
-
-void KNFilterSelectAction::setEnabled(bool b)
-{
-  p_opup->hide();
-  KAction::setEnabled(b);
 }
 
 
@@ -133,7 +83,7 @@ KNFilterManager::KNFilterManager(KActionCollection* actColl, QObject * parent, c
 {
   fList.setAutoDelete(true);
 
-  actFilter = new KNFilterSelectAction(i18n("&Filter"), "filter", 0 , actionCollection, "view_Filter");
+  actFilter = new KNFilterSelectAction(i18n("&Filter"), "filter", actionCollection, "view_Filter");
   connect(actFilter, SIGNAL(activated(int)), this,  SLOT(slotMenuActivated(int)));
   actFilter->setEnabled(false);
 
@@ -145,7 +95,6 @@ KNFilterManager::KNFilterManager(KActionCollection* actColl, QObject * parent, c
 
 KNFilterManager::~KNFilterManager()
 {
-  actFilter->unplugAll();
 }
 
 

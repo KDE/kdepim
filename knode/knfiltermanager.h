@@ -28,21 +28,16 @@ class KNArticleFilter;
 class KNFilterDialog;
 
 
-class KNFilterSelectAction : public KAction
+class KNFilterSelectAction : public KActionMenu
 {
   Q_OBJECT
 
   public:
     KNFilterSelectAction( const QString& text, const QString& pix,
-                          int accel, QObject* parent, const char* name );
+                          QObject* parent, char *name );
     ~KNFilterSelectAction();
 
-    virtual int plug( QWidget* widget, int index = -1 );
-
-    KPopupMenu* popupMenu()    { return p_opup; }
     void setCurrentItem(int id);
-
-    void setEnabled(bool b);
 
   protected slots:
     void slotMenuActivated(int id);
@@ -51,7 +46,6 @@ class KNFilterSelectAction : public KAction
     void activated(int id);
 
   private:
-    KPopupMenu *p_opup;
     int currentItem;
 };
 
