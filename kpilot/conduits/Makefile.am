@@ -6,10 +6,8 @@
 ### installed on user systems.
 ###
 SUBDIRS = knotes \
-	expense
+	expense \
+	abbrowserconduit
 
 #	vcalconduit \
 #	popmail \
-#	knotes \
-#	expense \
-#	abbrowserconduit

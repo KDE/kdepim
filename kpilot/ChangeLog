@@ -1,3 +1,32 @@
+KPilot Developer's notes for december 16th 2001
+===============================================
+
+Worked on some conduits for danimo, who has UI updates. So more conduits
+compile now, but I haven't tested them. However, they do get installed
+if you do make install, and they may eat your Pilot, you Buick, or New York
+when run. USE EXTREME CAUTION.
+
+I think the NULL conduit is safe, though :)
+
+Abbrowser Conduit: it compiles, and it has but a setup dialog and a 
+sync part which has not been tested at all.
+
+* Makefile.am
+  - Fixed up includes, removed old PISOCK_INCLUDE.
+* abbrowser-conduit.cc
+  - Changed kdDebug() to DEBUGCONDUIT, applied indent style, #ifdef DEBUGs
+  - Replaced static QString objects by const char * (KConfig keys)
+  - Removed old files
+  - Assume FirstTime is always *true*, this is at least partly broken,
+    but it makes the conduit compile at least.
+
+And in other news, little bugfixes and other neat stuff sometimes shows up
+in my mailbox. Martin Junius is a long-time contributor, and he's volunteered
+(again) to make new KPilot rpms for RH 7.2 once the system is stable again.
+
+* kpilot/addressWidget.cc
+  setupWidget() - Martin Junius found a display bug and sent a patch.
+
 KPilot Developer's notes for december 2nd 2001
 ===============================================
 

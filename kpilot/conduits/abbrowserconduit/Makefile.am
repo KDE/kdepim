@@ -1,5 +1,8 @@
-INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH) -I$(top_srcdir)/kpilot/lib 
+### Makefile for the abbrowser / kabc conduit
+###
+### The abbrowser conduit is Copyright (C) 2001 by Greg Stern
 
+INCLUDES= $(all_includes) -I$(top_srcdir)/kpilot/lib 
 METASOURCES = AUTO
 
 servicedir = $(kde_servicesdir)
@@ -15,11 +18,11 @@ libabbrowserconduit_la_SOURCES = \
 	abbrowser-conduit.cc \
 	abbrowserConduitConfig_base.ui \
 	deconflictDialog_base.ui
-
-
 libabbrowserconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
 libabbrowserconduit_la_LIBADD = ../../lib/libkpilot.la
-libabbrowserconduit_la_CFLAGS = -DDEBUG -DDEBUG_CERR
+# You may want to enable debugging like this on systems with broken kdelibs
+#
+# libabbrowserconduit_la_CFLAGS = -DDEBUG -DDEBUG_CERR
 
 testkab_SOURCES = testkabapi.cpp
 testkab_LDFLAGS = $(all_libraries) $(KDE_RPATH)
