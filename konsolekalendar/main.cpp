@@ -110,6 +110,7 @@ static KCmdLineOptions options[] =
 
 int main(int argc, char *argv[])
 {
+  KLocale::setMainCatalogue("konsolekalendar");
 
   KAboutData aboutData(
       progName,                        // internal program name
