@@ -24,6 +24,7 @@
 #include <klineedit.h>
 #include <kstatusbar.h>
 #include <kcombobox.h>
+#include <kstandarddirs.h>
 
 // Qt
 #include <qtextedit.h>
@@ -172,15 +173,15 @@ CertManager::CertManager( bool remote, const QString& query,
   // Import from file
   KAction* importCRLFromFile = new KAction( i18n("CRL..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
                                             actionCollection(), "importCRLFromFile" );
-  QStringList lst;
-  lst << "dirmngr" << "-h";
-  importCRLFromFile->setEnabled( checkExec( lst ) );
+
+   QString dirmngr = KStandardDirs::findExe( "dirmngr" );
+   bool dirMngrFound = !dirmngr.isEmpty();
+   importCRLFromFile->setEnabled( dirMngrFound );
 
   // View CRLs
   KAction* viewCRLs = new KAction( i18n("CRL Cache..."), QIconSet(), 0, this, SLOT( slotViewCRLs() ),
 				   actionCollection(), "viewCRLs");
-  viewCRLs->setEnabled( importCRLFromFile->isEnabled() ); // we also need dirmngr for this
-  
+  viewCRLs->setEnabled( dirMngrFound ); // we also need dirmngr for this
 
   // Toolbar
   _toolbar = toolBar( "mainToolBar" );
@@ -191,7 +192,7 @@ CertManager::CertManager( bool remote, const QString& query,
 				  "query_lineedit_action");
   _leAction->plug( _toolbar );
 
-  lst.clear();
+  QStringList lst;
   lst << i18n("in local certificates") << i18n("in external certificates");
   _comboAction = new ComboAction( lst, actionCollection(), this, SLOT( slotToggleRemote(int) ), 
 		       "location_combo_action");
