@@ -121,9 +121,6 @@ them when they become due.</para>
 <chapter id="using-kalarm">
 <title>Using &kalarm;</title>
 
-<sect1 id="graphmode">
-<title>Graphical mode</title>
-
 <para>When it is run with no command line parameters, &kalarm; starts
 in graphical mode, and displays the current list of outstanding
 alarms.</para>
@@ -135,9 +132,16 @@ already running, &kalarm; starts it.</para>
 <tip><para>All spin boxes in &kalarm; have an acceleration facility.
 To make the value change by larger steps, hold down the
 <keycap>Shift</keycap> key while you click on the spin arrow
-buttons.</para></tip>
+buttons.</para>
 
-<sect2>
+<mediaobject>
+<imageobject>
+<imagedata fileref="spinbox.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+</tip>
+
+<sect1 id="alarm-list">
 <title>Alarm list</title>
 
 <para>The main &kalarm; window displays the current list of pending
@@ -185,13 +189,16 @@ always shown.</para>
 Alarms</guimenuitem></menuchoice>. To hide them again, repeat the
 action.</para>
 
-</sect2>
+</sect1>
+
+<sect1 id="create-edit">
+<title>Creating and manipulating alarms</title>
 
 <sect2>
-<title>Adding a new alarm</title>
+<title>Creating a new alarm</title>
 
-<para>To add a new alarm, do one of the following. This displays the
-alarm edit dialog which is described in the
+<para>To create a new alarm, do one of the following. This displays
+the alarm edit dialog which is described in the
 <link linkend="edit-alarm">next section</link>.</para>
 
 <itemizedlist>
@@ -230,7 +237,8 @@ various sources:</para>
 
 <itemizedlist>
 <listitem>
-<para>To base your new alarm on an alarm template, display the alarm
+<para>To base your new alarm on an
+<link linkend="templates">alarm template</link>, display the alarm
 edit dialog as described above, and then click
 <guibutton>Load Template</guibutton>. Select a template from the list
 which appears and click <guibutton>OK</guibutton>. The alarm edit
@@ -769,186 +777,6 @@ defined in the <guilabel>Alarm Text</guilabel> group box.</para>
 </itemizedlist>
 
 </sect2>
-
-<sect2>
-<title>Displaying &kalarm; in the system tray</title>
-
-<para>You must be running the &kde; desktop in order to display
-&kalarm; in the system tray. If &kalarm; is running in
-<quote>continuous</quote> mode, the system tray icon is always
-displayed. These instructions apply only to <quote>on-demand</quote>
-mode. (See <link linkend="preferences">Configuring &kalarm;</link>
-for a description of run modes.)</para>
-
-<para>To display &kalarm; in the &kde; system tray, select <menuchoice>
-<guimenu>View</guimenu><guimenuitem>Show in System Tray</guimenuitem>
-</menuchoice>.</para>
-
-<para>To remove &kalarm; from the &kde; system tray, do one of the
-following:</para>
-
-<itemizedlist>
-<listitem>
-<para>Select <menuchoice><guimenu>View</guimenu>
-<guimenuitem>Hide from System Tray</guimenuitem></menuchoice>.</para>
-</listitem>
-
-<listitem>
-<para><mousebutton>Right</mousebutton> click on the system tray icon
-and choose <menuchoice><guimenuitem>Quit</guimenuitem></menuchoice>
-from the context menu.</para>
-</listitem>
-</itemizedlist>
-
-<para>Use of the system tray icon is described
-<link linkend="system-tray">below</link>.</para>
-
-</sect2>
-
-<sect2 id="enable-disable">
-<title>Enabling/disabling alarm monitoring</title>
-
-<sect3>
-<title>Enabling alarm monitoring</title>
-
-<para>First, if &kalarm;'s run mode is <quote>continuous</quote> and
-you have selected <guilabel>Disable alarms while not
-running</guilabel> in the Preferences dialog, you must ensure that
-&kalarm; is running in order for alarm monitoring to take
-place.</para>
-
-<para>Then if alarm monitoring is currently disabled, do one of the
-following:</para>
-
-<itemizedlist>
-<listitem>
-<para>Select <menuchoice><guimenu>Actions</guimenu>
-<guimenuitem>Enable Alarms</guimenuitem></menuchoice>.</para>
-</listitem>
-
-<listitem>
-<para><mousebutton>Right</mousebutton> click on the system tray icon
-and choose
-<menuchoice><guimenuitem>Enable Alarms</guimenuitem></menuchoice>
-from the context menu.</para>
-</listitem>
-</itemizedlist>
-
-<para>The <application>alarm daemon</application> is started if
-necessary and alarms will be monitored for when they become due.</para>
-
-<warning><para>Starting the <application>alarm daemon</application>
-will affect any other applications which use the <application>alarm
-daemon</application>.</para></warning>
-
-</sect3>
-
-<sect3>
-<title>Disabling alarm monitoring</title>
-
-<para>There are several ways to disable alarm monitoring, which
-prevents &kalarm; from displaying any further alarms either until you
-re-enable alarms, or - assuming that the <application>alarm
-daemon</application> is configured to start at login - until the next
-time you log in.</para>
-
-<para>To disable alarms without stopping the <application>alarm
-daemon</application> (and therefore without affecting any other
-applications which use the <application>alarm daemon</application>),
-do one of the following:</para>
-
-<itemizedlist>
-<listitem>
-<para>Select <menuchoice><guimenu>Actions</guimenu>
-<guimenuitem>Alarms Enabled</guimenuitem></menuchoice>.</para>
-</listitem>
-
-<listitem>
-<para><mousebutton>Right</mousebutton> click on the system tray icon
-and choose
-<menuchoice><guimenuitem>Alarms Enabled</guimenuitem></menuchoice>
-from the context menu.</para>
-</listitem>
-
-<listitem>
-<para>If &kalarm;'s run mode is <quote>continuous</quote> and you have
-selected <guilabel>Disable alarms while not running</guilabel> in the
-Preferences dialog, quit &kalarm;.</para>
-</listitem>
-</itemizedlist>
-
-<para>To disable alarms by stopping the <application>alarm
-daemon</application>:</para>
-
-<itemizedlist>
-<listitem>
-<para>Select <menuchoice><guimenu>Settings</guimenu>
-<guimenuitem>Control Alarm Daemon...</guimenuitem></menuchoice>. This
-displays the Service Manager dialog which enables you to stop the
-<application>alarm daemon</application>.</para>
-</listitem>
-</itemizedlist>
-
-<warning><para>This will affect any other applications which use the
-<application>alarm daemon</application>.</para></warning>
-
-</sect3>
-</sect2>
-
-<sect2>
-<title>Refreshing alarms</title>
-
-<para>If in the unlikely event that any alarm was not triggered when
-it should have been, you can refresh the alarm list and trigger any
-missed alarms by selecting
-<menuchoice>
-<guimenu>Actions</guimenu><guimenuitem>Refresh Alarms</guimenuitem>
-</menuchoice>.</para>
-
-<para>&kalarm; retriggers missed alarms by resetting the
-<application>alarm daemon</application>, which is discussed in the
-<link linkend="daemon-reset">Alarm daemon</link> section.</para>
-
-</sect2>
-
-<sect2>
-<title>Controlling the <application>alarm daemon</application></title>
-
-<para>To control the <application>alarm daemon</application>, select
-<menuchoice><guimenu>Settings</guimenu> <guimenuitem>Control Alarm
-Daemon...</guimenuitem></menuchoice>. This displays the Service
-Manager dialog which allows you to stop or start the
-<application>alarm daemon</application> and configure whether it runs
-automatically at login. See
-<link linkend="daemon-control">Controlling the alarm daemon with the
-Service Manager</link> for details.</para>
-
-</sect2>
-
-<sect2>
-<title>Quitting the program</title>
-
-<para>Quit &kalarm; by closing all its windows and the system tray
-icon, or if it is running in <quote>continuous</quote> mode, by
-closing any message windows and selecting
-<menuchoice><guimenuitem>Quit</guimenuitem></menuchoice> in the
-system tray icon context menu.</para>
-
-<para><menuchoice><guimenu>File</guimenu><guimenuitem>Quit</guimenuitem>
-</menuchoice> closes only the window concerned. The effect of the
-system tray icon context menu item
-<menuchoice><guimenuitem>Quit</guimenuitem></menuchoice> depends on
-the run mode: in <quote>on-demand</quote> mode it hides the system
-tray icon, while in <quote>continuous</quote> mode it quits the
-program.</para>
-
-<tip><para>If you have deselected <guilabel>Disable alarms while not
-running</guilabel> in the Preferences dialog, quitting &kalarm; has no
-effect on the <application>alarm daemon</application> which if
-already active will continue to monitor scheduled alarms and request
-their display when they become due.</para></tip>
-
-</sect2>
 </sect1>
 
 <sect1 id="message-window">
@@ -1026,7 +854,7 @@ titlebar, so you cannot move it.</para>
 </sect1>
 
 <sect1 id="system-tray">
-<title>System tray icon</title>
+<title>System tray operation</title>
 
 <para>&kalarm; may be run as an icon in the &kde; system tray. This
 icon allows one-click activation of &kalarm;, and provides both
@@ -1116,464 +944,186 @@ while not running</guilabel> in the Preferences dialog.</para>
 </varlistentry>
 </variablelist>
 
-</sect1>
+<sect2>
+<title>Displaying &kalarm; in the system tray</title>
 
-<sect1 id="cmdline-operation">
-<title>Command line operation</title>
+<para>You must be running the &kde; desktop in order to display
+&kalarm; in the system tray. If &kalarm; is running in
+<quote>continuous</quote> mode, the system tray icon is always
+displayed. These instructions apply only to <quote>on-demand</quote>
+mode. (See <link linkend="preferences">Configuring &kalarm;</link>
+for a description of run modes.)</para>
 
-<para>When command line parameters are supplied, &kalarm; does not
-display the list of scheduled alarms as described in <link
-linkend="graphmode">Graphical mode</link> above. Command line options
-specific to &kalarm; may be used to perform the following
-operations:</para>
+<para>To display &kalarm; in the &kde; system tray, select <menuchoice>
+<guimenu>View</guimenu><guimenuitem>Show in System Tray</guimenuitem>
+</menuchoice>.</para>
+
+<para>To remove &kalarm; from the &kde; system tray, do one of the
+following:</para>
 
 <itemizedlist>
-<listitem><para>schedule a new alarm</para>
+<listitem>
+<para>Select <menuchoice><guimenu>View</guimenu>
+<guimenuitem>Hide from System Tray</guimenuitem></menuchoice>.</para>
 </listitem>
-<listitem><para>control the <application>alarm daemon</application></para>
-</listitem>
-<listitem><para>control &kalarm;'s display mode</para>
-</listitem>
-<listitem><para>obtain help</para>
+
+<listitem>
+<para><mousebutton>Right</mousebutton> click on the system tray icon
+and choose <menuchoice><guimenuitem>Quit</guimenuitem></menuchoice>
+from the context menu.</para>
 </listitem>
 </itemizedlist>
 
-<para>Additional command line options are provided primarily to enable
-other programs to interface to &kalarm;. They are described in the
-chapter <link linkend="cmdline-interface">Developer's Guide to
-&kalarm;</link>.</para>
+<para>Use of the system tray icon is described
+<link linkend="system-tray">below</link>.</para>
 
-<para>The command line must only contain options applicable to one
-&kalarm; operation. If you want to perform multiple operations, you
-must invoke &kalarm; multiple times with a single set of options each
-time.</para>
+</sect2>
+</sect1>
 
-<sect2 id="cmdline-schedule">
-<title>Schedule a new alarm</title>
+<sect1 id="refreshing">
+<title>Refreshing alarms</title>
 
-<para>The following options are used to schedule a new alarm:</para>
+<para>If in the unlikely event that any alarm was not triggered when
+it should have been, you can refresh the alarm list and trigger any
+missed alarms by selecting
+<menuchoice>
+<guimenu>Actions</guimenu><guimenuitem>Refresh Alarms</guimenuitem>
+</menuchoice>.</para>
 
-<informaltable>
-<tgroup cols="2">
-<thead>
-<row>
-  <entry>Option</entry>
-  <entry>Description</entry>
-</row>
-</thead>
-<tbody>
-<row>
-  <entry><option>-a</option>, <option>--ack-confirm</option></entry>
-  <entry>Prompt for confirmation when the alarm message is
-  acknowledged.</entry>
-</row>
-<row>
-  <entry><option>-A</option>, <option>--attach <replaceable>URL</replaceable></option></entry>
-  <entry>Specify the name or &URL; of a file which is to be attached
-  to the email. This option may be repeated as necessary.
-  <option>--mail</option> must be specified with this option.</entry>
-</row>
-<row>
-  <entry><option>-b</option>, <option>--beep</option></entry>
-  <entry>Make an audible beep when the message is displayed.
-  <option>--play</option> and <option>--play-repeat</option> cannot
-  be specified with this option.</entry>
-</row>
-<row>
-  <entry><option>--bcc</option></entry>
-  <entry>Blind copy the email to yourself.
-  <option>--mail</option> must be specified with this option.</entry>
-</row>
-<row>
-  <entry><option>-c</option>, <option>--color</option>, <option>--colour
-  <replaceable>color</replaceable></option></entry>
-  <entry>Set the message background color to the specified &Qt;
-  color name or hex code 0xRRGGBB.</entry>
-</row>
-<row>
-  <entry><option>-C</option>, <option>--colorfg</option>, <option>--colourfg
-  <replaceable>color</replaceable></option></entry>
-  <entry>Set the message foreground color to the specified &Qt;
-  color name or hex code 0xRRGGBB.</entry>
-</row>
-<row>
-  <entry><option>-e</option>, <option>--exec <replaceable>commandline</replaceable></option></entry>
-  <entry>Specify a shell command to execute. If specified, this option
-  must be the last &kalarm; option in &kalarm;'s command line. All
-  subsequent command parameters and options  are interpreted as
-  forming the command line to execute. <option>--file</option> and
-  <option>--mail</option> cannot be specified with this option.
-  <option>--ack-confirm</option>, <option>--beep</option>,
-  <option>--color</option> and <option>--colorfg</option> are ignored
-  with this option.</entry>
-</row>
-<row>
-  <entry><option>-f</option>, <option>--file <replaceable>URL</replaceable></option></entry>
-  <entry>Specify the name or &URL; of a text or image file whose
-  contents are to form the alarm message. <option>--exec</option> and
-  <option>--mail</option> cannot be specified, and
-  <replaceable>message</replaceable> must not be present with this
-  option.</entry>
-</row>
-<row>
-  <entry><option>-i</option>, <option>--interval
-  <replaceable>period</replaceable></option></entry>
-  <entry>Set the interval between repetitions of the alarm.
-  Hours/minutes are specified in the format
-  <replaceable>nHnM</replaceable>, where <replaceable>n</replaceable>
-  is a number, &eg; 3H30M. Other time periods are specified in the
-  format <replaceable>nX</replaceable>, where
-  <replaceable>n</replaceable> is a number and
-  <replaceable>X</replaceable> is one of the following letters: Y
-  (years), M (months), W (weeks), D (days).
-  Mandatory if <option>--repeat</option> or <option>--until</option>
-  is specified. <option>--recurrence</option> cannot be specified with
-  this option.</entry>
-</row>
-<row>
-  <entry><option>-l</option>, <option>--late-cancel</option></entry>
-  <entry>Cancel the alarm if it cannot be triggered at the correct
-  time.</entry>
-</row>
-<row>
-  <entry><option>-L</option>, <option>--login</option></entry>
-  <entry>Trigger the alarm every time you log in.
-  <option>--interval</option>, <option>--repeat</option> and
-  <option>--until</option> cannot be specified with this
-  option.</entry>
-</row>
-<row>
-  <entry><option>-m</option>, <option>--mail
-  <replaceable>address</replaceable></option></entry>
-  <entry>Send an email to the specified address. This option may be
-  repeated as necessary.  <option>--exec</option> and
-  <option>--file</option> cannot be specified with this option.
-  <option>--ack-confirm</option>, <option>--beep</option>,
-  <option>--color</option> and <option>--colorfg</option> are ignored
-  with this option.</entry>
-</row>
-<row>
-  <entry><option>-p</option>, <option>--play <replaceable>URL</replaceable></option></entry>
-  <entry>Specify the name or &URL; of an audio file to be played once
-  when the alarm message is displayed. 
-  <option>--play-repeat</option> and <option>--beep</option> cannot be
-  specified with this option.</entry>
-</row>
-<row>
-  <entry><option>-P</option>, <option>--play-repeat <replaceable>URL</replaceable></option></entry>
-  <entry>Specify the name or &URL; of an audio file to be played
-  repeatedly for as long as the alarm message is displayed.
-  <option>--play</option> and <option>--beep</option> cannot be
-  specified with this option.</entry>
-</row>
-<row>
-  <entry><option>--recurrence
-  <replaceable>spec</replaceable></option></entry>
-  <entry>Set the alarm to recur. Specify the recurrence using iCalendar
-  syntax (defined in RFC2445),
-  &eg; <quote>FREQ=MONTHLY;COUNT=4;INTERVAL=3;BYDAY=-1MO</quote>.
-  <option>--repeat</option>, <option>--interval</option>, and
-  <option>--until</option> cannot be specified with this
-  option.</entry>
-</row>
-<row>
-  <entry><option>-r</option>, <option>--repeat
-  <replaceable>count</replaceable></option></entry>
-  <entry>Set the number of times the alarm should be triggered. Specify
-  -1 to repeat the alarm indefinitely. <option>--interval</option>
-  must be, and <option>--until</option> and
-  <option>--recurrence</option> cannot be, specified with this
-  option.</entry>
-</row>
-<row>
-  <entry><option>-R</option>, <option>--reminder
-  <replaceable>period</replaceable></option></entry>
-  <entry>Output a reminder alarm the specified length of time before
-  the main alarm and each of its recurrences (if any). Hours/minutes are
-  specified in the format <replaceable>nHnM</replaceable>, where
-  <replaceable>n</replaceable> is a number, &eg; 3H30M. Other time
-  periods are specified in the format <replaceable>nX</replaceable>,
-  where <replaceable>n</replaceable> is a number and
-  <replaceable>X</replaceable> is one of the following letters: W
-  (weeks), D (days). This option cannot be specified with
-  <option>--exec</option> or <option>--mail</option>.</entry>
-</row>
-<row>
-  <entry><option>-S</option>, <option>--subject
-  <replaceable>subject</replaceable></option></entry>
-  <entry>The subject line of the email. <option>--mail</option> must
-  be specified with this option.</entry>
-</row>
-<row>
-  <entry><option>-t</option>, <option>--time
-  <replaceable>date/time</replaceable></option></entry>
-  <entry>Trigger alarm on the date or at the date/time specified.
-  Specify a date without a time in the format
-  <replaceable>yyyy-mm-dd</replaceable>; specify a date and time by
-  <replaceable>[[[yyyy-]mm-]dd-]hh:mm</replaceable> (where omitted,
-  date fields default to the values for today).</entry>
-</row>
-<row>
-  <entry><option>-u</option>, <option>--until
-  <replaceable>date/time</replaceable></option></entry>
-  <entry>Repeat the alarm until the date or date/time specified.
-  Specify a date without a time in the same format as for
-  <option>--time</option>. <option>--interval</option> must be, and
-  <option>--repeat</option> and <option>--recurrence</option> cannot
-  be, specified with this option.</entry>
-</row>
-<row>
-  <entry><replaceable>message</replaceable></entry>
-  <entry>Message text to display or, if <option>--mail</option> is
-  specified, the body of the email message.</entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable>
+<para>&kalarm; retriggers missed alarms by resetting the
+<application>alarm daemon</application>, which is discussed in the
+<link linkend="daemon-reset">Alarm daemon</link> section.</para>
 
-<para>Either a message text, <option>--file</option> or
-<option>--exec</option> must be specified; except as noted above, all
-the options are optional.</para>
+</sect1>
 
-<para>Two alternative examples which display a multi-line message with
-a red background at 10 p.m. on the 27th of this month are:</para>
+<sect1 id="enable-disable">
+<title>Enabling/disabling alarm monitoring</title>
 
-<informalexample><screen>
-<prompt>%</prompt> <userinput><command>kalarm</command> <option>-c <replaceable>red</replaceable></option> <option>-t <replaceable>27-22:00</replaceable></option> <option><replaceable>"Remember to\nSTOP"</replaceable></option></userinput>
-<prompt>%</prompt> <userinput><command>kalarm</command> <option>-c <replaceable>0xFF0000</replaceable></option> <option>-t <replaceable>27-22:00</replaceable></option> <option><replaceable>"Remember to\nSTOP"</replaceable></option></userinput>
-</screen>
-</informalexample>
+<sect2>
+<title>Enabling alarm monitoring</title>
+
+<para>First, if &kalarm;'s run mode is <quote>continuous</quote> and
+you have selected <guilabel>Disable alarms while not
+running</guilabel> in the Preferences dialog, you must ensure that
+&kalarm; is running in order for alarm monitoring to take
+place.</para>
+
+<para>Then if alarm monitoring is currently disabled, do one of the
+following:</para>
+
+<itemizedlist>
+<listitem>
+<para>Select <menuchoice><guimenu>Actions</guimenu>
+<guimenuitem>Enable Alarms</guimenuitem></menuchoice>.</para>
+</listitem>
+
+<listitem>
+<para><mousebutton>Right</mousebutton> click on the system tray icon
+and choose
+<menuchoice><guimenuitem>Enable Alarms</guimenuitem></menuchoice>
+from the context menu.</para>
+</listitem>
+</itemizedlist>
+
+<para>The <application>alarm daemon</application> is started if
+necessary and alarms will be monitored for when they become due.</para>
+
+<warning><para>Starting the <application>alarm daemon</application>
+will affect any other applications which use the <application>alarm
+daemon</application>.</para></warning>
 
 </sect2>
 
 <sect2>
-<title>Other options</title>
+<title>Disabling alarm monitoring</title>
 
-<para>The following options are used to reset or halt the
-<application>alarm daemon</application>, or to control &kalarm;'s
-display mode.</para>
+<para>There are several ways to disable alarm monitoring, which
+prevents &kalarm; from displaying any further alarms either until you
+re-enable alarms, or - assuming that the <application>alarm
+daemon</application> is configured to start at login - until the next
+time you log in.</para>
 
-<para>See the <link linkend="daemon-reset">Alarm daemon</link> section
-for a discussion about resetting and stopping the <application>alarm
-daemon</application>.</para>
+<para>To disable alarms without stopping the <application>alarm
+daemon</application> (and therefore without affecting any other
+applications which use the <application>alarm daemon</application>),
+do one of the following:</para>
 
-<informaltable>
-<tgroup cols="2">
-<thead>
-<row>
-  <entry>Option</entry>
-  <entry>Description</entry>
-</row>
-</thead>
-<tbody>
-<row>
-  <entry><option>--reset</option></entry>
-  <entry>Reset the <application>alarm daemon</application>.</entry>
-</row>
-<row>
-  <entry><option>--stop</option></entry>
-  <entry>Stop the <application>alarm daemon</application>.</entry>
-</row>
-<row>
-  <entry><option>--tray</option></entry>
-  <entry>Display &kalarm; as an icon in the &kde; system tray.</entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable>
+<itemizedlist>
+<listitem>
+<para>Select <menuchoice><guimenu>Actions</guimenu>
+<guimenuitem>Alarms Enabled</guimenuitem></menuchoice>.</para>
+</listitem>
 
-<para>For example, to reset the <application>alarm
+<listitem>
+<para><mousebutton>Right</mousebutton> click on the system tray icon
+and choose
+<menuchoice><guimenuitem>Alarms Enabled</guimenuitem></menuchoice>
+from the context menu.</para>
+</listitem>
+
+<listitem>
+<para>If &kalarm;'s run mode is <quote>continuous</quote> and you have
+selected <guilabel>Disable alarms while not running</guilabel> in the
+Preferences dialog, quit &kalarm;.</para>
+</listitem>
+</itemizedlist>
+
+<para>To disable alarms by stopping the <application>alarm
 daemon</application>:</para>
 
-<informalexample><screen>
-<prompt>%</prompt> <userinput><command>kalarm</command> <option>--reset</option></userinput>
-</screen>
-</informalexample>
+<itemizedlist>
+<listitem>
+<para>Select <menuchoice><guimenu>Settings</guimenu>
+<guimenuitem>Control Alarm Daemon...</guimenuitem></menuchoice>. This
+displays the Service Manager dialog which enables you to stop the
+<application>alarm daemon</application>.</para>
+</listitem>
+</itemizedlist>
 
-</sect2>
-
-<sect2>
-<title>Help options</title>
-
-<para>The following help options are common to all &kde;
-programs:</para>
-
-<informaltable>
-<tgroup cols="2">
-<thead>
-<row>
-  <entry>Option</entry>
-  <entry>Description</entry>
-</row>
-</thead>
-<tbody>
-<row>
-  <entry><option>--help</option></entry>
-  <entry>Shows a brief options help text.</entry>
-</row>
-<row>
-  <entry><option>--help-qt</option></entry>
-  <entry>Shows numerous generic &Qt;-specific options.</entry>
-</row>
-<row>
-  <entry><option>--help-kde</option></entry>
-  <entry>Shows numerous generic &kde;-specific options.</entry>
-</row>
-<row>
-  <entry><option>--help-all</option></entry>
-  <entry>Shows all options.</entry>
-</row>
-<row>
-  <entry><option>--author</option></entry>
-  <entry>Shows the names and email addresses of &kalarm; authors.</entry>
-</row>
-<row>
-  <entry><option>-v</option>, <option>--version</option></entry>
-  <entry>Shows the running versions of the &Qt; library , &kde; and
-  &kalarm;.</entry>
-</row>
-<row>
-  <entry><option>--license</option></entry>
-  <entry>Show license information.</entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable>
+<warning><para>This will affect any other applications which use the
+<application>alarm daemon</application>.</para></warning>
 
 </sect2>
 </sect1>
 
-<sect1 id="daemon">
-<title>Alarm daemon</title>
+<sect1 id="using-daemon">
+<title>Controlling the <application>alarm daemon</application></title>
 
-<para>The <application>alarm daemon</application>, &kalarmd;, monitors
-&kalarm;'s calendar file for alarms becoming due. When it determines
-that an alarm is due, it tells &kalarm; to display or execute it, or
-to cancel it if it is late and late trigger was not selected for that
-alarm.</para>
-
-<para>Under &kde;3, the <application>alarm daemon</application> may
-also be used by other applications, including KOrganizer.</para>
-
-<para>The <application>alarm daemon</application> runs in the
-background, with no user interface. It may be controlled as described
-below.</para>
-
-<sect2>
-<title>Starting, resetting and stopping the <application>alarm daemon</application></title>
-
-<para>The <application>alarm daemon</application> is normally started
-at &kde; session login (unless you use the Service Manager dialog to
-disable auto start), and runs continuously until logout. If for any
-reason it is not running, alarm monitoring will not occur and &kalarm;
-will not display or execute any alarms.</para>
-
-<sect3>
-<title>Starting the <application>alarm daemon</application></title>
-
-<para>To start the <application>alarm daemon</application>, you can
-either run &kalarm; in its default graphical mode (&ie; without any
-command line parameters), enable alarms using &kalarm;'s system tray
-icon menu, reset the daemon as described
-<link linkend="daemon-reset">below</link>, start it using the
-Service Manager dialog (see <link linkend="daemon-control">Controlling
-the alarm daemon with the Service Manager</link>)
-or you can run the <application>alarm daemon</application> directly
-from the command line:</para>
-
-<screen width="40">
-<prompt>%</prompt> <userinput><command>kalarmd</command></userinput>
-</screen>
-
-</sect3>
-
-<sect3 id="daemon-reset">
-<title>Resetting the <application>alarm daemon</application></title>
-
-<para>It is also possible to reset the <application>alarm
-daemon</application> without stopping it. Resetting causes the
-<application>alarm daemon</application> to re-read the list of
-scheduled messages from the calendar file and re-initialize its
-&kalarm;-related data.</para>
-
-<para>Why might you want to reset the <application>alarm
-daemon</application>? It isn't a very likely occurrence, but if for
-any reason &kalarm; was not able to run when the <application>alarm
-daemon</application> told it to trigger an alarm, that alarm will
-never be displayed or executed until the <application>alarm
-daemon</application> is either reset or restarted. Resetting is
-preferable to stopping the <application>alarm daemon</application> and
-restarting it, since resetting the daemon will not affect any other
-applications which use the <application>alarm daemon</application>.</para>
-
-<tip><para>Resetting starts the <application>alarm
-daemon</application> if it is not currently running.</para></tip>
-
-<para>To reset the <application>alarm daemon</application>, either use
-the menu command <menuchoice>
-<guimenu>Actions</guimenu><guimenuitem>Refresh Alarms</guimenuitem>
-</menuchoice> or type the following command:</para>
-
-<screen width="40">
-<prompt>%</prompt> <userinput><command>kalarm</command> <option>--reset</option></userinput>
-</screen>
-
-</sect3>
-
-<sect3>
-<title>Stopping the <application>alarm daemon</application></title>
-
-<para>Stopping the <application>alarm daemon</application> will
-prevent any further monitoring of scheduled alarm messages until the
-daemon is restarted.</para>
-
-<warning><para>Stopping it will affect the functioning of any other
-applications which also use the <application>alarm
-daemon</application>. Consider resetting the daemon
-instead.</para></warning>
-
-<para>To stop the <application>alarm daemon</application>,
-either use the Service Manager dialog (see
+<para>To control the <application>alarm daemon</application>, select
+<menuchoice><guimenu>Settings</guimenu> <guimenuitem>Control Alarm
+Daemon...</guimenuitem></menuchoice>. This displays the Service
+Manager dialog which allows you to stop or start the
+<application>alarm daemon</application> and configure whether it runs
+automatically at login. See
 <link linkend="daemon-control">Controlling the alarm daemon with the
-Service Manager</link>), or type the following command:</para>
+Service Manager</link> for details.</para>
 
-<screen width="40">
-<prompt>%</prompt> <userinput><command>kalarm</command> <option>--stop</option></userinput>
-</screen>
-</sect3>
+</sect1>
 
-</sect2>
+<sect1 id="quitting">
+<title>Quitting the program</title>
 
-<sect2 id="daemon-control">
-<title>Controlling the <application>alarm daemon</application> with the Service Manager</title>
+<para>Quit &kalarm; by closing all its windows and the system tray
+icon, or if it is running in <quote>continuous</quote> mode, by
+closing any message windows and selecting <menuchoice>
+<guimenu>File</guimenu><guimenuitem>Quit</guimenuitem></menuchoice>,
+or <menuchoice><guimenuitem>Quit</guimenuitem></menuchoice> in the
+system tray icon context menu.</para>
 
-<para>The Service Manager dialog allows you to configure and control
-the <application>alarm daemon</application>. You can:</para>
+<para>The effect of <menuchoice><guimenu>File</guimenu>
+<guimenuitem>Quit</guimenuitem></menuchoice> or of the system tray
+icon context menu item
+<menuchoice><guimenuitem>Quit</guimenuitem></menuchoice> depends on
+the run mode: in <quote>on-demand</quote> mode it hides the system
+tray icon, while in <quote>continuous</quote> mode it quits the
+program.</para>
 
-<itemizedlist>
-<listitem>
-<para>Configure whether it runs automatically at login.</para>
-<warning><para>If neither the <application>alarm daemon</application>
-nor &kalarm; is configured to run at login, alarm monitoring will not
-occur and &kalarm; will not display or execute any
-alarms.</para></warning>
-</listitem>
+<tip><para>If you have deselected <guilabel>Disable alarms while not
+running</guilabel> in the Preferences dialog, quitting &kalarm; has no
+effect on the <application>alarm daemon</application> which if
+already active will continue to monitor scheduled alarms and request
+their display when they become due.</para></tip>
 
-<listitem>
-<para>Stop and start the <application>alarm
-daemon</application>.</para>
-<warning><para>Starting or stopping the <application>alarm
-daemon</application> will affect any other applications which use the
-<application>alarm daemon</application>.</para></warning>
-</listitem>
-</itemizedlist>
-
-<para>The Service Manager dialog can be accessed either via the menu
-option <menuchoice><guimenu>Settings</guimenu> <guimenuitem>Control
-Alarm Daemon...</guimenuitem></menuchoice>, or via the &kde; Control
-Center.</para>
-
-</sect2>
 </sect1>
 </chapter>
 
@@ -1922,10 +1472,9 @@ late</guilabel>, <guilabel>Confirm acknowledgment</guilabel> and
 <guilabel>Copy email to self</guilabel> checkboxes.</para>
 </listitem>
 
-<listitem><para>Set the default <guilabel>Beep</guilabel> or sound
-file options. Note that a default sound file may be specified even if
-<guilabel>Sound</guilabel> is unchecked or <guilabel>Beep</guilabel>
-is checked.</para>
+<listitem><para>Set the default sound options. Note that a default
+sound file may be specified even if <guilabel>Sound</guilabel> is
+unchecked or <guilabel>Beep</guilabel> is checked.</para>
 </listitem>
 
 <listitem><para>Set the default recurrence type.</para>
@@ -1937,6 +1486,464 @@ is checked.</para>
 </itemizedlist>
 </sect1>
 
+</chapter>
+
+<chapter id="cmdline-operation">
+<title>Command line operation</title>
+
+<para>When command line parameters are supplied, &kalarm; does not
+display the list of scheduled alarms as described in <link
+linkend="using-kalarm">Using &kalarm;</link> above. Command line
+options specific to &kalarm; may be used to perform the following
+operations:</para>
+
+<itemizedlist>
+<listitem><para>schedule a new alarm</para>
+</listitem>
+<listitem><para>control the <application>alarm daemon</application></para>
+</listitem>
+<listitem><para>control &kalarm;'s display mode</para>
+</listitem>
+<listitem><para>obtain help</para>
+</listitem>
+</itemizedlist>
+
+<para>Additional command line options are provided primarily to enable
+other programs to interface to &kalarm;. They are described in the
+chapter <link linkend="cmdline-interface">Developer's Guide to
+&kalarm;</link>.</para>
+
+<para>The command line must only contain options applicable to one
+&kalarm; operation. If you want to perform multiple operations, you
+must invoke &kalarm; multiple times with a single set of options each
+time.</para>
+
+<sect1 id="cmdline-schedule">
+<title>Schedule a new alarm</title>
+
+<para>The following options are used to schedule a new alarm:</para>
+
+<informaltable>
+<tgroup cols="2">
+<thead>
+<row>
+  <entry>Option</entry>
+  <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry><option>-a</option>, <option>--ack-confirm</option></entry>
+  <entry>Prompt for confirmation when the alarm message is
+  acknowledged.</entry>
+</row>
+<row>
+  <entry><option>-A</option>, <option>--attach <replaceable>URL</replaceable></option></entry>
+  <entry>Specify the name or &URL; of a file which is to be attached
+  to the email. This option may be repeated as necessary.
+  <option>--mail</option> must be specified with this option.</entry>
+</row>
+<row>
+  <entry><option>-b</option>, <option>--beep</option></entry>
+  <entry>Make an audible beep when the message is displayed.
+  <option>--play</option> and <option>--play-repeat</option> cannot
+  be specified with this option.</entry>
+</row>
+<row>
+  <entry><option>--bcc</option></entry>
+  <entry>Blind copy the email to yourself.
+  <option>--mail</option> must be specified with this option.</entry>
+</row>
+<row>
+  <entry><option>-c</option>, <option>--color</option>, <option>--colour
+  <replaceable>color</replaceable></option></entry>
+  <entry>Set the message background color to the specified &Qt;
+  color name or hex code 0xRRGGBB.</entry>
+</row>
+<row>
+  <entry><option>-C</option>, <option>--colorfg</option>, <option>--colourfg
+  <replaceable>color</replaceable></option></entry>
+  <entry>Set the message foreground color to the specified &Qt;
+  color name or hex code 0xRRGGBB.</entry>
+</row>
+<row>
+  <entry><option>-e</option>, <option>--exec <replaceable>commandline</replaceable></option></entry>
+  <entry>Specify a shell command to execute. If specified, this option
+  must be the last &kalarm; option in &kalarm;'s command line. All
+  subsequent command parameters and options  are interpreted as
+  forming the command line to execute. <option>--file</option> and
+  <option>--mail</option> cannot be specified with this option.
+  <option>--ack-confirm</option>, <option>--beep</option>,
+  <option>--color</option> and <option>--colorfg</option> are ignored
+  with this option.</entry>
+</row>
+<row>
+  <entry><option>-f</option>, <option>--file <replaceable>URL</replaceable></option></entry>
+  <entry>Specify the name or &URL; of a text or image file whose
+  contents are to form the alarm message. <option>--exec</option> and
+  <option>--mail</option> cannot be specified, and
+  <replaceable>message</replaceable> must not be present with this
+  option.</entry>
+</row>
+<row>
+  <entry><option>-i</option>, <option>--interval
+  <replaceable>period</replaceable></option></entry>
+  <entry>Set the interval between repetitions of the alarm.
+  Hours/minutes are specified in the format
+  <replaceable>nHnM</replaceable>, where <replaceable>n</replaceable>
+  is a number, &eg; 3H30M. Other time periods are specified in the
+  format <replaceable>nX</replaceable>, where
+  <replaceable>n</replaceable> is a number and
+  <replaceable>X</replaceable> is one of the following letters: Y
+  (years), M (months), W (weeks), D (days).
+  Mandatory if <option>--repeat</option> or <option>--until</option>
+  is specified. <option>--recurrence</option> cannot be specified with
+  this option.</entry>
+</row>
+<row>
+  <entry><option>-l</option>, <option>--late-cancel</option></entry>
+  <entry>Cancel the alarm if it cannot be triggered at the correct
+  time.</entry>
+</row>
+<row>
+  <entry><option>-L</option>, <option>--login</option></entry>
+  <entry>Trigger the alarm every time you log in.
+  <option>--interval</option>, <option>--repeat</option> and
+  <option>--until</option> cannot be specified with this
+  option.</entry>
+</row>
+<row>
+  <entry><option>-m</option>, <option>--mail
+  <replaceable>address</replaceable></option></entry>
+  <entry>Send an email to the specified address. This option may be
+  repeated as necessary.  <option>--exec</option> and
+  <option>--file</option> cannot be specified with this option.
+  <option>--ack-confirm</option>, <option>--beep</option>,
+  <option>--color</option> and <option>--colorfg</option> are ignored
+  with this option.</entry>
+</row>
+<row>
+  <entry><option>-p</option>, <option>--play <replaceable>URL</replaceable></option></entry>
+  <entry>Specify the name or &URL; of an audio file to be played once
+  when the alarm message is displayed. 
+  <option>--play-repeat</option> and <option>--beep</option> cannot be
+  specified with this option.</entry>
+</row>
+<row>
+  <entry><option>-P</option>, <option>--play-repeat <replaceable>URL</replaceable></option></entry>
+  <entry>Specify the name or &URL; of an audio file to be played
+  repeatedly for as long as the alarm message is displayed.
+  <option>--play</option> and <option>--beep</option> cannot be
+  specified with this option.</entry>
+</row>
+<row>
+  <entry><option>--recurrence
+  <replaceable>spec</replaceable></option></entry>
+  <entry>Set the alarm to recur. Specify the recurrence using iCalendar
+  syntax (defined in RFC2445),
+  &eg; <quote>FREQ=MONTHLY;COUNT=4;INTERVAL=3;BYDAY=-1MO</quote>.
+  <option>--repeat</option>, <option>--interval</option>, and
+  <option>--until</option> cannot be specified with this
+  option.</entry>
+</row>
+<row>
+  <entry><option>-r</option>, <option>--repeat
+  <replaceable>count</replaceable></option></entry>
+  <entry>Set the number of times the alarm should be triggered. Specify
+  -1 to repeat the alarm indefinitely. <option>--interval</option>
+  must be, and <option>--until</option> and
+  <option>--recurrence</option> cannot be, specified with this
+  option.</entry>
+</row>
+<row>
+  <entry><option>-R</option>, <option>--reminder
+  <replaceable>period</replaceable></option></entry>
+  <entry>Output a reminder alarm the specified length of time before
+  the main alarm and each of its recurrences (if any). Hours/minutes are
+  specified in the format <replaceable>nHnM</replaceable>, where
+  <replaceable>n</replaceable> is a number, &eg; 3H30M. Other time
+  periods are specified in the format <replaceable>nX</replaceable>,
+  where <replaceable>n</replaceable> is a number and
+  <replaceable>X</replaceable> is one of the following letters: W
+  (weeks), D (days). This option cannot be specified with
+  <option>--exec</option> or <option>--mail</option>.</entry>
+</row>
+<row>
+  <entry><option>-S</option>, <option>--subject
+  <replaceable>subject</replaceable></option></entry>
+  <entry>The subject line of the email. <option>--mail</option> must
+  be specified with this option.</entry>
+</row>
+<row>
+  <entry><option>-t</option>, <option>--time
+  <replaceable>date/time</replaceable></option></entry>
+  <entry>Trigger alarm on the date or at the date/time specified.
+  Specify a date without a time in the format
+  <replaceable>yyyy-mm-dd</replaceable>; specify a date and time by
+  <replaceable>[[[yyyy-]mm-]dd-]hh:mm</replaceable> (where omitted,
+  date fields default to the values for today).</entry>
+</row>
+<row>
+  <entry><option>-u</option>, <option>--until
+  <replaceable>date/time</replaceable></option></entry>
+  <entry>Repeat the alarm until the date or date/time specified.
+  Specify a date without a time in the same format as for
+  <option>--time</option>. <option>--interval</option> must be, and
+  <option>--repeat</option> and <option>--recurrence</option> cannot
+  be, specified with this option.</entry>
+</row>
+<row>
+  <entry><replaceable>message</replaceable></entry>
+  <entry>Message text to display or, if <option>--mail</option> is
+  specified, the body of the email message.</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>Either a message text, <option>--file</option> or
+<option>--exec</option> must be specified; except as noted above, all
+the options are optional.</para>
+
+<para>Two alternative examples which display a multi-line message with
+a red background at 10 p.m. on the 27th of this month are:</para>
+
+<informalexample><screen>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>-c <replaceable>red</replaceable></option> <option>-t <replaceable>27-22:00</replaceable></option> <option><replaceable>"Remember to\nSTOP"</replaceable></option></userinput>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>-c <replaceable>0xFF0000</replaceable></option> <option>-t <replaceable>27-22:00</replaceable></option> <option><replaceable>"Remember to\nSTOP"</replaceable></option></userinput>
+</screen>
+</informalexample>
+
+</sect1>
+
+<sect1 id="cmdline-other">
+<title>Other options</title>
+
+<para>The following options are used to reset or halt the
+<application>alarm daemon</application>, or to control &kalarm;'s
+display mode.</para>
+
+<para>See the <link linkend="daemon-reset">Alarm daemon</link> section
+for a discussion about resetting and stopping the <application>alarm
+daemon</application>.</para>
+
+<informaltable>
+<tgroup cols="2">
+<thead>
+<row>
+  <entry>Option</entry>
+  <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry><option>--reset</option></entry>
+  <entry>Reset the <application>alarm daemon</application>.</entry>
+</row>
+<row>
+  <entry><option>--stop</option></entry>
+  <entry>Stop the <application>alarm daemon</application>.</entry>
+</row>
+<row>
+  <entry><option>--tray</option></entry>
+  <entry>Display &kalarm; as an icon in the &kde; system tray.</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>For example, to reset the <application>alarm
+daemon</application>:</para>
+
+<informalexample><screen>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>--reset</option></userinput>
+</screen>
+</informalexample>
+
+</sect1>
+
+<sect1 id="cmdline-help">
+<title>Help options</title>
+
+<para>The following help options are common to all &kde;
+programs:</para>
+
+<informaltable>
+<tgroup cols="2">
+<thead>
+<row>
+  <entry>Option</entry>
+  <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry><option>--help</option></entry>
+  <entry>Shows a brief options help text.</entry>
+</row>
+<row>
+  <entry><option>--help-qt</option></entry>
+  <entry>Shows numerous generic &Qt;-specific options.</entry>
+</row>
+<row>
+  <entry><option>--help-kde</option></entry>
+  <entry>Shows numerous generic &kde;-specific options.</entry>
+</row>
+<row>
+  <entry><option>--help-all</option></entry>
+  <entry>Shows all options.</entry>
+</row>
+<row>
+  <entry><option>--author</option></entry>
+  <entry>Shows the names and email addresses of &kalarm; authors.</entry>
+</row>
+<row>
+  <entry><option>-v</option>, <option>--version</option></entry>
+  <entry>Shows the running versions of the &Qt; library , &kde; and
+  &kalarm;.</entry>
+</row>
+<row>
+  <entry><option>--license</option></entry>
+  <entry>Show license information.</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+</sect1>
+</chapter>
+
+<chapter id="daemon">
+<title>Alarm daemon</title>
+
+<para>The <application>alarm daemon</application>, &kalarmd;, monitors
+&kalarm;'s calendar file for alarms becoming due. When it determines
+that an alarm is due, it tells &kalarm; to display or execute it, or
+to cancel it if it is late and late trigger was not selected for that
+alarm.</para>
+
+<para>Under &kde;3, the <application>alarm daemon</application> may
+also be used by other applications, including KOrganizer.</para>
+
+<para>The <application>alarm daemon</application> runs in the
+background, with no user interface. It may be controlled as described
+below.</para>
+
+<sect1 id="daemon-start">
+<title>Starting, resetting and stopping the <application>alarm daemon</application></title>
+
+<para>The <application>alarm daemon</application> is normally started
+at &kde; session login (unless you use the Service Manager dialog to
+disable auto start), and runs continuously until logout. If for any
+reason it is not running, alarm monitoring will not occur and &kalarm;
+will not display or execute any alarms.</para>
+
+<sect2>
+<title>Starting the <application>alarm daemon</application></title>
+
+<para>To start the <application>alarm daemon</application>, you can
+either run &kalarm; in its default graphical mode (&ie; without any
+command line parameters), enable alarms using &kalarm;'s system tray
+icon menu, reset the daemon as described
+<link linkend="daemon-reset">below</link>, start it using the
+Service Manager dialog (see <link linkend="daemon-control">Controlling
+the alarm daemon with the Service Manager</link>)
+or you can run the <application>alarm daemon</application> directly
+from the command line:</para>
+
+<screen width="40">
+<prompt>%</prompt> <userinput><command>kalarmd</command></userinput>
+</screen>
+
+</sect2>
+
+<sect2 id="daemon-reset">
+<title>Resetting the <application>alarm daemon</application></title>
+
+<para>It is also possible to reset the <application>alarm
+daemon</application> without stopping it. Resetting causes the
+<application>alarm daemon</application> to re-read the list of
+scheduled messages from the calendar file and re-initialize its
+&kalarm;-related data.</para>
+
+<para>Why might you want to reset the <application>alarm
+daemon</application>? It isn't a very likely occurrence, but if for
+any reason &kalarm; was not able to run when the <application>alarm
+daemon</application> told it to trigger an alarm, that alarm will
+never be displayed or executed until the <application>alarm
+daemon</application> is either reset or restarted. Resetting is
+preferable to stopping the <application>alarm daemon</application> and
+restarting it, since resetting the daemon will not affect any other
+applications which use the <application>alarm daemon</application>.</para>
+
+<tip><para>Resetting starts the <application>alarm
+daemon</application> if it is not currently running.</para></tip>
+
+<para>To reset the <application>alarm daemon</application>, either use
+the menu command <menuchoice>
+<guimenu>Actions</guimenu><guimenuitem>Refresh Alarms</guimenuitem>
+</menuchoice> or type the following command:</para>
+
+<screen width="40">
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>--reset</option></userinput>
+</screen>
+
+</sect2>
+
+<sect2>
+<title>Stopping the <application>alarm daemon</application></title>
+
+<para>Stopping the <application>alarm daemon</application> will
+prevent any further monitoring of scheduled alarm messages until the
+daemon is restarted.</para>
+
+<warning><para>Stopping it will affect the functioning of any other
+applications which also use the <application>alarm
+daemon</application>. Consider resetting the daemon
+instead.</para></warning>
+
+<para>To stop the <application>alarm daemon</application>,
+either use the Service Manager dialog (see
+<link linkend="daemon-control">Controlling the alarm daemon with the
+Service Manager</link>), or type the following command:</para>
+
+<screen width="40">
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>--stop</option></userinput>
+</screen>
+</sect2>
+
+</sect1>
+
+<sect1 id="daemon-control">
+<title>Controlling the <application>alarm daemon</application> with the Service Manager</title>
+
+<para>The Service Manager dialog allows you to configure and control
+the <application>alarm daemon</application>. You can:</para>
+
+<itemizedlist>
+<listitem>
+<para>Configure whether it runs automatically at login.</para>
+<warning><para>If neither the <application>alarm daemon</application>
+nor &kalarm; is configured to run at login, alarm monitoring will not
+occur and &kalarm; will not display or execute any
+alarms.</para></warning>
+</listitem>
+
+<listitem>
+<para>Stop and start the <application>alarm
+daemon</application>.</para>
+<warning><para>Starting or stopping the <application>alarm
+daemon</application> will affect any other applications which use the
+<application>alarm daemon</application>.</para></warning>
+</listitem>
+</itemizedlist>
+
+<para>The Service Manager dialog can be accessed either via the menu
+option <menuchoice><guimenu>Settings</guimenu> <guimenuitem>Control
+Alarm Daemon...</guimenuitem></menuchoice>, or via the &kde; Control
+Center.</para>
+
+</sect1>
 </chapter>
 
 <chapter id="developers">
@@ -2770,6 +2777,17 @@ used with one of the other three options.</para>
 &updating.documentation;
 
 <qandaset id="faqlist">
+<qandaentry>
+<question>
+<para>What is the alarm daemon?</para>
+</question>
+<answer>
+<para>The <application>alarm daemon</application> is an application
+which runs in the background, monitoring alarms and telling &kalarm;
+to trigger them when they become due.</para>
+</answer>
+</qandaentry>
+
 <qandaentry>
 <question>
 <para>What configuration files does &kalarm; use?</para>
