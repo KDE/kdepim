@@ -31,7 +31,7 @@ Person::Person( const QString &fullName )
 {
   QString name, email;
   KPIM::getNameAndMail( fullName, name, email );
-  setName( email );
+  setName( name );
   setEmail( email );
 }
 
