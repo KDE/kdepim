@@ -106,12 +106,12 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
 
   connect(h_drView, SIGNAL(itemSelected(QListViewItem*)),
     this, SLOT(slotArticleSelected(QListViewItem*)));
-  connect(h_drView, SIGNAL(doubleClicked(QListViewItem*)),
-    this, SLOT(slotArticleDoubleClicked(QListViewItem*)));
   connect(h_drView, SIGNAL(selectionChanged()),
     this, SLOT(slotArticleSelectionChanged()));
   connect(h_drView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
     this, SLOT(slotArticleRMB(QListViewItem*, const QPoint&, int)));
+  connect(h_drView, SIGNAL(mouseButtonPressed(int, QListViewItem *, const QPoint &, int)),
+    this, SLOT(slotArticleMousePressed(int, QListViewItem *, const QPoint &, int)));
   connect(h_drView, SIGNAL(sortingChanged(int)),
     this, SLOT(slotHdrViewSortingChanged(int)));
 
@@ -686,25 +686,6 @@ void KNodeView::slotArticleSelected(QListViewItem *i)
 }
 
 
-void KNodeView::slotArticleDoubleClicked(QListViewItem *it)
-{
-  if(!it)
-    return;
-
-  KNArticle *art=(static_cast<KNHdrViewItem*>(it))->art;
-
-  if ((art->type()==KNMimeBase::ATlocal) && ((f_olManager->currentFolder()==f_olManager->outbox())||
-                                             (f_olManager->currentFolder()==f_olManager->drafts()))) {
-    a_rtFactory->edit( static_cast<KNLocalArticle*>(art) );
-  } else {
-    if (!KNArticleWindow::raiseWindowForArticle(art)) {
-      KNArticleWindow *w=new KNArticleWindow(art);
-      w->show();
-    }
-  }
-}
-
-
 void KNodeView::slotArticleSelectionChanged()
 {
   // enable all actions that work with multiple selection
@@ -859,6 +840,27 @@ void KNodeView::slotCollectionRMB(QListViewItem *i, const QPoint &p, int)
       f_olderPopup->popup(p);
     else
       a_ccPopup->popup(p);
+  }
+}
+
+
+void KNodeView::slotArticleMousePressed(int button, QListViewItem *item, const QPoint &p, int)
+{
+  if(b_lockui)
+    return;
+
+  if (button == MidButton) {
+    KNArticle *art=(static_cast<KNHdrViewItem*>(item))->art;
+
+    if ((art->type()==KNMimeBase::ATlocal) && ((f_olManager->currentFolder()==f_olManager->outbox())||
+                                               (f_olManager->currentFolder()==f_olManager->drafts()))) {
+      a_rtFactory->edit( static_cast<KNLocalArticle*>(art) );
+    } else {
+      if (!KNArticleWindow::raiseWindowForArticle(art)) {
+        KNArticleWindow *w=new KNArticleWindow(art);
+        w->show();
+      }
+    }
   }
 }
 
