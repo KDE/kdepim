@@ -53,15 +53,15 @@
 &lt;p&gt;Please enter the user name exactly as set on the handheld. &lt;/p&gt;
 &lt;p&gt;If setting the device type manually (i.e., if automatic detection did not work for you), please look below for tips on choosing the right device name.  {0...n} means a number from 0 up to a very large number, though usually just 255.
 &lt;p&gt;
-Serial Port: And "old-school" method of connection, used primarily by the original line of Palm Pilots, and various Palm-based cellphones.  Device name will look like /dev/ttyS{0...n} (Linux) or /dev/cuaa{0...n} (FreeBSD).&lt;/p&gt;
+Serial Port: an old method of connection, used primarily by the original line of Palm Pilots, and various Palm-based cellphones.  Device name will look like /dev/ttyS{0...n} (Linux) or /dev/cuaa{0...n} (FreeBSD).&lt;/p&gt;
 &lt;p&gt;
-USB Port: A newer style of connection, used by most newer Palms, Handsprings, and Sony Clies.  Device name will look like /dev/ttyUSB{0...n} or /dev/usb/tts/{0...n} (Linux) or /dev/ucom{0...n} (FreeBSD).  On Linux, definetly check both 0 and 1, as newer devices tend to use 1, and older devices tend to use 0.&lt;/p&gt;
+USB Port: A newer style of connection, used by most newer Palms, Handsprings, and Sony Clies.  Device name will look like /dev/ttyUSB{0...n} or /dev/usb/tts/{0...n} (Linux) or /dev/ucom{0...n} (FreeBSD).  On Linux, definitely check both 0 and 1: newer devices tend to use 1; older devices tend to use 0.&lt;/p&gt;
 &lt;p&gt;
-Infrared: (pronounced infra-red, *not* in-fraired) is a dog-slow connection type used soley as a last resort.  Device name will be /dev/ircomm0 or /dev/ttyS{0...n} (Linux) or /dev/sio{0...n} (FreeBSD).&lt;/p&gt;
+Infrared: (pronounced infra-red) is a relatively slow connection type used solely as a last resort.  Device name will be /dev/ircomm0 or /dev/ttyS{0...n} (Linux), or /dev/sio{0...n} (FreeBSD).&lt;/p&gt;
 &lt;p&gt;
-Bluetooth: The new-kid on the block, this is used almost exclusively on new, high-end devices like the Tungsten T3 or the Zire 72.  Device name will be /dev/usb/ttub/{0...n} or /dev/ttyUB{0...n} (Linux) or /dev/ttyp{0...n} (FreeBSD).&lt;/p&gt;
+Bluetooth: A new connection method, this is used almost exclusively on new, high-end devices, like the Tungsten T3 or the Zire 72.  Device name will be /dev/usb/ttub/{0...n} or /dev/ttyUB{0...n} (Linux), or /dev/ttyp{0...n} (FreeBSD).&lt;/p&gt;
 &lt;p&gt;
-Network: This has not been tested by any of the KPilot developers themselves (hardware donations always accepted!), but it has been reported that setting the device to "net:any" will work for network-enabled devices.  However, this has also been known to lock KPilot up when doing anything other than just syncing.  With Free Software, when it breaks, you get to keep *both* pieces!
+Network: This has not been tested by any of the KPilot developers themselves (hardware donations always accepted!), but it has been reported that setting the device to "net:any" will work for network-enabled devices.  However, this has also been known to lock KPilot up when doing anything other than just syncing.  Use it with caution.
 &lt;/p&gt;</string>
             </property>
             <grid>

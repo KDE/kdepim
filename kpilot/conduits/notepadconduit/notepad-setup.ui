@@ -17,7 +17,7 @@
         <string>Form2</string>
     </property>
     <property name="whatsThis" stdset="0">
-        <string>Path to the directory, where the pictures should be exported.</string>
+        <string>Path to the directory to which the pictures should be exported.</string>
     </property>
     <grid>
         <property name="name">
