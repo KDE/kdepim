@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>544</width>
-            <height>296</height>
+            <height>298</height>
         </rect>
     </property>
     <property name="caption">
@@ -160,6 +160,12 @@
                     <property name="name">
                         <cstring>fSendMode</cstring>
                     </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="currentItem">
+                        <number>3</number>
+                    </property>
                 </widget>
             </grid>
         </widget>
@@ -262,6 +268,9 @@
                     </item>
                     <property name="name">
                         <cstring>fRecvMode</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
                     </property>
                 </widget>
                 <widget class="KURLRequester" row="6" column="1">

@@ -38,9 +38,10 @@ class KAboutData;
 class PopMailSendPage;
 class PopMailReceivePage;
 
+#if 0
 class PopmailWidgetSetup : public ConduitConfig
 {
-Q_OBJECT
+// Q_OBJECT
 public:
 	PopmailWidgetSetup(QWidget *,const char *,const QStringList &);
 	virtual ~PopmailWidgetSetup();
@@ -54,7 +55,7 @@ private:
 	PopMailSendPage *fSendPage;
 	PopMailReceivePage *fRecvPage;
 } ;
-
+#endif
 
 class PopmailConduitFactory : public KLibFactory
 {

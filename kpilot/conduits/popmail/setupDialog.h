@@ -44,6 +44,7 @@ class QRadioButton;
 class QButtonGroup;
 
 
+#if 0
 // A standard dialog page with all the
 // settings used when sending mail, both
 // with SMTP and sendmail (in future via KMail
@@ -52,14 +53,14 @@ class QButtonGroup;
 //
 class PopMailSendPage : public QWidget
 {
-	Q_OBJECT
+// Q_OBJECT
 
 public:
 	PopMailSendPage(QWidget *parent );
 	virtual int commitChanges(KConfig& );
 	void readSettings(KConfig &);
 
-public slots:
+public /* slots */:
 	/**
 	* Called to browse for a signature file.
 	*/
@@ -106,14 +107,14 @@ private:
 //
 class PopMailReceivePage : public QWidget
 {
-	Q_OBJECT
+// Q_OBJECT
 
 public:
 	PopMailReceivePage(QWidget *);
 	virtual int commitChanges(KConfig& );
 	void readSettings(KConfig &);
 
-public slots:
+public /* slots */:
 	void browseMailbox();
 	void togglePopPass();
 	void toggleMode();
@@ -146,8 +147,10 @@ private:
 
 	RetrievalMode fMode;
 } ;
+#endif
 
-class PopMailWidget;
+
+class PopMailWidget; // From setup-dialog.ui
 
 class PopMailWidgetConfig : public ConduitConfigBase
 {

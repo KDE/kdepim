@@ -52,7 +52,7 @@ static const char *setupDialog_id=
 #include <qfiledlg.h>
 #include <qcombobox.h>
 
-#define OLDSTYLE
+#undef OLDSTYLE
 #ifdef OLDSTYLE
 #include <qlabel.h>
 #include <qwhatsthis.h>
@@ -73,7 +73,7 @@ static const char *setupDialog_id=
 #include "setup-dialog.h"
 #include "setupDialog.moc"
 
-
+#if 0
 PopMailSendPage::PopMailSendPage(QWidget *parent) :
 	QWidget(parent,"SendMail")
 {
@@ -593,7 +593,7 @@ void PopMailReceivePage::togglePopPass()
 		fPopPass->setEnabled(false);
 	}
 }
-
+#endif
 
 
 PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p,const char *n) :
@@ -641,6 +641,14 @@ void PopMailWidgetConfig::load(KConfig *fConfig)
 	RD(fLeaveMail,setChecked,Bool,"LeaveMail",true);
 #undef RD
 
+	/**
+	*
+	* Disable sending through anything but KMail,
+	* and totally disable receiving.
+	*/
+	fConfigWidget->fSendMode->setCurrentItem(3);
+	fConfigWidget->fRecvMode->setCurrentItem(0);
+	
 	toggleSendMode(fConfigWidget->fSendMode->currentItem());
 	toggleRecvMode(fConfigWidget->fRecvMode->currentItem());
 }

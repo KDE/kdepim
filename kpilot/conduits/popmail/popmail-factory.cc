@@ -104,7 +104,6 @@ PopmailConduitFactory::~PopmailConduitFactory()
 		<< endl;
 #endif
 
-#if 0
 	if (qstrcmp(c,"ConduitConfigBase")==0)
 	{
 		QWidget *w = dynamic_cast<QWidget *>(p);
@@ -123,18 +122,15 @@ PopmailConduitFactory::~PopmailConduitFactory()
 			return 0L;
 		}
 	}
-#endif
+	
 	if (qstrcmp(c,"ConduitConfig")==0)
 	{
 		QWidget *w = dynamic_cast<QWidget *>(p);
 
 		if (w)
 		{
-#if 0
 			return new ConduitConfigImplementation(w,n,a,
 				PopMailWidgetConfig::create);
-#endif
-			return new PopmailWidgetSetup(w,n,a);
 		}
 		else
 		{
@@ -167,6 +163,7 @@ PopmailConduitFactory::~PopmailConduitFactory()
 	return 0L;
 }
 
+#if 0
 PopmailWidgetSetup::PopmailWidgetSetup(QWidget *w, const char *n,
 	const QStringList & a) :
 	ConduitConfig(w,n,a)
@@ -214,3 +211,5 @@ PopmailWidgetSetup::~PopmailWidgetSetup()
 	fSendPage->readSettings(*fConfig);
 	fRecvPage->readSettings(*fConfig);
 }
+
+#endif
