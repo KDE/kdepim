@@ -558,8 +558,8 @@ already has a Message-ID. Normally, articles get their Message-ID from the
 newsserver: this means that you can only supersede articles which have
 already been published.</para> 
 
-<para>You can configure &knode; to generate this message, then you can
-supersede your articles in the <guilabel>Outbox</guilabel>,
+<para>You can configure &knode; to generate this Message-ID, then you can
+supersede your articles in the folder <guilabel>Sent</guilabel>,
 too.</para> 
 
 <para>&knode; allows you to only supersede your own articles.</para> 
