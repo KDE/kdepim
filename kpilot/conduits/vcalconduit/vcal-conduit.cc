@@ -1163,16 +1163,15 @@ void VCalConduit::doLocalSync()
 		}
       } else { 
 	if (insertall == 0) {
-		QString text;
-		text = i18n("This is the first time that "
+		QString text = i18n("This is the first time that "
 			"you have done a HotSync\n"
 			"with the vCalendar conduit. "
 			"There is an appointment\n"
 			"in the PalmPilot which is not "
 			"in the vCalendar (KOrganizer).\n\n");
-		text += i18n("Appointment: ");
-		text += dateEntry->getDescription();
-		text += i18n("\n\nWhat must be done with this appointment?");
+		text += i18n("Appointment: %1.\n\n"
+			"What must be done with this appointment?")
+			.arg(dateEntry->getDescription());
 
 		response = QMessageBox::information(0, 
 			i18n("KPilot vCalendar Conduit"), 
@@ -1190,14 +1189,19 @@ void VCalConduit::doLocalSync()
 
 		switch(response) 
 		{
-		case 0:
-			updateVObject(rec);
-			break;
 		case 1:
 			deletedList.append(new int(rec->getID()));
 			break;
-		case 2:
+		case 2 :
 			insertall = 1;
+			updateVObject(rec);
+			break;
+
+		// Default is to insert this single entry
+		// and ask again later.
+		//
+		//
+		default : 
 			updateVObject(rec);
 			break;
 		}
