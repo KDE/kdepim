@@ -23,7 +23,6 @@ KMail:
 Note: We might want to add a KMail profile for this in addition
 to the kolab wizard.
 
-
 KAddressBook:
 
 1. Start KDE Control Center and go to KDE Components, page KDE
@@ -71,5 +70,13 @@ TODO
 
 
 Kontact:
+
+
+General Notes:
+==============
+Autocompletion: Works in both KMail and KOrganizer. The order of resources used for completion
+is as follows:
+  1. All available addressbook resources as seen in "kcmshell kresources", section "kabc"
+  2. LDAP
 
 Nothing special, AFAIK
