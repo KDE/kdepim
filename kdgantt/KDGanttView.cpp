@@ -108,7 +108,7 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  ) : KDGanttMinimize
   connect( myListView, SIGNAL(mouseButtonPressed(  int, QListViewItem * , const QPoint &, int ) ), this, SLOT(slotMouseButtonPressed (  int , QListViewItem * , const QPoint & , int ) ) );
 
     //connect( myListView, SIGNAL( ), this, SLOT( ) );
-    myTimeTable = new KDTimeTableWidget (0,this);
+    myTimeTable = new KDTimeTableWidget (rightWidget,this);
 
     spacerRight = new QWidget(  rightWidget );
 
