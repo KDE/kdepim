@@ -34,6 +34,7 @@ Widget::Widget( QWidget* parent, const char* name )
 
     QHBox* info = new QHBox(this);
     info->setSpacing( 10 );
+    info->setMargin( 10 );
 
     QVBox *info2 = new QVBox(info);
     m_device = new QLabel(info2);
@@ -55,8 +56,8 @@ Widget::Widget( QWidget* parent, const char* name )
     m_split->setResizeMode( m_edit, QSplitter::KeepSize );
 
     m_layout = new QVBoxLayout( m_ab );
-    m_layout->setAutoAdd( TRUE );
-    //layout->addStretch();
+    m_layout->insertStretch( -1, 5 );
+    m_layoutFillIndex = 0;
 
     m_lay->addWidget( label );
     m_lay->addWidget( line );
@@ -86,9 +87,8 @@ void Widget::addProgress( ManipulatorPart* part, const Progress& prog) {
 void Widget::syncProgress( ManipulatorPart* part, int status, int percent )  {
 
     OverViewProgressEntry* it;
-
     for ( it = m_messageList.first(); it; it = m_messageList.next() )  {
-        if ( QString::compare( it->name(), part->type() ) == 0 ) {
+        if ( QString::compare( it->name(), part->name() ) == 0 ) {
             it->setProgress( status );
             return;
         }
@@ -97,13 +97,15 @@ void Widget::syncProgress( ManipulatorPart* part, int status, int percent )  {
     OverViewProgressEntry* test = new OverViewProgressEntry( m_ab, "test" );
     m_messageList.append( test );
 
-    if ( part->type() )  {
-        test->setText( part->type() );
+    if ( part->name() )  {
+        test->setText( part->name() );
     }
     if ( part->pixmap() ) {
         test->setPixmap( *(part->pixmap()) );
     }
     test->setProgress( status );
+    m_layout->insertWidget(  m_layoutFillIndex , test, 0, AlignTop );
+    m_layoutFillIndex++;
     test->show();
 }
 

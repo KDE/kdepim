@@ -39,6 +39,7 @@ namespace OverView {
         void startSync();
 	void cleanView();
     private:
+	int m_layoutFillIndex;
         QVBoxLayout* m_lay;
         QLabel* m_device;
         QLabel* m_profile;

@@ -13,16 +13,23 @@ OverViewProgressEntry::OverViewProgressEntry( QWidget* parent, const char* name 
     m_layout = new QHBoxLayout( this, QBoxLayout::LeftToRight );
     m_layout->setSpacing( 5 );
 
+    QWidget* spacer = new QWidget( this, "spacer" );
+    spacer->setMinimumWidth( 5 );
+
     m_pixmapLabel = new QLabel( this, "pixmap" );
     m_pixmapLabel->setFixedWidth( 16 );
     m_textLabel = new QLabel( this, "text" );
     m_progressField = new QLabel( this, "progress" );
 
+    QWidget *space = new QWidget( this, "spacer" );
+    space->setMinimumWidth( 10 );
+
+    m_layout->addWidget( spacer, 0, AlignLeft );
     m_layout->addWidget( m_pixmapLabel, 0, AlignLeft );
     m_layout->addWidget( m_textLabel, 5, AlignLeft );
     m_layout->addStretch(0);
     m_layout->addWidget( m_progressField, 0, AlignLeft );
-
+    m_layout->addWidget( space, 0, AlignRight );
 }
 
 OverViewProgressEntry::~OverViewProgressEntry() {
