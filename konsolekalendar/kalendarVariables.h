@@ -1,3 +1,6 @@
+#ifndef _KALENDAR_VARIABLES_H
+#define _KALENDAR_VARIABLES_H
+
 /***************************************************************************
 			  kalendarVariables.h  -  description
 			     -------------------
@@ -79,3 +82,7 @@ class KalendarVariables
 
 
 };
+
+#endif
+
+#endif
