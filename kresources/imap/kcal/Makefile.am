@@ -5,6 +5,8 @@ INCLUDES = -I$(top_srcdir)/libkcal -I$(top_srcdir)/kresources/imap/shared \
 
 kde_module_LTLIBRARIES = kcal_imap.la
 
+noinst_HEADERS = resourceimap.h resourceimapconfig.h
+
 kcal_imap_la_SOURCES = resourceimap.cpp resourceimapconfig.cpp
 kcal_imap_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN)
 kcal_imap_la_LIBADD = -lkresources \
