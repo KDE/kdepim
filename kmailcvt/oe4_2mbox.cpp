@@ -16,7 +16,10 @@
  ***************************************************************************/
 
 #include <klocale.h>
+#include <ktempfile.h>
 //#define i18n(a) a
+
+#include <qfile.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -95,7 +98,7 @@ return result->success;
 
 void oe4_2mbox::addMessage(const char *string,int code)
 {
-static FILE *f=NULL;
+static KTempFile *tmp=0;
 static int status=-1;
 static float perc=0.0;
 
@@ -104,17 +107,19 @@ static float perc=0.0;
     {
       if (status!=0 && status!=-1) { addMessage("",0); }
       status=1;
-      {char s[1024];
-        sprintf(s,"/tmp/oe4_2mbox.%d",getpid());
-        f=fopen(s,"wb");
-        if (f==NULL) {QString msg;
-          msg=i18n("FATAL: Cannot open TEMP file '%1'").arg(s);
+      tmp = new KTempFile;
+      tmp->setAutoDelete(true);
+      if (tmp->status() != 0 || !tmp->fstream()) 
+      {   
+          QString msg;
+          msg=i18n("FATAL: Cannot open temporary file.");
           INFO->alert(CAP,msg);
           status=-1;
-        }
+          delete tmp;
+          tmp = 0;
       }
       if (status!=-1) {
-        fprintf(f,"%s",string);
+        fprintf(tmp->fstream(),"%s",string);
       }
     }
     break;
@@ -128,7 +133,7 @@ static float perc=0.0;
       }
       else if (status!=-1) {
         status=2;
-        fprintf(f,"%s",string);
+        fprintf(tmp->fstream(),"%s",string);
       }
     }
     break;
@@ -150,25 +155,21 @@ static float perc=0.0;
         }
         INFO->current(perc);
 
-        fprintf(f,"%s",string);
-        fclose(f);
-        {char s[1024];
-          sprintf(s,"/tmp/oe4_2mbox.%d",getpid());
-          f=fopen(s,"rb");
-          if (f==NULL) {QString msg;
-            msg.sprintf(" ('%s')",s);
-            msg=i18n("FATAL: Unable to open for reading the TEMP file that was just created")+msg;
-            INFO->alert(CAP,msg);
-            status=-1;
-          }
-          else {
-            fclose(f);
-            F->kmailMessage(INFO, (char *) FOLDER, s, added);
-            mails += 1;
-            unlink(s);
-            status=-1; // skip to next message.
-          }
+        fprintf(tmp->fstream(),"%s",string);
+        if (!tmp->close())
+        { 
+          QString msg;
+          msg=i18n("FATAL: Cannot write temporary file.");
+          INFO->alert(CAP,msg);
+          status=-1;
         }
+        else {
+          F->kmailMessage(INFO, (char *) FOLDER, QFile::encodeName(tmp->name()).data(), added);
+          mails += 1;
+          status=-1; // skip to next message.
+        }
+        delete tmp;
+        tmp = 0;
       }
     }
     break;
