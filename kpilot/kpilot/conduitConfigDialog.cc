@@ -135,8 +135,14 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QHBox *p,const char *n) :
 	QVBox *v = 0L;
 
 	// Create the left hand column
-	fConduitList = new QListView(p,"ConduitList");
+	v = new QVBox(p);
+	fConduitList = new QListView(v,"ConduitList");
 	fConduitList->addColumn(i18n("Conduit"));
+	v->setStretchFactor(fConduitList,0);
+	v->setSpacing(50);
+	l = new QLabel(v);    // Just a placekeeper, to fix redraw problems.
+	l->resize(30,30);
+	v->setStretchFactor(l,100);
 
 	// Right hand column
 	fStack = new QWidgetStack(p,"RightPart");
@@ -178,7 +184,8 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QHBox *p,const char *n) :
 	// Page 3
 	l = new QLabel(fStack);
 	l->setFrameShape(QLabel::Box);
-	l->setText(i18n("<qt>This conduit has no configuration options.</qt>"));
+	l->setText(i18n("<qt>This is an internal conduit which has no "
+		"configuration options.</qt>"));
 	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
 	fStack->addWidget(l,INTERNAL_CONDUIT);
 }
