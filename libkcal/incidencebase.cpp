@@ -186,7 +186,39 @@ void IncidenceBase::setFloats(bool f)
   updated();
 }
 
+//
+// comments
+//
+void IncidenceBase::addComment(const QString& comment) {
+  mComments += comment;
+}
 
+bool IncidenceBase::removeComment(QString& comment) {
+  bool found = false;
+  QStringList::Iterator i;
+
+  i = mComments.begin();
+  while (!found && ++i != mComments.end()) {
+    if ( (*i) == comment) {
+      found = true;
+      mComments.remove(i);
+    }
+  }
+
+  return found;
+}
+
+void IncidenceBase::clearComments() {
+  mComments.clear();
+}
+
+QStringList IncidenceBase::comments() {
+  return mComments;
+}
+
+//
+// attendees
+//
 void IncidenceBase::addAttendee(Attendee *a, bool doupdate)
 {
 //  kdDebug(5800) << "IncidenceBase::addAttendee()" << endl;

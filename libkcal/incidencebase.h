@@ -96,6 +96,35 @@ class IncidenceBase : public CustomProperties
     /** Set whether the incidence floats, i.e. has a date but no time attached to it. */
     void setFloats( bool f );
 
+    //
+    // Comments
+    //
+    
+    /** 
+     * Add a comment to this incidence.  
+     *
+     * Does not add a linefeed character.  Just appends the text as passed in.
+     *
+     * @param comment  The comment to add.
+     */
+    void addComment(const QString& comment);
+
+    /** 
+     * Remove a comment from the event.
+     *
+     * Removes first comment whose string is an exact match for the string
+     * passed in.
+     *
+     * @return true if match found, false otherwise.
+     */
+    bool removeComment(QString& comment);
+
+    /** Delete all comments associated with this incidence. */
+    void clearComments();
+
+    /** Return all comments associated with this incidence.  */
+    QStringList comments();
+
     /**
       Add Attendee to this incidence. IncidenceBase takes ownership of the
       Attendee object.
@@ -172,6 +201,7 @@ class IncidenceBase : public CustomProperties
     QString mUid;
     QDateTime mLastModified;
     Attendee::List mAttendees;
+    QStringList mComments;
 
     bool mFloats;
 

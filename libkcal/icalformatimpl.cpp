@@ -694,6 +694,12 @@ void ICalFormatImpl::writeIncidenceBase( icalcomponent *parent,
     }
   }
 
+  // comments
+  QStringList comments = incidenceBase->comments();
+  for (QStringList::Iterator it=comments.begin(); it!=comments.end(); ++it) {
+    icalcomponent_add_property(parent, icalproperty_new_comment((*it).utf8()));
+  }
+
   // custom properties
   writeCustomProperties( parent, incidenceBase );
 }
@@ -1586,6 +1592,11 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *inci
 
       case ICAL_ATTENDEE_PROPERTY:  // attendee
         incidenceBase->addAttendee(readAttendee(p));
+        break;
+      
+      case ICAL_COMMENT_PROPERTY:
+        incidenceBase->addComment(
+            QString::fromUtf8(icalproperty_get_comment(p)));
         break;
 
       default:
