@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 1998 Preston Brwon
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
 
@@ -580,8 +581,9 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   // attachments
   // TODO: handle binary attachments!
   Attachment::List attachments = anEvent->attachments();
-  for ( Attachment *at = attachments.first(); at; at = attachments.next() )
-    addPropValue(vevent, VCAttachProp, at->uri().local8Bit());
+  Attachment::List::ConstIterator atIt;
+  for ( atIt = attachments.begin(); atIt != attachments.end(); ++atIt )
+    addPropValue( vevent, VCAttachProp, (*atIt)->uri().local8Bit() );
 
   // resources
   tmpStrList = anEvent->resources();

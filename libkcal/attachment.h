@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 2002 Michael Brade <brade@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -17,12 +18,12 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+#ifndef KCAL_ATTACHMENT_H
+#define KCAL_ATTACHMENT_H
 
-#ifndef _ATTACHMENT_H
-#define _ATTACHMENT_H
+#include "listbase.h"
 
 #include <qstring.h>
-#include <qptrlist.h>
 
 namespace KCal {
 
@@ -32,34 +33,34 @@ namespace KCal {
 class Attachment
 {
   public:
-    typedef QPtrList<Attachment> List;
+    typedef ListBase<Attachment> List;
 
     /**
      * Create a Reference to some URI.
      * @param uri the uri this attachment refers to
      * @param mime the mime type of the resource being linked to
      */
-    Attachment(const QString& uri, const QString& mime = QString::null);
+    Attachment( const QString &uri, const QString &mime = QString::null );
 
     /**
      * Create a binary attachment.
      * @param base64 the attachment in base64 format
      * @param mime the mime type of the attachment
      */
-    Attachment(const char *base64, const QString& mime = QString::null);
+    Attachment( const char *base64, const QString &mime = QString::null );
 
     /* The VALUE parameter in Cal */
-    bool isURI() const;
+    bool isUri() const;
     QString uri() const;
-    void setURI(const QString& uri);
+    void setUri( const QString &uri );
     
     bool isBinary() const;
     char *data() const;
-    void setData(const char *base64);
+    void setData( const char *base64 );
 
     /* The optional FMTTYPE parameter in iCal */
     QString mimeType() const;
-    void setMimeType(const QString& mime);
+    void setMimeType( const QString &mime );
 
   private:
     QString mMimeType;

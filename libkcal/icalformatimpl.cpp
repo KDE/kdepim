@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -169,15 +170,8 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
     icalcomponent_add_property(vevent,icalproperty_new_dtend(end));
   }
 
-// TODO: attachments, resources
+// TODO: resources
 #if 0
-  // attachments
-  tmpStrList = anEvent->attachments();
-  for ( QStringList::Iterator it = tmpStrList.begin();
-        it != tmpStrList.end();
-        ++it )
-    addPropValue(vevent, VCAttachProp, (*it).utf8());
-
   // resources
   tmpStrList = anEvent->resources();
   tmpStr = tmpStrList.join(";");
@@ -389,8 +383,9 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
   // attachments
   Attachment::List attachments = incidence->attachments();
-  for (Attachment *at = attachments.first(); at; at = attachments.next())
-    icalcomponent_add_property(parent,writeAttachment(at));
+  Attachment::List::ConstIterator atIt;
+  for ( atIt = attachments.begin(); atIt != attachments.end(); ++atIt )
+    icalcomponent_add_property( parent, writeAttachment( *atIt ) );
 
   // alarms
   Alarm::List::ConstIterator alarmIt;
@@ -514,20 +509,23 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
 
 icalproperty *ICalFormatImpl::writeAttachment(Attachment *att)
 {
-  icalattachtype* attach = icalattachtype_new();
-  if (att->isURI())
-    icalattachtype_set_url(attach, att->uri().utf8().data());
+  icalattachtype *attach = icalattachtype_new();
+  if ( att->isUri() )
+    icalattachtype_set_url( attach, att->uri().utf8().data() );
   else
-    icalattachtype_set_base64(attach, att->data(), 0);
+    icalattachtype_set_base64( attach, att->data(), 0 );
 
-  icalproperty *p = icalproperty_new_attach(attach);
+  icalproperty *p = icalproperty_new_attach( attach );
 
-  if (!att->mimeType().isEmpty())
-    icalproperty_add_parameter(p,icalparameter_new_fmttype(att->mimeType().utf8().data()));
+  if ( !att->mimeType().isEmpty() )
+    icalproperty_add_parameter( p,
+        icalparameter_new_fmttype( att->mimeType().utf8().data() ) );
 
-  if (att->isBinary()) {
-    icalproperty_add_parameter(p,icalparameter_new_value(ICAL_VALUE_BINARY));
-    icalproperty_add_parameter(p,icalparameter_new_encoding(ICAL_ENCODING_BASE64));
+  if ( att->isBinary() ) {
+    icalproperty_add_parameter( p,
+        icalparameter_new_value( ICAL_VALUE_BINARY ) );
+    icalproperty_add_parameter( p,
+        icalparameter_new_encoding( ICAL_ENCODING_BASE64 ) );
   }
   return p;
 }

@@ -373,14 +373,12 @@ void Incidence::deleteAttachment(Attachment *attachment)
   mAttachments.removeRef(attachment);
 }
 
-void Incidence::deleteAttachments(const QString& mime)
+void Incidence::deleteAttachments( const QString &mime )
 {
-  Attachment *at = mAttachments.first();
-  while (at) {
-    if (at->mimeType() == mime)
-      mAttachments.remove();
-    else
-      at = mAttachments.next();
+  Attachment::List::Iterator it = mAttachments.begin();
+  while( it != mAttachments.end() ) {
+    if ( (*it)->mimeType() == mime ) mAttachments.remove( it );
+    else ++it;
   }
 }
 
@@ -392,12 +390,9 @@ Attachment::List Incidence::attachments() const
 Attachment::List Incidence::attachments(const QString& mime) const
 {
   Attachment::List attachments;
-  QPtrListIterator<Attachment> it( mAttachments );
-  Attachment *at;
-  while ( (at = it.current()) ) {
-    if (at->mimeType() == mime)
-      attachments.append(at);
-    ++it;
+  Attachment::List::ConstIterator it;
+  for( it = mAttachments.begin(); it != mAttachments.end(); ++it ) {
+    if ( (*it)->mimeType() == mime ) attachments.append( *it );
   }
 
   return attachments;

@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 2002 Michael Brade <brade@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -36,7 +37,7 @@ Attachment::Attachment(const char *base64, const QString& mime)
   mBinary = true;
 }
 
-bool Attachment::isURI() const
+bool Attachment::isUri() const
 {
   return !mBinary;
 }
@@ -49,7 +50,7 @@ QString Attachment::uri() const
     return QString::null;
 }
 
-void Attachment::setURI(const QString& uri)
+void Attachment::setUri(const QString& uri)
 {
   mData = uri;
   mBinary = false;
