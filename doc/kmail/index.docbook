@@ -1548,7 +1548,7 @@ the icon in the composer window.</para>
 
 <varlistentry>
 <term><guilabel>Automatically encrypt messages whenever possible</guilabel></term>
-<listitem><para>If this option is on, then &kmail; will automatically encrypt messages
+<listitem><para>If this option is on, &kmail; will automatically encrypt messages
 with the built-in OpenPGP support or the PGP/MIME-Plugin provided that
 for every recipient a trusted PGP key is found in your keyring and
 provided that you did not tell &kmail; not to encrypt messages send to
@@ -4300,6 +4300,48 @@ Both will speed up <application>GnuPG</application> immensely.</para>
 </answer>
 </qandaentry>
 
+<qandaentry id="pgp-faq">
+<question><para>What should I know if I want to use
+<application>PGP</application>/<application>GnuPG</application> with
+&kmail;?</para></question>
+
+<answer><para>&kmail; provides a simple and easy to use interface for basic
+ functions of these programs. Still you should understand how these programs
+ work and what might make their use insecure. Some important issues:</para>
+
+<itemizedlist>
+<listitem>
+<para>You <emphasis>really</emphasis> should test if encryption works
+before you use it. &kmail; partly relies on
+<application>PGP</application>/<application>GnuPG</application>'s error strings,
+which often change between different versions.</para>
+</listitem>
+<listitem>
+<para>&kmail; will not encrypt messages with an untrusted (unsigned) public key.
+If you want to encrypt to such a 
+key you should check the identity of the key owner and only then sign the key
+with your secret key. If you do not want to or cannot check the identity
+of the key owner but nevertheless want to encrypt the message then
+please sign the key locally with <userinput><command>gpg</command>
+<option>--lsign</option> <replaceable>keyID</replaceable></userinput>.</para>
+</listitem>
+<listitem>
+<para>Trusting a foreign public key without checking it is no good idea.</para>
+</listitem>
+<listitem>
+<para>&kmail; cannot encrypt and sign attachments if you are using
+the built-in OpenPGP support. For encrypted and signed attachments you need
+to have <link linkend="configure-security-plugins">crypto 
+plugins</link> installed and configured.</para>
+</listitem>
+<listitem>
+<para>Starting with GnuPG 1.0.7 you have to set your own key to
+ultimate ownertrust. It is no longer implicitly done for you.</para>
+</listitem>
+</itemizedlist>
+</answer>
+</qandaentry>
+
 <qandaentry>
 <question><para>I cannot add addresses to my address book after upgrading to KDE 3.x.</para></question>
 <answer>
@@ -4563,48 +4605,6 @@ specify lockfiles in three different ways, so there is no way to
 establish a correspondence between the spoolfiles and lockfiles. So it's
 really up to you to make sure you specify the right lockfile for each
 spoolfile.</para>
-</answer>
-</qandaentry>
-
-<qandaentry id="pgp-faq">
-<question><para>What should I know if I want to use
-<application>PGP</application>/<application>GnuPG</application> with
-&kmail;?</para></question>
-
-<answer><para>&kmail; provides a simple and easy to use interface for basic
- functions of these programs. Still you should understand how these programs
- work and what might make their use insecure. Some important issues:</para>
-
-<itemizedlist>
-<listitem>
-<para>You <emphasis>really</emphasis> should test if encryption works
-before you use it. &kmail; partly relies on
-<application>PGP</application>/<application>GnuPG</application>'s error strings,
-which often change between different versions.</para>
-</listitem>
-<listitem>
-<para>&kmail; will not encrypt messages with an untrusted (unsigned) public key.
-If you want to encrypt to such a 
-key you should check the identity of the key owner and only then sign the key
-with your secret key. If you do not want to or cannot check the identity
-of the key owner but nevertheless want to encrypt the message then
-please sign the key locally with <userinput><command>gpg</command>
-<option>--lsign</option> <replaceable>keyID</replaceable></userinput>.</para>
-</listitem>
-<listitem>
-<para>Trusting a foreign public key without checking it is no good idea.</para>
-</listitem>
-<listitem>
-<para>As most other email clients, &kmail; can encrypt your messages, but
-<emphasis>not</emphasis> your attachments. You have to encrypt them manually
-before you attach them - unless you have the appropriate 
-<link linkend="configure-security-plugins">crypto plugins</link> installed and configured.</para>
-</listitem>
-<listitem>
-<para>Starting with GnuPG 1.0.7 you have to set your own key to
-ultimate ownertrust. It is no longer implicitly done for you.</para>
-</listitem>
-</itemizedlist>
 </answer>
 </qandaentry>
 
