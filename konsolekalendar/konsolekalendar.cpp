@@ -19,6 +19,7 @@
 #include <iostream>
 
 #include <qdatetime.h>
+#include <qfile.h>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -47,27 +48,49 @@ KonsoleKalendar::~KonsoleKalendar()
 bool KonsoleKalendar::openCalendar()
 {
 
-	
-	
-  if( !m_Calendar->load( m_variables.getCalendarFile() ) ) 
+
+
+  if( !m_Calendar->load( m_variables.getCalendarFile() ) )
   {
-	  kdDebug() << "Can't open file: " << m_variables.getCalendarFile() << endl;  
+	  kdDebug() << "Can't open file: " << m_variables.getCalendarFile() << endl;
 	  return false;
-  } 
-   else 
+  }
+   else
   {
 	kdDebug() << "Succefully opened file: " << m_variables.getCalendarFile() << endl;
 	m_variables.setCalendar( m_Calendar );
 	return true;
-	  
+
   }
-	
+
 }
 
 void KonsoleKalendar::closeCalendar()
 {
+		m_Calendar->close();
 		delete m_Calendar;
 }
+
+void KonsoleKalendar::createCalendar()
+{
+
+	QFile fileExists( m_variables.getCalendarFile() );
+	bool exists = fileExists.exists();
+	fileExists.close();
+
+	if( !exists )
+	{
+
+	if(m_variables.isVerbose()){
+	  kdDebug() << "Creating calendar file: " << m_variables.getCalendarFile() << endl;
+	}
+
+	  CalendarLocal newCalendar;
+	  newCalendar.save( m_variables.getCalendarFile() );
+	  newCalendar.close();
+	}// if
+}
+
 
 
 void KonsoleKalendar::showInstance()
@@ -75,44 +98,44 @@ void KonsoleKalendar::showInstance()
     if( m_variables.isNext() ) {
       showNext();
     }
-  
+
     if( m_variables.isDate() && m_variables.isStartDate() == false ) {
-      showDate( m_variables.getDate() );                              
+      showDate( m_variables.getDate() );
     }
-    
-    if( m_variables.isStartDate() ) {    
+
+    if( m_variables.isStartDate() ) {
       if(m_variables.isVerbose()){
-        kdDebug() << "konsolecalendar.cpp::showInstance() | Start date set" << endl;           
+        kdDebug() << "konsolecalendar.cpp::showInstance() | Start date set" << endl;
       }
-      
+
       QDateTime start = m_variables.getStartDate( );
       QDateTime end;
       bool loop = false;
-      
+
       if( m_variables.isEndDate() ) {
-        end = m_variables.getEndDate( );                
+        end = m_variables.getEndDate( );
       } else {
          end = start.addDays(30);
       }
-    
+
       while( !loop ) {
         if(m_variables.isVerbose()) {
-          kdDebug() << "konsolecalendar.cpp::showInstance() | " << start.toString().local8Bit()  << endl;            
+          kdDebug() << "konsolecalendar.cpp::showInstance() | " << start.toString().local8Bit()  << endl;
           kdDebug() << "konsolecalendar.cpp::showInstance() | days to end " << start.daysTo( end )  << endl;
         }
-      
+
         showDate( start );
-            
+
         if( !start.daysTo( end )  ) {
           loop = true;
         }
-      
-        start = start.addDays(1);          
-      }     
-    }
-  
 
-  
+        start = start.addDays(1);
+      }
+    }
+
+
+
 }
 
 void KonsoleKalendar::addEvent()
@@ -120,16 +143,16 @@ void KonsoleKalendar::addEvent()
         kdDebug() << "konsolecalendar.cpp::addEvent | Create Adding"  << endl;
 
 	KonsoleKalendarAdd add( &m_variables );
-	
+
 	kdDebug() << "konsolecalendar.cpp::addEvent | Adding now!"  << endl;
 	add.addEvent();
 
 }
-	
+
 void KonsoleKalendar::changeEvent()
 {
 }
-	
+
 void KonsoleKalendar::deleteEvent()
 {
 }
@@ -141,50 +164,50 @@ void KonsoleKalendar::showDate( QDateTime date )
   QPtrList<Event> eventList(m_Calendar->events( date.date(), TRUE));
   QString tempString;
   QDate current = QDate::currentDate();
-      
+
   if( eventList.count() ) {
     int len = 100;
     tempString = date.toString();
     len -= tempString.length();
-  
+
     cout << endl << tempString.local8Bit() << "\n";
 
     for( len = len; len < 100; len ++) {
        cout << "-";
     }
-      
+
     cout << endl;
-  
+
     for ( singleEvent = eventList.first(); singleEvent != 0; singleEvent =
           eventList.next() ) {
-      if( m_variables.isAll() ) { 
+      if( m_variables.isAll() ) {
         printEventTime(singleEvent);
         // cout << endl;
         cout << "\t" << singleEvent->summary().local8Bit() << endl;
-      } 
-       else 
-      {      
-        if(current.daysTo( date.date() ) == 0) 
+      }
+       else
+      {
+        if(current.daysTo( date.date() ) == 0)
 	{
-          if( m_variables.isVerbose() ) 
+          if( m_variables.isVerbose() )
 	  {
             cout << i18n("Today: ").local8Bit() <<  isHappened(singleEvent) << endl;
-          }  
-        
-          if( isHappened(singleEvent) == false) 
+          }
+
+          if( isHappened(singleEvent) == false)
 	  {
             printEventTime( singleEvent );
             cout << "\t" << singleEvent->summary().local8Bit() << endl;
           }
         } // if
-	 else 
+	 else
 	{
-		
+
           if( m_variables.isVerbose() )
 	  {
             cout << i18n("Not today: ").local8Bit() <<  isHappened(singleEvent) << endl;
           }
-    
+
           printEventTime( singleEvent );
           cout << "\t" << singleEvent->summary().local8Bit() << endl;
         }// else
@@ -201,18 +224,18 @@ void KonsoleKalendar::showNext()
 
   // single event
   Event *singleEvent;
-  QDate qdate;    
+  QDate qdate;
   QString tempString;
   int len = 50;
 
   while(!loop) {
     QPtrList<Event> eventList(m_Calendar->events(m_variables.getDate().date(), TRUE));
-  
+
     if( eventList.count() ) {
       len = 80;
       tempString = m_variables.getDate().toString();
       len -= tempString.length();
-  
+
       cout << endl << tempString.local8Bit() << " ";
 
       for( len = len; len < 80; len ++) {

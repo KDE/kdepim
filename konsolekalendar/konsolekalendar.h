@@ -38,42 +38,44 @@ class KonsoleKalendar
 
    /*
     * Visualisez what we need
-    */ 
+    */
     void showInstance();
-   
+
    /*
     *  Opens calendar file (now in our machine future from others)
     */
    bool openCalendar();
-   
+
    /*
     * Closes calendar.
-    */ 
+    */
    void closeCalendar();
 
    /*
-    * Add event to calendar 
+    * Add event to calendar
     */
    void addEvent();
-   
+
    /*
-    * Change event 
+    * Change event
     */
-   
+
    void changeEvent();
-   
+
    /*
-    * Delete event 
+    * Delete event
     */
-   
+
    void deleteEvent();
-   
+
+  void createCalendar();
+
   private:
     void showNext();
     void showDate( QDateTime date );
     void printEventTime(Event *event);
     bool isHappened(Event *event);
-      
+
     KonsoleKalendarVariables m_variables;
     CalendarLocal *m_Calendar;
 };
