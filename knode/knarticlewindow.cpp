@@ -20,6 +20,7 @@
 #include <kedittoolbar.h>
 #include <kkeydialog.h>
 #include <kconfig.h>
+#include <kaccel.h>
 #include <kaction.h>
 #include <kaccel.h>
 

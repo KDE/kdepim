@@ -23,6 +23,7 @@
 #include <kcharsets.h>
 #include <kmessagebox.h>
 #include <kabapi.h>
+#include <kaccel.h>
 #include <kaction.h>
 #include <kstdaction.h>
 #include <kkeydialog.h>
