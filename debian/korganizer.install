@@ -6,9 +6,10 @@ debian/tmp/usr/bin/korganizer
 debian/tmp/usr/bin/korganizerIn
 debian/tmp/usr/bin/khotnewstuff
 debian/tmp/usr/bin/ghns
-debian/tmp/usr/bin/simplealarmdaemon
 debian/tmp/usr/lib/libkorganizer.la
 debian/tmp/usr/lib/libkorganizer.so.*
+debian/tmp/usr/lib/libkorganizer_eventviewer.la 
+debian/tmp/usr/lib/libkorganizer_eventviewer.so.* 
 debian/tmp/usr/lib/libkpimexchange.la
 debian/tmp/usr/lib/libkpimexchange.so.*
 debian/tmp/usr/lib/libknewstuff.la
@@ -19,6 +20,8 @@ debian/tmp/usr/lib/kde3/libkorg_birthdays.la
 debian/tmp/usr/lib/kde3/libkorg_birthdays.so
 debian/tmp/usr/lib/kde3/libkorg_datenums.la
 debian/tmp/usr/lib/kde3/libkorg_datenums.so
+debian/tmp/usr/lib/kde3/libkorg_hebrew.la 
+debian/tmp/usr/lib/kde3/libkorg_hebrew.so
 debian/tmp/usr/lib/kde3/libkorg_holidays.la
 debian/tmp/usr/lib/kde3/libkorg_holidays.so
 debian/tmp/usr/lib/kde3/libkorg_projectview.la
@@ -32,11 +35,14 @@ debian/tmp/usr/share/apps/korgac
 debian/tmp/usr/share/apps/korganizer
 debian/tmp/usr/share/apps/knewstuff/types
 debian/tmp/usr/share/autostart/korgac.desktop
+debian/tmp/usr/share/config.kcfg/korganizer.kcfg
 debian/tmp/usr/share/doc/kde/HTML/en/korganizer
 debian/tmp/usr/share/doc/kde/HTML/en/konsolekalendar
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/korganizer.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/korganizer.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/korganizer.png
+debian/tmp/usr/share/icons/crystalsvg/64x64/apps/korganizer.png
+debian/tmp/usr/share/icons/crystalsvg/128x128/apps/korganizer.png
 debian/tmp/usr/share/icons/crystalsvg/16x16/actions/knewstuff.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/actions/knewstuff.png
 debian/tmp/usr/share/icons/crystalsvg/64x64/actions/knewstuff.png
@@ -47,6 +53,7 @@ debian/tmp/usr/share/services/configtime.desktop
 debian/tmp/usr/share/services/configviews.desktop
 debian/tmp/usr/share/services/configcolors.desktop
 debian/tmp/usr/share/services/configfonts.desktop
+debian/tmp/usr/share/services/configfreebusy.desktop
 debian/tmp/usr/share/services/configgroupscheduling.desktop
 debian/tmp/usr/share/services/configgroupautomation.desktop
 debian/tmp/usr/share/servicetypes/calendardecoration.desktop

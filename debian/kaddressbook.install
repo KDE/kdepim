@@ -84,6 +84,8 @@ debian/tmp/usr/share/doc/kde/HTML/en/kaddressbook/vieweditdlg.png
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/kaddressbook.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/kaddressbook.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/kaddressbook.png
+debian/tmp/usr/share/icons/crystalsvg/64x64/apps/kaddressbook.png
+debian/tmp/usr/share/icons/crystalsvg/128x128/apps/kaddressbook.png
 debian/tmp/usr/share/services/kaddressbook/cardview.desktop
 debian/tmp/usr/share/services/kaddressbook/distributionlist.desktop
 debian/tmp/usr/share/services/kaddressbook/iconview.desktop

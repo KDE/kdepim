@@ -31,6 +31,11 @@ debian/tmp/usr/share/apps/kpilot/icons/crystalsvg/48x48/apps/kpalmdoc.png
 debian/tmp/usr/share/apps/kpilot/icons/crystalsvg/32x32/apps/kpalmdoc.png
 debian/tmp/usr/share/apps/kpilot/icons/crystalsvg/22x22/apps/kpalmdoc.png
 debian/tmp/usr/share/apps/kpilot/icons/crystalsvg/16x16/apps/kpalmdoc.png
+debian/tmp/usr/share/apps/kpilot/icons/crystalsvg/22x22/actions/busysync.png
+debian/tmp/usr/share/apps/kpilot/icons/crystalsvg/22x22/actions/hotsync.png
+debian/tmp/usr/share/apps/kpilot/icons/crystalsvg/22x22/actions/backup.png
+debian/tmp/usr/share/apps/kpilot/icons/crystalsvg/22x22/actions/fastsync.png
+debian/tmp/usr/share/apps/kpilot/icons/crystalsvg/22x22/actions/restore.png
 debian/tmp/usr/share/apps/kpilot/kpilot-db.png
 debian/tmp/usr/share/apps/kpilot/kpilot-calendar.png
 debian/tmp/usr/share/apps/kpilot/kpilot-todo.png

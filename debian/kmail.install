@@ -2,6 +2,8 @@ debian/tmp/usr/bin/kmail
 debian/tmp/usr/include/kde/kmailIface.h
 debian/tmp/usr/include/kde/kmailpartIface.h
 debian/tmp/usr/include/kde/kmailicalIface.h
+debian/tmp/usr/lib/libkmailprivate.la
+debian/tmp/usr/lib/libkmailprivate.so.*
 debian/tmp/usr/lib/kde3/libkmailpart.la
 debian/tmp/usr/lib/kde3/libkmailpart.so
 debian/tmp/usr/lib/kde3/libkmailpart.so.1
@@ -30,6 +32,10 @@ debian/tmp/usr/share/apps/kmail/about/main.html
 debian/tmp/usr/share/apps/kmail/about/pointers.png
 debian/tmp/usr/share/apps/kmail/about/shadow1.png
 debian/tmp/usr/share/apps/kmail/eventsrc
+debian/tmp/usr/share/apps/kmail/icons/crystalsvg/48x48/actions/mark_as_spam.png
+debian/tmp/usr/share/apps/kmail/icons/crystalsvg/32x32/actions/mark_as_spam.png
+debian/tmp/usr/share/apps/kmail/icons/crystalsvg/22x22/actions/mark_as_spam.png
+debian/tmp/usr/share/apps/kmail/icons/crystalsvg/16x16/actions/mark_as_spam.png
 debian/tmp/usr/share/apps/kmail/kmcomposerui.rc
 debian/tmp/usr/share/apps/kmail/kmmainwin.rc
 debian/tmp/usr/share/apps/kmail/kmreadermainwin.rc
@@ -45,6 +51,7 @@ debian/tmp/usr/share/icons/crystalsvg/16x16/apps/kmail.png
 debian/tmp/usr/share/icons/crystalsvg/22x22/apps/kmail.png
 debian/tmp/usr/share/icons/crystalsvg/22x22/apps/kmaillight.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/kmail.png
+debian/tmp/usr/share/icons/crystalsvg/32x32/apps/kmaillight.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/kmail.png
 debian/tmp/usr/share/icons/crystalsvg/64x64/apps/kmail.png
 debian/tmp/usr/share/icons/crystalsvg/128x128/apps/kmail.png

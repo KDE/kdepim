@@ -19,16 +19,17 @@ debian/tmp/usr/lib/kde3/libkontact_weatherplugin.so
 debian/tmp/usr/lib/kde3/libkontact_weatherplugin.la
 debian/tmp/usr/lib/kde3/libkontact_knodeplugin.so
 debian/tmp/usr/lib/kde3/libkontact_knodeplugin.la
-debian/tmp/usr/lib/kde3/libkontact_kitchensync.so
-debian/tmp/usr/lib/kde3/libkontact_kitchensync.la
 debian/tmp/usr/share/applications/kde/Kontact.desktop
 debian/tmp/usr/share/apps/kontact/kontactui.rc
 debian/tmp/usr/share/apps/kontact/kontact.setdlg
 debian/tmp/usr/share/apps/kontact/pics/splash.png
 debian/tmp/usr/share/apps/kontactsummary/kontactsummary_part.rc
+debian/tmp/usr/share/config.kcfg/kontact.kcfg
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/kontact.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/kontact.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/kontact.png
+debian/tmp/usr/share/icons/crystalsvg/64x64/apps/kontact.png
+debian/tmp/usr/share/icons/crystalsvg/128x128/apps/kontact.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/korganizer_todo.png
 debian/tmp/usr/share/services/kontactconfig.desktop
 debian/tmp/usr/share/services/kontact/kaddressbookplugin.desktop
@@ -39,6 +40,5 @@ debian/tmp/usr/share/services/kontact/todoplugin.desktop
 debian/tmp/usr/share/services/kontact/summaryplugin.desktop
 debian/tmp/usr/share/services/kontact/weatherplugin.desktop
 debian/tmp/usr/share/services/kontact/knodeplugin.desktop
-debian/tmp/usr/share/services/kontact/kitchensync.desktop
 debian/tmp/usr/share/servicetypes/kontactplugin.desktop
 

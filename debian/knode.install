@@ -85,6 +85,13 @@ debian/tmp/usr/share/doc/kde/HTML/en/knode/using-firststart.docbook
 debian/tmp/usr/share/doc/kde/HTML/en/knode/using-morefeatures.docbook
 debian/tmp/usr/share/doc/kde/HTML/en/knode/using-subscribing.docbook
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/knode.png
+debian/tmp/usr/share/icons/crystalsvg/16x16/apps/knode2.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/knode.png
+debian/tmp/usr/share/icons/crystalsvg/32x32/apps/knode2.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/knode.png
+debian/tmp/usr/share/icons/crystalsvg/48x48/apps/knode2.png
+debian/tmp/usr/share/icons/crystalsvg/64x64/apps/knode.png
+debian/tmp/usr/share/icons/crystalsvg/64x64/apps/knode2.png
+debian/tmp/usr/share/icons/crystalsvg/128x128/apps/knode.png
+debian/tmp/usr/share/icons/crystalsvg/128x128/apps/knode2.png
 debian/tmp/usr/share/services/knewsservice.protocol

@@ -20,9 +20,11 @@ debian/tmp/usr/lib/libkalarmd.so
 debian/tmp/usr/lib/libkcal.so
 debian/tmp/usr/lib/libkgantt.so
 debian/tmp/usr/lib/libkorganizer.so
+debian/tmp/usr/lib/libkorganizer_eventviewer.so
 debian/tmp/usr/lib/libkpilot.so
 debian/tmp/usr/lib/libkpimexchange.so
 debian/tmp/usr/lib/libkdepim.so
+debian/tmp/usr/lib/libkmailprivate.so
 debian/tmp/usr/lib/libknewstuff.so
 debian/tmp/usr/lib/libksync.so
 debian/tmp/usr/lib/libktnef.la
