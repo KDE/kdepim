@@ -447,7 +447,7 @@ void AddressEditDialog::fillCountryCombo(KComboBox *combo)
   };
 
   QStringList countries;
-  for ( int i = 0; sCountry[ i ] != ""; ++i )
+  for ( int i = 0; !sCountry[ i ].isEmpty(); ++i )
     countries.append( sCountry[i] );
 
   countries.sort();
