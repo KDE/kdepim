@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <iostream.h>
+#include <iostream>
 #include <stdlib.h>
 
 
@@ -35,7 +35,7 @@ void filter_ldif::import(filterInfo *info) {
 	 char     file[1024];
    char     dir[1024];
    QWidget *parent=info->parent();
-   cout << parent << "\n";
+   std::cout << parent << std::endl;
 
    sprintf(dir,getenv("HOME"));
 
@@ -197,13 +197,15 @@ bool filter_ldif::convert(const char *filename, filterInfo *info) {
 QString filter_ldif::decodeBase64(QString input)
 {
 
-    // cout << "  Trying to decode base64 string: " << input << "\n";
+    // std::cout << "  Trying to decode base64 string: " << input <<
+    // std::endl;
     QString result;
 
     int tempLen = input.length();
     for(unsigned int i=0; i<input.length(); i++) {
         if(codes[ input[i].latin1() ] < 0) {
-	   // cout << "Invalid character in base64 string: " << input[i].latin1() << "\n";
+	   // std::cout << "Invalid character in base64 string: " <<
+	   // input[i].latin1() << std::endl;
 	   --tempLen; // ignore non-valid chars and padding
         }
     }
