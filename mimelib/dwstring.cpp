@@ -377,7 +377,6 @@ DwString::DwString(FILE* aFile , size_t aLen)
 
 DwString::DwString(const char* aCstr)
 {
-    assert(aCstr != 0);
     if (sEmptyRep == 0) {
         sEmptyBuffer[0] = 0;
         sEmptyRep = new DwStringRep(sEmptyBuffer, kEmptyBufferSize);
@@ -388,8 +387,10 @@ DwString::DwString(const char* aCstr)
     mRep = new_rep_reference(sEmptyRep);
     mStart = 0;
     mLength = 0;
-    size_t len = (aCstr) ? strlen(aCstr) : 0;
-    _replace(0, mLength, aCstr, len);
+    if ( aCstr ) {
+        size_t len = (aCstr) ? strlen(aCstr) : 0;
+        _replace(0, mLength, aCstr, len);
+    }
 }
 
 
