@@ -3,7 +3,8 @@ TODO LIST (Ignore the file TODO)
 * Factor the Kroupware stuff into a conduit instead of
   hardcoding it in the daemon.
 * GJJ: Remove all the Log: CVS tags from files. This is just dumbwork,
-  but will save us on merge conflicts later.
+  but will save us on merge conflicts later. This has already been
+  done in kpilot/
 * GJJ: move the file install widget to an iconview.
 * GJJ: lose the QMultiLineEdit in MemoWidget.
 * GJJ: Add a menuitem "Configure conduits" to the kpilotDaemon RMB Menu
@@ -29,8 +30,24 @@ TODO LIST (Ignore the file TODO)
 * GJJ: Add a flag to the log{Error,Message} function 
   to prevent the addition of the trailing <br> and the date
 
+KPilot Developer's notes for January 30th, 2003
+===============================================  
 
+2003-1-24  Adriaan de Groot
+* Received a patch from David Mott that removes lots of the Log:
+  tags from the KPilot source (mostly in kpilot/). Finished the
+  job too, committed. 
 
+2003-1-20  Adriaan de Groot
+* For the next little while, I'll be working in _BRANCH fixing
+  bugs as best I can. These will end up in KDE 3.1.x releases.
+  Reinhold will be working in HEAD, adding neat features.
+  BRANCH will be merged to HEAD regularly so that no bug-fixes
+  are lost in HEAD. 
+* Reduced debugging output clutter in PilotAddress by changing 
+  to FUNCTIONSETUPL(). Assigned Levels are: 4=PilotAddress.
+  
+  
 2003-1-18  Reinhold Kainhofer
 * Removed several $Log: ... tags from the conduits I maintain
 * started implementing the custom fields sync of the addressbook conduit. 
@@ -38,7 +55,7 @@ TODO LIST (Ignore the file TODO)
 * Cleanup of includes in my conduits.
 * Some more work on the DOCConduit. There are still several open issues, but
   the basic functionality works just fine!
-	
+
 
 KPilot Developer's notes for January 15th, 2003
 ===============================================
