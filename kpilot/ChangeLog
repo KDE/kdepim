@@ -43,7 +43,22 @@ KPilot Developer's notes for February 8th, 2003
 * kpilot.cc [BRANCH] Improve perceived startup time by delaying
   the loading of databases till the GUI is up.
 * options.h [BRANCH] To enforce discipline, use NO_ASCII_CAST.
+  NOT COMMITTED - it'll break a lot of debug stuff as well. 
+  However, as an occasional test, it's a good idea.
 * {many files} [BRANCH] Clean up random char * conversions.
+* kpilotConfig.{h,cc} [BRANCH] Introduce config entry for encoding.
+* kpilot.cc pilotDaemon.cc pilotAppCategory.h pilotRecord.cc [BRANCH] 
+  Use the config entry for encoding. Applications that use any
+  PilotAppCategory derived class - ie. that interpret data from the
+  Pilot in any way - should call setupPilotCodec() beforehand with
+  the name of the encoding (QString::null == "ISO8859-1", the default,
+  or use something like "Shift-JIS").
+* pilotMemo.{h,cc} memoWidget.cc [BRANCH] Use the codec for the returned
+  title of the memo. This is the first step on making PilotMemo return
+  everything in QString format suitable for any encoding. In order to
+  change the encoding, add
+	Encoding=<name>
+  to the kpilotrc file in the top part (ie. after DeviceName).
   
 2003-2-1  Adriaan de Groot
 * Some time spent tracking down double activations of slowShowMemo().
