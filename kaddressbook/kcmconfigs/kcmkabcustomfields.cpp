@@ -202,10 +202,20 @@ void KCMKabCustomFields::initGUI()
   mPageView->setFullWidth( true );
   hbox->addWidget( mPageView );
 
-  mPagePreview = new QLabel( this );
-  mPagePreview->setFrameStyle( QFrame::Box | QFrame::Sunken );
-  mPagePreview->setMinimumWidth( 300 );
-  hbox->addWidget( mPagePreview );
+  QFrame *box = new QFrame( this );
+  box->setFrameStyle( QFrame::Box | QFrame::Sunken );
+  box->setMinimumWidth( 300 );
+
+  QVBoxLayout *boxLayout = new QVBoxLayout( box, KDialog::marginHint(), 
+                                            KDialog::spacingHint() );
+
+  mPagePreview = new QLabel( box );
+  boxLayout->addWidget( mPagePreview );
+
+  mPageDetails = new QLabel( box );
+  boxLayout->addWidget( mPageDetails );
+
+  hbox->addWidget( box );
 
   QStringList list = KGlobal::dirs()->findAllResources( "data", "kaddressbook/contacteditorpages/*.ui", true, true );
   for ( QStringList::iterator it = list.begin(); it != list.end(); ++it ) {
@@ -238,12 +248,17 @@ void KCMKabCustomFields::updatePreview( QListViewItem *item )
                                 .arg( i18n( "What's This" ) )
                                 .arg( item->text( 3 ) );
 
-      mPagePreview->setText( details );
+      mPageDetails->setText( details );
+
+      PageItem *pageItem = static_cast<PageItem*>( item->parent() );
+      mPagePreview->setPixmap( pageItem->preview() );
     } else {
+      mPageDetails->setText( "" );
+
       PageItem *pageItem = static_cast<PageItem*>( item );
       mPagePreview->setPixmap( pageItem->preview() );
     }
-	} else {
+  } else {
     mPagePreview->setPixmap( QPixmap() );
   }
 }

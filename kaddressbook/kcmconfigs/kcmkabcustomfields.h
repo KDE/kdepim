@@ -53,6 +53,7 @@ class KCMKabCustomFields : public KCModule
 
     KListView *mPageView;
     QLabel *mPagePreview;
+    QLabel *mPageDetails;
     QPushButton *mDesignerButton;
 };
 
