@@ -169,6 +169,9 @@ void FolderLister::slotListJobResult( KIO::Job *job )
 
       QString displayName;
       bool isFolder = false;
+      bool isEventFolder = false;
+      bool isContactFolder = false;
+      bool isTodoFolder = false;
 
       QDomNode n4;
       for( n4 = n3.firstChild(); !n4.isNull(); n4 = n4.nextSibling() ) {
@@ -176,12 +179,15 @@ void FolderLister::slotListJobResult( KIO::Job *job )
         
         if ( e.tagName() == "displayname" ) displayName = e.text();
         if ( e.tagName() == "resourcetype" ) {
-          QDomNode n5 = e.namedItem( "collection" );
-          if ( !n5.isNull() ) isFolder = true;
+          isFolder = !e.namedItem( "collection" ).isNull();
+          isEventFolder = !e.namedItem( "vevent-collection" ).isNull();
+          isTodoFolder = !e.namedItem( "vtodo-collection" ).isNull();
+          isContactFolder = !e.namedItem( "vcard-collection" ).isNull();
         }
       }
 
-      if ( isFolder ) {
+      if ( ( isFolder && mType == Calendar ) ||
+           ( isContactFolder && mType == AddressBook ) ) {
         QDomNode n6 = n.namedItem( "href" );
         QDomElement e2 = n6.toElement();
         QString href = e2.text();
