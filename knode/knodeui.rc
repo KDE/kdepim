@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="KNode" version="8">
+<kpartgui name="KNode" version="9">
 
 <MenuBar>
   <Menu noMerge="1" name="file"><text>&amp;File</text>
@@ -19,6 +19,7 @@
     <Action name="view_showThreads"/>
     <Action name="view_ExpandAll"/>
     <Action name="view_CollapseAll"/>
+    <Action name="thread_toggle"/>
     <Separator/>
     <Action name="view_Filter"/>
     <Action name="view_Sort"/>
@@ -37,16 +38,13 @@
     <Action name="go_prevGroup"/>
   </Menu>
   <Menu name="account"><text>A&amp;ccount</text>
-    <Action name="account_properties"/>
-    <Separator/>
-    <Action name="account_subscribe"/>
     <Action name="account_dnlHeaders"/>
+    <Action name="account_subscribe"/>
     <Separator/>
+    <Action name="account_properties"/>
     <Action name="account_delete"/>
   </Menu>
   <Menu name="group"><text>G&amp;roup</text>
-    <Action name="group_properties"/>
-    <Separator/>
     <Action name="group_dnlHeaders"/>
     <Action name="group_expire"/>
     <Action name="group_resort"/>
@@ -54,14 +52,12 @@
     <Action name="group_allRead"/>
     <Action name="group_allUnread"/>
     <Separator/>
-    <Action name="account_subscribe"/>
+    <Action name="group_properties"/>
     <Action name="group_unsubscribe"/>
     <Separator/>
-    <Menu name="group_folder_sub"><text>&amp;Folders</text>
-      <Action name="folder_compact"/>
-      <Action name="folder_empty"/>
-    </Menu>  
-  </Menu>   
+    <Action name="folder_compact"/>
+    <Action name="folder_empty"/>
+  </Menu>
   <Menu name="article"><text>&amp;Article</text>
     <Action name="article_postNew"/>
     <Action name="article_postReply"/>
@@ -78,9 +74,7 @@
       <Action name="thread_setScore"/>
       <Action name="thread_watch"/>
       <Action name="thread_ignore"/>
-      <Separator/>
-      <Action name="thread_toggle"/>
-    </Menu> 
+    </Menu>
     <Separator/>
     <Action name="article_cancel"/>
     <Action name="article_supersede"/>
@@ -119,21 +113,19 @@
 <StatusBar/>
 
 <Menu name="account_popup">
-  <Action name="account_properties"/>
-  <Separator/>
-  <Action name="account_subscribe"/>
   <Action name="account_dnlHeaders"/>
+  <Action name="account_subscribe"/>
   <Separator/>
+  <Action name="account_properties"/>
   <Action name="account_delete"/>
 </Menu>
 
 <Menu name="group_popup">
-  <Action name="group_properties"/>
-  <Separator/>
   <Action name="group_dnlHeaders"/>
   <Action name="group_allRead"/>
   <Action name="group_allUnread"/>
   <Separator/>
+  <Action name="group_properties"/>
   <Action name="group_unsubscribe"/>
 </Menu>
 
