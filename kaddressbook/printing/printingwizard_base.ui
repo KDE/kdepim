@@ -1,0 +1,155 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>PrintingWizardBase</class>
+<widget class="QWizard">
+    <property name="name">
+        <cstring>PrintingWizardBase</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>600</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Printing Wizard</string>
+    </property>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>General</cstring>
+        </property>
+        <attribute name="title">
+            <string>General</string>
+        </attribute>
+        <vbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <property name="margin">
+                <number>3</number>
+            </property>
+            <property name="spacing">
+                <number>3</number>
+            </property>
+            <widget class="QLayoutWidget">
+                <property name="name">
+                    <cstring>Layout1</cstring>
+                </property>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>tlStyle</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>1</hsizetype>
+                                <vsizetype>5</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="text">
+                            <string>Print Style:</string>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignVCenter|AlignRight</set>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox">
+                        <property name="name">
+                            <cstring>cbStyle</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>3</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                    </widget>
+                </hbox>
+            </widget>
+            <widget class="QButtonGroup">
+                <property name="name">
+                    <cstring>bgPrintSet</cstring>
+                </property>
+                <property name="sizePolicy">
+                    <sizepolicy>
+                        <hsizetype>5</hsizetype>
+                        <vsizetype>1</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                    </sizepolicy>
+                </property>
+                <property name="title">
+                    <string>Print what contacts?</string>
+                </property>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QRadioButton">
+                        <property name="name">
+                            <cstring>rbCurrentContact</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Print current contact</string>
+                        </property>
+                    </widget>
+                    <widget class="QRadioButton">
+                        <property name="name">
+                            <cstring>rbSelection</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Selection</string>
+                        </property>
+                    </widget>
+                    <widget class="QRadioButton">
+                        <property name="name">
+                            <cstring>rbWholeBook</cstring>
+                        </property>
+                        <property name="text">
+                            <string>All entries</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                    </widget>
+                </vbox>
+            </widget>
+        </vbox>
+    </widget>
+</widget>
+<connections>
+    <connection>
+        <sender>cbStyle</sender>
+        <signal>activated(int)</signal>
+        <receiver>PrintingWizardBase</receiver>
+        <slot>slotStyleSelected(int)</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in implementation">printingwizard_base.ui.h</include>
+</includes>
+<slots>
+    <slot>slotStyleSelected( int )</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>
