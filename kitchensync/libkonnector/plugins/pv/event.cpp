@@ -16,13 +16,15 @@
  ***************************************************************************/
 
 #include <qtextstream.h>
+#include <qbitarray.h>
 #include <qdir.h>
-
-#include <kdebug.h>
 
 #include <idhelper.h>
 
+#include <kdebug.h>
+
 #include "libpv/pvdataentry.h"
+#include "utils.h"
 
 #include "event.h"
 
@@ -31,58 +33,108 @@ using namespace PVHelper;
 
 EventSyncee* Event::toEventSyncee(QDomNode& n)
 {
-  kdDebug() << "Begin::Event::toEventSyncee" << endl;
+  kdDebug(5205) << "Begin::Event::toEventSyncee" << endl;
   EventSyncee* syncee = new KSync::EventSyncee();
   KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/idhelper");
-  
+
   QString id;
 
   while(!n.isNull())
   {
     QDomElement e = n.toElement();
+    // Check the elements and fill the contents to the event
     if( e.tagName() == QString::fromLatin1("event"))
     {
-      // convert XML contact to event
-      KCal::Event* event = new KCal::Event();      
-      helper.addId("Event", e.attribute("uid"), event->uid());
+      KCal::Event* event = new KCal::Event();
+      // Dates of the event
+      QDateTime startDate;
+      QDateTime endDate;
+      // Recurrence and type of recurrence
+      KCal::Recurrence *rec = event->recurrence();
+      int type = 0xFF;
+
+      // Register Id of entry
+      helper.addId(e.attribute("category"), e.attribute("uid"), event->uid());
+
       // Get subentries
       QDomNode n = e.firstChild();
       QDomElement el = n.toElement();
 
       while(!n.isNull()) // get all sub entries of element todo
       {
-        QDomElement el = n.toElement();
-        if (el.tagName() == QString::fromLatin1("alarmdate"))
+        QDomElement el = n.toElement();      
+        if (el.tagName() == QString::fromLatin1("type"))
         {
-// xxx alarm objekt anhängen!!!
+          // Handle recurrence
+          type = el.text().toInt();
         }
-        else if (el.tagName() == QString::fromLatin1("alarmtime"))
+        else if (el.tagName() == QString::fromLatin1("date"))
         {
-// xxx alarm objekt anhängen!!!
+          if (el.text() != "")
+          {        
+            // Convert the string to a QDate
+            QDate dat;
+            dat.setYMD(el.text().left(4).toInt(), el.text().mid(4, 2).toInt(),
+                        el.text().mid(6, 2).toInt());
+            startDate.setDate(dat);
+
+            if (type != 0xFF)
+            {
+              // Set recurrence depending on type
+              setRecurrence(rec, startDate, type);
+            }
+          }
         }
-        else if (el.tagName() == QString::fromLatin1("category"))
+        else if (el.tagName() == QString::fromLatin1("enddate"))
         {
-          if (el.text() == "0")
-            event->setCategories(QString("A"));
-          else if (el.text() == "1")
-            event->setCategories(QString("B"));
-          else if (el.text() == "2")
-            event->setCategories(QString("C"));
-          else if (el.text() == "3")
-            event->setCategories(QString("D"));
-          else if (el.text() == "4")
-            event->setCategories(QString("E"));            
+          if (el.text() != "")
+          {        
+            // Convert the string to a QDate
+            QDate dat;
+            dat.setYMD(el.text().left(4).toInt(), el.text().mid(4, 2).toInt(),
+                        el.text().mid(6, 2).toInt());
+            QDateTime datTime(dat);
+            event->setDtEnd(datTime);
+          }
         }
-        else if (el.tagName() == QString::fromLatin1("duedate"))
+        else if (el.tagName() == QString::fromLatin1("starttime"))
         {
-/*          event->setHasDueDate(true);
-          QDate date(el.text().left(4).toInt(), el.text().mid(4, 2).toInt(), el.text().mid(6, 2).toInt());
-          QDateTime time(date);
-          event->setDtDue(time);*/
+          if (el.text() != "")
+          {
+            // Time should be calculated depending on timezone -> dirty hack! xxx
+            QTime startTime(el.text().left(2).toInt() - 1, el.text().right(2).toInt());
+            startDate.setTime(startTime);
+            event->setFloats(false);
+          }
         }
-        else if (el.tagName() == QString::fromLatin1("priority"))
+        else if (el.tagName() == QString::fromLatin1("endtime"))
         {
-          event->setPriority(el.text().toInt());
+          if (el.text() != "")
+          {
+            // Time should be calculated depending on timezone -> dirty hack! xxx
+            QTime endTime(el.text().left(2).toInt() - 1, el.text().right(2).toInt());
+            endDate.setTime(endTime);
+            endDate.setDate(startDate.date());
+            event->setDtEnd(endDate);
+          }
+        }
+        if (el.tagName() == QString::fromLatin1("alarmtime"))
+        {
+          if (el.text() != "")
+          {
+            // Get time.
+            // Time should be calculated depending on timezone -> dirty hack! xxx
+            QTime tim(el.text().left(2).toInt() - 1, el.text().right(2).toInt());
+            QTime alarmTime(tim);
+            // Calculate offset
+            int offset = alarmTime.secsTo(startDate.time());
+            // Add alarm as an incidence of this todo
+            KCal::Alarm *al = new KCal::Alarm(event);
+            al->setText(event->description());
+            al->setOffset(offset * -1);  // * -1 -> alarm has to be before event
+            al->setEnabled(true);
+            event->addAlarm(al);
+          }
         }
         else if (el.tagName() == QString::fromLatin1("description"))
         {
@@ -97,10 +149,14 @@ EventSyncee* Event::toEventSyncee(QDomNode& n)
           {
             event->setSummary(el.text());
           }
-        }        
+        }
         // Go to next entry
         n = n.nextSibling();
       }  // end of while
+      
+      // Set start date
+      event->setDtStart(startDate);
+
       EventSyncEntry* entry = new EventSyncEntry(event);
       // add entry to syncee
       syncee->addEntry(entry);
@@ -125,40 +181,59 @@ EventSyncee* Event::toEventSyncee(QDomNode& n)
     }  // end of if contact
     else
     {
-      kdDebug() << "PVHelper::XML2Syncee -> contact not found" << endl;
+      kdDebug(5205) << "PVHelper::XML2Syncee -> contact not found" << endl;
       return 0l; // xxx bessere fehlerbehandlung!
     }
     n = n.nextSibling(); // jump to next element
   }  // end of while
-  kdDebug() << "End::Todo::toTodoSyncee" << endl;
+  kdDebug(5205) << "End::Todo::toTodoSyncee" << endl;
   return syncee;
 }
+
 
 QString Event::toXML(EventSyncee* syncee)
 {
   KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/idhelper");
-  
+
   QStringList categories;
- 
+
   QString str;
-    
-  str.append("<todos>\n");
-  
+
+  str.append("<events>\n");
+
   // for all entries
   KCal::Event* event;
   KSync::EventSyncEntry *entry;
-    
+
   for (entry = (KSync::EventSyncEntry*)syncee->firstEntry(); entry != 0l;
                            entry = (KSync::EventSyncEntry*)syncee->nextEntry())
-  {    
+  {
     QString id;
     QString state;
     QString category;
     // Get todo from entry
     event = entry->incidence();
-     
+
+    // Recurrence
+    KCal::Recurrence *rec;
+    rec = event->recurrence();
+
+    // determine the category
+    if (rec->doesRecur())
+    {
+      category = "Schedule Reminder";
+    }
+    else if (event->isMultiDay())
+    {
+      category = "Schedule Multi Date";
+    }
+    else
+    {
+      category = "Schedule";
+    }
+
     // Check if id is new
-    id =  helper.konnectorId("Event", event->uid());
+    id =  helper.konnectorId(category, event->uid());
     if (id.isEmpty())
     {
       // New entry -> set state = added
@@ -168,47 +243,50 @@ QString Event::toXML(EventSyncee* syncee)
     {
       state = "undefined";
     }
-      
+
+    // Get start and end date;
+    // Time should be calculated depending on timezone -> dirty hack! xxx
+    QDateTime datStart = event->dtStart().addSecs(3600);
+    // Time should be calculated depending on timezone -> dirty hack! xxx
+    QDateTime datEnd = event->dtEnd().addSecs(3600);
+
     // Convert to XML stream
     str.append("<event uid='" + id + "' state='" + state + "' ");
     str.append("category='" + category + "'>\n");
 
-    str.append("<alarmdate></alarmdate>\n");/* xxx alarm objekt extrahieren!!! */
-    str.append("<alarmtime></alarmtime>\n");/* xxx alarm objekt extrahieren!!! */
-    QStringList categories;
-    categories = event->categories(); // xxx only one category supported yet!
-    if (categories[0] != "A" && categories[0] != "B" && categories[0] != "C" &&
-         categories[0] != "D" && categories[0] != "E")
+    // Type is only defined on "Schedule Reminder"
+    if (category == "Schedule Reminder")
     {
-      kdDebug() << "setting default category!!" << endl;
-      str.append("<category>0</category>\n");      
+      QString type = getType(rec);
+      str.append("<type>" + type + "</type>\n");
     }
-    else
+
+    str.append("<date>" + datStart.toString("yyyyMMdd") + "</date>\n");
+
+    // End Date is only defined on "Schedule Multi Date"
+    if (category == "Schedule Multi Date")
     {
-      if (categories[0] == "A")
-        str.append("<category>0</category>\n");
-      else if (categories[0] == "B")
-        str.append("<category>1</category>\n");
-      else if (categories[0] == "C")
-        str.append("<category>1</category>\n");
-      else if (categories[0] == "D")
-        str.append("<category>1</category>\n");
-      else if (categories[0] == "E")
-        str.append("<category>1</category>\n");        
+      str.append("<enddate>" + datEnd.toString("yyyyMMdd") + "</enddate>\n");
     }
-    
-    QString strdate;    
-/*    if (event->hasDueDate())
+    else  // Categories "Schedule" and "Schedule Reminder"
     {
-      QDate dat = event->dtDue().date();
-      strdate = dat.toString("yyyyMMdd");
-      str.append("<duedate>" + strdate + "</duedate>\n");
-    }      
-    else
-    {
-      str.append("<duedate></duedate>\n");    
-    }*/
-     
+      str.append("<starttime>" + datStart.toString("hhmm") + "</starttime>\n");
+      str.append("<endtime>" + datEnd.toString("hhmm") + "</endtime>\n");
+
+      // alarm
+      KCal::Alarm *al = event->alarms().first();
+      if (al)
+      {
+      
+        QDateTime datTime = al->time().addSecs(3600);
+        str.append("<alarmtime>" + datTime.toString("hhmm") + "</alarmtime>\n");
+      }
+      else
+      {
+        str.append("<alarmtime></alarmtime>\n");      
+      }
+    }
+
     // If no description, insert summary instead
     QString description = event->description();
     if (description.isEmpty())
@@ -216,9 +294,117 @@ QString Event::toXML(EventSyncee* syncee)
       description = event->summary();
     }
     str.append("<description>" + description + "</description>\n");
+
     str.append("</event>\n");
   } // end for
   str.append("</events>\n");
-    
+
   return str;
+}
+
+
+void Event::setRecurrence(KCal::Recurrence *rec, QDateTime startDatTime, int type)
+{
+  QBitArray bits(7);  // Weekdays are used as a bitarray
+  int week;       // Week of month
+  
+  QDate startDate = startDatTime.date();
+
+  // Set recurrence start date
+  rec->setRecurStart(startDatTime);
+  
+  // Set recurrence depending on type
+  switch (type)
+  {
+    case 0:
+      // Daily
+      rec->setDaily(1, -1);  // -1 stands for "no end date"
+      break;
+    case 1:
+      // Weekly
+      bits.fill(false); // clear bits
+      bits.setBit(startDate.dayOfWeek() - 1);  // -1 needed because dayOfWeek returns 1..7
+      rec->setWeekly(1, bits, -1);
+      break;
+    case 2:
+      // Monthly
+      rec->setMonthly(KCal::Recurrence::rMonthlyDay, 1, -1);
+      rec->addMonthlyDay(startDate.day());
+      break;
+    case 3:
+      // Monthly day (e.g. the 1st Saturday of the month)
+      // Calculate the position (week of month)
+      // e.g. 15. = week 2 -> position = 2
+      week = (((startDate.day() - 1) / 7) + 1);
+      rec->setMonthly(KCal::Recurrence::rMonthlyPos, 1, -1);
+      bits.fill(false); // clear bits
+      bits.setBit(startDate.dayOfWeek() - 1);
+      // Set position of recurrence
+      // e.g. each 2nd Wednesday -> pos. = 2; bit Wednesday is set
+      rec->addMonthlyPos(week, bits);
+      break;
+    case 4:
+      // yearly
+      rec->setYearly(KCal::Recurrence::rYearlyDay, 1, -1);
+      rec->addYearlyNum(startDate.dayOfYear());
+      break;
+    case 5:
+      // Yearly day (e.g. the 1st Saturday of july)
+      // Calculate the position (week of month)
+      // e.g. 15. = week 2 -> position = 2
+      week = (((startDate.day() - 1) / 7) + 1);
+      // set frequency to 12 -> Cheat to get this category to work!
+      rec->setMonthly(KCal::Recurrence::rMonthlyPos, 12, -1);
+      
+      bits.fill(false); // clear bits
+      bits.setBit(startDate.dayOfWeek() - 1);
+      // Set position of recurrence
+      // e.g. each 2nd Wednesday -> pos. = 2; bit Wednesday is set
+      rec->addMonthlyPos(week, bits);
+      break;
+    default:
+      break;
+  }  // switch
+}
+
+
+QString Event::getType(KCal::Recurrence *rec)
+{
+  QString type;
+  switch(rec->doesRecur())
+  {
+    case KCal::Recurrence::rDaily :
+      // Daily recurrence
+      type = "0";
+      break;
+    case KCal::Recurrence::rWeekly :
+      // Weekly recurrence
+      type = "1";
+      break;
+    case KCal::Recurrence::rMonthlyDay :
+      // Monthly recurrence (same day each month e.g. 15.)
+      type = "2";
+      break;
+    case KCal::Recurrence::rMonthlyPos :
+      if (rec->frequency() == 12)
+      {
+        // Yearly recurrence at a specified day (e.g. 2nd friday in july)
+        type = "5";
+      }
+      else
+      {
+        // Monthly recurrence (same weekday each month e.g. 2nd friday)
+        type = "3";
+      }
+      break;
+    case KCal::Recurrence::rYearlyDay :
+      // Yearly recurrence (each july 15th)
+      type = "4";
+      break;
+
+    case KCal::Recurrence::rNone : // fall through
+    default :
+      break;
+  }
+  return type;
 }

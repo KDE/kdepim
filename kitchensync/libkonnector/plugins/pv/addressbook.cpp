@@ -33,7 +33,7 @@ using namespace PVHelper;
 
 AddressBookSyncee* AddressBook::toAddressBookSyncee(QDomNode& n)
 {
-  kdDebug() << "Begin::AddressBook::toAddressBookSyncee" << endl;
+  kdDebug(5205) << "Begin::AddressBook::toAddressBookSyncee" << endl;
   AddressBookSyncee *syncee = new AddressBookSyncee();
   KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/idhelper");
   
@@ -162,12 +162,12 @@ AddressBookSyncee* AddressBook::toAddressBookSyncee(QDomNode& n)
     }  // end of if contact
     else
     {
-      kdDebug() << "PVHelper::XML2Syncee -> contact not found" << endl;
+      kdDebug(5205) << "PVHelper::XML2Syncee -> contact not found" << endl;
       return 0l; // xxx bessere fehlerbehandlung!
     }
     n = n.nextSibling(); // jump to next element
   }  // end of while
-  kdDebug() << "End::AddressBook::toAddressBookSyncee" << endl;
+  kdDebug(5205) << "End::AddressBook::toAddressBookSyncee" << endl;
   return syncee;
 }
 
@@ -354,6 +354,11 @@ QString AddressBook::addressToStr(const KABC::Address& addr)
   }
   if (!addr.locality().isEmpty())
   {
+    // Add a space separator between postal code and locality
+    if (!addr.postalCode().isEmpty())
+    {
+      strAddr.append(" ");
+    }
     strAddr.append(addr.locality());
   }
   return strAddr;

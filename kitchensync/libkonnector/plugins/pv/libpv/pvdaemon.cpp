@@ -140,14 +140,14 @@ void pvDaemon::getChanges(const QStringList& categories)
           {
             contacts << (*it);
           }
-          else if ((*it).contains("To Do"))
-          {
-            todos << (*it);          
-          }
           else if ((*it).contains("Schedule"))
           {
             events << (*it);
           }
+          else if ((*it).contains("To Do"))
+          {
+            todos << (*it);          
+          }          
         }
         if (!contacts.isEmpty())
         {
@@ -161,18 +161,6 @@ void pvDaemon::getChanges(const QStringList& categories)
           }
           textStream << "</contacts>" << endl;
         }
-        if (!todos.isEmpty())
-        {
-          textStream << "<todos>" << endl;
-          for (QStringList::ConstIterator it = todos.begin(); it != todos.end(); it++)
-          {          
-            unsigned int category = Utils::getCategoryPV((*it).latin1());
-            kdDebug() << "Category: " << category << endl;
-            // Get the PVDataEntries of one category and convert them to xml
-            textStream << getChangesFromPV(category);
-          }
-          textStream << "</todos>" << endl;
-        }
         if (!events.isEmpty())
         {
           textStream << "<events>" << endl;
@@ -185,6 +173,18 @@ void pvDaemon::getChanges(const QStringList& categories)
           }
           textStream << "</events>" << endl;
         }        
+        if (!todos.isEmpty())
+        {
+          textStream << "<todos>" << endl;
+          for (QStringList::ConstIterator it = todos.begin(); it != todos.end(); it++)
+          {          
+            unsigned int category = Utils::getCategoryPV((*it).latin1());
+            kdDebug() << "Category: " << category << endl;
+            // Get the PVDataEntries of one category and convert them to xml
+            textStream << getChangesFromPV(category);
+          }
+          textStream << "</todos>" << endl;
+        }
         // Finish the XML file
         textStream << "</pvdataentries>" << endl;
         

@@ -98,7 +98,7 @@ const map<unsigned int, string>& CasioPV::PVSchedule::getData() const{
 
 string CasioPV::PVSchedule::getDate()
 {
-  return m_data[DATE];
+  return Utils::ChangeDateToUnix(m_data[DATE]);
 }
 
 string CasioPV::PVSchedule::getStartTime()
@@ -128,7 +128,7 @@ void CasioPV::PVSchedule::setDate( string& value )
   {
     throw PVDataEntryException( "PVSchedule::setDate : string not in yyyymmdd format", 4004 );
   }
-  m_data[DATE] = value;
+  m_data[DATE] = Utils::ChangeDateToPV(value);
 }
 
 void CasioPV::PVSchedule::setStartTime( string& value )
@@ -215,9 +215,9 @@ string CasioPV::PVSchedule::toXML()
                             << Utils::getCategoryString(getModeCode())
                             << "' state='" << getState() << "'>" << endl  
        << "<date>" << getDate() << "</date>" << endl
-       << "<alarmtime>" << getAlarmTime() << "</alarmtime>" << endl
        << "<starttime>" << getStartTime() << "</starttime>" << endl
        << "<endtime>" << getEndTime() << "</endtime>" << endl
+       << "<alarmtime>" << getAlarmTime() << "</alarmtime>" << endl
        << "<description>" << getDescription() << "</description>" << endl
       << "</event>" << endl;
   return oss.str();
@@ -242,9 +242,9 @@ void CasioPV::PVSchedule::fromXML(string strXML)
     {  
       setDate(vecElem[0]);
     }
-    setAlarmTime(vecElem[1]);
-    setStartTime(vecElem[2]);
-    setEndTime(vecElem[3]);
+    setStartTime(vecElem[1]);
+    setEndTime(vecElem[2]);
+    setAlarmTime(vecElem[3]);    
     setDescription(vecElem[4]);
   }
 }

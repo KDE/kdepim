@@ -70,14 +70,14 @@ QString PVPlugin::udi()const
 
 QIconSet PVPlugin::iconSet()const
 {
-    kdDebug() << "iconSet" << endl;
+    kdDebug(5205) << "iconSet" << endl;
     QPixmap logo;
     logo.load( locate("appdata",  "pics/pv_logo.png" ) );
     return QIconSet( logo );
 }
 QString PVPlugin::iconName()const
 {
-    kdDebug() << "icon Name from PV" << endl;
+    kdDebug(5205) << "icon Name from PV" << endl;
     return QString::fromLatin1("pics/pv_logo.png");
 };
 Kapabilities PVPlugin::capabilities( )
@@ -112,7 +112,7 @@ Kapabilities PVPlugin::capabilities( )
 void PVPlugin::setCapabilities(const Kapabilities &kaps)
 {
   // Set important kapabilities for syncing
-  kdDebug() << "PVPlugin setCapabilities" << endl;
+  kdDebug(5205) << "PVPlugin setCapabilities" << endl;
   casioPVLink->setModel(kaps.currentModel());
   casioPVLink->setConnectionMode(kaps.currentConnectionMode());
   casioPVLink->setMetaSyncing(kaps.isMetaSyncingEnabled());
@@ -120,19 +120,19 @@ void PVPlugin::setCapabilities(const Kapabilities &kaps)
 
 bool PVPlugin::startSync()
 {
-  kdDebug() << "start Sync PVPlugin" << endl;
+  kdDebug(5205) << "start Sync PVPlugin" << endl;
   return casioPVLink->startSync();
 }
 
 bool PVPlugin::startBackup(const QString& path)
 {
-  kdDebug() << "start Backup PVPlugin" << endl;
+  kdDebug(5205) << "start Backup PVPlugin" << endl;
   return casioPVLink->startBackup(path);
 }
 
 bool PVPlugin::startRestore(const QString& path)
 {
-  kdDebug() << "start Restore PVPlugin" << endl;
+  kdDebug(5205) << "start Restore PVPlugin" << endl;
   return casioPVLink->startRestore(path);
 }
 
@@ -143,17 +143,19 @@ bool PVPlugin::isConnected()
 
 bool PVPlugin::insertFile(const QString &fileName )
 {
-  return casioPVLink->insertFile(fileName);
+  // Not used yet
+  return false;
 }
 
 QByteArray PVPlugin::retrFile(const QString &path )
 {
-  return casioPVLink->retrFile(path);
+  // Not used yet
+  return 0;
 }
 
 void PVPlugin::slotWrite(const QString &path, const QByteArray &array )
 {
-  casioPVLink->write(path, array);
+  // Not used yet
 }
 
 void PVPlugin::slotWrite(Syncee::PtrList entry)
@@ -163,12 +165,12 @@ void PVPlugin::slotWrite(Syncee::PtrList entry)
 
 void PVPlugin::slotWrite(KOperations::ValueList operations )
 {
-  casioPVLink->write(operations);
+  // Not used yet
 }
 
 Syncee* PVPlugin::retrEntry( const QString& path )
 {
-  return casioPVLink->retrEntry(path);
+  return 0;// Not used yet
 }
 
 // Public slots for signals from casioPVLink
@@ -185,7 +187,7 @@ void PVPlugin::slotChanged( bool state)
 
 void PVPlugin::slotErrorKonnector(int mode, QString error)
 {
-  kdDebug() << "slotError PVKonnector" << endl;
+  kdDebug(5205) << "slotError PVKonnector" << endl;
   emit errorKonnector(m_udi, mode, error);
 }
 

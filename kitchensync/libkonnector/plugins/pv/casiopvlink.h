@@ -45,12 +45,7 @@ namespace KSync
       void setModel(const QString& model );
       void setConnectionMode(const QString& connectionMode );
       void setMetaSyncing(const bool meta);
-      QByteArray retrFile(const QString &path );
-      Syncee* retrEntry( const QString& );
-      bool insertFile(const QString &fileName );
-      void write(const QString &, const QByteArray & );
       void write(Syncee::PtrList);
-      void write(KOperations::ValueList);
       QString metaId()const;
 
       // -------------------- Public DCOP interface -------------------- //

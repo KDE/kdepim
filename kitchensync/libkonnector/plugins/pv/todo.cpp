@@ -31,10 +31,10 @@ using namespace PVHelper;
 
 TodoSyncee* Todo::toTodoSyncee(QDomNode& n)
 {
-  kdDebug() << "Begin::Todo::toTodoSyncee" << endl;
+  kdDebug(5205) << "Begin::Todo::toTodoSyncee" << endl;
   TodoSyncee* syncee = new KSync::TodoSyncee();
   KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/idhelper");
-  
+
   QString id;
 
   while(!n.isNull())
@@ -45,6 +45,7 @@ TodoSyncee* Todo::toTodoSyncee(QDomNode& n)
       // convert XML contact to todo
       KCal::Todo* todo = new KCal::Todo();
       helper.addId("Todo", e.attribute("uid"), todo->uid());
+      QDate alarmDate;
       // Get subentries
       QDomNode n = e.firstChild();
       QDomElement el = n.toElement();
@@ -52,13 +53,65 @@ TodoSyncee* Todo::toTodoSyncee(QDomNode& n)
       while(!n.isNull()) // get all sub entries of element todo
       {
         QDomElement el = n.toElement();
-        if (el.tagName() == QString::fromLatin1("alarmdate"))
+        // Check the elements and fill the contents to the todo
+        if (el.tagName() == QString::fromLatin1("check"))
         {
-// xxx alarm objekt anhängen!!!
+          if (el.text() == "0")
+          {
+            todo->setCompleted(false);
+          }
+          else if (el.text() == "1")
+          {
+            todo->setCompleted(true);
+          }
+        }
+        else if (el.tagName() == QString::fromLatin1("duedate"))
+        {
+          todo->setHasDueDate(true);
+          QDate date(el.text().left(4).toInt(), el.text().mid(4, 2).toInt(), el.text().mid(6, 2).toInt());
+          QDateTime datTime(date);
+          todo->setDtDue(datTime);
+        }
+        else if (el.tagName() == QString::fromLatin1("alarmdate"))
+        {
+          if (el.text() != "")
+          {          
+            // Set alarm date
+            alarmDate.setYMD(el.text().left(4).toInt(), el.text().mid(4, 2).toInt(),
+                                   el.text().mid(6, 2).toInt());
+          }
         }
         else if (el.tagName() == QString::fromLatin1("alarmtime"))
         {
-// xxx alarm objekt anhängen!!!
+          if (el.text() != "")
+          {
+            // Get time. Put date and time to a QDateTime
+            // Time should be calculated depending on timezone -> dirty hack! xxx
+            QTime alarmTime(el.text().left(2).toInt(), el.text().right(2).toInt());
+            QDateTime datTime(alarmDate, alarmTime);
+            
+            // Calculate offset
+            int offset = datTime.secsTo(todo->dtDue());
+            // Add alarm as an incidence of this todo
+            KCal::Alarm *al = new KCal::Alarm(todo);
+            al->setText(todo->description());
+            al->setOffset(offset * -1);  // * -1 -> alarm has to be before event
+            al->setEnabled(true);
+            todo->addAlarm(al);
+          }
+        }
+        else if (el.tagName() == QString::fromLatin1("checkdate"))
+        {
+          if (!el.text().isEmpty())
+          {
+            QDate date(el.text().left(4).toInt(), el.text().mid(4, 2).toInt(), el.text().mid(6, 2).toInt());
+            QDateTime datTime(date);
+            todo->setCompleted(datTime);
+          }
+        }
+        else if (el.tagName() == QString::fromLatin1("priority"))
+        {
+          todo->setPriority(el.text().toInt());
         }
         else if (el.tagName() == QString::fromLatin1("category"))
         {
@@ -71,38 +124,7 @@ TodoSyncee* Todo::toTodoSyncee(QDomNode& n)
           else if (el.text() == "3")
             todo->setCategories(QString("D"));
           else if (el.text() == "4")
-            todo->setCategories(QString("E"));            
-        }
-        else if (el.tagName() == QString::fromLatin1("check"))
-        {
-          if (el.text() == "0")
-          {
-            todo->setCompleted(false);
-          }
-          else if (el.text() == "1")
-          {
-            todo->setCompleted(true);
-          }
-        }
-        else if (el.tagName() == QString::fromLatin1("checkdate"))
-        {
-          if (!el.text().isEmpty())
-          {
-            QDate date(el.text().left(4).toInt(), el.text().mid(4, 2).toInt(), el.text().mid(6, 2).toInt());
-            QDateTime time(date);
-            todo->setCompleted(time);
-          }
-        }
-        else if (el.tagName() == QString::fromLatin1("duedate"))
-        {
-          todo->setHasDueDate(true);
-          QDate date(el.text().left(4).toInt(), el.text().mid(4, 2).toInt(), el.text().mid(6, 2).toInt());
-          QDateTime time(date);
-          todo->setDtDue(time);
-        }
-        else if (el.tagName() == QString::fromLatin1("priority"))
-        {
-          todo->setPriority(el.text().toInt());
+            todo->setCategories(QString("E"));
         }
         else if (el.tagName() == QString::fromLatin1("description"))
         {
@@ -117,7 +139,7 @@ TodoSyncee* Todo::toTodoSyncee(QDomNode& n)
           {
             todo->setSummary(el.text());
           }
-        }        
+        }
         // Go to next entry
         n = n.nextSibling();
       }  // end of while
@@ -145,12 +167,12 @@ TodoSyncee* Todo::toTodoSyncee(QDomNode& n)
     }  // end of if contact
     else
     {
-      kdDebug() << "PVHelper::XML2Syncee -> contact not found" << endl;
+      kdDebug(5205) << "PVHelper::XML2Syncee -> contact not found" << endl;
       return 0l; // xxx bessere fehlerbehandlung!
     }
     n = n.nextSibling(); // jump to next element
   }  // end of while
-  kdDebug() << "End::Todo::toTodoSyncee" << endl;
+  kdDebug(5205) << "End::Todo::toTodoSyncee" << endl;
   return syncee;
 
 }
@@ -158,25 +180,25 @@ TodoSyncee* Todo::toTodoSyncee(QDomNode& n)
 QString Todo::toXML(TodoSyncee* syncee)
 {
   KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/idhelper");
-  
+
   QStringList categories;
- 
+
   QString str;
-    
+
   str.append("<todos>\n");
-  
+
   // for all entries
-  KCal::Todo* todo;  
+  KCal::Todo* todo;
   KSync::TodoSyncEntry *entry;
-    
+
   for (entry = (KSync::TodoSyncEntry*)syncee->firstEntry(); entry != 0l;
                            entry = (KSync::TodoSyncEntry*)syncee->nextEntry())
-  {    
+  {
     QString id;
-    QString state;    
+    QString state;
     // Get todo from entry
     todo = entry->todo();
-     
+
     // Check if id is new
     id =  helper.konnectorId("Todo", todo->uid());
     if (id.isEmpty())
@@ -188,19 +210,67 @@ QString Todo::toXML(TodoSyncee* syncee)
     {
       state = "undefined";
     }
-      
+
     // Convert to XML stream
     str.append("<todo uid='" + id + "' state='" + state + "'>\n");
 
-    str.append("<alarmdate></alarmdate>\n");/* xxx alarm objekt extrahieren!!! */
-    str.append("<alarmtime></alarmtime>\n");/* xxx alarm objekt extrahieren!!! */
+    if (todo->isCompleted())
+    {
+      str.append("<check>1</check>\n");
+    }
+    else
+    {
+      str.append("<check>0</check>\n");
+    }
+    if (todo->hasDueDate())
+    {
+      QDateTime datTime = todo->dtDue();
+      str.append("<duedate>" + datTime.toString("yyyyMMdd") + "</duedate>\n");
+    }
+    else
+    {
+      str.append("<duedate></duedate>\n");
+    }
+    
+    // alarm
+    KCal::Alarm *al = todo->alarms().first();
+    if (al)
+    {
+    // Time should be calculated depending on timezone -> dirty hack! xxx
+      QDateTime datTime = al->time();
+      str.append("<alarmdate>" + datTime.toString("yyyyMMdd") + "</alarmdate>\n");
+      str.append("<alarmtime>" + datTime.toString("hhmm") + "</alarmtime>\n");
+    }
+    else
+    {
+      str.append("<alarmdate></alarmdate>\n");
+      str.append("<alarmtime></alarmtime>\n");
+    }
+    if (todo->isCompleted())
+    {    
+      QDateTime datTime = todo->completed();
+      str.append("<checkdate>" + datTime.toString("yyyyMMdd") + "</checkdate>\n");
+    }
+    else
+    {
+      str.append("<checkdate></checkdate>\n");
+    }
+
+    // Check priority -> has to be 1..3 (as defined on PV)
+    unsigned int prio = todo->priority();
+    if (prio > 3)
+    {
+      prio = 3;
+    }
+    str.append("<priority>" + QString::number(prio) + "</priority>\n");
+
     QStringList categories;
     categories = todo->categories(); // xxx only one category supported yet!
     if (categories[0] != "A" && categories[0] != "B" && categories[0] != "C" &&
          categories[0] != "D" && categories[0] != "E")
     {
-      kdDebug() << "setting default category!!" << endl;
-      str.append("<category>0</category>\n");      
+      kdDebug(5205) << "setting default category!!" << endl;
+      str.append("<category>0</category>\n");
     }
     else
     {
@@ -213,40 +283,9 @@ QString Todo::toXML(TodoSyncee* syncee)
       else if (categories[0] == "D")
         str.append("<category>1</category>\n");
       else if (categories[0] == "E")
-        str.append("<category>1</category>\n");        
+        str.append("<category>1</category>\n");
     }
-    
-    QString strdate;    
-    if (todo->isCompleted())
-    {
-      str.append("<check>1</check>\n");
-      QDate dat = todo->completed().date();
-      strdate = dat.toString("yyyyMMdd");
-      str.append("<checkdate>" + strdate + "</checkdate>\n");            
-    }
-    else
-    {
-      str.append("<check>0</check>\n");
-      str.append("<checkdate></checkdate>\n");
-    }
-    if (todo->hasDueDate())
-    {
-      QDate dat = todo->dtDue().date();
-      strdate = dat.toString("yyyyMMdd");
-      str.append("<duedate>" + strdate + "</duedate>\n");
-    }      
-    else
-    {
-      str.append("<duedate></duedate>\n");    
-    }
-     
-    // Check priority -> has to be 1..3 (as defined on PV)
-    unsigned int prio = todo->priority();
-    if (prio > 3)
-    {
-      prio = 3;
-    }
-    str.append("<priority>" + QString::number(prio) + "</priority>\n");
+
     // If no description, insert summary instead
     QString description = todo->description();
     if (description.isEmpty())
@@ -257,6 +296,6 @@ QString Todo::toXML(TodoSyncee* syncee)
     str.append("</todo>\n");
   } // end for
   str.append("</todos>\n");
-    
+
   return str;
 }

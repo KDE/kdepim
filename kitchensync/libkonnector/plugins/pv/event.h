@@ -19,6 +19,7 @@
 #define event_h
 
 #include <qdom.h>
+#include <qbuffer.h>
 
 #include <libkcal/event.h>
 #include <eventsyncee.h>
@@ -31,6 +32,11 @@ namespace PVHelper
       static KSync::EventSyncee* toEventSyncee(QDomNode& n);
 
       static QString toXML(KSync::EventSyncee* syncee);
+
+    private:
+      static void setRecurrence(KCal::Recurrence *rec, QDateTime startDate, int type);
+
+      static QString getType(KCal::Recurrence *rec);
   };
 }
 

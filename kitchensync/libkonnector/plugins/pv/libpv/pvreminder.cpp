@@ -104,7 +104,7 @@ string CasioPV::PVReminder::getType()
 
 string CasioPV::PVReminder::getDate()
 {
-  return m_data[DATE];
+  return Utils::ChangeDateToUnix(m_data[DATE]);
 }
 
 string CasioPV::PVReminder::getStartTime()
@@ -139,7 +139,7 @@ void CasioPV::PVReminder::setDate( string& value )
   {
     throw PVDataEntryException( "PVReminder::setDate : string not in yyyymmdd format", 4004 );
   }
-  m_data[DATE] = value;
+  m_data[DATE] = Utils::ChangeDateToPV(value);
 }
 
 void CasioPV::PVReminder::setStartTime( string& value )
@@ -229,9 +229,9 @@ string CasioPV::PVReminder::toXML()
                             << "' state='" << getState() << "'>" << endl  
        << "<type>" << getType() << "</type>" << endl
        << "<date>" << getDate() << "</date>" << endl
-       << "<alarmtime>" << getAlarmTime() << "</alarmtime>" << endl
        << "<starttime>" << getStartTime() << "</starttime>" << endl
        << "<endtime>" << getEndTime() << "</endtime>" << endl
+       << "<alarmtime>" << getAlarmTime() << "</alarmtime>" << endl
        << "<description>" << getDescription() << "</description>" << endl
       << "</event>" << endl;
   return oss.str();
@@ -257,12 +257,9 @@ void CasioPV::PVReminder::fromXML(string strXML)
     {    
       setDate(vecElem[1]);
     }
-    setAlarmTime(vecElem[2]);
-    setStartTime(vecElem[3]);
-    if (vecElem[4] != "")
-    {
-      setEndTime(vecElem[4]);
-    }
+    setStartTime(vecElem[2]);
+    setEndTime(vecElem[3]);
+    setAlarmTime(vecElem[4]);    
     setDescription(vecElem[5]);
   }
 }

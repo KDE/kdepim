@@ -264,13 +264,13 @@ string CasioPV::PVTodo::toXML()
   std::stringstream oss;
   oss << "<todo uid='" << getUid()
                         << "' state='" << getState() << "'>" << endl  
+       << "<check>" << getCheck() << "</check>" << endl
+       << "<duedate>" << getDueDate() << "</duedate>" << endl
        << "<alarmdate>" << getAlarmDate() << "</alarmdate>" << endl
        << "<alarmtime>" << getAlarmTime() << "</alarmtime>" << endl
-       << "<category>" << getCategory() << "</category>" << endl
-       << "<check>" << getCheck() << "</check>" << endl
        << "<checkdate>" << getCheckDate() << "</checkdate>" << endl
-       << "<duedate>" << getDueDate() << "</duedate>" << endl
        << "<priority>" << getPriority() << "</priority>" << endl
+       << "<category>" << getCategory() << "</category>" << endl
        << "<description>" << getDescription() << "</description>" << endl
       << "</todo>" << endl;
   return oss.str();
@@ -291,25 +291,22 @@ void CasioPV::PVTodo::fromXML(string strXML)
   }
   else
   {
-    if (vecElem[0] != "")
-    {
-      setAlarmDate(vecElem[0]);
-    }
+    setCheck(vecElem[0]);
     if (vecElem[1] != "")
     {
-      setAlarmTime(vecElem[1]);
+      setDueDate(vecElem[1]);
+    }    
+    if (vecElem[2] != "")
+    {
+      setAlarmDate(vecElem[2]);
     }
-    setCategory(vecElem[2]);
-    setCheck(vecElem[3]);
+    setAlarmTime(vecElem[3]);
     if (vecElem[4] != "")
     {
       setCheckDate(vecElem[4]);
     }
-    if (vecElem[5] != "")
-    {
-      setDueDate(vecElem[5]);
-    }
-    setPriority(vecElem[6]);
+    setPriority(vecElem[5]);
+    setCategory(vecElem[6]);
     setDescription(vecElem[7]);
   }
 }

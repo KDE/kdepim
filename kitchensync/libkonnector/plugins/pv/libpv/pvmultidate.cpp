@@ -94,12 +94,12 @@ const map<unsigned int, string>& CasioPV::PVMultiDate::getData() const{
 
 string CasioPV::PVMultiDate::getDate()
 {
-  return m_data[DATE];
+  return Utils::ChangeDateToUnix(m_data[DATE]);
 }
 
 string CasioPV::PVMultiDate::getEndDate()
 {
-  return m_data[END_DATE];
+  return Utils::ChangeDateToUnix(m_data[END_DATE]);
 }
 
 string CasioPV::PVMultiDate::getDescription()
@@ -113,7 +113,7 @@ void CasioPV::PVMultiDate::setDate( string& value )
   {
     throw PVDataEntryException( "PVMultiDate::setDate : string not in yyyymmdd format", 4004 );
   }
-  m_data[DATE] = value;
+  m_data[DATE] = Utils::ChangeDateToPV(value);
 }
 
 void CasioPV::PVMultiDate::setEndDate( string& value )
@@ -122,7 +122,7 @@ void CasioPV::PVMultiDate::setEndDate( string& value )
   {
     throw PVDataEntryException( "PVMultiDate::setEndDate : string not in yyyymmdd format", 4004 );
   }
-  m_data[END_DATE] = value;
+  m_data[END_DATE] = Utils::ChangeDateToPV(value);
 }
 
 void CasioPV::PVMultiDate::setDescription( string& value )
@@ -186,13 +186,13 @@ std::ostream& CasioPV::operator<< (std::ostream& out, CasioPV::PVMultiDate& mult
 string CasioPV::PVMultiDate::toXML()
 {
   std::stringstream oss;
-  oss << "<multidate uid='" << getUid() << "' category='"
+  oss << "<event uid='" << getUid() << "' category='"
                             << Utils::getCategoryString(getModeCode())
                              << "' state='" << getState() << "'>" << endl  
        << "<date>" << getDate() << "</date>" << endl
        << "<enddate>" << getEndDate() << "</enddate>" << endl
        << "<description>" << getDescription() << "</description>" << endl
-      << "</multidate>" << endl;
+      << "</event>" << endl;
   return oss.str();
 }
 
