@@ -43,17 +43,29 @@ class KCMKabCustomFields : public KCModule
     virtual void defaults();
     virtual const KAboutData* aboutData() const;
 
+  protected:
+    void        loadUiFiles();
+    void        loadActivePages(const QStringList&);
+    QStringList saveActivePages();
+    QString     kabLocalDir();
+
   private slots:
     void updatePreview( QListViewItem* );
     void itemClicked( QListViewItem* );
     void startDesigner();
+    void rebuildList();
+    void deleteFile();
+    void importFile();
 
+    
   private:
     void initGUI();
 
     KListView *mPageView;
     QLabel *mPagePreview;
     QLabel *mPageDetails;
+    QPushButton *mDeleteButton;    
+    QPushButton *mImportButton;
     QPushButton *mDesignerButton;
 };
 

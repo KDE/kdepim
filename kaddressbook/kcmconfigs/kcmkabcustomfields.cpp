@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <unistd.h>
+
 #include <qimage.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -28,7 +30,9 @@
 #include <qpixmap.h>
 #include <qpushbutton.h>
 #include <qwhatsthis.h>
+#include <qgroupbox.h>
 #include <qwidgetfactory.h>
+#include <qregexp.h>
 
 #include <kaboutdata.h>
 #include <kdebug.h>
@@ -38,6 +42,11 @@
 #include <klocale.h>
 #include <krun.h>
 #include <kstandarddirs.h>
+#include <kactivelabel.h>
+#include <kdirwatch.h>
+#include <kfiledialog.h> 
+#include <kmessagebox.h>
+#include <kio/netaccess.h>
 
 #include "kabprefs.h"
 
@@ -133,31 +142,87 @@ KCMKabCustomFields::KCMKabCustomFields( QWidget *parent, const char *name )
   connect( mPageView, SIGNAL( clicked( QListViewItem* ) ),
            this, SLOT( itemClicked( QListViewItem* ) ) );
 
+  connect( mDeleteButton, SIGNAL( clicked() ),
+           this, SLOT( deleteFile() ) );
+  connect( mImportButton, SIGNAL( clicked() ),
+           this, SLOT( importFile() ) );
   connect( mDesignerButton, SIGNAL( clicked() ),
-           this, SLOT( startDesigner() ) );
-
+           this, SLOT( startDesigner() ) );         
+           
   load();
+    
+  // Install a dirwatcher that will detect newly created or removed designer files
+  KDirWatch *dw = new KDirWatch( this );
+  dw->addDir( kabLocalDir() + "contacteditorpages", true );
+  connect( dw, SIGNAL( created(const QString&) ), SLOT( rebuildList() ) );  
+  connect( dw, SIGNAL( deleted(const QString&) ), SLOT( rebuildList() ) );
+  connect( dw, SIGNAL( dirty(const QString&) ),   SLOT( rebuildList() ) );
+
 }
 
-void KCMKabCustomFields::load()
+void KCMKabCustomFields::deleteFile()
 {
-  QStringList activePages = KABPrefs::instance()->mAdvancedCustomFields;
+  QListViewItem *item = mPageView->selectedItem();
+  if ( item ) {
+    PageItem *pageItem = static_cast<PageItem*>( item->parent() ? item->parent() : item );
+    if (KMessageBox::questionYesNo(this, 
+         i18n( "<qt>Do you really want to delete '<b>%1</b>'?</qt>").arg( pageItem->text(0) ) ) 
+         == KMessageBox::Yes)
+      KIO::NetAccess::del( pageItem->path(), 0 );
+  }
+  // The actual view refresh will be done automagically by the slots connected to kdirwatch
+}
 
+void KCMKabCustomFields::importFile()
+{
+  KURL src = KFileDialog::getOpenFileName( QDir::homeDirPath(), i18n("*.ui|Designer files"), 
+                                              this, i18n("Import Page") );
+  KURL dest = kabLocalDir() + "contacteditorpages/";
+  dest.setFileName(src.fileName());
+  KIO::NetAccess::file_copy( src, dest, -1, true, false, this );
+  // The actual view refresh will be done automagically by the slots connected to kdirwatch
+}
+
+
+void KCMKabCustomFields::loadUiFiles()
+{
+  QStringList list = KGlobal::dirs()->findAllResources( "data", "kaddressbook/contacteditorpages/*.ui", true, true );
+  for ( QStringList::iterator it = list.begin(); it != list.end(); ++it ) {
+    new PageItem( mPageView, *it );
+  }
+}
+
+void KCMKabCustomFields::rebuildList()
+{
+  QStringList ai = saveActivePages();
+  updatePreview( 0 );
+  mPageView->clear();
+  loadUiFiles();
+  loadActivePages(ai);
+}
+
+void KCMKabCustomFields::loadActivePages(const QStringList& ai)
+{
   QListViewItemIterator it( mPageView );
   while ( it.current() ) {
     if ( it.current()->parent() == 0 ) {
       PageItem *item = static_cast<PageItem*>( it.current() );
-      if ( activePages.find( item->name() ) != activePages.end() ) {
+      if ( ai.find( item->name() ) != ai.end() ) {
         item->setOn( true );
         item->setIsActive( true );
       }
     }
 
     ++it;
-  }
+  }  
 }
 
-void KCMKabCustomFields::save()
+void KCMKabCustomFields::load()
+{
+  loadActivePages(KABPrefs::instance()->mAdvancedCustomFields);
+}
+
+QStringList KCMKabCustomFields::saveActivePages()
 {
   QListViewItemIterator it( mPageView, QListViewItemIterator::Checked |
                             QListViewItemIterator::Selectable );
@@ -172,8 +237,12 @@ void KCMKabCustomFields::save()
     ++it;
   }
 
-  KABPrefs::instance()->mAdvancedCustomFields = activePages;
+  return activePages;
+}
 
+void KCMKabCustomFields::save()
+{
+  KABPrefs::instance()->mAdvancedCustomFields =  saveActivePages();
   KABPrefs::instance()->writeConfig();
 }
 
@@ -195,29 +264,49 @@ void KCMKabCustomFields::initGUI()
   mPageView->setFullWidth( true );
   hbox->addWidget( mPageView );
 
-  QFrame *box = new QFrame( this );
-  box->setFrameStyle( QFrame::Box | QFrame::Sunken );
-
-  QVBoxLayout *boxLayout = new QVBoxLayout( box, KDialog::marginHint(), 
-                                            KDialog::spacingHint() );
+  QGroupBox *box = new QGroupBox(1, Qt::Horizontal, i18n("Preview of selected page"), this );
 
   mPagePreview = new QLabel( box );
   mPagePreview->setMinimumWidth( 300 );
-  boxLayout->addWidget( mPagePreview );
 
   mPageDetails = new QLabel( box );
-  boxLayout->addWidget( mPageDetails );
 
   hbox->addWidget( box );
 
-  QStringList list = KGlobal::dirs()->findAllResources( "data", "kaddressbook/contacteditorpages/*.ui", true, true );
-  for ( QStringList::iterator it = list.begin(); it != list.end(); ++it ) {
-    new PageItem( mPageView, *it );
-  }
+  loadUiFiles();
 
   hbox = new QHBoxLayout( layout, KDialog::spacingHint() );
+
+  QString cwHowto = i18n("<qt><p>This section allows for adding your own GUI"
+                         "  Elements ('<i>Widgets</i>') to store your own values"
+                         " into the addressbook. Proceed like described below:</p>"
+                         "<ol>"
+                         "<li>Click on '<i>Open with Qt Designer</i>'"
+                         "<li>In the dialog, select '<i>Widget</i>', then click <i>OK</i>"
+                         "<li>Add your widgets to the form"
+                         "<li>Save the file in the directory proposed by Qt Designer"
+                         "<li>Close Qt Designer"
+                         "</ol>"
+                         "<p>In case you already have a designer file (*.ui) around"
+                         " somewhere on your harddisk, simply choose '<i>Import Page</i>'</p>"
+                         "<p><b>Important:</b> The name of each input widget you place within"
+                         " the form has to start with '<i>X_</i>', so if you want the widget to"
+                         " correspond to your custom Entry '<i>X-Foo</i>', set the widgets"
+                         " <i>name</i> property to '<i>X_Foo</i>'.</p></qt>");
+
+  KActiveLabel *activeLabel = new KActiveLabel(
+      i18n( "<a href=\"whatsthis:%1\">How does this work?</a>" ).arg(cwHowto), this );
+  hbox->addWidget( activeLabel );
+
+  // ### why is this needed? Looks like a KActiveLabel bug...
+  activeLabel->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Maximum );
+
   hbox->addStretch( 1 );
 
+  mImportButton = new QPushButton( i18n( "Import Page" ), this);
+  hbox->addWidget( mImportButton );
+  mDeleteButton = new QPushButton( i18n( "Delete Page" ), this);
+  hbox->addWidget( mDeleteButton );
   mDesignerButton = new QPushButton( i18n( "Edit with Qt Designer..." ), this );
   hbox->addWidget( mDesignerButton );
 }
@@ -227,18 +316,18 @@ void KCMKabCustomFields::updatePreview( QListViewItem *item )
   if ( item ) {
     if ( item->parent() ) {
       QString details = QString( "<qt><table>"
-                                 "<tr><td align=\"right\"><b>%1:</b></td><td>%2</td></tr>"
-                                 "<tr><td align=\"right\"><b>%3:</b></td><td>%4</td></tr>"
-                                 "<tr><td align=\"right\"><b>%5:</b></td><td>%6</td></tr>"
-                                 "<tr><td align=\"right\"><b>%7:</b></td><td>%8</td></tr>"
+                                 "<tr><td align=\"right\"><b>%1</b></td><td>%2</td></tr>"
+                                 "<tr><td align=\"right\"><b>%3</b></td><td>%4</td></tr>"
+                                 "<tr><td align=\"right\"><b>%5</b></td><td>%6</td></tr>"
+                                 "<tr><td align=\"right\"><b>%7</b></td><td>%8</td></tr>"
                                  "</table></qt>" )
-                                .arg( i18n( "vCard Key" ) )
-                                .arg( item->text( 0 ) )
-                                .arg( i18n( "Type" ) )
+                                .arg( i18n( "vCard Key:" ) )
+                                .arg( item->text( 0 ).replace("X_","X-") )
+                                .arg( i18n( "Type:" ) )
                                 .arg( item->text( 1 ) )
-                                .arg( i18n( "Classname" ) )
+                                .arg( i18n( "Classname:" ) )
                                 .arg( item->text( 2 ) )
-                                .arg( i18n( "What's This" ) )
+                                .arg( i18n( "Description:" ) )
                                 .arg( item->text( 3 ) );
 
       mPageDetails->setText( details );
@@ -246,15 +335,16 @@ void KCMKabCustomFields::updatePreview( QListViewItem *item )
       PageItem *pageItem = static_cast<PageItem*>( item->parent() );
       mPagePreview->setPixmap( pageItem->preview() );
     } else {
-      mPageDetails->setText( "" );
+      mPageDetails->setText( QString::null );
 
       PageItem *pageItem = static_cast<PageItem*>( item );
       mPagePreview->setPixmap( pageItem->preview() );
     }
-    mPagePreview->setFrameStyle( QFrame::Box | QFrame::Sunken );
+    mPagePreview->setFrameStyle( QFrame::Panel | QFrame::Sunken );
   } else {
     mPagePreview->setPixmap( QPixmap() );
     mPagePreview->setFrameStyle( 0 );
+    mPageDetails->setText( QString::null );
   }
 }
 
@@ -271,13 +361,28 @@ void KCMKabCustomFields::itemClicked( QListViewItem *item )
   }
 }
 
+QString KCMKabCustomFields::kabLocalDir()
+{
+  QStringList kabdirs = KGlobal::dirs()->findDirs("data", "kaddressbook");
+  return kabdirs.grep( QRegExp( "^"+KGlobal::dirs()->localkdedir() ) ).first();
+}
+
 void KCMKabCustomFields::startDesigner()
 {
   QString cmdLine = "designer";
+  
+  // check if path exists and create one if not.
+  QString cepPath = kabLocalDir() +"contacteditorpages";
+  if( !KGlobal::dirs()->exists(cepPath) ) {
+    KIO::NetAccess::mkdir( cepPath, this );
+  }
+   
+  // finnally jump there 
+  chdir(cepPath.local8Bit());
 
   QListViewItem *item = mPageView->selectedItem();
   if ( item ) {
-    PageItem *pageItem = static_cast<PageItem*>( item );
+    PageItem *pageItem = static_cast<PageItem*>( item->parent() ? item->parent() : item );
     cmdLine += " " + pageItem->path();
   }
 
