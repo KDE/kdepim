@@ -46,3 +46,4 @@ QWidget* FileviewPart::configWidget() {
 }
 
 #include "ksync_fileviewpart.moc"
+#include "fileviewpart.moc"

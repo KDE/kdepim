@@ -70,3 +70,4 @@ KSyncFileviewWidget::~KSyncFileviewWidget() {
      delete m_part2;
 }
 #include "ksync_fileviewwidget.moc"
+#include "fileviewwidget.moc"
