@@ -30,7 +30,7 @@
 #include <syncee.h>
 #include <synceelist.h>
 
-#include "konnectorplugin.h"
+#include "konnector.h"
 #include "kdevice.h"
 #include "filter.h"
 #include "error.h"

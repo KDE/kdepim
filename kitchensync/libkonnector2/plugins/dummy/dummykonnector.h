@@ -26,7 +26,7 @@
 
 #include <libkcal/calendarlocal.h>
 
-#include <konnectorplugin.h>
+#include <konnector.h>
 
 namespace KSync {
 

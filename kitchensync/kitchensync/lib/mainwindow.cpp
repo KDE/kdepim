@@ -38,7 +38,7 @@
 #include <syncuikde.h>
 
 #include <konnectormanager.h>
-#include <konnectorplugin.h>
+#include <konnector.h>
 #include <error.h>
 #include <progress.h>
 

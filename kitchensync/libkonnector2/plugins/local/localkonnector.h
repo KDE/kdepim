@@ -23,7 +23,7 @@
 
 #include "libkcal/calendarlocal.h"
 
-#include <konnectorplugin.h>
+#include <konnector.h>
 
 #include <qiconset.h>
 #include <qptrlist.h>

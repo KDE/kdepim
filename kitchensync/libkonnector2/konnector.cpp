@@ -20,8 +20,9 @@
     Boston, MA 02111-1307, USA.
 */
 
+#include "konnector.h"
+
 #include "konnectorinfo.h"
-#include "konnectorplugin.h"
 
 using namespace KSync;
 
@@ -85,4 +86,4 @@ QStringList Konnector::builtIn() const
     return QStringList();
 }
 
-#include "konnectorplugin.moc"
+#include "konnector.moc"

@@ -25,7 +25,7 @@
 #include <qiconset.h>
 #include <qptrlist.h>
 
-#include <konnectorplugin.h>
+#include <konnector.h>
 
 #include "clientmanager.h"
 

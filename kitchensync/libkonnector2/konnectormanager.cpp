@@ -29,8 +29,6 @@
 #include "configpart.h"
 #include "konnectorinfo.h"
 
-
-#include "konnectorplugin.h"
 #include "konnectormanager.h"
 
 using namespace KSync;

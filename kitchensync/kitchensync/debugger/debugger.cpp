@@ -20,7 +20,7 @@
 */
 #include "debugger.h"
 
-#include <konnectorplugin.h>
+#include <konnector.h>
 #include <configwidget.h>
 #include <konnectormanager.h>
 #include <konnectorinfo.h>

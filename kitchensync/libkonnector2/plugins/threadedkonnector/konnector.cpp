@@ -24,7 +24,6 @@
 #include <kconfig.h>
 #include <kapabilities.h>
 #include <konnectorinfo.h>
-#include <konnectorplugin.h>
 
 #include "clientmanager.h"
 
