@@ -16,6 +16,7 @@ DateTime.h \
 DateTime_generated.h \
 Defines.h \
 Entity.h \
+Entity_generated.h \
 Enum.h \
 Envelope.h \
 Envelope_generated.h \
