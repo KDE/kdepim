@@ -39,14 +39,14 @@ static const char *pilotMemo_id =
 PilotMemo::PilotMemo(PilotRecord * rec) : PilotAppCategory(rec)
 {
 	FUNCTIONSETUP;
-	unpack(rec->getData(), 1);
+	fText = codec()->toUnicode((const char *)(rec->getData()),rec->getLen());
 	(void) pilotMemo_id;
 }
 
 void PilotMemo::unpack(const void *text, int /* firstTime */)
 {
 	FUNCTIONSETUP;
-
+	kdWarning() << k_funcinfo << ": deprecated and broken function." << endl;
 	fText = codec()->toUnicode((const char *)text);
 }
 
