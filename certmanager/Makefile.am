@@ -1,4 +1,4 @@
-SUBDIRS = lib conf .
+SUBDIRS = lib conf kwatchgnupg .
 
 KDE_CXXFLAGS = -DLIBKLEOPATRA_NO_COMPAT
 
