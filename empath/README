@@ -2,6 +2,11 @@ OI !
 
 Developers: Please read DEVELOPER_INFO as well as this.
 
+Currently working on: Making Maildir work properly, using a single dir as the base,
+i.e. ~/Maildir, and using separate Maildir type dirs for folders. This is the
+way it was meant to be. EmpathMailboxMaildir will now contain many EmpathMaildir,
+which will all have their own indices.
+
 NOTE WELL ! Started recently moving things to QCString. I've defined QCString as
 QString for Qt 1 compiles, of course.
 
