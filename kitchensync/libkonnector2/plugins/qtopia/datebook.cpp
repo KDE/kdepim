@@ -315,7 +315,7 @@ QString DateBook::event2string( KCal::Event *event, ExtraMap& map )
         }
         case KCal::Recurrence::rWeekly :{
             type = "Weekly";
-            char day = 0; // signed
+            signed char day = 0;
             QBitArray array = rec->days();
             if ( array.testBit(0 ) ) day |= Monday;
             if ( array.testBit(1 ) ) day |= Tuesday;
