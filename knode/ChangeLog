@@ -2,15 +2,16 @@ changes between 0.3.3 and 0.4
 - full support for non iso-8859-x charsets
 - basic PGP/GnuPG support
 - full GNKSA compliance
-- Followup and reply at same time now possible
-- selection of multiple articles/groups in the listview
+- followup and reply at same time now possible
 - the moderation status of newsgroups is detected and displayed
 - rot13 de-/encoding
 - server specific identities
-- the article line count can now be displayed in the listview
+- selection of multiple articles/groups in the listview
 - improved keyboard handling in the configuration dialog
 - selection dialogs for sort column (F7) and filter (F6) that
   can be reached with a keyboard shortcut
+- the article line count can now be displayed in the listview
+- improved color and font configuration
 - the interpretation of text format tags can now be disabled
 - support for other webbrowsers (Mozilla, Opera, user-defined)
 - added a context menu for the article pane
