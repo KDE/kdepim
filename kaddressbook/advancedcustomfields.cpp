@@ -114,7 +114,10 @@ void AdvancedCustomFields::storeContact( KABC::Addressee *addr )
       value = wdg->currentText();
     }
 
-    addr->insertCustom( "KADDRESSBOOK", it.key(), value );
+    if ( value.isEmpty() )
+      addr->removeCustom( "KADDRESSBOOK", it.key() );
+    else
+      addr->insertCustom( "KADDRESSBOOK", it.key(), value );
   }
 }
 
