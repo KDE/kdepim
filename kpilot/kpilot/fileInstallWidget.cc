@@ -33,26 +33,28 @@ static const char *fileinstallwidget_id="$Id$";
 #include "options.h"
 
 #include <unistd.h>
-#include <sys/stat.h>
-#include <qdir.h>
-#include <qfile.h>
-#include <qlist.h>
+// #include <sys/stat.h>
+// #include <qdir.h>
+// #include <qfile.h>
+// #include <qlist.h>
 #include <qlistbox.h>
 #include <qstring.h>
 #include <qlabel.h>
 #include <qpushbt.h>
 #include <qdragobject.h>
 #include <qlayout.h>
-
-#include <kstddirs.h>
-#include <klocale.h>
-#include <kurl.h>
-#include <kmessagebox.h>
+// 
+// #include <kstddirs.h>
+// #include <klocale.h>
+// #include <kurl.h>
+// #include <kmessagebox.h>
 #include <kfiledialog.h>
-#include <kdebug.h>
-#include <kio/netaccess.h>
+// #include <kdebug.h>
+// #include <kio/netaccess.h>
 
 #include "kpilotlink.h"
+#include "kpilotConfig.h"
+#include "fileInstaller.h"
 #include "fileInstallWidget.moc"
 
 FileInstallWidget::FileInstallWidget( QWidget* parent,
@@ -86,146 +88,96 @@ FileInstallWidget::FileInstallWidget( QWidget* parent,
 	grid->addColSpacing(4,SPACING);
 	grid->addRowSpacing(5,SPACING);
 
+	fInstaller = new FileInstaller;
+	connect(fInstaller,SIGNAL(filesChanged()),
+		this,SLOT(refreshFileInstallList()));
+
 	setAcceptDrops(true);
 }
 
-/**
-  * Adds 'fileName' to the pending file list and the list box if using the gui version
-  */
-void
-FileInstallWidget::addFileToLists(const char* fileName)
-    {
-    char* newFileName;
-    
-    /* Will be deleted by the ListBox */
-    newFileName = new char[strlen(fileName) + 1];
-    strcpy(newFileName, fileName);
-    fListBox->insertItem(newFileName, -1);
-    }
 
 void FileInstallWidget::dragEnterEvent(QDragEnterEvent* event)
 {
-  event->accept(QUriDrag::canDecode(event));
+	event->accept(QUriDrag::canDecode(event));
 }
     
 
 void FileInstallWidget::dropEvent(QDropEvent* drop)
-    {
-      QStrList list;
-      QUriDrag::decode(drop, list);
+{
+	FUNCTIONSETUP;
 
-      kdDebug() << "FileInstallWidget::dropEvent() - Got " << list.first() << endl;
+	QStrList list;
+	QUriDrag::decode(drop, list);
 
-      if(list.first() != 0L)
- 	getFilesForInstall(list);
-    }
+	DEBUGKPILOT << ": Got " << list.first() << endl;
+
+	if(list.first() != 0L)
+	{
+		fInstaller->addFiles(list);
+	}
+}
 
 void
 FileInstallWidget::slotClearButton()
 {
-  unsigned int i;
-  QString dirname = KGlobal::dirs()->saveLocation("data", QString("kpilot/pending_install/"));
-  QDir installDir(dirname);
-  for(i = 2; i < installDir.count(); i++)
-    {
-      unlink((dirname + installDir[i]).latin1());
-    }
-  refreshFileInstallList();
+	fInstaller->clearPending();
 }
 
 void
 FileInstallWidget::initialize()
 {
-  refreshFileInstallList();
+	refreshFileInstallList();
 }
 
 void
 FileInstallWidget::slotAddFile()
-    {
-    QStrList strList;
-    QString fileName = KFileDialog::getOpenFileName();
-    if(!fileName.isEmpty())
+{
+	QString fileName = KFileDialog::getOpenFileName();
+	if(!fileName.isEmpty())
 	{
-	strList.append(fileName.latin1());
-	getFilesForInstall(strList);
+		fInstaller->addFile(fileName);
 	}
-    }
-
-void
-FileInstallWidget::getFilesForInstall(QStrList& fileList)
-    {
-      unsigned int i = 0;
-      QString dirname = KGlobal::dirs()->saveLocation("data", QString("kpilot/pending_install/"));
-      while (i < fileList.count())
-	{
-	  KURL srcName = fileList.at(i);
-	  KURL destDir(dirname + "/" + srcName.filename());
-	  KIO::NetAccess::copy(srcName, destDir);
-	  i++;
-	  refreshFileInstallList();
-	}
-    }
-
+}
 
 void
 FileInstallWidget::preHotSync(char* command)
 {
-  char buffer[10];
-  KConfig* config = KGlobal::config();
-  config->setGroup(QString());
-  if(config->readNumEntry("SyncFiles"))
-    {
-      sprintf(buffer, "%d\n", KPilotLink::InstallFile);
-      strcat(command, buffer);
-    }
+	char buffer[10];
+	KConfig &config = KPilotConfig::getConfig();
+	if(config.readBoolEntry("SyncFiles",false))
+	{
+		sprintf(buffer, "%d\n", KPilotLink::InstallFile);
+		strcat(command, buffer);
+	}
 }
 
 void
 FileInstallWidget::postHotSync()
 {
-  refreshFileInstallList();
+	refreshFileInstallList();
 }
 
 bool 
 FileInstallWidget::saveData()
-    {
-    return true;
+{
+	return true;
 	/* NOTREACHED */
 	(void) fileinstallwidget_id;
-    }
-
-void 
-FileInstallWidget::saveInstallList()
-    {
-//     QString installList = kapp->localkdedir();
-//     installList += KPILOT_INSTALL_FILE;
-
-//     QFile installFile(installList);
-//     installFile.open(IO_WriteOnly | IO_Truncate);
-//     QTextStream t(&installFile);
-
-//     while(fFileList.first())
-// 	{
-// 	t << fFileList.first()->url() << endl;
-// 	fFileList.remove(fFileList.first());
-// 	}
-//     installFile.close();
-    }
+}
 
 
 void
 FileInstallWidget::refreshFileInstallList()
-    {
-      unsigned int i;
-      fListBox->clear();
-      QString dirname = KGlobal::dirs()->saveLocation("data", QString("kpilot/pending_install/"));
-      QDir installDir(dirname);
-      for(i = 2; i < installDir.count(); i++)
- 	addFileToLists(installDir[i].latin1());
-    }
+{
+	fListBox->clear();
+	fListBox->insertStringList(fInstaller->fileNames());
+}
 
 
 // $Log$
+// Revision 1.13  2001/02/26 22:12:24  adridg
+// Use Qt layout classes
+//
 // Revision 1.12  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

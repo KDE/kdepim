@@ -30,17 +30,15 @@
 #define __FILE_INSTALL_WIDGET_H
 
 #include "pilotComponent.h"
-#include <qlistbox.h>
-#include <qlist.h>
-#include <kurl.h>
 
 class KPilotInstaller;
+class FileInstaller;
 
 class FileInstallWidget : public PilotComponent
     {
     Q_OBJECT
     
-    public:
+public:
     FileInstallWidget(QWidget* parent, const QString& dbPath);
     ~FileInstallWidget() { }
 
@@ -51,38 +49,37 @@ class FileInstallWidget : public PilotComponent
     bool saveData();
 
 
-    void refreshFileInstallList();
-
-    signals:
+signals:
     void fileInstallWidgetDone();
 
-    protected:
-    void addFileToLists(const char* fileName);
+protected:
     void setSaveFileList(bool saveIt) { fSaveFileList = saveIt; }
     bool getSaveFileList() { return fSaveFileList; }
-    void getFilesForInstall(QStrList& fileList);
-    void saveInstallList();
     void dragEnterEvent(QDragEnterEvent* event);
     void dropEvent(QDropEvent* drop);
 
     KPilotInstaller* getPilotInstallerApp() { return fKPilotInstaller; }
 
-    private:
+private:
     QListBox*   fListBox;
-    QList<KURL> fFileList;
     bool        fSaveFileList;
 
     KPilotInstaller* fKPilotInstaller;
+	FileInstaller *fInstaller;
 
  protected slots:
     void slotClearButton();
     void slotAddFile();
+    void refreshFileInstallList();
     };
 
 #endif
 
 
 // $Log$
+// Revision 1.8  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.7  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

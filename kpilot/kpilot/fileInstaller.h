@@ -34,6 +34,7 @@
 
 #include <qobject.h>
 #include <qstring.h>
+#include <qstringlist.h>
 
 class QStrList;
 
@@ -47,7 +48,13 @@ public:
 	void clearPending();
 
 	void addFiles(QStrList&);
+	void addFiles(QStringList&);
 	void addFile(const QString&);
+
+	const QString &dir() const { return fDirName; } ;
+	const QStringList fileNames() const ;
+	
+
 
 protected:
 	virtual bool runCopy(const QString &src);
@@ -64,5 +71,8 @@ private:
 
 #endif
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/03/01 20:41:11  adridg
+// Added class to factor out code in daemon and fileinstallwidget
+//
 

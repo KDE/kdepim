@@ -30,7 +30,7 @@
 */
 
 static const char *fileinstaller_id =
-	"$Id:$";
+	"$Id$";
 
 
 #include "options.h"
@@ -114,6 +114,22 @@ void FileInstaller::addFiles(QStrList& fileList)
 	if (succ) { emit filesChanged(); }
 }
 
+void FileInstaller::addFiles(QStringList& fileList)
+{
+	FUNCTIONSETUP;
+
+	unsigned int i = 0;
+	unsigned int succ = 0;
+
+	while (i < fileList.count())
+	{
+		if (runCopy(fileList[i])) succ++;
+		i++;
+	}
+
+	if (succ) { emit filesChanged(); }
+}
+
 void FileInstaller::addFile(const QString& file)
 {
 	FUNCTIONSETUP;
@@ -128,5 +144,21 @@ void FileInstaller::addFile(const QString& file)
 {
 }
 
-// $Log:$
+const QStringList FileInstaller::fileNames() const
+{
+	FUNCTIONSETUP;
+
+	QDir installDir(fDirName);
+
+	return installDir.entryList(QDir::Files | 
+		QDir::NoSymLinks | 
+		QDir::Readable);
+}
+
+
+
+// $Log$
+// Revision 1.1  2001/03/01 20:41:11  adridg
+// Added class to factor out code in daemon and fileinstallwidget
+//
 
