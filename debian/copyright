@@ -1,7 +1,6 @@
-This package was updated by Ivan E. Moore II <rkrusty@debian.org>.
+This package was built by Ivan E. Moore II <rkrusty@debian.org>.
  
-It was downloaded from ftp.kde.org
-/pub/kde/unstable/CVS/snapshots/current kdepim-*.tgz 
+It was downloaded via cvs from cvs.kde.org
 
 Copyright:
 

@@ -29,7 +29,7 @@ clean: debian-clean
 
 debian-clean:
 	dh_testdir
-	-rm -f $(BUILDDIR)/build-stamp
+	-rm -rf $(BUILDDIR)
 	if test -d CVS; then \
 	  make -f admin/Makefile.common cvs-clean ;\
 	fi
