@@ -180,7 +180,8 @@ void Kleo::KeyListView::setHierarchical( bool hier ) {
   if ( hier == mHierarchical )
     return;
   mHierarchical = hier;
-  // re-insert all keys...
+  refillFingerprintDictionary();
+  gatherScattered();
 }
 
 void Kleo::KeyListView::slotAddKey( const GpgME::Key & key ) {
@@ -196,9 +197,9 @@ void Kleo::KeyListView::slotUpdateTimeout() {
   if ( d->keyBuffer.empty() )
     return;
 
-  const bool wasUpdatesEnabled = isUpdatesEnabled();
+  const bool wasUpdatesEnabled = viewport()->isUpdatesEnabled();
   if ( wasUpdatesEnabled )
-    setUpdatesEnabled( false );
+    viewport()->setUpdatesEnabled( false );
   kdDebug( 5150 ) << "Kleo::KeyListView::slotUpdateTimeout(): processing "
 		  << d->keyBuffer.size() << " items en block" << endl;
   if ( hierarchical() ) {
@@ -210,7 +211,7 @@ void Kleo::KeyListView::slotUpdateTimeout() {
       (void)new KeyListViewItem( this, *it );
   }
   if ( wasUpdatesEnabled )
-    setUpdatesEnabled( true );
+    viewport()->setUpdatesEnabled( true );
   d->keyBuffer.clear();
 }
 
@@ -241,6 +242,16 @@ void Kleo::KeyListView::gatherScattered() {
       parent->insertItem( cur );
     }
   }
+}
+
+void Kleo::KeyListView::refillFingerprintDictionary() {
+  d->itemMap.clear();
+  for ( QListViewItemIterator it( this ) ; it.current() ; ++it )
+    if ( ( it.current()->rtti() & KeyListViewItem::RTTI_MASK ) == KeyListViewItem::RTTI ) {
+      KeyListViewItem * item = static_cast<KeyListViewItem*>( it.current() );
+      if ( const char * fpr = item->key().subkey(0).fingerprint() )
+	d->itemMap.insert( std::make_pair( QCString( fpr ), item ) );
+    }
 }
 
 Kleo::KeyListViewItem * Kleo::KeyListView::parentFor( const QCString & s ) const {

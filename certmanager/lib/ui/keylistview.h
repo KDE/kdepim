@@ -231,6 +231,7 @@ namespace Kleo {
   private:
     void doHierarchicalInsert( const GpgME::Key & );
     void gatherScattered();
+    void refillFingerprintDictionary();
     KeyListViewItem * parentFor( const QCString & ) const;
 
   private:
