@@ -100,6 +100,7 @@ KAboutData *KAddressbookPart::createAboutData()
   about->addAuthor("Mischel Boyer de la Giroday", I18N_NOOP("LDAP Lookup"), 
 		   "michel@klaralvdalens-datakonsult.se");
   about->addAuthor("Steffen Hansen", I18N_NOOP("LDAP Lookup"), "hansen@kde.org");
+  about->addAuthor("Tobias Koenig", I18N_NOOP("bug fixes, vcard import/export"), "tokoe@kde.org");
 
   return about;
 }

@@ -28,48 +28,61 @@ class QWidget;
 class QToolButton;
 class QString;
 
+class KLineEdit;
 class KListBox;
-
-class FilterEditWidget;
+class KListView;
 
 #include <kdialogbase.h>
 
 #include "filter.h"
 
-class FilterEditDialog : public KDialogBase
+class FilterDialog : public KDialogBase
 {
   Q_OBJECT
   
   public:
-    FilterEditDialog(QWidget *parent, const char *name = 0);
-    ~FilterEditDialog();
+    FilterDialog(QWidget *parent, const char *name = 0);
+    ~FilterDialog();
     
     void setFilters(const Filter::List &list);
     const Filter::List &filters() const { return mFilterList; }
     
-  signals:
-    void filtersChanged(const Filter::List &list);
-    
   protected slots:
     void add();
+    void edit();
     void remove();
-    void rename();
     
-    void filterHighlighted(int);
+  private:
+    void initGUI();
+    void refresh();
     
-    void slotOk();
-    void slotApply();
+    Filter::List mFilterList;
+    
+    KListBox *mFilterListBox;
+    QPushButton *mAddButton;
+    QPushButton *mEditButton;
+    QPushButton *mRemoveButton;
+};
+
+class FilterEditDialog : public KDialogBase
+{
+  public:
+    FilterEditDialog( QWidget *parent, const char *name = 0 );
+    ~FilterEditDialog();
+    
+    void setFilter( const Filter &filter );
+    Filter filter();
     
   private:
     void initGUI();
     
-    Filter::List mFilterList;
-    int mCurrentIndex;
+    Filter mFilter;
     
-    KListBox *mFilterListBox;
-    QToolButton *mRemoveButton;
-    QToolButton *mRenameButton;
-    FilterEditWidget *mEditWidget;
+    KLineEdit *mNameEdit;
+    KListView *mCategoriesView;
+    QButtonGroup *mMatchRuleGroup;
+    QPushButton *mEditButton;
+    QPushButton *mRemoveButton;
 };
 
 #endif

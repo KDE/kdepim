@@ -596,9 +596,7 @@ void KAddressBook::slotAddressBookChanged()
 
 void KAddressBook::configureFilters()
 {
-  FilterEditDialog dlg( this );
-  connect( &dlg, SIGNAL( filtersChanged(const Filter::List &) ),
-            mViewManager, SLOT( filtersChanged(const Filter::List & ) ) );
+  FilterDialog dlg( this );
   
   dlg.setFilters( mViewManager->filters() );
 
