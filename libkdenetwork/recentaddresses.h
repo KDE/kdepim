@@ -46,9 +46,8 @@ namespace KRecentAddress {
 
 class RecentAddresses
 {
-    friend class foobar; // private destructor
-
 public:
+    ~RecentAddresses();
     /**
      * @returns the only possible instance of this class.
      */
@@ -94,7 +93,6 @@ public:
 
 private:
     RecentAddresses();
-    ~RecentAddresses();
 
     KABC::Addressee::List m_addresseeList;
 

@@ -28,33 +28,40 @@
  *  you do not wish to do so, delete this exception statement from
  *  your version.
  */
+#include "recentaddresses.h"
+
+#include <kstaticdeleter.h>
 #include <kconfig.h>
 #include <kglobal.h>
 
 #include <kdebug.h>
-#include "recentaddresses.h"
 
-KRecentAddress::RecentAddresses * KRecentAddress::RecentAddresses::s_self = 0;
 
-KRecentAddress::RecentAddresses * KRecentAddress::RecentAddresses::self()
+using namespace KRecentAddress;
+
+static KStaticDeleter<RecentAddresses> sd;
+
+RecentAddresses * RecentAddresses::s_self = 0;
+
+RecentAddresses * RecentAddresses::self()
 {
     if ( !s_self )
-        s_self = new KRecentAddress::RecentAddresses();
+        sd.setObject( s_self, new RecentAddresses() );
     return s_self;
 }
 
-KRecentAddress::RecentAddresses::RecentAddresses()
+RecentAddresses::RecentAddresses()
 {
     load( KGlobal::config() );
 }
 
-KRecentAddress::RecentAddresses::~RecentAddresses()
+RecentAddresses::~RecentAddresses()
 {
     // if you want this destructor to get called, use a KStaticDeleter
     // on s_self
 }
 
-void KRecentAddress::RecentAddresses::load( KConfig *config )
+void RecentAddresses::load( KConfig *config )
 {
     QStringList addresses;
     QString name;
@@ -77,13 +84,13 @@ void KRecentAddress::RecentAddresses::load( KConfig *config )
     adjustSize();
 }
 
-void KRecentAddress::RecentAddresses::save( KConfig *config )
+void RecentAddresses::save( KConfig *config )
 {
     KConfigGroupSaver cs( config, "General" );
     config->writeEntry( "Recent Addresses", addresses() );
 }
 
-void KRecentAddress::RecentAddresses::add( const QString& entry )
+void RecentAddresses::add( const QString& entry )
 {
     if ( !entry.isEmpty() && m_maxCount > 0 ) {
         QString email;
@@ -105,19 +112,19 @@ void KRecentAddress::RecentAddresses::add( const QString& entry )
     }
 }
 
-void KRecentAddress::RecentAddresses::setMaxCount( int count )
+void RecentAddresses::setMaxCount( int count )
 {
     m_maxCount = count;
     adjustSize();
 }
 
-void KRecentAddress::RecentAddresses::adjustSize()
+void RecentAddresses::adjustSize()
 {
     while ( m_addresseeList.count() > m_maxCount )
         m_addresseeList.remove( m_addresseeList.fromLast() );
 }
 
-QStringList KRecentAddress::RecentAddresses::addresses() const
+QStringList RecentAddresses::addresses() const
 {
     QStringList addresses;
     for ( KABC::Addressee::List::ConstIterator it = m_addresseeList.begin();
