@@ -325,7 +325,7 @@ kdDebug()<<"Found it in the list!"<<endl;
 }
 
 
-void GroupwareUploadJob::slotItemUploadedNew( const QString &/*localId*/, const QString &remoteURL )
+void GroupwareUploadJob::slotItemUploadedNew( const QString &localId, const QString &remoteURL )
 {
   kdDebug() << "GroupwareUploadJob::slotItemUploadedNew, upload successful: "<< remoteURL << endl;
   const KURL &url( remoteURL );
@@ -334,6 +334,9 @@ void GroupwareUploadJob::slotItemUploadedNew( const QString &/*localId*/, const 
   // TODO: For a new item this won't return anything, so we need to insert the
   // local<=>remote id map when creating the upload job... And maybe
   const QString &local = adaptor()->idMapper()->localId( remote );
+  if ( !localId.isEmpty() ) {
+    adaptor()->deleteItem( localId );
+  }
   if ( !local.isEmpty() ) {
 //     adaptor()->itemUploadedNew( local, remoteURL );
   }
