@@ -20,8 +20,8 @@
 </author>
 </authorgroup>
 
-<date>08/10/2000</date>
-<releaseinfo>1.01.95.3</releaseinfo>
+<date>31/10/2000</date>
+<releaseinfo>1.2</releaseinfo>
 
 <abstract>
 	
@@ -1842,7 +1842,7 @@ Mailreader window</link>.
 
 <qandaentry>
  <question><para>Does &kmail; support <acronym>IMAP</acronym>?</para></question>
- <answer><para>Not yet.</para></answer>
+ <answer><para>Not yet. No, we have no idea when it will be ready.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -1852,6 +1852,11 @@ Mailreader window</link>.
  of features etc. Here's a real problem: &kmail; will not delete some temporary files if it crashes. In this
  case, you should <command>cd</command> to <filename class="directory">~/.kde/share/apps/kmail/tmp/</filename>
  and delete all the files and folders there.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>How do I use my Eudora/Netscape/Outlook/... mail folders in &kmail;?</para></question>
+ <answer><para>See the section <link linkend="secImporting">Using other Mailbox files With &kmail;</link>.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -1925,8 +1930,87 @@ mails have already been sent through the Internet.
 </qandaentry>
 
 <qandaentry>
- <question><para>How do I use my Eudora / XFmail / other random mail client mailboxes in &kmail;?</para></question>
- <answer><para>See the section <link linkend="secImporting">Using other Mailbox files With &kmail;</link>.</para></answer>
+ <question><para>Does &kmail; lock the folders it uses?</para></question>
+ <answer><para>&kmail;'s file locking implementation uses the fcntl system calls by default.
+This has problems in situations where your mail account folders are mounted
+over <acronym>nfs</acronym>. There is a new hidden option where you can change the locking
+implementation for local mail accounts.  This will enable you to use a local
+mail account which is mounted over nfs.</para>
+
+<para>To avoid the risk of losing mail when using a local account it is necessary
+to ensure that KMail uses the same type of locking as your mail delivery
+agent.</para>
+
+<para>There are five different locking options you can use:</para>
+<itemizedlist>
+	<listitem><para>procmail_lockfile</para></listitem>
+	<listitem><para>mutt_dotlock</para></listitem>
+	<listitem><para>mutt_dotlock_privileged</para></listitem>
+	<listitem><para>fcntl</para></listitem>
+	<listitem><para>none</para></listitem>
+</itemizedlist>
+
+<para>procmail_lockfile will use a small utility that comes with procmail called
+lockfile.  You can use this if your mail folder is in a directory where you
+have write permissions.  This will not work on your /var/spool/mail/user file
+in most cases.  It will create .lock files on your account when kmail is
+checking for new mail.  Please note that this will only work if procmail is
+installed on your system.</para>
+
+<para><token>mutt_dotlock</token> and <token>mutt_dotlock_privileged</token> will both use a small utility that
+comes with mutt called <command>mutt_dotlock</command>. <command>mutt_dotlock</command> can be used in the same
+way as the <token>procmail_lockfile</token> option, with the same limitation with regards to
+the <filename class="directory">/var/spool/mail/</filename> folders.  However, the <token>mutt_dotlock_privileged</token> option
+can create lock files in the <filename class="directory">/var/spool/mail</filename> directory. 
+<command>mutt_dotlock</command> is a
+setgid program and this option will run <command>mutt_dotlock</command> in setgid mode. Please
+note that these options will only work if mutt is installed on your system.</para>
+
+<para><token>fcntl</token>: the default option will use the fcntl system call.</para>
+
+<para>If you don't want to use any locking, the <token>none</token> option is what you want.
+However, there are risks of losing mail when no locking is used.</para>
+
+<para>In your <filename>kmailrc</filename>, there are group sections for each of your mail accounts.
+These will typically look like:</para>
+
+<screen>[Account 1]
+Folder=inbox
+Location=/net/ns/home/wynnw/.newmail
+Name=Work
+Type=local
+check-exclude=false
+check-interval=10
+precommand=</screen>
+
+<para>To change the account to use the locking mechanism you want, change it to:</para>
+
+<screen>[Account 1]
+Folder=inbox
+Location=/net/ns/home/wynnw/.newmail
+Name=Work
+Type=local
+check-exclude=false
+check-interval=10
+precommand=
+LockType=&lt;value&gt;</screen>
+
+<para>where &lt;value&gt; is <token>procmail_lockfile</token>, <token>mutt_dotlock</token>,
+<token>mutt_dotlock_privileged</token>, <token>fcntl</token> or <token>none</token>. 
+So an actual working account group would look like:</para>
+
+<screen>[Account 1]
+Folder=inbox
+Location=/net/ns/home/wynnw/.newmail
+Name=Work
+Type=local
+check-exclude=false
+check-interval=10
+precommand=
+LockType=mutt_dotlock</screen>
+
+<para>Please make the changes exactly as you see them here - case sensitivity is
+very important, as is spelling.</para></answer>
 </qandaentry>
 
 <qandaentry>
