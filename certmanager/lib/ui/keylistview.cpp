@@ -335,15 +335,11 @@ void Kleo::KeyListView::slotRefreshKey( const GpgME::Key & key ) {
   const char * fpr = key.primaryFingerprint();
   if ( !fpr )
     return;
-  // ### hmm, how about using d->itemMap to find the corresponding item?
-  for ( QListViewItemIterator it( this ) ; it.current() ; ++it )
-    if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( it.current() ) )
-      if ( qstrcmp( fpr, item->key().primaryFingerprint() ) == 0 ) {
-	item->setKey ( key );
-	return;
-      }
-  // none found -> add it
-  slotAddKey( key );
+  if ( KeyListViewItem * item = itemByFingerprint( fpr ) )
+    item->setKey ( key );
+  else
+    // none found -> add it
+    slotAddKey( key );
 }
 
 // slots for the emission of covariant signals:
