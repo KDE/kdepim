@@ -60,7 +60,7 @@
                             <cstring>fOutputFile</cstring>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Enter here or select clicking the file picker button the location and file name of the output file used to store the handheld system information.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Enter here, or select by clicking the file picker button, the location and file name of the output file used to store the handheld's system information.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="0" column="0">
@@ -74,7 +74,7 @@
                             <cstring>fOutputFile</cstring>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Enter here or select clicking the file picker button the location and file name of the output file used to store the handheld system information.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Enter here, or select by clicking the file picker button, the location and file name of the output file used to store the handheld's system information.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="2">
@@ -121,7 +121,7 @@
                                     <bool>false</bool>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Enter here the location of the template or select it clicking the file picker button, if you select the Custom template option.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Enter here, or select by clicking on the file picker button, the location of the template to be used if you select the Custom template option.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="2" column="0">
@@ -132,7 +132,7 @@
                                     <string>&amp;Custom template:</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Select this option to output the system information data as defined by a custom template. Enter the location of the template in the edit box or select it clicking the file picker button.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Select this option to output the system information data as defined by a custom template. Enter the location of the template in the edit box, or select it clicking on the file picker button.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                         </grid>

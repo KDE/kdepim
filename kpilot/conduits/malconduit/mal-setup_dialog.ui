@@ -89,7 +89,7 @@
                                     <string></string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Select this option to synchronize with the MAL server on every HotSync that is at least one hour before the last MAL sync, or in other words, KPilot will only try to synchronize with the MAL servers if it is more than an hour since the last MAL sync. To perform a successful synchronization, you need to have access to the MAL server during the HotSync.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Select this option to synchronize with the MAL server on every HotSync that is at least one hour before the last MAL sync; or, in other words, KPilot will only try to synchronize with the MAL servers if it is more than an hour since the last MAL sync. To perform a successful synchronization, you need to have access to the MAL server during the HotSync.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="2" column="0">
@@ -100,7 +100,7 @@
                                     <string>Once a &amp;day</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Select this option to synchronize with the MAL server on every HotSync that is at least one day before the last MAL sync, or in other words, KPilot will only try to synchronize with the MAL servers if it is more than a day since the last MAL sync. To perform a successful synchronization, you need to have access to the MAL server during the HotSync.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Select this option to synchronize with the MAL server on every HotSync that is at least one day before the last MAL sync; or, in other words, KPilot will only try to synchronize with the MAL servers if it is more than a day since the last MAL sync. To perform a successful synchronization, you need to have access to the MAL server during the HotSync.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="3" column="0">
@@ -111,7 +111,7 @@
                                     <string>Once a &amp;week</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Select this option to synchronize with the MAL server on every HotSync that is at least one week before the last MAL sync, or in other words, KPilot will only try to synchronize with the MAL servers if it is more than a week since the last MAL sync. To perform a successful synchronization, you need to have access to the MAL server during the HotSync.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Select this option to synchronize with the MAL server on every HotSync that is at least one week before the last MAL sync; or, in other words, KPilot will only try to synchronize with the MAL servers if it is more than a week since the last MAL sync. To perform a successful synchronization, you need to have access to the MAL server during the HotSync.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="4" column="0">
@@ -122,7 +122,7 @@
                                     <string>Once a &amp;month</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Select this option to synchronize with the MAL server on every HotSync that is at least one month before the last MAL sync, or in other words, KPilot will only try to synchronize with the MAL servers if it is more than a month since the last MAL sync. To perform a successful synchronization, you need to have access to the MAL server during the HotSync.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Select this option to synchronize with the MAL server on every HotSync that is at least one month before the last MAL sync; or, in other words, KPilot will only try to synchronize with the MAL servers if it is more than a month since the last MAL sync. To perform a successful synchronization, you need to have access to the MAL server during the HotSync.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                         </grid>

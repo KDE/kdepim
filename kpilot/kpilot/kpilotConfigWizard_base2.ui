@@ -136,7 +136,7 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                 <bool>true</bool>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>&lt;qt&gt;Check this box to make the kpilot daemon load when you first log in until you log out.  That means (in theory), that you shouldn't have to do anything other than connect your handheld and push "sync", and kpilot will appear and magically do your bidding. &lt;/qt&gt;</string>
+                <string>&lt;qt&gt;Check this box to make the kpilot daemon load when you first log in until you log out.  That means (in theory), that you should not have to do anything other than connect your handheld and push "sync", and kpilot will appear and magically do your bidding. &lt;/qt&gt;</string>
             </property>
         </widget>
         <spacer>
