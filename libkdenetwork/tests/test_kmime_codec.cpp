@@ -18,7 +18,9 @@
 #include <cstdlib>
 #include <iostream>
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 #include <getopt.h>
 #include <cassert>
 
@@ -238,7 +240,7 @@ void encode_decode_convenience_qba( bool encode, const Codec * codec,
     out = codec->decode( infile_buffer, withCRLF );
   if ( writing ) {
     Q_LONG written = outfile.writeBlock( out );
-    assert( written = (Q_LONG)out.size() );
+    assert( written == (Q_LONG)out.size() );
   }
 }
 
