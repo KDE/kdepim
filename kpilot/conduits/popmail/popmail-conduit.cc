@@ -44,6 +44,7 @@ static const char *popmail_conduit_id=
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/utsname.h>
 #include <ctype.h>
 #include <iostream.h>
 
@@ -1970,6 +1971,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.46  2002/12/20 17:33:12  coolo
+// getdomainname returns the NIS/LDAP domain, you don't want that for DNS/SMTP
+//
 // Revision 1.45  2002/11/27 21:29:04  adridg
 // See larger ChangeLog entry
 //
