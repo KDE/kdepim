@@ -45,9 +45,46 @@
 
 #include "groupwiseserver.h"
 
-static KExtendedSocket *m_sock = 0;
+static QMap<struct soap *,GroupwiseServer *> mServerMap;
 
 int myOpen( struct soap *soap, const char *endpoint, const char *host, int port )
+{
+  QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
+  it = mServerMap.find( soap );
+  if ( it == mServerMap.end() ) return -1;
+
+  return (*it)->gSoapOpen( soap, endpoint, host, port );
+}
+
+int myClose( struct soap *soap )
+{
+  QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
+  it = mServerMap.find( soap );
+  if ( it == mServerMap.end() ) return -1;
+
+  return (*it)->gSoapClose( soap );
+}
+
+int mySendCallback( struct soap *soap, const char *s, size_t n )
+{
+  QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
+  it = mServerMap.find( soap );
+  if ( it == mServerMap.end() ) return -1;
+
+  return (*it)->gSoapSendCallback( soap, s, n );
+}
+
+size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
+{
+  QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
+  it = mServerMap.find( soap );
+  if ( it == mServerMap.end() ) return -1;
+
+  return (*it)->gSoapReceiveCallback( soap, s, n );
+}
+
+int GroupwiseServer::gSoapOpen( struct soap *soap, const char *endpoint,
+  const char *host, int port )
 {
    m_sock->reset();
    m_sock->setBlockingMode(false);
@@ -64,16 +101,16 @@ int myOpen( struct soap *soap, const char *endpoint, const char *host, int port 
    return m_sock->fd();
 }
 
-int myClose( struct soap *soap )
+int GroupwiseServer::gSoapClose( struct soap *soap )
 {
    m_sock->close();
    m_sock->reset();
    return SOAP_OK;
 }
 
-int mySendCallback( struct soap *soap, const char *s, size_t n )
+int GroupwiseServer::gSoapSendCallback( struct soap *soap, const char *s, size_t n )
 {
-#if 0
+#if 1
 qDebug("*************************");
 char p[99999];
 strncpy(p, s, n);
@@ -100,13 +137,13 @@ qDebug("\n*************************");
    return SOAP_OK;
 }
 
-size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
+size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s, size_t n )
 {
 //   m_sock->open();
    long ret = m_sock->readBlock( s, n );
    if ( ret < 0 )
         qDebug("ERROR: receive failed: %s %d %d", strerror(m_sock->systemError()), m_sock->socketStatus(), m_sock->fd() );
-#if 0
+#if 1
 qDebug("*************************");
 char p[99999];
 strncpy(p, s, ret);
@@ -121,24 +158,33 @@ qDebug("kioReceiveCallback return %d", ret);
 GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
                                   const QString &password, QObject *parent )
   : QObject( parent, "GroupwiseServer" ),
-    mUrl( url ), mUser( user ), mPassword( password ), mSSL( url.left(6)=="https:" )
+    mUrl( url ), mUser( user ), mPassword( password ),
+    mSSL( url.left(6)=="https:" ), m_sock( 0 )
 {
   mSoap = new soap;
   mWeaver = new KPIM::ThreadWeaver::Weaver( this );
   KPIM::ThreadWeaver::WeaverThreadLogger *weaverLogger = new KPIM::ThreadWeaver::WeaverThreadLogger( this );
   weaverLogger->attach( mWeaver );
 
+  kdDebug() << "GroupwiseServer(): URL: " << url << endl;
+
+  soap_init( mSoap );
+
 #if 1
   // disable this block to use native gSOAP network functions
-  if (mSSL) 
+kdDebug() << "TTTTTTTTTTT" << mSSL << " " << url << endl;
+  if (mSSL) {
+     kdDebug() << "Creating KSSLSocket()" << endl;
      m_sock = new KSSLSocket();
-  else
+  } else
      m_sock = new KExtendedSocket();
 
   mSoap->fopen = myOpen;
   mSoap->fsend = mySendCallback;
   mSoap->frecv = myReceiveCallback;
   mSoap->fclose = myClose;
+
+  mServerMap.insert( mSoap, this );
 #endif
 }
 
@@ -160,7 +206,7 @@ bool GroupwiseServer::login()
 
   ns1__PlainText pt;
 
-  soap_init( mSoap );
+//  soap_init( mSoap );
   pt.username = mUser.latin1();
   pt.password = new string( mPassword.latin1() );
   loginReq.auth = &pt;
@@ -170,6 +216,8 @@ bool GroupwiseServer::login()
   mSession.clear();
 
 //  cout << "Login" << endl;
+
+  kdDebug() << "GroupwiseServer::login() URL:" << mUrl << endl;
 
   int result = soap_call___ns2__loginRequest(mSoap, mUrl.latin1(), NULL, &loginReq, &loginResp );
 

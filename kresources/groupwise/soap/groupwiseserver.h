@@ -45,6 +45,8 @@ class Incidence;
 class ResourceGroupwise;
 }
 
+class KExtendedSocket;
+
 struct soap;
 
 class ns1__Folder;
@@ -88,6 +90,12 @@ class GroupwiseServer : public QObject
 
     bool getCategoryList();
 
+    int gSoapOpen( struct soap *soap, const char *endpoint, const char *host,
+      int port );
+    int gSoapClose( struct soap *soap );
+    int gSoapSendCallback( struct soap *soap, const char *s, size_t n );
+    size_t gSoapReceiveCallback( struct soap *soap, char *s, size_t n );
+
   signals:
     void readAddressBooksFinished();
     void readCalendarFinished();
@@ -112,6 +120,8 @@ class GroupwiseServer : public QObject
     
     struct soap *mSoap;
     KPIM::ThreadWeaver::Weaver *mWeaver;
+
+    KExtendedSocket *m_sock;
 };
 
 #endif
