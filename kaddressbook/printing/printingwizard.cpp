@@ -78,21 +78,31 @@ namespace KABPrinting {
     // WORK_TO_DO: select contacts for printing
     void PrintingWizard::print()
     {
+        QStringList contacts;
         if(style!=0)
         {
             if(rbCurrentContact->isChecked())
             {
                 // ... print current entry
+                // contacts << document()->currentEntry();
             } else {
                 if(rbSelection->isChecked())
                 {
-                    style->print(selection);
+                    contacts=selection;
                 } else {
-                    // ... print all contacts
-                    style->print(QStringList());
+                    // create a string list of all entries:
+                    KABC::AddressBook::Iterator iter;
+                    for(iter=document()->begin(); iter!=document()->end(); ++iter)
+                    {
+                        contacts << (*iter).uid();
+                    }
                 }
             }
         }
+        kdDebug() << "MikesStyle::print: printing "
+                  << contacts.count() << " contacts." << endl;
+        // ... print:
+        style->print(contacts);
     }
 
 }

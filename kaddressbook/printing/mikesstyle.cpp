@@ -27,20 +27,6 @@ namespace KABPrinting
 
     void MikesStyle::print(QStringList printUids)
     {
-        // ----- we will never be called with 0 entries except we have
-        // to print all entries:
-        if(printUids.count()==0)
-        { // this will be moved to PrintingWizard:
-            KABC::AddressBook::Iterator iter;
-            for (iter = wiz->document()->begin();
-                 iter != wiz->document()->end(); ++iter)
-            {
-                printUids << (*iter).uid();
-            }
-        }
-        kdDebug() << "MikesStyle::print: printing "
-                  << printUids.count() << " contacts." << endl;
-
         QFont mFont;
         QFont mBoldFont;
         QPainter p;

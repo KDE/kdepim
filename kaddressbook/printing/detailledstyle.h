@@ -1,7 +1,10 @@
 #ifndef DETAILLEDSTYLE_H
 #define DETAILLEDSTYLE_H
 
+#include <kabc/addressee.h>
 #include "printstyle.h"
+// this is bad style, but we do not have another common library by now:
+#include "../kab_printmethods.h"
 
 namespace KABPrinting {
 
@@ -12,6 +15,16 @@ namespace KABPrinting {
         DetailledPrintStyle(PrintingWizard* parent, const char* name=0);
         ~DetailledPrintStyle();
         void print(QStringList contacts);
+    protected:
+        bool printEntries(const QStringList& contacts,
+                          KPrinter *printer,
+                          QPainter *painter,
+                          const QRect& window);
+        bool printEntry(const KABC::Addressee& contact,
+                        const QRect& window,
+                        QPainter *painter,
+                        int top, bool fake, QRect *brect);
+        KABEntryPainter ePntr;
     };
 
     class DetailledPrintStyleFactory : public PrintStyleFactory
