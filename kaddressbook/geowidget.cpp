@@ -30,6 +30,7 @@
 #include <knuminput.h>
 #include <kstandarddirs.h>
 
+#include <qcheckbox.h>
 #include <qfile.h>
 #include <qgroupbox.h>
 #include <qlabel.h>
@@ -48,35 +49,39 @@ GeoWidget::GeoWidget( QWidget *parent, const char *name )
 {
   QLabel *label = 0;
 
-  QGridLayout *topLayout = new QGridLayout( this, 3, 3 );
+  QGridLayout *topLayout = new QGridLayout( this, 4, 3 );
   topLayout->setMargin( KDialog::marginHint() );
   topLayout->setSpacing( KDialog::spacingHint() );
 
   label = new QLabel( this );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "package_network", KIcon::Desktop ) );
   label->setAlignment( Qt::AlignTop );
-  topLayout->addMultiCellWidget( label, 0, 2, 0, 0 );
+  topLayout->addMultiCellWidget( label, 0, 3, 0, 0 );
+
+  mGeoIsValid = new QCheckBox( i18n( "Use geo data" ), this );
+  topLayout->addMultiCellWidget( mGeoIsValid, 0, 0, 1, 2 );
 
   label = new QLabel( i18n( "Latitude:" ), this );
-  topLayout->addWidget( label, 0, 1 );
+  topLayout->addWidget( label, 1, 1 );
 
-  mLatitudeBox = new KDoubleSpinBox( -91, 90, 1, -91, 6, this );
+  mLatitudeBox = new KDoubleSpinBox( -90, 90, 1, 0, 6, this );
+  mLatitudeBox->setEnabled( false );
   mLatitudeBox->setSuffix( "°" );
-  mLatitudeBox->setSpecialValueText( i18n( "undefined" ) );
-  topLayout->addWidget( mLatitudeBox, 0, 2 );
+  topLayout->addWidget( mLatitudeBox, 1, 2 );
   label->setBuddy( mLatitudeBox );
 
   label = new QLabel( i18n( "Longitude:" ), this );
-  topLayout->addWidget( label, 1, 1 );
+  topLayout->addWidget( label, 2, 1 );
 
-  mLongitudeBox = new KDoubleSpinBox( -181, 180, 1, -181, 6, this );
+  mLongitudeBox = new KDoubleSpinBox( -180, 180, 1, 0, 6, this );
+  mLongitudeBox->setEnabled( false );
   mLongitudeBox->setSuffix( "°" );
-  mLongitudeBox->setSpecialValueText( i18n( "undefined" ) );
-  topLayout->addWidget( mLongitudeBox, 1, 2 );
+  topLayout->addWidget( mLongitudeBox, 2, 2 );
   label->setBuddy( mLongitudeBox );
 
   mExtendedButton = new QPushButton( i18n( "Edit Geo Data..." ), this );
-  topLayout->addMultiCellWidget( mExtendedButton, 2, 2, 1, 2 );
+  mExtendedButton->setEnabled( false );
+  topLayout->addMultiCellWidget( mExtendedButton, 3, 3, 1, 2 );
 
   connect( mLatitudeBox, SIGNAL( valueChanged( double ) ),
            SIGNAL( changed() ) );
@@ -84,6 +89,15 @@ GeoWidget::GeoWidget( QWidget *parent, const char *name )
            SIGNAL( changed() ) );
   connect( mExtendedButton, SIGNAL( clicked() ),
            SLOT( editGeoData() ) );
+
+  connect( mGeoIsValid, SIGNAL( toggled( bool ) ),
+           mLatitudeBox, SLOT( setEnabled( bool ) ) );
+  connect( mGeoIsValid, SIGNAL( toggled( bool ) ),
+           mLongitudeBox, SLOT( setEnabled( bool ) ) );
+  connect( mGeoIsValid, SIGNAL( toggled( bool ) ),
+           mExtendedButton, SLOT( setEnabled( bool ) ) );
+  connect( mGeoIsValid, SIGNAL( toggled( bool ) ),
+           SIGNAL( changed() ) );
 
   KAcceleratorManager::manage( this );
 }
@@ -95,20 +109,24 @@ GeoWidget::~GeoWidget()
 void GeoWidget::setGeo( const KABC::Geo &geo )
 {
   if ( geo.isValid() ) {
+    mGeoIsValid->setChecked( true );
     mLatitudeBox->setValue( geo.latitude() );
     mLongitudeBox->setValue( geo.longitude() );
-  } else {
-    mLatitudeBox->setValue( -91 );
-    mLongitudeBox->setValue( -181 );
-  }
+  } else
+    mGeoIsValid->setChecked( false );
 }
 
 KABC::Geo GeoWidget::geo() const
 {
   KABC::Geo geo;
 
-  geo.setLatitude( mLatitudeBox->value() );
-  geo.setLongitude( mLongitudeBox->value() );
+  if ( mGeoIsValid->isChecked() ) {
+    geo.setLatitude( mLatitudeBox->value() );
+    geo.setLongitude( mLongitudeBox->value() );
+  } else {
+    geo.setLatitude( 91 );
+    geo.setLongitude( 181 );
+  }
 
   return geo;
 }

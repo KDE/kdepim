@@ -36,6 +36,7 @@ class GeoMapWidget;
 class KComboBox;
 class KDoubleSpinBox;
 
+class QCheckBox;
 class QLabel;
 class QSpinBox;
 class QPushButton;
@@ -74,6 +75,7 @@ class GeoWidget : public QWidget
     KDoubleSpinBox *mLatitudeBox;
     KDoubleSpinBox *mLongitudeBox;
 
+    QCheckBox *mGeoIsValid;
     QPushButton *mExtendedButton;
 };
 
