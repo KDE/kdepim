@@ -83,7 +83,7 @@ KNSourceViewWindow::KNSourceViewWindow(const QString &htmlCode)
   QStyleSheetItem *style;
   style=new QStyleSheetItem(browser->styleSheet(), "txt");
   style->setDisplayMode(QStyleSheetItem::DisplayBlock);
-  style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpacePre);
+  style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNoWrap);
 
   browser->setText(QString("<qt><txt>%1</txt></qt>").arg(htmlCode));
   restoreWindowSize("sourceWindow", this, QSize(500,300));
@@ -135,14 +135,14 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   style=new QStyleSheetItem(styleSheet(), "bodyblock");
   style->setDisplayMode(QStyleSheetItem::DisplayBlock);
   style->setMargin(QStyleSheetItem::MarginAll, 5);
-  style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpacePre);
+  style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNoWrap);
   style=new QStyleSheetItem(styleSheet(), "headerblock");
   style->setDisplayMode(QStyleSheetItem::DisplayBlock);
   style->setMargin(QStyleSheetItem::MarginLeft, 10);
   style->setMargin(QStyleSheetItem::MarginVertical, 2);
   style=new QStyleSheetItem(styleSheet(), "txt_attachment");
   style->setDisplayMode(QStyleSheetItem::DisplayBlock);
-  style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpacePre);
+  style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNoWrap);
 
   f_actory = new QMimeSourceFactory();
   setMimeSourceFactory(f_actory);
@@ -340,6 +340,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
   QRegExp regExp;
   uint len=line.length();
   int matchLen;
+  bool forceNBSP=false; //use "&nbsp;" for spaces => workaround for a bug in QTextBrowser
 
   if (allowRot13 && r_ot13)
     text = rot13(line);
@@ -360,7 +361,24 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case '>' :  lastReplacement=idx; result+="&gt;"; break;
       case '&' :  lastReplacement=idx; result+="&amp;"; break;
       case '"' :  lastReplacement=idx; result+="&quot;"; break;
-      case '\t':  lastReplacement=idx; result+="        "; break;   // tab == 8 spaces
+      case '\t':  lastReplacement=idx; result+="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; break;  // tab == 8 spaces
+
+      case 32 :
+        if(text[idx+1].latin1()==32) {
+          while(text[idx].latin1()==32) {
+            result+="&nbsp;";
+            idx++;
+          }
+          idx--;
+          forceNBSP=true; // force &nbsp; for the rest of this line
+        } else
+          if(idx==0 || forceNBSP) {
+            result+="&nbsp;";
+            forceNBSP=true; // force &nbsp; for the rest of this line
+          } else
+            result+=' ';
+        lastReplacement=idx;
+        break;
 
       case '@' :            // email-addresses or message-ids
         if (parseURLs) {
