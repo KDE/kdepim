@@ -42,8 +42,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2004-09-25</date>
-<releaseinfo>1.02.00</releaseinfo>
+<date>2004-10-26</date>
+<releaseinfo>1.02.01</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -64,22 +64,21 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&kalarm; is a personal alarm message, command and email
-scheduler. It lets you set up personal alarm messages which pop up on
-the screen at the chosen time, or you can schedule commands to be
-executed or emails to be sent.</para>
+<para>&kalarm; lets you schedule the display of personal alarm
+messages, the playing of sound files, the execution of commands and
+the sending of emails.</para>
 
 <para>In its default graphical mode, &kalarm; displays the list of
 pending alarms, showing their times and details.  You can create new
 alarms, or you can select existing alarms for modification or
 deletion. You can also optionally view expired alarms.</para>
 
-<para>When setting up or modifying an alarm, you may either type in
-the alarm message text, specify a text or image file to display,
-specify a command to execute, or enter an email to send. You can also
-choose the color of the alarm message, whether it should repeat,
-whether to play a sound, and whether the alarm should be canceled if
-it cannot be triggered at its scheduled time.</para>
+<para>When configuring an alarm, you may either type in the alarm
+message text, specify a text or image file to display, specify a
+command to execute, or enter an email to send. You can also choose
+the color of the alarm message, whether to play a sound, whether it
+should repeat, and whether the alarm should be canceled if it cannot
+be triggered at its scheduled time.</para>
 
 <para>Alarms may also be scheduled from the command line, or via &DCOP;
 calls from programs.</para>
@@ -258,6 +257,14 @@ the selected alarm's details.</para>
 drag the email from &kmail; onto &kalarm;'s main window or system tray
 icon. This opens the alarm edit dialog with the entire email message
 (including sender, recipient, etc.) as the alarm text.</para>
+</listitem>
+
+<listitem>
+<para>To create a new email alarm to send a copy of an existing email
+message, drag the email from &kmail; onto &kalarm;'s main window or
+system tray icon. Then select the <guilabel>Email</guilabel> option.
+The alarm edit dialog is preset with the entire email message except
+sender.</para>
 </listitem>
 
 <listitem>
@@ -626,7 +633,7 @@ is limited to being less than the recurrence interval.</para>
 <listitem>
 <para>Select the background color for the alarm message window.
 (The color selection list can be configured in the
-<link linkend="preferences">Preferences dialog</link>.) </para>
+<link linkend="preferences">Preferences dialog</link>.)</para>
 </listitem>
 
 <listitem>
@@ -701,14 +708,21 @@ the alarm is configured. To remove an attachment, highlight it in the
 drop-down list and click the <guibutton>Remove</guibutton>
 button.</para>
 
-<para>You can set your email address from which the email is sent, in
-the <link linkend="preferences">Preferences dialog</link>, the
-default being your email address set in the &kde; Control
-Center.</para>
-
-<para>Set the following option:</para>
+<para>Set the following options:</para>
 
 <itemizedlist>
+<listitem>
+<para>The <guilabel>From</guilabel> combo box allows you to select
+which &kmail; identity to use as your email address for sending the
+email. This option only appears if your <guilabel>From</guilabel>
+email address in the
+<link linkend="preferences">Preferences dialog</link> is set to
+<guilabel>Use &kmail; identities</guilabel>. Otherwise your email
+address is preset in the
+<link linkend="preferences">Preferences dialog</link>, rendering this
+option inapplicable.</para>
+</listitem>
+
 <listitem>
 <para>Check <guilabel>Copy email to self</guilabel> to send a blind
 copy of the email to yourself when the alarm is triggered. The email
@@ -1612,23 +1626,55 @@ agent such as <application>postfix</application> or
 </listitem>
 
 <listitem>
-<para>The <guilabel>From</guilabel> email address specifies your email
-address to be used as the sender's address in email alarms.
-Select <guilabel>Use address from Control Center</guilabel> to use
-the email address which is configured in the &kde; Control
-Center.</para>
+<para><guilabel>Copy sent emails into &kmail;'s sent-items folder</guilabel>:
+Select this option if, every time an email alarm is triggered, you
+want a copy of the transmitted email to be stored in &kmail;'s
+<filename>sent-items</filename> folder.</para>
+
+<note><para>This option is not available when &kmail; is selected as
+the email client, since &kmail; automatically does this.</para></note>
 </listitem>
 
 <listitem>
-<para>The <guilabel>Bcc</guilabel> email address specifies your email
-address to be used for sending blind copies of email alarms to
-yourself when the <guilabel>Copy email to self</guilabel> option is
-selected. If blind copies are to be sent to your account on the
+<para>Select your email address to be used as the sender's address in
+email alarms:</para>
+
+<itemizedlist>
+<listitem><para>Select <guilabel>From</guilabel> to enter an email
+address.</para>
+</listitem>
+
+<listitem><para>Select <guilabel>Use address from Control
+Center</guilabel> to use the email address which is configured in the
+&kde; Control Center.</para>
+</listitem>
+
+<listitem><para>Select <guilabel>Use &kmail; identities</guilabel> to
+be able to choose at the time you configure an email alarm which of
+&kmail;'s email identities to use. &kmail;'s default identity will be
+used for alarms which were already configured before you selected this
+option.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem>
+<para>Select your email address to be used for sending blind copies of
+email alarms to yourself when the
+<guilabel>Copy email to self</guilabel> option is selected:</para>
+
+<itemizedlist>
+<listitem><para>Select <guilabel>Bcc</guilabel> to enter an email
+address. If blind copies are to be sent to your account on the
 computer which &kalarm; runs on, you could simply enter your user
-login name here.
-Select <guilabel>Use address from Control Center</guilabel> to use
-the email address which is configured in the &kde; Control
-Center.</para>
+login name here.</para>
+</listitem>
+
+<listitem><para>Select <guilabel>Use address from Control
+Center</guilabel> to use the email address which is configured in the
+&kde; Control Center.</para>
+</listitem>
+</itemizedlist>
 </listitem>
 
 <listitem>
@@ -1919,6 +1965,13 @@ time.</para>
   contents are to form the alarm message. <option>--exec</option> and
   <option>--mail</option> cannot be specified, and
   <replaceable>message</replaceable> must not be present with this
+  option.</entry>
+</row>
+<row>
+  <entry><option>-F</option>, <option>--from-id
+  <replaceable>ID</replaceable></option></entry>
+  <entry>Use the specified &kmail; identity as the sender of the
+  email. <option>--mail</option> must be specified with this
   option.</entry>
 </row>
 <row>
@@ -3152,7 +3205,8 @@ is identical to
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-bool scheduleEmail(const QString&amp; <replaceable>addresses</replaceable>,
+bool scheduleEmail(const QString&amp; <replaceable>fromID</replaceable>,
+                   const QString&amp; <replaceable>addresses</replaceable>,
                    const QString&amp; <replaceable>subject</replaceable>,
                    const QString&amp; <replaceable>message</replaceable>,
                    const QString&amp; <replaceable>attachments</replaceable>,
@@ -3164,7 +3218,8 @@ bool scheduleEmail(const QString&amp; <replaceable>addresses</replaceable>,
                    int <replaceable>simpleRepeatCount</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleEmail(const QString&amp; <replaceable>addresses</replaceable>,
+bool scheduleEmail(const QString&amp; <replaceable>fromID</replaceable>,
+                   const QString&amp; <replaceable>addresses</replaceable>,
                    const QString&amp; <replaceable>subject</replaceable>,
                    const QString&amp; <replaceable>message</replaceable>,
                    const QString&amp; <replaceable>attachments</replaceable>,
@@ -3176,7 +3231,8 @@ bool scheduleEmail(const QString&amp; <replaceable>addresses</replaceable>,
                    int <replaceable>recurCount</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleEmail(const QString&amp; <replaceable>addresses</replaceable>,
+bool scheduleEmail(const QString&amp; <replaceable>fromID</replaceable>,
+                   const QString&amp; <replaceable>addresses</replaceable>,
                    const QString&amp; <replaceable>subject</replaceable>,
                    const QString&amp; <replaceable>message</replaceable>,
                    const QString&amp; <replaceable>attachments</replaceable>,
@@ -3191,6 +3247,16 @@ bool scheduleEmail(const QString&amp; <replaceable>addresses</replaceable>,
 <refsect2>
 <title>Parameters</title>
 <variablelist>
+<varlistentry>
+<term><parameter>fromID</parameter></term>
+<listitem>
+<para>The &kmail; identity to use as the sender of the email. If
+empty, the sender's email address will be that configured in
+&kalarm;'s
+<link linkend="preferences-email">Email preferences</link>.</para>
+</listitem>
+</varlistentry>
+
 <varlistentry>
 <term><parameter>addresses</parameter></term>
 <listitem>
