@@ -1,7 +1,7 @@
 This package was updated by Ivan E. Moore II <rkrusty@debian.org>.
  
 It was downloaded from ftp.kde.org
-/pub/kde/unstable/CVS/snapshots/current kdeadmin-*.tgz 
+/pub/kde/unstable/CVS/snapshots/current kdepim-*.tgz 
 
 Copyright:
 
@@ -11,8 +11,7 @@ All programs in this package are released under GPL
     Requires the Qt widget libraries, available at no cost at
     http://www.troll.no
 
-    Copyright (C) 1997 Peter Putzer
-                       pputzer@edu.uni-klu.ac.at
+    See */AUTHORS for authors.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

@@ -15,7 +15,6 @@ Description: KDE Personal Information Management Applications
  This package contains the following programs: 
   - korganizer
   - kpilot
-  - kab2
 
 Package: kdepim-dev-cvs
 Architecture: any
