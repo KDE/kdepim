@@ -766,6 +766,8 @@ void KNodeView::slotArticleSelectionChanged()
     a_ctArtSetThreadScore->setEnabled(enabled);
     a_ctArtToggleIgnored->setEnabled(enabled);
     a_ctArtToggleWatched->setEnabled(enabled);
+    a_ctScoreLower->setEnabled(enabled);
+    a_ctScoreRaise->setEnabled(enabled);
   }
 
   enabled = (f_olManager->currentFolder()!=0);
