@@ -389,6 +389,18 @@ int KABC::ResourceIMAP::subresourceCompletionWeight( const QString& subresource 
   return 80;
 }
 
+QString KABC::ResourceIMAP::subresourceLabel( const QString& subresource ) const
+{
+  // TODO
+  //if ( mResources.contains( subresource ) ) {
+  //  return mResources[ subresource ].label();
+  //}
+  return subresource;
+
+  //kdDebug(5650) << "subresourceLabel( " << subresource << " ): not found!\n";
+  //return QString::null;
+}
+
 void KABC::ResourceIMAP::setSubresourceCompletionWeight( const QString& subresource, int completionWeight )
 {
   if ( mResources.contains( subresource ) ) {
