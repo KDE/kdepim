@@ -30,6 +30,7 @@
 #include "options.h"
 
 #include <time.h>
+#include <iostream>
 
 #include <pi-dlp.h>
 

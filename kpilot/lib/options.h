@@ -39,13 +39,29 @@
 // the generic DB viewer, which uses the widget.
 #define USE_KHEXEDIT
 
-// Turn ON as much debugging as possible with -DDEBUG -DDEBUG_CERR
-// Some systems have changed kdWarning() and kdDebug() into nops,
-// so DEBUG_CERR changes them into cerr again. Odd and disturbing.
-//
+// Want to be as careful as possible about casting QStrings back and
+// forth, because of the potential for putting UTF-8 encoded data on the HH.
+// KHexEdit headers are not safe, though, so don't use this in general.
+#ifndef QT_NO_ASCII_CAST
 // #define QT_NO_ASCII_CAST		(1)
+#endif
+#ifndef QT_NO_CAST_ASCII
 // #define QT_NO_CAST_ASCII		(1)
+#endif
+
+
+// Switch _on_ debugging if it's not off.
+//
+#ifndef NDEBUG
+#define DEBUG				(1)
+#endif
+
+// Switch on debugging explicitly. Perhaps send debug to stderr instead
+// of to the KDE debugging facility (it does lose some niftiness then).
+//
+#ifndef DEBUG
 // #define DEBUG			(1)
+#endif
 // #define DEBUG_CERR			(1)
 
 #include "config.h"
@@ -98,6 +114,10 @@
 // Dunno, really. Probably because everything needs it.
 #include <klocale.h>
 // For the debug stuff.
+#ifdef DEBUG
+#undef NDEBUG
+#undef NO_DEBUG
+#endif
 #include <kdebug.h>
 
 
@@ -114,6 +134,12 @@ extern KDE_EXPORT int debug_level;
 #define FUNCTIONSETUP	KPILOT_FNAMEDEF(1)
 #define FUNCTIONSETUPL(l)	KPILOT_FNAMEDEF(l)
 
+#ifdef DEBUG_CERR
+#define DEBUGSTREAM std::ostream
+#else
+#define DEBUGSTREAM kdbgstream
+#endif
+
 class KPilotDepthCount 
 { 
 public: 
@@ -121,6 +147,13 @@ public:
 	~KPilotDepthCount(); 
 	QString indent() const; 
 	const char *name() const { return fName; } ;
+	inline DEBUGSTREAM debug(int area=0)
+#ifdef DEBUG_CERR
+	{ return std::cerr; } 
+#else
+	{ return kdDebug(debug_level >= fLevel, area); }
+#endif
+
 protected: 
 	static int depth; 
 	int fDepth; 
@@ -157,10 +190,10 @@ inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
 //
 //
 #define DEBUGSTREAM	kdbgstream
-#define DEBUGKPILOT	kdDebug(5510)
-#define DEBUGDAEMON	kdDebug(5511)
-#define DEBUGCONDUIT	kdDebug(5512)
-#define DEBUGDB         kdDebug(5513)
+#define DEBUGKPILOT	fname.debug(5510)
+#define DEBUGDAEMON	fname.debug(5511)
+#define DEBUGCONDUIT	fname.debug(5512)
+#define DEBUGDB         fname.debug(5513)
 
 inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d) 
 	{ return o << d.indent() << ":" ; }

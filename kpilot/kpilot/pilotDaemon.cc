@@ -191,7 +191,7 @@ void PilotDaemonTray::setupWidget()
 
 	KHelpMenu *help = new KHelpMenu(menu,aboutData);
 	menu->insertItem(
-		KGlobal::iconLoader()->loadIconSet("help",KIcon::Small,0,true),
+		KGlobal::iconLoader()->loadIconSet(CSL1("help"),KIcon::Small,0,true),
 		i18n("&Help"),help->menu(),false /* no whatsthis */);
 
 
@@ -465,7 +465,7 @@ void PilotDaemon::showTray()
 		<< endl;
 	DEBUGDAEMON << fname
 		<< ": Got conduit list "
-		<< (KPilotSettings::installedConduits().join(","))
+		<< (KPilotSettings::installedConduits().join(CSL1(",")))
 		<< endl;
 #endif
 
@@ -728,7 +728,7 @@ bool PilotDaemon::setupPilotLink()
 	else if (s.startsWith(CSL1("D"))) requestSync(SyncAction::eDefaultSync);
 	else
 	{
-		kdWarning() << ": Unknown sync type " << ( s.isEmpty() ? "<none>" : s )
+		kdWarning() << ": Unknown sync type " << ( s.isEmpty() ? CSL1("<none>") : s )
 			<< endl;
 	}
 }
@@ -977,7 +977,7 @@ static void queueConduits(ActionQueue *fSyncStack,
 	{
 		fSyncStack->queueConduits( conduits,e);
 		QString s = i18n("Conduit flags: ");
-		s.append(ConduitProxy::flagsForMode(e).join(" "));
+		s.append(ConduitProxy::flagsForMode(e).join(CSL1(" ")));
 		// logMessage(s);
 	}
 }

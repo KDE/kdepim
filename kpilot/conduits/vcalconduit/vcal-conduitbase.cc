@@ -587,7 +587,7 @@ void VCalConduitBase::cleanup()
 					else {
 						KIO::NetAccess::removeTempFile(fCalendarFile);
 					}
-					QFile backup(fCalendarFile + "~");
+					QFile backup(fCalendarFile + CSL1("~"));
 					backup.remove();
 				}
 				break;

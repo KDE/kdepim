@@ -225,7 +225,7 @@ static inline void initNoBackup(QStringList &dbnames,
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Will skip databases "
-		<< dbnames.join(",") << endl;
+		<< dbnames.join(CSL1(",")) << endl;
 	QString creatorids;
 	for (QValueList<unsigned long>::const_iterator i = dbcreators.begin();
 		i != dbcreators.end(); ++i)
@@ -366,14 +366,14 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 
 	fDBIndex = info.index + 1;
 
-	char buff[7];
+	char buff[8];
 	buff[0] = '[';
 	set_long( &buff[1], info.creator );
 	buff[6] = ']';
 	buff[7] = '\0';
-	QString creator( buff );
+	QString creator = QString::fromLatin1( buff );
 	info.name[33]='\0';
-	QString dbname( info.name );
+	QString dbname = QString::fromLatin1( info.name );
 	if ( !mDeviceDBs.contains( creator ) )
 		mDeviceDBs << creator;
 	if ( !mDeviceDBs.contains( dbname ) )

@@ -115,6 +115,11 @@ FileInstallWidget::~FileInstallWidget()
 	KPILOT_DELETE(fInstaller);
 }
 
+static inline bool pdbOrPrc(const QString &s)
+{
+	return s.endsWith(CSL1(".pdb"),false) || s.endsWith(CSL1(".prc"),false) ;
+}
+
 void FileInstallWidget::dragEnterEvent(QDragEnterEvent *event)
 {
 	FUNCTIONSETUP;
@@ -129,7 +134,7 @@ void FileInstallWidget::dragEnterEvent(QDragEnterEvent *event)
 	QString filename;
     for ( it = urls.begin(); it != urls.end(); ++it ) {
 		filename = (*it).fileName();
-		if(!(filename.endsWith("pdb", FALSE) || filename.endsWith("prc", FALSE))) {
+		if(!pdbOrPrc(filename)) {
 			event->accept(false);
 			return;
 		}
@@ -245,7 +250,7 @@ void FileInstallWidget::refreshFileInstallList()
 
 	for (QStringList::Iterator fileName = fileNames.begin(); fileName != fileNames.end(); ++fileName)
 	{
-		if((*fileName).endsWith("prc", FALSE) || (*fileName).endsWith("pdb", FALSE))
+		if(pdbOrPrc(*fileName))
 		{
 			new KIconViewItem(fIconView, *fileName, kpilotIcon);
 		}

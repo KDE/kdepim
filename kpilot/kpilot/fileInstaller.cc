@@ -92,7 +92,7 @@ void FileInstaller::clearPending()
 {
 	FUNCTIONSETUP;
 
-	if(!(s.endsWith("pdb", false) || s.endsWith("prc", false))) {
+	if(!(s.endsWith(CSL1(".pdb"), false) || s.endsWith(CSL1(".prc"), false))) {
 		KMessageBox::detailedSorry(w, i18n("Cannot install %1").arg(s),
 			i18n("Only PalmOS database files (like *.pdb and *.prc) can be installed by the file installer."));
 		return false;

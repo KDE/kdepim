@@ -320,7 +320,7 @@ void AddressWidget::updateWidget()
 
 			if (!title.isEmpty())
 			{
-				title.remove(QRegExp("\n.*"));
+				title.remove(QRegExp(CSL1("\n.*")));
 				PilotListItem *p = new PilotListItem(title,
 					listIndex,
 					fAddressList.current());
@@ -652,7 +652,7 @@ void AddressWidget::writeAddress(PilotAddress * which,
 	PilotRecord *pilotRec = which->pack();
 
 	myDB->writeRecord(pilotRec);
-	markDBDirty("AddressDB");
+	markDBDirty(CSL1("AddressDB"));
 	delete pilotRec;
 
 	// Clean up in the case that we allocated our own DB.

@@ -108,7 +108,7 @@ private:
 #ifdef DEBUG
 		FUNCTIONSETUPL(3);
 		DEBUGDAEMON << fname << "Bound devices: "
-			<< ((mBoundDevices.count() > 0) ? mBoundDevices.join(", ") : CSL1("<none>")) << endl;
+			<< ((mBoundDevices.count() > 0) ? mBoundDevices.join(CSL1(", ")) : CSL1("<none>")) << endl;
 #endif
 	}
 } ;

@@ -109,25 +109,25 @@ void DatebookWidget::hideComponent()
 void DatebookWidget::slotDayChanged()
 {
 	FUNCTIONSETUP;
-	KMessageBox::information(this, "slotDayChanged");
+	KMessageBox::information(this, CSL1("slotDayChanged"));
 }
 
 void DatebookWidget::slotAddEvent()
 {
 	FUNCTIONSETUP;
-	KMessageBox::information(this, "slotAddEvent");
+	KMessageBox::information(this, CSL1("slotAddEvent"));
 }
 
 void DatebookWidget::slotEditEvent()
 {
 	FUNCTIONSETUP;
-	KMessageBox::information(this, "slotEditEvent");
+	KMessageBox::information(this, CSL1("slotEditEvent"));
 }
 
 void DatebookWidget::slotDeleteEvent()
 {
 	FUNCTIONSETUP;
-	KMessageBox::information(this, "slotDeleteEvent");
+	KMessageBox::information(this, CSL1("slotDeleteEvent"));
 }
 
 

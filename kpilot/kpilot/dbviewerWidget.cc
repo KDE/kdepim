@@ -167,7 +167,7 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 	DEBUGKPILOT << fname << ": Selected DB " << dbname << endl;
 #endif
 	struct DBInfo dbinfo;
-	QString display("");
+	QString display;
 	fRecList.clear();
 	fRecordList->clear();
 
@@ -176,12 +176,12 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 
 	if (!shown) return;
 
-	if (dbname.endsWith(".pdb") || dbname.endsWith(".PDB"))
+	if (dbname.endsWith(CSL1(".pdb")) || dbname.endsWith(CSL1(".PDB")))
 	{
 		// We are dealing with a database
 		currentDBtype=eDatabase;
 
-		currentDB.remove( QRegExp(".(pdb|PDB)$") );
+		currentDB.remove( QRegExp(CSL1(".(pdb|PDB)$")) );
 
 		fDB=new PilotLocalDatabase(dbPath(), currentDB, false);
 		if (!fDB || !fDB->isDBOpen())
@@ -191,14 +191,15 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 			return;
 		}
 		dbinfo=fDB->getDBInfo();
-		display.append(i18n("<B>Database:</B> %1, %2 records<BR>").arg(dbinfo.name).arg(fDB->recordCount()));
+		display.append(i18n("<B>Database:</B> %1, %2 records<BR>")
+			.arg(QString::fromLatin1(dbinfo.name)).arg(fDB->recordCount()));
 		char buff[5];
 		set_long(buff, dbinfo.type);
 		buff[4]='\0';
-		QString tp(buff);
+		QString tp = QString::fromLatin1(buff);
 		set_long(buff, dbinfo.creator);
 		buff[4]='\0';
-		QString cr(buff);
+		QString cr = QString::fromLatin1(buff);
 		display.append(i18n("<B>Type:</B> %1, <B>Creator:</B> %2<br><br>").arg(tp).arg(cr));
 
 		int currentRecord = 0;
@@ -346,7 +347,7 @@ bool GenericDBWidget::slotEditRecord(QListViewItem*item)
 	else
 	{
 		// Either nothing selected, or some error occurred...
-		KMessageBox::information(this, i18n("You must select a record for editing."), i18n("No Record Selected"), "norecordselected");
+		KMessageBox::information(this, i18n("You must select a record for editing."), i18n("No Record Selected"), CSL1("norecordselected"));
 	}
 	return false;
 }

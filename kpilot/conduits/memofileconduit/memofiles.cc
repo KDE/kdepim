@@ -30,15 +30,15 @@
 #include "memofiles.h"
 #include "memofile.h"
 
-QString Memofiles::FIELD_SEP = "\t";
+QString Memofiles::FIELD_SEP = CSL1("\t");
 
 Memofiles::Memofiles (MemoCategoryMap & categories, struct MemoAppInfo & appInfo, QString & baseDirectory) :
 		_categories(categories), _memoAppInfo(appInfo), _baseDirectory(baseDirectory)
 {
 	FUNCTIONSETUP;
 	_memofiles.clear();
-	_memoMetadataFile = _baseDirectory + QDir::separator() + ".ids";
-	_categoryMetadataFile = _baseDirectory + QDir::separator() + ".categories";
+	_memoMetadataFile = _baseDirectory + QDir::separator() + CSL1(".ids");
+	_categoryMetadataFile = _baseDirectory + QDir::separator() + CSL1(".categories");
 	_countNewToLocal = _countModifiedToLocal = _countDeletedToLocal = 0;
 	_memofiles.setAutoDelete(true);
 
@@ -80,12 +80,10 @@ void Memofiles::load (bool loadAll)
 		}
 
 
-		QStringList entries = dir.entryList();
+		QStringList entries = dir.entryList(QDir::Files);
 		QString file;
 		for(QStringList::Iterator it = entries.begin(); it != entries.end(); ++it) {
 			file = *it;
-			if(file == "." || file == "..")
-				continue;
 			QFileInfo info(dir, file);
 
 			if(info.isFile() && info.isReadable()) {
@@ -405,15 +403,15 @@ void Memofiles::addModifiedMemo (PilotMemo * memo)
 		return;
 	}
 
-	QString debug = ": adding a PilotMemo. id: ["
-	                + QString::number(memo->getID()) + "], title: ["
-	                + memo->getTitle() + "]. ";
+	QString debug = CSL1(": adding a PilotMemo. id: [")
+	                + QString::number(memo->getID()) + CSL1("], title: [")
+	                + memo->getTitle() + CSL1("]. ");
 
 	Memofile * memofile = find(memo->getID());
 
 	if (NULL == memofile) {
 		_countNewToLocal++;
-		debug += " new from pilot.";
+		debug += CSL1(" new from pilot.");
 	} else {
 		// we have found a local memofile that was modified on the palm.  for the time
 		// being (until someone complains, etc.), we will always overwrite changes to
@@ -422,7 +420,7 @@ void Memofiles::addModifiedMemo (PilotMemo * memo)
 		// this...
 		_countModifiedToLocal++;
 		_memofiles.remove(memofile);
-		debug += " modified from pilot.";
+		debug += CSL1(" modified from pilot.");
 	}
 
 #ifdef DEBUG
@@ -662,7 +660,7 @@ bool Memofiles::folderRemove(const QDir &_d)
 
 	QStringList entries = d.entryList();
 	for(QStringList::Iterator it = entries.begin(); it != entries.end(); ++it) {
-		if(*it == "." || *it == "..")
+		if(*it == CSL1(".") || *it == CSL1(".."))
 			continue;
 		QFileInfo info(d, *it);
 		if(info.isDir()) {
@@ -696,12 +694,12 @@ QString Memofiles::filename(PilotMemo * memo)
 
 	if (filename.isEmpty()) {
 		QString text = memo->text();
-		int i = text.find("\n");
+		int i = text.find(CSL1("\n"));
 		if (i > 1) {
 			filename = text.left(i);
 		}
 		if (filename.isEmpty()) {
-			filename = "empty";
+			filename = CSL1("empty");
 		}
 	}
 
@@ -723,7 +721,7 @@ QString Memofiles::filename(PilotMemo * memo)
 	// if our user has 20 memos with the same filename, he/she is asking
 	// for trouble.
 	while (NULL != memofile && uniq <=20) {
-		newfilename = QString(filename + "." + QString::number(uniq++) );
+		newfilename = QString(filename + CSL1(".") + QString::number(uniq++) );
 		memofile = find(category, newfilename);
 	}
 
@@ -732,7 +730,7 @@ QString Memofiles::filename(PilotMemo * memo)
 
 QString Memofiles::getResults()
 {
-	QString result = "";
+	QString result;
 
 	if (_countNewToLocal > 0)
 		result += i18n("%1 new to filesystem. ").arg(_countNewToLocal);

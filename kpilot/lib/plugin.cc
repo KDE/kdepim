@@ -112,11 +112,11 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	else if (args.contains(CSL1("--full"))) fSyncDirection=SyncAction::eFullSync;
 	else fSyncDirection=SyncAction::eFastSync;
 
-	QString cResolution(args.grep(QRegExp("--conflictResolution \\d*")).first());
+	QString cResolution(args.grep(QRegExp(CSL1("--conflictResolution \\d*"))).first());
 	if (cResolution.isEmpty())
 	{
 		fConflictResolution=(SyncAction::ConflictResolution)
-			cResolution.replace(QRegExp("--conflictResolution (\\d*)"), "\\1").toInt();
+			cResolution.replace(QRegExp(CSL1("--conflictResolution (\\d*)")), CSL1("\\1")).toInt();
 	}
 
 #ifdef DEBUG
@@ -193,7 +193,7 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 		// make sure the dir for the backup db really exists!
 		QFileInfo fi(dbpath);
 		QString path(QFileInfo(dbpath).dir(TRUE).absPath());
-		if (!path.endsWith("/")) path.append(CSL1("/"));
+		if (!path.endsWith(CSL1("/"))) path.append(CSL1("/"));
 		if (!KStandardDirs::exists(path))
 		{
 #ifdef DEBUG
@@ -392,7 +392,7 @@ bool PluginUtility::isModal(const QStringList &a)
 
 /* static */ long PluginUtility::pluginVersion(const KLibrary *lib)
 {
-	QString symbol("version_");
+	QString symbol = CSL1("version_");
 	symbol.append(lib->name());
 
 	if (!lib->hasSymbol(symbol.latin1())) return 0;
@@ -404,7 +404,7 @@ bool PluginUtility::isModal(const QStringList &a)
 
 /* static */ QString PluginUtility::pluginVersionString(const KLibrary *lib)
 {
-	QString symbol("id_");
+	QString symbol= CSL1("id_");
 	symbol.append(lib->name());
 
 	if (!lib->hasSymbol(symbol.latin1())) return QString::null;

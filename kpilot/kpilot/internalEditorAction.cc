@@ -74,7 +74,7 @@ void InternalEditorAction::syncDirtyDB()
 	{
 		fInternalEditorSyncStatus=eSyncDirtyDB;
 		dirtyDBs=KPilotSettings::dirtyDatabases();
-		emit logMessage(i18n("Databases with changed records: %1").arg(dirtyDBs.join(", ")));
+		emit logMessage(i18n("Databases with changed records: %1").arg(dirtyDBs.join(CSL1(", "))));
 		dbIter=dirtyDBs.begin();
 	}
 	else
@@ -156,7 +156,7 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	bool knownDB=true;
 	QString localEntry, serialEntry, recType(i18n("record"));
 
-	if (dbName=="AddressDB" && db)
+	if (dbName==CSL1("AddressDB") && db)
 	{
 		struct AddressAppInfo fAppInfo;
 		unsigned char *buffer = new unsigned char[PilotRecord::APP_BUFFER_SIZE];
@@ -171,7 +171,7 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 		recType=i18n("address");
 	}
 	else
-	if (dbName=="ToDoDB" && db)
+	if (dbName==CSL1("ToDoDB") && db)
 	{
 		struct ToDoAppInfo fAppInfo;
 		unsigned char *buffer = new unsigned char[PilotRecord::APP_BUFFER_SIZE];
@@ -186,7 +186,7 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 		recType=i18n("to-do entry");
 	}
 	else
-	if (dbName=="MemoDB")
+	if (dbName==CSL1("MemoDB"))
 	{
 		PilotMemo localMemo(localrec);
 		PilotMemo serialMemo(serialrec);
@@ -195,7 +195,7 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 		recType=i18n("memo");
 	}
 	else
-	if (dbName=="DatebookDB")
+	if (dbName==CSL1("DatebookDB"))
 	{
 	        struct AppointmentAppInfo fAppInfo;
 		unsigned char *buffer = new unsigned char[PilotDateEntry::APP_BUFFER_SIZE];
@@ -239,14 +239,14 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 		label=new QLabel(i18n("Entry in KPilot"), page);
 		layout->addWidget( label, 2,0);
 
-		KTextEdit*textBrowser = new KTextEdit("<qt>"+localEntry+"</qt>", QString::null, page);
+		KTextEdit*textBrowser = new KTextEdit(CSL1("<qt>")+localEntry+CSL1("</qt>"), QString::null, page);
 		textBrowser->setReadOnly(true);
 		layout->addWidget( textBrowser, 3,0);
 
 		label=new QLabel(i18n("Entry on Handheld"), page);
 		layout->addWidget( label, 2,1);
 
-		textBrowser = new KTextEdit("<qt>"+serialEntry+"</qt>", QString::null, page);
+		textBrowser = new KTextEdit(CSL1("<qt>")+serialEntry+CSL1("</qt>"), QString::null, page);
 		textBrowser->setReadOnly(true);
 		layout->addWidget( textBrowser, 3,1);
 	}
@@ -325,7 +325,7 @@ void InternalEditorAction::syncFlagsChangedDB()
 	{
 		fInternalEditorSyncStatus=eSyncFlagsChangedDB;
 		dirtyDBs=KPilotSettings::flagsChangedDatabases();
-		emit logMessage(i18n("Databases with changed flags: %1").arg(dirtyDBs.join(", ")));
+		emit logMessage(i18n("Databases with changed flags: %1").arg(dirtyDBs.join(CSL1(", "))));
 		dbIter=dirtyDBs.begin();
 	}
 	else
@@ -366,7 +366,7 @@ void InternalEditorAction::syncAppBlockChangedDB()
 	{
 		fInternalEditorSyncStatus=eSyncAppBlockChangedDB;
 		dirtyDBs=KPilotSettings::appBlockChangedDatabases();
-		emit logMessage(i18n("Databases with changed AppBlock: %1").arg(dirtyDBs.join(", ")));
+		emit logMessage(i18n("Databases with changed AppBlock: %1").arg(dirtyDBs.join(CSL1(", "))));
 		dbIter=dirtyDBs.begin();
 	}
 	else

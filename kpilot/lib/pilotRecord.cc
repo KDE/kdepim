@@ -190,7 +190,7 @@ void PilotRecord::setData(const char *data, int len)
 
 /* static */ QString PilotAppCategory::codecName()
 {
-	return codec()->name();
+	return QString::fromLatin1(codec()->name());
 }
 
 bool PilotAppCategory::setCat(struct CategoryAppInfo &info,const QString &label)

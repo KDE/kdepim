@@ -413,7 +413,7 @@ void MemoWidget::slotDeleteMemo()
 #ifdef DEBUG
 				DEBUGKPILOT << fname << ": I think I found the memo." << endl;
 #endif
-				(const_cast<PilotRecord *>(r))->makeDeleted();
+				(const_cast<PilotRecord *>(r))->setDeleted(true);
 				break;
 			}
 		}
@@ -554,7 +554,7 @@ void MemoWidget::writeMemo(PilotMemo * which)
 	PilotRecord *pilotRec = which->pack();
 	PilotDatabase *memoDB = new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
 	memoDB->writeRecord(pilotRec);
-	markDBDirty("MemoDB");
+	markDBDirty(CSL1("MemoDB"));
 	KPILOT_DELETE( memoDB );
 	KPILOT_DELETE( pilotRec );
 }

@@ -36,8 +36,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#include <kdepimmacros.h>
-
 struct pi_buffer_t;
 
 #include <pi-file.h>

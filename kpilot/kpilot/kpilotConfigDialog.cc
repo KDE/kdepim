@@ -212,7 +212,7 @@ void DeviceConfigPage::getEncoding()
 	FUNCTIONSETUP;
 	QString e = KPilotSettings::encoding();
 	if (e.isEmpty())
-		fConfigWidget->fPilotEncoding->setCurrentText("ISO8859-15");
+		fConfigWidget->fPilotEncoding->setCurrentText(CSL1("ISO8859-15"));
 	else
 		fConfigWidget->fPilotEncoding->setCurrentText(e);
 }
@@ -377,7 +377,7 @@ void BackupConfigPage::slotSelectNoBackupDBs()
 	if (dlg && (dlg->exec()==QDialog::Accepted) )
 	{
 		fConfigWidget->fBackupOnly->setText(
-			dlg->getSelectedDBs().join(","));
+			dlg->getSelectedDBs().join(CSL1(",")));
 		KPilotSettings::setAddedDBs( dlg->getAddedDBs() );
 	}
 	KPILOT_DELETE(dlg);
@@ -395,7 +395,7 @@ void BackupConfigPage::slotSelectNoRestoreDBs()
 	if (dlg && (dlg->exec()==QDialog::Accepted) )
 	{
 		fConfigWidget->fSkipDB->setText(
-			dlg->getSelectedDBs().join(","));
+			dlg->getSelectedDBs().join(CSL1(",")));
 		KPilotSettings::setAddedDBs( dlg->getAddedDBs() );
 	}
 	KPILOT_DELETE(dlg);

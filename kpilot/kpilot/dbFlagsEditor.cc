@@ -116,15 +116,15 @@ void DBFlagsEditor::fillWidgets()
 {
 	// FUNCTIONSETUP
 
-	widget->fDBName->setText(dbi->name);
+	widget->fDBName->setText(QString::fromLatin1(dbi->name));
 
 	char buff[5];
 	set_long(buff, dbi->type);
 	buff[4]='\0';
-	widget->fType->setText(buff);
+	widget->fType->setText(QString::fromLatin1(buff));
 	set_long(buff, dbi->creator);
 	buff[4]='\0';
-	widget->fCreator->setText(buff);
+	widget->fCreator->setText(QString::fromLatin1(buff));
 
 	widget->fRessourceDB->setChecked(dbi->flags & dlpDBFlagResource);
 	widget->fReadOnly->setChecked(dbi->flags & dlpDBFlagReadOnly);

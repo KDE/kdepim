@@ -91,7 +91,7 @@ VCalConduitFactory::~VCalConduitFactory()
 VCalConduitSettings* VCalConduitFactory::config()
 {
 	if (!fConfig) {
-		fConfig = new VCalConduitSettings("Calendar");
+		fConfig = new VCalConduitSettings(CSL1("Calendar"));
 		if (fConfig) fConfig->readConfig();
 	}
 	return fConfig;

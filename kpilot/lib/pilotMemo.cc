@@ -84,7 +84,7 @@ void *PilotMemo::pack(void *buf, int *len)
 
 	// Finally, we set the length of the memo to the used length
 	// of the data buffer, which might be the length of the string.
-	if (s.length() < use_length) use_length = s.length()+1;
+	if ((int)s.length() < use_length) use_length = s.length()+1;
 	*len = use_length;
 	return buf;
 }

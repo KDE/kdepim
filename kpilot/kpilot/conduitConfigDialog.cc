@@ -71,7 +71,6 @@ static const char *conduitconfigdialog_id =
 #define CONDUIT_LIBRARY (3)
 #define CONDUIT_ORDER	(4)
 
-#include "kdepimmacros.h"
 
 extern "C"
 {
@@ -232,7 +231,8 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 
 	// Create the title
 	QVBoxLayout *vbox = new QVBoxLayout(this, 0, KDialog::spacingHint());
-	fTitleText = new QLabel("Conduit Setup - Addressbook", this);
+	// String below is just to make space; no need to translate.
+	fTitleText = new QLabel(CSL1("Conduit Setup - Addressbook"), this);
 	QFont titleFont(fTitleText->font());
 	titleFont.setBold(true);
 	fTitleText->setFont(titleFont);
@@ -409,8 +409,8 @@ void ConduitConfigWidget::fillLists()
 
 #define IC(a,b,c) p = new KPilotCheckListItem(conduits,i18n(a),QCheckListItem::CheckBox); \
 	p->setText(CONDUIT_COMMENT,i18n(c)); \
-	p->setText(CONDUIT_LIBRARY,"internal_" b); \
-	p->setText(CONDUIT_DESKTOP,"internal_" b); \
+	p->setText(CONDUIT_LIBRARY,CSL1("internal_" b)); \
+	p->setText(CONDUIT_DESKTOP,CSL1("internal_" b)); \
 	if (potentiallyInstalled.findIndex(p->text(CONDUIT_DESKTOP))>=0) \
 		p->setOriginalState(true);
 
@@ -712,7 +712,7 @@ void ConduitConfigWidget::selected(QListViewItem *p)
 	// set the dialog title to the selected item
 	QListViewItem *pParent = p->parent();
 	QString title;
-	title = pParent ? pParent->text(CONDUIT_NAME) + " - " : "";
+	title = pParent ? pParent->text(CONDUIT_NAME) + CSL1(" - ") : QString() ;
 	title += p ? p->text(CONDUIT_NAME) : i18n("KPilot Setup");
 	fTitleText->setText(title);
 }

@@ -34,9 +34,7 @@
 #include <time.h>
 #include <pi-dlp.h>
 
-#ifndef QOBJECT_H
 #include <qobject.h>
-#endif
 
 
 class QTimer;

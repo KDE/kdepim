@@ -850,7 +850,7 @@ static bool runConfigure(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 	KPilotSettings::self()->readConfig();
 
 	KCMultiDialog *options = new KCMultiDialog( KDialogBase::Plain, i18n("Configuration"), parent, "KPilotPreferences", true );
-	options->addModule( "kpilot_config.desktop" );
+	options->addModule( CSL1("kpilot_config.desktop") );
 
 	if (!options)
 	{

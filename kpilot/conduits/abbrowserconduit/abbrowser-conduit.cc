@@ -240,7 +240,7 @@ bool AbbrowserConduit::_loadAddressBook()
 				stopTickle();
 				return false;
 			}
-			KABC::Resource *res = new ResourceFile(fABookFile, "vcard" );
+			KABC::Resource *res = new ResourceFile(fABookFile, CSL1("vcard") );
 
 			bool r = aBook->addResource( res );
 			if ( !r )
@@ -337,7 +337,7 @@ bool AbbrowserConduit::_saveAddressBook()
 			else {
 				KIO::NetAccess::removeTempFile(fABookFile);
 			}
-			QFile backup(fABookFile + "~");
+			QFile backup(fABookFile + CSL1("~"));
 			backup.remove();
 		}
 
@@ -607,7 +607,7 @@ QString AbbrowserConduit::_getCatForHH(const QStringList cats, const QString cur
 		}
 	}
 	// If we have a free label, return the first possible cat
-	QString lastCat(fAddressAppInfo.category.name[15]);
+	QString lastCat = QString::fromLatin1(fAddressAppInfo.category.name[15]);
 	if (lastCat.isEmpty()) return cats.first();
 	return QString::null;
 }
@@ -696,6 +696,7 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 #else
 	Q_UNUSED(pcAddr);
 	Q_UNUSED(backupAddr);
+	Q_UNUSED(palmAddr);
 #endif
 }
 

@@ -357,7 +357,7 @@ QString TodoConduit::_getCat(const QStringList cats, const QString curr) const
 		}
 	}
 	// If we have a free label, return the first possible cat
-	QString lastName(fTodoAppInfo.category.name[15]);
+	QString lastName( QString::fromLatin1(fTodoAppInfo.category.name[15]) );
 	if (lastName.isEmpty()) return cats.first();
 	return QString::null;
 }

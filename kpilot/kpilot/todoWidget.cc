@@ -580,7 +580,7 @@ void TodoWidget::writeTodo(PilotTodoEntry * which,
 	PilotRecord *pilotRec = which->pack();
 
 	myDB->writeRecord(pilotRec);
-	markDBDirty("ToDoDB");
+	markDBDirty(CSL1("ToDoDB"));
 	KPILOT_DELETE(pilotRec);
 
 

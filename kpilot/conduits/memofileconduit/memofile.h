@@ -80,9 +80,9 @@ class Memofile : public PilotMemo
 		bool deleteFile();
 
 		QString toString() {
-			return "id: [" + QString::number(getID())
-					+ "], category:[" + _categoryName
-					+ "], filename: [" + _filename + "]";
+			return CSL1("id: [") + QString::number(getID())
+					+ CSL1("], category:[") + _categoryName
+					+ CSL1("], filename: [") + _filename + CSL1("]");
 		} ;
 		const QString & getCategoryName() { return _categoryName; } ;
 		const QString & getFilename() { return _filename; } ;

@@ -235,13 +235,13 @@ void ConverterDlg::slotToText()
 		// Now that we have both directories, create the converter object
 		DEBUGCONDUIT<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
 		DEBUGCONDUIT<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
-		QStringList pdbfiles(pdbinfo.dir().entryList("*.pdb"));
+		QStringList pdbfiles(pdbinfo.dir().entryList(CSL1("*.pdb")));
 		QStringList converted_Files;
 
 		DEBUGCONDUIT<<"Length of filename list: "<<pdbfiles.size()<<endl;
 		for ( QStringList::Iterator it = pdbfiles.begin(); it != pdbfiles.end(); ++it )
 		{
-			QString txtfile=QFileInfo(*it).baseName(true)+".txt";
+			QString txtfile=QFileInfo(*it).baseName(true)+CSL1(".txt");
 			DEBUGCONDUIT<<"pdbfile="<<*it<<", pdbdir="<<pdburl<<", txtfile="<<txtfile<<", txtdir="<<txturl<<endl;
 			if (convertPDBtoTXT(pdburl, *it, txturl, txtfile, &conv))
 			{
@@ -373,13 +373,13 @@ void ConverterDlg::slotToPDB()
 		// Now that we have both directories, create the converter object
 		DEBUGCONDUIT<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
 		DEBUGCONDUIT<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
-		QStringList txtfiles(txtinfo.dir().entryList("*.txt"));
+		QStringList txtfiles(txtinfo.dir().entryList(CSL1("*.txt")));
 		QStringList converted_Files;
 
 		DEBUGCONDUIT<<"Length of filename list: "<<txtfiles.size()<<endl;
 		for ( QStringList::Iterator it = txtfiles.begin(); it != txtfiles.end(); ++it )
 		{
-			QString pdbfile=QFileInfo(*it).baseName(true)+".pdb";
+			QString pdbfile=QFileInfo(*it).baseName(true)+CSL1(".pdb");
 			DEBUGCONDUIT<<"pdbfile="<<pdbfile<<", pdbdir="<<pdburl<<", txtfile="<<*it<<", txtdir="<<txturl<<endl;
 			if (convertTXTtoPDB(txturl, *it, pdburl, pdbfile, &conv))
 			{

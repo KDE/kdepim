@@ -237,7 +237,7 @@ static void update440()
 	const char **s = oldconduits;
 	while (*s)
 	{
-		QString libname = CSL1("kde3/lib%1conduit.so").arg(*s);
+		QString libname = CSL1("kde3/lib%1conduit.so").arg(QString::fromLatin1(*s));
 		QString foundlib = ::locate("lib",libname);
 		if (!foundlib.isEmpty())
 		{
@@ -266,7 +266,7 @@ static void update443()
 	bool fixedSome = false;
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": Skip databases are: "
-		<< skip.join(",") << endl;
+		<< skip.join(CSL1(",")) << endl;
 #endif
 
 	for (QStringList::const_iterator i = skip.begin(); i!=skip.end(); ++i)

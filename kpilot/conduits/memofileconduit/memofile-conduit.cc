@@ -69,7 +69,7 @@ MemofileConduit::MemofileConduit(KPilotDeviceLink *d,
                                  const char *n,
                                  const QStringList &l) :
 		ConduitAction(d,n,l),
-		_DEFAULT_MEMODIR("~/MyMemos/")
+		_DEFAULT_MEMODIR(CSL1("~/MyMemos/"))
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
@@ -91,7 +91,7 @@ MemofileConduit::~MemofileConduit()
 	FUNCTIONSETUP;
 
 	fFirstSync = false;
-	if(!openDatabases(QString::fromLatin1("MemoDB"))) {
+	if(!openDatabases(CSL1("MemoDB"))) {
 		emit logError(i18n("Unable to open the memo databases on the handheld."));
 		return false;
 	}
@@ -601,7 +601,7 @@ bool MemofileConduit::sync()
 
 QString MemofileConduit::getResults()
 {
-	QString result = "";
+	QString result;
 
 	if (_countNewToPilot > 0)
 		result += i18n("%1 new to Palm. ").arg(_countNewToPilot);

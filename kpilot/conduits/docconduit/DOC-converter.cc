@@ -124,8 +124,8 @@ int docRegExpBookmark::findMatches(QString doctext, bmkList &fBookmarks)
 					// TODO: use the subexpressions from the regexp for the bmk name ($1..$9) (given as separate regexp)
 					QString bmkText(bmkName);
 					for (int i=0; i<=rx.numCaptures(); ++i) {
-						bmkText.replace(QString("$%1").arg(i), rx.cap(i));
-						bmkText.replace(QString("\\%1").arg(i), rx.cap(i));
+						bmkText.replace(CSL1("$%1").arg(i), rx.cap(i));
+						bmkText.replace(CSL1("\\%1").arg(i), rx.cap(i));
 					}
 					fBookmarks.append(new docBookmark(bmkText.left(16), pos));
 				}
@@ -575,7 +575,7 @@ bool DOCConverter::convertPDBtoTXT()
 		if (rec)
 		{
 			PilotDOCBookmark bookie(rec);
-			docBookmark*bmk=new docBookmark(bookie.bookmarkName, bookie.pos);
+			docBookmark*bmk=new docBookmark(QString::fromLatin1(bookie.bookmarkName), bookie.pos);
 			bmks.append(bmk);
 			KPILOT_DELETE(rec);
 		} else {

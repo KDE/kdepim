@@ -91,7 +91,7 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 
 			QString text=si.handheldDB;
 			if  (cE.conflict) {
-				text="<qt><b><font color=red>"+text+"</font></b></qt>";
+				text=CSL1("<qt><b><font color=red>")+text+CSL1("</font></b></qt>");
 				DEBUGCONDUIT<<"We have a conflict for database "<<si.handheldDB<<endl;
 				hasConflicts=true;
 			}
