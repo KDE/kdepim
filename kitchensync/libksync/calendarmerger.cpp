@@ -67,6 +67,8 @@ template<class T> void mergeComp(T* const, const T* const );
 template<class T> void mergePer(T* const, const T* const );
 
 template<class T> void mergeDtEnd( T* const, const T* const );
+template<class T> void mergeStartFloat( T* const, const T* const ); /* merge date and float attribute */
+template<class T> void mergeDueFloat( T* const, const T* const );   /* merge date and float attribute */
 
 template <class T>
 class MergeBase
@@ -146,6 +148,8 @@ void init()
   mergeTodoMap->add( CalendarMerger::StartDate, mergeStart );
   mergeTodoMap->add( CalendarMerger::Completed, mergeComp  );
   mergeTodoMap->add( CalendarMerger::Percent,   mergePer   );
+  mergeTodoMap->add( CalendarMerger::StartDateTime, mergeStartFloat );
+  mergeTodoMap->add( CalendarMerger::DueDateTime,   mergeDueFloat   );
 
   /* event specefic additional information */
   mergeEventMap->add( CalendarMerger::DtEnd,    mergeDtEnd );
@@ -323,6 +327,7 @@ template <class Todo> void mergeLoc( Todo* const dest , const Todo* const src)
     dest->setLocation( src->location() );
 }
 
+
 /// KCal::Todo Specefic
 /*
  * Merge the Due Date
@@ -369,6 +374,35 @@ template<class T>
 void mergeDtEnd( T* const dest, const T* src)
 {
   dest->setDtEnd( src->dtEnd() );
+}
+
+template<class Todo> void mergeStartFloat( Todo* const dest, const Todo* const src ) {
+  /*
+   * merge the start Time of the src into dest!
+   * Merge only if both have startDates and finally
+   * src doesFloat
+   */
+  if ( dest->hasStartDate() && src->hasStartDate() && src->doesFloat() ) {
+    QDateTime dt = dest->dtStart( true );
+    dt.setTime( src->dtStart( true ).time() );
+    dest->setDtStart( dt );
+  }
+}
+
+/*
+ * same as mergeStartFloat
+ */
+template<class Todo> void mergeDueFloat( Todo* const dest, const Todo* const src ) {
+  /*
+   * merge the due Time of the src into dest!
+   * Merge only if both have dueDates and finally
+   * src doesFloat
+   */
+  if ( dest->hasDueDate() && src->hasDueDate() && src->doesFloat() ) {
+    QDateTime dt = dest->dtDue( true );
+    dt.setTime( src->dtDue( true ).time() );
+    dest->setDtDue( dt, true );
+  }
 }
 
 }

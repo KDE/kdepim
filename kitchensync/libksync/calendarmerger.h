@@ -65,7 +65,9 @@ public:
         DtDue = BaseLast,
         StartDate,
         Completed,
-        Percent
+        Percent,
+        StartDateTime, /* time of startdate supported probably also not support Float*/
+        DueDateTime,   /* time of duedate   supported probably also not support Float*/      
     };
 
     /**
