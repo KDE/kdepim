@@ -87,21 +87,43 @@ bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts, Event *event ){
 }
 
 bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event ){
+
+// startdate,starttime,enddate,endtime,summary,description,UID
+
+  QString delim = ",";  //one day maybe the delim character can be an option??
+
   if ( !event->doesFloat() ) {
-    *ts <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
-    *ts << "\t";
-    *ts << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
+    *ts <<          event->dtStart().date().toString("yyyy:M:d");
+    *ts << delim << event->dtStart().time().toString("hh:ss");
+    *ts << delim << event->dtEnd().date().toString("yyyy:M:d");
+    *ts << delim << event->dtEnd().time().toString("hh:ss");
+  } else {
+    *ts << ",,,";
   }
 
-
-  *ts << "\t" << I18N_NOOP("Summary:");
-  *ts << "\t\"" << event->summary().local8Bit() << "\"";
-  *ts << "\t" << I18N_NOOP("Description:");
-  *ts << "\t\"" << event->description().local8Bit() << "\"";
-  *ts << "\t" << I18N_NOOP("UID:");
-  *ts << "\t" << event->uid().local8Bit() << endl;
+  *ts << delim << event->summary().local8Bit();
+  *ts << delim << event->description().local8Bit();
+  *ts << delim << event->uid().local8Bit();
+  *ts << endl;
 
   return true;
 }
 
-
+// Old function for printing out as keyword:<tab>value
+//bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event ){
+//
+//  if ( !event->doesFloat() ) {
+//    *ts <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
+//    *ts << "\t";
+//    *ts << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
+// }
+//
+//  *ts << "\t" << I18N_NOOP("Summary:");
+//  *ts << "\t\"" << event->summary().local8Bit() << "\"";
+//  *ts << "\t" << I18N_NOOP("Description:");
+//  *ts << "\t\"" << event->description().local8Bit() << "\"";
+//  *ts << "\t" << I18N_NOOP("UID:");
+//  *ts << "\t" << event->uid().local8Bit() << endl;
+//
+//  return true;
+//}
