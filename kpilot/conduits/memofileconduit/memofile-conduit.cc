@@ -542,3 +542,7 @@ void MemofileConduit::cleanup()
 	fLocalDatabase->cleanup();
 	fLocalDatabase->resetSyncFlags();
 }
+
+
+#include "memofile-conduit.moc"
+
