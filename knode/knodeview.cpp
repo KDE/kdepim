@@ -1177,6 +1177,16 @@ void KNodeView::slotArtRefreshList()
 void KNodeView::slotArtCollapseAll()
 {
   kdDebug(5003) << "KNodeView::slotArtCollapseAll()" << endl;
+
+  // find the root of the current thread and make it current,
+  // otherwise the current thread will not collapse
+  if (a_rtView->article() && a_rtView->article()->listItem()) {
+    QListViewItem *item = a_rtView->article()->listItem();
+    while (item->parent())
+      item = item->parent();
+    h_drView->setCurrentItem(item);
+  }
+
   a_rtManager->setAllThreadsOpen(false);
 }
 
