@@ -58,7 +58,7 @@ namespace {
 
   class Formatter : public KMail::Interface::BodyPartFormatter {
   public:
-    Result format( BodyPart *bodyPart, KMail::HtmlWriter *writer ) const { 
+    Result format( BodyPart *bodyPart, KMail::HtmlWriter *writer ) const {
 
        if ( !writer ) return AsIcon;
 
@@ -73,7 +73,7 @@ namespace {
              i18n( "Attached business cards" ) +
              "</h2></div>"
                 );
-       
+
        QValueListIterator<KABC::Addressee> it = al.begin();
        int count = 0;
        for ( ; it != al.end(); ++it ) {
@@ -85,7 +85,7 @@ namespace {
 
           QString addToLinkText = i18n( "Add this contact to the addressbook." );
           QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );
-          writer->queue( 
+          writer->queue(
                 "<div align=\"center\"><a href=\"" +
                 bodyPart->makeLink( op ) +
                 "\">" +
@@ -100,8 +100,9 @@ namespace {
 
   class UrlHandler : public KMail::Interface::BodyPartURLHandler {
   public:
-     bool handleClick( BodyPart * bodyPart, const QString & path ) const {
- 
+     bool handleClick( BodyPart * bodyPart, const QString & path,
+                       KMail::Callback& ) const {
+
        const QString vCard = bodyPart->asText();
        if ( vCard.isEmpty() ) return true;
        VCardConverter vcc;
@@ -135,7 +136,7 @@ namespace {
       return idx == 0 ? "x-vcard" : idx == 1 ? "vcard" : 0 ;
     }
 
-    const KMail::Interface::BodyPartURLHandler * urlHandler( int idx ) const { 
+    const KMail::Interface::BodyPartURLHandler * urlHandler( int idx ) const {
        return idx == 0 ? new UrlHandler() : 0 ;
     }
   };

@@ -437,7 +437,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return dynamic_cast<Incidence*>( message->event() );
     }
 
-    void setStatusOnMyself( Incidence* incidence, Attendee::PartStat status ) const
+    void setStatusOnMyself( Incidence* incidence,
+                            Attendee::PartStat status ) const
     {
       // TODO: Find myself instead of just taking the first
       Attendee* myself = *incidence->attendees().begin();
@@ -497,7 +498,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     }
 
     bool handleClick( KMail::Interface::BodyPart *part,
-                      const QString &path ) const
+                      const QString &path, KMail::Callback& ) const
     {
       QString iCal = part->asText();
 
