@@ -101,6 +101,8 @@ protected:
 	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) {FUNCTIONSETUP; if (r) return new PilotTodoEntry(fTodoAppInfo, r); else return new PilotTodoEntry(fTodoAppInfo);};
 	virtual KCal::Incidence*newIncidence() { return new KCal::Todo; };
 
+	virtual void preRecord(PilotRecord*r);
+
 protected:
 
 	PilotRecord *recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e);
@@ -108,11 +110,17 @@ protected:
 	KCal::Incidence *incidenceFromRecord(KCal::Incidence *, const PilotAppCategory *);
 	KCal::Todo *incidenceFromRecord(KCal::Todo *, const PilotTodoEntry *);
 
+	void setCategory(PilotTodoEntry*de, const KCal::Todo*todo);
+	void setCategory(KCal::Todo*todo, const PilotTodoEntry*de);
+	
 	struct ToDoAppInfo fTodoAppInfo;
 	bool categoriesSynced;
 } ;
 
 // $Log$
+// Revision 1.12  2002/07/28 17:27:54  cschumac
+// Move file loading/saving code from CalendarLocal to own class.
+//
 // Revision 1.11  2002/07/11 12:21:35  adridg
 // Remove a #define DEBUG that had wandered in from the cold
 //

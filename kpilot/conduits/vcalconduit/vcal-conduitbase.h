@@ -138,6 +138,8 @@ protected:
 	// execute something at the beginning or end of the sync.
 	virtual void preSync(){};
 	virtual void postSync(){};
+	virtual void preRecord(PilotRecord*r){};
+	virtual void preIncidence(KCal::Incidence *e){};
 
 protected:
 	KCal::CalendarLocal *fCalendar;
@@ -156,6 +158,9 @@ protected:
 
 
 // $Log$
+// Revision 1.9  2002/07/28 17:27:54  cschumac
+// Move file loading/saving code from CalendarLocal to own class.
+//
 // Revision 1.8  2002/07/09 22:38:04  kainhofe
 // Implemented a first (not-yet-functional) version of the category sync
 //

@@ -71,6 +71,8 @@ static const char *vcalconduitbase_id = "$Id$";
 #include "vcal-factorybase.h"
 #include "vcal-conduitbase.moc"
 
+
+
 QDateTime readTm(const struct tm &t)
 {
   QDateTime dt;
@@ -78,6 +80,7 @@ QDateTime readTm(const struct tm &t)
   dt.setTime(QTime(t.tm_hour, t.tm_min, t.tm_sec));
   return dt;
 }
+
 
 
 struct tm writeTm(const QDateTime &dt)
@@ -97,6 +100,7 @@ struct tm writeTm(const QDateTime &dt)
 
   return t;
 }
+
 
 
 struct tm writeTm(const QDate &dt)
@@ -119,20 +123,24 @@ struct tm writeTm(const QDate &dt)
 
 
 
+
 /****************************************************************************
  *                          VCalConduitBase class                               *
  ****************************************************************************/
 
+ 
 VCalConduitBase::VCalConduitBase(KPilotDeviceLink *d,
 	const char *n,
 	const QStringList &a) :
 	ConduitAction(d,n,a),
 	fCalendar(0L),
-	fP(0L)
+	fP(0L),
+	fFullSync(false)
 {
 	FUNCTIONSETUP;
 	(void) vcalconduitbase_id;
 }
+
 
 
 VCalConduitBase::~VCalConduitBase()
@@ -142,6 +150,7 @@ VCalConduitBase::~VCalConduitBase()
 	KPILOT_DELETE(fP);
 	KPILOT_DELETE(fCalendar);
 }
+
 
 
 /* There are several different scenarios for a record on the Palm and its PC counterpart
@@ -230,7 +239,7 @@ there are two special cases: a full and a first sync.
 	// changing the PC or using a different Palm Desktop app causes a full sync
 	// Use gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
 	// as PC_ID, so using JPilot and KPilot is the same as using two differenc PCs
-	fFullSync = (syncAction==SYNC_FULL) ||
+	fFullSync = fFullSync|| (syncAction==SYNC_FULL) ||
 		((usr->getLastSyncPC()!=(unsigned long) gethostid()) && fConfig->readBoolEntry(VCalConduitFactoryBase::fullSyncOnPCChange, true));
 
 	if (!openDatabases(dbname(), &fFullSync) ) goto error;
@@ -273,6 +282,7 @@ error:
 }
 
 
+
 /* virtual */ void VCalConduitBase::readConfig()
 {
 	fConfig->setGroup(configGroup());
@@ -284,7 +294,8 @@ error:
 	conflictResolution = fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution);
 	archive = fConfig->readBoolEntry(VCalConduitFactoryBase::archive);
 }
-	
+
+
 
 /* virtual */ bool VCalConduitBase::openCalendar()
 {
@@ -333,6 +344,8 @@ error:
 	return (fCalendar && fP);
 }
 
+
+
 void VCalConduitBase::syncPalmRecToPC()
 {
 	FUNCTIONSETUP;
@@ -362,6 +375,9 @@ void VCalConduitBase::syncPalmRecToPC()
 			return;
 		}
 	}
+
+	// let subclasses do something with the record before we try to sync
+	preRecord(r);
 
 	// first, delete the dirty flag from the palm database. Prolly should do this after the record has been synced
 //	r->setAttrib(r->getAttrib() & ~dlpRecAttrDirty);
@@ -430,6 +446,10 @@ void VCalConduitBase::syncPCRecToPalm()
 		QTimer::singleShot(0,this,SLOT(syncDeletedIncidence()));
 		return;
 	}
+	
+	// let subclasses do something with the event
+	preIncidence(e);
+
 	// find the corresponding index on the palm and sync. If there is none, create it.
 	int ix=e->pilotId();
 #ifdef DEBUG
@@ -688,6 +708,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.16  2002/07/25 21:58:57  kainhofe
+// QString::arg error
+//
 // Revision 1.15  2002/07/23 00:45:18  kainhofe
 // Fixed several bugs with recurrences.
 //

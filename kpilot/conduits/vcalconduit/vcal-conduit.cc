@@ -418,6 +418,7 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 	}
 
 	QBitArray dayArray(7);
+	QDate evt;
 
 	switch(dateEntry->getRepeatType())
 	{
@@ -485,6 +486,18 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 			recur->setYearly(Recurrence_t::rYearlyDay,freq,endDate);
 		}
 		recur->addYearlyNum( readTm(dateEntry->getEventStart()).date().dayOfYear() );
+/*		if (repeatsForever)
+		{
+			recur->setYearly(Recurrence_t::rYearlyPos,freq,-1);
+		}
+		else
+		{
+			recur->setYearly(Recurrence_t::rYearlyPos,freq,endDate);
+		}
+		evt=readTm(dateEntry->getEventStart()).date();
+		recur->addYearlyNum( evt.month() );
+		dayArray.setBit((evt.day()-1) % 7);
+		recur->addYearlyMonthPos( ( (evt.day()-1) / 7) + 1, dayArray );*/
 		break;
 	case repeatNone:
 	default :
@@ -675,6 +688,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.72  2002/07/28 17:27:54  cschumac
+// Move file loading/saving code from CalendarLocal to own class.
+//
 // Revision 1.71  2002/07/24 20:08:53  kainhofe
 // fixed yearly recurrences
 //
