@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>01/07/2000</date>
+<date>15/07/2000</date>
 <releaseinfo>1.01.45</releaseinfo>
 
 <abstract>
@@ -1708,6 +1708,20 @@ too. This will remove all the messages in the trash folder whenever you exit KMa
 <para>Before you can use spellchecking the first time, you have to configure it.
 You can do so in the <emphasis remap="bf">Composer</emphasis> window's 
 menu under <emphasis remap="bf">Settings | Spellchecker...</emphasis>.</para>
+</sect2>
+
+
+<sect2 id="pgpgpgsupport">
+<title>Which version of KMail supports which version of PGP/GnuPG?</title>
+
+<para>KMail 1.0.x: The unpatched version supports only PGP (version 2.x and 5.x). KMail
+will prefer version 5.x if both versions are installed. There is no
+way for the user to force KMail to use version 2.x in this case. There
+are patches for PGP6 and GnuPG support at <ulink url="http://devel-home.kde.org/~kmail/">KMail's
+homepage</ulink>. If the GPG patch is applied, and GPG *and* PGP are installed, KMail
+will prefer GPG. Here is no way to force KMail to use PGP.</para>
+
+<para>KMail 1.1.x: This has at least the improvements from the patches above.</para>
 </sect2>
 
 
