@@ -36,8 +36,8 @@
 #include "knkeysettings.h"
 #include "knusersettings.h"
 
-  #include "knglobals.h"
-  #include "utilities.h"
+#include "knglobals.h"
+#include "utilities.h"
   
 KNSettingsDialog::KNSettingsDialog() : KDialogBase(TreeList, i18n("Settings"), Ok|Cancel|Help, Ok,
                                                    xTop, 0, true, true)

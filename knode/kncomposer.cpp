@@ -401,7 +401,7 @@ KNComposer::ComposerView::ComposerView(QWidget *parent, bool mail)
 	if(mail) l2=new QLabel(i18n("To:"), fr1);
 	else l2=new QLabel(i18n("Groups:"), fr1);
 	dest=new QLineEdit(fr1);
-	destButton=new QPushButton("...", fr1);
+	destButton=new QPushButton(i18n("Browse..."), fr1);
 	if(!mail) {
 		fupCheck=new QCheckBox(i18n("Followup-To:"), fr1);
 		fup2=new QComboBox(true, fr1);

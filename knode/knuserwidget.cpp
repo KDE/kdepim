@@ -34,7 +34,7 @@ KNUserWidget::KNUserWidget(QString title, QWidget *parent, const char *n)
 	replyTo=new QLineEdit(this);
 	orga=new QLineEdit(this);
 	sig=new QLineEdit(this);
-	sigBtn=new QPushButton("...", this);
+	sigBtn=new QPushButton(i18n("Browse..."), this);
 	sigBtn->setFixedSize(sigBtn->sizeHint());
 	connect(sigBtn, SIGNAL(clicked()), this, SLOT(slotSigButton()));
 		
