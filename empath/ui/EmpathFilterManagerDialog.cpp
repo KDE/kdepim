@@ -31,6 +31,7 @@
 // Local includes
 #include "Empath.h"
 #include "EmpathDefines.h"
+#include "EmpathSeparatorWidget.h"
 #include "EmpathFilterManagerDialog.h"
 #include "EmpathFilterEditDialog.h"
 #include "EmpathFilterList.h"
@@ -97,6 +98,9 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(QWidget * parent)
     layout0->addWidget(filtersButtonBox_);
     
     layout->addStretch(10);
+    
+    layout->addWidget(new EmpathSeparatorWidget(this));
+    
     layout->addWidget(buttonBox_);
 
     QObject::connect(

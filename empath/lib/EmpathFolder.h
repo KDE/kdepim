@@ -151,7 +151,7 @@ class EmpathFolder : public QObject
          * @arg c Total message count.
          * @arg uc Unread message count.
          */
-        void countUpdated(Q_UINT32 c, Q_UINT32 uc);
+        void countUpdated(unsigned int c, unsigned int uc);
         /**
          * Signals a new message has arrived with given id.
          */

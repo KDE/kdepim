@@ -26,14 +26,14 @@
 #define EMPATHFOLDERCHOOSERWIDGET_H
 
 // Qt includes
+#include <qwidget.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
-#include <qhbox.h>
 
 // Local includes
 #include "EmpathURL.h"
 
-class EmpathFolderChooserWidget : public QHBox
+class EmpathFolderChooserWidget : public QWidget
 {
     Q_OBJECT
     

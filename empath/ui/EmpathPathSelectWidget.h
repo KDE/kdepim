@@ -27,9 +27,13 @@
 
 // Qt includes
 #include <qstring.h>
+#include <qlabel.h>
+#include <qwidget.h>
 #include <qpushbutton.h>
 #include <qlineedit.h>
-#include <qhbox.h>
+
+// KDE includes
+#include <kbuttonbox.h>
 
 /**
  * @short Browsable file/dir selector
@@ -37,7 +41,7 @@
  * that lets the user select a dir or a file path.
  * @author Rikkus
  */
-class EmpathPathSelectWidget : public QHBox
+class EmpathPathSelectWidget : public QWidget
 {
     Q_OBJECT
     

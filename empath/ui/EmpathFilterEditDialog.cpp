@@ -35,6 +35,7 @@
 #include "Empath.h"
 #include "EmpathDefines.h"
 #include "EmpathMatcher.h"
+#include "EmpathSeparatorWidget.h"
 #include "EmpathMatchPropertiesDialog.h"
 #include "EmpathFolderChooserWidget.h"
 #include "EmpathFilterActionDialog.h"
@@ -56,7 +57,7 @@ EmpathFilterEditDialog::EmpathFilterEditDialog
     le_name_ = new QLineEdit(this, "le_name");
     
     QLabel * l_arrives =
-        new QLabel(i18n("When new mail arrives in folder"), this, "l_arrives");
+        new QLabel(i18n("Folder"), this, "l_arrives");
 
     fcw_arrives_ = new EmpathFolderChooserWidget(this);
     
@@ -89,8 +90,11 @@ EmpathFilterEditDialog::EmpathFilterEditDialog
 
     QVBoxLayout * layout        = new QVBoxLayout(this, dialogSpace);
     QHBoxLayout * nameLayout    = new QHBoxLayout(layout);
+    layout->addWidget(new EmpathSeparatorWidget(this));
     QHBoxLayout * arrivesLayout = new QHBoxLayout(layout);
+    layout->addWidget(new EmpathSeparatorWidget(this));
     QHBoxLayout * matchesLayout = new QHBoxLayout(layout);
+    layout->addWidget(new EmpathSeparatorWidget(this));
     QHBoxLayout * actionLayout  = new QHBoxLayout(layout);
 
     arrivesLayout   ->  addWidget(l_arrives);
@@ -107,6 +111,7 @@ EmpathFilterEditDialog::EmpathFilterEditDialog
 
     layout->addStretch(10);
 
+    layout->addWidget(new EmpathSeparatorWidget(this));
     layout->addWidget(buttonBox);
 
     update();

@@ -130,6 +130,13 @@ EmpathMailbox::retrieve(const EmpathURL & url, QString xxinfo, QString xinfo)
     _enqueue(RetrieveMessage, url, xxinfo, xinfo);
 }
 
+    void
+EmpathMailbox::retrieve
+(const EmpathURL & from, const EmpathURL & to, QString xxinfo, QString xinfo)
+{
+    _enqueue(from, to, xxinfo, xinfo);
+}
+
     EmpathURL
 EmpathMailbox::write(
    const EmpathURL & folder, RMM::RMessage & msg, QString xxinfo, QString xinfo)
@@ -220,6 +227,13 @@ EmpathMailbox::_enqueue(
 }
 
     void
+EmpathMailbox::_enqueue(
+    const EmpathURL & from, const EmpathURL & to, QString xxinfo, QString xinfo)
+{
+    _enqueue(new CopyAction(from, to, xxinfo, xinfo));
+}
+
+    void
 EmpathMailbox::_enqueue(Action * a)
 {
     queue_.enqueue(a);
@@ -239,6 +253,10 @@ EmpathMailbox::_runQueue()
         {
             case RetrieveMessage:
                 _retrieve(u, a->xxinfo(), a->xinfo());
+                break;
+            
+            case CopyMessage:
+                _retrieve(u, ((CopyAction *)a)->to(), a->xxinfo(), a->xinfo());
                 break;
         
             case MarkMessage:

@@ -68,6 +68,29 @@ class Action
         QString xinfo_;
 };
 
+class CopyAction : public Action
+{
+    public:
+
+        CopyAction(
+            const EmpathURL & from,
+            const EmpathURL & to,
+            QString xxinfo,
+            QString xinfo)
+            :   Action(CopyMessage, from, xxinfo, xinfo),
+                to_(to)
+        {
+            // Empty.
+        }
+
+        EmpathURL to() { return to_; }
+
+    private:
+
+        EmpathURL to_;
+};
+
+
 class MarkAction : public Action
 {
     public:
@@ -342,11 +365,11 @@ class EmpathMailbox : public QObject
         void syncFolderLists();
         void newMailArrived();
         void mailboxChangedByExternal();
-        void countUpdated(Q_UINT32, Q_UINT32);
+        void countUpdated(unsigned int, unsigned int);
         
     public slots:
 
-        void s_countUpdated(Q_UINT32, Q_UINT32);
+        void s_countUpdated(unsigned int, unsigned int);
         
     protected:
         
@@ -374,6 +397,7 @@ class EmpathMailbox : public QObject
         void _connectUp();
         void _enqueue(const EmpathURL &, RMM::MessageStatus, QString, QString);
         void _enqueue(const EmpathURL &, RMM::RMessage &, QString, QString);
+        void _enqueue(const EmpathURL &, const EmpathURL &, QString, QString);
         void _enqueue(ActionType, const EmpathURL &, QString, QString);
         void _enqueue(Action *);
 

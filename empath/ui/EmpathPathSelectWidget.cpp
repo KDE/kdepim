@@ -34,7 +34,7 @@
 
 EmpathPathSelectWidget::EmpathPathSelectWidget
     (const QString & initialPath, QWidget * parent)
-    :   QHBox(parent, "PathSelectWidget")
+    :   QWidget(parent, "PathSelectWidget")
 {
     le_path_    = new QLineEdit(initialPath, this);
     pb_select_  = new QPushButton(this);
@@ -43,6 +43,10 @@ EmpathPathSelectWidget::EmpathPathSelectWidget
     pb_select_->setFixedWidth(pb_select_->sizeHint().height());
 
     QObject::connect(pb_select_, SIGNAL(clicked()), this, SLOT(s_browse()));
+
+    QHBoxLayout * layout = new QHBoxLayout(this);
+    layout->addWidget(le_path_);
+    layout->addWidget(pb_select_);
 }
 
 EmpathPathSelectWidget::~EmpathPathSelectWidget()

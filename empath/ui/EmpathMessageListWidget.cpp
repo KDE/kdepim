@@ -343,7 +343,7 @@ EmpathMessageListWidget::s_messageDelete()
 {
     EmpathURL u(url_);
     
-    EmpathTask * t(empath->addTask(i18n("Deleting messages")));
+    EmpathTask * t = new EmpathTask(i18n("Deleting messages"));
     
     t->setMax(_nSelected());
     
@@ -816,6 +816,7 @@ EmpathMessageListWidget::selectInvert()
     void
 EmpathMessageListWidget::s_itemGone(const QString & s)
 {
+    empathDebug("");
     if (filling_) return;
     
     QListViewItemIterator it(this);
@@ -901,7 +902,7 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
 {
     setRootIsDecorated(false);
 
-    EmpathTask * t(empath->addTask(i18n("Sorting messages")));
+    EmpathTask * t = new EmpathTask(i18n("Sorting messages"));
     t->setMax(f->messageCount());
     
     setSorting(-1);
@@ -945,7 +946,7 @@ EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
 {
     setRootIsDecorated(true);
     
-    EmpathTask * t(empath->addTask(i18n("Sorting messages")));
+    EmpathTask * t = new EmpathTask(i18n("Sorting messages"));
     t->setMax(f->messageCount());
     
     QStrList l(f->index()->allKeys());

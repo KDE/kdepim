@@ -33,6 +33,7 @@
 
 // Local includes
 #include "EmpathMatcher.h"
+#include "EmpathSeparatorWidget.h"
 #include "EmpathMatchPropertiesDialog.h"
 #include "EmpathUIUtils.h"
 #include "EmpathConfig.h"
@@ -112,6 +113,7 @@ EmpathMatchPropertiesDialog::EmpathMatchPropertiesDialog(
     layout->addWidget(rb_all);
 
     layout->addStretch(10);
+    layout->addWidget(new EmpathSeparatorWidget(this));
     layout->addWidget(buttonBox);
     
     if (matcher_ == 0)

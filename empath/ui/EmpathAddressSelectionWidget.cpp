@@ -26,6 +26,7 @@
 #include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qmessagebox.h> 
+#include <qlayout.h> 
 
 // KDE includes
 #include <kiconloader.h>
@@ -37,13 +38,18 @@
 #include "EmpathAddressSelectionWidget.h"
 
 EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(QWidget * parent)
-    :   QHBox(parent, "AddressSelectionWidget")
+    :   QWidget(parent, "AddressSelectionWidget")
 {
     le_address_ = new QLineEdit(this, "le_address");
     pb_browse_  = new QPushButton(this, "pb_browse");
 
     pb_browse_->setPixmap(empathIcon("misc-point")), 
     pb_browse_->setFixedWidth(pb_browse_->sizeHint().width());
+
+    QHBoxLayout * layout = new QHBoxLayout(this);
+
+    layout->addWidget(le_address_);
+    layout->addWidget(pb_browse_);
 
     QObject::connect(le_address_, SIGNAL(textChanged(const QString&)),
             this, SLOT(s_textChanged(const QString&)));

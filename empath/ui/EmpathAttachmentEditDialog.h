@@ -27,22 +27,17 @@
 
 // Qt includes
 #include <qdialog.h>
-#include <qcstring.h>
-#include <qstrlist.h>
-#include <qwidget.h>
-#include <qgroupbox.h>
-#include <qlabel.h>
 #include <qlineedit.h>
-#include <qlayout.h>
 #include <qpushbutton.h>
 #include <qradiobutton.h>
 #include <qbuttongroup.h>
 #include <qcombobox.h>
 
 // KDE includes
-#include <kbuttonbox.h>
 
 #include "EmpathAttachmentSpec.h"
+
+class EmpathFileSelectWidget;
 
 class EmpathAttachmentEditDialog : public QDialog
 {
@@ -74,7 +69,8 @@ class EmpathAttachmentEditDialog : public QDialog
 
         QButtonGroup    * bg_encoding_;
 
-        QLineEdit       * le_filename_;
+        EmpathFileSelectWidget * efsw_filename_;
+
         QLineEdit       * le_description_;
         
         QPushButton     * pb_OK_;
@@ -90,15 +86,6 @@ class EmpathAttachmentEditDialog : public QDialog
         QComboBox       * cb_subType_;
         QComboBox       * cb_charset_;
 
-        static const QString textSubTypes_[];
-        static const QString messageSubTypes_[];
-        static const QString applicationSubTypes_[];
-        static const QString imageSubTypes_[];
-        static const QString videoSubTypes_[];
-        static const QString audioSubTypes_[];
-        static const QString charsetTypes_[];
-        static const int nTxt, nMsg, nApp, nImg, nVid, nAud, nChr;
-        
         QStringList txtST_, msgST_, appST_, imgST_, vidST_, audST_, chrT_;
 
         EmpathAttachmentSpec spec_;

@@ -22,9 +22,6 @@
 # pragma implementation "EmpathIndex.h"
 #endif
 
-// System includes
-#include <utime.h>
-
 // Qt includes
 #include <qdatastream.h>
 #include <qregexp.h>
@@ -86,11 +83,6 @@ EmpathIndex::EmpathIndex(const EmpathURL & folder)
     _open();
 }
 
-    void
-EmpathIndex::touch()
-{
-}
-
 EmpathIndex::~EmpathIndex()
 {
     _close();
@@ -118,6 +110,11 @@ EmpathIndex::record(const QCString & key)
         return 0;
     }
 
+    if (key.isEmpty()) {
+        empathDebug("I'm not retrieving using an empty key");
+        return 0;
+    }
+
     QByteArray a = dbf_->retrieve(key);
 
     if (a.isNull())
@@ -134,13 +131,14 @@ EmpathIndex::record(const QCString & key)
     Q_UINT32
 EmpathIndex::countUnread() const
 {
-    return unreadCount_;
+    // STUB
+    return 0;
 }
 
      Q_UINT32
 EmpathIndex::count() const
 {
-    return count_;
+    return dbf_->index().count();
 }
     
     void
@@ -241,6 +239,34 @@ EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
 }
 
     bool
+EmpathIndex::replace(const QCString & key, EmpathIndexRecord & rec)
+{
+    if (dbf_ == 0) {
+        empathDebug("Index not open!");
+        return false;
+    }
+
+    if (key.isEmpty()) {
+        empathDebug("Key is empty !");
+        return false;
+    }
+
+    QByteArray a;
+    QDataStream s(a, IO_WriteOnly);
+    s << rec;
+    
+    bool dummy;
+    bool ok = dbf_->replace(key, a, dummy);
+    
+    if (!ok) {
+        empathDebug("Could not replace record !");
+        return false;
+    }
+
+    return true;
+}
+
+    bool
 EmpathIndex::remove(const QCString & key)
 {  
     if (dbf_ == 0) {
@@ -293,6 +319,12 @@ EmpathIndex::lastModified() const
 {
     return dbf_->lastModified();
 }	 
+
+    bool
+EmpathIndex::contains(const QCString & s) const
+{
+    return dbf_->exists(s);
+}
 	
 
 // vim:ts=4:sw=4:tw=78

@@ -53,7 +53,6 @@
 #include "EmpathMailSenderSMTP.h"
 #include "EmpathFilterList.h"
 #include "EmpathTask.h"
-#include "EmpathTaskTimer.h"
 
 Empath * Empath::EMPATH = 0;
 bool Empath::started_ = false;
@@ -213,10 +212,7 @@ Empath::finishedWithMessage(const EmpathURL & url, const QString & xinfo)
     EmpathMailbox *
 Empath::mailbox(const EmpathURL & url)
 {
-    EmpathMailbox * m = mailboxList_[url.mailboxName()];
-    if (m == 0)
-        empathDebug("Cannot find mailbox called `" + url.mailboxName() + "'");
-    return m;
+    return mailboxList_[url.mailboxName()];
 }
 
     EmpathFolder *
@@ -233,6 +229,7 @@ Empath::folder(const EmpathURL & url)
     void
 Empath::copy(const EmpathURL & from, const EmpathURL & to, QString xinfo)
 {
+    empathDebug("Copying " + from.asString() + " to " + to.asString());
     EmpathMailbox * m_from = mailbox(from);
     
     if (m_from == 0) {
@@ -240,7 +237,7 @@ Empath::copy(const EmpathURL & from, const EmpathURL & to, QString xinfo)
         return;
     }
 
-    m_from->retrieve(from, to.asString(), xinfo);
+    m_from->retrieve(from, to, "copy", xinfo);
 }
 
     void
@@ -253,7 +250,7 @@ Empath::move(const EmpathURL & from, const EmpathURL & to, QString xinfo)
         return;
     }
 
-    m_from->retrieve(from, to.asString(), xinfo);
+    m_from->retrieve(from, to, "move", xinfo);
 }
 
     void
@@ -357,10 +354,9 @@ Empath::mark(
     EmpathTask *
 Empath::addTask(const QString & name)
 {
-    EmpathTask * t = new EmpathTask(name);
-    CHECK_PTR(t);
-    new EmpathTaskTimer(t);
-    return t;
+    // TODO: Remove this. It's deprecated since we killed EmpathTaskTimer.
+    empathDebug("This is deprecated.");
+    return new EmpathTask(name);
 }
 
 
@@ -426,22 +422,42 @@ Empath::s_retrieveComplete(
     bool status,
     const EmpathURL & from,
     const EmpathURL & to,
-    QString /* ixinfo */,
+    QString ixinfo,
     QString xinfo)
 {
-    empathDebug("emitting retrieveComplete");
-    emit(retrieveComplete(status, from, to, xinfo));
+    EmpathMailbox * m = mailbox(to);
+
+    if (m == 0) {
+        if (ixinfo == "copy")
+            emit(copyComplete(false, from, to, xinfo));
+        else
+            emit(moveComplete(false, from, to, xinfo));
+    }
+
+    RMM::RMessage * msg = message(from, xinfo);
+
+    if (msg == 0) {
+        if (ixinfo == "copy")
+            emit(copyComplete(false, from, to, xinfo));
+        else
+            emit(moveComplete(false, from, to, xinfo));
+    }
+    
+    m->write(to, *msg, ixinfo, xinfo);
 }
 
     void
 Empath::s_retrieveComplete(
     bool status,
     const EmpathURL & url,
-    QString /* ixinfo */,
+    QString ixinfo, 
     QString xinfo)
 {
     empathDebug("emitting retrieveComplete");
     emit(retrieveComplete(status, url, xinfo));
+
+    if (xinfo == "save")
+        s_messageReadyForSave(status, url, ixinfo, xinfo);
 }
 
     void
@@ -490,7 +506,7 @@ Empath::s_markComplete(
 Empath::s_writeComplete(
     bool status,
     const EmpathURL & url,
-    QString /* ixinfo */,
+    QString ixinfo,
     QString xinfo)
 {    
     emit(writeComplete(status, url, xinfo));

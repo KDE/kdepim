@@ -31,6 +31,5 @@ EmpathMatcher.cpp \
 EmpathURL.cpp \
 EmpathSecurityProcess.cpp \
 EmpathTask.cpp \
-EmpathTaskTimer.cpp \
 EmpathUtilities.cpp \
 md5.cpp

@@ -43,6 +43,8 @@ EmpathListView::EmpathListView(
 {
     empathDebug("ctor");
 
+    viewport()->setMouseTracking(true);
+
     linkItem_ = 0;
 
     delayedLinkTimer_ = new QTimer(this);
@@ -259,8 +261,8 @@ EmpathListView::contentsMouseReleaseEvent(QMouseEvent *e)
 
     void
 EmpathListView::contentsMouseMoveEvent(QMouseEvent *e)
-{   
-    if (!maybeDrag_) 
+{
+    if (!maybeDrag_)
         return;
 
     if (!e) 
@@ -270,7 +272,7 @@ EmpathListView::contentsMouseMoveEvent(QMouseEvent *e)
 
     QPoint p = e->pos();
 
-    if ( (p - pressPos_).manhattanLength() < 5) { // FIXME: Hardcoded
+    if ( (p - pressPos_).manhattanLength() < 10) { // FIXME: Hardcoded
         // Ignore, we haven't moved the cursor far enough.
         // QListView::contentsMouseMoveEvent(e);
         return;

@@ -36,6 +36,7 @@
 
 // Local includes
 #include "EmpathAccountsSettingsDialog.h"
+#include "EmpathSeparatorWidget.h"
 #include "EmpathServerTypeDialog.h"
 #include "EmpathMailboxList.h"
 #include "EmpathMailbox.h"
@@ -85,14 +86,17 @@ EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(QWidget * parent)
     buttonBox_->layout();
 
     // Layout
-    QVBoxLayout * mainLayout = new QVBoxLayout(this, dialogSpace);
-    QHBoxLayout * topLayout = new QHBoxLayout;
+    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
+    QHBoxLayout * topLayout = new QHBoxLayout(layout);
     
     topLayout->addWidget(lv_accts_);
     topLayout->addWidget(ctrlButtons);
     
-    mainLayout->addLayout(topLayout);
-    mainLayout->addWidget(buttonBox_);
+    layout->addStretch(10);
+
+    layout->addWidget(new EmpathSeparatorWidget(this));
+
+    layout->addWidget(buttonBox_);
 
     // Connections
     QObject::connect(pb_newPOP,     SIGNAL(clicked()),    SLOT(s_newPOP()));
@@ -177,7 +181,8 @@ EmpathAccountsSettingsDialog::s_updateMailboxList()
     EmpathMailboxListIterator it(empath->mailboxList());
 
     for (; it.current(); ++it)
-        new EmpathAccountListItem(lv_accts_, it.current());
+        if (it.current()->type() != EmpathMailbox::Maildir)
+            new EmpathAccountListItem(lv_accts_, it.current());
 }
 
 

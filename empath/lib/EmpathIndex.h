@@ -51,6 +51,11 @@ class EmpathIndex
          * Get the index record using the given key.
          */
         EmpathIndexRecord * record(const QCString & key);
+
+        /**
+         * Find out if the record exists
+         */
+        bool contains(const QCString & key) const;
         
         /**
          * Set the index to talk to the given folder.
@@ -83,9 +88,14 @@ class EmpathIndex
         void sync();
         
         /**
-         * Insert entry. Will overwrite any existing.
+         * Insert entry.
          */
         bool insert(const QCString &, EmpathIndexRecord &);
+
+        /**
+         * Insert entry.
+         */
+        bool replace(const QCString &, EmpathIndexRecord &);
 		
         /**
          * Remove entry.
@@ -108,8 +118,6 @@ class EmpathIndex
         bool initialised() const { return initialised_; }
         void setInitialised(bool i) { initialised_ = i; }
 
-        void touch();
-        
         const char * className() const { return "EmpathIndex"; }
 
     protected:

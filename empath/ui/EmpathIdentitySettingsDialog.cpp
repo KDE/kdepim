@@ -99,11 +99,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(QWidget * parent)
     layout0->addWidget(le_replyTo_,   2, 1);
     layout0->addWidget(le_org_,       3, 1);
 
-    QLabel * sep0 = new QLabel(this);
-
-    sep0->setFrameStyle(QFrame::HLine | QFrame::Sunken);
-
-    layout->addWidget(sep0);
+    layout->addWidget(new EmpathSeparatorWidget(this));
     
     QHBoxLayout * layout1 = new QHBoxLayout;
     
@@ -115,6 +111,8 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(QWidget * parent)
     layout->addWidget(mle_sig_);
     
     layout->addSpacing(10);
+ 
+    layout->addWidget(new EmpathSeparatorWidget(this));
    
     layout->addWidget(buttonBox_);
  
@@ -251,6 +249,9 @@ EmpathIdentitySettingsDialog::loadData()
 
         if (f.open(IO_ReadOnly)) {
 
+            mle_sig_->setReadOnly(false);
+            mle_sig_->clear();
+
             QTextStream t(&f);
 
             QString s;
@@ -263,6 +264,7 @@ EmpathIdentitySettingsDialog::loadData()
             f.close();
 
             mle_sig_->setText(s);
+            mle_sig_->setReadOnly(true);
         }
     }
 }

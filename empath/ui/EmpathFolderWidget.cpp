@@ -144,8 +144,6 @@ EmpathFolderWidget::s_update()
     itemList_.clear();
     clear();
 
-    setUpdatesEnabled(false);
-    viewport()->setUpdatesEnabled(false);
     EmpathMailboxListIterator mit(empath->mailboxList());
 
     for (; mit.current(); ++mit)
@@ -158,15 +156,11 @@ EmpathFolderWidget::s_update()
             itemList_.remove(it.current());
             QListView::removeItem((QListViewItem *)(it.current()));
         }
-
-    setUpdatesEnabled(true);
-    viewport()->setUpdatesEnabled(true);
 }
 
     void
 EmpathFolderWidget::s_sync()
 {
-    triggerUpdate();
     QListIterator<EmpathFolderListItem> it(itemList_);
     for (; it.current(); ++it)
         it.current()->s_update();
@@ -416,6 +410,9 @@ EmpathFolderWidget::s_startDrag(const QList<QListViewItem> & items)
     void
 EmpathFolderWidget::contentsDragEnterEvent(QDragEnterEvent * e)
 {
+    if (!e)
+        return;
+
     empathDebug("");
     
     if (!QUriDrag::canDecode(e)) {
@@ -433,6 +430,9 @@ EmpathFolderWidget::contentsDragEnterEvent(QDragEnterEvent * e)
     void
 EmpathFolderWidget::contentsDragMoveEvent(QDragMoveEvent * e)
 {
+    if (!e)
+        return;
+
     empathDebug("");
 
     QPoint vp = contentsToViewport(e->pos());
@@ -496,6 +496,9 @@ EmpathFolderWidget::contentsDragLeaveEvent(QDragLeaveEvent *)
     void
 EmpathFolderWidget::contentsDropEvent(QDropEvent * e)
 {
+    if (!e)
+        return;
+
     empathDebug("");
     autoOpenTimer->stop();
     stopAutoScroll();

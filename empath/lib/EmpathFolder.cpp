@@ -54,8 +54,8 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
 {
     index_ = new EmpathIndex(url_);
 	
-    QObject::connect(this, SIGNAL(countUpdated(Q_UINT32, Q_UINT32)),
-        empath->mailbox(url_), SLOT(s_countUpdated(Q_UINT32, Q_UINT32)));
+    QObject::connect(this, SIGNAL(countUpdated(unsigned int, unsigned int)),
+        empath->mailbox(url_), SLOT(s_countUpdated(unsigned int, unsigned int)));
  
     if      (url_ == empath->inbox())   pixmapName_ = "folder-inbox";
     else if (url_ == empath->outbox())  pixmapName_ = "folder-outbox";

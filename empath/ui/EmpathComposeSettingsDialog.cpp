@@ -32,6 +32,7 @@
 
 // Local includes
 #include "EmpathComposeSettingsDialog.h"
+#include "EmpathSeparatorWidget.h"
 #include "EmpathMailSender.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
@@ -120,6 +121,8 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(QWidget * parent)
     layout0->addWidget(le_replyAll_,2, 1);
     layout0->addWidget(le_forward_, 3, 1);
 
+    layout->addWidget(new EmpathSeparatorWidget(this));
+ 
     layout->addWidget(cb_quote_);
     layout->addWidget(cb_addSig_);
     layout->addWidget(cb_digSign_);
@@ -132,7 +135,15 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(QWidget * parent)
     layout2->addWidget(cb_externalEditor_);
     layout2->addWidget(le_externalEditor_);
 
+    layout->addWidget(new EmpathSeparatorWidget(this));
+
+    layout->addWidget(rb_sendNow_);
+    layout->addWidget(rb_sendLater_);
+
     layout->addStretch(10);
+
+    layout->addWidget(new EmpathSeparatorWidget(this));
+ 
     layout->addWidget(buttonBox_);
  
     QWhatsThis::add(le_reply_, i18n(

@@ -60,11 +60,9 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
     QLabel * l_fixedFont =
         new QLabel(i18n("Message font"), this, "l_fixedFont");
     
-    
-    l_sampleFixed_ = new QLabel(i18n("Sample"), this, "l_sampleFixed");
-    
     pb_chooseFixedFont_ =
-        new QPushButton(i18n("Choose..."), this, "pb_chooseFixedFont");
+        new QPushButton(
+            KGlobal::fixedFont().family(), this, "pb_chooseFixedFont");
     
     cb_underlineLinks_    =
         new QCheckBox(i18n("&Underline Links"), this, "cb_underlineLinks");
@@ -119,10 +117,6 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
     
     QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
 
-    EmpathSeparatorWidget * sep0 =
-        new EmpathSeparatorWidget(i18n("Message List"), this);
-    layout->addWidget(sep0);
-
     QHBoxLayout * layout0 = new QHBoxLayout(layout);
     layout0->addWidget(l_sortColumn);
     layout0->addWidget(cb_sortColumn_);
@@ -134,25 +128,27 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
     layout->addWidget(cb_sortAscending_);
     layout->addWidget(cb_threadMessages_);
 
-    EmpathSeparatorWidget * sep1 =
-        new EmpathSeparatorWidget(i18n("Message view"), this);
-    layout->addWidget(sep1);
-
+    layout->addWidget(new EmpathSeparatorWidget(this));
+ 
     QHBoxLayout * layout3 = new QHBoxLayout(layout);
     layout3->addWidget(l_displayHeaders);
     layout3->addWidget(le_displayHeaders_);
 
     QHBoxLayout * layout4 = new QHBoxLayout(layout);
     layout4->addWidget(l_fixedFont);
-    layout4->addWidget(l_sampleFixed_);
     layout4->addWidget(pb_chooseFixedFont_);
 
     QGridLayout * layout5 = new QGridLayout(layout);
 
-    layout5->addWidget(kcb_quoteColourOne_,     0, 0);
-    layout5->addWidget(kcb_quoteColourTwo_,     1, 0);
-    layout5->addWidget(kcb_linkColour_,         2, 0);
-    layout5->addWidget(kcb_visitedLinkColour_,  3, 0);
+    layout5->addWidget(l_quoteColourOne,    0, 0);
+    layout5->addWidget(l_quoteColourTwo,    1, 0);
+    layout5->addWidget(l_linkColour,        2, 0);
+    layout5->addWidget(l_visitedColour,     3, 0);
+
+    layout5->addWidget(kcb_quoteColourOne_,     0, 1);
+    layout5->addWidget(kcb_quoteColourTwo_,     1, 1);
+    layout5->addWidget(kcb_linkColour_,         2, 1);
+    layout5->addWidget(kcb_visitedLinkColour_,  3, 1);
 
     int w = kcb_quoteColourOne_->sizeHint().width();
     
@@ -161,15 +157,12 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
     kcb_linkColour_         ->setFixedWidth(w);
     kcb_visitedLinkColour_  ->setFixedWidth(w);
 
-    layout5->addWidget(l_quoteColourOne,    0, 1);
-    layout5->addWidget(l_quoteColourTwo,    1, 1);
-    layout5->addWidget(l_linkColour,        2, 1);
-    layout5->addWidget(l_visitedColour,     3, 1);
-
     layout->addWidget(cb_underlineLinks_);
 
     layout->addStretch(10);
 
+    layout->addWidget(new EmpathSeparatorWidget(this));
+ 
     layout->addWidget(buttonBox_);
     
     QWhatsThis::add(le_displayHeaders_, i18n(
@@ -252,11 +245,13 @@ EmpathDisplaySettingsDialog::~EmpathDisplaySettingsDialog()
     void
 EmpathDisplaySettingsDialog::s_chooseFixedFont()
 {
-    QFont fnt = l_sampleFixed_->font();
+    QFont fnt = pb_chooseFixedFont_->font();
     KFontDialog d(this);
     d.setFont(fnt);
-    if (d.getFont(fnt) == QDialog::Accepted)
-        l_sampleFixed_->setFont(fnt);
+    if (d.getFont(fnt) == QDialog::Accepted) {
+        pb_chooseFixedFont_->setFont(fnt);
+        pb_chooseFixedFont_->setText(fnt.family());
+    }
 }
 
     void
@@ -268,7 +263,7 @@ EmpathDisplaySettingsDialog::saveData()
     
     c->setGroup(GROUP_DISPLAY);
 
-    c->writeEntry(UI_FIXED_FONT,      l_sampleFixed_->font());
+    c->writeEntry(UI_FIXED_FONT,      pb_chooseFixedFont_->font());
     c->writeEntry(UI_UNDERLINE_LINKS, cb_underlineLinks_->isChecked());
     c->writeEntry(UI_QUOTE_ONE,       kcb_quoteColourOne_->color());
     c->writeEntry(UI_QUOTE_TWO,       kcb_quoteColourTwo_->color());
@@ -293,8 +288,10 @@ EmpathDisplaySettingsDialog::loadData()
     c->setGroup(GROUP_DISPLAY);
     
     QFont f = KGlobal::fixedFont();
+    QFont savedFont = c->readFontEntry(UI_FIXED_FONT, &f);
 
-    l_sampleFixed_->setFont(c->readFontEntry(UI_FIXED_FONT, &f));
+    pb_chooseFixedFont_->setFont(savedFont);
+    pb_chooseFixedFont_->setFont(savedFont.family());
     cb_underlineLinks_->setChecked
         (c->readBoolEntry(UI_UNDERLINE_LINKS, DFLT_UNDER_LINKS));
     kcb_quoteColourOne_->setColor(c->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
@@ -349,7 +346,8 @@ EmpathDisplaySettingsDialog::s_default()
 {
     using namespace EmpathConfig;
 
-    l_sampleFixed_->setFont(KGlobal::fixedFont());
+    pb_chooseFixedFont_->setFont(KGlobal::fixedFont());
+    pb_chooseFixedFont_->setText(KGlobal::fixedFont().family());
     cb_underlineLinks_->setChecked(DFLT_UNDER_LINKS);
     kcb_quoteColourOne_->setColor(DFLT_Q_1);
     kcb_quoteColourTwo_->setColor(DFLT_Q_2);

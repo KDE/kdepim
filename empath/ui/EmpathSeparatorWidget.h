@@ -18,38 +18,33 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathSeparatorWidget.h"
-#endif
-
 #ifndef EMPATHSEPARATORWIDGET_H
 #define EMPATHSEPARATORWIDGET_H
 
 // Qt includes
-#include <qstring.h>
-#include <qframe.h>
 #include <qlabel.h>
-#include <qwidget.h>
+#include <qframe.h>
+
+// Local includes
+#include "EmpathUIUtils.h"
 
 /**
  * @short Dialog separator widget
  * @author Rikkus
  */
-class EmpathSeparatorWidget : public QWidget
+class EmpathSeparatorWidget : public QLabel
 {
     Q_OBJECT
     
     public:
     
-        EmpathSeparatorWidget(const QString &, QWidget * parent);
-        ~EmpathSeparatorWidget();
-
-        QString text() const;
-        void setText(const QString &);
-        
-    protected:
-
-        QLabel  * l_text_;
+        EmpathSeparatorWidget(QWidget * parent)
+            :   QLabel(parent, "Separator")
+        {
+            setFrameStyle(QFrame::HLine | QFrame::Sunken);
+            setLineWidth(1);
+            setFixedHeight(dialogSpace);
+        }
 };
 
 #endif

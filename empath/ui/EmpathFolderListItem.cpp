@@ -71,8 +71,8 @@ EmpathFolderListItem::EmpathFolderListItem(
         return;
     }
 
-    QObject::connect(m, SIGNAL(countUpdated(Q_UINT32, Q_UINT32)),
-        this, SLOT(s_setCount(Q_UINT32, Q_UINT32)));
+    QObject::connect(m, SIGNAL(countUpdated(unsigned int, unsigned int)),
+        this, SLOT(s_setCount(unsigned int, unsigned int)));
     
     setText(0, m->name());
     setText(1, "...");
@@ -109,8 +109,8 @@ EmpathFolderListItem::EmpathFolderListItem(
     }
 
     QObject::connect(
-        f,      SIGNAL(countUpdated(Q_UINT32, Q_UINT32)),
-        this,   SLOT(s_setCount(Q_UINT32, Q_UINT32)));
+        f,      SIGNAL(countUpdated(unsigned int, unsigned int)),
+        this,   SLOT(s_setCount(unsigned int, unsigned int)));
     
     QObject::connect(
         this,   SIGNAL(update()),
@@ -123,8 +123,10 @@ EmpathFolderListItem::EmpathFolderListItem(
     
     setText(0, s);
     setPixmap(0, empathIcon(f->pixmapName()));
-    setText(1, "...");
-    setText(2, "...");
+    
+    if (!f->isContainer())
+        setText(1, "...");
+        setText(2, "...");
 }
     
 EmpathFolderListItem::~EmpathFolderListItem()

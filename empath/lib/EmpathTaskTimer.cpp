@@ -28,6 +28,7 @@ EmpathTaskTimer::EmpathTaskTimer(EmpathTask * t)
     :    QObject(),
         task_(t)
 {
+    empathDebug("");
     QObject::connect(
         task_,    SIGNAL(finished()),
         this,    SLOT(s_done()));
@@ -40,7 +41,7 @@ EmpathTaskTimer::EmpathTaskTimer(EmpathTask * t)
         this,    SIGNAL(newTask(EmpathTask *)),
         empath,    SLOT(s_newTask(EmpathTask *)));
     
-    timer_.start(100, true);
+    timer_.start(100, true); // 0.1 s
 }
 
 EmpathTaskTimer::~EmpathTaskTimer()
@@ -52,6 +53,7 @@ EmpathTaskTimer::~EmpathTaskTimer()
     void
 EmpathTaskTimer::s_done()
 {
+    empathDebug("");
     QObject::disconnect(
         task_,    SIGNAL(finished()),
         this,    SLOT(s_done()));
@@ -62,6 +64,7 @@ EmpathTaskTimer::s_done()
     void
 EmpathTaskTimer::s_timeout()
 {
+    empathDebug("");
     emit(newTask(task_));
 }
 

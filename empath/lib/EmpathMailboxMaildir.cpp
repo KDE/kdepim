@@ -39,6 +39,7 @@
 #include "EmpathMailboxMaildir.h"
 #include "EmpathFolderList.h"
 #include "EmpathConfig.h"
+#include "EmpathTask.h"
 #include "Empath.h"
 
 EmpathMailboxMaildir::EmpathMailboxMaildir(const QString & name)
@@ -227,9 +228,9 @@ EmpathMailboxMaildir::loadConfig()
     
     path_ = c->readEntry(M_PATH);
     
-    if (path_.at(path_.length()) != '/')
-        path_ += '/';
- 
+    while (path_.at(path_.length() - 1) == '/')
+        path_.truncate(path_.length() - 1);
+
     if (path_.isEmpty()) {
         empathDebug("My path is empty :(");
         return;
@@ -243,13 +244,21 @@ EmpathMailboxMaildir::loadConfig()
             return;
         }
 
+    empath->s_infoMessage(i18n("Reading folders"));
     _recursiveReadFolders(path_);
     _setupDefaultFolders();
     
     // Initialise all maildir objects.
+
+    EmpathTask * t = new EmpathTask(i18n("Reading folders"));
+    t->setMax(boxList_.count());
     
-    for (EmpathMaildirListIterator it(boxList_); it.current(); ++it)
+    for (EmpathMaildirListIterator it(boxList_); it.current(); ++it) {
         it.current()->init();
+        t->doneOne();
+    }
+
+    t->done();
     
     emit(syncFolderLists());
 }
@@ -260,12 +269,12 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
     // We need to look at the maildir base directory, and go recursively
     // through subdirs. Any subdir that has cur, tmp and new is a Maildir
     // folder.
-
-    while (path_.at(path_.length() - 1) == '/')
-        path_.truncate(path_.length() - 1);
     
-    QDir d(currentDir);
-    d.setFilter(QDir::Dirs);
+    QDir d(
+        currentDir,
+        QString::null, // No name filter.
+        QDir::Unsorted,
+        QDir::Dirs | QDir::NoSymLinks | QDir::Readable);
     
     if (d.count() == 0) {
         empathDebug("No folders in maildir");
@@ -280,7 +289,7 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
     hasCur = hasNew = hasTmp = false;
     
     for (; it != l.end(); ++it) {
-        
+
         if ((*it).at(0) == '.')
             continue;
         
@@ -302,6 +311,9 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
         _recursiveReadFolders(currentDir + "/" + *it);
     }
  
+    if (currentDir == path_)
+        return;
+
     bool isMaildir = hasCur && hasNew && hasTmp;
 
     EmpathURL url(
@@ -313,14 +325,10 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
     
     folderList_.insert(url.folderPath(), f);
 
-    // If this dir is not itself a maildir folder, we add it as a containing
-    // folder.
-    if (!isMaildir) {
+    if (!isMaildir)
         f->setContainer(true);
-        return;
-    }
-   
-    boxList_.append(new EmpathMaildir(path_, url));
+    else
+        boxList_.append(new EmpathMaildir(path_, url));
     
     emit(updateFolderLists());
     kapp->processEvents();

@@ -72,6 +72,9 @@ EmpathMainWindow::EmpathMainWindow()
 
     progressStack_->hide();
 
+    QObject::connect(
+        empath, SIGNAL(newTask(EmpathTask *)),
+        this,   SLOT(s_newTask(EmpathTask *)));
 
     mainWidget_ = new EmpathMainWidget(this);
     
@@ -164,26 +167,6 @@ EmpathMainWindow::s_newTask(EmpathTask * t)
     progressStack_->show();
 }
 
-// If the user presses the close button on the title bar, or tries
-// to kill us off another way, handle gracefully
-
-    bool
-EmpathMainWindow::queryExit()
-{
-    // FIXME: Check if the user wants to save changes
-    
-    s_fileQuit();
-
-    return false;
-}
-
-    void
-EmpathMainWindow::closeEvent(QCloseEvent * e)
-{
-    e->accept();
-    s_fileQuit();
-}
-
 // File menu slots
 
     void
@@ -200,24 +183,6 @@ EmpathMainWindow::s_fileAddressBook()
     void
 EmpathMainWindow::s_fileQuit()
 {
-    // FIXME: Check if the user wants to save changes.
-    
-    // Hide all toplevels while we clean up.
-    hide();
-
-    QWidgetList * list = QApplication::topLevelWidgets();
-
-    QWidgetListIt it(*list);
-    
-    for (; it.current(); ++it)
-        if (it.current()->isVisible())
-            it.current()->hide();
-    
-    delete list;
-    list = 0;
-    
-    kapp->processEvents();
-
     delete this;
 }
 
@@ -364,7 +329,7 @@ EmpathMainWindow::s_about()
     void
 EmpathMainWindow::s_aboutQt()
 {
-    QMessageBox::aboutQt(this, "aboutQt");
+    QMessageBox::aboutQt(this, "About Qt");
 }
 
     void
@@ -515,7 +480,6 @@ EmpathProgressIndicator::s_setMaxValue(int v)
     void
 EmpathProgressIndicator::s_incValue()
 {
-    empathDebug("");
     ++pos_;
     progress_->advance(1);
     kapp->processEvents();

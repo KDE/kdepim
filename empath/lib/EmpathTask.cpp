@@ -35,6 +35,12 @@ EmpathTask::EmpathTask(const QString & name)
         pos_(0),
         done_(false)
 {
+    empathDebug(name);
+    QObject::connect(
+        this,   SIGNAL(newTask(EmpathTask *)),
+        empath, SLOT(s_newTask(EmpathTask *)));
+
+    startTimer(50);
 }
 
 EmpathTask::~EmpathTask()
@@ -66,8 +72,18 @@ EmpathTask::doneOne()
     void
 EmpathTask::done()
 {
+    empathDebug("");
     done_ = true;
     emit(finished());
+    kapp->processEvents();
+}
+
+    void
+EmpathTask::timerEvent(QTimerEvent *)
+{
+    killTimers();
+    emit(newTask(this));
+    kapp->processEvents();
 }
 
 // vim:ts=4:sw=4:tw=78

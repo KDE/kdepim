@@ -56,21 +56,6 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent)
 
     messageViewWidget_ = new EmpathMessageViewWidget(EmpathURL(), vSplit);
    
-    QValueList<int> vSizes;
-    QValueList<int> hSizes;
-    
-    KConfig * c = KGlobal::config();
-    
-    using namespace EmpathConfig;
-    
-    c->setGroup(GROUP_DISPLAY);
-    
-    vSizes.append(c->readNumEntry(UI_MAIN_W_V, width() / 2));
-    hSizes.append(c->readNumEntry(UI_MAIN_W_H, height() / 2));
-    
-    vSplit->setSizes(vSizes);
-    hSplit->setSizes(hSizes);
-
     QObject::connect(
         messageListWidget_, SIGNAL(changeView(const EmpathURL &)),
         messageViewWidget_, SLOT(s_setMessage(const EmpathURL &)));
@@ -78,16 +63,7 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent)
 
 EmpathMainWidget::~EmpathMainWidget()
 {
-    KConfig * c = KGlobal::config();
-    
-    using namespace EmpathConfig;
-
-    c->setGroup(GROUP_DISPLAY);
-    
-    c->writeEntry(UI_MAIN_W_V, vSplit->sizes()[0]);
-    c->writeEntry(UI_MAIN_W_H, hSplit->sizes()[0]);
-    
-    c->sync();
+    // Empty.
 }
 
     EmpathMessageListWidget *

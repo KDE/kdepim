@@ -22,6 +22,7 @@ EmpathConfigPOP3Logging.cpp \
 EmpathConfigPOP3Server.cpp \
 EmpathConfigPOP3Widget.cpp \
 EmpathDisplaySettingsDialog.cpp \
+EmpathEnvelopeWidget.cpp \
 EmpathFilterActionDialog.cpp \
 EmpathFilterEditDialog.cpp \
 EmpathFilterListItem.cpp \
@@ -52,7 +53,6 @@ EmpathPasswordEditWidget.cpp \
 EmpathSubjectSpecWidget.cpp \
 EmpathSendingSettingsDialog.cpp \
 EmpathSetupWizard.cpp \
-EmpathSeparatorWidget.cpp \
 EmpathUI.cpp \
 EmpathUIUtils.cpp
 

@@ -29,6 +29,7 @@
 // Local includes
 #include "EmpathFolderChooserWidget.h"
 #include "EmpathFilterEventHandler.h"
+#include "EmpathSeparatorWidget.h"
 #include "EmpathFilter.h"
 #include "EmpathAddressSelectionWidget.h"
 #include "EmpathFilterActionDialog.h"
@@ -104,10 +105,13 @@ EmpathFilterActionDialog::EmpathFilterActionDialog(
 
     layout->addWidget(rb_delete_);
     layout->addWidget(rb_ignore_);
+    
+    layout->addWidget(new EmpathSeparatorWidget(this));
 
     layout->addWidget(cb_continue_);
     
     layout->addStretch(10);
+    layout->addWidget(new EmpathSeparatorWidget(this));
     layout->addWidget(buttonBox_);
 
     QObject::connect(pb_OK_,        SIGNAL(clicked()), SLOT(s_OK()));

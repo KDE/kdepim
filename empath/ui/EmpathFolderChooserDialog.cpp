@@ -35,6 +35,7 @@
 // Local includes
 #include "EmpathFolderChooserDialog.h"
 #include "EmpathFolderChooserWidget.h"
+#include "EmpathSeparatorWidget.h"
 #include "EmpathDefines.h"
 #include "EmpathFolder.h"
 #include "EmpathFolderWidget.h"
@@ -63,6 +64,7 @@ EmpathFolderChooserDialog::EmpathFolderChooserDialog(QWidget * parent)
 
     layout->addWidget(folderWidget_);
     layout->addStretch(10);
+    layout->addWidget(new EmpathSeparatorWidget(this));
     layout->addWidget(buttonBox);
 }
 

@@ -136,10 +136,6 @@ class EmpathMainWindow : public KTMainWindow
         
         void s_newTask(EmpathTask * t);
 
-    protected:
-        
-        void closeEvent(QCloseEvent *);
-
     private:
     
         // General
@@ -162,7 +158,6 @@ class EmpathMainWindow : public KTMainWindow
         void _setupToolBar();
         void _setupStatusBar();
 
-        bool queryExit();
         bool _messageSelected();
 
         QWidgetStack * progressStack_;

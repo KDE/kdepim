@@ -23,45 +23,24 @@
 #endif
 
 // Qt includes
-#include <qlabel.h>
+#include <qframe.h>
 #include <qlayout.h>
 
 // Local includes
 #include "EmpathSeparatorWidget.h"
 
 EmpathSeparatorWidget::EmpathSeparatorWidget
-        (const QString & text, QWidget * parent)
-    :   QWidget(parent, "Separator")
+        (QWidget * parent)
+    :   QLabel(parent, "Separator")
 {
-    l_text_ = new QLabel(text, this);
-    QLabel * f = new QLabel(this);
-    
-    QHBoxLayout * layout = new QHBoxLayout(this);
-    
-    layout->addWidget(l_text_);
-    layout->addWidget(f);
-
-    f->setFrameStyle(QFrame::HLine | QFrame::Sunken);
-
-    setFixedHeight(l_text_->sizeHint().height());
-
-    l_text_->setFixedWidth(l_text_->sizeHint().width() + 10);
+    setFrameStyle(QFrame::HLine | QFrame::Sunken);
+    setLineWidth(2);
+    setFixedHeight(8);
 }
 
 EmpathSeparatorWidget::~EmpathSeparatorWidget()
 {
+    // Empty.
 }
 
-    QString
-EmpathSeparatorWidget::text() const
-{
-    return l_text_->text();
-}
-
-    void
-EmpathSeparatorWidget::setText(const QString & s)
-{
-    l_text_->setText(s);
-}
-        
 // vim:ts=4:sw=4:tw=78

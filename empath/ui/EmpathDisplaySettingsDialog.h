@@ -71,7 +71,6 @@ class EmpathDisplaySettingsDialog : public QDialog
 
     private:
 
-        QLabel          * l_sampleFixed_;
         QPushButton     * pb_chooseFixedFont_;
         
         KColorButton    * kcb_quoteColourTwo_;

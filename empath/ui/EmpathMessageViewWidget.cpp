@@ -87,7 +87,7 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
 EmpathMessageViewWidget::s_retrieveComplete(
     bool b, const EmpathURL & url, QString xinfo)
 {
-    empathDebug("My id is: `view" + QString().setNum(id_));
+    empathDebug("My id is: `view" + QString().setNum(id_) + "'");
     empathDebug("Given id: " + xinfo);
     if ((b == false) || (xinfo != "view" + QString().setNum(id_)))
         return;

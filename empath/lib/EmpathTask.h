@@ -68,6 +68,8 @@ class EmpathTask : public QObject
         int pos() { return pos_; }
         
         bool isDone() { return done_; }
+    
+        void timerEvent(QTimerEvent *);
         
         QString name() { return name_; }
         
@@ -77,6 +79,7 @@ class EmpathTask : public QObject
         void posChanged(int);
         void addOne();
         void finished();
+        void newTask(EmpathTask *);
         
     private:
         

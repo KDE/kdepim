@@ -157,6 +157,8 @@ class Database
 
     QDataStream indexStream_;
     QDataStream dataStream_;
+
+    QDateTime touched_;
 };
 
 } // End namespace

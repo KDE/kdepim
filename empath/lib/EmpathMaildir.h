@@ -100,6 +100,7 @@ class EmpathMaildir : public QObject
         void        _removeUntagged(EmpathFolder *);
        
         QDateTime    mtime_;
+        QStringList tagList_;
         
         QTimer       timer_;
 

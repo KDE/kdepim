@@ -22,10 +22,17 @@
 # pragma implementation "EmpathAttachmentEditDialog.h"
 #endif
 
+// System includes
+#include <stdlib.h>
+
+// Qt includes
 #include <qwhatsthis.h>
+#include <qlayout.h>
+#include <qlabel.h>
 
 // KDE includes
 #include <kfiledialog.h>
+#include <kbuttonbox.h>
 #include <klocale.h>
 #include <kapp.h>
 
@@ -33,111 +40,7 @@
 #include "EmpathUIUtils.h"
 #include "EmpathDefines.h"
 #include "EmpathAttachmentEditDialog.h"
-
-    const QString
-EmpathAttachmentEditDialog::charsetTypes_[] = { 
-    "us-ascii (English)",
-    "iso-8859-1 (Latin-1)",
-    "iso-8859-2 (Latin-2)",
-    "iso-8859-3 (Esperanto)",
-    "iso-8859-4 (Baltic)",
-    "iso-8859-5 (Cyrillic)",
-    "iso-8859-6 (Arabic)",
-    "iso-8859-7 (Greek)",
-    "iso-8859-8 (Hebrew)",
-    "iso-8859-9 (Turkish)",
-    "iso-8859-10 (Nordic)",
-    "KOI-8R (Russian)"
-};
-
-    const int
-EmpathAttachmentEditDialog::nChr = 12;
-
-    const QString
-EmpathAttachmentEditDialog::textSubTypes_[] = {
-    "Plain",
-    "RichText",
-    "HTML"
-};
-    const int
-EmpathAttachmentEditDialog::nTxt = 3;
-
-    const QString
-EmpathAttachmentEditDialog::messageSubTypes_[] = {
-    "RFC822",
-    "Digest",
-    "Parallel",
-    "Partial",
-    "External-Body"
-};    
-    const int
-EmpathAttachmentEditDialog::nMsg = 5;
-
-    const QString
-EmpathAttachmentEditDialog::applicationSubTypes_[] = {
-    "Octet-Stream",
-    "X-cpio",
-    "X-DVI",
-    "X-perl",
-    "X-tar",
-    "X-deb",
-    "X-rar-compressed",
-    "X-LaTeX",
-    "X-sh",
-    "X-shar",
-    "X-tar-gz",
-    "X-tcl",
-    "X-TeX",
-    "X-troff",
-    "X-zip",
-    "X-VRML"
-};
-
-    const int
-EmpathAttachmentEditDialog::nApp = 16;
-
-    const QString
-EmpathAttachmentEditDialog::imageSubTypes_[] = {
-    "JPEG",
-    "GIF",
-    "PNG",
-    "TIFF",
-    "X-XBitmap",
-    "X-XPixmap",
-    "X-CMU-Raster",
-    "X-Portable-Anymap",
-    "X-Portable-Bitmap",
-    "X-Portable-Graymap",
-    "X-Portable-Pixmap",
-    "X-RGB"
-};
-
-    const int
-EmpathAttachmentEditDialog::nImg = 12; 
-
-    const QString
-EmpathAttachmentEditDialog::videoSubTypes_[] = {
-    "MPEG",
-    "QuickTime",
-    "FLI",
-    "GL",
-    "X-SGI-Movie",
-    "X-MSVideo"
-};
-
-    const int
-EmpathAttachmentEditDialog::nVid = 6;
-
-    const QString
-EmpathAttachmentEditDialog::audioSubTypes_[] = {
-    "MIDI",
-    "ULAW",
-    "X-AIFF",
-    "X-WAV"
-};
-
-    const int
-EmpathAttachmentEditDialog::nAud = 4;
+#include "EmpathPathSelectWidget.h"
 
 EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
         QWidget * parent,
@@ -161,11 +64,14 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
     QObject::connect(pb_cancel_,    SIGNAL(clicked()),  SLOT(s_cancel()));
     QObject::connect(pb_help_,      SIGNAL(clicked()),  SLOT(s_help()));
 
-    QLabel * l_filename    = new QLabel(i18n("Filename"), this, "l_filename");
+    QLabel * l_filename = new QLabel(i18n("Filename"), this, "l_filename");
+
+    efsw_filename_ =
+        new EmpathFileSelectWidget(getenv("HOME"), this);
+
+    QWhatsThis::add(efsw_filename_, i18n("Pick a file to attach !"));
+
     QLabel * l_description = new QLabel(i18n("Description"), this, "l_descrip");
-    le_filename_   = new QLineEdit(this, "le_filename");
-    
-    QWhatsThis::add(le_filename_, i18n("Pick a file to attach !"));
     
     le_description_ = new QLineEdit(this, "le_description");
     
@@ -173,21 +79,17 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
             "Write your own description of the attachment here.\n"
             "For example, ``Here's that file you didn't want''"));
     
-    bg_encoding_ =
-        new QButtonGroup(this, "bg_encoding");
-
+    bg_encoding_ = new QButtonGroup(this, "bg_encoding");
     bg_encoding_->hide();
     bg_encoding_->setExclusive(true);
 
-    rb_base64_    =
-        new QRadioButton(i18n("Base 64"), this, "rb_base64_");
+    rb_base64_  = new QRadioButton(i18n("Base 64"), this, "rb_base64_");
     
     QWhatsThis::add(rb_base64_, i18n(
             "Encode the attachment using base 64.\n"
             "This is generally the best encoding type to use"));
 
-    rb_qp_        =
-        new QRadioButton(i18n("Quoted printable"), this, "rb_qp");
+    rb_qp_ = new QRadioButton(i18n("Quoted printable"), this, "rb_qp");
     
     QWhatsThis::add(rb_qp_, i18n(
             "Encode the attachment as quoted-printable.\n"
@@ -195,16 +97,14 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
             "recipient is able to read 8 bit or base64 messages\n"
             "as it doesn't make text completely unreadable."));
 
-    rb_8bit_    =
-        new QRadioButton(i18n("8 Bit"), this, "rb_8bit_");
+    rb_8bit_ = new QRadioButton(i18n("8 Bit"), this, "rb_8bit_");
     
     QWhatsThis::add(rb_8bit_, i18n(
             "Encode the attachment using 8 bit.\n"
             "Actually, this doesn't do anything much\n"
             "and it's fine for just sending text."));
 
-    rb_7bit_    =
-        new QRadioButton(i18n("7 bit"), this, "rb_7bit_");
+    rb_7bit_ = new QRadioButton(i18n("7 bit"), this, "rb_7bit_");
     
     QWhatsThis::add(rb_7bit_, i18n(
             "Encode the attachment as 7 bit.\n"
@@ -214,28 +114,28 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
             "with 8 bit, or being read by a dumb MUA.\n"
             "If you don't understand this, don't worry."));
 
-    rb_base64_    ->setChecked(true);
+    rb_base64_  ->setChecked(true);
     rb_8bit_    ->setChecked(false);
     rb_7bit_    ->setChecked(false);
-    rb_qp_        ->setChecked(false);
+    rb_qp_      ->setChecked(false);
     
     bg_encoding_->insert(rb_base64_,    RMM::CteTypeBase64);
-    bg_encoding_->insert(rb_8bit_,        RMM::CteType8bit);
-    bg_encoding_->insert(rb_7bit_,        RMM::CteType7bit);
+    bg_encoding_->insert(rb_8bit_,      RMM::CteType8bit);
+    bg_encoding_->insert(rb_7bit_,      RMM::CteType7bit);
     bg_encoding_->insert(rb_qp_,        RMM::CteTypeQuotedPrintable);
     
     QObject::connect(
         bg_encoding_, SIGNAL(clicked(int)),
         this, SLOT(s_encodingChanged(int)));
 
-    QLabel * l_type       = new QLabel(i18n("Type"), this, "l_type");
+    QLabel * l_type     = new QLabel(i18n("Type"), this, "l_type");
 
-    QLabel * l_subType    = new QLabel(i18n("SubType"), this, "l_subType");
+    QLabel * l_subType  = new QLabel(i18n("SubType"), this, "l_subType");
     
     cb_type_ = new QComboBox(this, "cb_type");
     
-    QWhatsThis::add(cb_type_, i18n(
-            "Specify the major type of the attachment."));
+    QWhatsThis::add
+        (cb_type_, i18n("Specify the major type of the attachment."));
     
     cb_type_->insertItem("text",        0);
     cb_type_->insertItem("message",     1);
@@ -245,13 +145,13 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
     cb_type_->insertItem("audio",       5);
     
     cb_subType_        = new QComboBox(true, this, "cb_subType");
-    
+   
     QWhatsThis::add(cb_subType_, i18n(
             "Specify the minor type of the attachment.\n"
             "You may make up your own here, but precede\n"
             "it with 'X-'."));
 
-    QLabel * l_charset_ = new QLabel(i18n("Charset"), this, "l_charset");
+    QLabel * l_charset = new QLabel(i18n("Character set"), this, "l_charset");
     
     cb_charset_        = new QComboBox(this, "cb_charset");
     
@@ -260,6 +160,36 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
             "will be specified to be using."));
     
     // Layouts
+    
+    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
+
+    QGridLayout * nameDescriptionLayout = new QGridLayout(layout);
+
+    nameDescriptionLayout->addWidget(l_filename,        0, 0);
+    nameDescriptionLayout->addWidget(efsw_filename_,    0, 1);
+    nameDescriptionLayout->addWidget(l_description,     1, 0);
+    nameDescriptionLayout->addWidget(le_description_,   1, 1);
+
+    QHBoxLayout * typeLayout = new QHBoxLayout(layout);
+
+    typeLayout->addWidget(l_type);
+    typeLayout->addWidget(cb_type_);
+    typeLayout->addWidget(l_subType);
+    typeLayout->addWidget(cb_subType_);
+
+    QGridLayout * encodingLayout = new QGridLayout(layout);
+
+    encodingLayout->addWidget(rb_base64_,   0, 0);
+    encodingLayout->addWidget(rb_qp_,       0, 1);
+    encodingLayout->addWidget(rb_8bit_,     1, 0);
+    encodingLayout->addWidget(rb_7bit_,     1, 1);
+ 
+    QHBoxLayout * charsetLayout = new QHBoxLayout(layout);
+
+    charsetLayout->addWidget(l_charset);
+    charsetLayout->addWidget(cb_charset_);
+
+    layout->addWidget(buttonBox);
 
     QObject::connect(
         cb_type_, SIGNAL(activated(int)),
@@ -276,22 +206,79 @@ EmpathAttachmentEditDialog::~EmpathAttachmentEditDialog()
     void
 EmpathAttachmentEditDialog::_init()
 {
-    le_filename_->setText(spec_.filename());
+    txtST_  <<  "Plain"
+            <<  "RichText"
+            <<  "HTML";
+
+    msgST_  <<  "RFC822"
+            <<  "Digest"
+            <<  "Parallel"
+            <<  "Partial"
+            <<  "External-Body";
+ 
+    appST_  <<  "Octet-Stream"
+            <<  "X-cpio"
+            <<  "X-DVI"
+            <<  "X-perl"
+            <<  "X-tar"
+            <<  "X-deb"
+            <<  "X-rar-compressed"
+            <<  "X-LaTeX"
+            <<  "X-sh"
+            <<  "X-shar"
+            <<  "X-tar-gz"
+            <<  "X-tcl"
+            <<  "X-TeX"
+            <<  "X-troff"
+            <<  "X-zip"
+            <<  "X-VRML";
+
+    imgST_  <<  "JPEG"
+            <<  "GIF"
+            <<  "PNG"
+            <<  "TIFF"
+            <<  "X-XBitmap"
+            <<  "X-XPixmap"
+            <<  "X-CMU-Raster"
+            <<  "X-Portable-Anymap"
+            <<  "X-Portable-Bitmap"
+            <<  "X-Portable-Graymap"
+            <<  "X-Portable-Pixmap"
+            <<  "X-RGB";
+
+    vidST_  <<  "MPEG"
+            <<  "QuickTime"
+            <<  "FLI"
+            <<  "GL"
+            <<  "X-SGI-Movie"
+            <<  "X-MSVideo";
+
+    audST_  <<  "MIDI"
+            <<  "ULAW"
+            <<  "X-AIFF"
+            <<  "X-WAV";
+ 
+    chrT_   <<  "us-ascii (English)"
+            <<  "iso-8859-1 (Latin-1)"
+            <<  "iso-8859-2 (Latin-2)"
+            <<  "iso-8859-3 (Esperanto)"
+            <<  "iso-8859-4 (Baltic)"
+            <<  "iso-8859-5 (Cyrillic)"
+            <<  "iso-8859-6 (Arabic)"
+            <<  "iso-8859-7 (Greek)"
+            <<  "iso-8859-8 (Hebrew)"
+            <<  "iso-8859-9 (Turkish)"
+            <<  "iso-8859-10 (Nordic)"
+            <<  "KOI-8R (Russian)";
+ 
+    efsw_filename_->setPath(spec_.filename());
     le_description_->setText(spec_.description());
-    
-    int i;
-    
-    i = 0; do txtST_.append(textSubTypes_       [i++]); while (i != nTxt);
-    i = 0; do msgST_.append(messageSubTypes_    [i++]); while (i != nMsg);
-    i = 0; do appST_.append(applicationSubTypes_[i++]); while (i != nApp);
-    i = 0; do imgST_.append(imageSubTypes_      [i++]); while (i != nImg);
-    i = 0; do vidST_.append(videoSubTypes_      [i++]); while (i != nVid);
-    i = 0; do audST_.append(audioSubTypes_      [i++]); while (i != nAud);
-    i = 0; do chrT_ .append(charsetTypes_       [i++]); while (i != nChr);
-    
+
     s_typeChanged(2);
     cb_type_->setCurrentItem(2);
     
+    cb_charset_->insertStringList(chrT_);
+                
     bg_encoding_->setButton((int)(spec_.encoding()));
 }
 
@@ -321,7 +308,7 @@ EmpathAttachmentEditDialog::s_browse()
     if (filename.isEmpty() || filename.at(filename.length() - 1) == '/')
         return;
 
-    le_filename_->setText(filename);
+    efsw_filename_->setPath(filename);
     
     int lastSlash = filename.findRev('/');
 
@@ -357,7 +344,7 @@ EmpathAttachmentEditDialog::s_typeChanged(int idx)
     EmpathAttachmentSpec
 EmpathAttachmentEditDialog::spec()
 {
-    spec_.setFilename        (le_filename_->text());
+    spec_.setFilename        (efsw_filename_->path());
     spec_.setDescription    (le_description_->text());
     spec_.setType            (cb_type_->currentText());
     spec_.setSubType        (cb_subType_->currentText());
@@ -373,7 +360,7 @@ EmpathAttachmentEditDialog::setSpec(const EmpathAttachmentSpec & s)
     
     bg_encoding_->setButton((int)(spec_.encoding()));
     
-    le_filename_->setText(spec_.filename());
+    efsw_filename_->setPath(spec_.filename());
     le_description_->setText(spec_.description());
 
 

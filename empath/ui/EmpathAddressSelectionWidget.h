@@ -26,7 +26,7 @@
 #define EMPATH_ADDRESS_SELECTION_WIDGET_H
 
 // Qt includes
-#include <qhbox.h>
+#include <qwidget.h>
 
 class QLineEdit;
 class QPushButton;
@@ -35,7 +35,7 @@ class QPushButton;
  * Megawidget used to get an address from the user.
  * Not yet implemented: Allows user to browse through address book.
  */
-class EmpathAddressSelectionWidget : public QHBox
+class EmpathAddressSelectionWidget : public QWidget
 {
     Q_OBJECT
     

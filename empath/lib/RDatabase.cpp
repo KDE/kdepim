@@ -40,6 +40,7 @@ Database::Database(const QString & filename)
 
   index_.setAutoDelete(true);
   _open();
+  touched_ = QDateTime::currentDateTime();
 }
 
 Database::~Database()
@@ -117,6 +118,7 @@ Database::_loadIndex()
     index_.insert(key, new Q_UINT32(ofs));
   }
 
+  touched_ = QDateTime::currentDateTime();
   indexDirty_ = false;
   indexLoaded_ = true;
 }
@@ -180,6 +182,7 @@ Database::insert(const QCString & key, const QByteArray & data)
 
   dataFileSize_ = dataFile_.at();
 
+  touched_ = QDateTime::currentDateTime();
   return true;
 }
 
@@ -203,6 +206,11 @@ Database::retrieve(const QCString & key)
     return data;
   }
 
+  if (*ofs > dataFileSize_) {
+    _setError("Attempt to seek past end of file");
+    return data;
+  }
+
   dataFile_.at(*ofs);
 
   dataStream_ >> data;
@@ -221,6 +229,8 @@ Database::remove(const QCString & key)
   ok_ = true;
   bool removed = index_.remove(key);
   indexDirty_ = removed;
+  if (removed)
+    touched_ = QDateTime::currentDateTime();
   return removed;
 }
 
@@ -243,6 +253,7 @@ Database::replace(const QCString & key, const QByteArray & data, bool & ow)
 
     dataFileSize_ = dataFile_.at();
 
+    touched_ = QDateTime::currentDateTime();
     return true;
   }
 
@@ -273,17 +284,18 @@ Database::replace(const QCString & key, const QByteArray & data, bool & ow)
 #endif
 
   Q_UINT32 newRecordLength = data.size();
+  
 
   // If the replacement is larger than the original, we remove
   // the key for original, and add the new record at the end of the
   // data file.
 
   if (newRecordLength > originalRecordLength) {
-    
+  
     index_.replace(key, new Q_UINT32(dataFileSize_));
     indexDirty_ = true;
-  
-    dataFile_.at(*ofs);
+    
+    dataFile_.at(dataFileSize_);
     dataStream_ << data;
   
     dataFileSize_ = dataFile_.at();
@@ -308,6 +320,7 @@ Database::sync()
   _saveIndex();
   indexFile_.flush();
   dataFile_.flush();
+  touched_ = QDateTime::currentDateTime();
 }
 
   void
@@ -423,7 +436,7 @@ Database::reorganise()
   QDateTime
 Database::lastModified() const
 {
-  return QFileInfo(dataFile_).lastModified();
+  return touched_;
 }
 
   void
@@ -447,6 +460,7 @@ Database::clear()
     return;
   }
  
+  touched_ = QDateTime::currentDateTime();
 }
 
 } // End namespace

@@ -1,5 +1,17 @@
 #include <kmenubar.h>
 
+#include "EmpathDefines.h"
+
+const char * EmpathAboutText =
+    "<p>Empath -- Mail client</p>"
+    "<p>Version 1.0beta1</p>"
+    "<p>Maintainer: Rik Hemsley &lt;rik@kde.org&gt;</p>"
+    "<p>Contributors:"
+    "<ul>"
+    "<li>Wilco Greven</li>"
+    "<li>Dirk A. Mueller</li>"
+    "</ul>"
+    "</p>";
 
 void
 EmpathMainWindow::_setupMenuBar()
@@ -19,9 +31,6 @@ EmpathMainWindow::_setupMenuBar()
     optionsMenu_    = new QPopupMenu;
     CHECK_PTR(optionsMenu_);
 
-    helpMenu_        = new QPopupMenu;
-    CHECK_PTR(helpMenu_);
-
     // File menu
     
     fileMenu_->insertItem(empathIcon("menu-send"), i18n("&Send Pending Mail"),
@@ -34,7 +43,7 @@ EmpathMainWindow::_setupMenuBar()
     
 //    fileMenu_->insertSeparator();
 
-    fileMenu_->insertItem(i18n("E&xit"),
+    fileMenu_->insertItem(i18n("&Close"),
         this, SLOT(s_fileQuit()));
 
     // Edit menu
@@ -146,23 +155,7 @@ EmpathMainWindow::_setupMenuBar()
         i18n("&Filters"),
         this, SLOT(s_setupFilters()));
     
-    helpMenu_->insertItem(
-        i18n("&Contents"),
-        this, SLOT(s_help()));
-
-    helpMenu_->insertItem(i18n("&About Empath"),
-        this, SLOT(s_about()));
-
-    helpMenu_->insertSeparator();
-    
-    helpMenu_->insertItem(
-        i18n("About &Qt"),
-        this, SLOT(s_aboutQt()));
-    
-    helpMenu_->insertSeparator();
-
-    helpMenu_->insertItem(i18n("&Send bug report"),
-        empath, SLOT(s_bugReport()));
+    helpMenu_ = helpMenu(i18n(EmpathAboutText));
     
     menu_->insertItem(i18n("&File"), fileMenu_);
     menu_->insertItem(i18n("&Edit"), editMenu_);

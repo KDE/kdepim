@@ -72,8 +72,6 @@ EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMM::RMessage & m)
         parentMessageId_    (m.envelope().parentMessageId()),
         tagged_             (false)
 {
-    empathDebug("My id is `" + id + "'");
-    empathDebug("My subject is `" + subject_ + "'");
 }
 
 EmpathIndexRecord::EmpathIndexRecord(

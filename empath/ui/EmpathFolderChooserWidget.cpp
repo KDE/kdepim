@@ -22,6 +22,8 @@
 # pragma implementation "EmpathFolderChooserWidget.h"
 #endif
 
+// Qt includes
+#include <qlayout.h>
 #include <qpixmap.h>
 
 // KDE includes
@@ -37,7 +39,7 @@
 #include "EmpathUIUtils.h"
 
 EmpathFolderChooserWidget::EmpathFolderChooserWidget(QWidget * parent)
-    :    QHBox(parent, "FolderChooserWidget")
+    :    QWidget(parent, "FolderChooserWidget")
 {
     le_folderName_      = new QLineEdit(this, "l_folderName_");
     pb_selectFolder_    = new QPushButton(this, "pb_selectFolder_");
@@ -49,6 +51,11 @@ EmpathFolderChooserWidget::EmpathFolderChooserWidget(QWidget * parent)
             this, SLOT(s_browse()));
     
     le_folderName_->setText("<" + i18n("no folder selected") + ">");
+
+    QHBoxLayout * layout = new QHBoxLayout(this);
+
+    layout->addWidget(le_folderName_);
+    layout->addWidget(pb_selectFolder_);
 }
 
 EmpathFolderChooserWidget::~EmpathFolderChooserWidget()

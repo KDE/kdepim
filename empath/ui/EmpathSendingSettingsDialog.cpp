@@ -84,10 +84,6 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(QWidget * parent)
     
     QVBoxLayout * layout = new QVBoxLayout(this, 10, 10);
 
-    EmpathSeparatorWidget * sep0 =
-        new EmpathSeparatorWidget(i18n("Server"), this);
-    layout->addWidget(sep0);
-
     QGridLayout * layout0 = new QGridLayout(layout);
     QHBoxLayout * layout1 = new QHBoxLayout;
 
@@ -103,15 +99,14 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(QWidget * parent)
     layout1->addWidget(l_smtpPort);
     layout1->addWidget(sb_smtpPort_);
 
-    EmpathSeparatorWidget * sep1 =
-        new EmpathSeparatorWidget(i18n("Copies"), this);
-    layout->addWidget(sep1);
+    layout->addWidget(new EmpathSeparatorWidget(this));
 
     QHBoxLayout * layout2 = new QHBoxLayout(layout);
     layout2->addWidget(cb_copyOther_);
     layout2->addWidget(asw_copyOther_);
     
     layout->addStretch(10);
+    layout->addWidget(new EmpathSeparatorWidget(this));
     layout->addWidget(buttonBox_);
 
     // WhatsThis
