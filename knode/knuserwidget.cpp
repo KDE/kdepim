@@ -20,6 +20,7 @@
 #include <qbuttongroup.h>
 #include <qradiobutton.h>
 #include <qmultilineedit.h>
+#include <qlineedit.h>
 
 #include <klocale.h>
 #include <kfiledialog.h>
