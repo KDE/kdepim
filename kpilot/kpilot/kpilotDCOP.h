@@ -61,6 +61,7 @@ k_dcop:
 	* the configure dialog.
 	*/
 	virtual ASYNC configure() = 0;
+	virtual ASYNC configureWizard() = 0;
 
 	/**
 	* Report KPilot's state back to the daemon.

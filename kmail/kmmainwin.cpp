@@ -19,6 +19,7 @@
 #include <kmessagebox.h>
 #include <kstringhandler.h>
 #include <kdebug.h>
+#include <ktip.h>
 
 #include "kmmainwin.moc"
 
@@ -26,13 +27,20 @@ KMMainWin::KMMainWin(QWidget *)
     : KMainWindow( 0, "kmail-mainwindow#" ),
       mReallyClose( false )
 {
+  // Set this to be the group leader for all subdialogs - this means
+  // modal subdialogs will only affect this dialog, not the other windows
+  setWFlags( getWFlags() | WGroupLeader );
+
   kapp->ref();
-  mKMMainWidget = new KMMainWidget( this, "KMMainWidget", actionCollection() );
+  mKMMainWidget = new KMMainWidget( this, "KMMainWidget", this, actionCollection() );
   mKMMainWidget->resize( 450, 600 );
   setCentralWidget(mKMMainWidget);
   setupStatusBar();
   if (kmkernel->xmlGuiInstance())
     setInstance( kmkernel->xmlGuiInstance() );
+
+  if ( kmkernel->firstInstance() )
+    QTimer::singleShot( 200, this, SLOT(slotShowTipOnStart()) );
 
   setStandardToolBarMenuEnabled(true);
 
@@ -44,8 +52,9 @@ KMMainWin::KMMainWin(QWidget *)
 
   KStdAction::quit( this, SLOT(slotQuit()), actionCollection());
   createGUI( "kmmainwin.rc", false );
+  // Don't use conserveMemory() because this renders dynamic plugging
+  // of actions unusable!
 
-  conserveMemory();
   applyMainWindowSettings(KMKernel::config(), "Main Window");
 
   connect( KPIM::BroadcastStatus::instance(), SIGNAL( statusMsg( const QString& ) ),
@@ -56,8 +65,6 @@ KMMainWin::KMMainWin(QWidget *)
 
   connect(mKMMainWidget, SIGNAL(captionChangeRequest(const QString&)),
 	  SLOT(setCaption(const QString&)) );
-  connect(mKMMainWidget, SIGNAL(modifiedToolBarConfig()),
-	   SLOT(slotUpdateToolbars()) );
 
   // Enable mail checks again (see destructor)
   kmkernel->enableMailCheck();
@@ -112,6 +119,9 @@ void KMMainWin::displayStatusMsg(const QString& aText)
 
 void KMMainWin::slotEditToolbars()
 {
+  // remove dynamically created actions before editing
+  mKMMainWidget->clearFilterActions();
+
   saveMainWindowSettings(KMKernel::config(), "Main Window");
   KEditToolbar dlg(actionCollection(), "kmmainwin.rc");
 
@@ -119,6 +129,8 @@ void KMMainWin::slotEditToolbars()
 	   SLOT(slotUpdateToolbars()) );
 
   dlg.exec();
+  // plug dynamically created actions again
+  mKMMainWidget->initializeFilterActions();
 }
 
 void KMMainWin::slotUpdateToolbars()
@@ -176,3 +188,10 @@ bool KMMainWin::queryClose()
     return true;
   return kmkernel->canQueryClose();
 }
+
+void KMMainWin::slotShowTipOnStart()
+{
+  KTipDialog::showTip( this );
+}
+
+

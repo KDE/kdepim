@@ -34,7 +34,7 @@
 
 #include <klocale.h>
 
-static const char kwatchgnupg_version[] = "0.01";
+static const char kwatchgnupg_version[] = "1.0";
 static const char description[] = I18N_NOOP("GnuPG log viewer");
 
 struct about_data {

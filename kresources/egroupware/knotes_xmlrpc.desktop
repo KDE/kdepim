@@ -5,7 +5,6 @@ Name[it]=XML RPC
 Name[nl]=XML-PRC
 Name[pt_BR]=RPC XML
 Name[sv]=XML RPC
-Name[xx]=xxXML-RPCxx
 X-KDE-Library=knotes_xmlrpc
 Type=Service
 ServiceTypes=KResources/Plugin

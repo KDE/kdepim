@@ -21,6 +21,7 @@ using KMail::ObjectTreeParser;
 #include "headerstrategy.h"
 using KMail::HeaderStrategy;
 #include "kmaddrbook.h"
+#include "kcursorsaver.h"
 
 #include <cryptplugwrapperlist.h>
 #include <kpgpblock.h>
@@ -172,6 +173,7 @@ void KMMessage::assign( const KMMessage& other )
     mUnencryptedMsg = new KMMessage( *other.unencryptedMsg() );
   else
     mUnencryptedMsg = 0;
+  setDrafts( other.drafts() );
   //mFileName = ""; // we might not want to copy the other messages filename (?)
   //KMMsgBase::assign( &other );
 }
@@ -1098,18 +1100,18 @@ KMMessage* KMMessage::createRedirect2( const QString &toStr )
     id = strId.toUInt();
   const KPIM::Identity & ident =
     kmkernel->identityManager()->identityForUoidOrDefault( id );
-  
+
   // X-KMail-Redirect-From: content
   QString strByWayOf = QString("%1 (by way of %2 <%3>)")
     .arg( from() )
     .arg( ident.fullName() )
     .arg( ident.emailAddr() );
-    
+
   // Resent-From: content
   QString strFrom = QString("%1 <%2>")
     .arg( ident.fullName() )
     .arg( ident.emailAddr() );
-    
+
   // format the current date to be used in Resent-Date:
   QString origDate = msg->headerField( "Date" );
   msg->setDateToday();
@@ -1121,7 +1123,7 @@ KMMessage* KMMessage::createRedirect2( const QString &toStr )
     msg->setHeaderField( "Date", origDate );
 
   // prepend Resent-*: headers (c.f. RFC2822 3.6.6)
-  msg->setHeaderField( "Resent-Message-ID", generateMessageId( msg->sender() ), 
+  msg->setHeaderField( "Resent-Message-ID", generateMessageId( msg->sender() ),
                        Structured, true);
   msg->setHeaderField( "Resent-Date", newDate, Structured, true );
   msg->setHeaderField( "Resent-To",   toStr,   Address, true );
@@ -1156,10 +1158,12 @@ KMMessage* KMMessage::createBounce( bool )
   if (senderStr.isEmpty())
   {
 #if ALLOW_GUI
-    if ( withUI )
+    if ( withUI ) {
+      const KCursorSaver saver( QCursor::ArrowCursor );
       KMessageBox::sorry(0 /*app-global modal*/,
 			 i18n("The message has no sender set"),
 			 i18n("Bounce Message"));
+    }
 #endif
     return 0;
   }
@@ -1175,7 +1179,8 @@ KMMessage* KMMessage::createBounce( bool )
   else receiver = KPIM::getEmailAddr(to());
 
 #if ALLOW_GUI
-  if ( withUI )
+  if ( withUI ) {
+    const KCursorSaver saver( QCursor::ArrowCursor );
     // No composer appears. So better ask before sending.
     if (KMessageBox::warningContinueCancel(0 /*app-global modal*/,
         i18n("Return the message to the sender as undeliverable?\n"
@@ -1187,6 +1192,7 @@ KMMessage* KMMessage::createBounce( bool )
     {
       return 0;
     }
+  }
 #endif
 
   KMMessage *msg = new KMMessage;
@@ -1346,12 +1352,14 @@ static int requestAdviceOnMDN( const char * what ) {
   for ( int i = 0 ; i < numMdnMessageBoxes ; ++i )
     if ( !qstrcmp( what, mdnMessageBoxes[i].dontAskAgainID ) )
       if ( mdnMessageBoxes[i].canDeny ) {
+	const KCursorSaver saver( QCursor::ArrowCursor );
 	int answer = QMessageBox::information( 0,
 			 i18n("Message Disposition Notification Request"),
 			 i18n( mdnMessageBoxes[i].text ),
 			 i18n("&Ignore"), i18n("Send \"&denied\""), i18n("&Send") );
 	return answer ? answer + 1 : 0 ; // map to "mode" in createMDN
       } else {
+	const KCursorSaver saver( QCursor::ArrowCursor );
 	int answer = QMessageBox::information( 0,
 			 i18n("Message Disposition Notification Request"),
 			 i18n( mdnMessageBoxes[i].text ),
@@ -1398,7 +1406,7 @@ KMMessage* KMMessage::createMDN( MDN::ActionMode a,
 
   MDN::SendingMode s = MDN::SentAutomatically; // set to manual if asked user
   QString special; // fill in case of error, warning or failure
-  KConfigGroup mdnConfig( KGlobal::config(), "MDN" );
+  KConfigGroup mdnConfig( KMKernel::config(), "MDN" );
 
   // default:
   int mode = mdnConfig.readNumEntry( "default-policy", 0 );
@@ -2879,96 +2887,99 @@ DwBodyPart * KMMessage::findDwBodyPart( int type, int subtype ) const
 void KMMessage::bodyPart(DwBodyPart* aDwBodyPart, KMMessagePart* aPart,
 			 bool withBody)
 {
-  if( aPart ) {
-    if( aDwBodyPart && aDwBodyPart->hasHeaders()  ) {
-      // This must not be an empty string, because we'll get a
-      // spurious empty Subject: line in some of the parts.
-      //aPart->setName(" ");
-      // partSpecifier
-      QString partId( aDwBodyPart->partId() );
-      aPart->setPartSpecifier( partId );
+  if ( !aPart )
+    return;
 
-      DwHeaders& headers = aDwBodyPart->Headers();
-      // Content-type
-      QCString additionalCTypeParams;
-      if (headers.HasContentType())
+  aPart->clear();
+
+  if( aDwBodyPart && aDwBodyPart->hasHeaders()  ) {
+    // This must not be an empty string, because we'll get a
+    // spurious empty Subject: line in some of the parts.
+    //aPart->setName(" ");
+    // partSpecifier
+    QString partId( aDwBodyPart->partId() );
+    aPart->setPartSpecifier( partId );
+
+    DwHeaders& headers = aDwBodyPart->Headers();
+    // Content-type
+    QCString additionalCTypeParams;
+    if (headers.HasContentType())
+    {
+      DwMediaType& ct = headers.ContentType();
+      aPart->setOriginalContentTypeStr( ct.AsString().c_str() );
+      aPart->setTypeStr(ct.TypeStr().c_str());
+      aPart->setSubtypeStr(ct.SubtypeStr().c_str());
+      DwParameter *param = ct.FirstParameter();
+      while(param)
       {
-        DwMediaType& ct = headers.ContentType();
-        aPart->setOriginalContentTypeStr( ct.AsString().c_str() );
-        aPart->setTypeStr(ct.TypeStr().c_str());
-        aPart->setSubtypeStr(ct.SubtypeStr().c_str());
-        DwParameter *param = ct.FirstParameter();
-        while(param)
-        {
-          if (!qstricmp(param->Attribute().c_str(), "charset"))
-            aPart->setCharset(QCString(param->Value().c_str()).lower());
-          else if (param->Attribute().c_str()=="name*")
-            aPart->setName(KMMsgBase::decodeRFC2231String(
-              param->Value().c_str()));
-          else {
-            additionalCTypeParams += ';';
-            additionalCTypeParams += param->AsString().c_str();
-          }
-          param=param->Next();
+        if (!qstricmp(param->Attribute().c_str(), "charset"))
+          aPart->setCharset(QCString(param->Value().c_str()).lower());
+        else if (param->Attribute().c_str()=="name*")
+          aPart->setName(KMMsgBase::decodeRFC2231String(
+            param->Value().c_str()));
+        else {
+          additionalCTypeParams += ';';
+          additionalCTypeParams += param->AsString().c_str();
         }
+        param=param->Next();
       }
-      else
-      {
-        aPart->setTypeStr("text");      // Set to defaults
-        aPart->setSubtypeStr("plain");
-      }
-      aPart->setAdditionalCTypeParamStr( additionalCTypeParams );
-      // Modification by Markus
-      if (aPart->name().isEmpty())
-      {
-	if (headers.HasContentType() && !headers.ContentType().Name().empty()) {
-	  aPart->setName(KMMsgBase::decodeRFC2047String(headers.
-							ContentType().Name().c_str()) );
-	} else if (headers.HasSubject() && !headers.Subject().AsString().empty()) {
-	  aPart->setName( KMMsgBase::decodeRFC2047String(headers.
-							 Subject().AsString().c_str()) );
-	}
-      }
-
-      // Content-transfer-encoding
-      if (headers.HasContentTransferEncoding())
-        aPart->setCteStr(headers.ContentTransferEncoding().AsString().c_str());
-      else
-        aPart->setCteStr("7bit");
-
-      // Content-description
-      if (headers.HasContentDescription())
-        aPart->setContentDescription(headers.ContentDescription().AsString().c_str());
-      else
-        aPart->setContentDescription("");
-
-      // Content-disposition
-      if (headers.HasContentDisposition())
-        aPart->setContentDisposition(headers.ContentDisposition().AsString().c_str());
-      else
-        aPart->setContentDisposition("");
-
-      // Body
-      if (withBody)
-        aPart->setBody( aDwBodyPart->Body().AsString().c_str() );
-      else
-        aPart->setBody( "" );
-
     }
-    // If no valid body part was given,
-    // set all MultipartBodyPart attributes to empty values.
     else
     {
-      aPart->setTypeStr("");
-      aPart->setSubtypeStr("");
-      aPart->setCteStr("");
-      // This must not be an empty string, because we'll get a
-      // spurious empty Subject: line in some of the parts.
-      //aPart->setName(" ");
-      aPart->setContentDescription("");
-      aPart->setContentDisposition("");
-      aPart->setBody("");
+      aPart->setTypeStr("text");      // Set to defaults
+      aPart->setSubtypeStr("plain");
     }
+    aPart->setAdditionalCTypeParamStr( additionalCTypeParams );
+    // Modification by Markus
+    if (aPart->name().isEmpty())
+    {
+      if (headers.HasContentType() && !headers.ContentType().Name().empty()) {
+        aPart->setName(KMMsgBase::decodeRFC2047String(headers.
+      						ContentType().Name().c_str()) );
+      } else if (headers.HasSubject() && !headers.Subject().AsString().empty()) {
+        aPart->setName( KMMsgBase::decodeRFC2047String(headers.
+      						 Subject().AsString().c_str()) );
+      }
+    }
+
+    // Content-transfer-encoding
+    if (headers.HasContentTransferEncoding())
+      aPart->setCteStr(headers.ContentTransferEncoding().AsString().c_str());
+    else
+      aPart->setCteStr("7bit");
+
+    // Content-description
+    if (headers.HasContentDescription())
+      aPart->setContentDescription(headers.ContentDescription().AsString().c_str());
+    else
+      aPart->setContentDescription("");
+
+    // Content-disposition
+    if (headers.HasContentDisposition())
+      aPart->setContentDisposition(headers.ContentDisposition().AsString().c_str());
+    else
+      aPart->setContentDisposition("");
+
+    // Body
+    if (withBody)
+      aPart->setBody( aDwBodyPart->Body().AsString().c_str() );
+    else
+      aPart->setBody( "" );
+
+  }
+  // If no valid body part was given,
+  // set all MultipartBodyPart attributes to empty values.
+  else
+  {
+    aPart->setTypeStr("");
+    aPart->setSubtypeStr("");
+    aPart->setCteStr("");
+    // This must not be an empty string, because we'll get a
+    // spurious empty Subject: line in some of the parts.
+    //aPart->setName(" ");
+    aPart->setContentDescription("");
+    aPart->setContentDisposition("");
+    aPart->setBody("");
   }
 }
 
@@ -4220,25 +4231,28 @@ void KMMessage::setMDNSentState( KMMsgMDNSentState status, int idx ) {
 }
 
 //-----------------------------------------------------------------------------
-void KMMessage::link(const KMMessage *aMsg, KMMsgStatus aStatus)
+void KMMessage::link( const KMMessage *aMsg, KMMsgStatus aStatus )
 {
-  Q_ASSERT(aStatus == KMMsgStatusReplied || aStatus == KMMsgStatusForwarded);
+  Q_ASSERT( aStatus == KMMsgStatusReplied 
+      || aStatus == KMMsgStatusForwarded || aStatus == KMMsgStatusDeleted );
 
-  QString message = headerField("X-KMail-Link-Message");
-  if (!message.isEmpty())
+  QString message = headerField( "X-KMail-Link-Message" );
+  if ( !message.isEmpty() )
     message += ',';
-  QString type = headerField("X-KMail-Link-Type");
-  if (!type.isEmpty())
+  QString type = headerField( "X-KMail-Link-Type" );
+  if ( !type.isEmpty() )
     type += ',';
 
-  message += QString::number(aMsg->getMsgSerNum());
-  if (aStatus == KMMsgStatusReplied)
+  message += QString::number( aMsg->getMsgSerNum() );
+  if ( aStatus == KMMsgStatusReplied )
     type += "reply";
-  else if (aStatus == KMMsgStatusForwarded)
+  else if ( aStatus == KMMsgStatusForwarded )
     type += "forward";
+  else if ( aStatus == KMMsgStatusDeleted )
+    type += "deleted";
 
-  setHeaderField("X-KMail-Link-Message", message);
-  setHeaderField("X-KMail-Link-Type", type);
+  setHeaderField( "X-KMail-Link-Message", message );
+  setHeaderField( "X-KMail-Link-Type", type );
 }
 
 //-----------------------------------------------------------------------------
@@ -4252,12 +4266,14 @@ void KMMessage::getLink(int n, ulong *retMsgSerNum, KMMsgStatus *retStatus) cons
   message = message.section(',', n, n);
   type = type.section(',', n, n);
 
-  if (!message.isEmpty() && !type.isEmpty()) {
+  if ( !message.isEmpty() && !type.isEmpty() ) {
     *retMsgSerNum = message.toULong();
-    if (type == "reply")
+    if ( type == "reply" )
       *retStatus = KMMsgStatusReplied;
-    else if (type == "forward")
+    else if ( type == "forward" )
       *retStatus = KMMsgStatusForwarded;
+    else if ( type == "deleted" )
+      *retStatus = KMMsgStatusDeleted;
   }
 }
 
@@ -4351,6 +4367,8 @@ void KMMessage::updateBodyPart(const QString partSpecifier, const QByteArray & d
 //-----------------------------------------------------------------------------
 void KMMessage::updateAttachmentState( DwBodyPart* part )
 {
+  static const char cSMIMEData[] = "smime.p7s";
+
   if ( !part )
     part = getFirstDwBodyPart();
   if ( !part )
@@ -4361,7 +4379,8 @@ void KMMessage::updateAttachmentState( DwBodyPart* part )
 
   if ( part->hasHeaders() &&
        part->Headers().HasContentDisposition() &&
-       !part->Headers().ContentDisposition().Filename().empty() )
+       !part->Headers().ContentDisposition().Filename().empty() &&
+       0 != qstricmp(part->Headers().ContentDisposition().Filename().c_str(), cSMIMEData ))
   {
     setStatus( KMMsgStatusHasAttach );
     return;

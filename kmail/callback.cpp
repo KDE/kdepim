@@ -65,10 +65,9 @@ bool Callback::mailICal( const QString& to, const QString iCal,
   msg->setTo( to );
   msg->setBody( iCal.utf8() );
   msg->setFrom( receiver() );
-
-  KMComposeWin *cWin = new KMComposeWin(msg);
-  // cWin->setCharset( "", true );
-  cWin->slotWordWrapToggled( false );
+  /* We want the triggering mail to be moved to the trash once this one
+   * has been sent successfully. Set a link header which accomplishes that. */
+  msg->link( mMsg, KMMsgStatusDeleted );
 
   // Outlook will only understand the reply if the From: header is the
   // same as the To: header of the invitation message.
@@ -80,21 +79,23 @@ bool Callback::mailICal( const QString& to, const QString iCal,
     if( identity != KPIM::Identity::null )
       // Identity found. Use this
       msg->setFrom( identity.fullEmailAddr() );
+      msg->setHeaderField("X-KMail-Identity", QString::number( identity.uoid() ));
+      // Remove BCC from identity on ical invitations (https://intevation.de/roundup/kolab/issue474)
+      msg->setBcc( "" );
   }
 
-  // TODO: These are no longer available. It was an internal
-  // implementation detail of kmcomposewin, anyway. Please find
-  // another way...
-  //cWin->mNeverSign = true;
-  //cWin->mNeverEncrypt = true;
+  KMComposeWin *cWin = new KMComposeWin();
+  cWin->setMsg( msg, false /* mayAutoSign */ );
+  // cWin->setCharset( "", true );
+  cWin->slotWordWrapToggled( false );
+  cWin->setSigningAndEncryptionDisabled( true );
 
-  // This is commented out, since there is no other visual indication of
-  // the fact that a message has been sent. Also, there is no way
-  // to delete the mail and the composer window :-(
-  // TODO: Fix this somehow. Difficult because of the async readerwindow
-  // cWin->slotSendNow();
-  // Instead, we do this for now:
-  cWin->show();
+  if ( options.readBoolEntry( "AutomaticSending", true ) ) {
+    cWin->setAutoDeleteWindow(  true );
+    cWin->slotSendNow();
+  } else {
+    cWin->show();
+  }
 
   return true;
 }
@@ -112,21 +113,17 @@ QString Callback::receiver() const
     // Only one receiver, so that has to be us
     mReceiver = mMsg->to();
   else {
-    bool found = false;
+    int found = 0;
     for( QStringList::Iterator it = addrs.begin(); it != addrs.end(); ++it ) {
       if( kmkernel->identityManager()->identityForAddress( *it ) !=
           KPIM::Identity::null ) {
-	// Ok, this could be us
-	if( found != 0 ) {
-	  // Whoops! Something is wrong here. Found more than one
-          found = false;
-          break;
-        } else
-          mReceiver = *it;
+        // Ok, this could be us
+        ++found;
+        mReceiver = *it;
       }
     }
 
-    if( !found ) {
+    if( found != 1 ) {
       bool ok;
       mReceiver =
         KInputDialog::getItem( i18n( "Select Address" ),
@@ -142,3 +139,4 @@ QString Callback::receiver() const
 
   return mReceiver;
 }
+

@@ -216,7 +216,8 @@ void LdapClient::endParseLDIF()
 void LdapClient::finishCurrentObject()
 {
   mCurrentObject.dn = d->ldif.dn();
-  if( mCurrentObject.objectClass.lower() == "groupofnames" ){
+  const QString sClass( mCurrentObject.objectClass.lower() );
+  if( sClass == "groupofnames" || sClass == "kolabgroupofnames" ){
     LdapAttrMap::ConstIterator it = mCurrentObject.attrs.find("mail");
     if( it == mCurrentObject.attrs.end() ){
       // No explicit mail address found so far?
@@ -320,6 +321,7 @@ LdapSearch::LdapSearch()
 
 void LdapSearch::readConfig()
 {
+  //kdDebug(5300) << "LdapClient::readConfig()" << endl;
   cancelSearch();
   QValueList< LdapClient* >::Iterator it;
   for ( it = mClients.begin(); it != mClients.end(); ++it )
@@ -337,8 +339,10 @@ void LdapSearch::readConfig()
       LdapClient* ldapClient = new LdapClient( j, this );
 
       QString host =  config.readEntry( QString( "SelectedHost%1" ).arg( j ), "" ).stripWhiteSpace();
-      if ( !host.isEmpty() )
+      if ( !host.isEmpty() ){
         ldapClient->setHost( host );
+        mNoLDAPLookup = false;
+      }
 
       QString port = QString::number( config.readUnsignedNumEntry( QString( "SelectedPort%1" ).arg( j ) ) );
       if ( !port.isEmpty() )
@@ -383,6 +387,7 @@ void LdapSearch::readConfig()
 
 void LdapSearch::slotFileChanged( const QString& file )
 {
+  //kdDebug(5300) << "LdapClient::slotFileChanged( " << file << " )" << endl;
   if ( file == mConfigFile )
     readConfig();
 }
@@ -484,7 +489,7 @@ void LdapSearch::makeSearchData( QStringList& ret, LdapResultList& resList )
     for ( it2 = (*it1).attrs.begin(); it2 != (*it1).attrs.end(); ++it2 ) {
       QByteArray val = (*it2).first();
       int len = val.size();
-      if( '\0' == val[len-1] )
+      if( len > 0 && '\0' == val[len-1] )
         --len;
       const QString tmp = QString::fromUtf8( val, len );
       kdDebug(5300) << "      key: \"" << it2.key() << "\" value: \"" << tmp << "\"" << endl;
@@ -521,7 +526,8 @@ void LdapSearch::makeSearchData( QStringList& ret, LdapResultList& resList )
         givenname = tmp;
       else if( it2.key() == "sn" )
         sn = tmp;
-      else if( it2.key() == "objectClass" && tmp == "groupOfNames" ) {
+      else if( it2.key() == "objectClass" &&
+               ( tmp == "groupOfNames" || tmp == "kolabGroupOfNames" ) ) {
         isDistributionList = true;
       }
     }

@@ -34,13 +34,14 @@ class KLineEdit;
 class QCheckBox;
 class QListView;
 class QPushButton;
+class KABCore;
 
 class LDAPSearchDialog : public KDialogBase
 { 
   Q_OBJECT
 
   public:
-    LDAPSearchDialog( KABC::AddressBook *ab, QWidget* parent, const char* name = 0 );
+    LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core, QWidget* parent, const char* name = 0 );
     ~LDAPSearchDialog();
 
     bool isOK() const { return mIsOK; }
@@ -78,6 +79,7 @@ class LDAPSearchDialog : public KDialogBase
     QPtrList<KPIM::LdapClient> mLdapClientList;
     bool mIsOK;
     KABC::AddressBook *mAddressBook;
+    KABCore *mCore;
 
     KComboBox* mFilterCombo;
     KComboBox* mSearchType;

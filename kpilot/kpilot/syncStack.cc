@@ -31,6 +31,7 @@
 static const char *syncStack_id = "$Id$";
 
 #include <unistd.h>
+#include <assert.h>
 
 #include <qtimer.h>
 #include <qfile.h>
@@ -127,6 +128,9 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	case eRestore:
 		kdWarning() << k_funcinfo << ": Running conduits during restore." << endl;
 		l.append(CSL1("--test"));
+		break;
+	case eDefaultSync:
+		assert(m!=eDefaultSync);
 		break;
 	}
 	return l;

@@ -63,3 +63,11 @@ make_standard_stuff(DecryptionResult)
 const char * GpgME::DecryptionResult::unsupportedAlgortihm() const {
   return d ? d->res.unsupported_algorithm : 0 ;
 }
+
+bool GpgME::DecryptionResult::wrongKeyUsage() const {
+#ifdef HAVE_GPGME_WRONG_KEY_USAGE
+  if ( d )
+    return d->res.wrong_key_usage;
+#endif
+  return false;
+}

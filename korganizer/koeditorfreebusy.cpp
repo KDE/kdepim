@@ -54,7 +54,8 @@ class FreeBusyItem : public KDGanttViewTaskItem
 {
   public:
     FreeBusyItem( Attendee *attendee, KDGanttView *parent ) :
-      KDGanttViewTaskItem( parent ), mAttendee( attendee )
+      KDGanttViewTaskItem( parent ), mAttendee( attendee ), mTimerID( 0 ),
+      mIsDownloading( false )
     {
       Q_ASSERT( attendee );
       updateItem();
@@ -87,11 +88,28 @@ class FreeBusyItem : public KDGanttViewTaskItem
 
     QString email() const { return mAttendee->email(); }
 
+    void setUpdateTimerID( int id ) { mTimerID = id; }
+    int updateTimerID() const { return mTimerID; }
+
+    void startDownload() {
+      mIsDownloading = true;
+      FreeBusyManager *m = KOGroupware::instance()->freeBusyManager();
+      m->retrieveFreeBusy( attendee()->email() );
+    }
+    void setIsDownloading( bool d ) { mIsDownloading = d; }
+    bool isDownloading() const { return mIsDownloading; }
+
   private:
     Attendee *mAttendee;
     KCal::FreeBusy *mFreeBusy;
 
     QMap<int,QString> mKeyMap;
+
+    // This is used for the update timer
+    int mTimerID;
+
+    // Only run one download job at a time
+    bool mIsDownloading;
 };
 
 void FreeBusyItem::updateItem()
@@ -143,6 +161,9 @@ void FreeBusyItem::setFreeBusyPeriods( FreeBusy* fb )
       setFreeBusy( 0 );
       setShowNoInformation( true );
   }
+
+  // We are no longer downloading
+  mIsDownloading = false;
 }
 
 
@@ -153,17 +174,14 @@ KOEditorFreeBusy::KOEditorFreeBusy( int spacing, QWidget *parent,
   QVBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setSpacing( spacing );
 
-  QString organizer = KOPrefs::instance()->email();
-  mOrganizerLabel = new QLabel( i18n("Organizer: %1").arg( organizer ), this );
-  mIsOrganizer = true; // Will be set later. This is just valgrind silencing
-  topLayout->addWidget( mOrganizerLabel );
-
   // Label for status summary information
   // Uses the tooltip palette to highlight it
+  mIsOrganizer = false; // Will be set later. This is just valgrind silencing
   mStatusSummaryLabel = new QLabel( this );
   mStatusSummaryLabel->setPalette( QToolTip::palette() );
   mStatusSummaryLabel->setFrameStyle( QFrame::Plain | QFrame::Box );
   mStatusSummaryLabel->setLineWidth( 1 );
+  mStatusSummaryLabel->hide(); // Will be unhidden later if you are organizer
   topLayout->addWidget( mStatusSummaryLabel );
 
   // The control panel for the gantt widget
@@ -172,7 +190,7 @@ KOEditorFreeBusy::KOEditorFreeBusy( int spacing, QWidget *parent,
   QLabel *label = new QLabel( i18n( "Scale: " ), this );
   controlLayout->addWidget( label );
 
-  scaleCombo = new QComboBox( this ); 
+  scaleCombo = new QComboBox( this );
   scaleCombo->insertItem( i18n( "Hour" ) );
   scaleCombo->insertItem( i18n( "Day" ) );
   scaleCombo->insertItem( i18n( "Week" ) );
@@ -238,8 +256,6 @@ KOEditorFreeBusy::KOEditorFreeBusy( int spacing, QWidget *parent,
                                                       const QDateTime & ) ),
            mGanttView, SLOT( zoomToSelection( const QDateTime &,
                                               const  QDateTime & ) ) );
-//  connect( mGanttView, SIGNAL( lvItemDoubleClicked( KDGanttViewItem * ) ),
-//           SLOT( updateFreeBusyData( KDGanttViewItem * ) ) );
   connect( mGanttView, SIGNAL( lvItemDoubleClicked( KDGanttViewItem * ) ),
            SLOT( editFreeBusyUrl( KDGanttViewItem * ) ) );
 
@@ -260,6 +276,8 @@ void KOEditorFreeBusy::removeAttendee( Attendee *attendee )
       static_cast<FreeBusyItem *>( mGanttView->firstChild() );
   while( anItem ) {
     if( anItem->attendee() == attendee ) {
+      if ( anItem->updateTimerID() != 0 )
+        killTimer( anItem->updateTimerID() );
       delete anItem;
       updateStatusSummary();
       break;
@@ -268,12 +286,11 @@ void KOEditorFreeBusy::removeAttendee( Attendee *attendee )
   }
 }
 
-void KOEditorFreeBusy::insertAttendee( Attendee *attendee )
+void KOEditorFreeBusy::insertAttendee( Attendee *attendee, bool readFBList )
 {
-  (void)new FreeBusyItem( attendee, mGanttView );
-#if 0
-  updateFreeBusyData( attendee );
-#endif
+  FreeBusyItem* item = new FreeBusyItem( attendee, mGanttView );
+  if ( readFBList )
+    updateFreeBusyData( item );
   updateStatusSummary();
 }
 
@@ -284,7 +301,7 @@ void KOEditorFreeBusy::updateAttendee( Attendee *attendee )
   while( anItem ) {
     if( anItem->attendee() == attendee ) {
       anItem->updateItem();
-      updateFreeBusyData( attendee );
+      updateFreeBusyData( anItem );
       updateStatusSummary();
       break;
     }
@@ -312,17 +329,15 @@ bool KOEditorFreeBusy::updateEnabled() const
 void KOEditorFreeBusy::readEvent( Event *event )
 {
   setDateTimes( event->dtStart(), event->dtEnd() );
+  mIsOrganizer = KOPrefs::instance()->thatIsMe( event->organizer().email() );
+  updateStatusSummary();
 }
 
 
 void KOEditorFreeBusy::setDateTimes( QDateTime start, QDateTime end )
 {
-  mDtStart = start;
-  mDtEnd = end;
 
-  mGanttView->centerTimelineAfterShow( start );
-  mGanttView->clearBackgroundColor();
-  mGanttView->setIntervalBackgroundColor( start, end, Qt::magenta );
+  slotUpdateGanttView( start, end );
 }
 
 void KOEditorFreeBusy::slotScaleChanged( int newScale )
@@ -333,27 +348,42 @@ void KOEditorFreeBusy::slotScaleChanged( int newScale )
   slotCenterOnStart();
 }
 
-void KOEditorFreeBusy::slotCenterOnStart() 
+void KOEditorFreeBusy::slotCenterOnStart()
 {
   mGanttView->centerTimeline( mDtStart );
 }
 
-void KOEditorFreeBusy::slotZoomToTime() 
+void KOEditorFreeBusy::slotZoomToTime()
 {
   mGanttView->zoomToFit();
 }
 
-void KOEditorFreeBusy::updateFreeBusyData( KDGanttViewItem *item )
+void KOEditorFreeBusy::updateFreeBusyData( FreeBusyItem* item )
 {
-  FreeBusyItem *g = static_cast<FreeBusyItem *>( item );
-  updateFreeBusyData( g->attendee() );
+  if ( item->isDownloading() )
+    // This item is already in the process of fetching the FB list
+    return;
+
+  if ( item->updateTimerID() != 0 )
+    // An update timer is already running. Reset it
+    killTimer( item->updateTimerID() );
+
+  // This item does not have a download running, and no timer is set
+  // Do the download in five seconds
+  item->setUpdateTimerID( startTimer( 5000 ) );
 }
 
-void KOEditorFreeBusy::updateFreeBusyData( Attendee *attendee )
+void KOEditorFreeBusy::timerEvent( QTimerEvent* event )
 {
-  if( KOGroupware::instance() && attendee->name() != "(EmptyName)" ) {
-    FreeBusyManager *m = KOGroupware::instance()->freeBusyManager();
-    m->retrieveFreeBusy( attendee->email() );
+  killTimer( event->timerId() );
+  FreeBusyItem *item = static_cast<FreeBusyItem *>( mGanttView->firstChild() );
+  while( item ) {
+    if( item->updateTimerID() == event->timerId() ) {
+      item->setUpdateTimerID( 0 );
+      item->startDownload();
+      return;
+    }
+    item = static_cast<FreeBusyItem *>( item->nextSibling() );
   }
 }
 
@@ -384,13 +414,15 @@ void KOEditorFreeBusy::slotInsertFreeBusy( KCal::FreeBusy *fb,
 
 void KOEditorFreeBusy::slotUpdateGanttView( QDateTime dtFrom, QDateTime dtTo )
 {
+  mDtStart = dtFrom;
+  mDtEnd = dtTo;
   bool block = mGanttView->getUpdateEnabled( );
   mGanttView->setUpdateEnabled( false );
   QDateTime horizonStart = QDateTime( dtFrom.addDays( -15 ).date() );
   mGanttView->setHorizonStart( horizonStart  );
   mGanttView->setHorizonEnd( dtTo.addDays( 15 ) );
   mGanttView->clearBackgroundColor();
-  mGanttView->setIntervalBackgroundColor( dtFrom, dtTo, Qt::magenta ); 
+  mGanttView->setIntervalBackgroundColor( dtFrom, dtTo, Qt::magenta );
   mGanttView->setUpdateEnabled( block );
   mGanttView->centerTimelineAfterShow( dtFrom );
 }
@@ -557,7 +589,6 @@ void KOEditorFreeBusy::updateStatusSummary()
         .arg( total ).arg( accepted ).arg( tentative ).arg( declined ) );
   } else {
     mStatusSummaryLabel->hide();
-    mStatusSummaryLabel->setText( "" );
   }
   mStatusSummaryLabel->adjustSize();
 }
@@ -578,7 +609,7 @@ void KOEditorFreeBusy::reload()
 
   FreeBusyItem *item = static_cast<FreeBusyItem *>( mGanttView->firstChild() );
   while( item ) {
-    updateFreeBusyData( item->attendee() );
+    updateFreeBusyData( item );
     item = static_cast<FreeBusyItem *>( item->nextSibling() );
   }
 }
@@ -589,7 +620,7 @@ void KOEditorFreeBusy::editFreeBusyUrl( KDGanttViewItem *i )
   if ( !item ) return;
 
   Attendee *attendee = item->attendee();
-  
+
   FreeBusyUrlDialog dialog( attendee, this );
   dialog.exec();
 }

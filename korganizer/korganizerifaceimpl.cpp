@@ -1,7 +1,7 @@
 /*
     This file is part of KOrganizer.
 
-    Copyright (c) 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+    Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -32,7 +32,6 @@
 
 #include "korganizerifaceimpl.h"
 #include "actionmanager.h"
-#include "kogroupware.h"
 
 
 KOrganizerIfaceImpl::KOrganizerIfaceImpl( ActionManager* actionManager,
@@ -84,38 +83,4 @@ bool KOrganizerIfaceImpl::deleteEvent( QString uid )
 bool KOrganizerIfaceImpl::editIncidence( QString uid )
 {
   return mActionManager->editIncidence( uid );
-}
-
-bool KOrganizerIfaceImpl::eventRequest( QString request, QString receiver,
-                                        QString ical )
-{
-  return mActionManager->eventRequest( request, receiver, ical );
-}
-
-bool KOrganizerIfaceImpl::eventReply( QString ical )
-{
-  return mActionManager->eventReply( ical );
-}
-
-bool KOrganizerIfaceImpl::cancelEvent( QString ical )
-{
-  return mActionManager->cancelEvent( ical );
-}
-
-QString KOrganizerIfaceImpl::formatICal( QString iCal )
-{
-  if( !KOGroupware::instance() ) return QString();
-  return KOGroupware::instance()->formatICal( iCal );
-}
-
-QString KOrganizerIfaceImpl::formatTNEF( QByteArray tnef )
-{
-  if( !KOGroupware::instance() ) return QString();
-  return KOGroupware::instance()->formatTNEF( tnef );
-}
-
-QString KOrganizerIfaceImpl::msTNEFToVPart( QByteArray tnef )
-{
-  if( !KOGroupware::instance() ) return QString();
-  return KOGroupware::instance()->msTNEFToVPart( tnef );
 }

@@ -23,6 +23,7 @@
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
 */
+#include <assert.h>
 
 #include <qintdict.h>
 #include <qdatetime.h>
@@ -194,6 +195,11 @@ QDate KOAgenda::selectedIncidenceDate() const
   return ( mSelectedItem ? mSelectedItem->itemDate() : QDate() );
 }
 
+const QString KOAgenda::lastSelectedUid() const
+{
+  return mSelectedUid;
+}
+
 
 void KOAgenda::init()
 {
@@ -231,6 +237,7 @@ void KOAgenda::init()
   mItemMoved = false;
 
   mSelectedItem = 0;
+  mSelectedUid = QString::null;
 
   setAcceptDrops( true );
   installEventFilter( this );
@@ -476,9 +483,8 @@ bool KOAgenda::eventFilter_key( QObject *, QKeyEvent *ke )
         if ( !mTypeAhead ) {
           mTypeAhead = true;
           emitNewEventForSelection();
-          return true;
         }
-        break;
+        return true;
     }
   }
   return false;
@@ -495,8 +501,8 @@ void KOAgenda::finishTypeAhead()
   if ( typeAheadReceiver() ) {
     for( QEvent *e = mTypeAheadEvents.first(); e;
          e = mTypeAheadEvents.next() ) {
-//      kdDebug() << "postEvent() " << int( typeAheadReceiver() ) << endl;
-      QApplication::postEvent( typeAheadReceiver(), e );
+//      kdDebug() << "sendEvent() " << int( typeAheadReceiver() ) << endl;
+      QApplication::sendEvent( typeAheadReceiver(), e );
     }
   }
   mTypeAheadEvents.clear();
@@ -593,9 +599,7 @@ bool KOAgenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
     case QEvent::MouseButtonDblClick:
       if (object == viewport()) {
         selectItem(0);
-        QPoint pos = viewportToContents( viewportPos );
-        QPoint gpos = contentsToGrid( pos );
-        emit newEventSignal( gpos );
+        emit newEventSignal();
       } else {
         KOAgendaItem *doubleClickedItem = dynamic_cast<KOAgendaItem *>(object);
         if (doubleClickedItem) {
@@ -1525,17 +1529,22 @@ void KOAgenda::insertMultiItem (Event *event,QDate qd,int XBegin,int XEnd,
   int width = XEnd - XBegin + 1;
   int count = 0;
   KOAgendaItem *current = 0;
+  int visibleCount = mSelectedDates.first().daysTo(mSelectedDates.last());
   QPtrList<KOAgendaItem> multiItems;
   for ( cellX = XBegin; cellX <= XEnd; ++cellX ) {
-    if ( cellX == XBegin ) cellYTop = YTop;
-    else cellYTop = 0;
-    if ( cellX == XEnd ) cellYBottom = YBottom;
-    else cellYBottom = rows() - 1;
-    newtext = QString("(%1/%2): ").arg( ++count ).arg( width );
-    newtext.append( event->summary() );
-    current = insertItem( event, qd, cellX, cellYTop, cellYBottom );
-    current->setText( newtext );
-    multiItems.append( current );
+    ++count;
+    //Only add the items that are visible.
+    if( cellX >=0 && cellX <= visibleCount ) {
+      if ( cellX == XBegin ) cellYTop = YTop;
+      else cellYTop = 0;
+      if ( cellX == XEnd ) cellYBottom = YBottom;
+      else cellYBottom = rows() - 1;
+      newtext = QString("(%1/%2): ").arg( count ).arg( width );
+      newtext.append( event->summary() );
+      current = insertItem( event, qd, cellX, cellYTop, cellYBottom );
+      current->setText( newtext );
+      multiItems.append( current );
+    }
   }
 
   KOAgendaItem *next = 0;
@@ -1756,7 +1765,20 @@ void KOAgenda::selectItem(KOAgendaItem *item)
   }
   mSelectedItem = item;
   mSelectedItem->select();
+  assert( mSelectedItem->incidence() );
+  mSelectedUid = mSelectedItem->incidence()->uid();
   emit incidenceSelected( mSelectedItem->incidence() );
+}
+
+void KOAgenda::selectItemByUID( const QString& uid )
+{
+  KOAgendaItem *item;
+  for ( item = mItems.first(); item != 0; item = mItems.next() ) {
+    if( item->incidence() && item->incidence()->uid() == uid ) {
+      selectItem( item );
+      break;
+    }
+  }
 }
 
 // This function seems never be called.

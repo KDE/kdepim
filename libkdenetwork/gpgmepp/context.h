@@ -47,10 +47,13 @@ namespace GpgME {
 
   class Error {
   public:
-    Error( int e ) : mErr( e ) {}
+    Error( int e=0 ) : mErr( e ) {}
 
     const char * source() const;
     const char * asString() const;
+
+    int code() const;
+    int sourceID() const;
 
     bool isCanceled() const;
 

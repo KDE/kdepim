@@ -33,7 +33,7 @@
 #include <kstdguiitem.h>
 
 #include "egroupwarewizard.h"
-//#include "kolabwizard.h"
+#include "kolabwizard.h"
 #include "sloxwizard.h"
 
 #include "overviewpage.h"
@@ -99,11 +99,8 @@ void OverViewPage::showWizardEGroupware()
 
 void OverViewPage::showWizardKolab()
 {
-#if 0
-  // Kolab stuff disabled
   KolabWizard wizard;
   wizard.exec();
-#endif
 }
 
 void OverViewPage::showWizardSlox()

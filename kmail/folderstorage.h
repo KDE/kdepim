@@ -3,7 +3,7 @@
 
     This file is part of KMail.
 
-    Copyright (c) 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+    Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -143,6 +143,12 @@ public:
 
   /** Checks if the message is already "gotten" with getMsg */
   virtual bool isMessage(int idx);
+
+  /** Load message from file and do NOT store it, only return it.
+      This is equivalent to, but faster than, getMsg+unGetMsg
+      WARNING: the caller has to delete the returned value!
+  */
+  virtual KMMessage* readTemporaryMsg(int idx);
 
   /** Read a message and return a referece to a string */
   virtual QCString& getMsgString(int idx, QCString& mDest) = 0;
@@ -416,10 +422,13 @@ signals:
 
   /** Emitted after an expunge. If not quiet, changed() will be
       emmitted first. */
-  void expunged();
+  void expunged( KMFolder* );
 
   /** Emitted when the name of the folder changes. */
   void nameChanged();
+
+  /** Emitted when the readonly status of the folder changes. */
+  void readOnlyChanged(KMFolder*);
 
   /** Emitted before a message is removed from the folder. */
   void msgRemoved(KMFolder*, Q_UINT32 sernum);
@@ -523,7 +532,6 @@ protected:
   bool mNoContent;
   bool mNoChildren;
   bool mConvertToUtf8;
-  bool mContentsTypeChanged;
 
   /** Points at the reverse dictionary for this folder. */
   KMMsgDictREntry *mRDict;

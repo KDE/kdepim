@@ -1,7 +1,7 @@
 /*******************************************************************
  This file is part of KNotes.
 
- Copyright (c) 2004, Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+ Copyright (c) 2004, Bo Thorsen <bo@sonofthor.dk>
                2004, Michael Brade <brade@kde.org>
 
  This program is free software; you can redistribute it and/or modify
@@ -108,6 +108,9 @@ void KNotesResourceManager::deleteNote( KCal::Journal *journal )
     // Remove the journal from the resource it came from
     m_resourceMap[ uid ]->deleteNote( journal );
     m_resourceMap.remove( uid );
+
+    // libkcal does not delete the journal immediately, therefore it is ok to
+    // emit the journal here
     emit sigDeregisteredNote( journal );
 }
 

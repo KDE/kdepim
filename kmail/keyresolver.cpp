@@ -41,6 +41,7 @@
 #include "keyresolver.h"
 
 #include "kcursorsaver.h"
+#include "kleo_util.h"
 
 #include <ui/keyselectiondialog.h>
 #include <kleo/cryptobackendfactory.h>
@@ -67,19 +68,6 @@
 #include <iostream>
 
 #include <time.h>
-
-//
-// some helper functions indicating the need for CryptoMessageFormat
-// to be a class type :)
-//
-
-static inline bool isOpenPGP( Kleo::CryptoMessageFormat f ) {
-  return f == Kleo::InlineOpenPGPFormat || f == Kleo::OpenPGPMIMEFormat ;
-}
-
-static inline bool isSMIME( Kleo::CryptoMessageFormat f ) {
-  return f ==  Kleo::SMIMEFormat || f == Kleo::SMIMEOpaqueFormat ;
-}
 
 //
 // some predicates to be used in STL algorithms:
@@ -261,9 +249,11 @@ void Kleo::KeyResolver::SigningPreferenceCounter::operator()( const Kleo::KeyRes
 
 
 class Kleo::KeyResolver::EncryptionPreferenceCounter : public std::unary_function<Item,void> {
+  const Kleo::KeyResolver * _this;
 public:
-  EncryptionPreferenceCounter( EncryptionPreference defaultPreference )
-    : mDefaultPreference( defaultPreference ),
+  EncryptionPreferenceCounter( const Kleo::KeyResolver * kr, EncryptionPreference defaultPreference )
+    : _this( kr ),
+      mDefaultPreference( defaultPreference ),
       mTotal( 0 ),
       mNoKey( 0 ),
       mNeverEncrypt( 0 ),
@@ -296,6 +286,8 @@ private:
 };
 
 void Kleo::KeyResolver::EncryptionPreferenceCounter::operator()( Item & item ) {
+  if ( item.needKeys )
+    item.keys = _this->getEncryptionKeys( item.address, true );
   if ( item.keys.empty() ) {
     ++mNoKey;
     return;
@@ -387,7 +379,7 @@ namespace {
     CASE(SMIME);
     CASE(SMIMEOpaque);
     ++mTotal;
-  };
+  }
 #undef CASE
 
 } // anon namespace
@@ -500,7 +492,7 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry( const GpgME::Key & key, cons
     : ( sign
 	? signingKeyNearExpiryWarningThresholdInDays()
 	: encryptKeyNearExpiryWarningThresholdInDays() );
-  if ( daysTillExpiry <= threshold ) {
+  if ( threshold > -1 && daysTillExpiry <= threshold ) {
     const QString msg =
       key.protocol() == GpgME::Context::OpenPGP
       ? ( mine ? sign
@@ -713,7 +705,7 @@ std::vector<Kleo::KeyResolver::Item> Kleo::KeyResolver::getEncryptionItems( cons
     QString addr = canonicalAddress( *it ).lower();
     ContactPreferences& pref = lookupContactPreferences( addr );
 
-    items.push_back( Item( *it, getEncryptionKeys( *it, true ),
+    items.push_back( Item( *it, /*getEncryptionKeys( *it, true ),*/
 			   pref.encryptionPreference,
 			   pref.signingPreference,
 			   pref.cryptoMessageFormat ) );
@@ -770,7 +762,7 @@ Kleo::Action Kleo::KeyResolver::checkEncryptionPreferences( bool encryptionReque
        d->mOpenPGPEncryptToSelfKeys.empty() && d->mSMIMEEncryptToSelfKeys.empty() )
     return Impossible;
 
-  EncryptionPreferenceCounter count( mOpportunisticEncyption ? AskWheneverPossible : UnknownPreference );
+  EncryptionPreferenceCounter count( this, mOpportunisticEncyption ? AskWheneverPossible : UnknownPreference );
   count = std::for_each( d->mPrimaryEncryptionKeys.begin(), d->mPrimaryEncryptionKeys.end(),
 			 count );
   count = std::for_each( d->mSecondaryEncryptionKeys.begin(), d->mSecondaryEncryptionKeys.end(),
@@ -788,7 +780,7 @@ Kleo::Action Kleo::KeyResolver::checkEncryptionPreferences( bool encryptionReque
   if ( act != Ask ||
        std::for_each( d->mPrimaryEncryptionKeys.begin(), d->mPrimaryEncryptionKeys.end(),
        std::for_each( d->mSecondaryEncryptionKeys.begin(), d->mSecondaryEncryptionKeys.end(),
-		      EncryptionPreferenceCounter( UnknownPreference ) ) ).numAlwaysAskForEncryption() )
+		      EncryptionPreferenceCounter( this, UnknownPreference ) ) ).numAlwaysAskForEncryption() )
     return act;
   else
     return AskOpportunistic;
@@ -823,21 +815,13 @@ Kpgp::Result Kleo::KeyResolver::resolveAllKeys( bool signingRequested, bool encr
   return result;
 }
 
-static const Kleo::CryptoMessageFormat formats[] = {
-  Kleo::OpenPGPMIMEFormat,
-  Kleo::SMIMEFormat,
-  Kleo::SMIMEOpaqueFormat,
-  Kleo::InlineOpenPGPFormat,
-};
-static const unsigned int numFormats = sizeof formats / sizeof *formats ;
-
 Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys( bool signingRequested ) {
   //
   // 1. Get keys for all recipients:
   //
 
   for ( std::vector<Item>::iterator it = d->mPrimaryEncryptionKeys.begin() ; it != d->mPrimaryEncryptionKeys.end() ; ++it ) {
-    if ( !it->keys.empty() )
+    if ( !it->needKeys )
       continue;
     it->keys = getEncryptionKeys( it->address, false );
     if ( it->keys.empty() )
@@ -850,7 +834,7 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys( bool signingRequested ) {
   }
 
   for ( std::vector<Item>::iterator it = d->mSecondaryEncryptionKeys.begin() ; it != d->mSecondaryEncryptionKeys.end() ; ++it ) {
-    if ( !it->keys.empty() )
+    if ( !it->needKeys )
       continue;
     it->keys = getEncryptionKeys( it->address, false );
     if ( it->keys.empty() )
@@ -880,15 +864,15 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys( bool signingRequested ) {
 		     EncryptionFormatPreferenceCounter() );
 
   CryptoMessageFormat commonFormat = AutoFormat;
-  for ( unsigned int i = 0 ; i < numFormats ; ++i ) {
-    if ( !( formats[i] & mCryptoMessageFormats ) )
+  for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
+    if ( !( concreteCryptoMessageFormats[i] & mCryptoMessageFormats ) )
       continue;
-    if ( signingRequested && signingKeysFor( formats[i] ).empty() )
+    if ( signingRequested && signingKeysFor( concreteCryptoMessageFormats[i] ).empty() )
       continue;
-    if ( encryptToSelf() && encryptToSelfKeysFor( formats[i] ).empty() )
+    if ( encryptToSelf() && encryptToSelfKeysFor( concreteCryptoMessageFormats[i] ).empty() )
       continue;
-    if ( primaryCount.numOf( formats[i] ) == primaryCount.numTotal() ) {
-      commonFormat = formats[i];
+    if ( primaryCount.numOf( concreteCryptoMessageFormats[i] ) == primaryCount.numTotal() ) {
+      commonFormat = concreteCryptoMessageFormats[i];
       break;
     }
   }
@@ -914,8 +898,8 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys( bool signingRequested ) {
 
   // 3. Check for expiry:
 
-  for ( unsigned int i = 0 ; i < numFormats ; ++i ) {
-    const std::vector<SplitInfo> si_list = encryptionItems( formats[i] );
+  for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
+    const std::vector<SplitInfo> si_list = encryptionItems( concreteCryptoMessageFormats[i] );
     for ( std::vector<SplitInfo>::const_iterator sit = si_list.begin() ; sit != si_list.end() ; ++sit )
       for ( std::vector<GpgME::Key>::const_iterator kit = sit->keys.begin() ; kit != sit->keys.end() ; ++kit ) {
 	const Kpgp::Result r = checkKeyNearExpiry( *kit, "other encryption key near expiry warning",
@@ -1051,13 +1035,13 @@ Kpgp::Result Kleo::KeyResolver::resolveSigningKeysForSigningOnly() {
 
   CryptoMessageFormat commonFormat = AutoFormat;
 
-  for ( unsigned int i = 0 ; i < numFormats ; ++i ) {
-    if ( !( formats[i] & mCryptoMessageFormats ) )
+  for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
+    if ( !( concreteCryptoMessageFormats[i] & mCryptoMessageFormats ) )
       continue;
-    if ( signingKeysFor( formats[i] ).empty() )
+    if ( signingKeysFor( concreteCryptoMessageFormats[i] ).empty() )
       continue; // skip;
-    if ( count.numOf( formats[i] ) == count.numTotal() ) {
-      commonFormat = formats[i];
+    if ( count.numOf( concreteCryptoMessageFormats[i] ) == count.numTotal() ) {
+      commonFormat = concreteCryptoMessageFormats[i];
       break;
     }
   }
@@ -1102,9 +1086,9 @@ QStringList Kleo::KeyResolver::allRecipients() const {
 
 void Kleo::KeyResolver::collapseAllSplitInfos() {
   dump();
-  for ( unsigned int i = 0 ; i < numFormats ; ++i ) {
+  for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
     std::map<CryptoMessageFormat,FormatInfo>::iterator pos =
-      d->mFormatInfoMap.find( formats[i] );
+      d->mFormatInfoMap.find( concreteCryptoMessageFormats[i] );
     if ( pos == d->mFormatInfoMap.end() )
       continue;
     std::vector<SplitInfo> & v = pos->second.splitInfos;
@@ -1124,11 +1108,11 @@ void Kleo::KeyResolver::addToAllSplitInfos( const std::vector<GpgME::Key> & keys
   dump();
   if ( !f || keys.empty() )
     return;
-  for ( unsigned int i = 0 ; i < numFormats ; ++i ) {
-    if ( !( f & formats[i] ) )
+  for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
+    if ( !( f & concreteCryptoMessageFormats[i] ) )
       continue;
     std::map<CryptoMessageFormat,FormatInfo>::iterator pos =
-      d->mFormatInfoMap.find( formats[i] );
+      d->mFormatInfoMap.find( concreteCryptoMessageFormats[i] );
     if ( pos == d->mFormatInfoMap.end() )
       continue;
     std::vector<SplitInfo> & v = pos->second.splitInfos;
@@ -1439,9 +1423,9 @@ void Kleo::KeyResolver::addKeys( const std::vector<Item> & items ) {
   for ( std::vector<Item>::const_iterator it = items.begin() ; it != items.end() ; ++it ) {
     SplitInfo si( it->address );
     CryptoMessageFormat f = AutoFormat;
-    for ( unsigned int i = 0 ; i < numFormats ; ++i )
-      if ( mCryptoMessageFormats & formats[i] & it->format ) {
-	f = formats[i];
+    for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i )
+      if ( mCryptoMessageFormats & concreteCryptoMessageFormats[i] & it->format ) {
+	f = concreteCryptoMessageFormats[i];
 	break;
       }
     if ( f == AutoFormat )

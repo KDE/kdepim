@@ -30,7 +30,8 @@ class QComboBox;
 
 namespace Kleo {
   class KeyRequester;
-};
+}
+
 class QCheckBox;
 
 class CryptoWidget : public KAB::ContactEditorWidget

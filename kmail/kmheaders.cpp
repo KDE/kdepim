@@ -925,7 +925,7 @@ void KMHeaders::setFolder( KMFolder *aFolder, bool forceJumpToUnread )
                  this, SLOT(msgChanged()));
       disconnect(mFolder, SIGNAL(cleared()),
                  this, SLOT(folderCleared()));
-      disconnect(mFolder, SIGNAL(expunged()),
+      disconnect(mFolder, SIGNAL(expunged( KMFolder* )),
                  this, SLOT(folderCleared()));
       disconnect( mFolder, SIGNAL( statusMsg( const QString& ) ),
                   BroadcastStatus::instance(), SLOT( setStatusMsg( const QString& ) ) );
@@ -955,7 +955,7 @@ void KMHeaders::setFolder( KMFolder *aFolder, bool forceJumpToUnread )
               this, SLOT(msgChanged()));
       connect(mFolder, SIGNAL(cleared()),
               this, SLOT(folderCleared()));
-      connect(mFolder, SIGNAL(expunged()),
+      connect(mFolder, SIGNAL(expunged( KMFolder* )),
                  this, SLOT(folderCleared()));
       connect(mFolder, SIGNAL(statusMsg(const QString&)),
               BroadcastStatus::instance(), SLOT( setStatusMsg( const QString& ) ) );
@@ -987,17 +987,16 @@ void KMHeaders::setFolder( KMFolder *aFolder, bool forceJumpToUnread )
         mItems.resize( 0 );
       }
     }
+
+    CREATE_TIMER(updateMsg);
+    START_TIMER(updateMsg);
+    updateMessageList(true, forceJumpToUnread);
+    END_TIMER(updateMsg);
+    SHOW_TIMER(updateMsg);
+    makeHeaderVisible();
   }
-
-  CREATE_TIMER(updateMsg);
-  START_TIMER(updateMsg);
-  updateMessageList(true, forceJumpToUnread);
-  END_TIMER(updateMsg);
-  SHOW_TIMER(updateMsg);
-  makeHeaderVisible();
-
-  if (mFolder)
-    setFolderInfoStatus();
+  /* Doesn't the below only need to be done when the folder changed? - till */
+  setFolderInfoStatus();
 
   QString colText = i18n( "Sender" );
   if (mFolder && (mFolder->whoField().lower() == "to"))
@@ -1021,7 +1020,7 @@ void KMHeaders::setFolder( KMFolder *aFolder, bool forceJumpToUnread )
 //-----------------------------------------------------------------------------
 void KMHeaders::msgChanged()
 {
-  emit maybeDeleting();
+ // emit maybeDeleting();
   if (mFolder->count() == 0) { // Folder cleared
     clear();
     return;
@@ -1351,15 +1350,25 @@ void KMHeaders::msgRemoved(int id, QString msgId, QString strippedSubjMD5)
   mImperfectlyThreadedList.removeRef(removedItem);
   delete removedItem;
   // we might have rethreaded it, in which case its current state will be lost
-  if ( curItem && curItem != removedItem ) {
-    setCurrentItem( curItem );
-    setSelectionAnchor( currentItem() );
+  if ( curItem ) {
+    if ( curItem != removedItem ) {
+      setCurrentItem( curItem );
+      setSelectionAnchor( currentItem() );
+    } else {
+      // We've removed the current item, which means it was removed from
+      // something other than a user move or copy, which would have selected
+      // the next logical mail. This can happen when the mail is deleted by
+      // a filter, or some other behind the scenes action. Select something
+      // sensible, then, and make sure the reader window is cleared.
+      emit maybeDeleting();
+      int contentX, contentY;
+      KMHeaderItem *nextItem = prepareMove( &contentX, &contentY );
+      finalizeMove( nextItem, contentX, contentY );
+    }
   }
-
   /* restore signal */
   connect( this, SIGNAL(currentChanged(QListViewItem*)),
            this, SLOT(highlightMessage(QListViewItem*)));
-
 }
 
 
@@ -1551,27 +1560,17 @@ void KMHeaders::applyFiltersOnMsg()
   for (KMMsgBase *msg = msgList.first(); msg; msg = msgList.next())
     scheduler->execFilters( msg );
 #else
-  emit maybeDeleting();
+  int contentX, contentY;
+  KMHeaderItem *nextItem = prepareMove( &contentX, &contentY );
 
-  disconnect(this,SIGNAL(currentChanged(QListViewItem*)),
-             this,SLOT(highlightMessage(QListViewItem*)));
   KMMessageList* msgList = selectedMsgs();
-  int topX = contentsX();
-  int topY = contentsY();
-
   if (msgList->isEmpty())
     return;
-  QListViewItem *qlvi = currentItem();
-  QListViewItem *next = qlvi;
-  while (next && next->isSelected())
-    next = next->itemBelow();
-  if (!next || (next && next->isSelected())) {
-    next = qlvi;
-    while (next && next->isSelected())
-      next = next->itemAbove();
-  }
+  finalizeMove( nextItem, contentX, contentY );
 
-  clearSelection();
+  CREATE_TIMER(filter);
+  START_TIMER(filter);
+
   for (KMMsgBase* msgBase=msgList->first(); msgBase; msgBase=msgList->next()) {
     int idx = msgBase->parent()->find(msgBase);
     assert(idx != -1);
@@ -1588,26 +1587,8 @@ void KMHeaders::applyFiltersOnMsg()
       if (slotFilterMsg(msg) == 2) break;
     }
   }
-
-  setContentsPos( topX, topY );
-  emit selected( 0 );
-  if (next) {
-    setCurrentItem( next );
-    setSelected( next, true );
-    setSelectionAnchor( currentItem() );
-    highlightMessage( next );
-  }
-  else if (currentItem()) {
-    setSelected( currentItem(), true );
-    setSelectionAnchor( currentItem() );
-    highlightMessage( currentItem() );
-  }
-  else
-    emit selected( 0 );
-
-  makeHeaderVisible();
-  connect(this,SIGNAL(currentChanged(QListViewItem*)),
-          this,SLOT(highlightMessage(QListViewItem*)));
+  END_TIMER(filter);
+  SHOW_TIMER(filter);
 #endif
 }
 
@@ -1709,6 +1690,8 @@ void KMHeaders::finalizeMove( KMHeaderItem *item, int contentX, int contentY )
 //-----------------------------------------------------------------------------
 void KMHeaders::moveMsgToFolder ( KMFolder* destFolder, bool askForConfirmation )
 {
+  if ( destFolder == mFolder ) return; // Catch the noop case
+
   KMMessageList msgList = *selectedMsgs();
   if ( !destFolder && askForConfirmation &&    // messages shall be deleted
        KMessageBox::warningContinueCancel(this,
@@ -1737,6 +1720,8 @@ void KMHeaders::slotMoveCompleted( KMCommand *command )
   kdDebug(5006) << k_funcinfo << command->result() << endl;
   bool deleted = static_cast<KMMoveCommand *>( command )->destFolder() == 0;
   if ( command->result() == KMCommand::OK ) {
+    // make sure the current item is shown
+    makeHeaderVisible();
 #if 0 // enable after the message-freeze
     BroadcastStatus::instance()->setStatusMsg(
        deleted ? i18nTODO("Messages deleted successfully.") : i18nTODO("Messages moved successfully") );

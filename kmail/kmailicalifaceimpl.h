@@ -2,7 +2,7 @@
     This file is part of KMail.
 
     Copyright (c) 2003 Steffen Hansen <steffen@klaralvdalens-datakonsult.se>
-    Copyright (c) 2003 - 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+    Copyright (c) 2003 - 2004 Bo Thorsen <bo@sonofthor.dk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -36,7 +36,6 @@
 
 #include "kmailicalIface.h"
 #include "kmfoldertype.h"
-
 #include <kfoldertree.h>
 
 #include <qdict.h>
@@ -164,12 +163,7 @@ public slots:
   void slotRefresh( const QString& type);
 
 private slots:
-  void slotRefreshCalendar();
-  void slotRefreshTasks();
-  void slotRefreshJournals();
-  void slotRefreshContacts();
-  void slotRefreshNotes();
-
+  void slotRefreshFolder( KMFolder* folder );
   void slotCheckDone();
   void slotMessageRetrieved( KMMessage* );
 
@@ -200,7 +194,7 @@ private:
   KMFolderType mFolderType;
 
   // groupware folder icons:
-  static QPixmap *pixContacts, *pixCalendar, *pixNotes, *pixTasks;
+  static QPixmap *pixContacts, *pixCalendar, *pixNotes, *pixTasks, *pixJournals;
 
   bool mUseResourceIMAP;
   bool mHideFolders;

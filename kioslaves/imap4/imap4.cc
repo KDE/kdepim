@@ -1212,7 +1212,6 @@ IMAP4Protocol::special (const QByteArray & aData)
     stream >> cmd;
     if ( hasCapability( "ACL" ) ) {
       specialACLCommand( cmd, stream );
-      finished();
     } else {
       error( ERR_UNSUPPORTED_ACTION, "ACL" );
     }
@@ -1285,6 +1284,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
       return;
     }
     completeQueue.removeRef (cmd);
+    finished();
     break;
   }
   case 'D': // DELETEACL
@@ -1303,6 +1303,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
       return;
     }
     completeQueue.removeRef (cmd);
+    finished();
     break;
   }
   case 'G': // GETACL
@@ -1323,11 +1324,13 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     // since I don't think it can be used in login names.
     kdDebug(7116) << getResults() << endl;
     infoMessage(getResults().join( " " ));
+    finished();
     break;
   }
   case 'L': // LISTRIGHTS
   {
     // Do we need this one? It basically shows which rights are tied together, but that's all?
+    error( ERR_UNSUPPORTED_ACTION, QString(QChar(command)) );
     break;
   }
   case 'M': // MYRIGHTS
@@ -1348,10 +1351,12 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
       Q_ASSERT( lst.count() == 1 );
       infoMessage( lst.first() );
     }
+    finished();
     break;
   }
   default:
     kdWarning(7116) << "Unknown special ACL command:" << command << endl;
+    error( ERR_UNSUPPORTED_ACTION, QString(QChar(command)) );
   }
 }
 
@@ -2060,7 +2065,7 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
         {
           _hierarchyDelimiter = (*it).hierarchyDelimiter();
           mHierarchyDelim[myNamespace] = _hierarchyDelimiter;
-          kdDebug(7116) << "IMAP4: parseURL - got delimiter " << 
+          kdDebug(7116) << "IMAP4: parseURL - got delimiter " <<
             _hierarchyDelimiter << endl;
         }
       }

@@ -74,7 +74,7 @@ namespace {
   }
 
   QString TestColumnStrategy::toolTip( const GpgME::Key & key, int ) const {
-    return "Fingerprint: " + QString::fromUtf8( key.subkey(0).fingerprint() );
+    return "Fingerprint: " + QString::fromUtf8( key.primaryFingerprint() );
   }
 
   QString TestColumnStrategy::text( const GpgME::Key & key, int col ) const {

@@ -32,6 +32,7 @@ Comment[pt]=Configuração do Konnector
 Comment[pt_BR]=Definições do Konnector
 Comment[ro]=Definiţii Konnector
 Comment[ru]=Определения Konnector
+Comment[se]=Konnector-definišuvnnat
 Comment[sk]=Definície Konnector
 Comment[sl]=Definicije Konnectorja
 Comment[sr]=Дефиниције Konnector-а
@@ -43,7 +44,6 @@ Comment[tr]=Konnector Tanımlamaları
 Comment[uk]=Визначення Konnector
 Comment[ven]=Dzithalutshedzo dza Konnector
 Comment[xh]=Iinkcazelo ze Konnector
-Comment[xx]=xxKonnector Definitionsxx
 Comment[zh_CN]=Konnector 定义
 Comment[zh_TW]=Kontour 定義
 Comment[zu]=Izincazelo ze-Konnector
@@ -56,7 +56,6 @@ Name[hu]=Konnektor
 Name[nso]=Mokgomaganyi
 Name[pl]=Łącznik
 Name[ta]=இணைப்பான்
-Name[xx]=xxKonnectorxx
 [PropertyDef::Group]
 Type=QString
 

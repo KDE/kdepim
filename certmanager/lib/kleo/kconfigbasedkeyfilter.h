@@ -91,7 +91,7 @@ namespace Kleo {
       Is = 1,
       IsNot = 2,
       IsAtLeast = 3,
-      IsAtMost = 4,
+      IsAtMost = 4
     };
     LevelState mOwnerTrust;
     GpgME::Key::OwnerTrust mOwnerTrustReferenceLevel;

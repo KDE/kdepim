@@ -1,224 +1,101 @@
-#!/usr/bin/make -f
-# -*- makefile -*-
-# Sample debian/rules that uses debhelper.
-# GNU copyright 1997 to 1999 by Joey Hess.
-#
-# Modified to make a template file for a multi-binary package with separated
-# build-arch and build-indep targets  by Bill Allombert 2001
+#! /usr/bin/make -f
 
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+include /usr/share/cdbs/1/rules/debhelper.mk
+include debian/kde.mk
+include /usr/share/cdbs/1/rules/simple-patchsys.mk
+include /usr/share/cdbs/1/rules/utils.mk
 
-# This has to be exported to make some magic below work.
-export DH_OPTIONS
+DEB_KDE_CVS_MAKE := yes
+DEB_KDE_ENABLE_FINAL := yes
+DEB_KDE_APIDOX := yes
 
-# These are used for cross-compiling and for saving the configure script
-# from having to guess our platform (since we know it already)
-DEB_HOST_GNU_TYPE	?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
-DEB_BUILD_GNU_TYPE	?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+DEB_CONFIGURE_EXTRA_FLAGS := --enable-shared --enable-static
 
-CFLAGS = -Wall -g
+post-patches:: debian/stamp-libtool-update
 
-ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-	CFLAGS += -O0
-else
-	CFLAGS += -O2
-endif
-ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
-	INSTALL_PROGRAM += -s
-endif
+debian/stamp-libtool-update:
+	cp -f /usr/share/libtool/libtool.m4 admin/libtool.m4.in
+	cp -f /usr/share/libtool/ltmain.sh admin/ltmain.sh
+	touch debian/stamp-libtool-update
 
-objdir = $(CURDIR)/obj-$(DEB_BUILD_GNU_TYPE)
-
--include debian/debiandirs
-
-debian/debiandirs: admin/debianrules
-	perl -w admin/debianrules echodirs > debian/debiandirs
-
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-
-	# Apply Debian specific patches
-	if test -d $(CURDIR)/debian/patches ;\
-	then \
-		for i in $(CURDIR)/debian/patches/*.diff.uu ;\
-		do \
-			cd $(CURDIR)/debian/patches ;\
-			uudecode "$$i" ;\
-			cd $(CURDIR) ;\
-		done ;\
-		patches=$$(find $(CURDIR)/debian/patches -name *.diff | sort);\
-	fi ;\
-	if test ! -f patch-stamp; then \
-		for patch in $$patches ;\
-		do \
-			echo APPLYING PATCH\: "$${patch##*/}" ;\
-			patch -p1 < "$$patch" ;\
-		done ;\
-		touch patch-stamp ;\
-	fi
-
-	# KDE CVS does not have aclocal.m4 or configure
-	if test ! -f configure; then \
-		$(MAKE) -f admin/Makefile.common ;\
-	fi
-
-	# ensure configure is executable
-	chmod +x configure
-
-	# make build directory
-	mkdir $(objdir)
-
-	# run configure with build tree $(objdir)
-	cd $(objdir) && \
-	../configure $(configkde) --enable-final \
-	--with-extra-includes=/usr/include/libpisock \
-	--with-extra-includes=/usr/include/glib-1.2 \
-	--with-extra-includes=/usr/lib/glib/include \
-	--with-extra-includes=/usr/include/gtk-1.2
-
-	touch configure-stamp
-
-#Architecture
-build: build-arch build-indep
-
-build-arch: build-arch-stamp
-build-arch-stamp: configure-stamp
-	dh_testdir
-
-	cd $(objdir) && \
-	$(MAKE)
-
-	# generate manpages
-	for i in debian/man/*.sgml; do \
-		docbook-to-man $$i > `dirname $$i`/`basename $$i .sgml`.1 ;\
+common-build-arch:: debian/stamp-man-pages
+debian/stamp-man-pages:
+# Generate man pages for the programs
+	for f in debian/man/*.man; do \
+		soelim -Idebian/man $$f \
+		 >debian/man/`basename $$f .man`.1; \
 	done
+	touch debian/stamp-man-pages
 
-	touch build-arch-stamp
+clean::
+	rm -f debian/man/*.1
+	rm -f debian/stamp-libtool-update debian/stamp-man-pages
+	rm -f admin/libtool.m4.in admin/ltmain.sh
+	rm -f Makefile.cvs
+	rm -f debian/patches/04_korganizer_makefile.diff \
+		debian/patches/05_lib_link.diff
 
-build-indep: build-indep-stamp
-build-indep-stamp: configure-stamp
-	dh_testdir
+DEB_INSTALL_DOCS_ALL :=
 
-	cd $(objdir) && \
-	$(MAKE)
+DEB_INSTALL_CHANGELOGS_ALL = $(shell for f in ChangeLog CHANGELOG CHANGES; do if test -s $(cdbs_curpkg)/$$f; then echo $(cdbs_curpkg)/$$f; break; fi; done)
 
-	cd $(objdir) && \
-	$(MAKE) apidox
+shlibs_ver=4:3.3.1
+DEB_DH_MAKESHLIBS_ARGS_libkcal2 := -V'libkcal2 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libkdenetwork2 := -V'libkdenetwork2 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libkdepim1 := -V'libkdepim1 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libkgantt0 := -V'libkgantt0 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libkleopatra0 := -V'libkleopatra0 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libkpimexchange1 := -V'libkpimexchange1 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libkpimidentities1 := -V'libkpimidentities1 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libksieve0 := -V'libksieve0 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libmimelib1 := -V'libmimelib1 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_kaddressbook := -V
+DEB_DH_MAKESHLIBS_ARGS_kalarm := -V
+DEB_DH_MAKESHLIBS_ARGS_kdepim-wizards := -V
+DEB_DH_MAKESHLIBS_ARGS_kitchensync := -V
+DEB_DH_MAKESHLIBS_ARGS_kleopatra := -V
+DEB_DH_MAKESHLIBS_ARGS_kmail := -V
+DEB_DH_MAKESHLIBS_ARGS_knode := -V
+DEB_DH_MAKESHLIBS_ARGS_knotes := -V
+DEB_DH_MAKESHLIBS_ARGS_kontact := -V
+DEB_DH_MAKESHLIBS_ARGS_korganizer := -V
+DEB_DH_MAKESHLIBS_ARGS_kpilot := -V
+DEB_DH_MAKESHLIBS_ARGS_ksync := -V
+DEB_DH_MAKESHLIBS_ARGS_ktnef := -V
 
-	touch build-indep-stamp
+DEB_SHLIBDEPS_INCLUDE := \
+	debian/kaddressbook/usr/lib \
+	debian/kalarm/usr/lib \
+	debian/kdepim-wizards/usr/lib \
+	debian/kitchensync/usr/lib \
+	debian/kleopatra/usr/lib \
+	debian/kmail/usr/lib \
+	debian/knode/usr/lib \
+	debian/knotes/usr/lib \
+	debian/kontact/usr/lib \
+	debian/korganizer/usr/lib \
+	debian/kpilot/usr/lib \
+	debian/ksync/usr/lib \
+	debian/ktnef/usr/lib \
+	debian/libkcal2/usr/lib \
+	debian/libkdenetwork2/usr/lib \
+	debian/libkdepim1/usr/lib \
+	debian/libkgantt0/usr/lib \
+	debian/libkleopatra0/usr/lib \
+	debian/libkpimexchange1/usr/lib \
+	debian/libkpimidentities1/usr/lib \
+	debian/libksieve0/usr/lib \
+	debian/libmimelib1/usr/lib
 
-debian-clean:
-	dh_testdir
-	dh_testroot
-
-	dh_clean
-
-clean:
-	dh_testdir
-	dh_testroot
-	rm -f build-arch-stamp build-indep-stamp configure-stamp \
-		debian/debiandirs debian/man/*.1
-
-	# Remove Debian specific patches
-	if test -d $(CURDIR)/debian/patches ;\
-	then \
-		patches=$$(find $(CURDIR)/debian/patches -name *.diff | sort -r);\
-	fi ;\
-	if test -f patch-stamp; then \
-		for patch in $$patches ;\
-		do \
-			echo REMOVING PATCH\: "$${patch##*/}" ;\
-			patch -p1 -R < "$$patch" ;\
-		done ;\
-		for i in $(CURDIR)/debian/patches/*.diff.uu ;\
-		do \
-			 rm -f "$${i%%.uu}" ;\
-		done ;\
-		rm -f patch-stamp ;\
-	fi
-
-	# Remove build tree
-	rm -rf $(objdir)
-
-	# if Makefile exists run distclean
-	if test -f Makefile; then \
-		$(MAKE) distclean; \
-	fi
-
-	if test -d CVS; then \
-		$(MAKE) -f admin/Makefile.common cvs-clean ;\
-	fi
-
-	dh_clean
-
-install: install-arch install-indep
-
-install-arch:
-	dh_testdir
-	dh_testroot
-	dh_clean -k -s
-	dh_installdirs -s
-
-	cd $(objdir) && \
-	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
-
-	dh_install -s
-
-install-indep:
-	dh_testdir
-	dh_testroot
-	dh_clean -k -i
-	dh_installdirs -i
-
-	cd $(objdir) && \
-	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
-
-	cd $(objdir) && \
-	$(MAKE) install-apidox DESTDIR=$(CURDIR)/debian/tmp
-
-	dh_install -i
-
-# Must not depend on anything. This is to be called by
-# binary-arch/binary-indep
-# in another 'make' thread.
-binary-common:
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs
-	dh_installdocs
-#	dh_installexamples
-	dh_installmenu
-	dh_installdebconf
-#	dh_installlogrotate
-#	dh_installemacsen
-#	dh_installpam
-#	dh_installmime
-#	dh_installinit
-#	dh_installcron
-#	dh_installinfo
-	dh_installman
-	dh_link
-	dh_strip
-	dh_compress -X.bz2 -X.css -X.dcl -X.docbook -X-license -X.tag
-	dh_fixperms
-#	dh_perl
-#	dh_python
-	dh_makeshlibs -V
-	dh_installdeb
-	dh_shlibdeps -ldebian/kaddressbook/usr/lib:debian/kalarm/usr/lib:debian/kmail/usr/lib:debian/kontact/usr/lib:debian/korganizer/usr/lib:debian/kpilot/usr/lib:debian/ksync/usr/lib:debian/ktnef/usr/lib:debian/libkcal2/usr/lib:debian/libkdenetwork2/usr/lib:debian/libkdepim1/usr/lib:debian/libkdgantt0/usr/lib:debian/libkgantt0/usr/lib:debian/libkpimexchange1/usr/lib:debian/libksieve0/usr/lib:debian/libmimelib1/usr/lib
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-# Build architecture independant packages using the common target.
-binary-indep: build-indep install-indep
-	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
-
-# Build architecture dependant packages using the common target.
-binary-arch: build-arch install-arch
-	$(MAKE) -f debian/rules DH_OPTIONS=-s binary-common
-
-binary: binary-arch binary-indep
-.PHONY: build clean binary-indep binary-arch binary install install-indep install-arch configure
+# kontact starts fine without korganizer or kpilot dependencies
+DEB_DH_SHLIBDEPS_ARGS += $(DEB_DH_SHLIBDEPS_ARGS_$(cdbs_curpkg))
+DEB_DH_SHLIBDEPS_ARGS_kontact := \
+	-Xusr/lib/kde3/libkontact_korganizerplugin.so \
+	-Xusr/lib/kde3/libkontact_kpilotplugin.so \
+	-Xusr/lib/kde3/libkontact_todoplugin.so -- \
+	-dRecommends \
+	debian/kontact/usr/lib/kde3/libkontact_korganizerplugin.so \
+	debian/kontact/usr/lib/kde3/libkontact_todoplugin.so \
+	-dSuggests \
+	debian/kontact/usr/lib/kde3/libkontact_kpilotplugin.so \
+	-dDepends	# Since -u args go first in dpkg-shlibdeps call

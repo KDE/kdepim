@@ -83,8 +83,8 @@ public:
 
 	PilotAppCategory(PilotRecord* rec) :
 		fAttrs((rec)?rec->getAttrib():0),
-		fId((rec)?rec->getID():0),
-		fCategory((rec)?rec->getCat():0)
+		fId((rec)?rec->id():0),
+		fCategory((rec)?rec->category():0)
 	{} ;
 
 	PilotAppCategory(const PilotAppCategory &copyFrom) :
@@ -153,5 +153,28 @@ public:
 	static QTextCodec *setupPilotCodec(const QString &);
 	static QString codecName();
 };
+
+
+/*
+** Lacking templates, we need to do this with a macro. Since the
+** AppInfo for each class may be different, this needs to get
+** expanded in a context where the type of the AppInfo is known.
+*/
+
+#define PILOTAPPCATEGORY_SETCATEGORY(appinfo,label) \
+	int emptyAvailable = -1; \
+	if (label.isEmpty()) { setCat(0); return true; } \
+	for (int catId = 1; catId < 16; catId++) { \
+		QString aCat; \
+		if (!appinfo.category.name[catId][0]) { \
+			emptyAvailable=catId; continue; \
+		} \
+		aCat = codec()->toUnicode(appinfo.category.name[catId]); \
+		if (label == aCat) { setCat(catId); return true; } \
+	} \
+	if (emptyAvailable<0) return false; \
+	qstrncpy(appinfo.category.name[emptyAvailable], codec()->fromUnicode(label), 16); \
+	setCat(emptyAvailable); \
+	return true;
 
 #endif

@@ -213,7 +213,7 @@ QString KKioDrop::mailbox() const
 QString KKioDrop::auth() const
 {
 	return ( _metadata->contains("auth")?(*_metadata)["auth"]:"" );
-};
+}
 
 void KKioDrop::recheck()
 {

@@ -272,7 +272,8 @@ bool KOTodoEditor::processInput()
 
   } else {
     mTodo = new Todo;
-    mTodo->setOrganizer( KOPrefs::instance()->email() );
+    mTodo->setOrganizer( Person( KOPrefs::instance()->fullName(), 
+                         KOPrefs::instance()->email() ) );
 
     writeTodo( mTodo );
     if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
@@ -369,10 +370,18 @@ void KOTodoEditor::readTodo( Todo *todo )
 
 void KOTodoEditor::writeTodo( Todo *todo )
 {
+  Incidence *oldIncidence = todo->clone();
+
+  mRecurrence->writeIncidence( todo );
   mGeneral->writeTodo( todo );
   mDetails->writeEvent( todo );
-  mRecurrence->writeIncidence( todo );
   mAttachments->writeIncidence( todo );
+
+  if ( *(oldIncidence->recurrence()) != *(todo->recurrence() ) ) {
+    todo->setDtDue( todo->dtDue(), true );
+    if ( todo->hasStartDate() )
+      todo->setDtStart( todo->dtStart() );
+  }
 
   // set related event, i.e. parent to-do in this case.
   if ( mRelatedTodo ) {

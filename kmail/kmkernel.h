@@ -53,7 +53,6 @@ class KProgress;
 class KPassivePopup;
 class KMMainWin;
 class KMainWindow;
-class KMGroupware;
 class KMailICalIfaceImpl;
 class KMReaderWin;
 class KSystemTray;
@@ -121,6 +120,9 @@ public:
   DCOPRef openComposer(const QString &to, const QString &cc,
                        const QString &bcc, const QString &subject,
                        const QString &body,bool hidden);
+
+  /** DCOP call used by the Kontact plugin to create a new message. */
+  DCOPRef newMessage();
 
   int sendCertificate( const QString& to, const QByteArray& certData );
 
@@ -204,7 +206,6 @@ public:
   /** Expire all folders, used for the gui action */
   void expireAllFoldersNow();
 
-  KMGroupware& groupware();
   KMailICalIfaceImpl& iCalIface();
 
   bool firstStart() { return the_firstStart; }
@@ -293,10 +294,10 @@ protected slots:
   void slotDataReq(KIO::Job*,QByteArray&);
   void slotResult(KIO::Job*);
   void slotConfigChanged();
-  void slotFolderRemoved(KMFolder*);
 
 signals:
   void configChanged();
+  void folderRemoved( KMFolder* aFolder );
 
 private:
   void openReader( bool onlyCheck );
@@ -351,7 +352,6 @@ private:
   QTimer *mDeadLetterTimer;
   int mDeadLetterInterval;
   QTimer *mBackgroundTasksTimer;
-  KMGroupware * mGroupware;
   KMailICalIfaceImpl* mICalIface;
   JobScheduler* mJobScheduler;
   // temporary mainwin

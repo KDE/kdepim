@@ -1,7 +1,7 @@
 /*******************************************************************
  This file is part of KNotes.
 
- Copyright (c) 2004, Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+ Copyright (c) 2004, Bo Thorsen <bo@sonofthor.dk>
                2004, Michael Brade <brade@kde.org>
 
  This program is free software; you can redistribute it and/or modify
@@ -37,8 +37,6 @@
 
 #include <libkcal/icalformat.h>
 
-#include "knoteslegacy.h"
-
 #include "knotes/resourcelocal.h"
 #include "knotes/resourcemanager.h"
 
@@ -59,15 +57,6 @@ bool ResourceLocal::load()
 {
     mCalendar.load( KGlobal::dirs()->saveLocation( "data" ) + "knotes/notes.ics" );
 
-    // TODO
-    // initialize the Calendar
-    //mCalendar.setOwner(..);
-    //mCalendar.setEmail(..);
-
-    // read the old config files into mCalendar and convert them
-    if ( KNotesLegacy::convert( &mCalendar ) )
-        save();
-
     KCal::Journal::List notes = mCalendar.journals();
     KCal::Journal::List::ConstIterator it;
     for ( it = notes.begin(); it != notes.end(); ++it )
@@ -78,7 +67,7 @@ bool ResourceLocal::load()
 
 bool ResourceLocal::save()
 {
-    QString file = KGlobal::dirs()->saveLocation( "data" ) + "knotes/notes.ics";
+    QString file = KGlobal::dirs()->saveLocation( "data", "knotes/" ) + "notes.ics";
 
     if ( !mCalendar.save( file, new KCal::ICalFormat() ) )
     {

@@ -512,6 +512,7 @@ void KOTodoView::updateView()
 {
 //  kdDebug(5850) << "KOTodoView::updateView()" << endl;
   int oldPos = mTodoListView->contentsY();
+  mItemsToDelete.clear();
   mTodoListView->clear();
 
   Todo::List todoList = calendar()->todos();
@@ -750,7 +751,7 @@ void KOTodoView::showItem( QListViewItem *item, const QPoint &, int )
 void KOTodoView::popupMenu( QListViewItem *item, const QPoint &, int column )
 {
   mActiveItem = static_cast<KOTodoViewItem *>( item );
-  if ( item ) {
+  if ( mActiveItem && !mActiveItem->todo()->isReadOnly() ) {
     QDate date = mActiveItem->todo()->dtDue().date();
     if ( mActiveItem->todo()->hasDueDate () ) {
       mMovePopupMenu->datePicker()->setDate( date );
@@ -987,16 +988,19 @@ void KOTodoView::purgeCompleted()
 
 void KOTodoView::addQuickTodo()
 {
-  Todo *todo = new Todo();
-  todo->setSummary( mQuickAdd->text() );
-  todo->setOrganizer( KOPrefs::instance()->email() );
-  if ( !calendar()->addTodo( todo ) ) {
-    KODialogManager::errorSaveTodo( this );
-    return;
+  if ( ! mQuickAdd->text().stripWhiteSpace().isEmpty() ) {
+    Todo *todo = new Todo();
+    todo->setSummary( mQuickAdd->text() );
+    todo->setOrganizer( Person( KOPrefs::instance()->fullName(), 
+                        KOPrefs::instance()->email() ) );
+    if ( !calendar()->addTodo( todo ) ) {
+      KODialogManager::errorSaveTodo( this );
+      return;
+    }
+    mQuickAdd->setText( QString::null );
+    emit incidenceAdded( todo );
+    updateView();
   }
-  mQuickAdd->setText( QString::null );
-  emit incidenceAdded( todo );
-  updateView();
 }
 
 void KOTodoView::emitCompletedSignal( Todo *todo )

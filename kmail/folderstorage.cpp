@@ -3,7 +3,7 @@
 
     This file is part of KMail.
 
-    Copyright (c) 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+    Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -427,18 +427,12 @@ void FolderStorage::take(QPtrList<KMMessage> msgList)
 //-----------------------------------------------------------------------------
 KMMessage* FolderStorage::getMsg(int idx)
 {
-  KMMsgBase* mb;
-
   if(!(idx >= 0 && idx <= count()))
     return 0;
 
-  mb = getMsgBase(idx);
+  KMMsgBase* mb = getMsgBase(idx);
   if (!mb) return 0;
 
-#if 0
-  if (mb->isMessage()) return ((KMMessage*)mb);
-  return readMsg(idx);
-#else
   KMMessage *msg = 0;
   bool undo = mb->enableUndo();
   if (mb->isMessage()) {
@@ -453,9 +447,12 @@ KMMessage* FolderStorage::getMsg(int idx)
 	  mCompactable = FALSE; // Don't compact
 	  writeConfig();
       }
+
   }
   msg->setEnableUndo(undo);
 
+  // Can't happen. Either isMessage and we had a sernum, or readMsg gives us one
+  // (via insertion into mMsgList).
   if (msg->getMsgSerNum() == 0) {
     msg->setMsgSerNum(kmkernel->msgDict()->insert(0, msg, idx));
     kdDebug(5006) << "Serial number generated for message in folder "
@@ -463,9 +460,34 @@ KMMessage* FolderStorage::getMsg(int idx)
   }
   msg->setComplete( true );
   return msg;
-#endif
+}
 
+//-----------------------------------------------------------------------------
+KMMessage* FolderStorage::readTemporaryMsg(int idx)
+{
+  if(!(idx >= 0 && idx <= count()))
+    return 0;
 
+  KMMsgBase* mb = getMsgBase(idx);
+  if (!mb) return 0;
+
+  unsigned long sernum = mb->getMsgSerNum();
+
+  KMMessage *msg = 0;
+  bool undo = mb->enableUndo();
+  if (mb->isMessage()) {
+    // the caller will delete it, so we must make a copy it
+    msg = new KMMessage(*(KMMessage*)mb);
+    msg->setMsgSerNum(sernum);
+  } else {
+    // ## Those three lines need to be moved to a virtual method for KMFolderSearch, like readMsg
+    msg = new KMMessage(*(KMMsgInfo*)mb);
+    msg->setMsgSerNum(sernum); // before fromDwString so that readyToShow uses the right sernum
+    msg->fromDwString(getDwString(idx));
+  }
+  msg->setEnableUndo(undo);
+  msg->setComplete( true );
+  return msg;
 }
 
 
@@ -715,7 +737,7 @@ int FolderStorage::expunge()
   if (mAutoCreateIndex)
     writeConfig();
   emit changed();
-  emit expunged();
+  emit expunged( folder() );
 
   return 0;
 }
@@ -816,7 +838,6 @@ void FolderStorage::readConfig()
   int type = config->readNumEntry( "ContentsType", 0 );
   if ( type < 0 || type > KMail::ContentsTypeLast ) type = 0;
   setContentsType( static_cast<KMail::FolderContentsType>( type ) );
-  mContentsTypeChanged = false;
 
   if( folder() ) folder()->readConfig( config );
 }

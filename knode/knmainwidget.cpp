@@ -171,7 +171,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
                                         "all messages are shown again." ) );
 
   QLabel *lbl = new QLabel(i18n("&Search:"), q_uicksearch, "kde toolbar widget");
-  QLineEdit *s_earchLineEdit = new KPIM::KListViewSearchLine(q_uicksearch, h_drView, "KListViewSearchLine");
+  s_earchLineEdit = new KPIM::KListViewSearchLine(q_uicksearch, h_drView, "KListViewSearchLine");
   q_uicksearch->setStretchableWidget(s_earchLineEdit);
   lbl->setBuddy(s_earchLineEdit);
   connect( resetQuickSearch, SIGNAL( activated() ), s_earchLineEdit, SLOT( clear() ));
@@ -1172,6 +1172,7 @@ void KNMainWidget::slotCollectionSelected(QListViewItem *i)
   KNGroup *selectedGroup=0;
   KNFolder *selectedFolder=0;
 
+  s_earchLineEdit->clear();
   h_drView->clear();
   slotArticleSelected(0);
 
@@ -1902,7 +1903,7 @@ void KNMainWidget::slotFolEmpty()
       i18n("This folder cannot be emptied at the moment\nbecause some of its articles are currently in use.") );
       return;
     }
-    if( KMessageBox::Yes == KMessageBox::warningContinueCancel(
+    if( KMessageBox::Continue == KMessageBox::warningContinueCancel(
         this, i18n("Do you really want to delete all articles in %1?").arg(f_olManager->currentFolder()->name()),"",KGuiItem(i18n("&Delete"),"editdelete")) )
       f_olManager->emptyFolder(f_olManager->currentFolder());
   }

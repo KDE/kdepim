@@ -1,0 +1,32 @@
+Index: kalarmd/Makefile.am
+===================================================================
+RCS file: /home/kde/kdepim/kalarmd/Makefile.am,v
+retrieving revision 1.46
+diff -u -r1.46 Makefile.am
+--- kalarmd/Makefile.am	22 Mar 2004 12:15:34 -0000	1.46
++++ kalarmd/Makefile.am	27 Aug 2004 03:27:26 -0000
+@@ -3,7 +3,7 @@
+ lib_LTLIBRARIES = libkalarmd.la
+ 
+ libkalarmd_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+-libkalarmd_la_LIBADD  = $(LIB_KDECORE)
++libkalarmd_la_LIBADD  = $(LIB_KDECORE) $(top_builddir)/libkcal/libkcal.la
+ libkalarmd_la_SOURCES =  alarmdaemoniface.stub alarmguiiface.stub \
+ 	adcalendarbase.cpp
+ 
+Index: kpilot/lib/Makefile.am
+===================================================================
+RCS file: /home/kde/kdepim/kpilot/lib/Makefile.am,v
+retrieving revision 1.20
+diff -u -r1.20 Makefile.am
+--- kpilot/lib/Makefile.am	18 Jan 2004 15:32:37 -0000	1.20
++++ kpilot/lib/Makefile.am	27 Aug 2004 03:27:28 -0000
+@@ -25,7 +25,7 @@
+ 	pilotDateEntry.cc pilotTodoEntry.cc
+ 
+ libkpilot_la_LDFLAGS = $(all_libraries) $(KDE_EXTRA_RPATH) $(KDE_RPATH)
+-libkpilot_la_LIBADD = $(PISOCK_LIB)
++libkpilot_la_LIBADD = $(PISOCK_LIB) $(LIB_KDEUI)
+ 
+ kpilotincludedir = $(includedir)/kpilot
+ kpilotinclude_HEADERS = kpilotlink.h uiDialog.h plugin.h syncAction.h \

@@ -2058,16 +2058,12 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
           //Save the cursor position
           int parIdx = 1, txtIdx = 1;
           getCursorPosition(&parIdx, &txtIdx);
-
-          //Put in our replacement
-          QString txtContents = text();
-          QString newContents = txtContents.left(firstSpace) + m_replacements[word][id] +
-                                txtContents.right( txtContents.length() - lastSpace );
-          setText( newContents );
-
-          //Restore the cursor position
-          if( txtIdx > lastSpace )
-            txtIdx += newContents.length() - txtContents.length();
+          setSelection(para, firstSpace, para, lastSpace);
+          insert(m_replacements[word][id]);
+          // Restore the cursor position; if the cursor was behind the
+          // misspelled word then adjust the cursor position
+          if ( para == parIdx && txtIdx >= lastSpace )
+            txtIdx += m_replacements[word][id].length() - word.length();
           setCursorPosition(parIdx, txtIdx);
         }
         //Cancel original event

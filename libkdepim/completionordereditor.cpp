@@ -44,6 +44,8 @@
 #include <qvbox.h>
 #include <qheader.h>
 #include <qtoolbutton.h>
+#include <kapplication.h>
+#include <dcopclient.h>
 
 /*
 
@@ -148,7 +150,7 @@ public:
   KABCImapSubResCompletionItem( ResourceABC* resource, const QString& subResource )
     : mResource( resource ), mSubResource( subResource ), mWeight( completionWeight() ) {}
   virtual QString label() const {
-    return QString( "%1 %2" ).arg( mResource->resourceName() ).arg( mSubResource );
+    return QString( "%1 %2" ).arg( mResource->resourceName() ).arg( mResource->subresourceLabel( mSubResource ) );
   }
   virtual int completionWeight() const {
     return mResource->subresourceCompletionWeight( mSubResource );
@@ -292,9 +294,14 @@ void CompletionOrderEditor::slotOk()
       CompletionViewItem *item = static_cast<CompletionViewItem *>( it );
       item->item()->setCompletionWeight( w );
       item->item()->save( this );
-      kdDebug(5300) << "   " << item->item()->label() << " " << w << endl;
+      kdDebug(5300) << "slotOk:   " << item->item()->label() << " " << w << endl;
       --w;
     }
+
+    // Emit DCOP signal
+    // The emitter is always set to KPIM::IMAPCompletionOrder, so that the connect works
+    // This is why we can't use k_dcop_signals here, but need to use emitDCOPSignal
+    kapp->dcopClient()->emitDCOPSignal( "KPIM::IMAPCompletionOrder", "orderChanged()", QByteArray() );
   }
   KDialogBase::slotOk();
 }

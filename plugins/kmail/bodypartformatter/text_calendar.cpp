@@ -53,10 +53,11 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kapplication.h>
+#include <ktempfile.h>
 
 #include <qurl.h>
-#include <qfile.h>
 #include <qdir.h>
+#include <qtextstream.h>
 
 using namespace KCal;
 
@@ -498,10 +499,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       Attendee* newMyself = 0;
       if( myself ) {
         myself->setStatus( status );
-
-        // No more request response
-        myself->setRSVP(false);
-
         newMyself = new Attendee( myself->name(),
                                   receiver.isEmpty() ? myself->email() :
                                   receiver,
@@ -527,42 +524,39 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         subject = i18n( "Answer: %1" ).arg( incidence->summary() );
       else
         subject = i18n( "Answer: Incidence with no summary" );
-      return callback.mailICal( incidence->organizer(), msg, subject );
+      return callback.mailICal( incidence->organizer().fullName(), msg, subject );
     }
 
-    bool saveFile( const QString& iCal, const QString& type ) const
+    bool saveFile( const QString& receiver, const QString& iCal,
+                   const QString& type ) const
     {
-      QString location = locateLocal( "data", "korganizer/income." + type,
-                                      true );
-      QDir dir;
-      if ( !dir.exists( location ) ) dir.mkdir( location );
-      QString file;
-      do {
-        file = location + "/" + KApplication::randomString( 10 );
-      } while ( QFile::exists( file ) );
-      QFile f( file );
-      if ( !f.open( IO_WriteOnly ) ) {
-        KMessageBox::error( 0, i18n("Could not open file for writing:\n%1")
-                            .arg( file ) );
+      KTempFile file( locateLocal( "data", "korganizer/income." + type + '/',
+                                   true ) );
+      QTextStream* ts = file.textStream();
+      if ( !ts ) {
+        KMessageBox::error( 0, i18n("Could not save file to KOrganizer") );
         return false;
-      } else {
-        QByteArray msgArray = iCal.utf8();
-        f.writeBlock( msgArray, msgArray.size() );
-        f.close();
       }
+      ts->setEncoding( QTextStream::UnicodeUTF8 );
+      (*ts) << receiver << '\n' << iCal;
       return true;
     }
 
     bool handleAccept( const QString& iCal, KMail::Callback& callback ) const
     {
+      const QString receiver = callback.receiver();
+      if ( receiver.isEmpty() )
+        // Must be some error. Still return true though, since we did handle it
+        return true;
+
       // First, save it for KOrganizer to handle
-      saveFile( iCal, "accepted" );
+      saveFile( receiver, iCal, "accepted" );
 
       // Now produce the return message
       ICalFormat format;
       Incidence* incidence = icalToString( iCal, format );
       if( !incidence ) return false;
-      setStatusOnMyself( incidence, Attendee::Accepted, callback.receiver() );
+      setStatusOnMyself( incidence, Attendee::Accepted, receiver );
       return mail( incidence, callback );
     }
 
@@ -587,7 +581,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         return handleDecline( iCal, c );
       if ( path == "reply" || path == "cancel" )
         // These should just be saved with their type as the dir
-        return saveFile( iCal, path );
+        return saveFile( "Reciever Not Searched", iCal, path );
 
       return false;
     }

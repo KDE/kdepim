@@ -160,6 +160,15 @@ public:
 	virtual QString dbPathName() const = 0;
 
 	/**
+	* Use this instead of RTTI to determine the type of a
+	* PilotDatabase, for those cases where it's important.
+	*/
+	typedef enum { eNone=0,
+		eLocalDB=1,
+		eSerialDB=2 } DBType;
+	virtual DBType dbType() const = 0;
+
+	/**
 	* Here are some static utility functions. listAppInfo() is primarily
 	* meant for debugging, and it dumps an appinfo block to stdout.
 	*/

@@ -149,6 +149,7 @@ bool KMSender::send(KMMessage* aMsg, short sendNow)
     aMsg->setTo("Undisclosed.Recipients: ;");
   }
 
+  aMsg->removeHeaderField( "X-KMail-CryptoFormat" );
 
   // Handle redirections
   QString from  = aMsg->headerField("X-KMail-Redirect-From");
@@ -747,7 +748,14 @@ void KMSender::setStatusByLink(const KMMessage *aMsg)
 
     if (folder) {
       folder->open();
-      folder->setStatus(index, status);
+      if ( status == KMMsgStatusDeleted ) {
+        // Move the message to the trash folder
+        KMDeleteMsgCommand *cmd = 
+          new KMDeleteMsgCommand( folder, folder->getMsg( index ) ); 
+        cmd->start();
+      } else {
+        folder->setStatus(index, status);
+      }
       folder->close();
     }
   }

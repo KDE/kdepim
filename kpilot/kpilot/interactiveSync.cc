@@ -252,12 +252,10 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 #ifdef DEBUG
 	DEBUGDAEMON << fname
 		<< ": Restoring from base directory "
-		<< fP->fDatabaseDir << endl;
+		<< *(PilotLocalDatabase::getDBPath()) << endl;
 #endif
 
-	QString dirname = fP->fDatabaseDir +
-		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
-		CSL1("/");
+	QString dirname = *(PilotLocalDatabase::getDBPath());
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Restoring user " << dirname << endl;

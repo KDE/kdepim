@@ -41,11 +41,13 @@
 #include <kmessagebox.h>
 #include <kpushbutton.h>
 #include <kstdguiitem.h>
+#include <kglobalsettings.h>
 
 #include <qlayout.h>
 #include <qlabel.h>
-#include <qtextview.h>
+#include <qtextedit.h>
 #include <qfontmetrics.h>
+#include <qtimer.h>
 
 CRLView::CRLView( QWidget* parent, const char* name, bool modal )
   : QDialog( parent, name, modal ), _process(0)
@@ -54,8 +56,9 @@ CRLView::CRLView( QWidget* parent, const char* name, bool modal )
 
   topLayout->addWidget( new QLabel( i18n("CRL cache dump:"), this ) );
 
-  _textView = new QTextView( this );
-  _textView->setWordWrap( QTextEdit::NoWrap );
+  _textView = new QTextEdit( this );
+  _textView->setFont( KGlobalSettings::fixedFont() );
+  _textView->setTextFormat( QTextEdit::LogText );
   topLayout->addWidget( _textView );
 
   QHBoxLayout* hbLayout = new QHBoxLayout( topLayout );
@@ -75,17 +78,26 @@ CRLView::CRLView( QWidget* parent, const char* name, bool modal )
 
   resize( _textView->fontMetrics().width( 'M' ) * 80,
 	  _textView->fontMetrics().lineSpacing() * 25 );
+
+  _timer = new QTimer( this );
+  connect( _timer, SIGNAL(timeout()), SLOT(slotAppendBuffer()) );
 }
 
 CRLView::~CRLView()
 {
-  delete _process;
+  delete _process; _process = 0;
+}
+
+void CRLView::closeEvent( QCloseEvent * e ) {
+  QDialog::closeEvent( e );
+  delete _process; _process = 0;
 }
 
 void CRLView::slotUpdateView()
 {
   _updateButton->setEnabled( false );
   _textView->clear();
+  _buffer = QString::null;
   if( _process == 0 ) {
     _process = new KProcess();
     *_process << "gpgsm" << "--call-dirmngr" << "listcrls";
@@ -99,15 +111,23 @@ void CRLView::slotUpdateView()
     KMessageBox::error( this, i18n( "Unable to start gpgsm process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
     slotProcessExited();
   }
+  _timer->start( 1000 );
 }
 
 void CRLView::slotReadStdout( KProcess*, char* buf, int len)
 {
-  _textView->append( QString::fromUtf8( buf, len ) );
+  _buffer.append( QString::fromUtf8( buf, len ) );
+}
+
+void CRLView::slotAppendBuffer() {
+  _textView->append( _buffer );
+  _buffer = QString::null;
 }
 
 void CRLView::slotProcessExited()
 {
+  _timer->stop();
+  slotAppendBuffer();
   _updateButton->setEnabled( true );
 
   if( !_process->normalExit() ) {

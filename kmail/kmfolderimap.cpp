@@ -606,7 +606,7 @@ void KMFolderImap::slotListResult( const QStringList& subfolderNames_,
       subfolderNames.clear();
     }
     folder()->createChildFolder();
-    KMFolderImap *f;
+    KMFolderImap *f = 0;
     KMFolderNode *node = folder()->child()->first();
     while (node)
     {
@@ -667,12 +667,14 @@ void KMFolderImap::slotListResult( const QStringList& subfolderNames_,
       if (node)
         f = static_cast<KMFolderImap*>(static_cast<KMFolder*>(node)->storage());
       else {
-        f = static_cast<KMFolderImap*>
-          (folder()->child()->createFolder(subfolderNames[i])->storage());
-        if (f)
-        {
-          f->close();
-        } else {
+        KMFolder *newFolder = folder()->child()->createFolder(subfolderNames[i]);
+        if ( newFolder ) {
+          f = static_cast<KMFolderImap*> ( newFolder->storage() );
+          if ( f ) {
+            f->close();
+          }
+        }
+        if ( !f ) {
           kdWarning(5006) << "can't create folder " << subfolderNames[i] << endl;
         }
       }
@@ -738,12 +740,17 @@ void KMFolderImap::checkValidity()
   url.setPath(imapPath() + ";UID=0:0");
   kdDebug(5006) << "KMFolderImap::checkValidity of: " << imapPath() << endl;
 
-  if ( mAccount->makeConnection() == ImapAccountBase::Error ) {
+  // Start with a clean slate
+  disconnect( mAccount, SIGNAL( connectionResult(int, const QString&) ),
+              this, SLOT( checkValidity() ) );
+
+  KMAcctImap::ConnectionState connectionState = mAccount->makeConnection();
+  if ( connectionState == ImapAccountBase::Error ) {
     kdDebug(5006) << "KMFolderImap::checkValidity - got no connection" << endl;
     emit folderComplete(this, FALSE);
     mContentState = imapNoInformation;
     return;
-  } else if ( mAccount->makeConnection() == ImapAccountBase::Connecting ) {
+  } else if ( connectionState == ImapAccountBase::Connecting ) {
     // We'll wait for the connectionResult signal from the account. If it
     // errors, the above will catch it.
     kdDebug(5006) << "CheckValidity - waiting for connection" << endl;
@@ -1722,8 +1729,8 @@ void KMFolderImap::slotStatResult(KIO::Job * job)
         }
       }
     }
-    emit numUnreadMsgsChanged( folder() );
   }
+  emit numUnreadMsgsChanged( folder() );
 }
 
 //-----------------------------------------------------------------------------

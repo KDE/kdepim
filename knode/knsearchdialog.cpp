@@ -30,7 +30,7 @@
 
 
 KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
- : QDialog(parent)
+  : QDialog(parent)
 {
   setCaption(kapp->makeStdCaption( i18n("Search for Articles") ));
   setIcon(SmallIcon("knode"));
@@ -79,12 +79,6 @@ KNSearchDialog::~KNSearchDialog()
 {
   delete f_ilter;
   KNHelper::saveWindowSize("searchDlg", size());
-}
-
-
-void KNSearchDialog::hideEvent(QHideEvent *)
-{
-  emit dialogDone();
 }
 
 

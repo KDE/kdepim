@@ -14,14 +14,14 @@ static const KCmdLineOptions options[] =
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "groupwarewizard",
+  KAboutData aboutData( "kdepimwizards",
                         I18N_NOOP( "KDE-PIM Groupware Configuration Wizard" ), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;
 
-  KGlobal::locale()->insertCatalogue( "kdepimwizards" );
+  KGlobal::locale()->insertCatalogue( "libkdepim" );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 

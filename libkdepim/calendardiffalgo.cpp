@@ -40,17 +40,17 @@ static QString toString( KCal::Attendee *attendee )
   return attendee->name() + "<" + attendee->email() + ">";
 }
 
-static QString toString( KCal::Alarm *alarm )
+static QString toString( KCal::Alarm * )
 {
   return QString::null;
 }
 
-static QString toString( KCal::Incidence *incidence )
+static QString toString( KCal::Incidence * )
 {
   return QString::null;
 }
 
-static QString toString( KCal::Attachment *attachment )
+static QString toString( KCal::Attachment * )
 {
   return QString::null;
 }
@@ -113,8 +113,8 @@ void CalendarDiffAlgo::diffIncidenceBase( KCal::IncidenceBase *left, KCal::Incid
   if ( left->dtStart() != right->dtStart() )
     conflictField( i18n( "Start time" ), left->dtStartStr(), right->dtStartStr() );
 
-  if ( !compareString( left->organizer(), right->organizer() ) )
-    conflictField( i18n( "Organizer" ), left->organizer(), right->organizer() );
+  if ( !compareString( left->organizer().fullName(), right->organizer().fullName() ) )
+    conflictField( i18n( "Organizer" ), left->organizer().fullName(), right->organizer().fullName() );
 
   if ( !compareString( left->uid(), right->uid() ) )
     conflictField( i18n( "UID" ), left->uid(), right->uid() );

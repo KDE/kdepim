@@ -198,6 +198,7 @@ void KOEditorGeneral::initAlarm(QWidget *parent,QBoxLayout *topLayout)
 void KOEditorGeneral::pickAlarmSound()
 {
   QString prefix = KGlobal::dirs()->findResourceDir("data", "korganizer/sounds/alert.wav");
+  prefix += "/korganizer/sounds/alert.wav";
   if (!mAlarmSoundButton->isOn()) {
     mAlarmSound = "";
     QToolTip::remove(mAlarmSoundButton);
@@ -312,7 +313,7 @@ void KOEditorGeneral::readIncidence(Incidence *event)
 
 #if 0
   // organizer information
-  mOwnerLabel->setText(i18n("Owner: ") + event->organizer());
+  mOwnerLabel->setText(i18n("Owner: ") + event->organizer().fullName() );
 #endif
 
   enableAlarmEdit( event->isAlarmEnabled() );

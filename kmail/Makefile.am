@@ -1,4 +1,4 @@
-KDE_OPTIONS = nofinal
+#KDE_OPTIONS = nofinal
 KDE_CXXFLAGS = $(USE_RTTI)
 
 SUBDIRS = interfaces . about pics profiles avscripts
@@ -19,7 +19,8 @@ libkmailprivate_la_LIBADD  = $(LIB_KHTML) $(LIB_KSPELL) $(LIB_KABC) \
 	../libkdenetwork/libkdenetwork.la ../libkdepim/libkdepim.la \
 	../libkpimidentities/libkpimidentities.la ../mimelib/libmimelib.la \
 	../libksieve/libksieve.la \
-	../certmanager/lib/libkleopatra.la
+	../certmanager/lib/libkleopatra.la \
+        ../libkcal/libkcal.la
 
 kde_module_LTLIBRARIES = kcm_kmail.la libkmailpart.la libkmail_bodypartformatter_application_octetstream.la
 libkmailpart_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -version-info 1:0 -no-undefined
@@ -49,8 +50,6 @@ libkmailprivate_la_SOURCES = kmmessage.cpp kmmainwin.cpp configuredialog.cpp \
 		kmreaderwin.cpp htmlstatusbar.cpp kmmsgdict.cpp \
 		kmgroupware.cpp folderstorage.cpp \
 		csshelper.cpp klistboxdialog.cpp \
-		signatureconfigurationdialog.ui \
-		encryptionconfigurationdialog.ui \
 		actionscheduler.cpp messageproperty.cpp \
 		kmmsgpart.cpp kmmsginfo.cpp \
 		kmacctmgr.cpp kmacctfolder.cpp kmdict.cpp \
@@ -71,9 +70,6 @@ libkmailprivate_la_SOURCES = kmmessage.cpp kmmainwin.cpp configuredialog.cpp \
 		vacationdialog.cpp vacation.cpp sieveconfig.cpp sievejob.cpp \
 		kmpopheaders.cpp kmpopfiltercnfrmdlg.cpp \
 		kmmimeparttree.cpp \
-		certificatehandlingdialog.ui \
-		certificatehandlingdialogimpl.cpp \
-		certificatewizard.ui certificatewizardimpl.cpp \
 		mailinglist-magic.cpp kmacctmaildir.cpp \
 		attachmentstrategy.cpp \
 		headerstrategy.cpp headerstyle.cpp khtmlparthtmlwriter.cpp \
@@ -81,8 +77,7 @@ libkmailprivate_la_SOURCES = kmmessage.cpp kmmainwin.cpp configuredialog.cpp \
                 mailcomposerIface.skel objecttreeparser.cpp \
 		attachmentcollector.cpp \
 		bodypartformatter.cpp bodypartformatterfactory.cpp \
-		partNode.cpp signatureconfigurationdialogimpl.cpp \
-		encryptionconfigurationdialogimpl.cpp mailsourceviewer.cpp \
+		partNode.cpp mailsourceviewer.cpp \
 		kmcommands.cpp kmreadermainwin.cpp \
 		kmstartup.cpp kmmainwidget.cpp \
                 folderpropertiesdialog.ui kmfolderindex.cpp \

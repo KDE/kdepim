@@ -118,7 +118,7 @@ namespace KPIM {
   template< typename T, typename T_config >
   PluginLoader<T,T_config> * PluginLoader<T,T_config>::mSelf = 0;
 
-};
+}
 
 #define KPIM_DEFINE_PLUGIN_LOADER( pl, t, mf, p ) \
   namespace { /* don't pollute namespaces */ \
@@ -128,7 +128,7 @@ namespace KPIM {
     }; \
     const char * const pl##Config::mainfunc = mf; \
     const char * const pl##Config::path = p; \
-  }; \
+  } \
   typedef KPIM::PluginLoader< t, pl##Config > pl; \
       
 

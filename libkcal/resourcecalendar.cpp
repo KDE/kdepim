@@ -113,14 +113,20 @@ void ResourceCalendar::loadError( const QString &err )
 
 bool ResourceCalendar::save()
 {
-  kdDebug(5800) << "Save resource " + resourceName() << endl;
+  if ( !readOnly() ) { 
+    kdDebug(5800) << "Save resource " + resourceName() << endl; 
 
-  mReceivedSaveError = false;
+    mReceivedSaveError = false;
 
-  bool success = doSave();
-  if ( !success && !mReceivedSaveError ) saveError();
+    bool success = doSave();
+    if ( !success && !mReceivedSaveError ) saveError();
 
-  return success;
+    return success;
+  } else { 
+    // Read-only, just don't save... 
+    kdDebug(5800) << "Don't save read-only resource " + resourceName() << endl; 
+    return true; 
+  } 
 }
 
 void ResourceCalendar::saveError( const QString &err )

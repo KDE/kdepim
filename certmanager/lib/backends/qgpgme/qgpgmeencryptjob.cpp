@@ -97,12 +97,12 @@ void Kleo::QGpgMEEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
   emit result( mResult, mOutDataDataProvider->data() );
 }
 
-void Kleo::QGpgMEEncryptJob::showErrorDialog( QWidget * parent ) const {
+void Kleo::QGpgMEEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
   if ( !mResult.error() || mResult.error().isCanceled() )
     return;
   const QString msg = i18n("Encryption failed: %1")
     .arg( QString::fromLocal8Bit( mResult.error().asString() ) );
-  KMessageBox::error( parent, msg );
+  KMessageBox::error( parent, msg, caption );
 }
 
 #include "qgpgmeencryptjob.moc"

@@ -30,9 +30,6 @@
 static const char *pilotdaemon_id =
 	"$Id$";
 
-// Heck yeah.
-#define ENABLE_KROUPWARE
-
 #include "options.h"
 
 #include <stdlib.h>
@@ -69,10 +66,6 @@ static const char *pilotdaemon_id =
 #include "logFile.h"
 
 #include "kpilotConfig.h"
-
-#ifdef ENABLE_KROUPWARE
-#include "kroupware.h"
-#endif
 
 
 #include "kpilotDCOP_stub.h"
@@ -154,7 +147,7 @@ void PilotDaemonTray::setupWidget()
 	FUNCTIONSETUP;
 
 	KGlobal::iconLoader()->addAppDir( CSL1("kpilot") );
-	icons[Normal] = loadIcon( CSL1("hotsync") );
+	icons[Normal] = loadIcon( CSL1("kpilot") );
 	icons[Busy] = loadIcon( CSL1("busysync") );
 	icons[NotListening] = loadIcon( CSL1("nosync") );
 
@@ -698,7 +691,6 @@ static void fillConduitNameMap()
 		conduitNameMap = new QDict<QString>;
 		// Fill with internal settings.
 		conduitNameMap->insert(CSL1("internal_fileinstall"),new QString(i18n("File Installer")));
-		conduitNameMap->insert(CSL1("internal_kroupware"),new QString(i18n("Kroupware")));
 
 		conduitNameMap->setAutoDelete(true);
 	}
@@ -885,55 +877,6 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 	return true;
 }
 
-static int checkKroupware(ActionQueue *fSyncStack,
-	KPilotDeviceLink *pilotLink,
-	const QStringList &conduits,
-	QString &errreturn,
-	bool &syncWithKMail)
-{
-	FUNCTIONSETUP;
-	int _kroupwareParts = 0;
-#ifdef ENABLE_KROUPWARE
-
-	syncWithKMail =  (conduits.findIndex( CSL1("internal_kroupware") ) >= 0) ;
-	if (!syncWithKMail) return 0;
-
-	QString errmsg;
-	if (!KroupwareSync::startKMail(&errmsg))
-	{
-		errreturn = i18n("Could not start KMail. The "
-			"error message was: %1.").arg(errmsg);
-	}
-
-	if (conduits.findIndex( CSL1("vcal-conduit") ) >= 0 )
-		_kroupwareParts |= KroupwareSync::Cal ;
-	if (conduits.findIndex( CSL1("todo-conduit") ) >= 0 )
-		_kroupwareParts |= KroupwareSync::Todo ;
-	if (conduits.findIndex( CSL1("knotes-conduit") ) >= 0 )
-		_kroupwareParts |= KroupwareSync::Notes ;
-	if (conduits.findIndex( CSL1("abbrowser_conduit") ) >= 0 )
-		_kroupwareParts |= KroupwareSync::Address ;
-
-	fSyncStack->addAction(new KroupwareSync(true /* pre-sync */,
-		_kroupwareParts,pilotLink));
-#endif
-	return _kroupwareParts;
-}
-
-static void finishKroupware(ActionQueue *fSyncStack,
-	KPilotDeviceLink *pilotLink,
-	int kroupwareParts,
-	bool syncWithKMail)
-{
-#ifdef ENABLE_KROUPWARE
-	if (syncWithKMail)
-	{
-		fSyncStack->addAction(new KroupwareSync(false /* post-sync */ ,
-			kroupwareParts,pilotLink));
-	}
-#endif
-}
-
 static void queueInstaller(ActionQueue *fSyncStack,
 	FileInstaller *fInstaller,
 	const QStringList &c)
@@ -971,8 +914,6 @@ static void queueConduits(ActionQueue *fSyncStack,
 
 	bool pcchanged=false; // If last PC to sync was a different one (implies full sync, normally)
 	QStringList conduits ; // list of conduits to run
-	bool syncWithKMail = false; // if kroupware sync is enabled
-	int _kroupwareParts = 0; // which parts to sync
 	QString s; // a generic string for stuff
 	KPilotUser *usr = 0L; // Pointer to user data on Pilot
 
@@ -1006,27 +947,23 @@ static void queueConduits(ActionQueue *fSyncStack,
 		goto launch;
 	}
 
-	// changing the PC or using a different Palm Desktop app causes a full sync
-	// Use gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
-	// as PC_ID, so using JPilot and KPilot is the same as using two differenc PCs
-	usr = pilotLink->getPilotUser();
-	pcchanged = usr->getLastSyncPC() !=(unsigned long) gethostid();
-	if (pcchanged && KPilotSettings::fullSyncOnPCChange())
+	// Except when the user has requested a Restore, in which case she knows she doesn't
+	// want to sync with a blank palm and then back up the result over her stored backup files,
+	// do a Full Sync when changing the PC or using a different Palm Desktop app.
+	if (fNextSyncType != SyncAction::eRestore)
 	{
-		fNextSyncType = SyncAction::eFullSync;
+		// Use gethostid to determine , since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
+		// as PC_ID, so using JPilot and KPilot is the same as using two different PCs
+		usr = pilotLink->getPilotUser();
+		pcchanged = usr->getLastSyncPC() !=(unsigned long) gethostid();
+		if (pcchanged && KPilotSettings::fullSyncOnPCChange() )
+		{
+			fNextSyncType = SyncAction::eFullSync;
+		}
 	}
 
 	// Normal case: regular sync.
 	fSyncStack->queueInit(true);
-
-
-	// Add kroupware to the mix, if needed.
-	_kroupwareParts = checkKroupware(fSyncStack,pilotLink,conduits,s,syncWithKMail);
-	if (syncWithKMail) logMessage( i18n("Kroupware syncing is enabled.") );
-	if (!s.isEmpty()) logError(s);
-
-
-
 
 	conduits = KPilotSettings::installedConduits() ;
 
@@ -1083,8 +1020,6 @@ static void queueConduits(ActionQueue *fSyncStack,
 		break;
 #endif
 	}
-
-	finishKroupware(fSyncStack,pilotLink,_kroupwareParts,syncWithKMail);
 
 
 // Jump here to finalize the connections to the sync action

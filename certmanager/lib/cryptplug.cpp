@@ -61,6 +61,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <assert.h>
 #include <errno.h>
 #include <time.h>
@@ -282,7 +283,7 @@ bool CryptPlug::initialize() {
   GpgME::setDefaultLocale( LC_CTYPE, setlocale( LC_CTYPE, 0 ) );
   GpgME::setDefaultLocale( LC_MESSAGES, setlocale( LC_MESSAGES, 0 ) );
   return (gpgme_engine_check_version (GPGMEPLUG_PROTOCOL) == GPG_ERR_NO_ERROR);
-};
+}
 
 
 bool CryptPlug::hasFeature( Feature flag )
@@ -1988,11 +1989,13 @@ bool CryptPlug::decryptAndCheckMessage( const char*  ciphertext,
 {
   gpgme_ctx_t ctx;
   gpgme_error_t err;
+  gpgme_decrypt_result_t decryptresult;
   gpgme_data_t gCiphertext, gPlaintext;
   gpgme_sig_stat_t sigstatus = GPGME_SIG_STAT_NONE;
   size_t rCLen = 0;
   char*  rCiph = 0;
   bool bOk = false;
+  bool bWrongKeyUsage = false;
 
   if( !ciphertext )
     return false;
@@ -2017,6 +2020,13 @@ bool CryptPlug::decryptAndCheckMessage( const char*  ciphertext,
 
   err = gpgme_op_decrypt_verify( ctx, gCiphertext, gPlaintext );
   gpgme_data_release( gCiphertext );
+  
+  decryptresult = gpgme_op_decrypt_result( ctx );
+#ifdef HAVE_GPGME_WRONG_KEY_USAGE
+  if( decryptresult->wrong_key_usage )
+    bWrongKeyUsage = true;
+#endif
+  
   if( err ) {
     fprintf( stderr, "\ngpgme_op_decrypt_verify() returned this error code:  %i\n\n", err );
     if( errId )
@@ -2031,7 +2041,12 @@ bool CryptPlug::decryptAndCheckMessage( const char*  ciphertext,
     gpgme_release( ctx );
     return bOk;
   }
-
+  
+  if( bWrongKeyUsage ) {
+    if( errId )
+      *errId = CRYPTPLUG_ERR_WRONG_KEY_USAGE; // report the wrong key usage
+  }  
+  
   rCiph = gpgme_data_release_and_get_mem( gPlaintext,  &rCLen );
 
   *cleartext = (char*)malloc( rCLen + 1 );

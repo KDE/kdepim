@@ -25,6 +25,12 @@
 #include <qdatetime.h>
 #include <qdom.h>
 
+#include <kabc/addressee.h>
+
+namespace KCal {
+class Incidence;
+}
+
 class SloxItem
 {
   public:
@@ -41,6 +47,9 @@ class WebdavHandler
 {
   public:
     WebdavHandler();
+
+    void setUserId( const QString & );
+    QString userId() const;
 
     void log( const QString & );
 
@@ -61,9 +70,18 @@ class WebdavHandler
 
     static QValueList<SloxItem> getSloxItems( const QDomDocument &doc );
 
+    void clearSloxAttributeStatus();
+    void parseSloxAttribute( const QDomElement & );
+    void setSloxAttributes( KCal::Incidence * );
+    void setSloxAttributes( KABC::Addressee & );
+
   private:
     QString mLogFile;
     int mLogCount;
+
+    QString mUserId;
+    
+    bool mWritable;
 };
 
 #endif

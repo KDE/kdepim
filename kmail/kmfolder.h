@@ -73,6 +73,8 @@ public:
   void writeConfig( KConfig* config ) const;
 
   FolderStorage* storage() { return mStorage; }
+  /** if the folder is const, the storage should be as well */
+  const FolderStorage* storage() const { return mStorage; }
 
   /** Returns the type of this folder */
   KMFolderType folderType() const;
@@ -506,7 +508,7 @@ signals:
 
   /** Emitted after an expunge. If not quiet, changed() will be
       emmitted first. */
-  void expunged();
+  void expunged( KMFolder* );
 
   /** Emitted when the icon paths are set. */
   void iconsChanged();

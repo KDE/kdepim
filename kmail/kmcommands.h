@@ -62,6 +62,9 @@ public slots:
   // Retrieve messages then calls execute
   void start();
 
+  // advance the progressbar, emitted by the folderjob
+  void slotProgress( unsigned long done, unsigned long total );
+
 signals:
   void messagesTransfered( KMCommand::Result result );
   /** Emitted when the command has completed.
@@ -275,17 +278,16 @@ private:
   virtual Result execute();
 };
 
-class KMShowMsgSrcCommand : public KMCommand
+class KMShowMsgSrcCommand
 {
-  Q_OBJECT
-
 public:
-  KMShowMsgSrcCommand( QWidget *parent, KMMessage *msg,
-		       bool fixedFont );
-  virtual Result execute();
+  KMShowMsgSrcCommand( KMMessage *msg, bool fixedFont );
+		       
+  void start();
 
 private:
   bool mFixedFont;
+  KMMessage *mMsg;
 };
 
 class KMSaveMsgCommand : public KMCommand
@@ -508,12 +510,14 @@ class KMPrintCommand : public KMCommand
   Q_OBJECT
 
 public:
-  KMPrintCommand( QWidget *parent, KMMessage *msg, bool htmlOverride=false );
+  KMPrintCommand( QWidget *parent, KMMessage *msg, 
+                  bool htmlOverride=false, const QTextCodec *codec = 0 );
 
 private:
   virtual Result execute();
 
   bool mHtmlOverride;
+  const QTextCodec *mCodec;
 };
 
 class KMSetStatusCommand : public KMCommand
@@ -648,6 +652,12 @@ public slots:
   void slotMsgAddedToDestFolder(KMFolder *folder, Q_UINT32 serNum);
   void slotMoveCanceled();
 
+protected:
+  // Needed for KMDeleteCommand for "move to trash"
+  KMMoveCommand( Q_UINT32 sernum );
+  void setDestFolder( KMFolder* folder ) { mDestFolder = folder; }
+  void addMsg( KMMsgBase *msg ) { mMsgList.append( msg ); }
+
 private:
   virtual Result execute();
   void completeMove( Result result );
@@ -667,9 +677,11 @@ class KMDeleteMsgCommand : public KMMoveCommand
 public:
   KMDeleteMsgCommand( KMFolder* srcFolder, const QPtrList<KMMsgBase> &msgList );
   KMDeleteMsgCommand( KMFolder* srcFolder, KMMessage * msg );
+  KMDeleteMsgCommand( Q_UINT32 sernum );
 
 private:
   static KMFolder * findTrashFolder( KMFolder * srcFolder );
+
 };
 
 class KMUrlClickedCommand : public KMCommand

@@ -471,16 +471,6 @@ void KPilotInstaller::slotListSyncRequested()
 	return status();
 }
 
-/* virtual DCOP */ ASYNC KPilotInstaller::configure()
-{
-	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Daemon requested configure" << endl;
-#endif
-
-	if (!fConfigureKPilotDialogInUse)
-		slotConfigureKPilot();
-}
 
 bool KPilotInstaller::componentPreSync()
 {
@@ -563,7 +553,7 @@ void KPilotInstaller::initMenu()
 
 	KActionMenu *syncPopup;
 
-	syncPopup = new KActionMenu(i18n("HotSync"), CSL1("hotsync"),
+	syncPopup = new KActionMenu(i18n("HotSync"), CSL1("kpilot"),
 		actionCollection(), "popup_hotsync");
 	connect(syncPopup, SIGNAL(activated()),
 		this, SLOT(slotHotSyncRequested()));
@@ -604,7 +594,7 @@ void KPilotInstaller::initMenu()
 		"should restore the Handheld from data on the PC."));
 	syncPopup->insert(a);
 
-	a = new KAction(i18n("&List Only"),CSL1("list"),0,
+	a = new KAction(i18n("&List Only"),CSL1("listsync"),0,
 		this,SLOT(slotListSyncRequested()),
 		actionCollection(), "file_list");
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
@@ -644,11 +634,11 @@ void KPilotInstaller::initMenu()
 		actionCollection());
 	(void) KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
 		actionCollection());
-	(void) KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
+	(void) KStdAction::preferences(this, SLOT(configure()),
 		actionCollection());
 
 	a = new KAction(i18n("Configuration &Wizard..."), CSL1("wizard"), 0,
-		this, SLOT(slotConfigureWizard()),
+		this, SLOT(configureWizard()),
 		actionCollection(), "options_configure_wizard");
 	a->setWhatsThis(i18n("Configure KPilot using the configuration wizard."));
 
@@ -937,14 +927,14 @@ sorry:
 	return ret;
 }
 
-void KPilotInstaller::slotConfigureWizard()
+void KPilotInstaller::configureWizard()
 {
 	FUNCTIONSETUP;
 
 	runWizard(getDaemon(),this);
 }
 
-void KPilotInstaller::slotConfigureKPilot()
+void KPilotInstaller::configure()
 {
 	FUNCTIONSETUP;
 

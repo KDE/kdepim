@@ -70,7 +70,7 @@ const std::vector<GpgME::Key> & HierarchyAnalyser::subjectsForIssuer( const char
 std::vector<GpgME::Key> HierarchyAnalyser::subjectsForIssuerRecursive( const char * issuer_dn ) const {
   std::vector<GpgME::Key> keys = subjectsForIssuer( issuer_dn );
   for ( unsigned int i = 0 ; i < keys.size() ; ++i ) // can't use iterators here, since appending would invalidate them
-    if ( const char * fpr = keys[i].subkey(0).fingerprint() ) {
+    if ( const char * fpr = keys[i].primaryFingerprint() ) {
       const std::vector<GpgME::Key> & tmp = subjectsForIssuer( fpr );
       std::copy( tmp.begin(), tmp.end(), std::back_inserter( keys ) );
     }

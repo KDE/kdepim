@@ -31,7 +31,6 @@ Attendee::Attendee( const QString &name, const QString &email, bool _rsvp,
                     Attendee::PartStat s, Attendee::Role r, const QString &u)
   : Person( name, email )
 {
-  mFlag = true;
   mRSVP = _rsvp;
   mStatus = s;
   mRole = r;

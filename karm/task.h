@@ -273,6 +273,9 @@ class Task : public QObject, public QListViewItem
     int _currentPic;
     static QPtrVector<QPixmap> *icons;
 
+    /** Don't need to update storage when deleting task from list. */
+    bool _removing;
+
 };
 
 #endif // KARM_TASK_H

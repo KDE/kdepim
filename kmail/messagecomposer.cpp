@@ -1,7 +1,7 @@
 /**
  *  messagecomposer.cpp
  *
- *  Copyright (c) 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+ *  Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -43,6 +43,7 @@
 #include "kmfolder.h"
 #include "kmfoldercombobox.h"
 #include "keyresolver.h"
+#include "kleo_util.h"
 
 #include <libkpimidentities/identity.h>
 #include <libkpimidentities/identitymanager.h>
@@ -107,48 +108,51 @@ static inline bool showKeyApprovalDialog() {
 
 static inline int encryptKeyNearExpiryWarningThresholdInDays() {
   const KConfigGroup composer( KMKernel::config(), "Composer" );
+  if ( ! composer.readBoolEntry( "crypto-warn-when-near-expire", true ) )
+    return -1;
   const int num = composer.readNumEntry( "crypto-warn-encr-key-near-expire-int", 14 );
   return kMax( 1, num );
 }
 
 static inline int signingKeyNearExpiryWarningThresholdInDays() {
   const KConfigGroup composer( KMKernel::config(), "Composer" );
+  if ( ! composer.readBoolEntry( "crypto-warn-when-near-expire", true ) )
+    return -1;
   const int num = composer.readNumEntry( "crypto-warn-sign-key-near-expire-int", 14 );
   return kMax( 1, num );
 }
 
 static inline int encryptRootCertNearExpiryWarningThresholdInDays() {
   const KConfigGroup composer( KMKernel::config(), "Composer" );
+  if ( ! composer.readBoolEntry( "crypto-warn-when-near-expire", true ) )
+    return -1;
   const int num = composer.readNumEntry( "crypto-warn-encr-root-near-expire-int", 14 );
   return kMax( 1, num );
 }
 
 static inline int signingRootCertNearExpiryWarningThresholdInDays() {
   const KConfigGroup composer( KMKernel::config(), "Composer" );
+  if ( ! composer.readBoolEntry( "crypto-warn-when-near-expire", true ) )
+    return -1;
   const int num = composer.readNumEntry( "crypto-warn-sign-root-near-expire-int", 14 );
   return kMax( 1, num );
 }
 
 static inline int encryptChainCertNearExpiryWarningThresholdInDays() {
   const KConfigGroup composer( KMKernel::config(), "Composer" );
+  if ( ! composer.readBoolEntry( "crypto-warn-when-near-expire", true ) )
+    return -1;
   const int num = composer.readNumEntry( "crypto-warn-encr-chaincert-near-expire-int", 14 );
   return kMax( 1, num );
 }
 
 static inline int signingChainCertNearExpiryWarningThresholdInDays() {
   const KConfigGroup composer( KMKernel::config(), "Composer" );
+  if ( ! composer.readBoolEntry( "crypto-warn-when-near-expire", true ) )
+    return -1;
   const int num = composer.readNumEntry( "crypto-warn-sign-chaincert-near-expire-int", 14 );
   return kMax( 1, num );
 }
-
-static const Kleo::CryptoMessageFormat formats[] = {
-  Kleo::OpenPGPMIMEFormat,
-  Kleo::SMIMEFormat,
-  Kleo::SMIMEOpaqueFormat,
-  Kleo::InlineOpenPGPFormat,
-};
-static const unsigned int numFormats = sizeof formats / sizeof *formats ;
-
 
 /*
   Design of this:
@@ -415,8 +419,9 @@ void MessageComposer::readFromComposeWin()
   // we have to remember the Bcc because it might have been overwritten
   // by a custom header (therefore we can't use bcc() later) and because
   // mimelib removes addresses without domain part (therefore we can't use
-  // mReferenceMessage->bcc() later)
-  mBcc = mReferenceMessage->bcc();
+  // mReferenceMessage->bcc() later and also not now. So get the Bcc from
+  // the composer window.)
+  mBcc = mComposeWin->bcc();
   mTo = KPIM::splitEmailAddrList( mComposeWin->to().stripWhiteSpace() );
   mCc = KPIM::splitEmailAddrList( mComposeWin->cc().stripWhiteSpace() );
   mBccList = KPIM::splitEmailAddrList( mBcc.stripWhiteSpace() );
@@ -790,11 +795,11 @@ void MessageComposer::markAllAttachmentsForEncryption( bool enc ) {
 
 void MessageComposer::composeMessage()
 {
-  for ( unsigned int i = 0 ; i < numFormats ; ++i ) {
-    if ( mKeyResolver->encryptionItems( formats[i] ).empty() )
+  for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
+    if ( mKeyResolver->encryptionItems( concreteCryptoMessageFormats[i] ).empty() )
       continue;
     KMMessage * msg = new KMMessage( *mReferenceMessage );
-    composeMessage( *msg, mDoSign, mDoEncrypt, formats[i] );
+    composeMessage( *msg, mDoSign, mDoEncrypt, concreteCryptoMessageFormats[i] );
     if ( !mRc )
       return;
   }
@@ -916,10 +921,6 @@ static inline bool binaryHint( Kleo::CryptoMessageFormat f ) {
   }
 }
 
-static inline bool isSMIME( Kleo::CryptoMessageFormat f ) {
-  return f == Kleo::SMIMEFormat || f == Kleo::SMIMEOpaqueFormat ;
-}
-
 static inline bool armor( Kleo::CryptoMessageFormat f ) {
   return !binaryHint( f );
 }
@@ -958,7 +959,8 @@ public:
       mNewBodyPart( newBodyPart ), mFormat( format ) {}
 
   void execute() {
-    KMMessagePart tmpNewBodyPart = *mNewBodyPart;
+    KMMessagePart tmpNewBodyPart;
+    tmpNewBodyPart.duplicate( *mNewBodyPart );
 
     // TODO: Async call
 
@@ -1626,7 +1628,8 @@ void MessageComposer::addBodyAndAttachments( KMMessage* msg,
       msg->headers().ContentType().SetBoundary( mSaveBoundary );
       msg->headers().ContentType().Assemble();
     }
-    msg->setBody(ourFineBodyPart.body() );
+    if ( !ourFineBodyPart.body().isNull() )
+      msg->setBody(ourFineBodyPart.body() );
 
     if ( mDebugComposerCrypto ) {
       kdDebug(5006) << "MessageComposer::addBodyAndAttachments():\n      Final message:\n|||" << msg->asString() << "|||\n\n" << endl;

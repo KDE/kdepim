@@ -174,7 +174,7 @@ LogWidget::LogWidget(QWidget * parent) :
 
 		QPixmap splash(splashPath);
 		QPainter painter(&splash);
-		painter.setPen(QColor(255, 0, 0));
+		painter.setPen(QColor(0, 255, 0));
 
 		// This latin1() is ok; KPILOT_VERSION is a #define
 		// of a constant string.
@@ -190,12 +190,12 @@ LogWidget::LogWidget(QWidget * parent) :
 #endif
 
 		painter.fillRect(splash.width() -  28 - textWidth,
-			splash.height() - 6 - textHeight - textHeight ,
+			splash.height() - 6 - textHeight,
 			textWidth + 6,
 			textHeight + 4,
 			black);
 		painter.drawText(splash.width() -  25 - textWidth,
-			splash.height() - 8 - textHeight,
+			splash.height() - 8,
 			QString::fromLatin1(KPILOT_VERSION));
 		fSplash = new QLabel(this);
 		fSplash->setPixmap(splash);

@@ -395,8 +395,10 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
   icalcomponent_add_property(vtodo,
       icalproperty_new_percentcomplete(todo->percentComplete()));
 
-  icalcomponent_add_property(vtodo,
-      icalproperty_new_recurrenceid( writeICalDateTime( todo->dtDue())));
+  if( todo->doesRecur() ) {
+    icalcomponent_add_property(vtodo,
+        icalproperty_new_recurrenceid( writeICalDateTime( todo->dtDue())));
+  }
 
   return vtodo;
 }
@@ -645,9 +647,9 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 */
 
   // related event
-  if (incidence->relatedTo()) {
+  if ( !incidence->relatedToUid().isEmpty() ) {
     icalcomponent_add_property(parent,icalproperty_new_relatedto(
-        incidence->relatedTo()->uid().utf8()));
+        incidence->relatedToUid().utf8()));
   }
 
   // recurrence rule stuff
@@ -691,11 +693,11 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
 // turned off as it always is set to PTS0 (and must not occur together with DTEND
 
-//  if (incidence->hasDuration()) {
-//    icaldurationtype duration;
-//    duration = writeICalDuration(incidence->duration());
-//    icalcomponent_add_property(parent,icalproperty_new_duration(duration));
-//  }
+  if (incidence->hasDuration()) {
+    icaldurationtype duration;
+    duration = writeICalDuration(incidence->duration());
+    icalcomponent_add_property(parent,icalproperty_new_duration(duration));
+  }
 }
 
 void ICalFormatImpl::writeIncidenceBase( icalcomponent *parent,
@@ -705,8 +707,7 @@ void ICalFormatImpl::writeIncidenceBase( icalcomponent *parent,
       writeICalDateTime( QDateTime::currentDateTime() ) ) );
 
   // organizer stuff
-  icalcomponent_add_property( parent, icalproperty_new_organizer(
-      ( "MAILTO:" + incidenceBase->organizer() ).utf8() ) );
+  icalcomponent_add_property( parent, writeOrganizer( incidenceBase->organizer() ) );
 
   // attendees
   if ( incidenceBase->attendeeCount() > 0 ) {
@@ -736,6 +737,19 @@ void ICalFormatImpl::writeCustomProperties(icalcomponent *parent,CustomPropertie
     icalcomponent_add_property(parent,p);
   }
 }
+
+icalproperty *ICalFormatImpl::writeOrganizer( const Person &organizer )
+{
+  icalproperty *p = icalproperty_new_organizer("MAILTO:" + organizer.email().utf8());
+
+  if (!organizer.name().isEmpty()) {
+    icalproperty_add_parameter( p, icalparameter_new_cn(organizer.name().utf8()) );
+  }
+  // TODO: Write dir, senty-by and language
+
+  return p;
+}
+
 
 icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
 {
@@ -1427,6 +1441,25 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
   return new Attendee( name, email, rsvp, status, role, uid );
 }
 
+Person ICalFormatImpl::readOrganizer( icalproperty *organizer )
+{
+  QString email = QString::fromUtf8(icalproperty_get_organizer(organizer));
+  if ( email.startsWith("mailto:", false ) ) {
+    email = email.remove(0,7);
+  }
+  QString cn;
+  
+  icalparameter *p = icalproperty_get_first_parameter( 
+             organizer, ICAL_CN_PARAMETER );
+  
+  if ( p ) {
+    cn = QString::fromUtf8( icalparameter_get_cn( p ) );
+  }
+  Person org( cn, email );
+  // TODO: Treat sent-by, dir and language here, too
+  return org;
+}
+
 Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
 {
   icalattachtype *a = icalproperty_get_attach(attach);
@@ -1635,7 +1668,7 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *inci
         break;
 
       case ICAL_ORGANIZER_PROPERTY:  // organizer
-        incidenceBase->setOrganizer(QString::fromUtf8(icalproperty_get_organizer(p)));
+        incidenceBase->setOrganizer( readOrganizer(p));
         break;
 
       case ICAL_ATTENDEE_PROPERTY:  // attendee
@@ -2094,16 +2127,18 @@ icaldurationtype ICalFormatImpl::writeICalDuration(int seconds)
 {
   icaldurationtype d;
 
-  d.weeks    = seconds   % gSecondsPerWeek;
-  seconds   -= d.weeks   * gSecondsPerWeek;
-  d.days     = seconds   % gSecondsPerDay;
-  seconds   -= d.days    * gSecondsPerDay;
-  d.hours    = seconds   % gSecondsPerHour;
-  seconds   -= d.hours   * gSecondsPerHour;
-  d.minutes  = seconds   % gSecondsPerMinute;
-  seconds   -= d.minutes * gSecondsPerMinute;
+  d.is_neg  = (seconds<0)?1:0;
+  if (seconds<0) seconds = -seconds;
+
+  d.weeks    = seconds / gSecondsPerWeek;
+  seconds   %= gSecondsPerWeek;
+  d.days     = seconds / gSecondsPerDay;
+  seconds   %= gSecondsPerDay;
+  d.hours    = seconds / gSecondsPerHour;
+  seconds   %= gSecondsPerHour;
+  d.minutes  = seconds / gSecondsPerMinute;
+  seconds   %= gSecondsPerMinute;
   d.seconds  = seconds;
-  d.is_neg = 0;
 
   return d;
 }
@@ -2496,10 +2531,24 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
 
   icalcomponent_add_property(message,icalproperty_new_method(icalmethod));
 
-  // TODO: check, if dynamic cast is required
   if(incidence->type() == "Todo") {
     Todo *todo = static_cast<Todo *>(incidence);
-    icalcomponent_add_component(message,writeTodo(todo));
+    icalcomponent *vtodo = writeTodo(todo);
+    /*
+     * RFC 2446 states in section 3.4.3 ( REPLY to a VTODO ), that
+     * a REQUEST-STATUS property has to be present. Until we do more 
+     * fine grained handling, assume all is well. Note that this is the 
+     * status of the _request_, not the attendee. Just to avoid confusion.
+     * - till
+     */
+    if ( icalmethod == ICAL_METHOD_REPLY ) {
+      struct icalreqstattype rst;
+      rst.code = ICAL_2_0_SUCCESS_STATUS;
+      rst.desc = 0;
+      rst.debug = 0;
+      icalcomponent_add_property( vtodo, icalproperty_new_requeststatus( rst ) );
+    }
+    icalcomponent_add_component(message,vtodo);
   }
   if(incidence->type() == "Event") {
     Event *event = static_cast<Event *>(incidence);

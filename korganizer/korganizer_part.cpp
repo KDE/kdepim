@@ -35,8 +35,6 @@
 #include "stdcalendar.h"
 #include "alarmclient.h"
 
-#include "kalarmd/alarmdaemoniface_stub.h"
-
 #include <libkcal/calendarlocal.h>
 #include <libkcal/calendarresources.h>
 #include <libkcal/resourcecalendar.h>
@@ -75,6 +73,10 @@ KOrganizerPart::KOrganizerPart( QWidget *parentWidget, const char *widgetName,
                                 const QStringList & ) :
   KParts::ReadOnlyPart(parent, name)
 {
+  KGlobal::locale()->insertCatalogue( "libkcal" );
+  KGlobal::locale()->insertCatalogue( "libkdepim" );
+  KGlobal::locale()->insertCatalogue( "kdgantt" );
+
   KOCore::self()->setXMLGUIClient( this );
 
   QString pname( name );

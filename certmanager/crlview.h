@@ -34,10 +34,12 @@
 #define CRLVIEW_H
 
 #include <qdialog.h>
+#include <qstring.h>
 
-class QTextView;
+class QTextEdit;
 class QPushButton;
 class KProcess;
+class QTimer;
 
 class CRLView : public QDialog {
   Q_OBJECT
@@ -50,12 +52,18 @@ public slots:
 protected slots:
   void slotReadStdout( KProcess*, char* buf, int len);
   void slotProcessExited();
+  void slotAppendBuffer();
+
+protected:
+  void closeEvent( QCloseEvent * );
 
 private:  
-  QTextView*   _textView;
+  QTextEdit*   _textView;
   QPushButton* _updateButton;
   QPushButton* _closeButton;
   KProcess*    _process;
+  QTimer*      _timer;
+  QString      _buffer;
 };
 
 #endif // CRLVIEW_H

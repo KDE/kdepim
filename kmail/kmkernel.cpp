@@ -35,11 +35,8 @@ using KRecentAddress::RecentAddresses;
 #include "configuredialog.h"
 #include "kmcommands.h"
 #include "kmsystemtray.h"
-// #### disabled for now #include "startupwizard.h"
-
 
 #include <kwin.h>
-#include "kmgroupware.h"
 #include "kmailicalifaceimpl.h"
 #include "mailserviceimpl.h"
 using KMail::MailServiceImpl;
@@ -119,8 +116,10 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
 
   // make sure that we check for config updates before doing anything else
   KMKernel::config();
-
-  mGroupware = new KMGroupware( this );
+  // this shares the kmailrc parsing too (via KSharedConfig), and reads values from it
+  // so better do it here, than in some code where changing the group of config()
+  // would be unexpected
+  GlobalSettings::self();
 
   // Set up DCOP interface
   mICalIface = new KMailICalIfaceImpl();
@@ -317,14 +316,16 @@ void KMKernel::openReader( bool onlyCheck )
   if (ktmw) {
     mWin = (KMMainWin *) ktmw;
     activate = !onlyCheck; // existing window: only activate if not --check
+    if ( activate )
+       mWin->show();
   }
   else {
     mWin = new KMMainWin;
-    activate = true; // new window: always activate
+    mWin->show();
+    activate = false; // new window: no explicit activation (#73591)
   }
 
   if ( activate ) {
-    mWin->show();
     // Activate window - doing this instead of KWin::activateWindow(mWin->winId());
     // so that it also works when called from KMailApplication::newInstance()
 #if defined Q_WS_X11 && ! defined K_WS_QTONLY
@@ -418,19 +419,28 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
   if ( !to.isEmpty() ) msg->setTo(to);
   if ( !body.isEmpty() ) msg->setBody(body.utf8());
 
-  bool iCalHack = false;
-  KConfigGroup options( config(), "Groupware" );
-  if (  !attachData.isEmpty() ) {
-    if ( attachName == "cal.ics" && attachType == "text" &&
-	attachSubType == "calendar" && attachParamAttr == "method" &&
-	options.readBoolEntry( "LegacyBodyInvites", false ) ) {
+  bool iCalAutoSend = false;
+  bool noWordWrap = false;
+  bool isICalInvitation = false;
+  if ( !attachData.isEmpty() ) {
+    isICalInvitation = attachName == "cal.ics" &&
+      attachType == "text" &&
+      attachSubType == "calendar" &&
+      attachParamAttr == "method";
+    // Remove BCC from identity on ical invitations (https://intevation.de/roundup/kolab/issue474)
+    if ( isICalInvitation && bcc.isEmpty() )
+      msg->setBcc( "" );
+    if ( isICalInvitation &&
+       GlobalSettings::legacyBodyInvites() ) {
       // KOrganizer invitation caught and to be sent as body instead
       msg->setBody( attachData );
       msg->setHeaderField( "Content-Type",
-			   QString( "text/calendar; method=%1; "
+                           QString( "text/calendar; method=%1; "
                                     "charset=\"utf-8\"" ).
-			   arg( attachParamValue ) );
-      iCalHack = true;
+                           arg( attachParamValue ) );
+
+      iCalAutoSend = true; // no point in editing raw ICAL
+      noWordWrap = true; // we shant word wrap inline invitations
     } else {
       // Just do what we're told to do
       msgPart = new KMMessagePart;
@@ -442,22 +452,29 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
       msgPart->setParameter( attachParamAttr, attachParamValue );
       msgPart->setContentDisposition( attachContDisp );
       if( !attachCharset.isEmpty() ) {
-	// kdDebug(5006) << "KMKernel::openComposer set attachCharset to "
+        // kdDebug(5006) << "KMKernel::openComposer set attachCharset to "
         // << attachCharset << endl;
-	msgPart->setCharset( attachCharset );
+        msgPart->setCharset( attachCharset );
       }
+      // Don't show the composer window, if the automatic sending is checked
+      KConfigGroup options(  config(), "Groupware" );
+      iCalAutoSend = options.readBoolEntry( "AutomaticSending", true );
     }
   }
 
-  KMComposeWin *cWin = new KMComposeWin( msg );
-  if( iCalHack )
+  KMComposeWin *cWin = new KMComposeWin();
+  cWin->setMsg( msg, !isICalInvitation /* mayAutoSign */ );
+  cWin->setSigningAndEncryptionDisabled( isICalInvitation 
+      && GlobalSettings::legacyBodyInvites() );
+  cWin->setAutoDelete( true );
+  if( noWordWrap )
     cWin->slotWordWrapToggled( false );
   else
     cWin->setCharset( "", true );
   if ( msgPart )
     cWin->addAttach(msgPart);
 
-  if ( hidden == 0 && !iCalHack ) {
+  if ( hidden == 0 && !iCalAutoSend ) {
     cWin->show();
     // Activate window - doing this instead of KWin::activateWindow(cWin->winId());
     // so that it also works when called from KMailApplication::newInstance()
@@ -465,8 +482,7 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
     KStartupInfo::setNewStartupId( cWin, kapp->startupId() );
 #endif
   } else {
-    // TODO: Delete the window
-    kdDebug(5006) << "Hidden send now window\n";
+    cWin->setAutoDeleteWindow( true );
     cWin->slotSendNow();
   }
 
@@ -498,6 +514,27 @@ DCOPRef KMKernel::openComposer(const QString &to, const QString &cc,
   }
 
   return DCOPRef(cWin);
+}
+
+DCOPRef KMKernel::newMessage()
+{
+  KMFolder *folder = 0;
+  KMMainWidget *widget = getKMMainWidget();
+  if ( widget && widget->folderTree() )
+    folder = widget->folderTree()->currentFolder();
+
+  KMComposeWin *win;
+  KMMessage *msg = new KMMessage;
+  if ( folder ) {
+    msg->initHeader( folder->identity() );
+    win = new KMComposeWin( msg, folder->identity() );
+  } else {
+    msg->initHeader();
+    win = new KMComposeWin( msg );
+  }
+  win->show();
+
+  return DCOPRef( win );
 }
 
 int KMKernel::viewMessage( const KURL & messageFile )
@@ -659,7 +696,7 @@ int KMKernel::dcopAddMessage(const QString & foldername,const KURL & msgUrl)
 QStringList KMKernel::folderList() const
 {
   QStringList folders;
-  const QString localPrefix = i18n( "/Local" );
+  const QString localPrefix = "/Local";
   folders << localPrefix;
   the_folderMgr->getFolderURLS( folders, localPrefix );
   the_imapFolderMgr->getFolderURLS( folders );
@@ -669,7 +706,7 @@ QStringList KMKernel::folderList() const
 
 DCOPRef KMKernel::getFolder( const QString& vpath )
 {
-  const QString localPrefix = i18n( "/Local" );
+  const QString localPrefix = "/Local";
   if ( the_folderMgr->getFolderByURL( vpath ) )
     return DCOPRef( new FolderIface( vpath ) );
   else if ( vpath.startsWith( localPrefix ) &&
@@ -1001,7 +1038,6 @@ void KMKernel::init()
     }
   }
   readConfig();
-  mGroupware->readConfig();
   mICalIface->readConfig();
   // filterMgr->dump();
 #if 0 //disabled for now..
@@ -1019,13 +1055,13 @@ void KMKernel::init()
 #endif
 
   connect( the_folderMgr, SIGNAL( folderRemoved(KMFolder*) ),
-           this, SLOT( slotFolderRemoved(KMFolder*) ) );
+           this, SIGNAL( folderRemoved(KMFolder*) ) );
   connect( the_dimapFolderMgr, SIGNAL( folderRemoved(KMFolder*) ),
-           this, SLOT( slotFolderRemoved(KMFolder*) ) );
+           this, SIGNAL( folderRemoved(KMFolder*) ) );
   connect( the_imapFolderMgr, SIGNAL( folderRemoved(KMFolder*) ),
-           this, SLOT( slotFolderRemoved(KMFolder*) ) );
+           this, SIGNAL( folderRemoved(KMFolder*) ) );
   connect( the_searchFolderMgr, SIGNAL( folderRemoved(KMFolder*) ),
-           this, SLOT( slotFolderRemoved(KMFolder*) ) );
+           this, SIGNAL( folderRemoved(KMFolder*) ) );
 
   mBackgroundTasksTimer = new QTimer( this );
   connect( mBackgroundTasksTimer, SIGNAL( timeout() ), this, SLOT( slotRunBackgroundTasks() ) );
@@ -1114,6 +1150,7 @@ void KMKernel::cleanupImapFolders()
         KMessageBox::error(0,(i18n("Cannot create file `%1' in %2.\nKMail cannot start without it.").arg(acct->name()).arg(the_dimapFolderMgr->basePath())));
         exit(-1);
       }
+      cfld->folder()->setId( acct->id() );
     }
 
     cfld->setNoContent(true);
@@ -1339,11 +1376,6 @@ void KMKernel::action(bool mailto, bool check, const QString &to,
                       const KURL &messageFile,
                       const KURL::List &attachURLs)
 {
-  // Run the groupware setup wizard. It doesn't do anything if this isn't
-  // the first run. Replace this with a general wizard later
-  // #### Disabled until we have a general startup wizard.
-  // StartupWizard::run();
-
   if (mailto)
     openComposer (to, cc, bcc, subj, body, 0, messageFile, attachURLs);
   else
@@ -1503,10 +1535,13 @@ bool KMKernel::folderIsTrash(KMFolder * folder)
 {
   assert(folder);
   if (folder == the_trashFolder) return true;
-  if (folder->folderType() != KMFolderTypeImap) return false;
-  KMFolderImap *fi = static_cast<KMFolderImap*>(folder->storage());
-  if (fi->account() && fi->account()->trash() == folder->idString())
-    return true;
+  QStringList actList = acctMgr()->getAccounts(false);
+  QStringList::Iterator it( actList.begin() );
+  for( ; it != actList.end() ; ++it ) {
+    KMAccount* act = acctMgr()->findByName( *it );
+    if ( act && ( act->trash() == folder->idString() ) )
+      return true;
+  }
   return false;
 }
 
@@ -1614,12 +1649,6 @@ KConfig* KMKernel::config()
   return mySelf->mConfig;
 }
 
-KMGroupware & KMKernel::groupware()
-{
-  assert( mGroupware );
-  return *mGroupware;
-}
-
 KMailICalIfaceImpl& KMKernel::iCalIface()
 {
   assert( mICalIface );
@@ -1629,7 +1658,7 @@ KMailICalIfaceImpl& KMKernel::iCalIface()
 void KMKernel::selectFolder( QString folderPath )
 {
   kdDebug(5006)<<"Selecting a folder "<<folderPath<<endl;
-  const QString localPrefix = i18n( "/Local" );
+  const QString localPrefix = "/Local";
   KMFolder *folder = kmkernel->folderMgr()->getFolderByURL( folderPath );
   if ( !folder && folderPath.startsWith( localPrefix ) )
     folder = the_folderMgr->getFolderByURL( folderPath.mid( localPrefix.length() ) );
@@ -1670,11 +1699,6 @@ KMMainWidget *KMKernel::getKMMainWidget()
   }
   delete l;
   return 0;
-}
-
-void KMKernel::slotFolderRemoved( KMFolder * aFolder )
-{
-  if ( the_filterMgr ) the_filterMgr->folderRemoved( aFolder, 0 );
 }
 
 void KMKernel::slotRunBackgroundTasks() // called regularly by timer

@@ -2,7 +2,7 @@
     This file is part of libkcal.
 
     Copyright (c) 2003 Steffen Hansen <steffen@klaralvdalens-datakonsult.se>
-    Copyright (c) 2003 - 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+    Copyright (c) 2003 - 2004 Bo Thorsen <bo@sonofthor.dk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -228,6 +228,9 @@ bool ResourceIMAP::addEvent( Event *anEvent, const QString& subresource )
   QString resource = subresource;
   if ( subresource.isEmpty() )
     resource = findWritableResource( mEventResources, "Calendar" );
+  if ( resource.isEmpty() )
+    return false;
+
   mUidmap[ uid ] = resource;
 
   if ( mSilent ) return true;
@@ -306,6 +309,9 @@ bool ResourceIMAP::addTodo( Todo *todo, const QString& subresource )
   QString resource = subresource;
   if ( subresource.isEmpty() )
     resource = findWritableResource( mTaskResources, "Task" );
+  if ( resource.isEmpty() )
+    return false;
+
   mUidmap[ uid ] = resource;
 
   if ( mSilent ) return true;
@@ -366,6 +372,9 @@ bool ResourceIMAP::addJournal( Journal *journal, const QString& subresource )
   QString resource = subresource;
   if ( subresource.isEmpty() )
     resource = findWritableResource( mJournalResources, "Journal" );
+  if ( resource.isEmpty() )
+    return false;
+
   mUidmap[ uid ] = resource;
 
   if ( mSilent ) return true;

@@ -160,7 +160,7 @@ int TimeLabels::minimumWidth() const
   int borderWidth = 4;
 
   // the maximum width possible
-  int width = fm.width("88:88") + borderWidth;
+  int width = fm.width("88:88") + 2*borderWidth;
 
   return width;
 }
@@ -786,6 +786,8 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
     ev->setDtEnd( endDt );
   } else if ( i->type() == "Todo" ) {
     Todo *td = static_cast<Todo*>(i);
+    startDt = td->dtStart();
+    startDt = startDt.addDays( daysOffset );
     endDt = td->dtDue();
     endDt = endDt.addDays( daysOffset );
     endDt.setTime( endTime );
@@ -1159,6 +1161,11 @@ void KOAgendaView::fillAgenda( const QDate & )
 
 void KOAgendaView::fillAgenda()
 {
+  /* Remember the uids of the selected items. In case one of the
+   * items was deleted and re-added, we want to reselect it. */
+  const QString &selectedAgendaUid = mAgenda->lastSelectedUid();
+  const QString &selectedAllDayAgendaUid = mAllDayAgenda->lastSelectedUid();
+
   enableAgendaUpdate( true );
   clearView();
 
@@ -1183,6 +1190,7 @@ void KOAgendaView::fillAgenda()
 
   QDate today = QDate::currentDate();
 
+  bool somethingReselected = false;
   DateList::ConstIterator dit;
   int curCol = 0;
   for( dit = mSelectedDates.begin(); dit != mSelectedDates.end(); ++dit ) {
@@ -1201,6 +1209,15 @@ void KOAgendaView::fillAgenda()
       Event *event = *dayEvents.at(numEvent);
 //      kdDebug(5850) << " Event: " << event->summary() << endl;
       insertIncidence( event, currentDate, curCol );
+      if( event->uid() == selectedAgendaUid && !selectedAgendaUid.isNull() ) {
+        mAgenda->selectItemByUID( event->uid() );
+        somethingReselected = true;
+      }
+      if( event->uid() == selectedAllDayAgendaUid && !selectedAllDayAgendaUid.isNull() ) {
+        mAllDayAgenda->selectItemByUID( event->uid() );
+        somethingReselected = true;
+      }
+
     }
 //    if (numEvent == 0) kdDebug(5850) << " No events" << endl;
 
@@ -1251,7 +1268,9 @@ void KOAgendaView::fillAgenda()
 // make invalid
   deleteSelectedDateTime();
 
-  emit incidenceSelected( 0 );
+  if( !somethingReselected ) {
+    emit incidenceSelected( 0 );
+  }
 
 //  kdDebug(5850) << "Fill Agenda done" << endl;
 }

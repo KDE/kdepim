@@ -105,7 +105,6 @@ libkorganizer_la_SOURCES =  outgoingdialog_base.ui \
 	alarmclient.cpp \
 	actionmanager.cpp resourceview.cpp \
 	navigatorbar.cpp kogroupware.cpp \
-	kogroupwareincomingdialog_base.ui kogroupwareincomingdialog.cpp \
 	history.cpp \
 	koprefs_base.kcfgc \
 	koincidencetooltip.cpp aboutdata.cpp \
@@ -119,7 +118,8 @@ libkorganizer_la_SOURCES =  outgoingdialog_base.ui \
 libkorganizer_eventviewer_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) \
                                        -no-undefined -version-info 1:0
 libkorganizer_eventviewer_la_LIBADD  = $(LIB_KPARTS) \
-                                       $(top_builddir)/libkcal/libkcal.la
+                                       $(top_builddir)/libkcal/libkcal.la \
+                                       $(top_builddir)/libkdepim/libkdepim.la
 libkorganizer_eventviewer_la_SOURCES = koeventviewer.cpp urihandler.cpp \
                                        kmailIface.stub koeventviewerdialog.cpp
 
@@ -154,7 +154,7 @@ noinst_HEADERS = komonthview.h \
 	outgoingdialog.h incomingdialog.h publishdialog.h koeditorfreebusy.h \
 	koeventview.h statusdialog.h customlistviewitem.h \
 	alarmclient.h \
-	navigatorbar.h kogroupware.h kogroupwareincomingdialog.h \
+	navigatorbar.h kogroupware.h \
 	koincidencetooltip.h korganizerifaceimpl.h
 
 tip_DATA = tips

@@ -113,8 +113,14 @@ public:
   virtual void addDirectory( KMFolderDir *fdir, KMFolderTreeItem* parent );
 
   /** Find index of given folder. Returns 0 if not found */
-  virtual QListViewItem* indexOfFolder(const KMFolder*);
-
+  virtual QListViewItem* indexOfFolder( const KMFolder* folder ) const
+  {
+     if ( mFolderToItem.contains( folder ) )
+       return mFolderToItem[ folder ];
+     else
+       return 0;
+  }
+  
   /** create a folderlist */
   void createFolderList( QStringList *str,
                          QValueList<QGuardedPtr<KMFolder> > *folders,
@@ -154,6 +160,19 @@ public:
   /** Returns the main widget that this widget is a child of. */
   KMMainWidget * mainWidget() const { return mMainWidget; }
 
+  /** Select the folder and make sure it's visible */
+  void showFolder( KMFolder* );
+
+  void insertIntoFolderToItemMap( const KMFolder *folder, KMFolderTreeItem* item )
+  {
+    mFolderToItem.insert( folder, item );
+  }
+
+  void removeFromFolderToItemMap( const KMFolder *folder )
+  {
+    mFolderToItem.remove( folder );
+  }
+  
 signals:
   /** The selected folder has changed */
   void folderSelected(KMFolder*);
@@ -201,10 +220,6 @@ public slots:
   /** Select the item and switch to the folder */
   void doFolderSelected(QListViewItem*);
 
-  /** autoscroll support */
-  void startAutoScroll();
-  void stopAutoScroll();
-
   /**
    * Reset current folder and all childs
    * If no item is given we take the current one
@@ -246,8 +261,6 @@ protected slots:
   /** slots for the unread/total-popup */
   void slotToggleUnreadColumn();
   void slotToggleTotalColumn();
-
-  void autoScroll();
 
   void slotContextMenuRequested( QListViewItem *, const QPoint & );
 
@@ -295,10 +308,6 @@ protected:
   void connectSignals();
 
 private:
-  QTimer autoscroll_timer;
-  int autoscroll_time;
-  int autoscroll_accel;
-
   /** total column */
   QListViewItemIterator mUpdateIterator;
 
@@ -310,6 +319,8 @@ private:
   /** show popup after D'n'D? */
   bool mShowPopupAfterDnD;
   KMMainWidget *mMainWidget;
+  bool mReloading;
+  QMap<const KMFolder*, KMFolderTreeItem*> mFolderToItem;
 };
 
 #endif

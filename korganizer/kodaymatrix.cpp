@@ -117,6 +117,7 @@ KODayMatrix::KODayMatrix( QWidget *parent, const char *name )
   mSelectedDaysColor = QColor( "white" );
   mTodayMarginWidth = 2;
   mSelEnd = mSelStart = NOSELECTION;
+  setBackgroundMode( NoBackground );
 }
 
 void KODayMatrix::setCalendar( Calendar *cal )
@@ -208,7 +209,7 @@ void KODayMatrix::recalculateToday()
       mToday = i;
     }
   }
-  // qDebug(QString("Today is visible at %1.").arg(today));
+  // kdDegug(5850) << "Today is visible at "<< today << "." << endl;
 }
 
 /* slot */ void KODayMatrix::updateView()
@@ -480,20 +481,21 @@ void KODayMatrix::dropEvent( QDropEvent *e )
     action = menu->exec( QCursor::pos(), 0 );
   }
 
-  // When copying, clear the UID:
-  if ( action == DRAG_COPY ) {
-    if ( todo ) todo->recreate();
-    if ( event ) event->recreate();
-  } else {
-    if ( existingEvent ) oldEvent = existingEvent->clone();
-    if ( event ) delete event;
-    event = existingEvent;
-    if ( existingTodo ) oldTodo = existingTodo->clone();
-    if ( todo ) delete todo;
-    todo = existingTodo;
-  }
-
   if ( action == DRAG_COPY  || action == DRAG_MOVE ) {
+  
+    // When copying, clear the UID:
+    if ( action == DRAG_COPY ) {
+      if ( todo ) todo->recreate();
+      if ( event ) event->recreate();
+    } else {
+      if ( existingEvent ) oldEvent = existingEvent->clone();
+      if ( event ) delete event;
+      event = existingEvent;
+      if ( existingTodo ) oldTodo = existingTodo->clone();
+      if ( todo ) delete todo;
+      todo = existingTodo;
+    }
+
     e->accept();
     if ( event ) {
       // Adjust date
@@ -555,21 +557,23 @@ void KODayMatrix::dropEvent( QDropEvent *e )
 //  P A I N T   E V E N T   H A N D L I N G
 // ----------------------------------------------------------------------------
 
-void KODayMatrix::paintEvent( QPaintEvent *pevent )
+void KODayMatrix::paintEvent( QPaintEvent * )
 {
-//kdDebug(5850) << "KODayMatrix::paintEvent() BEGIN" << endl;
+// kdDebug(5850) << "KODayMatrix::paintEvent() BEGIN" << endl;
 
-  QPainter p(this);
-
+  QPainter p;
   QRect sz = frameRect();
+  QPixmap pm( sz.size() );
   int dheight = mDaySize.height();
   int dwidth = mDaySize.width();
   int row,col;
   int selw, selh;
   bool isRTL = KOGlobals::self()->reverseLayout();
 
-  // draw background and topleft frame
-  p.fillRect(pevent->rect(), mDefaultBackColor);
+  p.begin(  &pm, this );
+  pm.fill( mDefaultBackColor );
+
+  // draw topleft frame
   p.setPen(mDefaultTextColor);
   p.drawRect(0, 0, sz.width()+1, sz.height()+1);
   // don't paint over borders
@@ -685,6 +689,8 @@ void KODayMatrix::paintEvent( QPaintEvent *pevent )
       p.setFont(myFont);
     }
   }
+  p.end();
+  bitBlt(  this, 0, 0, &pm );
 }
 
 // ----------------------------------------------------------------------------

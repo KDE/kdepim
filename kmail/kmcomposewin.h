@@ -314,6 +314,12 @@ public:
    inline void setAutoDelete(bool f) { mAutoDeleteMsg = f; }
 
   /**
+   * If this flag is set, the compose window will delete itself after
+   * the window has been closed.
+   */
+  void setAutoDeleteWindow( bool f );
+
+  /**
    * If this folder is set, the original message is inserted back after
    * cancelling
    */
@@ -355,6 +361,14 @@ public:
     mSubjectTextWasSpellChecked = _spell;
   }
   bool subjectTextWasSpellChecked() const { return mSubjectTextWasSpellChecked; }
+
+
+  /** Disabled signing and encryption completely for this composer window. */
+  void setSigningAndEncryptionDisabled( bool v )
+  {
+    mSigningAndEncryptionExplicitlyDisabled = v;
+  }
+
 public slots:
   /**
    * Actions:
@@ -606,7 +620,7 @@ protected:
   /**
    * Initialization methods
    */
-  void setupActions();
+  void setupActions(int aCryptoMessageFormat=-1);
   void setupStatusBar();
   void setupEditor();
 
@@ -736,6 +750,7 @@ protected:
   int mViewId, mRemoveId, mSaveAsId, mPropertiesId;
   bool mAutoSign, mAutoPgpSign, mAutoPgpEncrypt, mAutoDeleteMsg;
   bool mNeverSignWhenSavingInDrafts, mNeverEncryptWhenSavingInDrafts;
+  bool mSigningAndEncryptionExplicitlyDisabled;
   bool mAutoRequestMDN;
   bool mLastSignActionState, mLastEncryptActionState;
   bool mLastIdentityHasSigningKey, mLastIdentityHasEncryptionKey;

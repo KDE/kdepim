@@ -70,7 +70,7 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
     mAlarms.append( b );
   }
   mAlarms.setAutoDelete(true);
-  
+
   Attachment::List::ConstIterator it1;
   for ( it1 = i.mAttachments.begin(); it1 != i.mAttachments.end(); ++it1 ) {
     Attachment *a = new Attachment( **it1 );
@@ -264,8 +264,9 @@ QString Incidence::categoriesStr() const
 
 void Incidence::setRelatedToUid(const QString &relatedToUid)
 {
-  if (mReadOnly) return;
+  if ( mReadOnly || mRelatedToUid == relatedToUid ) return;
   mRelatedToUid = relatedToUid;
+  updated();
 }
 
 QString Incidence::relatedToUid() const
@@ -279,7 +280,11 @@ void Incidence::setRelatedTo(Incidence *relatedTo)
   if(mRelatedTo)
     mRelatedTo->removeRelation(this);
   mRelatedTo = relatedTo;
-  if (mRelatedTo) mRelatedTo->addRelation(this);
+  if (mRelatedTo) {
+    mRelatedTo->addRelation(this);
+    if ( mRelatedTo->uid() != mRelatedToUid )
+      setRelatedToUid( mRelatedTo->uid() );
+  }
 }
 
 Incidence *Incidence::relatedTo() const
@@ -296,7 +301,6 @@ void Incidence::addRelation( Incidence *event )
 {
   if ( mRelations.find( event ) == mRelations.end() ) {
     mRelations.append( event );
-    updated();
   }
 }
 

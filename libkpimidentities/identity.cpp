@@ -229,31 +229,55 @@ QDataStream & KPIM::operator>>( QDataStream & stream, KPIM::Signature & sig ) {
 Identity Identity::null;
 
 bool Identity::isNull() const {
-  return mIdentity.isNull() && mFullName.isNull() && mEmailAddr.isNull() &&
-    mOrganization.isNull() && mReplyToAddr.isNull() && mBcc.isNull() &&
-    mVCardFile.isNull() &&
-    mFcc.isNull() && mDrafts.isNull() &&
-    mPGPEncryptionKey.isNull() && mPGPSigningKey.isNull() &&
-    mSMIMEEncryptionKey.isNull() && mSMIMESigningKey.isNull() &&
-    mTransport.isNull() && mDictionary.isNull() &&
+  return mIdentity.isEmpty() && mFullName.isEmpty() && mEmailAddr.isEmpty() &&
+    mOrganization.isEmpty() && mReplyToAddr.isEmpty() && mBcc.isEmpty() &&
+    mVCardFile.isEmpty() &&
+    mFcc.isEmpty() && mDrafts.isEmpty() &&
+    mPGPEncryptionKey.isEmpty() && mPGPSigningKey.isEmpty() &&
+    mSMIMEEncryptionKey.isEmpty() && mSMIMESigningKey.isEmpty() &&
+    mTransport.isEmpty() && mDictionary.isEmpty() &&
     mPreferredCryptoMessageFormat == Kleo::AutoFormat &&
     mSignature.type() == Signature::Disabled;
 }
 
 bool Identity::operator==( const Identity & other ) const {
-    return mUoid == other.mUoid &&
-      mIdentity == other.mIdentity && mFullName == other.mFullName &&
-      mEmailAddr == other.mEmailAddr && mOrganization == other.mOrganization &&
-      mReplyToAddr == other.mReplyToAddr && mBcc == other.mBcc &&
-      mVCardFile == other.mVCardFile &&
-      mFcc == other.mFcc &&
-      mPGPEncryptionKey == other.mPGPEncryptionKey &&
-      mPGPSigningKey == other.mPGPSigningKey &&
-      mSMIMEEncryptionKey == other.mSMIMEEncryptionKey &&
-      mSMIMESigningKey == other.mSMIMESigningKey &&
-      mPreferredCryptoMessageFormat == other.mPreferredCryptoMessageFormat &&
-      mDrafts == other.mDrafts && mTransport == other.mTransport &&
-      mDictionary == other.mDictionary && mSignature == other.mSignature;
+  bool same = mUoid == other.mUoid &&
+    mIdentity == other.mIdentity && mFullName == other.mFullName &&
+    mEmailAddr == other.mEmailAddr && mOrganization == other.mOrganization &&
+    mReplyToAddr == other.mReplyToAddr && mBcc == other.mBcc &&
+    mVCardFile == other.mVCardFile &&
+    mFcc == other.mFcc &&
+    mPGPEncryptionKey == other.mPGPEncryptionKey &&
+    mPGPSigningKey == other.mPGPSigningKey &&
+    mSMIMEEncryptionKey == other.mSMIMEEncryptionKey &&
+    mSMIMESigningKey == other.mSMIMESigningKey &&
+    mPreferredCryptoMessageFormat == other.mPreferredCryptoMessageFormat &&
+    mDrafts == other.mDrafts && mTransport == other.mTransport &&
+    mDictionary == other.mDictionary && mSignature == other.mSignature;
+
+#if 0
+  if ( same )
+    return true;
+  if ( mUoid != other.mUoid ) kdDebug() << "mUoid differs : " << mUoid << " != " << other.mUoid << endl;
+  if ( mIdentity != other.mIdentity ) kdDebug() << "mIdentity differs : " << mIdentity << " != " << other.mIdentity << endl;
+  if ( mFullName != other.mFullName ) kdDebug() << "mFullName differs : " << mFullName << " != " << other.mFullName << endl;
+  if ( mEmailAddr != other.mEmailAddr ) kdDebug() << "mEmailAddr differs : " << mEmailAddr << " != " << other.mEmailAddr << endl;
+  if ( mOrganization != other.mOrganization ) kdDebug() << "mOrganization differs : " << mOrganization << " != " << other.mOrganization << endl;
+  if ( mReplyToAddr != other.mReplyToAddr ) kdDebug() << "mReplyToAddr differs : " << mReplyToAddr << " != " << other.mReplyToAddr << endl;
+  if ( mBcc != other.mBcc ) kdDebug() << "mBcc differs : " << mBcc << " != " << other.mBcc << endl;
+  if ( mVCardFile != other.mVCardFile ) kdDebug() << "mVCardFile differs : " << mVCardFile << " != " << other.mVCardFile << endl;
+  if ( mFcc != other.mFcc ) kdDebug() << "mFcc differs : " << mFcc << " != " << other.mFcc << endl;
+  if ( mPGPEncryptionKey != other.mPGPEncryptionKey ) kdDebug() << "mPGPEncryptionKey differs : " << mPGPEncryptionKey << " != " << other.mPGPEncryptionKey << endl;
+  if ( mPGPSigningKey != other.mPGPSigningKey ) kdDebug() << "mPGPSigningKey differs : " << mPGPSigningKey << " != " << other.mPGPSigningKey << endl;
+  if ( mSMIMEEncryptionKey != other.mSMIMEEncryptionKey ) kdDebug() << "mSMIMEEncryptionKey differs : '" << mSMIMEEncryptionKey << "' != '" << other.mSMIMEEncryptionKey << "'" << endl;
+  if ( mSMIMESigningKey != other.mSMIMESigningKey ) kdDebug() << "mSMIMESigningKey differs : " << mSMIMESigningKey << " != " << other.mSMIMESigningKey << endl;
+  if ( mPreferredCryptoMessageFormat != other.mPreferredCryptoMessageFormat ) kdDebug() << "mPreferredCryptoMessageFormat differs : " << mPreferredCryptoMessageFormat << " != " << other.mPreferredCryptoMessageFormat << endl;
+  if ( mDrafts != other.mDrafts ) kdDebug() << "mDrafts differs : " << mDrafts << " != " << other.mDrafts << endl;
+  if ( mTransport != other.mTransport ) kdDebug() << "mTransport differs : " << mTransport << " != " << other.mTransport << endl;
+  if ( mDictionary != other.mDictionary ) kdDebug() << "mDictionary differs : " << mDictionary << " != " << other.mDictionary << endl;
+  if ( ! ( mSignature == other.mSignature ) ) kdDebug() << "mSignature differs" << endl;
+#endif
+  return same;
 }
 
 Identity::Identity( const QString & id, const QString & fullName,
@@ -261,10 +285,15 @@ Identity::Identity( const QString & id, const QString & fullName,
 			const QString & replyToAddr )
   : mUoid( 0 ), mIdentity( id ), mFullName( fullName ),
     mEmailAddr( emailAddr ), mOrganization( organization ),
-    mReplyToAddr( replyToAddr ), mIsDefault( false ),
+    mReplyToAddr( replyToAddr ),
+    // Using "" instead of null to make operator==() not fail
+    // (readConfig returns "")
+    mBcc( "" ), mVCardFile( "" ), mPGPEncryptionKey( "" ), mPGPSigningKey( "" ),
+    mSMIMEEncryptionKey( "" ), mSMIMESigningKey( "" ), mFcc( "" ), mDrafts( "" ), mTransport( "" ),
+    mDictionary( "" ),
+    mIsDefault( false ),
     mPreferredCryptoMessageFormat( Kleo::AutoFormat )
 {
-
 }
 
 Identity::~Identity()
@@ -405,21 +434,29 @@ void Identity::setOrganization(const QString &str)
 void Identity::setPGPSigningKey(const QCString &str)
 {
   mPGPSigningKey = str;
+  if ( mPGPSigningKey.isNull() )
+    mPGPSigningKey = "";
 }
 
 void Identity::setPGPEncryptionKey(const QCString &str)
 {
   mPGPEncryptionKey = str;
+  if ( mPGPEncryptionKey.isNull() )
+    mPGPEncryptionKey = "";
 }
 
 void Identity::setSMIMESigningKey(const QCString &str)
 {
   mSMIMESigningKey = str;
+  if ( mSMIMESigningKey.isNull() )
+    mSMIMESigningKey = "";
 }
 
 void Identity::setSMIMEEncryptionKey(const QCString &str)
 {
   mSMIMEEncryptionKey = str;
+  if ( mSMIMEEncryptionKey.isNull() )
+    mSMIMEEncryptionKey = "";
 }
 
 //-----------------------------------------------------------------------------
@@ -492,18 +529,24 @@ void Identity::setSignatureInlineText(const QString &str )
 void Identity::setTransport(const QString &str)
 {
   mTransport = str;
+  if ( mTransport.isNull() )
+    mTransport = "";
 }
 
 //-----------------------------------------------------------------------------
 void Identity::setFcc(const QString &str)
 {
   mFcc = str;
+  if ( mFcc.isNull() )
+    mFcc = "";
 }
 
 //-----------------------------------------------------------------------------
 void Identity::setDrafts(const QString &str)
 {
   mDrafts = str;
+  if ( mDrafts.isNull() )
+    mDrafts = "";
 }
 
 
@@ -511,6 +554,8 @@ void Identity::setDrafts(const QString &str)
 void Identity::setDictionary( const QString &str )
 {
   mDictionary = str;
+  if ( mDictionary.isNull() )
+    mDictionary = "";
 }
 
 

@@ -412,7 +412,7 @@ const char* bugURL( void );
    This function may be called prior to initialize().
   */
 int interfaceVersion (int *min_version);
-
+#define CRYPTPLUG_ERR_WRONG_KEY_USAGE 0x7070
 
 /*! \ingroup groupGeneral
     \brief This function sets up all internal structures.

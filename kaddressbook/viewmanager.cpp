@@ -437,6 +437,10 @@ void ViewManager::startDrag()
   KABC::VCardConverter converter;
   QString vcards = converter.createVCards( addrList );
 
+  // Best text representation is given by textdrag, so it must be first
+  drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToEmails( addrList ), this ) );
+  drag->addDragObject( new KVCardDrag( vcards, this ) );
+
   KTempDir tempDir;
   if ( tempDir.status() == 0 ) {
     QString fileName;
@@ -454,9 +458,6 @@ void ViewManager::startDrag()
       drag->addDragObject( urlDrag );
     }
   }
-
-  drag->addDragObject( new KVCardDrag( vcards, this ) );
-  drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToEmails( addrList ), this ) );
 
   drag->setPixmap( KGlobal::iconLoader()->loadIcon( "vcard", KIcon::Desktop ) );
   drag->dragCopy();

@@ -89,8 +89,8 @@ PilotRecord::PilotRecord(PilotRecord * orig)
 	memcpy(fData, orig->getData(), orig->getLen());
 	fLen = orig->getLen();
 	fAttrib = orig->getAttrib();
-	fCat = orig->getCat();
-	fID = orig->getID();
+	fCat = orig->category();
+	fID = orig->id();
 
 	fAllocated++;
 }
@@ -105,9 +105,34 @@ PilotRecord & PilotRecord::operator = (PilotRecord & orig)
 	memcpy(fData, orig.getData(), orig.getLen());
 	fLen = orig.getLen();
 	fAttrib = orig.getAttrib();
-	fCat = orig.getCat();
-	fID = orig.getID();
+	fCat = orig.category();
+	fID = orig.id();
 	return *this;
+}
+
+recordid_t PilotRecord::getID() const
+{
+	return id();
+}
+
+void PilotRecord::makeDeleted()
+{
+	setDeleted(true);
+}
+
+void PilotRecord::makeSecret()
+{
+	setSecret(true);
+}
+
+int PilotRecord::getCat() const
+{
+	return category();
+}
+
+void PilotRecord::setCat(int i)
+{
+	return setCategory(i);
 }
 
 void PilotRecord::setData(const char *data, int len)
@@ -138,8 +163,8 @@ void PilotRecord::setData(const char *data, int len)
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname
-		<< ": Got codec " << codecName().latin1() << " for setting "
-		<< s.latin1() << endl;
+		<< ": Got codec " << codecName() << " for setting "
+		<< s << endl;
 #endif
 	return codec();
 }

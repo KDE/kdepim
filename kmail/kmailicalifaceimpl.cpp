@@ -2,7 +2,7 @@
     This file is part of KMail.
 
     Copyright (c) 2003 Steffen Hansen <steffen@klaralvdalens-datakonsult.se>
-    Copyright (c) 2003 - 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+    Copyright (c) 2003 - 2004 Bo Thorsen <bo@sonofthor.dk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -204,7 +204,7 @@ QStringList KMailICalIfaceImpl::incidences( const QString& type,
       KMMessage *msg = f->getMsg( i );
       Q_ASSERT( msg );
       if( msg->isComplete() ) {
-        if( KMGroupware::vPartFoundAndDecoded( msg, s ) ) {
+        if( vPartFoundAndDecoded( msg, s ) ) {
           QString uid( "UID" );
           vPartMicroParser( s, uid );
           const Q_UINT32 sernum = msg->getMsgSerNum();
@@ -241,7 +241,7 @@ void KMailICalIfaceImpl::slotMessageRetrieved( KMMessage* msg )
   Accumulator *ac = mAccumulators.find( parent->location() );
   if( ac ) {
     QString s;
-    if ( !KMGroupware::vPartFoundAndDecoded( msg, s ) ) return;
+    if ( !vPartFoundAndDecoded( msg, s ) ) return;
     QString uid( "UID" );
     vPartMicroParser( s, uid );
     const Q_UINT32 sernum = msg->getMsgSerNum();
@@ -304,7 +304,7 @@ bool KMailICalIfaceImpl::update( const QString& type, const QString& folder,
   if( !mUseResourceIMAP )
     return false;
 
-  if( entries.count() & 2 == 1 )
+  if( entries.count() % 2 == 1 )
     // Something is wrong - an odd amount of strings should not happen
     return false;
 
@@ -387,7 +387,7 @@ void KMailICalIfaceImpl::slotIncidenceAdded( KMFolder* folder,
     KMMessage *msg = folder->getMsg( i );
     if( !msg ) return;
     if( msg->isComplete() ) {
-      if ( !KMGroupware::vPartFoundAndDecoded( msg, s ) ) return;
+      if ( !vPartFoundAndDecoded( msg, s ) ) return;
       kdDebug(5006) << "Emitting DCOP signal incidenceAdded( " << type
                     << ", " << folder->location() << ", " << s << " )" << endl;
       QString uid( "UID" );
@@ -440,7 +440,7 @@ void KMailICalIfaceImpl::slotIncidenceDeleted( KMFolder* folder,
     // Read the iCal or vCard
     bool unget = !folder->isMessage( i );
     QString s;
-    if( KMGroupware::vPartFoundAndDecoded( folder->getMsg( i ), s ) ) {
+    if( vPartFoundAndDecoded( folder->getMsg( i ), s ) ) {
       QString uid( "UID" );
       vPartMicroParser( s, uid );
       kdDebug(5006) << "Emitting DCOP signal incidenceDeleted( "
@@ -461,6 +461,13 @@ void KMailICalIfaceImpl::slotRefresh( const QString& type )
     signalRefresh( type, QString::null /* PENDING(bo) folder->location() */ );
     kdDebug(5006) << "Emitting DCOP signal signalRefresh( " << type << " )" << endl;
   }
+}
+
+void KMailICalIfaceImpl::slotRefreshFolder( KMFolder* folder )
+{
+  const QString type = icalFolderType( folder );
+  if ( !type.isEmpty() )
+    slotRefresh( type );
 }
 
 
@@ -657,12 +664,16 @@ void KMailICalIfaceImpl::folderContentsTypeChanged( KMFolder* folder,
                 this, SLOT( slotIncidenceAdded( KMFolder*, Q_UINT32 ) ) );
     disconnect( folder, SIGNAL( msgRemoved( KMFolder*, Q_UINT32 ) ),
                 this, SLOT( slotIncidenceDeleted( KMFolder*, Q_UINT32 ) ) );
+    disconnect( folder, SIGNAL( expunged( KMFolder* ) ),
+                this, SLOT( slotRefreshFolder( KMFolder* ) ) );
 
     // And listen to changes from it
     connect( folder, SIGNAL( msgAdded( KMFolder*, Q_UINT32 ) ),
              this, SLOT( slotIncidenceAdded( KMFolder*, Q_UINT32 ) ) );
     connect( folder, SIGNAL( msgRemoved( KMFolder*, Q_UINT32 ) ),
              this, SLOT( slotIncidenceDeleted( KMFolder*, Q_UINT32 ) ) );
+    connect( folder, SIGNAL( expunged( KMFolder* ) ),
+             this, SLOT( slotRefreshFolder( KMFolder* ) ) );
   }
 
   // Tell about the new resource
@@ -740,27 +751,27 @@ void KMailICalIfaceImpl::readConfig()
   // Make sure the folder parent has the subdirs
   bool makeSubFolders = false;
   KMFolderNode* node;
-  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Calendar ) );
+  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Calendar, folderLanguage ) );
   if( !node || node->isDir() ) {
     makeSubFolders = true;
     mCalendar = 0;
   }
-  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Tasks ) );
+  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Tasks, folderLanguage ) );
   if( !node || node->isDir() ) {
     makeSubFolders = true;
     mTasks = 0;
   }
-  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Journals ) );
+  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Journals, folderLanguage ) );
   if( !node || node->isDir() ) {
     makeSubFolders = true;
     mJournals = 0;
   }
-  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Contacts ) );
+  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Contacts, folderLanguage ) );
   if( !node || node->isDir() ) {
     makeSubFolders = true;
     mContacts = 0;
   }
-  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Notes ) );
+  node = folderParentDir->hasNamedFolder( folderName( KFolderTreeItem::Notes, folderLanguage ) );
   if( !node || node->isDir() ) {
     makeSubFolders = true;
     mNotes = 0;
@@ -811,16 +822,6 @@ void KMailICalIfaceImpl::readConfig()
   mContacts = initFolder( KFolderTreeItem::Contacts, "GCo" );
   mNotes    = initFolder( KFolderTreeItem::Notes, "GNo" );
 
-  // Connect the expunged signal
-  connect( mCalendar, SIGNAL( expunged() ), this, SLOT( slotRefreshCalendar() ) );
-  connect( mTasks,    SIGNAL( expunged() ), this, SLOT( slotRefreshTasks() ) );
-  connect( mJournals, SIGNAL( expunged() ), this, SLOT( slotRefreshJournals() ) );
-  connect( mContacts, SIGNAL( expunged() ), this, SLOT( slotRefreshContacts() ) );
-  connect( mNotes,    SIGNAL( expunged() ), this, SLOT( slotRefreshNotes() ) );
-
-  // Bad hack
-  connect( mNotes,    SIGNAL( changed() ),  this, SLOT( slotRefreshNotes() ) );
-
   // Make KOrganizer re-read everything
   slotRefresh( "Calendar" );
   slotRefresh( "Task" );
@@ -844,12 +845,6 @@ void KMailICalIfaceImpl::slotCheckDone()
     readConfig();
   }
 }
-
-void KMailICalIfaceImpl::slotRefreshCalendar() { slotRefresh( "Calendar" ); }
-void KMailICalIfaceImpl::slotRefreshTasks() { slotRefresh( "Task" ); }
-void KMailICalIfaceImpl::slotRefreshJournals() { slotRefresh( "Journal" ); }
-void KMailICalIfaceImpl::slotRefreshContacts() { slotRefresh( "Contact" ); }
-void KMailICalIfaceImpl::slotRefreshNotes() { slotRefresh( "Notes" ); }
 
 KMFolder* KMailICalIfaceImpl::initFolder( KFolderTreeItem::Type itemType,
                                           const char* typeString )
@@ -886,11 +881,15 @@ KMFolder* KMailICalIfaceImpl::initFolder( KFolderTreeItem::Type itemType,
               this, SLOT( slotIncidenceAdded( KMFolder*, Q_UINT32 ) ) );
   disconnect( folder, SIGNAL( msgRemoved( KMFolder*, Q_UINT32 ) ),
               this, SLOT( slotIncidenceDeleted( KMFolder*, Q_UINT32 ) ) );
+  disconnect( folder, SIGNAL( expunged( KMFolder* ) ),
+              this, SLOT( slotRefreshFolder( KMFolder* ) ) );
   // Setup the signals to listen for changes
   connect( folder, SIGNAL( msgAdded( KMFolder*, Q_UINT32 ) ),
            this, SLOT( slotIncidenceAdded( KMFolder*, Q_UINT32 ) ) );
   connect( folder, SIGNAL( msgRemoved( KMFolder*, Q_UINT32 ) ),
            this, SLOT( slotIncidenceDeleted( KMFolder*, Q_UINT32 ) ) );
+  connect( folder, SIGNAL( expunged( KMFolder* ) ),
+           this, SLOT( slotRefreshFolder( KMFolder* ) ) );
 
   return folder;
 }
@@ -926,7 +925,7 @@ void KMailICalIfaceImpl::loadPixmaps() const
     pixCalendar = new QPixmap( UserIcon("kmgroupware_folder_calendar"));
     pixNotes    = new QPixmap( UserIcon("kmgroupware_folder_notes"));
     pixTasks    = new QPixmap( UserIcon("kmgroupware_folder_tasks"));
-    // TODO: Find a pixmap for journals
+    pixJournals = new QPixmap( UserIcon("kmgroupware_folder_journals"));
   }
 }
 
@@ -953,6 +952,7 @@ QPixmap* KMailICalIfaceImpl::pixContacts;
 QPixmap* KMailICalIfaceImpl::pixCalendar;
 QPixmap* KMailICalIfaceImpl::pixNotes;
 QPixmap* KMailICalIfaceImpl::pixTasks;
+QPixmap* KMailICalIfaceImpl::pixJournals;
 
 static void reloadFolderTree()
 {

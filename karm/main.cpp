@@ -45,9 +45,13 @@ int main( int argc, char *argv[] )
   KApplication myApp;
 
   MainWindow *mainWindow = new MainWindow;
-
   myApp.setMainWidget( mainWindow );
-  mainWindow->show();
+
+  if (kapp->isRestored() && KMainWindow::canBeRestored( 1 ))
+    mainWindow->restore( 1, false );
+  else
+    mainWindow->show();
+
   signal( SIGQUIT, cleanup );
   signal( SIGINT, cleanup );
   int ret = myApp.exec();

@@ -69,8 +69,8 @@ using KMail::MessageProperty;
 
 //-----------------------------------------------------------------------------
 KMMsgBase::KMMsgBase(KMFolder* aParentFolder)
-  : mParent( aParentFolder ), mDirty( false), mIndexOffset( 0 ),
-    mIndexLength( 0 ), mEnableUndo( false ), mStatus( KMMsgStatusUnknown )
+  : mParent( aParentFolder ), mIndexOffset( 0 ),
+    mIndexLength( 0 ), mDirty( false ), mEnableUndo( false ), mStatus( KMMsgStatusUnknown )
 {
 }
 
@@ -98,8 +98,8 @@ void KMMsgBase::assign(const KMMsgBase* other)
   mIndexOffset = other->mIndexOffset;
   mIndexLength = other->mIndexLength;
   MessageProperty::forget( this );
-  bool otherTransfer = MessageProperty::transferInProgress( other );
-  MessageProperty::setTransferInProgress( this, otherTransfer );
+  //bool otherTransfer = MessageProperty::transferInProgress( other );
+  //MessageProperty::setTransferInProgress( this, otherTransfer );
 }
 
 
@@ -719,9 +719,11 @@ QString KMMsgBase::decodeRFC2047String(const QCString& aStr)
   invalid_encoded_word:
     // invalid encoding, keep separating LWSP.
     pos = beg;
-    result += LWSP_buffer;
+    if ( !LWSP_buffer.isNull() )
+      result += LWSP_buffer;
     result += "=?";
     lastWasEncodedWord = false;
+    ++pos; // eat '?' (for loop eats '=')
     LWSP_buffer = 0;
   }
   return result;

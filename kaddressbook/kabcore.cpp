@@ -274,7 +274,7 @@ QWidget *KABCore::widget() const
 KAboutData *KABCore::createAboutData()
 {
   KAboutData *about = new KAboutData( "kaddressbook", I18N_NOOP( "KAddressBook" ),
-                                      "3.3", I18N_NOOP( "The KDE Address Book" ),
+                                      "3.3.2", I18N_NOOP( "The KDE Address Book" ),
                                       KAboutData::License_GPL_V2,
                                       I18N_NOOP( "(c) 1997-2004, The KDE PIM Team" ) );
   about->addAuthor( "Tobias Koenig", I18N_NOOP( "Current maintainer" ), "tokoe@kde.org" );
@@ -325,7 +325,7 @@ void KABCore::setContactSelected( const QString &uid )
   mActionEditAddressee->setEnabled( selected );
   mActionMail->setEnabled( selected );
   mActionMailVCard->setEnabled( selected );
-  mActionChat->setEnabled( selected );
+  mActionChat->setEnabled( selected && mKIMProxy && mKIMProxy->initialize() );
   mActionWhoAmI->setEnabled( selected );
   mActionCategories->setEnabled( selected );
   mActionMerge->setEnabled( selected );
@@ -820,9 +820,9 @@ void KABCore::openLDAPDialog()
   }
 
   if ( !mLdapSearchDialog ) {
-    mLdapSearchDialog = new LDAPSearchDialog( mAddressBook, mWidget );
+    mLdapSearchDialog = new LDAPSearchDialog( mAddressBook, this, mWidget );
     connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ), mSearchManager,
-            SLOT( reload() ) );
+            SLOT( addressBookChanged() ) );
     connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ),
             SLOT( setModified() ) );
   } else

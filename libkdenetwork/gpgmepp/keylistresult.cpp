@@ -57,7 +57,7 @@ GpgME::KeyListResult::KeyListResult( const Error & error, const _gpgme_op_keylis
   d->ref();
 }
 
-make_standard_stuff(KeyListResult);
+make_standard_stuff(KeyListResult)
 
 void GpgME::KeyListResult::detach() {
   if ( isNull() || d->refCount() <= 1 )

@@ -20,6 +20,16 @@
 
 #include "webdavhandler.h"
 
+#ifdef HAVE_VALUES_H
+#include <values.h>
+#else
+#ifdef HAVE_SYS_LIMITS_H
+#include <sys/limits.h>
+#endif
+#endif
+
+#include <libkcal/incidence.h>
+
 #include <libkdepim/kpimprefs.h>
 
 #include <kdebug.h>
@@ -42,6 +52,17 @@ WebdavHandler::WebdavHandler()
 
   kdDebug() << "LOG FILE: " << mLogFile << endl;
 }
+
+void WebdavHandler::setUserId( const QString &id )
+{
+  mUserId = id;
+}
+
+QString WebdavHandler::userId() const
+{
+  return mUserId;
+}
+
 
 void WebdavHandler::log( const QString &text )
 {
@@ -138,10 +159,26 @@ QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
 {
   QString s = str.mid( 0, str.length() - 3 );
 
+  bool preEpoch = s.startsWith("-");
+  if (preEpoch)
+     s = s.mid(1);
+
   unsigned long ticks = s.toULong();
 
   QDateTime dt;
-  dt.setTime_t( ticks, Qt::UTC );
+
+  if (preEpoch) {
+    dt.setTime_t( 0, Qt::UTC );
+    if (ticks > INT_MAX) {
+      dt = dt.addSecs(-INT_MAX);
+      ticks -= INT_MAX;
+    }
+    dt = dt.addSecs(-((long) ticks));
+  }
+  else
+  {
+    dt.setTime_t( ticks, Qt::UTC );
+  }
 
   return dt;
 }
@@ -149,14 +186,7 @@ QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
 QDateTime WebdavHandler::sloxToQDateTime( const QString &str,
                                           const QString &timeZoneId )
 {
-  QString s = str.mid( 0, str.length() - 3 );
-
-  unsigned long ticks = s.toULong();
-
-  QDateTime dt;
-  dt.setTime_t( ticks, Qt::UTC );
-
-  return KPimPrefs::utcToLocalTime( dt, timeZoneId );
+  return KPimPrefs::utcToLocalTime( sloxToQDateTime(str), timeZoneId );
 }
 
 QDomElement WebdavHandler::addElement( QDomDocument &doc, QDomNode &node,
@@ -186,4 +216,41 @@ QDomElement WebdavHandler::addSloxElement( QDomDocument &doc, QDomNode &node,
   }
   node.appendChild( el );
   return el;
+}
+
+void WebdavHandler::parseSloxAttribute( const QDomElement &e )
+{
+//  kdDebug() << "parseSloxAttribute" << endl;
+
+  QString tag = e.tagName();
+  QString text = QString::fromUtf8( e.text().latin1() );
+  if ( text.isEmpty() ) return;
+
+  if ( tag == "owner" ) {
+    if ( text == mUserId ) mWritable = true;
+  } else if ( tag == "writerights" ) {
+    QDomNode n;
+    for( n = e.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+      QDomElement e2 = n.toElement();
+      if ( e2.tagName() == "member" ) {
+        if ( e2.text() == mUserId ) mWritable = true;
+      }
+      // TODO: Process group write rights
+    }
+  }
+}
+
+void WebdavHandler::clearSloxAttributeStatus()
+{
+  mWritable = false;
+}
+
+void WebdavHandler::setSloxAttributes( KCal::Incidence *i )
+{
+  i->setReadOnly( !mWritable );
+}
+
+void WebdavHandler::setSloxAttributes( KABC::Addressee & )
+{
+  // FIXME: libkabc doesn't allow to set an individual addressee to read-only
 }

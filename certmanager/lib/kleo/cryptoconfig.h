@@ -341,6 +341,6 @@ namespace Kleo {
     virtual void clear() = 0;
   };
 
-};
+}
 
 #endif /* CRYPTOCONFIG_H */

@@ -247,6 +247,7 @@ void ExchangeUpload::startUpload( const KURL &url )
       event->transparency() ? "Free" : "Busy" );
   // KLUDGE: somehow we need to take the opposite of the
   // value that localUTCOffset() supplies...
+  // FIXME: What do we need that offset for anyway???
   int tzOffset = - KRFCDate::localUTCOffset(); 
   QString offsetString;
   if ( tzOffset == 0 ) 
@@ -258,13 +259,14 @@ void ExchangeUpload::startUpload( const KURL &url )
   offsetString = offsetString.replace( QRegExp(" "), "0" );
 
   kdDebug() << "Timezone offset: " << tzOffset << " : " << offsetString << endl;
+  kdDebug() << "ExchangeUpload::mTimeZoneId=" << mTimeZoneId << endl;
 
   addElement( doc, prop, "urn:schemas:calendar:", "dtstart", 
-      event->dtStart().toString( "yyyy-MM-ddThh:mm:ssZ" ) );
+      zoneAsUtc( event->dtStart(), mTimeZoneId ).toString( Qt::ISODate ) + "Z" );
   //    event->dtStart().toString( "yyyy-MM-ddThh:mm:ss.zzzZ" ) );
   //    2002-06-04T08:00:00.000Z" );
   addElement( doc, prop, "urn:schemas:calendar:", "dtend", 
-      event->dtEnd().toString( "yyyy-MM-ddThh:mm:ssZ" ) );
+      zoneAsUtc( event->dtEnd(), mTimeZoneId ).toString( Qt::ISODate ) + "Z" );
 #if 0
   addElement( doc, prop, "urn:schemas:calendar:", "dtstart", 
       event->dtStart().toString( "yyyy-MM-ddThh:mm:ss.zzz" )+ offsetString );

@@ -36,7 +36,6 @@ Name[ta]=MAL (AvantGo) காப்புக் குழாய்
 Name[tg]=Канали MAL (AvantGo)
 Name[tr]=MAL (AvantGo) Kanalı
 Name[uk]=Акведук MAL (AvantGo)
-Name[xx]=xxMAL (AvantGo) Conduitxx
 Name[zh_CN]=MAL (AvantGo) 管道
 Implemented=file
 ServiceTypes=KPilotConduit

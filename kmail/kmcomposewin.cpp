@@ -39,6 +39,8 @@ using KPIM::AddressesDialog;
 using KPIM::MailListDrag;
 #include "recentaddresses.h"
 using KRecentAddress::RecentAddresses;
+#include "kleo_util.h"
+#include "stl_util.h"
 
 #include <libkpimidentities/identitymanager.h>
 #include <libkpimidentities/identitycombo.h>
@@ -112,26 +114,6 @@ using KRecentAddress::RecentAddresses;
 
 #include "kmcomposewin.moc"
 
-static const Kleo::CryptoMessageFormat cryptoMessageFormats[] = {
-  Kleo::AutoFormat,
-  Kleo::InlineOpenPGPFormat,
-  Kleo::OpenPGPMIMEFormat,
-  Kleo::SMIMEFormat,
-  Kleo::SMIMEOpaqueFormat,
-};
-static const int numCryptoMessageFormats = sizeof cryptoMessageFormats / sizeof *cryptoMessageFormats ;
-
-static inline Kleo::CryptoMessageFormat cb2format( int idx ) {
-  return cryptoMessageFormats[ idx >= 0 && idx < numCryptoMessageFormats ? idx : 0 ];
-}
-
-static inline int format2cb( Kleo::CryptoMessageFormat f ) {
-  for ( int i = 0 ; i < numCryptoMessageFormats ; ++i )
-    if ( f == cryptoMessageFormats[i] )
-      return i;
-  return 0;
-}
-
 //-----------------------------------------------------------------------------
 KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id  )
   : MailComposerIface(), KMail::SecondaryWindow( "kmail-composer#" ),
@@ -140,6 +122,7 @@ KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id  )
     mAtmModified( false ),
     mMsg( 0 ),
     mAttachMenu( 0 ),
+    mSigningAndEncryptionExplicitlyDisabled( false ),
     mAutoRequestMDN( false ),
     mFolder( 0 ),
     mUseHTMLEditor( false ),
@@ -157,6 +140,10 @@ KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id  )
     mCryptoModuleAction( 0 ),
     mComposer( 0 )
 {
+  // Set this to be the group leader for all subdialogs - this means
+  // modal subdialogs will only affect this dialog, not the other windows
+  setWFlags( getWFlags() | WGroupLeader );
+
   mSubjectTextWasSpellChecked = false;
   if (kmkernel->xmlGuiInstance())
     setInstance( kmkernel->xmlGuiInstance() );
@@ -210,6 +197,7 @@ KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id  )
   QString tip = i18n("Select email address(es)");
   QToolTip::add( mBtnTo, tip );
   QToolTip::add( mBtnCc, tip );
+  QToolTip::add( mBtnBcc, tip );
   QToolTip::add( mBtnReplyTo, tip );
 
   QWhatsThis::add( mBtnIdentity, i18n("Remember this identity, so that it "
@@ -267,7 +255,10 @@ KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id  )
   readConfig();
   setupStatusBar();
   setupEditor();
-  setupActions();
+  if( !aMsg || aMsg->headerField("X-KMail-CryptoFormat").isEmpty() )
+    setupActions();
+  else
+    setupActions( aMsg->headerField("X-KMail-CryptoFormat").stripWhiteSpace().toInt() );
 
   applyMainWindowSettings(KMKernel::config(), "Composer");
 
@@ -325,11 +316,6 @@ KMComposeWin::KMComposeWin( KMMessage *aMsg, uint id  )
   mDone = true;
 }
 
-template <typename T>
-inline void Delete( const T * t ) {
-  delete t; t = 0;
-}
-
 //-----------------------------------------------------------------------------
 KMComposeWin::~KMComposeWin()
 {
@@ -353,7 +339,15 @@ KMComposeWin::~KMComposeWin()
     job->kill();
     it = mMapAtmLoadData.begin();
   }
-  std::for_each( mComposedMessages.begin(), mComposedMessages.end(), Delete<KMMessage> );
+  deleteAll( mComposedMessages );
+}
+
+void KMComposeWin::setAutoDeleteWindow( bool f )
+{
+  if ( f )
+    setWFlags( getWFlags() | WDestructiveClose );
+  else
+    setWFlags( getWFlags() & ~WDestructiveClose );
 }
 
 //-----------------------------------------------------------------------------
@@ -923,7 +917,7 @@ void KMComposeWin::rethinkHeaderLine(int aValue, int aMask, int& aRow,
 }
 
 //-----------------------------------------------------------------------------
-void KMComposeWin::setupActions(void)
+void KMComposeWin::setupActions(int aCryptoMessageFormat)
 {
   if (kmkernel->msgSender()->sendImmediate()) //default == send now?
   {
@@ -1147,9 +1141,9 @@ void KMComposeWin::setupActions(void)
   }
 
   connect(mEncryptAction, SIGNAL(toggled(bool)),
-                         SLOT(slotEncryptToggled( bool )));
-  connect(mSignAction,    SIGNAL(toggled(bool)),
-                         SLOT(slotSignToggled(    bool )));
+                          SLOT(slotEncryptToggled( bool )));
+  connect(mSignAction,   SIGNAL(toggled(bool)),
+                         SLOT(slotSignToggled(     bool )));
 
   QStringList l;
   for ( int i = 0 ; i < numCryptoMessageFormats ; ++i )
@@ -1159,7 +1153,11 @@ void KMComposeWin::setupActions(void)
 					   this, SLOT(slotSelectCryptoModule()),
 					   actionCollection(), "options_select_crypto" );
   mCryptoModuleAction->setItems( l );
-  mCryptoModuleAction->setCurrentItem( format2cb( ident.preferredCryptoMessageFormat() ) );
+  mCryptoModuleAction->setCurrentItem(
+    format2cb(   (0 <= aCryptoMessageFormat)
+               ? (Kleo::CryptoMessageFormat)aCryptoMessageFormat
+               : ident.preferredCryptoMessageFormat() ) );
+
   slotSelectCryptoModule();
 
   QStringList styleItems;
@@ -1440,8 +1438,6 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
 
   const KPIM::Identity & ident = im->identityForUoid( mIdentity->currentIdentity() );
 
-  mOldSigText = ident.signatureText();
-
   // check for the presence of a DNT header, indicating that MDN's were
   // requested
   QString mdnAddr = newMsg->headerField("Disposition-Notification-To");
@@ -1479,6 +1475,15 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
 
   mLastIdentityHasSigningKey = !ident.pgpSigningKey().isEmpty() || !ident.smimeSigningKey().isEmpty();
   mLastIdentityHasEncryptionKey = !ident.pgpEncryptionKey().isEmpty() || !ident.smimeEncryptionKey().isEmpty();
+
+  if( !mMsg->headerField("X-KMail-CryptoFormat").isEmpty() ){
+    const int format = mMsg->headerField("X-KMail-CryptoFormat").stripWhiteSpace().toInt();
+    if( 0 <= format ){
+      mCryptoModuleAction->setCurrentItem(
+        format2cb( (Kleo::CryptoMessageFormat)format ) );
+      slotSelectCryptoModule();
+    }
+  }
 
   if ( Kleo::CryptoBackendFactory::instance()->openpgp() || Kleo::CryptoBackendFactory::instance()->smime() ) {
     const bool canOpenPGPSign = Kleo::CryptoBackendFactory::instance()->openpgp()
@@ -1762,7 +1767,7 @@ void KMComposeWin::applyChanges( bool dontSignNorEncrypt, bool dontDisable )
 
 void KMComposeWin::slotComposerDone( bool rc )
 {
-  std::for_each( mComposedMessages.begin(), mComposedMessages.end(), Delete<KMMessage> );
+  deleteAll( mComposedMessages );
   mComposedMessages = mComposer->composedMessageList();
   emit applyChangesDone( rc );
   delete mComposer;
@@ -2172,6 +2177,7 @@ void KMComposeWin::slotAttachFileResult(KIO::Job *job)
     // make it visible in the config file:
     composer.writeEntry("showMessagePartDialogOnAttach", false);
   if (composer.readBoolEntry("showMessagePartDialogOnAttach", false)) {
+    const KCursorSaver saver( QCursor::ArrowCursor );
     KMMsgPartDialogCompat dlg;
     int encodings = 0;
     for ( QValueListConstIterator<int> it = allowedCTEs.begin() ;
@@ -2993,9 +2999,13 @@ void KMComposeWin::doSend(int aSendNow, bool saveInDrafts)
       (!hf.isEmpty() && (hf != mTransport->text(0))))
     mMsg->setHeaderField("X-KMail-Transport", mTransport->currentText());
 
+  if( saveInDrafts )
+    mMsg->setHeaderField("X-KMail-CryptoFormat", QString::number(cryptoMessageFormat()));
+
   mDisableBreaking = saveInDrafts;
 
-  const bool neverEncrypt = saveInDrafts && mNeverEncryptWhenSavingInDrafts;
+  const bool neverEncrypt = ( saveInDrafts && mNeverEncryptWhenSavingInDrafts )
+                           || mSigningAndEncryptionExplicitlyDisabled;
   connect( this, SIGNAL( applyChangesDone( bool ) ),
            SLOT( slotContinueDoSend( bool ) ) );
 
@@ -3072,7 +3082,7 @@ void KMComposeWin::slotContinueDoSend( bool sentOk )
 	if ( draftsFolder == 0 )
 	  // This is *NOT* supposed to be "imapDraftsFolder", because a
 	  // dIMAP folder works like a normal folder
-	  draftsFolder = kmkernel->imapFolderMgr()->findIdString( (*it)->drafts() );
+	  draftsFolder = kmkernel->dimapFolderMgr()->findIdString( (*it)->drafts() );
 	if ( draftsFolder == 0 )
 	  imapDraftsFolder = kmkernel->imapFolderMgr()->findIdString( (*it)->drafts() );
 	if ( !draftsFolder && !imapDraftsFolder ) {
@@ -3242,7 +3252,12 @@ void KMComposeWin::toggleMarkup(bool markup)
     int paraFrom, indexFrom, paraTo, indexTo;
     mEditor->getSelection ( &paraFrom, &indexFrom, &paraTo, &indexTo);
     mEditor->selectAll();
+    // save the buttonstates because setColor calls fontChanged
+    bool _bold = textBoldAction->isChecked();
+    bool _italic = textItalicAction->isChecked();
     mEditor->setColor(QColor(0,0,0));
+    textBoldAction->setChecked(_bold);
+    textItalicAction->setChecked(_italic);
     mEditor->setSelection ( paraFrom, indexFrom, paraTo, indexTo);
 
     mEditor->setTextFormat(Qt::RichText);
@@ -3559,6 +3574,7 @@ void KMComposeWin::slotSetAlwaysSend( bool bAlways )
 
 void KMComposeWin::slotListAction( const QString& style )
 {
+    toggleMarkup(true);
     if ( style == i18n( "Standard" ) )
        mEditor->setParagType( QStyleSheetItem::DisplayBlock, QStyleSheetItem::ListDisc );
     else if ( style == i18n( "Bulleted List (Disc)" ) )
@@ -3820,6 +3836,10 @@ KMAtmListViewItem::KMAtmListViewItem(QListView *parent) :
 
 KMAtmListViewItem::~KMAtmListViewItem()
 {
+  delete mCBEncrypt;
+  mCBEncrypt = 0;
+  delete mCBSign;
+  mCBSign = 0;
 }
 
 void KMAtmListViewItem::paintCell( QPainter * p, const QColorGroup & cg,
@@ -3837,6 +3857,7 @@ void KMAtmListViewItem::paintCell( QPainter * p, const QColorGroup & cg,
     }
     int colWidth = mListview->header()->sectionSize( column );
     r.setX( mListview->header()->sectionPos( column )
+            - mListview->header()->offset()
             + colWidth / 2
             - r.height() / 2
             - 1 );
@@ -3866,10 +3887,12 @@ void KMAtmListViewItem::enableCryptoCBs(bool on)
   if( mCBEncrypt ) {
     mCBEncryptEnabled = on;
     mCBEncrypt->setEnabled( on );
+    mCBEncrypt->setShown( on );
   }
   if( mCBSign ) {
     mCBSignEnabled = on;
     mCBSign->setEnabled( on );
+    mCBSign->setShown( on );
   }
 }
 
@@ -3980,6 +4003,7 @@ void KMLineEdit::loadContacts()
     QStringList::Iterator it = recent.begin();
     QString name, email;
     for ( ; it != recent.end(); ++it ) {
+      //kdDebug(5006) << "KMLineEdit::loadContacts() found: \"" << *it << "\"" << endl;
       KABC::Addressee addr;
       KPIM::getNameAndMail(*it, name, email);
       addr.setNameFromString( name );

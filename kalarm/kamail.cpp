@@ -16,16 +16,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- *  In addition, as a special exception, the copyright holders give permission
- *  to link the code of this program with any edition of the Qt library by
- *  Trolltech AS, Norway (or with modified versions of Qt that use the same
- *  license as Qt), and distribute linked combinations including the two.
- *  You must obey the GNU General Public License in all respects for all of
- *  the code used other than Qt.  If you modify this file, you may extend
- *  this exception to your version of the file, but you are not obligated to
- *  do so. If you do not wish to do so, delete this exception statement from
- *  your version.
  */
 
 #include "kalarm.h"
@@ -96,7 +86,7 @@ QString KAMail::send(const KAEvent& event, bool allowNotify)
 		       ? i18n("No 'From' email address is configured.\nPlease set it in the KDE Control Center or in the %1 Preferences dialog.").arg(kapp->aboutData()->programName())
 		       : i18n("No 'From' email address is configured.\nPlease set it in the %1 Preferences dialog.").arg(kapp->aboutData()->programName());
 	}
-	QString bcc  = preferences->emailBccAddress();
+	QString bcc = event.emailBcc() ? preferences->emailBccAddress() : QString::null;
 	kdDebug(5950) << "KAlarmApp::sendEmail(): To: " << event.emailAddresses(", ")
 	              << "\nSubject: " << event.emailSubject() << endl;
 
@@ -119,7 +109,7 @@ QString KAMail::send(const KAEvent& event, bool allowNotify)
 			command += QString::fromLatin1(" -s ");
 			command += KShellProcess::quote(event.emailSubject());
 
-			if (event.emailBcc()  &&  !bcc.isEmpty())
+			if (!bcc.isEmpty())
 			{
 				command += QString::fromLatin1(" -b ");
 				command += KShellProcess::quote(bcc);
@@ -258,7 +248,7 @@ QString KAMail::sendKMail(const KAEvent& event, const QString& from, const QStri
 		proc << "kmail"
 		     << "--subject" << event.emailSubject().local8Bit()
 		     << "--body" << event.message().local8Bit();
-		if (event.emailBcc()  &&  !bcc.isEmpty())
+		if (!bcc.isEmpty())
 			proc << "--bcc" << bcc.local8Bit();
 		QStringList attachments = event.emailAttachments();
 		if (attachments.count())
@@ -296,7 +286,7 @@ QString KAMail::initHeaders(const KAEvent& event, const QString& from, const QSt
 	}
 	message += QString::fromLatin1("From: ") + from;
 	message += QString::fromLatin1("\nTo: ") + event.emailAddresses(", ");
-	if (event.emailBcc()  &&  !bcc.isEmpty())
+	if (!bcc.isEmpty())
 		message += QString::fromLatin1("\nBcc: ") + bcc;
 	message += QString::fromLatin1("\nSubject: ") + event.emailSubject();
 	message += QString::fromLatin1("\nX-Mailer: %1" KALARM_VERSION).arg(kapp->aboutData()->programName());
@@ -565,7 +555,6 @@ QString KAMail::convertAttachments(const QString& items, QStringList& list)
 {
 	KURL url;
 	list.clear();
-	QCString addrs = items.local8Bit();
 	int length = items.length();
 	for (int next = 0;  next < length;  )
 	{
@@ -578,7 +567,7 @@ QString KAMail::convertAttachments(const QString& items, QStringList& list)
 			sc = items.length();
 		if (sc < i)
 			i = sc;
-		QString item = items.mid(next, i - next);
+		QString item = items.mid(next, i - next).stripWhiteSpace();
 		switch (checkAttachment(item))
 		{
 			case 1:   list += item;  break;

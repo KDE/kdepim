@@ -412,8 +412,6 @@ void ConduitConfigWidget::fillLists()
 	if (potentiallyInstalled.findIndex(p->text(CONDUIT_DESKTOP))>=0) \
 		p->setOriginalState(true);
 
-	IC("Kroupware","kroupware",
-		"Sync the handheld with a Kroupware client (for example, KMail).");
 	IC("Install Files","fileinstall",
 		"Install files that are dragged to KPilot onto the handheld.");
 #undef IC

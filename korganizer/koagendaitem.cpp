@@ -82,7 +82,7 @@ void KOAgendaItem::updateIcons()
   mIconRecur = mIncidence->doesRecur();
   mIconAlarm = mIncidence->isAlarmEnabled();
   if ( mIncidence->attendeeCount() > 0 ) {
-    if ( KOPrefs::instance()->thatIsMe( mIncidence->organizer() ) ) {
+    if ( KOPrefs::instance()->thatIsMe( mIncidence->organizer().email() ) ) {
       mIconReply = false;
       mIconGroup = false;
       mIconOrganizer = true;
@@ -615,8 +615,7 @@ void KOAgendaItem::paintTodoIcon( QPainter *p, int &x, int ft )
   static const QPixmap completedPxmp = KOGlobals::self()->smallIcon("checkedbox");
   if ( mIncidence->type() != "Todo" )
     return;
-  bool b = ( static_cast<Todo *>( mIncidence ) )->isCompleted() ||
-           ( mDate < ( static_cast<Todo *>( mIncidence )->dtDue().date() ) );
+  bool b = ( static_cast<Todo *>( mIncidence ) )->isCompleted();
   conditionalPaint( p, !b, x, ft, todoPxmp );
   conditionalPaint( p, b, x, ft, completedPxmp );
 }

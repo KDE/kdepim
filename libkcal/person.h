@@ -34,6 +34,7 @@ class Person
     Person() {}
     Person( const QString &fullName );
     Person( const QString &name, const QString &email );
+    bool isEmpty() const;
 
     QString fullName( ) const;
 

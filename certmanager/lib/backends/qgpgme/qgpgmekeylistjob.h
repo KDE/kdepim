@@ -35,6 +35,8 @@
 
 #include <kleo/keylistjob.h>
 
+#include <gpgmepp/keylistresult.h>
+
 #include "qgpgmejob.h"
 
 namespace GpgME {
@@ -57,6 +59,9 @@ namespace Kleo {
     /*! \reimp from KeyListJob */
     GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly, std::vector<GpgME::Key> & keys );
 
+    /*! \reimp from Job */
+    void showErrorDialog( QWidget * parent, const QString & caption ) const;
+
   private slots:
     void slotNextKeyEvent( GpgME::Context * context, const GpgME::Key & key );
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
@@ -66,6 +71,9 @@ namespace Kleo {
   private:
     void doOperationDoneEvent( const GpgME::Error & e );
     void setup( const QStringList & );
+
+  private:
+    GpgME::KeyListResult mResult;
   };
 
 }

@@ -599,15 +599,23 @@ void KAEvent::adjustStartDate(const QDate& d)
 
 /******************************************************************************
  * Return the time of the next scheduled occurrence of the event.
+ * Reminders and deferred reminders can optionally be ignored.
  */
-DateTime KAEvent::nextDateTime() const
+DateTime KAEvent::nextDateTime(bool includeReminders) const
 {
-	if (mReminderMinutes)
+	if (includeReminders  &&  mReminderMinutes)
 	{
 		if (!mReminderOnceOnly  ||  mDateTime == mStartDateTime)
 			return mDateTime.addSecs(-mReminderMinutes * 60);
 	}
-	return mDeferral ? QMIN(mDeferralTime, mDateTime) : mDateTime;
+	if (mDeferral
+	&&  (includeReminders  ||  !mReminderDeferral))
+	{
+		if (mMainExpired)
+			return mDeferralTime;
+		return QMIN(mDeferralTime, mDateTime);
+	}
+	return mDateTime;
 }
 
 /******************************************************************************
@@ -1273,7 +1281,7 @@ void KAEvent::defer(const DateTime& dateTime, bool reminder, bool adjustRecurren
 			QDateTime now = QDateTime::currentDateTime();
 			if (mDateTime.dateTime() < now)
 			{
-				if (setNextOccurrence(now) == NO_OCCURRENCE)
+				if (!mMainExpired  &&  setNextOccurrence(now) == NO_OCCURRENCE)
 				{
 					mMainExpired = true;
 					--mAlarmCount;
@@ -1590,17 +1598,34 @@ QString KAEvent::recurrenceText(bool brief) const
 /******************************************************************************
  * Adjust the event date/time to the first recurrence of the event, on or after
  * start date/time. The event start date may not be a recurrence date, in which
- * case a later date will be set. Not to be called for sub-daily recurrences.
+ * case a later date will be set.
  */
 void KAEvent::setFirstRecurrence()
 {
-	RecurType rt = checkRecur();
-	if (rt == NO_RECUR  ||  rt == MINUTELY)
-		return;
+	switch (checkRecur())
+	{
+		case NO_RECUR:
+		case MINUTELY:
+		case DAILY:
+			return;
+		case ANNUAL_DATE:
+		case ANNUAL_POS:
+			if (!mRecurrence->yearNums().count())
+				return;    // (presumably it's a template)
+			break;
+		case WEEKLY:
+		case MONTHLY_POS:
+		case MONTHLY_DAY:
+		case ANNUAL_DAY:
+			break;
+	}
 	QDateTime recurStart = mRecurrence->recurStart();
 	if (mRecurrence->recursOnPure(recurStart.date()))
 		return;           // it already recurs on the start date
 		
+	// Set the frequency to 1 to find the first possible occurrence
+	int frequency = mRecurrence->frequency();
+	mRecurrence->setFrequency(1);
 	int remainingCount;
 	DateTime next;
 	nextRecurrence(mDateTime.dateTime(), next, remainingCount);
@@ -1612,6 +1637,7 @@ void KAEvent::setFirstRecurrence()
 		mStartDateTime = mDateTime = next;
 		mUpdated = true;
 	}
+	mRecurrence->setFrequency(frequency);    // restore the frequency
 }
 
 /******************************************************************************
@@ -1950,35 +1976,39 @@ bool KAEvent::setRecurAnnualByDay(Recurrence& recurrence, int freq, const QPtrLi
 *  Reply = true if successful.
 */
 bool KAEvent::setRecurrence(Recurrence& recurrence, RecurType recurType, int repeatInterval,
-                                int repeatCount, const QDateTime& endTime)
+                                int repeatCount, const DateTime& start, const QDateTime& end)
 {
+	if (start.isDateOnly())
+		recurrence.setRecurStart(start.date());
+	else
+		recurrence.setRecurStart(start.dateTime());
 	switch (recurType)
 	{
 		case MINUTELY:
-			setRecurMinutely(recurrence, repeatInterval, repeatCount, endTime);
+			setRecurMinutely(recurrence, repeatInterval, repeatCount, end);
 			break;
 		case DAILY:
-			setRecurDaily(recurrence, repeatInterval, repeatCount, endTime.date());
+			setRecurDaily(recurrence, repeatInterval, repeatCount, end.date());
 			break;
 		case WEEKLY:
 		{
 			QBitArray days(7);
-			days.setBit(QDate::currentDate().dayOfWeek() - 1);
-			setRecurWeekly(recurrence, repeatInterval, days, repeatCount, endTime.date());
+			days.setBit(start.date().dayOfWeek() - 1);
+			setRecurWeekly(recurrence, repeatInterval, days, repeatCount, end.date());
 			break;
 		}
 		case MONTHLY_DAY:
 		{
 			QValueList<int> days;
-			days.append(QDate::currentDate().day());
-			setRecurMonthlyByDate(recurrence, repeatInterval, days, repeatCount, endTime.date());
+			days.append(start.date().day());
+			setRecurMonthlyByDate(recurrence, repeatInterval, days, repeatCount, end.date());
 			break;
 		}
 		case ANNUAL_DATE:
 		{
 			QValueList<int> months;
-			months.append(QDate::currentDate().month());
-			setRecurAnnualByDate(recurrence, repeatInterval, months, 0, repeatCount, endTime.date());
+			months.append(start.date().month());
+			setRecurAnnualByDate(recurrence, repeatInterval, months, 0, repeatCount, end.date());
 			break;
 		}
 		case NO_RECUR:
