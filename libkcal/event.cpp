@@ -38,7 +38,6 @@ Event::Event(const Event &e) : Incidence(e)
   mDtEnd = e.mDtEnd;
   mHasEndDate = e.mHasEndDate;
   mTransparency = e.mTransparency;
-  mLocation = e.mLocation;
 }
 
 Event::~Event()
@@ -121,16 +120,4 @@ void Event::setDuration(int seconds)
 {
   setHasEndDate(false);
   Incidence::setDuration(seconds);
-}
-
-void Event::setLocation(const QString &location)
-{
-  if (mReadOnly) return;
-  mLocation = location;
-  updated();
-}
-
-QString Event::location() const
-{
-  return mLocation;
 }

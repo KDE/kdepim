@@ -79,9 +79,9 @@ class Todo : public Incidence
     /** return the event's status in string format. */
 //    QString statusStr() const;
 
-    /// return, if this todo is completed
+    /** return, if this todo is completed */
     bool isCompleted() const;
-    /// set completed state of this todo
+    /** set completed state of this todo */
     void setCompleted(bool);
     
     /**
@@ -95,20 +95,15 @@ class Todo : public Incidence
     */
     void setPercentComplete(int);
 
-    /// return date and time when todo was completed
+    /** return date and time when todo was completed */
     QDateTime completed() const;
     QString completedStr() const;
-    /// set date and time of completion
+    /** set date and time of completion */
     void setCompleted(const QDateTime &completed);
 
-    /// Return true, if todo has a date associated with completion.
+    /** Return true, if todo has a date associated with completion */
     bool hasCompletedDate() const;
     
-    /// set the todo's location
-    void setLocation(const QString &location);
-    /// return the todo's location 
-    QString location() const;
-
   private:
     bool accept(Visitor &v) { return v.visit(this); }
 
@@ -123,8 +118,6 @@ class Todo : public Incidence
     bool mHasCompletedDate;
 
     int mPercentComplete;
-    
-    QString mLocation;
 };
 
 }

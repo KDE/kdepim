@@ -216,7 +216,12 @@ class Incidence : public IncidenceBase
 
     /** Return the recurrence rule associated with this incidence. If there is none, returns an appropriate (non-0) object. */
     Recurrence *recurrence() const;
-
+    
+    /** set the event's/todo's location. Do _not_ use it with journal */
+    void setLocation(const QString &location);
+    /** return the event's/todo's location. Do _not_ use it with journal */
+    QString location() const;
+    
   private:
     int mRevision;
 
@@ -237,6 +242,8 @@ class Incidence : public IncidenceBase
 
     QPtrList<Alarm> mAlarms;
     Recurrence *mRecurrence;
+    
+    QString mLocation;
 };
 
 }

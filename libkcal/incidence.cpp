@@ -58,6 +58,7 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
   mResources = i.mResources;
   mSecrecy = i.mSecrecy;
   mPriority = i.mPriority;
+  mLocation = i.mLocation;
 
   QPtrListIterator<Alarm> it( i.mAlarms );
   const Alarm *a;
@@ -405,4 +406,16 @@ bool Incidence::isAlarmEnabled() const
 Recurrence *Incidence::recurrence() const
 {
   return mRecurrence;
+}
+
+void Incidence::setLocation(const QString &location)
+{
+  if (mReadOnly) return;
+  mLocation = location;
+  updated();
+}
+
+QString Incidence::location() const
+{
+  return mLocation;
 }

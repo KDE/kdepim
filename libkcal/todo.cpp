@@ -47,7 +47,6 @@ Todo::Todo(const Todo &t) : Incidence(t)
   mCompleted = t.mCompleted;
   mHasCompletedDate = t.mHasCompletedDate;
   mPercentComplete = t.mPercentComplete;
-  mLocation = t.mLocation;
 }
 
 Todo::~Todo()
@@ -244,14 +243,3 @@ void Todo::setPercentComplete(int v)
   mPercentComplete = v;
 }
 
-void Todo::setLocation(const QString &location)
-{
-  if (mReadOnly) return;
-  mLocation = location;
-  updated();
-}
-
-QString Todo::location() const
-{
-  return mLocation;
-}
