@@ -9,7 +9,7 @@ Package: task-kdepim
 Architecture: all
 Section: x11
 Replaces: kdepim, kdepim-common
-Depends: korganizer, abbrowser
+Depends: korganizer, abbrowser, kpilot
 Suggests: kdebase
 Description: Personal Information Management for KDE (common files)
  Personal Information Management (PIM) for KDE
@@ -53,6 +53,14 @@ Suggests: kdebase, korganizer
 Conflicts: kdepim
 Description: Address book reader
  Address book reader for KDE
+
+Package: kpilot
+Architecture: any
+Section: utils
+Depends: ${shlibs:Depends}, pilot-link
+Suggests: kdebase, korganizer, kab, knotes
+Description: Palm Pliot sync tool for KDE
+ Palm Pilot sync tool for KDE
 
 Package: kdepim-dev
 Architecture: any
