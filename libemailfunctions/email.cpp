@@ -335,7 +335,7 @@ QCString KPIM::getEmailAddr(const QString& aStr)
   int a, i, j, len, found = 0;
   QChar c;
   // Find the '@' in the email address:
-  a = aStr.find('@');
+  a = aStr.findRev('@');
   if (a<0) return aStr.latin1();
   // Loop backwards until we find '<', '(', ' ', or beginning of string.
   for (i = a - 1; i >= 0; i--) {
