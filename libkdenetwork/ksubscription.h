@@ -114,6 +114,12 @@ class GroupItem : public QCheckListItem
     void setIsCheckItem( bool check ) { mIsCheckItem = check; }
 
     /**
+     * Get/Set if state changes should be ignored
+     */
+    bool ignoreStateChange() { return mIgnoreStateChange; }
+    void setIgnoreStateChange( bool ignore ) { mIgnoreStateChange = ignore; }
+
+    /**
      * Reimplemented
      * Sets the subscribed property (only while items are loaded)
      */
@@ -121,7 +127,7 @@ class GroupItem : public QCheckListItem
 
     /**
      * Reimlemented
-     * Calls KSubscription::changeItemState
+     * Calls KSubscription::changeItemState if mIgnoreStateChange == false
      */
     virtual void stateChange( bool on );
 
@@ -168,6 +174,8 @@ class GroupItem : public QCheckListItem
     bool mLastOpenState;
     // is this a checkable item
     bool mIsCheckItem;
+    // ignore state changes
+    bool mIgnoreStateChange;
 };
 
 //==========================================================================

@@ -54,7 +54,8 @@ bool KGroupInfo::operator< (const KGroupInfo &gi2)
 GroupItem::GroupItem( QListView *v, const KGroupInfo &gi, KSubscription* browser, 
     bool isCheckItem )
   : QCheckListItem( v, gi.name, isCheckItem ? CheckBox : Controller ), 
-    mInfo( gi ), mBrowser( browser ), mIsCheckItem( isCheckItem )
+    mInfo( gi ), mBrowser( browser ), mIsCheckItem( isCheckItem ), 
+    mIgnoreStateChange( false )
 {
   if (listView()->columns() > 1)
     setDescription();
@@ -64,7 +65,8 @@ GroupItem::GroupItem( QListView *v, const KGroupInfo &gi, KSubscription* browser
 GroupItem::GroupItem( QListViewItem *i, const KGroupInfo &gi, KSubscription* browser, 
     bool isCheckItem )
   : QCheckListItem( i, gi.name, isCheckItem ? CheckBox : Controller ), 
-    mInfo( gi ), mBrowser( browser ), mIsCheckItem( isCheckItem )
+    mInfo( gi ), mBrowser( browser ), mIsCheckItem( isCheckItem ),
+    mIgnoreStateChange( false )
 {
   if (listView()->columns() > 1)
     setDescription();
@@ -81,6 +83,8 @@ void GroupItem::setOn( bool on )
 {
   if (mBrowser->isLoading())
   {
+    // set this only if we're loading/creating items
+    // otherwise changes are only permanent when the dialog is saved
     mInfo.subscribed = on;
   }
   if (isCheckItem())
@@ -91,7 +95,8 @@ void GroupItem::setOn( bool on )
 void GroupItem::stateChange( bool on )
 {
   // delegate to parent
-  mBrowser->changeItemState(this, on);
+  if ( !mIgnoreStateChange )
+    mBrowser->changeItemState(this, on);
 }
 
 //------------------------------------------------------------------------------
@@ -413,7 +418,7 @@ void KSubscription::changeItemState( GroupItem* item, bool on )
   // is this a checkable item
   if (!item->isCheckItem()) return;
 
-  // we're currently loading the items, ignore changes
+  // if we're currently loading the items ignore changes
   if (mLoading) return;
   if (on)
   {
@@ -423,15 +428,15 @@ void KSubscription::changeItemState( GroupItem* item, bool on )
       while (p) 
       {
         // make sure all parents are subscribed
-        mLoading = true;
         GroupItem* pi = static_cast<GroupItem*>(p);
         if (pi->isCheckItem() && !pi->isOn())
         {
+          pi->setIgnoreStateChange(true);
           pi->setOn(true);
+          pi->setIgnoreStateChange(false);
           new GroupItem(subView, pi->info(), this);
         }
         p = p->parent();
-        mLoading = false;
       }
       new GroupItem(subView, item->info(), this);
     }
