@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathMailboxAbstract.h"
+#endif
+
 // These functions are here to be included by all subclasses of EmpathMailbox.
 // Include them in the class definition for your subclass, under public:
 // XXX Make sure that you put a new public:, protected: etc specifier after the
@@ -31,7 +35,7 @@ virtual bool newMail() const;
 virtual void saveConfig();
 virtual void readConfig();
 		
-virtual bool writeMessage(const EmpathURL & folder, RMessage &);
+virtual QString writeMessage(const EmpathURL & folder, RMessage &);
 		
 virtual Q_UINT32				sizeOfMessage		(const EmpathURL &);
 virtual QString					plainBodyOfMessage	(const EmpathURL &);

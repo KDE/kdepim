@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathIndex.h"
+#endif
+
 // Local includes
 #include "EmpathIndexRecord.h"
 #include "EmpathIndex.h"
@@ -36,9 +40,7 @@ EmpathIndex::~EmpathIndex()
 }
 
 	int
-EmpathIndex::compareItems(
-	EmpathIndexRecord * item1,
-	EmpathIndexRecord * item2)
+EmpathIndex::compareItems(void * item1, void * item2)
 {
 	// Compare parent id of the two messages.
 	Q_UINT32 i1 = ((EmpathIndexRecord *)item1)->date().asUnixTime();
@@ -66,10 +68,10 @@ EmpathIndex::messageDescription(RMessageID & id) const
 	Q_UINT32
 EmpathIndex::countUnread() const
 {
-	Q_UINT32 unread = 0;
+	Q_UINT32 unread = count();
 	EmpathIndexIterator it(*this);
 	for (; it.current(); ++it)
-		if (it.current()->status() ^ RMM::Read) ++unread;
+		if (it.current()->status() & RMM::Read) --unread;
 	return unread;
 }
 

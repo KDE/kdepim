@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathFilterManagerDialog.h"
+#endif
+
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
@@ -186,6 +190,7 @@ EmpathFilterManagerDialog::s_addFilter()
 	if (filterEditDialog.exec() != QDialog::Accepted) {
 		empathDebug("Deleting unwanted filter");
 		delete newFilter;
+		newFilter = 0;
 		return;
 	}
 	

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMessageListWidget.h"
+#endif
+
 // System includes
 #include <stdlib.h>
 
@@ -279,7 +283,7 @@ EmpathMessageListWidget::mark(RMM::MessageStatus status)
 	for (; it.current(); ++it) {
 	
 		t->doneOne();
-
+		
 		if (!it.current()->isSelected())
 			continue;
 
@@ -290,8 +294,8 @@ EmpathMessageListWidget::mark(RMM::MessageStatus status)
 			setStatus(it.current(),
 				RMM::MessageStatus(it.current()->status() ^ status));
 	}
+	
 	t->done();
-
 }
 
 	void
@@ -404,7 +408,7 @@ EmpathMessageListWidget::s_messageSaveAs()
 		else
 			outStr = QCString(s.mid(i, blockSize));
 		
-		if (f.writeBlock(outStr, outStr.length()) != outStr.length()) {
+		if (f.writeBlock(outStr, outStr.length()) != (int)outStr.length()) {
 			// Warn user file not written.
 			KMsgBox(this, "Empath", i18n("Sorry I couldn't write the file successfully. Please try another file."), KMsgBox::EXCLAMATION, i18n("OK"));
 			delete message; message = 0;
@@ -457,7 +461,7 @@ EmpathMessageListWidget::s_messageView()
 
 	void
 EmpathMessageListWidget::s_rightButtonPressed(
-		QListViewItem * item, const QPoint & pos, int column)
+		QListViewItem * item, const QPoint & pos, int)
 {
 	if (item == 0) return;
 	wantScreenUpdates_ = false;
@@ -542,8 +546,6 @@ EmpathMessageListWidget::markAsRead(EmpathMessageListItem * item)
 EmpathMessageListWidget::setStatus(
 		EmpathMessageListItem * item, RMM::MessageStatus status)
 {
-	empathDebug("setStatus() called with " + QString().setNum(status));
-	
 	item->setStatus(status);
 
 	if (status & RMM::Read)
@@ -651,7 +653,7 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	
 	
 	QTime begin(QTime::currentTime());
-	QTime begin2(begin);
+//	QTime begin2(begin);
 	QTime now;
 	
 	setUpdatesEnabled(false);

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathServerTypeDialog.h"
+#endif
+
 #ifndef EMPATHSERVERTYPEDIALOG_H
 #define EMPATHSERVERTYPEDIALOG_H
 
@@ -34,7 +38,7 @@
 
 // Local includes
 #include "EmpathDefines.h"
-#include "EmpathEnum.h"
+#include "EmpathMailbox.h"
 #include "RikGroupBox.h"
 
 class EmpathServerTypeDialog : public QDialog
@@ -47,7 +51,7 @@ class EmpathServerTypeDialog : public QDialog
 
 		~EmpathServerTypeDialog() { empathDebug("dtor"); }
 
-		AccountType accountType();
+		EmpathMailbox::AccountType accountType();
 
 	protected slots:
 

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathServerTypeDialog.h"
+#endif
+
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
@@ -103,9 +107,9 @@ EmpathServerTypeDialog::EmpathServerTypeDialog(
 			20,
 			h * 10 + 20);
 
-	buttonGroup_->insert(rb_serverTypeMaildir_,	Maildir);
-	buttonGroup_->insert(rb_serverTypePOP3_,	POP3);
-	buttonGroup_->insert(rb_serverTypeIMAP4_,	IMAP4);
+	buttonGroup_->insert(rb_serverTypeMaildir_,	EmpathMailbox::Maildir);
+	buttonGroup_->insert(rb_serverTypePOP3_,	EmpathMailbox::POP3);
+	buttonGroup_->insert(rb_serverTypeIMAP4_,	EmpathMailbox::IMAP4);
 	
 	buttonBox_ = new KButtonBox(this);
 	CHECK_PTR(buttonBox_);
@@ -171,16 +175,16 @@ EmpathServerTypeDialog::s_Help()
 	empathInvokeHelp("","");
 }
 
-	AccountType
+	EmpathMailbox::AccountType
 EmpathServerTypeDialog::accountType()
 {
 	if (rb_serverTypeMaildir_->isChecked())
-	return Maildir;	
+	return EmpathMailbox::Maildir;	
 	if (rb_serverTypePOP3_->isChecked())
-	return POP3;
+	return EmpathMailbox::POP3;
 	if (rb_serverTypeIMAP4_->isChecked())
-	return IMAP4;
+	return EmpathMailbox::IMAP4;
 	// Get out of gaol
-	return Maildir;
+	return EmpathMailbox::Maildir;
 }
 

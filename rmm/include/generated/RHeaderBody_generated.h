@@ -3,12 +3,12 @@
 RHeaderBody();
 RHeaderBody(const RHeaderBody &);
 RHeaderBody(const QCString &);
-virtual RHeaderBody & operator = (const RHeaderBody &);
-virtual RHeaderBody & operator = (const QCString &);
-virtual bool operator == (RHeaderBody &);
-virtual bool operator != (RHeaderBody & x) { return !(*this == x); }
-virtual bool operator == (const QCString & s) { RHeaderBody a(s); return (*this == a); } 
-virtual bool operator != (const QCString &s) {return !(*this == s);}
+RHeaderBody & operator = (const RHeaderBody &);
+RHeaderBody & operator = (const QCString &);
+bool operator == (RHeaderBody &);
+bool operator != (RHeaderBody & x) { return !(*this == x); }
+bool operator == (const QCString & s) { RHeaderBody a(s); return (*this == a); } 
+bool operator != (const QCString &s) {return !(*this == s);}
 
 virtual ~RHeaderBody();
 virtual void _parse();

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathAccountsSettingsDialog.h"
+#endif
+
 // KDE includes
 #include <klocale.h>
 #include <klineeditdlg.h>
@@ -195,7 +199,7 @@ EmpathAccountsSettingsDialog::s_newAccount()
 
 	switch (serverTypeDialog.accountType()) {
 
-		case Maildir:
+		case EmpathMailbox::Maildir:
 			{
 				empathDebug("creating new Maildir mailbox");
 				tempMailbox = new EmpathMailboxMaildir("Unnamed Maildir");
@@ -223,7 +227,7 @@ EmpathAccountsSettingsDialog::s_newAccount()
 			break;
 
 
-		case POP3:
+		case EmpathMailbox::POP3:
 			{
 				empathDebug("creating new POP3 mailbox");
 				tempMailbox = new EmpathMailboxPOP3("Unnamed POP3");
@@ -250,7 +254,7 @@ EmpathAccountsSettingsDialog::s_newAccount()
 			}
 			break;
 
-		case IMAP4:
+		case EmpathMailbox::IMAP4:
 			{
 				empathDebug("creating new IMAP4 mailbox");
 				tempMailbox = new EmpathMailboxIMAP4("Unnamed IMAP4");
@@ -310,7 +314,7 @@ EmpathAccountsSettingsDialog::s_editAccount()
 
 	switch (m->type()) {
 
-		case Maildir:
+		case EmpathMailbox::Maildir:
 			{
 				EmpathConfigMaildirDialog configDialog(
 						(EmpathMailboxMaildir *)m, this, "configDialog");
@@ -319,7 +323,7 @@ EmpathAccountsSettingsDialog::s_editAccount()
 			}
 		   break;
 
-	   	case POP3:
+		case EmpathMailbox::POP3:
 		   {
 			   EmpathConfigPOP3Dialog configDialog(
 					   (EmpathMailboxPOP3 *)m, true, this, "configDialog");
@@ -328,7 +332,7 @@ EmpathAccountsSettingsDialog::s_editAccount()
 		   }
 		   break;
 
-	   	case IMAP4:
+		case EmpathMailbox::IMAP4:
 		   {
 			   EmpathConfigIMAP4Dialog configDialog(
 					   (EmpathMailboxIMAP4 *)m, this, "configDialog");
@@ -369,11 +373,10 @@ EmpathAccountsSettingsDialog::updateMailboxList()
 
 		switch (m->type()) {
 
-			case Maildir:	accType = "Maildir";	break;
-			case POP3:		accType = "POP3";		break;
-			case IMAP4:		accType = "IMAP4";		break;
-
-			default:								break;
+			case EmpathMailbox::Maildir:	accType = "Maildir";	break;
+			case EmpathMailbox::POP3:		accType = "POP3";		break;
+			case EmpathMailbox::IMAP4:		accType = "IMAP4";		break;
+			default: break;
 		}
 
 		QListViewItem * newItem =

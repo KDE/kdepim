@@ -12,14 +12,14 @@
 	print $1 "();" >> outfile
 	print $1 "(const " $1 " &);" >> outfile
 	print $1 "(const QCString &);" >> outfile
-	print pre $1 " & operator = (const " $1 " &);" >> outfile
-	print pre $1 " & operator = (const QCString &);" >> outfile
-	print pre "bool operator == (" $1 " &);" >> outfile
-	print pre "bool operator != (" $1 " & x) { return !(*this == x); }" \
+	print $1 " & operator = (const " $1 " &);" >> outfile
+	print $1 " & operator = (const QCString &);" >> outfile
+	print "bool operator == (" $1 " &);" >> outfile
+	print "bool operator != (" $1 " & x) { return !(*this == x); }" \
 			>> outfile
-	print pre "bool operator == (const QCString & s) { " $1 " a(s); " \
+	print "bool operator == (const QCString & s) { " $1 " a(s); " \
 			"return (*this == a); } " >> outfile
-	print pre "bool operator != (const QCString &s) {return !(*this == s);}\n" \
+	print "bool operator != (const QCString &s) {return !(*this == s);}\n" \
 			>> outfile
 	print "virtual ~" $1 "();" >> outfile
 	print pre "void _parse();" >> outfile

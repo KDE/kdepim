@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathSendingSettingsDialog.h"
+#endif
+
 #include <qpixmap.h>
 
 // KDE includes
@@ -446,9 +450,9 @@ EmpathSendingSettingsDialog::saveData()
 
 	// Get server type
 	int servType = (int)(
-		(rb_sendmail_->isChecked()	? Sendmail	: 0) |
-		(rb_qmail_->isChecked()		? Qmail		: 0) |
-		(rb_smtp_->isChecked()		? SMTP		: 0));
+		(rb_sendmail_->isChecked()	? EmpathMailSender::Sendmail	: 0) |
+		(rb_qmail_->isChecked()		? EmpathMailSender::Qmail		: 0) |
+		(rb_smtp_->isChecked()		? EmpathMailSender::SMTP		: 0));
 	
 	CWE( EmpathConfig::KEY_OUTGOING_SERVER_TYPE,servType); 
 	
@@ -481,13 +485,13 @@ EmpathSendingSettingsDialog::loadData()
 	KConfig * c	= KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_SENDING);
 	
-	OutgoingServerType t =
-		(OutgoingServerType)
+	EmpathMailSender::OutgoingServerType t =
+		(EmpathMailSender::OutgoingServerType)
 		(c->readNumEntry(EmpathConfig::KEY_OUTGOING_SERVER_TYPE));
 	
-	rb_sendmail_->setChecked(	t == Sendmail);
-	rb_qmail_->setChecked(		t == Qmail);
-	rb_smtp_->setChecked(		t == SMTP);
+	rb_sendmail_->setChecked(	t == EmpathMailSender::Sendmail);
+	rb_qmail_->setChecked(		t == EmpathMailSender::Qmail);
+	rb_smtp_->setChecked(		t == EmpathMailSender::SMTP);
 	
 	le_sendmail_->setText(
 		c->readEntry(EmpathConfig::KEY_SENDMAIL_LOCATION));

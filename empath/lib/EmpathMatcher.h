@@ -18,19 +18,30 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathMatcher.h"
+#endif
+
 #ifndef EMPATHMATCHER_H
 #define EMPATHMATCHER_H
 
 #include "RMM_Message.h"
 #include "EmpathMatcher.h"
 #include "EmpathDefines.h"
-#include "EmpathEnum.h"
 #include "EmpathURL.h"
 
 class EmpathMatcher
 {
 	public:
-		
+
+		enum MatchExprType {
+			Size,
+			BodyExpr,
+			HeaderExpr,
+			HasAttachments,
+			AnyMessage
+		};
+	
 		EmpathMatcher();
 		virtual ~EmpathMatcher();
 		void load(const QString & parentName, Q_UINT32 id);
@@ -51,7 +62,7 @@ class EmpathMatcher
 		void setSize(Q_UINT32 s) { size_ = s; }
 		void setMatchHeader(const QString & s) { matchHeader_ = s; }
 		void setMatchExpr(const QString & s) { matchExpr_ = s; }
-		
+	
 	private:
 		
 		MatchExprType type_;

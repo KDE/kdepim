@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "RMM_MessageID.h"
+#endif
+
 #include <sys/time.h>
 #include <sys/stat.h>
 #include <sys/utsname.h>
@@ -159,7 +163,7 @@ RMessageID::_parse()
 	}
 	
 	localPart_	= strRep_.left(atPos);
-	domain_		= strRep_.right(atPos - 1);
+	domain_		= strRep_.right(strRep_.length() - atPos - 1);
 	
 	if (localPart_.at(0) == '<')
 		localPart_.remove(0, 1);
@@ -197,6 +201,7 @@ RMessageID::createDefault()
 	else
 		domain_ = "localhost.localdomain";
 
+	rmmDebug("Created \"" + localPart_ + "." + domain_ + "\"");
 	parsed_ = true;
 	assembled_ = false;
 }

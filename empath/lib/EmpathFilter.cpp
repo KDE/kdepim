@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathFilter.h"
+#endif
+
 // KDE includes
 #include <klocale.h>
 #include <kglobal.h>
@@ -32,7 +36,7 @@
 
 EmpathFilter::EmpathFilter(const QString & name)
 	:	priority_(0),
-                fEventHandler_(0),
+		fEventHandler_(0),
 		name_(name)
 {
 	empathDebug("ctor");

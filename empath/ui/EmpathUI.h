@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathUI.h"
+#endif
+
 #ifndef EMPATH_UI_H
 #define EMPATH_UI_H
 
@@ -25,7 +29,7 @@
 #include <qobject.h>
 
 // Local includes
-#include "EmpathEnum.h"
+#include "Empath.h"
 #include "EmpathUIUtils.h"
 #include "EmpathURL.h"
 
@@ -51,7 +55,7 @@ class EmpathUI : public QObject
 		void s_about();
 		void s_bugReport();
 		
-		void s_newComposer(ComposeType, const EmpathURL &);
+		void s_newComposer(Empath::ComposeType, const EmpathURL &);
 		void s_newComposer(const QString &);
 		
 	private:

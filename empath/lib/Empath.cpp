@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "Empath.h"
+#endif
+
 // System includes
 #include <sys/time.h>
 #include <sys/stat.h>
@@ -98,16 +102,29 @@ Empath::updateOutgoingServer()
 	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
-	OutgoingServerType st =
-		(OutgoingServerType)
+	EmpathMailSender::OutgoingServerType st =
+		(EmpathMailSender::OutgoingServerType)
 		(c->readUnsignedNumEntry(EmpathConfig::KEY_OUTGOING_SERVER_TYPE,
-								 Sendmail));
+								 EmpathMailSender::Sendmail));
 	
 	switch (st) {
-		case Sendmail:	mailSender_ = new EmpathMailSenderSendmail;	break;
-		case Qmail:		mailSender_ = new EmpathMailSenderQmail;	break;
-		case SMTP:		mailSender_ = new EmpathMailSenderSMTP;		break;
-		default:		mailSender_ = 0; return;					break;
+		
+		case EmpathMailSender::Sendmail:
+			mailSender_ = new EmpathMailSenderSendmail;
+			break;
+		
+		case EmpathMailSender::Qmail:
+			mailSender_ = new EmpathMailSenderQmail;
+			break;
+		
+		case EmpathMailSender::SMTP:
+			mailSender_ = new EmpathMailSenderSMTP;
+			break;
+			
+		default:
+			mailSender_ = 0;
+			return;
+			break;
 	}
 
 	CHECK_PTR(mailSender_);
@@ -192,7 +209,7 @@ Empath::addTask(const QString & name)
 {
 	EmpathTask * t = new EmpathTask(name);
 	CHECK_PTR(t);
-	EmpathTaskTimer * timer = new EmpathTaskTimer(t);
+	new EmpathTaskTimer(t);
 	return t;
 }
 

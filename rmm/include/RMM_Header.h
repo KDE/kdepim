@@ -18,8 +18,12 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef R_HEADER_H
-#define R_HEADER_H
+#ifdef __GNUG__
+# pragma interface "RMM_Header.h"
+#endif
+
+#ifndef RMM_HEADER_H
+#define RMM_HEADER_H
 
 #include <qlist.h>
 

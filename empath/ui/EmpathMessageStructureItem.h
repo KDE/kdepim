@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathMessageStructureItem.h"
+#endif
+
 #ifndef EMPATHMESSAGESTRUCTUREITEM_H
 #define EMPATHMESSAGESTRUCTUREITEM_H
 

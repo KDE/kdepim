@@ -19,7 +19,7 @@ a) A Maildir, with some mail in it. I suggest using mail from an existing
    
 FOR INFORMATION ON THE DESIGN:
 
-Read DESIGN
+Read DESIGN.html
 
 Note that the ChangeLog is now a little out of date.
 The design_docs stuff is basically me just writing stuff down so that I

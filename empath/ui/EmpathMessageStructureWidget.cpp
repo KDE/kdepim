@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMessageStructureWidget.h"
+#endif
+
 // Qt includes
 #include <qfile.h>
 #include <qdatastream.h>

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathMailboxIMAP4.h"
+#endif
+
 #ifndef EMPATHMAILBOXIMAP4_H
 #define EMPATHMAILBOXIMAP4_H
 
@@ -36,15 +40,15 @@ class EmpathMailboxIMAP4 : public EmpathMailbox
 		EmpathMailboxIMAP4(const QString & name);
 		
 		EmpathMailboxIMAP4(
-				const QString & name,
-				const QString & serverAddress,
-				Q_UINT32 serverPort,
-				const QString & username,
-				const QString & password);
+				const QString &	name,
+				const QString &	serverAddress,
+				Q_UINT32		serverPort,
+				const QString &	username,
+				const QString &	password);
 
-		EmpathMailboxIMAP4(const EmpathMailboxIMAP4 & acc);
+		EmpathMailboxIMAP4(const EmpathMailboxIMAP4 &);
 
-		EmpathMailboxIMAP4 & operator = (const EmpathMailboxIMAP4 & acc);
+		EmpathMailboxIMAP4 & operator = (const EmpathMailboxIMAP4 &);
 
 
 		~EmpathMailboxIMAP4 () { empathDebug ("dtor"); } // blank
@@ -53,37 +57,36 @@ class EmpathMailboxIMAP4 : public EmpathMailbox
 		
 		// Set methods
 		
-		void setServerAddress(const QString & serverAddress);
-		void setServerPort(Q_UINT32 serverPort);
-		void setUsername(const QString & username);
-		void setPassword(const QString & password);
-		void setPasswordSavePolicy(SavePolicy policy);
-		void setLoggingPolicy(bool policy);
-		void setLogFilePath(const QString & logPath);
-		void setLogFileDisposalPolicy(bool policy);
-		void setMaxLogFileSize(Q_UINT32 maxSize);
-		void setMessageSizeThreshold(Q_UINT32 threshold);
-		void setCheckForNewMail(bool yn);
-		void setMailCheckInterval(Q_UINT32 interval);
-		void setDeleteFromServer(bool yn);
-		void setAutoGetNewMail(bool yn);
-		void setSaveAllAddresses(bool yn);
-		void setNotify(bool yn);
-		void setRetrieveIfHave(bool yn);
-
+		void setServerAddress			(const QString &);
+		void setServerPort				(Q_UINT32);
+		void setUsername				(const QString &);
+		void setPassword				(const QString &);
+		void setPasswordSavePolicy		(SavePolicy);
+		void setLoggingPolicy			(bool);
+		void setLogFilePath				(const QString &);
+		void setLogFileDisposalPolicy	(bool);
+		void setMaxLogFileSize			(Q_UINT32);
+		void setMessageSizeThreshold	(Q_UINT32);
+		void setCheckForNewMail			(bool);
+		void setMailCheckInterval		(Q_UINT32);
+		void setDeleteFromServer		(bool);
+		void setAutoGetNewMail			(bool);
+		void setSaveAllAddresses		(bool);
+		void setNotify					(bool);
+		void setRetrieveIfHave			(bool);
 
 		// Get methods
 		
-		QString serverAddress();
-		Q_UINT32 serverPort();
-		QString username();
-		QString password();
-		SavePolicy passwordSavePolicy();
-		bool loggingPolicy();
-		QString logFilePath();
-		bool logFileDisposalPolicy();
-		Q_UINT32 maxLogFileSize();
-		Q_UINT32 messageSizeThreshold();
+		QString		serverAddress();
+		Q_UINT32	serverPort();
+		QString		username();
+		QString		password();
+		bool		loggingPolicy();
+		QString		logFilePath();
+		bool		logFileDisposalPolicy();
+		Q_UINT32	maxLogFileSize();
+		Q_UINT32	messageSizeThreshold();
+		SavePolicy	passwordSavePolicy();
 	
 	private:
 

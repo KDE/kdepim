@@ -18,9 +18,15 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathHeaderSpecWidget.h"
+#endif
+
 #include "EmpathHeaderSpecWidget.h"
 #include "EmpathAddressSelectionWidget.h"
 #include "EmpathUIUtils.h"
+#include "Empath.h"
+
 #include <RMM_Enum.h>
 
 EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
@@ -44,17 +50,24 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
 	
 	headerNameWidget_->setText(headerName_ + ":");
 	
+	address_ = false;
+
 	RMM::HeaderDataType t(RMM::headerNameToType(headerName_.ascii()));
 	
 	if (t == RMM::AddressList	||
 		t == RMM::Address		||
 		t == RMM::MailboxList	||
-		t == RMM::Mailbox) {
+		t == RMM::Mailbox)
+		address_ = true;
+
+	if (address_) {
 
 		headerBodyWidget_	=
 			new EmpathAddressSelectionWidget(this, "headerNameWidget");
 		CHECK_PTR(headerBodyWidget_);
-		((EmpathAddressSelectionWidget *)headerBodyWidget_)->setText(headerBody_);
+		
+		((EmpathAddressSelectionWidget *)headerBodyWidget_)->
+			setText(headerBody_);
 	
 	} else {
 
@@ -64,16 +77,15 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
 	}
 	
 	
-	int h = headerBodyWidget_->sizeHint().height();
-	headerNameWidget_->setFixedHeight(h);
-	headerBodyWidget_->setFixedHeight(h);
-	
 	layout_->addWidget(headerNameWidget_, 0, 0);
 	layout_->addWidget(headerBodyWidget_, 0, 1);
 
 	layout_->activate();
 	
 	headerBodyWidget_->setFocus();
+	
+	int h = headerBodyWidget_->sizeHint().height();
+	setFixedHeight(h);
 }
 
 EmpathHeaderSpecWidget::~EmpathHeaderSpecWidget()
@@ -92,13 +104,19 @@ EmpathHeaderSpecWidget::setHeaderName(const QString & headerName)
 EmpathHeaderSpecWidget::header()
 {
 //	return (headerNameWidget_->text() + " " + headerBodyWidget_->text());
+	return QString::null;
 }
 
 	void
 EmpathHeaderSpecWidget::setHeaderBody(const QString & headerBody)
 {
+	empathDebug("setHeaderBody(" + headerBody + ")");
 	headerBody_ = headerBody;
-//	headerBodyWidget_->setText(headerBody_);
+	if (address_)
+		((EmpathAddressSelectionWidget *)headerBodyWidget_)->
+			setText(headerBody_);
+	else
+		((QLineEdit *)headerBodyWidget_)->setText(headerBody_);
 }
 
 	int
@@ -111,5 +129,24 @@ EmpathHeaderSpecWidget::sizeOfColumnOne()
 EmpathHeaderSpecWidget::setColumnOneSize(int i)
 {
 	headerNameWidget_->setFixedWidth(i);
+}
+
+	QString
+EmpathHeaderSpecWidget::headerName()
+{
+	return headerNameWidget_->text();
+}
+
+	QString
+EmpathHeaderSpecWidget::headerBody()
+{
+	if (address_) {
+		QString s = ((EmpathAddressSelectionWidget *)headerBodyWidget_)->text();
+		if (!s.contains('@') && !s.isEmpty())
+			s += '@' + empath->hostName();
+		return s;
+	}
+	else
+		return ((QLineEdit *)headerBodyWidget_)->text();
 }
 

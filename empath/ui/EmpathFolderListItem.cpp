@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathFolderListItem.h"
+#endif
+
 // Qt includes
 #include <qfont.h>
 #include <qstring.h>
@@ -95,8 +99,6 @@ EmpathFolderListItem::EmpathFolderListItem(
 		if (*it == url_.asString())
 			setOpen(true);
 
-	EmpathMailbox * m(empath->mailbox(url_));
-	
 	EmpathFolder * f(empath->folder(url_));
 	
 	if (f == 0) {
@@ -123,8 +125,6 @@ EmpathFolderListItem::EmpathFolderListItem(
 	setPixmap(0, empathIcon(f->pixmapName()));
 	setText(1, "...");
 	setText(2, "...");
-//	setText(1, QString().setNum(f->unreadMessageCount()));
-//	setText(2, QString().setNum(f->messageCount()));
 }
 	
 EmpathFolderListItem::~EmpathFolderListItem()

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathDisplaySettingsDialog.h"
+#endif
+
 // Qt includes
 #include <qimage.h>
 #include <qdir.h>
@@ -447,7 +451,8 @@ EmpathDisplaySettingsDialog::loadData()
 	l_sampleFixed_->setFont(
 		c->readFontEntry(EmpathConfig::KEY_FIXED_FONT, &font));
 	
-	cb_underlineLinks_->setChecked(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS, true));
+	cb_underlineLinks_->setChecked(
+		c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS, true));
 	
 	col = kapp->palette().color(QPalette::Normal, QColorGroup::Base);
 	

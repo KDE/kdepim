@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathEditorProcess.h"
+#endif
+
 // System includes
 #include <sys/stat.h>
 #include <unistd.h>
@@ -84,9 +88,10 @@ EmpathEditorProcess::go()
 
 	f.writeBlock(text_.data(), text_.length());
 	f.flush();
+	f.close();
 
 	// f doesn't own the file so I must ::close().
-	if (::close(fd) != 0) {
+	if (f.status() != IO_Ok) {
 		empathDebug("Couldn't successfully close the file.");
 		return;
 	}
@@ -115,7 +120,7 @@ EmpathEditorProcess::go()
 }
 
 	void
-EmpathEditorProcess::s_composeFinished(KProcess * p)
+EmpathEditorProcess::s_composeFinished(KProcess *)
 {
 	empathDebug("s_composeFinished called (process exited)");
 	// Find the process' filename in the process table.
@@ -166,7 +171,7 @@ EmpathEditorProcess::s_composeFinished(KProcess * p)
 
 	void
 EmpathEditorProcess::s_debugExternalEditorOutput(
-	KProcess * p, char * buffer, int buflen)
+	KProcess *, char * buffer, int)
 {
 	empathDebug("Received: " + QString(buffer));
 }

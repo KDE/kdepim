@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMailboxMaildir.h"
+#endif
+
 // FIXME: The writeNewMail method needs to find a way of telling the
 // caller whether message write was successful.
 
@@ -38,7 +42,6 @@
 #include "EmpathFolderList.h"
 #include "EmpathMessageList.h"
 #include "EmpathConfig.h"
-#include "EmpathEnum.h"
 #include "Empath.h"
 
 EmpathMailboxMaildir::EmpathMailboxMaildir(const QString & name)
@@ -136,16 +139,14 @@ EmpathMailboxMaildir::_setupDefaultFolders()
 	saveConfig();
 }
 	
-	bool
+	QString
 EmpathMailboxMaildir::writeMessage(const EmpathURL & folder, RMessage & m)
 {
 	empathDebug("writeMessage() called");
 	
 	EmpathMaildir * box = _box(folder);
-	if (box == 0) return 0;
-	box->writeMessage(m);
-	
-	return true;
+	if (box == 0) return QString::null;
+	return box->writeMessage(m);
 }
 
 	bool
@@ -162,7 +163,7 @@ EmpathMailboxMaildir::saveConfig()
 	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_MAILBOX + url_.mailboxName());
 	
-	c->writeEntry(EmpathConfig::KEY_MAILBOX_TYPE, type_);
+	c->writeEntry(EmpathConfig::KEY_MAILBOX_TYPE, (unsigned int)type_);
 	c->writeEntry(EmpathConfig::KEY_LOCAL_MAILBOX_PATH, path_);
 	
 	c->writeEntry(EmpathConfig::KEY_CHECK_MAIL, checkMail_);

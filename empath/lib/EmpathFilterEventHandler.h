@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathFilterEventHandler.h"
+#endif
+
 #ifndef EMPATHFILTEREVENTHANDER_H
 #define EMPATHFILTEREVENTHANDER_H
 
@@ -27,7 +31,6 @@
 // Local includes
 #include "RMM_MessageID.h"
 #include "EmpathURL.h"
-#include "EmpathEnum.h"
 
 class EmpathFilterEventHandler : public QObject
 {
@@ -35,30 +38,33 @@ class EmpathFilterEventHandler : public QObject
 
 	public:
 		
+		enum ActionType { MoveFolder, CopyFolder, Delete, Ignore, Forward };
+		
 		EmpathFilterEventHandler();
 		
 		virtual ~EmpathFilterEventHandler();
 
-		void setMoveFolder(const EmpathURL & folder);
-		void setCopyFolder(const EmpathURL & folder);
+		void setMoveFolder(const EmpathURL &);
+		void setCopyFolder(const EmpathURL &);
 		void setDelete();
 		void setIgnore();
-		void setForward(const QString & address);
+		void setForward(const QString &);
 
-		void handleMessage(const EmpathURL & id);
-		bool load(const QString & filterName);
-		void save(const QString & filterName);
-		QString description() const;
-		ActionType actionType() const;
-		EmpathURL moveOrCopyFolder() const;
-		const QString & forwardAddress() const;
+		void handleMessage	(const EmpathURL &);
+		
+		bool load			(const QString &);
+		void save			(const QString &);
+
+		QString		description()		const;
+		ActionType	actionType()		const;
+		EmpathURL	moveOrCopyFolder()	const;
+		QString		forwardAddress()	const;
 
 	private:
 
-		QString forwardAddress_;
-		EmpathURL moveCopyFolder_;
-		
-		ActionType actionType_;
+		QString		forwardAddress_;
+		EmpathURL	moveCopyFolder_;
+		ActionType	actionType_;
 };
 
 #endif // EMPATHFILTEREVENTHANDLER_H

@@ -18,8 +18,13 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-// Qt includes
-#include <qlayout.h>
+#ifdef __GNUG__
+# pragma implementation "EmpathAttachmentListWidget.h"
+#endif
+
+#ifdef __GNUG__
+# pragma implementation ""
+#endif
 
 // KDE includes
 #include <klocale.h>
@@ -35,24 +40,11 @@
 EmpathAttachmentListWidget::EmpathAttachmentListWidget(
 		QWidget * parent,
 		const char * name)
-	:	QWidget(parent, name)
+	:	QListView(parent, name)
 {
 	empathDebug("ctor");
 
-	QGridLayout * layout = new QGridLayout(this, 1, 1, 0, 10);
-	CHECK_PTR(layout);
-	
-	lv_attachments_	= new QListView(this, "lv_attachments");
-	CHECK_PTR(lv_attachments_);
-
-	lv_attachments_->addColumn(QString::null);
-	lv_attachments_->addColumn(i18n("Filename"));
-	lv_attachments_->addColumn(i18n("Type"));
-	lv_attachments_->addColumn(i18n("Encoding"));
-
-	layout->addWidget(lv_attachments_,	0, 0);
-
-	layout->activate();
+	addColumn(i18n("Attachments"));
 }
 
 EmpathAttachmentListWidget::~EmpathAttachmentListWidget()
@@ -61,7 +53,7 @@ EmpathAttachmentListWidget::~EmpathAttachmentListWidget()
 }
 
 	void
-EmpathAttachmentListWidget::use(const RMessage & att)
+EmpathAttachmentListWidget::use(const RMessage &)
 {
 }
 

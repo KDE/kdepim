@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathStatusWidget.h"
+#endif
+
 #ifndef EMPATH_STATUS_WIDGET_H
 #define EMPATH_STATUS_WIDGET_H
 

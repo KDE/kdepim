@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathFilterActionDialog.h"
+#endif
+
 // KDE includes
 #include <kapp.h>
 #include <klocale.h>
@@ -228,32 +232,35 @@ EmpathFilterActionDialog::~EmpathFilterActionDialog()
 	void
 EmpathFilterActionDialog::load()
 {
+	empathDebug("load()");
+	ASSERT(filter_ != 0);
 	EmpathFilterEventHandler * handler = filter_->eventHandler();
-	if (!handler) return;
+	if (handler == 0) return;
+	empathDebug("...");
 	
 	switch (handler->actionType()) {
 		
-		case MoveFolder:
+		case EmpathFilterEventHandler::MoveFolder:
 			cb_moveOrCopy_->setCurrentItem(0);
 			fcw_moveFolder_->setURL(handler->moveOrCopyFolder());
 			rb_moveFolder_->setChecked(true);
 			break;
 		
-		case CopyFolder:
+		case EmpathFilterEventHandler::CopyFolder:
 			cb_moveOrCopy_->setCurrentItem(1);
 			fcw_moveFolder_->setURL(handler->moveOrCopyFolder());
 			rb_moveFolder_->setChecked(true);
 			break;
 			
-		case Delete:
+		case EmpathFilterEventHandler::Delete:
 			rb_delete_->setChecked(true);
 			break;
 			
-		case Ignore:
+		case EmpathFilterEventHandler::Ignore:
 			rb_ignore_->setChecked(true);
 			break;
 			
-		case Forward:
+		case EmpathFilterEventHandler::Forward:
 			rb_forwardTo_->setChecked(true);
 			asw_address_->setAddress(handler->forwardAddress());
 			break;

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMessageHTMLView.h"
+#endif
+
 #include <ctype.h>
 
 // Qt includes
@@ -74,8 +78,8 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 	end();
 
 	QObject::connect(
-		this, SIGNAL(popupMenu(const char *, const QPoint &)),
-		this, SLOT(s_popupMenu(const char *, const QPoint &)));
+		this, SIGNAL(popupMenu(QString, const QPoint &)),
+		this, SLOT(s_popupMenu(QString, const QPoint &)));
 	
 	empathDebug("ctor finished");
 }
@@ -210,13 +214,9 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 	}
 
 	register char * bufpos = buf;
-	int numBufs = 1;
-	int tabstop = 4; // FIXME: Hard coded !
-	int totalLength = 0;
 	register int x = 0;
 	register char * startAddress = 0;
 	register char * endAddress = 0;
-	char * c = 0;
 	int quoteDepth = 0;
 	bool markDownQuotedLine = false;
 
@@ -254,13 +254,22 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 			case '-':
 				// Markup sig.
 				// Ensure first char on line, and following char is '-'
-				if (pos != start && *(pos - 1) == '\n' &&
-					*(pos + 1) == '-' &&
-					*(pos + 2) == '\n')
-				{			
+				// Handle '\n--[ ]'
+				if (pos != start && *(pos - 1) == '\n' && *(pos + 1) == '-')
+				{
+					if (*(pos + 2) == '\n')
+						pos += 2;
+					
+					else if (*(pos + 2) == ' ' && *(pos + 3) == '\n')
+						pos += 3;
+					
+					else {
+						*(++bufpos) = *pos;
+						break;
+					}
+
 					strcpy(bufpos, "<BR><HR><BR>");
 					bufpos += 12;
-					++pos;
 
 				} else *(bufpos++) = *pos;
 		
@@ -529,14 +538,12 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 }
 
 	void
-EmpathMessageHTMLWidget::s_popupMenu(const char * c, const QPoint & p)
+EmpathMessageHTMLWidget::s_popupMenu(QString s, const QPoint &)
 {
-	if (c == 0)
+	if (s.isEmpty())
 		return;
 	
 	popup_.clear();
-	
-	QString s(c);
 	
 	empathDebug("URL clicked was: \"" + s + "\"");
 	

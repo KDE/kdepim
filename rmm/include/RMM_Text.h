@@ -18,8 +18,12 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef RMM_RTEXT_H
-#define RMM_RTEXT_H
+#ifdef __GNUG__
+# pragma interface "RMM_Text.h"
+#endif
+
+#ifndef RMM_TEXT_H
+#define RMM_TEXT_H
 
 #include <RMM_Defines.h>
 #include <RMM_HeaderBody.h>

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathConfigPOP3Dialog.h"
+#endif
+
 #ifndef EMPATHCONFIGPOP3DIALOG_H
 #define EMPATHCONFIGPOP3DIALOG_H
 

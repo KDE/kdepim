@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathMessageHTMLView.h"
+#endif
+
 #ifndef EMPATHMESSAGEHTMLVIEW_H
 #define EMPATHMESSAGEHTMLVIEW_H
 
@@ -56,7 +60,7 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
 		
 	protected slots:
 		
-		void s_popupMenu(const char *, const QPoint &);
+		void s_popupMenu(QString, const QPoint &);
 
 	private:
 		

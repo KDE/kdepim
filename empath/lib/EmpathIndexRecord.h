@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathIndexRecord.h"
+#endif
+
 #ifndef EMPATHMESSAGEDESCRIPTION_H
 #define EMPATHMESSAGEDESCRIPTION_H
 
@@ -104,9 +108,11 @@ class EmpathIndexRecordList : public QList<EmpathIndexRecord>
 		virtual ~EmpathIndexRecordList() {}
 		
 	protected:
-		virtual int compareItems(EmpathIndexRecord * i1, EmpathIndexRecord * i2)
+		virtual int compareItems(void * i1, void * i2)
 		{
-			return i1->date().qdt() > i2->date().qdt() ? 1 : -1;
+			return
+				((EmpathIndexRecord *)i1)->date().qdt() >
+				((EmpathIndexRecord *)i2)->date().qdt() ? 1 : -1;
 		}
 };
 

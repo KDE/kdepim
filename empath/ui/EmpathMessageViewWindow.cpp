@@ -18,6 +18,13 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMessageViewWindow.h"
+#endif
+
+// Qt includes
+#include <qmessagebox.h>
+
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
@@ -119,7 +126,7 @@ EmpathMessageViewWindow::setupMenuBar()
 		this, SLOT(s_help()));
 
 	helpMenu_->insertItem(i18n("&About Empath"),
-		this, SLOT(s_aboutEmpath()));
+		empath, SLOT(s_about()));
 
 	helpMenu_->insertSeparator();
 	
@@ -330,6 +337,12 @@ EmpathMessageViewWindow::s_messageReplyAll()
 {
 	empathDebug("s_messageReplyAll called");
 	empath->s_replyAll(url_);
+}
+
+	void
+EmpathMessageViewWindow::s_aboutQt()
+{
+	QMessageBox::aboutQt(this, "aboutQt");
 }
 
 

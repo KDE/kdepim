@@ -29,7 +29,7 @@ class EmpathHeaderViewWidget : public QWidget
 		void paintEvent(QPaintEvent *);
 		void resizeEvent(QResizeEvent *);
 		void mouseMoveEvent(QMouseEvent *);
-		void leaveEvent(QEvent * e) { mouseMoveEvent(0); }
+		void leaveEvent(QEvent *) { mouseMoveEvent(0); }
 		void mousePressEvent(QMouseEvent * e);
 
 	private:

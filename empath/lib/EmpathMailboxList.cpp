@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMailboxList.h"
+#endif
+
 // Qt includes
 #include <qstring.h>
 
@@ -144,7 +148,7 @@ EmpathMailboxList::readConfig()
 	// Load each mailbox ( make new, tell it to read config )
 	empathDebug("Reading " + QString().setNum(l.count()) + " mailboxes into list");
 
-	AccountType mailboxType = Maildir;
+	EmpathMailbox::AccountType mailboxType = EmpathMailbox::Maildir;
 	
 	QStrListIterator it(l);
 	
@@ -153,28 +157,28 @@ EmpathMailboxList::readConfig()
 		c->setGroup(EmpathConfig::GROUP_MAILBOX + it.current());
 		
 		mailboxType =
-			(AccountType)
+			(EmpathMailbox::AccountType)
 			c->readUnsignedNumEntry(EmpathConfig::KEY_MAILBOX_TYPE);
 
 		EmpathMailbox * m = 0;
 
 		switch (mailboxType) {
 			
-			case Maildir:
+			case EmpathMailbox::Maildir:
 				empathDebug("Adding new Maildir mailbox with name \"" +
 					QString(it.current()) + "\"");
 				m = new EmpathMailboxMaildir(it.current());
 				CHECK_PTR(m);
 				break;
 			
-			case POP3:
+			case EmpathMailbox::POP3:
 				empathDebug("Adding new POP3 mailbox with name \"" +
 					QString(it.current()) + "\"");
 				m = new EmpathMailboxPOP3(it.current());
 				CHECK_PTR(m);
 				break;
 
-			case IMAP4:
+			case EmpathMailbox::IMAP4:
 				empathDebug("Adding new IMAP4 mailbox with name \"" +
 					QString(it.current()) + "\"");
 				m = new EmpathMailboxIMAP4(it.current());

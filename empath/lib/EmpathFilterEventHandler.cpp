@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathFilterEventHandler.h"
+#endif
+
 // Qt includes
 #include <qsmartptr.h>
 
@@ -44,7 +48,7 @@ EmpathFilterEventHandler::~EmpathFilterEventHandler()
 	empathDebug("dtor");
 }
 
-	ActionType
+	EmpathFilterEventHandler::ActionType
 EmpathFilterEventHandler::actionType() const
 {
 	return actionType_;
@@ -56,7 +60,7 @@ EmpathFilterEventHandler::moveOrCopyFolder() const
 	return moveCopyFolder_;
 }
 
-	const QString &
+	QString
 EmpathFilterEventHandler::forwardAddress() const
 {
 	return forwardAddress_;

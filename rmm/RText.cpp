@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "RMM_Text.h"
+#endif
+
 #include <qstring.h>
 
 #include <RMM_Text.h>

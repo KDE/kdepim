@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathAttachmentListWidget.h"
+#endif
+
 #ifndef EMPATHATTACHMENTLISTWIDGET_H
 #define EMPATHATTACHMENTLISTWIDGET_H
 
@@ -36,7 +40,7 @@
 /**
  * This widget shows the structure of a message.
  */
-class EmpathAttachmentListWidget : public QWidget
+class EmpathAttachmentListWidget : public QListView
 {
 	Q_OBJECT
 	

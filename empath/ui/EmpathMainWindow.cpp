@@ -18,9 +18,14 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMainWindow.h"
+#endif
+
 // Qt includes
 #include <qapplication.h>
 #include <qmsgbox.h>
+#include <qwidgetlist.h>
 
 // KDE includes
 #include <klocale.h>
@@ -72,6 +77,8 @@ EmpathMainWindow::EmpathMainWindow(const char * name)
 	messageListWidget_ = mainWidget_->messageListWidget();
 
 	setView(mainWidget_, false);
+	setIcon(empathIcon("empath.png"));
+	kapp->setMainWidget(this);
 	
 	_setupMenuBar();
 	_setupToolBar();
@@ -194,9 +201,25 @@ EmpathMainWindow::s_fileAddressBook()
 EmpathMainWindow::s_fileQuit()
 {
 	empathDebug("s_fileQuit called");
-	// FIXME: Check if the user wants to save changes
+
+	// FIXME: Check if the user wants to save changes.
+	
+	// Hide all toplevels while we clean up.
 	hide();
+
+	QWidgetList * list = QApplication::topLevelWidgets();
+
+	QWidgetListIt it(*list);
+	
+	for (; it.current(); ++it)
+		if (it.current()->isVisible())
+			it.current()->hide();
+	
+	delete list;
+	list = 0;
+	
 	kapp->processEvents();
+
 	delete this;
 }
 
@@ -360,11 +383,9 @@ EmpathMainWindow::s_messageMoveTo()
 
 	EmpathFolder * copyFolder = empath->folder(fcd.selected());
 
-	if (copyFolder != 0) {
-		if (copyFolder->writeMessage(message)) {
+	if (copyFolder != 0)
+		if (!copyFolder->writeMessage(message).isNull())
 			empath->remove(messageListWidget_->firstSelectedMessage());
-		}
-	}
 }
 
 	void

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathIndex.h"
+#endif
+
 #ifndef EMPATHMESSAGEDESCRIPTIONLIST
 #define EMPATHMESSAGEDESCRIPTIONLIST
 
@@ -47,11 +51,13 @@ class EmpathIndex : public QDict<EmpathIndexRecord>
 		/**
 		 * Count the number of messages stored.
 		 */
+
 		Q_UINT32 countUnread() const;
 
 		/**
 		 * Sync up the message list with the mailbox.
 		 */
+
 		void sync();
 
 		EmpathFolder * folder() { return folder_; }
@@ -60,9 +66,7 @@ class EmpathIndex : public QDict<EmpathIndexRecord>
 
 	protected:
 		
-		virtual int compareItems(
-			EmpathIndexRecord * item1,
-			EmpathIndexRecord * item2);
+		virtual int compareItems(void *, void *);
 		
 		EmpathFolder * folder_;
 		

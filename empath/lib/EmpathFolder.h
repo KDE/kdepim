@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathFolder.h"
+#endif
+
 #ifndef EMPATHFOLDER_H
 #define EMPATHFOLDER_H
 
@@ -27,7 +31,6 @@
 
 // Local includes
 #include "EmpathIndex.h"
-#include "EmpathEnum.h"
 #include "EmpathURL.h"
 #include "RMM_MessageID.h"
 
@@ -70,7 +73,7 @@ class EmpathFolder : public QObject
 		const EmpathIndexRecord *
 			messageDescription(RMessageID & messageID) const;
 
-		bool writeMessage(RMessage & message);
+		QString writeMessage(RMessage & message);
 		bool removeMessage(const EmpathURL &);
 
 		void update();
@@ -80,6 +83,7 @@ class EmpathFolder : public QObject
 		 * This message is allocated with new. It is your responsibility to
 		 * delete it.
 		 */
+
 		RMessage * message(const EmpathURL & url);
 
 		bool mark(const EmpathURL &, RMM::MessageStatus);

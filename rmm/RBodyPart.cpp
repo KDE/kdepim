@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "RMM_BodyPart.h"
+#endif
+
 // Qt includes
 #include <qregexp.h>
 
@@ -339,14 +343,14 @@ RBodyPart::_update()
 }
 
 	void
-RBodyPart::addPart(RBodyPart * bp)
+RBodyPart::addPart(RBodyPart *)
 {
 	parse();
 	_update();
 }
 
 	void
-RBodyPart::removePart(RBodyPart * part)
+RBodyPart::removePart(RBodyPart *)
 {
 	parse();
 	_update();

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathComposeWidget.h"
+#endif
+
 #ifndef EMPATHCOMPOSEWIDGET_H
 #define EMPATHCOMPOSEWIDGET_H
 
@@ -34,11 +38,13 @@
 #include <qmultilinedit.h>
 
 // Local includes
-#include "EmpathEnum.h"
+#include "Empath.h"
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
 #include "EmpathHeaderSpecWidget.h"
 #include "RMM_Message.h"
+
+class EmpathAttachmentListWidget;
 
 /**
  * The container for the various widgets used when composing.
@@ -55,7 +61,7 @@ class EmpathComposeWidget : public QWidget
 		EmpathComposeWidget(QWidget * parent = 0, const char * name = 0);
 
 		EmpathComposeWidget(
-			ComposeType t, const EmpathURL &,
+			Empath::ComposeType t, const EmpathURL &,
 			QWidget * parent = 0, const char * name = 0);
 	
 		EmpathComposeWidget(
@@ -81,9 +87,17 @@ class EmpathComposeWidget : public QWidget
 		
 		void bugReport();
 		
+		bool haveTo();
+		bool haveSubject();
+		
 	protected slots:
 		
 		void	s_editorDone(bool ok, QCString text);
+	
+		void	s_cut();
+		void	s_copy();
+		void	s_paste();
+		void	s_selectAll();
 		
 	private:
 
@@ -93,8 +107,11 @@ class EmpathComposeWidget : public QWidget
 		void	_spawnExternalEditor(const QCString & text);
 		void	_addExtraHeaders();
 		void	_addHeader(const QString &, const QString & = QString::null);
+		void	_set(const QString &, const QString &);
+		QString	_get(const QString &);
 		
-		
+		EmpathAttachmentListWidget * attachmentWidget_;
+
 		QMultiLineEdit	* editorWidget_;
 		QListView		* lv_attachments_;
 		QComboBox		* cmb_priority_;
@@ -107,7 +124,8 @@ class EmpathComposeWidget : public QWidget
 		
 		QList<EmpathHeaderSpecWidget> headerSpecList_;
 
-		ComposeType	composeType_;
+		Empath::ComposeType	composeType_;
+
 		EmpathURL	url_;
 		QString		recipient_;
 		

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathSecurityProcess.h"
+#endif
+
 // System includes
 #include <stdlib.h>             // setenv()
 
@@ -99,13 +103,13 @@ EmpathSecurityProcess::s_pgpSentError(KProcess *, char * s, int)
 
 	void
 EmpathSecurityProcess::_encrypt(
-	const QCString & s, const QCString & recipient, QObject * parent)
+	const QCString &, const QCString & recipient, QObject * parent)
 {
 	p	<< "pgpe -atf +batchmode=1 -r " << recipient;
 
 	QObject::connect(
-	this,	SIGNAL(done(bool, QCString)),
-	parent,	SLOT(s_encryptDone(bool, QCString)));
+		this,	SIGNAL(done(bool, QCString)),
+		parent,	SLOT(s_encryptDone(bool, QCString)));
 	
 	if (!p.start(KProcess::NotifyOnExit, KProcess::All)) {
 		empathDebug("Couldn't start pgp process");
@@ -116,7 +120,7 @@ EmpathSecurityProcess::_encrypt(
 	
 	void
 EmpathSecurityProcess::_encryptAndSign(
-	const QCString & s, const QCString & recipient, QObject * parent)
+	const QCString &, const QCString & recipient, QObject * parent)
 {
 	p	<< "pgpe -atf +batchmode=1 -s -r " << recipient;
 
@@ -143,7 +147,7 @@ EmpathSecurityProcess::_encryptAndSign(
 
 	void
 EmpathSecurityProcess::_decrypt(
-	const QCString & s, QObject * parent)
+	const QCString &, QObject * parent)
 {
 	p	<< "pgpv -f -z";
 	

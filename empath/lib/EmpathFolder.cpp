@@ -18,12 +18,15 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathFolder.h"
+#endif
+
 // Local includes
 #include "Empath.h"
 #include "EmpathFolderList.h"
 #include "EmpathFolder.h"
 #include "EmpathDefines.h"
-#include "EmpathEnum.h"
 #include "EmpathMailbox.h"
 #include "EmpathIndex.h"
 #include "EmpathUtilities.h"
@@ -51,7 +54,7 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
 }
 
 	bool
-EmpathFolder::operator == (const EmpathFolder & other) const
+EmpathFolder::operator == (const EmpathFolder &) const
 {
 	empathDebug("operator == () called");
 	return false;
@@ -103,17 +106,22 @@ EmpathFolder::update()
 	emit(countUpdated(messageList_.countUnread(), messageList_.count()));
 }
 
-	bool
+	QString
 EmpathFolder::writeMessage(RMessage & message)
 {
 	empathDebug("writeMessage() called");
+
 	EmpathMailbox * m = empath->mailbox(url_);
+	
 	if (m == 0)
-		return false;
-	if (!m->writeMessage(url_, message))
-		return false;
-	emit(countUpdated(messageList_.countUnread(), messageList_.count()));
-	return true;
+		return QString::null;
+	
+	QString id(m->writeMessage(url_, message));
+	
+	if (!id.isNull())
+		emit(countUpdated(messageList_.countUnread(), messageList_.count()));
+	
+	return id;
 }
 
 	EmpathFolder *
@@ -137,16 +145,16 @@ EmpathFolder::parent() const
 EmpathFolder::mark(const EmpathURL & message, RMM::MessageStatus s)
 {
 	empathDebug("mark called");
+	
 	EmpathMailbox * m(empath->mailbox(url_));
 	if (m == 0) return false;
-	bool retval = m->mark(message, s);
-	if (retval) {
-		empathDebug("Marked message successfully");
+	
+	if (m->mark(message, s)) {
 		messageList_[message.messageID()]->setStatus(s);
 		emit(countUpdated(messageList_.countUnread(), messageList_.count()));
 		return true;
 	}
-	empathDebug("Did NOT mark message successfully");
+	
 	return false;
 }
 

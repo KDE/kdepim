@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "RMM_Token.h"
+#endif
+
 #ifndef RMM_TOKEN_H
 #define RMM_TOKEN_H
 

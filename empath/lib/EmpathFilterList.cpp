@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathFilterList.h"
+#endif
+
 // KDE includes
 #include <kglobal.h>
 #include <kconfig.h>
@@ -45,8 +49,6 @@ EmpathFilterList::save()
 	
 	empathDebug("There are " + QString().setNum(count()) + " filters to save");
 	EmpathFilterListIterator it(*this);
-	
-	int c = 0;
 	
 	QStrList list;
 

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathMaildir.h"
+#endif
+
 #ifndef EMPATH_MAILDIR_H
 #define EMPATH_MAILDIR_H 
 
@@ -28,7 +32,6 @@
 #include <qlist.h>
 
 // Local includes
-#include "EmpathEnum.h"
 #include "EmpathURL.h"
 #include "EmpathDefines.h"
 #include "RMM_Enum.h"
@@ -56,7 +59,7 @@ class EmpathMaildir
 		
 		bool		mark(const EmpathURL &, RMM::MessageStatus);
 		
-		bool		writeMessage(RMessage & msg);
+		QString		writeMessage(RMessage & msg);
 		
 		Q_UINT32				sizeOfMessage			(const QString & id);
 		QString					plainBodyOfMessage		(const QString & id);
@@ -85,8 +88,8 @@ class EmpathMaildir
 		// Order dependency
 		Q_UINT32	seq_;
 		QString		path_;
-		QString		basePath_;
 		EmpathURL	url_;
+		QString		basePath_;
 		// End order dependency
 		
 		QDir d;

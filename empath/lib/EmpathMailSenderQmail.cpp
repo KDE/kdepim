@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMailSenderQmail.h"
+#endif
+
 // Qt includes
 #include <qcstring.h>
 
@@ -102,7 +106,7 @@ EmpathMailSenderQmail::sendOne(RMessage & message)
 }
 
 	void
-EmpathMailSenderQmail::wroteStdin(KProcess * p)
+EmpathMailSenderQmail::wroteStdin(KProcess *)
 {
 	empathDebug("wroteStdin() called");
 
@@ -131,7 +135,7 @@ EmpathMailSenderQmail::wroteStdin(KProcess * p)
 }
 
 	void
-EmpathMailSenderQmail::qmailExited(KProcess * p)
+EmpathMailSenderQmail::qmailExited(KProcess *)
 {
 	empathDebug("qmail exited");
 	
@@ -143,7 +147,7 @@ EmpathMailSenderQmail::qmailExited(KProcess * p)
 }
 
 	void
-EmpathMailSenderQmail::qmailReceivedStderr(KProcess *, char * buf, int buflen)
+EmpathMailSenderQmail::qmailReceivedStderr(KProcess *, char * buf, int)
 {
 	QString eatBuf;
 	

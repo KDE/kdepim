@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathMailbox.h"
+#endif
+
 #ifndef EMPATHMAILBOX_H
 #define EMPATHMAILBOX_H
 
@@ -31,7 +35,6 @@
 #include "RMM_Message.h"
 #include "RMM_MessageID.h"
 #include "EmpathDefines.h"
-#include "EmpathEnum.h"
 #include "EmpathURL.h"
 #include "EmpathFolderList.h"
 
@@ -42,6 +45,9 @@ class EmpathMailbox : public QObject
 	Q_OBJECT
 	
 	public:
+		
+		enum AccountType	{ Local, Maildir, POP3, IMAP4 };
+		enum SavePolicy		{ Forever, ThisSession, Never };
 		
 		EmpathMailbox();
 	
@@ -78,7 +84,7 @@ class EmpathMailbox : public QObject
 		/**
 		 * @short Write a new message to the specified folder.
 		 */
-		virtual bool
+		virtual QString
 			writeMessage(const EmpathURL & folder, RMessage & msg) = 0;
 		
 		/**
@@ -217,12 +223,12 @@ class EmpathMailbox : public QObject
 		/**
 		 * @short Report the type of this mailbox.
 		 */
-		AccountType	type() const { return type_; }
+		AccountType	type()			const { return type_; }
 		
 		/**
 		 * @short Name of the desired pixmap to represent this box.
 		 */
-		QString 	pixmapName() const { return pixmapName_; }
+		QString 	pixmapName()	const { return pixmapName_; }
 		
 		bool 		newMailReady()	const { return (newMessagesCount_ != 0); }
 		Q_UINT32 	newMails()		const { return newMessagesCount_; }
@@ -244,6 +250,7 @@ class EmpathMailbox : public QObject
 		EmpathIndex			index_;
 
 		EmpathURL			url_;
+
 		AccountType			type_;
 
 		Q_UINT32			newMessagesCount_;

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMessageDownloadStatus.h"
+#endif
+
 // KDE includes
 #include <klocale.h>
 
@@ -105,7 +109,7 @@ EmpathMessageDownloadStatus::s_setMailboxBytes(Q_UINT32 mailboxBytes)
 }
 
 	void
-EmpathMessageDownloadStatus::s_nextMessage(Q_UINT32 lastMsgBytes)
+EmpathMessageDownloadStatus::s_nextMessage(Q_UINT32)
 {
 	++msgNo_;
 	l_messageNumber_->setText(

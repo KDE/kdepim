@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathHeaderSpecWidget.h"
+#endif
+
 #ifndef EMPATHHEADERSPECWIDGET_H
 #define EMPATHHEADERSPECWIDGET_H
 
@@ -60,6 +64,8 @@ class EmpathHeaderSpecWidget : public QWidget
 		
 		QString headerName_;
 		QString headerBody_;
+		
+		bool address_;
 };
 
 #endif

@@ -18,16 +18,24 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathUI.h"
+#endif
+
+// Qt includes
+#include <qmessagebox.h>
+#include <qstring.h>
+
 // KDE includes
 #include <kglobal.h>
 #include <kconfig.h>
 #include <kiconloader.h>
 #include <kapp.h>
+#include <klocale.h>
 
 // Local includes
 #include "Empath.h"
 #include "EmpathUI.h"
-#include "EmpathAboutBox.h"
 #include "EmpathMainWindow.h"
 #include "EmpathComposeWindow.h"
 #include "EmpathDisplaySettingsDialog.h"
@@ -52,12 +60,14 @@ EmpathUI::EmpathUI()
 	
 	QString iconSetPath(c->readEntry(EmpathConfig::KEY_ICON_SET, "standard"));
 
-	KGlobal::iconLoader()->insertDirectory(0, kapp->kde_datadir() + "/empath/pics/" + iconSetPath);
-	KGlobal::iconLoader()->insertDirectory(0, kapp->kde_datadir() + "/empath/pics/mime");
+	KGlobal::iconLoader()->insertDirectory(0,
+		kapp->kde_datadir() + "/empath/pics/" + iconSetPath);
+	KGlobal::iconLoader()->insertDirectory(0,
+		kapp->kde_datadir() + "/empath/pics/mime");
 	
 	QObject::connect(
-		empath,	SIGNAL(newComposer(ComposeType, const EmpathURL &)),
-		this,	SLOT(s_newComposer(ComposeType, const EmpathURL &)));
+		empath,	SIGNAL(newComposer(Empath::ComposeType, const EmpathURL &)),
+		this,	SLOT(s_newComposer(Empath::ComposeType, const EmpathURL &)));
 	
 	QObject::connect(
 		empath,	SIGNAL(newComposer(const QString &)),
@@ -105,11 +115,8 @@ EmpathUI::~EmpathUI()
 }
 
 	void	
-EmpathUI::s_newComposer(ComposeType t, const EmpathURL & m)
+EmpathUI::s_newComposer(Empath::ComposeType t, const EmpathURL & m)
 {
-	empathDebug("s_newComposer(" +
-		QString().setNum(t) + ", " + m.asString() + ") called");
-
 	EmpathComposeWindow * c = new EmpathComposeWindow(t, m);
 	CHECK_PTR(c);
 	c->show();
@@ -118,8 +125,6 @@ EmpathUI::s_newComposer(ComposeType t, const EmpathURL & m)
 	void	
 EmpathUI::s_newComposer(const QString & recipient)
 {
-	empathDebug("s_newComposer(" + recipient + ") called");
-
 	EmpathComposeWindow * c = new EmpathComposeWindow(recipient);
 	CHECK_PTR(c);
 	c->show();
@@ -132,7 +137,8 @@ EmpathUI::_showTipOfTheDay() const
 
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
-	if (!c->readBoolEntry(EmpathConfig::KEY_TIP_OF_THE_DAY_AT_STARTUP, false)) return;
+	if (!c->readBoolEntry(EmpathConfig::KEY_TIP_OF_THE_DAY_AT_STARTUP, false))
+		return;
 
 	EmpathTipOfTheDay totd(
 			(QWidget *)0L,
@@ -181,7 +187,24 @@ EmpathUI::s_setupFilters()
 	void
 EmpathUI::s_about()
 {
-	EmpathAboutBox::create();
+	static const QString EmpathAbout = QString::fromLatin1(
+		"<h3>Empath</h3>"
+		"<p>Version %1</p>"
+		"<p>A sophisticated mail client for <b>KDE</b></p>"
+		"<p>Maintainer contact address: <b>&lt;rik@kde.org&gt;</b></p>"
+		"<hr>"
+		"<p>Compiled with KDE libraries version: %2</p>"
+		"<p>Compiled with Qt library version: %3</p>"
+		"<p>Empath is licensed under the <em>GNU Public License</em></p>");
+
+	QString kdeVersion		= QString::fromLatin1(KDE_VERSION_STRING);
+	QString qtVersion		= QString::fromLatin1(QT_VERSION_STR);
+
+	QMessageBox::about(0, i18n("About Empath"),
+		i18n(EmpathAbout.ascii())
+		.arg(EMPATH_VERSION_STRING)
+		.arg(kdeVersion)
+		.arg(qtVersion));
 }
 
 	void

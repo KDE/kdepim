@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathURL.h"
+#endif
+
 // Qt includes
 #include <qregexp.h>
 
@@ -82,8 +86,6 @@ EmpathURL::_parse()
 	bool hadTrailingSlash(strRep_.at(0) == '/');
 	_cleanUp(strRep_);
 	
-	int x = strRep_.contains('/') ? 0 : 1;
-
 	if (strRep_.contains('/') == 0) {
 		// No slashes, therefore it's just got a mailbox name.
 		mailboxName_	= strRep_;

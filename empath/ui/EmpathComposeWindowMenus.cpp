@@ -1,8 +1,6 @@
 	void
 EmpathComposeWindow::setupMenuBar()
 {
-	empathDebug("setting up menu bar");
-
 	fileMenu_	= new QPopupMenu();
 	CHECK_PTR(fileMenu_);
 
@@ -16,7 +14,6 @@ EmpathComposeWindow::setupMenuBar()
 	CHECK_PTR(helpMenu_);
 
 	// File menu
-	empathDebug("setting up file menu");
 	
 	fileMenu_->insertItem(empathIcon("mini-send.png"), i18n("&Send Message"),
 		this, SLOT(s_fileSendMessage()));
@@ -31,8 +28,7 @@ EmpathComposeWindow::setupMenuBar()
 
 	// Edit menu
 	
-	empathDebug("setting up edit menu");
-
+#if 0
 	editMenu_->insertItem(i18n("&Undo"),
 		this, SLOT(s_editUndo()));
 	
@@ -40,7 +36,7 @@ EmpathComposeWindow::setupMenuBar()
 		this, SLOT(s_editRedo()));
 	
 	editMenu_->insertSeparator();
-
+#endif
 	editMenu_->insertItem(empathIcon("empath-cut.png"), i18n("Cu&t"),
 		this, SLOT(s_editCut()));
 	
@@ -50,14 +46,15 @@ EmpathComposeWindow::setupMenuBar()
 	editMenu_->insertItem(empathIcon("empath-paste.png"), i18n("&Paste"),
 		this, SLOT(s_editPaste()));
 	
-	editMenu_->insertItem(empathIcon("blank.png"), i18n("&Delete"),
-		this, SLOT(s_editDelete()));
+//	editMenu_->insertItem(empathIcon("blank.png"), i18n("&Delete"),
+//		this, SLOT(s_editDelete()));
 
 	editMenu_->insertSeparator();
 	
 	editMenu_->insertItem(empathIcon("blank.png"), i18n("&Select All"),
 		this, SLOT(s_editSelectAll()));
 	
+#if 0
 	editMenu_->insertSeparator();
 	
 	editMenu_->insertItem(empathIcon("blank.png"), i18n("Find..."),
@@ -65,12 +62,10 @@ EmpathComposeWindow::setupMenuBar()
 	
 	editMenu_->insertItem(empathIcon("blank.png"), i18n("Find &Again"),
 		this, SLOT(s_editFindAgain()));
-	
+#endif
 	// Message Menu
-	empathDebug("setting up message menu");
-
 	messageMenu_->insertItem(empathIcon("mini-compose.png"), i18n("&New"),
-		this, SLOT(s_messageNew()));
+		empath, SLOT(s_compose()));
 
 	messageMenu_->insertItem(empathIcon("mini-save.png"), i18n("Save &As"),
 		this, SLOT(s_messageSaveAs()));

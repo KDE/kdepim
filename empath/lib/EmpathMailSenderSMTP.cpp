@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMailSenderSMTP.h"
+#endif
+
 // KDE includes
 #include <kglobal.h>
 #include <kconfig.h>
@@ -45,7 +49,7 @@ EmpathMailSenderSMTP::setServer(const QString & name, const Q_UINT32 port)
 }
 
 	bool
-EmpathMailSenderSMTP::sendOne(RMessage & message)
+EmpathMailSenderSMTP::sendOne(RMessage &)
 {
 	return false;
 }

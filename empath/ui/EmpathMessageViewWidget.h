@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathMessageViewWidget.h"
+#endif
+
 #ifndef EMPATHMESSAGEVIEWWIDGET_H
 #define EMPATHMESSAGEVIEWWIDGET_H
 
@@ -71,7 +75,7 @@ class EmpathMessageViewWidget : public QWidget
 		void s_docChanged();
 		void s_hScrollbarSetValue(int);
 		void s_vScrollbarSetValue(int);
-		void s_URLSelected(const char *, int);
+		void s_URLSelected(QString, int);
 		void s_clipClicked();
 
 	private:

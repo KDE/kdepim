@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathSecurityProcess.h"
+#endif
+
 // Qt includes
 #include <qcstring.h>
 #include <qobject.h>

@@ -18,6 +18,14 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathAddressSelectionWidget.h"
+#endif
+
+#ifdef __GNUG__
+# pragma implementation ""
+#endif
+
 // KDE includes
 #include <kiconloader.h>
 #include <kmsgbox.h>
@@ -36,7 +44,7 @@ EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(
 {
 	empathDebug("ctor");
 	
-	layout_		= new QGridLayout(this, 1, 2, 2, 10);
+	layout_		= new QGridLayout(this, 1, 2, 0, 10);
 	CHECK_PTR(layout_);
 	le_address_	= new QLineEdit(this, "le_address");
 	CHECK_PTR(le_address_);

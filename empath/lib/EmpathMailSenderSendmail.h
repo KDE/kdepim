@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathMailSenderSendmail.h"
+#endif
+
 #ifndef EMPATHMAILSENDERSENDMAIL_H
 #define EMPATHMAILSENDERSENDMAIL_H
 
@@ -44,6 +48,7 @@
  * Option -oem means 'Mail back errors, don't tell me now'
  * Option -oi  means 'Ignore dots'.
  */
+
 class EmpathMailSenderSendmail : public EmpathMailSender
 {
 	Q_OBJECT

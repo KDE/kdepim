@@ -18,6 +18,14 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathComposeSettingsDialog.h"
+#endif
+
+#ifdef __GNUG__
+# pragma implementation ""
+#endif
+
 // KDE includes
 #include <klocale.h>
 #include <kglobal.h>
@@ -263,8 +271,8 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 	
 	rb_sendLater_->setFixedHeight(h);
 	
-	buttonGroup_->insert(rb_sendNow_,	SendNow);
-	buttonGroup_->insert(rb_sendLater_,	SendLater);
+	buttonGroup_->insert(rb_sendNow_,	EmpathMailSender::SendNow);
+	buttonGroup_->insert(rb_sendLater_,	EmpathMailSender::SendLater);
 	
 	cb_externalEditor_ = new QCheckBox(i18n("Use external editor"),
 		this, "cb_useExternalEditor");
@@ -404,7 +412,10 @@ EmpathComposeSettingsDialog::saveData()
 	CWE( EmpathConfig::KEY_WRAP_LINES,				cb_wrap_->isChecked());
 	CWE( EmpathConfig::KEY_WRAP_COLUMN,				sb_wrap_->value());
 	CWE( EmpathConfig::KEY_SEND_POLICY,
-		(unsigned long)(rb_sendNow_->isChecked() ? SendNow : SendLater));
+		(unsigned long)(
+						rb_sendNow_->isChecked() ?
+						EmpathMailSender::SendNow :
+						EmpathMailSender::SendLater));
 	
 	CWE( EmpathConfig::KEY_USE_EXTERNAL_EDITOR,cb_externalEditor_->isChecked());
 	CWE( EmpathConfig::KEY_EXTERNAL_EDITOR,		le_externalEditor_->text());
@@ -445,8 +456,10 @@ EmpathComposeSettingsDialog::loadData()
 		c->readNumEntry(EmpathConfig::KEY_WRAP_COLUMN, 76));
 	
 	rb_sendNow_->setChecked((
-		(SendPolicy)
-		 c->readNumEntry(EmpathConfig::KEY_SEND_POLICY, SendLater)) == SendNow);
+		(EmpathMailSender::SendPolicy)
+		 c->readNumEntry(
+			 EmpathConfig::KEY_SEND_POLICY,
+			 EmpathMailSender::SendLater)) == EmpathMailSender::SendNow);
 
 	rb_sendLater_->setChecked(
 		!rb_sendNow_->isChecked());

@@ -18,11 +18,15 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMessageListItem.h"
+#endif
+
 // Qt includes
 #include <qstring.h>
 
 // KDE includes
-#include <kapp.h>
+#include <kglobal.h>
 
 // Local includes
 #include "EmpathMessageListWidget.h"
@@ -123,12 +127,12 @@ EmpathMessageListItem::setup()
 	
 	widthChanged();
 	int ph = pixmap(0) ? pixmap(0)->height() : 0;
-	int th = QFontMetrics(kapp->generalFont()).height();
+	int th = QFontMetrics(KGlobal::generalFont()).height();
 	setHeight(QMAX(ph, th));
 }
 
 	QString
-EmpathMessageListItem::key(int column, bool b) const
+EmpathMessageListItem::key(int column, bool) const
 {
 	QString s;
 	

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathFilterEditDialog.h"
+#endif
+
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
@@ -283,9 +287,9 @@ EmpathFilterEditDialog::s_removeExpr()
 EmpathFilterEditDialog::s_editAction()
 {
 	empathDebug("s_editAction() called");
+	ASSERT(filter_ != 0);
 	EmpathFilterActionDialog fDlg(filter_, this, "filterActionDialog");
 	if (fDlg.exec() != QDialog::Accepted) return;
-	ASSERT(filter_->actionDescription());
 	l_action_->setText(filter_->actionDescription());
 }
 

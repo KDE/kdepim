@@ -18,36 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <qstring.h>
+#ifdef __GNUG__
+# pragma implementation "RMM_Entity.h"
+#endif
 
-#include <RMM_Envelope.h>
 #include <RMM_Entity.h>
-#include <RMM_MimeType.h>
 
-REntity::REntity()
-	:	RMessageComponent()
-{
-	rmmDebug("ctor");
-}
-
-REntity::REntity(const REntity & e)
-	:	RMessageComponent(e)
-{
-	rmmDebug("ctor");
-}
-
-REntity::~REntity()
-{
-	rmmDebug("dtor");
-}
-
-	REntity &
-REntity::operator = (const REntity & e)
-{
-	rmmDebug("operator =");
-    if (this == &e) return *this; // Don't do a = a.
-	RMessageComponent::operator = (e);
-	assembled_ = false;
-	return *this;
-}
-
+REntity::~REntity() {}

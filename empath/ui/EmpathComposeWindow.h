@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathComposeWindow.h"
+#endif
+
 #ifndef EMPATHCOMPOSEWINDOW_H
 #define EMPATHCOMPOSEWINDOW_H
 
@@ -31,7 +35,7 @@
 
 // Local includes
 #include "EmpathDefines.h"
-#include "EmpathEnum.h"
+#include "Empath.h"
 #include "EmpathURL.h"
 
 class EmpathComposeWidget;
@@ -46,7 +50,7 @@ class EmpathComposeWindow : public KTMainWindow
 	public:
 		
 		EmpathComposeWindow();
-		EmpathComposeWindow(ComposeType t, const EmpathURL &);
+		EmpathComposeWindow(Empath::ComposeType t, const EmpathURL &);
 		EmpathComposeWindow(const QString &);
 		~EmpathComposeWindow();
 		
@@ -75,7 +79,6 @@ class EmpathComposeWindow : public KTMainWindow
 		void s_editFindAgain();
 		
 		// Message menu slots
-		void s_messageNew();
 		void s_messageSaveAs();
 		void s_messageCopyTo();
 
@@ -89,10 +92,19 @@ class EmpathComposeWindow : public KTMainWindow
 		void s_addSignature		(bool);
 		void s_digitallySign	(bool);
 		void s_encrypt			(bool);
+		
+	signals:
+		
+		void cut();
+		void copy();
+		void paste();
+		void selectAll();
 
 	private:
 		
 		void _init();
+		void _askForRecipient();
+		void _askForSubject();
 	
 		QPopupMenu		* fileMenu_;
 		QPopupMenu		* editMenu_;

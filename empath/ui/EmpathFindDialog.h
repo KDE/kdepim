@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathFindDialog.h"
+#endif
+
 #ifndef EMPATHFINDDIALOG_H
 #define EMPATHFINDDIALOG_H
 

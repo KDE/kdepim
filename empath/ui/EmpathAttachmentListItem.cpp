@@ -18,8 +18,19 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathAttachmentListItem.h"
+#endif
+
+#ifdef __GNUG__
+# pragma implementation ""
+#endif
+
 // Qt includes
 #include <qpixmap.h>
+
+// KDE includes
+#include <kglobal.h>
 
 // Local includes
 #include "EmpathAttachmentListItem.h"
@@ -54,7 +65,7 @@ EmpathAttachmentListItem::setup()
 {	
 	widthChanged();
 	
-	int th = QFontMetrics(empathGeneralFont()).height();
+	int th = QFontMetrics(KGlobal::generalFont()).height();
 	
 	if (!pixmap(0))
 		setHeight(th);
@@ -66,7 +77,6 @@ EmpathAttachmentListItem::setup()
 	QString
 EmpathAttachmentListItem::key(int, bool) const
 {
-	QString s;
-	return s;
+	return text(0);
 }
 

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "RMM_MimeType.h"
+#endif
+
 #include <ctype.h>
 #include <stdlib.h>
 #include <iostream.h>
@@ -36,7 +40,7 @@ RMimeType::RMimeType()
 }
 
 RMimeType::RMimeType(const RMimeType & t)
-	:	RHeaderBody()
+	:	RHeaderBody(t)
 {
 	rmmDebug("ctor");
 }
@@ -91,6 +95,7 @@ RMimeType::setType(RMM::MimeType t)
 	void
 RMimeType::setType(const QCString & s)
 {
+	type_ = RMM::mimeTypeStr2Enum(s);
 }
 
 	RMM::MimeSubType
@@ -102,11 +107,13 @@ RMimeType::subType()
 	void
 RMimeType::setSubType(RMM::MimeSubType t)
 {
+	subType_ = t;
 }
 
 	void
 RMimeType::setSubType(const QCString & s)
 {
+	subType_ = RMM::mimeSubTypeStr2Enum(s);
 }
 
 	QCString

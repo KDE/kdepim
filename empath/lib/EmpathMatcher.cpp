@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMatcher.h"
+#endif
+
 // Qt includes
 #include <qregexp.h>
 
@@ -54,7 +58,7 @@ EmpathMatcher::save(const QString & parentid, Q_UINT32 id)
 		"_" +
 		QString().setNum(id));
 	
-	c->writeEntry(EmpathConfig::KEY_MATCH_EXPR_TYPE, type_);
+	c->writeEntry(EmpathConfig::KEY_MATCH_EXPR_TYPE, (unsigned int)type_);
 	
 	switch (type_) {
 		

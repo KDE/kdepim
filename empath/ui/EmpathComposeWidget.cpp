@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathComposeWidget.h"
+#endif
+
 // Qt includes
 #include <qregexp.h>
 #include <qfile.h>
@@ -31,6 +35,7 @@
 
 // Local includes
 #include "EmpathComposeWidget.h"
+#include "EmpathAttachmentListWidget.h"
 #include "EmpathAddressSelectionWidget.h"
 #include "EmpathSubjectSpecWidget.h"
 #include "EmpathEditorProcess.h"
@@ -46,13 +51,14 @@ EmpathComposeWidget::EmpathComposeWidget(
 		QWidget *			parent,
 		const char *		name)
 	:
-		QWidget(parent, name)
+		QWidget(parent, name),
+		url_("")
 {
 	empathDebug("ctor");
 }
 
 EmpathComposeWidget::EmpathComposeWidget(
-		ComposeType			t,
+		Empath::ComposeType	t,
 		const EmpathURL &	m,
 		QWidget *			parent,
 		const char *		name)
@@ -70,8 +76,8 @@ EmpathComposeWidget::EmpathComposeWidget(
 		const char *		name)
 	:
 		QWidget(parent, name),
-                composeType_(ComposeNormal),
-                //url_ needs to be initialized ?! (Dirk)
+		composeType_(Empath::ComposeNormal),
+		url_(""),
 		recipient_(recipient)
 {
 	empathDebug("ctor");
@@ -79,7 +85,7 @@ EmpathComposeWidget::EmpathComposeWidget(
 
 	void
 EmpathComposeWidget::_init()
-{
+{	
 	maxSizeColOne_ = 0;
 	
 	// Get the layouts sorted out first.
@@ -91,8 +97,11 @@ EmpathComposeWidget::_init()
 	
 	layout_->addLayout(headerLayout_, 0, 0);
 	
-	extraLayout_ = new QGridLayout(1, 2, 4);
+	extraLayout_ = new QGridLayout(2, 2, 4);
 	CHECK_PTR(extraLayout_);
+	
+	attachmentWidget_ =
+		new EmpathAttachmentListWidget(this);
 	
 	layout_->addLayout(extraLayout_, 0, 1);
 	
@@ -124,10 +133,11 @@ EmpathComposeWidget::_init()
 	
 	editorWidget_->setFont(c->readFontEntry(EmpathConfig::KEY_FIXED_FONT));
 
+	extraLayout_->addMultiCellWidget(attachmentWidget_,		0, 0, 0, 1);
+	extraLayout_->addWidget(l_priority_,					1, 0);
+	extraLayout_->addWidget(cmb_priority_,					1, 1);
 
-	extraLayout_->addWidget(l_priority_,		0, 0);
-	extraLayout_->addWidget(cmb_priority_,		0, 1);
-	layout_->addMultiCellWidget(editorWidget_,	1, 1, 0, 1);
+	layout_->addMultiCellWidget(editorWidget_,				1, 1, 0, 1);
 
 	_addHeader("To");
 	_addHeader("Cc");
@@ -135,29 +145,36 @@ EmpathComposeWidget::_init()
 	_addExtraHeaders();
 	_addHeader("Subject");
 
+	// Ensure everything's lined up nicely.
+	
 	QListIterator<EmpathHeaderSpecWidget> hit(headerSpecList_);
 	
 	for (; hit.current(); ++hit)
 		hit.current()->setColumnOneSize(maxSizeColOne_);
 
+	layout_->setRowStretch(0, 0);
+	layout_->setRowStretch(1, 10);
+	layout_->setColStretch(0, 7);
+	layout_->setColStretch(0, 3);
 	headerLayout_->activate();
 	extraLayout_->activate();
 	layout_->activate();
 
 	switch (composeType_) {
 
-		case ComposeReply:		_reply();		break; 
-		case ComposeReplyAll:	_reply(true);	break; 
-		case ComposeForward:	_forward();		break; 
-		case ComposeNormal:		default:		break;
+		case Empath::ComposeReply:		_reply();		break; 
+		case Empath::ComposeReplyAll:	_reply(true);	break; 
+		case Empath::ComposeForward:	_forward();		break; 
+		case Empath::ComposeNormal:		default:		break;
 	}
 	
-	if (composeType_ == ComposeForward) {
+	if (composeType_ == Empath::ComposeForward) {
 		// Don't bother opening external editor
 		return;
 	}
 	
-//	headerEditWidget_->setTo(recipient_);
+	if (!recipient_.isEmpty())
+		_set("To", recipient_);
 	
 	c->setGroup(EmpathConfig::GROUP_COMPOSE);
 
@@ -180,9 +197,20 @@ EmpathComposeWidget::message()
 	empathDebug("message called");
 
 	QCString s;
-//	s += headerEditWidget_->envelope().ascii();
 
-	if (composeType_ == ComposeReply || composeType_ == ComposeReplyAll) {
+	QListIterator<EmpathHeaderSpecWidget> it(headerSpecList_);
+	
+	for (; it.current(); ++it) {
+		if (it.current()->headerBody().isEmpty())
+			continue;
+		s += it.current()->headerName().ascii();
+		s += " ";
+		s += it.current()->headerBody().ascii();
+		s += "\n";
+	}
+
+	if (composeType_ == Empath::ComposeReply	||
+		composeType_ == Empath::ComposeReplyAll) {
 		
 		RMessage * m(empath->message(url_));
 		if (m == 0) {
@@ -229,11 +257,6 @@ EmpathComposeWidget::message()
 	s += QCString(" <");
 	s += QCString(c->readEntry(EmpathConfig::KEY_EMAIL).ascii());
 	s += QCString(">");
-	s += "\n";
-	
-	s +=
-		QCString("Subject: ");// +
-//		QCString(headerEditWidget_->subject().ascii());
 	s += "\n";
 	
 	RDateTime dt;
@@ -315,13 +338,22 @@ EmpathComposeWidget::_reply(bool toAll)
 	// address if there's one given, otherwise it will be the first in
 	// the sender list.
 	if (!toAll) {
-
-		if (message.envelope().has(RMM::HeaderReplyTo))
-			to = message.envelope().replyTo().at(0)->asString();
-		else
-			to = message.envelope().to().at(0)->asString();
 		
-		//headerEditWidget_->setTo(to);
+		empathDebug("Normal reply");
+
+		if (message.envelope().has(RMM::HeaderReplyTo)) {
+			empathDebug("Has header reply to");
+			to = message.envelope().replyTo().at(0)->asString();
+		}
+		else
+		{
+			empathDebug("Does not have header reply to");
+			to = message.envelope().to().at(0)->asString();
+		}
+		
+		empathDebug("to == " + to);
+		
+		_set("To", QString::fromLatin1(to));
 	}
 	
 	if (toAll) {
@@ -329,12 +361,12 @@ EmpathComposeWidget::_reply(bool toAll)
 		if (message.envelope().has(RMM::HeaderReplyTo)) {
 		
 			to = message.envelope().replyTo().asString();
-		//	headerEditWidget_->setTo(to);
+			_set("To", QString::fromLatin1(to));
 		
 		} else if (message.envelope().has(RMM::HeaderFrom)) {
 		
 			to = message.envelope().from().at(0).asString();
-		//	headerEditWidget_->setTo(to);
+			_set("To", QString::fromLatin1(to));
 		}
 	
 	
@@ -363,26 +395,21 @@ EmpathComposeWidget::_reply(bool toAll)
 			if (!cc.isEmpty())
 				cc += message.envelope().to().asString();
 		
-		//headerEditWidget_->setCc(cc);
+		_set("Cc", QString::fromLatin1(cc));
 	}
-
-	
-//	headerEditWidget_->setFocus();
 	
 	// Fill in the subject.
-	QString s = message.envelope().subject().asString();
+	QString s = QString::fromLatin1(message.envelope().subject().asString());
 	empathDebug("Subject was \"" + s + "\""); 
 
-	/*
 	if (s.isEmpty())
-		headerEditWidget_->setSubject(
-			i18n("Re: (no subject given)"));
+		_set("Subject",	i18n("Re: (no subject given)"));
 	else
 		if (s.find(QRegExp("^[Rr][Ee]:")) != -1)
-			headerEditWidget_->setSubject(s);
+			_set("Subject", s);
 		else
-			headerEditWidget_->setSubject("Re: " + s);
-	*/
+			_set("Subject", "Re: " + s);
+
 	// Now quote original message if we need to.
 	
 	KConfig * c(KGlobal::config());
@@ -439,18 +466,16 @@ EmpathComposeWidget::_forward()
 	QString s;
 
 	// Fill in the subject.
-	s = message.envelope().subject().asString();
+	s = QString::fromLatin1(message.envelope().subject().asString());
 	empathDebug("Subject was \"" + s + "\""); 
-/*
- * 	if (s.isEmpty())
-		headerEditWidget_->setSubject(
-			i18n("Fwd: (no subject given)"));
+
+	if (s.isEmpty())
+		_set("Subject", i18n("Fwd: (no subject given)"));
 	else
 		if (s.find(QRegExp("^[Ff][Ww][Dd]:")) != -1)
-			headerEditWidget_->setSubject(s);
+			_set("Subject", s);
 		else
-			headerEditWidget_->setSubject("Fwd: " + s);
-*/
+			_set("Subject", "Fwd: " + s);
 }
 
 	void
@@ -468,17 +493,24 @@ EmpathComposeWidget::s_editorDone(bool ok, QCString text)
 	void
 EmpathComposeWidget::bugReport()
 {
-	//headerEditWidget_->setTo("rik@kde.org");
+	_set("To", "rik@kde.org");
 	QString errorStr_;
-	errorStr_ = i18n("- What were you trying to do when the problem occured ?");
+	errorStr_ = "- " +
+		i18n("What were you trying to do when the problem occured ?");
 	errorStr_ += "\n\n\n\n";
-	errorStr_ += i18n("- What actually happened ?");
+	errorStr_ += "- " +
+		i18n("What actually happened ?");
 	errorStr_ += "\n\n\n\n";
-	errorStr_ += i18n("- Exactly what did you do that caused the problem to manifest itself ?");
+	errorStr_ += "- " +
+		i18n(
+		"Exactly what did you do that caused the problem to manifest itself ?");
 	errorStr_ += "\n\n\n\n";
-	errorStr_ += i18n("- Do you have a suggestion as to how this behaviour can be corrected ?");
+	errorStr_ += "- " +
+		i18n(
+		"Do you have a suggestion as to how this behaviour can be corrected ?");
 	errorStr_ += "\n\n\n\n";
-	errorStr_ += i18n("- If you saw an error message, please try to reproduce it here");
+	errorStr_ += "- " +
+		i18n("- If you saw an error message, please try to reproduce it here");
 	editorWidget_->setText(errorStr_);
 }
 
@@ -511,5 +543,92 @@ EmpathComposeWidget::_addHeader(const QString & n, const QString & b)
 	headerSpecList_.append(newHsw);
 		
 	maxSizeColOne_ = QMAX(newHsw->sizeOfColumnOne(), maxSizeColOne_);
+}
+
+	QString
+EmpathComposeWidget::_get(const QString & headerName)
+{
+	QListIterator<EmpathHeaderSpecWidget> it(headerSpecList_);
+	
+	QCString n(headerName.ascii() + ':');
+	
+	for (; it.current(); ++it)
+		if (stricmp(it.current()->headerName().ascii(), n) == 0) {
+			return it.current()->headerBody();
+		}
+	
+	return QString::null;
+}
+
+	void
+EmpathComposeWidget::_set(const QString & headerName, const QString & val)
+{
+	QListIterator<EmpathHeaderSpecWidget> it(headerSpecList_);
+	
+	QCString n(headerName.ascii());
+	n += ':';
+	empathDebug("Setting \"" + QString(n) + "\"");
+	empathDebug("Val = " + val);
+	
+	for (; it.current(); ++it) {
+		empathDebug("looking at \"" + it.current()->headerName() + "\"");
+		if (stricmp(it.current()->headerName().ascii(), n) == 0) {
+			it.current()->setHeaderBody(val);
+			return;
+		}
+	}
+	
+	_addHeader(headerName, val);
+	headerSpecList_.last()->setColumnOneSize(maxSizeColOne_);
+}
+
+	void
+EmpathComposeWidget::s_cut()
+{
+	editorWidget_->cut();
+}
+
+	void
+EmpathComposeWidget::s_copy()
+{
+	editorWidget_->copy();
+}
+
+	void
+EmpathComposeWidget::s_paste()
+{
+	editorWidget_->paste();
+}
+
+	void
+EmpathComposeWidget::s_selectAll()
+{
+	editorWidget_->selectAll();
+}
+
+	bool
+EmpathComposeWidget::haveTo()
+{
+	QListIterator<EmpathHeaderSpecWidget> it(headerSpecList_);
+
+	for (; it.current(); ++it)
+		if (stricmp(it.current()->headerName().ascii(), "To:") == 0 &&
+			!it.current()->headerBody().isEmpty())
+			return true;
+	
+	return false;
+}
+	
+	bool
+EmpathComposeWidget::haveSubject()
+{
+	QListIterator<EmpathHeaderSpecWidget> it(headerSpecList_);
+
+	for (; it.current(); ++it)
+		if (stricmp(it.current()->headerName().ascii(), "Subject:") == 0 &&
+			!it.current()->headerBody().isEmpty())
+			return true;
+	
+	return false;
 }
 

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathIdentitySettingsDialog.h"
+#endif
+
 #ifndef EMPATHIDENTITYSETTINGSDIALOG_H
 #define EMPATHIDENTITYSETTINGSDIALOG_H
 
@@ -53,6 +57,7 @@ class EmpathIdentitySettingsDialog : public QDialog
 	
 	protected:
 		void hideEvent(QHideEvent *) { delete this; }
+		void closeEvent(QCloseEvent *);
 
 	protected slots:
 

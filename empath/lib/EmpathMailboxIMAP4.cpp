@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMailboxIMAP4.h"
+#endif
+
 // Local includes
 #include "EmpathMailboxIMAP4.h"
 
@@ -141,7 +145,7 @@ EmpathMailboxIMAP4::password()
 	return password_;
 }
 
-	SavePolicy
+	EmpathMailbox::SavePolicy
 EmpathMailboxIMAP4::passwordSavePolicy()
 {
 	return passwordSavePolicy_;
@@ -171,10 +175,10 @@ EmpathMailboxIMAP4::maxLogFileSize()
 	return maxLogFileSize_;
 }
 
-	bool
-EmpathMailboxIMAP4::writeMessage(const EmpathURL & folder, RMessage &)
+	QString
+EmpathMailboxIMAP4::writeMessage(const EmpathURL &, RMessage &)
 {
-	return false;
+	return QString::null;
 }
 
 	bool
@@ -183,36 +187,36 @@ EmpathMailboxIMAP4::newMail() const
 	return false;
 }
 	void
-EmpathMailboxIMAP4::syncIndex(const EmpathURL & url)
+EmpathMailboxIMAP4::syncIndex(const EmpathURL &)
 {
 }
 
 	RMessage *
-EmpathMailboxIMAP4::message(const EmpathURL & id)
+EmpathMailboxIMAP4::message(const EmpathURL &)
 {
 	return 0;
 }
 
 	Q_UINT32
-EmpathMailboxIMAP4::sizeOfMessage(const EmpathURL & id)
+EmpathMailboxIMAP4::sizeOfMessage(const EmpathURL &)
 {
 	return 0;
 }
 
 	QString
-EmpathMailboxIMAP4::plainBodyOfMessage(const EmpathURL & id)
+EmpathMailboxIMAP4::plainBodyOfMessage(const EmpathURL &)
 {
 	return QString::null;
 }
 
 	REnvelope *
-EmpathMailboxIMAP4::envelopeOfMessage(const EmpathURL & id)
+EmpathMailboxIMAP4::envelopeOfMessage(const EmpathURL &)
 {
 	return 0;
 }
 
 	RBodyPart::PartType
-EmpathMailboxIMAP4::typeOfMessage(const EmpathURL & id)
+EmpathMailboxIMAP4::typeOfMessage(const EmpathURL &)
 {
 	return RBodyPart::Basic;
 }
@@ -224,25 +228,25 @@ EmpathMailboxIMAP4::init()
 }
 
 	bool
-EmpathMailboxIMAP4::removeMessage(const EmpathURL & id)
+EmpathMailboxIMAP4::removeMessage(const EmpathURL &)
 {
 	return false;
 }
 
 	bool
-EmpathMailboxIMAP4::addFolder(const EmpathURL & id)
+EmpathMailboxIMAP4::addFolder(const EmpathURL &)
 {
 	return false;
 }
 
 	bool
-EmpathMailboxIMAP4::removeFolder(const EmpathURL & id)
+EmpathMailboxIMAP4::removeFolder(const EmpathURL &)
 {
 	return false;
 }
 
 	bool
-EmpathMailboxIMAP4::mark(const EmpathURL & url, RMM::MessageStatus s)
+EmpathMailboxIMAP4::mark(const EmpathURL &, RMM::MessageStatus)
 {
 	return false;
 }

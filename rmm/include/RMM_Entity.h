@@ -18,8 +18,12 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef DW_ENTITY_H
-#define DW_ENTITY_H
+#ifdef __GNUG__
+# pragma interface "RMM_Entity.h"
+#endif
+
+#ifndef RMM_ENTITY_H
+#define RMM_ENTITY_H
 
 #include <qstring.h>
 #include <RMM_MessageComponent.h>
@@ -35,22 +39,15 @@ class REntity : public RMessageComponent
 {
 	public:
 
-		REntity();
-		REntity(const REntity &);
-		REntity(const QCString & s) : RMessageComponent(s) { }
+		REntity() : RMessageComponent() {}
+		REntity(const REntity & e) : RMessageComponent(e) {}
+		REntity(const QCString & s) : RMessageComponent(s) {}
 
 		virtual ~REntity();
-
-		virtual REntity & operator = (const REntity &);
-
-		virtual REntity & operator = (const QCString & s)
-		{ RMessageComponent::operator = (s); return *this; }
 
 		virtual void parse() = 0L;
 		virtual void assemble() = 0L;
 		virtual void createDefault() = 0L;
-		
-		virtual QCString asString() { return RMessageComponent::asString(); }
 		
 		virtual const char * className() const { return "REntity"; }
 };

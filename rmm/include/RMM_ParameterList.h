@@ -18,8 +18,12 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef RMM_RPARAMETERLIST_H
-#define RMM_RPARAMETERLIST_H
+#ifdef __GNUG__
+# pragma interface "RMM_ParameterList.h"
+#endif
+
+#ifndef RMM_PARAMETERLIST_H
+#define RMM_PARAMETERLIST_H
 
 #include <qstring.h>
 #include <qlist.h>

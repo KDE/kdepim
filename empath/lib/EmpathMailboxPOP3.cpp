@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMailboxPOP3.h"
+#endif
+
 // Qt includes
 #include <qregexp.h>
 #include <qdir.h>
@@ -49,8 +53,9 @@ EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
 		authenticationTries_(8)
 {
 	empathDebug("ctor");
-	type_ = POP3;
-	job = new KIOJob();
+
+	type_	= POP3;
+	job		= new KIOJob();
 	CHECK_PTR(job);
 	
 	QObject::connect(
@@ -106,12 +111,12 @@ EmpathMailboxPOP3::s_checkNewMail()
 	checkForNewMail();
 }
 
-	bool
-EmpathMailboxPOP3::writeMessage(const EmpathURL & folder, RMessage &)
+	QString
+EmpathMailboxPOP3::writeMessage(const EmpathURL &, RMessage &)
 {
 	empathDebug("writeMessage() called");
 	empathDebug("This mailbox is READ ONLY !");
-	return false;
+	return QString::null; 
 }
 	
 	bool
@@ -122,18 +127,18 @@ EmpathMailboxPOP3::newMail() const
 }
 
 	void
-EmpathMailboxPOP3::syncIndex(const EmpathURL & url)
+EmpathMailboxPOP3::syncIndex(const EmpathURL &)
 {
 }
 
 	Q_UINT32
-EmpathMailboxPOP3::sizeOfMessage(const EmpathURL & _id)
+EmpathMailboxPOP3::sizeOfMessage(const EmpathURL &)
 {
 	return 0;
 }
 
 	QString
-EmpathMailboxPOP3::plainBodyOfMessage(const EmpathURL & _id)
+EmpathMailboxPOP3::plainBodyOfMessage(const EmpathURL &)
 {
 	return "";
 }
@@ -159,7 +164,7 @@ EmpathMailboxPOP3::path()
 }
 
 	RMessage *
-EmpathMailboxPOP3::message(const EmpathURL & id)
+EmpathMailboxPOP3::message(const EmpathURL &)
 {
 	return 0;
 }
@@ -171,30 +176,30 @@ EmpathMailboxPOP3::init()
 }
 
 	bool
-EmpathMailboxPOP3::removeMessage(const EmpathURL & id)
+EmpathMailboxPOP3::removeMessage(const EmpathURL &)
 {
 	return false;
 }
 
 	bool
-EmpathMailboxPOP3::addFolder(const EmpathURL & id)
+EmpathMailboxPOP3::addFolder(const EmpathURL &)
 {
 	return false;
 }
 
 	bool
-EmpathMailboxPOP3::removeFolder(const EmpathURL & id)
+EmpathMailboxPOP3::removeFolder(const EmpathURL &)
 {
 	return false;
 }
 	bool
-EmpathMailboxPOP3::mark(const EmpathURL & url, RMM::MessageStatus s)
+EmpathMailboxPOP3::mark(const EmpathURL &, RMM::MessageStatus)
 {
 	return false;
 }
 
 	void
-EmpathMailboxPOP3::s_data(int i, const char * c, int l)
+EmpathMailboxPOP3::s_data(int, const char *, int)
 {
 #if 0
 	switch (state_) {
@@ -424,7 +429,7 @@ EmpathMailboxPOP3::useAPOP()
 	return useAPOP_;
 }
 
-	SavePolicy
+	EmpathMailbox::SavePolicy
 EmpathMailboxPOP3::passwordSavePolicy()
 { 
 	return passwordSavePolicy_;

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMailbox.h"
+#endif
+
 // Local includes
 #include "EmpathUtilities.h"
 #include "EmpathFolder.h"
@@ -107,7 +111,7 @@ EmpathMailbox::unreadMessageCount() const
 }
 
 	void
-EmpathMailbox::s_countUpdated(int unread, int read)
+EmpathMailbox::s_countUpdated(int, int)
 {
 	empathDebug("s_countUpdated() called");
 	empathDebug("emitting(" + QString().setNum(unreadMessageCount()) +

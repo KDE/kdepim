@@ -18,14 +18,29 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathDefines.h"
+#endif
+
 #ifndef EMPATHDEFINES_H
 #define EMPATHDEFINES_H
+
 #include <qstring.h>
+
+static const QString	EMPATH_VERSION_STRING	=
+	QString::fromLatin1("1.0 Alpha");
+
+static const int		EMPATH_VERSION_MAJOR	= 0;
+static const int		EMPATH_VERSION_MINOR	= 8;
+static const int		EMPATH_VERSION_RELEASE	= 1;
+
+#ifdef DEBUG
 #include <iostream.h>
-#ifndef NDEBUG
-# define empathDebug(a) cerr << className() << ": " << QString((a)).data() << endl;
+#	define empathDebug(a) cerr << className() << ": " << \
+	QString((a)).ascii() << endl;
 #else
-# define empathDebug(a)
+#	define empathDebug(a)
 #endif
+
 #endif // included this file
 

@@ -4,8 +4,7 @@ Highest priority first.
 
 * Drag and drop - Working on this but I need HELP ! It's not working right !
 
-* Test sendmail and qmail sending. Queuing and sending is broken today. I'm
-  working on it but I'd like help. Add user feedback.
+* Test sendmail and qmail sending. Add user feedback.
 
 * Nail down the parser (rmm). It's still buggy when creating message parts
   yourself and trying to put them together.
@@ -28,15 +27,10 @@ Highest priority first.
   Will there be a general KDE printing i/f ? Do I make stuff ps first ?
   
 * Plug memory leaks. Basically this just means putting setAutoDelete() back
-  in various parts of rmm. This caused crashes for me, and I couldn't figure
-  out the cause, but it shouldn't be too much hassle. The rest of Empath
-  is pretty leak-free I think, due to the lack of allocating anything ;)
+  in various parts of rmm. I think this crashes because of a Qt bug.
 
 ===============================================================================
 Little things I need to do. Highest priority first.
-
-* Find out where the bug that adds whitespace to the start of a copied message
-  comes from.
 
 * Make filters work again, and fix their config dialogs.
 

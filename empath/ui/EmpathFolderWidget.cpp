@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathFolderWidget.h"
+#endif
+
 // Qt includes
 #include <qdragobject.h>
 #include <qstringlist.h>
@@ -333,7 +337,7 @@ EmpathFolderWidget::s_mailboxProperties()
 
 	switch (m->type()) {
 
-		case Maildir:
+		case EmpathMailbox::Maildir:
 			{
 				EmpathConfigMaildirDialog configDialog(
 						(EmpathMailboxMaildir *)m, this, "configDialog");
@@ -342,7 +346,7 @@ EmpathFolderWidget::s_mailboxProperties()
 			}
 			break;
 
-		case POP3:
+		case EmpathMailbox::POP3:
 			{
 				EmpathConfigPOP3Dialog configDialog(
 						(EmpathMailboxPOP3 *)m, true, this, "configDialog");
@@ -351,7 +355,7 @@ EmpathFolderWidget::s_mailboxProperties()
 			}
 			break;
 
-		case IMAP4:
+		case EmpathMailbox::IMAP4:
 			{
 				EmpathConfigIMAP4Dialog configDialog(
 						(EmpathMailboxIMAP4 *)m, this, "configDialog");

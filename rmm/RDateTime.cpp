@@ -18,14 +18,21 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "RMM_DateTime.h"
+#endif
+
+// System includes
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
 #include <ctype.h>
 #include <stdlib.h>
 
+// Qt includes
 #include <qdatetime.h>
 
+// Local includes
 #include <RMM_DateTime.h>
 #include <RMM_Enum.h>
 #include <RMM_Token.h>

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "RMM_MediaType.h"
+#endif
+
 #ifndef RMM_MEDIATYPE_H
 #define RMM_MEDIATYPE_H
 

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMaildir.h"
+#endif
+
 // System includes
 #include <sys/file.h>
 #include <stdlib.h>
@@ -146,8 +150,6 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 				(	(flags.contains('S') ? RMM::Read	: 0)	|
 					(flags.contains('R') ? RMM::Replied	: 0)	|
 					(flags.contains('F') ? RMM::Marked	: 0));
-			
-			empathDebug("status: " + QString().setNum(status));
 		}
 		
 		// Remove the flags from the end of the filename.
@@ -255,13 +257,11 @@ EmpathMaildir::mark(const EmpathURL & message, RMM::MessageStatus msgStat)
 	return retval;
 }
 
-	bool
+	QString
 EmpathMaildir::writeMessage(RMessage & m)
 {
 	empathDebug("writeMessage called");
-	QString s = _write(m);
-	
-	return (s.isEmpty() ? false : true);
+	return _write(m);
 }
 
 	Q_UINT32
@@ -274,20 +274,20 @@ EmpathMaildir::sizeOfMessage(const QString & id)
 }
 
 	QString
-EmpathMaildir::plainBodyOfMessage(const QString & id)
+EmpathMaildir::plainBodyOfMessage(const QString &)
 {
 	return QString::null;
 }
 
 	REnvelope *
-EmpathMaildir::envelopeOfMessage(const QString & id)
+EmpathMaildir::envelopeOfMessage(const QString &)
 {
-	REnvelope * e = new REnvelope;
+	REnvelope * e = 0;
 	return e;
 }
 
 	RBodyPart::PartType
-EmpathMaildir::typeOfMessage(const QString & id)
+EmpathMaildir::typeOfMessage(const QString &)
 {
 	return RBodyPart::Basic;
 }

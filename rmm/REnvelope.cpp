@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "RMM_Envelope.h"
+#endif
+
 #include <qlist.h>
 
 #include <RMM_HeaderList.h>
@@ -254,7 +258,7 @@ REnvelope::get(const QCString & s)
 	RHeaderListIterator it(headerList_);
 
 	for (; it.current(); ++it)
-		if (!stricmp(it.current()->headerName(), s))
+		if (stricmp(it.current()->headerName(), s) == 0)
 			return it.current();
 	
 	return 0;
@@ -594,6 +598,8 @@ REnvelope::set(RMM::HeaderType t, const QCString & s)
 	}
 	
 	CHECK_PTR(d);
+	
+	*d = s;
 
 	RHeader * hdr = new RHeader;
 

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathTaskWidget.h"
+#endif
+
 #ifndef EMPATH_TASK_WIDGET_H
 #define EMPATH_TASK_WIDGET_H
 
@@ -59,8 +63,8 @@ class EmpathTaskItem : public QWidget
 	private:
 		
 		QString title_;
-		int max_;
 		int pos_;
+		int max_;
 		
 		QProgressBar* progressMeter_;
 		QLabel		* label_;

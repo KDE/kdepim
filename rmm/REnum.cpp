@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "RMM_Enum.h"
+#endif
+
 #include <qstring.h>
 
 #include <RMM_Enum.h>
@@ -864,6 +868,9 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 			case MimeSubTypeHTML:
 				s = "html.png";
 				break;
+
+				default:
+					break;
 			}
 
 			break;
@@ -887,6 +894,9 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 				case MimeSubTypeParallel:
 					s = "parallel.png";
 					break;
+
+				default:
+					break;
 			}
 				
 			break;
@@ -905,6 +915,9 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 
 				case MimeSubTypeExternalBody:
 					s = "external-body.png";
+					break;
+
+				default:
 					break;
 			}
 
@@ -960,6 +973,9 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 
 				case MimeSubTypeXxpm:
 					s = "x-xpixmap.png";
+					break;
+
+				default:
 					break;
 			}
 
@@ -1032,6 +1048,9 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 				case MimeSubTypeXzip:
 					s = "x-zip.png";
 					break;
+
+				default:
+					break;
 			}
 
 			break;
@@ -1058,6 +1077,9 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 
 				case MimeSubTypeXwav:
 					s = "x-wav.png";
+					break;
+
+				default:
 					break;
 			}
 	
@@ -1090,6 +1112,9 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 				case MimeSubTypeQuickTime:
 					s = "quicktime.png";
 					break;
+
+				default:
+					break;
 			}
 
 			break;
@@ -1101,6 +1126,9 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 			
 				case MimeSubTypeXvrml:
 					s = "x-vrml.png";
+					break;
+
+				default:
 					break;
 			}
 			
@@ -1120,7 +1148,7 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 RMM::headerNameToEnum(const QCString & headerName)
 {
 	for (int i = 0; i <= 42; i++)
-		if (!stricmp((headerName), RMM::headerNames[i]))
+		if (!stricmp(headerName, RMM::headerNames[i]))
 			return (RMM::HeaderType)i;
 
 	return RMM::HeaderUnknown;

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathMessageViewWindow.h"
+#endif
+
 #ifndef EMPATHMESSAGEVIEWWINDOW_H
 #define EMPATHMESSAGEVIEWWINDOW_H
 
@@ -61,6 +65,7 @@ class EmpathMessageViewWindow : public KTMainWindow
 		void s_messageBounce();
 		void s_messageDelete();
 		void s_messagePrint();
+		void s_aboutQt();
 
 	private:
 		

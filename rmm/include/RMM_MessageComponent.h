@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "RMM_MessageComponent.h"
+#endif
+
 #ifndef RMM_MESSAGE_COMPONENT_H
 #define RMM_MESSAGE_COMPONENT_H
 
@@ -40,11 +44,11 @@ class RMessageComponent {
 
 		virtual ~RMessageComponent();
 
-		virtual RMessageComponent & operator = (const RMessageComponent & m);
-		virtual RMessageComponent & operator = (const QCString & s);
+		RMessageComponent & operator = (const RMessageComponent & m);
+		RMessageComponent & operator = (const QCString & s);
 		
-		virtual bool operator == (RMessageComponent &);
-		virtual bool operator == (const QCString &);
+		bool operator == (RMessageComponent &);
+		bool operator == (const QCString &);
 
 		virtual void parse() = 0L;
 		virtual void assemble() = 0L;

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "RMM_DateTime.h"
+#endif
+
 #ifndef RMM_RDATETIME_H
 #define RMM_RDATETIME_H
 

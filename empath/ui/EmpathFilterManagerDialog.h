@@ -19,6 +19,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathFilterManagerDialog.h"
+#endif
+
 #ifndef EMPATHFILTERMANAGERDIALOG_H
 #define EMPATHFILTERMANAGERDIALOG_H
 

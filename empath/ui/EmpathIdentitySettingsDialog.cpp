@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathIdentitySettingsDialog.h"
+#endif
+
 // Qt includes
 #include <qfile.h>
 #include <qtextstream.h>
@@ -56,7 +60,8 @@ EmpathIdentitySettingsDialog::create()
 EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 		QWidget * parent,
 		const char * name)
-	:	QDialog(parent, name, false)
+	:	QDialog(parent, name, false),
+		applied_(false)
 {
 	empathDebug("ctor");
 	setCaption(i18n("Identity Settings - ") + kapp->getCaption());
@@ -333,7 +338,7 @@ EmpathIdentitySettingsDialog::s_chooseSig()
 EmpathIdentitySettingsDialog::saveData()
 {
 	empathDebug("saveData() called");
-	KConfig * c = KGlobal::config();
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_IDENTITY);
 
 #define CWE c->writeEntry
@@ -349,16 +354,16 @@ EmpathIdentitySettingsDialog::saveData()
 EmpathIdentitySettingsDialog::loadData()
 {
 	empathDebug("loadData() called");
-	KConfig * c = KGlobal::config();
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_IDENTITY);
 	
-	le_chooseName_->setText(c->readEntry(EmpathConfig::KEY_NAME));
-	le_chooseEmail_->setText(c->readEntry(EmpathConfig::KEY_EMAIL));
-	le_chooseReplyTo_->setText(c->readEntry(EmpathConfig::KEY_REPLY_TO));
-	le_chooseOrg_->setText(c->readEntry(EmpathConfig::KEY_ORGANISATION));
-	le_chooseSig_->setText(c->readEntry(EmpathConfig::KEY_SIG_PATH));
+	le_chooseName_->setText		(c->readEntry(EmpathConfig::KEY_NAME));
+	le_chooseEmail_->setText	(c->readEntry(EmpathConfig::KEY_EMAIL));
+	le_chooseReplyTo_->setText	(c->readEntry(EmpathConfig::KEY_REPLY_TO));
+	le_chooseOrg_->setText		(c->readEntry(EmpathConfig::KEY_ORGANISATION));
+	le_chooseSig_->setText		(c->readEntry(EmpathConfig::KEY_SIG_PATH));
 
-	if (QString(le_chooseSig_->text()).length() != 0) {
+	if (!QString(le_chooseSig_->text()).isEmpty()) {
 		// Preview the sig
 		QFile f(le_chooseSig_->text());
 		if ( f.open(IO_ReadOnly) ) {
@@ -448,6 +453,13 @@ EmpathIdentitySettingsDialog::s_cancel()
 {
 	if (!applied_)
 		KGlobal::config()->rollback(true);
+	delete this;
+}
+
+	void
+EmpathIdentitySettingsDialog::closeEvent(QCloseEvent * e)
+{
+	e->accept();
 	delete this;
 }
 

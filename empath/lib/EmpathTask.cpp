@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathTask.h"
+#endif
+
 #include <kapp.h>
 
 #include "EmpathTask.h"
@@ -49,7 +53,6 @@ EmpathTask::setPos(int i)
 {
 	empathDebug("setPos() called");
 	emit(posChanged(i));
-	kapp->processOneEvent();
 }
 
 	void
@@ -64,7 +67,7 @@ EmpathTask::doneOne()
 EmpathTask::done()
 {
 	empathDebug("done() called");
-	emit(finished());
 	done_ = true;
+	emit(finished());
 }
 

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMatchPropertiesDialog.h"
+#endif
+
 // KDE includes
 #include <klocale.h>
 
@@ -244,30 +248,30 @@ EmpathMatchPropertiesDialog::EmpathMatchPropertiesDialog(
 	
 		switch (matcher_->type()) {
 			
-			case AnyMessage:
+			case EmpathMatcher::AnyMessage:
 				empathDebug("AnyMessage");
 				rb_all_->setChecked(true);
 				break;
 
-			case HasAttachments:
+			case EmpathMatcher::HasAttachments:
 				empathDebug("HasAttachments");
 				rb_attached_->setChecked(true);
 				break;
 
-			case Size:
+			case EmpathMatcher::Size:
 				empathDebug("Size");
 				rb_size_->setChecked(true);
 				empathDebug("Size == " + QString().setNum(matcher_->size()));
 				sb_size_->setValue(matcher_->size());
 				break;
 				
-			case BodyExpr:
+			case EmpathMatcher::BodyExpr:
 				empathDebug("BodyExpr");
 				rb_exprBody_->setChecked(true);
 				le_exprBody_->setText(matcher_->matchExpr());
 				break;
 
-			case HeaderExpr:
+			case EmpathMatcher::HeaderExpr:
 				empathDebug("HeaderExpr");
 				rb_exprHeader_->setChecked(true);
 				cb_header_->insertItem(matcher_->matchHeader(), 0);
@@ -293,20 +297,20 @@ EmpathMatchPropertiesDialog::s_OK()
 	empathDebug("s_OK() called");
 	
 	if (rb_all_->isChecked())
-		matcher_->setType(AnyMessage);
+		matcher_->setType(EmpathMatcher::AnyMessage);
 	else if (rb_attached_->isChecked())
-		matcher_->setType(HasAttachments);
+		matcher_->setType(EmpathMatcher::HasAttachments);
 	else if (rb_size_->isChecked()) {
-		matcher_->setType(Size);
+		matcher_->setType(EmpathMatcher::Size);
 		matcher_->setSize(sb_size_->getValue());
 	}
 	else if (rb_exprBody_->isChecked()) {
-		matcher_->setType(BodyExpr);
+		matcher_->setType(EmpathMatcher::BodyExpr);
 		matcher_->setMatchExpr(le_exprBody_->text());
 		matcher_->setMatchHeader(cb_header_->currentText());
 	}
 	else if (rb_exprHeader_->isChecked()) {
-		matcher_->setType(HeaderExpr);
+		matcher_->setType(EmpathMatcher::HeaderExpr);
 		matcher_->setMatchExpr(le_exprHeader_->text());
 	}
 	

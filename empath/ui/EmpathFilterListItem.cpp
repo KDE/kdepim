@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathFilterListItem.h"
+#endif
+
 // Qt includes
 #include <qfont.h>
 #include <qstring.h>
@@ -49,7 +53,7 @@ EmpathFilterListItem::~EmpathFilterListItem()
 }
 
 	QString
-EmpathFilterListItem::key(int column, bool) const
+EmpathFilterListItem::key(int, bool) const
 {
 	QString tmpString;
 	tmpString.sprintf("%08x", filter_->priority());

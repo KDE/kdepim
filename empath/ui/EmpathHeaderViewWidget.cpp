@@ -50,9 +50,12 @@ EmpathHeaderViewWidget::useEnvelope(REnvelope & e)
 	QStrListIterator it(l);
 	
 	for (; it.current() ; ++it) {
-		empathDebug("Using header: " + QString(it.current()));
+		
+		QCString s = it.current();
+		s = s.stripWhiteSpace();
+		empathDebug("Using header: " + QString::fromLatin1(s));
 	
-		RHeader * h(e.get(it.current()));
+		RHeader * h(e.get(s));
 		if (h == 0) continue;
 		
 		headerList_.append(h->headerName() + ":");

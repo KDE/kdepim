@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathComposeWindow.h"
+#endif
+
 // Qt includes
 #include <qmessagebox.h>
 
@@ -51,8 +55,9 @@ EmpathComposeWindow::EmpathComposeWindow()
 	_init();
 }
 
-EmpathComposeWindow::EmpathComposeWindow(ComposeType t, const EmpathURL & m)
-	: KTMainWindow()
+EmpathComposeWindow::EmpathComposeWindow(
+		Empath::ComposeType t, const EmpathURL & m)
+	:	KTMainWindow()
 {
 	empathDebug("ctor");
 	composeWidget_	=
@@ -84,6 +89,31 @@ EmpathComposeWindow::_init()
 	setCaption(i18n("Compose Message - ") + kapp->getCaption());
 	setView(composeWidget_, false);
 	updateRects();
+
+	// Resize to main window size for now.
+	KConfig * c = KGlobal::config();
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
+	
+	int x = c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_X_SIZE, 600);
+	int y = c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_Y_SIZE, 400);
+	resize(x, y);
+	
+	QObject::connect(
+		this,			SIGNAL(cut()),
+		composeWidget_,	SLOT(s_cut()));
+
+	QObject::connect(
+		this,			SIGNAL(copy()),
+		composeWidget_,	SLOT(s_copy()));
+
+	QObject::connect(
+		this,			SIGNAL(paste()),
+		composeWidget_,	SLOT(s_paste()));
+
+	QObject::connect(
+		this,			SIGNAL(selectAll()),
+		composeWidget_,	SLOT(s_selectAll()));
+	
 	show();
 }
 
@@ -190,15 +220,37 @@ EmpathComposeWindow::s_fileSendMessage()
 {
 	empathDebug("s_fileSendMessage called");
 
+	if (!composeWidget_->haveTo()) {
+		_askForRecipient();
+		return;
+	}
+	
+	if (!composeWidget_->haveSubject()) {
+		_askForSubject();
+		return;
+	}
+	
 	RMessage outMessage(composeWidget_->message());
 
+	hide();
 	empath->send(outMessage);
+	delete this;
 }
 
 	void
 EmpathComposeWindow::s_fileSendLater()
 {
 	empathDebug("s_fileSendLater called");
+	
+	if (!composeWidget_->haveTo()) {
+		_askForRecipient();
+		return;
+	}
+	
+	if (!composeWidget_->haveSubject()) {
+		_askForSubject();
+		return;
+	}
 	
 	RMessage outMessage(composeWidget_->message());
 
@@ -235,7 +287,7 @@ EmpathComposeWindow::s_fileSaveAs()
 	if (!f.open(IO_WriteOnly)) {
 		// Warn user file cannot be opened.
 		empathDebug("Couldn't open file for writing");
-		KMsgBox(this, "Empath",
+		KMsgBox::message(this, "Empath",
 			i18n("Sorry I can't write to that file. "
 				"Please try another filename."),
 			KMsgBox::EXCLAMATION, i18n("OK"));
@@ -287,18 +339,21 @@ EmpathComposeWindow::s_editRedo()
 EmpathComposeWindow::s_editCut()
 {
 	empathDebug("s_editCut called");
+	emit(cut());
 }
 
 	void
 EmpathComposeWindow::s_editCopy()
 {
 	empathDebug("s_editCopy called");
+	emit(copy());
 }
 
 	void
 EmpathComposeWindow::s_editPaste()
 {
 	empathDebug("s_editPaste called");
+	emit(paste());
 }
 
 	void
@@ -311,6 +366,7 @@ EmpathComposeWindow::s_editDelete()
 EmpathComposeWindow::s_editSelectAll()
 {
 	empathDebug("s_editSelectAll called");
+	emit(selectAll());
 }
 
 	void
@@ -332,13 +388,6 @@ EmpathComposeWindow::s_editFindAgain()
 }
 
 // Message menu slots
-
-	void
-EmpathComposeWindow::s_messageNew()
-{
-	empathDebug("s_messageNew called");
-	empath->s_compose();
-}
 
 	void
 EmpathComposeWindow::s_messageSaveAs()
@@ -363,7 +412,7 @@ EmpathComposeWindow::s_messageSaveAs()
 	if (!f.open(IO_WriteOnly)) {
 		// Warn user file cannot be opened.
 		empathDebug("Couldn't open file for writing");
-		KMsgBox(this, "Empath",
+		KMsgBox::message(this, "Empath",
 			i18n("Sorry I can't write to that file. "
 				"Please try another filename."),
 			KMsgBox::EXCLAMATION, i18n("OK"));
@@ -457,6 +506,22 @@ EmpathComposeWindow::bugReport()
 {
 	setCaption(i18n("Bug Report - ") + kapp->getCaption());
 	composeWidget_->bugReport();
+}
+
+	void
+EmpathComposeWindow::_askForRecipient()
+{
+	KMsgBox::message(this, "Empath",
+		i18n("Please specify at least one recipient"),
+		KMsgBox::EXCLAMATION, i18n("OK"));
+}
+
+	void
+EmpathComposeWindow::_askForSubject()
+{
+	KMsgBox::message(this, "Empath",
+		i18n("Please specify a subject"),
+		KMsgBox::EXCLAMATION, i18n("OK"));
 }
 
 #include "EmpathComposeWindowMenus.cpp"

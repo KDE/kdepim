@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "Empath.h"
+#endif
+
 #ifndef EMPATH_H
 #define EMPATH_H
 
@@ -58,6 +62,14 @@ class Empath : public QObject
 	Q_OBJECT
 
 	public:
+	
+		enum ComposeType {
+			ComposeReply,
+			ComposeReplyAll,
+			ComposeForward,
+			ComposeNormal,
+			ComposeBounce
+		};
 		
 		/**
 		 * ctor
@@ -175,7 +187,7 @@ class Empath : public QObject
 		 * the ui first, but be careful ;)
 		 */
 		void init();
-		
+
 	public slots:
 		
 		void s_newTask(EmpathTask *);
@@ -218,10 +230,7 @@ class Empath : public QObject
 		 * Bounce a message.
 		 */
 		void s_bounce(const EmpathURL &);
-		
-		/**
-		 * Mark a message with a given status.
-		 */
+
 		bool mark(const EmpathURL &, RMM::MessageStatus);
 		
 		void s_setupDisplay();
@@ -243,7 +252,7 @@ class Empath : public QObject
 		 */
 		void updateFolderLists();
 		void newMailArrived();
-		void newComposer(ComposeType, const EmpathURL &);
+		void newComposer(Empath::ComposeType, const EmpathURL &);
 		void newComposer(const QString &);
 		
 		void setupDisplay();

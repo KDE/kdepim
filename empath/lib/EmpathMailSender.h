@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathMailSender.h"
+#endif
+
 #ifndef EMPATHMAILSENDER_H
 #define EMPATHMAILSENDER_H
 
@@ -35,6 +39,7 @@
  * is to queue messages in a local spool for later delivery by a
  * derived class. (well _that_ makes sense ;)
  */
+
 class EmpathMailSender : public QObject
 {
 	Q_OBJECT
@@ -54,6 +59,7 @@ class EmpathMailSender : public QObject
 		 *
 		 * Message will be returned to user on failure. FIXME: How ?
 		 */
+
 		bool send(RMessage &);
 
 		virtual bool sendOne(RMessage & message) = 0L;
@@ -68,10 +74,18 @@ class EmpathMailSender : public QObject
 		 * that stores and despatches mail on their behalf. I know my old isp
 		 * did this, so I presume a lot of other peoples' isps do it too.
 		 */
+
 		void sendQueued();
 
 		virtual void saveConfig() = 0;
 		virtual void readConfig() = 0;
+		
+		enum OutgoingServerType	{ Sendmail, Qmail, SMTP };
+		enum SendPolicy			{ SendNow, SendLater };
+		
+	private:
+		
+		void emergencyBackup(RMessage &);
 };
 
 #endif

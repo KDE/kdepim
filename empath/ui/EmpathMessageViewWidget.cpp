@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMessageViewWidget.h"
+#endif
+
 // Qt includes
 #include <qstrlist.h>
 
@@ -109,8 +113,8 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 	
 	QObject::connect(messageWidget_, SIGNAL(documentChanged()), SLOT(s_docChanged()));
 
-	QObject::connect(messageWidget_, SIGNAL(URLSelected(const char *, int)),
-			SLOT(s_URLSelected(const char *, int)));
+	QObject::connect(messageWidget_, SIGNAL(URLSelected(QString, int)),
+			SLOT(s_URLSelected(QString, int)));
 	
 	s_docChanged();
 	mainLayout_->activate();
@@ -318,13 +322,8 @@ EmpathMessageViewWidget::s_hScrollbarSetValue(int val)
 }
 
 	void
-EmpathMessageViewWidget::s_URLSelected(const char * url, int button)
+EmpathMessageViewWidget::s_URLSelected(QString fixedURL, int button)
 {
-	empathDebug("URL \" " + QString(url) + "\" clicked with button " +
-			QString().setNum(button));
-
-	QString fixedURL(url);
-
 	fixedURL = fixedURL.stripWhiteSpace();
 
 	if (fixedURL.left(7) == "mailto:") {

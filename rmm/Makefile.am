@@ -10,8 +10,8 @@ RContentType.cpp \
 RCte.cpp \
 RDateTime.cpp \
 RDispositionType.cpp \
-REntity.cpp \
 REnum.cpp \
+REntity.cpp \
 REnvelope.cpp \
 RGroup.cpp \
 RHeader.cpp \

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathConfigMaildirDialog.h"
+#endif
+
 #ifndef EMPATHCONFIGMAILDIRDIALOG_H
 #define EMPATHCONFIGMAILDIRDIALOG_H
 

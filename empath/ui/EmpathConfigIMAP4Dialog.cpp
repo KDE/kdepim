@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathConfigIMAP4Dialog.h"
+#endif
+
 // KDE includes
 #include <klocale.h>
 

@@ -18,6 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathMailboxPOP3.h"
+#endif
+
 #ifndef EMPATHMAILBOXPOP3_H
 #define EMPATHMAILBOXPOP3_H
 
