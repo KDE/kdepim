@@ -292,6 +292,8 @@ class Recurrence
     QDate getLastDateInYear(const QDate& latestDate) const;
 
   private:
+    Recurrence(const Recurrence&);
+
     short recurs;                        // should be one of the enums.
 
     int rWeekStart;                      // day which starts the week, 1 = Monday .. 7 = Sunday
