@@ -483,6 +483,7 @@ class ReadNewsGeneral : public Base {
     bool defaultToExpandedThreads()  { return d_efaultExpand; }
     bool showLines()                 { return s_howLines; }
     bool showScore()                 { return s_howScore; }
+    bool showUnread()                { return s_howUnread; }
 
     int collCacheSize()              { return c_ollCacheSize; }
     int artCacheSize()               { return a_rtCacheSize; }
@@ -502,6 +503,7 @@ class ReadNewsGeneral : public Base {
           d_efaultExpand,
           s_howLines,
           s_howScore,
+          s_howUnread,
           s_howThreads,
           a_utoCheckPgpSigs;
 
@@ -529,6 +531,7 @@ class ReadNewsGeneralWidget : public BaseWidget {
                 *e_xpThrCB,
                 *d_efaultExpandCB,
                 *l_inesCB,
+                *u_nreadCB,
                 *s_coreCB;
     KIntSpinBox *m_arkSecs,
                 *m_axFetch,

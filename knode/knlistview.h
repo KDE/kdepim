@@ -47,6 +47,7 @@ class KNLVItemBase : public KFolderTreeItem  {
     virtual bool acceptDrag(QDropEvent* ) const    { return false; };
 
     virtual int countUnreadRecursive();
+    virtual int countUnreadInThread()   { return 0; }
 
 
   protected:

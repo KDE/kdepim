@@ -94,6 +94,21 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
   if (width-xText-5 > 0) {
     QString t = shortString(text(column),column,width-xText-5,p->fontMetrics());
     p->drawText(xText, 0, width-xText-5, height(), alignment | AlignVCenter,  t);
+    if (countUnreadInThread() > 0 && column==0 && !isOpen()) {
+      QString t2 = QString("   (%1)").arg(countUnreadInThread());
+      QFont orig=p->font();
+      QFont font=p->font();
+      font.setBold( true );
+      p->setFont(font);
+      QPen pen=p->pen();
+      if (isSelected()||a_ctive) {
+        pen.setColor(cg.highlightedText());
+      } else {
+        pen.setColor(cg.link());
+      }
+      p->setPen(pen);
+      p->drawText(xText + QFontMetrics(orig).width(t, -1), 0, width-xText-5, height(), alignment | AlignVCenter,  t2);
+    }
   }
 }
 

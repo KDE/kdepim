@@ -587,6 +587,7 @@ KNConfig::ReadNewsGeneral::ReadNewsGeneral()
   d_efaultExpand=conf->readBoolEntry("defaultExpand", false);
   s_howLines=conf->readBoolEntry("showLines3", true);
   s_howScore=conf->readBoolEntry("showScore3", true);
+  s_howUnread=conf->readBoolEntry("showUnread", true);
   s_howThreads = conf->readBoolEntry("showThreads", true);
   a_utoCheckPgpSigs = conf->readBoolEntry("autoCheckPgpSigs",false);
 
@@ -621,6 +622,7 @@ void KNConfig::ReadNewsGeneral::save()
   conf->writeEntry("defaultExpand", d_efaultExpand);
   conf->writeEntry("showLines3", s_howLines);
   conf->writeEntry("showScore3", s_howScore);
+  conf->writeEntry("showUnread", s_howUnread);
   conf->writeEntry("showThreads", s_howThreads);
   conf->writeEntry("autoCheckPgpSigs", a_utoCheckPgpSigs);
 

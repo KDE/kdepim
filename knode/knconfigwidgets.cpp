@@ -893,6 +893,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   d_efaultExpandCB=new QCheckBox(i18n("Default to e&xpanded threads"), lgb);
   s_coreCB=new QCheckBox(i18n("Show article &score"), lgb);
   l_inesCB=new QCheckBox(i18n("Show &line count"), lgb);
+  u_nreadCB=new QCheckBox(i18n("Show unread count in &thread"), lgb);
 
   c_ollCacheSize=new KIntSpinBox(0, 99999, 1, 1, 10, cgb);
   c_ollCacheSize->setSuffix(" KB");
@@ -926,6 +927,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   lgbL->addWidget(d_efaultExpandCB);
   lgbL->addWidget(s_coreCB);
   lgbL->addWidget(l_inesCB);
+  lgbL->addWidget(u_nreadCB);
 
   cgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
   cgbL->addWidget(l2, 1,0);
@@ -948,6 +950,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   d_efaultExpandCB->setChecked(d->d_efaultExpand);
   l_inesCB->setChecked(d->s_howLines);
   s_coreCB->setChecked(d->s_howScore);
+  u_nreadCB->setChecked(d->s_howUnread);
   c_ollCacheSize->setValue(d->c_ollCacheSize);
   a_rtCacheSize->setValue(d->a_rtCacheSize);
 }
@@ -973,6 +976,7 @@ void KNConfig::ReadNewsGeneralWidget::apply()
   d_ata->d_efaultExpand=d_efaultExpandCB->isChecked();
   d_ata->s_howLines=l_inesCB->isChecked();
   d_ata->s_howScore=s_coreCB->isChecked();
+  d_ata->s_howUnread=u_nreadCB->isChecked();
   d_ata->c_ollCacheSize=c_ollCacheSize->value();
   d_ata->a_rtCacheSize=a_rtCacheSize->value();
 

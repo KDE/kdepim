@@ -66,6 +66,18 @@ QDragObject* KNHdrViewItem::dragObject()
 }
 
 
+int KNHdrViewItem::countUnreadInThread()
+{
+  int count = 0;
+  if(knGlobals.cfgManager->readNewsGeneral()->showUnread()) {
+    if(art->type()==KMime::Base::ATremote) {
+      count = static_cast<KNRemoteArticle*>(art)->unreadFollowUps();
+    }
+  }
+  return count;
+}
+
+
 bool KNHdrViewItem::greyOut()
 {
   if(art->type()==KMime::Base::ATremote)

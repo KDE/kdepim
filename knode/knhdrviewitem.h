@@ -39,6 +39,7 @@ class KNHdrViewItem : public KNLVItemBase  {
     virtual QDragObject* dragObject();
 
     KNArticle *art;
+    virtual int countUnreadInThread();
 
   protected:
     bool greyOut();
