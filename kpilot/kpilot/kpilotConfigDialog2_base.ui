@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>SyncConfigWidget</class>
 <comment>A widget for editing HotSync-specific settings.</comment>
 <author>David Bishop</author>
@@ -65,7 +65,7 @@
                 <cstring>fSpecialSync</cstring>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>&lt;qt&gt;Select in this list the synchronization type that KPilot will use as default. Possibly values are  "HotSync", to run all selected conduits, and sync the databases with a modified flag set, updating the modified records only, "FastSync", to only synchronize those databases that have conduits, "FullSync" to run all selected conduits, and sync all databases, reading all records, and performing a full backup, "Copy PC to handheld" to run all conduits and sync all databases, but instead of merging the information from both sources, copy the PC data to the handheld and  finally, "Copy handheld to PC" to run all conduits and sync all databases, but instead of merging the information from both sources, copy the handheld data to the PC.&lt;/qt&gt;</string>
+                <string>&lt;qt&gt;Select in this list the synchronization type that KPilot will use as default. Possibly values are:&lt;br&gt;"HotSync", to run all selected conduits, and sync the databases with a modified flag set, updating the modified records only;&lt;br&gt;"FastSync", to only synchronize those databases that have conduits;&lt;br&gt;"FullSync" to run all selected conduits, and sync all databases, reading all records, and performing a full backup;&lt;br&gt;"Copy PC to handheld" to run all conduits and sync all databases, but instead of merging the information from both sources, copy the PC data to the handheld;&lt;br&gt;"Copy handheld to PC" to run all conduits and sync all databases, but instead of merging the information from both sources, copy the handheld data to the PC.&lt;/qt&gt;</string>
             </property>
         </widget>
         <widget class="QLabel" row="0" column="0">
