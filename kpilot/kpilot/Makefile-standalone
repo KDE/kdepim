@@ -9,7 +9,7 @@ DCOPIDL=$(KDEDIR)/bin/dcopidl
 DCOPIDL2CPP=$(KDEDIR)/bin/dcopidl2cpp
 
 CXX=g++
-CXXFLAGS=-DNDEBUG -DNO_DEBUG
+CXXFLAGS=-DDEBUG -DDEBUG_CERR
 # INCLUDES=-I$(QTDIR)/include -I$(KDEDIR)/include
 #
 # Or, for stupid RH 7.1 systems:
@@ -20,9 +20,13 @@ LDFLAGS=-L$(KDEDIR)/lib -Wl,-R -Wl,$(KDEDIR)/lib \
 CONFIG_DISTDIR=kpilotConfig-0.2
 CONFIG_OBJS=options.o kpilotConfig.o \
 	uiDialog.o kpilotConfigDialog.o kpilotConfigDialog_base.o \
+	listCat.o \
+	conduitSetup.o conduitConfigDialog.o conduitConfigDialog_base.o \
 	main-config.o
-CONFIG_MOCS=uiDialog.moc kpilotConfigDialog_base.moc kpilotConfigDialog.moc
-CONFIG_EXTRA=kpilotConfigDialog_base.ui
+CONFIG_MOCS=uiDialog.moc kpilotConfigDialog_base.moc kpilotConfigDialog.moc \
+	conduitSetup.moc conduitConfigDialog.moc conduitConfigDialog_base.moc \
+	listCat.moc
+CONFIG_EXTRA=kpilotConfigDialog_base.ui conduitConfigDialog_base.ui
 CONFIG_LIBS=-lkdeui -lkfile -lkdecore -lqt 
 
 TEST_DISTDIR=kpilotTest-0.2
@@ -129,6 +133,15 @@ kpilotDaemon.tar.gz :
 	tar cvzf $@ $(DAEMON_DISTDIR)
 	-rm -f $(DAEMON_DISTDIR)/*
 	-rmdir $(DAEMON_DISTDIR)
+
+conduitConfigDialog_base.cc : conduitConfigDialog_base.h conduitConfigDialog_base.ui
+	echo '#include <klocale.h>' > $@
+	$(UIC) -tr i18n -i conduitConfigDialog_base.h conduitConfigDialog_base.ui | \
+		sed -e "s,i18n( \"\" ),QString::null,g" >> $@
+	echo '#include "conduitConfigDialog_base.moc"' >> $@
+
+conduitConfigDialog_base.h : conduitConfigDialog_base.ui
+	$(UIC) -o $@ $<
 
 kpilotConfigDialog_base.cc : kpilotConfigDialog_base.h kpilotConfigDialog_base.ui
 	echo '#include <klocale.h>' > $@

@@ -54,6 +54,7 @@ kpilotTest_SOURCES = options.cc kpilotConfig.cc kpilotlink.cc \
 
 kpilotConfig_SOURCES = options.cc kpilotConfig.cc \
 	uiDialog.cc kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
+	conduitConfigDialog_base.ui conduitConfigDialog.cc \
 	listCat.cc conduitSetup.cc main-config.cc
 
 
