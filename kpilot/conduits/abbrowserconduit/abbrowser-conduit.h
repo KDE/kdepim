@@ -268,7 +268,6 @@ private:
 	} eCustom[4];
 	static QString fCustomFmt;
 
-	static void cleanupOnCrash(int);
 } ;
 
 #endif
