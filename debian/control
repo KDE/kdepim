@@ -9,8 +9,8 @@ Package: korganizer
 Architecture: any
 Section: x11
 Replaces: kdepim, kdepim-common
-Depends: ${shlibs:Depends}, kdebase-libs
-Recommends: kghostview
+Depends: ${shlibs:Depends}
+Recommends: kghostview, kdebase-libs
 Suggests: kpilot
 Enhances: kdebase, kpilot
 Description: Personal organizer based on QT and KDE 
@@ -36,7 +36,8 @@ Description: Personal organizer based on QT and KDE
 Package: kpilot
 Architecture: any
 Section: utils
-Depends: ${shlibs:Depends}, pilot-link, kdebase-libs
+Depends: ${shlibs:Depends}, pilot-link
+Recommends: kdebase-libs
 Suggests: korganizer, kab, knotes
 Enhances: kdebase, korganizer, knotes, kab
 Description: Palm Pilot sync tool for KDE
@@ -45,7 +46,8 @@ Description: Palm Pilot sync tool for KDE
 Package: kandy
 Architecture: any
 Section: utils
-Depends: ${shlibs:Depends}, kdebase-libs
+Depends: ${shlibs:Depends}
+Recommends: kdebase-libs
 Enhances: kdebase
 Description: Mobile phone utility for KDE
  At the moment Kandy is more or less a terminal program with some special
