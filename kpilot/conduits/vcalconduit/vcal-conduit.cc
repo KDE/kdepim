@@ -259,7 +259,7 @@ void VCalConduit::syncRecord()
 	if (!r)
 	{
 		fP->updateEvents();
-		QTimer::singleShot(0,this,SLOT(syncRecord()));
+		QTimer::singleShot(0,this,SLOT(syncEvent()));
 		return;
 	}
 
@@ -553,6 +553,13 @@ void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry &dateEn
 }
 
 // $Log$
+// Revision 1.51.2.1  2002/04/04 20:28:28  adridg
+// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
+// when using PILOT_VERSION. kpilotTest defaults to list, like the options
+// promise. Always do old-style USB sync (also works with serial devices)
+// and runs conduits only for HotSync. KPilot now as it should have been
+// for the 3.0 release.
+//
 // Revision 1.51  2002/02/23 20:57:41  adridg
 // #ifdef DEBUG stuff
 //
