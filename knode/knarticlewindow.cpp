@@ -141,7 +141,7 @@ void KNArticleWindow::slotFileClose()
 
 void KNArticleWindow::slotConfKeys()
 {
-  KKeyDialog::configureKeys(actionCollection(), xmlFile(), true, this);
+  KKeyDialog::configure( actionCollection(), this, true );
 }
 
 

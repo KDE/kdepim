@@ -110,7 +110,7 @@ void KNDialogListBox::keyPressEvent(QKeyEvent *e)
 KNProgress::KNProgress (int desiredHeight, int maxValue, int value, QWidget *parent, const char *name)
  : KProgress(parent, name), desHeight(desiredHeight)
 {
-  setRange(0, maxValue);
+  setTotalSteps(maxValue);
   setValue(value);
   setFixedWidth(110);
   setFrameStyle(QFrame::Box);

@@ -149,7 +149,7 @@ KNSaveHelper::~KNSaveHelper()
   } else
     if (tmpFile) {      // network location, initiate transaction
       tmpFile->close();
-      if (KIO::NetAccess::upload(tmpFile->name(),url) == false)
+      if (KIO::NetAccess::upload(tmpFile->name(),url, 0) == false)
         KNHelper::displayRemoteFileError();
       tmpFile->unlink();   // delete temp file
       delete tmpFile;
@@ -244,7 +244,7 @@ KNFile* KNLoadHelper::setURL(KURL url)
 
   QString fileName;
   if (!u_rl.isLocalFile()) {
-    if (KIO::NetAccess::download(u_rl, t_empName))
+    if (KIO::NetAccess::download(u_rl, t_empName, 0))
       fileName = t_empName;
   } else
     fileName = u_rl.path();

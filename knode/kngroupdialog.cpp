@@ -313,7 +313,7 @@ void KNGroupDialog::slotUser2()
 
   if (dlg->exec()) {
     if (takeCustom->isChecked())
-      lastDate = dateSel->getDate();
+      lastDate = dateSel->date();
     a_ccount->setLastNewFetch(QDate::currentDate());
     leftLabel->setText(i18n("Checking for new groups..."));
     enableButton(User1,false);
