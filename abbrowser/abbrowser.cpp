@@ -22,9 +22,8 @@
 Pab::Pab()
 {
   setCaption( i18n( "Address Book Browser" ));
-  //xxx  document = new ContactEntryList( "entries.txt" );
   document = new ContactEntryList();
-  view = new PabWidget( document, this, "Kontact" );
+  view = new PabWidget( document, this, "Abbrowser" );
 
   // tell the KTMainWindow that this is indeed the main widget
   setView(view);
@@ -33,7 +32,7 @@ Pab::Pab()
   QPopupMenu* p = new QPopupMenu;
   p->insertItem(i18n("&Sync"), this, SLOT(save()), CTRL+Key_S);
   p->insertItem(i18n("&New Contact"), this, SLOT(newContact()), CTRL+Key_N);
-  p->insertItem(i18n("New &Group"), this, SLOT(newGroup()), CTRL+Key_G);
+  /*  p->insertItem(i18n("New &Group"), this, SLOT(newGroup()), CTRL+Key_G); */
   p->insertSeparator();
   p->insertItem(i18n("&Send Mail"), view, SLOT(sendMail()));
   p->insertSeparator();
@@ -70,9 +69,8 @@ Pab::Pab()
   menuBar()->insertSeparator();
 
   // KDE will generate a short help menu automagically
-  p = helpMenu( i18n("Kab --- KDE Address Book\n\n"
-		     "(c) 2000AD The KDE PIM Team \n"
-		     "Long Description"));
+  p = helpMenu( i18n("Abbrowser --- KDE Address Book\n\n"
+		     "(c) 2000AD The KDE PIM Team \n"));
 
   menuBar()->insertItem(i18n("&Help"), p);
   
@@ -97,6 +95,7 @@ Pab::Pab()
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(sendMail()), // result
 			  i18n("Send email"));      // tooltip text
+  toolBar()->setFullSize(true);
   
   // we do want a status bar
   enableStatusBar();
@@ -106,16 +105,48 @@ Pab::Pab()
 
 void Pab::newContact()
 {
- ContactDialog *test = new PabNewContactDialog( this, i18n( "Address Book Entry Editor" ));
- connect( test, SIGNAL( add( ContactEntry* ) ), 
-	  view, SLOT( addNewEntry( ContactEntry* ) ));
- test->show();
+  ContactDialog *cd = new PabNewContactDialog( this, i18n( "Address Book Entry Editor" ));
+  connect( cd, SIGNAL( add( ContactEntry* ) ), 
+	   view, SLOT( addNewEntry( ContactEntry* ) ));
+  cd->show();
+}
+
+void Pab::updateContact( QString addr, QString name )
+{
+  ContactEntryList *cel = view->contactEntryList();
+  QStringList keys = cel->keys();
+  for ( QStringList::Iterator it = keys.begin(); it != keys.end(); ++it ) {
+    ContactEntry *ce = cel->find( *it );
+    if (ce)
+      if (ce->find("EMAIL")  && ((*ce->find("EMAIL")).stripWhiteSpace() == addr)) {
+	if (!name.isEmpty())
+	  ce->replace( "N", new QString( name ) );
+	QString title = i18n( "Address Book Entry Editor" );
+	PabContactDialog *cd = new PabContactDialog( this, title, *it, ce );
+	QObject::connect( cd, SIGNAL( change( QString, ContactEntry* ) ), 
+			  view, SLOT( change( QString, ContactEntry* ) ));
+	cd->show();
+	return;
+      }
+  }
+  
+  ContactDialog *cd = new PabNewContactDialog( this, i18n( "Address Book Entry Editor" ));
+  ContactEntry *ce = cd->entry();
+  if (!name.isEmpty())
+    ce->replace( ".AUXCONTACT-N", new QString(name) );
+  ce->replace( "EMAIL", new QString( addr ) );
+  connect( cd, SIGNAL( add( ContactEntry* ) ), 
+	   view, SLOT( addNewEntry( ContactEntry* ) ));
+  cd->parseName();
+  cd->show();
 }
 
 void Pab::save()
 {
   document->sync();
   //xxx  document->save( "entries.txt" );
+    UndoStack::instance()->clear();
+    RedoStack::instance()->clear();
 }
 
 void Pab::readConfig()

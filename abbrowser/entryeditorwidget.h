@@ -64,7 +64,7 @@ protected:
     QComboBox *cbSelectFrom;
     QPushButton *pbOk;
 
-protected slots:
+public slots:
     void pickBirthDate();
     void pickAnniversaryDate();
     void newAddressDialog();
