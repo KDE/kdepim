@@ -155,7 +155,7 @@ public:
   virtual void setUIntValueList( const QValueList<unsigned int>& );
   virtual void setURLValueList( const KURL::List& );
   virtual bool isDirty() const { return mDirty; }
-  void setDirty( bool b ) { mDirty = b; }
+  void setDirty( bool b );
   QString outputString() const;
 
 protected:

@@ -234,14 +234,14 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   KTempFile tmpFile;
   tmpFile.setAutoDelete( true );
 
+  QValueList<QGpgMECryptoConfigEntry *> dirtyEntries;
+
   // Collect all dirty entries
-  bool foundOne = false;
   QDictIterator<QGpgMECryptoConfigGroup> groupit( mGroups );
   for( ; groupit.current(); ++groupit ) {
     QDictIterator<QGpgMECryptoConfigEntry> it( groupit.current()->mEntries );
     for( ; it.current(); ++it ) {
       if ( it.current()->isDirty() ) {
-        foundOne = true;
         // OK, we can set it.currentKey() to it.current()->outputString()
         QString line = it.currentKey();
         if ( it.current()->isSet() ) { // set option
@@ -253,12 +253,12 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
         line += '\n';
         QCString line8bit = line.latin1(); // latin1 is correct here, it's all escaped (and KProcIO uses latin1 when reading).
         tmpFile.file()->writeBlock( line8bit.data(), line8bit.size()-1 /*no 0*/ );
-        it.current()->setDirty( false ); // ### move to after running gpgconf, on success only?
+        dirtyEntries.append( it.current() );
       }
     }
   }
   tmpFile.close();
-  if ( !foundOne )
+  if ( dirtyEntries.isEmpty() )
     return;
 
   // Call gpgconf --change-options <component>
@@ -285,8 +285,19 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
     rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
 
   // ####### TODO error handling (message box).
-  if( rc != 0 ) // Happens due to bugs in gpgconf (e.g. issue104)
+  if( rc != 0 ) // Happens due to bugs in gpgconf (e.g. issues 104/115)
+  {
+    QString wmsg = i18n( "Error from gpgconf while saving configuration: %1" ).arg( strerror( rc ) );
+    KMessageBox::error(0, wmsg);
     kdWarning(5150) << k_funcinfo << ":" << strerror( rc ) << endl;
+  }
+  else
+  {
+    QValueList<QGpgMECryptoConfigEntry *>::Iterator it = dirtyEntries.begin();
+    for( ; it != dirtyEntries.end(); ++it ) {
+      (*it)->setDirty( false );
+    }
+  }
 }
 
 ////
@@ -433,8 +444,9 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
 QGpgMECryptoConfigEntry::~QGpgMECryptoConfigEntry()
 {
 #ifndef NDEBUG
-  if ( !s_duringClear && !mDirty )
-    kdWarning(5150) << "Deleting a QGpgMECryptoConfigEntry that was modified. You forgot to call sync() (to commit) or clear() (to discard)" << endl;
+  if ( !s_duringClear && mDirty )
+    kdWarning(5150) << "Deleting a QGpgMECryptoConfigEntry that was modified (" << mDescription << ")\n"
+                    << "You forgot to call sync() (to commit) or clear() (to discard)" << endl;
 #endif
 }
 
@@ -744,6 +756,11 @@ bool QGpgMECryptoConfigEntry::isStringType() const
            || mArgType == Kleo::CryptoConfigEntry::ArgType_Path
            || mArgType == Kleo::CryptoConfigEntry::ArgType_URL
            || mArgType == Kleo::CryptoConfigEntry::ArgType_LDAPURL );
+}
+
+void QGpgMECryptoConfigEntry::setDirty( bool b )
+{
+  mDirty = b;
 }
 
 #include "qgpgmecryptoconfig.moc"
