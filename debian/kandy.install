@@ -1,6 +1,6 @@
 debian/tmp/usr/bin/kandy
 debian/tmp/usr/bin/kandy_client
 debian/tmp/usr/share/applnk/Utilities/kandy.desktop
-debian/tmp/usr/share/applnk/Utilities/More/kandy.desktop
+debian/tmp/usr/share/applications/kde/kandy.desktop
 debian/tmp/usr/share/apps/kandy
 debian/tmp/usr/share/doc/kde/HTML/en/kandy

@@ -1,9 +1,13 @@
+debian/tmp/usr/bin/cfgc
 debian/tmp/usr/lib/libkdepim.la
 debian/tmp/usr/lib/libkdepim.so.1
 debian/tmp/usr/lib/libkdepim.so.1.0.0
 debian/tmp/usr/lib/libknewstuff.la
 debian/tmp/usr/lib/libknewstuff.so.1
 debian/tmp/usr/lib/libknewstuff.so.1.0.0
+debian/tmp/usr/lib/libksieve.la
+debian/tmp/usr/lib/libksieve.so.0
+debian/tmp/usr/lib/libksieve.so.0.0.0
 debian/tmp/usr/lib/libksync.la
 debian/tmp/usr/lib/libksync.so.1
 debian/tmp/usr/lib/libksync.so.1.0.0

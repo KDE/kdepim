@@ -1,6 +1,6 @@
 debian/tmp/usr/bin/kalarm
 debian/tmp/usr/share/applnk/Applications/kalarm.desktop
-debian/tmp/usr/share/applnk/Utilities/More/kalarm.desktop
+debian/tmp/usr/share/applications/kde/kalarm.desktop
 debian/tmp/usr/share/apps/kalarm
 debian/tmp/usr/share/autostart/kalarm.tray.desktop
 debian/tmp/usr/share/doc/kde/HTML/en/kalarm

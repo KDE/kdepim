@@ -1,6 +1,6 @@
 debian/tmp/usr/bin/karm
 debian/tmp/usr/share/applnk/Utilities/karm.desktop
-debian/tmp/usr/share/applnk/Utilities/More/karm.desktop
+debian/tmp/usr/share/applications/kde/karm.desktop
 debian/tmp/usr/share/apps/karm
 debian/tmp/usr/share/doc/kde/HTML/en/karm
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/karm.png

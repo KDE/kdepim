@@ -8,7 +8,10 @@ debian/tmp/usr/lib/kde3/libkmailpart.so.1
 debian/tmp/usr/lib/kde3/libkmailpart.so.1.0.0
 debian/tmp/usr/lib/kde3/kio_sieve.la
 debian/tmp/usr/lib/kde3/kio_sieve.so
-debian/tmp/usr/share/applnk/Internet/KMail.desktop
+debian/tmp/usr/share/applications/kde/KMail.desktop
+debian/tmp/usr/share/apps/kconf_update/kmail-3.1.4-dont-use-UOID-0-for-any-identity.pl
+debian/tmp/usr/share/apps/kconf_update/kmail-3.2-update-loop-on-goto-unread-settings.sh
+debian/tmp/usr/share/apps/kconf_update/kmail-3.2-misc.sh
 debian/tmp/usr/share/apps/kconf_update/kmail-3.1-update-new-mail-notification-settings.pl
 debian/tmp/usr/share/apps/kconf_update/kmail-3.1-use-UOID-for-identities.pl
 debian/tmp/usr/share/apps/kconf_update/kmail-pgpidentity.pl
@@ -39,6 +42,7 @@ debian/tmp/usr/share/apps/kmail/profile-secure-rc
 debian/tmp/usr/share/apps/kmail/tips
 debian/tmp/usr/share/doc/kde/HTML/en/kmail/
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/kmail.png
+debian/tmp/usr/share/icons/crystalsvg/22x22/apps/kmail.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/kmail.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/kmail.png
 debian/tmp/usr/share/icons/crystalsvg/64x64/apps/kmail.png

@@ -14,6 +14,8 @@ debian/tmp/usr/include/kde/kdepim
 debian/tmp/usr/include/kde/calendar
 debian/tmp/usr/include/kde/korganizer
 debian/tmp/usr/include/kde/kontact
+debian/tmp/usr/include/kde/knewstuff
+debian/tmp/usr/include/kde/ksieve
 debian/tmp/usr/lib/libkalarmd.so
 debian/tmp/usr/lib/libkcal.so
 debian/tmp/usr/lib/libkgantt.so
@@ -26,3 +28,4 @@ debian/tmp/usr/lib/libksync.so
 debian/tmp/usr/lib/libktnef.la
 debian/tmp/usr/lib/libktnef.so
 debian/tmp/usr/lib/libkdgantt.so
+debian/tmp/usr/lib/libksieve.so

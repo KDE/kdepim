@@ -10,14 +10,6 @@ debian/tmp/usr/lib/libksharedfile.so
 debian/tmp/usr/lib/libksharedfile.la
 debian/tmp/usr/lib/libkonnector.so
 debian/tmp/usr/lib/libkonnector.la
-debian/tmp/usr/lib/libdummykonnector.so
-debian/tmp/usr/lib/libdummykonnector.la
-debian/tmp/usr/lib/liblocalkonnector.so
-debian/tmp/usr/lib/liblocalkonnector.la
-debian/tmp/usr/lib/libqtopiakonnector.so
-debian/tmp/usr/lib/libqtopiakonnector.la
-debian/tmp/usr/lib/libagendakonnector.so
-debian/tmp/usr/lib/libagendakonnector.la
 debian/tmp/usr/lib/libkitchensyncui.so
 debian/tmp/usr/lib/libkitchensyncui.la
 

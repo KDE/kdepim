@@ -1,5 +1,9 @@
 debian/tmp/usr/bin/knode
-debian/tmp/usr/share/applnk/Internet/KNode.desktop
+debian/tmp/usr/lib/kde3/libknodepart.so.1.0.0
+debian/tmp/usr/lib/kde3/libknodepart.so.1
+debian/tmp/usr/lib/kde3/libknodepart.so
+debian/tmp/usr/lib/kde3/libknodepart.la
+debian/tmp/usr/share/applications/kde/KNode.desktop
 debian/tmp/usr/share/apps/knode/filters/1.fltr
 debian/tmp/usr/share/apps/knode/filters/2.fltr
 debian/tmp/usr/share/apps/knode/filters/3.fltr

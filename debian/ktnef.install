@@ -1,6 +1,6 @@
 debian/tmp/usr/bin/ktnef
 debian/tmp/usr/lib/libktnef.so.*
-debian/tmp/usr/share/applnk/Utilities/ktnef.desktop
+debian/tmp/usr/share/applications/kde/ktnef.desktop
 debian/tmp/usr/share/apps/ktnef/icons/hicolor/22x22/actions/ktnef_extract_all_to.png
 debian/tmp/usr/share/apps/ktnef/icons/hicolor/22x22/actions/ktnef_extract_to.png
 debian/tmp/usr/share/apps/ktnef/icons/locolor/16x16/actions/ktnef_extract_all_to.png
