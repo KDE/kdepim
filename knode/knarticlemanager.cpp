@@ -773,9 +773,9 @@ void  KNArticleManager::rescoreArticles(KNRemoteArticle::List &l)
     for(; a; a=l.next()) {
       int defScore = 0;
       if (a->isIgnored())
-        defScore = -100;
+        defScore = knGlobals.cfgManager->scoring()->ignoredThreshold();
       else if (a->isWatched())
-        defScore = 100;
+        defScore = knGlobals.cfgManager->scoring()->watchedThreshold();
       a->setScore(defScore);
 
       KNScorableArticle sa(a);

@@ -37,6 +37,7 @@ KNConfigManager::KNConfigManager(QObject *p, const char *n) : QObject(p, n), d_i
   r_eadNewsGeneral    = new KNConfig::ReadNewsGeneral();
   r_eadNewsViewer     = new KNConfig::ReadNewsViewer();
   d_isplayedHeaders   = new KNConfig::DisplayedHeaders();
+  s_coring            = new KNConfig::Scoring();
   p_ostNewsTechnical  = new KNConfig::PostNewsTechnical();
   p_ostNewsCompose    = new KNConfig::PostNewsComposer();
   c_leanup            = new KNConfig::Cleanup();
@@ -51,6 +52,7 @@ KNConfigManager::~KNConfigManager()
   delete r_eadNewsGeneral;
   delete r_eadNewsViewer;
   delete d_isplayedHeaders;
+  delete s_coring;
   delete p_ostNewsTechnical;
   delete p_ostNewsCompose;
   delete c_leanup;
@@ -130,7 +132,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   list.clear();
   list << QString(" ")+i18n("Reading News") << QString(" ")+i18n("Scoring");
   frame = addHBoxPage(list,i18n("Scoring Rules"),BarIcon("misc"));
-  w_idgets.append(new KNConfig::ScoreListWidget(frame));
+  w_idgets.append(new KNConfig::ScoringWidget(m->scoring(),frame));
 
   // Read News / Filters
   list.clear();

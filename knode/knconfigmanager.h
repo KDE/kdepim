@@ -34,6 +34,7 @@ class KNConfigManager : QObject {
     KNConfig::ReadNewsGeneral*      readNewsGeneral()     { return r_eadNewsGeneral; }
     KNConfig::ReadNewsViewer*       readNewsViewer()      { return r_eadNewsViewer; }
     KNConfig::DisplayedHeaders*     displayedHeaders()    { return d_isplayedHeaders; }
+    KNConfig::Scoring*              scoring()             { return s_coring; }
     KNConfig::PostNewsTechnical*    postNewsTechnical()   { return p_ostNewsTechnical; }
     KNConfig::PostNewsComposer*     postNewsComposer()    { return p_ostNewsCompose; }
     KNConfig::Cleanup*              cleanup()             { return c_leanup; }
@@ -47,6 +48,7 @@ class KNConfigManager : QObject {
     KNConfig::ReadNewsGeneral      *r_eadNewsGeneral;
     KNConfig::ReadNewsViewer       *r_eadNewsViewer;
     KNConfig::DisplayedHeaders     *d_isplayedHeaders;
+    KNConfig::Scoring              *s_coring;
     KNConfig::PostNewsTechnical    *p_ostNewsTechnical;
     KNConfig::PostNewsComposer     *p_ostNewsCompose;
     KNConfig::Cleanup              *c_leanup;

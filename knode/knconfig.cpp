@@ -786,6 +786,36 @@ void KNConfig::DisplayedHeaders::down(KNDisplayedHeader *h)
 //==============================================================================================================
 
 
+KNConfig::Scoring::Scoring()
+{
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("SCORING");
+
+  i_gnoredThreshold=conf->readNumEntry("ignoredThreshold", -100);
+  w_atchedThreshold=conf->readNumEntry("watchedThreshold", 100);
+}
+
+
+KNConfig::Scoring::~Scoring()
+{
+}
+
+
+void KNConfig::Scoring::save()
+{
+  kdDebug(5003) << "KNConfig::Scoring::save()" << endl;
+
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("SCORING");
+
+  conf->writeEntry("ignoredThreshold", i_gnoredThreshold);
+  conf->writeEntry("watchedThreshold", w_atchedThreshold);
+}
+
+
+//==============================================================================================================
+
+
 KNConfig::XHeader::XHeader(const QString &s)
 {
   if(s.left(2)=="X-") {

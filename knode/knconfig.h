@@ -669,17 +669,42 @@ class DisplayedHeaderConfDialog : public KDialogBase {
 };
 
 
-class ScoreListWidget : public BaseWidget {
+class Scoring : public Base {
+
+  friend class ScoringWidget;
+
+  public:
+    Scoring();
+    ~Scoring();
+
+    void save();
+
+    int ignoredThreshold()   { return i_gnoredThreshold; }
+    int watchedThreshold()   { return w_atchedThreshold; }
+
+  protected:
+    int i_gnoredThreshold,
+        w_atchedThreshold;
+
+};
+
+
+class ScoringWidget : public BaseWidget {
 
   Q_OBJECT
 
   public:
-    ScoreListWidget(QWidget *p=0, const char *n=0);
-    ~ScoreListWidget();
+    ScoringWidget(Scoring *d, QWidget *p=0, const char *n=0);
+    ~ScoringWidget();
+
+    void apply();
 
   private:
     KScoringRulesConfig *ksc;
+    KIntSpinBox *i_gnored,
+                *w_atched;
 
+    Scoring *d_ata;
 };
 
 

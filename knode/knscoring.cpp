@@ -117,7 +117,7 @@ void KNScoringManager::configure()
 {
   if(!c_onfDialog) {
     c_onfDialog = new KDialogBase(knGlobals.topWidget, 0, false, i18n("Edit Scoring Rules"), KDialogBase::Close, KDialogBase::Close, true);
-    KScoringRulesConfig *c = new KScoringRulesConfig(this,c_onfDialog);
+    KScoringRulesConfig *c = new KScoringRulesConfig(this, true, c_onfDialog);
     c_onfDialog->setMainWidget(c);
     connect(c_onfDialog, SIGNAL(finished()), SLOT(slotDialogDone()));
     KNHelper::restoreWindowSize("scoringRulesEditor", c_onfDialog, QSize(255,223));

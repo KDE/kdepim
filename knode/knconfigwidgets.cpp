@@ -870,7 +870,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   QLabel *l1;
 
   a_utoCB=new QCheckBox(i18n("Check for new articles a&utomatically"), hgb);
-  m_axFetch=new KIntSpinBox(0, 20000, 1, 0, 10, hgb);
+  m_axFetch=new KIntSpinBox(0, 100000, 1, 0, 10, hgb);
   l1=new QLabel(m_axFetch, i18n("&Maximal number of articles to fetch"), hgb);
   m_arkCB=new QCheckBox(i18n("Mar&k article as read after"), hgb);
   m_arkSecs=new KIntSpinBox(0, 9999, 1, 0, 10, hgb);
@@ -1338,17 +1338,45 @@ void KNConfig::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
 //=============================================================================================
 
 
-KNConfig::ScoreListWidget::ScoreListWidget(QWidget *p, const char *n)
-  : BaseWidget(p,n)
+KNConfig::ScoringWidget::ScoringWidget(Scoring *d, QWidget *p, const char *n)
+  : BaseWidget(p,n), d_ata(d)
 {
-  QGridLayout *topL = new QGridLayout(this,1,1);
-  ksc = new KScoringRulesConfig(knGlobals.scoreManager,this);
-  topL->addWidget(ksc,0,0);
+  QGridLayout *topL = new QGridLayout(this,3,2, 5,5);
+  ksc = new KScoringRulesConfig(knGlobals.scoreManager, false, this);
+  topL->addMultiCellWidget(ksc, 0,0, 0,1);
+
+  i_gnored=new KIntSpinBox(-100000, 100000, 1, 0, 10, this);
+  QLabel *l=new QLabel(i_gnored, i18n("Default score for &ignored threads:"), this);
+  topL->addWidget(l, 1, 0);
+  topL->addWidget(i_gnored, 1, 1);
+
+  w_atched=new KIntSpinBox(-100000, 100000, 1, 0, 10, this);
+  l=new QLabel(w_atched, i18n("Default score for &watched threads:"), this);
+  topL->addWidget(l, 2, 0);
+  topL->addWidget(w_atched, 2, 1);
+
+  topL->setColStretch(0, 1);
+
+  // init
+  i_gnored->setValue(d_ata->i_gnoredThreshold);
+  w_atched->setValue(d_ata->w_atchedThreshold);
 }
 
 
-KNConfig::ScoreListWidget::~ScoreListWidget()
+KNConfig::ScoringWidget::~ScoringWidget()
 {
+}
+
+
+void KNConfig::ScoringWidget::apply()
+{
+  if(!d_irty)
+    return;
+
+  d_ata->i_gnoredThreshold = i_gnored->value();
+  d_ata->w_atchedThreshold = w_atched->value();
+
+  d_ata->save();
 }
 
 
