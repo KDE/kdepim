@@ -1,34 +1,33 @@
-INCLUDES= -I$(LIBPISOCK_PATH) -I$(top_srcdir)/kpilot/kpilot -I$(top_srcdir)/abbrowser $(all_includes)
+INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH) -I../../lib 
+
 METASOURCES = AUTO
 
 servicedir = $(kde_servicesdir)
 service_DATA = abbrowser_conduit.desktop
 
-####### This part is very kpilot specific
-# you can add here more. This one gets installed
-bin_PROGRAMS = abbrowser_conduit
+kde_module_LTLIBRARIES = libabbrowserconduit.la
+noinst_PROGRAMS = testkab testdcop
 
-# KDE magic file
-MAGIC=$(kde_mimedir)/magic
 
-# Which sources should be compiled for abbrowser_conduit
-abbrowser_conduit_SOURCES= abbrowser-conduit.cc \
+libabbrowserconduit_la_SOURCES = \
+	abbrowser-factory.cc \
+	abbrowser-setup.cc \
+	abbrowser-conduit.cc \
 	abbrowserConduitConfig_base.ui \
-	abbrowserConduitConfig.cc \
-	setupDialog.cc \
-	contactentry.cpp
+	deconflictDialog_base.ui
 
-# the library search path
-abbrowser_conduit_LDFLAGS = $(all_libraries) \
-	$(KDE_RPATH) \
-	-L../../kpilot
 
-# the libraries to link against. Be aware of the order. First the libraries,
-# that depend on the following ones.
-abbrowser_conduit_LDADD   =  \
-	-lconduit -lpilotdb \
-	$(LIB_KDEUI) $(LIB_KFILE) $(LIB_KDECORE) \
-	@LIBSOCKET@ -lpisock
+libabbrowserconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
+libabbrowserconduit_la_LIBADD = ../../lib/libkpilot.la
 
-# this option you can leave out. Just, if you use "make dist", you need it
-noinst_HEADERS = abbrowser-conduit.h abbrowserConduitConfig.h setupDialog.h
+libabbrowserconduit_la_CFLAGS += -DDEBUG -DDEBUG_CERR
+
+testkab_SOURCES = testkabapi.cpp
+testkab_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testkab_LDADD = $(LIB_KDECORE) -lkab
+
+testdcop_SOURCES = testAbbrowserDCOP.cc contactentry.cpp
+testdcop_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testdcop_LDADD = $(LIB_KDECORE) $(LIB_KFILE)
+
+

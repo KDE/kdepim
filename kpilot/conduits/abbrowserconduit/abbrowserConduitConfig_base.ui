@@ -1,24 +1,24 @@
 <!DOCTYPE UI><UI>
-<class>AbbrowserConduitConfig_base</class>
-<include>kcombobox.h</include>
+<class>AbbrowserWidget</class>
+<author>Adriaan de Groot and David Bishop</author>
 <widget>
     <class>QWidget</class>
     <property stdset="1">
         <name>name</name>
-        <cstring>AbbrowserConduitConfig_base</cstring>
+        <cstring>Form2</cstring>
     </property>
     <property stdset="1">
         <name>geometry</name>
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>375</width>
-            <height>335</height>
+            <width>495</width>
+            <height>243</height>
         </rect>
     </property>
     <property stdset="1">
         <name>caption</name>
-        <string>KAddressBook Conduit Config</string>
+        <string>Form2</string>
     </property>
     <grid>
         <property stdset="1">
@@ -29,219 +29,355 @@
             <name>spacing</name>
             <number>6</number>
         </property>
-        <widget row="1"  column="0"  rowspan="1"  colspan="3" >
-            <class>QCheckBox</class>
+        <widget row="0"  column="0" >
+            <class>QTabWidget</class>
             <property stdset="1">
                 <name>name</name>
-                <cstring>fCloseAbbrowserOnExit</cstring>
+                <cstring>tabWidget</cstring>
             </property>
-            <property stdset="1">
-                <name>text</name>
-                <string>Close KAddressBook application if not already running</string>
-            </property>
-        </widget>
-        <widget row="6"  column="0"  rowspan="1"  colspan="2" >
-            <class>QLabel</class>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fPilotFaxTypeLabel</cstring>
-            </property>
-            <property stdset="1">
-                <name>text</name>
-                <string>Pilot fax -&gt; KAddressBook phone</string>
-            </property>
-        </widget>
-        <widget row="5"  column="2" >
-            <class>KComboBox</class>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Home Address</string>
+            <widget>
+                <class>QWidget</class>
+                <property stdset="1">
+                    <name>name</name>
+                    <cstring>tab</cstring>
                 </property>
-            </item>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Business Address</string>
+                <attribute>
+                    <name>title</name>
+                    <string>General</string>
+                </attribute>
+                <grid>
+                    <property stdset="1">
+                        <name>margin</name>
+                        <number>11</number>
+                    </property>
+                    <property stdset="1">
+                        <name>spacing</name>
+                        <number>6</number>
+                    </property>
+                    <widget row="3"  column="0" >
+                        <class>QLabel</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>TextLabel1</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>Handle conflict in addresses:</string>
+                        </property>
+                    </widget>
+                    <widget row="3"  column="1" >
+                        <class>QComboBox</class>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>User Choose</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Keep Both in Abbrowser</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>PDA Overrides</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Abbrowser Overrides</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Do Nothing</string>
+                            </property>
+                        </item>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>fConflictStrategy</cstring>
+                        </property>
+                        <property>
+                            <name>toolTip</name>
+                            <string>&lt;qt&gt;If you select &amp;quot;User Choose&amp;quot; here, the conduit will ask you what to do with every conflicting entry individually. Otherwise, it will apply your choice to every conflict.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget row="2"  column="0"  rowspan="1"  colspan="2" >
+                        <class>QCheckBox</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>fSmartMerge</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>&amp;Smartly merge new address by name or company</string>
+                        </property>
+                        <property stdset="1">
+                            <name>checked</name>
+                            <bool>true</bool>
+                        </property>
+                        <property>
+                            <name>toolTip</name>
+                            <string>&lt;qt&gt;Use key fields to merge address books.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget row="0"  column="0" >
+                        <class>QCheckBox</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>fFirstTimeSync</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>&amp;First Time syncing</string>
+                        </property>
+                        <property>
+                            <name>toolTip</name>
+                            <string>&lt;qt&gt;Should be checked if your PDA has never been synced or backed up before.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget row="1"  column="0"  rowspan="1"  colspan="2" >
+                        <class>QCheckBox</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>fCloseKab</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>&amp;Close KAddressBook application if not already running</string>
+                        </property>
+                        <property>
+                            <name>toolTip</name>
+                            <string>&lt;qt&gt;Close Kaddressbook if the conduit had to start it at the beginning of the Sync.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <spacer row="4"  column="0" >
+                        <property>
+                            <name>name</name>
+                            <cstring>Spacer1</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>orientation</name>
+                            <enum>Vertical</enum>
+                        </property>
+                        <property stdset="1">
+                            <name>sizeType</name>
+                            <enum>Expanding</enum>
+                        </property>
+                        <property>
+                            <name>sizeHint</name>
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </grid>
+            </widget>
+            <widget>
+                <class>QWidget</class>
+                <property stdset="1">
+                    <name>name</name>
+                    <cstring>tab</cstring>
                 </property>
-            </item>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fPilotStreetType</cstring>
-            </property>
-        </widget>
-        <widget row="5"  column="0"  rowspan="1"  colspan="2" >
-            <class>QLabel</class>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fPilotStreetLabel</cstring>
-            </property>
-            <property stdset="1">
-                <name>text</name>
-                <string>Pilot street address -&gt; KAddressBook type</string>
-            </property>
-        </widget>
-        <widget row="2"  column="0"  rowspan="1"  colspan="3" >
-            <class>QCheckBox</class>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fSmartMerge</cstring>
-            </property>
-            <property stdset="1">
-                <name>text</name>
-                <string>Smartly merge new address by name or company</string>
-            </property>
-        </widget>
-        <widget row="6"  column="2" >
-            <class>KComboBox</class>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Home Fax</string>
-                </property>
-            </item>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Business Fax</string>
-                </property>
-            </item>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fPilotFaxType</cstring>
-            </property>
-        </widget>
-        <widget row="3"  column="1"  rowspan="1"  colspan="2" >
-            <class>KComboBox</class>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fConflictResolution</cstring>
-            </property>
-            <property>
-                <name>toolTip</name>
-                <string>Action to perform when a new contact on Pilot and in KDE are added with the same name.</string>
-            </property>
-        </widget>
-        <widget row="4"  column="0"  rowspan="1"  colspan="2" >
-            <class>QLabel</class>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fMapLabel</cstring>
-            </property>
-            <property stdset="1">
-                <name>text</name>
-                <string>Pilot "Other" -&gt; KAddressBook phone</string>
-            </property>
-            <property>
-                <name>toolTip</name>
-                <string>KAddressBook field that the Pilot "other" phone is mapped to.</string>
-            </property>
-        </widget>
-        <widget row="3"  column="0" >
-            <class>QLabel</class>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fConflictLabel</cstring>
-            </property>
-            <property stdset="1">
-                <name>text</name>
-                <string>Handle conflict in addresses</string>
-            </property>
-            <property>
-                <name>toolTip</name>
-                <string>Action to perform when a new contact on Pilot and in KDE are added with the same name.</string>
-            </property>
-        </widget>
-        <widget row="4"  column="2" >
-            <class>QComboBox</class>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Other Phone</string>
-                </property>
-            </item>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Assistant</string>
-                </property>
-            </item>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Business Phone 2</string>
-                </property>
-            </item>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Business Fax</string>
-                </property>
-            </item>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Car Phone</string>
-                </property>
-            </item>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Email 2</string>
-                </property>
-            </item>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Home Fax</string>
-                </property>
-            </item>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Home Phone 2</string>
-                </property>
-            </item>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Telex</string>
-                </property>
-            </item>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>TTY/TDD Phone</string>
-                </property>
-            </item>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fMapPilotOther</cstring>
-            </property>
-            <property stdset="1">
-                <name>editable</name>
-                <bool>false</bool>
-            </property>
-            <property>
-                <name>toolTip</name>
-                <string>KAddressBook field that the Pilot "other" phone is mapped to.</string>
-            </property>
-        </widget>
-        <widget row="0"  column="0"  rowspan="1"  colspan="3" >
-            <class>QCheckBox</class>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fFirstTimeSyncing</cstring>
-            </property>
-            <property stdset="1">
-                <name>text</name>
-                <string>First time syncing</string>
-            </property>
-            <property>
-                <name>toolTip</name>
-                <string>Should be checked if your Palm Pilot has never been HotSynced or backed up with KAddressBook before.</string>
-            </property>
+                <attribute>
+                    <name>title</name>
+                    <string>Phone</string>
+                </attribute>
+                <grid>
+                    <property stdset="1">
+                        <name>margin</name>
+                        <number>11</number>
+                    </property>
+                    <property stdset="1">
+                        <name>spacing</name>
+                        <number>6</number>
+                    </property>
+                    <widget row="0"  column="0" >
+                        <class>QLabel</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>TextLabel2</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>Pilot Other Phone</string>
+                        </property>
+                    </widget>
+                    <widget row="0"  column="1" >
+                        <class>QComboBox</class>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Other Phone</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Assistant</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Business Phone 2</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Business Fax</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Car Phone</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Email 2</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Home Fax</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Home Phone 2</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Telex</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>TTY/TTD Phone</string>
+                            </property>
+                        </item>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>fOtherPhone</cstring>
+                        </property>
+                        <property>
+                            <name>toolTip</name>
+                            <string>&lt;qt&gt;Select which field in KAddressbook should be used to store the Pilot's &amp;quot;Other&amp;quot; phone.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget row="1"  column="0" >
+                        <class>QLabel</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>TextLabel4</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>Pilot Street Address</string>
+                        </property>
+                    </widget>
+                    <widget row="1"  column="1" >
+                        <class>QComboBox</class>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Home Address</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Business Address</string>
+                            </property>
+                        </item>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>fAddress</cstring>
+                        </property>
+                        <property>
+                            <name>toolTip</name>
+                            <string>&lt;qt&gt;Select which field in KAddressbook should be used to store the Pilot's Street Address.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget row="2"  column="0" >
+                        <class>QLabel</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>TextLabel5</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>Pilot Fax</string>
+                        </property>
+                    </widget>
+                    <widget row="2"  column="1" >
+                        <class>QComboBox</class>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Home Fax</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property>
+                                <name>text</name>
+                                <string>Business Fax</string>
+                            </property>
+                        </item>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>fFax</cstring>
+                        </property>
+                        <property>
+                            <name>toolTip</name>
+                            <string>&lt;qt&gt;Select which field in KAddressbook should be used to store the Fax number from the Pilot.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <spacer row="3"  column="0" >
+                        <property>
+                            <name>name</name>
+                            <cstring>Spacer2</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>orientation</name>
+                            <enum>Vertical</enum>
+                        </property>
+                        <property stdset="1">
+                            <name>sizeType</name>
+                            <enum>Expanding</enum>
+                        </property>
+                        <property>
+                            <name>sizeHint</name>
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </grid>
+            </widget>
         </widget>
     </grid>
 </widget>
+<tabstops>
+    <tabstop>tabWidget</tabstop>
+    <tabstop>fFirstTimeSync</tabstop>
+    <tabstop>fCloseKab</tabstop>
+    <tabstop>fSmartMerge</tabstop>
+    <tabstop>fConflictStrategy</tabstop>
+</tabstops>
 </UI>

@@ -1,14 +1,46 @@
+KPilot Developer's notes for october 28th 2001
+==============================================
+
+So fun to have distributions release broken versions of an application. 
+It sometimes makes me wish I didn't have to commit stuff to CVS at all
+until the application is totally right according to me (which is then
+sure to run into trouble with the KDE release schedule).
+
+Another fun thing is wrestling with broken hardware. But it's finally fixed
+now. So I hope the pace picks up again now. I've been working on the
+abbrowser conduti sporadically, so we now have at least three conduits
+partially ported to the new setup.
+
 KPilot Developer's notes for october 21st 2001
 ==============================================
+
+2001-10-21  Adriaan de Groot
+
+Since to do the popmail conduit I first need to learn about IOSlaves
+and the KNotes conduit is hard, I spent some time playing with the
+abbrowser / KAddressbook conduit.
+
+* conduits/abbrowser/*
+  () Removed all the old files for the setup dialog, now using David Bishop's
+     .ui files with some polish from me (like putting his name in the "Author"
+     field in the .ui file).
+  () Fixed up the Makefile.am to make the library and the test apps.
+  () Added a factory function.
+  () Removed all the palettes from the deconflict dialog. This takes 150k out
+     of the .ui file. Next challenge is to make it respect the KDE system
+     settings.
 
 2001-10-20  Adriaan de Groot
 
 Worse is when your AGP bus turns out to be broken instead.
 
 * conduits/knotes/knotes-action.{h,cc}
-  Added action resetIndexes which should be called at the end of every phase
+  () Added method resetIndexes which should be called at the end of every phase
   of the sync, basically to reset the counter and list iterator to the 
   beginning of the list of KNotes.
+  () Added method modifyNoteOnPilot which does the modified-notes-to Pilot
+  work. It isn't very robust yet, since it doesn't handle weird cases
+  (modified yet unknown on Pilot, for example) at all.
 
 2001-10-19  Adriaan de Groot
 
