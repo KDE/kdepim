@@ -184,9 +184,7 @@ void TaskView::deleteItemState( QListViewItem *item )
   if( _preferences ) _preferences->deleteEntry( t->uid() );
 }
 
-
-
-void TaskView::closeStorage() { _storage->close(); }
+void TaskView::closeStorage() { _storage->closeStorage( this ); }
 
 
 void TaskView::loadFromFlatFile()

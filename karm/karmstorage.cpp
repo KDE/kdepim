@@ -83,14 +83,22 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   KEMailSettings settings;
 
   // If same file, don't reload
-  if (preferences->iCalFile() == _icalfile) return err;
+  if ( preferences->iCalFile() == _icalfile ) return err;
 
-  // Clear view and calendar from memory.
-  view->clear();
 
-  // If KArm just instantiated, load calendar resources.
-  if ( ! _calendar) _calendar = new KCal::CalendarResources();
-  else close();
+  // If file doesn't exist, create a blank one to avoid ResourceLocal load
+  // error.  We make it user and group read/write, others read.  This is
+  // masked by the users umask.  (See man creat)
+  int handle;
+  handle = open (
+      QFile::encodeName( preferences->iCalFile() ),
+      O_CREAT|O_EXCL|O_WRONLY,
+      S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH
+      );
+  if (handle != -1) close(handle);
+
+  if ( _calendar) closeStorage(view);
+  else _calendar = new KCal::CalendarResources();
 
   // Create local file resource and add to resources
   _icalfile = preferences->iCalFile();
@@ -99,6 +107,7 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   l->setResourceName( QString::fromLatin1("KArm") );
   l->open();
   l->load();
+
   KCal::CalendarResourceManager *m = _calendar->resourceManager();
   m->add(l);
   m->setStandardResource(l);
@@ -195,12 +204,18 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   return err;
 }
 
-void KarmStorage::close()
+void KarmStorage::closeStorage(TaskView* view)
 {
   if ( _calendar )
   {
     if ( _lock ) _calendar->releaseSaveTicket( _lock );
+
     _calendar->close();
+
+    KCal::CalendarResourceManager *m = _calendar->resourceManager();
+    m->remove( m->standardResource() );
+
+    view->clear();
   }
 }
 
@@ -217,7 +232,7 @@ void KarmStorage::save(TaskView* taskview)
 
   _calendar->save(_lock);
   _lock = _calendar->requestSaveTicket
-    (_calendar->resourceManager()->standardResource());
+    ( _calendar->resourceManager()->standardResource() );
 
   kdDebug(5970)
     << "KarmStorage::save : wrote "

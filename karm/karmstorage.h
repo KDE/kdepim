@@ -97,13 +97,8 @@ class KarmStorage
      */
     QString load(TaskView* taskview, const Preferences* preferences);
 
-    /* 
-     * Close the calendar and release the lock.  
-     *
-     * Does not save, call save for that.   
-     *
-     */
-    void close();
+    /* Close calendar and clear view.  Release lock if holding one. */
+    void closeStorage(TaskView* view);
 
     /*
      * Save all tasks and their totals to an iCalendar file.
