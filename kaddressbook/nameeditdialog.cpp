@@ -52,7 +52,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, QWidget *parent, co
   QWidget *page = plainPage();
   QGridLayout *layout = new QGridLayout(page);
   layout->setSpacing(spacingHint());
-  layout->addColSpacing(2, 50);
+  layout->addColSpacing(2, 100);
   QLabel *label;
   
   label = new QLabel(i18n("Honorific prefixes:"), page);
@@ -61,7 +61,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, QWidget *parent, co
   mPrefixCombo->setDuplicatesEnabled(false);
   mPrefixCombo->setEditable(true);
   label->setBuddy( mPrefixCombo );
-  layout->addWidget(mPrefixCombo, 0, 1);
+  layout->addMultiCellWidget(mPrefixCombo, 0, 0, 1, 2);
   
   label = new QLabel(i18n("Given name:"), page);
   layout->addWidget(label, 1, 0);
@@ -87,10 +87,11 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, QWidget *parent, co
   mSuffixCombo->setDuplicatesEnabled(false);
   mSuffixCombo->setEditable(true);
   label->setBuddy( mSuffixCombo );
-  layout->addWidget(mSuffixCombo, 4, 1);
+  layout->addMultiCellWidget(mSuffixCombo, 4, 4, 1, 2);
 
   mParseBox = new QCheckBox( i18n( "Parse name automatically" ), page );
   connect( mParseBox, SIGNAL( toggled(bool) ), SLOT( parseBoxChanged(bool) ) );
+  connect( mParseBox, SIGNAL( toggled(bool) ), SLOT( modified() ) );
   layout->addMultiCellWidget( mParseBox, 5, 5, 0, 1 );
   
   // Fill in the values
