@@ -392,6 +392,12 @@ static const char *s_weekDayName[] =
   "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"
 };
 
+static const char *s_monthName[] =
+{
+  "january", "february", "march", "april", "may", "june", "july",
+  "august", "september", "october", "november", "december"
+};
+
 void Incidence::setRecurrence( KCal::Recurrence* recur )
 {
   mRecurrence.interval = recur->frequency();
@@ -445,12 +451,9 @@ void Incidence::setRecurrence( KCal::Recurrence* recur )
     QPtrList<int> rmd = recur->monthDays();
     int day = !rmd.isEmpty() ? day = *rmd.first() : day = recur->parent()->dtStart().date().day();
     mRecurrence.date = QString::number( day );
-    QValueList<int> monthlist;
-    QValueList<int> leaplist;
-    recur->getYearlyMonthMonths( day, monthlist, leaplist );
-    if ( !monthlist.isEmpty() ) {
-      mRecurrence.month = monthlist.first();
-    }
+    QPtrList<int> months = recur->yearNums();
+    if ( !months.isEmpty() )
+      mRecurrence.month = s_monthName[ *months.first() ];
     break;
   }
   case KCal::Recurrence::rYearlyDay: // YearlyDay (day N of the year)
@@ -612,7 +615,9 @@ void Incidence::saveTo( KCal::Incidence* incidence )
                                 KCal::Recurrence::rMar1, // whichever
                                 mRecurrence.interval,
                                 -1 );
-        recur->addYearlyNum( mRecurrence.month.toInt() );
+        for ( int i = 0; i < 12; ++i )
+          if ( s_monthName[ i ] == mRecurrence.month )
+            recur->addYearlyNum( i );
       } else if ( mRecurrence.type == "yearday" ) {
         recur->setYearly( KCal::Recurrence::rYearlyDay, mRecurrence.interval, -1 );
         recur->addYearlyNum( mRecurrence.dayNumber.toInt() );
