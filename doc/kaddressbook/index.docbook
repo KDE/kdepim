@@ -261,6 +261,15 @@ name &mdash; this configuration can be done in the name edit dialog.
 To specify a
 default formatted name type for new contacts, use the <link linkend="preferences-address-book-contact">configure dialog</link>.
 </para>
+<sect2 id="managing-contacts-im-addresses">
+<title>Instant Messaging</title>
+<para>
+  A contact can have multiple instant addresses associated with it.  At the time of writing, <application>Kopete</application> and
+  <application>Konversation</application> store their information here.  It is recommended that you add and edit instant messaging addresses
+  in <application>Kopete</application> and <application>Konversation</application> rather than here, since they can assist you better in
+  adding the address, adding the user to a group, and so on.
+</para>
+</sect>
 </sect2>
 
       <sect2 id="managing-contacts-crypto-preferences">
