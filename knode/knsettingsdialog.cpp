@@ -90,7 +90,8 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
   setFolderIcon(list, BarIcon("mail_forward"));
 
   // Identity
-  QFrame *frame = addHBoxPage(i18n(" Identity"),i18n("Personal Information"),UserIcon("identity"));
+  QFrame *frame = addHBoxPage(i18n(" Identity"),i18n("Personal Information"),
+			BarIcon("identity", KIcon::SizeMedium ) );
   widgets.append(new KNUserSettings(frame));
 
   // Accounts / News
