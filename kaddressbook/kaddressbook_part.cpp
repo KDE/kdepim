@@ -88,7 +88,7 @@ KAddressbookPart::~KAddressbookPart()
 KAboutData *KAddressbookPart::createAboutData()
 {
   KAboutData *about = new KAboutData("kaddressbook", I18N_NOOP("KAddressBook"),
-                                     "3.0", I18N_NOOP("The KDE Address Book"),
+                                     "3.1beta1", I18N_NOOP("The KDE Address Book"),
                                      KAboutData::License_BSD, 
                                      I18N_NOOP("(c) 1997-2002, The KDE PIM Team"));
   about->addAuthor("Don Sanders",I18N_NOOP("Original author and maintainer"));
