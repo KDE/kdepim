@@ -169,8 +169,8 @@ a daily recurrence, <quote>3 Weeks</quote> for a recurrence which
 triggers on Monday and Wednesday every third week,
 <quote>Login</quote> for a repeat-at-login alarm).</para>
 
-<para>The alarms may be ordered by date/time, repeat interval, color
-or text by clicking on the titlebar for the appropriate column.
+<para>The alarms may be ordered by date/time, repeat interval, color,
+type or text by clicking on the titlebar for the appropriate column.
 To reverse the sort order, click the column titlebar again.</para>
 
 <para>You can optionally show the remaining time until each alarm is
@@ -181,12 +181,16 @@ Times</guimenuitem></menuchoice>.
 To show or hide the time-to-alarm column, select
 <menuchoice><guimenu>View</guimenu><guimenuitem>Show Time To
 Alarms</guimenuitem></menuchoice>. At least one of these columns is
-always shown.</para>
+always shown. You can use the
+<link linkend="preferences-view">Preferences dialog</link> to change
+the default columns to display.</para>
 
 <para>Expired alarms may be shown in the alarm list by selecting
 <menuchoice><guimenu>View</guimenu><guimenuitem>Show Expired
 Alarms</guimenuitem></menuchoice>. To hide them again, repeat the
-action.</para>
+action. You can use the
+<link linkend="preferences-view">Preferences dialog</link> to show
+expired alarms by default.</para>
 
 </sect1>
 
@@ -633,7 +637,7 @@ is limited to being less than the recurrence interval.</para>
 <listitem>
 <para>Select the background color for the alarm message window.
 (The color selection list can be configured in the
-<link linkend="preferences">Preferences dialog</link>.)</para>
+<link linkend="preferences-fontcolour">Preferences dialog</link>.)</para>
 </listitem>
 
 <listitem>
@@ -643,8 +647,8 @@ message. In the <guilabel>Choose Alarm Font &amp; Color</guilabel>
 dialog, check <guilabel>Use default font</guilabel> to display the
 message in whatever font is configured as the default at the time
 the message is displayed. (The default font can be set in the
-<link linkend="preferences">Preferences dialog</link>.) To choose a
-specific font for the message, uncheck
+<link linkend="preferences-fontcolour">Preferences dialog</link>.)
+To choose a specific font for the message, uncheck
 <guilabel>Use default font</guilabel>.</para>
 </listitem>
 
@@ -716,19 +720,20 @@ button.</para>
 which &kmail; identity to use as your email address for sending the
 email. This option only appears if your <guilabel>From</guilabel>
 email address in the
-<link linkend="preferences">Preferences dialog</link> is set to
+<link linkend="preferences-email">Preferences dialog</link> is set to
 <guilabel>Use &kmail; identities</guilabel>. Otherwise your email
 address is preset in the
-<link linkend="preferences">Preferences dialog</link>, rendering this
-option inapplicable.</para>
+<link linkend="preferences-email">Preferences dialog</link>, rendering
+this option inapplicable.</para>
 </listitem>
 
 <listitem>
 <para>Check <guilabel>Copy email to self</guilabel> to send a blind
 copy of the email to yourself when the alarm is triggered. The email
 address to which the copy will be sent may be set in the
-<link linkend="preferences">Preferences dialog</link>, the default
-being your email address set in the &kde; Control Center.</para>
+<link linkend="preferences-email">Preferences dialog</link>, the
+default being your email address set in the &kde; Control
+Center.</para>
 </listitem>
 </itemizedlist>
 </listitem>
@@ -759,8 +764,8 @@ when the alarm is to be triggered. Check <guilabel>Any time</guilabel>
 if you want to specify only a date for the alarm: in this case the
 alarm will be displayed at the first opportunity on or after the
 configured start-of-day time, on the specified date.
-(<link linkend="preferences">Configuring &kalarm;</link> describes
-how to set the start-of-day time.)</para>
+(<link linkend="preferences-general">Configuring &kalarm;</link>
+describes how to set the start-of-day time.)</para>
 
 <para>For a non-recurring alarm, the date/time which you enter must be
 in the future, or if you enter only a date it must be today or later.
@@ -1072,7 +1077,7 @@ alarm message window.</para>
 
 <para>The alarm message window may be displayed in two different
 modes, depending on your preferences. You can choose the mode in the
-<link linkend="preferences">Preferences dialog</link>.</para>
+<link linkend="preferences-view">Preferences dialog</link>.</para>
 
 <itemizedlist>
 <listitem>
@@ -1105,7 +1110,7 @@ indicates that alarms are not being monitored.</para>
 summary of the first few message alarms due in the next 24 hours are
 displayed as a tooltip. You can switch this feature off, or configure
 the number of alarms to display and their format, in the
-<link linkend="preferences">Preferences dialog</link>.</para>
+<link linkend="preferences-view">Preferences dialog</link>.</para>
 
 <para><mousebutton>Left</mousebutton> click on the system tray icon to
 toggle between displaying and hiding the &kalarm; main window.</para>
@@ -1155,7 +1160,7 @@ includes options relating to the &kalarm; system tray icon.</para>
 <listitem><para><action>Restores or minimizes the main &kalarm; window.</action></para>
 <para>This option is only available if the run mode is
 <quote>continuous</quote>. (See
-<link linkend="preferences">Configuring &kalarm;</link> for a
+<link linkend="preferences-general">Configuring &kalarm;</link> for a
 description of run modes.)</para>
 </listitem>
 </varlistentry>
@@ -1180,8 +1185,9 @@ while not running</guilabel> in the Preferences dialog.</para>
 &kalarm; in the system tray. If &kalarm; is running in
 <quote>continuous</quote> mode, the system tray icon is always
 displayed. These instructions apply only to <quote>on-demand</quote>
-mode. (See <link linkend="preferences">Configuring &kalarm;</link>
-for a description of run modes.)</para>
+mode. (See
+<link linkend="preferences-general">Configuring &kalarm;</link> for a
+description of run modes.)</para>
 
 <para>To display &kalarm; in the &kde; system tray, select <menuchoice>
 <guimenu>View</guimenu><guimenuitem>Show in System Tray</guimenuitem>
@@ -2014,7 +2020,8 @@ time.</para>
   <entry><option>--recurrence
   <replaceable>spec</replaceable></option></entry>
   <entry>Set the alarm to recur. Specify the recurrence using iCalendar
-  syntax (defined in RFC2445),
+  syntax (defined in
+  <ulink url="http://www.w3.org/2002/12/cal/rfc2445.html">RFC2445</ulink>),
   &eg; <quote>FREQ=MONTHLY;COUNT=4;INTERVAL=3;BYDAY=-1MO</quote>.
   <option>--until</option> cannot be specified with this
   option.</entry>
@@ -2224,8 +2231,8 @@ below.</para>
 
 <para>The <application>alarm daemon</application> is normally started
 at &kde; session login (unless you disable auto start in the
-<link linkend="preferences">Preferences dialog</link> and then cease
-to use &kalarm;), and runs continuously until logout. If for any
+<link linkend="preferences-general">Preferences dialog</link> and then
+cease to use &kalarm;), and runs continuously until logout. If for any
 reason it is not running, alarm monitoring will not occur and &kalarm;
 will not display or execute any alarms.</para>
 
@@ -3480,6 +3487,25 @@ daemon</application> use?</para>
 <para>The file <filename>$KDEHOME/share/config/kalarmdrc</filename>
 holds your <application>alarm daemon</application> preferences,
 together with details of the &kalarm; client application.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>What format are alarms stored in?</para>
+</question>
+<answer>
+<para>The calendar files in which &kalarm; stores its alarms are text
+files whose format is defined by the document
+<ulink url="http://www.w3.org/2002/12/cal/rfc2445.html">RFC2445 -
+Internet Calendaring and Scheduling Core Object Specification
+(iCalendar)</ulink>. This is the standard format used by all kdepim
+applications. &kalarm; uses certain non-standard properties in the
+Alarm component, in conformance with RFC2445:
+<literal>X-KDE-KALARM-TYPE</literal>,
+<literal>X-KDE-KALARM-FONTCOLOR</literal>,
+<literal>X-KDE-KALARM-VOLUME</literal>,
+<literal>X-KDE-KALARM-KMAILID</literal>.</para>
 </answer>
 </qandaentry>
 
