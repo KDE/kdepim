@@ -259,6 +259,7 @@ int SyncAction::questionYesNoCancel(const QString & text,
 		startTickle(timeout);
 	}
 
+#if KDE_IS_VERSION(3,3,0)
 	r = KMessageBox::createKMessageBox(dialog,
 		QMessageBox::Question,
 		text,
@@ -266,6 +267,10 @@ int SyncAction::questionYesNoCancel(const QString & text,
 		(key.isEmpty() ? QString::null : i18n("&Do not ask again")),
 		&checkboxReturn,
 		0);
+#else
+	r = KDialogBase::Cancel;
+#endif
+
 	switch(r)
 	{
 	case KDialogBase::Yes : result=KMessageBox::Yes ; break;
