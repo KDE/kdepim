@@ -1,8 +1,6 @@
-KDE_CXXFLAGS = -DQT_NO_ASCII_CAST
-
 INCLUDES=$(all_includes)
 
-bin_PROGRAMS = test
+noinst_PROGRAMS = test
 test_SOURCES = test.cpp
 test_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 test_LDADD = $(top_builddir)/rmm/librmm.la $(LIB_QT)

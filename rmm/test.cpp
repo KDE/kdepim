@@ -1,3 +1,4 @@
+#include <iostream>
 #include <qstring.h>
 #include <qdir.h>
 #include <qstringlist.h>
@@ -33,7 +34,7 @@
 main(int argc, char ** argv)
 {
   if (argc != 2) {
-    qDebug("Usage: " + QString(argv[0]) + " <maildir path>");
+    cerr << "Usage: " << argv[0] << " <maildir path>" << endl;
     exit(1);
   }
       
@@ -55,7 +56,7 @@ main(int argc, char ** argv)
     QFile f(path + "/" + *it);
 
     if (!f.open(IO_ReadOnly)) {
-      qDebug("Cannot open " + path + "/" + *it);
+      cerr << "Cannot open " << path << "/" << *it << endl;
       exit(1);
     }
 
@@ -76,6 +77,10 @@ main(int argc, char ** argv)
 
   QTime t2(QTime::currentTime());
 
-  qDebug("Parse time: " + QString::number(t.secsTo(t2)) + "." + QString::number(t.msecsTo(t2) - t.secsTo(t2) * 1000));
+  cerr  << "Parse time: "
+        << t.secsTo(t2)
+        << "."
+        << t.msecsTo(t2) - t.secsTo(t2) * 1000
+        << endl;
 }
 
