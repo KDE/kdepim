@@ -919,13 +919,15 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
                       << i->type() << endl;
           }
           i->setUid( uid );
-          i->setCustomProperty( "SLOX", "ID", uid );
+          i->setCustomProperty( "SLOX", "ID", sloxId );
 
           disableChangeNotification();
           mCalendar.deleteIncidence( mUploadedIncidence );
           mCalendar.addIncidence( i );
           mCalendar.save( cacheFile() );
           enableChangeNotification();
+
+          emit resourceChanged( this );
         }
       }
     }
