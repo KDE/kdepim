@@ -42,6 +42,7 @@
 #include <kmessagebox.h>
 #include <ktempfile.h>
 #include <kurl.h>
+#include <kabc/vcardconverter.h>  // for time-conversion functions
 
 #include <kdebug.h>
 
@@ -90,8 +91,11 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
     return addrList;
   }
 
-  QString empty;
-
+  QDateTime dtDefault;
+  dtDefault = QFileInfo(file).lastModified();
+  if ( !dtDefault.isValid() )
+    dtDefault = QDateTime::currentDateTime();
+  
   QTextStream t( &file );
   t.setEncoding( QTextStream::Latin1 );
   QString s, completeline, fieldname;
@@ -99,6 +103,7 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
   bool lastWasComment = false;
 
   KABC::Addressee a;
+  a.setRevision(dtDefault);
   KABC::Address homeAddr( KABC::Address::Home );
   KABC::Address workAddr( KABC::Address::Work ); 
   while ( !t.eof() ) {
@@ -119,6 +124,7 @@ writeData:
 
       // delete old and create a new empty address entry
       a = KABC::Addressee();
+      a.setRevision(dtDefault);
       homeAddr = KABC::Address( KABC::Address::Home );
       workAddr = KABC::Address( KABC::Address::Work );
 
@@ -217,10 +223,15 @@ addComment:
          fieldname == QString::fromLatin1( "custom4" ) )
       goto addComment;
 
-    if ( a.url().isEmpty() && ( fieldname == QString::fromLatin1( "homeurl" ) ||
-         fieldname == QString::fromLatin1( "workurl" ) ) ) {
-      a.setUrl( s );  // only one URL allowed, ignore the other one
-      continue;
+    if ( fieldname == QString::fromLatin1( "homeurl" ) ||
+         fieldname == QString::fromLatin1( "workurl" ) ) {
+      if (a.url().isEmpty()) {
+        a.setUrl( s );
+        continue;
+      }
+      if ( a.url().prettyURL() == KURL(s).prettyURL() )
+        continue;
+      // only one URL possible with kabc; print error message below...
     }
 
     if ( fieldname == QString::fromLatin1( "homephone" ) ) {
@@ -362,11 +373,19 @@ addComment:
       continue;
     }
 
-    if ( fieldname == QString::fromLatin1( "modifytimestamp" ) ||
-         fieldname == QString::fromLatin1( "objectclass" ) ) // ignore 
+    if ( fieldname == QString::fromLatin1( "modifytimestamp" ) ) {
+      QDateTime dt = KABC::VCardStringToDate( s );
+      if ( dt.isValid() ) {
+          a.setRevision(dt);
+          continue;
+      }
+    }
+
+    if ( fieldname == QString::fromLatin1( "objectclass" ) ) // ignore 
       continue;
 
-    kdWarning() << "LDIF import filter: Unable to handle line: " << completeline << endl;
+    kdWarning() << QString("LDIF import filter: Unable to handle line: %1  for  %2\n")
+	.arg(completeline).arg(a.formattedName());
   }
 
   file.close();
@@ -411,7 +430,7 @@ bool LDIFXXPort::exportContacts( const KABC::AddresseeList &list, const QString&
   }
 }
 
-static void ldif_out( QTextStream *t, QString str, QString field )
+static void ldif_out( QTextStream *t, const QString &str, const QString &field )
 {
   if ( field.isEmpty() )
     return;
@@ -482,6 +501,8 @@ void LDIFXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
     ldif_out( &t, "workurl: %1\n", (*it).url().prettyURL() );
     ldif_out( &t, "homeurl: %1\n", (*it).url().prettyURL() );
     ldif_out( &t, "description:: %1\n", KCodecs::base64Encode( (*it).note().utf8() ) );
+    if ((*it).revision().isValid())
+      ldif_out(&t, "modifytimestamp: %1Z\n", KABC::dateToVCardString((*it).revision()));
 
     t << "objectclass: top\n";
     t << "objectclass: person\n";
