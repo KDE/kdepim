@@ -20,10 +20,15 @@
 
 #include "sloxaccounts.h"
 
+#include <libkcal/freebusyurlstore.h>
+
 #include <kabc/stdaddressbook.h>
 
 #include <kstaticdeleter.h>
 #include <kdebug.h>
+
+QString SloxAccounts::mServer;
+QString SloxAccounts::mDomain;
 
 SloxAccounts *SloxAccounts::mSelf = 0;
 KStaticDeleter<SloxAccounts> selfDeleter;
@@ -46,9 +51,26 @@ SloxAccounts::SloxAccounts()
 #endif
 }
 
+void SloxAccounts::setServer( const QString &server )
+{
+  mServer = server;
+
+  QStringList l = QStringList::split( '.', server );
+
+  if ( l.count() < 2 ) mDomain = server;
+  else mDomain = l[ l.count() - 2 ] + "." + l[ l.count() - 1 ];
+}
+
 void SloxAccounts::insertUser( const QString &id, const KABC::Addressee &a )
 {
   mUsers.replace( id, a.uid() );
+
+  QString email = id + "@" + mDomain;
+  
+  QString url = "http://" + mServer + "/servlet/webdav.freebusy?username=";
+  url += id + "&server=" + mDomain;
+
+  KCal::FreeBusyUrlStore::self()->writeUrl( email, url );
 }
 
 KABC::Addressee SloxAccounts::lookupUser( const QString &id )

@@ -68,6 +68,8 @@ void ResourceSlox::init( const KURL &url,
   mURL = url;
   mUser = user;
   mPassword = password;
+
+  SloxAccounts::setServer( mURL.host() );
 }
 
 ResourceSlox::~ResourceSlox()

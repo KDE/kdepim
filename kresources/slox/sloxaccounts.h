@@ -27,6 +27,8 @@ class SloxAccounts
   public:
     static SloxAccounts *self();
 
+    static void setServer( const QString & );
+
     void insertUser( const QString &id, const KABC::Addressee &a );
   
     KABC::Addressee lookupUser( const QString &id );
@@ -35,6 +37,9 @@ class SloxAccounts
     SloxAccounts();
   
     static SloxAccounts *mSelf;
+
+    static QString mServer;
+    static QString mDomain;
 
     QMap<QString, QString> mUsers; // map users ids to kabc uids.
 };
