@@ -8,8 +8,8 @@ using namespace KitchenSync;
 KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   :
   KParts::MainWindow( widget, name, f ){
-
-
+  setXMLFile("ksyncgui.rc");
+  menuBar()->show();
 };
 
 KSyncMainWindow::~KSyncMainWindow()
