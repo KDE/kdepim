@@ -37,17 +37,10 @@ addressbooks will appear in the user interface, and be accessible through
 the API.
 </P>
 <P>
-Addressbooks will be communicated with via TCP/IP. A standard protocol will be
+Addressbooks will be communicated with via DCOP. A standard protocol will be
 used that provides a consistent interface and allows for accessing entities
 within each addressbook. This interface will not be visible to the user nor
 the application programmer as it will be hidden behind the API.
-</P>
-<P>
-An addressbook will know what format it is stored in. At initialisation it
-will attempt to load a plugin to handle storage for its format type. If this
-attempt is unsuccessful - either the plugin cannot be loaded or the plugin
-cannot access its data store, the addressbook will be considered unusable
-and ignored by the API library.
 </P>
 <P>
 At any point in time, on user request, an addressbook object may attempt to

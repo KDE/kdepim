@@ -1,11 +1,4 @@
-Test design + implementation for kab2.
-The server side is mostly covered in the pim/corba directory - check there for
-the idl too.
-The parts of the server that live here are backends and filters.
+The KDE addressbook, version 2.
 
-Look at README in each subdir for notes about each component.
-
-Look in the doc directory for related documentation.
-
-Contact Rik <rik@kde.org> with any questions, comments etc.
+Questions, comments etc. should be directed to kde-pim@kde.org
 

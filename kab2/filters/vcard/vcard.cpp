@@ -12,18 +12,18 @@
 #include "VCardNValue.h"
 #include "VCardTextValue.h"
 
-#include <KabEntity.h>
-#include <Kab2.h>
+#include "Entity.h"
+#include "KAddressBook.h"
 
 extern "C" {
-int import(const char *, KAB::AddressBook *);
+int import(const char * data, const char * addressBookName);
 }
 
-int import(const char * _str, KAB::AddressBook * ab) 
+int import(const char * data, KAB::AddressBook * ab) 
 {
   Q_UINT32 imported(0);
   
-  QCString str(_str);
+  QCString str(data);
   
   VCARD::VCardEntity v(str);
   VCARD::VCardList cardList = v.cardList();
@@ -31,7 +31,7 @@ int import(const char * _str, KAB::AddressBook * ab)
     
   for (int imported = 0; it.current(); ++it, imported++) {
 
-    KAB::Entity * e = new KAB::Entity;
+    Entity e;
     
     VCARD::ContentLineList contentLineList = it.current()->contentLineList();
 
@@ -46,12 +46,8 @@ int import(const char * _str, KAB::AddressBook * ab)
       QCString  value = line->value()->asString();
       QCString  name  = line->name();
 
-
       QByteArray data = value.data();
       int dataLength = value.length();
-      
-      
-
       
     }
   }

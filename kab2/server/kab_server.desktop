@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec=kab_server --name %n --path %b
+Terminal=0
+BinaryPattern=kab_server
+Comment=KDE Addressbook
+Name=Addressbook
+X-KDE-ServiceType=Addressbook/Server
+

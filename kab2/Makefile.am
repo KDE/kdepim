@@ -1,1 +1,1 @@
-SUBDIRS = lib server backends
+SUBDIRS = lib server

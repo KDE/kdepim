@@ -1,22 +1,5 @@
-Test implementation of a kab server.
 
-Notes:
+Well, this is now the 3rd (4th?) implementation of KabII.
 
-* You can start one (or more) of these on any machine accessible from your
-  client.
-
-* To start it, use kab_server <format> <location>, where <location> is an URL.
-  The simplest form is probably 'kab_server gdbm /tmp/kab'.
-  This will create an AddressBook object which loads a plugin to handle gdbm
-  format data, and which uses /tmp/kab as its data store.
-
-* Requests are served on port 6566 (ASCII 'AB').
-
-* The server fork()s on each incoming connection.
-
-* Locking is non-existant at the moment.
-
-* Documentation describing the protocol used is in ../doc
-
-Questions, comments etc. should be directed to Rik <rik@kde.org>
+Hopefully this time we've cracked it.
 
