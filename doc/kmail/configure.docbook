@@ -373,8 +373,13 @@ message will be encoded when it is sent. <guilabel>Allow
 as accented letters will be sent as-is. If <guilabel>MIME Compliant
 (Quoted Printable)</guilabel> is selected, special characters will be
 encoded using standard &MIME; encodings, which may be more portable to
-other mailing systems than 8-bit <acronym>ASCII</acronym>. You normally
-do not need to change the default.<!-- TODO: advise what is better --></para>
+other mailing systems than 8-bit <acronym>ASCII</acronym>. 
+We recommend to use <guilabel>MIME Compliant</guilabel>.</para>
+
+<note><para>Even with <guilabel>Allow 8-bit</guilabel>
+selected &kmail; will use <guilabel>MIME
+Compliant</guilabel> encoding in some situations, for
+example for sending cryptographically signed messages.</para></note>
 
 <para><guilabel>Default domain</guilabel> lets you specify which domain name
 should be used to complete email addresses that only consist of the recipient's user
