@@ -43,6 +43,8 @@ XXPortObject::XXPortObject( KABC::AddressBook *ab, QWidget *parent,
   : QObject( parent, name ), mAddressBook( ab ), mParentWidget( parent ),
     d( new XXPortObjectPrivate )
 {
+  setInstance( new KInstance( "kaddressbook" ) );
+
   d->mExportMapper = new QSignalMapper( this );
   d->mImportMapper = new QSignalMapper( this );
 
