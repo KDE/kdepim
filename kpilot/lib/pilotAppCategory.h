@@ -3,6 +3,7 @@
 /* pilotAppCategory.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** The class PilotAppCategory is the base class for "interpretations"
 ** of a PilotRecord. This is where the records change from a collection
@@ -37,12 +38,13 @@
 // #include <pi-macros.h>
 
 #include <qstring.h>
+#include <pi-appinfo.h>
 
 #include "pilotRecord.h"
 
 class QTextCodec;
 
-class PilotAppCategory
+class KDE_EXPORT PilotAppCategory
 {
 protected:			// Use protected since we will be subclassed
 	int fAttrs;	        // Attributes on this record
@@ -64,7 +66,7 @@ protected:			// Use protected since we will be subclassed
 	* otherwise @p buf. Set @p size to the actual size of data returned.
 	* (all of this is dictated by the pilot-link interfaces).
 	*/
-	virtual void *pack(void *buf, int *size) = 0;
+	virtual void *pack_(void *buf, int *size) = 0;
 	virtual void unpack(const void *, int = 0) = 0;
 
 
@@ -81,10 +83,10 @@ public:
 		fCategory(c)
 	{} ;
 
-	PilotAppCategory(PilotRecord* rec) :
+	PilotAppCategory(const PilotRecord* rec) :
 		fAttrs((rec)?rec->getAttrib():0),
-		fId((rec)?rec->getID():0),
-		fCategory((rec)?rec->getCat():0)
+		fId((rec)?rec->id():0),
+		fCategory((rec)?rec->category():0)
 	{} ;
 
 	PilotAppCategory(const PilotAppCategory &copyFrom) :
@@ -111,15 +113,7 @@ public:
 	/** @return a PilotRecord that contains all of the info of the
 	*  subclass.  Remember to delete the PilotRecord when finished.
 	*/
-	virtual PilotRecord* pack()
-	{
-		int len = PilotRecord::APP_BUFFER_SIZE;
-		void* buff = new unsigned char[len];
-		pack(buff, &len);
-		PilotRecord* rec =  new PilotRecord(buff, len, getAttrib(), getCat(), id());
-		delete [] (unsigned char*)buff;
-		return rec;
-	}
+	virtual PilotRecord* pack();
 
 	int getAttrib(void) const { return fAttrs; }
 	int getCat(void) const { return fCategory; }
@@ -148,6 +142,29 @@ public:
 		{ if (pilotCodec) return pilotCodec; else return setupPilotCodec(QString::null); } ;
 	static QTextCodec *setupPilotCodec(const QString &);
 	static QString codecName();
+
+
+public:
+	bool setCat(struct CategoryAppInfo &info,const QString &label);
+
+	static void dumpCategories(const struct CategoryAppInfo &info)
+	{
+#ifdef DEBUG
+		FUNCTIONSETUP;
+		DEBUGCONDUIT << fname << " lastUniqueId"
+			<< info.lastUniqueID << endl;
+		for (int i = 0; i < 16; i++)
+		{
+			if (!info.name[i][0]) continue;
+			DEBUGCONDUIT << fname << ": " << i << " = "
+				<< info.ID[i] << " <"
+				<< info.name[i] << ">" << endl;
+		}
+#else
+		Q_UNUSED(info);
+#endif
+	}
 };
+
 
 #endif

@@ -3,6 +3,7 @@
 /* pilotDaemonDCOP.h			KPilotDaemon
 **
 ** Copyright (C) 2000 by Adriaan de Groot
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the DCOP interface for
 ** the KPilotDaemon. The daemon has *two* interfaces:
@@ -34,8 +35,6 @@
 #include <dcopobject.h>
 #include <qdatetime.h>
 #include <qstringlist.h>
-class QDateTime;
-class QStringList;
 
 class PilotDaemonDCOP : virtual public DCOPObject
 {
@@ -59,6 +58,7 @@ k_dcop:
 	*/
 	virtual ASYNC quitNow() = 0;
 	virtual ASYNC reloadSettings() = 0; // Indicate changed config file.
+	virtual ASYNC setTempDevice(QString d) =0; // use this device
 	virtual void stopListening() = 0;
 	virtual void startListening() = 0;
 	virtual bool isListening() =0 ;
@@ -78,9 +78,17 @@ k_dcop:
 	virtual QString userName() = 0;
 	virtual QString pilotDevice() = 0;
 	virtual bool killDaemonOnExit() = 0;
+   
+	/**
+	* Some other useful functionality
+	*/
+	virtual void addInstallFiles(const QStringList &) = 0;
+
 
 k_dcop_signals:
 	void kpilotDaemonStatusChanged();
+	// used to push status information 
+	void kpilotDaemonStatusDetails( QDateTime, QString, QStringList, QString, QString, QString, bool );
 } ;
 
 #endif

@@ -3,6 +3,7 @@
 /* kpilot.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is the main program in KPilot.
 */
@@ -92,16 +93,22 @@ private:
 	*/
 protected:
 	void killDaemonIfNeeded();
-public:
-	void startDaemonIfNeeded();
 
 public slots:
+	/**
+	* These are slots for the menu actions for each kind of
+	* sync that can be requested.
+	*/
 	void slotRestoreRequested();
 	void slotBackupRequested();
 	void slotHotSyncRequested();
-	void slotListSyncRequested();
+	void slotTestSyncRequested();
 	void slotFastSyncRequested();
+	void slotFullSyncRequested();
+	void slotHHtoPCRequested();
+	void slotPCtoHHRequested();
 
+	void startDaemonIfNeeded();
 
 	/**
 	* These are slots for the standard Configure ...
@@ -109,7 +116,6 @@ public slots:
 	* functionality is in kdelibs starting with KDE 3.1,
 	* but we need to remain backwards compatible.
 	*/
-	void optionsShowToolbar();
 	void optionsConfigureKeys();
 	void optionsConfigureToolbars();
 
@@ -121,11 +127,13 @@ public:
 	virtual ASYNC daemonStatus(int);
 	virtual int kpilotStatus();
 
+public slots:
 	/**
 	* This is the DCOP interface from the daemon to KPilot
 	* to configure KPilot.
 	*/
 	virtual ASYNC configure();
+	virtual ASYNC configureWizard();
 
 protected:
 	void readConfig();
@@ -137,6 +145,11 @@ protected:
 	bool componentPreSync();
 	void setupSync(int kind,const QString& msg);
 	void componentPostSync();
+	/**
+	* Run after a configuration change to force
+	* the viewers to re-load data.
+	*/
+	void componentUpdate();
 
 	void initIcons();
 	void initMenu();
@@ -166,8 +179,6 @@ private:
 
 protected slots:
 	void quit();
-	void slotConfigureKPilot();
-	void slotConfigureWizard();
 	void fileInstalled(int which);
 	void slotNewToolbarConfig();
 

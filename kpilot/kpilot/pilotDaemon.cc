@@ -1,7 +1,8 @@
-/* pilotDaemon.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 ** Copyright (C) 2001-2004 by Adriaan de Groot
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is the KPilot Daemon, which does the actual communication with
 ** the Pilot and with the conduits.
@@ -29,9 +30,6 @@
 */
 static const char *pilotdaemon_id =
 	"$Id$";
-
-// Heck yeah.
-#define ENABLE_KROUPWARE
 
 #include "options.h"
 
@@ -70,10 +68,6 @@ static const char *pilotdaemon_id =
 
 #include "kpilotConfig.h"
 
-#ifdef ENABLE_KROUPWARE
-#include "kroupware.h"
-#endif
-
 
 #include "kpilotDCOP_stub.h"
 #include "kpilotDCOP.h"
@@ -85,6 +79,7 @@ static KAboutData *aboutData = 0L;
 
 PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 	KSystemTray(0, "pilotDaemon"),
+	fSyncTypeMenu(0L),
 	daemon(p),
 	kap(0L),
 	fBlinkTimer(0L)
@@ -154,7 +149,7 @@ void PilotDaemonTray::setupWidget()
 	FUNCTIONSETUP;
 
 	KGlobal::iconLoader()->addAppDir( CSL1("kpilot") );
-	icons[Normal] = loadIcon( CSL1("hotsync") );
+	icons[Normal] = loadIcon( CSL1("kpilot") );
 	icons[Busy] = loadIcon( CSL1("busysync") );
 	icons[NotListening] = loadIcon( CSL1("nosync") );
 
@@ -169,21 +164,34 @@ void PilotDaemonTray::setupWidget()
 		daemon, SLOT(slotRunConfig()));
 	menu->insertSeparator();
 
-	KPopupMenu *synctype = new KPopupMenu(menu,"sync_type_menu");
-#define MI(a,b) synctype->insertItem( \
-		KGlobal::iconLoader()->loadIconSet(b,KIcon::Small,0,true), \
-		SyncAction::syncModeName(SyncAction::a), \
+	fSyncTypeMenu = new KPopupMenu(menu,"sync_type_menu");
+	QString once = i18n("Appended to names of sync types to indicate the sync will happen just one time"," (once)");
+#define MI(a) fSyncTypeMenu->insertItem( \
+		SyncAction::syncModeName(SyncAction::a) + once, \
 		(int)(SyncAction::a));
-	MI(eHotSync,"hotsync");
-	MI(eFastSync,"fastsync");
-	MI(eBackup,"backup");
+	fSyncTypeMenu->insertItem(i18n("Default (%1)")
+		.arg(SyncAction::syncModeName((SyncAction::SyncMode)KPilotSettings::syncType())),
+		0);
+	fSyncTypeMenu->insertSeparator();
+
+        // Keep this synchronized with kpilotui.rc and kpilot.cc if at all possible.
+	MI(eHotSync);
+	MI(eFastSync);
+	MI(eFullSync);
+	MI(eBackup);
+	MI(eRestore);
+	MI(eCopyHHToPC);
+	MI(eCopyPCToHH);
+
+	fSyncTypeMenu->setCheckable(true);
+	fSyncTypeMenu->setItemChecked(0,true);
 #undef MI
-	connect(synctype,SIGNAL(activated(int)),daemon,SLOT(requestSync(int)));
-	menu->insertItem(i18n("Next &Sync"),synctype);
+	connect(fSyncTypeMenu,SIGNAL(activated(int)),daemon,SLOT(requestSync(int)));
+	menu->insertItem(i18n("Next &Sync"),fSyncTypeMenu);
 
 	KHelpMenu *help = new KHelpMenu(menu,aboutData);
 	menu->insertItem(
-		KGlobal::iconLoader()->loadIconSet("help",KIcon::Small,0,true),
+		KGlobal::iconLoader()->loadIconSet(CSL1("help"),KIcon::Small,0,true),
 		i18n("&Help"),help->menu(),false /* no whatsthis */);
 
 
@@ -293,7 +301,8 @@ PilotDaemon::PilotDaemon() :
 	fLogFile(0L),
 	fLogStub(new LoggerDCOP_stub("kpilot", "LogIface")),
 	fLogFileStub(new LoggerDCOP_stub("kpilotDaemon", "LogIface")),
-	fKPilotStub(new KPilotDCOP_stub("kpilot", "KPilotIface"))
+	fKPilotStub(new KPilotDCOP_stub("kpilot", "KPilotIface")),
+	fTempDevice(QString::null)
 {
 	FUNCTIONSETUP;
 
@@ -410,6 +419,16 @@ void PilotDaemon::showTray()
 	updateTrayStatus();
 }
 
+/* DCOP ASYNC */ void PilotDaemon::setTempDevice(QString d)
+{
+	if ( !d.isEmpty() ){
+		fTempDevice = d;
+		if (fPilotLink)
+			fPilotLink->setTempDevice( fTempDevice );
+		reloadSettings();
+	}
+}
+
 /* DCOP ASYNC */ void PilotDaemon::reloadSettings()
 {
 	FUNCTIONSETUP;
@@ -446,9 +465,11 @@ void PilotDaemon::showTray()
 		<< endl;
 	DEBUGDAEMON << fname
 		<< ": Got conduit list "
-		<< (KPilotSettings::installedConduits().join(","))
+		<< (KPilotSettings::installedConduits().join(CSL1(",")))
 		<< endl;
 #endif
+
+	requestSync(SyncAction::eDefaultSync);
 
 
 	if (fPilotLink)
@@ -460,7 +481,21 @@ void PilotDaemon::showTray()
 			<< endl;
 #endif
 
-		fPilotLink->reset( KPilotSettings::pilotDevice());
+		fPilotLink->reset( KPilotSettings::pilotDevice() );
+#ifdef DEBUG
+		DEBUGDAEMON << fname
+			<< ": Using workarounds "
+			<< KPilotSettings::workarounds()
+			<< endl;
+#endif
+		if ( KPilotSettings::workarounds() == KPilotSettings::eWorkaroundUSB )
+		{
+#ifdef DEBUG
+			DEBUGDAEMON << fname
+				<< ": Using Zire31 USB workaround." << endl;
+#endif
+			fPilotLink->setWorkarounds(true);
+		}
 	}
 
 	if (KPilotSettings::dockDaemon())
@@ -567,7 +602,7 @@ bool PilotDaemon::setupPilotLink()
 	FUNCTIONSETUP;
 
 	KPILOT_DELETE(fPilotLink);
-	fPilotLink = new KPilotDeviceLink();
+	fPilotLink = new KPilotDeviceLink( 0, 0, fTempDevice );
 	if (!fPilotLink)
 	{
 		kdWarning() << k_funcinfo
@@ -631,9 +666,23 @@ bool PilotDaemon::setupPilotLink()
 	FUNCTIONSETUP;
 
 
-	if ( (mode>=0) && (mode<=SyncAction::eRestore))
+	if ( (mode>=0) && (mode<=SyncAction::eLastMode))
 	{
-		fNextSyncType = (SyncAction::SyncMode) mode;
+		if (((int)SyncAction::eDefaultSync)==mode)
+		{
+			fNextSyncType = (SyncAction::SyncMode) KPilotSettings::syncType();
+			if ( (((int)SyncAction::eDefaultSync) == fNextSyncType) ||
+				(fNextSyncType < 0) || (fNextSyncType > SyncAction::eLastMode) )
+			{
+				// Bad mode set in config file.
+				kdWarning() << k_funcinfo << ": Bad mode set in config file." << endl;
+				fNextSyncType = SyncAction::eHotSync;
+			}
+		}
+		else
+		{
+			fNextSyncType = (SyncAction::SyncMode) mode;
+		}
 #ifdef DEBUG
 		DEBUGDAEMON << fname
 			<< ": Next sync is: "
@@ -644,9 +693,23 @@ bool PilotDaemon::setupPilotLink()
 	else
 	{
 		kdWarning() << k_funcinfo << ": Ignored fake sync type " << mode << endl;
+		return;
 	}
 
 	updateTrayStatus();
+
+	if (fTray && (fTray->fSyncTypeMenu))
+	{
+		for (int i=((int)SyncAction::eDefaultSync);
+			i<=((int)SyncAction::eLastUserMode) /* Restore */ ;
+			++i)
+		{
+			fTray->fSyncTypeMenu->setItemChecked(i,mode==i);
+		}
+	}
+
+	getLogger().logMessage(i18n("Next HotSync will be: %1. ").arg(syncTypeString(fNextSyncType)) +
+		i18n("Please press the HotSync button."));
 }
 
 /* DCOP ASYNC */ void PilotDaemon::requestSyncType(QString s)
@@ -662,9 +725,10 @@ bool PilotDaemon::setupPilotLink()
 	else if (s.startsWith(CSL1("T"))) requestSync(SyncAction::eTest);
 	else if (s.startsWith(CSL1("CopyHHToPC"))) requestSync(SyncAction::eCopyHHToPC);
 	else if (s.startsWith(CSL1("CopyPCToHH"))) requestSync(SyncAction::eCopyPCToHH);
+	else if (s.startsWith(CSL1("D"))) requestSync(SyncAction::eDefaultSync);
 	else
 	{
-		kdWarning() << ": Unknown sync type " << ( s.isEmpty() ? "<none>" : s )
+		kdWarning() << ": Unknown sync type " << ( s.isEmpty() ? CSL1("<none>") : s )
 			<< endl;
 	}
 }
@@ -693,17 +757,19 @@ static QDict<QString> *conduitNameMap = 0L;
 
 static void fillConduitNameMap()
 {
-	if (!conduitNameMap)
+	if ( !conduitNameMap )
 	{
 		conduitNameMap = new QDict<QString>;
-		// Fill with internal settings.
-		conduitNameMap->insert(CSL1("internal_fileinstall"),new QString(i18n("File Installer")));
-		conduitNameMap->insert(CSL1("internal_kroupware"),new QString(i18n("Kroupware")));
-
 		conduitNameMap->setAutoDelete(true);
 	}
+	conduitNameMap->clear();
 
 	QStringList l = KPilotSettings::installedConduits();
+	// Fill with internal settings.
+	if ( l.find( CSL1("internal_fileinstall") ) != l.end() ) {
+		conduitNameMap->insert( CSL1("internal_fileinstall"),
+		                        new QString(i18n("File Installer")) );
+	}
 
 	QStringList::ConstIterator end = l.end();
 	for (QStringList::ConstIterator i = l.begin(); i != end; ++i)
@@ -720,7 +786,7 @@ static void fillConduitNameMap()
 			{
 				readableName = o->name();
 			}
-			conduitNameMap->insert(*i,new QString(readableName));
+			conduitNameMap->insert( *i, new QString(readableName) );
 		}
 	}
 }
@@ -885,63 +951,13 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 	return true;
 }
 
-static int checkKroupware(ActionQueue *fSyncStack,
-	KPilotDeviceLink *pilotLink,
-	const QStringList &conduits,
-	QString &errreturn,
-	bool &syncWithKMail)
-{
-	FUNCTIONSETUP;
-	int _kroupwareParts = 0;
-#ifdef ENABLE_KROUPWARE
-
-	syncWithKMail =  (conduits.findIndex( CSL1("internal_kroupware") ) >= 0) ;
-	if (!syncWithKMail) return 0;
-
-	QString errmsg;
-	if (!KroupwareSync::startKMail(&errmsg))
-	{
-		errreturn = i18n("Could not start KMail. The "
-			"error message was: %1.").arg(errmsg);
-	}
-
-	if (conduits.findIndex( CSL1("vcal-conduit") ) >= 0 )
-		_kroupwareParts |= KroupwareSync::Cal ;
-	if (conduits.findIndex( CSL1("todo-conduit") ) >= 0 )
-		_kroupwareParts |= KroupwareSync::Todo ;
-	if (conduits.findIndex( CSL1("knotes-conduit") ) >= 0 )
-		_kroupwareParts |= KroupwareSync::Notes ;
-	if (conduits.findIndex( CSL1("abbrowser_conduit") ) >= 0 )
-		_kroupwareParts |= KroupwareSync::Address ;
-
-	fSyncStack->addAction(new KroupwareSync(true /* pre-sync */,
-		_kroupwareParts,pilotLink));
-#endif
-	return _kroupwareParts;
-}
-
-static void finishKroupware(ActionQueue *fSyncStack,
-	KPilotDeviceLink *pilotLink,
-	int kroupwareParts,
-	bool syncWithKMail)
-{
-#ifdef ENABLE_KROUPWARE
-	if (syncWithKMail)
-	{
-		fSyncStack->addAction(new KroupwareSync(false /* post-sync */ ,
-			kroupwareParts,pilotLink));
-	}
-#endif
-}
-
 static void queueInstaller(ActionQueue *fSyncStack,
 	FileInstaller *fInstaller,
 	const QStringList &c)
 {
 	if (c.findIndex(CSL1("internal_fileinstall")) >= 0)
 	{
-		fSyncStack->queueInstaller(fInstaller->dir(),
-			fInstaller->fileNames());
+		fSyncStack->queueInstaller(fInstaller->dir());
 	}
 }
 
@@ -961,7 +977,7 @@ static void queueConduits(ActionQueue *fSyncStack,
 	{
 		fSyncStack->queueConduits( conduits,e);
 		QString s = i18n("Conduit flags: ");
-		s.append(ConduitProxy::flagsForMode(e).join(" "));
+		s.append(ConduitProxy::flagsForMode(e).join(CSL1(" ")));
 		// logMessage(s);
 	}
 }
@@ -972,8 +988,6 @@ static void queueConduits(ActionQueue *fSyncStack,
 
 	bool pcchanged=false; // If last PC to sync was a different one (implies full sync, normally)
 	QStringList conduits ; // list of conduits to run
-	bool syncWithKMail = false; // if kroupware sync is enabled
-	int _kroupwareParts = 0; // which parts to sync
 	QString s; // a generic string for stuff
 	KPilotUser *usr = 0L; // Pointer to user data on Pilot
 
@@ -985,8 +999,6 @@ static void queueConduits(ActionQueue *fSyncStack,
 	DEBUGDAEMON << fname << ": Status is " << shortStatusString() << endl;
 	(void) PilotDatabase::count();
 #endif
-
-
 
 	fDaemonStatus = HOTSYNC_START ;
 	if (fTray)
@@ -1007,27 +1019,23 @@ static void queueConduits(ActionQueue *fSyncStack,
 		goto launch;
 	}
 
-	// changing the PC or using a different Palm Desktop app causes a full sync
-	// Use gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
-	// as PC_ID, so using JPilot and KPilot is the same as using two differenc PCs
-	usr = pilotLink->getPilotUser();
-	pcchanged = usr->getLastSyncPC() !=(unsigned long) gethostid();
-	if (pcchanged && KPilotSettings::fullSyncOnPCChange())
+	// Except when the user has requested a Restore, in which case she knows she doesn't
+	// want to sync with a blank palm and then back up the result over her stored backup files,
+	// do a Full Sync when changing the PC or using a different Palm Desktop app.
+	if (fNextSyncType != SyncAction::eRestore)
 	{
-		fNextSyncType = SyncAction::eFullSync;
+		// Use gethostid to determine , since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
+		// as PC_ID, so using JPilot and KPilot is the same as using two different PCs
+		usr = pilotLink->getPilotUser();
+		pcchanged = usr->getLastSyncPC() !=(unsigned long) gethostid();
+		if (pcchanged && KPilotSettings::fullSyncOnPCChange() )
+		{
+			fNextSyncType = SyncAction::eFullSync;
+		}
 	}
 
 	// Normal case: regular sync.
 	fSyncStack->queueInit(true);
-
-
-	// Add kroupware to the mix, if needed.
-	_kroupwareParts = checkKroupware(fSyncStack,pilotLink,conduits,s,syncWithKMail);
-	if (syncWithKMail) logMessage( i18n("Kroupware syncing is enabled.") );
-	if (!s.isEmpty()) logError(s);
-
-
-
 
 	conduits = KPilotSettings::installedConduits() ;
 
@@ -1056,6 +1064,8 @@ static void queueConduits(ActionQueue *fSyncStack,
 		queueInstaller(fSyncStack,fInstaller,conduits);
 		queueEditors(fSyncStack,pilotLink);
 		queueConduits(fSyncStack,conduits,fNextSyncType);
+		// After running the conduits, install new databases
+		queueInstaller(fSyncStack,fInstaller,conduits);
 		// And sync the remaining databases if needed.
 		if ( (fNextSyncType == SyncAction::eHotSync) ||
 			(fNextSyncType == SyncAction::eFullSync))
@@ -1069,6 +1079,8 @@ static void queueConduits(ActionQueue *fSyncStack,
 	case SyncAction::eCopyHHToPC:
 		queueConduits(fSyncStack,conduits,SyncAction::eCopyHHToPC);
 		break;
+	case SyncAction::eDefaultSync:
+		Q_ASSERT(SyncAction::eDefaultSync != fNextSyncType);
 #if 0
 	default:
 #ifdef DEBUG
@@ -1082,8 +1094,6 @@ static void queueConduits(ActionQueue *fSyncStack,
 		break;
 #endif
 	}
-
-	finishKroupware(fSyncStack,pilotLink,_kroupwareParts,syncWithKMail);
 
 
 // Jump here to finalize the connections to the sync action
@@ -1171,7 +1181,7 @@ launch:
 	}
 
 	fPostSyncAction = None;
-	requestRegularSyncNext();
+	requestSync(SyncAction::eDefaultSync /* default */);
 
 	(void) PilotDatabase::count();
 
@@ -1243,7 +1253,7 @@ void PilotDaemon::slotRunConfig()
 	{
 		// KPilot not running
 		KProcess *p = new KProcess;
-		*p << "kpilot" << "-c";
+		*p << "kpilot" << "-s";
 
 		p->start();
 	}
@@ -1263,12 +1273,26 @@ void PilotDaemon::updateTrayStatus(const QString &s)
 	QToolTip::remove(fTray);
 	QToolTip::add(fTray,tipText);
 	emitDCOPSignal( "kpilotDaemonStatusChanged()", QByteArray() );
+	// emit the same dcop signal but including the information needed by Kontact to update its kpilot summary widget
+	QByteArray data;
+	QDataStream arg(data, IO_WriteOnly);
+	arg << lastSyncDate();
+	arg << shortStatusString();
+	arg << configuredConduitList();
+	arg << logFileName();
+	arg << userName();
+	arg << pilotDevice();
+	arg << killDaemonOnExit();
+	emitDCOPSignal( "kpilotDaemonStatusDetails(QDateTime,QString,QStringList,QString,QString,QString,bool)", data );
 }
 
 static KCmdLineOptions daemonoptions[] = {
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif
+	{ "device <device>", I18N_NOOP("Device to try first"), ""},
+	{"fail-silently", /* TODO_I18N */ ("Exit instead of complaining "
+		"about bad configuration files"), 0},
 	KCmdLineLastOption
 } ;
 
@@ -1308,9 +1332,21 @@ int main(int argc, char **argv)
 #ifdef DEBUG
 	KPilotConfig::getDebugLevel(p);
 #endif
-
 	if (!KUniqueApplication::start())
 	{
+		if (p->isSet("device")){
+			// tell the running kpilotDaemon to use
+			// this device now
+			DCOPClient d;
+			QString dev(p->getOption("device"));
+			QByteArray data;
+			QDataStream arg(data, IO_WriteOnly);
+			arg << dev;
+			if (d.attach()){
+				d.send("kpilotDaemon", "KPilotDaemonIface", "setTempDevice(QString)", data );
+				d.detach();
+			}
+		}
 		return 0;
 	}
 	KUniqueApplication a(true, true);
@@ -1326,7 +1362,10 @@ int main(int argc, char **argv)
 			kdError() << k_funcinfo
 				<< ": Is still not configured for use."
 				<< endl;
-			KPilotConfig::sorryVersionOutdated(KPilotSettings::configVersion());
+			if (!p->isSet("fail-silently"))
+			{
+				KPilotConfig::sorryVersionOutdated(KPilotSettings::configVersion());
+			}
 			return 1;
 		}
 
@@ -1339,6 +1378,9 @@ int main(int argc, char **argv)
 
 
 	PilotDaemon *gPilotDaemon = new PilotDaemon();
+
+	if (p->isSet("device"))
+		gPilotDaemon->setTempDevice(p->getOption("device"));
 
 	if (gPilotDaemon->status() == PilotDaemon::ERROR)
 	{

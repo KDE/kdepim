@@ -22,9 +22,9 @@ libconfiguration_la_SOURCES = kpilotConfig.cc kpilotSettings.kcfgc
 libconfiguration_la_LDFLAGS = $(all_libraries)
 
 kcm_kpilot_la_SOURCES = pilotDaemonDCOP.stub  kpilotConfigDialog.cc \
-	kpilotConfigDialog_base.ui \
-	kpilotConfigDialog2_base.ui \
-	kpilotConfigDialog3_base.ui \
+	kpilotConfigDialog_device.ui \
+	kpilotConfigDialog_sync.ui \
+	kpilotConfigDialog_startup.ui \
 	kpilotConfigDialog_viewers.ui \
 	kpilotConfigDialog_backup.ui \
 	conduitConfigDialog.cc \
@@ -32,8 +32,8 @@ kcm_kpilot_la_SOURCES = pilotDaemonDCOP.stub  kpilotConfigDialog.cc \
 	kpilotConfigWizard_address.kcfgc \
 	kpilotConfigWizard_notes.kcfgc \
 	kpilotConfigWizard_vcal.kcfgc \
-	kpilotConfigWizard_base2.ui \
-	kpilotConfigWizard_base3.ui \
+	kpilotConfigWizard_user.ui \
+	kpilotConfigWizard_app.ui \
 	kpilotConfigWizard.cc \
 	dbSelectionDialog.cc dbSelection_base.ui
 kcm_kpilot_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
@@ -52,8 +52,7 @@ kpilot_SOURCES	= \
 	datebookWidget.cc \
 	todoWidget.cc todoEditor.cc todoEditor_base.ui \
 	fileInstaller.cc fileInstallWidget.cc \
-	listItems.cc \
-	kroupware.cc
+	listItems.cc
 kpilot_COMPILE_FIRST = kpilotSettings.h
 
 
@@ -61,7 +60,7 @@ kpilotDaemon_SOURCES = \
 	pilotDaemonDCOP.skel kpilotDCOP.stub loggerDCOP.stub loggerDCOP.skel \
 	pilotDaemon.cc logFile.cc \
 	hotSync.cc internalEditorAction.cc interactiveSync.cc syncStack.cc \
-	fileInstaller.cc kroupware.cc
+	fileInstaller.cc
 
 kpilotTest_SOURCES = \
 	logWidget.cc pilotComponent.cc \
@@ -97,6 +96,8 @@ rc_DATA = kpilotui.rc
 
 update_DATA = kpilot.upd
 updatedir = $(kde_datadir)/kconf_update
+
+include $(top_srcdir)/doc/api/Doxyfile.am
 
 ### Some additional dependencies:
 

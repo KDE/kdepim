@@ -1,4 +1,4 @@
-/* pilotDOCHead.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer
 **
@@ -80,7 +80,7 @@ PilotDOCHead & PilotDOCHead::operator =(const PilotDOCHead & e)
 
 
 
-void *PilotDOCHead::pack(void *buf, int *len)
+void *PilotDOCHead::pack_(void *buf, int *len)
 {
 	char *tmp = (char *) buf;
 

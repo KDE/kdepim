@@ -3,6 +3,7 @@
 /* pilotSerialDatabase.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** See the .cc file for an explanation of what this file is for.
 */
@@ -35,7 +36,7 @@
 #include "pilotRecord.h"
 
 
-class PilotSerialDatabase : public PilotDatabase
+class KDE_EXPORT PilotSerialDatabase : public PilotDatabase
 {
 public:
 	PilotSerialDatabase(int linksocket, const QString &dbName);
@@ -98,6 +99,9 @@ public:
 		long type=0, int cardno=0, int flags=0, int version=0);
 	QString getDBName() { return fDBName; }
 
+
+	virtual DBType dbType() const;
+
 protected:
 	virtual void openDatabase();
 	virtual void closeDatabase();
@@ -110,6 +114,14 @@ private:
 	QString     fDBName;
 	int         fDBHandle;
 	int         fDBSocket;
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+	// Pilot-link 0.12 allocates buffers as needed and resizes them.
+	// Start with a buffer that is _probably_ big enough for most 
+	// PIM records, but much smaller than the 64k that we use otherwise.
+	// Might want to add algorithm for trying to optimize the initial 
+	// allocation for a given database.
+	static const int InitialBufferSize = 2048;
+#endif
 };
 
 #endif

@@ -1,11 +1,11 @@
-/* uiDialog.cc                          KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2004 by Adriaan de Groot
 **
-** This defines a subclass of KDialogBase that handles the setup for
-** KPilot -- and conduits -- configuration dialogs. It also provides
-** some support for the default about-page in setup dialogs, for applications
-** (like conduits) with no main window or menu.
+** This class defines a way to add an "about widget" to a tab widget.
+**
+** None of Dan's original code is left.
 */
 
 /*
@@ -44,35 +44,7 @@
 #include <kiconloader.h>
 #include <kactivelabel.h>
 
-#include "uiDialog.moc"
-
-UIDialog::UIDialog(QWidget * parent, const char *name,
-	bool modal) :
-	KDialogBase(parent, name, modal, QString::null,
-		KDialogBase::Ok | KDialogBase::Cancel,
-		KDialogBase::Ok, false),
-	fP(0L)
-{
-	FUNCTIONSETUP;
-
-	fMainWidget = makeHBoxMainWidget();
-}
-
-UIDialog::UIDialog(QWidget *parent, const char *name,
-	int buttonmask, bool modal) :
-	KDialogBase(parent,name,modal,QString::null,
-		buttonmask | KDialogBase::Ok,
-		KDialogBase::Ok, false),
-	fP(0L)
-{
-	FUNCTIONSETUP;
-	fMainWidget = makeHBoxMainWidget();
-}
-
-UIDialog::~UIDialog()
-{
-	FUNCTIONSETUP;
-}
+#include "uiDialog.h"
 
 /* static */ QWidget *UIDialog::aboutPage(QWidget *parent, KAboutData *ad)
 {
@@ -287,39 +259,3 @@ UIDialog::~UIDialog()
 	tw->adjustSize();
 }
 
-void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
-{
-	FUNCTIONSETUP;
-	addAboutPage(tabWidget(),ad,aboutbutton);
-}
-
-void UIDialog::setTabWidget(QTabWidget * w)
-{
-	FUNCTIONSETUP;
-
-	widget()->resize(w->size());
-	fP = w;
-}
-
-/* slot */ void UIDialog::showAbout()
-{
-	FUNCTIONSETUP;
-	KAboutApplication *kap = new KAboutApplication(this);
-
-	kap->exec();
-	// Experience crashes when deleting kap
-	//
-	//
-	// delete kap;
-}
-
-/* virtual slot */ void UIDialog::slotOk()
-{
-	FUNCTIONSETUP;
-
-	if (validate())
-	{
-		commitChanges();
-		KDialogBase::slotOk();
-	}
-}

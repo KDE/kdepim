@@ -1,4 +1,4 @@
-/* vcal-conduit.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
@@ -28,10 +28,12 @@
 */
 
 #include "options.h"
+#include <qtextcodec.h>
 #include <libkcal/calendar.h>
 #include <libkcal/recurrence.h>
 #define Recurrence_t KCal::Recurrence
 #include <pilotDateEntry.h>
+#include <pilotDatabase.h>
 #include "vcal-conduit.moc"
 #include "vcal-factory.h"
 
@@ -108,6 +110,7 @@ KCal::Incidence *VCalConduitPrivate::findIncidence(PilotAppCategory*tosearch)
 KCal::Incidence *VCalConduitPrivate::getNextIncidence()
 {
 	FUNCTIONSETUP;
+
 	if (reading) {
 		++fAllEventsIterator;
 	} else {
@@ -115,8 +118,7 @@ KCal::Incidence *VCalConduitPrivate::getNextIncidence()
 		fAllEventsIterator = fAllEvents.begin();
 	}
 	// At end of list, or empty list.
-	if ( fAllEventsIterator == fAllEvents.end() ) return 0;
-	return *fAllEventsIterator;
+	return (fAllEventsIterator == fAllEvents.end()) ? 0L : *fAllEventsIterator;
 }
 
 /** Find the next incidence in the list which ddoes not have the SYNCNONE flag set. The
@@ -138,13 +140,12 @@ KCal::Incidence *VCalConduitPrivate::getNextModifiedIncidence()
 		++fAllEventsIterator;
 	}
 	while ( fAllEventsIterator != fAllEvents.end() &&
-		e && e->syncStatus()==KCal::Incidence::SYNCNONE)
+		e && e->syncStatus()==KCal::Incidence::SYNCNONE && e->pilotId() > 0)
 	{
 		++fAllEventsIterator;
 		e=*fAllEventsIterator;
 	}
-	if ( fAllEventsIterator == fAllEvents.end() ) return 0;
-	else return *fAllEventsIterator;
+	return (fAllEventsIterator == fAllEvents.end()) ? 0L : 	*fAllEventsIterator;
 }
 
 
@@ -173,6 +174,32 @@ VCalConduit::~VCalConduit()
 
 VCalConduitPrivateBase* VCalConduit::newVCalPrivate(KCal::Calendar *fCalendar) {
 	return new VCalConduitPrivate(fCalendar);
+}
+
+void VCalConduit::_getAppInfo()
+{
+	FUNCTIONSETUP;
+	// get the address application header information
+	unsigned char *buffer =
+		new unsigned char[PilotDateEntry::APP_BUFFER_SIZE];
+	int appLen = fDatabase->readAppBlock(buffer,PilotDateEntry::APP_BUFFER_SIZE);
+
+	unpack_AppointmentAppInfo(&fAppointmentAppInfo, buffer, appLen);
+	delete[]buffer;
+	buffer = NULL;
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << " lastUniqueId"
+		<< fAppointmentAppInfo.category.lastUniqueID << endl;
+#endif
+	for (int i = 0; i < 16; i++)
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << " cat " << i << " =" <<
+			fAppointmentAppInfo.category.name[i] << endl;
+#endif
+	}
+
 }
 
 const QString VCalConduit::getTitle(PilotAppCategory*de)
@@ -216,6 +243,7 @@ PilotRecord*VCalConduit::recordFromIncidence(PilotDateEntry*de, const KCal::Even
 	setExceptions(de, e);
 	de->setDescription(e->summary());
 	de->setNote(e->description());
+	setCategory(de, e);
 DEBUGCONDUIT<<"-------- "<<e->summary()<<endl;
 	return de->pack();
 }
@@ -237,7 +265,8 @@ KCal::Event *VCalConduit::incidenceFromRecord(KCal::Event *e, const PilotDateEnt
 		return NULL;
 	}
 
-	e->setOrganizer(fCalendar->getEmail());
+   // We don't want this, do we?
+//	e->setOrganizer(fCalendar->getEmail());
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 	e->setSecrecy(de->isSecret() ?
 		KCal::Event::SecrecyPrivate :
@@ -256,6 +285,9 @@ KCal::Event *VCalConduit::incidenceFromRecord(KCal::Event *e, const PilotDateEnt
 		DEBUGCONDUIT<<fname<<": DESCRIPTION: "<<de->getDescription()<<"  ---------------------------------------------------"<<endl;
 #endif
 	e->setDescription(de->getNote());
+
+	// used by e.g. Agendus and Datebk
+	setCategory(e, de);
 
 	return e;
 }
@@ -718,13 +750,64 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 	dateEntry->setExceptions(ex_List);
 }
 
-PilotAppCategory*VCalConduit::newPilotEntry(PilotRecord*r) 
+
+void VCalConduit::setCategory(PilotDateEntry *de, const KCal::Event *e)
 {
-  if (r) return new PilotDateEntry(r);
-	else return new PilotDateEntry();
+	if (!de || !e) return;
+	de->setCategory(_getCat(e->categories(), de->getCategoryLabel()));
 }
 
-KCal::Incidence*VCalConduit::newIncidence() 
+/**
+ * _getCat returns the id of the category from the given categories list. If none of the categories exist
+ * on the palm, the "Nicht abgelegt" (don't know the english name) is used.
+ */
+
+QString VCalConduit::_getCat(const QStringList cats, const QString curr) const
+{
+	int j;
+	if (cats.size()<1) return QString::null;
+	if (cats.contains(curr)) return curr;
+	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it ) {
+		for (j=1; j<=15; j++)
+		{
+			QString catName = PilotAppCategory::codec()->
+			  toUnicode(fAppointmentAppInfo.category.name[j]);
+			if (!(*it).isEmpty() && !(*it).compare( catName ) )
+			{
+				return catName;
+			}
+		}
+	}
+	// If we have a free label, return the first possible cat
+	QString lastName(QString::fromLatin1(fAppointmentAppInfo.category.name[15]));
+	if (lastName.isEmpty()) return cats.first();
+	return QString::null;
+}
+
+void VCalConduit::setCategory(KCal::Event *e, const PilotDateEntry *de)
+{
+	if (!e || !de) return;
+	QStringList cats=e->categories();
+	int cat=de->getCat();
+	if (0<cat && cat<=15)
+	{
+		QString newcat=PilotAppCategory::codec()->toUnicode(fAppointmentAppInfo.category.name[cat]);
+		if (!cats.contains(newcat))
+		{
+			cats.append( newcat );
+			e->setCategories(cats);
+		}
+	}
+}
+
+
+PilotAppCategory*VCalConduit::newPilotEntry(PilotRecord*r)
+{
+	if (r) return new PilotDateEntry(fAppointmentAppInfo,r);
+	else return new PilotDateEntry(fAppointmentAppInfo);
+}
+
+KCal::Incidence*VCalConduit::newIncidence()
 {
   return new KCal::Event;
 }

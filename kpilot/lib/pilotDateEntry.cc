@@ -1,6 +1,7 @@
-/* pilotDateEntry.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a C++ wrapper for the Pilot's datebook structures.
 */
@@ -40,16 +41,17 @@
 #include "pilotDateEntry.h"
 
 static const char *pilotDateEntry_id = "$Id$";
+const int PilotDateEntry::APP_BUFFER_SIZE = 0xffff;
 
 
-PilotDateEntry::PilotDateEntry(void):PilotAppCategory()
+PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo):PilotAppCategory(), fAppInfo(appInfo)
 {
 	::memset(&fAppointmentInfo, 0, sizeof(struct Appointment));
 }
 
 /* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotDateEntry()
 */
-PilotDateEntry::PilotDateEntry(PilotRecord * rec):PilotAppCategory(rec)
+PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo, PilotRecord * rec):PilotAppCategory(rec), fAppInfo(appInfo)
 {
 	::memset(&fAppointmentInfo, 0, sizeof(fAppointmentInfo));
 	if (rec)
@@ -82,7 +84,7 @@ void PilotDateEntry::_copyExceptions(const PilotDateEntry & e)
 		}
 		else
 		{
-			kdError(LIBPILOTDB_AREA) << __FUNCTION__
+			kdError() << __FUNCTION__
 				<< ": malloc() failed, exceptions not copied"
 				<< endl;
 			fAppointmentInfo.exceptions = 0;
@@ -96,7 +98,7 @@ void PilotDateEntry::_copyExceptions(const PilotDateEntry & e)
 }
 
 
-PilotDateEntry::PilotDateEntry(const PilotDateEntry & e):PilotAppCategory(e)
+PilotDateEntry::PilotDateEntry(const PilotDateEntry & e):PilotAppCategory(e), fAppInfo(e.fAppInfo)
 {
 	::memcpy(&fAppointmentInfo, &e.fAppointmentInfo,
 		sizeof(struct Appointment));
@@ -263,8 +265,12 @@ QString PilotDateEntry::getTextRepresentation(bool richText)
 	return text;
 }
 
+QString PilotDateEntry::getCategoryLabel() const
+{
+	return codec()->toUnicode(fAppInfo.category.name[getCat()]);
+}
 
-void *PilotDateEntry::pack(void *buf, int *len)
+void *PilotDateEntry::pack_(void *buf, int *len)
 {
 	int i;
 
@@ -297,11 +303,11 @@ void PilotDateEntry::setDescriptionP(const char *desc, int l)
 			(char *) ::malloc(l + 1);
 		if (fAppointmentInfo.description)
 		{
-			::strcpy(fAppointmentInfo.description, desc);
+			strlcpy(fAppointmentInfo.description, desc, l+1);
 		}
 		else
 		{
-			kdError(LIBPILOTDB_AREA) << __FUNCTION__
+			kdError() << __FUNCTION__
 				<< ": malloc() failed, description not set"
 				<< endl;
 		}
@@ -323,11 +329,11 @@ void PilotDateEntry::setNoteP(const char *note, int l)
 		fAppointmentInfo.note = (char *)::malloc(l + 1);
 		if (fAppointmentInfo.note)
 		{
-			strcpy(fAppointmentInfo.note, note);
+			strlcpy(fAppointmentInfo.note, note,l+1);
 		}
 		else
 		{
-			kdError(LIBPILOTDB_AREA) << __FUNCTION__
+			kdError() << __FUNCTION__
 				<< ": malloc() failed, note not set" << endl;
 		}
 	}

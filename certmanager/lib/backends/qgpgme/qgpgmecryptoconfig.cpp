@@ -183,8 +183,8 @@ void QGpgMECryptoConfigComponent::runGpgConf()
   else
     rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
 
-  if( rc != 0 ) // Can it really be non-0, when gpg-config --list-components worked?
-    kdWarning(5150) << k_funcinfo << ":" << strerror( rc ) << endl;
+  if( rc != 0 ) // can happen when using the wrong version of gpg...
+    kdWarning(5150) << "Running 'gpgconf --list-options " << mName << "' failed. " << strerror( rc ) << ", but try that command to see the real output" << endl;
   else {
     if ( mCurrentGroup && !mCurrentGroup->mEntries.isEmpty() ) // only add non-empty groups
       mGroups.insert( mCurrentGroupName, mCurrentGroup );
@@ -667,7 +667,13 @@ void QGpgMECryptoConfigEntry::setBoolValue( bool b )
 void QGpgMECryptoConfigEntry::setStringValue( const QString& str )
 {
   mValue = stringToValue( str, false );
-  mSet = true;
+  // When setting a string to empty (and there's no default), we need to act like resetToDefault
+  // Otherwise we try e.g. "ocsp-responder:0:" and gpgconf answers:
+  // "gpgconf: argument required for option ocsp-responder"
+  if ( str.isEmpty() && !isOptional() )
+    mSet = false;
+  else
+    mSet = true;
   mDirty = true;
 }
 
@@ -690,8 +696,11 @@ void QGpgMECryptoConfigEntry::setUIntValue( unsigned int i )
 void QGpgMECryptoConfigEntry::setURLValue( const KURL& url )
 {
   QString str = splitURL( mRealArgType, url );
+  if ( str.isEmpty() && !isOptional() )
+    mSet = false;
+  else
+    mSet = true;
   mValue = str;
-  mSet = true;
   mDirty = true;
 }
 
@@ -705,7 +714,10 @@ void QGpgMECryptoConfigEntry::setNumberOfTimesSet( unsigned int i )
 void QGpgMECryptoConfigEntry::setStringValueList( const QStringList& lst )
 {
   mValue = lst;
-  mSet = true;
+  if ( lst.isEmpty() && !isOptional() )
+    mSet = false;
+  else
+    mSet = true;
   mDirty = true;
 }
 
@@ -716,7 +728,10 @@ void QGpgMECryptoConfigEntry::setIntValueList( const QValueList<int>& lst )
     ret << QVariant( *it );
   }
   mValue = ret;
-  mSet = true;
+  if ( ret.isEmpty() && !isOptional() )
+    mSet = false;
+  else
+    mSet = true;
   mDirty = true;
 }
 
@@ -726,8 +741,11 @@ void QGpgMECryptoConfigEntry::setUIntValueList( const QValueList<unsigned int>& 
   for( QValueList<unsigned int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
     ret << QVariant( *it );
   }
+  if ( ret.isEmpty() && !isOptional() )
+    mSet = false;
+  else
+    mSet = true;
   mValue = ret;
-  mSet = true;
   mDirty = true;
 }
 
@@ -738,7 +756,10 @@ void QGpgMECryptoConfigEntry::setURLValueList( const KURL::List& urls )
     lst << splitURL( mRealArgType, *it );
   }
   mValue = lst;
-  mSet = true;
+  if ( lst.isEmpty() && !isOptional() )
+    mSet = false;
+  else
+    mSet = true;
   mDirty = true;
 }
 

@@ -39,6 +39,8 @@
 #include "time-setup.moc"
 #include "timeConduitSettings.h"
 
+#include "uiDialog.h"
+
 TimeWidgetConfig::TimeWidgetConfig(QWidget *w, const char *n) :
 	ConduitConfigBase(w,n),
 	fConfigWidget(new TimeWidget(w))

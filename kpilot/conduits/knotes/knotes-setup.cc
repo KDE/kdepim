@@ -1,4 +1,4 @@
-/* knotes-setup.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2001,2003 by Dan Pilone
 **
@@ -42,6 +42,7 @@
 #include "knotes-setup.h"
 #include "knotesconduitSettings.h"
 
+#include "uiDialog.h"
 
 KNotesConfigBase::KNotesConfigBase(QWidget *w, const char *n) :
 	ConduitConfigBase(w,n),

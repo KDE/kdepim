@@ -1,6 +1,8 @@
-/* kpilotConfigDialog.cc                KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2002-2004 by Adriaan de Groot
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines a specialization of KPilotDeviceLink
 ** that can actually handle some HotSync tasks, like backup
@@ -43,16 +45,21 @@ static const char *kpilotconfigdialog_id =
 #include <qlineedit.h>
 #include <qtabwidget.h>
 #include <qspinbox.h>
+#include <qfile.h>
 
 #include <kmessagebox.h>
 #include <kcharsets.h>
+#include <kstandarddirs.h>
+#include <kglobal.h>
+#include <kurl.h>
+#include <kio/netaccess.h>
 
 #include "kpilotConfig.h"
 #include "kpilotSettings.h"
 
-#include "kpilotConfigDialog_base.h"
-#include "kpilotConfigDialog2_base.h"
-#include "kpilotConfigDialog3_base.h"
+#include "kpilotConfigDialog_device.h"
+#include "kpilotConfigDialog_sync.h"
+#include "kpilotConfigDialog_startup.h"
 #include "kpilotConfigDialog_viewers.h"
 #include "kpilotConfigDialog_backup.h"
 #include "kpilotConfigDialog.moc"
@@ -92,6 +99,7 @@ DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConfigPage( w,
 	CM(fPilotSpeed, SIGNAL(activated(int)));
 	CM(fPilotEncoding, SIGNAL(textChanged(const QString &)));
 	CM(fUserName, SIGNAL(textChanged(const QString &)));
+	CM(fWorkaround, SIGNAL(activated(int)));
 #undef CM
 
 	fConduitName = i18n("Device");
@@ -110,6 +118,22 @@ void DeviceConfigPage::load()
 	getEncoding();
 	fConfigWidget->fUserName->setText(KPilotSettings::userName());
 
+	switch(KPilotSettings::workarounds())
+	{
+	case KPilotSettings::eWorkaroundNone :
+		fConfigWidget->fWorkaround->setCurrentItem(0);
+		break;
+	case KPilotSettings::eWorkaroundUSB :
+		fConfigWidget->fWorkaround->setCurrentItem(1);
+		break;
+	default:
+		kdWarning() << k_funcinfo 
+			<< ": Unknown workaround number "
+			<< (int) KPilotSettings::workarounds()
+			<< endl;
+		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
+		fConfigWidget->fWorkaround->setCurrentItem(0);
+	}
 	unmodified();
 }
 
@@ -147,6 +171,18 @@ void DeviceConfigPage::load()
 	setEncoding();
 	KPilotSettings::setUserName(fConfigWidget->fUserName->text());
 
+	switch(fConfigWidget->fWorkaround->currentItem())
+	{
+	case 0 : KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone); break;
+	case 1 : KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundUSB); break;
+	default :
+		kdWarning() << k_funcinfo 
+			<< ": Unknown workaround number "
+			<< fConfigWidget->fWorkaround->currentItem()
+			<< endl;
+		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
+			
+	}
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();
 	unmodified();
@@ -176,7 +212,7 @@ void DeviceConfigPage::getEncoding()
 	FUNCTIONSETUP;
 	QString e = KPilotSettings::encoding();
 	if (e.isEmpty())
-		fConfigWidget->fPilotEncoding->setCurrentText("ISO8859-15");
+		fConfigWidget->fPilotEncoding->setCurrentText(CSL1("ISO8859-15"));
 	else
 		fConfigWidget->fPilotEncoding->setCurrentText(e);
 }
@@ -207,6 +243,7 @@ SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
 	CM(fSpecialSync, SIGNAL(activated(int)));
 	CM(fFullBackupCheck, SIGNAL(toggled(bool)));
+	CM(fScreenlockSecure, SIGNAL(toggled(bool)));
 	CM(fConflictResolution, SIGNAL(activated(int)));
 #undef CM
 
@@ -218,8 +255,9 @@ static SyncAction::SyncMode syncTypeMap[MENU_ITEM_COUNT] = {
 	SyncAction::eHotSync,
 	SyncAction::eFastSync,
 	SyncAction::eFullSync,
-	SyncAction::eCopyHHToPC,
-	SyncAction::eCopyPCToHH } ;
+	SyncAction::eCopyPCToHH,
+	SyncAction::eCopyHHToPC
+	} ;
 
 void SyncConfigPage::load()
 {
@@ -339,7 +377,7 @@ void BackupConfigPage::slotSelectNoBackupDBs()
 	if (dlg && (dlg->exec()==QDialog::Accepted) )
 	{
 		fConfigWidget->fBackupOnly->setText(
-			dlg->getSelectedDBs().join(","));
+			dlg->getSelectedDBs().join(CSL1(",")));
 		KPilotSettings::setAddedDBs( dlg->getAddedDBs() );
 	}
 	KPILOT_DELETE(dlg);
@@ -357,7 +395,7 @@ void BackupConfigPage::slotSelectNoRestoreDBs()
 	if (dlg && (dlg->exec()==QDialog::Accepted) )
 	{
 		fConfigWidget->fSkipDB->setText(
-			dlg->getSelectedDBs().join(","));
+			dlg->getSelectedDBs().join(CSL1(",")));
 		KPilotSettings::setAddedDBs( dlg->getAddedDBs() );
 	}
 	KPILOT_DELETE(dlg);
@@ -388,7 +426,7 @@ void ViewersConfigPage::load()
 	FUNCTIONSETUP;
 	KPilotSettings::self()->readConfig();
 
-	fConfigWidget->fInternalEditors->setChecked(KPilotSettings::internalEditors());
+	fConfigWidget->fInternalEditors->setChecked( false /* KPilotSettings::internalEditors() */ );
 	fConfigWidget->fUseSecret->setChecked(KPilotSettings::showSecrets());
 	fConfigWidget->fAddressGroup->setButton(KPilotSettings::addressDisplayMode());
 	fConfigWidget->fUseKeyField->setChecked(KPilotSettings::useKeyField());
@@ -447,11 +485,42 @@ void StartExitConfigPage::load()
 	unmodified();
 }
 
+
 /* virtual */ void StartExitConfigPage::commit()
 {
 	FUNCTIONSETUP;
 
+	QString autostart = KGlobalSettings::autostartPath();
+	QString desktopfile = CSL1("kpilotdaemon.desktop");
+	QString desktopcategory = CSL1("kde/");
+	QString location = KGlobal::dirs()->findResource("xdgdata-apps",desktopcategory + desktopfile);
+	if (location.isEmpty()) // Fallback to KDE 3.0?
+	{
+		location = KGlobal::dirs()->findResource("apps",desktopfile);
+	}
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Autostart=" << autostart << endl;
+	DEBUGDAEMON << fname << ": desktop=" << desktopfile << endl;
+	DEBUGDAEMON << fname << ": location=" << location << endl;
+#endif
+	
 	KPilotSettings::setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin->isChecked());
+	if (KPilotSettings::startDaemonAtLogin())
+	{
+		if (!location.isEmpty())
+		{
+			KURL src;
+			src.setPath(location);
+			KURL dst;
+			dst.setPath(autostart+desktopfile);
+			KIO::NetAccess::file_copy(src,dst,-1 /* 0666? */,true /* overwrite */);
+		}
+	}
+	else
+	{
+		QFile::remove(autostart+desktopfile);
+	}
 	KPilotSettings::setDockDaemon(fConfigWidget->fDockDaemon->isChecked());
 	KPilotSettings::setKillDaemonAtExit(fConfigWidget->fKillDaemonOnExit->isChecked());
 	KPilotSettings::setQuitAfterSync(fConfigWidget->fQuitAfterSync->isChecked());

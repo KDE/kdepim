@@ -35,6 +35,8 @@ CPPFLAGS="$CPPFLAGS $all_includes"
 LDFLAGS="$LDFLAGS $all_libraries"
 
 HAVE_PISOCK=0
+HAVE_BAD_PISOCK=NO
+
 PISOCK_LIB=""
 PISOCK_INCLUDE=""
 pisock_path=""
@@ -97,13 +99,32 @@ if test "$HAVE_PISOCK" = "1" ; then
 	}
 	]
 	,
-	[AC_MSG_RESULT([pilot-link version 0.10 or 0.11 found])],
+	[AC_MSG_RESULT([pilot-link version >= 0.9.5 found])],
 	[AC_MSG_RESULT([Your version of pilot-link won't work with KPilot])]
 	HAVE_PISOCK="0"
 	,
 	[AC_MSG_RESULT([Cross-compiling KPilot is doomed])
 	HAVE_PISOCK="0"
 	])
+fi
+if test "$HAVE_PISOCK" = "1" ; then
+	AC_MSG_CHECKING([deprecated pilot-link version])
+	AC_TRY_RUN([
+	#include <pi-version.h>
+	int main()
+	{ if (PILOT_LINK_VERSION==0) {
+	    if ((PILOT_LINK_MAJOR<11)) return (0);
+	    if ((PILOT_LINK_MAJOR==11) && (PILOT_LINK_MINOR<8)) return (0);
+	  }
+	  return (1);
+	}
+	]
+	,
+	[AC_MSG_RESULT([yes])
+	HAVE_BAD_PISOCK=YES
+	],
+	[AC_MSG_RESULT([no])]
+	)
 fi
 
 if test "$HAVE_PISOCK" = "1" ; then

@@ -3,6 +3,7 @@
 /* pilotAddress.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a wrapper for pilot-link's address structures.
 */
@@ -57,28 +58,27 @@
  * is an overflow.
  *
  * There are eight possible fields for 5 view slots:
- * <li> fields: Work, Home, Fax, Other, Pager, Mobile, E-mail, Main
- * <li> slots: entryPhone1, entryPhone2, entryPhone3, entryPhone4,
- * entryPhone5
+ * - fields: Work, Home, Fax, Other, Pager, Mobile, E-mail, Main
+ * - slots: entryPhone1, entryPhone2, entryPhone3, entryPhone4, entryPhone5
  *
  * Internally in the pilot-link library, the AddressAppInfo phone
  * array stores the strings for the eight possible phone values.
  * Their English string values are :
- * <li> phone[0] = Work
- * <li> phone[1] = Home
- * <li> phone[2] = Fax
- * <li> phone[3] = Other
- * <li> phone[4] = E-mail
- * <li> phone[5] = Main
- * <li> phone[6] = Pager
- * <li> phone[7] = Mobile
+ * - phone[0] = Work
+ * - phone[1] = Home
+ * - phone[2] = Fax
+ * - phone[3] = Other
+ * - phone[4] = E-mail
+ * - phone[5] = Main
+ * - phone[6] = Pager
+ * - phone[7] = Mobile
  *
  * Apparently, this order is kept for all languages, just with localized
  * strings.  The implementation of the internal methods will assume
  * this order is kept. In other languages, main can replaced with
  * Corporation.
  */
-class PilotAddress : public PilotAppCategory
+class KDE_EXPORT PilotAddress : public PilotAppCategory
 {
 public:
 	enum EPhoneType {
@@ -104,7 +104,9 @@ public:
 	*/
 	void reset() { memset(&fAddressInfo, 0, sizeof(struct Address)); }
 
-	/** @param field int values associated with the enum defined in
+	/**
+	*   @param text set the field value
+	*   @param field int values associated with the enum defined in
 	*  pi-address.h.
 	*  The copied possible enum's are: (copied from pi-address.h on 1/12/01)
 	*  enum { entryLastname, entryFirstname, entryCompany,
@@ -122,16 +124,21 @@ public:
 	*  to the category list
 	*  @return false if category labels are full
 	*/
-	bool setCategory(const QString &label);
+	inline bool setCategory(const QString &label) { return setCat(fAppInfo.category,label); } ;
 
 
-	/** @param checkCustom4 flag if true, checks the entryCustom4 field
+	/**
+	*  @param type is the type of phone
+	*  @param checkCustom4 flag if true, checks the entryCustom4 field
 	*  for extra phone fields
 	*  @return the field associated with the type
 	*/
 	QString getPhoneField(EPhoneType type, bool checkCustom4=true) const;
 
-	/** @param overflowCustom is true, and entryPhone1 to entryPhone5 is full
+	/**
+	*  @param type is the type of phone
+	*  @param field is value to store
+	*  @param overflowCustom is true, and entryPhone1 to entryPhone5 is full
 	*  it will use entryCustom4 field to store the field
 	*/
 	void setPhoneField(EPhoneType type, const QString &field,
@@ -148,13 +155,14 @@ public:
 	int getShownPhone() const { return fAddressInfo.showPhone; }
 	void setShownPhone(EPhoneType phoneType);
 	int  getPhoneLabelIndex(int index) { return fAddressInfo.phoneLabel[index]; }
-	PilotRecord* pack() { return PilotAppCategory::pack(); }
 
 
-	void *pack(void *, int *);
+	virtual void *pack_(void *, int *);
 	void unpack(const void *, int = 0) { }
 
 	static const int APP_BUFFER_SIZE;
+
+	const struct Address *address() const { return &fAddressInfo; } ;
 
 protected:
 	// Get the pointers in cases where no conversion to

@@ -1,7 +1,6 @@
-/* dbSelectionDialog.cc                KPilot
+/* KPilot
 **
-** Copyright (C) 2003 by Dan Pilone
-** Created 2003 by Reinhold Kainhofer
+** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines a dialog box that lets the
 ** user select a set of databases (e.g. which databases
@@ -117,7 +116,7 @@ void KPilotDBSelectionDialog::removeDB()
 	}
 	else
 	{
-		KMessageBox::information(this, i18n("You need to select a database to delete in the list."),i18n("No Database Selected"), "NoDBSelected");
+		KMessageBox::information(this, i18n("You need to select a database to delete in the list."),i18n("No Database Selected"), CSL1("NoDBSelected"));
 	}
 }
 

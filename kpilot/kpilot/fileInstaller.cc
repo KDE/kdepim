@@ -1,4 +1,4 @@
-/* fileInstaller.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
@@ -33,35 +33,18 @@ static const char *fileinstaller_id =
 	"$Id$";
 
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
 #include <unistd.h>
 
-#ifndef QSTRING_H
 #include <qstring.h>
-#endif
-#ifndef QSTRLIST_H
 #include <qstrlist.h>
-#endif
-#ifndef QDIR_H
 #include <qdir.h>
-#endif
 
-#ifndef _KGLOBAL_H
 #include <kglobal.h>
-#endif
-#ifndef _KSTDDIRS_H
-#include <kstddirs.h>
-#endif
-#ifndef _KURL_H
+#include <kstandarddirs.h>
 #include <kurl.h>
-#endif
-#ifndef _KIO_NETACCESS_H
 #include <kio/netaccess.h>
-#endif
-
 #include <kmessagebox.h>
 
 #include "fileInstaller.moc"
@@ -109,7 +92,7 @@ void FileInstaller::clearPending()
 {
 	FUNCTIONSETUP;
 
-	if(!(s.endsWith("pdb", false) || s.endsWith("prc", false))) {
+	if(!(s.endsWith(CSL1(".pdb"), false) || s.endsWith(CSL1(".prc"), false))) {
 		KMessageBox::detailedSorry(w, i18n("Cannot install %1").arg(s),
 			i18n("Only PalmOS database files (like *.pdb and *.prc) can be installed by the file installer."));
 		return false;
@@ -120,7 +103,7 @@ void FileInstaller::clearPending()
 #endif
 
 	KURL srcName(s);
-	KURL destDir(fDirName + CSL1("/") + srcName.filename());
+	KURL destDir(fDirName + CSL1("/") + srcName.fileName());
 
 #if KDE_IS_VERSION(3,1,9)
 	return KIO::NetAccess::copy(srcName, destDir, w);

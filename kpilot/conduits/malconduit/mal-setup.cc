@@ -4,7 +4,7 @@
 **
 ** This file defines the setup dialog for the MAL-conduit plugin.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -25,14 +25,14 @@
 ** Specific permission is granted for this code to be linked to libmal
 ** (this is necessary because the libmal license is not GPL-compatible).
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 #include "options.h"
 
-#include <qtabwidget.h> 
+#include <qtabwidget.h>
 #include <qradiobutton.h>
 #include <qbuttongroup.h>
 #include <qlineedit.h>
@@ -44,6 +44,8 @@
 
 #include <kapplication.h>
 #include <kconfig.h>
+
+#include "uiDialog.h"
 
 #include "mal-setup_dialog.h"
 
@@ -67,13 +69,13 @@ MALWidgetSetup::MALWidgetSetup(QWidget *w, const char *n) :
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
 	CM( syncTime, SIGNAL(clicked(int)) );
 	CM( proxyType, SIGNAL(clicked(int)) );
-	
+
 	CM( proxyServerName, SIGNAL(textChanged(const QString &)) );
 	CM( proxyCustomPortCheck, SIGNAL(clicked()) );
 	CM( proxyCustomPort, SIGNAL(valueChanged(int)) );
 	CM( proxyUserName, SIGNAL(textChanged(const QString &)) );
 	CM( proxyPassword, SIGNAL(textChanged(const QString &)) );
-	
+
 	CM( malServerName, SIGNAL(textChanged(const QString &)) );
 	CM( malCustomPortCheck, SIGNAL(clicked()) );
 	CM( malCustomPort, SIGNAL(valueChanged(int)) );
@@ -93,17 +95,17 @@ MALWidgetSetup::~MALWidgetSetup()
 
 	MALConduitSettings::setSyncFrequency(
 		fConfigWidget->syncTime->id(fConfigWidget->syncTime->selected()));
-	
+
 	// Proxy settings
 	MALConduitSettings::setProxyType(
 		fConfigWidget->proxyType->id(fConfigWidget->proxyType->selected()));
 	MALConduitSettings::setProxyServer( fConfigWidget->proxyServerName->currentText() );
 
-	if (fConfigWidget->proxyCustomPortCheck->isChecked() ) 
+	if (fConfigWidget->proxyCustomPortCheck->isChecked() )
 	{
 		MALConduitSettings::setProxyPort( fConfigWidget->proxyCustomPort->value());
 	}
-	else 
+	else
 	{
 		MALConduitSettings::setProxyPort(0);
 	}
@@ -112,18 +114,18 @@ MALWidgetSetup::~MALWidgetSetup()
 
 	// MAL Server settings (not yet possible!!!)
 	MALConduitSettings::setMALServer( fConfigWidget->malServerName->currentText() );
-	
-	if (fConfigWidget->malCustomPortCheck->isChecked() ) 
+
+	if (fConfigWidget->malCustomPortCheck->isChecked() )
 	{
 		MALConduitSettings::setMALPort( fConfigWidget->malCustomPort->value());
 	}
-	else 
+	else
 	{
 		MALConduitSettings::setMALPort(0);
 	}
 	MALConduitSettings::setMALUser( fConfigWidget->malUserName->text() );
 	MALConduitSettings::setMALPassword( fConfigWidget->malPassword->text() );
-	
+
 	MALConduitSettings::self()->writeConfig();
 	unmodified();
 }
@@ -136,26 +138,37 @@ MALWidgetSetup::~MALWidgetSetup()
 	MALConduitSettings::self()->readConfig();
 
 	fConfigWidget->syncTime->setButton( MALConduitSettings::syncFrequency() );
-	
+
 	// Proxy settings
 	fConfigWidget->proxyType->setButton(MALConduitSettings::proxyType());
 	fConfigWidget->proxyServerName->setEditText(MALConduitSettings::proxyServer());
-	
+
 	int proxyPortNr=MALConduitSettings::proxyPort();
-	if (proxyPortNr>0 && proxyPortNr<65536) 
+	if (proxyPortNr>0 && proxyPortNr<65536)
 	{
 		fConfigWidget->proxyCustomPortCheck->setChecked(true);
 		fConfigWidget->proxyCustomPort->setEnabled(true);
 		fConfigWidget->proxyCustomPort->setValue(proxyPortNr);
 	}
 	fConfigWidget->proxyUserName->setText(MALConduitSettings::proxyUser());
-	fConfigWidget->proxyPassword->setText(MALConduitSettings::proxyPassword());
+	fConfigWidget->proxyPassword->setText(QString::null);
+	fConfigWidget->proxyPassword->insert(MALConduitSettings::proxyPassword());
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Got proxy password <"
+		<< MALConduitSettings::proxyPassword()
+		<< "> set Text <"
+		<< fConfigWidget->proxyPassword->text()
+		<< "> and Pwd <"
+		<< fConfigWidget->proxyPassword->password()
+		<< ">" << endl;
+#endif
 
 	// MAL Server settings (not yet possible!!!)
 	fConfigWidget->malServerName->setEditText(MALConduitSettings::mALServer());
-	
+
 	int malPortNr=MALConduitSettings::mALPort();
-	if (malPortNr>0 && malPortNr<65536) 
+	if (malPortNr>0 && malPortNr<65536)
 	{
 		fConfigWidget->malCustomPortCheck->setChecked(true);
 		fConfigWidget->malCustomPort->setEnabled(true);

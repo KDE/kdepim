@@ -1,4 +1,4 @@
-/* knotes-action.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2002,2003,2004 by Adriaan de Groot
@@ -29,6 +29,8 @@
 
 #include "options.h"
 
+#undef DEBUGAREA
+#define DEBUGAREA	DEBUGAREA_CONDUIT
 
 #include <qmap.h>
 #include <qtimer.h>
@@ -75,7 +77,7 @@ public:
 
 	int memo() const { return memoId; } ;
 	KNoteID_t note() const { return noteId; } ;
-	bool valid() const { return (!noteId.isEmpty()) && (memoId>0); } ;
+	inline bool valid() const { return (memoId>0) && (!noteId.isEmpty()) ; } ;
 	QString toString() const { return CSL1("<%1,%2>").arg(noteId).arg(memoId); } ;
 
 	static NoteAndMemo findNote(const QValueList<NoteAndMemo> &,KNoteID_pt note);
@@ -155,6 +157,7 @@ public:
 	// process(). Typically used to note how much work is done.
 	int fCounter;
 	int fDeleteCounter; // Count deleted memos as well.
+	int fModifyCounter; // Count modified KNotes.
 
 	// We need to translate between the ids that KNotes uses and
 	// Pilot id's, so we make a list of pairs.
@@ -201,29 +204,47 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	QString e;
 	if (!fP || !fP->fDCOP)
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
+			<< "No DCOP connection." << endl;
+#endif
 		emit logError(i18n("No DCOP connection could be made. The "
-			"conduit cannot function like this."));
+			"conduit cannot function without DCOP."));
 		return false;
 
 	}
-	if (!PluginUtility::isRunning("knotes"))
+	
+	
+	QCString knotesAppname = "knotes" ;
+	if (!PluginUtility::isRunning(knotesAppname))
 	{
-		emit logError(i18n("KNotes is not running. The conduit must "
-			"be able to make a DCOP connection to KNotes "
-			"for synchronization to take place. "
-			"Please start KNotes and try again."));
-		return false;
+		knotesAppname = "kontact" ;
+		if (!PluginUtility::isRunning(knotesAppname))
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": KNotes not running." << endl;
+#endif
+			emit logError(i18n("KNotes is not running. The conduit must "
+				"be able to make a DCOP connection to KNotes "
+				"for synchronization to take place. "
+				"Please start KNotes and try again."));
+			return false;
+		}
 	}
 
-	fP->fKNotes = new KNotesIface_stub("knotes","KNotesIface");
+	fP->fKNotes = new KNotesIface_stub(knotesAppname,"KNotesIface");
 
 	fP->fNotes = fP->fKNotes->notes();
 	if (fP->fKNotes->status() != DCOPStub::CallSucceeded)
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
+			<< "Can not get list of notes from KNotes.." << endl;
+#endif
 		emit logError(i18n("Could not retrieve list of notes from KNotes. "
 			"The KNotes conduit will not be run."));
 		return false;
-		
+
 	}
 
 	// Database names seem to be latin1
@@ -232,17 +253,15 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	if (isTest())
 	{
 		listNotes();
+		return delayDone();
 	}
-	else
-	{
-		fP->fTimer = new QTimer(this);
-		fActionStatus = Init;
-		resetIndexes();
 
-		connect(fP->fTimer,SIGNAL(timeout()),SLOT(process()));
+	fP->fTimer = new QTimer(this);
+	fActionStatus = Init;
+	resetIndexes();
 
-		fP->fTimer->start(0,false);
-	}
+	connect(fP->fTimer,SIGNAL(timeout()),SLOT(process()));
+	fP->fTimer->start(0,false);
 
 	return true;
 }
@@ -253,6 +272,7 @@ void KNotesAction::resetIndexes()
 
 	fP->fCounter = 0;
 	fP->fDeleteCounter = 0;
+	fP->fModifyCounter = 0;
 	fP->fRecordIndex = 0;
 	fP->fIndex = fP->fNotes.begin();
 }
@@ -282,7 +302,6 @@ void KNotesAction::listNotes()
 	DEBUGCONDUIT << fname << ": "
 		<< "Sync direction: " << getSyncDirection() << endl;
 #endif
-	delayDone();
 }
 
 /* slot */ void KNotesAction::process()
@@ -299,15 +318,36 @@ void KNotesAction::listNotes()
 		resetIndexes();
 		getAppInfo();
 		getConfigInfo();
-		fActionStatus = ModifiedNotesToPilot;
-		// TODO: Handle all varieties of special syncs
-		if (SyncAction::eCopyHHToPC == getSyncDirection())
+		switch(getSyncDirection())
 		{
+		case SyncAction::eDefaultSync:
+		case SyncAction::eTest:
+		case SyncAction::eBackup:
+		case SyncAction::eRestore:
+			// Impossible!
+			fActionStatus = Done;
+			break;
+		case SyncAction::eCopyHHToPC :
+			listNotes(); // Debugging
 			fActionStatus = MemosToKNotes;
+			break;
+		case SyncAction::eFastSync:
+		case SyncAction::eHotSync:
+		case SyncAction::eFullSync:
+		case SyncAction::eCopyPCToHH:
+			fActionStatus = ModifiedNotesToPilot;
+			break;
 		}
 		break;
 	case ModifiedNotesToPilot :
 		if (modifyNoteOnPilot())
+		{
+			resetIndexes();
+			fActionStatus = DeleteNotesOnPilot;
+		}
+		break;
+	case DeleteNotesOnPilot:
+		if (deleteNoteOnPilot())
 		{
 			resetIndexes();
 			fActionStatus = NewNotesToPilot;
@@ -317,8 +357,26 @@ void KNotesAction::listNotes()
 		if (addNewNoteToPilot())
 		{
 			resetIndexes();
-			fActionStatus = MemosToKNotes;
 			fDatabase->resetDBIndex();
+			switch(getSyncDirection())
+			{
+			case SyncAction::eDefaultSync:
+			case SyncAction::eTest:
+			case SyncAction::eBackup:
+			case SyncAction::eRestore:
+			case SyncAction::eCopyHHToPC :
+				// Impossible!
+				fActionStatus = Done;
+				break;
+			case SyncAction::eFastSync:
+			case SyncAction::eHotSync:
+			case SyncAction::eFullSync:
+				fActionStatus = MemosToKNotes;
+				break;
+			case SyncAction::eCopyPCToHH:
+				fActionStatus = Cleanup;
+				break;
+			}
 		}
 		break;
 	case MemosToKNotes :
@@ -332,7 +390,7 @@ void KNotesAction::listNotes()
 		break;
 	default :
 		if (fP->fTimer) fP->fTimer->stop();
-		emit syncDone(this);
+		delayDone();
 	}
 }
 
@@ -393,7 +451,7 @@ void KNotesAction::getAppInfo()
 	}
 
 	unpack_MemoAppInfo(&memoInfo,buffer,appInfoSize);
-	PilotDatabase::listAppInfo(&memoInfo.category);
+	PilotAppCategory::dumpCategories(memoInfo.category);
 
 	resetIndexes();
 }
@@ -435,8 +493,17 @@ bool KNotesAction::modifyNoteOnPilot()
 
 		if (nm.valid())
 		{
-			QString text = fP->fIndex.data() + CSL1("\n") ;
-			text.append(fP->fKNotes->text(fP->fIndex.key()));
+			QString text,title,body;
+			title = fP->fIndex.data();
+			body = fP->fKNotes->text(fP->fIndex.key());
+			if (body.startsWith(title))
+			{
+				text = body;
+			}
+			else
+			{
+				text = title + CSL1("\n") + body;
+			}
 
 			PilotMemo *a = new PilotMemo(text);
 			PilotRecord *r = a->pack();
@@ -459,13 +526,46 @@ bool KNotesAction::modifyNoteOnPilot()
 		else
 		{
 			kdWarning() << ": Modified note unknown to Pilot" << endl;
+			// Add it anyway, with new PilotID.
+			int newid = addNoteToPilot();
+			fP->fIdList.remove(nm);
+			fP->fIdList.append(NoteAndMemo(fP->fIndex.key(),newid));
 		}
 
-		fP->fCounter++;
+		++(fP->fCounter);
 	}
 
 	++(fP->fIndex);
 	return false;
+}
+
+bool KNotesAction::deleteNoteOnPilot()
+{
+	FUNCTIONSETUP;
+
+	QValueList<NoteAndMemo>::Iterator i = fP->fIdList.begin();
+	while ( i != fP->fIdList.end() )
+	{
+		if (fP->fNotes.contains((*i).note()))
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": Note " << (*i).note() << " still exists." << endl;
+#endif
+		}
+		else
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": Note " << (*i).note() << " is deleted." << endl;
+			fDatabase->deleteRecord((*i).memo());
+			fLocalDatabase->deleteRecord((*i).memo());
+			i = fP->fIdList.remove(i);
+			continue;
+#endif
+		}
+		++i;
+	}
+
+	return true;
 }
 
 bool KNotesAction::addNewNoteToPilot()
@@ -489,30 +589,9 @@ bool KNotesAction::addNewNoteToPilot()
 
 	if (fP->fKNotes->isNew(CSL1("kpilot"),fP->fIndex.key()))
 	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname
-			<< ": The note #"
-			<< fP->fIndex.key()
-			<< " with name "
-			<< fP->fIndex.data()
-			<< " is new to the Pilot."
-			<< endl;
-#endif
-
-		QString text = fP->fIndex.data() + CSL1("\n") ;
-		text.append(fP->fKNotes->text(fP->fIndex.key()));
-
-		PilotMemo *a = new PilotMemo(text);
-		PilotRecord *r = a->pack();
-
-		int newid = fDatabase->writeRecord(r);
-		fLocalDatabase->writeRecord(r);
+		int newid = addNoteToPilot();
 		fP->fIdList.append(NoteAndMemo(fP->fIndex.key(),newid));
-
-		delete r;
-		delete a;
-
-		fP->fCounter++;
+		++(fP->fCounter);
 	}
 
 	++(fP->fIndex);
@@ -527,6 +606,9 @@ bool KNotesAction::syncMemoToKNotes()
 
 	if (SyncAction::eCopyHHToPC == getSyncDirection())
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": Read record " << fP->fRecordIndex << endl;
+#endif
 		rec = fDatabase->readRecordByIndex(fP->fRecordIndex);
 		fP->fRecordIndex++;
 	}
@@ -537,19 +619,32 @@ bool KNotesAction::syncMemoToKNotes()
 
 	if (!rec)
 	{
+		// Tell the user what happened. If no changes were
+		// made, spoke remains false and we'll tack a
+		// message on to the end saying so, so that
+		// the user always gets at least one message.
+		bool spoke = false;
 		if (fP->fCounter)
 		{
 			addSyncLogEntry(i18n("Added one memo to KNotes.",
 				"Added %n memos to KNotes.",fP->fCounter));
+			spoke = true;
 		}
-		else
+		if (fP->fModifyCounter)
 		{
-			addSyncLogEntry(i18n("No memos added to KNotes."));
+			addSyncLogEntry(i18n("Modified one note in KNotes.",
+				"Modified %n notes in KNotes.",fP->fModifyCounter));
+			spoke = true;
 		}
 		if (fP->fDeleteCounter)
 		{
 			addSyncLogEntry(i18n("Deleted one memo from KNotes.",
 				"Deleted %n memos from KNotes.",fP->fDeleteCounter));
+			spoke = true;
+		}
+		if (!spoke)
+		{
+			addSyncLogEntry(i18n("No change to KNotes."));
 		}
 		return true;
 	}
@@ -567,85 +662,91 @@ bool KNotesAction::syncMemoToKNotes()
 		<< endl;
 #endif
 
-	if (memo->isDeleted() && m.valid())
+	if (memo->isDeleted())
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": It's been deleted." << endl;
 #endif
-		// We knew about the note already, but it
-		// has changed on the Pilot.
-		//
-		//
-		if (fP->fDeleteNoteForMemo)
+		if (m.valid())
 		{
-			fP->fKNotes->killNote(m.note(),KNotesConduitSettings::suppressKNotesConfirm());
-			fP->fDeleteCounter++;
-		}
-
-		fLocalDatabase->deleteRecord(rec->getID());
-	}
-	else if (memo->isDeleted() /* && !m.valid() */ )
-	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << ": It's new and deleted." << endl;
-#endif
-		fLocalDatabase->deleteRecord(rec->getID());
-	}
-	else if (!memo->isDeleted() && m.valid())
-	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << ": It's just modified." << endl;
-		DEBUGCONDUIT << fname << ": <"
-			<< fP->fNotes[m.note()]
-			<< "> <"
-			<< memo->shortTitle()
-			<< ">"
-			<< endl;
-#endif
-		// Check if KNotes still knows about this note
-		if (!(fP->fKNotes->name(m.note()).isEmpty()))
-		{
-			updateNote(m,memo);
+			// We knew about the note already, but it
+			// has changed on the Pilot.
+			//
+			//
+			if (fP->fDeleteNoteForMemo)
+			{
+				fP->fKNotes->killNote(m.note(),KNotesConduitSettings::suppressKNotesConfirm());
+				fP->fDeleteCounter++;
+			}
 		}
 		else
 		{
-			uint c = fP->fIdList.remove(m);
-			if (!c)
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": It's new and deleted." << endl;
+#endif
+		}
+
+		fLocalDatabase->deleteRecord(rec->id());
+	}
+	else 
+	{
+		if (m.valid())
+		{
+	#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": It's just modified." << endl;
+			DEBUGCONDUIT << fname << ": <"
+				<< fP->fNotes[m.note()]
+				<< "> <"
+				<< memo->shortTitle()
+				<< ">"
+				<< endl;
+	#endif
+			// Check if KNotes still knows about this note
+			if (!(fP->fKNotes->name(m.note()).isEmpty()))
 			{
-				kdWarning() << k_funcinfo
-					<< ": Tried to remove valid note "
-					   "and failed."
-					<< endl;
+				updateNote(m,memo);
 			}
-			addNote(memo);
+			else
+			{
+				uint c = fP->fIdList.remove(m);
+				if (!c)
+				{
+					kdWarning() << k_funcinfo
+						<< ": Tried to remove valid note "
+						"and failed."
+						<< endl;
+				}
+				addMemoToKNotes(memo);
+			}
+		}
+		else
+		{
+			addMemoToKNotes(memo);
 		}
 		fLocalDatabase->writeRecord(rec);
 	}
-	else if (!memo->isDeleted() && !m.valid())
-	{
-		addNote(memo);
-		fLocalDatabase->writeRecord(rec);
-	}
 
-	if (memo) delete memo;
-	if (rec) delete rec;
+	KPILOT_DELETE(memo);
+	KPILOT_DELETE(rec);
 
 	return false;
 }
 
 void KNotesAction::updateNote(const NoteAndMemo &m, const PilotMemo *memo)
 {
+	FUNCTIONSETUP;
 	if (fP->fNotes[m.note()] != memo->shortTitle())
 	{
 		// Name changed. KNotes might complain though.
 		fP->fKNotes->setName(m.note(), memo->shortTitle());
 	}
 	fP->fKNotes->setText(m.note(),memo->text());
+	fP->fModifyCounter++;
 }
 
-void KNotesAction::addNote(const PilotMemo *memo)
+void KNotesAction::addMemoToKNotes(const PilotMemo *memo)
 {
-  FUNCTIONSETUP;
+	FUNCTIONSETUP;
 	// This note is new to KNotes
 	KNoteID_t i = fP->fKNotes->newNote(memo->shortTitle(), memo->text());
 	fP->fIdList.append(NoteAndMemo(i,memo->id()));
@@ -654,6 +755,34 @@ void KNotesAction::addNote(const PilotMemo *memo)
 	DEBUGCONDUIT << fname << ": It's new with knote id " << i << endl;
 #endif
 }
+int KNotesAction::addNoteToPilot()
+{
+	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": The note #"
+		<< fP->fIndex.key()
+		<< " with name "
+		<< fP->fIndex.data()
+		<< " is new to the Pilot."
+		<< endl;
+#endif
+
+	QString text = fP->fIndex.data() + CSL1("\n") ;
+	text.append(fP->fKNotes->text(fP->fIndex.key()));
+
+	PilotMemo *a = new PilotMemo(text);
+	PilotRecord *r = a->pack();
+
+	int newid = fDatabase->writeRecord(r);
+	fLocalDatabase->writeRecord(r);
+
+	delete r;
+	delete a;
+
+	return newid;
+}
+
 
 void KNotesAction::cleanupMemos()
 {

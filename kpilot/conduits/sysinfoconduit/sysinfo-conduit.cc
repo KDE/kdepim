@@ -1,4 +1,4 @@
-/* sysinfo-conduit.cc                           KPilot
+/* KPilot
 **
 ** Copyright (C) 2003 by Reinhold Kainhofer
 **
@@ -49,7 +49,7 @@
 #include "sysinfo-conduit.moc"
 #include "sysinfoSettings.h"
 
-const QString SysInfoConduit::defaultpage = QString("KPilot System Information Page\n"
+const QString SysInfoConduit::defaultpage = CSL1("KPilot System Information Page\n"
 "==============================\n"
 "(Kpilot was unable to find the correct template file, \n"
 "so this simple template was used.)\n\n"
@@ -89,10 +89,10 @@ const QString SysInfoConduit::defaultpage = QString("KPilot System Information P
 "#endifdblist#-->\n"
 "\n"
 "<!--#ifrecords#\n"
-"-) Number of addresses, todos, events, and memos\n"
+"-) Number of addresses, to-dos, events, and memos\n"
 "     Addresses: #addresses# entries in Addressbook\n"
 "     Events:    #events# entries in Calendar\n"
-"     Todos:     #todos# entries in ToDo list\n"
+"     To-dos:    #todos# entries in To-do list\n"
 "     Memos:     #memos# memos\n"
 "#endifrecords#-->\n"
 "\n"
@@ -179,23 +179,28 @@ SysInfoConduit::~SysInfoConduit()
 
 void SysInfoConduit::readConfig()
 {
-	FUNCTIONSETUP;
-	
-#ifdef DEBUG
-	DEBUGCONDUIT<<"Output file="<<SysinfoSettings::outputFile()<<" with type "<<
-		SysinfoSettings::outputFormat()<<" (Template:"<<SysinfoSettings::templateFile()<<")"<<endl;
-	DEBUGCONDUIT<<"HW:"<<SysinfoSettings::hardwareInfo()<<",User:"<<SysinfoSettings::userInfo()<<
-		",Mem:"<<SysinfoSettings::memoryInfo()<<",Sto:"<<SysinfoSettings::storageInfo()<<endl;
-	DEBUGCONDUIT<<"DBL:"<<SysinfoSettings::databaseList()<<",Rec:"<<SysinfoSettings::recordNumbers()<<
-		",KDE:"<<SysinfoSettings::kDEVersion()<<",PalmOS:"<<SysinfoSettings::palmOSVersion()<<endl;
-#endif
+	fOutputFile = SysinfoSettings::outputFile();
+	fOutputType = (eOutputTypeEnum) SysinfoSettings::outputFormat();
+	fTemplateFile = SysinfoSettings::templateFile();
+	fHardwareInfo = SysinfoSettings::hardwareInfo();
+	fUserInfo = SysinfoSettings::userInfo();
+	fMemoryInfo = SysinfoSettings::memoryInfo();
+	fStorageInfo = SysinfoSettings::storageInfo();
+	fDBList = SysinfoSettings::databaseList();
+	fRecordNumber = SysinfoSettings::recordNumbers();
+	fSyncInfo = SysinfoSettings::syncInfo();
+	fKDEVersion = SysinfoSettings::kDEVersion();
+	fPalmOSVersion = SysinfoSettings::palmOSVersion();
+	fDebugInfo = SysinfoSettings::debugInformation();
 }
 
 
 /* virtual */ bool SysInfoConduit::exec()
 {
 	FUNCTIONSETUP;
-	DEBUGCONDUIT<<id_conduit_sysinfo<<endl;
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << id_conduit_sysinfo<<endl;
+#endif
 
 	readConfig();
 
@@ -219,32 +224,32 @@ void SysInfoConduit::hardwareInfo()
 		KPilotSysInfo *sysinfo = fHandle->getSysInfo();
 		if (sysinfo)
 		{
-			fValues["deviceid"] = QString(sysinfo->getProductID());
+			fValues[CSL1("deviceid")] = QString::fromLatin1(sysinfo->getProductID());
 		}
 		else
 		{
-			fValues["deviceid"] = unknown;
+			fValues[CSL1("deviceid")] = unknown;
 		}
 		
 		KPilotCard *device = fHandle->getCardInfo();
 		if (device)
 		{
-			fValues["devicename"] = QString(device->getCardName());
-			fValues["devicemodel"] = unknown;  // TODO
-			fValues["manufacturer"] = QString(device->getCardManufacturer());
+			fValues[CSL1("devicename")] = QString::fromLatin1(device->getCardName());
+			fValues[CSL1("devicemodel")] = unknown;  // TODO
+			fValues[CSL1("manufacturer")] = QString::fromLatin1(device->getCardManufacturer());
 		}
 		else
 		{
-			fValues["devicename"] = unknown;
-			fValues["devicemodel"] = unknown;
-			fValues["manufacturer"] = unknown;
+			fValues[CSL1("devicename")] = unknown;
+			fValues[CSL1("devicemodel")] = unknown;
+			fValues[CSL1("manufacturer")] = unknown;
 		}
 		
-		fValues["devicetype"] = unknown;
+		fValues[CSL1("devicetype")] = unknown;
 		
 		KPILOT_DELETE(device);
-		keepParts.append("hardware");
-	} else removeParts.append("hardware");
+		keepParts.append(CSL1("hardware"));
+	} else removeParts.append(CSL1("hardware"));
 	QTimer::singleShot(0, this, SLOT(userInfo()));
 }
 
@@ -257,15 +262,15 @@ void SysInfoConduit::userInfo()
 		 * - #uid#
 		 */
 		KPilotUser*user=fHandle->getPilotUser();
-		fValues["username"] = user->getUserName();
+		fValues[CSL1("username")] = user->getUserName();
 		if (user->getPasswordLength()>0)
-			fValues["pw"] = i18n("Password set");
+			fValues[CSL1("pw")] = i18n("Password set");
 		else
-			fValues["pw"] = i18n("No password set");
-		fValues["uid"] = QString::number(user->getUserID());
-		fValues["viewerid"] = QString::number(user->getViewerID());
-		keepParts.append("user");
-	} else removeParts.append("user");
+			fValues[CSL1("pw")] = i18n("No password set");
+		fValues[CSL1("uid")] = QString::number(user->getUserID());
+		fValues[CSL1("viewerid")] = QString::number(user->getViewerID());
+		keepParts.append(CSL1("user"));
+	} else removeParts.append(CSL1("user"));
 	QTimer::singleShot(0, this, SLOT(memoryInfo()));
 }
 
@@ -279,11 +284,11 @@ void SysInfoConduit::memoryInfo()
 		 * - #freemem#
 		 */
 		KPilotCard*device = fHandle->getCardInfo();
-		fValues["rom"] =  QString::number(device->getRomSize()/1024);
-		fValues["totalmem"] =  QString::number(device->getRamSize()/1024);
-		fValues["freemem"] =  QString::number(device->getRamFree()/1024);
-		keepParts.append("memory");
-	} else removeParts.append("memory");
+		fValues[CSL1("rom")] =  QString::number(device->getRomSize()/1024);
+		fValues[CSL1("totalmem")] =  QString::number(device->getRamSize()/1024);
+		fValues[CSL1("freemem")] =  QString::number(device->getRamFree()/1024);
+		keepParts.append(CSL1("memory"));
+	} else removeParts.append(CSL1("memory"));
 	QTimer::singleShot(0, this, SLOT(storageInfo()));
 }
 
@@ -296,17 +301,17 @@ void SysInfoConduit::storageInfo()
 		 */
 		KPilotCard*device = fHandle->getCardInfo(1);
 		if (device) {
-			fValues["cards"] = QString("%1 (%2, %3 kB of %3 kB free)")
-				.arg(device->getCardName())
-				.arg(device->getCardManufacturer())
+			fValues[CSL1("cards")] = CSL1("%1 (%2, %3 kB of %3 kB free)")
+				.arg(QString::fromLatin1(device->getCardName()))
+				.arg(QString::fromLatin1(device->getCardManufacturer()))
 				.arg(device->getRamFree()/1024)
 				.arg(device->getRamSize()/1024);
 			KPILOT_DELETE(device);
 		} else {
-			fValues["cards"] = i18n("No Cards available via pilot-link");
+			fValues[CSL1("cards")] = i18n("No Cards available via pilot-link");
 		}
-		keepParts.append("storage");
-	} else removeParts.append("storage");
+		keepParts.append(CSL1("storage"));
+	} else removeParts.append(CSL1("storage"));
 	QTimer::singleShot(0, this, SLOT(dbListInfo()));
 }
 
@@ -318,8 +323,8 @@ void SysInfoConduit::dbListInfo()
 		 * - #dblist(structure)#
 		 */
 		dblist=fHandle->getDBList();
-		keepParts.append("dblist");
-	} else removeParts.append("dblist");
+		keepParts.append(CSL1("dblist"));
+	} else removeParts.append(CSL1("dblist"));
 	QTimer::singleShot(0, this, SLOT(recNumberInfo()));
 }
 
@@ -334,32 +339,33 @@ void SysInfoConduit::recNumberInfo()
 		 * - #memos#
 		 */
 		PilotDatabase*fDatabase;
-		fValues["addresses"] = "ERROR";
-		fValues["events"] = "ERROR";
-		fValues["todos"] = "ERROR";
-		fValues["memos"] = "ERROR";
-		fDatabase = new PilotSerialDatabase(pilotSocket(), "AddressDB");
+		QString ERROR = CSL1("ERROR");
+		fValues[CSL1("addresses")] = ERROR;
+		fValues[CSL1("events")] = ERROR;
+		fValues[CSL1("todos")] = ERROR;
+		fValues[CSL1("memos")] = ERROR;
+		fDatabase = new PilotSerialDatabase(pilotSocket(), CSL1("AddressDB"));
 		if (fDatabase) {
-			fValues["addresses"] = QString::number(fDatabase->recordCount());
+			fValues[CSL1("addresses")] = QString::number(fDatabase->recordCount());
 			KPILOT_DELETE(fDatabase);
 		}
-		fDatabase = new PilotSerialDatabase(pilotSocket(), "DatebookDB");
+		fDatabase = new PilotSerialDatabase(pilotSocket(), CSL1("DatebookDB"));
 		if (fDatabase) {
-			fValues["events"] = QString::number(fDatabase->recordCount());
+			fValues[CSL1("events")] = QString::number(fDatabase->recordCount());
 			KPILOT_DELETE(fDatabase);
 		}
-		fDatabase = new PilotSerialDatabase(pilotSocket(), "ToDoDB");
+		fDatabase = new PilotSerialDatabase(pilotSocket(), CSL1("ToDoDB"));
 		if (fDatabase) {
-			fValues["todos"] = QString::number(fDatabase->recordCount());
+			fValues[CSL1("todos")] = QString::number(fDatabase->recordCount());
 			KPILOT_DELETE(fDatabase);
 		}
-		fDatabase = new PilotSerialDatabase(pilotSocket(), "MemoDB");
+		fDatabase = new PilotSerialDatabase(pilotSocket(), CSL1("MemoDB"));
 		if (fDatabase) {
-			fValues["memos"] = QString::number(fDatabase->recordCount());
+			fValues[CSL1("memos")] = QString::number(fDatabase->recordCount());
 			KPILOT_DELETE(fDatabase);
 		}
-		keepParts.append("records");
-	} else removeParts.append("records");
+		keepParts.append(CSL1("records"));
+	} else removeParts.append(CSL1("records"));
 	QTimer::singleShot(0, this, SLOT(syncInfo()));
 }
 
@@ -376,13 +382,13 @@ void SysInfoConduit::syncInfo()
 		time_t lastsync = user->getLastSyncDate();
 		QDateTime qlastsync;
 		qlastsync.setTime_t(lastsync);
-		fValues["lastsync"] = qlastsync.toString(Qt::LocalDate);
+		fValues[CSL1("lastsync")] = qlastsync.toString(Qt::LocalDate);
 		lastsync = user->getLastSuccessfulSyncDate();
 		qlastsync.setTime_t(lastsync);
-		fValues["lastsuccsync"] = qlastsync.toString(Qt::LocalDate);
-		fValues["lastsyncpc"] = QString::number(user->getLastSyncPC());
-		keepParts.append("sync");
-	} else removeParts.append("sync");
+		fValues[CSL1("lastsuccsync")] = qlastsync.toString(Qt::LocalDate);
+		fValues[CSL1("lastsyncpc")] = QString::number(user->getLastSyncPC());
+		keepParts.append(CSL1("sync"));
+	} else removeParts.append(CSL1("sync"));
 	QTimer::singleShot(0, this, SLOT(pcVersionInfo()));
 }
 
@@ -397,26 +403,26 @@ void SysInfoConduit::pcVersionInfo()
 		 * - #kpilot#
 		 * - #pilotlink#
 		 */
-		fValues["kpilot"] = QString::fromLatin1(KPILOT_VERSION);
-		fValues["kde"] = i18n("unknown");
-		fValues["qt"] = i18n("unknown");
-		fValues["os"] = i18n("unknown");
-		fValues["hostname"] = i18n("unknown");
+		fValues[CSL1("kpilot")] = QString::fromLatin1(KPILOT_VERSION);
+		fValues[CSL1("kde")] = i18n("unknown");
+		fValues[CSL1("qt")] = i18n("unknown");
+		fValues[CSL1("os")] = i18n("unknown");
+		fValues[CSL1("hostname")] = i18n("unknown");
 		struct utsname name;
 		if (uname (&name) >= 0) {
-			fValues["os"] = QString("%1 %3, %5")
-				.arg(name.sysname)
-				.arg(name.release)
-				.arg(name.machine);
-			fValues["hostname"] = QString("%2").arg(name.nodename);
+			fValues[CSL1("os")] = CSL1("%1 %3, %5")
+				.arg(QString::fromLatin1(name.sysname))
+				.arg(QString::fromLatin1(name.release))
+				.arg(QString::fromLatin1(name.machine));
+			fValues[CSL1("hostname")] = CSL1("%2").arg(QString::fromLatin1(name.nodename));
 		}
 #ifdef KDE_VERSION_STRING
-		fValues["kde"] = QString::fromLatin1(KDE_VERSION_STRING);
+		fValues[CSL1("kde")] = QString::fromLatin1(KDE_VERSION_STRING);
 #endif
 #ifdef QT_VERSION_STR
-		fValues["qt"] = QString::fromLatin1(QT_VERSION_STR);
+		fValues[CSL1("qt")] = QString::fromLatin1(QT_VERSION_STR);
 #endif
-		fValues["pilotlink"] = CSL1("%1.%2.%3%4")
+		fValues[CSL1("pilotlink")] = CSL1("%1.%2.%3%4")
 			.arg(PILOT_LINK_VERSION)
 			.arg(PILOT_LINK_MAJOR)
 			.arg(PILOT_LINK_MINOR)
@@ -425,8 +431,8 @@ void SysInfoConduit::pcVersionInfo()
 #else
 			.arg(QString());
 #endif
-		keepParts.append("pcversion");
-	} else removeParts.append("pcversion");
+		keepParts.append(CSL1("pcversion"));
+	} else removeParts.append(CSL1("pcversion"));
 	QTimer::singleShot(0, this, SLOT(palmVersionInfo()));
 }
 
@@ -437,15 +443,15 @@ void SysInfoConduit::palmVersionInfo()
 		/* Retrieve values for
 		 * - #palmos#
 		 */
-/*		fValues["palmos"] = QString("PalmOS® %1.%2 (compat %3.%4)")
+/*		fValues["palmos"] = QString("PalmOS %1.%2 (compat %3.%4)")
 			.arg(fHandle->getSysInfo()->getMajorVersion())
 			.arg(fHandle->getSysInfo()->getMinorVersion())
 			.arg(fHandle->getSysInfo()->getCompatMajorVersion())
 			.arg(fHandle->getSysInfo()->getCompatMinorVersion());*/
-		fValues["palmos"] = QString("PalmOS® %1.%2").arg(fHandle->majorVersion()).arg(fHandle->minorVersion());
+		fValues[CSL1("palmos")] = CSL1("PalmOS %1.%2").arg(fHandle->majorVersion()).arg(fHandle->minorVersion());
 
-		keepParts.append("palmversion");
-	} else removeParts.append("palmversion");
+		keepParts.append(CSL1("palmversion"));
+	} else removeParts.append(CSL1("palmversion"));
 	QTimer::singleShot(0, this, SLOT(debugInfo()));
 }
 
@@ -456,9 +462,9 @@ void SysInfoConduit::debugInfo()
 		/* Retrieve values for
 		 * - #debug#
 		 */
-		fValues["debug"] = i18n("No debug data");
-		keepParts.append("debug");
-	} else removeParts.append("debug");
+		fValues[CSL1("debug")] = i18n("No debug data");
+		keepParts.append(CSL1("debug"));
+	} else removeParts.append(CSL1("debug"));
 	QTimer::singleShot(0, this, SLOT(writeFile()));
 }
 
@@ -466,7 +472,7 @@ void SysInfoConduit::writeFile()
 {
 	FUNCTIONSETUP;
 
-	fValues["date"] = QDateTime::currentDateTime().toString(Qt::LocalDate);
+	fValues[CSL1("date")] = QDateTime::currentDateTime().toString(Qt::LocalDate);
 
 	QString output;
 	// Open the template file
@@ -474,14 +480,14 @@ void SysInfoConduit::writeFile()
 	switch(fOutputType)
 	{
 		case eOutputText:
-			templatefile=locate("data", "kpilot/sysinfoconduit/Template.txt");
+			templatefile=locate("data", CSL1("kpilot/sysinfoconduit/Template.txt"));
 			break;
 		case eOutputTemplate:
 			templatefile=fTemplateFile;
 			break;
 		case eOutputHTML:
 		default:
-			templatefile=locate("data", "kpilot/sysinfoconduit/Template.html");
+			templatefile=locate("data", CSL1("kpilot/sysinfoconduit/Template.html"));
 			break;
 	}
 
@@ -507,24 +513,24 @@ void SysInfoConduit::writeFile()
 
 	// Remove all parts not extracted
 	for ( QStringList::Iterator it = removeParts.begin(); it != removeParts.end(); ++it ) {
-		QRegExp re(QString("<!--#if%1#.*#endif%1#-->").arg(*it).arg(*it));
+		QRegExp re(CSL1("<!--#if%1#.*#endif%1#-->").arg(*it).arg(*it));
 		re.setMinimal(true);
 		output.remove(re);
 	}
 	for ( QStringList::Iterator it = keepParts.begin(); it != keepParts.end(); ++it ) {
-		QRegExp re(QString("<!--#if%1#(.*)#endif%1#-->").arg(*it).arg(*it));
+		QRegExp re(CSL1("<!--#if%1#(.*)#endif%1#-->").arg(*it).arg(*it));
 		re.setMinimal(true);
-		output.replace(re, "\\1");
+		output.replace(re, CSL1("\\1"));
 	}
 
 	// Do a loop through all keys in fValues
 	QMap<QString,QString>::Iterator it;
 	for ( it = fValues.begin(); it != fValues.end(); ++it ) {
-		output.replace(QString("#%1#").arg(it.key().latin1()), it.data().latin1());
+		output.replace(CSL1("#%1#").arg(it.key()), it.data());
 	}
 
 	// Insert the list of databases
-	QRegExp re("#dblist\\[(.*)\\]#");
+	QRegExp re(CSL1("#dblist\\[(.*)\\]#"));
 	re.setMinimal(true);
 	while (re.search(output)>=0){
 		QString dbstring;
@@ -546,22 +552,22 @@ void SysInfoConduit::writeFile()
 			 * %8 .. modifyDate
 			 * %9 .. backupDate
 			 */
-			newpatt.replace("%0", QString(dbi->name));
+			newpatt.replace(CSL1("%0"), QString::fromLatin1(dbi->name));
 			set_long(&tmpchr[0],dbi->type);
-			newpatt.replace("%1", QString(tmpchr));
+			newpatt.replace(CSL1("%1"), QString::fromLatin1(tmpchr));
 			set_long(&tmpchr[0],dbi->creator);
-			newpatt.replace("%2", tmpchr);
-			newpatt.replace("%3", QString::number(dbi->index));
-			newpatt.replace("%4", QString::number(dbi->flags));
-			newpatt.replace("%5", QString::number(dbi->miscFlags));
-			newpatt.replace("%6", QString::number(dbi->version));
+			newpatt.replace(CSL1("%2"), QString::fromLatin1(tmpchr));
+			newpatt.replace(CSL1("%3"), QString::number(dbi->index));
+			newpatt.replace(CSL1("%4"), QString::number(dbi->flags));
+			newpatt.replace(CSL1("%5"), QString::number(dbi->miscFlags));
+			newpatt.replace(CSL1("%6"), QString::number(dbi->version));
 			QDateTime tm;
 			tm.setTime_t(dbi->createDate);
-			newpatt.replace("%7", tm.toString(Qt::LocalDate));
+			newpatt.replace(CSL1("%7"), tm.toString(Qt::LocalDate));
 			tm.setTime_t(dbi->modifyDate);
-			newpatt.replace("%8", tm.toString(Qt::LocalDate));
+			newpatt.replace(CSL1("%8"), tm.toString(Qt::LocalDate));
 			tm.setTime_t(dbi->backupDate);
-			newpatt.replace("%9", tm.toString(Qt::LocalDate));
+			newpatt.replace(CSL1("%9"), tm.toString(Qt::LocalDate));
 
 			dbstring.append(newpatt);
 		}
@@ -571,8 +577,11 @@ void SysInfoConduit::writeFile()
 
 	// Write out the result
 	QFile outfile(fOutputFile);
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Writing file <" << fOutputFile << ">" << endl;
+#endif
 	if (fOutputFile.isEmpty() || (!outfile.open(IO_WriteOnly)) ) {
-		QFileInfo fi(QDir::home(), QString("KPilotSysInfo.")+QFileInfo(templatefile).extension() );
+		QFileInfo fi(QDir::home(), CSL1("KPilotSysInfo.")+QFileInfo(templatefile).extension() );
 		fOutputFile=fi.absFilePath();
 		kdWarning()<<i18n("Unable to open output file, using %1 instead.").arg(fOutputFile).latin1()<<endl;
 		emit logMessage(i18n("Unable to open output file, using %1 instead.").arg(fOutputFile));

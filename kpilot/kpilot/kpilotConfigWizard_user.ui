@@ -1,0 +1,168 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>ConfigWizard_base2</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>ConfigWizard_base2</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>512</width>
+            <height>298</height>
+        </rect>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>textLabel1</cstring>
+            </property>
+            <property name="text">
+                <string>This wizard will help you configure KPilot.</string>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignVCenter</set>
+            </property>
+        </widget>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>textLabel5</cstring>
+            </property>
+            <property name="text">
+                <string>As a first step, we need to determine the user name and how the handheld is connected to the computer.</string>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignVCenter</set>
+            </property>
+        </widget>
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>groupBox2</cstring>
+            </property>
+            <property name="title">
+                <string>Handheld &amp;&amp; User Name</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;p&gt;You can either let KPilot detect these values automatically (for this you need your handheld ready and connected to the PC)  or enter them manually.&lt;/p&gt;
+&lt;p&gt;Please enter the username exactly as set on the handheld. &lt;/p&gt;
+&lt;p&gt;If setting the device type manually (i.e., if automatic detection did not work for you), please look below for tips on choosing the right device name.  {0...n} means a number from 0 up to a very large number, though usually just 255.
+&lt;p&gt;
+Serial Port: an old method of connection, used primarily by the original line of Palm Pilots, and various Palm-based cellphones.  Device name will look like /dev/ttyS{0...n} (Linux) or /dev/cuaa{0...n} (FreeBSD).&lt;/p&gt;
+&lt;p&gt;
+USB Port: A newer style of connection, used by most newer Palms, Handsprings, and Sony Clies.  Device name will look like /dev/ttyUSB{0...n} or /dev/usb/tts/{0...n} (Linux) or /dev/ucom{0...n} (FreeBSD).  On Linux, definitely check both 0 and 1: newer devices tend to use 1; older devices tend to use 0.&lt;/p&gt;
+&lt;p&gt;
+Infrared: (pronounced infra-red) is a relatively slow connection type used solely as a last resort.  Device name will be /dev/ircomm0 or /dev/ttyS{0...n} (Linux), or /dev/sio{0...n} (FreeBSD).&lt;/p&gt;
+&lt;p&gt;
+Bluetooth: A new connection method, this is used almost exclusively on new, high-end devices, like the Tungsten T3 or the Zire 72.  Device name will be /dev/usb/ttub/{0...n} or /dev/ttyUB{0...n} (Linux), or /dev/ttyp{0...n} (FreeBSD).&lt;/p&gt;
+&lt;p&gt;
+Network: This has not been tested by any of the KPilot developers themselves (hardware donations always accepted!), but it has been reported that setting the device to "net:any" will work for network-enabled devices.  However, this has also been known to lock KPilot up when doing anything other than just syncing. Use it with caution.
+&lt;/p&gt;</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>textLabel3_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Device:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>fDeviceName</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Enter the device the Pilot is attached to (for instance a serial or USB port) here. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device. Use the button below to automatically detect the device. You need write permission to successfully synchronize with the handheld.&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton" row="2" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>fProbeButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Automatically Detect Handheld &amp;&amp; User Name</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Click this button to open the detection dialog. The wizard will try to automatically find and display the correct device and username for your handheld. If the wizard cannot retrieve this information, check if you have write permission for the device.&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="1" column="1">
+                    <property name="name">
+                        <cstring>fDeviceName</cstring>
+                    </property>
+                    <property name="text">
+                        <string>/dev/pilot</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Enter the device the Pilot is attached to (for instance a serial or USB port) here. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device. Use the button below to automatically detect the device. You need write permission to successfully synchronize with the handheld.&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="0" column="1">
+                    <property name="name">
+                        <cstring>fUserName</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Enter your username here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting, or use the button below to automatically detect it.&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>textLabel2_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>User na&amp;me:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>fUserName</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Enter your username here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting, or use the button below to automatically detect it.&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>fPilotRunningPermanently</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Start KPilot at login</string>
+            </property>
+            <property name="checked">
+                <bool>true</bool>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;qt&gt;Check this box to make the kpilot daemon load when you first log in until you log out.  That means (in theory), that you should not have to do anything other than connect your handheld and push "sync", and kpilot will appear and magically do your bidding. &lt;/qt&gt;</string>
+            </property>
+        </widget>
+        <spacer>
+            <property name="name">
+                <cstring>spacer4</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>70</height>
+                </size>
+            </property>
+        </spacer>
+    </vbox>
+</widget>
+<tabstops>
+    <tabstop>fUserName</tabstop>
+    <tabstop>fDeviceName</tabstop>
+    <tabstop>fProbeButton</tabstop>
+    <tabstop>fPilotRunningPermanently</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -1,4 +1,4 @@
-/* pilotDOCEntry.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer
 **
@@ -77,7 +77,7 @@ PilotDOCEntry & PilotDOCEntry::operator =(const PilotDOCEntry & e)
 
 
 
-void *PilotDOCEntry::pack(void *buf, int *len)
+void *PilotDOCEntry::pack_(void *buf, int *len)
 {
 //      int len;
 	if (compress)

@@ -3,6 +3,7 @@
 /* pilotTodoEntry.h	-*- C++ -*-		KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a wrapper around the pilot-link Memo structure. It is
 ** the interpreted form of a Pilot database record.
@@ -40,7 +41,7 @@
 
 
 
-class PilotTodoEntry : public PilotAppCategory
+class KDE_EXPORT PilotTodoEntry : public PilotAppCategory
 {
 public:
 	PilotTodoEntry(struct ToDoAppInfo &appInfo);
@@ -52,8 +53,6 @@ public:
 	virtual QString getTextRepresentation(bool richText=false);
 
 	PilotTodoEntry& operator=(const PilotTodoEntry &e);
-
-	PilotRecord* pack() { return PilotAppCategory::pack(); }
 
 	struct tm getDueDate() const { return fTodoInfo.due; }
 	void setDueDate(struct tm& d) { fTodoInfo.due = d; }
@@ -81,12 +80,12 @@ public:
 	*  to the category list
 	*  @return false if category labels are full
 	*/
-	bool setCategory(const QString &label);
+	inline bool setCategory(const QString &label) { return setCat(fAppInfo.category,label);  };
 
 	// static const int APP_BUFFER_SIZE;
 
 protected:
-	void *pack(void *, int *);
+	void *pack_(void *, int *);
 	void unpack(const void *, int = 0) { } ;
 
 	const char *getDescriptionP() const { return fTodoInfo.description; } ;

@@ -3,6 +3,7 @@
 /* pilotLocalDatabase.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** See the .cc file for an explanation of what this file is for.
 */
@@ -32,7 +33,9 @@
 
 #include "pilotDatabase.h"
 
-class PilotLocalDatabase : public PilotDatabase
+// #define SHADOW_LOCAL_DB (1)
+
+class KDE_EXPORT PilotLocalDatabase : public PilotDatabase
 {
 public:
 	/**
@@ -85,20 +88,30 @@ public:
 	virtual int recordCount();
 	// Returns a QValueList of all record ids in the database.
 	virtual QValueList<recordid_t> idList();
-	// Reads a record from database by id, returns record length
+	// Reads a record from database by id, returns record
 	virtual PilotRecord* readRecordById(recordid_t id);
-	// Reads a record from database, returns the record length
+	// Reads a record from database, returns the record
 	virtual PilotRecord* readRecordByIndex(int index);
 	// Reads the next record from database in category 'category'
 	virtual PilotRecord* readNextRecInCategory(int category);
+	/**
+	* Returns the next "new" record, ie. the next record
+	* that has not been synced yet. These records all have ID=0, so are
+	* not easy to find with the other methods. The record is the one
+	* contained in the database, not a copy like the read*() functions
+	* give you -- so be careful with it. Don't delete it, in any case.
+	* Casting it to non-const and marking it deleted is OK, though,
+	* which is mostly its intended use.
+	*/
+	const PilotRecord *findNextNewRecord();
+
 	/**
 	* Reads the next record from database that has the dirty flag set.
 	* ind (if a valid pointer is given) will receive the index of the
 	* returned record.
 	*/
-	virtual PilotRecord* readNextModifiedRec(int *ind=NULL);
-	// Writes a new record to database (if 'id' == 0, one will be
-	// assigned to newRecord)
+	virtual PilotRecord* readNextModifiedRec(int *ind=0L);
+	// Writes a new record to database (if 'id' == 0, none is assigned, either)
 	virtual recordid_t writeRecord(PilotRecord* newRecord);
 	/**
 	* Deletes a record with the given recordid_t from the database,
@@ -135,6 +148,9 @@ public:
 	struct DBInfo getDBInfo() const { return fDBInfo; }
 	void setDBInfo(struct DBInfo dbi) {fDBInfo=dbi; }
 
+	virtual DBType dbType() const;
+
+
 protected:
 	// Changes any forward slashes to underscores
 	void fixupDBName();
@@ -151,6 +167,10 @@ private:
 	PilotRecord* fRecords[10000]; // Current max records in DB.. hope it's enough
 	int         fPendingRec; // Temp index for the record about to get an ID.
 
+#ifdef SHADOW_LOCAL_DB
+	QValueList<PilotRecord *> fRecordList;
+	QValueList<PilotRecord *>::Iterator fRecordIndex;
+#endif
 
 	/**
 	* For databases opened by name only (constructor 2 -- which is the

@@ -9,6 +9,8 @@ messages:
 	$(XGETTEXT) `find . -name "*.cc" -o -name "*.cpp"` -o $(podir)/kpilot.pot   
 	-rm -f rc.cpp
 
+include $(top_srcdir)/doc/api/Doxyfile.am
+
 # Just for the KPilot developers: grab all the strings, for checking.
 devel-pot :
 	extractrc `find . -name "*.rc" -o -name "*.ui"` > /tmp/rc.cpp

@@ -1,6 +1,7 @@
-/* pilotAddress.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a C++ wrapper for the pilot's address database structures.
 */
@@ -239,37 +240,6 @@ QString PilotAddress::getTextRepresentation(bool richText)
 	return text;
 }
 
-bool PilotAddress::setCategory(const QString &label)
-{
-	FUNCTIONSETUPL(4);
-	if (label.isEmpty())
-	{
-		setCat(0);
-		return true;
-	}
-	for (int catId = 1; catId < 16; catId++)
-	{
-		QString aCat = codec()->toUnicode(fAppInfo.category.name[catId]);
-
-		if (label == aCat)
-		{
-			setCat(catId);
-			return true;
-		}
-		else
-			// if empty, then no more labels; add it
-		if (aCat.isEmpty())
-		{
-			qstrncpy(fAppInfo.category.name[catId],
-				codec()->fromUnicode(label), 16);
-			setCat(catId);
-			return true;
-		}
-	}
-	// if got here, the category slots were full
-	return false;
-}
-
 QString PilotAddress::getCategoryLabel() const
 {
 	int cat(getCat());
@@ -422,11 +392,12 @@ void PilotAddress::setField(int field, const QString &text)
 	if (fAddressInfo.entry[field])
 	{
 		free(fAddressInfo.entry[field]);
+		fAddressInfo.entry[field]=0L;
 	}
 	if (!text.isEmpty())
 	{
 		fAddressInfo.entry[field] = (char *) malloc(text.length() + 1);
-		strcpy(fAddressInfo.entry[field], codec()->fromUnicode(text));
+		strlcpy(fAddressInfo.entry[field], codec()->fromUnicode(text), text.length() + 1);
 	}
 	else
 	{
@@ -434,7 +405,7 @@ void PilotAddress::setField(int field, const QString &text)
 	}
 }
 
-void *PilotAddress::pack(void *buf, int *len)
+void *PilotAddress::pack_(void *buf, int *len)
 {
 	FUNCTIONSETUPL(4);
 	int i;

@@ -1,6 +1,7 @@
-/* kpilotConfig.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is all of KPilot's config-handling stuff.
 */
@@ -34,7 +35,7 @@
 #include <qcombobox.h>
 #include <qcheckbox.h>
 
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kconfig.h>
 #include <ksimpleconfig.h>
 #include <kcmdlineargs.h>
@@ -212,18 +213,14 @@ static void update440()
 	KConfig*c = KPilotSettings::self()->config();
 ///	c->resetGroup();
 	c->setGroup( QString::null );
-	bool useKroupware = c->readBoolEntry("SyncWithKMail",false);
 	bool installFiles = c->readBoolEntry("SyncFiles",true);
-	if (useKroupware) conduits.append( CSL1("internal_kroupware") );
 	if (installFiles) conduits.append( CSL1("internal_fileinstall") );
-	c->deleteEntry("SyncWithKMail");
 	c->deleteEntry("SyncFiles");
 	KPilotSettings::setInstalledConduits(conduits);
 	c->sync();
-	if (useKroupware || installFiles)
+	if (installFiles)
 		KMessageBox::information(0L,
-			i18n("The settings for Kroupware syncing with KMail "
-				"and the file installer have been moved to the "
+			i18n("The settings for the file installer have been moved to the "
 				"conduits configuration. Check the installed "
 				"conduits list."),
 			i18n("Settings Updated"));
@@ -240,7 +237,7 @@ static void update440()
 	const char **s = oldconduits;
 	while (*s)
 	{
-		QString libname = CSL1("kde3/lib%1conduit.so").arg(*s);
+		QString libname = CSL1("kde3/lib%1conduit.so").arg(QString::fromLatin1(*s));
 		QString foundlib = ::locate("lib",libname);
 		if (!foundlib.isEmpty())
 		{
@@ -269,7 +266,7 @@ static void update443()
 	bool fixedSome = false;
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": Skip databases are: "
-		<< skip.join(",") << endl;
+		<< skip.join(CSL1(",")) << endl;
 #endif
 
 	for (QStringList::const_iterator i = skip.begin(); i!=skip.end(); ++i)

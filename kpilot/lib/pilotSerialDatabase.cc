@@ -1,6 +1,7 @@
-/* pilotSerialDatabase.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** Databases approached through DLP / Pilot-link look different,
 ** so this file defines an API for them.
@@ -29,14 +30,18 @@
 #include "options.h"
 
 #include <time.h>
+#include <iostream>
 
 #include <pi-dlp.h>
 
 #include <qfile.h>
+#include <qtextcodec.h>
 
 #include <klocale.h>
 #include <kdebug.h>
+#include <kglobal.h>
 
+#include "pilotAppCategory.h"
 #include "pilotSerialDatabase.h"
 
 static const char *pilotSerialDatabase_id =
@@ -80,8 +85,19 @@ int PilotSerialDatabase::readAppBlock(unsigned char *buffer, int maxLen)
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return -1;
 	}
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	return dlp_ReadAppBlock(fDBSocket, getDBHandle(), 0, (void *) buffer,
 		maxLen);
+#else
+	pi_buffer_t *buf = pi_buffer_new(maxLen);
+	int r = dlp_ReadAppBlock(fDBSocket, getDBHandle(), 0 /* offset */, maxLen, buf);
+	if (r>=0)
+	{
+		memcpy(buffer, buf->data, KMAX(maxLen, r));
+	}
+	pi_buffer_free(buf);
+	return r;
+#endif
 }
 
 // Writes the application block info.
@@ -133,10 +149,8 @@ QValueList<recordid_t> PilotSerialDatabase::idList()
 // Reads a record from database by id, returns record length
 PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 {
-	FUNCTIONSETUP;
-	char buffer[PilotRecord::APP_BUFFER_SIZE];
+	FUNCTIONSETUPL(3);
 	int index, attr, category;
-	PI_SIZE_T size;
 
 	if (isDBOpen() == false)
 	{
@@ -149,38 +163,62 @@ PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 			<<id<<endl;;
 		return 0L;
 	}
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
+	char buffer[PilotRecord::APP_BUFFER_SIZE];
+	PI_SIZE_T size;
 	if (dlp_ReadRecordById(fDBSocket, getDBHandle(), id, buffer, &index,
 			&size, &attr, &category) >= 0)
 		return new PilotRecord(buffer, size, attr, category, id);
+#else
+	pi_buffer_t *b = pi_buffer_new(InitialBufferSize);
+	if (dlp_ReadRecordById(fDBSocket,getDBHandle(),id,b,&index,&attr,&category) >= 0)
+	{
+		return new PilotRecord(b, attr, category, id);
+	}
+#endif
 	return 0L;
 }
 
 // Reads a record from database, returns the record length
 PilotRecord *PilotSerialDatabase::readRecordByIndex(int index)
 {
-	FUNCTIONSETUP;
-	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	PI_SIZE_T size;
-	int attr, category;
-	recordid_t id;
+	FUNCTIONSETUPL(3);
 
 	if (isDBOpen() == false)
 	{
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
 	}
+
+	int attr, category;
+	recordid_t id;
+	PilotRecord *rec = 0L;
+
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
+	char buffer[PilotRecord::APP_BUFFER_SIZE];
+	PI_SIZE_T size;
 	if (dlp_ReadRecordByIndex(fDBSocket, getDBHandle(), index,
-			(void *) buffer, &id, &size, &attr, &category) >= 0)
-		return new PilotRecord(buffer, size, attr, category, id);
-	return 0L;
+			buffer, &id, &size, &attr, &category) >= 0)
+	{
+		rec = new PilotRecord(buffer, size, attr, category, id);
+	}
+#else
+	pi_buffer_t *b = pi_buffer_new(InitialBufferSize);
+	if (dlp_ReadRecordByIndex(fDBSocket, getDBHandle(), index,
+		b, &id, &attr, &category) >= 0)
+	{
+		rec = new PilotRecord(b, attr, category, id);
+	}
+#endif
+
+
+	return rec;
 }
 
 // Reads the next record from database in category 'category'
 PilotRecord *PilotSerialDatabase::readNextRecInCategory(int category)
 {
 	FUNCTIONSETUP;
-	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	PI_SIZE_T size;
 	int index, attr;
 	recordid_t id;
 
@@ -189,9 +227,18 @@ PilotRecord *PilotSerialDatabase::readNextRecInCategory(int category)
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
 	}
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
+	char buffer[PilotRecord::APP_BUFFER_SIZE];
+	PI_SIZE_T size;
 	if (dlp_ReadNextRecInCategory(fDBSocket, getDBHandle(),
 			category, buffer, &id, &index, &size, &attr) >= 0)
 		return new PilotRecord(buffer, size, attr, category, id);
+#else
+	pi_buffer_t *b = pi_buffer_new(InitialBufferSize);
+	if (dlp_ReadNextRecInCategory(fDBSocket, getDBHandle(),
+		category,b,&id,&index,&attr) >= 0)
+		return new PilotRecord(b, attr, category, id);
+#endif
 	return 0L;
 }
 
@@ -199,8 +246,6 @@ PilotRecord *PilotSerialDatabase::readNextRecInCategory(int category)
 PilotRecord *PilotSerialDatabase::readNextModifiedRec(int *ind)
 {
 	FUNCTIONSETUP;
-	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	PI_SIZE_T size;
 	int index, attr, category;
 	recordid_t id;
 
@@ -209,12 +254,23 @@ PilotRecord *PilotSerialDatabase::readNextModifiedRec(int *ind)
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
 	}
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
+	char buffer[PilotRecord::APP_BUFFER_SIZE];
+	PI_SIZE_T size;
 	if (dlp_ReadNextModifiedRec(fDBSocket, getDBHandle(), (void *) buffer,
 			&id, &index, &size, &attr, &category) >= 0)
 	{
 		if (ind) *ind=index;
 		return new PilotRecord(buffer, size, attr, category, id);
 	}
+#else
+	pi_buffer_t *b = pi_buffer_new(InitialBufferSize);
+	if (dlp_ReadNextModifiedRec(fDBSocket, getDBHandle(), b, &id, &index, &attr, &category) >= 0)
+	{
+		if (ind) *ind=index;
+		return new PilotRecord(b, attr, category, id);
+	}
+#endif
 	return 0L;
 }
 
@@ -234,18 +290,18 @@ recordid_t PilotSerialDatabase::writeRecord(PilotRecord * newRecord)
 	// to the handheld (RecordIDs are only 3 bytes!!!). Under normal conditions
 	// this check should never yield true, so write out an error to indicate
 	// someone messed up full time...
-	if (newRecord->getID()>0xFFFFFF)
+	if (newRecord->id()>0xFFFFFF)
 	{
 		kdError() << k_funcinfo << "Encountered an invalid record id "
-			<<newRecord->getID()<<", resetting it to zero.";
+			<<newRecord->id()<<", resetting it to zero.";
 		newRecord->setID(0);
 	}
 	success =
 		dlp_WriteRecord(fDBSocket, getDBHandle(),
-		newRecord->getAttrib(), newRecord->getID(),
-		newRecord->getCat(), newRecord->getData(),
+		newRecord->getAttrib(), newRecord->id(),
+		newRecord->category(), newRecord->getData(),
 		newRecord->getLen(), &newid);
-	if ( (newRecord->getID() != newid) && (newid!=0) )
+	if ( (newRecord->id() != newid) && (newid!=0) )
 		newRecord->setID(newid);
 	return newid;
 }
@@ -304,8 +360,10 @@ void PilotSerialDatabase::openDatabase()
 	FUNCTIONSETUP;
 	int db;
 
+	setDBOpen(false);
+
 	QString s = getDBName();
-	if (s.isEmpty() || s.isNull())
+	if (s.isEmpty())
 	{
 		kdError() << k_funcinfo << ": Bad DB name, "
 			<< (s.isNull() ? "null" : "empty")
@@ -314,8 +372,21 @@ void PilotSerialDatabase::openDatabase()
 		return;
 	}
 
+	QCString encodedName = QFile::encodeName(s);
+	if (encodedName.isEmpty())
+	{
+		kdError() << k_funcinfo << ": Bad DB name, "
+			<< (encodedName.isNull() ? "null" : "empty")
+			<< " string given."
+			<< endl;
+		return;
+	}
+
+	char encodedNameBuffer[PATH_MAX];
+	strlcpy(encodedNameBuffer,(const char *)encodedName,PATH_MAX);
+
 	if (dlp_OpenDB(fDBSocket, 0, dlpOpenReadWrite,
-		QFile::encodeName(getDBName()).data(), &db) < 0)
+		encodedNameBuffer, &db) < 0)
 	{
 		kdError() << k_funcinfo
 			<< i18n("Cannot open database")
@@ -336,7 +407,7 @@ bool PilotSerialDatabase::createDatabase(long creator, long type, int cardno, in
 	// The latin1 seems ok, database names are latin1.
 	int res=dlp_CreateDB(fDBSocket,
 		creator, type, cardno, flags, version,
-		getDBName().latin1(), &db);
+		PilotAppCategory::codec()->fromUnicode(getDBName()), &db);
 	if (res<0) {
 		kdError() <<k_funcinfo
 			<< i18n("Cannot create database %1 on the handheld").arg(getDBName())<<endl;
@@ -363,7 +434,13 @@ int PilotSerialDatabase::deleteDatabase()
 
 	if (isDBOpen()) closeDatabase();
 
-	return dlp_DeleteDB(fDBSocket, 0, fDBName.latin1());
+	return dlp_DeleteDB(fDBSocket, 0, PilotAppCategory::codec()->fromUnicode(fDBName));
 }
 
+
+
+/* virtual */ PilotDatabase::DBType PilotSerialDatabase::dbType() const
+{
+	return eSerialDB;
+}
 

@@ -35,6 +35,8 @@
 
 #include <pi-dlp.h>
 
+#include "config.h"
+
 class KPilotUser
 {
 public:
@@ -43,29 +45,20 @@ public:
 
 	PilotUser *pilotUser() { return &fUser; }
 
-	/**
-	* Ensures the names are properly terminated.  Needed incase we
-	* are syncing a new and bogus pilot.
-	*/
-	void boundsCheck()
-	{
-	}
-
 	const char* getUserName() const     { return fUser.username; }
 	void setUserName(const char* name)
 	{
-		::strncpy(fUser.username, name,sizeof(fUser.username)-1);
-		boundsCheck();
+		memset(&fUser.username, 0, sizeof(fUser.username));
+		strlcpy(fUser.username, name,sizeof(fUser.username));
 	}
 
 	const int getPasswordLength() const { return fUser.passwordLength; }
 	const char* getPassword() const     { return fUser.password; }
 	void setPassword(char* password)
 	{
-		::memset(&fUser.password, 0, sizeof(fUser.password));
-		::strncpy(fUser.password, password,sizeof(fUser.password)-1);
-		boundsCheck();
-		fUser.passwordLength = ::strlen(fUser.password);
+		memset(&fUser.password, 0, sizeof(fUser.password));
+		strlcpy(fUser.password, password,sizeof(fUser.password));
+		fUser.passwordLength = strlen(fUser.password);
 	}
 
 	unsigned long getUserID() const     { return fUser.userID; }

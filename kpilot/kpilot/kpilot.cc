@@ -1,6 +1,7 @@
-/* kpilot.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is the main program in KPilot.
 **
@@ -48,7 +49,7 @@ static const char *kpilot_id =
 #include <kwin.h>
 #include <kcombobox.h>
 #include <kmenubar.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kiconloader.h>
@@ -56,7 +57,7 @@ static const char *kpilot_id =
 #include <kaction.h>
 #include <kactionclasses.h>
 #include <kstdaction.h>
-#include <kuniqueapp.h>
+#include <kuniqueapplication.h>
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
 #include <kcmultidialog.h>
@@ -192,10 +193,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 	if (!fDaemonWasRunning && KApplication::startServiceByDesktopName(
 		CSL1("kpilotdaemon"),
 		QString::null, &daemonError, &daemonDCOP, &daemonPID
-#if (KDE_VERSION >= 220)
-			// Startup notification was added in 2.2
-			, "0"
-#endif
+			, "0" /* no notify */
 		))
 	{
 		kdError() << k_funcinfo
@@ -300,31 +298,31 @@ void KPilotInstaller::initComponents()
 	w = getManagingWidget()->addVBoxPage(a,QString::null, \
 		(pixfile.isEmpty() ? QPixmap() : QPixmap(pixfile))) ;
 
-	ADDICONPAGE(i18n("HotSync"),CSL1("kpilot/kpilot-bhotsync.png"));
+	ADDICONPAGE(i18n("HotSync"),CSL1("kpilot/icons/kpilot-bhotsync.png"));
 	fLogWidget = new LogWidget(w);
 	addComponentPage(fLogWidget, i18n("HotSync"));
 	fLogWidget->setShowTime(true);
 
-	ADDICONPAGE(i18n("Todo Viewer"),CSL1("kpilot/kpilot-todo.png"));
+	ADDICONPAGE(i18n("To-do Viewer"),CSL1("kpilot/icons/kpilot-todo.png"));
 	addComponentPage(new TodoWidget(w,defaultDBPath),
-		i18n("Todo Viewer"));
+		i18n("To-do Viewer"));
 
-	ADDICONPAGE(i18n("Address Viewer"),CSL1("kpilot/kpilot-address.png"));
+	ADDICONPAGE(i18n("Address Viewer"),CSL1("kpilot/icons/kpilot-address.png"));
 	addComponentPage(new AddressWidget(w,defaultDBPath),
 		i18n("Address Viewer"));
 
-	ADDICONPAGE(i18n("Memo Viewer"),CSL1("kpilot/kpilot-knotes.png"));
+	ADDICONPAGE(i18n("Memo Viewer"),CSL1("kpilot/icons/kpilot-knotes.png"));
 	addComponentPage(new MemoWidget(w, defaultDBPath),
 		i18n("Memo Viewer"));
 
-	ADDICONPAGE(i18n("Generic DB Viewer"),CSL1("kpilot/kpilot-db.png"));
-	addComponentPage(new GenericDBWidget(w,defaultDBPath),
-		i18n("Generic DB Viewer"));
-
-	ADDICONPAGE(i18n("File Installer"),CSL1("kpilot/kpilot-fileinstaller.png"));
+	ADDICONPAGE(i18n("File Installer"),CSL1("kpilot/icons/kpilot-fileinstaller.png"));
 	fFileInstallWidget = new FileInstallWidget(
 		w,defaultDBPath);
 	addComponentPage(fFileInstallWidget, i18n("File Installer"));
+
+	ADDICONPAGE(i18n("Generic DB Viewer"),CSL1("kpilot/icons/kpilot-db.png"));
+	addComponentPage(new GenericDBWidget(w,defaultDBPath),
+		i18n("Generic DB Viewer"));
 
 #undef ADDICONPAGE
 #undef VIEWICON
@@ -347,10 +345,14 @@ void KPilotInstaller::slotAboutToShowComponent( QWidget *c )
 	FUNCTIONSETUP;
 	int ix = fManagingWidget->pageIndex( c );
 	PilotComponent*compToShow = fP->list().at(ix);
-DEBUGKPILOT<<"Index: "<<ix<<", Widget="<<c<<", ComToShow="<<compToShow<<endl;
+#ifdef DEBUG
+	DEBUGKPILOT << fname
+		<< ": Index: " << ix
+		<< ", Widget=" << c
+		<< ", ComToShow=" << compToShow << endl;
+#endif
 	for ( PilotComponent *comp = fP->list().first(); comp; comp = fP->list().next() )
 	{
-DEBUGKPILOT<<"comp="<<comp<<endl;
 		// Load/Unload the data needed
 		comp->showKPilotComponent( comp == compToShow );
 	}
@@ -430,7 +432,31 @@ void KPilotInstaller::slotFastSyncRequested()
 		i18n("Please press the HotSync button."));
 }
 
-void KPilotInstaller::slotListSyncRequested()
+void KPilotInstaller::slotFullSyncRequested()
+{
+	FUNCTIONSETUP;
+	setupSync(SyncAction::eFullSync,
+		i18n("Next sync will be a Full Sync. ") +
+		i18n("Please press the HotSync button."));
+}
+
+void KPilotInstaller::slotHHtoPCRequested()
+{
+	FUNCTIONSETUP;
+	setupSync(SyncAction::eCopyHHToPC,
+		i18n("Next sync will copy Handheld data to PC. ") +
+		i18n("Please press the HotSync button."));
+}
+
+void KPilotInstaller::slotPCtoHHRequested()
+{
+	FUNCTIONSETUP;
+	setupSync(SyncAction::eCopyPCToHH,
+		i18n("Next sync will copy PC data to Handheld. ") +
+		i18n("Please press the HotSync button."));
+}
+
+void KPilotInstaller::slotTestSyncRequested()
 {
 	FUNCTIONSETUP;
 	setupSync(SyncAction::eTest,
@@ -460,7 +486,16 @@ void KPilotInstaller::slotListSyncRequested()
 			fAppStatus=Normal;
 		}
 		break;
-	default :
+	case KPilotDCOP::DaemonQuit :
+		if (fLogWidget)
+		{
+			fLogWidget->logMessage(i18n("The daemon has exited."));
+			fLogWidget->logMessage(i18n("No further HotSyncs are possible."));
+			fLogWidget->logMessage(i18n("Restart the daemon to HotSync again."));
+		}
+		fAppStatus=WaitingForDaemon;
+		break;
+	case KPilotDCOP::None :
 		kdWarning() << k_funcinfo << ": Unhandled status message " << i << endl;
 		break;
 	}
@@ -469,17 +504,6 @@ void KPilotInstaller::slotListSyncRequested()
 /* virtual DCOP*/ int KPilotInstaller::kpilotStatus()
 {
 	return status();
-}
-
-/* virtual DCOP */ ASYNC KPilotInstaller::configure()
-{
-	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Daemon requested configure" << endl;
-#endif
-
-	if (!fConfigureKPilotDialogInUse)
-		slotConfigureKPilot();
 }
 
 bool KPilotInstaller::componentPreSync()
@@ -546,7 +570,6 @@ void KPilotInstaller::setupSync(int kind, const QString & message)
 	getDaemon().requestSync(kind);
 }
 
-
 void KPilotInstaller::closeEvent(QCloseEvent * e)
 {
 	FUNCTIONSETUP;
@@ -563,15 +586,20 @@ void KPilotInstaller::initMenu()
 
 	KActionMenu *syncPopup;
 
-	syncPopup = new KActionMenu(i18n("HotSync"), CSL1("hotsync"),
+	syncPopup = new KActionMenu(i18n("HotSync"), CSL1("kpilot"),
 		actionCollection(), "popup_hotsync");
+	syncPopup->setToolTip(i18n("Select the kind of HotSync to perform next."));
+	syncPopup->setWhatsThis(i18n("Select the kind of HotSync to perform next. "
+		"This applies only to the next HotSync; to change the default, use "
+		"the configuration dialog."));
 	connect(syncPopup, SIGNAL(activated()),
 		this, SLOT(slotHotSyncRequested()));
 
-	// File actions
+	// File actions, keep this list synced with kpilotui.rc and pilotDaemon.cc
 	a = new KAction(i18n("&HotSync"), CSL1("hotsync"), 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_hotsync");
+	a->setToolTip(i18n("Next HotSync will be normal HotSync."));
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should be a normal HotSync."));
 	syncPopup->insert(a);
@@ -579,6 +607,7 @@ void KPilotInstaller::initMenu()
 	a = new KAction(i18n("&FastSync"), CSL1("fastsync"), 0,
 		this, SLOT(slotFastSyncRequested()),
 		actionCollection(), "file_fastsync");
+	a->setToolTip(i18n("Next HotSync will be a FastSync."));
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should be a FastSync (run conduits only)."));
 	syncPopup->insert(a);
@@ -586,6 +615,7 @@ void KPilotInstaller::initMenu()
 	a = new KAction(i18n("Full&Sync"), CSL1("fullsync"), 0,
 		this, SLOT(slotFullSyncRequested()),
 		actionCollection(), "file_fullsync");
+	a->setToolTip(i18n("Next HotSync will be a FullSync."));
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should be a FullSync (check data on both sides)."));
 	syncPopup->insert(a);
@@ -593,6 +623,7 @@ void KPilotInstaller::initMenu()
 	a = new KAction(i18n("&Backup"), CSL1("backup"), 0,
 		this, SLOT(slotBackupRequested()),
 		actionCollection(), "file_backup");
+	a->setToolTip(i18n("Next HotSync will be backup."));
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should back up the Handheld to the PC."));
 	syncPopup->insert(a);
@@ -600,23 +631,46 @@ void KPilotInstaller::initMenu()
 	a = new KAction(i18n("&Restore"), CSL1("restore"), 0,
 		this, SLOT(slotRestoreRequested()),
 		actionCollection(), "file_restore");
+	a->setToolTip(i18n("Next HotSync will be restore."));
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should restore the Handheld from data on the PC."));
 	syncPopup->insert(a);
 
-	a = new KAction(i18n("&List only"),CSL1("list"),0,
-		this,SLOT(slotListSyncRequested()),
+	a = new KAction(i18n("Copy Handheld to PC"), QString::null, 0,
+		this, SLOT(slotHHtoPCRequested()),
+		actionCollection(), "file_HHtoPC");
+	a->setToolTip(i18n("Next HotSync will be backup."));
+	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+		"should copy all data from the Handheld to the PC, "
+		"overwriting entries on the PC."));
+	syncPopup->insert(a);
+
+	a = new KAction(i18n("Copy PC to Handheld"), QString::null, 0,
+		this, SLOT(slotPCtoHHRequested()),
+		actionCollection(), "file_PCtoHH");
+	a->setToolTip(i18n("Next HotSync will copy PC to Handheld."));
+	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+		"should copy all data from the PC to the Handheld, "
+		"overwriting entries on the Handheld."));
+	syncPopup->insert(a);
+
+
+#ifdef DEBUG
+	a = new KAction(i18n("&List Only"),CSL1("listsync"),0,
+		this,SLOT(slotTestSyncRequested()),
 		actionCollection(), "file_list");
+	a->setToolTip(i18n("Next HotSync will list databases."));
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should just list the files on the Handheld and do nothing "
 		"else."));
 	syncPopup->insert(a);
-
+#endif
 
 
 	a = new KAction(i18n("Rese&t Link"),CSL1("reload"), 0,
 		this, SLOT(slotResetLink()),
 		actionCollection(),"file_reload");
+	a->setToolTip(i18n("Reset the device connection."));
 	a->setWhatsThis(i18n("Try to reset the daemon and its connection "
 		"to the Handheld."));
 
@@ -628,27 +682,18 @@ void KPilotInstaller::initMenu()
 	// View actions
 
 	// Options actions
-#if KDE_VERSION >= 0x30180
 	createStandardStatusBarAction();
-#endif
-
-#if KDE_VERSION >= 0x30080
 	setStandardToolBarMenuEnabled(true);
-#else
-	m_toolbarAction =
-		KStdAction::showToolbar(this, SLOT(optionsShowToolbar()),
-		actionCollection());
-#endif
 
 	(void) KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
 		actionCollection());
 	(void) KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
 		actionCollection());
-	(void) KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
+	(void) KStdAction::preferences(this, SLOT(configure()),
 		actionCollection());
 
 	a = new KAction(i18n("Configuration &Wizard..."), CSL1("wizard"), 0,
-		this, SLOT(slotConfigureWizard()),
+		this, SLOT(configureWizard()),
 		actionCollection(), "options_configure_wizard");
 	a->setWhatsThis(i18n("Configure KPilot using the configuration wizard."));
 
@@ -708,20 +753,23 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 
 	const char *componentname = p->name("(none)");
 	char *actionname = 0L;
+	int actionnameLength = 0;
 
 	if (strncmp(componentname, "component_", 10) == 0)
 	{
-		actionname = new char[strlen(componentname) - 10 + 8];
+		actionnameLength = strlen(componentname) - 10 + 8;
+		actionname = new char[actionnameLength];
 
-		strcpy(actionname, "view_");
-		strcat(actionname, componentname + 10);
+		strlcpy(actionname, "view_", actionnameLength);
+		strlcat(actionname, componentname + 10, actionnameLength);
 	}
 	else
 	{
-		actionname = new char[8 + strlen(componentname)];
+		actionnameLength = strlen(componentname) + 8;
+		actionname = new char[actionnameLength];
 
-		strcpy(actionname, "view_");
-		strcat(actionname, componentname);
+		strlcpy(actionname, "view_", actionnameLength);
+		strlcat(actionname, componentname, actionnameLength);
 	}
 
 #ifdef DEBUG
@@ -752,29 +800,6 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 	}*/
 }
 
-#if KDE_VERSION >= 0x30080
-// Included in kdelibs in KDE 3.1, but we can't #ifdef slots,
-// so include a dummy implementation.
-void KPilotInstaller::optionsShowToolbar()
-{
-}
-#else
-void KPilotInstaller::optionsShowToolbar()
-{
-	FUNCTIONSETUP;
-	if (m_toolbarAction->isChecked())
-	{
-		toolBar()->show();
-	}
-	else
-	{
-		toolBar()->hide();
-	}
-
-	kapp->processEvents();
-	resizeEvent(0);
-}
-#endif
 
 void KPilotInstaller::optionsConfigureKeys()
 {
@@ -786,10 +811,8 @@ void KPilotInstaller::optionsConfigureToolbars()
 {
 	FUNCTIONSETUP;
 	// use the standard toolbar editor
-#if KDE_VERSION >= 0x030100
 	// This was added in KDE 3.1
 	saveMainWindowSettings( KGlobal::config(), autoSaveGroup() );
-#endif
 	KEditToolbar dlg(actionCollection());
 	connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(slotNewToolbarConfig()));
 	dlg.exec();
@@ -801,9 +824,7 @@ void KPilotInstaller::slotNewToolbarConfig()
 	FUNCTIONSETUP;
 	// recreate our GUI
 	createGUI();
-#if KDE_VERSION >= 0x030100
 	applyMainWindowSettings( KGlobal::config(), autoSaveGroup() );
-#endif
 }
 
 void KPilotInstaller::slotResetLink()
@@ -829,7 +850,7 @@ static bool runConfigure(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 	KPilotSettings::self()->readConfig();
 
 	KCMultiDialog *options = new KCMultiDialog( KDialogBase::Plain, i18n("Configuration"), parent, "KPilotPreferences", true );
-	options->addModule( "kpilot_config.desktop" );
+	options->addModule( CSL1("kpilot_config.desktop") );
 
 	if (!options)
 	{
@@ -852,7 +873,8 @@ static bool runConfigure(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 		KPilotSettings::self()->readConfig();
 
 		// Update the daemon to reflect new settings.
-		//
+		// @TODO: This should also be done when pressing apply without
+		// closing the dialog.
 		//
 		daemon.reloadSettings();
 		ret = true;
@@ -869,10 +891,17 @@ static bool runConfigure(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 	return ret;
 }
 
-static bool runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
+/*
+ * Run the config wizard -- this takes a little library magic, and
+ * it might fail entirely; returns false if no wizard could be run,
+ * or true if the wizard runs (says nothing about it being OK'ed or
+ * canceled, though).
+ */
+typedef enum { Failed, OK, Cancel } WizardResult;
+static WizardResult runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 {
 	FUNCTIONSETUP;
-	bool ret = false;
+	WizardResult ret = Failed ;
 	int rememberedSync = daemon.nextSyncType();
 	daemon.requestSync(0);
 
@@ -885,7 +914,6 @@ static bool runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 	if (!l)
 	{
 		kdWarning() << k_funcinfo << ": Couldn't load library!" << endl;
-		ret=false;
 		goto sorry;
 	}
 
@@ -897,7 +925,6 @@ static bool runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 	if (!f)
 	{
 		kdWarning() << k_funcinfo << ": No create_wizard() in library." << endl;
-		ret = false;
 		goto sorry;
 	}
 
@@ -905,27 +932,31 @@ static bool runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 	if (!w)
 	{
 		kdWarning() << k_funcinfo << ": Can't create wizard." << endl;
-		ret = false;
 		goto sorry;
 	}
 
 	if (w->exec())
 	{
 		KPilotSettings::self()->readConfig();
-		ret = true;
+		ret = OK;
+	}
+	else
+	{
+		ret = Cancel;
 	}
 	KPILOT_DELETE(w);
 
 sorry:
-	if (!ret)
+	if (Failed == ret)
 	{
-		KMessageBox::sorry(parent,i18n("Wizard Not Available"),
+		KMessageBox::sorry(parent,
 			i18n("The library containing the configuration wizard for KPilot "
 				"could not be loaded, and the wizard is not available. "
-				"Please try to use the regular configuration dialog."));
+				"Please try to use the regular configuration dialog."),
+				i18n("Wizard Not Available"));
 	}
 
-	if (ret)
+	if (OK == ret)
 	{
 		KPilotConfig::updateConfigVersion();
 		KPilotSettings::writeConfig();
@@ -936,22 +967,90 @@ sorry:
 	return ret;
 }
 
-void KPilotInstaller::slotConfigureWizard()
+void KPilotInstaller::componentUpdate()
 {
 	FUNCTIONSETUP;
 
-	runWizard(getDaemon(),this);
+	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
+	bool dbPathChanged = false;
+
+	for (fP->list().first();
+		fP->list().current();
+		fP->list().next())
+	{
+// TODO_RK: update the current component to use the new settings
+//			fP->list().current()->initialize();
+		PilotComponent *p = fP->list().current();
+		if (p && (p->dbPath() != defaultDBPath))
+		{
+			dbPathChanged = true;
+			p->setDBPath(defaultDBPath);
+		}
+	}
+
+	if (!dbPathChanged) // done if the username didn't change
+	{
+		return;
+	}
+
+	// Otherwise, need to re-load the databases
+	//
+	if (fLogWidget)
+	{
+		fLogWidget->logMessage(i18n("Changed username to `%1'.")
+			.arg(KPilotSettings::userName()));
+		fManagingWidget->showPage(0);
+		slotAboutToShowComponent(fLogWidget);
+	}
+	else
+	{
+		int ix = fManagingWidget->activePageIndex();
+		PilotComponent *component = 0L;
+		if (ix>=0)
+		{
+			component = fP->list().at(ix);
+		}
+		if (component)
+		{
+			component->hideComponent(); // Throw away current data
+			component->showComponent(); // Reload
+		}
+	}
 }
 
-void KPilotInstaller::slotConfigureKPilot()
+/* virtual DCOP */ ASYNC KPilotInstaller::configureWizard()
 {
 	FUNCTIONSETUP;
 
-	if (fAppStatus!=Normal)
+	if ( fAppStatus!=Normal || fConfigureKPilotDialogInUse )
 	{
 		if (fLogWidget)
 		{
-			fLogWidget->addMessage(i18n("Cannot configure KPilot right now."));
+			fLogWidget->addMessage(i18n("Cannot run KPilot's configuration wizard right now (KPilot's UI is already busy)."));
+		}
+		return;
+	}
+	fAppStatus=UIBusy;
+	fConfigureKPilotDialogInUse = true;
+
+	if (runWizard(getDaemon(),this) == OK)
+	{
+		componentUpdate();
+	}
+
+	fConfigureKPilotDialogInUse = false;
+	fAppStatus=Normal;
+}
+
+/* virtual DCOP */ ASYNC KPilotInstaller::configure()
+{
+	FUNCTIONSETUP;
+
+	if ( fAppStatus!=Normal || fConfigureKPilotDialogInUse )
+	{
+		if (fLogWidget)
+		{
+			fLogWidget->addMessage(i18n("Cannot configure KPilot right now (KPilot's UI is already busy)."));
 		}
 		return;
 	}
@@ -959,14 +1058,7 @@ void KPilotInstaller::slotConfigureKPilot()
 	fConfigureKPilotDialogInUse = true;
 	if (runConfigure(getDaemon(),this))
 	{
-		// Update each installed component.
-		for (fP->list().first();
-			fP->list().current();
-			fP->list().next())
-		{
-			// TODO_RK: update the current component to use the new settings
-//			fP->list().current()->initialize();
-		}
+		componentUpdate();
 	}
 
 	fConfigureKPilotDialogInUse = false;
@@ -1000,8 +1092,6 @@ static KCmdLineOptions kpilotoptions[] = {
 	{"setup",
 		I18N_NOOP("Setup the Pilot device, conduits and other parameters"),
 		0L},
-	{"c", 0, 0},
-	{"conduit-setup", I18N_NOOP("Deprecated, use \"setup\" instead."), 0L},
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif
@@ -1013,7 +1103,6 @@ static KCmdLineOptions kpilotoptions[] = {
 
 // "Regular" mode == 0
 // setup mode == 's'
-// conduit setup == 'c'
 //
 // This is only changed by the --setup flag --
 // kpilot still does a setup the first time it is run.
@@ -1046,6 +1135,7 @@ int main(int argc, char **argv)
 	about.addCredit("Preston Brown", I18N_NOOP("VCal conduit"));
 	about.addCredit("Greg Stern", I18N_NOOP("Abbrowser conduit"));
 	about.addCredit("Chris Molnar", I18N_NOOP("Expenses conduit"));
+	about.addCredit("Jörn Ahrens", I18N_NOOP("Notepad conduit, Bugfixer"));
 	about.addCredit("Heiko Purnhagen", I18N_NOOP("Bugfixer"));
 	about.addCredit("Jörg Habenicht", I18N_NOOP("Bugfixer"));
 	about.addCredit("Martin Junius",
@@ -1055,8 +1145,6 @@ int main(int argc, char **argv)
 		I18N_NOOP(".ui files"));
 	about.addCredit("Aaron J. Seigo",
 		I18N_NOOP("Bugfixer, coolness"));
-	about.addCredit("Jörn Ahrens",
-		I18N_NOOP("Visual improvements"));
 
 	KCmdLineArgs::init(argc, argv, &about);
 	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilot");
@@ -1074,7 +1162,12 @@ int main(int argc, char **argv)
 	}
 	KUniqueApplication a(true, true);
 
-	if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
+
+	if (p->isSet("setup"))
+	{
+		run_mode = KPilotConfig::ConfigureKPilot;
+	}
+	else if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 	{
 		kdWarning() << ": KPilot configuration version "
 			<< KPilotConfig::ConfigurationVersion
@@ -1087,12 +1180,6 @@ int main(int argc, char **argv)
 		if (run_mode == KPilotConfig::Cancel) return 1;
 	}
 
-	if (p->isSet("setup") || p->isSet("conduit-setup"))
-	{
-		if ((run_mode == KPilotConfig::Normal) ||
-			(run_mode == KPilotConfig::WizardAndContinue))
-			run_mode = KPilotConfig::ConfigureKPilot;
-	}
 
 	if ( (run_mode == KPilotConfig::ConfigureKPilot) ||
 		(run_mode == KPilotConfig::ConfigureAndContinue) ||
@@ -1107,7 +1194,7 @@ int main(int argc, char **argv)
 		bool r = false;
 		if (run_mode == KPilotConfig::WizardAndContinue)
 		{
-			r = runWizard(*daemon,0L);
+			r = ( runWizard(*daemon,0L) == OK );
 		}
 		else
 		{
@@ -1135,13 +1222,11 @@ int main(int argc, char **argv)
 
 	if (tp->status() == KPilotInstaller::Error)
 	{
-		delete tp;
-
-		tp = 0;
+		KPILOT_DELETE(tp);
 		return 1;
 	}
 
-	tp->startDaemonIfNeeded();
+	QTimer::singleShot(0,tp,SLOT(startDaemonIfNeeded()));
 
 	KGlobal::dirs()->addResourceType("pilotdbs",
 		CSL1("share/apps/kpilot/DBBackup"));

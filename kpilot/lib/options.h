@@ -3,6 +3,7 @@
 /* options.h			KPilot
 **
 ** Copyright (C) 1998-2001,2002,2003 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines some global constants and macros for KPilot.
 ** In particular, KDE2 is defined when KDE2 seems to be the environment
@@ -38,26 +39,50 @@
 // the generic DB viewer, which uses the widget.
 #define USE_KHEXEDIT
 
+// Want to be as careful as possible about casting QStrings back and
+// forth, because of the potential for putting UTF-8 encoded data on the HH.
+// KHexEdit headers are not safe, though, so don't use this in general.
+#ifndef QT_NO_ASCII_CAST
 // #define QT_NO_ASCII_CAST		(1)
+#endif
+#ifndef QT_NO_CAST_ASCII
 // #define QT_NO_CAST_ASCII		(1)
+#endif
+
+
+// Switch _on_ debugging if it's not off.
+//
+#ifndef NDEBUG 
+#ifndef DEBUG
+#define DEBUG				(1)
+#endif
+#endif
+
+// Switch on debugging explicitly. Perhaps send debug to stderr instead
+// of to the KDE debugging facility (it does lose some niftiness then).
+//
+#ifndef DEBUG
 // #define DEBUG			(1)
+#endif
 // #define DEBUG_CERR			(1)
 
 #include "config.h"
 #include <unistd.h>     /* For size_t for pilot-link */
 #include <qglobal.h>
 #include <pi-version.h>
+// For KDE_EXPORT with kdelibs 3.3.x
+#include <kdepimmacros.h>
 
 #if (QT_VERSION < 0x030200)
-#error "This is KPilot for KDE3.2 and won't compile with Qt < 3.2.0"
+#error "This is KPilot for KDE3.3 and won't compile with Qt < 3.2.0"
 #endif
 
 #ifndef KDE_VERSION
 #include <kdeversion.h>
 #endif
 
-#if !(KDE_IS_VERSION(3,2,0))
-#error "This is KPilot for KDE 3.2 and won't compile with KDE < 3.2.0"
+#if !(KDE_IS_VERSION(3,3,0))
+#error "This is KPilot for KDE 3.3 and won't compile with KDE < 3.3.0"
 #endif
 
 
@@ -65,11 +90,17 @@
 #error "You need at least pilot-link version 0.9.5"
 #endif
 
+
 #define PILOT_LINK_NUMBER	((10000*PILOT_LINK_VERSION) + \
 				(100*PILOT_LINK_MAJOR)+PILOT_LINK_MINOR)
 #define PILOT_LINK_0_10_0	(1000)
 #define PILOT_LINK_0_11_0	(1100)
+#define PILOT_LINK_0_11_8	(1108)
 #define PILOT_LINK_0_12_0	(1200)
+
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_11_8
+#warning "You need at least pilot-link version 0.11.8 for modern devices"
+#endif
 
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 #define PI_SIZE_T int
@@ -78,119 +109,135 @@
 #endif
 
 
-// Turn ON as much debugging as possible with -DDEBUG -DDEBUG_CERR
-// Some systems have changed kdWarning() and kdDebug() into nops,
-// so DEBUG_CERR changes them into cerr again. Odd and disturbing.
-//
 
-#ifdef DEBUG_CERR
-using namespace std;
-#define DEBUGFUNC	std::cerr
-#else
-#define DEBUGFUNC	kdDebug()
-#endif
 
 // For QString, and everything else needs it anyway.
 #include <qstring.h>
 // Dunno, really. Probably because everything needs it.
 #include <klocale.h>
 // For the debug stuff.
+#ifdef DEBUG
+#undef NDEBUG
+#undef NO_DEBUG
+#endif
 #include <kdebug.h>
 
-// KPilot will move towards the *standard* way of doing
-// debug messages soon. This means that we need some
-// debug areas.
-//
-//
-#define KPILOT_AREA	5510
-#define DAEMON_AREA	5511
-#define CONDUIT_AREA	5512
-#define LIBPILOTDB_AREA	5513
+
+
+extern KDE_EXPORT int debug_level;
+
+#ifdef DEBUG
+#ifdef __GNUC__
+#define KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(DEBUGAREA,l,__FUNCTION__)
+#else
+#define	KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(DEBUGAREA,l,__FILE__ ":" "__LINE__")
+#endif
+
+#define FUNCTIONSETUP		KPILOT_FNAMEDEF(1)
+#define FUNCTIONSETUPL(l)	KPILOT_FNAMEDEF(l)
+#define DEBUGAREA 		0
+
+#define DEBUGAREA_KPILOT	5510
+#define DEBUGAREA_DAEMON	5511
+#define DEBUGAREA_CONDUIT	5512
+#define DEBUGAREA_DB		5513
 
 #ifdef DEBUG_CERR
-// For ostream
 #include <iostream>
-#define DEBUGSTREAM	std::ostream
+#endif
+
+class KDE_EXPORT KPilotDepthCount 
+{ 
+public: 
+	KPilotDepthCount(int area, int level, const char *s); 
+	~KPilotDepthCount(); 
+	QString indent() const; 
+	const char *name() const { return fName; } ;
+	// if DEBUG_CERR is defined, we can't return std::cerr (by value), 
+	// since the copy constructor is private!
+#ifndef DEBUG_CERR
+	inline kdbgstream debug(int area=0)
+	{ return kdDebug(debug_level >= fLevel, area); }
+#endif
+
+protected: 
+	static int depth; 
+	int fDepth; 
+	int fLevel;
+	const char *fName;
+} ;
+
+// stderr / iostream-based debugging.
+//
+//
+#ifdef DEBUG_CERR
+#include <iostream>
 #define DEBUGKPILOT	std::cerr
 #define DEBUGDAEMON	std::cerr
 #define DEBUGCONDUIT	std::cerr
 #define DEBUGDB		std::cerr
 
-inline std::ostream& operator <<(std::ostream &o, const QString &s) { if (s.isEmpty()) return o; else return o<<s.latin1(); }
-inline std::ostream& operator <<(std::ostream &o, const QCString &s) { return (o << *s ); }
+using namespace std;
+
+inline std::ostream& operator <<(std::ostream &o, const QString &s) 
+	{ if (s.isEmpty()) return o<<"<empty>"; else return o<<s.latin1(); }
+inline std::ostream& operator <<(std::ostream &o, const QCString &s)
+	{ if (s.isEmpty()) return o<<"<empty>"; else return o << *s; }
+
+
+
+inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
+	{ return o << d.indent() << ' ' << d.name(); } 
 
 #else
-#define DEBUGSTREAM	kdbgstream
-#define DEBUGKPILOT	kdDebug(KPILOT_AREA)
-#define DEBUGDAEMON	kdDebug(DAEMON_AREA)
-#define DEBUGCONDUIT	kdDebug(CONDUIT_AREA)
-#define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
+
+// kddebug based debugging
+//
+//
+#define DEBUGKPILOT	fname.debug(DEBUGAREA_KPILOT)
+#define DEBUGDAEMON	fname.debug(DEBUGAREA_DAEMON)
+#define DEBUGCONDUIT	fname.debug(DEBUGAREA_CONDUIT)
+#define DEBUGDB         fname.debug(DEBUGAREA_DB)
+
+inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d) 
+	{ return o << d.indent() ; }
+
 #endif
 
-#define KPILOT_VERSION	"4.4.3 (Wien)"
 
-// * KPilot debugging code looks like:
+// no debugging at all
 //
-//      DEBUGKPILOT << fname << ": Creating dialog window." << endl;
+#else
+#define DEBUGSTREAM	kndbgstream
+#define DEBUGKPILOT	kndDebug()
+#define DEBUGDAEMON	kndDebug()
+#define DEBUGCONDUIT	kndDebug()
+#define DEBUGDB         kndDebug()
+
+// With debugging turned off, FUNCTIONSETUP doesn't do anything.
 //
-// This uses KDE's debug areas (accessible through kdebugdialog)
-// to keep track of what to print. No extra #if or if(), since the
-// global NDEBUG flag changes all the kdDebug() calls into nops and
-// the compiler optimizes them away. There are four DEBUG* macros,
-// defined above. Use the areas *_AREA in calls to kdWarning() or
-// kdError() to make sure the right output is generated.
+//
+#define FUNCTIONSETUP const int fname = 0;
+#define FUNCTIONSETUPL(a) const int fname = a;
+#endif
+
+#define KPILOT_VERSION	"4.5.0 (baby)"
 
 
-extern int debug_level;
-extern const char *debug_spaces;
-
-// Function to expand newlins in rich text to <br>\n
+// Function to expand newlines in rich text to <br>\n
 QString rtExpand(const QString &s, bool richText=true);
 
 
-#ifdef DEBUG
-// Both old and new-style debugging suggest (insist?) that
-// every function be started with the macro FUNCTIONSETUP,
-// which outputs function and line information on every call.
-//
-//
-#ifdef __GNUC__
-#define KPILOT_FNAMEDEF	static const char *fname=__FUNCTION__
-#define KPILOT_LOCNDEF	debug_spaces+(::strlen(fname)) \
-				<< "(" << __FILE__ << ":" << \
-				__LINE__ << ")\n"
-#else
-#define	KPILOT_FNAMEDEF	static const char *fname=__FILE__ ":" "__LINE__"
-#define KPILOT_LOCNDEF	"\n"
-#endif
-
-#define FUNCTIONSETUP	KPILOT_FNAMEDEF; \
-			if (debug_level) { DEBUGFUNC << \
-			fname << KPILOT_LOCNDEF ; }
-#define FUNCTIONSETUPL(l)	KPILOT_FNAMEDEF; \
-				if (debug_level>l) { DEBUGFUNC << \
-				fname << KPILOT_LOCNDEF; }
-
-
-#else
-// With debugging turned off, FUNCTIONSETUP doesn't do anything.
-// In particular it doesn't give functions a local variable fname,
-// like FUNCTIONSETUP does in the debugging case.
-//
-//
-#define FUNCTIONSETUP
-#define FUNCTIONSETUPL(a)
-#endif
 
 /**
  * Convert a struct tm from the pilot-link package to a QDateTime
  */
-QDateTime readTm(const struct tm &t);
+KDE_EXPORT QDateTime readTm(const struct tm &t);
 /**
  * Convert a QDateTime to a struct tm for use with the pilot-link package
  */
-struct tm writeTm(const QDateTime &dt);
-struct tm writeTm(const QDate &dt);
+KDE_EXPORT struct tm writeTm(const QDateTime &dt);
+KDE_EXPORT struct tm writeTm(const QDate &dt);
 
 
 // Some layout macros

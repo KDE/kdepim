@@ -1,4 +1,4 @@
-/* pilotMemo.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
@@ -36,7 +36,7 @@ static const char *pilotMemo_id =
 
 
 
-PilotMemo::PilotMemo(PilotRecord * rec) : PilotAppCategory(rec)
+PilotMemo::PilotMemo(const PilotRecord * rec) : PilotAppCategory(rec)
 {
 	FUNCTIONSETUP;
 	fText = codec()->toUnicode((const char *)(rec->getData()),rec->getLen());
@@ -50,39 +50,40 @@ void PilotMemo::unpack(const void *text, int /* firstTime */)
 	fText = codec()->toUnicode((const char *)text);
 }
 
-// The indirection just to make the base class happy
-void *PilotMemo::internalPack(unsigned char *buf)
+PilotRecord *PilotMemo::pack()
 {
-	FUNCTIONSETUP;
-	kdWarning() << k_funcinfo << ": Deprecated." << endl;
-	QCString s = codec()->fromUnicode(fText);
-	return strcpy((char *) buf, (const char *)s);
+	char *buf = new char[fText.length() + 8];
+	int len = fText.length() + 8;
+	pack_(buf,&len);
+	PilotRecord *r = new PilotRecord(buf, len, getAttrib(), getCat(), id());
+	delete[] buf;
+	return r;
 }
 
-void *PilotMemo::pack(void *buf, int *len)
+void *PilotMemo::pack_(void *buf, int *len)
 {
 	FUNCTIONSETUP;
+	if (!*len) return NULL;
 	if (*len < 0) return NULL; // buffer size being silly
 	if (fText.length() > (unsigned) *len) return NULL; // won't fit either
 
 	QCString s = codec()->fromUnicode(fText);
 
-	unsigned int use_length = *len;
-
-	// It won't fit if the buffer is too small. This second test
-	// is because the encoded length in bytes may be longer (?)
-	// than the unencoded length in characters.
-	if (s.length() > use_length) return NULL;
+	int use_length = *len;
+	if (MAX_MEMO_LEN < use_length) use_length = MAX_MEMO_LEN;
 
 	// Zero out the buffer, up to the max memo size.
-	use_length = QMIN(MAX_MEMO_LEN,use_length);
 	memset(buf,0,use_length);
 
 	// Copy the encoded string and make extra sure it's NUL terminated.
 	// Yay, _every_ parameter needs a cast.
-	use_length = QMIN(s.length(),use_length);
+	// *NOTE* This will truncate the memo text if it was passed in as being
+	//        too long, but this is better than allowing garbage in
 	strlcpy(( char *)buf,(const char *)s,use_length);
 
+	// Finally, we set the length of the memo to the used length
+	// of the data buffer, which might be the length of the string.
+	if ((int)s.length() < use_length) use_length = s.length()+1;
 	*len = use_length;
 	return buf;
 }
@@ -139,6 +140,6 @@ QString PilotMemo::sensibleTitle() const
 	}
 	else
 	{
-		return QString(i18n("[unknown]"));
+		return i18n("[unknown]");
 	}
 }

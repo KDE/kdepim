@@ -1,4 +1,4 @@
-/* logWidget.cc                         KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
 **
@@ -126,11 +126,17 @@ LogWidget::LogWidget(QWidget * parent) :
 #endif
 
 	initialText.append(CSL1(TE_EOL));
-	initialText.append(i18n("<qt><B>HotSync Log</B></qt>"));
+	initialText.append(i18n("<qt><b>HotSync Log</b></qt>"));
 	initialText.append(CSL1(TE_EOL));
 
-	initialText.append(CSL1(TE_EOL "<QT><B>KPilot has been reported to cause "
-		"data loss. Please check with kdepim-users@kde.org.</B></QT>" TE_EOL));
+	initialText.append(CSL1(TE_EOL "<qt><b>KPilot has been reported to cause "
+		"data loss. Please check with kdepim-users@kde.org.</b></qt>" TE_EOL));
+
+#if KDE_IS_VERSION(3,3,0)
+#else
+	initialText.append(CSL1(TE_EOL "<qt><b>KDE 3.2 is no longer supported. Please update to KDE 3.3 or later.</b></qt>" TE_EOL));
+	initialText.append(CSL1(TE_EOL "<qt><b>You may be unable to do conflict resolution.</b></qt>" TE_EOL));
+#endif
 
 	fLog->setText(initialText);
 	fLog->scrollToBottom();
@@ -174,7 +180,7 @@ LogWidget::LogWidget(QWidget * parent) :
 
 		QPixmap splash(splashPath);
 		QPainter painter(&splash);
-		painter.setPen(QColor(255, 0, 0));
+		painter.setPen(QColor(0, 255, 0));
 
 		// This latin1() is ok; KPILOT_VERSION is a #define
 		// of a constant string.
@@ -190,12 +196,12 @@ LogWidget::LogWidget(QWidget * parent) :
 #endif
 
 		painter.fillRect(splash.width() -  28 - textWidth,
-			splash.height() - 6 - textHeight - textHeight ,
+			splash.height() - 6 - textHeight,
 			textWidth + 6,
 			textHeight + 4,
 			black);
 		painter.drawText(splash.width() -  25 - textWidth,
-			splash.height() - 8 - textHeight,
+			splash.height() - 8,
 			QString::fromLatin1(KPILOT_VERSION));
 		fSplash = new QLabel(this);
 		fSplash->setPixmap(splash);

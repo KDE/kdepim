@@ -1,6 +1,7 @@
-/* pilotLocalDatabase.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This defines an interface to Pilot databases on the local disk.
 */
@@ -34,6 +35,7 @@ static const char *pilotlocaldatabase_id =
 
 #include <stdio.h>
 #include <unistd.h>
+#include <assert.h>
 
 #include <iostream>
 
@@ -41,11 +43,13 @@ static const char *pilotlocaldatabase_id =
 #include <qfile.h>
 #include <qregexp.h>
 #include <qdatetime.h>
+#include <qtextcodec.h>
 
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kstandarddirs.h>
 
+#include "pilotAppCategory.h"
 #include "pilotLocalDatabase.h"
 
 PilotLocalDatabase::PilotLocalDatabase(const QString & path,
@@ -130,13 +134,7 @@ PilotLocalDatabase::~PilotLocalDatabase()
 void PilotLocalDatabase::fixupDBName()
 {
 	FUNCTIONSETUP;
-#if QT_VERSION < 0x30100
-	fDBName = fDBName.replace(QRegExp(CSL1("/")),CSL1("_"));
-#else
-	// Actually, I don't know if this char-replace
-	// is more efficient than the QString one.
-	fDBName = fDBName.replace('/', CSL1("_"));
-#endif
+	fDBName = fDBName.replace(CSL1("/"),CSL1("_"));
 }
 
 bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags, int version)
@@ -156,7 +154,7 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 #endif
 
 	// Database names seem to be latin1.
-	memcpy(&fDBInfo.name[0], fDBName.latin1(), 34*sizeof(char));
+	memcpy(&fDBInfo.name[0], PilotAppCategory::codec()->fromUnicode(fDBName), 34*sizeof(char));
 	fDBInfo.creator=creator;
 	fDBInfo.type=type;
 	fDBInfo.more=0;
@@ -175,11 +173,16 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 
 	for (int i=0; i<fNumRecords; i++) {
 		KPILOT_DELETE(fRecords[i]);
-		fRecords[i]=NULL;
 	}
 	fNumRecords=0;
 	fCurrentRecord=0;
 	fPendingRec=0;
+
+#ifdef SHADOW_LOCAL_DB
+	// Also delete records if the array implementation goes away
+	fRecordList.clear();
+	fRecordIndex = fRecordList.begin();
+#endif
 
 	// TODO: Do I have to open it explicitly???
 	setDBOpen(true);
@@ -237,6 +240,10 @@ int PilotLocalDatabase::writeAppBlock(unsigned char *buffer, int len)
 	// returns the number of records in the database
 int PilotLocalDatabase::recordCount()
 {
+#ifdef SHADOW_LOCAL_DB
+	DEBUGKPILOT << fNumRecords << " vs " << fRecordList.count() << endl;
+	assert( (unsigned) fNumRecords == fRecordList.count() );
+#endif
 	return fNumRecords;
 }
 
@@ -251,8 +258,24 @@ QValueList<recordid_t> PilotLocalDatabase::idList()
 	// now create the QValue list from the idarr:
 	for (int id=0; id<idlen; id++)
 	{
-		idlist.append(fRecords[id]->getID());
+		idlist.append(fRecords[id]->id());
 	}
+
+#ifdef SHADOW_LOCAL_DB
+	assert(fRecordList.count() == (unsigned) idlen);
+
+	QValueList<PilotRecord *>::ConstIterator i = fRecordList.begin();
+	QValueList<recordid_t>::ConstIterator j = idlist.begin();
+
+	while ( (i!=fRecordList.end()) && (j!=idlist.end()) )
+	{
+		assert(*j == (*i)->id());
+		++i;
+		++j;
+	}
+	assert( (i==fRecordList.end()) && (j==idlist.end()));
+#endif
+
 	return idlist;
 }
 
@@ -266,15 +289,30 @@ PilotRecord *PilotLocalDatabase::readRecordById(recordid_t id)
 	fPendingRec = -1;
 	if (isDBOpen() == false)
 	{
+#ifdef DEBUG
 		DEBUGKPILOT << fDBName << ": DB not open!" << endl;
+#endif
 		return 0L;
 	}
+
+#ifdef SHADOW_LOCAL_DB
+	int shadowcount = 0;
+	for (fRecordIndex = fRecordList.begin(); fRecordIndex != fRecordList.end(); ++fRecordIndex)
+	{
+		if ((*fRecordIndex)->id() == id) break;
+		++shadowcount;
+	}
+#endif
+
 	for (i = 0; i < fNumRecords; i++)
 	{
-		if (fRecords[i]->getID() == id)
+		if (fRecords[i]->id() == id)
 		{
+#ifdef SHADOW_LOCAL_DB
+			assert( shadowcount == i );
+			assert( fRecords[i] == (*fRecordIndex) );
+#endif
 			PilotRecord *newRecord = new PilotRecord(fRecords[i]);
-
 			return newRecord;
 		}
 	}
@@ -291,8 +329,15 @@ PilotRecord *PilotLocalDatabase::readRecordByIndex(int index)
 		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
-	if (index >= fNumRecords)
+#ifdef SHADOW_LOCAL_DB
+	assert((unsigned) recordCount() == fRecordList.count());
+#endif
+	if (index >= recordCount())
 		return 0L;
+#ifdef SHADOW_LOCAL_DB
+	fRecordIndex = fRecordList.at(index);
+	assert(fRecords[index] == *fRecordIndex);
+#endif
 	PilotRecord *newRecord = new PilotRecord(fRecords[index]);
 
 	return newRecord;
@@ -308,11 +353,32 @@ PilotRecord *PilotLocalDatabase::readNextRecInCategory(int category)
 		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
+#ifdef SHADOW_LOCAL_DB
+	while ( (fRecordIndex != fRecordList.end()) &&
+		((*fRecordIndex)->category() != category) )
+	{
+		++fRecordIndex;
+	}
+#endif
+
 	while ((fCurrentRecord < fNumRecords)
-		&& (fRecords[fCurrentRecord]->getCat() != category))
+		&& (fRecords[fCurrentRecord]->category() != category))
 	{
 		fCurrentRecord++;
 	}
+
+#ifdef SHADOW_LOCAL_DB
+	if (fRecordIndex == fRecordList.end())
+	{
+		assert(fCurrentRecord == fNumRecords);
+	}
+	else
+	{
+		assert(*fRecordIndex == fRecords[fCurrentRecord]);
+	}
+	++fRecordIndex;
+#endif
+
 	if (fCurrentRecord == fNumRecords)
 		return 0L;
 	PilotRecord *newRecord = new PilotRecord(fRecords[fCurrentRecord]);
@@ -321,7 +387,52 @@ PilotRecord *PilotLocalDatabase::readNextRecInCategory(int category)
 	return newRecord;
 }
 
-// Reads the next record from database that has the dirty flag set.
+const PilotRecord *PilotLocalDatabase::findNextNewRecord()
+{
+	FUNCTIONSETUP;
+
+	if (isDBOpen() == false)
+	{
+		kdError() << k_funcinfo << ": DB not open!" << endl;
+		return 0L;
+	}
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": looking for new record from " << fCurrentRecord << endl;
+#endif
+#ifdef SHADOW_LOCAL_DB
+	while ( (fRecordIndex != fRecordList.end() ) &&
+		((*fRecordIndex)->id() != 0) )
+	{
+		++fRecordIndex;
+	}
+#endif
+	// Should this also check for deleted?
+	while ((fCurrentRecord < fNumRecords)
+		&& (fRecords[fCurrentRecord]->id() != 0 ))
+	{
+		fCurrentRecord++;
+	}
+#ifdef SHADOW_LOCAL_DB
+	if (fCurrentRecord == fNumRecords)
+	{
+		assert(fRecordIndex == fRecordList.end());
+	}
+	else
+	{
+		assert((*fRecordIndex) == fRecords[fCurrentRecord]);
+	}
+#endif
+	if (fCurrentRecord == fNumRecords)
+		return 0L;
+
+	fPendingRec = fCurrentRecord;	// Record which one needs the new id
+	fCurrentRecord++;	// so we skip it next time
+#ifdef SHADOW_LOCAL_DB
+	++fRecordIndex;
+#endif
+	return fRecords[fPendingRec];
+}
+
 PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 {
 	FUNCTIONSETUP;
@@ -331,12 +442,30 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
+#ifdef SHADOW_LOCAL_DB
+	while ( (fRecordIndex != fRecordList.end() ) &&
+		!((*fRecordIndex)->isDirty()) &&
+		((*fRecordIndex)->id() > 0) )
+	{
+		++fRecordIndex;
+	}
+#endif
 	// Should this also check for deleted?
 	while ((fCurrentRecord < fNumRecords)
-		&& !(fRecords[fCurrentRecord]->getAttrib() & dlpRecAttrDirty)  && (fRecords[fCurrentRecord]->getID()>0 ))
+		&& !(fRecords[fCurrentRecord]->isDirty())  && (fRecords[fCurrentRecord]->id()>0 ))
 	{
 		fCurrentRecord++;
 	}
+#ifdef SHADOW_LOCAL_DB
+	if (fCurrentRecord == fNumRecords)
+	{
+		assert(fRecordIndex == fRecordList.end());
+	}
+	else
+	{
+		assert((*fRecordIndex) == fRecords[fCurrentRecord]);
+	}
+#endif
 	if (fCurrentRecord == fNumRecords)
 		return 0L;
 	PilotRecord *newRecord = new PilotRecord(fRecords[fCurrentRecord]);
@@ -363,9 +492,9 @@ recordid_t PilotLocalDatabase::writeID(PilotRecord * rec)
 			": Last call was _NOT_ readNextModifiedRec()" << endl;
 		return 0;
 	}
-	fRecords[fPendingRec]->setID(rec->getID());
+	fRecords[fPendingRec]->setID(rec->id());
 	fPendingRec = -1;
-	return rec->getID();
+	return rec->id();
 }
 
 // Writes a new record to database (if 'id' == 0, it is assumed that this is a new record to be installed on pilot)
@@ -403,10 +532,10 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 	newRecord->setAttrib(newRecord->getAttrib() | dlpRecAttrDirty);
 
 	// First check to see if we have this record:
-	if (newRecord->getID() != 0)
+	if (newRecord->id() != 0)
 	{
 		for (i = 0; i < fNumRecords; i++)
-			if (fRecords[i]->getID() == newRecord->getID())
+			if (fRecords[i]->id() == newRecord->id())
 			{
 				delete fRecords[i];
 
@@ -416,7 +545,7 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 	}
 	// Ok, we don't have it, so just tack it on.
 	fRecords[fNumRecords++] = new PilotRecord(newRecord);
-	return newRecord->getID();
+	return newRecord->id();
 }
 
 // Deletes a record with the given recordid_t from the database, or all records, if all is set to true. The recordid_t will be ignored in this case
@@ -443,9 +572,9 @@ int PilotLocalDatabase::deleteRecord(recordid_t id, bool all)
 	else
 	{
 		int i=0;
-		while ( (i<fNumRecords) && (fRecords[i]) && (fRecords[i]->getID()!=id) )
+		while ( (i<fNumRecords) && (fRecords[i]) && (fRecords[i]->id()!=id) )
 			i++;
-		if ( (i<fNumRecords) && (fRecords[i]) && (fRecords[i]->getID() == id) )
+		if ( (i<fNumRecords) && (fRecords[i]) && (fRecords[i]->id() == id) )
 		{
 			delete fRecords[i];
 			for (int j=i+1; j<fNumRecords; j++)
@@ -494,6 +623,9 @@ int PilotLocalDatabase::resetDBIndex()
 		return -1;
 	}
 	fCurrentRecord = 0;
+#ifdef SHADOW_LOCAL_DB
+	fRecordIndex = fRecordList.begin();
+#endif
 	return 0;
 }
 
@@ -551,14 +683,16 @@ void PilotLocalDatabase::openDatabase()
 	int attr, cat;
 	pi_uid_t id;
 
-	QString tempName = dbPathName();
-	QCString fileName = QFile::encodeName(tempName);
-	dbFile = pi_file_open(const_cast < char *>((const char *) fileName));
+	setDBOpen(false);
+	char buffer[PATH_MAX];
+	memset(buffer,0,PATH_MAX);
+	strlcpy(buffer,QFile::encodeName(dbPathName()),PATH_MAX);
 
+	dbFile = pi_file_open(buffer);
 	if (dbFile == 0L)
 	{
 		kdError() << k_funcinfo
-			<< ": Failed to open " << tempName << endl;
+			<< ": Failed to open " << dbPathName() << endl;
 		return;
 	}
 	pi_file_get_info(dbFile, &fDBInfo);
@@ -571,6 +705,9 @@ void PilotLocalDatabase::openDatabase()
 	{
 		fRecords[fCurrentRecord] =
 			new PilotRecord(tmpBuffer, size, attr, cat, id);
+#ifdef SHADOW_LOCAL_DB
+		fRecordList.append(fRecords[fCurrentRecord]);
+#endif
 		fCurrentRecord++;
 	}
 	pi_file_close(dbFile);	// We done with it once we've read it in.
@@ -593,31 +730,39 @@ void PilotLocalDatabase::closeDatabase()
 		return;
 	}
 
-	QString tempName_ = dbPathName();
-	QString newName_ = tempName_ + CSL1(".bak");
-	QCString tempName = QFile::encodeName(tempName_);
-	QCString newName = QFile::encodeName(newName_);
+	QString newName = dbPathName() + CSL1(".new");
+	char buf[PATH_MAX];
+	memset(buf,0,PATH_MAX);
+	strlcpy(buf,QFile::encodeName(newName),PATH_MAX);
 
-	dbFile = pi_file_create(const_cast < char *>((const char *)newName),
-		&fDBInfo);
 #ifdef DEBUG
-	DEBUGCONDUIT<<"Created temp file "<<newName<<" for the database file "<<dbPathName()<<endl;
+	DEBUGCONDUIT << fname
+		<< ": Creating temp file " << buf
+		<< " for the database file " << dbPathName() << endl;
 #endif
 
+	dbFile = pi_file_create(buf,&fDBInfo);
 	pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
 	for (i = 0; i < fNumRecords; i++)
 	{
-		pi_file_append_record(dbFile,
-			fRecords[i]->getData(),
-			fRecords[i]->getLen(),
-			fRecords[i]->getAttrib(), fRecords[i]->getCat(),
-			fRecords[i]->getID());
+		if ((fRecords[i]->id() == 0) && (fRecords[i]->isDeleted()))
+		{
+			// Just ignore it
+		}
+		else
+		{
+			pi_file_append_record(dbFile,
+				fRecords[i]->getData(),
+				fRecords[i]->getLen(),
+				fRecords[i]->getAttrib(), fRecords[i]->category(),
+				fRecords[i]->id());
+		}
 	}
 
 	pi_file_close(dbFile);
-	unlink((const char *) QFile::encodeName(tempName));
+	QFile::remove(dbPathName());
 	rename((const char *) QFile::encodeName(newName),
-		(const char *) QFile::encodeName(tempName));
+		(const char *) QFile::encodeName(dbPathName()));
 	setDBOpen(false);
 }
 
@@ -644,3 +789,9 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 		*fPathBase = s;
 	}
 }
+
+/* virtual */ PilotDatabase::DBType PilotLocalDatabase::dbType() const
+{
+	return eLocalDB;
+}
+

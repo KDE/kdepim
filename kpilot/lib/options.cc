@@ -1,6 +1,7 @@
-/* options.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 2000-2001 by Adriaan de Groot
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a file of odds and ends, with debugging functions and stuff.
 */
@@ -120,4 +121,36 @@ struct tm writeTm(const QDate &dt)
   return t;
 }
 
+#ifdef DEBUG
+KPilotDepthCount::KPilotDepthCount(int area, int level, const char *s) :
+	fDepth(depth),
+	fLevel(level),
+	fName(s)
+{
+	if (debug_level>=fLevel) 
+	{ 
+#ifdef DEBUG_CERR
+		DEBUGKPILOT 
+#else
+		debug(area)
+#endif
+		<< indent() << ">" << name() << endl; 
+	}
+	depth++;
+}
+
+KPilotDepthCount::~KPilotDepthCount()
+{
+	depth--;
+}
+
+QString KPilotDepthCount::indent() const
+{
+	QString s;
+	s.fill(' ',fDepth);
+	return s+s+' ';
+}
+
+int KPilotDepthCount::depth = 0;
+#endif
 

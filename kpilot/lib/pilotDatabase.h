@@ -3,6 +3,7 @@
 /* pilotDatabase.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is the abstract base class for databases, which is used both
 ** by local databases and by the serial databases held in the Pilot.
@@ -64,7 +65,7 @@
  * PilotDatabase methods when finished with them!!
  */
 
-class PilotDatabase
+class KDE_EXPORT PilotDatabase
 {
 public:
 	PilotDatabase(const QString &name = QString::null);
@@ -160,10 +161,13 @@ public:
 	virtual QString dbPathName() const = 0;
 
 	/**
-	* Here are some static utility functions. listAppInfo() is primarily
-	* meant for debugging, and it dumps an appinfo block to stdout.
+	* Use this instead of RTTI to determine the type of a
+	* PilotDatabase, for those cases where it's important.
 	*/
-	static void listAppInfo(const struct CategoryAppInfo *);
+	typedef enum { eNone=0,
+		eLocalDB=1,
+		eSerialDB=2 } DBType;
+	virtual DBType dbType() const = 0;
 
 	static inline bool isResource(struct DBInfo *info)
 	{

@@ -45,6 +45,8 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
+#include <kapplication.h>
+#include <dcopclient.h>
 
 #include <qpushbutton.h>
 #include <qlayout.h>
@@ -303,7 +305,12 @@ void Kleo::BackendConfigWidget::slotConfigureButtonClicked() {
   const CryptoBackend* backend = d->listView->currentBackend();
   if ( backend && backend->config() ) {
     Kleo::CryptoConfigDialog dlg( backend->config() );
-    dlg.exec();
+    int result = dlg.exec();
+    if ( result == QDialog::Accepted )
+    {
+      // Tell other users of gpgconf (e.g. the s/mime page) that the gpgconf data might have changed
+      kapp->dcopClient()->emitDCOPSignal( "KPIM::CryptoConfig", "changed()", QByteArray() );
+    }
   }
   else // shouldn't happen, button is disabled
     kdWarning(5150) << "Can't configure backend, no config object available" << endl;

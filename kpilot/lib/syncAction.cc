@@ -1,6 +1,7 @@
-/* syncAction.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2001 by Waldo Bastian (code in questionYesNo)
 **
 */
@@ -51,12 +52,7 @@ static const char *syncAction_id =
 #include <kglobal.h>
 #include <kstandarddirs.h>
 #include <kconfig.h>
-
-#if KDE_VERSION < 300
-#include <kapplication.h>
-#else
-#include <kapplication.h>
-#endif
+#include <kmessagebox.h>
 
 #include "syncAction.moc"
 #include "kpilotlibSettings.h"
@@ -64,10 +60,25 @@ static const char *syncAction_id =
 SyncAction::SyncAction(KPilotDeviceLink  *p,
 	const char *name) :
 	QObject(p, name),
-	fHandle(p)
+	fHandle(p),
+	fParent(0L)
 {
 	FUNCTIONSETUP;
 	(void) syncAction_id;
+}
+
+SyncAction::SyncAction(KPilotDeviceLink *p,
+	QWidget * visibleparent,
+	const char *name) :
+	QObject(p, name),
+	fHandle(p),
+	fParent(visibleparent)
+{
+	FUNCTIONSETUP;
+}
+
+SyncAction::~SyncAction()
+{
 }
 
 /* virtual */ QString SyncAction::statusString() const
@@ -124,185 +135,160 @@ bool SyncAction::delayDone()
 	case eCopyPCToHH : return i18n("Copy PC to Handheld");
 	case eCopyHHToPC : return i18n("Copy Handheld to PC");
 	case eBackup : return i18n("Backup");
-	case eRestore : return i18n("Restore from Backup");
+	case eRestore : return i18n("Restore From Backup");
+	case eDefaultSync: break; /* FALLTHRU */
 	}
 	return i18n("Unknown sync mode");
 }
 
-InteractiveAction::InteractiveAction(KPilotDeviceLink *p,
-	QWidget * visibleparent,
-	const char *name) :
-	SyncAction(p, name),
-	fParent(visibleparent),
-	fTickleTimer(0L),
-	fTickleCount(0),
-	fTickleTimeout(0)
+void SyncAction::startTickle(unsigned timeout)
 {
 	FUNCTIONSETUP;
+	connect(fHandle,SIGNAL(timeout()),this,SIGNAL(timeout()));
+	fHandle->startTickle(timeout);
 }
 
-InteractiveAction::~InteractiveAction()
+void SyncAction::stopTickle()
 {
 	FUNCTIONSETUP;
-
-	KPILOT_DELETE(fTickleTimer);
+	disconnect(fHandle,SIGNAL(timeout()),this,SIGNAL(timeout()));
+	fHandle->stopTickle();
 }
 
 
-void InteractiveAction::startTickle(unsigned timeout)
-{
-	FUNCTIONSETUP;
-	fTickleTimeout = timeout;
-	fTickleCount = 0;
-	if (!fTickleTimer)
-	{
-		fTickleTimer = new QTimer(this);
-		QObject::connect(fTickleTimer, SIGNAL(timeout()),
-			this, SLOT(tickle()));
-	}
-	else
-	{
-		fTickleTimer->stop();
-	}
-
-	fTickleTimer->start(1000, false);
-}
-
-void InteractiveAction::stopTickle()
-{
-	FUNCTIONSETUP;
-	if (fTickleTimer)
-	{
-		fTickleTimer->stop();
-	}
-}
-
-void InteractiveAction::tickle()
-{
-	FUNCTIONSETUP;
-	fTickleCount++;
-
-	// Note that if fTickleTimeout == 0 then this
-	// test will never be true until unsigned wraps
-	// around, which is 2^32 seconds, which is a long time.
-	//
-	// This is intentional.
-	//
-	//
-	if (fTickleCount == fTickleTimeout)
-	{
-		emit timeout();
-	}
-	else
-	{
-		if (pi_tickle(pilotSocket()))
-		{
-			kdWarning() << k_funcinfo
-				<< "Couldn't tickle Pilot!" << endl;
-		}
-	}
-}
-
-int InteractiveAction::questionYesNo(const QString & text,
+int SyncAction::questionYesNo(const QString & text,
 	const QString & caption,
 	const QString & key,
-	unsigned timeout)
+	unsigned timeout,
+	const QString & yes,
+	const QString &no )
 {
 	FUNCTIONSETUP;
 
-	KConfig *config = KPilotLibSettings::self()->config();
-	KConfigGroupSaver cfgs(config,"Notification Messages");
-
+	bool checkboxReturn = false;
+	int r;
+	KMessageBox::ButtonCode result;
 	if (!key.isEmpty())
 	{
-		QString prev = config->readEntry(key).lower();
-
-		if (prev == CSL1("yes"))
+		if (!KMessageBox::shouldBeShownYesNo(key,result))
 		{
-			return KDialogBase::Yes;
-		}
-		else if (prev == CSL1("no"))
-		{
-			return KDialogBase::No;
+			return result;
 		}
 	}
 
+#if !KDE_IS_VERSION(3,3,0)
+	return KMessageBox::Cancel;
+#else
 	KDialogBase *dialog =
 		new KDialogBase(caption.isNull()? i18n("Question") : caption,
 		KDialogBase::Yes | KDialogBase::No,
 		KDialogBase::Yes, KDialogBase::No,
 		fParent, "questionYesNo", true, true,
-		KStdGuiItem::yes(), KStdGuiItem::no());
+		yes.isEmpty() ? KStdGuiItem::yes() : yes,
+		no.isEmpty() ? KStdGuiItem::no() : no);
 
-	// The following code is taken from KDialogBase.cc,
-	// part of the KDE 2.2 libraries. Copyright 2001
-	// by Waldo Bastian.
-	//
-	//
-	QVBox *topcontents = new QVBox(dialog);
-
-	topcontents->setSpacing(KDialog::spacingHint() * 2);
-	topcontents->setMargin(KDialog::marginHint() * 2);
-
-	QWidget *contents = new QWidget(topcontents);
-	QHBoxLayout *lay = new QHBoxLayout(contents);
-
-	lay->setSpacing(KDialog::spacingHint() * 2);
-
-	lay->addStretch(1);
-	QLabel *label1 = new QLabel( contents);
-#if QT_VERSION < 300
-	label1->setPixmap(QMessageBox::standardIcon(QMessageBox::Information,
-        	kapp->style().guiStyle()));
-#else
-	label1->setPixmap(QMessageBox::standardIcon(QMessageBox::Information));
-#endif
-	lay->add( label1 );
-	QLabel *label2 = new QLabel( text, contents);
-	label2->setMinimumSize(label2->sizeHint());
-	lay->add(label2);
-	lay->addStretch(1);
-
-	QSize extraSize = QSize(50, 30);
-
-	QCheckBox *checkbox = 0L;
-	if (!key.isEmpty())
-	{
-		checkbox = new QCheckBox(i18n("Do not ask again"),topcontents);
-		extraSize = QSize(50,0);
-	}
-
-	dialog->setMainWidget(topcontents);
-	dialog->enableButtonSeparator(false);
-	dialog->incInitialSize(extraSize);
-
-	QTimer *timer = new QTimer(dialog);
-
-	QObject::connect(timer, SIGNAL(timeout()),
-		dialog, SLOT(slotCancel()));
 	if (timeout > 0)
 	{
-		timer->start(timeout,true);
+		QObject::connect(fHandle, SIGNAL(timeout()),
+			dialog, SLOT(slotCancel()));
+		startTickle(timeout);
 	}
 
-	int result = dialog->exec();
+	r = (KMessageBox::ButtonCode) KMessageBox::createKMessageBox(dialog,
+		QMessageBox::Question,
+		text,
+		QStringList(),
+		(key.isEmpty() ? QString::null : i18n("&Do not ask again")),
+		&checkboxReturn,
+		0);
 
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": Dialog returned " << result << endl;
+
+	switch(r)
+	{
+	case KDialogBase::Yes : result=KMessageBox::Yes ; break;
+	case KDialogBase::No  : result=KMessageBox::No; break;
+	case KDialogBase::Cancel : result=KMessageBox::Cancel; break;
+	default : break;
+	}
+
+	stopTickle();
+
+	if (!key.isEmpty() && checkboxReturn)
+	{
+		KMessageBox::saveDontShowAgainYesNo(key,result);
+	}
+
+	return result;
+#endif
+}
+
+
+int SyncAction::questionYesNoCancel(const QString & text,
+	const QString & caption,
+	const QString & key,
+	unsigned timeout,
+	const QString &yes,
+	const QString &no)
+{
+	FUNCTIONSETUP;
+
+	bool checkboxReturn = false;
+	int r;
+	KMessageBox::ButtonCode result;
+
+	if (!key.isEmpty())
+	{
+		if (!KMessageBox::shouldBeShownYesNo(key,result))
+		{
+			if (result != KMessageBox::Cancel)
+			{
+				return result;
+			}
+		}
+	}
+
+	KDialogBase *dialog =
+		new KDialogBase(caption.isNull()? i18n("Question") : caption,
+		KDialogBase::Yes | KDialogBase::No | KDialogBase::Cancel,
+		KDialogBase::Yes, KDialogBase::Cancel,
+		fParent, "questionYesNoCancel", true, true,
+		(yes.isEmpty() ? KStdGuiItem::yes() : yes),
+		(no.isEmpty() ? KStdGuiItem::no() : no),
+		KStdGuiItem::cancel());
+
+	if (timeout > 0)
+	{
+		QObject::connect(fHandle, SIGNAL(timeout()),
+			dialog, SLOT(slotCancel()));
+		startTickle(timeout);
+	}
+
+#if KDE_IS_VERSION(3,3,0)
+	r = KMessageBox::createKMessageBox(dialog,
+		QMessageBox::Question,
+		text,
+		QStringList(),
+		(key.isEmpty() ? QString::null : i18n("&Do not ask again")),
+		&checkboxReturn,
+		0);
+#else
+	r = KDialogBase::Cancel;
 #endif
 
-	if (!key.isEmpty() && checkbox && checkbox->isChecked())
+	switch(r)
 	{
-		if (result == KDialogBase::Yes)
-		{
-			config->writeEntry(key,"Yes");
-		}
-		else if (result == KDialogBase::No)
-		{
-			config->writeEntry(key,"No");
-		}
+	case KDialogBase::Yes : result=KMessageBox::Yes ; break;
+	case KDialogBase::No  : result=KMessageBox::No; break;
+	case KDialogBase::Cancel : result=KMessageBox::Cancel; break;
+	default : break;
+	}
+	stopTickle();
+
+	if (!key.isEmpty() && checkboxReturn)
+	{
+		KMessageBox::saveDontShowAgainYesNo(key,result);
 	}
 
-	delete dialog;
 	return result;
 }
+

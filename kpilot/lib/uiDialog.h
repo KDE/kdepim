@@ -3,11 +3,10 @@
 /* uiDialog.h                           KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2004 by Adriaan de Groot
 **
-** This defines a subclass of KDialogBase that handles the setup for
-** KPilot -- and conduits -- configuration dialogs. It also provides
-** some support for the default about-page in setup dialogs, for applications
-** (like conduits) with no main window or menu.
+** This class defines a way to add an "about widget" to a tab widget.
+**
 */
 
 /*
@@ -31,37 +30,12 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <kdialogbase.h>
-
 class QTabWidget;
 class QPushButton;
 class KAboutData;
 
-class UIDialog : public KDialogBase
+class KDE_EXPORT UIDialog
 {
-Q_OBJECT
-public:
-	/**
-	* Create a UIDialog with the given parent and object name.
-	* The dialog can be made modal if you wish. The buttons
-	* can be specified using the second constructor, but you should
-	* always include an OK button for the purpose of committing
-	* whatever changes need to be made.
-	*/
-	UIDialog(QWidget *parent=0L, const char *name=0L, bool modal=false);
-	UIDialog(QWidget *parent=0L, const char *name=0L,
-		int buttonmask=Ok|Cancel, bool modal=false);
-	virtual ~UIDialog();
-
-protected:
-	/**
-	* Adds an "About" page to the tabwidget. If @p aboutbutton is
-	* true, include an additional "About" button that pops
-	* up the KAboutDialog. If @p data is non-null, use that
-	* data instead of the global KInstance about data.
-	*/
-	void addAboutPage(bool aboutbutton=false,KAboutData *data=0L);
-
 public:
 	/**
 	* This is the function that does the work of adding an about
@@ -77,27 +51,6 @@ public:
 	* you can slap in an about widget wherever.
 	*/
 	static QWidget *aboutPage(QWidget *parent, KAboutData *data=0L);
-
-protected slots:
-	void showAbout();
-	virtual void slotOk();
-
-protected:
-	/**
-	* validate() is called when the user OK's the dialog.
-	* If any checking needs to be done, then this is the place
-	* to do it, to provide the user with a chance to cancel the OK.
-	*/
-	virtual bool validate() { return true; } ;
-	virtual void commitChanges() = 0;
-
-	QWidget *widget() const { return fMainWidget; } ;
-	QTabWidget *tabWidget() const { return fP; } ;
-	void setTabWidget(QTabWidget *w);
-
-private:
-	QWidget *fMainWidget;
-	QTabWidget *fP;
 } ;
 
 #endif

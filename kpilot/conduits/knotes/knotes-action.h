@@ -46,6 +46,7 @@ public:
 
 	enum Status { Init,
 		ModifiedNotesToPilot,
+		DeleteNotesOnPilot,
 		NewNotesToPilot,
 		MemosToKNotes,
 		Cleanup,
@@ -71,12 +72,23 @@ protected:
 	void getAppInfo();
 	void getConfigInfo();
 	bool modifyNoteOnPilot();
+	bool deleteNoteOnPilot();
 	bool addNewNoteToPilot();
 	bool syncMemoToKNotes();
 	void cleanupMemos();
 
 	void updateNote(const NoteAndMemo &,const PilotMemo *);
-	void addNote(const PilotMemo *);
+	
+	/**
+	* Add the Memo to KNotes.
+	*/
+	void addMemoToKNotes(const PilotMemo *);
+	/**
+	* Add the Note currently being processed to the
+	* pilot as a new memo. Returns the id of the record.
+	*/
+	int addNoteToPilot();
+
 
 	void resetIndexes();
 

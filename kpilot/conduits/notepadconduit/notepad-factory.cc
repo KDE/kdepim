@@ -1,4 +1,4 @@
-/* notepad-factory.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2004 by Adriaan de Groot, Joern Ahrens
 **
@@ -32,7 +32,10 @@
 #include <kinstance.h>
 #include <kaboutdata.h>
 #include <kurlrequester.h>
+#include <kmessagebox.h>
 #include <qlineedit.h>
+
+#include "uiDialog.h"
 
 #include "notepad-conduit.h"     // Conduit action
 #include "notepad-setup.h"
@@ -49,6 +52,9 @@ void *init_conduit_notepad()
 
 }
 
+//----------------------------------------------------------------------------
+// Conduit Confuguration
+//----------------------------------------------------------------------------
 class NotepadConduitConfig : public ConduitConfigBase
 {
 public:
@@ -76,7 +82,6 @@ NotepadConduitConfig::NotepadConduitConfig(QWidget *p, const char *n) :
 	QObject::connect(fConfigWidget->fOutputDirectory, SIGNAL(textChanged(const QString&)),
 		this, SLOT(modified()));
 	fConfigWidget->fOutputDirectory->setMode(KFile::Directory | 
-											KFile::ExistingOnly |
 											KFile::LocalOnly);
 }
 
@@ -93,13 +98,15 @@ NotepadConduitConfig::NotepadConduitConfig(QWidget *p, const char *n) :
 	FUNCTIONSETUP;
 	
 	NotepadConduitSettings::self()->readConfig();
-
 	fConfigWidget->fOutputDirectory->setURL(NotepadConduitSettings::outputDirectory());
-
 	fModified=false;
 }
 
+//----------------------------------------------------------------------------
+// Conduit Factory
+//----------------------------------------------------------------------------
 KAboutData *NotepadConduitFactory::fAbout = 0L;
+
 NotepadConduitFactory::NotepadConduitFactory(QObject *p, const char *n) :
 	KLibFactory(p,n)
 {
@@ -114,8 +121,11 @@ NotepadConduitFactory::NotepadConduitFactory(QObject *p, const char *n) :
 		"(C) 2004, Joern Ahrens");
 	fAbout->addAuthor("Joern Ahrens",
 		I18N_NOOP("Primary Author"),
-		"joern@kpilot.org",
+		"kde@jokele.de",
 		"http://www.jokele.de/");
+	fAbout->addCredit("Adriaan de Groot");
+	fAbout->addCredit("Angus Ainslies", 
+		I18N_NOOP("Notepad conduit is based on Angus' read-notepad, part of pilot-link" ));
 }
 
 NotepadConduitFactory::~NotepadConduitFactory()
@@ -126,43 +136,37 @@ NotepadConduitFactory::~NotepadConduitFactory()
 	KPILOT_DELETE(fAbout);
 }
 
-/* virtual */ QObject *NotepadConduitFactory::createObject( QObject *p,
-	const char *n,
-	const char *c,
-	const QStringList &a)
+/* virtual */ QObject *NotepadConduitFactory::createObject( QObject *parent,
+	const char *name, const char *className, const QStringList &args)
 {
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Creating object of class "
-		<< c
+		<< className
 		<< endl;
 #endif
 
-	if (qstrcmp(c,"ConduitConfigBase")==0)
+	if(qstrcmp(className, "ConduitConfigBase") == 0)
 	{
-		QWidget *w = dynamic_cast<QWidget *>(p);
-		if (w)
-		{
+		QWidget *w = dynamic_cast<QWidget *>(parent);
+		if (w) {
 			return new NotepadConduitConfig(w);
 		}
-		else
-		{
+		else {
 			return 0L;
 		}
 	}
 
-	if (qstrcmp(c,"SyncAction")==0)
+	if(qstrcmp(className, "SyncAction") == 0)
 	{
-		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
+		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(parent);
 
-		if (d)
-		{
-			return new NotepadConduit(d,n,a);
+		if (d) {
+			return new NotepadConduit(d, name, args);
 		}
-		else
-		{
+		else {
 			kdError() << k_funcinfo
 				<< ": Couldn't cast to KPilotDeviceLink"
 				<< endl;

@@ -1,6 +1,7 @@
-/* pilotRecord.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a wrapper for pilot-link's general
 ** Pilot database structures. These records are
@@ -60,7 +61,7 @@ static const char *pilotRecord_id =
 	FUNCTIONSETUP;
 	DEBUGKPILOT << fname
 		<< ": Allocated " << fAllocated
-		<< "  Deleted " << fDeleted;
+		<< "  Deleted " << fDeleted << endl;
 #endif
 }
 
@@ -71,8 +72,12 @@ PilotRecord::PilotRecord(void *data, int len, int attrib, int cat,
 	fAttrib(attrib),
 	fCat(cat),
 	fID(uid)
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+	,
+	fBuffer(0L)
+#endif
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	fData = new char[len];
 
 	memcpy(fData, data, len);
@@ -81,16 +86,21 @@ PilotRecord::PilotRecord(void *data, int len, int attrib, int cat,
 	(void) pilotRecord_id;
 }
 
-PilotRecord::PilotRecord(PilotRecord * orig)
+PilotRecord::PilotRecord(PilotRecord * orig) :
+	fID(orig->id())
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+	,
+	fBuffer(0L)
+#endif
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	fData = new char[orig->getLen()];
 
 	memcpy(fData, orig->getData(), orig->getLen());
 	fLen = orig->getLen();
 	fAttrib = orig->getAttrib();
-	fCat = orig->getCat();
-	fID = orig->getID();
+	fCat = orig->category();
+	fID = orig->id();
 
 	fAllocated++;
 }
@@ -98,6 +108,15 @@ PilotRecord::PilotRecord(PilotRecord * orig)
 PilotRecord & PilotRecord::operator = (PilotRecord & orig)
 {
 	FUNCTIONSETUP;
+#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
+	if (fBuffer)
+	{
+		pi_buffer_free(fBuffer);
+		fBuffer=0L;
+		fData=0L;
+	}
+#endif
+
 	if (fData)
 		delete[]fData;
 	fData = new char[orig.getLen()];
@@ -105,9 +124,34 @@ PilotRecord & PilotRecord::operator = (PilotRecord & orig)
 	memcpy(fData, orig.getData(), orig.getLen());
 	fLen = orig.getLen();
 	fAttrib = orig.getAttrib();
-	fCat = orig.getCat();
-	fID = orig.getID();
+	fCat = orig.category();
+	fID = orig.id();
 	return *this;
+}
+
+recordid_t PilotRecord::getID() const
+{
+	return id();
+}
+
+void PilotRecord::makeDeleted()
+{
+	setDeleted(true);
+}
+
+void PilotRecord::makeSecret()
+{
+	setSecret(true);
+}
+
+int PilotRecord::getCat() const
+{
+	return category();
+}
+
+void PilotRecord::setCat(int i)
+{
+	return setCategory(i);
 }
 
 void PilotRecord::setData(const char *data, int len)
@@ -138,13 +182,43 @@ void PilotRecord::setData(const char *data, int len)
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname
-		<< ": Got codec " << codecName().latin1() << " for setting "
-		<< s.latin1() << endl;
+		<< ": Got codec " << codecName() << " for setting "
+		<< s << endl;
 #endif
 	return codec();
 }
 
 /* static */ QString PilotAppCategory::codecName()
 {
-	return codec()->name();
+	return QString::fromLatin1(codec()->name());
+}
+
+bool PilotAppCategory::setCat(struct CategoryAppInfo &info,const QString &label)
+{
+	int emptyAvailable = -1;
+	if (label.isEmpty()) { setCat(0); return true; }
+	for (int catId = 1; catId < 16; catId++) 
+	{
+		QString aCat;
+		if (!info.name[catId][0]) 
+		{
+			emptyAvailable=catId; continue;
+		}
+		aCat = codec()->toUnicode(info.name[catId]);
+		if (label == aCat) { setCat(catId); return true; }
+	}
+	if (emptyAvailable<0) return false;
+	strlcpy(info.name[emptyAvailable], codec()->fromUnicode(label), 16);
+	setCat(emptyAvailable);
+	return true;
+}
+
+PilotRecord *PilotAppCategory::pack()
+{
+	int len = PilotRecord::APP_BUFFER_SIZE;
+	void* buff = new unsigned char[len];
+	pack_(buff, &len);
+	PilotRecord* rec =  new PilotRecord(buff, len, getAttrib(), getCat(), id());
+	delete [] (unsigned char*)buff;
+	return rec;
 }

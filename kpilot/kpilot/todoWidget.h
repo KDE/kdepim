@@ -1,7 +1,6 @@
 /* todoWidget.h			KPilot
 **
-** Copyright (C) 2003 by Dan Pilone
-** Written 2003 by Reinhold Kainhofer
+** Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 
 ** This file defines the todo-viewing widget used in KPilot
@@ -169,8 +168,4 @@ protected:
 
 };
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
 #endif

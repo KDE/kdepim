@@ -120,7 +120,7 @@ ResolutionCheckListItem::ResolutionCheckListItem(ResolutionItem*it,
 
 ResolutionCheckListItem::ResolutionCheckListItem(QString text, QString header,
 		ResolutionCheckListItem*parent) :
-	QCheckListItem(parent, "", QCheckListItem::RadioButton),
+	QCheckListItem(parent, QString(), QCheckListItem::RadioButton),
 	fResItem(0L),
 	isController(false),
 	fCaption(header),
@@ -160,7 +160,7 @@ void ResolutionCheckListItem::setCaption(QString caption)
 void ResolutionCheckListItem::updateText()
 {
 	QString newText(i18n("Entries in the resolution dialog. First the name of the field, then the entry from the Handheld or PC after the colon", "%1: %2").arg(fCaption).arg(fText));
-	newText.replace(QRegExp("\n"),
+	newText.replace(QRegExp(CSL1("\n")),
 		i18n("Denoting newlines in Address entries. No need to translate", " | "));
 	setText(0, newText);
 }
@@ -211,13 +211,13 @@ void ResolutionDlg::adjustButtons(ResolutionTable*tab)
 	if (!tab) return;
 	if (!(tab->fExistItems & eExistsPC) )
 	{
-		fWidget->fPCValues->setText("Delete entry");
+		fWidget->fPCValues->setText(i18n("Delete entry"));
 		fWidget->fKeepBoth->setDisabled(TRUE);
 		fWidget->fKeepBoth->hide();
 	}
 	if (!(tab->fExistItems & eExistsPalm) )
 	{
-		fWidget->fPalmValues->setText("Delete entry");
+		fWidget->fPalmValues->setText(i18n("Delete entry"));
 		fWidget->fKeepBoth->setDisabled(TRUE);
 		fWidget->fKeepBoth->hide();
 	}

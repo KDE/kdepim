@@ -1,6 +1,7 @@
-/* hotSync.cc                           KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines SyncActions, which are used to perform some specific
 ** task during a HotSync. Conduits are not included here, nor are
@@ -47,6 +48,7 @@ static const char *hotsync_id =
 #include <qvaluelist.h>
 #include <qregexp.h>
 #include <qtextcodec.h>
+#include <qstringlist.h>
 
 #include <kglobal.h>
 #include <kstandarddirs.h>
@@ -107,7 +109,7 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 		// Let the KDE User know what's happening
 		// Pretty sure all database names are in latin1.
 		emit logMessage(i18n("Syncing database %1...")
-			.arg(QString::fromLatin1(db.name)));
+			.arg(PilotAppCategory::codec()->toUnicode(db.name)));
 
 		kapp->processEvents();
 	}
@@ -180,7 +182,7 @@ static inline bool dontBackup(struct DBInfo *info,
 	if (dbcreators.findIndex(info->creator) != -1) return true;
 
 	// Now take wildcards into account
-	QString db = QString::fromLatin1(info->name);
+	QString db = PilotAppCategory::codec()->toUnicode(info->name);
 	for (QStringList::const_iterator i = dbnames.begin(); i != dbnames.end(); ++i)
 	{
 		QRegExp re(*i,true,true); // Wildcard match
@@ -223,7 +225,7 @@ static inline void initNoBackup(QStringList &dbnames,
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Will skip databases "
-		<< dbnames.join(",") << endl;
+		<< dbnames.join(CSL1(",")) << endl;
 	QString creatorids;
 	for (QValueList<unsigned long>::const_iterator i = dbcreators.begin();
 		i != dbcreators.end(); ++i)
@@ -238,10 +240,14 @@ static inline void initNoBackup(QStringList &dbnames,
 {
 	FUNCTIONSETUP;
 
+	mDeviceDBs = KPilotSettings::deviceDBs();
+
 	fBackupDir =
 		fDatabaseDir +
 		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
 		CSL1("/");
+
+	logMessage(i18n("Backup directory: %1.").arg(fBackupDir));
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -273,15 +279,15 @@ static inline void initNoBackup(QStringList &dbnames,
 		return false;
 	}
 
-	initNoBackup(fNoBackupDBs,fNoBackupCreators);
+	initNoBackup( fNoBackupDBs, fNoBackupCreators );
 
-	fTimer = new QTimer(this);
-	QObject::connect(fTimer, SIGNAL(timeout()),
-		this, SLOT(backupOneDB()));
+	fTimer = new QTimer( this );
+	QObject::connect( fTimer, SIGNAL( timeout() ),
+		this, SLOT( backupOneDB() ) );
 
 	fDBIndex = 0;
 
-	fTimer->start(0, false);
+	fTimer->start( 0, false );
 	return true;
 }
 
@@ -342,23 +348,36 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	}
 
 	// TODO: Is there a way to skip unchanged databases?
-	int res=fHandle->getNextDatabase(fDBIndex, &info);
+	int res = fHandle->getNextDatabase( fDBIndex, &info );
 	if (res < 0)
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Backup complete." << endl;
 #endif
 
-		if (fFullBackup)
-			addSyncLogEntry(i18n("Full backup complete."));
+		if ( fFullBackup )
+			addSyncLogEntry( i18n("Full backup complete.") );
 		else
-			addSyncLogEntry(i18n("Fast backup complete."));
+			addSyncLogEntry( i18n("Fast backup complete.") );
 		endBackup();
 		fActionStatus = BackupComplete;
 		return;
 	}
 
 	fDBIndex = info.index + 1;
+
+	char buff[8];
+	buff[0] = '[';
+	set_long( &buff[1], info.creator );
+	buff[6] = ']';
+	buff[7] = '\0';
+	QString creator = QString::fromLatin1( buff );
+	info.name[33]='\0';
+	QString dbname = QString::fromLatin1( info.name );
+	if ( !mDeviceDBs.contains( creator ) )
+		mDeviceDBs << creator;
+	if ( !mDeviceDBs.contains( dbname ) )
+		mDeviceDBs << dbname;
 
 
 #ifdef DEBUG
@@ -372,7 +391,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 			<< endl;
 #endif
 		QString s = i18n("Skipping %1")
-			.arg(QString::fromLatin1(info.name));
+			.arg(PilotAppCategory::codec()->toUnicode(info.name));
 		addSyncLogEntry(s);
 		return;
 	}
@@ -383,9 +402,8 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 		return;
 	}
 
-	// Pretty sure all database names are latin1.
 	QString s = i18n("Backing up: %1")
-		.arg(QString::fromLatin1(info.name));
+		.arg(PilotAppCategory::codec()->toUnicode(info.name));
 	addSyncLogEntry(s);
 
 	if (!createLocalDatabase(&info))
@@ -394,7 +412,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 			<< ": Couldn't create local database for "
 			<< info.name << endl;
 		addSyncLogEntry(i18n("Backup of %1 failed.\n")
-			.arg(QString::fromLatin1(info.name)));
+			.arg(PilotAppCategory::codec()->toUnicode(info.name)));
 	}
 	else
 	{
@@ -406,7 +424,7 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 {
 	FUNCTIONSETUP;
 
-	QString databaseName(QString::fromLatin1(info->name));
+	QString databaseName(PilotAppCategory::codec()->toUnicode(info->name));
 	if (!fFullBackup)
 	{
 		// open the serial db first so that the local db is not read into memory
@@ -450,11 +468,7 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 	// Just fetch the database to the backup dir
 	if (!checkBackupDirectory(fBackupDir)) return false;
 
-#if QT_VERSION < 0x30100
-	databaseName.replace(QRegExp(CSL1("/")), CSL1("_"));
-#else
 	databaseName.replace('/', CSL1("_"));
-#endif
 
 	QString fullBackupName = fBackupDir + databaseName;
 
@@ -485,32 +499,30 @@ void BackupAction::endBackup()
 	KPILOT_DELETE(fTimer);
 	fDBIndex = (-1);
 	fActionStatus = BackupEnded;
+	mDeviceDBs.sort();
+	QString old( QString::null );
+	QStringList::Iterator itr = mDeviceDBs.begin();
+	while ( itr != mDeviceDBs.end() ) {
+		if ( old == *itr ) {
+			itr = mDeviceDBs.remove( itr );
+		} else {
+			old = *itr;
+			++itr;
+		}
+	}
+	KPilotSettings::setDeviceDBs( mDeviceDBs );
 
 	emit syncDone(this);
 }
 
 FileInstallAction::FileInstallAction(KPilotDeviceLink * p,
-	const QString & d,
-	const QStringList & l) :
+	const QString & d) :
 	SyncAction(p, "fileInstall"),
 	fDBIndex(-1),
 	fTimer(0L),
-	fDir(d),
-	fList(l)
+	fDir(d)
 {
 	FUNCTIONSETUP;
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": File list has "
-		<< fList.  count() << " entries" << endl;
-
-	QStringList::ConstIterator i;
-
-	for (i = fList.begin(); i != fList.end(); ++i)
-	{
-		DEBUGCONDUIT << fname << ": " << *i << endl;
-	}
-#endif
 }
 
 FileInstallAction::~FileInstallAction()
@@ -524,13 +536,15 @@ FileInstallAction::~FileInstallAction()
 {
 	FUNCTIONSETUP;
 
-	fDBIndex = 0;
-
+	QDir installDir(fDir);
+	fList = installDir.entryList(QDir::Files |
+		QDir::NoSymLinks | QDir::Readable);
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Installing " << fList.count() << " files" << endl;
 #endif
 
+	fDBIndex = 0;
 	emit logMessage(i18n("[File Installer]"));
 
 	// Possibly no files to install?
@@ -589,25 +603,23 @@ FileInstallAction::~FileInstallAction()
 
 	QString m = i18n("Installing %1").arg(fileName);
 	emit logProgress(m,(100 * fDBIndex) / (fList.count()+1));
-	m+=QString::fromLatin1("\n");
+	m+=CSL1("\n");
 	emit addSyncLogEntry(m,false /* Don't print in KPilot's log. */ );
 
 	struct pi_file *f = 0L;
 
+	// Check DB is ok, return false after warning user
+	if (!resourceOK(fileName,filePath)) goto nextFile;
+
 	f = pi_file_open(const_cast <char *>
 		((const char *) QFile::encodeName(filePath)));
 
-	if (!f)
-	{
-		kdWarning() << k_funcinfo
-			<< ": Unable to open file." << endl;
 
-		emit logError(i18n("Unable to open file &quot;%1&quot;.").
-			arg(fileName));
-		goto nextFile;
-	}
-
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	if (pi_file_install(f, pilotSocket(), 0) < 0)
+#else
+	if (pi_file_install(f, pilotSocket(), 0, NULL) < 0)
+#endif
 	{
 		kdWarning() << k_funcinfo << ": failed to install." << endl;
 
@@ -625,8 +637,62 @@ nextFile:
 	if (f) pi_file_close(f);
 	if (fDBIndex == -1)
 	{
-		emit syncDone(this);
+		fTimer->stop();
+		delayDone();
+		// emit syncDone(this);
 	}
+}
+
+// Check that the given file path is a good resource
+// file - in particular that the resource name is ok.
+bool FileInstallAction::resourceOK(const QString &fileName, const QString &filePath)
+{
+	FUNCTIONSETUP;
+
+	if (!QFile::exists(filePath))
+	{
+		emit logError(i18n("Unable to open file &quot;%1&quot;.").
+			arg(fileName));
+		return false;
+	}
+
+	struct pi_file *f = pi_file_open(const_cast <char *>
+		((const char *) QFile::encodeName(filePath)));
+
+	if (!f)
+	{
+		emit logError(i18n("Unable to open file &quot;%1&quot;.").
+			arg(fileName));
+		return false;
+	}
+
+	struct DBInfo info;
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
+	if (pi_file_get_info(f,&info) < 0)
+	{
+		emit logError(i18n("Unable to read file &quot;%1&quot;.").
+			arg(fileName));
+		return false;
+	}
+#else
+	pi_file_get_info(f,&info);
+#endif
+
+	// Looks like strlen, but we can't be sure of a NUL
+	// termination.
+	info.name[sizeof(info.name)-1]=0;
+	bool r = (strlen(info.name) < 32);
+	pi_file_close(f);
+
+	if (!r)
+	{
+		emit logError(i18n("The database in &quot;%1&quot; has a "
+			"resource name that is longer than 31 characters. "
+			"This suggests a bug in the tool used to create the database. "
+			"KPilot cannot install this database.").arg(fileName));
+	}
+
+	return r;
 }
 
 /* virtual */ QString FileInstallAction::statusString() const

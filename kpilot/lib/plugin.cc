@@ -1,6 +1,7 @@
-/* plugin.cc                            KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the base class of all KPilot conduit plugins configuration
 ** dialogs. This is necessary so that we have a fixed API to talk to from
@@ -38,6 +39,7 @@
 #include <qfileinfo.h>
 #include <qdir.h>
 #include <qregexp.h>
+#include <qtextcodec.h>
 
 #include <dcopclient.h>
 #include <kapplication.h>
@@ -47,6 +49,7 @@
 
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
+#include "pilotAppCategory.h"
 
 #include "plugin.moc"
 
@@ -111,11 +114,11 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	else if (args.contains(CSL1("--full"))) fSyncDirection=SyncAction::eFullSync;
 	else fSyncDirection=SyncAction::eFastSync;
 
-	QString cResolution(args.grep(QRegExp("--conflictResolution \\d*")).first());
+	QString cResolution(args.grep(QRegExp(CSL1("--conflictResolution \\d*"))).first());
 	if (cResolution.isEmpty())
 	{
 		fConflictResolution=(SyncAction::ConflictResolution)
-			cResolution.replace(QRegExp("--conflictResolution (\\d*)"), "\\1").toInt();
+			cResolution.replace(QRegExp(CSL1("--conflictResolution (\\d*)")), CSL1("\\1")).toInt();
 	}
 
 #ifdef DEBUG
@@ -147,68 +150,89 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 		<< name << endl;
 #endif
 
-	fLocalDatabase = new PilotLocalDatabase(name, true);
+	KPILOT_DELETE(fLocalDatabase);
+	PilotLocalDatabase *localDB = new PilotLocalDatabase(name, true);
 
-	if (!fLocalDatabase)
+	if (!localDB)
 	{
 		kdWarning() << k_funcinfo
 			<< ": Could not initialize object for local copy of database \""
 			<< name
 			<< "\"" << endl;
-			return false;
+		if (retrieved) *retrieved = false;
+		return false;
 	}
 
 	// if there is no backup db yet, fetch it from the palm, open it and set the full sync flag.
-	if (!fLocalDatabase->isDBOpen() )
+	if (!localDB->isDBOpen() )
 	{
-		QString dbpath(dynamic_cast<PilotLocalDatabase*>(fLocalDatabase)->dbPathName());
-		KPILOT_DELETE(fLocalDatabase);
+		QString dbpath(localDB->dbPathName());
+		KPILOT_DELETE(localDB);
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
 			<< ": Backup database "<< dbpath <<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
 #endif
 		struct DBInfo dbinfo;
-		if (fHandle->findDatabase(name.latin1(), &dbinfo)<0 )
+		if (fHandle->findDatabase(PilotAppCategory::codec()->fromUnicode( name ), &dbinfo)<0 )
 		{
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
 				<< ": Could not get DBInfo for "<<name<<"! "<<endl;
 #endif
+			if (retrieved) *retrieved = false;
 			return false;
 		}
 #ifdef DEBUG
-			DEBUGCONDUIT << fname
-					<< ": Found Palm database: "<<dbinfo.name<<endl
-					<<"type = "<< dbinfo.type<<endl
-					<<"creator = "<< dbinfo.creator<<endl
-					<<"version = "<< dbinfo.version<<endl
-					<<"index = "<< dbinfo.index<<endl;
+		DEBUGCONDUIT << fname
+				<< ": Found Palm database: "<<dbinfo.name<<endl
+				<<"type = "<< dbinfo.type<<endl
+				<<"creator = "<< dbinfo.creator<<endl
+				<<"version = "<< dbinfo.version<<endl
+				<<"index = "<< dbinfo.index<<endl;
 #endif
 		dbinfo.flags &= ~dlpDBFlagOpen;
 
 		// make sure the dir for the backup db really exists!
 		QFileInfo fi(dbpath);
 		QString path(QFileInfo(dbpath).dir(TRUE).absPath());
-		if (!KStandardDirs::exists(path)) {
+		if (!path.endsWith(CSL1("/"))) path.append(CSL1("/"));
+		if (!KStandardDirs::exists(path))
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": Trying to create path for database: <"
+				<< path << ">" << endl;
+#endif
 			KStandardDirs::makeDir(path);
 		}
+		if (!KStandardDirs::exists(path))
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": Database directory does not exist." << endl;
+#endif
+			if (retrieved) *retrieved = false;
+			return false;
+		}
+
 		if (!fHandle->retrieveDatabase(dbpath, &dbinfo) )
 		{
 #ifdef DEBUG
 			DEBUGCONDUIT << fname << ": Could not retrieve database "<<name<<" from the handheld."<<endl;
 #endif
+			if (retrieved) *retrieved = false;
 			return false;
 		}
-		fLocalDatabase = new PilotLocalDatabase(name, true);
-		if (!fLocalDatabase || !fLocalDatabase->isDBOpen())
+		localDB = new PilotLocalDatabase(name, true);
+		if (!localDB || !localDB->isDBOpen())
 		{
 #ifdef DEBUG
 			DEBUGCONDUIT << fname << ": local backup of database "<<name<<" could not be initialized."<<endl;
 #endif
+			if (retrieved) *retrieved = false;
 			return false;
 		}
 		if (retrieved) *retrieved=true;
 	}
+	fLocalDatabase = localDB;
 
 	// These latin1()'s are ok, since database names are latin1-coded.
 	fDatabase = new PilotSerialDatabase(pilotSocket(), name /* On pilot */);
@@ -287,15 +311,10 @@ bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPat
 	return (fDatabase && fLocalDatabase);
 }
 
-bool ConduitAction::openDatabases(const QString &dbName, bool*retrieved)
+bool ConduitAction::openDatabases(const QString &dbName, bool *retrieved)
 {
 	FUNCTIONSETUP;
 
-	/*
-	** We should look into the --local flag passed
-	** to the conduit and act accordingly, but until
-	** that is implemented ..
-	*/
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Mode="
@@ -304,7 +323,7 @@ bool ConduitAction::openDatabases(const QString &dbName, bool*retrieved)
 		<< endl ;
 #endif
 
-	if (isTest() && isLocal())
+	if (isLocal())
 	{
 		return openDatabases_(dbName,CSL1("/tmp/"));
 	}
@@ -370,7 +389,7 @@ bool PluginUtility::isModal(const QStringList &a)
 
 /* static */ long PluginUtility::pluginVersion(const KLibrary *lib)
 {
-	QString symbol("version_");
+	QString symbol = CSL1("version_");
 	symbol.append(lib->name());
 
 	if (!lib->hasSymbol(symbol.latin1())) return 0;
@@ -382,7 +401,7 @@ bool PluginUtility::isModal(const QStringList &a)
 
 /* static */ QString PluginUtility::pluginVersionString(const KLibrary *lib)
 {
-	QString symbol("id_");
+	QString symbol= CSL1("id_");
 	symbol.append(lib->name());
 
 	if (!lib->hasSymbol(symbol.latin1())) return QString::null;

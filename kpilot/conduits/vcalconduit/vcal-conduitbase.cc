@@ -1,4 +1,4 @@
-/* vcal-conduitbase.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2002-3 by Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
@@ -40,19 +40,23 @@ static const char *vcalconduitbase_id = "$Id$";
 #include <kmessagebox.h>
 #include <kio/netaccess.h>
 
-#include <libkcal/calendar.h>
-#include <libkcal/calendarlocal.h>
-#include <libkcal/calendarresources.h>
+#include "libkcal/calendar.h"
+#include "libkcal/calendarlocal.h"
+#include "libkcal/calendarresources.h"
 #include <kstandarddirs.h>
 
-#include <pilotSerialDatabase.h>
-#include <pilotLocalDatabase.h>
-#include <pilotDateEntry.h>
+#include "pilotSerialDatabase.h"
+#include "pilotLocalDatabase.h"
+#include "pilotDateEntry.h"
 
 #include "vcal-conduitbase.moc"
 #include "vcalconduitSettings.h"
 
 
+#ifndef LIBKCAL_IS_VERSION
+#warning "Using an old version of libkcal with timezone bug."
+#define LIBKCAL_IS_VERSION(a,b,c) (0)
+#endif
 
 
 
@@ -166,12 +170,14 @@ there are two special cases: a full and a first sync.
 	case SyncAction::eCopyPCToHH:
 		// TODO: Clear the palm and backup database??? Or just add the new items ignore
 		// the Palm->PC side and leave the existing items on the palm?
+		emit logMessage(i18n("Copying records to Pilot ..."));
 		QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
 		break;
 	case SyncAction::eCopyHHToPC:
 		// TODO: Clear the backup database and the calendar, update fP
 		//       or just add the palm items and leave the PC ones there????
 	default:
+		emit logMessage(i18n("Copying records to PC ..."));
 		QTimer::singleShot(0, this, SLOT(slotPalmRecToPC()));
 	}
 	return true;
@@ -194,7 +200,20 @@ error:
 	setConflictResolution(res);
 }
 
+#ifdef DEBUG
+static void listResources(KCal::CalendarResources *p)
+{
+	FUNCTIONSETUP;
+	KCal::CalendarResourceManager *manager = p->resourceManager();
 
+	DEBUGCONDUIT << fname << ": Resources in calendar:" << endl;
+	KCal::CalendarResourceManager::Iterator it;
+	for( it = manager->begin(); it != manager->end(); ++it )
+	{
+		DEBUGCONDUIT << fname << ": " << (*it)->resourceName() << endl;
+	}
+}
+#endif
 
 /* virtual */ bool VCalConduitBase::openCalendar()
 {
@@ -217,7 +236,8 @@ error:
 
 	switch(config()->calendarType())
 	{
-		case VCalConduitSettings::eCalendarLocal:{
+		case VCalConduitSettings::eCalendarLocal:
+		{
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
 				<< "Using CalendarLocal, file="
@@ -227,7 +247,7 @@ error:
 			{
 #ifdef DEBUG
 				DEBUGCONDUIT << fname
-					<< "Empty calendar file name." 
+					<< "Empty calendar file name."
 					<< endl;
 #endif
 				emit logError(i18n("You selected to sync with the a iCalendar file, "
@@ -239,23 +259,22 @@ error:
 			fCalendar = new KCal::CalendarLocal(tz);
 			if ( !fCalendar)
 			{
-				kdWarning() << k_funcinfo 
+				kdWarning() << k_funcinfo
 					<< "Cannot initialize calendar object for file "
 					<< config()->calendarFile() << endl;
 				return false;
 			}
 #ifdef DEBUG
-			DEBUGCONDUIT << fname 
-				<< "Calendar's timezone: " 
+			DEBUGCONDUIT << fname
+				<< "Calendar's timezone: "
 				<< fCalendar->timeZoneId() << endl;
 			DEBUGCONDUIT << fname
 				<< "Calendar is local time: "
 				<< fCalendar->isLocalTime() << endl;
 #endif
-			emit logMessage(i18n("Using %1 time zone: %2")
-				.arg(fCalendar->isLocalTime() ?
-					i18n("non-local") : i18n("local"))
-				.arg(tz));
+			emit logMessage( fCalendar->isLocalTime() ?
+				i18n("Using local time zone: %1").arg(tz) :
+				i18n("Using non-local time zone: %1").arg(tz) );
 
 			KURL kurl(config()->calendarFile());
 			if(!KIO::NetAccess::download(config()->calendarFile(), fCalendarFile, 0L) &&
@@ -276,12 +295,12 @@ error:
 #ifdef DEBUG
 				DEBUGCONDUIT << fname
 					<< "Calendar file "
-					<< fCalendarFile 
+					<< fCalendarFile
 					<< " could not be opened. "
-					   "Will create a new one" 
+					   "Will create a new one"
 					<< endl;
 #endif
-				// Try to create empty file. if it fails, 
+				// Try to create empty file. if it fails,
 				// no valid file name was given.
 				QFile fl(fCalendarFile);
 				if (!fl.open(IO_WriteOnly | IO_Append))
@@ -301,13 +320,17 @@ error:
 				fFirstSync=true;
 			}
 			addSyncLogEntry(i18n("Syncing with file \"%1\"").arg(config()->calendarFile()));
-			break;}
+			break;
+		}
 
 		case VCalConduitSettings::eCalendarResource:
 #ifdef DEBUG
 			DEBUGCONDUIT << "Using CalendarResource!" << endl;
 #endif
 			rescal = new KCal::CalendarResources( tz );
+#ifdef DEBUG
+			listResources(rescal);
+#endif
 			fCalendar = rescal;
 			if ( !fCalendar)
 			{
@@ -315,15 +338,16 @@ error:
 					"object for ResourceCalendar"<<endl;
 				return false;
 			}
-#if LIBKCAL_VERSION >= 0x030300
+#if LIBKCAL_IS_VERSION(1,1,0)
 			rescal->readConfig();
 			rescal->load();
+#else
+#warning "Timezone bug is present."
 #endif
 			addSyncLogEntry(i18n("Syncing with standard calendar resource."));
-			emit logMessage(i18n("Using %1 time zone: %2")
-				.arg(fCalendar->isLocalTime() ?
-					i18n("non-local") : i18n("local"))
-				.arg(tz));
+			emit logMessage( fCalendar->isLocalTime() ?
+				i18n("Using local time zone: %1").arg(tz) :
+				i18n("Using non-local time zone: %1").arg(tz) );
 			break;
 		default:
 			break;
@@ -337,12 +361,17 @@ error:
 		return false;
 	}
 	fP = newVCalPrivate(fCalendar);
-	if (!fP) return false;
+	if (!fP)
+	{
+		return false;
+	}
 	fP->updateIncidences();
 	if (fP->count()<1)
+	{
 		fFirstSync=true;
+	}
 
-	return (fCalendar && fP);
+	return true;
 }
 
 
@@ -367,11 +396,13 @@ void VCalConduitBase::slotPalmRecToPC()
 		fP->updateIncidences();
 		if (getSyncDirection()==SyncAction::eCopyHHToPC)
 		{
+			emit logMessage(i18n("Cleaning up ..."));
 			QTimer::singleShot(0, this, SLOT(cleanup()));
 			return;
 		}
 		else
 		{
+			emit logMessage(i18n("Copying records to Pilot ..."));
 			QTimer::singleShot(0 ,this,SLOT(slotPCRecToPalm()));
 			return;
 		}
@@ -384,14 +415,14 @@ void VCalConduitBase::slotPalmRecToPC()
 //	DEBUGCONDUIT<<fname<<": Time: "<<e->dtStart()<<" until "<<e->dtEnd()<<endl;
 	bool archiveRecord=(r->isArchived());
 
-	s = fLocalDatabase->readRecordById(r->getID());
+	s = fLocalDatabase->readRecordById(r->id());
 	if (!s || isFirstSync())
 	{
 #ifdef DEBUG
-		if (r->getID()>0 && !s)
+		if (r->id()>0 && !s)
 		{
 			DEBUGCONDUIT<<"---------------------------------------------------------------------------"<<endl;
-			DEBUGCONDUIT<< fname<<": Could not read palm record with ID "<<r->getID()<<endl;
+			DEBUGCONDUIT<< fname<<": Could not read palm record with ID "<<r->id()<<endl;
 		}
 #endif
 		if (!r->isDeleted() || (config()->syncArchived() && archiveRecord))
@@ -494,24 +525,24 @@ void VCalConduitBase::slotDeletedIncidence()
 		return;
 	}
 
-	KCal::Incidence *e = fP->findIncidence(r->getID());
+	KCal::Incidence *e = fP->findIncidence(r->id());
 	if (!e)
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT<<"didn't find incidence with id="<<r->getID()<<", deleting it"<<endl;
+		DEBUGCONDUIT<<"didn't find incidence with id="<<r->id()<<", deleting it"<<endl;
 #endif
 		// entry was deleted from Calendar, so delete it from the palm
-//		PilotRecord*s=fLocalDatabase->readRecordById(r->getID());
+//		PilotRecord*s=fLocalDatabase->readRecordById(r->id());
 //		if (s)
 //		{
 //			// delete the record from the palm
-//			s->makeDeleted();
+//			s->setDeleted();
 ////			s->setAttrib(s->getAttrib() & ~dlpRecAttrDeleted & ~dlpRecAttrDirty);
 //			fDatabase->writeRecord(s);
 //			KPILOT_DELETE(s);
 //		}
 		deletePalmRecord(NULL, r);
-//		r->makeDeleted();
+//		r->setDeleted();
 ////		r->setAttrib(r->getAttrib() & ~dlpRecAttrDeleted & ~dlpRecAttrDirty);
 //		fLocalDatabase->writeRecord(r);
 //		fDatabase->writeRecord(r);
@@ -556,7 +587,7 @@ void VCalConduitBase::cleanup()
 					else {
 						KIO::NetAccess::removeTempFile(fCalendarFile);
 					}
-					QFile backup(fCalendarFile + "~");
+					QFile backup(fCalendarFile + CSL1("~"));
 					backup.remove();
 				}
 				break;
@@ -588,7 +619,7 @@ KCal::Incidence* VCalConduitBase::addRecord(PilotRecord *r)
 
 	recordid_t id=fLocalDatabase->writeRecord(r);
 #ifdef DEBUG
-	DEBUGCONDUIT<<fname<<": Pilot Record ID="<<r->getID()<<", backup ID="<<id<<endl;
+	DEBUGCONDUIT<<fname<<": Pilot Record ID="<<r->id()<<", backup ID="<<id<<endl;
 #else
 	Q_UNUSED(id);
 #endif
@@ -621,11 +652,20 @@ int VCalConduitBase::resolveConflict(KCal::Incidence*e, PilotAppCategory*de) {
 	if (getConflictResolution()==SyncAction::eAskUser)
 	{
 		// TODO: This is messed up!!!
-		return KMessageBox::warningYesNo(NULL,
-			i18n("The following item was modified both on the Pilot and on your PC:\nPC entry:\n\t")+e->summary()+i18n("\nPilot entry:\n\t")+getTitle(de)+
-				i18n("\n\nShould the Pilot entry overwrite the PC entry? If you select \"No\", the PC entry will overwrite the Pilot entry."),
-			i18n("Conflicting Entries")
-		)==KMessageBox::No;
+		QString query = i18n("The following item was modified "
+			"both on the Handheld and on your PC:\nPC entry:\n\t");
+		query += e->summary();
+		query += i18n("\nHandheld entry:\n\t");
+		query += getTitle(de);
+		query += i18n("\n\nWhich entry do you want to keep? It will "
+			"overwrite the other entry.");
+
+		return KMessageBox::No == questionYesNo(
+			query,
+			i18n("Conflicting Entries"),
+			QString::null,
+			0 /* Never timeout */,
+			i18n("Handheld"), i18n("PC"));
 	}
 	return getConflictResolution();
 }
@@ -635,7 +675,7 @@ KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 	FUNCTIONSETUP;
 
 	PilotAppCategory*de=newPilotEntry(r);
-	KCal::Incidence *e = fP->findIncidence(r->getID());
+	KCal::Incidence *e = fP->findIncidence(r->id());
 
 	if (e && de)
 	{
@@ -669,7 +709,7 @@ KCal::Incidence*VCalConduitBase::deleteRecord(PilotRecord *r, PilotRecord *)
 {
 	FUNCTIONSETUP;
 
-	KCal::Incidence *e = fP->findIncidence(r->getID());
+	KCal::Incidence *e = fP->findIncidence(r->id());
 	if (e)
 	{
 		// RemoveEvent also takes it out of the calendar.
@@ -704,9 +744,9 @@ void VCalConduitBase::deletePalmRecord(KCal::Incidence*e, PilotRecord*s)
 	if (s)
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": deleting record " << s->getID() << endl;
+		DEBUGCONDUIT << fname << ": deleting record " << s->id() << endl;
 #endif
-		s->makeDeleted();
+		s->setDeleted();
 		fDatabase->writeRecord(s);
 		fLocalDatabase->writeRecord(s);
 	}

@@ -3,6 +3,7 @@
 /* pilotDateEntry.h	-*- C++ -*-	KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** See the .cc file for an explanation of what this file is for.
 */
@@ -41,19 +42,17 @@
 
 
 
-class PilotDateEntry : public PilotAppCategory
+class KDE_EXPORT PilotDateEntry : public PilotAppCategory
 {
 public:
-  PilotDateEntry(void);
-  PilotDateEntry(PilotRecord* rec);
+  PilotDateEntry(struct AppointmentAppInfo &appInfo);
+  PilotDateEntry(struct AppointmentAppInfo &appInfo, PilotRecord* rec);
   ~PilotDateEntry() { free_Appointment(&fAppointmentInfo); }
 
   PilotDateEntry(const PilotDateEntry &e);
 
   PilotDateEntry& operator=(const PilotDateEntry &e);
 	virtual QString getTextRepresentation(bool richText=false);
-
-  PilotRecord* pack() { return PilotAppCategory::pack(); }
 
   bool isEvent() const { return fAppointmentInfo.event; }
   int getEvent() const { return fAppointmentInfo.event; }
@@ -129,13 +128,17 @@ public:
             fAppointmentInfo.event);
   }
 
+  QString getCategoryLabel() const;
+  inline bool setCategory(const QString &label) { return setCat(fAppInfo.category,label); } ;
+  static const int APP_BUFFER_SIZE;
+
 protected:
-  void *pack(void *, int *);
+  void *pack_(void *, int *);
   void unpack(const void *, int = 0) { }
 
 private:
   struct Appointment fAppointmentInfo;
-
+        struct AppointmentAppInfo &fAppInfo;
 	void _copyExceptions(const PilotDateEntry &e);
 };
 

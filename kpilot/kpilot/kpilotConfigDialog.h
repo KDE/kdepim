@@ -3,6 +3,7 @@
 /* kpilotConfigDialog.h                 KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines a specialization of KPilotDeviceLink
 ** that can actually handle some HotSync tasks, like backup
@@ -73,7 +74,7 @@ private:
 } ;
 
 
-class SyncConfigPage : public ConfigPage
+class KDE_EXPORT SyncConfigPage : public ConfigPage
 {
 public:
 	SyncConfigPage( QWidget *, const char * );

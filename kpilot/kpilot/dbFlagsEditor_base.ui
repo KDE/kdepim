@@ -121,7 +121,7 @@
                         <cstring>fBackupDB</cstring>
                     </property>
                     <property name="text">
-                        <string>Database is &amp;backed  up</string>
+                        <string>Database is &amp;backed up</string>
                     </property>
                 </widget>
                 <widget class="QCheckBox" row="3" column="0">

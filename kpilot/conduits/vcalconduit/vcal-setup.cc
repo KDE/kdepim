@@ -1,4 +1,4 @@
-/* vcal-setup.cc                        KPilot
+/* KPilot
 **
 ** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
@@ -35,6 +35,8 @@
 #include "korganizerConduit.h"
 #include "vcal-factory.h"
 #include "vcal-setup.h"
+
+#include "uiDialog.h"
 
 VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
 	VCalWidgetSetupBase(w,n)

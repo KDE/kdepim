@@ -39,12 +39,9 @@ public:
 	PilotDOCBookmark(const PilotDOCBookmark & e);
 	~PilotDOCBookmark() {};
 	PilotDOCBookmark & operator=(const PilotDOCBookmark & e);
-	PilotRecord *pack() {
-		return PilotAppCategory::pack();
-	}
 
 protected:
-	void *pack(void *, int *);
+	void *pack_(void *, int *);
 	void unpack(const void *, int = 0) {}
 
 public:

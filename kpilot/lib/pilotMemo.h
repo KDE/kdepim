@@ -33,12 +33,12 @@
 #include "pilotAppCategory.h"
 
 
-class PilotMemo : public PilotAppCategory
+class KDE_EXPORT PilotMemo : public PilotAppCategory
 {
 public:
 	PilotMemo(void) : PilotAppCategory() { } ;
 	PilotMemo(const QString &s) : PilotAppCategory() { setText(s); } ;
-	PilotMemo(PilotRecord* rec);
+	PilotMemo(const PilotRecord* rec);
 	PilotMemo(void *buf) : PilotAppCategory() { unpack(buf, 1); } ;
 	PilotMemo(void *buf, int attr, recordid_t id, int category)
 		: PilotAppCategory(attr, id, category) { unpack(buf, 1); } ;
@@ -48,9 +48,9 @@ public:
 	QString text(void) const { return fText; } ;
 	void setText(const QString &text) { fText = text; } ;
 	QString getTitle(void) const ;
-	PilotRecord* pack() { return PilotAppCategory::pack(); } ;
+	PilotRecord* pack();
 
-	static const unsigned int MAX_MEMO_LEN=8192;
+	static const int MAX_MEMO_LEN=8192;
 
 	/**
 	* Return a "short but sensible" title. getTitle() returns the
@@ -67,13 +67,11 @@ public:
 	QString sensibleTitle() const;
 
 protected:
-	void *pack(void *, int *);
+	void *pack_(void *, int *);
 	void unpack(const void *, int = 0);
 
 private:
 	QString fText;
-
-	void *internalPack(unsigned char *);
 };
 
 #endif

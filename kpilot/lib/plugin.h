@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2002-2004 by Adriaan de Groot
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the base class of all KPilot conduit plugins configuration
 ** dialogs. This is necessary so that we have a fixed API to talk to from
@@ -35,13 +36,12 @@
 
 #include <qstringlist.h>
 
-#include "uiDialog.h"
 #include "syncAction.h"
 
 class PilotDatabase;
 class KLibrary;
 
-#define KPILOT_PLUGIN_API	(20040319)
+#define KPILOT_PLUGIN_API	(20041002)
 
 /**
 * The first classe here: ConduitConfigBase is for configuration purposes.
@@ -60,7 +60,7 @@ class KLibrary;
 *
 */
 
-class ConduitConfigBase : public QObject
+class KDE_EXPORT ConduitConfigBase : public QObject
 {
 Q_OBJECT
 public:
@@ -131,7 +131,7 @@ protected:
 * conduit can read/write metadata and local settings.
 */
 
-class ConduitAction : public SyncAction
+class KDE_EXPORT ConduitAction : public SyncAction
 {
 Q_OBJECT
 public:
@@ -147,7 +147,7 @@ protected:
 	bool isBackup() const { return fBackup; } ;
 	bool isLocal() const { return fLocal; } ;
 
-	int getSyncDirection() const { return fSyncDirection; };
+	SyncMode getSyncDirection() const { return fSyncDirection; };
 	ConflictResolution getConflictResolution() const
 		{ return fConflictResolution; };
 
@@ -232,7 +232,7 @@ private:
 	bool openDatabases_(const QString &dbName,const QString &localPath);
 } ;
 
-class PluginUtility
+class KDE_EXPORT PluginUtility
 {
 public:
 	static int findHandle(const QStringList &);

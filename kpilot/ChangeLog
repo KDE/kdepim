@@ -1,13 +1,216 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2005-01-30  Adriaan de Groot
+* Fixed one nasty random crash thanks to vanRijn, probably fixed
+  the KNotes HHtoPC problem, tagged 4.4.7, released it. This
+  is the last version to support KDE 3.2 at all, since KDE PIM
+  moved to KDE 3.3 ages ago and KDE 3.4 is at the door.
+
+2005-01-12  Adriaan de Groot
+* Made KNotes conduit work when KNotes is embedded in kontact, too.
+* One branch of the check-username code wasn't setting the username properly.
+* More debugging niftiness, major NO_CAST cleanup.
+* Fixed sysinfo conduit, which didn't read its config file.
+
+
+2005-01-11  Adriaan de Groot
+* Added a workaround for buggy Zire USB behavior. It works most of the time.
+* Fixed memory leak when reading AppInfo.
+* Updated website with some more OS-specific information. As always, I am
+  in dire need of workable explanations for OS (usually Linux-distro)
+  specific quirks.
+* Worked on debugging output a little, normalized more output.
+* Verified that copy PC to HH works on Addressbook, ToDo, Calendar.
+
+
+2005-01-05  Adriaan de Groot
+* Pilot-link 0.12, when it comes out, is source incompatible with 0.11,
+  but KPilot is already ported to it.
+* Fixed up silly conflict resolution question in the datebook, but
+  really it needs the field-by-field resolution that the addressbook has.
+* In KPilotDeviceLink, move around check for unconfigured device to
+  notice earlier, before doing any work. Minor coding style fixes.
+* Revamped debugging (again) so it's now much more 7 * 191; the call trace
+  is pretty readable now.
+
+2004-12-27  Adriaan de Groot
+* Quitting and having the daemon go with you works now.
+
+2004-12-07  Adriaan de Groot
+* Tried to make conduit descriptions more consistent. Remember: "handheld",
+  not "Pilot". Removed ugly const_cast. Added depth indication to the
+  call trace -- this is a pretty big change, it makes the output from
+  kpilot with --debug 1 more tree-ish, so it's easier to see what is being
+  called from where.
+
+2004-12-06  Adriaan de Groot
+* Imported memofile from vanRijn.
+
+2004-11-30  Adriaan de Groot
+* Having a second child .. puts a dent in development time.
+* Make the daemon's next-sync match the one in KPilot, added tooltips
+  and whatsthis. Make the daemon tell KPilot what the next sync is,
+  so that changes from the tray menu are visible. This removes some strings.
+
+2004-11-29  Adriaan de Groot
+* Waiting for second child .. puts a dent in development time too.
+* Ported KPilot to pilot-link 0.12 (unreleased) which adds support
+  for newer devices and saves memory in the process.
+* Data-loss on restore bug fixed by Will Stephenson.
+
+2004-11-23  Adriaan de Groot
+* Squashed several silly bugs in wizard and startup code.
+
+2004-11-17  Adriaan de Groot
+* Hiatus in KPilot due to working upstream on pilot-link.
+* Patches from Olivier, merci.
+
+2004-10-11  Adriaan de Groot
+* Made an actual CVS tag for KPilot, kpilot_4_4_6. Uploaded new 4.4.6
+  tarballs. Updated the site. Posted more developer's notes.
+* Added initial encoding-selection boxes to the doc conduit, to indicate
+  that the input text files are not UTF-8 but something else.
+* Started revamping PilotLocalDatabase so we can get rid of the must-
+  sync-to-delete-new-(memo|address|whatever) in the internal viewers.
+* All the bugs in the database really need a "can you check this again"?
+  added. Till Adam has been messing with recent code and is reporting
+  new crashes and bugs.
+
+
+2004-10-07  Adriaan de Groot
+* Started adding encoding support to PalmDOC conduit dialogs. Not
+  sure how to proceed there.
+* Closed some more bugs, generally confused about some of the bugs
+  remaining in the database -- I need cooperation from the folks
+  reporting the bugs.
+* Went on a str*cpy() hunt to avoid bad copies; converted most to
+  strlcpy(). Not the ones in the docconduit, though, since there,
+  the strncpy()s go to a data structure that doesn't necessarily
+  expect NUL termination (note to self: need to check that _extracting_
+  data from the structure doesn't rely on NUL).
+
+2004-10-05  Adriaan de Groot
+* I wonder if the codec() stuff shouldn't move from the PilotAppCategory
+  to the device link -- after all, it's the _device_ that knows what
+  the encoding is (who knows, maybe future versions of Pilots will be
+  able to tell th desktop this).
+* Added a localBackup action, so we can make ~ backup files of all the
+  database files before doing a sync, just in case.
+* Merged lots of bugs.
+* Found out that KPilot uses title instead of prefix for the honorific
+  titles in the addressbook - this means KPilot and KAddressbook got
+  out of sync. Fixed.
+* New questionYesNoCancel() didn't return correct button codes.
+* Checked all the codec stuff, added some in relevant places but can't
+  spot any addressbook fields that are not synced.
+
+2004-10-04  Adriaan de Groot
+* Bail if the Pilot disconnects, but only between conduits. Conduits
+  themselves should still check for disconnect.
+* Bug maintainence turned up a useful patch for category support
+  in the calendar.
+
+2004-10-01  Adriaan de Groot
+* Merged nice patch from Adrian S for HotPlug.
+* Moved tickle stuff into a separate thread, so that it doesn't
+  require a Qt event loop to keep the Pilot awake.
+* Added tickles in the right (?) places in the abbrowser - around
+  the loading part.
+* Discovered that UserCheck used KMessageBox::question*() instead of
+  a version with timeouts. Fixed that by adding a qYNCancel() to
+  InteractiveSync, and updated both qYN*() methods there to use
+  KDE 3.3 KMessageBox support.
+* Merged InteractiveAction with SyncAction, cleaning up the inheritance
+  tree and making it possible to conduits to use the question* methods.
+
+2004-09-26  Adriaan de Groot
+* Put up new tarballs on kpilot.org.
+* Patched up the KNotes conduit a little - notes listed as modified
+  but unknown to the Pilot are now added as new.
+* Bumped version to 4.4.5. Polished the splash a little.
+* Fixed 71122, finally. There wasn't any code at all in the conduit
+  for deleting memos.
+
+
+2004-09-22  Adriaan de Groot
+* Added some cheap RTTI to PilotDatabase, so you can call
+  dbType() to find out if it's really a local or a serial DB.
+* Stared at the doc conduit for a long time. Did whitespace first.
+
+2004-09-18  Adriaan de Groot & Reinhold Kainhofer
+* Deprecated a bunch of poorly-named functions in lib/, and
+  moved everything to the new names. Finally, no more getCat(),
+  but just category().
+* Detect special case of bad resource headers in file installer.
+* Rearranged sync enum just a little. Moved eTest out of the way,
+  since it's not really a valid value to pass to the demon and made
+  0 the value to indicate "default, whatever is stored in the
+  config file".
+* Fixed up sync-type not honored, clarified next-sync menu (I
+  think so, didn't ask -usability about it though).
+
+
+2004-08-16  Adriaan de Groot
+* Was away at a summer school for two weeks. Got no KPilot stuff
+  done except an off-by-one bug in the memo stuff.
+* Split the CopyHHtoPC code out in the knotes conduit,
+  ready for QThreading (maybe).
+
+2004-07-27  Adriaan de Groot
+* MAL conduit proxy password not loaded properly. Reported by
+  Olivier D.
+* Clean out ancient cruft in fileInstaller.{h,cc}. Run file installer
+  twice, to allow conduits to create files to install. Determine
+  list of files at ::exec() time, not at object creation time.
+* Added some docs to the conduit configure.in.in.
+* Give PERL conduit more information to work with.
+
+2004-07-19  Adriaan de Groot
+* In kontact, if the daemon gets started it shouldn't complain loudly
+  about messed-up configurations.
+
+2004-07-14  Adriaan de Groot
+* Joyeux quatorze juillet! Spent most of the past week totally ignoring
+  KPilot, working on personal websites, KDE-FreeBSD, and porting
+  k3b to FreeBSD (breaking it on Linux only briefly).
+
+2004-06-29  Reinhold Kainhofer
+* Fix the bug that todos that were marked finished on the handheld
+  lost that state when synced to the PC.
+* A few layout adjustments for the perl/python conduits (QTextEdit
+  instead of QLineEdit)
+
+2004-06-29  Joern Ahrens
+* Corrected the behavior of the configuration dialog, when the
+  screensaver option is changed.
+* Moved the tickle code from InteractiveAction to SyncAction.
+  Now it can be used in ConduitAction subclasses as well.
+* Ahh, got Adriaans m100, now I'm able to test without destroying
+  my data on the palm. Thanks Adriaan !
+
+2004-06-27  Joern Ahrens
+* Filled the notepad conduit with life. The notepads are saved as png
+  files in a configurable directory.
+
+2004-06-21  Adriaan de Groot
+* Disable editor buttons when 'internal editors' is disabled (Carlos)
+  and fix up the tooltips when they are disabled. Also update some
+  copyright lines. Work on the docs.
+
+2004-06-16  Adriaan de Groot
+* Disposed of foolish file installer bug. Updated tarballs on website
+  before fixing it, so now we're stuck :) Looked at 71122 again,
+  testing with my m500.
+* Corrected finaly layout problems in some conduit config pages.
+
 2004-06-10  Adriaan de Groot
 * Much delay in getting back to work on KPilot, even after a new mobo
   arrived for my primary devel system. Useful patches were received
-  in the meantime, and commited by Joern. Olivier D. has started 
+  in the meantime, and commited by Joern. Olivier D. has started
   improving the MAL conduit, wrt. proxy and password support.
 
-2004-06-02 Joern Ahrens
+2004-06-02  Joern Ahrens
 * Improved the wizards whatsthis text, thanks to David Bishop
 
 2004-05-30  Adriaan de Groot

@@ -1,5 +1,5 @@
 # KDE Config File
-[KDE Desktop Entry]
+[Desktop Entry]
 Encoding=UTF-8
 Name=KPilotDaemon
 Name[af]=Kpilotdaemon
@@ -15,7 +15,7 @@ Name[he]=תהליך הרקע של KPilot
 Name[hi]=के-पायलट-डेमन
 Name[is]=KPilot þjónn
 Name[it]=Demone KPilot
-Name[ja]=KPilotデーモン
+Name[ja]=KPilot デーモン
 Name[lv]=KPilotDēmons
 Name[nso]=Daemon ya KPilot
 Name[pl]=demon KPilota
@@ -27,14 +27,13 @@ Name[sr]=KPilot демон
 Name[sr@Latn]=KPilot demon
 Name[sv]=Kpilotdemon
 Name[ta]=கேபைலட் டெமன்
+Name[tg]=Демони KPilot
 Name[ven]=Daemon ya Mureili wa K
-Name[xx]=xxKPilotDaemonxx
 Name[zu]=KUmshayeli webhanoyi Daemon
 Exec=kpilotDaemon
 NoDisplay=true
 Icon=kpilot.xpm
 Type=Application
-Terminal=0
-MiniIcon=kpilot.xpm
+Terminal=false
 X-DCOP-ServiceType=Unique
-Categories=Qt;KDE;Utility
+Categories=Qt;KDE;Utility;

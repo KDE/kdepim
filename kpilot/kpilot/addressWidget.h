@@ -1,6 +1,7 @@
 /* addressWidget.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the address-viewing widget used in KPilot
 ** to display the Pilot's address records.
@@ -64,6 +65,7 @@ public slots:
 	void slotCreateNewRecord();
 	void slotDeleteRecord();
 	void slotEditCancelled();
+	void slotExport();
 
 	void slotUpdateButtons();	// Enable/disable buttons
 
@@ -139,8 +141,4 @@ public:
 	typedef enum { PhoneNumberLength=16 } Constants ;
 };
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
 #endif

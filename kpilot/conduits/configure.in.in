@@ -132,7 +132,7 @@ NOTFOUND) AC_MSG_RESULT(searched but not found) ;;
     AC_MSG_RESULT(no (but first try gave $msg))
   else
     AC_DEFINE(HAVE_LIBMAL, 1, [Define if you have MAL libraries])
-		dnl check which version we have (pre 0.40 or >=0.40):		
+		dnl check which version we have (pre 0.40 or >=0.40):
     AC_TRY_LINK(dnl
     [#include <libmal.h>],
     [
@@ -176,6 +176,24 @@ KDE_CHECK_HEADER(kresources/factory.h,HAVE_KABC=1,
 AM_CONDITIONAL(include_abc, test "$HAVE_KABC" = 1)
 ])
 
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                     checks for the notepad conduit
+dnl
+dnl ----------------------------------------------------------------------------
+
+AC_DEFUN([KPILOT_CHECK_NOTEPAD],[HAVE_NOTEPAD=0
+KDE_CHECK_HEADER(pi-notepad.h,HAVE_NOTEPAD=1,
+	AC_MSG_WARN([KPILOT: No notepad.h for pilot-link. Your pilot-link is too old.]))
+AM_CONDITIONAL(include_notepad, test "$HAVE_NOTEPAD" = 1)
+])
+
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                     checks for embedded language conduits
+dnl
+dnl ----------------------------------------------------------------------------
+
 AC_DEFUN([KPILOT_CHECK_PERL],[HAVE_PERL=0
 AC_MSG_CHECKING([for Perl embedding])
 if perl -MExtUtils::Embed -e ccopts > /dev/null 2> /dev/null ; then
@@ -209,3 +227,5 @@ KPILOT_CHECK_MAL
 KPILOT_CHECK_KABC
 KPILOT_CHECK_PERL
 KPILOT_CHECK_PYTHON
+KPILOT_CHECK_NOTEPAD
+

@@ -47,7 +47,7 @@ VCalWidgetSetupBase::VCalWidgetSetupBase(QWidget *w, const char *n) :
 	fWidget=fConfigWidget;
 
 	fConfigWidget->fCalendarFile->setMode(KFile::File);
-	fConfigWidget->fCalendarFile->setFilter("*.vcs *.ics|ICalendars\n*.*|All Files (*.*)");
+	fConfigWidget->fCalendarFile->setFilter(CSL1("*.vcs *.ics|ICalendars\n*.*|All Files (*.*)"));
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
 	CM(fSyncDestination,SIGNAL(clicked(int)));

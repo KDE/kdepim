@@ -1,4 +1,4 @@
-/* todo-conduit.cc  Todo-Conduit for syncing KPilot and KOrganizer
+/* Todo-Conduit for syncing KPilot and KOrganizer
 **
 ** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 1998-2001 Dan Pilone
@@ -120,21 +120,23 @@ KCal::Incidence *TodoConduitPrivate::findIncidence(PilotAppCategory*tosearch)
 
 KCal::Incidence *TodoConduitPrivate::getNextIncidence()
 {
+	FUNCTIONSETUP;
 	if (reading) {
-                ++fAllTodosIterator;
-                if ( fAllTodosIterator == fAllTodos.end() ) return 0;
-        } else {
-	        reading=true;
-                fAllTodosIterator = fAllTodos.begin();
-        }
-        return *fAllTodosIterator;
+		++fAllTodosIterator;
+	} 
+	else {
+		reading=true;
+		fAllTodosIterator = fAllTodos.begin();
+	}
+	
+	return(fAllTodosIterator == fAllTodos.end()) ? 0L : *fAllTodosIterator;
 }
 
 
 
 KCal::Incidence *TodoConduitPrivate::getNextModifiedIncidence()
 {
-FUNCTIONSETUP;
+	FUNCTIONSETUP;
 	KCal::Todo*e=0L;
 	if (!reading)
 	{
@@ -158,10 +160,7 @@ FUNCTIONSETUP;
 
 	}
 
-	if ( fAllTodosIterator == fAllTodos.end() ) 
-		return 0;
-	else 
-		return *fAllTodosIterator;
+	return (fAllTodosIterator == fAllTodos.end()) ? 0L : *fAllTodosIterator;
 }
 
 
@@ -216,17 +215,8 @@ void TodoConduit::_getAppInfo()
 	buffer = NULL;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << " lastUniqueId"
-		<< fTodoAppInfo.category.lastUniqueID << endl;
+	PilotAppCategory::dumpCategories(fTodoAppInfo.category);
 #endif
-	for (int i = 0; i < 16; i++)
-	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << " cat " << i << " =" <<
-			fTodoAppInfo.category.name[i] << endl;
-#endif
-	}
-
 }
 
 
@@ -331,7 +321,7 @@ void TodoConduit::preRecord(PilotRecord*r)
 	if (!categoriesSynced && r)
 	{
 		const PilotAppCategory*de=newPilotEntry(r);
-		KCal::Incidence *e = fP->findIncidence(r->getID());
+		KCal::Incidence *e = fP->findIncidence(r->id());
 		setCategory(dynamic_cast<KCal::Todo*>(e), dynamic_cast<const PilotTodoEntry*>(de));
 	}
 }
@@ -367,7 +357,7 @@ QString TodoConduit::_getCat(const QStringList cats, const QString curr) const
 		}
 	}
 	// If we have a free label, return the first possible cat
-	QString lastName(fTodoAppInfo.category.name[15]);
+	QString lastName( QString::fromLatin1(fTodoAppInfo.category.name[15]) );
 	if (lastName.isEmpty()) return cats.first();
 	return QString::null;
 }
@@ -394,8 +384,9 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 		return NULL;
 	}
 
-	e->setOrganizer(fCalendar->getEmail());
-	e->setPilotId(de->getID());
+   // We don't want this, do we?
+//	e->setOrganizer(fCalendar->getEmail());
+	e->setPilotId(de->id());
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 	e->setSecrecy(de->isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic);
 
@@ -424,6 +415,9 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 
 	// COMPLETED? //
 	e->setCompleted(de->getComplete());
+	if ( de->getComplete() && !e->hasCompletedDate() ) {
+		e->setCompleted( QDateTime::currentDateTime() );
+	}
 
 	e->setSummary(de->getDescription());
 	e->setDescription(de->getNote());

@@ -1,4 +1,4 @@
-/* perl-factory.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2004 by Adriaan de Groot
 **
@@ -31,7 +31,9 @@
 #include <kconfig.h>
 #include <kinstance.h>
 #include <kaboutdata.h>
-#include <qlineedit.h>
+#include <qtextedit.h>
+
+#include "uiDialog.h"
 
 #include "perl-conduit.h"     // Conduit action
 #include "perl-setup.h"
@@ -68,7 +70,7 @@ PerlConduitConfig::PerlConduitConfig(QWidget *p, const char *n) :
 	fConduitName = i18n("Perl");
 	UIDialog::addAboutPage(fConfigWidget->tabWidget,PerlConduitFactory::about());
 	fWidget=fConfigWidget;
-	QObject::connect(fConfigWidget->fExpression,SIGNAL(textChanged(const QString&)),
+	QObject::connect(fConfigWidget->fExpression,SIGNAL(textChanged()),
 		this,SLOT(modified()));
 }
 

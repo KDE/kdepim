@@ -52,12 +52,9 @@ class PilotDOCHead:public PilotAppCategory {
 	~PilotDOCHead() {
 	} PilotDOCHead & operator=(const PilotDOCHead & e);
 
-	PilotRecord *pack() {
-		return PilotAppCategory::pack();
-	}
 
  protected:
-	void *pack(void *, int *);
+	void *pack_(void *, int *);
 	void unpack(const void *, int = 0);
 };
 

@@ -25,28 +25,31 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include "kpalmdoc_dlg.h"
-#include "kpalmdoc_dlgbase.h"
+#include "options.h"
 
-#include <qtabwidget.h>
-#include <kapplication.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
 
-#include <kurlrequester.h>
+#include <qtabwidget.h>
 #include <qcheckbox.h>
 #include <qradiobutton.h>
-#include <kconfig.h>
 #include <qbuttongroup.h>
-#include <klocale.h>
 #include <qlabel.h>
+#include <qcombobox.h>
+
+#include <klocale.h>
+#include <kconfig.h>
 #include <kaboutapplication.h>
+#include <kapplication.h>
+#include <kurlrequester.h>
 #include <kmessagebox.h>
+#include <kcharsets.h>
 
 #include <pilotLocalDatabase.h>
 
-#include "options.h"
+#include "kpalmdoc_dlg.h"
+#include "kpalmdoc_dlgbase.h"
 #include "DOC-converter.h"
 #include "kpalmdocSettings.h"
 
@@ -57,11 +60,14 @@ ConverterDlg::ConverterDlg( QWidget *parent, const QString& caption)
 {
 	QWidget *page = makeHBoxMainWidget();
 	dlg=new ConverterDlgBase(page);
-	readSettings();
-//	setMainWidget(dlg->tabWidget);
+	QStringList l = KGlobal::charsets()->descriptiveEncodingNames();
+	for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it)
+	{
+		dlg->fEncoding->insertItem(*it);
+	}
 
-	// Connect the signals and slots from the various widgets!
-	// e.g.
+	readSettings();
+
 	connect(dlg->fDirectories, SIGNAL(toggled(bool)),
 		this, SLOT(slotDirectories(bool)));
 	connect(dlg->fTextToPDB, SIGNAL(clicked()), this, SLOT(slotToPDB()));
@@ -82,6 +88,7 @@ void ConverterDlg::writeSettings()
 	KPalmDocSettings::setSyncFolders( dlg->fDirectories->isChecked() );
 	KPalmDocSettings::setAskOverwrite( dlg->fAskOverwrite->isChecked() );
 	KPalmDocSettings::setVerboseMessages( dlg->fVerbose->isChecked() );
+	KPalmDocSettings::setEncoding( dlg->fEncoding->currentText() );
 
 	// PC->Handheld page
 	KPalmDocSettings::setCompress( dlg->fCompress->isChecked() );
@@ -98,6 +105,8 @@ void ConverterDlg::writeSettings()
 
 void ConverterDlg::readSettings()
 {
+	FUNCTIONSETUP;
+
 	KPalmDocSettings::self()->readConfig();
 
 	// General Page:
@@ -108,6 +117,11 @@ void ConverterDlg::readSettings()
 	slotDirectories(dir);
 	dlg->fAskOverwrite->setChecked( KPalmDocSettings::askOverwrite() );
 	dlg->fVerbose->setChecked( KPalmDocSettings::verboseMessages() );
+	QString encoding = KPalmDocSettings::encoding();
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Encoding=" << encoding << endl;
+#endif
+	dlg->fEncoding->setCurrentText( KPalmDocSettings::encoding() );
 
 	// PC->Handheld page
 	dlg->fCompress->setChecked(KPalmDocSettings::compress() );
@@ -129,6 +143,7 @@ void ConverterDlg::slotClose()
 
 void ConverterDlg::slotToText()
 {
+	FUNCTIONSETUP;
 	// First, get the settings from the controls and initialize
 	// the converter object
 	int bmks=dlg->fPCBookmarks->id(dlg->fPCBookmarks->selected());
@@ -157,7 +172,7 @@ void ConverterDlg::slotToText()
 	{
 		if (pdbinfo.isFile())
 		{
-			int res=KMessageBox::questionYesNo(this, 
+			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>").arg(pdburl)
@@ -173,7 +188,7 @@ void ConverterDlg::slotToText()
 		if (!pdbinfo.isDir())
 		{
 			// no directory, so error message and return
-			KMessageBox::sorry(this, 
+			KMessageBox::sorry(this,
 				i18n("<qt>The folder <em>%1</em> for "
 				"the handheld database files is not a valid "
 				"folder.</qt>").arg(pdburl));
@@ -182,7 +197,7 @@ void ConverterDlg::slotToText()
 
 		if (!pdbinfo.exists())
 		{
-			KMessageBox::sorry(this, 
+			KMessageBox::sorry(this,
 				i18n("<qt>The folder <em>%1</em> for "
 				"the handheld database files is not a "
 				"valid directory.</qt>").arg(pdburl));
@@ -193,7 +208,7 @@ void ConverterDlg::slotToText()
 		// Now check the to directory:
 		if (txtinfo.isFile())
 		{
-			int res=KMessageBox::questionYesNo(this, 
+			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>").arg(txturl)
@@ -210,7 +225,7 @@ void ConverterDlg::slotToText()
 			txtinfo.dir().mkdir(txturl, true);
 		}
 		if (!txtinfo.isDir()) {
-			KMessageBox::sorry(this, 
+			KMessageBox::sorry(this,
 				i18n("<qt>The folder <em>%1</em> for "
 				"the text files could not be created.</qt>").arg(txturl));
 			return;
@@ -218,16 +233,16 @@ void ConverterDlg::slotToText()
 
 
 		// Now that we have both directories, create the converter object
-DEBUGCONDUIT<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
-DEBUGCONDUIT<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
-		QStringList pdbfiles(pdbinfo.dir().entryList("*.pdb"));
+		DEBUGCONDUIT<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
+		DEBUGCONDUIT<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
+		QStringList pdbfiles(pdbinfo.dir().entryList(CSL1("*.pdb")));
 		QStringList converted_Files;
 
-DEBUGCONDUIT<<"Length of filename list: "<<pdbfiles.size()<<endl;
+		DEBUGCONDUIT<<"Length of filename list: "<<pdbfiles.size()<<endl;
 		for ( QStringList::Iterator it = pdbfiles.begin(); it != pdbfiles.end(); ++it )
 		{
-			QString txtfile=QFileInfo(*it).baseName(true)+".txt";
-DEBUGCONDUIT<<"pdbfile="<<*it<<", pdbdir="<<pdburl<<", txtfile="<<txtfile<<", txtdir="<<txturl<<endl;
+			QString txtfile=QFileInfo(*it).baseName(true)+CSL1(".txt");
+			DEBUGCONDUIT<<"pdbfile="<<*it<<", pdbdir="<<pdburl<<", txtfile="<<txtfile<<", txtdir="<<txturl<<endl;
 			if (convertPDBtoTXT(pdburl, *it, txturl, txtfile, &conv))
 			{
 				converted_Files.append(*it);
@@ -274,6 +289,7 @@ DEBUGCONDUIT<<"pdbfile="<<*it<<", pdbdir="<<pdburl<<", txtfile="<<txtfile<<", tx
 
 void ConverterDlg::slotToPDB()
 {
+	FUNCTIONSETUP;
 	// First, get the settings from the controls and initialize
 	// the converter object
 	bool compress=dlg->fCompress->isChecked();
@@ -305,7 +321,7 @@ void ConverterDlg::slotToPDB()
 	{
 		if (txtinfo.isFile())
 		{
-			int res=KMessageBox::questionYesNo(this, 
+			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>").arg(txturl)
@@ -320,7 +336,7 @@ void ConverterDlg::slotToPDB()
 
 		if (!txtinfo.isDir() || !txtinfo.exists())
 		{
-			KMessageBox::sorry(this, 
+			KMessageBox::sorry(this,
 				i18n("<qt>The folder <em>%1</em> for "
 				"the text files is not a valid folder.</qt>").arg(txturl));
 			return;
@@ -330,7 +346,7 @@ void ConverterDlg::slotToPDB()
 		// Now check the to directory:
 		if (pdbinfo.isFile())
 		{
-			int res=KMessageBox::questionYesNo(this, 
+			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>")
@@ -355,16 +371,16 @@ void ConverterDlg::slotToPDB()
 
 
 		// Now that we have both directories, create the converter object
-DEBUGCONDUIT<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
-DEBUGCONDUIT<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
-		QStringList txtfiles(txtinfo.dir().entryList("*.txt"));
+		DEBUGCONDUIT<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
+		DEBUGCONDUIT<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
+		QStringList txtfiles(txtinfo.dir().entryList(CSL1("*.txt")));
 		QStringList converted_Files;
 
-DEBUGCONDUIT<<"Length of filename list: "<<txtfiles.size()<<endl;
+		DEBUGCONDUIT<<"Length of filename list: "<<txtfiles.size()<<endl;
 		for ( QStringList::Iterator it = txtfiles.begin(); it != txtfiles.end(); ++it )
 		{
-			QString pdbfile=QFileInfo(*it).baseName(true)+".pdb";
-DEBUGCONDUIT<<"pdbfile="<<pdbfile<<", pdbdir="<<pdburl<<", txtfile="<<*it<<", txtdir="<<txturl<<endl;
+			QString pdbfile=QFileInfo(*it).baseName(true)+CSL1(".pdb");
+			DEBUGCONDUIT<<"pdbfile="<<pdbfile<<", pdbdir="<<pdburl<<", txtfile="<<*it<<", txtdir="<<txturl<<endl;
 			if (convertTXTtoPDB(txturl, *it, pdburl, pdbfile, &conv))
 			{
 				converted_Files.append(*it);
@@ -412,6 +428,7 @@ void ConverterDlg::slotUser1()
 
 void ConverterDlg::slotDirectories(bool dir)
 {
+	FUNCTIONSETUP;
 	DEBUGCONDUIT<<"Slot Directories: "<<dir<<endl;
 	if (dir)
 	{
@@ -430,9 +447,10 @@ void ConverterDlg::slotDirectories(bool dir)
 bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 		QString pdbdir, QString pdbfile, DOCConverter*conv)
 {
+	FUNCTIONSETUP;
 	bool res=false;
 	QFileInfo dbfileinfo(pdbdir, pdbfile);
-DEBUGCONDUIT<<"Working  on file "<<pdbfile<<endl;
+	DEBUGCONDUIT<<"Working  on file "<<pdbfile<<endl;
 	if (!dbfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
 			i18n("<qt>The database file <em>%1</em> already exists. Overwrite it?</qt>")
@@ -474,9 +492,10 @@ DEBUGCONDUIT<<"Working  on file "<<pdbfile<<endl;
 bool ConverterDlg::convertPDBtoTXT(QString pdbdir, QString pdbfile,
 		QString txtdir, QString txtfile, DOCConverter*conv)
 {
+	FUNCTIONSETUP;
 	bool res=false;
 	QFileInfo txtfileinfo(txtdir, txtfile);
-DEBUGCONDUIT<<"Working  on file "<<txtfile<<endl;
+	DEBUGCONDUIT<<"Working  on file "<<txtfile<<endl;
 	if (!txtfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
 			i18n("<qt>The text file <em>%1</em> already exists. Overwrite it?</qt>")

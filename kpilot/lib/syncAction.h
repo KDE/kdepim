@@ -3,6 +3,7 @@
 /* syncAction.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 */
 
@@ -42,14 +43,17 @@ class QSocketNotifier;
 class KPilotUser;
 class SyncAction;
 
-
-class SyncAction : public QObject
+class KDE_EXPORT SyncAction : public QObject
 {
 Q_OBJECT
 
 public:
 	SyncAction(KPilotDeviceLink *p,
 		const char *name=0L);
+	SyncAction(KPilotDeviceLink *p,
+		QWidget *visibleparent,
+		const char *name=0L);
+	~SyncAction();
 
 	typedef enum { Error=-1 } Status;
 
@@ -96,15 +100,20 @@ signals:
 	*/
 protected slots:
 	void delayedDoneSlot();
+
 protected:
 	bool delayDone();
 
+public:
+	void addSyncLogEntry(const QString &e,bool log=true)
+		{ fHandle->addSyncLogEntry(e,log); } ;
+	void addLogMessage( const QString &msg ) { emit logMessage( msg ); }
+	void addLogError( const QString &msg ) { emit logError( msg ); }
+	void addLogProgress( const QString &msg, int prog ) { emit logProgress( msg, prog ); }
 protected:
 	KPilotDeviceLink *fHandle;
 	int fActionStatus;
 
-	void addSyncLogEntry(const QString &e,bool log=true)
-		{ fHandle->addSyncLogEntry(e,log); } ;
 	int pilotSocket() const { return fHandle->pilotSocket(); } ;
 
 	int openConduit() { return fHandle->openConduit(); } ;
@@ -114,14 +123,17 @@ public:
 	*/
 	enum SyncMode
 	{
-		eTest=0,
-		eFastSync,
-		eHotSync,
-		eFullSync,
-		eCopyPCToHH,
-		eCopyHHToPC,
+		eDefaultSync=0,
+		eFastSync=1,
+		eHotSync=2,
+		eFullSync=3,
+		eCopyPCToHH=4,
+		eCopyHHToPC=5,
 		eBackup=6,
-		eRestore
+		eRestore=7,
+		eTest=8,
+		eLastMode=eTest,
+		eLastUserMode=eRestore
 	};
 
 	/**
@@ -141,43 +153,8 @@ public:
 		eDelete,
 		eCROffset=-1
 	};
-} ;
-
-
-
-class InteractiveAction : public SyncAction
-{
-Q_OBJECT
-public:
-	// Note that this takes a QWidget as additional parameter,
-	// so that it can display windows relative to that if necessary.
-	//
-	//
-	InteractiveAction(KPilotDeviceLink *p,
-		QWidget *visibleparent=0L,
-		const char *name=0L);
-	virtual ~InteractiveAction();
-
-	// Reminder that the whole point of the class is to implement
-	// the pure virtual function exec().
-	//
-	// virtual void exec()=0;
-
-protected slots:
-	/**
-	* Called whenever the tickle state is on, uses dlp_tickle()
-	* or something like that to prevent the pilot from timing out.
-	*/
-	void tickle();
-
-signals:
-	void timeout();
 
 protected:
-	QWidget *fParent;
-	QTimer *fTickleTimer;
-	unsigned fTickleCount,fTickleTimeout;
-
 	/**
 	* Call startTickle() some time before showing a dialog to the
 	* user (we're assuming a local event loop here) so that while
@@ -191,6 +168,14 @@ protected:
 	*/
 	void startTickle(unsigned count=0);
 	void stopTickle();
+signals:
+	void timeout();
+
+
+
+
+protected:
+	QWidget *fParent;
 
 	/**
 	* Ask a yes-no question of the user. This has a timeout so that
@@ -202,12 +187,21 @@ protected:
 	*
 	* @p caption Message Box caption, uses "Question" if null.
 	* @p key     Key for the "Don't ask again" code.
-	* @p timeout Timeout, in ms.
+	* @p timeout Timeout, in seconds.
 	*/
 	int questionYesNo(const QString &question ,
 		const QString &caption = QString::null,
 		const QString &key = QString::null,
-		unsigned timeout = 20000);
-} ;
+		unsigned timeout = 20,
+		const QString &yes = QString::null,
+		const QString &no = QString::null );
+	int questionYesNoCancel(const QString &question ,
+		const QString &caption = QString::null,
+		const QString &key = QString::null,
+		unsigned timeout = 20,
+		const QString &yes = QString::null,
+		const QString &no = QString::null ) ;
+};
+
 
 #endif

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
-<kcfg><kcfgfile name="kpilotrc"/>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <include>kstandarddirs.h</include>
+  <kcfgfile name="kpilotrc"/>
   <group name="General">
     <entry name="Debug" type="UInt">
         <label>
@@ -39,6 +42,15 @@
         </label>
         <default></default>
     </entry>
+    <entry name="Workarounds" type="Enum">
+        <choices>
+          <choice name="eWorkaroundNone"/>
+          <choice name="eWorkaroundUSB"/>
+        </choices>
+        <label></label>
+        <default>eWorkaroundNone</default>
+    </entry>
+    
     <entry name="LogFileName" type="String">
         <label>
         </label>
@@ -47,7 +59,7 @@
     <entry name="StartDaemonAtLogin" type="Bool">
         <label>
         </label>
-        <default>true</default>
+        <default>false</default>
     </entry>
     <entry name="KillDaemonAtExit" type="Bool">
         <label>
@@ -96,7 +108,7 @@
     </entry>
     <entry name="SkipBackupDB" type="StringList">
         <label>Which databases not to backup.</label>
-        <default>[Arng],[PmDB],[lnch],[a86k],FATFS</default>
+        <default>[Arng],[PmDB],[lnch],[a86k],FATFS,ImgFile-Foto,Jpeg-Foto</default>
     </entry>
     <entry name="SkipRestoreDB" type="StringList">
         <label>
@@ -119,12 +131,12 @@
     </entry>
     <entry name="ScreenlockSecure" type="Bool">
         <label>Prevent HotSync when screen locked</label>
-        <description>Turning this option on prevents syncing
+        <whatsthis>Turning this option on prevents syncing
 	when the screen is locked. This is a security measure
 	to prevent people from stealing your data through physical
 	access to a Pilot device link to your machine.
 	It doesn't work with screensavers other than KDE, though,
-	so you will need to turn it off for other environments.</description>
+	so you will need to turn it off for other environments.</whatsthis>
 	<default>true</default>
     </entry>
   </group>

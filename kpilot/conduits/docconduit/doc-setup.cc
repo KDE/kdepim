@@ -1,4 +1,4 @@
-/* doc-setup.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer
 **
@@ -31,15 +31,18 @@
 #include <qtabwidget.h>
 #include <qcheckbox.h>
 #include <qbuttongroup.h>
+#include <qcombobox.h>
 
 #include <kconfig.h>
 #include <kurlrequester.h>
+#include <kcharsets.h>
 
 #include "doc-setupdialog.h"
 #include "doc-factory.h"
 #include "doc-setup.h"
 #include "docconduitSettings.h"
 
+#include "uiDialog.h"
 
 DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 	ConduitConfigBase(w, n),
@@ -48,6 +51,12 @@ DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 	FUNCTIONSETUP;
 
 	fWidget=fConfigWidget;
+
+	QStringList l = KGlobal::charsets()->descriptiveEncodingNames();
+	for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it)
+	{
+		fConfigWidget->fEncoding->insertItem(*it);
+	}
 
 	fConfigWidget->fTXTDir->setMode(KFile::Directory);
 	fConfigWidget->fPDBDir->setMode(KFile::Directory);
@@ -69,6 +78,7 @@ DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 	CMOD(fNoConversionOfBmksOnly,stateChanged(int));
 	CMOD(fAlwaysUseResolution,stateChanged(int));
 	CMOD(fPCBookmarks,clicked(int));
+	CMOD(fEncoding,textChanged(const QString &));
 #undef CMOD
 
 	fConfigWidget->adjustSize();
@@ -77,10 +87,10 @@ DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 /* virtual */ void DOCWidgetConfig::commit()
 {
 	FUNCTIONSETUP;
-	
+
 	DOCConduitSettings::setTXTDirectory( fConfigWidget->fTXTDir->url() );
 	DOCConduitSettings::setPDBDirectory( fConfigWidget->fPDBDir->url() );
-	
+
 	DOCConduitSettings::setKeepPDBsLocally( fConfigWidget->fkeepPDBLocally->isChecked());
 	DOCConduitSettings::setConflictResolution( fConfigWidget->fConflictResolution->id(
 		fConfigWidget->fConflictResolution->selected()) );
@@ -95,6 +105,7 @@ DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 	DOCConduitSettings::setAlwaysShowResolutionDialog(fConfigWidget->fAlwaysUseResolution->isChecked());
 	DOCConduitSettings::setBookmarksToPC( fConfigWidget->fPCBookmarks->id(
 		fConfigWidget->fPCBookmarks->selected()) );
+	DOCConduitSettings::setEncoding( fConfigWidget->fEncoding->currentText() );
 
 	DOCConduitSettings::self()->writeConfig();
 	unmodified();
@@ -104,7 +115,7 @@ DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 {
 	FUNCTIONSETUP;
 	DOCConduitSettings::self()->readConfig();
-	
+
 	fConfigWidget->fTXTDir->setURL( DOCConduitSettings::tXTDirectory() );
 	fConfigWidget->fPDBDir->setURL( DOCConduitSettings::pDBDirectory() );
 	fConfigWidget->fkeepPDBLocally->setChecked( DOCConduitSettings::keepPDBsLocally() );
@@ -120,6 +131,7 @@ DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 	fConfigWidget->fAlwaysUseResolution->setChecked( DOCConduitSettings::alwaysShowResolutionDialog() );
 
 	fConfigWidget->fPCBookmarks->setButton(DOCConduitSettings::bookmarksToPC() );
+	fConfigWidget->fEncoding->setCurrentText(DOCConduitSettings::encoding() );
 	unmodified();
 }
 

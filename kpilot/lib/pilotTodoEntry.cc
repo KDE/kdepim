@@ -1,6 +1,7 @@
-/* pilotTodoEntry.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a C++ wrapper for the todo-list entry structures.
 */
@@ -141,43 +142,12 @@ QString PilotTodoEntry::getTextRepresentation(bool richText)
 	return text;
 }
 
-bool PilotTodoEntry::setCategory(const QString &label)
-{
-	FUNCTIONSETUP;
-	if (label.isEmpty())
-	{
-		setCat(0);
-		return true;
-	}
-	for (int catId = 0; catId < 16; catId++)
-	{
-		QString aCat = codec()->toUnicode(fAppInfo.category.name[catId]);
-
-		if (label == aCat)
-		{
-			setCat(catId);
-			return true;
-		}
-		else
-			// if empty, then no more labels; add it
-		if (aCat.isEmpty())
-		{
-			qstrncpy(fAppInfo.category.name[catId],
-				codec()->fromUnicode(label), 16);
-			setCat(catId);
-			return true;
-		}
-	}
-	// if got here, the category slots were full
-	return false;
-}
-
 QString PilotTodoEntry::getCategoryLabel() const
 {
 	return codec()->toUnicode(fAppInfo.category.name[getCat()]);
 }
 
-void *PilotTodoEntry::pack(void *buf, int *len)
+void *PilotTodoEntry::pack_(void *buf, int *len)
 {
 	int i;
 
@@ -201,11 +171,11 @@ void PilotTodoEntry::setDescriptionP(const char *desc, int len)
 		fTodoInfo.description = (char *)::malloc(len + 1);
 		if (fTodoInfo.description)
 		{
-			::strcpy(fTodoInfo.description, desc);
+			strlcpy(fTodoInfo.description, desc, len+1);
 		}
 		else
 		{
-			kdError(LIBPILOTDB_AREA) << __FUNCTION__
+			kdError() << __FUNCTION__
 				<< ": malloc() failed, description not set"
 				<< endl;
 		}
@@ -235,11 +205,11 @@ void PilotTodoEntry::setNoteP(const char *note, int len)
 		fTodoInfo.note = (char *)::malloc(len + 1);
 		if (fTodoInfo.note)
 		{
-		    ::strcpy(fTodoInfo.note, note);
+		    strlcpy(fTodoInfo.note, note, len+1);
 		}
 		else
 		{
-			kdError(LIBPILOTDB_AREA) << __FUNCTION__
+			kdError() << __FUNCTION__
 				<< ": malloc() failed, note not set" << endl;
 		}
 	}

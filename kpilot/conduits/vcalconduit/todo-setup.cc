@@ -1,4 +1,4 @@
-/* todo-setup.cc                        KPilot
+/* KPilot
 **
 ** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
@@ -35,16 +35,17 @@
 #include "todo-factory.h"
 #include "todo-setup.h"
 
+#include "uiDialog.h"
 
 
 ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n) :
 	VCalWidgetSetupBase(w,n)
 {
 	FUNCTIONSETUP;
-	fConduitName = i18n("ToDo");
+	fConduitName = i18n("To-do");
 	UIDialog::addAboutPage(fConfigWidget->tabWidget,VCalConduitFactoryBase::about());
 
-	fConfigWidget->fSyncDestination->setTitle(i18n("ToDo Destination"));
+	fConfigWidget->fSyncDestination->setTitle(i18n("To-do Destination"));
 }
 
 ToDoWidgetSetup::~ToDoWidgetSetup()

@@ -1,4 +1,4 @@
-/* time-conduit.cc                           KPilot
+/* KPilot
 **
 ** Copyright (C) 2002-2003 by Reinhold Kainhofer
 **
@@ -33,7 +33,7 @@
 #include <kdebug.h>
 
 #include "time-factory.h"
-#include "time-conduit.moc"
+#include "time-conduit.h"
 #include "timeConduitSettings.h"
 
 
@@ -46,10 +46,10 @@ const char *id_conduit_time =
 	"$Id$";
 }
 
- 
- 
+
+
 TimeConduit::TimeConduit(KPilotDeviceLink * o,
-	const char *n, 
+	const char *n,
 	const QStringList & a) :
 	ConduitAction(o, n, a)
 {
@@ -83,56 +83,27 @@ void TimeConduit::readConfig()
 
 	readConfig();
 
-	switch (TimeConduitSettings::direction())
-	{
-		case TimeConduitSettings::eSetPCfromHH:
-			emit logMessage(i18n("Setting the clock on the handheld"));
-//			fHandle->addSyncLogEntry(i18n("Setting the clock on the handheld"));
-			syncPCToPalm();
-			break;
-		case TimeConduitSettings::eSetHHfromPC:
-			emit logMessage(i18n("Setting the clock on the PC from the time on the handheld"));
-//			fHandle->addSyncLogEntry(i18n("Setting the clock on the PC from the time on the handheld"));
-			syncPalmToPC();
-			break;
-		default:
-			emit logError(i18n("Unknown setting for time synchronization."));
-			kdWarning() << k_funcinfo << ": unknown sync direction "<<TimeConduitSettings::direction()<<endl;
-			return false;
-	}
-	emit syncDone(this);
-	return true;
-}
-
-void TimeConduit::syncPalmToPC()
-{
-	FUNCTIONSETUP;
-	QDateTime pdaTime=fHandle->getTime();
-#ifdef DEBUG
-	DEBUGCONDUIT<<fname<<": syncing time "<<pdaTime.toString()<<" to the PC"<<endl;
-#endif
-	emit logError(i18n("The system clock was not adjusted to %1 (not implemented)").arg(pdaTime.toString()));
-	// TODO: Set the system time from this QDateTime
+	emit logMessage(i18n("Setting the clock on the handheld"));
+	syncHHfromPC();
+	return delayDone();
 }
 
 
-
-void TimeConduit::syncPCToPalm()
+void TimeConduit::syncHHfromPC()
 {
 	FUNCTIONSETUP;
 	time_t ltime;
 	time(&ltime);
 	QDateTime time=QDateTime::currentDateTime();
-	
+
 	long int major=fHandle->majorVersion(), minor=fHandle->minorVersion();
-	
-	if (major==3 && (minor==25 || minor==30)) 
+
+	if (major==3 && (minor==25 || minor==30))
 	{
 		emit logMessage(i18n("PalmOS 3.25 and 3.3 do not support setting the system time. Skipping the time conduit..."));
 		return;
 	}
 
-//	fHandle->setTime(QDateTime::currentDateTime());
 	fHandle->setTime(ltime);
 #ifdef DEBUG
 	time.setTime_t(ltime);

@@ -1,4 +1,4 @@
-/* abbrowser-setup.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2002-2003 Reinhold Kainhofer
@@ -38,6 +38,8 @@
 #include "abbrowser-factory.h"
 #include "abbrowser-setup.h"
 #include "abbrowserSettings.h"
+
+#include "uiDialog.h"
 
 AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n) :
 	ConduitConfigBase(w,n),

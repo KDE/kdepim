@@ -1,4 +1,4 @@
-/* vcal-factory.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
@@ -91,7 +91,7 @@ VCalConduitFactory::~VCalConduitFactory()
 VCalConduitSettings* VCalConduitFactory::config()
 {
 	if (!fConfig) {
-		fConfig = new VCalConduitSettings("Calendar");
+		fConfig = new VCalConduitSettings(CSL1("Calendar"));
 		if (fConfig) fConfig->readConfig();
 	}
 	return fConfig;

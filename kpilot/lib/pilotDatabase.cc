@@ -1,4 +1,4 @@
-/* pilotDatabase.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
@@ -69,28 +69,10 @@ PilotDatabase::PilotDatabase(const QString &s) :
 	DEBUGDAEMON << fname << ": " << creationCount << " databases." << endl;
 	if (createdNames)
 	{
-		DEBUGDAEMON << fname << ": " 
+		DEBUGDAEMON << fname << ": "
 			<< createdNames->join(CSL1(",")) << endl;
 	}
 #endif
 	return creationCount;
 }
 
-/* static */ void PilotDatabase::listAppInfo(const struct CategoryAppInfo *category)
-{
-#ifdef DEBUG
-	FUNCTIONSETUP;
-
-	for (int i = 0; i < 15; i++)
-	{
-		DEBUGKPILOT << fname
-			<< ": Category #"
-			<< i
-			<< " has ID "
-			<< (int) category->ID[i]
-			<< " and name "
-			<< (category->name[i][0] ? "*" : "-")
-			<< category->name[i] << endl;
-	}
-#endif
-}

@@ -47,9 +47,6 @@ public:
 	~PilotDOCEntry() {};
 	PilotDOCEntry & operator=(const PilotDOCEntry & e);
 
-	PilotRecord *pack() {
-		return PilotAppCategory::pack();
-	}
 
 	QString getText() {
 		fText.Decompress();
@@ -68,7 +65,7 @@ public:
 	};
 
 protected:
-	void *pack(void *, int *);
+	void *pack_(void *, int *);
 	void unpack(const void *, int = 0) {
 	}
 };

@@ -1,4 +1,4 @@
-/* doc-conduit.cc                           KPilot
+/* KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer
 **
@@ -40,7 +40,7 @@
 #include <qdir.h>
 
 #include <kconfig.h>
-#include <kmdcodec.h> 
+#include <kmdcodec.h>
 
 #include <pilotLocalDatabase.h>
 #include <pilotSerialDatabase.h>
@@ -151,6 +151,7 @@ void DOCConduit::readConfig()
 
 bool DOCConduit::pcTextChanged(QString txtfn)
 {
+	FUNCTIONSETUP;
 	// How do I find out if a text file has changed shince we last synced it??
 	// Use KMD5 for now. If I realize it is too slow, then I have to go back to comparing modification times
 	// if there is no config setting yet, assume the file has been changed. the md5 sum will be written to the config file after the sync.
@@ -173,7 +174,7 @@ bool DOCConduit::pcTextChanged(QString txtfn)
 #endif
 		return (thisDigest.length()<=0) || (thisDigest!=oldDigest);
 	} else {
-		// File does not exist. This should actually never happen. Anyways, just return true to indicate it has changed. 
+		// File does not exist. This should actually never happen. Anyways, just return true to indicate it has changed.
 		// doSync should detect this and delete the doc from the handheld.
 		return true;
 	}
@@ -182,26 +183,27 @@ bool DOCConduit::pcTextChanged(QString txtfn)
 
 
 
-bool DOCConduit::hhTextChanged(PilotDatabase*docdb) 
+bool DOCConduit::hhTextChanged(PilotDatabase*docdb)
 {
+	FUNCTIONSETUP;
 	if (!docdb) return false;
-	
+
 	PilotRecord *firstRec = docdb->readRecordByIndex(0);
 	PilotDOCHead docHeader(firstRec);
 	KPILOT_DELETE(firstRec);
 
 	int storyRecs = docHeader.numRecords;
 
-	// determine the index of the next modified record (does it lie 
+	// determine the index of the next modified record (does it lie
 	// beyond the actual text records?)
 	int modRecInd=-1;
 	PilotRecord*modRec=docdb->readNextModifiedRec(&modRecInd);
 #ifdef DEBUG
 	DEBUGCONDUIT<<"Index of first changed record: "<<modRecInd<<endl;
 #endif
-		
+
 	KPILOT_DELETE(modRec);
-	// if the header record was changed, find out which is the first changed 
+	// if the header record was changed, find out which is the first changed
 	// real document record:
 	if (modRecInd==0) {
 		modRec=docdb->readNextModifiedRec(&modRecInd);
@@ -210,15 +212,15 @@ bool DOCConduit::hhTextChanged(PilotDatabase*docdb)
 #endif
 		KPILOT_DELETE(modRec);
 	}
-	
-	// The record index starts with 0, so only a negative number means 
+
+	// The record index starts with 0, so only a negative number means
 	// no modified record was found
 	if (modRecInd >= 0) {
 #ifdef DEBUG
 		DEBUGCONDUIT<<"Handheld side has changed, condition="<<
 			((!DOCConduitSettings::ignoreBmkChanges()) || (modRecInd <= storyRecs))<<endl;
 #endif
-		if ((!DOCConduitSettings::ignoreBmkChanges()) || (modRecInd <= storyRecs)) 
+		if ((!DOCConduitSettings::ignoreBmkChanges()) || (modRecInd <= storyRecs))
 			return true;
 	} else {
 #ifdef DEBUG
@@ -273,7 +275,7 @@ QString DOCConduit::constructTXTFileName(QString name) {
 
 	readConfig();
 	dbnr=0;
-	
+
 	emit logMessage(i18n("Searching for texts and databases to synchronize"));
 
 	QTimer::singleShot(0, this, SLOT(syncNextDB()));
@@ -282,9 +284,11 @@ QString DOCConduit::constructTXTFileName(QString name) {
 
 
 
-bool DOCConduit::doSync(docSyncInfo &sinfo) {
+bool DOCConduit::doSync(docSyncInfo &sinfo)
+{
+	FUNCTIONSETUP;
 	bool res=false;
-	
+
 	if (sinfo.direction==eSyncDelete) {
 		if (!sinfo.txtfilename.isEmpty()) {
 			if (!QFile::remove(sinfo.txtfilename)) {
@@ -302,7 +306,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 			}
 		}
 		if (!sinfo.pdbfilename.isEmpty() && DOCConduitSettings::keepPDBsLocally() ) {
-			PilotLocalDatabase*database=new PilotLocalDatabase(DOCConduitSettings::pDBDirectory(), 
+			PilotLocalDatabase*database=new PilotLocalDatabase(DOCConduitSettings::pDBDirectory(),
 				QString::fromLatin1(sinfo.dbinfo.name), false);
 			if (database) {
 				if ( database->deleteDatabase() !=0 ) {
@@ -312,7 +316,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 			}
 		}
 		if (!DOCConduitSettings::localSync()) {
-			PilotDatabase *database=new PilotSerialDatabase(pilotSocket(), 
+			PilotDatabase *database=new PilotSerialDatabase(pilotSocket(),
 				QString::fromLatin1(sinfo.dbinfo.name));
 			if ( database->deleteDatabase() !=0 ) {
 					kdWarning()<<"Unable to delete database "<<sinfo.dbinfo.name<<" from the handheld"<<endl;
@@ -333,6 +337,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 		if (!database->createDatabase(dbcreator(), dbtype()) ) {
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Failed"<<endl;
+			emit logMessage(i18n("Database created."));
 #endif
 		}
 	}
@@ -358,7 +363,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 			default:
 				break;
 		}
-		
+
 		// Now calculate the md5 checksum of the PC text and write it to the config file
 		if (res)
 		{
@@ -378,8 +383,8 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 #endif
 			}
 		}
-		
-		if (!postSyncAction(database, sinfo, res)) 
+
+		if (!postSyncAction(database, sinfo, res))
 			emit logError(i18n("Unable to install the locally created PalmDOC %1 to the handheld.")
 				.arg(QString::fromLatin1(sinfo.dbinfo.name)));
 		if (!res)
@@ -391,7 +396,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 	}
 	else
 	{
-		emit logError(i18n("Unable to open or create the database %1")
+		emit logError(i18n("Unable to open or create the database %1.")
 			.arg(QString::fromLatin1(sinfo.dbinfo.name)));
 	}
 	return res;
@@ -442,7 +447,7 @@ void DOCConduit::syncNextDB() {
 void DOCConduit::syncNextTXT()
 {
 	FUNCTIONSETUP;
-	
+
 	if (eSyncDirection==eSyncPDAToPC  )
 	{
 		// We don't sync from PC to PDB, so start the conflict resolution and then the actual sync process
@@ -469,7 +474,7 @@ void DOCConduit::syncNextTXT()
 	QFileInfo fl(dr, fn );
 	QString txtfilename=fl.absFilePath();
 	QString pdbfilename;
-	dociterator++;
+	++dociterator;
 
 	DBInfo dbinfo;
 	// Include all "extensions" except the last. This allows full stops inside the database name (e.g. abbreviations)
@@ -479,7 +484,7 @@ void DOCConduit::syncNextTXT()
 
 	bool alreadySynced=fDBNames.contains(fl.baseName(TRUE));
 	if (!alreadySynced) {
-		docSyncInfo syncInfo(QString::fromLatin1(dbinfo.name), 
+		docSyncInfo syncInfo(QString::fromLatin1(dbinfo.name),
 			txtfilename, pdbfilename, eSyncNone);
 		syncInfo.dbinfo=dbinfo;
 		needsSync(syncInfo);
@@ -527,8 +532,8 @@ void DOCConduit::checkPDBFiles() {
 	QDir dr(DOCConduitSettings::pDBDirectory());
 	QFileInfo fl(dr, fn );
 	QString pdbfilename=fl.absFilePath();
-	dociterator++;
-	
+	++dociterator;
+
 	//  Get the doc title and check if it has already been synced (in the synced docs list of in fDBNames to be synced)
 	// If the doc title doesn't appear in either list, install it to the Handheld, and add it to the list of dbs to be synced.
 	QString dbname=fl.baseName(TRUE).left(30);
@@ -551,7 +556,7 @@ void DOCConduit::checkPDBFiles() {
 #endif
 		}
 	}
-	
+
 	QTimer::singleShot(0, this, SLOT(checkPDBFiles()));
 }
 
@@ -585,9 +590,9 @@ void DOCConduit::checkDeletedDocs()
 
 void DOCConduit::resolve() {
 	FUNCTIONSETUP;
-	
-	for (fSyncInfoListIterator=fSyncInfoList.begin(); fSyncInfoListIterator!=fSyncInfoList.end(); fSyncInfoListIterator++) {
-		// Walk through each database and apply the conflictResolution option. 
+
+	for (fSyncInfoListIterator=fSyncInfoList.begin(); fSyncInfoListIterator!=fSyncInfoList.end(); ++fSyncInfoListIterator) {
+		// Walk through each database and apply the conflictResolution option.
 		// the remaining conflicts will be resolved in the resolution dialog
 		if ((*fSyncInfoListIterator).direction==eSyncConflict){
 #ifdef DEBUG
@@ -623,7 +628,7 @@ void DOCConduit::resolve() {
 			}
 		}
 	}
-	
+
 	// Show the conflict resolution dialog and ask for the action for each database
 	ResolutionDialog*dlg=new ResolutionDialog( 0,  i18n("Conflict Resolution"), &fSyncInfoList , fHandle);
 	bool show=DOCConduitSettings::alwaysShowResolutionDialog() || (dlg && dlg->hasConflicts);
@@ -636,7 +641,7 @@ void DOCConduit::resolve() {
 		}
 	}
 	KPILOT_DELETE(dlg)
-	
+
 
 	// fDBNames will be filled with the names of the databases that are actually synced (not deleted), so I can write the list to the config file
 	fDBNames.clear();
@@ -654,10 +659,10 @@ void DOCConduit::syncDatabases() {
 		QTimer::singleShot(0, this, SLOT(cleanup()));
 		return;
 	}
-	
+
 	docSyncInfo sinfo=(*fSyncInfoListIterator);
-	fSyncInfoListIterator++;
-	
+	++fSyncInfoListIterator;
+
 	switch (sinfo.direction) {
 		case eSyncConflict:
 #ifdef DEBUG
@@ -681,7 +686,7 @@ void DOCConduit::syncDatabases() {
 			break;
 	}
 	if (sinfo.direction != eSyncDelete) fDBNames.append(sinfo.handheldDB);
-	
+
 	QTimer::singleShot(0,this, SLOT(syncDatabases()));
 	return;
 }
@@ -697,7 +702,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 {
 	FUNCTIONSETUP;
 	sinfo.direction = eSyncNone;
-	
+
 	PilotDatabase*docdb=openDOCDatabase(QString::fromLatin1(sinfo.dbinfo.name));
 	if (!fDBListSynced.contains(sinfo.handheldDB)) {
 		// the database wasn't included on last sync, so it has to be new.
@@ -718,7 +723,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 		if (docdb && docdb->isDBOpen()) sinfo.fPalmStatus=eStatNew;
 		else sinfo.fPalmStatus=eStatDoesntExist;
 		KPILOT_DELETE(docdb);
-		
+
 		switch (eSyncDirection) {
 			case eSyncPDAToPC:
 				if (sinfo.fPalmStatus==eStatDoesntExist)
@@ -726,7 +731,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 				else sinfo.direction=eSyncPDAToPC;
 				break;
 			case eSyncPCToPDA:
-				if (sinfo.fPCStatus==eStatDoesntExist) 
+				if (sinfo.fPCStatus==eStatDoesntExist)
 					sinfo.direction=eSyncDelete;
 				else sinfo.direction=eSyncPCToPDA;
 				break;
@@ -738,7 +743,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 					if (sinfo.fPalmStatus==eStatNew) sinfo.direction=eSyncPDAToPC;
 					else {
 						sinfo.direction=eSyncNone;
-#ifdef DEBUG					
+#ifdef DEBUG
 						DEBUGCONDUIT<<"I'm supposed to find a sync direction, but the "<<
 						" text "<<sinfo.dbinfo.name<<" doesn't exist on either "<<
 						" the handheld or the PC"<<endl;
@@ -751,7 +756,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 		}
 		return true;
 	}
-	
+
 	// Text was included in the last sync
 	if (!QFile::exists(sinfo.txtfilename)) sinfo.fPCStatus=eStatDeleted;
 	else if(pcTextChanged(sinfo.txtfilename)) {
@@ -765,7 +770,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 		DEBUGCONDUIT<<"PC side has NOT changed!"<<endl;
 #endif
 	}
-	
+
 	if (!docdb || !docdb->isDBOpen()) sinfo.fPalmStatus=eStatDeleted;
 	else if (hhTextChanged(docdb)) {
 #ifdef DEBUG
@@ -796,7 +801,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 			D   C   |     C          D           H
 		*/
 
-	
+
 	if (sinfo.fPCStatus == eStatNone && sinfo.fPalmStatus==eStatNone) {
 #ifdef DEBUG
 		DEBUGCONDUIT<<"Nothing has changed, not need for a sync."<<endl;
@@ -804,11 +809,11 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 		sinfo.direction=eSyncNone;
 		return false;
 	}
-	
-	// In all other cases, if only one direction (PC->HH or HH->PC) 
-	// should be done, check if the DB was deleted or if we are supposed 
+
+	// In all other cases, if only one direction (PC->HH or HH->PC)
+	// should be done, check if the DB was deleted or if we are supposed
 	// to sync that direction
-	
+
 	if (eSyncDirection==eSyncPCToPDA) {
 		if (sinfo.fPCStatus==eStatDeleted) sinfo.direction=eSyncDelete;
 		else sinfo.direction=eSyncPCToPDA;
@@ -819,16 +824,16 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 		else sinfo.direction=eSyncPDAToPC;
 		return true;
 	}
-	
-	
+
+
 	// ---------------------------------------------------------------
 	// Finally, do the normal case, where both directions are possible
 	// ---------------------------------------------------------------
-	
-	
+
+
 	// if either is deleted, and the other is not changed, delete
 	if ( ((sinfo.fPCStatus==eStatDeleted) && (sinfo.fPalmStatus!=eStatChanged)) ||
-	     ((sinfo.fPalmStatus==eStatDeleted) && (sinfo.fPCStatus!=eStatChanged)) ) 
+	     ((sinfo.fPalmStatus==eStatDeleted) && (sinfo.fPCStatus!=eStatChanged)) )
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT<<"DB was deleted on one side and not changed on "
@@ -837,8 +842,8 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 		sinfo.direction=eSyncDelete;
 		return true;
 	}
-	
-	// eStatDeleted (and both not changed) have already been treated, for all 
+
+	// eStatDeleted (and both not changed) have already been treated, for all
 	// other values in combination with eStatNone, just copy the texts.
 	if (sinfo.fPCStatus==eStatNone) {
 #ifdef DEBUG
@@ -852,9 +857,9 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 		sinfo.direction=eSyncPCToPDA;
 		return true;
 	}
-	
-	// All other cases 
-	//    (deleted,changed), (changed, deleted), (changed,changed) 
+
+	// All other cases
+	//    (deleted,changed), (changed, deleted), (changed,changed)
 	// create a conflict:
 	sinfo.direction=eSyncConflict;
 	return true;
@@ -918,12 +923,12 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 	}
 	if (DOCConduitSettings::keepPDBsLocally())
 	{
-		return new PilotLocalDatabase(DOCConduitSettings::pDBDirectory(), 
+		return new PilotLocalDatabase(DOCConduitSettings::pDBDirectory(),
 			QString::fromLatin1(dbinfo.name), false);
 	}
 	else
 	{
-		return new PilotSerialDatabase(pilotSocket(), 
+		return new PilotSerialDatabase(pilotSocket(),
 			QString::fromLatin1(dbinfo.name));
 	}
 }
@@ -931,7 +936,7 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 
 // res gives us information whether the sync worked and the db might need to be
 // transferred to the handheld or not (and we just need to clean up the mess)
-bool DOCConduit::postSyncAction(PilotDatabase * database, 
+bool DOCConduit::postSyncAction(PilotDatabase * database,
                                 docSyncInfo &sinfo, bool res)
 {
 	FUNCTIONSETUP;
@@ -939,61 +944,59 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 
 	switch (sinfo.direction)
 	{
-		case eSyncPDAToPC:
-			// also reset the sync flags on the handheld
+	case eSyncPDAToPC:
+		// also reset the sync flags on the handheld
 #ifdef DEBUG
-				DEBUGCONDUIT<<"Resetting sync flags for database "
-					<<sinfo.dbinfo.name<<endl;
+		DEBUGCONDUIT<<"Resetting sync flags for database "
+			<<sinfo.dbinfo.name<<endl;
 #endif
-			if (DOCConduitSettings::keepPDBsLocally() && !DOCConduitSettings::localSync()) {
-				PilotSerialDatabase*db=new PilotSerialDatabase(pilotSocket(), 
-					QString::fromLatin1(sinfo.dbinfo.name));
+		if (DOCConduitSettings::keepPDBsLocally() && !DOCConduitSettings::localSync())
+		{
+			PilotSerialDatabase*db=new PilotSerialDatabase(pilotSocket(),
+				QString::fromLatin1(sinfo.dbinfo.name));
 #ifdef DEBUG
-				DEBUGCONDUIT<<"Middle 1 Resetting sync flags for database "
-					<<sinfo.dbinfo.name<<endl;
+			DEBUGCONDUIT<<"Middle 1 Resetting sync flags for database "
+				<<sinfo.dbinfo.name<<endl;
 #endif
-				if (db) {
-					db->resetSyncFlags();
-					KPILOT_DELETE(db);
-				}
-#ifdef DEBUG
-				DEBUGCONDUIT<<"Middle2 Resetting sync flags for database "
-					<<sinfo.dbinfo.name<<endl;
-#endif
-			}
-#ifdef DEBUG
-				DEBUGCONDUIT<<"End Resetting sync flags for database "
-					<<sinfo.dbinfo.name<<endl;
-#endif
-			break;
-		case eSyncPCToPDA:
-			if (DOCConduitSettings::keepPDBsLocally() && !DOCConduitSettings::localSync() && res)
+			if (db)
 			{
-				// Copy the database to the palm
-				PilotLocalDatabase*localdb=dynamic_cast<PilotLocalDatabase*>(database);
-				if (localdb)
+				db->resetSyncFlags();
+				KPILOT_DELETE(db);
+			}
+		}
+#ifdef DEBUG
+		DEBUGCONDUIT<<"End Resetting sync flags for database "
+			<<sinfo.dbinfo.name<<endl;
+#endif
+		break;
+	case eSyncPCToPDA:
+		if (DOCConduitSettings::keepPDBsLocally() && !DOCConduitSettings::localSync() && res)
+		{
+			// Copy the database to the palm
+			PilotLocalDatabase*localdb=dynamic_cast<PilotLocalDatabase*>(database);
+			if (localdb)
+			{
+#ifdef DEBUG
+				DEBUGCONDUIT<<"Installing file "<<localdb->dbPathName()<<" ("
+					<<sinfo.handheldDB<<") to the handheld"<<endl;
+#endif
+				QString dbpathname=localdb->dbPathName();
+				// This deletes localdb as well, which is just a cast from database
+				KPILOT_DELETE(database);
+				if (!fHandle->installFiles(dbpathname, false))
 				{
+					rs = false;
 #ifdef DEBUG
-					DEBUGCONDUIT<<"Installing file "<<localdb->dbPathName()<<" ("
-						<<sinfo.handheldDB<<") to the handheld"<<endl;
+					DEBUGCONDUIT<<"Could not install the database "<<dbpathname<<" ("
+						<<sinfo.handheldDB<<")"<<endl;
 #endif
-					QString dbpathname=localdb->dbPathName();
-					// This deletes localdb as well, which is just a cast from database
-					KPILOT_DELETE(database);
-					if (!fHandle->installFiles(dbpathname, false))
-					{
-						rs = false;
-#ifdef DEBUG
-						DEBUGCONDUIT<<"Could not install the database "<<dbpathname<<" ("
-							<<sinfo.handheldDB<<")"<<endl;
-#endif
-					}
 				}
 			}
-		default:
-			break;
+		}
+	default:
+		break;
 	}
-	
+
 #ifdef DEBUG
 	DEBUGCONDUIT<<"Vor KPILOT_DELETE(database)"<<endl;
 #endif

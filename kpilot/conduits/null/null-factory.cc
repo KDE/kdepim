@@ -1,4 +1,4 @@
-/* null-factory.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
 **
@@ -36,10 +36,12 @@
 #include <kinstance.h>
 #include <kaboutdata.h>
 
+#include "uiDialog.h"
+
 #include "setup_base.h"
 #include "null-conduit.h"
 #include "null-factory.moc"
-#include "nullconduitSettings.h"
+#include "nullSettings.h"
 
 
 extern "C"
@@ -93,7 +95,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 		<< endl;
 #endif
 
-	NullConduitSettings::setMessage( fConfigWidget->fLogMessage->text() );
+	NullConduitSettings::setLogMessage( fConfigWidget->fLogMessage->text() );
 	NullConduitSettings::setDatabases( fConfigWidget->fDatabases->text() );
 	NullConduitSettings::setFailImmediately( fConfigWidget->fFailImmediately->isChecked());
 	NullConduitSettings::self()->writeConfig();
@@ -105,7 +107,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 	FUNCTIONSETUP;
 	NullConduitSettings::self()->readConfig();
 
-	fConfigWidget->fLogMessage->setText( NullConduitSettings::message() );
+	fConfigWidget->fLogMessage->setText( NullConduitSettings::logMessage() );
 	fConfigWidget->fDatabases->setText( NullConduitSettings::databases().join(",") );
 	fConfigWidget->fFailImmediately->setChecked( NullConduitSettings::failImmediately() );
 

@@ -1,4 +1,4 @@
-/* fileInstallWidget.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
@@ -75,19 +75,17 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 
 	QPushButton *abutton;
 
-	 abutton = clearButton= new QPushButton(i18n("Clear List"), this);
-
-	connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
-	grid->addWidget(abutton, 3, 1);
-	QWhatsThis::add(abutton,
-		i18n
-		("<qt>Clear the list of files to install. No files will be installed.</qt>"));
-
 	abutton = addButton = new QPushButton(i18n("Add File..."), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
-	grid->addWidget(abutton, 4, 1);
+	grid->addWidget(abutton, 3, 1);
 	QWhatsThis::add(abutton,
 		i18n("<qt>Choose a file to add to the list of files to install.</qt>"));
+
+	abutton = clearButton= new QPushButton(i18n("Clear List"), this);
+	connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
+	grid->addWidget(abutton, 4, 1);
+	QWhatsThis::add(abutton,
+		i18n("<qt>Clear the list of files to install. No files will be installed.</qt>"));
 
 	fIconView = new KIconView(this);
 	connect(fIconView, SIGNAL(dropped(QDropEvent *, const QValueList<QIconDragItem> &)),
@@ -117,6 +115,11 @@ FileInstallWidget::~FileInstallWidget()
 	KPILOT_DELETE(fInstaller);
 }
 
+static inline bool pdbOrPrc(const QString &s)
+{
+	return s.endsWith(CSL1(".pdb"),false) || s.endsWith(CSL1(".prc"),false) ;
+}
+
 void FileInstallWidget::dragEnterEvent(QDragEnterEvent *event)
 {
 	FUNCTIONSETUP;
@@ -131,7 +134,7 @@ void FileInstallWidget::dragEnterEvent(QDragEnterEvent *event)
 	QString filename;
     for ( it = urls.begin(); it != urls.end(); ++it ) {
 		filename = (*it).fileName();
-		if(!(filename.endsWith("pdb", FALSE) || filename.endsWith("prc", FALSE))) {
+		if(!pdbOrPrc(filename)) {
 			event->accept(false);
 			return;
 		}
@@ -247,7 +250,7 @@ void FileInstallWidget::refreshFileInstallList()
 
 	for (QStringList::Iterator fileName = fileNames.begin(); fileName != fileNames.end(); ++fileName)
 	{
-		if((*fileName).endsWith("prc", FALSE) || (*fileName).endsWith("pdb", FALSE))
+		if(pdbOrPrc(*fileName))
 		{
 			new KIconViewItem(fIconView, *fileName, kpilotIcon);
 		}

@@ -30,9 +30,7 @@
 #ifndef _KPILOT_ADDRESSEDITOR_H
 #define _KPILOT_ADDRESSEDITOR_H
 
-#ifndef _KDIALOGBASE_H
 #include <kdialogbase.h>
-#endif
 
 class QLineEdit;
 class PilotAddress;
@@ -85,9 +83,5 @@ private:
 	void fillFields();
 	QString phoneLabelText(PilotAddress *, int i);
 };
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
 #endif
 

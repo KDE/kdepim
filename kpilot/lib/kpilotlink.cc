@@ -1,6 +1,7 @@
-/* kpilotlink.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 */
 
@@ -43,12 +44,16 @@ static const char *kpilotlink_id = "$Id$";
 #include <pi-socket.h>
 #include <pi-dlp.h>
 #include <pi-file.h>
-
+#if !(PILOT_LINK_NUMBER < PILOT_LINK_0_12_0)
+#include <pi-buffer.h>
+#endif
 
 #include <qdir.h>
 #include <qtimer.h>
 #include <qdatetime.h>
 #include <qsocketnotifier.h>
+#include <qthread.h>
+#include <qtextcodec.h>
 
 #include <kconfig.h>
 #include <kmessagebox.h>
@@ -57,6 +62,7 @@ static const char *kpilotlink_id = "$Id$";
 #include "pilotUser.h"
 #include "pilotSysInfo.h"
 #include "pilotCard.h"
+#include "pilotAppCategory.h"
 
 #include "kpilotlink.moc"
 
@@ -73,21 +79,18 @@ public:
 
 	bool canBind( QString device )
 	{
-		FUNCTIONSETUP;
 		showList();
 		return !mBoundDevices.contains( device );
 	}
 
 	void bindDevice( QString device )
 	{
-		FUNCTIONSETUP;
 		mBoundDevices.append( device );
 		showList();
 	}
 
 	void unbindDevice( QString device )
 	{
-		FUNCTIONSETUP;
 		mBoundDevices.remove( device );
 		showList();
 	}
@@ -103,8 +106,9 @@ private:
 	inline void showList() const
 	{
 #ifdef DEBUG
-		DEBUGDAEMON << "Bound devices: "
-			<< mBoundDevices.join(", ").latin1() << endl;
+		FUNCTIONSETUPL(3);
+		DEBUGDAEMON << fname << "Bound devices: "
+			<< ((mBoundDevices.count() > 0) ? mBoundDevices.join(CSL1(", ")) : CSL1("<none>")) << endl;
 #endif
 	}
 } ;
@@ -112,9 +116,13 @@ private:
 KPilotDeviceLink::KPilotDeviceLinkPrivate *KPilotDeviceLink::KPilotDeviceLinkPrivate::mThis = 0L;
 
 
-KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
+KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name, const QString &tempDevice) :
 	QObject(parent, name),
 	fLinkStatus(Init),
+	fTickleDone(true),
+	fTickleThread(0L),
+	fWorkaroundUSB(false),
+	fWorkaroundUSBTimer(0L),
 	fPilotPath(QString::null),
 	fRetries(0),
 	fOpenTimer(0L),
@@ -122,6 +130,7 @@ KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
 	fSocketNotifierActive(false),
 	fPilotMasterSocket(-1),
 	fCurrentPilotSocket(-1),
+	fTempDevice(tempDevice),
 	fPilotUser(0L),
 	fPilotSysInfo(0L)
 {
@@ -142,6 +151,7 @@ KPilotDeviceLink::~KPilotDeviceLink()
 {
 	FUNCTIONSETUP;
 	close();
+	KPILOT_DELETE(fWorkaroundUSBTimer);
 	KPILOT_DELETE(fPilotSysInfo);
 	KPILOT_DELETE(fPilotUser);
 }
@@ -150,6 +160,7 @@ void KPilotDeviceLink::close()
 {
 	FUNCTIONSETUP;
 
+	KPILOT_DELETE(fWorkaroundUSBTimer);
 	KPILOT_DELETE(fOpenTimer);
 	KPILOT_DELETE(fSocketNotifier);
 	fSocketNotifierActive=false;
@@ -192,9 +203,21 @@ void KPilotDeviceLink::reset(const QString & dP)
 
 	fPilotPath = dP;
 	if (fPilotPath.isEmpty())
+	   fPilotPath = fTempDevice;
+	if (fPilotPath.isEmpty())
 		return;
 
 	reset();
+}
+
+static inline void startOpenTimer(KPilotDeviceLink *dev, QTimer *&t)
+{
+	if ( !t ){
+		t = new QTimer(dev);
+		QObject::connect(t, SIGNAL(timeout()),
+			dev, SLOT(openDevice()));
+	}
+	t->start(1000, false);
 }
 
 void KPilotDeviceLink::reset()
@@ -207,10 +230,7 @@ void KPilotDeviceLink::reset()
 	checkDevice();
 
 	// Timer already deleted by close() call.
-	fOpenTimer = new QTimer(this);
-	QObject::connect(fOpenTimer, SIGNAL(timeout()),
-		this, SLOT(openDevice()));
-	fOpenTimer->start(1000, false);
+	startOpenTimer(this,fOpenTimer);
 
 	fLinkStatus = WaitingForDevice;
 }
@@ -237,11 +257,16 @@ void KPilotDeviceLink::checkDevice()
 		// (relevant as long as we use only one device type)
 		//
 		emit logError(i18n("Pilot device %1 does not exist. "
-			"Assuming the device uses DevFS.")
+			"Probably it is a USB device and will appear during a HotSync.")
 				.arg(fPilotPath));
 	}
 }
 
+void KPilotDeviceLink::setTempDevice( const QString &d )
+{
+	fTempDevice = d;
+	KPilotDeviceLinkPrivate::self()->bindDevice( fTempDevice );
+}
 
 void KPilotDeviceLink::openDevice()
 {
@@ -262,6 +287,10 @@ void KPilotDeviceLink::openDevice()
 	{
 		emit logMessage(i18n("Device link ready."));
 	}
+	else if (open(fTempDevice))
+	{
+		emit logMessage(i18n("Device link ready."));
+	}
 	else
 	{
 		shouldPrint(OpenFailMessage,i18n("Could not open device: %1 "
@@ -270,16 +299,15 @@ void KPilotDeviceLink::openDevice()
 
 		if (fLinkStatus != PilotLinkError)
 		{
-			fOpenTimer->start(1000, false);
+			startOpenTimer(this,fOpenTimer);
 		}
 	}
 }
 
-bool KPilotDeviceLink::open()
+bool KPilotDeviceLink::open(QString device)
 {
 	FUNCTIONSETUPL(2);
 
-	struct pi_sockaddr addr;
 	int ret;
 	int e = 0;
 	QString msg;
@@ -292,10 +320,21 @@ bool KPilotDeviceLink::open()
 	}
 	fCurrentPilotSocket = (-1);
 
-	fRealPilotPath = KStandardDirs::realPath ( pilotPath() );
-//	if ( dv.exists() && dv.isSymLink() ) {
-//		fRealPilotPath = dv.readLink();
-//	}
+	if ( device.isEmpty() )
+	{
+		device = pilotPath();
+	}
+	if (device.isEmpty())
+	{
+		kdWarning() << k_funcinfo
+			<< ": No point in trying empty device."
+			<< endl;
+
+		msg = i18n("The Pilot device is not configured yet.");
+		e = 0;
+		goto errInit;
+	}
+	fRealPilotPath = KStandardDirs::realPath ( device );
 
 	if ( !KPilotDeviceLinkPrivate::self()->canBind( fRealPilotPath ) ) {
 		msg = i18n("Already listening on that device");
@@ -307,18 +346,8 @@ bool KPilotDeviceLink::open()
 
 	if (fPilotMasterSocket == -1)
 	{
-		if (fPilotPath.isEmpty())
-		{
-			kdWarning() << k_funcinfo
-				<< ": No point in trying empty device."
-				<< endl;
-
-			msg = i18n("The Pilot device is not configured yet.");
-			e = 0;
-			goto errInit;
-		}
 #ifdef DEBUG
-		DEBUGDAEMON << fname << ": Typing to open " << fPilotPath << endl;
+		DEBUGDAEMON << fname << ": Typing to open " << fRealPilotPath << endl;
 #endif
 
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
@@ -351,16 +380,20 @@ bool KPilotDeviceLink::open()
 	DEBUGDAEMON << fname << ": Binding to path " << fPilotPath << endl;
 #endif
 
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
+	struct pi_sockaddr addr;
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
 	addr.pi_family = PI_AF_SLP;
 #else
 	addr.pi_family = PI_AF_PILOT;
 #endif
-	strncpy(addr.pi_device, QFile::encodeName(fPilotPath),sizeof(addr.pi_device));
-
+	strlcpy(addr.pi_device, QFile::encodeName(device),sizeof(addr.pi_device));
 
 	ret = pi_bind(fPilotMasterSocket,
 		(struct sockaddr *) &addr, sizeof(addr));
+#else
+	ret = pi_bind(fPilotMasterSocket, QFile::encodeName(device));
+#endif
 
 	if (ret >= 0)
 	{
@@ -373,17 +406,38 @@ bool KPilotDeviceLink::open()
 		QObject::connect(fSocketNotifier, SIGNAL(activated(int)),
 			this, SLOT(acceptDevice()));
 		fSocketNotifierActive=true;
+		
+		if (fWorkaroundUSB)
+		{
+#ifdef DEBUG
+			DEBUGDAEMON << fname << ": Adding Z31 workaround." << endl;
+#endif
+			// Special case for Zire 31, 72, Tungsten T5,
+			// all of which may make a non-HotSync connection
+			// to the PC. Must detect this and bail quickly.
+			//
+			fWorkaroundUSBTimer = new QTimer(this);
+			connect(fWorkaroundUSBTimer,SIGNAL(timeout()),
+				this,SLOT(workaroundUSB()));
+			fWorkaroundUSBTimer->start(5000,true);
+		}
+		
 		return true;
 	}
 	else
 	{
 #ifdef DEBUG
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 		DEBUGDAEMON << fname
 			<< ": Tried "
 			<< addr.pi_device
 			<< " and got "
 			<< strerror(errno)
 			<< endl;
+#else
+		DEBUGDAEMON << fname
+			<< ": Tried " << device << " and got " << strerror(errno) << endl;
+#endif
 #endif
 
 		if (fRetries < 5)
@@ -504,6 +558,8 @@ void KPilotDeviceLink::acceptDevice()
 		return;
 	}
 
+	KPILOT_DELETE(fWorkaroundUSBTimer);
+
 	emit logProgress(QString::null,10);
 
 	fCurrentPilotSocket = pi_accept(fPilotMasterSocket, 0, 0);
@@ -572,7 +628,6 @@ void KPilotDeviceLink::acceptDevice()
 #endif
 
 	dlp_ReadUserInfo(fCurrentPilotSocket, fPilotUser->pilotUser());
-	fPilotUser->boundsCheck();
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -584,8 +639,10 @@ void KPilotDeviceLink::acceptDevice()
 	/* Tell user (via Pilot) that we are starting things up */
 	if ((ret=dlp_OpenConduit(fCurrentPilotSocket)) < 0)
 	{
+#ifdef DEBUG
 		DEBUGDAEMON << k_funcinfo
 			<< ": dlp_OpenConduit returned " << ret << endl;
+#endif
 
 #if 0
 		fLinkStatus = SyncDone;
@@ -603,10 +660,161 @@ void KPilotDeviceLink::acceptDevice()
 	emit deviceReady( this );
 }
 
-void KPilotDeviceLink::tickle() const
+void KPilotDeviceLink::workaroundUSB()
 {
 	FUNCTIONSETUP;
-	pi_tickle(pilotSocket());
+	
+	Q_ASSERT((fLinkStatus == DeviceOpen) || (fLinkStatus == WorkaroundUSB));
+	if (fLinkStatus == DeviceOpen)
+	{
+		reset();
+	}
+	fLinkStatus = WorkaroundUSB;
+	
+	if (!QFile::exists(fRealPilotPath))
+	{
+		// Fake connection has vanished again.
+		// Resume polling for regular connection.
+		startOpenTimer(this,fOpenTimer);
+		return;
+	}
+	if (fOpenTimer)
+	{
+		fOpenTimer->stop();
+	}
+	KPILOT_DELETE(fWorkaroundUSBTimer);
+	QTimer::singleShot(1000,this,SLOT(workaroundUSB()));
+}
+
+bool KPilotDeviceLink::tickle() const
+{
+	// No FUNCTIONSETUP here because it may be called from
+	// a separate thread.
+	return pi_tickle(pilotSocket()) >= 0;
+}
+
+class TickleThread : public QThread
+{
+public:
+	TickleThread(KPilotDeviceLink *d, bool *done, int timeout) :
+		QThread(),
+		fHandle(d),
+		fDone(done),
+		fTimeout(timeout)
+	{ };
+	virtual ~TickleThread();
+
+	virtual void run();
+
+	static const int ChecksPerSecond = 5;
+	static const int SecondsPerTickle = 5;
+
+private:
+	KPilotDeviceLink *fHandle;
+	bool *fDone;
+	int fTimeout;
+} ;
+
+TickleThread::~TickleThread()
+{
+}
+
+void TickleThread::run()
+{
+	FUNCTIONSETUP;
+	int subseconds = ChecksPerSecond;
+	int ticktock = SecondsPerTickle;
+	int timeout = fTimeout;
+#ifdef DEBUG_CERR
+	DEBUGDAEMON << fname << ": Running for " << timeout << " seconds." << endl;
+	DEBUGDAEMON << fname << ": Done @" << (void *) fDone << endl;
+#endif
+	while (!(*fDone))
+	{
+		QThread::msleep(1000/ChecksPerSecond);
+		if (!(--subseconds))
+		{
+#ifdef DEBUG_CERR
+// Don't dare use kdDebug() here, we're in a separate thread
+			DEBUGDAEMON << fname << ": One second." << endl;
+#endif
+			if (timeout)
+			{
+				if (!(--timeout))
+				{
+					QApplication::postEvent(fHandle, new QEvent((QEvent::Type)(KPilotDeviceLink::TickleTimeoutEvent)));
+					break;
+				}
+			}
+			subseconds=ChecksPerSecond;
+			if (!(--ticktock))
+			{
+#ifdef DEBUG_CERR
+				DEBUGDAEMON << fname << ": Kietel kietel!." << endl;
+#endif
+				ticktock=SecondsPerTickle;
+				fHandle->tickle();
+			}
+		}
+	}
+#ifdef DEBUG_CERR
+	DEBUGDAEMON << fname << ": Finished." << endl;
+#endif
+}
+
+/*
+** Deal with events, especially the ones used to signal a timeout
+** in a tickle thread.
+*/
+
+/* virtual */ bool KPilotDeviceLink::event(QEvent *e)
+{
+	if (e->type() == TickleTimeoutEvent)
+	{
+		stopTickle();
+		emit timeout();
+		return true;
+	}
+	else	return QObject::event(e);
+}
+
+/*
+Start a tickle thread with the indicated timeout.
+*/
+void KPilotDeviceLink::startTickle(unsigned int timeout)
+{
+	FUNCTIONSETUP;
+
+	Q_ASSERT(fTickleDone);
+
+	/*
+	** We've told the thread to finish up, but it hasn't
+	** done so yet - so wait for it to do so, should be
+	** only 200ms at most.
+	*/
+	if (fTickleDone && fTickleThread)
+	{
+		fTickleThread->wait();
+		KPILOT_DELETE(fTickleThread);
+	}
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Done @" << (void *) (&fTickleDone) << endl;
+#endif
+	fTickleDone = false;
+	fTickleThread = new TickleThread(this,&fTickleDone,timeout);
+	fTickleThread->start();
+}
+
+void KPilotDeviceLink::stopTickle()
+{
+	FUNCTIONSETUP;
+	fTickleDone = true;
+	if (fTickleThread)
+	{
+		fTickleThread->wait();
+		KPILOT_DELETE(fTickleThread);
+	}
 }
 
 
@@ -643,9 +851,11 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 	if (!QFile::exists(f))
 		return false;
 
+	char buffer[PATH_MAX];
+	memset(buffer,0,PATH_MAX);
+	strlcpy(buffer,QFile::encodeName(f),PATH_MAX);
 	struct pi_file *pf =
-		pi_file_open(const_cast < char *>
-			((const char *) QFile::encodeName(f)));
+		pi_file_open(buffer);
 
 	if (!f)
 	{
@@ -657,7 +867,11 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 		return false;
 	}
 
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	if (pi_file_install(pf, fCurrentPilotSocket, 0) < 0)
+#else
+	if (pi_file_install(pf, fCurrentPilotSocket, 0, 0L) < 0)
+#endif
 	{
 		kdWarning() << k_funcinfo
 			<< ": Cannot pi_file_install " << f << endl;
@@ -686,7 +900,7 @@ void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool log)
 #endif
 
 	dlp_AddSyncLogEntry(fCurrentPilotSocket,
-		const_cast < char *>(t.latin1()));
+		const_cast<char *>((const char *)PilotAppCategory::codec()->fromUnicode(entry)));
 	if (log)
 	{
 		emit logMessage(entry);
@@ -701,34 +915,37 @@ int KPilotDeviceLink::openConduit()
 QString KPilotDeviceLink::statusString() const
 {
 	FUNCTIONSETUP;
-	QString s = QString::fromLatin1("KPilotDeviceLink=");
+	QString s = CSL1("KPilotDeviceLink=");
 
 
 	switch (fLinkStatus)
 	{
 	case Init:
-		s.append(QString::fromLatin1("Init"));
+		s.append(CSL1("Init"));
 		break;
 	case WaitingForDevice:
-		s.append(QString::fromLatin1("WaitingForDevice"));
+		s.append(CSL1("WaitingForDevice"));
 		break;
 	case FoundDevice:
-		s.append(QString::fromLatin1("FoundDevice"));
+		s.append(CSL1("FoundDevice"));
 		break;
 	case CreatedSocket:
-		s.append(QString::fromLatin1("CreatedSocket"));
+		s.append(CSL1("CreatedSocket"));
 		break;
 	case DeviceOpen:
-		s.append(QString::fromLatin1("DeviceOpen"));
+		s.append(CSL1("DeviceOpen"));
 		break;
 	case AcceptedDevice:
-		s.append(QString::fromLatin1("AcceptedDevice"));
+		s.append(CSL1("AcceptedDevice"));
 		break;
 	case SyncDone:
-		s.append(QString::fromLatin1("SyncDone"));
+		s.append(CSL1("SyncDone"));
 		break;
 	case PilotLinkError:
-		s.append(QString::fromLatin1("PilotLinkError"));
+		s.append(CSL1("PilotLinkError"));
+		break;
+	case WorkaroundUSB:
+		s.append(CSL1("WorkaroundUSB"));
 		break;
 	}
 
@@ -749,6 +966,10 @@ void KPilotDeviceLink::finishSync()
 	getPilotUser()->setLastSyncPC((unsigned long) gethostid());
 	getPilotUser()->setLastSyncDate(time(0));
 
+	
+#ifdef DEBUG	
+	DEBUGDAEMON << fname << ": Writing username " << getPilotUser()->getUserName() << endl;
+#endif
 	dlp_WriteUserInfo(pilotSocket(),getPilotUser()->pilotUser());
 	addSyncLogEntry(i18n("End of HotSync\n"));
 	endOfSync();
@@ -758,7 +979,17 @@ int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
 {
 	FUNCTIONSETUP;
 
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	return dlp_ReadDBList(pilotSocket(),0,dlpDBListRAM,index,dbinfo);
+#else
+	pi_buffer_t buf = { 0,0,0 };
+	int r = dlp_ReadDBList(pilotSocket(),0,dlpDBListRAM,index,&buf);
+	if (r >= 0)
+	{
+		memcpy(dbinfo,buf.data,sizeof(struct DBInfo));
+	}
+	return r;
+#endif
 }
 
 // Find a database with the given name. Info about the DB is stored into dbinfo (e.g. to be used later on with retrieveDatabase).
@@ -780,18 +1011,17 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 		<< " to " << fullBackupName << endl;
 #endif
 
-	// The casts here look funny because:
-	//
-	// fullBackupName is a QString
-	// QFile::encodeName() gives us a QCString
-	// which needs an explicit cast to become a const char *
-	// which needs a const cast to become a char *
-	//
-	//
 	struct pi_file *f;
-	f = pi_file_create(const_cast < char *>
-		((const char *) (QFile::encodeName(fullBackupName))),
-		info);
+	if (fullBackupName.isEmpty())
+	{
+		// Don't even bother trying to convert or retrieve.
+		return false;
+	}
+	QCString encodedName = QFile::encodeName(fullBackupName);
+	char filenameBuf[PATH_MAX];
+	memset(filenameBuf,0,PATH_MAX);
+	strlcpy(filenameBuf,(const char *)encodedName,PATH_MAX);
+	f = pi_file_create(filenameBuf,info);
 
 	if (f == 0)
 	{
@@ -800,7 +1030,11 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 		return false;
 	}
 
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	if (pi_file_retrieve(f, pilotSocket(), 0) < 0)
+#else
+	if (pi_file_retrieve(f, pilotSocket(), 0, 0L) < 0)
+#endif
 	{
 		kdWarning() << k_funcinfo
 			<< ": Failed, unable to back up database" << endl;
@@ -821,6 +1055,7 @@ QPtrList<DBInfo> KPilotDeviceLink::getDBList(int cardno, int flags)
 	int index=0;
 	while (cont)
 	{
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 		DBInfo*dbi=new DBInfo();
 		if (dlp_ReadDBList(pilotSocket(), cardno, flags, index, dbi)<0)
 		{
@@ -832,6 +1067,34 @@ QPtrList<DBInfo> KPilotDeviceLink::getDBList(int cardno, int flags)
 			index=dbi->index+1;
 			dbs.append(dbi);
 		}
+#else
+		pi_buffer_t buf = { 0,0,0 };
+		pi_buffer_clear(&buf);
+		// DBInfo*dbi=new DBInfo();
+		if (dlp_ReadDBList(pilotSocket(), cardno, flags | dlpDBListMultiple, index, &buf)<0)
+		{
+			cont=false;
+		}
+		else
+		{
+			DBInfo *db_n = 0L;
+			DBInfo *db_it = (DBInfo *)buf.data;
+			int info_count = buf.used / sizeof(struct DBInfo);
+
+			while(info_count>0)
+			{
+				db_n = new DBInfo();
+				memcpy(db_n,db_it,sizeof(struct DBInfo));
+				++db_it;
+				info_count--;
+				dbs.append(db_n);
+			}
+			if (db_n)
+			{
+				index=db_n->index+1;
+			}
+		}
+#endif
 	}
 	return dbs;
 }

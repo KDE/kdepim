@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
-<kcfg><kcfgfile name="kpilot_addressconduitrc"/> 
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name="kpilot_addressconduitrc"/> 
   <group name="General">
     <entry name="AddressbookType" key="Addressbook type" type="Enum">
 				<choices>
 						<choice name="eAbookResource"/>
 						<choice name="eAbookFile"/>
 				</choices>
-        <label>
-        </label>
-        <default>eAbookResource</default>
+        <default>eAbookFile</default>
     </entry>
     <entry name="FileName" type="Path">
-        <label>
-        </label>
-        <default></default>
+        <default>$HOME/.kde/share/apps/kabc/std.vcf</default>
     </entry>
 		<entry name="ArchiveDeleted" type="Bool">
-        <label>
-        </label>
         <default>true</default>
     </entry>
     <entry name="ConflictResolution" key="ConflictResolve" type="Int">
-        <label>
-        </label>
         <default>-1</default>
     </entry>
     <entry name="PilotOther" type="Enum">
@@ -37,8 +32,6 @@
 						<choice name="eTelex"/>
 						<choice name="eTTYTTDPhone"/>
 				</choices>
-        <label>
-        </label>
         <default>eAssistant</default>
     </entry>
     <entry name="PilotStreet" type="Enum">
@@ -46,8 +39,6 @@
 						<choice name="ePilotStreetHome"/>
 						<choice name="ePilotStreetWork"/>
 				</choices>
-        <label>
-        </label>
         <default>ePilotStreetHome</default>
     </entry>
     <entry name="PilotFax" type="Enum">
@@ -55,8 +46,6 @@
 						<choice name="ePilotFaxHome"/>
 						<choice name="ePilotFaxWork"/>
 				</choices>
-        <label>
-        </label>
         <default>ePilotFaxHome</default>
     </entry>
     <entry name="Custom0" key="Custom 0" type="Enum">
@@ -66,34 +55,24 @@
 						<choice name="eCustomURL"/>
 						<choice name="eCustomIM"/>
 				</choices>
-        <label>
-        </label>
         <default>eCustomField</default>
     </entry>
     <entry name="Custom1" key="Custom 1" type="Enum">
 				<choices label="eCustomEnum">
 				</choices>
-        <label>
-        </label>
         <default>eCustomField</default>
     </entry>
    <entry name="Custom2" key="Custom 2" type="Enum">
 				<choices label="eCustomEnum">
 				</choices>
-        <label>
-        </label>
         <default>eCustomField</default>
     </entry>
    <entry name="Custom3" key="Custom 3" type="Enum">
 				<choices label="eCustomEnum">
 				</choices>
-        <label>
-        </label>
         <default>eCustomField</default>
     </entry>
     <entry name="CustomDateFormat" type="String">
-        <label>
-        </label>
         <default></default>
     </entry>
   </group>
