@@ -159,14 +159,16 @@ bool Incidence::loadAttendeeAttribute( QDomElement& element,
 void Incidence::saveAttendeeAttribute( QDomElement& element,
                                        const Attendee& attendee ) const
 {
-  writeString( element, "display-name", attendee.displayName );
-  writeString( element, "smtp-address", attendee.smtpAddress );
-  writeString( element, "status", attendee.status );
-  writeString( element, "request-response",
+  QDomElement e = element.ownerDocument().createElement( "attendee" );
+  element.appendChild( e );
+  writeString( e, "display-name", attendee.displayName );
+  writeString( e, "smtp-address", attendee.smtpAddress );
+  writeString( e, "status", attendee.status );
+  writeString( e, "request-response",
                ( attendee.requestResponse ? "true" : "false" ) );
-  writeString( element, "invitationSent",
+  writeString( e, "invitationSent",
                ( attendee.invitationSent ? "true" : "false" ) );
-  writeString( element, "role", attendee.role );
+  writeString( e, "role", attendee.role );
 }
 
 void Incidence::saveAttendees( QDomElement& element ) const
