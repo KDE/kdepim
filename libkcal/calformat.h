@@ -48,7 +48,7 @@ class CalFormat {
 
     /** Associate a widget with this format */
     void setTopwidget(QWidget *topWidget);
-    
+
     /**
       loads a calendar on disk into the calendar associated with this format.
       Returns TRUE if successful,else returns FALSE.
@@ -60,16 +60,16 @@ class CalFormat {
      * @param fileName the name of the file
      */
     virtual bool save(const QString &fileName) = 0;
-  
+
     /**
       Parse string and populate calendar with that information.
     */
-    virtual bool fromString( const QString & ) = 0;  
+    virtual bool fromString( const QString & ) = 0;
     /**
       Return calendar information as string.
     */
     virtual QString toString() = 0;
-  
+
     /** /deprecated */
     void showDialogs(bool);
 
@@ -89,26 +89,28 @@ class CalFormat {
     static const QString& application()  { return mApplication; }
     /** Return the PRODID string for calendar files */
     static const QString& productId()  { return mProductId; }
+    /** Return the KDE calendar format version indicated by a PRODID property */
+    static int calendarVersion(const char* prodId);
 
     /** Create a unique id string. */
     static QString createUniqueId();
-  
+
     /**
       Set exception for this object. This is used by the functions of this
       class to report errors.
     */
     void setException(ErrorFormat *error);
-  
-  protected:  
+
+  protected:
     QWidget *mTopWidget;      // topWidget used for message boxes
     bool mEnableDialogs;      // display various GUI dialogs?
 
     Calendar *mCalendar;
-  
+
   private:
     QPtrList<Event> mEventsRelate;           // events with relations
     QPtrList<Event> mTodosRelate;            // todos with relations
-    
+
     ErrorFormat *mException;
 
     static QString mApplication;   // name of application for unique ID strings

@@ -29,16 +29,28 @@
 using namespace KCal;
 
 QString CalFormat::mApplication = QString::fromLatin1("libkcal");
-QString CalFormat::mProductId = QString::fromLatin1("-//K Desktop Environment//NONSGML libkcal 3.0//EN");
+QString CalFormat::mProductId = QString::fromLatin1("-//K Desktop Environment//NONSGML libkcal 3.1//EN");
+
+// An array containing the PRODID strings indexed against the calendar file format version used.
+// Every time the calendar file format is changed, add an entry/entries to this list.
+struct CalVersion {
+  int       version;
+  QString   prodId;
+};
+static CalVersion prodIds[] = {
+  { 220, QString::fromLatin1("-//K Desktop Environment//NONSGML KOrganizer 2.2//EN") },
+  { 300, QString::fromLatin1("-//K Desktop Environment//NONSGML KOrganizer 3.0//EN") },
+  { 0 }
+};
 
 
 CalFormat::CalFormat(Calendar *cal)
 {
   mCalendar = cal;
-  
+
   mTopWidget = 0;
   mEnableDialogs = false;
-  
+
   mException = 0;
 }
 
@@ -82,7 +94,7 @@ void CalFormat::setApplication(const QString& application, const QString& produc
 
 QString CalFormat::createUniqueId()
 {
-  int hashTime = QTime::currentTime().hour() + 
+  int hashTime = QTime::currentTime().hour() +
                  QTime::currentTime().minute() + QTime::currentTime().second() +
                  QTime::currentTime().msec();
   QString uidStr = QString("%1-%2.%3")
@@ -90,4 +102,13 @@ QString CalFormat::createUniqueId()
                            .arg(KApplication::random())
                            .arg(hashTime);
   return uidStr;
+}
+
+int CalFormat::calendarVersion(const char* prodId)
+{
+  for (const CalVersion* cv = prodIds;  cv->version;  ++cv) {
+    if (!strcmp(prodId, cv->prodId.local8Bit()))
+      return cv->version;
+  }
+  return 0;
 }
