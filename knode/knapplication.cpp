@@ -22,6 +22,7 @@
 #include "knode.h"
 #include "knapplication.h"
 #include "knconvert.h"
+#include "knapplication.moc"
 
 
 int KNApplication::newInstance()

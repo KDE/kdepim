@@ -21,7 +21,7 @@
 
 class KNApplication : public KUniqueApplication
 {
-
+    Q_OBJECT
   public:
     KNApplication(): KUniqueApplication() { };
 
