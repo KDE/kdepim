@@ -50,6 +50,7 @@
 #include <qurl.h>
 #include <qfile.h>
 #include <qdir.h>
+#include <qstylesheet.h>
 
 namespace {
   class Formatter : public KMail::Interface::BodyPartFormatter {
@@ -93,7 +94,7 @@ namespace {
 
       QStringList lines = QStringList::split( '\n', diff, true );
       for ( QStringList::Iterator it = lines.begin(); it != lines.end(); ++it ) {
-        QString line( *it );
+        QString line( QStyleSheet::escape( *it ) );
         QString style;
         if ( line.length() > 0 ) {
           if ( line.startsWith( "+++" ) ) {
