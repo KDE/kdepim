@@ -27,105 +27,140 @@
 
 #include <qregexp.h>
 
-#include <stdio.h>
-static const char version[] = "0.1";
+#include <iostream>
+
+static const char version[] = "0.2";
 static const char appName[] = "kabc2mutt";
-static const char programName[] = I18N_NOOP("kabc2mutt");
-static const char description[] = I18N_NOOP("kabc - mutt converter");
+static const char programName[] = I18N_NOOP( "kabc2mutt" );
+static const char description[] = I18N_NOOP( "kabc - mutt converter" );
 
 static KCmdLineOptions k2moptions[] =
 {
-    { "query <substring>", I18N_NOOP("Only show contacts where name or address matches <substring>"), 0 },
-    { "format <format>", I18N_NOOP("Default format is 'alias'. 'query' returns email<tab>name<tab>, as needed by mutt's query_command"), "alias" },
-    { "ignore-case", I18N_NOOP("Make queries case insensitive"), 0 },
-    KCmdLineLastOption
+  { "query <substring>", I18N_NOOP( "Only show contacts where name or address matches <substring>" ), 0 },
+  { "format <format>", I18N_NOOP( "Default format is 'alias'. 'query' returns email<tab>name<tab>, as needed by mutt's query_command" ), "alias" },
+  { "ignore-case", I18N_NOOP( "Make queries case insensitive" ), 0 },
+  { "all-addresses", I18N_NOOP( "Return all mail addresses, not just the preferred one" ), 0},
+  KCmdLineLastOption
 };
+
+
+static std::ostream & operator<< ( std::ostream &os, const QString &s );
 
 int main( int argc, char **argv )
 {
-    KApplication::disableAutoDcopRegistration();
-    KCmdLineArgs::init( argc, argv, appName, programName, description, version );
-    KCmdLineArgs::addCmdLineOptions( k2moptions );
+  enum format_t { Aliases, QueryCommand };
 
-    KApplication app( false, false );
+  KApplication::disableAutoDcopRegistration();
+  KCmdLineArgs::init( argc, argv, appName, programName, description, version );
+  KCmdLineArgs::addCmdLineOptions( k2moptions );
 
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    // Handle --format option
-    QCString formatString = args->getOption("format");
-    enum { Aliases, QueryCommand } format;
-    if ( formatString == "query" )
-        format = QueryCommand;
-    else
-        format = Aliases;
+  KApplication app( false, false );
 
-    // Handle --query option
-    QString subString = QString::fromLocal8Bit( args->getOption("query") );
-    if ( !subString.isEmpty() )
-    {
-        // Mutt wants a first line with some status message on it
-        // See http://mutt.org/doc/manual/manual-4.html#ss4.5
-        printf( "%s\n", i18n("Searching KDE addressbook...").local8Bit().data() );
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+  // Handle --format option
+  const format_t format = (args->getOption("format") == "query") ? QueryCommand : Aliases;
+
+  // Handle --all-addresses option
+  const bool all = args->isSet( "all-addresses" );
+
+  // Handle --query option
+  const QString subString = QString::fromLocal8Bit( args->getOption( "query" ) );
+  if ( !subString.isEmpty() ) {
+    // Mutt wants a first line with some status message on it
+    // See http://mutt.org/doc/manual/manual-4.html#ss4.5
+    std::cout << i18n( "Searching KDE addressbook" ) << std::endl;
+  }
+
+  // Handle --ignore-case option
+  const bool cs = !args->isSet( "ignore-case" );
+
+  KABC::AddressBook *ab = KABC::StdAddressBook::self();
+  KABC::StdAddressBook::setAutomaticSave( false );
+
+  // print addressees
+  KABC::AddressBook::ConstIterator iaddr;
+  for ( iaddr = ab->begin(); iaddr != ab->end(); ++iaddr ) {
+    const QString name = (*iaddr).givenName() + ' ' + (*iaddr).familyName();
+    if ( !subString.isEmpty() ) {
+      bool match = (name.find(subString, 0, cs) > -1) || ((*iaddr).preferredEmail().find(subString, 0, cs) > -1 );
+      if ( !match )
+        continue;
     }
 
-    bool cs = !args->isSet( "ignore-case" );
+    const QStringList &allAddresses = (*iaddr).emails();
+    QStringList::const_iterator from, to;
+    bool multiple = false;
 
-    KABC::AddressBook *ab = KABC::StdAddressBook::self();
-    KABC::StdAddressBook::setAutomaticSave( false );
+    if ( all ) {
+      // use all entries
+      multiple = allAddresses.size() > 1;
+      from = allAddresses.begin();
+      to = allAddresses.end();
+    } else {
+      // use only the first entry, the one returned by preferredEmail()
+      from = to = allAddresses.begin();  // start with empty list
+      if ( to != allAddresses.end() )
+        ++to;
+    }
 
-    // print addressees
-    KABC::AddressBook::Iterator it;
-    for ( it = ab->begin(); it != ab->end(); ++it ) {
-      if ( (*it).preferredEmail().isEmpty() )
-        continue;
-      QString name = (*it).givenName() + ' ' + (*it).familyName();
+    size_t index = 0;
+    if ( format == Aliases ) {
+      const QString key = (*iaddr).givenName().left( 3 ) + (*iaddr).familyName().left( 3 );
+      while ( from != to ) {
+        std::cout << "alias " << key;
+        if ( index )
+          std::cout << index;
+        std::cout << '\t' << name << " <" << (*from) << '>' << std::endl;
+        ++index;
+        ++from;
+      }
+    } else {
+      while ( from != to ) {
+        std::cout << (*from) << '\t' << name;
+        if ( multiple ) {
+          if ( index )
+            std::cout << "\t#" << index;
+          else
+            std::cout << '\t' << i18n("preferred");
+          ++index;
+        }
+        std::cout << std::endl;
+        ++from;
+      }
+    }
+  }
 
-      if ( !subString.isEmpty() )
-      {
-        bool match = (name.find(subString, 0, cs) > -1) || ((*it).preferredEmail().find(subString, 0, cs) > -1 );
+  // print all distribution lists
+  KABC::DistributionListManager manager( ab );
+  manager.load();
+
+  QStringList dists = manager.listNames();
+  for ( QStringList::Iterator iaddr = dists.begin(); iaddr != dists.end(); ++iaddr ) {
+    KABC::DistributionList *list = manager.list( *iaddr );
+    if ( list ) {
+      if ( !subString.isEmpty() ) {
+        bool match = ((*iaddr).find(subString) > -1);
         if ( !match )
           continue;
       }
 
-      if ( format == Aliases )
-      {
-          QString key = (*it).givenName().left( 3 ) + (*it).familyName().left( 3 );
-
-          printf( "alias %s\t%s <%s>\n", key.local8Bit().data(),
-                  name.local8Bit().data(),
-                  (*it).preferredEmail().local8Bit().data() );
+      QStringList emails = list->emails();
+      if ( format == Aliases ) {
+        std::cout << "alias " << (*iaddr).replace( QRegExp( " " ), "_" )
+                  << '\t' << emails.join( "," ) << std::endl;
       } else {
-          printf( "%s\t%s\t\n", (*it).preferredEmail().local8Bit().data(),
-                  name.local8Bit().data() );
+        std::cout << emails.join( "," ) << '\t' << (*iaddr) << '\t' << std::endl;
       }
-    }
-
-    // print all distribution lists
-    KABC::DistributionListManager manager( ab );
-    manager.load();
-
-    QStringList dists = manager.listNames();
-    for ( QStringList::Iterator it = dists.begin(); it != dists.end(); ++it ) {
-      KABC::DistributionList *list = manager.list( *it );
-      if ( list ) {
-
-        if ( !subString.isEmpty() )
-        {
-          bool match = ((*it).find(subString) > -1);
-          if ( !match )
-            continue;
-        }
-
-        QStringList emails = list->emails();
-        if ( format == Aliases )
-            printf( "alias %s\t %s\n",
-                    (*it).replace( QRegExp( " " ), "_" ).local8Bit().data(),
-                    emails.join( "," ).local8Bit().data() );
-        else
-            printf( "%s\t%s\t\n",
-                    emails.join( "," ).local8Bit().data(),
-                    (*it).local8Bit().data() );
     }
   }
 
   return 0;
 }
+
+static std::ostream & operator<< ( std::ostream &os, const QString &s )
+{
+  os << s.local8Bit().data();
+  return os;
+}
+
