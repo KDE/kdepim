@@ -59,13 +59,33 @@
         </label>
         <default>ePilotFaxHome</default>
     </entry>
-    <entry name="Custom$(customIndex)" key="Custom $(customIndex)" type="Enum">
-				<parameter name="customIndex" type="Int" max="3"/>
+    <entry name="Custom0" key="Custom 0" type="Enum">
 				<choices label="eCustomEnum">
 						<choice name="eCustomField"/>
 						<choice name="eCustomBirthdate"/>
 						<choice name="eCustomURL"/>
 						<choice name="eCustomIM"/>
+				</choices>
+        <label>
+        </label>
+        <default>eCustomField</default>
+    </entry>
+    <entry name="Custom1" key="Custom 1" type="Enum">
+				<choices label="eCustomEnum">
+				</choices>
+        <label>
+        </label>
+        <default>eCustomField</default>
+    </entry>
+   <entry name="Custom2" key="Custom 2" type="Enum">
+				<choices label="eCustomEnum">
+				</choices>
+        <label>
+        </label>
+        <default>eCustomField</default>
+    </entry>
+   <entry name="Custom3" key="Custom 3" type="Enum">
+				<choices label="eCustomEnum">
 				</choices>
         <label>
         </label>

@@ -176,10 +176,10 @@ void AbbrowserConduit::readConfig()
 		<< " fPilotStreetHome=" << AbbrowserSettings::pilotStreet()
 		<< " fPilotFaxHome=" << AbbrowserSettings::pilotFax()
 		<< " fArchive=" << AbbrowserSettings::archiveDeleted()
-		<< " eCustom[0]=" << AbbrowserSettings::custom(0)
-		<< " eCustom[1]=" << AbbrowserSettings::custom(1)
-		<< " eCustom[2]=" << AbbrowserSettings::custom(2)
-		<< " eCustom[3]=" << AbbrowserSettings::custom(3)
+		<< " eCustom[0]=" << AbbrowserSettings::custom0()
+		<< " eCustom[1]=" << AbbrowserSettings::custom1()
+		<< " eCustom[2]=" << AbbrowserSettings::custom2()
+		<< " eCustom[3]=" << AbbrowserSettings::custom3()
 		<< " fFirstTime=" << isFirstSync()
 		<< endl;
 #endif
@@ -348,18 +348,49 @@ void AbbrowserConduit::_setAppInfo()
 	delete[] buffer;
 }
 
+int AbbrowserConduit::getCustom(const int index)
+{
+	FUNCTIONSETUP;
 
+	int customEnum;
+	switch(index) {
+		case 0:
+			customEnum = AbbrowserSettings::custom0();
+			break;
+		case 1:
+			customEnum = AbbrowserSettings::custom1();
+			break;
+		case 2:
+			customEnum = AbbrowserSettings::custom2();
+			break;
+		case 3:
+			customEnum = AbbrowserSettings::custom3();
+			break;
+		default:
+			customEnum = index;
+			break;
+	}
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << "Index: " << index << " -> customEnum: " 
+		<< customEnum << endl;
+#endif
+
+	return customEnum;
+}
 
 QString AbbrowserConduit::getCustomField(const Addressee &abEntry, const int index)
 {
 	FUNCTIONSETUP;
 
-	switch (AbbrowserSettings::custom(index)) {
+	switch (getCustom(index)) {
 		case AbbrowserSettings::eCustomBirthdate: {
 			QDateTime bdate(abEntry.birthday().date());
-			if (!bdate.isValid()) return abEntry.custom(appString, CSL1("CUSTOM")+QString::number(index));
+			if (!bdate.isValid()) 
+				return abEntry.custom(appString, CSL1("CUSTOM")+QString::number(index));
 			QString tmpfmt(KGlobal::locale()->dateFormat());
-			if (!AbbrowserSettings::customDateFormat().isEmpty()) KGlobal::locale()->setDateFormat(AbbrowserSettings::customDateFormat());
+			if (!AbbrowserSettings::customDateFormat().isEmpty())
+				KGlobal::locale()->setDateFormat(AbbrowserSettings::customDateFormat());
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Birthdate: "<<KGlobal::locale()->formatDate(bdate.date())<<" (QDate: "<<bdate.toString()<<endl;
 #endif
@@ -379,11 +410,12 @@ QString AbbrowserConduit::getCustomField(const Addressee &abEntry, const int ind
 			break;
 	}
 }
+
 void AbbrowserConduit::setCustomField(Addressee &abEntry,  int index, QString cust)
 {
 	FUNCTIONSETUP;
 
-	switch (AbbrowserSettings::custom(index) ) {
+	switch (getCustom(index)) {
 		case AbbrowserSettings::eCustomBirthdate: {
 			QDate bdate;
 			bool ok=false;

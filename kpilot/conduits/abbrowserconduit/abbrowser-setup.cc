@@ -92,20 +92,20 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	AbbrowserSettings::setPilotFax(fConfigWidget->fFax->currentItem());
 
 	// Custom fields page
-	AbbrowserSettings::setCustom(0, fConfigWidget->fCustom0->currentItem());
-	AbbrowserSettings::setCustom(1, fConfigWidget->fCustom1->currentItem());
-	AbbrowserSettings::setCustom(2, fConfigWidget->fCustom2->currentItem());
-	AbbrowserSettings::setCustom(3, fConfigWidget->fCustom3->currentItem());
+	AbbrowserSettings::setCustom0(fConfigWidget->fCustom0->currentItem());
+	AbbrowserSettings::setCustom1(fConfigWidget->fCustom1->currentItem());
+	AbbrowserSettings::setCustom2(fConfigWidget->fCustom2->currentItem());
+	AbbrowserSettings::setCustom3(fConfigWidget->fCustom3->currentItem());
 #ifdef DEBUG
 	DEBUGCONDUIT <<fname<<
 	  "Custom0: "<<fConfigWidget->fCustom0->currentItem()<<"   "<<
 	  "Custom1: "<<fConfigWidget->fCustom1->currentItem()<<"   "<<
 	  "Custom2: "<<fConfigWidget->fCustom2->currentItem()<<"   "<<
 	  "Custom3: "<<fConfigWidget->fCustom3->currentItem()<<"   "
-		<< " eCustom[0]=" << AbbrowserSettings::custom(0)<<"    "
-		<< " eCustom[1]=" << AbbrowserSettings::custom(1)<<"    "
-		<< " eCustom[2]=" << AbbrowserSettings::custom(2)<<"    "
-		<< " eCustom[3]=" << AbbrowserSettings::custom(3)<<"    "<<
+		<< " eCustom[0]=" << AbbrowserSettings::custom0()<<"    "
+		<< " eCustom[1]=" << AbbrowserSettings::custom1()<<"    "
+		<< " eCustom[2]=" << AbbrowserSettings::custom2()<<"    "
+		<< " eCustom[3]=" << AbbrowserSettings::custom3()<<"    "<<
 		endl;
 #endif
 	int fmtindex=fConfigWidget->fCustomDate->currentItem();
@@ -127,10 +127,10 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 		<< " fPilotStreetHome=" << AbbrowserSettings::pilotStreet()
 		<< " fPilotFaxHome=" << AbbrowserSettings::pilotFax()
 		<< " fArchive=" << AbbrowserSettings::archiveDeleted()
-		<< " eCustom[0]=" << AbbrowserSettings::custom(0)
-		<< " eCustom[1]=" << AbbrowserSettings::custom(1)
-		<< " eCustom[2]=" << AbbrowserSettings::custom(2)
-		<< " eCustom[3]=" << AbbrowserSettings::custom(3)
+		<< " eCustom[0]=" << AbbrowserSettings::custom0()
+		<< " eCustom[1]=" << AbbrowserSettings::custom1()
+		<< " eCustom[2]=" << AbbrowserSettings::custom2()
+		<< " eCustom[3]=" << AbbrowserSettings::custom3()
 		<< endl;
 #endif
 	
@@ -149,10 +149,10 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	fConfigWidget->fFax->setCurrentItem(AbbrowserSettings::pilotFax());
 
 	// Custom fields page
-	fConfigWidget->fCustom0->setCurrentItem(AbbrowserSettings::custom(0));
-	fConfigWidget->fCustom1->setCurrentItem(AbbrowserSettings::custom(1));
-	fConfigWidget->fCustom2->setCurrentItem(AbbrowserSettings::custom(2));
-	fConfigWidget->fCustom3->setCurrentItem(AbbrowserSettings::custom(3));
+	fConfigWidget->fCustom0->setCurrentItem(AbbrowserSettings::custom0());
+	fConfigWidget->fCustom1->setCurrentItem(AbbrowserSettings::custom1());
+	fConfigWidget->fCustom2->setCurrentItem(AbbrowserSettings::custom2());
+	fConfigWidget->fCustom3->setCurrentItem(AbbrowserSettings::custom3());
 	QString datefmt=AbbrowserSettings::customDateFormat();
 	if (datefmt.isEmpty())
 	{

@@ -115,6 +115,7 @@ private:
 	/********************************************************/
 	/* Handle special fields of the Addressees              */
 	/********************************************************/
+	static int getCustom(const int index);
 	static QString getCustomField(const Addressee &abEntry, const int index);
 	static void setCustomField(Addressee &abEntry, int index, QString cust);
 	static QString getOtherField(const Addressee&abEntry);
