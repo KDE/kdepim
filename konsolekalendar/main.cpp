@@ -494,6 +494,8 @@ int main(int argc, char *argv[])
   variables.setCalendar( localCalendar  );   
  } else {
   calendarResource = new CalendarResources();	 
+  calendarResource->readConfig();
+  calendarResource->load();
   variables.setCalendarResources( calendarResource );	 
  }
 
