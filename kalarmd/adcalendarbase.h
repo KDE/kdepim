@@ -30,6 +30,7 @@
 namespace KIO {
   class Job;
 }
+class AlarmDaemon;
 
 using namespace KCal;
 
@@ -70,13 +71,16 @@ class ADCalendarBase : public CalendarLocal
     virtual void setEventHandled(const Event*, const QValueList<QDateTime> &) = 0;
     virtual bool eventHandled(const Event*, const QValueList<QDateTime> &) = 0;
 
+    // Check status of mLoadedConnected and set it to true
+    bool         setLoadedConnected();  
+
     void         dump() const;
 
   signals:
     void         loaded(ADCalendarBase*, bool success);
 
   protected:
-    bool         loadFile_(const QCString& appName);
+    bool         loadFile_();
 
   private:
     ADCalendarBase(const ADCalendarBase&);             // prohibit copying
@@ -109,6 +113,7 @@ class ADCalendarBase : public CalendarLocal
     QString           mTempFileName;  // temporary file used if currently downloading, else null
     int               mRcIndex;       // index within 'clients' RC file for this calendar's entry
     bool              mLoaded;        // true if calendar file is currently loaded
+    bool              mLoadedConnected; // true if the loaded() signal has been connected to AlarmDaemon
     bool              mUnregistered;  // client has registered, but has not since added the calendar
 };
 

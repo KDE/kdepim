@@ -46,6 +46,7 @@ ADCalendarBase::ADCalendarBase(const QString& url, const QCString& appname, Type
     mActionType(type),
     mRcIndex(-1),
     mLoaded(false),
+    mLoadedConnected(false),
     mUnregistered(false)
 {
   if (mAppName == "korgac")
@@ -78,7 +79,7 @@ ADCalendarBase::ADCalendarBase(const QString& url, const QCString& appname, Type
 /*
  * Load the calendar file.
  */
-bool ADCalendarBase::loadFile_(const QCString& appName)
+bool ADCalendarBase::loadFile_()
 {
   if ( !mTempFileName.isNull() ) {
     // Don't try to load the file if already downloading it
@@ -140,6 +141,14 @@ void ADCalendarBase::loadLocalFile( const QString& filename )
         ++it;
     }
   }
+}
+
+bool ADCalendarBase::setLoadedConnected()
+{
+  if (mLoadedConnected)
+    return true;
+  mLoadedConnected = true;
+  return false;
 }
 
 void ADCalendarBase::dump() const

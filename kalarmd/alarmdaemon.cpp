@@ -203,8 +203,10 @@ void AlarmDaemon::reloadCal_(ADCalendarBase* cal)
   if (cal && !cal->downloading())
   {
     cal->close();
-    connect( cal, SIGNAL( loaded(ADCalendarBase*, bool) ),
-             SLOT( calendarLoaded(ADCalendarBase*, bool) ) );
+    if (!cal->setLoadedConnected()) {
+      connect( cal, SIGNAL( loaded(ADCalendarBase*, bool) ),
+               SLOT( calendarLoaded(ADCalendarBase*, bool) ) );
+    }
     cal->loadFile();
   }
 }

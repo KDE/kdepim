@@ -46,7 +46,7 @@ class ADCalendar : public ADCalendarBase
                                    const QValueList<QDateTime> &);
     static void    clearEventsHandled(const QString& calendarURL);
 
-    bool           loadFile()          { return loadFile_(""); }
+    bool           loadFile()          { return loadFile_(); }
 
   public:
     bool           available_;
