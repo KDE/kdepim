@@ -51,8 +51,6 @@ public slots:
 	virtual void exec();
 
 protected:
-	bool knotesRunning() const;
-
 	/**
 	* For test mode -- just list the notes KNotes has.
 	*/
@@ -82,6 +80,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.3  2001/12/20 22:55:44  adridg
+// Making conduits save their configuration and doing syncs
+//
 // Revision 1.2  2001/10/31 23:46:51  adridg
 // CVS_SILENT: Ongoing conduits ports
 //

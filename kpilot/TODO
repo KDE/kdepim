@@ -6,6 +6,7 @@ issues are periodically purged from this list.
 General TODO
 ============
 
+* Adjust the time of events to allow for the timezone KOrganizer is in.
 * Make the FileInstallWidget use a KDirWatcher.
 * Handle real devfs better (regular USB support seems OK now).
 * Handle difference between pi_bind() "no such file" error and others.

@@ -173,7 +173,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	FUNCTIONSETUP;
 
 	if (!fP->fDCOP) return;
-	if (!knotesRunning()) return;
+	if (!PluginUtility::isRunning("knotes")) return;
 	if (!fConfig) return;
 
 	fP->fKNotes = new KNotesIface_stub("knotes","KNotesIface");
@@ -452,13 +452,6 @@ void KNotesAction::cleanupMemos()
 	fStatus=Done;
 }
 
-bool KNotesAction::knotesRunning() const
-{
-	FUNCTIONSETUP;
-
-	QCStringList apps = fP->fDCOP->registeredApplications();
-	return apps.contains("knotes");
-}
 
 /* virtual */ QString KNotesAction::statusString() const
 {
@@ -477,6 +470,9 @@ bool KNotesAction::knotesRunning() const
 
 
 // $Log$
+// Revision 1.6  2001/12/31 09:24:25  adridg
+// Cleanup, various fixes for runtime loading
+//
 // Revision 1.5  2001/12/20 22:55:44  adridg
 // Making conduits save their configuration and doing syncs
 //

@@ -3,22 +3,17 @@
 ### so it seems logical to put them in one place.
 ###
 
-INCLUDES= -I$(top_srcdir)/kpilot/lib $(all_includes)
+INCLUDES= -I$(top_srcdir)/kpilot/lib -I$(top_srcdir)/libkcal $(all_includes)
 
 METASOURCES = AUTO
 
 servicedir  = $(kde_servicesdir)
-service_DATA = todo-conduit.desktop vcal-conduit.desktop
+service_DATA = vcal-conduit.desktop
 
-kde_module_LTLIBRARIES = libtodoconduit.la libvcalconduit.la
-
-libtodoconduit_la_SOURCES = todo-factory.cc korganizertodoConduit.ui \
-	vcalBase.cc todo-setup.cc todo-conduit.cc
-libtodoconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib -L../../../libkcal
-libtodoconduit_la_LIBADD = -lkpilot -lkcal
+kde_module_LTLIBRARIES = libvcalconduit.la
 
 libvcalconduit_la_SOURCES = vcal-factory.cc korganizerConduit.ui \
-	vcalBase.cc vcal-setup.cc vcal-conduit.cc
+	vcal-setup.cc vcal-conduit.cc
 libvcalconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib -L../../../libkcal
 libvcalconduit_la_LIBADD = -lkpilot -lkcal
 

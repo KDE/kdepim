@@ -1,4 +1,4 @@
-KPilot Developer's notes for january 20th 2001
+KPilot Developer's notes for january 20th 2002
 ==============================================
 
 It's been a slightly sleepy time. Some rocky backporting has occurred,
@@ -24,6 +24,19 @@ comes out and makes all this compatibility effort moot ...
 * Documentation
   - Added a warning "Docs out of date" to the docs, adapted all the top-level
     README &c. files to reflect the current situation.
+2002-01-20  Adriaan de Groot
+* lib/pilotLocalDatabase.{h,cc}
+  - Added new constructor that doesn't take a path, but just uses the
+    application-instance database directory.
+* lib/plugin.{h,cc}
+  - Added isRunning() to PluginUtility, since several conduits need to
+    know if the application they are syncing is already running or not.
+* conduits/knotes/knotes-action.{h,cc}
+  - Replaced knotesRunning by call to isRunning();
+* conduits/vcalconduit/*
+  - Started a real re-write of the vcal conduit (what??!)
+* TODO
+  - Updated the TODO list with some concrete stuff.
 
 KPilot Developer's notes for december 31st 2001
 ===============================================
