@@ -8,7 +8,7 @@
 
 #include <kdatastream.h>
 #include <dcopclient.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <kcmdlineargs.h>
 
 #include "KAddressBookServerInterface.h"

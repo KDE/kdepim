@@ -2,7 +2,7 @@
 
 #include <qcstring.h>
 #include <qstring.h>
-#include <qlist.h>
+#include <qptrlist.h>
 
 #include "VCardEnum.h"
 #include "VCardVCard.h"

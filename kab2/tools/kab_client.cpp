@@ -5,7 +5,7 @@
 #include <qfile.h>
 
 #include <dcopclient.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <kinstance.h>
 #include <kcmdlineargs.h>
 #include <kdatastream.h>

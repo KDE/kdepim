@@ -28,10 +28,10 @@
 #include <klibloader.h>
 #include <kdebug.h>
 #include <kdatastream.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <dcopclient.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 
 // Local includes
 #include <kab2/Command.h>

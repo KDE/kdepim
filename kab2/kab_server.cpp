@@ -19,7 +19,7 @@
 */
 
 // KDE includes
-#include <kuniqueapp.h>
+#include <kuniqueapplication.h>
 #include <klocale.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
