@@ -157,4 +157,4 @@ bool Message::removeHeader(const char *type)
 
 
 
-}; // namespace KMime
+} // namespace KMime

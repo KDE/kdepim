@@ -12,7 +12,7 @@
 #include "overviewpart.h"
 
 typedef KParts::GenericFactory< KSync::OverviewPart> OverviewPartFactory;
-K_EXPORT_COMPONENT_FACTORY( liboverviewpart, OverviewPartFactory );
+K_EXPORT_COMPONENT_FACTORY( liboverviewpart, OverviewPartFactory )
 
 using namespace KSync;
 

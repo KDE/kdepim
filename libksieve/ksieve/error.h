@@ -132,6 +132,6 @@ namespace KSieve {
     QString mStringOne, mStringTwo;
   };
 
-}; // namespace KSieve
+} // namespace KSieve
 
 #endif // __KSIEVE_ERROR_H__

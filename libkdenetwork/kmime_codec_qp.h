@@ -132,6 +132,6 @@ public:
 };
 
 
-}; // namespace KMime
+} // namespace KMime
 
 #endif // __KMIME_CODEC_QP__

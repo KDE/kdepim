@@ -288,7 +288,7 @@ namespace KSieve {
     }
 
     return false;
-  };
+  }
 
   bool Lexer::parseBracketComment( QString & result, bool reallySave ) {
     // bracket-comment := "/*" *(CHAR-NOT-STAR / ("*" CHAR-NOT-SLASH )) "*/"
@@ -453,7 +453,7 @@ namespace KSieve {
       return true;
     makeIllegalCharError();
     return false;
-  };
+  }
 
   static inline QString removeDotStuffAndCRLF( const QString & s ) {
     const bool dotstuffed = s.startsWith("..");
@@ -464,7 +464,7 @@ namespace KSieve {
     const int e = CRLF ? 2 : LF ? 1 : 0 ; // what to chop off at the end
 
     return s.mid( b, s.length() - b - e );
-  };
+  }
 
   bool Lexer::parseMultiLine( QString & result ) {
     // multi-line          := "text:" *(SP / HTAB) (hash-comment / CRLF)
@@ -538,7 +538,7 @@ namespace KSieve {
     lines.erase( --lines.end() ); // don't include the lone dot.
     result = lines.join("\n");
     return true;
-  };
+  }
 
   bool Lexer::parseQuotedString( QString & result ) {
     // quoted-string := DQUOTE *CHAR DQUOTE
@@ -592,4 +592,4 @@ namespace KSieve {
     return false;
   }
 
-}; // namespace KSieve
+} // namespace KSieve

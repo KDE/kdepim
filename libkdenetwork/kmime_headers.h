@@ -477,7 +477,7 @@ protected:
 };
 
 
-}; // namespace Generics
+} // namespace Generics
 
 //
 //
@@ -786,7 +786,7 @@ class UserAgent : public Base {
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
 #include "kmime_headers_obs.h"
 #endif
-};  //namespace Headers
+}  //namespace Headers
 
 #if 0
 typedef Headers::Base* (*headerCreator)(void);
@@ -852,7 +852,7 @@ public:
 
 #endif
 
-};  //namespace KMime
+}  //namespace KMime
 
 
 #endif // __KMIME_HEADERS_H__

@@ -74,7 +74,7 @@ namespace Types {
       return result + '@' + domain;
   }
 
-};
+}
 
 namespace HeaderParsing {
 
@@ -1733,6 +1733,6 @@ bool tryToMakeAnySenseOfDateString( const char* & scursor,
 }
 #endif
 
-}; // namespace HeaderParsing
+} // namespace HeaderParsing
 
-}; // namespace KMime
+} // namespace KMime

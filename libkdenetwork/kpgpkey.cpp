@@ -257,4 +257,4 @@ void Key::setFingerprint(const KeyID& keyID, const QCString &fpr)
                   << keyID << " doesn't exist." << endl;
 }
 
-}; // namespace Kpgp
+} // namespace Kpgp

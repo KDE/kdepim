@@ -28,7 +28,7 @@ class KNFolder;
 
 namespace KNConfig {
 class Cleanup;
-};
+}
 
 
 class KNCleanUp {

@@ -142,6 +142,6 @@ namespace KSync {
       PartBarItem *m_activeItem;
     };
 
-};
+}
 
 #endif

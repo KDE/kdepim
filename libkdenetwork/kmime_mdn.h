@@ -193,8 +193,8 @@ namespace KMime {
     enum ReturnContent { Nothing, All, HeadersOnly };
 
 
-  }; // namespace MDN
+  } // namespace MDN
 
-}; // namespace KMime
+} // namespace KMime
 
 #endif // __KMIME_MDN_H__

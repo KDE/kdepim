@@ -672,7 +672,7 @@ KNConfig::ReadNewsNavigation::ReadNewsNavigation()
   m_arkThreadReadCloseThread=conf->readBoolEntry("markThreadReadCloseThread", false);
   i_gnoreThreadGoNext=conf->readBoolEntry("ignoreThreadGoNext", false);
   i_gnoreThreadCloseThread=conf->readBoolEntry("ignoreThreadCloseThread", false);
-};
+}
 
 
 KNConfig::ReadNewsNavigation::~ReadNewsNavigation()

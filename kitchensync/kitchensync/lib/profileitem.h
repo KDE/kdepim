@@ -34,6 +34,6 @@ namespace KSync {
     private:
         Profile m_prof;
     };
-};
+}
 
 #endif

@@ -79,5 +79,5 @@ namespace KSync {
         KConfig *m_config;
         QMap< QString,  Kontainer::ValueList > m_ids;
     };
-};
+}
 #endif

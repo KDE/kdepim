@@ -69,7 +69,7 @@ namespace KSync {
         // void rightClicked ( const QPoint );
     };
 
-};
+}
 
 #endif
 

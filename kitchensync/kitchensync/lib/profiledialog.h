@@ -44,6 +44,6 @@ private slots:
         void slotAdd();
         void slotEdit();
     };
-};
+}
 
 #endif

@@ -226,6 +226,6 @@ Base::lastErrorMessage() const
 }
 
 
-}; // namespace Kpgp
+} // namespace Kpgp
 
 #endif

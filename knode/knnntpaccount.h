@@ -28,7 +28,7 @@ class KNNntpAccount;
 
 namespace KNConfig {
 class Identity;
-};
+}
 
 
 class KNNntpAccountIntervalChecking : public QObject  {

@@ -129,6 +129,6 @@ private:
     bool mActive, mAutomatic, mAutoReady;
 };
 
-}; //namespace Syntaxhighlighter
+} //namespace Syntaxhighlighter
 
 #endif

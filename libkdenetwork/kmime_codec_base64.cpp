@@ -401,4 +401,4 @@ bool Base64Encoder::generic_finish( char* & dcursor, const char * const dend,
 
 
 
-}; // namespace KMime
+} // namespace KMime

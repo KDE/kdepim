@@ -137,5 +137,5 @@ namespace KSieve {
     return true;
   }
 
-}; // namespace KSieve
+} // namespace KSieve
 

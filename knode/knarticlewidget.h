@@ -35,7 +35,7 @@ class KNArticle;
 class KNArticleCollection;
 namespace KMime {
   class Content;
-};
+}
 
 
 class KNSourceViewWindow : public KTextBrowser {

@@ -439,7 +439,7 @@ bool GSingleIdent::parse( const char* & scursor, const char * const send, bool i
 
 
 
-}; // namespace Generics
+} // namespace Generics
 
 
 //-----<ReturnPath>-------------------------
@@ -1612,6 +1612,6 @@ QString CDisposition::asUnicodeString()
 
 //-----</CDisposition>-------------------------
 #endif
-}; // namespace Headers
+} // namespace Headers
 
-}; // namespace KMime
+} // namespace KMime

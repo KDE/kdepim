@@ -144,6 +144,6 @@ namespace KSieve {
     ScriptBuilder * mBuilder;
   };
 
-}; // namespace KSieve
+} // namespace KSieve
 
 #endif // __KSIEVE_PARSING_H__

@@ -22,7 +22,7 @@
 //#include "sync.h"
 
 typedef KParts::GenericFactory< KSync::OrganizerPart> OrganizerPartFactory;
-K_EXPORT_COMPONENT_FACTORY( liborganizerpart, OrganizerPartFactory );
+K_EXPORT_COMPONENT_FACTORY( liborganizerpart, OrganizerPartFactory )
 
 using namespace KSync ;
 
@@ -71,7 +71,8 @@ QWidget* OrganizerPart::configWidget()
     }
 
   return (QWidget*) m_config;
-};
+}
+
 bool OrganizerPart::isEvolutionSync()const {
     QString path;
     path = core()->currentProfile().path( "OrganizerPart" );
@@ -340,7 +341,8 @@ void OrganizerPart::doMetaIntern( Syncee* syncee,
             }
         }
     }
-};
+}
+
 /**
  * let's save it
  */

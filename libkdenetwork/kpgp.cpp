@@ -1799,4 +1799,4 @@ Module::setEncryptionPreference( const QString& address,
   }
 }
 
-}; // namespace Kpgp
+} // namespace Kpgp

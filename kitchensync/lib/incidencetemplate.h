@@ -224,7 +224,7 @@ namespace KSync {
         dest->setLocation( src->location() );
     }
     }
-};
+}
 
 
 #endif

@@ -35,7 +35,7 @@ class KNNntpAccount;
 
 namespace KNConfig {
   class Identity;
-};
+}
 
 
 class KNArticleFactory : public QObject , public KNJobConsumer {

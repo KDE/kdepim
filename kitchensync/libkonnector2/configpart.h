@@ -118,6 +118,6 @@ namespace KSync {
         QLineEdit* m_lneName;
         bool push:1;
     };
-};
+}
 
 #endif

@@ -55,5 +55,5 @@ namespace KSync {
         ConfigWidgetPrivate* d;
 
     };
-};
+}
 #endif

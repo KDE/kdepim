@@ -46,6 +46,6 @@ namespace KSync {
         ProfileWizardChooserImpl *m_choo;
         ProfileWizardIntro *m_intro;
     };
-};
+}
 
 #endif

@@ -34,6 +34,6 @@ namespace KSync {
     private:
         ManPartService m_manpart;
     };
-};
+}
 
 #endif

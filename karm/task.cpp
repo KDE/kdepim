@@ -24,7 +24,7 @@ Task::Task( const QString& taskName, long minutes, long sessionTime,
   : QObject(), QListViewItem(parent)
 {
   init(taskName, minutes, sessionTime, desktops);
-};
+}
 
 Task::Task( const QString& taskName, long minutes, long sessionTime,
             DesktopList desktops, Task *parent)

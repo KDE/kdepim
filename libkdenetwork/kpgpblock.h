@@ -347,7 +347,7 @@ Block::unknownSigner() const
 
 // -------------------------------------------------------------------------
 
-}; // namespace Kpgp
+} // namespace Kpgp
 
 #endif
 

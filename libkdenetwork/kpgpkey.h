@@ -775,6 +775,6 @@ class KeyList : public KeyListBase
     }
 };
 
-}; // namespace Kpgp
+} // namespace Kpgp
 
 #endif

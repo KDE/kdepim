@@ -120,7 +120,7 @@ namespace KSync {
         Profile m_cur;
         Profile::ValueList m_list;
     };
-};
+}
 
 
 #endif

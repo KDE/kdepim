@@ -61,7 +61,7 @@ namespace KSync {
         QString m_icon;
         QString m_lib;
     };
-};
+}
 
 
 #endif

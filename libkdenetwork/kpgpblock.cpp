@@ -131,4 +131,4 @@ Block::encrypt( const QStringList& receivers, const QCString& keyId,
   return pgp->encrypt( *this, receivers, keyId, sign, charset );
 }
 
-}; // namespace Kpgp
+} // namespace Kpgp

@@ -827,4 +827,4 @@ BaseG::parseKeyList( const QCString& output, bool secretKeys )
 }
 
 
-}; // namespace Kpgp
+} // namespace Kpgp

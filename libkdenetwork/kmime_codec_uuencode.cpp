@@ -237,4 +237,4 @@ bool UUDecoder::decode( const char* & scursor, const char * const send,
 } // UUDecoder::decode()
 
 
-}; // namespace KMime
+} // namespace KMime

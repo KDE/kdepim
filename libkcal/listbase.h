@@ -43,7 +43,7 @@ class ListBase : public QValueList<T *>
     {
       if ( mAutoDelete ) {
         QValueListIterator<T *> it;
-        for( it = begin(); it != end(); ++it ) delete *it;
+        for( it = QValueList<T*>::begin(); it != QValueList<T*>::end(); ++it ) delete *it;
       }
     }
 
@@ -62,7 +62,7 @@ class ListBase : public QValueList<T *>
     bool removeRef( T *t )
     {
       QValueListIterator<T *> it = find( t );
-      if ( it == end() ) {
+      if ( it == QValueList<T*>::end() ) {
         return false;
       } else {
         delete t;

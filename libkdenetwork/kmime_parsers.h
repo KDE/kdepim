@@ -108,8 +108,8 @@ protected:
 };
 
 
-}; // namespace Parser
+} // namespace Parser
 
-}; // namespace KMime
+} // namespace KMime
 
 #endif // __KMIME_PARSERS__

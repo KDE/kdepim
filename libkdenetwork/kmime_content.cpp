@@ -893,4 +893,4 @@ void Content::setForceDefaultCS(bool b)
 }
 
 
-}; // namespace KMime
+} // namespace KMime

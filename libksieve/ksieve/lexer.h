@@ -191,6 +191,6 @@ namespace KSieve {
     Lexer( const Lexer & );
   };
 
-}; // namespace KSieve
+} // namespace KSieve
 
 #endif // __KSIEVE_LEXER_H__

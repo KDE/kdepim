@@ -258,5 +258,5 @@ namespace MDN {
     return QString::null;
   }
 
-}; // namespace MDN
-}; // namespace KMime
+} // namespace MDN
+} // namespace KMime

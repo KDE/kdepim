@@ -52,6 +52,6 @@ namespace KSync {
         bool m_configured:1;
         KABC::Resource* resource( const QString& type );
     };
-};
+}
 
 #endif

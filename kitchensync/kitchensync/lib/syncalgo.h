@@ -48,6 +48,6 @@ namespace KSync {
                      Syncee* syncee,
                      Syncee* target,bool over );
     };
-};
+}
 
 #endif

@@ -61,6 +61,6 @@ protected:
 
 }; // class Message
 
-}; // namespace KMime
+} // namespace KMime
 
 #endif // __KMIME_MESSAGE_H__

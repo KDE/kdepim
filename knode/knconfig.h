@@ -40,7 +40,7 @@ class KURLCompletion;
 namespace Kpgp {
   class Config;
   class SecretKeyRequester;
-};
+}
 
 class KNNntpAccount;
 class KNAccountManager;
@@ -1215,6 +1215,6 @@ class CacheWidget : public BaseWidget  {
 }; */
 
 
-}; //KNConfig
+} //KNConfig
 
 #endif //KNCONFIG_H

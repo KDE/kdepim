@@ -43,6 +43,6 @@ namespace KSync {
     private:
         void initListView( const ManPartService::ValueList& );
     };
-};
+}
 
 #endif

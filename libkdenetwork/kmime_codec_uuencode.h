@@ -71,6 +71,6 @@ public:
   Decoder * makeDecoder( bool withCRLF=false ) const;
 };
 
-}; // namespace KMime
+} // namespace KMime
 
 #endif // __KMIME_CODEC_UUENCODE_H__

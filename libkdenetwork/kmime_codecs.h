@@ -348,6 +348,6 @@ protected:
   const bool mWithCRLF;
 };
 
-}; // namespace KMime
+} // namespace KMime
 
 #endif // __KMIME_CODECS__

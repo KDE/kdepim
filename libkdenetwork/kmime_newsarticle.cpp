@@ -27,7 +27,7 @@ void NewsArticle::parse()
 
   if( !(raw=rawHeader(l_ines.type())).isEmpty() )
     l_ines.from7BitString(raw);
-};
+}
 
 void NewsArticle::assemble()
 {
@@ -157,4 +157,4 @@ bool NewsArticle::removeHeader(const char *type)
 }
 
 
-}; // namespace KMime
+} // namespace KMime

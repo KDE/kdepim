@@ -680,4 +680,4 @@ Base::addUserId()
 }
 
 
-}; // namespace Kpgp
+} // namespace Kpgp

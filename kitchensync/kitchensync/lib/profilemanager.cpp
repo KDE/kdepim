@@ -26,7 +26,7 @@ using namespace KSync;
 
 ProfileManager::ProfileManager() {
 
-};
+}
 ProfileManager::ProfileManager( const Profile::ValueList& list )
     : m_list( list ) {
 }
@@ -42,7 +42,7 @@ void ProfileManager::setCurrentProfile( const Profile& prof) {
 }
 Profile::ValueList ProfileManager::profiles() const {
     return m_list;
-};
+}
 void ProfileManager::setProfiles( const Profile::ValueList& list ) {
     m_list = list;
     m_cur = Profile(); // invalidate
@@ -77,7 +77,7 @@ Profile::ValueList ProfileManager::byName2( const QString& name ) {
 void ProfileManager::load() {
     ProfileFileManager man;
     m_list = man.load();
-};
+}
 
 void ProfileManager::save() {
     ProfileFileManager man;

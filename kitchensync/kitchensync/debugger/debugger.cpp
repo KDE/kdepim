@@ -48,7 +48,7 @@ using namespace KCal;
 using namespace KSync;
 
 typedef KParts::GenericFactory< Debugger> DebuggerFactory;
-K_EXPORT_COMPONENT_FACTORY( libksync_debugger, DebuggerFactory );
+K_EXPORT_COMPONENT_FACTORY( libksync_debugger, DebuggerFactory )
 
 
 class CustomComboBox : public QComboBox

@@ -85,6 +85,6 @@ namespace KSync {
   };
   
 
-};
+}
 
 #endif

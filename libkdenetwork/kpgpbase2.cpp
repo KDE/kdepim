@@ -1058,4 +1058,4 @@ Base2::parseKeyList( const QCString& output, bool secretKeys )
 }
 
 
-}; // namespace Kpgp
+} // namespace Kpgp

@@ -45,7 +45,7 @@ public:
     QSortedVector() {}
     QSortedVector ( uint size ) : QPtrVector<type>(size) {}
     QSortedVector( const QSortedVector<type> &l ) : QPtrVector<type>(l) {}
-    ~QSortedVector() { clear(); }
+    ~QSortedVector() { QPtrVector<type>::clear(); }
     QSortedVector<type> &operator=(const QSortedVector<type> &l)
       { return (QSortedVector<type>&)QPtrList<type>::operator=(l); }
 

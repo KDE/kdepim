@@ -91,6 +91,6 @@ namespace KSync {
         KonnectorProfileListBase *m_base;
 
     };
-};
+}
 
 #endif

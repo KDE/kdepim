@@ -809,4 +809,4 @@ Base5::parseTrustDataForKey( Key* key, const QCString& str )
 }
 
 
-}; // namespace Kpgp
+} // namespace Kpgp

@@ -462,7 +462,7 @@ Module::showKeyApprovalDlg( void ) const
 
 // -------------------------------------------------------------------------
 
-}; // namespace Kpgp
+} // namespace Kpgp
 
 #endif
 

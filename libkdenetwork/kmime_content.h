@@ -165,6 +165,6 @@ template <class T> T* Content::getHeaderInstance(T *ptr, bool create)
 
 
 
-}; // namespace KMime
+} // namespace KMime
 
 #endif // __KMIME_CONTENT_H__

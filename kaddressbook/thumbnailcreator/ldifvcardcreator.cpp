@@ -49,7 +49,7 @@ extern "C"
   {
     return new VCard_LDIFCreator;
   }
-};
+}
 
 VCard_LDIFCreator::VCard_LDIFCreator()
   : mSplitter( 0 )

@@ -37,7 +37,7 @@ ManPartService::ManPartService( const KService::Ptr& service )
 }
 ManPartService::ManPartService( const ManPartService& man ) {
     *this = man;
-};
+}
 QString ManPartService::name() const {
     return m_name;
 }

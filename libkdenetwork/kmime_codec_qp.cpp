@@ -612,9 +612,9 @@ bool Rfc2047QEncodingEncoder::finish( char* & dcursor, const char * const dend )
   }
 
   return mStepNo == 0;
-};
+}
 
 
 
 
-}; // namespace KMime
+} // namespace KMime

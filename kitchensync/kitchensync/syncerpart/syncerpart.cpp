@@ -48,7 +48,7 @@
 
 
 typedef KParts::GenericFactory< KSync::SyncerPart> SyncerPartFactory;
-K_EXPORT_COMPONENT_FACTORY( libksync_syncerpart, SyncerPartFactory );
+K_EXPORT_COMPONENT_FACTORY( libksync_syncerpart, SyncerPartFactory )
 
 using namespace KCal;
 using namespace KSync;

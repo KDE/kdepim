@@ -96,7 +96,7 @@ namespace KSieve {
     default:
       return "<unkown>";
     }
-  };
+  }
 
   QString Error::asString() const {
 
@@ -240,8 +240,8 @@ namespace KSieve {
     }
 
     return err;
-  };
+  }
   
 
-}; // namespace KSieve
+} // namespace KSieve
 

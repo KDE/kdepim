@@ -205,4 +205,4 @@ bool Encoder::flushOutputBuffer( char* & dcursor, const char * const dend ) {
 }
 
 
-}; // namespace KMime
+} // namespace KMime

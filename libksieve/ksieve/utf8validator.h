@@ -37,6 +37,6 @@ namespace KSieve {
 
   bool isValidUtf8( const char * s, unsigned int len );
 
-}; // namespace KSieve
+} // namespace KSieve
 
 #endif // __KSIEVE_ERROR_H__

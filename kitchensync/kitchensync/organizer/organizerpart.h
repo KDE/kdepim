@@ -16,7 +16,7 @@ class KSimpleConfig;
 
 namespace KCal {
     class CalendarLocal;
-};
+}
 
 namespace KSync {
     class Syncee;
@@ -61,6 +61,6 @@ namespace KSync {
     bool isEvolutionSync()const;
     QString path( Data d, const QString& str );
   };
-};
+}
 
 #endif

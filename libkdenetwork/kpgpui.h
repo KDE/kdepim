@@ -330,6 +330,6 @@ class CipherTextDialog: public KDialogBase
     QMultiLineEdit *mEditBox;
 };
 
-}; // namespace Kpgp
+} // namespace Kpgp
 
 #endif

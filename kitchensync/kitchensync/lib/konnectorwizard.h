@@ -80,7 +80,7 @@ namespace KSync{
         void slotKonChanged( const QString& );
     };
 
-};
+}
 
 
 #endif

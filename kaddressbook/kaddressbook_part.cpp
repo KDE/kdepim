@@ -39,7 +39,7 @@
 #include "kaddressbook_part.h"
 
 typedef KParts::GenericFactory< KAddressbookPart > KAddressbookFactory;
-K_EXPORT_COMPONENT_FACTORY( libkaddressbookpart, KAddressbookFactory );
+K_EXPORT_COMPONENT_FACTORY( libkaddressbookpart, KAddressbookFactory )
 
 KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetName,
                                     QObject *parent, const char *name,

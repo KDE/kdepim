@@ -96,7 +96,7 @@ namespace KSieve {
     if ( scriptBuilder() )
       scriptBuilder()->finished();
     return true;
-  };
+  }
 
 
   bool Parser::parseCommandList() {
@@ -588,4 +588,4 @@ namespace KSieve {
     return true;
   }
 
-}; // namespace KSieve
+} // namespace KSieve

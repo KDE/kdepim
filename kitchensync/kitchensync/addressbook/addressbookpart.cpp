@@ -19,7 +19,7 @@
 #include "addressbookpart.h"
 
 typedef KParts::GenericFactory< KSync::AddressBookPart> AddressBookPartFactory;
-K_EXPORT_COMPONENT_FACTORY( libaddressbookpart,  AddressBookPartFactory );
+K_EXPORT_COMPONENT_FACTORY( libaddressbookpart,  AddressBookPartFactory )
 
 using namespace KSync;
 

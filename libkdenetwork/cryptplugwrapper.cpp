@@ -452,7 +452,7 @@ QString CryptPlugWrapper::libName() const
 void CryptPlugWrapper::setDisplayName( const QString& name )
 {
     _name = name;
-};
+}
 
 
 QString CryptPlugWrapper::displayName() const
@@ -481,7 +481,7 @@ QString CryptPlugWrapper::libVersion() const
 void CryptPlugWrapper::setUpdateURL( const QString& url )
 {
     _updateURL = url;
-};
+}
 
     
 QString CryptPlugWrapper::updateURL() const

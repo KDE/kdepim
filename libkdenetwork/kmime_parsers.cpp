@@ -462,5 +462,5 @@ bool YENCEncoded::parse()
   return b_ins.count()>0;
 }
 
-}; // namespace Parser
-}; // namespace KMime
+} // namespace Parser
+} // namespace KMime

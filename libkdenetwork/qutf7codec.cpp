@@ -85,7 +85,7 @@ static uchar optDirectSet[] = {
 
 static inline bool isOfSet(uchar ch, uchar* set) {
   return set[ ch/8 ] & (0x80 >> ( ch%8 ));
-};
+}
 
 int QUtf7Codec::heuristicContentMatch(const char* chars, int len) const
 {

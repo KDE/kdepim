@@ -103,6 +103,6 @@ private:
     static RecentAddresses *s_self;
 };
 
-};
+}
 
 #endif // KMRECENTADDR_H

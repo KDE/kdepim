@@ -28,7 +28,7 @@ class KNGroup;
 
 namespace KNConfig {
 class IdentityWidget;
-};
+}
 
 
 class KNGroupPropDlg : public KDialogBase  {

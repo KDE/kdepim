@@ -49,6 +49,6 @@ protected:
 
 }; // class NewsArticle
 
-}; // namespace KMime
+} // namespace KMime
 
 #endif // __KMIME_NEWSARTICLE_H__

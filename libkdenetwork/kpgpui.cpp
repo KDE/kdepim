@@ -366,7 +366,7 @@ KeyID KeySelectionDialog::key() const
     return KeyID();
   else
     return mKeyIds.first();
-};
+}
 
 
 void KeySelectionDialog::initKeylist( const KeyList& keyList,
@@ -1632,7 +1632,7 @@ void SecretKeyRequester::virtual_hook( int id, void* data ) {
   base::virtual_hook( id, data );
 }
 
-}; // namespace Kpgp
+} // namespace Kpgp
 
 
 

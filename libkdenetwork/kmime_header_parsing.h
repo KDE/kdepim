@@ -77,7 +77,7 @@ namespace Types {
     bool timeZoneKnown;     // do we know the timezone? (e.g. on -0000)
   };
 
-}; // namespace KMime::Types
+} // namespace KMime::Types
 
 namespace HeaderParsing {
 
@@ -185,9 +185,9 @@ namespace HeaderParsing {
 				      time_t & result, bool isCRLF=false );
 #endif
 
-}; // namespace HeaderParsing
+} // namespace HeaderParsing
 
-}; // namespace KMime
+} // namespace KMime
 
 
 #endif // __KMIME_HEADER_PARSING_H__

@@ -312,7 +312,7 @@ private:
     QStringList m_modes;
     QString m_name;
 };
-};
+}
 #endif
 
 
