@@ -297,7 +297,7 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
     if ( td->hasDueDate() ) {
       QDateTime due( td->dtDue() );
       daysTo = due.date().daysTo( date ) ;
-      td->setDtDue( due.addDays( daysTo ) );
+      td->setDtDue( due.addDays( daysTo ), true );
       haveOffset = true;
     }
     if ( td->hasStartDate() ) {
