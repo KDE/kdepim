@@ -141,7 +141,11 @@ void unset_tz(struct set_tz_save savetz)
 
 	free(orig_tzid);
     } else {
+#ifdef __FreeBSD__
+	unsetenv("TZ");
+#else
 	putenv("TZ"); /* Delete from environment */
+#endif
     } 
 
     if(savetz.new_env_str != 0){
