@@ -20,22 +20,20 @@ noinst_HEADERS =	\
 			KDMinimizeSplitter.h		\
 			KDSemiSizingControl.h		\
 			KDSizingControl.h		\
+			KDGanttViewEventItem.h		\
+			KDGanttView.h			\
+			KDGanttViewItem.h		\
+			KDGanttViewSummaryItem.h	\
+			KDGanttViewTaskItem.h		\
+			KDGanttViewTaskLinkGroup.h	\
+			KDGanttViewTaskLink.h		\
+			KDXMLTools.h			\
 			itemAttributeDialog.ui.h	\
 			qlayoutengine_p.h
 
 METASOURCES = AUTO
 
 INCLUDES  = $(all_includes)
-
-include_HEADERS = 	\
-			KDGanttView.h			\
-			KDGanttViewEventItem.h		\
-			KDGanttViewItem.h		\
-			KDGanttViewSummaryItem.h	\
-			KDGanttViewTaskItem.h		\
-			KDGanttViewTaskLink.h		\
-			KDGanttViewTaskLinkGroup.h	\
-			KDXMLTools.h
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp *.h -o $(podir)/kdgantt.pot
