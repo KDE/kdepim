@@ -639,6 +639,8 @@ void KNMainWindow::initActions()
   a_ctArtFilterKeyb->plugAccel(a_ccel);
   a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"find" , Key_F4 , this,
                               SLOT(slotArtSearch()), actionCollection(), "article_search");
+  a_ctArtFind               = new KAction(i18n("F&ind in Article..."),KStdAccel::shortcut(KStdAccel::Find) , this,
+                              SLOT(slotArtFind()), actionCollection(), "find_in_article");
   a_ctArtRefreshList        = new KAction(i18n("&Refresh List"),"reload", KStdAccel::shortcut(KStdAccel::Reload), this,
                               SLOT(slotArtRefreshList()), actionCollection(), "view_Refresh");
   a_ctArtCollapseAll        = new KAction(i18n("&Collapse All Threads"), 0 , this,
@@ -1858,6 +1860,13 @@ void KNMainWindow::slotArtSearch()
 {
   kdDebug(5003) << "KNMainWindow::slotArtSearch()" << endl;
   a_rtManager->search();
+}
+
+
+void KNMainWindow::slotArtFind()
+{
+  kdDebug(5003) << "KNMainWindow::slotArtFind()" << endl;
+  a_rtView->find();
 }
 
 

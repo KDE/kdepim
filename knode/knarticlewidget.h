@@ -18,6 +18,7 @@
 #define KNARTICLEWIDGET_H
 
 #include <qbitarray.h>
+#include <keditcl.h>
 #include <ktextbrowser.h>
 #include "knjobdata.h"
 
@@ -82,6 +83,8 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     bool scrollingDownPossible();       // needed for "read-through"
     void scrollDown();
 
+    void find();
+
     void applyConfig();
     void setBodyPopup(QPopupMenu *popup)  { b_odyPopup = popup; };
 
@@ -127,9 +130,16 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     QTimer *t_imer;
     QCString o_verrideCS;
     bool f_orceCS, emuKMail;
-      
+
     KPopupMenu *u_rlPopup, *a_ttPopup;
     QPopupMenu *b_odyPopup;
+
+    KEdFind* f_inddialog;
+    bool     f_ind_first;
+    bool     f_ind_found;
+    QString  f_ind_pattern;
+    int      f_ind_para;
+    int      f_ind_index;
 
   //-------------------------- <Actions> ---------------------------
 
@@ -169,6 +179,9 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     void slotSetCharset(const QString&);
     void slotSetCharsetKeyboard();
     void slotViewSource();
+
+    void slotFindStart();
+    void slotFindDone();
 
   //-------------------------- </Actions> --------------------------
 

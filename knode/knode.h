@@ -220,6 +220,7 @@ class KNMainWindow : public KDockMainWindow
     KAction               *a_ctArtSortHeadersKeyb,
                           *a_ctArtFilterKeyb,
                           *a_ctArtSearch,
+                          *a_ctArtFind,
                           *a_ctArtRefreshList,
                           *a_ctArtCollapseAll,
                           *a_ctArtExpandAll,
@@ -301,6 +302,7 @@ class KNMainWindow : public KDockMainWindow
     void slotArtSortHeaders(int i);
     void slotArtSortHeadersKeyb();
     void slotArtSearch();
+    void slotArtFind();
     void slotArtRefreshList();
     void slotArtCollapseAll();
     void slotArtExpandAll();

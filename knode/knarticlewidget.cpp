@@ -36,6 +36,7 @@
 #include <kaction.h>
 #include <kapplication.h>
 #include <kpgpblock.h>
+#include <kstringhandler.h>
 
 #include "resource.h"
 #include "knarticlewidget.h"
@@ -125,7 +126,7 @@ QByteArray KNMimeSource::encodedData(const char *) const
 
 
 KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, const char *name )
-    : KTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false), emuKMail(false), a_ctions(actColl)
+    : KTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false), emuKMail(false), a_ctions(actColl), f_inddialog(0)
 {
   i_nstances.append(this);
   setNotifyClick( true );
@@ -233,13 +234,87 @@ void KNArticleWidget::scrollDown()
 }
 
 
+void KNArticleWidget::find()
+{
+  if( !f_inddialog ) {
+    f_inddialog = new KEdFind( this, "knodefind", false);
+    connect(f_inddialog,SIGNAL(search()),this,SLOT(slotFindStart()));
+    connect(f_inddialog,SIGNAL(done()),this,SLOT(slotFindDone()));
+  }
+
+  QString string = f_inddialog->getText();
+  f_inddialog->setText(string.isEmpty() ? f_ind_pattern : string);
+
+  f_ind_first = true;
+  f_ind_found = false;
+
+  f_inddialog->show();
+  f_inddialog->result();
+}
+
+void KNArticleWidget::slotFindStart()
+{
+  bool forward = !f_inddialog->get_direction();
+  
+  if (f_ind_first) {
+    if (forward) {
+      f_ind_para = 0;
+      f_ind_index = 0;
+   }
+   else {
+      f_ind_para = paragraphs()-1;
+      f_ind_index = paragraphLength(f_ind_para);
+   }
+  }
+  else
+    f_ind_index++;
+
+  f_ind_pattern = f_inddialog->getText();
+  f_ind_first=!QTextEdit::find(f_ind_pattern,f_inddialog->case_sensitive(),false,forward,&f_ind_para,&f_ind_index);
+
+  if (!f_ind_first)
+    f_ind_found = true;
+  else
+    if (f_ind_found) {
+      if (forward) {
+        if ( KMessageBox::questionYesNo( this,
+             i18n("End of article reached.\n" "Continue from the beginning?"),
+  	     i18n("Find") ) == KMessageBox::Yes ) {
+          f_ind_first = true;
+    	  slotFindStart();
+        }
+      }
+      else {
+        if ( KMessageBox::questionYesNo( this,
+             i18n("Beginning of article reached.\n" "Continue from the end?"),
+  	     i18n("Find") ) == KMessageBox::Yes ) {
+          f_ind_first = true;
+   	  slotFindStart();
+        }
+      }
+    }
+  else
+    KMessageBox::information( this,
+    	i18n( "Search string '%1' not found." ).arg(KStringHandler::csqueeze(f_ind_pattern)),
+	i18n( "Find" ) );
+}
+
+void KNArticleWidget::slotFindDone()
+{
+  if (!f_inddialog)
+    return;
+
+  removeSelection();
+  f_inddialog->hide();
+}
+
+
 void KNArticleWidget::focusInEvent(QFocusEvent *e)
 {
   emit focusChanged(e);
   QTextBrowser::focusInEvent(e);
 
 }
-
 
 void KNArticleWidget::focusOutEvent(QFocusEvent *e)
 {

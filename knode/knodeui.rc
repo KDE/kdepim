@@ -16,6 +16,8 @@
     <Action name="edit_select_all"/>
     <Separator/>
     <Action name="article_search"/>
+    <Action name="find_in_article"/>
+    <Separator/>
     <Action name="fetch_article_with_id"/>
   </Menu>
   <Menu noMerge="1" name="view"><text>&amp;View</text>
