@@ -17,7 +17,7 @@ static KCmdLineOptions options[] =
 int main(int argc,  char* argv[] )
 {
   
-  KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+//  KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
   KAboutData aboutData("kitchensync",I18N_NOOP("KitchenSync"),
 		       "0.0 pre Alpha",
