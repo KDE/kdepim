@@ -408,8 +408,8 @@ void TaskView::addCommentToTask()
     return;
 
   bool ok;
-  QString comment = KLineEditDlg::getText(
-                       i18n("Log comment for task %1").arg(task->name()),
+  QString comment = KLineEditDlg::getText(i18n("Comment"),
+                       i18n("Log comment for task '%1':").arg(task->name()),
                        QString(), &ok, this);
   if ( ok )
     task->addComment( comment, _storage );
@@ -420,7 +420,7 @@ void TaskView::deleteTask(bool markingascomplete)
 {
   Task *task = current_item();
   if (task == 0) {
-    KMessageBox::information(0,i18n("No task selected"));
+    KMessageBox::information(0,i18n("No task selected."));
     return;
   }
 

@@ -48,7 +48,7 @@ void FilterPMail::import(FilterInfo *info)
    // Select directory from where I have to import files
    QString chosenDir=KFileDialog::getExistingDirectory(QDir::homeDirPath(),info->parent());
    if (chosenDir.isEmpty()) {
-      info->alert(i18n("No directory selected"));
+      info->alert(i18n("No directory selected."));
       return;
    }
 

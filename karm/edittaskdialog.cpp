@@ -103,7 +103,7 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
 
   // The "Edit relative" radio button
   lay1->addSpacing(10);lay1->addStretch(1);
-  _relativeRB = new QRadioButton( i18n( "Edit &relative (Apply to both time and"
+  _relativeRB = new QRadioButton( i18n( "Edit &relative (apply to both time and"
                                         " session time)" ), page, "_relativeRB" );
   lay1->addWidget( _relativeRB );
   connect( _relativeRB, SIGNAL( clicked() ), this, SLOT(slotRelativePressed()) );

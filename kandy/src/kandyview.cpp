@@ -228,7 +228,7 @@ void KandyView::executeCommand()
       if (p->userInput()) {
         bool ok = false;
         QString value = KInputDialog::getText(QString::null,
-            i18n("Enter Value for %1").arg(p->name()),QString::null,&ok,this);
+            i18n("Enter value for %1:").arg(p->name()),QString::null,&ok,this);
         if (!ok)
           return;
         p->setValue(value);

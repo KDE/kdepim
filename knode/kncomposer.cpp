@@ -1615,7 +1615,7 @@ void KNComposer::slotSpellFinished()
           slotSpellcheck();
 #if KDE_IS_VERSION( 3, 1, 90 )
       else if( status == KSpell::FinishedNoMisspellingsEncountered )
-          KMessageBox::information( this, i18n("No misspellings encountered"));
+          KMessageBox::information( this, i18n("No misspellings encountered."));
 #endif
   }
 }

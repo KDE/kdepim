@@ -238,7 +238,7 @@ void MainWindow::makeMenus()
       _taskView,
       SLOT( newSubTask() ), actionCollection(),
       "new_sub_task");
-  actionDelete = new KAction( i18n("&Delete..."),
+  actionDelete = new KAction( i18n("&Delete"),
       QString::fromLatin1("editdelete"), Key_Delete,
       _taskView,
       SLOT( deleteTask() ), actionCollection(),
@@ -277,7 +277,7 @@ void MainWindow::makeMenus()
       actionCollection(),
       "clip_history");
 
-  new KAction( i18n("Import &Legacy Flat File"), 0,
+  new KAction( i18n("Import &Legacy Flat File..."), 0,
       _taskView, SLOT(loadFromFlatFile()), actionCollection(),
       "import_flatfile");
   /*

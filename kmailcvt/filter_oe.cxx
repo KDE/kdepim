@@ -56,14 +56,14 @@ void FilterOE::import(FilterInfo *info)
   // Select directory containing plain text emails
   QString mailDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(),inf->parent());
   if (mailDir.isEmpty()) { // No directory selected
-    info->alert(i18n("No directory selected"));
+    info->alert(i18n("No directory selected."));
     return;
   }
 
   QDir dir (mailDir);
   QStringList files = dir.entryList("*.[dDmM][bB][xX]", QDir::Files, QDir::Name);
   if (files.isEmpty()) {
-    info->alert(i18n("No Outlook Express mailboxes found in directory %1").arg(mailDir));
+    info->alert(i18n("No Outlook Express mailboxes found in directory %1.").arg(mailDir));
     return;
   }
   totalFiles = files.count();

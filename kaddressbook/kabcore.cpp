@@ -979,16 +979,16 @@ void KABCore::initActions()
   connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
 
   // misc
-  action = new KAction( i18n( "&Lookup Addresses in Directory" ), "find", 0,
+  action = new KAction( i18n( "&Lookup Addresses in Directory..." ), "find", 0,
                         this, SLOT( openLDAPDialog() ), actionCollection(), "ldap_lookup" );
   action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book." ) );
 
-  mActionWhoAmI = new KAction( i18n( "Set Who Am I" ), "personal", 0, this,
+  mActionWhoAmI = new KAction( i18n( "Set 'Who Am I'" ), "personal", 0, this,
                                SLOT( setWhoAmI() ), actionCollection(),
                                "edit_set_personal" );
   mActionWhoAmI->setWhatsThis( i18n( "Set the personal contact<p>The data of this contact will be used in many other KDE applications, so you don't have to input your personal data several times." ) );
 
-  mActionCategories = new KAction( i18n( "Set Categories" ), 0, this,
+  mActionCategories = new KAction( i18n( "Select Categories..." ), 0, this,
                                    SLOT( setCategories() ), actionCollection(),
                                    "edit_set_categories" );
   mActionCategories->setWhatsThis( i18n( "Set the categories for all selected contacts." ) );

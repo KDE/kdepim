@@ -185,7 +185,7 @@ bool KDropManager::createBasicConfig()
 				"your email settings. You need to configure mail\n"
 				"monitor for your email accounts. To do that,\n"
 				"right click on the applet in the panel tray and\n"
-				"select Configure Korn...\n"),
+				"select 'Configure Korn...'."),
 			i18n("Mail Monitor"));
 	}
 	else {
