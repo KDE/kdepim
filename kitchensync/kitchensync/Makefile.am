@@ -13,5 +13,5 @@ bin_PROGRAMS = kitchensync
 kitchensync_SOURCES = ksync_mainwindow.cc \
 	ksync_main.cc 
 
-kitchensync_LDADD = ../lib/libksyncentries.la ../libkonnector/libkonnector.la ./lib/libkitchensync.la -lkparts
+kitchensync_LDADD = ../lib/libksyncentries.la ../libkonnector/libkonnector.la ./organizer/liborganizerpart.la ./lib/libkitchensync.la -lkparts
 kitchensync_LDFLAGS = $(KDE_RPATH) $(all_libraries)
