@@ -657,15 +657,15 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
                                            Q_UINT32 sernum,
                                            const QString& xml )
 {
-  bool rc = true;
-  const bool silent = mSilent;
-  mSilent = true;
-
   if ( type != kmailCalendarContentsType && type != kmailTodoContentsType
        && type != kmailJournalContentsType )
     // Not ours
     return false;
   if ( !subresourceActive( subResource ) ) return true;
+
+  bool rc = true;
+  const bool silent = mSilent;
+  mSilent = true;
 
   // If this xml file is one of ours, load it here
   if ( type == kmailCalendarContentsType )
