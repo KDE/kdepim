@@ -1,3 +1,10 @@
+kdepim (4:2.2.0-0beta1-3) unstable; urgency=low
+ 
+  * Sync with upstream
+  * Recommend kghostview (Closes: #103585)
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Thu, 05 Jul 2001 09:08:00 -0700
+
 kdepim (4:2.2.0-0beta1-2) unstable; urgency=low
  
   * sync with upstream

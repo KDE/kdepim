@@ -10,6 +10,7 @@ Architecture: any
 Section: x11
 Replaces: kdepim, kdepim-common
 Depends: ${shlibs:Depends}, kdebase-libs
+Recommends: kghostview
 Suggests: kpilot
 Enhances: kdebase, kpilot
 Description: Personal organizer based on QT and KDE 
