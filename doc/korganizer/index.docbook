@@ -1,20 +1,16 @@
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
-<!ENTITY k   "<application>KOrganizer</application>">
-<!ENTITY kappname "&k;">
-<!ENTITY sli    "slider">
-<!ENTITY dir    "directory">
-<!ENTITY kde    "K Desktop Environment">
+<!ENTITY kappname "&korganizer;">
 <!ENTITY % addindex "IGNORE">
-<!ENTITY % ents PUBLIC "-//KDE//ENTITIES Application-Variable Entities V1.0//EN">
+<!ENTITY % English "INCLUDE">
+<!ENTITY % ents PUBLIC "-//KDE//ENTITIES Documentation V1.0//EN">
   %ents;
-<![ %addindex; [ <!ENTITY kdedocindex SYSTEM "docindex.docbook"> ]]>
 ]>
 
-<book id="korganizer" lang="en">
+<book id="korganizer" lang="&language;">
 
 <bookinfo>
 
-<title>The &k; Handbook</title>
+<title>The &korganizer; Handbook</title>
 
 <authorgroup>
 <author>
@@ -22,21 +18,21 @@
 <surname>Prudek</surname>
 </author>
 
-<othercredit>
+<othercredit role="developer">
 <firstname>Cornelius</firstname>
 <surname>Schumacher</surname>
 <affiliation><address><email>schumacher@kde.org</email></address></affiliation>
 <contrib>Developer</contrib>
 </othercredit>
 
-<othercredit>
+<othercredit role="developer">
 <firstname>Preston</firstname>
 <surname>Brown</surname>
 <affiliation><address><email>pbrown@kde.org</email></address></affiliation>
 <contrib>Developer</contrib>
 </othercredit>
 
-<othercredit>
+<othercredit role="reviewer">
 <firstname>Lauri</firstname>
 <surname>Watts</surname>
 <affiliation><address><email>vampyr@atconnex.net</email></address></affiliation>
@@ -51,16 +47,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>10/10/2000</date>
+<date>14/12/2000</date>
 <releaseinfo>1.92.00</releaseinfo>
-
-<revhistory>
-<revision>
-<revnumber>1.0</revnumber>
-<date>20.8.2000</date>
-<authorinitials>M.P.</authorinitials>
-<revremark>Initial release for KOrganizer 2.0.</revremark></revision>
-</revhistory>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -73,11 +61,9 @@
 <keyword>appointment</keyword>
 </keywordset>
 
-
-
-<abstract><para>&k; is an easy to use personal information manager
-(<abbrev>PIM</abbrev>). You can schedule appointments, events, and to-do
-tasks. &k; will remind you about pending tasks, and help you keep your
+<abstract><para>&korganizer; is an easy to use personal information manager
+(<acronym>PIM</acronym>). You can schedule appointments, events, and to-do
+tasks. &korganizer; will remind you about pending tasks, and help you keep your
 schedule. </para></abstract>
 
 </bookinfo>
@@ -85,11 +71,11 @@ schedule. </para></abstract>
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&k; is a personal information manager (<abbrev>PIM</abbrev>). You can
-schedule appointments, events, and to-do tasks. &k; will remind you about
+<para>&korganizer; is a personal information manager (<abbrev>PIM</abbrev>). You can
+schedule appointments, events, and to-do tasks. &korganizer; will remind you about
 pending tasks, and help you keep your schedule.</para>
 
-<para>Main features of &k;:</para>
+<para>Main features of &korganizer;:</para>
 <para><itemizedlist>
 <listitem><para>To-Do's and Events supported</para></listitem>
 <listitem><para>Easy editing and change from one type of event to
@@ -112,11 +98,11 @@ events</para></listitem>
 </itemizedlist></para>
 
 <para>Now take a <link linkend="five-minute-course">Five-minute fly-over
-course</link> of &k;, or delve into <link linkend="installation">reference
+course</link> of &korganizer;, or delve into <link linkend="installation">reference
 documentation</link>!</para>
 
 <sect1 id="korg-revhistory">
-<title>&k; Revision History</title>
+<title>&korganizer; Revision History</title>
 
 <itemizedlist>
 <listitem><para>1.92 - current release</para></listitem>
@@ -126,20 +112,20 @@ documentation</link>!</para>
 </chapter>
 
 <chapter id="five-minute-course">
-<title>Five-minute Fly-over Course of &k; (for the experienced and for the
+<title>Five-minute Fly-over Course of &korganizer; (for the experienced and for the
 impatient)</title>
 
 <para>Pressed for time? Let's kick you started with a fast, hands-on overview of
-&k;!</para>
+&korganizer;!</para>
 
 <para>If you ever worked with a personal information program before, you'll be
-right at home with &k;. You can enter new events, reschedule existing events,
+right at home with &korganizer;. You can enter new events, reschedule existing events,
 assign categories to your events, devise new categories, enter and modify lists
 of attendees and their roles, email event invitations automatically and exchange
-data with other &k; calendars.</para>
+data with other &korganizer; calendars.</para>
 
 <para>This course assumes that you know how to work with the &kde;, and that you
-prefer to explore on your own. Only the basic functions of &k; are covered
+prefer to explore on your own. Only the basic functions of &korganizer; are covered
 here.</para> 
 
 <sect1 id="course-entering-events">
@@ -147,8 +133,9 @@ here.</para>
 
 <procedure>
 <step><para>Click on the desired date in the Date Navigator.</para></step>
-<step><para>Click on <guiicon><inlinegraphic fileref="i_view_day.png"
-format="png"></inlinegraphic></guiicon>.</para></step> 
+<step><para>Click on <guiicon><inlinemediaobject><imageobject>
+<imagedata fileref="i_view_day.png" format="PNG"></imageobject>
+</inlinemediaobject></guiicon>.</para></step> 
 <step><para>Double-click the desired hour in the main panel.</para></step> 
 <step><para>Enter event details. Use tabs <guilabel>General</guilabel>,
 <guilabel>Attendees</guilabel>, and <guilabel>Recurrence</guilabel> to move
@@ -175,7 +162,7 @@ To-Do</guimenuitem></menuchoice>.</para></step>
 <sect1 id="course-event-types">
 <title>Event Types</title>
 
-<para>There are two types of entries in &k;:</para>
+<para>There are two types of entries in &korganizer;:</para>
 
 <itemizedlist>
 <listitem><para>Events start and finish at distinct
@@ -193,7 +180,7 @@ July 1 and you need to go to a hairdresser withing a week. On July 3 you talk to
 your hairdresser and agree on an exact time. Thus the original To-Do becomes
 similar to an appointment. </para>
 
-<para>&k; makes adding exact time to a To-Do very easy. If you uncheck the
+<para>&korganizer; makes adding exact time to a To-Do very easy. If you uncheck the
 <guilabel>No time associated</guilabel> checkbox<footnote><para>The <guilabel>No
 time associated</guilabel> checkbox only appears when the <guilabel>No due
 date</guilabel> is unchecked.</para> </footnote> and enter the appropriate time,
@@ -241,8 +228,8 @@ locate and double-click the To-Do there.</para>
 <sect1 id="course-conclusion">
 <title>Conclusion</title>
 
-<para>This five-minute course covered only the basic operation of &k;. Now you
-should go on and read the rest of this manual to unleash the full power of &k;'s
+<para>This five-minute course covered only the basic operation of &korganizer;. Now you
+should go on and read the rest of this manual to unleash the full power of &korganizer;'s
 capabilities. But if you don't feel like it, you should at least skip through
 the <link linkend="faq">FAQ</link>.</para>
 
@@ -250,95 +237,10 @@ the <link linkend="faq">FAQ</link>.</para>
 
 </chapter>
 
-<chapter id="installation">
-<title>Installation</title>
-
-<sect1 id="getting-korg">
-<title>How to obtain &k;</title>
-
-<para>&k; is part of the KDE project
-<ulink url="http://www.kde.org">http://www.kde.org</ulink>.
-&k; can be found in the kdepim package on
-<ulink url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>, the
-main ftp site of the KDE project.</para>
-
-<para>Click the <guisubmenu>Applications</guisubmenu> menu of the
-<guimenu>main</guimenu> menu to see if &k; is already installed on your
-system. If &k; is not there,  either it is not installed, or perhaps the
-administrator of your system has moved it to some other place.</para>
-
-<para>&k; homepage is at <ulink
-url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</ulink>
-</para>
-
-</sect1>
-
-<sect1 id="requirements">
-<title>Requirements</title>
-
-<para>&k; requires KDE 2.0. It requires roughly 2MB of space in your KDE2 system
-directory. Your calendars will require additional space in your home
-directory. Very large calendars slow down &k; operation, therefore periodic
-cleanup is advisable.</para>
-
-<para>&k; needs about 5 Megabytes of memory to run, but this may vary depending
-on your platform and the size of your calendar(s).</para>
-
-<para>All required libraries are part of standard KDE libraries (kdelibs). KDE
-base package (kdebase) must also be installed to change localisation preferences
-like date and time formats. &k; itself is in the kdepim package. All packages
-can be found on <ulink url="http://www.kde.org">KDE home page.</ulink>.</para>
-
-<para>The &k; homepage is at <ulink
-url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</ulink>
-</para>
-
-</sect1>
-
-<sect1 id="compilation">
-<title>Compilation and installation</title>
-
-<para>If &k; is not installed and if you are the administrator of your system,
-your best bet is to use a precompiled binary file. </para>
-
-<itemizedlist>
-
-<listitem><para>If your system understands rpm binary package format, you should
-get a file "<filename>kdepim2.i386.rpm</filename>" or similar. The correct
-installation command is: <command>rpm <option>-i
-<replaceable>kdepim2.i386.rpm</replaceable></option></command>, and the correct
-upgrade command is: <command>rpm <option>-U
-<replaceable>kdepim2.i386.rpm</replaceable></option></command></para></listitem>
-
-<listitem><para>If your system uses different binary package format, you need to
-read the instructions that came with your system.</para></listitem>
-
-<listitem><para>If you cannot obtain precompiled binary package, you have to
-compile &k; yourself from a source file. Find a file
-"<filename>kdepim2.tar.gz</filename>" or similar, unpack it in a new directory,
-and enter the following in that directory:</para>
-
-<screen width="40">
-<prompt>%</prompt> <command>./configure</command>
-<prompt>%</prompt> <command>make</command>
-<prompt>%</prompt> <command>make <option>install</option></command>
-</screen>
-</listitem> 
-
-</itemizedlist>
-
-<para>Since &k; uses <application>autoconf</application> and
-<application>automake</application> you should have not trouble compiling
-it. Should you run into problems please report them to the <ulink
- url="http://lists.kde.org">KDE mailing lists</ulink>.</para> 
-</sect1>
-
-</chapter>
-
 <chapter id="config">
 <title>Configuration </title>
 
-<para>You can change &k;'s behavior if you wish. To display configuration
+<para>You can change &korganizer;'s behavior if you wish. To display configuration
 window, click on <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Preferences</guimenuitem> </menuchoice>.  You can get more
 information in the <link linkend="reference-windows-preferences">Preferences
@@ -355,7 +257,7 @@ the toolbar handle and drag the toolbar to a new place on your screen.</para>
 <para>Localisation information like date and time formats can be configured from
 <application>KDE Control Center</application> within the <menuchoice>
 <guisubmenu>Personalization</guisubmenu> <guimenuitem>Country &
-Language</guimenuitem> </menuchoice> module. &k; has to be restarted for changes
+Language</guimenuitem> </menuchoice> module. &korganizer; has to be restarted for changes
 done in <application>KDE Control Center</application> to take effect.</para>
 
 </chapter>
@@ -424,7 +326,7 @@ name</guimenuitem></menuchoice>.</para></listitem>
 
 <varlistentry>
 <term><guilabel>Start Date</guilabel> and <guilabel>End Date</guilabel></term>
-<listitem><para>The &k; suggested Start and End dates of your event. Events are
+<listitem><para>The &korganizer; suggested Start and End dates of your event. Events are
 expected to start and end on the same date. Change these dates as desired. Enter
 the dates directly or use the Calendar Widget. Choose time from half-hour
 intervals, or enter the desired time directly into the time
@@ -459,8 +361,8 @@ linkend="entering-data-events-recurrence">Recurrence tab window</link>.</para>
 
 <varlistentry>
 <term><guilabel>Reminder</guilabel></term>
-<listitem><para>Check the <guilabel>Reminder</guilabel> checkbox if &k; should
-remind you about an event. &k; can also run specific program at that
+<listitem><para>Check the <guilabel>Reminder</guilabel> checkbox if &korganizer; should
+remind you about an event. &korganizer; can also run specific program at that
 time.</para>
 <tip><para>Make sure, however, that you have sufficient rights to run that
 program; if you do not, the program will not run.</para></tip>
@@ -481,7 +383,7 @@ menu.</para></listitem>
 <term><guilabel>Private</guilabel></term>
 <listitem><para>Check the <guilabel>Private</guilabel> box to keep the event
 private. Currently, this checkbox has no real effect. However, when group
-scheduling features of &k; are completed, private tasks will only be visible to
+scheduling features of &korganizer; are completed, private tasks will only be visible to
 you. The checkbox may also have an effect when the calendar file is loaded in
 another calendar understanding the vCalendar format.</para></listitem>
 </varlistentry>
@@ -573,7 +475,7 @@ occurs. </para></listitem>
 <term><guilabel>Monthly</guilabel></term>
 <listitem><para>You can either have the event occur on the same day of the
 month, or in a specific week on a specific day of the week.  You need to choose
-between these two possibilities.  By default, &k; assumes you want to repeat on
+between these two possibilities.  By default, &korganizer; assumes you want to repeat on
 the same calendar day of the month (for instance the 15th).  You can also adjust
 the period, so you can repeat monthly, tri-monthly and so on.
 </para></listitem>
@@ -584,7 +486,7 @@ the period, so you can repeat monthly, tri-monthly and so on.
 you are indicating a calendar day of the year (i.e., the 250th day of the year)
 - "<guilabel>Recur on this day</guilabel>", or this day of the month in a
 particular month of the year - "<guilabel>Recur in the month of</guilabel>" .
-By default, &k; assumes you mean the actual day of the year.  You can adjust the
+By default, &korganizer; assumes you mean the actual day of the year.  You can adjust the
 period to reflect events that occur bi-annually, every four years, and so
 on.</para></listitem>
 </varlistentry>
@@ -740,7 +642,7 @@ description</link>.</para> </listitem>
 <term><guilabel>Private</guilabel></term>
 <listitem><para>Check the <guilabel>Private</guilabel> box to keep the To-Do
 task private. Currently, this checkbox has no real effect. However, when group
-scheduling features of &k; are completed, private tasks will only be visible to
+scheduling features of &korganizer; are completed, private tasks will only be visible to
 you. The checkbox may also have an effect when the calendar file is loaded in
 another calendar understanding the vCalendar format.</para></listitem>
 </varlistentry>
@@ -822,7 +724,7 @@ Plan, Conclusion</userinput>" on three separate lines.</para></step>
 <step><para>Check the <guilabel>Recurring event</guilabel>
 checkbox.</para></step>
 <step><para>Click on the <guilabel>Recurrence</guilabel> tab.</para>
-<note><para>Most work has been done for you automatically. &k; defaults to
+<note><para>Most work has been done for you automatically. &korganizer; defaults to
 weekly recurring. Also note that <guilabel>No ending date</guilabel> is
 chosen. This means that this event will be repeated each Monday (starting, of
 course, on Monday February 12, 2001) until the end of time (that is, until you
@@ -914,7 +816,7 @@ either Personal or Special Occasion - it's your choice.</para></tip>
 
 <para>Check the <guilabel>Private</guilabel> box to keep the To-Do task
 private. Currently, this checkbox has no real effect. However, when group
-scheduling features of &k; are completed, private tasks will only be visible to
+scheduling features of &korganizer; are completed, private tasks will only be visible to
 you. The checkbox may also have an effect when the calendar file is loaded in
 another calendar understanding the vCalendar format.</para>
 
@@ -993,11 +895,11 @@ changes.</para></listitem>
 <sect2 id="reference-windows-config-toolbars">
 <title>Configure toolbars</title>
 
-<para>&k; has two toolbars: a Main toolbar (with <guiicon>New</guiicon>,
+<para>&korganizer; has two toolbars: a Main toolbar (with <guiicon>New</guiicon>,
 <guiicon>Open</guiicon>, <guiicon>Print</guiicon>, <guiicon>Cut</guiicon>,
 <guiicon>Copy</guiicon>, <guiicon>Paste</guiicon>, <guiicon>Goto
 Today</guiicon>, <guiicon>New Event</guiicon> and <guiicon>Mail Event</guiicon>
-icons, and with actions specific to &k;, like <guiicon>Find</guiicon> and
+icons, and with actions specific to &korganizer;, like <guiicon>Find</guiicon> and
 <guiicon>Print</guiicon> preview) and a <guiicon>View</guiicon> toolbar (for
 selecting between <guiicon>List view</guiicon>, <guiicon>Day view</guiicon>,
 <guiicon>Workday view</guiicon>, <guiicon>Week view</guiicon>, and
@@ -1051,7 +953,7 @@ any icons.</para>
 <title>Toolbar position</title>
 
 <para>You can have the toolbar at the top, bottom, left or right side. If you
-choose Floating position, the toolbar will be displayed outsite the main &k;
+choose Floating position, the toolbar will be displayed outsite the main &korganizer;
 panel and you can move it around. If you choose Flat, the toolbar will collapse
 into a tiny rectangle. You can later click on that rectangle and the toolbar
 will appear again.</para> 
@@ -1072,7 +974,7 @@ medium and large icons.</para>
 <title>Preferences</title>
 
 <para>The options dialog lets you configure a number of different areas of
-&k;.</para> 
+&korganizer;.</para> 
 
 <sect3 id="preferences-personal">
 <title>Personal</title>
@@ -1106,20 +1008,20 @@ it.</para></listitem>
 <varlistentry>
 <term><guilabel>Send Bcc to owner when mailing events</guilabel></term>
 <listitem><para>When you check the <guilabel>Send Bcc to owner when mailing
-events</guilabel>, you will get a copy of all e-mail messages that &k; sends at
+events</guilabel>, you will get a copy of all e-mail messages that &korganizer; sends at
 your request to the event attendees.</para></listitem> 
 </varlistentry>
 <varlistentry>
 <term><guilabel>Auto-save calendar</guilabel></term>
 <listitem><para>When <guilabel>Auto-save calendar</guilabel> is checked,
-calendar is saved automatically when you exit &k;, without asking. Furthermore,
+calendar is saved automatically when you exit &korganizer;, without asking. Furthermore,
 the calendar is saved periodically as you work to prevent the loss of valuable
 data. You can also specify the save interval in minutes.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Confirm Deletes</guilabel></term>
-<listitem><para>When you check <guilabel>Confirm Deletes</guilabel>, &k; will
-ask you to confim each deletion. If this is not checked, &k; will never ask
+<listitem><para>When you check <guilabel>Confirm Deletes</guilabel>, &korganizer; will
+ask you to confim each deletion. If this is not checked, &korganizer; will never ask
 before deleting events.</para></listitem>  
 </varlistentry>
 <varlistentry>
@@ -1141,22 +1043,22 @@ and weekends are displayed in red color.</para></listitem>
 <listitem><para><guilabel>Time Zone</guilabel> specifies your time zone in hours
 offset from <abbrev>UTC</abbrev> (<abbrev>GMT</abbrev>).  For the US East Coast,
 that means -0500 when Daylight Savings are not in effect, and -0400 when they
-are.  &k; will automatically adjust for daylight savings.  </para></listitem>
+are.  &korganizer; will automatically adjust for daylight savings.  </para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Default Event Time</guilabel></term>
 <listitem><para>When you choose <link linkend="entering-data-events">New
 Event</link> from the <link linkend="actions-new-event">Action Menu</link>, or
-create an event in some other manner such that &k; cannot guess when you would
-like your event to start, &k; will put this hour in the start time editor as the
+create an event in some other manner such that &korganizer; cannot guess when you would
+like your event to start, &korganizer; will put this hour in the start time editor as the
 default value.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Default duration time of a new appointment</guilabel></term>
 <listitem><para>When you choose <link linkend="entering-data-events">New
 Event</link> from the <link linkend="actions-new-event">Action Menu</link>, or
-create an event in some other manner such that &k; cannot guess the duration of
-your event, &k; will use this as the default value.  </para></listitem>
+create an event in some other manner such that &korganizer; cannot guess the duration of
+your event, &korganizer; will use this as the default value.  </para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Default Alarm Time</guilabel></term>
@@ -1199,7 +1101,7 @@ color.</para>
 <variablelist>
 <varlistentry>
 <term><guilabel>Day Begins At</guilabel></term>
-<listitem><para><guilabel>Day Begins At</guilabel> is the hour that &k; will
+<listitem><para><guilabel>Day Begins At</guilabel> is the hour that &korganizer; will
 display at the top. You can of course scroll to an earlier hour, but the
 <guilabel>Day Begins At</guilabel> should be the earliest time that you use for
 events. It could be the time when you usually get up, or the time when you start
@@ -1235,13 +1137,13 @@ seconds.</para></listitem>
 <title>Printing</title>
 
 <para>Select the appropriate <guilabel>Printer Name</guilabel> which
-you want to use for printing in &k;.</para>
+you want to use for printing in &korganizer;.</para>
 
 <para><guilabel>Paper Orientation</guilabel> specifies the orientation
 of the printounts. Portait is vertical printing (more tall than wide), Landscape
 is horizontal (more wide than tall).</para>
 
-<para>The <guilabel>Preview Program</guilabel> field tells &k; what
+<para>The <guilabel>Preview Program</guilabel> field tells &korganizer; what
 program you want to use when you choose <guimenuitem>Print Preview</guimenuitem>
 from the <link linkend="file-print-preview">File Menu</link>. Typically you will
 want to use <application>kghostview</application>,
@@ -1250,8 +1152,8 @@ here.</para>
 
 <para>To be able to use the <link
 linkend="file-print-preview"><guimenuitem>Print preview...</guimenuitem></link>
-feature, you need a program that can accept printing output of &k; and display
-it on the screen. Since &k; uses the PostScript language to talk to your
+feature, you need a program that can accept printing output of &korganizer; and display
+it on the screen. Since &korganizer; uses the PostScript language to talk to your
 printer, you need a program that understands PostScript and that can show it on
 your screen. Historically, the best results have been achieved with
 <application>gv</application>, but KDE-specific program
@@ -1268,7 +1170,7 @@ any other PostScript-to-screen software.</para>
 <sect1 id="reference-menus">
 <title>Menus</title>
 
-<para>When &k; starts, the main &k; window appears. The window has several
+<para>When &korganizer; starts, the main &korganizer; window appears. The window has several
 components: a menubar, a toolbar, a month calendar, a main panel with the
 current "view" of events, and a tasklist. The calendar initially displays
 today's date.</para>
@@ -1289,7 +1191,7 @@ the entire calendar.</para>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>n</keycap></keycombo>
 </shortcut>
-<guimenu><inlinegraphic fileref="i_file_new.png" format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_new.png" format="PNG"></imageobject></inlinemediaobject>
 File</guimenu> <guimenuitem>New</guimenuitem></menuchoice></term>
 <listitem><para><action>Opens another main window.</action> This window initially contains unnamed calendar. You can use the new window to:</para>
 <itemizedlist>
@@ -1310,7 +1212,7 @@ to give your new calendar a filename and to save it).</para></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>o</keycap></keycombo>
 </shortcut>
-<guimenu><inlinegraphic fileref="i_file_open.png" format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_open.png" format="PNG"></imageobject></inlinemediaobject>
 File</guimenu> <guimenuitem>Open</guimenuitem></menuchoice></term>
 <listitem><para><action>Opens a file dialog allowing you to select a new vCalendar
 to load.</action>  If you have made changes to the current calendar, you will
@@ -1330,10 +1232,10 @@ dialog entirely.</action></para></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>s</keycap></keycombo>
 </shortcut>
-<guimenu><inlinegraphic fileref="i_file_save.png" format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_save.png" format="PNG"></imageobject></inlinemediaobject>
 File</guimenu> <guimenuitem>Save</guimenuitem></menuchoice></term>
 <listitem><para>When you choose <guimenuitem>Save</guimenuitem> or click the
-<guiicon>Save</guiicon> icon, &k; <action>saves the calendar to disk, and makes
+<guiicon>Save</guiicon> icon, &korganizer; <action>saves the calendar to disk, and makes
 sure all changes that you made will be remembered</action>.  If the calendar has
 no name, Save will behave like <guilabel>Save As</guilabel>.</para></listitem>
 </varlistentry>
@@ -1353,7 +1255,7 @@ calendar.</para></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>w</keycap></keycombo>
 </shortcut>
-<guimenu><inlinegraphic fileref="i_file_close.png" format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_close.png" format="PNG"></imageobject></inlinemediaobject>
 File</guimenu> <guimenuitem>Close</guimenuitem></menuchoice></term>
 <listitem><para><action>Closes the current calendar. The window itself will
 remain open, and may be reused to open another
@@ -1364,7 +1266,7 @@ calendar.</action></para></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>p</keycap></keycombo>
 </shortcut>
-<guimenu><inlinegraphic fileref="i_file_print.png" format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_print.png" format="PNG"></imageobject></inlinemediaobject>
 File</guimenu> <guimenuitem>Print</guimenuitem></menuchoice></term>
 <listitem><para>Choose <guimenuitem>Print</guimenuitem> or click the
 <guilabel>Print</guilabel> icon to <action>print the current
@@ -1374,8 +1276,8 @@ To-Do).</para></listitem>
 </varlistentry>
 <varlistentry id="file-print-preview">
 <term><menuchoice>
-<guimenu><inlinegraphic fileref="i_file_print_preview.png"
-format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_print_preview.png"
+format="PNG"></imageobject></inlinemediaobject>
 File</guimenu><guimenuitem>Print Preview</guimenuitem></menuchoice></term>
 <listitem><para>If you choose <guimenuitem>Print Preview</guimenuitem> or click
 the <guiicon>Print Preview</guiicon> icon, <action>the current calendar will be
@@ -1392,10 +1294,10 @@ dialog.</para></listitem>
 <guimenu>File</guimenu>
 <guimenuitem>Print Setup</guimenuitem>
 </menuchoice></term>
-<listitem><para><action><guilabel>Print Setup</guilabel> brings up the print
-setup dialog. You can set up the look of your printed output.  See the section
+<listitem><para><guilabel>Print Setup</guilabel> <action>brings up the print
+setup dialog</action>. You can set up the look of your printed output.  See the section
 on <link linkend="preferences-printing">Printing Preferences</link> for more
-information.</action></para></listitem>
+information.</para></listitem>
 </varlistentry>
 <varlistentry id="file-import-ical">
 <term><menuchoice>
@@ -1404,7 +1306,7 @@ information.</action></para></listitem>
 </menuchoice></term>
 <listitem><para>If you have used <application>ical</application>, a popular but
 older calendar program for unix, you may wish to <action>import your events,
-events, and to-do items</action> directly to &k;. This action will read the
+events, and to-do items</action> directly to &korganizer;. This action will read the
 .calendar file from your home directory and merge any entries it contains into
 your current calendar.  If any errors or suspicious things occur during the
 process, you will be notified via a message box.</para></listitem>
@@ -1427,7 +1329,7 @@ instance.</para></listitem>
 </menuchoice></term>
 <listitem><para><action>From time to time you should delete your old
 events.</action></para>
-<tip><para>Contemporary computers have ample storage space. However, if you synchronize your &k; calendar with a limited-memory machine like the Palm device, you will find archiving useful. The performance of &k; can also become worse when there are many events.</para></tip>
+<tip><para>Contemporary computers have ample storage space. However, if you synchronize your &korganizer; calendar with a limited-memory machine like the Palm device, you will find archiving useful. The performance of &korganizer; can also become worse when there are many events.</para></tip>
 <procedure>
 <step><para>Click the <guilabel>Archive Old Entries</guilabel>.</para></step>
 <step><para>Fill in the date in <guilabel>Events older than</guilabel> field or
@@ -1477,7 +1379,7 @@ display alarms; only one calendar can be active. Click on the <guilabel>Make
 active</guilabel> menu item to <action>activate the current calendar
 window.</action></para>
 <para>The active calendar is loaded as default calendar when starting
-&k;. In other words, if you work with more than one calendar, you should
+&korganizer;. In other words, if you work with more than one calendar, you should
 make your main calendar active.</para></listitem>
 </varlistentry>
 
@@ -1486,7 +1388,7 @@ make your main calendar active.</para></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>q</keycap></keycombo>
 </shortcut>
-<guimenu><inlinegraphic fileref="i_file_quit.png"></inlinegraphic> File</guimenu>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_file_quit.png"></imageobject></inlinemediaobject> File</guimenu>
 <guimenuitem>Quit</guimenuitem>
 </menuchoice></term>
 <listitem><para>When you choose <guimenuitem>Quit</guimenuitem> or click
@@ -1517,7 +1419,7 @@ find event and to-do entries accross the current calendar.</para>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>x</keycap></keycombo>
 </shortcut>
-<guimenu><inlinegraphic fileref="i_cut.png" format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_cut.png" format="PNG"></imageobject></inlinemediaobject>
 Edit</guimenu> <guimenuitem>Cut</guimenuitem> </menuchoice></term>
 <listitem><para><action>Cuts the currently selected event(s) to the clipboard,
 removing them from your calendar.</action></para></listitem>
@@ -1527,7 +1429,7 @@ removing them from your calendar.</action></para></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>c</keycap></keycombo>
 </shortcut>
-<guimenu><inlinegraphic fileref="i_copy.png" format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_copy.png" format="PNG"></imageobject></inlinemediaobject>
 Edit</guimenu> <guimenuitem>Copy</guimenuitem></menuchoice></term>
 <listitem><para><action>Copies the currently selected event(s) to the clipboard,
 leaving them untouched in your calendar.</action></para></listitem>
@@ -1537,17 +1439,17 @@ leaving them untouched in your calendar.</action></para></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>v</keycap></keycombo>
 </shortcut>
-<guimenu><inlinegraphic fileref="i_paste.png" format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_paste.png" format="PNG"></imageobject></inlinemediaobject>
 Edit</guimenu> <guimenuitem>Paste</guimenuitem></menuchoice></term>
 <listitem><para><guimenuitem>Paste</guimenuitem> <action>inserts the
 contents of the clipboard into your calendar</action>. The clipboard must
 contain a valid vCalendar, provided either by a previous Cut/Copy operation or
-from a selection made outside of &k;.  You will be warned if the contents of the
+from a selection made outside of &korganizer;.  You will be warned if the contents of the
 clipboard cannot be understood.</para>
 <tip><para>However, you can safely use <keycombo><keycap>Ctrl</keycap>
 <keycap>C</keycap></keycombo> and <keycombo> <keycap>Ctrl</keycap>
 <keycap>V</keycap></keycombo> hotkeys to copy text data from any outside
-application to a &k; Edit Event window and vice versa. </para></tip></listitem> 
+application to a &korganizer; Edit Event window and vice versa. </para></tip></listitem> 
 </varlistentry>
 
 <varlistentry id="edit-find">
@@ -1555,7 +1457,7 @@ application to a &k; Edit Event window and vice versa. </para></tip></listitem>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>f</keycap></keycombo>
 </shortcut>
-<guimenu><inlinegraphic fileref="i_edit_find.png" format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_edit_find.png" format="PNG"></imageobject></inlinemediaobject>
 Edit</guimenu> <guimenuitem>Find</guimenuitem>
 </menuchoice></term>
 <listitem><para>Choose <guimenuitem>Find</guimenuitem> from the
@@ -1567,7 +1469,7 @@ you don't know single character of the summary, put <userinput>?</userinput>
 instead of the missing character. If you don't know more characters, use
 <userinput>*</userinput>. For instance if you know that the summary has
 <emphasis>work</emphasis> in the middle, you would write 
-<userinput>*work*</userinput> in the Find dialog. &k; will locate summary entries like
+<userinput>*work*</userinput> in the Find dialog. &korganizer; will locate summary entries like
 "Must go to work", "Wine workshop" and similar. Letter case isignored.</para></tip>
 <para>The result of the Find operation is a list of events with the specified
 summary description. The columns shown in the list are the same as the <link
@@ -1586,7 +1488,7 @@ linkend="entering-data-events">Entering events</link> and
 
 <para>There are several different "views" available for displaying your list of
 events, including a "list" view, a "day" view, a "week" view, and a "month"
-view.  &k; is smart enough to remember in between sessions what the last active
+view.  &korganizer; is smart enough to remember in between sessions what the last active
 view was, and the next time it is started, it will display that view.</para>
 
 <para>In general, each view will provide a way of displaying your events and
@@ -1600,7 +1502,7 @@ operations.</para>
 <variablelist>
 <varlistentry id="view-list-view">
 <term><menuchoice>
-<guimenu><inlinegraphic fileref="i_view_list.png" format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_view_list.png" format="PNG"></imageobject></inlinemediaobject>
 View</guimenu><guimenuitem>List</guimenuitem></menuchoice></term>
 <listitem><para><action>Switch the display to the List view.</action></para>
 <para>This view displays all your events for the day as a list. Events are
@@ -1617,7 +1519,7 @@ of the other views.</para></listitem>
 </varlistentry>
 <varlistentry id="view-day-view">
 <term><menuchoice>
-<guimenu><inlinegraphic fileref="i_view_day.png" format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_view_day.png" format="PNG"></imageobject></inlinemediaobject>
 View</guimenu><guimenuitem>Day</guimenuitem></menuchoice></term>
 <listitem><para><action>Switch the display to the Day view.</action></para>
 <para>This view presents your event for a single day, sorted
@@ -1648,15 +1550,15 @@ Work Week views.</para>
 pointer over the event, and drag it to the Date Navigator on the left
 side.</para>
 <tip><para>There is a useful shortcut for adding events: double-click on any
-open region of time, and &k; will automatically create an event with default
+open region of time, and &korganizer; will automatically create an event with default
 duration (which is customizable in the preferences dialog). You can immediately
 edit the description.  The events "snap" to half-hour increments, rounding off
 to the closest half hour from where you clicked.</para></tip> </listitem>
 </varlistentry>
 <varlistentry id="view-workweek-view">
 <term><menuchoice>
-<guimenu><inlinegraphic fileref="i_view_work_week.png"
-format="png"></inlinegraphic> View</guimenu><guimenuitem>Work
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_view_work_week.png"
+format="PNG"></imageobject></inlinemediaobject> View</guimenu><guimenuitem>Work
 Week</guimenuitem></menuchoice></term>
 <listitem><para><action>Switch the display to the Work Week
 view.</action></para>
@@ -1666,7 +1568,7 @@ week are shown.</para></listitem>
 
 <varlistentry id="view-week-view">
 <term><menuchoice>
-<guimenu><inlinegraphic fileref="i_view_week.png" format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_view_week.png" format="PNG"></imageobject></inlinemediaobject>
 View</guimenu> <guimenuitem>Week</guimenuitem></menuchoice></term>
 <listitem><para><action>Switch the display to the Week view.</action></para>
 <para>The week view provides a view similar to the day view. Events for seven
@@ -1696,8 +1598,8 @@ buttons will navigate to the future.</para></listitem>
 
 <varlistentry id="view-todo-view">
 <term><menuchoice>
-<guimenu><inlinegraphic fileref="i_view_todo_list.png"
-format="png"></inlinegraphic> View</guimenu> <guimenuitem>To-do
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_view_todo_list.png"
+format="PNG"></imageobject></inlinemediaobject> View</guimenu> <guimenuitem>To-do
 list</guimenuitem></menuchoice></term>
 <listitem><para><action>Switch the display to the To-Do view.</action></para>
 <para>The To-Do list provides a place for you to jot down quick (or long-term)
@@ -1752,21 +1654,21 @@ available drag-and-drop operations.</para></listitem>
 <variablelist>
 <varlistentry id="go-previous-day">
 <term><menuchoice>
-<guimenu><inlinegraphic fileref="i_go_backward.png"
-format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_go_backward.png"
+format="PNG"></imageobject></inlinemediaobject>
 Go</guimenu><guimenuitem>Previous Day</guimenuitem></menuchoice></term>
 <listitem><para><action>Go to the previous day.</action></para></listitem>
 </varlistentry>
 <varlistentry id="go-next-day">
 <term><menuchoice>
-<guimenu><inlinegraphic fileref="i_go_forward.png" format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_go_forward.png" format="PNG"></imageobject></inlinemediaobject>
 Go</guimenu><guimenuitem>Next Day</guimenuitem></menuchoice></term>
 <listitem><para><action>Go to the next day.</action></para></listitem>
 </varlistentry>
 <varlistentry id="go-goto-today">
 <term><menuchoice>
-<guimenu><inlinegraphic fileref="i_go_to_today.png"
-format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_go_to_today.png"
+format="PNG"></imageobject></inlinemediaobject>
 Go</guimenu><guimenuitem>Go to Today</guimenuitem></menuchoice></term>
 <listitem><para><action>Go to today.</action></para></listitem>
 </varlistentry>
@@ -1854,8 +1756,8 @@ Window</link>.</para></listitem>
 </varlistentry>
 <varlistentry id="settings-preferences">
 <term><menuchoice>
-<guimenu><inlinegraphic fileref="i_settings_prefs.png"
-format="png"></inlinegraphic>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_settings_prefs.png"
+format="PNG"></imageobject></inlinemediaobject>
 Settings</guimenu><guimenuitem>Preferences</guimenuitem></menuchoice></term>
 <listitem><para>Choose <menuchoice> <guimenu>Settings</guimenu>
 <guimenuitem>Preferences</guimenuitem> </menuchoice> or click the
@@ -1873,12 +1775,12 @@ window</link>.</para></listitem>
 <variablelist>
 <varlistentry id="help-contents">
 <term><menuchoice>
-<guimenu><inlinegraphic fileref="i_help_contents.png"
-format="png"></inlinegraphic> Help</guimenu>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_help_contents.png"
+format="PNG"></imageobject></inlinemediaobject> Help</guimenu>
 <guimenuitem>Contents</guimenuitem></menuchoice></term>
 <listitem><para>Choose
 <menuchoice><guimenu>Help</guimenu><guimenuitem>Contents</guimenuitem></menuchoice>
-or click the Help Contents icon to <action>display the help pages</action> for &k; which you are right now reading.</para></listitem> 
+or click the Help Contents icon to <action>display the help pages</action> for &korganizer; which you are right now reading.</para></listitem> 
 </varlistentry>
 <varlistentry id="help-report-bug">
 <term><menuchoice>
@@ -1886,11 +1788,11 @@ or click the Help Contents icon to <action>display the help pages</action> for &
 <guimenuitem>Report Bug</guimenuitem>
 </menuchoice></term>
 <listitem><para>Choose <guilabel>Report Bug</guilabel> if you believe that you
-have discovered a bug in &k;. A bug reporting window will be shown. Decide how
+have discovered a bug in &korganizer;. A bug reporting window will be shown. Decide how
 annoying is the bug, and indicate it on <guilabel>Severity</guilabel>
 buttons. The KDE Team welcomes your bug reports, for they contribute
 significantly to improving the &kde;.</para>
-<para>You can also ask the &k; authors to add additional features to the
+<para>You can also ask the &korganizer; authors to add additional features to the
 program. Just choose <guilabel>Wishlist</guilabel> as the Severity, and enter
 your wish. We are honestly looking forward to receiving your
 ideas.</para></listitem>
@@ -1901,7 +1803,7 @@ ideas.</para></listitem>
 <guimenuitem>About KOrganizer</guimenuitem>
 </menuchoice></term>
 <listitem><para>Choose <guimenuitem>About KOrganizer</guimenuitem> to
-<action>display copyright information</action> about &k;, and the author
+<action>display copyright information</action> about &korganizer;, and the author
 list.</para></listitem>
 </varlistentry>
 <varlistentry id="help-about-kde">
@@ -1955,7 +1857,7 @@ the handbook.</para>
   <entry><keycap>F1</keycap></entry>
   <entry><link linkend="help-contents"><menuchoice><guimenu>Help</guimenu>
   <guimenuitem>Contents</guimenuitem></menuchoice></link> equivalent; help for
-  &k;.</entry>
+  &korganizer;.</entry>
 </row>
 <row>
   <entry><keycombo><keycap>Ctrl</keycap> <keycap>N</keycap></keycombo></entry>
@@ -2053,7 +1955,7 @@ the handbook.</para>
   <entry><emphasis>Help:</emphasis> <link linkend="help-contents"> <menuchoice>
   <guimenu>Help</guimenu>
   <guimenuitem>Contents</guimenuitem></menuchoice></link> equivalent; help for
-  &k;.</entry>
+  &korganizer;.</entry>
   <entry><keycap>F1</keycap></entry>
 </row>
 <row>
@@ -2124,7 +2026,7 @@ event or event that you are editing from the calendar.</para></listitem>
 <varlistentry>
 <term><guibutton>OK</guibutton></term>
 <listitem><para>When you click the <guibutton>OK</guibutton> button, your
-changes will be remembered and &k; will close the window.</para></listitem> 
+changes will be remembered and &korganizer; will close the window.</para></listitem> 
 </varlistentry>
 <varlistentry>
 <term><guibutton>Apply</guibutton></term>
@@ -2135,7 +2037,7 @@ editing.</para></listitem>
 <varlistentry>
 <term><guibutton>Cancel</guibutton></term>
 <listitem><para>If you click the <guibutton>Cancel</guibutton> button, your
-editing will be forgotten, and &k; will close the window.</para></listitem> 
+editing will be forgotten, and &korganizer; will close the window.</para></listitem> 
 </varlistentry>
 </variablelist>
 
@@ -2144,13 +2046,13 @@ editing will be forgotten, and &k; will close the window.</para></listitem>
 <sect1 id="vcalendar-format">
 <title>vCalendar Format</title> 
 
-<para>&k; is the first free <abbrev>PIM</abbrev> for Unix which implements the
+<para>&korganizer; is the first free <abbrev>PIM</abbrev> for Unix which implements the
 vCalendar protocol for personal data interchange. This vendor-independent, open
 standard allows different programs and devices to share/synchronize event and
 calendar information without proprietary standards. The data is stored in
 <abbrev>ASCII</abbrev> and is easily human-readable. While some Windows programs
 have implemented a limited import/export ability from their native formats to
-vCalendar, &k;'s native file format on disk is vCalendar, so it bypasses this
+vCalendar, &korganizer;'s native file format on disk is vCalendar, so it bypasses this
 middle-step entirely. It also allows you to easily access your data without the
 program itself, in the spirit of other UNIX programs. </para> 
 
@@ -2161,9 +2063,9 @@ program itself, in the spirit of other UNIX programs. </para>
 <chapter id="other-features">
 <title>Other Features</title>
 
-<para>In this chapter, you'll learn other useful features of &k;: the parameters
-you can specify on the command line (when invoking &k; from a shell), what
-tricks you can do with a click of your mouse, what interaction between &k; and
+<para>In this chapter, you'll learn other useful features of &korganizer;: the parameters
+you can specify on the command line (when invoking &korganizer; from a shell), what
+tricks you can do with a click of your mouse, what interaction between &korganizer; and
 <application>Konqueror</application> is possible.</para>
 
 <para>You'll also learn about merging and importing data, and about
@@ -2172,7 +2074,7 @@ synchronizing with your Palm Pilot or compatible hanheld computer.</para>
 <sect1 id="other-features-commandline-options">
 <title>Command Line</title>
 
-<para>While &k; supports the full score of options that are common to all &kde;
+<para>While &korganizer; supports the full score of options that are common to all &kde;
 programs, it also supports two options of its own: it can list the events for
 the current day, and it can show the list of events for a specified number of
 days.</para>
@@ -2200,11 +2102,11 @@ days.</para>
 </row>
 <row>
   <entry><option>--author</option></entry>
-  <entry>Shows the names and email addresses of &k; authors.</entry>
+  <entry>Shows the names and email addresses of &korganizer; authors.</entry>
 </row>
 <row>
   <entry><option>-V</option>, <option>--version</option></entry>
-  <entry>Shows the running versions of the Qt library , &kde; and &k;.</entry>
+  <entry>Shows the running versions of the Qt library , &kde; and &korganizer;.</entry>
 </row>
 <row>
   <entry><option>-l</option>, <option>--list</option></entry>
@@ -2224,7 +2126,7 @@ days.</para>
 <sect1 id="other-features-drag-and-drop">
 <title>Drag and Drop Operations</title>
 
-<para>&k; can be easily controlled with your mouse. The supported drag-and-drop
+<para>&korganizer; can be easily controlled with your mouse. The supported drag-and-drop
 operations are detailed below.</para>
 
 <itemizedlist>
@@ -2252,13 +2154,13 @@ screen.</para></listitem>
 <title><application>Konqueror</application> interaction</title>
 
 <para><application>Konqueror</application> recognizes the vCalendar format used
-by &k;. If you use <application>Konqueror</application> to navigate to your
+by &korganizer;. If you use <application>Konqueror</application> to navigate to your
 calendar, it will be displayed <emphasis>inside</emphasis>
 <application>Konqueror</application> as a live object. You will be able to
 
 
 perform most operations with your calendar inside
-<application>Konqueror</application>; you will not need to start &k;. In
+<application>Konqueror</application>; you will not need to start &korganizer;. In
 technical jargon, this is described as "embedding vCalendar as KPart inside
 <application>Konqueror</application>".</para>
 
@@ -2324,7 +2226,7 @@ you must copy this data to your home directory, click
 <chapter id="credits">
 <title>Credits and License</title>
 
-<para>&k;</para>
+<para>&korganizer;</para>
 
 <para>Program copyright 2000, The KDE Developers</para>
 
@@ -2339,17 +2241,103 @@ you must copy this data to your home directory, click
 
 <para>Documentation copyright 2000 Milos Prudek</para>
 
-<para>&k; homepage is at <ulink
+<para>&korganizer; homepage is at <ulink
 url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</ulink></para>
 
-&license-links;
+&underFDL;
+&underGPL;
 
 </chapter>
+
+<appendix id="installation">
+<title>Installation</title>
+
+<sect1 id="getting-korg">
+<title>How to obtain &korganizer;</title>
+
+<para>&korganizer; is part of the KDE project
+<ulink url="http://www.kde.org">http://www.kde.org</ulink>.
+&korganizer; can be found in the kdepim package on
+<ulink url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>, the
+main ftp site of the KDE project.</para>
+
+<para>Click the <guisubmenu>Applications</guisubmenu> menu of the
+<guimenu>main</guimenu> menu to see if &korganizer; is already installed on your
+system. If &korganizer; is not there,  either it is not installed, or perhaps the
+administrator of your system has moved it to some other place.</para>
+
+<para>&korganizer; homepage is at <ulink
+url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</ulink>
+</para>
+
+</sect1>
+
+<sect1 id="requirements">
+<title>Requirements</title>
+
+<para>&korganizer; requires KDE 2.0. It requires roughly 2MB of space in your KDE2 system
+directory. Your calendars will require additional space in your home
+directory. Very large calendars slow down &korganizer; operation, therefore periodic
+cleanup is advisable.</para>
+
+<para>&korganizer; needs about 5 Megabytes of memory to run, but this may vary depending
+on your platform and the size of your calendar(s).</para>
+
+<para>All required libraries are part of standard KDE libraries (kdelibs). KDE
+base package (kdebase) must also be installed to change localisation preferences
+like date and time formats. &korganizer; itself is in the kdepim package. All packages
+can be found on <ulink url="http://www.kde.org">KDE home page.</ulink>.</para>
+
+<para>The &korganizer; homepage is at <ulink
+url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</ulink>
+</para>
+
+</sect1>
+
+<sect1 id="compilation">
+<title>Compilation and installation</title>
+
+<para>If &korganizer; is not installed and if you are the administrator of your system,
+your best bet is to use a precompiled binary file. </para>
+
+<itemizedlist>
+
+<listitem><para>If your system understands rpm binary package format, you should
+get a file "<filename>kdepim2.i386.rpm</filename>" or similar. The correct
+installation command is: <command>rpm <option>-i
+<replaceable>kdepim2.i386.rpm</replaceable></option></command>, and the correct
+upgrade command is: <command>rpm <option>-U
+<replaceable>kdepim2.i386.rpm</replaceable></option></command></para></listitem>
+
+<listitem><para>If your system uses different binary package format, you need to
+read the instructions that came with your system.</para></listitem>
+
+<listitem><para>If you cannot obtain precompiled binary package, you have to
+compile &korganizer; yourself from a source file. Find a file
+"<filename>kdepim2.tar.gz</filename>" or similar, unpack it in a new directory,
+and enter the following in that directory:</para>
+
+<screen width="40">
+<prompt>%</prompt> <command>./configure</command>
+<prompt>%</prompt> <command>make</command>
+<prompt>%</prompt> <command>make <option>install</option></command>
+</screen>
+</listitem> 
+
+</itemizedlist>
+
+<para>Since &korganizer; uses <application>autoconf</application> and
+<application>automake</application> you should have not trouble compiling
+it. Should you run into problems please report them to the <ulink
+ url="http://lists.kde.org">KDE mailing lists</ulink>.</para> 
+</sect1>
+
+</appendix>
 
 <glossary id="glossary">
 <title>Glossary</title> 
 
-<glossentry>
+<glossentry id="gloss-calendar-widget">
 <glossterm>Calendar Widget</glossterm>
 <glossdef>
 
@@ -2362,11 +2350,11 @@ directly to the desired month or year.</para>
 </glossdef>
 </glossentry>
 
-<glossentry>
+<glossentry id="gloss-date-navigator">
 <glossterm>Date Navigator</glossterm>
 <glossdef>
 
-<para>The calendar that is in the upper-left corner of the &k; window. It is the
+<para>The calendar that is in the upper-left corner of the &korganizer; window. It is the
 main way provided to navigate among dates, and to select from them. The
 single-arrow icons move forwards and backwards in time by increments of a month,
 while the double-arrows allow moving by years at a time. Today's date will be
@@ -2382,7 +2370,7 @@ linkend="preferences-views">Views chapter</link>.</para>
 </glossdef>
 </glossentry>
 
-<glossentry>
+<glossentry id="gloss-due-date">
 <glossterm>Due Date</glossterm>
 <glossdef>
 
@@ -2393,11 +2381,11 @@ by 16th November, that date is called "the To-Do task due date"</para>
 </glossdef>
 </glossentry>
 
-<glossentry>
+<glossentry id="gloss-group-scheduling">
 <glossterm>Group scheduling features</glossterm>
 <glossdef>
 
-<para>These features are planned for the future versions of &k;. Group
+<para>These features are planned for the future versions of &korganizer;. Group
 scheduling will facilitate member roles (attendee, owner, organizer), time
 conflict resolution, event reminder distribution, response collection and
 evaluation. In other words, you will be able to appoint attendees, invite them
@@ -2416,7 +2404,7 @@ Preferences</link> section.</para>
 </glossdef>
 </glossentry>
 
-<glossentry>
+<glossentry id="gloss-main-panel">
 <glossterm>Main panel</glossterm>
 <glossdef>
 <para>Normally the largest part of the screen, to the right of the Date
