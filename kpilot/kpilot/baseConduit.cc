@@ -28,6 +28,7 @@
 #include <unistd.h>
 #include <qpixmap.h>
 #include <ksock.h>
+#include <kconfig.h>
 
 #include "baseConduit.moc"
 #include "statusMessages.h"
@@ -284,3 +285,10 @@ BaseConduit::getRecord(KSocket* in)
 	return new QPixmap((const char **)kpilot_conduit);
 }
 
+
+int BaseConduit::getDebugLevel(KConfig *c)
+{
+	int d=c->readNumEntry("Debug",0);
+	debug_level |= d;
+	return debug_level ;
+}

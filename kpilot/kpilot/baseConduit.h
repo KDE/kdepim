@@ -31,14 +31,20 @@ class BaseConduit : public QObject
   Q_OBJECT
 
 public:
-  enum eConduitMode { None, Error, HotSync, Setup, Backup, DBInfo };
+  enum eConduitMode { None=0, 
+		Error=-1, 
+		HotSync=2, 
+		Setup=4, 
+		Backup=6, 
+		DBInfo=8 
+	};
 
   /**
    * The mode that this conduit should be running in will be passed to the
    * constructor.   After the constructor returns the appropriate 
-   * virtual method will be called (ie: setup, hotsync, backup, etc).
+   * virtual method should be called (ie: setup, hotsync, backup, etc).
    */
-  BaseConduit(eConduitMode mode);
+  BaseConduit(eConduitMode);
   virtual ~BaseConduit();
 
   /**
@@ -81,6 +87,8 @@ public:
 	 */
 	 virtual QPixmap *icon() const;
 
+	const eConduitMode getMode() const { return fMode; } ;
+
 protected:
 
   /**
@@ -114,11 +122,6 @@ protected:
    */
   recordid_t writeRecord(PilotRecord* rec); 
   
-  /**
-   * Mode for this instance of the conduit
-   */
-  eConduitMode fMode;
-
 	/**
 	* Adds a message to the sync log by talking to
 	* the daemon; the message s should not contain
@@ -129,7 +132,23 @@ protected:
 	*/
 	int addSyncLogMessage(const char *s);
 
+	/**
+	* Conduits can have an additional Debug= line in their
+	* config which may be read and ORed with the user-specified
+	* debug level. This function does that. It's not automatic
+	* because then BaseConduit would have to know the group
+	* the conduit wants to read.
+	*
+	* @ret resulting debug level
+	*/
+	int getDebugLevel(KConfig *);
+
 private:
+  /**
+   * Mode for this instance of the conduit
+   */
+  eConduitMode fMode;
+
   KSocket* fDaemonSocket;
   PilotRecord* getRecord(KSocket*);
   void writeRecord(KSocket* theSocket, PilotRecord* rec);

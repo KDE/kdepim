@@ -27,6 +27,7 @@ static const char *id=
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kapp.h>
+#include <kdebug.h>
 
 #include "conduitApp.h"
 #else
@@ -276,12 +277,11 @@ ConduitApp::setConduit(BaseConduit* conduit)
 			<< (int)fMode << ')' << endl; \
 			fMode=BaseConduit::Error; } }
 
-int ConduitApp::exec()
+BaseConduit::eConduitMode ConduitApp::getMode()
 {
 	FUNCTIONSETUP;
 
-	QWidget *widget = 0L;
-	QPixmap *icon= 0L;
+	if (fMode!=BaseConduit::None) return fMode;
 
 	KCmdLineArgs *args=getOptions();
 	CheckArg("info",DBInfo);
@@ -296,12 +296,40 @@ int ConduitApp::exec()
 			<< endl;
 		fMode=BaseConduit::Error;
 	}
+	else
+	{
+		if (debug_level & SYNC_TEDIOUS)
+		{
+			kdDebug() << fname 
+				<< ": Set mode to "
+				<< (int) fMode
+				<< endl;
+		}
+	}
+
+	return fMode;
+}
+
+int ConduitApp::exec()
+{
+	FUNCTIONSETUP;
+
+	QWidget *widget = 0L;
+	QPixmap *icon= 0L;
+
+	(void) getMode();
 
 	// Note that both styles and GUI are only in effect
 	// if we are going to do the setup dialog.
 	//
 	fApp=new KApplication(fMode==BaseConduit::Setup,
 		fMode==BaseConduit::Setup);
+
+	kdDebug() << fname << ": App mode="
+		<< (int) fMode
+		<< " conduit mode="
+		<< (int) fConduit->getMode()
+		<< endl;
 
 	switch(fMode)
 	{
@@ -359,3 +387,6 @@ ConduitApp::exec()
 	return 0;
 }
 #endif
+
+
+// $Log:$

@@ -87,7 +87,7 @@ public:
 	* is in that mode, although it can return to
 	* mode error if errors occur.
 	*/
-	BaseConduit::eConduitMode getMode() { return fMode; }
+	BaseConduit::eConduitMode getMode();
 
 	/**
 	* Run the conduit app. This is probably the
@@ -108,4 +108,5 @@ private:
 	char **fArgv;
 } ;
 
+// $Log:$
 #endif
