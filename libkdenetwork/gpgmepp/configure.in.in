@@ -91,10 +91,9 @@ KDEPIM_PATH_GPGME(0.4.4,[
 	AC_TRY_COMPILE([#include <gpgme.h>], [
 		gpgme_keylist_mode_t mode = GPGME_KEYLIST_MODE_VALIDATE;
 	], [
-		have_gpgme_keylist_mode_validate=yes
+		AC_DEFINE(HAVE_GPGME_KEYLIST_MODE_VALIDATE, 1, [Define to 1 if your gpgme supports GPGME_KEYLIST_MODE_VALIDATE])
 		AC_MSG_RESULT([yes])
 	], [
-		have_gpgme_keylist_mode_validate=no
 		AC_MSG_RESULT([no])
 	])
 	CFLAGS="$kdepim_gpgmepp_save_cflags"
@@ -102,15 +101,11 @@ KDEPIM_PATH_GPGME(0.4.4,[
 	
 ],[
 	kdepim_needs_gpgme_copy="true"
-	have_gpgme_keylist_mode_validate=no
 	GPGME_CFLAGS='-I$(top_srcdir)/libkdenetwork/libgpgme-copy/gpgme -I$(top_srcdir)/libkdenetwork/libgpg-error-copy'
 	GPGME_LIBS='$(top_builddir)/libkdenetwork/libgpgme-copy/gpgme/libgpgme.la'
 ])
 
 AM_CONDITIONAL(needs_gpgme_copy, test -n "$kdepim_needs_gpgme_copy")
-
-AC_DEFINE(HAVE_GPGME_KEYLIST_MODE_VALIDATE, test "x$have_gpgme_keylist_mode_validate" = "xyes",
-[Define to 1 if your gpgme supports GPGME_KEYLIST_MODE_VALIDATE])
 
 dnl Always true - either from the local copy or from the system lib.
 dnl Only kept for compat, feel free to clean up those 3 lines
