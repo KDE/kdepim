@@ -483,7 +483,14 @@ void AddresseeEditorWidget::nameTextChanged(const QString &text)
   
   // use the addressee class to parse the name for us
   mAddressee.setNameFromString(text);
-  
+
+  nameBoxChanged();  
+
+  emitModified();
+}
+
+void AddresseeEditorWidget::nameBoxChanged()
+{
   // Rebuild the formatted name combo
   mFormattedNameBox->clear();
   QStringList options;
@@ -492,15 +499,11 @@ void AddresseeEditorWidget::nameTextChanged(const QString &text)
           << mAddressee.familyName() + QString(", ") + mAddressee.givenName();
   mFormattedNameBox->insertStringList(options);
   mFormattedNameBox->setCurrentText(mAddressee.formattedName());
-  
-  emitModified();
 }
 
 void AddresseeEditorWidget::nameButtonClicked()
 {
-  // show the name dialog. We use the addressee class to do the parsing
-  // of the name for us.
-  mAddressee.setNameFromString(mNameEdit->text());
+  // show the name dialog.
   NameEditDialog dialog(mAddressee.familyName(), mAddressee.givenName(),
                         mAddressee.prefix(), mAddressee.suffix(),
                         mAddressee.additionalName(), this, "NameDialog");
@@ -512,10 +515,16 @@ void AddresseeEditorWidget::nameButtonClicked()
     mAddressee.setPrefix(dialog.prefix());
     mAddressee.setSuffix(dialog.suffix());
     mAddressee.setAdditionalName(dialog.additionalName());
-    
-    // Update the name edit. This should rebuild the formatted name
-    // combo because of the signal.
-    mNameEdit->setText(mAddressee.realName());
+
+    // Update the name edit.
+    QString name = mAddressee.givenName() + " " + mAddressee.additionalName() +
+            " " + mAddressee.familyName();
+    mNameEdit->blockSignals( true );
+    mNameEdit->setText( name );
+    mNameEdit->blockSignals( false );
+
+    // Update the combo box.
+    nameBoxChanged();
     
     emitModified();
   }

@@ -75,6 +75,7 @@ class AddresseeEditorWidget : public QWidget
     void emitModified();
     void dateChanged(QDate);
     void nameTextChanged(const QString &);
+    void nameBoxChanged();
     void nameButtonClicked();
     void categoryButtonClicked();
     
