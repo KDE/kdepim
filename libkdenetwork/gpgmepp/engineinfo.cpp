@@ -71,7 +71,7 @@ const GpgME::EngineInfo & GpgME::EngineInfo::operator=( const GpgME::EngineInfo 
 }
 
 bool GpgME::EngineInfo::isNull() const {
-  return !d || d->info;
+  return !d || !d->info;
 }
 
 GpgME::Context::Protocol GpgME::EngineInfo::protocol() const {
