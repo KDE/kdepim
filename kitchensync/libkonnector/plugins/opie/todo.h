@@ -2,6 +2,8 @@
 #ifndef ToDoHelper_H
 #define ToDoHelper_H
 
+
+#include <qdom.h>
 #include <qmap.h>
 #include <qvaluelist.h>
 #include <libkcal/todo.h>
@@ -10,24 +12,28 @@
 
 #include "helper.h"
 
-class KSyncEntry;
 class OpieCategories;
-class KonnectorUIDHelper;
-class KAlendarSyncEntry;
+
+namespace KSync {
+    class KonnectorUIDHelper;
+    class Syncee;
+    class TodoSyncee;
+}
 namespace OpieHelper {
 
     class ToDo  : public Base {
     public:
         ToDo( CategoryEdit* edit = 0,
-              KonnectorUIDHelper* helper= 0,
+              KSync::KonnectorUIDHelper* helper= 0,
               const QString& tz = QString::null,
               bool meta = FALSE);
         ~ToDo();
 
-        QPtrList<KCal::Todo> toKDE( const QString &fileName );
-        QByteArray fromKDE( KAlendarSyncEntry* entry  );
+        KSync::TodoSyncee* toKDE( const QString &fileName );
+        QByteArray fromKDE( KSync::TodoSyncee* entry  );
     private:
         void setUid( KCal::Todo*,  const QString &uid );
+        KCal::Todo* dom2todo( QDomElement );
         QString todo2String( KCal::Todo*  );
     };
 };

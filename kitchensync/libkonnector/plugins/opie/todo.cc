@@ -1,6 +1,5 @@
 
 #include <qbuffer.h>
-#include <qdom.h>
 #include <qfile.h>
 #include <qvaluelist.h>
 #include <qstring.h>
@@ -8,7 +7,10 @@
 
 #include <kdebug.h>
 
+#include <todosyncee.h>
+
 #include <idhelper.h>
+
 #include "opiecategories.h"
 #include "todo.h"
 
@@ -16,7 +18,7 @@ using namespace OpieHelper;
 
 
 ToDo::ToDo( CategoryEdit* edit,
-            KonnectorUIDHelper* helper,
+            KSync::KonnectorUIDHelper* helper,
             const QString &tz,
             bool meta)
     : Base( edit,  helper,  tz,  meta )
@@ -26,9 +28,55 @@ ToDo::~ToDo()
 {
 
 }
-QPtrList<KCal::Todo> ToDo::toKDE( const QString &fileName )
+KCal::Todo* ToDo::dom2todo( QDomElement e ) {
+    QString dummy;
+    int Int;
+    KCal::Todo* todo = new KCal::Todo();
+    QStringList list = QStringList::split(";",  e.attribute("Categories") );
+    QStringList categories;
+
+    for ( uint i = 0; i < list.count(); i++ ) {
+        kdDebug(5202)<< list[i]
+                     << " Category "
+                     << m_edit->categoryById( list[i],  "Todo List")
+                     << endl;
+        categories.append(m_edit->categoryById(list[i], "Todo List") );
+    }
+    if (!categories.isEmpty() ) {
+        todo->setCategories( categories );
+    }
+
+    todo->setDescription(e.attribute("Description" ) );
+    todo->setSummary( e.attribute("Summary") ); //opie only
+
+    setUid(todo,  e.attribute("Uid")  );
+    dummy = e.attribute("Completed");
+    Int = dummy.toInt();
+    todo->setCompleted( Int);
+
+    dummy = e.attribute("Priority" );
+    todo->setPriority(dummy.toInt( )  );
+    dummy = e.attribute("HasDate" );
+    bool status = dummy.toInt( );
+    if(status){
+        todo->setHasDueDate(true );
+        QDateTime time = QDateTime::currentDateTime();
+        QDate date;
+        dummy = e.attribute("DateDay" );
+        int day= dummy.toInt( );
+        int month = e.attribute("DateMonth").toInt( );
+        int year = e.attribute("DateYear").toInt( );
+        date.setYMD(year, month, day);
+        time.setDate( date );
+        todo->setDtDue( time );
+    }else{
+        todo->setHasDueDate( false );
+    }
+    return todo;
+}
+KSync::TodoSyncee* ToDo::toKDE( const QString &fileName )
 {
-    QPtrList<KCal::Todo> m_list;
+    KSync::TodoSyncee* syncee = new KSync::TodoSyncee();
 
     QFile file( fileName );
     if ( file.open( IO_ReadOnly ) ) {
@@ -37,71 +85,28 @@ QPtrList<KCal::Todo> ToDo::toKDE( const QString &fileName )
             QDomElement docElem = doc.documentElement();
             KCal::Todo *todo;
             QDomNode n = docElem.firstChild();
-            QString dummy;
-            int Int;
-            bool ok;
             while (!n.isNull() ) {
                 QDomElement e = n.toElement();
                 if (!e.isNull() ) {
                     if ( e.tagName() == "Task" ) {
-                        todo = new KCal::Todo();
-                        QStringList list = QStringList::split(";",  e.attribute("Categories") );
-                        QStringList categories;
-                        for ( uint i = 0; i < list.count(); i++ ) {
-                            kdDebug(5202)<< list[i] << " Category " << m_edit->categoryById( list[i],  "Todo List") << endl;
-                            categories.append(m_edit->categoryById(list[i], "Todo List") );
-                        }
-                        if (!categories.isEmpty() ) {
-                            todo->setCategories( categories );
-                        }
-                        todo->setDescription(e.attribute("Description" ) );
-                        todo->setSummary( e.attribute("Description").left(15) );
-
-                        setUid(todo,  e.attribute("Uid")  );
-                        dummy = e.attribute("Completed");
-                        Int = dummy.toInt(&ok);
-                        if(ok ){
-                            bool status = Int;
-                            if( status ){
-                                todo->setCompleted(true);
-                            }else
-                                todo->setCompleted( false );
-                        }else
-                            todo->setCompleted( false );
-
-                        dummy = e.attribute("Priority" );
-                        todo->setPriority(dummy.toInt(&ok )  );
-                        dummy = e.attribute("HasDate" );
-                        bool status = dummy.toInt(&ok );
-                        if(status){
-                            todo->setHasDueDate(true );
-                            QDateTime time = QDateTime::currentDateTime();
-                            QDate date;
-                            dummy = e.attribute("DateDay" );
-                            int day= dummy.toInt(&ok );
-                            int month = e.attribute("DateMonth").toInt(&ok );
-                            int year = e.attribute("DateYear").toInt(&ok );
-                            date.setYMD(year, month, day);
-                            time.setDate( date );
-                            todo->setDtDue( time );
-                        }else{
-                            todo->setHasDueDate( false );
-                        }
-                        m_list.append( todo );
+                        todo = dom2todo( e );
+                        KSync::TodoSyncEntry* entry;
+                        entry = new KSync::TodoSyncEntry( todo );
+                        syncee->addEntry( entry );
                     } // if name == "Task"
                 } // e.isNull
                 n = n.nextSibling();
             } // n.isNull
         } // setContent
     } // off open
-    return m_list;
+    return syncee;
 }
-QByteArray ToDo::fromKDE(KAlendarSyncEntry* entry )
+QByteArray ToDo::fromKDE( KSync::TodoSyncee* syncee )
 {
     // KDE ID clear bit first
     m_kde2opie.clear();
-    Kontainer::List newIds = entry->ids( "todo");
-    for ( Kontainer::List::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
+    Kontainer::ValueList newIds = syncee->ids( "todo");
+    for ( Kontainer::ValueList::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
         m_helper->addId("todo",  (*idIt).first(),  (*idIt).second() );
     }
     // update m_helper first;
@@ -109,14 +114,16 @@ QByteArray ToDo::fromKDE(KAlendarSyncEntry* entry )
     QBuffer buffer( array );
     if ( buffer.open( IO_WriteOnly )) {
         // clear list
-        QPtrList<KCal::Todo> list = entry->calendar()->getTodoList();
-        KCal::Todo *todo;
+        KSync::TodoSyncEntry* entry;
         QTextStream stream( &buffer );
         stream.setEncoding( QTextStream::UnicodeUTF8 );
         stream << "<!DOCTYPE Tasks>" << endl;
         stream << "<Tasks>" << endl;
-        for ( todo = list.first(); todo != 0; todo = list.next() ) {
-            stream << todo2String( todo ) << endl;
+        for ( entry = (KSync::TodoSyncEntry*)syncee->firstEntry();
+              entry != 0l;
+              entry = (KSync::TodoSyncEntry*)syncee->nextEntry() )
+        {
+            stream << todo2String( entry->todo() ) << endl;
         }
         stream << "</Tasks>" << endl;
         buffer.close();

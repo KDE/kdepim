@@ -598,7 +598,7 @@ QString OpieSocket::randomString( int length )
 QString OpieSocket::metaId() const{
     return d->partnerId;
 }
-KSyncEntry* retrEntry( const QString& )
+Syncee* retrEntry( const QString& )
 {
     return 0l;
 }
