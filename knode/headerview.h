@@ -22,6 +22,7 @@
 #include <kmime_util.h>
 
 class KPopupMenu;
+class KNHdrViewItem;
 
 class KNHeaderView : public KListView  {
 
