@@ -1589,6 +1589,7 @@ void KMMainWidget::folderSelected(KMFolder* aFolder, bool jumpToUnread)
 
   }
   mFolder = (KMFolder*)aFolder;
+  if ( mFolder ) { // == 0 -> pointing to toplevel ("Welcome to KMail") folder
   connect( mFolder, SIGNAL( changed() ),
            this, SLOT( updateMarkAsReadAction() ) );
   connect( mFolder, SIGNAL( msgHeaderChanged( KMFolder*, int ) ),
@@ -1597,6 +1598,7 @@ void KMMainWidget::folderSelected(KMFolder* aFolder, bool jumpToUnread)
            this, SLOT( updateMarkAsReadAction() ) );
   connect( mFolder, SIGNAL( msgRemoved(KMFolder *) ),
            this, SLOT( updateMarkAsReadAction() ) );
+  }
 
   readFolderConfig();
   if (mMsgView)
