@@ -16,9 +16,6 @@ kde_module_LTLIBRARIES = conduit_vcal.la conduit_todo.la
 
 libvcalconduit_shared_la_SOURCES = korganizerConduit.ui vcal-factorybase.cc \
 	vcal-setup.cc vcal-conduitbase.cc
-libvcalconduit_shared_la_COMPILE_FIRST = korganizerConduit.ui
-
-vcal-setup.cc : korganizerConduit.h
 
 ## Almost all source files for the vcal conduit are already in the shared
 ## library...

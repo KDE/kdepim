@@ -17,9 +17,6 @@ conduit_sysinfo_la_SOURCES = \
 	sysinfo-setup_dialog.ui
 conduit_sysinfo_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 conduit_sysinfo_la_LIBADD = ../../lib/libkpilot.la $(LIB_KDEUI) $(LIB_KIO)
-conduit_sysinfo_la_COMPILE_FIRST = sysinfo-setup_dialog.ui
-
-sysinfo-setup.cc : sysinfo-setup_dialog.h
 
 kpilot_sysinfo_data_DATA = Template.html Template.txt
 kpilot_sysinfo_datadir = $(kde_datadir)/kpilot/sysinfoconduit

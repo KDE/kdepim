@@ -7,10 +7,6 @@ conduit_address_la_SOURCES = resolutionDialog.cc abbrowser-factory.cc \
 conduit_address_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 conduit_address_la_LIBADD = ../../lib/libkpilot.la -lkabc
 
-conduit_address_la_COMPILE_FIRST = kaddressbookConduit.ui
-
-abbrowser-setup.cc : kaddressbookConduit.h
-
 servicedir = $(kde_servicesdir)
 service_DATA = abbrowser_conduit.desktop
 

@@ -10,9 +10,6 @@ ktnef_SOURCES = ktnefmain.cpp ktnefview.cpp attachpropertydialogbase.ui \
                 attachpropertydialog.cpp messagepropertydialog.cpp \
                 qwmf.cpp main.cpp
 ktnef_METASOURCES = AUTO
-ktnef_COMPILE_FIRST = attachpropertydialogbase.ui
-
-ktnefmain.cpp : attachpropertydialogbase.h
 
 noinst_HEADERS = ktnefmain.h ktnefview.h attachpropertydialog.h \
                  qwmf.h wmfstruct.h metafuncs.h

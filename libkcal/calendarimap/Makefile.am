@@ -9,8 +9,6 @@ kcal_imap_la_SOURCES = resourceimap.cpp resourceimap.skel \
 kcal_imap_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN)
 kcal_imap_la_LIBADD = -lkresources $(top_builddir)/libkcal/libkcal.la
 
-resourceimap.cpp : kmailicalIface_stub.h
-
 kmailicalIface_DIR = $(top_srcdir)/kmail
 
 servicedir = $(kde_servicesdir)/kresources/kcal
