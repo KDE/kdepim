@@ -7,6 +7,8 @@
 
 class Task;
 
+#define DONT_LOG false
+
 class KarmLogEvent
 {
  protected:

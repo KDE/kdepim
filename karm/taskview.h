@@ -64,6 +64,7 @@ class TaskView : public KListView
     void updateParents( QListViewItem* task, long totalDiff, long sesssionDiff);
     void startTimerFor( Task* item );
     void stopTimerFor( Task* item );
+    void deleteChildTasks( Task *item );
     void applyTrackers();
     void updateTrackers( Task *task, DesktopListType dl );
     bool parseLine( QString line, long *time, QString *name, int *level,
@@ -77,8 +78,9 @@ class TaskView : public KListView
     void buildAndPositionTasks( QPtrList<KCal::Todo>& todoList );
     void buildTask( KCal::Incidence* event, QDict<Task>& map );
     void positionTask( const KCal::Incidence* event, const QDict<Task>& map );
+    void addTimeToActiveTasks( int minutes );
 
-  public slots:
+  public:
     /*
        File format:
        zero or more lines of
@@ -88,10 +90,14 @@ class TaskView : public KListView
        [string]  desktops, in which to count. e.g. "1,2,5" (optional)
     */
     void load();
-    void save();
     void writeTaskToFile( QTextStream *, QListViewItem *, int );
     void writeTaskToCalendar( KCal::CalendarLocal&, Task*, int,
                               QPtrStack< KCal::Event >&);
+    void resetSessionTimeForAllTasks();
+    void resetTimeForAllTasks();
+
+  public slots:
+    void save();
     void startCurrentTimer();
     void stopCurrentTimer();
     void stopAllTimers();
@@ -102,8 +108,6 @@ class TaskView : public KListView
     void editTask();
     void deleteTask();
     void extractTime( int minutes );
-    void resetSessionTimeForAllTasks();
-    void resetTimeForAllTasks();
     void handleDesktopChange( int desktop );
     void loadFromKOrgTodos();
     void loadFromKOrgEvents();
@@ -116,14 +120,9 @@ class TaskView : public KListView
   signals:
     void sessionTimeChanged( long, long );
     void updateButtons();
-    void timerActive();
-    void timerInactive();
+    void timersActive();
+    void timersInactive();
     void tasksChanged( QPtrList<Task> activeTasks );
-
-
-  protected slots:
-    void stopChildCounters( Task *item );
-    void addTimeToActiveTasks( int minutes );
 };
 
 inline QString TaskView::formatTime( long minutes )

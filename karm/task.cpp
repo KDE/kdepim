@@ -72,6 +72,9 @@ void Task::init( const QString& taskName, long minutes, long sessionTime,
   _i = 0;
 }
 
+Task::~Task() {
+  delete _timer;
+}
 
 void Task::setRunning( bool on )
 {
@@ -100,27 +103,38 @@ bool Task::isRunning() const
 void Task::setName( const QString& name )
 {
   QString oldname = _name;
-  _name = name;
-  _logging->rename( this, oldname );
-  update();
+  // only rename if new name is different than old
+  if ( oldname != name ) {
+    _name = name;
+    _logging->rename( this, oldname );
+    update();
+  }
 }
 
-void Task::setTotalTime ( long minutes )
+void Task::setTotalTime ( long minutes, bool do_logging )
 {
   long oldtime = _totalTime;
   _totalTime = minutes;
-  noNegativeTimes();
-  _logging->newTotalTime( this, _totalTime, (_totalTime - oldtime) );
-  update();
+  // only set new total time if new total time is different than old
+  if ( oldtime != _totalTime ) {
+    noNegativeTimes();
+    if ( do_logging )
+      _logging->newTotalTime( this, _totalTime, (_totalTime - oldtime) );
+    update();
+  }
 }
 
-void Task::setSessionTime ( long minutes )
+void Task::setSessionTime ( long minutes, bool do_logging )
 {
   long oldtime = _sessionTime;
   _sessionTime = minutes;
-  noNegativeTimes();
-  _logging->newSessionTime( this, _sessionTime, (_sessionTime - oldtime) );
-  update();
+  // only set new session time if new time is different than old
+  if ( oldtime != _sessionTime ) {
+    noNegativeTimes();
+    if ( do_logging )
+      _logging->newSessionTime( this, _sessionTime, (_sessionTime - oldtime) );
+    update();
+  }
 }
 
 void Task::setDesktopList ( DesktopListType desktopList )

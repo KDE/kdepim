@@ -81,12 +81,12 @@ MainWindow::MainWindow()
 
   _tray = new KarmTray( this );
 
-  connect( _taskView, SIGNAL( timerActive() ),  _tray, SLOT( startClock() ) );
-  connect( _taskView, SIGNAL( timerActive() ),  this,  SLOT( enableStopAll()));
-  connect( _taskView, SIGNAL( timerInactive() ),_tray, SLOT( stopClock() ) );
-  connect( _taskView, SIGNAL( timerInactive() ),this,  SLOT( disableStopAll()));
-  connect( _taskView, SIGNAL( tasksChanged( QPtrList<Task> ) ), _tray,
-                   SLOT( updateToolTip( QPtrList<Task> ) ) );
+  connect( _taskView, SIGNAL( timersActive() ), _tray, SLOT( startClock() ) );
+  connect( _taskView, SIGNAL( timersActive() ), this,  SLOT( enableStopAll() ));
+  connect( _taskView, SIGNAL( timersInactive() ), _tray, SLOT( stopClock() ) );
+  connect( _taskView, SIGNAL( timersInactive() ),  this,  SLOT( disableStopAll()));
+  connect( _taskView, SIGNAL( tasksChanged( QPtrList<Task> ) ),
+                      _tray, SLOT( updateToolTip( QPtrList<Task> ) ));
 
   // FIXME: this shouldnt stay. We need to check whether the
   // file exists and if not, create a blank one and ask whether

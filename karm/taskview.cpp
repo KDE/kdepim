@@ -551,7 +551,7 @@ void TaskView::startTimerFor(Task* item)
     activeTasks.append(item);
     emit updateButtons();
     if ( activeTasks.count() == 1 )
-        emit timerActive();
+        emit timersActive();
 
     emit tasksChanged( activeTasks);
   }
@@ -559,13 +559,13 @@ void TaskView::startTimerFor(Task* item)
 
 void TaskView::stopAllTimers()
 {
-  for(unsigned int i=0; i<activeTasks.count();i++) {
+  for (unsigned int i=0; i<activeTasks.count();i++) {
     activeTasks.at(i)->setRunning(false);
   }
   _idleTimeDetector->stopIdleDetection();
   activeTasks.clear();
   emit updateButtons();
-  emit timerInactive();
+  emit timersInactive();
   emit tasksChanged( activeTasks);
 }
 
@@ -602,7 +602,7 @@ void TaskView::stopTimerFor(Task* item)
     item->setRunning(false);
     if (activeTasks.count()== 0) {
       _idleTimeDetector->stopIdleDetection();
-      emit timerInactive();
+      emit timersInactive();
     }
     emit updateButtons();
   }
@@ -700,13 +700,13 @@ void TaskView::editTask()
 {
   Task *task = (Task *) currentItem();
   if (!task)
-  return;
+    return;
 
   DesktopListType desktops = task->getDesktops();
   AddTaskDialog *dialog = new AddTaskDialog(i18n("Edit Task"), true, &desktops);
-  dialog->setTask(task->name(),
-                  task->totalTime(),
-                  task->sessionTime());
+  dialog->setTask( task->name(),
+                   task->totalTime(),
+                   task->sessionTime() );
   int result = dialog->exec();
   if (result == QDialog::Accepted) {
     QString taskName = i18n("Unnamed Task");
@@ -751,8 +751,9 @@ void TaskView::updateParents( QListViewItem* task, long totalDiff,
   QListViewItem *item = task->parent();
   while (item) {
     Task *parentTask = (Task *) item;
-    parentTask->setTotalTime(parentTask->totalTime()+totalDiff);
-    parentTask->setSessionTime(parentTask->sessionTime()+sessionDiff);
+    parentTask->setTotalTime( parentTask->totalTime() + totalDiff, DONT_LOG );
+    parentTask->setSessionTime( parentTask->sessionTime() + sessionDiff,
+                                DONT_LOG );
     item = item->parent();
   }
   // only toplevel tasks directly contribute to the statusbar
@@ -762,50 +763,49 @@ void TaskView::updateParents( QListViewItem* task, long totalDiff,
 
 void TaskView::deleteTask()
 {
-  Task *item = ((Task *) currentItem());
-  if (item == 0) {
+  Task *task = ((Task *) currentItem());
+  if (task == 0) {
     KMessageBox::information(0,i18n("No task selected"));
     return;
   }
 
   int response = KMessageBox::Yes;
   if ( _preferences->promptDelete() ) {
-      if (item->childCount() == 0) {
-          response = KMessageBox::questionYesNo(0,
+    if (task->childCount() == 0) {
+      response = KMessageBox::questionYesNo( 0,
                   i18n( "Are you sure you want to delete "
-                        "the task named\n\"%1\"").arg(item->name()),
+                        "the task named\n\"%1\"").arg(task->name()),
                   i18n( "Deleting Task"));
-      }
-      else {
-          response = KMessageBox::questionYesNo(0,
+    }
+    else {
+      response = KMessageBox::questionYesNo( 0,
                   i18n( "Are you sure you want to delete the task named"
                         "\n\"%1\"\n" "NOTE: all its subtasks will also "
-                        "be deleted!").arg(item->name()),
+                        "be deleted!").arg(task->name()),
                   i18n( "Deleting Task"));
-      }
+    }
   }
 
   if (response == KMessageBox::Yes) {
 
-    // Remove chilren from the active set of tasks.
-    stopChildCounters(item);
-    stopTimerFor(item);
+    deleteChildTasks(task);
+    stopTimerFor(task);
 
-    // Stop idle detection if no more counters is running
+    // Stop idle detection if no more counters are running
     if (activeTasks.count() == 0) {
       _idleTimeDetector->stopIdleDetection();
-      emit timerInactive();
+      emit timersInactive();
     }
     emit tasksChanged( activeTasks );
 
-    long sessionTime = item->sessionTime();
-    long totalTime   = item->totalTime();
-    updateParents( item, -totalTime, -sessionTime );
+    long sessionTime = task->sessionTime();
+    long totalTime   = task->totalTime();
+    updateParents( task, -totalTime, -sessionTime );
 
     DesktopListType desktopList;
-    updateTrackers(item, desktopList); // remove from tracker list
+    updateTrackers(task, desktopList); // remove from tracker list
 
-    delete item;
+    delete task;
 
     // remove root decoration if there is no more children.
     bool anyChilds = false;
@@ -821,14 +821,18 @@ void TaskView::deleteTask()
   }
 }
 
-void TaskView::stopChildCounters(Task *item)
+/** Removes all children tasks from the list of active Tasks
+ *  and delete them.
+ */
+void TaskView::deleteChildTasks(Task *item)
 {
   for ( QListViewItem *child=item->firstChild();
         child;
         child=child->nextSibling()) {
-    stopChildCounters((Task *)child);
+    deleteChildTasks((Task *)child);
+    activeTasks.removeRef((Task *)child);
+    delete (Task*)child;
   }
-  activeTasks.removeRef(item);
 }
 
 

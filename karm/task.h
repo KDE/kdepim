@@ -31,6 +31,7 @@ class Task : public QObject, public QListViewItem
     Task( const QString& taskame, long minutes, long sessionTime, 
           DesktopListType desktops, QListViewItem *parent = 0);
     Task( KCal::Incidence* event, QListView* parent );
+    ~Task();
 
     void init( const QString& taskame, long minutes, long sessionTime, 
                DesktopListType desktops);
@@ -46,10 +47,11 @@ class Task : public QObject, public QListViewItem
     void decrementTime( long minutes );
 
     /** sets the total time accumulated by the task
-     *  @param minutes time in minutes
+     *  @param      minutes time in minutes
+     *  @do_loggin  log the change or not?
      */
-    void setTotalTime ( long minutes );
-    void setSessionTime ( long minutes );
+    void setTotalTime ( long minutes, bool do_logging = true);
+    void setSessionTime ( long minutes, bool do_logging = true );
     void setDesktopList ( DesktopListType dl );
 
     /** returns the total time accumulated by the task
