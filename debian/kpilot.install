@@ -32,7 +32,6 @@ debian/tmp/usr/share/icons/crystalsvg/48x48/apps/kpilotDaemon.png
 debian/tmp/usr/share/services/abbrowser_conduit.desktop
 debian/tmp/usr/share/services/expense-conduit.desktop
 debian/tmp/usr/share/services/knotes-conduit.desktop
-debian/tmp/usr/share/services/null-conduit.desktop
 debian/tmp/usr/share/services/popmail-conduit.desktop
 debian/tmp/usr/share/services/time_conduit.desktop
 debian/tmp/usr/share/services/todo-conduit.desktop

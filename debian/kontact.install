@@ -7,6 +7,8 @@ debian/tmp/usr/lib/kde3/libkpknotesplugin.la
 debian/tmp/usr/lib/kde3/libkpknotesplugin.so
 debian/tmp/usr/lib/kde3/libkpkorganizerplugin.la
 debian/tmp/usr/lib/kde3/libkpkorganizerplugin.so
+debian/tmp/usr/lib/kde3/kcm_kontact.la
+debian/tmp/usr/lib/kde3/kcm_kontact.so
 debian/tmp/usr/lib/libkpinterfaces.la
 debian/tmp/usr/lib/libkpinterfaces.so
 debian/tmp/usr/lib/libkpinterfaces.so.1

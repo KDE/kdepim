@@ -1,5 +1,4 @@
 debian/tmp/usr/bin/korn
-debian/tmp/usr/share/applnk/Internet/KOrn.desktop
 debian/tmp/usr/share/applnk/Internet/More/KOrn.desktop
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/korn.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/korn.png

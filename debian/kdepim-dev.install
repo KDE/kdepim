@@ -20,7 +20,6 @@ debian/tmp/usr/lib/libkgantt.so
 debian/tmp/usr/lib/libkorganizer.so
 debian/tmp/usr/lib/libkpilot.so
 debian/tmp/usr/lib/libkpimexchange.so
-debian/tmp/usr/lib/libkcalsystem.so
 debian/tmp/usr/lib/libkdepim.so
 debian/tmp/usr/lib/libknewstuff.so
 debian/tmp/usr/lib/libksync.so
