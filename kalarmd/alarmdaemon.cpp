@@ -439,16 +439,22 @@ bool AlarmDaemon::checkAlarms( ADCalendarBase* cal )
 /*
  * Check which of the alarms for the given event are due.
  * The times in 'alarmtimes' corresponding to due alarms are set.
+ * The times for non-due alarms are set invalid in 'alarmtimes'.
  */
 void AlarmDaemon::checkEventAlarms(const Event& event, QValueList<QDateTime>& alarmtimes)
 {
   alarmtimes.clear();
-  QDateTime now = QDateTime::currentDateTime();
+  QDateTime now1 = QDateTime::currentDateTime().addSecs(1);
   Alarm::List alarms = event.alarms();
   Alarm::List::ConstIterator it;
   for ( it = alarms.begin(); it != alarms.end(); ++it ) {
-    Alarm *alarm = *it; 
-    alarmtimes.append((alarm->enabled()  &&  alarm->time() <= now) ? alarm->time() : QDateTime());
+    Alarm *alarm = *it;
+    QDateTime dt;
+    if ( alarm->enabled() ) {
+      // Find the alarm's latest due repetition (if any)
+      dt = alarm->previousRepetition( now1 );
+    }
+    alarmtimes.append( dt );
   }
 }
 
