@@ -1334,7 +1334,6 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
         icalperiodtype icalperiod = icalproperty_get_freebusy(p);
         readTzidParameter(p,icalperiod.start);
         QDateTime period_start = readICalDateTime(icalperiod.start);
-        // @TODO: Allow the period given as start date and duration...
         if ( !icaltime_is_null_time(icalperiod.end) ) {
           readTzidParameter(p,icalperiod.end);
           QDateTime period_end = readICalDateTime(icalperiod.end);
