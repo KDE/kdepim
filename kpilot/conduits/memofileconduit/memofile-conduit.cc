@@ -385,14 +385,12 @@ void MemofileConduit::listPilotMemos()
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
 		<< ": listing record id: [" << memo->id()
-#ifdef DEBUG
 		<< "] category id: [" << memo->getCat()
 		<< "] category name: [" << _category_name
 		<< "] title: [" << memo->getTitle()
 		<< "]" << endl;
 #endif
 	}
-#endif
 
 }
 
