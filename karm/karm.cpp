@@ -125,8 +125,8 @@ void Karm::load()
   }
   f.close();
 
-	setSelected(firstChild(), true);
-	setCurrentItem(firstChild());
+  setSelected(firstChild(), true);
+  setCurrentItem(firstChild());
 
   emit( sessionTimeChanged() );
 }
