@@ -42,18 +42,15 @@ void FilterLDIF::import(FilterInfo *info) {
      return;
    }
 
-   QString from( i18n("Source: ") + "\t" + filename );
-   QString to( i18n("Destination: ") + "\t" + i18n("the KAddressBook") );
-
-   info->from(from);
-   info->to(to);
-   info->current(i18n("Currently converting .LDIF address file to KABC"));
+   info->from(filename);
+   info->to(i18n("KAddressBook"));
+   info->current(i18n("Currently converting .LDIF address file to KAddressBook"));
 
    convert(filename, info);
 
    info->current(100);
    info->overall(100);
-   info->current(i18n("Finished converting .LDIF address file to KABC"));
+   info->current(i18n("Finished converting .LDIF address file to KAddressBook"));
 }
 
 

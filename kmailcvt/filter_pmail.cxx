@@ -52,16 +52,15 @@ FilterPMail::~FilterPMail()
 
 void FilterPMail::import(FilterInfo *info)
 {
-   QString  choosen;
-   QString  msg;
+   QString  chosen;
 
    inf = info;
    par = info->parent();
 
    // Select directory from where I have to import files
-   choosen=KFileDialog::getExistingDirectory(QDir::homeDirPath(),par);
-   if (choosen.isEmpty()) { return; } // No directory choosen here!
-   dir = choosen;
+   chosen=KFileDialog::getExistingDirectory(QDir::homeDirPath(),par);
+   if (chosen.isEmpty()) { return; } // No directory choosen here!
+   dir = chosen;
 
    // Count total number of files to be processed
    info->log(i18n("Counting files..."));
@@ -71,7 +70,7 @@ void FilterPMail::import(FilterInfo *info)
 
    //msg=i18n("Searching for distribution lists ('.pml')...");
    //info->log(msg);
-   //totalFiles += countFiles(choosen, "*.pml");
+   //totalFiles += countFiles(chosen, "*.pml");
 
    info->log(i18n("Importing new mail files ('.cnm')..."));
    processFiles(".cnm", &FilterPMail::importNewMessage);
@@ -125,14 +124,11 @@ void FilterPMail::processFiles(const char *mask, void(FilterPMail::* workFunc)(c
       if (strlen(file)>4 && strcasecmp(&file[strlen(file)-4],mask)==0) {
 
          // Notify current file
-         QString msg;
-         msg = i18n("From: %1").arg(file);
-         inf->from(msg);
+         inf->from(file);
 
          // Clear the other fields
-         msg = "";
-         inf->to(msg);
-         inf->current(msg);
+         inf->to(QString::null);
+         inf->current(QString::null);
          inf->current(-1);
 
          // combine dir and filename into a path
@@ -154,10 +150,8 @@ void FilterPMail::processFiles(const char *mask, void(FilterPMail::* workFunc)(c
 void FilterPMail::importNewMessage(const char *file)
 {
    const char* destFolder = "PMail-New Messages";
-   QString msg;
 
-   msg = i18n("To: %1").arg(destFolder);
-   inf->to(msg);
+   inf->to(QString(destFolder));
 
    addMessage(inf, destFolder, file);
 }
@@ -172,7 +166,6 @@ void FilterPMail::importMailFolder(const char *file)
    } pmm_head;
 
    FILE *f;
-   QString msg;
    QString folder;
    int ch = 0;
    int state = 0;
@@ -214,8 +207,7 @@ void FilterPMail::importMailFolder(const char *file)
    fread(&pmm_head, sizeof(pmm_head), 1, f);
    folder = "PMail-";
    folder.append(pmm_head.folder);
-   msg = i18n("To: %1").arg(folder);
-   inf->to(msg);
+   inf->to(folder);
    // The folder name might contain weird characters ...
    folder.replace(QRegExp("[^a-zA-Z0-9:.-]"), ":");
 
@@ -230,8 +222,7 @@ void FilterPMail::importMailFolder(const char *file)
          temp = tempfile->fstream();
          state = 1;
          n++;
-         msg.sprintf("Message %d", n);
-         inf->current(msg);
+         inf->current(i18n("Message %1").arg(n));
          // fall throught
 
       // inside a message state
@@ -295,7 +286,7 @@ void FilterPMail::importUnixMailFolder(const char *file)
    fclose(f);
    folder = "PMail-";
    folder.append(pmg_head.folder);
-   inf->to(i18n("To: %1").arg(folder));
+   inf->to(folder);
    // The folder name might contain weird characters ...
    folder.replace(QRegExp("[^a-zA-Z0-9:.-]"), ":");
 
@@ -324,8 +315,7 @@ void FilterPMail::importUnixMailFolder(const char *file)
          temp = tempfile->fstream();
          // Notify progress
          n++;
-         s.sprintf("Message %d", n);
-         inf->current(s);
+         inf->current(i18n("Message %1").arg(n));
       }
 
       fputs(line, temp);
@@ -340,3 +330,5 @@ void FilterPMail::importUnixMailFolder(const char *file)
 
    fclose(f);
 }
+
+// vim: ts=2 sw=2 et

@@ -88,10 +88,10 @@ void FilterPlain::processFiles(QString filter)
 {
    QDir dir (mailDir);
    QStringList files = dir.entryList(filter, QDir::Files, QDir::Name);
-   
+
    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
-	inf->from(i18n("From: %1").arg(*mailFile));
-	inf->to(i18n("To: %1").arg(dir.dirName()));
+	inf->from(*mailFile);
+	inf->to(dir.dirName());
 	addMessage(inf, dir.dirName(), dir.filePath(*mailFile));
         
 	inf->overall(100 * ++currentFile/ totalFiles);

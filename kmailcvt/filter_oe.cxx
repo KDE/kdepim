@@ -94,8 +94,8 @@ void FilterOE::importMailBox(const QString& fileName)
   QFile mailfile(fileName);
   QFileInfo mailfileinfo(fileName);
   folderName = "OE-" + mailfileinfo.baseName(TRUE);
-  inf->from(i18n("From: %1").arg(mailfileinfo.fileName()));
-  inf->to(i18n("To: %1").arg(folderName));
+  inf->from(mailfileinfo.fileName());
+  inf->to(folderName);
 
   if (!mailfile.open(IO_ReadOnly)) {
     inf->log(i18n("Couldn't open mailbox %1").arg(fileName));
