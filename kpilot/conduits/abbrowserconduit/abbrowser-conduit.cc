@@ -49,7 +49,7 @@
 #include <kabc/stdaddressbook.h>
 #include <kabc/resource.h>
 //#include <kabc/resourcefile.h>
-#include <kresources/resourcefactory.h>
+#include <kresources/factory.h>
 
 #include <pilotUser.h>
 #include <pilotSerialDatabase.h>
@@ -232,7 +232,7 @@ bool AbbrowserConduit::_loadAddressBook()
 			break;
 		case eAbookLocal: { // initialize the abook with the given file
 			aBook = new KABC::AddressBook();
-			KRES::ResourceFactory*resfact=KRES::ResourceFactory::self("contact");
+			KRES::Factory*resfact=KRES::Factory::self("contact");
 			if (aBook && resfact)
 			{
 				// just give the config object of the conduit, because the filename
