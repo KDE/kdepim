@@ -79,7 +79,6 @@ void Task::init( const QString& taskName, long minutes, long sessionTime,
   _lastStart = QDateTime::currentDateTime();
   _totalTime = _time = minutes;
   _totalSessionTime = _sessionTime = sessionTime;
-  noNegativeTimes();
   _timer = new QTimer(this);
   _desktops = desktops;
   connect(_timer, SIGNAL(timeout()), this, SLOT(updateActiveIcon()));
@@ -199,7 +198,6 @@ void Task::changeTimes( long minutesSession, long minutes, KarmStorage* storage)
     _sessionTime += minutesSession;
     _time += minutes;
     if ( storage ) storage->changeTime(this, minutes * gSecondsPerMinute);
-    noNegativeTimes();
     changeTotalTimes( minutesSession, minutes );
   }
 }
@@ -212,7 +210,6 @@ void Task::changeTotalTimes( long minutesSession, long minutes )
 
   _totalSessionTime += minutesSession;
   _totalTime += minutes;
-  noNegativeTimes();
   update();
   changeParentTotalTimes( minutesSession, minutes );
 }
@@ -265,14 +262,6 @@ void Task::updateActiveIcon()
 {
   _currentPic = (_currentPic+1) % 8;
   setPixmap(1, *(*icons)[_currentPic]);
-}
-
-void Task::noNegativeTimes()
-{
-  if ( _time < 0 )
-      _time = 0;
-  if ( _sessionTime < 0 )
-      _sessionTime = 0;
 }
 
 QString Task::fullName() const
