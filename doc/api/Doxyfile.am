@@ -2,43 +2,19 @@
 apidox-am-yes:
 	@if test "$(subdir)" != "."; then \
 		$(mkinstalldirs) $(top_builddir)/apidocs/$(subdir) ;\
-		if test ! -x $(top_builddir)/apidocs/common; then \
-			if test -d $(top_srcdir)/doc/api; then \
-			   common_dir=`cd $(top_srcdir)/doc/api && pwd` ;\
-			else \
-	   		   common_dir=$(kde_libs_htmldir)/en/common ;\
-			fi ;\
-			$(LN_S) $$common_dir $(top_builddir)/apidocs/common; \
-		fi ;\
-		cp $(top_srcdir)/admin/Doxyfile.global Doxyfile; \
-		echo "PROJECT_NAME           = \"$(subdir) Library\"" >> Doxyfile; \
+		cp $(top_srcdir)/doc/api/Doxyfile.pim Doxyfile; \
+		echo "PROJECT_NAME           = \"$(subdir)\"" >> Doxyfile; \
 		echo "PROJECT_NUMBER         = \"Version $(VERSION)\"" >> Doxyfile; \
 		echo "INPUT                  = $(srcdir)" >> Doxyfile; \
 		echo "IMAGE_PATH             = $(top_srcdir)/doc/api" >> Doxyfile ;\
 		echo "OUTPUT_DIRECTORY       = $(top_builddir)/apidocs" >> Doxyfile; \
 		echo "HTML_OUTPUT            = $(subdir)/html" >> Doxyfile; \
-	        echo "GENERATE_HTML          = YES" >> Doxyfile ;\
-		echo "HTML_HEADER            = $(top_builddir)/apidocs/common/header.html" >> Doxyfile;\
-		echo "HTML_FOOTER            = $(top_builddir)/apidocs/common/footer.html" >> Doxyfile;\
-		echo "HTML_STYLESHEET        = $(top_builddir)/apidocs/common/doxygen.css" >> Doxyfile;\
+		echo "HTML_HEADER            = $(top_srcdir)/doc/api/header.html" >> Doxyfile;\
+		echo "HTML_FOOTER            = $(top_srcdir)/doc/api/footer.html" >> Doxyfile;\
+		echo "HTML_STYLESHEET        = $(top_srcdir)/doc/api/doxygen.css" >> Doxyfile;\
 		echo "LATEX_OUTPUT           = $(subdir)/latex" >> Doxyfile; \
 		echo "RTF_OUTPUT             = $(subdir)/rtf" >> Doxyfile; \
 		echo "MAN_OUTPUT             = $(subdir)/man" >> Doxyfile; \
-		echo "HTML_ALIGN_MEMBERS     = NO" >> Doxyfile ;\
-		echo "REFERENCED_BY_RELATION = NO" >> Doxyfile ;\
-		echo "REFERENCES_RELATION    = NO" >> Doxyfile ;\
-		echo "VERBATIM_HEADERS       = NO" >> Doxyfile ;\
-		echo "GENERATE_LATEX         = NO" >> Doxyfile ; \
-		echo "GENERATE_RTF           = NO" >> Doxyfile ; \
-		echo "GENERATE_MAN           = NO" >> Doxyfile ; \
-		echo "GENERATE_XML           = NO" >> Doxyfile ; \
-		echo "GENERATE_HTML          = YES" >> Doxyfile ;\
-		echo "SOURCE_BROWSER         = NO" >> Doxyfile ; \
-		echo "GENERATE_AUTOGEN_DEF   = NO" >> Doxyfile ; \
-		echo "ENABLE_PREPROCESSING   = NO" >> Doxyfile ; \
-		echo "CLASS_DIAGRAMS         = NO" >> Doxyfile ; \
-		echo "HAVE_DOT               = NO" >> Doxyfile ; \
-		echo "IGNORE_PREFIX          = K" >> Doxyfile ;\
 		$(DOXYGEN) Doxyfile ;\
 	fi
 
