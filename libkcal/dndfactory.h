@@ -27,6 +27,7 @@ namespace KCal {
 class ICalDrag;
 class Event;
 class Todo;
+class Calendar;
 
 /**
   This class implements functions to create Drag and Drop objects used for
@@ -48,7 +49,7 @@ class DndFactory
     Todo *createDropTodo(QDropEvent *de);
     /** Create Event object from drop event */
     Event *createDrop(QDropEvent *de);
-  
+
     /** cut event to clipboard */
     void cutEvent(Event *);
     /** cut, copy, and paste operations follow. */
