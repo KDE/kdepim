@@ -676,6 +676,8 @@ void ResourceXMLRPC::listEventsFinished( const QValueList<QVariant>& list,
       } else
         delete event;
     } else {
+      if ( !localUid.isEmpty() )
+        event->setUid( localUid );
       mEventUidMapper->add( event->uid(), uid );
       mCalendar.addEvent( event );
       changed = true;
