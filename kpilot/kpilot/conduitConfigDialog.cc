@@ -57,6 +57,7 @@ static const char *conduitconfigdialog_id =
 #include <kseparator.h>
 #include <kconfigskeleton.h>
 
+#include "uiDialog.h"
 #include "plugin.h"
 #include "kpilotConfig.h"
 #include "kpilotConfigDialog.h"

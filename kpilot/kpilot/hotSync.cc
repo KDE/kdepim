@@ -109,7 +109,7 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 		// Let the KDE User know what's happening
 		// Pretty sure all database names are in latin1.
 		emit logMessage(i18n("Syncing database %1...")
-			.arg(QString::fromLatin1(db.name)));
+			.arg(PilotAppCategory::codec()->toUnicode(db.name)));
 
 		kapp->processEvents();
 	}
@@ -182,7 +182,7 @@ static inline bool dontBackup(struct DBInfo *info,
 	if (dbcreators.findIndex(info->creator) != -1) return true;
 
 	// Now take wildcards into account
-	QString db = QString::fromLatin1(info->name);
+	QString db = PilotAppCategory::codec()->toUnicode(info->name);
 	for (QStringList::const_iterator i = dbnames.begin(); i != dbnames.end(); ++i)
 	{
 		QRegExp re(*i,true,true); // Wildcard match
@@ -391,7 +391,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 			<< endl;
 #endif
 		QString s = i18n("Skipping %1")
-			.arg(QString::fromLatin1(info.name));
+			.arg(PilotAppCategory::codec()->toUnicode(info.name));
 		addSyncLogEntry(s);
 		return;
 	}
@@ -402,9 +402,8 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 		return;
 	}
 
-	// Pretty sure all database names are latin1.
 	QString s = i18n("Backing up: %1")
-		.arg(QString::fromLatin1(info.name));
+		.arg(PilotAppCategory::codec()->toUnicode(info.name));
 	addSyncLogEntry(s);
 
 	if (!createLocalDatabase(&info))
@@ -413,7 +412,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 			<< ": Couldn't create local database for "
 			<< info.name << endl;
 		addSyncLogEntry(i18n("Backup of %1 failed.\n")
-			.arg(QString::fromLatin1(info.name)));
+			.arg(PilotAppCategory::codec()->toUnicode(info.name)));
 	}
 	else
 	{
@@ -425,7 +424,7 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 {
 	FUNCTIONSETUP;
 
-	QString databaseName(QString::fromLatin1(info->name));
+	QString databaseName(PilotAppCategory::codec()->toUnicode(info->name));
 	if (!fFullBackup)
 	{
 		// open the serial db first so that the local db is not read into memory

@@ -60,7 +60,7 @@ void DBFlagsEditor::slotOk()
 {
 	if (KMessageBox::questionYesNo(this, i18n("Changing the database flags might corrupt the whole database, or make the data unusable. Do not change the values unless you are absolutely sure you know what you are doing.\n\nReally assign these new flags?"), i18n("Changing Database Flags"))==KMessageBox::Yes)
 	{
-		strlcpy(dbi->name, widget->fDBName->text().latin1(), 33);
+		strlcpy(dbi->name, PilotAppCategory::codec()->fromUnicode(widget->fDBName->text()), 33);
 
 		char buff[5];
 		strlcpy(buff, widget->fType->text().latin1(), 5);
