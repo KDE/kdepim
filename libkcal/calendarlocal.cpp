@@ -201,7 +201,7 @@ Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
 
   Todo::List::ConstIterator it2;
   for( it2 = mTodoList.begin(); it2 != mTodoList.end(); ++it2 ) {
-    appendAlarms( alarms, *it2, from, to );
+    if (! (*it2)->isCompleted() ) appendAlarms( alarms, *it2, from, to );
   }
 
   return alarms;
