@@ -81,7 +81,7 @@
 
 static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
 
-  if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys )
+  if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys ) {
     if ( key.isInvalid() )
       qDebug( "key is invalid - ignoring" );
     if ( key.isExpired() ) {
@@ -94,6 +94,7 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
       qDebug( "key is disabled" );
       return false;
     }
+  }
 
   if ( keyUsage & Kleo::KeySelectionDialog::EncryptionKeys &&
        !key.canEncrypt() ) {
