@@ -115,9 +115,7 @@ int main(int argc, char *argv[])
   KCmdLineArgs::init( argc, argv, &aboutData, true );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
-  KLocale::setMainCatalogue("kio_help");
   KInstance ins("konsolekalendar");
-  KGlobal::locale();
 
 // Replace the KApplication call below with the three lines above
 // will make this a pure non-GUI application -- thanks for the info Stephan Kulow.
