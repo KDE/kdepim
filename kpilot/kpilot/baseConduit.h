@@ -30,8 +30,10 @@
 
 #include <qobject.h>
 #include <qstring.h>
+#include <qpixmap.h>
 #include "pilotRecord.h"
 
+class QWidget;
 class KSocket;
 
 class BaseConduit : public QObject
@@ -201,6 +203,9 @@ private:
 
 
 // $Log$
+// Revision 1.16  2001/03/02 16:59:35  adridg
+// Added new protocol message READ_APP_INFO for conduit->daemon communication
+//
 // Revision 1.15  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //
