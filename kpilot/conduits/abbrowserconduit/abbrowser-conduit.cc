@@ -640,9 +640,6 @@ void AbbrowserConduit::syncDeletedRecord()
 		QTimer::singleShot(0, this, SLOT(syncDeletedRecord()));
 		return;
 	}
-#ifdef DEBUG
-	DEBUGCONDUIT<<"Item "<<r->getID()<<" not yet synced, see if we find it in the addressbook"<<endl;
-#endif
 
 	QString uid = addresseeMap[r->getID()];
 	KABC::Addressee e = aBook->findByUid(uid);
@@ -734,18 +731,7 @@ KABC::Addressee AbbrowserConduit::_saveAbEntry(KABC::Addressee &abEntry)
 	{
 		addresseeMap.insert(abEntry.custom(appString, idString).toLong(), abEntry.uid());
 	}
-#ifdef DEBUG
-	else
-	{
-		DEBUGCONDUIT<<fname<<": WARNING: saveAbEntry without Pilot id set (uid: "<<abEntry.uid()<<")"<<endl;
-	}
-#endif
 	  
-// TODO: Remove this terrible hack when insertAddressee finally sets a default resource to new addressees
-// BEGIN BAD HACK
-//	if (!abEntry.resource()) 
-//		abEntry.setResource(aBook->resources().first());
-// END BAD HACK
 	aBook->insertAddressee(abEntry);
 	abChanged=true;
 	return abEntry;
@@ -867,10 +853,6 @@ DEBUGCONDUIT<<"Now syncing "<<padr.getField(entryFirstname)<<" "<<padr.getField(
 
 	if (backup) ad=_findMatch(pbackupadr);
 	if (ad.isEmpty()) ad=_findMatch(padr);
-#ifdef DEBUG
-//	if (ad.isEmpty())
-		DEBUGCONDUIT<<"ad.isEmpty()="<<ad.isEmpty()<<endl;
-#endif
 
 	if (ad.isEmpty() ) 
 	{
@@ -907,13 +889,7 @@ DEBUGCONDUIT<<"not a new entry, but PC entry does not exist => deconfliction of 
 	}
 	else
 	{
-#ifdef DEBUG
-DEBUGCONDUIT<<"vor insertCustom"<<endl;
-#endif
 		ad.insertCustom(appString, idString, QString::number(padr.getID()));
-#ifdef DEBUG
-DEBUGCONDUIT<<"Not equal"<<endl;
-#endif
 		PilotAddress backupadr(fAddressAppInfo, backup);
 		_mergeEntries(padr, backupadr, ad);
 	}
@@ -1024,7 +1000,6 @@ bool AbbrowserConduit::_equal(const PilotAddress & piAddress,
 	// TODO: also check the PilotID
 	if (_compare( abEntry.familyName(), piAddress.getField(entryLastname))  ) 
 	{
-DEBUGCONDUIT<<"Family name not equal: "<< abEntry.familyName()<<" vs. " <<piAddress.getField(entryLastname)<<endl;
 		return false;
 	} 
 	if (_compare( abEntry.givenName(), piAddress.getField(entryFirstname) ) )
@@ -1297,7 +1272,7 @@ int AbbrowserConduit::_conflict(const QString &entry, const QString &field, cons
 	if (pc == palm) return CHANGED_NONE;
 		// only pc modified, so return that string, no conflict
 #ifdef DEBUG
-	DEBUGCONDUIT<<fname<<": conflicting entries for "<<field<<" of "<<entry<<" are: palm="<<palm<<", backup="<<backup<<", pc="<<pc<<endl;
+//	DEBUGCONDUIT<<fname<<": conflicting entries for "<<field<<" of "<<entry<<" are: palm="<<palm<<", backup="<<backup<<", pc="<<pc<<endl;
 #endif
 	if (palm == backup) {
 		mergeNeeded=true;
@@ -1397,7 +1372,7 @@ int AbbrowserConduit::_smartMergeEntry(QString abEntry, const PilotAddress &back
 	bool mergeNeeded=false;
 	QString mergedStr;
 	mergedString=QString();
-DEBUGCONDUIT<<"PalmFlag="<<PalmFlag<<", Palm: "<<pilotAddress.getField(PalmFlag)<<", Backup: "<<backupAddress.getField(PalmFlag)<<endl;
+//DEBUGCONDUIT<<"PalmFlag="<<PalmFlag<<", Palm: "<<pilotAddress.getField(PalmFlag)<<", Backup: "<<backupAddress.getField(PalmFlag)<<endl;
 	
 	int res=_conflict(thisName, name, pilotAddress.getField(PalmFlag), backupAddress.getField(PalmFlag), abEntry, mergeNeeded, mergedStr);
 	if (res & CHANGED_NORES) return res;
@@ -1433,12 +1408,6 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	bool mergeNeeded = false;
 	QString mergedStr;
 	int res;
-//	KABC::PhoneNumber phone;
-
-#ifdef DEBUG
-//	DEBUGCONDUIT<<endl<<"************************************************************************"<<"Smartly merging:"<<endl;
-//	showAdresses(pilotAddress, backupAddress, abEntry);
-#endif
 
 	res=_smartMergeEntry(abEntry.familyName(), backupAddress, pilotAddress, (int)entryLastname, thisName, i18n("last name"), mergedStr);
 	if (res>=0) return res;
@@ -1475,11 +1444,6 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	res=_smartMergeEntry(abEntry.custom(appString, "CUSTOM4"), backupAddress, pilotAddress, entryCustom4, thisName, i18n("custom 4"), mergedStr);
 	if (res>=0) return res;
 	else if (!mergedStr.isEmpty()) abEntry.insertCustom(appString, "CUSTOM4", mergedStr);
-
-#ifdef DEBUG
-//	DEBUGCONDUIT<<endl<<endl<<"After personal fields:"<<endl<<endl;
-//	showAdresses(pilotAddress, backupAddress, abEntry);
-#endif
 
 	res=_smartMergePhone(abEntry, backupAddress, pilotAddress, PilotAddress::eWork, abEntry.phoneNumber(KABC::PhoneNumber::Work), thisName, i18n("work phone"));
 	if (res>=0) return res;
@@ -1518,15 +1482,7 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 
 	
 
-#ifdef DEBUG
-//	DEBUGCONDUIT<<endl<<endl<<"After phone fields:"<<endl<<endl;
-//	showAdresses(pilotAddress, backupAddress, abEntry);
-#endif
-	
-	
 	KABC::Address abAddress=getAddress(abEntry);
-/*	if (isPilotStreetHome()) abAddress = abEntry.address(KABC::Address::Home);
-	else abAddress = abEntry.address(KABC::Address::Work);*/
 	
 	res=_smartMergeEntry(abAddress.street(), backupAddress, pilotAddress, entryAddress, thisName, i18n("address"), mergedStr);
 	if (res>=0) return res;
@@ -1555,11 +1511,6 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	abEntry.insertCategory(pilotAddress.getCategoryLabel());
 
 
-#ifdef DEBUG
-//	DEBUGCONDUIT<<endl<<endl<<"After merge fields:"<<endl<<endl;
-//	showAdresses(pilotAddress, backupAddress, abEntry);
-#endif
-	
 	outPilotAddress = pilotAddress;
 	outAbEntry = abEntry;
 
@@ -1580,9 +1531,6 @@ int AbbrowserConduit::_mergeEntries(PilotAddress &pilotAddress, PilotAddress &ba
 	{
 		if (res & CHANGED_DUPLICATE)
 		{
-#ifdef DEBUG
-DEBUGCONDUIT<<"res & CHANGED_ADD"<<endl;
-#endif
 			if (res & CHANGED_PALM) 
 			{
 #ifdef DEBUG
@@ -1632,10 +1580,6 @@ DEBUGCONDUIT<<"res & CHANGED_PC"<<endl;
 int AbbrowserConduit::_handleConflict(PilotAddress &pilotAddress, PilotAddress &backupAddress, KABC::Addressee &abEntry)
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-DEBUGCONDUIT<<"abEntry.isEmpty()="<<abEntry.isEmpty()<<endl;
-DEBUGCONDUIT<<"abEntry.givenName()="<<abEntry.givenName()<<endl;
-#endif
 
 	
 	if (abEntry.isEmpty()) 
@@ -1647,23 +1591,14 @@ DEBUGCONDUIT<<"abEntry.givenName()="<<abEntry.givenName()<<endl;
 
 	if (_equal(pilotAddress, abEntry)) return CHANGED_NONE;
 	
-#ifdef DEBUG
-DEBUGCONDUIT<<"Not equal, so compare pilotAddress with backupAddress"<<endl;
-#endif
 	if (pilotAddress == backupAddress) {
 #ifdef DEBUG
 DEBUGCONDUIT<<"pilotAddress==backupAddress"<<endl;
 #endif
 		if (!_equal(backupAddress, abEntry)) {
-#ifdef DEBUG
-DEBUGCONDUIT<<"!_equal(backupAddress, abEntry)"<<endl;
-#endif
 			_copy(pilotAddress, abEntry);
 			return CHANGED_PALM;
 		} else {
-#ifdef DEBUG
-			DEBUGCONDUIT<<fname<<": pilot==backup and backup==abEntry, but pilot!=abEntry !!!!! BUG, BUG, BUG"<<endl;
-#endif
 			// This should never be called, since that would mean pilotAddress and backupAddress are equal, which we already checked!!!!
 			return CHANGED_NONE; 
 		}
@@ -1692,21 +1627,6 @@ DEBUGCONDUIT<<"!_equal(backupAddress, abEntry), Attempt a merge..."<<endl;
 						pilotAddress=pAdr;
 						abEntry=abEnt;
 				}
-//					case eUserChoose:
-//					case eKeepBothInAbbrowser:
-//						pilotAddress=pAdr;
-//						abEntry=abEnt;
-//						return ADD_BOTH; break;
-//					case eRevertToBackup: return CHANGED_BOTH; break;
-//					case ePilotOverides: return CHANGED_PC; break;
-//					case eAbbrowserOverides: return CHANGED_PALM; break;
-//					case eDoNotResolve:
-//					default:
-//						pilotAddress=pAdr;
-//						abEntry=abEnt;
-//						return CHANGED_NONE;
-//						break;
-//				}
 				return res;
 			} else { // no smart merge
 				switch ( getEntryResolution(abEntry, pilotAddress) ) {
@@ -1867,10 +1787,7 @@ KABC::Addressee AbbrowserConduit::_findMatch(const PilotAddress & pilotAddress) 
 #endif			
 		}
 	}
-#ifdef DEBUG
-			DEBUGCONDUIT<<fname<<": PilotRecord has id "<<pilotAddress.id()<<endl;
-#endif			
-	
+
 	bool piFirstEmpty = (pilotAddress.getField(entryFirstname) == 0L);
 	bool piLastEmpty = (pilotAddress.getField(entryLastname) == 0L);
 	bool piCompanyEmpty = (pilotAddress.getField(entryCompany) == 0L);
