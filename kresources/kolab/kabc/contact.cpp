@@ -1064,7 +1064,7 @@ QImage Contact::loadPictureFromKMail( const QString& attachmentName, KABC::Resou
 QImage Contact::loadPictureFromAddressee( const KABC::Picture& picture )
 {
   QImage img;
-  if ( !picture.isIntern() ) {
+  if ( !picture.isIntern() && !picture.url().isEmpty() ) {
     QString tmpFile;
     if ( KIO::NetAccess::download( picture.url(), tmpFile, 0 /*no widget known*/ ) ) {
       img.load( tmpFile );
@@ -1093,7 +1093,7 @@ QByteArray Kolab::Contact::loadDataFromKMail( const QString& attachmentName, KAB
 QByteArray Kolab::Contact::loadSoundFromAddressee( const KABC::Sound& sound )
 {
   QByteArray data;
-  if ( !sound.isIntern() ) {
+  if ( !sound.isIntern() && !sound.url().isEmpty() ) {
     QString tmpFile;
     if ( KIO::NetAccess::download( sound.url(), tmpFile, 0 /*no widget known*/ ) ) {
       QFile f( tmpFile );
