@@ -34,3 +34,4 @@ Type=Application
 Terminal=0
 MiniIcon=kpilot.xpm
 X-DCOP-ServiceType=Unique
+Categories=QT;KDE;Utility

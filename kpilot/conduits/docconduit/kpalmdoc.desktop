@@ -2,7 +2,11 @@
 [KDE Desktop Entry]
 Encoding=UTF-8
 Name=KPalmDOC
+Name[sv]=Kpalm DOC
 GenericName=PalmDOC converter
+GenericName[es]=Conversor de PalmDOC
+GenericName[hu]=PalmDOC-konverter
+GenericName[sv]=Konvertering av Palm DOC
 Exec=kpalmdoc
 Icon=kpalmdoc
 Type=Application
@@ -11,3 +15,4 @@ Terminal=0
 MiniIcon=kpalmdoc
 X-KDE-StartupNotify=true
 X-DCOP-ServiceType=Unique
+Categories=QT;KDE;Utility

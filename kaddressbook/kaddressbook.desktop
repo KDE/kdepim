@@ -49,3 +49,4 @@ X-DCOP-ServiceName=kaddressbook
 MimeType=text/x-vcard
 ServiceTypes=KParts/ReadOnlyPart,Browser/View,DCOP/AddressBook
 X-KDE-Library=libkaddressbookpart
+Categories=QT;KDE;Utility
