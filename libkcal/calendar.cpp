@@ -289,10 +289,10 @@ void Calendar::addIncidence(Incidence *i)
   i->accept(v);
 }
 
-QPtrList<Todo> Calendar::getFilteredTodoList()
+QPtrList<Todo> Calendar::todos()
 {
-  QPtrList<Todo> tl = getTodoList();
-  mFilter->apply(&tl);
+  QPtrList<Todo> tl = rawTodos();
+  mFilter->apply( &tl );
   return tl;
 }
 

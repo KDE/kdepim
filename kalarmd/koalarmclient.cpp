@@ -70,7 +70,7 @@ void KOAlarmClient::handleEvent( const QString &iCalendarString )
     mAlarmDialog->appendEvent( new Event( *ev ) );
   }
 
-  QPtrList<Todo> todos = cal.getTodoList();
+  QPtrList<Todo> todos = cal.todos();
 
   Todo *todo;
   for( todo = todos.first(); todo; todo = todos.next() ) {

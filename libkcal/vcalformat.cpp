@@ -101,7 +101,7 @@ bool VCalFormat::save(Calendar *calendar, const QString &fileName)
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
 
   // TODO STUFF
-  QPtrList<Todo> todoList = mCalendar->getTodoList();
+  QPtrList<Todo> todoList = mCalendar->rawTodos();
   QPtrListIterator<Todo> qlt(todoList);
   for (; qlt.current(); ++qlt) {
     vo = eventToVTodo(qlt.current());
@@ -1473,7 +1473,7 @@ void VCalFormat::populate(VObject *vcal)
 	if (mCalendar->getEvent(tmpStr)) {
 	  goto SKIP;
 	}
-	if (mCalendar->getTodo(tmpStr)) {
+	if (mCalendar->todo(tmpStr)) {
 	  goto SKIP;
 	}
       }
@@ -1521,7 +1521,7 @@ void VCalFormat::populate(VObject *vcal)
   }
   Todo *todo;
   for ( todo=mTodosRelate.first(); todo != 0; todo=mTodosRelate.next() ) {
-    todo->setRelatedTo(mCalendar->getTodo(todo->relatedToUid()));
+    todo->setRelatedTo(mCalendar->todo(todo->relatedToUid()));
   }
 }
 

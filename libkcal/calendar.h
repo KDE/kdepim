@@ -205,20 +205,20 @@ class Calendar {
     /**
       Return filterd list of todos.
     */
-    QPtrList<Todo> getFilteredTodoList();
-    /**
-      Return unfiltered list of todos.
-    */
-    virtual const QPtrList<Todo> &getTodoList() const = 0;
+    virtual QPtrList<Todo> todos();
     /**
       Searches todolist for an event with this unique string identifier,
       returns a pointer or null.
     */
-    virtual Todo *getTodo( const QString &UniqueStr ) = 0;
+    virtual Todo *todo( const QString &uid ) = 0;
     /**
       Returns list of todos due on the specified date.
     */
-    virtual QPtrList<Todo> getTodosForDate( const QDate &date ) = 0;
+    virtual QPtrList<Todo> todos( const QDate &date ) = 0;
+    /**
+      Return unfiltered list of todos.
+    */
+    virtual QPtrList<Todo> rawTodos() const = 0;
 
     /**
       Add a Journal entry to calendar.

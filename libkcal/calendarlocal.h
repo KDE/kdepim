@@ -77,16 +77,33 @@ class CalendarLocal : public Calendar, public IncidenceBase::Observer
     /** returns the number of events that are present on the specified date. */
     int numEvents(const QDate &qd);
   
-    /** add a todo to the todolist. */
-    void addTodo(Todo *todo);
-    /** remove a todo from the todolist. */
-    void deleteTodo(Todo *);
-    const QPtrList<Todo> &getTodoList() const;
-    /** searches todolist for an event with this unique string identifier,
-      returns a pointer or null. */
-    Todo *getTodo(const QString &UniqueStr);
-    /** Returns list of todos due on the specified date */
-    QPtrList<Todo> getTodosForDate(const QDate & date);
+    /**
+      Add a todo to the todolist.
+    */
+    void addTodo( Todo *todo );
+    /**
+      Remove a todo from the todolist.
+    */
+    void deleteTodo( Todo * );
+    /**
+      Searches todolist for an event with this unique string identifier,
+      returns a pointer or null.
+    */
+    Todo *todo( const QString &uid );
+    /**
+      Return list of all todos.
+    */
+    QPtrList<Todo> rawTodos() const;
+    /**
+      Returns list of todos due on the specified date.
+    */
+    QPtrList<Todo> todos( const QDate &date );
+    /**
+      Return list of all todos.
+      
+      Workaround because compiler does not recognize function of base class.
+    */
+    QPtrList<Todo> todos() { return Calendar::todos(); }
 
     /** Add a Journal entry to calendar */
     virtual void addJournal(Journal *);

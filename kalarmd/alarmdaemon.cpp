@@ -478,7 +478,7 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
       if (client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY) {
 	Event *event = calendar->getEvent( eventID );
         if (!event) {
-	  Todo *todo = calendar->getTodo( eventID );
+	  Todo *todo = calendar->todo( eventID );
 	  if(!todo) {
 	    return false;
 	  }

@@ -84,7 +84,7 @@ void TodoConduitPrivate::addIncidence(KCal::Incidence*e)
 
 int TodoConduitPrivate::updateIncidences()
 {
-	fAllTodos = fCalendar->getTodoList();
+	fAllTodos = fCalendar->todos();
 	fAllTodos.setAutoDelete(false);
 	return fAllTodos.count();
 }
@@ -363,6 +363,9 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 
 
 // $Log$
+// Revision 1.16  2002/07/09 22:38:04  kainhofe
+// Implemented a first (not-yet-functional) version of the category sync
+//
 // Revision 1.15  2002/06/12 22:11:17  kainhofe
 // Proper cleanup, libkcal still has some problems marking records modified on loading
 //

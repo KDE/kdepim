@@ -154,7 +154,7 @@ QString ICalFormat::toString( Calendar *cal )
   icalcomponent *component;
 
   // todos
-  QPtrList<Todo> todoList = cal->getTodoList();
+  QPtrList<Todo> todoList = cal->rawTodos();
   QPtrListIterator<Todo> qlt(todoList);
   for (; qlt.current(); ++qlt) {
     component = mImpl->writeTodo(qlt.current());

@@ -1671,7 +1671,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   while (c) {
 //    kdDebug(5800) << "----Todo found" << endl;
     Todo *todo = readTodo(c);
-    if (!cal->getTodo(todo->uid())) cal->addTodo(todo);
+    if (!cal->todo(todo->uid())) cal->addTodo(todo);
     c = icalcomponent_get_next_component(calendar,ICAL_VTODO_COMPONENT);
   }
 
@@ -1728,7 +1728,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
         if (cal->getEvent(tmpStr)) {
           goto SKIP;
         }
-        if (cal->getTodo(tmpStr)) {
+        if (cal->todo(tmpStr)) {
           goto SKIP;
         }
       }
@@ -1772,7 +1772,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   }
   Todo *todo;
   for ( todo=mTodosRelate.first(); todo != 0; todo=mTodosRelate.next() ) {
-    todo->setRelatedTo(cal->getTodo(todo->relatedToUid()));
+    todo->setRelatedTo(cal->todo(todo->relatedToUid()));
   }
 
   return true;

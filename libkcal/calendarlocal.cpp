@@ -331,24 +331,23 @@ void CalendarLocal::deleteTodo(Todo *todo)
   setModified( true );
 }
 
-
-const QPtrList<Todo> &CalendarLocal::getTodoList() const
+QPtrList<Todo> CalendarLocal::rawTodos() const
 {
   return mTodoList;
 }
 
-Todo *CalendarLocal::getTodo(const QString &UniqueStr)
+Todo *CalendarLocal::todo( const QString &uid )
 {
   Todo *aTodo;
   for (aTodo = mTodoList.first(); aTodo;
        aTodo = mTodoList.next())
-    if (aTodo->uid() == UniqueStr)
+    if (aTodo->uid() == uid)
       return aTodo;
   // not found
   return 0;
 }
 
-QPtrList<Todo> CalendarLocal::getTodosForDate(const QDate & date)
+QPtrList<Todo> CalendarLocal::todos( const QDate &date )
 {
   QPtrList<Todo> todos;
 
