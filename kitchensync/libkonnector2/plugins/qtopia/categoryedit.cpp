@@ -5,7 +5,7 @@
 #include <qfile.h>
 //#include <qstring.h>
 
-
+#include <kconfig.h>
 #include <kdebug.h>
 
 #include "categoryedit.h"
@@ -13,20 +13,14 @@
 
 using namespace OpieHelper;
 
-CategoryEdit::CategoryEdit()
-{
-
+CategoryEdit::CategoryEdit(){
 }
-CategoryEdit::CategoryEdit(const QString &fileName)
-{
+CategoryEdit::CategoryEdit(const QString &fileName){
     parse( fileName );
 }
-CategoryEdit::~CategoryEdit()
-{
-
+CategoryEdit::~CategoryEdit(){
 }
-void CategoryEdit::save(const QString& fileName)const
-{
+void CategoryEdit::save(const QString& fileName)const{
     QFile file( fileName );
     if ( file.open( IO_WriteOnly ) ) {
         QTextStream stream( &file );
@@ -49,12 +43,10 @@ void CategoryEdit::save(const QString& fileName)const
         file.close();
     }
 }
-int CategoryEdit::addCategory( const QString &name, int id )
-{
+int CategoryEdit::addCategory( const QString &name, int id ){
     return addCategory( QString::null, name, id );
 }
-int CategoryEdit::addCategory( const QString &appName,  const QString &name,  int id )
-{
+int CategoryEdit::addCategory( const QString &appName,  const QString &name,  int id ){
     kdDebug(5226) << "add Category " << appName << " " << name << " " << id << endl;
     if ( id == 0 ) {
         kdDebug(5226) << "need to generate one " << endl;
@@ -74,20 +66,27 @@ int CategoryEdit::addCategory( const QString &appName,  const QString &name,  in
     kdDebug(5226) << "new id is " << id << endl;
     return id;
 }
-void CategoryEdit::parse( const QString &tempFile )
-{
+/*
+ * we parse the simple Category File here
+ * We also keep track of global Cats
+ * and Of Organizer and Contact cats and then
+ * we will add them to the kde side...
+ */
+void CategoryEdit::parse( const QString &tempFile ){
     clear();
 
     QDomDocument doc( "mydocument" );
     QFile f( tempFile );
-    if ( !f.open( IO_ReadOnly ) ){
+    if ( !f.open( IO_ReadOnly ) )
 	return;
-    }
+
     if ( !doc.setContent( &f ) ) {
 	f.close();
 	return;
     }
     f.close();
+
+    QStringList global, contact, organizer;
 
     // print out the element names of all elements that are a direct child
     // of the outermost element.
@@ -100,13 +99,25 @@ void CategoryEdit::parse( const QString &tempFile )
 		QString id = e.attribute("id" );
 		QString app = e.attribute("app" );
 		QString name = e.attribute("name");
+
+                /*
+                 * see where it belongs default to global
+                 */
+                if (app == QString::fromLatin1("Calendar") || app == QString::fromLatin1("Todo List") )
+                    organizer.append( name );
+                else if ( app == QString::fromLatin1("Contacts") )
+                    contact.append( name );
+                else
+                    global.append( name );
+
 		OpieCategories category( id, name, app );
 		m_categories.append( category ); // cheater
 	    }
 	    n = n.nextSibling();
 	}
     }
-
+    updateKDE( "kaddressbookrc", global + contact );
+    updateKDE( "korganizerrc", global + organizer );
 
 }
 void CategoryEdit::clear()
@@ -144,4 +155,14 @@ QStringList CategoryEdit::categoriesByIds( const QStringList& ids,
     }
 
     return list;
+}
+void CategoryEdit::updateKDE( const QString& configFile,  const QStringList& cats ) {
+    KConfig conf(configFile);
+    conf.setGroup("General");
+    QStringList avail = conf.readListEntry("Custom Categories");
+    for (QStringList::ConstIterator it = cats.begin(); it !=  cats.end(); ++it ) {
+        if (!avail.contains( (*it) ) )
+            avail << (*it);
+    }
+    conf.writeEntry("Custom Categories", avail );
 }

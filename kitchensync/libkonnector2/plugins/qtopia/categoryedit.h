@@ -28,6 +28,10 @@ namespace OpieHelper {
         void clear();
         QValueList<OpieCategories> categories()const {  return m_categories; };
     private:
+        /**
+         * this function will be used internally to update the kde categories...
+         */
+        void updateKDE( const QString& app,  const QStringList& categories );
         QMap<int, bool> ids; // from tt Qtopia::UidGen
         QValueList<OpieCategories> m_categories;
     };
