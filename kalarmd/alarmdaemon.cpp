@@ -591,11 +591,11 @@ void AlarmDaemon::setTimerStatus()
  * DCOP call to add an application to the list of GUI applications,
  * and add it to the config file.
  */
-bool AlarmDaemon::registerGui(const QCString& appName, const QCString& dcopObject)
+void AlarmDaemon::registerGui(const QCString& appName, const QCString& dcopObject)
 {
   kdDebug(5900) << "AlarmDaemon::registerGui(" << appName << ")\n";
   if (appName.isEmpty())
-    return false;
+    return;
   const GuiInfo* g = getGuiInfo(appName);
   if (g)
     mGuis.remove(appName);   // the application is already in the GUI list
@@ -606,7 +606,6 @@ bool AlarmDaemon::registerGui(const QCString& appName, const QCString& dcopObjec
   for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next()) {
     notifyGuiCalStatus(cal);
   }
-  return true;
 }
 
 /*

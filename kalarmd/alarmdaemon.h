@@ -75,7 +75,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
                         bool displayCalendarName)
                        { return registerApp_(appName, appTitle, dcopObject,
                                              notificationType, displayCalendarName, true); }
-    bool    registerGui(const QCString& appName, const QCString& dcopObject);
+    void    registerGui(const QCString& appName, const QCString& dcopObject);
     void    readConfig();
     void    quit();
     void    forceAlarmCheck() { checkAlarms(); }
