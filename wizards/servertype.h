@@ -55,7 +55,7 @@ class ServerType : public QObject
      */
     typedef QValueList<ConnectionInfo> ConnectionInfoList;
 
-    ServerType( QObject *parent, const char *name ) {}
+    ServerType( QObject *parent, const char *name ):QObject(parent, name) {}
     virtual ~ServerType() {}
 
     /**
