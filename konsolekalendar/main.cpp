@@ -373,12 +373,12 @@ int main(int argc, char *argv[])
 	   */  
 	konsolekalendar->openCalendar();
 
-   if( view == true )
+   if( view )
    {
 	konsolekalendar->showInstance();
    }
 
-   if( add == true )
+   if( add )
    {
 	konsolekalendar->addEvent();   
    }
