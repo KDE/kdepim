@@ -134,7 +134,7 @@ void KNLVItemBase::expandChildren()
 {
   QListViewItemIterator it(firstChild());
   for( ; it.current(); ++it) {
-    if(it.current()->depth()==depth()) break;
+    if(it.current()->depth()<=depth()) break;
     it.current()->setOpen(true);
   }
 }
