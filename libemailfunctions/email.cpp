@@ -287,8 +287,16 @@ QString KPIM::emailParseResultToString( EmailParseResult errorCode )
 //-----------------------------------------------------------------------------
 bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
 {
-  QRegExp rx( "[a-zA-Z]*[\\w.-]*[a-zA-Z0-9]@[\\w-]+(\\.[\\w-])+" );
-  return ( rx.search( aStr ) == 0 ); // returns 0 if match and -1 for no match
+  int atChar = aStr.find( '@' );
+  QString domainPart = aStr.mid( atChar + 1);
+  QString addrRx = "[a-zA-Z]*[\\w.-]*[a-zA-Z0-9]@";
+  if ( domainPart[ 0 ] == '[' || domainPart[ domainPart.length()-1 ] == ']' ) {
+    addrRx += "\\[[0-9]{,3}(\\.[0-9]{,3}){3}\\]";
+  } else {
+    addrRx += "[\\w-]+(\\.[\\w-]+)";
+  }
+  QRegExp rx( addrRx );
+  return rx.exactMatch( aStr );
 }
 
 //-----------------------------------------------------------------------------
