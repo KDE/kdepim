@@ -50,7 +50,6 @@ PilotSerialDatabase::PilotSerialDatabase(int linksocket,
 	fDBSocket(linksocket)
 {
 	FUNCTIONSETUP;
-	setDBType(eSerialDB);
 	fDBName = dbName;
 
 	openDatabase();
@@ -367,4 +366,10 @@ int PilotSerialDatabase::deleteDatabase()
 	return dlp_DeleteDB(fDBSocket, 0, fDBName.latin1());
 }
 
+
+
+/* virtual */ PilotDatabase::DBType PilotSerialDatabase::dbType() const
+{
+	return eSerialDB;
+}
 

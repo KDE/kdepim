@@ -135,6 +135,9 @@ public:
 	struct DBInfo getDBInfo() const { return fDBInfo; }
 	void setDBInfo(struct DBInfo dbi) {fDBInfo=dbi; }
 
+	virtual DBType dbType() const;
+
+
 protected:
 	// Changes any forward slashes to underscores
 	void fixupDBName();

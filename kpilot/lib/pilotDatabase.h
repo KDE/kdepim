@@ -166,7 +166,7 @@ public:
 	typedef enum { eNone=0,
 		eLocalDB=1,
 		eSerialDB=2 } DBType;
-	int dbType() const { return fDBType; }
+	virtual DBType dbType() const = 0;
 
 	/**
 	* Here are some static utility functions. listAppInfo() is primarily
@@ -185,15 +185,9 @@ protected:
 
 	void setDBOpen(bool yesno) { fDBOpen = yesno; }
 
-	/**
-	* Use this from constructors of subclasses to set the
-	* type. Call it once only, with the correct type from DBType.
-	*/
-	void setDBType(int);
 private:
 	bool fDBOpen;
 	QString fName;
-	int fDBType;
 };
 
 #endif

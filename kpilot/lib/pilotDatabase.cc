@@ -41,8 +41,7 @@ static QStringList *createdNames = 0L;
 
 PilotDatabase::PilotDatabase(const QString &s) :
 	fDBOpen(false),
-	fName(s),
-	fDBType(0)
+	fName(s)
 {
 	FUNCTIONSETUP;
 	creationCount++;
@@ -96,19 +95,5 @@ PilotDatabase::PilotDatabase(const QString &s) :
 #endif
 }
 
-void PilotDatabase::setDBType(int i)
-{
-	FUNCTIONSETUP;
-
-	if (fDBType)
-	{
-		kdFatal() << "Resetting database type." << endl;
-		Q_ASSERT(!fDBType);
-	}
-	else
-	{
-		fDBType = i;
-	}
-}
 
 
