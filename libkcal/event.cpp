@@ -27,7 +27,7 @@
 using namespace KCal;
 
 Event::Event() :
-  mHasEndDate(false), mEndFloats(doesFloat()), mTransparency(0)
+  mHasEndDate(false), mTransparency(0)
 {
 }
 
@@ -35,7 +35,6 @@ Event::Event(const Event &e) : Incidence(e)
 {
   mDtEnd = e.mDtEnd;
   mHasEndDate = e.mHasEndDate;
-  mEndFloats  = e.mEndFloats;
   mTransparency = e.mTransparency;
 }
 
@@ -104,25 +103,6 @@ void Event::setHasEndDate(bool b)
 bool Event::hasEndDate() const
 {
   return mHasEndDate;
-}
-
-bool Event::doesEndFloat() const
-{
-  return mEndFloats;
-}
-
-void Event::setEndFloats(bool f)
-{
-  if (mReadOnly) return;
-  mEndFloats = f;
-  updated();
-}
-
-void Event::setFloats(bool f)
-{
-  if (mReadOnly) return;
-  mEndFloats = f;
-  Incidence::setFloats(f);
 }
 
 bool Event::isMultiDay() const

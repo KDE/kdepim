@@ -94,7 +94,7 @@ class IncidenceBase : public CustomProperties
      * i.e. has a date but no time attached to it. */
     bool doesFloat() const;
     /** Set whether the incidence floats, i.e. has a date but no time attached to it. */
-    virtual void setFloats(bool f);
+    void setFloats(bool f);
 
     /**
       Add Attendee to this incidence. IncidenceBase takes ownership of the

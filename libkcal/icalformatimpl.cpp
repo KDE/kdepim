@@ -157,7 +157,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
 
   // end time
   icaltimetype end;
-  if (event->doesEndFloat()) {
+  if (event->doesFloat()) {
 //    kdDebug(5800) << "§§ Event " << event->summary() << " floats." << endl;
     // +1 day because end date is non-inclusive.
     end = writeICalDate( event->dtEnd().date().addDays( 1 ) );

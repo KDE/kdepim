@@ -59,18 +59,6 @@ class Event : public Incidence
     /** Return whether the event has an end date/time. */
     bool hasEndDate() const;
 
-    /** Return true or false depending on whether the end date/time "floats,"
-     * i.e. has a date but no time attached to it. */
-    bool doesEndFloat() const;
-    /** Set whether the end date/time floats, i.e. has a date but no time attached to it.
-     *  Note that this is overridden by subsequent calls to setFloats().
-     */
-    virtual void setEndFloats(bool f);
-    /** Set whether the event floats, i.e. has a date but no time attached to it.
-     *  Both the start and end float status are set.
-     */
-    virtual void setFloats(bool f);
-
     /** Return true if the event spans multiple days, otherwise return false. */
     bool isMultiDay() const;
 
@@ -86,7 +74,6 @@ class Event : public Incidence
 
     QDateTime mDtEnd;
     bool mHasEndDate;
-    bool mEndFloats;
     int mTransparency;
 };
 
