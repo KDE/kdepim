@@ -97,12 +97,18 @@ public:
 	void startDaemonIfNeeded();
 
 public slots:
+	/**
+	* These are slots for the menu actions for each kind of
+	* sync that can be requested.
+	*/
 	void slotRestoreRequested();
 	void slotBackupRequested();
 	void slotHotSyncRequested();
-	void slotListSyncRequested();
+	void slotTestSyncRequested();
 	void slotFastSyncRequested();
 	void slotFullSyncRequested();
+	void slotHHtoPCRequested();
+	void slotPCtoHHRequested();
 
 
 	/**

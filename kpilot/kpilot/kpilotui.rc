@@ -3,12 +3,14 @@
 <kpartgui name="kpilot" version="5">
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
+    <!-- Keep this list synchronized with pilotDaemon.cc and kpilot.cc -->
     <Action name="file_hotsync" />
     <Action name="file_fastsync" />
     <Action name="file_fullsync" />
     <Action name="file_backup" />
     <Action name="file_restore" />
-    <Action name="file_list" />
+    <Action name="file_HHtoPC" />
+    <Action name="file_PCtoHH" />
     <Separator />
     <Action name="file_quit" />
   </Menu>

@@ -1,6 +1,21 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-12-06  Adriaan de Groot
+* Imported memofile from vanRijn.
+
+2004-11-30  Adriaan de Groot
+* Having a second child .. puts a dent in development time.
+* Make the daemon's next-sync match the one in KPilot, added tooltips
+  and whatsthis. Make the daemon tell KPilot what the next sync is,
+  so that changes from the tray menu are visible. This removes some strings.
+
+2004-11-29  Adriaan de Groot
+* Waiting for second child .. puts a dent in development time too.
+* Ported KPilot to pilot-link 0.12 (unreleased) which adds support
+  for newer devices and saves memory in the process.
+* Data-loss on restore bug fixed by Will Stephenson.
+
 2004-11-23  Adriaan de Groot
 * Squashed several silly bugs in wizard and startup code.
 

@@ -173,6 +173,8 @@ void PilotDaemonTray::setupWidget()
 		.arg(SyncAction::syncModeName((SyncAction::SyncMode)KPilotSettings::syncType())),
 		0);
 	fSyncTypeMenu->insertSeparator();
+
+        // Keep this synchronized with kpilotui.rc and kpilot.cc if at all possible.
 	MI(eHotSync);
 	MI(eFastSync);
 	MI(eFullSync);
@@ -691,6 +693,9 @@ bool PilotDaemon::setupPilotLink()
 			fTray->fSyncTypeMenu->setItemChecked(i,mode==i);
 		}
 	}
+
+	getLogger().logMessage(i18n("Next HotSync will be: %1. ").arg(syncTypeString(fNextSyncType)) +
+		i18n("Please press the HotSync button."));
 }
 
 /* DCOP ASYNC */ void PilotDaemon::requestSyncType(QString s)

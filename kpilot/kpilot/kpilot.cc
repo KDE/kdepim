@@ -349,8 +349,8 @@ void KPilotInstaller::slotAboutToShowComponent( QWidget *c )
 	int ix = fManagingWidget->pageIndex( c );
 	PilotComponent*compToShow = fP->list().at(ix);
 #ifdef DEBUG
-	DEBUGKPILOT << fname 
-		<< ": Index: " << ix 
+	DEBUGKPILOT << fname
+		<< ": Index: " << ix
 		<< ", Widget=" << c
 		<< ", ComToShow=" << compToShow << endl;
 #endif
@@ -443,7 +443,23 @@ void KPilotInstaller::slotFullSyncRequested()
 		i18n("Please press the HotSync button."));
 }
 
-void KPilotInstaller::slotListSyncRequested()
+void KPilotInstaller::slotHHtoPCRequested()
+{
+	FUNCTIONSETUP;
+	setupSync(SyncAction::eCopyHHToPC,
+		i18n("Next sync will copy Handheld data to PC. ") +
+		i18n("Please press the HotSync button."));
+}
+
+void KPilotInstaller::slotPCtoHHRequested()
+{
+	FUNCTIONSETUP;
+	setupSync(SyncAction::eCopyPCToHH,
+		i18n("Next sync will copy PC data to Handheld. ") +
+		i18n("Please press the HotSync button."));
+}
+
+void KPilotInstaller::slotTestSyncRequested()
 {
 	FUNCTIONSETUP;
 	setupSync(SyncAction::eTest,
@@ -473,7 +489,17 @@ void KPilotInstaller::slotListSyncRequested()
 			fAppStatus=Normal;
 		}
 		break;
-	default :
+	case KPilotDCOP::DaemonQuit :
+		if (fLogWidget)
+		{
+			fLogWidget->logMessage(
+			i18n("The daemon has exited. No further HotSyncs are possible "
+			"until the daemon is restarted (by quitting and restarting KPilot, "
+			"for instance.)"));
+		}
+		fAppStatus=WaitingForDaemon;
+		break;
+	case KPilotDCOP::None :
 		kdWarning() << k_funcinfo << ": Unhandled status message " << i << endl;
 		break;
 	}
@@ -548,7 +574,6 @@ void KPilotInstaller::setupSync(int kind, const QString & message)
 	getDaemon().requestSync(kind);
 }
 
-
 void KPilotInstaller::closeEvent(QCloseEvent * e)
 {
 	FUNCTIONSETUP;
@@ -567,13 +592,18 @@ void KPilotInstaller::initMenu()
 
 	syncPopup = new KActionMenu(i18n("HotSync"), CSL1("kpilot"),
 		actionCollection(), "popup_hotsync");
+	syncPopup->setToolTip(i18n("Select the kind of HotSync to perform next."));
+	syncPopup->setWhatsThis(i18n("Select the kind of HotSync to perform next. "
+		"This applies only to the next HotSync; to change the default, use "
+		"the configuration dialog."));
 	connect(syncPopup, SIGNAL(activated()),
 		this, SLOT(slotHotSyncRequested()));
 
-	// File actions
+	// File actions, keep this list synced with kpilotui.rc and pilotDaemon.cc
 	a = new KAction(i18n("&HotSync"), CSL1("hotsync"), 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_hotsync");
+	a->setToolTip(i18n("Next HotSync will be normal HotSync."));
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should be a normal HotSync."));
 	syncPopup->insert(a);
@@ -581,6 +611,7 @@ void KPilotInstaller::initMenu()
 	a = new KAction(i18n("&FastSync"), CSL1("fastsync"), 0,
 		this, SLOT(slotFastSyncRequested()),
 		actionCollection(), "file_fastsync");
+	a->setToolTip(i18n("Next HotSync will be a FastSync."));
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should be a FastSync (run conduits only)."));
 	syncPopup->insert(a);
@@ -588,6 +619,7 @@ void KPilotInstaller::initMenu()
 	a = new KAction(i18n("Full&Sync"), CSL1("fullsync"), 0,
 		this, SLOT(slotFullSyncRequested()),
 		actionCollection(), "file_fullsync");
+	a->setToolTip(i18n("Next HotSync will be a FullSync."));
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should be a FullSync (check data on both sides)."));
 	syncPopup->insert(a);
@@ -595,6 +627,7 @@ void KPilotInstaller::initMenu()
 	a = new KAction(i18n("&Backup"), CSL1("backup"), 0,
 		this, SLOT(slotBackupRequested()),
 		actionCollection(), "file_backup");
+	a->setToolTip(i18n("Next HotSync will be backup."));
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should back up the Handheld to the PC."));
 	syncPopup->insert(a);
@@ -602,23 +635,46 @@ void KPilotInstaller::initMenu()
 	a = new KAction(i18n("&Restore"), CSL1("restore"), 0,
 		this, SLOT(slotRestoreRequested()),
 		actionCollection(), "file_restore");
+	a->setToolTip(i18n("Next HotSync will be restore."));
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should restore the Handheld from data on the PC."));
 	syncPopup->insert(a);
 
+	a = new KAction(i18n("Copy Handheld to PC"), QString::null, 0,
+		this, SLOT(slotHHtoPCRequested()),
+		actionCollection(), "file_HHtoPC");
+	a->setToolTip(i18n("Next HotSync will be backup."));
+	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+		"should copy all data from the Handheld to the PC, "
+		"overwriting entries on the PC."));
+	syncPopup->insert(a);
+
+	a = new KAction(i18n("Copy PC to Handheld"), QString::null, 0,
+		this, SLOT(slotPCtoHHRequested()),
+		actionCollection(), "file_PCtoHH");
+	a->setToolTip(i18n("Next HotSync will copy PC to Handheld."));
+	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+		"should copy all data from the PC to the Handheld, "
+		"overwriting entries on the Handheld."));
+	syncPopup->insert(a);
+
+
+#ifdef DEBUG
 	a = new KAction(i18n("&List Only"),CSL1("listsync"),0,
-		this,SLOT(slotListSyncRequested()),
+		this,SLOT(slotTestSyncRequested()),
 		actionCollection(), "file_list");
+	a->setToolTip(i18n("Next HotSync will list databases."));
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should just list the files on the Handheld and do nothing "
 		"else."));
 	syncPopup->insert(a);
-
+#endif
 
 
 	a = new KAction(i18n("Rese&t Link"),CSL1("reload"), 0,
 		this, SLOT(slotResetLink()),
 		actionCollection(),"file_reload");
+	a->setToolTip(i18n("Reset the device connection."));
 	a->setWhatsThis(i18n("Try to reset the daemon and its connection "
 		"to the Handheld."));
 
