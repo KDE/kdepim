@@ -6,6 +6,8 @@ AM_CONDITIONAL(include_exchange_SUBDIR, test "$ac_use_exchange" = "yes")
 
 if test "x$ac_use_exchange" != "xyes"; then
         DO_NOT_COMPILE="$DO_NOT_COMPILE libkpimexchange"
+else
+	AC_DEFINE(KDEPIM_ENABLE_EXCHANGE, 1, [Define if you want Exchange2000 Server support])
 fi
 ~
 

@@ -1,20 +1,21 @@
 /*
-    This file is part of the KDE-PIM exchange library
+    This file is part of libkpimexchange
     Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
+    This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
 */
 
 #include <qfile.h>
@@ -94,7 +95,7 @@ void ExchangeDownload::download(KCal::Calendar* calendar, const QDate& start, co
 
 void ExchangeDownload::initiateDownload( const QDate& start, const QDate& end, bool showProgress ) 
 {
-  mAccount->authenticate();
+  // mAccount->authenticate();
 
   if( showProgress ) {
     kdDebug() << "Creating progress dialog" << endl;
@@ -105,11 +106,9 @@ void ExchangeDownload::initiateDownload( const QDate& start, const QDate& end, b
     // connect( mProgress, SIGNAL(complete( ExchangeProgress* )), this, SLOT(slotComplete( ExchangeProgress* )) );
   }
 
-  kdDebug() << "Makeing date select query" << endl;
-
   QString sql = dateSelectQuery( start, end );
  
-  kdDebug() << "Exchange download query: " << endl << sql << endl;
+  // kdDebug() << "Exchange download query: " << endl << sql << endl;
 
   increaseDownloads();
 
@@ -141,7 +140,7 @@ void ExchangeDownload::slotSearchResult( KIO::Job *job )
   }
   QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
 
-  kdDebug() << "Search result: " << endl << response.toString() << endl;
+  // kdDebug() << "Search result: " << endl << response.toString() << endl;
 
   handleAppointments( response, true );
   
@@ -157,7 +156,7 @@ void ExchangeDownload::slotMasterResult( KIO::Job *job )
   }
   QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
 
-  kdDebug() << "Search (master) result: " << endl << response.toString() << endl;
+  // kdDebug() << "Search (master) result: " << endl << response.toString() << endl;
 
   handleAppointments( response, false );
   
@@ -172,7 +171,7 @@ void ExchangeDownload::handleAppointments( const QDomDocument& response, bool re
   {
     kdDebug() << "Current item:" << item.tagName() << endl;
     QDomNodeList propstats = item.elementsByTagNameNS( "DAV:", "propstat" );
-    kdDebug() << "Item has " << propstats.count() << " propstat children" << endl; 
+    // kdDebug() << "Item has " << propstats.count() << " propstat children" << endl; 
     for( uint i=0; i < propstats.count(); i++ )
     {
       QDomElement propstat = propstats.item(i).toElement();
@@ -235,7 +234,7 @@ void ExchangeDownload::handleRecurrence(QString uid) {
 	" AND (\"urn:schemas:calendar:instancetype\" = 1)\r\n";
 //	"      OR \"urn:schemas:calendar:instancetype\" = 3)\r\n" // FIXME: exception are not handled
 
-  kdDebug() << "Exchange master query: " << endl << query << endl;
+  // kdDebug() << "Exchange master query: " << endl << query << endl;
 
   increaseDownloads();
  
@@ -246,7 +245,7 @@ void ExchangeDownload::handleRecurrence(QString uid) {
 
 void ExchangeDownload::slotData(KIO::Job *job, const QByteArray &data) {
   KURL url = static_cast<KIO::TransferJob *>(job)->url();
-  kdDebug() << "Got data for " << url.prettyURL() << endl;
+  // kdDebug() << "Got data for " << url.prettyURL() << endl;
   
   if(data.size() != 0)
   {
@@ -306,8 +305,8 @@ void ExchangeDownload::handlePart( DwEntity *part ) {
   // kdDebug() << "part text:" << endl << part->Body().AsString().c_str() << endl;
   DwMediaType contType = part->Headers().ContentType();
   if ( contType.TypeStr()=="text" && contType.SubtypeStr()=="calendar" ) {
-    kdDebug() << "CALENDAR!" <<endl;
-    kdDebug() << "VCalendar text:" << endl << "---- BEGIN ----" << endl << part->Body().AsString().c_str() << "---- END ---" << endl;
+    // kdDebug() << "CALENDAR!" <<endl;
+    // kdDebug() << "VCalendar text:" << endl << "---- BEGIN ----" << endl << part->Body().AsString().c_str() << "---- END ---" << endl;
     KCal::ICalFormat *format = new KCal::ICalFormat();
     bool result = format->fromString( mCalendar, part->Body().AsString().c_str() );
     if ( mMode == Synchronous )
@@ -315,9 +314,9 @@ void ExchangeDownload::handlePart( DwEntity *part ) {
       // mEvents.add();
     }
     delete format;
-    kdDebug() << "Result:" << result << endl;
+    // kdDebug() << "Result:" << result << endl;
   } else {
-    kdDebug() << contType.TypeStr().c_str() << "/" << contType.SubtypeStr().c_str() << endl;
+    // kdDebug() << contType.TypeStr().c_str() << "/" << contType.SubtypeStr().c_str() << endl;
   }
 }
 
@@ -343,6 +342,7 @@ void ExchangeDownload::increaseDownloads()
 void ExchangeDownload::decreaseDownloads()
 {
   mDownloadsBusy--;
+  // kdDebug() << "Download finished, waiting for " << mDownloadsBusy << " more" << endl;
   emit finishDownload();
   if ( mDownloadsBusy == 0 ) {
     kdDebug() << "All downloads finished" << endl;
@@ -361,10 +361,6 @@ void ExchangeDownload::decreaseDownloads()
 QPtrList<KCal::Event> ExchangeDownload::eventsForDate( KCal::Calendar* calendar, const QDate &qd )
 {
   kdDebug() << "Entering ExchangeDownload::eventsForDate()" << endl;
-  kdDebug() << "Account : " << mAccount << endl;
-  kdDebug() << "Host    : " << mAccount->host() << endl;
-  kdDebug() << "Account : " << mAccount->account() << endl;
-  kdDebug() << "Password: " << mAccount->password() << endl;
 
   mState = WaitingForResult;
   mMode = Synchronous;
@@ -380,7 +376,7 @@ QPtrList<KCal::Event> ExchangeDownload::eventsForDate( KCal::Calendar* calendar,
     qApp->processEvents();
   } while ( mState==WaitingForResult );
 
-  // This leaks: the calendarLocal we allocated is now lost
+  kdDebug() << "Finished downloading events for date" << endl;
   return mEvents;
 
   /*

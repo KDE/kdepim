@@ -2,20 +2,20 @@
     This file is part of libkpimexchange.
     Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
 
     You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+    02111-1307, USA.
 */
 
 #include <stdlib.h>
@@ -55,6 +55,7 @@ ExchangeCalendar::ExchangeCalendar( KPIM::ExchangeAccount* account, const QStrin
 
 void ExchangeCalendar::init( KPIM::ExchangeAccount* account )
 {
+  kdDebug() << "ExchangeCalendar::init()" << endl;
   mAccount = account;
   mClient = new ExchangeClient( account );
   mDates = new DateSet();
@@ -70,6 +71,7 @@ void ExchangeCalendar::init( KPIM::ExchangeAccount* account )
 
 ExchangeCalendar::~ExchangeCalendar()
 {
+  kdDebug() << "Destructing ExchangeCalendar" << endl;
   close();
   // delete mNewestDate;
   // delete mOldestDate;
@@ -83,7 +85,8 @@ ExchangeCalendar::~ExchangeCalendar()
 
 bool ExchangeCalendar::load( const QString &fileName )
 {
-  return mCache->load( fileName );
+  // return mCache->load( fileName );
+  return true;
 }
 
 bool ExchangeCalendar::save( const QString &fileName, CalFormat *format )
@@ -212,6 +215,9 @@ QPtrList<Event> ExchangeCalendar::rawEventsForDate(const QDate &qd, bool sorted)
   // If the events for this date are not in the cache, or if they are old,
   // get them again
   QDateTime now = QDateTime::currentDateTime();
+  // kdDebug() << "Now is " << now.toString() << endl;
+  // kdDebug() << "mDates: " << mDates << endl;
+  // kdDebug() << "mDates->contains(qd) is " << mDates->contains( qd ) << endl;
   if ( !mDates->contains( qd ) || (*mCacheDates)[qd].secsTo( now ) > mCachedSeconds ) {
     kdDebug() << "Reading events for date " << qd.toString() << endl;
     mClient->events( mCache, qd );
@@ -220,7 +226,9 @@ QPtrList<Event> ExchangeCalendar::rawEventsForDate(const QDate &qd, bool sorted)
   }
 
   // Events are safely in the cache now, return them from cache
-  return mCache->rawEventsForDate( qd, sorted );
+  QPtrList<Event> events = mCache->rawEventsForDate( qd, sorted );
+  kdDebug() << "Found " << events.count() << " events." << endl;
+  return events;
 
 /*
   if (!sorted) {
