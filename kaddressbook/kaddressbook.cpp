@@ -85,7 +85,6 @@ KAddressBook::KAddressBook( QWidget *parent, const char *name )
   connect(mViewManager, SIGNAL(importVCard(const QString &, bool)),
           this, SLOT(importVCard(const QString &, bool)));
 
-  mDistEditor = 0;
   mPrefsDialog = 0;
   mLdapSearchDialog = 0;
 }
@@ -99,11 +98,9 @@ void KAddressBook::newContact()
 void KAddressBook::slotDistributionList()
 {
   save();
-  if (!mDistEditor)
-      mDistEditor = new KABC::DistributionListDialog(
-	  KABC::StdAddressBook::self(), this );
+  KABC::DistributionListDialog dlg( KABC::StdAddressBook::self(), this );
 
-  mDistEditor->exec();
+  dlg.exec();
 }
 
 void KAddressBook::addEmail( QString aStr )
@@ -256,9 +253,6 @@ void KAddressBook::writeConfig()
 
 KAddressBook::~KAddressBook()
 {
-  if (mDistEditor)
-      delete mDistEditor;
-
   writeConfig();
 
   delete mDocument;

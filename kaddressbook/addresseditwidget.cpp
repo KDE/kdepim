@@ -122,11 +122,13 @@ void AddressEditWidget::updateAddressEdit()
 {
   KABC::Address::List::Iterator it = mTypeCombo->selectedElement();
 
+  bool block = signalsBlocked();
+  blockSignals( true );
+
+  mAddressTextEdit->setText( "" );
+
   if ( it != mAddressList.end() ) {
     KABC::Address a = *it;
-
-    bool block = signalsBlocked();
-    blockSignals(true);
 
     if ( !a.isEmpty() ) {
       QString text;
@@ -149,12 +151,10 @@ void AddressEditWidget::updateAddressEdit()
       text += a.extended();
 
       mAddressTextEdit->setText(text);
-    } else {
-      mAddressTextEdit->setText("");
     }
-
-    blockSignals(block);
   }
+
+  blockSignals( block );
 }
 
 
@@ -287,7 +287,7 @@ void AddressEditDialog::addAddress()
     mAddressList.append( Address( dlg.type() ) );
 
     mTypeCombo->updateTypes();
-    mTypeCombo->selectType( dlg.type() );
+    mTypeCombo->setCurrentItem( mTypeCombo->count() - 1 );
     updateAddressEdits();
   }
 }
