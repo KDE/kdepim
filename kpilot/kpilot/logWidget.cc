@@ -42,6 +42,7 @@ static const char *logw_id =
 #include <qpushbutton.h>
 #include <qhbox.h>
 #include <qtextstream.h>
+#include <qpainter.h>
 
 #include <kglobal.h>
 #include <kstddirs.h>
@@ -317,6 +318,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.10  2001/12/31 09:38:09  adridg
+// Splash patch by Aaron
+//
 // Revision 1.9  2001/12/29 15:44:16  adridg
 // Missing progress slots
 //
