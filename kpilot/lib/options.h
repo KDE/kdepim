@@ -52,8 +52,10 @@
 
 // Switch _on_ debugging if it's not off.
 //
-#ifndef NDEBUG
+#ifndef NDEBUG 
+#ifndef DEBUG
 #define DEBUG				(1)
+#endif
 #endif
 
 // Switch on debugging explicitly. Perhaps send debug to stderr instead
@@ -135,6 +137,8 @@ extern KDE_EXPORT int debug_level;
 #define FUNCTIONSETUPL(l)	KPILOT_FNAMEDEF(l)
 
 #ifdef DEBUG_CERR
+//#include <ostream>
+#include <iostream>
 #define DEBUGSTREAM std::ostream
 #else
 #define DEBUGSTREAM kdbgstream
@@ -147,10 +151,10 @@ public:
 	~KPilotDepthCount(); 
 	QString indent() const; 
 	const char *name() const { return fName; } ;
+	// if DEBUG_CERR is defined, we can't return std::cerr (by value), 
+	// since the copy constructor is private!
+#ifndef DEBUG_CERR
 	inline DEBUGSTREAM debug(int area=0)
-#ifdef DEBUG_CERR
-	{ return std::cerr; } 
-#else
 	{ return kdDebug(debug_level >= fLevel, area); }
 #endif
 
