@@ -39,6 +39,7 @@
 
 
 class QTimer;
+class QDateTime;
 class QSocketNotifier;
 class KPilotUser;
 struct DBInfo;
@@ -335,7 +336,8 @@ public:
 	/**
 	 * Set the time on the handheld to the give QDateTime
 	 */
-	bool setTime(const QDateTime&time);
+	bool setTime(const time_t &pctime);
+//	bool setTime(const QDateTime&time);
 	
 } ;
 
@@ -343,6 +345,9 @@ bool operator < ( const struct db &, const struct db &) ;
 
 
 // $Log$
+// Revision 1.7  2002/07/25 19:02:20  kainhofe
+// Added functions to get/set the time on the handheld
+//
 // Revision 1.6  2002/07/05 00:15:22  kainhofe
 // Added KPilotDeviceLink::tickle(), Changelog update, compile fixes
 //

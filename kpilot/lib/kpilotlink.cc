@@ -43,6 +43,7 @@ static const char *kpilotlink_id = "$Id$";
 
 #include <qdir.h>
 #include <qtimer.h>
+#include <qdatetime.h>
 #include <qsocketnotifier.h>
 
 #include <kconfig.h>
@@ -708,10 +709,10 @@ QDateTime KPilotDeviceLink::getTime()
 }
 
 
-bool KPilotDeviceLink::setTime(const QDateTime&time)
+bool KPilotDeviceLink::setTime(const time_t &pctime)
 {
-	struct tm time_tm=writeTm(time);
-	time_t pctime=mktime(&time_tm);
+//	struct tm time_tm=writeTm(time);
+//	time_t pctime=mktime(&time_tm);
 	return dlp_SetSysDateTime(pilotSocket(), pctime);
 }
 
@@ -732,6 +733,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.16  2002/07/25 19:02:20  kainhofe
+// Added functions to get/set the time on the handheld
+//
 // Revision 1.15  2002/07/20 22:08:19  mhunter
 // Hot-Sync -> HotSync
 //
