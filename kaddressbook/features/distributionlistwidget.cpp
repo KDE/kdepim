@@ -35,9 +35,9 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-#include <kabc/addressbook.h>
 #include <kabc/addresseedialog.h>
 #include <kabc/distributionlist.h>
+#include <kabc/stdaddressbook.h>
 #include <kabc/vcardtool.h>
 #include <libkdepim/kvcarddrag.h>
 
@@ -158,7 +158,9 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   mManager->load();
 
   connect( KABC::DistributionListWatcher::self(), SIGNAL( changed() ),
-           this, SLOT( updateNameCombo ) );
+           this, SLOT( updateNameCombo() ) );
+  connect( KABC::StdAddressBook::self(), SIGNAL( addressBookChanged(AddressBook*) ),
+           this, SLOT( updateNameCombo() ) );
 
   updateNameCombo();
 
@@ -328,7 +330,10 @@ void DistributionListWidget::updateContactView()
 
 void DistributionListWidget::updateNameCombo()
 {
+  int pos = mNameCombo->currentItem();
+  mNameCombo->clear();
   mNameCombo->insertStringList( mManager->listNames() );
+  mNameCombo->setCurrentItem( pos );
 
   updateContactView();
 }
