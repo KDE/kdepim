@@ -209,34 +209,48 @@ private:
 /** This widget displays a list box of the email addresses as well as buttons
 * to manipulate them (up, down, add, remove)
 */
-class EmailWidget : public QWidget
+class EmailEditWidget : public QWidget
+{
+  Q_OBJECT
+
+  public:
+    EmailEditWidget( QWidget *parent, const char *name );
+    ~EmailEditWidget();
+
+    void setEmails(const QStringList &list);
+    QStringList emails();
+
+  signals:
+    void modified();
+    
+  private slots:
+    void edit();
+
+  private:
+    KLineEdit *mEmailEdit;
+    QStringList mEmailList;
+};
+
+class EmailEditDialog : public KDialogBase
 {
   Q_OBJECT
   
   public:
-    EmailWidget(QWidget *parent, const char *name);
-    ~EmailWidget();
+    EmailEditDialog( const QStringList &list, QWidget *parent, const char *name = 0 );
+    ~EmailEditDialog();
     
-    void setEmails(const QStringList &list);
     QStringList emails() const;
-    
-  signals:
-    void modified();
     
   protected slots:
     void add();
     void remove();
     void edit();
     void standard();
-    void selectionChanged(int idx);
+    void selectionChanged( int );
 
-  protected:
-    virtual void keyPressEvent(QKeyEvent*);
-  
   private:
     KLineEdit *mEmailEdit;
     QListBox *mEmailListBox;
-    QPushButton *mAddButton;
     QPushButton *mRemoveButton;
     QPushButton *mEditButton;
     QPushButton *mStandardButton;

@@ -50,23 +50,92 @@
 /////////////////////////////////////
 // EmailWidget
 
-EmailWidget::EmailWidget(QWidget *parent, const char *name)
+EmailEditWidget::EmailEditWidget(QWidget *parent, const char *name)
   : QWidget(parent, name)
 {
-  QGridLayout *topLayout = new QGridLayout(this, 4, 3);
+  QGridLayout *topLayout = new QGridLayout(this, 2, 2);
 
-  QLabel *label = new QLabel(i18n("Email address:"), this);
+  QLabel *label = new QLabel(i18n("Preferred email address:"), this);
   topLayout->addWidget(label, 0, 0);
 
   mEmailEdit = new KLineEdit(this);
+  connect(mEmailEdit, SIGNAL( textChanged(const QString &) ), SIGNAL( modified() ) );
+  topLayout->addWidget(mEmailEdit, 0, 1);
+
+  QPushButton *editButton = new QPushButton(i18n("Edit email addresses..."), this);
+  connect(editButton, SIGNAL(clicked()), SLOT(edit()));
+  topLayout->addMultiCellWidget(editButton, 1, 1, 0, 1);
+
+  topLayout->activate();
+}
+
+EmailEditWidget::~EmailEditWidget()
+{
+}
+    
+void EmailEditWidget::setEmails(const QStringList &list)
+{
+  mEmailList = list;
+
+  if ( list.count() > 0 ) {
+    bool blocked = mEmailEdit->signalsBlocked();
+    mEmailEdit->blockSignals( true );
+    mEmailEdit->setText( list[ 0 ] );
+    mEmailEdit->blockSignals( blocked );
+  }
+}
+
+QStringList EmailEditWidget::emails()
+{
+  if ( mEmailEdit->text().isEmpty() ) {
+    if ( mEmailList.count() > 0 )
+      mEmailList.remove( mEmailList.begin() );
+  } else {
+    if ( mEmailList.count() > 0 )
+      mEmailList.remove( mEmailList.begin() );
+
+    mEmailList.prepend( mEmailEdit->text() );
+  }
+
+  return mEmailList;
+}
+
+void EmailEditWidget::edit()
+{
+  EmailEditDialog dlg( mEmailList, this );
+  
+  if ( dlg.exec() ) {
+    mEmailList = dlg.emails();
+    mEmailEdit->setText( mEmailList[ 0 ] );
+    emit modified();
+  }
+}
+
+/////////////////////////////////////
+// EmailEditDialog
+
+EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent, const char *name )
+  : KDialogBase( KDialogBase::Plain, i18n( "Edit Email Addresses" ),
+                KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
+                parent, name, true)
+{
+  QWidget *page = plainPage();
+
+  QGridLayout *topLayout = new QGridLayout( page, 4, 3 );
+
+  QLabel *label = new QLabel(i18n("Email address:"), page);
+  topLayout->addWidget(label, 0, 0);
+
+  mEmailEdit = new KLineEdit(page);
   topLayout->addWidget(mEmailEdit, 0, 1);
   connect(mEmailEdit, SIGNAL(returnPressed()), SLOT(add()));
 
-  mAddButton = new QPushButton(i18n("Add"), this, "mAddButton");
+  QPushButton *mAddButton = new QPushButton( i18n("Add"), page );
   connect(mAddButton, SIGNAL(clicked()), SLOT(add()));
   topLayout->addWidget(mAddButton, 0, 2);
 
-  mEmailListBox = new QListBox(this, "mEmailView");
+  mEmailListBox = new QListBox( page );
+  mEmailListBox->insertStringList( list );
 
   // Make sure there is room for the scrollbar
   mEmailListBox->setMinimumHeight(mEmailListBox->sizeHint().height() + 30);
@@ -74,65 +143,54 @@ EmailWidget::EmailWidget(QWidget *parent, const char *name)
           SLOT(selectionChanged(int)));
   topLayout->addMultiCellWidget(mEmailListBox, 1, 3, 0, 1);
   
-  mEditButton = new QPushButton(i18n("Change"), this, "mEditButton");
+  mEditButton = new QPushButton(i18n("Change"), page);
   connect(mEditButton, SIGNAL(clicked()), SLOT(edit()));
   topLayout->addWidget(mEditButton, 1, 2);
 
-  mRemoveButton = new QPushButton(i18n("Remove..."), this, "mRemoveButton");
+  mRemoveButton = new QPushButton(i18n("Remove..."), page);
   connect(mRemoveButton, SIGNAL(clicked()), SLOT(remove()));
   topLayout->addWidget(mRemoveButton, 2, 2);
 
-  mStandardButton = new QPushButton(i18n("Set Standard"), this, "mStandardButton");
+  mStandardButton = new QPushButton(i18n("Set Standard"), page);
   connect(mStandardButton, SIGNAL(clicked()), SLOT(standard()));
   topLayout->addWidget(mStandardButton, 3, 2);
-  
+
   topLayout->activate();
   
   // set default state
   selectionChanged(-1);
 }
 
-EmailWidget::~EmailWidget()
+EmailEditDialog::~EmailEditDialog()
 {
 }
     
-void EmailWidget::setEmails(const QStringList &list)
-{
-  mEmailListBox->clear();
-  mEmailListBox->insertStringList(list);
-}
-
-QStringList EmailWidget::emails() const
+QStringList EmailEditDialog::emails() const
 {
   QStringList emails;
   
   for (unsigned int i = 0; i < mEmailListBox->count(); ++i)
-  {
     emails << mEmailListBox->text(i);
-  }
   
   return emails;
 }
 
-void EmailWidget::add()
+void EmailEditDialog::add()
 {
   if (!mEmailEdit->text().isEmpty())
-  {
     mEmailListBox->insertItem(mEmailEdit->text());
-    emit modified();
-  }
 
   mEmailEdit->clear();
   mEmailEdit->setFocus();
 }
 
-void EmailWidget::edit()
+void EmailEditDialog::edit()
 {
   mEmailEdit->setText(mEmailListBox->currentText());
   mEmailEdit->setFocus();
 }
 
-void EmailWidget::remove()
+void EmailEditDialog::remove()
 {
   QString address = mEmailListBox->currentText();
   
@@ -141,34 +199,24 @@ void EmailWidget::remove()
   QString caption = i18n("Confirm Remove");
   
   if (KMessageBox::questionYesNo(this, text, caption) == KMessageBox::Yes)
-  {  
     mEmailListBox->removeItem(mEmailListBox->currentItem());
-  
-    emit modified();
-  }
 }
 
-void EmailWidget::standard()
+void EmailEditDialog::standard()
 {
   QString text = mEmailListBox->currentText();
   mEmailListBox->removeItem(mEmailListBox->currentItem());
   mEmailListBox->insertItem(text, 0);
   mEmailListBox->setSelected(0, true);
-
-  emit modified();
 }
 
-void EmailWidget::selectionChanged(int index)
+void EmailEditDialog::selectionChanged(int index)
 {
   bool value = (index >= 0); // An item is selected
 
   mRemoveButton->setEnabled(value);
   mEditButton->setEnabled(value);
   mStandardButton->setEnabled(value);
-}
-
-void EmailWidget::keyPressEvent(QKeyEvent*)
-{
 }
 
 /////////////////////////////////////

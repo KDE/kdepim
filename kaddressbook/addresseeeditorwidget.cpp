@@ -201,7 +201,7 @@ void AddresseeEditorWidget::setupTab1()
                                                    KIcon::Desktop));
   layout->addMultiCellWidget(label, 5, 6, 3, 3);
 
-  mEmailWidget = new EmailWidget(tab1, "mEmailWidget");
+  mEmailWidget = new EmailEditWidget(tab1, "mEmailWidget");
   connect(mEmailWidget, SIGNAL(modified()), this, SLOT(emitModified()));
   layout->addMultiCellWidget( mEmailWidget, 5, 6, 4, 6 );
 

@@ -39,7 +39,7 @@ class KLineEdit;
 class KComboBox;
 class KDateEdit;
 
-class EmailWidget;
+class EmailEditWidget;
 class AddressEditWidget;
 class PhoneEditWidget;
 
@@ -112,7 +112,7 @@ class AddresseeEditorWidget : public QWidget
     KLineEdit *mRoleEdit;
     KLineEdit *mOrgEdit;
     KComboBox *mFormattedNameBox;
-    EmailWidget *mEmailWidget;
+    EmailEditWidget *mEmailWidget;
     AddressEditWidget *mAddressEditWidget;
     PhoneEditWidget *mPhoneEditWidget;
     KLineEdit *mURLEdit;
