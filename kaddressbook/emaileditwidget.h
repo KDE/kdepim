@@ -81,14 +81,12 @@ class EmailEditDialog : public KDialogBase
 
   protected slots:
     void add();
-    void remove();
     void edit();
+    void remove();
     void standard();
     void selectionChanged( int );
-    void emailChanged();
 
   private:
-    KLineEdit *mEmailEdit;
     QListBox *mEmailListBox;
     QPushButton *mAddButton;
     QPushButton *mRemoveButton;
@@ -96,8 +94,6 @@ class EmailEditDialog : public KDialogBase
     QPushButton *mStandardButton;
 
     bool mChanged;
-    bool mIsEdit;
-    int mEditPos;
 };
 
 #endif
