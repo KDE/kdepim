@@ -256,7 +256,7 @@ void AbbrowserConduit::_setAppInfo()
 
 QString AbbrowserConduit::getOtherField(const KABC::Addressee&abEntry) 
 {
-	FUNCTIONSETUP;
+//	FUNCTIONSETUP;
 	switch (ePilotOther)
 	{
 		case eOtherPhone:
@@ -420,10 +420,12 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress & pilotAddress)
 	// as PC_ID, so using JPilot and KPilot is the same as using two differenc PCs
 	fFullSync = (syncAction==SYNC_FULL) ||
 		((usr->getLastSyncPC()!=(unsigned long) gethostid()) && fConfig->readBoolEntry(AbbrowserConduitFactory::fullSyncOnPCChange(), true));
-	
-	if (!openDatabases("AddressDB", &fFullSync) ) goto error;
+		
+	fFirstTime=false;
+	if (!openDatabases("AddressDB", &fFirstTime) ) goto error;
 	_setAppInfo();
 	if (!_loadAddressBook() ) goto error;
+	fFirstTime |= (aBook->begin() == aBook->end() );
 //	recordIds=fDatabase->idList();
 	
 	// perform syncing from palm to abbrowser
@@ -471,9 +473,6 @@ void AbbrowserConduit::syncPalmRecToPC()
 	}
 	else
 	{
-#ifdef DEBUG
-		DEBUGCONDUIT<<"Checking for already synced ID "<<r->getID()<<"...  "<<endl;
-#endif
 		// already synced, so skip:
 		if (syncedIds.contains(r->getID())) 
 		{
@@ -483,14 +482,8 @@ void AbbrowserConduit::syncPalmRecToPC()
 			QTimer::singleShot(0, this, SLOT(syncPalmRecToPC()));
 			return;
 		}
-		else
-		{
-#ifdef DEBUG
-			DEBUGCONDUIT<<"not yet synced"<<endl;
-#endif
-		}
 	}
-	
+
 	bool archiveRecord=(r->getAttrib() & dlpRecAttrArchived);
 
 	KABC::Addressee e;
@@ -545,6 +538,8 @@ void AbbrowserConduit::syncPalmRecToPC()
 
 void AbbrowserConduit::syncPCRecToPalm()
 {
+//QTimer::singleShot(0,this,SLOT(cleanup()));
+//return;
 	FUNCTIONSETUP;
 	
 	if (abiter==aBook->end() || (*abiter).isEmpty()) {
@@ -560,6 +555,10 @@ void AbbrowserConduit::syncPCRecToPalm()
 	{
 		// it's a new item (no record ID and not inserted by the Palm -> PC sync), so add it 
 		_addToPalm(ad);
+		// TODO: return!!!
+		abiter++;
+		QTimer::singleShot(0, this, SLOT(syncPCRecToPalm()));
+		return;
 	}
 	// look into the list of already synced record ids to see if the addressee hasn't already been synced
 	else if (syncedIds.contains(rid) )
@@ -583,28 +582,34 @@ void AbbrowserConduit::syncPCRecToPalm()
 	}
 
 	
+	// TODO: implement a first sync!!!
 	PilotRecord*backup=fLocalDatabase->readRecordById(rid);
 	// only update if no backup record or the backup record is not equal to the addresse
 	PilotAddress pbackupadr(fAddressAppInfo, backup);
-	if (!backup || !_equal(pbackupadr, ad) )
+	if (!backup || !_equal(pbackupadr, ad) || fFirstTime)
 	{
 		PilotRecord*rec=fDatabase->readRecordById(rid);
+		
 		if (!rec) 
 		{
-			// not found on palm, so it was permanently deleted from the palm. 
-			int res=KMessageBox::warningYesNo(0L, 
-				i18n("The following record does not exist on the handheld and was probably deleted from the handheld:\n%1\n\n"
-				"Also delete it from the PC?").arg(ad.realName()),  
-				i18n("Addressbook conduit Conflict"), i18n("Delete from PC"), i18n("Add on handheld")/*, i18n("don't resolve")*/ );
-			switch (res) {
-				case KMessageBox::Yes:
-					// Palm takes precedence -> delete from PC
-					_deleteOnPC(rec, backup);
-					break;
-				case KMessageBox::No:
-					// PC takes precedence -> add to palm
-					_addToPalm(ad);
-					break;
+			if (fFirstTime) _addToPalm(ad);
+			else 
+			{ 
+				// not found on palm, so it was permanently deleted from the palm. 
+				int res=KMessageBox::warningYesNo(0L, 
+					i18n("The following record does not exist on the handheld and was probably deleted from the handheld:\n%1\n\n"
+					"Also delete it from the PC?").arg(ad.realName()),  
+					i18n("Addressbook conduit Conflict"), i18n("Delete from PC"), i18n("Add on handheld")/*, i18n("don't resolve")*/ );
+				switch (res) {
+					case KMessageBox::Yes:
+						// Palm takes precedence -> delete from PC
+						_deleteOnPC(rec, backup);
+						break;
+					case KMessageBox::No:
+						// PC takes precedence -> add to palm
+						_addToPalm(ad);
+						break;
+				}
 			}
 		}
 		else 
@@ -726,7 +731,6 @@ KABC::Addressee AbbrowserConduit::_saveAbEntry(KABC::Addressee &abEntry)
 {
 	FUNCTIONSETUP;
 
-	// TODO: Clear a modified flag (if existent)
 	if (!abEntry.custom(appString, idString).isEmpty())
 	{
 		addresseeMap.insert(abEntry.custom(appString, idString).toLong(), abEntry.uid());
@@ -831,7 +835,7 @@ KABC::Addressee AbbrowserConduit::_addToAbbrowser(const PilotAddress & address)
  
 KABC::Addressee AbbrowserConduit::_addToPC(PilotRecord *r)
 {
-	FUNCTIONSETUP;
+//	FUNCTIONSETUP;
 	return _changeOnPC(r, NULL);
 }
 
@@ -853,15 +857,21 @@ DEBUGCONDUIT<<"Now syncing "<<padr.getField(entryFirstname)<<" "<<padr.getField(
 
 	if (backup) ad=_findMatch(pbackupadr);
 	if (ad.isEmpty()) ad=_findMatch(padr);
+#ifdef DEBUG
+	DEBUGCONDUIT<<"ad.custom="<<ad.custom(appString, idString)<<endl;
+#endif
 
 	if (ad.isEmpty() ) 
 	{
+#ifdef DEBUG
+DEBUGCONDUIT<<"ad.isEmpty() "<<endl;
+#endif
 		if (!backup) 
 		{
 			// not found, so add
 			ad=_addToAbbrowser(padr);
 			fLocalDatabase->writeRecord(rec);
-		}
+		} 	
 		else
 		{
 #ifdef DEBUG
@@ -889,7 +899,10 @@ DEBUGCONDUIT<<"not a new entry, but PC entry does not exist => deconfliction of 
 	}
 	else
 	{
-		ad.insertCustom(appString, idString, QString::number(padr.getID()));
+#ifdef DEBUG
+DEBUGCONDUIT<<"!ad.isEmpty()"<<endl;
+showAddressee(ad);
+#endif
 		PilotAddress backupadr(fAddressAppInfo, backup);
 		_mergeEntries(padr, backupadr, ad);
 	}
@@ -996,8 +1009,8 @@ void AbbrowserConduit::_deleteFromPalm(PilotRecord*rec)
 bool AbbrowserConduit::_equal(const PilotAddress & piAddress,
 	KABC::Addressee & abEntry) const
 {
-	FUNCTIONSETUP;
-	// TODO: also check the PilotID
+//	FUNCTIONSETUP;
+	
 	if (_compare( abEntry.familyName(), piAddress.getField(entryLastname))  ) 
 	{
 		return false;
@@ -1069,10 +1082,10 @@ bool AbbrowserConduit::_equal(const PilotAddress & piAddress,
 		return false;
 	} 
 
-	if (	_compare( abEntry.custom(appString, "CUSTOM1"), piAddress.getField(entryCustom1)) ||
-			_compare( abEntry.custom(appString, "CUSTOM2"), piAddress.getField(entryCustom2)) ||
-			_compare( abEntry.custom(appString, "CUSTOM3"), piAddress.getField(entryCustom3)) ||
-			_compare( abEntry.custom(appString, "CUSTOM4"), piAddress.getField(entryCustom4))  )
+	if (_compare( abEntry.custom(appString, "CUSTOM1"), piAddress.getField(entryCustom1)) ||
+		_compare( abEntry.custom(appString, "CUSTOM2"), piAddress.getField(entryCustom2)) ||
+		_compare( abEntry.custom(appString, "CUSTOM3"), piAddress.getField(entryCustom3)) ||
+		_compare( abEntry.custom(appString, "CUSTOM4"), piAddress.getField(entryCustom4))  )
 	{
 		return false;
 	}
@@ -1108,22 +1121,9 @@ void AbbrowserConduit::_copy(PilotAddress & toPilotAddr, KABC::Addressee & fromA
 	toPilotAddr.setPhoneField(PilotAddress::eOther, getOtherField(fromAbEntry).latin1());
 	toPilotAddr.setShownPhone(PilotAddress::eMobile);
 
-	// in future, may want prefs that will map from abbrowser entries
-	// to the pilot phone entries so they can do the above assignment and
-	// assign the Other entry which is currenty unused
-	// TODO: really use home address by default?? Should add some config option for this
-//	KABC::Address homeAddress = fromAbEntry.address(KABC::Address::Home);
 	KABC::Address homeAddress = getAddress(fromAbEntry);
 	if (!homeAddress.isEmpty()) 
 		_setPilotAddress(toPilotAddr, homeAddress);
-/*	else
-	{
-		// no home address, try work address
-		KABC::Address workAddress =
-			fromAbEntry.address(KABC::Address::Work);
-		if (!workAddress.isEmpty())
-			_setPilotAddress(toPilotAddr, workAddress);
-	}*/
 	
 	// TODO: Process the additional entries from the Palm (the palm database app block tells us the name of the fields)
 	toPilotAddr.setField(entryCustom1, fromAbEntry.custom(appString, "CUSTOM1"));
@@ -1131,10 +1131,7 @@ void AbbrowserConduit::_copy(PilotAddress & toPilotAddr, KABC::Addressee & fromA
 	toPilotAddr.setField(entryCustom3, fromAbEntry.custom(appString, "CUSTOM3"));
 	toPilotAddr.setField(entryCustom4, fromAbEntry.custom(appString, "CUSTOM4"));
 	
-	
-	//TODO: sync categories
 	toPilotAddr.setCat(_getCat(fromAbEntry.categories()));
-//showPilotAddress(toPilotAddr);
 }
 
 /** 
@@ -1161,7 +1158,7 @@ void AbbrowserConduit::_copy(PilotAddress & toPilotAddr, KABC::Addressee & fromA
 
 void AbbrowserConduit::_setPilotAddress(PilotAddress & toPilotAddr, const KABC::Address & abAddress)
 {
-	FUNCTIONSETUP;
+//	FUNCTIONSETUP;
 	toPilotAddr.setField(entryAddress, abAddress.street().latin1());
 	toPilotAddr.setField(entryCity, abAddress.locality().latin1());
 	toPilotAddr.setField(entryState, abAddress.region().latin1());
@@ -1207,9 +1204,7 @@ void AbbrowserConduit::_copy(KABC::Addressee & toAbEntry, const PilotAddress & f
 	_copyPhone(toAbEntry, toAbEntry.phoneNumber(KABC::PhoneNumber::Pager), fromPiAddr.getPhoneField(PilotAddress::ePager));
 	setOtherField(toAbEntry, fromPiAddr.getPhoneField(PilotAddress::eOther));
 
-	// TODO: in future, probably the address assigning to work or home should be a prefs option
-	// for now, just assign to home since that's what I'm using it for
-	KABC::Address homeAddress = getAddress(toAbEntry);//KABC::Address::Home);
+	KABC::Address homeAddress = getAddress(toAbEntry);
 	homeAddress.setStreet(fromPiAddr.getField(entryAddress));
 	homeAddress.setLocality(fromPiAddr.getField(entryCity));
 	homeAddress.setRegion(fromPiAddr.getField(entryState));
@@ -1228,7 +1223,7 @@ void AbbrowserConduit::_copy(KABC::Addressee & toAbEntry, const PilotAddress & f
 	// toAbEntry is in
 	toAbEntry.insertCustom(appString, idString, QString::number(fromPiAddr.getID()));
 	
-	// TODO: Sync categories
+	
 	// first remove all categories and then add only the appropriate one
 	for (int j=1; j<=15; j++) 
 	{
@@ -1267,27 +1262,51 @@ int AbbrowserConduit::_conflict(const QString &entry, const QString &field, cons
 {
 	FUNCTIONSETUP;
 	mergeNeeded = false;
+	QString bckup=backup;
+	
 
 		// if both entries are already the same, no need to do anything
 	if (pc == palm) return CHANGED_NONE;
-		// only pc modified, so return that string, no conflict
-#ifdef DEBUG
-//	DEBUGCONDUIT<<fname<<": conflicting entries for "<<field<<" of "<<entry<<" are: palm="<<palm<<", backup="<<backup<<", pc="<<pc<<endl;
-#endif
-	if (palm == backup) {
-		mergeNeeded=true;
-		mergedStr=pc;
-		return CHANGED_PALM;
+
+
+	// If this is a first sync, we don't have a bckup record, so 
+	if (fFirstTime) 
+	{
+		bckup=QString();
+		if (pc.isEmpty()) 
+		{
+			mergeNeeded=true;
+			mergedStr=palm;
+			return CHANGED_PC;
+		}
+		if (palm.isEmpty())
+		{
+			mergeNeeded=true;
+			mergedStr=pc;
+			return CHANGED_PALM;
+		}
 	}
-		// only palm modified, so return that string, no conflict
-	if (pc == backup) {
-		mergeNeeded=true;
-		mergedStr=palm;
-		return CHANGED_PC;
+	else
+	{
+			// only pc modified, so return that string, no conflict
+#ifdef DEBUG
+//		DEBUGCONDUIT<<fname<<": conflicting entries for "<<field<<" of "<<entry<<" are: palm="<<palm<<", backup="<<backup<<", pc="<<pc<<endl;
+#endif
+		if (palm == backup) {
+			mergeNeeded=true;
+				mergedStr=pc;
+			return CHANGED_PALM;
+		}
+			// only palm modified, so return that string, no conflict
+		if (pc == backup) {
+			mergeNeeded=true;
+			mergedStr=palm;
+			return CHANGED_PC;
+		}
 	}
 	
-	// all three differ => conflict => deconfliction. Use already chosen resolution option if possible
-	EConflictResolution fieldres=getFieldResolution(entry, field, palm, backup, pc);
+	// We need to do some deconfliction. Use already chosen resolution option if possible
+	EConflictResolution fieldres=getFieldResolution(entry, field, palm, bckup, pc);
 #ifdef DEBUG
 	DEBUGCONDUIT<<"fieldres="<<fieldres<<endl;
 #endif
@@ -1321,18 +1340,6 @@ int AbbrowserConduit::_conflict(const QString &entry, const QString &field, cons
 
 int AbbrowserConduit::_compare(const QString &str1, const QString &str2) const
 {
-	 FUNCTIONSETUP;
-#ifdef DEBUG
-	if (str1.isEmpty() && str2.isEmpty() )  {}
-	else 
-	{
-		if (str1.compare(str2)) 
-		{
-			DEBUGCONDUIT<<"Not equal: "<< str1<<" vs. " <<str2<<endl;
-		}
-	}
-#endif
-	
 	if (str1.isEmpty() && str2.isEmpty() ) return 0;
 	else return str1.compare(str2);
 }
@@ -1507,7 +1514,6 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	abEntry.insertAddress(abAddress);
 
 	abEntry.insertCustom(appString, idString, QString::number(pilotAddress.id()));
-	// TODO: Merge category
 	abEntry.insertCategory(pilotAddress.getCategoryLabel());
 
 
@@ -1526,6 +1532,7 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 int AbbrowserConduit::_mergeEntries(PilotAddress &pilotAddress, PilotAddress &backupAddress, KABC::Addressee &abEntry)
 {
 	FUNCTIONSETUP;
+	
 	int res=_handleConflict(pilotAddress, backupAddress, abEntry);
 	if (res & CHANGED_NORES)
 	{
@@ -1533,16 +1540,10 @@ int AbbrowserConduit::_mergeEntries(PilotAddress &pilotAddress, PilotAddress &ba
 		{
 			if (res & CHANGED_PALM) 
 			{
-#ifdef DEBUG
-DEBUGCONDUIT<<"res & CHANGED_PALM"<<endl;
-#endif
 				_addToPalm(abEntry);
 			}
 			if (res & CHANGED_PC)
 			{
-#ifdef DEBUG
-DEBUGCONDUIT<<"res & CHANGED_PC"<<endl;
-#endif
 				_addToAbbrowser(pilotAddress);
 //				_saveBackupAddress(pilotAddress);
 			}
@@ -1550,24 +1551,22 @@ DEBUGCONDUIT<<"res & CHANGED_PC"<<endl;
 	}
 	else
 	{
-#ifdef DEBUG
-DEBUGCONDUIT<<" ! res & CHANGED_ADD"<<endl;
-#endif
 		if (res & CHANGED_PALM)
 		{
-#ifdef DEBUG
-DEBUGCONDUIT<<"res & CHANGED_PALM"<<endl;
-#endif
 			_savePilotAddress(pilotAddress, abEntry);
 		}
 		if (res & CHANGED_PC)
 		{
-#ifdef DEBUG
-DEBUGCONDUIT<<"res & CHANGED_PC"<<endl;
-#endif
 			_saveAbEntry(abEntry);
 			_saveBackupAddress(pilotAddress);
 		}
+	}
+	QString idStr(abEntry.custom(appString, idString));
+	
+	if (idStr.isEmpty() || (idStr !=QString::number(pilotAddress.getID()) )) 
+	{
+		abEntry.insertCustom(appString, idString, QString::number(pilotAddress.getID()));
+		_saveAbEntry(abEntry);
 	}
 	return 0;
 }
@@ -1592,9 +1591,6 @@ int AbbrowserConduit::_handleConflict(PilotAddress &pilotAddress, PilotAddress &
 	if (_equal(pilotAddress, abEntry)) return CHANGED_NONE;
 	
 	if (pilotAddress == backupAddress) {
-#ifdef DEBUG
-DEBUGCONDUIT<<"pilotAddress==backupAddress"<<endl;
-#endif
 		if (!_equal(backupAddress, abEntry)) {
 			_copy(pilotAddress, abEntry);
 			return CHANGED_PALM;
@@ -1603,19 +1599,10 @@ DEBUGCONDUIT<<"pilotAddress==backupAddress"<<endl;
 			return CHANGED_NONE; 
 		}
 	} else {
-#ifdef DEBUG
-DEBUGCONDUIT<<"pilotAddress!=backupAddress"<<endl;
-#endif
 		if (_equal(backupAddress, abEntry)) {
-#ifdef DEBUG
-DEBUGCONDUIT<<"_equal(backupAddress, abEntry)"<<endl;
-#endif
 			_copy(abEntry, pilotAddress);
 			return CHANGED_PC;
 		} else {
-#ifdef DEBUG
-DEBUGCONDUIT<<"!_equal(backupAddress, abEntry), Attempt a merge..."<<endl;
-#endif
 			// Both pc and palm were changed => merge, override, duplicate or ignore.
 			if (doSmartMerge()) {
 				PilotAddress pAdr(pilotAddress);
@@ -1666,18 +1653,22 @@ AbbrowserConduit::EConflictResolution AbbrowserConduit::getFieldResolution(const
 		case eKeepBothInAbbrowser:
 		case ePilotOverides:
 		case eAbbrowserOverides:
-		case eRevertToBackup:
 		case eDoNotResolve:
 			return res; break;
+		case eRevertToBackup:
+			if (backup.isNull()) return eDoNotResolve; 
+			else return res; 
+			break;
 		case eUserChoose:
 		default:
 			QStringList lst;
 			lst <<
 					i18n("Leave untouched")<<
 					i18n("Handheld overrides") << 
-					i18n("PC overrides") <<
-					i18n("Use the value from the last sync") <<
-					i18n("Duplicate both");
+					i18n("PC overrides");
+			if (!backup.isNull()) 
+				lst<<i18n("Use the value from the last sync");
+			lst<<i18n("Duplicate both");
 			bool remember=FALSE;
 			res=ResolutionDialog(i18n("Address conflict"), i18n("<html><p>The field \"%1\" of the entry \"%2\" was changed on the handheld and on the PC.</p>"
 					"<table border=0>"
@@ -1692,6 +1683,8 @@ AbbrowserConduit::EConflictResolution AbbrowserConduit::getFieldResolution(const
 					.arg(pc)
 					.arg(backup),
 					lst, i18n("Apply to all fields of this entry"), &remember);
+			// TODO: Does the counting start from 0 or 1? if they start from 0, decrease these by 1
+			if (backup.isNull() && res==4) res=5;
 			if (remember) 
 			{
 				fEntryResolution=res;
@@ -1841,16 +1834,12 @@ KABC::Addressee AbbrowserConduit::_findMatch(const PilotAddress & pilotAddress) 
 
 
 
-/*
-int AbbrowserConduit::_getCatId(int catIndex) const
-{
-	FUNCTIONSETUP;
-	return fAddressAppInfo.category.ID[catIndex];
-}
-*/
 
 
 // $Log$
+// Revision 1.44  2002/08/18 23:51:20  kainhofe
+// removed some debug messages
+//
 // Revision 1.42  2002/08/16 18:54:06  kainhofe
 // Tried to fix the conduit, but KABC has changed so much that the conduit was totaly broken again. I will not touch the conduit any more until KABC is really solid and doesn't change any more!!!!
 //

@@ -83,6 +83,10 @@ ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotDeviceLink*fH, QString capt
 //	setTabOrder( RadioButton1_2_2, buttonOk );
 //	setTabOrder( buttonOk, buttonCancel );
 //	setTabOrder( buttonCancel, buttonHelp );
+	adjustSize();
+	resize(size());
+	
+	
 	if (fHandle) 
 		tickleTimer=new QTimer(this, "TickleTimer");
 
