@@ -381,6 +381,11 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return 0;
 	}
+	if (!newRecord)
+	{
+		kdError() << k_funcinfo << ": Record to be written is invalid!" << endl;
+		return 0;
+	}
 	// We can't do this since it's possible the local apps need to rewrite a record
 	// that also exists on the pilot, ie: it would already have a uid but incorrectly
 	// get marked as clean.  So it's up to the app to mark them clean/dirty as appropriate.
