@@ -2233,7 +2233,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   while (c) {
 //    kdDebug(5800) << "----Todo found" << endl;
     Todo *todo = readTodo(c);
-    if (!cal->todo(todo->uid())) cal->addTodo(todo);
+    if (todo && !cal->todo(todo->uid())) cal->addTodo(todo);
     c = icalcomponent_get_next_component(calendar,ICAL_VTODO_COMPONENT);
   }
 
@@ -2242,7 +2242,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   while (c) {
 //    kdDebug(5800) << "----Event found" << endl;
     Event *event = readEvent(c);
-    if (!cal->event(event->uid())) cal->addEvent(event);
+    if (event && !cal->event(event->uid())) cal->addEvent(event);
     c = icalcomponent_get_next_component(calendar,ICAL_VEVENT_COMPONENT);
   }
 
@@ -2251,7 +2251,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   while (c) {
 //    kdDebug(5800) << "----Journal found" << endl;
     Journal *journal = readJournal(c);
-    if (!cal->journal(journal->uid())) cal->addJournal(journal);
+    if (journal && !cal->journal(journal->uid())) cal->addJournal(journal);
     c = icalcomponent_get_next_component(calendar,ICAL_VJOURNAL_COMPONENT);
   }
 
