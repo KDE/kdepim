@@ -4,7 +4,7 @@
 **
 ** The code for NotepadActionThread::unpackNotePad was taken from 
 ** Angus Ainslies read-notepad.c, which is part of pilot-link.
-** NotepadActionThread::saveImage is based also based on read-notepad.c.
+** NotepadActionThread::saveImage is also based on read-notepad.c.
 **
 ** This file is part of the Notepad conduit, a conduit for KPilot that
 ** stores the notepad drawings to files.
