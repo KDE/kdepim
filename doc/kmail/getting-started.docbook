@@ -60,7 +60,7 @@ Fill in the <guilabel>Name</guilabel> field with your
 full name (&eg; <userinput>John Doe</userinput>) and the
 <guilabel>Organization</guilabel> field (optional) with the appropriate
 information. Next, fill in the <guilabel>Email Address</guilabel> field with your
-email address (&eg; <userinput>john@somewhere.org</userinput>). If you are 
+email address (&eg; <userinput>john@example.net</userinput>). If you are 
 using <application>PGP</application> or
 <application>GnuPG</application> you need to set your key in 
 the <guilabel>OpenPGP Key</guilabel> field in the <guilabel>Advanced</guilabel>
