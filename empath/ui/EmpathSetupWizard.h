@@ -104,10 +104,6 @@ class EmpathAccountInfoPage : public QWidget
         EmpathAccountInfoPage(QWidget * parent, const char * name = 0);
         virtual ~EmpathAccountInfoPage();
         
-    protected slots:
-            
-        void s_accountCountChanged(unsigned int);
-        
     signals:
         
         void continueOK(bool);

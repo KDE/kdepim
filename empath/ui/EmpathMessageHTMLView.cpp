@@ -50,7 +50,7 @@
 EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
         QWidget     *   _parent,
         const char  *   _name)
-    :   KHTMLView(_parent, _name),
+    :   KHTMLWidget(_parent, _name),
         busy_(false)
 {
     empathDebug("ctor");
@@ -73,7 +73,6 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
     write (i18n("Welcome to Empath"));
     write ("</FONT></TT></HTML>");
     // End welcome message
-    parse();
     end();
     
     QObject::connect(
@@ -111,19 +110,18 @@ EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
 
-    KHTMLWidget * w = getKHTMLWidget();
-    w->setFixedFont(f.family());
-    w->setFontSizes(fsizes);
-    w->setStandardFont(KGlobal::generalFont().family());
-    w->setURLCursor(KCursor::handCursor());
-    w->setFocusPolicy(QWidget::StrongFocus);
-    w->setDefaultBGColor(
+    setFixedFont(f.family());
+    setFontSizes(fsizes);
+    setStandardFont(KGlobal::generalFont().family());
+    setURLCursor(KCursor::handCursor());
+    setFocusPolicy(QWidget::StrongFocus);
+    setDefaultBGColor(
         kapp->palette().color(QPalette::Normal, QColorGroup::Base));
-    w->setDefaultTextColors(
+    setDefaultTextColors(
         kapp->palette().color(QPalette::Normal, QColorGroup::Text),
         c->readColorEntry(EmpathConfig::KEY_LINK_COLOUR),
         c->readColorEntry(EmpathConfig::KEY_VISITED_LINK_COLOUR));
-    w->setUnderlineLinks(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS));
+    setUnderlineLinks(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS));
 
     if (s.isEmpty()) {
         write(
@@ -134,7 +132,6 @@ EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
             i18n("This part is empty") +
             "</PRE></BODY></HTML>");
         setCursor(arrowCursor);
-        parse();
         busy_ = false;
         return true;
     }
@@ -171,7 +168,6 @@ EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
     }
     
     setCursor(arrowCursor);
-    parse();
     busy_ = false;
     return true;
 }

@@ -54,8 +54,6 @@
 EmpathUI::EmpathUI()
     : QObject()
 {
-    empathDebug("ctor");
-    
     qInitPngIO();
     
     KConfig * c(KGlobal::config());
@@ -103,7 +101,6 @@ EmpathUI::EmpathUI()
 
 EmpathUI::~EmpathUI()
 {
-    empathDebug("dtor");
 }
 
     void    
@@ -160,23 +157,11 @@ EmpathUI::s_setupFilters()
     void
 EmpathUI::s_about()
 {
-    QMessageBox::information((QWidget *)0, "Pine needles in your bed",
-        i18n("Susie is a bitch. She wants to be spanked."), i18n("Administer spanking"));
-#if 0
-    KAboutDialog * about = new KAboutDialog;
-    about->setLogo(KGlobal::iconLoader()->loadIcon("empath"));
-    about->setAuthor(
-        "Rik Hemsley", "rik@kde.org", "http://without.netpedia.net", "");
-    about->addContributor("Dirk A. Mueller",    "", "", "");
-    about->addContributor("Tybollt",            "", "", "");
-    about->addContributor("Torsten Rahn",       "", "", "");
-    about->addContributor("Stephen Pitts",      "", "", "");
-    about->setVersion(EMPATH_VERSION_STRING);
-    QObject::connect(
-        about,  SIGNAL(sendEmail(const QString &, const QString &)),
-        this,   SLOT(s_sendEmail(const QString &, const QString &)));
-    about->show();
-#endif
+    QMessageBox::information(
+        (QWidget *)0,
+        "And the crowd had no idea why.",
+        i18n("Where were his ethics ?"),
+        i18n("Where were his manners ?"));
 }
 
     void
@@ -196,10 +181,9 @@ EmpathUI::s_infoMessage(const QString & s)
     
     QWidgetListIt it(*l);
     
-    for (; it.current(); ++it) {
+    for (; it.current(); ++it)
         if (it.current()->inherits("KTMainWindow"))
             ((KTMainWindow *)it.current())->statusBar()->message(s, 4000);
-    }
     
     delete l;
     l = 0;
@@ -225,7 +209,6 @@ EmpathUI::s_getSaveName(const EmpathURL & url)
     
     if (saveFilePath.isEmpty())
         return;
-    
    
     empath->s_saveNameReady(url, saveFilePath);
 }

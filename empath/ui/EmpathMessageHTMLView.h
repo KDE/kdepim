@@ -33,14 +33,14 @@
 // KDE includes
 #include <ktmainwindow.h>
 #include <kstdaccel.h>
-#include <khtmlview.h>
+#include <khtml.h>
 
 // Local includes
 #include <RMM_Message.h>
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
 
-class EmpathMessageHTMLWidget : public KHTMLView
+class EmpathMessageHTMLWidget : public KHTMLWidget
 {
     Q_OBJECT
 
@@ -57,6 +57,10 @@ class EmpathMessageHTMLWidget : public KHTMLView
          */
         void toHTML(QString &);
         bool showText(const QString & s, bool markup = true);
+        virtual KHTMLWidget * createFrame(QWidget *, const char *)
+        {
+            // We don't want to create frames, do we ?
+        }
         
     protected slots:
         

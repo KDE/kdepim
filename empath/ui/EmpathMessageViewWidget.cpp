@@ -26,6 +26,8 @@
 #include <krun.h>
 
 // Local includes
+#include "EmpathMessageStructureWidget.h"
+#include "EmpathMessageHTMLView.h"
 #include "EmpathHeaderViewWidget.h"
 #include "EmpathMessageViewWidget.h"
 #include "EmpathComposeWindow.h"

@@ -20,6 +20,8 @@
 
 // Qt includes
 #include <qlayout.h>
+#include <qradiobutton.h>
+#include <qbuttongroup.h>
 #include <qlabel.h>
 
 // KDE includes
@@ -82,8 +84,9 @@ EmpathSetupWizard::s_userContinueOK(bool b)
     void
 EmpathSetupWizard::s_accountContinueOK(bool b)
 {
-    setNextEnabled(accountPage_, b);
+    empathDebug(b ? "true" : "false");
     setAppropriate(reviewPage_, b);
+    setNextEnabled(accountPage_, b);
 }
 
 EmpathWelcomePage::EmpathWelcomePage(QWidget * parent, const char *)
@@ -126,6 +129,8 @@ EmpathUserInfoPage::EmpathUserInfoPage(QWidget * parent, const char *)
 
     QObject::connect(le_address_, SIGNAL(textChanged(const QString &)),
         this, SLOT(s_textChanged(const QString &)));
+
+    le_name_->setFocus();
 }
 
 EmpathUserInfoPage::~EmpathUserInfoPage()
@@ -149,19 +154,37 @@ EmpathUserInfoPage::s_textChanged(const QString &)
 EmpathAccountInfoPage::EmpathAccountInfoPage(QWidget * parent, const char *)
     :   QWidget(parent, "AccountInfoPage")
 {
-    QGridLayout * layout = new QGridLayout(this, 1, 1, 0, 0);
-    widget_ = new EmpathAccountsSettingsWidget(this, 0);
-    layout->addWidget(widget_, 0, 0);
+    QGridLayout * layout = new QGridLayout(this, 5, 1, 0, 0);
+
+    QButtonGroup * group = new QButtonGroup(this);
+    group->hide();
+    
+    QLabel * method_= new QLabel(
+        i18n("Please specify what kind of mailbox you use.\n"), this);
+    
+    QRadioButton * pop_ = new QRadioButton(
+    i18n("POP - I download my mail"), this);
+    
+    QRadioButton * local_ = new QRadioButton(
+    i18n("Local - My mail is automatically delivered to me"), this);
+    
+    QRadioButton * dunno_ = new QRadioButton(
+        i18n("I don't know - help !"), this);
+    
+    group->insert(pop_,     0);
+    group->insert(local_,   1);
+    group->insert(dunno_,   2);
+    
+    group->setButton(0); // Default to POP.
+    pop_->setFocus();
+    
+    layout->addWidget(method_, 0, 0);
+    layout->addWidget(pop_,    1, 0);
+    layout->addWidget(local_,  2, 0);
+    layout->addWidget(dunno_,  3, 0);
     layout->activate();
     
-    QObject::connect(widget_, SIGNAL(countChanged(unsigned int)),
-        this, SLOT(s_accountCountChanged(unsigned int)));
-}
-
-    void
-EmpathAccountInfoPage::s_accountCountChanged(unsigned int count)
-{
-    emit(continueOK(count != 0));
+    emit(continueOK(true));
 }
 
 EmpathAccountInfoPage::~EmpathAccountInfoPage()

@@ -31,13 +31,15 @@
 #include <kstdaccel.h>
 
 // Local includes
-#include "EmpathMessageStructureWidget.h"
 #include "EmpathDefines.h"
-#include "EmpathMessageHTMLView.h"
+#include "EmpathURL.h"
 
+class EmpathMessageStructureWidget;
+class EmpathMessageHTMLWidget;
 class EmpathHeaderViewWidget;
-class RMM::RBodyPart;
-
+namespace RMM {
+    class RBodyPart;
+}
 class EmpathMessageViewWidget : public QWidget
 {
     Q_OBJECT

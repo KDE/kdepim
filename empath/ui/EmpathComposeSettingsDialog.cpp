@@ -68,22 +68,22 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
     QLineEdit    tempLineEdit((QWidget *)0);
     Q_UINT32 h    = tempLineEdit.sizeHint().height();
     
-    rgb_phrases_    = new RikGroupBox(i18n("Phrases"), 8, this, "rgb_phrases");
+    rgb_phrases_ = new RikGroupBox(i18n("Phrases"), 8, this, "rgb_phrases");
     CHECK_PTR(rgb_phrases_);
     
-    rgb_msg_        = new RikGroupBox(i18n("Message"), 8, this, "rgb_msg");
+    rgb_msg_ = new RikGroupBox(i18n("Message"), 8, this, "rgb_msg");
     CHECK_PTR(rgb_msg_);
     
-    rgb_when_        = new RikGroupBox(i18n("When to send"), 8, this, "rgb_when");
+    rgb_when_ = new RikGroupBox(i18n("When to send"), 8, this, "rgb_when");
     CHECK_PTR(rgb_when_);
     
-    w_phrases_    = new QWidget(rgb_phrases_,    "w_phrases");
+    w_phrases_ = new QWidget(rgb_phrases_, "w_phrases");
     CHECK_PTR(w_phrases_);
     
-    w_msg_        = new QWidget(rgb_msg_,        "w_msg");
+    w_msg_ = new QWidget(rgb_msg_, "w_msg");
     CHECK_PTR(w_msg_);
     
-    w_when_        = new QWidget(rgb_when_,    "w_when");
+    w_when_ = new QWidget(rgb_when_, "w_when");
     CHECK_PTR(w_when_);
     
     rgb_phrases_->setWidget(w_phrases_);
@@ -338,49 +338,49 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 
     // Layouts
     
-    topLevelLayout_                = new QGridLayout(this, 5, 2, 10, 10);
+    topLevelLayout_ = new QGridLayout(this, 5, 2, 10, 10);
     CHECK_PTR(topLevelLayout_);
     
     topLevelLayout_->setRowStretch(0, 3);
     topLevelLayout_->setRowStretch(1, 4);
     topLevelLayout_->setRowStretch(2, 2);
 
-    phrasesGroupLayout_        = new QGridLayout(w_phrases_,    3, 2, 0, 10);
+    phrasesGroupLayout_ = new QGridLayout(w_phrases_, 3, 2, 0, 10);
     CHECK_PTR(phrasesGroupLayout_);
     
     phrasesGroupLayout_->setColStretch(0, 2);
     phrasesGroupLayout_->setColStretch(1, 4);
     
-    messageGroupLayout_        = new QGridLayout(w_msg_,        4, 2, 0, 10);
+    messageGroupLayout_ = new QGridLayout(w_msg_, 4, 2, 0, 10);
     CHECK_PTR(messageGroupLayout_);
 
     messageGroupLayout_->setColStretch(0, 6);
     messageGroupLayout_->setColStretch(1, 1);
 
-    whenGroupLayout_        = new QGridLayout(w_when_,        2, 1, 0, 10);
+    whenGroupLayout_ = new QGridLayout(w_when_, 2, 1, 0, 10);
     CHECK_PTR(whenGroupLayout_);
     
     topLevelLayout_->addWidget(l_extra_,                0, 0);
-    topLevelLayout_->addWidget(le_extra_,                0, 1);
-    topLevelLayout_->addMultiCellWidget(rgb_phrases_,    1, 1, 0, 1);
-    topLevelLayout_->addMultiCellWidget(rgb_msg_,        2, 2, 0, 1);
-    topLevelLayout_->addMultiCellWidget(rgb_when_,        3, 3, 0, 1);
-    topLevelLayout_->addWidget(cb_externalEditor_,        4, 0);
-    topLevelLayout_->addWidget(le_externalEditor_,        4, 1);
-    topLevelLayout_->addMultiCellWidget(buttonBox_,        5, 5, 0, 1);
+    topLevelLayout_->addWidget(le_extra_,               0, 1);
+    topLevelLayout_->addMultiCellWidget(rgb_phrases_,   1, 1, 0, 1);
+    topLevelLayout_->addMultiCellWidget(rgb_msg_,       2, 2, 0, 1);
+    topLevelLayout_->addMultiCellWidget(rgb_when_,      3, 3, 0, 1);
+    topLevelLayout_->addWidget(cb_externalEditor_,      4, 0);
+    topLevelLayout_->addWidget(le_externalEditor_,      4, 1);
+    topLevelLayout_->addMultiCellWidget(buttonBox_,     5, 5, 0, 1);
 
     phrasesGroupLayout_->addWidget(l_reply_,    0, 0);
-    phrasesGroupLayout_->addWidget(l_replyAll_,    1, 0);
-    phrasesGroupLayout_->addWidget(l_forward_,    2, 0);
+    phrasesGroupLayout_->addWidget(l_replyAll_, 1, 0);
+    phrasesGroupLayout_->addWidget(l_forward_,  2, 0);
     
-    phrasesGroupLayout_->addWidget(le_reply_,        0, 1);
-    phrasesGroupLayout_->addWidget(le_replyAll_,    1, 1);
-    phrasesGroupLayout_->addWidget(le_forward_,        2, 1);
+    phrasesGroupLayout_->addWidget(le_reply_,   0, 1);
+    phrasesGroupLayout_->addWidget(le_replyAll_,1, 1);
+    phrasesGroupLayout_->addWidget(le_forward_, 2, 1);
 
     phrasesGroupLayout_->activate();
     
-    messageGroupLayout_->addMultiCellWidget(cb_quote_,        0, 0, 0, 1);
-    messageGroupLayout_->addMultiCellWidget(cb_addSig_,        1, 1, 0, 1);
+    messageGroupLayout_->addMultiCellWidget(cb_quote_,      0, 0, 0, 1);
+    messageGroupLayout_->addMultiCellWidget(cb_addSig_,     1, 1, 0, 1);
     messageGroupLayout_->addMultiCellWidget(cb_digSign_,    2, 2, 0, 1);
     messageGroupLayout_->addWidget(cb_wrap_,                3, 0);
     messageGroupLayout_->addWidget(sb_wrap_,                3, 1);
@@ -388,7 +388,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
     messageGroupLayout_->activate();
     
     whenGroupLayout_->addWidget(rb_sendNow_,    0, 0);
-    whenGroupLayout_->addWidget(rb_sendLater_,    1, 0);
+    whenGroupLayout_->addWidget(rb_sendLater_,  1, 0);
     
     whenGroupLayout_->activate();
     
@@ -404,15 +404,15 @@ EmpathComposeSettingsDialog::saveData()
     KConfig * c    = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_COMPOSE);
 #define CWE c->writeEntry
-    CWE( EmpathConfig::KEY_EXTRA_HEADERS,            le_extra_->text());
-    CWE( EmpathConfig::KEY_PHRASE_REPLY_SENDER,        le_reply_->text());
-    CWE( EmpathConfig::KEY_PHRASE_REPLY_ALL,        le_replyAll_->text());
-    CWE( EmpathConfig::KEY_PHRASE_FORWARD,            le_forward_->text());
-    CWE( EmpathConfig::KEY_AUTO_QUOTE,                cb_quote_->isChecked());
-    CWE( EmpathConfig::KEY_ADD_SIG,                    cb_addSig_->isChecked());
-    CWE( EmpathConfig::KEY_ADD_DIG_SIG,                cb_digSign_->isChecked());
-    CWE( EmpathConfig::KEY_WRAP_LINES,                cb_wrap_->isChecked());
-    CWE( EmpathConfig::KEY_WRAP_COLUMN,                sb_wrap_->value());
+    CWE( EmpathConfig::KEY_EXTRA_HEADERS,       le_extra_->text());
+    CWE( EmpathConfig::KEY_PHRASE_REPLY_SENDER, le_reply_->text());
+    CWE( EmpathConfig::KEY_PHRASE_REPLY_ALL,    le_replyAll_->text());
+    CWE( EmpathConfig::KEY_PHRASE_FORWARD,      le_forward_->text());
+    CWE( EmpathConfig::KEY_AUTO_QUOTE,          cb_quote_->isChecked());
+    CWE( EmpathConfig::KEY_ADD_SIG,             cb_addSig_->isChecked());
+    CWE( EmpathConfig::KEY_ADD_DIG_SIG,         cb_digSign_->isChecked());
+    CWE( EmpathConfig::KEY_WRAP_LINES,          cb_wrap_->isChecked());
+    CWE( EmpathConfig::KEY_WRAP_COLUMN,         sb_wrap_->value());
     CWE( EmpathConfig::KEY_SEND_POLICY,
         (unsigned long)(
                         rb_sendNow_->isChecked() ?
@@ -420,7 +420,7 @@ EmpathComposeSettingsDialog::saveData()
                         EmpathMailSender::SendLater));
     
     CWE( EmpathConfig::KEY_USE_EXTERNAL_EDITOR,cb_externalEditor_->isChecked());
-    CWE( EmpathConfig::KEY_EXTERNAL_EDITOR,        le_externalEditor_->text());
+    CWE( EmpathConfig::KEY_EXTERNAL_EDITOR,     le_externalEditor_->text());
 #undef CWE
 }
 
@@ -509,19 +509,19 @@ EmpathComposeSettingsDialog::s_apply()
     void
 EmpathComposeSettingsDialog::s_default()
 {
-    le_extra_            ->    setText        (QString::null);
-    le_reply_            ->    setText        (i18n("%s wrote:"));
-    le_replyAll_        ->    setText        (i18n("%s wrote:"));
-    le_forward_            ->    setText        (i18n("Forwarded message from %s"));
-    cb_quote_            ->    setChecked    (true);
-    cb_addSig_            ->    setChecked    (true);
-    cb_digSign_            ->    setChecked    (false);
-    cb_wrap_            ->    setChecked    (true);
-    sb_wrap_            ->    setValue    (76);
-    rb_sendNow_            ->    setChecked    (false);
-    rb_sendLater_        ->    setChecked    (true);
-    cb_externalEditor_    ->    setChecked    (false);
-    le_externalEditor_    ->    setText        ("gvim");
+    le_extra_           ->  setText     (QString::null);
+    le_reply_           ->  setText     (i18n("%s wrote:"));
+    le_replyAll_        ->  setText     (i18n("%s wrote:"));
+    le_forward_         ->  setText     (i18n("Forwarded message from %s"));
+    cb_quote_           ->  setChecked  (true);
+    cb_addSig_          ->  setChecked  (true);
+    cb_digSign_         ->  setChecked  (false);
+    cb_wrap_            ->  setChecked  (true);
+    sb_wrap_            ->  setValue    (76);
+    rb_sendNow_         ->  setChecked  (false);
+    rb_sendLater_       ->  setChecked  (true);
+    cb_externalEditor_  ->  setChecked  (false);
+    le_externalEditor_  ->  setText     ("gvim");
 }
     
     void
