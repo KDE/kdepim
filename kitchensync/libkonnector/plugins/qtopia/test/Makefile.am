@@ -28,7 +28,9 @@ kdetest_SOURCES =  kdetest.cpp
 todometa_LDADD = $(LIB_KDEUI) $(LIB_QT)
 todometa_SOURCES = todometa.cpp
 
-contactmeta_LDADD = $(LIB_KDEUI) $(LIB_QT)
+contactmeta_LDADD = $(top_builddir)/kitchensync/lib/libksync.la \
+	$(top_builddir)/kitchensync/libkonnector/plugins/qtopia/libqtopiakonnector.la \
+	$(top_builddir)/kitchensync/libkonnector/libkonnector.la
 contactmeta_SOURCES = contactmeta.cpp
 
 datebookmeta_LDADD = $(LIB_KDEUI) $(LIB_QT)

@@ -25,13 +25,20 @@ void MD5Map::load( const QString& file ) {
     }
 }
 void MD5Map::save() {
-    clear();
     KConfig* conf = config();
+
+    QStringList groups = conf->groupList();
+    for (QStringList::Iterator it = groups.begin(); it != groups.end(); ++it ) {
+        conf->deleteGroup( (*it) );
+    }
+
     Iterator it;
     for ( it = m_map.begin(); it != m_map.end(); ++it ) {
         conf->setGroup( it.key() );
         conf->writeEntry( "sum", it.data() );
     }
+    conf->sync();
+    qWarning("save %s",  m_file.latin1() );
 }
 void MD5Map::setFileName( const QString& file ) {
     m_file = file;
@@ -61,7 +68,7 @@ void MD5Map::clear() {
 }
 KConfig* MD5Map::config() {
     if (!m_conf ) {
-        m_conf = new KConfig( m_file );
+        m_conf = new KConfig( m_file, false, false );
     }
     return m_conf;
 }

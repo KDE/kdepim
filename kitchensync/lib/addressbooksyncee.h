@@ -11,7 +11,7 @@ namespace KSync {
     {
     public:
         typedef QPtrList<AddressBookSyncEntry> PtrList;
-        AddressBookSyncEntry( const KABC::Addressee & );
+        AddressBookSyncEntry( const KABC::Addressee & = KABC::Addressee() );
         AddressBookSyncEntry( const AddressBookSyncEntry& );
 
         QString name();

@@ -225,7 +225,7 @@ KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
             *stream << "HomeWebPage=\"" << ab.custom( "opie", "HomeWebPage" ) << "\" ";
             *stream << "Spouse=\"" << ab.custom( "opie",  "Spouse") << "\" ";
             *stream << "Gender=\"" << ab.custom( "opie",  "Gender") << "\" ";
-            *stream << "Birthday=\"" << ab.custom( "opie",  "Birthday" ) << "\" ";
+            *stream << "Birthday=\"" << ab.birthday().date().toString("dd.MM.yyyy") << "\" ";
             *stream << "Anniversary=\"" << ab.custom( "opie",  "Anniversary" ) << "\" ";
             *stream << "Nickname=\"" << ab.nickName() << "\" ";
             *stream << "Children=\"" << ab.custom("opie", "Children" ) << "\" ";
