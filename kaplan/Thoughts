@@ -3,6 +3,7 @@
 * Note: Lines starting with a "z" are my comments - Zack :)
 * Note: Lines starting with a "s" are my comments - Simon
 * Note: Lines starting with a % are my comments - Don
+* Note: Lines starting with a "g" are my comments - Guenter
 
 Misc:
 =====
@@ -25,28 +26,32 @@ z Kaplan so that the interface looks like
 - Mail
   |    \
   |     - Local Folders
-  |                   \
-  |                    Inbox
-  |                    |
-  |                    Thrash
-  |                    |
-  |                    Sent
+  |                    \
+  |                     Inbox
+  |                     |
+  |                     Thrash
+  |                     |
+  |                     Sent
 - Notes
   |    \
   |     Notes 1
   |     |
   |     Notes 2
   |
-  - Events
-          \
-           Event 1
-           |
-           Event 2
+- Events
+        \
+         Event 1
+         |
+         Event 2
 
 z which is not that bad. The question would be how to render the tree
 z on the Kaplan side while keeping the items on the parts side ( because
 z e.g. KMails hold custom pixmaps for the folders which had to be
 z displayed in the Kaplan tree).
+
+g I'm currently having 248 events. A tree is a very bad solution to visualize 
+g them. selecting "Events" in the tree should just only start the korganizer 
+g part.
 
 % The folder tree makes sense for advanced users, but I think
 % the simplicity of the current navigator widget has advantages for 
@@ -154,6 +159,8 @@ z Background loading of parts is OK. The idea is simple : load the
 z last used part on startup. Make sure its loading finishes and then
 z load the rest once the user can already interact with the last used
 z loaded part.
+
+g why do we always need the addressbook? Is libkabc not sufficent?
 
 % I guess my machine is too fast, starting parts is pretty quick here :-)
 
