@@ -67,6 +67,13 @@ PilotSerialDatabase::~PilotSerialDatabase()
 	delete[]fDBName;
 }
 
+QString PilotSerialDatabase::dbPathName() const
+{
+	QString s("Pilot:");
+	s.append(fDBName);
+	return s;
+}
+
 // Reads the application block info
 int PilotSerialDatabase::readAppBlock(unsigned char *buffer, int maxLen)
 {
@@ -254,6 +261,9 @@ void PilotSerialDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.2  2002/05/22 20:40:13  adridg
+// Renaming for sensibility
+//
 // Revision 1.1  2001/10/10 22:01:24  adridg
 // Moved from ../kpilot/, shared files
 //

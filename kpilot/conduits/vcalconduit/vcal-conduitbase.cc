@@ -73,6 +73,9 @@ static const char *vcalconduitbase_id = "$Id$";
 #include "vcal-factorybase.h"
 #include "vcal-conduitbase.moc"
 
+#define fCurrentDatabase fDatabase
+#define fBackupDatabase fLocalDatabase
+
 QDateTime readTm(const struct tm &t)
 {
   QDateTime dt;
@@ -120,7 +123,6 @@ struct tm writeTm(const QDate &dt)
 }
 
 
-
 /****************************************************************************
  *                          VCalConduitBase class                               *
  ****************************************************************************/
@@ -130,8 +132,6 @@ VCalConduitBase::VCalConduitBase(KPilotDeviceLink *d,
 	const QStringList &a) :
 	ConduitAction(d,n,a),
 	fCalendar(0L),
-	fCurrentDatabase(0L),
-	fBackupDatabase(0L),
 	fP(0L)
 {
 	FUNCTIONSETUP;
@@ -530,7 +530,7 @@ void VCalConduitBase::cleanup()
 	KPILOT_DELETE(fCurrentDatabase);
 	KPILOT_DELETE(fBackupDatabase);
 
-	fCalendar->save(fCalendarFile);
+	if (fCalendar) fCalendar->save(fCalendarFile);
 	KPILOT_DELETE(fCalendar);
 	KPILOT_DELETE(fP);
 
@@ -691,6 +691,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.9  2002/06/07 06:37:15  adridg
+// Be safer on cleanup to avoid crash
+//
 // Revision 1.8  2002/05/18 13:08:57  kainhofe
 // dirty flag is now cleared, conflict resolution shows the correct item title and asks the correct question
 //

@@ -73,6 +73,7 @@ public:
 	// Purges all Archived/Deleted records from Palm Pilot database
 	virtual int cleanup();
 
+
 	// Writes a new ID to the record specified the index.  Not supported on Serial connections
 	virtual recordid_t writeID(PilotRecord* rec);
 
@@ -83,7 +84,7 @@ public:
 	* the path and dbname passed to the constructor, and including
 	* the .pdb extension.
 	*/
-	QString dbPathName() const;
+	virtual QString dbPathName() const;
 
 	/**
 	* Accessor functions for the application info block.
@@ -124,6 +125,9 @@ private:
 
 
 // $Log$
+// Revision 1.4  2002/05/22 20:40:13  adridg
+// Renaming for sensibility
+//
 // Revision 1.3  2002/05/19 15:01:49  adridg
 // Patches for the KNotes conduit
 //

@@ -63,6 +63,8 @@ public:
 	/** Purges all Archived/Deleted records from Palm Pilot database */
 	virtual int cleanup();
 
+	virtual QString dbPathName() const;
+
 	const char *getDBName() { return fDBName; }
 
 protected:
@@ -82,6 +84,9 @@ private:
 
 
 // $Log$
+// Revision 1.2  2002/05/22 20:40:13  adridg
+// Renaming for sensibility
+//
 // Revision 1.1  2001/10/10 22:01:24  adridg
 // Moved from ../kpilot/, shared files
 //

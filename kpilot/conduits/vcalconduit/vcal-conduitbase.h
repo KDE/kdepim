@@ -133,8 +133,6 @@ protected:
 
 protected:
 	KCal::Calendar *fCalendar;
-	PilotSerialDatabase *fCurrentDatabase;
-	PilotLocalDatabase *fBackupDatabase;
 
 	QString fCalendarFile;
 	int syncAction, nextSyncAction, conflictResolution;
@@ -150,6 +148,9 @@ protected:
 
 
 // $Log$
+// Revision 1.5  2002/05/18 13:08:57  kainhofe
+// dirty flag is now cleared, conflict resolution shows the correct item title and asks the correct question
+//
 // Revision 1.4  2002/05/14 23:07:49  kainhofe
 // Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
 //

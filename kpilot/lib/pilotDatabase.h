@@ -105,6 +105,12 @@ public:
 
 	bool isDBOpen() const { return fDBOpen; }
 
+	/** Returns some sensible human-readable identifier for
+	*   the database. Serial databases get Pilot:, local
+	*   databases return the full path.
+	*/
+	virtual QString dbPathName() const = 0;
+
 	/**
 	* Here are some static utility functions. listAppInfo() is primarily
 	* meant for debugging, and it dumps an appinfo block to stdout.
@@ -124,6 +130,9 @@ private:
 
 
 // $Log$
+// Revision 1.5  2002/05/22 20:40:13  adridg
+// Renaming for sensibility
+//
 // Revision 1.4  2002/01/17 16:24:10  adridg
 // Compile fixes on Solaris
 //
