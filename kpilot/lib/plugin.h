@@ -50,9 +50,28 @@ public:
 	bool isModified() const { return fModified; } ;
 	QWidget *widget() const { return fWidget; } ;
 
-public slots:
-	virtual void commit(KConfig *);
-	virtual void load(KConfig *);
+public:
+	/** 
+	* Load or save the config widget's settings in the given 
+	* KConfig object; leave the group unchanged.
+	*/
+	virtual void commit(KConfig *) = 0L;
+	virtual void load(KConfig *) = 0L;
+	/**
+	* Called when the object is to be hidden again and might
+	* need to save changed settings. Should prompt the user
+	* and call commit() if needed. Override this function only
+	* if you need a very different kind of prompt window.
+	*
+	* Returns false if the change is to be canceled. Returns
+	* true otherwise, whether or not the changes were saved.
+	*/
+	virtual bool maybeSave(KConfig *);
+	/**
+	* This function provides the string for the prompt used
+	* in maybeSave(). Override it to change the text.
+	*/
+	virtual QString maybeSaveText() const;
 protected slots:
 	void modified();
 

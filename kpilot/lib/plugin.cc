@@ -40,6 +40,7 @@
 
 #include <dcopclient.h>
 #include <kapplication.h>
+#include <kmessagebox.h>
 
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
@@ -66,7 +67,7 @@ ConduitConfigBase::~ConduitConfigBase()
 	fModified=true;
 }
 
-
+#if 0
 void ConduitConfigBase::commit(KConfig *)
 {
 	FUNCTIONSETUP;
@@ -76,7 +77,29 @@ void ConduitConfigBase::load(KConfig *)
 {
 	FUNCTIONSETUP;
 }
+#endif
 
+/* virtual */ QString ConduitConfigBase::maybeSaveText() const
+{
+	FUNCTIONSETUP;
+	
+	return i18n("The <i>%1</i> conduit's settings have been changed. Do you "
+		"want to save the changes before continuing?").arg(name());
+}
+
+/* virtual */ bool ConduitConfigBase::maybeSave(KConfig *c)
+{
+	FUNCTIONSETUP;
+	
+	if (!isModified()) return true;
+	
+	int r = KMessageBox::questionYesNoCancel(fWidget,
+		maybeSaveText(),
+		i18n("%1 Conduit").arg(name()));
+	if (r == KMessageBox::Cancel) return false;
+	if (r == KMessageBox::Yes) commit(c);
+	return true;
+}
 
 ConduitConfig::ConduitConfig(QWidget *parent,
 	const char *name,
@@ -239,10 +262,10 @@ bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPat
 	fLocalDatabase= new PilotLocalDatabase(dbName); // From default
 	if (!fLocalDatabase || !fDatabase)
 	{
+#ifdef DEBUG
 		const QString *where2 = PilotLocalDatabase::getDBPath();
 
 		QString none = CSL1("<null>");
-#ifdef DEBUG
 		DEBUGCONDUIT << fname
 			<< ": Could not open both local copies of \""
 			<< dbName
