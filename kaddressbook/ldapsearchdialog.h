@@ -57,7 +57,7 @@ class LDAPSearchDialog : public KDialogBase
     void slotStopSearch();
     void slotSearchDone();
     void slotError( const QString& );
-    void slotHelp();
+    virtual void slotHelp();
     virtual void slotUser1();
     virtual void slotUser2();
     virtual void slotUser3();
@@ -68,7 +68,9 @@ class LDAPSearchDialog : public KDialogBase
     virtual void closeEvent( QCloseEvent* );
 
   private:
-    QString makeFilter( const QString& query, const QString& attr );
+    void saveSettings();
+
+    QString makeFilter( const QString& query, const QString& attr, bool startsWith );
 
     void cancelQuery();
 
@@ -78,6 +80,7 @@ class LDAPSearchDialog : public KDialogBase
     KABC::AddressBook *mAddressBook;
 
     KComboBox* mFilterCombo;
+    KComboBox* mSearchType;
     KLineEdit* mSearchEdit;
 
     QCheckBox* mRecursiveCheckbox;

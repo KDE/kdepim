@@ -141,6 +141,11 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, QWidget* parent,
   mRecursiveCheckbox = new QCheckBox( i18n( "Recursive search" ), groupBox  );
   mRecursiveCheckbox->setChecked( true );
   boxLayout->addMultiCellWidget( mRecursiveCheckbox, 1, 1, 0, 4 );
+
+  mSearchType = new KComboBox( groupBox );
+  mSearchType->insertItem( i18n( "Contains..." ) );
+  mSearchType->insertItem( i18n( "Starts with..." ) );
+  boxLayout->addMultiCellWidget( mSearchType, 1, 1, 3, 4 );
   
   topLayout->addWidget( groupBox );
 
@@ -171,6 +176,11 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, QWidget* parent,
   restoreSettings();
 }
 
+LDAPSearchDialog::~LDAPSearchDialog()
+{
+  saveSettings();
+}
+
 void LDAPSearchDialog::restoreSettings()
 {
   // Create one KABC::LdapClient per selected server and configure it.
@@ -179,6 +189,10 @@ void LDAPSearchDialog::restoreSettings()
   // the beginning of the process
   mLdapClientList.setAutoDelete( true );
   mLdapClientList.clear();
+
+  KConfig kabConfig( "kaddressbookrc" );
+  kabConfig.setGroup( "LDAPSearch" );
+  mSearchType->setCurrentItem( kabConfig.readNumEntry( "SearchType", 0 ) );
 
   // then read the config file and register all selected 
   // server in the list
@@ -258,8 +272,12 @@ void LDAPSearchDialog::restoreSettings()
   }
 }
 
-LDAPSearchDialog::~LDAPSearchDialog()
+void LDAPSearchDialog::saveSettings()
 {
+  KConfig config( "kaddressbookrc" );
+  config.setGroup( "LDAPSearch" );
+  config.writeEntry( "SearchType", mSearchType->currentItem() );
+  config.sync();
 }
 
 void LDAPSearchDialog::cancelQuery()
@@ -284,20 +302,21 @@ void LDAPSearchDialog::slotSetScope( bool rec )
   }
 }
 
-QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr )
+QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr,
+                                      bool startsWith )
 {
   if( query.isEmpty() )
     // Return a filter that matches everything
     return QString( "|(cn=*)(sn=*)" );
 
   if ( attr == i18n( "Name" ) ) {
-    QString result( "|(cn=*%1*)(sn=*%2*)" );
+    QString result( (startsWith ? "|(cn=%1*)(sn=%2*)" : "|(cn=*%1*)(sn=*%2*)") );
 
     result = result.arg( query ).arg( query );
 
     return result;
   } else {
-    QString result( "%1=*%2*" );
+    QString result( (startsWith ? "%1=%2*" : "%1=*%2*") );
 
     if ( attr == i18n( "Email" ) ) {
       result = result.arg( "mail" ).arg( query );
@@ -326,13 +345,17 @@ void LDAPSearchDialog::slotStartSearch()
   connect( mSearchButton, SIGNAL( clicked() ),
            this, SLOT( slotStopSearch() ) );
 
-  QString filter = makeFilter( mSearchEdit->text().stripWhiteSpace(), mFilterCombo->currentText() );
+  bool startsWith = (mSearchType->currentItem() == 1);
+
+  QString filter = makeFilter( mSearchEdit->text().stripWhiteSpace(), mFilterCombo->currentText(), startsWith );
 
    // loop in the list and run the KABC::LdapClients 
   mResultListView->clear();
   for( KABC::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
     client->startQuery( filter );
   }
+
+  saveSettings();
 }
 
 void LDAPSearchDialog::slotStopSearch()
@@ -394,6 +417,11 @@ QString LDAPSearchDialog::selectedEMails() const
   }
 
   return result.join( ", " );
+}
+
+void LDAPSearchDialog::slotHelp()
+{
+  kapp->invokeHelp( "ldap-queries" );
 }
 
 void LDAPSearchDialog::slotUser1()
@@ -472,11 +500,6 @@ void LDAPSearchDialog::slotUser3()
   }
 
   emit addresseesAdded();
-}
-
-void LDAPSearchDialog::slotHelp()
-{
-  kapp->invokeHelp( "ldap-queries" );
 }
 
 #include "ldapsearchdialog.moc"
