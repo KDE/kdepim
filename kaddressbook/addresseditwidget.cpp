@@ -52,6 +52,30 @@
 
 #include "addresseditwidget.h"
 
+class TabPressEater : public QObject
+{
+  public:
+    TabPressEater( QObject *parent )
+      : QObject( parent, "TabPressEater" )
+    {
+    }
+
+  protected:
+    bool eventFilter( QObject*, QEvent *event )
+    {
+      if ( event->type() == QEvent::KeyPress ) {
+        QKeyEvent *keyEvent = (QKeyEvent*)event;
+        if ( keyEvent->key() == Qt::Key_Tab ) {
+          QApplication::sendEvent( parent(), event );
+          return true;
+        } else
+          return false;
+      } else {
+        return false;
+      }
+    }
+};
+
 
 AddressEditWidget::AddressEditWidget( bool readOnly,
                                       QWidget *parent, const char *name )
@@ -246,6 +270,9 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   mStreetTextEdit = new QTextEdit( page );
   label->setBuddy( mStreetTextEdit );
   topLayout->addWidget( mStreetTextEdit, 1, 1 );
+
+  TabPressEater *eater = new TabPressEater( this );
+  mStreetTextEdit->installEventFilter( eater );
 
   label = new QLabel( i18n( "Post office box:" ), page );
   topLayout->addWidget( label, 2 , 0 );
