@@ -2,6 +2,67 @@
 ======================
 
 
+2003-7-27  Reinhold Kainhofer
+* The internal editor action now displays the contents of the conflicting 
+  records and lets the user decide which one overrides (Fixes bug #61103).
+* For this I added a function getTextRepresentation(bool richText) to 
+  PilotAppCategory, PilotAddress, PilotMemo, PilotDateEnty and PilotTodoEnty, 
+  which returns the contents of the record as a string that can be displayed
+  to the user. Moved that code from the internal viewers to the classes.
+* If there is no nice-text representation, I now use KHE::KHexEdit to 
+  show the raw contents, so the user gets an idea of the conflicting records.
+
+
+2003-7-26  Reinhold Kainhofer
+* Changed a few accelerators (duplicates reported by Dr.Klash) 
+* Also show items marked as deleted in the GenericDB viewer.
+* All conduits now have their own copy of the handheld's database 
+  in $KDEHOME/share/apps/kpilot/conduits/UserName/*.pdb. This was 
+  needed so that backup runs don't break the conduit's algorithm to 
+  detect changed records on the PC. So far, we compared each entry 
+  to the corresponding entry in the backup database. It that changed, 
+  basically we are screwed. 
+  For this new feature I extended the constructur of PilotLocalDatabase 
+  to take an additional boolean parameter useConduitDBs. If that is set, 
+  the db will be opened in ..../conduits/Username/
+* Do not return "Unfiled" or "Nicht abgelegt" as category label 
+  if no category is set. Instead return an empty string.
+* Added isArchived() and makeArchived() methods to PilotAppCategory 
+  to set the dlpRecArchived flag.
+* Changed the way how the DBBackup/username/ and conduits/username/ 
+  directories are created (now I'm using KStandardDirs::makeDir and 
+  KStandardDirs::exists).
+* FirstSync now also means PC->HH or HH->PC directions (which is clear 
+  intuitively, as with these direction, nothing that's on the other 
+  side should matter at all).
+* Added eDelete to the sync actions in the SyncAction class
+
+
+2003-7-15 to 2003-7-26  Reinhold Kainhofer
+Complete rewrite of the addressbook conduit (for the, umhh, third(?) time). 
+* NEW FEATURE: custom fields can now also be synced with 
+	birth date, URL, ICQ, etc. (bug #50871)
+* Conflict resolution shows the whole conflicting item 
+  and all conflicting fields (so far, every conflicting 
+  field was shown on its own, bug #59222). The conflict 
+  resolution is done completely independent from the addressee 
+  object and might so be reused later in other conduits as well.
+* Separated the mechanism to detect changes from the mechanism 
+  to sync/merge addressees. This makes the whole thing a lot 
+  easier to understand and maintain, and there are far less 
+  cases you have to consider.
+* the conduit now obeys the global conflict resolution (ask, 
+  PC overrides, HH overrides, last sync overrides, duplicate) 
+  and sync direction (fast, full, only PC->HH, only HH->PC)
+  settings. Bug #59220.
+* The "only HH->PC" and "only PC->HH" sync directions first 
+  copy all existing entries to the receiving end, and only then 
+  remove all other entries from there. This avoids data loss if 
+  the connection breaks while such a special sync is running.
+* Added a crash handler to clean up the addressbook if the 
+  conduit crashes.
+		 
+
 2003-7-11  Reinhold Kainhofer
 * Records in the PilotLocalDatabase with ID 0 (i.e. new records 
   added by KPilot's internal editors) will always be treated as 
