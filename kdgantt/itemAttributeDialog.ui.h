@@ -203,7 +203,7 @@ void itemAttributeDialog::reset( KDGanttViewItem * item )
     TimeEdit1->setTime( item->startTime().time() );
     if ( item->pixmap() != 0 )
 	setIcon( *(item->pixmap()) );
-    setCaption( i18n( "Properties of %1" ).arg( (QListViewItem*)item->text(0) ) );
+    setCaption( i18n( "Properties of %1" ).arg( ((QListViewItem*)item)->text(0) ) );
     itemName->setText(((QListViewItem*)item)->text(0) );
 
 //    DateEdit1->setRange(item->startTime().date().addYears(-10), item->endTime().date() );
