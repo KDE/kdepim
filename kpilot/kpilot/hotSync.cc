@@ -355,13 +355,13 @@ FileInstallAction::~FileInstallAction()
 		<< ": Installing " << fList.count() << " files" << endl;
 #endif
 
+	emit logMessage(i18n("[File Installer]"));
+
 	// Possibly no files to install?
 	if (!fList.count())
 	{
 		emit logMessage(i18n("No Files to install"));
-		emit syncDone(this);
-
-		return true;
+		return delayDone();
 	}
 
 	fTimer = new QTimer(this);
@@ -370,7 +370,8 @@ FileInstallAction::~FileInstallAction()
 
 	fTimer->start(0, false);
 
-	emit logProgress(i18n("Installing Files"), 0);
+	emit logProgress(i18n("Installing one file",
+		"Installing %n Files",fList.count()), 0);
 	return true;
 }
 

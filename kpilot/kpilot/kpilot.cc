@@ -196,6 +196,8 @@ void KPilotInstaller::startDaemonIfNeeded()
 {
 	FUNCTIONSETUP;
 
+	fStatus=WaitingForDaemon;
+
 	QString daemonError;
 	QCString daemonDCOP;
 	int daemonPID;
@@ -229,7 +231,15 @@ void KPilotInstaller::startDaemonIfNeeded()
 #endif
 		))
 	{
-		kdError() << k_funcinfo << ": Can't start daemon : " << daemonError << endl;
+		kdError() << k_funcinfo 
+			<< ": Can't start daemon : " << daemonError << endl;
+		if (fLogWidget)
+		{
+			fLogWidget->addMessage(i18n("Could not start the "
+				"KPilot daemon. The system error message "
+				"was: &quot;%1&quot;").arg(daemonError));
+		}
+		fStatus=Error;
 	}
 	else
 	{
@@ -237,6 +247,18 @@ void KPilotInstaller::startDaemonIfNeeded()
 		s = getDaemon().statusString();
 		DEBUGKPILOT << fname << ": Daemon status is " << s << endl;
 #endif
+		if (fLogWidget)
+		{
+			int wordoffset;
+			s.remove(0,12);
+			wordoffset=s.find(' ');
+			if (wordoffset>0) s.remove(wordoffset,60);
+			
+			fLogWidget->addMessage(
+				i18n("Daemon status is `%1'")
+				.arg(s));
+		}
+		fStatus=Normal;
 	}
 }
 
@@ -248,6 +270,12 @@ void KPilotInstaller::readConfig()
 	fKillDaemonOnExit = c.getKillDaemonOnExit();
 
 	(void) PilotAppCategory::setupPilotCodec(c.getEncoding());
+	if (fLogWidget)
+	{
+		fLogWidget->addMessage(i18n("Using character set %1 on "
+			"the handheld.")
+			.arg(PilotAppCategory::codecName()));
+	}
 }
 
 
@@ -414,13 +442,29 @@ void KPilotInstaller::slotListSyncRequested()
 
 	switch(i)
 	{
+	case KPilotDCOP::StartOfHotSync :
+		if (fStatus==Normal)
+		{
+			fStatus=WaitingForDaemon;
+			componentPreSync();
+		}
+		break;
 	case KPilotDCOP::EndOfHotSync :
-		componentPostSync();
+		if (fStatus==WaitingForDaemon)
+		{
+			componentPostSync();
+			fStatus=Normal;
+		}
 		break;
 	default :
 		kdWarning() << k_funcinfo << ": Unhandled status message " << i << endl;
 		break;
 	}
+}
+
+/* virtual DCOP*/ int KPilotInstaller::kpilotStatus()
+{
+	return status();
 }
 
 /* virtual DCOP */ ASYNC KPilotInstaller::configure()
@@ -724,6 +768,8 @@ void KPilotInstaller::slotConfigureKPilot()
 {
 	FUNCTIONSETUP;
 
+	if (fStatus!=Normal) return;
+	fStatus=UIBusy;
 	fConfigureKPilotDialogInUse = true;
 	// Display the (modal) options page.
 	//
@@ -741,6 +787,7 @@ void KPilotInstaller::slotConfigureKPilot()
 			<< ": Can't allocate KPilotOptions object" << endl;
 		getDaemon().requestSync(rememberedSync);
 		fConfigureKPilotDialogInUse = false;
+		fStatus=Normal;
 		return;
 	}
 
@@ -778,12 +825,15 @@ void KPilotInstaller::slotConfigureKPilot()
 	DEBUGKPILOT << fname << ": Done with options." << endl;
 #endif
 	fConfigureKPilotDialogInUse = false;
+	fStatus=Normal;
 }
 
 void KPilotInstaller::slotConfigureConduits()
 {
 	FUNCTIONSETUP;
 
+	if (fStatus!=Normal) return;
+	fStatus=UIBusy;
 	fConfigureConduitDialogInUse = true;
 
 	ConduitConfigDialog *conSetup = 0L;
@@ -798,6 +848,7 @@ void KPilotInstaller::slotConfigureConduits()
 	delete conSetup;
 
 	fConfigureConduitDialogInUse = false;
+	fStatus=Normal;
 }
 
 

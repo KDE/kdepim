@@ -248,7 +248,8 @@ void KPilotDeviceLink::openDevice()
 		fStatus = FoundDevice;
 	}
 
-	shouldPrint(OpenMessage,i18n("Trying to open device..."));
+	shouldPrint(OpenMessage,i18n("Trying to open device %1...")
+		.arg(fPilotPath));
 
 	if (open())
 	{

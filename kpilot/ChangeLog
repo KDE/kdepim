@@ -4,9 +4,6 @@ TODO LIST (Ignore the file TODO)
 * GJJ: Hunt down and kill printfs. Hunt down bad i18n.
 * GJJ: move the file install widget to an iconview.
 * GJJ: Show the sync log as a KPassivePopup
-* Good junior job: move the conduit configuration dialog (for the
-  umpteenth time) to a list of QCheckBoxes, like noatun's plain
-  playlist or kdebugdialog.
 * Good junior job: the question asked when kpilot and the pilot's
   usernames don't match isn't very intuitive. It should be changed
   to a yes/no/cancel with "Use KPilot name" "Use Pilot name" "Cancel".
@@ -37,6 +34,16 @@ TODO LIST (Ignore the file TODO)
 
 KPilot Developer's notes for April 30th, 2003
 =============================================
+
+2003-4-18  Adriaan de Groot
+* Laurent Montel did some compile fixes for restrictive (NO_ASCII_ ...)
+  compile environments. And I fixed them to match the coding guide.
+* Make file installer emit a [] message like the conduits do, to
+  give the "No files to install" message context. Tell the user how
+  many files will be installed.
+* Tell the user if the daemon can't be started. Tell the user what
+  charset is selected.
+
 
 2003-4-17  Adriaan de Groot
 * Finished moving the conduit config to checklist items. Worked out

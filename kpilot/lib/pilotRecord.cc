@@ -161,3 +161,7 @@ static const char *latin1 = "ISO8859-1" ;
 	return codec();
 }
 
+/* static */ QString PilotAppCategory::codecName()
+{
+	return codec()->name();
+}

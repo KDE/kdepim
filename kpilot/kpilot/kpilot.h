@@ -127,6 +127,7 @@ public:
 	* This is the DCOP interface from the daemon to KPilot.
 	*/
 	virtual ASYNC daemonStatus(int);
+	virtual int kpilotStatus();
 
 	/**
 	* This is the DCOP interface from the daemon to KPilot

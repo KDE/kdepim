@@ -61,6 +61,11 @@ k_dcop:
 	* the configure conduits dialog.
 	*/
 	virtual ASYNC configureConduits() = 0;
+
+	/**
+	* Report KPilot's state back to the daemon.
+	*/
+	virtual int kpilotStatus() = 0;
 } ;
 
 
