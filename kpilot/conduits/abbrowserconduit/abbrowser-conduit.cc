@@ -1770,7 +1770,7 @@ bool AbbrowserConduit::_applyResolutionTable(ResolutionTable*tab, Addressee &pcA
 	SETFIELD(FamilyName, entryLastname);
 	SETFIELD(GivenName, entryFirstname);
 	SETFIELD(Organization, entryCompany);
-	SETFIELD(Title, entryTitle);
+	SETFIELD(Prefix, entryTitle);
 	SETFIELD(Note, entryNote);
 	SETCUSTOMFIELD(0, entryCustom1);
 	SETCUSTOMFIELD(1, entryCustom2);
