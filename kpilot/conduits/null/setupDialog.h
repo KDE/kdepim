@@ -38,6 +38,8 @@ private:
 	QLabel *textFieldLabel;
 	QLineEdit *textField;
 	QLabel *generalLabel;
+	QLabel *dbLabel;
+	QLineEdit *dbField;
 } ;
 
 class NullOptions : public setupDialog

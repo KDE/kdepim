@@ -124,7 +124,27 @@ NullConduit::aboutAndSetup()
 	return new NullOptions(0L);
 }
 
+const char *
+NullConduit::dbInfo()
+{
+	KConfig *config = KPilotLink::getConfig(NullOptions::NullGroup);
+
+	QString m = config->readEntry("DB");
+	if (m.isNull())
+	{
+		return "";
+	}
+	else
+	{
+		return m.ascii();
+	}
+}
+
+
 // $Log$
+// Revision 1.8  2000/09/27 18:41:21  adridg
+// Added author info and new QT layout code.
+//
 // Revision 1.7  2000/09/05 07:13:57  adridg
 // Updated to KCmdLineArgs
 //

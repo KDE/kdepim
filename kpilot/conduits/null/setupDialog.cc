@@ -86,7 +86,9 @@ NullPage::NullPage(setupDialog *parent, KConfig *config) :
 	grid->addColSpacing(3,SPACING);
 
 	generalLabel=new QLabel(i18n(
-		"The NULL conduit doesn't actually do anything."),
+		"The NULL conduit doesn't actually do anything.\n"
+		"Fill in databases you don't want to sync in\n"
+		"the database field, separated by commas."),
 		this);
 	generalLabel->adjustSize();
 
@@ -102,11 +104,22 @@ NullPage::NullPage(setupDialog *parent, KConfig *config) :
 	grid->addWidget(textFieldLabel,2,1);
 	grid->addWidget(textField,2,2);
 
-	grid->setRowStretch(3,100);
+	dbLabel=new QLabel(i18n("Databases:"),this);
+	dbLabel->adjustSize();
+	dbField=new QLineEdit(this);
+	dbField->setText(config->readEntry("DB"));
+
+	grid->addWidget(dbLabel,3,1);
+	grid->addWidget(dbField,3,2);
+
+	grid->setRowStretch(4,100);
 }
 
 
 // $Log$
+// Revision 1.8  2000/09/27 18:41:21  adridg
+// Added author info and new QT layout code.
+//
 // Revision 1.7  2000/08/28 12:22:03  pilone
 // 	KDE 2.0 Cleanup patches.  Start of adding conduits as kpilot
 // services.

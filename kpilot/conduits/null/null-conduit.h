@@ -25,8 +25,8 @@ public:
   virtual void doSync();
   virtual QWidget* aboutAndSetup();
 
-  virtual const char* dbInfo() { return NULL; }
-  
+  virtual const char* dbInfo() ; // { return NULL; }
 };
 
+// $Log:$
 #endif
