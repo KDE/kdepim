@@ -236,6 +236,132 @@ To specify a
 default formatted name type for new contacts, use the <link linkend="preferences-address-book-contact">configure dialog</link>.
 </para>
 </sect2>
+
+      <sect2 id="managing-contacts-crypto-preferences">
+	<title>Crypto Settings tab</title>
+	<para>
+	  In this tab, you can define preferences with regards to
+	  cryptography for a contact. At the time of this writing,
+	  only <application>KMail</application> will make use of these
+	  preferences when composing messages. This mechanism replaces
+	  the barely editable per-recipient crypto preferences of
+	  earlier <application>KMail</application> releases.
+	</para>
+	<variablelist>
+	  <varlistentry id="managing-contacts-crypto-preferences-allowed-protocols">
+	    <term>
+	      <guilabel>Allowed Protocols</guilabel>
+	    </term>
+	    <listitem>
+	      <para>
+		Here, you can restrict the cryptographic message
+		formats that can be used for this contact. See the
+		section on <ulink
+		url="/kmail/the-composer-window.html#cryptographic-message-formats">Cryptographic
+		Message Formats</ulink> in <ulink
+		url="/kmail/"><application>KMail</application>'s
+		handbook</ulink> for a discussion of the different
+		available formats.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry id="managing-contacts-crypto-preferences-preferred-keys">
+	    <term>
+	      <guilabel>Preferred OpenPGP encryption key</guilabel>,
+	      <guilabel>Preferred S/MIME encryption certificate</guilabel>
+	    </term>
+	    <listitem>
+	      <para>
+		Here, you can assign a preferred OpenPGP key and/or
+		S/MIME certificate to be used when encrypting to this
+		contact. Otherwise, the local keyring and local
+		certificate box are searched for matching keys and
+		certificates.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry id="managing-contacts-crypto-preferences-message-preference">
+	    <term>
+	      <guilabel>Message Preference</guilabel>
+	    </term>
+	    <listitem>
+	      <para>
+		Here, you can select from a set of directives for user
+		interaction both when signing and when encrypting.
+	      </para>
+	      <variablelist>
+		<varlistentry id="managing-contacts-crypto-preferences-message-preference-none">
+		  <term>
+		    <guilabel>&lt;none&gt;</guilabel>
+		  </term>
+		  <listitem>
+		    <para>
+		      No preference, use whatever mode
+		      <application>KMail</application> defaults to.
+		    </para>
+		  </listitem>
+		</varlistentry>
+		<varlistentry id="managing-contacts-crypto-preferences-message-preference-never">
+		  <term>
+		    <guilabel>Never Sign</guilabel>, <guilabel>Never Encrypt</guilabel>
+		  </term>
+		  <listitem>
+		    <para>
+		      Never sign (encrypt) messages to this
+		      contact. Don't ask for confirmation (except in
+		      the case of conflicts with preferences of other
+		      contacts).
+		    </para>
+		  </listitem>
+		</varlistentry>
+		<varlistentry id="managing-contacts-crypto-preferences-message-preference-always">
+		  <term>
+		    <guilabel>Always Sign</guilabel>,
+		    <guilabel>Always Encrypt</guilabel>
+		  </term>
+		  <listitem>
+		    <para>
+		      Always sign (encrypt) messages to the
+		      contact. Don't ask for confirmation (except in
+		      the case of conflicts with preferences of other
+		      contacts).
+		    </para>
+		  </listitem>
+		</varlistentry>
+		<varlistentry id="managing-contacts-crypto-preferences-message-preference-if-possible">
+		  <term>
+		    <guilabel>Always Sign If Possible</guilabel>,
+		    <guilabel>Always Encrypt If Possible</guilabel>
+		  </term>
+		  <listitem>
+		    <para>
+		      Always sign (encrypt) messages to this contact
+		      when it would be possible to do so. Don't ask if
+		      it isn't possible. Situations in which signing
+		      might not be possible include other recipients
+		      having signing preferences of
+		      "Never". Situations in which encryption might
+		      not be possible include missing
+		      keys/certificates for this or other recievers.
+		    </para>
+		  </listitem>
+		</varlistentry>
+		<varlistentry id="managing-contacts-crypto-preferences-message-preference-ask">
+		  <term>
+		    <guilabel>Ask</guilabel>
+		  </term>
+		  <listitem>
+		    <para>
+		      Always ask whether to sign (encrypt).
+		    </para>
+		  </listitem>
+		</varlistentry>
+	      </variablelist>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+      </sect2>
+
 </sect1>
 
 <sect1 id="using-views">
