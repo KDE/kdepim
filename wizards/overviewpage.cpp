@@ -44,8 +44,7 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   QGridLayout *layout = new QGridLayout( this, 7, 4, KDialog::marginHint(),
                                          KDialog::spacingHint() );
 
-  QString msg = i18n( "KDE Groupware Wizard" );
-  QLabel *label = new QLabel( "<qt><b><u><h2>" + msg + "</h2></u></b></qt>" , this );
+  QLabel *label = new QLabel( i18n ( "<qt><b><u><h2>KDE Groupware Wizard</h2></u></b></qt>" ) , this );
   layout->addMultiCellWidget( label, 0, 0, 0, 2 );
 
   label = new QLabel( this );
