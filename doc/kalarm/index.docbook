@@ -42,7 +42,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2004-06-23</date>
+<date>2004-06-24</date>
 <releaseinfo>1.01.00</releaseinfo>
 
 <abstract>
@@ -198,8 +198,8 @@ action.</para>
 <title>Creating a new alarm</title>
 
 <para>To create a new alarm, do one of the following. This displays
-the alarm edit dialog which is described
-<link linkend="alarm-edit-dialog">below</link>.</para>
+the <link linkend="alarm-edit-dialog">alarm edit dialog</link> through
+which you configure the alarm.</para>
 
 <itemizedlist>
 <listitem>
@@ -220,15 +220,14 @@ system tray icon.</para>
 </listitem>
 
 <listitem>
-<para>Double click on empty space below the last entry in the alarm
-list.</para>
+<para><mousebutton>Right</mousebutton> click in the alarm list and
+choose <menuchoice><guimenuitem>New</guimenuitem></menuchoice> from
+the context menu.</para>
 </listitem>
 
 <listitem>
-<para><mousebutton>Right</mousebutton> click on empty space below the
-last entry in the alarm list and choose
-<menuchoice><guimenuitem>New</guimenuitem></menuchoice> from the
-context menu.</para>
+<para>Double click on empty space below the last entry in the alarm
+list.</para>
 </listitem>
 </itemizedlist>
 
@@ -312,339 +311,21 @@ dialog</link>.</para>
 
 </sect2>
 
-<sect2 id="alarm-edit-dialog">
-<title>The alarm edit dialog</title>
-
-<para>The alarm edit dialog enables you to view and edit an
-alarm.</para>
-
-<screenshot>
-<screeninfo>Screenshot of the alarm edit dialog</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="editwindow.png" format="PNG"/>
-</imageobject>
-<textobject>
-<phrase>Alarm edit dialog</phrase>
-</textobject>
-</mediaobject>
-</screenshot>
-
-<para>In the <guilabel>Action</guilabel> group box, select the type
-of alarm:</para>
-
-<itemizedlist>
-<listitem>
-<para><guilabel>Text</guilabel> in order to enter an alarm message text
-(which may include newlines) in the edit box. Set the following
-options:</para>
-
-<itemizedlist>
-<listitem>
-<para>The <guilabel>Confirm acknowledgment</guilabel> checkbox lets
-you specify whether you will be prompted for confirmation when you
-close the alarm message window. This may be used as a safeguard
-against accidental acknowledgment of alarms.</para>
-</listitem>
-
-<listitem>
-<para>Check <guilabel>Sound</guilabel> if you want an audible alarm
-to sound when the alarm message is displayed. By default a beep is
-sounded; use the button on the right to select an audio file to play.
-To revert to a beep, click the button again. To see what your current
-sound selection is, hover the mouse above the button until a tooltip
-appears.</para>
-
-<para>If you have selected an audio file to play, there are further
-options to control the sound:</para>
-
-<itemizedlist>
-<listitem>
-<para>Check <guilabel>Repeat</guilabel> to continually repeat the
-audio file for as long as the alarm is displayed. (The alarm message
-window contains a button to stop playing the sound should you need
-silence but still want to display the alarm.)</para>
-</listitem>
-
-<listitem>
-<para>Check <guilabel>Volume</guilabel> and adjust the slider
-control if you want to adjust the volume at which the audio file is
-played.</para>
-
-<tip><para>You can use the <guibutton>Try</guibutton> button to test out
-the resultant sound level.</para></tip>
-</listitem>
-</itemizedlist>
-</listitem>
-
-<listitem>
-<para>Check <guilabel>Reminder</guilabel> if you want to display a
-reminder in advance of the main alarm and of each of its recurrences
-(if any). Enter how long in advance using the edit controls beside
-the checkbox.</para>
-
-<para>If the alarm recurs, check <guilabel>Reminder for first
-recurrence only</guilabel> if you only want a reminder before the
-alarm's first recurrence. If this is not checked, the reminder period
-is limited to being less than the recurrence interval.</para>
-</listitem>
-
-<listitem>
-<para>Select the background color for the alarm message window.
-(The color selection list can be configured in the
-<link linkend="preferences">Preferences dialog</link>.) </para>
-</listitem>
-
-<listitem>
-<para>Use the <guibutton>Font &amp; Color...</guibutton> button to
-select a font, or foreground or background color, for the alarm
-message. In the <guilabel>Choose Alarm Font &amp; Color</guilabel>
-dialog, check <guilabel>Use default font</guilabel> to display the
-message in whatever font is configured as the default at the time
-the message is displayed. (The default font can be set in the
-<link linkend="preferences">Preferences dialog</link>.) To choose a
-specific font for the message, uncheck
-<guilabel>Use default font</guilabel>.</para>
-</listitem>
-
-<listitem>
-<para>Use the <guibutton>Special Actions...</guibutton> button to
-specify shell commands to execute before or after displaying the
-alarm. In the <guilabel>Special Alarm Actions</guilabel>
-dialog:</para>
-
-<itemizedlist>
-<listitem>
-<para>In the <guilabel>Pre-alarm action</guilabel> field, enter a
-shell command to execute before the alarm is displayed.  Note that
-&kalarm; will wait for the command to complete before displaying the
-alarm.</para>
-</listitem>
-
-<listitem>
-<para>In the <guilabel>Post-alarm action</guilabel> field, enter a
-shell command to execute when the alarm window is closed.</para>
-</listitem>
-</itemizedlist>
-
-<para>See the description of Command alarms below for details of how
-shell commands are executed.</para>
-
-<para>Note that special actions are not executed if the alarm was
-displaying at the time you logged off and is then restored when you
-log in.</para>
-</listitem>
-</itemizedlist>
-</listitem>
-
-<listitem>
-<para><guilabel>File</guilabel> to enter the name or &URL; of a text
-or image file whose contents are to be displayed in the alarm message.
-Use the button beside the edit box to display a file selection dialog.
-Set options as for text alarms above.</para>
-</listitem>
-
-<listitem>
-<para><guilabel>Command</guilabel> to enter a shell command line to
-execute. The command is passed straight to the default shell (defined
-by the <envar>SHELL</envar> environment variable), and may include
-whatever options, parameters, piped commands, etc. are permitted by
-the shell in a single line command.</para>
-
-<note><para>This option is not available if &kde; is running in kiosk
-mode.</para></note>
-</listitem>
-
-<listitem>
-<para><guilabel>Email</guilabel> to enter an email message to send.
-Fill in the recipients' addresses, the email subject line and the
-message body in the three edit fields. Use the button beside the
-addressee edit box to display your &kde; address book from which you
-can select email recipients. Attachments may be added using the
-<guibutton>Add...</guibutton> button. Note that attached files must
-still exist when the alarm is triggered; no copy is stored at the time
-the alarm is configured. To remove an attachment, highlight it in the
-drop-down list and click the <guibutton>Remove</guibutton>
-button.</para>
-
-<para>You can set your email address from which the email is sent, in
-the <link linkend="preferences">Preferences dialog</link>, the
-default being your email address set in the &kde; Control
-Center.</para>
-
-<para>Set the following option:</para>
-
-<itemizedlist>
-<listitem>
-<para>Check <guilabel>Copy email to self</guilabel> to send a blind
-copy of the email to yourself when the alarm is triggered. The email
-address to which the copy will be sent may be set in the
-<link linkend="preferences">Preferences dialog</link>, the default
-being your email address set in the &kde; Control Center.</para>
-</listitem>
-</itemizedlist>
-</listitem>
-</itemizedlist>
-
-
-<para>If the alarm is a recurring alarm and it was deferred after it
-was last displayed, the <guilabel>Deferred Alarm</guilabel> group box
-shows the time the alarm was deferred to.
-<guibutton>Change...</guibutton> displays a dialog which allows you to
-change the deferred time or to cancel the deferral.</para>
-
-<para>In the <guilabel>Time</guilabel> group box, select either</para>
-
-<itemizedlist>
-<listitem>
-<para><guilabel>At date/time</guilabel> to enter the date and time
-when the alarm is to be triggered. Check <guilabel>Any time</guilabel>
-if you want to specify only a date for the alarm: in this case the
-alarm will be displayed at the first opportunity on or after the
-configured start-of-day time, on the specified date.
-(<link linkend="preferences">Configuring &kalarm;</link> describes
-how to set the start-of-day time.)</para>
-
-<para>For a non-recurring alarm, the date/time which you enter must be
-in the future, or if you enter only a date it must be today or later.
-For a recurring alarm, there are no such restrictions since the start
-date/time will be automatically adjusted to the first recurrence due
-after the current time.</para>
-</listitem>
-
-<listitem>
-<para><guilabel>Time from now</guilabel> to enter how long after now
-(in hours and minutes) the alarm should be triggered.</para>
-</listitem>
-</itemizedlist>
-
-<para>The alarm's basic repetition characteristic is displayed for
-convenience in the <guilabel>Alarm</guilabel> tab. Specify whether or
-how the alarm should be repeated in the <guilabel>Recurrence</guilabel>
-tab:</para>
-
-<itemizedlist>
-<listitem>
-<para>In the <guilabel>Recurrence Rule</guilabel> group box, set the
-recurrence type or time period as follows:</para>
-
-<itemizedlist>
-<listitem><para>To trigger the alarm once only, select <guilabel>No
-recurrence</guilabel>.</para></listitem>
-
-<listitem><para>Select <guilabel>At login</guilabel> to trigger the
-alarm whenever you log in, until its scheduled end time. Then, at its
-scheduled end time it will finally be triggered one last time. (Note
-that an alarm repeated at login will also be triggered any time you
-enable alarms, or restart or reset the <application>alarm
-daemon</application>.)</para></listitem>
-
-<listitem>
-<para>To make the alarm recur at regular intervals, select one of the
-time period types and then enter in the
-<guilabel>Recur every</guilabel> box how many time periods should
-elapse between recurrences. For example, to repeat
-every fortnight, you could select <guilabel>Daily</guilabel> and enter
-a value of 14, or select <guilabel>Weekly</guilabel> and enter a value
-of 2. Depending on the time period type selected, you may have further
-options:</para>
-
-<itemizedlist>
-<listitem>
-<para>For a weekly recurrence, check each day in the week on which you
-wish to trigger the alarm.</para>
-</listitem>
-
-<listitem>
-<para>For a monthly recurrence, you may select either a fixed date, or
-a position (&eg; the second Tuesday).</para>
-</listitem>
-
-<listitem>
-<para>For a yearly recurrence, you may select either a fixed day in
-the month, or a position in a month (&eg; the last Saturday in
-May). Check each month of the year in which you wish to trigger the
-alarm.</para>
-</listitem>
-</itemizedlist>
-
-<tip><para>To set a daily alarm to occur only on weekdays, use a
-weekly recurrence and check each weekday.</para></tip>
-
-</listitem>
-</itemizedlist>
-</listitem>
-
-<listitem>
-<para>In the <guilabel>Recurrence End</guilabel> group box, set the
-overall recurrence time span as follows:</para>
-
-<itemizedlist>
-<listitem><para>Select <guilabel>No end</guilabel> to continue the
-repetitions indefinitely.</para></listitem>
-
-<listitem><para>Select <guilabel>End after</guilabel> to specify the
-total number of occurrences of the alarm.</para></listitem>
-
-<listitem><para>Select <guilabel>End by</guilabel> to specify the
-date/time until which the alarm will be repeated.</para></listitem>
-</itemizedlist>
-
-</listitem>
-
-<listitem>
-<para>If you wish to exclude certain date/times from the recurrence
-which you have set up, specify them in the
-<guilabel>Exceptions</guilabel> group box. The list of exceptions
-(&ie; excluded date/times) is shown on the left. To add a new
-exception, enter a date on the right and press
-<guibutton>Add</guibutton>. To change an exception, highlight it in
-the list, enter the new date on the right and press
-<guibutton>Change</guibutton>. To delete an exception, highlight it
-in the list and press <guibutton>Delete</guibutton>.</para>
-</listitem>
-
-</itemizedlist>
-
-<para>The <guilabel>Cancel if late</guilabel> checkbox determines what
-happens if the alarm cannot be triggered at its scheduled time.
-Check this box to cancel the alarm if it cannot be triggered within
-one minute after the right time.
-Leave the box unchecked to trigger the alarm at
-the first opportunity starting at the scheduled time. Date-only alarms,
-&ie; ones for which the <guilabel>Any time</guilabel> option is
-selected, will be canceled if they cannot be displayed within 24
-hours of the start-of-day time on the date scheduled.</para>
-
-<note><para>An alarm can only be triggered while you are logged in,
-and while both X and the <application>alarm daemon</application> are
-running.</para></note>
-
-<para>Press the <guibutton>Try</guibutton> button to test the alarm
-and check whether it works correctly. The alarm is executed just as
-if it had been scheduled in the normal way.</para>
-
-<para>Press the <guibutton>OK</guibutton> button
-when all details are correct, to add the alarm to the scheduled
-list.</para>
-
-</sect2>
-
 <sect2>
 <title>Deleting an alarm</title>
 
-<para>To delete an existing alarm, do one of the following:</para>
+<para>To delete existing alarms, do one of the following:</para>
 
 <itemizedlist>
 <listitem>
-<para>Select it by clicking on its entry in the alarm list. Then choose
-<menuchoice>
+<para>Select one or more alarms by clicking on their entries in the
+alarm list. Then choose <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Delete</guimenuitem>
 </menuchoice>.</para>
 </listitem>
 <listitem>
-<para><mousebutton>Right</mousebutton> click on its entry in the alarm
-list and choose
+<para><mousebutton>Right</mousebutton> click on the desired entries in
+the alarm list and choose
 <menuchoice><guimenuitem>Delete</guimenuitem></menuchoice>
 from the context menu.</para>
 </listitem>
@@ -835,6 +516,351 @@ defined in the <guilabel>Alarm Text</guilabel> group box.</para>
 <link linkend="edit-alarm">Alarm Edit dialog</link>.</para>
 </listitem>
 </itemizedlist>
+
+</sect2>
+</sect1>
+
+<sect1 id="alarm-edit-dialog">
+<title>The alarm edit dialog</title>
+
+<para>The alarm edit dialog enables you to view and edit an
+alarm.</para>
+
+<screenshot>
+<screeninfo>Screenshot of the alarm edit dialog</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="editwindow.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>Alarm edit dialog</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<sect2>
+<title>Alarm action</title>
+
+<para>In the <guilabel>Action</guilabel> group box, select the type
+of alarm:</para>
+
+<itemizedlist>
+<listitem>
+<para><guilabel>Text</guilabel> in order to enter an alarm message text
+(which may include newlines) in the edit box. Set the following
+options:</para>
+
+<itemizedlist>
+<listitem>
+<para>The <guilabel>Confirm acknowledgment</guilabel> checkbox lets
+you specify whether you will be prompted for confirmation when you
+close the alarm message window. This may be used as a safeguard
+against accidental acknowledgment of alarms.</para>
+</listitem>
+
+<listitem>
+<para>Check <guilabel>Sound</guilabel> if you want an audible alarm
+to sound when the alarm message is displayed. By default a beep is
+sounded; use the button on the right to select an audio file to play.
+To revert to a beep, click the button again. To see what your current
+sound selection is, hover the mouse above the button until a tooltip
+appears.</para>
+
+<para>If you have selected an audio file to play, there are further
+options to control the sound:</para>
+
+<itemizedlist>
+<listitem>
+<para>Check <guilabel>Repeat</guilabel> to continually repeat the
+audio file for as long as the alarm is displayed. (The alarm message
+window contains a button to stop playing the sound should you need
+silence but still want to display the alarm.)</para>
+</listitem>
+
+<listitem>
+<para>Check <guilabel>Volume</guilabel> and adjust the slider
+control if you want to adjust the volume at which the audio file is
+played.</para>
+
+<tip><para>You can use the <guibutton>Try</guibutton> button to test out
+the resultant sound level.</para></tip>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem>
+<para>Check <guilabel>Reminder</guilabel> if you want to display a
+reminder in advance of the main alarm and of each of its recurrences
+(if any). Enter how long in advance using the edit controls beside
+the checkbox.</para>
+
+<para>If the alarm recurs, check <guilabel>Reminder for first
+recurrence only</guilabel> if you only want a reminder before the
+alarm's first recurrence. If this is not checked, the reminder period
+is limited to being less than the recurrence interval.</para>
+</listitem>
+
+<listitem>
+<para>Select the background color for the alarm message window.
+(The color selection list can be configured in the
+<link linkend="preferences">Preferences dialog</link>.) </para>
+</listitem>
+
+<listitem>
+<para>Use the <guibutton>Font &amp; Color...</guibutton> button to
+select a font, or foreground or background color, for the alarm
+message. In the <guilabel>Choose Alarm Font &amp; Color</guilabel>
+dialog, check <guilabel>Use default font</guilabel> to display the
+message in whatever font is configured as the default at the time
+the message is displayed. (The default font can be set in the
+<link linkend="preferences">Preferences dialog</link>.) To choose a
+specific font for the message, uncheck
+<guilabel>Use default font</guilabel>.</para>
+</listitem>
+
+<listitem>
+<para>Use the <guibutton>Special Actions...</guibutton> button to
+specify shell commands to execute before or after displaying the
+alarm. In the <guilabel>Special Alarm Actions</guilabel>
+dialog:</para>
+
+<itemizedlist>
+<listitem>
+<para>In the <guilabel>Pre-alarm action</guilabel> field, enter a
+shell command to execute before the alarm is displayed.  Note that
+&kalarm; will wait for the command to complete before displaying the
+alarm.</para>
+</listitem>
+
+<listitem>
+<para>In the <guilabel>Post-alarm action</guilabel> field, enter a
+shell command to execute when the alarm window is closed.</para>
+</listitem>
+</itemizedlist>
+
+<para>See the description of Command alarms below for details of how
+shell commands are executed.</para>
+
+<para>Note that special actions are not executed if the alarm was
+displaying at the time you logged off and is then restored when you
+log in.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem>
+<para><guilabel>File</guilabel> to enter the name or &URL; of a text
+or image file whose contents are to be displayed in the alarm message.
+Use the button beside the edit box to display a file selection dialog.
+Set options as for text alarms above.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Command</guilabel> to enter a shell command line to
+execute. The command is passed straight to the default shell (defined
+by the <envar>SHELL</envar> environment variable), and may include
+whatever options, parameters, piped commands, etc. are permitted by
+the shell in a single line command.</para>
+
+<note><para>This option is not available if &kde; is running in kiosk
+mode.</para></note>
+</listitem>
+
+<listitem>
+<para><guilabel>Email</guilabel> to enter an email message to send.
+Fill in the recipients' addresses, the email subject line and the
+message body in the three edit fields. Use the button beside the
+addressee edit box to display your &kde; address book from which you
+can select email recipients. Attachments may be added using the
+<guibutton>Add...</guibutton> button. Note that attached files must
+still exist when the alarm is triggered; no copy is stored at the time
+the alarm is configured. To remove an attachment, highlight it in the
+drop-down list and click the <guibutton>Remove</guibutton>
+button.</para>
+
+<para>You can set your email address from which the email is sent, in
+the <link linkend="preferences">Preferences dialog</link>, the
+default being your email address set in the &kde; Control
+Center.</para>
+
+<para>Set the following option:</para>
+
+<itemizedlist>
+<listitem>
+<para>Check <guilabel>Copy email to self</guilabel> to send a blind
+copy of the email to yourself when the alarm is triggered. The email
+address to which the copy will be sent may be set in the
+<link linkend="preferences">Preferences dialog</link>, the default
+being your email address set in the &kde; Control Center.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+
+</sect2>
+
+<sect2>
+<title>Deferral</title>
+
+<para>If the alarm is a recurring alarm and it was deferred after it
+was last displayed, the <guilabel>Deferred Alarm</guilabel> group box
+shows the time the alarm was deferred to.
+<guibutton>Change...</guibutton> displays a dialog which allows you to
+change the deferred time or to cancel the deferral.</para>
+
+</sect2>
+
+<sect2>
+<title>Time</title>
+
+<para>In the <guilabel>Time</guilabel> group box, select either</para>
+
+<itemizedlist>
+<listitem>
+<para><guilabel>At date/time</guilabel> to enter the date and time
+when the alarm is to be triggered. Check <guilabel>Any time</guilabel>
+if you want to specify only a date for the alarm: in this case the
+alarm will be displayed at the first opportunity on or after the
+configured start-of-day time, on the specified date.
+(<link linkend="preferences">Configuring &kalarm;</link> describes
+how to set the start-of-day time.)</para>
+
+<para>For a non-recurring alarm, the date/time which you enter must be
+in the future, or if you enter only a date it must be today or later.
+For a recurring alarm, there are no such restrictions since the start
+date/time will be automatically adjusted to the first recurrence due
+after the current time.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Time from now</guilabel> to enter how long after now
+(in hours and minutes) the alarm should be triggered.</para>
+</listitem>
+</itemizedlist>
+
+</sect2>
+
+<sect2>
+<title>Recurrence</title>
+
+<para>The alarm's basic repetition characteristic is displayed for
+convenience in the <guilabel>Alarm</guilabel> tab. Specify whether or
+how the alarm should be repeated in the <guilabel>Recurrence</guilabel>
+tab:</para>
+
+<itemizedlist>
+<listitem>
+<para>In the <guilabel>Recurrence Rule</guilabel> group box, set the
+recurrence type or time period as follows:</para>
+
+<itemizedlist>
+<listitem><para>To trigger the alarm once only, select <guilabel>No
+recurrence</guilabel>.</para></listitem>
+
+<listitem><para>Select <guilabel>At login</guilabel> to trigger the
+alarm whenever you log in, until its scheduled end time. Then, at its
+scheduled end time it will finally be triggered one last time. (Note
+that an alarm repeated at login will also be triggered any time you
+enable alarms, or restart or reset the <application>alarm
+daemon</application>.)</para></listitem>
+
+<listitem>
+<para>To make the alarm recur at regular intervals, select one of the
+time period types and then enter in the
+<guilabel>Recur every</guilabel> box how many time periods should
+elapse between recurrences. For example, to repeat
+every fortnight, you could select <guilabel>Daily</guilabel> and enter
+a value of 14, or select <guilabel>Weekly</guilabel> and enter a value
+of 2. Depending on the time period type selected, you may have further
+options:</para>
+
+<itemizedlist>
+<listitem>
+<para>For a weekly recurrence, check each day in the week on which you
+wish to trigger the alarm.</para>
+</listitem>
+
+<listitem>
+<para>For a monthly recurrence, you may select either a fixed date, or
+a position (&eg; the second Tuesday).</para>
+</listitem>
+
+<listitem>
+<para>For a yearly recurrence, you may select either a fixed day in
+the month, or a position in a month (&eg; the last Saturday in
+May). Check each month of the year in which you wish to trigger the
+alarm.</para>
+</listitem>
+</itemizedlist>
+
+<tip><para>To set a daily alarm to occur only on weekdays, use a
+weekly recurrence and check each weekday.</para></tip>
+
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem>
+<para>In the <guilabel>Recurrence End</guilabel> group box, set the
+overall recurrence time span as follows:</para>
+
+<itemizedlist>
+<listitem><para>Select <guilabel>No end</guilabel> to continue the
+repetitions indefinitely.</para></listitem>
+
+<listitem><para>Select <guilabel>End after</guilabel> to specify the
+total number of occurrences of the alarm.</para></listitem>
+
+<listitem><para>Select <guilabel>End by</guilabel> to specify the
+date/time until which the alarm will be repeated.</para></listitem>
+</itemizedlist>
+
+</listitem>
+
+<listitem>
+<para>If you wish to exclude certain date/times from the recurrence
+which you have set up, specify them in the
+<guilabel>Exceptions</guilabel> group box. The list of exceptions
+(&ie; excluded date/times) is shown on the left. To add a new
+exception, enter a date on the right and press
+<guibutton>Add</guibutton>. To change an exception, highlight it in
+the list, enter the new date on the right and press
+<guibutton>Change</guibutton>. To delete an exception, highlight it
+in the list and press <guibutton>Delete</guibutton>.</para>
+</listitem>
+
+</itemizedlist>
+
+</sect2>
+
+<sect2>
+<title>Other controls</title>
+
+<para>The <guilabel>Cancel if late</guilabel> checkbox determines what
+happens if the alarm cannot be triggered at its scheduled time.
+Check this box to cancel the alarm if it cannot be triggered within
+one minute after the right time.
+Leave the box unchecked to trigger the alarm at
+the first opportunity starting at the scheduled time. Date-only alarms,
+&ie; ones for which the <guilabel>Any time</guilabel> option is
+selected, will be canceled if they cannot be displayed within 24
+hours of the start-of-day time on the date scheduled.</para>
+
+<note><para>An alarm can only be triggered while you are logged in,
+and while both X and the <application>alarm daemon</application> are
+running.</para></note>
+
+<para>Press the <guibutton>Load Template</guibutton> button to select
+a template to preset the dialog with, as described in <link
+linkend="create-edit">Creating and manipulating alarms</link>. </para>
+
+<para>Press the <guibutton>Try</guibutton> button to test the alarm
+and check whether it works correctly. The alarm is executed just as
+if it had been scheduled in the normal way.</para>
+
+<para>Press the <guibutton>OK</guibutton> button
+when all details are correct, to add the alarm to the scheduled
+list.</para>
 
 </sect2>
 </sect1>
@@ -2803,8 +2829,8 @@ running; if it is, they should instead use &DCOP; calls to request these
 operations.</para></note>
 
 <para>The command line options for scheduling a new alarm are as
-described in the chapter <link linkend="cmdline-operation">Using
-&kalarm;</link>. The options for triggering and canceling scheduled
+described in the chapter <link linkend="cmdline-operation">Command line
+operation</link>. The options for triggering and canceling scheduled
 alarms are as follows:</para>
 
 <note><para>Normal users may also if they wish use these command line
@@ -3051,6 +3077,20 @@ if your &kde; is installed in <filename>/opt/kde2</filename>:</para>
 
 <para><userinput><command>./configure</command> --prefix=<replaceable>/opt/kde2</replaceable></userinput></para>
 </note>
+
+<para>The standalone version of &kalarm; has a special configuration
+option which allows you to select which languages documentation is to
+be installed for by specifying a language code, or a list of language
+codes, as a parameter to <command>./configure</command>. By default,
+documentation in all available languages is installed. A list of
+documentation languages included in the package, together with their
+codes, is in the <filename>DOC-LANGUAGES</filename> file. Note that
+this has no effect on which user interface translations are installed.
+For example, to install only French and British English
+documentation:</para>
+
+<para><userinput><command>./configure</command> --enable-doc-language=<replaceable>"fr en_GB"</replaceable></userinput></para>
+
 </sect1>
 
 <sect1 id="configuration">
