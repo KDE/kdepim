@@ -1138,8 +1138,23 @@ void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, 
   todo->setCategories( todoCategories );
 
   todo->setLastModified( args[ "datemodified" ].toDateTime() );
-  todo->setDtStart( args[ "startdate" ].toDateTime() );
-  todo->setDtDue( args[ "enddate" ].toDateTime() );
+
+  todo->setFloats( true );
+  QDateTime dateTime = args[ "startdate" ].toDateTime();
+  if ( dateTime.isValid() ) {
+    todo->setDtStart( dateTime );
+    todo->setHasStartDate( true );
+    if ( dateTime.time().isValid() )
+      todo->setFloats( false );
+  }
+
+  dateTime = args[ "enddate" ].toDateTime();
+  if ( dateTime.isValid() ) {
+    todo->setDtDue( dateTime );
+    todo->setHasDueDate( true );
+    if ( dateTime.time().isValid() )
+      todo->setFloats( false );
+  }
 
   // SUBTODO
   QString parentId = args[ "id_parent" ].toString();
