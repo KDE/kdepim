@@ -163,10 +163,7 @@ void createConnection(KCmdLineArgs *p)
 		devicePath = "/dev/pilot";
 	}
 
-	KPilotDeviceLink::DeviceType deviceType =
-		KPilotDeviceLink::OldStyleUSB;
-
-	deviceLink->reset(deviceType, devicePath);
+	deviceLink->reset(devicePath);
 }
 
 int syncTest(KCmdLineArgs *p)

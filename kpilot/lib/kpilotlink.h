@@ -150,27 +150,13 @@ public:
 	/**
 	* Information on what kind of device we're dealing with.
 	*/
-	typedef enum { None,
-		Serial,
-		OldStyleUSB,
-		DevFSUSB
-		} DeviceType;
-
-	DeviceType deviceType() const { return fDeviceType; } ;
-	QString deviceTypeString(int i) const;
-	bool isTransient() const
-	{
-		return (fDeviceType==OldStyleUSB) ||
-			(fDeviceType==DevFSUSB);
-	}
-
 	QString pilotPath() const { return fPilotPath; } ;
 
 	/**
 	* Return the device link to the Init state and try connecting
 	* to the given device path (if it's non-empty).
 	*/
-	void reset(DeviceType t,const QString &pilotPath = QString::null);
+	void reset(const QString &pilotPath);
 
 
 public slots:
@@ -243,11 +229,6 @@ private:
 	* Usually /dev/pilot, /dev/ttySx, or /dev/usb/x.
 	*/
 	QString fPilotPath;
-
-	/**
-	* What kind of device is this?
-	*/
-	DeviceType fDeviceType;
 
 	/**
 	* For transient devices: how often have we tried pi_bind()?

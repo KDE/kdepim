@@ -37,7 +37,6 @@
 #include "pilotTodoEntry.h"
 
 static const char *pilotTodoEntry_id = "$Id$";
-const int PilotTodoEntry::APP_BUFFER_SIZE = 0xffff;
 
 
 PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo):PilotAppCategory(), fAppInfo(appInfo)

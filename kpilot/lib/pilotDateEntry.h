@@ -31,25 +31,13 @@
 #include <time.h>
 #include <string.h>
 
-#ifndef QBITARRAY_H
 #include <qbitarray.h>
-#endif
 
-#ifndef _PILOT_MACROS_H_
 #include <pi-macros.h>
-#endif
-
-#ifndef _PILOT_DATEBOOK_H_
 #include <pi-datebook.h>
-#endif
 
-#ifndef _KPILOT_PILOTAPPCATEGORY_H
 #include "pilotAppCategory.h"
-#endif
-
-#ifndef _KPILOT_PILOTRECORD_H
 #include "pilotRecord.h"
-#endif
 
 
 

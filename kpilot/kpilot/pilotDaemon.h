@@ -186,7 +186,6 @@ private:
 	KPilotDeviceLink &getPilotLink() { return *fPilotLink; }
 	KPilotDeviceLink *fPilotLink;
 
-	KPilotDeviceLink::DeviceType fPilotType;
 	// TODO!!! get rid of the next sync type
 	SyncAction::SyncMode fNextSyncType;
 

@@ -68,14 +68,6 @@ static const char *memowidget_id =
 #endif
 
 
-// This constant (0xffff) appears all over the place (mostly in
-// ::initialize(), but elsewhere as well. It seems to be inherited
-// from the pilot-link library.
-//
-// I've replaced instances of the constant with this #define
-//
-//
-#define PILOT_BUFFER_SIZE	(0xffff)
 
 
 
@@ -92,11 +84,6 @@ MemoWidget::MemoWidget(QWidget * parent,
 	setupWidget();
 	fMemoList.setAutoDelete(true);
 	slotUpdateButtons();
-
-#if 0
-	connect(fTextWidget, SIGNAL(textChanged()),
-		this, SLOT(slotTextChanged()));
-#endif
 
 	/* NOTREACHED */
 	(void) memowidget_id;

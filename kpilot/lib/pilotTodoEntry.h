@@ -4,7 +4,8 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
-** See the .cc file for an explanation of what this file is for.
+** This is a wrapper around the pilot-link Memo structure. It is
+** the interpreted form of a Pilot database record.
 */
 
 /*
@@ -44,43 +45,45 @@ class PilotTodoEntry : public PilotAppCategory
 public:
 	PilotTodoEntry(struct ToDoAppInfo &appInfo);
 	PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec);
+	PilotTodoEntry(const PilotTodoEntry &e);
 
-  PilotTodoEntry(const PilotTodoEntry &e);
-  ~PilotTodoEntry() { free_ToDo(&fTodoInfo); }
+	~PilotTodoEntry() { free_ToDo(&fTodoInfo); }
+
 	virtual QString getTextRepresentation(bool richText=false);
 
-  PilotTodoEntry& operator=(const PilotTodoEntry &e);
+	PilotTodoEntry& operator=(const PilotTodoEntry &e);
 
-  PilotRecord* pack() { return PilotAppCategory::pack(); }
+	PilotRecord* pack() { return PilotAppCategory::pack(); }
 
-  struct tm getDueDate() const { return fTodoInfo.due; }
-  void setDueDate(struct tm& d) { fTodoInfo.due = d; }
-  const struct tm *getDueDate_p() const { return &fTodoInfo.due; }
+	struct tm getDueDate() const { return fTodoInfo.due; }
+	void setDueDate(struct tm& d) { fTodoInfo.due = d; }
+	const struct tm *getDueDate_p() const { return &fTodoInfo.due; }
 
-  int getIndefinite() const { return fTodoInfo.indefinite; }
-  void setIndefinite(int i) { fTodoInfo.indefinite = i; }
+	int getIndefinite() const { return fTodoInfo.indefinite; }
+	void setIndefinite(int i) { fTodoInfo.indefinite = i; }
 
-  int getPriority() const { return fTodoInfo.priority; }
-  void setPriority(int p) { fTodoInfo.priority = p; }
+	int getPriority() const { return fTodoInfo.priority; }
+	void setPriority(int p) { fTodoInfo.priority = p; }
 
-  int getComplete() const { return fTodoInfo.complete; }
-  void setComplete(int c) { fTodoInfo.complete = c; }
+	int getComplete() const { return fTodoInfo.complete; }
+	void setComplete(int c) { fTodoInfo.complete = c; }
 
-  void  setDescription(const QString &);
-  QString getDescription() const; // { return fTodoInfo.description; }
+	void  setDescription(const QString &);
+	QString getDescription() const;
 
-  void  setNote(const QString &note);
-  QString getNote() const; // { return fTodoInfo.note; }
+	void  setNote(const QString &note);
+	QString getNote() const;
 
 	QString getCategoryLabel() const;
-		// { return fAppInfo.category.name[getCat()]; }
+
+
 	/** If the label already exists, uses the id; if not, adds the label
 	*  to the category list
 	*  @return false if category labels are full
 	*/
 	bool setCategory(const QString &label);
 
-	static const int APP_BUFFER_SIZE;
+	// static const int APP_BUFFER_SIZE;
 
 protected:
 	void *pack(void *, int *);
@@ -92,7 +95,7 @@ protected:
 	void setNoteP(const char *, int len=-1) ;
 
 private:
-  struct ToDo fTodoInfo;
+	struct ToDo fTodoInfo;
 	struct ToDoAppInfo &fAppInfo;
 };
 

@@ -71,7 +71,7 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	fStatus = new QLabel( i18n("Autodetection not yet started..."), fStatusGroup, "fStatus" );
 	fStatus->setAlignment( QLabel::WordBreak );
 	fStatusGroupLayout->addWidget( fStatus, 0, 0 );
-	
+
 	fProgress = new KProgress( 60, fStatusGroup, "fProgress" );
 	fStatusGroupLayout->addWidget( fProgress, 1, 0 );
 
@@ -109,7 +109,7 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	                <<"/dev/cuaa0"<<"/dev/cuaa1"<<"/dev/cuaa2"<<"/dev/cuaa3"
 	                <<"/dev/ucom0"<<"/dev/ucom1"<<"/dev/ucom2"<<"/dev/ucom3";
 ;
-	
+
 	fProcessEventsTimer = new QTimer( this );
 	fTimeoutTimer = new QTimer( this );
 	fProgressTimer = new QTimer( this );
@@ -123,18 +123,21 @@ ProbeDialog::~ProbeDialog()
 {
 }
 
-void ProbeDialog::processEvents() {
-FUNCTIONSETUP;
+void ProbeDialog::processEvents()
+{
+	FUNCTIONSETUP;
 //kdDebug()<<"processEvents"<<endl;
 //QTimer::singleShot(500, this, SLOT(processEvents()));
 	KApplication::kApplication()->processEvents();
 }
 
-void ProbeDialog::progress() {
+void ProbeDialog::progress()
+{
 	fProgress->advance(1);
 }
 
-int ProbeDialog::exec() {
+int ProbeDialog::exec()
+{
 	mDetected = false;
 	mUserName = "";
 	mDevice = "";
@@ -148,7 +151,10 @@ int ProbeDialog::exec() {
 //        /dev/ttyUSB*, /dev/usb/tts/[012345...]
 // *BSD: /dev/pilot, /dev/cuaa[01]   (serial), /dev/ucom* (usb)
 
-void ProbeDialog::startDetection() {
+void ProbeDialog::startDetection()
+{
+	FUNCTIONSETUP;
+
 	disconnectDevices();
 	fProgress->setProgress(0);
 	fStatus->setText( i18n("Starting detection...") );
@@ -163,33 +169,39 @@ void ProbeDialog::startDetection() {
 	if (!fTimeoutTimer->start( 30000, true ) ) kdDebug()<<"Could not start fTimeoutTimer"<<endl;
 	if (!fProcessEventsTimer->start( 100, false ) ) kdDebug()<<"Could not start fProcessEventsTimer"<<endl;
 	if (!fProgressTimer->start( 500, false) ) kdDebug()<<"Could not start Progress timer"<<endl;
-	
+
 	QStringList::iterator end(mDevicesToProbe.end());
 	KPilotDeviceLink*link;
-	for (QStringList::iterator it=mDevicesToProbe.begin(); it!=end; ++it) {
+	for (QStringList::iterator it=mDevicesToProbe.begin(); it!=end; ++it)
+	{
 		link = new KPilotDeviceLink();
-kdDebug()<<"new kpilotDeviceLink for "<<(*it)<<endl;
-		link->reset( KPilotDeviceLink::OldStyleUSB, *it);
-kdDebug()<<"after resetting kpilotDeviceLink for "<<(*it)<<endl;
+#ifdef DEBUG
+		kdDebug()<<"new kpilotDeviceLink for "<<(*it)<<endl;
+#endif
+		link->reset( *it);
 		mDeviceLinkMap[*it] = link;
 		mDeviceLinks.append( link );
 		connect( link, SIGNAL(deviceReady(KPilotDeviceLink*)), this, SLOT(connection(KPilotDeviceLink*)) );
 	}
 	fStatus->setText( i18n("Waiting for handheld to connect...") );
-kdDebug()<<"end of startDetection"<<endl;
-QTimer::singleShot(0, this, SLOT(processEvents()));
+
+	QTimer::singleShot(0, this, SLOT(processEvents()));
 }
 
-void ProbeDialog::timeout() {
+void ProbeDialog::timeout()
+{
 	disconnectDevices();
 	if (!mDetected) fStatus->setText( i18n("Timeout reached, could not detect a handheld.") );
 }
 
-void ProbeDialog::connection( KPilotDeviceLink*lnk) {
+void ProbeDialog::connection( KPilotDeviceLink*lnk)
+{
+	FUNCTIONSETUP;
+
 	if (!lnk) return;
 	KPilotUser*usr( lnk->getPilotUser() );
 //	KPilotSysInfo*sysInfo( lnk->getSysInfo() );
-	
+
 	mUserName = usr->getUserName();
 	mUID = usr->getUserID();
 	mDevice = lnk->pilotPath();
@@ -205,24 +217,30 @@ void ProbeDialog::connection( KPilotDeviceLink*lnk) {
 	enableButtonOK(true);
 }
 
-void ProbeDialog::disconnectDevices() {
+void ProbeDialog::disconnectDevices()
+{
+	FUNCTIONSETUP;
+
 	if (!mDetected) fStatus->setText( i18n("Disconnected from all devices") );
 	fProcessEventsTimer->stop( );
 	fTimeoutTimer->stop();
 	fProgressTimer->stop();
 	fProgress->setProgress(fProgress->maxValue());
-	if (!mDeviceLinks.isEmpty()) {
+	if (!mDeviceLinks.isEmpty())
+	{
 		PilotLinkList::iterator end(mDeviceLinks.end());
-		for (PilotLinkList::iterator it=mDeviceLinks.begin(); it!=end; ++it) {
+		for (PilotLinkList::iterator it=mDeviceLinks.begin(); it!=end; ++it)
+		{
 			KPILOT_DELETE(*it);
 		}
 		mDeviceLinks.clear();
 		mDeviceLinkMap.clear();
 	}
-	
+
 
 	PilotDaemonDCOP_stub *daemonStub = new PilotDaemonDCOP_stub("kpilotDaemon", "KPilotDaemonIface");
-	if (daemonStub) {
+	if (daemonStub)
+	{
 		daemonStub->startListening();
 	}
 	KPILOT_DELETE(daemonStub);

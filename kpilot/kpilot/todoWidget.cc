@@ -51,13 +51,6 @@ static const char *todowidget_id =
 #include "todoWidget.moc"
 
 
-// This is the size of several (automatic) buffers,
-// used to retrieve data from the database.
-// I have no idea if 0xffff is some magic number or not.
-//
-//
-#define BUFFERSIZE	(0xffff)
-
 
 
 TodoCheckListItem::TodoCheckListItem(QListView*parent, const QString&text,
@@ -148,14 +141,14 @@ void TodoWidget::showComponent()
 #endif
 
 	fTodoDB = new PilotLocalDatabase(dbPath(), CSL1("ToDoDB"));
-	unsigned char buffer[BUFFERSIZE];
+	unsigned char buffer[PilotRecord::APP_BUFFER_SIZE];
 	int appLen;
 
 	fTodoList.clear();
 
 	if (fTodoDB->isDBOpen())
 	{
-		appLen = fTodoDB->readAppBlock(buffer, BUFFERSIZE);
+		appLen = fTodoDB->readAppBlock(buffer, PilotRecord::APP_BUFFER_SIZE);
 		unpack_ToDoAppInfo(&fTodoAppInfo, buffer, appLen);
 
 		populateCategories(fCatList, &fTodoAppInfo.category);

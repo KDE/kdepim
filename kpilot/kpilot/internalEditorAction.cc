@@ -157,12 +157,11 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	bool knownDB=true;
 	QString localEntry, serialEntry, recType(i18n("record"));
 
-
 	if (dbName=="AddressDB" && db)
 	{
 		struct AddressAppInfo fAppInfo;
-		unsigned char *buffer = new unsigned char[PilotTodoEntry::APP_BUFFER_SIZE];
-		int appLen = db->readAppBlock(buffer, PilotTodoEntry::APP_BUFFER_SIZE);
+		unsigned char *buffer = new unsigned char[PilotRecord::APP_BUFFER_SIZE];
+		int appLen = db->readAppBlock(buffer, PilotRecord::APP_BUFFER_SIZE);
 		unpack_AddressAppInfo(&fAppInfo, buffer, appLen);
 		delete[] buffer;
 
@@ -176,8 +175,8 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	if (dbName=="ToDoDB" && db)
 	{
 		struct ToDoAppInfo fAppInfo;
-		unsigned char *buffer = new unsigned char[PilotTodoEntry::APP_BUFFER_SIZE];
-		int appLen = db->readAppBlock(buffer, PilotTodoEntry::APP_BUFFER_SIZE);
+		unsigned char *buffer = new unsigned char[PilotRecord::APP_BUFFER_SIZE];
+		int appLen = db->readAppBlock(buffer, PilotRecord::APP_BUFFER_SIZE);
 		unpack_ToDoAppInfo(&fAppInfo, buffer, appLen);
 		delete[] buffer;
 

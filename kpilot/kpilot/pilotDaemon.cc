@@ -381,18 +381,12 @@ void PilotDaemon::showTray()
 	KPilotSettings::self()->readConfig();
 	getPilotSpeed();
 
-//	fPilotDevice = KPilotSettings::pilotDevice();
-	fPilotType = KPilotDeviceLink::None;
-
 	(void) PilotAppCategory::setupPilotCodec(KPilotSettings::encoding());
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
 		<< ": Got configuration "
 		<< KPilotSettings::pilotDevice()
-		<< " ("
-		<< fPilotType
-		<< ")"
 		<< endl;
 	DEBUGDAEMON << fname
 		<< ": Got conduit list "
@@ -401,24 +395,16 @@ void PilotDaemon::showTray()
 #endif
 
 
-	/*
-	** Override the kind of device, since OldStyleUSB
-	** works with everything and it saves the user from
-	** havind to choose the right kind.
-	*/
-	fPilotType = KPilotDeviceLink::OldStyleUSB;
-
 	if (fPilotLink)
 	{
 #ifdef DEBUG
 		DEBUGDAEMON << fname
 			<< ": Resetting with device "
 			<< KPilotSettings::pilotDevice()
-			<< " and type "
-			<< fPilotLink->deviceTypeString(fPilotType) << endl;
+			<< endl;
 #endif
 
-		fPilotLink->reset(fPilotType, KPilotSettings::pilotDevice());
+		fPilotLink->reset( KPilotSettings::pilotDevice());
 	}
 
 	if (KPilotSettings::dockDaemon())

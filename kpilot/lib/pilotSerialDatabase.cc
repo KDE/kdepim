@@ -135,7 +135,7 @@ QValueList<recordid_t> PilotSerialDatabase::idList()
 PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 {
 	FUNCTIONSETUP;
-	char *buffer[0xffff];
+	char buffer[PilotRecord::APP_BUFFER_SIZE];
 	int index, size, attr, category;
 
 	if (isDBOpen() == false)
@@ -159,7 +159,7 @@ PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 PilotRecord *PilotSerialDatabase::readRecordByIndex(int index)
 {
 	FUNCTIONSETUP;
-	char *buffer[0xffff];
+	char buffer[PilotRecord::APP_BUFFER_SIZE];
 	int size, attr, category;
 	recordid_t id;
 
@@ -178,7 +178,7 @@ PilotRecord *PilotSerialDatabase::readRecordByIndex(int index)
 PilotRecord *PilotSerialDatabase::readNextRecInCategory(int category)
 {
 	FUNCTIONSETUP;
-	char *buffer[0xffff];
+	char buffer[PilotRecord::APP_BUFFER_SIZE];
 	int index, size, attr;
 	recordid_t id;
 
@@ -197,7 +197,7 @@ PilotRecord *PilotSerialDatabase::readNextRecInCategory(int category)
 PilotRecord *PilotSerialDatabase::readNextModifiedRec(int *ind)
 {
 	FUNCTIONSETUP;
-	char *buffer[0xffff];
+	char buffer[PilotRecord::APP_BUFFER_SIZE];
 	int index, size, attr, category;
 	recordid_t id;
 

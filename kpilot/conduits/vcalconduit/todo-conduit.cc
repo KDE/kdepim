@@ -208,8 +208,8 @@ void TodoConduit::_getAppInfo()
 	FUNCTIONSETUP;
 	// get the address application header information
 	unsigned char *buffer =
-		new unsigned char[PilotTodoEntry::APP_BUFFER_SIZE];
-	int appLen = fDatabase->readAppBlock(buffer,PilotTodoEntry::APP_BUFFER_SIZE);
+		new unsigned char[PilotRecord::APP_BUFFER_SIZE];
+	int appLen = fDatabase->readAppBlock(buffer,PilotRecord::APP_BUFFER_SIZE);
 
 	unpack_ToDoAppInfo(&fTodoAppInfo, buffer, appLen);
 	delete[]buffer;

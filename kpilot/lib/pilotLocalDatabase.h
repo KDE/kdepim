@@ -32,20 +32,17 @@
 
 #include <time.h>	/* for broken pilot-link libraries */
 
-#ifndef _PILOT_MACROS_H_
 #include <pi-macros.h>	/* for recordid_t */
-#endif
 
-#ifndef _KPILOT_PILOTDATABASE_H
 #include "pilotDatabase.h"
-#endif
 
 class PilotLocalDatabase : public PilotDatabase
 {
 public:
 	/**
 	* Opens the local database. If the database cannot be found at the
-	* given position, a default path is used ($KDEHOME/share/apps/kpilot/DBBackup)
+	* given position, a default path is used 
+	*     ($KDEHOME/share/apps/kpilot/DBBackup)
 	* and if the file is found there, it is opened. In some cases this should
 	* not be done, so the parameter useDefaultPath controls this behavior.
 	* If it is set to true, the default path is used if the file cannot be
@@ -72,10 +69,20 @@ public:
 
 	virtual ~PilotLocalDatabase();
 
-	/** Creates the database with the given creator, type and flags on the given card (default is RAM). If the database already exists, this function does nothing. */
-	virtual bool createDatabase(long creator=0, long type=0, int cardno=0, int flags=0, int version=0);
-	/** Deletes the database (by name, as given in the constructor and stored in the fDBName field. ) */
+	/** Creates the database with the given creator, type and flags on 
+	* the given card (default is RAM). If the database already exists, 
+	* this function does nothing. 
+	*/
+	virtual bool createDatabase(long creator=0, 
+		long type=0, int cardno=0, int flags=0, int version=0);
+
+
+
+	/** Deletes the database (by name, as given in the constructor 
+	* and stored in the fDBName field. ) 
+	*/
 	virtual int deleteDatabase();
+
 	// Reads the application block info
 	virtual int readAppBlock(unsigned char* buffer, int maxLen);
 	// Writes the application block info.
@@ -96,7 +103,8 @@ public:
 	* returned record.
 	*/
 	virtual PilotRecord* readNextModifiedRec(int *ind=NULL);
-	// Writes a new record to database (if 'id' == 0, one will be assigned to newRecord)
+	// Writes a new record to database (if 'id' == 0, one will be 
+	// assigned to newRecord)
 	virtual recordid_t writeRecord(PilotRecord* newRecord);
 	/**
 	* Deletes a record with the given recordid_t from the database,

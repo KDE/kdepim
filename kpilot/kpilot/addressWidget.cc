@@ -65,12 +65,6 @@ static const char *addresswidget_id =
 
 #include "addressWidget.moc"
 
-// This is the size of several (automatic) buffers,
-// used to retrieve data from the database.
-// I have no idea if 0xffff is some magic number or not.
-//
-//
-#define BUFFERSIZE	(0xffff)
 
 AddressWidget::AddressWidget(QWidget * parent,
 	const QString & path) :
@@ -146,14 +140,14 @@ void AddressWidget::showComponent()
 
 	PilotDatabase *addressDB =
 		new PilotLocalDatabase(dbPath(), CSL1("AddressDB"));
-	unsigned char buffer[BUFFERSIZE];
+	unsigned char buffer[PilotRecord::APP_BUFFER_SIZE];
 	int appLen;
 
 	fAddressList.clear();
 
 	if (addressDB->isDBOpen())
 	{
-		appLen = addressDB->readAppBlock(buffer, BUFFERSIZE);
+		appLen = addressDB->readAppBlock(buffer, PilotRecord::APP_BUFFER_SIZE);
 		unpack_AddressAppInfo(&fAddressAppInfo, buffer, appLen);
 
 		populateCategories(fCatList, &fAddressAppInfo.category);

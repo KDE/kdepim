@@ -4,7 +4,8 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
-** See the .cc file for an explanation of what this file is for.
+** Wrapper for the PilotUser struct from pilot-link, which describes
+** the user-data set in the Pilot.
 */
 
 /*
@@ -32,9 +33,7 @@
 #include <string.h>
 #include <time.h>
 
-#ifndef _PILOT_DLP_H_
 #include <pi-dlp.h>
-#endif
 
 class KPilotUser
 {

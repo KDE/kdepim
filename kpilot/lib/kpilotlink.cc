@@ -70,7 +70,6 @@ KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
 	QObject(parent, name),
 	fLinkStatus(Init),
 	fPilotPath(QString::null),
-	fDeviceType(None),
 	fRetries(0),
 	fOpenTimer(0L),
 	fSocketNotifier(0L),
@@ -132,7 +131,7 @@ void KPilotDeviceLink::close()
 	fCurrentPilotSocket = (-1);
 }
 
-void KPilotDeviceLink::reset(DeviceType t, const QString & dP)
+void KPilotDeviceLink::reset(const QString & dP)
 {
 	FUNCTIONSETUP;
 
@@ -143,11 +142,6 @@ void KPilotDeviceLink::reset(DeviceType t, const QString & dP)
 	//
 	close();
 	fPilotPath = QString::null;
-
-	fDeviceType = t;
-	if (t == None)
-		return;
-	fDeviceType=OldStyleUSB;
 
 	fPilotPath = dP;
 	if (fPilotPath.isEmpty())
@@ -331,7 +325,7 @@ bool KPilotDeviceLink::open()
 			<< endl;
 #endif
 
-		if (isTransient() && (fRetries < 5))
+		if (fRetries < 5)
 		{
 			return false;
 		}
@@ -509,9 +503,9 @@ void KPilotDeviceLink::acceptDevice()
 	/* Ask the pilot who it is.  And see if it's who we think it is. */
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Reading user info @"
-		<< (int) fPilotUser << endl;
+		<< (long) fPilotUser << endl;
 	DEBUGDAEMON << fname << ": Buffer @"
-		<< (int) fPilotUser->pilotUser() << endl;
+		<< (long) fPilotUser->pilotUser() << endl;
 #endif
 
 	dlp_ReadUserInfo(fCurrentPilotSocket, fPilotUser->pilotUser());
@@ -641,24 +635,6 @@ int KPilotDeviceLink::openConduit()
 	return dlp_OpenConduit(fCurrentPilotSocket);
 }
 
-QString KPilotDeviceLink::deviceTypeString(int i) const
-{
-	FUNCTIONSETUP;
-	switch (i)
-	{
-	case None:
-		return QString::fromLatin1("None");
-	case Serial:
-		return QString::fromLatin1("Serial");
-	case OldStyleUSB:
-		return QString::fromLatin1("OldStyleUSB");
-	case DevFSUSB:
-		return QString::fromLatin1("DevFSUSB");
-	default:
-		return QString::fromLatin1("<unknown>");
-	}
-}
-
 QString KPilotDeviceLink::statusString() const
 {
 	FUNCTIONSETUP;
@@ -778,12 +754,12 @@ QPtrList<DBInfo> KPilotDeviceLink::getDBList(int cardno, int flags)
 	while (cont)
 	{
 		DBInfo*dbi=new DBInfo();
-		if (dlp_ReadDBList(pilotSocket(), cardno, flags, index, dbi)<0) 
+		if (dlp_ReadDBList(pilotSocket(), cardno, flags, index, dbi)<0)
 		{
 			KPILOT_DELETE(dbi);
 			cont=false;
-		} 
-		else 
+		}
+		else
 		{
 			index=dbi->index+1;
 			dbs.append(dbi);

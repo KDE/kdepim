@@ -62,8 +62,13 @@ public:
 	* returned record. 
 	*/
 	virtual PilotRecord* readNextModifiedRec(int *ind=NULL);
-	/** Writes a new record to database (if 'id' == 0, one will be assigned to newRecord) */
+
+	/** 
+	* Writes a new record to database (if 'id' == 0, one will be 
+	* assigned to newRecord) 
+	*/
 	virtual recordid_t writeRecord(PilotRecord* newRecordb);
+
 	/** 
 	* Deletes a record with the given recordid_t from the database, 
 	* or all records, if all is set to true. The recordid_t will be 
@@ -79,10 +84,19 @@ public:
 
 	virtual QString dbPathName() const;
 
-	/** Deletes the database (by name, as given in the constructor and stored in the fDBName field). */
+	/** 
+	* Deletes the database (by name, as given in the constructor and 
+	* stored in the fDBName field). 
+	*/
 	virtual int deleteDatabase();
-	/** Creates the database with the given creator, type and flags on the given card (default is RAM). If the database already exists, this function does nothing. */
-	virtual bool createDatabase(long creator=0, long type=0, int cardno=0, int flags=0, int version=0);
+
+	/** 
+	* Creates the database with the given creator, type and flags on 
+	* the given card (default is RAM). If the database already exists, 
+	* this function does nothing. 
+	*/
+	virtual bool createDatabase(long creator=0, 
+		long type=0, int cardno=0, int flags=0, int version=0);
 	QString getDBName() { return fDBName; }
 
 protected:

@@ -4,7 +4,10 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
-** See the .cc file for an explanation of what this file is for.
+** This file defines the class PilotRecord, which is the lowest-
+** denominator representation of the bits used in a Pilot-based
+** database record. This can be converted into a PilotAppCategory
+** (subclass) object, which is the interpreted form of the bits.
 */
 
 /*
@@ -38,6 +41,8 @@ public:
 	PilotRecord(void* data, int len, int attrib, int cat, pi_uid_t uid);
 	PilotRecord(PilotRecord* orig);
 	~PilotRecord() { delete [] fData; fDeleted++; }
+
+	enum { APP_BUFFER_SIZE = 0xffff } ;
 
 	PilotRecord& operator=(PilotRecord& orig);
 

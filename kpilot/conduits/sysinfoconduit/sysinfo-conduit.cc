@@ -240,8 +240,7 @@ void SysInfoConduit::hardwareInfo()
 			fValues["manufacturer"] = unknown;
 		}
 		
-		fValues["devicetype"] = QString(
-			fHandle->deviceTypeString(fHandle->deviceType()));
+		fValues["devicetype"] = unknown;
 		
 		KPILOT_DELETE(device);
 		keepParts.append("hardware");

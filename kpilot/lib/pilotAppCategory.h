@@ -5,7 +5,7 @@
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
 ** The class PilotAppCategory is the base class for "interpretations"
-** of a PilotRecord. This is where the records change from a collction
+** of a PilotRecord. This is where the records change from a collection
 ** of bits to something with meaning. Subclasses of PilotAppCategory
 ** give specific meaning to records from specific databases.
 **
@@ -113,7 +113,7 @@ public:
 	*/
 	virtual PilotRecord* pack()
 	{
-		int len = 0xffff;
+		int len = PilotRecord::APP_BUFFER_SIZE;
 		void* buff = new unsigned char[len];
 		pack(buff, &len);
 		PilotRecord* rec =  new PilotRecord(buff, len, getAttrib(), getCat(), id());

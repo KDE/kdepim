@@ -39,12 +39,9 @@ static const char *pilotadress_id =
 
 #include <qtextcodec.h>
 
-#ifndef _KPILOT_PILOTADDRESS_H
 #include "pilotAddress.h"
-#endif
 
 
-const int PilotAddress::APP_BUFFER_SIZE = 0xffff;
 #define MAXFIELDS 19
 
 PilotAddress::PilotAddress(struct AddressAppInfo &appInfo,
