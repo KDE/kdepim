@@ -94,11 +94,14 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 */
   mTradeAsFamilyName->hide();
 
+  mLimitContactDisplay = new QCheckBox( i18n( "Limit unfiltered display to 100 contacts" ), groupBox, "mlimit" );
+  boxLayout->addWidget( mLimitContactDisplay );
+
   QBoxLayout *editorLayout = new QHBoxLayout( boxLayout, KDialog::spacingHint() );
-  
+
   QLabel *label = new QLabel( i18n( "Addressee Editor Type:" ), groupBox );
   editorLayout->addWidget( label );
-  
+
   mEditorCombo = new QComboBox( groupBox );
   mEditorCombo->insertItem( i18n( "Full Editor" ) );
   mEditorCombo->insertItem( i18n( "Simple Editor" ) );
@@ -153,6 +156,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   connect( mNameParsing, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
   connect( mViewsSingleClickBox, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
   connect( mTradeAsFamilyName, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
+  connect( mLimitContactDisplay, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
   connect( mPhoneHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mFaxHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mExtensionView, SIGNAL( selectionChanged( QListViewItem* ) ),
@@ -197,6 +201,7 @@ void KABConfigWidget::restoreSettings()
   KConfig config( "kabcrc", false, false );
   config.setGroup( "General" );
   mTradeAsFamilyName->setChecked( config.readBoolEntry( "TradeAsFamilyName", true ) );
+  mLimitContactDisplay->setChecked( config.readBoolEntry( "LimitContactDisplay", true ) );
 
   blockSignals( blocked );
 
@@ -218,6 +223,7 @@ void KABConfigWidget::saveSettings()
   KConfig config( "kabcrc", false, false );
   config.setGroup( "General" );
   config.writeEntry( "TradeAsFamilyName", mTradeAsFamilyName->isChecked() );
+  config.writeEntry( "LimitContactDisplay", mLimitContactDisplay->isChecked() );
 
   emit changed( false );
 }
@@ -227,6 +233,7 @@ void KABConfigWidget::defaults()
   mNameParsing->setChecked( true );
   mViewsSingleClickBox->setChecked( false );
   mEditorCombo->setCurrentItem( 0 );
+  mLimitContactDisplay->setChecked( true );
 
   emit changed( true );
 }

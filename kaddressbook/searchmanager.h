@@ -58,6 +58,8 @@ class SearchManager : public QObject
 
 
     void setJumpButtonFilter( const QStringList &patterns, KABC::Field *field );
+    
+    void reconfigure();
 
     /**
       Returns the contacts which matched the last search query.
@@ -90,6 +92,8 @@ class SearchManager : public QObject
 
     QStringList mJumpButtonPatterns;
     KABC::Field *mJumpButtonField;
+    
+    bool mLimitContactDisplay;
 };
 
 #endif

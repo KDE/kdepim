@@ -821,6 +821,8 @@ void KABCore::detailsHighlighted( const QString &msg )
 void KABCore::configurationChanged()
 {
   mExtensionManager->reconfigure();
+  SearchManager::self()->reconfigure();
+  mViewManager->refreshView();
 }
 
 void KABCore::addressBookChanged()

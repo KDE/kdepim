@@ -39,10 +39,12 @@ SearchManager *SearchManager::self()
 SearchManager::SearchManager( KABC::AddressBook *ab,
                               QObject *parent, const char *name )
   : QObject( parent, name ),
-    mAddressBook( ab ), mLastField( 0 ), mLastType( Contains ), 
+    mAddressBook( ab ), mLastField( 0 ), mLastType( Contains ),
     mJumpButtonField( 0 )
 {
   mJumpButtonPatterns.append( "" );
+
+  reconfigure();
 }
 
 void SearchManager::search( const QString &pattern, KABC::Field *field, Type type )
@@ -85,12 +87,22 @@ void SearchManager::setJumpButtonFilter( const QStringList &patterns, KABC::Fiel
   search( mLastPattern, mLastField, mLastType );
 }
 
+void SearchManager::reconfigure()
+{
+  KConfig config( "kabcrc", false, false );
+  config.setGroup( "General" );
+
+  mLimitContactDisplay = config.readBoolEntry( "LimitContactDisplay", true );
+
+  reload();
+}
+
 void SearchManager::doSearch( const QString &pattern, KABC::Field *field, Type type,
                               const KABC::Addressee::List &list )
 {
   if ( pattern.isEmpty() ) {
     mContacts = list;
-    if ( mContacts.count() > 100 ) { // show only 100 contacts
+    if ( mLimitContactDisplay && mContacts.count() > 100 ) { // show only 100 contacts
       KABC::Addressee::List::Iterator it = mContacts.at( 100 );
       while ( it != mContacts.end() )
         it = mContacts.remove( it );
