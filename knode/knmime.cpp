@@ -162,9 +162,7 @@ QString KNMimeBase::decodeRFC2047String(const QCString &src, QFont::CharSet &cs)
       }
       end = pos+2;//end now points to the first char after the encoded string
       if (i>=maxLen || !*pos) valid = FALSE;
-    }
-    if (valid)
-    {
+
       ch = *pos;
       *pos = '\0';
       str = QCString(mid, (int)(mid - pos - 1));
