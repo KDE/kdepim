@@ -102,7 +102,8 @@ void FileInstaller::clearPending()
 	DEBUGDAEMON << fname << ": Copying " << s << endl;
 #endif
 
-	KURL srcName(s);
+	KURL srcName;
+	srcName.setPath(s);
 	KURL destDir(fDirName + CSL1("/") + srcName.fileName());
 
 #if KDE_IS_VERSION(3,1,9)
