@@ -42,7 +42,7 @@ noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
 	guiapp.h alarmgui.h alarmguiiface.h alarmdialog.h \
 	dockwindow.h koeventviewer.h \
         adcalendarbase.h adcalendar.h adcalendar_gui.h \
-	adconfigdatabase.h adconfigdatarw.h clientinfo.h compat.h \
+	adconfigdatabase.h adconfigdatarw.h clientinfo.h \
         simplealarmdaemon.h
 
 METASOURCES = AUTO
