@@ -258,7 +258,7 @@ bool KABEntryPainter::printEntry(const KABC::Addressee& entry,
             it!=phoneNumbers.end();
             ++it)
         {
-            line=(*it).label();
+            line=(*it).typeLabel();
             line+=": " + (*it).number();
             list.append(line.stripWhiteSpace());
         }
