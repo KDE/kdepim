@@ -125,11 +125,11 @@ class QuotedPrintableDecoder : public Decoder {
       @li @p insideHexChar == @p true, @p mAccu != 0:
           saw the first nibble '=X'
    */
-  const bool mQEncoding : 1;
-  bool mInsideHexChar   : 1;
-  bool mFlushing        : 1;
-  bool mExpectLF        : 1;
-  bool mHaveAccu        : 1;
+  const bool mQEncoding;
+  bool mInsideHexChar;
+  bool mFlushing;
+  bool mExpectLF;
+  bool mHaveAccu;
 protected:
   friend class QuotedPrintableCodec;
   friend class Rfc2047QEncodingCodec;
