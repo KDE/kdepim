@@ -27,7 +27,6 @@ int main(int argc,char **argv)
   }
 
   KABC::AddressBook *kabcBook = StdAddressBook::self();
-  kabcBook->clear();
 
   KabKey key;
   ::AddressBook::Entry entry;
@@ -49,8 +48,22 @@ int main(int argc,char **argv)
 
     Addressee a;
 
-    // TODO: Check for existing kabc id in kab addressbook
-    // TODO: Add kabc id to kab addressbook
+    QStringList::ConstIterator customIt;
+    for( customIt = entry.custom.begin(); customIt != entry.custom.end(); ++customIt ) {
+      if ( (*customIt).startsWith( "X-KABC-UID:" ) ) {
+        a.setUid( (*customIt).mid( (*customIt).find( ":" ) + 1 ) );
+        break;
+      }
+    }
+    if( customIt == entry.custom.end() ) {
+      entry.custom << "X-KABC-UID:" + a.uid();
+      ::AddressBook::ErrorCode error = kab.addressbook()->change( key, entry );
+      if (error != ::AddressBook::NoError) {
+        kdDebug() << "kab.change returned with error " << error << endl;
+      } else {
+        kdDebug() << "Wrote back to kab uid " << a.uid() << endl;
+      }
+    }
     
     a.setTitle( entry.title );
     a.setFormattedName( entry.fn );
@@ -65,7 +78,6 @@ int main(int argc,char **argv)
       a.insertEmail( *emailIt );
     }
 
-    kdDebug() << "Phone: " << entry.telephone.join(",");
     QStringList::ConstIterator phoneIt;
     for( phoneIt = entry.telephone.begin(); phoneIt != entry.telephone.end(); ++phoneIt ) {
       int kabType = (*phoneIt++).toInt();
@@ -134,6 +146,8 @@ int main(int argc,char **argv)
 
     kabcBook->insertAddressee( a );
   }
+
+  kab.save( true );
 
   StdAddressBook::save();
   
