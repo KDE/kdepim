@@ -1,6 +1,10 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2005-03-22  Adriaan de Groot
+* Long drought in doing any KPilot work or updating the ChangeLog.
+* Meddled in lib/ some to add modifiedIDList() and sanitize some types.
+
 2005-01-30  Adriaan de Groot
 * Fixed one nasty random crash thanks to vanRijn, probably fixed
   the KNotes HHtoPC problem, tagged 4.4.7, released it. This
