@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>05/12/2000</date>
+<date>20/12/2000</date>
 <releaseinfo>1.2</releaseinfo>
 
 <abstract>
@@ -506,7 +506,7 @@ fields and selecting <guilabel>Add to address book</guilabel>.</para>
 </sect1>
 
 <sect1 id="filters">
-<title>Filters</title>
+<title><anchor id="filterssection">Filters</title>
 
 <para>After using &kmail; for a while, you may find that you have trouble sorting out the new messages in 
 your inbox when they arrive. Filters allow you to automatically perform certain actions on
@@ -1943,12 +1943,34 @@ too. This will remove all the messages in the trash folder whenever you exit &km
 </qandaentry>
 
 <qandaentry>
- <question><para>What should I know if I want to use PGP/GnuPG with &kmail;?</para></question>
+ <question><para><anchor id="pgp">What should I know if I want to use PGP/GnuPG with &kmail;?</para></question>
  <answer><para>&kmail; provides a simple and easy to use interface for basic functions of these
  programs. Still you should understand how these programs work and what might make them
- insecure. Just one example: Trusting a foreign public key without checking it is no good idea.
- Another issue are attachments: As most other mail clients, &kmail; can encrypt your messages,
- but not your attachments. You have to encrypt them manually before you attach them.</para></answer>
+ insecure. Important issues:</para>
+ <itemizedlist>
+	 <listitem><para>Trusting a foreign public key without checking it is no good idea.</para></listitem>
+	 <listitem><para>As most other mail clients, &kmail; can encrypt your messages,
+	  but <emphasis>not</emphasis> your attachments. You have to encrypt them manually before 
+	  you attach them.</para></listitem>
+	 <listitem><para>You really should test if encryption works before you use it. &kmail; relies
+	  on PGP/GnuPG's error strings, which often change between different versions.</para></listitem>
+	 <listitem><para>There's a bug in &kmail; 1.1.99 (which comes with KDE 2.0 and 2.0.1) that
+	  makes GnuPG/PGP not work if you use a different language than English. You can work around
+	  it this way (&kmail; will still use your favourite language):</para>
+	  <itemizedlist>
+	   <listitem><para>Rename <filename>/usr/bin/kmail</filename> to <filename>/usr/bin/kmail.original</filename></para></listitem>
+	   <listitem><para>Install in <filename class="directory">/usr/bin</filename> the following shell script, calling it 
+		<filename>kmail</filename> and making sure it is owned by "root" and has 755 permissions (rwxr-xr-x):</para>
+<screen>
+#!/bin/bash
+LANGUAGE=en
+export LANGUAGE
+kmail.original $*
+</screen></listitem>
+	  </itemizedlist>
+	  </listitem>
+ </itemizedlist>
+ </answer>
 </qandaentry>
 
 <qandaentry>
