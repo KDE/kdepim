@@ -47,8 +47,8 @@ public:
 
 	void clearPending();
 
-	void addFiles(const QStringList&);
-	void addFile(const QString&);
+	void addFiles( const QStringList&, QWidget* w );
+	void addFile( const QString&, QWidget* w );
 
 	/**
 	* Returns information about this installer. Note particularly
@@ -61,7 +61,7 @@ public:
 
 
 protected:
-	virtual bool runCopy(const QString &src);
+	virtual bool runCopy( const QString &src, QWidget*w );
 
 public slots:
 	void copyCompleted();

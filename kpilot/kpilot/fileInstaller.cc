@@ -103,7 +103,7 @@ void FileInstaller::clearPending()
 	}
 }
 
-/* virtual */ bool FileInstaller::runCopy(const QString & s)
+/* virtual */ bool FileInstaller::runCopy(const QString & s, QWidget* w )
 {
 	FUNCTIONSETUP;
 
@@ -114,11 +114,11 @@ void FileInstaller::clearPending()
 	KURL srcName(s);
 	KURL destDir(fDirName + CSL1("/") + srcName.filename());
 
-	return KIO::NetAccess::copy(srcName, destDir, 0L);
+	return KIO::NetAccess::copy(srcName, destDir, w);
 }
 
 
-void FileInstaller::addFiles(const QStringList & fileList)
+void FileInstaller::addFiles(const QStringList & fileList, QWidget* w)
 {
 	FUNCTIONSETUP;
 
@@ -129,7 +129,7 @@ void FileInstaller::addFiles(const QStringList & fileList)
 	for(QStringList::ConstIterator it = fileList.begin();
 	    it != fileList.end(); ++it)
 	{
-		if (runCopy(*it))
+		if (runCopy( *it, w ))
 			succ++;
 	}
 
@@ -139,13 +139,13 @@ void FileInstaller::addFiles(const QStringList & fileList)
 	}
 }
 
-void FileInstaller::addFile(const QString & file)
+void FileInstaller::addFile( const QString & file, QWidget* w )
 {
 	FUNCTIONSETUP;
 
 	if (!enabled) return;
 	
-	if (runCopy(file))
+	if (runCopy(file, w))
 	{
 		emit(filesChanged());
 	}

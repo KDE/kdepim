@@ -139,7 +139,7 @@ void FileInstallWidget::dropEvent(QDropEvent * drop)
 	      files << (*it).path();
 	}
 
-	fInstaller->addFiles(files);
+	fInstaller->addFiles(files, this );
 }
 
 void FileInstallWidget::slotClearButton()
@@ -163,7 +163,7 @@ void FileInstallWidget::slotAddFile()
 
 	for (QStringList::Iterator fileName = fileNames.begin(); fileName != fileNames.end(); ++fileName)
 	{
-		fInstaller->addFile(*fileName);
+		fInstaller->addFile(*fileName, this );
 	}
 }
 

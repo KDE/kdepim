@@ -136,7 +136,6 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 	}
 
 	daemon->addInstallFiles(files);
-//	fInstaller->addFiles(files);
 }
 
 /* virtual */ void PilotDaemonTray::mousePressEvent(QMouseEvent * e)
@@ -269,10 +268,6 @@ PilotDaemon::PilotDaemon() :
 {
 	FUNCTIONSETUP;
 
-	fInstaller = new FileInstaller;
-	connect(fInstaller, SIGNAL(filesChanged()),
-		this, SLOT(slotFilesChanged()));
-
 	setupPilotLink();
 	reloadSettings();
 
@@ -282,6 +277,10 @@ PilotDaemon::PilotDaemon() :
 			<< ": Connecting to device failed." << endl;
 		return;
 	}
+
+	fInstaller = new FileInstaller;
+	connect(fInstaller, SIGNAL(filesChanged()),
+		this, SLOT(slotFilesChanged()));
 
 
 #ifdef DEBUG
@@ -304,7 +303,7 @@ void PilotDaemon::addInstallFiles(const QStringList &l)
 {
 	FUNCTIONSETUP;
 
-	fInstaller->addFiles(l);
+	fInstaller->addFiles( l, fTray );
 }
 
 int PilotDaemon::getPilotSpeed(KPilotConfigSettings & config)
