@@ -101,9 +101,6 @@ class DistributionListView : public KListView
     void dropEvent( QDropEvent *e );
     void viewportDragMoveEvent( QDragMoveEvent *e );
     void viewportDropEvent( QDropEvent *e );
-
-  signals:
-    void dropped( QDropEvent *e );
 };
 
 /**
