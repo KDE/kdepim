@@ -21,15 +21,17 @@
 #ifndef KCAL_RESOURCECACHED_H
 #define KCAL_RESOURCECACHED_H
 
-#include <qptrlist.h>
-#include <qstring.h>
-#include <qdatetime.h>
-#include <kconfig.h>
+#include "resourcecalendar.h"
 
 #include "incidence.h"
 #include "calendarlocal.h"
 
-#include "resourcecalendar.h"
+#include <kconfig.h>
+
+#include <qptrlist.h>
+#include <qstring.h>
+#include <qdatetime.h>
+#include <qtimer.h>
 
 namespace KCal {
 
@@ -41,8 +43,45 @@ class ResourceCached : public ResourceCalendar,
                        public KCal::Calendar::Observer
 {
   public:
+    /**
+      Reload policy.
+      
+      @see setReloadPolicy(), reloadPolicy()
+    */
+    enum { ReloadNever, ReloadOnStartup, ReloadInterval, ReloadAlways };
+  
     ResourceCached( const KConfig * );
     virtual ~ResourceCached();
+
+    void readConfig( const KConfig *config );
+    void writeConfig( KConfig *config );
+
+    /**
+      Set reload policy. This controls when the cache is refreshed.
+
+      ReloadNever     never reload
+      ReloadOnStartup reload when resource is loaded
+      ReloadInterval  reload regularly after given interval
+      ReloadAlways    reload whenever the resource is accessed
+    */
+    void setReloadPolicy( int policy );
+    /**
+      Return reload policy.
+      
+      @see setReloadPolicy()
+    */
+    int reloadPolicy() const;
+
+    /**
+      Set reload interval in minutes which is used when reload policy is
+      ReloadInterval.
+    */
+    void setReloadInterval( int minutes );
+
+    /**
+      Return reload interval in minutes.
+    */
+    int reloadInterval() const;
 
     /**
       Add event to calendar.
@@ -163,6 +202,9 @@ class ResourceCached : public ResourceCalendar,
     CalendarLocal mCalendar;
 
   private:
+    int mReloadPolicy;
+    int mReloadInterval;
+
     QMap<KCal::Incidence *,bool> mAddedIncidences;
     QMap<KCal::Incidence *,bool> mChangedIncidences;
     QMap<KCal::Incidence *,bool> mDeletedIncidences;

@@ -106,7 +106,7 @@ void ResourceRemote::readConfig( const KConfig *config )
   url = config->readEntry( "UploadUrl" );
   mUploadUrl = KURL( url );
 
-  mReloadPolicy = config->readNumEntry( "ReloadPolicy", ReloadNever );
+  ResourceCached::readConfig( config );
 }
 
 void ResourceRemote::writeConfig( KConfig *config )
@@ -118,7 +118,7 @@ void ResourceRemote::writeConfig( KConfig *config )
   config->writeEntry( "DownloadUrl", mDownloadUrl.url() );
   config->writeEntry( "UploadUrl", mUploadUrl.url() );
 
-  config->writeEntry( "ReloadPolicy", mReloadPolicy );
+  ResourceCached::writeConfig( config );
 }
 
 void ResourceRemote::setDownloadUrl( const KURL &url )
@@ -139,16 +139,6 @@ void ResourceRemote::setUploadUrl( const KURL &url )
 KURL ResourceRemote::uploadUrl() const
 {
   return mUploadUrl;
-}
-
-void ResourceRemote::setReloadPolicy( int i )
-{
-  mReloadPolicy = i;
-}
-
-int ResourceRemote::reloadPolicy() const
-{
-  return mReloadPolicy;
 }
 
 void ResourceRemote::setUseProgressManager( bool useProgressManager )
@@ -324,7 +314,7 @@ void ResourceRemote::dump() const
   ResourceCalendar::dump();
   kdDebug(5800) << "  DownloadUrl: " << mDownloadUrl.url() << endl;
   kdDebug(5800) << "  UploadUrl: " << mUploadUrl.url() << endl;
-  kdDebug(5800) << "  ReloadPolicy: " << mReloadPolicy << endl;
+  kdDebug(5800) << "  ReloadPolicy: " << reloadPolicy() << endl;
 }
 
 #include "resourceremote.moc"

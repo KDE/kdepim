@@ -38,12 +38,45 @@
 using namespace KCal;
 
 ResourceCached::ResourceCached( const KConfig* config )
-  : ResourceCalendar( config )
+  : ResourceCalendar( config ), mReloadPolicy( ReloadNever ),
+    mReloadInterval( 10 )
 {
 }
 
 ResourceCached::~ResourceCached()
 {
+}
+
+void ResourceCached::setReloadPolicy( int i )
+{
+  mReloadPolicy = i;
+}
+
+int ResourceCached::reloadPolicy() const
+{
+  return mReloadPolicy;
+}
+
+void ResourceCached::setReloadInterval( int minutes )
+{
+  mReloadInterval = minutes;
+}
+
+int ResourceCached::reloadInterval() const
+{
+  return mReloadInterval;
+}
+
+void ResourceCached::readConfig( const KConfig *config )
+{
+  mReloadPolicy = config->readNumEntry( "ReloadPolicy", ReloadNever );
+  mReloadInterval = config->readNumEntry( "ReloadInterval", 10 );
+}
+
+void ResourceCached::writeConfig( KConfig *config )
+{
+  config->writeEntry( "ReloadPolicy", mReloadPolicy );
+  config->writeEntry( "ReloadInterval", mReloadInterval );
 }
 
 bool ResourceCached::addEvent(Event *event)

@@ -55,13 +55,6 @@ class ResourceRemote : public ResourceCached
 
   public:
     /**
-      Reload policy.
-      
-      @see setReloadPolicy(), reloadPolicy()
-    */
-    enum { ReloadNever, ReloadOnStartup, ReloadOnceADay, ReloadAlways };
-  
-    /**
       Create resource from configuration information stored in KConfig object.
     */
     ResourceRemote( const KConfig * );
@@ -82,22 +75,6 @@ class ResourceRemote : public ResourceCached
     
     void setUploadUrl( const KURL & );
     KURL uploadUrl() const;
-
-    /**
-      Set reload policy. This controls when the remote file is downloaded.
-
-      ReloadNever     never reload
-      ReloadOnStartup reload when resource is loaded
-      ReloadOnceADay  reload once a day
-      ReloadAlways    reload whenever the resource is accessed
-    */
-    void setReloadPolicy( int policy );
-    /**
-      Return reload policy.
-      
-      @see setReloadPolicy()
-    */
-    int reloadPolicy() const;
 
     void setUseProgressManager( bool useProgressManager );
     bool useProgressManager() const;
@@ -137,8 +114,6 @@ class ResourceRemote : public ResourceCached
 
     KURL mDownloadUrl;
     KURL mUploadUrl;
-
-    int mReloadPolicy;
 
     bool mUseProgressManager;
     bool mUseCacheFile;
