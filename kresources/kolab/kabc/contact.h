@@ -36,7 +36,7 @@
 #include <kolabbase.h>
 
 namespace KABC {
-  class Address;
+  class Addressee;
 }
 
 namespace Kolab {
@@ -67,15 +67,15 @@ public:
 
   /// Use this to parse an xml string to a contact entry
   /// The caller is responsible for deleting the returned object
-  static KABC::Address* xmlToAddress( const QString& xml );
+  static KABC::Addressee* xmlToAddressee( const QString& xml );
 
   /// Use this to get an xml string describing this contact
-  static QString addressToXML( KABC::Address* );
+  static QString addresseeToXML( KABC::Addressee* );
 
-  explicit Contact( KABC::Address* address = 0 );
+  explicit Contact( KABC::Addressee* address = 0 );
   ~Contact();
 
-  void saveTo( KABC::Address* address );
+  void saveTo( KABC::Addressee* address );
 
   QString type() const { return "Contact"; }
 
@@ -188,7 +188,7 @@ public:
   QString saveXML() const;
 
 protected:
-  void setFields( KABC::Address* );
+  void setFields( KABC::Addressee* );
 
 private:
   bool loadNameAttribute( QDomElement& element );

@@ -32,28 +32,28 @@
 
 #include "contact.h"
 
-#include <kabc/address.h>
+#include <kabc/addressee.h>
 #include <kdebug.h>
 
 using namespace Kolab;
 
 
-KABC::Address* Contact::xmlToAddress( const QString& xml )
+KABC::Addressee* Contact::xmlToAddressee( const QString& xml )
 {
   Contact contact;
   contact.load( xml );
-  KABC::Address* address = new KABC::Address();
-  contact.saveTo( address );
-  return address;
+  KABC::Addressee* addressee = new KABC::Addressee();
+  contact.saveTo( addressee );
+  return addressee;
 }
 
-QString Contact::addressToXML( KABC::Address* address )
+QString Contact::addresseeToXML( KABC::Addressee* addressee )
 {
-  Contact contact( address );
+  Contact contact( addressee );
   return contact.saveXML();
 }
 
-Contact::Contact( KABC::Address* addr )
+Contact::Contact( KABC::Addressee* addr )
 {
   setFields( addr );
 }
@@ -679,18 +679,48 @@ QString Contact::saveXML() const
   return document.toString();
 }
 
-void Contact::setFields( KABC::Address* address )
+void Contact::setFields( KABC::Addressee* addressee )
 {
-  kdError() << "NYI: " << k_funcinfo << endl;
+  KolabBase::setFields( addressee );
+
+  setGivenName( addressee->givenName() );
+  setMiddleNames( addressee->additionalName() );
+  setLastName( addressee->familyName() );
+  setFullName( addressee->formattedName() );
+  setPrefix( addressee->prefix() );
+  setSuffix( addressee->suffix() );
+  setRole( addressee->role() );
+  setOrganization( addressee->organization() );
+  setWebPage( addressee->url().url() );
+  setIMAddress( addressee->custom( "KADDRESSBOOK", "X-IMAddress" ) );
+  setDepartment( addressee->custom( "KADDRESSBOOK", "X-Department" ) );
+  setOfficeLocation( addressee->custom( "KADDRESSBOOK", "X-Office" ) );
+  setProfession( addressee->custom( "KADDRESSBOOK", "X-Profession" ) );
+  setJobTitle( addressee->title() );
+  setManagerName( addressee->custom( "KADDRESSBOOK", "X-ManagersName" ) );
+  setAssistant( addressee->custom( "KADDRESSBOOK", "X-AssistantsName" ) );
+  setNickName( addressee->nickName() );
+  setSpouseName( addressee->custom( "KADDRESSBOOK", "X-SpousesName" ) );
+  setBirthday( addressee->birthday().date() );
+  setAnniversary( QDate::fromString( addressee->custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate) );
+#if 0
+  setPicture( addressee->photo() );
+#endif
+
+  // TODO: Unhandled Addressee fields:
+  // mailer, timezone, geo, productId, sortString, logo, sound
+  // agent, preferred email, emails, phoneNumbers, keys, addresses,
+  // customs, name(), preferred address, preferred phone number
+
+  // TODO: Things KAddressBook can't handle:
+  // initials, children, gender, language
+
+  // TODO: Free/Busy URL. This is done rather awkward in KAddressBook -
+  // it stores it in a local file through a korganizer file :-(
 }
 
-void Contact::saveTo( KABC::Address* address )
+void Contact::saveTo( KABC::Addressee* addressee )
 {
-  kdError() << "NYI: " << k_funcinfo << endl;
-#if 0
-  KolabBase::saveTo( journal );
-
-  // TODO: background and foreground
-  journal->setSummary( summary() );
-#endif
+  kdError() << "NYFI: " << k_funcinfo << endl;
+  KolabBase::saveTo( addressee );
 }
