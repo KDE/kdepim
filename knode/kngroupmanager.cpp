@@ -481,8 +481,6 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
         a_rticleMgr->updateStatusString();
       }
 
-      g_List->removeRef(g);
-
       const QFileInfoList *list = dir.entryInfoList();  // get list of matching files and delete all
       if (list) {
         QFileInfoListIterator it( *list );
@@ -495,6 +493,8 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
         }
       }
       kdDebug(5003) << "Files deleted!" << endl;
+
+      g_List->removeRef(g);
 
       return true;
     }
