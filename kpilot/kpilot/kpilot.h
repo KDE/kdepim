@@ -1,3 +1,5 @@
+#ifndef _KPILOT_KPILOT_H
+#define _KPILOT_KPILOT_H
 /* kpilot.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -26,55 +28,13 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#ifndef _KPILOT_KPILOT_H
-#define _KPILOT_KPILOT_H
-
-
-#ifndef QAPP_H
-#include <qapp.h>
-#endif
-
-#ifndef QMENUBAR_H
-#include <qmenubar.h>
-#endif
-
-#ifndef QLIST_H
-#include <qlist.h>
-#endif
-
-#ifndef QPOPMENU_H
-#include <qpopmenu.h>
-#endif
-
-#ifndef QPIXMAP_H
-#include <qpixmap.h>
-#endif
-
-
-#ifndef _KAPP_H_
-#include <kapp.h>
-#endif
-
-#ifndef _KLOCALE_H_
-#include <klocale.h>
-#endif
-
-#ifndef _KMAINWINDOW_H_
 #include <kmainwindow.h>
-#endif
 
-#ifndef _KPROGRESS_H_
-#include <kprogress.h>
-#endif
-
-#ifndef _KPILOT_KPILOTDCOP_H
 #include "kpilotDCOP.h"
-#endif
 
 class QPopupMenu;
 class QComboBox;
 class QWidgetStack;
-// class KProcess;
 class KAction;
 class KToggleAction;
 class KProgress;
@@ -115,7 +75,7 @@ public:
 		bool force=false);
 
 
-    bool getQuitAfterCopyComplete() const { return fQuitAfterCopyComplete; }
+    // bool getQuitAfterCopyComplete() const { return fQuitAfterCopyComplete; }
 
 
 	// Adds 'name' to the pull down menu of components
@@ -138,20 +98,10 @@ public:
 	virtual ASYNC daemonStatus(QString);
 	virtual ASYNC daemonProgress(QString,int);
 
-    protected:
-      void closeEvent(QCloseEvent *e);
-      void setQuitAfterCopyComplete(bool quit) { fQuitAfterCopyComplete = quit; }
-      QWidgetStack *getManagingWidget() { return fManagingWidget; }
+protected:
+	void closeEvent(QCloseEvent *e);
+	QWidgetStack *getManagingWidget() { return fManagingWidget; }
       
-      // Not sure if this is the way to go or not... might want to make the link
-      // persist...
-      // void initPilotLink();
-      // void initCommandSocket();
-
-      // void initStatusLink(); // Seperate so the components can be initialized
-      // KPilotLink* getPilotLink() { return fPilotLink; }
-      // void destroyPilotLink() { if (fPilotLink) {delete fPilotLink; fPilotLink = 0L; /* delete fLinkProcess; fLinkProcess = 0L; */ } }
-
 	/**
 	* Provide access to the daemon's DCOP interface
 	* through an object of the stub class.
@@ -184,25 +134,21 @@ public slots:
 	
 
 protected:
-	// int testSocket(KSocket *);
-
 	void readConfig();
 
 
 	/**
 	* Run all the internal conduits' presync functions.
-	* Expects the link command to be empty if @p b is true.
 	*/
-	void componentPreSync(bool b=true);
+	bool componentPreSync();
 	void setupSync(int kind,const QString& msg);
 
-private:
-      void initIcons();
-      void initMenu();
-      void initStatusBar();
-      void setupWidget();
-      void initComponents();
-      
+	void initIcons();
+	void initMenu();
+	void initStatusBar();
+	void setupWidget();
+	void initComponents();
+
 	/**
 	* These are constants used in the KPilotInstaller code.
 	* Most of them are IDs for UI elements. ID_FILE_QUIT is a big
@@ -224,22 +170,26 @@ private:
 		ID_CONDUITS_ENABLE,
 		ID_CONDUITS_SETUP 
 		} Constants ;
-      
-      KMenuBar*       fMenuBar;
-      KStatusBar*     fStatusBar;
-      KProgress       *fProgress;
-      KToolBar*       fToolBar;
-      bool            fQuitAfterCopyComplete; // Used for GUI-less interface
-      QWidgetStack    *fManagingWidget;
-      QList<PilotComponent>  fPilotComponentList; // Has the widgets/components...
-      // KPilotLink*     fPilotLink;
-      // KSocket*        fPilotCommandSocket;
-      // KSocket*        fPilotStatusSocket;
-      bool            fKillDaemonOnExit;
-      char            fLinkCommand[10000];
-      int             fLastWidgetSelected;
+ 
 
-      Status fStatus;
+	/**
+	* This is the private-d-pointer, KPilot style. Not everything 
+	* has moved there yet.
+	*/
+	class KPilotPrivate;
+	KPilotPrivate *fP;
+
+private:
+	KMenuBar*       fMenuBar;
+	KStatusBar*     fStatusBar;
+	KProgress       *fProgress;
+	KToolBar*       fToolBar;
+	bool            fQuitAfterCopyComplete; // Used for GUI-less interface
+	QWidgetStack    *fManagingWidget;
+	bool            fKillDaemonOnExit;
+	bool fDaemonWasRunning;
+
+	Status fStatus;
 
 	FileInstallWidget *fFileInstallWidget;
 	LogWidget *fLogWidget;
@@ -251,13 +201,11 @@ private:
 	KToggleAction  *m_statusbarAction;
 
 	
- protected slots:
-      void quit();
+protected slots:
+	void quit();
 	void slotConfigureKPilot();
 	void slotConfigureConduits();
-      void fileInstalled(int which);
-      // void slotSyncDone(KProcess* which);
-      // void slotDaemonStatus(KSocket*);
+	void fileInstalled(int which);
 
 	/**
 	 * Indicate that a particular component has been selected (through
@@ -265,28 +213,23 @@ private:
 	 * adjust any other user-visible state to indicate that that component
 	 * is now active.
 	 *
-	 * This should be called (possibly by the component itself!) or activated
-	 * through the signal mechanism.
+	 * This should be called (possibly by the component itself!) 
+	 * or activated through the signal mechanism.
 	 * */
 	void slotSelectComponent(PilotComponent *);
 
-    signals:
-    void modeSelected(int selected);
-    };
+signals:
+	void modeSelected(int selected);
+};
 
 
 
  
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
-#endif
-
-#undef REALLY_KPILOT
-
 
 // $Log$
+// Revision 1.32  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.31  2001/09/23 21:44:56  adridg
 // Myriad small changes
 //
@@ -335,3 +278,4 @@ private:
 // Revision 1.16  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //
+#endif

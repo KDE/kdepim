@@ -125,25 +125,18 @@ static const char *kpilot_id =
 #include <kedittoolbar.h>
 #endif
 
+#include <kprogress.h>
+
 
 #include "kpilotConfigDialog.h"
 #include "kpilotConfig.h"
 
-#ifndef _KPILOT_ADDRESSWIDGET_H
+#include "pilotComponent.h"
+
 #include "addressWidget.h"
-#endif
-
-#ifndef _KPILOT_MEMOWIDGET_H
 #include "memoWidget.h"
-#endif
-
-#ifndef _KPILOT_FILEINSTALLWIDGET_H
 #include "fileInstallWidget.h"
-#endif
-
-#ifndef _KPILOT_LOGWIDGET_H
 #include "logWidget.h"
-#endif
 
 #ifndef _KPILOT_CONDUITSETUP_H
 #include "conduitSetup.h"
@@ -159,11 +152,24 @@ static const char *kpilot_id =
 
 #include "kpilot.moc"
 
+class KPilotInstaller::KPilotPrivate
+{
+public:
+	typedef QList<PilotComponent> ComponentList;
+
+private:
+	ComponentList  fPilotComponentList;
+
+public:
+	ComponentList &list() { return fPilotComponentList; } ;
+} ;
+	
 KPilotInstaller::KPilotInstaller() :
 	KMainWindow(0),
 	DCOPObject("KPilotIface"),
 	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon", 
 		"KPilotDaemonIface")),
+	fP(new KPilotPrivate),
 	fMenuBar(0L),
 	fStatusBar(0L),
 	fProgress(0L),
@@ -171,6 +177,7 @@ KPilotInstaller::KPilotInstaller() :
 	fQuitAfterCopyComplete(false),
 	fManagingWidget(0L),
 	fKillDaemonOnExit(false),
+	fDaemonWasRunning(true),
 	fStatus(Startup), 
 	fFileInstallWidget(0L), 
 	fLogWidget(0L)
@@ -201,7 +208,10 @@ void KPilotInstaller::killDaemonIfNeeded()
 		DEBUGKPILOT << fname << ": Killing daemon." << endl;
 #endif
 
-		getDaemon().quitNow();
+		if (!fDaemonWasRunning)
+		{
+			getDaemon().quitNow();
+		}
 	}
 }
 
@@ -224,7 +234,11 @@ void KPilotInstaller::startDaemonIfNeeded()
 #ifdef DEBUG
 		DEBUGKPILOT << fname << ": Daemon not responding." << endl;
 #endif
-		fKillDaemonOnExit |= true;
+		fDaemonWasRunning = false;
+	}
+	else
+	{
+		fDaemonWasRunning = true;
 	}
 
 	if (KApplication::startServiceByDesktopPath(
@@ -395,22 +409,17 @@ void KPilotInstaller::showTitlePage(const QString & msg, bool)
 void KPilotInstaller::slotBackupRequested()
 {
 	FUNCTIONSETUP;
-	showTitlePage();
-	fStatusBar->changeItem(i18n("Backing up pilot. ") +
-		i18n("Please press the hot-sync button."), 0);
-
-	getDaemon().requestSync(PilotDaemonDCOP::Backup);
+	setupSync(PilotDaemonDCOP::Backup,
+		i18n("Backing up Pilot. ") +
+		i18n("Please press the HotSync button."));
 }
 
 void KPilotInstaller::slotRestoreRequested()
 {
 	FUNCTIONSETUP;
-
-	showTitlePage();
-
-	fStatusBar->changeItem(i18n("Restoring pilot. ") +
-		i18n("Please press the hot-sync button."), 0);
-	getDaemon().requestSync(PilotDaemonDCOP::Restore);
+	setupSync(PilotDaemonDCOP::Restore,
+		i18n("Restoring Pilot. ") +
+		i18n("Please press the HotSync button."));
 }
 
 void KPilotInstaller::slotHotSyncRequested()
@@ -429,33 +438,44 @@ void KPilotInstaller::slotFastSyncRequested()
 		i18n("Please press the HotSync button."));
 }
 
-void KPilotInstaller::componentPreSync(bool expectEmptyLinkCommand)
+bool KPilotInstaller::componentPreSync()
 {
 	FUNCTIONSETUP;
 
-	if (fLinkCommand[0] && expectEmptyLinkCommand)
-	{
-		kdWarning() << __FUNCTION__
-			<< ": LinkCommand not empty!" << endl;
-	}
+	QString reason;
+	QString rprefix(i18n("Can't start a Sync now. %1"));
 
-
-	for (fPilotComponentList.first();
-		fPilotComponentList.current(); fPilotComponentList.next())
+	for (fP->list().first();
+		fP->list().current(); fP->list().next())
 	{
+#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": Pre-sync for builtin "
-			<< fPilotComponentList.current()->name() << endl;
-		fPilotComponentList.current()->preHotSync(fLinkCommand);
+			<< fP->list().current()->name() << endl;
+#endif
+		if (!fP->list().current()->preHotSync(reason))
+			break;
 	}
+
+	if (!reason.isNull())
+	{
+		KMessageBox::sorry(this,
+			rprefix.arg(reason),
+			i18n("Can't start Sync"));
+		return false;
+	}
+	return true;
 }
 
 void KPilotInstaller::setupSync(int kind, const QString & message)
 {
 	FUNCTIONSETUP;
 
+	if (!componentPreSync())
+	{
+		return;
+	}
 	showTitlePage(message);
-	componentPreSync(false);
 	getDaemon().requestSync(kind);
 }
 
@@ -548,12 +568,12 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 #endif
 
 	p->initialize();
-	fPilotComponentList.append(p);
+	fP->list().append(p);
 
 	// The first component added gets id 1, while the title
 	// screen -- added elsewhere -- has id 0.
 	//
-	fManagingWidget->addWidget(p, fPilotComponentList.count());
+	fManagingWidget->addWidget(p, fP->list().count());
 
 
 	const char *componentname = p->name("(none)");
@@ -683,11 +703,11 @@ void KPilotInstaller::slotConfigureKPilot()
 		// Update each installed component.
 		//
 		//
-		for (fPilotComponentList.first();
-			fPilotComponentList.current();
-			fPilotComponentList.next())
+		for (fP->list().first();
+			fP->list().current();
+			fP->list().next())
 		{
-			fPilotComponentList.current()->initialize();
+			fP->list().current()->initialize();
 		}
 	}
 
@@ -944,6 +964,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.61  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.60  2001/09/23 21:42:35  adridg
 // Factored out debugging options
 //
