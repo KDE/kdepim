@@ -145,7 +145,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
 {
   int count = 0;
   if ( !kmailIncidencesCount( count, mimetype, subResource ) ) {
-    kdError() << "Communication problem in ResourceKolab::load()\n";
+    kdError(5650) << "Communication problem in ResourceKolab::load()\n";
     return false;
   }
 
@@ -166,7 +166,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
     QMap<Q_UINT32, QString> lst;
     if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
-      kdError() << "Communication problem in ResourceKolab::load()\n";
+      kdError(5650) << "Communication problem in ResourceKolab::load()\n";
       return false;
     }
 
@@ -435,7 +435,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       return false;
 
     if ( !sendKMailUpdate( incidence, subResource, sernum ) ) {
-      kdError(5500) << "Communication problem in ResourceKolab::addIncidence()\n";
+      kdError(5650) << "Communication problem in ResourceKolab::addIncidence()\n";
       return false;
     } else {
       // KMail is doing it's best to add the event now, put a sticker on it,
