@@ -6,6 +6,8 @@
 // this is bad style, but we do not have another common library by now:
 #include "../kabentrypainter.h"
 
+class AppearancePage;
+
 namespace KABPrinting {
 
     class DetailledPrintStyle : public PrintStyle
@@ -24,7 +26,9 @@ namespace KABPrinting {
                         const QRect& window,
                         QPainter *painter,
                         int top, bool fake, QRect *brect);
-        KABEntryPainter ePntr;
+    private:
+        AppearancePage *mPageAppearance;
+        KABEntryPainter *mEPntr;
     };
 
     class DetailledPrintStyleFactory : public PrintStyleFactory

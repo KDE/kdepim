@@ -8,6 +8,7 @@ libprinter_la_SOURCES = printingwizard_base.ui \
 	printingwizard.cpp \
 	printstyle.cpp \
 	detailledstyle.cpp  \
+	ds_appearance.ui \
 	mikesstyle.cpp
 
 EXTRA_DIST = printingwizard_base.ui \
@@ -15,3 +16,7 @@ EXTRA_DIST = printingwizard_base.ui \
 	printstyle.cpp printstyle.h \
 	detailledstyle.cpp detailledstyle.h \
 	mikesstyle.cpp mikesstyle.h
+
+preview_DATA = detailed-style.png
+
+previewdir = $(kde_datadir)/kaddressbook/printing

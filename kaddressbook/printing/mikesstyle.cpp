@@ -30,12 +30,12 @@ namespace KABPrinting
         QFont mFont;
         QFont mBoldFont;
         QPainter p;
-        p.begin(wiz->printer());
+        p.begin(wizard()->printer());
         int yPos = 0;
         int spacingHint = 10;
         // Now do the actual printing
         KProgressDialog pDialog
-            (wiz, 0, i18n("Printing Progress"),
+            (wizard(), 0, i18n("Printing Progress"),
              i18n("Please wait while the contacts are prepared "
                   "for the printer."));
         pDialog.setAutoClose(true);
@@ -65,7 +65,7 @@ namespace KABPrinting
             kapp->processEvents(); // Mirko: do I like this :-) ?
 
             // find the addressee
-            a = wiz->document()->findByUid(*iter);
+            a = wizard()->document()->findByUid(*iter);
 
             // Get the total height so we know if it will fit on the
             // current page
@@ -78,7 +78,7 @@ namespace KABPrinting
                 paintTagLine(p, mFont);
                 p.restore();
 
-                wiz->printer()->newPage();
+                wizard()->printer()->newPage();
                 yPos = 0;
             }
 
@@ -157,7 +157,7 @@ namespace KABPrinting
         // now the fields, in two halves
         painter.setFont(font);
 
-        KABC::Field::List fields = wiz->document()->fields();
+        KABC::Field::List fields = wizard()->document()->fields();
         int numFields = fields.count();
         QString label;
         QString value;
@@ -224,7 +224,7 @@ namespace KABPrinting
         int height = 0;
 
         // get the fields
-        KABC::Field::List fieldList = wiz->document()->fields();
+        KABC::Field::List fieldList = wizard()->document()->fields();
         int numFields = fieldList.count();
         int halfHeight = 0;
 

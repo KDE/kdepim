@@ -28,7 +28,7 @@ namespace KABPrinting {
         mBasicPage->rbSelection->setEnabled(!selection.isEmpty());
         connect(mBasicPage->cbStyle, SIGNAL(activated(int)),
                 SLOT(slotStyleSelected(int)));
-        addPage(mBasicPage, i18n("General"));
+        insertPage(mBasicPage, i18n("General"), -1);
         setAppropriate(mBasicPage, true);
         registerStyles();
         if(mBasicPage->cbStyle->count()>0)
@@ -74,7 +74,10 @@ namespace KABPrinting {
         {
             mBasicPage->plPreview->setText(i18n("(No Preview available.)"));
         }
-        setFinishEnabled(mBasicPage, style!=0);
+        if(pageCount()<=1) // the style did not add pages
+        {
+            setFinishEnabled(mBasicPage, style!=0);
+        }
     }
 
     KABC::AddressBook* PrintingWizardImpl::document()
