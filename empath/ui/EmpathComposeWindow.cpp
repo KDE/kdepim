@@ -193,9 +193,12 @@ EmpathComposeWindow::setupToolBar()
 {
 	empathDebug("setting up tool bar");
 
-	KToolBar * tb = new KToolBar(this, "tooly", 42);
+	QPixmap p = empathIcon("compose.xpm");
+	int i = QMAX(p.width(), p.height());
+
+	KToolBar * tb = new KToolBar(this, "tooly", i + 4 );
 	CHECK_PTR(tb);
-	
+
 	this->addToolBar(tb, 0);
 
 	tb->insertButton(empathIcon("send.xpm"), 0, SIGNAL(clicked()),

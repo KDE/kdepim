@@ -53,7 +53,7 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
 		unreadMessageCount_(0),
 		url_(url)
 {
-	empathDebug("ctor");
+	empathDebug("ctor with url == \"" + url_.asString() + "\"");
 	messageList_.setFolder(this);
 	id_ = ID++;
 	QObject::connect(this, SIGNAL(countUpdated(int, int)),
@@ -116,7 +116,7 @@ EmpathFolder::update()
 	EmpathMailbox * m = empath->mailbox(url_);
 	if (m == 0) return;
 	empathDebug("mailbox name = " + m->name());
-	m->readMailForFolder(this);
+	m->syncIndex(url_);
 	emit(countUpdated(messageList_.countUnread(), messageList_.count()));
 }
 
@@ -130,7 +130,17 @@ EmpathFolder::writeMessage(const RMessage & message)
 	EmpathFolder *
 EmpathFolder::parent() const
 {
-	// FIXME !
-	return 0;
+	empathDebug("parent() called");
+	QString f = url_.folderPath();
+	QString m = url_.mailboxName();
+	empathDebug("My folder path is \"" + f + "\"");
+	if (f.right(1) == "/")
+		f = f.remove(f.length(), 1);
+	if (!f.contains("/")) return 0;
+	f = f.left(f.length() - f.findRev("/") + 1);
+	f += "/";
+	empathDebug("Parent folder path is \"" + f + "\"");
+	EmpathURL u(m, f, "");
+	return empath->folder(u);
 }
 

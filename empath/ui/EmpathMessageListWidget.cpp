@@ -569,16 +569,20 @@ EmpathMessageListWidget::currentFolder()
 }
 
 	void
-EmpathMessageListWidget::s_showFolder(EmpathFolder * folder)
+EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 {
-	empathDebug("s_showFolder(" + folder->name() + ") called");
+	empathDebug("s_showFolder(" + url.asString() + ") called");
 	
-	if (currentFolder_ == folder) {
+	if (url_ == url) {
 		empathDebug("Same as we're showing");
 		return;
 	}
-	currentFolder_ = folder;
-
+	
+	url_ = url;
+	
+	currentFolder_ = empath->folder(url);
+	if (currentFolder_ == 0) return;
+	
 	clear();
 	
 	currentFolder_->messageList().sync();
@@ -587,7 +591,7 @@ EmpathMessageListWidget::s_showFolder(EmpathFolder * folder)
 		QString().setNum(currentFolder_->messageList().count()) +
 			" messages to visual list");
 	
-	QDictIterator<EmpathIndexRecord> it(currentFolder_->messageList());
+	EmpathIndexIterator it(currentFolder_->messageList());
 
 	// Start by putting everything into our list. This takes care of sorting so
 	// hopefully threading will be simpler.

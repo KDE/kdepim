@@ -75,36 +75,36 @@ class EmpathURL
 		
 		EmpathURL & operator = (const QString &);
 
-		bool operator == (const EmpathURL & b);
-		bool operator == (const QString & s);
+		bool operator == (const EmpathURL & b) const;
+		bool operator == (const QString & s) const;
 
 		virtual ~EmpathURL();
 
-		QString mailboxName() const { return mailboxName_; }
-		QString folderPath() const { return folderPath_; }
-		QString messageID() const { return messageID_; }
+		const QString & mailboxName() const { return mailboxName_; }
+		const QString & folderPath() const { return folderPath_; }
+		const QString & messageID() const { return messageID_; }
 		
 		EmpathURL withoutMessageID() const;
 		
 		/**
 		 * This will always return true, theoretically.
 		 */
-		bool hasMailbox() const;
+		bool hasMailbox() const { return !mailboxName_.isEmpty(); }
 		
 		/**
 		 * Returns true if there is a folder part to this URL.
 		 */
-		bool hasFolder() const;
+		bool hasFolder() const { return !folderPath_.isEmpty(); }
 		
 		/**
 		 * Returns true if there's a message id at the end of this URL.
 		 */
-		bool hasMessageID() const;
+		bool hasMessageID() const { return !messageID_.isEmpty(); }
 		
 		/**
 		 * Returns the assembled representation of this URL.
 		 */
-		QString asString() const;
+		QString asString() const { return strRep_; }
 		
 		void setMailboxName(const QString & mailboxName);
 		void setFolderPath(const QString & folderPath);
@@ -122,8 +122,6 @@ class EmpathURL
 
 		void _parse();
 		void _assemble();
-		void _stripSlashes(QString & s);
-		void _simplifySlashes(QString & s);
 
 		QString mailboxName_;
 		QString folderPath_;

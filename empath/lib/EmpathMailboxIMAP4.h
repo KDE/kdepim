@@ -49,8 +49,6 @@ class EmpathMailboxIMAP4 : public EmpathMailbox
 
 		~EmpathMailboxIMAP4 () { empathDebug ("dtor"); } // blank
 	
-		void readMailForFolder(EmpathFolder * folder);
-		
 #include "EmpathMailboxAbstract.h"
 		
 		// Set methods

@@ -18,51 +18,29 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-// KDE includes
-#include <kiconloader.h>
-#include <kapp.h>
-#include <kconfig.h>
+// Qt includes
+#include <qobject.h>
 
 // Local includes
 #include "EmpathUIUtils.h"
-#include "Empath.h"
 
-	QPixmap
-empathIcon(const QString & name)
-{
-	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_DISPLAY);
-	QString iconSet = c->readEntry(KEY_ICON_SET, "8bit");
-	
-	QPixmap p;
-	p = Icon(iconSet + "/" + name);
-	
-	if (p.isNull())
-		p = Icon(name);
-	
-	return p;
-}
+class RMessage;
 
-	QFont
-empathFixedFont()
+class EmpathUI : public QObject
 {
-	return kapp->fixedFont();
-}
+	Q_OBJECT
 
-	QFont
-empathGeneralFont()
-{
-	return kapp->generalFont();
-}
+	public:
+
+		EmpathUI();
+		~EmpathUI();
+		
+	protected slots:
+		
+		void s_newComposer(ComposeType, RMessage *);
 	
-	QColor
-empathTextColour()
-{
-	return qApp->palette()->color(QPalette::Normal, QColorGroup::Text);
-}
+	private:
+	
+		void _showTipOfTheDay() const;
+};
 
-	QColor
-empathWindowColour()
-{
-	return qApp->palette()->color(QPalette::Normal, QColorGroup::Background);
-}

@@ -44,8 +44,6 @@ class EmpathMailboxMaildir : public EmpathMailbox
 		
 		virtual ~EmpathMailboxMaildir();
 	
-		virtual void readMailForFolder(EmpathFolder * folder);
-
 		void mark(const EmpathURL & message, MessageStatus msgStat);
 		
 		void setPath(const QString & path);

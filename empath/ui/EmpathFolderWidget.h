@@ -32,6 +32,7 @@
 #include "EmpathFolder.h"
 #include "EmpathMailbox.h"
 #include "EmpathFolderListItem.h"
+#include "EmpathURL.h"
 #include "Empath.h"
 
 class EmpathFolderWidget : public QListView
@@ -56,10 +57,13 @@ class EmpathFolderWidget : public QListView
 		void s_mailboxCheck();
 		void s_mailboxProperties();
 		void s_update();
+		void s_newFolder();
+		void s_removeFolder();
+		void s_setUpAccounts();
 	
 	signals:
 
-		void showFolder(EmpathFolder *);
+		void showFolder(const EmpathURL & url);
 
 	private:
 
@@ -68,14 +72,13 @@ class EmpathFolderWidget : public QListView
 		void _addMailbox(const EmpathMailbox & mailbox);
 		void _addChildren(const EmpathFolder & item);
 		
-		QList<EmpathFolderListItem> itemList_;
+		EmpathFolderListItemList itemList_;
 		
 		QPopupMenu folderPopup_;
 		QPopupMenu mailboxPopup_;
+		QPopupMenu otherPopup_;
 		
-		OverType popupMenuIsOverType;
-		EmpathMailbox * popupMenuIsOverMailbox;
-		EmpathFolder * popupMenuIsOverFolder;
+		EmpathURL popupMenuOverURL;
 };
 
 #endif

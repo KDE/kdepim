@@ -59,8 +59,6 @@ EmpathMailboxMaildir::EmpathMailboxMaildir(const QString & name)
 		if (!d.mkdir(path_)) {
 			empathDebug("Couldn't make " + path_ + " !!!!!");
 		}
-
-	_setupDefaultFolders();
 }
 
 EmpathMailboxMaildir::~EmpathMailboxMaildir()
@@ -77,8 +75,13 @@ EmpathMailboxMaildir::mark(const EmpathURL & message, MessageStatus msgStat)
 }
 
 	void
-EmpathMailboxMaildir::readMailForFolder(EmpathFolder * folder)
+EmpathMailboxMaildir::syncIndex(const EmpathURL & url)
 {
+	EmpathMaildirListIterator it(boxList_);
+	
+	for (; it.current(); ++it)
+		if (it.current()->path() == url.folderPath())
+			it.current()->sync(url);
 }
 	
 	void
@@ -90,11 +93,11 @@ EmpathMailboxMaildir::s_checkNewMail()
 EmpathMailboxMaildir::_setupDefaultFolders()
 {
 	empathDebug("_setupDefaultFolders() called");
-	EmpathURL urlInbox	(name_, i18n("Inbox"),	"");
-	EmpathURL urlOutbox	(name_, i18n("Outbox"),	"");
-	EmpathURL urlTrash	(name_, i18n("Trash"),	"");
-	EmpathURL urlSent	(name_, i18n("Sent"),	"");
-	EmpathURL urlDrafts	(name_, i18n("Drafts"),	"");
+	EmpathURL urlInbox	(url_.mailboxName(), i18n("Inbox"),		"");
+	EmpathURL urlOutbox	(url_.mailboxName(), i18n("Outbox"),	"");
+	EmpathURL urlTrash	(url_.mailboxName(), i18n("Trash"),		"");
+	EmpathURL urlSent	(url_.mailboxName(), i18n("Sent"),		"");
+	EmpathURL urlDrafts	(url_.mailboxName(), i18n("Drafts"),	"");
 	
 	EmpathFolder * folder_inbox = new EmpathFolder(urlInbox);
 	CHECK_PTR(folder_inbox);
@@ -168,9 +171,9 @@ EmpathMailboxMaildir::newMail() const
 	void
 EmpathMailboxMaildir::saveConfig()
 {
-	empathDebug("saveConfig() called - my name is " + name_);
+	empathDebug("saveConfig() called - my name is " + url_.asString());
 	KConfig * c = kapp->getConfig();
-	c->setGroup(name_);
+	c->setGroup(url_.mailboxName());
 	
 	c->writeEntry(KEY_MAILBOX_TYPE, type_);
 	
@@ -192,10 +195,13 @@ EmpathMailboxMaildir::readConfig()
 {
 	empathDebug("readConfig() called");
 	KConfig * c = kapp->getConfig();
-	c->setGroup(name_);
+	empathDebug("Setting config group to \"" + url_.mailboxName() + "\""); 
+	c->setGroup(url_.mailboxName());
 	
 	QStrList l;
 	c->readListEntry(KEY_FOLDER_LIST, l);
+	
+	empathDebug("There are " + QString().setNum(l.count()) + " folders to load");
 	
 	QStrListIterator it(l);
 	
@@ -203,8 +209,10 @@ EmpathMailboxMaildir::readConfig()
 	boxList_.clear();
 	
 	for (; it.current(); ++it) {
+		
+		empathDebug("Loading folder: \"" + QString(it.current()) + "\"");
 
-		EmpathURL url(name_, it.current(), "");
+		EmpathURL url(url_.mailboxName(), it.current(), "");
 
 		EmpathFolder * f = new EmpathFolder(url);
 		CHECK_PTR(f);
@@ -273,6 +281,7 @@ EmpathMailboxMaildir::typeOfMessage(const EmpathURL & id)
 EmpathMailboxMaildir::init()
 {
 	empathDebug("init() called");
+	readConfig();
 }
 
 	RMessage *
@@ -312,6 +321,7 @@ EmpathMailboxMaildir::_box(const EmpathURL & id)
 	bool
 EmpathMailboxMaildir::addFolder(const EmpathURL & id)
 {
+	empathDebug("addFolder(" + id.asString() + ") called");
 	EmpathFolder * f = new EmpathFolder(id);
 	CHECK_PTR(f);
 	

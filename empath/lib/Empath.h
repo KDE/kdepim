@@ -139,12 +139,6 @@ class Empath : public QObject
 		 */
 		EmpathFilterList & filterList();
 		
-		/**
-		 * A cache for message data. Has been removed from the code but will
-		 * probably make another appearance sometime if it is deemed necessary.
-		 */
-		EmpathMessageDataCache & messageDataCache() const;
-
 		void statusMessage(const QString & message) const;
 		void updateOutgoingServer();
 		

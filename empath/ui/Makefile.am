@@ -40,7 +40,6 @@ libempathui_a_SOURCES = \
 	EmpathHeaderNameWidget.cpp \
 	EmpathHeaderSpecWidget.cpp \
 	EmpathIdentitySettingsDialog.cpp \
-	EmpathMailboxNameDialog.cpp \
 	EmpathMainWidget.cpp \
 	EmpathMainWindow.cpp \
 	EmpathMatchPropertiesDialog.cpp \

@@ -57,8 +57,8 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name = 0)
 	empathDebug("Updating message list widget");
 	messageListWidget_->update();
 	
-	QObject::connect(folderWidget_, SIGNAL(showFolder(EmpathFolder *)),
-			messageListWidget_, SLOT(s_showFolder(EmpathFolder *)));
+	QObject::connect(folderWidget_, SIGNAL(showFolder(const EmpathURL &)),
+			messageListWidget_, SLOT(s_showFolder(const EmpathURL &)));
 	
 	QObject::connect(messageListWidget_, SIGNAL(changeView(RMessage *)),
 			this, SLOT(s_displayMessage(RMessage *)));

@@ -65,7 +65,6 @@ EmpathMailboxIMAP4::readConfig()
 EmpathMailboxIMAP4::setServerAddress(const QString & serverAddress)
 {
 	serverAddress_	= serverAddress;
-	location_		= serverAddress_;
 }
 
 	void
@@ -292,9 +291,8 @@ EmpathMailboxIMAP4::newMail() const
 	return false;
 }
 	void
-EmpathMailboxIMAP4::readMailForFolder(EmpathFolder * folder)
+EmpathMailboxIMAP4::syncIndex(const EmpathURL & url)
 {
-	empathDebug("readMailForFolder(" + folder->name() + ") called");
 }
 
 	RMessage *

@@ -181,31 +181,36 @@ EmpathMailboxList::readConfig()
 		switch (mailboxType) {
 			
 			case Maildir:
-				empathDebug("Adding new Maildir mailbox");
+				empathDebug("Adding new Maildir mailbox with name \"" +
+					QString(it.current()) + "\"");
 				m = new EmpathMailboxMaildir(it.current());
 				CHECK_PTR(m);
 				break;
 			
 			case Mbox:
-				empathDebug("Adding new Mbox mailbox");
+				empathDebug("Adding new Mbox mailbox with name \"" +
+					QString(it.current()) + "\"");
 				m = new EmpathMailboxMbox(it.current());
 				CHECK_PTR(m);
 				break;
 	
 			case MMDF:
-				empathDebug("Adding new MMDF mailbox");
+				empathDebug("Adding new MMDF mailbox with name \"" +
+					QString(it.current()) + "\"");
 				m = new EmpathMailboxMMDF(it.current());
 				CHECK_PTR(m);
 				break;
 		
 			case POP3:
-				empathDebug("Adding new pop3 mailbox");
+				empathDebug("Adding new POP3 mailbox with name \"" +
+					QString(it.current()) + "\"");
 				m = new EmpathMailboxPOP3(it.current());
 				CHECK_PTR(m);
 				break;
 
 			case IMAP4:
-				empathDebug("Adding new imap4 mailbox");
+				empathDebug("Adding new IMAP4 mailbox with name \"" +
+					QString(it.current()) + "\"");
 				m = new EmpathMailboxIMAP4(it.current());
 				CHECK_PTR(m);
 				break;
@@ -216,7 +221,10 @@ EmpathMailboxList::readConfig()
 				break;
 		}
 
-		if (m == 0) continue;
+		if (m == 0) {
+			empathDebug("Mailbox is 0 ! (?)");
+			continue;
+		}
 		
 		empathDebug("Adding mailbox with name = " + m->name());
 		QList::append(m);

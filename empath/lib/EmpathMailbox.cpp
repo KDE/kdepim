@@ -26,11 +26,9 @@
 #include "Empath.h"
 
 EmpathMailbox::EmpathMailbox(const QString & name)
-	:	name_(name)
+	:	url_(name, "", "")
 {
-	empathDebug("ctor");
-	timer_ = new QTimer(this, "mailboxTimer");
-	CHECK_PTR(timer_);
+	empathDebug("ctor - url == \"" + url_.asString() + "\"");
 //	pixmap_ = empathIcon("mailbox.xpm");
 	folderList_.setAutoDelete(true);
 	QObject::connect(this, SIGNAL(updateFolderLists()),
@@ -68,12 +66,12 @@ EmpathMailbox::setCheckMail(bool yn)
 	checkMail_ = yn;
 	if (checkMail_) {
 		empathDebug("Switching on timer");
-		timer_->stop();
-		timer_->start(checkMailInterval_ * 60000);
+		timer_.stop();
+		timer_.start(checkMailInterval_ * 60000);
 	}
 	else {
 		empathDebug("Switching off timer");
-		timer_->stop();
+		timer_.stop();
 	}
 }
 
@@ -84,8 +82,8 @@ EmpathMailbox::setCheckMailInterval(Q_UINT32 checkMailInterval)
 			QString().setNum(checkMailInterval));
 	checkMailInterval_ = checkMailInterval;
 	if (checkMail_) {
-		timer_->stop();
-		timer_->start(checkMailInterval_ * 60000);
+		timer_.stop();
+		timer_.start(checkMailInterval_ * 60000);
 	}
 }
 
@@ -110,16 +108,9 @@ EmpathMailbox::id() const
 	void
 EmpathMailbox::setName(const QString & name) 
 {
-	name_ = name.data();
-	empathDebug("Mailbox: setting name to " + name_);
+	url_.setMailboxName(name);
 }
 
-	QString
-EmpathMailbox::location() const
-{
-	return location_;
-}
-	
 	AccountType
 EmpathMailbox::type() const
 {
@@ -136,12 +127,6 @@ EmpathMailbox::usesTimer() const
 EmpathMailbox::timerInterval() const
 {
 	return checkMailInterval_;
-}
-
-	QString
-EmpathMailbox::path() const
-{
-	return EmpathURL(name_).asString();
 }
 
 	const EmpathFolderList &
@@ -199,7 +184,7 @@ EmpathMailbox::s_countUpdated(EmpathFolder * f, int unread, int read)
 	emit(countUpdated((int)unreadMessageCount(), (int)messageCount()));
 }
 
-	const EmpathFolder *
+	EmpathFolder *
 EmpathMailbox::folder(const QString & folderPath)
 {
 	empathDebug("folder(" + folderPath + ") called");

@@ -34,7 +34,6 @@ EmpathURL::EmpathURL()
 		strRep_("")
 {
 	empathDebug("ctor");
-	_assemble();
 }
 
 EmpathURL::EmpathURL(
@@ -49,9 +48,6 @@ EmpathURL::EmpathURL(
 {
 	empathDebug("ctor with \"" + QString(mailboxName) +
 		"\", \"" + QString(folderPath) + "\"");
-	_stripSlashes(mailboxName_);
-	_stripSlashes(folderPath_);
-	_simplifySlashes(folderPath_);
 	_assemble();
 }
 
@@ -76,45 +72,49 @@ EmpathURL::EmpathURL(const EmpathURL & url)
 	void
 EmpathURL::_parse()
 {
-	empathDebug("_parse() called");
-	
-	if (strRep_.left(9) != "empath://" || strRep_.length() < 10) {
-		empathDebug("URL is invalid");
+	if (strRep_.left(9) != "empath://") {
 		isValid_ = false;
 		return;
 	}
-
-	int endOfMailboxName = strRep_.find('/', 9);
 	
-	if (endOfMailboxName == -1) {
-		
-		// Now assume that we only got a mailbox, no folderPath.
-		mailboxName_ = strRep_.right(strRep_.length() - 9);
+	QString s = strRep_.right(strRep_.length() - 9);
+	s.replace(QRegExp("//"), "/");
 	
-	} else {
-
-		mailboxName_ = strRep_.mid(9, endOfMailboxName - 9);
+	unsigned int slashes = s.contains('/');
+	
+	// Case 1: No slashes, therefore it's just got a mailbox name.
+	if (slashes == 0) {
+		mailboxName_ = s;
+		folderPath_	= "";
+		messageID_ = "";
+		return;
 	}
 	
-	// Otherwise, there's a folderPath, or just a '/' at the end.
-
-	if (strRep_.length() == (unsigned)endOfMailboxName) {
-	
-		// There's no folderPath, just a mailbox.
-		folderPath_ = "";
-	
-	} else {
-	
-		folderPath_ = strRep_.right(strRep_.length() - endOfMailboxName);
+	// Case 2: Only one slash. Just a mailbox name again,
+	// ignore the trailing slash.
+	if (slashes == 1) {
+		mailboxName_ = s.left(s.length() - 1);
+		folderPath_	= "";
+		messageID_ = "";
+		return;
 	}
 	
-	_stripSlashes(mailboxName_);
-	_stripSlashes(folderPath_);
-	_simplifySlashes(folderPath_);
+	// Case 3: Not a mailbox (because the above didn't match), but has a
+	// trailing slash. Therefore it's a mailbox + a folder path.
+	if (s.right(1) == '/') {
+		unsigned int i = s.find('/');
+		mailboxName_ = s.left(i);
+		folderPath_ = s.right(s.length() - i);
+		messageID_ = "";
+		return;
+	}
 	
-	empathDebug("mailbox name is " + mailboxName_);
-	empathDebug("folder path is " + folderPath_);
-	_assemble();
+	// Case 4: We have a mailbox, a folder path, and a message id.
+	unsigned int i = s.find('/');
+	mailboxName_ = s.left(i);
+	unsigned int j = s.findRev('/');
+	folderPath_ = s.mid(i + 1, j);
+	messageID_ = s.right(s.length() - j);
 }
 
 EmpathURL::~EmpathURL()
@@ -128,9 +128,6 @@ EmpathURL::operator = (const EmpathURL & url)
 	empathDebug("operator = ");
 	mailboxName_	= url.mailboxName_;
 	folderPath_		= url.folderPath_;
-	_stripSlashes(mailboxName_);
-	_stripSlashes(folderPath_);
-	_simplifySlashes(folderPath_);
 	_assemble();
 	return *this;
 }
@@ -141,11 +138,12 @@ EmpathURL::operator = (const QString & url)
 	empathDebug("operator = \"" + url + "\"");
 	strRep_ = url;
 	_parse();
+	_assemble();
 	return *this;
 }
 
 	bool
-EmpathURL::operator == (const EmpathURL & b)
+EmpathURL::operator == (const EmpathURL & b) const
 {
 	empathDebug("operator ==");
 	return (
@@ -155,7 +153,7 @@ EmpathURL::operator == (const EmpathURL & b)
 }
 
 	bool
-EmpathURL::operator == (const QString & s)
+EmpathURL::operator == (const QString & s) const
 {
 	empathDebug("operator ==");
 	EmpathURL url(s);
@@ -167,7 +165,6 @@ EmpathURL::operator == (const QString & s)
 	void
 EmpathURL::setMailboxName(const QString & mailboxName)
 {
-	empathDebug("setMailboxName(" + mailboxName + ") called");
 	mailboxName_ = mailboxName;
 	_assemble();
 }
@@ -175,49 +172,28 @@ EmpathURL::setMailboxName(const QString & mailboxName)
 	void
 EmpathURL::setFolderPath(const QString & folderPath)
 {
-	empathDebug("setFolderPath(" + folderPath + ") called");
 	folderPath_ = folderPath;
 	_assemble();
 }
 
-	QString
-EmpathURL::asString() const
+	void
+EmpathURL::setMessageID(const QString & messageID)
 {
-	empathDebug("asString() called");
-	if (mailboxName_ == "local" && folderPath_ == "orphaned")
-		return i18n("<No folder selected>");
-	return strRep_;
+	messageID_ = messageID;
+	_assemble();
 }
 
 	void
 EmpathURL::_assemble()
 {
-	empathDebug("_assemble() called");
-	_stripSlashes(mailboxName_);
-	_stripSlashes(folderPath_);
-	strRep_ = "empath://" + mailboxName_ + "/" + folderPath_;
-}
-
-	void
-EmpathURL::_stripSlashes(QString & s)
-{
-	empathDebug("_stripSlashes(" + s + ") called");
-	if (s.isEmpty()) return;
-	while (s[0] == '/')			s = s.right(s.length() - 1);
-	while (s.right(1) == "/")	s = s.left(s.length() - 1);
-}
-
-	void
-EmpathURL::_simplifySlashes(QString & s)
-{
-	empathDebug("_simplifySlashes(" + s + ") called");
+	QString s = mailboxName_ + "/" + folderPath_ + "/" + messageID_;
 	s.replace(QRegExp("//"), "/");
+	strRep_ = "empath://" + s;
 }
 
 	QStringList
 EmpathURL::folderPathList()
 {
-	empathDebug("folderPathList() called");
 	QStringList sl_f;
 	unsigned int startPos = 0;
 	int i = folderPath_.find('/');

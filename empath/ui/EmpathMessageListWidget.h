@@ -32,6 +32,7 @@
 #include "EmpathDefines.h"
 #include "EmpathIndexRecord.h"
 #include "EmpathMessageListItem.h"
+#include "EmpathURL.h"
 
 class EmpathFolder;
 class EmpathMessageListWidget;
@@ -77,8 +78,13 @@ class EmpathMessageListWidget : public QListView
 		void s_rightButtonClicked(QListViewItem *, const QPoint &, int);
 		void s_doubleClicked(QListViewItem *);
 		void s_currentChanged(QListViewItem *);
-		void s_showFolder(EmpathFolder *);
+		void s_showFolder(const EmpathURL &);
 		void s_headerClicked(int);
+	
+	signals:
+		
+		void currentChanged(RMessage *);
+		void changeView(RMessage *);
 		
 	private:
 
@@ -103,14 +109,11 @@ class EmpathMessageListWidget : public QListView
 		void setStatus(EmpathMessageListItem * item, MessageStatus status);
 
 		EmpathFolder * currentFolder_;
+		EmpathURL url_;
 
 		int lastHeaderClicked_;
 		bool sortType_; // Ascending, Descending
 		
-	signals:
-		
-		void currentChanged(RMessage *);
-		void changeView(RMessage *);
 };
 
 #endif

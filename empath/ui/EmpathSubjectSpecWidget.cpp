@@ -48,7 +48,7 @@ EmpathSubjectSpecWidget::EmpathSubjectSpecWidget(
 	l_subject_->setFixedHeight(h);
 	l_subject_->setFixedWidth(l_subject_->sizeHint().width() + 8);
 	
-	layout->setColStretch(0, 3);
+	layout->setColStretch(0, 0);
 	layout->setColStretch(1, 7);
 
 	layout->addWidget(l_subject_, 0, 0);

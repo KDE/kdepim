@@ -65,14 +65,17 @@ Empath::Empath()
 	
 	_saveHostName();
 	_setStartTime();
-	
-	empathDebug("Initialising mailbox list and filters");
 
+	empathDebug("===========================================================");	
+	empathDebug("Initialising mailboxes");
 	mailboxList_.init();
+	empathDebug("===========================================================");	
+	empathDebug("Initialising filters");
 	filterList_.load();
-	
+	empathDebug("===========================================================");	
 	empathDebug("Initialising outgoing server");
 	updateOutgoingServer();
+	empathDebug("===========================================================");	
 }
 
 Empath::~Empath()
@@ -134,17 +137,23 @@ Empath::updateOutgoingServer()
 	empathDebug("Updating outgoing server type");
 
 	if (mailSender_ != 0) {
+	
 		delete mailSender_;
 		mailSender_ = 0;
-	}
-	else
+	
+	} else {
+		
 		empathDebug("There was no outgoing server. Not attempting to delete");
+	}
 	
 	KConfig * c = kapp->getConfig();
+	
 	c->setGroup(GROUP_GENERAL);
 	
-	switch (
-		(OutgoingServerType)(c->readUnsignedNumEntry(KEY_OUTGOING_SERVER_TYPE))) {
+	OutgoingServerType st =
+		(OutgoingServerType)(c->readUnsignedNumEntry(KEY_OUTGOING_SERVER_TYPE));
+	
+	switch (st) {
 	
 		case Sendmail:
 			
@@ -206,25 +215,7 @@ Empath::_setStartTime()
 	startupSeconds_ = timeVal.tv_sec;
 
 }
-/*
-	void
-Empath::_showTipOfTheDay() const
-{
-	KConfig * c = kapp->getConfig();
 
-	c->setGroup(GROUP_GENERAL);
-	
-	if (!c->readBoolEntry(KEY_TIP_OF_THE_DAY_AT_STARTUP, false)) return;
-
-	EmpathTipOfTheDay totd(
-			(QWidget *)0L,
-			"tipWidget",
-			kapp->kde_datadir() + "/empath/tips/EmpathTips",
-			"",
-			0);
-	totd.exec();
-}
-*/
 	void
 Empath::statusMessage(const QString & messageText) const
 {
@@ -265,12 +256,6 @@ Empath::mailSender() const
 Empath::getEmpath()
 {
 	return EMPATH;
-}
-
-	EmpathMessageDataCache &
-Empath::messageDataCache() const
-{
-	return messageDataCache_;
 }
 
 	void
@@ -364,11 +349,15 @@ Empath::message(const EmpathURL & source)
 	EmpathMailbox *
 Empath::mailbox(const EmpathURL & url)
 {
-	empathDebug("mailbox() called, looking for " + url.mailboxName());
+	empathDebug("mailbox() called, looking for \"" + url.mailboxName() + "\"");
 	EmpathMailboxListIterator it(mailboxList_);
-	for (; it.current(); ++it)
-		if (it.current()->name() == url.mailboxName())
+	for (; it.current(); ++it) {
+		empathDebug("Looking at mailbox \"" + it.current()->name() + "\"");
+		if (it.current()->name() == url.mailboxName()) {
+			empathDebug("... found !");
 			return it.current();
+		}
+	}
 	return 0;
 }
 
@@ -377,7 +366,7 @@ Empath::folder(const EmpathURL & url)
 {
 	empathDebug("folder(" + url.asString() + ") called");
 	
-	EmpathMailbox * m = mailbox(url.mailboxName());
+	EmpathMailbox * m = mailbox(url);
 	
 	if (m == 0) return 0;
 

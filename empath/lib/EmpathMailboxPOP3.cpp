@@ -733,7 +733,6 @@ EmpathMailboxPOP3::setServerAddress(const QString & serverAddress)
 {
 	empathDebug("setServerAddress(" + serverAddress + ") called");
 	serverAddress_	= serverAddress;
-	location_		= serverAddress_;
 
 }
 
@@ -988,11 +987,8 @@ EmpathMailboxPOP3::newMail() const
 }
 
 	void
-EmpathMailboxPOP3::readMailForFolder(EmpathFolder * folder)
+EmpathMailboxPOP3::syncIndex(const EmpathURL & url)
 {
-	/*
-	empathDebug("readMailForFolder(" + folder->name() + ") called");
-	*/
 }
 
 	bool

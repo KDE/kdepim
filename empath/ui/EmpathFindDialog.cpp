@@ -24,8 +24,11 @@
 // Local headers
 #include "EmpathFindDialog.h"
 
+QStrList EmpathFindDialog::_findHistory;
+QStrList EmpathFindDialog::_replaceHistory;
+
 EmpathFindDialog::EmpathFindDialog(QWidget * parent, const char * name)
-	: QDialog()
+	: QDialog(parent, name, true)
 {
 	empathDebug("ctor");
 

@@ -111,8 +111,8 @@ private:
 	bool			_forwards;
 	bool			_firstOnLine;
 	
-	QStrList		_findHistory;
-	QStrList		_replaceHistory;
+	static QStrList		_findHistory;
+	static QStrList		_replaceHistory;
 
 	void			updateFindHistory(QString newItem);
 	void			updateReplaceHistory(QString newItem);

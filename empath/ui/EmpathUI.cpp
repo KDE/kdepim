@@ -19,50 +19,50 @@
 */
 
 // KDE includes
-#include <kiconloader.h>
 #include <kapp.h>
-#include <kconfig.h>
 
 // Local includes
-#include "EmpathUIUtils.h"
-#include "Empath.h"
+#include "EmpathUI.h"
+#include "EmpathMainWindow.h"
+#include "EmpathComposeWindow.h"
+#include "RMM_Message.h"
+#include "EmpathConfig.h"
+#include "EmpathTipOfTheDay.h"
 
-	QPixmap
-empathIcon(const QString & name)
+EmpathUI::EmpathUI()
+	: QObject()
+{
+	empathDebug("ctor");
+	EmpathMainWindow * mainWindow = new EmpathMainWindow("mainWindow");
+	kapp->setMainWidget(mainWindow);
+}
+
+EmpathUI::~EmpathUI()
+{
+	empathDebug("dtor");
+}
+
+	void	
+EmpathUI::s_newComposer(ComposeType t, RMessage * m)
+{
+	EmpathComposeWindow * c = new EmpathComposeWindow(t, m);
+}
+
+	void
+EmpathUI::_showTipOfTheDay() const
 {
 	KConfig * c = kapp->getConfig();
-	c->setGroup(GROUP_DISPLAY);
-	QString iconSet = c->readEntry(KEY_ICON_SET, "8bit");
+
+	c->setGroup(GROUP_GENERAL);
 	
-	QPixmap p;
-	p = Icon(iconSet + "/" + name);
-	
-	if (p.isNull())
-		p = Icon(name);
-	
-	return p;
+	if (!c->readBoolEntry(KEY_TIP_OF_THE_DAY_AT_STARTUP, false)) return;
+
+	EmpathTipOfTheDay totd(
+			(QWidget *)0L,
+			"tipWidget",
+			kapp->kde_datadir() + "/empath/tips/EmpathTips",
+			"",
+			0);
+	totd.exec();
 }
 
-	QFont
-empathFixedFont()
-{
-	return kapp->fixedFont();
-}
-
-	QFont
-empathGeneralFont()
-{
-	return kapp->generalFont();
-}
-	
-	QColor
-empathTextColour()
-{
-	return qApp->palette()->color(QPalette::Normal, QColorGroup::Text);
-}
-
-	QColor
-empathWindowColour()
-{
-	return qApp->palette()->color(QPalette::Normal, QColorGroup::Background);
-}

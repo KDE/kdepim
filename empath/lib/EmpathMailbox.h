@@ -63,18 +63,38 @@ class EmpathMailbox : public QObject
 		virtual void saveConfig() = 0;
 		virtual void readConfig() = 0;
 		
-		virtual bool writeMessage(EmpathFolder * parentFolder, const RMessage &)=0;
+		virtual bool
+			writeMessage(EmpathFolder * parentFolder, const RMessage &) = 0;
 		
-		virtual Q_UINT32				sizeOfMessage		(const EmpathURL &) = 0;
-		virtual QString					plainBodyOfMessage	(const EmpathURL &) = 0;
-		virtual REnvelope *				envelopeOfMessage	(const EmpathURL &) = 0;
-		virtual RMessage *				message				(const EmpathURL &) = 0;
-		virtual bool 					removeMessage		(const EmpathURL &) = 0;
-		virtual RMessage::MessageType	typeOfMessage		(const EmpathURL &) = 0;
-		virtual bool					addFolder			(const EmpathURL &) = 0;
-		virtual bool					removeFolder		(const EmpathURL &) = 0;
+		virtual Q_UINT32
+			sizeOfMessage		(const EmpathURL &) = 0;
 		
-		virtual void init() = 0;
+		virtual QString
+			plainBodyOfMessage	(const EmpathURL &) = 0;
+		
+		virtual REnvelope *
+			envelopeOfMessage	(const EmpathURL &) = 0;
+		
+		virtual RMessage *
+			message				(const EmpathURL &) = 0;
+		
+		virtual bool
+			removeMessage		(const EmpathURL &) = 0;
+		
+		virtual RMessage::MessageType
+			typeOfMessage		(const EmpathURL &) = 0;
+		
+		virtual bool
+			addFolder			(const EmpathURL &) = 0;
+		
+		virtual bool
+			removeFolder		(const EmpathURL &) = 0;
+		
+		virtual void
+			syncIndex			(const EmpathURL &) = 0;
+		
+		virtual void
+			init() = 0;
 		
 	public slots:
 
@@ -85,49 +105,43 @@ class EmpathMailbox : public QObject
 	
 	public:
 
-		virtual void readMailForFolder(EmpathFolder * folder) = 0;
+		void		setID(Q_UINT32 id);
+		Q_UINT32	id() const;
+
+		bool		newMailReady() const;
+		Q_UINT32	newMails() const;
+
+
+		RMessage &	firstMailReady();
 		
-		void setID(Q_UINT32 id);
-		Q_UINT32 id() const;
+		void		setCheckMail(bool yn);
+		void		setCheckMailInterval(Q_UINT32 checkMailInterval);
 
-		bool newMailReady() const;
-		Q_UINT32 newMails() const;
+		bool		checkMail() const;
+		Q_UINT32	checkMailInterval() const;
 
+		void				setName(const QString & name);
+		const QString &		name() const { return url_.mailboxName(); }
+		const EmpathURL &	url() const { return url_; }
 
-		RMessage & firstMailReady();
-		
-		void setCheckMail(bool yn);
-		void setCheckMailInterval(Q_UINT32 checkMailInterval);
+		AccountType			type() const;
 
-		bool checkMail() const;
-		Q_UINT32 checkMailInterval() const;
+		bool						folderExists(const QString & folderPath);
+		EmpathFolder *				folder(const QString & folderPath);
+		const EmpathFolderList &	folderList() const;
+		bool						createFolder(const QString & path);
 
-		void setName(const QString & name);
-		QString name() const { return name_; }
+		bool		usesTimer() const;
+		Q_UINT32	timerInterval() const;
 
-		QString path() const;
-		
-		QString location() const;
-		
-		AccountType type() const;
+		Q_UINT32	messageCount() const;
+		Q_UINT32	unreadMessageCount() const;
 
-		bool folderExists(const QString & folderPath);
-		const EmpathFolder * folder(const QString & folderPath);
-		const EmpathFolderList & folderList() const;
+		const QPixmap &	pixmap() const;
 
-		bool createFolder(const QString & path);
+		void	update(EmpathFolder * f);
 
-		bool usesTimer() const;
-		Q_UINT32 timerInterval() const;
-
-		Q_UINT32 messageCount() const;
-		Q_UINT32 unreadMessageCount() const;
-
-		const QPixmap & pixmap() const;
-
-		void update(EmpathFolder * f);
-		
-		void emitMailRead(int i) { emit mailRead(i); }
+		void	emitMailRead(int i) { emit mailRead(i); }
 
 	signals:
 
@@ -146,16 +160,15 @@ class EmpathMailbox : public QObject
 		EmpathFolderList	folderList_;
 		EmpathIndex			index_;
 
-		QString			name_;
+		EmpathURL		url_;
 		AccountType		type_;
-		QString			location_;
 
 		QString			canonName_;
 		Q_UINT32		newMessagesCount_;
 
 		bool			checkMail_;
 		Q_UINT32		checkMailInterval_;
-		QTimer			* timer_;
+		QTimer			timer_;
 		QPixmap			pixmap_;
 		Q_UINT32 		id_;
 		

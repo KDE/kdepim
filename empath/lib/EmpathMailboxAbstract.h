@@ -33,14 +33,15 @@ virtual void readConfig();
 		
 virtual bool writeMessage(EmpathFolder * parentFolder, const RMessage &);
 		
-virtual Q_UINT32				sizeOfMessage			(const EmpathURL &);
-virtual QString					plainBodyOfMessage		(const EmpathURL &);
-virtual REnvelope *				envelopeOfMessage		(const EmpathURL &);
-virtual RMessage::MessageType	typeOfMessage			(const EmpathURL &);
-virtual RMessage *				message					(const EmpathURL &);
-virtual bool 					removeMessage			(const EmpathURL &);
-virtual bool					addFolder				(const EmpathURL &);
-virtual bool					removeFolder			(const EmpathURL &);
+virtual Q_UINT32				sizeOfMessage		(const EmpathURL &);
+virtual QString					plainBodyOfMessage	(const EmpathURL &);
+virtual REnvelope *				envelopeOfMessage	(const EmpathURL &);
+virtual RMessage::MessageType	typeOfMessage		(const EmpathURL &);
+virtual RMessage *				message				(const EmpathURL &);
+virtual bool 					removeMessage		(const EmpathURL &);
+virtual bool					addFolder			(const EmpathURL &);
+virtual bool					removeFolder		(const EmpathURL &);
+virtual void					syncIndex			(const EmpathURL &);
 
 virtual void init();
 		

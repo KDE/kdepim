@@ -20,6 +20,7 @@
 
 // KDE includes
 #include <klocale.h>
+#include <klineeditdlg.h>
 
 // Local includes
 #include "EmpathAccountsSettingsDialog.h"
@@ -30,7 +31,6 @@
 #include "EmpathConfigMMDFDialog.h"
 #include "EmpathConfigPOP3Dialog.h"
 #include "EmpathConfigIMAP4Dialog.h"
-#include "EmpathMailboxNameDialog.h"
 #include "EmpathMailboxList.h"
 #include "EmpathMailbox.h"
 #include "EmpathMailboxMaildir.h"
@@ -65,7 +65,6 @@ EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(
 
 	lv_accts_->addColumn(i18n("Account Name"));
 	lv_accts_->addColumn(i18n("Type"));
-	lv_accts_->addColumn(i18n("Location"));
 	lv_accts_->addColumn(i18n("Timer"));
 	lv_accts_->setAllColumnsShowFocus(true);
 	lv_accts_->setFrameStyle(QFrame::Box | QFrame::Sunken);
@@ -149,12 +148,16 @@ EmpathAccountsSettingsDialog::s_newAccount()
 				tempMailbox = new EmpathMailboxMaildir("Unnamed Maildir");
 				CHECK_PTR(tempMailbox);
 				
-				EmpathMailboxNameDialog mailboxNameDialog(
-					tempMailbox, this, "mailboxNameDialog");
-				if (mailboxNameDialog.exec() == Cancel) return;
+				KLineEditDlg led(
+					i18n("Mailbox name"), tempMailbox->name(), this);
+				
+				if (!led.exec() || led.text().isEmpty()) return;
+				
+				tempMailbox->setName(led.text());
 				
 				EmpathConfigMaildirDialog configDialog(
-						(EmpathMailboxMaildir *)tempMailbox, this, "configDialog");
+						(EmpathMailboxMaildir *)tempMailbox,
+						this, "configDialog");
 				
 				if (configDialog.exec() == Cancel) {
 					empathDebug("Deleting unwanted mailbox");
@@ -172,10 +175,13 @@ EmpathAccountsSettingsDialog::s_newAccount()
 				empathDebug("creating new Mbox mailbox");
 				tempMailbox = new EmpathMailboxMbox("Unnamed Mbox");
 				CHECK_PTR(tempMailbox);
+					
+				KLineEditDlg led(
+					i18n("Mailbox name"), tempMailbox->name(), this);
 				
-				EmpathMailboxNameDialog mailboxNameDialog(
-					tempMailbox, this, "mailboxNameDialog");
-				if (mailboxNameDialog.exec() == Cancel) return;
+				if (!led.exec() || led.text().isEmpty()) return;
+				
+				tempMailbox->setName(led.text());
 				
 				EmpathConfigMboxDialog configDialog(
 						(EmpathMailboxMbox *)tempMailbox, this, "configDialog");
@@ -195,10 +201,13 @@ EmpathAccountsSettingsDialog::s_newAccount()
 				empathDebug("creating new MMDF mailbox");
 				tempMailbox = new EmpathMailboxMbox("Unnamed MMDF");
 				CHECK_PTR(tempMailbox);
+	
+				KLineEditDlg led(
+					i18n("Mailbox name"), tempMailbox->name(), this);
 				
-				EmpathMailboxNameDialog mailboxNameDialog(
-					tempMailbox, this, "mailboxNameDialog");
-				if (mailboxNameDialog.exec() == Cancel) return;
+				if (!led.exec() || led.text().isEmpty()) return;
+				
+				tempMailbox->setName(led.text());
 				
 				EmpathConfigMMDFDialog configDialog(
 						(EmpathMailboxMMDF *)tempMailbox, this, "configDialog");
@@ -219,9 +228,12 @@ EmpathAccountsSettingsDialog::s_newAccount()
 				tempMailbox = new EmpathMailboxPOP3("Unnamed POP3");
 				CHECK_PTR(tempMailbox);
 				
-				EmpathMailboxNameDialog mailboxNameDialog(
-					tempMailbox, this, "mailboxNameDialog");
-				if (mailboxNameDialog.exec() == Cancel) return;
+				KLineEditDlg led(
+					i18n("Mailbox name"), tempMailbox->name(), this);
+				
+				if (!led.exec() || led.text().isEmpty()) return;
+				
+				tempMailbox->setName(led.text());
 				
 				EmpathConfigPOP3Dialog configDialog(
 						(EmpathMailboxPOP3 *)tempMailbox,
@@ -243,9 +255,12 @@ EmpathAccountsSettingsDialog::s_newAccount()
 				tempMailbox = new EmpathMailboxIMAP4("Unnamed IMAP4");
 				CHECK_PTR(tempMailbox);
 				
-				EmpathMailboxNameDialog mailboxNameDialog(
-					tempMailbox, this, "mailboxNameDialog");
-				if (mailboxNameDialog.exec() == Cancel) return;
+				KLineEditDlg led(
+					i18n("Mailbox name"), tempMailbox->name(), this);
+				
+				if (!led.exec() || led.text().isEmpty()) return;
+				
+				tempMailbox->setName(led.text());
 				
 				EmpathConfigIMAP4Dialog configDialog(
 						(EmpathMailboxIMAP4 *)tempMailbox, this, "configDialog");
@@ -280,9 +295,12 @@ EmpathAccountsSettingsDialog::s_editAccount()
 		return;
 	}
 
-	EmpathMailboxNameDialog mailboxNameDialog(m, this, "mailboxNameDialog");
-	if (mailboxNameDialog.exec() == Cancel) return;
-	
+	KLineEditDlg led(i18n("Mailbox name"), m->name(), this);
+		
+	if (!led.exec() || led.text().isEmpty()) return;
+			
+	m->setName(led.text());
+				
 	DialogRetval dlg_retval = Cancel;
 	
 	empathDebug("Mailbox name = " + m->name());
@@ -378,7 +396,6 @@ EmpathAccountsSettingsDialog::updateMailboxList()
 				lv_accts_,
 				m->name(),
 				accType,
-				m->location(),
 				timerInterval);
 	}
 }

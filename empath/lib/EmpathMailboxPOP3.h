@@ -48,7 +48,6 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 		bool checkForNewMail();
 		bool logging();
 		void setLogging(bool policy);
-		void readMailForFolder(EmpathFolder * folder);
 		bool alreadyHave();
 		EmpathURL path();
 

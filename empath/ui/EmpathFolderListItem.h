@@ -25,8 +25,8 @@
 #include <qlistview.h>
 #include <qlist.h>
 
-class EmpathFolder;
-class EmpathMailbox;
+// Local includes
+#include "EmpathURL.h"
 
 class EmpathFolderListItem : public QObject, public QListViewItem
 {
@@ -34,18 +34,15 @@ class EmpathFolderListItem : public QObject, public QListViewItem
 
 	public:
 		
-		EmpathFolderListItem(QListViewItem * parent, const EmpathFolder & folder);
-		EmpathFolderListItem(QListView * parent, const EmpathMailbox & mailbox);
+		EmpathFolderListItem(QListView * parent, const EmpathURL & url);
+		EmpathFolderListItem(QListViewItem * parent, const EmpathURL & url);
 		virtual ~EmpathFolderListItem();
 		
 		virtual void setup();
 		
-		EmpathFolder & folder() const;
-		EmpathMailbox & mailbox() const;
+		const EmpathURL & url () const { return url_; }
 
 		QString key(int, bool) const;
-
-		bool isFolderItem() const { return (type_ == Folder); }
 		
 	protected slots:
 
@@ -53,14 +50,10 @@ class EmpathFolderListItem : public QObject, public QListViewItem
 		
 	private:
 	
-		enum FolderListItemType { Folder, Mailbox };
-		
-		FolderListItemType type_;
-		
-		EmpathFolder * folder_;
-		EmpathMailbox * mailbox_;
+		EmpathURL url_;
 };
 
+typedef QList<EmpathFolderListItem> EmpathFolderListItemList;
 typedef QListIterator<EmpathFolderListItem> EmpathFolderListItemIterator;
 
 #endif

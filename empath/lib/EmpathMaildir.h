@@ -60,6 +60,8 @@ class EmpathMaildir
 		
 		const char * className() const { return "EmpathMaildir"; }
 		
+		void sync(const EmpathURL & url);
+		
 	private:
 		
 		QString		_write(const RMessage & msg);
