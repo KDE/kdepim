@@ -116,7 +116,7 @@ bool ResourceLocalDir::doLoad()
   QString dirName = mURL.path();
   bool success = true;
   
-  if ( !KStandardDirs::exists( dirName ) ) {
+  if ( !( KStandardDirs::exists( dirName ) || KStandardDirs::exists( dirName + "/") ) ) {
     kdDebug(5800) << "ResourceLocalDir::load(): Directory '" << dirName << "' doesn't exist yet. Creating it..." << endl;
     
     // Create the directory. Use 0775 to allow group-writable if the umask 
