@@ -60,7 +60,9 @@ Installation
 ============
 
 	KPilot _REQUIRES_ at least Beta 4 of KDE (http://www.kde.org/)
-and v1.33 or better of the QT widget set (http://www.troll.no/).
+and v1.33 or better of the QT widget set (http://www.troll.no/). As of
+this writing, Qt-1.44 and KDE 1.1.2 are current; no support has been
+introduced for the upcoming KDE2 and Qt-2.02.
 
 	If you have these packages, a simple:
 
@@ -68,7 +70,7 @@ and v1.33 or better of the QT widget set (http://www.troll.no/).
 	make
 	make install
 
-	from the kpilot-3.0 directory should configure and install
+from the kpilot-3.0 directory should configure and install
 KPilot.  If you are using KPanel (the panel that comes with KDE)
 restarting it should insert an icon into the Utilities submenu.  If
 you are not using KPanel, the executable is named kpilot and will be
