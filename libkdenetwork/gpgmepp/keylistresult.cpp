@@ -49,6 +49,13 @@ GpgME::KeyListResult::KeyListResult( gpgme_ctx_t ctx, int error )
   d->ref();
 }
 
+GpgME::KeyListResult::KeyListResult( const Error & error, const _gpgme_op_keylist_result & res )
+  : GpgME::Result( error ), d( 0 )
+{
+  d = new Private( res );
+  d->ref();
+}
+
 make_standard_stuff(KeyListResult)
 
 bool GpgME::KeyListResult::isTruncated() const {
