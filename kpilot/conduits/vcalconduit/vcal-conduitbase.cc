@@ -478,7 +478,7 @@ void VCalConduitBase::syncPCRecToPalm()
 		DEBUGCONDUIT<<fname<<": Description: "<<e->summary()<<endl;
 		DEBUGCONDUIT<<fname<<": Time: "
 			<< e->dtStart().toString()
-#if KDE_VERSION > 0x030100
+#if KDE_VERSION > 0x030180
 			<< " until "
 			<< e->dtEnd()
 #endif
