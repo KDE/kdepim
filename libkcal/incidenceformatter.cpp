@@ -210,33 +210,33 @@ static QString eventViewerFormatAttachments( Incidence *i )
   return tmpStr;
 }
 
-/* 
-  FIXME:This function depends of kaddressbook. Is necessary a new 
+/*
+  FIXME:This function depends of kaddressbook. Is necessary a new
   type of event?
 */
 static QString eventViewerFormatBirthday( Event *event )
 {
   if ( !event) return  QString::null;
   if ( event->customProperty("KABC","BIRTHDAY")!= "YES" ) return QString::null;
-  
+
   QString uid_1 = event->customProperty("KABC","UID-1");
   QString name_1 = event->customProperty("KABC","NAME-1");
   QString email_1= event->customProperty("KABC","EMAIL-1");
-  
+
   KIconLoader iconLoader;
   const QString iconPath = iconLoader.iconPath( "mail_generic",
                                                   KIcon::Small );
-  //TODO: add a tart icon 
+  //TODO: add a tart icon
   QString tmpString = "<ul>";
   tmpString += linkPerson( email_1, name_1, uid_1, iconPath );
-  
+
   if ( event->customProperty( "KABC", "ANNIVERSARY") == "YES" ) {
     QString uid_2 = event->customProperty("KABC","UID-2");
     QString name_2 = event->customProperty("KABC","NAME-2");
     QString email_2= event->customProperty("KABC","EMAIL-2");
     tmpString += linkPerson( email_2, name_2, uid_2, iconPath );
   }
-  
+
   tmpString += "</ul>";
   return tmpString;
 }
@@ -289,11 +289,11 @@ static QString eventViewerFormatEvent( Event *event )
   }
 
   tmpStr += eventViewerFormatReadOnly( event );
-  
+
   tmpStr += eventViewerFormatAttendees( event );
   tmpStr += eventViewerFormatAttachments( event );
 
-  tmpStr += "<p><em>" + i18n( "Creation date: %1.").arg( 
+  tmpStr += "<p><em>" + i18n( "Creation date: %1.").arg(
     KGlobal::locale()->formatDateTime( event->created() , true ) ) + "</em>";
   return tmpStr;
 }
@@ -333,7 +333,7 @@ static QString eventViewerFormatTodo( Todo *todo )
   tmpStr += eventViewerFormatReadOnly( todo );
   tmpStr += eventViewerFormatAttendees( todo );
   tmpStr += eventViewerFormatAttachments( todo );
-  tmpStr += "<p><em>" + i18n( "Creation date: %1.").arg( 
+  tmpStr += "<p><em>" + i18n( "Creation date: %1.").arg(
     KGlobal::locale()->formatDateTime( todo->created() , true ) ) + "</em>";
   return tmpStr;
 }
@@ -786,7 +786,7 @@ class IncidenceFormatter::ScheduleMessageVisitor : public IncidenceBase::Visitor
     ScheduleMessage *mMessage;
 };
 
-class IncidenceFormatter::InvitationHeaderVisitor : 
+class IncidenceFormatter::InvitationHeaderVisitor :
       public IncidenceFormatter::ScheduleMessageVisitor
 {
   protected:
@@ -812,7 +812,7 @@ class IncidenceFormatter::InvitationHeaderVisitor :
     }
 };
 
-class IncidenceFormatter::InvitationBodyVisitor : 
+class IncidenceFormatter::InvitationBodyVisitor :
       public IncidenceFormatter::ScheduleMessageVisitor
 {
   protected:
@@ -1461,7 +1461,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event*event )
     else
       ret += tmp.arg( event->dtStartStr().replace(" ", "&nbsp;") );
 
-    tmp = "<br>" + i18n("<i>To:</i>&nbsp;%1");
+    tmp = "<br>" + i18n("Event end","<i>To:</i>&nbsp;%1");
     if (event->doesFloat())
       ret += tmp.arg( event->dtEndDateStr().replace(" ", "&nbsp;") );
     else
@@ -1525,9 +1525,9 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Journal*journal )
 
 QString IncidenceFormatter::ToolTipVisitor::dateRangeText( FreeBusy *fb )
 {
-  QString tmp( "<br>" + i18n("<i>Period start:</i>&nbsp;1") );
+  QString tmp( "<br>" + i18n("<i>Period start:</i>&nbsp;%1") );
   QString ret = tmp.arg( KGlobal::locale()->formatDateTime( fb->dtStart() ) );
-  tmp = "<br>" + i18n("<i>Period start:</i>&nbsp;1");
+  tmp = "<br>" + i18n("<i>Period start:</i>&nbsp;%1");
   ret += tmp.arg( KGlobal::locale()->formatDateTime( fb->dtEnd() ) );
   return ret;
 }
