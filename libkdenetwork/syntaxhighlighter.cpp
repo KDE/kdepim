@@ -214,6 +214,7 @@ DictSpellChecker::DictSpellChecker( QTextEdit *textEdit,
 DictSpellChecker::~DictSpellChecker()
 {
     delete mSpell;
+    delete rehighlightRequest;
 }
 
 void DictSpellChecker::slotSpellReady( KSpell *spell )
