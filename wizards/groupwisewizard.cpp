@@ -40,7 +40,7 @@ class CreateGroupwiseKcalResource : public KConfigPropagator::Change
 {
   public:
     CreateGroupwiseKcalResource()
-      : KConfigPropagator::Change( i18n("Create Groupwise Calendar Resource") )
+      : KConfigPropagator::Change( i18n("Create GroupWise Calendar Resource") )
     {
     }
 
@@ -54,7 +54,7 @@ class CreateGroupwiseKcalResource : public KConfigPropagator::Change
       kdDebug() << "TICK" << endl;
 
       KCal::ResourceGroupwise *r = new KCal::ResourceGroupwise();
-      r->setResourceName( i18n("Groupwise") );
+      r->setResourceName( i18n("GroupWise") );
       r->prefs()->setHost( GroupwiseConfig::self()->host() );
       r->prefs()->setPort( GroupwiseConfig::self()->port() );
       r->prefs()->setUser( GroupwiseConfig::self()->user() );
@@ -78,7 +78,7 @@ class UpdateGroupwiseKcalResource : public KConfigPropagator::Change
 {
   public:
     UpdateGroupwiseKcalResource()
-      : KConfigPropagator::Change( i18n("Update Groupwise Calendar Resource") )
+      : KConfigPropagator::Change( i18n("Update GroupWise Calendar Resource") )
     {
     }
 
@@ -108,7 +108,7 @@ class CreateGroupwiseKabcResource : public KConfigPropagator::Change
 {
   public:
     CreateGroupwiseKabcResource()
-      : KConfigPropagator::Change( i18n("Create Groupwise Addressbook Resource") )
+      : KConfigPropagator::Change( i18n("Create GroupWise Addressbook Resource") )
     {
     }
 
@@ -225,7 +225,7 @@ class GroupwisePropagator : public KConfigPropagator
 
 GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
 {
-  QFrame *page = createWizardPage( i18n("Novell Groupwise") );
+  QFrame *page = createWizardPage( i18n("Novell GroupWise") );
 
   QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );

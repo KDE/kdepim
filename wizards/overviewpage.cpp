@@ -74,7 +74,7 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   layout->addMultiCellWidget( button, 5, 5, 0, 3 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardSlox() ) );
 
-  button = new QPushButton( i18n("Novell Groupwise"), this );
+  button = new QPushButton( i18n("Novell GroupWise"), this );
   layout->addMultiCellWidget( button, 6, 6, 0, 3 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardGroupwise() ) );
 

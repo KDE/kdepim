@@ -38,7 +38,7 @@ int main(int argc,char **argv)
   KLocale::setMainCatalogue( "kdepimwizards" ); 
 
   KAboutData aboutData( "groupwisewizard",
-                        I18N_NOOP( "Novell Groupwise Configuration Wizard" ),
+                        I18N_NOOP( "Novell GroupWise Configuration Wizard" ),
                         "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
