@@ -207,7 +207,7 @@ Module::prepare( bool needPassPhrase, Block* block )
       if (passdlgResult == QDialog::Accepted) {
         if (!setPassPhrase(passdlg.passphrase())) {
           if (strlen(passdlg.passphrase()) >= 1024)
-             errMsg = i18n("Passphrase is too long, it must contain less than 1024 characters.");
+             errMsg = i18n("Passphrase is too long, it must contain fewer than 1024 characters.");
           else
              errMsg = i18n("Out of memory.");
   	return 0;
@@ -384,7 +384,7 @@ Module::encrypt( Block& block,
   if( status & BADKEYS ) {
     QString str = i18n("%1 = 'bad keys' error message",
                        "%1\nDo you want to encrypt anyway, leave the "
-                       "message as is, or cancel sending the message?")
+                       "message as-is, or cancel sending the message?")
                   .arg( pgp->lastErrorMessage() );
 
     QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
@@ -410,13 +410,13 @@ Module::encrypt( Block& block,
 
   if( status & MISSINGKEY ) {
     QString str = i18n("%1 = 'missing keys' error message",
-                       "%1\nDo you want to leave the message as is, "
+                       "%1\nDo you want to leave the message as-is, "
                        "or cancel sending the message?")
                   .arg( pgp->lastErrorMessage() );
     QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
     int ret = KMessageBox::warningContinueCancel( 0, str,
                                                   i18n("PGP Warning"),
-                                                  i18n("&Send as Is") );
+                                                  i18n("&Send As-Is") );
     QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;
