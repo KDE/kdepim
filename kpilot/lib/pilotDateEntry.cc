@@ -47,12 +47,16 @@ PilotDateEntry::PilotDateEntry(void):PilotAppCategory()
 	::memset(&fAppointmentInfo, 0, sizeof(struct Appointment));
 }
 
-
+/* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotDateEntry()
+*/
 PilotDateEntry::PilotDateEntry(PilotRecord * rec):PilotAppCategory(rec)
 {
 	::memset(&fAppointmentInfo, 0, sizeof(fAppointmentInfo));
-	unpack_Appointment(&fAppointmentInfo,
-		(unsigned char *) rec->getData(), rec->getLen());
+	if (rec)
+	{
+		 unpack_Appointment(&fAppointmentInfo,
+			(unsigned char *) rec->getData(), rec->getLen());
+	}
 	return;
 
 	/* NOTREACHED */
@@ -205,6 +209,9 @@ void PilotDateEntry::setNote(const char *note)
 
 
 // $Log$
+// Revision 1.2  2001/12/28 12:55:24  adridg
+// Fixed email addresses; added isBackup() to interface
+//
 // Revision 1.1  2001/12/27 23:08:30  adridg
 // Restored some deleted wrapper files
 //

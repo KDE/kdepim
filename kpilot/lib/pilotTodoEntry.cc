@@ -47,10 +47,16 @@ PilotTodoEntry::PilotTodoEntry(void):PilotAppCategory()
 }
 
 
+/* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotTodoEntry()
+*/
 PilotTodoEntry::PilotTodoEntry(PilotRecord * rec):PilotAppCategory(rec)
 {
-	unpack_ToDo(&fTodoInfo, (unsigned char *) rec->getData(),
-		rec->getLen());
+	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
+	if (rec) 
+	{
+		unpack_ToDo(&fTodoInfo, (unsigned char *) rec->getData(),
+			rec->getLen());
+	}
 	(void) pilotTodoEntry_id;
 }
 
@@ -151,6 +157,9 @@ void PilotTodoEntry::setNote(const char *note)
 
 
 // $Log$
+// Revision 1.2  2001/12/28 12:55:24  adridg
+// Fixed email addresses; added isBackup() to interface
+//
 // Revision 1.1  2001/12/27 23:08:30  adridg
 // Restored some deleted wrapper files
 //
