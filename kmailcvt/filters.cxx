@@ -159,7 +159,6 @@ KMail::~KMail()
 
 bool KMail::kmailMessage(FilterInfo *info,QString folderName,QString msgPath)
 {
-  QString msg;
   const QByteArray kmData;
   QByteArray kmRes;
   QDataStream kmArg(kmData,IO_WriteOnly);
@@ -173,9 +172,8 @@ bool KMail::kmailMessage(FilterInfo *info,QString folderName,QString msgPath)
     // Maybe KMail isn't already running, so try starting it
     KApplication::startServiceByDesktopName("kmail", QString::null); // Will wait until kmail is started
     if (!c->call("kmail", "KMailIface", "dcopAddMessage(QString,KURL)", kmData, type, kmRes)) {
-      msg=i18n("FATAL: Unable to start KMail for DCOP communication.\n"
-               "       Make sure 'kmail' is installed.");
-      info->alert(cap,msg);
+      info->alert(cap, i18n("FATAL: Unable to start KMail for DCOP communication.\n"
+               "       Make sure 'kmail' is installed."));
       return false;
     }
   }
@@ -185,16 +183,13 @@ bool KMail::kmailMessage(FilterInfo *info,QString folderName,QString msgPath)
   KmResult >> result;
     
   if (result==-1) {
-    msg=i18n("Cannot make folder %1 in KMail").arg(folderName);
-    info->alert(cap,msg);
+    info->alert(cap, i18n("Cannot make folder %1 in KMail").arg(folderName));
     return false;
   } else if (result==-2) {
-    msg=i18n("Cannot add message to folder %1 in KMail").arg(folderName);
-    info->alert(cap,msg);
+    info->alert(cap, i18n("Cannot add message to folder %1 in KMail").arg(folderName));
     return false;
   } else if (result==0) {
-    msg=i18n("Error while adding message to folder %1 in KMail").arg(folderName);
-    info->alert(cap,msg);
+    info->alert(cap, i18n("Error while adding message to folder %1 in KMail").arg(folderName));
     return false;
   }
 
