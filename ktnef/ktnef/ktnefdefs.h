@@ -30,6 +30,7 @@
 #define attATTACHDATA	  0x800f	/* Attachment Data */
 #define attATTACHTITLE	  0x8010	/* Attachment File Name */
 #define attATTACHMETAFILE 0x8011
+#define attATTACHCREATEDATE 0x8012
 #define attATTACHMODDATE  0x8013
 #define attDATEMODIFIED   0x8020
 #define attATTACHRENDDATA 0x9002
