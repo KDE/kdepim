@@ -466,7 +466,7 @@ void KNNntpClient::doFetchArticle()
     
   if (!sendCommandWCheck(cmd,220)) {      // 220 n <a> article retrieved - head and body follow
     int code = atoi(getCurrentLine());
-    if (code == 430)  // 430 no such article found
+    if ((code == 430) || (code == 423))  // 430 no such article found || 423 no such article number in this group
       job->setErrorString(
              errorPrefix + getCurrentLine() +
              i18n("<br><br>The article you requested isn't available on your newsserver.<br>You can try to get it from <a href=\"http://groups.google.com/groups?q=msgid:%1&ic=1\">groups.google.com</a>.")
