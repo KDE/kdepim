@@ -335,15 +335,12 @@ int Alarm::snoozeTime() const
 
 void Alarm::setRepeatCount(int alarmRepeatCount)
 {
-  kdDebug(5800) << "Alarm::setRepeatCount(): " << alarmRepeatCount << endl;
-
   mAlarmRepeatCount = alarmRepeatCount;
   mParent->updated();
 }
 
 int Alarm::repeatCount() const
 {
-  kdDebug(5800) << "Alarm::repeatCount(): " << mAlarmRepeatCount << endl;
   return mAlarmRepeatCount;
 }
 
