@@ -35,7 +35,7 @@
 
 #include "test_keylister.h"
 
-#include <kleo/keylister.h>
+#include <kleo/keylistjob.h>
 #include <cryptplugwrapper.h>
 #include <cryptplugfactory.h>
 
