@@ -1,5 +1,5 @@
 APPSDIR = $(kde_appsdir)/Internet
-INCLUDES= $(all_includes) -I rmm/include/ -I lib/ -I ui/
+INCLUDES= $(all_includes) -I$(top_srcdir)/empath/rmm/include/ -I$(top_srcdir)/empath/lib/ -I$(top_srcdir)/empath/ui/
 SUBDIRS = doc pics toolbar tips templates rmm lib ui import
 
 bin_PROGRAMS = empath
@@ -18,7 +18,7 @@ messages:
 
 install-data-local: 
 	$(mkinstalldirs) $(APPSDIR)
-	$(INSTALL_DATA) empath.desktop $(APPSDIR)
+	$(INSTALL_DATA) $(top_srcdir)/empath/empath.desktop $(APPSDIR)
 	$(mkinstalldirs) $(kde_datadir)/empath
 	
 uninstall-local:

@@ -1,4 +1,4 @@
-INCLUDES= $(all_includes) -I ../rmm/include/ -I ../lib/
+INCLUDES= $(all_includes) -I$(top_srcdir)/empath/rmm/include/ -I$(top_srcdir)/empath/lib/
 
 noinst_LIBRARIES = libempathui.a
 
