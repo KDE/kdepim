@@ -133,8 +133,8 @@ int main( int argc, char** argv ) {
             break;
           }
           }
-          cout << endl;
         }
+        cout << endl;
       }
       // ...
     }
