@@ -80,7 +80,7 @@ class CardViewItemList : public QPtrList<CardViewItem>
 
       if ( cItem1 == cItem2 )
           return 0;
-      
+
       if ((cItem1 == 0) || (cItem2 == 0))
           return cItem1 ? -1 : 1;
 
@@ -94,9 +94,9 @@ class CardViewItemList : public QPtrList<CardViewItem>
     }
 
   private:
-    /*int find( const CardViewItem * ) 
-    { 
-      qDebug("DON'T USE CardViewItemList::find( item )! Use findRef( item )!"); 
+    /*int find( const CardViewItem * )
+    {
+      qDebug("DON'T USE CardViewItemList::find( item )! Use findRef( item )!");
     }*/
 };
 
@@ -145,18 +145,18 @@ class CardViewPrivate
        mDrawSeparators( true),
        mSepWidth( 2 ),
        mShowEmptyFields( false ),
+       mLayoutDirty( true ),
+       mLastClickOnItem( false ),
        mItemMargin( 0 ),
        mItemSpacing( 10 ),
-       mLayoutDirty( true ),
-       mMaxFieldLines( INT_MAX ),
-       mLastClickOnItem( false ),
-       mLastClickPos( QPoint(0, 0) ),
-       mCurrentItem( 0L ),
        mItemWidth( 200 ),
-       mCompText( QString::null ),
-       mRubberBandAnchor( 0 )
+       mMaxFieldLines( INT_MAX ),
+       mCurrentItem( 0L ),
+       mLastClickPos( QPoint(0, 0) ),
+       mRubberBandAnchor( 0 ),
+       mCompText( QString::null )
     {};
-      
+
     CardViewItemList mItemList;
     QPtrList<CardViewSeparator> mSeparatorList;
     QFontMetrics *mFm;
@@ -189,7 +189,7 @@ class CardViewPrivate
     uint first;                 // the first col to anchor at for painting rubber bands
     int firstX;                 // X position of first in pixel
     int pressed;                // the colummn that was pressed on at resizing start
-    int span;                   // pressed - first    
+    int span;                   // pressed - first
     // key completion
     QString mCompText;          // current completion string
     QDateTime mCompUpdated;     // ...was updated at this time
@@ -225,7 +225,7 @@ CardViewItem::~CardViewItem()
   // Remove ourself from the view
   if (mView != 0)
     mView->takeItem(this);
-  
+
   delete d;
 }
 
@@ -248,7 +248,7 @@ void CardViewItem::paintCard(QPainter *p, QColorGroup &cg)
 
   if (!mView)
     return;
-  
+
   QPen pen;
   QBrush brush;
   QFontMetrics fm = *(mView->d->mFm);
@@ -263,7 +263,7 @@ void CardViewItem::paintCard(QPainter *p, QColorGroup &cg)
   int labelWidth = QMIN( w/2 - 4 - mg, d->maxLabelWidth + colonWidth + 4 );
   int valueXPos = labelWidth + 4 + mg;
   int valueWidth = w - labelWidth - 4 - mg;
-  
+
   p->setFont( mView->font() );
   labelWidth -= colonWidth; // extra space for the colon
 
@@ -289,9 +289,9 @@ void CardViewItem::paintCard(QPainter *p, QColorGroup &cg)
     brush = cg.brush(QColorGroup::Highlight);
   else
     brush = cg.brush(QColorGroup::Button);
-  
+
   p->fillRect(mg, mg, w, 4 + bFm.height(), brush);
-  
+
   // Now paint the caption
   p->save();
   QFont bFont = mView->headerFont();
@@ -309,7 +309,7 @@ void CardViewItem::paintCard(QPainter *p, QColorGroup &cg)
   QString label, value;
   int yPos = mg + 4 + bFm.height()/* + 1*/ + fm.height(); // why the + 1 ??? (anders)
   p->setPen(cg.text());
-  
+
   int fh = fm.height();
   int cln( 0 );
   QString tmp;
@@ -358,18 +358,18 @@ int CardViewItem::height( bool allowCache ) const
   // use cache
   if ( allowCache && d->hcache )
     return d->hcache;
-  
+
   // Base height:
   //  2 for line width
   //  2 for top caption pad
   //  2 for bottom caption pad
-  //   2 pad for the end 
+  //   2 pad for the end
   // + 2 times the advised margin
   int baseHeight = 8 + ( 2 * mView->itemMargin() );
 
   //  size of font for each field
   //  2 pad for each field
-  
+
   // anders: if the view does not show empty fields, check for value
   bool sef = mView->showEmptyFields();
   int fh = mView->d->mFm->height();//lineSpacing(); // font height
@@ -385,7 +385,7 @@ int CardViewItem::height( bool allowCache ) const
     lines = QMIN( (*iter)->second.contains('\n') + 1, maxLines );
     fieldHeight += ( lines * fh ) + 2;//sp;
   }
-  
+
   // height of caption font (bold)
   fieldHeight += mView->d->mBFm->height();
   d->hcache = baseHeight + fieldHeight;
@@ -407,7 +407,7 @@ void CardViewItem::insertField(const QString &label, const QString &value)
   CardViewItem::Field *f = new CardViewItem::Field(label, value);
   d->mFieldList.append(f);
   d->hcache=0;
-  
+
   if (mView)
   {
     mView->setLayoutDirty(true);
@@ -430,7 +430,7 @@ void CardViewItem::removeField(const QString &label)
   if (*iter)
     d->mFieldList.remove(*iter);
   d->hcache = 0;
-  
+
   if (mView)
     mView->setLayoutDirty(true);
 }
@@ -439,7 +439,7 @@ void CardViewItem::clearFields()
 {
   d->mFieldList.clear();
   d->hcache = 0;
-  
+
   if (mView)
     mView->setLayoutDirty(true);
 }
@@ -498,7 +498,7 @@ QString CardViewItem::fieldValue(const QString &label)
   for (iter.toFirst(); iter.current(); ++iter)
     if ((*iter)->first == label)
         return (*iter)->second;
-        
+
   return QString();
 }
 
@@ -513,11 +513,11 @@ void CardViewItem::showFullString( const QPoint &itempos, CardViewTip *tip )
   int lw;
   bool drawLabels = mView->drawFieldLabels();
   bool isLabel = drawLabels && itempos.x() < w/2 ? true : false;
-  
+
   if ( itempos.y() < y )
   {
     if ( itempos.y() < 8 + mrg || itempos.y() > y - 4 )
-      return; 
+      return;
     // this is the caption
     s = caption();
     trimmed = mView->d->mBFm->width( s ) > w - 4;
@@ -529,7 +529,7 @@ void CardViewItem::showFullString( const QPoint &itempos, CardViewTip *tip )
     Field *f = fieldAt( itempos );
     if ( !f || ( !mView->showEmptyFields() && f->second.isEmpty() ) )
       return;
-    
+
     // y position:
     // header font height + 4px hader margin + 2px leading + item margin
     // + actual field index * (fontheight + 2px leading)
@@ -556,7 +556,7 @@ void CardViewItem::showFullString( const QPoint &itempos, CardViewTip *tip )
     {
       trimmed = mView->d->mFm->width( s ) > mw - colonWidth;
     } else {
-      QRect r( mView->d->mFm->boundingRect( 0, 0, INT_MAX, INT_MAX, Qt::AlignTop|Qt::AlignLeft, s ) ); 
+      QRect r( mView->d->mFm->boundingRect( 0, 0, INT_MAX, INT_MAX, Qt::AlignTop|Qt::AlignLeft, s ) );
       trimmed = r.width() > mw || r.height()/fh >  QMIN(s.contains('\n') + 1, maxLines);
     }
   }
@@ -608,7 +608,7 @@ CardViewItem::Field *CardViewItem::fieldAt( const QPoint & itempos ) const
 //BEGIN CardView
 
 CardView::CardView(QWidget *parent, const char *name)
-  : QScrollView(parent, name), 
+  : QScrollView(parent, name),
     d(new CardViewPrivate())
 {
   d->mItemList.setAutoDelete(true);
@@ -622,7 +622,7 @@ CardView::CardView(QWidget *parent, const char *name)
   d->mTip = ( new CardViewTip( viewport() ) ),
   d->mTip->hide();
   d->mTimer = ( new QTimer(this, "mouseTimer") ),
-  
+
   viewport()->setMouseTracking( true );
   viewport()->setFocusProxy(this);
   viewport()->setFocusPolicy(WheelFocus);
@@ -649,14 +649,14 @@ void CardView::takeItem(CardViewItem *item)
   if ( d->mCurrentItem == item )
     d->mCurrentItem = item->nextItem();
   d->mItemList.take(d->mItemList.findRef(item));
-  
+
   setLayoutDirty(true);
 }
 
 void CardView::clear()
 {
   d->mItemList.clear();
-  
+
   setLayoutDirty(true);
 }
 
@@ -934,7 +934,7 @@ void CardView::drawContents(QPainter *p, int clipx, int clipy,
       p->restore();
     }
   }
-  
+
   // Followed by the separators if they are in the clip region
   QPtrListIterator<CardViewSeparator> sepIter(d->mSeparatorList);
   for (sepIter.toFirst(); sepIter.current(); ++sepIter)
@@ -984,7 +984,7 @@ void CardView::calcLayout()
     item = *iter;
 
     yPos += cardSpacing;
-    
+
     if (yPos + item->height() + cardSpacing >= height() - horizontalScrollBar()->height())
     {
       maxHeight = QMAX(maxHeight, yPos);
@@ -1007,7 +1007,7 @@ void CardView::calcLayout()
 
     item->d->x = xPos;
     item->d->y = yPos;
-    
+
     yPos += item->height();
     maxWidth = QMAX(maxWidth, d->mItemWidth);
   }
@@ -1055,7 +1055,7 @@ void CardView::setItemSpacing( uint spacing )
 {
   if ( spacing == d->mItemSpacing )
     return;
-    
+
   d->mItemSpacing = spacing;
   setLayoutDirty( true );
 }
@@ -1077,10 +1077,10 @@ void CardView::mousePressEvent(QMouseEvent *e)
       d->mResizeAnchor = e->x()+contentsX();
       d->colspace = (2*d->mItemSpacing) /*+ (2*d->mItemMargin)*/;
       int ccw = d->mItemWidth + d->colspace + d->mSepWidth;
-      d->first = (contentsX()+d->mSepWidth)/ccw;       
+      d->first = (contentsX()+d->mSepWidth)/ccw;
       d->pressed = (d->mResizeAnchor+d->mSepWidth)/ccw;
-      d->span = d->pressed - d->first;               
-      d->firstX = d->first * ccw;                    
+      d->span = d->pressed - d->first;
+      d->firstX = d->first * ccw;
       if ( d->firstX ) d->firstX -= d->mSepWidth;            // (no sep in col 0)
     }
     else
@@ -1129,9 +1129,9 @@ void CardView::mousePressEvent(QMouseEvent *e)
              (e->state() & Qt::ShiftButton))
     {
       if ( item == other ) return;
-      
+
       bool s = ! item->isSelected();
-      
+
       if ( s && ! (e->state() & ControlButton) )
       {
         bool b = signalsBlocked();
@@ -1139,7 +1139,7 @@ void CardView::mousePressEvent(QMouseEvent *e)
         selectAll(false);
         blockSignals(b);
       }
-      
+
       int from, to, a, b;
       a = d->mItemList.findRef( item );
       b = d->mItemList.findRef( other );
@@ -1202,7 +1202,7 @@ void CardView::mouseReleaseEvent(QMouseEvent *e)
     d->mRubberBandAnchor = 0;
     return;
   }
-  
+
   // If there are accel keys, we will not emit signals
   if ((e->state() & Qt::ShiftButton) || (e->state() & Qt::ControlButton))
     return;
@@ -1258,9 +1258,9 @@ void CardView::contentsMouseMoveEvent( QMouseEvent *e )
       drawRubberBands( x );
       return;
   }
-  
+
   d->mTimer->start( 500 );
-  
+
   // see if we are over a separator
   // only if we actually have them painted?
   if ( d->mDrawSeparators  )
@@ -1321,11 +1321,11 @@ void CardView::keyPressEvent( QKeyEvent *e )
     e->ignore();
     return;
   }
-  
+
   uint pos = d->mItemList.findRef( d->mCurrentItem );
   CardViewItem *aItem = 0L; // item that gets the focus
   CardViewItem *old = d->mCurrentItem;
-  
+
   switch ( e->key() )
   {
     case Key_Up:
@@ -1400,20 +1400,20 @@ void CardView::keyPressEvent( QKeyEvent *e )
     {
       // QListView: "Make the item below the bottom visible and current"
       // find the first not fully visible column.
-      // TODO: consider if a partly visible (or even hidden) item at the 
+      // TODO: consider if a partly visible (or even hidden) item at the
       //       bottom of the rightmost column exists
       int cw = columnWidth();
       int theCol = ( (( contentsX() + visibleWidth() )/cw) * cw ) + d->mItemSpacing + 1;
-      // if separators are on, we may need to we may be one column further right if only the spacing/sep is hidden 
+      // if separators are on, we may need to we may be one column further right if only the spacing/sep is hidden
       if ( d->mDrawSeparators && cw - (( contentsX() + visibleWidth() )%cw) <= d->mItemSpacing + d->mSepWidth )
         theCol += cw;
-      
+
       // make sure this is not too far right
       while ( theCol > contentsWidth() )
         theCol -= columnWidth();
-    
+
       aItem = itemAt( QPoint( theCol, d->mItemSpacing + 1 ) );
-      
+
       if ( aItem )
         setCurrentItem( aItem );
     }
@@ -1437,7 +1437,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
     // if we have a string, do autosearch
     else if ( ! e->text().isEmpty() && e->text()[0].isPrint() )
     {
-      
+
     }
     break;
   }
@@ -1458,7 +1458,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
         b = d->mItemList.findRef( old );
         from = a < b ? a : b;
         to = a > b ? a : b;
-        
+
         if ( to - from > 1 )
         {
           bool b = signalsBlocked();
@@ -1466,7 +1466,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
           selectAll(false);
           blockSignals(b);
         }
-        
+
         //kdDebug()<<"selecting items "<<from<<" - "<<to<<" ( "<<s<<" )"<<endl;
         CardViewItem *item;
         for ( ; from <= to; from++ )
@@ -1488,7 +1488,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
         blockSignals(true);
         selectAll(false);
         blockSignals(b);
-        
+
         setSelected( aItem, true );
         emit selectionChanged();
       }
@@ -1585,11 +1585,11 @@ void CardView::tryShowFullText()
 void CardView::drawRubberBands( int pos )
 {
   if ( pos && ((pos-d->firstX)/d->span) - d->colspace - d->mSepWidth < MIN_ITEM_WIDTH ) return;
-  
+
   int tmpcw = (d->mRubberBandAnchor-d->firstX)/d->span;
   int x = d->firstX + tmpcw - d->mSepWidth - contentsX();
   int h = visibleHeight();
-  
+
   QPainter p( viewport() );
   p.setRasterOp( XorROP );
   p.setPen( gray );
@@ -1620,7 +1620,7 @@ int CardView::itemWidth()
 {
   return d->mItemWidth;
 }
- 
+
 void CardView::setItemWidth( int w )
 {
   if ( w == d->mItemWidth )
