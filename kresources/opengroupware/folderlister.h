@@ -54,7 +54,7 @@ class FolderLister : public QObject
   
     FolderLister();
   
-    void retrieveFolders();
+    void retrieveFolders( const KURL & );
   
     void setFolders( const Entry::List & );
     Entry::List folders() const { return mFolders; }
@@ -62,9 +62,6 @@ class FolderLister : public QObject
     void setWriteDestinationId( const QString & );
     QString writeDestinationId() const { return mWriteDestinationId; }
         
-    void setUrl( const KURL & );
-    KURL url() const { return mUrl; }
-    
     void readConfig( const KConfig * );
     void writeConfig( KConfig * );
     

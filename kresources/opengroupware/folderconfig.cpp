@@ -67,7 +67,7 @@ FolderConfig::FolderConfig( QWidget *parent )
   topLayout->addWidget( topBox );
   
   QPushButton *button = new QPushButton( i18n("Update Folder List"), topBox );
-  connect( button, SIGNAL( clicked() ), SLOT( retrieveFolderList() ) );
+  connect( button, SIGNAL( clicked() ), SIGNAL( updateFoldersClicked() ) );
   
   mFolderList = new KListView( topBox );
   mFolderList->addColumn( i18n("Folder") );
@@ -90,11 +90,11 @@ void FolderConfig::setFolderLister( FolderLister *f )
   connect( mFolderLister, SIGNAL( foldersRead() ), SLOT( updateFolderList() ) );
 }
 
-void FolderConfig::retrieveFolderList()
+void FolderConfig::retrieveFolderList( const KURL &url )
 {
-  kdDebug() << "FolderConfig::updateFolderList()" << endl;
+  kdDebug() << "FolderConfig::retrieveFolderList()" << endl;
 
-  mFolderLister->retrieveFolders();
+  mFolderLister->retrieveFolders( url );
 }
 
 void FolderConfig::updateFolderList()
@@ -135,7 +135,6 @@ void FolderConfig::saveSettings()
   }
 
   mFolderLister->setFolders( folders );
-
 }
 
 #include "folderconfig.moc"

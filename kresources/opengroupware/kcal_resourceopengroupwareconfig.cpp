@@ -72,6 +72,8 @@ OpenGroupwareConfig::OpenGroupwareConfig( QWidget* parent,  const char* name )
   mainLayout->addMultiCellWidget( mSaveConfig, 4, 4, 2, 2 );
 
   mFolderConfig = new FolderConfig( this );
+  connect( mFolderConfig, SIGNAL( updateFoldersClicked() ),
+    SLOT( updateFolders() ) );
   mainLayout->addMultiCellWidget( mFolderConfig, 4, 4, 0, 1 );
 }
 
@@ -113,6 +115,15 @@ void OpenGroupwareConfig::saveSettings( KRES::Resource *resource )
   } else {
     kdError(5700) << "KCalOpenGroupwareConfig::saveSettings(): no KCalOpenGroupware, cast failed" << endl;
   }
+}
+
+void OpenGroupwareConfig::updateFolders()
+{
+  KURL url = mUrl->text();
+  url.setUser( mUserEdit->text() );
+  url.setPass( mPasswordEdit->text() );
+
+  mFolderConfig->retrieveFolderList( url );
 }
 
 #include "kcal_resourceopengroupwareconfig.moc"

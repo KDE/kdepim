@@ -26,6 +26,7 @@
 #include <kio/davjob.h>
 #include <kdebug.h>
 #include <kconfig.h>
+#include <klocale.h>
 
 #include <qdom.h>
 
@@ -33,11 +34,6 @@ using namespace KCal;
 
 FolderLister::FolderLister()
 {
-}
-
-void FolderLister::setUrl( const KURL &url )
-{
-  mUrl = url;
 }
 
 void FolderLister::setFolders( const FolderLister::Entry::List &folders )
@@ -69,7 +65,7 @@ void FolderLister::readConfig( const KConfig *config )
     
     mFolders.append( e );
     
-    ++it2;    
+    ++it2;
   }
 
   mWriteDestinationId = config->readEntry( "WriteDestinationId" );
@@ -95,14 +91,19 @@ void FolderLister::writeConfig( KConfig *config )
   config->writeEntry( "WriteDestinationId", mWriteDestinationId );
 }
 
-void FolderLister::retrieveFolders()
+void FolderLister::retrieveFolders( const KURL &u )
 {
+  mUrl = u;
+
   QDomDocument props = WebdavHandler::createAllPropsRequest();
 
   kdDebug(7000) << "FolderLister::retrieveFolders: " << mUrl.prettyURL() << endl;
   kdDebug(7000) << "props: " << props.toString() << endl;
 
-  mListEventsJob = KIO::davPropFind( mUrl, props, "1", false );
+  KURL url = mUrl;
+  url.addPath( "Groups" );
+
+  mListEventsJob = KIO::davPropFind( url, props, "1", false );
 
   connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotListJobResult( KIO::Job * ) ) );
@@ -120,6 +121,17 @@ void FolderLister::slotListJobResult( KIO::Job *job )
 //    kdDebug(7000) << " Doc: " << doc.toString() << endl;
 
     mFolders.clear();
+
+    // Personal calendar
+    Entry personal;
+    personal.name = i18n("Personal Calendar");
+    KURL url = mUrl;
+    url.setUser( QString::null );
+    url.setPass( QString::null );
+    personal.id = url.url();
+    personal.active = true;
+
+    mFolders.append( personal );
 
     QDomElement docElement = doc.documentElement();
     QDomNode n;

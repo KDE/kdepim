@@ -21,6 +21,8 @@
 #ifndef KCAL_FOLDERCONFIG_H
 #define KCAL_FOLDERCONFIG_H
 
+#include <kurl.h>
+
 #include <qwidget.h>
 
 class KListView;
@@ -43,9 +45,10 @@ class FolderConfig : public QWidget
 
   public slots:
     void updateFolderList();
-  
-  protected slots:
-    void retrieveFolderList();
+    void retrieveFolderList( const KURL & );
+
+  signals:
+    void updateFoldersClicked();
 
   private:
     KListView *mFolderList;

@@ -52,6 +52,9 @@ class OpenGroupwareConfig : public KRES::ConfigWidget
     virtual void loadSettings( KRES::Resource *resource );
     virtual void saveSettings( KRES::Resource *resource );
 
+  protected slots:
+    void updateFolders();
+
   private:
     KLineEdit *mUrl;
     KLineEdit *mUserEdit;

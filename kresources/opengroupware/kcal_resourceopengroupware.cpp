@@ -110,11 +110,6 @@ void OpenGroupware::readConfig( const KConfig *config )
 
   ResourceCached::readConfig( config );
 
-  KURL url = mPrefs->url();
-  url.setUser( mPrefs->user() );
-  url.setPass( mPrefs->password() );
-  mFolderLister->setUrl( url );
-  
   mFolderLister->readConfig( config );
 }
 
