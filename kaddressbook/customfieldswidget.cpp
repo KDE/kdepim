@@ -373,9 +373,7 @@ void CustomFieldsWidget::addField()
                             dlg.type(), dlg.isGlobal() );
 
     if ( dlg.isGlobal() ) {
-      KConfig config( "kaddressbookrc" );
-      config.setGroup( "AdvancedContactEditor" );
-      config.writeEntry( "GlobalCustomFields", marshallFields( true ) );
+      KABPrefs::instance()->mGlobalCustomFields = marshallFields( true );
     } else {
       AddresseeConfig addrConfig( mAddressee );
       addrConfig.setCustomFields( marshallFields( false ) );
@@ -409,9 +407,7 @@ void CustomFieldsWidget::removeField()
           mRemoveButton->setEnabled( false );
 
         if ( (*it).mGlobal ) {
-          KConfig config( "kaddressbookrc" );
-          config.setGroup( "AdvancedContactEditor" );
-          config.writeEntry( "GlobalCustomFields", marshallFields( true ) );
+          KABPrefs::instance()->mGlobalCustomFields = marshallFields( true );
         } else {
           AddresseeConfig addrConfig( mAddressee );
           addrConfig.setCustomFields( marshallFields( false ) );
@@ -438,9 +434,7 @@ void CustomFieldsWidget::initGUI()
   layout->addWidget( mRemoveButton, 1, 2, Qt::AlignRight );
 
   // load global fields
-  KConfig config( "kaddressbookrc" );
-  config.setGroup( "AdvancedContactEditor" );
-  QStringList globalFields = config.readListEntry( "GlobalCustomFields" );
+  QStringList globalFields = KABPrefs::instance()->mGlobalCustomFields;
 
   if ( globalFields.isEmpty() )
     return;

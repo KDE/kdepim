@@ -50,6 +50,11 @@ class KABPrefs : public KPimPrefs
     QValueList<int> mExtensionsSplitter;
     QValueList<int> mDetailsSplitter;
 
+    // Contact Editor
+    int mEditorType;
+    QStringList mGlobalCustomFields;
+    QStringList mAdvancedCustomFields;
+
     // Extensions stuff
     int mCurrentExtension;
     QStringList mActiveExtensions;
@@ -63,7 +68,6 @@ class KABPrefs : public KPimPrefs
 
     enum { FullEditor, SimpleEditor };
 
-    int mEditorType;
 
     void setCategoryDefaults();
     

@@ -66,6 +66,8 @@ KABPrefs::KABPrefs()
 
   KConfigSkeleton::setCurrentGroup( "AddresseeEditor" );
   addItemInt( "EditorType", mEditorType, 0 );
+  addItemStringList( "GlobalCustomFields", mGlobalCustomFields );
+  addItemStringList( "AdvancedCustomFields", mAdvancedCustomFields );
 }
 
 KABPrefs::~KABPrefs()
