@@ -24,8 +24,8 @@ libkpilot_la_SOURCES = kpilotlibSettings.kcfgc options.cc uiDialog.cc plugin.cc 
 	pilotMemo.cc pilotAddress.cc \
 	pilotDateEntry.cc pilotTodoEntry.cc
 
-libkpilot_la_LDFLAGS = $(all_libraries) $(KDE_EXTRA_RPATH) $(KDE_RPATH)
-libkpilot_la_LIBADD = $(PISOCK_LIB)
+libkpilot_la_LDFLAGS = -no-undefined $(all_libraries) $(KDE_EXTRA_RPATH) $(KDE_RPATH)
+libkpilot_la_LIBADD = $(LIB_KDEUI) $(PISOCK_LIB)
 
 kpilotincludedir = $(includedir)/kpilot
 kpilotinclude_HEADERS = kpilotlink.h uiDialog.h plugin.h syncAction.h recordConduit.h \
