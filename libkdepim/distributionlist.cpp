@@ -130,7 +130,7 @@ KPIM::DistributionList KPIM::DistributionList::findByName( KABC::AddressBook* bo
         return *abIt;
     }
   }
-  kdDebug() << k_funcinfo << "not found: " << name << endl;
+  kdDebug() << k_funcinfo << "not found: " << name << kdBacktrace();
   return DistributionList();
 }
 
@@ -210,4 +210,18 @@ QStringList KPIM::DistributionList::emails( KABC::AddressBook* book ) const
   }
 
   return emails;
+}
+
+QValueList<KPIM::DistributionList>
+ KPIM::DistributionList::allDistributionLists( KABC::AddressBook* book )
+{
+  QValueList<KPIM::DistributionList> lst;
+  KABC::AddressBook::Iterator abIt;
+  for ( abIt = book->begin(); abIt != book->end(); ++abIt )
+  {
+    if ( isDistributionList( *abIt ) ) {
+      lst.append( KPIM::DistributionList( *abIt ) );
+    }
+  }
+  return lst;
 }

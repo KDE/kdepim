@@ -20,8 +20,13 @@
  *  Boston, MA 02111-1307, USA.
  *
  */
+
+#include "addressesdialog.h"
+
 #include <kabc/stdaddressbook.h>
 #include <kabc/distributionlist.h>
+#include <kresources/selectdialog.h>
+#include <kabc/resource.h>
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kglobal.h>
@@ -40,8 +45,8 @@
 #include <qvbox.h>
 #include <qwidget.h>
 
-#include "addressesdialog.h"
 #include "addresspicker.h"
+#include "distributionlist.h"
 
 namespace KPIM {
 
@@ -365,11 +370,14 @@ AddressesDialog::toAddresses()  const
 {
   return allAddressee( d->toItem );
 }
+
+#if 0 // currently unused
 KABC::Addressee::List
 AddressesDialog::allToAddressesNoDuplicates()  const
 {
   KABC::Addressee::List aList = allAddressee( d->toItem );
   QStringList dList = toDistributionLists();
+  // TODO: port to KPIM::DistributionList
   KABC::DistributionListManager manager( KABC::StdAddressBook::self() );
   manager.load();
   for ( QStringList::ConstIterator it = dList.begin(); it != dList.end(); ++it ) {
@@ -395,6 +403,7 @@ AddressesDialog::allToAddressesNoDuplicates()  const
   }
   return aList;
 }
+#endif
 
 KABC::Addressee::List
 AddressesDialog::ccAddresses()  const
@@ -561,8 +570,8 @@ AddressesDialog::initConnections()
   connect( d->ui->mSelectedView, SIGNAL(doubleClicked(QListViewItem*)),
            SLOT(removeEntry()) );
 
-  connect( KABC::DistributionListWatcher::self(), SIGNAL( changed() ),
-           this, SLOT( updateAvailableAddressees() ) );
+  //connect( KABC::DistributionListWatcher::self(), SIGNAL( changed() ),
+  //         this, SLOT( updateAvailableAddressees() ) );
 
   connect( KABC::StdAddressBook::self(), SIGNAL( addressBookChanged(AddressBook*) ),
            this, SLOT( updateAvailableAddressees() ) );
@@ -624,7 +633,7 @@ AddressesDialog::addAddresseeToSelected( const KABC::Addressee& addr, AddresseeV
     defaultParent->setOpen( true );
   }
 
-  d->ui->mSaveAs->setEnabled(false /*true*/); // TODO, see saveAs
+  d->ui->mSaveAs->setEnabled(true);
 }
 
 void
@@ -637,7 +646,7 @@ AddressesDialog::addAddresseesToSelected( AddresseeViewItem *parent,
 
   if (itr.current())
   {
-    d->ui->mSaveAs->setEnabled(false /*true*/); // TODO, see saveAs
+    d->ui->mSaveAs->setEnabled(true);
   }
 
   while ( itr.current() ) {
@@ -816,17 +825,33 @@ AddressesDialog::removeEntry()
     delete d->bccItem;
     d->bccItem = 0;
   }
-  d->ui->mSaveAs->setEnabled(false); // TODO, see saveAs
-  //d->ui->mSaveAs->setEnabled(d->ui->mSelectedView->firstChild() != 0);
+  d->ui->mSaveAs->setEnabled(d->ui->mSelectedView->firstChild() != 0);
+}
+
+// copied from kabcore.cpp :(
+static KABC::Resource *requestResource( KABC::AddressBook* abook, QWidget *parent )
+{
+  QPtrList<KABC::Resource> kabcResources = abook->resources();
+
+  QPtrList<KRES::Resource> kresResources;
+  QPtrListIterator<KABC::Resource> resIt( kabcResources );
+  KABC::Resource *resource;
+  while ( ( resource = resIt.current() ) != 0 ) {
+    ++resIt;
+    if ( !resource->readOnly() ) {
+      KRES::Resource *res = static_cast<KRES::Resource*>( resource );
+      if ( res )
+        kresResources.append( res );
+    }
+  }
+
+  KRES::Resource *res = KRES::SelectDialog::getResource( kresResources, parent );
+  return static_cast<KABC::Resource*>( res );
 }
 
 void
 AddressesDialog::saveAs()
 {
-#if 0 // TODO implement - needs porting to KPIM::DistributionList
-  KABC::DistributionListManager manager( KABC::StdAddressBook::self( true ) );
-  manager.load();
-
   if ( !d->ui->mSelectedView->firstChild() ) {
     KMessageBox::information( 0,
                               i18n("There are no addresses in your list. "
@@ -843,7 +868,10 @@ AddressesDialog::saveAs()
   if ( !ok || name.isEmpty() )
     return;
 
-  if ( manager.list( name ) ) {
+  KABC::AddressBook* abook = KABC::StdAddressBook::self( true );
+  KPIM::DistributionList dlist = KPIM::DistributionList::findByName( abook, name );
+
+  if ( !dlist.isEmpty() ) {
     KMessageBox::information( 0,
                               i18n( "<qt>Distribution list with the given name <b>%1</b> "
                                     "already exists. Please select a different name.</qt>" )
@@ -851,15 +879,19 @@ AddressesDialog::saveAs()
     return;
   }
 
-  KABC::DistributionList *dlist = new KABC::DistributionList( &manager, name );
+  KABC::Resource* resource = requestResource( abook, this );
+  if ( !resource )
+    return;
+
+  dlist.setResource( resource );
+  dlist.setName( name );
   KABC::Addressee::List addrl = allAddressee( d->ui->mSelectedView, false );
   for ( KABC::Addressee::List::iterator itr = addrl.begin();
         itr != addrl.end(); ++itr ) {
-    dlist->insertEntry( *itr );
+    dlist.insertEntry( *itr );
   }
 
-  manager.save();
-#endif
+  abook->insertAddressee( dlist );
 }
 
 void
@@ -967,26 +999,26 @@ AddressesDialog::allDistributionLists( AddresseeViewItem* parent ) const
 void
 AddressesDialog::addDistributionLists()
 {
-  KABC::DistributionListManager manager( KABC::StdAddressBook::self( true ) );
-  manager.load();
+  KABC::AddressBook* abook = KABC::StdAddressBook::self( true );
+  const QValueList<KPIM::DistributionList> distLists =
+    KPIM::DistributionList::allDistributionLists( abook );
 
-  QStringList distLists = manager.listNames();
   if ( distLists.isEmpty() )
     return;
 
   AddresseeViewItem *topItem = new AddresseeViewItem( d->ui->mAvailableView,
                                                       i18n( "Distribution Lists" ) );
 
-  QStringList::Iterator listIt;
+  QValueList<KPIM::DistributionList>::ConstIterator listIt;
   for ( listIt = distLists.begin(); listIt != distLists.end(); ++listIt ) {
-    KABC::DistributionList* dlist = manager.list( *listIt );
-    KABC::DistributionList::Entry::List entries = dlist->entries();
+    KPIM::DistributionList dlist = *listIt;
+    KPIM::DistributionList::Entry::List entries = dlist.entries(abook);
 
-    AddresseeViewItem *item = new AddresseeViewItem( topItem, dlist->name() );
+    AddresseeViewItem *item = new AddresseeViewItem( topItem, dlist.name() );
     connect( item, SIGNAL( addressSelected( AddresseeViewItem*, bool ) ),
              this, SLOT( availableAddressSelected( AddresseeViewItem*, bool ) ) );
 
-    KABC::DistributionList::Entry::List::Iterator itemIt;
+    KPIM::DistributionList::Entry::List::Iterator itemIt;
     for ( itemIt = entries.begin(); itemIt != entries.end(); ++itemIt )
       addAddresseeToAvailable( (*itemIt).addressee, item, false );
   }

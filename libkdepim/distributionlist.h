@@ -60,7 +60,7 @@ class DistributionList : public KABC::Addressee
     /// HACK: reimplemented from Addressee, but it's NOT virtual there
     void setName( const QString &name );
 
-    // name() : from Addressee
+    QString name() const { return formattedName(); }
 
     /**
       Insert an entry into this distribution list. If the entry already exists
@@ -101,6 +101,11 @@ class DistributionList : public KABC::Addressee
     static DistributionList findByName( KABC::AddressBook* book,
                                         const QString& name,
                                         bool caseSensitive = true );
+    // should be a method of AddressBook
+    // A bit slow (but no more than findByName).
+    // From KAddressbook, use Core::distributionLists() instead.
+    static QValueList<DistributionList> allDistributionLists( KABC::AddressBook* book );
+
 
   private:
     // can't have any data here, use Addressee's methods instead
