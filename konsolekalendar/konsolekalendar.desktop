@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=KonsoleKalendar
+Exec=kdialog --sorry "konsolekalendar is a command-line only program.  Please read the handbook at help:/konsolekalendar for more info."
+Icon=konsolekalendar
+Type=Application
+DocPath=konsolekalendar/index.html
+Terminal=0
+NoDisplay=true
+Categories=Qt;KDE;Utility;X-KDE-More
