@@ -37,7 +37,7 @@ protected slots:
   void save();
   void quit();
   void print();
-
+  void slotSelectionChanged();
 protected:
   virtual void saveProperties( KConfig* );
   void saveGeometry();
@@ -46,6 +46,12 @@ protected:
   private:
     void makeMenus();
     KDialogBase *dialog;
+  KAction 
+    *actionStart,
+    *actionStop,
+    *actionDelete,
+    *actionEdit;
+
 };
 
 #endif

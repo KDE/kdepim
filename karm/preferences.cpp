@@ -1,3 +1,4 @@
+#undef Unsorted // for --enable-final
 #include "preferences.h"
 #include <qcheckbox.h>
 #include <klineedit.h>

@@ -4,7 +4,7 @@
 */
 
 
-/* 
+/*
  * $Id$
  */
 
@@ -38,26 +38,27 @@ KarmWindow::KarmWindow()
 	_accel( new KAccel( this ) ),
 	_watcher( new KAccelMenuWatch( _accel, this ) ),
 	_karm( new Karm( this ) ),
-	_totalTime( 0 )  
+	_totalTime( 0 )
 {
   setCentralWidget( _karm );
   connect( _karm, SIGNAL( sessionTimeChanged( long ) ),
 		   this, SLOT( updateTime( long ) ) );
-
+  connect(_karm, SIGNAL(currentChanged ( QListViewItem * )),this,SLOT(slotSelectionChanged()));
+  connect(_karm, SIGNAL(selectionChanged  ( QListViewItem * )),this,SLOT(slotSelectionChanged()));
   // status bar
   statusBar()->insertItem( i18n( "This session: %1" )
                            .arg(QString::fromLatin1("0:00")), 0, 0, true );
 
   // setup PreferenceDialog.
   _preferences = Preferences::instance();
-  
+
   // popup menus
   makeMenus();
   _watcher->updateMenus();
 
   // connections
   connect( _karm, SIGNAL(timerTick()), this, SLOT(updateTime()));
-  
+
   _preferences->load();
   loadGeometry();
 
@@ -69,9 +70,19 @@ KarmWindow::KarmWindow()
   KDockWindow *dockWindow = new KDockWindow(this,"doc widget");
   dockWindow->setPixmap( SmallIcon( QString::fromLatin1( "karm" ) ) );
   dockWindow->show();
+  slotSelectionChanged();
 }
 
-void KarmWindow::save() 
+void KarmWindow::slotSelectionChanged()
+{
+  QListViewItem* item=_karm->currentItem();
+  actionDelete->setEnabled(item);
+  actionEdit->setEnabled(item);
+  actionStart->setEnabled(item);
+  actionStop->setEnabled(item);
+}
+
+void KarmWindow::save()
 {
   _karm->save();
   saveGeometry();
@@ -84,7 +95,7 @@ void KarmWindow::quit()
   kapp->quit();
 }
 
-	
+
 KarmWindow::~KarmWindow()
 {
   quit();
@@ -135,16 +146,12 @@ void KarmWindow::resetSessionTime()
 
 void KarmWindow::makeMenus()
 {
-  KAction 
+  KAction
     *actionKeyBindings,
     *actionResetSession,
-    *actionStart,
-    *actionStop,
     *actionNew,
-    *actionNewSub,
-    *actionDelete,
-    *actionEdit;
-  
+    *actionNewSub;
+
   (void) KStdAction::quit(this, SLOT(quit()), actionCollection());
   (void) KStdAction::print(this, SLOT(print()), actionCollection());
   actionKeyBindings = KStdAction::keyBindings(this, SLOT(keyBindings()),actionCollection());
@@ -172,34 +179,35 @@ void KarmWindow::makeMenus()
                            CTRL + Key_E,_karm,
                            SLOT(editTask()),actionCollection(),"edit_task");
   createGUI( QString::fromLatin1("karmui.rc") );
-  
+
   // Tool tops must be set after the createGUI.
   actionKeyBindings->setToolTip(i18n("Configure key bindings"));
   actionKeyBindings->setWhatsThis(i18n("This will let you configure keybindings which is specific to karm"));
 
   actionResetSession->setToolTip(i18n("Reset session time"));
   actionResetSession->setWhatsThis(i18n("This will reset the session time for all tasks."));
-  
+
   actionStart->setToolTip(i18n("Start timing for selected task"));
   actionStart->setWhatsThis(i18n("This will start timing for the selected task.\n"
                             "It is even possible to time several tasks simultaneously.\n\n"
                             "You may also start timing of a tasks by double clicking the left mouse "
                             "button on a given task. This will, however, stop timing of other tasks."));
-  	
+
   actionStop->setToolTip(i18n("Stop timing of the selected task"));
   actionStop->setWhatsThis(i18n("Stop timing of the selected task"));
 
   actionNew->setToolTip(i18n("Create new top level task"));
-  actionNew->setWhatsThis(i18n("This will create a new top level task."));  
+  actionNew->setWhatsThis(i18n("This will create a new top level task."));
 
   actionDelete->setToolTip(i18n("Delete selected task"));
   actionDelete->setWhatsThis(i18n("This will delete the selected task and all its subtasks."));
- 	
+
   actionEdit->setToolTip(i18n("Edit name or times for selected task"));
   actionEdit->setWhatsThis(i18n("This will bring up a dialog box where you may edit the parameters for the selected task."));
+  slotSelectionChanged();
 }
 
-void KarmWindow::print() 
+void KarmWindow::print()
 {
   MyPrinter printer(_karm);
   printer.print();
@@ -208,7 +216,7 @@ void KarmWindow::print()
 void KarmWindow::loadGeometry()
 {
   KConfig &config = *kapp->config();
-  
+
   config.setGroup( QString::fromLatin1("Main Window Geometry") );
   int w = config.readNumEntry( QString::fromLatin1("Width"), 100 );
   int h = config.readNumEntry( QString::fromLatin1("Height"), 100 );
