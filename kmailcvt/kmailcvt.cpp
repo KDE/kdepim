@@ -156,7 +156,7 @@ KAboutDialog dlg(this,"KmailCvt2");
      Y=(height()-dlg.height())/2+y();
      dlg.move(X,Y);
   }
-  dlg.show();
+  dlg.exec();
 }
 
 #include "kmailcvt.moc"
