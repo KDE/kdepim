@@ -143,7 +143,7 @@ Selects the whole article.</action>
 <menuchoice>
 <shortcut>
 <keycap>F4</keycap></shortcut>
-<guimenu>Article</guimenu>
+<guimenu>Edit</guimenu>
 <guimenuitem>Search articles</guimenuitem>
 </menuchoice>
 </term>
