@@ -1,25 +1,25 @@
-/*                                                                      
-    This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
-                                                                        
+/*
+    This file is part of KAddressBook.
+    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include <qlayout.h>
 #include <qlabel.h>
@@ -52,7 +52,7 @@ PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
 {
   QGridLayout *layout = new QGridLayout( this, 5, 2 );
   layout->setSpacing( KDialog::spacingHint() );
-  
+
   mPrefCombo = new PhoneTypeCombo( mPhoneList, this );
   mPrefEdit = new KLineEdit( this );
   mPrefEdit->setMinimumWidth( mPrefEdit->sizeHint().width() * 1.5 );
@@ -175,7 +175,7 @@ const KABC::PhoneNumber::List &PhoneEditWidget::phoneNumbers()
 void PhoneEditWidget::edit()
 {
   PhoneEditDialog dlg( mPhoneList, this );
-  
+
   if ( dlg.exec() ) {
     mPhoneList = dlg.phoneNumbers();
     updateCombos();
@@ -345,7 +345,7 @@ PhoneEditDialog::PhoneEditDialog( const KABC::PhoneNumber::List &list, QWidget *
   mListView->setAllColumnsShowFocus( true );
   mListView->addColumn( i18n( "Number" ) );
   mListView->addColumn( i18n( "Type" ) );
-  
+
   KButtonBox *buttonBox = new KButtonBox( page, Vertical );
 
   buttonBox->addButton( i18n( "&Add..." ), this, SLOT( slotAddPhoneNumber() ) );
@@ -359,6 +359,7 @@ PhoneEditDialog::PhoneEditDialog( const KABC::PhoneNumber::List &list, QWidget *
   layout->addWidget( buttonBox, 0, 1 );
 
   connect( mListView, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()) );
+  connect( mListView, SIGNAL(doubleClicked( QListViewItem *, const QPoint &, int  )), this, SLOT( slotEditPhoneNumber()));
 
   KABC::PhoneNumber::List::Iterator it;
   for ( it = mPhoneNumberList.begin(); it != mPhoneNumberList.end(); ++it )
@@ -373,7 +374,7 @@ void PhoneEditDialog::slotAddPhoneNumber()
 {
   KABC::PhoneNumber tmp( "", 0 );
   PhoneTypeDialog dlg( tmp, this );
-  
+
   if ( dlg.exec() ) {
     KABC::PhoneNumber phoneNumber = dlg.phoneNumber();
     mPhoneNumberList.append( phoneNumber );
@@ -400,7 +401,7 @@ void PhoneEditDialog::slotEditPhoneNumber()
     return;
 
   PhoneTypeDialog dlg( item->phoneNumber(), this );
-  
+
   if ( dlg.exec() ) {
     slotRemovePhoneNumber();
     KABC::PhoneNumber phoneNumber = dlg.phoneNumber();
@@ -421,7 +422,7 @@ const KABC::PhoneNumber::List &PhoneEditDialog::phoneNumbers()
 {
   return mPhoneNumberList;
 }
- 
+
 ///////////////////////////////////////////
 // PhoneTypeDialog
 PhoneTypeDialog::PhoneTypeDialog( const KABC::PhoneNumber &phoneNumber,

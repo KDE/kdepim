@@ -1,15 +1,15 @@
 /*
-    This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
-                                                                        
+    This file is part of KAddressBook.
+    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
@@ -51,7 +51,7 @@ FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
   initGUI();
 
   QStringList cats = KABPrefs::instance()->mCustomCategories;
-  
+
   QStringList::Iterator iter;
   for ( iter = cats.begin(); iter != cats.end(); ++iter )
     mCategoriesView->insertItem( new QCheckListItem( mCategoriesView, (*iter), QCheckListItem::CheckBox ) );
@@ -86,7 +86,7 @@ void FilterEditDialog::setFilter( const Filter &filter )
 Filter FilterEditDialog::filter()
 {
   Filter filter;
-  
+
   filter.setName( mNameEdit->text() );
 
   QStringList categories;
@@ -104,7 +104,7 @@ Filter FilterEditDialog::filter()
     filter.setMatchRule( Filter::Matching );
   else
     filter.setMatchRule( Filter::NotMatching );
-  
+
   return filter;
 }
 
@@ -114,7 +114,7 @@ void FilterEditDialog::initGUI()
 
   QWidget *page = plainPage();
   QLabel *label;
-  
+
   QGridLayout *topLayout = new QGridLayout( page, 3, 2 );
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( marginHint() );
@@ -124,7 +124,7 @@ void FilterEditDialog::initGUI()
   topLayout->addWidget( label, 0, 0 );
   topLayout->addWidget( mNameEdit, 0, 1 );
 
-  mCategoriesView = new KListView( page );  
+  mCategoriesView = new KListView( page );
   mCategoriesView->addColumn( i18n( "Categories" ) );
   topLayout->addMultiCellWidget( mCategoriesView, 1, 1, 0, 1 );
 
@@ -138,11 +138,11 @@ void FilterEditDialog::initGUI()
   QRadioButton *radio = new QRadioButton( i18n( "Show only contacts matching the selected categories" ), mMatchRuleGroup );
   radio->setChecked( true );
   mMatchRuleGroup->insert( radio );
-  gbLayout->addWidget( radio );  
+  gbLayout->addWidget( radio );
 
   radio = new QRadioButton(i18n("Show all contacts except those matching the selected categories"), mMatchRuleGroup );
   mMatchRuleGroup->insert( radio );
-  gbLayout->addWidget( radio );  
+  gbLayout->addWidget( radio );
 
   topLayout->addMultiCellWidget( mMatchRuleGroup, 2, 2, 0, 1 );
 }
@@ -182,7 +182,7 @@ Filter::List &FilterDialog::filters()
 
   return mFilterList;
 }
-    
+
 void FilterDialog::add()
 {
   FilterEditDialog dlg( this );
@@ -225,7 +225,7 @@ void FilterDialog::remove()
 void FilterDialog::refresh()
 {
   mFilterListBox->clear();
-  
+
   Filter::List::Iterator iter;
   for ( iter = mFilterList.begin(); iter != mFilterList.end(); ++iter )
     mFilterListBox->insertItem( (*iter).name() );
@@ -234,7 +234,7 @@ void FilterDialog::refresh()
 void FilterDialog::selectionChanged( QListBoxItem *item )
 {
   bool state = ( item != 0 );
-  
+
   mEditButton->setEnabled( state );
   mRemoveButton->setEnabled( state );
 }
@@ -244,15 +244,17 @@ void FilterDialog::initGUI()
   resize( 330, 200 );
 
   QWidget *page = plainPage();
-  
+
   QGridLayout *topLayout = new QGridLayout( page, 1, 2 );
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( marginHint() );
-  
+
   mFilterListBox = new KListBox( page, "mFilterListBox" );
   topLayout->addWidget( mFilterListBox, 0, 0 );
   connect( mFilterListBox, SIGNAL( selectionChanged( QListBoxItem * ) ),
            SLOT( selectionChanged( QListBoxItem * ) ) );
+  connect( mFilterListBox, SIGNAL( doubleClicked ( QListBoxItem * ) ),
+           SLOT( edit() ) );
 
   KButtonBox *buttonBox = new KButtonBox( page, Vertical );
   buttonBox->addButton( i18n( "&Add..." ), this, SLOT( add() ) );
