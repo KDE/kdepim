@@ -20,7 +20,7 @@
 #include <klocale.h>
 #include <kcharsets.h>
 #include <kdeversion.h>
-#if KDE_VERSION >= KDE_IS_VERSION( 3, 1, 90 )
+#if KDE_IS_VERSION( 3, 1, 90 )
 #include <kcalendarsystem.h>
 #endif
 
