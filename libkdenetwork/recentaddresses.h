@@ -33,8 +33,21 @@
 #include <qstringlist.h>
 #include <kabc/addressee.h>
 
+#include <kdialogbase.h>
+
 class KConfig;
+class KEditListBox;
 namespace KRecentAddress {
+
+class RecentAddressDialog : public KDialogBase
+{
+ public:
+  RecentAddressDialog( QWidget *parent, const char *name = 0 );
+  void setAddresses( const QStringList &addrs );
+  QStringList addresses() const;
+ private:
+    KEditListBox *mEditor;
+};
 
 /**
  * Handles a list of "recent email-addresses". Simply set a max-count and

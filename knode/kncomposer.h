@@ -367,6 +367,9 @@ protected:
     // Inherited. Always called by the parent when this widget is created.
     virtual void loadAddresses();
     void keyPressEvent(QKeyEvent *e);
+    virtual QPopupMenu *createPopupMenu();
+private slots:
+    void editRecentAddresses();
 private:
     KNComposer::ComposerView *composerView;
 };

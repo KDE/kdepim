@@ -72,6 +72,35 @@ KNLineEdit::KNLineEdit(KNComposer::ComposerView *_composerView, bool useCompleti
 {
 }
 
+
+QPopupMenu *KNLineEdit::createPopupMenu()
+{
+    QPopupMenu *menu = KLineEdit::createPopupMenu();
+    if ( !menu )
+        return 0;
+
+    menu->insertSeparator();
+    menu->insertItem( i18n( "Edit recent addresses..." ),
+                      this, SLOT( editRecentAddresses() ) );
+
+    return menu;
+}
+
+void KNLineEdit::editRecentAddresses()
+{
+  KRecentAddress::RecentAddressDialog dlg( this );
+  dlg.setAddresses( RecentAddresses::self( knGlobals.config() )->addresses() );
+  if ( dlg.exec() ) {
+    RecentAddresses::self( knGlobals.config() )->clear();
+    QStringList addrList = dlg.addresses();
+    QStringList::Iterator it;
+    for ( it = addrList.begin(); it != addrList.end(); ++it )
+      RecentAddresses::self( knGlobals.config() )->add( *it );
+
+    loadAddresses();
+  }
+}
+
 void KNLineEdit::loadAddresses()
 {
     KNLineEditInherited::loadAddresses();

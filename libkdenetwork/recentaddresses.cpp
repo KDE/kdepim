@@ -34,7 +34,11 @@
 #include <kglobal.h>
 
 #include <kdebug.h>
+#include <klocale.h>
+#include <keditlistbox.h>
 
+
+#include <qlayout.h>
 
 using namespace KRecentAddress;
 
@@ -141,4 +145,27 @@ QStringList RecentAddresses::addresses() const
         addresses.append( (*it).fullEmail() );
     }
     return addresses;
+}
+
+RecentAddressDialog::RecentAddressDialog( QWidget *parent, const char *name )
+  : KDialogBase( Plain, i18n( "Edit recent addresses" ), Ok | Cancel, Ok,
+                 parent, name, true, true )
+{
+  QWidget *page = plainPage();
+  QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );
+
+  mEditor = new KEditListBox( i18n( "Recent Addresses" ), page, "", false,
+                              KEditListBox::Add | KEditListBox::Remove );
+  layout->addWidget( mEditor );
+}
+
+void RecentAddressDialog::setAddresses( const QStringList &addrs )
+{
+  mEditor->clear();
+  mEditor->insertStringList( addrs );
+}
+
+QStringList RecentAddressDialog::addresses() const
+{
+  return mEditor->items();
 }
