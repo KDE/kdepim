@@ -79,8 +79,6 @@ class KNodeApp : public KTMainWindow
     void setStatusHelpMsg(const QString& text);
     void setCursorBusy(bool b=true);
 
-
-
     //network
     void jobDone(KNJobData *j);
     	
@@ -97,6 +95,7 @@ class KNodeApp : public KTMainWindow
   	//exit
     void cleanup();
     bool queryExit();
+    bool queryClose();
 
 	  //actions
 	  KAction *actCancel, *actSupersede;

@@ -73,10 +73,12 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
 		void cancel(KNFetchArticle *a, KNGroup *g);		
 		void supersede(KNSavedArticle *a=0);
 		void supersede(KNFetchArticle *a, KNGroup *g);		
-			
+		
 		void jobDone(KNJobData *job);
 		
 		void mailToClicked(KNArticleWidget *aw);				
+		
+  	bool closeComposeWindows();    // try to close all composers, return false if user objects
 		
 	protected:
 		KNSavedArticle* newArticle(KNNntpAccount *acc=0);

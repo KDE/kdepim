@@ -40,21 +40,24 @@ class KNComposer : public KTMainWindow  {
 
   Q_OBJECT
 	
-	public:
-		enum composerResult { CRsendNow, CRsendLater, CRdelAsk,
-													CRdel, CRsave, CRcancel };
+  public:
+    enum composerResult { CRsendNow, CRsendLater, CRdelAsk,
+                          CRdel, CRsave, CRcancel };
 													
-		KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n=0);
-		~KNComposer();
-		void setConfig();
+    KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n=0);
+    ~KNComposer();
+    void setConfig();
+
+    // this tells closeEvent() whether it can accept or not:
+    void setDoneSuccess(bool b)           { doneSuccess = b; }
 		
-		composerResult result()		{ return r_esult; }
-		KNSavedArticle* article()	{ return a_rticle; }
-		bool hasValidData();
+    composerResult result()		            { return r_esult; }
+    KNSavedArticle* article()	            { return a_rticle; }
+    bool hasValidData();
 		
-		bool textChanged()										{ return (view->edit->isModified() || externalEdited); }
-		bool attachmentsChanged()							{ return attChanged; }
-		void bodyContent(KNMimeContent *b);
+    bool textChanged()										{ return (view->edit->isModified() || externalEdited); }
+    bool attachmentsChanged()							{ return attChanged; }
+    void bodyContent(KNMimeContent *b);
 		QCString subject()                    { return QCString(view->subject->text().local8Bit()); }
 		QCString destination()                { return d_estination; }
 		QCString followUp2();
@@ -63,7 +66,7 @@ class KNComposer : public KTMainWindow  {
 		static void readConfig();
 	  				
 	protected:
-		void closeEvent(QCloseEvent *e);
+    void closeEvent(QCloseEvent *e);
 		void initData();		
 		// inserts at cursor position if clear is false, replaces content otherwise
 		void insertFile(QString fileName, bool clear=false);
@@ -96,6 +99,7 @@ class KNComposer : public KTMainWindow  {
 		KNNntpAccount *nntp;
 		QCString s_ignature, d_estination;
 		bool attChanged;
+		bool doneSuccess;
 		
 		bool externalEdited;
 		KAction *actExternalEditor;
@@ -117,7 +121,6 @@ class KNComposer : public KTMainWindow  {
  		void slotSendLater(); 		
  		void slotSaveAsDraft(); 	
  		void slotArtDelete();
-  	void slotFileClose();
   	void slotFind();
   	void slotFindNext();
   	void slotReplace();

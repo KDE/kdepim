@@ -136,6 +136,7 @@ QSize KNProgress::sizeHint() const
 KNodeApp::KNodeApp()
 {
   knGlobals.top=this;
+  kapp->setMainWidget(this);  // this makes the external viewer windows close on shutdown...
 
   //init the GUI
   setPlainCaption("KNode " KNODE_VERSION);
@@ -640,6 +641,13 @@ bool KNodeApp::queryExit()
 {
 	cleanup();	
 	return true;
+}
+
+
+
+bool KNodeApp::queryClose()
+{
+	return SAManager->closeComposeWindows();
 }
 
 

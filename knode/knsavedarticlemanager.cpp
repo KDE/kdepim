@@ -715,14 +715,17 @@ void KNSavedArticleManager::slotComposerDone(KNComposer *com)
 		case KNComposer::CRsendNow:
 			delCom=getComposerData(com);
 			if(delCom) sendArticle(art, true);
+			  else com->setDoneSuccess(false);			
 		break;
 		case KNComposer::CRsendLater:
 			delCom=getComposerData(com);
-			if(delCom) sendArticle(art, false);
+			if (delCom) sendArticle(art, false);
+			  else com->setDoneSuccess(false);
 		break;
 		case KNComposer::CRsave :
 			delCom=getComposerData(com);
 			if(delCom) saveArticle(art);
+			  else com->setDoneSuccess(false);			
 		break;
 		case KNComposer::CRdelAsk:
 			delCom=deleteArticle(art, true);
@@ -810,6 +813,22 @@ void KNSavedArticleManager::mailToClicked(KNArticleWidget *aw)
 	if(tmp.isEmpty()) tmp=aw->article()->fromEmail();
 	art->setDestination(tmp.copy());
 	openInComposer(art);
+}
+
+
+
+// try to close all composers, return false if user objects
+bool KNSavedArticleManager::closeComposeWindows()
+{
+  KNComposer *comp;
+  QList<KNComposer> comList2 = *comList;  // copy it, because the close() call will modifiy the original
+
+  for ( comp=comList2.first(); comp != 0; comp=comList2.next() ) {
+    if (!comp->close())
+      return false;
+  }
+
+  return true;
 }
 
 

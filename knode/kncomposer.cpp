@@ -74,7 +74,7 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
               actionCollection(), "save_as_draft");
   new KAction(i18n("D&elete"),"delete", 0 , this, SLOT(slotArtDelete()),
               actionCollection(), "art_delete");
-  KStdAction::close(this, SLOT(slotFileClose()),actionCollection());
+  KStdAction::close(this, SLOT(close()),actionCollection());
 
   // edit menu
   KStdAction::undo(view->edit, SLOT(undo()), actionCollection());
@@ -112,7 +112,9 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
 	
 	setConfig();
 	restoreWindowSize("composer", this, sizeHint());
-	
+
+	view->edit->setModified(false);
+		
 	if (useExternalEditor) slotExternalEditor();
 }
 
@@ -141,11 +143,31 @@ void KNComposer::setConfig()
 
 void KNComposer::closeEvent(QCloseEvent *e)
 {
-	if(a_rticle->id()==-1) r_esult=CRdel;
-	else r_esult=CRcancel;
+  if (!textChanged() && !attachmentsChanged()) {  // nothing to save, don't show nag screen
+    if (a_rticle->id()==-1) r_esult=CRdel;
+     	else r_esult=CRcancel;
+  } else {
+    switch ( KMessageBox::warningYesNoCancel( this, i18n("Do you want to save this article in the draft folder?"),
+                                              QString::null, i18n("&Save"), i18n("&Discard"))) {
+      case KMessageBox::Yes :
+        r_esult=CRsave;
+        break;
+      case KMessageBox::No :
+      	if (a_rticle->id()==-1) r_esult=CRdel;
+          else r_esult=CRcancel;
+        break;
+      default:            // cancel
+        e->ignore();
+        return;
+    }
+  }
 	
-	e->accept();
-	emit composerDone(this);
+  doneSuccess = true;
+  emit composerDone(this);
+  if (doneSuccess)
+    e->accept();
+  else
+    e->ignore();
 }
 
 
@@ -344,12 +366,6 @@ void KNComposer::slotArtDelete()
 {
   r_esult=CRdelAsk;
   emit composerDone(this);
-}
-
-
-void KNComposer::slotFileClose()
-{
-	close();
 }
 
 
@@ -587,6 +603,7 @@ void KNComposer::slotSpellFinished()
 void KNComposer::slotEditorFinished(KProcess *)
 {
   insertFile(editorTempfile->name(),true);
+  externalEdited = true;
   slotCancelEditor();   // cleanup...
 }
 
