@@ -47,7 +47,7 @@
 </copyright>
 
 <copyright>
-<year>2003</year><year>2004</year><holder>Allen Winter</holder>
+<year>2003</year><year>2005</year><holder>Allen Winter</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
@@ -445,6 +445,18 @@ room with the entire staff.,&konsolekalendar;-1128954167.1013
 
 <para>The <acronym>HTML</acronym> export format will produce a valid
 <acronym>HTML</acronym> file that can be published to the <acronym>WWW</acronym>.
+This export format is not suitable for follow-on script parsing, but is
+very nice for publishing calendars for easy public viewing.</para>
+
+<para><emphasis>TODO:</emphasis> Insert screenshot here</para>
+
+</sect2>
+
+<sect2 id="html-month-format">
+<title><acronym>HTMLmonth</acronym> Format</title>
+
+<para>This format produces an <acronym>HTML</acronym> file showing 
+all appointments in the months specified by the date range.
 This export format is not suitable for follow-on script parsing, but is
 very nice for publishing calendars for easy public viewing.</para>
 
