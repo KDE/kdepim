@@ -36,6 +36,7 @@
 #endif
 
 #include "backendconfigwidget.h"
+#include "cryptoconfigdialog.h"
 
 #include "cryptplugfactory.h"
 #include "cryptplugwrapperlist.h"
@@ -170,7 +171,12 @@ void Kleo::BackendConfigWidget::slotRescanButtonClicked() {
 }
 
 void Kleo::BackendConfigWidget::slotConfigureButtonClicked() {
-  qDebug( "Sorry, not implemented: Kleo::BackendConfigWidget::slotConfigureButtonClicked()" );
+  if ( d->backendFactory->config() ) {
+    Kleo::CryptoConfigDialog dlg( d->backendFactory->config() );
+    dlg.exec();
+  }
+  else
+    kdWarning(5150) << "Can't configure backend, no config object available" << endl;
 }
 
 void Kleo::BackendConfigWidget::save() const {

@@ -58,7 +58,7 @@ Kleo::CryptoConfigEntry* DirectoryServicesConfigurationPage::configEntry() {
         KMessageBox::error( this, i18n( "Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3" ).arg( s_dirserv_componentName, s_dirserv_groupName, s_dirserv_entryName ) );
         return 0;
     }
-    if( entry->argType() != Kleo::CryptoConfigEntry::ArgType_URL || !entry->isList() ) {
+    if( entry->argType() != Kleo::CryptoConfigEntry::ArgType_LDAPURL || !entry->isList() ) {
         KMessageBox::error( this, i18n( "Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5" ).arg( s_dirserv_componentName, s_dirserv_groupName, s_dirserv_entryName ).arg( entry->argType() ).arg( entry->isList() ) );
         return 0;
     }

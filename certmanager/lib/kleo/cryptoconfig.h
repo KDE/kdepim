@@ -49,16 +49,10 @@ namespace Kleo {
        @li basic	This option should always be offered to the user.
        @li advanced	This option may be offered to advanced users.
        @li expert	This option should only be offered to expert users.
-       @li invisible	This option should normally never be displayed,
-       not even to expert users.
-       @li internal	This option is for internal use only.  Ignore it.
-       // #### should we even have internal in the API, then?
        */
     enum Level { Level_Basic = 0,
                  Level_Advanced = 1,
-                 Level_Expert = 2,
-                 Level_Invisible = 3,
-                 Level_Internal = 4 };
+                 Level_Expert = 2 };
 
     /**
        Type of the argument
@@ -70,13 +64,16 @@ namespace Kleo {
        The file does not necessarily need to exist.
        Separated from string so that e.g. a KURLRequester can be used.
        @li ArgType_URL		A URL
+       @li ArgType_LDAPURL	A LDAP URL
+       Separated from URL so that a more specific widget can be shown, hiding the url syntax
     */
     enum ArgType { ArgType_None = 0,
                    ArgType_String = 1,
                    ArgType_Int = 2,
                    ArgType_UInt = 3,
                    ArgType_Path = 4,
-                   ArgType_URL = 5 };
+                   ArgType_URL = 5,
+                   ArgType_LDAPURL = 6 };
 
     virtual ~CryptoConfigEntry() {}
 
@@ -335,9 +332,11 @@ namespace Kleo {
     virtual void sync( bool runtime ) = 0;
 
     /**
-     * Tells the CryptoConfig to discard any cached information.
+     * Tells the CryptoConfig to discard any cached information, including
+     * all components, groups and entries.
      * Call this to free some memory when you won't be using the object
      * for some time.
+     * DON'T call this if you're holding pointers to components, groups or entries.
      */
     virtual void clear() = 0;
   };

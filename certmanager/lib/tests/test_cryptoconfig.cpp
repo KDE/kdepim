@@ -79,6 +79,7 @@ int main( int argc, char** argv ) {
           case Kleo::CryptoConfigEntry::ArgType_UInt:
             cout << " uint value=" << entry->uintValue();
             break;
+          case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
           case Kleo::CryptoConfigEntry::ArgType_URL:
             cout << " URL value=" << entry->urlValue().prettyURL().local8Bit();
             // fallthrough
@@ -113,6 +114,7 @@ int main( int argc, char** argv ) {
             cout << " uint values=" << str.local8Bit();
             break;
           }
+          case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
           case Kleo::CryptoConfigEntry::ArgType_URL: {
               KURL::List urls = entry->urlValueList();
               cout << " url values=" << urls.toStringList().join(" ").local8Bit() << "\n    ";
@@ -159,6 +161,7 @@ int main( int argc, char** argv ) {
 
       // Set to default
       entry->resetToDefault();
+      assert( entry->uintValue() == 100 );
       assert( entry->isDirty() );
       assert( !entry->isSet() );
       config->sync( true );
@@ -168,7 +171,8 @@ int main( int argc, char** argv ) {
       entry = config->entry( "dirmngr", "LDAP", "ldaptimeout" );
       assert( !entry->isDirty() );
       assert( !entry->isSet() );
-      cout << "LDAP timeout reset to default, " << val << " seconds." << endl;
+      cout << "LDAP timeout reset to default, " << entry->uintValue() << " seconds." << endl;
+      assert( entry->uintValue() == 100 );
 
       // Reset old value
       entry->setUIntValue( val );

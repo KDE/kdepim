@@ -158,13 +158,17 @@ public:
   void setDirty( bool b ) { mDirty = b; }
   QString outputString() const;
 
+protected:
+  bool isStringType() const;
+  QVariant stringToValue( const QString& value ) const;
 private:
   QString mDescription;
+  QVariant mDefaultValue;
   QVariant mValue;
-  uint mFlags : 4; // bitfield with 4 bits
-  uint mLevel : 3; // max is 4 -> 3 bits
+  uint mFlags : 7; // bitfield with 7 bits
+  uint mLevel : 3; // max is 4 (2, in fact) -> 3 bits
   uint mRealArgType : 6; // max is 33 -> 6 bits
-  uint mArgType : 3; // max is 5 (ArgType enum) -> 3 bits;
+  uint mArgType : 3; // max is 6 (ArgType enum) -> 3 bits;
   uint mDirty : 1;
   uint mSet : 1;
 };
