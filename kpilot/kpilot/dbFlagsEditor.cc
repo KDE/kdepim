@@ -31,6 +31,7 @@
 
 #include <qlineedit.h>
 #include <qcheckbox.h>
+#include <qtextcodec.h>
 #include <kdatewidget.h>
 #include <ktimewidget.h>
 #include <kmessagebox.h>
