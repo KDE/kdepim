@@ -51,7 +51,7 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2004-07-05</date>
+<date>2004-07-12</date>
 <releaseinfo>1.4.0</releaseinfo>
 
 <abstract><para>&karm; tracks time spent on various tasks.</para></abstract>
@@ -71,16 +71,18 @@
 <title>Introduction</title>
 
 <para>&karm; tracks time spent on various tasks.  It is useful for tracking
-	billable hours and can report the hours logged by task and day.  This
-	history report can be exported to a comma-delimited text file for import
-	into other billing and/or project management tools.  &karm; detects when
-	your keyboard and mouse go idle and can associate different tasks with
-	different desktops, two tools that can help keep the timer running on the
-	correct task.</para>
+       billable hours and can report the hours logged by task and day.  This
+       history report can be exported to a comma-delimited text file for import
+       into other billing and/or project management tools.  &karm; detects when
+       your keyboard and mouse go idle and can associate different tasks with
+       different desktops, two tools that can help keep the timer running on the
+       correct task.</para>
 
 <para>&karm; was originally written by Sirtaj Singh Kang. The word
 <quote>karm</quote> means <quote>work</quote> in the author's native
 Punjabi.</para>
+
+<para>TODO: Add link to kdepim.kde.org page.</para>
 
 </chapter>
 
@@ -102,55 +104,93 @@ at the command line.</para>
 </sect1>
 
 <sect1 id="general-use">
-<title>General usage</title>
+<title>Tasks</title>
 
-<para>Enter the various tasks you wish to track.</para>
+<informalexample>
+<formalpara><title>Problem:</title><para>You are a free software consultant with
+many clients.  Some clients have multiple projects.  During the course of a
+day, you switch back and forth between different projects.  You need to track
+your time to generate monthly invoices.</para></formalpara>
+<formalpara><title>Solution:</title><para>Create one top-level task for each client
+and a subtask for each client project.  For projects that require more
+detailed tracking, create a list of project subtasks.  Track time by
+double-clicking on task you are currently working on.</para></formalpara>
+</informalexample>
 
-<para>To start timing a task, select it and double-click on it, choose
-<guimenuitem>Start</guimenuitem> from the <guimenu>Clock</guimenu> menu
-or press the <guiicon>Start</guiicon> button in the toolbar. To stop
-timing it, double-click it, choose <guimenuitem>Stop</guimenuitem> from
-the <guimenu>Clock</guimenu> menu or press the <guiicon>Stop</guiicon>
-button in the toolbar. &karm; also now allows you to tie tasks to a 
-particular desktop and time them automatically.</para><para>A &karm; 
-icon also appears in the &kde; taskbar, indicating when timing has 
-started or stopped; right-click it to access some of &karm;'s 
-features.</para>
+<para>&karm; provides great flexibility in tracking your time, allowing
+unlimited tasks and task depth.  Time may be logged to any task, and more than
+one task can be active at any given time.</para>
 
-<para>Multiple tasks can now be timed simultaneously.</para>
+<para>
+To create a top-level task, select
+<menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
+</shortcut>
+<guimenu>Task</guimenu>
+<guimenuitem>New</guimenuitem>
+</menuchoice>
 
-<para>Tasks can be saved and are restored at the next use.</para>
+To create a subtask, pick the parent task and select
+
+<menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;&Alt;<keycap>N</keycap></keycombo>
+</shortcut>
+<guimenu>Task</guimenu>
+<guimenuitem>New Subtask</guimenuitem>
+</menuchoice>
+</para>
+
+<para>When &karm; exits, the task list is saved to the file specified in 
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure KArm</guimenuitem>
+</menuchoice>.
+When it next opens, it reloads the task list from the same file.</para>
 
 </sect1>
 
-<sect1 id="timers"><title>The Timers</title>
+<sect1 id="timers"><title>Timers</title>
 
-<para>&karm; maintains two different timers for each task: the session time
-and the total time.  For example, to track hours logged this week and this
-month, reset the session time at the beginning of the work week and reset all
-times at the beginning of each month.</para>
+<informalexample>
+<formalpara><title>Problem:</title><para>To remain solvent, you must bill an
+average of five hours a day.  To stay on track, you watch your daily and
+weekly totals.</para></formalpara>
+<formalpara><title>Solution:</title><para>Reset the session timer at the
+beginning of each work day and reset all timers at the beginning of each
+week.</para></formalpara> </informalexample>
 
-<para>In the default configuration, &karm; displays four time columns for
-each task:</para>
+<para>&karm; makes tracking time simple.  To start logging time against a
+task, double-click on the task.  To stop logging time, double-click
+the task again.  Active tasks display a small clock in the <guilabel>Session
+Time</guilabel> column.</para>
+	
+<para>Another visual clue of logging activity is the &karm; system tray icon.
+When a task is active, the second hand in the icon moves.  If you rest the
+mouse pointer over this icon, the name of the active task will display in a
+tooltip.  If more than one task is active, the task names in the tooltip are 
+separated by commas.</para>
+
+<para>&karm; maintains two timers for each task: one for the session time
+and one for the total time.  In the default configuration, &karm; displays
+two columns for each timer, resulting in a total of four columns for each task:</para>
 
 <variablelist>
-
 <varlistentry> <term><guilabel>Session Time</guilabel></term>
-<listitem><para>The time logged for the task since the session
+<listitem><para>The time spent on the task since the session
 began.</para></listitem> </varlistentry> 
 
 <varlistentry> <term><guilabel>Total Session Time</guilabel></term>
-<listitem><para>The time logged for this task and all it's subtasks since the
+<listitem><para>The time spent on the task and all it's subtasks since the
 session began.</para></listitem> </varlistentry> 
-
 <varlistentry> <term><guilabel>Time</guilabel></term> <listitem><para>The time
-logged for the task since all times were reset.</para></listitem>
+spent on the task since all times were reset.</para></listitem>
 </varlistentry> 
 
 <varlistentry> <term><guilabel>Total Time</guilabel></term>
-<listitem><para>The time logged for this task and all it's subtasks since all
+<listitem><para>The time spent on the task and all it's subtasks since all
 times were reset.</para></listitem> </varlistentry> 
-
 </variablelist>
 
 <para>To start a new session, select
@@ -167,6 +207,194 @@ times were reset.</para></listitem> </varlistentry>
 </menuchoice>
 </para>
 
+<sect2><title>Desktop Tracking</title>
+
+<informalexample>
+<formalpara><title>Problem:</title><para>You have two main projects that you
+switch between each day.  To help organize your work, you keep your project
+1 files on Desktop 1 and your project 2 files on Desktop
+2.</para></formalpara>
+
+<formalpara><title>Solution:</title><para>Associate project 1 task with Desktop 1
+and the project 2 task with Desktop 2.  When you switch from Desktop 2 to
+Desktop 1 active, &karm; automatically stops the project 2 task and starts
+the project 1 task.</para></formalpara>
+</informalexample>
+
+<para>To associate a task with a one or more desktops, select
+<menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>E</keycap></keycombo>
+</shortcut>
+<guimenu>Task</guimenu>
+<guimenuitem>Edit</guimenuitem>
+</menuchoice>.
+
+Turn on <guilabel>Auto tracking</guilabel> and select the desktop or desktops
+to associate with this task.  When any of the selected desktops becomes active,
+after a short delay &karm; will be automatically start logging time against
+that task.</para>
+
+</sect2>
+
+<sect2><title>Idle Detection</title>
+
+<informalexample> <formalpara><title>Problem:</title><para>You leave work
+early on Friday to run an errand and forget to stop the timer.  When you
+return on Monday, the timer is still running.</para> </formalpara>
+<formalpara><title>Solution:</title><para>Turn on idle detection.</para>
+</formalpara> </informalexample>
+
+<para>&karm; can be configured to detect when the mouse and keyboard become
+ idle.  If the mouse and keyboard are idle for longer than the specified
+ number of minutes, &karm; displays the following dialog:</para>
+
+<screenshot>
+ <screeninfo>&karm; Idle Detection</screeninfo>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="idle-detect.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <phrase>&karm; Idle Detection Dialog</phrase>
+          </textobject>
+        </mediaobject>
+</screenshot>
+
+<variablelist>
+<varlistentry><term><guibutton>Revert &amp; Stop</guibutton></term>
+<listitem><para>Subtract the amount of idle time from all active timers and
+stop them.</para><para>You were not working on the task(s) while you
+computer was idle and you are still are
+not.</para></listitem></varlistentry> 
+
+<varlistentry> <term><guibutton>Revert &amp; Continue</guibutton></term>
+<listitem><para>Subtract the amount of idle time from all active timers but
+keep them running.</para><para>You were not working on the task(s) while
+your computer was idle but you are now.  </para></listitem></varlistentry> 
+
+<varlistentry> <term><guibutton>Continue Timing</guibutton></term>
+<listitem><para>Apply the idle time to all active timers and keep them
+running.</para><para>You were working on the task(s) while your computer
+was idle and still are.  </para></listitem></varlistentry> </variablelist>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="reporting"><title>Reporting</title>
+
+<para>&karm; provides three ways of reporting on time you have logged.  You
+can send the session and time totals to the printer, copy the time totals to
+the clipboard, or the time history to the clipboard.</para>
+
+<sect2><title>Printer Report</title>
+<para>To generate the totals report for the printer, select
+<menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Print</guimenuitem>
+</menuchoice>.
+This generates a three-column report for the complete list of tasks.  The
+first column is the task name, the second column is the <guilabel>Total
+Session Time</guilabel> and the third column is the <guilabel>Total
+Time</guilabel>.</para>
+</sect2>
+
+<sect2><title>Clipboard Totals</title>
+<para>To generate the totals report to the clipboard, select
+<menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Copy Totals to Clipboard</guimenuitem>
+</menuchoice>.
+</para>
+
+<para>This report is generated for the currenly selected task and all it's
+subtasks.  If the current task is a top-level task, &karm; asks you if you
+want to generate the report for the current task and it's subtasks or for the
+entire task list.</para>
+
+<screenshot>
+<screeninfo>&karm; Copy This Task</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="copy-this-task.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>&karm; Copy This Task Dialog</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>Once the report is generated, Open KEdit or some other text editor and
+paste the report data.</para>
+
+<screen>
+Task Totals
+2004-07-10 02:26
+
+  Time    Task
+----------------------------------------------
+  6:35    kde
+   6:35    karm
+    1:08    bugs
+    0:00    checkin changes - translation strings
+   0:00    promo
+   0:00    web stuff
+----------------------------------------------
+  6:35 Total
+</screen>
+
+<para>The first column is the <guilabel>Total Time</guilabel> and is indented
+(like the task names) to indicate task/sub-task relationships.  The reported times
+include the sub-task times.</para> 
+
+</sect2>
+
+<sect2><title>Clipboard History</title>
+<para>To generate the totals report to the clipboard, select
+<menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;&Alt;<keycap>C</keycap></keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Copy History to Clipboard</guimenuitem>
+</menuchoice>.
+</para>
+
+<para>This report is generated for the currenly selected task and all it's
+subtasks.  Unlike the totals report, this report does not give you the option
+to report on the complete task list.  You can only report on the current task
+and all it's sub-tasks.</para>
+
+<para>TODO: add screenshot of date selection dialog, explain.</para>
+
+<para>TODO: show example output, mention logging config parameter.</para>
+
+</sect2>
+</sect1>
+
+<sect1 id="interfaces">
+<title>Other Systems</title>
+<sect2 id="korganizer"><title>KOrganizer</title>
+
+<para>&karm;, like KOrganizer and Apple's iCal, uses the industry standard
+<ulink
+url="http://developer.kde.org/documentation/standards/index.html">iCalendar</ulink>
+format for it's data.  &karm; can read and write the to do lists created by
+these two applications.</para>
+
+<para>TODO: Add warning about locking</para>
+
+</sect2>
+<sect2 id="csv-export"><title>Data Export</title>
+<para>TODO: write data export section</para>
+</sect2>
 </sect1>
 
 </chapter>
@@ -197,7 +425,7 @@ time accumulated for each in the current session and in total. Tasks
 being timed have a small clock icon next to the session time.</para>
 
 <para>Subtasks can be created for each task. Clicking the plus sign and 
-minus sign in front of the maintask toggles the view of its associated
+minus sign in front of the main task toggles the view of its associated
 subtasks. The total time accrued for a task includes the times for its 
 subtasks, as well as its own accumulated time.</para>
 
@@ -224,7 +452,8 @@ times</action></para>
 </varlistentry>
 
 <varlistentry>
-<term><menuchoice>
+<term>
+<menuchoice>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
 </shortcut>
@@ -452,8 +681,8 @@ configure &karm;</para>
 allows you to specify an alert for no activity and a warning message when you 
 delete a task set, <guilabel>Display </guilabel>, which configures the fields 
 shown in the main window and <guilabel>Storage</guilabel>,
-which configures the location of the save file, whether autosaving is
-enabled and the autosave interval.</para> </listitem>
+which configures the location of the save file, whether auto saving is
+enabled and the auto save interval.</para> </listitem>
 </varlistentry>
 
 </variablelist>
@@ -544,6 +773,52 @@ which is that it is based on the Xt toolkit.</para>
 &underGPL;
 
 </chapter>
+
+<glossary id="glossary">
+<glossentry id="gloss-active-task">
+<glossterm>active task</glossterm>
+<glossdef><para>A task which has a timer running.</para></glossdef>
+</glossentry>
+
+<glossentry id="gloss-desktop">
+<glossterm>desktop</glossterm>
+<glossdef><para>GNU/Linux, FreeBSD and other systems that run X-Windows have
+multiple desktops.  You typically have four different desktops installed by
+default.  Each desktop can display it's own set of programs and files.  When
+KDE first starts up, the desktop you see is Desktop 1.  If you press
+<keycombo action="simul">&Alt;<keycap>F2</keycap></keycombo>, you will see
+Desktop 2.  Pressing <keycombo
+action="simul">&Alt;<keycap>F1</keycap></keycombo> will bring back Desktop
+1.  </para></glossdef> </glossentry>
+
+<glossentry id="gloss-history">
+<glossterm>history</glossterm>
+<glossdef><para>If &karm; is configured to log history, it will record ever
+start/stop timer event. This history is never cleared when times are reset
+cleared and remains on file until the task is deleted.</para></glossdef>
+</glossentry>
+
+<glossentry id="gloss-session"> <glossterm>session</glossterm>
+<glossdef><para>A user-defined starting point for the session timers.  A new
+session begins when you select <menuchoice> <guimenu>File</guimenu>
+<guimenuitem>Start New Session</guimenuitem> </menuchoice>.
+Session data is not saved when you create a new session.
+</para></glossdef> </glossentry>
+
+<glossentry id="gloss-system-tray"> <glossterm>system tray</glossterm>
+<glossdef><para>The system tray is in the bar that (by default) appears at
+the bottom of the screen.  In this system tray <inlinemediaobject>
+<imageobject> <imagedata fileref="systray.png"
+format="PNG"/></imageobject> </inlinemediaobject> the &karm; icon is on the far
+right.</para></glossdef>
+</glossentry>
+
+<glossentry id="gloss-top-level-task">
+<glossterm>top level task</glossterm>
+<glossdef><para>A task with no parent tasks.</para></glossdef>
+</glossentry>
+
+</glossary>
 
 <appendix id="installation">
 <title>Installation</title>
