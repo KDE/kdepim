@@ -54,7 +54,7 @@ binary-arch: build
 	for i in `cat debian/undocumented.in | grep -v "#"`; do \
 	  echo "$$i.1" >> debian/undocumented ; \
 	done
-	dh_movefiles -pkdepim-dev $(kde_libdir)/*.a $(kde_libdir)/*.la $(kde_includedir)
+	dh_movefiles -pkdepim-dev $(kde_libdir)/*.a $(kde_libdir)/*.la 
 	dh_undocumented 
 	dh_installdocs
 	dh_installmenu
