@@ -488,7 +488,7 @@ void KonsoleKalendarVariables::setParseString( QString parsestring ){
   QString summary;
   QString description;
   QString location;
-  bool floating;
+  // bool floating;
   int a = 0;
 
   m_bParseString = true;
