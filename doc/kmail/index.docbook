@@ -40,8 +40,8 @@
 
 </authorgroup>
 
-<date>2001-09-02</date>
-<releaseinfo>1.03.00</releaseinfo>
+<date>2001-12-02</date>
+<releaseinfo>1.03.70</releaseinfo>
 
 <copyright>
 <year>1999</year>
@@ -587,11 +587,9 @@ select addresses from there.</para>
 <para>When you start typing an address in the
 <guilabel>To:</guilabel>/<guilabel>Cc:</guilabel>/<guilabel>Bcc:</guilabel>
 fields, a popup will appear that offers matching addresses that have been used recently 
-and matching addresses from your address book. <!-- fixme: will hopefully be fixed: -->
-Note that this auto-completion is case-sensitive, so if you type <guilabel>john</guilabel>, 
-<guilabel>John Doe &lt;doe@acme.com&gt;</guilabel> will not show
-up automatically. If you don't like the automatic popup you can disable it by clicking
-with the &RMB; on the field and choosing a different completion mode.</para>
+and matching addresses from your address book. If you don't like the automatic 
+popup you can disable it by clicking with the &RMB; on the field and choosing 
+a different completion mode.</para>
 
 <para>Whenever you want to add more than one
 recipient in one of the fields, use a comma to separate each address
@@ -1272,7 +1270,7 @@ that are from fj@anywhere.com.</para>
 <sect1 id="multiple-accounts">
 <title>Multiple Accounts</title>
 
-<para>Multiple accounts are used to check fro messages from more than one email address
+<para>Multiple accounts are used to check for messages from more than one email address
 and/or mail server. Select <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kmail;...</guimenuitem></menuchoice> and click on the
 <guilabel>Network</guilabel> tab to add or change your account settings. See the
@@ -1514,28 +1512,336 @@ setting's <guilabel>Security</guilabel> tab.</para>
 <chapter id="configure">
 <title>Configure &kmail;</title>
 
-<para>&kmail;'s settings window gives you a number of ways to configure &kmail;.</para>
+<para>&kmail;'s settings window gives you a number of ways to
+configure &kmail;. You can reach it via
+<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
+&kmail;...</guimenuitem></menuchoice>.</para>
 
-<sect1 id="identity-tab">
-<title>Identity Tab</title>
+<para>It is divided into six
+<!--fixme: update when plugin page becomes available-->
+pages, each of them represented by one of the
+icons in the list on the left hand side of the dialog. This chapter
+will describe each page in detail.</para>
 
-<para>The Identity Tab is described in the <link linkend="getting-started">Getting Started</link>
+<sect1 id="configure-identity">
+<title>The <guilabel>Identity</guilabel> Page</title>
+
+<para>You can find a quick introduction to the
+<guilabel>Identity</guilabel> page in the <link
+linkend="getting-started">Getting Started</link> section.</para>
+
+<para>This page allows you to create one or more
+<emphasis>Identities</emphasis>, &ie; combinations of name, email
+address and other settings. Typically, you will create one identity
+for <quote>official</quote> communication (&eg; at work) and one for
+<quote>private</quote> communication. If you have more than one email
+address, you can create one identity per address. You will then be
+able to select an address on a per-mail basis.</para>
+
+<para>The page consists of a popup menu named
+<guilabel>Identity</guilabel>, three buttons to perform some general
+identity list management and three tabs holding each identity's
+settings.</para>
+
+<para>The <guilabel>Identity</guilabel> popup will always show at
+least one identity: the <guilabel>Default</guilabel> identity. You
+cannot delete and you cannot rename the <guilabel>Default</guilabel>
+identity.</para>
+
+<para>To rename the currently selected identity, click on the
+<guibutton>Rename...</guibutton> button. A small dialog will come up
+asking for the new name of the identity.</para>
+
+<para>To delete the currently selected identity, click on the
+<guibutton>Remove</guibutton> button and confirm the action in the
+dialog that pops up.</para>
+
+<para>To add a new identity to the identity list, click on the
+<guibutton>New...</guibutton> button. A dialog will come up that
+allows you to select certain defaults for your new idenity.</para>
+
+<!-- TODO?: s/dialog/form(ular)/? since it's not really a dialog (see iface hall of shame) -->
+<sect2 id="configure-identity-newidentitydialog">
+<title>The <guilabel>New Identity</guilabel> Dialog</title>
+
+<para>You can reach this dialog via &kmail;'s <link
+linkend="configure">configure dialog</link>. If you got here by
+accident, just hit the <guibutton>Cancel</guibutton> button to leave
+the dialog without creating a new identity.</para>
+
+<para>You can enter the name of the new identity into the
+<guilabel>New Identity</guilabel> edit field. This will be the name
+shown in the identity list.</para>
+
+<para>You can choose how the new identity should be initialized by
+checking one of the three radio buttons in the middle of the
+dialog:</para>
+<variablelist>
+<varlistentry>
+<term><guilabel>With empty fields</guilabel></term>
+<listitem>
+<para>All fields of the new identity are cleared or preset with
+standard values.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Use Control Center settings</guilabel></term>
+<listitem>
+<para>Uses the settings of the <application>Control
+Center</application>'s default email profile (you can edit that one
+under <menuchoice><guimenu>Personalization</guimenu>
+<guimenuitem>EMail</guimenuitem></menuchoice> in the
+<application>Control Center</application>).</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Duplicate existing identity</guilabel></term>
+<listitem>
+<para>Copies all fields from an already existent identity. You can
+choose which identity to copy from by selecting the corresponding
+entry in the <guilabel>Existing identities</guilabel> popup.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+<para>Hit <guibutton>OK</guibutton> to create the new identity or
+<guibutton>Cancel</guibutton> to abort creation.</para>
+</sect2>
+
+<sect2 id="configure-identity-general">
+<title><guilabel>General</guilabel> Tab</title>
+
+<para>The <guilabel>General</guilabel> tab allows you to specify some
+basic settings for the currently selected identity.</para>
+<variablelist>
+<varlistentry>
+<term><guilabel>Name</guilabel></term>
+<listitem>
+<para>Enter your full name here. This field isn't strictly mandatory,
+but without it, your email address shows up as
+<replaceable>joe@example.com</replaceable>, &ie; without the so-called
+<emphasis>display name</emphasis>.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Organization</guilabel></term>
+<listitem>
+<para>Enter your organization here. This field is purely
+optional. Most user agents will show this information in a separate
+header field <guilabel>Organization</guilabel>. &kmail;, however, puts
+it between parentheses and displays is together with the email address
+in the <guilabel>From</guilabel> header field.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Email Address</guilabel></term>
+<listitem>
+<para>Enter your email address here (without the <emphasis>display
+name</emphasis>).</para>
+</listitem>
+</varlistentry>
+</variablelist>
+<note>
+<para>If your email address is <replaceable>Joe User
+&le;joe@example.com&gt;</replaceable>, you should enter <userinput>Joe
+User</userinput> into the <guilabel>Name</guilabel> field and
+<userinput>joe@example.com</userinput> into the <guilabel>Email
+Address</guilabel> field.</para>
+</note>
+</sect2>
+
+<sect2 id="configure-identity-advanced">
+<title><guilabel>Advanced</guilabel> Tab</title>
+
+<para>The <guilabel>Advanced</guilabel> tab allows you to specify some
+rarely used or otherwise specialized settings for the currently
+selected identity.</para>
+<variablelist>
+<varlistentry>
+<term><guilabel>Reply-To Address</guilabel></term>
+<listitem>
+<para>Enter here the address to which replies to your mails should be
+sent. Only fill out this field if it is different from your normal
+address (specified using the <guilabel>Name</guilabel> and
+<guilabel>Email Address</guilabel> on the <link
+linkend="configure-identity-general"><guilabel>General</guilabel>
+tab</link>), since replies default to the sender's address
+anyway.</para>
+
+<note><para>This field is only useful if you want replies to your mail
+to go somewhere else than your regular email address, &eg; if you are
+using this identity to send emails from an email address that cannot
+receive messages. <!-- TODO: wording... -->Since there is no real <emphasis>killer
+argument</emphasis> for using this field, it will possibly be
+deprecated by newer versions of the email standard. Also, some broken
+mailing lists overwrite this header field with their post address to
+make sure that replies go to the list instead of individuals. So the
+usefulness of this field is very limited and it should only be used in
+rare cases.</para></note>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>OpenPGP Key</guilabel></term>
+<listitem>
+<para>Select here the ID of your <application>OpenPGP</application>
+key that should be used to (digitally) sign messages when this
+identity is used. When you click on the <guilabel>Change...</guilabel>
+button, a key selection dialog comes up where you can select the key
+to use from the list of secret keys found. If you don't have an
+<application>OpenPGP</application> key or don't know what that is, you
+don't need to worry about this setting.</para>
+
+<note><para>The selected key will also be used as the recipient when
+you check <link linkend="configure-security-pgp-encrypttoself">
+<guilabel>When encrypting, always include me in the list of
+recipients</guilabel></link> on the <link
+linkend="configure-security-pgp"><guilabel>PGP</guilabel> tab</link>
+of the <link linkend="configure-security">
+<guilabel>Security</guilabel> page</link>.</para></note>
+
+<note><para>You might need to configure your
+<application>OpenPGP</application> environment first, before the key
+selection dialog works. You can do this on the <link
+linkend="configure-security"> <guilabel>Security</guilabel>
+page</link>.</para></note>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Sent-mail folder</guilabel></term>
+<listitem>
+<para>Select the folder into which mails should be filed after sending
+when using this identity.</para>
+
+<tip><para>You can exercise more fine-grained control over where to
+file sent mails by creating a corresponding <link
+linkend="filters">filter</link> that is applied to outgoing
+mails.</para></tip>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Special transport</guilabel></term>
+<listitem>
+<para>Select or enter an alternative SMTP server to be used when sending
+mails using this identity.</para>
+
+<note><para>You need to configure outgoing mail servers first, before
+you can choose them from the list. You can do this on the <link
+linkend="configure-network-sending"><guilabel>Sending</guilabel>
+tab</link> of the <link linkend="configure-network">
+<guilabel>Network</guilabel> page</link>.</para></note>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect2>
+
+<sect2 id="configure-identity-signature">
+<title><guilabel>Signature</guilabel> Tab</title>
+
+<para>This tab allows you to specify a signature (footer/disclaimer)
+to be appended to each mail sent using this identity.</para>
+
+<note><para>This type of signature has nothing to do with the
+(digital) signatures for which you can select the to-be-used key on
+the <link linkend="configure-identity-advanced">previous
+tab</link>. It's just bad wording to call this a signature, but since
+the term is already used everywhere else, we keep this notation. Just
+keep in mind that these signatures and digital signatures are two
+totally different things.</para></note>
+
+<para>Check the <guilabel>Enable signature</guilabel> option if you
+want to append signatures when using this idenity.</para>
+
+<para>Check the <guilabel>Automatically append signature</guilabel>
+option if you want the signature to be appended automatically to each
+mail you compose using this identity. Else, choose
+<menuchoice><guimenuitem>Append signature</guimenuitem></menuchoice> in
+the <link
+linkend="composer-attach-menu"><guilabel>Composer</guilabel>'s
+<guimenu>Attach</guimenu> menu</link> whenever you want to append the
+signature.</para>
+
+<para>&kmail; can obtain the signature text from various sources. The
+traditional way on Unix is to read the text from a file called
+<filename>.signature</filename> in the user's home directory. This file can
+be shared between several mail user agents, so you get the same
+signature in each mail program you use.</para>
+
+<para>To read the text from a flat text file you select
+<guilabel>Obtain signature text from file</guilabel>. Enter the
+filename in the <guilabel>Specify file</guilabel> edit field or hit
+the button to the right of it to browse your filesystem. If you want
+to edit the file, hit the <guilabel>Edit file</guilabel>
+button.</para>
+
+<para>&kmail; can also read the signature text from the output of a
+command. Thus, you can use programs such as
+<command>fortune</command> to create a new signature text for
+every mail. Everything the program outputs onto
+<acronym>stdout</acronym> is catched and used as the signature
+text.</para>
+
+<para>To read the text from the output of a command you select
+<guilabel>Obtain signature text from output of
+command</guilabel>. Enter the command (preferably with full path) in
+the <guilabel>Specify command</guilabel> edit field or hit the button
+to the right of it to browse your filesystem.</para>
+
+<para>As a third option, you can enter the signature text directly in
+&kmail;'s configuration dialog. To do this, select <guilabel>Obtain
+signature text from input field below</guilabel> and enter the text
+into the appearing text box.</para>
+
+<note><para>On the internet, signatures are by convention separated
+from the body of the message by a line containing only the three
+character <quote>-- </quote> (dash, dash, space). &kmail; will
+automatically prepend the signature text with this line if it is not
+already present in the signature text.</para>
+
+<para>If - for whatever reasons - you do not wish the separator to be
+included by &kmail;, simply append it to the signature text yourself.</para>
+</note>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="configure-network">
+<title>The <guilabel>Network</guilabel> Page</title>
+
+<para>You can find a quick introduction to the
+<guilabel>Network</guilabel> page in the <link
+linkend="setting-up-your-account">Setting up your Account</link>
 section.</para>
 
+<para>This page allows you to create one or more (incoming and
+outgoing) <emphasis>accounts</emphasis>, &ie; combinations of mail
+servers, login information and other settings. Typically, you will
+create one outgoing (used for sending mails) and one incoming (used to
+retrieve mails) account. You can create as many as you want, though,
+and assign each one to different <link
+linkend="configure-identity">identities</link> or decide on a per-mail
+basis.</para>
+
+<sect2 id="configure-network-sending">
+<title><guilabel>Sending</guilabel> Tab</title>
+
+<para>The <guilabel>Sending</guilabel> tab allows you to define new
+outgoing mail servers and set some common options.</para>
+<!-- fixme: more! -->
+
+
+</sect2>
+
+<sect2 id="configure-network-receiving">
+<title><guilabel>Receiving</guilabel> Tab</title>
+<para><!-- fixme: link to somewhere else / copy from somewhere else? -->Not documented yet.</para>
+</sect2>
+
 </sect1>
 
-<sect1 id="network-tab">
-<title>Network Tab</title>
-
-<para>The Network Tab is described in the  <link linkend="setting-up-your-account">Setting 
-up your Account</link> section.</para>
-
-</sect1>
-
-<sect1 id="appearance-tab">
+<sect1 id="configure-appearance">
 <title>Appearance Tab</title>
 
-<sect2 id="appearance-tab-fonts">
+<sect2 id="configure-appearance-fonts">
 <title>Fonts</title>
 
 <para>This section allows you to change the type, size and character set of the
@@ -1546,7 +1852,7 @@ so you can choose a monospaced font for the date field for better readability.</
 
 </sect2>
 
-<sect2 id="appearance-tab-colors">
+<sect2 id="configure-appearance-colors">
 <title>Colors</title>
 
 <para>This section allows you to change the color of the text.
@@ -1555,7 +1861,7 @@ quoted more than three times will appear in color.</para>
 
 </sect2>
 
-<sect2 id="appearance-tab-layout">
+<sect2 id="configure-appearance-layout">
 <title>Layout</title>
 
 <para><guilabel>Show long folder list</guilabel> lets you toggle the long folder 
@@ -1579,33 +1885,15 @@ specify in &kcontrol;.</para>
 
 </sect2>
 
-<sect2 id="appearance-tab-profiles">
+<sect2 id="configure-appearance-profiles">
 <title>Profiles</title>
 
 <para>This section offers several default settings.</para>
 
 </sect2>
 
-<sect2 id="appearance-tab-addressbook">
-<title>Addressbook</title>
-
-<para>This section allows you to choose between several address books, whereas
-<guilabel>Traditional KMail</guilabel> is a very simple one and
-<guilabel>&kaddressbook;</guilabel> is an advanced one - we recommend
-to use &kaddressbook;. Note that you need the kdeutils package 
-to use <guilabel>KAB</guilabel>.</para>
-
-<para>While the <guilabel>Traditional KMail</guilabel> database is
-independent (&ie; you will not see addresses in 
-<guilabel>KAB</guilabel>/<guilabel>&kaddressbook;</guilabel> if you
-only entered them in the <guilabel>Traditional KMail</guilabel>
-address book), <guilabel>KAB</guilabel> and <guilabel>&kaddressbook;</guilabel>
-use the same database.</para>
-
-</sect2>
-
 <!--
-<sect2 id="appearance-tab-messages-scoring">
+<sect2 id="configure-appearance-scoring">
 <title>Messages Scoring</title>
 
 <para>In this section you can manage rules that define a message's score.
@@ -1633,10 +1921,10 @@ a dialog when you enter a folder with a matching message.</para>
 
 </sect1>
 
-<sect1 id="composer-tab">
+<sect1 id="configure-composer">
 <title>Composer Tab</title>
 
-<sect2 id="composer-tab-general">
+<sect2 id="configure-composer-general">
 <title>General</title>
 
 <para>The <guilabel>Phrases</guilabel> section lets you define the automatically
@@ -1672,7 +1960,7 @@ the default value, which is <userinput>78</userinput>).</para>
 
 </sect2>
 
-<sect2 id="composer-tab-editor">
+<sect2 id="configure-composer-editor">
 <title>Editor</title>
 
 <para>If you don't like the <guilabel>Composer</guilabel> you can use a
@@ -1684,7 +1972,7 @@ it.</para>
 
 </sect2>
 
-<sect2 id="composer-tab-subject">
+<sect2 id="configure-composer-subject">
 <title>Subject</title>
 
 <para>This section contains a list of prefixes for <quote>Reply</quote> and
@@ -1695,7 +1983,7 @@ optionally replace them).</para>
 
 </sect2>
 
-<sect2 id="composer-tab-charset">
+<sect2 id="configure-composer-charset">
 <title>Charset</title>
 
 <para>In the <guilabel>Available charsets</guilabel> section you can manage the
@@ -1711,11 +1999,8 @@ forwarding.</para>
 
 </sect2>
 
-</sect1>
-
-<sect1 id="mime-tab">
-<title>&MIME; Headers Tab</title>
-<!-- fixme in kmail, too: "headers tab" -->
+<sect2 id="configure-composer-headers">
+<title>Headers</title>
 
 <para>The <guilabel>Create own Message-Id headers</guilabel> section lets you define
 how your messages' Message-Id field will be generated. The Message-Id
@@ -1732,12 +2017,14 @@ sets the headers that &kmail; will use for its outgoing messages. You
 can both invent new fields and overwrite existing ones. This feature
 is only useful for advanced users.</para>
 
+</sect2>
+
 </sect1>
 
-<sect1 id="security-tab">
+<sect1 id="configure-security">
 <title>Security Tab</title>
 
-<sect2 id="security-tab-general">
+<sect2 id="configure-security-general">
 <title>General</title>
 
 <para><guilabel>Prefer HTML to plain text</guilabel> will show
@@ -1767,10 +2054,11 @@ delivery</guilabel> filter action.</para>
 
 </sect2>
 
-<sect2 id="security-tab-pgp">
+<sect2 id="configure-security-pgp">
 <title>PGP</title>
 
-<para>For the <guilabel>PGP</guilabel> tab please see the <link
+<para id="configure-security-pgp-encrypttoself">For the
+<guilabel>PGP</guilabel> tab please see the <link
 linkend="pgp-settings"><application>PGP</application>
 section</link>.</para>
 
@@ -1778,11 +2066,11 @@ section</link>.</para>
 
 </sect1>
 
-<sect1 id="misc-tab">
+<sect1 id="configure-misc">
 <title>Miscellaneous Tab</title>
 
-<sect2 id="misc-tab-trash-folder">
-<title>Trash folder</title>
+<sect2 id="configure-misc-folders">
+<title>Folders</title>
 
 <variablelist>
 <varlistentry>
@@ -1849,6 +2137,25 @@ really want to empty the folder.</para>
 <para>This let's you configure actions for the arrival of new mail. Note that
 automatically fetching messages can be configured in your account settings under <link
 linkend="receiving-mail">Incoming Mail</link>.</para>
+
+</sect2>
+
+<sect2 id="configure-misc-addressbook">
+<title>Addressbook</title>
+
+<!-- fixme?: does the traditional address bokk still exist? -->
+<para>This section allows you to choose between several address books, whereas
+<guilabel>Traditional KMail</guilabel> is a very simple one and
+<guilabel>&kaddressbook;</guilabel> is an advanced one - we recommend
+to use &kaddressbook;. Note that you need the kdeutils package 
+to use <guilabel>KAB</guilabel>.</para>
+
+<para>While the <guilabel>Traditional KMail</guilabel> database is
+independent (&ie; you will not see addresses in 
+<guilabel>KAB</guilabel>/<guilabel>&kaddressbook;</guilabel> if you
+only entered them in the <guilabel>Traditional KMail</guilabel>
+address book), <guilabel>KAB</guilabel> and <guilabel>&kaddressbook;</guilabel>
+use the same database.</para>
 
 </sect2>
 
