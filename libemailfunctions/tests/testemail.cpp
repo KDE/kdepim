@@ -87,6 +87,11 @@ static QString simpleEmailTestParseResultToString( bool validEmail )
   }
 }
 
+static QString getEmailParseResultToString( QCString emailAddress )
+{
+  return QString( emailAddress );
+}
+
 static bool checkIsValidEmailAddress( const QString& input, const QString&  expErrorCode )
 {
   EmailParseResult errorCode = KPIM::isValidEmailAddress( input );
@@ -100,6 +105,14 @@ static bool checkIsValidSimpleEmailAddress( const QString& input, const QString&
   bool validEmail = KPIM::isValidSimpleEmailAddress( input );
   QString result = simpleEmailTestParseResultToString( validEmail );
   check( "isValidSimpleEmailAddress " + input + " result ", result, expResult );
+  return true;
+}
+
+static bool checkGetEmailAddr( const QString& input, const QString& expResult )
+{
+  QCString emailAddress = KPIM::getEmailAddr( input );
+  QString result = getEmailParseResultToString( emailAddress );
+  check( "getEmail " + input + " result ", result, expResult );
   return true;
 }
 
@@ -219,6 +232,9 @@ int main(int argc, char *argv[])
   // @ is allowed inisde doublequotes
   checkIsValidEmailAddress( "\"matt@jongel\" <matt@fruitsalad.org>", "AddressOk" );
 
+  // anglebrackets inside dbl quotes 
+  checkIsValidEmailAddress( "\"matt<blah blah>\" <matt@fruitsalad.org>", "AddressOk" );
+
   // a , inside a double quoted string is OK, how do I know this? well Ingo says so
   // and it makes sense since it is also a seperator of email addresses
   checkIsValidEmailAddress( "\"Douhan, Matt\" <matt@fruitsalad.org>", "AddressOk" );
@@ -249,6 +265,14 @@ int main(int argc, char *argv[])
 
   // and here some insane but still valid cases
   checkIsValidSimpleEmailAddress( "\"m@tt\"@fruitsalad.org", "true" );
+
+  // check the getEmailAddr address method
+  checkGetEmailAddr( "matt@fruitsalad.org", "matt@fruitsalad.org" );
+  checkGetEmailAddr( "Matt Douhan <matt@fruitsalad.org>", "matt@fruitsalad.org" );
+  checkGetEmailAddr( "\"Matt Douhan <blah blah>\" <matt@fruitsalad.org>", "matt@fruitsalad.org" ); 
+  checkGetEmailAddr( "\"Matt <blah blah>\" <matt@fruitsalad.org>", "matt@fruitsalad.org" ); 
+  checkGetEmailAddr( "Matt Douhan (jongel) <matt@fruitsalad.org", "matt@fruitsalad.org" );
+  checkGetEmailAddr( "Matt Douhan (m@tt) <matt@fruitsalad.org>", "matt@fruitsalad.org" );
 
   printf("\nTest OK !\n");
 
