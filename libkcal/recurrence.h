@@ -152,8 +152,8 @@ class Recurrence
     void setFrequency(int freq);
 
     /**
-     * Returns the total number of recurrences, including the initial occurrence.
-     * The returned value is -1 if the event recurs infinitely.
+     * Returns -1 if the event recurs infinitely, 0 if the end date is set,
+     * otherwise the total number of recurrences, including the initial occurrence.
      */
     int duration() const;
     /** Sets the total number of times the event is to occur, including both the
