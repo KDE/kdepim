@@ -317,14 +317,14 @@ void KPilotInstaller::initComponents()
 	addComponentPage(new MemoWidget(w, defaultDBPath),
 		i18n("Memo Viewer"));
 
-	ADDICONPAGE(i18n("Generic DB Viewer"),CSL1("kpilot/kpilot-db.png"));
-	addComponentPage(new GenericDBWidget(w,defaultDBPath),
-		i18n("Generic DB Viewer"));
-
 	ADDICONPAGE(i18n("File Installer"),CSL1("kpilot/kpilot-fileinstaller.png"));
 	fFileInstallWidget = new FileInstallWidget(
 		w,defaultDBPath);
 	addComponentPage(fFileInstallWidget, i18n("File Installer"));
+
+	ADDICONPAGE(i18n("Generic DB Viewer"),CSL1("kpilot/kpilot-db.png"));
+	addComponentPage(new GenericDBWidget(w,defaultDBPath),
+		i18n("Generic DB Viewer"));
 
 #undef ADDICONPAGE
 #undef VIEWICON
@@ -469,17 +469,6 @@ void KPilotInstaller::slotListSyncRequested()
 /* virtual DCOP*/ int KPilotInstaller::kpilotStatus()
 {
 	return status();
-}
-
-/* virtual DCOP */ ASYNC KPilotInstaller::configure()
-{
-	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Daemon requested configure" << endl;
-#endif
-
-	if (!fConfigureKPilotDialogInUse)
-		slotConfigureKPilot();
 }
 
 bool KPilotInstaller::componentPreSync()
@@ -644,11 +633,11 @@ void KPilotInstaller::initMenu()
 		actionCollection());
 	(void) KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
 		actionCollection());
-	(void) KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
+	(void) KStdAction::preferences(this, SLOT(configure()),
 		actionCollection());
 
 	a = new KAction(i18n("Configuration &Wizard..."), CSL1("wizard"), 0,
-		this, SLOT(slotConfigureWizard()),
+		this, SLOT(configureWizard()),
 		actionCollection(), "options_configure_wizard");
 	a->setWhatsThis(i18n("Configure KPilot using the configuration wizard."));
 
@@ -937,18 +926,41 @@ sorry:
 	return ret;
 }
 
-void KPilotInstaller::slotConfigureWizard()
+/* virtual DCOP */ ASYNC KPilotInstaller::configureWizard()
 {
 	FUNCTIONSETUP;
+	if ( fAppStatus!=Normal || fConfigureKPilotDialogInUse )
+	{
+		if (fLogWidget)
+		{
+			fLogWidget->addMessage(i18n("Cannot configure KPilot right now."));
+		}
+		return;
+	}
+	fAppStatus=UIBusy;
+	fConfigureKPilotDialogInUse = true;
 
-	runWizard(getDaemon(),this);
+	if (runWizard(getDaemon(),this))
+	{
+		// Update each installed component.
+		for (fP->list().first();
+			fP->list().current();
+			fP->list().next())
+		{
+			// TODO_RK: update the current component to use the new settings
+//			fP->list().current()->initialize();
+		}
+	}
+
+	fConfigureKPilotDialogInUse = false;
+	fAppStatus=Normal;
 }
 
-void KPilotInstaller::slotConfigureKPilot()
+/* virtual DCOP */ ASYNC KPilotInstaller::configure()
 {
 	FUNCTIONSETUP;
 
-	if (fAppStatus!=Normal)
+	if ( fAppStatus!=Normal || fConfigureKPilotDialogInUse )
 	{
 		if (fLogWidget)
 		{
