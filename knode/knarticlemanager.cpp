@@ -201,7 +201,7 @@ QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
   f->writeBlock(data.data(), data.size());
   tmpFile->close();
   path=tmpFile->name();
-  pathHdr=new KNHeaders::Generic("X-KNode-Tempfile", path, QFont::Unicode);
+  pathHdr=new KNHeaders::Generic("X-KNode-Tempfile", c, path, "UTF-8");
   c->setHeader(pathHdr);
 
   return path;

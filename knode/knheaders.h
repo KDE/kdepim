@@ -25,6 +25,9 @@
 #include <qlist.h>
 #include <qfont.h>
 
+//forward declaration
+class KNMimeContent;
+
 
 namespace KNHeaders {
 
@@ -44,6 +47,8 @@ enum contentDisposition { CDinline,
                           CDattachment,
                           CDparallel };
 
+//often used charset
+static const QCString Latin1("ISO-8859-1");
 
 /* Baseclass of all header-classes. It represents a
    header-field as described in RFC-822.  */
@@ -51,54 +56,71 @@ class Base {
 
   public:
     /* Create an empty header. */
-    Base()                                            { e_ncCSet=QFont::ISO_8859_1; }
+    Base()  { p_arent=0; e_ncCS=0; }
 
-    virtual ~Base()                                   {}
+    /* Create an empty header with a parent-content. */
+    Base(KNMimeContent *parent)  { p_arent=parent; e_ncCS=0; }
+
+    /* Destructor */
+    virtual ~Base()  {}
+
+    /* Return the parent of this header. */
+    KNMimeContent* parent()  { return p_arent; }
+
+    /* Set the parent for this header. */
+    void setParent(KNMimeContent *p)  { p_arent=p; }
 
     /* Parse the given string. Take care of RFC2047-encoded
        strings. A default charset is given. If the last parameter
        is true the default charset is used in any case */
-    virtual void from7BitString(const QCString&, QFont::CharSet, bool)  {}
+    virtual void from7BitString(const QCString&)  {}
 
     /* Return the encoded header. The parameter specifies
        wether the header-type should be included. */
-    virtual QCString as7BitString(bool incType=true)        { (void)(incType); return QCString(); }
+    virtual QCString as7BitString(bool incType=true)  { (void)(incType); return QCString(); }
+
+    /* Return the charset that is used for RFC2047-encoding */
+    QCString rfc2047Charset();
+
+    /* Set the charset for RFC2047-encoding */
+    void setRFC2047Charset(const QCString &cs);
+
+    /* Return the default charset */
+    QCString defaultCS();
+
+    /* Return if the default charset is mandatory */
+    bool forceCS();
 
     /* Parse the given string and set the charset. */
-    virtual void fromUnicodeString(const QString&, QFont::CharSet)    {}
-
-    /* Returns the charset that is used for RFC2047-encoding */
-    QFont::CharSet rfc2047Charset()             { return e_ncCSet; }
-    void setRFC2047Charset(QFont::CharSet cs)   { e_ncCSet=cs; }
-
-    /* use the default charset instead of the declared charset */
-    void setForceDefaultCS(bool) {}
+    virtual void fromUnicodeString(const QString&, const QCString&)  {}
 
     /* Return the decoded content of the header without
        the header-type. */
-    virtual QString asUnicodeString()                 { return QString(); }
+    virtual QString asUnicodeString()  { return QString(); }
 
     /* Delete */
-    virtual void clear()        {}
+    virtual void clear()  {}
 
-    virtual bool isEmpty()      { return false; }
+    /* Do we have data? */
+    virtual bool isEmpty()  { return false; }
 
-    /* Returns the type of this header (e.g. "From") */
+    /* Return the type of this header (e.g. "From") */
     virtual const char* type()  { return ""; }
 
-    /* Checks if this header is of type t. */
-    bool is(const char* t)      { return (strcasecmp(t, type())==0); }
+    /* Check if this header is of type t. */
+    bool is(const char* t)  { return (strcasecmp(t, type())==0); }
 
-    /* Checks if this header is a MIME header */
-    bool isMimeHeader()         { return (strncasecmp(type(), "Content-", 8)==0); }
+    /* Check if this header is a MIME header */
+    bool isMimeHeader()  { return (strncasecmp(type(), "Content-", 8)==0); }
 
-    /* Checks if this header is a X-Header */
-    bool isXHeader()            { return (strncmp(type(), "X-", 2)==0); }
+    /* Check if this header is a X-Header */
+    bool isXHeader()  { return (strncmp(type(), "X-", 2)==0); }
 
   protected:
-    QCString typeIntro()        { return (QCString(type())+": "); }
+    QCString typeIntro()  { return (QCString(type())+": "); }
 
-    QFont::CharSet e_ncCSet;
+    const char *e_ncCS;
+    KNMimeContent *p_arent;
 
 };
 typedef QList<Base> List;
@@ -110,13 +132,14 @@ class Generic : public Base {
 
   public:
     Generic(const char *t);
-    Generic(const char *t, const QCString &s, QFont::CharSet defaultCS, bool force);
-    Generic(const char *t, const QString &s, QFont::CharSet cs);
+    Generic(const char *t, KNMimeContent *p);
+    Generic(const char *t, KNMimeContent *p, const QCString &s);
+    Generic(const char *t, KNMimeContent *p, const QString &s, const QCString &cs);
     ~Generic();
 
-    virtual void from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet cs);
+    virtual void fromUnicodeString(const QString &s, const QCString &c);
     virtual QString asUnicodeString();
     virtual void clear()            { delete[] t_ype; u_nicode.truncate(0); }
     virtual bool isEmpty()          { return (t_ype==0 || u_nicode.isEmpty()); }
@@ -134,14 +157,15 @@ class Generic : public Base {
 class MessageID : public Base {
 
   public:
-    MessageID()                  {}
-    MessageID(const QCString &s) { from7BitString(s,QFont::ISO_8859_1, false); }
-    MessageID(const QString &s)  { fromUnicodeString(s, QFont::ISO_8859_1); }
-    ~MessageID()                 {}
+    MessageID() : Base()  {}
+    MessageID(KNMimeContent *p) : Base(p) {}
+    MessageID(KNMimeContent *p, const QCString &s) : Base(p) { from7BitString(s); }
+    MessageID(KNMimeContent *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
+    ~MessageID()  {}
 
-    virtual void from7BitString(const QCString &s, QFont::CharSet, bool);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet);
+    virtual void fromUnicodeString(const QString &s, const QCString&);
     virtual QString asUnicodeString();
     virtual void clear()            { m_id.resize(0); }
     virtual bool isEmpty()          { return (m_id.isEmpty()); }
@@ -159,14 +183,15 @@ class MessageID : public Base {
 class Control : public Base {
 
   public:
-    Control()                   {}
-    Control(const QCString &s)  { from7BitString(s, QFont::ISO_8859_1, false); }
-    Control(const QString &s)   { fromUnicodeString(s, QFont::ISO_8859_1); }
-    ~Control()                  {}
+    Control() : Base()  {}
+    Control(KNMimeContent *p) : Base(p)  {}
+    Control(KNMimeContent *p, const QCString &s) : Base(p) { from7BitString(s); }
+    Control(KNMimeContent *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
+    ~Control()  {}
 
-    virtual void from7BitString(const QCString &s, QFont::CharSet, bool);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet);
+    virtual void fromUnicodeString(const QString &s, const QCString&);
     virtual QString asUnicodeString();
     virtual void clear()            { c_trlMsg.truncate(0); }
     virtual bool isEmpty()          { return (c_trlMsg.isEmpty()); }
@@ -184,9 +209,10 @@ class Control : public Base {
 class Supersedes : public MessageID {
 
   public:
-    Supersedes()                  : MessageID() {}
-    Supersedes(const QCString &s) : MessageID(s) {}
-    Supersedes(const QString &s)  : MessageID(s) {}
+    Supersedes() : MessageID()  {}
+    Supersedes(KNMimeContent *p) : MessageID(p)  {}
+    Supersedes(KNMimeContent *p, const QCString &s) : MessageID(p,s)  {}
+    Supersedes(KNMimeContent *p, const QString &s)  : MessageID(p,s)  {}
     ~Supersedes()                   {}
 
     virtual const char* type()      { return "Supersedes"; }
@@ -198,14 +224,15 @@ class Supersedes : public MessageID {
 class Subject : public Base {
 
   public:
-    Subject()                                                        {}
-    Subject(const QCString &s, QFont::CharSet defaultCS, bool force) { from7BitString(s, defaultCS, force); }
-    Subject(const QString &s, QFont::CharSet cs)                     { fromUnicodeString(s, cs); }
-    ~Subject()                                                       {}
+    Subject() : Base()  {}
+    Subject(KNMimeContent *p) : Base(p)  {}
+    Subject(KNMimeContent *p, const QCString &s) : Base(p)  { from7BitString(s); }
+    Subject(KNMimeContent *p, const QString &s, const QCString &cs) : Base(p)  { fromUnicodeString(s, cs); }
+    ~Subject()  {}
 
-    virtual void from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet cs);
+    virtual void fromUnicodeString(const QString &s, const QCString &cs);
     virtual QString asUnicodeString();
     virtual void clear()            { s_ubject.truncate(0); }
     virtual bool isEmpty()          { return (s_ubject.isEmpty()); }
@@ -224,20 +251,21 @@ class Subject : public Base {
 class AddressField : public Base {
 
   public:
-    AddressField()                                            {}
-    AddressField(const AddressField &a)                       : Base() { n_ame=a.n_ame; e_mail=a.e_mail.copy(); e_ncCSet=a.e_ncCSet; }
-    AddressField(const QCString &s, QFont::CharSet defaultCS, bool force) { from7BitString(s, defaultCS, force); }
-    AddressField(const QString &s, QFont::CharSet cs)         { fromUnicodeString(s, cs); }
-    ~AddressField()                                           {}
+    AddressField() : Base()  {}
+    AddressField(KNMimeContent *p) : Base(p)  {}
+    AddressField(KNMimeContent *p, const QCString &s) : Base(p)  { from7BitString(s); }
+    AddressField(KNMimeContent *p, const QString &s, const QCString &cs) : Base(p)  { fromUnicodeString(s, cs); }
+    AddressField(const AddressField &a):  Base(a.p_arent)  { n_ame=a.n_ame; e_mail=a.e_mail.copy(); e_ncCS=a.e_ncCS; }
+    ~AddressField()  {}
 
-    AddressField& operator=(const AddressField &a)    { n_ame=a.n_ame; e_mail=a.e_mail.copy(); e_ncCSet=a.e_ncCSet; return (*this); }
+    AddressField& operator=(const AddressField &a)  { n_ame=a.n_ame; e_mail=a.e_mail.copy(); e_ncCS=a.e_ncCS; return (*this); }
 
-    virtual void from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet cs);
+    virtual void fromUnicodeString(const QString &s, const QCString &cs);
     virtual QString asUnicodeString();
-    virtual void clear()            { n_ame.truncate(0); e_mail.resize(0); }
-    virtual bool isEmpty()          { return (e_mail.isEmpty()); }
+    virtual void clear()              { n_ame.truncate(0); e_mail.resize(0); }
+    virtual bool isEmpty()            { return (e_mail.isEmpty()); }
 
     bool hasName()                    { return ( !n_ame.isEmpty() ); }
     bool hasEmail()                   { return ( !e_mail.isEmpty() ); }
@@ -245,7 +273,7 @@ class AddressField : public Base {
     QCString nameAs7Bit();
     QCString email()                  { return e_mail; }
     void setName(const QString &s)    { n_ame=s; }
-    void setNameFrom7Bit(const QCString &s, QFont::CharSet defaultCS, bool force);
+    void setNameFrom7Bit(const QCString &s);
     void setEmail(const QCString &s)  { e_mail=s; }
 
   protected:
@@ -259,10 +287,11 @@ typedef QList<AddressField> AddressList;
 class From : public AddressField {
 
   public:
-    From()                                            {}
-    From(const QCString &s, QFont::CharSet defaultCS, bool force) : AddressField(s,defaultCS,force) {}
-    From(const QString &s, QFont::CharSet cs)         : AddressField(s, cs)       {}
-    ~From()                                                                       {}
+    From() : AddressField()  {}
+    From(KNMimeContent *p) : AddressField(p)  {}
+    From(KNMimeContent *p, const QCString &s) : AddressField(p,s)  {}
+    From(KNMimeContent *p, const QString &s, const QCString &cs) : AddressField(p,s,cs)  {}
+    ~From()  {}
 
     virtual const char* type()      { return "From"; }
 };
@@ -272,10 +301,11 @@ class From : public AddressField {
 class ReplyTo : public AddressField {
 
   public:
-    ReplyTo()                                            {}
-    ReplyTo(const QCString &s, QFont::CharSet defaultCS, bool force) : AddressField(s,defaultCS, force) {}
-    ReplyTo(const QString &s, QFont::CharSet cs)         : AddressField(s, cs)       {}
-    ~ReplyTo()                                                                       {}
+    ReplyTo() : AddressField()  {}
+    ReplyTo(KNMimeContent *p) : AddressField(p)  {}
+    ReplyTo(KNMimeContent *p, const QCString &s) : AddressField(p,s)  {}
+    ReplyTo(KNMimeContent *p, const QString &s, const QCString &cs) : AddressField(p,s,cs)  {}
+    ~ReplyTo()  {}
 
     virtual const char* type()      { return "Reply-To"; }
 
@@ -286,14 +316,15 @@ class ReplyTo : public AddressField {
 class Organization : public Base {
 
   public:
-    Organization()                                            {}
-    Organization(const QCString &s, QFont::CharSet defaultCS, bool force) { from7BitString(s,defaultCS,force); }
-    Organization(const QString &s, QFont::CharSet cs)         { fromUnicodeString(s, cs); }
-    ~Organization()                                           {}
+    Organization() : Base()  {}
+    Organization(KNMimeContent *p) : Base(p)  {}
+    Organization(KNMimeContent *p, const QCString &s) : Base(p)  { from7BitString(s); }
+    Organization(KNMimeContent *p, const QString &s, const QCString &cs) : Base(p)  { fromUnicodeString(s, cs); }
+    ~Organization()  {}
 
-    virtual void from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet cs);
+    virtual void fromUnicodeString(const QString &s, const QCString &cs);
     virtual QString asUnicodeString();
     virtual void clear()            { o_rga.truncate(0); }
     virtual bool isEmpty()          { return (o_rga.isEmpty()); }
@@ -309,15 +340,16 @@ class Organization : public Base {
 class Date : public Base {
 
   public:
-    Date()                  { t_ime=0; }
-    Date(time_t t)          { t_ime=t; }
-    Date(const QCString &s) { from7BitString(s, QFont::ISO_8859_1, false); }
-    Date(const QString &s)  { fromUnicodeString(s, QFont::ISO_8859_1); }
-    ~Date()                 {}
+    Date() : Base()  {}
+    Date(KNMimeContent *p) : Base(p)  { t_ime=0; }
+    Date(KNMimeContent *p, time_t t) : Base(p)  { t_ime=t; }
+    Date(KNMimeContent *p, const QCString &s) : Base(p)  { from7BitString(s); }
+    Date(KNMimeContent *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
+    ~Date()  {}
 
-    virtual void from7BitString(const QCString &s, QFont::CharSet, bool);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet);
+    virtual void fromUnicodeString(const QString &s, const QCString&);
     virtual QString asUnicodeString();
     virtual void clear()            { t_ime=0; }
     virtual bool isEmpty()          { return (t_ime==0); }
@@ -339,14 +371,15 @@ class Date : public Base {
 class To : public Base {
 
   public:
-    To()                                             : a_ddrList(0) {}
-    To(const QCString &s, QFont::CharSet defaultCS, bool force)  : a_ddrList(0) { from7BitString(s, defaultCS, force); }
-    To(const QString &s, QFont::CharSet cs)          : a_ddrList(0) { fromUnicodeString(s, cs); }
-    ~To()                                                           { delete a_ddrList; }
+    To() : Base(),a_ddrList(0)  {}
+    To(KNMimeContent *p) : Base(p),a_ddrList(0)  {}
+    To(KNMimeContent *p, const QCString &s) : Base(p),a_ddrList(0)  { from7BitString(s); }
+    To(KNMimeContent *p, const QString &s, const QCString &cs) : Base(p),a_ddrList(0)  { fromUnicodeString(s,cs); }
+    ~To()  { delete a_ddrList; }
 
-    virtual void from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet cs);
+    virtual void fromUnicodeString(const QString &s, const QCString &cs);
     virtual QString asUnicodeString();
     virtual void clear()            { delete a_ddrList; a_ddrList=0; }
     virtual bool isEmpty()          { return (!a_ddrList || a_ddrList->isEmpty()
@@ -357,7 +390,7 @@ class To : public Base {
     void emails(QStrList *l);
 
   protected:
-   AddressList *a_ddrList;
+    AddressList *a_ddrList;
 
 };
 
@@ -366,10 +399,11 @@ class To : public Base {
 class CC : public To {
 
   public:
-    CC()                                                                {}
-    CC(const QCString &s, QFont::CharSet defaultCS, bool force)   : To(s,defaultCS,force) {}
-    CC(const QString &s, QFont::CharSet cs)           : To(s,cs)        {}
-    ~CC()                                                               {}
+    CC() : To()  {}
+    CC(KNMimeContent *p) : To(p)  {}
+    CC(KNMimeContent *p, const QCString &s) : To(p,s)  {}
+    CC(KNMimeContent *p, const QString &s, const QCString &cs) : To(p,s,cs)  {}
+    ~CC()  {}
 
     virtual const char* type()      { return "CC"; }
 
@@ -380,10 +414,11 @@ class CC : public To {
 class BCC : public To {
 
   public:
-    BCC()                                                                {}
-    BCC(const QCString &s, QFont::CharSet defaultCS, bool force)   : To(s,defaultCS,force) {}
-    BCC(const QString &s, QFont::CharSet cs)           : To(s,cs)        {}
-    ~BCC()                                                               {}
+    BCC() : To()  {}
+    BCC(KNMimeContent *p) : To(p)  {}
+    BCC(KNMimeContent *p, const QCString &s) : To(p,s)  {}
+    BCC(KNMimeContent *p, const QString &s, const QCString &cs) : To(p,s,cs)  {}
+    ~BCC()  {}
 
     virtual const char* type()      { return "BCC"; }
 
@@ -394,14 +429,15 @@ class BCC : public To {
 class Newsgroups : public Base {
 
   public:
-    Newsgroups()                  {}
-    Newsgroups(const QCString &s) { from7BitString(s, QFont::ISO_8859_1, false); }
-    Newsgroups(const QString &s)  { fromUnicodeString(s, QFont::ISO_8859_1); }
-    ~Newsgroups()                 {}
+    Newsgroups() : Base()  {}
+    Newsgroups(KNMimeContent *p) : Base(p)  {}
+    Newsgroups(KNMimeContent *p, const QCString &s) : Base(p)  { from7BitString(s); }
+    Newsgroups(KNMimeContent *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
+    ~Newsgroups()  {}
 
-    virtual void from7BitString(const QCString &s, QFont::CharSet, bool);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet);
+    virtual void fromUnicodeString(const QString &s, const QCString&);
     virtual QString asUnicodeString();
     virtual void clear()            { g_roups.resize(0); }
     virtual bool isEmpty()          { return g_roups.isEmpty(); }
@@ -419,10 +455,11 @@ class Newsgroups : public Base {
 class FollowUpTo : public Newsgroups {
 
   public:
-    FollowUpTo()                                   {}
-    FollowUpTo(const QCString &s)  : Newsgroups(s) {}
-    FollowUpTo(const QString &s)   : Newsgroups(s) {}
-    ~FollowUpTo()                                  {}
+    FollowUpTo() : Newsgroups()  {}
+    FollowUpTo(KNMimeContent *p) : Newsgroups(p)  {}
+    FollowUpTo(KNMimeContent *p, const QCString &s) : Newsgroups(p,s)  {}
+    FollowUpTo(KNMimeContent *p, const QString &s) : Newsgroups(p,s)  {}
+    ~FollowUpTo()  {}
 
     virtual const char* type()        { return "Followup-To"; }
 
@@ -433,15 +470,16 @@ class FollowUpTo : public Newsgroups {
 class Lines : public Base {
 
   public:
-    Lines()                  : l_ines(-1) {}
-    Lines(unsigned int i)    : l_ines(i)  {}
-    Lines(const QCString &s) { from7BitString(s, QFont::ISO_8859_1, false); }
-    Lines(const QString &s)  { fromUnicodeString(s, QFont::ISO_8859_1); }
+    Lines() : Base(),l_ines(-1)  {}
+    Lines(KNMimeContent *p) : Base(p),l_ines(-1)  {}
+    Lines(KNMimeContent *p, unsigned int i) : Base(p),l_ines(i)  {}
+    Lines(KNMimeContent *p, const QCString &s) : Base(p)  { from7BitString(s); }
+    Lines(KNMimeContent *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
     ~Lines()                 {}
 
-    virtual void from7BitString(const QCString &s, QFont::CharSet, bool );
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet);
+    virtual void fromUnicodeString(const QString &s, const QCString&);
     virtual QString asUnicodeString();
     virtual void clear()            { l_ines=-1; }
     virtual bool isEmpty()          { return (l_ines==-1); }
@@ -460,16 +498,17 @@ class Lines : public Base {
 class References : public Base {
 
   public:
-    References()                  : pos(-1) {}
-    References(const QCString &s) { from7BitString(s, QFont::ISO_8859_1,false); }
-    References(const QString &s)  { fromUnicodeString(s, QFont::ISO_8859_1); }
+    References() : Base(),p_os(-1)  {}
+    References(KNMimeContent *p) : Base(p),p_os(-1)  {}
+    References(KNMimeContent *p, const QCString &s) : Base(p),p_os(-1)  { from7BitString(s); }
+    References(KNMimeContent *p, const QString &s) : Base(p),p_os(-1)  { fromUnicodeString(s, Latin1); }
     ~References()                 {}
 
-    virtual void from7BitString(const QCString &s, QFont::CharSet, bool);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet);
+    virtual void fromUnicodeString(const QString &s, const QCString&);
     virtual QString asUnicodeString();
-    virtual void clear()            { r_ef.resize(0); pos=0; }
+    virtual void clear()            { r_ef.resize(0); p_os=0; }
     virtual bool isEmpty()          { return (r_ef.isEmpty()); }
     virtual const char* type()      { return "References"; }
 
@@ -481,7 +520,7 @@ class References : public Base {
 
   protected:
     QCString r_ef;
-    int pos;
+    int p_os;
 
 };
 
@@ -490,14 +529,15 @@ class References : public Base {
 class UserAgent : public Base {
 
   public:
-    UserAgent()                  {}
-    UserAgent(const QCString &s) { from7BitString(s, QFont::ISO_8859_1, false); }
-    UserAgent(const QString &s)  { fromUnicodeString(s, QFont::ISO_8859_1); }
-    ~UserAgent()                 {}
+    UserAgent() : Base()  {}
+    UserAgent(KNMimeContent *p) : Base(p)  {}
+    UserAgent(KNMimeContent *p, const QCString &s) : Base(p)  { from7BitString(s); }
+    UserAgent(KNMimeContent *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
+    ~UserAgent()  {}
 
-    virtual void from7BitString(const QCString &s, QFont::CharSet, bool);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet);
+    virtual void fromUnicodeString(const QString &s, const QCString&);
     virtual QString asUnicodeString();
     virtual void clear()            { u_agent.resize(0); }
     virtual bool isEmpty()          { return (u_agent.isEmpty()); }
@@ -513,21 +553,20 @@ class UserAgent : public Base {
 class ContentType : public Base {
 
   public:
-    ContentType()                                            : m_imeType("text/plain"), c_ategory(CCsingle), f_orceDefaultCS(false) {}
-    ContentType(const QCString &s, QFont::CharSet defaultCS, bool force) { from7BitString(s, defaultCS, force); }
-    ContentType(const QString &s, QFont::CharSet defaultCS, bool force)  { f_orceDefaultCS=force; fromUnicodeString(s, defaultCS); }
-    ~ContentType()                                           {}
+    ContentType() : Base(),m_imeType("application/octet-stream"),c_ategory(CCsingle)  {}
+    ContentType(KNMimeContent *p) : Base(p),m_imeType("application/octet-stream"),c_ategory(CCsingle)  {}
+    ContentType(KNMimeContent *p, const QCString &s) : Base(p)  { from7BitString(s); }
+    ContentType(KNMimeContent *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
+    ~ContentType()  {}
 
-    virtual void from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet cs);
+    virtual void fromUnicodeString(const QString &s, const QCString&);
     virtual QString asUnicodeString();
     virtual void clear()            { m_imeType.resize(0); p_arams.resize(0); }
     virtual bool isEmpty()          { return (m_imeType.isEmpty()); }
     virtual const char* type()      { return "Content-Type"; }
 
-    // overide the specified charset
-    void setForceDefaultCS(bool b)  { f_orceDefaultCS=b; }
 
     //mime-type handling
     QCString mimeType()                     { return m_imeType; }
@@ -549,7 +588,7 @@ class ContentType : public Base {
     QCString boundary();
     void setBoundary(const QCString &s);
     QString name();
-    void setName(const QString &s, QFont::CharSet cs);
+    void setName(const QString &s, const QCString &cs);
     QCString id();
     void setId(const QCString &s);
     int partialNumber();
@@ -565,7 +604,6 @@ class ContentType : public Base {
     void setParameter(const QCString &name, const QCString &value, bool doubleQuotes=false);
     QCString m_imeType, p_arams;
     contentCategory c_ategory;
-    bool f_orceDefaultCS;
 
 };
 
@@ -574,14 +612,15 @@ class ContentType : public Base {
 class CTEncoding : public Base {
 
   public:
-    CTEncoding()                  : c_te(CE7Bit), d_ecoded(true) {}
-    CTEncoding(const QCString &s) { from7BitString(s, QFont::ISO_8859_1, false); }
-    CTEncoding(const QString &s)  { fromUnicodeString(s, QFont::ISO_8859_1); }
-    ~CTEncoding()                 {}
+    CTEncoding() : Base(),c_te(CE7Bit),d_ecoded(true)  {}
+    CTEncoding(KNMimeContent *p) : Base(p),c_te(CE7Bit),d_ecoded(true)  {}
+    CTEncoding(KNMimeContent *p, const QCString &s) : Base(p)  { from7BitString(s); }
+    CTEncoding(KNMimeContent *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
+    ~CTEncoding()  {}
 
-    virtual void from7BitString(const QCString &s, QFont::CharSet, bool);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet);
+    virtual void fromUnicodeString(const QString &s, const QCString&);
     virtual QString asUnicodeString();
     virtual void clear()            { d_ecoded=true; c_te=CE7Bit; }
     virtual const char* type()      { return "Content-Transfer-Encoding"; }
@@ -603,14 +642,15 @@ class CTEncoding : public Base {
 class CDisposition : public Base {
 
   public:
-    CDisposition()                                            : d_isp(CDinline) {}
-    CDisposition(const QCString &s, QFont::CharSet defaultCS, bool force) { from7BitString(s, defaultCS, force); }
-    CDisposition(const QString &s, QFont::CharSet cs)         { fromUnicodeString(s, cs); }
-    ~CDisposition()                                           {}
+    CDisposition() : Base(),d_isp(CDinline)  {}
+    CDisposition(KNMimeContent *p) : Base(p),d_isp(CDinline)  {}
+    CDisposition(KNMimeContent *p, const QCString &s) : Base(p)  { from7BitString(s); }
+    CDisposition(KNMimeContent *p, const QString &s, const QCString &cs) : Base(p)  { fromUnicodeString(s, cs); }
+    ~CDisposition()  {}
 
-    virtual void from7BitString(const QCString &s,QFont::CharSet defaultCS, bool force);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet);
+    virtual void fromUnicodeString(const QString &s, const QCString &cs);
     virtual QString asUnicodeString();
     virtual void clear()            { f_ilename.truncate(0); d_isp=CDinline; }
     virtual const char* type()      { return "Content-Disposition"; }
@@ -633,14 +673,15 @@ class CDisposition : public Base {
 class CDescription : public Base {
 
   public:
-    CDescription()                                            {}
-    CDescription(const QCString &s, QFont::CharSet defaultCS, bool force) { from7BitString(s, defaultCS, force); }
-    CDescription(const QString &s, QFont::CharSet cs)         { fromUnicodeString(s, cs); }
-    ~CDescription()                                           {}
+    CDescription() : Base()  {}
+    CDescription(KNMimeContent *p) : Base(p)  {}
+    CDescription(KNMimeContent *p, const QCString &s) : Base(p) { from7BitString(s); }
+    CDescription(KNMimeContent *p, const QString &s, const QCString &cs) : Base(p)  { fromUnicodeString(s, cs); }
+    ~CDescription()  {}
     
-    virtual void from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force);
+    virtual void from7BitString(const QCString &s);
     virtual QCString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, QFont::CharSet cs);
+    virtual void fromUnicodeString(const QString &s, const QCString &cs);
     virtual QString asUnicodeString();
     virtual void clear()            { d_esc.truncate(0); }
     virtual bool isEmpty()          { return (d_esc.isEmpty()); }

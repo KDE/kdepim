@@ -459,31 +459,29 @@ void KNComposer::applyChanges()
   KNMimeContent *text=0;
   KNAttachment *a=0;
 
-  QFont::CharSet cs=KGlobal::charsets()->charsetForEncoding(c_harset);
-
   //Date
   a_rticle->date()->setUnixTime();    //set current date+time
 
   //Subject
-  a_rticle->subject()->fromUnicodeString(v_iew->s_ubject->text(), cs);
+  a_rticle->subject()->fromUnicodeString(v_iew->s_ubject->text(), c_harset);
 
   //Newsgroups
   if (m_ode != mail) {
-    a_rticle->newsgroups()->fromUnicodeString(v_iew->g_roups->text(), QFont::ISO_8859_1);
+    a_rticle->newsgroups()->fromUnicodeString(v_iew->g_roups->text(), KNHeaders::Latin1);
     a_rticle->setDoPost(true);
   } else
     a_rticle->setDoPost(false);
 
   //To
   if (m_ode != news) {
-    a_rticle->to()->fromUnicodeString(v_iew->t_o->text(), cs);
+    a_rticle->to()->fromUnicodeString(v_iew->t_o->text(), c_harset);
     a_rticle->setDoMail(true);
   } else
     a_rticle->setDoMail(false);
 
   //Followup-To
   if( a_rticle->doPost() && !v_iew->f_up2->currentText().isEmpty())
-    a_rticle->followUpTo()->fromUnicodeString(v_iew->f_up2->currentText(), QFont::ISO_8859_1);
+    a_rticle->followUpTo()->fromUnicodeString(v_iew->f_up2->currentText(), KNHeaders::Latin1);
   else
     a_rticle->removeHeader("Followup-To");
 

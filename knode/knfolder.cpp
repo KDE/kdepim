@@ -212,7 +212,7 @@ bool KNFolder::loadHdrs()
       pos2=tmp.length();
       end=true;
     }
-    art->subject()->from7BitString(tmp.mid(pos1, pos2-pos1), art->defaultCharset(),false);
+    art->subject()->from7BitString(tmp.mid(pos1, pos2-pos1));
 
     if (!end) {
       pos1=pos2+1;
@@ -221,7 +221,7 @@ bool KNFolder::loadHdrs()
         pos2=tmp.length();
         end=true;
       }
-      art->newsgroups()->from7BitString(tmp.mid(pos1, pos2-pos1), art->defaultCharset(),false);
+      art->newsgroups()->from7BitString(tmp.mid(pos1, pos2-pos1));
     }
 
     if (!end) {
@@ -231,13 +231,13 @@ bool KNFolder::loadHdrs()
         pos2=tmp.length();
         end=true;
       }
-      art->to()->from7BitString(tmp.mid(pos1,pos2-pos1), art->defaultCharset(),false);
+      art->to()->from7BitString(tmp.mid(pos1,pos2-pos1));
     }
 
     if (!end) {
       pos1=pos2+1;
       pos2=tmp.length();
-      art->lines()->from7BitString(tmp.mid(pos1,pos2-pos1), art->defaultCharset(),false);
+      art->lines()->from7BitString(tmp.mid(pos1,pos2-pos1));
     }
 
     if(!append(art)) {

@@ -45,8 +45,12 @@ class KNMimeBase {
                           ATlocal };
 
     //encode and decode
-    static QString decodeRFC2047String(const QCString &src, QFont::CharSet &charset, bool force);
-    static QCString encodeRFC2047String(const QString &src, QFont::CharSet charset);
+    static QString decodeRFC2047String(const QCString &src, const char **usedCS, const QCString &defaultCS, bool forceCS);
+    static QCString encodeRFC2047String(const QString &src, const char *charset);
+
+    //charset cache
+    static QStrIList c_harsetCache;
+    static const char* cachedCharset(const QCString &name);
 
     //generation of message-ids and boundaries
     static QCString uniqueString();
@@ -172,8 +176,8 @@ class KNMimeContent : public KNMimeBase {
     QByteArray decodedContent();
     void decodedText(QString &s);
     void decodedText(QStringList &s);
-    bool canDecode8BitText();
-    void setFontForContent(QFont &f);
+    //bool canDecode8BitText();
+    //void setFontForContent(QFont &f);
     void fromUnicodeString(const QString &s);
 
     KNMimeContent* textContent();
@@ -187,16 +191,18 @@ class KNMimeContent : public KNMimeBase {
 
     // this charset is used for all headers and the body
     // if the charset is not declared explictly
-    QFont::CharSet defaultCharset()           { return d_efaultCS; }
-    void setDefaultCharset(QFont::CharSet cs) { d_efaultCS = cs; }
+    QCString defaultCharset()                  { return QCString(d_efaultCS); }
+    void setDefaultCharset(const QCString &cs) { d_efaultCS = cachedCharset(cs); }
 
     // use the default charset even if a different charset is
     // declared in the article
     bool forceDefaultCS()         {  return f_orceDefaultCS; }
+
     // enables/disables the force mode, housekeeping.
     // works correctly only when the article is completly empty or
     // completly loaded
     virtual void setForceDefaultCS(bool b);
+
 
   protected:
     QCString rawHeader(const char *name);
@@ -207,7 +213,7 @@ class KNMimeContent : public KNMimeBase {
               b_ody;
     List *c_ontents;
     KNHeaders::List *h_eaders;
-    QFont::CharSet d_efaultCS;
+    const char *d_efaultCS;
     bool f_orceDefaultCS;
 
 };
@@ -373,7 +379,7 @@ class KNRemoteArticle : public KNArticle {
     KNHeaders::MessageID m_essageID;
     KNHeaders::From f_rom;
 
-    int i_dRef; // id of a possible reference-article
+    int i_dRef; // id of a reference-article
     unsigned char t_hrLevel, // quality of threading
                   s_core; // guess what ;-)
     unsigned short u_nreadFups, // number of the article's unread follow-ups
@@ -415,13 +421,13 @@ class KNLocalArticle : public KNArticle {
     KNHeaders::To* to(bool create=true)                     { if( (!create && t_o.isEmpty()) || (!create && !doMail()) )
                                                                 return 0;
                                                               return &t_o; }
-    
+
     //send article as mail
     bool doMail()                 { return f_lags.get(1); }
     void setDoMail(bool b=true)   { f_lags.set(1, b); }
     bool mailed()                 { return f_lags.get(2); }
     void setMailed(bool b=true)   { f_lags.set(2, b); }
-    
+
     //post article to a newsgroup
     bool doPost()                 { return f_lags.get(3); }
     void setDoPost(bool b=true)   { f_lags.set(3, b); }
@@ -429,29 +435,29 @@ class KNLocalArticle : public KNArticle {
     void setPosted(bool b=true)   { f_lags.set(4, b); }
     bool canceled()               { return f_lags.get(5); }
     void setCanceled(bool b=true) { f_lags.set(5, b); }
-    
+
     //sending status
     bool pending()                { return ( (doPost() && !posted()) || (doMail() && !mailed()) ); }
-    
+
     //edit
     bool editDisabled()               { return f_lags.get(6); }
     void setEditDisabled(bool b=true) { f_lags.set(6, b); }
-        
+
     //MBOX infos
     int startOffset()             { return s_Offset; }
     void setStartOffset(int so)   { s_Offset=so; }
     int endOffset()               { return e_Offset; }
     void setEndOffset(int eo)     { e_Offset=eo; }
-        
+
     //nntp-server id
     int serverId()                { if(!doPost()) return -1; else return s_erverId; }
     void setServerId(int i)       { s_erverId=i; }
-    
+
     //list item handling
     void updateListItem();
-    
+
     void setForceDefaultCS(bool b);
-    
+
     protected:
       //hardcoded headers
       KNHeaders::Newsgroups n_ewsgroups;
@@ -510,7 +516,7 @@ class KNAttachment {
     bool  i_sAttached,
           h_asChanged,
           f_b64;
-};    
+};
 
 // some compilers (for instance Compaq C++) need template inline functions
 // here rather than in the *.cpp file
@@ -520,10 +526,8 @@ template <class T> T* KNMimeContent::getHeaderInstance(T *ptr, bool create)
   T dummy; //needed to access virtual member T::type()
 
   ptr=static_cast <T*> (getHeaderByType(dummy.type()));
-  if(!ptr && create) { //no such header found => create it
-    ptr=new T();
-    ptr->setRFC2047Charset(d_efaultCS);      // important for the ContentType-Header!!
-    ptr->setForceDefaultCS(f_orceDefaultCS);
+  if(!ptr && create) { //no such header found, but we need one => create it
+    ptr=new T(this);
     if(!(h_eaders)) {
       h_eaders=new KNHeaders::List();
       h_eaders->setAutoDelete(true);

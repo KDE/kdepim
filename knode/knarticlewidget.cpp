@@ -125,7 +125,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   a_ctSetCharsetKeyb = new KAction(i18n("Charset"), Key_C, this,
                                    SLOT(slotSetCharsetKeyboard()), a_ctions, "set_charset_keyboard");
 
-  o_verrideCS=QFont::ISO_8859_1;
+  o_verrideCS=KNHeaders::Latin1;
   f_orceCS=false;
 
   //timer
@@ -232,6 +232,21 @@ void KNArticleWidget::viewportMouseReleaseEvent(QMouseEvent *e)
   }
 }
 
+
+bool KNArticleWidget::canDecode8BitText(const QCString &charset)
+{
+  if(charset.isEmpty())
+    return false;
+  bool ok=true;
+  (void) KGlobal::charsets()->codecForName(charset,ok);
+  return ok;
+}
+
+
+void KNArticleWidget::setFontForCharset(QFont &f, const QCString &charset)
+{
+  KGlobal::charsets()->setQFont(f, charset);
+}
 
 
 void KNArticleWidget::applyConfig()
@@ -696,7 +711,7 @@ void KNArticleWidget::createHtmlPage()
 
   KNMimeContent *text=a_rticle->textContent();
   if(text) {
-    if(!text->canDecode8BitText()) {
+    if(!canDecode8BitText(text->contentType()->charset())) {
       html+=QString("<tr><td colspan=3 bgcolor=red><font color=black><headerblock>%1</headerblock></font></td></tr>")
         .arg(i18n("Unknown charset! Default charset is used instead."));
       kdDebug(5003) << "KNArticleWidget::createHtmlPage() : unknown charset = " << text->contentType()->charset() << " not available!" << endl;
@@ -705,7 +720,7 @@ void KNArticleWidget::createHtmlPage()
     else {
       QFont f=app->articleFont();
       if (!app->useFontsForAllCS())
-        text->setFontForContent(f);
+        setFontForCharset(f, text->contentType()->charset());
       setFont(f);
     }
   }
@@ -953,7 +968,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
             //article not in local group => create a new (orphant) article.
             //It will be deleted by the displaying widget/window
             a=new KNRemoteArticle(g); //we need "g" to access the nntp-account
-            a->messageID()->from7BitString(refMid, QFont::Latin1, true);
+            a->messageID()->from7BitString(refMid);
             awin=new KNArticleWindow(a);
             awin->show();
           }
@@ -1163,10 +1178,10 @@ void KNArticleWidget::slotSetCharset(const QString &s)
 
   if (s == i18n("Automatic")) {
     f_orceCS=false;
-    o_verrideCS=QFont::ISO_8859_1;
+    o_verrideCS=KNHeaders::Latin1;
   } else {
     f_orceCS=true;
-    o_verrideCS=KGlobal::charsets()->charsetForEncoding(s);
+    o_verrideCS=s.latin1();
   }
 
   if (a_rticle && a_rticle->hasContent()) {

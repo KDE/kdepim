@@ -218,22 +218,21 @@ bool KNGroup::loadHdrs()
         split.init(buff, "\t");
 
         art=new KNRemoteArticle(this);
-        QFont::CharSet cs=art->defaultCharset();
 
         split.first();
-        art->messageID()->from7BitString(split.string(),cs,false);
+        art->messageID()->from7BitString(split.string());
     
         split.next();
-        art->subject()->from7BitString(split.string(),cs,false);
+        art->subject()->from7BitString(split.string());
         
         split.next();
         art->from()->setEmail(split.string());
         split.next();
         if(split.string()!="0")
-          art->from()->setNameFrom7Bit(split.string(),art->defaultCharset(),false);
+          art->from()->setNameFrom7Bit(split.string());
 
         buff=f.readLine();
-        if(buff!="0") art->references()->from7BitString(buff.copy(),cs,false);
+        if(buff!="0") art->references()->from7BitString(buff.copy());
                       
         buff=f.readLine();
         sscanf(buff,"%d %d %d", &id, &lines, (uint*) &timeT);
@@ -324,7 +323,6 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
   QCString tmp;
   KNStringSplitter split;
   split.setIncludeSep(false);
-  QFont::CharSet defCS;
   int cnt=0,todo=hdrs->count();
   QTime timer;
 
@@ -339,35 +337,33 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
     //new Header-Object
     art=new KNRemoteArticle(this);
     art->setNew(true);
-    defCS=art->defaultCharset();
-    //art->setFetchTime(fTimeT);
-        
+
     //Article Number
     split.first();
     // ignored hdr->artNr=split.string().toInt();
 
     //Subject
     split.next();
-    art->subject()->from7BitString(split.string(), defCS, false);
+    art->subject()->from7BitString(split.string());
     if(art->subject()->isEmpty())
-      art->subject()->fromUnicodeString(i18n("no subject"), defCS);
+      art->subject()->fromUnicodeString(i18n("no subject"), art->defaultCharset());
     
     //From and Email
     split.next();
-    art->from()->from7BitString(split.string(), defCS, false);
+    art->from()->from7BitString(split.string());
         
     //Date
     split.next();
-    art->date()->from7BitString(split.string(), defCS, false);
+    art->date()->from7BitString(split.string());
                     
     //Message-ID
     split.next();
-    art->messageID()->from7BitString(split.string().simplifyWhiteSpace(), defCS, false);
+    art->messageID()->from7BitString(split.string().simplifyWhiteSpace());
       
     //References
     split.next();
     if(!split.string().isEmpty())
-      art->references()->from7BitString(split.string(), defCS, false); //use QCString::copy() ?
+      art->references()->from7BitString(split.string()); //use QCString::copy() ?
     
     //Lines
     split.next();

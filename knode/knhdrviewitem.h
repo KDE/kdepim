@@ -35,7 +35,6 @@ class KNHdrViewItem : public KNLVItemBase  {
     QString key(int, bool) const;
 
     KNArticle *art;
-    QFont::CharSet subjectCS, nameCS;
 
     static void clearFontCache();
     

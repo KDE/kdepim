@@ -147,10 +147,10 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
       art->setDoMail(true);
     }
     else
-      art->newsgroups()->from7BitString(fup2->as7BitString(false), art->defaultCharset(), false);
+      art->newsgroups()->from7BitString(fup2->as7BitString(false));
   }
   else
-    art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false), art->defaultCharset(), false);
+    art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false));
 
   //To
   KNHeaders::ReplyTo *replyTo=a->replyTo(false);
@@ -178,7 +178,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   else
     refs = "";
 
-  art->references()->from7BitString(refs, art->defaultCharset(),false);
+  art->references()->from7BitString(refs);
   art->references()->append(a->messageID()->as7BitString(false));
 
   //------------------------- </Headers> ---------------------------
@@ -347,14 +347,14 @@ void KNArticleFactory::createCancel(KNArticle *a)
   KNHeaders::MessageID *msgId=a->messageID();
   QCString tmp;
   tmp="cancel of "+msgId->as7BitString(false);
-  art->subject()->from7BitString(tmp, art->defaultCharset(), false);
+  art->subject()->from7BitString(tmp);
 
   //newsgroups
-  art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false), art->defaultCharset(), false);
+  art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false));
 
   //control
   tmp="cancel "+msgId->as7BitString(false);
-  art->control()->from7BitString(tmp, art->defaultCharset(), false);
+  art->control()->from7BitString(tmp);
 
   //Lines
   art->lines()->setNumberOfLines(1);
@@ -420,16 +420,16 @@ void KNArticleFactory::createSupersede(KNArticle *a)
   art->subject()->fromUnicodeString(a->subject()->asUnicodeString(), a->subject()->rfc2047Charset());
 
   //newsgroups
-  art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false), art->defaultCharset(), false);
+  art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false));
 
   //followup-to
-  art->followUpTo()->from7BitString(a->followUpTo()->as7BitString(false), art->defaultCharset(), false);
+  art->followUpTo()->from7BitString(a->followUpTo()->as7BitString(false));
 
   //References
-  art->references()->from7BitString(a->references()->as7BitString(false), art->defaultCharset(), false);
+  art->references()->from7BitString(a->references()->as7BitString(false));
 
   //Supersedes
-  art->supersedes()->from7BitString(a->messageID()->as7BitString(false), art->defaultCharset(), false);
+  art->supersedes()->from7BitString(a->messageID()->as7BitString(false));
 
   //Body
   QString text;
@@ -733,8 +733,6 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, QCString 
                       *defId=0,
                       *accId=0,
                       *id=0;
-  QFont::CharSet cs=KGlobal::charsets()->charsetForEncoding(pnt->charset());
-
   if(!g)
     grpId=0;
   else {
@@ -750,7 +748,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, QCString 
 
   //From
   KNHeaders::From *from=art->from();
-  from->setRFC2047Charset(cs);
+  from->setRFC2047Charset(pnt->charset());
 
   //name
   if(grpId && grpId->hasName())
@@ -779,7 +777,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, QCString 
   else
     id=((accId) && accId->hasReplyTo())? accId:defId;
   if(id->hasReplyTo())
-    art->replyTo()->fromUnicodeString(id->replyTo(), cs);
+    art->replyTo()->fromUnicodeString(id->replyTo(), pnt->charset());
 
   //Organization
   if(grpId && grpId->hasOrga())
@@ -787,14 +785,14 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, QCString 
   else
     id=((accId) && accId->hasOrga())? accId:defId;
   if(id->hasOrga())
-    art->organization()->fromUnicodeString(id->orga(), cs);
+    art->organization()->fromUnicodeString(id->orga(), pnt->charset());
 
   //Date
   art->date()->setUnixTime(); //set current date+time
 
   //User-Agent
   if( !pnt->noUserAgent() ) {
-    art->userAgent()->from7BitString("KNode/" KNODE_VERSION, art->defaultCharset(), false);
+    art->userAgent()->from7BitString("KNode/" KNODE_VERSION);
   }
 
   //Mime
@@ -812,7 +810,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, QCString 
   if(withXHeaders) {
     KNConfig::XHeaders::Iterator it;
     for(it=pnt->xHeaders().begin(); it!=pnt->xHeaders().end(); ++it)
-      art->setHeader( new KNHeaders::Generic( (QCString("X-")+(*it).name()), (*it).value(), cs ) );
+      art->setHeader( new KNHeaders::Generic( (QCString("X-")+(*it).name()), art, (*it).value(), pnt->charset() ) );
   }
 
   //Signature
@@ -860,7 +858,11 @@ bool KNArticleFactory::cancelAllowed(KNArticle *a)
 
     KNHeaders::MessageID *mid=localArt->messageID(false);
     if(!mid || mid->isEmpty()) {
-      KMessageBox::sorry(knGlobals.topWidget, i18n("This article cannot be canceled or superseded,\nbecause it's message-id has not been created by KNode!\nBut you can look for your article in the newsgroup\nand cancel (or supersede) it there."));
+      KMessageBox::sorry(knGlobals.topWidget, i18n(
+"This article cannot be canceled or superseded,\n\
+because it's message-id has not been created by KNode!\n\
+But you can look for your article in the newsgroup\n\
+and cancel (or supersede) it there."));
       return false;
     }
 

@@ -25,7 +25,7 @@
 
 
 KNHdrViewItem::KNHdrViewItem(KNListView *ref, KNArticle *a) :
-  KNLVItemBase(ref), art(a), subjectCS(QFont::ISO_8859_1), nameCS(QFont::ISO_8859_1)
+  KNLVItemBase(ref), art(a)
 {
 }
 
@@ -105,21 +105,26 @@ const QFont& KNHdrViewItem::fontForColumn(int col, const QFont &font)
     return font;
 
   QFont *f=0;
-  QFont::CharSet cs;
-  if (col==0)
-    cs = subjectCS;
-  else
-    cs = nameCS;
+  QCString cs;
+  if(col==0) {
+    cs = art->subject()->rfc2047Charset();
+  }
+  else {
+    if(art->type()==KNMimeBase::ATremote)
+      cs = art->from()->rfc2047Charset();
+    else
+      cs = art->to()->rfc2047Charset();
+  }
 
   // check if we already have a suitable font in the cache
-  f=f_ontCache.find(QString::number((int)(cs)));
+  f=f_ontCache.find(cs);
   if (f) return (*f);
 
   // new charset...
   f = new QFont(knGlobals.cfgManager->appearance()->articleListFont());
   KGlobal::charsets()->setQFont(*f, cs);
   f_ontCache.setAutoDelete(true);
-  f_ontCache.insert(QString::number((int)(cs)),f);
+  f_ontCache.insert(cs, f);
 
   return (*f);
 }
