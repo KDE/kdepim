@@ -47,8 +47,7 @@
 #include <kconfig.h>
 #include <kabc/addressbook.h>
 #include <kabc/stdaddressbook.h>
-#include <kabc/resource.h>
-#include <kresources/factory.h>
+#include <kabc/resourcefile.h>
 
 #include <pilotUser.h>
 #include <pilotSerialDatabase.h>
@@ -267,48 +266,33 @@ bool AbbrowserConduit::_loadAddressBook()
 	switch (fAbookType)
 	{
 		case eAbookResource:
-#ifdef DEBUG
 			DEBUGCONDUIT<<"Loading standard addressbook"<<endl;
-#endif
 			aBook = StdAddressBook::self();
 			break;
 		case eAbookLocal: { // initialize the abook with the given file
-			aBook = new AddressBook();
-			KRES::Factory*resfact=KRES::Factory::self("contact");
-#ifdef DEBUG
 			DEBUGCONDUIT<<"Loading custom addressbook"<<endl;
-#endif
-			if (aBook && resfact)
-			{
-				// just give the config object of the conduit, because the filename
-				// is stored there under the key "FileName", just as the ResourceFile
-				// class expects it to be (I'd like it much more if I could just give
-				// the filename instead of having to use a config file)
-				KRES::Resource*rawres=resfact->resource("file", fConfig);
-				KABC::Resource*abookres=dynamic_cast<KABC::Resource*>(rawres);
-				if ((!abookres) || (!aBook->addResource(abookres)) )
-				{
-					kdWarning()<<k_funcinfo<<": Unable to open addressbook resource "
-						<<"for file "<<fAbookFile<<endl;
-					KPILOT_DELETE(rawres);
-					KPILOT_DELETE(aBook);
-					return false;
-				}
+			aBook = new AddressBook();
+			if (!aBook) return false;
+			KABC::Resource *res = new ResourceFile( fAbookFile, "vcard" );
+			if ( !aBook->addResource( res ) ) {
+				DEBUG_KPILOT << "Unable to open resource for file " << fAbookFile << endl;
+				KPILOT_DELETE( aBook );
+				return false;
 			}
 			break;}
 		default: break;
 	}
-	if (!aBook )
+	// find out if this can fail for reasons other than a non-existent
+	// vcf file. If so, how can I determine if the missing file was the problem
+	// or something more serious:
+	if ( !aBook || !aBook->load() )
 	{
 		// Something went wrong, so tell the user and return false to exit the conduit
+		emit logError(i18n("Unable to initialize and load the addressbook for the sync.") );
 		kdWarning()<<k_funcinfo<<": Unable to initialize the addressbook for the sync."<<endl;
 		KPILOT_DELETE(aBook);
 		return false;
 	}
-	// find out if this can fail for reasons other than a non-existent
-	// vcf file. If so, how can I determine if the missing file was the problem
-	// or something more serious:
-	aBook->load();
 	abChanged = false;
 	ticket=aBook->requestSaveTicket();
 	if (!ticket)
