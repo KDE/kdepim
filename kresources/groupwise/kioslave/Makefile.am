@@ -15,3 +15,5 @@ kio_groupwise_la_LIBADD = $(top_builddir)/libkcal/libkcal.la \
   ../soap/libgwsoap.la $(top_builddir)/libkdepim/libkdepim.la $(LIB_KIO)
 kio_groupwise_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
 
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/kio_groupwise.pot
