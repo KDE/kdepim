@@ -463,7 +463,7 @@ EmpathComposeWindow::s_encrypt(bool)
     void
 EmpathComposeWindow::bugReport()
 {
-    setCaption(i18n("Bug Report - ") + kapp->getCaption());
+    setCaption(i18n("Bug Report"));
     composeWidget_->bugReport();
 }
 

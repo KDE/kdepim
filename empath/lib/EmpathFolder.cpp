@@ -38,7 +38,6 @@
 EmpathFolder::EmpathFolder()
     :    QObject()
 {
-    empathDebug("default ctor !");
     pixmapName_ = "mini-folder-grey";
 }
 
@@ -46,8 +45,6 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
     :   QObject(),
         url_(url)
 {
-    empathDebug("ctor with url == \"" + url_.asString() + "\"");
-    
     index_ = new EmpathIndex(url);
 	
     QObject::connect(this, SIGNAL(countUpdated(Q_UINT32, Q_UINT32)),
@@ -59,13 +56,11 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
     bool
 EmpathFolder::operator == (const EmpathFolder &) const
 {
-    empathDebug("operator == () called");
     return false;
 }
 
 EmpathFolder::~EmpathFolder()
 {
-    empathDebug("dtor");
 }
 
     void
@@ -84,13 +79,13 @@ EmpathFolder::record(const QCString & key)
 EmpathFolder::update()
 {
     EmpathMailbox * m = empath->mailbox(url_);
-    if (m == 0) return;
+    
+    if (m == 0)
+        return;
+    
     m->sync(url_);
-    Q_UINT32 unread = index_->countUnread();
-    Q_UINT32 all = index_->count();
-
-    empathDebug("emitting countUpdated(" + QString().setNum(unread) + ", " + QString().setNum(all) + ")");
-    emit(countUpdated(unread , all));
+    
+    emit(countUpdated(index_->countUnread(), index_->count()));
 }
 
     EmpathFolder *
@@ -110,6 +105,24 @@ EmpathFolder::parent() const
     
     EmpathURL u(url_.mailboxName(), f, QString::null);
     return empath->folder(u);
+}
+
+    Q_UINT32
+EmpathFolder::messageCount()
+{
+    return index_->count();
+}
+
+    Q_UINT32
+EmpathFolder::unreadMessageCount()
+{
+    return index_->countUnread();
+}
+
+    void
+EmpathFolder::setStatus(const QString & id, RMM::MessageStatus status)
+{
+    index_->setStatus(id, status);
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -42,8 +42,11 @@
 #include <klocale.h>
 
 // Local includes
+#include "RMM_Envelope.h"
 #include "EmpathMaildir.h"
+#include "EmpathFolder.h"
 #include "EmpathFolderList.h"
+#include "EmpathIndex.h"
 #include "EmpathMessageList.h"
 #include "Empath.h"
 #include "EmpathTask.h"
@@ -89,11 +92,15 @@ EmpathMaildir::sync(bool force)
     if (!force && !_touched(f))
         return;
     
+    empathDebug("I have to sync");
+    
     _markNewMailAsSeen();
     
     _tagOrAdd(f);
 
     _removeUntagged(f);
+    
+    f->index()->setInitialised(true);
 }
 
     bool
@@ -130,7 +137,16 @@ EmpathMaildir::mark(const QString & id, RMM::MessageStatus msgStat)
     if (!retval)
         empath->s_infoMessage(i18n("Couldn't mark message") +
            " [" + id + "] with flags " + statusFlags);
-    
+ 
+    EmpathFolder * f(empath->folder(url_));
+
+    if (f == 0) {
+        empathDebug("Cannot access my folder !");
+        return retval;
+    }
+
+    f->update();
+   
     return retval;
 }
 
@@ -444,14 +460,24 @@ EmpathMaildir::s_timerBeeped()
     bool
 EmpathMaildir::_touched(EmpathFolder * f)
 {
+    if (!(f->index()->initialised())) {
+        empathDebug("Index not initialised");
+        return true;
+    }
+    
     QFileInfo fiDir(path_ + "/cur/");
+    
     QFileInfo fiIndex(f->index()->indexFileName());
     
-    if (!fiIndex.exists())
+    if (!fiIndex.exists()) {
+        empathDebug("Index file does not yet exist");
         return true;
+    }
     
-    if (fiDir.lastModified() > f->index()->lastModified())
+    if (fiDir.lastModified() > f->index()->lastModified()) {
+        empathDebug("Index file is older than Maildir");
         return true;
+    }
 
     return false;
 }

@@ -86,15 +86,13 @@ Empath::Empath()
         mailSender_(0),
         seq_(0)
 {
-    empathDebug("ctor");
     EMPATH = this;
-    updateOutgoingServer();            // Must initialise the pointer.
+    updateOutgoingServer(); // Must initialise the pointer.
 }
 
     void
 Empath::init()
 {
-    empathDebug("init() called");
     processID_ = getpid();
     pidStr_.setNum(processID_);
     _saveHostName();
@@ -189,6 +187,7 @@ Empath::mailbox(const EmpathURL & url)
         if (it.current()->name() == url.mailboxName())
             return it.current();
     
+    empathDebug("Can't find mailbox " + url.mailboxName());
     return 0;
 }
 
@@ -196,10 +195,10 @@ Empath::mailbox(const EmpathURL & url)
 Empath::folder(const EmpathURL & url)
 {
     EmpathMailbox * m = mailbox(url);
-    if (m == 0) {
-        empathDebug("Can't find mailbox " + url.asString());
+
+    if (m == 0)
         return 0;
-    }
+
     return m->folder(url);
 }
 
@@ -209,7 +208,6 @@ Empath::copy(const EmpathURL & from, const EmpathURL & to, QString xinfo)
     EmpathMailbox * m_from = mailbox(from);
     
     if (m_from == 0) {
-        empathDebug("Can't find mailbox " + from.mailboxName());
         emit(copyComplete(false, from, to, xinfo));
         return;
     }
@@ -223,7 +221,6 @@ Empath::move(const EmpathURL & from, const EmpathURL & to, QString xinfo)
     EmpathMailbox * m_from = mailbox(from);
     
     if (m_from == 0) {
-        empathDebug("Can't find mailbox " + from.mailboxName());
         emit(moveComplete(false, from, to, xinfo));
         return;
     }
@@ -237,7 +234,6 @@ Empath::retrieve(const EmpathURL & url, QString xinfo)
     EmpathMailbox * m = mailbox(url);
     
     if (m == 0) {
-        empathDebug("Can't find mailbox " + url.mailboxName());
         emit(retrieveComplete(false, url, xinfo));
         return;
     }
@@ -251,7 +247,6 @@ Empath::write(const EmpathURL & url, RMM::RMessage & msg, QString xinfo)
     EmpathMailbox * m = mailbox(url);
     
     if (m == 0) {
-        empathDebug("Can't find mailbox " + url.mailboxName());
         emit(writeComplete(false, url, xinfo));
         return EmpathURL("");
     }
@@ -264,8 +259,8 @@ Empath::createFolder(const EmpathURL & url, QString xinfo)
     EmpathMailbox * m = mailbox(url);
 
     if (m == 0) {
-        empathDebug("Can't find mailbox " + url.mailboxName());
         emit(createFolderComplete(false, url, xinfo));
+        return;
     }
 
     m->createFolder(url, QString::null, xinfo);
@@ -277,13 +272,10 @@ Empath::remove(const EmpathURL & url, QString xinfo)
     EmpathMailbox * m = mailbox(url);
     
     if (m == 0) {
-        empathDebug("Can't find mailbox " + url.mailboxName());
-        if (url.hasMessageID())
-            emit(removeComplete(false, url, xinfo));
-        else
-            emit(removeComplete(false, url, xinfo));
+        emit(removeComplete(false, url, xinfo));
         return;
     }
+
     m->remove(url, QString::null, xinfo);
 }
 
@@ -293,11 +285,7 @@ Empath::remove(const EmpathURL & url, const QStringList & l, QString xinfo)
     EmpathMailbox * m = mailbox(url);
 
     if (m == 0) {
-        empathDebug("Can't find mailbox " + url.mailboxName());
-        if (url.hasMessageID())
-            emit(removeComplete(false, url, xinfo));
-        else
-            emit(removeComplete(false, url, xinfo));
+        emit(removeComplete(false, url, xinfo));
         return;
     }
 
@@ -312,7 +300,6 @@ Empath::mark(const EmpathURL & url, RMM::MessageStatus s, QString xinfo)
     EmpathMailbox * m = mailbox(url);
     
     if (m == 0) {
-        empathDebug("Can't find mailbox " + url.mailboxName());
         emit(markComplete(false, url, xinfo));
         return;
     }
@@ -332,7 +319,6 @@ Empath::mark(
     EmpathMailbox * m = mailbox(url);
     
     if (m == 0) {
-        empathDebug("Can't find mailbox " + url.mailboxName());
         emit(markComplete(false, url, xinfo));
         return;
     }
@@ -501,10 +487,8 @@ Empath::s_saveNameReady(const EmpathURL & url, QString name)
 {
     EmpathMailbox * m = mailbox(url);
     
-    if (m == 0) {
-        empathDebug("Can't find mailbox " + url.mailboxName());
+    if (m == 0)
         return;
-    }
 
     m->retrieve(url, name, "save");
 
@@ -519,7 +503,7 @@ Empath::s_messageReadyForSave(
     
     if (!status) {
         empathDebug("Couldn't retrieve message for saving");
-        abort();
+        return;
     }
     
     QFile f(name);
@@ -538,7 +522,7 @@ Empath::s_messageReadyForSave(
     
     if (m == 0) {
         empathDebug("Couldn't get message that supposedly retrieved");
-        abort();
+        return;
     }
     
     QString s(m->asString());

@@ -46,6 +46,7 @@
 #include "EmpathMessageList.h"
 #include "EmpathMessageListWidget.h"
 #include "EmpathIndexRecord.h"
+#include "EmpathIndex.h"
 #include "EmpathMessageViewWindow.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
@@ -506,8 +507,6 @@ EmpathMessageListWidget::setStatus(
     void
 EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 {
-    empathDebug("s_showFolder(" + url.asString() + ") called");
-    
     if (url_ == url) {
         emit(showing());
         return;
@@ -516,6 +515,7 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
     empath->s_infoMessage(
         i18n("Reading mailbox") + " " + url.asString());
     
+    empathDebug("Looking for old folder - this is likely to say 'mailbox not found' - that's ok");
     EmpathFolder * oldFolder = empath->folder(url_);
     
     if (oldFolder != 0) {
@@ -531,7 +531,6 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
     
     url_ = url;
     
-    empathDebug("calling empath->folder(" + url_.asString() + ")");
     EmpathFolder * f = empath->folder(url_);
     
     QObject::connect(

@@ -22,6 +22,7 @@
 #include <qdatastream.h>
 #include <qregexp.h>
 #include <qfileinfo.h>
+#include <qdir.h>
 
 // KDE includes
 #include <kglobal.h>
@@ -40,9 +41,9 @@
 
 EmpathIndex::EmpathIndex()
     :   blockSize_(1024),
-        touched_(true),
         count_(0),
-        unreadCount_(0)
+        unreadCount_(0),
+        initialised_(false)
 {
     // Empty.
 }
@@ -50,22 +51,31 @@ EmpathIndex::EmpathIndex()
 EmpathIndex::EmpathIndex(const EmpathURL & folder)
 	:	blockSize_(1024),
         folder_(folder),
-        touched_(true),
         count_(0),
-        unreadCount_(0)
+        unreadCount_(0),
+        initialised_(false)
 {
     QString resDir =
-        KGlobal::dirs()->getSaveLocation("indices", folder.mailboxName(), true);
+        KGlobal::dirs()->saveLocation("indices", folder.mailboxName(), true);
 
-    if (resDir.isEmpty()) {
-        empathDebug("Serious problem with local indices dir");
+    QDir d(resDir);
+    
+    if (!d.exists()) {
+        if (!d.mkdir(resDir)) {
+            empathDebug("Cannot make index dir " + resDir);
+            return;
+        }
     }
-
+    
     QString legalName = folder.folderPath().replace(QRegExp("/"), "_");
+    
+    filename_ = resDir + "/" + legalName;
 
-    // filename_ = resDir + "/" + legalName;  
-    filename_ = "/tmp/" + legalName;
-	
+    QFileInfo fi(filename_);
+
+    if (!fi.exists())
+        initialised_ = false;
+    
     _open();
 }
 
@@ -78,6 +88,7 @@ EmpathIndex::~EmpathIndex()
 EmpathIndex::setFilename(const QString & filename)
 {
     filename_ = filename;
+    _close();
     _open();
 }
 
@@ -90,8 +101,8 @@ EmpathIndex::setFolder(const EmpathURL & folder)
     EmpathIndexRecord *
 EmpathIndex::record(const QCString & key)
 {
-    if (!dbf_) {
-        empathDebug("dbf is not open");
+    if (!dbf_ && !_open()) {
+        empathDebug("Index not open!");
         return 0;
     }
     
@@ -123,53 +134,20 @@ EmpathIndex::record(const QCString & key)
     Q_UINT32
 EmpathIndex::countUnread()
 {
-    if (touched_)
-        recalculateCount();
-
     return unreadCount_;
 }
 
      Q_UINT32
 EmpathIndex::count()
 {
-    if (touched_)
-        recalculateCount();
-
     return count_;
 }
     
     void
-EmpathIndex::recalculateCount()
-{
-    if (!dbf_) {
-        empathDebug("dbf is not open");
-        return;
-    }
-
-    unreadCount_ = count_ = 0;
-    
-    datum key = gdbm_firstkey(dbf_);
-    
-    while (key.dptr) {
-        
-        RMM::MessageStatus status = (RMM::MessageStatus)(key.dptr[0]);
-
-        if (!(status & RMM::Read))
-            ++unreadCount_;
-
-        ++count_;
-
-        key = gdbm_nextkey(dbf_, key);
-    }
-    
-    touched_ = false;
-}
-
-    void
 EmpathIndex::sync()
 {
-    if (!dbf_) {
-        empathDebug("dbf is not open");
+    if (!dbf_ && !_open()) {
+        empathDebug("Index not open!");
         return;
     }
 
@@ -192,9 +170,11 @@ EmpathIndex::_close()
     }
     
     gdbm_close(dbf_);
+    
+    count_ = unreadCount_ = 0;
 }
 
-    void
+    bool
 EmpathIndex::_open()
 {
     dbf_ = gdbm_open(
@@ -202,10 +182,12 @@ EmpathIndex::_open()
     
     if (!dbf_) {
         empathDebug(gdbm_strerror(gdbm_errno));
-        touched_ = false;
-    } else {
-        touched_ = true;
+        return false;
     }
+    
+    count_ = unreadCount_ = 0;
+
+    return true;
 }
 
     QStrList
@@ -213,11 +195,10 @@ EmpathIndex::allKeys()
 {
     QStrList l;   
 
-    if (!dbf_) {
-        empathDebug("dbf is not open");
+    if (!dbf_ && !_open()) {
+        empathDebug("Index not open!");
         return l;
     }
-
  
     datum key = gdbm_firstkey(dbf_);
 
@@ -236,11 +217,10 @@ EmpathIndex::allKeys()
     bool
 EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
 {
-    if (!dbf_) {
-        empathDebug("dbf is not open");
+    if (!dbf_ && !_open()) {
+        empathDebug("Index not open!");
         return false;
     }
-    
 
     datum k;
     k.dptr  = key.data();
@@ -261,34 +241,60 @@ EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
     
     int retval = gdbm_store(dbf_, k, d, GDBM_REPLACE);
     
-    touched_ = true;
+    if (retval == -1) {
+        empathDebug("Could not insert record !");
+        return false;
+    }
+
+    ++count_;
     
-    return (retval != -1);
+    if (!(rec.status() & RMM::Read))
+        ++unreadCount_;
+    
+    return true;
 }
 
     bool
 EmpathIndex::remove(const QCString & key)
 {  
-    if (!dbf_) {
-        empathDebug("dbf is not open");
+    if (!dbf_ && !_open()) {
+        empathDebug("Index not open!");
         return false;
     }
-
 
     datum k;
     
     k.dptr  = const_cast<char *>(key.data());
     k.dsize = key.length();
+ 
+    datum die = gdbm_fetch(dbf_, k);
+
+    if (!die.dptr) {
+        empathDebug("Record does not exist");
+        return false;
+    }
     
-    touched_ = true;
-    return (gdbm_delete(dbf_, k) == 0);
+    RMM::MessageStatus status = (RMM::MessageStatus)(die.dptr[0]);
+
+    bool ok = (gdbm_delete(dbf_, k) == 0);
+    
+    if (ok) {
+        --count_;
+        if (!(status & RMM::Read))
+            --unreadCount_;
+    
+    } else {
+        empathDebug("Could not delete record");
+    }
+    
+    return ok;
 }
 
     void
 EmpathIndex::clear()
 {
-    if (!dbf_) {
-        empathDebug("dbf is not open");
+    if (!dbf_ && !_open()) {
+        empathDebug("Index not open!");
         return;
     }
     
@@ -300,14 +306,14 @@ EmpathIndex::clear()
         key = gdbm_nextkey(dbf_, key);
     }
 
-    touched_ = true;
+    count_ = unreadCount_ = 0;
 }
 
     void
 EmpathIndex::setStatus(const QString & id, RMM::MessageStatus status)
 {
-    if (!dbf_) {
-        empathDebug("dbf is not open");
+    if (!dbf_ && !_open()) {
+        empathDebug("Index not open!");
         return;
     }
     
@@ -322,15 +328,23 @@ EmpathIndex::setStatus(const QString & id, RMM::MessageStatus status)
         return;
     }
     
+    bool wasRead = ((RMM::MessageStatus)(changer.dptr[0])) & RMM::Read;
+    bool isRead = status & RMM::Read;
+    
     changer.dptr[0] = (unsigned char)(status);
 
     int retval = gdbm_store(dbf_, k, changer, GDBM_REPLACE);
 
-    touched_ = true;
-
     if (retval == -1) {
         empathDebug("Couldn't replace record");
+        return;
     }
+    
+    if (wasRead && !isRead)
+        unreadCount_++;
+    
+    if (!wasRead && isRead)
+        unreadCount_--;
 }
     
     QDateTime

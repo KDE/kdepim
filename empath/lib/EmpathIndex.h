@@ -29,12 +29,8 @@
 #include <qdatetime.h>
 
 // Local includes
-#include "RMM_MessageID.h"
 #include "EmpathIndexRecord.h"
 #include "EmpathURL.h"
-
-class EmpathFolder;
-class EmpathMessageList;
 
 /**
  * Dictionary of index records
@@ -50,7 +46,7 @@ class EmpathIndex
         ~EmpathIndex();
 
         /**
-         * Get the index record using the given RMM::RMessageID.
+         * Get the index record using the given key.
          */
         EmpathIndexRecord * record(const QCString & key);
         
@@ -107,13 +103,14 @@ class EmpathIndex
 
         void setStatus(const QString & id, RMM::MessageStatus status);
         
-        void recalculateCount();
+        bool initialised() { return initialised_; }
+        void setInitialised(bool i) { initialised_ = i; }
         
         const char * className() const { return "EmpathIndex"; }
 
     protected:
         
-        void _open();
+        bool _open();
         void _close();
         
         int blockSize_;
@@ -123,9 +120,10 @@ class EmpathIndex
         QString filename_;
         GDBM_FILE dbf_;
         
-        bool touched_;
         Q_UINT32 count_;
         Q_UINT32 unreadCount_;
+        
+        bool initialised_;
 };
 
 #endif

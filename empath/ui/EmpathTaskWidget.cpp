@@ -29,7 +29,6 @@
 #include <kapp.h>
 #include <klocale.h>
 #include <kpixmap.h>
-#include <kpixmapeffect.h>
 
 // Local includes
 #include "Empath.h"
@@ -40,17 +39,15 @@
 EmpathTaskWidget::EmpathTaskWidget(QWidget * parent, const char * name)
     :    QWidget(parent, name)
 {
-    empathDebug("ctor");
-
     itemList_.setAutoDelete(true);
+
     QObject::connect(
         empath, SIGNAL(newTask(EmpathTask *)),
-        this,    SLOT(s_addTask(EmpathTask *)));
+        this,   SLOT(s_addTask(EmpathTask *)));
 }
 
 EmpathTaskWidget::~EmpathTaskWidget()
 {
-    empathDebug("dtor");
 }
 
     void
@@ -72,28 +69,27 @@ EmpathTaskWidget::resizeEvent(QResizeEvent *)
 EmpathTaskWidget::s_addTask(EmpathTask * t)
 {
     if (t->isDone()) return;
-    empathDebug("s_addTask(" + t->name() + ") called");
+    
     EmpathTaskItem * newItem = new EmpathTaskItem(t->name(), this, "taskItem");
-    CHECK_PTR(newItem);
     
     QObject::connect(
-        t,            SIGNAL(finished()),
+        t,          SIGNAL(finished()),
         newItem,    SLOT(s_done()));
     
     QObject::connect(
         newItem,    SIGNAL(done(EmpathTaskItem *)),
-        this,        SLOT(s_done(EmpathTaskItem *)));
+        this,       SLOT(s_done(EmpathTaskItem *)));
     
     QObject::connect(
-        t,            SIGNAL(maxChanged(int)),
+        t,          SIGNAL(maxChanged(int)),
         newItem,    SLOT(s_setMax(int)));
             
     QObject::connect(
-        t,            SIGNAL(posChanged(int)),
+        t,          SIGNAL(posChanged(int)),
         newItem,    SLOT(s_setPos(int)));
     
     QObject::connect(
-        t,            SIGNAL(addOne()),
+        t,          SIGNAL(addOne()),
         newItem,    SLOT(s_inc()));
     
     itemList_.append(newItem);
@@ -114,7 +110,6 @@ EmpathTaskWidget::s_addTask(EmpathTask * t)
     void
 EmpathTaskWidget::s_done(EmpathTaskItem * item)
 {
-    empathDebug("s_done() called");
     QListIterator<EmpathTaskItem> it(itemList_);
     itemList_.remove(item);
     
@@ -137,13 +132,9 @@ EmpathTaskItem::EmpathTaskItem(const QString & title,
         pos_(0),
         max_(100)
 {
-    empathDebug("ctor");
-    layout_ = new QGridLayout(this, 1, 2, 2, 10);
-    CHECK_PTR(layout_);
-    label_ = new QLabel(title_, this, "l_taskTitle");
-    CHECK_PTR(label_);
-    progressMeter_ = new QProgressBar(this, "taskProgress");
-    CHECK_PTR(progressMeter_);
+    layout_         = new QGridLayout(this, 1, 2, 2, 10);
+    label_          = new QLabel(title_, this, "l_taskTitle");
+    progressMeter_  = new QProgressBar(this, "taskProgress");
     
     setFixedHeight(progressMeter_->sizeHint().height());
     layout_->addWidget(label_,            0, 0);
@@ -154,13 +145,11 @@ EmpathTaskItem::EmpathTaskItem(const QString & title,
 
 EmpathTaskItem::~EmpathTaskItem()
 {
-    empathDebug("dtor");
 }
 
     void
 EmpathTaskItem::s_done()
 {
-    empathDebug("s_done() called");
     emit(done(this));
 }
 
@@ -174,7 +163,6 @@ EmpathTaskItem::s_inc()
     void
 EmpathTaskItem::s_setMax(int max)
 {
-    empathDebug("s_setMax(" + QString().setNum(max) + ") called");
     progressMeter_->setTotalSteps(max);
     max_ = max;
 }

@@ -306,14 +306,14 @@ EmpathMailboxMaildir::s_getNewMail()
     void
 EmpathMailboxMaildir::init()
 {
-    readConfig();
-
     QDir d(path_);
     
     if (!d.exists())
         if (!d.mkdir(path_)) {
             empathDebug("Couldn't make " + path_ + " !!!!!");
         }
+
+    readConfig();
 }
 
     void

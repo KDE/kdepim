@@ -27,13 +27,10 @@
 
 // Local includes
 #include "EmpathURL.h"
-#include "EmpathIndex.h"
-#include <RMM_Message.h>
-#include <RMM_MessageID.h>
 
+class EmpathIndex;
 class EmpathMailbox;
 class EmpathIndexRecord;
-class EmpathIndex;
 class EmpathIndexAllocator;
 
 /**
@@ -92,14 +89,12 @@ class EmpathFolder : public QObject
         /**
          * How many messages in total are stored here ?
          */
-        Q_UINT32    messageCount()
-        { return index_->count(); }
+        Q_UINT32 messageCount();
 
         /**
          * How many messages stored are unread ?
          */
-        Q_UINT32    unreadMessageCount()
-        { return index_->countUnread(); }
+        Q_UINT32 unreadMessageCount();
 
         /**
          * @internal
@@ -133,8 +128,7 @@ class EmpathFolder : public QObject
          */
         void itemCome(const QString & s) { emit(itemArrived(s));    }
         
-        void setStatus(const QString & id, RMM::MessageStatus status)
-        { index_->setStatus(id, status); }
+        void setStatus(const QString & id, RMM::MessageStatus);
         
     protected slots:
         

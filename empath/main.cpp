@@ -35,7 +35,7 @@
 #include "EmpathDefines.h"
 #include "EmpathUI.h"
 
-void empathMain(int, char **, bool = false);
+void empathMain(int, char **);
 
     int
 main(int argc, char ** argv)
@@ -52,7 +52,6 @@ main(int argc, char ** argv)
 
     if (opts.check("--help", "-h", true)) {
         cerr    << "usage: empath --help    gives you this message"     << endl
-                << "              --server  runs as CORBA server"       << endl
                 << "              --version prints version information" << endl;
         return 0;
     }
@@ -62,21 +61,17 @@ main(int argc, char ** argv)
         return 0;
     }
     
-    empathMain(argc, argv, (opts.check("--server", "-s", true)));
+    empathMain(argc, argv);
 
     umask(prev_umask);
     
-    exit(0);
+    return 0;
 }
 
     void
-empathMain(int argc, char ** argv, bool server)
+empathMain(int argc, char ** argv)
 {
-    if (server && fork() != 0) return;
-
-    // Create a KApplication.
     KApplication * app = new KApplication(argc, argv, "empath");
-    CHECK_PTR(app);
     
     KGlobal::dirs()->addResourceType("indices", "/share/apps/empath/indices");
     KGlobal::dirs()->addResourceType("cache", "/share/apps/empath/cache");
@@ -87,17 +82,11 @@ empathMain(int argc, char ** argv, bool server)
     // Create the kernel.
     Empath::start();
     
-    EmpathUI * ui(0);
-    
-    if (!server) {
+    // Create the user interface.
+    EmpathUI * ui = new EmpathUI;
 
-        // Create the user interface.
-        ui = new EmpathUI;
-        CHECK_PTR(ui);
-            
-        // Attempt to get the UI up and running quickly.
-        app->processEvents();
-    }
+    // Attempt to get the UI up and running quickly.
+    app->processEvents();
 
     // Initialise the kernel.
     empath->init();
@@ -109,10 +98,8 @@ empathMain(int argc, char ** argv, bool server)
     
     cerr << endl << "Empath exited event loop. Shutting down." << endl;
     
-    if (!server) {
-        delete ui;
-        ui = 0;
-    }
+    delete ui;
+    ui = 0;
     
     empath->shutdown();
     
