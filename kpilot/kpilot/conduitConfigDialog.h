@@ -52,7 +52,6 @@ public:
 
 	QListView *fConduitList;
 	QWidgetStack *fStack;
-	QLabel *fOldStyleLabel;
 	QPushButton *fConfigureButton;
 	QPushButton *fConfigureWizard,*fConfigureKontact;
 } ;

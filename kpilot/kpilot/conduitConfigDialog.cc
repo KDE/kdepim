@@ -203,7 +203,6 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 
 	// Second page, now with layout in a single column
 	//
-	//
 	// Probably deprecated.
 	//
 	btns = addDescriptionPage(fStack,OLD_CONDUIT,
@@ -235,12 +234,13 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 		"</qt>"),false);
 
 	// Page 6 - explanation about general setup
-	//
-	// TODO: add wizard-startup buttons here.
 	btns = addDescriptionPage(fStack,GENERAL_EXPLN,
 		i18n("<qt><p>The <i>general</i> portion of KPilot's setup "
 		"contains settings for your hardware and the way KPilot "
-		"should display your data. The HotSync settings are "
+		"should display your data. For the basic setup, which should fulfill "
+		"the need of most users, just use the setup wizard below.</p>"
+		"If you need some special settings, this dialog provides all the options "
+		"for fine-tuning KPilot. But be warned: The HotSync settings are "
 		"various esoteric things.</p>"
 		"<p>You can enable an action or conduit by clicking on its checkbox. "
 		"Checked conduits will be run during a HotSync. "
@@ -579,10 +579,6 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 			return;
 		}
 		fStack->raiseWidget(OLD_CONDUIT);
-		fOldStyleLabel->setText(i18n("<qt>The conduit <i>%1</i> "
-			"is an old-style conduit. To configure it, "
-			"click the configure button below.</qt>")
-				.arg(p->text(CONDUIT_NAME)));
 
 		fCurrentOldStyle=d;
 		d->readSettings();
