@@ -32,9 +32,9 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 
-filter_oe5::filter_oe5() : filter(i18n("Import Folders From Outlook Express 4/5/6"),"Stephan B. Nedregard/Hans Dijkema")
+filter_oe5::filter_oe5() : filter(i18n("Import Folders From Outlook Express 5/6"),"Stephan B. Nedregard/Hans Dijkema")
 {
-  CAP=i18n("Import Outlook Express 5");
+  CAP=i18n("Import Outlook Express 5/6");
 }
 
 filter_oe5::~filter_oe5()
@@ -42,103 +42,108 @@ filter_oe5::~filter_oe5()
 
 void filter_oe5::import(filterInfo *info)
 {
-QString  choosen;
-QString  msg;
-QWidget *parent=info->parent();
+  QString  choosen;
+  QString  msg;
+  QWidget *parent=info->parent();
 
-   if (!kmailStart(info)) { return; }
+  if (!kmailStart(info)) { return; }
 
-   msg=i18n("Stephan B. Nedregard kindly contributed the Outlook Express 4/5/6\n"
-	    "import code.\n\n"
-	    "Select the Outlook Express 5 directory on your system.\n\n"
-	    "This import filter will search for folders (the '.mbx' files).\n\n"
-	    "NOTE: You will not be able to revert to your original folder\n"
-	    "structure, only the folders themselves are imported. But you will\n"
-	    "probably only do this one time.\n\n"
-	    "NOTE: Kmailcvt takes the same folder names as the Outlook Express\n"
-	    "folder names, but precedes them with 'OE5-'. If this causes\n"
-	    "problems for you (you have KMail folders beginning with 'OE5-'),\n"
-	    "cancel this import function (the next dialog will allow you to do\n"
-	    "that) and rename the existing KMail folders."
-           );
-   info->alert(CAP,msg);
+  msg=i18n("<p>Stephan B. Nedregard kindly contributed the Outlook Express 5/6 "
+      "import code.</p>"
+      "<p>Select the Outlook Express directory on your system. "
+      "This import filter will search for folders (the '.mbx' files).</p>"
+      "<p><b>NOTE:</b> You will not be able to revert to your original folder "
+      "structure, only the folders themselves are imported. But you will "
+      "probably only do this one time.</p>"
+      "<p><b>NOTE:</b> The folder names will be the same as the Outlook Express "
+      "folder names, but they will be preceded with 'OE5-'. If this causes "
+      "problems for you (you have KMail folders beginning with 'OE5-'), "
+      "cancel this import function (the next dialog will allow you to do "
+      "that) and rename the existing KMail folders.</p>"
+      );
+  info->alert(CAP,msg);
 
-   choosen=KFileDialog::getExistingDirectory(QDir::homeDirPath(),parent,"ImportOE5");
-   if (choosen.isEmpty()) { return; } // No directory choosen here!
+  choosen=KFileDialog::getExistingDirectory(QDir::homeDirPath(),parent, 
+      i18n("Select a folder"));
+  if (choosen.isEmpty()) { return; } // No directory choosen here!
 
-   msg=i18n("Searching for Outlook Express '.dbx' folders in directory %1").arg(choosen);
-   info->log(msg);
+  msg=i18n("Searching for Outlook Express '.dbx' folders in directory %1").arg(choosen);
+  info->log(msg);
 
-   {DIR *d;
+  {
+    DIR *d;
     struct dirent *entry;
-      d=opendir(QFile::encodeName(choosen));
-      if (d==NULL) {QString msg;
-        msg=i18n("Can't open directory %1").arg(choosen);
-        info->alert(CAP,msg);
+    d=opendir(QFile::encodeName(choosen));
+    if (d==NULL) {QString msg;
+      msg=i18n("Can't open directory %1").arg(choosen);
+      info->alert(CAP,msg);
+    }
+    else {int   N=0,n=0;
+      float perc;
+
+      entry=readdir(d);
+      while (entry!=NULL) {char *file=entry->d_name;
+        if (strlen(file)>4 && strcasecmp(&file[strlen(file)-4],".dbx")==0) {
+          N+=1;
+        }
+        entry=readdir(d);
       }
-      else {int   N=0,n=0;
-            float perc;
+      if (N==0) {
+        info->alert(CAP,i18n("No '.dbx' folders found!"));
+      }
+      rewinddir(d);
 
-        entry=readdir(d);
-        while (entry!=NULL) {char *file=entry->d_name;
-          if (strlen(file)>4 && strcasecmp(&file[strlen(file)-4],".dbx")==0) {
-            N+=1;
-          }
-          entry=readdir(d);
-        }
-        if (N==0) {
-          info->alert(CAP,i18n("No '.dbx' folders found!"));
-        }
-        rewinddir(d);
+      info->overall();
 
-        info->overall();
+      entry=readdir(d);
+      while (entry!=NULL) {char *file=entry->d_name;
 
-        entry=readdir(d);
-        while (entry!=NULL) {char *file=entry->d_name;
+        n+=1;
+        perc=(((float) n)/((float) N))*100.0;
+        info->overall(perc);
 
-          n+=1;
-          perc=(((float) n)/((float) N))*100.0;
-          info->overall(perc);
+        if (strlen(file)>4 && strcasecmp(&file[strlen(file)-4],".dbx")==0) {
+          {
+            char fldr[PATH_MAX],name[256];
 
-          if (strlen(file)>4 && strcasecmp(&file[strlen(file)-4],".dbx")==0) {
+            snprintf(fldr, sizeof(fldr), "%s/%s",QFile::encodeName(choosen).data(),file);
+            snprintf(name, sizeof(name), "%s",file);name[strlen(name)-4]='\0';
+
             {
-              char fldr[PATH_MAX],name[256];
+              QString s;
+              s.sprintf("\t%s",fldr);
+              s=i18n("Source:")+s;
+              info->from(s);
+              s.sprintf("\tOE5-%s",name);
+              s=i18n("Destination:")+s;
+              info->to(s);
+            }
 
-              snprintf(fldr, sizeof(fldr), "%s/%s",QFile::encodeName(choosen).data(),file);
-              snprintf(name, sizeof(name), "%s",file);name[strlen(name)-4]='\0';
+            {
+              msg=i18n("  importing folder '%1' to KMail 'OE5-%2'...").arg(file).arg(name);
+              info->log(msg);
+            }
 
-              {QString s;
-                 s.sprintf("\t%s",fldr);
-                 s=i18n("Source:")+s;
-                 info->from(s);
-                 s.sprintf("\tOE5-%s",name);
-                 s=i18n("Destination:")+s;
-                 info->to(s);
-              }
-
-              {QString f,n;
-                 msg=i18n("  importing folder '%1' to KMail 'OE5-%2'...").arg(file).arg(name);
-                 info->log(msg);
-              }
-
-              {oe5_2mbox m(fldr,name,this,info);
-                m.convert();
-              }
+            {
+              oe5_2mbox m(fldr,name,this,info);
+              m.convert();
             }
           }
-          entry=readdir(d);
         }
-        closedir(d);
-
-        if (N!=0) {
-          info->log(i18n("done."));
-          info->current();info->current(100.0);
-          info->overall();info->overall(100.0);
-          info->alert(CAP,i18n("All '.dbx' folders are imported"));
-        }
+        entry=readdir(d);
       }
-   }
+      closedir(d);
 
-   kmailStop(info);
+      if (N!=0) {
+        info->log(i18n("done."));
+        info->current();info->current(100.0);
+        info->overall();info->overall(100.0);
+        info->alert(CAP,i18n("All '.dbx' folders are imported"));
+      }
+    }
+  }
+
+  kmailStop(info);
 }
 
+// vim: ts=2 sw=2 et
