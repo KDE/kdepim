@@ -1,3 +1,5 @@
+KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS)
+
 INCLUDES = -I$(top_srcdir)/rmm/ $(all_includes)
 
 lib_LTLIBRARIES = libempathkernel.la

@@ -2,7 +2,7 @@
 
 SUBDIRS = pics import lib ui
 APPSDIR = $(kde_appsdir)/Internet
-KDE_CXXFLAGS = $(USE_RTTI)
+KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS) 
 INCLUDES = -I$(srcdir)/lib -I$(srcdir)/ui -I$(top_srcdir)/rmm $(all_includes)
 
 #############################################################################
