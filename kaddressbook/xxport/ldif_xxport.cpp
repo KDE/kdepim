@@ -129,8 +129,6 @@ bool LDIFXXPort::exportContacts( const KABC::AddresseeList &list, const QString&
     QString filename = url.path();
     QFile file( filename );
 
-kdWarning() << filename << endl;
-
     if ( !file.open( IO_WriteOnly ) ) {
       QString txt = i18n( "<qt>Unable to open file <b>%1</b>.</qt>" );
       KMessageBox::error( parentWidget(), txt.arg( filename ) );
