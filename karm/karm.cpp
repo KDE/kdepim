@@ -19,7 +19,6 @@
 #include <kmenubar.h>
 #include <ktoolbar.h>
 #include <kmessagebox.h>
-#include <kdebug.h>
 
 #include "task.h"
 #include "karm.h"
@@ -80,7 +79,6 @@ Karm::~Karm()
 
 void Karm::handleDesktopChange(int desktop)
 {
-  kdDebug() << "handleDesktopChange("<<desktop<<")"<<endl;
   desktop--; // desktopTracker starts with 0 for desktop 1
   // start all tasks setup for running on desktop
   TaskVector::iterator it;
@@ -216,14 +214,11 @@ void Karm::updateTrackers(Task *task, DesktopListType desktopList)
 void Karm::printTrackers() {
   TaskVector::iterator it;
   for (int i=0; i<16; i++) {
-   kdDebug() << "Desktop "<<i<<": ";
     TaskVector& start = desktopTracker[i];
     it = start.begin();
     while (it != start.end()) {
-      kdDebug() << (*it)->name() << " ";
       it++;
     }
-    kdDebug() << endl;
   }
 }
 
@@ -360,7 +355,6 @@ void Karm::startTimerFor(Task* item)
     item->setRunning(true);
     activeTasks.append(item);
     emit updateButtons();
-    kdDebug() << activeTasks.count()<<endl;
     if ( activeTasks.count() == 1 )
         emit timerActive();
     
