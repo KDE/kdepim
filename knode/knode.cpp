@@ -79,8 +79,11 @@ KNMainWindow::KNMainWindow()
   sb->setItemAlignment (SB_MAIN,AlignLeft | AlignVCenter);
   sb->insertItem(QString::null, SB_FILTER,2);
   sb->setItemAlignment (SB_FILTER,AlignLeft | AlignVCenter);
-  sb->insertItem(QString::null,SB_GROUP,3);
-  sb->setItemAlignment (SB_GROUP,AlignLeft | AlignVCenter);
+
+  s_tatusGroup = new KStatusBarLabel( QString::null, SB_GROUP, sb );
+  sb->addWidget( s_tatusGroup );
+//   sb->insertItem(QString::null,SB_GROUP,3);
+//   sb->setItemAlignment (SB_GROUP,AlignLeft | AlignVCenter);
 
   //setup splitter behaviour
   manager()->setSplitterHighResolution(true);
@@ -329,8 +332,17 @@ void KNMainWindow::setStatusMsg(const QString& text, int id)
       statusBar()->changeItem(i18n(" Ready"),SB_MAIN);
     else
       statusBar()->changeItem(knGlobals.netAccess->currentMsg(), SB_MAIN);   // restore the original message
-  else
+  else if ( id == SB_GROUP ) {
+    int statusWidth = s_tatusGroup->width();
+    QString mtext = text;
+    while (!mtext.isEmpty() && fontMetrics().width( mtext ) >= statusWidth) {
+      mtext.truncate( mtext.length() - 1);
+    }
+    s_tatusGroup->setText( mtext );
+  }
+  else {
     statusBar()->changeItem(text, id);
+  }
 }
 
 

@@ -34,6 +34,7 @@ class KAccel;
 class KAction;
 class KToggleAction;
 class KSelectAction;
+class KStatusBarLabel;
 
 class KNListView;
 class KNProgress;
@@ -60,7 +61,7 @@ class KNMainWindow : public KDockMainWindow
   Q_OBJECT
 
   public:
-          
+
     KNMainWindow();
     ~KNMainWindow();
 
@@ -345,6 +346,8 @@ class KNMainWindow : public KDockMainWindow
 
   //--------------------------- </Actions> -----------------------------
 
+private:
+  KStatusBarLabel *s_tatusGroup; // widget used in the statusBar() for the group status
 };
 
 #endif // KNODE_H
