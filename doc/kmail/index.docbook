@@ -50,7 +50,7 @@
 
 </authorgroup>
 
-<date>2002-01-23</date>
+<date>2002-01-31</date>
 <releaseinfo>1.04.00</releaseinfo>
 
 <copyright>
@@ -170,19 +170,10 @@ full name (&eg; <userinput>John Doe</userinput>) and the
 information. Next, fill in the <guilabel>Email Address</guilabel> field with your
 email address (&eg; <userinput>john@somewhere.org</userinput>). If you are 
 using <application>PGP</application> or
-<application>GnuPG</application> you need to set your identity in 
+<application>GnuPG</application> you need to set your key in 
 the <guilabel>OpenPGP Key</guilabel> field in the <guilabel>Advanced</guilabel>
 tab. Optionally, go to the <guilabel>Signature</guilabel> tab and
 enter your signature.</para>
-
-<!--###fixme?
-<para>If you add a new identity, an <guilabel>Add
-Transport...</guilabel> button will appear (this button does not exist
-for the <guilabel>Default</guilabel> identity). It allows you to
-configure a way of sending messages for a specific identity, &eg; you
-might want to use a different <acronym>SMTP</acronym> server for one of
-your identities.</para>
--->
 
 </sect1>
 
@@ -243,7 +234,9 @@ chapter.</para>
 <para>To set up an account so you can receive mail, press the
 <guibutton>Add...</guibutton> button in the <guilabel>Receiving</guilabel>
 tab. You will then be prompted for the type of account.  Most users should
-select <guilabel>Pop3</guilabel> or <guilabel>IMAP</guilabel>.</para>
+select <guilabel>Pop3</guilabel> or <guilabel>IMAP</guilabel>. If
+you want to use a local mailbox file, please see the <link linkend="faq-file-locking">FAQ
+about file locking</link>.</para>
         
 <para>You will then be presented with
 the <guilabel>Add Account</guilabel> window. First, fill in the
@@ -475,14 +468,30 @@ without having to use the mouse:</para>
 <entry>Previous unread message in the current folder</entry>
 </row>
 <row>
-<entry><keycombo
-action="simul">&Ctrl;<keycap>+</keycap></keycombo></entry>
+<entry><keycombo action="simul">&Ctrl;<keycap>+</keycap></keycombo></entry>
 <entry>Go to next folder with unread messages</entry>
 </row>
 <row>
-<entry><keycombo
-action="simul">&Ctrl;<keycap>-</keycap></keycombo></entry>
+<entry><keycombo action="simul">&Ctrl;<keycap>-</keycap></keycombo></entry>
 <entry>Go to the previous folder with unread messages</entry>
+</row>
+<row>
+<entry><keycombo action="simul">&Ctrl;<keycap>Left Arrow</keycap></keycombo></entry>
+<entry>Walk upwards in the list of folders. Use 
+<keycombo action="simul">&Ctrl;<keycap>Space</keycap></keycombo> to actually
+enter the folder.</entry>
+</row>
+<row>
+<entry><keycombo action="simul">&Ctrl;<keycap>Right Arrow</keycap></keycombo></entry>
+<entry>Walk downwards in the list of folders. Use 
+<keycombo action="simul">&Ctrl;<keycap>Space</keycap></keycombo> to actually
+enter the folder.</entry>
+</row>
+<row>
+<entry><keycombo action="simul">&Ctrl;<keycap>Space</keycap></keycombo></entry>
+<entry>Enter the folder that has focus, &ie; the folder that you navigated
+to using <keycombo action="simul">&Ctrl;<keycap>Left Arrow</keycap></keycombo> or
+<keycombo action="simul">&Ctrl;<keycap>Right Arrow</keycap></keycombo>.</entry>
 </row>
 </tbody>
 </tgroup>
@@ -530,7 +539,11 @@ message, click the <guiicon>Send</guiicon> icon (the envelope) to send
 the message now, or click the <guiicon>Queue</guiicon> icon to put
 the message in the outbox. If your message isn't finished yet, select
 <menuchoice><guimenu>Message</guimenu><guimenuitem>Save in drafts
-folder</guimenuitem></menuchoice>.
+folder</guimenuitem></menuchoice>. If you want to send an <link
+linkend="pgp-encrypt-your-messages">encrypted</link>
+or <link linkend="pgp-sign-your-messages">digitally signed</link> message, select the
+<guiicon>Sign Message</guiicon> resp. <guiicon>Encrypt 
+Message</guiicon> icons in the toolbar.
 </para> 
 
 </sect2>
@@ -1233,8 +1246,9 @@ the binary to be called <command>gpg</command>. If that's not the case for you,
 just make a symlink.</para>
 
 <para>If you haven't done so, you have to generate a key pair (secret and public
-key) for your identity. You must do this at the command line (use
-<userinput><command>pgp</command> <option>-kg</option></userinput>).  &kmail;
+key) for your identity. You must do this at the command line: use
+<userinput><command>pgp</command> <option>-kg</option></userinput>
+resp. <userinput><command>gpg</command> <option>--gen-key</option></userinput>.  &kmail;
 has no internal support for <application>pgp</application>'s key generation at
 this time. The identity (normally your name followed by your email address
 within brackets, such as <userinput>John Doe
@@ -1279,7 +1293,7 @@ passphrase is stored in memory and not written to the hard disk.</para>
 <varlistentry>
 <term><guilabel>Always encrypt to self</guilabel></term>
 <listitem>
-<para>If this option is off and you want send an encrypted message to somebody,
+<para>If this option is off and you want to send an encrypted message to somebody,
 then you can't read this message any longer after you have composed and
 encrypted it. Turn this option on to keep sent encrypted messages readable for
 you too.</para>
@@ -1295,18 +1309,20 @@ strongly recommended to use this option.</para>
 </listitem>
 </varlistentry>
 
-<!-- fixme: what's this??
 <varlistentry>
 <term><guilabel>Always show the encryption keys for approval</guilabel></term>
 <listitem>
-<para></para> 
+<para>This will always open a dialog that lets you choose the key used for
+each recipient when you are sending an encrypted message. If this
+option is off, &kmail; will show this dialog only when it cannot
+find a key for a recipient.</para> 
 </listitem>
 </varlistentry>
--->
+
 </variablelist>
 
 <para>On the <guilabel>Composer</guilabel> tab you can also check the
-<guilabel>Automatically sign messages using PGP</guilabel> option. This means
+<guilabel>Automatically sign messages using OpenPGP</guilabel> option. This means
 that all your messages will be signed before being sent. (So you don't have to
 set the signing option for each message manually.)</para>
 
@@ -1913,6 +1929,11 @@ start of the line).</para>
 <para><guilabel>Automatically sign messages using OpenPGP</guilabel> lets you toggle
 whether to automatically sign your messages by default. Of course you can still
 deselect the icon in the composer window for each message if necessary.</para>
+
+<para><guilabel>Automatically encrypt messages whenever possible</guilabel> will
+encrypt every message you send, unless there's no trusted key for the recipient
+or you turned off using the recipient's key in the <guilabel>Encryption Preference</guilabel>
+setting of the <guilabel>Encryption Key Approval</guilabel> dialog.</para>
 
 <para><guilabel>Word wrap at column</guilabel> lets you turn word wrapping on
 and off in the <guilabel>Composer window</guilabel> and lets you set the column
@@ -4102,7 +4123,7 @@ server.</para></note></para>
 </answer>
 </qandaentry>
 
-<qandaentry>
+<qandaentry id="faq-file-locking">
 <question><para>Does &kmail; lock the folders it uses?</para></question>
 <answer><para>&kmail; does not lock the files in <filename
 class="directory">~/Mail</filename>.</para>
