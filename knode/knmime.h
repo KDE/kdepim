@@ -352,7 +352,8 @@ class KNRemoteArticle : public KNArticle {
     // status
     bool isNew()                         { return f_lags.get(2); }
     void setNew(bool b=true)             { f_lags.set(2, b); }
-    bool isRead()                        { return f_lags.get(3); }
+    bool getReadFlag()                   { return f_lags.get(3); }
+    bool isRead()                        { return f_lags.get(7) || f_lags.get(3); }   // ignored articles == read
     void setRead(bool b=true)            { f_lags.set(3, b); }
     bool isExpired()                     { return f_lags.get(4); }
     void setExpired(bool b=true)         { f_lags.set(4, b); }

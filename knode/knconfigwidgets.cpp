@@ -981,6 +981,91 @@ void KNConfig::ReadNewsGeneralWidget::apply()
   d_ata->setDirty(true);
 }
 
+//=============================================================================================
+
+
+KNConfig::ReadNewsNavigationWidget::ReadNewsNavigationWidget(ReadNewsNavigation *d, QWidget *p, const char *n)
+  : BaseWidget(p, n), d_ata(d)
+{
+  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+
+  // ==== General =============================================================
+
+  QGroupBox *gb=new QGroupBox(i18n("General"), this);
+  QVBoxLayout *gbL=new QVBoxLayout(gb, 8, 5);
+  topL->addWidget(gb);
+
+  gbL->addSpacing(fontMetrics().lineSpacing()-4);
+  e_muKMailCB=new QCheckBox(i18n("Emulate the &keyboard behaviour of KMail"), gb);
+  gbL->addWidget(e_muKMailCB);
+
+  // ==== Mark All as Read ====================================================
+
+  gb=new QGroupBox(i18n("\"Mark All as Read\" triggers the following actions:"), this);
+  gbL=new QVBoxLayout(gb, 8, 5);
+  topL->addWidget(gb);
+
+  gbL->addSpacing(fontMetrics().lineSpacing()-4);
+  m_arkAllReadGoNextCB=new QCheckBox(i18n("&Switch to the next group"), gb);
+  gbL->addWidget(m_arkAllReadGoNextCB);
+
+  // ==== Mark Thread as Read =================================================
+
+  gb=new QGroupBox(i18n("\"Mark Thread as Read\" triggers the following actions:"), this);
+  gbL=new QVBoxLayout(gb, 8, 5);
+  topL->addWidget(gb);
+
+  gbL->addSpacing(fontMetrics().lineSpacing()-4);
+  m_arkThreadReadCloseThreadCB=new QCheckBox(i18n("Clos&e the current thread"), gb);
+  gbL->addWidget(m_arkThreadReadCloseThreadCB);
+  m_arkThreadReadGoNextCB=new QCheckBox(i18n("Go &to the next unread thread"), gb);
+  gbL->addWidget(m_arkThreadReadGoNextCB);
+
+  // ==== Ignore Thread =======================================================
+
+  gb=new QGroupBox(i18n("\"Ignore Thread\" triggers the following actions:"), this);
+  gbL=new QVBoxLayout(gb, 8, 5);
+  topL->addWidget(gb);
+
+  gbL->addSpacing(fontMetrics().lineSpacing()-4);
+  i_gnoreThreadCloseThreadCB=new QCheckBox(i18n("Close the cu&rrent thread"), gb);
+  gbL->addWidget(i_gnoreThreadCloseThreadCB);
+  i_gnoreThreadGoNextCB=new QCheckBox(i18n("Go to the next &unread thread"), gb);
+  gbL->addWidget(i_gnoreThreadGoNextCB);
+
+  topL->addStretch(1);
+  topL->setResizeMode(QLayout::Minimum);
+
+  //init
+  e_muKMailCB->setChecked(d->e_muKMail);
+  m_arkAllReadGoNextCB->setChecked(d->m_arkAllReadGoNext);
+  m_arkThreadReadGoNextCB->setChecked(d->m_arkThreadReadGoNext);
+  m_arkThreadReadCloseThreadCB->setChecked(d->m_arkThreadReadCloseThread);
+  i_gnoreThreadGoNextCB->setChecked(d->i_gnoreThreadGoNext);
+  i_gnoreThreadCloseThreadCB->setChecked(d->i_gnoreThreadCloseThread);
+}
+
+
+KNConfig::ReadNewsNavigationWidget::~ReadNewsNavigationWidget()
+{
+}
+
+
+void KNConfig::ReadNewsNavigationWidget::apply()
+{
+  if(!d_irty)
+    return;
+
+  d_ata->e_muKMail = e_muKMailCB,
+  d_ata->m_arkAllReadGoNext = m_arkAllReadGoNextCB->isChecked();
+  d_ata->m_arkThreadReadGoNext = m_arkThreadReadGoNextCB->isChecked();
+  d_ata->m_arkThreadReadCloseThread = m_arkThreadReadCloseThreadCB->isChecked();
+  d_ata->i_gnoreThreadGoNext = i_gnoreThreadGoNextCB->isChecked();
+  d_ata->i_gnoreThreadCloseThread = i_gnoreThreadCloseThreadCB->isChecked();
+
+  d_ata->setDirty(true);
+}
+
 
 //=============================================================================================
 

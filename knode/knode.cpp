@@ -358,13 +358,14 @@ void KNMainWindow::slotSettings()
 }
 
 
-bool KNMainWindow::eventFilter(QObject *, QEvent *e)
+bool KNMainWindow::eventFilter(QObject *o, QEvent *e)
 {
   if ((e->type() == QEvent::KeyPress) ||
       (e->type() == QEvent::KeyRelease) ||
       (e->type() == QEvent::Accel) ||
       (e->type() == QEvent::AccelOverride))
     return true;
+
   return false;
 }
 

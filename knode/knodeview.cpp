@@ -727,6 +727,19 @@ void KNodeView::getSelectedThreads(KNRemoteArticle::List &l)
 }
 
 
+void KNodeView::closeCurrentThread()
+{
+  QListViewItem *item = h_drView->currentItem();
+  if (item) {
+    while (item->parent())
+      item = item->parent();
+    h_drView->setCurrentItem(item);
+    item->setOpen(false);
+    h_drView->ensureItemVisible(item);
+  }
+}
+
+
 void KNodeView::updateCaption()
 {
   QString newCaption=i18n("KDE News Reader");
@@ -1097,7 +1110,7 @@ void KNodeView::slotNavNextUnreadArt()
   if ((!current->isActive())&&(!art->isRead()))   // take current article, if unread & not selected
     next=current;
   else {
-    if(current->isExpandable() && !current->isOpen())
+    if(current->isExpandable() && art->hasUnreadFollowUps() && !current->isOpen())
         h_drView->setOpen(current, true);
     next=static_cast<KNHdrViewItem*>(current->itemBelow());
   }
@@ -1106,7 +1119,7 @@ void KNodeView::slotNavNextUnreadArt()
     art=static_cast<KNRemoteArticle*>(next->art);
     if(!art->isRead()) break;
     else {
-      if(next->isExpandable() && !next->isOpen())
+      if(next->isExpandable() && art->hasUnreadFollowUps() && !next->isOpen())
         h_drView->setOpen(next, true);
       next=static_cast<KNHdrViewItem*>(next->itemBelow());
     }
@@ -1345,7 +1358,10 @@ void KNodeView::slotGrpUnsubscribe()
 void KNodeView::slotGrpSetAllRead()
 {
   kdDebug(5003) << "KNodeView::slotGrpSetAllRead()" << endl;
+
   a_rtManager->setAllRead(true);
+  if (c_fgManager->readNewsNavigation()->markAllReadGoNext())
+    slotNavNextGroup();
 }
 
 
@@ -1501,23 +1517,21 @@ void KNodeView::slotArtCollapseAll()
 {
   kdDebug(5003) << "KNodeView::slotArtCollapseAll()" << endl;
 
-  // find the root of the current thread and make it current,
-  // otherwise the current thread will not collapse
-  if (a_rtView->article() && a_rtView->article()->listItem()) {
-    QListViewItem *item = a_rtView->article()->listItem();
-    while (item->parent())
-      item = item->parent();
-    h_drView->setCurrentItem(item);
-  }
-
+  closeCurrentThread();
   a_rtManager->setAllThreadsOpen(false);
+  if (h_drView->currentItem())
+    h_drView->ensureItemVisible(h_drView->currentItem());
 }
 
 
 void KNodeView::slotArtExpandAll()
 {
   kdDebug(5003) << "KNodeView::slotArtExpandAll()" << endl;
+
   a_rtManager->setAllThreadsOpen(true);
+  if (h_drView->currentItem())
+    h_drView->ensureItemVisible(h_drView->currentItem());
+
 }
 
 
@@ -1574,6 +1588,13 @@ void KNodeView::slotArtSetThreadRead()
   KNRemoteArticle::List l;
   getSelectedThreads(l);
   a_rtManager->setRead(l, true);
+
+  if (h_drView->currentItem()) {
+    if (c_fgManager->readNewsNavigation()->markThreadReadCloseThread())
+      closeCurrentThread();
+    if (c_fgManager->readNewsNavigation()->markThreadReadGoNext())
+      slotNavNextUnreadThread();
+  }
 }
 
 
@@ -1643,6 +1664,13 @@ void KNodeView::slotArtToggleIgnored()
   getSelectedThreads(l);
   a_rtManager->toggleIgnored(l);
   a_rtManager->rescoreArticles(l);
+
+  if (h_drView->currentItem()) {
+    if (c_fgManager->readNewsNavigation()->ignoreThreadCloseThread())
+      closeCurrentThread();
+    if (c_fgManager->readNewsNavigation()->ignoreThreadGoNext())
+      slotNavNextUnreadThread();
+  }
 }
 
 

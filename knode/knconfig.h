@@ -292,7 +292,7 @@ class Appearance : public Base {
 #define COL_CNT 13
 #define FNT_CNT 5
 #define HEX_CNT 4
-#define ICON_CNT 17
+#define ICON_CNT 18
 
   friend class AppearanceWidget;
 
@@ -305,12 +305,12 @@ class Appearance : public Base {
 
     enum FontIndex    { article=0, articleFixed=1, composer=2, groupList=3, articleList=4 };
 
-    enum IconIndex    { greyBall=0,       redBall=1,      greyBallChkd=2,
-                        redBallChkd=3,    newFups=4,      eyes=5,
-                        mail=6,           posting=7,      canceledPosting=8,
-                        savedRemote=9,    nntp=10,        group=11,
-                        folder=12,        rootFolder=13,  customFolder=14,
-                        sendErr=15,       null=16 };
+    enum IconIndex    { greyBall=0,        redBall=1,      greyBallChkd=2,
+                        redBallChkd=3,     newFups=4,      eyes=5,
+                        ignore=6,          mail=7,         posting=8,
+                        canceledPosting=9, savedRemote=10, nntp=11,
+                        group=12,          folder=13,      rootFolder=14,
+                        customFolder=15,   sendErr=16,     null=17 };
     Appearance();
     ~Appearance();
 
@@ -529,6 +529,55 @@ class ReadNewsGeneralWidget : public BaseWidget {
                 *a_rtCacheSize;
 
     ReadNewsGeneral *d_ata;
+
+};
+
+
+class ReadNewsNavigation : public Base {
+
+  friend class ReadNewsNavigationWidget;
+
+  public:
+    ReadNewsNavigation();
+    ~ReadNewsNavigation();
+
+    void save();
+
+    bool emulateKMail()               { return e_muKMail; }
+    bool markAllReadGoNext()          { return m_arkAllReadGoNext; }
+    bool markThreadReadGoNext()       { return m_arkThreadReadGoNext; }
+    bool markThreadReadCloseThread()  { return m_arkThreadReadCloseThread; }
+    bool ignoreThreadGoNext()         { return i_gnoreThreadGoNext; }
+    bool ignoreThreadCloseThread()   { return i_gnoreThreadCloseThread; }
+
+  protected:
+    bool  e_muKMail,
+          m_arkAllReadGoNext,
+          m_arkThreadReadGoNext,
+          m_arkThreadReadCloseThread,
+          i_gnoreThreadGoNext,
+          i_gnoreThreadCloseThread;
+
+};
+
+
+class ReadNewsNavigationWidget : public BaseWidget {
+
+  public:
+    ReadNewsNavigationWidget(ReadNewsNavigation *d, QWidget *p=0, const char *n=0);
+    ~ReadNewsNavigationWidget();
+
+    void apply();
+
+  protected:
+    QCheckBox   *e_muKMailCB,
+                *m_arkAllReadGoNextCB,
+                *m_arkThreadReadGoNextCB,
+                *m_arkThreadReadCloseThreadCB,
+                *i_gnoreThreadGoNextCB,
+                *i_gnoreThreadCloseThreadCB;
+
+    ReadNewsNavigation *d_ata;
 
 };
 

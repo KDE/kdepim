@@ -33,6 +33,7 @@ class KNConfigManager : QObject {
     KNConfig::Identity*             identity()            { return i_dentity; }
     KNConfig::Appearance*           appearance()          { return a_ppearance; }
     KNConfig::ReadNewsGeneral*      readNewsGeneral()     { return r_eadNewsGeneral; }
+    KNConfig::ReadNewsNavigation*   readNewsNavigation()  { return r_eadNewsNavigation; }
     KNConfig::ReadNewsViewer*       readNewsViewer()      { return r_eadNewsViewer; }
     KNConfig::DisplayedHeaders*     displayedHeaders()    { return d_isplayedHeaders; }
     KNConfig::Scoring*              scoring()             { return s_coring; }
@@ -48,6 +49,7 @@ class KNConfigManager : QObject {
     KNConfig::Identity             *i_dentity;
     KNConfig::Appearance           *a_ppearance;
     KNConfig::ReadNewsGeneral      *r_eadNewsGeneral;
+    KNConfig::ReadNewsNavigation   *r_eadNewsNavigation;
     KNConfig::ReadNewsViewer       *r_eadNewsViewer;
     KNConfig::DisplayedHeaders     *d_isplayedHeaders;
     KNConfig::Scoring              *s_coring;

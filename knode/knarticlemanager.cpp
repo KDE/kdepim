@@ -589,15 +589,17 @@ void KNArticleManager::setAllRead(bool r)
   if(!g_roup)
     return;
 
-  int new_count = 0;
+  int new_count = 0, ignore_count=0;
   KNRemoteArticle *a;
   for(int i=0; i<g_roup->length(); i++) {
     a=g_roup->at(i);
-    if(a->isRead()!=r) {
+    if(a->getReadFlag()!=r) {
       a->setRead(r);
       a->setChanged(true);
-      if(a->isNew())
+      if(a->isNew() && !a->isIgnored())
         new_count++;
+      if(a->isIgnored())
+        ignore_count++;
     }
   }
 
@@ -606,7 +608,7 @@ void KNArticleManager::setAllRead(bool r)
     g_roup->setReadCount(g_roup->length());
     g_roup->setNewCount(0);
   } else {
-    g_roup->setReadCount(0);
+    g_roup->setReadCount(ignore_count);
     g_roup->setNewCount(new_count);
   }
 
@@ -648,44 +650,46 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
       }
     }
 
-    else if(a->isRead()!=r) {
-      changeCnt++;
+    else if(a->getReadFlag()!=r) {
       a->setRead(r);
       a->setChanged(true);
       a->updateListItem();
 
-      idRef=a->idRef();
+      if (!a->isIgnored()) {
+        changeCnt++;
+        idRef=a->idRef();
 
-      while(idRef!=0) {
-        ref=g->byId(idRef);
+        while(idRef!=0) {
+          ref=g->byId(idRef);
+          if(r) {
+            ref->decUnreadFollowUps();
+            if(a->isNew())
+              ref->decNewFollowUps();
+          }
+          else {
+            ref->incUnreadFollowUps();
+            if(a->isNew())
+              ref->incNewFollowUps();
+          }
+
+          if(ref->listItem() &&
+             ((ref->unreadFollowUps()==0 || ref->unreadFollowUps()==1) ||
+              (ref->newFollowUps()==0 || ref->newFollowUps()==1)))
+            ref->updateListItem();
+
+          idRef=ref->idRef();
+        }
+
         if(r) {
-          ref->decUnreadFollowUps();
+          g->incReadCount();
           if(a->isNew())
-            ref->decNewFollowUps();
+            g->decNewCount();
         }
         else {
-          ref->incUnreadFollowUps();
+          g->decReadCount();
           if(a->isNew())
-            ref->incNewFollowUps();
+            g->incNewCount();
         }
-
-        if(ref->listItem() &&
-           ((ref->unreadFollowUps()==0 || ref->unreadFollowUps()==1) ||
-            (ref->newFollowUps()==0 || ref->newFollowUps()==1)))
-          ref->updateListItem();
-
-        idRef=ref->idRef();
-      }
-
-      if(r) {
-        g->incReadCount();
-        if(a->isNew())
-          g->decNewCount();
-      }
-      else {
-        g->decReadCount();
-        if(a->isNew())
-          g->incNewCount();
       }
     }
   }
@@ -701,32 +705,117 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
 
 void KNArticleManager::toggleWatched(KNRemoteArticle::List &l)
 {
-  KNRemoteArticle *a=l.first();
-  bool watch=true;
-  if (a && a->isWatched())
-    watch=false;
+  if(l.isEmpty())
+    return;
+
+  KNRemoteArticle *a=l.first(), *ref=0;
+  bool watch = (!a->isWatched());
+  KNGroup *g=static_cast<KNGroup*>(a->collection() );
+  int changeCnt=0, idRef=0;
 
   for(KNRemoteArticle *a=l.first(); a; a=l.next()) {
-    a->setIgnored(false);
+    if (a->isIgnored()) {
+      a->setIgnored(false);
+
+      if (!a->getReadFlag()) {
+        changeCnt++;
+        idRef=a->idRef();
+
+        while(idRef!=0) {
+          ref=g->byId(idRef);
+
+          ref->incUnreadFollowUps();
+          if(a->isNew())
+            ref->incNewFollowUps();
+
+          if(ref->listItem() &&
+             ((ref->unreadFollowUps()==0 || ref->unreadFollowUps()==1) ||
+              (ref->newFollowUps()==0 || ref->newFollowUps()==1)))
+            ref->updateListItem();
+
+          idRef=ref->idRef();
+        }
+        g->decReadCount();
+        if(a->isNew())
+          g->incNewCount();
+      }
+    }
+
     a->setWatched(watch);
     a->updateListItem();
     a->setChanged(true);
+  }
+
+  if(changeCnt>0) {
+    g->updateListItem();
+    if(g==g_roup)
+      updateStatusString();
   }
 }
 
 
 void KNArticleManager::toggleIgnored(KNRemoteArticle::List &l)
 {
-  KNRemoteArticle *a=l.first();
-  bool ignore=true;
-  if (a && a->isIgnored())
-    ignore=false;
+  if(l.isEmpty())
+    return;
+
+  KNRemoteArticle *a=l.first(), *ref=0;
+  bool ignore=(!a->isIgnored());
+  KNGroup *g=static_cast<KNGroup*>(a->collection() );
+  int changeCnt=0, idRef=0;
 
   for(; a; a=l.next()) {
     a->setWatched(false);
-    a->setIgnored(ignore);
+    if (a->isIgnored() != ignore) {
+      a->setIgnored(ignore);
+
+      if (!a->getReadFlag()) {
+        changeCnt++;
+        idRef=a->idRef();
+
+        while(idRef!=0) {
+          ref=g->byId(idRef);
+
+          if(ignore) {
+            ref->decUnreadFollowUps();
+            if(a->isNew())
+              ref->decNewFollowUps();
+          }
+          else {
+            ref->incUnreadFollowUps();
+            if(a->isNew())
+              ref->incNewFollowUps();
+          }
+
+          if(ref->listItem() &&
+             ((ref->unreadFollowUps()==0 || ref->unreadFollowUps()==1) ||
+              (ref->newFollowUps()==0 || ref->newFollowUps()==1)))
+            ref->updateListItem();
+
+          idRef=ref->idRef();
+        }
+
+        if(ignore) {
+          g->incReadCount();
+          if(a->isNew())
+            g->decNewCount();
+        }
+        else {
+          g->decReadCount();
+          if(a->isNew())
+            g->incNewCount();
+        }
+
+      }
+    }
     a->updateListItem();
     a->setChanged(true);
+  }
+
+  if(changeCnt>0) {
+    g->updateListItem();
+    if(g==g_roup)
+      updateStatusString();
   }
 }
 

@@ -989,7 +989,7 @@ void KNGroup::dynDataVer0::setData(KNRemoteArticle *a)
   id=a->id();
   idRef=a->idRef();
   thrLevel=a->threadingLevel();
-  read=a->isRead();
+  read=a->getReadFlag();
   score=a->score();
 }
 
@@ -1009,7 +1009,7 @@ void KNGroup::dynDataVer1::setData(KNRemoteArticle *a)
   id=a->id();
   idRef=a->idRef();
   thrLevel=a->threadingLevel();
-  read=a->isRead();
+  read=a->getReadFlag();
   score=a->score();
   ignoredWatched = 0;
   if (a->isWatched())

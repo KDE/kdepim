@@ -89,6 +89,7 @@ class KNodeView : public QSplitter
     void getSelectedArticles(QList<KNRemoteArticle> &l);
     void getSelectedThreads(QList<KNRemoteArticle> &l);
     void getSelectedArticles(QList<KNLocalArticle> &l);
+    void closeCurrentThread();
 
     void updateCaption();
 

@@ -266,6 +266,7 @@ KNConfig::Appearance::Appearance()
   recreateLVIcons();
   i_cons[newFups]         = UserIcon("newsubs");
   i_cons[eyes]            = UserIcon("eyes");
+  i_cons[ignore]          = UserIcon("ignore");
   i_cons[mail]            = SmallIcon("mail_generic");
   i_cons[posting]         = SmallIcon("filenew");
   i_cons[canceledPosting] = SmallIcon("editdelete");
@@ -633,6 +634,49 @@ void KNConfig::ReadNewsGeneral::save()
   conf->setGroup("CACHE");
   conf->writeEntry("collMemSize", c_ollCacheSize);
   conf->writeEntry("artMemSize", a_rtCacheSize);
+
+  d_irty = false;
+}
+
+
+//==============================================================================================================
+
+
+KNConfig::ReadNewsNavigation::ReadNewsNavigation()
+{
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("READNEWS_NAVIGATION");
+
+  e_muKMail=conf->readBoolEntry("emuKMail", false);
+  m_arkAllReadGoNext=conf->readBoolEntry("markAllReadGoNext", false);
+  m_arkThreadReadGoNext=conf->readBoolEntry("markThreadReadGoNext", false);
+  m_arkThreadReadCloseThread=conf->readBoolEntry("markThreadReadCloseThread", false);
+  i_gnoreThreadGoNext=conf->readBoolEntry("ignoreThreadGoNext", false);
+  i_gnoreThreadCloseThread=conf->readBoolEntry("ignoreThreadCloseThread", false);
+};
+
+
+KNConfig::ReadNewsNavigation::~ReadNewsNavigation()
+{
+}
+
+
+void KNConfig::ReadNewsNavigation::save()
+{
+  if(!d_irty)
+    return;
+
+  kdDebug(5003) << "KNConfig::ReadNewsNavigation::save()" << endl;
+
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("READNEWS_NAVIGATION");
+
+  conf->writeEntry("emuKMail", e_muKMail);
+  conf->writeEntry("markAllReadGoNext", m_arkAllReadGoNext);
+  conf->writeEntry("markThreadReadGoNext", m_arkThreadReadGoNext);
+  conf->writeEntry("markThreadReadCloseThread", m_arkThreadReadCloseThread);
+  conf->writeEntry("ignoreThreadGoNext", i_gnoreThreadGoNext);
+  conf->writeEntry("ignoreThreadCloseThread", i_gnoreThreadCloseThread);
 
   d_irty = false;
 }

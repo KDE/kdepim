@@ -1765,8 +1765,12 @@ void KNRemoteArticle::updateListItem()
 
   if(isWatched())
     i_tem->setPixmap(2, app->icon(KNConfig::Appearance::eyes));
-  else
-    i_tem->setPixmap(2, app->icon(KNConfig::Appearance::null));
+  else {
+    if(isIgnored())
+      i_tem->setPixmap(2, app->icon(KNConfig::Appearance::ignore));
+    else
+      i_tem->setPixmap(2, app->icon(KNConfig::Appearance::null));
+  }
 
   i_tem->setText(2, QString("%1").arg(s_core));
 

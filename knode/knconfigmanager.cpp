@@ -35,6 +35,7 @@ KNConfigManager::KNConfigManager(QObject *p, const char *n) : QObject(p, n), d_i
   i_dentity           = new KNConfig::Identity();
   a_ppearance         = new KNConfig::Appearance();
   r_eadNewsGeneral    = new KNConfig::ReadNewsGeneral();
+  r_eadNewsNavigation = new KNConfig::ReadNewsNavigation();
   r_eadNewsViewer     = new KNConfig::ReadNewsViewer();
   d_isplayedHeaders   = new KNConfig::DisplayedHeaders();
   s_coring            = new KNConfig::Scoring();
@@ -50,6 +51,7 @@ KNConfigManager::~KNConfigManager()
   delete i_dentity;
   delete a_ppearance;
   delete r_eadNewsGeneral;
+  delete r_eadNewsNavigation;
   delete r_eadNewsViewer;
   delete d_isplayedHeaders;
   delete s_coring;
@@ -76,6 +78,7 @@ void KNConfigManager::syncConfig()
 {
   a_ppearance->save();
   r_eadNewsGeneral->save();
+  r_eadNewsNavigation->save();
   r_eadNewsViewer->save();
   d_isplayedHeaders->save();
   s_coring->save();
@@ -141,6 +144,12 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   list << QString(" ")+i18n("Reading News") << QString(" ")+i18n("General");
   frame = addHBoxPage(list, i18n("General Options"), BarIcon("misc"));
   w_idgets.append(new KNConfig::ReadNewsGeneralWidget(m->readNewsGeneral(), frame));
+
+  // Read News / Navigation
+  list.clear();
+  list << QString(" ")+i18n("Reading News") << QString(" ")+i18n("Navigation");
+  frame = addHBoxPage(list, i18n("Customize keyboard navigation"), BarIcon("move"));
+  w_idgets.append(new KNConfig::ReadNewsNavigationWidget(m->readNewsNavigation(), frame));
 
   // Read News / Scores
   list.clear();
