@@ -79,16 +79,6 @@ ResourceIMAP::~ResourceIMAP()
   close();
 }
 
-bool ResourceIMAP::getIncidenceList( QStringList& lst, const QString& type )
-{
-  if( !kmailIncidences( lst, type, "FIXME" ) ) {
-    kdError() << "Communication problem in ResourceIMAP::getIncidenceList()\n";
-    return false;
-  }
-
-  return true;
-}
-
 bool ResourceIMAP::doOpen()
 {
   return true;
@@ -96,9 +86,6 @@ bool ResourceIMAP::doOpen()
 
 bool ResourceIMAP::load()
 {
-  kdDebug(5800) << "Loading resource " << resourceName() << " on "
-                << mServer << endl;
-
   // Load each resource. Note: It's intentional to use & instead of &&
   // so we try all three, even if the first failed
   return loadAllEvents() & loadAllTasks() & loadAllJournals();
@@ -106,84 +93,127 @@ bool ResourceIMAP::load()
 
 bool ResourceIMAP::loadAllEvents()
 {
-  // Get the list of events
-  QStringList lst;
-  if ( !getIncidenceList( lst, "Calendar" ) )
-    // The get failed
+  bool changed = false;
+
+  // Get the list of resources
+  QStringList resources;
+  if ( !kmailSubresources( resources, "Calendar" ) )
     return false;
 
-  // We got a fresh list of events, so clean out the old ones
+  // We get a fresh list of events, so clean out the old ones
   mCalendar.deleteAllEvents();
 
-  // Populate the calendar with the new events
-  for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
-    Incidence* i = parseIncidence( *it );
-    if ( i ) {
-      if ( i->type() == "Event" ) {
-        mCalendar.addEvent(static_cast<Event*>(i));
-        i->registerObserver( this );
-      } else {
-        kdDebug() << "Unknown incidence type " << i->type();
-        delete i;
-      }
+  QStringList::ConstIterator itR;
+  for ( itR = resources.begin(); itR != resources.end(); ++itR ) {
+    // Get the list of events
+    QStringList lst;
+    if ( !kmailIncidences( lst, "Calendar", *itR ) )
+      // The get failed
+      return false;
+
+    // Populate the calendar with the new events
+    for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+      Incidence* i = parseIncidence( *it );
+      if ( i ) {
+        if ( i->type() == "Event" ) {
+          mCalendar.addEvent(static_cast<Event*>(i));
+          i->registerObserver( this );
+          changed = true;
+        } else {
+          kdDebug(5650) << "Unknown incidence type " << i->type();
+          delete i;
+        }
+      } else
+        kdDebug(5650) << "Problem reading: " << *it << endl;
     }
   }
+
+  if ( changed )
+    emit resourceChanged( this );
 
   return true;
 }
 
 bool ResourceIMAP::loadAllTasks()
 {
-  // Get the list of todos
-  QStringList lst;
-  if ( !getIncidenceList( lst, "Task" ) )
-    // The get failed
+  bool changed = false;
+
+  // Get the list of resources
+  QStringList resources;
+  if ( !kmailSubresources( resources, "Task" ) )
     return false;
 
-  // We got a fresh list of todos, so clean out the old ones
+  // We get a fresh list of todos, so clean out the old ones
   mCalendar.deleteAllTodos();
 
-  // Populate the calendar with the new todos
-  for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
-    Incidence* i = parseIncidence( *it );
-    if ( i ) {
-      if ( i->type() == "Todo" ) {
-        mCalendar.addTodo(static_cast<Todo*>(i));
-        i->registerObserver( this );
-      } else {
-        kdDebug() << "Unknown incidence type " << i->type();
-        delete i;
+  QStringList::ConstIterator itR;
+  for ( itR = resources.begin(); itR != resources.end(); ++itR ) {
+    // Get the list of todos
+    QStringList lst;
+    if ( !kmailIncidences( lst, "Task", *itR ) )
+      // The get failed
+      return false;
+
+    // Populate the calendar with the new todos
+    for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+      Incidence* i = parseIncidence( *it );
+      if ( i ) {
+        if ( i->type() == "Todo" ) {
+          mCalendar.addTodo(static_cast<Todo*>(i));
+          i->registerObserver( this );
+          changed = true;
+        } else {
+          kdDebug() << "Unknown incidence type " << i->type();
+          delete i;
+        }
       }
     }
   }
+
+  if ( changed )
+    emit resourceChanged( this );
 
   return true;
 }
 
 bool ResourceIMAP::loadAllJournals()
 {
-  // Get the list of journals
-  QStringList lst;
-  if ( !getIncidenceList( lst, "Journal" ) )
-    // The get failed
+  bool changed = false;
+
+  // Get the list of resources
+  QStringList resources;
+  if ( !kmailSubresources( resources, "Journal" ) )
     return false;
 
-  // We got a fresh list of journals, so clean out the old ones
+  // We get a fresh list of journals, so clean out the old ones
   mCalendar.deleteAllJournals();
 
-  // Populate the calendar with the new journals
-  for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
-    Incidence* i = parseIncidence( *it );
-    if ( i ) {
-      if ( i->type() == "Journal" ) {
-        mCalendar.addJournal(static_cast<Journal*>(i));
-        i->registerObserver( this );
-      } else {
-        kdDebug() << "Unknown incidence type " << i->type();
-        delete i;
+  QStringList::ConstIterator itR;
+  for ( itR = resources.begin(); itR != resources.end(); ++itR ) {
+    // Get the list of journals
+    QStringList lst;
+    if ( !kmailIncidences( lst, "Journal", *itR ) )
+      // The get failed
+      return false;
+
+    // Populate the calendar with the new journals
+    for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+      Incidence* i = parseIncidence( *it );
+      if ( i ) {
+        if ( i->type() == "Journal" ) {
+          mCalendar.addJournal(static_cast<Journal*>(i));
+          i->registerObserver( this );
+          changed = true;
+        } else {
+          kdDebug() << "Unknown incidence type " << i->type();
+          delete i;
+        }
       }
     }
   }
+
+  if ( changed )
+    emit resourceChanged( this );
 
   return true;
 }

@@ -61,6 +61,7 @@ class KMailConnection : public QObject, public DCOPObject {
     // Call the DCOP methods
     bool kmailIncidences( QStringList& lst, const QString& type,
                           const QString& resource );
+    bool kmailSubresources( QStringList& lst, const QString& type );
     bool kmailAddIncidence( const QString& type, const QString& uid,
                             const QString& incidence,
                             const QString& resource );

@@ -155,6 +155,18 @@ bool KMailConnection::kmailIncidences( QStringList& lst, const QString& type,
   return mKMailIcalIfaceStub->ok();
 }
 
+bool KMailConnection::kmailSubresources( QStringList& lst,
+                                         const QString& type )
+{
+  if ( !connectToKMail() ) {
+    kdError(5650) << "DCOP error: Can't connect to KMail\n";
+    return false;
+  }
+
+  lst = mKMailIcalIfaceStub->subresources( type );
+  return mKMailIcalIfaceStub->ok();
+}
+
 bool KMailConnection::kmailAddIncidence( const QString& type,
                                          const QString& resource,
                                          const QString& uid,

@@ -175,7 +175,6 @@ protected:
 
   private:
     void init();
-    bool getIncidenceList( QStringList& lst, const QString& type );
 
     bool loadAllEvents();
     bool loadAllTasks();

@@ -45,6 +45,12 @@ bool ResourceIMAPShared::kmailIncidences( QStringList& lst,
   return mConnection->kmailIncidences( lst, type, resource );
 }
 
+bool ResourceIMAPShared::kmailSubresources( QStringList& lst,
+                                            const QString& type )
+{
+  return mConnection->kmailSubresources( lst, type );
+}
+
 bool ResourceIMAPShared::kmailAddIncidence( const QString& type,
                                             const QString& resource,
                                             const QString& uid,
