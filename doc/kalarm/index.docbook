@@ -1437,7 +1437,7 @@ personal preferences, select <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice>.
 This displays the configuration dialog.</para>
 
-<sect2 id="preferences-general">
+<sect1 id="preferences-general">
 <title>General</title>
 
 <para>The <guilabel>General</guilabel> section lets you control
@@ -1540,9 +1540,9 @@ stored according to the selected options.</para>
 </itemizedlist>
 </listitem>
 </itemizedlist>
-</sect2>
+</sect1>
 
-<sect2 id="preferences-email">
+<sect1 id="preferences-email">
 <title>Email</title>
 
 <para>The <guilabel>Email</guilabel> section lets you choose options
@@ -1602,9 +1602,9 @@ ensure that you do whatever is needed to actually transmit
 the email.</para>
 </listitem>
 </itemizedlist>
-</sect2>
+</sect1>
 
-<sect2 id="preferences-view">
+<sect1 id="preferences-view">
 <title>View</title>
 
 <para>The <guilabel>View</guilabel> section lets you control some
@@ -1693,9 +1693,9 @@ checking whether the <application>alarm daemon</application> is
 running.</para>
 </listitem>
 </itemizedlist>
-</sect2>
+</sect1>
 
-<sect2 id="preferences-appearance">
+<sect1 id="preferences-appearance">
 <title>Appearance</title>
 
 <para>The <guilabel>Appearance</guilabel> section lets you set the
@@ -1725,9 +1725,9 @@ the list, and when it is displayed, this button is disabled.</para>
 </listitem>
 
 </itemizedlist>
-</sect2>
+</sect1>
 
-<sect2 id="preferences-edit">
+<sect1 id="preferences-edit">
 <title>Edit</title>
 
 <para>The <guilabel>Edit</guilabel> section lets you choose
@@ -1754,7 +1754,7 @@ late</guilabel>, <guilabel>Confirm acknowledgment</guilabel> and
 </listitem>
 
 </itemizedlist>
-</sect2>
+</sect1>
 
 </chapter>
 
