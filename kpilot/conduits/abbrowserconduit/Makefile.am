@@ -1,6 +1,7 @@
 ### Makefile for the abbrowser / kabc conduit
 ###
 ### The abbrowser conduit is Copyright (C) 2001 by Greg Stern
+### Copyright (C) 2002 by Reinhold Kainhofer
 
 INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 METASOURCES = AUTO

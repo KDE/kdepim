@@ -50,10 +50,6 @@
 
 //#define ADD_BOTH CHANGED_BOTH|CHANGED_ADD
 
-// Made a local copy of contactentry.h now that abbrowser has moved.
-//
-//
-//#include "contactentry.h"
 
 //class DCOPClient;
 class PilotLocalDatabase;
@@ -235,6 +231,9 @@ private:
 
 
 // $Log$
+// Revision 1.22  2002/08/15 21:40:14  kainhofe
+// some more work in the addressbook conduit. Does not yet work
+//
 // Revision 1.21  2002/07/23 00:52:02  kainhofe
 // Reorder the resolution methods
 //
