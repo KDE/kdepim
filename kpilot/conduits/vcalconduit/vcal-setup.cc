@@ -39,7 +39,7 @@
 #include <kurlrequester.h>
 
 #include "korganizerConduit.h"
-#include "vcal-factory.h"
+#include "vcal-factorybase.h"
 #include "vcal-setup.h"
 
 
@@ -115,10 +115,10 @@ VCalWidgetSetupBase::~VCalWidgetSetupBase()
 VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
 	VCalWidgetSetupBase(w,n)
 {
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,VCalConduitFactory::about());
+	UIDialog::addAboutPage(fConfigWidget->tabWidget, VCalConduitFactoryBase::about());
 	fConfigWidget->fSyncDestination->setTitle(i18n("Calendar Destination"));
 	fConduitName=i18n("Calendar");
-	fGroupName=QString::fromLatin1(VCalConduitFactory::group);
+	fGroupName=VCalConduitFactoryBase::getGroup();
 
 }
 

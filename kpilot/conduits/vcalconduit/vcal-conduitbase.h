@@ -121,7 +121,7 @@ protected:
 
 
 	// general settings, implemented by child classes for the conduits
-	virtual const QString configGroup() = 0;
+	virtual const QString configGroup() { return VCalConduitFactoryBase::getGroup(); };
 	virtual const QString dbname() = 0;
 
 	virtual const QString getTitle(PilotAppCategory*de)=0;

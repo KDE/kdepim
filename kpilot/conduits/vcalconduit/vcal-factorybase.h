@@ -41,6 +41,7 @@
 #define SYNC_FULL 2
 #define SYNC_MAX SYNC_FULL
 
+class KAboutData;
 
 class VCalConduitFactoryBase : public KLibFactory
 {
@@ -48,7 +49,9 @@ Q_OBJECT;
 
 public:
 	VCalConduitFactoryBase(QObject * p= 0L,const char * n= 0L):KLibFactory(p,n){};
-	virtual ~VCalConduitFactoryBase() {};
+	virtual ~VCalConduitFactoryBase();
+	static KAboutData *about() { return fAbout; };
+	static QString getGroup() { return group; };
 
 	static const char *const calendarFile,
 		*const syncAction,
@@ -63,6 +66,8 @@ protected:
 		const char* name = 0,
 		const char* classname = "QObject",
 		const QStringList &args = QStringList() )=0;
+	static KAboutData *fAbout;
+	static QString group;
 } ;
 
 #endif

@@ -67,8 +67,6 @@ public:
 class VCalConduit : public VCalConduitBase
 {
 Q_OBJECT
-//private:
-//	class VCalPrivate;
 public:
 	VCalConduit(KPilotDeviceLink *,
 		const char *name=0L,
@@ -76,7 +74,6 @@ public:
 	virtual ~VCalConduit();
 
 protected:
-	virtual const QString configGroup() { return QString::fromLatin1(VCalConduitFactory::group); };
 	virtual const QString dbname() { return CSL1("DatebookDB"); };
 
 	virtual VCalConduitPrivateBase*newVCalPrivate(KCal::Calendar *fCalendar);

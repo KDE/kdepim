@@ -44,10 +44,6 @@ public:
 	ToDoConduitFactory(QObject * = 0L,const char * = 0L);
 	virtual ~ToDoConduitFactory();
 
-	static KAboutData *about() { return fAbout; } ;
-
-	static const char * const group;
-
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
 		const char* name = 0,
@@ -55,7 +51,6 @@ protected:
 		const QStringList &args = QStringList() );
 private:
 	KInstance *fInstance;
-	static KAboutData *fAbout;
 } ;
 
 extern "C"

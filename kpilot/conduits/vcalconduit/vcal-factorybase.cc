@@ -26,8 +26,10 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include "vcal-factorybase.moc"
+#include <kaboutdata.h>
 
+#include "vcal-factorybase.moc"
+#include "options.h"
 
 // Configuration keys
 //
@@ -41,6 +43,12 @@ const char * const VCalConduitFactoryBase::calendarType = "CalendarType";
 
 const char * const VCalConduitFactoryBase::calendarFile = "CalFile" ;
 
-//const char * const VCalConduitFactoryBase::firstTime = "FirstTime" ;
-//const char * const VCalConduitFactoryBase::deleteOnPilot = "DeleteOnPilot" ;
-//const char * const VCalConduitFactoryBase::alwaysFullSync = "AlwaysFullSync";
+QString VCalConduitFactoryBase::group = "vcalOptions" ;
+KAboutData *VCalConduitFactoryBase::fAbout = 0L;
+
+
+VCalConduitFactoryBase::~VCalConduitFactoryBase()
+{
+	KPILOT_DELETE(fAbout);
+};
+

@@ -11,14 +11,18 @@ METASOURCES = AUTO
 servicedir  = $(kde_servicesdir)
 service_DATA = vcal-conduit.desktop todo-conduit.desktop
 
+noinst_LTLIBRARIES = libvcalconduit_shared.la
 kde_module_LTLIBRARIES = conduit_vcal.la conduit_todo.la
 
-conduit_vcal_la_SOURCES = korganizerConduit.ui vcal-factorybase.cc vcal-factory.cc  \
-	vcal-setup.cc vcal-conduitbase.cc vcal-conduit.cc
-conduit_vcal_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
-conduit_vcal_la_LIBADD = ../../lib/libkpilot.la ../../../libkcal/libkcal.la
+libvcalconduit_shared_la_SOURCES = korganizerConduit.ui vcal-factorybase.cc \
+	vcal-setup.cc vcal-conduitbase.cc
 
-conduit_todo_la_SOURCES = korganizerConduit.ui vcal-factorybase.cc todo-factory.cc  \
-	vcal-setup.cc todo-setup.cc vcal-conduit.cc vcal-conduitbase.cc todo-conduit.cc vcal-factory.cc 
+## Almost all source files for the vcal conduit are already in the shared
+## library...
+conduit_vcal_la_SOURCES = vcal-conduit.cc vcal-factory.cc
+conduit_vcal_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
+conduit_vcal_la_LIBADD = ../../lib/libkpilot.la ../../../libkcal/libkcal.la libvcalconduit_shared.la
+
+conduit_todo_la_SOURCES = todo-factory.cc todo-setup.cc todo-conduit.cc
 conduit_todo_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
-conduit_todo_la_LIBADD = ../../lib/libkpilot.la ../../../libkcal/libkcal.la
+conduit_todo_la_LIBADD = ../../lib/libkpilot.la ../../../libkcal/libkcal.la libvcalconduit_shared.la

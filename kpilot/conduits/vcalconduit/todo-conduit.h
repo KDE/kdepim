@@ -45,11 +45,6 @@
 class PilotRecord;
 class PilotSerialDatabase;
 class PilotLocalDatabase;
-//class PilotAppCategory;
-//class PilotDateEntry: public PilotAppCategory;
-//class VCalConduitFactory;
-
-//class VCalConduitBase;
 
 class TodoConduitPrivate : public VCalConduitPrivateBase
 {
@@ -78,8 +73,6 @@ public:
 class TodoConduit : public VCalConduitBase
 {
 Q_OBJECT
-//protected:
-//	class VCalPrivate;
 public:
 	TodoConduit(KPilotDeviceLink *,
 		const char *name=0L,
@@ -89,10 +82,11 @@ public:
 protected:
 	virtual const QString getTitle(PilotAppCategory*de);
 	
-	virtual const QString configGroup() { return QString::fromLatin1(ToDoConduitFactory::group); };
 	virtual const QString dbname() { return CSL1("ToDoDB"); };
 	virtual void preSync() {_getAppInfo(); };
-	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar) { return new TodoConduitPrivate(fCalendar);};
+	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar) { 
+		return new TodoConduitPrivate(fCalendar);
+	};
 
 	virtual void readConfig();
 	void _getAppInfo();
@@ -100,7 +94,11 @@ protected:
 	virtual void postSync();
 	QString _getCat(const QStringList cats, const QString curr) const;
 
-	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) {FUNCTIONSETUP; if (r) return new PilotTodoEntry(fTodoAppInfo, r); else return new PilotTodoEntry(fTodoAppInfo);};
+	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) {
+		FUNCTIONSETUP; 
+		if (r) return new PilotTodoEntry(fTodoAppInfo, r); 
+		else return new PilotTodoEntry(fTodoAppInfo);
+	};
 	virtual KCal::Incidence*newIncidence() { return new KCal::Todo; };
 
 	virtual void preRecord(PilotRecord*r);

@@ -43,10 +43,10 @@ ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n) :
 {
 	FUNCTIONSETUP;
 	fConduitName = i18n("ToDo");
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,ToDoConduitFactory::about());
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,VCalConduitFactoryBase::about());
 
 	fConfigWidget->fSyncDestination->setTitle(i18n("ToDo Destination"));
-	fGroupName = QString::fromLatin1(ToDoConduitFactory::group);
+	fGroupName = VCalConduitFactoryBase::getGroup();
 }
 
 ToDoWidgetSetup::~ToDoWidgetSetup()

@@ -5,7 +5,7 @@
 **
 ** This file defines the factory for the todo-conduit plugin.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -47,13 +47,7 @@ void *init_conduit_todo()
 
 } ;
 
-// Configuration keys
-//
-//
-const char * const ToDoConduitFactory::group = "todoOptions" ;
 
-
-KAboutData *ToDoConduitFactory::fAbout = 0L;
 ToDoConduitFactory::ToDoConduitFactory(QObject *p, const char *n) :
 	VCalConduitFactoryBase(p,n)
 {
@@ -80,6 +74,7 @@ ToDoConduitFactory::ToDoConduitFactory(QObject *p, const char *n) :
 		I18N_NOOP("Maintainer"),
 		"reinhold@kainhofer.com",
 		"http://reinhold.kainhofer.com/Linux/");
+	group="todoOptions";
 }
 
 ToDoConduitFactory::~ToDoConduitFactory()

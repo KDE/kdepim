@@ -30,7 +30,7 @@
 */
 
 #include "plugin.h"
-#include "vcal-factory.h"
+#include "vcal-factorybase.h"
 
 class VCalWidget;
 
