@@ -30,6 +30,7 @@
 #include "kaccelmenuwatch.h"
 #include "karm.h"
 #include "print.h"
+#include "task.h"
 #include "preferences.h"
 #include <kstatusbar.h>
 
@@ -45,6 +46,7 @@ KarmWindow::KarmWindow()
 		   this, SLOT( updateTime( long ) ) );
   connect(_karm, SIGNAL(currentChanged ( QListViewItem * )),this,SLOT(slotSelectionChanged()));
   connect(_karm, SIGNAL(selectionChanged  ( QListViewItem * )),this,SLOT(slotSelectionChanged()));
+  connect(_karm, SIGNAL( updateButtons() ), this, SLOT(slotSelectionChanged()));
   // status bar
   statusBar()->insertItem( i18n( "This session: %1" )
                            .arg(QString::fromLatin1("0:00")), 0, 0, true );
@@ -75,11 +77,11 @@ KarmWindow::KarmWindow()
 
 void KarmWindow::slotSelectionChanged()
 {
-  QListViewItem* item=_karm->currentItem();
+  Task* item= static_cast<Task *>(_karm->currentItem());
   actionDelete->setEnabled(item);
   actionEdit->setEnabled(item);
-  actionStart->setEnabled(item);
-  actionStop->setEnabled(item);
+  actionStart->setEnabled(item && !item->isRunning());
+  actionStop->setEnabled(item && item->isRunning());
 }
 
 void KarmWindow::save()

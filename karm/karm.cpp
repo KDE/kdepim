@@ -206,6 +206,7 @@ void Karm::startTimer()
     _idleTimer->startIdleDetection();
     item->setRunning(true);
     activeTasks.append(item);
+    emit updateButtons();
   }
 }
 
@@ -216,12 +217,13 @@ void Karm::stopAllTimers()
   }
   _idleTimer->stopIdleDetection();
   activeTasks.clear();
+  emit updateButtons();
 }
 
 void Karm::resetSessionTimeForAllTasks()
 {
   for(QListViewItem *child=firstChild(); child; child=child->itemBelow()) {
-    dynamic_cast<Task*>(child)->setSessionTime(0);
+    static_cast<Task*>(child)->setSessionTime(0);
   }
 }
 
@@ -233,6 +235,7 @@ void Karm::stopCurrentTimer()
     item->setRunning(false);
     if (activeTasks.count()== 0)
       _idleTimer->stopIdleDetection();
+    emit updateButtons();
   }
 }
 

@@ -22,15 +22,6 @@ class Task :public QObject, public QListViewItem
 {
 Q_OBJECT
 
-private:
-	QString _name;
-	long _totalTime;
-  long _sessionTime;
-  QTimer *_timer;
-  int _i;
-  static QPtrVector<QPixmap> *icons;
-     Loging *_loging;
-
 public:
 	/** constructor */
 	Task(const QString& taskame, long minutes, long sessionTime, QListView *parent = 0);
@@ -76,15 +67,26 @@ public:
 	/** Updates the content of the QListViewItem with respect to _name and _totalTime
 	 */
 	inline void update() {
-    setText(0, _name);
+		setText(0, _name);
 		setText(1, Karm::formatTime(_sessionTime));
 		setText(2, Karm::formatTime(_totalTime));
 	}
-  
-  void setRunning(bool on);
 
-protected slots:    
+  void setRunning(bool on);
+  bool isRunning() const;
+
+protected slots:
   void updateActiveIcon();
+
+private:
+  QString _name;
+  long _totalTime;
+  long _sessionTime;
+  QTimer *_timer;
+  int _i;
+  static QPtrVector<QPixmap> *icons;
+  Loging *_loging;
+
 };
 
 #endif

@@ -1,7 +1,7 @@
-#include<ctype.h>
-#include<qfile.h>
-#include<stdlib.h>
-#include<stdio.h>
+#include <ctype.h>
+#include <qfile.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <kiconloader.h>
 #include <qtimer.h>
 #include"task.h"
@@ -54,7 +54,7 @@ void Task::setRunning(bool on)
   if (on) {
     if (!_timer->isActive()) {
       _timer->start(1000);
-	  _loging->start(this);
+      _loging->start(this);
       _i=7;
       updateActiveIcon();
     }
@@ -62,10 +62,15 @@ void Task::setRunning(bool on)
   else {
     if (_timer->isActive()) {
       _timer->stop();
-	  _loging->stop(this);
+      _loging->stop(this);
       setPixmap(1, UserIcon(QString::fromLatin1("empty-watch.xpm")));
     }
   }
+}
+
+bool Task::isRunning() const
+{
+  return _timer->isActive();
 }
 
 void Task::setName( const QString& name )

@@ -26,13 +26,13 @@ private: // member variables
     IdleTimer *_idleTimer;
     QTimer *_minuteTimer;
     QTimer *_autoSaveTimer;
-    
+
     Preferences *_preferences;
-  
+
     QPtrList<Task> activeTasks;
 
 public:
-    Karm( QWidget *parent = 0, const char *name = 0 );	
+    Karm( QWidget *parent = 0, const char *name = 0 );
     virtual ~Karm();
     static QString formatTime(long minutes);
 
@@ -43,7 +43,7 @@ public slots:
     /*
     File format:
     zero or more lines of
-    1 		number	
+    1 		number
     time	in minutes
     string	task name
     */
@@ -67,11 +67,11 @@ protected slots:
     void autoSaveChanged(bool);
     void autoSavePeriodChanged(int period);
     void minuteUpdate();
-  
+
 signals:
     void sessionTimeChanged( long difference );
     void timerTick();
-
+    void updateButtons();
 
 protected slots:
     void stopChildCounters(Task *item);
