@@ -134,7 +134,7 @@ void Pab::saveCe() {
   //xxx  ce->save( "entry.txt" );
 }
 
-void Pab::saveProperties(KConfig *config)
+void Pab::saveProperties(KConfig *)
 {
 	// the 'config' object points to the session managed
 	// config file.  anything you write here will be available
@@ -149,7 +149,7 @@ void Pab::saveProperties(KConfig *config)
 	// e.g., config->writeEntry("key", var); 
 }
 
-void Pab::readProperties(KConfig *config)
+void Pab::readProperties(KConfig *)
 {
 	// the 'config' object points to the session managed
 	// config file.  this function is automatically called whenever

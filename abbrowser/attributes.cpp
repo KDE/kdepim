@@ -42,7 +42,7 @@ bool Attributes::nameFieldList( int index,
 				QStringList *pnames, 
 				QStringList *pfields )
 {
-  if ((index >= 0) && (index < nameList_.count())) {
+  if ((index >= 0) && (index < (int)nameList_.count())) {
     QStringList newpfields;
     QStringList::Iterator it;
 

@@ -238,7 +238,7 @@ void ContactDialog::setupTab1()
     ContactComboBox *cbPhone = new ContactComboBox( hGrid );
     //    for (int i =0; sPhone[i] != ""; ++i )
     //      cbPhone->insertItem( i18n( sPhone[i] ), vPhone[i] );
-    for( int i = 0; i < namePhone.count(); ++i )
+    for( int i = 0; i < (int)namePhone.count(); ++i )
       cbPhone->insertItem(  namePhone[i], fieldPhone[i] );
     cbPhone->setCurrentItem( iPhone[row] );
     cbPhone->setMinimumSize( cbPhone->sizeHint() );
@@ -840,7 +840,7 @@ NameDialog::NameDialog( QWidget *parent, ContactEntry *ce, bool modal )
 
   lay->addWidget( new QLabel( i18n("Title"), gb ),1,0);
   cbTitle = new QComboBox( true, gb );
-  for ( int i = 0; i < sTitle.count(); ++i )
+  for ( int i = 0; i < (int)sTitle.count(); ++i )
     cbTitle->insertItem( sTitle[i] );
   if (ce->find( "X-Title" ))
     cbTitle->setEditText( *ce->find( "X-Title" ));
@@ -875,7 +875,7 @@ NameDialog::NameDialog( QWidget *parent, ContactEntry *ce, bool modal )
 
   lay->addWidget( new QLabel( i18n("Suffix"), gb ), 5, 0 );
   cbSuffix = new QComboBox( true, gb );
-  for ( int i = 0; i < sSuffix.count(); ++i )
+  for ( int i = 0; i < (int)sSuffix.count(); ++i )
     cbSuffix->insertItem( sSuffix[i] );
   if (ce->find( "X-Suffix" ))
     cbSuffix->setEditText( *ce->find( "X-Suffix" ));
@@ -935,7 +935,7 @@ void ContactDialog::setSheet(int sheet)
   vp->setSheet( vs );
 }
 
-NewFieldDialog::NewFieldDialog( QWidget *parent, bool modal = false )
+NewFieldDialog::NewFieldDialog( QWidget *parent, bool modal )
   : QDialog( parent, "", modal )
     {
   setCaption( "Create Custom Field" );

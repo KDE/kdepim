@@ -15,11 +15,11 @@ class PabContactDialog : public ContactDialog
   Q_OBJECT
 
 public:
-  PabContactDialog::PabContactDialog( QWidget *parent, 
-				      const char *name,
-				      QString entryKey,
-				      ContactEntry* entry,
-				      bool modal = FALSE );
+  PabContactDialog( QWidget *parent, 
+		    const char *name,
+		    QString entryKey,
+		    ContactEntry* entry,
+		    bool modal = FALSE );
   virtual ~PabContactDialog();
  
 signals:
@@ -37,9 +37,9 @@ class PabNewContactDialog : public ContactDialog
   Q_OBJECT
 
 public:
-  PabNewContactDialog::PabNewContactDialog( QWidget *parent, 
-					    const char *name, 
-					    bool modal = FALSE );
+  PabNewContactDialog( QWidget *parent, 
+		       const char *name, 
+		       bool modal = FALSE );
   virtual ~PabNewContactDialog();
 
 signals:

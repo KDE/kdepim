@@ -105,7 +105,6 @@ QString PwPasteCommand::name()
 
 void PwPasteCommand::undo()
 {
-  PabListViewItem* plvi;
   ContactEntryList* cel = pw->contactEntryList();
   QStringList::Iterator it;
   for( it = keyList.begin(); it != keyList.end(); ++it ) {
@@ -282,7 +281,6 @@ void PwCutCommand::undo()
 
 void PwCutCommand::redo()
 {
-  PabListViewItem* plvi;
   ContactEntryList* cel = pw->contactEntryList();
   QStringList::Iterator it;
   for( it = keyList.begin(); it != keyList.end(); ++it ) {
@@ -868,7 +866,6 @@ PabWidget* PabListView::getPabWidget()
 
 PabListViewItem *PabListView::getItem( QString entryKey )
 {
-  ContactEntryList *cel = pabWidget->contactEntryList();
   QListViewItem *item = firstChild();
   PabListViewItem *plvi;
   while (item) {
