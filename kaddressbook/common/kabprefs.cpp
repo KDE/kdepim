@@ -71,8 +71,6 @@ void KABPrefs::usrReadConfig()
   if ( mCustomCategories.isEmpty() )
     setCategoryDefaults();
 
-  qDebug( "categories set" );
-
   KPimPrefs::usrReadConfig();
 }
 
