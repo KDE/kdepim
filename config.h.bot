@@ -14,8 +14,10 @@
 #ifndef HAVE_USLEEP                 /* usleep not defined in Tru64  */ 
 #ifdef __cplusplus  
 extern "C" void usleep(unsigned int);
+extern "C" long gethostid (void);
 #else
 void usleep(unsigned int);
+extern gethostid (void);
 #endif
 #endif
 #endif
