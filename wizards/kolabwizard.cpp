@@ -147,7 +147,7 @@ class KolabPropagator : public KConfigPropagator
   protected:
     void addKorganizerChanges( Change::List &changes )
     {
-      QString freeBusyBaseUrl = "webdavs://" + KolabConfig::self()->server() +
+      KURL freeBusyBaseUrl = "webdavs://" + KolabConfig::self()->server() +
                                 "/freebusy/";
 
       ChangeConfig *c = new ChangeConfig;
@@ -158,10 +158,13 @@ class KolabPropagator : public KConfigPropagator
       c->label = "";
 
       QString user = KolabConfig::self()->user();
-      int pos = user.find( "@" );
-      if ( pos > 0 ) user = user.left( pos );
+      // We now use the full email address in the freebusy URL
+      //int pos = user.find( "@" );
+      //if ( pos > 0 ) user = user.left( pos );
 
-      c->value = freeBusyBaseUrl + user + ".ifb";
+      KURL publishURL = freeBusyBaseUrl;
+      publishURL.addPath( user + ".ifb" ); // this encodes the '@' in the username
+      c->value = publishURL.url();
 
       changes.append( c );
 
@@ -169,7 +172,7 @@ class KolabPropagator : public KConfigPropagator
       c->file = "korganizerrc";
       c->group = "FreeBusy";
       c->name = "FreeBusyRetrieveUrl";
-      c->value = freeBusyBaseUrl;
+      c->value = freeBusyBaseUrl.url();
       changes.append( c );
 
       // Use full email address for retrieval of free/busy lists
