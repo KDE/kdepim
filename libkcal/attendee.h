@@ -52,7 +52,6 @@ class Attendee : public Person
     Attendee(const QString& name, const QString &email,
              bool rsvp=false, PartStat status=NeedsAction,
              Role role=ReqParticipant,const QString& u=QString::null);
-//    Attendee(const Attendee &);
     /** Destruct Attendee */
     virtual ~Attendee();
 

@@ -20,7 +20,6 @@
 
 #ifndef EVENT_H
 #define EVENT_H
-// $Id$
 //
 // Event component, representing a VEVENT object
 //
@@ -75,7 +74,6 @@ class Event : public Incidence
     QDateTime mDtEnd;
     bool mHasEndDate;
     int mTransparency;
-    QString mLocation;
 };
 
 }

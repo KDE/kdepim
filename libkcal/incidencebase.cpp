@@ -35,6 +35,8 @@ IncidenceBase::IncidenceBase() :
   mPilotId(0), mSyncStatus(SYNCMOD), mObserver(0)
 {
   setUid(CalFormat::createUniqueId());
+
+  mAttendees.setAutoDelete( true );
 }
 
 IncidenceBase::IncidenceBase(const IncidenceBase &i)
@@ -45,12 +47,17 @@ IncidenceBase::IncidenceBase(const IncidenceBase &i)
   mHasDuration = i.mHasDuration;
   mOrganizer = i.mOrganizer;
   mUid = i.mUid;
-  mAttendees = i.attendees();
+  QPtrList<Attendee> attendees;
+  for( Attendee *a = attendees.first(); a; a = attendees.next() ) {
+    mAttendees.append( new Attendee( *a ) );
+  }
   mFloats = i.mFloats;
   mLastModified = i.mLastModified;
   mPilotId = i.mPilotId;
   mSyncStatus = i.mSyncStatus;
   mObserver = i.mObserver;
+  
+  mAttendees.setAutoDelete( true );
 }
 
 IncidenceBase::~IncidenceBase()

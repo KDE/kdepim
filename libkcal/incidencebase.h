@@ -19,7 +19,6 @@
 */
 #ifndef KCAL_INCIDENCEBASE_H
 #define KCAL_INCIDENCEBASE_H
-// $Id$
 //
 // Incidence - base class of calendaring components
 //
@@ -95,7 +94,10 @@ class IncidenceBase
     /** sets the event's float value. */
     void setFloats(bool f);
 
-    /** Add Attendee to this incidence. */
+    /**
+      Add Attendee to this incidence. IncidenceBase takes ownership of the
+      Attendee object.
+    */
     void addAttendee(Attendee *a, bool doupdate=true );
 //    void removeAttendee(Attendee *a);
 //    void removeAttendee(const char *n);

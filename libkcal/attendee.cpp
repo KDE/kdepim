@@ -40,16 +40,6 @@ Attendee::Attendee(const QString &name, const QString &email, bool _rsvp, Attend
   mUid = u;
 }
 
-#if 0
-Attendee::Attendee(const Attendee &a)
-{
-  flag = a.flag;
-  rsvp = a.rsvp;
-  status = a.status;
-  role = a.role;
-}
-#endif
-
 Attendee::~Attendee()
 {
 }

@@ -46,9 +46,9 @@ Recurrence::Recurrence(Incidence *parent, int compatVersion)
   mCompatDuration(0),
   mParent(parent)
 {
-  rMonthDays.setAutoDelete(TRUE);
-  rMonthPositions.setAutoDelete(TRUE);
-  rYearNums.setAutoDelete(TRUE);
+  rMonthDays.setAutoDelete( true );
+  rMonthPositions.setAutoDelete( true );
+  rYearNums.setAutoDelete( true );
 }
 
 Recurrence::Recurrence(const Recurrence &r, Incidence *parent)
@@ -84,9 +84,9 @@ Recurrence::Recurrence(const Recurrence &r, Incidence *parent)
     *tmp = *yn.current();
     rYearNums.append(tmp);
   }
-  rMonthDays.setAutoDelete(TRUE);
-  rMonthPositions.setAutoDelete(TRUE);
-  rYearNums.setAutoDelete(TRUE);
+  rMonthDays.setAutoDelete( true );
+  rMonthPositions.setAutoDelete( true );
+  rYearNums.setAutoDelete( true );
 }
 
 Recurrence::~Recurrence()

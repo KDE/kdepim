@@ -32,9 +32,9 @@ class Incidence;
 /**
   This class represents a recurrence rule for a calendar incidence.
 */
-class Recurrence {
+class Recurrence
+{
   public:
-
     /** enumeration for describing how an event recurs, if at all. */
     enum { rNone = 0, rMinutely = 0x001, rHourly = 0x0002, rDaily = 0x0003,
            rWeekly = 0x0004, rMonthlyPos = 0x0005, rMonthlyDay = 0x0006,
@@ -249,8 +249,9 @@ class Recurrence {
     bool getYearlyMonthMonths(int day, QValueList<int>&,
                               QValueList<int> &leaplist) const;
 
-    // stuff below here is for recurring events
-    // this is a SUBSET of vCalendar and should be expanded...
+  private:
+    Recurrence(const Recurrence&);
+
     short recurs;                        // should be one of the enums.
 
     int rWeekStart;                      // day which starts the week, 1 = Monday .. 7 = Sunday
@@ -271,7 +272,6 @@ class Recurrence {
     int rDuration;                       // num times to recur (inc. first occurrence), -1 = infinite
     QDateTime rEndDateTime;              // date/time at which to end recurrence
 
-  private:
     QDateTime mRecurStart;               // date/time of first recurrence
     bool mFloats;                        // the recurrence has no time, just a date
     bool mRecurReadOnly;

@@ -18,8 +18,6 @@
     Boston, MA 02111-1307, USA.
 */
 
-// $Id$
-
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -70,8 +68,7 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
     ++it;
   }
 
-//  Recurrence *mRecurrence;      Recurrence *mRecurrence;
-  mRecurrence = new Recurrence(this);
+  mRecurrence = new Recurrence( *(i.mRecurrence), this );
 }
 
 Incidence::~Incidence()

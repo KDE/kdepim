@@ -34,11 +34,14 @@ int main(int argc,char **argv)
 
   Event *event1 = new Event;
   event1->setSummary("Test Event");
+  event1->recurrence()->setDaily( 2, 3 );
+
   QString eventString1 = f.toString( event1 );
   if ( verbose )
     kdDebug() << "EVENT1 START:" << eventString1 << "EVENT1 END" << endl;
-    
+
   Incidence *event2 = event1->clone();
+
   QString eventString2 = f.toString( event2 );
   if( verbose )
     kdDebug() << "EVENT2 START:" << eventString2 << "EVENT2 END" << endl;

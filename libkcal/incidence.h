@@ -19,7 +19,6 @@
 */
 #ifndef INCIDENCE_H
 #define INCIDENCE_H
-// $Id$
 //
 // Incidence - base class of calendaring components
 //
@@ -214,7 +213,10 @@ class Incidence : public IncidenceBase
     /** return whether any alarm associated with this incidence is enabled */
     bool isAlarmEnabled() const;
 
-    /** Return the recurrence rule associated with this incidence. If there is none, returns an appropriate (non-0) object. */
+    /**
+      Return the recurrence rule associated with this incidence. If there is
+      none, returns an appropriate (non-0) object.
+    */
     Recurrence *recurrence() const;
     
     /** set the event's/todo's location. Do _not_ use it with journal */
