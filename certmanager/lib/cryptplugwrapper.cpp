@@ -113,7 +113,7 @@
     \see cryptplugwrapper.h
 */
 
-      
+
 // a little helper class for reordering of DN attributes
 class DNBeautifier {
 public:
@@ -122,7 +122,7 @@ public:
                               unknownAttrsPostfix,
                               unknownAttrsInfix };
   // infix: at the position of "_X_", if any, else Postfix
-  
+
   DNBeautifier()
   {
     // the attrOrder is defaulted to an empty string automatically
@@ -141,7 +141,7 @@ public:
     if( config ){
       const QString oldGroup( config->group() );
       config->setGroup( cfgGroup );                             // e.g. "General"
-      _attrOrder = 
+      _attrOrder =
         config->readListEntry( cfgAttributeOrderEntry );        // e.g. "DNAttributeOrder"
       _unknownAttrsHandlingChar =
         config->readEntry( cfgUnknownAttrsEntry ).upper().latin1(); // e.g. "DNUnknownAttributes"
@@ -159,7 +159,7 @@ public:
     }
     if( _attrOrder.isEmpty() && ! fallbackAttrOrder.isEmpty() )
       _attrOrder = fallbackAttrOrder;
-    
+
     if( _attrOrder.isEmpty() ){
       _attrOrderChar = 0;
     }else{
@@ -185,7 +185,7 @@ public:
       ++i;
     }
   }
-  
+
   QStringList attrOrder() const
   {
     return _attrOrder;
@@ -203,13 +203,13 @@ public:
   {
     return _unknownAttrsHandlingChar;
   }
-  
+
   QValueList< QPair<QString,QString> > reorder( const QValueList< QPair<QString,QString> > & dn ) const
   {
     return reorder( dn, _attrOrder, _unknownAttrsHandling );
   }
-  
-  
+
+
   static QValueList< QPair<QString,QString> > reorder(
     const QValueList< QPair<QString,QString> > & dn,
     QStringList attrOrder,
@@ -218,12 +218,12 @@ public:
     if( !attrOrder.isEmpty() ){
       QPtrList<   QPair<QString,QString> > unknownEntries;
       QValueList< QPair<QString,QString> > dnNew;
-      
+
       QPair<QString,QString>* unknownEntry;
       QStringList::ConstIterator itOrder;
       QValueList< QPair<QString,QString> >::ConstIterator itDN;
       bool bFound;
-      
+
       if( unknownAttrsHandling != unknownAttrsHide ){
         // find all unknown entries in their order of appearance
         for( itDN = dn.begin(); itDN != dn.end(); ++itDN ){
@@ -238,20 +238,20 @@ public:
             unknownEntries.append( &(*itDN) );
         }
       }
-      
-      // prepend the unknown attrs (if desired)         
+
+      // prepend the unknown attrs (if desired)
       if( unknownAttrsHandling == unknownAttrsPrefix ){
         for( unknownEntry = unknownEntries.first(); unknownEntry; unknownEntry = unknownEntries.next() ){
           dnNew << *unknownEntry;
         }
       }
-      
+
       // process the known attrs in the desired order
       bool b_X_declared = false;
       for( itOrder = attrOrder.begin(); itOrder != attrOrder.end(); ++itOrder ){
         if( (*itOrder) == "_X_" ){
           b_X_declared = true;
-          // insert the unknown attrs (if desired)         
+          // insert the unknown attrs (if desired)
           if( unknownAttrsHandling == unknownAttrsInfix ){
             for( unknownEntry = unknownEntries.first(); unknownEntry; unknownEntry = unknownEntries.next() ){
               dnNew << *unknownEntry;
@@ -266,20 +266,20 @@ public:
           }
         }
       }
-      
+
       // append the unknown attrs (if desired)
-      if( unknownAttrsHandling == unknownAttrsPostfix || 
+      if( unknownAttrsHandling == unknownAttrsPostfix ||
           ( unknownAttrsHandling == unknownAttrsInfix && ! b_X_declared ) ){
         for( unknownEntry = unknownEntries.first(); unknownEntry; unknownEntry = unknownEntries.next() ){
           dnNew << *unknownEntry;
         }
       }
-      
+
       return dnNew;
     }
     return dn;
   }
-  
+
 private:
   QStringList _attrOrder;
   char**      _attrOrderChar;
@@ -1024,7 +1024,7 @@ void CryptPlugWrapper::setUpdateURL( const QString& url )
     _updateURL = url;
 }
 
-    
+
 QString CryptPlugWrapper::updateURL() const
 {
     return _updateURL;
@@ -1068,7 +1068,7 @@ bool CryptPlugWrapper::initialize( InitStatus* initStatus, QString* errorMsg )
 	/* now call the init function */
 	if( !_cp->initialize() ) {
 	  _initStatus = InitStatus_InitError;
-	  kdDebug(5150) << "Error while executing function 'initialize'.\n" << endl;
+	  kdDebug(5150) << "Error while executing function 'initialize' on plugin " << _libName << endl;
 	  _lastError = i18n("Error while initializing plugin \"%1\"").arg( _libName );
 	  if ( errorMsg )
 	    *errorMsg = _lastError;
@@ -1314,7 +1314,7 @@ CryptPlugWrapper::CertificateInfoList CryptPlugWrapper::listKeys( const QString&
                                "DN",
                                "AttributeOrder",
                                "UnknownAttributes" );
-    
+
     while ( true ) {
       CryptPlug::CertificateInfo* info = 0;
       if ( _cp->nextCertificate( it,
@@ -1358,15 +1358,15 @@ CryptPlugWrapper::CertificateInfoList CryptPlugWrapper::listKeys( const QString&
       for ( CryptPlug::DnPair * a = info->dnarray ; a && a->key&& a->value ; ++a )
         //kdDebug(5150) << "CryptPlugWrapper::listKeys() " << a->key << " = " << a->value << endl;
         cpwinfo.dn.push_back( qMakePair( QString::fromUtf8( a->key ), QString::fromUtf8( a->value ) ) );
-      
+
       //cpwinfo.dn = dnBeautifier.reorder( cpwinfo.dn );
-        
+
       result.push_back( cpwinfo );
     }
 
     if ( _cp->endListCertificates( it ) != 0 )
       if ( truncated ) *truncated = true;
-      
+
     return result;
 }
 
@@ -1375,7 +1375,7 @@ GpgME::ImportResult CryptPlugWrapper::importCertificate( const char* data, size_
     if ( !_cp )
       return GpgME::ImportResult();
 
- 
+
    return _cp->importCertificateFromMem( data, length );
 }
 
