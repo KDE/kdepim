@@ -1,5 +1,5 @@
 // Conduit for KPilot <--> KOrganizer
-// (c) 1998, 1999 Preston Brown, Herwin Jan Steehouwer, and Dan Pilone
+// (c) 1998, 1999, 2000  Preston Brown, Herwin Jan Steehouwer, and Dan Pilone
 
 // I have noticed that this is full of memory leaks, but since it is
 // short lived, it shouldn't matter so much. -- PGB
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
   QString fileName;
   fileName += tmpnam(0L);
   fileName += "-vcalconduit.log";
-  logfile = fopen(fileName.data(), "w+");
+  logfile = fopen(fileName.latin1(), "w+");
   fprintf(logfile, "vcalconduit log file opened for writing\n");
   fflush(logfile);
 #else
@@ -72,9 +72,9 @@ VCalConduit::VCalConduit(eConduitMode mode)
     if(fCalendar == 0L) {
       QString message;
       message.sprintf("The VCalConduit could not open the file %s.\n "
-		      "Please configure the conduit with the correct filename and try again",calName.data());
+		      "Please configure the conduit with the correct filename and try again",calName.latin1());
       QMessageBox::critical(0, "KPilot vCalendar Conduit Fatal Error",
-			    message.data());                                                 
+			    message.latin1());                                                 
       exit(-1);
     }
   }
@@ -93,7 +93,7 @@ VCalConduit::~VCalConduit()
 
 /* static */ const char *VCalConduit::version()
 {
-	return i18n("VCal Conduit v2.0");
+	return "VCal Conduit v2.0";
 }
 
 void VCalConduit::doBackup()
@@ -188,16 +188,16 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 			todaysDate.date().year(), todaysDate.date().month(),
 		       todaysDate.date().day(), todaysDate.time().hour(),
 		       todaysDate.time().minute(), todaysDate.time().second());
-    addPropValue(vevent, VCDCreatedProp, dateString.data());
+    addPropValue(vevent, VCDCreatedProp, dateString.latin1());
     numStr.sprintf("KPilot - %d",rec->getID());
-    addPropValue(vevent, VCUniqueStringProp, numStr.data());
+    addPropValue(vevent, VCUniqueStringProp, numStr.latin1());
     addPropValue(vevent, VCSequenceProp, "1");
-    addPropValue(vevent, VCLastModifiedProp, dateString.data());
+    addPropValue(vevent, VCLastModifiedProp, dateString.latin1());
     
     addPropValue(vevent, VCPriorityProp, "0");
     addPropValue(vevent, VCTranspProp, "0");
     addPropValue(vevent, VCRelatedToProp, "0");
-    addPropValue(vevent, KPilotIdProp, numStr.setNum(dateEntry.getID()));
+    addPropValue(vevent, KPilotIdProp, numStr.setNum(dateEntry.getID()).latin1());
     addPropValue(vevent, KPilotStatusProp, "0");
     fprintf(logfile,"the pilot record didn't exist as a vobject, new vobject created\n");
     fflush(logfile);
@@ -234,9 +234,9 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 		       dateEntry.getEventStart().tm_min,
 		       dateEntry.getEventStart().tm_sec);
     if (vo)
-      setVObjectUStringZValue_(vo, fakeUnicode(dateString.data(), 0));
+      setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
     else 
-      addPropValue(vevent, VCDTstartProp, dateString.data());
+      addPropValue(vevent, VCDTstartProp, dateString.latin1());
   } else {
     // the event floats
     dateString.sprintf("%.4d%.2d%.2dT000000",
@@ -244,9 +244,9 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 		       dateEntry.getEventStart().tm_mon + 1,
 		       dateEntry.getEventStart().tm_mday);
     if (vo)
-      setVObjectUStringZValue_(vo, fakeUnicode(dateString.data(), 0));
+      setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
     else
-      addPropValue(vevent, VCDTstartProp, dateString.data());
+      addPropValue(vevent, VCDTstartProp, dateString.latin1());
   }
   
   // END TIME //
@@ -298,13 +298,13 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 
 
   if (vo)
-    setVObjectUStringZValue_(vo, fakeUnicode(dateString.data(), 0));
+    setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
   else if (!dateEntry.getEvent() || multiDay)
     // we don't want to add it if it isn't there already, or if the
     // event isn't multiday/floating.
     // it is deprecated to have both DTSTART and DTEND set to 000000 for
     // their times.
-    addPropValue(vevent, VCDTendProp, dateString.data());
+    addPropValue(vevent, VCDTendProp, dateString.latin1());
 
   fprintf(logfile,"got to point after times are entered\n");
   fflush(logfile);
@@ -339,10 +339,10 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 		       alarmDT.time().second());
     if (vo) {
       vo = isAPropertyOf(vo, VCRunTimeProp);
-      setVObjectUStringZValue_(vo, fakeUnicode(dateString.data(), 0));
+      setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
     } else {
       vo = addProp(vevent, VCDAlarmProp);
-      addPropValue(vo, VCRunTimeProp, dateString.data());
+      addPropValue(vo, VCRunTimeProp, dateString.latin1());
       addPropValue(vo, VCRepeatCountProp, "1");
       addPropValue(vo, VCDisplayStringProp, "beep!");
     }
@@ -420,9 +420,9 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 
     vo = isAPropertyOf(vevent, VCRRuleProp);
     if (vo)
-      setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.data(), 0));
+      setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
     else
-      addPropValue(vevent, VCRRuleProp,tmpStr.data());
+      addPropValue(vevent, VCRRuleProp,tmpStr.latin1());
   } else {
     if (vo)
       addProp(vo, KPilotSkipProp);
@@ -441,9 +441,9 @@ void VCalConduit::updateVObject(PilotRecord *rec)
     }
     tmpStr.truncate(tmpStr.length()-1);
     if (vo)
-      setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.data(), 0));
+      setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
     else
-      addPropValue(vevent, VCExDateProp, tmpStr.data());
+      addPropValue(vevent, VCExDateProp, tmpStr.latin1());
   } else {
     if (vo)
       addProp(vo, KPilotSkipProp);
@@ -461,9 +461,9 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   // the vCalendar parser doesn't handle empty summaries very well...
   if (!tmpStr.isEmpty()) {
     if (vo)
-      setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.data(), 0));
+      setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
     else
-      addPropValue(vevent, VCSummaryProp, tmpStr.data());
+      addPropValue(vevent, VCSummaryProp, tmpStr.latin1());
   }
 
   fprintf(logfile,"successfully entered summary\n");
@@ -494,9 +494,9 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   (rec->getAttrib() & dlpRecAttrSecret) ?
     tmpStr = "PRIVATE" : tmpStr = "PUBLIC";
   if (vo)
-    setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.data(), 0));
+    setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
   else
-    addPropValue(vevent, VCClassProp, tmpStr.data());
+    addPropValue(vevent, VCClassProp, tmpStr.latin1());
   
   // PILOT STATUS //
   vo = isAPropertyOf(vevent, KPilotStatusProp);
@@ -547,7 +547,7 @@ void VCalConduit::saveVCal()
 	QString calName = config->readEntry("CalFile");
 	if (fCalendar)
 	{
-		writeVObjectToFile((char*)calName.data(), fCalendar);  
+		writeVObjectToFile((char*)calName.latin1(), fCalendar);  
 	}
 }
 
@@ -725,7 +725,7 @@ void VCalConduit::doLocalSync()
 	      ASSERT(tmpTime.isValid());
 	      QDateTime tmpDT(tmpDate, tmpTime);
 	      // correct for GMT if string is in Zulu format
-	      if (tmpStr.right(1) == 'Z')
+	      if (tmpStr.right(1) == QString("Z"))
 		tmpDT = tmpDT.addSecs(60*timeZone);
 
 	      tmpStr = fakeCString(vObjectUStringZValue(b));
@@ -742,7 +742,7 @@ void VCalConduit::doLocalSync()
 	      ASSERT(tmpTime.isValid());
 	      QDateTime tmpDT2(tmpDate, tmpTime);
 	      // correct for GMT if string is in Zulu format
-	      if (tmpStr.right(1) == 'Z')
+	      if (tmpStr.right(1) == QString("Z"))
 		tmpDT2 = tmpDT2.addSecs(60*timeZone);
 
 	      int diffSecs = tmpDT.secsTo(tmpDT2);
@@ -808,7 +808,7 @@ void VCalConduit::doLocalSync()
 	    index = tmpStr.findRev(' ') + 1; // advance to last field
 	    if (tmpStr.mid(index,1) == "#") index++;
 	    if (tmpStr.find('T', index) != -1) {
-	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).data()));
+	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).latin1()));
 	      dateEntry->setRepeatFrequency(rFreq);
 	      dateEntry->setRepeatEnd(rEndDate);
 	    } else {
@@ -849,7 +849,7 @@ void VCalConduit::doLocalSync()
 	    dateEntry->setRepeatDays(qba);
 	    index = last; if (tmpStr.mid(index,1) == "#") index++;
 	    if (tmpStr.find('T', index) != -1) {
-	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).data()));
+	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).latin1()));
 	      dateEntry->setRepeatFrequency(rFreq);
 	      dateEntry->setRepeatEnd(rEndDate);
 	    } else {
@@ -900,7 +900,7 @@ void VCalConduit::doLocalSync()
 	    }
 	    index = last; if (tmpStr.mid(index,1) == "#") index++;
 	    if (tmpStr.find('T', index) != -1) {
-	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).data()));
+	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).latin1()));
 	      dateEntry->setRepeatFrequency(rFreq);
 	      dateEntry->setRepeatEnd(rEndDate);
 	    } else {
@@ -938,7 +938,7 @@ void VCalConduit::doLocalSync()
 	    }
 	    index = last; if (tmpStr.mid(index,1) == "#") index++;
 	    if (tmpStr.find('T', index) != -1) {
-	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).data()));
+	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).latin1()));
 	      dateEntry->setRepeatFrequency(rFreq);
 	      dateEntry->setRepeatEnd(rEndDate);
 	    } else {
@@ -971,7 +971,7 @@ void VCalConduit::doLocalSync()
 	    }
 	    index = last; if (tmpStr.mid(index,1) == "#") index++;
 	    if (tmpStr.find('T', index) != -1) {
-	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).data()));
+	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).latin1()));
 	      dateEntry->setRepeatFrequency(rFreq);
 	      dateEntry->setRepeatEnd(rEndDate);
 	    } else {
@@ -1046,10 +1046,10 @@ void VCalConduit::doLocalSync()
 	  tmpStr.setNum(id);
 	  vo = isAPropertyOf(vevent, KPilotIdProp);
 	  // give it an id.
-	  setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.data(), 0));
+	  setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
 	  vo = isAPropertyOf(vevent, KPilotStatusProp);
 	  tmpStr = "0"; // no longer a modified event.
-	  setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.data(), 0));
+	  setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
 
 	  fprintf(logfile,"wrote and updated vobject/pilot event\n");
 	  fflush(logfile);
@@ -1236,7 +1236,7 @@ struct tm VCalConduit::ISOToTm(const QString &tStr)
   tm.tm_yday = 0; // unimplemented
   tm.tm_isdst = 0; // unimplemented
   
-  sscanf(tStr.data(),"%04d%02d%02dT%02d%02d%02d",
+  sscanf(tStr.latin1(),"%04d%02d%02dT%02d%02d%02d",
 	 &tm.tm_year, &tm.tm_mon,
 	 &tm.tm_mday, &tm.tm_hour,
 	 &tm.tm_min, &tm.tm_sec);

@@ -885,11 +885,11 @@ KPilotInstaller::testDir(QString name)
     {
 	FUNCTIONSETUP;
 
-    DIR *dp;
-    dp = opendir(name);
+    DIR *dp = NULL;
+    dp = opendir(name.latin1());
     if(dp == 0L)
 	{
-	::mkdir (name, S_IRWXU);
+	::mkdir (name.latin1(), S_IRWXU);
 	}
     else
     	{
@@ -915,7 +915,7 @@ static char authorsbuf[256]={0};
 	{
 		sprintf(authorsbuf,"%s%s",
 			"Dan Pilone, Adriaan de Groot\n",
-			i18n("and many others.").data());
+			i18n("and many others.").latin1());
 	}
 
 	return authorsbuf;

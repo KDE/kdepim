@@ -1,6 +1,6 @@
 // conduitSetup.cc
 //
-// Copyright (C) 1998,1999 Dan Pilone
+// Copyright (C) 1998,1999,2000 Dan Pilone
 //
 // This file is distributed under the Gnu General Public Licence (GPL).
 // The GPL should have been included with this file in a file called
@@ -29,6 +29,7 @@
 #include <kprocess.h>
 #include <kmessagebox.h>
 #include <kstddirs.h>
+#include <kdebug.h>
 
 #include "conduitSetup.moc"
 
@@ -64,24 +65,24 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
 	V+=label2->height()+SPACING;
 
   fInstalledConduits = new QListBox(this, "fInstalledConduits");
-  fInstalledConduits->setAutoScrollBar(TRUE);
+//   fInstalledConduits->setAutoScrollBar(TRUE);
   fInstalledConduits->setMultiSelection(FALSE);
-  fInstalledConduits->setAutoBottomScrollBar(TRUE);
-  fInstalledConduits->setDragSelect(TRUE);
-  fInstalledConduits->setBottomScrollBar(FALSE);
-  fInstalledConduits->setScrollBar(FALSE);
+//   fInstalledConduits->setAutoBottomScrollBar(TRUE);
+//   fInstalledConduits->setDragSelect(TRUE);
+//   fInstalledConduits->setBottomScrollBar(FALSE);
+//   fInstalledConduits->setScrollBar(FALSE);
   fInstalledConduits->setGeometry(261,V,182,217);
   fInstalledConduits->setFont(QFont("times",14,QFont::Normal,(int)0));
 	connect(fInstalledConduits, SIGNAL(highlighted(int)), 
 		this, SLOT(slotSelectInstalled()));
 
   fAvailableConduits = new QListBox(this, "fAvailableConduits");
-  fAvailableConduits->setAutoScrollBar(TRUE);
+//   fAvailableConduits->setAutoScrollBar(TRUE);
   fAvailableConduits->setMultiSelection(FALSE);
-  fAvailableConduits->setAutoBottomScrollBar(TRUE);
-  fAvailableConduits->setDragSelect(TRUE);
-  fAvailableConduits->setBottomScrollBar(FALSE);
-  fAvailableConduits->setScrollBar(FALSE);
+//   fAvailableConduits->setAutoBottomScrollBar(TRUE);
+//   fAvailableConduits->setDragSelect(TRUE);
+//   fAvailableConduits->setBottomScrollBar(FALSE);
+//   fAvailableConduits->setScrollBar(FALSE);
   fAvailableConduits->setGeometry(11,V,167,217);
   fAvailableConduits->setFont(QFont("times",14,QFont::Normal,(int)0));
 	connect(fAvailableConduits, SIGNAL(highlighted(int)), 
@@ -254,11 +255,11 @@ CConduitSetup::slotDone()
 	}
 	if (debug_level&SYNC_TEDIOUS)
 	{
-		cerr << fname << ": Conduit startup command line is:\n"
+		kdDebug() << fname << ": Conduit startup command line is:\n"
 			<< fname << ": " << currentConduit << endl;
 	}
 
-      conduit = popen(currentConduit, "r");
+      conduit = popen(currentConduit.latin1(), "r");
       if(conduit)
 	len = fread(dbName, 1, 255, conduit);
       pclose(conduit);
@@ -301,7 +302,7 @@ CConduitSetup::slotInstallConduit()
 	{
 		if (debug_level)
 		{
-			cerr << fname << ": No item selected " <<
+			kdDebug() << fname << ": No item selected " <<
 				"but installer called.\n" ;
 		}
 		return;
@@ -323,7 +324,7 @@ CConduitSetup::slotUninstallConduit()
 	{
 		if (debug_level)
 		{
-			cerr << fname << ": No item selected but " <<
+			kdDebug() << fname << ": No item selected but " <<
 				"uninstaller called.\n";
 		}
 		return;
@@ -404,7 +405,7 @@ CConduitSetup::slotSetupConduit()
 
 	if (debug_level & SYNC_TEDIOUS)
 	{
-		cerr << fname << ": Starting setup for conduit "
+		kdDebug() << fname << ": Starting setup for conduit "
 			<< conduitName << endl;
 	}
 	fSetupConduitProcess.clearArguments();
@@ -431,7 +432,7 @@ CConduitSetup::slotSetupConduit()
 
 	if (debug_level & SYNC_TEDIOUS)
 	{
-		cerr << fname << ": My position is "
+		kdDebug() << fname << ": My position is "
 			<< p.x() << ',' << p.y()
 			<< endl;
 	}

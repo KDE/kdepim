@@ -48,24 +48,24 @@ AddressEditor::cancel()
 void
 AddressEditor::commitChanges()
 {
-  fAddress->setField(entryLastname, fLastNameField->text());
-  fAddress->setField(entryFirstname, fFirstNameField->text());
-  fAddress->setField(entryCompany, fCompanyField->text());
-  fAddress->setField(entryPhone1, fPhone1Field->text());
-  fAddress->setField(entryPhone2, fPhone2Field->text());
-  fAddress->setField(entryPhone3, fPhone3Field->text());
-  fAddress->setField(entryPhone4, fPhone4Field->text());
-  fAddress->setField(entryPhone5, fPhone5Field->text());
-  fAddress->setField(entryAddress, fAddressField->text());
-  fAddress->setField(entryCity, fCityField->text());
-  fAddress->setField(entryState, fStateField->text());
-  fAddress->setField(entryZip, fZipField->text());
-  fAddress->setField(entryCountry, fCountryField->text());
-  fAddress->setField(entryTitle, fTitleField->text());
-  fAddress->setField(entryCustom1, fCustom1Field->text());
-  fAddress->setField(entryCustom2, fCustom2Field->text());
-  fAddress->setField(entryCustom3, fCustom3Field->text());
-  fAddress->setField(entryCustom4, fCustom4Field->text());
+  fAddress->setField(entryLastname, fLastNameField->text().latin1());
+  fAddress->setField(entryFirstname, fFirstNameField->text().latin1());
+  fAddress->setField(entryCompany, fCompanyField->text().latin1());
+  fAddress->setField(entryPhone1, fPhone1Field->text().latin1());
+  fAddress->setField(entryPhone2, fPhone2Field->text().latin1());
+  fAddress->setField(entryPhone3, fPhone3Field->text().latin1());
+  fAddress->setField(entryPhone4, fPhone4Field->text().latin1());
+  fAddress->setField(entryPhone5, fPhone5Field->text().latin1());
+  fAddress->setField(entryAddress, fAddressField->text().latin1());
+  fAddress->setField(entryCity, fCityField->text().latin1());
+  fAddress->setField(entryState, fStateField->text().latin1());
+  fAddress->setField(entryZip, fZipField->text().latin1());
+  fAddress->setField(entryCountry, fCountryField->text().latin1());
+  fAddress->setField(entryTitle, fTitleField->text().latin1());
+  fAddress->setField(entryCustom1, fCustom1Field->text().latin1());
+  fAddress->setField(entryCustom2, fCustom2Field->text().latin1());
+  fAddress->setField(entryCustom3, fCustom3Field->text().latin1());
+  fAddress->setField(entryCustom4, fCustom4Field->text().latin1());
   emit(recordChangeComplete(fAddress));
   hide();
   delete this;

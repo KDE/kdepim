@@ -14,7 +14,7 @@ static const char *id="$Id$";
 #include <kapp.h>
 #include "messageDialog.moc"
 
-MessageDialog::MessageDialog( const char *title, QWidget* parent, const char* name, bool modal)
+MessageDialog::MessageDialog( QString title, QWidget* parent, const char* name, bool modal)
   : QDialog(parent, name, modal, 0)
     {
     setGeometry(x(), y(), 250, 40);
@@ -28,7 +28,7 @@ MessageDialog::MessageDialog( const char *title, QWidget* parent, const char* na
     }
   
 void 
-MessageDialog::setMessage(const char* message)
+MessageDialog::setMessage(QString message)
     {
     fMessage->setText(message);
     fMessage->adjustSize();

@@ -1,6 +1,6 @@
 // setupDialog.cc
 //
-// Copyright (C) 2000 Adriaan de Groot
+// Copyright (C) 2000 Dan Pilone, Adriaan de Groot
 //
 // This file is distributed under the Gnu General Public Licence (GPL).
 // The GPL should have been included with this file in a file called
@@ -18,38 +18,14 @@
 
 #include "options.h"
 
-#ifdef KDE2
 #include <stream.h>
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <kconfig.h>
 #include <klocale.h>
+#include <kdebug.h>
 #include "kpilotlink.h"
 #include "setupDialog.moc"
-#else
-// KDE standard includes
-//
-//
-#include <kconfig.h>
-#include <kapp.h>
-#include <stream.h>
-
-
-
-// KPilot standard includes
-//
-//
-#include "kpilot.h"
-#include "options.h"
-
-
-
-// null-conduit specific includes
-//
-//
-#include "setupDialog.moc"
-#include "null-conduit.h"
-#endif
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
@@ -96,7 +72,7 @@ int NullPage::commitChanges(KConfig *config)
 
 	if (debug_level)
 	{
-		cerr << fname << ": Wrote null-conduit message:\n" <<
+		kdDebug() << fname << ": Wrote null-conduit message:\n" <<
 			fname << ": " << textField->text() << endl;
 	}
 	config->writeEntry("Text", textField->text());
@@ -130,6 +106,19 @@ NullPage::NullPage(setupDialog *parent, KConfig *config) :
 
 
 // $Log$
+// Revision 1.6  2000/08/08 02:22:30  matz
+// As rikkus did not disable compilation of kpilot anymore I can even make
+// it compilable:
+// - works now with blddir != srcdir (I might have broken bld==src ;) test it)
+// - the setupInfobla interface has changed to now use the info from KInstance
+//   I only disabled the old call, but did not include the KInstance call, so
+//   conduits have no about data right now (how can one show that at all?)
+//   the author of kpilot would need to add it
+// - some C++ comments in C files
+// - some runtime fixes
+// - it even starts, but as I have no Pilot I can't really test it
+// - I'm very tired now ;)
+//
 // Revision 1.5  2000/07/27 23:07:16  pilone
 // 	Ported the conduits.  They build.  Don't know if they work, but they
 // build.

@@ -1,6 +1,9 @@
 INCLUDES= @all_includes@ -I$(top_srcdir)/kpilot/kpilot -I$(top_srcdir)/kpilot/kpilot/libpilot/include
 METASOURCES = AUTO
 
+servicedir  = $(kde_servicesdir)
+service_DATA = popmail-conduit.desktop
+
 ####### This part is very kpilot specific
 # you can add here more. This one gets installed 
 noinst_PROGRAMS = popmail_conduit

@@ -1,6 +1,6 @@
 // setupDialog.cc
 //
-// Copyright (C) 1998,1999 Dan Pilone
+// Copyright (C) 1998,1999,2000 Dan Pilone
 //
 // This file is distributed under the Gnu General Public Licence (GPL).
 // The GPL should have been included with this file in a file called
@@ -29,6 +29,7 @@ static char *id="$Id$";
 #include <qpushbutton.h>
 #include <qradiobt.h>
 #include <kstddirs.h>
+#include <kdebug.h>
 
 #include <stream.h>
 #include "popmail-conduit.h"
@@ -202,7 +203,7 @@ void PopMailSendPage::browseSignature()
 
 	if (debug_level & UI_TEDIOUS)
 	{
-		cerr << fname << ": Signature currently "
+		kdDebug() << fname << ": Signature currently "
 			<< fSignature->text() << endl;
 	}
 
@@ -219,7 +220,7 @@ void PopMailSendPage::browseSignature()
 
 	if (debug_level & UI_MINOR)
 	{
-		cerr << fname << ": Signature selected "
+		kdDebug() << fname << ": Signature selected "
 			<< filename << endl;
 	}
 
@@ -368,7 +369,7 @@ void PopMailUNIXPage::browseMailbox()
 
 	if (debug_level & UI_TEDIOUS)
 	{
-		cerr << fname << ": Mailbox currently "
+		kdDebug() << fname << ": Mailbox currently "
 			<< fMailbox->text() << endl;
 	}
 
@@ -385,7 +386,7 @@ void PopMailUNIXPage::browseMailbox()
 
 	if (debug_level & UI_MINOR)
 	{
-		cerr << fname << ": Mailbox selected "
+		kdDebug() << fname << ": Mailbox selected "
 			<< filename << endl;
 	}
 
@@ -471,19 +472,19 @@ PopMailReceivePage::PopMailReceivePage(setupDialog *parent,
 /* virtual */ int PopMailReceivePage::commitChanges(KConfig *config)
 {
 	FUNCTIONSETUP;
-	config->writeEntry("PopServer", fPopServer->text());
-	config->writeEntry("PopPort", atoi(fPopPort->text()));
-	config->writeEntry("PopUser", fPopUser->text());
+	config->writeEntry("PopServer", fPopServer->text().latin1());
+	config->writeEntry("PopPort", atoi(fPopPort->text().latin1()));
+	config->writeEntry("PopUser", fPopUser->text().latin1());
 	config->writeEntry("LeaveMail", (int)fLeaveMail->isChecked());
 	config->writeEntry("StorePass", (int)fStorePass->isChecked());
-	config->writeEntry("PopPass", fPopPass->text());
+	config->writeEntry("PopPass", fPopPass->text().latin1());
 	config->sync(); 
 	//
 	// Make sure permissions are safe (still not a good idea)
 	//
 	if(fStorePass->isChecked()) 
 	{
-	    chmod(KGlobal::dirs()->findResource("config", "popmail-conduitrc"), 0600);
+	    chmod(KGlobal::dirs()->findResource("config", "popmail-conduitrc").latin1(), 0600);
 	}
 	return 0;
 }

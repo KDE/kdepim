@@ -1,6 +1,6 @@
 // null-conduit.cc
 //
-// Copyright (C) 2000 by Adriaan de Groot
+// Copyright (C) 2000 by Dan Pilone, Adriaan de Groot
 //
 // This file is distributed under the Gnu General Public Licence (GPL).
 // The GPL should have been included with this file in a file called
@@ -20,7 +20,6 @@
 
 #include "options.h"
 
-#ifdef KDE2
 // Only include what we really need:
 // First UNIX system stuff, then std C++, 
 // then Qt, then KDE, then local includes.
@@ -29,34 +28,12 @@
 #include <stream.h>
 #include <kmessagebox.h>
 #include <kconfig.h>
+#include <kdebug.h>
+
 #include "conduitApp.h"
 #include "kpilotlink.h"
 #include "null-conduit.h"
 #include "setupDialog.h"
-#else
-// KDE standard includes 
-//
-//
-#include <stream.h>
-#include <qdir.h>
-#include <kapp.h>
-#include <kconfig.h>
-#include <kmsgbox.h>
-#include <ksock.h>
-
-// Conduit standard includes
-//
-//
-#include "conduitApp.h"
-#include "kpilot.h"
-
-// null-conduit specific includes
-//
-//
-#include "null-conduit.h"
-#include "setupDialog.h"
-#endif
-
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
@@ -119,9 +96,9 @@ NullConduit::doSync()
 	config->setGroup(NullOptions::NullGroup);
 
 	QString m=config->readEntry("Text");
-	addSyncLogMessage(m);
+	addSyncLogMessage(m.latin1());
 
-	cerr << fname << ": Message from null-conduit:\n"
+	kdDebug() << fname << ": Message from null-conduit:\n"
 		<< fname << ": " << m
 		<< endl;
 
@@ -141,6 +118,10 @@ NullConduit::aboutAndSetup()
 }
 
 // $Log$
+// Revision 1.5  2000/07/27 23:07:16  pilone
+// 	Ported the conduits.  They build.  Don't know if they work, but they
+// build.
+//
 // Revision 1.8  2000/07/20 21:29:42  adridg
 // Minor KDE1 & KDE2 interoperability issues
 //

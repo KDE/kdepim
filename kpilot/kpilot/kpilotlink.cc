@@ -44,6 +44,7 @@ static const char *id="$Id$";
 #include <fcntl.h>
 #include <stream.h>
 #include <qdir.h>
+
 #include <kconfig.h>
 #include <klocale.h>
 #include <ksock.h>
@@ -106,7 +107,7 @@ KPilotLink::KPilotLink()
   // When KPilot starts up we want to be able to find the last synced users data.
   KConfig* config = getConfig();
   config->setGroup(QString());
-  getPilotUser().setUserName(config->readEntry("UserName"));
+  getPilotUser().setUserName(config->readEntry("UserName").latin1());
   delete config;
 }
 
@@ -119,14 +120,14 @@ KPilotLink::KPilotLink(QWidget* owner, KStatusBar* statusBar,
     fMessageDialog(0L)
 {
   fKPilotLink = this;
-  initPilotSocket(devicePath);
+  initPilotSocket(devicePath.latin1());
   initConduitSocket();
   fMessageDialog = new MessageDialog(i18n("Sync Status"));
 
   // When KPilot starts up we want to find the last synced users data.
   KConfig* config = getConfig();
   config->setGroup(QString());
-  getPilotUser().setUserName(config->readEntry("UserName"));
+  getPilotUser().setUserName(config->readEntry("UserName").latin1());
   delete config;
 }
 
@@ -155,7 +156,7 @@ KPilotLink::initPilotSocket(const char* devicePath)
   if (!(fPilotMasterSocket = 
 	pi_socket(PI_AF_SLP, PI_SOCK_STREAM, PI_PF_PADP))) 
     {
-      cerr << fname << ": Cannot create socket"
+      kdDebug() << fname << ": Cannot create socket"
 	   << endl;
 
       KMessageBox::error(fOwningWidget,
@@ -169,12 +170,12 @@ KPilotLink::initPilotSocket(const char* devicePath)
     }
 
   addr.pi_family = PI_AF_SLP;
-  strcpy(addr.pi_device,fPilotPath);
+  strcpy(addr.pi_device, fPilotPath.latin1());
   ret = pi_bind(fPilotMasterSocket, 
 		(struct sockaddr*)&addr, sizeof(addr));
   if(ret == -1) 
     {
-      cerr << fname << ": Cannot bind() to pilot"
+      kdDebug() << fname << ": Cannot bind() to pilot"
 	   << endl;
 
       KMessageBox::error(fOwningWidget,
@@ -326,7 +327,7 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
       s[i]=0;
       if (debug_level & SYNC_TEDIOUS)
 	{
-	  cerr << fname << ": Message length "
+	  kdDebug() << fname << ": Message length "
 	       << i << " => "
 	       << s
 	       << endl;
@@ -337,7 +338,7 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
       
   else
     {
-      cerr << fname << ": Unknown status message " 
+      kdDebug() << fname << ": Unknown status message " 
 	   << message
 	   << endl;
     }
@@ -430,7 +431,7 @@ KPilotLink::doFullRestore()
 {
   FUNCTIONSETUP;
 
-  DIR * dir;
+  DIR * dir = NULL;
   struct dirent * dirent;
   struct DBInfo info;
   struct db * db[256];
@@ -449,7 +450,7 @@ KPilotLink::doFullRestore()
 						  + getPilotUser().getUserName() + "/");
 
   // FIXME: This should be done with a QDirectory-thingee
-  dir = opendir(dirname);
+  dir = opendir(dirname.latin1());
     
   while( (dirent = readdir(dir)) )
     {
@@ -461,7 +462,7 @@ KPilotLink::doFullRestore()
 	
       db[dbcount] = (struct db*)malloc(sizeof(struct db));
 	
-      sprintf(db[dbcount]->name, "%s/%s", (const char *)dirname, dirent->d_name);
+      sprintf(db[dbcount]->name, "%s/%s", (const char *)dirname.latin1(), dirent->d_name);
 	
       f = pi_file_open(db[dbcount]->name);
       if (f==0) 
@@ -532,7 +533,7 @@ KPilotLink::doFullRestore()
 	
       if (dlp_OpenConduit(getCurrentPilotSocket()) < 0) 
 	{
-	  cerr << fname << ": Exiting on cancel. "
+	  kdDebug() << fname << ": Exiting on cancel. "
 	    "All data not restored."
 	       << endl;
 	  exit(1);
@@ -587,7 +588,7 @@ KPilotLink::createLocalDatabase(DBInfo* info)
       if(temp[j] == '/') temp[j] = '_';
     }
 
-  sprintf(name, "%s/%s", (const char *)fullBackupDir, info->name);
+  sprintf(name, "%s/%s", fullBackupDir.latin1(), info->name);
   if (info->flags & dlpDBFlagResource)
     {
       strcat(name,".prc");
@@ -599,7 +600,7 @@ KPilotLink::createLocalDatabase(DBInfo* info)
 
   if (debug_level & DB_TEDIOUS)
     {
-      cerr << fname << ": Creating local database "
+      kdDebug() << fname << ": Creating local database "
 	   << name << endl;
     }
   /* Ensure that DB-open flag is not kept */
@@ -608,14 +609,14 @@ KPilotLink::createLocalDatabase(DBInfo* info)
   f = pi_file_create(name, info);
   if (f==0) 
     {
-      cerr << fname << ": Failed, unable to create file"
+      kdDebug() << fname << ": Failed, unable to create file"
 	   << endl;
       return false;
     }
 
   if(pi_file_retrieve(f, getCurrentPilotSocket(), 0)<0)
     {
-      cerr << fname << ": Failed, unable to back up database"
+      kdDebug() << fname << ": Failed, unable to back up database"
 	   << endl;
       pi_file_close(f);
       return false;
@@ -695,14 +696,14 @@ KPilotLink::installFiles(const QString &path)
 
   if(getConnected() == false)
     {
-      cerr << fname << ": No HotSync started!" << endl;
+      kdDebug() << fname << ": No HotSync started!" << endl;
       return;
     }
 
   updateProgressBar(0);
   if (debug_level & SYNC_MINOR)
     {
-      cerr << fname << ": Installing from directory "
+      kdDebug() << fname << ": Installing from directory "
 	   << actualPath << endl;
     }
 
@@ -710,7 +711,7 @@ KPilotLink::installFiles(const QString &path)
     {
       if (debug_level & SYNC_MAJOR)
 	{
-	  cerr << fname << ": Installing file "
+	  kdDebug() << fname << ": Installing file "
 	       << *fileIter << endl;
 	}
 
@@ -732,7 +733,7 @@ KPilotLink::installFiles(const QString &path)
 
       if (f==0) 
 	{
-	  cerr << fname << ": Unable to open file." << endl;
+	  kdDebug() << fname << ": Unable to open file." << endl;
 
 	  QString message;
 
@@ -747,14 +748,14 @@ KPilotLink::installFiles(const QString &path)
 	  //  	    cout << "Installing " << (*(fileIter)) << "..." << flush;
 	  if(pi_file_install(f, getCurrentPilotSocket(), 0) <0)
 	    {
-	      cerr << fname << ": failed to install." << endl;
+	      kdDebug() << fname << ": failed to install." << endl;
 	      KMessageBox::error(fOwningWidget,
 				 i18n("Cannot install file on Pilot"),
 				 i18n("Install File Error"));
 	    }
 	  else
 	    {
-	      unlink(actualPath + (*(fileIter)));
+	      unlink((actualPath + (*(fileIter))).latin1());
 	    }
 	  pi_file_close(f);
 	}
@@ -771,7 +772,7 @@ void KPilotLink::syncFlags()
 {
   if(getConnected() == false) 
     {
-      cerr << "KPilotLink::syncFlags() No HotSync started!" << endl;
+      kdDebug() << "KPilotLink::syncFlags() No HotSync started!" << endl;
       return;
     }
 
@@ -883,8 +884,8 @@ KPilotLink::startHotSync()
     }
   updateProgressBar(10);
   destroyProgressBar();
-  showMessage(i18n("Hot-Sync started."));
-  addSyncLogEntry(i18n("Sync started with KPilot-v4.0b\n"));
+  showMessage("Hot-Sync started.");
+  addSyncLogEntry("Sync started with KPilot-v4.0b\n");
   fNextDBIndex = 0;
   fCurrentDB = 0L;
 }
@@ -949,7 +950,7 @@ KPilotLink::doConduitBackup()
   fCurrentDB->resetDBIndex();
   if(fConduitProcess->isRunning())
     {
-      cerr << fname << ": Waiting for conduit to die.. " << endl;
+      kdDebug() << fname << ": Waiting for conduit to die.. " << endl;
     }
   // Eek! Busy waiting w/no event loop?
   // Well, some kind of event loop now,
@@ -992,7 +993,7 @@ int KPilotLink::findNextDB(DBInfo *info)
 
   if (debug_level & SYNC_TEDIOUS)
     {
-      cerr << fname << ": Found database with:\n"
+      kdDebug() << fname << ": Found database with:\n"
 	   << fname << ": Index=" << fNextDBIndex
 	   << endl;
     }
@@ -1032,7 +1033,7 @@ KPilotLink::syncNextDB()
 
   if (debug_level & SYNC_TEDIOUS)
     {
-      cerr << fname << ": Special dispositions\n"
+      kdDebug() << fname << ": Special dispositions\n"
 	   << fname << ": BackupOnly=" << backupOnly << endl
 	   << fname << ": Skip=" << skip << endl ;
     }
@@ -1040,7 +1041,7 @@ KPilotLink::syncNextDB()
 
   if (debug_level & SYNC_MAJOR)
     {
-      cerr << fname << ": Syncing " << info.name << endl;
+      kdDebug() << fname << ": Syncing " << info.name << endl;
     }
 
 
@@ -1050,7 +1051,7 @@ KPilotLink::syncNextDB()
     {
       if (debug_level & SYNC_MINOR)
 	{
-	  cerr << fname << ": No registered conduit for " 
+	  kdDebug() << fname << ": No registered conduit for " 
 	       << info.name << endl;
 	}
 
@@ -1064,7 +1065,7 @@ KPilotLink::syncNextDB()
       if (debug_level & SYNC_MINOR)
 	{
 	  char *m=printlong(info.creator);
-	  cerr << fname << ": Looking for disposition of "
+	  kdDebug() << fname << ": Looking for disposition of "
 	       << m
 	       << endl;
 	}
@@ -1087,13 +1088,13 @@ KPilotLink::syncNextDB()
 	{
 	  if (debug_level & SYNC_TEDIOUS)
 	    {
-	      cerr << fname << ": Sync OK" << endl;
+	      kdDebug() << fname << ": Sync OK" << endl;
 	    }
 	  addSyncLogEntry("OK.\n");
 	}
       else
 	{
-	  cerr << fname << ": Sync " 
+	  kdDebug() << fname << ": Sync " 
 	       << info.name << " failed."
 	       << endl;
 
@@ -1106,7 +1107,7 @@ KPilotLink::syncNextDB()
       conduitName = registeredConduit(info.name);
       if (debug_level & SYNC_MAJOR)
 	{
-	  cerr << fname << ": Syncing " << info.name << endl;
+	  kdDebug() << fname << ": Syncing " << info.name << endl;
 	}
     }
 
@@ -1118,7 +1119,7 @@ KPilotLink::syncNextDB()
 
   if (debug_level & SYNC_MAJOR)
     {
-      cerr << fname << ": " 
+      kdDebug() << fname << ": " 
 	   << message << endl;
     }
 
@@ -1127,7 +1128,7 @@ KPilotLink::syncNextDB()
   fCurrentDB->resetDBIndex();
   if(fConduitProcess->isRunning())
     {
-      cerr << fname << ": Waiting for conduit to die.. " << endl;
+      kdDebug() << fname << ": Waiting for conduit to die.. " << endl;
     }
 
   // This is busy waiting, but make sure that
@@ -1286,7 +1287,7 @@ void KPilotLink::checkPilotUser()
       else
 	{
 	  // The gui was right.
-	  getPilotUser().setUserName(guiUserName);
+	  getPilotUser().setUserName(guiUserName.latin1());
 	  cout << "Pilot User set to " << getPilotUser().getUserName() << endl;
 	}
     }
@@ -1306,5 +1307,5 @@ KConfig *KPilotLink::getConfig(const QString &s)
 PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 {
   QString pathName = KGlobal::dirs()->saveLocation("data", QString("kpilot/DBBackup/") + getPilotUser().getUserName() + "/");
-  return new PilotLocalDatabase(pathName, database);
+  return new PilotLocalDatabase(pathName.latin1(), database.latin1());
 }

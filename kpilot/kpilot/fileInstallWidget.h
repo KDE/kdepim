@@ -46,6 +46,7 @@ class FileInstallWidget : public PilotComponent
     bool getSaveFileList() { return fSaveFileList; }
     void getFilesForInstall(QStrList& fileList);
     void saveInstallList();
+    void dragEnterEvent(QDragEnterEvent* event);
     void dropEvent(QDropEvent* drop);
 
     KPilotInstaller* getPilotInstallerApp() { return fKPilotInstaller; }

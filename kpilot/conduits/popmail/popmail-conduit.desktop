@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Service
+Name=KPilot POP Mail Conduit
+Implemented=file
+ServiceTypes=KPilotConduit

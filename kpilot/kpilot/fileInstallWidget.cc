@@ -25,11 +25,15 @@ static const char *id="$Id$";
 #include <qstring.h>
 #include <qlabel.h>
 #include <qpushbt.h>
+#include <qdragobject.h>
+
 #include <kurl.h>
 #include <kmessagebox.h>
 #include <kwin.h>
 #include <kapp.h>
 #include <kfiledialog.h>
+#include <kdebug.h>
+
 #include "kpilot.h"
 #include "kpilotlink.h"
 #include "fileInstallWidget.moc"
@@ -51,7 +55,7 @@ FileInstallWidget::FileInstallWidget(KPilotInstaller* installer, QWidget* parent
     connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
     fListBox = new QListBox(this);
     fListBox->setGeometry(140, 10, 350, 300);
-//     setAcceptsDrops(true);
+    setAcceptDrops(true);
     installer->addComponentPage(this, i18n("File Installer"));
     }
 
@@ -72,20 +76,28 @@ FileInstallWidget::addFileToLists(const char* fileName)
 
 void
 FileInstallWidget::kfmFileCopyComplete()
-    {
-//     delete fKFM;
-//     fKFM = 0L;
-    if(getPilotInstallerApp()->getQuitAfterCopyComplete())
- 	emit fileInstallWidgetDone();
-    }
-    
-void
-FileInstallWidget::dropEvent(QDropEvent* drop)
-    {
-//     QStrList & list = drop->getURLList();
+{
+  //     delete fKFM;
+  //     fKFM = 0L;
+  if(getPilotInstallerApp()->getQuitAfterCopyComplete())
+    emit fileInstallWidgetDone();
+}
 
-//     if(list.first() != 0L)
-// 	getFilesForInstall(list);
+void FileInstallWidget::dragEnterEvent(QDragEnterEvent* event)
+{
+  event->accept(QUriDrag::canDecode(event));
+}
+    
+
+void FileInstallWidget::dropEvent(QDropEvent* drop)
+    {
+      QStrList list;
+      QUriDrag::decode(drop, list);
+
+      kdDebug() << "FileInstallWidget::dropEvent() - Got " << list.first() << endl;
+
+      if(list.first() != 0L)
+ 	getFilesForInstall(list);
     }
 
 void
@@ -118,9 +130,9 @@ FileInstallWidget::slotAddFile()
     {
     QStrList strList;
     QString fileName = KFileDialog::getOpenFileName();
-    if(fileName != NULL)
+    if(!fileName.isEmpty())
 	{
-	strList.append(fileName);
+	strList.append(fileName.latin1());
 	getFilesForInstall(strList);
 	}
     }

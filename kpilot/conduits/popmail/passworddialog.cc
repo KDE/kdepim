@@ -38,7 +38,7 @@ static char *id="$Id$";
 #include <klocale.h>
 #include <kapp.h>
 
-PasswordDialog::PasswordDialog(const char *head, QWidget* parent, const char* name, bool modal, WFlags wflags)
+PasswordDialog::PasswordDialog(QString head, QWidget* parent, const char* name, bool modal, WFlags wflags)
    : QDialog(parent, name, modal, wflags)
 {
     
@@ -47,7 +47,7 @@ PasswordDialog::PasswordDialog(const char *head, QWidget* parent, const char* na
    //
    // Bei Bedarf einen kleinen Kommentar als Label einfuegen
    //
-   if (_head)
+   if (!_head.isEmpty())
    {
       QLabel *l;
       
@@ -109,7 +109,7 @@ PasswordDialog::PasswordDialog(const char *head, QWidget* parent, const char* na
 const char * PasswordDialog::password()
 {
    if ( _w_password )
-      return _w_password->text();
+      return _w_password->text().latin1();
    else
       return "";
 }

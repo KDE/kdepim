@@ -1,5 +1,5 @@
 // Conduit for KPilot <--> KOrganizer for Todo Items
-// (c) 1998, 1999 Preston Brown
+// (c) 1998, 1999, 2000 Preston Brown
 
 // I have noticed that this is full of memory leaks, but since it is
 // short lived, it shouldn't matter so much. -- PGB
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
   QString fileName;
   fileName += tmpnam(0L);
   fileName += "-todoconduit.log";
-  logfile = fopen(fileName.data(), "w+");
+  logfile = fopen(fileName.latin1(), "w+");
   fprintf(logfile, "todoconduit log file opened for writing\n");
   fflush(logfile);
   ConduitApp a(argc, argv, "todo_conduit",
@@ -65,9 +65,9 @@ TodoConduit::TodoConduit(eConduitMode mode)
       QString message;
       message.sprintf("The TodoConduit could not open the file %s.\n "
 		      "Please configure the conduit with the correct "
-		      "filename and try again",calName.data());
+		      "filename and try again",calName.latin1());
       QMessageBox::critical(0, "KPilot Todo Conduit Fatal Error",
-			    message.data());
+			    message.latin1());
       exit(-1);
     }
   }
@@ -189,13 +189,13 @@ void TodoConduit::updateVObject(PilotRecord *rec)
 		       todaysDate.date().day(), todaysDate.time().hour(),
 		       todaysDate.time().minute(), todaysDate.time().second());
 
-    addPropValue(vtodo, VCDCreatedProp, dateString.data());
+    addPropValue(vtodo, VCDCreatedProp, dateString.latin1());
     numStr.sprintf("KPilot - %d",rec->getID());
-    addPropValue(vtodo, VCUniqueStringProp, numStr.data());
+    addPropValue(vtodo, VCUniqueStringProp, numStr.latin1());
     addPropValue(vtodo, VCSequenceProp, "1");
-    addPropValue(vtodo, VCLastModifiedProp, dateString.data());
+    addPropValue(vtodo, VCLastModifiedProp, dateString.latin1());
     addPropValue(vtodo, VCPriorityProp, "0");
-    addPropValue(vtodo, KPilotIdProp, numStr.setNum(todoEntry.getID()));
+    addPropValue(vtodo, KPilotIdProp, numStr.setNum(todoEntry.getID()).latin1());
     addPropValue(vtodo, KPilotStatusProp, "0");
 
     fprintf(logfile,"created initial VObject\n");    
@@ -239,9 +239,9 @@ void TodoConduit::updateVObject(PilotRecord *rec)
 		       todoEntry.getDueDate().tm_min,
 		       todoEntry.getDueDate().tm_sec);
     if (vo)
-      setVObjectUStringZValue_(vo, fakeUnicode(dateString.data(), 0));
+      setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
     else
-      addPropValue(vtodo, VCDTendProp, dateString.data());
+      addPropValue(vtodo, VCDTendProp, dateString.latin1());
   }
   
   // PRIORITY //
@@ -249,17 +249,17 @@ void TodoConduit::updateVObject(PilotRecord *rec)
   int priority = todoEntry.getPriority();
   tmpStr.setNum(priority);
   if (vo)
-    setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.data(), 0));
+    setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
   else
-    addPropValue(vtodo, VCPriorityProp, tmpStr.data());
+    addPropValue(vtodo, VCPriorityProp, tmpStr.latin1());
 
   // COMPLETED? //
   vo = isAPropertyOf(vtodo, VCStatusProp);
   tmpStr = (todoEntry.getComplete() ? "COMPLETED" : "X-ACTION");
   if (vo)
-    setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.data(), 0));
+    setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
   else
-    addPropValue(vtodo, VCStatusProp, tmpStr.data());
+    addPropValue(vtodo, VCStatusProp, tmpStr.latin1());
 
   // SUMMARY //
   vo = isAPropertyOf(vtodo, VCSummaryProp);
@@ -270,9 +270,9 @@ void TodoConduit::updateVObject(PilotRecord *rec)
   // the vCalendar parser really hates empty summaries, avoid them.
   if (!tmpStr.isEmpty()) {
     if (vo)
-      setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.data(), 0));
+      setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
     else
-      addPropValue(vtodo, VCSummaryProp, tmpStr.data());
+      addPropValue(vtodo, VCSummaryProp, tmpStr.latin1());
   }
 
   // DESCRIPTION (NOTE) //
@@ -506,10 +506,10 @@ void TodoConduit::doLocalSync()
 	  tmpStr.setNum(id);
 	  vo = isAPropertyOf(vtodo, KPilotIdProp);
 	  // give it an id.
-	  setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.data(), 0));
+	  setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
 	  vo = isAPropertyOf(vtodo, KPilotStatusProp);
 	  tmpStr = "0"; // no longer a modified event.
-	  setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.data(), 0));
+	  setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
 	} else {
 	  fprintf(logfile,"error! writeRecord returned a pilotID <= 0!\n");
 	  fflush(logfile);
@@ -550,7 +550,7 @@ void TodoConduit::doLocalSync()
 	   text += "\n\nWhat must be done with this appointment?";
 
 	   response = QMessageBox::information(0, "KPilot Todo List Conduit",
-					       text.data(), "&Insert","&Delete",
+					       text.latin1(), "&Insert","&Delete",
 					       "Insert &All",0);
 	   switch(response) {
 	   case 0:
@@ -640,7 +640,7 @@ struct tm TodoConduit::ISOToTm(const QString &tStr)
   tm.tm_yday = 0; // unimplemented
   tm.tm_isdst = 0; // unimplemented
   
-  sscanf(tStr.data(),"%04d%02d%02dT%02d%02d%02d",
+  sscanf(tStr.latin1(),"%04d%02d%02dT%02d%02d%02d",
 	 &tm.tm_year, &tm.tm_mon,
 	 &tm.tm_mday, &tm.tm_hour,
 	 &tm.tm_min, &tm.tm_sec);

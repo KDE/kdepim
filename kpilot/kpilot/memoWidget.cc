@@ -34,6 +34,7 @@ static const char *id="$Id$";
 #include <kapp.h>
 #include <kmessagebox.h>
 #include <kfiledialog.h>
+#include <kdebug.h>
 
 #include "kpilot.h"
 #include "options.h"
@@ -103,7 +104,7 @@ void MemoWidget::initializeCategories(PilotDatabase *memoDB)
 			fCatList->insertItem(fMemoAppInfo.category.name[i]);
 			if (debug_level & UI_MINOR)
 			{
-				cerr << fname << 
+				kdDebug() << fname << 
 					": Added category " <<
 					i << '=' <<
 					fMemoAppInfo.category.name[i] <<
@@ -152,7 +153,7 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 				fMemoList.append(memo);
 				if (debug_level & UI_TEDIOUS)
 				{
-					cerr << fname <<
+					kdDebug() << fname <<
 						": Added memo "
 						<< currentRecord
 						<< endl ;
@@ -162,7 +163,7 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 			{
 				if (debug_level&UI_TEDIOUS)
 				{
-					cerr << fname <<
+					kdDebug() << fname <<
 						": Skipped secret record " <<
 						currentRecord << endl ;
 				}
@@ -172,7 +173,7 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 		{
 			if (debug_level&UI_TEDIOUS)
 			{
-				cerr << fname << 
+				kdDebug() << fname << 
 					": Skipped deleted record " <<
 					currentRecord << endl ;
 			}
@@ -198,7 +199,7 @@ MemoWidget::initialize()
 		KPilotLink::getPilotLink()->openLocalDatabase("MemoDB");
 	if (memoDB==NULL || !memoDB->isDBOpen())
 	{
-		cerr << fname << 
+		kdDebug() << fname << 
 			": Can't open local database MemoDB\n" ;
 
 		updateWidget();
@@ -300,7 +301,7 @@ MemoWidget::slotDeleteMemo()
 
 	if(item == -1)
 	{
-		cerr << fname <<
+		kdDebug() << fname <<
 			": No current item selected\n" ;
 		return;
 	}
@@ -315,7 +316,7 @@ MemoWidget::slotDeleteMemo()
 		//
 		if (debug_level)
 		{
-			cerr << fname <<
+			kdDebug() << fname <<
 				": Refusing to delete new memo.\n";
 		}
 
@@ -332,7 +333,7 @@ MemoWidget::slotDeleteMemo()
 	{
 		if (debug_level)
 		{
-			cerr << fname <<
+			kdDebug() << fname <<
 				": Used decided not to delete memo.\n" ;
 		}
 		return;
@@ -356,7 +357,7 @@ MemoWidget::updateWidget()
 
 	if (fCatList->currentItem()==-1)
 	{
-		cerr << fname <<
+		kdDebug() << fname <<
 			": No category selected.\n";
 		return ;
 	}
@@ -388,7 +389,7 @@ MemoWidget::updateWidget()
 		currentCatID=-1;
 		if (debug_level&UI_MINOR)
 		{
-			cerr << fname <<
+			kdDebug() << fname <<
 				": Category 'All' selected.\n" ;
 		}
 	}
@@ -397,7 +398,7 @@ MemoWidget::updateWidget()
 		QString selectedCategory=fCatList->text(fCatList->currentItem());
 		if (debug_level&UI_MINOR)
 		{
-			cerr << fname << 
+			kdDebug() << fname << 
 				": List item " << fCatList->currentItem() <<
 				" selected, text=" <<
 				selectedCategory << '\n' ;
@@ -405,12 +406,12 @@ MemoWidget::updateWidget()
 
 		currentCatID=0;
 		while(strcmp(fMemoAppInfo.category.name[currentCatID], 
-		       selectedCategory) && 
+		       selectedCategory.latin1()) && 
 			(currentCatID < fCatList->count()))
 		{
 			if (debug_level&UI_TEDIOUS)
 			{
-				cerr << fname <<
+				kdDebug() << fname <<
 					": Didn't match category " <<
 					currentCatID << '=' <<
 					fMemoAppInfo.category.name[currentCatID]
@@ -424,7 +425,7 @@ MemoWidget::updateWidget()
 		{
 			if (debug_level&UI_MINOR)
 			{
-				cerr << fname << 
+				kdDebug() << fname << 
 					": Matched category " <<
 					currentCatID << '=' <<
 					fMemoAppInfo.category.name[currentCatID]
@@ -433,7 +434,7 @@ MemoWidget::updateWidget()
 		}
 		else
 		{
-			cerr << fname << ": Selected category didn't match "
+			kdDebug() << fname << ": Selected category didn't match "
 				"any name!\n" ;
 			currentCatID=-1;
 		}
@@ -458,7 +459,7 @@ MemoWidget::updateWidget()
 			fLookupTable[currentEntry++] = listIndex;
 			if (debug_level & UI_TEDIOUS)
 			{
-				cerr << fname << ": Added memo "
+				kdDebug() << fname << ": Added memo "
 					<< fMemoList.current()->getTitle()
 					<< endl;
 			}
@@ -467,7 +468,7 @@ MemoWidget::updateWidget()
 		{
 			if (debug_level & UI_TEDIOUS)
 			{
-				cerr << fname << ": Skipped memo "
+				kdDebug() << fname << ": Skipped memo "
 					<< fMemoList.current()->getTitle()
 					<< endl;
 			}
@@ -518,7 +519,7 @@ MemoWidget::slotTextChanged()
 	  slotShowMemo(fListBox->currentItem());
 	  return;
 	}
-      currentMemo->setText(fTextWidget->text().data());
+      currentMemo->setText(fTextWidget->text().latin1());
       writeMemo(currentMemo);
     }
 }
@@ -540,7 +541,7 @@ MemoWidget::slotImportMemo()
 	currentCatID++;
 	if (fMemoAppInfo.category.name[currentCatID])
 	  notFound = strcmp(fMemoAppInfo.category.name[currentCatID],
-			    fCatList->text(fCatList->currentItem()));
+			    fCatList->text(fCatList->currentItem()).latin1());
       }
 
     QString fileName = KFileDialog::getOpenFileName();

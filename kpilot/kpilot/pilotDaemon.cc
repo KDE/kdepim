@@ -247,10 +247,10 @@ PilotDaemon::testDir(QString name)
 {
 	FUNCTIONSETUP;
 
-    DIR *dp;
-    dp = opendir(name);
+    DIR *dp = NULL;
+    dp = opendir(name.latin1());
     if(dp == 0L)
-        ::mkdir (name, S_IRWXU);
+        ::mkdir (name.latin1(), S_IRWXU);
     else
         closedir( dp );
 }
@@ -282,7 +282,7 @@ PilotDaemon::reloadSettings()
 			<< endl;
 	}
 
-	fPilotLink->changePilotPath(fPilotDevice.data());
+	fPilotLink->changePilotPath(fPilotDevice.latin1());
 	setupSubProcesses();
 }
 
@@ -314,7 +314,7 @@ PilotDaemon::setupConnections()
 		return;
 	}
 
-	fPilotLink = new KPilotLink(0L, 0L, fPilotDevice.data());
+	fPilotLink = new KPilotLink(0L, 0L, fPilotDevice.latin1());
 	connect(fPilotLink, SIGNAL(databaseSyncComplete()),
 		this, SLOT(slotDBBackupFinished()));
 	connect(this, SIGNAL(endHotSync()), this, SLOT(slotEndHotSync()));

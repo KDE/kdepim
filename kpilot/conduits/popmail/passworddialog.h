@@ -25,12 +25,12 @@ class PasswordDialog : public QDialog
     Q_OBJECT
    
 public:
-    PasswordDialog( const char *head, QWidget* parent=0, const char* name=0, bool modal=false, WFlags f=0 );
+    PasswordDialog( QString head, QWidget* parent=0, const char* name=0, bool modal=false, WFlags f=0 );
     
     const char *password();			// Gibt das Paswort zurueck
     
 private:
-    const char *_head;
+    QString _head;
     QLineEdit *_w_password;      
 };
 

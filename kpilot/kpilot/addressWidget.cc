@@ -34,6 +34,7 @@ static char *id="$Id$";
 
 #include <kapp.h>
 #include <kmessagebox.h>
+#include <kdebug.h>
 
 #include "strToken.h"
 #include "addressWidget.moc"
@@ -86,7 +87,7 @@ void AddressWidget::setupCategories()
 		{
 			if (debug_level & UI_MINOR)
 			{
-				cerr << fname << 
+				kdDebug() << fname << 
 				": Adding category: " << 
 				fAddressAppInfo.category.name[i] << 
 				" with ID: " << 
@@ -115,7 +116,7 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig *config)
 
 	if (debug_level & DB_TEDIOUS)
 	{
-		cerr << fname << ": Reading AddressDB...";
+		kdDebug() << fname << ": Reading AddressDB...";
 	}
 
 	while((pilotRec = addressDB->readRecordByIndex(currentRecord)) != 0L)
@@ -126,7 +127,7 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig *config)
 			address = new PilotAddress(pilotRec);
 			if (address == 0L)
 			{
-				cerr << fname << ": Couldn't allocate "
+				kdDebug() << fname << ": Couldn't allocate "
 					"record " << currentRecord++ <<
 					endl;
 				break;
@@ -141,13 +142,13 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig *config)
 		//
 		if ((debug_level & DB_TEDIOUS) && !(currentRecord & 0xf))
 		{
-			cerr << '.' ;
+			kdDebug() << '.' ;
 		}
 	}
 
 	if (debug_level & DB_TEDIOUS)
 	{
-		cerr << '(' << currentRecord << " records)" << endl;
+		kdDebug() << '(' << currentRecord << " records)" << endl;
 	}
 
 	return currentRecord;
@@ -182,7 +183,7 @@ AddressWidget::initialize()
 	}
 	else
 	{
-		cerr << fname << ": Could not open local AddressDB" << endl;
+		kdDebug() << fname << ": Could not open local AddressDB" << endl;
 	}
 
 
@@ -264,13 +265,13 @@ AddressWidget::updateWidget()
 
 	if (debug_level & UI_MINOR)
 	{
-		cerr << fname << ": Display Mode=" << 
+		kdDebug() << fname << ": Display Mode=" << 
 			addressDisplayMode << '\n' ;
 	}
 
 	if (fCatList->currentItem()==-1)
 	{
-		cerr << fname <<
+		kdDebug() << fname <<
 			": No category selected in address book.\n";
 		return;
 	}
@@ -288,7 +289,7 @@ AddressWidget::updateWidget()
 		currentCatID=-1;
 		if (debug_level & UI_MINOR)
 		{
-			cerr << fname << 
+			kdDebug() << fname << 
 				": Category all selected.\n";
 		}
 	}
@@ -300,7 +301,7 @@ AddressWidget::updateWidget()
 		// So we need to find the category number
 		// for this category.
 		while(strcmp(fAddressAppInfo.category.name[currentCatID], 
-			fCatList->text(fCatList->currentItem())) &&
+			fCatList->text(fCatList->currentItem()).latin1()) &&
 			(currentCatID < fCatList->count()))
 		{
 			currentCatID++;
@@ -308,7 +309,7 @@ AddressWidget::updateWidget()
 
 		if (currentCatID >= fCatList->count())
 		{
-			cerr << fname << 
+			kdDebug() << fname << 
 				": Can't find selected category!\n";
 			currentCatID=-1; // All category
 		}
@@ -318,7 +319,7 @@ AddressWidget::updateWidget()
 	fAddressList.first();
 	if (debug_level & UI_TEDIOUS)
 	{
-		cerr << fname << ": Adding records...";
+		kdDebug() << fname << ": Adding records...";
 	}
 
 	while(fAddressList.current())
@@ -349,13 +350,13 @@ AddressWidget::updateWidget()
 		//
 		if ((debug_level & UI_TEDIOUS) && !(listIndex & 0xf))
 		{
-			cerr << '.' ;
+			kdDebug() << '.' ;
 		}
 	}
 	fTextWidget->clear();
 	if (debug_level & UI_TEDIOUS)
 	{
-		cerr << '(' << listIndex << " records)" << endl;
+		kdDebug() << '(' << listIndex << " records)" << endl;
 	}
 }
 
@@ -367,7 +368,7 @@ char *AddressWidget::createTitle(PilotAddress *address,int displayMode)
 	char *title = new char[255];
 	if (title == 0L)
 	{
-		cerr << fname << ": Cannot allocate title string." << endl;
+		kdDebug() << fname << ": Cannot allocate title string." << endl;
 		return 0L;
 	}
 
@@ -476,7 +477,7 @@ AddressWidget::slotAddRecord(PilotAddress* address)
   // category numbers are changed.  So we need to find the category number
   // for this category.
   while(strcmp(fAddressAppInfo.category.name[currentCatID], 
-	       fCatList->text(fCatList->currentItem())))
+	       fCatList->text(fCatList->currentItem()).latin1()))
     currentCatID++;
   address->setCat(currentCatID);
   fAddressList.append(address);
@@ -580,7 +581,7 @@ AddressWidget::slotImportAddressList()
  	{
 	if (debug_level)
 	{
-		cerr << fname << ": Can't open file "
+		kdDebug() << fname << ": Can't open file "
 			<< fileName
 			<< " read-only.\n";
 	}
@@ -598,15 +599,15 @@ AddressWidget::slotImportAddressList()
 	// Moved this out of the while loop since it should be constant.
 	//
 	//
-	strcpy(importFormat, config->readEntry("IncomingFormat"));
+	strcpy(importFormat, config->readEntry("IncomingFormat").latin1());
 	delim[0] = importFormat[3];
 	delim[1] = 0L;
 
 	if (debug_level & SYNC_MINOR)
 	{
-		cerr << fname << ": Input format is " << importFormat <<
+		kdDebug() << fname << ": Input format is " << importFormat <<
 			endl;
-		cerr << fname << ": Delimiter is " << delim << endl;
+		kdDebug() << fname << ": Delimiter is " << delim << endl;
 	}
 
     while(inputStream.eof() == false)
@@ -620,7 +621,7 @@ AddressWidget::slotImportAddressList()
  	nextRecord = inputStream.readLine();
 	if (debug_level & SYNC_TEDIOUS)
 	{
-		cerr << fname << ": Read line " << nextRecord;
+		kdDebug() << fname << ": Read line " << nextRecord;
 	}
 
  	if(inputStream.eof() || (nextRecord == ""))
@@ -628,7 +629,7 @@ AddressWidget::slotImportAddressList()
  	    break;
 	}
 
-	dataTokenizer = new StrTokenizer(nextRecord, delim);
+	dataTokenizer = new StrTokenizer(nextRecord.latin1(), delim);
 	strcpy(nextField, dataTokenizer->getNextField());
  	if(useKeyField)
 	{
@@ -715,12 +716,12 @@ AddressWidget::setFieldBySymbol(PilotAddress* rec, const char* symbol, const cha
 
 	if ((debug_level & SYNC_MINOR) && rc)
 	{
-		cerr << fname << ": Unknown field "
+		kdDebug() << fname << ": Unknown field "
 			<< symbol << endl;
 	}
 	if (debug_level & SYNC_TEDIOUS)
 	{
-		cerr << fname << ": Set field " 
+		kdDebug() << fname << ": Set field " 
 			<< symbol
 			<< " to "
 			<< text
@@ -799,7 +800,7 @@ AddressWidget::writeAddress(PilotAddress* which,PilotDatabase *addressDB)
 	//
 	if (!myDB->isDBOpen())
 	{
-		cerr << fname << ": Address database is not open.\n";
+		kdDebug() << fname << ": Address database is not open.\n";
 		return;
 	}
 
@@ -843,7 +844,7 @@ AddressWidget::slotExportAddressList()
       
     for(currentAddress = fAddressList.first(); currentAddress; currentAddress = fAddressList.next())
 	{
-	strcpy(exportFormat, config->readEntry("OutgoingFormat"));
+	strcpy(exportFormat, config->readEntry("OutgoingFormat").latin1());
 	delim[0] = exportFormat[3];
 	delim[1] = 0L;
 

@@ -91,7 +91,7 @@ setupDialog::setupDialog(QWidget *parent,
 	const QString &name,
 	const QString &caption,
 	bool modal) :
-	QTabDialog(parent,name,modal),
+	QTabDialog(parent,name.latin1(),modal),
 	fGroupName(name),
 	quitOnClose(!modal),
 	fConfigVersion(0)
@@ -249,7 +249,7 @@ int setupDialog::addPage(setupDialogPage *p)
 	if (debug_level & UI_TEDIOUS)
 	{
 		cerr << fname << ": Checking for existence of "
-			<< filelabel << ' ' << filename << endl;
+			<< filelabel.latin1() << ' ' << filename.latin1() << endl;
 	}
 
 	QFileInfo info(filename);
@@ -261,7 +261,7 @@ int setupDialog::addPage(setupDialogPage *p)
 
 		if (debug_level)
 		{
-			cerr << fname << ": " << msg << endl;
+			cerr << fname << ": " << msg.latin1() << endl;
 		}
 
 
