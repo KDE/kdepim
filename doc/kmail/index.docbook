@@ -10,24 +10,21 @@
 <bookinfo>
 <title>The &kmail; Handbook</title>
 
-<!-- note from daniel.naber@t-online.de, 2002-01-18: I'm working on this
+<!-- note from daniel.naber@t-online.de, 2002-07-20: I'm working on this
 "by hand" (using nedit) so please don't mix up the formatting too much.
 $Id$
  -->
 
-<!-- TODO: 
+<!-- TODO:
 
-* document "check what the server supports"
-* document "pipelining..."
-* more about the "create folder" dialog (e.g. Sender/Receiver)
+* more about security?
+
 * Configure KMail: "page" or "tab", but no mix of both!
-
 * add section for drag'n'drop?
 * "Using other mailbox..." -> sounds strange?
- 
-* use better markup instead of 'quote'
+
+* use better markup instead of 'quote'?
 * fix my adverb vs. adjective mistakes
-* does the "lists.kde.org?..." link work correctly/completely again?
 
 * coherent wording for section / tab / ...
 * <menuchoice><guimenu>xxx , or is <guimenu>xxx enough?
@@ -61,8 +58,8 @@ $Id$
 
 </authorgroup>
 
-<date>2002-03-29</date>
-<releaseinfo>1.04.00</releaseinfo>
+<date>2002-07-11</date>
+<releaseinfo>1.04.02</releaseinfo>
 
 <copyright>
 <year>1999</year>
@@ -258,7 +255,7 @@ specify a path in the <guilabel>Prefix to folders</guilabel> field. This
 tells &kmail; where it can find your folders on the server. If you also
 have a shell account on the server and the messages are stored in your home
 directory it might be useful to store the messages in a subdirectory
-<filename class="directory">/Mail/</filename>. Use this as a value in
+<filename class="directory">Mail</filename>. Use this as a value in
 the <guilabel>Prefix to folders</guilabel> field so that &kmail; does
 not mix up mailbox files and other files. If you are not interested in 
 this feature, simple leave the field blank.</para>
@@ -269,7 +266,7 @@ server as soon as you leave a folder. Otherwise the messages are
 only marked as deleted and it is up to you to compact the folders
 manually by using the menu item <guimenuitem>Compact All
 Folders</guimenuitem>.</para>
-          
+
 <para>If you check <guilabel>Show hidden folders</guilabel>,
 folders whose name starts with a dot are also displayed.</para>
 
@@ -301,6 +298,10 @@ option.</para>
 will execute just before fetching mail. Please specify the full path 
 (don't use <quote>~</quote>) and note that &kmail; will not continue 
 until the program returns.</para>
+
+<para>On the <guilabel>Extras</guilabel> tab you can select <guilabel>Use
+pipelining for faster mail download</guilabel> if this is supported by your
+server. You should carefully test this to make sure it works safely.</para>
 
 </sect3>
 
@@ -341,7 +342,9 @@ or <guilabel>TLS</guilabel>.  You should only use <guilabel>Clear
 text</guilabel> if your server doesn't support any of the other
 authentication methods. Additionally, for <acronym>IMAP</acronym>
 <guilabel>Anonymous</guilabel> is supported, but <guilabel>APOP</guilabel>
-is not.</para>
+is not. Use the <guibutton>Check what the server supports</guibutton> button
+on the <guilabel>Extras</guilabel> resp. <guilabel>Security</guilabel> tab
+to automatically select the most secure settings supported by your server.</para>
 
 <para>You are now ready to send and receive mail. For
 <acronym>IMAP</acronym>, click on the <guilabel>+</guilabel> sign in the
@@ -537,7 +540,12 @@ Reader</guilabel> window button bar.</para>
 
 <para>To write your message, fill in the appropriate fields in the
 composer window. Use the <guimenu>View</guimenu> menu
-to select which header fields are displayed. There are a variety of shortcuts to help
+to select which header fields are displayed. The <guimenuitem>Identity</guimenuitem>
+field offers a <guibutton>Sticky</guibutton> option. If it is checked,
+the current identity will become the default identity when you open
+a new composer next time.</para>
+
+<para>There are a variety of shortcuts to help
 you with writing your messages. The <guiicon>ellipsis</guiicon> buttons next to
 the <guilabel>To:</guilabel>, <guilabel>Cc:</guilabel>, and
 <guilabel>Bcc:</guilabel> fields will call up the address book so that you can
@@ -1187,6 +1195,8 @@ the pull-down menus: <guilabel>From</guilabel>,
 
 <para>You now have a filter that transfers all &kde; List messages
 that are from fj@anywhere.com.</para>
+<!-- fixme: trigger with ctrl-j or whenever new mail arrives (unless
+<guilabel>Advanced Options</guilabel> are changed. -->
 </sect2>
 </sect1>
 
@@ -1358,7 +1368,7 @@ attachments manually, using a shell command or some other tool before you attach
 them.</para></warning>
 
 <warning><para>&kmail; has to rely on <application>PGP</application>'s
-output. This output is often different between different versions of
+output. This output is often different between different versions of 
 <application>PGP</application>, so it's important that you test if encryption
 really works with your setup before you start using it seriously. &kmail; might
 <emphasis>not</emphasis> warn you if something fails. You better enable 
@@ -1833,7 +1843,10 @@ keep in mind that these signatures and digital signatures are two
 completely different things.</para></note>
 
 <para>Check the <guilabel>Enable Signature</guilabel> option if you
-want to append signatures when using this identity.</para>
+want to be able to append the signature when using this identity. To
+<emphasis>automatically</emphasis> append it to every new message
+you also have to select <guilabel>Automatically append
+signature</guilabel> in the <guilabel>Composer</guilabel> configuration page.</para>
 
 <para>&kmail; can obtain the signature text from various sources. The
 traditional way on Unix is to read the text from a file called
@@ -1905,6 +1918,19 @@ outgoing mail servers and set some common options.</para>
 
 <para>For basic information, see <link
 linkend="sending-mail">Setting up your Account: Sending</link>.</para>
+
+<para>When you click <guibutton>Add...</guibutton> or <guibutton>Modify...</guibutton>
+the <guilabel>Add transport</guilabel> resp. <guilabel>Modify
+transport</guilabel> dialog will open. For sending via <command>sendmail</command> you
+can specify a name and the location of the <command>sendmail</command> program.
+For <acronym>SMTP</acronym> you can specify <guilabel>Name</guilabel>,
+<guilabel>Host</guilabel>, and <guilabel>Port</guilabel> of the server.
+<guilabel>Server requires authentication</guilabel> will enable the
+<guilabel>Login</guilabel> and <guilabel>Password</guilabel> fields and
+the <guilabel>Authentication method</guilabel> buttons on the
+<guilabel>Security</guilabel> tab. If you are not sure about the
+security settings you can make &kmail; test for the best settings
+by using <guibutton>Check what the server supports</guibutton>.</para>
 
 <para><guilabel>Confirm before send</guilabel> will pop up a
 confirmation box every time you send a message.</para>
@@ -2706,12 +2732,15 @@ dialog.</para>
 a new folder. You can make this new folder a sub folder if you choose a parent
 folder using the <guilabel>Belongs to</guilabel> selection. The folder
 can be either in <guilabel>mbox</guilabel> or in <guilabel>maildir</guilabel>
-format. <guilabel>mbox</guilabel> saves all messages of one folder to a file,
-whereas <guilabel>maildir</guilabel> saves each message to its own file. 
+format. <guilabel>mbox</guilabel> saves all messages of one folder to one file,
+whereas <guilabel>maildir</guilabel> saves each message to its own file.
 <guilabel>maildir</guilabel> can be considered more robust, but it can be
 slower on some file systems. Note that there's currently no feature in &kmail; that
-allows to convert between both formats automatically.</para>
-<para>If you're going to use the folder for a mailing list you may want to add 
+allows to convert between both formats automatically (but you can just move all
+messages from an old <guilabel>mbox</guilabel> folder to a new
+<guilabel>maildir</guilabel> folder).</para>
+
+<para>If you're going to use the folder for a mailing list you may want to add
 the mailing list address
 in the <guilabel>Associated Mailing List</guilabel> section. You will then be able to use
 the <menuchoice><guimenu>Message</guimenu><guimenuitem>Reply
@@ -2720,6 +2749,24 @@ mailing list address in the <guilabel>To:</guilabel> field (&ie; it will ignore
 the <token>Reply-To</token> of the message). You can also click the
 <mousebutton>middle</mousebutton> mousebutton in the Folders pane to post to a
 mailing list that is associated with that folder.</para>
+
+<para>The <guilabel>Old Message Expiry</guilabel> section lets you automatically
+delete old messages when you exit &kmail;
+<!-- fixme: delete or move to trash? -->
+(depending on your settings
+in &kmail;'s <guilabel>Miscellaneous</guilabel> configuration page) or
+via <menuchoice><guimenu>File</guimenu><guisubmenu>Expire
+All Folders</guisubmenu></menuchoice>.</para>
+
+<para>With the <guilabel>Identity</guilabel> section you can set your default
+identity for new messages. Replies to messages that where sent directly
+to you will still default to the message's <quote>To</quote> address if an
+according identity is found.</para>
+
+<para>With <guilabel>Show Sender/Receiver</guilabel> you can set the 
+visible columns in the header pane. This is useful if you use the
+current folder for your own sent messages.</para>
+
 </listitem>
 </varlistentry>
 
@@ -3957,6 +4004,44 @@ menu</link>.</para>
 <qandaset id="faq-set">
 
 <qandaentry>
+<question><para>Why aren't my filters applied to incoming messages of IMAP accounts?</para></question>
+<answer>
+<para>Because &kmail; currently doesn't support this. You should use server-side
+filtering (ask your admin for how to install filters on the server and in
+which format), since IMAP is all about managing your emails <emphasis>on the server</emphasis>.
+Unfortunately, although there exists a mail filter language (Sieve, defined
+in RFC3028), there is no standardized access protocol for installing or
+editing server-side Sieve scripts. If such a protocol becomes available in
+the future, &kmail; will most probaly include support for it.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>I cannot add addresses to my address book after upgrading to KDE 3.0.</para></question>
+<answer>
+<para>You probably copied your old <filename>kmailrc</filename> file manually. That's not
+necessary, there's a script that will do such things when you run KDE 3.0
+for the first time. To fix the problem, remove the complete <quote>[AddressBook]</quote>
+group and the addressbook option in group <quote>[General]</quote> in your 
+<filename>kmailrc</filename> file. However, chances are you'll also encounter other problems 
+that the config update script was to solve.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>When sending a mail (using SMTP) to another person in the same
+domain, &kmail; incorrectly completes the <quote>To:</quote> email address.</para></question>
+<answer>
+<para>Add the following entry to the <quote>[General]</quote> section of the 
+<filename>kmailrc</filename>:
+<userinput>Default domain=foo.bar</userinput>
+where <quote>foo.bar</quote> is the domain name which should be used to auto-complete
+not fully qualified email addresses.</para>
+<para>This <quote>hidden</quote> feature will be configurable in the next version of &kmail;.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
 <question><para>Can I use &kmail; together with a different mail client, &eg;
 <application>mutt</application>?</para></question>
 <answer>
@@ -4264,9 +4349,14 @@ please sign the key locally with <userinput><command>gpg</command>
 <para>Trusting a foreign public key without checking it is no good idea.</para>
 </listitem>
 <listitem>
+<!-- fixme: KDE 3.1 / SMIME -->
 <para>As most other mail clients, &kmail; can encrypt your messages, but
 <emphasis>not</emphasis> your attachments. You have to encrypt them manually
 before you attach them.</para>
+</listitem>
+<listitem>
+<para>Starting with GnuPG 1.0.7 you have to set your own key to
+ultimate ownertrust. It's no longer implicitly done for you.</para>
 </listitem>
 </itemizedlist>
 </answer>
@@ -4431,8 +4521,10 @@ available in <filename>kdenetwork/kmail/kmailIface.h</filename> and
 <title>Using other Mailbox Files with &kmail;</title>
 
 <para>&kmail; offers an import tool for the messages and address books of some
-other mail clients. You can access it
-using <menuchoice><guimenu>File</guimenu><guimenuitem>Import...</guimenuitem></menuchoice>.
+other mail clients. You can access it using <menuchoice><guimenu>File</guimenu>
+<guimenuitem>Import...</guimenuitem></menuchoice>. Please make sure that you 
+compact your folders in the other mail client, no matter if you are going to use
+the import utility or if you are going to copy files manually.
 You only need to read this chapter if this tool does not work for you.</para>
 
 <para>This section is for all of the users who need to move email messages from
@@ -4448,7 +4540,7 @@ mailboxes), make sure they are writable by your user, and launch &kmail;. The
 mailboxes should now show up correctly in &kmail;.</para>
 
 <para>Please have a look at the
-<ulink url="http://kmail.kde.org/download.html">Download section of &kmail;'s
+<ulink url="http://kmail.kde.org/tools.html">Tools section of &kmail;'s
 homepage</ulink> first, to see if there's a tool that imports your mailbox
 and maybe even address book.</para>
 
@@ -4622,7 +4714,7 @@ there.</para>
 <term>Maildir / Outlook Express / xfmail</term>
 <listitem>
 <para>Tools to convert these formats are available at the
-<ulink url="http://kmail.kde.org/download.html">Download section of &kmail;'s
+<ulink url="http://kmail.kde.org/tools.html">Tools section of &kmail;'s
 homepage</ulink>.</para>
 </listitem>
 </varlistentry>
@@ -4632,7 +4724,7 @@ homepage</ulink>.</para>
 Mail</application>, &etc;...</term>
 <listitem>
 <para>First you should have a look at <ulink
-url="http://kmail.kde.org/download.html">Download section of &kmail;'s homepage</ulink> if 
+url="http://kmail.kde.org/tools.html">Tools section of &kmail;'s homepage</ulink> if 
 there are tools to convert your messages.</para>
 <para>Mail programs not listed here or on the homepage probably do not work with &kmail; as they use
 proprietary mail formats that &kmail; cannot understand. However, there is no
