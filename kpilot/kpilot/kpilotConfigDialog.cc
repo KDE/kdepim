@@ -180,6 +180,7 @@ void KPilotConfigDialog::readConfig()
 	fConfigWidget->fSyncWithKMail->setChecked(c.getSyncWithKMail());
 
 	/* Viewers tab */
+	fConfigWidget->fInternalEditors->setChecked(c.getInternalEditors());
 	fConfigWidget->fUseSecret->setChecked(c.getShowSecrets());
 	c.setAddressGroup();
 	fConfigWidget->fAddressGroup->setButton(c.getAddressDisplayMode());
@@ -244,6 +245,7 @@ void KPilotConfigDialog::readConfig()
 	c.setSyncWithKMail(fConfigWidget->fSyncWithKMail->isChecked());
 
 	/* Viewers tab */
+	c.setInternalEditors( fConfigWidget->fInternalEditors->isChecked());
 	c.setShowSecrets(fConfigWidget->fUseSecret->isChecked());
 	c.setAddressGroup();
 	c.setAddressDisplayMode(fConfigWidget->fAddressGroup->id(
