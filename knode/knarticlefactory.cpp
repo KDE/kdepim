@@ -61,6 +61,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
     return;
 
   KNLocalArticle *art=newArticle();
+
   if(!art)
     return;
 
@@ -68,6 +69,9 @@ void KNArticleFactory::createPosting(KNGroup *g)
   art->setDoPost(true);
   art->setDoMail(false);
   art->newsgroups()->from7BitString(g->groupname());
+
+  if(g->useCharset())
+    art->contentType()->setCharset(g->defaultCharset());
 
   KNConfig::Identity *i=g->identity();
   setIdentity(art, i);
@@ -106,12 +110,12 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, bool post, bool mail)
   QString subject=a->subject()->asUnicodeString();
   if(subject.left(3).upper()!="RE:")
     subject.prepend("Re: ");
-  art->subject()->fromUnicodeString(subject);
+  art->subject()->fromUnicodeString(subject, a->subject()->rfc2047Charset());
 
   //newsgroups
   KNHeaders::FollowUpTo *fup2=art->followUpTo(false);
   if(fup2 && !fup2->isEmpty()) {
-    if(fup2->as7BitString().upper()=="POSTER") { //Followup-To: Poster
+    if(fup2->as7BitString(false).upper()=="POSTER") { //Followup-To: poster
       art->setDoPost(false);
       art->setDoMail(true);
     }
@@ -152,16 +156,13 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, bool post, bool mail)
   KNConfig::Identity *identity=0;
   QCString firstGrp=art->newsgroups()->firstGroup();
   KNGroup *g=knGlobals.grpManager->group(firstGrp, nntp);
-  if(g)
+  if(g) {
     identity=g->identity();
+    if(g->useCharset())
+      art->contentType()->setCharset(g->defaultCharset());
+  }
   setIdentity(art, identity);
 
-  //Mime
-  KNHeaders::ContentType *type=art->contentType();
-  type->setMimeType("text/plain");
-  type->setCharset(knGlobals.cfgManager->postNewsTechnical()->charset());
-  int e=knGlobals.cfgManager->postNewsTechnical()->encoding();
-  art->contentTransferEncoding()->setCte((KNHeaders::contentEncoding)(e));
 
   //------------------------- </Headers> ---------------------------
 
@@ -265,7 +266,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   //subject
   KNHeaders::Subject *subj=a->subject();
   QString subject=("Fwd: "+a->subject()->asUnicodeString());
-  art->subject()->fromUnicodeString(subject);
+  art->subject()->fromUnicodeString(subject, a->subject()->rfc2047Charset());
 
   //identity
   setIdentity(art, 0);
@@ -320,7 +321,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 
 void KNArticleFactory::createMail(const QString &address)
 {
-  //create new article
+  /*/create new article
   KNLocalArticle *art=newArticle();
   if(!art)
     return;
@@ -336,7 +337,7 @@ void KNArticleFactory::createMail(const QString &address)
   KNComposer *c=new KNComposer(art, QString::null, knGlobals.cfgManager->identity()->getSignature(), true);
   c_ompList.append(c);
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
-  c->show();
+  c->show();*/
 }
 
 
@@ -611,8 +612,9 @@ KNLocalArticle* KNArticleFactory::newArticle()
 
   //X-Headers
   KNConfig::XHeaders::Iterator it;
+  QFont::CharSet cs=KNMimeBase::stringToCharset(pnt->charset());
   for(it=pnt->xHeaders().begin(); it!=pnt->xHeaders().end(); ++it)
-    art->setHeader( new KNHeaders::Generic( (QCString("X-")+(*it).name()), (*it).value()) );
+    art->setHeader( new KNHeaders::Generic( (QCString("X-")+(*it).name()), (*it).value(), cs ) );
 
   return art;
 }
@@ -624,9 +626,11 @@ void KNArticleFactory::setIdentity(KNLocalArticle *a, KNConfig::Identity *i)
     return;
 
   KNConfig::Identity *id;
+  QFont::CharSet cs=KNMimeBase::stringToCharset(knGlobals.cfgManager->postNewsTechnical()->charset());
 
   //From
   KNHeaders::From *from=a->from();
+  from->setRFC2047Charset(cs);
 
   //name
   if(i && i->hasName())
@@ -651,7 +655,7 @@ void KNArticleFactory::setIdentity(KNLocalArticle *a, KNConfig::Identity *i)
   else
     id=knGlobals.cfgManager->identity();
   if(id->hasReplyTo())
-    a->replyTo()->fromUnicodeString(id->replyTo().copy());
+    a->replyTo()->fromUnicodeString(id->replyTo().copy(), cs);
 
   //Organization
   if(i && i->hasOrga())
@@ -659,7 +663,7 @@ void KNArticleFactory::setIdentity(KNLocalArticle *a, KNConfig::Identity *i)
   else
     id=knGlobals.cfgManager->identity();
   if(id->hasOrga())
-    a->organization()->fromUnicodeString(id->orga().copy());
+    a->organization()->fromUnicodeString(id->orga().copy(), cs);
 
 }
 

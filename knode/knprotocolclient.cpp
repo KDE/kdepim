@@ -204,7 +204,7 @@ bool KNProtocolClient::openConnection()
  // can only use inet_addr because of portability problem on Solaris
  // TODO: port to QDns/QSocket
  // Solaris uses deprecated inet_addr instead of inet_aton (David F.)
-  address.s_addr = inet_addr(account.server().local8Bit().data());
+  address.s_addr = inet_addr(account.server().data());
   // unsigned int is ok because its uint/32bit in fact
   if ( (unsigned int) address.s_addr != (unsigned int)-1 ) {
     if (!conRawIP(&address)) {
@@ -212,7 +212,7 @@ bool KNProtocolClient::openConnection()
       return false;
     }
   } else {               // host name lookup....
-    struct hostent* hostData = gethostbyname(account.server().local8Bit().data());
+    struct hostent* hostData = gethostbyname(account.server().data());
 
     if (NULL==hostData) {
       herror("connect(): ");

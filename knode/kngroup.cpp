@@ -32,7 +32,7 @@
 #include "knnntpaccount.h"
 #include "utilities.h"
 #include "kngroup.h"
-#include "knconfig.h"
+#include "knconfigmanager.h"
 
 
 #define SORT_DEPTH 5
@@ -82,12 +82,14 @@ bool KNGroup::readInfo(const QString &confPath)
 {
   KSimpleConfig info(confPath);
 
-  g_roupname = info.readEntry("groupname").local8Bit();
-  d_escription = info.readEntry("description").local8Bit();
+  g_roupname = info.readEntry("groupname").latin1();
+  d_escription = info.readEntry("description").latin1();
   n_ame = info.readEntry("name");
   c_ount = info.readNumEntry("count",0);
   r_eadCount = info.readNumEntry("read",0);
   l_astNr = info.readNumEntry("lastMsg",0);
+  u_seCharset = info.readBoolEntry("useCharset", false);
+  d_efaultChSet = info.readEntry("defaultChSet").latin1();
 
   i_dentity=new KNConfig::Identity(false);
   i_dentity->loadConfig(&info);
@@ -117,6 +119,8 @@ void KNGroup::saveInfo()
     info.writeEntry("count", c_ount);
     info.writeEntry("read", r_eadCount);
     info.writeEntry("name", n_ame);
+    info.writeEntry("useCharset", u_seCharset);
+    info.writeEntry("defaultChSet", QString::fromLatin1(d_efaultChSet));
   
     if(i_dentity)
       i_dentity->saveConfig(&info);
@@ -174,6 +178,12 @@ bool KNGroup::loadHdrs()
         return false;
       }
 
+      QFont::CharSet cs;
+      if(useCharset())
+        cs=KNMimeBase::stringToCharset(d_efaultChSet);
+      else
+        cs=KNMimeBase::stringToCharset(knGlobals.cfgManager->postNewsTechnical()->charset());
+
       while(!f.atEnd()) {
         buff=f.readLine();    
         if(buff.isEmpty()){
@@ -195,21 +205,19 @@ bool KNGroup::loadHdrs()
         art->messageID()->from7BitString(split.string());
     
         split.next();
-        art->subject()->fromUnicodeString(QString::fromUtf8(split.string().data()));
+        art->subject()->fromUnicodeString(QString::fromUtf8(split.string().data()), cs);
         
         split.next();
         art->from()->setEmail(split.string());
-    
         split.next();
         if(split.string()!="0") art->from()->setName(QString::fromUtf8(split.string().data()));
+        art->from()->setRFC2047Charset(cs);
 
         buff=f.readLine();
         if(buff!="0") art->references()->from7BitString(buff.copy());
                       
         buff=f.readLine();
-        sscanf(buff,"%d %d %d", &id, &lines, (uint*) &timeT);//, (uint*) &fTimeT);
-        //kdDebug(5003) << "id = " << id << endl;
-      
+        sscanf(buff,"%d %d %d", &id, &lines, (uint*) &timeT);
         art->setId(id);
         art->lines()->setNumberOfLines(lines);
         art->date()->setUnixTime(timeT);
@@ -295,8 +303,6 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
 {
   KNRemoteArticle *art=0;
   QCString tmp;
-  //DwDateTime dt;
-  //time_t fTimeT=dt.AsUnixTime();
   KNStringSplitter split;
   split.setIncludeSep(false);
   int cnt=0;
@@ -320,7 +326,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
     split.next();
     art->subject()->from7BitString(split.string());
     if(art->subject()->isEmpty())
-    	art->subject()->fromUnicodeString(i18n("no subject"));
+    	art->subject()->fromUnicodeString(i18n("no subject"), QFont::AnyCharSet);
     
     //From and Email
     split.next();
@@ -414,7 +420,6 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
     }
   
     f.close();
-    
   }
   
   return savedCnt;

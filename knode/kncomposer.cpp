@@ -23,6 +23,8 @@
 
 #include <klocale.h>
 #include <kglobalsettings.h>
+#include <kglobal.h>
+#include <kcharsets.h>
 #include <kmessagebox.h>
 #include <kabapi.h>
 #include <kaction.h>
@@ -104,6 +106,11 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   a_ctSpellCheck = KStdAction::spelling (this, SLOT(slotSpellcheck()), actionCollection(), "spellcheck");
 
+  a_ctSetCharset = new KSelectAction(i18n("&Charset"), 0, actionCollection(), "setcharset");
+  a_ctSetCharset->setItems(KNMimeBase::availableCharsets());
+  connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
+    this, SLOT(slotSetCharset(const QString&)));
+
 
   //attach menu
   new KAction(i18n("Append &Signature"), "signature", 0 , this, SLOT(slotAppendSig()),
@@ -141,11 +148,11 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   if(!a_ttPopup) a_ttPopup = new QPopupMenu();
   slotAttachmentSelected(0);
 
-  //apply configuration
-  setConfig();
-
   //init
   initData(text);
+
+  //apply configuration
+  setConfig();
 
   if(firstEdit)    // now we place the cusor at the end of the quoted text
     v_iew->e_dit->setCursorPosition(v_iew->e_dit->numLines()-1,0);
@@ -187,7 +194,15 @@ void KNComposer::setConfig()
 {
   v_iew->e_dit->setWordWrap(QMultiLineEdit::FixedColumnWidth);
   v_iew->e_dit->setWrapColumnOrWidth(knGlobals.cfgManager->postNewsComposer()->maxLineLength());
-  v_iew->e_dit->setFont(knGlobals.cfgManager->appearance()->composerFont());
+
+  QFont fnt=knGlobals.cfgManager->appearance()->composerFont();
+  KGlobal::charsets()->setQFont(fnt, c_harset);
+  v_iew->e_dit->setFont(fnt);
+
+  fnt=font();
+  KGlobal::charsets()->setQFont(fnt, c_harset);
+  v_iew->s_ubject->setFont(fnt);
+  v_iew->t_o->setFont(fnt);
 }
 
 
@@ -237,20 +252,23 @@ void KNComposer::applyChanges()
   KNMimeContent *text=0;
   KNAttachment *a=0;
 
+  QFont::CharSet cs=KNMimeBase::stringToCharset(c_harset);
+
+
   //Subject
-  a_rticle->subject()->fromUnicodeString(v_iew->s_ubject->text());
+  a_rticle->subject()->fromUnicodeString(v_iew->s_ubject->text(), cs);
 
   //Newsgroups
-  a_rticle->newsgroups()->fromUnicodeString(v_iew->g_roups->text());
+  a_rticle->newsgroups()->fromUnicodeString(v_iew->g_roups->text(), QFont::ISO_8859_1);
   a_rticle->setDoPost(v_iew->g_roupsCB->isChecked());
 
   //To
-  a_rticle->to()->fromUnicodeString(v_iew->t_o->text());
+  a_rticle->to()->fromUnicodeString(v_iew->t_o->text(), cs);
   a_rticle->setDoMail(v_iew->t_oCB->isChecked());
 
   //Followup-To
   if( a_rticle->doPost() && v_iew->f_up2CB->isChecked() && !v_iew->f_up2->currentText().isEmpty())
-    a_rticle->followUpTo()->fromUnicodeString(v_iew->f_up2->currentText());
+    a_rticle->followUpTo()->fromUnicodeString(v_iew->f_up2->currentText(), QFont::ISO_8859_1);
   else
     a_rticle->removeHeader("Followup-To");
 
@@ -283,7 +301,6 @@ void KNComposer::applyChanges()
     KNHeaders::CTEncoding *enc=text->contentTransferEncoding();
     KNConfig::PostNewsTechnical *pnt=knGlobals.cfgManager->postNewsTechnical();
     type->setMimeType("text/plain");
-    type->setCharset(pnt->charset());
     enc->setCte((KNHeaders::contentEncoding)(pnt->encoding())); //default encoding for textual contents
     enc->setDecoded(true);
     text->assemble();
@@ -294,7 +311,9 @@ void KNComposer::applyChanges()
   for(int i=0; i < v_iew->e_dit->numLines(); i++)
     tmp+=v_iew->e_dit->textLine(i)+"\n";
 
+  text->contentType()->setCharset(c_harset);
   text->fromUnicodeString(tmp);
+
 
   //text is set and all attached contents have been assembled => now set lines
   a_rticle->lines()->setNumberOfLines(a_rticle->lineCount());
@@ -367,9 +386,10 @@ void KNComposer::initData(const QString &text)
     slotFupCheckBoxToggled(false);
   }
 
+  KNMimeContent *textContent=a_rticle->textContent();
+
   if(text.isEmpty()) {
     QString decoded;
-    KNMimeContent *textContent=a_rticle->textContent();
     if(textContent) {
       textContent->decodedText(decoded);
       v_iew->e_dit->setText(decoded);
@@ -377,6 +397,13 @@ void KNComposer::initData(const QString &text)
   }
   else
     v_iew->e_dit->setText(text);
+
+  if(textContent)
+    c_harset=textContent->contentType()->charset();
+  else
+    c_harset=knGlobals.cfgManager->postNewsTechnical()->charset();
+
+  a_ctSetCharset->setCurrentItem(KNMimeBase::indexForCharset(c_harset));
 
   if(a_rticle->contentType()->isMultipart()) {
     v_iew->showAttachmentView();
@@ -447,6 +474,16 @@ void KNComposer::slotArtDelete()
 {
   r_esult=CRdelAsk;
   emit composerDone(this);
+}
+
+
+void KNComposer::slotSetCharset(const QString &s)
+{
+  if(s.isEmpty())
+    return;
+
+  c_harset=s.latin1();
+  setConfig(); //adjust fonts
 }
 
 

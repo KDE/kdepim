@@ -40,9 +40,9 @@ class KNServerInfo {
     //get
     serverType type()         { return t_ype; }
     int id()                  { return i_d; }
-    const QString& server()   { return s_erver; }
-    const QString& user()     { return u_ser; }
-    const QString& pass()     { return p_ass; }
+    const QCString& server()  { return s_erver; }
+    const QCString& user()    { return u_ser; }
+    const QCString& pass()    { return p_ass; }
     int port()                { return p_ort; }
     int hold()                { return h_old; }
     int timeout()             { return t_imeout; }
@@ -53,9 +53,9 @@ class KNServerInfo {
     //set
     void setType(serverType t)        { t_ype=t; }
     void setId(int i)                 { i_d=i; }
-    void setServer(const QString &s)  { s_erver=s.copy(); }
-    void setUser(const QString &s)    { u_ser=s.copy(); }
-    void setPass(const QString &s)    { p_ass=s.copy(); }
+    void setServer(const QCString &s) { s_erver=s.copy(); }
+    void setUser(const QCString &s)   { u_ser=s.copy(); }
+    void setPass(const QCString &s)   { p_ass=s.copy(); }
     void setPort(int p)               { p_ort=p; }
     void setHold(int h)               { h_old=h; }
     void setTimeout(int t)            { t_imeout=t; }
@@ -63,8 +63,16 @@ class KNServerInfo {
 
   protected:
     serverType t_ype;
-    QString s_erver, u_ser, p_ass;
-    int i_d, p_ort, h_old, t_imeout;
+
+    QCString  s_erver,
+              u_ser,
+              p_ass;
+
+    int i_d,
+        p_ort,
+        h_old,
+        t_imeout;
+
     bool n_eedsLogon;
     
 };  

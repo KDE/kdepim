@@ -30,6 +30,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kwin.h>
+#include <kcharsets.h>
 
 #include "knode.h"
 #include "knglobals.h"
@@ -203,7 +204,7 @@ QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
   f->writeBlock(data.data(), data.size());
   tmpFile->close();
   path=tmpFile->name();
-  pathHdr=new KNHeaders::Generic("X-KNode-Tempfile", path);
+  pathHdr=new KNHeaders::Generic("X-KNode-Tempfile", path, QFont::Unicode);
   c->setHeader(pathHdr);
 
   return path;
@@ -242,7 +243,6 @@ void KNArticleManager::showHdrs(bool clear)
   knGlobals.top->secureProcessEvents();
 
   if(g_roup) {
-    v_iew->header()->setLabel(1, i18n("From"));
     KNRemoteArticle *art; //, *ref;
 
     if (g_roup->isLocked()) {
@@ -293,7 +293,6 @@ void KNArticleManager::showHdrs(bool clear)
       kdDebug(5003) << "failed to unlock nntp mutex" << endl;
   }
   else { //folder
-    v_iew->header()->setLabel(1, i18n("Newsgroups / To"));
     KNLocalArticle *art;
     for(int idx=0; idx<f_older->length(); idx++) {
       art=f_older->at(idx);
@@ -323,6 +322,15 @@ void KNArticleManager::setAllThreadsOpen(bool b)
 }
 
 
+void KNArticleManager::setViewFont()
+{
+  QFont fnt=knGlobals.cfgManager->appearance()->articleListFont();
+  if(g_roup && g_roup->useCharset())
+    KGlobal::charsets()->setQFont(fnt, g_roup->defaultCharset());
+  v_iew->setFont(fnt);
+}
+
+
 void KNArticleManager::search()
 {
   if(!g_roup) return;
@@ -336,6 +344,27 @@ void KNArticleManager::search()
     connect(s_earchDlg, SIGNAL(dialogDone()), this,
       SLOT(slotSearchDialogDone()));
     s_earchDlg->show();
+  }
+}
+
+
+void KNArticleManager::setGroup(KNGroup *g)
+{
+  g_roup=g;
+
+  if(g) {
+    v_iew->header()->setLabel(1, i18n("From"));
+    setViewFont();
+  }
+}
+
+
+void KNArticleManager::setFolder(KNFolder *f)
+{
+  f_older=f;
+  if(f) {
+    v_iew->header()->setLabel(1, i18n("Newsgroups / To"));
+    setViewFont();
   }
 }
 

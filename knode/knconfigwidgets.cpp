@@ -25,6 +25,7 @@
 #include "knarticlewidget.h"
 #include "knfiltermanager.h"
 #include "knarticlefilter.h"
+#include "knmime.h"
 
 KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n) : BaseWidget(p, n), d_ata(d)
 {
@@ -433,14 +434,14 @@ void KNConfig::NntpAccountConfDialog::slotOk()
   }
 
   a_ccount->setName(n_ame->text());
-  a_ccount->setServer(s_erver->text());
+  a_ccount->setServer(s_erver->text().latin1());
   a_ccount->setPort(p_ort->text().toInt());
   a_ccount->setHold(h_old->value());
   a_ccount->setTimeout(t_imeout->value());
   a_ccount->setFetchDescriptions(f_etchDes->isChecked());
   a_ccount->setNeedsLogon(a_uth->isChecked());
-  a_ccount->setUser(u_ser->text());
-  a_ccount->setPass(p_ass->text());
+  a_ccount->setUser(u_ser->text().local8Bit());
+  a_ccount->setPass(p_ass->text().local8Bit());
 
   accept();
 }
@@ -507,7 +508,7 @@ KNConfig::SmtpAccountWidget::~SmtpAccountWidget()
 
 void KNConfig::SmtpAccountWidget::apply()
 {
-  s_erverInfo->setServer(s_erver->text());
+  s_erverInfo->setServer(s_erver->text().latin1());
   s_erverInfo->setPort(p_ort->text().toInt());
   s_erverInfo->setHold(h_old->value());
   s_erverInfo->setTimeout(t_imeout->value());
@@ -1436,7 +1437,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   ggbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
   ggbL->addWidget(new QLabel(i18n("Charset"), ggb), 1,0);
   c_harset=new QComboBox(ggb);
-  c_harset->insertItem("US-ASCII");      // availableCharsetNames() returns the wrong format and
+  /*c_harset->insertItem("US-ASCII");      // availableCharsetNames() returns the wrong format and
   c_harset->insertItem("ISO-8859-1");    // posting of non-iso-8859 is currently broken...
   c_harset->insertItem("ISO-8859-2");
   c_harset->insertItem("ISO-8859-3");
@@ -1449,8 +1450,8 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   c_harset->insertItem("ISO-8859-10");
   c_harset->insertItem("ISO-8859-13");
   c_harset->insertItem("ISO-8859-14");
-  c_harset->insertItem("ISO-8859-15");
-  //c_harset->insertStringList(KGlobal::charsets()->availableCharsetNames());
+  c_harset->insertItem("ISO-8859-15");  */
+  c_harset->insertStringList(KNMimeBase::availableCharsets());
   ggbL->addWidget(c_harset, 1,1);
 
   ggbL->addWidget(new QLabel(i18n("Encoding"), ggb), 2,0);

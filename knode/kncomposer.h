@@ -83,6 +83,7 @@ class KNComposer : public KMainWindow  {
     composerResult r_esult;
     KNLocalArticle *a_rticle;
     QString s_ignature;
+    QCString c_harset;
     bool d_oneSuccess;
 
     //edit
@@ -103,6 +104,7 @@ class KNComposer : public KMainWindow  {
                   *a_ctRemoveAttachment,
                   *a_ctAttachmentProperties;
     KToggleAction *a_ctShowToolbar;
+    KSelectAction *a_ctSetCharset;
     
 
   protected slots:
@@ -110,6 +112,7 @@ class KNComposer : public KMainWindow  {
     void slotSendLater();     
     void slotSaveAsDraft();   
     void slotArtDelete();
+    void slotSetCharset(const QString &s);
     void slotFind();
     void slotFindNext();
     void slotReplace();

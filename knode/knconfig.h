@@ -79,14 +79,18 @@ class Identity : public Base {
     bool isGlobal()           { return g_lobal; }
 
     //personal information
-    bool hasName()            { return (!n_ame.isEmpty()); }
-    QString name()            { return n_ame; }
-    bool hasEmail()           { return (!e_mail.isEmpty()); }
-    QCString email()          { return e_mail; }
-    bool hasReplyTo()         { return (!r_eplyTo.isEmpty()); }
-    QString replyTo()         { return r_eplyTo; }
-    bool hasOrga()            { return (!o_rga.isEmpty()); }
-    QString orga()            { return o_rga; }
+    bool hasName()                    { return (!n_ame.isEmpty()); }
+    QString name()                    { return n_ame; }
+    void setName(const QString &s)    { n_ame=s; }
+    bool hasEmail()                   { return (!e_mail.isEmpty()); }
+    QCString email()                  { return e_mail; }
+    void setEmail(const QCString &s)  { e_mail=s; }
+    bool hasReplyTo()                 { return (!r_eplyTo.isEmpty()); }
+    QString replyTo()                 { return r_eplyTo; }
+    void setReplyTo(const QString &s) { r_eplyTo=s; }
+    bool hasOrga()                    { return (!o_rga.isEmpty()); }
+    QString orga()                    { return o_rga; }
+    void setOrga(const QString &s)    { o_rga=s; }
 
     //signature
     bool hasSignature()       { return ( (u_seSigFile && !s_igPath.isEmpty()) || !s_igText.isEmpty() ); }

@@ -386,6 +386,7 @@ void KNGroupManager::showGroupProperties(KNGroup *g)
   if(!g) g=c_urrentGroup;
   if(!g) return;
   g->showProperties();
+  a_rticleMgr->setViewFont();
 }
 
 

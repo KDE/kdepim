@@ -80,20 +80,26 @@ bool KNServerInfo::isEqual(KNServerInfo *i)
     
 void KNServerInfo::readConf(KConfig *conf)
 {
-  s_erver = conf->readEntry("server", "localhost");
-  if (t_ype == STnntp)
-    p_ort = conf->readNumEntry("port", 119);
+  s_erver=conf->readEntry("server", "localhost").latin1();
+
+  if(t_ype==STnntp)
+    p_ort=conf->readNumEntry("port", 119);
   else
-    p_ort = conf->readNumEntry("port", 25);
-  h_old = conf->readNumEntry("holdTime", 300);
-  if (h_old < 0) h_old = 0;
-  t_imeout = conf->readNumEntry("timeout", 60);
-  if (t_imeout < 15) t_imeout = 15;
-  if (t_ype==STnntp) {
-    i_d = conf->readNumEntry("id", -1);
-    n_eedsLogon = conf->readBoolEntry("needsLogon",false);
-    u_ser = conf->readEntry("user");
-    p_ass = decryptStr(conf->readEntry("pass"));
+    p_ort=conf->readNumEntry("port", 25);
+
+  h_old=conf->readNumEntry("holdTime", 300);
+
+  if(h_old < 0) h_old=0;
+
+  t_imeout=conf->readNumEntry("timeout", 60);
+
+  if(t_imeout < 15) t_imeout=15;
+
+  if(t_ype==STnntp) {
+    i_d=conf->readNumEntry("id", -1);
+    n_eedsLogon=conf->readBoolEntry("needsLogon",false);
+    u_ser=conf->readEntry("user").local8Bit();
+    p_ass=decryptStr(conf->readEntry("pass")).local8Bit();
   }
 }
 
@@ -101,14 +107,14 @@ void KNServerInfo::readConf(KConfig *conf)
 
 void KNServerInfo::saveConf(KConfig *conf)
 {
-  conf->writeEntry("server", s_erver);
+  conf->writeEntry("server", QString::fromLatin1(s_erver));
   conf->writeEntry("port", p_ort);
   conf->writeEntry("holdTime", h_old);
   conf->writeEntry("timeout", t_imeout);
   if (t_ype==STnntp) {
     conf->writeEntry("id", i_d);
     conf->writeEntry("needsLogon", n_eedsLogon);
-    conf->writeEntry("user", u_ser);
-    conf->writeEntry("pass", encryptStr(p_ass));
+    conf->writeEntry("user", QString::fromLocal8Bit(u_ser));
+    conf->writeEntry("pass", encryptStr(QString::fromLocal8Bit(p_ass)));
   }
 }

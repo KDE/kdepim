@@ -52,15 +52,15 @@ KNFolderManager::KNFolderManager(KNListView *v, KNArticleManager *a) : v_iew(v),
   KSimpleConfig info(dir+".standard.info");
   KNFolder *f;
 
-  f=new KNFolder(1, i18n("Drafts"));
+  f=new KNFolder(1, i18n("Drafts"), "drafts");
   f->setCount(info.readNumEntry("draftsCount", 0));
   f_List.append(f);
 
-  f=new KNFolder(2, i18n("Outbox"));
+  f=new KNFolder(2, i18n("Outbox"), "outbox");
   f->setCount(info.readNumEntry("outboxCount", 0));
   f_List.append(f);
 
-  f=new KNFolder(3, i18n("Sent"));
+  f=new KNFolder(3, i18n("Sent"), "sent");
   f->setCount(info.readNumEntry("sentCount", 0));
   f_List.append(f);
 

@@ -35,10 +35,21 @@
 #include "knfolder.h"
 #include "knarticlewidget.h"
 
-KNFolder::KNFolder(int id, const QString &n, KNCollection *p) : KNArticleCollection(p) , i_d(id), i_ndexDirty(false)
+KNFolder::KNFolder(int id, const QString &name, KNCollection *parent)
+  : KNArticleCollection(parent) , i_d(id), i_ndexDirty(false)
 {
-  n_ame=n;
+  n_ame=name;
   QString fname=path()+QString("%1_%2.").arg(n_ame).arg(i_d);
+  m_boxFile.setName(fname+"mbox");
+  i_ndexFile.setName(fname+"idx");
+}
+
+
+KNFolder::KNFolder(int id, const QString &name, const QString &prefix, KNCollection *parent)
+  : KNArticleCollection(parent) , i_d(id), i_ndexDirty(false)
+{
+  n_ame=name;
+  QString fname=path()+QString("%1_%2.").arg(prefix).arg(i_d);
   m_boxFile.setName(fname+"mbox");
   i_ndexFile.setName(fname+"idx");
 }
@@ -188,7 +199,7 @@ bool KNFolder::loadHdrs()
     //set overview
     pos1=tmp.find(' ')+1;
     pos2=tmp.find('\t', pos1);
-    art->subject()->fromUnicodeString(QString::fromUtf8(tmp.mid(pos1, pos2-pos1)));
+    art->subject()->from7BitString(tmp.mid(pos1, pos2-pos1));
     pos1=pos2+1;
     pos2=tmp.find('\t', pos1);
     art->newsgroups()->from7BitString(tmp.mid(pos1, pos2-pos1));
@@ -303,9 +314,9 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
 
       //write overview information
       ts << "X-KNode-Overview: ";
-      ts << a->subject()->asUnicodeString().utf8() << '\t';
+      ts << a->subject()->as7BitString(false) << '\t';
       ts << a->newsgroups()->as7BitString(false) << '\t';
-      ts << a->to()->asUnicodeString().utf8() << '\n';
+      ts << a->to()->as7BitString(false) << '\n';
 
       //write article
       a->toStream(ts);

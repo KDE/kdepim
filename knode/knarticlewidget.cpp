@@ -474,20 +474,23 @@ void KNArticleWidget::setArticle(KNArticle *a)
   if(!a)
   	showBlankPage();
   else {
+  	//kdDebug(5003) << "KNArticleWidget::setArticle() : " << a->messageID()->as7BitString(false) << endl;
   	if(a->hasContent()) //article is already loaded => just show it
   		createHtmlPage();
-  	else if(a->type()==KNMimeBase::ATremote && !a->isLocked()) { //ok, this is a remote-article => fetch it from the server
-  		KNGroup *g=static_cast<KNGroup*>(a->collection());
-  		emitJob( new KNJobData(	KNJobData::JTfetchArticle, this, g->account(), a_rticle ) );
-  	}
-  	else { //local article
-  	  KNLocalArticle *la=static_cast<KNLocalArticle*>(a_rticle);
-  	  KNFolder *f=static_cast<KNFolder*>(a_rticle->collection());
-  	  if(!f || !f->loadArticle(la))
-  	    showErrorMessage(i18n("Cannot load the article from the mbox-file !!"));
-  	  else
-  	    createHtmlPage();
-  	}
+  	else if(!a->isLocked()) {
+  	  if(a->type()==KNMimeBase::ATremote) {//ok, this is a remote-article => fetch it from the server
+    		KNGroup *g=static_cast<KNGroup*>(a->collection());
+    		emitJob( new KNJobData(	KNJobData::JTfetchArticle, this, g->account(), a_rticle ) );
+      }
+  	  else { //local article
+    	  KNLocalArticle *la=static_cast<KNLocalArticle*>(a_rticle);
+    	  KNFolder *f=static_cast<KNFolder*>(a_rticle->collection());
+    	  if(!f || !f->loadArticle(la))
+    	    showErrorMessage(i18n("Cannot load the article from the mbox-file !!"));
+    	  else
+    	    createHtmlPage();
+    	}
+    }
 	}
 }
 
@@ -541,12 +544,13 @@ void KNArticleWidget::createHtmlPage()
   if(f_ullHdrs) {
     KNStringSplitter split;
     split.init(a_rticle->head(), "\n");
+    kdDebug(5003) << a_rticle->head() << endl;
 		QString temp;
     int pos;
     bool splitOk=split.first();
     while(splitOk) {
     	html+="<tr><td align=right>";
-      temp=QString::fromLatin1(split.string().data());
+      temp=QString::fromLatin1(split.string().data(), split.string().length());
       if( (pos=temp.find(':'))==-1 )
         html+=QString("</td><td width=\"100%\">%1</td></tr>").arg(toHtmlString(temp, false, false));
       else

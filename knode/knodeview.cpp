@@ -126,9 +126,6 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   //apply saved options
   readOptions();
 
-  //apply configuration
-  configChanged();
-
   //-------------------------------- </GUI> ------------------------------------
 
 
@@ -166,6 +163,9 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
 
   //-------------------------------- </CORE> -----------------------------------
 
+
+  //apply configuration
+  configChanged();
 
   //set the keyboard focus indicator on the first item in the Collection View
   if(c_olView->firstChild())
@@ -365,7 +365,7 @@ void KNodeView::configChanged()
   }
 
   c_olView->setFont(app->groupListFont());
-  h_drView->setFont(app->articleListFont());
+  a_rtManager->setViewFont();
 
   QPalette p = c_olView->palette();
   p.setColor(QColorGroup::Base, app->backgroundColor());
@@ -673,12 +673,10 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
 }
 
 
-void KNodeView::slotArticleRMB(QListViewItem *i, const QPoint &p, int c)
+void KNodeView::slotArticleRMB(QListViewItem *i, const QPoint &p, int)
 {
   if(b_lockui)
     return;
-
-  (void)(c); //fix compiler warning
 
   if(i) {
     if( (static_cast<KNHdrViewItem*>(i))->art->type()==KNMimeBase::ATremote)
@@ -689,13 +687,10 @@ void KNodeView::slotArticleRMB(QListViewItem *i, const QPoint &p, int c)
 }
 
 
-
-void KNodeView::slotCollectionRMB(QListViewItem *i, const QPoint &p, int c)
+void KNodeView::slotCollectionRMB(QListViewItem *i, const QPoint &p, int)
 {
   if(b_lockui)
     return;
-
-  (void)(c); //fix compiler warning
 
   if(i) {
     if( (static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTgroup)
@@ -706,7 +701,6 @@ void KNodeView::slotCollectionRMB(QListViewItem *i, const QPoint &p, int c)
       a_ccPopup->popup(p);
   }
 }
-
 
 
 void KNodeView::slotHdrViewSortingChanged(int i)

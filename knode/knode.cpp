@@ -33,6 +33,8 @@
 #include "utilities.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
+#include "knaccountmanager.h"
+#include "knserverinfo.h"
 
 
 
@@ -122,8 +124,6 @@ QSize KNProgress::sizeHint() const
 
 KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
 {
-  //bool is_first_start = firstStart();
-
   knGlobals.top=this;
   knGlobals.topWidget=this;
   kapp->setMainWidget(this);  // this makes the external viewer windows close on shutdown...
@@ -173,11 +173,10 @@ KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
   a_ctWinToggleStatusbar->setChecked(!statusBar()->isHidden());
 
 
-#warning FIXME
-  /*if (is_first_start) {  // open the config dialog on the first start
+  if(firstStart()) {  // open the config dialog on the first start
     show();              // the settings dialog must appear in front of the main window!
     slotSettings();
-  }*/
+  }
 }
 
 
@@ -185,62 +184,6 @@ KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
 KNMainWindow::~KNMainWindow()
 {
   delete a_ccel;
-}
-
-
-//============================ URL handling ==============================
-
-
-void KNMainWindow::openURL(const KURL &url)
-{
-#warning FIXME
-  /*QString host = url.host();
-  unsigned short int port = url.port();
-  KNNntpAccount *acc;
-
-  // lets see if we already have an account for this host...
-  for (acc = AManager->first(); acc; acc = AManager->next())
-    if ((acc->server()==host)&&((port == 0) || (acc->port()==port)))
-      break;
-
-  if (!acc) {
-    acc = new KNNntpAccount();
-    acc->setName(host);
-    acc->setServer(host);
-    if (port != 0)
-      acc->setPort(port);
-    if (url.hasUser() && url.hasPass()) {
-      acc->setNeedsLogon(true);
-      acc->setUser(url.user());
-      acc->setPass(url.pass());
-    }
-    if (!AManager->newAccount(acc))
-      return;
-  }
-
-  QString groupname = url.path(-1);
-  while (groupname.startsWith("/"))
-    groupname.remove(0,1);
-
-  QListViewItem *item = 0;
-  if (groupname.isEmpty())
-    item = acc->listItem();
-  else {
-    KNGroup *grp = GManager->group(groupname.local8Bit(),acc);
-    if (!grp) {
-      KNGroupInfo inf(groupname.local8Bit(),"");
-      GManager->subscribeGroup(&inf,acc);
-      grp = GManager->group(groupname.local8Bit(),acc);
-      if (grp)
-        item = grp->listItem();
-    } else
-      item = grp->listItem();
-  }
-  if (item) {
-    view->collectionView->setCurrentItem(item);
-    view->collectionView->ensureItemVisible(item);
-    view->collectionView->setSelected(item, true);
-  } */
 }
 
 
@@ -257,12 +200,10 @@ void KNMainWindow::setStatusMsg(const QString& text, int id)
 }
 
 
-
 void KNMainWindow::setStatusHelpMsg(const QString& text)
 {
    statusBar()->message(text, 2000);
 }
-
 
 
 void KNMainWindow::setCursorBusy(bool b)
@@ -270,7 +211,6 @@ void KNMainWindow::setCursorBusy(bool b)
   if(b) kapp->setOverrideCursor(waitCursor);
   else  kapp->restoreOverrideCursor();
 }
-
 
 
 void KNMainWindow::blockUI(bool b)
@@ -281,7 +221,6 @@ void KNMainWindow::blockUI(bool b)
   v_iew->blockUI(b);
   setCursorBusy(b);
 }
-
 
 
 // processEvents with some blocking
@@ -350,38 +289,35 @@ void KNMainWindow::slotSettings()
 }
 
 
-/*void KNMainWindow::cleanup()
+bool KNMainWindow::firstStart()
 {
-  KNPurgeProgressDialog *ppdlg=0;
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("GENERAL");
+  QString ver = conf->readEntry("Version");
+  if(!ver.isEmpty())
+    return false;
 
-  saveSettings();
+  KConfig emailConf("emaildefaults");
 
-  if(GManager->timeToExpire()) {
-    ppdlg=new KNPurgeProgressDialog();
-    ppdlg->show();
-    GManager->expireAll(ppdlg);
-  }
-  else
-    GManager->syncGroups();
+  emailConf.setGroup("UserInfo");
+  KNConfig::Identity *id=knGlobals.cfgManager->identity();
+  id->setName(emailConf.readEntry("FullName"));
+  id->setEmail(emailConf.readEntry("EmailAddress").latin1());
+  id->setOrga(emailConf.readEntry("Organization"));
+  id->setReplyTo(emailConf.readEntry("ReplyAddr"));
+  id->save();
 
-  if(FoManager->timeToCompact()) {
-    if(!ppdlg) {
-      ppdlg=new KNPurgeProgressDialog();
-      ppdlg->show();
-    }
-    FoManager->compactAll(ppdlg);
-  }
-  else
-    FoManager->syncFolders();
+  emailConf.setGroup("ServerInfo");
+  KNServerInfo *smtp=knGlobals.accManager->smtp();
+  smtp->setServer(emailConf.readEntry("Outgoing").latin1());
+  conf->setGroup("MAILSERVER");
+  smtp->saveConf(conf);
 
-  AManager->saveYourself();
+  conf->setGroup("GENERAL");
+  conf->writeEntry("Version", KNODE_VERSION);
 
-  KNViewHeader::clear();
-  KNArticleManager::deleteTempFiles();
-
-  if(ppdlg) delete ppdlg;
-}*/
-
+  return true;
+}
 
 
 bool KNMainWindow::queryClose()

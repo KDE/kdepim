@@ -85,14 +85,15 @@ class KNArticleManager : public QObject {
     void showHdrs(bool clear=true);
     void setAllThreadsOpen(bool b=true);
     void toggleShowThreads()        { s_howThreads=!s_howThreads; showHdrs(true); }
+    void setViewFont();
 
     //filter
     KNArticleFilter* filter() const { return f_ilter; }
     void search();
 
     //collection handling
-    void setGroup(KNGroup *g)       { g_roup=g; }
-    void setFolder(KNFolder *f)     { f_older=f; }
+    void setGroup(KNGroup *g);
+    void setFolder(KNFolder *f);
     KNArticleCollection* collection();
 
     //article handling - RemoteArticles

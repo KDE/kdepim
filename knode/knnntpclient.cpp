@@ -478,7 +478,7 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
     //qDebug("knode: user: %s",account.user().data());
         
     QCString command = "AUTHINFO USER ";
-    command += account.user().local8Bit();
+    command += account.user();
     if (!KNProtocolClient::sendCommand(command,rep))
       return false;
     
@@ -493,7 +493,7 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
       //qDebug("knode: pass: %s",account.pass().data());
       
       command = "AUTHINFO PASS ";
-      command += account.pass().local8Bit();
+      command += account.pass();
       if (!KNProtocolClient::sendCommand(command,rep))
         return false; 
     }

@@ -13,6 +13,8 @@
   <Menu name="edit"><text>&amp;Edit</text>
     <Action name="external_editor"/>
     <Action name="spellcheck"/>
+    <Separator/>
+    <Action name="setcharset"/>
   </Menu>
   <Menu name="attach"><text>&amp;Attach</text>
     <Action name="append_signature"/>

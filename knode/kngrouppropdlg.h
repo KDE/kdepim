@@ -19,8 +19,10 @@
 #define KNGROUPPROPDLG_H
 
 #include <kdialogbase.h>
+#include <qlineedit.h>
+#include <qcheckbox.h>
+#include <qcombobox.h>
 
-class QLineEdit;
 class KNGroup;
 
 namespace KNConfig {
@@ -33,13 +35,15 @@ class KNGroupPropDlg : public KDialogBase  {
     KNGroupPropDlg(KNGroup *group, QWidget *parent=0, const char *name=0);
     ~KNGroupPropDlg();
     
-    bool nickHasChanged() { return nChanged; }  
+    bool nickHasChanged() { return n_ickChanged; }
     
   protected:
-    KNGroup *grp;
-    bool nChanged;
+    KNGroup *g_rp;
+    bool n_ickChanged;
     KNConfig::IdentityWidget* i_dWidget;
-    QLineEdit *nick;
+    QLineEdit *n_ick;
+    QCheckBox *u_seCharset;
+    QComboBox *c_harset;
     
   protected slots:
     void slotOk();

@@ -26,8 +26,12 @@ class KNMimeBase {
                           ATlocal };
 
     //encode and decode
-    static QString decodeRFC2047String(const QCString &src);
-    static QCString encodeRFC2047String(const QString &src);
+    static QStringList availableCharsets();
+    static QFont::CharSet stringToCharset(const QCString &str);
+    static QCString charsetToString(QFont::CharSet cs);
+    static int indexForCharset(const QCString &str);
+    static QString decodeRFC2047String(const QCString &src, QFont::CharSet &charset);
+    static QCString encodeRFC2047String(const QString &src, QFont::CharSet charset);
 
     //generation of message-ids and boundaries
     static QCString uniqueString();

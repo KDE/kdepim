@@ -30,7 +30,8 @@ class KNFolder : public KNArticleCollection  {
   friend class KNCleanUp; 
 
   public:
-    KNFolder(int id, const QString &n, KNCollection *p=0);
+    KNFolder(int id, const QString &name, KNCollection *parent=0);
+    KNFolder(int id, const QString &name, const QString &prefix, KNCollection *parent=0);
     ~KNFolder();
 
     //type
@@ -85,5 +86,7 @@ class KNFolder : public KNArticleCollection  {
           bool flags[6];
       };
 };
+
+
 
 #endif

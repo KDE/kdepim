@@ -9,6 +9,7 @@
 #include <kcharsets.h>
 #include <kmimemagic.h>
 #include <kdebug.h>
+#include <qstringlist.h>
 
 #include "knmime.h"
 #include "knhdrviewitem.h"
@@ -17,7 +18,96 @@
 #include "knconfigmanager.h"
 #include "utilities.h"
 
-QString KNMimeBase::decodeRFC2047String(const QCString &src)
+
+#if QT_VERSION > 220
+#define CHARSETS_COUNT 27
+#else
+#define CHARSETS_COUNT 26
+#endif
+
+
+struct CharsetEntry {
+  const char *name;
+  QFont::CharSet id;
+};
+
+static const CharsetEntry charsetTable[CHARSETS_COUNT] =
+{
+  {"ISO-8859-1", QFont::ISO_8859_1},
+  {"ISO-8859-2", QFont::ISO_8859_2},
+  {"ISO-8859-3", QFont::ISO_8859_3},
+  {"ISO-8859-4", QFont::ISO_8859_4},
+  {"ISO-8859-5", QFont::ISO_8859_5},
+  {"ISO-8859-6", QFont::ISO_8859_6},
+  {"ISO-8859-7", QFont::ISO_8859_7},
+  {"ISO-8859-8", QFont::ISO_8859_8},
+  {"ISO-8859-9", QFont::ISO_8859_9},
+  {"ISO-8859-10", QFont::ISO_8859_10},
+  {"ISO-8859-11", QFont::ISO_8859_11},
+  {"ISO-8859-12", QFont::ISO_8859_12},
+  {"ISO-8859-13", QFont::ISO_8859_13},
+  {"ISO-8859-14", QFont::ISO_8859_14},
+  {"ISO-8859-15", QFont::ISO_8859_15},
+  {"KOI8-R", QFont::KOI8R},
+#if QT_VERSION > 220
+  {"KOI8-U", QFont::KOI8U},
+#endif
+  {"EUCJP", QFont::Set_Ja},
+  {"EUCKR", QFont::Set_Ko},
+  {"SET-TH-TH", QFont::Set_Th_TH},
+  {"SET-GBK", QFont::Set_GBK},
+  {"SET-ZH", QFont::Set_Zh},
+  {"SET-ZH-TW", QFont::Set_Zh_TW},
+  {"SET-BIG5", QFont::Set_Big5},
+  {"TSCII", QFont::TSCII},
+  {"UTF-8", QFont::Unicode},
+  {"US-ASCII", QFont::ISO_8859_1}
+};
+
+
+QStringList KNMimeBase::availableCharsets() {
+  QStringList cs;
+
+  for(int i=0; i < CHARSETS_COUNT; i++)
+    cs << QString::fromLatin1(charsetTable[i].name);
+
+  return cs;
+}
+
+
+QFont::CharSet KNMimeBase::stringToCharset(const QCString &str)
+{
+  for(int i=0; i < CHARSETS_COUNT; i++)
+    if( strcasecmp(str.data(), charsetTable[i].name)==0 )
+      return (charsetTable[i].id);
+
+  //not found => return local charset
+  return KGlobal::charsets()->charsetForLocale();
+}
+
+
+QCString KNMimeBase::charsetToString(QFont::CharSet cs)
+{
+  for(int i=0; i < CHARSETS_COUNT; i++)
+    if(charsetTable[i].id==cs)
+      return QCString(charsetTable[i].name);
+
+  //not found => return local charset
+  return QCString(KGlobal::locale()->charset().latin1());
+}
+
+
+int KNMimeBase::indexForCharset(const QCString &str)
+{
+ for(int i=0; i < CHARSETS_COUNT; i++)
+    if( strcasecmp(charsetTable[i].name, str.data())==0 )
+      return i;
+
+  return -1;
+}
+
+
+QString KNMimeBase::decodeRFC2047String(const QCString &src, QFont::CharSet &cs)
 {
   QCString result, str;
   QCString charset;
@@ -28,9 +118,10 @@ QString KNMimeBase::decodeRFC2047String(const QCString &src)
   const int maxLen=400;
   int i;
 
-  if(src.find("=?") < 0) {
-    QTextCodec *codec=QTextCodec::codecForLocale();
-    return codec->toUnicode(src);
+  //no 8Bit encoded characters => latin1
+  if(src.find("=?") < 0){
+    cs=QFont::ISO_8859_1;
+    return QString::fromLatin1(src);
   }
 
   result.truncate(src.length());
@@ -111,40 +202,41 @@ QString KNMimeBase::decodeRFC2047String(const QCString &src)
   *dest = '\0';
 
   //convert to unicode
-  QTextCodec *codec=QTextCodec::codecForName(charset);
-  if(!codec)
-    codec=QTextCodec::codecForLocale(); //no suitable codec found => use local charset
-  return codec->toUnicode(result);
+  bool ok=true;
+  QTextCodec *codec=KGlobal::charsets()->codecForName(charset, ok);
+  if(!ok) {
+    codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset()); //no suitable codec found => use local charset
+    cs=KGlobal::charsets()->charsetForLocale();
+  }
+  else
+    cs=stringToCharset(charset);
+
+  return codec->toUnicode(result.data(), result.length());
 }
 
 
-QCString KNMimeBase::encodeRFC2047String(const QString &src)
+QCString KNMimeBase::encodeRFC2047String(const QString &src, QFont::CharSet cs)
 {
   QCString encoded8Bit, result, chset;
   unsigned int start=0,end=0;
-  bool nonAscii=false;
-  QTextCodec *codec;
+  bool nonAscii=false, ok=true;
+  QTextCodec *codec=0;
   KNConfig::PostNewsTechnical *pnt=knGlobals.cfgManager->postNewsTechnical();
 
-  if(pnt->charset().upper()=="US-ASCII")
-    chset="ISO-8859-1";
-  else
-    chset=pnt->charset().upper();
+  chset=charsetToString(cs);
+  codec=KGlobal::charsets()->codecForName(chset, ok);
 
-
-  codec=QTextCodec::codecForName(chset);
-
-  if(codec) //suitable codec found => encode
-    encoded8Bit=codec->fromUnicode(src);
-  else { // no codec available => try local8Bit and hope the best ;-)
-    chset=(QFont::encodingName(QFont::charSetForLocale())).latin1();
-    encoded8Bit=src.local8Bit();
+  if(!ok) {
+    //no codec available => try local8Bit and hope the best ;-)
+    chset=KGlobal::locale()->charset().latin1();
+    codec=KGlobal::charsets()->codecForName(chset);
   }
+  encoded8Bit=codec->fromUnicode(src);
 
   if(pnt->allow8BitHeaders())
     return encoded8Bit;
 
-  for (unsigned int i=0;i<encoded8Bit.length();i++) {
+  for (unsigned int i=0; i<encoded8Bit.length(); i++) {
     if (encoded8Bit[i]==' ')    // encoding starts at word boundaries
       start = i+1;
 
@@ -529,6 +621,8 @@ void KNMimeContent::setContent(QStrList *l)
   //usage of textstreams is much faster than simply appending the strings
   QTextStream hts(h_ead, IO_WriteOnly),
               bts(b_ody, IO_WriteOnly);
+  hts.setEncoding(QTextStream::Latin1);
+  bts.setEncoding(QTextStream::Latin1);
 
   bool isHead=true;
   for(char *line=l->first(); line; line=l->next()) {
@@ -541,6 +635,11 @@ void KNMimeContent::setContent(QStrList *l)
     else
       bts << line << "\n";
   }
+
+  //terminate strings
+  hts << '\0';
+  bts << '\0';
+
   qDebug("KNMimeContent::setContent(QStrList *l) : finished");
 }
 
@@ -696,8 +795,6 @@ void KNMimeContent::clear()
 QCString KNMimeContent::encodedContent(bool useCrLf)
 {
   QCString e;
-  int pos;
-
 
   //head
   e=h_ead.copy();
@@ -777,11 +874,12 @@ void KNMimeContent::decodedText(QString &s)
   if(!decodeText()) //this is not a text content !!
     return;
 
-  QTextCodec *codec=QTextCodec::codecForName(contentType()->charset());
-  if(!codec) // no suitable codec found => try local settings and hope the best ;-)
-    s=QString::fromLocal8Bit(b_ody);
-  else
-    s=codec->toUnicode(b_ody);
+  bool ok=true;
+  QTextCodec *codec=KGlobal::charsets()->codecForName(contentType()->charset(), ok);
+  if(!ok) // no suitable codec found => try local settings and hope the best ;-)
+    codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset());
+
+  s=codec->toUnicode(b_ody.data(), b_ody.length());
 }
 
 
@@ -790,20 +888,23 @@ void KNMimeContent::decodedText(QStringList &l)
   if(!decodeText()) //this is not a text content !!
     return;
 
-  QTextCodec *codec=QTextCodec::codecForName(contentType()->charset());
   QString unicode;
-  if(!codec) // no suitable codec found => try local settings and hope the best ;-)
-    unicode=QString::fromLocal8Bit(b_ody);
-  else
-    unicode=codec->toUnicode(b_ody);
+  bool ok=true;
 
+  QTextCodec *codec=KGlobal::charsets()->codecForName(contentType()->charset(), ok);
+  if(!ok) // no suitable codec found => try local settings and hope the best ;-)
+    codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset());
+
+  unicode=codec->toUnicode(b_ody.data(), b_ody.length());
   l=QStringList::split("\n", unicode, true); //split the string at linebreaks
 }
 
 
 bool KNMimeContent::canDecode8BitText()
 {
-  return ( (QTextCodec::codecForName(contentType()->charset()))!=0 );
+  bool ok=true;
+  (void) KGlobal::charsets()->codecForName(contentType()->charset(), ok);
+  return ok;
 }
 
 
@@ -818,14 +919,16 @@ void KNMimeContent::setFontForContent(QFont &f)
 
 void KNMimeContent::fromUnicodeString(const QString &s)
 {
-  QTextCodec *codec=QTextCodec::codecForName(contentType()->charset());
+  bool ok=true;
+  QTextCodec *codec=KGlobal::charsets()->codecForName(contentType()->charset(), ok);
 
-  if(codec) //suitable codec found
-    b_ody=codec->fromUnicode(s);
-  else
-    b_ody=s.local8Bit(); //no codec available => take local 8Bit and hope the best ;-)
+  if(!ok) { // no suitable codec found => try local settings and hope the best ;-)
+    codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset());
+    contentType()->setCharset(KGlobal::locale()->charset().latin1());
+  }
 
-  contentTransferEncoding()->setDecoded(true); //text is always decoded now
+  b_ody=codec->fromUnicode(s);
+  contentTransferEncoding()->setDecoded(true); //text is always decoded
 }
 
 
@@ -1305,7 +1408,7 @@ KNHeaders::Base* KNArticle::getHeaderByType(const char *type)
 void KNArticle::setHeader(KNHeaders::Base *h)
 {
 	if(h->is("Subject"))
-		s_ubject.fromUnicodeString(h->asUnicodeString());
+		s_ubject.fromUnicodeString(h->asUnicodeString(), h->rfc2047Charset());
   else if(h->is("Date"))  	
 		d_ate.setUnixTime( (static_cast<KNHeaders::Date*>(h))->unixTime() );
   else if(h->is("Lines"))
@@ -1698,14 +1801,14 @@ void KNAttachment::updateContentInfo()
   //Content-Type
   KNHeaders::ContentType *t=c_ontent->contentType();
   t->setMimeType(m_imeType);
-  t->setName(n_ame);
+  t->setName( KNMimeBase::encodeRFC2047String(n_ame, KGlobal::charsets()->charsetForLocale()) );
   t->setCategory(KNHeaders::CCmixedPart);
 
   //Content-Description
   if(d_escription.isEmpty())
     c_ontent->removeHeader("Content-Description");
   else
-    c_ontent->contentDescription()->fromUnicodeString(d_escription);
+    c_ontent->contentDescription()->fromUnicodeString(d_escription, KGlobal::charsets()->charsetForLocale());
 
   //Content-Disposition
   KNHeaders::CDisposition *d=c_ontent->contentDisposition();

@@ -66,6 +66,8 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     const QCString& groupname()         { return g_roupname; }
     const QCString& description()       { return d_escription; }
     KNConfig::Identity* identity()      { return i_dentity; }
+    const QCString defaultCharset()     { return d_efaultChSet; }
+    bool useCharset()                   { return ( u_seCharset && !d_efaultChSet.isEmpty() ); }
     bool hasName()                      { return (!n_ame.isEmpty()); }
     int statThrWithNew();
     int statThrWithUnread();
@@ -75,8 +77,10 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
 
     
     //set
-    void setGroupname(const QCString &s)    { g_roupname=s; }
-    void setDescription(const QCString &s)  { d_escription=s; }
+    void setGroupname(const QCString &s)      { g_roupname=s; }
+    void setDescription(const QCString &s)    { d_escription=s; }
+    void setDefaultCharset(const QCString &s) { d_efaultChSet=s; }
+    void setUseCharset(bool b)                { u_seCharset=b; }
     void setNewCount(int i)                 { n_ewCount=i; }
     void incNewCount(int i=1)               { n_ewCount+=i; }
     void decNewCount(int i=1)               { n_ewCount-=i; }
@@ -93,10 +97,18 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     void sortHdrs(int cnt);
     int findRef(KNRemoteArticle *a, int from, int to, bool reverse=false);
         
-    int n_ewCount, r_eadCount, l_astNr, m_axFetch;
-    QCString g_roupname, d_escription;
-    bool l_ocked;
-    int l_oading;
+    int       n_ewCount,
+              r_eadCount,
+              l_astNr,
+              m_axFetch;
+
+    QCString  g_roupname,
+              d_escription,
+              d_efaultChSet;
+
+    bool      l_ocked,
+              u_seCharset;
+
     KNConfig::Identity *i_dentity;
 
     class dynData {

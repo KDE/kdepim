@@ -84,6 +84,12 @@ class KNodeView : public QSplitter
     void blockUI(bool b=true)   { b_lockui=b; }
     void configChanged();   // switch between long & short group list, update fonts and colors
 
+    //access to GUI-elements
+    KNListView*       collectionView()  { return c_olView; }
+    KNListView*       headerView()      { return h_drView; }
+    KNArticleWidget*  articleView()     { return a_rtView; }
+
+
   protected:
     void initActions();
     void initPopups(KNMainWindow *w);
@@ -126,8 +132,8 @@ class KNodeView : public QSplitter
     //listview slots
     void slotArticleSelected(QListViewItem*);
 		void slotCollectionSelected(QListViewItem*);
-		void slotArticleRMB(QListViewItem *i, const QPoint &p, int c);
-		void slotCollectionRMB(QListViewItem *i, const QPoint &p, int c);
+		void slotArticleRMB(QListViewItem *i, const QPoint &p, int);
+		void slotCollectionRMB(QListViewItem *i, const QPoint &p, int);
 		void slotHdrViewSortingChanged(int i);
 		
 		//network slots

@@ -62,9 +62,6 @@ class KNMainWindow : public KMainWindow
     KNMainWindow();
     ~KNMainWindow();
 
-    // handle URL given as argument
-    void openURL(const KURL &url);
-        
     //GUI
     void setStatusMsg(const QString& = QString::null, int id=SB_MAIN);
     void setStatusHelpMsg(const QString& text);
@@ -76,14 +73,14 @@ class KNMainWindow : public KMainWindow
 
 
   protected:
-    /*void saveSettings();
-    // checks if run for the first time, sets some global defaults (email configuration)
+
+    //checks if run for the first time, sets some global defaults (email configuration)
     bool firstStart();
       
     //exit
-    void cleanup();*/
     bool queryClose();
 
+    //update appearance
     virtual void fontChange( const QFont & );
     virtual void paletteChange ( const QPalette & );
 
