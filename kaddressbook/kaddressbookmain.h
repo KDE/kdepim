@@ -78,6 +78,8 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
 
   private slots:
     void configureKeyBindings();
+    void configureToolbars();
+    void newToolbarConfig();
 
   private:
     KABCore *mCore;
