@@ -170,7 +170,10 @@ int main(int argc, char *argv[])
   KonsoleKalendarVariables variables;
   KonsoleKalendarEpoch epochs;
 
+  CalendarResources calendarResource;	
+	
   variables.setExportType( NONE );
+  variables.setCalendarResources( &calendarResource );	
 	
   if ( args->isSet("verbose") ) {
      variables.setVerbose(true);
@@ -457,20 +460,27 @@ int main(int argc, char *argv[])
       * If this ain't best way i'll make the bug report at once;) 
       */
 
-     variables.createCalendarResources();
+     //variables.createCalendarResources();
+
+
+     	  
+     KConfig cfg( locateLocal( "config", "korganizerrc" ) );
 	  
-     /*KConfig cfg( locateLocal( "config", "korganizerrc" ) );
 	  
-	  
-     CalendarResourceManager *manager = variables.loadCalendarResources( &cfg )->resourceManager();
-	  
-     kdDebug() << "CalendarResources used by Konsolekalendar:" << endl;
-     CalendarResourceManager::Iterator it;
+     bool success = variables.loadCalendarResources( &cfg );
+
+     if( success == true ) {	  
+      CalendarResourceManager *manager = variables.getCalendarResources()->resourceManager();	     
+      kdDebug() << "main | CalendarResources used by Konsolekalendar:" << endl;
+      CalendarResourceManager::Iterator it;
      
-     for( it = manager->begin(); it != manager->end(); ++it ) {
-       (*it)->dump();
-     }*/
-	  
+      for( it = manager->begin(); it != manager->end(); ++it ) {
+        (*it)->dump();
+      }
+     } else {
+       kdDebug() << "Can't find default calendar!" << endl;	     
+       return(-1);
+     }
      
    }
 

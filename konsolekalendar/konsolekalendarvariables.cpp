@@ -296,21 +296,17 @@ CalendarResources *KonsoleKalendarVariables::getCalendarResources()
 }
 
 
-CalendarResources *KonsoleKalendarVariables::loadCalendarResources( KConfig *config )
+bool KonsoleKalendarVariables::loadCalendarResources( KConfig *config )
 {
 	kdDebug() << "loading resources" << endl;  
 	if ( m_resource ) {
 
-
-	    
 	      kdDebug() << "loading resources" << endl;
 		  
 		  CalendarResourceManager *manager = m_resource->resourceManager();
 		  
 		      if ( manager->isEmpty() ) {
 			      
-			      
-			     
 			            config->setGroup("General");
 			            QString fileName = config->readPathEntry( "Active Calendar" );
 			      
@@ -333,7 +329,7 @@ CalendarResources *KonsoleKalendarVariables::loadCalendarResources( KConfig *con
 		      }
 	  }
 	
-	  return m_resource;
+	  return true;
 }
 
 

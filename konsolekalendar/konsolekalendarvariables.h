@@ -159,7 +159,7 @@ class KonsoleKalendarVariables
   /*
    * Loads calendar resources 
    */
-  CalendarResources *loadCalendarResources( KConfig *config ); 
+  bool loadCalendarResources( KConfig *config ); 
    
    
   private:
