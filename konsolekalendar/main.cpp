@@ -15,6 +15,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
@@ -28,6 +31,10 @@
 
 #include <stdlib.h>
 #include <iostream>
+
+#ifdef HAVE_TIME_H
+#include <time.h>
+#endif
 
 #include "konsolekalendar.h"
 #include "konsolekalendarepoch.h"
