@@ -1,8 +1,13 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-05-11  Reinhold Kainhofer
+* Deprecated the JPilotProxy and expenses conduits, moved to nonbeta.
+
 2004-05-07  Adriaan de Groot
 * PilotDatabase was a QObject. I wonder why, it didn't have signals or slots.
+* PilotDatabase creation and destruction is now tracked (counted, at least,
+  so you can see if there's a leak there).
 
 2004-04-30  Adriaan de Groot
 * Vrolijke koninginnedag!
