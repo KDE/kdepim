@@ -816,7 +816,11 @@ void PabWidget::sendMail()
 
 void PabWidget::itemSelected( QListViewItem *item )
 {
+  if ( item == 0 )
+    return;
+
   PabListViewItem *plvi = dynamic_cast< PabListViewItem* >(item);
+
   if (plvi) {
     QString title = i18n( "Address Book Entry Editor" );
     QString entryKey = plvi->entryKey();
@@ -826,11 +830,13 @@ void PabWidget::itemSelected( QListViewItem *item )
       return;
     }
     PabContactDialog *cd = new PabContactDialog( title, this, 0, entryKey, ce );
-    QObject::connect( cd, SIGNAL( change( QString, ContactEntry* ) ), 
+    QObject::connect( cd, SIGNAL( change( QString, ContactEntry* ) ),
 		      this, SLOT( change( QString, ContactEntry* ) ));
     cd->show();
   }
+
   item->setSelected( TRUE );
+
   item->repaint();
 }
 
