@@ -1,11 +1,12 @@
 KAlarm
 
-=== Version 0.5.8--- 5 Aug 2002 ===
+=== Version 0.5.8--- 8 Aug 2002 ===
 Adjust wrong summer times stored by version 0.5.7 (KDE 3.0.0).
 Display KAlarm handbook when Help clicked in configuration dialog.
 Make Close button on message window not the default button to reduce chance
   of accidental acknowledgement.
 Fix session restoration often not occurring at login.
+Make "Help -> Report Bug" use the KDE bug system (bug #43250).
 
 === Version 0.5.7--- 17 Mar 2002 ===
 Show system tray icon on deferring command line-initiated message (run-in-
