@@ -55,7 +55,8 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(QWidget * parent)
     QString imgPath =
         KGlobal::dirs()->findResource("appdata", "empath_logo.png");
 
-    setText("<center><img source=\"" + imgPath + "\"/>");
+    setText("<qt bgcolor=\"white\" > 
+        <center><img source=\"" + imgPath + "\" /> </qt>");
 
     setMimeSourceFactory(&(empath->viewFactory()));
     
