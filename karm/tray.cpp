@@ -60,7 +60,6 @@ KarmTray::KarmTray(KarmWindow* parent)
 
   parent->actionPreferences->plug( contextMenu() ); 
   parent->actionStopAll->plug( contextMenu() );
-  connect( this, SIGNAL(quitSelected()), parent, SLOT(quit()) );
 
   resetClock();
   initToolTip();
