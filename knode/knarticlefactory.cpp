@@ -116,7 +116,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
     else
       chset = knGlobals.cfgManager->postNewsTechnical()->charset();
   } else
-    chset = a->contentType()->charset();
+    chset = knGlobals.cfgManager->postNewsTechnical()->findComposerCharset(a->contentType()->charset());
 
   //create new article
   QString sig;
@@ -247,7 +247,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   if (knGlobals.cfgManager->postNewsTechnical()->useOwnCharset())
     chset = knGlobals.cfgManager->postNewsTechnical()->charset();
   else
-    chset = a->contentType()->charset();
+    chset = knGlobals.cfgManager->postNewsTechnical()->findComposerCharset(a->contentType()->charset());
 
   //create new article
   QString sig;
@@ -406,7 +406,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 
   //new article
   QString sig;
-  KNLocalArticle *art=newArticle(grp, sig, a->contentType()->charset());
+  KNLocalArticle *art=newArticle(grp, sig, knGlobals.cfgManager->postNewsTechnical()->findComposerCharset(a->contentType()->charset()));
   if(!art)
     return;
 

@@ -899,8 +899,10 @@ QCString KNConfig::PostNewsTechnical::findComposerCharset(QCString cs)
     }
   }
 
-  if (!s.isEmpty())
-    findComposerCSCache.insert(cs, new QCString(s));
+  if (s.isEmpty())
+    s = "us-ascii";
+
+  findComposerCSCache.insert(cs, new QCString(s));
 
   return s;
 }
@@ -924,8 +926,10 @@ QCString KNConfig::PostNewsTechnical::findComposerCharset(QFont::CharSet cs)
     }
   }
 
-  if (!s.isEmpty())
-    findComposerCSCache.insert(QString::number((int)(cs)).latin1(), new QCString(s));
+  if (s.isEmpty())
+    s = "us-ascii";
+
+  findComposerCSCache.insert(QString::number((int)(cs)).latin1(), new QCString(s));
 
   return s;
 }
