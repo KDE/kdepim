@@ -1757,7 +1757,7 @@ performs a menu item function, it is listed after the menu item.</para>
 <term>
 <menuchoice>
 <guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem>New Mail Client...</guimenuitem>
+<guimenuitem><accel>N</accel>ew Mail Client...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1839,7 +1839,7 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 <term>
 <menuchoice>
 <guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem>Send Queued</guimenuitem>
+<guimenuitem><accel>S</accel>end Queued</guimenuitem>
 </menuchoice></term>
 <listitem>
 <para>Sends the messages that are in your outbox.</para>
@@ -1855,6 +1855,20 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 </term>
 <listitem>
 <para>Opens up the <link linkend="the-address-book">Address Book</link>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu><accel>F</accel>ile</guimenu>
+<guimenuitem><accel>I</accel>mport...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Starts up <application>kmailcvt</application> (which is part of kdenetwork).
+This application lets you import mail from several proprietary mail clients to
+&kmail;.</para>
 </listitem>
 </varlistentry>
 
@@ -1967,15 +1981,25 @@ pane</guilabel>.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycap>K</keycap>
-</shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem>Select all messages</guimenuitem>
+<shortcut><keycap>K</keycap></shortcut><guimenu><accel>E</accel>dit</guimenu>
+<guimenuitem>Sele<accel>c</accel>t all messages</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>Selects all messages in the current folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo></shortcut>
+<guimenu><accel>E</accel>dit</guimenu>
+<guimenuitem>Select message <accel>t</accel>ext</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Selects the text of the currently displayed message.</para>
 </listitem>
 </varlistentry>
 
@@ -1987,7 +2011,7 @@ pane</guilabel>.</para>
 <sect2 id="reader-view-menu">
 <title><guimenu>View</guimenu> Menu</title>
 
-<!-- LW: This really needs to be broken up to one varlistentry per menu item -->
+<!-- LW: This really needs to be broken up to one varlistentry per menu item, fixme -->
 
 <variablelist>
 
@@ -2077,7 +2101,7 @@ mailing list that is associated with that folder.</para>
 <term>
 <menuchoice>
 <guimenu>F<accel>o</accel>lder</guimenu>
-<guimenuitem><accel>M</accel>odify...</guimenuitem>
+<guimenuitem><accel>P</accel>roperties...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2130,7 +2154,7 @@ deleted.</para>
 <term>
 <menuchoice>
 <guimenu>F<accel>o</accel>lder</guimenu>
-<guimenuitem>Prefer HTML to plain text</guimenuitem>
+<guimenuitem><accel>P</accel>refer HTML to plain text</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2144,7 +2168,7 @@ activate this for trusted messages.</para>
 <term>
 <menuchoice>
 <guimenu>F<accel>o</accel>lder</guimenu>
-<guimenuitem>Thread messages</guimenuitem>
+<guimenuitem><accel>T</accel>hread messages</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2294,6 +2318,22 @@ Otherwise the <guilabel>To:</guilabel> field will be empty.</para>
 </varlistentry>
 
 <varlistentry>
+<term>
+<menuchoice>
+<shortcut>
+<keycombo action="simul">&Alt;<keycap>R</keycap></keycombo>
+</shortcut>
+<guimenu><accel>M</accel>essage</guimenu>
+<guimenuitem>Reply <accel>w</accel>ithout quote...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up the <guilabel>Composer</guilabel> to reply but does not quote the
+text of the original message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term><menuchoice>
 <shortcut>
 <keycap>F</keycap>
@@ -2310,13 +2350,29 @@ will be forwarded, too.</para>
 </varlistentry>
 
 <varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycap>F</keycap>
+</shortcut>
+<guimenu><accel>M</accel>essage</guimenu>
+<!-- fixme in kmail: "f" twice as accel -->
+<guimenuitem><accel>F</accel>orward as attachment</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Forwards the message to a new recipient as an attachment. Attachments
+in the original message will also be in the forwarded message's attachment.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term>
 <menuchoice>
 <shortcut>
 <keycap>E</keycap>
 </shortcut>
 <guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem>R<accel>e</accel>direct</guimenuitem>
+<guimenuitem>R<accel>e</accel>direct...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2346,7 +2402,7 @@ user does not exist. Some people use this option to "reply" to spam.</para>
 <term>
 <menuchoice>
 <guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem>Send Again...</guimenuitem>
+<guimenuitem>Send a<accel>g</accel>ain...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2374,7 +2430,7 @@ Pane.</para>
 <keycap>T</keycap>
 </shortcut>
 <guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem>Edi<accel>t</accel>...</guimenuitem>
+<guimenuitem>Edi<accel>t</accel></guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2387,12 +2443,26 @@ Pane.</para>
 <term>
 <menuchoice>
 <guimenu><accel>M</accel>essage</guimenu>
+<guisubmenu><accel>C</accel>reate filter</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up the <link linkend="filter-dialog-id">Filter dialog</link> with a new filter added.
+This new filter is based on the fields of the current mail.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu><accel>M</accel>essage</guimenu>
 <guisubmenu>Set Status</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
 <para>Allows you to change the status of the selected message to one of the
-below:</para>
+below (more than one status per mail is currently not supported):</para>
+<!-- fixme: more than one? -->
 
 <itemizedlist>
 <listitem>
@@ -2433,6 +2503,7 @@ below:</para>
 <term>
 <menuchoice>
 <guimenu><accel>M</accel>essage</guimenu>
+<!-- fixme in kmail: "c" is accel twice -->
 <guisubmenu><accel>C</accel>opy to</guisubmenu>
 </menuchoice>
 </term>
@@ -2467,7 +2538,7 @@ below:</para>
 <para>Shows the message and its complete headers in plain text format in a new
 window. This can be useful to find out the origin of a mail. You should know
 that it's easy to fake the <literal>From:</literal> header of a mail, but
-the receiver can still find out which mail servers have been used by looking
+one can still find out which mail servers have been used by looking
 at the <literal>Received:</literal> lines in the header.</para>
 </listitem>
 </varlistentry>
@@ -2537,7 +2608,7 @@ toolbar.</para>
 <term>
 <menuchoice>
 <guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem>Configuration...</guimenuitem>
+<guimenuitem><accel>C</accel>onfigure &kmail;...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2549,7 +2620,7 @@ toolbar.</para>
 <term>
 <menuchoice>
 <guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem>F<accel>i</accel>lter Rules...</guimenuitem>
+<guimenuitem>Configure F<accel>i</accel>lters...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2791,7 +2862,7 @@ position.</para>
 <keycombo action="simul">&Ctrl;<keycap>Shift</keycap><keycap>Z</keycap></keycombo>
 </shortcut>
 <guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem>Red<accel>o</accel></guimenuitem>
+<guimenuitem>Re<accel>d</accel>o</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2901,7 +2972,7 @@ cut.</para>
 </term>
 <listitem>
 <para>This replaces multiple spaces with single spaces in the current
-selection.</para>
+selection or in the complete message if there is no selection.</para>
 </listitem>
 </varlistentry>
 
@@ -3069,6 +3140,7 @@ to paste long lines that shouldn't wrap.</para>
 <term>
 <menuchoice>
 <guimenu><accel>A</accel>ttach</guimenu>
+<!-- fixme in kmail: "P" used twice -->
 <guimenuitem>Attach <accel>P</accel>ublic Key...</guimenuitem>
 </menuchoice>
 </term>
