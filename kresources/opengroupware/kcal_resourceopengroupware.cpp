@@ -226,10 +226,13 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
       mProgress = 0;
     }
   } else {
+    mIncidencesForDownload.clear();
+    mVersionsPendingDownload.clear();
     QDomDocument doc = mListEventsJob->response();
 
     //kdDebug(7000) << " Doc: " << doc.toString() << endl;
 
+    //kdDebug(7000) << idMapper().asString() << endl;
     QDomNodeList entries = doc.elementsByTagNameNS( "DAV:", "href" );
     QDomNodeList fingerprints = doc.elementsByTagNameNS( "DAV:", "getetag" );
     int c = entries.count();
@@ -238,12 +241,45 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
       QDomNode node = entries.item( i );
       QDomElement e = node.toElement();
       const QString &entry = e.text();
-      mIncidencesForDownload << entry;
       node = fingerprints.item( i );
       e = node.toElement();
       i++;
+
+      bool download = false;
       KURL url ( entry );
-      idMapper().setFingerprint( url.path(), e.text() );
+      const QString &location = url.path();
+      const QString &newFingerprint = e.text();
+      /* if not locally present, download */
+      const QString &localId = idMapper().localId( location );
+      Incidence *i = 0;
+      if ( !localId.isNull() )
+        i = mCalendar.incidence( localId );
+      if ( !i ) {
+        // kdDebug(7000) << "Not locally present, download: " << location << endl;
+        download = true;
+      } else {
+        // kdDebug(7000) << "Locally present " << endl;
+        /* locallypresent, let's check if it's newer than what we have */
+        const QString &oldFingerprint = idMapper().fingerprint( i->uid() );
+        if ( oldFingerprint != newFingerprint ) {
+          // kdDebug(7000) << "Fingerprint changed old: " << oldFingerprint << " new: " << newFingerprint << endl;
+          // something changed on the server, let's see if we also changed it locally
+          if ( deletedIncidences().find( i ) != deletedIncidences().end()
+            || changedIncidences().find( i ) != changedIncidences().end() ) {
+            // TODO conflict resolution
+            // kdDebug(7000) << "TODO conflict resolution" << endl;
+            download = true;
+          } else {
+            download = true;
+          }
+        } else {
+          // kdDebug(7000) << "Fingerprint did not change, don't download this one " << endl;
+        }
+        if ( download ) {
+          mIncidencesForDownload << entry;
+          mVersionsPendingDownload.insert( location, newFingerprint );
+        }
+      }
     }
   }
   mListEventsJob = 0;
@@ -330,8 +366,19 @@ void OpenGroupware::slotJobResult( KIO::Job *job )
         } else {
           i->setUid( local );
         }
+        assert( mVersionsPendingDownload.contains( remote ) );
+        idMapper().setFingerprint( i->uid(), mVersionsPendingDownload[ remote ] );
+        // TODO verify the downloaded version matches
         i->setCustomProperty( "KCalResourceOpengroupware", "storagelocation" , remote );
-        addIncidence( i );
+        // if it's already there, we uploaded or changed it
+        if ( !mCalendar.incidence( i->uid() ) ) {
+          disableChangeNotification();
+          addIncidence( i );
+          kdDebug(7000) << "Added incidence: " << i->uid() << endl;
+          enableChangeNotification();
+        }
+        else
+          kdDebug(7000) << "Incidence already present locally" << endl;
       }
     }
   }
