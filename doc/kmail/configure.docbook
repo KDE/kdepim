@@ -28,11 +28,14 @@
       </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2004-07-02</date>
+<date>2004-07-05</date>
 <releaseinfo>1.7</releaseinfo>
 </chapterinfo>
 
 <title>Configure &kmail;</title>
+
+<sect1 id="configure-generalinfo">
+<title>General Information</title>
 
 <para>&kmail;'s configuration window enables you to configure &kmail;
 in many ways. You can reach it via
@@ -41,8 +44,48 @@ in many ways. You can reach it via
 
 <para>It is divided into six
 pages, each of them represented by one of the
-icons in the list on the left hand side of the dialog. This chapter
-will describe each page in detail.</para>
+icons in the list on the left hand side of the dialog. Below the pages
+will be described in detail.</para>
+
+<para>The dialog has several buttons:</para>
+
+<variablelist>
+<varlistentry>
+<term><guibutton>Help</guibutton></term>
+<listitem><para>This will open this manual at the appropriate page.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guibutton>Defaults</guibutton></term>
+<listitem><para>This will reset the configuration options on the current
+page back to the default values.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guibutton>Load Profile...</guibutton></term>
+<listitem><para>This will open a dialog which offers several configuration
+profiles. You can use these as starting points for your own configuration.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guibutton>Reset</guibutton></term>
+<listitem><para>This resets all changes you have made since you last saved
+the settings.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guibutton>OK</guibutton></term>
+<listitem><para>This saves the settings and closes the configuration dialog.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guibutton>Apply</guibutton></term>
+<listitem><para>This saves the settings without closing the configuration
+dialog.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guibutton>Cancel</guibutton></term>
+<listitem><para>This closes the configuration dialog without saving the
+changes you have made.</para></listitem>
+</varlistentry>
+</variablelist>
+
+</sect1>
 
 <sect1 id="configure-identity">
 <title><guilabel>Identities</guilabel> Page</title>
@@ -72,7 +115,7 @@ will then appear.</para>
 <sect2 id="configure-identity-newidentitydialog">
 <title>The <guilabel>New Identity</guilabel> Dialog</title>
 
-<para>You can enter the name of the new identity into the
+<para>You have to enter the name of the new identity into the
 <guilabel>New Identity</guilabel> edit field. This will be the name
 shown in the identity list.</para>
 
@@ -131,31 +174,30 @@ the correct value here.</para>
 <varlistentry>
 <term><guilabel>Organization</guilabel></term>
 <listitem>
-<para>Enter your organization here. This field is 
-optional. Most programs will show this information in a separate
-header field <guilabel>Organization</guilabel>. &kmail;, however, puts
-it between parentheses and displays it together with the email address
-in the <guilabel>From</guilabel> header field.</para>
+<para>Enter your organization here. This field is optional.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Email address</guilabel></term>
 <listitem>
-<para>Enter your email address here.</para>
+<para>Enter your email address here, &ie; something like 
+<userinput>joe@example.com</userinput>.</para>
 </listitem>
 </varlistentry>
 </variablelist>
+<example>
+<title>Example</title>
 <para>So if your address is <replaceable>Joe User
 &lt;joe@example.com&gt;</replaceable>, you should enter <userinput>Joe
 User</userinput> into the <guilabel>Your name</guilabel> field and
 <userinput>joe@example.com</userinput> into the <guilabel>Email
-address</guilabel> field.</para>
+address</guilabel> field.</para></example>
 </sect2>
 
     <sect2 id="configure-identity-cryptography">
-      <title>
+      <title><guilabel>
 	Cryptography
-      </title>
+      </guilabel></title>
 
       <para>
 	The <guilabel>Cryptography</guilabel> tab allows you to
@@ -321,8 +363,7 @@ anyway.</para>
 <note><para>This field is only useful if you want replies to your mail
 to go somewhere else than your regular email address, &eg; if you are
 using this identity to send messages from an email address that cannot
-receive messages. Note that this field will possibly be
-deprecated by newer versions of the Internet email standard. Furthermore,
+receive messages. Note that 
 some mailing lists overwrite this header field with their post address to
 make sure that replies go to the list instead of individuals. So the
 usefulness of this field is very limited and it should only be used in
@@ -481,7 +522,8 @@ linkend="sending-mail">Setting up your Account: Sending</link>.</para>
 <para>When you click <guibutton>Add...</guibutton> or
 <guibutton>Modify...</guibutton> the <guilabel>Add
 transport</guilabel> or <guilabel>Modify transport</guilabel> dialogs
-will open respectively. For sending via <command>sendmail</command>
+will open respectively. For sending via <application>sendmail</application>
+or similar programs
 you can specify a name and the location of the
 <command>sendmail</command> program.  For <acronym>SMTP</acronym> you
 can specify <guilabel>Name</guilabel>, <guilabel>Host</guilabel>, and
@@ -496,8 +538,30 @@ using <guibutton>Check What the Server Supports</guibutton>.</para>
 <para><guilabel>Confirm before send</guilabel> will pop up a
 confirmation box every time you send a message.</para>
 
-<para><guilabel>Send messages in outbox folder on check</guilabel> will send
-all messages from the outbox when you check for new messages.</para>
+<para><guilabel>Send messages in outbox folder</guilabel> lets you specify
+when queued messages, &ie; messages in the outbox folder pending to be sent,
+should be sent. You can choose between:</para>
+<variablelist>
+<varlistentry>
+<term><guilabel>Never Automatically</guilabel></term>
+<listitem><para>Queued messages will only be sent if you select 
+<menuchoice><guimenu>File</guimenu><guimenuitem>Send queued messages</guimenuitem></menuchoice>.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>On Manual Mail Checks</guilabel></term>
+<listitem><para>Queued messages will be sent after you have manually checked
+for new mail, &eg; with <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail</guimenuitem></menuchoice>. Of course, you can also
+manually sent the queued messages with
+<menuchoice><guimenu>File</guimenu><guimenuitem>Send queued messages</guimenuitem></menuchoice>.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>On All Mail Checks</guilabel></term>
+<listitem><para>Queued messages will be sent after all checks for new mail,
+&ie; after automatic mail checks as well as after manual mail checks.
+Of course, you can also manually sent the queued messages with
+<menuchoice><guimenu>File</guimenu><guimenuitem>Send queued messages</guimenuitem></menuchoice>.</para></listitem>
+</varlistentry>
+</variablelist>
 
 <para><guilabel>Default send method</guilabel> lets you define what
 happens when a message is sent. If <guilabel>Send now</guilabel> is
@@ -507,7 +571,7 @@ the outbox to be sent later with the
 <menuchoice><guimenu>File</guimenu><guimenuitem>Send
 Queued Messages</guimenuitem></menuchoice> command or automatically when you
 check your mail, depending on the setting of 
-<guilabel>Send messages in outbox folder on check</guilabel> above.</para>
+<guilabel>Send messages in outbox folder</guilabel> above.</para>
 
 <para><guilabel>Message property</guilabel> lets you select how your
 message will be encoded when it is sent. <guilabel>Allow
@@ -538,11 +602,16 @@ then messages you send to <replaceable>johndoe</replaceable> will be sent to
 <para>For basic information, see <link
 linkend="receiving-mail">Setting up your Account: Receiving</link>.</para>
 
+<para><guilabel>Check mail on startup</guilabel> lets you specify whether
+KMail should check for new mail immediately after it has been started.</para>
+
 <para>With <guilabel>New Mail Notification</guilabel> you can set
-how &kmail; will notify you if new messages have arrived. Of course
-this only makes sense if <guilabel>Enable interval mail checking</guilabel>
-is activated for at least one account: <guilabel>Beep</guilabel> will
-play a short beep sound, while more advanced notification options
+how &kmail; will notify you if new messages have arrived:
+<guilabel>Beep</guilabel> will play a short beep sound;
+if <guilabel>Detailed new mail notification</guilabel> is enabled then
+&kmail; will show the number of new messages for each folder provided
+you have chosen to be notified with a dialog. More advanced 
+notification options, like showing a dialog or running a certain command,
 are available via the <guibutton>Other Actions</guibutton> button.</para>
 
 </sect2>
@@ -550,10 +619,10 @@ are available via the <guibutton>Other Actions</guibutton> button.</para>
 </sect1>
 
 <sect1 id="configure-appearance">
-<title>Appearance Page</title>
+<title><guilabel>Appearance</guilabel> Page</title>
 
 <sect2 id="configure-appearance-fonts">
-<title>Fonts</title>
+<title><guilabel>Fonts</guilabel></title>
 
 <para>This section allows you to change the type, size and character set of the
 display fonts. <guilabel>Message Body</guilabel> sets the font for
@@ -565,7 +634,7 @@ so you can choose a monospaced font for the date field for better readability.</
 </sect2>
 
 <sect2 id="configure-appearance-colors">
-<title>Colors</title>
+<title><guilabel>Colors</guilabel></title>
 
 <para>This section allows you to change the color of the text.
 <guilabel>Recycle colors on deep quoting</guilabel> means that even text that is
@@ -576,7 +645,7 @@ the composer.<!-- TODO --></para>
 </sect2>
 
 <sect2 id="configure-appearance-layout">
-<title>Layout</title>
+<title><guilabel>Layout</guilabel></title>
 
 <para><guilabel>Show HTML status bar</guilabel> activates a bar at the left side of the reader
 pane that tells you if a message is &html; or not. This is important because
@@ -601,7 +670,7 @@ has attachments or has &html; parts.</para>
 </sect2>
 
 <sect2 id="configure-appearance-headers">
-<title>Headers</title>
+<title><guilabel>Headers</guilabel></title>
 
 <para>With <guilabel>Display message sizes</guilabel> selected there will be another 
 column in the header pane that shows the messages' size.</para>
@@ -634,14 +703,26 @@ and then clicking on <guilabel>Custom</guilabel> option.</para>
 
 </sect2>
 
-<sect2 id="configure-appearance-profiles">
-<title>Profiles</title>
+<sect2 id="configure-appearance-systemtray">
+<title><guilabel>System Tray</guilabel></title>
 
-<para>This section offers several default settings for &kmail;'s layout. You can
-use these as starting points for your own configuration.</para>
+<para>If you enable the system tray icon then a small &kmail; icon with the
+number of unread messages will be shown in the system tray. You can enable
+&kmail;'s system tray icon with <guilabel>Enable system tray icon</guilabel>,
+and with <guilabel>System Tray Mode</guilabel>
+you can specify whether the tray icon should always be shown or only if
+you have unread messages.</para>
 
-<warning><para>Note that choosing
-one of the offered profiles will override your current layout settings.</para></warning>
+<para>If the icon is visible then you can hide &kmail;'s main window by
+clicking on the icon or by clicking on the window close button. By clicking
+on the icon you can make &kmail;'s main window visible again.
+If you click on the icon with the <mousebutton>right</mousebutton>
+mousebutton then you get a menu with a few useful commands. You can check
+for new mail, create a new message or quit &kmail;. Additionally, there is
+the entry <guilabel>New Messages In</guilabel> which lists all folders
+containing unread messages. If you choose one of those folders then this
+folder will be selected in &kmail;'s main window.
+</para>
 
 </sect2>
 
