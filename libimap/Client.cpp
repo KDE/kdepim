@@ -107,8 +107,6 @@ Client::logout()
   bool
 Client::authenticate(const QString & /* username */, const QString & /* password */, const QString & /* authType */)
 {
-  qDebug("%s: STUB", __FUNCTION__);
-
   if (d->state_ < NotAuthenticated) {
     qDebug("Client::authenticate(): state < NotAuthenticated");
     return false;
