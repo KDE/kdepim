@@ -29,9 +29,7 @@
     your version.
 */
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
 
 #include <ui/keyselectiondialog.h>
 #include <gpgmepp/key.h>
@@ -41,6 +39,7 @@
 #include <kaboutdata.h>
 #include <kglobal.h>
 #include <kiconloader.h>
+#include <kdebug.h>
 
 #include <vector>
 
@@ -57,12 +56,11 @@ int main( int argc, char ** argv ) {
 				Kleo::KeySelectionDialog::AllKeys, true, true );
 
   if ( dlg.exec() == QDialog::Accepted ) {
-    qDebug( "accepted; selected key: %s\nselected _keys_:",
-	    dlg.selectedKey().userID(0).id() ? dlg.selectedKey().userID(0).id() : "<null>" );
+    kdDebug() << "accepted; selected key: " << (dlg.selectedKey().userID(0).id() ? dlg.selectedKey().userID(0).id() : "<null>") << "\nselected _keys_:" << endl;
     for ( std::vector<GpgME::Key>::const_iterator it = dlg.selectedKeys().begin() ; it != dlg.selectedKeys().end() ; ++it )
-      qDebug( "%s", it->userID(0).id() ? it->userID(0).id() : "<null>" );
+      kdDebug() << (it->userID(0).id() ? it->userID(0).id() : "<null>") << endl;
   } else {
-    qDebug( "rejected" );
+    kdDebug() << "rejected" << endl;
   }
 
   return 0;

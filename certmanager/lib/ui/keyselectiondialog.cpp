@@ -83,44 +83,44 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
 
   if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys ) {
     if ( key.isInvalid() )
-      qDebug( "key is invalid - ignoring" );
+      kdDebug() << "key is invalid - ignoring" << endl;
     if ( key.isExpired() ) {
-      qDebug( "key is expired" );
+      kdDebug() << "key is expired" << endl;
       return false;
     } else if ( key.isRevoked() ) {
-      qDebug( "key is revoked" );
+      kdDebug() << "key is revoked" << endl;
       return false;
     } else if ( key.isDisabled() ) {
-      qDebug( "key is disabled" );
+      kdDebug() << "key is disabled" << endl;
       return false;
     }
   }
 
   if ( keyUsage & Kleo::KeySelectionDialog::EncryptionKeys &&
        !key.canEncrypt() ) {
-    qDebug( "key can't encrypt" );
+    kdDebug() << "key can't encrypt" << endl;
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::SigningKeys &&
        !key.canSign() ) {
-    qDebug( "key can't sign" );
+    kdDebug() << "key can't sign" << endl;
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::CertificationKeys &&
        !key.canCertify() ) {
-    qDebug( "key can't certify" );
+    kdDebug() << "key can't certify" << endl;
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::AuthenticationKeys &&
        !key.canAuthenticate() ) {
-    qDebug( "key can't authenticate" );
+    kdDebug() << "key can't authenticate" << endl;
     return false;
   }
 
   if ( keyUsage & Kleo::KeySelectionDialog::SecretKeys &&
        !( keyUsage & Kleo::KeySelectionDialog::PublicKeys ) &&
        !key.isSecret() ) {
-    qDebug( "key isn't secret" );
+    kdDebug() << "key isn't secret" << endl;
     return false;
   }
 
@@ -133,7 +133,7 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
     for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != uids.end() ; ++it )
       if ( !it->isRevoked() && it->validity() >= GpgME::UserID::Marginal )
 	return true;
-    qDebug( "key has no UIDs with validity >= Marginal" );
+    kdDebug() << "key has no UIDs with validity >= Marginal" << endl;
     return false;
   }
   // X.509 keys are always trusted, else they won't be the keybox.
