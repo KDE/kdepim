@@ -215,7 +215,7 @@ bool AbbrowserConduit::_saveAddressBook()
 #endif
 	
 	if (!abChanged) return true;
-	return (aBook) && (aBook->saveAll());
+	return StdAddressBook::save();
 }
 
 
@@ -1889,6 +1889,9 @@ KABC::Addressee AbbrowserConduit::_findMatch(const PilotAddress & pilotAddress) 
 
 
 // $Log$
+// Revision 1.50  2002/09/12 22:21:19  kainhofe
+// FINALLLY!!! The conduit seems to work. Had the company field hardcoded, where a variable should have been. This messed up the whole conduit ;-((( Some minor issues remain, but the conduit can be released as beta 2
+//
 // Revision 1.49  2002/09/12 13:58:20  kainhofe
 // some more fixes, still does not do any sync unless compiled with -NDO_DANGEROUS_ABOOK_SYNC . Most things work, except for several conflict resolution settings
 //
