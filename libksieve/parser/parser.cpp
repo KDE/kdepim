@@ -1,5 +1,5 @@
 /*  -*- c++ -*-
-    parser.cpp
+    parser/parser.cpp
 
     This file is part of KSieve,
     the KDE internet mail/usenet news message filtering library.
@@ -33,6 +33,9 @@
 #include <config.h>
 
 #include <ksieve/parser.h>
+#include <impl/parser.h>
+
+#include <ksieve/error.h>
 
 #include <qstring.h>
 
@@ -42,7 +45,80 @@
 
 namespace KSieve {
 
+  //
+  //
+  // Parser Bridge implementation
+  //
+  //
+
   Parser::Parser( const char * scursor, const char * const send )
+    : i( 0 )
+  {
+    i = new Impl( scursor, send );
+  }
+
+  Parser::~Parser() {
+    delete i; i = 0;
+  }
+
+  void Parser::setScriptBuilder( ScriptBuilder * builder ) {
+    assert( i );
+    i->mBuilder = builder;
+  }
+
+  ScriptBuilder * Parser::scriptBuilder() const {
+    assert( i );
+    return i->mBuilder;
+  }
+
+  const Error & Parser::error() const {
+    assert( i );
+    return i->error();
+  }
+
+  bool Parser::parse() {
+    assert( i );
+    return i->parse();
+  }
+
+}
+
+namespace {
+
+  inline unsigned long factorForQuantifier( char ch ) {
+    switch ( ch ) {
+    case 'g':
+    case 'G':
+      return 1024*1024*1024;
+    case 'm':
+    case 'M':
+      return 1024*1024;
+    case 'k':
+    case 'K':
+      return 1024;
+    default:
+      assert( 0 ); // lexer should prohibit this
+      return 1; // make compiler happy
+    }
+  }
+
+  inline bool willOverflowULong( unsigned long result, unsigned long add ) {
+    const unsigned long maxULongByTen =
+      (unsigned long)( double(ULONG_MAX) / 10.0 );
+    return result > maxULongByTen || ULONG_MAX - 10 * result < add ;
+  }
+
+} // anon namespace
+
+namespace KSieve {
+
+  //
+  //
+  // Parser Implementation
+  //
+  //
+
+  Parser::Impl::Impl( const char * scursor, const char * const send )
     : mToken( Lexer::None ),
       lexer( scursor, send, Lexer::IncludeComments ),
       mBuilder( 0 )
@@ -50,20 +126,20 @@ namespace KSieve {
 
   }
 
-  bool Parser::isStringToken() const {
+  bool Parser::Impl::isStringToken() const {
     return token() == Lexer::QuotedString ||
            token() == Lexer::MultiLineString ;
   }
 
 
-  bool Parser::isArgumentToken() const {
+  bool Parser::Impl::isArgumentToken() const {
     return isStringToken() ||
            token() == Lexer::Number ||
            token() == Lexer::Tag ||
            token() == Lexer::Special && mTokenValue == "[" ;
   }
 
-  bool Parser::obtainToken() {
+  bool Parser::Impl::obtainToken() {
     while ( !mToken && !lexer.atEnd() && !lexer.error() ) {
       mToken = lexer.nextToken( mTokenValue );
       if ( lexer.error() )
@@ -85,7 +161,7 @@ namespace KSieve {
     return !lexer.error();
   }
 
-  bool Parser::parse() {
+  bool Parser::Impl::parse() {
     // this is the entry point: START := command-list
     if ( !parseCommandList() )
       return false;
@@ -99,7 +175,7 @@ namespace KSieve {
   }
 
 
-  bool Parser::parseCommandList() {
+  bool Parser::Impl::parseCommandList() {
     // our ABNF:
     // command-list := *comand
 
@@ -119,7 +195,7 @@ namespace KSieve {
   }
 
 
-  bool Parser::parseCommand() {
+  bool Parser::Impl::parseCommand() {
     // command   := identifier arguments ( ";" / block )
     // arguments := *argument [ test / test-list ]
     // block     := "{" *command "}"
@@ -214,7 +290,7 @@ namespace KSieve {
   }
 
 
-  bool Parser::parseArgumentList() {
+  bool Parser::Impl::parseArgumentList() {
     // our ABNF:
     // argument-list := *argument
 
@@ -230,7 +306,7 @@ namespace KSieve {
   }
 
 
-  bool Parser::parseArgument() {
+  bool Parser::Impl::parseArgument() {
     // argument := string-list / number / tag
 
     if ( !obtainToken() || atEnd() )
@@ -264,7 +340,7 @@ namespace KSieve {
   }
 
 
-  bool Parser::parseTestList() {
+  bool Parser::Impl::parseTestList() {
     // test-list := "(" test *("," test) ")"
     
     if ( !obtainToken() || atEnd() )
@@ -337,7 +413,7 @@ namespace KSieve {
   }
 
 
-  bool Parser::parseTest() {
+  bool Parser::Impl::parseTest() {
     // test := identifier arguments
     // arguments := *argument [ test / test-list ]
 
@@ -399,7 +475,7 @@ namespace KSieve {
   }
 
 
-  bool Parser::parseBlock() {
+  bool Parser::Impl::parseBlock() {
     // our ABNF:
     // block := "{" [ command-list ] "}"
 
@@ -445,7 +521,7 @@ namespace KSieve {
     return true;
   }
 
-  bool Parser::parseStringList() {
+  bool Parser::Impl::parseStringList() {
     // string-list := "[" string *("," string) "]" / string
     //  ;; if there is only a single string, the brackets are optional
     //
@@ -521,30 +597,7 @@ namespace KSieve {
     return false;
   }
 
-  static inline unsigned long factorForQuantifier( char ch ) {
-    switch ( ch ) {
-    case 'g':
-    case 'G':
-      return 1024*1024*1024;
-    case 'm':
-    case 'M':
-      return 1024*1024;
-    case 'k':
-    case 'K':
-      return 1024;
-    default:
-      assert( 0 ); // lexer should prohibit this
-      return 1; // make compiler happy
-    }
-  }
-
-  static inline bool willOverflowULong( unsigned long result, unsigned long add ) {
-    const unsigned long maxULongByTen =
-      (unsigned long)( double(ULONG_MAX) / 10.0 );
-    return result > maxULongByTen || ULONG_MAX - 10 * result < add ;
-  }
-
-  bool Parser::parseNumber() {
+  bool Parser::Impl::parseNumber() {
     // The lexer returns the number including the quantifier as a
     // single token value. Here, we split is an check that the number
     // is not out of range:

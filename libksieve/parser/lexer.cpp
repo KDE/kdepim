@@ -1,5 +1,5 @@
 /*  -*- c++ -*-
-    lexer.cpp
+    parser/lexer.cpp
 
     This file is part of KSieve,
     the KDE internet mail/usenet news message filtering library.
@@ -33,18 +33,18 @@
 #include <config.h>
 
 #include <ksieve/lexer.h>
+#include <impl/lexer.h>
 
 #include <ksieve/utf8validator.h>
+#include <ksieve/error.h>
 
 #include <qstring.h>
-#include <qcstring.h>
 #include <qstringlist.h>
 #include <qtextcodec.h>
 
 #include <memory> // std::auto_ptr
 
 #include <assert.h>
-#include <limits.h> // UINT_MAX (to be removed)
 #include <ctype.h> // isdigit
 
 #ifdef STR_DIM
@@ -54,6 +54,66 @@
 
 namespace KSieve {
 
+  //
+  //
+  // Lexer Bridge implementation
+  //
+  //
+
+  Lexer::Lexer( const char * scursor, const char * send, int options )
+    : i( 0 )
+  {
+    i = new Impl( scursor, send, options );
+  }
+
+  Lexer::~Lexer() {
+    delete i; i = 0;
+  }
+
+  bool Lexer::ignoreComments() const {
+    assert( i );
+    return i->ignoreComments();
+  }
+
+  const Error & Lexer::error() const {
+    assert( i );
+    return i->error();
+  }
+
+  bool Lexer::atEnd() const {
+    assert( i );
+    return i->atEnd();
+  }
+
+  int Lexer::column() const {
+    assert( i );
+    return i->column();
+  }
+
+  int Lexer::line() const {
+    assert( i );
+    return i->line();
+  }
+
+  void Lexer::save() {
+    assert( i );
+    i->save();
+  }
+
+  void Lexer::restore() {
+    assert( i );
+    i->restore();
+  }
+
+  Lexer::Token Lexer::nextToken( QString & result ) {
+    assert( i );
+    return i->nextToken( result );
+  }
+
+} // namespace KSieve
+
+
+namespace {
   // none except a-zA-Z0-9_
   static const unsigned char iTextMap[16] = {
     0x00, 0x00, 0x00, 0x00, // CTLs:        none
@@ -79,32 +139,49 @@ namespace KSieve {
     0x80, 0x00, 0x00, 0x0A
   };
 
-  static inline bool isOfSet( const unsigned char map[16], unsigned char ch ) {
+  inline bool isOfSet( const unsigned char map[16], unsigned char ch ) {
     assert( ch < 128 );
     return ( map[ ch/8 ] & 0x80 >> ch%8 );
   }
 
-  static inline bool isIText( unsigned char ch ) {
+  inline bool isIText( unsigned char ch ) {
     return ch <= 'z' && isOfSet( iTextMap, ch );
   }
 
-  static inline bool isDelim( unsigned char ch ) {
+  inline bool isDelim( unsigned char ch ) {
     return ch <= '}' && isOfSet( delimMap, ch );
   }
 
-  static inline bool isIllegal( unsigned char ch ) {
+  inline bool isIllegal( unsigned char ch ) {
     return ch >= '~' || isOfSet( illegalMap, ch );
   }
 
-  int Lexer::_strnicmp( const char * left, const char * right, size_t len ) const {
-    return charsLeft() >= len ? qstrnicmp( left, right, len ) : 1 ;
+  inline bool is8Bit( signed char ch ) {
+    return ch < 0;
   }
 
-  void Lexer::makeIllegalCharError( char ch ) {
-    makeError( isIllegal( ch ) ? Error::IllegalCharacter : Error::UnexpectedCharacter );
+  inline QString removeDotStuffAndCRLF( const QString & s ) {
+    const bool dotstuffed = s.startsWith("..");
+    const bool CRLF = s.endsWith("\r\n");
+    const bool LF = !CRLF && s.endsWith("\n");
+
+    const int b = dotstuffed ? 1 : 0; // what to skip at the beginning
+    const int e = CRLF ? 2 : LF ? 1 : 0 ; // what to chop off at the end
+
+    return s.mid( b, s.length() - b - e );
   }
 
-  Lexer::Lexer( const char * scursor, const char * send, int options )
+} // anon namespace
+
+namespace KSieve {
+
+  //
+  //
+  // Lexer Implementation
+  //
+  //
+
+  Lexer::Impl::Impl( const char * scursor, const char * send, int options )
     : mState( scursor ? scursor : send ),
       mEnd( send ? send : scursor ),
       mIgnoreComments( options & IgnoreComments )
@@ -113,8 +190,7 @@ namespace KSieve {
       assert( atEnd() );
   }
 
-
-  Lexer::Token Lexer::nextToken( QString & result ) {
+  Lexer::Token Lexer::Impl::nextToken( QString & result ) {
     assert( !atEnd() );
     result = QString::null;
     //clearErrors();
@@ -209,7 +285,7 @@ namespace KSieve {
     }
   }
 
-  bool Lexer::eatWS() {
+  bool Lexer::Impl::eatWS() {
     while ( !atEnd() )
       switch ( *mState.cursor ) {
       case '\r':
@@ -229,7 +305,7 @@ namespace KSieve {
     return true;
   }
 
-  bool Lexer::eatCRLF() {
+  bool Lexer::Impl::eatCRLF() {
     assert( !atEnd() );
     assert( *mState.cursor == '\n' || *mState.cursor == '\r' );
 
@@ -252,7 +328,7 @@ namespace KSieve {
   }
       
 
-  bool Lexer::parseHashComment( QString & result, bool reallySave ) {
+  bool Lexer::Impl::parseHashComment( QString & result, bool reallySave ) {
     // hash-comment := "#" *CHAR-NOT-CRLF CRLF
 
     // check that the caller plays by the rules:
@@ -286,7 +362,7 @@ namespace KSieve {
     return false;
   }
 
-  bool Lexer::parseBracketComment( QString & result, bool reallySave ) {
+  bool Lexer::Impl::parseBracketComment( QString & result, bool reallySave ) {
     // bracket-comment := "/*" *(CHAR-NOT-STAR / ("*" CHAR-NOT-SLASH )) "*/"
 
     // check that caller plays by the rules:
@@ -329,7 +405,7 @@ namespace KSieve {
     return true;
   }
 
-  bool Lexer::parseComment( QString & result, bool reallySave ) {
+  bool Lexer::Impl::parseComment( QString & result, bool reallySave ) {
     // comment := hash-comment / bracket-comment
 
     switch( *mState.cursor ) {
@@ -349,7 +425,7 @@ namespace KSieve {
     }
   }
 
-  bool Lexer::eatCWS() {
+  bool Lexer::Impl::eatCWS() {
     // white-space := 1*(SP / CRLF / HTAB / comment )
 
     while ( !atEnd() ) {
@@ -378,7 +454,7 @@ namespace KSieve {
     return true;
   }
 
-  bool Lexer::parseIdentifier( QString & result ) {
+  bool Lexer::Impl::parseIdentifier( QString & result ) {
     // identifier := (ALPHA / "_") *(ALPHA DIGIT "_")
 
     assert( isIText( *mState.cursor ) );
@@ -407,7 +483,7 @@ namespace KSieve {
     return false;
   }
 
-  bool Lexer::parseTag( QString & result ) {
+  bool Lexer::Impl::parseTag( QString & result ) {
     // tag := ":" identifier
 
     // check that the caller plays by the rules:
@@ -418,7 +494,7 @@ namespace KSieve {
     return parseIdentifier( result );
   }
 
-  bool Lexer::parseNumber( QString & result ) {
+  bool Lexer::Impl::parseNumber( QString & result ) {
     // number     := 1*DIGIT [QUANTIFIER]
     // QUANTIFIER := "K" / "M" / "G"
 
@@ -451,18 +527,7 @@ namespace KSieve {
     return false;
   }
 
-  static inline QString removeDotStuffAndCRLF( const QString & s ) {
-    const bool dotstuffed = s.startsWith("..");
-    const bool CRLF = s.endsWith("\r\n");
-    const bool LF = !CRLF && s.endsWith("\n");
-
-    const int b = dotstuffed ? 1 : 0; // what to skip at the beginning
-    const int e = CRLF ? 2 : LF ? 1 : 0 ; // what to chop off at the end
-
-    return s.mid( b, s.length() - b - e );
-  }
-
-  bool Lexer::parseMultiLine( QString & result ) {
+  bool Lexer::Impl::parseMultiLine( QString & result ) {
     // multi-line          := "text:" *(SP / HTAB) (hash-comment / CRLF)
     //                        *(multi-line-literal / multi-line-dotstuff)
     //                        "." CRLF
@@ -536,7 +601,7 @@ namespace KSieve {
     return true;
   }
 
-  bool Lexer::parseQuotedString( QString & result ) {
+  bool Lexer::Impl::parseQuotedString( QString & result ) {
     // quoted-string := DQUOTE *CHAR DQUOTE
 
     // check that caller plays by the rules:
@@ -586,6 +651,10 @@ namespace KSieve {
 
     makeError( Error::PrematureEndOfQuotedString, qsBeginLine, qsBeginCol );
     return false;
+  }
+
+  void Lexer::Impl::makeIllegalCharError( char ch ) {
+    makeError( isIllegal( ch ) ? Error::IllegalCharacter : Error::UnexpectedCharacter );
   }
 
 } // namespace KSieve

@@ -33,44 +33,12 @@
 #ifndef __KSIEVE_PARSING_H__
 #define __KSIEVE_PARSING_H__
 
-#include <ksieve/lexer.h>
-#include <ksieve/error.h>
-
-#include <qstring.h>
+class QString;
 
 namespace KSieve {
 
-  class ScriptBuilder {
-  public:
-    virtual ~ScriptBuilder() {}
-
-    virtual void taggedArgument( const QString & tag ) = 0;
-    virtual void stringArgument( const QString & string, bool multiLine ) = 0;
-    virtual void numberArgument( unsigned long number, char quantifier ) = 0;
-
-    virtual void stringListArgumentStart() = 0;
-    virtual void stringListEntry( const QString & string, bool multiLine ) = 0;
-    virtual void stringListArgumentEnd() = 0;
-
-    virtual void commandStart( const QString & identifier ) = 0;
-    virtual void commandEnd() = 0;
-
-    virtual void testStart( const QString & identifier ) = 0;
-    virtual void testEnd() = 0;
-
-    virtual void testListStart() = 0;
-    virtual void testListEnd() = 0;
-
-    virtual void blockStart() = 0;
-    virtual void blockEnd() = 0;
-
-    virtual void hashComment( const QString & comment ) = 0;
-    virtual void bracketComment( const QString & comment ) = 0;
-
-    virtual void error( const Error & error ) = 0;
-
-    virtual void finished() = 0;
-  };
+  class ScriptBuilder;
+  class Error;
 
   /** @short Parser for the Sieve grammar.
       @author Marc Mutz <mutz@kde.org>
@@ -79,69 +47,22 @@ namespace KSieve {
   public:
 
     Parser( const char * scursor, const char * const send );
+    ~Parser();
 
-    void setScriptBuilder( ScriptBuilder * builder ) {
-      mBuilder = builder;
-    }
-    ScriptBuilder * scriptBuilder() {
-      return mBuilder;
-    }
+    void setScriptBuilder( ScriptBuilder * builder );
+    ScriptBuilder * scriptBuilder() const;
 
     bool parse();
 
-    Error error() const { return mError == Error::None ? lexer.error() : mError ; }
+    const Error & error() const;
+
+    class Impl;
+  private:
+    Impl * i;
 
   private:
-    bool parseCommandList();
-
-    bool parseCommand();
-
-    bool parseArgumentList();
-
-    bool parseArgument();
-
-    bool parseTestList();
-
-    bool parseTest();
-
-    bool parseBlock();
-
-    bool parseStringList();
-
-    bool parseNumber();
-
-  private:
-    Lexer::Token token() const { return mToken; }
-    QString tokenValue() const { return mTokenValue; }
-
-    bool atEnd() const {
-      return !mToken && lexer.atEnd() ;
-    }
-    bool obtainToken();
-    void consumeToken() {
-      mToken = Lexer::None;
-      mTokenValue = QString::null;
-    }
-    void makeError( Error::Type e, int line, int col ) {
-      mError = Error( e, line, col );
-      if ( scriptBuilder() )
-	scriptBuilder()->error( mError );
-    }
-    void makeError( Error::Type e ) {
-      makeError( e, lexer.line(), lexer.column() );
-    }
-    void makeUnexpectedTokenError( Error::Type e ) {
-      makeError( e ); // ### save wrong token...
-    }
-    bool isArgumentToken() const;
-    bool isStringToken() const;
-
-  private:
-    Error mError;
-    Lexer::Token mToken;
-    QString mTokenValue;
-    Lexer lexer;
-    ScriptBuilder * mBuilder;
+    const Parser & operator=( const Parser & );
+    Parser( const Parser & );
   };
 
 } // namespace KSieve
