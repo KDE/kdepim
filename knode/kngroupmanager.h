@@ -115,9 +115,6 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     void expireAll(KNNntpAccount *a);
     void syncGroups();    
 
-    // job handling
-    void jobDone(KNJobData *j);
-
   public slots:
     void slotLoadGroupList(KNNntpAccount *a);      // load group list from disk (if this fails: ask user if we should fetch the list)
     void slotFetchGroupList(KNNntpAccount *a);     // fetch group list from server
