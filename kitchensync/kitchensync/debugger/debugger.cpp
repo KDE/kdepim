@@ -19,7 +19,7 @@ Debugger::Debugger( QWidget *parent, const char *name,
                     QObject *, const char *,const QStringList & )
   : ManipulatorPart( parent, name ), m_widget( 0 )
 {
-  m_pixmap = KGlobal::iconLoader()->loadIcon("kcmsystem", KIcon::Desktop, 48 );
+  m_pixmap = KGlobal::iconLoader()->loadIcon("package_settings", KIcon::Desktop, 48 );
 }
 
 KAboutData *Debugger::createAboutData()
