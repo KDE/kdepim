@@ -1018,7 +1018,22 @@ sub menu you select.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>Settings</guimenu>
+<guimenu>Tools</guimenu>
+<guisubmenu>Filter Log Viewer...</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up the viewer window for the filter log. There you find some options to
+control the logging of the filtering process. In the log you will find valueable
+information about what filter rules were used, what was the result of the evaluation 
+of those rules, and which filter action were applied to a message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Tools</guimenu>
 <guimenuitem>Anti-Spam Wizard...</guimenuitem>
 </menuchoice>
 </term>
