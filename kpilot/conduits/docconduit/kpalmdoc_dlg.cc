@@ -318,7 +318,7 @@ void ConverterDlg::slotToPDB()
 		// Now check the to directory:
 		if (pdbinfo.isFile())
 		{
-			int res=KMessageBox::questionYesNo(this, i18n("<qt>You selected "
+			int res=KMessageBox::questionYesNo(this, 
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>")
