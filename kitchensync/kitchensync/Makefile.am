@@ -10,10 +10,8 @@ METASOURCES = AUTO
 
 bin_PROGRAMS = kitchensync
 
-kitchensync_SOURCES = ksync_mainwindow.cc \
-	ksync_main.cc \
-	ksync_systemtray.cc \
+kitchensync_SOURCES = 	ksync_main.cc \
 	ksync_splash.cc
 
-kitchensync_LDADD = ../lib/libksyncentries.la ../libkonnector/libkonnector.la ./organizer/liborganizerpart.la ./overview/liboverviewpart.la ./fileview/libfileviewpart.la  ./lib/libkitchensync.la -lkparts
+kitchensync_LDADD = ../lib/libksyncentries.la ../libkonnector/libkonnector.la    ./lib/libkitchensync.la -lkparts
 kitchensync_LDFLAGS = $(KDE_RPATH) $(all_libraries)

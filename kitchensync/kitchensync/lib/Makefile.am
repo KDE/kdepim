@@ -2,12 +2,12 @@ INCLUDES = -I$(top_srcdir)/kitchensync/lib $(all_includes)
 
 lib_LTLIBRARIES = libkitchensync.la
 
-libkitchensync_la_SOURCES = partbar.cc manipulatorpart.cc ksync_configuredialog.cc
+libkitchensync_la_SOURCES = partbar.cc manipulatorpart.cc ksync_configuredialog.cc ksync_systemtray.cc ksync_mainwindow.cc
 libkitchensync_la_LDFLAGS = $(all_libraries) -no-undefined 
 libkitchensync_la_LIBADD = $(LIB_KPARTS)
 
 ksyncincludedir = $(includedir)/kitchensync
-ksyncinclude_HEADERS = partbar.h manipulatorpart.h
+ksyncinclude_HEADERS = partbar.h manipulatorpart.h ksync_systemtray.h ksync_mainwindow.h
 
 METASOURCES = AUTO
 

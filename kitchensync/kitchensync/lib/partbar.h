@@ -1,31 +1,31 @@
-/*
+/**
 † † This file is part of the OPIE Project
 † † Copyright (c)  2002 Holger Freyther <zecke@handhelds.org>
 † †                2002 Maximilian Reiﬂ <harlekin@handhelds.org>
 
 
 
- †             =.            
-† † † † † † †.=l.            
+ †             =.
+† † † † † † †.=l.
 † † † † † †.>+-=
-†_;:, † † .> † †:=|.         This library is free software; you can 
+†_;:, † † .> † †:=|.         This library is free software; you can
 .> <`_, † > †. † <=          redistribute it and/or  modify it under
 :`=1 )Y*s>-.-- † :           the terms of the GNU Library General Public
 .="- .-=="i, † † .._         License as published by the Free Software
 †- . † .-<_> † † .<>         Foundation; either version 2 of the License,
 † † †._= =} † † † :          or (at your option) any later version.
-† † .%`+i> † † † _;_.        
-† † .i_,=:_. † † †-<s.       This library is distributed in the hope that  
+† † .%`+i> † † † _;_.
+† † .i_,=:_. † † †-<s.       This library is distributed in the hope that
 † † †+ †. †-:. † † † =       it will be useful,  but WITHOUT ANY WARRANTY;
 † † : .. † †.:, † † . . .    without even the implied warranty of
 † † =_ † † † †+ † † =;=|`    MERCHANTABILITY or FITNESS FOR A
 † _.=:. † † † : † †:=>`:     PARTICULAR PURPOSE. See the GNU
 ..}^=.= † † † = † † † ;      Library General Public License for more
 ++= † -. † † .` † † .:       details.
-†: † † = †...= . :.=-        
+†: † † = †...= . :.=-
 †-. † .:....=;==+<;          You should have received a copy of the GNU
 † -_. . . † )=. †=           Library General Public License along with
-† † -- † † † †:-=`           this library; see the file COPYING.LIB. 
+† † -- † † † †:-=`           this library; see the file COPYING.LIB.
                              If not, write to the Free Software Foundation,
                              Inc., 59 Temple Place - Suite 330,
                              Boston, MA 02111-1307, USA.
@@ -37,6 +37,7 @@
 #ifndef PARTBAR_H
 #define PARTBAR_H
 
+#include <qlistbox.h>
 #include <klistbox.h>
 #include <kicontheme.h>
 
@@ -45,10 +46,10 @@
 #include "manipulatorpart.h"
 
 namespace KitchenSync {
-  
+
   /* forward declaration */
   class PartBar;
-  
+
   /**
    * an member of the PartBar
    */
@@ -57,12 +58,12 @@ namespace KitchenSync {
     public:
       PartBarItem( PartBar*, ManipulatorPart * );
       ~PartBarItem();
-      
+
       /**
-       * the part to be embedded 
+       * the part to be embedded
        */
       ManipulatorPart* part();
-      
+
       /**
        * sets the icon for the item.
        * @param icon the icon to set
@@ -70,7 +71,7 @@ namespace KitchenSync {
        */
       void setIcon( const QString& icon, KIcon::Group group = KIcon::Panel );
 
-      
+
       /**
        * returns the width of this item.
        */
@@ -79,28 +80,28 @@ namespace KitchenSync {
        * returns the height of this item.
        */
       virtual int height( const QListBox * ) const;
-      
+
       /**
        * returns the pixmap.
        */
       virtual const QPixmap * pixmap() const {
-	return m_Pixmap; 
+	return m_Pixmap;
       }
-      
+
     protected:
-      virtual void paint( QPainter *p); 
+      virtual void paint( QPainter *p);
 
     private:
       QPixmap* m_Pixmap;
       ManipulatorPart* m_Part;
       PartBar* m_Parents;
     };
-  
-  
+
+
   //class KListBox;
-  
+
   /**
-   * PartBar is a widget that displays icons together. 
+   * PartBar is a widget that displays icons together.
    * The the items of the PartBar emit the activated() signal.
    */
   class PartBar  : public QFrame
@@ -109,20 +110,20 @@ namespace KitchenSync {
     public:
       PartBar( QWidget *parent = 0, const char *name = 0, WFlags f = 0 );
       ~PartBar() {};
-      
+
       virtual PartBarItem* insertItem( ManipulatorPart *part, int pos = -1 );
-       
+
       /**
        * Allows to set a custom KListBox
        * Items of the previous box will not be moved to the next box
        */
       virtual void setListBox(  KListBox*);
-      
+
       /**
        * @returns the KListBox that is used.
        */
       KListBox *listBox() const { return m_listBox; }
-      
+
       /**
        * removes all items
        */
@@ -131,9 +132,9 @@ namespace KitchenSync {
        * @return a size hint.
        */
       virtual QSize sizeHint() const;
-      
+
       virtual QSize minimumSizeHint() const;
-      
+
       /**
        * @returns the current PartBarItem
        */
@@ -152,7 +153,7 @@ namespace KitchenSync {
       KListBox *m_listBox;
       PartBarItem *m_activeItem;
     };
-  
+
 };
 
-#endif 
+#endif
