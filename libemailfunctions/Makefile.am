@@ -2,8 +2,8 @@ INCLUDES = $(all_includes)
 
 noinst_LTLIBRARIES = libemailfunctions.la
 libemailfunctions_la_SOURCES = email.cpp idmapper.cpp kasciistricmp.cpp \
-                               kasciistringtools.cpp \
-                               networkstatus.cpp networkstatus.skel
+	kasciistringtools.cpp \
+	networkstatus.cpp networkstatus.skel
 libemailfunctions_la_LDFLAGS = $(all_libraries) -no-undefined
 ## Since this is a noinst library, in case of --enable-closure we need
 ## to link it explicitly to the libraries that it uses.
