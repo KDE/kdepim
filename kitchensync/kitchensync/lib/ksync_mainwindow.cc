@@ -728,13 +728,16 @@ void KSyncMainWindow::slotPartProg( ManipulatorPart* par, int prog) {
 }
 void KSyncMainWindow::slotPartProg( ManipulatorPart* part, const Progress& prog) {
     emit partProgress( part, prog );
+    emit syncProgress( part, 1, 0 );
 }
 void KSyncMainWindow::slotPartErr( ManipulatorPart* part, const Error& err) {
     emit partError( part, err );
+    emit syncProgress( part, 3, 0 );
 }
 void KSyncMainWindow::slotPartSyncStatus( ManipulatorPart* par, int err) {
     kdDebug(5210) << "SyncStatus: " << par << " " << err << endl;
     emit doneSync( par );
+    emit syncProgress( par, 2, 0 );
     // done() from ManipulatorPart now go on to the next ManipulatorPart...
     ++(*m_partsIt);
     ManipulatorPart* part = m_partsIt->current();
