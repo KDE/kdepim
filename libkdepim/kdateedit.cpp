@@ -1,5 +1,7 @@
 /*
-    This file is part of KOrganizer.
+    This file is part of libkdepim.
+
+    Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,8 +21,6 @@
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
 */
-
-// $Id$	
 
 #include <qapplication.h>
 #include <qpixmap.h>

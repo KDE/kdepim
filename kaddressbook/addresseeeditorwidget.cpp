@@ -43,7 +43,8 @@
 #include <libkdepim/categoryselectdialog.h>
 #include <libkdepim/categoryeditdialog.h>
 
-#include "kdateedit.h"
+#include <libkdepim/kdateedit.h>
+
 #include "addresseeeditorsupportwidgets.h"
 #include "kabprefs.h"
 
