@@ -1,5 +1,3 @@
-#ifndef NAMEEDITDIALOG_H
-#define NAMEEDITDIALOG_H
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -23,6 +21,9 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#ifndef NAMEEDITDIALOG_H
+#define NAMEEDITDIALOG_H
+
 #include <kdialogbase.h>
 #include <kabc/addressee.h>
 
@@ -41,7 +42,16 @@ class NameEditDialog : public KDialogBase
   Q_OBJECT
 
   public:
-    NameEditDialog( const KABC::Addressee &addr, QWidget *parent, const char *name = 0);
+    enum FormattedNameType
+    {
+      CustomName, // returned by @ref customFormattedName()
+      SimpleName, // form: givenName familyName
+      FullName,   // form: prefix givenName additionalName familyName suffix
+      ReverseName // form: familyName, givenName
+    };
+
+    NameEditDialog( const KABC::Addressee &addr, int type,
+                    QWidget *parent, const char *name = 0 );
     ~NameEditDialog();
    
     QString familyName() const;
@@ -49,19 +59,27 @@ class NameEditDialog : public KDialogBase
     QString prefix() const;
     QString suffix() const;
     QString additionalName() const;
+    QString customFormattedName() const;
+    int formattedNameType() const;
 
     bool changed() const;
+
+    static QString formattedName( const KABC::Addressee &addr, int type );
    
-  protected slots:
-    void parseBoxChanged(bool);
+  private slots:
+    void parseBoxChanged( bool );
+    void typeChanged( int );
+    void updateTypeCombo();
     void modified();
 
   private:
     KComboBox *mSuffixCombo;
     KComboBox *mPrefixCombo;
+    KComboBox *mFormattedNameCombo;
     KLineEdit *mFamilyNameEdit;
     KLineEdit *mGivenNameEdit;
     KLineEdit *mAdditionalNameEdit;
+    KLineEdit *mFormattedNameEdit;
     QCheckBox *mParseBox;
 
     AddresseeConfig mAddresseeConfig;

@@ -96,7 +96,6 @@ class AddresseeEditorWidget : public ExtensionWidget
     void nameBoxChanged();
     void nameButtonClicked();
     void categoryButtonClicked();
-    void formattedNameChanged( const QString& );
     
     /**
       Called whenever the categories change in the categories dialog.
@@ -115,6 +114,7 @@ class AddresseeEditorWidget : public ExtensionWidget
     void setupTab3();
     
     KABC::Addressee mAddressee;
+    int mFormattedNameType;
     bool mDirty;
     
     // GUI
@@ -126,7 +126,7 @@ class AddresseeEditorWidget : public ExtensionWidget
     KLineEdit *mNameEdit;
     KLineEdit *mRoleEdit;
     KLineEdit *mOrgEdit;
-    KComboBox *mFormattedNameBox;
+    KSqueezedTextLabel *mFormattedNameLabel;
     AddressEditWidget *mAddressEditWidget;
     EmailEditWidget *mEmailWidget;
     PhoneEditWidget *mPhoneEditWidget;

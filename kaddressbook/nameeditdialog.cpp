@@ -44,85 +44,99 @@
 
 #include "nameeditdialog.h"
 
-NameEditDialog::NameEditDialog( const KABC::Addressee &addr, QWidget *parent, const char *name )
-  : KDialogBase(KDialogBase::Plain, i18n("Edit Contact Name"),
-                KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
-                parent, name, true)
+NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
+                                QWidget *parent, const char *name )
+  : KDialogBase( KDialogBase::Plain, i18n( "Edit Contact Name" ),
+                 KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
+                 parent, name, true )
 {
   QWidget *page = plainPage();
-  QGridLayout *layout = new QGridLayout(page);
-  layout->setSpacing(spacingHint());
-  layout->addColSpacing(2, 100);
+  QGridLayout *layout = new QGridLayout( page );
+  layout->setSpacing( spacingHint() );
+  layout->addColSpacing( 2, 100 );
   QLabel *label;
   
-  label = new QLabel(i18n("Honorific prefixes:"), page);
-  layout->addWidget(label, 0, 0);
-  mPrefixCombo = new KComboBox(page, "mPrefixCombo");
-  mPrefixCombo->setDuplicatesEnabled(false);
-  mPrefixCombo->setEditable(true);
+  label = new QLabel( i18n( "Honorific prefixes:" ), page );
+  layout->addWidget( label, 0, 0 );
+  mPrefixCombo = new KComboBox( page );
+  mPrefixCombo->setDuplicatesEnabled( false );
+  mPrefixCombo->setEditable( true );
   label->setBuddy( mPrefixCombo );
-  layout->addMultiCellWidget(mPrefixCombo, 0, 0, 1, 2);
+  layout->addMultiCellWidget( mPrefixCombo, 0, 0, 1, 2 );
   
-  label = new QLabel(i18n("Given name:"), page);
-  layout->addWidget(label, 1, 0);
-  mGivenNameEdit = new KLineEdit(page, "mGivenNameEdit");
+  label = new QLabel( i18n( "Given name:" ), page );
+  layout->addWidget( label, 1, 0 );
+  mGivenNameEdit = new KLineEdit( page );
   label->setBuddy( mGivenNameEdit );
-  layout->addMultiCellWidget(mGivenNameEdit, 1, 1, 1, 2);
+  layout->addMultiCellWidget( mGivenNameEdit, 1, 1, 1, 2 );
 
-  label = new QLabel(i18n("Additional names:"), page);
-  layout->addWidget(label, 2, 0);
-  mAdditionalNameEdit = new KLineEdit(page, "mAdditionalNameEdit");
+  label = new QLabel( i18n( "Additional names:" ), page );
+  layout->addWidget( label, 2, 0 );
+  mAdditionalNameEdit = new KLineEdit( page );
   label->setBuddy( mAdditionalNameEdit );
-  layout->addMultiCellWidget(mAdditionalNameEdit, 2, 2, 1, 2);
+  layout->addMultiCellWidget( mAdditionalNameEdit, 2, 2, 1, 2 );
   
-  label = new QLabel(i18n("Family names:"), page);
-  layout->addWidget(label, 3, 0);
-  mFamilyNameEdit = new KLineEdit(page, "mFamilyNameEdit");
+  label = new QLabel( i18n( "Family names:" ), page );
+  layout->addWidget( label, 3, 0 );
+  mFamilyNameEdit = new KLineEdit( page );
   label->setBuddy( mFamilyNameEdit );
-  layout->addMultiCellWidget(mFamilyNameEdit, 3, 3, 1, 2);
+  layout->addMultiCellWidget( mFamilyNameEdit, 3, 3, 1, 2 );
   
-  label = new QLabel(i18n("Honorific suffixes:"), page);
-  layout->addWidget(label, 4, 0);
-  mSuffixCombo = new KComboBox(page, "mSuffixCombo");
-  mSuffixCombo->setDuplicatesEnabled(false);
-  mSuffixCombo->setEditable(true);
+  label = new QLabel( i18n( "Honorific suffixes:" ), page );
+  layout->addWidget( label, 4, 0 );
+  mSuffixCombo = new KComboBox( page );
+  mSuffixCombo->setDuplicatesEnabled( false );
+  mSuffixCombo->setEditable( true );
   label->setBuddy( mSuffixCombo );
-  layout->addMultiCellWidget(mSuffixCombo, 4, 4, 1, 2);
+  layout->addMultiCellWidget( mSuffixCombo, 4, 4, 1, 2 );
+
+  mFormattedNameCombo = new KComboBox( page );
+  layout->addWidget( mFormattedNameCombo, 5, 0 );
+  connect( mFormattedNameCombo, SIGNAL( activated( int ) ), SLOT( typeChanged( int ) ) );
+
+  mFormattedNameEdit = new KLineEdit( page );
+  mFormattedNameEdit->setEnabled( type == CustomName );
+  layout->addWidget( mFormattedNameEdit, 5, 1 );
 
   mParseBox = new QCheckBox( i18n( "Parse name automatically" ), page );
   connect( mParseBox, SIGNAL( toggled(bool) ), SLOT( parseBoxChanged(bool) ) );
   connect( mParseBox, SIGNAL( toggled(bool) ), SLOT( modified() ) );
-  layout->addMultiCellWidget( mParseBox, 5, 5, 0, 1 );
-  
-  // Fill in the values
-  mFamilyNameEdit->setText(addr.familyName());
-  mGivenNameEdit->setText(addr.givenName());
-  mAdditionalNameEdit->setText(addr.additionalName());
-  
-  // Prefix and suffix combos
-  QStringList sTitle;
-  QStringList sSuffix;
+  layout->addMultiCellWidget( mParseBox, 6, 6, 0, 1 );
 
+  // Fill in the values
+  mFamilyNameEdit->setText( addr.familyName() );
+  mGivenNameEdit->setText( addr.givenName() );
+  mAdditionalNameEdit->setText( addr.additionalName() );
+  mFormattedNameEdit->setText( addr.formattedName() );
+
+  // Prefix and suffix combos
+  KConfig config( "kabcrc" );
+  config.setGroup( "General" );
+
+  QStringList sTitle;
   sTitle += i18n( "Dr." );
   sTitle += i18n( "Miss" );
   sTitle += i18n( "Mr." );
   sTitle += i18n( "Mrs." );
   sTitle += i18n( "Ms." );
   sTitle += i18n( "Prof." );
+  sTitle += config.readListEntry( "Prefixes" );
   sTitle.sort();
 
+  QStringList sSuffix;
   sSuffix += i18n( "I" );
   sSuffix += i18n( "II" );
   sSuffix += i18n( "III" );
   sSuffix += i18n( "Jr." );
   sSuffix += i18n( "Sr." );
+  sSuffix += config.readListEntry( "Suffixes" );
   sSuffix.sort();
   
-  mPrefixCombo->insertStringList(sTitle);
-  mSuffixCombo->insertStringList(sSuffix);
+  mPrefixCombo->insertStringList( sTitle );
+  mSuffixCombo->insertStringList( sSuffix );
   
-  mPrefixCombo->setCurrentText(addr.prefix());
-  mSuffixCombo->setCurrentText(addr.suffix());
+  mPrefixCombo->setCurrentText( addr.prefix() );
+  mSuffixCombo->setCurrentText( addr.suffix() );
 
   mAddresseeConfig.setAddressee( addr );
   mParseBox->setChecked( mAddresseeConfig.automaticNameParsing() );
@@ -130,10 +144,20 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, QWidget *parent, co
   KAcceleratorManager::manage( this );
 
   connect( mPrefixCombo, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mPrefixCombo, SIGNAL( textChanged( const QString& ) ), SLOT( updateTypeCombo() ) );
   connect( mGivenNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mGivenNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( updateTypeCombo() ) );
   connect( mAdditionalNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mAdditionalNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( updateTypeCombo() ) );
   connect( mFamilyNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mFamilyNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( updateTypeCombo() ) );
   connect( mSuffixCombo, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mSuffixCombo, SIGNAL( textChanged( const QString& ) ), SLOT( updateTypeCombo() ) );
+  connect( mFormattedNameCombo, SIGNAL( activated( int ) ), SLOT( modified() ) );
+  connect( mFormattedNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+
+  updateTypeCombo();
+  mFormattedNameCombo->setCurrentItem( type );
 
   mChanged = false;
 }
@@ -167,9 +191,39 @@ QString NameEditDialog::additionalName() const
   return mAdditionalNameEdit->text();
 }
 
+QString NameEditDialog::customFormattedName() const
+{
+  return mFormattedNameEdit->text();
+}
+
+int NameEditDialog::formattedNameType() const
+{
+  return mFormattedNameCombo->currentItem();
+}
+
 bool NameEditDialog::changed() const
 {
   return mChanged;
+}
+
+QString NameEditDialog::formattedName( const KABC::Addressee &addr, int type )
+{
+  switch ( type ) {
+    case SimpleName:
+      return addr.givenName() + " " + addr.familyName();
+      break;
+    case FullName:
+      return addr.prefix() + " " + addr.givenName() + " " +
+             addr.additionalName() + " " + addr.familyName() + " " +
+             addr.suffix();
+      break;
+    case ReverseName:
+      return addr.familyName() + ", " + addr.givenName();
+      break;
+    default:
+      return "";
+      break;
+  }
 }
 
 void NameEditDialog::parseBoxChanged( bool value )
@@ -177,9 +231,34 @@ void NameEditDialog::parseBoxChanged( bool value )
   mAddresseeConfig.setAutomaticNameParsing( value );
 }
 
+void NameEditDialog::typeChanged( int pos )
+{
+  mFormattedNameEdit->setEnabled( pos == 0 );
+}
+
 void NameEditDialog::modified()
 {
   mChanged = true;
+}
+
+void NameEditDialog::updateTypeCombo()
+{
+  KABC::Addressee addr;
+  addr.setPrefix( mPrefixCombo->currentText() );
+  addr.setGivenName( mGivenNameEdit->text() );
+  addr.setAdditionalName( mAdditionalNameEdit->text() );
+  addr.setFamilyName( mFamilyNameEdit->text() );
+  addr.setSuffix( mSuffixCombo->currentText() );
+
+  int pos = mFormattedNameCombo->currentItem();
+
+  mFormattedNameCombo->clear();
+  mFormattedNameCombo->insertItem( i18n( "Custom" ) );
+  mFormattedNameCombo->insertItem( formattedName( addr, SimpleName ) );
+  mFormattedNameCombo->insertItem( formattedName( addr, FullName ) );
+  mFormattedNameCombo->insertItem( formattedName( addr, ReverseName ) );
+
+  mFormattedNameCombo->setCurrentItem( pos );
 }
 
 #include "nameeditdialog.moc"

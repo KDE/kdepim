@@ -177,18 +177,9 @@ void AddresseeEditorWidget::setupTab1()
   
   // File as (formatted name)
   label = new QLabel( i18n( "Formatted name:" ), tab1 );
-  mFormattedNameBox = new KComboBox( true, tab1 );
-  mFormattedNameBox->setDuplicatesEnabled( false );
-  mFormattedNameBox->setAutoCompletion( true );
-  label->setBuddy( mFormattedNameBox );
-  connect( mFormattedNameBox, SIGNAL( activated( const QString& ) ),
-           SLOT( textChanged( const QString& ) ) );
-  connect( mFormattedNameBox, SIGNAL( textChanged( const QString& ) ),
-           SLOT( textChanged( const QString& ) ) );
-  connect( mFormattedNameBox, SIGNAL( textChanged( const QString& ) ),
-           SLOT( formattedNameChanged( const QString& ) ) );
+  mFormattedNameLabel = new KSqueezedTextLabel( tab1 );
   layout->addWidget( label, 3, 1 );
-  layout->addWidget( mFormattedNameBox, 3, 2 );
+  layout->addWidget( mFormattedNameLabel, 3, 2 );
   
   // Left hand separator. This separator doesn't go all the way
   // across so the dialog still flows from top to bottom
@@ -458,7 +449,24 @@ void AddresseeEditorWidget::load()
   blockSignals( true ); 
 
   mNameEdit->setText( mAddressee.assembledName() );
-  mFormattedNameBox->setCurrentText( mAddressee.formattedName() );
+  
+  if ( mAddressee.formattedName().isEmpty() ) {
+    KConfig config( "kaddressbookrc" );
+    config.setGroup( "General" );
+    mFormattedNameType = config.readNumEntry( "FormattedNameType", 1 );
+    mAddressee.setFormattedName( NameEditDialog::formattedName( mAddressee, mFormattedNameType ) );
+  } else {
+    if ( mAddressee.formattedName() == NameEditDialog::formattedName( mAddressee, NameEditDialog::SimpleName ) )
+      mFormattedNameType = NameEditDialog::SimpleName;
+    else if ( mAddressee.formattedName() == NameEditDialog::formattedName( mAddressee, NameEditDialog::FullName ) )
+      mFormattedNameType = NameEditDialog::FullName;
+    else if ( mAddressee.formattedName() == NameEditDialog::formattedName( mAddressee, NameEditDialog::ReverseName ) )
+      mFormattedNameType = NameEditDialog::ReverseName;
+    else
+      mFormattedNameType = NameEditDialog::CustomName;
+  }
+
+  mFormattedNameLabel->setText( mAddressee.formattedName() );
 
   mRoleEdit->setText( mAddressee.role() );
   mOrgEdit->setText( mAddressee.organization() );
@@ -498,7 +506,6 @@ void AddresseeEditorWidget::save()
 {
   if ( !mDirty ) return;
 
-  mAddressee.setFormattedName( mFormattedNameBox->currentText() );
   mAddressee.setRole( mRoleEdit->text() );
   mAddressee.setOrganization( mOrgEdit->text() );
   mAddressee.setUrl( KURL( mURLEdit->text() ) );
@@ -619,26 +626,16 @@ void AddresseeEditorWidget::nameBoxChanged()
     mNameLabel->show();
   }
 
-  bool block = mFormattedNameBox->signalsBlocked();
-  mFormattedNameBox->blockSignals( true );
-
-  int pos = mFormattedNameBox->currentItem();
-  mFormattedNameBox->clear();
-  QStringList options;
-  options << mAddressee.formattedName()
-          << QString( addr.assembledName() ).simplifyWhiteSpace()
-          << QString( addr.givenName() + QString(" ") + addr.familyName() ).simplifyWhiteSpace()
-          << addr.familyName() + QString(", ") + addr.givenName();
-  mFormattedNameBox->insertStringList( options );
-  mFormattedNameBox->setCurrentItem( pos );
-
-  mFormattedNameBox->blockSignals( block );
+  if ( mFormattedNameType != NameEditDialog::CustomName ) {
+    mFormattedNameLabel->setText( NameEditDialog::formattedName( mAddressee, mFormattedNameType ) );
+    mAddressee.setFormattedName( mFormattedNameLabel->text() );
+  }
 }
 
 void AddresseeEditorWidget::nameButtonClicked()
 {
   // show the name dialog.
-  NameEditDialog dialog( mAddressee, this );
+  NameEditDialog dialog( mAddressee, mFormattedNameType, this );
   
   if ( dialog.exec() ) {
     if ( dialog.changed() ) {
@@ -647,7 +644,11 @@ void AddresseeEditorWidget::nameButtonClicked()
       mAddressee.setPrefix( dialog.prefix() );
       mAddressee.setSuffix( dialog.suffix() );
       mAddressee.setAdditionalName( dialog.additionalName() );
-
+      mFormattedNameType = dialog.formattedNameType();
+      if ( mFormattedNameType == NameEditDialog::CustomName ) {
+        mFormattedNameLabel->setText( dialog.customFormattedName() );
+        mAddressee.setFormattedName( dialog.customFormattedName() );
+      }
       // Update the name edit.
       bool block = mNameEdit->signalsBlocked();
       mNameEdit->blockSignals( true );
@@ -713,19 +714,6 @@ void AddresseeEditorWidget::dateChanged( QDate )
 void AddresseeEditorWidget::invalidDate()
 {
   KMessageBox::sorry( this, i18n( "You must specify a valid date" ) );
-}
-
-void AddresseeEditorWidget::formattedNameChanged( const QString &fn )
-{
-  mAddressee.setFormattedName( fn );
-  QLineEdit *le = mFormattedNameBox->lineEdit();
-  int pos = 0;
-  if ( le )
-    pos = le->cursorPosition();
-
-  nameBoxChanged();
-
-  le->setCursorPosition( pos );
 }
 
 void AddresseeEditorWidget::pageChanged( QWidget *wdg )

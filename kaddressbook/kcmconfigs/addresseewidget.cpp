@@ -28,6 +28,7 @@
 #include <qpushbutton.h>
 
 #include <kbuttonbox.h>
+#include <kcombobox.h>
 #include <kconfig.h>
 #include <kdialog.h>
 #include <klocale.h>
@@ -87,8 +88,11 @@ QStringList NamePartWidget::nameParts() const
 
 void NamePartWidget::add()
 {
-  if ( !mEdit->text().isEmpty() )
+  if ( !mEdit->text().isEmpty() ) {
     mBox->insertItem( mEdit->text() );
+    emit modified();
+  }
+
   mEdit->setText( "" );
 }
 
@@ -97,6 +101,8 @@ void NamePartWidget::remove()
   mBox->removeItem( mBox->currentItem() );
   if ( mBox->count() == 0 )
     selectionChanged( 0 );
+
+  emit modified();
 }
 
 void NamePartWidget::selectionChanged( QListBoxItem *item )
@@ -113,17 +119,32 @@ void NamePartWidget::textChanged( const QString& text )
 AddresseeWidget::AddresseeWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  QHBoxLayout *layout = new QHBoxLayout( this, KDialog::marginHint(),
+  QGridLayout *layout = new QGridLayout( this, 2, 3, KDialog::marginHint(),
                                          KDialog::spacingHint() );
 
   mPrefix = new NamePartWidget( i18n( "Prefixes" ), this );
-  layout->addWidget( mPrefix );
+  layout->addWidget( mPrefix, 0, 0 );
   
   mInclusion = new NamePartWidget( i18n( "Inclusions" ), this );
-  layout->addWidget( mInclusion );
+  layout->addWidget( mInclusion, 0, 1 );
 
   mSuffix = new NamePartWidget( i18n( "Suffixes" ), this );
-  layout->addWidget( mSuffix );
+  layout->addWidget( mSuffix, 0, 2 );
+
+  QLabel *label = new QLabel( i18n( "Default Formatted Name" ), this );
+  layout->addWidget( label, 1, 0 );
+
+  mFormattedNameCombo = new KComboBox( this );
+  mFormattedNameCombo->insertItem( i18n( "Empty" ) );
+  mFormattedNameCombo->insertItem( i18n( "Simple Name" ) );
+  mFormattedNameCombo->insertItem( i18n( "Full Name" ) );
+  mFormattedNameCombo->insertItem( i18n( "Reverse Name" ) );
+  layout->addMultiCellWidget( mFormattedNameCombo, 1, 1, 1, 2 );
+
+  connect( mPrefix, SIGNAL( modified() ), SIGNAL( modified() ) );
+  connect( mInclusion, SIGNAL( modified() ), SIGNAL( modified() ) );
+  connect( mSuffix, SIGNAL( modified() ), SIGNAL( modified() ) );
+  connect( mFormattedNameCombo, SIGNAL( activated( int ) ), SIGNAL( modified() ) );
 }
 
 AddresseeWidget::~AddresseeWidget()
@@ -138,6 +159,10 @@ void AddresseeWidget::restoreSettings()
   mPrefix->setNameParts( config.readListEntry( "Prefixes" ) );
   mInclusion->setNameParts( config.readListEntry( "Inclusions" ) );
   mSuffix->setNameParts( config.readListEntry( "Suffixes" ) );
+
+  KConfig cfg( "kaddressbookrc" );
+  cfg.setGroup( "General" );
+  mFormattedNameCombo->setCurrentItem( cfg.readNumEntry( "FormattedNameType", 1 ) );
 }
 
 void AddresseeWidget::saveSettings()
@@ -148,7 +173,10 @@ void AddresseeWidget::saveSettings()
   config.writeEntry( "Prefixes", mPrefix->nameParts() );
   config.writeEntry( "Inclusions", mInclusion->nameParts() );
   config.writeEntry( "Suffixes", mSuffix->nameParts() );
-}
 
+  KConfig cfg( "kaddressbookrc" );
+  cfg.setGroup( "General" );
+  cfg.writeEntry( "FormattedNameType", mFormattedNameCombo->currentItem() );
+}
 
 #include "addresseewidget.moc"

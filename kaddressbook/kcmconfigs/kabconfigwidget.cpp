@@ -114,6 +114,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   // Addressee page
   mAddresseeWidget = new AddresseeWidget( this );
   tabWidget->addTab( mAddresseeWidget, i18n( "Contact" ) );
+  connect( mAddresseeWidget, SIGNAL( modified() ), SLOT( modified() ) );
 }
 
 void KABConfigWidget::restoreSettings()

@@ -26,6 +26,7 @@
 
 #include <qwidget.h>
 
+class KComboBox;
 class KLineEdit;
 
 class QListBox;
@@ -43,6 +44,9 @@ class NamePartWidget : public QWidget
     
     void setNameParts( const QStringList &list );
     QStringList nameParts() const;
+
+  signals:
+    void modified();
 
   private slots:
     void add();
@@ -70,7 +74,11 @@ class AddresseeWidget : public QWidget
     void restoreSettings();
     void saveSettings();
 
+  signals:
+    void modified();
+
   private:
+    KComboBox *mFormattedNameCombo;
     NamePartWidget *mPrefix;
     NamePartWidget *mInclusion;
     NamePartWidget *mSuffix;
