@@ -30,13 +30,18 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
 #include <kurl.h>
 #include <kmsgbox.h>
 #include <kstatusbar.h>
-#include <qlistbox.h>
 #include <kwm.h>
-#include <kpilotOptions.h>
 #include <kprocess.h>
+#include <kaboutdata.h>
+#include <klocale.h>
+#include <kcmdlineargs.h>
+
+#include <qlistbox.h>
+#include <kpilotOptions.h>
 #include "kpilot.moc"
 #include "kpilotlink.h"
 #include "messageDialog.h"
@@ -582,7 +587,7 @@ KPilotInstaller::slotSyncDone(KProcess*)
 
 void 
 KPilotInstaller::testDir(QString name)
-    {
+{
 	FUNCTIONSETUP;
 
     DIR *dp;
@@ -591,7 +596,11 @@ KPilotInstaller::testDir(QString name)
 	::mkdir (name, S_IRWXU);
     else
 	closedir( dp );
-    }
+}
+
+
+static const char* description=I18N_NOOP("The 3Com Palm Pilot and IBM Workpad Syncer for KDE");
+static const char* VERSION="3.0";
     
 int main(int argc, char** argv)
 {
@@ -604,6 +613,9 @@ int main(int argc, char** argv)
 	// have to work this way.
 	//
 	//
+	// This hack won't work now because of KCmdLineArgs.
+	// You'll have to create a KCmdLineOptions and pass it to
+	// KCmdLineArgs::addCmdLineOptions(), which is commented out
 	if (argv[1]!=NULL && strcmp(argv[1],"--debug")==0 && argv[2]!=NULL)
 	{
 		debug_level=atoi(argv[2]);
@@ -614,7 +626,18 @@ int main(int argc, char** argv)
 		}
 	}
 
-	KApplication a(argc, argv, "kpilot");
+	KAboutData aboutData( "kpilot", I18N_NOOP("KPilot"),
+		VERSION, description, KAboutData::License_GPL,
+		"(c) 1998-2000, The KPilot Authors");
+	aboutData.addAuthor("Dan Pilone",0, "pilone@slac.com");
+	aboutData.addAuthor("Robert Ambrose");
+	aboutData.addAuthor("Preston Brown",0, "pbrown@kde.org");
+	aboutData.addAuthor("Adriaan de Groot",0, "adridg@cs.kun.nl");
+	
+	KCmdLineArgs::init( argc, argv, &aboutData );
+//	KCmdLineArgs::addCmdLineOptions( options );
+  
+	KApplication a;
 	KPilotInstaller *tp = new KPilotInstaller();
 
 	a.setMainWidget(tp);
