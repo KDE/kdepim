@@ -29,8 +29,22 @@ bool KNRangeFilter::doFilter(int a)
 {
   bool ret=true;
   if(enabled) {
-    if(op1==eq) ret=(a==val1);
-    else ret=( matchesOp(val1,op1,a) && matchesOp(a,op2,val2) );
+    switch (op1) {
+      case gt:
+      case gtoeq:
+          if (op2 != dis)
+            ret=( matchesOp(val1,op1,a) && matchesOp(a,op2,val2) );
+          else
+            ret = matchesOp(val1,op1,a);;
+          break;
+      case eq:
+      case lt:
+      case ltoeq:
+          ret = matchesOp(val1,op1,a);
+          break;
+      default:
+          ret = false;
+    }
   }
   
   return ret;   
@@ -46,6 +60,9 @@ bool KNRangeFilter::matchesOp(int v1, Op o, int v2)
     case eq:      ret=(v1==v2);   break;
     case gt:      ret=(v1<v2);    break;
     case gtoeq:   ret=(v1<=v2);   break;
+    case ltoeq:   ret=(v1>=v2);   break;
+    case lt:      ret=(v1>v2);    break;
+    default:      ret=false;      break;
   };
   
   return ret;
@@ -93,7 +110,10 @@ KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max,
   op1->insertItem("<");
   op1->insertItem("<=");
   op1->insertItem("=");
+  op1->insertItem(">=");
+  op1->insertItem(">");
   op2=new QComboBox(this);
+  op2->insertItem("");
   op2->insertItem("<");
   op2->insertItem("<=");
   
@@ -114,8 +134,9 @@ KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max,
   topL->setColStretch(1,1);
   topL->setColStretch(5,1);
 
-  connect(op1, SIGNAL(activated(int)), this, SLOT(slotOp1Changed(int)));
-  connect(enabled, SIGNAL(toggled(bool)), this, SLOT(slotEnabled(bool)));
+  connect(op1, SIGNAL(activated(int)), SLOT(slotOp1Changed(int)));
+  connect(op2, SIGNAL(activated(int)), SLOT(slotOp2Changed(int)));
+  connect(enabled, SIGNAL(toggled(bool)), SLOT(slotEnabled(bool)));
   
   slotEnabled(false);
 }
@@ -135,8 +156,13 @@ KNRangeFilter KNRangeFilterWidget::filter()
   r.val2=val2->value();
   
   r.op1=(KNRangeFilter::Op) op1->currentItem();
-  r.op2=(KNRangeFilter::Op) op2->currentItem();
-    
+  if (op2->currentText()=="")
+    r.op2=KNRangeFilter::dis;
+  else if (op2->currentText()=="<")
+    r.op2=KNRangeFilter::gt;
+  else if (op2->currentText()=="<=")
+    r.op2=KNRangeFilter::gtoeq;
+
   r.enabled=enabled->isChecked();
   
   return r;
@@ -150,8 +176,13 @@ void KNRangeFilterWidget::setFilter(KNRangeFilter &f)
   val2->setValue(f.val2);
   
   op1->setCurrentItem((int)f.op1);
-  op2->setCurrentItem((int)f.op2);
-  
+  if (f.op2 == KNRangeFilter::dis)
+    op2->setCurrentItem(0);
+  else if (f.op2 == KNRangeFilter::gt)
+    op2->setCurrentItem(1);
+  else if (f.op2 == KNRangeFilter::gtoeq)
+    op2->setCurrentItem(2);
+
   enabled->setChecked(f.enabled);
 }
 
@@ -168,8 +199,15 @@ void KNRangeFilterWidget::clear()
 
 void KNRangeFilterWidget::slotOp1Changed(int id)
 {
-  op2->setEnabled((id!=2));
-  val2->setEnabled((id!=2));
+  op2->setEnabled(op1->isEnabled() && (id<2));
+  slotOp2Changed(op2->currentItem());
+}
+
+
+
+void KNRangeFilterWidget::slotOp2Changed(int id)
+{
+  val2->setEnabled(op1->isEnabled() && (op1->currentItem()<2) && (id>0));
 }
 
 
@@ -179,11 +217,7 @@ void KNRangeFilterWidget::slotEnabled(bool e)
   op1->setEnabled(e);
   val1->setEnabled(e);
   des->setEnabled(e);
-  if(op1->currentItem()==2)  slotOp1Changed(2);
-  else {
-    op2->setEnabled(e);
-    val2->setEnabled(e);
-  }
+  slotOp1Changed(op1->currentItem());
 }
 
 // -----------------------------------------------------------------------------

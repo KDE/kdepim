@@ -32,7 +32,7 @@ class KNRangeFilter {
   friend class KNRangeFilterWidget;
 
   public:
-    KNRangeFilter()   { op1=eq; op2=gt; val1=0; val2=0; enabled=false; }
+    KNRangeFilter()   { op1=eq; op2=dis; val1=0; val2=0; enabled=false; }
     ~KNRangeFilter()  {}
     
     KNRangeFilter& operator=(const KNRangeFilter &nr)
@@ -47,7 +47,7 @@ class KNRangeFilter {
     bool doFilter(int a);
     
   protected:
-    enum Op { gt=0, gtoeq=1, eq=2 };
+    enum Op { gt=0, gtoeq=1, eq=2, ltoeq=3, lt=4, dis=5 };
     bool matchesOp(int v1, Op o, int v2);
     
     int val1, val2;
@@ -81,6 +81,7 @@ class KNRangeFilterWidget : public QGroupBox {
   protected slots:
     void slotEnabled(bool e);                 
     void slotOp1Changed(int id);
+    void slotOp2Changed(int id);
     
 };
 
