@@ -34,7 +34,7 @@ public:
 	 * @param url The url: this url is used to split the location data off.
 	 * @param type The possible types of the url
 	 */
-	UrlInfo::UrlInfo( const KURL &url, const UrlType type = (UrlType)( message | directory ) );
+	UrlInfo( const KURL &url, const UrlType type = (UrlType)( message | directory ) );
 
 	/**
 	 * Destructor
