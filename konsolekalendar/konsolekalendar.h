@@ -1,5 +1,5 @@
-#ifndef KONSOLEKALENDAR_H
-#define KONSOLEKALENDAR_H
+#ifndef _KONSOLEKALENDAR_H
+#define _KONSOLEKALENDAR_H
 
 /***************************************************************************
         konsolekalendar.h  -  description
