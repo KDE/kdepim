@@ -417,37 +417,32 @@ QString Task::comment() const
 
 int Task::compare ( QListViewItem * i, int col, bool ascending ) const
 {
-  if ( col == 0 ) 
-    return key( col, ascending ).compare( i->key( col, ascending) );
-  else
+  switch ( col )
   {
-    switch ( col )
-    {
-      case 1: 
-        if ( _sessionTime < static_cast<Task*>(i)->sessionTime() ) return 1;
-        else if ( _sessionTime > static_cast<Task*>(i)->sessionTime() ) return 1;
-        else return 0;
-        break;
-      case 2:
-        if ( _time < static_cast<Task*>(i)->time() ) return 1;
-        else if ( _time > static_cast<Task*>(i)->time() ) return 1;
-        else return 0;
-        break;
-      case 3:
-        if ( _totalSessionTime < static_cast<Task*>(i)->totalSessionTime() ) 
-          return 1;
-        else if ( _totalSessionTime > static_cast<Task*>(i)->totalSessionTime() ) 
-          return 1;
-        else return 0;
-        break;
-      case 4:
-        if ( _totalTime < static_cast<Task*>(i)->totalTime() ) return 1;
-        else if ( _totalTime > static_cast<Task*>(i)->totalTime() ) return 1;
-        else return 0;
-        break;
-      default:
-        return key( col, ascending ).compare( i->key( col, ascending) );
-    }
+    case 1: 
+      if      ( _sessionTime < static_cast<Task*>(i)->sessionTime() ) return -1;
+      else if ( _sessionTime > static_cast<Task*>(i)->sessionTime() ) return 1;
+      else return 0;
+      break;
+    case 2:
+      if      ( _time < static_cast<Task*>(i)->time() ) return -1;
+      else if ( _time > static_cast<Task*>(i)->time() ) return 1;
+      else return 0;
+      break;
+    case 3:
+      if      ( _totalSessionTime < static_cast<Task*>(i)->totalSessionTime() ) 
+        return -1;
+      else if ( _totalSessionTime > static_cast<Task*>(i)->totalSessionTime() ) 
+        return 1;
+      else return 0;
+      break;
+    case 4:
+      if      ( _totalTime < static_cast<Task*>(i)->totalTime() ) return -1;
+      else if ( _totalTime > static_cast<Task*>(i)->totalTime() ) return 1;
+      else return 0;
+      break;
+    default:
+      return key(col, ascending).localeAwareCompare( i->key(col, ascending) );
   }
 }
 
