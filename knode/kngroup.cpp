@@ -854,7 +854,10 @@ void KNGroup::scoreArticles(bool onlynew)
     sm->initCache(groupname());
     for(int idx=0; idx<todo; idx++) {
       KNRemoteArticle *a = at(len-idx-1);
-      Q_ASSERT( a );
+      if ( !a ) {
+        kdWarning( 5003 ) << "found no article at " << len-idx-1 << endl;
+        continue;
+      }
 
       defScore = 0;
       if (a->isIgnored())
