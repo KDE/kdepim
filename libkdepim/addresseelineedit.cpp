@@ -105,38 +105,40 @@ void AddresseeLineEdit::init()
 //  connect( s_completion, SIGNAL( match( const QString& ) ),
 //           this, SLOT( slotMatched( const QString& ) ) );
 
-  if ( m_useCompletion && !s_LDAPTimer ) {
-    ldapTimerDeleter.setObject( s_LDAPTimer, new QTimer );
-    ldapSearchDeleter.setObject( s_LDAPSearch, new KPIM::LdapSearch );
-    ldapTextDeleter.setObject( s_LDAPText, new QString );
-    connect( s_LDAPTimer, SIGNAL( timeout() ), SLOT( slotStartLDAPLookup() ) );
-    connect( s_LDAPSearch, SIGNAL( searchData( const KPIM::LdapResultList& ) ),
-             SLOT( slotLDAPSearchData( const KPIM::LdapResultList& ) ) );
-  }
+  if ( m_useCompletion ) {
+    if ( !s_LDAPTimer ) {
+      ldapTimerDeleter.setObject( s_LDAPTimer, new QTimer );
+      ldapSearchDeleter.setObject( s_LDAPSearch, new KPIM::LdapSearch );
+      ldapTextDeleter.setObject( s_LDAPText, new QString );
+    }
+    if ( !m_completionInitialized ) {
+      setCompletionObject( s_completion, false );
+      connect( this, SIGNAL( completion( const QString& ) ),
+          this, SLOT( slotCompletion() ) );
 
-  if ( m_useCompletion && !m_completionInitialized ) {
-    setCompletionObject( s_completion, false );
-    connect( this, SIGNAL( completion( const QString& ) ),
-             this, SLOT( slotCompletion() ) );
+      KCompletionBox *box = completionBox();
+      connect( box, SIGNAL( highlighted( const QString& ) ),
+          this, SLOT( slotPopupCompletion( const QString& ) ) );
+      connect( box, SIGNAL( userCancelled( const QString& ) ),
+          SLOT( slotUserCancelled( const QString& ) ) );
 
-    KCompletionBox *box = completionBox();
-    connect( box, SIGNAL( highlighted( const QString& ) ),
-             this, SLOT( slotPopupCompletion( const QString& ) ) );
-    connect( box, SIGNAL( userCancelled( const QString& ) ),
-             SLOT( slotUserCancelled( const QString& ) ) );
+      // The emitter is always called KPIM::IMAPCompletionOrder by contract
+      if ( !connectDCOPSignal( 0, "KPIM::IMAPCompletionOrder", "orderChanged()",
+            "slotIMAPCompletionOrderChanged()", false ) )
+        kdError() << "AddresseeLineEdit: connection to orderChanged() failed" << endl;
 
-    // The emitter is always called KPIM::IMAPCompletionOrder by contract
-    if ( !connectDCOPSignal( 0, "KPIM::IMAPCompletionOrder", "orderChanged()",
-                             "slotIMAPCompletionOrderChanged()", false ) )
-      kdError() << "AddresseeLineEdit: connection to orderChanged() failed" << endl;
+      connect( s_LDAPTimer, SIGNAL( timeout() ), SLOT( slotStartLDAPLookup() ) );
+      connect( s_LDAPSearch, SIGNAL( searchData( const KPIM::LdapResultList& ) ),
+          SLOT( slotLDAPSearchData( const KPIM::LdapResultList& ) ) );
 
-    m_completionInitialized = true;
+      m_completionInitialized = true;
+    }
   }
 }
 
 AddresseeLineEdit::~AddresseeLineEdit()
 {
-  if (  s_LDAPSearch && s_LDAPLineEdit == this )
+  if ( s_LDAPSearch && s_LDAPLineEdit == this )
     stopLDAPLookup();
 }
 
@@ -495,6 +497,7 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
   QStringList::ConstIterator it;
   for ( it = emails.begin(); it != emails.end(); ++it ) {
     int len = (*it).length();
+    if ( len == 0 ) continue;
     if( '\0' == (*it)[len-1] )
       --len;
     const QString tmp = (*it).left( len );
