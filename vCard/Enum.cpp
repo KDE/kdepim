@@ -26,7 +26,8 @@
 using namespace VCARD;
 
 // There are 31 possible types, not including extensions.
-const QCString paramNames [] =
+	const QCString
+VCARD::paramNames [] =
 {
 	"NAME",
 	"PROFILE",
@@ -61,7 +62,8 @@ const QCString paramNames [] =
 	"KEY"
 };
 
-const ParamType paramTypesTable[] = {
+	const ParamType
+VCARD::paramTypesTable[] = {
 	ParamNone,		// NAME
 	ParamNone,		// PROFILE
 	ParamSource,	// SOURCE
@@ -97,7 +99,7 @@ const ParamType paramTypesTable[] = {
 };
 
 	ParamType
-EntityTypeToParamType(EntityType e)
+VCARD::EntityTypeToParamType(EntityType e)
 {
 	ParamType t(ParamUnknown);
 
@@ -156,7 +158,7 @@ EntityTypeToParamType(EntityType e)
 }
 
 	ValueType
-EntityTypeToValueType(EntityType e)
+VCARD::EntityTypeToValueType(EntityType e)
 {
 	ValueType t(ValueUnknown);
 
@@ -218,7 +220,7 @@ EntityTypeToValueType(EntityType e)
 }
 
 	EntityType
-ParamNameToEntityType(const QCString & s)
+VCARD::ParamNameToEntityType(const QCString & s)
 {
 	if (s.isEmpty()) return EntityUnknown;
 	
@@ -375,93 +377,94 @@ ParamNameToEntityType(const QCString & s)
  *
  */
 
-	QCString
-encodeBase64(const char * src, unsigned long srcl, unsigned long & destl)
-{
-	const unsigned char *s = (unsigned char *)src;
-	unsigned long i = ((srcl + 2) / 3) * 4;
-	destl = i += 2 * ((i / 60) + 1);
-	char * ret = new char[destl];
-	unsigned char *d((unsigned char *)ret);
-	
-	for (i = 0; srcl; s += 3) {
-		
-		*d++ =		B64[s[0] >> 2];
-		*d++ = 		B64[((s[0] << 4) + (--srcl ? s[1] >> 4 : 0)) & 0x3f];
-		*d++ =
-			srcl ?	B64[((s[1] << 2) + (--srcl ? s[2] >> 6 : 0)) & 0x3f] : '=';
-		*d++ =
-			srcl ?	B64[s[2] & 0x3f] : '=';
-		
-		if (srcl != 0)
-			srcl--;
-		
-		if (++i == 15) {
-			i = 0;
-			*d++ = '\r';
-			*d++ = '\n';
-		}
-	}
-  
-	*d++	= '\r';
-	*d++	= '\n';
-	*d		= '\0';
-	
-	QCString out(ret);
-	delete [] ret;
-	ret = 0;
-	return out;
-}
+static char B64[] = 
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+// the mime base64 disctionary used for decoding
+static char b64dec[] = {
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 20
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 30
+	-1, -1, -1,-19, -1, -1, -1,-16, -4, -4, // 40 -19 == '+' -16 == '/'
+	-4, -4, -4, -4, -4, -4, -4, -4, -1, -1, // 50 -4 == '0'
+	-1,  0, -1, -1, -1, 65, 65, 65, 65, 65, // 60 0 == '=' 65 == 'A'
+	65, 65, 65, 65, 65, 65, 65, 65, 65, 65, // 70
+	65, 65, 65, 65, 65, 65, 65, 65, 65, 65, // 80
+	65, -1, -1, -1, -1, -1, -1, 71, 71, 71, // 90 71 == 'a'
+	71, 71, 71, 71, 71, 71, 71, 71, 71, 71, // 100
+	71, 71, 71, 71, 71, 71, 71, 71, 71, 71, // 110
+	71, 71, 71, -1, -1, -1, -1, -1, -1, -1, // 120
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 130
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 140
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 150
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 160
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 170
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 180
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 190
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 200
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 210
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 220
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 230
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 240
+	-1, -1, -1, -1, -1,	-1, -1				// 250
+};
 
 	char *
-decodeBase64(const QCString & s, unsigned long & len)
+VCARD::decodeBase64(const char * s, unsigned long srcl, unsigned long & len)
 {
-	char c;
-	int e(0); 
+	register char c;
+	register unsigned long e(0);
 	len = 0;
-	
-	unsigned char * src = (unsigned char *)s.data();
-	
-	unsigned long srcl = s.length();
-	
+	unsigned const char * src = (unsigned const char *)s;
 	char * ret = new char[srcl + (srcl / 4 + 1)];
-	
-	char *d((char *)ret);
-
-	while (srcl--) {
-		
+	register char *d = ret;
+	while (srcl--) { // Critical loop
 		c = *src++;
-		
-		if		(isupper(c))	c -= 'A';
-		else if	(islower(c))	c -= 'a' - 26;
-		else if	(isdigit(c))	c -= '0' - 52;
-		else if	(c == '+')		c = 62;
-		else if	(c == '/')		c = 63;
-		
-		else if (c == '=') {
-
+		int dec = b64dec[c];
+		if (dec == -1) continue;
+		if (c == '=') {
 			switch (e++) {
-				case 3:		e = 0;				break;
-				case 2:		if (*src == '=')	break;
-				default:						return 0;
+				case 3: e = 0;								break;
+				case 2: if (*src == '=')					break;
+				default: delete [] ret; ret = 0; return 0;	break;
 			}
-	
 			continue;
 		}
-		
-		else continue;
-
-		switch (e++) {
-			
-			case 0:	*d = c << 2;					break;
-			case 1:	*d++ |= c >> 4; *d = c << 4;	break;
-			case 2:	*d++ |= c >> 2; *d = c << 6;	break;
-			case 3:	*d++ |= c; e = 0;				break;
+		c -= dec;
+		if (e == 0) { *d = c << 2; ++e; continue; }
+		switch (e) {
+			case 1: *d |= c >> 4; *++d = c << 4;	break;
+			case 2: *d |= c >> 2; *++d = c << 6;	break;
+			case 3: *d++ |= c; e = 0; continue;		break;
 		}
+		++e;
 	}
-
 	len = d - (char *)ret;
-	
+	return ret;
+}
+
+
+	char *
+VCARD::encodeBase64(const char * src, unsigned long srcl, unsigned long & destl)
+{
+	register const unsigned char *s = (unsigned char *)src;
+	register unsigned long i = ((srcl + 2) / 3) * 4;
+	destl = i += 2 * ((i / 60) + 1);
+	i = 0;
+	char * ret = new char[destl];
+	register unsigned char *d((unsigned char *)ret);
+	while (srcl != 0) { // Critical loop
+		*d++ = B64[s[0] >> 2];
+		*d++ = B64[((s[0] << 4) + (--srcl == 0 ? 0 : s[1] >> 4)) & 0x3f];
+		*d++ = srcl == 0 ? '=' :
+			B64[((s[1] << 2) + (--srcl == 0 ? 0 : s[2] >> 6)) & 0x3f];
+		*d++ = srcl == 0 ?	'=' : B64[s[2] & 0x3f];
+		if (srcl != 0) srcl--;
+		if (++i == 15) { i = 0; *d++ = '\r'; *d++ = '\n'; }
+		s += 3;
+	}
+	*d = '\r'; *++d = '\n'; *++d = '\0';
 	return ret;
 }
 

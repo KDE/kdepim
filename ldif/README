@@ -13,9 +13,6 @@ I've now tested this with an .ldif exported from Netscape Communicator 4.6
 It looks like folding is interpreted correctly, as is rebuilding of folded
 lines.
 
-I haven't implemented Base64 encoding / decoding as yet, but at least it
-recognises when something's encoded.
-
 Note that Communicator 4.6 isn't using the latest draft spec of ldif, which
 is called:
 "The LDAP Data Interchange Format (LDIF) - Technical Specification"
@@ -32,6 +29,25 @@ Using the current draft, the version should be set to 1.
 Also note that URL lines aren't recognised correctly as they are missing
 the '<' character that identifies them. I guess this is the fault of the old
 spec and not Communicator.
+
+You can test if a ValueSpec is Base64 encoded by calling:
+LDIF::ValueSpec::ValueType LDIF::ValueSpec::valueType();
+The return value is LDIF::ValueSpec::Base64 if, er, it's Base64 encoded.
+
+You can use the utility function:
+char * LDIF::decodeBase64(
+	const char * input, unsigned long inputLength, unsigned long & outLength)
+.. to decode. Use it something like this:
+
+LDIF::ValueSpec v = anAttrValSpec.valueSpec();
+QCString s(v.value());
+unsigned long outputLength;
+char * output = LDIF::decodeBase64(s.data(), s.length(), outputLength);
+if (output != 0)
+	// use output
+delete [] output; // The returned char * is allocated, so you must delete it.
+
+I'll make this return a KSmartPtr or whatever it's called soon.
 
 Feedback is welcome !
 

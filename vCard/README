@@ -5,5 +5,11 @@ This software is licensed under the GPL.
 
 A vCard 3.0 parser based on the same principles that librmm (from Empath) uses.
 
-It's small and blindingly fast. (137k with example program, stripped). Sue me.
+It's small and very fast due to parsing and assembly of object being lazy.
+
+There is a base64 codec declared in Enum.h
+
+Feedback welcome.
+
+Rik <rik@kde.org>
 
