@@ -26,7 +26,6 @@
 #include <qstring.h>
 
 namespace KSync{
-
 class SyncEntry;
 /**
  * \brief Small class to help in not losing attributes

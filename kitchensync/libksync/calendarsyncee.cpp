@@ -20,14 +20,14 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include <kdebug.h>
+#include "calendarsyncee.h"
+#include "calendarmerger.h"
+
 #include <libkcal/filestorage.h>
 #include <libkcal/calformat.h>
-
 #include <libkdepim/calendardiffalgo.h>
 
-#include "calendarmerger.h"
-#include "calendarsyncee.h"
+#include <kdebug.h>
 
 
 using namespace KSync;
