@@ -26,6 +26,7 @@
 
 #include <RMM_Defines.h>
 #include <RMM_Parameter.h>
+#include <RMM_HeaderBody.h>
 
 typedef QListIterator<RParameter> RParameterListIterator;
 
@@ -33,23 +34,21 @@ typedef QListIterator<RParameter> RParameterListIterator;
  * @short Simple encapsulation of a list of RParameter, which is also an
  * RHeaderBody.
  */
-class RParameterList : public QList<RParameter> {
+class RParameterList : public QList<RParameter>, RHeaderBody {
 
 	public:
 
 		RParameterList();
-		RParameterList(const RParameterList & pl);
-                RParameterList(const QCString & /*s*/) : QList<RParameter>() { }
-		const RParameterList & operator = (const RParameterList & pl);
-		const QCString & asString() const { return strRep_; }
+		RParameterList(const RParameterList &);
+		RParameterList(const QCString &);
+		RParameterList & operator = (const RParameterList &);
+		RParameterList & operator = (const QCString &);
+		const QCString & asString();
 
 		virtual ~RParameterList();
 
 		void parse();
 		void assemble();
-
-		bool isValid() const;
-
 		void createDefault();
 
 		const char * className() const { return "RParameterList"; }
@@ -57,7 +56,6 @@ class RParameterList : public QList<RParameter> {
 
 	private:
 
-		bool isValid_;
 		QCString strRep_;
 };
 

@@ -92,8 +92,6 @@ class EmpathConfig
 		static const QString		KEY_QMAIL_LOCATION;
 		static const QString		KEY_SMTP_SERVER_LOCATION;
 		static const QString		KEY_SMTP_SERVER_PORT;
-		static const QString		KEY_QMTP_SERVER_LOCATION;
-		static const QString		KEY_QMTP_SERVER_PORT;
 		static const QString		KEY_LOCAL_MAILBOX_PATH;
 		static const QString		KEY_LOCAL_CHECK_FOR_NEW_MAIL;
 		static const QString		KEY_LOCAL_MAIL_CHECK_INTERVAL;

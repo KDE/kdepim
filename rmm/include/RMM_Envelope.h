@@ -59,7 +59,7 @@ class REnvelope : public RMessageComponent
 		REnvelope(const QCString & s) : RMessageComponent(s) { }
 
 		virtual ~REnvelope();
-		const REnvelope & operator = (const REnvelope & envelope);
+		REnvelope & operator = (const REnvelope & envelope);
 
 		void parse();
 		void assemble();
@@ -67,16 +67,16 @@ class REnvelope : public RMessageComponent
 		/**
 		 * Find out if this header exists in the envelope.
 		 */
-		bool has(RMM::HeaderType t) const;
+		bool has(RMM::HeaderType t);
 		/**
 		 * Find out if this header exists in the envelope.
 		 */
-		bool has(const QCString & headerName) const;
+		bool has(const QCString & headerName);
 
 		void set(const QCString & s)
 		{ RMessageComponent::set(s); }
 		
-		const QCString & asString() const
+		const QCString & asString()
 		{ return RMessageComponent::asString(); }
 		
 		/**
@@ -92,7 +92,7 @@ class REnvelope : public RMessageComponent
 		 * then you get the first RAddress in that header body. If there is no
 		 * 'From' header, then you get what's in 'Sender'.
 		 */
-		const RMailbox & firstSender();
+		RMailbox & firstSender();
 		
 		/**
 		 * @short The ID of the 'parent' message.

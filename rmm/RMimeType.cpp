@@ -46,7 +46,7 @@ RMimeType::~RMimeType()
 	rmmDebug("dtor");
 }
 
-	const RMimeType &
+	RMimeType &
 RMimeType::operator = (const RMimeType & t)
 {
 	rmmDebug("operator =");
@@ -63,7 +63,7 @@ RMimeType::operator = (const RMimeType & t)
 }
 
 	RMM::MimeType
-RMimeType::type() const
+RMimeType::type()
 {
 	return type_;
 }
@@ -80,7 +80,7 @@ RMimeType::setType(const QCString & s)
 }
 
 	RMM::MimeSubType
-RMimeType::subType() const
+RMimeType::subType()
 {
 	return subType_;
 }
@@ -96,7 +96,7 @@ RMimeType::setSubType(const QCString & s)
 }
 
 	const QCString &
-RMimeType::boundary() const
+RMimeType::boundary()
 {
 	return boundary_;
 }
@@ -108,7 +108,7 @@ RMimeType::setBoundary(const QCString & s)
 }
 
 	const QCString &
-RMimeType::name() const
+RMimeType::name()
 {
 	return name_;
 }

@@ -28,7 +28,7 @@
 
 EmpathMessageListItem::EmpathMessageListItem(
 		EmpathMessageListWidget * parent,
-		const EmpathIndexRecord & msgDesc)
+		EmpathIndexRecord & msgDesc)
 	:	
 		QListViewItem(parent),
 		id_			(msgDesc.id()),
@@ -47,7 +47,7 @@ EmpathMessageListItem::EmpathMessageListItem(
 
 EmpathMessageListItem::EmpathMessageListItem(
 		EmpathMessageListItem * parent,
-		const EmpathIndexRecord & msgDesc)
+		EmpathIndexRecord & msgDesc)
 	:	
 		QListViewItem(parent),
 		id_			(msgDesc.id()),
@@ -82,16 +82,16 @@ EmpathMessageListItem::_init()
 	// I hope that 10G mail messages won't exist during my lifetime ;)
 	if (size_ < 1024) {
 		sizeStr = "%1 bytes";
-		sizeStr = sizeStr.arg((unsigned int)(size_), 4);
+		sizeStr = sizeStr.arg((Q_UINT32)size_, 4);
 		setText(4, sizeStr);
 	} else {
 		if (size_ < 1048576) {
 			sizeStr = "%1 Kb";
-			sizeStr = sizeStr.arg((unsigned int)(size_ / 1024.0), 4);
+			sizeStr = sizeStr.arg((Q_UINT32)(size_ / 1024.0), 4);
 			setText(4, sizeStr);
 		} else {
 			sizeStr = "%1 Mb";
-			sizeStr = sizeStr.arg((unsigned int)(size_ / 1048576.0), 4);
+			sizeStr = sizeStr.arg((Q_UINT32)(size_ / 1048576.0), 4);
 			setText(4, sizeStr);
 		}
 	}
@@ -111,6 +111,12 @@ EmpathMessageListItem::_init()
 		}
 		setText(1, s);
 	}
+	
+	dateStr_ = "%1";
+	dateStr_.arg(date_.asUnixTime());
+	
+	sizeStr_ = "%1";
+	sizeStr_.arg(size_);
 }
 
 	void
@@ -127,7 +133,7 @@ EmpathMessageListItem::setup()
 	QString
 EmpathMessageListItem::key(int column, bool b) const
 {
-	static QString s;
+	QString s;
 	
 	switch (column) {
 		
@@ -140,10 +146,7 @@ EmpathMessageListItem::key(int column, bool b) const
 			break;
 			
 		case 2:
-			if (b)
-				s.sprintf("%016ul", date_.asUnixTime());
-			else
-				s.sprintf("%016l", -date_.asUnixTime());
+			s = dateStr_;
 			break;
 			
 		case 3:
@@ -151,11 +154,7 @@ EmpathMessageListItem::key(int column, bool b) const
 			break;
 		
 		case 4:
-			if (b)
-				s.sprintf("%08ul", size_);
-			else
-				s.sprintf("%08l", -size_);
-			break;
+			s = sizeStr_;
 			
 		default:
 			break;

@@ -35,23 +35,21 @@ class RDispositionType : public RHeaderBody {
 		RDispositionType();
 		RDispositionType(const RDispositionType & t);
 		RDispositionType(const QCString & s) : RHeaderBody(s) { }
-		const RDispositionType & operator = (const RDispositionType & t);
+		RDispositionType & operator = (const RDispositionType & t);
 
 		virtual ~RDispositionType();
 
 		void parse();
 		void assemble();
 
-		bool isValid() const;
-
 		void set(RMM::DispType);
 		void set(const QCString & s) { RHeaderBody::set(s); }
 
-		const QCString & filename() const;
+		const QCString & filename();
 		void setFilename(const QCString &);
-		void addParameter(const RParameter & p);
-		const QList<RParameter> parameterList();
-		RMM::DispType type()const;
+		void addParameter(RParameter & p);
+		RParameterList & parameterList();
+		RMM::DispType type();
 		
 		void createDefault();
 		
@@ -59,10 +57,9 @@ class RDispositionType : public RHeaderBody {
 
 	private:
 
-		RParameterList parameterList_;
-		RMM::DispType dispType_;
-		QCString filename_;
-		bool isValid_;
+		RParameterList	parameterList_;
+		RMM::DispType	dispType_;
+		QCString		filename_;
 };
 
 #endif //RDISPOSITIONTYPE_H

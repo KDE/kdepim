@@ -134,9 +134,6 @@ EmpathMaildir::sync(const EmpathURL & url)
 			// Read the file to a RMessage
 			RMessage m(_messageData(s));
 			
-			// Parse the message.
-			m.parse();
-			
 			// Create an index record.
 			EmpathIndexRecord * ir = new EmpathIndexRecord(s, m);
 			CHECK_PTR(ir);
@@ -180,7 +177,7 @@ EmpathMaildir::mark(const EmpathURL & message, RMM::MessageStatus msgStat)
 }
 
 	bool
-EmpathMaildir::writeMessage(const RMessage & m)
+EmpathMaildir::writeMessage(RMessage & m)
 {
 	empathDebug("writeMessage called with message " + QString().setNum(m.id()));
 	QString s = _write(m);
@@ -458,7 +455,7 @@ EmpathMaildir::_setupDirs()
 }
 
 	QString
-EmpathMaildir::_write(const RMessage & msg)
+EmpathMaildir::_write(RMessage & msg)
 {
 	// Here's the procedure for writing a new mail to the user's Maildir.
 	// This procedure follows the advice of D. J. Bernstein, in the

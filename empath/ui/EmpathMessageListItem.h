@@ -44,11 +44,11 @@ class EmpathMessageListItem : public QListViewItem
 	
 		EmpathMessageListItem(
 			EmpathMessageListWidget * parent,
-			const EmpathIndexRecord & msgDesc);
+			EmpathIndexRecord & msgDesc);
 
 		EmpathMessageListItem(
 			EmpathMessageListItem * parent,
-			const EmpathIndexRecord & msgDesc);
+			EmpathIndexRecord & msgDesc);
 
 		~EmpathMessageListItem();
 		
@@ -57,11 +57,11 @@ class EmpathMessageListItem : public QListViewItem
 		QString key(int, bool) const;
 
 		const QString &		id()		const	{ return id_;			}
-		const RMessageID &	messageID() const	{ return messageID_;	}
-		const RMessageID &	parentID()	const	{ return parentID_;		}
+		RMessageID &		messageID() 		{ return messageID_;	}
+		RMessageID &		parentID()			{ return parentID_;		}
 		const QString &		subject()	const	{ return subject_;		}
-		const RMailbox &	sender()	const	{ return sender_;		}
-		const RDateTime &	date()		const	{ return date_;			}
+		RMailbox &			sender()			{ return sender_;		}
+		RDateTime &			date()				{ return date_;			}
 		RMM::MessageStatus	status()	const	{ return status_;		}
 		Q_UINT32			size()		const	{ return size_;			}
 
@@ -80,6 +80,8 @@ class EmpathMessageListItem : public QListViewItem
 		RMM::MessageStatus	status_;
 		QString				niceDate_;
 		Q_UINT32			size_;
+		QString				dateStr_;
+		QString				sizeStr_;
 };
 
 #endif

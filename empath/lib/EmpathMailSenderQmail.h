@@ -40,7 +40,7 @@ class EmpathMailSenderQmail : public EmpathMailSender
 		EmpathMailSenderQmail();
 		~EmpathMailSenderQmail();
 
-		bool sendOne(const RMessage & message);
+		bool sendOne(RMessage & message);
 
 		bool send(EmpathMessageList & messageList);
 		

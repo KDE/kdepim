@@ -32,7 +32,7 @@ RHeaderBody::RHeaderBody(const RHeaderBody & headerBody)
 	rmmDebug("ctor");
 }
 
-	const RHeaderBody &
+	RHeaderBody &
 RHeaderBody::operator = (const RHeaderBody & hb)
 {
 	rmmDebug("operator =");

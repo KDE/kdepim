@@ -44,7 +44,7 @@ RMessageID::~RMessageID()
 }
 
 	bool
-RMessageID::operator == (const RMessageID & msgID) const
+RMessageID::operator == (RMessageID & msgID)
 {
 	return (
 		localPart_	== msgID.localPart_ &&
@@ -52,7 +52,7 @@ RMessageID::operator == (const RMessageID & msgID) const
 }
 
 	bool
-RMessageID::operator != (const RMessageID & msgID) const
+RMessageID::operator != (RMessageID & msgID)
 {
 	return (
 		localPart_	!= msgID.localPart_ ||
@@ -60,7 +60,7 @@ RMessageID::operator != (const RMessageID & msgID) const
 }
 
 
-	const RMessageID &
+	RMessageID &
 RMessageID::operator = (const RMessageID & messageID)
 {
 	rmmDebug("operator =");
@@ -86,7 +86,7 @@ operator >> (QDataStream & s, RMessageID & mid)
 }
 		
 	QDataStream &
-operator << (QDataStream & s, const RMessageID & mid)
+operator << (QDataStream & s, RMessageID & mid)
 {
 	s << mid.localPart_;
 	s << mid.domain_;
@@ -94,7 +94,7 @@ operator << (QDataStream & s, const RMessageID & mid)
 }
 	
 	const QCString &
-RMessageID::localPart() const
+RMessageID::localPart()
 {
     return localPart_;
 }
@@ -106,7 +106,7 @@ RMessageID::setLocalPart(const QCString & localPart)
 }
 
 	const QCString &
-RMessageID::domain() const
+RMessageID::domain()
 {
     return domain_;
 }

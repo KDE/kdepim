@@ -33,7 +33,7 @@ EmpathMailSender::~EmpathMailSender()
 }
 
 	void
-EmpathMailSender::addPendingMessage(const RMessage & message)
+EmpathMailSender::addPendingMessage(RMessage & message)
 {
 // FIXME: duh ? this will disappear. Copy it or something.
 	RMessage * m = new RMessage(message);

@@ -39,7 +39,7 @@ RMechanism::~RMechanism()
 	rmmDebug("dtor");
 }
 
-	const RMechanism &
+	RMechanism &
 RMechanism::operator = (const RMechanism & m)
 {
 	rmmDebug("operator =");

@@ -29,6 +29,7 @@
 #include <RMM_Body.h>
 
 RMessage::RMessage()
+	:	REntity()
 {
 	rmmDebug("ctor");
 }
@@ -39,12 +40,18 @@ RMessage::RMessage(const RMessage & m)
 	rmmDebug("ctor");
 }
 
+RMessage::RMessage(const QCString & s)
+	:	REntity(s)
+{
+	rmmDebug("ctor");
+}
+
 RMessage::~RMessage()
 {
 	rmmDebug("dtor");
 }
 
-	const RMessage &
+	RMessage &
 RMessage::operator = (const RMessage & m)
 {
 	rmmDebug("operator =");
@@ -56,14 +63,16 @@ RMessage::operator = (const RMessage & m)
 }
 
 	int
-RMessage::numberOfParts() const
+RMessage::numberOfParts()
 {
+	parse();
 	return body_.numberOfParts();
 }
 
 	void
 RMessage::addPart(RBodyPart * bp)
 {
+	parse();
 	body_.addPart(bp);
 	_update();
 }
@@ -71,6 +80,7 @@ RMessage::addPart(RBodyPart * bp)
 	void
 RMessage::removePart(RBodyPart * part)
 {
+	parse();
 	body_.removePart(part);
 	_update();
 }
@@ -82,21 +92,24 @@ RMessage::_update()
 }
 
 	RMessage::MessageType
-RMessage::type() const
+RMessage::type()
 {
+	parse();
 	return type_;
 }
 
-	RBodyPart *
+	RBodyPart
 RMessage::part(int index)
 {
+	parse();
 	return body_.part(index);
 }
 
 	void
 RMessage::parse()
 {
-	rmmDebug("parse() called - data follows:\n" + strRep_);
+	rmmDebug("parse() called");
+	if (parsed_) return;
 
 	int endOfHeaders = strRep_.find(QRegExp("\n\n"));
 	
@@ -107,7 +120,6 @@ RMessage::parse()
 	}
 	
 	envelope_.set(strRep_.left(endOfHeaders));
-	envelope_.parse();
 
 	// Now see if there's a Content-Type header in the envelope.
 	// If there is, we might be looking at a multipart message.
@@ -142,12 +154,16 @@ RMessage::parse()
 	}
 
 	body_.set(strRep_.right(strRep_.length() - endOfHeaders));
-	body_.parse();
+	
+	parsed_		= true;
+	assembled_	= false;
 }
 
 	void
 RMessage::assemble()
 {
+	parse();
+	if (assembled_) return;
 	rmmDebug("assemble() called");
 
 	_update();
@@ -164,6 +180,7 @@ RMessage::assemble()
 		
 		strRep_ += body_.asString();
 	}
+	assembled_ = true;
 }
 
 	void
@@ -171,5 +188,37 @@ RMessage::createDefault()
 {
 	envelope_.createDefault();
 	body_.createDefault();
+}
+
+	REnvelope &
+RMessage::envelope()
+{
+	parse();
+	return envelope_;
+}
+
+	RBody &
+RMessage::body()
+{
+	parse();
+	return body_;
+}
+
+	Q_UINT32
+RMessage::size()
+{
+	return strRep_.length();
+}
+
+	RMM::MessageStatus
+RMessage::status()
+{
+	return status_;
+}
+
+	const char *
+RMessage::className()
+{
+	return "RMessage";
 }
 

@@ -40,29 +40,27 @@ class RDateTime : public QDateTime, public RHeaderBody {
 		RDateTime();
 		RDateTime(const RDateTime & dt);
 		RDateTime(const QCString & s) : RHeaderBody(s) { }
-		const RDateTime & operator = (const RDateTime & dt);
+		RDateTime & operator = (const RDateTime & dt);
 		void set(const QCString & s) { RHeaderBody::set(s); }
 
 		friend QDataStream & operator >> (
 			QDataStream & s, RDateTime & dt);
 		
 		friend QDataStream & operator << (
-			QDataStream & s, const RDateTime & dt);
+			QDataStream & s, RDateTime & dt);
 
 		virtual ~RDateTime();
 
 		void parse();
 		void assemble();
 
-		bool isValid() const;
-
-		void			setTimeZone(const QCString &);
-		void			set(Q_UINT32 unixTime);
+		void	setTimeZone(const QCString &);
+		void	set(Q_UINT32 unixTime);
 		
-		const QCString &	timeZone() const;
+		const QCString &	timeZone();
 		
-		const QCString &		asString() const { return RHeaderBody::asString(); }
-		Q_UINT32	asUnixTime() const;
+		const QCString &	asString();
+		Q_UINT32	asUnixTime();
 
 		void createDefault();
 		
@@ -70,7 +68,10 @@ class RDateTime : public QDateTime, public RHeaderBody {
 
 	private:
 
-		QCString			zone_;
+		QCString	zone_;
+		
+		bool		parsed_;
+		bool		assembled_;
 };
 
 #endif //RDATETIME_H

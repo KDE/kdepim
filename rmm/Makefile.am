@@ -27,4 +27,5 @@ RMimeType.cpp \
 RParameter.cpp \
 RParameterList.cpp \
 RText.cpp \
-RToken.cpp
+RToken.cpp \
+RUtilities.cpp

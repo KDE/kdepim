@@ -40,7 +40,7 @@ class EmpathMailboxMaildir : public EmpathMailbox
 	public:
 
 		EmpathMailboxMaildir(const QString & name);
-		QString writeNewMail(const RMessage & message);
+		QString writeNewMail(RMessage & message);
 		
 		virtual ~EmpathMailboxMaildir();
 	

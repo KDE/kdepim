@@ -46,27 +46,27 @@ class RBody : public RMessageComponent {
 	public:
 
 		RBody();
-		RBody(const RBody & body);
+		RBody(const RBody &);
 		RBody(const QCString & s) : RMessageComponent(s) { }
 
 		virtual ~RBody();
 
-		const RBody & operator = (const RBody & body);
+		RBody & operator = (const RBody &);
 
 		void parse();
 		void assemble();
 		void createDefault();
 
-		QCString	firstPlainBodyPart() { return ""; }
-		int			numberOfParts() const;
+		QCString	firstPlainBodyPart();
+		int			numberOfParts();
 		void		addPart(RBodyPart * bp);
 		void		removePart(RBodyPart * part);
-		RBodyPart	* part(int index);
+		RBodyPart	part(int index);
 		
-		void		setBoundary(const QCString & s)			{ boundary_ = s; }
-		void		setContentType(const RContentType & t)	{ contentType_ = t;}
-		void		setCTE(const RCte & t)					{ cte_ = t; }
-		void 		setMultiPart(bool b)					{ isMultiPart_ = b;}
+		void		setBoundary(const QCString & s);
+		void		setContentType(RContentType & t);
+		void		setCTE(RCte &);
+		void 		setMultiPart(bool);
 
 		const char * className() const { return "RBody"; }
 

@@ -43,7 +43,7 @@ RMailbox::~RMailbox()
 	rmmDebug("dtor");
 }
 
-const RMailbox & RMailbox::operator = (const RMailbox & mailbox)
+RMailbox & RMailbox::operator = (const RMailbox & mailbox)
 {
 	rmmDebug("operator =");
 	if (this == &mailbox) return *this; // Avoid a = a
@@ -69,7 +69,7 @@ operator >> (QDataStream & s, RMailbox & mailbox)
 }
 	
 	QDataStream &
-operator << (QDataStream & s, const RMailbox & mailbox)
+operator << (QDataStream & s, RMailbox & mailbox)
 {
 	s	<< mailbox.phrase_
 		<< mailbox.route_
@@ -80,7 +80,7 @@ operator << (QDataStream & s, const RMailbox & mailbox)
 
 
 	const QCString &
-RMailbox::phrase() const
+RMailbox::phrase()
 {
 	return phrase_;
 }
@@ -93,7 +93,7 @@ RMailbox::setPhrase(const QCString & s)
 }
 
 	const QCString &
-RMailbox::route() const
+RMailbox::route()
 {
 	return route_;
 }
@@ -105,7 +105,7 @@ RMailbox::setRoute(const QCString & s)
 }
 
 	const QCString &
-RMailbox::localPart() const
+RMailbox::localPart()
 {
 	return localPart_;
 }
@@ -118,7 +118,7 @@ RMailbox::setLocalPart(const QCString & s)
 
 
 	const QCString &
-RMailbox::domain() const
+RMailbox::domain()
 {
 	return domain_;
 }
@@ -129,7 +129,8 @@ RMailbox::setDomain(const QCString & s)
 	domain_ = s.data();
 }
 
-void RMailbox::parse()
+	void
+RMailbox::parse()
 {
 	rmmDebug("parse() called");
 	rmmDebug("strRep == \"" + strRep_ + "\"");
@@ -205,7 +206,6 @@ void RMailbox::parse()
 
 		// Easy, eh ?
 	}
-	dirty_ = true;
 	rmmDebug("phrase:    \""	+ phrase_		+ "\"");
 	rmmDebug("route:     \""	+ route_		+ "\"");
 	rmmDebug("localpart: \""	+ localPart_	+ "\"");
@@ -213,7 +213,8 @@ void RMailbox::parse()
 }
 
 
-void RMailbox::assemble()
+	void
+RMailbox::assemble()
 {
 	strRep_ = "";
 	rmmDebug("assemble() called");
@@ -222,12 +223,6 @@ void RMailbox::assemble()
 	else
 		strRep_ = localPart_ + "@" + domain_;
 	rmmDebug("assembled to \"" + strRep_ + "\""); 
-}
-
-	bool
-RMailbox::isValid() const
-{
-	return isValid_;
 }
 
 	void

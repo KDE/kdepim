@@ -41,19 +41,16 @@ class REntity : public RMessageComponent
 
 		virtual ~REntity();
 
-		const REntity & operator = (const REntity & entity);
+		REntity & operator = (const REntity & entity);
 
 		virtual void parse() = 0L;
 		virtual void assemble() = 0L;
 		virtual void createDefault() = 0L;
 		
-		void set(const QCString & s) { strRep_ = s.data(); }
-		const QCString & asString() const { return strRep_; }
+		void set(const QCString & s) { RMessageComponent::set(s); }
+		const QCString & asString() { return RMessageComponent::asString(); }
 		
 		const char * className() const { return "REntity"; }
-
-	protected:
-
 };
 
 #endif

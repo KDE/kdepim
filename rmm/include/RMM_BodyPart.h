@@ -33,43 +33,43 @@ class RBodyPart : public REntity {
 	public:
 	
 		RBodyPart();
-		RBodyPart(const RBodyPart & part);
+		RBodyPart(const RBodyPart &);
 		RBodyPart(const QCString & s) : REntity(s) { }
 
-		const RBodyPart & operator = (const RBodyPart & part);
+		RBodyPart & operator = (const RBodyPart & part);
 
 		virtual ~RBodyPart();
 		void parse();
 		void assemble();
 		void createDefault();
 		
-		RMM::MimeType mimeType() const;
-		RMM::MimeSubType mimeSubType() const;
+		RMM::MimeType mimeType();
+		RMM::MimeSubType mimeSubType();
 		
-		void setMimeType(RMM::MimeType t);
-		void setMimeType(const QCString & s);
-		void setMimeSubType(RMM::MimeSubType st);
-		void setMimeSubType(const QCString & s);
+		void setMimeType(RMM::MimeType);
+		void setMimeType(const QCString &);
+		void setMimeSubType(RMM::MimeSubType);
+		void setMimeSubType(const QCString &);
 
-		const QCString & description() const;
-		RMM::DispType disposition() const;
+		const QCString & description();
+		RMM::DispType disposition();
 		
-		void setDescription(const QCString & s);
-		void setDisposition(RMM::DispType d);
+		void setDescription(const QCString &);
+		void setDisposition(RMM::DispType);
 		
-		RMM::CteType encoding() const;
-		void setEncoding(RMM::CteType e);
+		RMM::CteType encoding();
+		void setEncoding(RMM::CteType);
 		
 		const char * className() const { return "RBodyPart"; }
 
 	protected:
 
-		QByteArray body_;
-		RMM::CteType encoding_;
-		RMM::MimeType mimeType_;
-		RMM::MimeSubType mimeSubType_;
-		QCString contentDescription_;
-		RMM::DispType disposition_;
+		QByteArray			body_;
+		RMM::CteType		encoding_;
+		RMM::MimeType		mimeType_;
+		RMM::MimeSubType	mimeSubType_;
+		QCString			contentDescription_;
+		RMM::DispType		disposition_;
 
 };
 

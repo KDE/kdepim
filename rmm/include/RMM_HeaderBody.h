@@ -44,10 +44,10 @@ class RHeaderBody : public RMessageComponent {
 		virtual void createDefault()
 			{ rmmDebug("WARNING base class createDefault() called"); }
 			
-		virtual const RHeaderBody & operator = (const RHeaderBody & h);
+		virtual RHeaderBody & operator = (const RHeaderBody & h);
 
 		void set(const QCString & s) { RMessageComponent::set(s); }
-		const QCString & asString() const { return RMessageComponent::asString(); }
+		const QCString & asString() { return RMessageComponent::asString(); }
 		
 		const char * className() const { return "RHeaderBody"; }
 

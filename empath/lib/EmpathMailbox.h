@@ -78,7 +78,7 @@ class EmpathMailbox : public QObject
 		 * @short Write a new message to the specified folder.
 		 */
 		virtual bool
-			writeMessage(const EmpathURL & folder, const RMessage & msg) = 0;
+			writeMessage(const EmpathURL & folder, RMessage & msg) = 0;
 		
 		/**
 		 * @short Get the size of the message specified in the url.

@@ -54,7 +54,7 @@ class EmpathMaildir
 		
 		void		mark(const EmpathURL & message, RMM::MessageStatus msgStat);
 		
-		bool		writeMessage(const RMessage & msg);
+		bool		writeMessage(RMessage & msg);
 		
 		Q_UINT32				sizeOfMessage			(const QString & id);
 		QString					plainBodyOfMessage		(const QString & id);
@@ -69,7 +69,7 @@ class EmpathMaildir
 		
 	private:
 		
-		QString		_write(const RMessage & msg);
+		QString		_write(RMessage & msg);
 		QCString	_messageData(const QString & filename);
 		void		_init();
 		void		_markNewMailAsSeen();

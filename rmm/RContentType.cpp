@@ -24,6 +24,7 @@
 #include <RMM_Token.h>
 
 RContentType::RContentType()
+	:	RHeaderBody()
 {
 	rmmDebug("ctor");
 }
@@ -32,6 +33,7 @@ RContentType::RContentType(const RContentType & cte)
 	:	RHeaderBody()
 {
 	rmmDebug("ctor");
+	assembled_	= false;
 }
 
 RContentType::~RContentType()
@@ -39,7 +41,7 @@ RContentType::~RContentType()
 	rmmDebug("dtor");
 }
 
-	const RContentType &
+	RContentType &
 RContentType::operator = (const RContentType & ct)
 {
 	rmmDebug("operator =");
@@ -57,9 +59,8 @@ RContentType::operator = (const RContentType & ct)
 	void
 RContentType::parse()
 {
-	rmmDebug("parse() called");
-	rmmDebug("strRep_ = " + strRep_);
-	
+	if (parsed_) return;
+
 	QCString ts;
 	int i = strRep_.find(";");
 	
@@ -81,14 +82,17 @@ RContentType::parse()
 		return;
 	}
 	
-	type_ = ts.left(slash).stripWhiteSpace();
-	subType_ = ts.right(ts.length() - slash - 1).stripWhiteSpace();
+	type_		= ts.left(slash).stripWhiteSpace();
+	subType_	= ts.right(ts.length() - slash - 1).stripWhiteSpace();
+	
+	parsed_		= true;
+	assembled_	= false;
 }
 
 	void
 RContentType::assemble()
 {
-	rmmDebug("assemble() called");
+	if (assembled_) return;
 	
 	strRep_ = type_ + "/" + subType_;
 	
@@ -101,6 +105,8 @@ RContentType::assemble()
 	strRep_ += parameterList_.asString();
 
 	rmmDebug("assembled to: \"" + strRep_ + "\"");
+	
+	assembled_ = true;
 }
 
 	void
@@ -109,5 +115,52 @@ RContentType::createDefault()
 	rmmDebug("createDefault() called");
 	type_ = "text";
 	subType_ = "plain";
+	parsed_		= true;
+	assembled_	= false;
+}
+
+	void
+RContentType::setType(const QCString & t)
+{
+	parse();
+	type_ = t;
+	assembled_	= false;
+}
+
+	void
+RContentType::setSubType(const QCString & t)
+{
+	parse();
+	subType_ = t;
+	assembled_	= false;
+}
+
+	void
+RContentType::setParameterList(RParameterList & p)
+{
+	parse();
+	parameterList_ = p;
+	assembled_	= false;
+}
+	
+	const QCString &
+RContentType::type()
+{
+	parse();
+	return type_;
+}
+
+	const QCString &
+RContentType::subType()
+{
+	parse();
+	return subType_;
+}
+	
+	RParameterList &
+RContentType::parameterList()	
+{
+	parse();
+	return parameterList_;
 }
 

@@ -31,18 +31,27 @@
 #include <RMM_Text.h>
 
 RHeader::RHeader()
-	:	headerType_(RMM::HeaderUnknown),
+	:	RMessageComponent(),
+		headerType_(RMM::HeaderUnknown),
 		headerBody_(0)
 {
 	rmmDebug("ctor");
 }
 
+RHeader::RHeader(const RHeader & h)
+	:	RMessageComponent()
+{
+	rmmDebug("copy ctor");
+}
+
 RHeader::RHeader(const QCString & name, RHeaderBody * b)
+	:	RMessageComponent()
 {
 	rmmDebug("ctor");
 }
 
 RHeader::RHeader(RMM::HeaderType t, RHeaderBody * b)
+	:	RMessageComponent()
 {
 	rmmDebug("ctor");
 }
@@ -53,7 +62,7 @@ RHeader::~RHeader()
 	delete headerBody_;
 }
 
-	const RHeader &
+	RHeader &
 RHeader::operator = (const RHeader & h)
 {
 	rmmDebug("operator =");
@@ -70,19 +79,19 @@ RHeader::operator = (const RHeader & h)
 }
 
 	const QCString &
-RHeader::headerName() const
+RHeader::headerName()
 {
 	return headerName_;
 }
 
 	RMM::HeaderType
-RHeader::headerType() const
+RHeader::headerType()
 {
 	return headerType_;
 }
 
 	RHeaderBody *
-RHeader::headerBody() const
+RHeader::headerBody()
 {
 	return headerBody_;
 }

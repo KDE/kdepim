@@ -83,9 +83,6 @@ class EmpathComposeWidget : public QWidget
 		
 	protected slots:
 		
-		void s_composeFinished(KProcess *);
-		void s_debugExternalEditorOutput(KProcess *, char *, int);
-
 	private:
 
 		void spawnExternalEditor(const QCString & text);

@@ -51,9 +51,12 @@
 #include <RMM_Token.h>
 
 RAddressList::RAddressList()
+	:	QList<RAddress>(),
+		RHeaderBody()
 {
 	rmmDebug("ctor");
 	setAutoDelete(true);
+	assembled_	= false;
 }
 
 
@@ -62,8 +65,8 @@ RAddressList::RAddressList(const RAddressList & list)
 		RHeaderBody()
 {
 	rmmDebug("ctor");
-	// TODO: Copy elements from list into us.
 	setAutoDelete(true);
+	assembled_	= false;
 }
 
 RAddressList::~RAddressList()
@@ -71,15 +74,14 @@ RAddressList::~RAddressList()
 	rmmDebug("dtor");
 }
 		
-
-	const RAddressList &
+	RAddressList &
 RAddressList::operator = (const RAddressList & al)
 {
 	rmmDebug("operator =");
     if (this == &al) return *this; // Don't do a = a.
 	
-	QList<RAddress>::operator = (al);
-	RHeaderBody::operator = (al);
+	QList<RAddress>::operator	= (al);
+	RHeaderBody::operator		= (al);
 
 	return *this;
 }
@@ -87,6 +89,8 @@ RAddressList::operator = (const RAddressList & al)
 	void
 RAddressList::parse()
 {
+	if (parsed_) return;
+
 	rmmDebug("parse() called");
 	rmmDebug("strRep_ = " + strRep_);
 
@@ -124,12 +128,15 @@ RAddressList::parse()
 
 	for (; it.current(); ++it)
 		it.current()->parse();
+	
+	parsed_		= true;
+	assembled_	= false;
 }
 
 	void
 RAddressList::assemble()
 {
-	rmmDebug("assemble() called");
+	if (assembled_) return;
 
 	bool firstTime = true;
 	
@@ -149,7 +156,7 @@ RAddressList::assemble()
 		strRep_ += it.current()->asString();
 	}
 	
-	rmmDebug("assembled to: \"" + strRep_ + "\"");
+	assembled_ = true;
 }
 
 

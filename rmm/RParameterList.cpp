@@ -27,13 +27,16 @@
 #include <RMM_Token.h>
 
 RParameterList::RParameterList()
+	:	QList<RParameter>(),
+		RHeaderBody()
 {
 	rmmDebug("ctor");
 	setAutoDelete(true);
 }
 
 RParameterList::RParameterList(const RParameterList & l)
-	:	QList<RParameter>()
+	:	QList<RParameter>(),
+		RHeaderBody()
 {
 	rmmDebug("ctor");
 	setAutoDelete(true);
@@ -44,11 +47,17 @@ RParameterList::~RParameterList()
 	rmmDebug("dtor");
 }
 
-	const RParameterList &
+	RParameterList &
 RParameterList::operator = (const RParameterList & l)
 {
 	if (this == &l) return *this;
 	QList<RParameter>::operator = (l);
+	return *this;
+}
+
+	RParameterList &
+RParameterList::operator = (const QCString & s)
+{
 	return *this;
 }
 
@@ -102,5 +111,11 @@ RParameterList::assemble()
 RParameterList::createDefault()
 {
 	rmmDebug("createDefault() called");
+}
+
+	const QCString &
+RParameterList::asString()
+{
+	return strRep_;
 }
 

@@ -196,12 +196,6 @@ EmpathConfig::KEY_SMTP_SERVER_LOCATION = "SMTPServerLocation";
 EmpathConfig::KEY_SMTP_SERVER_PORT = "SMTPServerPort";
 
 	const QString
-EmpathConfig::KEY_QMTP_SERVER_LOCATION = "QMTPServerLocation";
-
-	const QString
-EmpathConfig::KEY_QMTP_SERVER_PORT = "QMTPServerPort";
-
-	const QString
 EmpathConfig::KEY_LOCAL_MAILBOX_PATH = "MailboxPath";
 
 	const QString

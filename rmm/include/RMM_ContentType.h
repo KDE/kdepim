@@ -36,7 +36,7 @@ class RContentType : public RHeaderBody {
 		RContentType();
 		RContentType(const RContentType & ct);
 		RContentType(const QCString & s) : RHeaderBody(s) { }
-		const RContentType & operator = (const RContentType & ct);
+		RContentType & operator = (const RContentType & ct);
 		
 //		friend QDataStream & operator >> (
 //			QDataStream & s, RContentType & ct);
@@ -49,25 +49,22 @@ class RContentType : public RHeaderBody {
 		void parse();
 		void assemble();
 
-		bool isValid() const;
-
 		void createDefault();
 
-		void setType(const QCString & type)				{ type_ = type; }
-		void setSubType(const QCString & subType)		{ subType_ = subType; }
-		void setParameterList(const RParameterList & pl){ parameterList_ = pl; }
-		const QCString & type() const					{ return type_; }
-		const QCString & subType() const					{ return subType_; }
-		const RParameterList & parameterList() const	{ return parameterList_; }
+		void setType(const QCString &);
+		void setSubType(const QCString &);
+		void setParameterList(RParameterList &);
+		const QCString & type();
+		const QCString & subType();
+		RParameterList & parameterList();
 		
 		const char * className() const { return "RContentType"; }
 
 	private:
 
-		QCString type_;
-		QCString subType_;
-		RParameterList parameterList_;
-		bool isValid_;
+		QCString		type_;
+		QCString 		subType_;
+		RParameterList	parameterList_;
 };
 
 #endif //RMM_CONTENTTYPE_H

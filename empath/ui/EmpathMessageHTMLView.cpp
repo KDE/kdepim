@@ -164,8 +164,6 @@ EmpathMessageHTMLWidget::go()
 		return;
 	}
 	
-	message->parse(); message->assemble();
-	
 	QCString messageHeaders = message->envelope().asString();
 	QCString messageBody = message->body().asString();
 	

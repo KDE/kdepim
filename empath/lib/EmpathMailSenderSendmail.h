@@ -53,7 +53,7 @@ class EmpathMailSenderSendmail : public EmpathMailSender
 		EmpathMailSenderSendmail();
 		~EmpathMailSenderSendmail();
 
-		bool sendOne(const RMessage & message);
+		bool sendOne(RMessage & message);
 
 		bool send(EmpathMessageList & messageList);
 		

@@ -39,7 +39,7 @@ class EmpathIndex : public QDict<EmpathIndexRecord>
 		
 		EmpathIndex();
 		~EmpathIndex();
-		const EmpathIndexRecord * messageDescription(const RMessageID & id) const;
+		EmpathIndexRecord * messageDescription(RMessageID & id) const;
 		
 		void setFolder(EmpathFolder * parent) { folder_ = parent; }
 

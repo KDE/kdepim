@@ -31,12 +31,12 @@ RDispositionType::RDispositionType()
 }
 
 RDispositionType::RDispositionType(const RDispositionType & t)
-	:	RHeaderBody()
+	:	RHeaderBody(t)
 {
 	rmmDebug("ctor");
 }
 
-	const RDispositionType &
+	RDispositionType &
 RDispositionType::operator = (const RDispositionType & t)
 {
 	rmmDebug("operator =");
@@ -58,8 +58,9 @@ RDispositionType::~RDispositionType()
 }
 
 	RMM::DispType
-RDispositionType::type() const
+RDispositionType::type()
 {
+	parse();
     return dispType_;
 }
 
@@ -69,8 +70,9 @@ RDispositionType::set(RMM::DispType t)
 }
 
 	const QCString &
-RDispositionType::filename() const
+RDispositionType::filename()
 {
+	parse();
 	return filename_;
 }
 
@@ -78,7 +80,9 @@ RDispositionType::filename() const
 	void
 RDispositionType::setFilename(const QCString & s)
 {
+	parse();
 	filename_ = s;
+	assembled_ = false;
 }
 
 	void

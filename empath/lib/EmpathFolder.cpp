@@ -79,7 +79,7 @@ EmpathFolder::removeMessage(const EmpathURL & id)
 }
 
 	const EmpathIndexRecord *
-EmpathFolder::messageDescription(const RMessageID & id) const
+EmpathFolder::messageDescription(RMessageID & id) const
 {
 	empathDebug("messageWithID(" + id.asString() + ") called");
 	return messageList_.messageDescription(id);
@@ -105,7 +105,7 @@ EmpathFolder::update()
 }
 
 	bool
-EmpathFolder::writeMessage(const RMessage & message)
+EmpathFolder::writeMessage(RMessage & message)
 {
 	EmpathMailbox * m = empath->mailbox(url_);
 	return (m != 0 && m->writeMessage(url_, message));

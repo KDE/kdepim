@@ -18,6 +18,66 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <RMM_Utility.h>
+
+	QCString
+RToCrLfEol(const QCString &)
+{
+	QCString s;
+	return s;
+}
+
+	QCString
+RToLfEol(const QCString &)
+{
+	QCString s;
+	return s;
+}
+
+	QCString
+RToCrEol(const QCString &)
+{
+	QCString s;
+	return s;
+}
+
+	QCString
+RToLocalEol(const QCString &)
+{
+	QCString s;
+	return s;
+}
+
+	QCString
+REncodeBase64(const QCString &)
+{
+	QCString s;
+	return s;
+}
+
+	QCString
+RDecodeBase64(const QCString &)
+{
+	QCString s;
+	return s;
+}
+
+	QCString
+REncodeQuotedPrintable(const QCString &)
+{
+	QCString s;
+	return s;
+}
+
+	QCString
+RDecodeQuotedPrintable(const QCString &)
+{
+	QCString s;
+	return s;
+}
+
+
+/*
 static const char * base64table =
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -112,7 +172,7 @@ main()
 		    ((4 - char_count) * 6));
 	    errors++;
 	}
-    } else { /* c == '=' */
+    } else { // c == "="
 	switch (char_count) {
 	  case 1:
 	    fprintf(stderr, "base64 encoding incomplete: at least 2 bits missing");
@@ -129,3 +189,4 @@ main()
     }
     exit(errors ? 1 : 0);
 }
+*/

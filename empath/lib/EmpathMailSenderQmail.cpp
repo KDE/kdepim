@@ -56,7 +56,7 @@ EmpathMailSenderQmail::setQmailLocation(const QString & location)
 }
 
 	bool
-EmpathMailSenderQmail::sendOne(const RMessage & message)
+EmpathMailSenderQmail::sendOne(RMessage & message)
 {
 	empathDebug("sendOne() called");
 	

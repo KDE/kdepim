@@ -52,8 +52,8 @@ EmpathIndex::compareItems(
 	return i2 - i1;
 }
 
-	const EmpathIndexRecord *
-EmpathIndex::messageDescription(const RMessageID & id) const
+	EmpathIndexRecord *
+EmpathIndex::messageDescription(RMessageID & id) const
 {
 	EmpathIndexIterator it(*this);
 	

@@ -26,7 +26,8 @@
 #include <RMM_Mailbox.h>
 
 RAddress::RAddress()
-	:	mailbox_(0),
+	:	RHeaderBody(),
+		mailbox_(0),
 		group_(0)
 {
 	rmmDebug("ctor");
@@ -38,6 +39,7 @@ RAddress::RAddress(const RAddress & addr)
 		group_(addr.group_)
 {
 	rmmDebug("ctor");
+	assembled_	= false;
 }
 
 RAddress::RAddress(const QCString & addr)
@@ -51,15 +53,15 @@ RAddress::RAddress(const QCString & addr)
 RAddress::~RAddress()
 {
 	rmmDebug("dtor");
-
-        delete mailbox_;
-        delete group_;
+	
+	delete mailbox_;
+	delete group_;
 
 	mailbox_	= 0;
 	group_		= 0;
 }
 
-	const RAddress &
+	RAddress &
 RAddress::operator = (const RAddress & addr)
 {
 	rmmDebug("operator =");
@@ -78,24 +80,21 @@ RAddress::operator = (const RAddress & addr)
 
 	RHeaderBody::operator = (addr);
 
+	assembled_	= false;
 	return *this;
-}
-
-	bool
-RAddress::isValid() const
-{
-	return (group_->isValid() && mailbox_->isValid());
 }
 
 	RGroup *
 RAddress::group()
 {
+	parse();
 	return group_;
 }
 
 	RMailbox *
 RAddress::mailbox()
 {
+	parse();
 	return mailbox_;
 }
 
@@ -103,9 +102,11 @@ RAddress::mailbox()
 RAddress::parse()
 {
 	rmmDebug("parse() called");
-
-        delete mailbox_;
-        delete group_;
+	
+	if (parsed_) return;
+	
+	delete mailbox_;
+	delete group_;
 
 	mailbox_	= 0;
 	group_		= 0;
@@ -126,7 +127,6 @@ RAddress::parse()
 		if (!group_) rmmDebug("!mailbox!");
 		group_->set(s);
 		group_->parse();
-		dirty_ = group_->isDirty() ? true : dirty_;
 
 	} else {
 
@@ -138,9 +138,10 @@ RAddress::parse()
 		rmmDebug(s);
 		mailbox_->set(s);
 		mailbox_->parse();
-		dirty_ = mailbox_->isDirty() ? true : dirty_;
 	}
-	rmmDebug("parsed");
+	
+	parsed_		= true;
+	assembled_	= false;
 }
 
 	void
@@ -150,17 +151,17 @@ RAddress::assemble()
 
 	if (mailbox_ != 0) {
 
-		mailbox_->assemble();
 		strRep_ = mailbox_->asString();
 
 	} else if (group_ != 0) {
 
-		group_->assemble();
 		strRep_ = group_->asString();
 
 	} else {
 			strRep_ = "foo@bar";
 	}
+	
+	assembled_ = true;
 }
 
 	void

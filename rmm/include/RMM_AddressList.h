@@ -37,24 +37,18 @@ class RAddressList : public QList<RAddress>, public RHeaderBody {
 	public:
 
 		RAddressList();
-		RAddressList(const RAddressList & rAddressList);
+		RAddressList(const RAddressList &);
 		RAddressList(const QCString & s) : RHeaderBody(s) { }
-		const RAddressList & operator = (const RAddressList & al);
+		RAddressList & operator = (const RAddressList &);
 
 		virtual ~RAddressList();
 
 		virtual void parse();
 		virtual void assemble();
 
-		bool isValid() const;
-
 		void createDefault();
 
 		const char * className() const { return "RAddressList"; }
-
-	private:
-
-		bool isValid_;
 };
 
 #endif //RADDRESSLIST_H

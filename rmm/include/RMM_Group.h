@@ -38,13 +38,13 @@ class RGroup : public RAddress {
 		RGroup();
 		RGroup(const RGroup & group);
 		RGroup(const QCString & s) : RAddress(s) { }
-		const RGroup & operator = (const RGroup & group);
+		RGroup & operator = (const RGroup & group);
 
 		friend QDataStream & operator >> (
 			QDataStream & s, RGroup & group);
 		
 		friend QDataStream & operator << (
-			QDataStream & s, const RGroup & group);
+			QDataStream & s, RGroup & group);
 
 		virtual ~RGroup();
 
@@ -53,26 +53,23 @@ class RGroup : public RAddress {
 
 		void createDefault();
 
-		const QCString & name() const;
+		const QCString & name();
 
-		const QCString & phrase() const;
+		const QCString & phrase();
 
 		void setName(const QCString & name);
 
 		void setPhrase(const QCString & phrase);
 
-		const RMailboxList & mailboxList() const;
+		RMailboxList & mailboxList();
 
-		bool isValid() const;
-		
 		const char * className() const { return "RGroup"; }
 
 	private:
 
 		RMailboxList	mailboxList_;
-		QCString			name_;
-		QCString			phrase_;
-		bool isValid_;
+		QCString		name_;
+		QCString		phrase_;
 };
 
 #endif

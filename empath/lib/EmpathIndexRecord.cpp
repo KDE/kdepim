@@ -56,12 +56,12 @@ EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMessage & m)
 EmpathIndexRecord::EmpathIndexRecord(
 		const QString &		id,
 		const QString &		subject,
-		const RMailbox &	sender,
-		const RDateTime &	date,
+		RMailbox &			sender,
+		RDateTime &			date,
 		RMM::MessageStatus	status,
 		Q_UINT32			size,
-		const RMessageID &	messageId,
-		const RMessageID &	parentMessageId)
+		RMessageID &		messageId,
+		RMessageID &		parentMessageId)
 	:
 		id_					(id),
 		subject_			(subject),
@@ -81,7 +81,7 @@ EmpathIndexRecord::~EmpathIndexRecord()
 }
 
 	bool
-EmpathIndexRecord::hasParent() const
+EmpathIndexRecord::hasParent()
 {
 	return !parentMessageId_.asString().isEmpty();
 }
@@ -164,7 +164,7 @@ EmpathIndexRecord::niceDate(bool twelveHour) const
 }
 
 	QDataStream &
-operator << (QDataStream & s, const EmpathIndexRecord & rec)
+operator << (QDataStream & s, EmpathIndexRecord & rec)
 {
 	s	<< rec.id_
 		<< rec.subject_

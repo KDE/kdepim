@@ -23,12 +23,16 @@
 #include <RMM_MessageComponent.h>
 
 RMessageComponent::RMessageComponent()
+	:	parsed_		(false),
+		assembled_	(false)
 {
 	rmmDebug("ctor");
 }
 
 RMessageComponent::RMessageComponent(const RMessageComponent & mc)
-	: strRep_(mc.strRep_)
+	:	strRep_(mc.strRep_),
+		parsed_(mc.parsed_),
+		assembled_(mc.assembled_)
 {
 	rmmDebug("ctor");
 }
@@ -42,7 +46,17 @@ RMessageComponent::~RMessageComponent()
 RMessageComponent::operator = (const RMessageComponent & m)
 {
 	rmmDebug("operator =");
+	parsed_		= m.parsed_;
+	assembled_	= m.assembled_;
 	strRep_ = m.strRep_;
 	return *this;
+}
+
+	RMessageComponent &
+RMessageComponent::operator = (const QCString & s)
+{
+	strRep_		= s;
+	parsed_		= false;
+	assembled_	= false;
 }
 

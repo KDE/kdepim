@@ -46,7 +46,6 @@
 #include "EmpathMailSenderSendmail.h"
 #include "EmpathMailSenderQmail.h"
 #include "EmpathMailSenderSMTP.h"
-#include "EmpathMailSenderQMTP.h"
 #include "EmpathMessageDataCache.h"
 #include "EmpathFilterList.h"
 
@@ -139,11 +138,6 @@ Empath::updateOutgoingServer()
 			CHECK_PTR(mailSender_);
 			break;
 		
-		case QMTP:
-			mailSender_ = new EmpathMailSenderQMTP();
-			CHECK_PTR(mailSender_);
-			break;
-
 		default:
 			mailSender_ = 0;
 			return;

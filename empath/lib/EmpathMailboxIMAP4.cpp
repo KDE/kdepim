@@ -280,7 +280,7 @@ EmpathMailboxIMAP4::retrieveIfHave()
 }
 
 	bool
-EmpathMailboxIMAP4::writeMessage(const EmpathURL & folder, const RMessage &)
+EmpathMailboxIMAP4::writeMessage(const EmpathURL & folder, RMessage &)
 {
 	return false;
 }

@@ -26,12 +26,13 @@
 #include <RMM_MimeType.h>
 
 REntity::REntity()
+	:	RMessageComponent()
 {
 	rmmDebug("ctor");
 }
 
 REntity::REntity(const REntity & e)
-	:	RMessageComponent()
+	:	RMessageComponent(e)
 {
 	rmmDebug("ctor");
 }
@@ -41,7 +42,7 @@ REntity::~REntity()
 	rmmDebug("dtor");
 }
 
-	const REntity &
+	REntity &
 REntity::operator = (const REntity & e)
 {
 	rmmDebug("operator =");

@@ -33,22 +33,16 @@ class RMechanism : public RHeaderBody {
 		RMechanism();
 		RMechanism(const RMechanism & rMechanism);
 		RMechanism(const QCString & s) : RHeaderBody(s) { }
-		const RMechanism & operator = (const RMechanism & rMechanism);
+		RMechanism & operator = (const RMechanism &);
 
 		virtual ~RMechanism();
 
 		void parse();
 		void assemble();
 		
-		bool isValid() const;
-		
 		void createDefault();
 
 		const char * className() const { return "RMechanism"; }
-
-	private:
-
-		bool isValid_;
 };
 
 #endif //RMECHANISM_H

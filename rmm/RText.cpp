@@ -38,7 +38,7 @@ RText::~RText()
 	rmmDebug("dtor");
 }
 
-	const RText &
+	RText &
 RText::operator = (const RText & r)
 {
     if (this == &r) return *this; // Avoid a = a

@@ -23,6 +23,7 @@
 #include <RMM_Cte.h>
 
 RCte::RCte()
+	:	RHeaderBody()
 {
 	rmmDebug("ctor");
 }
@@ -31,6 +32,7 @@ RCte::RCte(const RCte & cte)
 	:	RHeaderBody()
 {
 	rmmDebug("ctor");
+	assembled_	= false;
 }
 
 RCte::~RCte()
@@ -38,7 +40,7 @@ RCte::~RCte()
 	rmmDebug("dtor");
 }
 
-	const RCte &
+	RCte &
 RCte::operator = (const RCte & cte)
 {
 	rmmDebug("operator =");
@@ -47,30 +49,54 @@ RCte::operator = (const RCte & cte)
 	mechanism_ = cte.mechanism_;
 	
 	RHeaderBody::operator = (cte);
-
+	
 	return *this;
 }
 
 	void
 RCte::parse()
 {
+	if (parsed_) return;
 	rmmDebug("parse() called");
 	rmmDebug("strRep_ = " + strRep_);
 	
-	mechanism_ = strRep_.stripWhiteSpace();
+	mechanism_	= strRep_.stripWhiteSpace();
+	
+	parsed_		= true;
+	assembled_	= false;
 }
 
 	void
 RCte::assemble()
 {
+	if (assembled_) return;
 	rmmDebug("assemble() called");
 	strRep_ = mechanism_;
+	assembled_ = true;
 }
 
 	void
 RCte::createDefault()
 {
 	rmmDebug("createDefault() called");
-	mechanism_ = "base64";
+	mechanism_	= "base64";
+	parsed_		= true;
+	assembled_	= false;
+}
+
+
+	const QCString &
+RCte::mechanism()	
+{
+	parse();
+	return mechanism_;
+}
+
+	void
+RCte::setMechanism(const QCString & m)
+{
+	parse();
+	mechanism_ = m;
+	assembled_	= false;
 }
 

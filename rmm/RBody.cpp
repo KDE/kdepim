@@ -27,8 +27,11 @@
 #include <RMM_Message.h>
 #include <RMM_MimeType.h>
 #include <RMM_Envelope.h>
+#include <RMM_Utility.h>
+#include <RMM_Enum.h>
 
 RBody::RBody()
+	:	RMessageComponent()
 {
 	rmmDebug("ctor");
 	partList_.setAutoDelete(true);
@@ -40,6 +43,8 @@ RBody::RBody(const RBody & body)
 {
 	rmmDebug("ctor");
 	partList_.setAutoDelete(true);
+	partList_	= body.partList_;
+	assembled_	= false;
 }
 
 RBody::~RBody()
@@ -47,7 +52,7 @@ RBody::~RBody()
 	rmmDebug("dtor");
 }
 
-	const RBody &
+	RBody &
 RBody::operator = (const RBody & body)
 {
 	rmmDebug("operator =");
@@ -65,8 +70,34 @@ RBody::operator = (const RBody & body)
 	void
 RBody::parse()
 {
-	rmmDebug("parse() called");
+	if (parsed_) return;
+	
 	partList_.clear();
+	
+	// We need to know what type of encoding we're looking at.
+
+	RMM::CteType t(RMM::RCteStr2Enum(cte_.mechanism()));
+	
+	QCString decoded;
+	
+	switch (t) {
+		
+		case RMM::CteTypeQuotedPrintable:
+			decoded = RDecodeQuotedPrintable(strRep_);
+			break;
+		
+		case RMM::CteTypeBase64:
+			decoded = RDecodeBase64(strRep_);
+			break;
+			
+		case RMM::CteType7bit:
+		case RMM::CteType8bit:
+		case RMM::CteTypeBinary:
+		default:
+			decoded = strRep_;
+			break;
+	}
+	
 	
 	if (!isMultiPart_) {
 		
@@ -122,18 +153,23 @@ RBody::parse()
 	// No more body parts. Anything that's left is the epilogue.
 	
 	epilogue_ = strRep_.right(strRep_.length() - i + boundary_.length());
-		
+	
+	parsed_		= true;
+	assembled_	= false;
 }
 
 	void
 RBody::assemble()
 {
 	rmmDebug("assemble() called");
+	
+	assembled_ = true;
 }	
 
 	int
-RBody::numberOfParts() const
+RBody::numberOfParts()
 {
+	parse();
 	return partList_.count();
 }
 
@@ -141,20 +177,20 @@ RBody::numberOfParts() const
 RBody::addPart(RBodyPart * bp)
 {
 	partList_.append(bp);
+	assembled_ = false;
 }
 
 	void
 RBody::removePart(RBodyPart * part)
 {
 	partList_.remove(part);
+	assembled_ = false;
 }
 
-	RBodyPart *
+	RBodyPart
 RBody::part(int index)
 {
-	rmmDebug("part(" + QCString().setNum(index) + ") called");
-	if (partList_.count() < (unsigned)index) return 0;
-	return partList_.at(index);
+	return *(partList_.at(index));
 }
 
 	void
@@ -162,5 +198,35 @@ RBody::createDefault()
 {
 	rmmDebug("createDefault() called");
 	strRep_ = "Empty message";
+	parsed_		= true;
+	assembled_	= true;
+}
+
+	void
+RBody::setBoundary(const QCString & s)
+{
+	boundary_ = s;
+	assembled_ = false;
+}
+
+	void
+RBody::setContentType(RContentType & t)
+{
+	contentType_ = t;
+	assembled_ = false;
+}
+	
+	void
+RBody::setCTE(RCte & t)
+{
+	cte_ = t; 
+	assembled_ = false;
+}
+
+	void
+RBody::setMultiPart(bool b)
+{
+	isMultiPart_ = b;
+	assembled_ = false;
 }
 

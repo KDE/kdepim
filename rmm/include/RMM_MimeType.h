@@ -40,16 +40,16 @@ class RMimeType : public RHeaderBody {
 
 		virtual ~RMimeType();
 
-		const RMimeType & operator = (const RMimeType &);
+		RMimeType & operator = (const RMimeType &);
 
 		void parse();
 		void assemble();
 
-		const QCString & boundary() const;
-		const QCString & name() const;
+		const QCString & boundary();
+		const QCString & name();
 
-		RMM::MimeType type() const;
-		RMM::MimeSubType subType() const;
+		RMM::MimeType type();
+		RMM::MimeSubType subType();
 
 		void setType(RMM::MimeType);
 		void setType(const QCString &);
@@ -63,14 +63,13 @@ class RMimeType : public RHeaderBody {
 
 	private:
 
-		QCString boundary_;
-		QCString name_;
+		QCString			boundary_;
+		QCString			name_;
 		
-		RMM::MimeType type_;
-		RMM::MimeSubType subType_;
+		RMM::MimeType		type_;
+		RMM::MimeSubType	subType_;
 		
-		RParameterList	parameterList_;
-
+		RParameterList		parameterList_;
 };
 
 #endif

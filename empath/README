@@ -4,29 +4,37 @@ Potential developers:
 
 See TODO for what you can help with.
 
+I'm currently working on making rmm (the message parsing library) do lazy
+parsing. It's already semi-working, and there's a HUGE speed increase.
+Amazing, in fact. It's also more convenient within Empath (and any other code
+using rmm) as you don't need to worry about parse() and assemble() any more.
+It's all automatic :)
+
 Please mail me to let me know what you're interested in doing.
 This doesn't have to be coding, it can be providing input for the design of
-the system, drawing icons, writing docs, translating, testing, etc. The more the
-merrier.
+the system, drawing icons, writing docs, translating, testing, etc. The more
+the merrier.
 
 Obviously the more coders the faster this will stabilise, but I consider the
 system as a whole to be important - users will need docs to read, and to be
-able to use Empath in their native language. I can do most of the Italian translation
-myself.
+able to use Empath in their native language. I can do most of the Italian
+translation myself.
 
 * GETTING STARTED *
 
 You need:
-a) A Maildir, with some mail in it. I suggest using mail from an existing maildir (you
- can use mutt to do this)
 
+a) A Maildir, with some mail in it. I suggest using mail from an existing
+   Maildir (you can use mutt to do this). Back it up, then put it in place in
+   ~/Maildir
+   
 FOR INFORMATION ON THE DESIGN:
 
 Read DESIGN
 
-Note that the ChangeLog is now a little out of date, and the design_docs are too.
-The design_docs stuff is basically me just writing stuff down so that I understand
-what I'm doing.
+Note that the ChangeLog is now a little out of date.
+The design_docs stuff is basically me just writing stuff down so that I
+understand what I'm doing.
 
 Rik Hemsley <rik@kde.org>
 

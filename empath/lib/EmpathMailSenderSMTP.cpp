@@ -44,7 +44,7 @@ EmpathMailSenderSMTP::setServer(const QString & name, const Q_UINT32 port)
 }
 
 	bool
-EmpathMailSenderSMTP::sendOne(const RMessage & message)
+EmpathMailSenderSMTP::sendOne(RMessage & message)
 {
 	return false;
 }

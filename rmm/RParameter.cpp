@@ -41,7 +41,7 @@ RParameter::~RParameter()
 	rmmDebug("dtor");
 }
 
-	const RParameter &
+	RParameter &
 RParameter::operator = (const RParameter & p)
 {
 	rmmDebug("operator =");
@@ -84,3 +84,26 @@ RParameter::createDefault()
 	attribute_ = value_ = "";
 }
 
+	const QCString &
+RParameter::attribute()
+{
+	return attribute_;
+}
+
+	const QCString &
+RParameter::value()
+{
+	return value_;
+}
+
+	void
+RParameter::setAttribute(const QCString & attribute)
+{
+	attribute_ = attribute;
+}
+	void
+RParameter::setValue(const QCString & value)	
+{
+	value_ = value;
+}
+	

@@ -42,8 +42,7 @@ class RMessageComponent {
 
 		virtual ~RMessageComponent();
 
-		RMessageComponent & operator = (const QCString & s)
-		{ strRep_ = s; return *this; }
+		RMessageComponent & operator = (const QCString & s);
 		
 		RMessageComponent & operator = (const RMessageComponent & m);
 
@@ -53,16 +52,11 @@ class RMessageComponent {
 		
 		virtual void createDefault() = 0L;
 
-		void set(const QCString & s) { strRep_ = s.data(); }
+		void set(const QCString & s) { parsed_ = false; strRep_ = s.data(); }
 
-		const QCString & asString() const { return strRep_; }
-
-		RMessageComponent * parent();
+		const QCString & asString() { assemble(); return strRep_; }
 
 		const char * className() const { return "RMessageComponent"; }
-
-		bool isDirty() const { return dirty_; }
-		void touch() { dirty_ = true; }
 		
 	protected:
 
@@ -70,9 +64,9 @@ class RMessageComponent {
 		RMessageComponent(const RMessageComponent & component);
 		RMessageComponent(const QCString & s) : strRep_(s.data()) { }
 
-		QCString strRep_;
-		RMessageComponent	* parent_;
-		bool				dirty_;
+		QCString			strRep_;
+		bool				parsed_;
+		bool				assembled_;
 };
 
 #endif

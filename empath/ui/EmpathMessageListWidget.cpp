@@ -97,8 +97,8 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 	
 	// Connect right button up so we can produce the popup context menu.
 	QObject::connect(
-		this, SIGNAL(rightButtonClicked(QListViewItem *, const QPoint &, int)),
-		this, SLOT(s_rightButtonClicked(QListViewItem *, const QPoint &, int)));
+		this, SIGNAL(rightButtonPressed(QListViewItem *, const QPoint &, int)),
+		this, SLOT(s_rightButtonPressed(QListViewItem *, const QPoint &, int)));
 	
 	// Connect the header's section clicked signal so we can sort properly
 	QObject::connect(header(), SIGNAL(sectionClicked(int)),
@@ -128,7 +128,7 @@ EmpathMessageListWidget::~EmpathMessageListWidget()
 
 	EmpathMessageListItem *
 EmpathMessageListWidget::findRecursive(
-		EmpathMessageListItem * initialItem, const RMessageID & msgId)
+		EmpathMessageListItem * initialItem, RMessageID & msgId)
 {
 	ASSERT(initialItem);
 
@@ -153,7 +153,7 @@ EmpathMessageListWidget::findRecursive(
 }
 
 	EmpathMessageListItem *
-EmpathMessageListWidget::find(const RMessageID & msgId)
+EmpathMessageListWidget::find(RMessageID & msgId)
 {
 	empathDebug("find (" + msgId.asString() + ") called");
 	if (!firstChild()) return 0;
@@ -161,7 +161,7 @@ EmpathMessageListWidget::find(const RMessageID & msgId)
 }
 
 	void
-EmpathMessageListWidget::addItem(const EmpathIndexRecord & item)
+EmpathMessageListWidget::addItem(EmpathIndexRecord & item)
 {
 	// Put the item into the master list.
 	empathDebug("addItem called");
@@ -251,7 +251,7 @@ EmpathMessageListWidget::getDescendants(
 }
 */
 	EmpathURL
-EmpathMessageListWidget::firstSelectedMessage() const
+EmpathMessageListWidget::firstSelectedMessage()
 {
 	EmpathURL u("orphaned");
 	if (currentItem() == 0) return u;
@@ -435,6 +435,18 @@ EmpathMessageListWidget::s_messageViewSource()
 }
 
 	void
+EmpathMessageListWidget::s_rightButtonPressed(
+		QListViewItem * item, const QPoint & pos, int column)
+{
+	if (item == 0) return;
+	wantScreenUpdates_ = false;
+	setSelected(item, true);
+	messageMenu_.exec(pos);
+	wantScreenUpdates_ = true;
+	emit(currentChanged(item));
+}
+/*
+	void
 EmpathMessageListWidget::s_rightButtonClicked(
 		QListViewItem * item, const QPoint & pos, int column)
 {
@@ -442,7 +454,7 @@ EmpathMessageListWidget::s_rightButtonClicked(
 	setSelected(item, true);
 	messageMenu_.exec(pos);
 }
-
+*/
 	void
 EmpathMessageListWidget::s_doubleClicked(QListViewItem *)
 {
@@ -456,7 +468,7 @@ EmpathMessageListWidget::s_currentChanged(QListViewItem *)
 	empathDebug("Current message changed - updating message widget");
 	
 	// Make sure we highlight the current item.
-	kapp->processEvents();
+//	kapp->processEvents();
 	
 	if (wantScreenUpdates_)
 		emit(changeView(firstSelectedMessage()));
@@ -531,9 +543,8 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	setUpdatesEnabled(false);
 	
 	QTime begin(QTime::currentTime());
+	QTime begin2(begin);
 	QTime now;
-	
-	unsigned int count(0);
 	
 	for (; mit.current(); ++mit) {
 		
@@ -542,17 +553,15 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 		now = QTime::currentTime();
 		if (begin.msecsTo(now) > 100) {
 			kapp->processEvents();
-			++count;
 			begin = now;
 		}
 	
-		if (count > 10) {
-			setUpdatesEnabled(true);
-			triggerUpdate();
-			setUpdatesEnabled(false);
-			count = 0;
-			begin = now;
-		}
+//		if (begin2.secsTo(now) > 10) {
+//			setUpdatesEnabled(true);
+//			triggerUpdate();
+//			setUpdatesEnabled(false);
+//			begin2 = now;
+//		}
 	}
 	
 	setUpdatesEnabled(true);

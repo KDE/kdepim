@@ -51,12 +51,12 @@ class EmpathMessageListWidget : public QListView
 		
 		~EmpathMessageListWidget();
 		
-		EmpathMessageListItem * find(const RMessageID & msgId);
+		EmpathMessageListItem * find(RMessageID & msgId);
 		EmpathMessageListItem * findRecursive(
-				EmpathMessageListItem * initialItem, const RMessageID & msgId);
+				EmpathMessageListItem * initialItem, RMessageID & msgId);
 		
-		void addItem(const EmpathIndexRecord & item);
-		EmpathURL firstSelectedMessage() const;
+		void addItem(EmpathIndexRecord & item);
+		EmpathURL firstSelectedMessage();
 		
 		void setSignalUpdates(bool yn);
 		const EmpathURL & currentFolder() { return url_; }
@@ -77,7 +77,8 @@ class EmpathMessageListWidget : public QListView
 		void s_messagePrint();
 		void s_messageFilter();
 		void s_messageViewSource();
-		void s_rightButtonClicked(QListViewItem *, const QPoint &, int);
+		//void s_rightButtonClicked(QListViewItem *, const QPoint &, int);
+		void s_rightButtonPressed(QListViewItem *, const QPoint &, int);
 		void s_doubleClicked(QListViewItem *);
 		void s_currentChanged(QListViewItem *);
 		void s_showFolder(const EmpathURL &);

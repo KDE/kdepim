@@ -31,7 +31,7 @@ virtual bool newMail() const;
 virtual void saveConfig();
 virtual void readConfig();
 		
-virtual bool writeMessage(const EmpathURL & folder, const RMessage &);
+virtual bool writeMessage(const EmpathURL & folder, RMessage &);
 		
 virtual Q_UINT32				sizeOfMessage		(const EmpathURL &);
 virtual QString					plainBodyOfMessage	(const EmpathURL &);

@@ -37,7 +37,7 @@ REnvelope::REnvelope(const REnvelope & e)
 	headerList_.setAutoDelete(true);
 }
 
-	const REnvelope &
+	REnvelope &
 REnvelope::operator = (const REnvelope & e)
 {
 	rmmDebug("operator =");
@@ -56,6 +56,7 @@ REnvelope::~REnvelope()
 	void
 REnvelope::parse()
 {
+	if (parsed_) return;
 	rmmDebug("parse() called");
 	rmmDebug("strRep_ : " + strRep_);
 
@@ -114,11 +115,16 @@ REnvelope::parse()
 
 	for (; it.current(); ++it)
 		it.current()->parse();
+	
+	parsed_		= true;
+	assembled_	= false;
 }
 
 	void
 REnvelope::assemble()
 {
+	parse();
+	if (assembled_) return;
 	rmmDebug("assemble() called");
 
 	strRep_ = "";
@@ -137,6 +143,7 @@ REnvelope::assemble()
 		strRep_ += '\r';
 		strRep_ += '\n';
 	}
+	assembled_ = true;
 }
 
 	void
@@ -203,11 +210,15 @@ REnvelope::createDefault()
 	_createDefault(RMM::HeaderFrom);
 	rmmDebug("****** CREATING DEFAULT DATE ******");
 	_createDefault(RMM::HeaderDate);
+	
+	parsed_		= true;
+	assembled_	= true;
 }
 
 	bool
-REnvelope::has(RMM::HeaderType t) const
+REnvelope::has(RMM::HeaderType t)
 {
+	parse();
 	RHeaderListIterator it(headerList_);
 
 	for (; it.current(); ++it)
@@ -217,8 +228,9 @@ REnvelope::has(RMM::HeaderType t) const
 }
 
 	bool
-REnvelope::has(const QCString & headerName) const
+REnvelope::has(const QCString & headerName)
 {
+	parse();
 	RHeaderListIterator it(headerList_);
 
 	for (; it.current(); ++it)
@@ -231,6 +243,7 @@ template <class T>
 	T
 REnvelope::get(RMM::HeaderType h, T t)
 {
+	parse();
 	rmmDebug("get " + QCString(RMM::headerNames[h]));
 	// See if we can find this header in the list.
 
@@ -598,6 +611,7 @@ REnvelope::xref()
 	RText &
 REnvelope::get(const QCString & headerName)
 {
+	parse();
 	RHeaderListIterator it(headerList_);
 
 	for (; it.current(); ++it) {
@@ -618,9 +632,10 @@ REnvelope::get(const QCString & headerName)
 	return *d;
 }
 
-	const RMailbox &
+	RMailbox &
 REnvelope::firstSender()
 {
+	parse();
 	rmmDebug("firstSender() called");
 
 	if (has(RMM::HeaderFrom)) {
@@ -651,6 +666,7 @@ REnvelope::firstSender()
 	RMessageID
 REnvelope::parentMessageId()
 {
+	parse();
 	// XXX If there's a references field, we use this over the InReplyTo: field.
 	// This is a temporary policy decision and may change.
 

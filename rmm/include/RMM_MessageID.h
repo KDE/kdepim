@@ -34,29 +34,27 @@ class RMessageID : public RHeaderBody {
 	public:
 
 		RMessageID();
-		RMessageID(const RMessageID & rMessageID);
+		RMessageID(const RMessageID &);
 		RMessageID(const QCString & s) : RHeaderBody(s) { }
-		bool operator == (const RMessageID & msgID) const;
-		bool operator != (const RMessageID & msgID) const;
-		const RMessageID & operator = (const RMessageID & rMessageID);
+		bool operator == (RMessageID &);
+		bool operator != (RMessageID &);
+		RMessageID & operator = (const RMessageID &);
 
 		friend QDataStream & operator >> (
 			QDataStream & s, RMessageID & mid);
 		
 		friend QDataStream & operator << (
-			QDataStream & s, const RMessageID & mid);
+			QDataStream & s, RMessageID & mid);
 		
 		virtual ~RMessageID();
 
 		void parse();
 		void assemble();
 		
-		bool isValid() const;
-		
 		void createDefault();
 
-		const QCString & localPart()const;
-		const QCString & domain()const;
+		const QCString & localPart();
+		const QCString & domain();
 		void setLocalPart(const QCString & localPart);
 		void setDomain(const QCString & domain);
 		

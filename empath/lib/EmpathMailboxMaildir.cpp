@@ -148,7 +148,7 @@ EmpathMailboxMaildir::_setupDefaultFolders()
 }
 	
 	bool
-EmpathMailboxMaildir::writeMessage(const EmpathURL & folder, const RMessage & m)
+EmpathMailboxMaildir::writeMessage(const EmpathURL & folder, RMessage & m)
 {
 	empathDebug("writeMessage called with message " + QString().setNum(m.id()));
 	// FIXME: Write writeNewMail method !

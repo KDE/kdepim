@@ -29,12 +29,13 @@
 #include <RMM_Enum.h>
 
 RBodyPart::RBodyPart()
+	:	REntity()
 {
 	rmmDebug("ctor");
 }
 
 RBodyPart::RBodyPart(const RBodyPart & part)
-	:	REntity()
+	:	REntity(part)
 {
 	rmmDebug("ctor");
 }
@@ -44,7 +45,7 @@ RBodyPart::~RBodyPart()
 	rmmDebug("dtor");
 }
 
-	const RBodyPart &
+	RBodyPart &
 RBodyPart::operator = (const RBodyPart & part)
 {
 	rmmDebug("operator =");
@@ -54,14 +55,16 @@ RBodyPart::operator = (const RBodyPart & part)
 }
 
 	RMM::MimeType
-RBodyPart::mimeType() const
+RBodyPart::mimeType()
 {
+	parse();
 	return mimeType_;
 }
 
 	RMM::MimeSubType
-RBodyPart::mimeSubType() const
+RBodyPart::mimeSubType()
 {
+	parse();
 	return mimeSubType_;
 }
 
@@ -69,34 +72,46 @@ RBodyPart::mimeSubType() const
 RBodyPart::setMimeType(RMM::MimeType t)
 {
 	mimeType_ = t;
+	assembled_ = false;
 }
 
 	void
 RBodyPart::setMimeSubType(RMM::MimeSubType st)
 {
 	mimeSubType_ = st;
+	assembled_ = false;
 }
 
 	void
 RBodyPart::setMimeType(const QCString & s)
 {
 	mimeType_ = RMM::mimeTypeStr2Enum(s);
+	assembled_ = false;
 }
 
 	void
 RBodyPart::setMimeSubType(const QCString & s)
 {
 	mimeSubType_ = RMM::mimeSubTypeStr2Enum(s);
+	assembled_ = false;
 }
 
 	void
 RBodyPart::parse()
 {
+	if (parsed_) return;
+	
+	parsed_		= true;
+	assembled_	= false;
 }
 
 	void
 RBodyPart::assemble()
 {
+	parse();
+	if (assembled_) return;
+
+	assembled_ = true;
 }
 
 	void

@@ -40,16 +40,16 @@ class RParameter : public RMessageComponent {
 
 		virtual ~RParameter();
 
-		const RParameter & operator = (const RParameter &);
+		RParameter & operator = (const RParameter &);
 
 		void parse();
 		void assemble();
 
-		const QCString & attribute() const { return attribute_; }
-		const QCString & value() const { return value_; }
+		const QCString & attribute();
+		const QCString & value();
 
-		void setAttribute(const QCString & attribute) { attribute_ = attribute; }
-		void setValue(const QCString & value) { value_ = value; }
+		void setAttribute	(const QCString & attribute);
+		void setValue		(const QCString & value);
 		
 		void createDefault();
 		

@@ -67,9 +67,9 @@ class EmpathFolder : public QObject
 		EmpathIndex & messageList() { return messageList_; }
 
 		const EmpathIndexRecord *
-			messageDescription(const RMessageID & messageID) const;
+			messageDescription(RMessageID & messageID) const;
 
-		bool writeMessage(const RMessage & message);
+		bool writeMessage(RMessage & message);
 		bool removeMessage(const EmpathURL &);
 
 		void update();
@@ -87,8 +87,8 @@ class EmpathFolder : public QObject
 
 	private:
 
-                EmpathFolder(const EmpathFolder &) : QObject() {}
-
+		EmpathFolder(const EmpathFolder &) : QObject() {}
+		
 		static uID ID;
 		uID id_;
 

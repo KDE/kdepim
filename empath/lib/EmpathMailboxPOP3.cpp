@@ -968,7 +968,7 @@ EmpathMailboxPOP3::_log(QCString text)
 }
 
 	bool
-EmpathMailboxPOP3::writeMessage(const EmpathURL & folder, const RMessage &)
+EmpathMailboxPOP3::writeMessage(const EmpathURL & folder, RMessage &)
 {
 	/*
 	empathDebug("writeMessage() called");
@@ -1098,7 +1098,6 @@ EmpathMailboxPOP3::plainBodyOfMessage(const EmpathURL & _id)
 	if (tempMessage == 0)
 		return "";
 	
-	tempMessage->parse();
 	return tempMessage->body().firstPlainBodyPart();
 	*/
 }
@@ -1124,7 +1123,6 @@ EmpathMailboxPOP3::typeOfMessage(const EmpathURL & _id)
 	if (tempMessage == 0)
 		return RMessage::BasicMessage;
 	
-	tempMessage->parse();
 	return tempMessage->type();
 	*/
 }

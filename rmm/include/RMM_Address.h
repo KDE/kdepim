@@ -37,17 +37,15 @@ class RAddress : public RHeaderBody {
 	public:
 
 		RAddress();
-		RAddress(const RAddress & a);
+		RAddress(const RAddress &);
 		RAddress(const QCString & s);
-		virtual const RAddress & operator = (const RAddress & a);
+		virtual RAddress & operator = (const RAddress & a);
 
 		virtual ~RAddress();
 
 		void parse();
 		void assemble();
 
-		bool isValid() const;
-		
 		RGroup * group();
 		RMailbox * mailbox();
 
@@ -57,10 +55,8 @@ class RAddress : public RHeaderBody {
 		
 	private:
 		
-		bool isValid_;
-
-		RMailbox * mailbox_;
-		RGroup * group_;
+		RMailbox	* mailbox_;
+		RGroup		* group_;
 };
 
 #endif //RADDRESS_H

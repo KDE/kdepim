@@ -32,24 +32,18 @@ class RText : public RHeaderBody {
 	public:
 
 		RText();
-		RText(const RText & rText);
+		RText(const RText &);
 		RText(const QCString & s) : RHeaderBody(s) { }
-		const RText & operator = (const RText & rText);
+		RText & operator = (const RText &);
 
 		virtual ~RText();
 
 		void parse();
 		void assemble();
 
-		bool isValid() const;
-
 		const char * className() const { return "RText"; }
-
+		
 		void createDefault();
-
-	private:
-
-		bool isValid_;
 };
 
 #endif //RTEXT_H

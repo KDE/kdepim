@@ -39,16 +39,16 @@ RGroup::~RGroup()
 	rmmDebug("dtor");
 }
 
-	const RGroup &
+	RGroup &
 RGroup::operator = (const RGroup & g)
 {
 	rmmDebug("operator =");
 	
 	if (this == &g) return *this;
 	
-	mailboxList_ = g.mailboxList_;
-	name_	= g.name_;
-	phrase_	= g.phrase_;
+	mailboxList_	= g.mailboxList_;
+	name_			= g.name_;
+	phrase_			= g.phrase_;
 	
 	RAddress::operator = (g);
 
@@ -64,7 +64,7 @@ operator >> (QDataStream & s, RGroup & group)
 }
 	
 	QDataStream &
-operator << (QDataStream & s, const RGroup & group)
+operator << (QDataStream & s, RGroup & group)
 {
 	s	<< group.name_
 		<< group.phrase_;
@@ -74,13 +74,13 @@ operator << (QDataStream & s, const RGroup & group)
 
 
 	const QCString &
-RGroup::name() const
+RGroup::name()
 {
 	return name_;
 }
 
 	const QCString &
-RGroup::phrase() const
+RGroup::phrase()
 {
 	return phrase_;
 }
@@ -97,8 +97,8 @@ RGroup::setPhrase(const QCString & s)
 	phrase_ = s;
 }
 
-	const RMailboxList &
-RGroup::mailboxList() const
+	RMailboxList &
+RGroup::mailboxList()
 {
 	return mailboxList_;
 }
@@ -113,12 +113,6 @@ RGroup::parse()
 RGroup::assemble()
 {
 	rmmDebug("assemble() called");
-}
-
-	bool
-RGroup::isValid() const
-{
-	return isValid_;
 }
 
 	void

@@ -32,7 +32,9 @@
 #include <RMM_Token.h>
 
 RDateTime::RDateTime()
-	:	zone_("")
+	:	QDateTime(),
+		RHeaderBody(),
+		zone_("")
 {
 	rmmDebug("ctor");
 }
@@ -44,13 +46,14 @@ RDateTime::~RDateTime()
 
 RDateTime::RDateTime(const RDateTime & t)
 	:	QDateTime(t),
-		RHeaderBody(),
+		RHeaderBody(t),
 		zone_(t.zone_.data())
 {
 	rmmDebug("ctor");
+	assembled_ = false;
 }
 
-	const RDateTime &
+	RDateTime &
 RDateTime::operator = (const RDateTime & dt)
 {
 	rmmDebug("operator =");
@@ -70,13 +73,16 @@ operator >> (QDataStream & s, RDateTime & dt)
 	s >> (QDateTime &)dt;
 	s >> dt.zone_;
 	//cerr << " >> gave me : " << dt.toString() << endl;
+	dt.parsed_		= true;
+	dt.assembled_	= false;
 	return s;
 }
 
 	QDataStream &
-operator << (QDataStream & s, const RDateTime & dt)
+operator << (QDataStream & s, RDateTime & dt)
 {
 	//cerr << " << is getting : " << dt.toString() << endl;
+	dt.parse();
 	s << (QDateTime)dt;
 	s << dt.zone_;
 	return s;
@@ -85,6 +91,8 @@ operator << (QDataStream & s, const RDateTime & dt)
 	void
 RDateTime::parse()
 {
+	if (parsed_) return;
+
 	rmmDebug("parse() called");
 	
 	Q_UINT32	dayOfMonth_;
@@ -102,6 +110,8 @@ RDateTime::parse()
 	if (tokens.count() < 6 || tokens.count() > 9) {
 		// Invalid date-time !
 		rmmDebug("Invalid date-time");
+		parsed_		= true;
+		assembled_	= false;
 		return;
 	}
 	
@@ -177,11 +187,16 @@ RDateTime::parse()
 	setTime(t);
 	
 	rmmDebug("XXX " + toString());
+	
+	parsed_		= true;
+	assembled_	= false;
 }
 
 	void
 RDateTime::assemble()
 {
+	if (assembled_) return;
+	
 	rmmDebug("assemble() called");
 	if (!QDateTime::isValid()) {
 		rmmDebug("I'm not VALID !");
@@ -204,6 +219,8 @@ RDateTime::assemble()
 	strRep_ += zone_;
 	
 	rmmDebug("assembled to \"" + strRep_ + "\"");
+	
+	assembled_ = true;
 }
 
 	void
@@ -212,8 +229,9 @@ RDateTime::createDefault()
 }
 
 	Q_UINT32
-RDateTime::asUnixTime() const
+RDateTime::asUnixTime()
 {
+	parse();
 	struct tm timeStruct;
 	
 	QDate d = date();
@@ -230,5 +248,13 @@ RDateTime::asUnixTime() const
 	time_t timeT = mktime(&timeStruct);	
 
 	return (Q_UINT32)timeT;	
+}
+
+
+	const QCString &
+RDateTime::asString()
+{
+	assemble();
+	return strRep_;
 }
 

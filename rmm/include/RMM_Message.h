@@ -26,6 +26,7 @@
 #include <RMM_BodyPart.h>
 #include <RMM_Body.h>
 #include <RMM_Defines.h>
+#include <RMM_Enum.h>
 
 class RMessage : public REntity {
 
@@ -38,51 +39,46 @@ class RMessage : public REntity {
 		
 		RMessage();
 		RMessage(const RMessage &);
-		RMessage(const QCString & s) : REntity(s) {
-			rmmDebug("ctor");
-			rmmDebug("Data:\n" + strRep_);
-		}
+		RMessage(const QCString & s);
 
 		virtual ~RMessage();
 
 		unsigned long int id() const { return id_; }
 
-		const RMessage & operator = (const RMessage & message);
+		RMessage & operator = (const RMessage & message);
 		
-		bool operator == (const RMessage & m) const
+		bool operator == (RMessage & m)
 		{ return id_ == m.id_; }
 		
-		friend QDataStream & operator << (QDataStream & str, const RMessage & m)
+		friend QDataStream & operator << (QDataStream & str, RMessage & m)
 		{ str << m.asString(); return str; }
 
 		QCString recipientListAsPlainString();
 
-		REnvelope	& envelope()			{ return envelope_; }
-		RBody		& body() 				{ return body_; }
+		REnvelope	& envelope();
+		RBody		& body();
 
-		Q_UINT32 size() const				{ return strRep_.length(); }
+		Q_UINT32 size();
 		
-		void set(const QCString & s)			{ REntity::set(s); }
-		const QCString & asString() const	{ return REntity::asString(); }
+		void set(const QCString & s)		{ REntity::set(s); }
+		const QCString & asString()			{ return REntity::asString(); }
 		
-		int			numberOfParts() const;
+		int			numberOfParts();
 		void		addPart(RBodyPart * bp);
 		void		removePart(RBodyPart * part);
 		
-		RBodyPart	* part(int index);
+		RBodyPart	part(int index);
 
-		MessageType	type() const;
+		MessageType	type();
 		
-//		void addAttachment(const EmpathAttachmentSpec & att);
-//		void addAttachmentList(const QList<EmpathAttachmentSpec> & attList);
-		bool hasParentMessageID() const;
+		bool hasParentMessageID();
 
-		void setStatus(RMM::MessageStatus status)	{ status_ = status; }
-		RMM::MessageStatus status() const			{ return status_; }
-		void setFolder(const QCString & folderName)	{ folder_ = folderName.data();}
-		const QCString & folder() const				{ return folder_; }
+		void setStatus(RMM::MessageStatus status);
+		RMM::MessageStatus status();
+		void setFolder(const QCString & folderName);
+		const QCString & folder();
 
-		const char * className() const				{ return "RMessage"; }
+		const char * className();
 
 		void parse();
 		void assemble();

@@ -51,7 +51,7 @@ class EmpathMailSender : public QObject
 		 *
 		 * Message will be returned to user on failure. FIXME: How ?
 		 */
-		virtual bool sendOne(const RMessage & message) = 0L;
+		virtual bool sendOne(RMessage & message) = 0L;
 
 		/**
 		 * Send a batch of messages. This could be useful if there's
@@ -68,7 +68,7 @@ class EmpathMailSender : public QObject
 		 * This will add a message to the local queue, i.e. spool it.
 		 * It will be despatched when the derived class feels like it.
 		 */
-		void addPendingMessage(const RMessage & message);
+		void addPendingMessage(RMessage & message);
 
 		virtual void saveConfig() = 0;
 		virtual void readConfig() = 0;

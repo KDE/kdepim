@@ -45,7 +45,7 @@ RMailboxList::~RMailboxList()
 	rmmDebug("dtor");
 }
 
-	const RMailboxList &
+	RMailboxList &
 RMailboxList::operator = (const RMailboxList & l)
 {
 	rmmDebug("operator =");

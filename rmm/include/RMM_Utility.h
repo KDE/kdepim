@@ -21,27 +21,17 @@
 #ifndef RMM_UTILITY_H
 #define RMM_UTILITY_H
 
-void	RInitialize();
-void	RFinalize();
+#include <RMM_Enum.h>
 
-int		RCteStrToEnum(const QCString & aStr);
-void	RCteEnumToStr(int aEnum, QCString & aStr);
+QCString			RToCrLfEol				(const QCString &);
+QCString			RToLfEol				(const QCString &);
+QCString			RToCrEol				(const QCString &);
+QCString			RToLocalEol				(const QCString &);
 
-int		RTypeStrToEnum(const QCString & aStr);
-void	RTypeEnumToStr(int aEnum, QCString & aStr);
+QCString			REncodeBase64			(const QCString &);
+QCString			RDecodeBase64			(const QCString &);
 
-int		RSubtypeStrToEnum(const QCString & aStr);
-void	RSubtypeEnumToStr(int aEnum, QCString & aStr);
-
-int		RToCrLfEol(const QCString & aSrcStr, QCString & aDestStr);
-int		RToLfEol(const QCString & aSrcStr, QCString & aDestStr);
-int		RToCrEol(const QCString & aSrcStr, QCString & aDestStr);
-int		RToLocalEol(const QCString & aSrcStr, QCString & aDestStr);
-
-int		REncodeBase64(const QCString & aSrcStr, QCString & aDestStr);
-int		RDecodeBase64(const QCString & aSrcStr, QCString & aDestStr);
-
-int		REncodeQuotedPrintable(const QCString & aSrcStr, QCString & aDestStr);
-int		RDecodeQuotedPrintable(const QCString & aSrcStr, QCString & aDestStr);
+QCString			REncodeQuotedPrintable	(const QCString &);
+QCString			RDecodeQuotedPrintable	(const QCString &);
 
 #endif

@@ -174,48 +174,9 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	QObject::connect(rb_smtp_, SIGNAL(toggled(bool)),
 			sb_smtpPort_, SLOT(setEnabled(bool)));
 	
-	rb_qmtp_		=
-		new QRadioButton("QMTP", w_server_,
-				"rb_qmtp");
-	CHECK_PTR(rb_qmtp_);
-	
-	rb_qmtp_->setFixedHeight(h);
-
-	le_qmtpServer_		=
-		new QLineEdit(w_server_, "le_qmtp");
-	CHECK_PTR(le_qmtpServer_);
-	
-	le_qmtpServer_->setFixedHeight(h);
-
-	l_qmtpServerPort_	=
-		new QLabel(i18n("Port:"), w_server_, "l_qmtpServerPort");
-	CHECK_PTR(l_qmtpServerPort_);
-	
-	l_qmtpServerPort_->setFixedHeight(h);
-	l_qmtpServerPort_->setFixedWidth(l_qmtpServerPort_->sizeHint().width());
-
-	sb_qmtpPort_	=
-		new KNumericSpinBox(w_server_, "sb_qmtpPort");
-	CHECK_PTR(sb_qmtpPort_);
-	sb_qmtpPort_->setEditable(true);
-	sb_qmtpPort_->setRange(1, 99999999);
-	sb_qmtpPort_->setValue(209);
-	
-	sb_qmtpPort_->setFixedHeight(h);
-
-	QObject::connect(rb_qmtp_, SIGNAL(toggled(bool)),
-			le_qmtpServer_, SLOT(setEnabled(bool)));
-	
-	QObject::connect(rb_qmtp_, SIGNAL(toggled(bool)),
-			l_qmtpServerPort_, SLOT(setEnabled(bool)));
-	
-	QObject::connect(rb_qmtp_, SIGNAL(toggled(bool)),
-			sb_qmtpPort_, SLOT(setEnabled(bool)));
-	
 	serverButtonGroup_->insert(rb_sendmail_,	0);
 	serverButtonGroup_->insert(rb_qmail_,		1);
 	serverButtonGroup_->insert(rb_smtp_,		2);
-	serverButtonGroup_->insert(rb_qmtp_,		3);
 	
 	rb_sendmail_->setChecked(true);	
 	le_qmail_->setEnabled(false);
@@ -223,10 +184,6 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	le_smtpServer_->setEnabled(false);
 	l_smtpServerPort_->setEnabled(false);
 	sb_smtpPort_->setEnabled(false);
-	le_qmtpServer_->setEnabled(false);
-	l_qmtpServerPort_->setEnabled(false);
-	sb_qmtpPort_->setEnabled(false);
-	
 
 	// Copies
 	
@@ -318,7 +275,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	topLevelLayout_->setRowStretch(0, 4);
 	topLevelLayout_->setRowStretch(1, 3);
 
-	serverGroupLayout_		= new QGridLayout(w_server_,	4, 5, 0, 10);
+	serverGroupLayout_		= new QGridLayout(w_server_,	3, 5, 0, 10);
 	CHECK_PTR(serverGroupLayout_);
 	
 	serverGroupLayout_->setColStretch(0, 2);
@@ -341,21 +298,17 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	serverGroupLayout_->addWidget(rb_sendmail_,		0, 0);
 	serverGroupLayout_->addWidget(rb_qmail_,		1, 0);
 	serverGroupLayout_->addWidget(rb_smtp_,			2, 0);
-	serverGroupLayout_->addWidget(rb_qmtp_,			3, 0);
 
 	serverGroupLayout_->addMultiCellWidget(le_sendmail_,	0, 0, 1, 3);
 	serverGroupLayout_->addMultiCellWidget(le_qmail_,		1, 1, 1, 3);
 	serverGroupLayout_->addWidget(le_smtpServer_,			2, 1);
-	serverGroupLayout_->addWidget(le_qmtpServer_,			3, 1);
 	
 	serverGroupLayout_->addWidget(pb_sendmailBrowse_,		0, 4);
 	serverGroupLayout_->addWidget(pb_qmailBrowse_,			1, 4);
 
 	serverGroupLayout_->addWidget(l_smtpServerPort_,		2, 2);
-	serverGroupLayout_->addWidget(l_qmtpServerPort_,		3, 2);
 	
 	serverGroupLayout_->addMultiCellWidget(sb_smtpPort_,	2, 2, 3, 4);
-	serverGroupLayout_->addMultiCellWidget(sb_qmtpPort_,	3, 3, 3, 4);
 
 	serverGroupLayout_->activate();
 	
@@ -382,8 +335,7 @@ EmpathSendingSettingsDialog::saveData()
 	int servType = (int)(
 		(rb_sendmail_->isChecked()	? Sendmail	: 0) |
 		(rb_qmail_->isChecked()		? Qmail		: 0) |
-		(rb_smtp_->isChecked()		? SMTP		: 0) |
-		(rb_qmtp_->isChecked()		? QMTP		: 0));
+		(rb_smtp_->isChecked()		? SMTP		: 0));
 	
 	CWE( EmpathConfig::KEY_OUTGOING_SERVER_TYPE,	servType						);
 	
@@ -391,10 +343,8 @@ EmpathSendingSettingsDialog::saveData()
 	CWE( EmpathConfig::KEY_QMAIL_LOCATION,		le_qmail_->text()				);
 	
 	CWE( EmpathConfig::KEY_SMTP_SERVER_LOCATION,	le_smtpServer_->text()			);
-	CWE( EmpathConfig::KEY_QMTP_SERVER_LOCATION,	le_qmtpServer_->text()			);
 
 	CWE( EmpathConfig::KEY_SMTP_SERVER_PORT,		sb_smtpPort_->getValue()		);
-	CWE( EmpathConfig::KEY_QMTP_SERVER_PORT,		sb_qmtpPort_->getValue()		);
 	
 	CWE( EmpathConfig::KEY_CC_ME,					cb_copySelf_->isChecked()		);
 	CWE( EmpathConfig::KEY_CC_OTHER,				cb_copyOther_->isChecked()		);
@@ -420,7 +370,6 @@ EmpathSendingSettingsDialog::loadData()
 	rb_sendmail_->setChecked(	t == Sendmail);
 	rb_qmail_->setChecked(		t == Qmail);
 	rb_smtp_->setChecked(		t == SMTP);
-	rb_qmtp_->setChecked(		t == QMTP);
 	
 	le_sendmail_->setText(		c->readEntry(EmpathConfig::KEY_SENDMAIL_LOCATION));
 	
@@ -428,9 +377,6 @@ EmpathSendingSettingsDialog::loadData()
 	
 	le_smtpServer_->setText(	c->readEntry(EmpathConfig::KEY_SMTP_SERVER_LOCATION));
 	sb_smtpPort_->setValue(		c->readNumEntry(EmpathConfig::KEY_SMTP_SERVER_PORT));
-	
-	le_qmtpServer_->setText(	c->readEntry(EmpathConfig::KEY_QMTP_SERVER_LOCATION));
-	sb_qmtpPort_->setValue(		c->readNumEntry(EmpathConfig::KEY_QMTP_SERVER_PORT));
 	
 	cb_copySelf_->setChecked(	c->readBoolEntry(EmpathConfig::KEY_CC_ME));
 	cb_copyOther_->setChecked(	c->readBoolEntry(EmpathConfig::KEY_CC_OTHER));

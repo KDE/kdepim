@@ -84,7 +84,6 @@ class EmpathSendingSettingsDialog : public QWidget
 		QLineEdit			* le_sendmail_;
 		QLineEdit			* le_qmail_;
 		QLineEdit			* le_smtpServer_;
-		QLineEdit			* le_qmtpServer_;
 
 		QCheckBox			* cb_copySelf_;
 		QCheckBox			* cb_copyOther_;
@@ -98,13 +97,10 @@ class EmpathSendingSettingsDialog : public QWidget
 		QRadioButton		* rb_sendmail_;
 		QRadioButton		* rb_qmail_;
 		QRadioButton		* rb_smtp_;
-		QRadioButton		* rb_qmtp_;
 
 		QLabel				* l_smtpServerPort_;
-		QLabel				* l_qmtpServerPort_;
 
 		KNumericSpinBox		* sb_smtpPort_;
-		KNumericSpinBox		* sb_qmtpPort_;
 		
 		EmpathAddressSelectionWidget	* asw_copyOther_;
 		EmpathFolderChooserWidget		* fcw_copyFolder_;

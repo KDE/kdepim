@@ -14,7 +14,6 @@ EmpathFolder.cpp \
 EmpathIndex.cpp \
 EmpathIndexRecord.cpp \
 EmpathMailSender.cpp \
-EmpathMailSenderQMTP.cpp \
 EmpathMailSenderQmail.cpp \
 EmpathMailSenderSMTP.cpp \
 EmpathMailSenderSendmail.cpp \

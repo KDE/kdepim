@@ -1,11 +1,11 @@
 Things you might want to VOLUNTEER for :)
 
 * Sending mail via sendmail seems a little flaky and there's no way to tell the
-  user what's going on. I'm going to drop QMTP as it seems like no-one uses it, but I
-  still need to get SMTP sending going.
+  user what's going on. I'm going to drop QMTP as it seems like no-one uses it,
+  but I still need to get SMTP sending going.
   
 * Using an external editor needs reorganising so that a class encapsulates the
-  process(es) that have been spawned.
+  process(es) that have been spawned. (Started on this)
   
 * EmpathComposeWidget uses the fancy Netscape-alike thing where when you add
   headers, more widgets are created. What needs to happen is that when the user
@@ -15,9 +15,62 @@ Things you might want to VOLUNTEER for :)
   remember that they wanted Reply-To: next and next time when they press enter
   after To:, they get Reply-To:
 
-* kioslaves need to be worked in for POP, IMAP, and possibly SMTP (where a kioslave would
-  have to be written !)
+* kioslaves need to be worked in for POP, IMAP, and possibly SMTP (where a
+  kioslave would have to be written !)
 
-* Actually do the multiple-parts thing in rmm (message parsing library). You may want
-  to have a chat with me about this one, so I can show you how it needs to work.
+* Find a way to both use a message cache, AND allow messages larger than the
+  maximum size for the cache. If I limit the cache to 1Mb to keep mem usage down
+  then I also end up refusing to show large messages ! If I resize the cache,
+  and then set it back down, the message will be deleted !
+
+* Sort out the mime handling. Currently all messages are treated as just plain
+  text. I've started to put the mechanism into place, but it's hard work.
+   
+* Remove the need to use parse() and assemble() in rmm. This will involve using
+  the 'dirty' flag. Each part will have to know whether it has been parsed or
+  not. If it hasn't, and any method is called (inspector or mutator) it will
+  have to be parsed first. Each part will also have to know when its strRep_
+  is dirty, i.e. it needs to be reassembled. Whenever asString() is called,
+  a check must be made to see if reassembly is necessary, assemble() called
+  if so.
+  This will make things a little more 'lazy' and remove complexity from user
+  code. It should provide some speedup as user code doesn't know when parsing
+  and assembling is really necessary, so will end up performing these more than
+  is needed.
+  - Working on this
+ 
+* Finish off doing the apply/revert stuff in the config dialogs. It's almost
+  done, but just needs looking at and checking it really works properly.
+  
+* Sort out adding folders. For some reason the folder name doesn't appear in
+  the FolderWidget. Also, the FolderWidget shouldn't collapse the tree when
+  a folder is added. This is a symptom of the fact I'm calling 'update()' on
+  the FolderWidget via a signal. Some more intelligence is necessary.
+  
+* In the same vein as the above, need to sort out EmpathMaildir so that it
+  reads recursively to find its folders rather than writing them to the config.
+  
+* mbox and MMDF handling. (Started but untested and unused as yet)
+
+* IMAP and news. IMAP should be via kio_imap, like POP will be. NNTP ? Will
+  there be an NNTP kioslave ?
+  
+* Come up with an intelligent solution to the password storage problem.
+
+* Find out if the reason that setUpdatesEnabled(false) on a QListView doesn't
+  work properly is Qt's fault.
+  
+* Sort out a way to rearrange the widgets in the main window. I might be doing
+  a konqueror style thing, but I can't really allow more than one of each of
+  FolderWidget, MessageListWidget and MessageViewWidget. They need to be
+  connected via signals and slots to update each other.
+  
+* Sort the status indicator issue. I really want to do something in the same
+  style as Outlook, but not as stupid, of course. Basically a multiple-indicator
+  widget that could possibly have the option of being 'swallowed' within the
+  main window, or simply act as a dialog (non-modal, of course).
+  We could just use the statusbar when there's only one task in the list. That
+  would be cool.
+  
+* Drag and drop.
 
