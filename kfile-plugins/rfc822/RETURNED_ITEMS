@@ -1,0 +1,14 @@
+If you make a new plugin, please add the list of returned items to this list.
+
+
+rfc822 plugin:
+===========
+
+type       key             W/A        details
+------------------------------------------------------------------------
+String     From            -/-    Name/email of sender
+String     To              -/-    Name/email of recipient
+String     Subject         -/-    Subject line of message
+String     Date            -/-    Date stamped in message
+String     Content-Type    -/-    Content type declared in headers
+
