@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
   <!ENTITY kappname "&kpilot;">
   <!ENTITY package "kdepim">
   <!ENTITY USB "<acronym>USB</acronym>">
@@ -1972,6 +1972,9 @@ Documentation copyright 2000,2001 Adriaan de Groot <email>adridg@cs.kun.nl</emai
 </book>
 <!-- 
      $Log$
+     Revision 1.14  2002/02/27 21:46:37  lauri
+     Fixing guilabels
+
      Revision 1.13  2002/01/20 22:30:41  adridg
      Updated for KPilot 4.3.0 w/ warning that there is no documentation
 
