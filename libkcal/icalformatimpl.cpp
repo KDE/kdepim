@@ -241,7 +241,7 @@ icalcomponent *ICalFormatImpl::writeJournal(Journal *journal)
   icalcomponent *vjournal = icalcomponent_new(ICAL_VJOURNAL_COMPONENT);
 
   writeIncidence(vjournal,journal);
-  
+
   // start time
   if (journal->dtStart().isValid()) {
     icaltimetype start;
@@ -381,7 +381,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
     icalcomponent_add_property(parent,icalproperty_new_exdate(
         writeICalDate(*exIt)));
   }
-  
+
   // attachments
   Attachment::List attachments = incidence->attachments();
   for (Attachment *at = attachments.first(); at; at = attachments.next())
@@ -1109,7 +1109,7 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   icalattachtype *a = icalproperty_get_attach(attach);
   icalparameter_value v = ICAL_VALUE_NONE;
   icalparameter_encoding e = ICAL_ENCODING_NONE;
- 
+
   Attachment *attachment = 0;
 
   icalparameter *vp = icalproperty_get_first_parameter(attach, ICAL_VALUE_PARAMETER);
@@ -1241,7 +1241,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
       case ICAL_ATTACH_PROPERTY:  // attachments
         incidence->addAttachment(readAttachment(p));
         break;
- 
+
       default:
 //        kdDebug(5800) << "ICALFormat::readIncidence(): Unknown property: " << kind
 //                  << endl;
@@ -1518,21 +1518,23 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
 
   // Determine the alarm's action type
   icalproperty *p = icalcomponent_get_first_property(alarm,ICAL_ACTION_PROPERTY);
-  if ( !p ) {
-    kdDebug(5800) << "Unknown type of alarm" << endl;
-    return;
-  }
-
-  icalproperty_action action = icalproperty_get_action(p);
   Alarm::Type type = Alarm::Display;
-  switch ( action ) {
-    case ICAL_ACTION_DISPLAY:   type = Alarm::Display;  break;
-    case ICAL_ACTION_AUDIO:     type = Alarm::Audio;  break;
-    case ICAL_ACTION_PROCEDURE: type = Alarm::Procedure;  break;
-    case ICAL_ACTION_EMAIL:     type = Alarm::Email;  break;
-    default:
-      kdDebug(5800) << "Unknown type of alarm" << endl;
-      return;
+  icalproperty_action action;
+  if ( !p ) {
+    kdDebug(5800) << "Unknown type of alarm, using default" << endl;
+//    return;
+  } else {
+
+    action = icalproperty_get_action(p);
+    switch ( action ) {
+      case ICAL_ACTION_DISPLAY:   type = Alarm::Display;  break;
+      case ICAL_ACTION_AUDIO:     type = Alarm::Audio;  break;
+      case ICAL_ACTION_PROCEDURE: type = Alarm::Procedure;  break;
+      case ICAL_ACTION_EMAIL:     type = Alarm::Email;  break;
+      default:
+        kdDebug(5800) << "Unknown type of alarm: " << action << endl;
+//        type = Alarm::Invalid;
+    }
   }
   ialarm->setType(type);
 
