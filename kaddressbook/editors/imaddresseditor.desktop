@@ -1,0 +1,17 @@
+[Desktop Entry]
+Type=Service
+Name=Instant Messaging
+Name[da]=Instant Message
+Name[et]=Kiirsuhtlus
+Name[pt]=Mensageiro Instantâneo
+Name[pt_BR]=Mensageiro Instantâneo
+Name[sv]=Direktmeddelanden
+Comment=Instant Messaging Address Editor
+Comment[da]=Adresseeditor for Instant Message
+Comment[et]=Kiirsuhtlusrakenduse aadressiredaktor
+Comment[nl]=Instant-messaging-adresbeheer
+Comment[pt]=Editor de Endereços do Mensageiro Instantâneo
+Comment[pt_BR]=Editor de Endereços do Mensageiro Instantâneo
+Comment[sv]=Addresseditor för direktmeddelanden
+ServiceTypes=KAddressBook/ContactEditorWidget
+X-KDE-Library=libkaddrbk_instantmessaging
