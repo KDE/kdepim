@@ -40,11 +40,11 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2001-11-1</date>
-<releaseinfo>0.03.00</releaseinfo>
+<date>2001-11-28</date>
+<releaseinfo>0.03.02</releaseinfo>
 
 <abstract>
-<para>This handbook describes &kalarm; version 0.3.</para>
+<para>This handbook describes &kalarm; version 0.3.5.</para>
 
 <para>&kalarm; is an alarm/reminder message scheduler for &kde;.</para>
 </abstract>
@@ -90,8 +90,8 @@ desktop to ensure that you don't miss it should you happen to be
 switching desktops just at that moment. The message window shows the
 time for which the alarm was scheduled, which could be useful to know
 if it was displayed late or if you were away from the computer when it
-popped up. It has a defer option to ask for the alarm to be displayed
-again later. An example of an alarm message:</para>
+popped up. It usually has a defer option to ask for the alarm to be
+displayed again later. An example of an alarm message:</para>
 
 <screenshot>
 <screeninfo>Screenshot of the &kalarm; message window</screeninfo>
@@ -179,7 +179,11 @@ displayed.</para>
 <para>If you want the alarm to be repeated, enter in the
 <guilabel>Repetition</guilabel> group box the number of repetitions
 (after the initial display) and the interval (in hours and minutes, in
-the range 1 minute to 99 hours) between repetitions.</para>
+the range 1 minute to 99 hours) between repetitions. Check the
+<guilabel>Repeat at login</guilabel> if you want the alarm to be
+displayed whenever you log in, in addition to its other scheduled
+times. (Note that an alarm repeated at login will also be displayed
+any time you restart or reset the alarm daemon.)</para>
 
 <para>The <guilabel>Cancel if late</guilabel> checkbox determines what
 happens if the alarm can't be displayed at its scheduled time. Check
@@ -276,6 +280,11 @@ minutes) the message should be redisplayed. Then click
 <guibutton><accel>D</accel>efer</guibutton> to defer the alarm
 message. If you don't want to defer it after all, just click
 <guibutton><accel>O</accel>K</guibutton>.</para>
+
+<note><para>The <guibutton><accel>D</accel>efer...</guibutton> button
+is not available for alarms which are displayed at login due to the
+<guilabel>Repeat at login</guilabel> option having been
+selected.</para></note>
 </listitem>
 </itemizedlist>
 
@@ -391,6 +400,10 @@ display by &kalarm;:</para>
   <entry><option>-l</option>, <option>--late-cancel</option></entry>
   <entry>Cancel the message if it cannot be displayed at the correct
   time.</entry>
+</row>
+<row>
+  <entry><option>-L</option>, <option>--login</option></entry>
+  <entry>Display the message every time you log in.</entry>
 </row>
 <row>
   <entry><option>-r</option>, <option>--repeat
