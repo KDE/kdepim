@@ -156,6 +156,8 @@ public:
 	void unpack(const void *, int = 0) { }
 
 	static const int APP_BUFFER_SIZE;
+	
+	const struct Address *address() const { return &fAddressInfo; } ;
 
 protected:
 	// Get the pointers in cases where no conversion to
