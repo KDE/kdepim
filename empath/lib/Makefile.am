@@ -1,10 +1,10 @@
-KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS) -DQT_NO_ASCII_CAST
+KDE_CXXFLAGS = -DQT_NO_ASCII_CAST
 
 INCLUDES = -I$(top_srcdir)/librmm/ $(all_includes)
 
 lib_LTLIBRARIES = libempathkernel.la
 
-libempathkernel_la_LDFLAGS = $(all_libraries) $(LIBQPTHREAD) $(LIBPTHREAD) \
+libempathkernel_la_LDFLAGS = $(all_libraries) $(LIBPTHREAD) \
 	-version-info 1:0:0 -module 
 	
 include_HEADERS = EmpathInterface.h
