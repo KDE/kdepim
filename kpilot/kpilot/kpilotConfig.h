@@ -21,7 +21,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -64,48 +64,48 @@ public:
 	//
 
 #define IntProperty(a) \
-	int get##a(QComboBox *p=0L) const; \
-	void set##a(QComboBox *); \
+	int get##a() const; \
 	void set##a(int); \
 
 #define BoolProperty(a) \
-	bool get##a(QCheckBox *p=0L) const; \
-	void set##a(QCheckBox *); \
+	bool get##a() const; \
 	void set##a(bool);
 
 #define StringProperty(a) \
-	QString get##a(QLineEdit *p=0L) const; \
-	void set##a(QLineEdit *); \
+	QString get##a() const; \
 	void set##a(const QString &);
 
 	IntProperty(Version)
 	IntProperty(Debug)
 
-
-	IntProperty(PilotType)
-	IntProperty(PilotSpeed)
+	/* General tab in the config dialog */
 	StringProperty(PilotDevice)
-	StringProperty(User)
+	IntProperty(PilotSpeed)
 	StringProperty(Encoding)
-
-
+	StringProperty(User)
 	BoolProperty(StartDaemonAtLogin)
-	BoolProperty(KillDaemonOnExit)
 	BoolProperty(DockDaemon)
+	BoolProperty(KillDaemonOnExit)
 
-	BoolProperty(ShowSecrets)
+	/* Sync tab */
+	IntProperty(SyncType)
+	IntProperty(SpecialSyncType)
+	BoolProperty(FullSyncOnPCChange)
+	IntProperty(ConflictResolution)
 	BoolProperty(SyncFiles)
 	BoolProperty(SyncWithKMail)
+
+	/* Viewers tab */
+	BoolProperty(ShowSecrets)
+	// Address widget stuff goes in a different group
+	KPilotConfigSettings &setAddressGroup();
+	IntProperty(AddressDisplayMode)
+	BoolProperty(UseKeyField)
+
+	/* Backup tab */
 	StringProperty(BackupOnly)
 	StringProperty(Skip)
 
-	// Address widget stuff goes in a different group
-	//
-	//
-	KPilotConfigSettings &setAddressGroup();
-
-	BoolProperty(UseKeyField)
-	IntProperty(AddressDisplayMode)
 
 
 
@@ -129,7 +129,7 @@ public:
 	//
 	//
 	void sync() { KSimpleConfig::sync(); } ;
-	KPilotConfigSettings & resetGroup() 
+	KPilotConfigSettings & resetGroup()
 		{ setGroup(QString::null); return *this; } ;
 } ;
 
@@ -155,7 +155,7 @@ public:
 	 */
         static QString getDefaultDBPath();
 
-  
+
 	/**
 	* This number can be changed every time a new
 	* KPilot version is released that absolutely requires
@@ -181,7 +181,7 @@ public:
 	/**
 	* We might have an additional Debug= line in their
 	* config which may be read and ORed with the user-specified
-	* debug level. This function does that. 
+	* debug level. This function does that.
 	*
 	* Note that this will SIGSEGV if there is no KApplication
 	* instance (yet) since it uses functions from there. @em Only

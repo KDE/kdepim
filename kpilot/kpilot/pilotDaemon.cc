@@ -19,7 +19,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -31,7 +31,7 @@ static const char *pilotdaemon_id =
 
 // Heck yeah.
 #define ENABLE_KROUPWARE
-	
+
 #ifndef _KPILOT_OPTIONS_H
 #include "options.h"
 #endif
@@ -125,7 +125,7 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 	KURL::List list;
 
 	KURLDrag::decode(e, list);
-	
+
 	QStringList files;
 	for(KURL::List::ConstIterator it = list.begin(); it != list.end(); ++it)
 	{
@@ -141,9 +141,9 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 {
 	FUNCTIONSETUP;
 
-	switch (e->button()) 
+	switch (e->button())
 	{
-		case RightButton: 
+		case RightButton:
 			{
 				KPopupMenu *menu = contextMenu();
 				contextMenuAboutToShow(menu);
@@ -405,8 +405,7 @@ void PilotDaemon::showTray()
 
 	fPilotDevice = config.getPilotDevice();
 	fPilotType = KPilotDeviceLink::None;
-	int t = config.getPilotType();
-	
+
 	(void) PilotAppCategory::setupPilotCodec(config.getEncoding());
 
 #ifdef DEBUG
@@ -419,23 +418,6 @@ void PilotDaemon::showTray()
 		<< endl;
 #endif
 
-	switch (t)
-	{
-	case 0:
-		fPilotType = KPilotDeviceLink::Serial;
-		break;
-	case 1:
-		fPilotType = KPilotDeviceLink::OldStyleUSB;
-		break;
-	case 2:
-		fPilotType = KPilotDeviceLink::DevFSUSB;
-		break;
-	default:
-#ifdef DEBUG
-		DEBUGDAEMON << fname << ": Unknown device type " << t << endl;
-#endif
-		break;
-	}
 
 	/*
 	** Override the kind of device, since OldStyleUSB
@@ -479,7 +461,7 @@ void PilotDaemon::showTray()
 			fTray = 0L;
 		}
 	}
-	
+
 	updateTrayStatus();
 }
 
@@ -680,7 +662,7 @@ QString PilotDaemon::syncTypeString(int i) const
 
 	// Queue to add all the actions for this sync to.
 	fSyncStack = new ActionQueue(fPilotLink);
-	
+
 	/**
 	* If KPilot is busy with something - like configuring
 	* conduit - then we shouldn't run a real sync, but
@@ -713,7 +695,7 @@ QString PilotDaemon::syncTypeString(int i) const
 
 		fSyncStack->queueInit();
 		fSyncStack->addAction(new SorryAction(fPilotLink));
-		// Near the end of this function - sets up 
+		// Near the end of this function - sets up
 		// signal/slot connections and fires off the sync.
 		goto launch;
 	}
@@ -724,19 +706,19 @@ QString PilotDaemon::syncTypeString(int i) const
 
 #ifdef ENABLE_KROUPWARE
 	c.setGroup(QString::null);
-	if ( c.getSyncWithKMail() ) 
+	if ( c.getSyncWithKMail() )
 	{
 		logMessage( i18n("Kroupware syncing is enabled.") );
-		
+
 		QString errmsg;
 		if (!KroupwareSync::startKMail(&errmsg))
 		{
 			logMessage( i18n("Could not start KMail. The "
 				"error message was: %1.").arg(errmsg));
 		}
-		
+
 		_syncWithKMail = true;
-		
+
 		if (conduits.findIndex( CSL1("vcal-conduit") ) >= 0 )
 			_kroupwareParts |= KroupwareSync::Cal ;
 		if (conduits.findIndex( CSL1("todo-conduit") ) >= 0 )
@@ -753,8 +735,8 @@ QString PilotDaemon::syncTypeString(int i) const
 		fSyncStack->addAction(new KroupwareSync(true /* pre-sync */,
 			_kroupwareParts,fPilotLink));
 	}
-#endif	
-	
+#endif
+
 	switch (fNextSyncType)
 	{
 	case PilotDaemonDCOP::Test:
@@ -801,13 +783,13 @@ QString PilotDaemon::syncTypeString(int i) const
 		fSyncStack->addAction(new KroupwareSync(false /* post-sync */ ,
 			_kroupwareParts,fPilotLink));
 	}
-#endif	
+#endif
 
 // Jump here to finalize the connections to the sync action
 // queue and start the actual sync.
 launch:
 	fSyncStack->queueCleanup();
-	
+
 	QObject::connect(fSyncStack, SIGNAL(logError(const QString &)),
 		this, SLOT(logError(const QString &)));
 	QObject::connect(fSyncStack, SIGNAL(logMessage(const QString &)),
@@ -820,7 +802,7 @@ launch:
 		this, SLOT(endHotSync()));
 
 	QTimer::singleShot(0,fSyncStack,SLOT(execConduit()));
-	
+
 	updateTrayStatus();
 }
 
@@ -862,7 +844,7 @@ launch:
 
 	getLogger().logProgress(i18n("HotSync Completed.<br>"), 100);
 	getKPilot().daemonStatus(KPilotDCOP::EndOfHotSync);
-	
+
 	fStatus = HOTSYNC_END;
 
 	if (fPostSyncAction & Quit)
@@ -880,7 +862,7 @@ launch:
 	}
 
 	fPostSyncAction = None;
-	
+
 	updateTrayStatus();
 }
 
@@ -927,7 +909,7 @@ void PilotDaemon::slotRunConduitConfig()
 	// If it succeeds, we can assume kpilot is running and then try
 	// to send the configureConduits() DCOP call.
 	// If it fails (probably because kpilot isn't running) it tries
-	// to call kpilot via KProcess (using a command line switch to 
+	// to call kpilot via KProcess (using a command line switch to
 	// only bring up the configure conduits dialog).
 	//
 	// Implementing the function this way catches all cases.
@@ -939,7 +921,7 @@ void PilotDaemon::slotRunConduitConfig()
 
 	// This DCOP call to kpilot's raise function solves the final case
 	// ie when kpilot already has the dialog open
-	
+
 	if (client->send("kpilot", "kpilot-mainwindow#1", "raise()",
 		QString::null))
 	{
@@ -987,7 +969,7 @@ int main(int argc, char **argv)
 	KCmdLineArgs::init(argc, argv, &about);
 	KUniqueApplication::addCmdLineOptions();
 #ifdef DEBUG
-	DEBUGDAEMON << fname 
+	DEBUGDAEMON << fname
 		<< ": Adding debug options." << endl;
 	// KCmdLineArgs::addCmdLineOptions(debug_options); // , "debug");
 

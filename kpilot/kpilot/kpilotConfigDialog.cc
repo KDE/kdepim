@@ -28,7 +28,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-static const char *kpilotconfigdialog_id = 
+static const char *kpilotconfigdialog_id =
 	"$Id$";
 
 #include "options.h"
@@ -38,6 +38,7 @@ static const char *kpilotconfigdialog_id =
 #include <qcombobox.h>
 #include <qcheckbox.h>
 #include <qradiobutton.h>
+#include <qbuttongroup.h>
 #include <qlineedit.h>
 #include <qtabwidget.h>
 
@@ -137,11 +138,6 @@ KPilotConfigDialog::~KPilotConfigDialog()
 void KPilotConfigDialog::disableUnusedOptions()
 {
 	FUNCTIONSETUP;
-
-	fConfigWidget->fOverwriteRemote->setEnabled(false);
-	fConfigWidget->fForceFirstTime->setEnabled(false);
-	fConfigWidget->fFullBackupCheck->setEnabled(false);
-	fConfigWidget->fPreferFastSync->setEnabled(false);
 }
 
 void KPilotConfigDialog::readConfig()
@@ -151,27 +147,33 @@ void KPilotConfigDialog::readConfig()
 	KPilotConfigSettings & c = KPilotConfig::getConfig();
 	c.resetGroup();
 
-	(void) c.getPilotDevice(fConfigWidget->fPilotDevice);
-	(void) c.getPilotSpeed(fConfigWidget->fPilotSpeed);
-	(void) c.getUser(fConfigWidget->fUserName);
-	(void) c.getStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin);
-	(void) c.getKillDaemonOnExit(fConfigWidget->fKillDaemonOnExit);
-	(void) c.getDockDaemon(fConfigWidget->fDockDaemon);
-
-	(void) c.getShowSecrets(fConfigWidget->fUseSecret);
-	(void) c.getBackupOnly(fConfigWidget->fBackupOnly);
-	(void) c.getSkip(fConfigWidget->fSkipDB);
-
-	(void) c.getSyncFiles(fConfigWidget->fSyncFiles);
-	(void) c.getSyncWithKMail(fConfigWidget->fSyncWithKMail);
-
+	/* General tab in the setup dialog */
+	fConfigWidget->fPilotDevice->setText(c.getPilotDevice());
+	fConfigWidget->fPilotSpeed->setCurrentItem(c.getPilotSpeed());
 	getEncoding(c);
-	
-	c.setAddressGroup();
-	(void) c.getUseKeyField(fConfigWidget->fUseKeyField);
-	setAddressDisplay(c.getAddressDisplayMode());
+	fConfigWidget->fUserName->setText(c.getUser());
+	fConfigWidget->fStartDaemonAtLogin->setChecked(c.getStartDaemonAtLogin());
+	fConfigWidget->fDockDaemon->setChecked(c.getDockDaemon());
+	fConfigWidget->fKillDaemonOnExit->setChecked(c.getKillDaemonOnExit());
 
+	/* Sync tab */
+	fConfigWidget->fSyncMode->setButton(c.getSyncType());
+	fConfigWidget->fSpecialSync->setCurrentItem(c.getSpecialSyncType());
+	fConfigWidget->fFullBackupCheck->setChecked(c.getFullSyncOnPCChange());
+	fConfigWidget->fConflictResolution->setCurrentItem(c.getConflictResolution());
+	fConfigWidget->fSyncFiles->setChecked(c.getSyncFiles());
+	fConfigWidget->fSyncWithKMail->setChecked(c.getSyncWithKMail());
+
+	/* Viewers tab */
+	fConfigWidget->fUseSecret->setChecked(c.getShowSecrets());
+	c.setAddressGroup();
+	fConfigWidget->fAddressGroup->setButton(c.getAddressDisplayMode());
+	fConfigWidget->fUseKeyField->setChecked(c.getUseKeyField());
 	c.resetGroup();
+
+	/* Backup tab */
+	fConfigWidget->fBackupOnly->setText(c.getBackupOnly());
+	fConfigWidget->fSkipDB->setText(c.getSkip());
 }
 
 /* virtual */ bool KPilotConfigDialog::validate()
@@ -208,63 +210,37 @@ void KPilotConfigDialog::readConfig()
 	c.resetGroup();
 
 	// General page
-	c.setPilotDevice(fConfigWidget->fPilotDevice);
-	c.setPilotSpeed(fConfigWidget->fPilotSpeed);
-	c.setUser(fConfigWidget->fUserName);
-	c.setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin);
-	c.setKillDaemonOnExit(fConfigWidget->fKillDaemonOnExit);
-	c.setDockDaemon(fConfigWidget->fDockDaemon);
+	c.setPilotDevice(fConfigWidget->fPilotDevice->text());
+	c.setPilotSpeed(fConfigWidget->fPilotSpeed->currentItem());
 	setEncoding(c);
+	c.setUser(fConfigWidget->fUserName->text());
+	c.setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin->isChecked());
+	c.setDockDaemon(fConfigWidget->fDockDaemon->isChecked());
+	c.setKillDaemonOnExit(fConfigWidget->fKillDaemonOnExit->isChecked());
 
-	// DB specials page
-	c.setShowSecrets(fConfigWidget->fUseSecret);
-	c.setBackupOnly(fConfigWidget->fBackupOnly);
-	c.setSkip(fConfigWidget->fSkipDB);
+	/* Sync tab */
+	c.setSyncType(fConfigWidget->fSyncMode->id(fConfigWidget->fSyncMode->selected()));
+	c.setSpecialSyncType(fConfigWidget->fSpecialSync->currentItem());
+	c.setFullSyncOnPCChange(fConfigWidget->fFullBackupCheck->isChecked());
+	c.setConflictResolution(fConfigWidget->fConflictResolution->currentItem());
+	c.setSyncFiles(fConfigWidget->fSyncFiles->isChecked());
+	c.setSyncWithKMail(fConfigWidget->fSyncWithKMail->isChecked());
 
-	// Sync page
-	c.setSyncFiles(fConfigWidget->fSyncFiles);
-	c.setSyncWithKMail(fConfigWidget->fSyncWithKMail);
-
-	// Address page
+	/* Viewers tab */
+	c.setShowSecrets(fConfigWidget->fUseSecret->isChecked());
 	c.setAddressGroup();
-	c.setUseKeyField(fConfigWidget->fUseKeyField);
-	c.setAddressDisplayMode(getAddressDisplay());
+	c.setAddressDisplayMode(fConfigWidget->fAddressGroup->id(
+		fConfigWidget->fAddressGroup->selected()));
+	c.setUseKeyField(fConfigWidget->fUseKeyField->isChecked());
 	c.resetGroup();
+
+	/* Backup tab */
+	c.setBackupOnly(fConfigWidget->fBackupOnly->text());
+	c.setSkip(fConfigWidget->fSkipDB->text());
 
 	KPilotConfig::updateConfigVersion();
 	c.sync();
 }
-
-int KPilotConfigDialog::getAddressDisplay() const
-{
-	FUNCTIONSETUP;
-
-	if (fConfigWidget->fNormalDisplay->isChecked())
-		return 0;
-	if (fConfigWidget->fCompanyDisplay->isChecked())
-		return 1;
-
-	return 0;
-}
-
-void KPilotConfigDialog::setAddressDisplay(int i)
-{
-	FUNCTIONSETUP;
-
-	switch (i)
-	{
-	case 0:
-		fConfigWidget->fNormalDisplay->setChecked(true);
-		break;
-	case 1:
-		fConfigWidget->fCompanyDisplay->setChecked(true);
-		break;
-	default:
-		fConfigWidget->fNormalDisplay->setChecked(true);
-		break;
-	}
-}
-
 
 /* slot */ void KPilotConfigDialog::changePortType(int i)
 {
@@ -288,7 +264,6 @@ void KPilotConfigDialog::setAddressDisplay(int i)
 void KPilotConfigDialog::getEncoding(const KPilotConfigSettings &c)
 {
 	FUNCTIONSETUP;
-	
 	QString e = c.getEncoding();
 	if (e.isEmpty())
 		fConfigWidget->fPilotEncoding->setCurrentItem(0);
@@ -299,7 +274,7 @@ void KPilotConfigDialog::getEncoding(const KPilotConfigSettings &c)
 void KPilotConfigDialog::setEncoding(KPilotConfigSettings &c)
 {
 	FUNCTIONSETUP;
-	
+
 	QString enc = fConfigWidget->fPilotEncoding->currentText();
 	if (enc.isEmpty())
 	{

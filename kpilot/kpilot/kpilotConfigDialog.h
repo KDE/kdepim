@@ -8,7 +8,7 @@
 ** that can actually handle some HotSync tasks, like backup
 ** and restore. It does NOT do conduit stuff.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 ** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -35,7 +35,7 @@
 class KPilotConfigWidget;
 class KPilotConfigSettings;
 
-class KPilotConfigDialog : public UIDialog 
+class KPilotConfigDialog : public UIDialog
 {
 Q_OBJECT
 public:
@@ -54,8 +54,6 @@ private:
 
 	void readConfig();
 	void disableUnusedOptions();
-	int getAddressDisplay() const;
-	void setAddressDisplay(int);
 
 	// Read and write the values of Encoding
 	// and EncodingDD.

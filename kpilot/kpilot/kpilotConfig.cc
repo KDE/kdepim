@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -67,7 +67,7 @@ static const char *kpilotconfig_id =
 // (increase) this number.
 //
 //
-/* static */ const int KPilotConfig::ConfigurationVersion = 403;
+/* static */ const int KPilotConfig::ConfigurationVersion = 404;
 
 /* static */ int KPilotConfig::getConfigVersion(KConfig * config)
 {
@@ -269,47 +269,41 @@ KPilotConfigSettings::~KPilotConfigSettings()
 	FUNCTIONSETUP;
 }
 
-
-
 #define IntProperty_(a,key,defl,m) \
-	int KPilotConfigSettings::get##a(QComboBox *p) const { \
+	int KPilotConfigSettings::get##a() const { \
 	int i = readNumEntry(key,defl); \
 	if ((i<0) || (i>m)) i=0; \
-	if (p) p->setCurrentItem(i); \
 	return i; } \
-	void KPilotConfigSettings::set##a(QComboBox *p) { \
-	set##a(p->currentItem()); } \
 	void KPilotConfigSettings::set##a(int i) { \
 	if ((i<0) || (i>m)) i=0; writeEntry(key,i); }
 
-IntProperty_(PilotType, "PilotType", 0, 3)
 IntProperty_(PilotSpeed, "PilotSpeed", 0, 4)
+IntProperty_(SyncType, "SyncType", 0, 2)
+IntProperty_(SpecialSyncType, "SpecialSync", 0, 2)
+IntProperty_(ConflictResolution, "ConflictResolution", 0,4)
 IntProperty_(AddressDisplayMode, "AddressDisplay", 0, 1)
 IntProperty_(Version, "Configured", 0, 100000)
 IntProperty_(Debug, "Debug", 0, 1023)
 
 #define BoolProperty_(a,key,defl) \
-	bool KPilotConfigSettings::get##a(QCheckBox *p) const { \
-	bool b = readBoolEntry(key,defl); if (p) p->setChecked(b); return b; } \
-	void KPilotConfigSettings::set##a(QCheckBox *p) { \
-	set##a(p->isChecked()); } \
+	bool KPilotConfigSettings::get##a() const { \
+	bool b = readBoolEntry(key,defl); return b; } \
 	void KPilotConfigSettings::set##a(bool b) { \
 	writeEntry(key,b); }
-	BoolProperty_(DockDaemon, "DockDaemon", true)
 
-BoolProperty_(KillDaemonOnExit, "StopDaemonAtExit", false)
 BoolProperty_(StartDaemonAtLogin, "StartDaemonAtLogin", true)
-BoolProperty_(ShowSecrets, "ShowSecrets", false)
+BoolProperty_(DockDaemon, "DockDaemon", true)
+BoolProperty_(KillDaemonOnExit, "StopDaemonAtExit", false)
+BoolProperty_(FullSyncOnPCChange, "FullSyncOnPCChange", true)
 BoolProperty_(SyncFiles, "SyncFiles", true)
 BoolProperty_(SyncWithKMail, "SyncWithKMail", false)
+BoolProperty_(ShowSecrets, "ShowSecrets", false)
 BoolProperty_(UseKeyField, "UseKeyField", false)
 
 
 #define StringProperty_(a,key,defl) \
-	QString KPilotConfigSettings::get##a(QLineEdit *p) const { \
-	QString s = readEntry(key,defl); if (p) p->setText(s); return s; } \
-	void  KPilotConfigSettings::set##a(QLineEdit *p) { \
-	set##a(p->text()); } \
+	QString KPilotConfigSettings::get##a() const { \
+	QString s = readEntry(key,defl); return s; } \
 	void  KPilotConfigSettings::set##a(const QString &s) { \
 	writeEntry(key,s); }
 
