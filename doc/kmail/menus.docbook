@@ -1019,7 +1019,7 @@ sub menu you select.</para>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Anti Spam Wizard...</guimenuitem>
+<guimenuitem>Anti-Spam Wizard...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
