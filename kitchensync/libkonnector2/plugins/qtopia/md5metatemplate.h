@@ -107,7 +107,7 @@ namespace OpieHelper {
     }
     template<class Syncee, class Entry>
     QString MD5Template<Syncee, Entry>::md5sum( const QString& base ) {
-        KMD5 sum(base);
+        KMD5 sum(base.local8Bit() );
         QString str = QString::fromLatin1( sum.hexDigest().data() );
 
         return str;

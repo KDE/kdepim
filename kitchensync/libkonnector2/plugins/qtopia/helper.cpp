@@ -31,7 +31,7 @@ QDateTime Base::fromUTC( time_t time )
    QString real_TZ = ptrTz ? QString::fromLocal8Bit( ptrTz ) : QString::null;
 
    if (!m_tz.isEmpty() )
-       setenv( "TZ", m_tz, true );
+       setenv( "TZ", m_tz.local8Bit(), true );
 
    kdDebug(5229) << "TimeZone was " << real_TZ << " TimeZone now is " << m_tz << endl;
 #if defined(_OS_WIN32) || defined (Q_OS_WIN32) || defined (Q_OS_WIN64)
@@ -47,7 +47,7 @@ QDateTime Base::fromUTC( time_t time )
     if (!m_tz.isEmpty() ) {
         unsetenv("TZ");
         if (!real_TZ.isEmpty() )
-            setenv("TZ",  real_TZ, true );
+            setenv("TZ",  real_TZ.local8Bit(), true );
     }
     kdDebug(5229) << "DateTime is " << dt.toString() << endl;
     // done
@@ -63,7 +63,7 @@ time_t Base::toUTC( const QDateTime& dt )
     QString real_TZ = ptrTz ? QString::fromLocal8Bit( getenv("TZ") ) : QString::null;
 
     if ( !m_tz.isEmpty() )
-        setenv( "TZ", m_tz, true );
+        setenv( "TZ", m_tz.local8Bit(), true );
 
 #if defined(_OS_WIN32) || defined (Q_OS_WIN32) || defined (Q_OS_WIN64)
     _tzset();
@@ -93,7 +93,7 @@ time_t Base::toUTC( const QDateTime& dt )
     if (!m_tz.isEmpty() ) {
         unsetenv("TZ");
         if (!real_TZ.isEmpty() )
-            setenv("TZ",  real_TZ, true );
+            setenv("TZ",  real_TZ.local8Bit(), true );
     }
     return tmp;
 }
