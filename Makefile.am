@@ -1,7 +1,8 @@
-## kdebase/Makefile.am
+## kdepim/Makefile.am
 ## (C) 1997 Stephan Kulow
 
-SUBDIRS = vCard libimap librmm libdif abbrowser korganizer kpilot doc empath
+SUBDIRS = $(TOPSUBDIRS)
+COMPILE_FIRST = vCard libimap librmm libdif 
 AUTOMAKE_OPTIONS = foreign 1.4
 DISTCLEANFILES = inst-apps
 
