@@ -525,8 +525,9 @@ QCString KPIM::getEmailAddress( const QCString & address )
                           false /* don't allow multiple addresses */ );
   if ( result != AddressOk ) {
     addrSpec = QCString();
-    kdDebug() << k_funcinfo << "\nInput: aStr\nError:"
-              << emailParseResultToString( result );
+    kdDebug() // << k_funcinfo << "\n"
+              << "Input: aStr\nError:"
+              << emailParseResultToString( result ) << endl;
   }
 
   return addrSpec;
@@ -549,8 +550,9 @@ QCString KPIM::getFirstEmailAddress( const QCString & addresses )
                           true /* allow multiple addresses */ );
   if ( result != AddressOk ) {
     addrSpec = QCString();
-    kdDebug() << k_funcinfo << "\nInput: aStr\nError:"
-              << emailParseResultToString( result );
+    kdDebug() // << k_funcinfo << "\n" 
+              << "Input: aStr\nError:"
+              << emailParseResultToString( result ) << endl;
   }
 
   return addrSpec;
