@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -77,7 +77,7 @@ protected slots:
 	void slotShowAbout();
 	void slotShowBusy();
 	void slotShowNormal();
-	
+
 	// "Regular" QT actions
 	//
 	//
@@ -153,11 +153,11 @@ public:
 	virtual int nextSyncType() const;
 	virtual ASYNC quitNow();
 	virtual ASYNC reloadSettings();
-	
+
 	virtual void stopListening();
 	virtual void startListening();
 	virtual bool isListening() { return fIsListening; }
-	/** 
+	/**
 	* Functions reporting same status data, e.g. for the kontact plugin.
 	*/
 	virtual QDateTime lastSyncDate();
@@ -197,7 +197,7 @@ private:
 	int fNextSyncType;
 
 	ActionQueue *fSyncStack;
-	
+
 	/**
 	* This is a pointer to the (optional) docked
 	* system tray icon for the daemon.
@@ -238,7 +238,7 @@ protected:
 	LoggerDCOP_stub &getFileLogger() { return *fLogFileStub; } ;
 	KPilotDCOP_stub &getKPilot() { return *fKPilotStub; } ;
 
-	LogFile*fLogFile;
+	LogFile *fLogFile;
 	bool fIsListening;
 
 private:

@@ -492,22 +492,22 @@ void PilotDaemon::showTray()
 	switch (status())
 	{
 	case INIT:
-		s.append(QString(CSL1("Initializing")));
+		s.append(CSL1("Initializing"));
 		break;
 	case READY:
-		s.append(QString(CSL1("Found device")));
+		s.append(CSL1("Found device"));
 		break;
 	case ERROR:
-		s.append(QString(CSL1("Error")));
+		s.append(CSL1("Error"));
 		break;
 	case FILE_INSTALL_REQ:
-		s.append(QString(CSL1("Installing File")));
+		s.append(CSL1("Installing File"));
 		break;
 	case HOTSYNC_END:
-		s.append(QString(CSL1("End of Hotsync")));
+		s.append(CSL1("End of Hotsync"));
 		break;
 	case HOTSYNC_START:
-		s.append(QString(CSL1("Syncing")));
+		s.append(CSL1("Syncing"));
 		break;
 	}
 
@@ -534,19 +534,19 @@ void PilotDaemon::showTray()
 	{
 	case INIT:
 	case READY:
-		s.append(QString(CSL1("Waiting for sync")));
+		s=CSL1("Waiting for sync");
 		break;
 	case ERROR:
-		s.append(QString(CSL1("Error")));
+		s=CSL1("Error");
 		break;
 	case FILE_INSTALL_REQ:
-		s.append(QString(CSL1("Installing File")));
+		s=CSL1("Installing File");
 		break;
 	case HOTSYNC_END:
-		s.append(QString(CSL1("End of Hotsync")));
+		s=CSL1("End of Hotsync");
 		break;
 	case HOTSYNC_START:
-		s.append(QString(CSL1("Syncing")));
+		s=CSL1("Syncing");
 		break;
 	}
 
@@ -718,6 +718,7 @@ QString PilotDaemon::pilotDevice()
 		<< ": Starting Sync with type "
 		<< syncTypeString(fNextSyncType)
 		<< " (" << fNextSyncType << ")" << endl;
+	DEBUGDAEMON << fname << ": Status is " << shortStatusString() << endl;
 #endif
 
 	QStringList conduits( KPilotSettings::installedConduits() );
