@@ -21,8 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef XXPORTOBJECT_H
-#define XXPORTOBJECT_H
+#ifndef KAB_XXPORT_H
+#define KAB_XXPORT_H
 
 #include <qobject.h>
 
@@ -31,13 +31,15 @@
 #include <klibloader.h>
 #include <kxmlguiclient.h>
 
-class XXPortObject : public QObject, virtual public KXMLGUIClient
+namespace KAB {
+
+class XXPort : public QObject, virtual public KXMLGUIClient
 {
   Q_OBJECT
 
   public:
-    XXPortObject( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
-    ~XXPortObject();
+    XXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    ~XXPort();
 
     /**
       Returns the unique identifier of this xxport modul, it should
@@ -107,15 +109,15 @@ class XXPortObject : public QObject, virtual public KXMLGUIClient
     KABC::AddressBook *mAddressBook;
     QWidget *mParentWidget;
 
-    class XXPortObjectPrivate;
-    XXPortObjectPrivate *d;
+    class XXPortPrivate;
+    XXPortPrivate *d;
 };
 
 class XXPortFactory : public KLibFactory
 {
   public:
-    virtual XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent,
-                                        const char *name = 0 ) = 0;
+    virtual XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent,
+                                  const char *name = 0 ) = 0;
 
   protected:
     virtual QObject* createObject( QObject*, const char*, const char*,
@@ -124,5 +126,7 @@ class XXPortFactory : public KLibFactory
       return 0;
     }
 };
+
+}
 
 #endif

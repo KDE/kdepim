@@ -69,11 +69,13 @@
 
 KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                   const char *name )
-  : QWidget( parent, name ), mGUIClient( client ), mViewManager( 0 ),
+  : KAB::Core( client, parent, name ), mViewManager( 0 ),
     mExtensionManager( 0 ), mConfigureDialog( 0 ), mLdapSearchDialog( 0 ),
     mReadWrite( readWrite ), mModified( false )
 {
   mIsPart = !parent->inherits( "KAddressBookMain" );
+
+  mWidget = new QWidget( parent, name );
 
   mAddressBook = KABC::StdAddressBook::self();
   KABC::StdAddressBook::setAutomaticSave( false );
@@ -154,15 +156,15 @@ void KABCore::restoreSettings()
 
   QValueList<int> splitterSize = KABPrefs::instance()->mExtensionsSplitter;
   if ( splitterSize.count() == 0 ) {
-    splitterSize.append( width() / 2 );
-    splitterSize.append( width() / 2 );
+    splitterSize.append( mWidget->width() / 2 );
+    splitterSize.append( mWidget->width() / 2 );
   }
   mExtensionBarSplitter->setSizes( splitterSize );
 
   splitterSize = KABPrefs::instance()->mDetailsSplitter;
   if ( splitterSize.count() == 0 ) {
-    splitterSize.append( height() / 2 );
-    splitterSize.append( height() / 2 );
+    splitterSize.append( mWidget->height() / 2 );
+    splitterSize.append( mWidget->height() / 2 );
   }
   mDetailsSplitter->setSizes( splitterSize );
 
@@ -191,19 +193,14 @@ KABC::AddressBook *KABCore::addressBook() const
   return mAddressBook;
 }
 
-KConfig *KABCore::config()
+KConfig *KABCore::config() const
 {
   return KABPrefs::instance()->config();
 }
 
 KActionCollection *KABCore::actionCollection() const
 {
-  return mGUIClient->actionCollection();
-}
-
-KXMLGUIClient *KABCore::guiClient() const
-{
-  return mGUIClient;
+  return guiClient()->actionCollection();
 }
 
 KABC::Field *KABCore::currentSearchField() const
@@ -234,6 +231,11 @@ KABC::Resource *KABCore::requestResource( QWidget *parent )
 
   KRES::Resource *res = KRES::SelectDialog::getResource( kresResources, parent );
   return static_cast<KABC::Resource*>( res );
+}
+
+QWidget *KABCore::widget() const
+{
+  return mWidget;
 }
 
 KAboutData *KABCore::createAboutData()
@@ -423,7 +425,7 @@ void KABCore::pasteContacts()
 
 void KABCore::pasteContacts( KABC::Addressee::List &list )
 {
-  KABC::Resource *resource = requestResource( this );
+  KABC::Resource *resource = requestResource( mWidget );
   KABC::Addressee::List::Iterator it;
   for ( it = list.begin(); it != list.end(); ++it )
     (*it).setResource( resource );
@@ -440,24 +442,24 @@ void KABCore::setWhoAmI()
   KABC::Addressee::List addrList = mViewManager->selectedAddressees();
 
   if ( addrList.count() > 1 ) {
-    KMessageBox::sorry( this, i18n( "Please select only one contact." ) );
+    KMessageBox::sorry( mWidget, i18n( "Please select only one contact." ) );
     return;
   }
 
   QString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>" ) );
-  if ( KMessageBox::questionYesNo( this, text.arg( addrList[ 0 ].assembledName() ) ) == KMessageBox::Yes )
+  if ( KMessageBox::questionYesNo( mWidget, text.arg( addrList[ 0 ].assembledName() ) ) == KMessageBox::Yes )
     static_cast<KABC::StdAddressBook*>( KABC::StdAddressBook::self() )->setWhoAmI( addrList[ 0 ] );
 }
 
 void KABCore::setCategories()
 {
-  KPIM::CategorySelectDialog dlg( KABPrefs::instance(), this, "", true );
+  KPIM::CategorySelectDialog dlg( KABPrefs::instance(), mWidget, "", true );
   if ( !dlg.exec() )
     return;
 
   bool merge = false;
   QString msg = i18n( "Merge with existing categories?" );
-  if ( KMessageBox::questionYesNo( this, msg ) == KMessageBox::Yes )
+  if ( KMessageBox::questionYesNo( mWidget, msg ) == KMessageBox::Yes )
     merge = true;
 
   QStringList categories = dlg.selectedCategories();
@@ -604,13 +606,13 @@ void KABCore::newContact()
     }
   }
 
-  KRES::Resource *res = KRES::SelectDialog::getResource( kresResources, this );
+  KRES::Resource *res = KRES::SelectDialog::getResource( kresResources, mWidget );
   resource = static_cast<KABC::Resource*>( res );
 
   if ( resource ) {
     KABC::Addressee addr;
     addr.setResource( resource );
-    dialog = createAddresseeEditorDialog( this );
+    dialog = createAddresseeEditorDialog( mWidget );
     dialog->setAddressee( addr );
   } else
     return;
@@ -620,7 +622,7 @@ void KABCore::newContact()
   dialog->show();
 }
 
-void KABCore::addEmail( QString aStr )
+void KABCore::addEmail( const QString &aStr )
 {
   QString fullName, email;
 
@@ -650,14 +652,14 @@ void KABCore::addEmail( QString aStr )
   }
 }
 
-void KABCore::importVCard( const KURL &url, bool showPreview )
+void KABCore::importVCard( const KURL &url )
 {
-  mXXPortManager->importVCard( url, showPreview );
+  mXXPortManager->importVCard( url );
 }
 
-void KABCore::importVCard( const QString &vCard, bool showPreview )
+void KABCore::importVCard( const QString &vCard )
 {
-  mXXPortManager->importVCard( vCard, showPreview );
+  mXXPortManager->importVCard( vCard );
 }
 
 void KABCore::editContact( const QString &uid )
@@ -677,7 +679,7 @@ void KABCore::editContact( const QString &uid )
   if ( !addr.isEmpty() ) {
     AddresseeEditorDialog *dialog = mEditorDict.find( addr.uid() );
     if ( !dialog ) {
-      dialog = createAddresseeEditorDialog( this );
+      dialog = createAddresseeEditorDialog( mWidget );
 
       mEditorDict.insert( addr.uid(), dialog );
 
@@ -697,7 +699,7 @@ void KABCore::save()
     			"address book. Please check that some other application is "
     			"not using it. " );
 
-    KMessageBox::error( this, text, i18n( "Unable to Save" ) );
+    KMessageBox::error( mWidget, text, i18n( "Unable to Save" ) );
   }
 
   setModified( false );
@@ -779,7 +781,7 @@ QString KABCore::getNameByPhone( const QString &phone )
 void KABCore::openConfigDialog()
 {
   if ( !mConfigureDialog ) {
-    mConfigureDialog = new KCMultiDialog( "PIM", this );
+    mConfigureDialog = new KCMultiDialog( "PIM", mWidget );
     mConfigureDialog->addModule( "PIM/kabconfig.desktop" );
     mConfigureDialog->addModule( "PIM/kabldapconfig.desktop" );
     connect( mConfigureDialog, SIGNAL( applyClicked() ),
@@ -798,7 +800,7 @@ void KABCore::openConfigDialog()
 void KABCore::openLDAPDialog()
 {
   if ( !mLdapSearchDialog ) {
-    mLdapSearchDialog = new LDAPSearchDialog( mAddressBook, this );
+    mLdapSearchDialog = new LDAPSearchDialog( mAddressBook, mWidget );
     connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ), mViewManager,
             SLOT( refreshView() ) );
     connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ), this,
@@ -813,21 +815,13 @@ void KABCore::openLDAPDialog()
 void KABCore::print()
 {
   KPrinter printer;
-  if ( !printer.setup( this, i18n("Print Addresses") ) )
+  if ( !printer.setup( mWidget, i18n("Print Addresses") ) )
     return;
 
   KABPrinting::PrintingWizard wizard( &printer, mAddressBook,
-                                      mViewManager->selectedUids(), this );
+                                      mViewManager->selectedUids(), mWidget );
 
   wizard.exec();
-}
-
-void KABCore::addGUIClient( KXMLGUIClient *client )
-{
-  if ( mGUIClient )
-    mGUIClient->insertChildClient( client );
-  else
-    KMessageBox::error( this, "no KXMLGUICLient");
 }
 
 void KABCore::configurationChanged()
@@ -842,7 +836,7 @@ void KABCore::addressBookChanged()
     if ( it.current()->dirty() ) {
       QString text = i18n( "Data has been changed externally. Unsaved "
                            "changes will be lost." );
-      KMessageBox::information( this, text );
+      KMessageBox::information( mWidget, text );
     }
     it.current()->setAddressee( mAddressBook->findByUid( it.currentKey() ) );
     ++it;
@@ -871,21 +865,21 @@ void KABCore::slotEditorDestroyed( const QString &uid )
 
 void KABCore::initGUI()
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( this );
+  QVBoxLayout *topLayout = new QVBoxLayout( mWidget );
   topLayout->setSpacing( KDialogBase::spacingHint() );
   QHBoxLayout *hbox = new QHBoxLayout( topLayout, KDialog::spacingHint() );
 
-  mIncSearchWidget = new IncSearchWidget( this );
+  mIncSearchWidget = new IncSearchWidget( mWidget );
   connect( mIncSearchWidget, SIGNAL( doSearch( const QString& ) ),
            SLOT( incrementalSearch( const QString& ) ) );
 
-  mFilterSelectionWidget = new FilterSelectionWidget( this );
+  mFilterSelectionWidget = new FilterSelectionWidget( mWidget );
   hbox->addWidget( mIncSearchWidget );
   hbox->addWidget( mFilterSelectionWidget );
 
   hbox = new QHBoxLayout( topLayout, KDialog::spacingHint() );
 
-  mDetailsSplitter = new QSplitter( this );
+  mDetailsSplitter = new QSplitter( mWidget );
   hbox->addWidget( mDetailsSplitter );
 
   mExtensionBarSplitter = new QSplitter( mDetailsSplitter );
@@ -901,14 +895,14 @@ void KABCore::initGUI()
 
   mExtensionManager = new ExtensionManager( this, mExtensionBarSplitter );
 
-  mJumpButtonBar = new JumpButtonBar( this, this );
+  mJumpButtonBar = new JumpButtonBar( this, mWidget );
 
   hbox->addWidget( mJumpButtonBar );
   hbox->setStretchFactor( mJumpButtonBar, 1 );
 
   topLayout->setStretchFactor( hbox, 1 );
 
-  mXXPortManager = new XXPortManager( this, this );
+  mXXPortManager = new XXPortManager( this, mWidget );
 
   initActions();
 }
@@ -1075,7 +1069,7 @@ void KABCore::updateActionMenu()
 
 void KABCore::configureKeyBindings()
 {
-  KKeyDialog::configure( actionCollection(), true );
+  KKeyDialog::configure( actionCollection(), mWidget );
 }
 
 #include "kabcore.moc"

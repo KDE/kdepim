@@ -32,7 +32,7 @@
 
 #include "addresseeutil.h"
 #include "addresseeconfig.h"
-#include "kabcore.h"
+#include "core.h"
 
 #include "undocmds.h"
 
@@ -86,7 +86,7 @@ void PwDeleteCommand::redo()
 /////////////////////////////////
 // PwPaste Methods
 
-PwPasteCommand::PwPasteCommand( KABCore *core, const KABC::Addressee::List &list )
+PwPasteCommand::PwPasteCommand( KAB::Core *core, const KABC::Addressee::List &list )
   : Command(), mCore( core ), mAddresseeList( list )
 {
   redo();

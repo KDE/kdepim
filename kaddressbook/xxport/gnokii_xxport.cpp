@@ -61,10 +61,10 @@ extern "C" {
 	} while (0)
 
 
-class GNOKIIXXPortFactory : public XXPortFactory
+class GNOKIIXXPortFactory : public KAB::XXPortFactory
 {
   public:
-    XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
       return new GNOKIIXXPort( ab, parent, name );
     }
@@ -80,7 +80,7 @@ extern "C"
 
 
 GNOKIIXXPort::GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : XXPortObject( ab, parent, name )
+  : KAB::XXPort( ab, parent, name )
 {
 	createImportAction( i18n( "Import From Nokia Mobile Phone..." ) );
 	createExportAction( i18n( "Export to Nokia Mobile Phone..." ) );

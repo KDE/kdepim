@@ -1,7 +1,6 @@
 /*
     This file is part of KAddressbook.
-    Copyright (c) 2000 - 2003 Oliver Strutynski <olistrut@gmx.de>
-                              Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,26 +21,13 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef LDIF_XXPORT_H
-#define LDIF_XXPORT_H
+#include "core.h"
 
-#include <xxport.h>
+using namespace KAB;
 
-class LDIFXXPort : public KAB::XXPort
+Core::Core( KXMLGUIClient *client, QObject *parent, const char *name )
+  : QObject( parent, name ), mGUIClient( client )
 {
-  Q_OBJECT
+}
 
-  public:
-    LDIFXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
-
-    QString identifier() const { return "ldif"; }
-
-  public slots:
-    bool exportContacts( const KABC::AddresseeList &list, const QString &data );
-    KABC::AddresseeList importContacts( const QString &data ) const;
-
-  private:
-    void doExport( QFile *fp, const KABC::AddresseeList &list );
-};
-
-#endif
+#include "core.moc"

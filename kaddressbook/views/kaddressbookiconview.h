@@ -44,7 +44,7 @@ class KAddressBookIconView : public KAddressBookView
   Q_OBJECT
     
   public:
-    KAddressBookIconView( KABC::AddressBook *ab, QWidget *parent,
+    KAddressBookIconView( KAB::Core *core, QWidget *parent,
                           const char *name = 0 );
     virtual ~KAddressBookIconView();
     

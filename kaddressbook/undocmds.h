@@ -33,11 +33,13 @@
 
 #include "undo.h"
 
-namespace KABC { 
-  class AddressBook;
+namespace KAB {
+class Core;
 }
 
-class KABCore;
+namespace KABC { 
+class AddressBook;
+}
 
 class PwDeleteCommand : public Command
 {
@@ -57,13 +59,13 @@ private:
 class PwPasteCommand : public Command
 {
   public:
-    PwPasteCommand( KABCore *core, const KABC::Addressee::List &list );
+    PwPasteCommand( KAB::Core *core, const KABC::Addressee::List &list );
     virtual QString name();
     virtual void undo();
     virtual void redo();
 
   private:
-    KABCore *mCore;
+    KAB::Core *mCore;
     KABC::Addressee::List mAddresseeList;
 };
 

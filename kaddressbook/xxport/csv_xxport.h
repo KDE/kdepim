@@ -24,9 +24,9 @@
 #ifndef CSV_XXPORT_H
 #define CSV_XXPORT_H
 
-#include <xxportobject.h>
+#include <xxport.h>
 
-class CSVXXPort : public XXPortObject
+class CSVXXPort : public KAB::XXPort
 {
   Q_OBJECT
 

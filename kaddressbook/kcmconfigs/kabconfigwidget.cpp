@@ -50,7 +50,7 @@ class ExtensionItem : public QCheckListItem
 
     void setService( const KService::Ptr &ptr );
     bool configWidgetAvailable() const;
-    ExtensionFactory *factory() const;
+    KAB::ExtensionFactory *factory() const;
 
     virtual QString text( int column ) const;
 
@@ -243,20 +243,20 @@ bool ExtensionItem::configWidgetAvailable() const
   if ( !factory )
     return false;
 
-  ExtensionFactory *extensionFactory = static_cast<ExtensionFactory*>( factory );
+  KAB::ExtensionFactory *extensionFactory = static_cast<KAB::ExtensionFactory*>( factory );
   if ( !extensionFactory )
     return false;
 
   return extensionFactory->configureWidgetAvailable();
 }
 
-ExtensionFactory *ExtensionItem::factory() const
+KAB::ExtensionFactory *ExtensionItem::factory() const
 {
   KLibFactory *factory = KLibLoader::self()->factory( mPtr->library().latin1() );
   if ( !factory )
     return 0;
 
-  return static_cast<ExtensionFactory*>( factory );
+  return static_cast<KAB::ExtensionFactory*>( factory );
 }
 
 QString ExtensionItem::text( int column ) const

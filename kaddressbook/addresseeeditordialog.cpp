@@ -26,12 +26,12 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+#include "core.h"
 #include "addresseeeditorwidget.h"
-#include "kabcore.h"
 
 #include "addresseeeditordialog.h"
 
-AddresseeEditorDialog::AddresseeEditorDialog( KABCore *core, QWidget *parent,
+AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core *core, QWidget *parent,
                                               const char *name )
   : KDialogBase( KDialogBase::Plain, i18n( "Edit Contact" ), 
                  KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Apply,

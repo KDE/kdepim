@@ -41,14 +41,14 @@
 #include <kabc/vcardtool.h>
 #include <libkdepim/kvcarddrag.h>
 
-#include "kabcore.h"
+#include "core.h"
 
 #include "distributionlistwidget.h"
 
-class DistributionListFactory : public ExtensionFactory
+class DistributionListFactory : public KAB::ExtensionFactory
 {
   public:
-    ExtensionWidget *extension( KABCore *core, QWidget *parent, const char *name )
+    KAB::ExtensionWidget *extension( KAB::Core *core, QWidget *parent, const char *name )
     {
       return new DistributionListWidget( core, parent, name );
     }
@@ -106,9 +106,9 @@ class ContactItem : public QListViewItem
     QString mEmail;
 };
 
-DistributionListWidget::DistributionListWidget( KABCore *core, QWidget *parent,
+DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent,
                                                 const char *name )
-  : ExtensionWidget( core, parent, name ), mManager( 0 )
+  : KAB::ExtensionWidget( core, parent, name ), mManager( 0 )
 {
   QGridLayout *topLayout = new QGridLayout( this, 3, 4, KDialog::marginHint(),
                                             KDialog::spacingHint() );
@@ -156,6 +156,9 @@ DistributionListWidget::DistributionListWidget( KABCore *core, QWidget *parent,
 
   mManager = new KABC::DistributionListManager( core->addressBook() );
   mManager->load();
+
+  connect( KABC::DistributionListWatcher::self(), SIGNAL( changed() ),
+           this, SLOT( updateNameCombo ) );
 
   updateNameCombo();
 

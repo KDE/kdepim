@@ -30,14 +30,14 @@
 
 class AddresseeEditorWidget;
 class QWidget;
-class KABCore;
+namespace KAB { class Core; }
 
 class AddresseeEditorDialog : public KDialogBase
 {
   Q_OBJECT
   
   public:
-    AddresseeEditorDialog( KABCore *core, QWidget *parent, const char *name = 0 );
+    AddresseeEditorDialog( KAB::Core *core, QWidget *parent, const char *name = 0 );
     ~AddresseeEditorDialog();
     
     void setAddressee( const KABC::Addressee& );

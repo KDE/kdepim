@@ -41,7 +41,7 @@ KAddressBookMain::KAddressBookMain()
 
   initActions();
 
-  setCentralWidget( mCore );
+  setCentralWidget( mCore->widget() );
 
   statusBar()->show();
 

@@ -40,14 +40,14 @@
 
 #include "addviewdialog.h"
 #include "addresseeutil.h"
+#include "core.h"
 #include "filtereditdialog.h"
 #include "filterselectionwidget.h"
-#include "kabcore.h"
 #include "kabprefs.h"
 
 #include "viewmanager.h"
 
-ViewManager::ViewManager( KABCore *core, QWidget *parent, const char *name )
+ViewManager::ViewManager( KAB::Core *core, QWidget *parent, const char *name )
   : QWidget( parent, name ), mCore( core ), mActiveView( 0 ),
     mFilterSelectionWidget( 0 )
 {
@@ -180,14 +180,13 @@ void ViewManager::setActiveView( const QString &name )
 
     ViewFactory *factory = mViewFactoryDict.find( type );
     if ( factory )
-      view = factory->view( mCore->addressBook(), mViewWidgetStack );
+      view = factory->view( mCore, mViewWidgetStack );
 
     if ( view ) {
       view->setCaption( name );
       mViewDict.insert( name, view );
       mViewWidgetStack->addWidget( view );
       view->readConfig( config );
-      view->setGUIClient( mCore->guiClient() );
 
       // The manager just relays the signals
       connect( view, SIGNAL( selected( const QString& ) ),

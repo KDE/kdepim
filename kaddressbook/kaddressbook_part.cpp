@@ -67,7 +67,7 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
 
   mCore = new KABCore( this, true, canvas );
   mCore->restoreSettings();
-  topLayout->addWidget( mCore );
+  topLayout->addWidget( mCore->widget() );
 
   KParts::InfoExtension *info = new KParts::InfoExtension( this, "KABPart" );
   connect( mCore, SIGNAL( contactSelected( const QString& ) ),
@@ -125,7 +125,7 @@ bool KAddressbookPart::openFile()
 {
   kdDebug(5720) << "KAddressbookPart:openFile()" << endl;
 
-  mCore->show();
+  mCore->widget()->show();
   return true;
 }
 

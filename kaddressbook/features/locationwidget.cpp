@@ -37,20 +37,20 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-#include "kabcore.h"
+#include "core.h"
 #include "locationconfig.h"
 
 #include "locationwidget.h"
 
-class LocationFactory : public ExtensionFactory
+class LocationFactory : public KAB::ExtensionFactory
 {
   public:
-    ExtensionWidget *extension( KABCore *core, QWidget *parent, const char *name )
+    KAB::ExtensionWidget *extension( KAB::Core *core, QWidget *parent, const char *name )
     {
       return new LocationWidget( core, parent, name );
     }
 
-    ConfigureWidget *configureWidget( QWidget *parent, const char *name )
+    KAB::ConfigureWidget *configureWidget( QWidget *parent, const char *name )
     {
       return new LocationConfigWidget( 0, parent, name );
     }
@@ -70,8 +70,8 @@ extern "C" {
   }
 }
 
-LocationWidget::LocationWidget( KABCore *core, QWidget *parent, const char *name )
-  : ExtensionWidget( core, parent, name )
+LocationWidget::LocationWidget( KAB::Core *core, QWidget *parent, const char *name )
+  : KAB::ExtensionWidget( core, parent, name )
 {
   QGridLayout *topLayout = new QGridLayout( this, 2, 4, KDialog::marginHint(),
                                             KDialog::spacingHint() );

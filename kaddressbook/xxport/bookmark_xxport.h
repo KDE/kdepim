@@ -25,9 +25,9 @@
 #ifndef BOOKMARK_XXPORT_H
 #define BOOKMARK_XXPORT_H
 
-#include <xxportobject.h>
+#include <xxport.h>
 
-class BookmarkXXPort : public XXPortObject
+class BookmarkXXPort : public KAB::XXPort
 {
   Q_OBJECT
 

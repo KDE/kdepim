@@ -37,10 +37,10 @@
 
 #include "kde2_xxport.h"
 
-class KDE2XXPortFactory : public XXPortFactory
+class KDE2XXPortFactory : public KAB::XXPortFactory
 {
   public:
-    XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
       return new KDE2XXPort( ab, parent, name );
     }
@@ -56,7 +56,7 @@ extern "C"
 
 
 KDE2XXPort::KDE2XXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : XXPortObject( ab, parent, name )
+  : KAB::XXPort( ab, parent, name )
 {
   createImportAction( i18n( "Import KDE 2 Addressbook..." ) );
 }

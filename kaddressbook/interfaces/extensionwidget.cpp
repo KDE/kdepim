@@ -21,47 +21,47 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef CONFIGUREWIDGET_H
-#define CONFIGUREWIDGET_H
+#include "core.h"
 
-#include <qwidget.h>
+#include "extensionwidget.h"
 
-#include <kconfig.h>
+using namespace KAB;
 
-namespace KABC {
-class AddressBook;
+ExtensionWidget::ExtensionWidget( Core *core, QWidget *parent,
+                                  const char *name )
+  : QWidget( parent, name ), mCore( core )
+{
 }
 
-class ConfigureWidget : public QWidget
+ExtensionWidget::~ExtensionWidget()
 {
-  public:
-    ConfigureWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
-    ~ConfigureWidget();
+}
 
-    /**
-      This method is called before the configure dialog is shown.
-      The widget should reimplement it and fill the GUI with the
-      values from the config file.
-      Important: Don't change the group of cfg!
-     */
-    virtual void restoreSettings( KConfig *cfg );
+KAB::Core *ExtensionWidget::core() const
+{
+  return mCore;
+}
 
-    /**
-      This method is called after the user clicked the 'Ok' button.
-      The widget should reimplement it and save all values from
-      the GUI to the config file.
-      Important: Don't change the group of cfg!
-     */
-    virtual void saveSettings( KConfig *cfg );
+bool ExtensionWidget::contactsSelected() const
+{
+  return mCore->selectedUIDs().count() != 0;
+}
 
+KABC::Addressee::List ExtensionWidget::selectedContacts()
+{
+  KABC::Addressee::List list;
 
-    /**
-      Returns a pointer to the address book of this widget.
-     */
-    KABC::AddressBook *addressBook() const;
+  QStringList uids = mCore->selectedUIDs();
+  QStringList::Iterator it;
+  for ( it = uids.begin(); it != uids.end(); ++it )
+    list.append( mCore->addressBook()->findByUid( *it ) );
 
-  private:
-    KABC::AddressBook *mAddressBook;
-};
+  return list;
+}
 
-#endif
+void ExtensionWidget::contactsSelectionChanged()
+{
+  // do nothing
+}
+
+#include "extensionwidget.moc"

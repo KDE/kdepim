@@ -36,7 +36,7 @@ class KListView;
 class QListViewItem;
 class QPushButton;
 
-class LocationConfigWidget : public ConfigureWidget
+class LocationConfigWidget : public KAB::ConfigureWidget
 {
   Q_OBJECT
 

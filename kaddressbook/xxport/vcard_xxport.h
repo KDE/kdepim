@@ -24,9 +24,9 @@
 #ifndef VCARD_XXPORT_H
 #define VCARD_XXPORT_H
 
-#include <xxportobject.h>
+#include <xxport.h>
 
-class VCardXXPort : public XXPortObject
+class VCardXXPort : public KAB::XXPort
 {
   Q_OBJECT
 

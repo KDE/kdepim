@@ -27,9 +27,12 @@
 #include <qhbox.h>
 #include <qptrlist.h>
 
-#include <extensionwidget.h>
+#include "extensionwidget.h"
 
-class KABCore;
+namespace KAB {
+class Core;
+}
+
 class KSelectAction;
 
 class ExtensionManager : public QHBox
@@ -37,7 +40,7 @@ class ExtensionManager : public QHBox
   Q_OBJECT
 
   public:
-    ExtensionManager( KABCore *core, QWidget *parent, const char *name = 0 );
+    ExtensionManager( KAB::Core *core, QWidget *parent, const char *name = 0 );
     ~ExtensionManager();
 
     /**
@@ -73,10 +76,10 @@ class ExtensionManager : public QHBox
   private:
     void createExtensionWidgets();
 
-    KABCore *mCore;
+    KAB::Core *mCore;
 
-    ExtensionWidget *mCurrentExtensionWidget;
-    QPtrList<ExtensionWidget> mExtensionWidgetList;
+    KAB::ExtensionWidget *mCurrentExtensionWidget;
+    QPtrList<KAB::ExtensionWidget> mExtensionWidgetList;
 
     KSelectAction *mActionExtensions;
 };

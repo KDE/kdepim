@@ -1,9 +1,10 @@
-INCLUDES= -I$(top_srcdir)/kaddressbook/details -I$(top_srcdir)/kaddressbook/features \
+INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces -I$(top_srcdir)/kaddressbook/details \
+	  -I$(top_srcdir)/kaddressbook/features \
 	  -I$(top_srcdir)/kaddressbook/printing -I$(top_srcdir)/kaddressbook/views \
-	  -I$(top_srcdir) -I$(top_builddir)/kaddressbook/printing \
-	  -I$(top_builddir)/kaddressbook/details $(all_includes) 
+	  -I$(top_srcdir) -I$(top_srcdir)/kaddressbook/printing \
+	  -I$(top_srcdir)/kaddressbook/details $(all_includes) 
 
-SUBDIRS = details printing . views features kcmconfigs xxport pics csv-templates \
+SUBDIRS = interfaces details printing . views features kcmconfigs xxport pics csv-templates \
 		thumbnailcreator
 
 SRCDOC_DEST=$(kde_htmldir)/en/kaddressbook
@@ -23,17 +24,19 @@ libkaddressbookpart_la_SOURCES = kaddressbook_part.cpp
 kaddressbook_METASOURCES = AUTO
 
 noinst_LTLIBRARIES = libkabcommon.la
-libkabcommon_la_SOURCES = kabprefs.cpp configurewidget.cpp
-
+libkabcommon_la_SOURCES = kabprefs.cpp
+libkabcommon_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
+libkabcommon_la_LIBADD = $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \
+                         $(top_builddir)/libkdepim/libkdepim.la
 lib_LTLIBRARIES = libkaddressbook.la
 
-libkaddressbook_la_SOURCES = xxportobject.cpp xxportmanager.cpp kabcore.cpp \
+libkaddressbook_la_SOURCES = xxportmanager.cpp kabcore.cpp \
  undo.cpp undocmds.cpp viewmanager.cpp filter.cpp filtereditdialog.cpp \
  xxportselectdialog.cpp extensionmanager.cpp incsearchwidget.cpp \
  addresseeutil.cpp \
  jumpbuttonbar.cpp addresseditwidget.cpp addresseeconfig.cpp \
  addresseeeditordialog.cpp addresseeeditorwidget.cpp \
- addviewdialog.cpp emaileditwidget.cpp extensionwidget.cpp \
+ addviewdialog.cpp emaileditwidget.cpp \
  filterselectionwidget.cpp geowidget.cpp imagewidget.cpp \
  kaddressbookiface.skel kaddressbookmain.cpp kaddressbookservice.cpp \
  kaddressbookview.cpp keywidget.cpp ldapsearchdialog.cpp nameeditdialog.cpp \
@@ -42,18 +45,16 @@ libkaddressbook_la_SOURCES = xxportobject.cpp xxportmanager.cpp kabcore.cpp \
  viewconfigurewidget.cpp
 libkaddressbook_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 libkaddressbook_la_LIBADD = details/libdetails.la printing/libprinter.la \
-        libkabcommon.la $(top_builddir)/libkdepim/libkdepim.la \
-	$(LIB_KABC) $(LIB_KHTML) -lkdeprint
+                            interfaces/libkabinterfaces.la \
+                            libkabcommon.la $(top_builddir)/libkdepim/libkdepim.la \
+                            $(LIB_KABC) $(LIB_KHTML) -lkdeprint
 libkaddressbook_la_COMPILE_FIRST = $(top_srcdir)/libkdepim/categoryselectdialog.h \
-	$(top_srcdir)/libkdepim/categoryeditdialog.h
-
-kaddressbookincludedir = $(includedir)/kaddressbook
-kaddressbookinclude_HEADERS = extensionwidget.h kabcore.h xxportobject.h
+                                   $(top_srcdir)/libkdepim/categoryeditdialog.h
 
 noinst_HEADERS = \
  addresseditwidget.h addresseeconfig.h \
  addresseeeditordialog.h addresseeeditorwidget.h addresseeutil.h \
- addviewdialog.h configurewidget.h emaileditwidget.h extensionmanager.h filter.h \
+ addviewdialog.h emaileditwidget.h extensionmanager.h filter.h \
  filtereditdialog.h filterselectionwidget.h geowidget.h imagewidget.h \
  incsearchwidget.h jumpbuttonbar.h kabprefs.h kaddressbook_part.h \
  kaddressbookmain.h kaddressbookservice.h kaddressbookview.h keywidget.h \
@@ -85,7 +86,6 @@ apps_DATA = kaddressbook.desktop
 KDE_ICON = kaddressbook
 
 servicetypedir = $(kde_servicetypesdir)
-servicetype_DATA = kaddressbook_extension.desktop kaddressbook_view.desktop \
- kaddressbook_xxport.desktop dcopaddressbook.desktop
+servicetype_DATA = kaddressbook_view.desktop dcopaddressbook.desktop
 
 include ../admin/Doxyfile.am

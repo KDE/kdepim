@@ -29,16 +29,18 @@
 
 #include <kurl.h>
 
-#include "xxportobject.h"
+#include "xxport.h"
 
-class KABCore;
+namespace KAB {
+class Core;
+}
 
 class XXPortManager : public QObject
 {
   Q_OBJECT
 
   public:
-    XXPortManager( KABCore *core, QObject *parent, const char *name = 0 );
+    XXPortManager( KAB::Core *core, QObject *parent, const char *name = 0 );
     ~XXPortManager();
 
     void restoreSettings();
@@ -49,8 +51,7 @@ class XXPortManager : public QObject
 
   public slots:
     void importVCard( const KURL &url );
-    void importVCard( const KURL &url, bool showPreview );
-    void importVCard( const QString &vCard, bool showPreview );
+    void importVCard( const QString &vCard );
 
   signals:
     void modified();
@@ -62,10 +63,9 @@ class XXPortManager : public QObject
   private:
     void loadPlugins();
 
-    QDict<XXPortObject> mXXPortObjects;
+    QDict<KAB::XXPort> mXXPortObjects;
 
-    KABCore *mCore;
-    bool mShowPreview;
+    KAB::Core *mCore;
 };
 
 #endif

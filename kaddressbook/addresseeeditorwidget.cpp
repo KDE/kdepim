@@ -52,10 +52,10 @@
 #include <libkdepim/kdateedit.h>
 
 #include "addresseditwidget.h"
+#include "core.h"
 #include "emaileditwidget.h"
 #include "geowidget.h"
 #include "imagewidget.h"
-#include "kabcore.h"
 #include "kabprefs.h"
 #include "keywidget.h"
 #include "nameeditdialog.h"
@@ -65,9 +65,9 @@
 
 #include "addresseeeditorwidget.h"
 
-AddresseeEditorWidget::AddresseeEditorWidget( KABCore *core, bool isExtension,
+AddresseeEditorWidget::AddresseeEditorWidget( KAB::Core *core, bool isExtension,
                                               QWidget *parent, const char *name )
-  : ExtensionWidget( core, parent, name ), mIsExtension( isExtension ),
+  : KAB::ExtensionWidget( core, parent, name ), mIsExtension( isExtension ),
     mBlockSignals( false )
 {
   kdDebug(5720) << "AddresseeEditorWidget()" << endl;

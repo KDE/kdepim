@@ -33,7 +33,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include "kabcore.h"
+#include "core.h"
 
 #include "jumpbuttonbar.h"
 
@@ -72,7 +72,7 @@ QString JumpButton::lastCharacter() const
   return mLastCharacter;
 }
 
-JumpButtonBar::JumpButtonBar( KABCore *core, QWidget *parent, const char *name )
+JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name )
   : QWidget( parent, name ), mCore( core )
 {
   setMinimumSize( 1, 1 );

@@ -28,18 +28,18 @@
 
 #include "configuretableviewdialog.h"
 #include "contactlistview.h"
+#include "core.h"
 #include "kabprefs.h"
 #include "undocmds.h"
-#include "viewmanager.h"
 
 #include "kaddressbooktableview.h"
 
 class TableViewFactory : public ViewFactory
 {
   public:
-    KAddressBookView *view( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAddressBookView *view( KAB::Core *core, QWidget *parent, const char *name )
     {
-      return new KAddressBookTableView( ab, parent, name );
+      return new KAddressBookTableView( core, parent, name );
     }
 
     QString type() const { return "Table"; }
@@ -61,9 +61,9 @@ extern "C" {
   }
 }
 
-KAddressBookTableView::KAddressBookTableView( KABC::AddressBook *ab,
+KAddressBookTableView::KAddressBookTableView( KAB::Core *core,
                                               QWidget *parent, const char *name )
-  : KAddressBookView( ab, parent, name )
+  : KAddressBookView( core, parent, name )
 {
   mainLayout = new QVBoxLayout( viewWidget(), 2 );
 
@@ -92,7 +92,7 @@ void KAddressBookTableView::reconstructListView()
         delete mListView;
     }
 
-  mListView = new ContactListView( this, addressBook(), viewWidget() );
+  mListView = new ContactListView( this, core()->addressBook(), viewWidget() );
 
   // Add the columns
   KABC::Field::List fieldList = fields();
@@ -179,7 +179,8 @@ void KAddressBookTableView::refresh(QString uid)
     KABC::Addressee::List addresseeList = addressees();
     KABC::Addressee::List::Iterator it;
     for (it = addresseeList.begin(); it != addresseeList.end(); ++it ) {
-      ContactListViewItem *item = new ContactListViewItem(*it, mListView, addressBook(), fields());
+      ContactListViewItem *item = new ContactListViewItem(*it, mListView, 
+                                        core()->addressBook(), fields());
       if ( (*it).uid() == currentUID )
         currentItem = item;
       else if ( (*it).uid() == nextUID && !currentItem )

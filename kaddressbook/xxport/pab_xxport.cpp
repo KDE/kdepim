@@ -38,10 +38,10 @@
 
 #include "pab_xxport.h"
 
-class PABXXPortFactory : public XXPortFactory
+class PABXXPortFactory : public KAB::XXPortFactory
 {
   public:
-    XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
       return new PABXXPort( ab, parent, name );
     }
@@ -57,7 +57,7 @@ extern "C"
 
 
 PABXXPort::PABXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : XXPortObject( ab, parent, name )
+  : KAB::XXPort( ab, parent, name )
 {
   createImportAction( i18n("Import MS Exchange Personal Address Book (.PAB)") );
 }

@@ -38,12 +38,12 @@
 #include <qstringlist.h>
 #include <qwhatsthis.h>
 
-#include "kabcore.h"
+#include "core.h"
 #include "kabprefs.h"
 
 #include "xxportselectdialog.h"
 
-XXPortSelectDialog::XXPortSelectDialog( KABCore *core, bool sort,
+XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
                                         QWidget* parent, const char* name )
     : KDialogBase( Plain, i18n( "Choose Which Contacts to Export" ), Help | Ok | Cancel,
                    Ok, parent, name, true, true ), mCore( core ),

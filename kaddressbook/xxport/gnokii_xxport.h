@@ -24,9 +24,9 @@
 #ifndef GNOKII_XXPORT_H
 #define GNOKII_XXPORT_H
 
-#include <xxportobject.h>
+#include <xxport.h>
 
-class GNOKIIXXPort : public XXPortObject
+class GNOKIIXXPort : public KAB::XXPort
 {
   Q_OBJECT
 

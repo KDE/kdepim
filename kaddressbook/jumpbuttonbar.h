@@ -32,11 +32,13 @@
 class QResizeEvent;
 class QPushButton;
 
+namespace KAB {
+class Core;
+}
+
 namespace KABC {
 class Field;
 }
-
-class KABCore;
 
 /**
   Used to draw the jump button bar on the right of the view.
@@ -46,7 +48,7 @@ class JumpButtonBar : public QWidget
   Q_OBJECT
   
   public:
-    JumpButtonBar( KABCore *core, QWidget *parent, const char *name = 0 );
+    JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name = 0 );
     ~JumpButtonBar();
     
     virtual QSizePolicy sizePolicy() const;
@@ -69,7 +71,7 @@ class JumpButtonBar : public QWidget
   private:
     void sortListLocaleAware( QStringList &list );
 
-    KABCore *mCore;
+    KAB::Core *mCore;
 
     QPtrList<QPushButton> mButtons;
 };

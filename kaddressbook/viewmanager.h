@@ -31,12 +31,12 @@
 class QDropEvent;
 class QWidgetStack;
 
-class KABCore;
 class KAction;
 class KSelectAction;
 
 class FilterSelectionWidget;
 
+namespace KAB { class Core; }
 namespace KABC { class AddressBook; }
 
 /**
@@ -52,7 +52,7 @@ class ViewManager : public QWidget
   Q_OBJECT
 
   public:
-    ViewManager( KABCore *core, QWidget *parent, const char *name = 0 );
+    ViewManager( KAB::Core *core, QWidget *parent, const char *name = 0 );
     ~ViewManager();
 
     void restoreSettings();
@@ -124,7 +124,7 @@ class ViewManager : public QWidget
     void initActions();
     void initGUI();
 
-    KABCore *mCore;
+    KAB::Core *mCore;
 
     Filter mCurrentFilter;
     Filter::List mFilterList;

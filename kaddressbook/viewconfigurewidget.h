@@ -45,7 +45,7 @@ class ViewConfigureFilterPage;
   is to show a page with the select fields widget. For simple views this may
   be sufficient.
 */
-class ViewConfigureWidget : public ConfigureWidget
+class ViewConfigureWidget : public KAB::ConfigureWidget
 {
   Q_OBJECT
     

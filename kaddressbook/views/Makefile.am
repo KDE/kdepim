@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook $(all_includes) 
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook/interfaces -I$(top_srcdir)/kaddressbook $(all_includes) 
 
 noinst_HEADERS = cardview.h colorlistbox.h configurecardviewdialog.h \
   configuretableviewdialog.h contactlistview.h kaddressbookcardview.h \
@@ -13,16 +13,18 @@ kde_module_LTLIBRARIES = libkaddrbk_cardview.la \
 
 METASOURCES = AUTO
 
+XXLIBS = $(top_builddir)/kaddressbook/libkaddressbook.la
+
 libkaddrbk_cardview_la_SOURCES = cardview.cpp colorlistbox.cpp \
   configurecardviewdialog.cpp kaddressbookcardview.cpp
 libkaddrbk_cardview_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
-libkaddrbk_cardview_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
+libkaddrbk_cardview_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_iconview_la_SOURCES = kaddressbookiconview.cpp
 libkaddrbk_iconview_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
-libkaddrbk_iconview_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
+libkaddrbk_iconview_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_tableview_la_SOURCES = configuretableviewdialog.cpp \
   contactlistview.cpp kaddressbooktableview.cpp 
 libkaddrbk_tableview_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
-libkaddrbk_tableview_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
+libkaddrbk_tableview_la_LIBADD = $(XXLIBS)

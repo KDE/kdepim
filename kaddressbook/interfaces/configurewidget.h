@@ -21,61 +21,51 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "configurewidget.h"
-#include "kabcore.h"
+#ifndef KAB_CONFIGUREWIDGET_H
+#define KAB_CONFIGUREWIDGET_H
 
-#include "extensionwidget.h"
+#include <qwidget.h>
 
-ExtensionWidget::ExtensionWidget( KABCore *core, QWidget *parent,
-                                  const char *name )
-  : QWidget( parent, name ), mCore( core )
-{
+#include <kconfig.h>
+
+namespace KABC {
+class AddressBook;
 }
 
-ExtensionWidget::~ExtensionWidget()
+namespace KAB {
+
+class ConfigureWidget : public QWidget
 {
+  public:
+    ConfigureWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    ~ConfigureWidget();
+
+    /**
+      This method is called before the configure dialog is shown.
+      The widget should reimplement it and fill the GUI with the
+      values from the config file.
+      Important: Don't change the group of cfg!
+     */
+    virtual void restoreSettings( KConfig *cfg );
+
+    /**
+      This method is called after the user clicked the 'Ok' button.
+      The widget should reimplement it and save all values from
+      the GUI to the config file.
+      Important: Don't change the group of cfg!
+     */
+    virtual void saveSettings( KConfig *cfg );
+
+
+    /**
+      Returns a pointer to the address book of this widget.
+     */
+    KABC::AddressBook *addressBook() const;
+
+  private:
+    KABC::AddressBook *mAddressBook;
+};
+
 }
 
-KABCore *ExtensionWidget::core() const
-{
-  return mCore;
-}
-
-bool ExtensionWidget::contactsSelected() const
-{
-  return mCore->selectedUIDs().count() != 0;
-}
-
-KABC::Addressee::List ExtensionWidget::selectedContacts()
-{
-  KABC::Addressee::List list;
-
-  QStringList uids = mCore->selectedUIDs();
-  QStringList::Iterator it;
-  for ( it = uids.begin(); it != uids.end(); ++it )
-    list.append( mCore->addressBook()->findByUid( *it ) );
-
-  return list;
-}
-
-void ExtensionWidget::contactsSelectionChanged()
-{
-  // do nothing
-}
-
-QString ExtensionWidget::title() const
-{
-  return "<bug!!!>";
-}
-
-QString ExtensionWidget::identifier() const
-{
-  return "<bug!!!>";
-}
-
-ConfigureWidget *ExtensionFactory::configureWidget( QWidget*, const char* )
-{
-  return 0;
-}
-
-#include "extensionwidget.moc"
+#endif

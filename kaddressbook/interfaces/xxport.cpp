@@ -27,21 +27,21 @@
 #include <kaction.h>
 #include <kmessagebox.h>
 
-#include "kabcore.h"
+#include "xxport.h"
 
-#include "xxportobject.h"
+using namespace KAB;
 
-class XXPortObject::XXPortObjectPrivate
+class XXPort::XXPortPrivate
 {
   public:
     QSignalMapper *mExportMapper;
     QSignalMapper *mImportMapper;
 };
 
-XXPortObject::XXPortObject( KABC::AddressBook *ab, QWidget *parent,
+XXPort::XXPort( KABC::AddressBook *ab, QWidget *parent,
                             const char *name )
   : QObject( parent, name ), mAddressBook( ab ), mParentWidget( parent ),
-    d( new XXPortObjectPrivate )
+    d( new XXPortPrivate )
 {
   setInstance( new KInstance( "kaddressbook" ) );
 
@@ -54,25 +54,25 @@ XXPortObject::XXPortObject( KABC::AddressBook *ab, QWidget *parent,
            SLOT( slotImportActivated( const QString& ) ) );
 }
 
-XXPortObject::~XXPortObject()
+XXPort::~XXPort()
 {
   delete d;
   d = 0;
 }
 
-bool XXPortObject::exportContacts( const KABC::AddresseeList&, const QString& )
+bool XXPort::exportContacts( const KABC::AddresseeList&, const QString& )
 {
   // do nothing
   return false;
 }
 
-KABC::AddresseeList XXPortObject::importContacts( const QString& ) const
+KABC::AddresseeList XXPort::importContacts( const QString& ) const
 {
   // do nothing
   return KABC::AddresseeList();
 }
 
-void XXPortObject::createImportAction( const QString &label, const QString &data )
+void XXPort::createImportAction( const QString &label, const QString &data )
 {
   QString id = "file_import_" + identifier() + ( data.isEmpty() ? QString( "" ) : "_" + data );
   KAction *action = new KAction( label, 0, d->mImportMapper, SLOT( map() ), actionCollection(), id.latin1() );
@@ -82,7 +82,7 @@ void XXPortObject::createImportAction( const QString &label, const QString &data
   setXMLFile( identifier() + "_xxportui.rc" );
 }
 
-void XXPortObject::createExportAction( const QString &label, const QString &data )
+void XXPort::createExportAction( const QString &label, const QString &data )
 {
   QString id = "file_export_" + identifier() + ( data.isEmpty() ? QString( "" ) : "_" + data );
   KAction *action = new KAction( label, 0, d->mExportMapper, SLOT( map() ), actionCollection(), id.latin1() );
@@ -92,24 +92,24 @@ void XXPortObject::createExportAction( const QString &label, const QString &data
   setXMLFile( identifier() + "_xxportui.rc" );
 }
 
-KABC::AddressBook *XXPortObject::addressBook() const
+KABC::AddressBook *XXPort::addressBook() const
 {
   return mAddressBook;
 }
 
-QWidget *XXPortObject::parentWidget() const
+QWidget *XXPort::parentWidget() const
 {
   return mParentWidget;
 }
 
-void XXPortObject::slotExportActivated( const QString &data )
+void XXPort::slotExportActivated( const QString &data )
 {
   emit exportActivated( identifier(), ( data == "<empty>" ? QString::null : data ) );
 }
 
-void XXPortObject::slotImportActivated( const QString &data )
+void XXPort::slotImportActivated( const QString &data )
 {
   emit importActivated( identifier(), ( data == "<empty>" ? QString::null : data ) );
 }
 
-#include "xxportobject.moc"
+#include "xxport.moc"

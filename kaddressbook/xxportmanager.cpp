@@ -26,13 +26,11 @@
 #include <kabc/addressbook.h>
 #include <kabc/resource.h>
 #include <kdebug.h>
-#include <kdialogbase.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktrader.h>
-#include <libkdepim/addresseeview.h>
 
-#include "kabcore.h"
+#include "core.h"
 #include "undocmds.h"
 #include "xxportselectdialog.h"
 
@@ -41,16 +39,8 @@
 KURL XXPortManager::importURL = KURL();
 QString XXPortManager::importData = QString::null;
 
-class PreviewDialog : public KDialogBase
-{
-  public:
-    PreviewDialog( const KABC::Addressee &addr,
-                   QWidget *parent, const char *name = 0 );
-};
-
-
-XXPortManager::XXPortManager( KABCore *core, QObject *parent, const char *name )
-  : QObject( parent, name ), mCore( core ), mShowPreview( false )
+XXPortManager::XXPortManager( KAB::Core *core, QObject *parent, const char *name )
+  : QObject( parent, name ), mCore( core )
 {
   loadPlugins();
 }
@@ -69,36 +59,27 @@ void XXPortManager::saveSettings()
 
 void XXPortManager::importVCard( const KURL &url )
 {
-  importVCard( url, false );
-}
-
-void XXPortManager::importVCard( const KURL &url, bool showPreview )
-{
   importURL = url;
-  mShowPreview = showPreview;
   slotImport( "vcard", "<empty>" );
-  mShowPreview = false;
   importURL = KURL();
 }
 
-void XXPortManager::importVCard( const QString &vCard, bool showPreview )
+void XXPortManager::importVCard( const QString &vCard )
 {
   importData = vCard;
-  mShowPreview = showPreview;
   slotImport( "vcard", "<empty>" );
-  mShowPreview = false;
   importData = "";
 }
 
 void XXPortManager::slotImport( const QString &identifier, const QString &data )
 {
-  XXPortObject *obj = mXXPortObjects[ identifier ];
+  KAB::XXPort *obj = mXXPortObjects[ identifier ];
   if ( !obj ) {
-    KMessageBox::error( mCore, i18n( "<qt>No import plugin available for <b>%1</b>.</qt>" ).arg( identifier ) );
+    KMessageBox::error( mCore->widget(), i18n( "<qt>No import plugin available for <b>%1</b>.</qt>" ).arg( identifier ) );
     return;
   }
 
-  KABC::Resource *resource = mCore->requestResource( mCore );
+  KABC::Resource *resource = mCore->requestResource( mCore->widget() );
   if ( !resource )
     return;
 
@@ -106,11 +87,6 @@ void XXPortManager::slotImport( const QString &identifier, const QString &data )
   KABC::AddresseeList::Iterator it;
   bool imported = false;
   for ( it = list.begin(); it != list.end(); ++it ) {
-    if ( mShowPreview ) {
-      PreviewDialog dlg( *it, mCore );
-      if ( !dlg.exec() )
-        continue;
-    }
     (*it).setResource( resource );
     // We use a PwNewCommand so the user can undo it.
     PwNewCommand *command = new PwNewCommand( mCore->addressBook(), *it );
@@ -125,21 +101,21 @@ void XXPortManager::slotImport( const QString &identifier, const QString &data )
 
 void XXPortManager::slotExport( const QString &identifier, const QString &data )
 {
-  XXPortObject *obj = mXXPortObjects[ identifier ];
+  KAB::XXPort *obj = mXXPortObjects[ identifier ];
   if ( !obj ) {
-    KMessageBox::error( mCore, i18n( "<qt>No export plugin available for <b>%1</b>.</qt>" ).arg( identifier ) );
+    KMessageBox::error( mCore->widget(), i18n( "<qt>No export plugin available for <b>%1</b>.</qt>" ).arg( identifier ) );
     return;
   }
 
   KABC::AddresseeList addrList;
-  XXPortSelectDialog dlg( mCore, obj->requiresSorting(), mCore );
+  XXPortSelectDialog dlg( mCore, obj->requiresSorting(), mCore->widget() );
   if ( dlg.exec() )
     addrList = dlg.contacts();
   else
     return;
 
   if ( !obj->exportContacts( addrList, data ) )
-    KMessageBox::error( mCore, i18n( "Unable to export contacts." ) );
+    KMessageBox::error( mCore->widget(), i18n( "Unable to export contacts." ) );
 }
 
 void XXPortManager::loadPlugins()
@@ -158,16 +134,18 @@ void XXPortManager::loadPlugins()
       continue;
     }
 
-    XXPortFactory *xxportFactory = static_cast<XXPortFactory*>( factory );
+    KAB::XXPortFactory *xxportFactory = static_cast<KAB::XXPortFactory*>( factory );
 
     if ( !xxportFactory ) {
       kdDebug(5720) << "XXPortManager::loadExtensions(): Cast failed" << endl;
       continue;
     }
 
-    XXPortObject *obj = xxportFactory->xxportObject( mCore->addressBook(), mCore );
+    KAB::XXPort *obj = xxportFactory->xxportObject( mCore->addressBook(), mCore->widget() );
     if ( obj ) {
-      mCore->addGUIClient( obj );
+      if ( mCore->guiClient() )
+        mCore->guiClient()->insertChildClient( obj );
+
       mXXPortObjects.insert( obj->identifier(), obj );
       connect( obj, SIGNAL( exportActivated( const QString&, const QString& ) ),
                this, SLOT( slotExport( const QString&, const QString& ) ) );
@@ -175,23 +153,6 @@ void XXPortManager::loadPlugins()
                this, SLOT( slotImport( const QString&, const QString& ) ) );
     }
   }
-}
-
-
-PreviewDialog::PreviewDialog( const KABC::Addressee &addr, QWidget *parent,
-                              const char *name )
-  : KDialogBase( Plain, i18n( "Contact Preview" ), Ok | Cancel, Ok, parent,
-                 name, true, true )
-{
-  QWidget *page = plainPage();
-  QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );
-  
-  KPIM::AddresseeView *view = new KPIM::AddresseeView( page );
-  view->setAddressee( addr );
-
-  layout->addWidget( view );
-
-  resize( 400, 300 );
 }
 
 #include "xxportmanager.moc"

@@ -39,7 +39,7 @@
 
 ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent,
                                           const char *name )
-  : ConfigureWidget( ab, parent, name )
+  : KAB::ConfigureWidget( ab, parent, name )
 {
   QVBoxLayout *topLayout = new QVBoxLayout( this );
 

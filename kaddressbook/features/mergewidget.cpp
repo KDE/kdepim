@@ -32,14 +32,14 @@
 
 #include <kabc/addressbook.h>
 
-#include "kabcore.h"
+#include "core.h"
 
 #include "mergewidget.h"
 
-class MergeFactory : public ExtensionFactory
+class MergeFactory : public KAB::ExtensionFactory
 {
   public:
-    ExtensionWidget *extension( KABCore *core, QWidget *parent, const char *name )
+    KAB::ExtensionWidget *extension( KAB::Core *core, QWidget *parent, const char *name )
     {
       return new MergeWidget( core, parent, name );
     }
@@ -80,8 +80,8 @@ class ContactItem : public QListViewItem
     KABC::Addressee mAddressee;
 };
 
-MergeWidget::MergeWidget( KABCore *core, QWidget *parent, const char *name )
-  : ExtensionWidget( core, parent, name ), mBlockUpdate( false )
+MergeWidget::MergeWidget( KAB::Core *core, QWidget *parent, const char *name )
+  : KAB::ExtensionWidget( core, parent, name ), mBlockUpdate( false )
 {
   QGridLayout *topLayout = new QGridLayout( this, 3, 2, KDialog::marginHint(),
                                             KDialog::spacingHint() );

@@ -74,7 +74,7 @@
     <Action name="file_mail_vcard"/>
   </Menu>
 
-  <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
+  <ToolBar name="mainToolBar"><text>Main Toolbar</text>
     <Action name="file_sync" />
     <Action name="kaddressbook_print" />
     <Separator/>
@@ -86,7 +86,7 @@
     <Action name="ldap_lookup"/>
   </ToolBar>
 
-  <ToolBar name="addresseeToolBar" noMerge="1"><text>Contact Toolbar</text>
+  <ToolBar name="addresseeToolBar"><text>Contact Toolbar</text>
     <Action name="kaddressbook_undo"/>
     <Action name="kaddressbook_redo"/>
     <Separator/>
@@ -97,7 +97,7 @@
     <Action name="edit_delete"/>
   </ToolBar>
 
-  <ToolBar name="viewToolBar" noMerge="1"><text>View Toolbar</text>
+  <ToolBar name="viewToolBar"><text>View Toolbar</text>
     <Action name="view_add"/>
     <Action name="view_modify"/>
     <Action name="view_delete"/>

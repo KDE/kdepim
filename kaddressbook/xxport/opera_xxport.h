@@ -25,9 +25,9 @@
 #ifndef OPERA_XXPORT_H
 #define OPERA_XXPORT_H
 
-#include <xxportobject.h>
+#include <xxport.h>
 
-class OperaXXPort : public XXPortObject
+class OperaXXPort : public KAB::XXPort
 {
   Q_OBJECT
 

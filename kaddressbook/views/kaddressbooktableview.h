@@ -41,7 +41,7 @@ friend class ContactListView;
   Q_OBJECT
 
   public:
-    KAddressBookTableView( KABC::AddressBook *ab, QWidget *parent,
+    KAddressBookTableView( KAB::Core *core, QWidget *parent,
                            const char *name = 0 );
     virtual ~KAddressBookTableView();
 

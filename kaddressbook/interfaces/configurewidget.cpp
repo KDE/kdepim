@@ -25,6 +25,8 @@
 
 #include "configurewidget.h"
 
+using namespace KAB;
+
 ConfigureWidget::ConfigureWidget( KABC::AddressBook *ab, QWidget *parent,
                                   const char *name )
   : QWidget( parent, name ), mAddressBook( ab )

@@ -26,31 +26,31 @@
 
 #include <libkdepim/interfaces/AddressBookServiceIface.h>
 
-class KABCore;
+namespace KAB {
+class Core;
+}
 
 class KAddressBookService : virtual public KPIM::AddressBookServiceIface
 {
   public:
-    KAddressBookService( KABCore *core );
+    KAddressBookService( KAB::Core *core );
 
     /**
       This method will add a vcard to the address book.
 
       @param vCard The vCard in string representation.
-      @param showPreview Whether a preview should be shown.
      */
-    void importVCard( const QString& vCard, bool showPreview );
+    void importVCard( const QString& vCard );
 
     /**
       This method will add a vcard to the address book.
 
       @param url The url where the vcard is located.
-      @param showPreview Whether a preview should be shown.
      */
-    void importVCard( const KURL& url, bool showPreview );
+    void importVCard( const KURL& url );
 
   private:
-    KABCore *mCore;
+    KAB::Core *mCore;
 };
 
 #endif

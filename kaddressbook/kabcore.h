@@ -29,6 +29,8 @@
 #include <qdict.h>
 #include <qwidget.h>
 
+#include "core.h"
+
 namespace KABC {
 class AddressBook;
 }
@@ -54,7 +56,7 @@ class ViewContainer;
 class ViewManager;
 class XXPortManager;
 
-class KABCore : public QWidget
+class KABCore : public KAB::Core
 {
   Q_OBJECT
 
@@ -81,18 +83,13 @@ class KABCore : public QWidget
     /**
       Returns a pointer to the KConfig object of the application.
      */
-    static KConfig *config();
+    KConfig *config() const;
 
     /**
       Returns a pointer to the global KActionCollection object. So
       other classes can register their actions easily.
      */
     KActionCollection *actionCollection() const;
-
-    /**
-      Returns a pointer to the gui client.
-     */
-    KXMLGUIClient *guiClient() const;
 
     /**
       Returns the current search field of the Incremental Search Widget.
@@ -110,6 +107,11 @@ class KABCore : public QWidget
       the user.
      */
     KABC::Resource *requestResource( QWidget *parent );
+
+    /**
+      Returns the parent widget.
+     */
+    QWidget *widget() const;
 
     static KAboutData *createAboutData();
 
@@ -224,16 +226,30 @@ class KABCore : public QWidget
     void contactModified( const KABC::Addressee &addr );
 
     /**
-      DCOP METHODS.
+      DCOP METHOD: Adds the given email address to address book.
      */
-    void addEmail( QString addr );
-    void importVCard( const KURL& url, bool showPreview );
-    void importVCard( const QString& vCard, bool showPreview );
-    void newContact();
-    QString getNameByPhone( const QString& phone );
+    virtual void addEmail( const QString& addr );
+
     /**
-      END DCOP METHODS
+      DCOP METHOD: Imports the vCard, located at the given url.
      */
+    virtual void importVCard( const KURL& url );
+
+    /**
+      DCOP METHOD: Imports the given vCard.
+     */
+    virtual void importVCard( const QString& vCard );
+
+    /**
+      DCOP METHOD: Opens contact editor to input a new contact.
+     */
+    virtual void newContact();
+
+    /**
+      DCOP METHOD: Returns the name of the contact, that matches the given 
+                   phone number.
+     */
+    virtual QString getNameByPhone( const QString& phone );
 
     /**
       Saves the contents of the AddressBook back to disk.
@@ -272,11 +288,6 @@ class KABCore : public QWidget
      */
     void print();
 
-    /**
-      Registers a new GUI client, so plugins can register its actions.
-     */
-    void addGUIClient( KXMLGUIClient *client );
-
   signals:
     void contactSelected( const QString &name );
     void contactSelected( const QPixmap &pixmap );
@@ -301,7 +312,7 @@ class KABCore : public QWidget
     AddresseeEditorDialog *createAddresseeEditorDialog( QWidget *parent,
                                                         const char *name = 0 );
 
-    KXMLGUIClient *mGUIClient;
+    QWidget *mWidget;
     KABC::AddressBook *mAddressBook;
 
     ViewManager *mViewManager;

@@ -28,12 +28,12 @@
 #include <ktrader.h>
 
 #include "addresseeeditorwidget.h"
-#include "kabcore.h"
+#include "core.h"
 #include "kabprefs.h"
 
 #include "extensionmanager.h"
 
-ExtensionManager::ExtensionManager( KABCore *core, QWidget *parent,
+ExtensionManager::ExtensionManager( KAB::Core *core, QWidget *parent,
                                     const char *name )
   : QHBox( parent, name ), mCore( core ), mCurrentExtensionWidget( 0 )
 {
@@ -105,8 +105,8 @@ void ExtensionManager::createExtensionWidgets()
 {
   // clear extension widget list
   mExtensionWidgetList.setAutoDelete( true );
-  QPtrListIterator<ExtensionWidget> wdgIt( mExtensionWidgetList );
-  ExtensionWidget *wdg = 0;
+  QPtrListIterator<KAB::ExtensionWidget> wdgIt( mExtensionWidgetList );
+  KAB::ExtensionWidget *wdg = 0;
   while ( ( wdg = wdgIt.current() ) != 0 )
     mExtensionWidgetList.remove( wdg );
 
@@ -137,7 +137,7 @@ void ExtensionManager::createExtensionWidgets()
       continue;
     }
 
-    ExtensionFactory *extensionFactory = static_cast<ExtensionFactory*>( factory );
+    KAB::ExtensionFactory *extensionFactory = static_cast<KAB::ExtensionFactory*>( factory );
 
     if ( !extensionFactory ) {
       kdDebug(5720) << "ExtensionManager::loadExtensions(): Cast failed" << endl;

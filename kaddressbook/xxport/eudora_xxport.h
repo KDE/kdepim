@@ -24,9 +24,9 @@
 #ifndef EUDORA_XXPORT_H
 #define EUDORA_XXPORT_H
 
-#include <xxportobject.h>
+#include <xxport.h>
 
-class EudoraXXPort : public XXPortObject
+class EudoraXXPort : public KAB::XXPort
 {
   Q_OBJECT
 

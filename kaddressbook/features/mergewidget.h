@@ -31,18 +31,20 @@
 
 class QListView;
 
-class KABCore;
+namespace KAB {
+class Core;
+}
 
 namespace KABC {
 class AddressBook;
 }
 
-class MergeWidget : public ExtensionWidget
+class MergeWidget : public KAB::ExtensionWidget
 {
     Q_OBJECT
 
   public:
-    MergeWidget( KABCore*, QWidget *parent, const char *name = 0 );
+    MergeWidget( KAB::Core*, QWidget *parent, const char *name = 0 );
     virtual ~MergeWidget();
 
     void contactsSelectionChanged();

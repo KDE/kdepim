@@ -21,21 +21,21 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "kabcore.h"
+#include "core.h"
 
 #include "kaddressbookservice.h"
 
-KAddressBookService::KAddressBookService( KABCore *core )
+KAddressBookService::KAddressBookService( KAB::Core *core )
   : DCOPObject( "AddressBookServiceIface" ), mCore( core )
 {
 }
 
-void KAddressBookService::importVCard( const QString& vCard, bool showPreview )
+void KAddressBookService::importVCard( const QString& vCard )
 {
-  mCore->importVCard( vCard, showPreview );
+  mCore->importVCard( vCard );
 }
 
-void KAddressBookService::importVCard( const KURL& url, bool showPreview )
+void KAddressBookService::importVCard( const KURL& url )
 {
-  mCore->importVCard( url, showPreview );
+  mCore->importVCard( url );
 }

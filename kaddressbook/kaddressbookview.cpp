@@ -21,7 +21,6 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include <qapplication.h>
 #include <qlayout.h>
 #include <qpopupmenu.h>
 
@@ -33,13 +32,13 @@
 #include <kxmlguifactory.h>
 #include <kxmlguiclient.h>
 
-#include "viewmanager.h"
+#include "core.h"
 
 #include "kaddressbookview.h"
 
-KAddressBookView::KAddressBookView( KABC::AddressBook *ab, QWidget *parent,
+KAddressBookView::KAddressBookView( KAB::Core *core, QWidget *parent,
                                     const char *name )
-    : QWidget( parent, name ), mAddressBook( ab ), mFieldList(), mGUIClient( 0 )
+    : QWidget( parent, name ), mCore( core ), mFieldList()
 {
   initGUI();
 }
@@ -76,7 +75,7 @@ QString KAddressBookView::selectedEmails()
   
   QStringList::Iterator it;
   for ( it = uidList.begin(); it != uidList.end(); ++it ) {
-    addr = mAddressBook->findByUid( *it );
+    addr = mCore->addressBook()->findByUid( *it );
       
     if ( !addr.isEmpty() ) {
       QString m = QString::null;
@@ -103,7 +102,7 @@ KABC::Addressee::List KAddressBookView::addressees()
   KABC::Addressee::List addresseeList;
 
   KABC::AddressBook::Iterator it;
-  for (it = mAddressBook->begin(); it != mAddressBook->end(); ++it ) {
+  for (it = mCore->addressBook()->begin(); it != mCore->addressBook()->end(); ++it ) {
     if ( mFilter.filterAddressee( *it ) )
       addresseeList.append( *it );
   }
@@ -141,24 +140,20 @@ const QString &KAddressBookView::defaultFilterName() const
   return mDefaultFilterName;
 }
     
-KABC::AddressBook *KAddressBookView::addressBook() const
+KAB::Core *KAddressBookView::core() const
 {
-  return mAddressBook;
-}
-
-void KAddressBookView::setGUIClient( KXMLGUIClient *client )
-{
-  mGUIClient = client;
+  return mCore;
 }
 
 void KAddressBookView::popup( const QPoint &point )
 {
-  if ( !mGUIClient ) {
+  if ( !mCore->guiClient() ) {
     kdWarning() << "No GUI client set!" << endl;
     return;
   }
 
-  QPopupMenu *menu = static_cast<QPopupMenu*>( mGUIClient->factory()->container( "RMBPopup", mGUIClient ) );
+  QPopupMenu *menu = static_cast<QPopupMenu*>( mCore->guiClient()->factory()->container( "RMBPopup",
+                                               mCore->guiClient() ) );
   if ( menu )
     menu->popup( point );
 }

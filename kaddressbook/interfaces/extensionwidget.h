@@ -21,8 +21,8 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#ifndef EXTENSIONWIDGET_H
-#define EXTENSIONWIDGET_H
+#ifndef KAB_EXTENSIONWIDGET_H
+#define KAB_EXTENSIONWIDGET_H
 
 #include <qwidget.h>
 
@@ -30,20 +30,22 @@
 #include <klibloader.h>
 
 class ConfigureWidget;
-class KABCore;
+
+namespace KAB {
+class Core;
 
 class ExtensionWidget : public QWidget
 {
   Q_OBJECT
   
   public:
-    ExtensionWidget( KABCore *core, QWidget *parent, const char *name = 0 );
+    ExtensionWidget( Core *core, QWidget *parent, const char *name = 0 );
     ~ExtensionWidget();
 
     /**
       @return A pointer to the core object
     */
-    KABCore *core() const;
+    KAB::Core *core() const;
 
     /**
       Returns whether there are selected contacts in the view.
@@ -66,18 +68,18 @@ class ExtensionWidget : public QWidget
       This method should be reimplemented and return the i18ned title of this
       widget.
      */
-    virtual QString title() const;
+    virtual QString title() const = 0;
 
     /**
       This method should be reimplemented and return a unique identifier.
      */
-    virtual QString identifier() const;
+    virtual QString identifier() const = 0;
 
   signals:
     void modified( const KABC::Addressee::List &list );
 
   private:
-    KABCore *mCore;
+    KAB::Core *mCore;
 
     class ExtensionWidgetPrivate;
     ExtensionWidgetPrivate *d;
@@ -86,11 +88,13 @@ class ExtensionWidget : public QWidget
 class ExtensionFactory : public KLibFactory
 {
   public:
-    virtual ExtensionWidget *extension( KABCore *core, QWidget *parent,
+    virtual ExtensionWidget *extension( KAB::Core *core, QWidget *parent,
                                         const char *name = 0 ) = 0;
 
-    virtual ConfigureWidget *configureWidget( QWidget *parent,
-                                              const char *name = 0 );
+    virtual ConfigureWidget *configureWidget( QWidget*, const char* = 0 )
+    {
+      return 0;
+    }
 
     virtual bool configureWidgetAvailable() { return false; }
 
@@ -107,5 +111,7 @@ class ExtensionFactory : public KLibFactory
       return 0;
     }
 };
+
+}
 
 #endif

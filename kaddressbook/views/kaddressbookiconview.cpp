@@ -33,17 +33,17 @@
 #include <kiconloader.h>
 #include <klocale.h>
 
+#include "core.h"
 #include "kabprefs.h"
-#include "viewmanager.h"
 
 #include "kaddressbookiconview.h"
 
 class IconViewFactory : public ViewFactory
 {
   public:
-    KAddressBookView *view( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAddressBookView *view( KAB::Core *core, QWidget *parent, const char *name )
     {
-      return new KAddressBookIconView( ab, parent, name );
+      return new KAddressBookIconView( core, parent, name );
     }
 
     QString type() const { return "Icon"; }
@@ -145,9 +145,9 @@ class AddresseeIconViewItem : public KIconViewItem
 ///////////////////////////////
 // KAddressBookView
 
-KAddressBookIconView::KAddressBookIconView( KABC::AddressBook *ab,
+KAddressBookIconView::KAddressBookIconView( KAB::Core *core,
                                             QWidget *parent, const char *name)
-    : KAddressBookView( ab, parent, name )
+    : KAddressBookView( core, parent, name )
 {
     // Init the GUI
     QVBoxLayout *layout = new QVBoxLayout(viewWidget());
@@ -219,7 +219,7 @@ void KAddressBookIconView::refresh(QString uid)
     KABC::Addressee::List addresseeList = addressees();
     KABC::Addressee::List::Iterator iter;
     for ( iter = addresseeList.begin(); iter != addresseeList.end(); ++iter )
-      aItem = new AddresseeIconViewItem( fields(), addressBook(), *iter, mIconView );
+      aItem = new AddresseeIconViewItem( fields(), core()->addressBook(), *iter, mIconView );
 
     mIconView->arrangeItemsInGrid( true );
 

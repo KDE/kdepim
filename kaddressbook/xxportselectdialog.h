@@ -36,7 +36,10 @@ class QListView;
 class QListViewItem;
 class QRadioButton;
 
-class KABCore;
+namespace KAB {
+class Core;
+}
+
 class KComboBox;
 
 class XXPortSelectDialog : public KDialogBase
@@ -44,7 +47,7 @@ class XXPortSelectDialog : public KDialogBase
   Q_OBJECT
 
   public:
-    XXPortSelectDialog( KABCore *core, bool sort, QWidget* parent,
+    XXPortSelectDialog( KAB::Core *core, bool sort, QWidget* parent,
                         const char* name = 0 );
 
     KABC::AddresseeList contacts();
@@ -71,7 +74,7 @@ class XXPortSelectDialog : public KDialogBase
     KComboBox *mFieldCombo;
     KComboBox *mSortTypeCombo;
 
-    KABCore *mCore;
+    KAB::Core *mCore;
     KABC::AddresseeList mAddresseeList;
     Filter::List mFilters;
     KABC::Field::List mFields;

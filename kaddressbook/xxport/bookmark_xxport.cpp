@@ -31,10 +31,10 @@
 
 #include "bookmark_xxport.h"
 
-class BookmarkXXPortFactory : public XXPortFactory
+class BookmarkXXPortFactory : public KAB::XXPortFactory
 {
   public:
-    XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
       return new BookmarkXXPort( ab, parent, name );
     }
@@ -50,7 +50,7 @@ extern "C"
 
 
 BookmarkXXPort::BookmarkXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : XXPortObject( ab, parent, name )
+  : KAB::XXPort( ab, parent, name )
 {
   createExportAction( i18n( "Export Bookmarks Menu..." ) );
 }

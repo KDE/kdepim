@@ -48,10 +48,10 @@
 
 #include "ldif_xxport.h"
 
-class LDIFXXPortFactory : public XXPortFactory
+class LDIFXXPortFactory : public KAB::XXPortFactory
 {
   public:
-    XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
       return new LDIFXXPort( ab, parent, name );
     }
@@ -67,7 +67,7 @@ extern "C"
 
 
 LDIFXXPort::LDIFXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : XXPortObject( ab, parent, name )
+  : KAB::XXPort( ab, parent, name )
 {
   createImportAction( i18n( "Import LDIF Addressbook..." ) );
   createExportAction( i18n( "Export LDIF Addressbook..." ) );

@@ -30,6 +30,10 @@
 class KComboBox;
 class KHTMLPart;
 
+namespace KAB {
+class Core;
+}
+
 namespace KABC {
 class Address;
 class AddressBook;
@@ -37,14 +41,12 @@ class AddressBook;
 
 class QPushButton;
 
-class KABCore;
-
-class LocationWidget : public ExtensionWidget
+class LocationWidget : public KAB::ExtensionWidget
 {
     Q_OBJECT
 
   public:
-    LocationWidget( KABCore *core, QWidget *parent, const char *name = 0 );
+    LocationWidget( KAB::Core *core, QWidget *parent, const char *name = 0 );
     virtual ~LocationWidget();
 
     void contactsSelectionChanged();

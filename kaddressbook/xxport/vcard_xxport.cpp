@@ -35,10 +35,10 @@
 
 #include "vcard_xxport.h"
 
-class VCardXXPortFactory : public XXPortFactory
+class VCardXXPortFactory : public KAB::XXPortFactory
 {
   public:
-    XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
       return new VCardXXPort( ab, parent, name );
     }
@@ -54,7 +54,7 @@ extern "C"
 
 
 VCardXXPort::VCardXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : XXPortObject( ab, parent, name )
+  : KAB::XXPort( ab, parent, name )
 {
   createImportAction( i18n( "Import vCard..." ) );
   createExportAction( i18n( "Export vCard 2.1..." ), "v21" );

@@ -36,10 +36,10 @@
 
 #define CTRL_C 3
 
-class EudoraXXPortFactory : public XXPortFactory
+class EudoraXXPortFactory : public KAB::XXPortFactory
 {
   public:
-    XXPortObject *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
       return new EudoraXXPort( ab, parent, name );
     }
@@ -55,7 +55,7 @@ extern "C"
 
 
 EudoraXXPort::EudoraXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : XXPortObject( ab, parent, name )
+  : KAB::XXPort( ab, parent, name )
 {
   createImportAction( i18n( "Import Eudora Addressbook..." ) );
 }

@@ -29,7 +29,7 @@
 
 #include "extensionconfigdialog.h"
 
-ExtensionConfigDialog::ExtensionConfigDialog( ExtensionFactory *factory, KConfig *config,
+ExtensionConfigDialog::ExtensionConfigDialog( KAB::ExtensionFactory *factory, KConfig *config,
                                               QWidget *parent, const char *name )
   : KDialogBase( Plain, i18n( "Extension Settings" ), Ok | Cancel, Ok, parent,
                  name, true, true ), mWidget( 0 ), mConfig( config )

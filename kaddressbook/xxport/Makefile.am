@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook $(all_includes) 
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook/interfaces -I$(top_srcdir)/kaddressbook $(all_includes) 
 
 kde_module_LTLIBRARIES = libkaddrbk_csv_xxport.la libkaddrbk_vcard_xxport.la \
 	libkaddrbk_kde2_xxport.la libkaddrbk_bookmark_xxport.la \
@@ -16,7 +16,7 @@ service_DATA = csv_xxport.desktop vcard_xxport.desktop kde2_xxport.desktop \
 METASOURCES = AUTO
 AM_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
 
-XXLIBS = $(top_builddir)/kaddressbook/libkaddressbook.la $(top_builddir)/libkdepim/libkdepim.la
+XXLIBS = $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la $(top_builddir)/libkdepim/libkdepim.la
 
 libkaddrbk_csv_xxport_la_SOURCES = csv_xxport.cpp csvimportdialog.cpp
 libkaddrbk_csv_xxport_la_LIBADD = $(XXLIBS)

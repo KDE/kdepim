@@ -24,9 +24,9 @@
 #ifndef KDE2_XXPORT_H
 #define KDE2_XXPORT_H
 
-#include <xxportobject.h>
+#include <xxport.h>
 
-class KDE2XXPort : public XXPortObject
+class KDE2XXPort : public KAB::XXPort
 {
   Q_OBJECT
 

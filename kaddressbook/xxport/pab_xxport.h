@@ -25,9 +25,9 @@
 #ifndef PAB_XXPORT_H
 #define PAB_XXPORT_H
 
-#include <xxportobject.h>
+#include <xxport.h>
 
-class PABXXPort : public XXPortObject
+class PABXXPort : public KAB::XXPort
 {
   Q_OBJECT
 

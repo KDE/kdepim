@@ -46,26 +46,28 @@ class AddressEditWidget;
 class EmailEditWidget;
 class GeoWidget;
 class ImageWidget;
-class KABCore;
 class KeyWidget;
 class PhoneEditWidget;
 class SecrecyWidget;
 class SoundWidget;
 
-namespace KPIM
-{
-  class CategorySelectDialog;
-  class CategoryEditDialog;
+namespace KAB {
+class Core;
+}
+
+namespace KPIM {
+class CategorySelectDialog;
+class CategoryEditDialog;
 }
 
 namespace KABC { class AddressBook; }
 
-class AddresseeEditorWidget : public ExtensionWidget
+class AddresseeEditorWidget : public KAB::ExtensionWidget
 {
   Q_OBJECT
   
   public:
-    AddresseeEditorWidget( KABCore *core, bool isExtension,
+    AddresseeEditorWidget( KAB::Core *core, bool isExtension,
                            QWidget *parent, const char *name = 0 );
     ~AddresseeEditorWidget();  
 

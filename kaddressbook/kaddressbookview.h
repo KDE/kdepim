@@ -38,6 +38,7 @@ class KXMLGUIClient;
 
 class QDropEvent;
 
+namespace KAB { class Core; }
 namespace KABC { class AddressBook; }
 
 /**
@@ -56,7 +57,7 @@ class KAddressBookView : public QWidget
   public:
     enum DefaultFilterType { None = 0, Active = 1, Specific = 2 };
     
-    KAddressBookView( KABC::AddressBook *ab, QWidget *parent, const char *name );
+    KAddressBookView( KAB::Core *core, QWidget *parent, const char *name );
     virtual ~KAddressBookView();
 
     /**
@@ -141,16 +142,9 @@ class KAddressBookView : public QWidget
     const QString &defaultFilterName() const;
     
     /**
-      @return The address book.
+      @return The Core object.
      */
-    KABC::AddressBook *addressBook() const;
-
-
-    /**
-      Sets the GUI client, this is an interim solution, which will be 
-      abolished as soon as the interfaces are ready.
-     */
-    void setGUIClient( KXMLGUIClient *client );
+    KAB::Core *core() const;
 
   public slots:
     /**
@@ -244,17 +238,16 @@ class KAddressBookView : public QWidget
     DefaultFilterType mDefaultFilterType;
     Filter mFilter;
     QString mDefaultFilterName;
-    KABC::AddressBook *mAddressBook;
+    KAB::Core *mCore;
     KABC::Field::List mFieldList;
     
     QWidget *mViewWidget;
-    KXMLGUIClient *mGUIClient;
 };
 
 class ViewFactory : public KLibFactory
 {
   public:
-    virtual KAddressBookView *view( KABC::AddressBook *ab, QWidget *parent,
+    virtual KAddressBookView *view( KAB::Core *core, QWidget *parent,
                                     const char *name = 0 ) = 0;
     /**
       @return The type of the view. This is normally a small one word

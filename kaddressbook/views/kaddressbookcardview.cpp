@@ -33,18 +33,18 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+#include "core.h"
 #include "configurecardviewdialog.h"
 #include "kabprefs.h"
-#include "viewmanager.h"
 
 #include "kaddressbookcardview.h"
 
 class CardViewFactory : public ViewFactory
 {
   public:
-    KAddressBookView *view( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAddressBookView *view( KAB::Core *core, QWidget *parent, const char *name )
     {
-      return new KAddressBookCardView( ab, parent, name );
+      return new KAddressBookCardView( core, parent, name );
     }
 
     QString type() const { return "Card"; }
@@ -153,9 +153,9 @@ void AddresseeCardView::startDrag()
 ///////////////////////////////
 // KAddressBookCardView
 
-KAddressBookCardView::KAddressBookCardView( KABC::AddressBook *ab,
+KAddressBookCardView::KAddressBookCardView( KAB::Core *core,
                                             QWidget *parent, const char *name )
-    : KAddressBookView( ab, parent, name )
+    : KAddressBookView( core, parent, name )
 {
     mShowEmptyFields = false;
 
@@ -292,7 +292,7 @@ void KAddressBookCardView::refresh(QString uid)
         for (iter = addresseeList.begin(); iter != addresseeList.end(); ++iter)
         {
             aItem = new AddresseeCardViewItem(fields(), mShowEmptyFields,
-                                              addressBook(), *iter, mCardView);
+                                              core()->addressBook(), *iter, mCardView);
         }
         mCardView->viewport()->setUpdatesEnabled( true );
         mCardView->viewport()->update();

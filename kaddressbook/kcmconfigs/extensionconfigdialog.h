@@ -28,12 +28,16 @@
 
 #include "extensionwidget.h"
 
+namespace KAB {
+class ConfigureWidget;
+}
+
 class ExtensionConfigDialog : public KDialogBase
 {
   Q_OBJECT
 
   public:
-    ExtensionConfigDialog( ExtensionFactory *factory, KConfig *config,
+    ExtensionConfigDialog( KAB::ExtensionFactory *factory, KConfig *config,
                            QWidget *parent, const char *name = 0 );
     ~ExtensionConfigDialog();
 
@@ -41,7 +45,7 @@ class ExtensionConfigDialog : public KDialogBase
     void slotOk();
 
   private:
-    ConfigureWidget *mWidget;
+    KAB::ConfigureWidget *mWidget;
     KConfig *mConfig;
 };
 
