@@ -27,6 +27,7 @@
 #include "customproperties.h"
 #include "duration.h"
 #include "person.h"
+#include "listbase.h"
 
 namespace KCal {
 
@@ -39,7 +40,12 @@ class Alarm : public CustomProperties
 {
   public:
     enum Type { Invalid, Display, Procedure, Email, Audio };
-    typedef QValueList<Alarm *> List;
+
+    class List : public ListBase<Alarm>
+    {
+      public:
+        List() : ListBase<Alarm>() {}
+    };    
 
     /** Construct a new alarm with variables initialized to "sane" values. */
     explicit Alarm(Incidence *parent);

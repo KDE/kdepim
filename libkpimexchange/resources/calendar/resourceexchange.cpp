@@ -307,7 +307,7 @@ void ResourceExchange::deleteTodo(Todo *todo)
 //  setModified( true );
 }
 
-QPtrList<Todo> ResourceExchange::rawTodos()
+Todo::List ResourceExchange::rawTodos()
 {
   return mCache->rawTodos();
 }
@@ -317,7 +317,7 @@ Todo *ResourceExchange::todo( const QString &uid )
   return mCache->todo( uid );
 }
 
-QPtrList<Todo> ResourceExchange::todos( const QDate &date )
+Todo::List ResourceExchange::todos( const QDate &date )
 {
   return mCache->todos( date );
 }
@@ -358,7 +358,7 @@ void ResourceExchange::insertEvent(const Event *anEvent)
 */
 // taking a QDate, this function will look for an eventlist in the dict
 // with that date attached -
-QPtrList<Event> ResourceExchange::rawEventsForDate(const QDate &qd, bool sorted)
+Event::List ResourceExchange::rawEventsForDate(const QDate &qd, bool sorted)
 {
   // kdDebug() << "ResourceExchange::rawEventsForDate(" << qd.toString() << "," << sorted << ")" << endl;
 
@@ -372,13 +372,11 @@ QPtrList<Event> ResourceExchange::rawEventsForDate(const QDate &qd, bool sorted)
   if ( !mDates->contains( start ) || (*mCacheDates)[start].secsTo( now ) > mCachedSeconds ) {
     QDate end = start.addMonths( 1 ).addDays( -1 ); // Last day of month
     // Get events that occur in this period from the cache
-    QPtrList<Event> oldEvents = mCache->rawEvents( start, end, false );
+    Event::List oldEvents = mCache->rawEvents( start, end, false );
     // And remove them all
-    QPtrListIterator<Event> it( oldEvents );
-    Event *event;
-    while ( (event = it.current()) != 0 ) {
-      ++it;
-      mCache->deleteEvent( event );
+    Event::List::ConstIterator it;
+    for( it = oldEvents.begin(); it != oldEvents.end(); ++it ) {
+      mCache->deleteEvent( *it );
     }
 
     kdDebug() << "Reading events for month of " << start.toString() << endl;
@@ -388,7 +386,7 @@ QPtrList<Event> ResourceExchange::rawEventsForDate(const QDate &qd, bool sorted)
   }
 
   // Events are safely in the cache now, return them from cache
-  QPtrList<Event> events = mCache->rawEventsForDate( qd, sorted );
+  Event::List events = mCache->rawEventsForDate( qd, sorted );
   // kdDebug() << "Found " << events.count() << " events." << endl;
   return events;
 
@@ -399,7 +397,7 @@ QPtrList<Event> ResourceExchange::rawEventsForDate(const QDate &qd, bool sorted)
 
   //  kdDebug(5800) << "Sorting events for date\n" << endl;
   // now, we have to sort it based on getDtStart.time()
-  QPtrList<Event> eventListSorted;
+  Event::List eventListSorted;
   for (anEvent = eventList.first(); anEvent; anEvent = eventList.next()) {
     if (!eventListSorted.isEmpty() &&
 	anEvent->dtStart().time() < eventListSorted.at(0)->dtStart().time()) {
@@ -422,20 +420,20 @@ QPtrList<Event> ResourceExchange::rawEventsForDate(const QDate &qd, bool sorted)
 }
 
 
-QPtrList<Event> ResourceExchange::rawEvents( const QDate &start, const QDate &end,
+Event::List ResourceExchange::rawEvents( const QDate &start, const QDate &end,
                                           bool inclusive )
 {
    kdDebug() << "ResourceExchange::rawEvents(start,end,inclusive)" << endl;
  return mCache->rawEvents( start, end, inclusive );
 }
 
-QPtrList<Event> ResourceExchange::rawEventsForDate(const QDateTime &qdt)
+Event::List ResourceExchange::rawEventsForDate(const QDateTime &qdt)
 {
    kdDebug() << "ResourceExchange::rawEventsForDate(qdt)" << endl;
  return rawEventsForDate( qdt.date() );
 }
 
-QPtrList<Event> ResourceExchange::rawEvents()
+Event::List ResourceExchange::rawEvents()
 {
    kdDebug() << "ResourceExchange::rawEvents()" << endl;
  return mCache->rawEvents();
@@ -468,7 +466,7 @@ Journal *ResourceExchange::journal(const QString &uid)
     return mCache->journal( uid );
 }
 
-QPtrList<Journal> ResourceExchange::journals()
+Journal::List ResourceExchange::journals()
 {
   return mCache->journals();
 }

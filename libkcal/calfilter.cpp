@@ -39,19 +39,18 @@ CalFilter::~CalFilter()
 {
 }
 
-void CalFilter::apply(QPtrList<Event> *eventlist)
+void CalFilter::apply( Event::List *eventlist )
 {
-  if (!mEnabled) return;
+  if ( !mEnabled ) return;
 
 //  kdDebug(5800) << "CalFilter::apply()" << endl;
 
-  Event *event = eventlist->first();
-  while(event) {
-    if (!filterEvent(event)) {
-      eventlist->remove();
-      event = eventlist->current();
+  Event::List::Iterator it = eventlist->begin();
+  while( it != eventlist->end() ) {
+    if ( !filterEvent( *it ) ) {
+      eventlist->remove( it );
     } else {
-      event = eventlist->next();
+      ++it;
     }
   }
 
@@ -59,19 +58,18 @@ void CalFilter::apply(QPtrList<Event> *eventlist)
 }
 
 // TODO: avoid duplicating apply() code
-void CalFilter::apply(QPtrList<Todo> *eventlist)
+void CalFilter::apply( Todo::List *eventlist )
 {
-  if (!mEnabled) return;
+  if ( !mEnabled ) return;
 
 //  kdDebug(5800) << "CalFilter::apply()" << endl;
 
-  Todo *event = eventlist->first();
-  while(event) {
-    if (!filterTodo(event)) {
-      eventlist->remove();
-      event = eventlist->current();
+  Todo::List::Iterator it = eventlist->begin();
+  while( it != eventlist->end() ) {
+    if ( !filterTodo( *it ) ) {
+      eventlist->remove( it );
     } else {
-      event = eventlist->next();
+      ++it;
     }
   }
 

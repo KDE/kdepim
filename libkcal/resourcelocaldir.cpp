@@ -145,7 +145,7 @@ bool ResourceLocalDir::load()
     kdDebug() << " read '" << fileName << "'" << endl;
     CalendarLocal cal;
     cal.load( fileName );
-    QPtrList<Incidence> incidences = cal.rawIncidences();
+    Incidence::List incidences = cal.rawIncidences();
     Incidence *i = incidences.first();
     if ( i ) mCalendar.addIncidence( i->clone() );
   }
@@ -159,10 +159,11 @@ bool ResourceLocalDir::save()
 
   if ( !mOpen ) return true;
 
-  QPtrList<Incidence> incidences = mCalendar.rawIncidences();
+  Incidence::List incidences = mCalendar.rawIncidences();
 
-  Incidence *i;
-  for( i = incidences.first(); i; i = incidences.next() ) {
+  Incidence::List::ConstIterator it;
+  for( it = incidences.begin(); it != incidences.end(); ++it ) {
+    Incidence *i = *it;
     QString fileName = mURL.path() + "/" + i->uid();
     kdDebug() << "writing '" << fileName << "'" << endl;
 

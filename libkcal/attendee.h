@@ -23,6 +23,7 @@
 
 #include <qstring.h>
 
+#include "listbase.h"
 #include "person.h"
 
 namespace KCal {
@@ -36,6 +37,12 @@ class Attendee : public Person
     enum PartStat { NeedsAction, Accepted, Declined, Tentative,
                     Delegated, Completed, InProcess };
     enum Role { ReqParticipant, OptParticipant, NonParticipant, Chair };
+
+    class List : public ListBase<Attendee>
+    {
+      public:
+        List() : ListBase<Attendee>() {}
+    };
   
     /**
       Create Attendee.

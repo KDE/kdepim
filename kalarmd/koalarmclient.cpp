@@ -63,18 +63,18 @@ void KOAlarmClient::handleEvent( const QString &iCalendarString )
   ICalFormat format;
   format.fromString( &cal, iCalendarString );
   
-  QPtrList<Event> events = cal.events();
+  Event::List events = cal.events();
 
-  Event *ev;
-  for( ev = events.first(); ev; ev = events.next() ) {
-    mAlarmDialog->appendEvent( new Event( *ev ) );
+  Event::List::ConstIterator it2;
+  for( it2 = events.begin(); it2 != events.end(); ++it2 ) {
+    mAlarmDialog->appendEvent( (*it2)->clone() );
   }
 
-  QPtrList<Todo> todos = cal.todos();
-
-  Todo *todo;
-  for( todo = todos.first(); todo; todo = todos.next() ) {
-    mAlarmDialog->appendTodo( new Todo( *todo ) );
+  Todo::List todos = cal.todos();
+  
+  Todo::List::ConstIterator it;
+  for( it = todos.begin(); it != todos.end(); ++it ) {
+    mAlarmDialog->appendTodo( (*it)->clone() );
   }
   
   showAlarmDialog();

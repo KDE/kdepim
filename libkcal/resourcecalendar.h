@@ -30,6 +30,9 @@
 #include <kconfig.h>
 
 #include "alarm.h"
+#include "todo.h"
+#include "event.h"
+#include "journal.h"
 
 #include <kresources/resource.h>
 #include <kresources/manager.h>
@@ -37,10 +40,6 @@
 namespace KCal {
 
 class CalFormat;
-class Event;
-class Todo;
-class IncidenceBase;
-class Journal;
 
 /**
   @internal
@@ -109,24 +108,24 @@ class ResourceCalendar : public KRES::Resource
       Return unfiltered list of all events in calendar. Use with care,
       this can be a bad idea for server-based calendars.
     */
-    virtual QPtrList<Event> rawEvents() = 0;
+    virtual Event::List rawEvents() = 0;
 
     /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
-    virtual QPtrList<Event> rawEventsForDate( const QDate &date, bool sorted = false ) = 0;
+    virtual Event::List rawEventsForDate( const QDate &date, bool sorted = false ) = 0;
 
     /**
       Get unfiltered events for date \a qdt.
     */
-    virtual QPtrList<Event> rawEventsForDate( const QDateTime &qdt ) = 0;
+    virtual Event::List rawEventsForDate( const QDateTime &qdt ) = 0;
 
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
       only events are returned, which are completely included in the range.
     */
-    virtual QPtrList<Event> rawEvents( const QDate &start, const QDate &end,
+    virtual Event::List rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false ) = 0;
 
     /** Asynchronous functions */
@@ -154,16 +153,16 @@ class ResourceCalendar : public KRES::Resource
     /** These Events are added to the calendar, or they are in the calendar
      * and I haven't yet told you about them
      */
-    void eventsAdded( QPtrList<Event>& events );
+    void eventsAdded( Event::List& events );
     /**
      * The Events in events have been modified
      */
-    void eventsModified( QPtrList<Event>& events );
+    void eventsModified( Event::List& events );
     /**
      * The Events in events have been deleted. Do not reference these
      * events after this call.
      */
-    void eventsDeleted( QPtrList<Event>& events );
+    void eventsDeleted( Event::List& events );
 
     void resourceChanged( ResourceCalendar * );
     void resourceLoaded( ResourceCalendar * );
@@ -186,11 +185,11 @@ class ResourceCalendar : public KRES::Resource
     /**
       Return list of all todos.
     */
-    virtual QPtrList<Todo> rawTodos() = 0;
+    virtual Todo::List rawTodos() = 0;
     /**
       Returns list of todos due on the specified date.
     */
-    virtual QPtrList<Todo> todos( const QDate &date ) = 0;
+    virtual Todo::List todos( const QDate &date ) = 0;
 
 
     /** Add a Journal entry to calendar */
@@ -206,7 +205,7 @@ class ResourceCalendar : public KRES::Resource
     virtual Journal *journal(const QString &UID) = 0;
 
     /** Return list of all Journals stored in calendar */
-    virtual QPtrList<Journal> journals() = 0;
+    virtual Journal::List journals() = 0;
 
 
     /** Return all alarms, which ocur in the given time interval. */
@@ -222,7 +221,7 @@ class ResourceCalendar : public KRES::Resource
     virtual void update(IncidenceBase *incidence) = 0;
 
     /** Returns a list of all incideces */
-    QPtrList<Incidence> rawIncidences();
+    Incidence::List rawIncidences();
 
   protected:
 

@@ -46,9 +46,10 @@ IncidenceBase::IncidenceBase(const IncidenceBase &i) :
   mHasDuration = i.mHasDuration;
   mOrganizer = i.mOrganizer;
   mUid = i.mUid;
-  QPtrList<Attendee> attendees = i.attendees();
-  for( Attendee *a = attendees.first(); a; a = attendees.next() ) {
-    mAttendees.append( new Attendee( *a ) );
+  Attendee::List attendees = i.attendees();
+  Attendee::List::ConstIterator it;
+  for( it = attendees.begin(); it != attendees.end(); ++it ) {
+    mAttendees.append( new Attendee( *(*it) ) );
   }
   mFloats = i.mFloats;
   mLastModified = i.mLastModified;
@@ -73,10 +74,12 @@ bool KCal::operator==( const IncidenceBase& i1, const IncidenceBase& i2 )
         return false; // no need to check further
     }
 
-    QPtrListIterator<Attendee> a1( i1.attendees() );
-    QPtrListIterator<Attendee> a2( i2.attendees() );
-    for( ; a1.current() && a2.current(); ++a1, ++a2 )
-        if( *a1.current() == *a2.current() )
+    Attendee::List al1 = i1.attendees();
+    Attendee::List al2 = i2.attendees();
+    Attendee::List::ConstIterator a1 = al1.begin();
+    Attendee::List::ConstIterator a2 = al2.begin();
+    for( ; a1 != al1.end() && a2 != al2.end(); ++a1, ++a2 )
+        if( **a1 == **a2 )
             continue;
         else {
             return false;
@@ -223,52 +226,30 @@ void IncidenceBase::clearAttendees()
   mAttendees.clear();
 }
 
-#if 0
-Attendee *IncidenceBase::getAttendee(const char *n) const
+Attendee *IncidenceBase::attendeeByMail( const QString &email )
 {
-  QPtrListIterator<Attendee> qli(mAttendees);
-
-  qli.toFirst();
-  while (qli) {
-    if (qli.current()->getName() == n)
-      return qli.current();
-    ++qli;
+  Attendee::List::ConstIterator it;
+  for( it = mAttendees.begin(); it != mAttendees.end(); ++it ) {
+    if ( (*it)->email() == email ) return *it;
   }
-  return 0L;
-}
-#endif
 
-Attendee *IncidenceBase::attendeeByMail(const QString &email)
-{
-  QPtrListIterator<Attendee> qli(mAttendees);
-
-  qli.toFirst();
-  while (qli) {
-    if (qli.current()->email() == email)
-      return qli.current();
-    ++qli;
-  }
-  return 0L;
+  return 0;
 }
 
-Attendee *IncidenceBase::attendeeByMails(const QStringList &emails, const QString& email)
+Attendee *IncidenceBase::attendeeByMails( const QStringList &emails,
+                                          const QString& email)
 {
-  QPtrListIterator<Attendee> qli(mAttendees);
-
   QStringList mails = emails;
-  if (!email.isEmpty()) {
-    mails.append(email);
-  }
-  qli.toFirst();
-  while (qli) {
-    for ( QStringList::Iterator it = mails.begin(); it != mails.end(); ++it ) {
-      if (qli.current()->email() == *it)
-        return qli.current();
-     }
+  if ( !email.isEmpty() ) mails.append( email );
 
-    ++qli;
+  Attendee::List::ConstIterator itA;
+  for( itA = mAttendees.begin(); itA != mAttendees.end(); ++itA ) {
+    for ( QStringList::Iterator it = mails.begin(); it != mails.end(); ++it ) {
+      if ( (*itA)->email() == email ) return *itA;
+    }
   }
-  return 0L;
+
+  return 0;
 }
 
 void IncidenceBase::setDuration(int seconds)

@@ -106,7 +106,7 @@ class IncidenceBase : public CustomProperties
     /** Remove all Attendees. */
     void clearAttendees();
     /** Return list of attendees. */
-    QPtrList<Attendee> attendees() const { return mAttendees; };
+    const Attendee::List &attendees() const { return mAttendees; };
     /** Return number of attendees. */
     int attendeeCount() const { return mAttendees.count(); };
     /** Return the Attendee with this email */
@@ -139,7 +139,7 @@ class IncidenceBase : public CustomProperties
     QString mOrganizer;
     QString mUid;
     QDateTime mLastModified;
-    QPtrList<Attendee> mAttendees;
+    Attendee::List mAttendees;
 
     bool mFloats;
 

@@ -109,9 +109,10 @@ void AlarmDialog::eventNotification()
 
   Incidence *in;
   for (in = mIncidences.first(); in; in = mIncidences.next()) {
-    QPtrList<Alarm> alarms = in->alarms();
-    const Alarm* alarm;
-    for (alarm = alarms.first(); alarm; alarm = alarms.next()) {
+    Alarm::List alarms = in->alarms();
+    Alarm::List::ConstIterator it;
+    for ( it = alarms.begin(); it != alarms.end(); ++it ) {
+      Alarm *alarm = *it;
 // TODO: Check whether this should be done for all multiple alarms
       if (alarm->type() == Alarm::Procedure) {
         kdDebug() << "Starting program: '" << alarm->programFile() << "'" << endl;

@@ -291,22 +291,22 @@ void CalendarResources::deleteTodo(Todo *todo)
   setModified( true );
 }
 
-QPtrList<Todo> CalendarResources::rawTodos()
+Todo::List CalendarResources::rawTodos()
 {
 //  kdDebug(5800) << "CalendarResources::rawTodos()" << endl;
 
-  QPtrList<Todo> result;
+  Todo::List result;
 
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
 //    kdDebug(5800) << "Getting raw todos from '" << (*it)->resourceName()
 //                  << "'" << endl;
-    QPtrList<Todo> todos = (*it)->rawTodos();
-    Todo *todo;
-    for ( todo = todos.first(); todo; todo = todos.next() ) {
+    Todo::List todos = (*it)->rawTodos();
+    Todo::List::ConstIterator it2;
+    for ( it2 = todos.begin(); it2 != todos.end(); ++it2 ) {
 //      kdDebug(5800) << "Adding todo to result" << endl;
-      result.append( todo );
-      mResourceMap[todo] = *it;
+      result.append( *it2 );
+      mResourceMap[ *it2 ] = *it;
     }
   }
 
@@ -330,19 +330,19 @@ Todo *CalendarResources::todo( const QString &uid )
   return 0;
 }
 
-QPtrList<Todo> CalendarResources::todos( const QDate &date )
+Todo::List CalendarResources::todos( const QDate &date )
 {
 //  kdDebug(5800) << "CalendarResources::todos(date)" << endl;
 
-  QPtrList<Todo> result;
+  Todo::List result;
 
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    QPtrList<Todo> todos = (*it)->todos( date );
-    Todo* todo;
-    for ( todo = todos.first(); todo; todo = todos.next() ) {
-      result.append( todo );
-      mResourceMap[todo] = *it;
+    Todo::List todos = (*it)->todos( date );
+    Todo::List::ConstIterator it2;
+    for ( it2 = todos.begin(); it2 != todos.end(); ++it2 ) {
+      result.append( *it2 );
+      mResourceMap[ *it2 ] = *it;
     }
   }
 
@@ -385,85 +385,86 @@ Alarm::List CalendarResources::alarms( const QDateTime &from, const QDateTime &t
 
 // taking a QDate, this function will look for an eventlist in the dict
 // with that date attached -
-QPtrList<Event> CalendarResources::rawEventsForDate(const QDate &qd, bool sorted)
+Event::List CalendarResources::rawEventsForDate( const QDate &qd, bool sorted )
 {
 //  kdDebug(5800) << "CalendarResources::rawEventsForDate()" << endl;
 
-  QPtrList<Event> result;
+  Event::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
 //    kdDebug() << "Getting events from '" << (*it)->resourceName() << "'"
 //              << endl;
-    QPtrList<Event> list = (*it)->rawEventsForDate( qd, sorted );
+    Event::List list = (*it)->rawEventsForDate( qd, sorted );
+
+    Event::List::ConstIterator it2;
     if ( sorted ) {
-      Event* item;
-      uint insertionPoint = 0;
-      for ( item = list.first(); item; item = list.next() ) {
-        while ( insertionPoint<result.count() &&
-                result.at( insertionPoint )->dtStart().time() <= item->dtStart().time() )
+      Event::List::Iterator insertionPoint = result.begin();
+      for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
+        while ( insertionPoint != result.end() &&
+                (*insertionPoint)->dtStart().time() <= (*it2)->dtStart().time() )
           insertionPoint++;
-        result.insert( insertionPoint, item );
-        mResourceMap[item] = *it;
+        result.insert( insertionPoint, *it2 );
+        mResourceMap[ *it2 ] = *it;
       }
     } else {
-      Event* item;
-      for ( item = list.first(); item; item = list.next() ) {
-        result.append( item );
-        mResourceMap[item] = *it;
+      for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
+        result.append( *it2 );
+        mResourceMap[ *it2 ] = *it;
       }
     }
   }
+
   return result;
 }
 
-QPtrList<Event> CalendarResources::rawEvents( const QDate &start,
-                                              const QDate &end,
-                                              bool inclusive )
+Event::List CalendarResources::rawEvents( const QDate &start, const QDate &end,
+                                          bool inclusive )
 {
   kdDebug(5800) << "CalendarResources::rawEvents(start,end,inclusive)" << endl;
 
-  QPtrList<Event> result;
+  Event::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    QPtrList<Event> list = (*it)->rawEvents( start, end, inclusive );
-    Event* item;
-    for ( item = list.first(); item; item = list.next() ) {
-      result.append( item );
-      mResourceMap[item] = *it;
+    Event::List list = (*it)->rawEvents( start, end, inclusive );
+    Event::List::ConstIterator it2;
+    for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
+      result.append( *it2 );
+      mResourceMap[ *it2 ] = *it;
     }
   }
   return result;
 }
 
-QPtrList<Event> CalendarResources::rawEventsForDate(const QDateTime &qdt)
+Event::List CalendarResources::rawEventsForDate(const QDateTime &qdt)
 {
   kdDebug(5800) << "CalendarResources::rawEventsForDate(qdt)" << endl;
 
-  QPtrList<Event> result;
+  // TODO: Remove the code duplication by the resourcemap iteration block.
+  Event::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    QPtrList<Event> list = (*it)->rawEventsForDate( qdt );
-    Event* item;
-    for ( item = list.first(); item; item = list.next() ) {
-      result.append( item );
-      mResourceMap[item] = *it;
+    Event::List list = (*it)->rawEventsForDate( qdt );
+    Event::List::ConstIterator it2;
+    for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
+      result.append( *it2 );
+      mResourceMap[ *it2 ] = *it;
     }
   }
   return result;
 }
 
-QPtrList<Event> CalendarResources::rawEvents()
+Event::List CalendarResources::rawEvents()
 {
   kdDebug(5800) << "CalendarResources::rawEvents()" << endl;
 
-  QPtrList<Event> result;
+  Event::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    QPtrList<Event> list = (*it)->rawEvents();
-    Event* item;
-    for ( item = list.first(); item; item = list.next() ) {
-      result.append( item );
-      mResourceMap[item] = *it;
+    Event::List list = (*it)->rawEvents();
+    Event::List::ConstIterator it2;
+    for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
+      result.append( *it2 );
+      mResourceMap[ *it2 ] = *it;
     }
   }
   return result;
@@ -544,18 +545,18 @@ Journal *CalendarResources::journal(const QString &uid)
   return 0;
 }
 
-QPtrList<Journal> CalendarResources::journals()
+Journal::List CalendarResources::journals()
 {
   kdDebug(5800) << "CalendarResources::journals()" << endl;
 
-  QPtrList<Journal> result;
+  Journal::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    QPtrList<Journal> list = (*it)->journals();
-    Journal* item;
-    for ( item = list.first(); item; item = list.next() ) {
-      result.append( item );
-      mResourceMap[item] = *it;
+    Journal::List list = (*it)->journals();
+    Journal::List::ConstIterator it2;
+    for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
+      result.append( *it2 );
+      mResourceMap[ *it2 ] = *it;
     }
   }
   return result;

@@ -51,26 +51,9 @@ bool ResourceCalendar::addIncidence( Incidence *incidence )
   return incidence->accept( v );
 }
 
-QPtrList<Incidence> ResourceCalendar::rawIncidences()
+Incidence::List ResourceCalendar::rawIncidences()
 {
-  QPtrList<Event> events = rawEvents();
-  QPtrList<Todo> todos = rawTodos();
-  QPtrList<Journal> journal = journals();
-  QPtrList<Incidence> incidences;
-  Event *ev;
-  for ( ev = events.first(); ev; ev = events.next() ) {
-    incidences.append(ev);
-  }
-  Todo *to;
-  for ( to = todos.first(); to; to = todos.next() ) {
-    incidences.append(to);
-  }
-   Journal *jo;
-   for ( jo = journal.first(); jo; jo = journal.next() ) {
-     incidences.append(jo);
-   }
-
-  return incidences;
+  return Calendar::mergeIncidenceList( rawEvents(), rawTodos(), journals() );
 }
 
 #include "resourcecalendar.moc"

@@ -73,7 +73,7 @@ void Todo::setDtDue(const QDateTime &dtDue)
   //int diffsecs = mDtDue.secsTo(dtDue);
 
   /*if (mReadOnly) return;
-  const QPtrList<Alarm>& alarms = alarms();
+  const Alarm::List& alarms = alarms();
   for (Alarm* alarm = alarms.first(); alarm; alarm = alarms.next()) {
     if (alarm->enabled()) {
       alarm->setTime(alarm->time().addSecs(diffsecs));
@@ -83,7 +83,7 @@ void Todo::setDtDue(const QDateTime &dtDue)
 
   //kdDebug(5800) << "setDtDue says date is " << mDtDue.toString() << endl;
 
-  /*const QPtrList<Alarm>& alarms = alarms();
+  /*const Alarm::List& alarms = alarms();
   for (Alarm* alarm = alarms.first(); alarm; alarm = alarms.next())
     alarm->setAlarmStart(mDtDue);*/
 

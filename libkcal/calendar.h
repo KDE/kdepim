@@ -144,12 +144,12 @@ class Calendar : public QObject, public CustomProperties,
     /**
       Return filtered list of all incidences of this calendar.
     */
-    virtual QPtrList<Incidence> incidences();
+    virtual Incidence::List incidences();
 
     /**
       Return unfiltered list of all incidences of this calendar.
     */
-    virtual QPtrList<Incidence> rawIncidences();
+    virtual Incidence::List rawIncidences();
 
     /**
       Adds a Event to this calendar object.
@@ -171,27 +171,27 @@ class Calendar : public QObject, public CustomProperties,
       date specified. useful for dayView, etc. etc.
       The calendar filter is applied.
     */
-    QPtrList<Event> events( const QDate &date, bool sorted = false);
+    Event::List events( const QDate &date, bool sorted = false);
     /**
       Get events, which occur on the given date.
       The calendar filter is applied.
     */
-    QPtrList<Event> events( const QDateTime &qdt );
+    Event::List events( const QDateTime &qdt );
     /**
       Get events in a range of dates. If inclusive is set to true, only events
       are returned, which are completely included in the range.
       The calendar filter is applied.
     */
-    QPtrList<Event> events( const QDate &start, const QDate &end,
-                            bool inclusive = false);
+    Event::List events( const QDate &start, const QDate &end,
+                        bool inclusive = false);
     /**
       Return filtered list of all events in calendar.
     */
-    virtual QPtrList<Event> events();
+    virtual Event::List events();
     /**
       Return unfiltered list of all events in calendar.
     */
-    virtual QPtrList<Event> rawEvents() = 0;
+    virtual Event::List rawEvents() = 0;
 
     /**
       Add a todo to the todolist.
@@ -206,7 +206,7 @@ class Calendar : public QObject, public CustomProperties,
     /**
       Return filterd list of todos.
     */
-    virtual QPtrList<Todo> todos();
+    virtual Todo::List todos();
     /**
       Searches todolist for an event with this unique string identifier,
       returns a pointer or null.
@@ -215,11 +215,11 @@ class Calendar : public QObject, public CustomProperties,
     /**
       Returns list of todos due on the specified date.
     */
-    virtual QPtrList<Todo> todos( const QDate &date ) = 0;
+    virtual Todo::List todos( const QDate &date ) = 0;
     /**
       Return unfiltered list of todos.
     */
-    virtual QPtrList<Todo> rawTodos() = 0;
+    virtual Todo::List rawTodos() = 0;
 
     /**
       Add a Journal entry to calendar.
@@ -242,7 +242,7 @@ class Calendar : public QObject, public CustomProperties,
     /**
       Return list of all Journal entries.
     */
-    virtual QPtrList<Journal> journals() = 0;
+    virtual Journal::List journals() = 0;
 
     /**
       Searches all incidence types for an incidence with this unique
@@ -295,6 +295,13 @@ class Calendar : public QObject, public CustomProperties,
     */
     QString loadedProductId();
 
+    /**
+      Merge lists of events, todos and journals to a list of incidences.
+    */
+    static Incidence::List mergeIncidenceList( const Event::List &,
+                                               const Todo::List &,
+                                               const Journal::List & );
+
   signals:
     void calendarChanged();
     void calendarSaved();
@@ -304,18 +311,18 @@ class Calendar : public QObject, public CustomProperties,
     /**
       Get unfiltered events, which occur on the given date.
     */
-    virtual QPtrList<Event> rawEventsForDate( const QDateTime &qdt ) = 0;
+    virtual Event::List rawEventsForDate( const QDateTime &qdt ) = 0;
     /**
       Get unfiltered events, which occur on the given date.
     */
-    virtual QPtrList<Event> rawEventsForDate( const QDate &date,
-                                              bool sorted = false ) = 0;  
+    virtual Event::List rawEventsForDate( const QDate &date,
+                                          bool sorted = false ) = 0;  
     /**
       Get events in a range of dates. If inclusive is set to true, only events
       are returned, which are completely included in the range.
     */
-    virtual QPtrList<Event> rawEvents( const QDate &start, const QDate &end,
-                                       bool inclusive = false ) = 0;
+    virtual Event::List rawEvents( const QDate &start, const QDate &end,
+                                   bool inclusive = false ) = 0;
 
   private:
     void init();

@@ -144,12 +144,13 @@ void KOEventViewer::formatCategories(Incidence *event)
 
 void KOEventViewer::formatAttendees(Incidence *event)
 {
-  QPtrList<Attendee> attendees = event->attendees();
-  if (attendees.count()) {
+  Attendee::List attendees = event->attendees();
+  if ( attendees.count() ) {
     addTag("h2",i18n("Attendees"));
-    Attendee *a;
     mText.append("<ul>");
-    for(a=attendees.first();a;a=attendees.next()) {
+    Attendee::List::ConstIterator it;
+    for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+      Attendee *a = *it;
       QString str = a->name();
       if (!a->email().isEmpty()) str += " &lt;" + a->email() + "&gt;";
       addTag("li",str);

@@ -79,8 +79,8 @@ class CalendarSyncee : public Syncee
     CalendarSyncEntry *createEntry( KCal::Incidence * );
   
     KCal::CalendarLocal *mCalendar;
-    QPtrList<KCal::Event> mEvents;
-    KCal::Event *mCurrentEvent;
+    KCal::Event::List mEvents;
+    KCal::Event::List::ConstIterator mCurrentEvent;
     
     QPtrList<CalendarSyncEntry> mEntries;
 };

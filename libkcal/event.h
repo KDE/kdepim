@@ -36,6 +36,8 @@ class Event : public Incidence
   public:
     enum Transparency { Opaque, Transparent };
 
+    typedef ListBase<Event> List;
+
     Event();
     Event(const Event &);
     ~Event();

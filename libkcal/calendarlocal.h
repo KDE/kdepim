@@ -86,7 +86,7 @@ class CalendarLocal : public Calendar
     /**
       Return unfiltered list of all events in calendar.
     */
-    QPtrList<Event> rawEvents();
+    Event::List rawEvents();
 
     /**
       Add a todo to the todolist.
@@ -108,17 +108,17 @@ class CalendarLocal : public Calendar
     /**
       Return list of all todos.
     */
-    QPtrList<Todo> rawTodos();
+    Todo::List rawTodos();
     /**
       Returns list of todos due on the specified date.
     */
-    QPtrList<Todo> todos( const QDate &date );
+    Todo::List todos( const QDate &date );
     /**
       Return list of all todos.
       
       Workaround because compiler does not recognize function of base class.
     */
-    QPtrList<Todo> todos() { return Calendar::todos(); }
+    Todo::List todos() { return Calendar::todos(); }
 
     /**
       Add a Journal entry to calendar.
@@ -143,7 +143,7 @@ class CalendarLocal : public Calendar
     /**
       Return list of all Journals stored in calendar.
     */
-    QPtrList<Journal> journals();
+    Journal::List journals();
 
     /**
       Return all alarms, which ocur in the given time interval.
@@ -166,16 +166,16 @@ class CalendarLocal : public Calendar
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
-    QPtrList<Event> rawEventsForDate( const QDate &date, bool sorted = false );
+    Event::List rawEventsForDate( const QDate &date, bool sorted = false );
     /**
       Get unfiltered events for date \a qdt.
     */
-    QPtrList<Event> rawEventsForDate( const QDateTime &qdt );
+    Event::List rawEventsForDate( const QDateTime &qdt );
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
       only events are returned, which are completely included in the range.
     */
-    QPtrList<Event> rawEvents( const QDate &start, const QDate &end,
+    Event::List rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false );
  
   protected:
@@ -197,9 +197,9 @@ class CalendarLocal : public Calendar
   private:
     void init();
 
-    QPtrList<Event> mEventList;
-    QPtrList<Todo> mTodoList;
-    QPtrList<Journal> mJournalList;
+    Event::List mEventList;
+    Todo::List mTodoList;
+    Journal::List mJournalList;
 };
 
 }

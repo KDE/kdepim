@@ -116,11 +116,10 @@ Event *CalendarLocal::event( const QString &uid )
 {
   kdDebug(5800) << "CalendarLocal::event(): " << uid << endl;
 
-  Event *event;
-
-  for ( event = mEventList.first(); event; event = mEventList.next() ) {
-    if ( event->uid() == uid ) {
-      return event;
+  Event::List::ConstIterator it;
+  for ( it = mEventList.begin(); it != mEventList.end(); ++it ) {
+    if ( (*it)->uid() == uid ) {
+      return *it;
     }
   }
 
@@ -159,27 +158,28 @@ void CalendarLocal::deleteAllTodos()
   mTodoList.setAutoDelete( false );
 }
 
-QPtrList<Todo> CalendarLocal::rawTodos()
+Todo::List CalendarLocal::rawTodos()
 {
   return mTodoList;
 }
 
 Todo *CalendarLocal::todo( const QString &uid )
 {
-  Todo *todo;
-  for ( todo = mTodoList.first(); todo; todo = mTodoList.next() ) {
-    if ( todo->uid() == uid ) return todo;
+  Todo::List::ConstIterator it;
+  for ( it = mTodoList.begin(); it != mTodoList.end(); ++it ) {
+    if ( (*it)->uid() == uid ) return *it;
   }
 
   return 0;
 }
 
-QPtrList<Todo> CalendarLocal::todos( const QDate &date )
+Todo::List CalendarLocal::todos( const QDate &date )
 {
-  QPtrList<Todo> todos;
+  Todo::List todos;
 
-  Todo *todo;
-  for ( todo = mTodoList.first(); todo; todo = mTodoList.next() ) {
+  Todo::List::ConstIterator it;
+  for ( it = mTodoList.begin(); it != mTodoList.end(); ++it ) {
+    Todo *todo = *it;
     if ( todo->hasDueDate() && todo->dtDue().date() == date ) {
       todos.append( todo );
     }
@@ -200,16 +200,16 @@ Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
 
   Alarm::List alarms;
 
-  Event *e;
-
-  for( e = mEventList.first(); e; e = mEventList.next() ) {
+  Event::List::ConstIterator it;
+  for( it = mEventList.begin(); it != mEventList.end(); ++it ) {
+    Event *e = *it;
     if ( e->doesRecur() ) appendRecurringAlarms( alarms, e, from, to );
     else appendAlarms( alarms, e, from, to );
   }
 
-  Todo *t;
-  for( t = mTodoList.first(); t; t = mTodoList.next() ) {
-    appendAlarms( alarms, t, from, to );
+  Todo::List::ConstIterator it2;
+  for( it2 = mTodoList.begin(); it2 != mTodoList.end(); ++it2 ) {
+    appendAlarms( alarms, *it2, from, to );
   }
 
   return alarms;
@@ -218,16 +218,17 @@ Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
 void CalendarLocal::appendAlarms( Alarm::List &alarms, Incidence *incidence,
                                   const QDateTime &from, const QDateTime &to )
 {
-  QPtrList<Alarm> alarmList = incidence->alarms();
-  Alarm *alarm;
-  for( alarm = alarmList.first(); alarm; alarm = alarmList.next() ) {
+  Alarm::List::ConstIterator it;
+  for( it = incidence->alarms().begin(); it != incidence->alarms().end();
+       ++it ) {
 //    kdDebug(5800) << "CalendarLocal::appendAlarms() '" << alarm->text()
 //                  << "': " << alarm->time().toString() << " - " << alarm->enabled() << endl;
-    if ( alarm->enabled() ) {
-      if ( alarm->time() >= from && alarm->time() <= to ) {
-        kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
-                      << "': " << alarm->time().toString() << endl;
-        alarms.append( alarm );
+    if ( (*it)->enabled() ) {
+      if ( (*it)->time() >= from && (*it)->time() <= to ) {
+        kdDebug(5800) << "CalendarLocal::appendAlarms() '"
+                      << incidence->summary() << "': "
+                      << (*it)->time().toString() << endl;
+        alarms.append( *it );
       }
     }
   }
@@ -238,22 +239,23 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
                                            const QDateTime &from,
                                            const QDateTime &to )
 {
-  QPtrList<Alarm> alarmList = incidence->alarms();
-  Alarm *alarm;
+  Alarm::List::ConstIterator it;
   QDateTime qdt;
-  for( alarm = alarmList.first(); alarm; alarm = alarmList.next() ) {
-    if (incidence->recursOn(from.date())) {
-      qdt.setTime(alarm->time().time());
-      qdt.setDate(from.date());
+  for( it = incidence->alarms().begin(); it != incidence->alarms().end();
+       ++it ) {
+    if ( incidence->recursOn( from.date() ) ) {
+      qdt.setTime( (*it)->time().time() );
+      qdt.setDate( from.date() );
     }
-    else qdt = alarm->time();
+    else qdt = (*it)->time();
     kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
-                  << "': " << qdt.toString() << " - " << alarm->enabled() << endl;
-    if ( alarm->enabled() ) {
+                  << "': " << qdt.toString() << " - " << (*it)->enabled()
+                  << endl;
+    if ( (*it)->enabled() ) {
 //      kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
-//                    << "': " << alarm->time().toString() << endl;
+//                    << "': " << (*it)->time().toString() << endl;
       if ( qdt >= from && qdt <= to ) {
-        alarms.append( alarm );
+        alarms.append( *it );
       }
     }
   }
@@ -276,16 +278,20 @@ void CalendarLocal::update( IncidenceBase *incidence )
 
 void CalendarLocal::insertEvent( Event *event )
 {
-  if ( mEventList.findRef( event ) < 0 ) mEventList.append( event );
+  if ( mEventList.find( event ) == mEventList.end() ) {
+    mEventList.append( event );
+  }
 }
 
 
-QPtrList<Event> CalendarLocal::rawEventsForDate( const QDate &qd, bool sorted )
+Event::List CalendarLocal::rawEventsForDate( const QDate &qd, bool sorted )
 {
-  QPtrList<Event> eventList;
+  Event::List eventList;
 
-  Event *event;
-  for( event = mEventList.first(); event; event = mEventList.next() ) {
+  Event::List::ConstIterator it;
+  for( it = mEventList.begin(); it != mEventList.end(); ++it ) {
+    Event *event = *it;
+
     if ( event->doesRecur() ) {
       if ( event->isMultiDay() ) {
         int extraDays = event->dtStart().date().daysTo( event->dtEnd().date() );
@@ -313,31 +319,29 @@ QPtrList<Event> CalendarLocal::rawEventsForDate( const QDate &qd, bool sorted )
 
   //  kdDebug(5800) << "Sorting events for date\n" << endl;
   // now, we have to sort it based on dtStart.time()
-  QPtrList<Event> eventListSorted;
-  Event *sortEvent;
-  for ( event = eventList.first(); event; event = eventList.next() ) {
-    sortEvent = eventListSorted.first();
-    int i = 0;
-    while ( sortEvent && event->dtStart().time()>=sortEvent->dtStart().time() )
-    {
-      i++;
-      sortEvent = eventListSorted.next();
+  Event::List eventListSorted;
+  Event::List::Iterator sortIt;
+  for ( it = eventList.begin(); it != eventList.end(); ++it ) {
+    sortIt = eventListSorted.begin();
+    while ( sortIt != eventListSorted.end() &&
+            (*it)->dtStart().time() >= (*sortIt)->dtStart().time() ) {
+      ++sortIt;
     }
-    eventListSorted.insert( i, event );
+    eventListSorted.insert( sortIt, *it );
   }
   return eventListSorted;
 }
 
 
-QPtrList<Event> CalendarLocal::rawEvents( const QDate &start, const QDate &end,
+Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
                                           bool inclusive )
 {
-  Event *event = 0;
-
-  QPtrList<Event> eventList;
+  Event::List eventList;
 
   // Get non-recurring events
-  for( event = mEventList.first(); event; event = mEventList.next() ) {
+  Event::List::ConstIterator it;
+  for( it = mEventList.begin(); it != mEventList.end(); ++it ) {
+    Event *event = *it;
     if ( event->doesRecur() ) {
       QDate rStart = event->dtStart().date();
       bool found = false;
@@ -394,12 +398,12 @@ QPtrList<Event> CalendarLocal::rawEvents( const QDate &start, const QDate &end,
   return eventList;
 }
 
-QPtrList<Event> CalendarLocal::rawEventsForDate( const QDateTime &qdt )
+Event::List CalendarLocal::rawEventsForDate( const QDateTime &qdt )
 {
   return rawEventsForDate( qdt.date() );
 }
 
-QPtrList<Event> CalendarLocal::rawEvents()
+Event::List CalendarLocal::rawEvents()
 {
   return mEventList;
 }
@@ -438,23 +442,25 @@ Journal *CalendarLocal::journal( const QDate &date )
 {
 //  kdDebug(5800) << "CalendarLocal::journal() " << date.toString() << endl;
 
-  for ( Journal *it = mJournalList.first(); it; it = mJournalList.next() )
-    if ( it->dtStart().date() == date )
-      return it;
+  Journal::List::ConstIterator it;
+  for ( it = mJournalList.begin(); it != mJournalList.end(); ++it )
+    if ( (*it)->dtStart().date() == date )
+      return *it;
 
   return 0;
 }
 
 Journal *CalendarLocal::journal( const QString &uid )
 {
-  for ( Journal *it = mJournalList.first(); it; it = mJournalList.next() )
-    if ( it->uid() == uid )
-      return it;
+  Journal::List::ConstIterator it;
+  for ( it = mJournalList.begin(); it != mJournalList.end(); ++it )
+    if ( (*it)->uid() == uid )
+      return *it;
 
   return 0;
 }
 
-QPtrList<Journal> CalendarLocal::journals()
+Journal::List CalendarLocal::journals()
 {
   return mJournalList;
 }

@@ -120,14 +120,14 @@ void TaskView::loadFromKCalFormat( const QString& file, int loadMask )
   kdDebug() << "Loading karm calendar data from " << file << endl;
 
   if ( loadMask & TaskView::loadEvent ) {
-    QPtrList<KCal::Event> eventList = _calendar.rawEvents();
+    KCal::Event::List eventList = _calendar.rawEvents();
     kdDebug() << "There are " << eventList.count()
               << " events in the calendar." << endl;
     buildAndPositionTasks( eventList );
   }
 
   if ( loadMask & TaskView::loadTodo ) {
-    QPtrList<KCal::Todo> todoList = _calendar.rawTodos();
+    KCal::Todo::List todoList = _calendar.rawTodos();
     kdDebug() << "There are " << todoList.count()
               << " todos in the calendar." << endl;
     buildAndPositionTasks( todoList );
@@ -157,30 +157,28 @@ void TaskView::loadFromKOrgEvents()
   loadFromKCalFormat( _preferences->activeCalendarFile(), TaskView::loadEvent );
 }
 
-void TaskView::buildAndPositionTasks( QPtrList<KCal::Event>& eventList )
+void TaskView::buildAndPositionTasks( KCal::Event::List &eventList )
 {
   QDict< Task > uid_task_map;
-  for ( QPtrListIterator<KCal::Event> iter ( eventList );
-        iter.current();
-        ++iter ) {
+  KCal::Event::List::ConstIterator iter;
+  for( iter = eventList.begin(); iter != eventList.end(); ++iter ) {
     buildTask( *iter, uid_task_map );
   }
 
-  for ( QPtrListIterator<KCal::Event> iter ( eventList );
-        iter.current();
-        ++iter ) {
+  for( iter = eventList.begin(); iter != eventList.end(); ++iter ) {
     positionTask( *iter, uid_task_map );
   }
 }
 
-void TaskView::buildAndPositionTasks( QPtrList<KCal::Todo>& todoList )
+void TaskView::buildAndPositionTasks( KCal::Todo::List &todoList )
 {
   QDict< Task > uid_task_map;
-  for ( QPtrListIterator<KCal::Todo> iter ( todoList ); iter.current(); ++iter ) {
+  KCal::Todo::List::ConstIterator iter;
+  for( iter = todoList.begin(); iter != todoList.end(); ++iter ) {
     buildTask( *iter, uid_task_map );
   }
 
-  for ( QPtrListIterator<KCal::Todo> iter ( todoList ); iter.current(); ++iter ) {
+  for( iter = todoList.begin(); iter != todoList.end(); ++iter ) {
     positionTask( *iter, uid_task_map );
   }
 }

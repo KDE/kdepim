@@ -66,14 +66,14 @@ bool CalendarSyncee::write()
 CalendarSyncEntry *CalendarSyncee::firstEntry()
 {
   mEvents = mCalendar->events();
-  mCurrentEvent = mEvents.first();
-  return createEntry(mCurrentEvent);
+  mCurrentEvent = mEvents.begin();
+  return createEntry( *mCurrentEvent );
 }
 
 CalendarSyncEntry *CalendarSyncee::nextEntry()
 {
-  mCurrentEvent = mEvents.next();
-  return createEntry(mCurrentEvent);
+  ++mCurrentEvent;
+  return createEntry( *mCurrentEvent );
 }
 
 #if 0

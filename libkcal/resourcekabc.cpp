@@ -238,24 +238,24 @@ Event *ResourceKABC::event( const QString &uid )
   return mCalendar.event( uid );
 }
 
-QPtrList<Event> ResourceKABC::rawEventsForDate(const QDate &qd, bool sorted)
+Event::List ResourceKABC::rawEventsForDate(const QDate &qd, bool sorted)
 {
   return mCalendar.rawEventsForDate( qd, sorted );
 }
 
 
-QPtrList<Event> ResourceKABC::rawEvents( const QDate &start, const QDate &end,
+Event::List ResourceKABC::rawEvents( const QDate &start, const QDate &end,
                                           bool inclusive )
 {
   return mCalendar.rawEvents( start, end, inclusive );
 }
 
-QPtrList<Event> ResourceKABC::rawEventsForDate(const QDateTime &qdt)
+Event::List ResourceKABC::rawEventsForDate(const QDateTime &qdt)
 {
   return mCalendar.rawEventsForDate( qdt.date() );
 }
 
-QPtrList<Event> ResourceKABC::rawEvents()
+Event::List ResourceKABC::rawEvents()
 {
   return mCalendar.rawEvents();
 }
@@ -270,7 +270,7 @@ void ResourceKABC::deleteTodo(Todo*)
 }
 
 
-QPtrList<Todo> ResourceKABC::rawTodos()
+Todo::List ResourceKABC::rawTodos()
 {
   return mCalendar.rawTodos();
 }
@@ -280,7 +280,7 @@ Todo *ResourceKABC::todo( const QString &uid )
   return mCalendar.todo( uid );
 }
 
-QPtrList<Todo> ResourceKABC::todos( const QDate &date )
+Todo::List ResourceKABC::todos( const QDate &date )
 {
   return mCalendar.todos( date );
 }
@@ -303,7 +303,7 @@ Journal *ResourceKABC::journal(const QString &uid)
   return mCalendar.journal( uid );
 }
 
-QPtrList<Journal> ResourceKABC::journals()
+Journal::List ResourceKABC::journals()
 {
   return mCalendar.journals();
 }

@@ -101,19 +101,19 @@ bool VCalFormat::save(Calendar *calendar, const QString &fileName)
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
 
   // TODO STUFF
-  QPtrList<Todo> todoList = mCalendar->rawTodos();
-  QPtrListIterator<Todo> qlt(todoList);
-  for (; qlt.current(); ++qlt) {
-    vo = eventToVTodo(qlt.current());
-    addVObjectProp(vcal, vo);
+  Todo::List todoList = mCalendar->rawTodos();
+  Todo::List::ConstIterator it;
+  for ( it = todoList.begin(); it != todoList.end(); ++it ) {
+    vo = eventToVTodo( *it );
+    addVObjectProp( vcal, vo );
   }
 
   // EVENT STUFF
-  QPtrList<Event> events = mCalendar->rawEvents();
-  Event *ev;
-  for(ev=events.first();ev;ev=events.next()) {
-    vo = eventToVEvent(ev);
-    addVObjectProp(vcal, vo);
+  Event::List events = mCalendar->rawEvents();
+  Event::List::ConstIterator it2;
+  for( it2 = events.begin(); it2 != events.end(); ++it2 ) {
+    vo = eventToVEvent( *it2 );
+    addVObjectProp( vcal, vo );
   }
 
   writeVObjectToFile(QFile::encodeName(fileName).data() ,vcal);
@@ -176,7 +176,7 @@ QString VCalFormat::toString( Calendar *calendar )
   addPropValue( vcal, VCVersionProp, _VCAL_VERSION );
 
   // TODO: Use all data.
-  QPtrList<Event> events = calendar->events();
+  Event::List events = calendar->events();
   Event *event = events.first();
   if ( !event ) return QString::null;
 
@@ -236,13 +236,12 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   addPropValue(vtodo, ICOrganizerProp, tmpStr.local8Bit());
 
   // attendees
-  if (anEvent->attendeeCount() != 0) {
-    QPtrList<Attendee> al = anEvent->attendees();
-    QPtrListIterator<Attendee> ai(al);
+  if ( anEvent->attendeeCount() > 0 ) {
+    Attendee::List::ConstIterator it;
     Attendee *curAttendee;
-
-    for (; ai.current(); ++ai) {
-      curAttendee = ai.current();
+    for ( it = anEvent->attendees().begin(); it != anEvent->attendees().end();
+          ++it ) {
+      curAttendee = *it;
       if (!curAttendee->email().isEmpty() &&
 	  !curAttendee->name().isEmpty())
         tmpStr = "MAILTO:" + curAttendee->name() + " <" +
@@ -317,9 +316,9 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
 
   // alarm stuff
   kdDebug(5800) << "vcalformat::eventToVTodo was called" << endl;
-  QPtrList<Alarm> alarms = anEvent->alarms();
-  Alarm* alarm;
-  for (alarm = alarms.first(); alarm; alarm = alarms.next()) {
+  Alarm::List::ConstIterator it;
+  for ( it = anEvent->alarms().begin(); it != anEvent->alarms().end(); ++it ) {
+    Alarm *alarm = *it;
     if (alarm->enabled()) {
       VObject *a = addProp(vtodo, VCDAlarmProp);
       tmpStr = qDateTimeToISO(alarm->time());
@@ -393,14 +392,12 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   tmpStr = "MAILTO:" + anEvent->organizer();
   addPropValue(vevent, ICOrganizerProp, tmpStr.local8Bit());
 
-  if (anEvent->attendeeCount() != 0) {
-    QPtrList<Attendee> al = anEvent->attendees();
-    QPtrListIterator<Attendee> ai(al);
-    Attendee *curAttendee;
-
-    // TODO: Put this functionality into Attendee class
-    for (; ai.current(); ++ai) {
-      curAttendee = ai.current();
+  // TODO: Put this functionality into Attendee class
+  if ( anEvent->attendeeCount() > 0 ) {
+    Attendee::List::ConstIterator it;    
+    for ( it = anEvent->attendees().begin(); it != anEvent->attendees().end();
+          ++it ) {
+      Attendee *curAttendee = *it;
       if (!curAttendee->email().isEmpty() &&
 	  !curAttendee->name().isEmpty())
         tmpStr = "MAILTO:" + curAttendee->name() + " <" +
@@ -582,7 +579,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 
   // attachments
   // TODO: handle binary attachments!
-  QPtrList<Attachment> attachments = anEvent->attachments();
+  Attachment::List attachments = anEvent->attachments();
   for ( Attachment *at = attachments.first(); at; at = attachments.next() )
     addPropValue(vevent, VCAttachProp, at->uri().local8Bit());
 
@@ -593,9 +590,9 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     addPropValue(vevent, VCResourcesProp, tmpStr.local8Bit());
 
   // alarm stuff
-  QPtrList<Alarm> alarms = anEvent->alarms();
-  Alarm* alarm;
-  for (alarm = alarms.first(); alarm; alarm = alarms.next()) {
+  Alarm::List::ConstIterator it;
+  for ( it = anEvent->alarms().begin(); it != anEvent->alarms().end(); ++it ) {
+    Alarm *alarm = *it;
     if (alarm->enabled()) {
       VObject *a = addProp(vevent, VCDAlarmProp);
       tmpStr = qDateTimeToISO(alarm->time());
@@ -1569,14 +1566,14 @@ void VCalFormat::populate(VObject *vcal)
   } // while
 
   // Post-Process list of events with relations, put Event objects in relation
-  Event *ev;
-  for ( ev=mEventsRelate.first(); ev != 0; ev=mEventsRelate.next() ) {
-    ev->setRelatedTo(mCalendar->event(ev->relatedToUid()));
+  Event::List::ConstIterator eIt;
+  for ( eIt = mEventsRelate.begin(); eIt != mEventsRelate.end(); ++eIt ) {
+    (*eIt)->setRelatedTo( mCalendar->event( (*eIt)->relatedToUid() ) );
   }
-  Todo *todo;
-  for ( todo=mTodosRelate.first(); todo != 0; todo=mTodosRelate.next() ) {
-    todo->setRelatedTo(mCalendar->todo(todo->relatedToUid()));
-  }
+  Todo::List::ConstIterator tIt;
+  for ( tIt = mTodosRelate.begin(); tIt != mTodosRelate.end(); ++tIt ) {
+    (*tIt)->setRelatedTo( mCalendar->todo( (*tIt)->relatedToUid() ) );
+   }
 }
 
 const char *VCalFormat::dayFromNum(int day)

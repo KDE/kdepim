@@ -22,7 +22,7 @@
 #define _ATTACHMENT_H
 
 #include <qstring.h>
-
+#include <qptrlist.h>
 
 namespace KCal {
 
@@ -31,7 +31,9 @@ namespace KCal {
  */
 class Attachment
 {
-public:
+  public:
+    typedef QPtrList<Attachment> List;
+
     /**
      * Create a Reference to some URI.
      * @param uri the uri this attachment refers to
@@ -58,7 +60,8 @@ public:
     /* The optional FMTTYPE parameter in iCal */
     QString mimeType() const;
     void setMimeType(const QString& mime);
-private:
+
+  private:
     QString mMimeType;
     QString mData;
     bool mBinary;

@@ -78,16 +78,17 @@ bool KonsoleKalendarAdd::addImportedCalendar()
    kdDebug() << "Can't open file: " << m_variables->getImportFile() << endl;
    return false;
  } else {
-   kdDebug() << "Succefully opened file: " << m_variables->getImportFile() << endl;
+   kdDebug() << "Successfully opened file: " << m_variables->getImportFile() << endl;
  } // else
 
- QPtrList<Event> eventList( importCalendar.rawEvents() );
+ Event::List eventList( importCalendar.rawEvents() );
  Event *singleEvent;
 
  if( eventList.count() ) {
 
-   for ( singleEvent = eventList.first(); singleEvent != 0; singleEvent =
-         eventList.next() ) {
+   Event::List::ConstIterator it;
+   for( it = eventList.begin(); it != eventList.end(); ++it ) {
+     singleEvent = *it;
 
      kdDebug() << "Add event" << endl;
      m_variables->getCalendar()->addEvent( singleEvent );

@@ -59,7 +59,7 @@ bool KonsoleKalendar::openCalendar()
   }
    else
   {
-	kdDebug() << "Succefully opened file: " << m_variables.getCalendarFile() << endl;
+	kdDebug() << "Successfully opened file: " << m_variables.getCalendarFile() << endl;
 	m_variables.setCalendar( m_Calendar );
 	return true;
 
@@ -180,7 +180,7 @@ void KonsoleKalendar::showDate( QDateTime date )
 {
   Event *singleEvent;
 
-  QPtrList<Event> eventList(m_Calendar->events( date.date(), TRUE));
+  Event::List eventList(m_Calendar->events( date.date(), TRUE));
   QString tempString;
   QDate current = QDate::currentDate();
 
@@ -197,8 +197,9 @@ void KonsoleKalendar::showDate( QDateTime date )
 
     cout << endl;
 
-    for ( singleEvent = eventList.first(); singleEvent != 0; singleEvent =
-          eventList.next() ) {
+    Event::List::ConstIterator it;
+    for( it = eventList.begin(); it != eventList.end(); ++it ) {
+      singleEvent = *it;
       if( m_variables.isAll() ) {
         printEventTime(singleEvent);
         // cout << endl;
@@ -248,7 +249,7 @@ void KonsoleKalendar::showNext()
   int len = 50;
 
   while(!loop) {
-    QPtrList<Event> eventList(m_Calendar->events(m_variables.getDate().date(), TRUE));
+    Event::List eventList(m_Calendar->events(m_variables.getDate().date(), TRUE));
 
     if( eventList.count() ) {
       len = 80;
@@ -263,7 +264,9 @@ void KonsoleKalendar::showNext()
 
       cout << endl;
 
-      for ( singleEvent = eventList.first(); singleEvent != 0; singleEvent = eventList.next() ){
+      Event::List::ConstIterator it;
+      for( it = eventList.begin(); it != eventList.end(); ++it ) {
+        singleEvent = *it;
         printEventTime(singleEvent);
         cout << endl;
         cout << "\t\t" << singleEvent->summary().local8Bit() << endl;

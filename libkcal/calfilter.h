@@ -54,13 +54,13 @@ class CalFilter {
       Apply filter to eventlist, all events not matching filter criterias are
       removed from the list.
     */
-    void apply(QPtrList<Event> *eventlist);
+    void apply(Event::List *eventlist);
     
     /**
       Apply filter to todolist, all todos not matching filter criterias are
       removed from the list.
     */
-    void apply(QPtrList<Todo> *todolist);
+    void apply(Todo::List *todolist);
     
     /**
       Apply filter criteria on the specified event. Return true, if event passes

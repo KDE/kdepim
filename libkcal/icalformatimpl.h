@@ -93,8 +93,8 @@ class ICalFormatImpl {
     QString mLoadedProductId;         // PRODID string loaded from calendar file
     int mCalendarVersion;             // determines backward compatibility mode on read
 
-    QPtrList<Event> mEventsRelate;           // events with relations
-    QPtrList<Todo> mTodosRelate;             // todos with relations
+    Event::List mEventsRelate;           // events with relations
+    Todo::List mTodosRelate;             // todos with relations
 
     static const int mSecondsPerWeek;
     static const int mSecondsPerDay;

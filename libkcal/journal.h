@@ -33,6 +33,8 @@ namespace KCal {
 class Journal : public Incidence
 {
   public:
+    typedef ListBase<Journal> List;
+  
     Journal();
     ~Journal();
 

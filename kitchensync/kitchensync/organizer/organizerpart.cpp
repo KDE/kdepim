@@ -207,15 +207,15 @@ TodoSyncee* OrganizerPart::loadTodos( const QString& pa, const QString& timeZone
     TodoSyncee* syncee = new TodoSyncee();
     KCal::CalendarLocal cal(timeZoneId);
     cal.load(path( Todo, pa ) );
-    QPtrList<KCal::Todo> todos = cal.rawTodos();
+    KCal::Todo::List todos = cal.rawTodos();
     if ( todos.isEmpty() ) {
         return syncee;
     }
 
-    KCal::Todo *todo;
+    KCal::Todo::List::ConstIterator it;
     TodoSyncEntry* entry =0 ;
-    for ( todo = todos.first(); todo; todo = todos.next() ) {
-        entry = new TodoSyncEntry((KCal::Todo*)todo->clone()) ;
+    for ( it = todos.begin(); it != todos.end(); ++it ) {
+        entry = new TodoSyncEntry( (*it)->clone() ) ;
         syncee->addEntry( entry );
     }
     return syncee;
@@ -224,15 +224,15 @@ EventSyncee* OrganizerPart::loadEvents(const QString& pa,  const QString& timeZo
     EventSyncee* syncee = new EventSyncee();
     KCal::CalendarLocal cal(timeZoneId);
     cal.load( path(Calendar, pa) );
-    QPtrList<KCal::Event> events = cal.rawEvents();
+    KCal::Event::List events = cal.rawEvents();
     if ( events.isEmpty() ) {
         return syncee;
     }
 
-    KCal::Event *event;
+    KCal::Event::List::ConstIterator it;
     EventSyncEntry* entry;
-    for ( event = events.first(); event; event = events.next() ) {
-        entry = new EventSyncEntry( (KCal::Event*)event->clone() );
+    for ( it = events.begin(); it != events.end(); ++it ) {
+        entry = new EventSyncEntry( (*it)->clone() );
         syncee->addEntry( entry );
         kdDebug(5222) << "Start Date of loaded " <<  entry->incidence()->dtStart().toString() << " " << entry->incidence()->uid() << endl;
     }

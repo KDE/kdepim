@@ -33,15 +33,15 @@ KonsoleKalendarChange::~KonsoleKalendarChange()
 
 bool KonsoleKalendarChange::changeEvent()
 {
-  QPtrList<Event> eventList( m_variables->
-                             getCalendar()->
-                             rawEventsForDate(
-                             m_variables->getDate()
-                             ) );
-  Event *singleEvent;
+  Event::List eventList( m_variables->
+                         getCalendar()->
+                         rawEventsForDate(
+                           m_variables->getDate()
+                         ) );
 
-  for ( singleEvent = eventList.first(); singleEvent != 0; singleEvent =
-        eventList.next() ) {
+  Event::List::ConstIterator it;
+  for( it = eventList.begin(); it != eventList.end(); ++it ) {
+    Event *singleEvent = *it;
     cout << "---- change---" << endl;
     cout <<  singleEvent->dtStartStr().remove(0, (singleEvent->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
     cout << " - ";

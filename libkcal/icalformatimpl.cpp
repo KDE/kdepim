@@ -383,17 +383,17 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   }
   
   // attachments
-  QPtrList<Attachment> attachments = incidence->attachments();
+  Attachment::List attachments = incidence->attachments();
   for (Attachment *at = attachments.first(); at; at = attachments.next())
     icalcomponent_add_property(parent,writeAttachment(at));
 
   // alarms
-  QPtrList<Alarm> alarms = incidence->alarms();
-  Alarm* alarm;
-  for (alarm = alarms.first(); alarm; alarm = alarms.next()) {
-    if (alarm->enabled()) {
-      kdDebug(5800) << "Write alarm for " << incidence->summary() << endl;
-      icalcomponent_add_component(parent,writeAlarm(alarm));
+  Alarm::List::ConstIterator alarmIt;
+  for ( alarmIt = incidence->alarms().begin();
+        alarmIt != incidence->alarms().end(); ++alarmIt ) {
+    if ( (*alarmIt)->enabled() ) {
+      kdDebug(5800) << "WralarmIte alarm for " << incidence->summary() << endl;
+      icalcomponent_add_component( parent, writeAlarm( *alarmIt ) );
     }
   }
 
@@ -408,26 +408,27 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 //  }
 }
 
-void ICalFormatImpl::writeIncidenceBase(icalcomponent *parent,IncidenceBase *incidenceBase)
+void ICalFormatImpl::writeIncidenceBase( icalcomponent *parent,
+                                         IncidenceBase * incidenceBase )
 {
-  icalcomponent_add_property(parent,icalproperty_new_dtstamp(
-      writeICalDateTime(QDateTime::currentDateTime())));
+  icalcomponent_add_property( parent, icalproperty_new_dtstamp(
+      writeICalDateTime( QDateTime::currentDateTime() ) ) );
 
   // organizer stuff
-  icalcomponent_add_property(parent,icalproperty_new_organizer(
-      ("MAILTO:" + incidenceBase->organizer()).utf8()));
+  icalcomponent_add_property( parent, icalproperty_new_organizer(
+      ( "MAILTO:" + incidenceBase->organizer() ).utf8() ) );
 
   // attendees
-  if (incidenceBase->attendeeCount() != 0) {
-    QPtrList<Attendee> al = incidenceBase->attendees();
-    QPtrListIterator<Attendee> ai(al);
-    for (; ai.current(); ++ai) {
-      icalcomponent_add_property(parent,writeAttendee(ai.current()));
+  if ( incidenceBase->attendeeCount() > 0 ) {
+    Attendee::List::ConstIterator it;
+    for( it = incidenceBase->attendees().begin();
+         it != incidenceBase->attendees().end(); ++it ) {
+      icalcomponent_add_property( parent, writeAttendee( *it ) );
     }
   }
 
   // custom properties
-  writeCustomProperties(parent, incidenceBase);
+  writeCustomProperties( parent, incidenceBase );
 }
 
 void ICalFormatImpl::writeCustomProperties(icalcomponent *parent,CustomProperties *properties)
@@ -1984,14 +1985,14 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 #endif
 
   // Post-Process list of events with relations, put Event objects in relation
-  Event *ev;
-  for ( ev=mEventsRelate.first(); ev != 0; ev=mEventsRelate.next() ) {
-    ev->setRelatedTo(cal->event(ev->relatedToUid()));
+  Event::List::ConstIterator eIt;
+  for ( eIt = mEventsRelate.begin(); eIt != mEventsRelate.end(); ++eIt ) {
+    (*eIt)->setRelatedTo( cal->event( (*eIt)->relatedToUid() ) );
   }
-  Todo *todo;
-  for ( todo=mTodosRelate.first(); todo != 0; todo=mTodosRelate.next() ) {
-    todo->setRelatedTo(cal->todo(todo->relatedToUid()));
-  }
+  Todo::List::ConstIterator tIt;
+  for ( tIt = mTodosRelate.begin(); tIt != mTodosRelate.end(); ++tIt ) {
+    (*tIt)->setRelatedTo( cal->todo( (*tIt)->relatedToUid() ) );
+   }
 
   return true;
 }

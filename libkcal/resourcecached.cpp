@@ -52,7 +52,7 @@ bool ResourceCached::addEvent(Event *event)
 }
 
 // probably not really efficient, but...it works for now.
-void ResourceCached::deleteEvent(Event *event)
+void ResourceCached::deleteEvent( Event *event )
 {
   kdDebug(5800) << "ResourceCached::deleteEvent" << endl;
 
@@ -65,40 +65,42 @@ Event *ResourceCached::event( const QString &uid )
   return mCalendar.event( uid );
 }
 
-QPtrList<Event> ResourceCached::rawEventsForDate(const QDate &qd, bool sorted)
+Event::List ResourceCached::rawEventsForDate( const QDate &qd, bool sorted )
 {
-  return mCalendar.rawEventsForDate( qd, sorted );
+  Event::List list = mCalendar.rawEventsForDate( qd, sorted );
+
+  return list;
 }
 
 
-QPtrList<Event> ResourceCached::rawEvents( const QDate &start, const QDate &end,
-                                          bool inclusive )
+Event::List ResourceCached::rawEvents( const QDate &start, const QDate &end,
+                                       bool inclusive )
 {
   return mCalendar.rawEvents( start, end, inclusive );
 }
 
-QPtrList<Event> ResourceCached::rawEventsForDate(const QDateTime &qdt)
+Event::List ResourceCached::rawEventsForDate( const QDateTime &qdt )
 {
   return mCalendar.rawEventsForDate( qdt.date() );
 }
 
-QPtrList<Event> ResourceCached::rawEvents()
+Event::List ResourceCached::rawEvents()
 {
   return mCalendar.rawEvents();
 }
 
-bool ResourceCached::addTodo(Todo *todo)
+bool ResourceCached::addTodo( Todo *todo )
 {
   return mCalendar.addTodo( todo );
 }
 
-void ResourceCached::deleteTodo(Todo *todo)
+void ResourceCached::deleteTodo( Todo *todo )
 {
   mCalendar.deleteTodo( todo );
 }
 
 
-QPtrList<Todo> ResourceCached::rawTodos()
+Todo::List ResourceCached::rawTodos()
 {
   return mCalendar.rawTodos();
 }
@@ -108,32 +110,32 @@ Todo *ResourceCached::todo( const QString &uid )
   return mCalendar.todo( uid );
 }
 
-QPtrList<Todo> ResourceCached::todos( const QDate &date )
+Todo::List ResourceCached::todos( const QDate &date )
 {
   return mCalendar.todos( date );
 }
 
 
-bool ResourceCached::addJournal(Journal *journal)
+bool ResourceCached::addJournal( Journal *journal )
 {
   kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
 
   return mCalendar.addJournal( journal );
 }
 
-Journal *ResourceCached::journal(const QDate &date)
+Journal *ResourceCached::journal( const QDate &date )
 {
 //  kdDebug(5800) << "ResourceCached::journal() " << date.toString() << endl;
 
   return mCalendar.journal( date );
 }
 
-Journal *ResourceCached::journal(const QString &uid)
+Journal *ResourceCached::journal( const QString &uid )
 {
   return mCalendar.journal( uid );
 }
 
-QPtrList<Journal> ResourceCached::journals()
+Journal::List ResourceCached::journals()
 {
   return mCalendar.journals();
 }

@@ -226,67 +226,43 @@ CalFilter *Calendar::filter()
   return mFilter;
 }
 
-QPtrList<Incidence> Calendar::incidences()
+Incidence::List Calendar::incidences()
 {
-  QPtrList<Incidence> incidences;
-  
-  Incidence *i;
-
-  QPtrList<Event> e = events();
-  for( i = e.first(); i; i = e.next() ) incidences.append( i );
-
-  QPtrList<Todo> t = todos();
-  for( i = t.first(); i; i = t.next() ) incidences.append( i );
-
-  QPtrList<Journal> j = journals();
-  for( i = j.first(); i; i = j.next() ) incidences.append( i );
-
-  return incidences;
+  return mergeIncidenceList( events(), todos(), journals() );
 }
 
-QPtrList<Incidence> Calendar::rawIncidences()
+Incidence::List Calendar::rawIncidences()
 {
-  QPtrList<Incidence> incidences;
-  
-  Incidence *i;
-
-  QPtrList<Event> e = rawEvents();
-  for( i = e.first(); i; i = e.next() ) incidences.append( i );
-
-  QPtrList<Todo> t = rawTodos();
-  for( i = t.first(); i; i = t.next() ) incidences.append( i );
-
-  QPtrList<Journal> j = journals();
-  for( i = j.first(); i; i = j.next() ) incidences.append( i );
-
-  return incidences;
+  return mergeIncidenceList( rawEvents(), rawTodos(), journals() );
 }
 
-QPtrList<Event> Calendar::events( const QDate &date, bool sorted )
+Event::List Calendar::events( const QDate &date, bool sorted )
 {
-  QPtrList<Event> el = rawEventsForDate(date,sorted);
+  Event::List el = rawEventsForDate( date, sorted );
+
+  mFilter->apply(&el);
+
+  return el;
+}
+
+Event::List Calendar::events( const QDateTime &qdt )
+{
+  Event::List el = rawEventsForDate(qdt);
   mFilter->apply(&el);
   return el;
 }
 
-QPtrList<Event> Calendar::events( const QDateTime &qdt )
-{
-  QPtrList<Event> el = rawEventsForDate(qdt);
-  mFilter->apply(&el);
-  return el;
-}
-
-QPtrList<Event> Calendar::events( const QDate &start, const QDate &end,
+Event::List Calendar::events( const QDate &start, const QDate &end,
                                   bool inclusive)
 {
-  QPtrList<Event> el = rawEvents(start,end,inclusive);
+  Event::List el = rawEvents(start,end,inclusive);
   mFilter->apply(&el);
   return el;
 }
 
-QPtrList<Event> Calendar::events()
+Event::List Calendar::events()
 {
-  QPtrList<Event> el = rawEvents();
+  Event::List el = rawEvents();
   mFilter->apply(&el);
   return el;
 }
@@ -315,9 +291,9 @@ Incidence *Calendar::incidence( const QString& uid )
   return i;
 }
 
-QPtrList<Todo> Calendar::todos()
+Todo::List Calendar::todos()
 {
-  QPtrList<Todo> tl = rawTodos();
+  Todo::List tl = rawTodos();
   mFilter->apply( &tl );
   return tl;
 }
@@ -358,14 +334,17 @@ void Calendar::removeRelations( Incidence *incidence )
 {
   QString uid = incidence->uid();
 
-  QPtrList<Incidence> relations = incidence->relations();
-  for( Incidence* i = relations.first(); i; i = relations.next() )
+  Incidence::List relations = incidence->relations();
+  Incidence::List::ConstIterator it;
+  for( it = relations.begin(); it != relations.end(); ++it ) {
+    Incidence *i = *it;
     if( !mOrphanUids.find( i->uid() ) ) {
       mOrphans.insert( uid, i );
       mOrphanUids.insert( i->uid(), i );
       i->setRelatedTo( 0 );
       i->setRelatedToUid( uid );
     }
+  }
 
   // If this incidence is related to something else, tell that about it
   if( incidence->relatedTo() )
@@ -408,6 +387,24 @@ void Calendar::setLoadedProductId( const QString &id )
 QString Calendar::loadedProductId()
 {
   return mLoadedProductId;
+}
+
+Incidence::List Calendar::mergeIncidenceList( const Event::List &e,
+                                              const Todo::List &t,
+                                              const Journal::List &j )
+{
+  Incidence::List incidences;
+  
+  Event::List::ConstIterator it1;
+  for( it1 = e.begin(); it1 != e.end(); ++it1 ) incidences.append( *it1 );
+
+  Todo::List::ConstIterator it2;
+  for( it2 = t.begin(); it2 != t.end(); ++it2 ) incidences.append( *it2 );
+
+  Journal::List::ConstIterator it3;
+  for( it3 = j.begin(); it3 != j.end(); ++it3 ) incidences.append( *it3 );
+
+  return incidences;
 }
 
 #include "calendar.moc"

@@ -264,14 +264,16 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status sta
   if (ev || to) {
     //get matching attendee in calendar
     kdDebug(5800) << "Scheduler::acceptTransaction match found!" << endl;
-    QPtrList<Attendee> attendeesIn = incidence->attendees();
-    QPtrList<Attendee> attendeesEv;
+    Attendee::List attendeesIn = incidence->attendees();
+    Attendee::List attendeesEv;
     if (ev) attendeesEv = ev->attendees();
     if (to) attendeesEv = to->attendees();
-    Attendee *attIn;
-    Attendee *attEv;
-    for ( attIn = attendeesIn.first(); attIn; attIn = attendeesIn.next() ) {
-      for ( attEv = attendeesEv.first(); attEv; attEv = attendeesEv.next() ) {
+    Attendee::List::ConstIterator inIt;
+    Attendee::List::ConstIterator evIt;
+    for ( inIt = attendeesIn.begin(); inIt != attendeesIn.end(); ++inIt ) {
+      Attendee *attIn = *inIt;
+      for ( evIt = attendeesEv.begin(); evIt != attendeesEv.end(); ++evIt ) {
+        Attendee *attEv = *evIt;;
         if (attIn->email()==attEv->email()) {
           //update attendee-info
           kdDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;

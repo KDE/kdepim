@@ -33,15 +33,15 @@ KonsoleKalendarDelete::~KonsoleKalendarDelete()
 
 bool KonsoleKalendarDelete::deleteEvent()
 {
-  QPtrList<Event> eventList( m_variables->
-                             getCalendar()->
-                             rawEventsForDate(
+  Event::List eventList( m_variables->
+                         getCalendar()->
+                         rawEventsForDate(
                              m_variables->getDate()
-                             ) );
-  Event *singleEvent;
+                         ) );
 
-  for ( singleEvent = eventList.first(); singleEvent != 0; singleEvent =
-        eventList.next() ) {
+  Event::List::ConstIterator it;
+  for( it = eventList.begin(); it != eventList.end(); ++it ) {
+    Event *singleEvent = *it;
     cout << "---- Delete---" << endl;
     cout <<  singleEvent->dtStartStr().remove(0, (singleEvent->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
     cout << " - ";

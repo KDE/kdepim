@@ -81,25 +81,25 @@ class ResourceKABC : public ResourceCalendar
     /**
       Return filtered list of all events in calendar.
     */
-//    QPtrList<Event> events();
+//    Event::List events();
     /**
       Return unfiltered list of all events in calendar.
     */
-    QPtrList<Event> rawEvents();
+    Event::List rawEvents();
     /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
-    QPtrList<Event> rawEventsForDate( const QDate &date, bool sorted = false );
+    Event::List rawEventsForDate( const QDate &date, bool sorted = false );
     /**
       Get unfiltered events for date \a qdt.
     */
-    QPtrList<Event> rawEventsForDate( const QDateTime &qdt );
+    Event::List rawEventsForDate( const QDateTime &qdt );
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
       only events are returned, which are completely included in the range.
     */
-    QPtrList<Event> rawEvents( const QDate &start, const QDate &end,
+    Event::List rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false );
 
 
@@ -125,11 +125,11 @@ class ResourceKABC : public ResourceCalendar
     /**
       Return list of all todos.
     */
-    QPtrList<Todo> rawTodos();
+    Todo::List rawTodos();
     /**
       Returns list of todos due on the specified date.
     */
-    QPtrList<Todo> todos( const QDate &date );
+    Todo::List todos( const QDate &date );
     /** Add a Journal entry to calendar */
     virtual bool addJournal(Journal *);
     /** Return Journal for given date */
@@ -137,7 +137,7 @@ class ResourceKABC : public ResourceCalendar
     /** Return Journal with given UID */
     virtual Journal *journal(const QString &UID);
     /** Return list of all Journals stored in calendar */
-    QPtrList<Journal> journals();
+    Journal::List journals();
 
     /** Return all alarms, which ocur in the given time interval. */
     Alarm::List alarms( const QDateTime &from, const QDateTime &to );

@@ -42,22 +42,24 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
   setDtStart(start);
   setDtEnd(end);
 
-  //Gets all the events in the calendar
-  QPtrList<Event> eventList = mCalendar->events();
-  Event *event;
+  // Get all the events in the calendar
+  Event::List eventList = mCalendar->events();
 
   int extraDays, i, x, duration;
   duration = start.daysTo(end);
   QDate day;
   QDateTime tmpStart;
   QDateTime tmpEnd;
-  //Loops through every event in the calendar
-  for( event = eventList.first(); event; event = eventList.next() ) {
-    //This whole for loop is for recurring events, it loops through 
-    //each of the days of the freebusy request
+  // Loops through every event in the calendar
+  Event::List::ConstIterator it;
+  for( it = eventList.begin(); it != eventList.end(); ++it ) {
+    Event *event = *it;
 
-    //First check if this is transparent. If it is, it shouldn't be in the
-    //freebusy list
+    // This whole for loop is for recurring events, it loops through 
+    // each of the days of the freebusy request
+
+    // First check if this is transparent. If it is, it shouldn't be in the
+    // freebusy list
     if ( event->transparency() == Event::Transparent )
       // Transparent
       continue;
@@ -91,7 +93,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
       }
     
     }
-    //Non-reocurring events
+    // Non-recurring events
     addLocalPeriod(event->dtStart(), event->dtEnd());
   }
 

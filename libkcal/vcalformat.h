@@ -24,6 +24,9 @@
 
 #include "calformat.h"
 
+#include "todo.h"
+#include "event.h"
+
 #define _VCAL_VERSION "1.0"
 
 class VObject;
@@ -99,8 +102,8 @@ class VCalFormat : public CalFormat {
   private:
     Calendar *mCalendar;
   
-    QPtrList<Event> mEventsRelate;           // events with relations
-    QPtrList<Todo> mTodosRelate;             // todos with relations
+    Event::List mEventsRelate;           // events with relations
+    Todo::List mTodosRelate;             // todos with relations
 };
 
 }

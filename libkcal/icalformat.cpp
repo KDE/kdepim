@@ -152,15 +152,15 @@ Incidence *ICalFormat::fromString( const QString &text )
   fromString(&cal, text);
 
   Incidence *ical = 0;
-  QPtrList<Event> elist = cal.events();
+  Event::List elist = cal.events();
   if ( elist.count() > 0 ) {
     ical = elist.first();
   } else {
-    QPtrList<Todo> tlist = cal.todos();
+    Todo::List tlist = cal.todos();
     if ( tlist.count() > 0 ) {
       ical = tlist.first();
     } else {
-      QPtrList<Journal> jlist = cal.journals();
+      Journal::List jlist = cal.journals();
       if ( jlist.count() > 0 ) {
         ical = jlist.first();
       }
@@ -178,33 +178,33 @@ QString ICalFormat::toString( Calendar *cal )
   icalcomponent *component;
 
   // todos
-  QPtrList<Todo> todoList = cal->rawTodos();
-  QPtrListIterator<Todo> qlt(todoList);
-  for (; qlt.current(); ++qlt) {
+  Todo::List todoList = cal->rawTodos();
+  Todo::List::ConstIterator it;
+  for( it = todoList.begin(); it != todoList.end(); ++it ) {
 //    kdDebug(5800) << "ICalFormat::toString() write todo "
-//                  << qlt.current()->uid() << endl;
-    component = mImpl->writeTodo(qlt.current());
-    icalcomponent_add_component(calendar,component);
+//                  << (*it)->uid() << endl;
+    component = mImpl->writeTodo( *it );
+    icalcomponent_add_component( calendar, component );
   }
 
   // events
-  QPtrList<Event> events = cal->rawEvents();
-  Event *ev;
-  for(ev=events.first();ev;ev=events.next()) {
+  Event::List events = cal->rawEvents();
+  Event::List::ConstIterator it2;
+  for( it2 = events.begin(); it2 != events.end(); ++it2 ) {
 //    kdDebug(5800) << "ICalFormat::toString() write event "
-//                  << ev->uid() << endl;
-    component = mImpl->writeEvent(ev);
-    icalcomponent_add_component(calendar,component);
+//                  << (*it2)->uid() << endl;
+    component = mImpl->writeEvent( *it2 );
+    icalcomponent_add_component( calendar, component );
   }
 
   // journals
-  QPtrList<Journal> journals = cal->journals();
-  Journal *j;
-  for(j=journals.first();j;j=journals.next()) {
+  Journal::List journals = cal->journals();
+  Journal::List::ConstIterator it3;
+  for( it3 = journals.begin(); it3 != journals.end(); ++it3 ) {
 //    kdDebug(5800) << "ICalFormat::toString() write journal "
-//                  << j->uid() << endl;
-    component = mImpl->writeJournal(j);
-    icalcomponent_add_component(calendar,component);
+//                  << (*it3)->uid() << endl;
+    component = mImpl->writeJournal( *it3 );
+    icalcomponent_add_component( calendar, component );
   }
 
   const char *text = icalcomponent_as_ical_string( calendar );

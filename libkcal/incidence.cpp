@@ -51,7 +51,7 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
 //  Incidence *mRelatedTo;          Incidence *mRelatedTo;
   mRelatedTo = 0;
   mRelatedToUid = i.mRelatedToUid;
-//  QPtrList<Incidence> mRelations;    QPtrList<Incidence> mRelations;
+//  Incidence::List mRelations;    Incidence::List mRelations;
   mExDates = i.mExDates;
   mAttachments = i.mAttachments;
   mResources = i.mResources;
@@ -59,14 +59,11 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
   mPriority = i.mPriority;
   mLocation = i.mLocation;
 
-  QPtrListIterator<Alarm> it( i.mAlarms );
-  const Alarm *a;
-  while( (a = it.current()) ) {
-    Alarm *b = new Alarm( *a );
+  Alarm::List::ConstIterator it;
+  for( it = i.mAlarms.begin(); it != i.mAlarms.end(); ++it ) {
+    Alarm *b = new Alarm( **it );
     b->setParent( this );
     mAlarms.append( b );
-
-    ++it;
   }
   mAlarms.setAutoDelete(true);
 
@@ -75,11 +72,11 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
 
 Incidence::~Incidence()
 {
-  Incidence *ev;
-  for (ev=mRelations.first();ev;ev=mRelations.next()) {
-    if (ev->relatedTo() == this) ev->setRelatedTo(0);
+  List::ConstIterator it;
+  for ( it = mRelations.begin(); it != mRelations.end(); ++it ) {
+    if ( (*it)->relatedTo() == this ) (*it)->setRelatedTo( 0 );
   }
-  if (relatedTo()) relatedTo()->removeRelation(this);
+  if ( relatedTo() ) relatedTo()->removeRelation( this );
 
   delete mRecurrence;
 }
@@ -98,10 +95,10 @@ bool KCal::operator==( const Incidence& i1, const Incidence& i2 )
         return false; // no need to check further
     }
 
-    QPtrListIterator<Alarm> a1( i1.alarms() );
-    QPtrListIterator<Alarm> a2( i2.alarms() );
-    for( ; a1.current() && a2.current(); ++a1, ++a2 )
-        if( *a1.current() == *a2.current() )
+    Alarm::List::ConstIterator a1 = i1.alarms().begin();
+    Alarm::List::ConstIterator a2 = i2.alarms().begin();
+    for( ; a1 != i1.alarms().end() && a2 != i2.alarms().end(); ++a1, ++a2 )
+        if( **a1 == **a2 )
             continue;
         else {
             return false;
@@ -260,15 +257,15 @@ Incidence *Incidence::relatedTo() const
   return mRelatedTo;
 }
 
-QPtrList<Incidence> Incidence::relations() const
+Incidence::List Incidence::relations() const
 {
   return mRelations;
 }
 
-void Incidence::addRelation(Incidence *event)
+void Incidence::addRelation( Incidence *event )
 {
-  if( mRelations.findRef( event ) == -1 ) {
-    mRelations.append(event);
+  if ( mRelations.find( event ) == mRelations.end() ) {
+    mRelations.append( event );
     updated();
   }
 }
@@ -345,14 +342,14 @@ void Incidence::deleteAttachments(const QString& mime)
   }
 }
 
-QPtrList<Attachment> Incidence::attachments() const
+Attachment::List Incidence::attachments() const
 {
   return mAttachments;
 }
 
-QPtrList<Attachment> Incidence::attachments(const QString& mime) const
+Attachment::List Incidence::attachments(const QString& mime) const
 {
-  QPtrList<Attachment> attachments;
+  Attachment::List attachments;
   QPtrListIterator<Attachment> it( mAttachments );
   Attachment *at;
   while ( (at = it.current()) ) {
@@ -435,7 +432,7 @@ QStringList Incidence::secrecyList()
 }
 
 
-QPtrList<Alarm> Incidence::alarms() const
+const Alarm::List &Incidence::alarms() const
 {
   return mAlarms;
 }
@@ -468,10 +465,9 @@ void Incidence::clearAlarms()
 
 bool Incidence::isAlarmEnabled() const
 {
-  Alarm* alarm;
-  for (QPtrListIterator<Alarm> it(mAlarms); (alarm = it.current()) != 0; ++it) {
-    if (alarm->enabled())
-      return true;
+  Alarm::List::ConstIterator it;
+  for( it = mAlarms.begin(); it != mAlarms.end(); ++it ) {
+    if ( (*it)->enabled() ) return true;
   }
   return false;
 }

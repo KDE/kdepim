@@ -279,24 +279,24 @@ Event *ResourceIMAP::event( const QString &uid )
 
 // taking a QDate, this function will look for an eventlist in the dict
 // with that date attached -
-QPtrList<Event> ResourceIMAP::rawEventsForDate( const QDate &qd, bool sorted )
+Event::List ResourceIMAP::rawEventsForDate( const QDate &qd, bool sorted )
 {
   return mCalendar.rawEventsForDate( qd, sorted );
 }
 
 
-QPtrList<Event> ResourceIMAP::rawEvents( const QDate &start, const QDate &end,
+Event::List ResourceIMAP::rawEvents( const QDate &start, const QDate &end,
                                           bool inclusive )
 {
   return mCalendar.rawEvents( start, end, inclusive );
 }
 
-QPtrList<Event> ResourceIMAP::rawEventsForDate(const QDateTime &qdt)
+Event::List ResourceIMAP::rawEventsForDate(const QDateTime &qdt)
 {
   return mCalendar.rawEventsForDate( qdt );
 }
 
-QPtrList<Event> ResourceIMAP::rawEvents()
+Event::List ResourceIMAP::rawEvents()
 {
   return mCalendar.rawEvents();
 }
@@ -349,7 +349,7 @@ void ResourceIMAP::deleteTodo(Todo *todo)
  * Getting Todos
  */
 
-QPtrList<Todo> ResourceIMAP::rawTodos()
+Todo::List ResourceIMAP::rawTodos()
 {
   return mCalendar.rawTodos();
 }
@@ -359,7 +359,7 @@ Todo *ResourceIMAP::todo( const QString &uid )
   return mCalendar.todo(uid);
 }
 
-QPtrList<Todo> ResourceIMAP::todos( const QDate &date )
+Todo::List ResourceIMAP::todos( const QDate &date )
 {
   return mCalendar.todos(date);
 }
@@ -421,7 +421,7 @@ Journal *ResourceIMAP::journal(const QString &uid)
   return mCalendar.journal(uid);
 }
 
-QPtrList<Journal> ResourceIMAP::journals()
+Journal::List ResourceIMAP::journals()
 {
   return mCalendar.journals();
 }

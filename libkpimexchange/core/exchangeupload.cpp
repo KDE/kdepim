@@ -288,7 +288,7 @@ void ExchangeUpload::startUpload( const KURL& url )
     }
   }
 
-  QPtrList<KCal::Alarm> alarms = event->alarms();
+  KCal::Alarm::List alarms = event->alarms();
   if ( alarms.count() > 0 ) {
     KCal::Alarm* alarm = alarms.first();
     // TODO: handle multiple alarms

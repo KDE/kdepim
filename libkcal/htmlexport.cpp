@@ -168,13 +168,13 @@ void HtmlExport::createHtmlMonthView(QTextStream *ts)
 
         *ts << "</td></tr><tr><td valign=\"top\">";
 
-        QPtrList<Event> events = mCalendar->events(start,true);
+        Event::List events = mCalendar->events(start,true);
         if (events.count()) {
           *ts << "<table>";
-          Event *ev;
-          for(ev = events.first(); ev; ev = events.next()) {
-            if ( checkSecrecy( ev ) ) {
-              createHtmlEvent(ts,ev,start,false);
+          Event::List::ConstIterator it;
+          for( it = events.begin(); it != events.end(); ++it ) {
+            if ( checkSecrecy( *it ) ) {
+              createHtmlEvent( ts, *it, start, false );
             }
           }
           *ts << "</table>";
@@ -220,16 +220,17 @@ void HtmlExport::createHtmlEventList (QTextStream *ts)
 
   for (QDate dt = fromDate(); dt <= toDate(); dt = dt.addDays(1)) {
     kdDebug(5850) << "Getting events for " << dt.toString() << endl;
-    QPtrList<Event> events = mCalendar->events(dt,true);
+    Event::List events = mCalendar->events(dt,true);
     if (events.count()) {
       *ts << "  <tr><td colspan=\"" << QString::number(columns)
           << "\" class=\"datehead\"><i>"
           << KGlobal::locale()->formatDate(dt)
           << "</i></td></tr>\n";
-      Event *ev;
-      for(ev = events.first(); ev; ev = events.next()) {
-	if ( checkSecrecy( ev ) ) {
-	  createHtmlEvent(ts,ev,dt);
+
+      Event::List::ConstIterator it;
+      for( it = events.begin(); it != events.end(); ++it ) {
+	if ( checkSecrecy( *it ) ) {
+	  createHtmlEvent( ts, *it, dt );
 	}
       }
     }
@@ -281,32 +282,34 @@ void HtmlExport::createHtmlEvent (QTextStream *ts, Event *event,
   *ts << "  </tr>\n";
 }
 
-void HtmlExport::createHtmlTodoList (QTextStream *ts)
+void HtmlExport::createHtmlTodoList ( QTextStream *ts )
 {
-  Todo *ev,*subev;
+  Todo::List rawTodoList = mCalendar->todos();
 
-  QPtrList<Todo> rawTodoList = mCalendar->todos();
-  QPtrList<Todo> todoList;
-
-  ev = rawTodoList.first();
-  while (ev) {
-    subev = ev;
-    if (ev->relatedTo()) {
-      if (ev->relatedTo()->type()=="Todo") {
-        if (rawTodoList.find(static_cast<Todo*>(ev->relatedTo()))<0) {
-          rawTodoList.append(static_cast<Todo*>(ev->relatedTo()));
+  Todo::List::Iterator it = rawTodoList.begin();
+  while ( it != rawTodoList.end() ) {
+    Todo *ev = *it;
+    Todo *subev = ev;
+    if ( ev->relatedTo() ) {
+      if ( ev->relatedTo()->type()=="Todo" ) {
+        if ( rawTodoList.find( static_cast<Todo *>( ev->relatedTo() ) ) ==
+             rawTodoList.end() ) {
+          rawTodoList.append( static_cast<Todo *>( ev->relatedTo() ) );
         }
       }
     }
-    rawTodoList.find(subev);
-    ev = rawTodoList.next();
+    it = rawTodoList.find( subev );
+    ++it;
   }
 
   // Sort list by priorities. This is brute force and should be
   // replaced by a real sorting algorithm.
-  for (int i=1; i<=5; ++i) {
-    for(ev=rawTodoList.first();ev;ev=rawTodoList.next()) {
-      if (ev->priority()==i && checkSecrecy( ev )) todoList.append(ev);
+  Todo::List todoList;
+  for ( int i = 1; i <= 5; ++i ) {
+    for( it = rawTodoList.begin(); it != rawTodoList.end(); ++it ) {
+      if ( (*it)->priority() == i && checkSecrecy( *it ) ) {
+        todoList.append( *it );
+      }
     }
   }
 
@@ -327,13 +330,13 @@ void HtmlExport::createHtmlTodoList (QTextStream *ts)
   *ts << "  </tr>\n";
 
   // Create top-level list.
-  for(ev=todoList.first();ev;ev=todoList.next()) {
-    if (!ev->relatedTo()) createHtmlTodo(ts,ev);
+  for( it = todoList.begin(); it != todoList.end(); ++it ) {
+    if ( !(*it)->relatedTo() ) createHtmlTodo( ts, *it );
   }
 
   // Create sub-level lists
-  for(ev=todoList.first();ev;ev=todoList.next()) {
-    QPtrList<Incidence> relations = ev->relations();
+  for( it = todoList.begin(); it != todoList.end(); ++it ) {
+    Incidence::List relations = (*it)->relations();
     if (relations.count()) {
       // Generate sub-task list of event ev
       *ts << "  <tr>\n";
@@ -343,24 +346,26 @@ void HtmlExport::createHtmlTodoList (QTextStream *ts)
       if (categoriesTodoEnabled()) ++columns;
       if (attendeesTodoEnabled()) ++columns;
       *ts << "\"" << QString::number(columns) << "\"";
-      *ts << "><a name=\"sub" << ev->uid() << "\"></a>"
+      *ts << "><a name=\"sub" << (*it)->uid() << "\"></a>"
           << i18n("Sub-Tasks of: ") << "<a href=\"#"
-          << ev->uid() << "\"><b>" << cleanChars(ev->summary()) << "</b></a></td>\n";
+          << (*it)->uid() << "\"><b>" << cleanChars( (*it)->summary())
+          << "</b></a></td>\n";
       *ts << "  </tr>\n";
 
-      QPtrList<Todo> sortedList;
-      Incidence *ev2;
+      Todo::List sortedList;
       // Sort list by priorities. This is brute force and should be
       // replaced by a real sorting algorithm.
-      for (int i=1; i<=5; ++i) {
-        for(ev2=relations.first();ev2;ev2=relations.next()) {
-          Todo *ev3 = dynamic_cast<Todo *>(ev2);
-          if (ev3 && ev3->priority() == i) sortedList.append(ev3);
+      for ( int i = 1; i <= 5; ++i ) {
+        Incidence::List::ConstIterator it2;
+        for( it2 = relations.begin(); it2 != relations.end(); ++it2 ) {
+          Todo *ev3 = dynamic_cast<Todo *>( *it2 );
+          if ( ev3 && ev3->priority() == i ) sortedList.append( ev3 );
         }
       }
 
-      for(subev=sortedList.first();subev;subev=sortedList.next()) {
-        createHtmlTodo(ts,subev);
+      Todo::List::ConstIterator it3;
+      for( it3 = sortedList.begin(); it3 != sortedList.end(); ++it3 ) {
+        createHtmlTodo( ts, *it3 );
       }
     }
   }
@@ -373,7 +378,7 @@ void HtmlExport::createHtmlTodo (QTextStream *ts,Todo *todo)
   kdDebug(5850) << "HtmlExport::createHtmlTodo()" << endl;
 
   bool completed = todo->isCompleted();
-  QPtrList<Incidence> relations = todo->relations();
+  Incidence::List relations = todo->relations();
 
   *ts << "<tr>\n";
 
@@ -464,7 +469,7 @@ void HtmlExport::formatHtmlCategories (QTextStream *ts,Incidence *event)
 
 void HtmlExport::formatHtmlAttendees (QTextStream *ts,Incidence *event)
 {
-  QPtrList<Attendee> attendees = event->attendees();
+  Attendee::List attendees = event->attendees();
   if (attendees.count()) {
 	  *ts << "<em>";
 #ifndef KORG_NOKABC
@@ -481,8 +486,9 @@ void HtmlExport::formatHtmlAttendees (QTextStream *ts,Incidence *event)
 	  *ts << event->organizer();
 #endif
     *ts << "</em><br />";
-    Attendee *a;
-    for(a=attendees.first();a;a=attendees.next()) {
+    Attendee::List::ConstIterator it;
+    for( it = attendees.begin(); it != attendees.end(); ++it ) {
+      Attendee *a = *it;
       if (!a->email().isEmpty()) {
 				*ts << "<a href=\"mailto:" << a->email();
 				*ts << "\">" << cleanChars(a->name()) << "</a>";

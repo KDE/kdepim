@@ -453,8 +453,10 @@ void AlarmDaemon::checkEventAlarms(const Event& event, QValueList<QDateTime>& al
   alarmtimes.clear();
   const Alarm* alarm;
   QDateTime now = QDateTime::currentDateTime();
-  QPtrList<Alarm> alarms = event.alarms();
-  for (QPtrListIterator<Alarm> it(alarms);  (alarm = it.current()) != 0;  ++it) {
+  Alarm::List alarms = event.alarms();
+  Alarm::List::ConstIterator it;
+  for ( it = alarms.begin(); it != alarms.end(); ++it ) {
+    Alarm *alarm = *it; 
     alarmtimes.append((alarm->enabled()  &&  alarm->time() <= now) ? alarm->time() : QDateTime());
   }
 }

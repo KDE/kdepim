@@ -168,10 +168,10 @@ namespace KSync {
         dest->setFloats( src->doesFloat() );
     }
     template <class Todo>  void mergeAttend( Todo* const dest, const Todo* const src) {
-        QPtrList<KCal::Attendee> att = src->attendees();
-        KCal::Attendee* at;
-        for ( at = att.first(); at; at = att.next() )
-            dest->addAttendee( new KCal::Attendee( *at ) );
+        KCal::Attendee::List att = src->attendees();
+        KCal::Attendee::List::ConstIterator it;
+        for ( it = att.begin(); it != att.end(); ++it )
+            dest->addAttendee( new KCal::Attendee( **it ) );
     }
     template <class Todo>  void mergeCreated( Todo* const dest, const Todo* const src) {
         dest->setCreated( src->created() );
@@ -189,10 +189,10 @@ namespace KSync {
         dest->setCategories( src->categories() );
     }
     template <class Todo> void mergeRel( Todo* const dest, const Todo* const src) {
-        QPtrList<KCal::Incidence> rel = src->relations();
-        KCal::Incidence* in;
-        for ( in = rel.first(); in; in = rel.next() ) {
-            dest->addRelation( in->clone() );
+        KCal::Incidence::List rel = src->relations();
+        KCal::Incidence::List::ConstIterator it;
+        for ( it = rel.begin(); it != rel.end(); ++it ) {
+            dest->addRelation( (*it)->clone() );
         }
     }
     template <class Todo> void mergeExDates( Todo* const dest, const Todo* const src) {
@@ -211,10 +211,10 @@ namespace KSync {
         dest->setPriority( src->priority() );
     }
     template <class Todo> void mergeAlarm( Todo* const dest, const Todo* const src ) {
-        QPtrList<KCal::Alarm> als = src->alarms();
-        KCal::Alarm* al;
-        for (al = als.first(); al; al = als.next() ) {
-            dest->addAlarm( new KCal::Alarm( (*al) ) );
+        KCal::Alarm::List als = src->alarms();
+        KCal::Alarm::List::ConstIterator it;
+        for ( it = als.begin(); it != als.end(); ++it ) {
+            dest->addAlarm( new KCal::Alarm( **it ) );
         }
     }
     template <class Todo> void mergeRecur( Todo* const , const Todo* const ) {

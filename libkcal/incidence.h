@@ -117,6 +117,8 @@ class Incidence : public IncidenceBase
     /** enumeration for describing an event's secrecy. */
     enum { SecrecyPublic = 0, SecrecyPrivate = 1, SecrecyConfidential = 2 };
 
+    typedef ListBase<Incidence> List;
+
     Incidence();
     Incidence(const Incidence &);
     ~Incidence();
@@ -188,7 +190,7 @@ class Incidence : public IncidenceBase
     /** what event does this one relate to? */
     Incidence *relatedTo() const;
     /** All events that are related to this event */
-    QPtrList<Incidence> relations() const;
+    Incidence::List relations() const;
     /** Add an event which is related to this event */
     void addRelation(Incidence *);
     /** Remove event that is related to this event */
@@ -213,9 +215,9 @@ class Incidence : public IncidenceBase
     /** remove and delete all attachments with this mime type */
     void deleteAttachments(const QString& mime);
     /** return list of all associated attachments */
-    QPtrList<Attachment> attachments() const;
+    Attachment::List attachments() const;
     /** find a list of attachments with this mime type */
-    QPtrList<Attachment> attachments(const QString& mime) const;
+    Attachment::List attachments(const QString& mime) const;
 
     /** sets the event's status the value specified.  See the enumeration
      * above for possible values. */
@@ -246,13 +248,13 @@ class Incidence : public IncidenceBase
     int priority() const;
 
     /** All alarms that are associated with this incidence */
-    QPtrList<Alarm> alarms() const;
+    const Alarm::List &alarms() const;
     /** Create a new alarm which is associated with this incidence */
-    Alarm* newAlarm();
+    Alarm *newAlarm();
     /** Add an alarm which is associated with this incidence */
-    void addAlarm(Alarm*);
+    void addAlarm( Alarm * );
     /** Remove an alarm that is associated with this incidence */
-    void removeAlarm(Alarm*);
+    void removeAlarm( Alarm * );
     /** Remove all alarms that are associated with this incidence */
     void clearAlarms();
     /** return whether any alarm associated with this incidence is enabled */
@@ -284,15 +286,15 @@ class Incidence : public IncidenceBase
     QStringList mCategories;
     Incidence *mRelatedTo;
     QString mRelatedToUid;
-    QPtrList<Incidence> mRelations;
+    Incidence::List mRelations;
     DateList mExDates;
-    QPtrList<Attachment> mAttachments;
+    Attachment::List mAttachments;
     QStringList mResources;
 
     int mSecrecy;
     int mPriority;                        // 1 = highest, 2 = less, etc.
 
-    QPtrList<Alarm> mAlarms;
+    Alarm::List mAlarms;
     Recurrence *mRecurrence;
     
     QString mLocation;

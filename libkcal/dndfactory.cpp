@@ -69,7 +69,7 @@ Event *DndFactory::createDrop(QDropEvent *de)
   if ( ICalDrag::decode( de, &cal ) || VCalDrag::decode( de, &cal ) ) {
     de->accept();
 
-    QPtrList<Event> events = cal.events();
+    Event::List events = cal.events();
     if ( !events.isEmpty() ) {
       Event *event = new Event( *events.first() );
       return event;
@@ -89,7 +89,7 @@ Todo *DndFactory::createDropTodo(QDropEvent *de)
   if ( ICalDrag::decode( de, &cal ) || VCalDrag::decode( de, &cal ) ) {
     de->accept();
 
-    QPtrList<Todo> todos = cal.todos();
+    Todo::List todos = cal.todos();
     if ( !todos.isEmpty() ) {
       Todo *todo = new Todo( *todos.first() );
       return todo;
@@ -136,7 +136,7 @@ Event *DndFactory::pasteEvent(const QDate &newDate, const QTime *newTime)
     return 0;
   }
 
-  QPtrList<Event> evList = cal.events();
+  Event::List evList = cal.events();
   Event *ev = evList.first();
   if ( ev ) {
     anEvent = new Event( *ev );
@@ -156,7 +156,7 @@ Event *DndFactory::pasteEvent(const QDate &newDate, const QTime *newTime)
 				  anEvent->dtEnd().time() ) );
     mCalendar->addEvent( anEvent );
   } else {
-    QPtrList<Todo> toList = cal.todos();
+    Todo::List toList = cal.todos();
     Todo *to = toList.first();
     if (to) {
       //anTodo = new Todo(*to);

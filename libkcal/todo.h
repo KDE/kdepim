@@ -33,6 +33,8 @@ namespace KCal {
 class Todo : public Incidence
 {
   public:
+    typedef ListBase<Todo> List;
+
     Todo();
     Todo(const Todo &);
     ~Todo();

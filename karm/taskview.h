@@ -107,8 +107,8 @@ class TaskView : public KListView
     void loadFromKCalFormat( const QString& file, int loadMask );
     void loadFromKCalFormat();
     void saveToKCalFormat();
-    void buildAndPositionTasks( QPtrList<KCal::Event>& eventList );
-    void buildAndPositionTasks( QPtrList<KCal::Todo>& todoList );
+    void buildAndPositionTasks( KCal::Event::List &eventList );
+    void buildAndPositionTasks( KCal::Todo::List &todoList );
     void buildTask( KCal::Incidence* event, QDict<Task>& map );
     void positionTask( const KCal::Incidence* event, const QDict<Task>& map );
     void addTimeToActiveTasks( int minutes, bool do_logging );
