@@ -215,7 +215,11 @@ int PopMailConduit::sendViaKMail()
 		return -1;
 	}
 
-	dcopptr->attach();
+	if (!dcopptr->isAttached())
+	{
+		dcopptr->attach();
+	}
+
 	while (PilotRecord *pilotRec = fDatabase->readNextRecInCategory(1))
 	{
 #ifdef DEBUG
