@@ -40,6 +40,7 @@
 #include <kurl.h>
 #include <ktempfile.h>
 #include <qtextstream.h>
+#include <kdebug.h>
 
 using namespace Kolab;
 
@@ -145,15 +146,17 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
       possible[ it.key() ] = it.data();
   }
 
-  if ( possible.isEmpty() )
-    // None found!!
+  if ( possible.isEmpty() ) { // None found!!
+    kdWarning(5650) << "No writable resource found!" << endl;
     return QString::null;
+  }
   if ( possible.count() == 1 )
     // Just one found
     return possible.begin().key();
 
   // Several found, ask the user
   // TODO: Show the label instead of the resource name
+
   return KInputDialog::getItem( i18n( "Select Resource Folder" ),
                                 i18n( "You have more than one writable resource folder. "
                                       "Please select the one you want to write to." ),
