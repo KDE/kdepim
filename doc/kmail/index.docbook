@@ -20,8 +20,8 @@
 </author>
 </authorgroup>
 
-<date>22/09/2000</date>
-<releaseinfo>1.01.90</releaseinfo>
+<date>25/09/2000</date>
+<releaseinfo>1.01.95</releaseinfo>
 
 <abstract>
 	
@@ -181,7 +181,7 @@ for setting up sendmail for a dial-up connection in the <link linkend="faq">FAQ<
 
 <para>To set up an account so you can receive mail, press the <guibutton>Add...</guibutton> button in the
 <guilabel>Incoming Mail</guilabel> section. You will then be prompted for the type of account.
-Most users should select <guilabel>POP3</guilabel> (<acronym>IMAP</acronym> accounts are not yet supported). After
+Most users should select <guilabel>Pop3</guilabel> (<acronym>IMAP</acronym> accounts are not yet supported). After
 pressing <guibutton>OK</guibutton> you will be presented with the <guilabel>Add Account</guilabel>
 window. First, fill in the <guilabel>Name</guilabel> field to name your account. You can choose
 any name you like.
@@ -191,7 +191,7 @@ should be filled in with the appropriate
 information from your <acronym>ISP</acronym> or System Administrator. Again, you should not need to
 change the <guilabel>Port</guilabel> setting.</para>
 
-<!--
+<!-- SSL for Pop3 will not be in KDE2.0???
 <para>With <guilabel>Use SSL for secure mail download</guilabel>
 you can encrypt the messages you are fetching on their way from your mailserver
 to your computer - but only if your mailserver supports that. Please understand
@@ -1040,7 +1040,7 @@ menu item function, it is listed after the menu item.</para>
 <para><variablelist>
 
 <varlistentry>
-<term>New Mail Client</term>
+<term>New Mail Client...</term>
 <listitem>
 <para>Creates a new <guilabel>Mail Reader</guilabel> window.</para>
 </listitem>
@@ -1104,12 +1104,14 @@ according to how you have moved and deleted them in &kmail;.</para>
 </listitem>
 </varlistentry>
 
+<!-- has been removed
 <varlistentry>
 <term>Quit (<keycombo><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo>)</term>
 <listitem>
 <para>Exits &kmail;.</para>
 </listitem>
 </varlistentry>
+-->
 
 </variablelist>
 </para>
@@ -1130,7 +1132,7 @@ in the trash.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Copy text(<keycombo><keycap>Ctrl</keycap><keycap>C</keycap></keycombo>)</term>
+<term>Copy text (<keycombo><keycap>Ctrl</keycap><keycap>C</keycap></keycombo>)</term>
 <listitem>
 <para>Copies selected text to the clipboard.</para>
 </listitem>
@@ -1250,7 +1252,7 @@ folder is the trash folder, the messages are permanently deleted.</para>
 <varlistentry>
 <term>Thread messages</term>
 <listitem>
-<para>Show the messages in the <guilabel>Header pane</guilabel>
+<para>Shows the messages in the <guilabel>Header pane</guilabel>
 in a tree-like list, with replies showing up directly under the message
 they reply to.</para>
 </listitem>
@@ -1354,6 +1356,13 @@ a mail relay if the user does not exist.</para>
 </varlistentry>
 
 <varlistentry>
+<term>Set encoding submenu</term>
+<listitem>
+<para>Lets you choose the character encoding to be used in the Message Pane.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term>Edit... (<keycap>T</keycap>)</term>
 <listitem>
 <para>Edits the selected message if it is editable. Only messages in the outbox
@@ -1428,6 +1437,36 @@ folder can be edited.</para>
 <para><variablelist>
 
 <varlistentry>
+<term>Show Toolbar</term>
+<listitem>
+<para>If enabled, the Toolbar is visible (the Toolbar is the one with the icons
+to compose a new message etc.)</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Show Statusbar</term>
+<listitem>
+<para>If enabled, the Statusbar is visible (the Statusbar is the small one on the bottom
+which shows useful short messages and link targets)</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Configure Key Bindings...</term>
+<listitem>
+<para>Opens a window that lets you configure the keyboard shortcuts for many menu command.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Configure Toolbars...</term>
+<listitem>
+<para>Opens a window that lets you choose which icons are visible in the toolbar.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term>Configuration...</term>
 <listitem>
 <para>Opens the <link linkend="secGettingStarted">Configure</link> window.</para>
@@ -1438,13 +1477,6 @@ folder can be edited.</para>
 <term>Filter Rules...</term>
 <listitem>
 <para>Opens the <link linkend="filters">Filter Rules</link> window.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Configure Toolbars...</term>
-<listitem>
-<para>Opens a window that lets you choose which icons are visible in the toolbar.</para>
 </listitem>
 </varlistentry>
 
@@ -1606,14 +1638,14 @@ Ctrl while dragging the text, it will not be moved, but copied.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Find (<keycombo><keycap>Ctrl</keycap><keycap>F</keycap></keycombo>)</term>
+<term>Find... (<keycombo><keycap>Ctrl</keycap><keycap>F</keycap></keycombo>)</term>
 <listitem>
 <para>Finds words, phrases, or expressions in the message.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term>Replace (<keycombo><keycap>Ctrl</keycap><keycap>R</keycap></keycombo>)</term>
+<term>Replace... (<keycombo><keycap>Ctrl</keycap><keycap>R</keycap></keycombo>)</term>
 <listitem>
 <para>Lets you replace words, phrases, or expressions in your message with other words or phrases.</para>
 </listitem>
@@ -1742,9 +1774,25 @@ by the receiver's mail client in order to work.</para>
 <para><variablelist>
 
 <varlistentry>
-<term>Spellchecker...</term>
+<term>Show Toolbar</term>
 <listitem>
-<para>Allows you to configure KSpell, KDE's spellchecker.</para>
+<para>If enabled, the Toolbar is visible (the Toolbar is the one with the icons
+to send the message etc.)</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Show Statusbar</term>
+<listitem>
+<para>If enabled, the Statusbar is visible (the Statusbar is the small one on the bottom
+which shows useful short messages)</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Configure Key Bindings...</term>
+<listitem>
+<para>Opens a window that lets you configure the keyboard shortcuts for many menu command.</para>
 </listitem>
 </varlistentry>
 
@@ -1752,6 +1800,13 @@ by the receiver's mail client in order to work.</para>
 <term>Configure Toolbars...</term>
 <listitem>
 <para>Opens a window that allows you to decide which icons appear in the toolbar.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Spellchecker...</term>
+<listitem>
+<para>Allows you to configure KSpell, KDE's spellchecker.</para>
 </listitem>
 </varlistentry>
 
