@@ -696,6 +696,13 @@ void KABCore::editContact( const QString &uid )
         ResourceMapEntry &entry = mResourceMap[ addr.resource() ];
         entry.counter++;
       } else {
+        if ( addr.resource()->readOnly() ) {
+          KMessageBox::sorry( mWidget, i18n( "You have tried to edit a contact, "
+                                             "that is located on '%1', which is a read-only resource. This is not possible until you move "
+                                             "this contact to another resource by copy+paste." )
+                              .arg( addr.resource()->resourceName() ) );
+          return;
+        }
         KABC::Ticket *ticket = mAddressBook->requestSaveTicket( addr.resource() );
         if ( !ticket ) {
           KMessageBox::error( mWidget, i18n( "Address book is locked by other process!" ) );
