@@ -181,12 +181,12 @@ KNConfig::Appearance::Appearance()
   c_olorNames[url]=i18n("Link");
 
   defCol=kapp->palette().disabled().text();
-  c_olors[readArticle]=c->readColorEntry("readArticleColor",&defCol);
-  c_olorNames[readArticle]=i18n("Read Article");
+  c_olors[readArticle]=c->readColorEntry("readThreadColor",&defCol);
+  c_olorNames[readArticle]=i18n("Read Thread");
 
   defCol=kapp->palette().active().text();
-  c_olors[unreadArticle]=c->readColorEntry("unreadArticleColor",&defCol);
-  c_olorNames[unreadArticle]=i18n("Unread Article");
+  c_olors[unreadArticle]=c->readColorEntry("unreadThreadColor",&defCol);
+  c_olorNames[unreadArticle]=i18n("Unread Thread");
 
   defCol=kapp->palette().active().highlight();
   c_olors[activeItem]=c->readColorEntry("activeItemColor",&defCol);
