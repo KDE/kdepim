@@ -162,7 +162,7 @@ static const char *kpilot_id="$Id$";
 #endif
 
 #ifndef _KPILOT_PILOTDAEMON_H
-#include "pilotDaemon.h"
+#include "pilotDaemonDCOP.h"
 #endif
 
 #ifndef __PILOTDAEMONDCOP_STUB__
@@ -905,13 +905,19 @@ int main(int argc, char** argv)
 	QString daemonError;
 	QCString daemonDCOP;
 	int daemonPID;
+
 	if (KApplication::startServiceByDesktopPath(
 		"Utilities/kpilotdaemon.desktop",
 		QString::null,
 		&daemonError,
 		&daemonDCOP,
-		&daemonPID,
-		"0"))
+		&daemonPID
+#if (KDE_VERSION >= 220)
+		// Startup notification was added in 2.2
+		,
+		"0"
+#endif
+		))
 	{
 		kdError() << __FUNCTION__
 			<< ": Can't start daemon."
@@ -935,6 +941,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.57  2001/09/07 20:48:13  adridg
+// Stripped away last crufty IPC, added logWidget
+//
 // Revision 1.56  2001/08/29 08:50:56  cschumac
 // Make KPilot compile.
 //

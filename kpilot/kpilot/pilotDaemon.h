@@ -1,3 +1,5 @@
+#ifndef _KPILOT_PILOTDAEMON_H
+#define _KPILOT_PILOTDAEMON_H
 /* pilotDaemon.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -26,13 +28,12 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _KPILOT_PILOTDAEMON_H
-#define _KPILOT_PILOTDAEMON_H
 
 #include <qpixmap.h>
 #include <ktmainwindow.h>
 #include <ksystemtray.h>
 
+#include "kpilotlink.h"
 #include "pilotDaemonDCOP.h"
 
 class KConfig;
@@ -41,10 +42,7 @@ class KProcess;
 class KAboutApplication;
 
 class PilotRecord;
-class KPilotLink;
-
-#define PILOTDAEMON_COMMAND_PORT	31509
-#define PILOTDAEMON_STATUS_PORT		31510
+class KPilotDCOP_stub;
 
 // Daemon for Palm Pilot syncing.  Note, if you wish to send commands to
 // KPilotLink then you need to connect to the command port _BEFORE_ the 
@@ -107,38 +105,31 @@ private:
 
 class PilotDaemon : public QObject, virtual public PilotDaemonDCOP
 {
+Q_OBJECT
+
+// The tray must be our friend so that we can let it stop the daemon.
 friend class PilotDaemonTray;
 
-  Q_OBJECT
   
 public:
-  // This was done as two separate ports so that you can have multiple status
-  // listeners
-  static const int COMMAND_PORT = PILOTDAEMON_COMMAND_PORT;
-  static const int STATUS_PORT = PILOTDAEMON_STATUS_PORT;
-  enum DaemonStatus 
+	PilotDaemon();
+	~PilotDaemon();
+
+	enum DaemonStatus 
   	{ 
-		HOTSYNC_START, HOTSYNC_END, FILE_INSTALL_REQ, 
-		ERROR, INIT 
+		HOTSYNC_START,    // Hotsync is running
+		HOTSYNC_END,      // Hotsync is cleaning up
+		FILE_INSTALL_REQ, // A file is being saved for installation
+		ERROR, 
+		READY,            // Connected to device and ready for Sync
+		INIT 
 	};
 
 	DaemonStatus status() const { return fStatus; } ;
+	/* DCOP */ virtual QString statusString();
 
-  PilotDaemon();
-  ~PilotDaemon();
   void quit(bool yesno) { fQuit = yesno; }
-
-  KProcess* getMonitorProcess() { return fMonitorProcess; }
-	/**
-	* Kill the monitor process, if any. Note that
-	* it is a bad idea to continue using the
-	* daemon without the monitor process, so
-	* this will usually be called just before quit().
-	*
-	* @arg finishsync indicates that the sync-status
-	* window should be updated before quitting.
-	*/
-	void killMonitor(bool finishsync=false);
+  bool quit() { return fQuit; }
 
 	/**
 	* Display the daemon's system tray icon
@@ -165,34 +156,16 @@ signals:
 private:
 	int getPilotSpeed(KConfig&);
 
-  void setupSubProcesses();
-  void setupConnections();
+	bool setupPilotLink();
+
   void startHotSync();
-  void sendStatus(const int status);
-  void saveProperties(KConfig&);
-  void sendRecord(PilotRecord* rec);
-  bool quit() { return fQuit; }
 
-#ifdef DEBUG
-	// The debugging version of getPilotLink also warns
-	// in case of bad link &c.
-	//
-	//
-	KPilotLink *getPilotLink();
-#else
-	KPilotLink* getPilotLink() { return fPilotLink; }
-#endif
+	KPilotDeviceLink &getPilotLink() { return *fPilotLink; }
+	KPilotDeviceLink *fPilotLink;
 
-  KProcess* fMonitorProcess;
-  KSocket* fCurrentSocket;
-  KServerSocket* fCommandSocket;
-  KServerSocket* fStatusSocket;
   bool fQuit;
-  KPilotLink* fPilotLink;
-  QString fPilotDevice;
-  QList<KSocket> fStatusConnections;
-  bool    fStartKPilot;
-  bool    fWaitingForKPilot;
+	QString fPilotDevice;
+	KPilotDeviceLink::DeviceType fPilotType;
 
 
 
@@ -203,31 +176,46 @@ private:
 	PilotDaemonTray *tray;
 
 private slots:
- void slotProcFinished(KProcess*);
-  void slotAccepted(KSocket* connection);
-  void slotAddStatusConnection(KSocket* connection);
-  void slotRemoveStatusConnection(KSocket* connection);
-  void slotConnectionClosed(KSocket* connection);
-  void slotCommandReceived(KSocket*);
   void slotEndHotSync();
   void quitImmediately();
-
-  void slotSyncingDatabase(char* dbName);
   void slotDBBackupFinished();
 
-	void slotRunKPilot();
+	/**
+	* Called when the daemon begins syncing database @p dbName.
+	* This notifies the KPilot UI as well.
+	*/
+	void slotSyncingDatabase(char *dbName);
+
 
 protected slots:
+	/**
+	* Called after a file has been installed to notify any observers, like
+	* KPilot, that files have been installed. [Here that means: copied
+	* to the pending_install directory and thus *waiting* for
+	* installation on the Palm]
+	*/
 	void slotFilesChanged();
+
+	/**
+	* Start up KPilot.
+	*/
+	void slotRunKPilot();
+
+
+	/**
+	* Provide access to KPilot's DCOP interface through a stub.
+	*/
+protected:
+	KPilotDCOP_stub &getKPilot() { return *fKPilotStub; } ;
+private:
+	KPilotDCOP_stub *fKPilotStub;
 };
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
-#endif
 
 // $Log$
+// Revision 1.23  2001/08/27 22:54:27  adridg
+// Decruftifying; improve DCOP link between daemon & viewer
+//
 // Revision 1.22  2001/08/19 19:25:57  adridg
 // Removed kpilotlink dependency from kpilot; added DCOP interfaces to make that possible. Also fixed a connect() type mismatch that was harmless but annoying.
 //
@@ -258,3 +246,4 @@ protected slots:
 // Revision 1.13  2001/01/03 00:02:45  adridg
 // Added Heiko's FastSync
 //
+#endif

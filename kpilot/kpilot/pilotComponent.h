@@ -1,3 +1,5 @@
+#ifndef _KPILOT_PILOTCOMPONENT_H
+#define _KPILOT_PILOTCOMPONENT_H
 /* pilotComponent.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -25,8 +27,6 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef _KPILOT_PILOTCOMPONENT_H
-#define _KPILOT_PILOTCOMPONENT_H
 
 /**
   * Base class for any module to KPilot
@@ -112,27 +112,17 @@ private:
 	QString fDBPath;
 } ;
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
-#endif
 
 
 
 // $Log$
-// Revision 1.9  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
+// Revision 1.10  2001/09/05 21:53:51  adridg
+// Major cleanup and architectural changes. New applications kpilotTest
+// and kpilotConfig are not installed by default but can be used to test
+// the codebase. Note that nothing else will actually compile right now.
 //
-// Revision 1.8  2001/04/14 15:21:35  adridg
-// XML GUI and ToolTips
-//
-// Revision 1.7  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.6  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
 //
 // Revision 1.5  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //
+#endif

@@ -48,7 +48,7 @@ static const char *test_id="$Id$";
 
 KPilotTestLink *KPilotTestLink::fTestLink = 0L;
 
-KPilotTestLink::KPilotTestLink(const QString &p) :
+KPilotTestLink::KPilotTestLink(DeviceType t,const QString &p) :
 	KPilotDeviceLink()
 {
 	FUNCTIONSETUP;
@@ -59,16 +59,16 @@ KPilotTestLink::KPilotTestLink(const QString &p) :
 
 	connect(this,SIGNAL(deviceReady()),
 		this,SLOT(enumerateDatabases()));
-	reset(p);
+	reset(t,p);
 }
 
-KPilotTestLink *KPilotTestLink::getTestLink(const QString &p)
+KPilotTestLink *KPilotTestLink::getTestLink(DeviceType t,const QString &p)
 {
 	FUNCTIONSETUP;
 
 	if (fTestLink) return fTestLink;
 
-	fTestLink = new KPilotTestLink(p);
+	fTestLink = new KPilotTestLink(t,p);
 	return fTestLink;
 }
 
@@ -81,7 +81,7 @@ void KPilotTestLink::enumerateDatabases()
 	int count=0;
 	struct DBInfo db;
 
-	while ((i=dlp_ReadDBList(fCurrentPilotSocket,0,dlpDBListRAM,
+	while ((i=dlp_ReadDBList(pilotSocket(),0,dlpDBListRAM,
 		dbindex,&db)) > 0)
 	{
 		count++;
@@ -128,11 +128,15 @@ int main(int argc, char **argv)
 	KApplication::addCmdLineOptions();
 
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
+
 	QString devicePath = p->getOption("port");
 	if (devicePath.isEmpty())
 	{
 		devicePath = "/dev/pilot";
 	}
+
+	KPilotDeviceLink::DeviceType deviceType = 
+		KPilotDeviceLink::OldStyleUSB;
 
 	KPilotConfig::getDebugLevel(p);
 
@@ -144,8 +148,7 @@ int main(int argc, char **argv)
 	w->setShowTime(true);
 	a.setMainWidget(w);
 
-	KPilotTestLink *t = KPilotTestLink::getTestLink(devicePath);
-	t->setTransient(true);
+	KPilotTestLink *t = KPilotTestLink::getTestLink(deviceType,devicePath);
 
 	QObject::connect(t,SIGNAL(logError(const QString &)),
 		w,SLOT(addError(const QString &)));
@@ -159,6 +162,9 @@ int main(int argc, char **argv)
 }
 
 // $Log$
+// Revision 1.2  2001/09/06 22:05:00  adridg
+// Enforce singleton-ness
+//
 // Revision 1.1  2001/09/05 21:53:51  adridg
 // Major cleanup and architectural changes. New applications kpilotTest
 // and kpilotConfig are not installed by default but can be used to test

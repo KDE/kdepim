@@ -26,7 +26,7 @@
 /*
 ** Bug reports and questions can be sent to groot@kde.org
 */
-static const char *logw_id="$Id:$";
+static const char *logw_id="$Id$";
 
 #include "options.h"
 
@@ -77,7 +77,7 @@ void LogWidget::addMessage(const QString &s)
 
 void LogWidget::addError(const QString &s)
 {
-	QString t("<B>");
+	QString t("<qt><B>");
 
 	if (fShowTime)
 	{
@@ -87,7 +87,7 @@ void LogWidget::addError(const QString &s)
 	}
 
 	t.append(s);
-	t.append("</B>");
+	t.append("</B></qt>");
 
 	fLog->append(s);
 }

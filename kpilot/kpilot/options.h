@@ -1,3 +1,5 @@
+#ifndef _KPILOT_OPTIONS_H
+#define _KPILOT_OPTIONS_H
 /* options.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -35,9 +37,6 @@
 
 
 
-#ifndef _KPILOT_OPTIONS_H
-#define _KPILOT_OPTIONS_H 1
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -46,20 +45,20 @@
 #include <qglobal.h>
 #endif
 
-#if (QT_VERSION > 223)
-#if (QT_VERSION > 299)
-#define KDE3
-#else
-#define KDE2
-#endif
-#else
+#if (QT_VERSION < 223)
 #error "This is KPilot for KDE2 and won't compile with Qt < 2.2.3"
 #endif
 
-// Turn ON as much debugging as possible
+// Turn ON as much debugging as possible with -DDEBUG -DDEBUG_CERR
+// Some systems have changed kdWarning() and kdDebug() into nops,
+// so DEBUG_CERR changes them into cerr again. Odd and disturbing.
 //
-//
-#define DEBUG
+#ifdef DEBUG_CERR
+#include <iostream.h>
+#define DEBUGFUNC	cerr
+#else
+#define DEBUGFUNC	kdDebug()
+#endif
 
 #ifndef QSTRING_H
 #include <qstring.h>
@@ -88,11 +87,17 @@
 #define CONDUIT_AREA	5512
 #define LIBPILOTDB_AREA	5513
 
+#ifdef DEBUG_CERR
+#define DEBUGKPILOT	cerr
+#define DEBUGDAEMON	cerr
+#define DEBUGCONDUIT	cerr
+#define DEBUGDB		cerr
+#else
 #define DEBUGKPILOT	kdDebug(KPILOT_AREA)
 #define DEBUGDAEMON	kdDebug(DAEMON_AREA)
 #define DEBUGCONDUIT	kdDebug(CONDUIT_AREA)
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
-
+#endif
 
 #define KPILOT_VERSION	"4.2.9"
 
@@ -124,7 +129,7 @@ extern const char *debug_spaces;
 //
 //
 #define FUNCTIONSETUP	static const char *fname=__FUNCTION__; \
-			if (debug_level) { kdDebug() << \
+			if (debug_level) { DEBUGFUNC << \
 			fname << debug_spaces+(strlen(fname)) \
 				<< "(" << __FILE__ << ":" << \
 				__LINE__ << ")\n"; }
@@ -184,14 +189,12 @@ inline kndbgstream operator << (kndbgstream s, const debugName &d) { s << d.j; r
 //
 #define KPILOT_FREE(a)	{ if (a) { ::free(a); a=0L; } }
 #define KPILOT_DELETE(a) { if (a) { delete a; a=0L; } }
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
-#endif
 
 
 // $Log$
+// Revision 1.31  2001/09/08 14:31:54  cschumac
+// qt3 include fix
+//
 // Revision 1.30  2001/09/05 21:53:51  adridg
 // Major cleanup and architectural changes. New applications kpilotTest
 // and kpilotConfig are not installed by default but can be used to test
@@ -227,3 +230,4 @@ inline kndbgstream operator << (kndbgstream s, const debugName &d) { s << d.j; r
 // Revision 1.20  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //
+#endif

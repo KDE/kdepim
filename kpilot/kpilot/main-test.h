@@ -37,10 +37,11 @@ class KPilotTestLink : public KPilotDeviceLink
 Q_OBJECT
 
 protected:
-	KPilotTestLink(const QString &);
+	KPilotTestLink(DeviceType t,const QString &);
 
 public:
-	static KPilotTestLink *getTestLink(const QString &p=QString::null);
+	static KPilotTestLink *getTestLink(DeviceType=None,
+		const QString &p=QString::null);
 
 private:
 	static KPilotTestLink *fTestLink;
@@ -49,6 +50,11 @@ protected slots:
 	void enumerateDatabases();
 } ;
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/09/05 21:53:51  adridg
+// Major cleanup and architectural changes. New applications kpilotTest
+// and kpilotConfig are not installed by default but can be used to test
+// the codebase. Note that nothing else will actually compile right now.
+//
 
 #endif

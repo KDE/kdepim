@@ -58,15 +58,19 @@
 static const char *pilotSerialDatabase_id =
 	"$Id$";
 
-PilotSerialDatabase::PilotSerialDatabase(KPilotLink* pilotLink, const char* dbName)
-  : PilotDatabase(), fDBName(0L), fDBHandle(-1), fPilotLink(pilotLink)
-    {
-    fDBName = new char[strlen(dbName) + 1];
-    strcpy(fDBName, dbName);
-    openDatabase();
-    /* NOTREACHED */
-    (void) pilotSerialDatabase_id;
-    }
+PilotSerialDatabase::PilotSerialDatabase(int linksocket,
+	const char* dbName) : PilotDatabase(), 
+	fDBName(0L), 
+	fDBSocket(linksocket),
+	fDBHandle(-1)
+{
+	fDBName = new char[strlen(dbName) + 1];
+	strcpy(fDBName, dbName);
+	openDatabase();
+
+	/* NOTREACHED */
+	(void) pilotSerialDatabase_id;
+}
 
 PilotSerialDatabase::~PilotSerialDatabase()
     {
@@ -83,7 +87,7 @@ int PilotSerialDatabase::readAppBlock(unsigned char* buffer, int maxLen)
 	kdError() << __FUNCTION__ << ": DB not open" << endl;
 	return -1;
 	}
-    return dlp_ReadAppBlock(getPilotLink()->getCurrentPilotSocket(), getDBHandle(), 0, (void *)buffer, maxLen);
+    return dlp_ReadAppBlock(fDBSocket, getDBHandle(), 0, (void *)buffer, maxLen);
     }
 
 // Writes the application block info.
@@ -95,7 +99,7 @@ int PilotSerialDatabase::writeAppBlock(unsigned char* buffer, int len)
       kdError() << __FUNCTION__ << ": DB not open" << endl;
       return -1;
     }
-  return dlp_WriteAppBlock(getPilotLink()->getCurrentPilotSocket(), getDBHandle(), buffer, len);
+  return dlp_WriteAppBlock(fDBSocket, getDBHandle(), buffer, len);
 }
 
 
@@ -111,7 +115,7 @@ PilotRecord* PilotSerialDatabase::readRecordById(recordid_t id)
 	kdError() << __FUNCTION__ << ": DB not open" << endl;
 	return 0L;
 	}
-    if(dlp_ReadRecordById(getPilotLink()->getCurrentPilotSocket(), getDBHandle(), id, buffer, &index,
+    if(dlp_ReadRecordById(fDBSocket, getDBHandle(), id, buffer, &index,
 			      &size, &attr, &category) >= 0)
 	return new PilotRecord(buffer, size, attr, category, id);
     return 0L;
@@ -130,7 +134,7 @@ PilotRecord* PilotSerialDatabase::readRecordByIndex(int index)
 	kdError() << __FUNCTION__ << ": DB not open" << endl;
 	return 0L;
 	}
-    if(dlp_ReadRecordByIndex(getPilotLink()->getCurrentPilotSocket(), getDBHandle(), index, 
+    if(dlp_ReadRecordByIndex(fDBSocket, getDBHandle(), index, 
 				 (void*)buffer, &id, &size, &attr, &category) >= 0)
 	return new PilotRecord(buffer, size, attr, category, id);
     return 0L;	
@@ -149,7 +153,7 @@ PilotRecord* PilotSerialDatabase::readNextRecInCategory(int category)
 	kdError() << __FUNCTION__ << ": DB not open" << endl;
 	return 0L;
 	}
-    if(dlp_ReadNextRecInCategory (getPilotLink()->getCurrentPilotSocket(), getDBHandle(), 
+    if(dlp_ReadNextRecInCategory (fDBSocket, getDBHandle(), 
 				      category, buffer, &id, &index, &size, &attr) >= 0)
 	return new PilotRecord(buffer, size, attr, category, id);
     return 0L;
@@ -168,7 +172,7 @@ PilotRecord* PilotSerialDatabase::readNextModifiedRec()
 	kdError() << __FUNCTION__ << ": DB not open" << endl;
 	return 0L;
 	}
-    if(dlp_ReadNextModifiedRec(getPilotLink()->getCurrentPilotSocket(), getDBHandle(), (void*)buffer, 
+    if(dlp_ReadNextModifiedRec(fDBSocket, getDBHandle(), (void*)buffer, 
 				   &id, &index, &size, &attr, &category) >= 0)
 	return new PilotRecord(buffer, size, attr, category, id);
     return 0L;
@@ -186,7 +190,7 @@ recordid_t PilotSerialDatabase::writeRecord(PilotRecord* newRecord)
 	kdError() << __FUNCTION__ << ": DB not open" << endl;
 	return 0;
 	}
-    success = dlp_WriteRecord(getPilotLink()->getCurrentPilotSocket(), getDBHandle(), newRecord->getAttrib(), 
+    success = dlp_WriteRecord(fDBSocket, getDBHandle(), newRecord->getAttrib(), 
 			      newRecord->getID(), newRecord->getCat(), newRecord->getData(),
 			      newRecord->getLen(), &newid);
     if(newRecord->getID() == 0)
@@ -203,7 +207,7 @@ int PilotSerialDatabase::resetSyncFlags()
 	kdError() << __FUNCTION__ << ": DB not open" << endl;
 	return -1;
 	}
-    return dlp_ResetSyncFlags(getPilotLink()->getCurrentPilotSocket(), getDBHandle()); 
+    return dlp_ResetSyncFlags(fDBSocket, getDBHandle()); 
     }
 
 // Resets next record index to beginning
@@ -215,7 +219,7 @@ int PilotSerialDatabase::resetDBIndex()
 	kdError() << __FUNCTION__ << ": DB not open" << endl;
 	return -1;
 	}
-    return dlp_ResetDBIndex(getPilotLink()->getCurrentPilotSocket(), getDBHandle()); 
+    return dlp_ResetDBIndex(fDBSocket, getDBHandle()); 
     }
 
 // Purges all Archived/Deleted records from Palm Pilot database
@@ -227,34 +231,38 @@ int PilotSerialDatabase::cleanUpDatabase()
 	kdError() << __FUNCTION__ << ": DB not open" << endl;
 	return -1;
 	}
-    return dlp_CleanUpDatabase(getPilotLink()->getCurrentPilotSocket(), getDBHandle()); 
+    return dlp_CleanUpDatabase(fDBSocket, getDBHandle()); 
     }
 
 void PilotSerialDatabase::openDatabase()
-    {
-    int db;
+{
+	int db;
 
-    if(dlp_OpenDB(getPilotLink()->getCurrentPilotSocket(), 0, dlpOpenReadWrite, getDBName(), &db) < 0)
+	if(dlp_OpenDB(fDBSocket, 0, dlpOpenReadWrite, getDBName(), &db) < 0)
 	{
-	KMessageBox::error(getPilotLink()->getOwningWidget(),
-		i18n("Cannot open database"),
-		i18n("Pilot database error"));
-	return;
+		kdError() << __FUNCTION__
+			<< i18n("Cannot open database")
+			<< i18n("Pilot database error")
+			<< endl;
+		return;
 	}
-    setDBHandle(db);
-    setDBOpen(true);
-    }
+	setDBHandle(db);
+	setDBOpen(true);
+}
 
 void PilotSerialDatabase::closeDatabase()
     {
     if(isDBOpen() == false)
 	return;
-    dlp_CloseDB(getPilotLink()->getCurrentPilotSocket(), getDBHandle());
+    dlp_CloseDB(fDBSocket, getDBHandle());
     setDBOpen(false);
     }
 
 
 // $Log$
+// Revision 1.12  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.11  2001/03/27 23:54:43  stern
 // Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
 //

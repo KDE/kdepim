@@ -48,7 +48,7 @@ class KPilotLink;
 class PilotSerialDatabase : public PilotDatabase
     {
     public:
-    PilotSerialDatabase(KPilotLink* pilotLink, const char* dbName);
+    PilotSerialDatabase(int linksocket, const char* dbName);
     virtual ~PilotSerialDatabase();
 
     /** Reads the application block info, returns size */
@@ -81,13 +81,14 @@ class PilotSerialDatabase : public PilotDatabase
     void closeDatabase();
     int getDBHandle() { return fDBHandle; }
 
-    KPilotLink* getPilotLink() { return fPilotLink; }
+    // KPilotLink* getPilotLink() { return fPilotLink; }
 
     private:
     void setDBHandle(int handle) { fDBHandle = handle; }
     char*       fDBName;
     int         fDBHandle;
-    KPilotLink* fPilotLink;
+    int         fDBSocket;
+    // KPilotLink* fPilotLink;
     };
 
 #else
@@ -98,6 +99,9 @@ class PilotSerialDatabase : public PilotDatabase
 
 
 // $Log$
+// Revision 1.8  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.7  2001/03/27 23:54:43  stern
 // Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
 //

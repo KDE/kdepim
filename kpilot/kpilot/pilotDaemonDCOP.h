@@ -70,12 +70,15 @@ k_dcop:
 	/**
 	* Functions requesting the status of the daemon.
 	*/
-	virtual QString statusString() const = 0;
+	virtual QString statusString() = 0;
 } ;
 
 
 
 // $Log$
+// Revision 1.8  2001/09/07 20:48:44  adridg
+// New methods, moved #ifdefs. The KPilot Daemon is still broken, though.
+//
 // Revision 1.7  2001/08/27 22:54:27  adridg
 // Decruftifying; improve DCOP link between daemon & viewer
 //
