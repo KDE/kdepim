@@ -87,7 +87,6 @@ KAddressBook::KAddressBook( QWidget *parent, const char *name )
   mDistEditor = 0;
   mPrefsDialog = 0;
   mLdapSearchDialog = 0;
-  mFilterEditDialog = 0;
 }
 
 
@@ -594,16 +593,14 @@ void KAddressBook::slotAddressBookChanged()
 
 void KAddressBook::configureFilters()
 {
-  if (mFilterEditDialog == 0)
-  {
-    mFilterEditDialog = new FilterEditDialog(this);
-    connect(mFilterEditDialog, SIGNAL(filtersChanged(const Filter::List &)),
-            mViewManager, SLOT(filtersChanged(const Filter::List &)));
-  }
+  FilterEditDialog dlg( this );
+  connect( &dlg, SIGNAL( filtersChanged(const Filter::List &) ),
+            mViewManager, SLOT( filtersChanged(const Filter::List & ) ) );
+  
+  dlg.setFilters( mViewManager->filters() );
 
-  mFilterEditDialog->setFilters(mViewManager->filters());
-  mFilterEditDialog->show();
-  mFilterEditDialog->raise();
+  if ( dlg.exec() )
+    mViewManager->filtersChanged( dlg.filters() );
 }
 
 void KAddressBook::setIncSearchWidget(IncSearchWidget *w)

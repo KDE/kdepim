@@ -101,8 +101,6 @@ KABC::Addressee::List KAddressBookView::addressees()
 {
   KABC::Addressee::List addresseeList;
   
-  // For now just return all the addressees, since filtering hasn't been 
-  // implemented
   KABC::AddressBook::Iterator iter;
   for (iter = mDocument->begin(); iter != mDocument->end(); ++iter)
   {
@@ -115,7 +113,7 @@ KABC::Addressee::List KAddressBookView::addressees()
 
 void KAddressBookView::initGUI()
 {
-    // Create the layou
+    // Create the layout
     QVBoxLayout *layout = new QVBoxLayout(this);
     
     // Add the view widget

@@ -14,7 +14,6 @@ class ViewManager;
 class PrefsDialog;
 class LDAPSearchDialogImpl;
 class AddresseeEditorDialog;
-class FilterEditDialog;
 class IncSearchWidget;
 
 namespace KABC {
@@ -207,7 +206,6 @@ class KAddressBook : public QWidget
     KABC::AddressBook *mDocument;
     KABC::DistributionListEditor *mDistEditor;
     PrefsDialog *mPrefsDialog;
-    FilterEditDialog *mFilterEditDialog;
     LDAPSearchDialogImpl *mLdapSearchDialog;
     ViewManager *mViewManager;
     QDict<AddresseeEditorDialog> mEditorDict;

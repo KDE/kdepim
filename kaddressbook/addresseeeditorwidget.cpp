@@ -409,7 +409,11 @@ void AddresseeEditorWidget::save()
   mAddressee.setFormattedName(mFormattedNameBox->currentText());
   mAddressee.setUrl(KURL(mURLEdit->text()));
   mAddressee.setNote(mNoteEdit->text());
-  mAddressee.setBirthday(QDateTime(mBirthdayPicker->date()));
+  if ( mBirthdayPicker->inputIsValid() )
+    mAddressee.setBirthday(QDateTime(mBirthdayPicker->date()));
+  else
+    mAddressee.setBirthday(QDateTime());
+  
   mAddressee.setNickName(mNicknameEdit->text());
   mAddressee.setCategories(QStringList::split(",", mCategoryEdit->text()));
   
@@ -428,8 +432,11 @@ void AddresseeEditorWidget::save()
                           mOfficeEdit->text());
   mAddressee.insertCustom("KADDRESSBOOK", "X-Profession",
                           mProfessionEdit->text());
-  mAddressee.insertCustom("KADDRESSBOOK", "X-Anniversary",
+  if ( mAnniversaryPicker->inputIsValid() )
+    mAddressee.insertCustom("KADDRESSBOOK", "X-Anniversary",
                           mAnniversaryPicker->date().toString(Qt::ISODate));
+  else
+    mAddressee.removeCustom("KADDRESSBOOK", "X-Anniversary");
                           
   // Save the email addresses
   QStringList emails = mAddressee.emails();
