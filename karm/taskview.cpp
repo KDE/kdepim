@@ -492,13 +492,13 @@ void TaskView::deleteTask(bool markingascomplete)
     }
     else
     {
-      kdDebug() << "TaskView::deleteTask - 1" << endl;
+      //kdDebug() << "TaskView::deleteTask - 1" << endl;
       task->remove(activeTasks, _storage);
-      kdDebug() << "TaskView::deleteTask - 2" << endl;
+      //kdDebug() << "TaskView::deleteTask - 2" << endl;
       task->removeFromView();
-      kdDebug() << "TaskView::deleteTask - 3" << endl;
+      //kdDebug() << "TaskView::deleteTask - 3" << endl;
       save();
-      kdDebug() << "TaskView::deleteTask - 4" << endl;
+      //kdDebug() << "TaskView::deleteTask - 4" << endl;
     }
 
     // remove root decoration if there is no more children.
