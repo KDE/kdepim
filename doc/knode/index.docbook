@@ -1,0 +1,68 @@
+<!DOCTYPE book PUBLIC  "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
+  <!ENTITY kapp "<application>KNode</application>">
+  <!ENTITY kappname "&kapp;" -- this only *seems* redundant -->
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % ents PUBLIC "-//KDE//ENTITIES Application-Variable Entities V1.0//EN">
+  %ents;
+]>
+
+<book lang="en">
+
+<bookinfo>
+<title>The KNode Handbook</title>
+
+<authorgroup>
+<author>
+<firstname></firstname>
+<othername></othername>
+<surname></surname>
+<affiliation>
+<address><email></email></address>
+</affiliation>
+</author>
+</authorgroup>
+
+
+
+<legalnotice>&FDLNotice;</legalnotice>
+
+<!-- Date and version information of the documentation
+Don't forget to include this last date and this last revision number, we
+need them for translation coordination !
+Please respect the format of the date (DD/MM/YYYY) and of the version
+(Major.minor.lesser), it could be used by automation scripts -->
+
+<date>02/09/2000</date>
+<releaseinfo>0.00.00</releaseinfo>
+
+<!-- Abstract about this handbook -->
+
+<abstract>
+<para>
+&kapp; is a graphical newsreader for KDE.
+</para>
+</abstract>
+
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>KNode</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="introduction">
+<title>Introduction</title>
+<para>Sorry, but the documentation for &kapp; was not finished when KDE was installed on this computer.</para> 
+<para>If you need help, please check <ulink url="http://www.kde.org">The KDE Website</ulink> for updates, or by submitting your question to <ulink url="mailto:kde-user@kde.org">The KDE User Mailing list</ulink>.</para>
+<para><emphasis>The KDE Team</emphasis></para>
+</chapter>
+
+<![ %addindex; [ &kdedocindex; ]]>
+</book>
+<!--
+Local Variables:
+sgml-minimize-attributes: nil
+sgml-general-insert-case: lower
+End:
+-->
