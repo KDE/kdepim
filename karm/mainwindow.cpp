@@ -70,6 +70,8 @@ MainWindow::MainWindow()
            this, SLOT(slotSelectionChanged()));
   connect( _taskView, SIGNAL( updateButtons() ),
            this, SLOT(slotSelectionChanged()));
+  connect( _preferences, SIGNAL( timeLogging(bool) ),
+           this, SLOT( timeLoggingChanged(bool) ));
 
   _preferences->load();
   loadGeometry();
@@ -103,6 +105,11 @@ void MainWindow::slotSelectionChanged()
   actionEdit->setEnabled(item);
   actionStart->setEnabled(item && !item->isRunning());
   actionStop->setEnabled(item && item->isRunning());
+}
+
+void MainWindow::timeLoggingChanged(bool on)
+{
+  actionAddComment->setEnabled( on );
 }
 
 void MainWindow::save()
@@ -312,6 +319,12 @@ void MainWindow::makeMenus()
   actionEdit->setWhatsThis( i18n("This will bring up a dialog box where you "
                                  "may edit the parameters for the selected "
                                  "task."));
+  actionAddComment->setToolTip( i18n("Add a comment to a task") );
+  actionAddComment->setWhatsThis( i18n("This will bring up a dialog box where "
+                                       "you can add a comment to a task. The "
+                                       "comment can f.ex. precise what you "
+                                       "are currently doing. The comment will "
+                                       "be logged in the log file."));
   slotSelectionChanged();
 }
 
