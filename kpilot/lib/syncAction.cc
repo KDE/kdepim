@@ -64,10 +64,7 @@ static const char *syncAction_id =
 SyncAction::SyncAction(KPilotDeviceLink  *p,
 	const char *name) :
 	QObject(p, name),
-	fHandle(p),
-	fTickleTimer(0L),
-	fTickleCount(0),
-	fTickleTimeout(0)
+	fHandle(p)
 {
 	FUNCTIONSETUP;
 	(void) syncAction_id;
@@ -75,7 +72,6 @@ SyncAction::SyncAction(KPilotDeviceLink  *p,
 
 SyncAction::~SyncAction()
 {
-	KPILOT_DELETE(fTickleTimer);
 }
 
 /* virtual */ QString SyncAction::statusString() const
@@ -141,57 +137,16 @@ bool SyncAction::delayDone()
 void SyncAction::startTickle(unsigned timeout)
 {
 	FUNCTIONSETUP;
-	fTickleTimeout = timeout;
-	fTickleCount = 0;
-	if (!fTickleTimer)
-	{
-		fTickleTimer = new QTimer(this);
-		QObject::connect(fTickleTimer, SIGNAL(timeout()),
-			this, SLOT(tickle()));
-	}
-	else
-	{
-		fTickleTimer->stop();
-	}
-
-	fTickleTimer->start(1000, false);
+	connect(fHandle,SIGNAL(timeout()),this,SIGNAL(timeout()));
+	fHandle->startTickle(timeout);
 }
 
 void SyncAction::stopTickle()
 {
 	FUNCTIONSETUP;
-	if (fTickleTimer)
-	{
-		fTickleTimer->stop();
-	}
+	disconnect(fHandle,SIGNAL(timeout()),this,SIGNAL(timeout()));
+	fHandle->stopTickle();
 }
-
-void SyncAction::tickle()
-{
-	FUNCTIONSETUP;
-	fTickleCount++;
-
-	// Note that if fTickleTimeout == 0 then this
-	// test will never be true until unsigned wraps
-	// around, which is 2^32 seconds, which is a long time.
-	//
-	// This is intentional.
-	//
-	//
-	if (fTickleCount == fTickleTimeout)
-	{
-		emit timeout();
-	}
-	else
-	{
-		if (pi_tickle(pilotSocket()))
-		{
-			kdWarning() << k_funcinfo
-				<< "Couldn't tickle Pilot!" << endl;
-		}
-	}
-}
-
 
 InteractiveAction::InteractiveAction(KPilotDeviceLink *p,
 	QWidget * visibleparent,
@@ -280,16 +235,15 @@ int InteractiveAction::questionYesNo(const QString & text,
 	dialog->enableButtonSeparator(false);
 	dialog->incInitialSize(extraSize);
 
-	QTimer *timer = new QTimer(dialog);
-
-	QObject::connect(timer, SIGNAL(timeout()),
-		dialog, SLOT(slotCancel()));
 	if (timeout > 0)
 	{
-		timer->start(timeout,true);
+		QObject::connect(this, SIGNAL(timeout()),
+			dialog, SLOT(slotCancel()));
+		startTickle(timeout);
 	}
 
 	int result = dialog->exec();
+	stopTickle();
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Dialog returned " << result << endl;

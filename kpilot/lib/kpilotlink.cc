@@ -49,6 +49,7 @@ static const char *kpilotlink_id = "$Id$";
 #include <qtimer.h>
 #include <qdatetime.h>
 #include <qsocketnotifier.h>
+#include <qthread.h>
 
 #include <kconfig.h>
 #include <kmessagebox.h>
@@ -115,6 +116,8 @@ KPilotDeviceLink::KPilotDeviceLinkPrivate *KPilotDeviceLink::KPilotDeviceLinkPri
 KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name, const QString &tempDevice) :
 	QObject(parent, name),
 	fLinkStatus(Init),
+	fTickleDone(true),
+	fTickleThread(0L),
 	fPilotPath(QString::null),
 	fRetries(0),
 	fOpenTimer(0L),
@@ -621,10 +624,117 @@ void KPilotDeviceLink::acceptDevice()
 	emit deviceReady( this );
 }
 
-void KPilotDeviceLink::tickle() const
+bool KPilotDeviceLink::tickle() const
 {
 	FUNCTIONSETUP;
-	pi_tickle(pilotSocket());
+	return pi_tickle(pilotSocket()) >= 0;
+}
+
+class TickleThread : public QThread
+{
+public:
+	TickleThread(KPilotDeviceLink *d, bool *done, int timeout) :
+		QThread(),
+		fHandle(d),
+		fDone(done),
+		fTimeout(timeout)
+	{ };
+	virtual ~TickleThread();
+
+	virtual void run();
+
+	static const int ChecksPerSecond = 5;
+	static const int SecondsPerTickle = 5;
+
+private:
+	KPilotDeviceLink *fHandle;
+	bool *fDone;
+	int fTimeout;
+} ;
+
+TickleThread::~TickleThread()
+{
+}
+
+void TickleThread::run()
+{
+	FUNCTIONSETUP;
+	int subseconds = ChecksPerSecond;
+	int ticktock = SecondsPerTickle;
+	int timeout = fTimeout;
+	while (!(*fDone))
+	{
+		usleep(1000/ChecksPerSecond);
+		if (!(--subseconds))
+		{
+			if (timeout)
+			{
+				if (!(--timeout))
+				{
+					QApplication::postEvent(fHandle, new QEvent((QEvent::Type)(KPilotDeviceLink::TickleTimeoutEvent)));
+					break;
+				}
+			}
+			subseconds=ChecksPerSecond;
+			if (!(--ticktock))
+			{
+				ticktock=SecondsPerTickle;
+				fHandle->tickle();
+			}
+		}
+	}
+}
+
+/*
+** Deal with events, especially the ones used to signal a timeout
+** in a tickle thread.
+*/
+
+/* virtual */ bool KPilotDeviceLink::event(QEvent *e)
+{
+	if (e->type() == TickleTimeoutEvent)
+	{
+		stopTickle();
+		emit timeout();
+		return true;
+	}
+	else	return QObject::event(e);
+}
+
+/*
+Start a tickle thread with the indicated timeout.
+*/
+void KPilotDeviceLink::startTickle(unsigned int timeout)
+{
+	FUNCTIONSETUP;
+
+	Q_ASSERT(fTickleDone);
+
+	/*
+	** We've told the thread to finish up, but it hasn't
+	** done so yet - so wait for it to do so, should be
+	** only 200ms at most.
+	*/
+	if (fTickleDone && fTickleThread)
+	{
+		fTickleThread->wait();
+		KPILOT_DELETE(fTickleThread);
+	}
+
+	fTickleDone = false;
+	fTickleThread = new TickleThread(this,&fTickleDone,timeout);
+	fTickleThread->start();
+}
+
+void KPilotDeviceLink::stopTickle()
+{
+	FUNCTIONSETUP;
+	fTickleDone = true;
+	if (fTickleThread)
+	{
+		fTickleThread->wait();
+		KPILOT_DELETE(fTickleThread);
+	}
 }
 
 

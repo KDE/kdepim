@@ -41,6 +41,7 @@
 class QTimer;
 class QDateTime;
 class QSocketNotifier;
+class QThread;
 class KPilotUser;
 class KPilotSysInfo;
 class KPilotCard;
@@ -101,6 +102,7 @@ public:
 	virtual ~KPilotDeviceLink();
 //	bool init(QObject *parent=0L,const char *n=0L);
 
+
 /*
 ** Status information
 */
@@ -131,14 +133,90 @@ public:
 	*/
 	bool getConnected() const { return fLinkStatus == AcceptedDevice; }
 
-public slots:
-	/**
-	* Tickle the palm to reset the timeout
-	*/
-	void tickle() const;
-
 private:
 	LinkStatus fLinkStatus;
+
+/**
+* Tickle handling.
+*
+* During a HotSync, the Pilot expects to be kept awake by (nearly)
+* continuous communication with the PC. The Pilot doesn't like
+* long periods of inactivity, since they drain the batteries while
+* the communications hardware is kept powered up. If the period of
+* inactivity is too long, the Pilot times out, shuts down the
+* communication, and the HotSync is broken.
+
+* Sometimes, however, periods of inactivity cannot be avoided --
+* for instance, if you _have_ to ask the user something during a
+* sync, or if you are fetching a large amount of data from a slow
+* source (libkabc can do that, if your addressbook is on an LDAP
+* server). During these periods of inactivity (as far as the Pilot
+* can tell), you can "tickle" the Pilot to keep it awake. This
+* prevents the communications from being shut down. It's not
+* a good idea to do this all the time -- battery life and possible
+* corruption of the dlp_ communications streams. Hence, you should
+* start and stop tickling the Pilot around any computation which:
+*   - may take a long time
+*   - does not in itself _ever_ communicate directly with the Pilot
+*
+*
+*
+* You can call slot tickle() whenever you like just to do a
+* dlp_tickle() call on the Pilot. It will return true if the
+* tickle was successful, false otherwise (this can be used to
+* detect if the communication with the Pilot has shut down for
+* some reason).
+*
+* The protected methods startTickle() and stopTickle() are intended
+* to be called only from SyncActions -- I can't think of any other
+* legitimate use, since everything being done during a HotSync is
+* done via subclasses of SyncActions anyway, and SyncAction provides
+* access to these methods though its own start- and stopTickle().
+*
+* Call startTickle with a timeout in seconds, or 0 for no timeout.
+* This timeout is _unrelated_ to the timeout in the Pilot's
+* communications. Instead, it indicates how long to continue
+* tickling the Pilot before emitting the timeout() signal. This
+* can be useful for placing an upper bound on the amount of
+* time to wait for, say, user interaction -- you don't want an
+* inattentive user to drain the batteries during a sync because
+* he doesn't click on "Yes" for some question. If you pass a
+* timeout of 0, the Pilot will continue to be tickled until you
+* call stopTickle().
+*
+* Call stopTickle() to stop tickling the Pilot and continue with
+* normal operation. You _must_ call stopTickle() before calling
+* anything else that might communicate with the Pilot, to avoid
+* corrupting the dlp_ communications stream. (TODO: Mutex the heck
+* out of this to avoid this problem). Note that stopTickle() may
+* hang up the caller for a small amount of time (up to 200ms)
+* before returning.
+*
+* event() and TickleTimeoutEvent are part of the implementation
+* of tickling, and are only accidentally visible.
+*
+* Signal timeout() is emitted if startTickle() has been called
+* with a non-zero timeout and that timeout has elapsed. The
+* tickler is stopped before timeout is emitted.
+*/
+public slots:
+	bool tickle() const;
+protected:
+	void startTickle(unsigned int timeout=0);
+	void stopTickle();
+public:
+	virtual bool event(QEvent *e);
+	static const unsigned int TickleTimeoutEvent = 1066;
+
+signals:
+	void timeout();
+
+private:
+	bool fTickleDone;
+	QThread *fTickleThread;
+
+
+
 
 
 /*

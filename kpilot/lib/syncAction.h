@@ -151,9 +151,6 @@ public:
 	};
 
 protected:
-	QTimer *fTickleTimer;
-	unsigned fTickleCount,fTickleTimeout;
-
 	/**
 	* Call startTickle() some time before showing a dialog to the
 	* user (we're assuming a local event loop here) so that while
@@ -167,12 +164,6 @@ protected:
 	*/
 	void startTickle(unsigned count=0);
 	void stopTickle();
-protected slots:
-	/**
-	* Called whenever the tickle state is on, uses dlp_tickle()
-	* or something like that to prevent the pilot from timing out.
-	*/
-	void tickle();
 signals:
 	void timeout();
 };
