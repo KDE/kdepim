@@ -82,6 +82,8 @@ KAddressBook::KAddressBook( QWidget *parent, const char *name )
           this, SLOT(addresseeExecuted(const QString &)));
   connect(mViewManager, SIGNAL(modified()), this,
           SLOT(viewModified()));
+  connect(mViewManager, SIGNAL(importVCard(const QString &, bool)),
+          this, SLOT(importVCard(const QString &, bool)));
 
   mDistEditor = 0;
   mPrefsDialog = 0;
@@ -322,9 +324,21 @@ void KAddressBook::importCSV()
   emit modified( true );
 }
 
-void KAddressBook::importVCard()
+void KAddressBook::importVCardSimple()
 {
-  QString fileName = KFileDialog::getOpenFileName(QString::null,
+importVCard(QString::null,false);
+}
+
+
+void KAddressBook::importVCard(const QString &file = QString::null, bool showDialog = true)
+{
+
+ QString fileName; 
+
+  if (file)
+    fileName = file;
+  else
+    QString fileName = KFileDialog::getOpenFileName(QString::null,
                                                   "*.vcf|vCards", 0,
                                                   i18n("Select vCard to Import"));
 
@@ -338,10 +352,10 @@ void KAddressBook::importVCard()
     QString data = QString::fromLatin1( rawData.data(), rawData.size() + 1 );
     bool ok = false;
     
-    if ( data.contains( "\r\nVERSION:3.0\r\n" ) ) {
+    if ( data.contains( "VERSION:3.0" ) ) {
       ok = converter.vCardToAddressee( data, a, KABC::VCardConverter::v3_0 );
       kdDebug() << "version 3.0" << endl;
-    } else if ( data.contains( "\r\nVERSION:2.1\r\n" ) ) {
+    } else if ( data.contains( "VERSION:2.1" ) ) {
       ok = converter.vCardToAddressee( data, a, KABC::VCardConverter::v2_1 );
       kdDebug() << "version 2.1" << endl;
     }
@@ -354,7 +368,8 @@ void KAddressBook::importVCard()
 
       mViewManager->refresh();
 
-      editAddressee(a.uid());
+      if (showDialog)
+        editAddressee(a.uid());
     } else {
       QString text = i18n("The selected file does not appear to be a valid vCard. "
                           "Please check the file and try again.");

@@ -552,19 +552,47 @@ void ViewManager::dropped(QDropEvent *e)
   kdDebug() << "ViewManager::dropped: got a drop event" << endl;
 
   QString clipText;
-  if (QTextDrag::decode(e, clipText))
-  {
-    KABC::Addressee::List aList;
-    aList = AddresseeUtil::clipboardToAddressees(clipText);
-
-    KABC::Addressee::List::Iterator iter;
-    for (iter = aList.begin(); iter != aList.end(); ++iter)
-    {
-      mDocument->insertAddressee(*iter);
-    }
-
-    mActiveView->refresh();
-  }
+  QStrList  urls;
+  
+ 
+  if (QUriDrag::decode(e, urls)) {
+     QPtrListIterator<char> it (urls);	
+     int c = urls.count();
+     if (c>1)
+     {
+       QString questionString = i18n("Import one contact into your addressbook?","Import %n contacts into your addressbook?",c);
+       if (KMessageBox::questionYesNo(this,questionString,i18n("Import contacts?"))==KMessageBox::Yes)
+        {
+          for ( ; it.current(); ++it)
+          {
+          //kdDebug() << "import VCard: " << *it << endl;
+          KURL url(*it);
+          QString f = url.path();
+          kdDebug() << "import VCard: " << f << endl;
+          emit importVCard(f, false);
+          }
+        }
+     } else if (c == 1)     {
+       KURL url(*it);
+       QString f = url.path();
+       kdDebug() << "import VCard: " << f << endl;
+       emit importVCard(f, true);
+     }
+     
+          
+  } else if (QTextDrag::decode(e, clipText)) {
+     KABC::Addressee::List aList;
+     aList = AddresseeUtil::clipboardToAddressees(clipText);
+ 
+     KABC::Addressee::List::Iterator iter;
+     for (iter = aList.begin(); iter != aList.end(); ++iter)
+     {
+       mDocument->insertAddressee(*iter);
+     }
+ 
+     mActiveView->refresh();
+   }
+  
 }
 
 void ViewManager::startDrag()

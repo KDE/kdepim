@@ -238,6 +238,9 @@ class ViewManager : public QWidget
 
     /** Set the current filter. 0 for none. */
     void setCurrentFilter(int index);
+    
+    /** Import a VCard that has been dragged  */
+    void importVCard(const QString &, bool);
   private:
     /** Create a view wrapper for each type of view we know about
     */

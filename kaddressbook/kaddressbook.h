@@ -93,7 +93,10 @@ class KAddressBook : public QWidget
 
     /** Import VCard files, the version is detected automatically.
     */
-    void importVCard();
+    void importVCard(const QString &, bool);
+    
+    /** Import VCard file.  Simple refers to the fact that no QString is passed here, used for menu items */
+    void importVCardSimple();
 
     /** Export comma-seperated list of all addressbook entries.
     */
