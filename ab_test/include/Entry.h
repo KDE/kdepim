@@ -24,51 +24,54 @@ class Entry
 		 * Constructor that initialises the name.
 		 */
 		Entry(const QString & name);
-		
+    /**
+     * dtor.
+     */
 		~Entry();
-		
 		/**
 		 * Get the name of this entry.
 		 */
-		QString		name()	    const	{ return name_;		  	}
-		
+		QString		name()    const	{ return name_;		  	}
 		/**
 		 * Get a copy of the field list.
 		 */
-		FieldList	fieldList()	const	{ return fieldList_;	}
-		
+		FieldList	fields()  const	{ return fieldList_;	}
 		/**
 		 * Add a new field.
 		 */
-		void addField(const Field &);
-	
+		void add(const Field &);
 		/**
 		 * Find the fields with the specified field name.
 		 */
-		FieldList	find(const QString & fieldName);
+		FieldList	fields(const QString & fieldName);
 		/**
 		 * Find the fields with the specified field name.
 		 */
-		FieldList	find(const QRegExp & expression);
+		FieldList	fields(const QRegExp & expression);
 		/**
 		 * Find the fields with the specified value type.
 		 */
-		FieldList	findByValue(ValueType t);
+		FieldList	fieldsWithValueType(ValueType t);
 		/**
 		 * Find the fields with the specified value type.
 		 */
-		FieldList	findByValue(const QString & valueType);
-	
+		FieldList	fieldsWithValueType(const QString & valueType);
+		/**
+		 * Find the fields with an extension value type.
+		 */
+		FieldList	fieldsWithExtensionValueType();
+		/**
+		 * Find the fields with a standard value type.
+		 */
+		FieldList	fieldsWithStandardValueType();
 		/**
 		 * Add fields from a QDataStream.
 		 */
 		friend QDataStream & operator >> (QDataStream &, Entry &);
-		
 		/**
 		 * Write all fields to a QDataStream.
 		 */
 		friend QDataStream & operator << (QDataStream &, const Entry &);
-	
 		/**
 		 * @internal
 		 */

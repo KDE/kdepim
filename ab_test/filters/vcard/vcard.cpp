@@ -104,10 +104,10 @@ int import(const char * _str, KAB::AddressBook * ab)
 			
 			Value val(valStr, type);
 			Field f(n, val);
-			e.addField(f);
+			e.add(f);
 		}
 		
-		ab->addEntry(e);
+		ab->add(e);
 		
 		++imported;
 	}

@@ -36,17 +36,17 @@ createTest()
   
   Entry e("Rik Mark Hemsley");
 
-  e.addField(f1);
-  e.addField(f2);
-  e.addField(f3);
-  e.addField(f4);
-  e.addField(f5);
-  e.addField(f6);
-  e.addField(f7);
-  e.addField(f8);
-  e.addField(f9);
+  e.add(f1);
+  e.add(f2);
+  e.add(f3);
+  e.add(f4);
+  e.add(f5);
+  e.add(f6);
+  e.add(f7);
+  e.add(f8);
+  e.add(f9);
   
-  if (!ab.addEntry(e)) {
+  if (!ab.add(e)) {
     cerr << "Couldn't add entry" << endl;
     exit(1);
   }
@@ -59,7 +59,7 @@ testFind(KAB::AddressBook & ab)
 {
   using namespace KAB;
 
-  Entry * ex = ab.findEntry("Rik Mark Hemsley");
+  Entry * ex = ab.entry("Rik Mark Hemsley");
 
   if (ex == 0) {
     cerr << "Couldn't find entry" << endl;
@@ -67,7 +67,7 @@ testFind(KAB::AddressBook & ab)
   }
   
   FieldList fl;  
-  fl = ex->findByValue(Date);
+  fl = ex->fieldsWithValueType(Date);
   
   FieldListConstIterator it(fl.begin());
   
@@ -128,7 +128,7 @@ main(int argc, char * argv[])
   AddressBook ab3;
   testImport(ab3, "VCARD", argv[1]);
   
-  FieldList l = ab3.findFieldsByValue(Any);
+  FieldList l = ab3.fieldsWithValueType(Any);
   
   for (FieldListConstIterator it(l.begin()); it != l.end(); ++it)
     cerr << (*it).name() << ": " << (*it).value().data() << endl;

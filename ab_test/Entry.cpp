@@ -16,7 +16,7 @@ Entry::~Entry()
 }
 
   FieldList
-Entry::find(const QString & fieldName)
+Entry::fields(const QString & fieldName)
 {
   FieldList l;
   
@@ -30,7 +30,7 @@ Entry::find(const QString & fieldName)
 }
 
   FieldList
-Entry::find(const QRegExp & expression)
+Entry::fields(const QRegExp & expression)
 {
   FieldList l;
   
@@ -44,7 +44,7 @@ Entry::find(const QRegExp & expression)
 }
 
   FieldList
-Entry::findByValue(ValueType t)
+Entry::fieldsWithValueType(ValueType t)
 {
   FieldList l;
   
@@ -58,7 +58,7 @@ Entry::findByValue(ValueType t)
 }
   
   FieldList
-Entry::findByValue(const QString & valueType)
+Entry::fieldsWithValueType(const QString & valueType)
 {
   FieldList l;
   
@@ -70,9 +70,29 @@ Entry::findByValue(const QString & valueType)
   
   return l;
 }
+
+  FieldList
+Entry::fieldsWithExtensionValueType()
+{
+  return fieldsWithValueType(XValue);
+}
+
+  FieldList
+Entry::fieldsWithStandardValueType()
+{
+  FieldList l;
+  
+  FieldListIterator it(fieldList_.begin());
+  
+  for (; it != fieldList_.end(); ++it)
+    if ((*it).type() != XValue)
+      l.append(*it);
+  
+  return l;
+}
   
   void
-Entry::addField(const Field & f)
+Entry::add(const Field & f)
 {
   fieldList_.append(f);
 }

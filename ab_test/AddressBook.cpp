@@ -39,13 +39,13 @@ AddressBook::operator = (const AddressBook & ab)
 }
 
   Entry *
-AddressBook::findEntry(const QString & name)
+AddressBook::entry(const QString & name)
 {
   return entryDict_[name];
 }
 
   EntryList
-AddressBook::findEntries(const QRegExp & e)
+AddressBook::entries(const QRegExp & e)
 {
   EntryList l;
   
@@ -57,13 +57,13 @@ AddressBook::findEntries(const QRegExp & e)
 }
 
   FieldList
-AddressBook::findFields(const QString & s)
+AddressBook::fields(const QString & s)
 {
   FieldList l;
   
   for (EntryDictIterator it(entryDict_); it.current(); ++it) {
   
-    FieldList f(it.current()->find(s));
+    FieldList f(it.current()->fields(s));
   
     for(
       FieldListConstIterator fit(f.begin());
@@ -76,13 +76,13 @@ AddressBook::findFields(const QString & s)
 }
 
   FieldList
-AddressBook::findFields(const QRegExp & e)
+AddressBook::fields(const QRegExp & e)
 {
   FieldList l;
   
   for (EntryDictIterator it(entryDict_); it.current(); ++it) {
   
-    FieldList f(it.current()->find(e));
+    FieldList f(it.current()->fields(e));
   
     for (
       FieldListConstIterator fit(f.begin());
@@ -95,13 +95,13 @@ AddressBook::findFields(const QRegExp & e)
 }
 
   FieldList
-AddressBook::findFieldsByValue(ValueType t)
+AddressBook::fieldsWithValueType(ValueType t)
 {
   FieldList l;
   
   for (EntryDictIterator it(entryDict_); it.current(); ++it) {
    
-    FieldList f(it.current()->findByValue(t));
+    FieldList f(it.current()->fieldsWithValueType(t));
   
     for (
       FieldListConstIterator fit(f.begin());
@@ -114,13 +114,13 @@ AddressBook::findFieldsByValue(ValueType t)
 }  
   
   FieldList
-AddressBook::findFieldsByValue(const QString & valueType)
+AddressBook::fieldsWithValueType(const QString & valueType)
 {
   FieldList l;
   
   for (EntryDictIterator it(entryDict_); it.current(); ++it) {
     
-    FieldList f(it.current()->findByValue(valueType));
+    FieldList f(it.current()->fieldsWithValueType(valueType));
     
     for (
       FieldListConstIterator fit(f.begin());
@@ -132,8 +132,33 @@ AddressBook::findFieldsByValue(const QString & valueType)
   return l;
 }
 
+  FieldList
+AddressBook::fieldsWithExtensionValueType()
+{
+  return fieldsWithValueType(XValue);
+}
+
+  FieldList
+AddressBook::fieldsWithStandardValueType()
+{
+  FieldList l;
+  
+  for (EntryDictIterator it(entryDict_); it.current(); ++it) {
+   
+    FieldList f(it.current()->fieldsWithStandardValueType());
+  
+    for (
+      FieldListConstIterator fit(f.begin());
+      fit != f.end();
+      ++fit)
+      l.append(*fit);
+  }
+  
+  return l;
+}
+
   bool
-AddressBook::addEntry(const Entry & e)
+AddressBook::add(const Entry & e)
 {
   if (e.name().isEmpty()) {
     kabDebug("Name is null, not adding!");
@@ -146,16 +171,21 @@ AddressBook::addEntry(const Entry & e)
 }
 
   bool
-AddressBook::removeEntry(const QString & key)
+AddressBook::remove(const QString & key)
 {
-  return entryDict_.remove(key);
+  bool retval = entryDict_.remove(key);
+
+  return retval;
 }
 
   bool
-AddressBook::replaceEntry(const QString & key, const Entry & e)
+AddressBook::update(const Entry & e)
 {
-  removeEntry(key);
-  return addEntry(e);
+  if (!e.name()) return false;
+  
+  entryDict_.replace(e.name(), new Entry(e));
+  
+  return true;
 }
 
   Q_UINT32
@@ -218,7 +248,7 @@ KAB::operator >> (QDataStream & s, AddressBook & a)
     EntryListConstIterator it(entryList.begin());
     it != entryList.end();
     ++it)
-    a.addEntry(*it);
+    a.add(*it);
 
   return s;
 }
@@ -276,3 +306,4 @@ AddressBook::load(const QString & filename)
 }
 
 // vim:ts=2:sw=2:tw=78:
+
