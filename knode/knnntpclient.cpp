@@ -394,6 +394,24 @@ void KNNntpClient::doFetchNewHeaders()
   progressValue = 100;
   predictedLines = toFetch;
 
+  // get list of additional headers provided by the XOVER command
+  // see RFC 2980 section 2.1.7
+  QStrList headerformat;
+  cmd = "LIST OVERVIEW.FMT";
+  if (sendCommand( cmd, rep )) {
+    QStrList tmp;
+    if (getMsg(tmp)) {
+      for(QCString s = tmp.first(); s; s = tmp.next()) {
+        // remove the mandatory xover header
+        if (s == "Subject:" || s == "From:" || s == "Date:" || s == "Message-ID:"
+            || s == "References:" || s == "Bytes:" || s == "Lines:")
+          continue;
+        else
+          headerformat.append(s);
+      }
+    }
+  }
+
   //qDebug("knode: KNNntpClient::doFetchNewHeaders() : xover %d-%d", last-toFetch+1, last);
   cmd.sprintf("xover %d-%d",last-toFetch+1,last);
   if (!sendCommand(cmd,rep))
@@ -419,7 +437,7 @@ void KNNntpClient::doFetchNewHeaders()
   sendSignal(TSsortNew);
 
   mutex.lock();
-  target->insortNewHeaders(&headers, this);
+  target->insortNewHeaders(&headers, &headerformat, this);
   target->setLastNr(last);
   mutex.unlock();
 }

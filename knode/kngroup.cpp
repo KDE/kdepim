@@ -182,7 +182,7 @@ bool KNGroup::loadHdrs()
   }
 
   kdDebug(5003) << "KNGroup::loadHdrs() : loading headers" << endl;
-  QCString buff;
+  QCString buff, hdrValue;
   KNFile f;
   KQCStringSplitter split;
   int cnt=0, id, lines, fileFormatVersion, artNumber;
@@ -245,6 +245,20 @@ bool KNGroup::loadHdrs()
         buff=f.readLine();
         sscanf(buff,"%d", &artNumber);
         art->setArticleNumber(artNumber);
+      }
+
+      // optional headers
+      if (fileFormatVersion > 1) {
+        // first line is the number of addiotion headers
+        buff = f.readLine();
+        // following lines contain one header per line
+        for (uint i = buff.toUInt(); i > 0; --i) {
+          buff = f.readLine();
+          int pos = buff.find(':');
+          hdrValue = buff.right( buff.length() - (pos + 2) );
+          if (hdrValue.length() > 0)
+            art->setHeader( new KMime::Headers::Generic( buff.left(pos), art, hdrValue ) );
+        }
       }
 
       if(append(art)) cnt++;
@@ -363,10 +377,10 @@ bool KNGroup::unloadHdrs(bool force)
 
 
 // Attention: this method is called from the network thread!
-void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
+void KNGroup::insortNewHeaders(QStrList *hdrs, QStrList *hdrfmt, KNProtocolClient *client)
 {
   KNRemoteArticle *art=0, *art2=0;
-  QCString tmp;
+  QCString data, hdr, hdrName;
   KQCStringSplitter split;
   split.setIncludeSep(false);
   int new_cnt=0, added_cnt=0, todo=hdrs->count();
@@ -423,10 +437,28 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
     if(!split.string().isEmpty())
       art->references()->from7BitString(split.string()); //use QCString::copy() ?
 
+    // Bytes
+    split.next();
+
     //Lines
     split.next();
-    split.next();
     art->lines()->setNumberOfLines(split.string().toInt());
+
+    // optinal additional headers
+    mOptionalHeaders = *hdrfmt;
+    for (hdr = hdrfmt->first(); hdr; hdr = hdrfmt->next()) {
+      if (!split.next())
+        break;
+      data = split.string();
+      int pos = hdr.find(':');
+      hdrName = hdr.left( pos );
+      // if the header format is 'full' we have to strip the header name
+      if (hdr.findRev("full") == (int)(hdr.length() - 5))
+        data = data.right( data.length() - (hdrName.length() + 2) );
+
+      // add header
+      art->setHeader( new KMime::Headers::Generic( hdrName, art, data ) );
+    }
 
     // check if we have this article already in this group,
     // if so mark it as new (useful with leafnodes delay-body function)
@@ -516,9 +548,20 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
       ts << art->id() << ' ';
       ts << art->lines()->numberOfLines() << ' ';
       ts << art->date()->unixTime() << ' ';
-      ts << "1\n";       // version number to achieve backward compatibility easily
+      ts << "2\n";       // version number to achieve backward compatibility easily
 
       ts << art->articleNumber() << '\n';
+
+      // optional headers
+      ts << mOptionalHeaders.count() << '\n';
+      for (QCString hdrName = mOptionalHeaders.first(); hdrName; hdrName = mOptionalHeaders.next()) {
+        hdrName = hdrName.left( hdrName.find(':') );
+        KMime::Headers::Base *hdr = art->getHeaderByType( hdrName );
+        if ( hdr )
+          ts << hdrName << ": " << hdr->asUnicodeString() << '\n';
+        else
+          ts << hdrName << ": \n";
+      }
 
       savedCnt++;
     }

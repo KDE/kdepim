@@ -93,7 +93,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     /** load + save */
     bool loadHdrs();
     bool unloadHdrs(bool force=true);
-    void insortNewHeaders(QStrList *hdrs, KNProtocolClient *client=0);
+    void insortNewHeaders(QStrList *hdrs, QStrList *hdrfmt, KNProtocolClient *client=0);
     int saveStaticData(int cnt,bool ovr=false);
     void saveDynamicData(int cnt,bool ovr=false);
     void syncDynamicData();
@@ -155,6 +155,11 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     Status    s_tatus;
 
     QStringList c_rosspostIDBuffer;
+
+    /** Optional headers provided by the XOVER command
+     *  These headers will be saved within the static data
+     */
+    QStrList mOptionalHeaders;
 
     KNConfig::Identity *i_dentity;
     KNConfig::Cleanup *mCleanupConf;
