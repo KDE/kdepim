@@ -1,0 +1,32 @@
+INCLUDES = -I$(top_srcdir) $(all_includes)
+
+lib_LTLIBRARIES = libkcal_resourcefeatureplan.la
+
+libkcal_resourcefeatureplan_la_SOURCES = kcal_resourcefeatureplan.cpp \
+                                         kcal_resourcefeatureplanconfig.cpp \
+                                         prefs.kcfgc \
+					 kde-features.cpp
+libkcal_resourcefeatureplan_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) \
+                                         -version-info 1:0:0 -no-undefined
+libkcal_resourcefeatureplan_la_LIBADD = $(top_builddir)/libkcal/libkcal.la \
+                                        $(top_builddir)/libkdepim/libkdepim.la
+
+
+kde_module_LTLIBRARIES = kcal_resourcefeatureplan.la
+
+kcal_resourcefeatureplan_la_SOURCES = kcal_resourcefeatureplanplugin.cpp
+kcal_resourcefeatureplan_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
+kcal_resourcefeatureplan_la_LIBADD = libkcal_resourcefeatureplan.la
+
+kcal_servicedir = $(kde_servicesdir)/kresources/kcal
+kcal_service_DATA = kcal_resourcefeatureplan.desktop
+
+dumpfeaturelist_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+dumpfeaturelist_LDADD   = -lkdecore
+dumpfeaturelist_SOURCES = dumpfeaturelist.cpp kde-features.cpp
+
+kde-features.cpp: $(srcdir)/kde-features.rng \
+  $(top_builddir)/kode/kxml_compiler
+	$(top_builddir)/kode/kxml_compiler $(srcdir)/kde-features.rng
+
+METASOURCES = AUTO

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=XML Feature Plan
+X-KDE-Library=kcal_resourcefeatureplan
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=calendar
+X-KDE-ResourceType=featureplan
