@@ -37,3 +37,5 @@ include_HEADERS = 	\
 			KDGanttViewTaskLinkGroup.h	\
 			KDXMLTools.h
 
+messages: rc.cpp
+	$(XGETTEXT) *.cpp *.h -o $(podir)/kdgantt.pot

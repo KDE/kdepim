@@ -46,7 +46,9 @@
 #include <qrect.h>
 #include <qtooltip.h>
 #include <qapplication.h>
+
 #include <kdialog.h>
+#include <klocale.h>
 
 KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):QCanvas (parent)
 {
@@ -688,25 +690,25 @@ KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant ):QWi
     myGridMinorWidth = 0;
     myPopupMenu = new QPopupMenu(this);
     QPopupMenu *scalePopupMenu = new QPopupMenu(this);
-    myPopupMenu->insertItem (tr("Scale"),scalePopupMenu);
-    scalePopupMenu->insertItem( tr("Minute"),this, SLOT(setSettings(int)),0 ,1,1 );
-    scalePopupMenu->insertItem( tr("Hour"),this, SLOT(setSettings(int)),0 ,2,2 );
-    scalePopupMenu->insertItem( tr("Day"),this, SLOT(setSettings(int)),0 ,3,3 );
-    scalePopupMenu->insertItem( tr("Week"),this, SLOT(setSettings(int)),0 ,4,4 );
-    scalePopupMenu->insertItem( tr("Month"),this, SLOT(setSettings(int)),0 ,5,5 );
-    scalePopupMenu->insertItem( tr("Auto"),this, SLOT(setSettings(int)),0 ,6,6 );
+    myPopupMenu->insertItem (i18n("Scale"),scalePopupMenu);
+    scalePopupMenu->insertItem( i18n("Minute"),this, SLOT(setSettings(int)),0 ,1,1 );
+    scalePopupMenu->insertItem( i18n("Hour"),this, SLOT(setSettings(int)),0 ,2,2 );
+    scalePopupMenu->insertItem( i18n("Day"),this, SLOT(setSettings(int)),0 ,3,3 );
+    scalePopupMenu->insertItem( i18n("Week"),this, SLOT(setSettings(int)),0 ,4,4 );
+    scalePopupMenu->insertItem( i18n("Month"),this, SLOT(setSettings(int)),0 ,5,5 );
+    scalePopupMenu->insertItem( i18n("Auto"),this, SLOT(setSettings(int)),0 ,6,6 );
     QPopupMenu *gridPopupMenu = new QPopupMenu(this);
-    myPopupMenu->insertItem (tr("Grid"),gridPopupMenu);
-    gridPopupMenu->insertItem( tr("Show minor grid"),this, SLOT(setSettings(int)),0 ,10,10 );
-    gridPopupMenu->insertItem( tr("Show major grid"),this, SLOT(setSettings(int)),0 ,11,11 );
-    gridPopupMenu->insertItem( tr("Show no grid"),this, SLOT(setSettings(int)),0 ,12,12 );
+    myPopupMenu->insertItem (i18n("Grid"),gridPopupMenu);
+    gridPopupMenu->insertItem( i18n("Show minor grid"),this, SLOT(setSettings(int)),0 ,10,10 );
+    gridPopupMenu->insertItem( i18n("Show major grid"),this, SLOT(setSettings(int)),0 ,11,11 );
+    gridPopupMenu->insertItem( i18n("Show no grid"),this, SLOT(setSettings(int)),0 ,12,12 );
     QPopupMenu *zoomPopupMenu = new QPopupMenu(this);
-    myPopupMenu->insertItem (tr("Zoom"),zoomPopupMenu);
-    zoomPopupMenu->insertItem( tr("Zoom to fit"),this, SLOT(setSettings(int)),0 ,20,20 );
-    zoomPopupMenu->insertItem( tr("Zoom to 100%"),this, SLOT(setSettings(int)),0 ,21,21 );
-    zoomPopupMenu->insertItem( tr("Zoom in (x 2)"),this, SLOT(setSettings(int)),0 ,22,22 );
-    zoomPopupMenu->insertItem( tr("Zoom out (x 1/2)"),this, SLOT(setSettings(int)),0 ,23,23 );
-    myPopupMenu->insertItem( tr("Print"),this, SLOT(setSettings(int)),0 ,30,30 );
+    myPopupMenu->insertItem (i18n("Zoom"),zoomPopupMenu);
+    zoomPopupMenu->insertItem( i18n("Zoom to fit"),this, SLOT(setSettings(int)),0 ,20,20 );
+    zoomPopupMenu->insertItem( i18n("Zoom to 100%"),this, SLOT(setSettings(int)),0 ,21,21 );
+    zoomPopupMenu->insertItem( i18n("Zoom in (x 2)"),this, SLOT(setSettings(int)),0 ,22,22 );
+    zoomPopupMenu->insertItem( i18n("Zoom out (x 1/2)"),this, SLOT(setSettings(int)),0 ,23,23 );
+    myPopupMenu->insertItem( i18n("Print"),this, SLOT(setSettings(int)),0 ,30,30 );
     flagZoomZoFit = false;
     setShowMinorTicks( true );
     myRealEnd =  myHorizonEnd;
@@ -2293,7 +2295,7 @@ KDListView::KDListView(QWidget* parent, KDGanttView* gantView):QListView (parent
     new KDListViewWhatsThis(viewport(),this);
     setRootIsDecorated( true );
     setAllColumnsShowFocus( true );
-    addColumn( tr( "Task Name" ) );
+    addColumn( i18n( "Task Name" ) );
     setSorting( -1 );
     setVScrollBarMode (QScrollView::AlwaysOff );
     setHScrollBarMode (QScrollView::AlwaysOn );
@@ -2425,39 +2427,39 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     onItem = new QPopupMenu( this );
     QPopupMenu * newMenu = new QPopupMenu( this );
     QPopupMenu * onView = new QPopupMenu( this );
-    onView->insertItem( tr( "Summary" ), this,
+    onView->insertItem( i18n( "Summary" ), this,
                         SLOT ( newRootItem( int ) ), 0, 0 );
-    onView->insertItem( tr( "Event" ), this,
+    onView->insertItem( i18n( "Event" ), this,
                         SLOT ( newRootItem( int ) ), 0, 1);
-    onView->insertItem( tr( "Task" ), this,
+    onView->insertItem( i18n( "Task" ), this,
                         SLOT ( newRootItem( int ) ), 0, 2 );
 
-    onItem->insertItem( tr( "New Root" ), onView );
-    newMenu->insertItem( tr( "Summary" ),
+    onItem->insertItem( i18n( "New Root" ), onView );
+    newMenu->insertItem( i18n( "Summary" ),
                          this, SLOT ( newChildItem(  int) ), 0, 0 );
-    newMenu->insertItem( tr( "Event" ),
+    newMenu->insertItem( i18n( "Event" ),
                          this, SLOT ( newChildItem( int ) ), 0, 1 );
-    newMenu->insertItem( tr( "Task" ),
+    newMenu->insertItem( i18n( "Task" ),
                          this, SLOT ( newChildItem( int ) ), 0, 2 );
 
-    onItem->insertItem( tr( "New Child" ), newMenu );
+    onItem->insertItem( i18n( "New Child" ), newMenu );
     QPopupMenu * afterMenu = new QPopupMenu( this );
-    afterMenu->insertItem( tr( "Summary" ),
+    afterMenu->insertItem( i18n( "Summary" ),
                            this, SLOT ( newChildItem(  int) ), 0, 0+4 );
-    afterMenu->insertItem( tr( "Event" ),
+    afterMenu->insertItem( i18n( "Event" ),
                            this, SLOT ( newChildItem( int ) ), 0, 1+4 );
-    afterMenu->insertItem( tr( "Task" ),
+    afterMenu->insertItem( i18n( "Task" ),
                            this, SLOT ( newChildItem( int ) ), 0, 2+4 );
-    onItem->insertItem( tr( "New After" ), afterMenu );
+    onItem->insertItem( i18n( "New After" ), afterMenu );
     QPopupMenu *pasteMenu = new QPopupMenu( this );
-    pasteMenu->insertItem( tr( "As Root" ),
+    pasteMenu->insertItem( i18n( "As Root" ),
                            this, SLOT ( pasteItem( int ) ), 0, 0 );
-    pasteMenu->insertItem( tr( "As Child" ),
+    pasteMenu->insertItem( i18n( "As Child" ),
                            this, SLOT ( pasteItem( int ) ), 0, 1 );
-    pasteMenu->insertItem( tr( "After" ),
+    pasteMenu->insertItem( i18n( "After" ),
                            this, SLOT ( pasteItem( int ) ), 0, 2 );
-    onItem->insertItem( tr( "Paste" ), pasteMenu, 3 );
-    onItem->insertItem( tr( "Cut Item" ), this, SLOT ( cutItem() ) );
+    onItem->insertItem( i18n( "Paste" ), pasteMenu, 3 );
+    onItem->insertItem( i18n( "Cut Item" ), this, SLOT ( cutItem() ) );
     onItem->setItemEnabled( 3, false );
     myMyContentsHeight = 0;
     _showItemAddPopupMenu = false;
