@@ -48,7 +48,7 @@ void CalFilter::apply( Event::List *eventlist )
   Event::List::Iterator it = eventlist->begin();
   while( it != eventlist->end() ) {
     if ( !filterEvent( *it ) ) {
-      eventlist->remove( it );
+      it = eventlist->remove( it );
     } else {
       ++it;
     }
