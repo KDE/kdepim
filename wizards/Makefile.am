@@ -52,7 +52,7 @@ sloxwizard_SOURCES = sloxmain.cpp
 
 noinst_HEADERS = egroupwarewizard.h kmailchanges.h kolabwizard.h sloxwizard.h
 
-kde_kcfg_DATA = egroupware.kcfg slox.kcfg # kolab.kcfg
+kde_kcfg_DATA = egroupware.kcfg slox.kcfg kolab.kcfg
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kdepimwizards.pot
