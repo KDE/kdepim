@@ -126,6 +126,7 @@ static const char *id="$Id$";
 #endif
 
 #include "hotSync.h"
+#include "interactiveSync.h"
 
 #include "kpilotDCOP_stub.h"
 
@@ -133,8 +134,14 @@ static const char *id="$Id$";
 
 class PilotDaemon::PilotDaemonPrivate
 {
-public:
+private:
 	QStack<SyncAction> SyncActionStack;
+
+public:
+	bool isEmpty() const { return SyncActionStack.isEmpty(); } ;
+	void clear() { SyncActionStack.clear(); } ;
+	void addAction(SyncAction *a) { SyncActionStack.push(a); } ;
+	SyncAction *nextAction() { return SyncActionStack.pop(); } ;
 } ;
 
 
@@ -291,6 +298,18 @@ QStringList PilotDaemonTray::installFiles()
 	else
 	{
 		return QStringList();
+	}
+}
+
+const QString &PilotDaemonTray::installDir()
+{
+	if (fInstaller)
+	{
+		return fInstaller->dir();
+	}
+	else
+	{
+		return QString::null;
 	}
 }
 
@@ -639,25 +658,23 @@ QString  PilotDaemon::syncTypeString(int i) const
 		<< ")"
 		<< endl;
 
-	SyncAction *a=0L;
-	fP->SyncActionStack.clear();
+	fP->clear();
+
+	fP->addAction(new CleanupAction(fPilotLink));
 
 	if (KPilotConfig::getConfig().resetGroup().getSyncFiles())
 	{
-		a = new FileInstallAction(fPilotLink,
-			fTray->installFiles());
-		fP->SyncActionStack.push(a);
+		fP->addAction(new FileInstallAction(fPilotLink,
+			fTray->installDir(),fTray->installFiles()));
 	}
 
 	switch (fNextSyncType)
 	{
 	case PilotDaemonDCOP::Test :
-		a = new TestLink(fPilotLink);
-		fP->SyncActionStack.push(a);
+		fP->addAction(new TestLink(fPilotLink));
 		break;
 	case PilotDaemonDCOP::Backup :
-		a = new BackupAction(fPilotLink);
-		fP->SyncActionStack.push(a);
+		fP->addAction(new BackupAction(fPilotLink));
 		break;
 	default :
 		DEBUGDAEMON << fname
@@ -665,6 +682,8 @@ QString  PilotDaemon::syncTypeString(int i) const
 			<< syncTypeString(fNextSyncType)
 			<< endl;
 	}
+
+	fP->addAction(new CheckUser(fPilotLink,0L));
 
 	nextSyncAction(0L);
 }
@@ -696,13 +715,13 @@ QString  PilotDaemon::syncTypeString(int i) const
 		delete b;
 	}
 
-	if (fP->SyncActionStack.isEmpty()) 
+	if (fP->isEmpty()) 
 	{ 
 		endHotSync(); 
 		return;
 	}
 
-	SyncAction *a = fP->SyncActionStack.pop();
+	SyncAction *a = fP->nextAction();
 	if (!a) return;
 
 	DEBUGDAEMON << fname
@@ -727,7 +746,7 @@ QString  PilotDaemon::syncTypeString(int i) const
 {
 	FUNCTIONSETUP;
 
-	ASSERT(fP->SyncActionStack.isEmpty());
+	ASSERT(fP->isEmpty());
 
 	if (fTray) { fTray -> changeIcon(PilotDaemonTray::Normal); } 
 
@@ -875,6 +894,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.46  2001/09/23 21:44:56  adridg
+// Myriad small changes
+//
 // Revision 1.45  2001/09/23 18:46:11  adridg
 // Oops .. needed some extra work on the QStack part
 //

@@ -71,7 +71,12 @@ public:
 	virtual void dragEnterEvent(QDragEnterEvent *);
 	virtual void dropEvent(QDropEvent *);
 
+	/**
+	* Methods to get information from the FileInstaller
+	* in the tray -- which files are there, and where?
+	*/
 	QStringList installFiles();
+	const QString &installDir();
 
 protected:
 	void setupWidget();
@@ -206,6 +211,9 @@ private:
 
 
 // $Log$
+// Revision 1.26  2001/09/23 18:46:11  adridg
+// Oops .. needed some extra work on the QStack part
+//
 // Revision 1.25  2001/09/23 18:24:59  adridg
 // New syncing architecture
 //
