@@ -412,7 +412,7 @@ const char* bugURL( void );
    This function may be called prior to initialize().
   */
 int interfaceVersion (int *min_version);
-
+#define CRYPTPLUG_ERR_WRONG_KEY_USAGE 0x7070
 
 /*! \ingroup groupGeneral
     \brief This function sets up all internal structures.
@@ -1126,9 +1126,9 @@ struct CertificateInfo {
   struct DnPair *dnarray; /* parsed values from userid[0] */
 };
 
-/*! \fn struct CertIterator*  startListCertificates( const char* pattern );
-    \fn struct CertificateInfo*  nextCertificate( struct CertIterator* );
-    \fn void endListCertificates( struct CertIterator* );
+/*! \function struct CertIterator*  startListCertificates( const char* pattern );
+    \function struct CertificateInfo*  nextCertificate( struct CertIterator* );
+    \function void endListCertificates( struct CertIterator* );
 
     \ingroup certList
   Example that runs through certs matching "Steffen":
