@@ -121,7 +121,6 @@ class KitchenSync : public Core
     void initPlugins();
     void slotSync();
     void slotActivated( ManipulatorPart * );
-    void slotQuit();
     void slotKonnectorBar( bool );
 
     void slotPreferences();

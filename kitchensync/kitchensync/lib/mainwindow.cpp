@@ -67,6 +67,7 @@ MainWindow::MainWindow( QWidget *widget, const char *name )
 
   mActionManager->setView( mView );
   mActionManager->initActions();
+  KStdAction::quit( this, SLOT( close() ), actionCollection() );
   setXMLFile("ksyncgui.rc");
   createGUI( 0 );
 

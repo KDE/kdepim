@@ -52,9 +52,6 @@ void ActionManager::initActions()
   new KAction( i18n("Synchronize" ), "reload", 0, mView, SLOT( slotSync() ),
                mActionCollection, "sync" );
 
-  new KAction( i18n("Quit"), "exit", 0, mView, SLOT( slotQuit() ),
-               mActionCollection, "quit" );
-
   new KAction( i18n("Configure Profiles..."), "configure", 0,
                mView, SLOT( slotConfigProf() ),
                mActionCollection, "config_profile" );

@@ -238,11 +238,6 @@ void KitchenSync::slotActivated( ManipulatorPart *part )
 //    createGUI( part );
 }
 
-void KitchenSync::slotQuit()
-{
-    close();
-}
-
 KSyncSystemTray* KitchenSync::tray()
 {
     return m_tray;
