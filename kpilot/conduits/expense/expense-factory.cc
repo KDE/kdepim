@@ -52,7 +52,7 @@ void *init_conduit_expense()
 	return new ExpenseConduitFactory;
 }
 
-} ;
+}
 
 
 const char *ExpenseConduitFactory::fGroup="Expense-conduit";

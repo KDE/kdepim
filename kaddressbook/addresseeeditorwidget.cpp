@@ -504,7 +504,7 @@ void AddresseeEditorWidget::load()
 
   mRoleEdit->setText( mAddressee.role() );
   mOrgEdit->setText( mAddressee.organization() );
-  mURLEdit->setURL( mAddressee.url().url() );
+  mURLEdit->setURL( KURL( mAddressee.url().url() ) );
   mURLEdit->home( false );
   mNoteEdit->setText( mAddressee.note() );
   mEmailWidget->setEmails( mAddressee.emails() );

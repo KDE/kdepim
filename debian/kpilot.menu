@@ -1,7 +1,15 @@
 ?package(kpilot):\
-	needs=X11\
-	section=Apps/Tools\
+	needs="X11"\
+	section="Apps/Tools"\
 	hints="KDE"\
 	kderemove="y"\
 	title="KPilot"\
 	command="/usr/bin/kpilot"
+
+?package(kpilot):\
+	needs="X11"\
+	section="Apps/Tools"\
+	hints="KDE"\
+	kderemove="y"\
+	title="KPalmDOC"\
+	command="/usr/bin/kpalmdoc"

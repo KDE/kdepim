@@ -24,6 +24,7 @@
 #include <kstatusbar.h>
 #include <kwin.h>
 #include <kconfig.h>
+#include <kstdaction.h>
 
 #include <qcheckbox.h>
 #include <qlayout.h>
@@ -39,6 +40,9 @@
 
 #include <assert.h>
 #include <stdlib.h>
+
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
 
 const int KMFldSearch::MSGID_COLUMN = 4;
 
@@ -60,6 +64,7 @@ KMFldSearch::KMFldSearch(KMMainWidget* w, const char* name,
   mLastFocus(0),
   mKMMainWidget(w)
 {
+  XDeleteProperty( qt_xdisplay(), winId(), XA_WM_TRANSIENT_FOR );
   KWin::setIcons(winId(), kapp->icon(), kapp->miniIcon());
 
   KConfig* config = KMKernel::config();
@@ -255,13 +260,11 @@ KMFldSearch::KMFldSearch(KMMainWidget* w, const char* name,
 					SLOT(slotForwardAttachedMsg()), ac,
 					"search_message_forward_as_attachment" );
   mForwardActionMenu->insert( mForwardAttachedAction );
-  mSaveAsAction = new KAction( i18n("Save &As..."), "filesave", 0,
-                               this, SLOT(slotSaveMsg()), ac, "search_file_save_as" );
+  mSaveAsAction = KStdAction::saveAs( this, SLOT(slotSaveMsg()), ac, "search_file_save_as" );
   mSaveAtchAction = new KAction( i18n("Save Attachments..."), "attach", 0,
                                  this, SLOT(slotSaveAttachments()), ac, "search_save_attachments" );
 
-  mPrintAction = new KAction( i18n( "&Print..." ), "fileprint", 0, this,
-			      SLOT(slotPrintMsg()), ac, "search_print" );
+  mPrintAction = KStdAction::print( this, SLOT(slotPrintMsg()), ac, "search_print" );
   mClearAction = new KAction( i18n("Clear Selection"), 0, 0, this,
 			      SLOT(slotClearSelection()), ac, "search_clear_selection" );
   connect(mTimer, SIGNAL(timeout()), this, SLOT(updStatus()));

@@ -19,7 +19,7 @@ class CertManager :public KMainWindow
   Q_OBJECT
 
 public:
-    CertManager( bool remote = false, const QString& query = QString::null, 
+    CertManager( bool remote = false, const QString& query = QString::null,
 		 QWidget* parent = 0, const char* name = 0);
 
     const CryptPlugWrapper::CertificateInfoList& certList() const { return _certList; }
@@ -46,13 +46,14 @@ protected slots:
     void slotStderr( KProcess*, char*, int );
 
     void slotToggleRemote(int idx);
-  
+
     void slotViewCRLs();
 
 private:
     bool checkExec( const QStringList& args );
+    void sendCertificate( const QString& email, const QByteArray& certificateData );
 
-    CertItem* fillInOneItem( CertBox* lv, CertItem* parent, 
+    CertItem* fillInOneItem( CertBox* lv, CertItem* parent,
 			     const CryptPlugWrapper::CertificateInfo& info );
 
     CryptPlugWrapper::CertificateInfoList _certList;

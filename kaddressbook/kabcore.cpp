@@ -77,8 +77,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                   const char *name )
   : KAB::Core( client, parent, name ), mStatusBar( 0 ), mViewManager( 0 ),
     mExtensionManager( 0 ), mCategorySelectDialog( 0 ), mCategoryEditDialog( 0 ),
-    mConfigureDialog( 0 ), mLdapSearchDialog( 0 ), mReadWrite( readWrite ),
-    mModified( false )
+    mLdapSearchDialog( 0 ), mReadWrite( readWrite ), mModified( false )
 {
   mWidget = new QWidget( parent, name );
 
@@ -253,7 +252,7 @@ QWidget *KABCore::widget() const
 KAboutData *KABCore::createAboutData()
 {
   KAboutData *about = new KAboutData( "kaddressbook", I18N_NOOP( "KAddressBook" ),
-                                      "3.1", I18N_NOOP( "The KDE Address Book" ),
+                                      "3.2.1", I18N_NOOP( "The KDE Address Book" ),
                                       KAboutData::License_GPL_V2,
                                       I18N_NOOP( "(c) 1997-2003, The KDE PIM Team" ) );
   about->addAuthor( "Tobias Koenig", I18N_NOOP( "Current maintainer" ), "tokoe@kde.org" );
@@ -493,7 +492,7 @@ void KABCore::incrementalSearch( const QString& text, bool search )
   mViewManager->setSelected( QString::null, false );
 
   if ( !text.isEmpty() ) {
-    KABC::Field *field = ( search ? mIncSearchWidget->currentField() : 
+    KABC::Field *field = ( search ? mIncSearchWidget->currentField() :
                                     mViewManager->currentSortField() );
 
 #if KDE_VERSION >= 319
@@ -502,7 +501,8 @@ void KABCore::incrementalSearch( const QString& text, bool search )
       list.sortByField( field );
       KABC::AddresseeList::Iterator it;
       for ( it = list.begin(); it != list.end(); ++it ) {
-        if ( field->value( *it ).startsWith( text, false ) ) {
+        if ( (search && field->value( *it ).find( text, 0, false ) != -1) ||
+             (!search && field->value( *it).startsWith( text, false)) ) {
           mViewManager->setSelected( (*it).uid(), true );
           return;
         }
@@ -510,10 +510,10 @@ void KABCore::incrementalSearch( const QString& text, bool search )
     } else {
       KABC::AddresseeList::Iterator it;
       for ( it = list.begin(); it != list.end(); ++it ) {
-        KABC::Field::List fieldList = mIncSearchWidget->fields();
+        KABC::Field::List fieldList = KABC::Field::allFields();
         KABC::Field::List::ConstIterator fieldIt;
         for ( fieldIt = fieldList.begin(); fieldIt != fieldList.end(); ++fieldIt ) {
-          if ( (*fieldIt)->value( *it ).startsWith( text, false ) ) {
+          if ( (*fieldIt)->value( *it ).find( text, 0, false ) != -1 ) {
             mViewManager->setSelected( (*it).uid(), true );
             return;
           }
@@ -744,10 +744,21 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
 {
   if ( list.count() != 0 ) {
     KABC::Addressee::List::ConstIterator it;
-    for ( it = list.begin(); it != list.end(); ++it )
-      mAddressBook->insertAddressee( *it );
+    for ( it = list.begin(); it != list.end(); ++it ) {
+      Command *command = 0;
 
-    setModified();
+      // check if it exists already
+      KABC::Addressee origAddr = mAddressBook->findByUid( (*it).uid() );
+      if ( origAddr.isEmpty() )
+        command = new PwNewCommand( mAddressBook, *it );
+      else
+        command = new PwEditCommand( mAddressBook, origAddr, *it );
+
+      UndoStack::instance()->push( command );
+      RedoStack::instance()->clear();
+    }
+
+    setModified( true );
   }
 
   if ( list.count() == 0 )
@@ -808,17 +819,14 @@ void KABCore::configure()
   // Save the current config so we do not loose anything if the user accepts
   saveSettings();
 
-  if ( !mConfigureDialog ) {
-    mConfigureDialog = new KCMultiDialog( mWidget );
+  KCMultiDialog dlg( mWidget, "", true );
+  connect( &dlg, SIGNAL( configCommitted() ),
+           this, SLOT( configurationChanged() ) );
 
-    connect( mConfigureDialog, SIGNAL( configCommitted() ),
-             this, SLOT( configurationChanged() ) );
+  dlg.addModule( "kabconfig.desktop" );
+  dlg.addModule( "kabldapconfig.desktop" );
 
-    mConfigureDialog->addModule( "kabconfig.desktop" );
-    mConfigureDialog->addModule( "kabldapconfig.desktop" );
-  }
-
-  mConfigureDialog->show();
+  dlg.exec();
 }
 
 void KABCore::print()
@@ -937,7 +945,7 @@ void KABCore::initActions()
   mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
   action->setWhatsThis( i18n( "Print a special number of contacts." ) );
 
-  mActionSave = new KAction(  KStdGuiItem::save().text(), "filesave", CTRL+Key_S, this,
+  mActionSave = KStdAction::save( this,
                              SLOT( save() ), actionCollection(), "file_sync" );
   mActionSave->setWhatsThis( i18n( "Save all changes of the address book to the storage backend." ) );
 

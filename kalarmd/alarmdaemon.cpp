@@ -50,40 +50,13 @@
 #include "alarmdaemon.moc"
 
 
-#ifdef CHECK_IF_SESSION_STARTED
-const int LOGIN_DELAY( 5 );
-#endif
-
 AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
   : DCOPObject(name), QObject(parent, name)
-#ifdef CHECK_IF_SESSION_STARTED
-    , mSessionStartTimer(0)
-#endif
 {
   kdDebug(5900) << "AlarmDaemon::AlarmDaemon()" << endl;
 
-#ifdef CHECK_IF_SESSION_STARTED
-  bool splash = kapp->dcopClient()->isApplicationRegistered("ksplash");
-  if (splash  ||  static_cast<AlarmApp*>(kapp)->startedAtLogin())
-  {
-    // Login session is starting up - need to wait for it to complete
-    // in order to prevent the daemon starting clients before they are
-    // restored by the session (where applicable).
-    // If ksplash can be detected as running, start a 1-second timer;
-    // otherwise, wait a few seconds.
-    kdDebug(5900) << "AlarmDaemon::AlarmDaemon(): session start\n";
-    mSessionStartTimer = new QTimer(this);
-    connect(mSessionStartTimer, SIGNAL(timeout()), SLOT(checkIfSessionStarted()));
-    mSessionStartTimer->start(splash ? 1000 : LOGIN_DELAY * 1000);
-  }
-#endif
-
   readCheckInterval();
-#ifdef CHECK_IF_SESSION_STARTED
-  readDaemonData(!!mSessionStartTimer);
-#else
   readDaemonData(false);
-#endif
 
   enableAutoStart(true);    // switch autostart on whenever the program is run
 
@@ -499,12 +472,24 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
       return false;
     }
 
-    if (!kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(calendar->appName())))
+    bool registered = kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(calendar->appName()));
+    bool ready = registered;
+    if (registered)
     {
-      // The client application is not running
+      QCStringList objects = kapp->dcopClient()->remoteObjects(calendar->appName());
+      if (objects.find(client.dcopObject) == objects.end())
+        ready = false;
+    }
+    if (!ready)
+    {
+      // The client application is not running, or is not yet ready
+      // to receive notifications.
       if (client.notificationType == ClientInfo::NO_START_NOTIFY
       ||  client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY) {
-        kdDebug(5900) << "AlarmDaemon::notifyEvent(): don't start client\n";
+        if (registered)
+          kdDebug(5900) << "AlarmDaemon::notifyEvent(): client not ready\n";
+        else
+          kdDebug(5900) << "AlarmDaemon::notifyEvent(): don't start client\n";
         return false;
       }
 
@@ -525,9 +510,15 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
         kdDebug(5900) << "AlarmDaemon::notifyEvent(): used command line" << endl;
         return true;
       }
+
+      // Notification type = DCOP_NOTIFY: start client and then use DCOP
       p.start(KProcess::Block);
-      kdDebug(5900) << "AlarmDaemon::notifyEvent(): started "
-                    << cmd << endl;
+      kdDebug(5900) << "AlarmDaemon::notifyEvent(): started " << cmd << endl;
+      if (!ready)
+      {
+        kdDebug(5900) << "AlarmDaemon::notifyEvent(): client not ready\n";
+        return false;
+      }
     }
 
     if (client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY)
@@ -567,39 +558,6 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
   }
   return true;
 }
-
-#ifdef CHECK_IF_SESSION_STARTED
-/*
- * Called by the timer to check whether session startup is complete.
- * If so, it checks which clients are already running and allows
- * notification of alarms to them. It also allows alarm notification
- * to clients which are not currently running but which allow the alarm
- * daemon to start them in order to notify them.
- * (Ideally checking for session startup would be done using a signal
- * from ksmserver, but until such a signal is available, we can check
- * whether ksplash is still running.)
- */
-void AlarmDaemon::checkIfSessionStarted()
-{
-  if (!kapp->dcopClient()->isApplicationRegistered("ksplash"))
-  {
-    // Session startup has now presumably completed. Cancel the timer.
-    kdDebug(5900) << "AlarmDaemon::checkIfSessionStarted(): startup complete\n";
-    delete mSessionStartTimer;
-
-    for (ClientList::Iterator client = mClients.begin();  client != mClients.end();  ++client)
-    {
-      if ((*client).notificationType == ClientInfo::DCOP_NOTIFY
-      ||  (*client).notificationType == ClientInfo::COMMAND_LINE_NOTIFY
-      ||  kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>((*client).appName))) {
-        (*client).waitForRegistration = false;
-      }
-    }
-
-    mSessionStartTimer = 0;    // indicate that session startup is complete
-  }
-}
-#endif
 
 /*
  * Starts or stops the alarm timer as necessary after a calendar is enabled/disabled.

@@ -43,6 +43,7 @@
 #include "koeditorattachments.h"
 #include "koeditorgantt.h"
 #include "kogroupware.h"
+#include "kodialogmanager.h"
 
 #include "koeventeditor.h"
 
@@ -203,7 +204,7 @@ void KOEventEditor::newEvent( const QString &summary,
                               const QString &attachment )
 {
   init();
-  
+
   mEvent = 0;
 
   loadDefaults();
@@ -265,11 +266,15 @@ bool KOEventEditor::processInput()
     writeEvent( mEvent );
     if( !KOPrefs::instance()->mUseGroupwareCommunication ||
 	KOGroupware::instance()->sendICalMessage( this, KCal::Scheduler::Request, mEvent ) ) {
-      mCalendar->addEvent( mEvent );
-      emit eventAdded( mEvent );
+      if ( mCalendar->addEvent( mEvent ) ) {
+        emit eventAdded( mEvent );
+      } else {
+        KODialogManager::errorSaveEvent( this );
+        delete mEvent;
+        mEvent = 0;
+        return false;
+      }
     } else {
-      delete mEvent;
-      mEvent = 0;
       return false;
     }
   }
@@ -367,7 +372,7 @@ int KOEventEditor::msgItemDelete()
 {
   return KMessageBox::warningContinueCancel(this,
       i18n("This item will be permanently deleted."),
-      i18n("KOrganizer Confirmation"),i18n("Delete"));
+      i18n("KOrganizer Confirmation"),KGuiItem(i18n("Delete"),"editdelete"));
 }
 
 void KOEventEditor::slotLoadTemplate()

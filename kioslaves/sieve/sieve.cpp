@@ -709,6 +709,10 @@ void kio_sieveProtocol::chmod(const KURL& url, int permissions)
   finished();
 }
 
+#if defined(_AIX) && defined(stat)
+#undef stat
+#endif
+
 void kio_sieveProtocol::stat(const KURL& url)
 {
 	if (!connect())

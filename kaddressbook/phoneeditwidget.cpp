@@ -197,21 +197,25 @@ void PhoneEditWidget::edit()
 
 void PhoneEditWidget::updatePrefEdit()
 {
+  mPrefEdit->setFocus();
   updateEdit( mPrefCombo );
 }
 
 void PhoneEditWidget::updateSecondEdit()
 {
+  mSecondEdit->setFocus();
   updateEdit( mSecondCombo );
 }
 
 void PhoneEditWidget::updateThirdEdit()
 {
+  mThirdEdit->setFocus();
   updateEdit( mThirdCombo );
 }
 
 void PhoneEditWidget::updateFourthEdit()
 {
+  mFourthEdit->setFocus();
   updateEdit( mFourthCombo );
 }
 
@@ -230,7 +234,9 @@ void PhoneEditWidget::updateEdit( PhoneTypeCombo *combo )
 
   PhoneNumber::List::Iterator it = combo->selectedElement();
   if ( it != mPhoneList.end() ) {
+    int pos = edit->cursorPosition();
     edit->setText( (*it).number() );
+    edit->setCursorPosition( pos );
   } else {
     kdDebug(5720) << "PhoneEditWidget::updateEdit(): no selected element" << endl;
   }

@@ -259,6 +259,28 @@ void Preferences::emitPreferencesChanged()
 	emit preferencesChanged();
 }
 
+QString Preferences::emailAddress() const
+{
+	if (mEmailUseControlCentre)
+	{
+		KEMailSettings e;
+		return e.getSetting(KEMailSettings::EmailAddress);
+	}
+	else
+		return mEmailAddress;
+}
+
+QString Preferences::emailBccAddress() const
+{
+	if (mEmailBccUseControlCentre)
+	{
+		KEMailSettings e;
+		return e.getSetting(KEMailSettings::EmailAddress);
+	}
+	else
+		return mEmailBccAddress;
+}
+
 void Preferences::setEmailAddress(bool useControlCentre, const QString& address)
 {
 	mEmailUseControlCentre = useControlCentre;
@@ -309,7 +331,7 @@ bool Preferences::notifying(const QString& messageID, bool yesNoMessage)
 	KConfig* config = kapp->config();
 	config->setGroup(QString::fromLatin1("Notification Messages"));
 	if (yesNoMessage)
-		return config->readEntry(messageID) != QString::fromLatin1("Yes");
+		return config->readEntry(messageID).lower() != QString::fromLatin1("yes");
 	else
 		return config->readBoolEntry(messageID, true);
 }

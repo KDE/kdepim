@@ -1,7 +1,7 @@
 /*
  *  prefdlg.cpp  -  program preferences dialog
  *  Program:  kalarm
- *  (C) 2001, 2002, 2003 by David Jarvie <software@astrojar.org.uk>
+ *  (C) 2001 - 2004 by David Jarvie <software@astrojar.org.uk>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,8 +38,10 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kfiledialog.h>
+#include <kmessagebox.h>
 #include <kaboutdata.h>
 #include <kapplication.h>
+#include <kemailsettings.h>
 #include <kiconloader.h>
 #include <kcolorcombo.h>
 #include <kdebug.h>
@@ -52,6 +54,7 @@
 #include "traywindow.h"
 #include "kamail.h"
 #include "kalarmapp.h"
+#include "soundpicker.h"
 #include "prefdlg.moc"
 
 
@@ -111,6 +114,17 @@ void KAlarmPrefDlg::slotHelp()
 void KAlarmPrefDlg::slotApply()
 {
 	kdDebug(5950) << "KAlarmPrefDlg::slotApply()" << endl;
+	QString errmsg = mEmailPage->validateAddress();
+	if (!errmsg.isEmpty())
+	{
+		showPage(pageIndex(mEmailPage->parentWidget()));
+		if (KMessageBox::warningYesNo(this, errmsg) != KMessageBox::Yes)
+		{
+			mValid = false;
+			return;
+		}
+	}
+	mValid = true;
 	mMessagePage->apply(false);
 	mEmailPage->apply(false);
 	mViewPage->apply(false);
@@ -122,8 +136,10 @@ void KAlarmPrefDlg::slotApply()
 void KAlarmPrefDlg::slotOk()
 {
 	kdDebug(5950) << "KAlarmPrefDlg::slotOk()" << endl;
+	mValid = true;
 	slotApply();
-	KDialogBase::slotOk();
+	if (mValid)
+		KDialogBase::slotOk();
 }
 
 // Discard the current preferences and use the present ones
@@ -413,7 +429,8 @@ void MiscPrefTab::slotClearExpired()
 =============================================================================*/
 
 EmailPrefTab::EmailPrefTab(QVBox* frame)
-	: PrefsTabBase(frame)
+	: PrefsTabBase(frame),
+	  mAddressChanged(false)
 {
 	QHBox* box = new QHBox(mPage);
 	box->setSpacing(2*KDialog::spacingHint());
@@ -442,6 +459,7 @@ EmailPrefTab::EmailPrefTab(QVBox* frame)
 	label->setFixedSize(label->sizeHint());
 	grid->addWidget(label, 1, 0);
 	mEmailAddress = new QLineEdit(group);
+	connect(mEmailAddress, SIGNAL(textChanged(const QString&)), SLOT(slotAddressChanged()));
 	label->setBuddy(mEmailAddress);
 	QWhatsThis::add(mEmailAddress,
 	      i18n("Your email address, used to identify you as the sender when sending email alarms."));
@@ -491,9 +509,10 @@ EmailPrefTab::EmailPrefTab(QVBox* frame)
 void EmailPrefTab::restore()
 {
 	mEmailClient->setButton(mPreferences->mEmailClient);
-	setEmailAddress(mPreferences->mEmailUseControlCentre, mPreferences->emailAddress());
-	setEmailBccAddress(mPreferences->mEmailBccUseControlCentre, mPreferences->emailBccAddress());
+	setEmailAddress(mPreferences->mEmailUseControlCentre, mPreferences->mEmailAddress);
+	setEmailBccAddress(mPreferences->mEmailBccUseControlCentre, mPreferences->mEmailBccAddress);
 	mEmailQueuedNotify->setChecked(Preferences::notifying(KAMail::EMAIL_QUEUED_NOTIFY, false));
+	mAddressChanged = false;
 }
 
 void EmailPrefTab::apply(bool syncToDisc)
@@ -501,11 +520,11 @@ void EmailPrefTab::apply(bool syncToDisc)
 	int client = mEmailClient->id(mEmailClient->selected());
 	mPreferences->mEmailClient = (client >= 0) ? Preferences::MailClient(client) : Preferences::default_emailClient;
 #if KDE_VERSION >= 210
-	mPreferences->setEmailAddress(mEmailUseControlCentre->isChecked(), mEmailAddress->text());
-	mPreferences->setEmailBccAddress(mEmailBccUseControlCentre->isChecked(), mEmailBccAddress->text());
+	mPreferences->setEmailAddress(mEmailUseControlCentre->isChecked(), mEmailAddress->text().stripWhiteSpace());
+	mPreferences->setEmailBccAddress(mEmailBccUseControlCentre->isChecked(), mEmailBccAddress->text().stripWhiteSpace());
 #else
-	mPreferences->setEmailAddress(false, mEmailAddress->text());
-	mPreferences->setEmailBccAddress(false, mEmailBccAddress->text());
+	mPreferences->setEmailAddress(false, mEmailAddress->text().stripWhiteSpace());
+	mPreferences->setEmailBccAddress(false, mEmailBccAddress->text().stripWhiteSpace());
 #endif
 	Preferences::setNotify(KAMail::EMAIL_QUEUED_NOTIFY, false, mEmailQueuedNotify->isChecked());
 	PrefsTabBase::apply(syncToDisc);
@@ -523,10 +542,10 @@ void EmailPrefTab::setEmailAddress(bool useControlCentre, const QString& address
 {
 #if KDE_VERSION >= 210
 	mEmailUseControlCentre->setChecked(useControlCentre);
-	mEmailAddress->setText(useControlCentre ? QString() : address);
+	mEmailAddress->setText(useControlCentre ? QString() : address.stripWhiteSpace());
 	slotEmailUseCCToggled(true);
 #else
-	mEmailAddress->setText(address);
+	mEmailAddress->setText(address.stripWhiteSpace());
 #endif
 }
 
@@ -534,6 +553,7 @@ void EmailPrefTab::slotEmailUseCCToggled(bool)
 {
 #if KDE_VERSION >= 210
 	mEmailAddress->setEnabled(!mEmailUseControlCentre->isChecked());
+	mAddressChanged = true;
 #endif
 }
 
@@ -541,10 +561,10 @@ void EmailPrefTab::setEmailBccAddress(bool useControlCentre, const QString& addr
 {
 #if KDE_VERSION >= 210
 	mEmailBccUseControlCentre->setChecked(useControlCentre);
-	mEmailBccAddress->setText(useControlCentre ? QString() : address);
+	mEmailBccAddress->setText(useControlCentre ? QString() : address.stripWhiteSpace());
 	slotEmailBccUseCCToggled(true);
 #else
-	mEmailBccAddress->setText(address);
+	mEmailBccAddress->setText(address.stripWhiteSpace());
 #endif
 }
 
@@ -553,6 +573,26 @@ void EmailPrefTab::slotEmailBccUseCCToggled(bool)
 #if KDE_VERSION >= 210
 	mEmailBccAddress->setEnabled(!mEmailBccUseControlCentre->isChecked());
 #endif
+}
+
+QString EmailPrefTab::validateAddress()
+{
+	if (!mAddressChanged)
+		return QString::null;
+	QString errmsg = i18n("%1\nAre you sure you want to save your changes?").arg(KAMail::i18n_NeedFromEmailAddress());
+#if KDE_VERSION >= 210
+	if (mEmailUseControlCentre->isChecked())
+	{
+		KEMailSettings e;
+		if (!e.getSetting(KEMailSettings::EmailAddress).isEmpty())
+			return QString::null;
+		errmsg = i18n("No email address is currently set in the KDE Control Center. %1").arg(errmsg);
+	}
+	else
+#endif
+	if (!mEmailAddress->text().stripWhiteSpace().isEmpty())
+		return QString::null;
+	return errmsg;
 }
 
 
@@ -756,8 +796,7 @@ void DefaultPrefTab::slotBeepToggled(bool)
 
 void DefaultPrefTab::slotBrowseSoundFile()
 {
-	QString	defaultDir = KGlobal::dirs()->findResourceDir("sound", "KDE_Notify.wav");
-	KURL url = KFileDialog::getOpenURL(defaultDir, i18n("*.wav|Wav Files"), 0, i18n("Choose Sound File"));
+	KURL url = SoundPicker::browseFile(mDefaultSoundFile->text());
 	if (!url.isEmpty())
 		mDefaultSoundFile->setText(url.prettyURL());
 }
@@ -857,12 +896,12 @@ ViewPrefTab::ViewPrefTab(QVBox* frame)
 	grid->addWidget(box, 5, 2, AlignLeft);
 	group->setMaximumHeight(group->sizeHint().height());
 
-	mModalMessages = new QCheckBox(i18n("Modal message &windows"), mPage, "modalMsg");
+	mModalMessages = new QCheckBox(i18n("Message &windows have a title bar and take keyboard focus"), mPage, "modalMsg");
 	mModalMessages->setMinimumSize(mModalMessages->sizeHint());
 	QWhatsThis::add(mModalMessages,
-	      i18n("Specify whether alarm message windows should be modal. "
-	           "If modal, the window is a normal window with a title bar, but it grabs keyboard input when it is displayed. "
-	           "If non-modal, the window does not interfere with your typing when "
+	      i18n("Specify the characteristics of alarm message windows:\n"
+	           "- If checked, the window is a normal window with a title bar, which grabs keyboard input when it is displayed.\n"
+	           "- If unchecked, the window does not interfere with your typing when "
 	           "it is displayed, but it has no title bar and cannot be moved or resized."));
 
 	mShowExpiredAlarms = new QCheckBox(i18n("&Show expired alarms"), mPage, "showExpired");

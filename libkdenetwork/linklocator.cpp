@@ -155,7 +155,7 @@ QString LinkLocator::getEmailAddress()
 
     // determine the domain part of the email address
     int end = mPos + 1;
-    while (end < (int)mText.length() && mText[end].unicode() < 128 &&
+    while (end < (int)mText.length() &&
       (mText[end].isLetterOrNumber() ||
         mText[end] == '@' || // allow @ to find invalid email addresses
         allowedSpecialChars.find(mText[end]) != -1))

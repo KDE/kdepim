@@ -63,6 +63,10 @@ ICalFormat::~ICalFormat()
   delete mImpl;
 }
 
+#if defined(_AIX) && defined(open)
+#undef open
+#endif
+
 bool ICalFormat::load( Calendar *calendar, const QString &fileName)
 {
   kdDebug(5800) << "ICalFormat::load() " << fileName << endl;

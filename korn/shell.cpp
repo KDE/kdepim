@@ -357,8 +357,8 @@ QPopupMenu *KornShell::initMenu()
 
   KStdAction::preferences(this, SLOT(optionDlg()), actions)->plug(menu);
   menu->insertSeparator();
-  (new KAction("R&echeck", KShortcut('e'), this, SLOT(reCheck()), actions, "re_check"))->plug(menu);
-  _checkMailAction = new KAction("Read &Subjects", KShortcut('s'), this, SLOT(readSubjects()), actions, "read_subjects");
+  (new KAction(i18n("R&echeck"), KShortcut('e'), this, SLOT(reCheck()), actions, "re_check"))->plug(menu);
+  _checkMailAction = new KAction(i18n("Read &Subjects"), KShortcut('s'), this, SLOT(readSubjects()), actions, "read_subjects");
   _checkMailAction->plug(menu);
   _checkMailAction->setEnabled(false);
   menu->insertSeparator();
@@ -382,7 +382,7 @@ bool KornShell::firstTimeInit()
 		i18n( "You do not appear to have used KOrn before.\n"
 		"Would you like a basic configuration created for you?" ),
 		i18n("Welcome to KOrn"),
-		i18n("Yes"), i18n( "No, Exit" ));
+		KStdGuiItem::yes(), i18n( "No, Exit" ));
 
 	if( status != 0 ) {
 		return false;

@@ -41,7 +41,7 @@
 static const char description[] =
     I18N_NOOP( "A KDE Personal Information Manager" );
 
-static const char version[] = "0.7.3 (Beta 1)";
+static const char version[] = "0.8.1";
 
 class KontactApp : public KUniqueApplication {
   public:

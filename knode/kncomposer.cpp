@@ -837,7 +837,7 @@ void KNComposer::closeEvent(QCloseEvent *e)
   }
   else {
     switch ( KMessageBox::warningYesNoCancel( this, i18n("Do you want to save this article in the draft folder?"),
-                                              QString::null, i18n("&Save"), i18n("&Discard"))) {
+                                              QString::null, KStdGuiItem::save(), KStdGuiItem::discard())) {
       case KMessageBox::Yes :
         r_esult=CRsave;
         break;

@@ -126,6 +126,8 @@ public:
 	QStringList getDirtyDatabases();
 	void setDirtyDatabases(const QStringList &);
 	void addDirtyDatabase(QString db);
+	
+	QStringList getNoBackupDatabases();
 
 	QStringList getAppBlockChangedDatabases();
 	void setAppBlockChangedDatabases(const QStringList &);

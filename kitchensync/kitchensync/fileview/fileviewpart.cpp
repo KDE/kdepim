@@ -12,7 +12,7 @@
 #include "ksync_fileviewwidget.h"
 
 typedef KGenericFactory< KitchenSync::FileviewPart> FileviewPartFactory;
-K_EXPORT_COMPONENT_FACTORY( libfileviewpart, FileviewPartFactory );
+K_EXPORT_COMPONENT_FACTORY( libfileviewpart, FileviewPartFactory )
 
 using namespace KitchenSync ;
 

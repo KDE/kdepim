@@ -320,7 +320,7 @@ class Appearance : public Base {
                         quoted2=5, quoted3=6, url=7, unreadThread=8, readThread=9,
                         unreadArticle=10, readArticle=11, activeItem=12, selectedItem=13 };
 
-    enum HexIndex     { quoted1Hex=0, quoted2Hex=1, quoted3Hex=2, headerHex=3 };
+    enum HexIndex     { quoted1Hex=0, quoted2Hex=1, quoted3Hex=2 };
 
     enum FontIndex    { article=0, articleFixed=1, composer=2, groupList=3, articleList=4 };
 
@@ -350,9 +350,8 @@ class Appearance : public Base {
     QColor activeItemColor();
     QColor selectedItemColor();
 
-    const char* headerDecoHexcode()       { return h_excodes[headerHex]; }
-    const char* quotedTextHexcode(int i)  { return h_excodes[i]; }
-    void updateHexcodes();
+    QString headerDecoHexcode()       { return headerDecoColor().name(); }
+    QString quotedTextHexcode(int i);
 
     QFont articleFont();
     QFont articleFixedFont();
@@ -381,7 +380,6 @@ class Appearance : public Base {
     QString c_olorNames[COL_CNT];
     QFont   f_onts[FNT_CNT];
     QString f_ontNames[FNT_CNT];
-    char    h_excodes[HEX_CNT][8];
     QPixmap i_cons[ICON_CNT];
 
 };

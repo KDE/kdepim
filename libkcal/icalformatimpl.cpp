@@ -400,8 +400,10 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
 
 icalcomponent *ICalFormatImpl::writeEvent(Event *event)
 {
+#if 0
   kdDebug(5800) << "Write Event '" << event->summary() << "' (" << event->uid()
-              << ")" << endl;
+                << ")" << endl;
+#endif
 
   QString tmpStr;
   QStringList tmpStrList;
@@ -985,7 +987,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
         icalcomponent_add_property(a,p);
       }
       icalcomponent_add_property(a,icalproperty_new_summary(alarm->mailSubject().utf8()));
-      icalcomponent_add_property(a,icalproperty_new_description(alarm->text().utf8()));
+      icalcomponent_add_property(a,icalproperty_new_description(alarm->mailText().utf8()));
       QStringList attachments = alarm->mailAttachments();
       if (attachments.count() > 0) {
         for (QStringList::Iterator at = attachments.begin();  at != attachments.end();  ++at) {

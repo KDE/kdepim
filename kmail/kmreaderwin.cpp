@@ -94,6 +94,7 @@ using KMail::TeeHtmlWriter;
 #include <kprocess.h>
 #include <kdialog.h>
 #include <kaction.h>
+#include <kiconloader.h>
 
 #include <qclipboard.h>
 #include <qhbox.h>
@@ -799,8 +800,8 @@ void KMReaderWin::setMsg(KMMessage* aMsg, bool force)
         << aMsg->fromStrip() << ", readyToShow " << (aMsg->readyToShow()) << endl;
 
   bool complete = true;
-  if ( aMsg && 
-       !aMsg->readyToShow() && 
+  if ( aMsg &&
+       !aMsg->readyToShow() &&
        (aMsg->getMsgSerNum() != mLastSerNum) &&
        !aMsg->isComplete() )
     complete = false;
@@ -923,7 +924,7 @@ void KMReaderWin::displayAboutPage()
 
   QString location = locate("data", "kmail/about/main.html");
   QString content = kFileToString(location);
-  mViewer->begin(location);
+  mViewer->begin(KURL( location ));
   QString info =
     i18n("%1: KMail version; %2: help:// URL; %3: homepage URL; "
 	 "%4: prior KMail version; %5: prior KDE version; "
@@ -1413,7 +1414,7 @@ void KMReaderWin::slotTouchMessage()
       KMCommand *command = new KMSetStatusCommand( KMMsgStatusRead, serNums );
       command->start();
       KMMessage * receipt = message()->createMDN( MDN::ManualAction,
-                                                  MDN::Displayed, 
+                                                  MDN::Displayed,
                                                   true /* allow GUI */ );
       if ( receipt )
         if ( !kmkernel->msgSender()->send( receipt ) ) // send or queue
@@ -1523,10 +1524,10 @@ void KMReaderWin::showAttachmentPopup( int id, const QString & name, const QPoin
   mAtmCurrent = id;
   mAtmCurrentName = name;
   KPopupMenu *menu = new KPopupMenu();
-  menu->insertItem(i18n("Open..."), 1);
+  menu->insertItem(SmallIcon("fileopen"),i18n("Open..."), 1);
   menu->insertItem(i18n("Open With..."), 2);
   menu->insertItem(i18n("View..."), 3);
-  menu->insertItem(i18n("Save As..."), 4);
+  menu->insertItem(SmallIcon("filesaveas"), i18n("Save As..."), 4);
   menu->insertItem(i18n("Properties..."), 5);
   connect(menu, SIGNAL(activated(int)), this, SLOT(slotAtmLoadPart(int)));
   menu->exec( p ,0 );
@@ -1539,7 +1540,11 @@ void KMReaderWin::setStyleDependantFrameWidth()
   if ( !mBox )
     return;
   // set the width of the frame to a reasonable value for the current GUI style
-  int frameWidth = style().pixelMetric( QStyle::PM_DefaultFrameWidth ) - 1;
+  int frameWidth;
+  if( style().isA("KeramikStyle") )
+    frameWidth = style().pixelMetric( QStyle::PM_DefaultFrameWidth ) - 1;
+  else
+    frameWidth = style().pixelMetric( QStyle::PM_DefaultFrameWidth );
   if ( frameWidth < 0 )
     frameWidth = 0;
   if ( frameWidth != mBox->lineWidth() )
@@ -2097,12 +2102,12 @@ void KMReaderWin::slotMailtoOpenAddrBook()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotUrlCopy()
 {
-  KMMainWidget *mainWidget = dynamic_cast<KMMainWidget*>(mMainWindow);
-  if (mainWidget)
-  {
-    KMCommand *command = new KMUrlCopyCommand( mUrlClicked, mainWidget );
-    command->start();
-  }
+  // we don't necessarily need a mainWidget for KMUrlCopyCommand so
+  // it doesn't matter if the dynamic_cast fails.
+  KMCommand *command =
+    new KMUrlCopyCommand( mUrlClicked,
+                          dynamic_cast<KMMainWidget*>( mMainWindow ) );
+  command->start();
 }
 
 //-----------------------------------------------------------------------------

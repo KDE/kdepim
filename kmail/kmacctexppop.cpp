@@ -353,6 +353,10 @@ void KMAcctExpPop::slotMsgRetrieved(KIO::Job*, const QString & infoMsg)
 {
   if (infoMsg != "message complete") return;
   KMMessage *msg = new KMMessage;
+  // Make sure to use LF as line ending to make the processing easier
+  // when piping through external programs
+  uint newSize = KMFolder::crlf2lf( curMsgData.data(), curMsgData.size() );
+  curMsgData.resize( newSize );
   msg->fromByteArray( curMsgData , true );
   if (stage == Head)
   {
@@ -670,7 +674,7 @@ void KMAcctExpPop::slotGetNextMsg()
 void KMAcctExpPop::slotData( KIO::Job* job, const QByteArray &data)
 {
   if (data.size() == 0) {
-    kdDebug(5006) << "Data: <End>" << endl; 
+    kdDebug(5006) << "Data: <End>" << endl;
     if ((stage == Retr) && (numMsgBytesRead < curMsgLen))
       numBytesRead += curMsgLen - numMsgBytesRead;
     else if (stage == Head){

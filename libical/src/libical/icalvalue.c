@@ -197,6 +197,11 @@ char* icalmemory_strdup_and_dequote(const char* str)
 		    *pout = *p;
 		    break;
 		}
+                case 't':
+                {
+		    *pout = '\t';
+		    break;
+                }
 		default:
 		{
 		    *pout = ' ';
@@ -693,7 +698,8 @@ char* icalvalue_text_as_ical_string(icalvalue* value) {
 	    }
 
 	    case ';':
-	    case ',':{
+	    case ',':
+	    case '\\': {
 		icalmemory_append_char(&str,&str_p,&buf_sz,'\\');
 		icalmemory_append_char(&str,&str_p,&buf_sz,*p);
 		line_length+=3;

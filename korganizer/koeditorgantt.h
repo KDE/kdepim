@@ -32,7 +32,7 @@ class GanttItem;
 namespace KCal {
   class FreeBusy;
   class Attendee;
-};
+}
 
 
 class KOEditorGantt : public QWidget

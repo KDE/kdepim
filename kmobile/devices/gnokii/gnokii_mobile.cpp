@@ -53,7 +53,7 @@
 
 
 /* This is a loaded library, which is initialized with the line below */
-K_EXPORT_COMPONENT_FACTORY( libkmobile_gnokii, KMobileGnokii() );
+K_EXPORT_COMPONENT_FACTORY( libkmobile_gnokii, KMobileGnokii() )
 
 /* createObject needs to be reimplemented by every KMobileDevice driver */
 QObject *KMobileGnokii::createObject( QObject *parent, const char *name,

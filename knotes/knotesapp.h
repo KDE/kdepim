@@ -1,7 +1,7 @@
 /*******************************************************************
  KNotes -- Notes for the KDE project
 
- Copyright (c) 1997-2003, The KNotes Developers
+ Copyright (c) 1997-2004, The KNotes Developers
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -22,8 +22,8 @@
 #define KNOTESAPP_H
 
 #include <qstring.h>
-#include <qptrlist.h>
 #include <qdict.h>
+#include <qptrlist.h>
 #include <qlabel.h>
 
 #include <kapplication.h>
@@ -35,6 +35,7 @@
 #include "KNotesIface.h"
 
 class KNote;
+class KNoteConfig;
 class KPopupMenu;
 class KAction;
 class KActionMenu;
@@ -54,14 +55,11 @@ public:
     KNotesApp();
     ~KNotesApp();
 
-    QString newNote( const QString& name = QString::null,
-                            const QString& text = QString::null );
-    QString newNoteFromClipboard( const QString& name = QString::null );
-
     void showNote( const QString& id ) const;
     void hideNote( const QString& id ) const;
-    void killNote( const QString& id, bool force );
+
     void killNote( const QString& id );
+    void killNote( const QString& id, bool force );
 
     QString name( const QString& id ) const;
     QString text( const QString& id ) const;
@@ -77,50 +75,55 @@ public:
 
     bool commitData( QSessionManager& );
 
+public slots:
+    QString newNote( const QString& name = QString::null,
+                     const QString& text = QString::null );
+    QString newNoteFromClipboard( const QString& name = QString::null );
+
 protected:
     void mousePressEvent( QMouseEvent* );
     bool eventFilter( QObject*, QEvent* );
 
 protected slots:
-    void slotNewNote();
-    void slotNewNoteFromClipboard();
     void slotShowNote();
 
-    void slotPreferences() const;
+    void slotPreferences();
     void slotConfigureAccels();
 
-    void slotNoteKilled( KCal::Journal* );
+    void slotNoteKilled( KCal::Journal *journal );
 
     void slotQuit();
 
+private:
+    void showNote( KNote *note ) const;
+    void saveConfigs();
+
 private slots:
+    void saveNotes();
     void updateNoteActions();
     void updateGlobalAccels();
 
-    void saveNotes();
+    void createNote( KCal::Journal *journal );
 
 private:
-    void showNote( KNote *note ) const;
-    void saveConfig();
-
-
     class KNoteActionList : public QPtrList<KAction>
     {
     public:
         virtual int compareItems( QPtrCollection::Item s1, QPtrCollection::Item s2 );
     };
 
-    QDict<KNote>      m_noteList;
-    KNoteActionList   m_noteActions;
-
     KCal::CalendarLocal m_calendar;
 
-    KPopupMenu *m_note_menu;
-    KPopupMenu *m_context_menu;
+    KNoteConfig     *m_defaultConfig;
 
-    KXMLGUIFactory *factory;
+    QDict<KNote>    m_noteList;
+    KNoteActionList m_noteActions;
 
-    KGlobalAccel *globalAccel;
+    KPopupMenu      *m_note_menu;
+    KPopupMenu      *m_context_menu;
+
+    KGlobalAccel    *m_globalAccel;
+    KXMLGUIFactory  *m_guiFactory;
 };
 
 #endif

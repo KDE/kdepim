@@ -1,13 +1,14 @@
 #include "maildlg.h"
 #include <qlayout.h>
 #include<kdebug.h>
+#include<klocale.h>
 #include<qapplication.h>
 #include "mailsubject.h"
 #include <qprogressdialog.h>
 #include "maildrop.h"
 
 KornMailDlg::KornMailDlg( QWidget *parent )
-   : KDialogBase( parent, "maildialog", true, "Mail Details", User1|Close, Close, true, KGuiItem("&Full Message"))
+   : KDialogBase( parent, "maildialog", true, i18n("Mail Details"), User1|Close, Close, true, KGuiItem(i18n("&Full Message")))
 {
 	QWidget * page = new QWidget( this );
 	setMainWidget(page);
@@ -36,7 +37,7 @@ void KornMailDlg::showFullMessage()
 	// create progress dialog
 	QProgressDialog progress(this, "bla", TRUE);
 	progress.setMinimumDuration(0);
-	progress.setLabelText("Loading full mail. Please wait...");
+	progress.setLabelText(i18n("Loading full mail. Please wait..."));
 
 	// this should show it even if the mailbox does not support progress bars
 	progress.setTotalSteps(1000);

@@ -293,8 +293,8 @@ void KMMainWidget::readConfig(void)
        * as we have some dependencies in this widget
        * it's better to manage these here */
       // The columns are shown by default.
-      int unreadColumn = config->readNumEntry("UnreadColumn", -1);
-      int totalColumn = config->readNumEntry("TotalColumn", -1);
+      const int unreadColumn = config->readNumEntry("UnreadColumn", 1);
+      const int totalColumn = config->readNumEntry("TotalColumn", 2);
 
       /* we need to _activate_ them in the correct order
       * this is ugly because we can't use header()->moveSection
@@ -306,6 +306,9 @@ void KMMainWidget::readConfig(void)
         mFolderTree->toggleColumn(KMFolderTree::total);
       if (unreadColumn != -1 && unreadColumn > totalColumn)
         mFolderTree->toggleColumn(KMFolderTree::unread);
+      mUnreadColumnToggle->setChecked( mFolderTree->isUnreadActive() );
+      mUnreadTextToggle->setChecked( !mFolderTree->isUnreadActive() );
+      mTotalColumnToggle->setChecked( mFolderTree->isTotalActive() );
 
     }
   }
@@ -629,8 +632,6 @@ void KMMainWidget::hide()
 //-----------------------------------------------------------------------------
 void KMMainWidget::show()
 {
-  if( mPanner1 ) mPanner1->setSizes( mPanner1Sep );
-  if( mPanner2 ) mPanner2->setSizes( mPanner2Sep );
   QWidget::show();
 }
 
@@ -757,10 +758,12 @@ void KMMainWidget::slotMailChecked(bool newMail, bool sendOnCheck)
 
   if(kmkernel->xmlGuiInstance()) {
     KNotifyClient::Instance instance(kmkernel->xmlGuiInstance());
-    KNotifyClient::event(0, "new-mail-arrived", i18n("New mail arrived"));
+    KNotifyClient::event(topLevelWidget()->winId(), "new-mail-arrived",
+      i18n("New mail arrived"));
   }
   else
-    KNotifyClient::event(0, "new-mail-arrived", i18n("New mail arrived"));
+    KNotifyClient::event(topLevelWidget()->winId(), "new-mail-arrived",
+      i18n("New mail arrived"));
   if (mBeepOnNew) {
     KNotifyClient::beep();
   }
@@ -877,7 +880,7 @@ void KMMainWidget::slotEmptyFolder()
       i18n("<qt>Are you sure you want to move all messages from "
            "folder <b>%1</b> to the trash?</qt>").arg(mFolder->label());
 
-    if (KMessageBox::warningContinueCancel(this, text, title, title)
+    if (KMessageBox::warningContinueCancel(this, text, title, KGuiItem( title, "edittrash"))
       != KMessageBox::Continue) return;
   }
 
@@ -971,7 +974,7 @@ void KMMainWidget::slotRemoveFolder()
   }
 
   if (KMessageBox::warningContinueCancel(this, str, i18n("Delete Folder"),
-                                         i18n("&Delete"))
+                                         KGuiItem( i18n("&Delete"), "editdelete"))
       == KMessageBox::Continue)
   {
     if (mFolder->hasAccounts())
@@ -1084,7 +1087,7 @@ void KMMainWidget::slotOverrideHtml()
         "\"spam\" and may increase the likelihood that your system will be "
         "compromised by other present and anticipated security exploits." ),
       i18n( "Security Warning" ),
-      i18n( "Continue" ),
+      KStdGuiItem::cont(),
       "OverrideHtmlWarning", false);
     if( result == KMessageBox::Cancel ) {
       mPreferHtmlAction->setChecked( false );
@@ -1587,6 +1590,7 @@ void KMMainWidget::folderSelected(KMFolder* aFolder, bool jumpToUnread)
 
   }
   mFolder = (KMFolder*)aFolder;
+  if ( mFolder ) { // == 0 -> pointing to toplevel ("Welcome to KMail") folder
   connect( mFolder, SIGNAL( changed() ),
            this, SLOT( updateMarkAsReadAction() ) );
   connect( mFolder, SIGNAL( msgHeaderChanged( KMFolder*, int ) ),
@@ -1595,6 +1599,7 @@ void KMMainWidget::folderSelected(KMFolder* aFolder, bool jumpToUnread)
            this, SLOT( updateMarkAsReadAction() ) );
   connect( mFolder, SIGNAL( msgRemoved(KMFolder *) ),
            this, SLOT( updateMarkAsReadAction() ) );
+  }
 
   readFolderConfig();
   if (mMsgView)
@@ -2544,14 +2549,12 @@ void KMMainWidget::setupActions()
 			       SLOT(slotToggleUnread()),
 			       actionCollection(), "view_unread_column" );
   mUnreadColumnToggle->setExclusiveGroup( "view_unread_group" );
-  mUnreadColumnToggle->setChecked( mFolderTree->isUnreadActive() );
   unreadMenu->insert( mUnreadColumnToggle );
 
   mUnreadTextToggle = new KRadioAction( i18n("View->Unread Count", "View After &Folder Name"), 0, this,
 			       SLOT(slotToggleUnread()),
 			       actionCollection(), "view_unread_text" );
   mUnreadTextToggle->setExclusiveGroup( "view_unread_group" );
-  mUnreadTextToggle->setChecked( !mFolderTree->isUnreadActive() );
   unreadMenu->insert( mUnreadTextToggle );
 
   // toggle for total column
@@ -2560,7 +2563,6 @@ void KMMainWidget::setupActions()
 			       actionCollection(), "view_columns_total" );
   mTotalColumnToggle->setToolTip( i18n("Toggle display of column showing the "
                                       "total number of messages in folders.") );
-  mTotalColumnToggle->setChecked( mFolderTree->isTotalActive() );
 
   (void)new KAction( KGuiItem( i18n("View->","&Expand Thread"), QString::null,
 			       i18n("Expand the current thread") ),

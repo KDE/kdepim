@@ -217,7 +217,7 @@ int InteractiveAction::questionYesNo(const QString & text,
 		KDialogBase::Yes | KDialogBase::No,
 		KDialogBase::Yes, KDialogBase::No,
 		fParent, "questionYesNo", true, true,
-		i18n("Yes"), i18n("No"));
+		KStdGuiItem::yes(), KStdGuiItem::no());
 
 	// The following code is taken from KDialogBase.cc,
 	// part of the KDE 2.2 libraries. Copyright 2001

@@ -32,7 +32,7 @@
 #include "pvkonnector.h"
 
 typedef KGenericFactory<KSync::PVPlugin, QObject>  PVKonnectorPlugin;
-K_EXPORT_COMPONENT_FACTORY(libpvkonnector, PVKonnectorPlugin);
+K_EXPORT_COMPONENT_FACTORY(libpvkonnector, PVKonnectorPlugin)
 
 using namespace KSync;
 

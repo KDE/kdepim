@@ -310,6 +310,13 @@ void KPilotConfigSettings::addDirtyDatabase(QString db)
 	}
 }
 
+QStringList KPilotConfigSettings::getNoBackupDatabases()
+{
+	FUNCTIONSETUP;
+	KConfigGroupSaver cgs(this,"");
+	return readListEntry("BackupForSync");
+}
+
 
 QStringList KPilotConfigSettings::getAppBlockChangedDatabases()
 {

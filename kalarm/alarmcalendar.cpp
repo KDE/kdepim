@@ -46,7 +46,7 @@ extern "C" {
 
 #include "kalarmapp.h"
 #include "preferences.h"
-#include "alarmcalendar.h"
+#include "alarmcalendar.moc"
 
 using namespace KCal;
 
@@ -57,7 +57,8 @@ AlarmCalendar::AlarmCalendar(const QString& path, KAlarmEvent::Status type, cons
 	  mConfigKey(icalPath.isNull() ? QString::null : configKey),
 	  mType(type),
 	  mKAlarmVersion(-1),
-	  mKAlarmVersion057_UTC(false)
+	  mKAlarmVersion057_UTC(false),
+	  mOpen(false)
 {
 	mUrl.setPath(path);       // N.B. constructor mUrl(path) doesn't work with UNIX paths
 	mICalUrl.setPath(icalPath.isNull() ? path : icalPath);
@@ -70,11 +71,11 @@ AlarmCalendar::~AlarmCalendar()
 }
 
 /******************************************************************************
-* Open the calendar file and load it into memory.
+* Open the calendar file if not already open, and load it into memory.
 */
 bool AlarmCalendar::open()
 {
-	if (mCalendar)
+	if (mOpen)
 		return true;
 	if (!mUrl.isValid())
 		return false;
@@ -84,32 +85,25 @@ bool AlarmCalendar::open()
 
 	if (!KIO::NetAccess::exists(mUrl))
 	{
-		if (!create())      // create the calendar file
+		// The calendar file doesn't yet exist, so create it
+		if (create())
+			load();
+	}
+	else
+	{
+		// Load the existing calendar file
+		if (load() == 0)
 		{
-			delete mCalendar;
-			mCalendar = 0;
-			return false;
+			if (create())       // zero-length file - create a new one
+				load();
 		}
 	}
-
-	// Load the calendar file
-	switch (load())
+	if (!mOpen)
 	{
-		case 1:         // success
-			break;
-		case 0:         // zero-length file
-			if (!create()  ||  load() <= 0)
-			{
-				delete mCalendar;
-				mCalendar = 0;
-				return false;
-			}
-		case -1:        // failure
-			delete mCalendar;
-			mCalendar = 0;
-			return false;
+		delete mCalendar;
+		mCalendar = 0;
 	}
-	return true;
+	return mOpen;
 }
 
 /******************************************************************************
@@ -195,6 +189,7 @@ int AlarmCalendar::load()
 	else
 		kdDebug(5950) << "AlarmCalendar::load(): KAlarm version " << mKAlarmVersion << endl;
 	KAlarmEvent::convertKCalEvents(*this);   // convert events to current KAlarm format for when calendar is saved
+	mOpen = true;
 	return 1;
 }
 
@@ -227,8 +222,7 @@ bool AlarmCalendar::saveCal(const QString& filename)
 	if (!success)
 	{
 		kdError(5950) << "AlarmCalendar::saveCal(" << saveFilename << "): failed.\n";
-#warning "Temporary untranslated string"
-		KMessageBox::error(0, QString::fromLatin1("Failed to save calendar to\n'%1'").arg(mICalUrl.prettyURL()), kapp->aboutData()->programName());
+		KMessageBox::error(0, i18n("Failed to save calendar to\n'%1'").arg(mICalUrl.prettyURL()), kapp->aboutData()->programName());
 		return false;
 	}
 
@@ -274,6 +268,7 @@ void AlarmCalendar::close()
 		delete mCalendar;
 		mCalendar = 0;
 	}
+	mOpen = false;
 }
 
 /******************************************************************************
@@ -302,6 +297,7 @@ void AlarmCalendar::convertToICal()
 */
 void AlarmCalendar::purge(int daysToKeep, bool saveIfPurged)
 {
+	kdDebug(5950) << "AlarmCalendar::purge(" << daysToKeep << ")\n";
 	if (daysToKeep >= 0)
 	{
 		bool purged = false;
@@ -329,6 +325,7 @@ void AlarmCalendar::purge(int daysToKeep, bool saveIfPurged)
 */
 Event* AlarmCalendar::addEvent(const KAlarmEvent& event, bool useEventID)
 {
+	kdDebug(5950) << "AlarmCalendar::addEvent(" << event.id() << ")\n";
 	if (!mCalendar)
 		return 0;
 	if (useEventID  &&  event.id().isEmpty())
@@ -560,6 +557,3 @@ bool AlarmCalendar::isUTC() const
 	}
 	return result;
 }
-
-#include "alarmcalendar.moc"
-

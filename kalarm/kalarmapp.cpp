@@ -1,7 +1,7 @@
 /*
  *  kalarmapp.cpp  -  the KAlarm application object
  *  Program:  kalarm
- *  (C) 2001, 2002, 2003 by David Jarvie <software@astrojar.org.uk>
+ *  (C) 2001 - 2004 by David Jarvie <software@astrojar.org.uk>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@
 #include <kfileitem.h>
 #include <kaction.h>
 #include <kstdaction.h>
+#include <kstdguiitem.h>
 #include <kstaticdeleter.h>
 #include <kdebug.h>
 
@@ -59,8 +60,6 @@
 #include "kalarmapp.moc"
 
 #include <netwm.h>
-
-extern QCString execArguments;
 
 #define       DAEMON_APP_NAME_DEF    "kalarmd"
 const char*   DCOP_OBJECT_NAME     = "display";
@@ -92,6 +91,7 @@ KAlarmApp::KAlarmApp()
 	  mDcopHandler(0),
 	  mDaemonGuiHandler(0),
 	  mTrayWindow(0),
+	  mDaemonStartTimer(0),
 	  mDaemonCheckInterval(0),
 	  mCalendarUpdateCount(0),
 	  mDaemonRegistered(false),
@@ -99,6 +99,7 @@ KAlarmApp::KAlarmApp()
 	  mDaemonRunning(false),
 	  mSessionClosingDown(false)
 {
+	kdDebug(5950) << "KAlarmApp::KAlarmApp()\n";
 #if KDE_VERSION >= 290
 	mNoShellAccess = !authorize("shell_access");
 #else
@@ -123,8 +124,8 @@ KAlarmApp::KAlarmApp()
 	 *  3) A user-specific one which contains details of alarms which are currently
 	 *     being displayed to that user and which have not yet been acknowledged.
 	 */
-	QRegExp vcsRegExp = QString::fromLatin1("\\.vcs$");
-	QString ical      = QString::fromLatin1(".ics");
+	QRegExp vcsRegExp(QString::fromLatin1("\\.vcs$"));
+	QString ical = QString::fromLatin1(".ics");
 	QString displayCal = locateLocal("appdata", DISPLAY_CALENDAR);
 	QString activeKey = QString::fromLatin1("Calendar");
 	QString activeCal = config->readPathEntry(activeKey, locateLocal("appdata", ACTIVE_CALENDAR));
@@ -276,11 +277,12 @@ bool KAlarmApp::restoreSession()
 */
 int KAlarmApp::newInstance()
 {
-	kdDebug(5950)<<"KAlarmApp::newInstance()\n";
 	++activeCount;
 	int exitCode = 0;               // default = success
 	static bool firstInstance = true;
-	if (!firstInstance || !isRestored())
+	if (firstInstance  &&  isRestored())
+		kdDebug(5950)<<"KAlarmApp::newInstance(): restoring\n";
+	else
 	{
 		QString usage;
 		KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
@@ -400,7 +402,7 @@ int KAlarmApp::newInstance()
 					kdDebug(5950)<<"KAlarmApp::newInstance(): exec\n";
 					if (args->isSet("mail"))
 						USAGE(i18n("%1 incompatible with %2").arg(QString::fromLatin1("--mail")).arg(QString::fromLatin1("--exec")))
-					alMessage = execArguments;
+					alMessage = args->getOption("exec");
 					action = KAlarmEvent::COMMAND;
 				}
 				else if (args->isSet("mail"))
@@ -670,9 +672,11 @@ void KAlarmApp::quitIf(int exitCode, bool force)
 {
 	if (force)
 	{
-		// Quit regardless
+		// Quit regardless, except for message windows
 		KAlarmMainWindow::closeAll();
 		displayTrayIcon(false);
+		if (MessageWin::instanceCount())
+			return;
 	}
 	else
 	{
@@ -710,6 +714,23 @@ void KAlarmApp::quitIf(int exitCode, bool force)
 	kdDebug(5950) << "KAlarmApp::quitIf(" << exitCode << "): quitting" << endl;
 	dcopClient()->registerAs(QCString(aboutData()->appName()) + "-quitting");
 	exit(exitCode);
+}
+
+/******************************************************************************
+* Called when the Quit menu item is selected.
+* Closes the system tray window and all main windows, but does not exit the
+* program if other windows are still open.
+*/
+void KAlarmApp::doQuit(QWidget* parent)
+{
+	kdDebug(5950) << "KAlarmApp::doQuit()\n";
+	if (mDisableAlarmsIfStopped
+	&&  KMessageBox::warningYesNo(parent, i18n("Quitting will disable alarms\n"
+	                                           "(once any alarm message windows are closed)."),
+	                            QString::null, KStdGuiItem::quit(), KStdGuiItem::cancel(), TrayWindow::QUIT_WARN
+	                           ) != KMessageBox::Yes)
+		return;
+	quitIf(0, true);
 }
 
 /******************************************************************************
@@ -897,7 +918,8 @@ void KAlarmApp::toggleAlarmsEnabled()
 */
 void KAlarmApp::slotPreferences()
 {
-	(new KAlarmPrefDlg(Preferences::instance()))->exec();
+	KAlarmPrefDlg prefDlg(Preferences::instance());
+	prefDlg.exec();
 }
 
 /******************************************************************************
@@ -988,7 +1010,7 @@ void KAlarmApp::slotPreferencesChanged()
 		||  Preferences::instance()->expiredKeepDays() >= 0  &&  Preferences::instance()->expiredKeepDays() < mOldExpiredKeepDays)
 		{
 			// expired alarms are now being kept for less long
-			if (mExpiredCalendar->isOpen()  ||  mExpiredCalendar->open())
+			if (mExpiredCalendar->open())
 				mExpiredCalendar->purge(Preferences::instance()->expiredKeepDays(), true);
 			refreshExpired = true;
 		}
@@ -1436,14 +1458,17 @@ void* KAlarmApp::execAlarm(KAlarmEvent& event, const KAlarmAlarm& alarm, bool re
 		QString err = KAMail::send(event, (reschedule || allowDefer));
 		if (!err.isNull())
 		{
-			kdDebug(5950) << "KAlarmApp::execAlarm(): failed\n";
 			QStringList errmsgs;
 			if (err.isEmpty())
+			{
 				errmsgs += i18n("Failed to send email");
+				kdDebug(5950) << "KAlarmApp::execAlarm(): failed\n";
+			}
 			else
 			{
 				errmsgs += i18n("Failed to send email:");
 				errmsgs += err;
+				kdDebug(5950) << "KAlarmApp::execAlarm(): failed: " << err << endl;
 			}
 			(new MessageWin(event, alarm, errmsgs, reschedule))->show();
 			result = 0;
@@ -1685,14 +1710,20 @@ void KAlarmApp::undeleteEvent(KAlarmEvent& event, KAlarmMainWindow* win)
 	if (KAlarmEvent::uidStatus(event.id()) == KAlarmEvent::EXPIRED)
 	{
 		QString id = event.id();
-		mCalendar->addEvent(event);
-		calendarSave();
+		QDateTime now = QDateTime::currentDateTime();
+		if (event.occursAfter(now))
+		{
+			if (event.recurs())
+				event.setNextOccurrence(now);   // skip any recurrences in the past
+			mCalendar->addEvent(event);
+			calendarSave();
 
-		// Update the window lists
-		KAlarmMainWindow::undeleteEvent(id, event, win);
+			// Update the window lists
+			KAlarmMainWindow::undeleteEvent(id, event, win);
 
-		if (expiredCalendar(false))
-			mExpiredCalendar->deleteEvent(id, true);   // save calendar after deleting
+			if (expiredCalendar(false))
+				mExpiredCalendar->deleteEvent(id, true);   // save calendar after deleting
+		}
 	}
 }
 
@@ -1722,7 +1753,7 @@ AlarmCalendar* KAlarmApp::expiredCalendar(bool saveIfPurged)
 	if (Preferences::instance()->expiredKeepDays())
 	{
 		// Expired events are being kept
-		if (mExpiredCalendar->isOpen()  ||  mExpiredCalendar->open())
+		if (mExpiredCalendar->open())
 		{
 			if (Preferences::instance()->expiredKeepDays() > 0)
 				mExpiredCalendar->purge(Preferences::instance()->expiredKeepDays(), saveIfPurged);
@@ -1829,6 +1860,13 @@ bool KAlarmApp::initCheck(bool calendarOnly)
 		 */
 		mDisplayCalendar->open();
 
+		/* Need to open the expired alarm calendar now, since otherwise if the daemon
+		 * immediately notifies multiple alarms, the second alarm is likely to be
+		 * processed while the calendar is executing open() (but before open() completes),
+		 * which causes a hang!!
+		 */
+		mExpiredCalendar->open();
+
 		startdaemon = true;
 	}
 	else
@@ -1836,9 +1874,9 @@ bool KAlarmApp::initCheck(bool calendarOnly)
 
 	if (!calendarOnly)
 	{
+		setUpDcop();              // we're now ready to handle DCOP calls, so set up handlers
 		if (startdaemon)
 			startDaemon();          // make sure the alarm daemon is running
-		setUpDcop();              // we're now ready to handle DCOP calls, so set up handlers
 	}
 	return true;
 }
@@ -1849,13 +1887,20 @@ bool KAlarmApp::initCheck(bool calendarOnly)
 void KAlarmApp::startDaemon()
 {
 	kdDebug(5950) << "KAlarmApp::startDaemon()\n";
-	if (!dcopClient()->isApplicationRegistered(DAEMON_APP_NAME))
+	if (!dcopClient()->isApplicationRegistered(DAEMON_APP_NAME)  &&  !mDaemonStartTimer)
 	{
 		// Start the alarm daemon. It is a KUniqueApplication, which means that
 		// there is automatically only one instance of the alarm daemon running.
-		QString execStr = locate("exe",QString::fromLatin1(DAEMON_APP_NAME));
-		kdeinitExecWait(execStr);
+		QString execStr = locate("exe", QString::fromLatin1(DAEMON_APP_NAME));
+		kdeinitExec(execStr);
 		kdDebug(5950) << "KAlarmApp::startDaemon(): Alarm daemon started" << endl;
+		const int startInterval = 500;   // milliseconds
+		mDaemonStartTimeout = 5000/startInterval + 1;    // check daemon status for 5 seconds before giving up
+		mDaemonStartTimer = new QTimer(this);
+		connect(mDaemonStartTimer, SIGNAL(timeout()), SLOT(checkIfDaemonStarted()));
+		mDaemonStartTimer->start(startInterval);
+		checkIfDaemonStarted();
+		return;
 	}
 
 	// Register this application with the alarm daemon
@@ -1871,7 +1916,24 @@ void KAlarmApp::startDaemon()
 	}
 
 	mDaemonRegistered = true;
-	kdDebug(5950) << "KAlarmApp::startDaemon(): started daemon" << endl;
+	kdDebug(5950) << "KAlarmApp::startDaemon(): daemon startup complete" << endl;
+}
+
+/******************************************************************************
+* Check whether the alarm daemon has started yet, and if so, register with it.
+*/
+void KAlarmApp::checkIfDaemonStarted()
+{
+	if (!dcopClient()->isApplicationRegistered(DAEMON_APP_NAME))
+	{
+		if (--mDaemonStartTimeout > 0)
+			return;     // wait a bit more to check again
+	}
+	else
+		startDaemon();
+
+	delete mDaemonStartTimer;
+	mDaemonStartTimer = 0;
 }
 
 /******************************************************************************

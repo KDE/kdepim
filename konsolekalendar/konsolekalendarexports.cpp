@@ -27,7 +27,6 @@
 #include <libkcal/calendarlocal.h>
 #include <libkcal/calendar.h>
 #include <libkcal/event.h>
-#include <libkcal/htmlexport.h>
 
 
 #include "konsolekalendarexports.h"
@@ -46,84 +45,67 @@ KonsoleKalendarExports::~KonsoleKalendarExports()
 {
 }
 
-bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts, Event *event ){
+bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts, Event *event, QDate date ){
 
-  if( m_firstEntry == true || 
-      m_lastDate.day() != event->dtStart().date().day() ||
-      m_lastDate.month() != event->dtStart().date().month() ||
-      m_lastDate.year() != event->dtStart().date().year() ){
-	  
-	  
-    m_firstEntry=false;	  
-    int len = event->dtStartStr().length();
-    QString date = event->dtStartStr();
-    date.truncate( len - 5 );
-    *ts << I18N_NOOP("Date:") << "\t" <<  date.local8Bit() << endl;
-    m_lastDate = event->dtStart().date();
-	  
+  if( m_firstEntry == true ||
+      m_lastDate.day() != date.day() ||
+      m_lastDate.month() != date.month() ||
+      m_lastDate.year() != date.year() ){
+
+
+    m_firstEntry=false;
+    QString sDate = date.toString();
+    *ts << I18N_NOOP("Date:") << "\t" <<  sDate << endl;
+    m_lastDate = date;
+
   }
 
   if ( !event->doesFloat() ) {
     *ts << "\t";
-    *ts <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
+    *ts <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) );
     *ts << " - ";
-    *ts << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
+    *ts << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) );
   }
 
 
   *ts << endl << I18N_NOOP("Summary:") << endl;
-  *ts << "\t" << event->summary().local8Bit() << endl;
-  *ts << I18N_NOOP("Description:") << endl;  
+  *ts << "\t" << event->summary() << endl;
+  *ts << I18N_NOOP("Description:") << endl;
   if( !event->description().isEmpty() ) {
-    *ts << "\t" << event->description().local8Bit() << endl;
+    *ts << "\t" << event->description() << endl;
   } else {
-    *ts << "\t" << I18N_NOOP("(no description available)") << endl;  
+    *ts << "\t" << I18N_NOOP("(no description available)") << endl;
   }
-  *ts << I18N_NOOP("UID:") << endl;  
-  *ts << "\t" << event->uid().local8Bit() << endl;
+  *ts << I18N_NOOP("UID:") << endl;
+  *ts << "\t" << event->uid() << endl;
   *ts << "----------------------------------" << endl;
 
   return true;
 }
 
-bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event ){
+bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event, QDate date ){
 
 // startdate,starttime,enddate,endtime,summary,description,UID
 
-  QString delim = ",";  //one day maybe the delim character can be an option??
+  QString delim = ",";  //TODO: the delim character can be an option??
 
   if ( !event->doesFloat() ) {
-    *ts <<          event->dtStart().date().toString("yyyy-M-d");
+    *ts <<          date.toString("yyyy-MM-dd");
     *ts << delim << event->dtStart().time().toString("hh:mm");
-    *ts << delim << event->dtEnd().date().toString("yyyy-M-d");
+    *ts << delim << date.toString("yyyy-MM-dd");
     *ts << delim << event->dtEnd().time().toString("hh:mm");
   } else {
-    *ts << ",,,";
+    *ts <<          date.toString("yyyy-MM-dd");
+    *ts << delim;
+    *ts << delim << date.toString("yyyy-MM-dd");
+    *ts << delim;
   }
 
-  *ts << delim << event->summary().local8Bit();
-  *ts << delim << event->description().local8Bit();
-  *ts << delim << event->uid().local8Bit();
+  QString rdelim = "\\" + delim;
+  *ts << delim << event->summary().replace(delim,rdelim);
+  *ts << delim << event->description().replace(delim,rdelim);
+  *ts << delim << event->uid();
   *ts << endl;
 
   return true;
 }
-
-// Old function for printing out as keyword:<tab>value
-//bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event ){
-//
-//  if ( !event->doesFloat() ) {
-//    *ts <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
-//    *ts << "\t";
-//    *ts << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
-// }
-//
-//  *ts << "\t" << I18N_NOOP("Summary:");
-//  *ts << "\t\"" << event->summary().local8Bit() << "\"";
-//  *ts << "\t" << I18N_NOOP("Description:");
-//  *ts << "\t\"" << event->description().local8Bit() << "\"";
-//  *ts << "\t" << I18N_NOOP("UID:");
-//  *ts << "\t" << event->uid().local8Bit() << endl;
-//
-//  return true;
-//}

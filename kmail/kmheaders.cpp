@@ -930,6 +930,8 @@ void KMHeaders::setFolder (KMFolder *aFolder, bool jumpToFirst)
                  this, SLOT(msgChanged()));
       disconnect(mFolder, SIGNAL(cleared()),
                  this, SLOT(folderCleared()));
+      disconnect(mFolder, SIGNAL(expunged()),
+                 this, SLOT(folderCleared()));
       disconnect(mFolder, SIGNAL(statusMsg(const QString&)),
                  mOwner, SLOT(statusMsg(const QString&)));
       writeSortOrder();
@@ -957,6 +959,8 @@ void KMHeaders::setFolder (KMFolder *aFolder, bool jumpToFirst)
               this, SLOT(msgChanged()));
       connect(mFolder, SIGNAL(cleared()),
               this, SLOT(folderCleared()));
+      connect(mFolder, SIGNAL(expunged()),
+                 this, SLOT(folderCleared()));
       connect(mFolder, SIGNAL(statusMsg(const QString&)),
               mOwner, SLOT(statusMsg(const QString&)));
       connect(mFolder, SIGNAL(numUnreadMsgsChanged(KMFolder*)),
@@ -1530,7 +1534,11 @@ void KMHeaders::slotExpandOrCollapseAllThreads( bool expand )
 void KMHeaders::setStyleDependantFrameWidth()
 {
   // set the width of the frame to a reasonable value for the current GUI style
-  int frameWidth = style().pixelMetric( QStyle::PM_DefaultFrameWidth ) - 1;
+  int frameWidth;
+  if( style().isA("KeramikStyle") )
+    frameWidth = style().pixelMetric( QStyle::PM_DefaultFrameWidth ) - 1;
+  else
+    frameWidth = style().pixelMetric( QStyle::PM_DefaultFrameWidth );
   if ( frameWidth < 0 )
     frameWidth = 0;
   if ( frameWidth != lineWidth() )
@@ -2653,6 +2661,12 @@ void KMHeaders::setSorting( int column, bool ascending )
   }
   KListView::setSorting( column, ascending );
   ensureCurrentItemVisible();
+  // Make sure the config and .sorted file are updated, otherwise stale info
+  // is read on new imap mail. ( folder->folderComplete() -> readSortOrder() ).
+  if ( mFolder ) {
+    writeFolderConfig();
+    writeSortOrder();
+  }
 }
 
 //Flatten the list and write it to disk

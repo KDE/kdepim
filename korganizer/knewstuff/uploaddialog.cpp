@@ -120,7 +120,7 @@ void UploadDialog::slotOk()
   entry->setVersion( mVersionEdit->text() );
   entry->setRelease( mReleaseSpin->value() );
   entry->setLicence( mLicenceCombo->currentText() );
-  entry->setPreview( mPreviewUrl->url(), mLanguageCombo->currentText() );
+  entry->setPreview( KURL( mPreviewUrl->url() ), mLanguageCombo->currentText() );
   entry->setSummary( mSummaryEdit->text(), mLanguageCombo->currentText() );
 
   mEngine->upload( entry );

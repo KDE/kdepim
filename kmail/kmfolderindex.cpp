@@ -181,6 +181,8 @@ int KMFolderIndex::writeIndex( bool createEmptyIndex )
 
   mIndexStream = fopen(QFile::encodeName(indexName), "r+"); // index file
   assert( mIndexStream );
+  fcntl(fileno(mIndexStream), F_SETFD, FD_CLOEXEC);
+
   updateIndexStreamPtr();
 
   writeMsgDict();
@@ -351,7 +353,7 @@ bool KMFolderIndex::readIndexHeader(int *gv)
             needs_update = false;
          }
       }
-      if (needs_update || mIndexSwapByteOrder)
+      if (needs_update || mIndexSwapByteOrder || (mIndexSizeOfLong != sizeof(long)))
 	setDirty( true );
       // Seek to end of header
       fseek(mIndexStream, endOfHeader, SEEK_SET );

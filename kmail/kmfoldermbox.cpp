@@ -42,7 +42,7 @@
 // Regular expression to find the line that seperates messages in a mail
 // folder:
 #define MSG_SEPERATOR_START "From "
-#define MSG_SEPERATOR_REGEX "^From .*..:...*$"
+#define MSG_SEPERATOR_REGEX "^From .*[0-9][0-9]:[0-9][0-9].*$"
 static short msgSepLen = strlen(MSG_SEPERATOR_START);
 
 
@@ -154,6 +154,10 @@ int KMFolderMbox::open()
 
   mChanged = false;
 
+  fcntl(fileno(mStream), F_SETFD, FD_CLOEXEC);
+  if (mIndexStream)
+     fcntl(fileno(mIndexStream), F_SETFD, FD_CLOEXEC);
+
   return rc;
 }
 
@@ -193,6 +197,7 @@ int KMFolderMbox::create(bool imap)
   umask(old_umask);
 
   if (!mStream) return errno;
+  fcntl(fileno(mStream), F_SETFD, FD_CLOEXEC);
 
   if (!path().isEmpty())
   {
@@ -202,6 +207,7 @@ int KMFolderMbox::create(bool imap)
     umask(old_umask);
 
     if (!mIndexStream) return errno;
+    fcntl(fileno(mIndexStream), F_SETFD, FD_CLOEXEC);
   }
   else
   {
@@ -934,8 +940,7 @@ if( fileD1.open( IO_WriteOnly ) ) {
     if (aMsg->headerField("Content-Type").isEmpty())  // This might be added by
       aMsg->removeHeaderField("Content-Type");        // the line above
   }
-  msgText = aMsg->asString();
-  escapeFrom( msgText );
+  msgText = escapeFrom( aMsg->asString() );
   size_t len = msgText.length();
 
   assert(mStream != 0);

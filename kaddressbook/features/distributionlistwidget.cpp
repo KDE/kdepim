@@ -134,6 +134,7 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   mContactView->addColumn( i18n( "Use Preferred" ) );
   mContactView->setEnabled( false );
   mContactView->setAllColumnsShowFocus( true );
+  mContactView->setFullWidth( true );
   topLayout->addMultiCellWidget( mContactView, 1, 1, 0, 3 );
   connect( mContactView, SIGNAL( selectionChanged() ),
            SLOT( selectionContactViewChanged() ) );
@@ -238,7 +239,7 @@ void DistributionListWidget::removeList()
 {
   int result = KMessageBox::warningContinueCancel( this,
       i18n( "<qt>Delete distribution list <b>%1</b>?</qt>" ) .arg( mNameCombo->currentText() ),
-      QString::null, i18n( "Delete" ) );
+      QString::null, KGuiItem( i18n("Delete"), "editdelete") );
 
   if ( result != KMessageBox::Continue )
     return;

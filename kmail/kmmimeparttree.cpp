@@ -23,13 +23,13 @@ KMMimePartTree::KMMimePartTree( KMReaderWin* readerWin,
                                 QWidget* parent,
                                 const char* name )
     : KListView(  parent, name ),
-      mReaderWin( readerWin )
+      mReaderWin( readerWin ), mSizeColumn(0)
 {
     setStyleDependantFrameWidth();
     addColumn( i18n("Description") );
     addColumn( i18n("Type") );
     addColumn( i18n("Encoding") );
-    addColumn( i18n("Size") );
+    mSizeColumn = addColumn( i18n("Size") );
     setColumnAlignment( 3, Qt::AlignRight );
 
     restoreLayoutIfPresent();
@@ -96,7 +96,7 @@ void KMMimePartTree::itemRightClicked( QListViewItem* item,
         kdDebug(5006) << "\n**\n** KMMimePartTree::itemRightClicked() **\n**" << endl;
 
         QPopupMenu* popup = new QPopupMenu;
-        popup->insertItem( i18n( "Save &As..." ), this, SLOT( slotSaveAs() ) );
+        popup->insertItem( SmallIcon("filesaveas"),i18n( "Save &As..." ), this, SLOT( slotSaveAs() ) );
         popup->insertItem( i18n( "Save as &Encoded..." ), this,
                            SLOT( slotSaveAsEncoded() ) );
         popup->insertItem( i18n( "Save All Attachments..." ), this,
@@ -152,7 +152,7 @@ void KMMimePartTree::saveOneFile( QListViewItem* item, bool encoded )
     QPtrList<partNode> parts;
     parts.append( static_cast<KMMimePartTreeItem *>(item)->node() );
     mReaderWin->setUpdateAttachment();
-    KMSaveAttachmentsCommand *command = new KMSaveAttachmentsCommand( this, parts, 
+    KMSaveAttachmentsCommand *command = new KMSaveAttachmentsCommand( this, parts,
             mReaderWin->message(), encoded );
     command->start();
 }
@@ -167,7 +167,7 @@ void KMMimePartTree::saveMultipleFiles( const QPtrList<QListViewItem>& selected,
         ++it;
     }
     mReaderWin->setUpdateAttachment();
-    KMSaveAttachmentsCommand *command = new KMSaveAttachmentsCommand( this, parts, 
+    KMSaveAttachmentsCommand *command = new KMSaveAttachmentsCommand( this, parts,
             mReaderWin->message(), encoded );
     command->start();
 }
@@ -177,7 +177,11 @@ void KMMimePartTree::saveMultipleFiles( const QPtrList<QListViewItem>& selected,
 void KMMimePartTree::setStyleDependantFrameWidth()
 {
   // set the width of the frame to a reasonable value for the current GUI style
-  int frameWidth = style().pixelMetric( QStyle::PM_DefaultFrameWidth ) - 1;
+  int frameWidth;
+  if( style().isA("KeramikStyle") )
+    frameWidth = style().pixelMetric( QStyle::PM_DefaultFrameWidth ) - 1;
+  else
+    frameWidth = style().pixelMetric( QStyle::PM_DefaultFrameWidth );
   if ( frameWidth < 0 )
     frameWidth = 0;
   if ( frameWidth != lineWidth() )
@@ -192,6 +196,23 @@ void KMMimePartTree::styleChange( QStyle& oldStyle )
   KListView::styleChange( oldStyle );
 }
 
+//-----------------------------------------------------------------------------
+void KMMimePartTree::correctSize( QListViewItem * item )
+{
+  if (!item) return;
+
+  KIO::filesize_t totalSize = 0;
+  QListViewItem * myChild = item->firstChild();
+  while ( myChild )
+  {
+    totalSize += static_cast<KMMimePartTreeItem*>(myChild)->origSize();
+    myChild = myChild->nextSibling();
+  }
+  if ( totalSize > static_cast<KMMimePartTreeItem*>(item)->origSize() )
+    item->setText( mSizeColumn, KIO::convertSize(totalSize) );
+  if ( item->parent() )
+    correctSize( item->parent() );
+}
 
 //=============================================================================
 KMMimePartTreeItem::KMMimePartTreeItem( KMMimePartTree * parent,
@@ -204,11 +225,13 @@ KMMimePartTreeItem::KMMimePartTreeItem( KMMimePartTree * parent,
 		   QString::null, // set by setIconAndTextForType()
 		   encoding,
 		   KIO::convertSize( size ) ),
-    mPartNode( node )
+    mPartNode( node ), mOrigSize(size)
 {
   if( node )
     node->setMimePartTreeItem( this );
   setIconAndTextForType( mimetype );
+  if ( parent )
+    parent->correctSize(this);
 }
 
 KMMimePartTreeItem::KMMimePartTreeItem( KMMimePartTreeItem * parent,
@@ -222,7 +245,7 @@ KMMimePartTreeItem::KMMimePartTreeItem( KMMimePartTreeItem * parent,
 		   QString::null, // set by setIconAndTextForType()
 		   encoding,
 		   KIO::convertSize( size ) ),
-    mPartNode( node )
+    mPartNode( node ), mOrigSize(size)
 {
   if( revertOrder && nextSibling() ){
     QListViewItem* sib = nextSibling();
@@ -233,6 +256,8 @@ KMMimePartTreeItem::KMMimePartTreeItem( KMMimePartTreeItem * parent,
   if( node )
     node->setMimePartTreeItem( this );
   setIconAndTextForType( mimetype );
+  if ( listView() )
+    static_cast<KMMimePartTree*>(listView())->correctSize(this);
 }
 
 void KMMimePartTreeItem::setIconAndTextForType( const QString & mime )
@@ -250,7 +275,6 @@ void KMMimePartTreeItem::setIconAndTextForType( const QString & mime )
     setPixmap( 0, mtp ? mtp->pixmap( KIcon::Small) : SmallIcon("unknown") );
   }
 }
-
 
 
 #include "kmmimeparttree.moc"

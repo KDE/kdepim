@@ -49,6 +49,7 @@
 #include <knotifyclient.h>
 #include <kaudioplayer.h>
 #include <kdebug.h>
+#include <kpushbutton.h>
 
 #include "kalarmapp.h"
 #include "alarmcalendar.h"
@@ -69,8 +70,8 @@ class MessageText : public QTextEdit
 			setReadOnly(true);
 			setWordWrap(QTextEdit::NoWrap);
 		}
-		virtual QSize sizeHint() const
-		{ return QSize(contentsWidth(), contentsHeight() + horizontalScrollBar()->height()); }
+		int scrollBarHeight() const     { return horizontalScrollBar()->height(); }
+		virtual QSize sizeHint() const  { return QSize(contentsWidth(), contentsHeight() + scrollBarHeight()); }
 };
 
 
@@ -308,6 +309,9 @@ QSize MessageWin::initView()
 			text->setPaper(mBgColour);
 			text->setPaletteForegroundColor(mFgColour);
 			text->setFont(font);
+			int h = text->sizeHint().height();
+			text->setMinimumHeight(h - text->scrollBarHeight());
+			text->setMaximumHeight(h);
 			QWhatsThis::add(text, i18n("The alarm message"));
 			int lineSpacing = text->fontMetrics().lineSpacing();
 			int vspace = lineSpacing/2 - marginKDE2;
@@ -355,7 +359,7 @@ QSize MessageWin::initView()
 	grid->setColStretch(0, 1);     // keep the buttons right-adjusted in the window
 
 	// Close button
-	QPushButton* okButton = new QPushButton(KStdGuiItem::close().text(), topWidget);
+	KPushButton* okButton = new KPushButton(KStdGuiItem::close(), topWidget);
 	// Prevent accidental acknowledgement of the message if the user is typing when the window appears
 	okButton->clearFocus();
 	okButton->setFocusPolicy(QWidget::ClickFocus);    // don't allow keyboard selection
@@ -589,15 +593,15 @@ void MessageWin::closeEvent(QCloseEvent* ce)
 */
 void MessageWin::slotDefer()
 {
-	DeferAlarmDlg* deferDlg = new DeferAlarmDlg(i18n("Defer Alarm"), QDateTime::currentDateTime().addSecs(60),
-	                                            false, this, "deferDlg");
-	deferDlg->setLimit(eventID);
+	DeferAlarmDlg deferDlg(i18n("Defer Alarm"), QDateTime::currentDateTime().addSecs(60),
+	                       false, this, "deferDlg");
+	deferDlg.setLimit(eventID);
 	mDeferDlgShowing = true;
 	if (!Preferences::instance()->modalMessages())
 		lower();
-	if (deferDlg->exec() == QDialog::Accepted)
+	if (deferDlg.exec() == QDialog::Accepted)
 	{
-		DateTime dateTime = deferDlg->getDateTime();
+		DateTime dateTime = deferDlg.getDateTime();
 		const Event* kcalEvent = eventID.isNull() ? 0 : theApp()->getCalendar().event(eventID);
 		if (kcalEvent)
 		{
@@ -667,7 +671,7 @@ TextMimeSourceFactory::TextMimeSourceFactory(const QString& absPath, KTextBrowse
 	  mLast(0)
 {
 	view->setMimeSourceFactory(this);
-	QString type = KMimeType::findByURL(absPath)->name();
+	QString type = KMimeType::findByPath(absPath)->name();
 	switch (KAlarmApp::fileType(type))
 	{
 		case 1:

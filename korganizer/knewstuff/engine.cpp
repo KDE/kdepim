@@ -258,7 +258,7 @@ void Engine::upload( Entry *entry )
 
   QString lang = entry->langs().first();
   QFileInfo fi( mUploadFile );
-  entry->setPayload( fi.fileName(), lang );
+  entry->setPayload( KURL( fi.fileName() ), lang );
 
   if ( !createMetaFile( entry ) ) return;
 
@@ -276,19 +276,19 @@ void Engine::upload( Entry *entry )
     } else {
       int result = KMessageBox::questionYesNo( mParentWidget, text, caption,
                                                i18n("Upload Info..."),
-                                               i18n("Close") );
+                                               KStdGuiItem::close() );
       if ( result == KMessageBox::Yes ) {
         kapp->invokeBrowser( noUploadUrl.url() );
       }
     }
   } else {
     int result = KMessageBox::questionYesNo( mParentWidget, text, caption,
-                                             i18n("Upload"), i18n("Cancel") );
+                                             i18n("Upload"), KStdGuiItem::cancel() );
     if ( result == KMessageBox::Yes ) {
       KURL destination = mUploadProvider->uploadUrl();
       destination.setFileName( fi.fileName() );
 
-      KIO::FileCopyJob *job = KIO::file_copy( mUploadFile, destination );
+      KIO::FileCopyJob *job = KIO::file_copy( KURL( mUploadFile ), destination );
       connect( job, SIGNAL( result( KIO::Job * ) ),
                SLOT( slotUploadPayloadJobResult( KIO::Job * ) ) );
     }
@@ -342,7 +342,7 @@ void Engine::slotUploadPayloadJobResult( KIO::Job *job )
   KURL metaDestination = mUploadProvider->uploadUrl();
   metaDestination.setFileName( fi.fileName() );
 
-  KIO::FileCopyJob *newJob = KIO::file_copy( mUploadMetaFile, metaDestination );
+  KIO::FileCopyJob *newJob = KIO::file_copy( KURL( mUploadMetaFile ), metaDestination );
   connect( newJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotUploadMetaJobResult( KIO::Job * ) ) );
 }

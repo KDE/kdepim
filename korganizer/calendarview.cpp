@@ -561,7 +561,7 @@ void CalendarView::goNext()
 {
   if (dynamic_cast<KOMonthView*>(mViewManager->currentView() ) )
     mNavigator->selectNextWeek();
-  else 
+  else
     mNavigator->selectNext();
 }
 
@@ -569,7 +569,7 @@ void CalendarView::goPrevious()
 {
   if (dynamic_cast<KOMonthView*>(mViewManager->currentView() ) )
     mNavigator->selectPreviousWeek();
-  else 
+  else
     mNavigator->selectPrevious();
 }
 
@@ -711,7 +711,7 @@ int CalendarView::msgItemDelete()
 {
   return KMessageBox::warningContinueCancel(this,
       i18n("This item will be permanently deleted."),
-      i18n("KOrganizer Confirmation"),i18n("Delete"));
+      i18n("KOrganizer Confirmation"),KGuiItem(i18n("Delete"),"editdelete"));
 }
 
 
@@ -756,6 +756,8 @@ void CalendarView::edit_copy()
   } else {
     KNotifyClient::beep();
   }
+  
+  mTodoList->clearSelection();
 }
 
 void CalendarView::edit_paste()
@@ -807,6 +809,9 @@ void CalendarView::edit_paste()
 
   } else if ( pastedIncidence->type() == "Todo" ) {
     Todo* pastedTodo = static_cast<Todo*>(pastedIncidence);
+    Todo* _selectedTodo = selectedTodo();
+    if ( _selectedTodo )
+      pastedTodo->setRelatedTo( _selectedTodo );
     todoAdded( pastedTodo );
   }
 }
@@ -1485,9 +1490,9 @@ void CalendarView::print()
   createPrinter();
 
   KOrg::BaseView *currentView = mViewManager->currentView();
-  
+
   CalPrinter::PrintType printType = CalPrinter::Month;
-  
+
   if ( currentView ) printType = currentView->printType();
 
   DateList tmpDateList = mNavigator->selectedDates();
@@ -1707,7 +1712,7 @@ void CalendarView::takeOverCalendar()
 {
   Incidence::List incidences = mCalendar->rawIncidences();
   Incidence::List::Iterator it;
-  
+
   for ( it = incidences.begin(); it != incidences.end(); it++ ) {
     (*it)->setOrganizer(KOPrefs::instance()->email());
     (*it)->recreate();

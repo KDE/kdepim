@@ -116,6 +116,10 @@ const uchar eTextMap[16] = {
   0x7F, 0xFF, 0xFF, 0xE0
 };
 
+#if defined(_AIX) && defined(truncate)
+#undef truncate
+#endif
+
 QString decodeRFC2047String(const QCString &src, const char **usedCS,
 			    const QCString &defaultCS, bool forceCS)
 {

@@ -671,21 +671,28 @@ void EditAlarmDlg::getEvent(KAlarmEvent& event)
 			mAlarmDateTime = event.startDateTime();
 			if (mDeferDateTime.isValid()  &&  mDeferDateTime < mAlarmDateTime)
 			{
+				bool deferral = true;
 				bool deferReminder = false;
 				int reminder = mReminder->getMinutes();
 				if (reminder)
 				{
 					DateTime remindTime = mAlarmDateTime.addMins(-reminder);
-					if (mDeferDateTime > remindTime)
-						deferReminder = true;
+					if (mDeferDateTime >= remindTime)
+					{
+						if (remindTime > QDateTime::currentDateTime())
+							deferral = false;    // ignore deferral if it's after next reminder
+						else if (mDeferDateTime > remindTime)
+							deferReminder = true;    // it's the reminder which is being deferred
+					}
 				}
-				event.defer(mDeferDateTime, deferReminder, false);
+				if (deferral)
+					event.defer(mDeferDateTime, deferReminder, false);
 			}
 		}
 	}
 	else
 	{
-		// Only the deferral time has been changed
+		// Only the deferral time may have changed
 		event = *mSavedEvent;
 		if (mSavedEvent->deferred())
 		{
@@ -770,8 +777,7 @@ void EditAlarmDlg::slotOk()
 				getEvent(event);
 				if (event.nextOccurrence(now, mAlarmDateTime) == KAlarmEvent::NO_OCCURRENCE)
 				{
-#warning "Temporary untranslated string"
-					KMessageBox::sorry(this, QString::fromLatin1("Recurrence has already expired"));
+					KMessageBox::sorry(this, i18n("Recurrence has already expired"));
 					return;
 				}
 			}
@@ -877,8 +883,8 @@ void EditAlarmDlg::slotEditDeferral()
 	if (start.isValid())
 	{
 		bool deferred = mDeferDateTime.isValid();
-		DeferAlarmDlg* deferDlg = new DeferAlarmDlg(i18n("Defer Alarm"), (deferred ? mDeferDateTime : DateTime(QDateTime::currentDateTime().addSecs(60))),
-		                                            deferred, this, "deferDlg");
+		DeferAlarmDlg deferDlg(i18n("Defer Alarm"), (deferred ? mDeferDateTime : DateTime(QDateTime::currentDateTime().addSecs(60))),
+		                       deferred, this, "deferDlg");
 		// Don't allow deferral past the next recurrence
 		int reminder = mReminder->getMinutes();
 		if (reminder)
@@ -887,10 +893,10 @@ void EditAlarmDlg::slotEditDeferral()
 			if (QDateTime::currentDateTime() < remindTime)
 				start = remindTime;
 		}
-		deferDlg->setLimit(start);
-		if (deferDlg->exec() == QDialog::Accepted)
+		deferDlg.setLimit(start);
+		if (deferDlg.exec() == QDialog::Accepted)
 		{
-			mDeferDateTime = deferDlg->getDateTime();
+			mDeferDateTime = deferDlg.getDateTime();
 			mDeferTimeLabel->setText(mDeferDateTime.isValid() ? mDeferDateTime.formatLocale() : QString::null);
 		}
 	}

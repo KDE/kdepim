@@ -302,7 +302,7 @@ void ImapJob::slotGetMessageResult( KIO::Job * job )
         msg->fromByteArray( (*it).data );
         msg->setHeaderField("X-UID",uid);
         // set correct size
-        msg->setMsgLength(size);
+        if ( size > 0 ) msg->setMsgLength(size);
         if ( mPartSpecifier.isEmpty() ) 
           msg->setComplete( true );
         else
