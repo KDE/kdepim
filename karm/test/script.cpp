@@ -27,6 +27,13 @@
 
 #include "script.h"
 
+/*
+        n.b. Do not use kdDebug statements in this file.
+
+        With qt-copy 3_3_BRANCH, they cause a Valgrind error.
+        Ref: KDE bug #95237.
+*/
+
 // Wait for terminate() attempt to return before using kill()
 // kill() doesn't let script interpreter try to clean up.
 const int NICE_KILL_TIMEOUT_IN_SECS = 5;
@@ -70,17 +77,16 @@ void Script::setTimeout( int seconds )
 
 int Script::run()
 {
-  kdDebug() << "Script::running " << m_proc->arguments() << " ..." << endl;
   m_proc->start();
   // This didn't work.  But Ctrl-C does.  :P
   //QTimer::singleShot( m_timeoutInSeconds * 1000, m_proc, SLOT( kill() ) );
-  while ( ! m_proc->normalExit() );
+  //while ( ! m_proc->normalExit() );
+  while ( m_proc->isRunning() );
   return m_status;
 }
 
 void Script::terminate()
 {
-  kdDebug() << "Script::terminate()" << endl;
   // These both trigger processExited, so exit() will run.
   m_proc->tryTerminate();
   QTimer::singleShot( NICE_KILL_TIMEOUT_IN_SECS*1000, m_proc, SLOT( kill() ) );
@@ -88,9 +94,7 @@ void Script::terminate()
 
 void Script::exit()
 {
-  kdDebug () << "Script::exit()" << endl;
   m_status = m_proc->exitStatus();
-  kdDebug () << "Script::exit(), m_status = " << m_proc->exitStatus() << endl;
   delete m_proc;
   m_proc = 0;
 }
@@ -101,14 +105,11 @@ void Script::stderr()
   m_status = 1;
   QString data = QString( m_proc->readStderr() );
   m_stderr= true;
-  kdDebug() << "stderr:" << data << endl;
 }
 
 void Script::stdout()
 {
   QString data = QString( m_proc->readStdout() );
-  kdDebug() << "stdout:" << endl;
-  kdDebug() << data << endl;
 }
 
 #include "script.moc"
