@@ -244,12 +244,12 @@ QString KPIM::emailParseResultToString( emailParseResult errorCode )
   switch ( errorCode ) {
     case TooManyAts : 
       return i18n("The email address you entered is not valid because it "
-                "contains more than one <emph>@</emph>: "
+                "contains more than one @ "
                 "you will not create valid messages if you do not "
                 "change your address.");
     case TooFewAts : 
       return i18n("The email address you entered is not valid because it "
-                "does not contain a <emph>@</emph>: "
+                "does not contain a @ "
                 "you will not create valid messages if you do not "
                 "change your address.");
     case AddressEmpty : 
