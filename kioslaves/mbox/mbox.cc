@@ -148,7 +148,7 @@ void MBoxProtocol::mimetype( const KURL& url )
 		return;
 	
 	if( info.type() == UrlInfo::invalid )
-		error( KIO::ERR_DOES_NOT_EXIST, i18n( "Invalid url" ) );
+		error( KIO::ERR_DOES_NOT_EXIST, i18n( "Invalid URL" ) );
 	else
 		mimeType( info.mimetype() );
 	finished();
