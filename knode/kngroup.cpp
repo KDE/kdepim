@@ -784,11 +784,14 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
   for(int idx=start; idx<end; idx++) {
     art=at(idx);
     int idRef=art->idRef();
+    int tmpIdRef;
 
     if(idRef!=0) {
       while(idRef!=0) {
         art=byId(idRef);
-        idRef=art->idRef();
+         tmpIdRef=art->idRef();
+         idRef = (idRef!=tmpIdRef)? tmpIdRef : 0;
+
       }
       if (art) {
         at(idx)->setIgnored(art->isIgnored());
@@ -914,6 +917,7 @@ void KNGroup::updateThreadInfo()
 
   for(int idx=0; idx<length(); idx++) {
     int idRef=at(idx)->idRef();
+    int tmpIdRef;
     int iterCount=1;         // control iteration count to avoid infinite loops
     while((idRef!=0) && (iterCount <= length())) {
       ref=byId(idRef);
@@ -926,7 +930,8 @@ void KNGroup::updateThreadInfo()
         ref->incUnreadFollowUps();
         if(at(idx)->isNew()) ref->incNewFollowUps();
       }
-      idRef=ref->idRef();
+      tmpIdRef=ref->idRef();
+      idRef= (idRef!=tmpIdRef) ? ref->idRef() : 0;
       iterCount++;
     }
     if(iterCount > length())
