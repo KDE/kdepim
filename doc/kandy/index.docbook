@@ -35,10 +35,10 @@ data on the desktop.</para>
 <chapter id="using-kandy">
 <title>Using Kandy</title>
 
-<sect1 id="mainwindow">
-<title>The Main Window</title>
+<sect1 id="terminal">
+<title>The Terminal Window</title>
 
-<para>The main window provides a low level interface for controlling the mobile
+<para>The terminal window provides a low level interface for controlling the mobile
 phone via AT modem commands. You can type in commands in the upper middle field.
 The lower middle fields shows the direct response of the mobile phone. In the
 right side of the main window the processed output is shown.</para>
@@ -51,7 +51,7 @@ commands by pressing the "Add Command" button. A dialog pops up, which lets you
 select name and parameters for the command.</para>
 
 <para>The command list is saved to an XML
-file by selecting "Save" from the menu or presing the corresponding toolbar
+file by selecting "Save" from the menu or pressing the corresponding toolbar
 button. You can load an existing file by selecting "Open" from the menu.</para>
 
 </sect1>
@@ -59,16 +59,24 @@ button. You can load an existing file by selecting "Open" from the menu.</para>
 <sect1 id="mobilegui">
 <title>Mobile Interface Window</title>
 
-<para>By pressing the button at the lower left corner of the main window you
+<para>By choosing "Mobile GUI" from the "Show" menu of the terminal window you
 open the Interface Window for your mobile phone. This shows a comprehensive view
-of the status and data present on the phone including.</para>
+of the status and data present on the phone including the phonebook. There are
+two list of phonebook data, one representing the KDE address book and the other
+representing the data on the phone.</para>
 
-<para>You can read the phone book by pressing the "Read" button. By pressing
-"Save" you can store the phonebook as list of comma-seperated values to disk.
-The "Import to KAB" button writes the phonebook to the KDE address book. The
-"Export form KAB" button loads the KDE address book into the list of
-phonenumbers. Currently it is not possible to ave phonebook data back to the
-mobile.</para>
+<para>You can read the phone books by pressing the "Read" button right under the
+corresponding list. By pressing the "Write" button you write back the data shown in
+the list to the corresponding phonebook. By pressing
+"Save to File" you can store the mobile phonebook as list of comma-seperated values to disk.
+After loading the phonebook data using the "Read" buttons, you can merge the phonebooks
+by pressing the "Merge" button. This will put data only present in one of the phonebooks
+into the other and vice versa. If conflicts occur during this process, a dialog pops up.
+</para>
+
+<para>The "Sync" button combines all the actions needed for syncing the phonebooks. It reads
+the data from the KDE addressbook and the mobile phone, does the merge and writes it back.
+</para>
 
 </sect1>
 
@@ -79,7 +87,18 @@ mobile.</para>
 preferences dialog of Kandy. You can set the name of the serial device, where
 your mobile is connected in this dialog. Examples for the name of the serial
 device under Linux are /dev/ttyS0 for the first and /dev/ttyS1 for the second
-serial interface of your computer.</para>
+serial interface of your computer. You can also set, which windows are opened
+per default, when starting Kandy.</para>
+
+</sect1>
+
+<sect1 id="dcop">
+<title>DCOP Interface</title>
+
+<para>Kandy provides an DCOP interface KandyIface with the following functions:
+syncPhonebook() syncs the mobile phone book book with the KDE address book. This is equivalent
+to pressing the "Sync" button in the Mobile Interface Window. exit() closes Kandy.
+</para>
 
 </sect1>
 
