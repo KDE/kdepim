@@ -1,5 +1,5 @@
 /***************************************************************************
-                          oe5_2mbox.cpp  -  description
+                          OE52MBox.cpp  -  description
                              -------------------
     begin                : Thu Aug 24 2000
     copyright            : (C) 2000 by Hans Dijkema
@@ -32,15 +32,15 @@
 
 #define CAP	cap 
 
-QString	      oe5_2mbox::cap = i18n("Import Outlook Express 5");
-filter *      oe5_2mbox::F = 0;
-const char *  oe5_2mbox::FOLDER = 0;
-filterInfo *  oe5_2mbox::INFO = 0;
-int           oe5_2mbox::numOfMessages = 0;
-unsigned long oe5_2mbox::added = 0;
-unsigned long oe5_2mbox::mails = 0;
+QString	      OE52MBox::cap = i18n("Import Outlook Express 5");
+Filter *      OE52MBox::F = 0;
+const char *  OE52MBox::FOLDER = 0;
+FilterInfo *  OE52MBox::INFO = 0;
+int           OE52MBox::numOfMessages = 0;
+unsigned long OE52MBox::added = 0;
+unsigned long OE52MBox::mails = 0;
 
-oe5_2mbox::oe5_2mbox(const char *in,const char *out,filter *F,filterInfo *I)
+OE52MBox::OE52MBox(const char *in,const char *out,Filter *F,FilterInfo *I)
 {
   info=I;
   f=F;
@@ -48,10 +48,11 @@ oe5_2mbox::oe5_2mbox(const char *in,const char *out,filter *F,filterInfo *I)
   folderTo=out;
 }
 
-oe5_2mbox::~oe5_2mbox()
-{}
+OE52MBox::~OE52MBox()
+{
+}
 
-int oe5_2mbox::convert(void)
+int OE52MBox::convert(void)
 {
 oe_data *result;
 char s[1024];
@@ -96,7 +97,7 @@ char s[1024];
 return result->success;
 }
 
-void oe5_2mbox::addMessage(const char *string,int code)
+void OE52MBox::addMessage(const char *string,int code)
 {
 static KTempFile *tmp=0;
 static int status=-1;

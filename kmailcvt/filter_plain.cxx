@@ -1,5 +1,5 @@
 /***************************************************************************
-                          filter_plain.cxx  -  Plain mail import
+                          FilterPlain.cxx  -  Plain mail import
                              -------------------
     begin                : Fri Jun 14 2002
     copyright            : (C) 2002 by Laurence Anderson
@@ -30,20 +30,20 @@
 #include "filter_plain.hxx"
 
 
-filter_plain::filter_plain() :
-   filter(i18n("Import Plain Text Emails"),"Laurence Anderson")
+FilterPlain::FilterPlain() :
+   Filter(i18n("Import Plain Text Emails"),"Laurence Anderson")
 {
 }
 
 
 
-filter_plain::~filter_plain()
+FilterPlain::~FilterPlain()
 {
 }
 
 
 
-void filter_plain::import(filterInfo *info)
+void FilterPlain::import(FilterInfo *info)
 {
    inf = info;
 
@@ -89,7 +89,7 @@ void filter_plain::import(filterInfo *info)
 
 
 /** counts all files which match filter in mail directory */
-int filter_plain::countFiles(QString filter)
+int FilterPlain::countFiles(QString filter)
 {
    QDir dir (mailDir);
    QStringList files = dir.entryList(filter, QDir::Files, QDir::Name);
@@ -98,7 +98,7 @@ int filter_plain::countFiles(QString filter)
 
 
 /** process files that match filter */
-void filter_plain::processFiles(QString filter)
+void FilterPlain::processFiles(QString filter)
 {
    QDir dir (mailDir);
    unsigned long added;
@@ -107,7 +107,7 @@ void filter_plain::processFiles(QString filter)
    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
 	inf->from(i18n("From: %1").arg(*mailFile));
 	inf->to(i18n("To: %1").arg(dir.dirName()));
-	kmailMessage((filterInfo *) inf, (char *)dir.dirName().latin1(), (char *)dir.filePath(*mailFile).latin1(), added);
+	kmailMessage((FilterInfo *) inf, (char *)dir.dirName().latin1(), (char *)dir.filePath(*mailFile).latin1(), added);
         
 	inf->overall((((float) ++currentFile)/((float) totalFiles))*100.0);
    }

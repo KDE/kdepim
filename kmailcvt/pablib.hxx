@@ -36,13 +36,13 @@ class pab
 
   private:
     FILE *in;
-    filterInfo *info;
-    filter     *f;
+    FilterInfo *info;
+    Filter     *f;
     const char *pabfile;
     QString     cap;
     QWidget    *parent;
   public:
-    pab(const char *pabFile,filter *f,filterInfo *info);
+    pab(const char *pabFile,Filter *f,FilterInfo *info);
    ~pab();
   private:
     content_t  skip(int longwords) { return relative(longwords); }

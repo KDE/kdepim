@@ -108,7 +108,7 @@
      word_t        literal(int k);
      content_t     order(int k);
    public:
-     pabfields_t(pabrec & R,filterInfo *info,QWidget *parent);
+     pabfields_t(pabrec & R,FilterInfo *info,QWidget *parent);
    public:
      void get(char * &givenName,char * &email,
               char * &title,char * &firstName,char * &additionalName,char * &lastName,

@@ -1,5 +1,5 @@
 /***************************************************************************
-                          filter_eudora_ab.cxx  -  description
+                          FilterEudoraAb.cxx  -  description
                           ------------------------------------
     begin                : Fri Jun 30 2000
     copyright            : (C) 2000 by Hans Dijkema
@@ -29,16 +29,16 @@
 #define CTRL_C	3
 
 
-filter_eudora_ab::filter_eudora_ab() : filter(i18n("Import Filter for Eudora Light Addressbook"),"Hans Dijkema")
+FilterEudoraAb::FilterEudoraAb() : Filter(i18n("Import Filter for Eudora Light Addressbook"),"Hans Dijkema")
 {
   CAP=i18n("Import Filter for Eudora Light Addressbook");
   LINES=0;
 }
 
-filter_eudora_ab::~filter_eudora_ab()
+FilterEudoraAb::~FilterEudoraAb()
 {}
 
-void filter_eudora_ab::import(filterInfo *info)
+void FilterEudoraAb::import(FilterInfo *info)
 {
 QString file;
 QWidget *parent=info->parent();
@@ -116,7 +116,7 @@ FILE   *F;
 
 #define LINELEN 10240
 
-void filter_eudora_ab::convert(FILE *f,filterInfo *info)
+void FilterEudoraAb::convert(FILE *f,FilterInfo *info)
 {
 QString line;
 char _line[LINELEN+1];
@@ -160,7 +160,7 @@ float perc;
   info->current(100.0);
 }
 
-QString filter_eudora_ab::getkey(QString line)
+QString FilterEudoraAb::getkey(QString line)
 {
 int b,e;
 QString result="";
@@ -178,7 +178,7 @@ QString result="";
 return result;
 }
 
-QString filter_eudora_ab::getemail(QString line)
+QString FilterEudoraAb::getemail(QString line)
 {
 int b;
 QString result="";
@@ -189,7 +189,7 @@ QString result="";
 return result;
 }
 
-QString filter_eudora_ab::getcomment(QString line)
+QString FilterEudoraAb::getcomment(QString line)
 {
 int b;
 QString result="";
@@ -204,7 +204,7 @@ unsigned int i;
 return result;
 }
 
-QString filter_eudora_ab::get(QString line,QString key)
+QString FilterEudoraAb::get(QString line,QString key)
 {
 QString result="";
 QString fd="<"+key+":";
@@ -221,7 +221,7 @@ unsigned int i;
 return result;
 }
 
-int filter_eudora_ab::find(QString key)
+int FilterEudoraAb::find(QString key)
 {
   return keys.findIndex(key);
 }

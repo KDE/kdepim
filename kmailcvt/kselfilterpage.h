@@ -20,8 +20,9 @@
 
 #include "kselfilterpagedlg.h"
 #include "filters.hxx"
-#include <kaboutdata.h>
-#include <qptrlist.h>
+
+class KAboutData;
+template <class T> class QPtrList;
 
 class KSelFilterPage : public KSelFilterPageDlg  {
 	Q_OBJECT
@@ -29,13 +30,13 @@ public:
 	KSelFilterPage(QWidget *parent=0, const char *name=0);
 	~KSelFilterPage();
   public:
-    void  addFilter(filter *f);
-    filter *getSelectedFilter(void);
+    void  addFilter(Filter *f);
+    Filter *getSelectedFilter(void);
     void  setAuthors(KAboutData& data);
    private:
-     QPtrList<filter> filterList;
+     QPtrList<Filter> filterList;
      QWidget *_parent;
-     filterInfo *info;
+     FilterInfo *info;
 };
 
 #endif

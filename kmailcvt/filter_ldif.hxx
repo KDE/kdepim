@@ -1,5 +1,5 @@
 /***************************************************************************
-                          filter_ldif.hxx  -  description
+                          FilterLDIF.hxx  -  description
                              -------------------
     begin                : Fri Dec 1, 2000
     copyright            : (C) 2000 by Oliver Strutynski
@@ -20,13 +20,13 @@
 
 #include "filters.hxx"
 
-class filter_ldif : public filter
+class FilterLDIF : public Filter
 {
   public:
-    filter_ldif();
-   ~filter_ldif();
-    void import(filterInfo *info);
-    bool convert(const QString &filename, filterInfo *info);
+    FilterLDIF();
+   ~FilterLDIF();
+    void import(FilterInfo *info);
+    bool convert(const QString &filename, FilterInfo *info);
 };
 
 

@@ -21,7 +21,7 @@
 #define REC_OK PAB_REC_OK
 
 
-pab::pab(const char *_pabfile,filter *_f,filterInfo *_info)
+pab::pab(const char *_pabfile,Filter *_f,FilterInfo *_info)
 {
   parent=_info->parent();
   pabfile=_pabfile;

@@ -15,8 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <kdebug.h>
 #include <kstandarddirs.h>
+#include <kaboutdata.h>
+
+#include <kdebug.h>
 
 #include "kselfilterpage.h"
 
@@ -30,20 +32,20 @@ KSelFilterPage::KSelFilterPage(QWidget *parent, const char *name ) : KSelFilterP
 KSelFilterPage::~KSelFilterPage() {
 }
 
-void KSelFilterPage::addFilter(filter *f)
+void KSelFilterPage::addFilter(Filter *f)
 {
 	filterList.append(f);
 	_filters->insertItem(f->name());
 }
 
-filter * KSelFilterPage::getSelectedFilter(void)
+Filter * KSelFilterPage::getSelectedFilter(void)
 {
 	return filterList.at(_filters->currentItem());
 }
 
 void KSelFilterPage::setAuthors(KAboutData& data)
 {
-	filter *filterItem;
+	Filter *filterItem;
 	for (filterItem = filterList.first(); filterItem; filterItem = filterList.next() ) {
 		data.addAuthor(filterItem->author().latin1(), filterItem->name().latin1());
 	}

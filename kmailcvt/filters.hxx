@@ -34,15 +34,15 @@
 
 #include "kimportpagedlg.h"
 
-class filterInfo
+class FilterInfo
 {
   private:
     KImportPageDlg *_dlg;
     QWidget      *_parent;
   public:
-    filterInfo(KImportPageDlg *dlg, QWidget *parent);
-   ~filterInfo();
-  public:
+    FilterInfo(KImportPageDlg *dlg, QWidget *parent);
+   ~FilterInfo();
+
     void  from(QString from);
     void  to(QString to);
     void  current(QString current);
@@ -54,32 +54,27 @@ class filterInfo
     QWidget *parent(void) { return _parent; }
 };
 
-class kmail
+class KMail
 {
+  public:
+    KMail();
+   ~KMail();
+   
+    bool kmailStart(FilterInfo *info) { return true; }
+    bool kmailMessage(FilterInfo *info,char *folder,char *msg,unsigned long & added);
+    void kmailStop(FilterInfo *info);
   private:
     QString cap;
-  public:
-    kmail();
-   ~kmail();
-  public:
-    bool kmailStart(filterInfo *info) { return true; }
-    bool kmailMessage(filterInfo *info,char *folder,char *msg,unsigned long & added);
-    void kmailStop(filterInfo *info);
+
 };
 
-class kab
+class KAb
 {
-  private:
-    filterInfo  *info;    // tmp var
-    KABC::AddressBook *mAddressBook;
-    KABC::Ticket *mTicket;
-    QString       tels;
-    QString       cap;
   public:
-    kab();
-   ~kab();
-    bool kabStart(filterInfo *info);
-    bool kabAddress(filterInfo *info, QString adrbookname,
+    KAb();
+   ~KAb();
+    bool kabStart(FilterInfo *info);
+    bool kabAddress(FilterInfo *info, QString adrbookname,
                     QString givenname, QString email=QString::null,
                     QString title=QString::null,
                     QString firstName=QString::null,QString additionalName=QString::null,
@@ -94,25 +89,31 @@ class kab
                     QString homepage=QString::null,QString talk=QString::null,
                     QString comment=QString::null,QString birthday=QString::null
                    );
-    void kabStop(filterInfo *info);
+    void kabStop(FilterInfo *info);
+
   private:
+    FilterInfo  *info;    // tmp var
+    KABC::AddressBook *mAddressBook;
+    KABC::Ticket *mTicket;
+    QString       tels;
+    QString       cap;
     bool checkStr( QString & );
 };
 
 
 
-class filter : public kmail, public kab
+class Filter : public KMail, public KAb
 {
-     QString myName;
-     QString myAuthor;
-   public:
-     filter(QString name,QString author);
-     virtual ~filter();
-   public:
-     virtual void import(filterInfo *i);
-   public:
-     QString name(void);
-     QString author(void);
+  public:
+    Filter(QString name,QString author);
+    virtual ~Filter();
+    virtual void import(FilterInfo *i);
+    QString author(void);
+    QString name(void);
+
+  private:
+    QString myName;
+    QString myAuthor;
 };
 
 #endif

@@ -1,5 +1,5 @@
 /***************************************************************************
-                          filter_pmail.hxx  -  Pegasus-Mail import
+                          FilterPMail.hxx  -  Pegasus-Mail import
                              -------------------
     begin                : Sat Jan 6 2001
     copyright            : (C) 2001 by Holger Schurig
@@ -24,13 +24,13 @@
   *@author root
   */
 
-class filter_pmail : public filter  {
+class FilterPMail : public Filter  {
 private:
   QString CAP;
   /** the working directory */
   QString dir;
   /**  */
-  filterInfo * inf;
+  FilterInfo * inf;
   /** which file (of totalFiles) is now in the work? */
   int currentFile;
   /** total number of files that get imported */
@@ -38,15 +38,15 @@ private:
   /** Our parent widget */
   QWidget * par;
 public:
-	filter_pmail();
-	~filter_pmail();
+	FilterPMail();
+	~FilterPMail();
 public:
-  void import(filterInfo *info);	
+  void import(FilterInfo *info);	
 private: // Private methods
   /** updates currentFile and the overall progress bar */
   void nextFile();
   /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
-  void processFiles(const char *mask,  void(filter_pmail::* workFunc)(const char*) );
+  void processFiles(const char *mask,  void(FilterPMail::* workFunc)(const char*) );
   /** counts all files with mask (e.g. '*.cnm') in in a directory */
   int countFiles(const char *mask);
   /** this function imports one *.CNM message */

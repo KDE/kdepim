@@ -20,25 +20,26 @@
 
 #include "filters.hxx"
 
-class oe4_2mbox
+class OE42MBox
 {
+  public:
+    OE42MBox(const char *folderIn,const char *folderTo,Filter *f,FilterInfo *info);
+   ~OE42MBox();
+
+    int convert(void);
+
   private:
     static void addMessage(const char *, int);
-    static filter     *F;
+    static Filter     *F;
     static const char *FOLDER;
-    static filterInfo *INFO;
+    static FilterInfo *INFO;
     static int         numOfMessages;
     static unsigned long added, mails;
     static QString cap;
-  private:
-    filter        *f;
-    filterInfo    *info;
+
+    Filter        *f;
+    FilterInfo    *info;
     const char    *folderIn,*folderTo;
-  public:
-    oe4_2mbox(const char *folderIn,const char *folderTo,filter *f,filterInfo *info);
-   ~oe4_2mbox();
-  public:
-    int convert(void);
 };
 
 #endif

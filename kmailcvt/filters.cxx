@@ -40,32 +40,32 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-filterInfo::filterInfo(KImportPageDlg *dlg, QWidget *parent)
+FilterInfo::FilterInfo(KImportPageDlg *dlg, QWidget *parent)
 {
    _dlg = dlg;
    _parent = parent;
 }
 
-filterInfo::~filterInfo()
+FilterInfo::~FilterInfo()
 {
 }
 
-void filterInfo::from(QString from)
+void FilterInfo::from(QString from)
 {
   _dlg->_from->setText(from);
 }
 
-void filterInfo::to(QString to)
+void FilterInfo::to(QString to)
 {
   _dlg->_to->setText(to);
 }
 
-void filterInfo::current(QString current)
+void FilterInfo::current(QString current)
 {
   _dlg->_current->setText(current);
 }
 
-void  filterInfo::current(float percent)
+void  FilterInfo::current(float percent)
 {
   int p=(int) (percent+0.5);
   if (percent<0) { _dlg->_done_current->reset(); }
@@ -73,14 +73,14 @@ void  filterInfo::current(float percent)
   kapp->processEvents(50);
 }
 
-void  filterInfo::overall(float percent)
+void  FilterInfo::overall(float percent)
 {
   int p=(int) (percent+0.5);
   if (percent<0) { _dlg->_done_overall->reset(); }
   _dlg->_done_overall->setProgress(p);
 }
 
-void filterInfo::log(QString toLog)
+void FilterInfo::log(QString toLog)
 {
   _dlg->_log->insertItem(toLog);
   _dlg->_log->setCurrentItem(_dlg->_log->count()-1);
@@ -88,7 +88,7 @@ void filterInfo::log(QString toLog)
   kapp->processEvents(50);
 }
 
-void filterInfo::clear(void)
+void FilterInfo::clear(void)
 {
   _dlg->_log->clear();
   current();
@@ -98,7 +98,7 @@ void filterInfo::clear(void)
   to("");
 }
 
-void filterInfo::alert(QString conversion, QString message)
+void FilterInfo::alert(QString conversion, QString message)
 {
   KMessageBox::information(_parent,message,conversion);
 }
@@ -109,27 +109,27 @@ void filterInfo::alert(QString conversion, QString message)
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-filter::filter(QString _name, QString _author)
+Filter::Filter(QString _name, QString _author)
 {
   myName=_name;
   myAuthor=_author;
 }
 
-filter::~filter()
+Filter::~Filter()
 {
 }
 
-QString filter::name(void)
+QString Filter::name(void)
 {
   return myName;
 }
 
-QString filter::author(void)
+QString Filter::author(void)
 {
   return myAuthor;
 }
 
-void filter::import(filterInfo *info)
+void Filter::import(FilterInfo *info)
 {
   info->alert(  i18n("class filter"),
 		i18n("no import function implemented") );
@@ -142,15 +142,16 @@ void filter::import(filterInfo *info)
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-kmail::kmail()
+KMail::KMail()
 {
   cap=i18n("KmailCvt - KMail API");
 }
 
-kmail::~kmail()
-{}
+KMail::~KMail()
+{
+}
 
-bool  kmail::kmailMessage(filterInfo *info,char *folder,char *_msg,unsigned long & added)
+bool KMail::kmailMessage(FilterInfo *info,char *folder,char *_msg,unsigned long & added)
 {
   QString folderName(folder);
   QString msg(_msg);
@@ -224,7 +225,7 @@ return true;
 */
 }
 
-void kmail::kmailStop(filterInfo *info)
+void KMail::kmailStop(FilterInfo *info)
 {
   info->log("kmail has adopted the (new) folders and messages");
 }
@@ -236,17 +237,17 @@ void kmail::kmailStop(filterInfo *info)
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-kab::kab()
+KAb::KAb()
 {
   mAddressBook = 0;
   cap=i18n("Kmailcvt - KAddressBook API");
 }
 
-kab::~kab()
+KAb::~KAb()
 {
 }
 
-bool kab::kabStart(filterInfo *info)
+bool KAb::kabStart(FilterInfo *info)
 {
   mAddressBook = KABC::StdAddressBook::self();
   mTicket = mAddressBook->requestSaveTicket();
@@ -257,13 +258,13 @@ bool kab::kabStart(filterInfo *info)
   return true;
 }
 
-void kab::kabStop(filterInfo *info)
+void KAb::kabStop(FilterInfo *info)
 {
   Q_UNUSED(info);
   mAddressBook->save( mTicket );
 }
 
-bool kab::checkStr( QString &str )
+bool KAb::checkStr( QString &str )
 {
   if ( str == QString::null ) return false;
   str = str.stripWhiteSpace();
@@ -271,7 +272,7 @@ bool kab::checkStr( QString &str )
   return false;
 }
 
-bool kab::kabAddress(filterInfo *_info,QString adrbookname,
+bool KAb::kabAddress(FilterInfo *_info,QString adrbookname,
                       QString givenname, QString email,
                       QString title,QString firstname,
                       QString additionalname,QString lastname,

@@ -1,5 +1,5 @@
 /***************************************************************************
-                          filter_ldif.cxx  -  description
+                          FilterLDIF.cxx  -  description
                              -------------------
     begin                : Fri Dec 1, 2000
     copyright            : (C) 2000 by Oliver Strutynski
@@ -26,13 +26,13 @@
 
 #include "filter_ldif.hxx"
 
-filter_ldif::filter_ldif() : filter(i18n("Import Netscape LDIF Address Book 1 (.LDIF)"),"Oliver Strutynski")
+FilterLDIF::FilterLDIF() : Filter(i18n("Import Netscape LDIF Address Book 1 (.LDIF)"),"Oliver Strutynski")
 {}
 
-filter_ldif::~filter_ldif()
+FilterLDIF::~FilterLDIF()
 {}
 
-void filter_ldif::import(filterInfo *info) {
+void FilterLDIF::import(FilterInfo *info) {
    QWidget *parent=info->parent();
 
    QString filename = KFileDialog::getOpenFileName( QDir::homeDirPath(), 
@@ -57,7 +57,7 @@ void filter_ldif::import(filterInfo *info) {
 }
 
 
-bool filter_ldif::convert(const QString &filename, filterInfo *info) {
+bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
    if (!kabStart(info))
 	return false;
 

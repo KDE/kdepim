@@ -1,5 +1,5 @@
 /***************************************************************************
-                          filter_pab.hxx  -  description
+                          FilterPAB.hxx  -  description
                              -------------------
     begin                : Fri Jun 30 2000
     copyright            : (C) 2000 by Hans Dijkema
@@ -20,13 +20,13 @@
 
 #include "filters.hxx"
 
-class filter_pab : public filter
+class FilterPAB : public Filter
 {
   public:
-    filter_pab();
-   ~filter_pab();
+    FilterPAB();
+   ~FilterPAB();
   public:
-    void import(filterInfo *info);
+    void import(FilterInfo *info);
 };
 
 

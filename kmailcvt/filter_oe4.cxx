@@ -1,5 +1,5 @@
 /***************************************************************************
-                          filter_oe4.cxx  -  description
+                          FilterOE4.cxx  -  description
                              -------------------
     begin                : Thu Aug 24 2000
     copyright            : (C) 2000 by Hans Dijkema
@@ -28,16 +28,16 @@
 #include <dirent.h>
 #include <klocale.h>
 
-filter_oe4::filter_oe4() : filter(i18n("Import Folders From Outlook Express 4"),"Stephan B. Nedregard/Hans Dijkema")
+FilterOE4::FilterOE4() : Filter(i18n("Import Folders From Outlook Express 4"),"Stephan B. Nedregard/Hans Dijkema")
 {
   CAP=i18n("Import Outlook Express 4");
 }
 
-filter_oe4::~filter_oe4()
+FilterOE4::~FilterOE4()
 {
 }
 
-void filter_oe4::import(filterInfo *info)
+void FilterOE4::import(FilterInfo *info)
 {
   QString  msg;
   QString  choosen;
@@ -132,7 +132,7 @@ void filter_oe4::import(filterInfo *info)
              }
 
              {
-               oe4_2mbox m(fldr,name,this,info);
+               OE42MBox m(fldr,name,this,info);
                m.convert();
              }
            }

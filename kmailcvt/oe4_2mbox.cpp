@@ -1,5 +1,5 @@
 /***************************************************************************
-                          oe4_2mbox.cpp  -  description
+                          OE42MBox.cpp  -  description
                              -------------------
     begin                : Thu Aug 24 2000
     copyright            : (C) 2000 by Hans Dijkema
@@ -17,7 +17,6 @@
 
 #include <klocale.h>
 #include <ktempfile.h>
-//#define i18n(a) a
 
 #include <qfile.h>
 
@@ -32,15 +31,15 @@
 
 #define CAP cap
 
-QString       oe4_2mbox::cap = i18n("Import Outlook Express 4");
-filter *      oe4_2mbox::F = 0;
-const char *  oe4_2mbox::FOLDER = 0;
-filterInfo *  oe4_2mbox::INFO = 0;
-int           oe4_2mbox::numOfMessages = 0;
-unsigned long oe4_2mbox::added = 0;
-unsigned long oe4_2mbox::mails = 0;
+QString       OE42MBox::cap = i18n("Import Outlook Express 4");
+Filter *      OE42MBox::F = 0;
+const char *  OE42MBox::FOLDER = 0;
+FilterInfo *  OE42MBox::INFO = 0;
+int           OE42MBox::numOfMessages = 0;
+unsigned long OE42MBox::added = 0;
+unsigned long OE42MBox::mails = 0;
 
-oe4_2mbox::oe4_2mbox(const char *in,const char *out,filter *F,filterInfo *I)
+OE42MBox::OE42MBox(const char *in,const char *out,Filter *F,FilterInfo *I)
 {
   info=I;
   f=F;
@@ -48,10 +47,11 @@ oe4_2mbox::oe4_2mbox(const char *in,const char *out,filter *F,filterInfo *I)
   folderTo=out;
 }
 
-oe4_2mbox::~oe4_2mbox()
-{}
+OE42MBox::~OE42MBox()
+{
+}
 
-int oe4_2mbox::convert(void)
+int OE42MBox::convert(void)
 {
 oe_data *result;
 char s[1024];
@@ -96,7 +96,7 @@ char s[1024];
 return result->success;
 }
 
-void oe4_2mbox::addMessage(const char *string,int code)
+void OE42MBox::addMessage(const char *string,int code)
 {
 static KTempFile *tmp=0;
 static int status=-1;

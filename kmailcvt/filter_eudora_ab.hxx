@@ -1,5 +1,5 @@
 /***************************************************************************
-                        filter_eudora_ab.hxx  -  description
+                        FilterEudoraAb.hxx  -  description
                         ------------------------------------
     begin                : Fri Jun 30 2000
     copyright            : (C) 2000 by Hans Dijkema
@@ -20,26 +20,25 @@
 #ifndef __FILTER_EUDORA_AB__
 #define __FILTER_EUDORA_AB__
 
-class filter_eudora_ab : public filter
+class FilterEudoraAb : public Filter
 {
+  public:
+    FilterEudoraAb();
+   ~FilterEudoraAb();
+
+    void import(FilterInfo *info);
+    void convert(FILE *f,FilterInfo *info);
+
   private:
     QString CAP;
     int     LINES;
-  private:
+
     QStringList keys;
     QStringList emails;
     QStringList names;
     QStringList phones;
     QStringList adr;
     QStringList comments;
-  public:
-    filter_eudora_ab();
-   ~filter_eudora_ab();
-  public:
-    void import(filterInfo *info);
-  private:
-    void convert(FILE *f,filterInfo *info);
-  private:
     QString get(QString line,QString key);
     QString getcomment(QString line);
     QString getemail(QString line);

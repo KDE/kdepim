@@ -1,5 +1,5 @@
 /***************************************************************************
-                          filter_pmail.cxx  -  Pegasus-Mail import
+                          FilterPMail.cxx  -  Pegasus-Mail import
                              -------------------
     begin                : Sat Jan 6 2001
     copyright            : (C) 2001 by Holger Schurig
@@ -27,21 +27,21 @@
 #include "filter_pmail.hxx"
 
 
-filter_pmail::filter_pmail() :
-   filter(i18n("Import Folders From Pegasus-Mail (*.CNM, *.PMM, *.MBX)"),"Holger Schurig")
+FilterPMail::FilterPMail() :
+   Filter(i18n("Import Folders From Pegasus-Mail (*.CNM, *.PMM, *.MBX)"),"Holger Schurig")
 {
   CAP=i18n("Import Pegasus-Mail");
 }
 
 
 
-filter_pmail::~filter_pmail()
+FilterPMail::~FilterPMail()
 {
 }
 
 
 
-void filter_pmail::import(filterInfo *info)
+void FilterPMail::import(FilterInfo *info)
 {
    QString  choosen;
    QString  msg;
@@ -80,18 +80,18 @@ void filter_pmail::import(filterInfo *info)
    if (!kmailStart(info))
       return;
    info->log(i18n("Importing new mail files ('.cnm')..."));
-   processFiles(".cnm", &filter_pmail::importNewMessage);
+   processFiles(".cnm", &FilterPMail::importNewMessage);
    info->log(i18n("Importing mail folders ('.pmm')..."));
-   processFiles(".pmm", &filter_pmail::importMailFolder);
+   processFiles(".pmm", &FilterPMail::importMailFolder);
    info->log(i18n("Importing 'UNIX' mail folders ('.mbx')..."));
-   processFiles(".mbx", &filter_pmail::importUnixMailFolder);
+   processFiles(".mbx", &FilterPMail::importUnixMailFolder);
    kmailStop(info);
 }
 
 
 /** counts all files with mask (e.g. '*.cnm') in
 in a directory */
-int filter_pmail::countFiles(const char *mask)
+int FilterPMail::countFiles(const char *mask)
 {
    DIR *d;
    struct dirent *entry;
@@ -112,7 +112,7 @@ int filter_pmail::countFiles(const char *mask)
 
 
 /** updates currentFile and the progress bar */
-void filter_pmail::nextFile()
+void FilterPMail::nextFile()
 {
    float perc;
 
@@ -123,7 +123,7 @@ void filter_pmail::nextFile()
 
 
 /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
-void filter_pmail::processFiles(const char *mask, void(filter_pmail::* workFunc)(const char*) )
+void FilterPMail::processFiles(const char *mask, void(FilterPMail::* workFunc)(const char*) )
 {
    DIR *d;
    struct dirent *entry;
@@ -161,7 +161,7 @@ void filter_pmail::processFiles(const char *mask, void(filter_pmail::* workFunc)
 
 
 /** this function imports one *.CNM message */
-void filter_pmail::importNewMessage(const char *file)
+void FilterPMail::importNewMessage(const char *file)
 {
    unsigned long added;
    const char* destFolder = "PMail-New Messages";
@@ -170,12 +170,12 @@ void filter_pmail::importNewMessage(const char *file)
    msg = i18n("To: %1").arg(destFolder);
    inf->to(msg);
 
-   kmailMessage((filterInfo *) inf, (char *)destFolder, (char *)file, added);
+   kmailMessage((FilterInfo *) inf, (char *)destFolder, (char *)file, added);
 }
 
 
 /** this function imports one mail folder file (*.PMM) */
-void filter_pmail::importMailFolder(const char *file)
+void FilterPMail::importMailFolder(const char *file)
 {
    struct {
       char folder[86];
@@ -256,7 +256,7 @@ void filter_pmail::importMailFolder(const char *file)
          if (ch == 0x1a) {
             // close file, send it
             fclose(temp);
-            kmailMessage((filterInfo *) inf, (char *)folder.latin1(), tempname, added);
+            kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname, added);
             unlink(tempname);
             state = 0;
             break;
@@ -272,7 +272,7 @@ void filter_pmail::importMailFolder(const char *file)
    // did Folder end without 0x1a at the end?
    if (state != 0) {
       fclose(temp);
-      kmailMessage((filterInfo *) inf, (char *)folder.latin1(), tempname, added);
+      kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname, added);
       unlink(tempname);
    }
 
@@ -281,7 +281,7 @@ void filter_pmail::importMailFolder(const char *file)
 
 
 /** imports a 'unix' format mail folder (*.MBX) */
-void filter_pmail::importUnixMailFolder(const char *file)
+void FilterPMail::importUnixMailFolder(const char *file)
 {
    #define MAX_LINE 4096
    #define MSG_SEPERATOR_START "From "
@@ -329,7 +329,7 @@ void filter_pmail::importUnixMailFolder(const char *file)
          regexp.search(line) >= 0))                            // slower regexp
       {
          fclose(temp);
-         kmailMessage((filterInfo *) inf, (char *)folder.latin1(), tempname, added);
+         kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname, added);
          unlink(tempname);
          temp = NULL;
       }
@@ -350,7 +350,7 @@ void filter_pmail::importUnixMailFolder(const char *file)
 
    if (temp) {
       fclose(temp);
-      kmailMessage((filterInfo *) inf, (char *)folder.latin1(), tempname, added);
+      kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname, added);
       unlink(tempname);
    }
 

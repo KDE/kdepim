@@ -1,5 +1,5 @@
 /***************************************************************************
-                          filter_oe5.cxx  -  description
+                          FilterOE5.cxx  -  description
                              -------------------
     begin                : Fri Jun 30 2000
     copyright            : (C) 2000 by Hans Dijkema
@@ -31,15 +31,15 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 
-filter_oe5::filter_oe5() : filter(i18n("Import Folders From Outlook Express 5/6"),"Stephan B. Nedregard/Hans Dijkema")
+FilterOE5::FilterOE5() : Filter(i18n("Import Folders From Outlook Express 5/6"),"Stephan B. Nedregard/Hans Dijkema")
 {
   CAP=i18n("Import Outlook Express 5/6");
 }
 
-filter_oe5::~filter_oe5()
+FilterOE5::~FilterOE5()
 {}
 
-void filter_oe5::import(filterInfo *info)
+void FilterOE5::import(FilterInfo *info)
 {
   QString  choosen;
   QString  msg;
@@ -124,7 +124,7 @@ void filter_oe5::import(filterInfo *info)
             }
 
             {
-              oe5_2mbox m(fldr,name,this,info);
+              OE52MBox m(fldr,name,this,info);
               m.convert();
             }
           }

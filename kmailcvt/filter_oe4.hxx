@@ -20,15 +20,16 @@
 #ifndef __FILTER_OE4__
 #define __FILTER_OE4__
 
-class filter_oe4 : public filter
+class FilterOE4 : public Filter
 {
+  public:
+    FilterOE4();
+   ~FilterOE4();
+
+    void import(FilterInfo *info);
   private:
    QString CAP;
-  public:
-    filter_oe4();
-   ~filter_oe4();
-  public:
-    void import(filterInfo *info);
+
 };
 
 #endif

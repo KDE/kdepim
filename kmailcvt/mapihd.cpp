@@ -151,7 +151,7 @@ pabrec_entry e=pr_unknown;
 return e;
 }
 
-pabfields_t::pabfields_t(pabrec & R,filterInfo *info,QWidget * /*parent*/)
+pabfields_t::pabfields_t(pabrec & R,FilterInfo *info,QWidget * /*parent*/)
 {
   // Skip the first two words, because they're always the
   // same 000c 0014 ==> 0014 gives us the types, so we

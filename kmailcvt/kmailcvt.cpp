@@ -50,13 +50,13 @@ Kmailcvt2::Kmailcvt2(QWidget *parent, const char *name)
 	addPage( importpage, i18n( "Step 2: Importing..." ) );
 	setFinishEnabled(QWizard::page(2), false);
 
-	selfilterpage->addFilter(new filter_oe5);
-	selfilterpage->addFilter(new filter_oe4);
-	selfilterpage->addFilter(new filter_pmail);
-	selfilterpage->addFilter(new filter_plain);
-	selfilterpage->addFilter(new filter_pab);
-	selfilterpage->addFilter(new filter_ldif);
-	selfilterpage->addFilter(new filter_eudora_ab);
+	selfilterpage->addFilter(new FilterOE5);
+	selfilterpage->addFilter(new FilterOE4);
+	selfilterpage->addFilter(new FilterPMail);
+	selfilterpage->addFilter(new FilterPlain);
+	selfilterpage->addFilter(new FilterPAB);
+	selfilterpage->addFilter(new FilterLDIF);
+	selfilterpage->addFilter(new FilterEudoraAb);
 }
 
 Kmailcvt2::~Kmailcvt2() {
@@ -65,14 +65,14 @@ Kmailcvt2::~Kmailcvt2() {
 void Kmailcvt2::next() {
 	if(currentPage()==selfilterpage){
 		// Save selected filter
-		filter *selectedFilter = selfilterpage->getSelectedFilter();
+		Filter *selectedFilter = selfilterpage->getSelectedFilter();
 		// Goto next page
 		QWizard::next();
 		// Disable cancel & back
 		QWizard::cancelButton()->setEnabled(false);
 		setBackEnabled(QWizard::currentPage(), false);
 		// Start import
-		filterInfo *info = new filterInfo(importpage, _parent);
+		FilterInfo *info = new FilterInfo(importpage, _parent);
 		info->clear(); // Clear info from last time
 		selectedFilter->import(info);
 		// Cleanup

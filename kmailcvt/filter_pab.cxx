@@ -1,5 +1,5 @@
 /***************************************************************************
-                          filter_pab.cxx  -  description
+                          FilterPAB.cxx  -  description
                              -------------------
     begin                : Fri Jun 30 2000
     copyright            : (C) 2000 by Hans Dijkema
@@ -20,13 +20,15 @@
 
 #include <kfiledialog.h>
 
-filter_pab::filter_pab() : filter(i18n("Import MS Exchange Personal Address Book (.PAB)"),"Hans Dijkema")
-{}
+FilterPAB::FilterPAB() : Filter(i18n("Import MS Exchange Personal Address Book (.PAB)"),"Hans Dijkema")
+{
+}
 
-filter_pab::~filter_pab()
-{}
+FilterPAB::~FilterPAB()
+{
+}
 
-void filter_pab::import(filterInfo *info)
+void FilterPAB::import(FilterInfo *info)
 {
 QString  file;
 QWidget *parent=info->parent();
