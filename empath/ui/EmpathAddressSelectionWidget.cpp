@@ -18,8 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <kiconloader.h>
+
 // Local includes
 #include "EmpathDefines.h"
+#include "EmpathUIUtils.h"
 #include "EmpathAddressSelectionWidget.h"
 
 EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(
@@ -31,8 +34,13 @@ EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(
 	empathDebug("ctor");
 	
 	layout_		= new QGridLayout(this, 1, 2, 0, 10);
+	CHECK_PTR(layout_);
 	le_address_	= new QLineEdit(this, "le_address");
-	pb_browse_	= new QPushButton("...", this, "pb_browse");
+	CHECK_PTR(le_address_);
+	pb_browse_	= new QPushButton(this, "pb_browse");
+	CHECK_PTR(pb_browse_);
+
+	pb_browse_->setPixmap(empathIcon("point.png")), 
    	
 	pb_browse_->setFixedWidth(le_address_->sizeHint().height());
 

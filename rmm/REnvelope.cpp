@@ -36,6 +36,15 @@ REnvelope::REnvelope(const REnvelope & e)
 {
 	rmmDebug("copy ctor");
 //	headerList_.setAutoDelete(true);
+	assembled_ = false;
+}
+
+REnvelope::REnvelope(const QCString & s)
+	:	RMessageComponent(s)
+{
+	rmmDebug("ctor with QCString(" + s + ")");
+	parsed_ = false;
+	assembled_ = false;
 }
 
 	REnvelope &
@@ -43,8 +52,21 @@ REnvelope::operator = (const REnvelope & e)
 {
 	rmmDebug("operator =");
     if (this == &e) return *this; // Don't do a = a.
+	rmmDebug("headerList count starts at " + QCString().setNum(e.headerList_.count()));
 	headerList_ = e.headerList_;
+	rmmDebug("headerList count ends at   " + QCString().setNum(e.headerList_.count()));
 	RMessageComponent::operator = (e);
+	parsed_ = true;
+	assembled_ = false;
+	return *this;
+}
+
+	REnvelope &
+REnvelope::operator = (const QCString & s)
+{
+	rmmDebug("operator = (" + s + ")");
+	RMessageComponent::operator = (s);
+	parsed_ = false;
 	assembled_ = false;
 	return *this;
 }
@@ -52,6 +74,13 @@ REnvelope::operator = (const REnvelope & e)
 REnvelope::~REnvelope()
 {
 	rmmDebug("dtor");
+}
+
+	QCString
+REnvelope::asString()
+{
+	assemble();
+	return strRep_;
 }
 
 	void
@@ -196,17 +225,8 @@ REnvelope::_createDefault(RMM::HeaderType t)
 	void
 REnvelope::createDefault()
 {
-	rmmDebug("****** CREATING DEFAULT TO ******");
-	_createDefault(RMM::HeaderTo);
-	rmmDebug("****** CREATING DEFAULT MESSAGE ID ******");
-	_createDefault(RMM::HeaderMessageID);
-	rmmDebug("****** CREATING DEFAULT FROM ******");
-	_createDefault(RMM::HeaderFrom);
-	rmmDebug("****** CREATING DEFAULT DATE ******");
-	_createDefault(RMM::HeaderDate);
-	
-	parsed_		= true;
-	assembled_	= true;
+	parsed_		= false; 
+	assembled_	= false;
 }
 
 	bool
@@ -579,21 +599,15 @@ REnvelope::firstSender()
 	if (!has(RMM::HeaderFrom))
 		return sender();
 	
-	else {
-
-		RMailboxList m(from());
-		rmmDebug("Number of mailboxes in from field : " +
-			QCString().setNum(m.count()));
-
-		if (m.count() == 0) {
-
-			rmmDebug("Asking the mailbox list to create a default mailbox");
-			m.createDefault();
-
-		}
-
-		return *(m.at(0));
+	RMailbox m;
+	
+	rmmDebug("firstSender: Checking if from count is 0");
+	if (from().count() == 0) {
+		rmmDebug("firstSender: count is 0");
+		return m;
 	}
+	
+	return from().at(0);
 }
 
 	RMessageID

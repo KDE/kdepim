@@ -32,8 +32,8 @@ class EmpathMatcher
 		
 		EmpathMatcher();
 		virtual ~EmpathMatcher();
-		void load(Q_UINT32 parentid, Q_UINT32 id);
-		void save(Q_UINT32 parentid, Q_UINT32 id);
+		void load(const QString & parentName, Q_UINT32 id);
+		void save(const QString & parentName, Q_UINT32 id);
 
 		bool match(const EmpathURL &);
 		QString description() const;

@@ -18,11 +18,19 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <sys/time.h>
+#include <sys/stat.h>
+#include <sys/utsname.h>
+#include <unistd.h>
+#include <errno.h>
+
 #include <qstring.h>
 #include <qregexp.h>
 #include <qstrlist.h>
 #include <RMM_MessageID.h>
 #include <RMM_Token.h>
+
+int RMessageID::seq_ = 0;
 
 RMessageID::RMessageID()
 	:	RHeaderBody()
@@ -177,6 +185,26 @@ RMessageID::assemble()
 RMessageID::createDefault()
 {
 	rmmDebug("createDefault() called");
+
+	struct timeval timeVal;
+	struct timezone timeZone;
+	
+	gettimeofday(&timeVal, &timeZone);
+	int t = timeVal.tv_sec;
+
+	localPart_ =
+		"Empath." +
+		QCString().setNum(t)		+ '.' +
+		QCString().setNum(getpid())	+ '.' +
+		QCString().setNum(seq_++);
+	
+	struct utsname utsName;
+	if (uname(&utsName) == 0)
+		domain_ = utsName.nodename;
+	else
+		domain_ = "localhost.localdomain";
+
+	parsed_ = true;
 	assembled_ = false;
 }
 

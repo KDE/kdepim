@@ -65,11 +65,10 @@ EmpathMailboxList::append(EmpathMailbox * mailbox)
 	// Save the config group.
 	KConfigGroupSaver cgs(config_, EmpathConfig::GROUP_GENERAL);
 	
-	// Save how many mailboxes we have.
-	config_->writeEntry(EmpathConfig::KEY_NUM_MAILBOXES, count());
-
 	QObject::QObject::connect(mailbox, SIGNAL(newMailArrived()),
 		empath, SLOT(s_newMailArrived()));
+	
+	saveConfig();
 	
 	emit(updateFolderLists());
 }
@@ -79,22 +78,16 @@ EmpathMailboxList::remove(EmpathMailbox * mailbox)
 {
 	empathDebug("remove \"" + mailbox->name() + "\" called");
 
-	QListIterator<EmpathMailbox> it(*this);
-
-	for (; it.current() ; ++it) {
-		
-		if (it.current()->name() == mailbox->name()) {
-			
-			QList::remove(it.current());
-			
-			saveConfig();
-		}
-
-		emit(updateFolderLists());
-		return true;
+	if (!QList::remove(mailbox)) {
+		empathDebug("Couldn't remove mailbox");
+		return false;
 	}
+	
+	saveConfig();
+	
+	emit(updateFolderLists());
 
-	return false;
+	return true;
 }
 
 	EmpathMailbox *
@@ -160,7 +153,7 @@ EmpathMailboxList::readConfig()
 	
 	for (; it.current() ; ++it) {
 		
-		c->setGroup(it.current());
+		c->setGroup(EmpathConfig::GROUP_MAILBOX + it.current());
 		
 		mailboxType =
 			(AccountType)

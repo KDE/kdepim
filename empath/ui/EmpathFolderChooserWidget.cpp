@@ -18,6 +18,8 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <qpixmap.h>
+
 // KDE includes
 #include <klocale.h>
 
@@ -28,6 +30,7 @@
 #include "EmpathFolderChooserDialog.h"
 #include "EmpathMailboxList.h"
 #include "EmpathMailbox.h"
+#include "EmpathUIUtils.h"
 
 EmpathFolderChooserWidget::EmpathFolderChooserWidget(
 		QWidget * parent, const char * name)
@@ -37,18 +40,31 @@ EmpathFolderChooserWidget::EmpathFolderChooserWidget(
 	setFrameStyle(QFrame::Box | QFrame::Raised);
 	setLineWidth(1);
 	l_folderName_		= new QLabel(this, "l_folderName_");
-	pb_selectFolder_	= new QPushButton("...", this, "pb_selectFolder_");
+	CHECK_PTR(l_folderName_);
+	
+	pb_selectFolder_	= new QPushButton(this, "pb_selectFolder_");
+	CHECK_PTR(pb_selectFolder_);
+	pb_selectFolder_->setPixmap(empathIcon("browse.png"));
+	
 	layout_				= new QGridLayout(this, 1, 2, 2, 10);
+	CHECK_PTR(layout_);
+
 	pb_selectFolder_->setFixedWidth(pb_selectFolder_->sizeHint().height());
+	
 	layout_->addWidget(l_folderName_,		0, 0);
 	layout_->addWidget(pb_selectFolder_,	0, 1);
 	layout_->activate();
+	
 	QObject::connect(pb_selectFolder_, SIGNAL(clicked()),
 			this, SLOT(s_browse()));
+	
 	l_folderName_->setText("<" + i18n("no folder selected") + ">");
-	this->setFixedHeight(
+	
+	setFixedHeight(
 		pb_selectFolder_->sizeHint().height() +
 		frameWidth() * 2);
+	
+	l_folderName_->setFixedHeight(pb_selectFolder_->sizeHint().height());
 }
 
 EmpathFolderChooserWidget::~EmpathFolderChooserWidget()
@@ -69,7 +85,7 @@ EmpathFolderChooserWidget::setURL(const EmpathURL & url)
 	
 	url_ = url;
 	
-	l_folderName_->setText(url_.asString());
+	l_folderName_->setText(url_.mailboxName() + "/" + url_.folderPath());
 }
 
 	void
@@ -78,9 +94,12 @@ EmpathFolderChooserWidget::s_browse()
 	empathDebug("s_browse() called");
 	EmpathFolderChooserDialog fcd(this, "folderChooserDialog");
 	
-	if (fcd.exec() == Cancel) return;
+	if (!fcd.exec()) {
+		empathDebug("Cancelled");
+		return;
+	}
 
 	url_ = fcd.selected();
-	l_folderName_->setText(url_.asString());
+	l_folderName_->setText(url_.mailboxName() + "/" + url_.folderPath());
 }
 

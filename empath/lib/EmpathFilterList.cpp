@@ -47,16 +47,19 @@ EmpathFilterList::save()
 	EmpathFilterListIterator it(*this);
 	
 	int c = 0;
+	
+	QStrList list;
 
 	for (; it.current() ; ++it) {
-		it.current()->setId(c++);
 		it.current()->save();
+		list.append(it.current()->name().ascii());
 	}
 	
 	empathDebug("Saving number of filters");
 	KConfig * config = kapp->getConfig();
-	config->setGroup(EmpathConfig::EmpathConfig::GROUP_GENERAL);
-	config->writeEntry(EmpathConfig::EmpathConfig::KEY_NUMBER_OF_FILTERS, count());
+	config->setGroup(EmpathConfig::GROUP_GENERAL);
+	
+	config->writeEntry(EmpathConfig::KEY_FILTER_LIST, list);
 }
 
 	void
@@ -65,18 +68,18 @@ EmpathFilterList::load()
 	empathDebug("load() called");
 	
 	KConfig * c = kapp->getConfig();
-	c->setGroup(EmpathConfig::EmpathConfig::GROUP_GENERAL);
+	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
-	Q_UINT32 numberOfFilters =
-		c->readUnsignedNumEntry(EmpathConfig::EmpathConfig::KEY_NUMBER_OF_FILTERS);
+	QStrList list;
+	c->readListEntry(EmpathConfig::KEY_FILTER_LIST, list);
 	
-	empathDebug("Number of filters == " + QString().setNum(numberOfFilters));
-
 	EmpathFilter * filter;
 	
-	for (Q_UINT32 i = 0 ; i < numberOfFilters ; ++i) {
-		filter = new EmpathFilter;
-		filter->load(i);
+	QStrListIterator it(list);
+	
+	for (; it.current() ; ++it) {
+		filter = new EmpathFilter(it.current());
+		filter->load();
 		append(filter);
 	}
 }

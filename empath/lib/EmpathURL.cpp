@@ -97,7 +97,7 @@ EmpathURL::_parse()
 		// trailing slash. Therefore it's a mailbox + a folder path.
 		unsigned int i	= strRep_.find('/');
 		mailboxName_	= strRep_.left(i);
-		folderPath_		= strRep_.right(strRep_.length() - i);
+		folderPath_		= strRep_.right(strRep_.length() - i - 1);
 		messageID_		= QString::null;
 		return;
 	}
@@ -209,5 +209,36 @@ EmpathURL::_cleanUp(QString & s)
 	s.replace(QRegExp("//"), "/");
 	if (s.at(0) == '/') s.remove(0, 1);
 	if (s.at(s.length() - 1) == '/') s.remove(s.length() - 1, 1);
+}
+
+	QString
+EmpathURL::mailboxName() const
+{
+	return _stripSlashes(mailboxName_);
+}
+
+	QString
+EmpathURL::folderPath() const
+{
+	return _stripSlashes(folderPath_);
+}
+
+	QString
+EmpathURL::messageID() const
+{
+	return _stripSlashes(messageID_);
+}
+
+	QString
+EmpathURL::_stripSlashes(const QString & s) const
+{
+	QString stripped(s);
+	while (stripped.at(0) == '/')
+		stripped.remove(0, 1);
+	
+	while (stripped.at(s.length()) == '/')
+		stripped.remove(s.length() - 1, 1);
+	
+	return stripped;
 }
 

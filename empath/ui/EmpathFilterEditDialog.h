@@ -28,6 +28,7 @@
 #include <qlabel.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
+#include <qlineedit.h>
 
 // KDE includes
 #include <kbuttonbox.h>
@@ -72,6 +73,7 @@ class EmpathFilterEditDialog : public QDialog
 		QWidget			* w_action_;
 
 		QGridLayout		* mainLayout_;
+		QGridLayout		* nameLayout_;
 		QGridLayout		* arrivesLayout_;
 		QGridLayout		* matchesLayout_;
 		QGridLayout		* actionLayout_;
@@ -98,6 +100,9 @@ class EmpathFilterEditDialog : public QDialog
 		EmpathFolderChooserWidget * fcw_arrivesFolder_;
 
 		EmpathFilter	* filter_;
+		
+		QLabel			* l_name_;
+		QLineEdit		* le_name_;
 };
 
 #endif

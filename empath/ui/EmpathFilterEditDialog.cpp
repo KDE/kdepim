@@ -20,6 +20,7 @@
 
 // KDE includes
 #include <klocale.h>
+#include <kapp.h>
 
 // Local includes
 #include "RikGroupBox.h"
@@ -39,13 +40,24 @@ EmpathFilterEditDialog::EmpathFilterEditDialog(
 		filter_(filter)
 {
 	empathDebug("ctor");
+	setCaption(i18n("Edit Filters - ") + kapp->getCaption());
 	ASSERT(filter_ != 0);
 	
 	QPushButton	tempButton((QWidget *)0);
 	Q_UINT32 h	= tempButton.sizeHint().height();
+	
+	l_name_ = new QLabel(i18n("Filter name"), this, "l_name");
+	CHECK_PTR(l_name_);
+	
+	l_name_->setFixedHeight(h);
+	
+	le_name_ = new QLineEdit(this, "le_name");
+	CHECK_PTR(le_name_);
+	
+	le_name_->setFixedHeight(h);
 
 	rgb_arrives_ = new RikGroupBox(
-			i18n("Match expressions"), 8, this, "rgb_arrives");
+			i18n("New mail in"), 8, this, "rgb_arrives");
 	CHECK_PTR(rgb_arrives_);
 	
 	rgb_matches_ = new RikGroupBox(
@@ -153,6 +165,9 @@ EmpathFilterEditDialog::EmpathFilterEditDialog(
 
 	mainLayout_ = new QGridLayout(this, 4, 1, 10, 10);
 	CHECK_PTR(mainLayout_);
+	
+	nameLayout_ = new QGridLayout(1, 2);
+	CHECK_PTR(nameLayout_);
 
 	arrivesLayout_ = new QGridLayout(w_arrives_, 2, 1, 10, 10);
 	CHECK_PTR(arrivesLayout_);
@@ -172,14 +187,19 @@ EmpathFilterEditDialog::EmpathFilterEditDialog(
 	actionLayout_->addWidget(l_action_, 0, 0);
 	actionLayout_->addWidget(pb_editAction_, 0, 1);
 	
-	mainLayout_->addWidget(rgb_arrives_,	0, 0);
-	mainLayout_->addWidget(rgb_matches_,	1, 0);
-	mainLayout_->addWidget(rgb_action_,		2, 0);
-	mainLayout_->addWidget(buttonBox_,		3, 0);
+	mainLayout_->addLayout(nameLayout_,		0, 0);
+	mainLayout_->addWidget(rgb_arrives_,	1, 0);
+	mainLayout_->addWidget(rgb_matches_,	2, 0);
+	mainLayout_->addWidget(rgb_action_,		3, 0);
+	mainLayout_->addWidget(buttonBox_,		4, 0);
+	
+	nameLayout_->addWidget(l_name_,			0, 0);
+	nameLayout_->addWidget(le_name_,		0, 1);
 
 	arrivesLayout_->activate();
 	matchesLayout_->activate();
 	actionLayout_->activate();
+	nameLayout_->activate();
 	mainLayout_->activate();
 	
 	update();
@@ -275,6 +295,8 @@ EmpathFilterEditDialog::update()
 	ASSERT(filter_);
 	
 	empathDebug("Setting folder chooser folder");
+	
+	le_name_->setText(filter_->name());
 	
 	fcw_arrivesFolder_->setURL(filter_->url());
 

@@ -55,9 +55,7 @@ class EmpathComposeWindow : public KTMainWindow
 		void s_fileSendMessage();
 		void s_fileSendLater();
 		void s_fileSaveAs();
-		void s_fileAttachFile();
 		void s_filePrint();
-		void s_fileSettings();
 		void s_fileClose();
 		
 		// Edit menu slots
@@ -77,12 +75,17 @@ class EmpathComposeWindow : public KTMainWindow
 		void s_messageNew();
 		void s_messageSaveAs();
 		void s_messageCopyTo();
-		void s_messageViewSource();
 
 		// Help menu slots
 		void s_help();
 		void s_aboutEmpath();
 		void s_aboutQt();
+
+		void s_confirmDelivery	(bool);
+		void s_confirmReading	(bool);
+		void s_addSignature		(bool);
+		void s_digitallySign	(bool);
+		void s_encrypt			(bool);
 
 	private:
 	
@@ -112,7 +115,12 @@ class EmpathComposeWindow : public KTMainWindow
 		void setupToolBar();
 
 		void setupStatusBar();
-
+		
+		int id_confirmDelivery_;
+		int id_confirmReading_;
+		int id_addSignature_;
+		int id_digitallySign_;
+		int id_encrypt_;
 };
 
 #endif

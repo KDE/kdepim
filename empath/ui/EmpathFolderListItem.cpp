@@ -63,7 +63,7 @@ EmpathFolderListItem::EmpathFolderListItem(
 		QListViewItem(parent),
 		url_(url)
 {
-	empathDebug("ctor with folder \"" + url_.folderPath() + "\"");
+	empathDebug("ctor with folder \"" + url_.asString() + "\"");
 
 	EmpathFolder * f(empath->folder(url_));
 	

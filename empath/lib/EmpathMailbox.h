@@ -189,12 +189,12 @@ class EmpathMailbox : public QObject
 		/**
 		 * @short Get the name of this box.
 		 */
-		const QString &		name()			const { return url_.mailboxName(); }
+		QString 	name()	const { return url_.mailboxName(); }
 		
 		/**
 		 * @short Change the name of this box.
 		 */
-		void				setName(const QString & name);
+		void		setName(const QString & name);
 		
 		/**
 		 * @short Get the full url to this box.
@@ -205,13 +205,13 @@ class EmpathMailbox : public QObject
 		 * @short Get the count of messages contained within all folders
 		 * owned by this box.
 		 */
-		Q_UINT32			messageCount()			const;
+		Q_UINT32	messageCount()			const;
 		
 		/**
 		 * @short Get the count of unread messages contained within all folders
 		 * owned by this box.
 		 */
-		Q_UINT32			unreadMessageCount()	const;
+		Q_UINT32	unreadMessageCount()	const;
 		
 		/**
 		 * @short Report the type of this mailbox.
@@ -221,7 +221,7 @@ class EmpathMailbox : public QObject
 		/**
 		 * @short Name of the desired pixmap to represent this box.
 		 */
-		const QString &	pixmapName() const { return pixmapName_; }
+		QString 	pixmapName() const { return pixmapName_; }
 		
 		bool 		newMailReady()	const { return (newMessagesCount_ != 0); }
 		Q_UINT32 	newMails()		const { return newMessagesCount_; }

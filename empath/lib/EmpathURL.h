@@ -80,9 +80,9 @@ class EmpathURL
 
 		virtual ~EmpathURL();
 
-		const QString & mailboxName() const { return mailboxName_; }
-		const QString & folderPath() const { return folderPath_; }
-		const QString & messageID() const { return messageID_; }
+		QString mailboxName() const;
+		QString folderPath() const;
+		QString messageID() const;
 		
 		EmpathURL withoutMessageID() const;
 		
@@ -123,6 +123,7 @@ class EmpathURL
 		void _cleanUp(QString &);
 		void _parse();
 		void _assemble();
+		QString _stripSlashes(const QString &) const;
 
 		QString mailboxName_;
 		QString folderPath_;

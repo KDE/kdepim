@@ -1,5 +1,12 @@
 OI !
 
+WARNING: If you've been using this (as if!) you need to remove your config
+file as I've changed the format slightly. Either that or simply reconfigure
+any mailboxes so the location is correct.
+
+IS anyone using this ? Anyone want to help development ? Am I saving the
+planet alone ?
+
 NEW: Dropped mbox and MMDF support due to it being impossible to guarantee
 safety of messages.
 

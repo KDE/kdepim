@@ -18,13 +18,12 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <iostream>
-
 // Qt includes
 #include <qheader.h>
 #include <qstring.h>
 #include <qfile.h>
 #include <qdatetime.h>
+#include <qevent.h>
 
 // KDE includes
 #include <klocale.h>
@@ -43,6 +42,7 @@
 #include "EmpathConfig.h"
 #include "Empath.h"
 #include "EmpathUIUtils.h"
+#include "EmpathTask.h"
 
 EmpathMessageListWidget::EmpathMessageListWidget(
 		QWidget * parent, const char * name)
@@ -52,16 +52,16 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 	wantScreenUpdates_ = false;
 	
 	lastHeaderClicked_ = -1;
-	sortType_ = 2;
 
 	setAllColumnsShowFocus(true);
 	setMultiSelection(false);
 	setRootIsDecorated(true);
-	setSorting(2);
+	
+	setSorting(-1);
+
 	addColumn("Subject");
 	addColumn("Sender");
 	addColumn("Date");
-	addColumn("Status");
 	addColumn("Size");
 	
 	px_						= empathIcon("tree.png");
@@ -78,7 +78,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 	KConfig * c = kapp->getConfig();
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
-	for (int i = 0 ; i < 5 ; i++) {
+	for (int i = 0 ; i < 4 ; i++) {
 		header()->setCellSize(i,
 				c->readUnsignedNumEntry(
 					EmpathConfig::KEY_MESSAGE_LIST_SIZE_COLUMN +
@@ -103,6 +103,8 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 	// Connect the header's section clicked signal so we can sort properly
 	QObject::connect(header(), SIGNAL(sectionClicked(int)),
 		this, SLOT(s_headerClicked(int)));
+	
+	markAsReadTimer_ = new EmpathMarkAsReadTimer(this);
 }
 
 EmpathMessageListWidget::~EmpathMessageListWidget()
@@ -114,7 +116,7 @@ EmpathMessageListWidget::~EmpathMessageListWidget()
 	KConfig * c = kapp->getConfig();
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
-	for (int i = 0 ; i < 5 ; i++) {
+	for (int i = 0 ; i < 4 ; i++) {
 
 		c->writeEntry(
 			EmpathConfig::KEY_MESSAGE_LIST_SIZE_COLUMN + QString().setNum(i),
@@ -124,6 +126,9 @@ EmpathMessageListWidget::~EmpathMessageListWidget()
 			EmpathConfig::KEY_MESSAGE_LIST_POS_COLUMN + QString().setNum(i),
 			header()->cellPos(i));
 	}
+	
+	delete markAsReadTimer_;
+	markAsReadTimer_ = 0;
 }
 
 	EmpathMessageListItem *
@@ -508,15 +513,18 @@ EmpathMessageListWidget::s_doubleClicked(QListViewItem *)
 }
 
 	void
-EmpathMessageListWidget::s_currentChanged(QListViewItem *)
+EmpathMessageListWidget::s_currentChanged(QListViewItem * i)
 {
 	empathDebug("Current message changed - updating message widget");
+	markAsReadTimer_->cancel();
 	
 	// Make sure we highlight the current item.
 	kapp->processEvents();
 	
-	if (wantScreenUpdates_)
+	if (wantScreenUpdates_) {
 		emit(changeView(firstSelectedMessage()));
+		markAsReadTimer_->go((EmpathMessageListItem *)i);
+	}
 }
 
 	void
@@ -524,6 +532,14 @@ EmpathMessageListWidget::setSignalUpdates(bool yn)
 {
 	empathDebug("Setting signal updates to " + QString(yn ? "true" : "false"));
 	wantScreenUpdates_ = yn;
+}
+
+	void
+EmpathMessageListWidget::markAsRead(EmpathMessageListItem * item)
+{
+	RMM::MessageStatus status(item->status());
+	status |= RMM::Read;
+	setStatus(item, status);
 }
 
 	void
@@ -562,46 +578,61 @@ EmpathMessageListWidget::setStatus(
 	void
 EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 {
-	cerr << "SHOW_FOLDER START" << endl;
 	empathDebug("s_showFolder(" + url.asString() + ") called");
 	
 	if (url_ == url) {
-		empathDebug("Same as we're showing");
+		emit(showing());
 		return;
 	}
 	
 	url_ = url;
 	
 	EmpathFolder * f = empath->folder(url_);
-	if (f == 0) return;
+	if (f == 0) {
+		emit(showing());
+	   	return;
+	}
 	
 	clear();
 	masterList_.clear();
 	
 	f->messageList().sync();
-
-	empathDebug("Adding " +
-		QString().setNum(f->messageCount()) +
-			" messages to visual list");
+	
+	EmpathTask * t(empath->addTask("Sorting messages"));
+	CHECK_PTR(t);
+	t->setMax(f->messageCount());
 	
 	EmpathIndexIterator it(f->messageList());
 	
 	KConfig * c(kapp->getConfig());
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
+	empathDebug("....................");
+	
 	// If we're not threading, just fire 'em in.
 	if (!c->readBoolEntry(EmpathConfig::KEY_THREAD_MESSAGES, false)) {
-		cerr << "NON-THREADING";
+		setRootIsDecorated(false);
+		setUpdatesEnabled(false);
 		for (; it.current(); ++it) {
-			cerr << ".";
 			EmpathMessageListItem * newItem =
 				new EmpathMessageListItem(this, *it.current());
 			CHECK_PTR(newItem);
 			setStatus(newItem, it.current()->status());
+			t->doneOne();
 		}
-		cerr << endl;
+		
+		setSorting(
+			c->readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 2),
+			c->readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true));
+		
+		setUpdatesEnabled(true);
+		t->done();
+		
+		emit(showing());
+	
 		return;
 	}
+	setRootIsDecorated(true);
 
 	// Start by putting everything into our list. This takes care of sorting so
 	// hopefully threading will be simpler.
@@ -629,6 +660,7 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 		empathDebug("in s_showFolder() mit.current()->status == " +
 			QString().setNum(mit.current()->status()));
 		addItem(mit.current());
+		t->doneOne();
 		
 		now = QTime::currentTime();
 		if (begin.msecsTo(now) > 100) {
@@ -644,8 +676,15 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 //		}
 	}
 	
+	sortType_ = c->readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true);
+	
+	setSorting(
+		c->readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 3), sortType_);
+	
+	emit(showing());
+	t->done();
+
 	setUpdatesEnabled(true);
-	cerr << "SHOW_FOLDER END" << endl;
 }
 
 	void
@@ -660,6 +699,12 @@ EmpathMessageListWidget::s_headerClicked(int i)
 	else sortType_ = true; // revert
 	
 	setSorting(i, sortType_);
+	
+	KConfig * c(kapp->getConfig());
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
+	
+	c->writeEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, i);
+	c->writeEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, sortType_);
 	
 	lastHeaderClicked_ = i;
 }
@@ -710,6 +755,78 @@ EmpathMessageListWidget::_setupMessageMenu()
 	
 	messageMenu_.insertItem(empathIcon("empath-print.png"), i18n("Print..."),
 		this, SLOT(s_messagePrint()));
+}
+
+EmpathMarkAsReadTimer::EmpathMarkAsReadTimer(EmpathMessageListWidget * parent)
+	:	QObject(),
+		parent_(parent)
+{
+	empathDebug("ctor");
+
+	QObject::connect(
+		&timer_,	SIGNAL(timeout()),
+		this,		SLOT(s_timeout()));
+}
+
+EmpathMarkAsReadTimer::~EmpathMarkAsReadTimer()
+{
+	empathDebug("dtor");
+}
+
+	void
+EmpathMarkAsReadTimer::go(EmpathMessageListItem * i)
+{
+	item_ = i;
+	// Don't bother if it's already read.
+	if (i->status() & RMM::Read) return;
+
+	KConfig * c(kapp->getConfig());
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
+	
+	if (!c->readBoolEntry(EmpathConfig::KEY_MARK_AS_READ)) return;
+	int waitTime(c->readNumEntry(EmpathConfig::KEY_MARK_AS_READ_TIME, 2));
+	timer_.start(waitTime * 1000, true);
+}
+
+	void
+EmpathMarkAsReadTimer::cancel()
+{
+	timer_.stop();
+}
+
+	void
+EmpathMarkAsReadTimer::s_timeout()
+{
+	if (!item_) return;
+
+	parent_->markAsRead(item_);	
+}
+
+	void
+EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
+{
+	empathDebug("mousePressEvent");
+	
+	if (e->state() & QMouseEvent::ShiftButton) {
+		
+		QListViewItem * item = itemAt(e->pos());
+		
+		if (item == 0) {
+			empathDebug("Not over anything to drag");
+			return;
+		}
+		
+		EmpathMessageListItem * i = (EmpathMessageListItem *)item;
+			
+		empathDebug("Starting a drag");
+		QTextDrag * u  = new QTextDrag(i->id().copy(), this, "urlDrag");
+		CHECK_PTR(u);
+		
+		u->setPixmap(empathIcon("tree.png"), QPoint(-24, -24)); 
+		
+		empathDebug("Starting the drag copy");
+		u->dragCopy();
+	}
 }
 
 /*
@@ -794,3 +911,4 @@ EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 }
 
 */
+

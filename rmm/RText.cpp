@@ -26,17 +26,20 @@ RText::RText()
 	:	RHeaderBody()
 {
 	rmmDebug("ctor");
+	parsed_ = assembled_ = true;
 }
 
 RText::RText(const RText & r)
 	:	RHeaderBody(r)
 {
+	parsed_ = assembled_ = true;
 }
 
 RText::RText(const QCString & s)
    	:	RHeaderBody(s)
 {
 	rmmDebug("ctor with \"" + s + "\"");
+	parsed_ = assembled_ = true;
 }
 
 RText::~RText()

@@ -24,6 +24,7 @@
 // Qt includes
 #include <qpopupmenu.h>
 #include <qregexp.h>
+#include <qtextview.h>
 
 // KDE includes
 #include <ktmainwindow.h>
@@ -53,27 +54,11 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
 		void toHTML(QCString &);
 		void show(const QCString & s, bool isHTML = false);
 
-	protected slots:
-
-
 	private:
 		
-		REnvelope envelope_;
 		RBodyPart bodyPart_;
 		
 		bool	loadTemplate(const QString & filename);
-
-		void	replaceHeaderTagsByData(
-					const QCString & messageHeaders, QCString & htmlTemplate);
-		void	replaceBodyTagsByData(
-					const QCString & messageBody, QCString & htmlTemplate);
-		
-		void	markupBackgroundColour(QCString & s);
-		void	markupTextColour(QCString & s);
-		void	markupHeaderBodies(const QCString & body, QCString & html);
-		void	markupHeaderNames(QCString & html);
-		
-		QCString htmlTemplate;
 		
 		bool useEnvelope_;
 };

@@ -102,24 +102,6 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 		// It can either be in the Transaction or Authorisation state.
 		// We, on the other hand, have another state - Not connected to the server.
 	
-		QCString			_getLine();
-		bool				_connectToServer();
-		bool				_loginAPOP();
-		bool				_login();
-		Q_UINT32			_countMessages();
-		bool				_deleteMessage(const QString &);
-		int					_write(const QString &);
-		RMessage *			_getMessage(const QString &);
-		REnvelope *			_getEnvelope(const QString &);
-		bool				_closeConnection(bool);
-		void				_openLog(const QString &);
-		bool				_getSizeList();
-		bool				_getUidlList();
-		bool				_positiveResponse();
-		void				_log(QCString text);
-		bool				_supportsAPOP();
-		bool				_getIndex();
-
 		// Order dependency
 		QString				serverAddress_;
 		Q_UINT32			serverPort_;
@@ -147,24 +129,8 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 		bool				connected_;
 		bool				loggedIn_;
 		QString				timeStamp_;
-		bool				busy_;
 		QFile				logFile_;
 		QCString			greeting_;
-		
-		QStrList			index__;
-		
-		static QString		COMMAND_APOP;
-		static QString		COMMAND_LIST;
-		static QString		COMMAND_UIDL;
-		static QString		COMMAND_USER;
-		static QString		COMMAND_PASS;
-		static QString		COMMAND_STAT;
-		static QString		COMMAND_RETR;
-		static QString		COMMAND_DELE;
-		static QString		COMMAND_RSET;
-		static QString		COMMAND_QUIT;
-		static QString		COMMAND_NOOP;
-		static QString		COMMAND_TOP;
 		
 		KIOJob * job;
 		

@@ -22,12 +22,13 @@
 #define EMPATHMAILSENDER_H
 
 // Qt includes
+#include <qvaluelist.h>
 #include <qobject.h>
 
 // Local includes
 #include "RMM_Message.h"
 #include "EmpathDefines.h"
-#include "EmpathMessageList.h"
+#include "EmpathURL.h"
 
 /**
  * Base class for any 'real' sender. This one's only responsibility
@@ -62,20 +63,10 @@ class EmpathMailSender : public QObject
 		 * that stores and despatches mail on their behalf. I know my old isp
 		 * did this, so I presume a lot of other peoples' isps do it too.
 		 */
-		virtual bool send(EmpathMessageList & messageList) = 0L;
-
-		/**
-		 * This will add a message to the local queue, i.e. spool it.
-		 * It will be despatched when the derived class feels like it.
-		 */
-		void addPendingMessage(RMessage & message);
+		bool sendQueued();
 
 		virtual void saveConfig() = 0;
 		virtual void readConfig() = 0;
-
-	private:
-
-		QList<RMessage>	pendingList_;
 };
 
 #endif

@@ -18,16 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-// System includes
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdio.h>
-
 // Qt includes
 #include <qregexp.h>
 #include <qdir.h>
@@ -35,6 +25,8 @@
 // KDE includes
 #include <klocale.h>
 #include <kconfig.h>
+#include <kapp.h>
+#include <kio_job.h>
 
 // Local includes
 #include "EmpathMailboxPOP3.h"
@@ -43,24 +35,6 @@
 #include "Empath.h"
 #include "EmpathConfig.h"
 #include "EmpathUtilities.h"
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-QString EmpathMailboxPOP3::COMMAND_APOP	=	"APOP";
-QString EmpathMailboxPOP3::COMMAND_LIST	=	"LIST";
-QString EmpathMailboxPOP3::COMMAND_UIDL	=	"UIDL";
-QString EmpathMailboxPOP3::COMMAND_USER	=	"USER";
-QString EmpathMailboxPOP3::COMMAND_PASS	=	"PASS";
-QString EmpathMailboxPOP3::COMMAND_STAT	=	"STAT";
-QString EmpathMailboxPOP3::COMMAND_RETR	=	"RETR";
-QString EmpathMailboxPOP3::COMMAND_DELE	=	"DELE";
-QString EmpathMailboxPOP3::COMMAND_RSET	=	"RSET";
-QString EmpathMailboxPOP3::COMMAND_QUIT	=	"QUIT";
-QString EmpathMailboxPOP3::COMMAND_NOOP	=	"NOOP";
-QString EmpathMailboxPOP3::COMMAND_TOP	=	"TOP";
-
 
 EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
 	:	EmpathMailbox		(name),
@@ -74,7 +48,6 @@ EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
 		logFileOpen_		(false),
 		authenticationTries_(8)
 {
-#if 0
 	empathDebug("ctor");
 	type_ = POP3;
 	job = new KIOJob();
@@ -91,12 +64,12 @@ EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
 	QString folderPixmapName = "mini-folder-inbox.png";
 	QString inboxName = i18n("Inbox");
 
-	EmpathURL url("empath://" + name_ + inboxName);
+	EmpathURL url(url_);
+	url.setFolderPath(inboxName);
 	
 	EmpathFolder * folder_inbox = new EmpathFolder(url);
 	
-	folderList_.append(*folder_inbox);
-#endif
+	folderList_.append(folder_inbox);
 }
 
 EmpathMailboxPOP3::~EmpathMailboxPOP3()
@@ -106,341 +79,17 @@ EmpathMailboxPOP3::~EmpathMailboxPOP3()
 }
 
 	bool
-EmpathMailboxPOP3::_getIndex()
-{
-	/*
-	empathDebug("_getIndex() called");
-	index_.clear();
-	
-	if (!_getSizeList()) return false;
-
-	QCString tempStr;
-	
-	if (!_changeState(Transaction)) return false;
-	
-	empathDebug("Doing UIDL");
-	_write (COMMAND_UIDL);
-
-	if (!_positiveResponse()) return false;
-
-	int i = 0;
-	while (true) {
-		
-		tempStr = _getLine();
-		empathDebug("tempStr: " + tempStr);
-
-		if (tempStr.isEmpty()) {
-			
-			errorStr = "Sorry server threw a wobbler while doing 'uidl'";
-			return false;
-		}
-	
-		if (tempStr.at(0) == '.') {
-			// end of listing
-			empathDebug("end of UIDL list");
-			break;
-		}
-	
-		int gap = tempStr.find(' ');
-		if (gap == -1) return false;
-		
-		QCString s = tempStr.right(tempStr.length() - ++gap);
-		
-		index__.append(s);
-		
-		++i;
-	}
-	return true;
-	*/
-}
-
-
-	bool
-EmpathMailboxPOP3::_getSizeList()
-{
-	/*
-	empathDebug("Getting size list");
-	QCString tempStr;
-	
-	if (!_changeState(Transaction)) return false;
-	
-	_write (COMMAND_LIST);
-
-	if (!_positiveResponse()) return false;
-
-	while (true) {
-		
-		tempStr = _getLine();
-		
-		if (tempStr.isEmpty()) {
-			
-			errorStr = "Sorry server threw a wobbler while doing 'list'";
-			return false;
-		}
-	
-		if (tempStr.at(0) == '.') {
-			// end of listing
-			break;
-		}
-	
-		uID msgno;
-		uID * msgsize = new uID;
-		int firstSpacePos = tempStr.find(' ');
-	
-		msgno = tempStr.left(firstSpacePos).toULong();
-		*msgsize = tempStr.right(tempStr.length() - firstSpacePos).toULong();
-	
-		empathDebug("Size: " + QString().setNum(*msgsize));
-		
-	}
-	return true;
-	*/
-}
-
-	bool
 EmpathMailboxPOP3::alreadyHave()
 {
 	return false;
 }
 
-	Q_UINT32
-EmpathMailboxPOP3::_countMessages()
-{
-	/*
-	empathDebug("_countMessages() called");
-	
-	if (!_changeState(Transaction)) return false;
-	
-	// Find out how many messages are in the mailbox.
-	_write(COMMAND_STAT);
-	
-	QCString tempStr = _getLine();
-	if (tempStr.left(3) != "+OK") return 0;
-  
-	Q_UINT32 msgs, bytes;
-	msgs = bytes = 0;
-
-	empathDebug("parsing stat output");
-	int firstSpacePos = tempStr.find(' ');
-	int secondSpacePos = tempStr.find(' ', ++firstSpacePos);
-	
-	if (firstSpacePos == -1 || secondSpacePos == -1) return 0;
-	
-	msgs = tempStr.mid(firstSpacePos, secondSpacePos - firstSpacePos).toULong();
-	bytes = tempStr.mid(++secondSpacePos, tempStr.length() - secondSpacePos).toULong();
-
-	empathDebug("done parse stat output");
-
-	numMessages_ = msgs;
-	mailboxSize_ = bytes;
-
-	empathDebug("There are " +
-			QString().setNum(msgs) + " messages on the server, totalling " +
-			QString().setNum(bytes) + " bytes");
-
-	return msgs;
-	*/
-}
-
-	REnvelope *
-EmpathMailboxPOP3::_getEnvelope(const QString & _id)
-{
-	/*
-	empathDebug("_getEnvelope(" + _id + ") called");
-
-	if (!_changeState(Transaction)) return 0;
-	
-	int msgNum = index__[_id]->index;
-	_write(COMMAND_TOP + " " + QCString().setNum(msgNum) + " 0");
-
-	if (!_positiveResponse()) return 0;
-	
-	// Read envelope
-	
-	QCString envelopeAsString;
-	QCString tempStr;
-
-	while (true) {
-		
-		tempStr = _getLine();
-		
-		if (tempStr.isEmpty()) {
-			
-			errorStr = "Sorry server threw a wobbler while getting message" +
-				QCString().setNum(msgNum);
-			return 0;
-		}
-		
-		if (tempStr == ".\r\n") {
-			// end of envelope
-			break;
-		}
-			
-		// CRLF -> LF
-			
-		tempStr[tempStr.length() - 2] = '\n';
-		tempStr[tempStr.length() - 1] = 0;
-			
-		// Check for byte-stuffing
-			
-		if (tempStr[0] == '.')
-			tempStr = tempStr.right(tempStr.length() - 1);
-
-		envelopeAsString += tempStr;
-	}
-
-	empathDebug("Creating a new envelope");
-	REnvelope * tempEnvelope = new REnvelope;
-	tempEnvelope->set(envelopeAsString);
-
-	return tempEnvelope;
-	*/
-}
-
-	RMessage *
-EmpathMailboxPOP3::_getMessage(const QString & _id)
-{
-	/*
-	empathDebug("getMessage (" + _id + ") called");
-	
-	QCString tempStr;
-
-	if (!_changeState(Transaction)) return 0;
-	
-	int msgNum = index_[id]->index;
-	_write(COMMAND_RETR + " " + QCString().setNum(msgNum));
-
-	if (!_positiveResponse()) return 0;
-
-	// Read message
-	
-	QCString messageAsString;
-
-	while (true) {
-		
-		tempStr = _getLine();
-		
-		if (tempStr.isEmpty()) {
-			
-			errorStr = "Sorry server threw a wobbler while getting message" +
-				QCString().setNum(msgNum);
-			return 0;
-		}
-		
-		if (tempStr == ".\r\n") {
-			// end of message
-			break;
-		}
-			
-		// CRLF -> LF
-			
-		tempStr[tempStr.length() - 2] = '\n';
-		tempStr[tempStr.length() - 1] = 0;
-			
-		// Check for byte-stuffing
-			
-		if (tempStr[0] == '.')
-			tempStr = tempStr.right(tempStr.length() - 1);
-
-		messageAsString += tempStr;
-	}
-
-	empathDebug("Creating a new message");
-	RMessage * tempMessage = new RMessage;
-	tempMessage->set(messageAsString);
-
-	return tempMessage;
-	*/
-}
-
-	bool
-EmpathMailboxPOP3::_deleteMessage(const QString & _id)
-{
-	/*
-	empathDebug("_deleteMessage(" + _id.asString() + ") called");
-	QCString tempStr;
-	
-	if (!_changeState(Transaction)) return false;
-	
-	int msgNum = index_[id]->index;
-	// delete the message on the server
-	_write(COMMAND_DELE + " " + QCString().setNum(msgNum));
-	
-	tempStr = _getLine();
-	
-	if (tempStr.left(3) != "+OK") {
-		errorStr =
-			"Sorry no response from POP3 server on request to delete message " +
-			QString().setNum(msgNum);
-			return false;
-	}
-	empathDebug("Message " + QString().setNum(msgNum) + " deleted from server");
-	return true;
-	*/
-}
-	
-	bool
-EmpathMailboxPOP3::_closeConnection(bool delMessages)
-{
-	/*
-	empathDebug("_closeConnection() called");
-	if (state_ == Disconnected) return false;
-
-	if (state_ == Transaction && !delMessages) {
-		_write(COMMAND_RSET);
-		// Eat response
-		_getLine();
-	}
-	
-	_write(COMMAND_QUIT);
-	// Eat response
-	_getLine();
-	close (sock_fd);
-	empathDebug("Connection closed");
-	return true;
-	*/
-}
-
 	bool
 EmpathMailboxPOP3::checkForNewMail()
 {
-	/*
 	empathDebug("_checkForNewMail() called");
 
-	if (!_changeState(Transaction)) return false;
-	
-	if (index_.count() == 0) _getIndex();
-	
-	// Now comes the clever bit.
-	// I just tell the Empath object that I want this message filtering.
-	// All decision making is done by the filters.
-	// I don't decide to download the message, or delete it.
-	// Those decisions are deferred to the filters.
-	// If a filter wants to look at the size of the message, it'll ask for its
-	// size. Then and only then will I bother to look at its size.
-	// Note: This could slow down the retrieval of messages, as I could have
-	// done a 'stat' query and got the sizes of all the messages at once.
-	// Perhaps I'll just do the stat query anyway the first time I'm asked for a
-	// message's size. That way when I'm asked again, I can have all the sizes
-	// cached. Same goes for UIDL.
-	
-	EmpathURL inboxPath("empath://" + name_ + "/" + folderList_.at(0)->name());
-	
-	empathDebug(
-		"Index contains references to " +
-		QString().setNum(index_.count()) +
-		" messages");
-		
-	QDictIterator<sizeAndIndex> it(index_);
-	
-	for (; it.current(); ++it) {
-		empathDebug("Filtering message " + QString().setNum(it.current()->index));
-		QString id(QCString(it.currentKey()));
-		empath->filterMessage(EmpathURL(name, inboxPath, id));
-	}
-
-	return true;
-	*/
+	return false;
 }
 
 	bool
@@ -453,66 +102,173 @@ EmpathMailboxPOP3::getMail()
 	void
 EmpathMailboxPOP3::s_checkNewMail()
 {
-	/*
 	empathDebug("checkNewMail()");
 	checkForNewMail();
-	_changeState(Disconnected);
-	*/
 }
+
+	bool
+EmpathMailboxPOP3::writeMessage(const EmpathURL & folder, RMessage &)
+{
+	empathDebug("writeMessage() called");
+	empathDebug("This mailbox is READ ONLY !");
+	return false;
+}
+	
+	bool
+EmpathMailboxPOP3::newMail() const
+{
+	empathDebug("newMail() called");
+	return false;
+}
+
+	void
+EmpathMailboxPOP3::syncIndex(const EmpathURL & url)
+{
+}
+
+	Q_UINT32
+EmpathMailboxPOP3::sizeOfMessage(const EmpathURL & _id)
+{
+	return 0;
+}
+
+	QString
+EmpathMailboxPOP3::plainBodyOfMessage(const EmpathURL & _id)
+{
+	QString s;
+	return s;
+}
+
+	REnvelope *
+EmpathMailboxPOP3::envelopeOfMessage(const EmpathURL & _id)
+{
+	empathDebug("getEnvelopeOfMessage(" + _id.asString() + ") called");
+	return 0;
+}
+
+	RBodyPart::PartType
+EmpathMailboxPOP3::typeOfMessage(const EmpathURL & _id)
+{
+	empathDebug("getTypeOfMessage(" + _id.asString() + ") called");
+	return RBodyPart::Basic;
+}
+
+	EmpathURL
+EmpathMailboxPOP3::path()
+{
+	return url_;
+}
+
+	RMessage *
+EmpathMailboxPOP3::message(const EmpathURL & id)
+{
+	return 0;
+}
+
+	void
+EmpathMailboxPOP3::init()
+{
+	empathDebug("init() called");
+}
+
+	bool
+EmpathMailboxPOP3::removeMessage(const EmpathURL & id)
+{
+	return false;
+}
+
+	bool
+EmpathMailboxPOP3::addFolder(const EmpathURL & id)
+{
+	return false;
+}
+
+	bool
+EmpathMailboxPOP3::removeFolder(const EmpathURL & id)
+{
+	return false;
+}
+	bool
+EmpathMailboxPOP3::mark(const EmpathURL & url, RMM::MessageStatus s)
+{
+	return false;
+}
+
+	void
+EmpathMailboxPOP3::s_data(int i, const char * c, int l)
+{
+#if 0
+	switch (state_) {
+		
+		case WaitForList:
+			int i = 0;
+			int x = 0;
+			while ((x = s.find(QRegExp("\n"), i)) != -1) {
+				dict[].setSize(
+			}
+			break;
+			
+		case WaitForUIDL:
+			break;
+		
+		case WaitForData:
+			break;
+		
+		case NoWait:
+		default:
+			break;
+	}
+#endif
+}
+
+	void
+EmpathMailboxPOP3::s_jobFinished(int)
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////
+///////////////////////// CONFIG STUFF FOLLOWS TO END ////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 	void
 EmpathMailboxPOP3::s_getNewMail()
 {
-	/*
 	empathDebug("getNewMail()");
-
-	if (logging_) {
-		_openLog(empathDir() + "empath_pop.log");
-	}
-	*/
-	
 }
 
 	void
 EmpathMailboxPOP3::saveConfig()
 {
-	/*
 	empathDebug("Saving config");
-	canonName_ = EmpathConfig::GROUP_MAILBOX + QString().setNum(id_);
 	KConfig * config_ = kapp->getConfig();
-	config_->setGroup(canonName_);
+	config_->setGroup(EmpathConfig::GROUP_MAILBOX + url_.mailboxName());
 #define CWE config_->writeEntry
 	CWE(EmpathConfig::KEY_MAILBOX_TYPE,					(int)type_);
-	CWE(EmpathConfig::KEY_MAILBOX_NAME,					name_);
 	CWE(EmpathConfig::KEY_POP3_SERVER_ADDRESS,			serverAddress_);
 	CWE(EmpathConfig::KEY_POP3_SERVER_PORT,				serverPort_);
-	CWE(EmpathConfig::KEY_POP3_USERNAME,					username_);
-	CWE(EmpathConfig::KEY_POP3_PASSWORD,					password_);
-	CWE(EmpathConfig::KEY_POP3_APOP,						useAPOP_);
+	CWE(EmpathConfig::KEY_POP3_USERNAME,				username_);
+	CWE(EmpathConfig::KEY_POP3_PASSWORD,				password_);
+	CWE(EmpathConfig::KEY_POP3_APOP,					useAPOP_);
 	CWE(EmpathConfig::KEY_POP3_SAVE_POLICY,				(int)passwordSavePolicy_);
 	CWE(EmpathConfig::KEY_POP3_LOGGING_POLICY,			logging_);
-	CWE(EmpathConfig::KEY_POP3_LOG_FILE_PATH,				logFilePath_);
-	CWE(EmpathConfig::KEY_POP3_LOG_FILE_DISPOSAL_POLICY,	logFileDisposalPolicy_);
-	CWE(EmpathConfig::KEY_POP3_MAX_LOG_FILE_SIZE,			maxLogFileSize_);
+	CWE(EmpathConfig::KEY_POP3_LOG_FILE_PATH,			logFilePath_);
+	CWE(EmpathConfig::KEY_POP3_LOG_FILE_DISPOSAL_POLICY,logFileDisposalPolicy_);
+	CWE(EmpathConfig::KEY_POP3_MAX_LOG_FILE_SIZE,		maxLogFileSize_);
 	CWE(EmpathConfig::KEY_POP3_MESSAGE_SIZE_THRESHOLD,	messageSizeThreshold_);
-	CWE(EmpathConfig::KEY_POP3_LARGE_MESSAGE_POLICY,		(int)largeMessagePolicy_);
+	CWE(EmpathConfig::KEY_POP3_LARGE_MESSAGE_POLICY,	(int)largeMessagePolicy_);
 	CWE(EmpathConfig::KEY_POP3_CHECK_FOR_NEW_MAIL,		checkMail_);
 	CWE(EmpathConfig::KEY_POP3_MAIL_CHECK_INTERVAL,		checkMailInterval_);
 	CWE(EmpathConfig::KEY_POP3_SAVE_ALL_ADDRESSES,		saveAllAddresses_);
-	CWE(EmpathConfig::KEY_POP3_RETRIEVE_IF_HAVE,			retrieveIfHave_);
+	CWE(EmpathConfig::KEY_POP3_RETRIEVE_IF_HAVE,		retrieveIfHave_);
 #undef CWE
-	*/
 }
 
 	void
 EmpathMailboxPOP3::readConfig()
 {
-	/*
-	empathDebug("Reading config - my canonical name is \"" + canonName_ + "\"");
-	
-	canonName_ = EmpathConfig::GROUP_MAILBOX + QString().setNum(id_);
+	empathDebug("Reading config");
 	KConfig * config_ = kapp->getConfig();
-	config_->setGroup(canonName_);
+	config_->setGroup(EmpathConfig::GROUP_MAILBOX + url_.mailboxName());
 	
 // For some reason, this just DOES NOT WORK here ! Need to do setGroup !
 //	KConfigGroupSaver(config_, canonName_);
@@ -522,33 +278,64 @@ EmpathMailboxPOP3::readConfig()
 	
 	empathDebug("Config group is now \"" + QString(config_->group()) + "\"");
 
-	name_ = CRE(EmpathConfig::KEY_MAILBOX_NAME, "Unnamed");
+	url_.setMailboxName(CRE(EmpathConfig::KEY_MAILBOX_NAME, "Unnamed"));
 
-	serverAddress_			= CRE(	EmpathConfig::KEY_POP3_SERVER_ADDRESS,	i18n("<unknown>"));
-	serverPort_				= CRUNE(EmpathConfig::KEY_POP3_SERVER_PORT,		110);
+	serverAddress_ =
+		CRE(EmpathConfig::KEY_POP3_SERVER_ADDRESS, i18n("<unknown>"));
+	
+	serverPort_ =
+		CRUNE(EmpathConfig::KEY_POP3_SERVER_PORT, 110);
+	
 	config_->setDollarExpansion(true);
-	username_				= CRE(	EmpathConfig::KEY_POP3_USERNAME,			"$USER");
+	username_ =
+		CRE(EmpathConfig::KEY_POP3_USERNAME, "$USER");
 	config_->setDollarExpansion(false);
-	password_				= CRE(	EmpathConfig::KEY_POP3_PASSWORD,			"");
-	useAPOP_				= CRBE(	EmpathConfig::KEY_POP3_APOP,				true);
-	passwordSavePolicy_		= (SavePolicy)CRUNE(EmpathConfig::KEY_POP3_SAVE_POLICY, Never);
-	logging_				= CRBE(	EmpathConfig::KEY_POP3_LOGGING_POLICY,	false);
-	logFilePath_			= CRE(	EmpathConfig::KEY_POP3_LOG_FILE_PATH,
+	
+	password_ =
+		CRE(EmpathConfig::KEY_POP3_PASSWORD, "");
+	
+	useAPOP_ =
+		CRBE(EmpathConfig::KEY_POP3_APOP, true);
+	
+	passwordSavePolicy_ =
+		(SavePolicy)
+		CRUNE(EmpathConfig::KEY_POP3_SAVE_POLICY, Never);
+	
+	logging_ =
+		CRBE(EmpathConfig::KEY_POP3_LOGGING_POLICY,	false);
+	
+	logFilePath_ =
+		CRE(EmpathConfig::KEY_POP3_LOG_FILE_PATH,
 		QDir::homeDirPath() + "/.kde/share/apps/empath/log/");
-	logFileDisposalPolicy_	= CRBE(	EmpathConfig::KEY_POP3_LOG_FILE_DISPOSAL_POLICY,	false);
-	maxLogFileSize_			= CRUNE(EmpathConfig::KEY_POP3_MAX_LOG_FILE_SIZE,	10);
-	messageSizeThreshold_	= CRUNE(EmpathConfig::KEY_POP3_MESSAGE_SIZE_THRESHOLD,	1024);
-	largeMessagePolicy_		= 
-		(LargeMessagePolicy)CRUNE(EmpathConfig::KEY_POP3_LARGE_MESSAGE_POLICY, RetrieveMessage);
-	checkMail_				= CRBE(	EmpathConfig::KEY_POP3_CHECK_FOR_NEW_MAIL,		true);
-	checkMailInterval_		= CRUNE(EmpathConfig::KEY_POP3_MAIL_CHECK_INTERVAL,		5);
-	saveAllAddresses_		= CRBE(	EmpathConfig::KEY_POP3_LOG_FILE_DISPOSAL_POLICY,	true);
-	retrieveIfHave_			= CRBE(	EmpathConfig::KEY_POP3_RETRIEVE_IF_HAVE,			false);
+	
+	logFileDisposalPolicy_	=
+		CRBE(EmpathConfig::KEY_POP3_LOG_FILE_DISPOSAL_POLICY, false);
+	
+	maxLogFileSize_ =
+		CRUNE(EmpathConfig::KEY_POP3_MAX_LOG_FILE_SIZE,	10);
+	
+	messageSizeThreshold_ =
+		CRUNE(EmpathConfig::KEY_POP3_MESSAGE_SIZE_THRESHOLD, 1024);
+	
+	largeMessagePolicy_ = 
+		(LargeMessagePolicy)
+		CRUNE(EmpathConfig::KEY_POP3_LARGE_MESSAGE_POLICY, RetrieveMessage);
+	
+	checkMail_ =
+		CRBE(EmpathConfig::KEY_POP3_CHECK_FOR_NEW_MAIL, true);
+	
+	checkMailInterval_ =
+		CRUNE(EmpathConfig::KEY_POP3_MAIL_CHECK_INTERVAL, 5);
+	
+	saveAllAddresses_ =
+		CRBE(EmpathConfig::KEY_POP3_LOG_FILE_DISPOSAL_POLICY, true);
+	
+	retrieveIfHave_ =
+		CRBE(EmpathConfig::KEY_POP3_RETRIEVE_IF_HAVE, false);
 	
 #undef CRE
 #undef CRUNE
 #undef CRBE
-	*/
 }
 
 // Set methods
@@ -556,99 +343,84 @@ EmpathMailboxPOP3::readConfig()
 	void
 EmpathMailboxPOP3::setServerAddress(const QString & serverAddress)
 {
-	empathDebug("setServerAddress(" + serverAddress + ") called");
 	serverAddress_	= serverAddress;
-
 }
 
 	void
 EmpathMailboxPOP3::setServerPort(Q_UINT32 serverPort)
 {
-	empathDebug("setServerPort(" + QString().setNum(serverPort) + ") called");
 	serverPort_ = serverPort;
 }
 
 	void
 EmpathMailboxPOP3::setUsername(const QString & username)
 {
-	empathDebug("setUsername(" + username + ") called");
 	username_ = username;
 }
 
 	void
 EmpathMailboxPOP3::setUseAPOP(bool yn)
 {
-	empathDebug("setUseAPOP" + QString(yn ? "true" : "false") + ") called");
 	useAPOP_ = yn;
 }
 
 	void
 EmpathMailboxPOP3::setPassword(const QString & password)
 {
-	empathDebug("setPassword(" + password + ") called");
 	password_ = password;
 }
 
 	void
 EmpathMailboxPOP3::setPasswordSavePolicy(SavePolicy policy)
 {
-	empathDebug("setPasswordSavePolicy(" + QString().setNum((int)policy) + ") called");
 	passwordSavePolicy_ = policy;
 }
 
 	void
 EmpathMailboxPOP3::setLoggingPolicy(bool policy)
 {
-	empathDebug("setLoggingPolicy(" + QString(policy ? "true" : "false") + ") called");
 	loggingPolicy_ = policy;
 }
 
 	void
 EmpathMailboxPOP3::setLogFilePath(const QString & logPath)
 {
-	empathDebug("setLogFilePath(" + logPath + ") called");
 	logFilePath_ = logPath;
 }
 
 	void
 EmpathMailboxPOP3::setLogFileDisposalPolicy(bool policy)
 {
-	empathDebug("setLogFileDisposalPolicy(" + QString(policy ? "true" : "false") + ") called");
 	logFileDisposalPolicy_ = policy;
 }
 
 	void
 EmpathMailboxPOP3::setMaxLogFileSize(Q_UINT32 maxSize)
 {
-	empathDebug("setMaxLogFileSize(" + QString().setNum(maxSize) + ") called");
 	maxLogFileSize_ = maxSize; 
 }
 
 	void
 EmpathMailboxPOP3::setMessageSizeThreshold(Q_UINT32 threshold)
 {
-	empathDebug("setMessageSizeThreshold(" + QString().setNum(threshold) + ") called");
 	messageSizeThreshold_ = threshold;
 }
 
 	void
 EmpathMailboxPOP3::setLargeMessagePolicy(LargeMessagePolicy policy)
 {
-	empathDebug("setLargeMessagePolicy(" + QString().setNum((int)policy) + ") called");
 	largeMessagePolicy_ = policy;
 }
 
 	void
 EmpathMailboxPOP3::setRetrieveIfHave(bool yn)
 {
-	empathDebug("setDeleteFromServer(" + QString(yn ? "true" : "false") + ") called");
 	retrieveIfHave_ = yn;
 }
 
 	void
 EmpathMailboxPOP3::setSaveAllAddresses(bool yn)
 {
-	empathDebug("setSaveAllAddresses(" + QString(yn ? "true" : "false") + ") called");
 	saveAllAddresses_ = yn;
 }
 	
@@ -737,12 +509,7 @@ EmpathMailboxPOP3::retrieveIfHave()
 {
 	return retrieveIfHave_;
 }
-#if 0
-	void
-EmpathMailboxPOP3::s_serverRead()
-{
-}
-#endif
+
 	bool
 EmpathMailboxPOP3::logging()
 {
@@ -753,290 +520,5 @@ EmpathMailboxPOP3::logging()
 EmpathMailboxPOP3::setLogging(bool policy)
 {
 	logging_ = policy;
-}
-
-	void
-EmpathMailboxPOP3::_openLog(const QString & filename)
-{
-	/*
-	empathDebug("_openLog(" + filename + ") called");
-	logFile_.setName(filename);
-	
-	if (!logFile_.open(IO_WriteOnly)) {
-		empathDebug("Couldn't open log file \"" + filename + "\"");
-		logFileOpen_ = false;
-		return;
-	}
-	
-	logFileOpen_ = true;
-	*/
-}
-
-	void
-EmpathMailboxPOP3::_log(QCString text)
-{
-	/*
-//	empathDebug("_log(" + text + ") called");
-	if (!logFileOpen_) {
-		return;
-	}
-	
-	text += '\n';
-	if (text.left(4) == COMMAND_PASS)
-	
-	if (logFile_.writeBlock(text, text.length()) == -1) {
-		empathDebug("Error writing to log file !");
-	}
-
-	logFile_.flush();
-*/
-}
-
-	bool
-EmpathMailboxPOP3::writeMessage(const EmpathURL & folder, RMessage &)
-{
-	/*
-	empathDebug("writeMessage() called");
-	empathDebug("This mailbox is READ ONLY !");
-	return false;
-	*/
-}
-	
-	bool
-EmpathMailboxPOP3::newMail() const
-{
-	/*
-	empathDebug("newMail() called");
-	return false;
-	*/
-}
-
-	void
-EmpathMailboxPOP3::syncIndex(const EmpathURL & url)
-{
-}
-#if 0
-	bool
-EmpathMailboxPOP3::_changeState(State newState)
-{
-	/*
-	if (state_ == newState) return true;
-	
-	switch (newState) {
-		
-		case Disconnected:
-			
-			return _closeConnection(false);
-			break;
-			
-		case Authorisation:
-			
-			// Can't get back to auth state when in transaction.
-			if (state_ == Transaction) {
-				if (!_changeState(Disconnected)) return false;
-				return _login();
-			}
-			else return _login();
-			break;
-			
-		case Transaction:
-			
-			if (state_ == Disconnected)
-				return (_connectToServer() && _login());
-			else return _login();
-			break;
-			
-		default:
-
-			return false;
-			break;
-	}
-	*/
-}
-#endif
-	bool
-EmpathMailboxPOP3::_positiveResponse()
-{
-	/*
-	if (state_ == Disconnected) return false;
-	
-	QString responseStr = _getLine();
-	
-	if (responseStr.left(4) == "-ERR")
-		empathDebug("Error from POP server: " + responseStr);
-	
-	return (!responseStr.isEmpty() && responseStr.left(3) == "+OK");
-	*/
-}
-
-	Q_UINT32
-EmpathMailboxPOP3::sizeOfMessage(const EmpathURL & _id)
-{
-	/*
-	empathDebug("getSizeOfMessage(" + _id.asString() + ") called");
-	
-	QString id = _id.asString();
-	if (state_ == Transaction) {
-		
-		// We were left in the transaction state.
-		// This means the list of message sizes is still valid, if we got it.
-		
-		if (index_.count() == 0) {
-			empathDebug("Getting index");
-			_getIndex();
-		}
-
-		if (index_.count() != 0) {
-			empathDebug("We already have the index.");
-			empathDebug("Size of message == " +
-				QString().setNum(index_[id]->size));
-			return index_[id]->size;
-		}
-	}
-	
-	if (!_changeState(Transaction)) return 0;
-	
-	_write(COMMAND_STAT + " " + QString().setNum(index_[id]->index));
-	
-	QString tempStr = _getLine();
-	
-	if (tempStr.left(3) != "+OK") return 0;
-	
-	uID msgno;
-	uID msgsize;
-	int firstSpacePos = tempStr.find(' ');
-	msgno = tempStr.left(firstSpacePos).toULong();
-	msgsize = tempStr.right(tempStr.length() - firstSpacePos).toULong();
-	
-	return 0;
-	*/
-}
-
-	QString
-EmpathMailboxPOP3::plainBodyOfMessage(const EmpathURL & _id)
-{
-	/*
-	empathDebug("getPlainBodyOfMessage(" + _id.asString() + ") called");
-
-	RMessage * tempMessage = _getMessage(_id.messageID());
-	
-	if (tempMessage == 0)
-		return "";
-	
-	return tempMessage->body().firstPlainBodyPart();
-	*/
-}
-
-	REnvelope *
-EmpathMailboxPOP3::envelopeOfMessage(const EmpathURL & _id)
-{
-	/*
-	empathDebug("getEnvelopeOfMessage(" + _id.asString() + ") called");
-
-	return _getEnvelope(_id.messageID());
-	*/
-}
-
-	RBodyPart::PartType
-EmpathMailboxPOP3::typeOfMessage(const EmpathURL & _id)
-{
-	/*
-	empathDebug("getTypeOfMessage(" + _id.asString() + ") called");
-
-	RMessage * tempMessage = _getMessage(_id);
-	
-	if (tempMessage == 0)
-		return RBodyPart::Basic;
-	
-	return tempMessage->type();
-	*/
-}
-
-	EmpathURL
-EmpathMailboxPOP3::path()
-{
-	/*
-	return name_;
-	*/
-}
-
-	RMessage *
-EmpathMailboxPOP3::message(const EmpathURL & id)
-{
-	/*
-	return _getMessage(id);
-	*/
-}
-
-	void
-EmpathMailboxPOP3::init()
-{
-	/*
-	empathDebug("init() called");
-	*/
-}
-
-	bool
-EmpathMailboxPOP3::removeMessage(const EmpathURL & id)
-{
-	/*
-	if (!_changeState(Transaction)) return false;
-	
-	int msgNum = index_[QString(id.asString())]->index;
-	_write(COMMAND_DELE + " " + QString().setNum(msgNum));
-
-	if (!_positiveResponse()) return 0;
-
-	return true;
-	*/
-}
-
-	bool
-EmpathMailboxPOP3::addFolder(const EmpathURL & id)
-{
-	return false;
-}
-
-	bool
-EmpathMailboxPOP3::removeFolder(const EmpathURL & id)
-{
-	return false;
-}
-	bool
-EmpathMailboxPOP3::mark(const EmpathURL & url, RMM::MessageStatus s)
-{
-	return false;
-}
-
-	void
-EmpathMailboxPOP3::s_data(int i, const char * c, int l)
-{
-#if 0
-	switch (state_) {
-		
-		case WaitForList:
-			int i = 0;
-			int x = 0;
-			while ((x = s.find(QRegExp("\n"), i)) != -1) {
-				dict[].setSize(
-			}
-			break;
-			
-		case WaitForUIDL:
-			break;
-		
-		case WaitForData:
-			break;
-		
-		case NoWait:
-		default:
-			break;
-	}
-#endif
-}
-
-	void
-EmpathMailboxPOP3::s_jobFinished(int)
-{
 }
 

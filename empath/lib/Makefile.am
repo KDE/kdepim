@@ -23,11 +23,10 @@ EmpathMailboxList.cpp \
 EmpathMailboxMaildir.cpp \
 EmpathMailboxPOP3.cpp \
 EmpathMaildir.cpp \
-EmpathMaildirIndex.cpp \
 EmpathMatcher.cpp \
-EmpathMessageDataCache.cpp \
 EmpathMessageList.cpp \
 EmpathURL.cpp \
 EmpathUtilities.cpp \
 EmpathTask.cpp \
+EmpathTaskTimer.cpp \
 md5.cpp

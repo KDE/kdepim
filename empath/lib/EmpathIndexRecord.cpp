@@ -106,9 +106,8 @@ EmpathIndexRecord::hasParent()
 	QString
 EmpathIndexRecord::niceDate(bool twelveHour)
 {
-	QDateTime now, then;
-	now = QDateTime::currentDateTime();
-	then = date_.qdt();
+	QDateTime now(QDateTime::currentDateTime());
+	QDateTime then(date_.qdt());
 	
 	// Use difference between times to work out how old a message is, and see
 	// if we can represent it in a more concise fashion.
@@ -116,37 +115,24 @@ EmpathIndexRecord::niceDate(bool twelveHour)
 	QString dts;
 	
 	// If the dates differ, then print the day of week..
-	if (then.daysTo(now) != 0) {
-		dts += then.date().dayName(then.date().dayOfWeek());
-		dts += " ";
-	}
+	if (then.daysTo(now) != 0)
+		dts += then.date().dayName(then.date().dayOfWeek()) + " ";
 	
-	// If the months differ, print day of month and month name
-	if (then.date().month() != now.date().month()) {
+	// If the weeks differ, print the day of month.
+	if (then.date().daysTo(now.date()) > 6)
+		dts += QString().setNum(then.date().day()) + " ";
 		
-		dts += QString().setNum(then.date().day());
 		
-		QString endDigit = dts.right(1);
+	// If the months differ, print month name.
+	if (then.date().month() != now.date().month())
+		dts += then.date().monthName(then.date().month()) + " ";
 		
-		if		((endDigit) == "1")	dts += "st";
-		else if ((endDigit) == "2")	dts += "nd";
-		else if ((endDigit) == "3")	dts += "rd";
-		else						dts += "th";
-		
-		dts += " ";
-		
-		dts += then.date().monthName(then.date().month());
-		
-		// If the message is from a different year, add that too.
-		if (then.date().year() != now.date().year()) {
-			
-			dts += " ";
-			dts += QString().setNum(then.date().year());
-		}
+	// If the message is from a different year, add that too.
+	if (then.date().year() != now.date().year())
+		dts += QString().setNum(then.date().year()) + " ";
 
-	} else {
-	
-		// We're in the same month, so print the time of the message. 
+	// If the day is the same, print the time of the message. 
+	if (then.date().day() == now.date().day()) {
 		
 		int hour = then.time().hour();
 		

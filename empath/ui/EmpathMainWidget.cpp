@@ -22,8 +22,9 @@
 #include <qheader.h>
 
 // Local includes
+#include "EmpathConfig.h"
 #include "EmpathMainWidget.h"
-#include "EmpathFolderWidget.h"
+#include "EmpathLeftSideWidget.h"
 #include "EmpathMessageViewWidget.h"
 #include "EmpathMessageListWidget.h"
 
@@ -31,18 +32,12 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name)
 	: QWidget(parent, name)
 {
 	empathDebug("ctor");
-	setBackgroundMode(QWidget::PaletteLight);
 	
-	hSplit = new KNewPanner(this, "hSplit", KNewPanner::Vertical, KNewPanner::Absolute);
+	hSplit = new KNewPanner(this, "hSplit", KNewPanner::Vertical);
 	
 	CHECK_PTR(hSplit);
 	
-	folderWidget_ =
-		new EmpathFolderWidget(hSplit, "folderWidget");
-	CHECK_PTR(folderWidget_);
-
-	
-	vSplit = new KNewPanner(hSplit, "vSplit", KNewPanner::Horizontal, KNewPanner::Absolute);
+	vSplit = new KNewPanner(hSplit, "vSplit", KNewPanner::Horizontal);
 	CHECK_PTR(vSplit);
 		
 	messageListWidget_ =
@@ -54,33 +49,43 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name)
 				vSplit, "messageViewWidget");
 	CHECK_PTR(messageViewWidget_);
 
+	leftSideWidget_ =
+		new EmpathLeftSideWidget(messageListWidget_, hSplit, "leftSideWidget");
+	CHECK_PTR(leftSideWidget_);
+
 	empathDebug("Updating message list widget");
 	messageListWidget_->update();
-	
-	QObject::connect(folderWidget_, SIGNAL(showFolder(const EmpathURL &)),
-			messageListWidget_, SLOT(s_showFolder(const EmpathURL &)));
 	
 	QObject::connect(messageListWidget_, SIGNAL(changeView(const EmpathURL &)),
 			this, SLOT(s_displayMessage(const EmpathURL &)));
 	
-	QObject::connect(folderWidget_->header(), SIGNAL(sizeChange(int, int, int)),
-			this, SLOT(s_folderWidgetSizeChange(int, int, int)));
-	
 	messageListWidget_->setSignalUpdates(true);
 	
 	vSplit->activate(messageListWidget_, messageViewWidget_);
-	hSplit->activate(folderWidget_, vSplit);
+	hSplit->activate(leftSideWidget_, vSplit);
+	
+	KConfig * c = kapp->getConfig();
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
+	
+	vSplit->setSeparatorPos(
+		c->readNumEntry(EmpathConfig::KEY_MAIN_WIDGET_V_SEP, 30));
+
+	hSplit->setSeparatorPos(
+		c->readNumEntry(EmpathConfig::KEY_MAIN_WIDGET_H_SEP, 50));
 }
 
 EmpathMainWidget::~EmpathMainWidget()
 {
 	empathDebug("dtor");
-	ASSERT(messageViewWidget_ != 0);
-	ASSERT(messageListWidget_ != 0);
-	delete messageViewWidget_;
-	messageViewWidget_ = 0;
-	delete messageListWidget_;
-	messageListWidget_ = 0;
+	
+	KConfig * c = kapp->getConfig();
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
+	
+	c->writeEntry(
+		EmpathConfig::KEY_MAIN_WIDGET_V_SEP, vSplit->separatorPos());
+	c->writeEntry(
+		EmpathConfig::KEY_MAIN_WIDGET_H_SEP, hSplit->separatorPos());
+	c->sync();
 }
 
 	void
@@ -88,8 +93,6 @@ EmpathMainWidget::resizeEvent(QResizeEvent * e)
 {
 	resize(e->size());
 	hSplit->resize(e->size());
-	hSplit->setAbsSeparatorPos(folderWidget_->header()->sizeHint().width());
-	vSplit->setAbsSeparatorPos(height() / 2);
 }
 
 	EmpathMessageListWidget *
@@ -109,11 +112,5 @@ EmpathMainWidget::s_displayMessage(const EmpathURL & url)
 {
 	messageViewWidget_->s_setMessage(url);
 	messageViewWidget_->go();
-}
-
-	void
-EmpathMainWidget::s_folderWidgetSizeChange(int a, int b, int c)
-{
-	hSplit->setAbsSeparatorPos(folderWidget_->header()->sizeHint().width());
 }
 

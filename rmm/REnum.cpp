@@ -140,7 +140,7 @@ RMM::strToMonth(const QCString & s)
 	if (s.isEmpty()) return MonthJan;
 
 	for (int i = 1; i <= 12; i++)
-		if (stricmp(s, monthNames[i-1])) return (Month)i;
+		if (!stricmp(s, monthNames[i-1])) return (Month)i;
 
 	return MonthJan;
 

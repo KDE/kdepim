@@ -27,6 +27,7 @@
 #include <kconfig.h>
 #include <kapp.h>
 #include <kquickhelp.h>
+#include <kfontdialog.h>
 
 // Local includes
 #include "EmpathUIUtils.h"
@@ -44,8 +45,8 @@ EmpathDisplaySettingsDialog::create()
 	exists_ = true;
 	EmpathDisplaySettingsDialog * d = new EmpathDisplaySettingsDialog(0, 0);
 	CHECK_PTR(d);
-	d->loadData();
 	d->show();
+	d->loadData();
 }
 		
 EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
@@ -60,99 +61,53 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	QLineEdit	tempLineEdit((QWidget *)0);
 	Q_UINT32 h	= tempLineEdit.sizeHint().height();
 	
-	fontDialog_	= new KFontDialog(this, "fontDialog");
-	CHECK_PTR(fontDialog_);
-	fontDialog_->hide();
+	rgb_list_	= new RikGroupBox(i18n("Message List"), 8, this, "rgb_list");
+	CHECK_PTR(rgb_list_);
+	
+	rgb_view_	= new RikGroupBox(i18n("Message Viewing"), 8, this, "rgb_view");
+	CHECK_PTR(rgb_view_);
+	
+	w_list_	= new QWidget(rgb_list_, "w_list");
+	CHECK_PTR(w_list_);
+	
+	w_view_	= new QWidget(rgb_view_, "w_view");
+	CHECK_PTR(w_view_);
+	
+	rgb_list_->setWidget(w_list_);
+	rgb_view_->setWidget(w_view_);
 
-	rgb_font_	= new RikGroupBox(i18n("Font"), 8, this, "rgb_font");
-	CHECK_PTR(rgb_font_);
-	
-	rgb_colour_	= new RikGroupBox(i18n("Colours"), 8, this, "rgb_colour");
-	CHECK_PTR(rgb_colour_);
-	
-	rgb_style_	= new RikGroupBox(i18n("Message font"), 8, this, "rgb_style");
-	CHECK_PTR(rgb_style_);
-
-	w_font_		= new QWidget(rgb_font_, "w_font");
-	CHECK_PTR(w_font_);
-	
-	w_colour_	= new QWidget(rgb_colour_, "w_colour");
-	CHECK_PTR(w_colour_);
-	
-	w_style_	= new QWidget(rgb_style_, "w_style");
-	CHECK_PTR(w_style_);
-	
-	rgb_font_->setWidget(w_font_);
-	rgb_style_->setWidget(w_style_);
-	rgb_colour_->setWidget(w_colour_);
-
-	rgb_font_->setMinimumHeight(h * 6);
-	rgb_style_->setMinimumHeight(h * 5);
-	rgb_colour_->setMinimumHeight(h * 8);
-	
-	setMinimumHeight(h * 24);
-	
-	// Fonts
-	
-	// Variable font
-	
-	l_variableFont_	=
-		new QLabel(i18n("Variable width font"), w_font_, "l_variableFont");
-	CHECK_PTR(l_variableFont_);
-
-	l_variableFont_->setFixedHeight(h);
-	
-	l_sampleVariable_	=
-		new QLabel(i18n("Sample"), w_font_, "l_sampleVariable");
-	CHECK_PTR(l_sampleVariable_);
-	
-	pb_chooseVariableFont_	=
-		new QPushButton(i18n("Choose..."), w_font_, "pb_chooseVariableFont");
-	CHECK_PTR(pb_chooseVariableFont_);
-	
-	QObject::connect(pb_chooseVariableFont_, SIGNAL(clicked()),
-			this, SLOT(s_chooseVariableFont()));
-	
-	KQuickHelp::add(pb_chooseVariableFont_, i18n(
-			"Empath uses two main fonts. The fixed font is\n"
-			"used for displaying and composing messages.\n"
-			"The variable font is used everywhere else that\n"
-			"the system font is unsuitable, i.e. when displaying\n"
-			"some parts of a message that don't need to be in\n"
-			"the fixed width font."));
-			
-	
+////////////////////////////////////////////////////////////////////////	
+// Message view
+// 
 	// Fixed font
 	
 	l_fixedFont_	=
-		new QLabel(i18n("Fixed width font"), w_font_, "l_fixedFont");
+		new QLabel(i18n("Message font"), w_view_, "l_messageFont");
 	CHECK_PTR(l_fixedFont_);
 	
 	l_fixedFont_->setFixedHeight(h);
 	
 	l_sampleFixed_		=
-		new QLabel(i18n("Sample"), w_font_, "l_sampleFixed");
+		new QLabel(i18n("Sample"), w_view_, "l_sampleFixed");
 	CHECK_PTR(l_sampleFixed_);
 	
 	pb_chooseFixedFont_		=
-		new QPushButton(i18n("Choose..."), w_font_, "pb_chooseFixedFont");
+		new QPushButton(i18n("Choose..."), w_view_, "pb_chooseFixedFont");
 	CHECK_PTR(pb_chooseFixedFont_);
 	
 	QObject::connect(pb_chooseFixedFont_, SIGNAL(clicked()),
 			this, SLOT(s_chooseFixedFont()));
 	
 	KQuickHelp::add(pb_chooseFixedFont_, i18n(
-			"Empath uses two main fonts. The fixed font is\n"
-			"used for displaying and composing messages.\n"
-			"The variable font is used everywhere else that\n"
-			"the system font is unsuitable, i.e. when displaying\n"
-			"some parts of a message that don't need to be in\n"
-			"the fixed width font."));
+			"Here you may set the font to use for displaying\n"
+			"messages. It's best to use a fixed-width font\n"
+			"as the rest of the world expects that. Doing\n"
+			"this allows people to line up text properly."));
 	
 	// underline links
 	
 	cb_underlineLinks_	=
-		new QCheckBox(i18n("&Underline Links"), w_font_, "cb_underlineLinks");
+		new QCheckBox(i18n("&Underline Links"), w_view_, "cb_underlineLinks");
 	CHECK_PTR(cb_underlineLinks_);
 	
 	cb_underlineLinks_->setFixedHeight(h);
@@ -163,131 +118,175 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 			"addresses, etc. If you're colour blind,\n"
 			"this is a smart move."));
 		
-	
-	// Message font style
-	
-	buttonGroup_			=
-		new QButtonGroup(this, "buttonGroup");
-	CHECK_PTR(buttonGroup_);
-
-	buttonGroup_->hide();
-	buttonGroup_->setExclusive(true);
-	
-	rb_messageFontFixed_	=
-		new QRadioButton(i18n("Use &fixed width font"),
-				w_style_, "rb_messageFontFixed");
-	CHECK_PTR(rb_messageFontFixed_);
-	
-	rb_messageFontFixed_->setFixedHeight(h);
-	
-	KQuickHelp::add(rb_messageFontFixed_, i18n(
-			"Use a fixed width font for showing and\n"
-			"composing messages. This is a really good\n"
-			"idea as messages can look dreadful in a\n"
-			"variable width font."));
-	
-	rb_messageFontVariable_	=
-		new QRadioButton(i18n("Use &variable width font"),
-				w_style_, "rb_messageFontVariable");
-	CHECK_PTR(rb_messageFontVariable_);
-	
-	rb_messageFontVariable_->setFixedHeight(h);
-	
-	KQuickHelp::add(rb_messageFontFixed_, i18n(
-			"Use a variable width font for showing and\n"
-			"composing messages. Not a good plan. The\n"
-			"rest of the world uses fixed width fonts\n"
-			"for email, so you'll be the odd one out.\n"));
-	
-	buttonGroup_->insert(rb_messageFontFixed_,		Fixed);
-	buttonGroup_->insert(rb_messageFontVariable_,	Variable);
-	
 	// Colours
 	
-	// Background
+	// Markup colour one
 	
-	l_backgroundColour_	=
-		new QLabel(i18n("Background Colour"), w_colour_, "l_backgroundColour");
-	CHECK_PTR(l_backgroundColour_);
+	l_quoteColourOne_	=
+		new QLabel(i18n("Quote colour one"), w_view_, "l_quoteColourOne");
+	CHECK_PTR(l_quoteColourOne_);
 	
-	l_backgroundColour_->setFixedHeight(h);
+	l_quoteColourOne_->setFixedHeight(h);
 	
 
-	kcb_backgroundColour_	=
-		new KColorButton(w_colour_, "kcb_backgroundColour");
-	CHECK_PTR(kcb_backgroundColour_);
+	kcb_quoteColourOne_	=
+		new KColorButton(w_view_, "kcb_quoteColourOne");
+	CHECK_PTR(kcb_quoteColourOne_);
 
-	KQuickHelp::add(kcb_backgroundColour_, i18n(
-			"Choose the background colour for reading\n"
-			"messages. If you don't like the standard,\n"
-			"you can use this. You could instead change\n"
-			"the template for displaying messages, if you\n"
-			"know HTML. This allows for greater power,\n"
-			"but is a little trickier."));
+	KQuickHelp::add(kcb_quoteColourOne_, i18n(
+			"Choose the primary colour for quoted text.\n"
+			"Text can be quoted to multiple depths.\n"
+			"Text that's quoted to an odd number, e.g.\n"
+			"where the line begins with '> ' or '> > > '\n"
+			"will be shown in this colour."));	
 	
-	// Text
+	// Markup colour two
 	
-	l_textColour_	=
-		new QLabel(i18n("Text Colour"), w_colour_, "l_textColour");
-	CHECK_PTR(l_textColour_);
+	l_quoteColourTwo_	=
+		new QLabel(i18n("Quote colour two"), w_view_, "l_quoteColourTwo");
+	CHECK_PTR(l_quoteColourTwo_);
 	
-	l_textColour_->setFixedHeight(h);
+	l_quoteColourTwo_->setFixedHeight(h);
 		
 
-	kcb_textColour_	=
-		new KColorButton(w_colour_, "kcb_textColour");
-	CHECK_PTR(kcb_textColour_);
+	kcb_quoteColourTwo_	=
+		new KColorButton(w_view_, "kcb_quoteColourTwo");
+	CHECK_PTR(kcb_quoteColourTwo_);
 
-	KQuickHelp::add(kcb_textColour_, i18n(
-			"Choose the text colour for reading\n"
-			"messages. If you don't like the standard,\n"
-			"you can use this. You could instead change\n"
-			"the template for displaying messages, if you\n"
-			"know HTML. This allows for greater power,\n"
-			"but is a little trickier."));
+	KQuickHelp::add(kcb_quoteColourTwo_, i18n(
+			"Choose the secondary colour for quoted text.\n"
+			"Text can be quoted to multiple depths.\n"
+			"Text that's quoted to an even number, e.g.\n"
+			"where the line begins with '> > ' or '> > > > '\n"
+			"will be shown in this colour."));
 	
 	// Link
 	
 	l_linkColour_	=
-		new QLabel(i18n("Link Colour"), w_colour_, "l_linkColour");
+		new QLabel(i18n("Link Colour"), w_view_, "l_linkColour");
 	CHECK_PTR(l_linkColour_);
 	
 	l_linkColour_->setFixedHeight(h);
 
 	kcb_linkColour_	=
-		new KColorButton(w_colour_, "kcb_linkColour");
+		new KColorButton(w_view_, "kcb_linkColour");
 	CHECK_PTR(kcb_linkColour_);
 			
 	KQuickHelp::add(kcb_linkColour_, i18n(
-			"Choose the link colour for reading\n"
-			"messages. If you don't like the standard,\n"
-			"you can use this. You could instead change\n"
-			"the template for displaying messages, if you\n"
-			"know HTML. This allows for greater power,\n"
-			"but is a little trickier."));
-	
+			"Choose the colour that links in messages\n"
+			"are shown in. Links means URLs, including\n"
+			"mailto: URLs."));
 	
 	// Visited link
 	
 	l_visitedLinkColour_	=
-		new QLabel(i18n("Visited Link Colour"), w_colour_, "l_visitedColour");
+		new QLabel(i18n("Visited Link Colour"), w_view_, "l_visitedColour");
 	CHECK_PTR(l_visitedLinkColour_);
 	
 	l_visitedLinkColour_->setFixedHeight(h);
 			
 	kcb_visitedLinkColour_	=
-		new KColorButton(w_colour_, "kcb_visitedColour");
+		new KColorButton(w_view_, "kcb_visitedColour");
 	CHECK_PTR(kcb_visitedLinkColour_);
 		
 	KQuickHelp::add(kcb_visitedLinkColour_, i18n(
-			"Choose the visited link colour for reading\n"
-			"messages. If you don't like the standard,\n"
-			"you can use this. You could instead change\n"
-			"the template for displaying messages, if you\n"
-			"know HTML. This allows for greater power,\n"
-			"but is a little trickier."));
+			"Choose the colour that visited links in messages\n"
+			"are shown in. Links means URLs, including\n"
+			"mailto: URLs."));
 	
-	// use defaults
+///////////////////////////////////////////////////////////////////
+// Message list
+// 
+	cb_threadMessages_ =
+		new QCheckBox(i18n("Thread messages"), w_list_, "cb_threadMessages");
+	CHECK_PTR(cb_threadMessages_);
+	
+	KQuickHelp::add(cb_threadMessages_, i18n(
+			"If you select this, messages will be 'threaded'\n"
+			"this means that when one message is a reply to\n"
+			"another, it will be placed in a tree, where it\n"
+			"is a branch from the previous message."));
+	
+	cb_threadMessages_->setFixedHeight(h);
+	
+	l_displayHeaders_ =
+		new QLabel(i18n("Display headers"), w_list_, "l_displayHeaders");
+	CHECK_PTR(l_displayHeaders_);
+	
+	l_displayHeaders_->setFixedHeight(h);
+	
+	le_displayHeaders_ =
+		new QLineEdit(w_list_, "le_displayHeaders");
+	CHECK_PTR(le_displayHeaders_);
+	
+	le_displayHeaders_->setFixedHeight(h);
+	
+	KQuickHelp::add(le_displayHeaders_, i18n(
+			"Here you may enter the headers that you\n"
+			"want to appear in the block above the message\n"
+			"you are reading. The default is:\n"
+			"From,Date,Subject\n"
+			"You must separate the header names by commas.\n"
+			"This is not case-sensitive, i.e. you can write\n"
+			"DATE and 'Date', 'date', 'DaTe' etc will all work\n"));
+	
+	l_sortColumn_ =
+		new QLabel(i18n("Message sort column"), w_list_, "l_sortColumn");
+	CHECK_PTR(l_sortColumn_);
+	
+	l_sortColumn_->setFixedHeight(h);
+	
+	cb_sortColumn_ =
+		new QComboBox(w_list_, "cb_sortColumn");
+	CHECK_PTR(cb_sortColumn_);
+	
+	cb_sortColumn_->setFixedHeight(h);
+	
+	cb_sortColumn_->insertItem(i18n("Subject"),	0);
+	cb_sortColumn_->insertItem(i18n("Sender"),	1);
+	cb_sortColumn_->insertItem(i18n("Date"),	2);
+	cb_sortColumn_->insertItem(i18n("Size"),	3);
+
+	KQuickHelp::add(cb_sortColumn_, i18n(
+			"Here you can specify which column the message\n"
+			"list will be sorted by, when you start the\n"
+			"program."));
+	
+	cb_sortAscending_ =
+		new QCheckBox(i18n("Sort ascending"), w_list_, "cb_sortAscending");
+	CHECK_PTR(cb_sortAscending_);
+	
+	cb_sortAscending_->setFixedHeight(h);
+	
+	KQuickHelp::add(cb_sortAscending_, i18n(
+			"If you select this, the column you specified\n"
+			"above will be sorted ascending.\n"
+			"Guess what happens if you don't.\n"));
+	
+	cb_timer_ =
+		new QCheckBox(i18n("Mark messages as read after"), w_list_, "cb_timer");
+	CHECK_PTR(cb_timer_);
+	
+	cb_timer_->setFixedHeight(h);
+	
+	KQuickHelp::add(cb_timer_, i18n(
+			"If you check this, messages will be marked"
+			"as read after you've been looking at them for"
+			"the time specified"));
+	
+	sb_timer_ =
+		new QSpinBox(0, 60, 1, w_list_, "sb_timer");
+	CHECK_PTR(sb_timer_);
+	
+	sb_timer_->setFixedHeight(h);
+	sb_timer_->setSuffix(" " + i18n("seconds"));
+	
+	KQuickHelp::add(sb_timer_, i18n(
+			"If you check this, messages will be marked"
+			"as read after you've been looking at them for"
+			"the time specified"));
+
+/////////////////////////////////////////////////////////////////////////
 	
 	l_iconSet_ = new QLabel(i18n("Icon set"), this, "l_iconSet");
 	CHECK_PTR(l_iconSet_);
@@ -348,65 +347,49 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 
 	// Layouts
 	
-	topLevelLayout_				= new QGridLayout(this, 5, 2, 10, 10);
+	topLevelLayout_				= new QGridLayout(this, 4, 2, 10, 10);
 	CHECK_PTR(topLevelLayout_);
 
+	listGroupLayout_			= new QGridLayout(w_list_, 4, 3, 0, 10);
+	CHECK_PTR(viewGroupLayout_);
+	
+	viewGroupLayout_			= new QGridLayout(w_view_, 6, 2, 0, 10);
+	CHECK_PTR(listGroupLayout_);
+
 	topLevelLayout_->setRowStretch(0, 4);
-	topLevelLayout_->setRowStretch(1, 2);
-	topLevelLayout_->setRowStretch(2, 5);
-
-	fontGroupLayout_			= new QGridLayout(w_font_, 3, 3, 0, 10);
-	CHECK_PTR(fontGroupLayout_);
-
-	messageFontsGroupLayout_	= new QGridLayout(w_style_, 2, 1, 0, 10);
-	CHECK_PTR(messageFontsGroupLayout_);
-
-	colourGroupLayout_			= new QGridLayout(w_colour_, 4, 2, 0, 10);
-	CHECK_PTR(colourGroupLayout_);
-
-	colourGroupLayout_->setColStretch(0, 4);
-	colourGroupLayout_->setColStretch(1, 2);
+	topLevelLayout_->setRowStretch(1, 6);
+	topLevelLayout_->setRowStretch(2, 0);
+	topLevelLayout_->setRowStretch(3, 0);
 	
-	fontGroupLayout_->setColStretch(0, 5);
-	fontGroupLayout_->setColStretch(1, 3);
-	fontGroupLayout_->setColStretch(2, 4);
+	topLevelLayout_->addMultiCellWidget(rgb_list_,		0, 0, 0, 1);
+	topLevelLayout_->addMultiCellWidget(rgb_view_,		1, 1, 0, 1);
+	topLevelLayout_->addWidget(l_iconSet_,				2, 0);
+	topLevelLayout_->addWidget(cb_iconSet_,				2, 1);
+	topLevelLayout_->addMultiCellWidget(buttonBox_,		3, 3, 0, 1);
 	
-	topLevelLayout_->addMultiCellWidget(rgb_font_, 0, 0, 0, 1);
-	topLevelLayout_->addMultiCellWidget(rgb_style_, 1, 1, 0, 1);
-	topLevelLayout_->addMultiCellWidget(rgb_colour_, 2, 2, 0, 1);
-	topLevelLayout_->addWidget(l_iconSet_, 3, 0);
-	topLevelLayout_->addWidget(cb_iconSet_, 3, 1);
-	topLevelLayout_->addMultiCellWidget(buttonBox_, 4, 4, 0, 1);
+	listGroupLayout_->addWidget(l_displayHeaders_,		0, 0);
+	listGroupLayout_->addWidget(le_displayHeaders_,		0, 1);
+	listGroupLayout_->addWidget(l_sortColumn_,			1, 0);
+	listGroupLayout_->addWidget(cb_sortColumn_,			1, 1);
+	listGroupLayout_->addWidget(cb_sortAscending_,		2, 0);
+	listGroupLayout_->addWidget(cb_threadMessages_,		2, 1);
+	listGroupLayout_->addWidget(cb_timer_,				3, 0);
+	listGroupLayout_->addWidget(sb_timer_,				3, 1);
+	listGroupLayout_->activate();
 	
-	fontGroupLayout_->addWidget(l_variableFont_,	0, 0);
-	fontGroupLayout_->addWidget(l_fixedFont_,		1, 0);
-	
-	fontGroupLayout_->addWidget(l_sampleVariable_,	0, 1);
-	fontGroupLayout_->addWidget(l_sampleFixed_,		1, 1);
-	
-	fontGroupLayout_->addWidget(pb_chooseVariableFont_,	0, 2);
-	fontGroupLayout_->addWidget(pb_chooseFixedFont_,	1, 2);
-	
-	fontGroupLayout_->addMultiCellWidget(cb_underlineLinks_,	3, 3, 0, 2);
-
-	fontGroupLayout_->activate();
-	
-	messageFontsGroupLayout_->addWidget(rb_messageFontFixed_,		0, 0);
-	messageFontsGroupLayout_->addWidget(rb_messageFontVariable_,	1, 0);
-	
-	messageFontsGroupLayout_->activate();
-	
-	colourGroupLayout_->addWidget(l_backgroundColour_,		0, 0);
-	colourGroupLayout_->addWidget(l_textColour_,			1, 0);
-	colourGroupLayout_->addWidget(l_linkColour_,			2, 0);
-	colourGroupLayout_->addWidget(l_visitedLinkColour_,		3, 0);
-
-	colourGroupLayout_->addWidget(kcb_backgroundColour_,	0, 1);
-	colourGroupLayout_->addWidget(kcb_textColour_,			1, 1);
-	colourGroupLayout_->addWidget(kcb_linkColour_,			2, 1);
-	colourGroupLayout_->addWidget(kcb_visitedLinkColour_,	3, 1);
-	
-	colourGroupLayout_->activate();
+	viewGroupLayout_->addWidget(l_fixedFont_,					0, 0);
+	viewGroupLayout_->addWidget(l_sampleFixed_,					0, 1);
+	viewGroupLayout_->addWidget(pb_chooseFixedFont_,			0, 2);
+	viewGroupLayout_->addMultiCellWidget(l_quoteColourOne_,		1, 1, 0, 1);
+	viewGroupLayout_->addWidget(kcb_quoteColourOne_,			1, 2);
+	viewGroupLayout_->addMultiCellWidget(l_quoteColourTwo_,		2, 2, 0, 1);
+	viewGroupLayout_->addWidget(kcb_quoteColourTwo_,			2, 2);
+	viewGroupLayout_->addMultiCellWidget(l_linkColour_,			3, 3, 0, 1);
+	viewGroupLayout_->addWidget(kcb_linkColour_,				3, 2);
+	viewGroupLayout_->addMultiCellWidget(l_visitedLinkColour_,	4, 4, 0, 1);
+	viewGroupLayout_->addWidget(kcb_visitedLinkColour_,			4, 2);
+	viewGroupLayout_->addMultiCellWidget(cb_underlineLinks_,	5, 5, 0, 2);
+	viewGroupLayout_->activate();
 
 	topLevelLayout_->activate();
 	
@@ -415,20 +398,12 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 };
 
 	void
-EmpathDisplaySettingsDialog::s_chooseVariableFont()
-{
-	QFont fnt = l_sampleVariable_->font();
-	fontDialog_->setFont(fnt);
-	if (fontDialog_->getFont(fnt) == QDialog::Accepted)
-		l_sampleVariable_->setFont(fnt);
-}
-
-	void
 EmpathDisplaySettingsDialog::s_chooseFixedFont()
 {
 	QFont fnt = l_sampleFixed_->font();
-	fontDialog_->setFont(fnt);
-	if (fontDialog_->getFont(fnt) == QDialog::Accepted)
+	KFontDialog d(this);
+	d.setFont(fnt);
+	if (d.getFont(fnt) == QDialog::Accepted)
 		l_sampleFixed_->setFont(fnt);
 }
 
@@ -438,17 +413,19 @@ EmpathDisplaySettingsDialog::saveData()
 	KConfig * c(kapp->getConfig());
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 #define CWE c->writeEntry
-	CWE( EmpathConfig::KEY_VARIABLE_FONT,		l_sampleVariable_->font());
 	CWE( EmpathConfig::KEY_FIXED_FONT,			l_sampleFixed_->font());
 	CWE( EmpathConfig::KEY_UNDERLINE_LINKS,		cb_underlineLinks_->isChecked());
-	CWE( EmpathConfig::KEY_FONT_STYLE,
-		(unsigned long)(rb_messageFontFixed_->isChecked() ? Fixed : Variable));
-
-	CWE( EmpathConfig::KEY_BACKGROUND_COLOUR,	kcb_backgroundColour_->color());
-	CWE( EmpathConfig::KEY_TEXT_COLOUR,			kcb_textColour_->color());
+	CWE( EmpathConfig::KEY_QUOTE_COLOUR_ONE,	kcb_quoteColourOne_->color());
+	CWE( EmpathConfig::KEY_QUOTE_COLOUR_TWO,	kcb_quoteColourTwo_->color());
 	CWE( EmpathConfig::KEY_LINK_COLOUR,			kcb_linkColour_->color());
 	CWE( EmpathConfig::KEY_VISITED_LINK_COLOUR,	kcb_visitedLinkColour_->color());
 	CWE( EmpathConfig::KEY_ICON_SET,			cb_iconSet_->currentText());
+	CWE( EmpathConfig::KEY_THREAD_MESSAGES,		cb_threadMessages_->isChecked());
+	CWE( EmpathConfig::KEY_MESSAGE_SORT_ASCENDING,cb_sortAscending_->isChecked());
+	CWE( EmpathConfig::KEY_SHOW_HEADERS,		le_displayHeaders_->text());
+	CWE( EmpathConfig::KEY_MESSAGE_SORT_COLUMN,	cb_sortColumn_->currentItem());
+	CWE( EmpathConfig::KEY_MARK_AS_READ,		cb_timer_->isChecked());
+	CWE( EmpathConfig::KEY_MARK_AS_READ_TIME,	sb_timer_->value());
 #undef CWE
 }
 
@@ -460,11 +437,6 @@ EmpathDisplaySettingsDialog::loadData()
 	
 	QFont font; QColor col;
 
-	font = empathGeneralFont();
-	
-	l_sampleVariable_->setFont(
-		c->readFontEntry(EmpathConfig::KEY_VARIABLE_FONT, &font));
-	
 	font = empathFixedFont();
 	
 	l_sampleFixed_->setFont(
@@ -472,20 +444,15 @@ EmpathDisplaySettingsDialog::loadData()
 	
 	cb_underlineLinks_->setChecked(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS, true));
 	
-	rb_messageFontVariable_->setChecked(
-		((FontStyle)c->readNumEntry(EmpathConfig::KEY_FONT_STYLE, Fixed)) == Variable);
-
-	rb_messageFontFixed_->setChecked(!rb_messageFontVariable_->isChecked());
-	
 	col = empathWindowColour();
 	
-	kcb_backgroundColour_->setColor(
-		c->readColorEntry(EmpathConfig::KEY_BACKGROUND_COLOUR, &col));
+	kcb_quoteColourOne_->setColor(
+		c->readColorEntry(EmpathConfig::KEY_QUOTE_COLOUR_ONE, &col));
 	
 	col = empathTextColour();
 	
-	kcb_textColour_->setColor(
-		c->readColorEntry(EmpathConfig::KEY_TEXT_COLOUR, &col));
+	kcb_quoteColourTwo_->setColor(
+		c->readColorEntry(EmpathConfig::KEY_QUOTE_COLOUR_TWO, &col));
 	
 	col = Qt::darkBlue;
 
@@ -496,6 +463,23 @@ EmpathDisplaySettingsDialog::loadData()
 	
 	kcb_visitedLinkColour_->setColor(
 		c->readColorEntry(EmpathConfig::KEY_VISITED_LINK_COLOUR, &col));
+	
+	cb_threadMessages_->setChecked(
+		c->readBoolEntry(EmpathConfig::KEY_THREAD_MESSAGES, true));
+	
+	cb_sortAscending_->setChecked(
+		c->readBoolEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true));
+	
+	le_displayHeaders_->setText(
+		c->readEntry(EmpathConfig::KEY_SHOW_HEADERS, i18n("From,Date,Subject")));
+	cb_sortColumn_->setCurrentItem(
+		c->readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 2));
+	
+	cb_timer_->setChecked(
+		c->readBoolEntry(EmpathConfig::KEY_MARK_AS_READ, true));
+	
+	sb_timer_->setValue(
+		c->readNumEntry(EmpathConfig::KEY_MARK_AS_READ_TIME, 2));
 	
 	// Fill in the icon set combo.
 	QDir d(empathDir() + "/pics/");
@@ -534,7 +518,8 @@ EmpathDisplaySettingsDialog::loadData()
 	void
 EmpathDisplaySettingsDialog::s_OK()
 {
-	s_apply();
+	if (!applied_)
+		s_apply();
 	kapp->getConfig()->sync();
 	delete this;
 }
@@ -565,15 +550,18 @@ EmpathDisplaySettingsDialog::s_apply()
 	void
 EmpathDisplaySettingsDialog::s_default()
 {
-	l_sampleVariable_->setFont(empathGeneralFont());
 	l_sampleFixed_->setFont(empathFixedFont());
 	cb_underlineLinks_->setChecked(true);
-	rb_messageFontFixed_->setChecked(true);
-	rb_messageFontVariable_->setChecked(false);
-	kcb_backgroundColour_->setColor(empathWindowColour());
-	kcb_textColour_->setColor(empathTextColour());
+	kcb_quoteColourOne_->setColor(Qt::darkBlue);
+	kcb_quoteColourTwo_->setColor(Qt::darkGreen);
 	kcb_linkColour_->setColor(Qt::blue);
 	kcb_visitedLinkColour_->setColor(Qt::darkCyan);
+	cb_threadMessages_->setChecked(true);
+	cb_sortAscending_->setChecked(true);
+	le_displayHeaders_->setText(i18n("From,Date,Subject"));
+	cb_sortColumn_->setCurrentItem(2);
+	cb_timer_->setChecked(true);
+	sb_timer_->setValue(2);
 	saveData();
 }
 	

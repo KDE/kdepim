@@ -21,6 +21,7 @@
 // Qt includes
 #include <qfile.h>
 #include <qtextstream.h>
+#include <qpixmap.h>
 
 // KDE includes
 #include <klocale.h>
@@ -174,7 +175,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 		new QPushButton(w_main_, "pb_chooseSig");
 	CHECK_PTR(pb_chooseSig_);
 	
-	pb_chooseSig_->setText("...");
+	pb_chooseSig_->setPixmap(empathIcon("browse.png"));
 	pb_chooseSig_->setFixedSize(h, h);
 	
 	QObject::connect(pb_chooseSig_, SIGNAL(clicked()),

@@ -76,10 +76,16 @@ class EmpathSendingSettingsDialog : public QDialog
 
 		QGridLayout			* serverGroupLayout_;
 		QGridLayout			* copiesGroupLayout_;
+		QGridLayout			* queuingGroupLayout_;
 
+		RikGroupBox			* rgb_queuing_;
 		RikGroupBox			* rgb_server_;
 		RikGroupBox			* rgb_copies_;
+		
+		QLabel				* l_queueFolder_;
+		EmpathFolderChooserWidget	* fcw_queueFolder_;
 	
+		QWidget				* w_queuing_;
 		QWidget				* w_server_;
 		QWidget				* w_copies_;
 
@@ -87,7 +93,6 @@ class EmpathSendingSettingsDialog : public QDialog
 		QLineEdit			* le_qmail_;
 		QLineEdit			* le_smtpServer_;
 
-		QCheckBox			* cb_copySelf_;
 		QCheckBox			* cb_copyOther_;
 		QCheckBox			* cb_copyFolder_;
 

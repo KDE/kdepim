@@ -47,14 +47,12 @@ class EmpathMailSenderSMTP : public EmpathMailSender
 
 		void setServer(const QString & name, const Q_UINT32 port);
 		bool sendOne(RMessage & message);
-		bool send(EmpathMessageList & messageList);
 		
 		virtual void saveConfig();
 		virtual void readConfig();
 
 	private:
 
-		bool			singleHost_;
 		QString			serverName_;
 		Q_UINT32		serverPort_;
 };

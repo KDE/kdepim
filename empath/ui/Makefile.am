@@ -36,6 +36,7 @@ EmpathHeaderNameWidget.cpp \
 EmpathHeaderSpecWidget.cpp \
 EmpathHeaderViewWidget.cpp \
 EmpathIdentitySettingsDialog.cpp \
+EmpathLeftSideWidget.cpp \
 EmpathMainWidget.cpp \
 EmpathMainWindow.cpp \
 EmpathMatchPropertiesDialog.cpp \

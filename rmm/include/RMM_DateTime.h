@@ -39,32 +39,25 @@ class RDateTime : public RHeaderBody {
 
 		RDateTime();
 		RDateTime(const RDateTime & dt);
-		RDateTime(const QCString & s) : RHeaderBody(s) { }
-		RDateTime & operator = (const RDateTime & dt);
-		void set(const QCString & s) { RHeaderBody::set(s); }
+		RDateTime(const QCString & s);
+		RDateTime & operator = (RDateTime & dt);
 		
 		QDateTime qdt() { parse(); return qdate_; }
 
-		friend QDataStream & operator >> (
-			QDataStream & s, RDateTime & dt);
-		
-		friend QDataStream & operator << (
-			QDataStream & s, RDateTime & dt);
+		friend QDataStream & operator >> (QDataStream & s, RDateTime & dt);
+		friend QDataStream & operator << (QDataStream & s, RDateTime & dt);
 
 		virtual ~RDateTime();
 
 		void parse();
 		void assemble();
 
-		void	setTimeZone(const QCString &);
-		void	set(Q_UINT32 unixTime);
+		void	setTimeZone	(const QCString &);
 		
 		QCString 	timeZone();
-		
 		Q_UINT32	asUnixTime();
 
-		void createDefault();
-		
+		void		createDefault();
 		const char * className() const { return "RDateTime"; }
 
 	private:

@@ -47,18 +47,23 @@ class EmpathConfig
 		static const QString		KEY_MAILBOX_NAME;
 		static const QString		KEY_MAILBOX_LIST;
 		static const QString		KEY_FOLDER_LIST;
-		static const QString		KEY_VARIABLE_FONT;
 		static const QString		KEY_FIXED_FONT;
-		static const QString		KEY_QUOTED_FONT;
 		static const QString		KEY_UNDERLINE_LINKS;
-		static const QString		KEY_FONT_STYLE;
-		static const QString		KEY_BACKGROUND_COLOUR;
-		static const QString		KEY_TEXT_COLOUR;
+		static const QString		KEY_QUOTE_COLOUR_ONE;
+		static const QString		KEY_QUOTE_COLOUR_TWO;
 		static const QString		KEY_LINK_COLOUR;
 		static const QString		KEY_VISITED_LINK_COLOUR;
 		static const QString		KEY_THREAD_MESSAGES;
+		static const QString		KEY_MESSAGE_SORT_COLUMN;
+		static const QString		KEY_MESSAGE_SORT_ASCENDING;
 		static const QString		KEY_SHOW_HEADERS;
 		static const QString		KEY_ICON_SET;
+		static const QString		KEY_MARK_AS_READ;
+		static const QString		KEY_MARK_AS_READ_TIME;
+		static const QString		KEY_MAIN_WINDOW_X_SIZE;
+		static const QString		KEY_MAIN_WINDOW_Y_SIZE;
+		static const QString		KEY_MAIN_WIDGET_V_SEP;
+		static const QString		KEY_MAIN_WIDGET_H_SEP;
 		static const QString		KEY_NAME;
 		static const QString		KEY_EMAIL;
 		static const QString		KEY_REPLY_TO;
@@ -70,6 +75,9 @@ class EmpathConfig
 		static const QString		KEY_AUTO_QUOTE;
 		static const QString		KEY_ADD_SIG;
 		static const QString		KEY_ADD_DIG_SIG;
+		static const QString		KEY_CONFIRM_DELIVERY;
+		static const QString		KEY_CONFIRM_READ;
+		static const QString		KEY_ENCRYPT;
 		static const QString		KEY_WRAP_LINES;
 		static const QString		KEY_WRAP_COLUMN;
 		static const QString		KEY_CC_ME;
@@ -78,6 +86,7 @@ class EmpathConfig
 		static const QString		KEY_COPY_FOLDER;
 		static const QString		KEY_COPY_FOLDER_NAME;
 		static const QString		KEY_SEND_POLICY;
+		static const QString		KEY_QUEUE_FOLDER;
 		static const QString		KEY_USE_EXTERNAL_EDITOR;
 		static const QString		KEY_EXTERNAL_EDITOR;
 		static const QString		KEY_ACCOUNT_TYPE;
@@ -119,7 +128,7 @@ class EmpathConfig
 		static const QString		KEY_POP3_SAVE_ALL_ADDRESSES;
 		static const QString		KEY_POP3_NOTIFY;
 		static const QString		KEY_POP3_RETRIEVE_IF_HAVE;
-		static const QString		KEY_NUMBER_OF_FILTERS;
+		static const QString		KEY_FILTER_LIST;
 		static const QString		KEY_NUM_MATCH_EXPRS_FOR_FILTER;
 		static const QString		KEY_MATCH_EXPR_TYPE;
 		static const QString		KEY_MATCH_SIZE;
@@ -132,7 +141,6 @@ class EmpathConfig
 		static const QString		KEY_FILTER_PRIORITY;
 
 		static const bool			DEFAULT_UNDERLINE_LINKS;
-		static const QString		DEFAULT_FIXED_OR_VARIABLE;
 		static const QString		DEFAULT_SIG_FILE;
 		static const QString		DEFAULT_PHRASE_REPLY_TO_SEND;
 		static const QString		DEFAULT_PHRASE_REPLY_TO_ALL;

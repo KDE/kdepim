@@ -4,10 +4,6 @@ Things you might want to VOLUNTEER for :)
 * Test qmail sending. Add user feedback.
 * Implement simple (to one host) SMTP sending.
   
-* Using an external editor needs reorganising so that a class encapsulates the
-  process(es) that have been spawned.
-  -- Started on this
-  
 * EmpathComposeWidget uses the fancy Netscape-alike thing where when you add
   headers, more widgets are created. What needs to happen is that when the user
   uses header names that aren't in the order of the base list, next time they
@@ -24,26 +20,42 @@ Things you might want to VOLUNTEER for :)
   then I also end up refusing to show large messages ! If I resize the cache,
   and then set it back down, the message will be deleted !
 
-* Finish off doing the apply/revert stuff in the config dialogs. It's almost
-  done, but just needs looking at and checking it really works properly.
-  
 * Come up with an intelligent solution to the password storage problem.
 
-* Find out if the reason that setUpdatesEnabled(false) on a QListView doesn't
-  work properly is Qt's fault.
-  
 * Sort out a way to rearrange the widgets in the main window. I might be doing
   a konqueror style thing, but I can't really allow more than one of each of
   FolderWidget, MessageListWidget and MessageViewWidget. They need to be
   connected via signals and slots to update each other.
   
-* Sort the status indicator issue. I really want to do something in the same
-  style as Outlook, but not as stupid, of course. Basically a multiple-indicator
-  widget that could possibly have the option of being 'swallowed' within the
-  main window, or simply act as a dialog (non-modal, of course).
-  We could just use the statusbar when there's only one task in the list. That
-  would be cool.
-  - Working on this
-  
-* Drag and drop.
+* Drag and drop - Working on this
 
+===============================================================================
+Little things I need to do:
+
+* Use the user's set font size when showing messages, not just font family.
+
+* Make folder widgets set totals correctly.
+
+* Implement cut/copy/paste etc in editor. How ? I should be using an OpenPart
+  editor.
+
+* Make reply to all work.
+
+* Make forwarding work properly. If only one plain body part -> just
+  add some text stating this is forwarded, else attach as message/rfc822 ?
+
+* Allow user to save, print etc the various parts of a message. When pressing
+  'Message->Print', ask which part they want to print, unless there's only one.
+
+* Fix external editor.
+
+* Make clicking on a URL work both in HTML view and about box.
+
+* Make From: bit in header view widget active as HTML label - basically need
+  some way to be able to mail to or add to non-existant address book.
+
+* Sod the 'View source' things, and simply allow switching to source view,
+  but only in the view window.
+
+* Fix the right-button-menu on the folder list. Tag -> Untag == OK. Mark as
+  read and replied don't seem to change for some reason unbeknownest to me.

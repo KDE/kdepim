@@ -48,8 +48,8 @@ EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
 		url_(url),
 		basePath_(basePath)
 {
+	path_ = basePath + "/" + url.folderPath();
 	empathDebug("ctor - path_ == " + path_);
-	path_ = basePath + url.folderPath();
 	_init();
 }
 
@@ -64,7 +64,8 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 	empathDebug("sync(" + url.asString() + ") called");
 	QTime realBegin(QTime::currentTime());
 	
-//	EmpathTask * t(empath->addTask(i18n("Reading mailbox")));
+	EmpathTask * t(empath->addTask(i18n("Reading mailbox")));
+	CHECK_PTR(t);
 	
 	// First make sure any new mail that has arrived goes into cur.
 	_markNewMailAsSeen();
@@ -107,7 +108,7 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 	
 	QStringList::ConstIterator it(fileList.begin());
 	
-//	t->setMax(fileList.count());
+	t->setMax(fileList.count());
 	
 	QString s;
 	QRegExp re_flags(":2,[A-Za-z]*$");
@@ -118,7 +119,7 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 		
 		QTime now(QTime::currentTime());
 		
-		if (now.msecsTo(begin) > 100) {
+		if (begin.msecsTo(now) > 100) {
 			kapp->processEvents();
 			begin = now;
 		}
@@ -177,7 +178,7 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 			empathDebug("New message in index with id \"" + s + "\"");
 		}
 		
-//		t->doneOne();
+		t->doneOne();
 	}
 	
 //	kapp->processEvents();
@@ -204,8 +205,7 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 		}
 	
 	
-//	t->done();
-
+	t->done();
 	
 	_writeIndex();
 	empathDebug("sync took " +

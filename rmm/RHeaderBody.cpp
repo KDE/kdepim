@@ -69,15 +69,18 @@ RHeaderBody::~RHeaderBody()
 	void
 RHeaderBody::parse()
 {
+	rmmDebug("WARNING PARSE CALLED");
 }
 
 	void
 RHeaderBody::assemble()
 {
+	rmmDebug("WARNING ASSEMBLE CALLED");
 }
 
 	void
 RHeaderBody::createDefault()
 {
+	rmmDebug("WARNING CREATEDEFAULT CALLED");
 }
 	

@@ -25,6 +25,8 @@
 
 // Qt includes
 #include <qregexp.h>
+#include <qfile.h>
+#include <qtextstream.h>
 
 // KDE includes
 #include <kprocess.h>
@@ -39,6 +41,7 @@
 #include "EmpathConfig.h"
 #include "Empath.h"
 #include "EmpathMailSender.h"
+#include "RMM_DateTime.h"
 
 EmpathComposeWidget::EmpathComposeWidget(
 	ComposeType			t,
@@ -85,10 +88,7 @@ EmpathComposeWidget::EmpathComposeWidget(
 	KConfig * c(kapp->getConfig());
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
-	if ((FontStyle)(c->readNumEntry(EmpathConfig::KEY_FONT_STYLE)) == Fixed)
-		editorWidget_->setFont(c->readFontEntry(EmpathConfig::KEY_FIXED_FONT));
-	else
-		editorWidget_->setFont(c->readFontEntry(EmpathConfig::KEY_VARIABLE_FONT));
+	editorWidget_->setFont(c->readFontEntry(EmpathConfig::KEY_FIXED_FONT));
 
 	layout_	= new QGridLayout(this, 3, 1, 2, 0, "layout_");
 	CHECK_PTR(layout_);
@@ -171,21 +171,37 @@ EmpathComposeWidget::_init()
 				
 				empathDebug("Quoting original if necessary");
 
+				// Add the 'On (date) (name) wrote' bit
+					
 				if (c->readBoolEntry(EmpathConfig::KEY_AUTO_QUOTE)) {
-					empathDebug("It is necessary");
-				
-					QCString s(message.data());
-					empathDebug("original:");
-					empathDebug(s);
-					
-					s.replace(QRegExp("\\n"), "\n> ");
-					empathDebug("quoted:");
-					empathDebug(s);
-					
-					editorWidget_->setText(s);
 
-				}
+					QString s(message.data());
 				
+					s.replace(QRegExp("\\n"), "\n> ");
+	
+					QString thingyWrote =
+						c->readEntry(
+							EmpathConfig::KEY_PHRASE_REPLY_SENDER, "") + '\n';
+					
+					// Be careful here. We don't want to reveal people's
+					// email addresses.
+					if (message.envelope().has(RMM::HeaderFrom) &&
+						!message.envelope().from().at(0).phrase().isEmpty()) {
+						
+						thingyWrote.replace(QRegExp("\\%s"),
+							message.envelope().from().at(0).phrase());
+
+						if (message.envelope().has(RMM::HeaderDate))
+							thingyWrote.replace(QRegExp("\\%d"),
+								message.envelope().date().qdt().date().toString());
+						else
+							thingyWrote.replace(QRegExp("\\%d"),
+								i18n("An unknown date and time"));
+					
+						editorWidget_->setText('\n' + thingyWrote + s);
+					}
+				}
+
 				editorWidget_->setFocus();
 			}
 			break;
@@ -236,12 +252,17 @@ EmpathComposeWidget::message()
 {
 	empathDebug("message called");
 
-	RMessage msg;
-	msg.envelope() = headerEditWidget_->envelope();
+	QCString s;
+	s += headerEditWidget_->envelope().asString();
 
 	if (composeType_ == ComposeReply || composeType_ == ComposeReplyAll) {
 		
 		RMessage * m(empath->message(url_));
+		if (m == 0) {
+			empathDebug("No message to reply to");
+			RMessage x;
+			return x;
+		}
 		
 		RMessage message(*m);
 		
@@ -254,17 +275,16 @@ EmpathComposeWidget::message()
 			references += message.envelope().references().asString();
 			references += " ";
 			references += message.envelope().messageID().asString();
-			msg.envelope().set(RMM::HeaderReferences, references);
+			s += references + "\n";
 			
 		} else {
 			
 			// No references field. In that case, we just make an In-Reply-To
 			// header.
-			QCString inReplyTo = message.envelope().inReplyTo().asString();
-			inReplyTo += RMM::headerNames[RMM::HeaderInReplyTo];
-			inReplyTo += ": ";
-			inReplyTo += message.envelope().messageID().asString();
-			msg.envelope().set(RMM::HeaderInReplyTo, inReplyTo);
+			QCString inReplyTo;
+			inReplyTo = "In-Reply-To: " +
+				message.envelope().messageID().asString();
+			s += inReplyTo + "\n";
 		}
 	}
 
@@ -272,8 +292,54 @@ EmpathComposeWidget::message()
 	// be important, and it's easier to see them when they're near to the
 	// message body text.
 	
-	// Header / body separator
-//	msg.body() = editorWidget_->text().ascii();
+	
+	KConfig * c(kapp->getConfig());
+	c->setGroup(EmpathConfig::GROUP_IDENTITY);
+	
+	s += QCString("From: ") +
+		c->readEntry(EmpathConfig::KEY_NAME).ascii() + QCString(" <") +
+		c->readEntry(EmpathConfig::KEY_EMAIL).ascii() + QCString(">\n");
+	
+	s += QCString("Subject: ") + subjectSpecWidget_->getSubject().ascii() +"\n";
+	RDateTime dt;
+	dt.createDefault();
+	s += "Date: " + dt.asString() + "\n";
+	
+	RMessageID id;
+	id.createDefault();
+	
+	s += "Message-Id: " + id.asString() + "\n";
+	
+	s += "\n";
+	
+	// Body
+	s += editorWidget_->text().ascii();
+	
+	c->setGroup(EmpathConfig::GROUP_COMPOSE);
+	
+	if (c->readBoolEntry(EmpathConfig::KEY_ADD_SIG)) {
+		
+		QFile f(c->readEntry(EmpathConfig::KEY_SIG_PATH));
+		
+		if (f.open(IO_ReadOnly)) {	
+
+			QTextStream t(&f);
+		
+			QCString sig;
+		
+			while (!t.eof())
+				t >> sig;
+		
+			s += "\n" + sig + "\n";
+		}
+	}
+
+	
+	empathDebug("MESSAGE DATA: ");
+	empathDebug(s);
+	RMessage msg(s);
+	empathDebug("MESSAGE DATA: ");
+	empathDebug(msg.asString());
 
 	return msg;
 }
@@ -282,7 +348,6 @@ EmpathComposeWidget::message()
 EmpathComposeWidget::messageHasAttachments()
 {
 	empathDebug("messageHasAttachments() called");
-//	return attachmentListWidget_->hasAttachments();
 	return false;
 }
 

@@ -18,9 +18,12 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <qpixmap.h>
+
 #include "EmpathHeaderSpecWidget.h"
 #include "EmpathHeaderNameWidget.h"
 #include "EmpathHeaderBodyWidget.h"
+#include "EmpathUIUtils.h"
 
 EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
 		int headerIndex,
@@ -44,8 +47,9 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
 	headerBodyWidget_	= new EmpathHeaderBodyWidget(this, "headerNameWidget");
 	CHECK_PTR(headerBodyWidget_);
 	
-	pb_selectRecipients_ = new QPushButton("...", this, "pb_selectRecipients");
+	pb_selectRecipients_ = new QPushButton(this, "pb_selectRecipients");
 	CHECK_PTR(pb_selectRecipients_);
+	pb_selectRecipients_->setPixmap(empathIcon("browse.png"));
 	
 	int h = headerBodyWidget_->sizeHint().height();
 	headerNameWidget_->setFixedHeight(h);

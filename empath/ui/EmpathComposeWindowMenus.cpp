@@ -90,14 +90,9 @@ EmpathComposeWindow::setupMenuBar()
 	messageMenu_->insertItem(empathIcon("mini-save.png"), i18n("Save &As"),
 		this, SLOT(s_messageSaveAs()));
 
-	messageMenu_->insertItem(empathIcon("mini-copy.png"), i18n("&Copy to..."),
+	messageMenu_->insertItem(empathIcon("copy.png"), i18n("&Copy to..."),
 		this, SLOT(s_messageCopyTo()));
 	
-	messageMenu_->insertSeparator();
-		
-	messageMenu_->insertItem(empathIcon("blank.png"), i18n("&View source"),
-		this, SLOT(s_messageViewSource()));
-
 	helpMenu_->insertItem(i18n("&Contents"),
 		this, SLOT(s_help()));
 

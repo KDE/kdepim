@@ -36,6 +36,8 @@ RDateTime::RDateTime()
 		zone_("")
 {
 	rmmDebug("ctor");
+	parsed_ = false;
+	assembled_ = false;
 }
 
 RDateTime::~RDateTime()
@@ -43,25 +45,35 @@ RDateTime::~RDateTime()
 	rmmDebug("dtor");
 }
 
-RDateTime::RDateTime(const RDateTime & t)
-	:	RHeaderBody(t)
+RDateTime::RDateTime(const QCString & s)
+	:	RHeaderBody(s)
 {
-	rmmDebug("copy ctor");
 	parsed_ = false;
 	assembled_ = false;
 }
 
+RDateTime::RDateTime(const RDateTime & t)
+	:	RHeaderBody(t),
+		qdate_		(t.qdate_),
+		zone_		(t.zone_),
+		parsed_		(t.parsed_),
+		assembled_	(t.assembled_)
+{
+	rmmDebug("copy ctor");
+}
+
 	RDateTime &
-RDateTime::operator = (const RDateTime & t)
+RDateTime::operator = (RDateTime & t)
 {
 	rmmDebug("operator =");
     if (this == &t) return *this; // Don't do a = a.
-	const_cast<RDateTime>(t).parse();
+	t.parse();
 	qdate_	= t.qdate_;
 	zone_	= t.zone_;
 	
 	RHeaderBody::operator = (t);
 	
+	parsed_ = true;
 	assembled_ = false;
 	return *this;
 }
@@ -71,7 +83,7 @@ operator >> (QDataStream & s, RDateTime & dt)
 {
 	s	>> dt.qdate_
 		>> dt.zone_;
-	//cerr << " >> gave me : " << dt.toString() << endl;
+	cerr << " >> gave me : " << dt.qdate_.toString().ascii() << endl;
 	dt.parsed_		= true;
 	dt.assembled_	= false;
 	return s;
@@ -80,7 +92,7 @@ operator >> (QDataStream & s, RDateTime & dt)
 	QDataStream &
 operator << (QDataStream & s, RDateTime & dt)
 {
-	//cerr << " << is getting : " << dt.toString() << endl;
+	cerr << " << is getting : " << dt.qdate_.toString().ascii() << endl;
 	dt.parse();
 	s	<< dt.qdate_
 		<< dt.zone_;
@@ -128,65 +140,38 @@ RDateTime::parse()
 	bool haveDay = false;
 	if (isalpha(tokens.at(i)[0])) { haveDay = true; i++; }
 
-	rmmDebug("0 = \"" + QCString(tokens.at(i)) + "\"");
 	if (tokens.at(i)[0] == '0')
 		dayOfMonth_ = tokens.at(i++)[1] - '0';
 	else
 		dayOfMonth_ = atoi(tokens.at(i++));
 
-	rmmDebug("Day of month = " + QCString().setNum(dayOfMonth_));
-	month_ = RMM::strToMonth(tokens.at(i++)) + 1;
-	rmmDebug("Month = " + QCString().setNum(month_));
+	month_ = RMM::strToMonth(tokens.at(i++));
 
 	if (strlen(tokens.at(i)) == 2)
 		year_ = atoi(tokens.at(i++)) + 1900;
 	else
 		year_ = atoi(tokens.at(i++));
 	
-	rmmDebug("Doing hour");
-	hour_ = atoi(tokens.at(i++));
-	rmmDebug("Hour:" + QCString().setNum(hour_));
-	rmmDebug("Doing min");
-	min_ = atoi(tokens.at(i++));
-	rmmDebug("Min:" + QCString().setNum(min_));
+	hour_	= atoi(tokens.at(i++));
+	min_	= atoi(tokens.at(i++));
 	
 	// If the earlier token for day of week was there, and the total token
 	// count is 8, then we must also have a seconds field next
 	// OR if the earlier token for day was NOT there, and the total token count
 	// is 7, then again, we must have a seconds field.
-	rmmDebug("Doing secs");
+	
 	if (( haveDay && (tokens.count() == 7)) ||
 		(!haveDay && (tokens.count() == 6)))
 		sec_ = strtol(tokens.at(i++), NULL, 10);
 	else
 		sec_ = 0;
 
-	rmmDebug("Sec:" + QCString().setNum(sec_));
-
-	rmmDebug("Doing tz");
-	rmmDebug("Token count = " + QCString().setNum(tokens.count()));
 	if (tokens.count() - 1 == (unsigned)i)
 		zone_ = tokens.at(i);
 	
-	rmmDebug("setYMD(" +
-		QCString().setNum(year_) +
-		", " +
-		QCString().setNum(month_) +
-		", " +
-		QCString().setNum(dayOfMonth_) +
-		")");
-
 	QDate d;
 	d.setYMD(year_, month_, dayOfMonth_);
 	qdate_.setDate(d);
-	
-	rmmDebug("setHMS(" +
-		QCString().setNum(hour_) +
-		", " +
-		QCString().setNum(min_) +
-		", " +
-		QCString().setNum(sec_) +
-		")");
 	
 	QTime t;
 	t.setHMS(hour_, min_, sec_);
@@ -221,8 +206,8 @@ RDateTime::assemble()
 	strRep_ += QCString().setNum(d.year());
 	strRep_ += ' ';
 	strRep_ += t.toString().ascii();
-	strRep_ += ' ';
-	strRep_ += zone_;
+	if (!zone_.isEmpty())
+		strRep_ += ' ' + zone_;
 	
 	rmmDebug("assembled to \"" + strRep_ + "\"");
 	
@@ -232,6 +217,10 @@ RDateTime::assemble()
 	void
 RDateTime::createDefault()
 {
+	qdate_ = QDateTime::currentDateTime();
+	zone_ = "";
+	parsed_ = true;
+	assembled_ = false;
 }
 
 	Q_UINT32
@@ -240,6 +229,7 @@ RDateTime::asUnixTime()
 	parse();
 	struct tm timeStruct;
 	
+	rmmDebug(QCString("asUnixTime: date: ") + qdate_.toString().ascii());
 	QDate d = qdate_.date();
 	QTime t = qdate_.time();
 	

@@ -32,7 +32,7 @@ typedef QListIterator<RMailbox> RMailboxListIterator;
  * @short Simple encapsulation of a list of RMailbox
  * Simple encapsulation of a list of RMailbox, which is also an RHeaderBody.
  */
-class RMailboxList : public QList<RMailbox>, public RHeaderBody {
+class RMailboxList : public RHeaderBody {
 
 	public:
 
@@ -40,15 +40,23 @@ class RMailboxList : public QList<RMailbox>, public RHeaderBody {
 		RMailboxList(const RMailboxList & rMailboxList);
 		RMailboxList(const QCString & s);
 		RMailboxList & operator = (const RMailboxList &);
+		RMailboxList & operator = (const QCString &);
 
 		virtual ~RMailboxList();
 
+		int count();
+		RMailbox at(int);
+		void append(RMailbox);
 		void parse();
 		void assemble();
 		
 		void createDefault();
 		
 		const char * className() const { return "RMailboxList"; }
+		
+	private:
+		
+		QList<RMailbox> list_;
 };
 
 #endif //RMAILBOXLIST_H

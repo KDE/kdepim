@@ -31,7 +31,8 @@
 #include "Empath.h"
 
 EmpathMailSenderQmail::EmpathMailSenderQmail()
-	:	error_(false)
+	:	EmpathMailSender(),
+		error_(false)
 {
 	QObject::connect (&qmailProcess_, SIGNAL(processExited(KProcess *)),
 			this, SLOT(qmailExited(KProcess *)));
@@ -97,19 +98,6 @@ EmpathMailSenderQmail::sendOne(RMessage & message)
 	}
 
 	return true;
-}
-
-	bool
-EmpathMailSenderQmail::send(EmpathMessageList & messageList)
-{
-	bool status = true;
-	
-	EmpathMessageListIterator it(messageList);
-	
-	for (; it.current(); ++it)
-		if (!sendOne(*(it.current()))) status = false;
-	
-	return status;
 }
 
 	void

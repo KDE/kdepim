@@ -151,6 +151,33 @@ EmpathMessageViewWidget::go()
 	else {
 		
 		// Multipart message
+		// 
+		// Options
+		// 
+		// ALTERNATIVE
+		// 
+		// Choose the 'nicest' version that we are capable of displaying.
+		// 
+		// I hate HTML mail, but that's just me.
+		// 
+		// Order of preference:
+		// HTML, RichText, Plain
+		// 
+		// MIXED
+		// 
+		// With mixed parts, we don't have a clue which part is supposed
+		// to be shown. We assume all, really, but we're not going to do
+		// that.
+		// 
+		// What we want to do is to find a part that looks like it's
+		// equivalent to what you expect, i.e. some text.
+		// 
+		// So, look for text/plain.
+		// 
+		// We won't use the priority order of ALTERNATIVE as we haven't
+		// been asked to, and we might end up showing some HTML that just
+		// confuses the user, when they should be seeing 'hello here's that
+		// web page I told you about'
 		
 		empathDebug("===================== MULTIPART ====================");
 		
@@ -206,7 +233,6 @@ EmpathMessageViewWidget::go()
 					empathDebug("Haven't decided what to do with this part yet");
 				}
 			}
-			empathDebug("...");
 		}
 		
 		empathDebug("=================== END MULTIPART =====================");
@@ -219,7 +245,7 @@ EmpathMessageViewWidget::go()
 EmpathMessageViewWidget::s_print()
 {
 	empathDebug("print() called");
-	messageWidget_->print();
+//	messageWidget_->print();
 }
 
 EmpathMessageViewWidget::~EmpathMessageViewWidget()
@@ -320,7 +346,10 @@ EmpathMessageViewWidget::s_URLSelected(const char * url, int button)
 	void
 EmpathMessageViewWidget::s_clipClicked()
 {
-	structureWidget_->show();
+	if (structureWidget_->isVisible())
+		structureWidget_->hide();
+	else
+		structureWidget_->show();
 }
 
 	void

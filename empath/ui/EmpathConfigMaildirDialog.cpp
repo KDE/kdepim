@@ -26,6 +26,7 @@
 // Local includes
 #include "EmpathConfigMaildirDialog.h"
 #include "EmpathMailboxMaildir.h"
+#include "EmpathUIUtils.h"
 		
 EmpathConfigMaildirDialog::EmpathConfigMaildirDialog(
 		EmpathMailboxMaildir * mailbox,
@@ -36,8 +37,8 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog(
 {
 	empathDebug("ctor");
 	
-	setCaption(i18n("Settings for mailbox") + "\"" + mailbox->name() + "\"" +
-		kapp->getCaption());
+	setCaption(i18n("Settings for mailbox") + " \"" + mailbox->name() + "\" - "
+		+ kapp->getCaption());
 
 	buttonBox_				= new KButtonBox(this);
 	CHECK_PTR(buttonBox_);
@@ -85,8 +86,9 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog(
 	le_mailboxPath_->setFixedHeight(h);
 	
 	pb_browseMailboxPath_ =
-		new QPushButton("...", w_server_, "pb_browseMailboxPath");
+		new QPushButton(w_server_, "pb_browseMailboxPath");
 	CHECK_PTR(pb_browseMailboxPath_);
+	pb_browseMailboxPath_->setPixmap(empathIcon("browse.png"));
 	
 	pb_browseMailboxPath_->setFixedWidth(pb_browseMailboxPath_->sizeHint().height());
 	pb_browseMailboxPath_->setFixedHeight(pb_browseMailboxPath_->sizeHint().height());
@@ -165,10 +167,11 @@ EmpathConfigMaildirDialog::s_OK()
 EmpathConfigMaildirDialog::fillInSavedData()
 {
 	ASSERT(mailbox_ != 0);
-	mailbox_->readConfig();
+//	mailbox_->readConfig();
 	le_mailboxPath_->setText(mailbox_->path());
 	cb_mailCheckInterval_->setChecked(mailbox_->checkMail());
 	sb_mailCheckInterval_->setValue(mailbox_->checkMailInterval());
+	sb_mailCheckInterval_->setEnabled(mailbox_->checkMail());
 }
 
 	void

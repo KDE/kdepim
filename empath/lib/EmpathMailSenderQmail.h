@@ -42,8 +42,6 @@ class EmpathMailSenderQmail : public EmpathMailSender
 
 		bool sendOne(RMessage & message);
 
-		bool send(EmpathMessageList & messageList);
-		
 		void setQmailLocation(const QString & qmailLocation);
 		
 		virtual void saveConfig();

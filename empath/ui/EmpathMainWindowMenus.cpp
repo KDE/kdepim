@@ -23,8 +23,8 @@ EmpathMainWindow::setupMenuBar()
 
 	// File menu
 	
-//	fileMenu_->insertItem(empathIcon("send.png"), i18n("&Send Pending Mail"),
-//		this, SLOT(s_fileSendNew()));
+	fileMenu_->insertItem(empathIcon("send.png"), i18n("&Send Pending Mail"),
+		this, SLOT(s_fileSendNew()));
 
 //	fileMenu_->insertSeparator();
 
@@ -41,7 +41,7 @@ EmpathMainWindow::setupMenuBar()
 	editMenu_->insertItem(empathIcon("empath-cut.png"), i18n("Cu&t"),
 		this, SLOT(s_editCut()));
 	
-	editMenu_->insertItem(empathIcon("empath-copy.png"),i18n("&Copy"),
+	editMenu_->insertItem(empathIcon("copy.png"),i18n("&Copy"),
 		this, SLOT(s_editCopy()));
 	
 	editMenu_->insertItem(empathIcon("empath-paste.png"), i18n("&Paste"),
@@ -123,11 +123,11 @@ EmpathMainWindow::setupMenuBar()
 		i18n("Save &As"),
 		this, SLOT(s_messageSaveAs()));
 	
-	messageMenu_->insertItem(
+	messageMenu_->insertItem(empathIcon("copy.png"),
 		i18n("&Copy to..."),
 		this, SLOT(s_messageCopyTo()));
 	
-	messageMenu_->insertItem(
+	messageMenu_->insertItem(empathIcon("move.png"),
 		i18n("&Move to..."),
 		this, SLOT(s_messageMoveTo()));
 	
@@ -137,9 +137,9 @@ EmpathMainWindow::setupMenuBar()
 		i18n("&Print") + "...",
 		this, SLOT(s_messagePrint()));
 	
-	messageMenu_->insertItem(
-		i18n("Fil&ter"),
-		this, SLOT(s_messageFilter()));
+//	messageMenu_->insertItem(
+//		i18n("Fil&ter"),
+//		this, SLOT(s_messageFilter()));
 
 	optionsMenu_->insertItem(empathIcon("settings-display.png"),
 		i18n("&Display"),

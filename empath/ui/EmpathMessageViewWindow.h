@@ -47,10 +47,6 @@ class EmpathMessageViewWindow : public KTMainWindow
 
 	protected slots:
 
-		void s_fileNewMessage();
-		void s_fileSaveAs();
-		void s_filePrint();
-		void s_fileSettings();
 		void s_fileClose();
 		void s_editCopy();
 		void s_editFindInMessage();
@@ -86,7 +82,7 @@ class EmpathMessageViewWindow : public KTMainWindow
 
 		void setupStatusBar();
 
-
+		EmpathURL		url_;
 };
 
 #endif

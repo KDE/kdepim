@@ -64,6 +64,7 @@ class RMessageID : public RHeaderBody {
 
 	private:
 
+		static int seq_;
 		QCString localPart_;
 		QCString domain_;
 };

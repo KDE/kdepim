@@ -134,16 +134,12 @@ EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(
 	
 	pb_OK_->setDefault(true);
 	
-	pb_apply_	= buttonBox_->addButton(i18n("&Apply"));
-	CHECK_PTR(pb_apply_);
-	
 	pb_cancel_	= buttonBox_->addButton(i18n("&Cancel"));
 	CHECK_PTR(pb_cancel_);
 	
 	buttonBox_->layout();
 	
 	QObject::connect(pb_OK_,		SIGNAL(clicked()),	SLOT(s_OK()));
-	QObject::connect(pb_apply_,		SIGNAL(clicked()),	SLOT(s_apply()));
 	QObject::connect(pb_cancel_,	SIGNAL(clicked()),	SLOT(s_cancel()));
 	QObject::connect(pb_help_,		SIGNAL(clicked()),	SLOT(s_help()));
 /////////////////////////////////////////////////////////////////////////////
@@ -429,12 +425,12 @@ EmpathAccountsSettingsDialog::s_help()
 EmpathAccountsSettingsDialog::s_apply()
 {
 	if (applied_) {
-		pb_apply_->setText(i18n("&Apply"));
+		//pb_apply_->setText(i18n("&Apply"));
 		kapp->getConfig()->rollback(true);
 		kapp->getConfig()->reparseConfiguration();
 		applied_ = false;
 	} else {
-		pb_apply_->setText(i18n("&Revert"));
+	//	pb_apply_->setText(i18n("&Revert"));
 		pb_cancel_->setText(i18n("&Close"));
 		empath->mailboxList().saveConfig();
 		applied_ = true;

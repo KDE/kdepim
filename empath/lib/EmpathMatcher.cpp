@@ -43,14 +43,14 @@ EmpathMatcher::~EmpathMatcher()
 }
 
 	void
-EmpathMatcher::save(Q_UINT32 parentid, Q_UINT32 id)
+EmpathMatcher::save(const QString & parentid, Q_UINT32 id)
 {
-	empathDebug("save(" + QString().setNum(parentid) + ", " + QString().setNum(id) + ") called");	
+	empathDebug("save(" + parentid + ", " + QString().setNum(id) + ") called");	
 	
 	KConfig * c = kapp->getConfig();
 	
 	c->setGroup(EmpathConfig::GROUP_EXPR +
-		QString().setNum(parentid) +
+		parentid +
 		"_" +
 		QString().setNum(id));
 	
@@ -80,19 +80,20 @@ EmpathMatcher::save(Q_UINT32 parentid, Q_UINT32 id)
 }
 
 	void
-EmpathMatcher::load(Q_UINT32 parentid, Q_UINT32 id)
+EmpathMatcher::load(const QString & parentName, Q_UINT32 id)
 {
-	empathDebug("load(" + QString().setNum(parentid) + ", " +
+	empathDebug("load(" + parentName + ", " +
 		QString().setNum(id) + ") called");
 	
 	KConfig * c = kapp->getConfig();
 	
-	c->setGroup(EmpathConfig::GROUP_EXPR +
-		QString().setNum(parentid) +
-		"_" +
+	c->setGroup(EmpathConfig::GROUP_EXPR + parentName + "_" +
 		QString().setNum(id));
 	
-	MatchExprType t = (MatchExprType)(c->readNumEntry(EmpathConfig::KEY_MATCH_EXPR_TYPE));
+	MatchExprType t =
+		(MatchExprType)
+		(c->readNumEntry(EmpathConfig::KEY_MATCH_EXPR_TYPE));
+	
 	empathDebug("I'm of type " + QString().setNum((int)t));
 	
 	setType(t);

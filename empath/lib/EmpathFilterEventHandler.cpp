@@ -174,11 +174,13 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
 }
 
 	bool
-EmpathFilterEventHandler::load(Q_UINT32 filterID)
+EmpathFilterEventHandler::load(const QString & filterID)
 {
 	KConfig * config = kapp->getConfig();
-	config->setGroup(EmpathConfig::EmpathConfig::GROUP_FILTER + QString().setNum(filterID));
-	actionType_ = (ActionType)config->readNumEntry(EmpathConfig::EmpathConfig::KEY_FILTER_EVENT_HANDLER_TYPE);
+	config->setGroup(EmpathConfig::GROUP_FILTER + filterID);
+	actionType_ =
+		(ActionType)
+		config->readNumEntry(EmpathConfig::KEY_FILTER_EVENT_HANDLER_TYPE);
 
 	switch (actionType_) {
 
@@ -186,20 +188,20 @@ EmpathFilterEventHandler::load(Q_UINT32 filterID)
 
 			setMoveFolder(
 					EmpathURL(config->readEntry(
-							EmpathConfig::EmpathConfig::KEY_FILTER_EVENT_HANDLER_FOLDER)));
+							EmpathConfig::KEY_FILTER_EVENT_HANDLER_FOLDER)));
 			break;
 			
 		case CopyFolder:
 
 			setCopyFolder(
 					EmpathURL(config->readEntry(
-							EmpathConfig::EmpathConfig::KEY_FILTER_EVENT_HANDLER_FOLDER)));
+							EmpathConfig::KEY_FILTER_EVENT_HANDLER_FOLDER)));
 			break;
 
 		case Forward:
 
 			setForward(config->readEntry(
-					EmpathConfig::EmpathConfig::KEY_FILTER_EVENT_HANDLER_FOLDER));
+					EmpathConfig::KEY_FILTER_EVENT_HANDLER_FOLDER));
 			break;
 
 		case Delete:
@@ -213,27 +215,28 @@ EmpathFilterEventHandler::load(Q_UINT32 filterID)
 }
 
 	void
-EmpathFilterEventHandler::save(Q_UINT32 filterID)
+EmpathFilterEventHandler::save(const QString & filterID)
 {
-	empathDebug("save(" + QString().setNum(filterID) + ") called");
+	empathDebug("save(" + filterID + ") called");
 	KConfig * config = kapp->getConfig();
-	config->setGroup(EmpathConfig::EmpathConfig::GROUP_FILTER + QString().setNum(filterID));
+	config->setGroup(EmpathConfig::GROUP_FILTER + filterID);
 	config->writeEntry(
-		EmpathConfig::EmpathConfig::KEY_FILTER_EVENT_HANDLER_TYPE, (int)actionType_);
+		EmpathConfig::KEY_FILTER_EVENT_HANDLER_TYPE, (int)actionType_);
 
 	switch (actionType_) {
 
 		case MoveFolder:
 		case CopyFolder:
 			
-			config->writeEntry(EmpathConfig::EmpathConfig::KEY_FILTER_EVENT_HANDLER_FOLDER,
+			config->writeEntry(EmpathConfig::KEY_FILTER_EVENT_HANDLER_FOLDER,
 				moveCopyFolder_.asString());
 			
 			break;
 		
 		case Forward:
 		
-			config->writeEntry(EmpathConfig::EmpathConfig::KEY_FILTER_EVENT_HANDLER_ADDRESS, forwardAddress_);
+			config->writeEntry(EmpathConfig::KEY_FILTER_EVENT_HANDLER_ADDRESS,
+				forwardAddress_);
 		
 			break;
 		
@@ -242,6 +245,7 @@ EmpathFilterEventHandler::save(Q_UINT32 filterID)
 		default:
 			break;
 	}
+	config->sync();
 }
 
 	QString

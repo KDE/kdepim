@@ -18,31 +18,43 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <iostream>
+
 // Qt includes
 #include <qpixmap.h>
 
+// KDE includes
+#include <kapp.h>
+#include <klocale.h>
+#include <kpixmap.h>
+
 // Local includes
+#include "Empath.h"
 #include "EmpathUIUtils.h"
 #include "EmpathDefines.h"
 #include "EmpathTaskWidget.h"
 
-EmpathTaskWidget * EmpathTaskWidget::taskWidget_ = 0;
-
-	void
-EmpathTaskWidget::addTask(EmpathTask * t)
-{
-	if (taskWidget_ == 0) {
-		taskWidget_ = new EmpathTaskWidget();
-		CHECK_PTR(taskWidget_);
-	}
-	
-	taskWidget_->_addTask(t);
-}
-
-EmpathTaskWidget::EmpathTaskWidget()
-	:	QWidget()
+EmpathTaskWidget::EmpathTaskWidget(QWidget * parent, const char * name)
+	:	QWidget(parent, name)
 {
 	empathDebug("ctor");
+//	setCaption(i18n("Pending tasks - ") + kapp->getCaption());
+	
+	KPixmap px;
+	px.resize(width(), 20);
+	px.gradientFill(
+		qApp->palette()->color(QPalette::Normal, QColorGroup::Background),
+		qApp->palette()->color(QPalette::Normal, QColorGroup::Base));
+	
+	l = new QLabel(this);
+	CHECK_PTR(l);
+	l->resize(width(), 20);
+	l->setPixmap(px);
+
+	itemList_.setAutoDelete(true);
+	QObject::connect(
+		empath, SIGNAL(newTask(EmpathTask *)),
+		this,	SLOT(s_addTask(EmpathTask *)));
 }
 
 EmpathTaskWidget::~EmpathTaskWidget()
@@ -53,11 +65,146 @@ EmpathTaskWidget::~EmpathTaskWidget()
 	void
 EmpathTaskWidget::resizeEvent(QResizeEvent * e)
 {
+	QListIterator<EmpathTaskItem> it(itemList_);
+	
+	int i = 0;
+	
+	for (; it.current(); ++it) {
+		
+		it.current()->move(
+			0, it.current()->minimumSizeHint().height() * i++ + 20);
+		it.current()->setFixedWidth(width());
+	}
+	
+	KPixmap px;
+	px.resize(width(), 20);
+	px.gradientFill(
+		qApp->palette()->color(QPalette::Normal, QColorGroup::Background),
+		qApp->palette()->color(QPalette::Normal, QColorGroup::Base));
+	l->setPixmap(px);
+	l->resize(width(), 20);
 }
 
 	void
-EmpathTaskWidget::_addTask(EmpathTask * t)
+EmpathTaskWidget::s_addTask(EmpathTask * t)
 {
-	empathDebug("_addTask(" + t->name() + ") called");
+	if (t->isDone()) return;
+	empathDebug("s_addTask(" + t->name() + ") called");
+	EmpathTaskItem * newItem = new EmpathTaskItem(t->name(), this, "taskItem");
+	CHECK_PTR(newItem);
+	
+	QObject::connect(
+		t,			SIGNAL(finished()),
+		newItem,	SLOT(s_done()));
+	
+	QObject::connect(
+		newItem,	SIGNAL(done(EmpathTaskItem *)),
+		this,		SLOT(s_done(EmpathTaskItem *)));
+	
+	QObject::connect(
+		t,			SIGNAL(maxChanged(int)),
+		newItem,	SLOT(s_setMax(int)));
+			
+	QObject::connect(
+		t,			SIGNAL(posChanged(int)),
+		newItem,	SLOT(s_setPos(int)));
+	
+	QObject::connect(
+		t,			SIGNAL(addOne()),
+		newItem,	SLOT(s_inc()));
+	
+	itemList_.append(newItem);
+	
+	itemHeight_ = (newItem->minimumSizeHint().height());
+	newItem->move(0, ((itemList_.count() - 1) * itemHeight_) + 20);
+	newItem->setFixedWidth(width());
+	newItem->show();
+	
+	setFixedHeight(itemList_.count() * itemHeight_ + 20);
+	resize(width(), itemList_.count() * itemHeight_ + 20);
+	show();
+	kapp->processEvents();
+}
+
+	void
+EmpathTaskWidget::s_done(EmpathTaskItem * item)
+{
+	empathDebug("s_done() called");
+	QListIterator<EmpathTaskItem> it(itemList_);
+	itemList_.remove(item);
+	
+	int i = 0;
+	
+	for (; it.current(); ++it) {
+		
+		it.current()->move(
+			0, it.current()->minimumSizeHint().height() * i++ + 20);
+	}
+	
+	setFixedHeight(itemHeight_ * itemList_.count());
+}
+
+EmpathTaskItem::EmpathTaskItem(const QString & title,
+		QWidget * parent, const char * name)
+	:
+		QWidget(parent, name),
+		title_(title)
+{
+	empathDebug("ctor");
+	layout_ = new QGridLayout(this, 1, 2, 2, 10);
+	CHECK_PTR(layout_);
+	label_ = new QLabel(title_, this, "l_taskTitle");
+	CHECK_PTR(label_);
+	progressMeter_ = new KProgress(this, "taskProgress");
+	CHECK_PTR(progressMeter_);
+	
+	setFixedHeight(progressMeter_->sizeHint().height());
+	layout_->addWidget(label_,			0, 0);
+	layout_->addWidget(progressMeter_,	0, 1);
+	layout_->activate();
+	show();
+}
+
+EmpathTaskItem::~EmpathTaskItem()
+{
+	empathDebug("dtor");
+}
+
+	void
+EmpathTaskItem::s_done()
+{
+	empathDebug("s_done() called");
+	emit(done(this));
+	kapp->processEvents();
+}
+
+	void
+EmpathTaskItem::s_inc()
+{
+	empathDebug("s_inc() called");
+	progressMeter_->advance(1);
+	kapp->processEvents();
+}
+
+	void
+EmpathTaskItem::s_setMax(int max)
+{
+	empathDebug("s_setMax() called");
+	progressMeter_->setRange(0, max);
+}
+
+	void
+EmpathTaskItem::s_setPos(int pos)
+{
+	empathDebug("s_setPos() called");
+	progressMeter_->setValue(pos);
+	kapp->processEvents();
+}
+
+	QSize
+EmpathTaskItem::minimumSizeHint() const
+{
+	QSize s(0, progressMeter_->sizeHint().height());
+	return s;
 }
 

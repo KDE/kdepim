@@ -70,6 +70,7 @@ RHeader::operator = (const QCString & s)
 	headerBody_ = 0;
 
 	RMessageComponent::operator = (s);
+	parsed_ = false;
 	assembled_	= false;
 	return *this;
 }
@@ -91,6 +92,7 @@ RHeader::operator = (const RHeader & h)
 	CHECK_PTR(headerBody_);
 	
 	RMessageComponent::operator = (h);
+	parsed_ = true;
 	assembled_	= false;
 	return *this;
 }
@@ -142,14 +144,20 @@ RHeader::parse()
 {
 	rmmDebug("parse() called");
 	if (parsed_) return;
-	rmmDebug("Need to parse");
+	rmmDebug("strRep_ == \"" + strRep_ + "\"");
 	int split = strRep_.find(':');
 
+	ASSERT(headerBody_ == 0);
 	delete headerBody_;
 	headerBody_ = 0;
 	headerType_ = RMM::HeaderUnknown;
 
-	if (split == -1) return;
+	if (split == -1) {
+		rmmDebug("No split ?");
+		headerBody_ = new RText;
+		CHECK_PTR(headerBody_);
+		return;
+	}
 
 	headerName_ = strRep_.left(split);
 	headerName_ = headerName_.stripWhiteSpace();
@@ -185,8 +193,8 @@ RHeader::parse()
 	QCString hb = strRep_.right(strRep_.length() - split - 1);
 	hb = hb.stripWhiteSpace();
 	*b = hb;
-	b->parse();
 	headerBody_ = b;
+	headerBody_->parse();
 
 	rmmDebug("strRep == " + strRep_);
 	parsed_		= true;
@@ -197,7 +205,10 @@ RHeader::parse()
 RHeader::assemble()
 {
 	rmmDebug("assemble() called");
-	if (assembled_) return;
+	if (assembled_) {
+		rmmDebug("Already assembled");
+		return;
+	}
 
 	if ((int)headerType_ > 42)
 		headerType_ = RMM::HeaderUnknown;
@@ -211,8 +222,9 @@ RHeader::assemble()
 	strRep_ += ' ';
 
 	if (headerBody_ != 0) {
-		headerBody_->assemble();
 		strRep_ += headerBody_->asString();
+	} else {
+		rmmDebug("headerBody is 0 !!!!");
 	}
 
 	rmmDebug("assembled to: \"" + strRep_ + "\"");

@@ -61,6 +61,7 @@ RBodyPart::RBodyPart(const QCString & s)
 {
 	rmmDebug("ctor");
 	body_.setAutoDelete(true);
+	parsed_ = false;
 }
 
 RBodyPart::~RBodyPart()
@@ -149,13 +150,20 @@ RBodyPart::parse()
 	int endOfHeaders = strRep_.find(QRegExp("\n\n"));
 	
 	if (endOfHeaders == -1) {
-		rmmDebug("No end of headers ! - message is " +
-			QCString().setNum(strRep_.length()) + " bytes long");
-		return;
+		
+		// The body is blank. We'll treat what there is as the envelope.
+		rmmDebug("empty body");
+		envelope_	= strRep_;
+		data_		= "";
+		
+	} else {
+		
+		rmmDebug("Setting envelope to:");
+		rmmDebug(strRep_.left(endOfHeaders));
+		envelope_	= strRep_.left(endOfHeaders);
+		data_		= strRep_.right(strRep_.length() - endOfHeaders);
 	}
 	
-	envelope_	= strRep_.left(endOfHeaders);
-	data_		= strRep_.right(strRep_.length() - endOfHeaders);
 
 	rmmDebug("Looking to see if there's a Content-Type header");
 	// Now see if there's a Content-Type header in the envelope.
@@ -263,7 +271,7 @@ RBodyPart::assemble()
 	rmmDebug("assemble() called");
 
 	strRep_ = envelope_.asString();
-	strRep_ += "\n\n";
+	strRep_ += "\n";
 	strRep_ += preamble_;
 	strRep_ += data_;
 	strRep_ += epilogue_;
@@ -346,6 +354,16 @@ RBodyPart::setEnvelope(REnvelope e)
 	envelope_ = e;
 	assembled_ = false;
 }	
+
+	void
+RBodyPart::setData(const QCString & s)
+{
+	rmmDebug("setData() called");
+	parse();
+	data_ = s;
+	assembled_ = false;
+}
+
 	void
 RBodyPart::setBody(QList<RBodyPart> & b)
 {

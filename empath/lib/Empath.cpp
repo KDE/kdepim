@@ -49,6 +49,7 @@
 #include "EmpathMessageDataCache.h"
 #include "EmpathFilterList.h"
 #include "EmpathTask.h"
+#include "EmpathTaskTimer.h"
 
 Empath * Empath::EMPATH = 0;
 
@@ -58,23 +59,22 @@ Empath::Empath()
 {
 	empathDebug("ctor");
 	EMPATH = this;
-	
-	empathDebug("Saving pid, hostname and start time");
+	cache_.setMaxCost(1048576); // 1Mb cache
+	updateOutgoingServer(); // Must initialise the pointer.
+}
+
+	void
+Empath::init()
+{
 	processID_ = getpid();
 	_saveHostName();
 	_setStartTime();
-	
-	cache_.setMaxCost(1048576); // 1Mb cache
-
 	empathDebug("===========================================================");	
 	empathDebug("Initialising mailboxes");
 	mailboxList_.init();
 	empathDebug("===========================================================");	
 	empathDebug("Initialising filters");
 	filterList_.load();
-	empathDebug("===========================================================");	
-	empathDebug("Initialising outgoing server");
-	updateOutgoingServer();
 	empathDebug("===========================================================");	
 }
 
@@ -290,9 +290,49 @@ Empath::s_setupFilters()
 	EmpathTask *
 Empath::addTask(const QString & name)
 {
+	empathDebug("addTask(" + name + ") called");
 	EmpathTask * t = new EmpathTask(name);
 	CHECK_PTR(t);
-	emit(newTask(t));
+	EmpathTaskTimer * timer = new EmpathTaskTimer(t);
 	return t;
 }
+
+	void
+Empath::s_newTask(EmpathTask * t)
+{
+	emit(newTask(t));
+}
+
+	void
+Empath::addPendingMessage(RMessage & message)
+{
+	KConfig * c(kapp->getConfig());
+	c->setGroup(EmpathConfig::GROUP_SENDING);
 	
+	EmpathURL queueURL(c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER));
+	
+	EmpathFolder *queueFolder(folder(queueURL));
+	
+	if (queueFolder == 0) {
+		empathDebug("Couldn't queue message - couldn't find queue folder !");
+		return;
+	}
+	
+	if (!queueFolder->writeMessage(message)) {
+		empathDebug("Couldn't queue message - folder won't accept !");
+		return;
+	}
+}
+
+	void
+Empath::sendQueued()
+{
+	mailSender_->sendQueued();
+}
+
+	void
+Empath::send(RMessage & message)
+{
+	mailSender_->sendOne(message);
+}
+

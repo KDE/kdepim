@@ -25,9 +25,50 @@
 #include <qwidget.h>
 #include <qpushbutton.h>
 #include <qlabel.h>
+#include <qlayout.h>
+
+// KDE includes
+#include <kprogress.h>
 
 // Local includes
 #include "EmpathTask.h" 
+
+class EmpathTaskItem : public QWidget
+{
+	Q_OBJECT
+		
+	public:
+		
+		EmpathTaskItem(
+			const QString & title,
+			QWidget * parent, const char * name);
+		
+		virtual ~EmpathTaskItem();
+		
+		QSize minimumSizeHint() const;
+		
+	protected slots:
+		
+		void s_done();
+		void s_inc();
+		void s_setMax(int);
+		void s_setPos(int);
+		
+	signals:
+		
+		void done(EmpathTaskItem *);
+		
+	private:
+		
+		QString title_;
+		int max_;
+		int pos_;
+		
+		KProgress	* progressMeter_;
+		QLabel		* label_;
+		QGridLayout * layout_;
+};
+
 
 class EmpathTaskWidget : public QWidget
 {
@@ -35,18 +76,21 @@ class EmpathTaskWidget : public QWidget
 		
 	public:
 		
-		static void addTask(EmpathTask *);
-	
+		EmpathTaskWidget(QWidget * parent = 0, const char * name = 0);
 		virtual	~EmpathTaskWidget();
+		
 		void	resizeEvent(QResizeEvent *);
 		
+	protected slots:
+			
+		void s_done(EmpathTaskItem *);
+		void s_addTask(EmpathTask *);
+
 	private:
 		
-		EmpathTaskWidget();
-		
-		static EmpathTaskWidget * taskWidget_;
-		
-		void _addTask(EmpathTask *);
+		QList<EmpathTaskItem> itemList_;
+		int	itemHeight_;
+		QLabel * l;
 };
 
 #endif

@@ -28,7 +28,7 @@
 #include "Empath.h"
 
 EmpathMailSenderSMTP::EmpathMailSenderSMTP()
-	:	singleHost_(false)
+	:	EmpathMailSender()
 {
 }
 
@@ -45,12 +45,6 @@ EmpathMailSenderSMTP::setServer(const QString & name, const Q_UINT32 port)
 
 	bool
 EmpathMailSenderSMTP::sendOne(RMessage & message)
-{
-	return false;
-}
-
-	bool
-EmpathMailSenderSMTP::send(EmpathMessageList & messageList)
 {
 	return false;
 }

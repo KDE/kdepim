@@ -52,6 +52,7 @@ RParameter::~RParameter()
 RParameter::operator = (const QCString & s)
 {
 	RMessageComponent::operator = (s);
+	return *this;
 }
 
 	RParameter &

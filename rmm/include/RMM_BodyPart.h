@@ -60,6 +60,7 @@ class RBodyPart : public REntity {
 		void	setEnvelope(REnvelope);
 		QList<RBodyPart> &	body();
 		void	setBody(QList<RBodyPart> &);
+		void	setData(const QCString &);
 		
 		void addPart(RBodyPart *);
 		void removePart(RBodyPart *);

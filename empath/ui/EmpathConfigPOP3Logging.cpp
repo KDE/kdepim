@@ -18,6 +18,8 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <qpixmap.h>
+
 // KDE includes
 #include <klocale.h>
 
@@ -25,6 +27,7 @@
 #include "EmpathDefines.h"
 #include "EmpathConfigPOP3Logging.h"
 #include "EmpathMailboxPOP3.h"
+#include "EmpathUIUtils.h"
 
 EmpathConfigPOP3Logging::EmpathConfigPOP3Logging(QWidget * parent, const char * name)
 	: QWidget(parent, name)
@@ -53,8 +56,9 @@ EmpathConfigPOP3Logging::EmpathConfigPOP3Logging(QWidget * parent, const char * 
 	le_logFile_->setMaximumHeight(h);
 	le_logFile_->setMinimumHeight(h);
 	
-	pb_browseLogFile_		= new QPushButton("...", this, "pb_browseLogFile");
+	pb_browseLogFile_		= new QPushButton(this, "pb_browseLogFile");
 	CHECK_PTR(pb_browseLogFile_);
+	pb_browseLogFile_->setPixmap(empathIcon("browse.png"));
 	
 	pb_browseLogFile_->setMaximumHeight(h);
 	pb_browseLogFile_->setMinimumHeight(h);

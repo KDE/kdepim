@@ -29,18 +29,16 @@
 #include <RMM_Token.h>
 
 RMailboxList::RMailboxList()
-	:	QList<RMailbox>(),
-		RHeaderBody()
-		
+	:	RHeaderBody()
 {
 	rmmDebug("ctor");
 }
 
 RMailboxList::RMailboxList(const RMailboxList & l)
-	:	QList<RMailbox>(l),
-		RHeaderBody()
+	:	RHeaderBody(l)
 {
 	rmmDebug("ctor");
+	list_ = l.list_;
 }
 
 RMailboxList::~RMailboxList()
@@ -53,9 +51,18 @@ RMailboxList::operator = (const RMailboxList & l)
 {
 	rmmDebug("operator =");
     if (this == &l) return *this; // Don't do a = a.
-	QList<RMailbox>::operator = (l);
+	list_ = l.list_;
 	RHeaderBody::operator = (l);
 	assembled_ = false;
+	return *this;
+}
+		
+	RMailboxList &
+RMailboxList::operator = (const QCString & s)
+{
+	rmmDebug("operator = QCString(" + s + ")");
+	RHeaderBody::operator = (s);
+	assembled_	= false;
 	return *this;
 }
 
@@ -67,7 +74,7 @@ RMailboxList::parse()
 	// XXX Currently just adapted slightly from RAddressList - adjust further ?
 	rmmDebug("strRep_ = " + strRep_);
 
-	clear();
+	list_.clear();
 
 	QStrList ltemp;
 	RTokenise(strRep_, ",\n\r", ltemp);
@@ -99,8 +106,8 @@ RMailboxList::parse()
 		rmmDebug("new RMailbox");
 		RMailbox * m = new RMailbox;
 		CHECK_PTR(m);
-		m->set(strRep_);
-		append(m);
+		*m = strRep_;
+		list_.append(m);
 		
 	} else {
 
@@ -110,8 +117,8 @@ RMailboxList::parse()
 			rmmDebug("new RMailbox");
 			RMailbox * m = new RMailbox;
 			CHECK_PTR(m);
-			m->set(lit.current());
-			append(m);
+			*m = lit.current();
+			list_.append(m);
 		}
 	}
 	
@@ -123,11 +130,12 @@ RMailboxList::parse()
 RMailboxList::assemble()
 {
 	rmmDebug("assemble() called");
+	parse();
 	if (assembled_) return;
 	// XXX Just ripped from RAddressList - adjust further ?
 	bool firstTime = true;
 	
-	RMailboxListIterator it(*this);
+	RMailboxListIterator it(list_);
 
 	strRep_ = "";
 	
@@ -153,9 +161,32 @@ RMailboxList::createDefault()
 	if (count() == 0) {
 		RMailbox * m = new RMailbox;
 		m->createDefault();
-		append(m);
+		list_.append(m);
 	}
 	
 	assembled_ = false;
+}
+
+	void
+RMailboxList::append(RMailbox m)
+{
+	parse();
+	RMailbox * mailbox = new RMailbox(m);
+	list_.append(mailbox);
+	assembled_ = false;
+}
+
+	RMailbox
+RMailboxList::at(int idx)
+{
+	parse();
+	return *(list_.at(idx));
+}
+
+	int
+RMailboxList::count()
+{
+	parse();
+	return list_.count();
 }
 

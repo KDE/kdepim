@@ -177,7 +177,7 @@ EmpathFilterManagerDialog::s_addFilter()
 {
 	empathDebug("s_addFilter() called");
 	
-	EmpathFilter * newFilter = new EmpathFilter;
+	EmpathFilter * newFilter = new EmpathFilter(i18n("Unnamed"));
 	
 	EmpathFilterEditDialog filterEditDialog(newFilter,
 			this, "filterEditDialog");
@@ -189,7 +189,7 @@ EmpathFilterManagerDialog::s_addFilter()
 	}
 	
 	// 0 is the first- filter becomes the last when it's added.
-	newFilter->setId(empath->filterList().count());
+	newFilter->setPriority(empath->filterList().count());
 	empath->filterList().append(newFilter);
 	update();
 }
@@ -291,6 +291,7 @@ EmpathFilterManagerDialog::s_apply()
 		pb_cancel_->setText(i18n("&Close"));
 		applied_ = true;
 	}
+	saveData();
 }
 
 	void

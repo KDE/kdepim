@@ -33,10 +33,10 @@
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
 
-class EmpathFolderWidget;
 class EmpathMessageViewWidget;
 class EmpathMessageListWidget;
 class EmpathStatusWidget;
+class EmpathLeftSideWidget;
 
 class EmpathMainWidget : public QWidget
 {
@@ -52,7 +52,6 @@ class EmpathMainWidget : public QWidget
 	protected slots:
 		
 		void s_displayMessage(const EmpathURL &);
-		void s_folderWidgetSizeChange(int, int, int);
 		void resizeEvent(QResizeEvent * e);
 
 	private:
@@ -60,7 +59,7 @@ class EmpathMainWidget : public QWidget
 		KNewPanner				* vSplit;
 		KNewPanner				* hSplit;
 		
-		EmpathFolderWidget		* folderWidget_;
+		EmpathLeftSideWidget	* leftSideWidget_;
 		EmpathMessageListWidget	* messageListWidget_;
 		EmpathMessageViewWidget	* messageViewWidget_;
 

@@ -18,6 +18,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+// Qt includes
+#include <qdragobject.h>
+
 // KDE includes
 #include <klocale.h>
 #include <klineeditdlg.h>
@@ -35,10 +38,14 @@
 #include "EmpathMailboxPOP3.h"
 #include "EmpathMailboxIMAP4.h"
 
-EmpathFolderWidget::EmpathFolderWidget(QWidget * parent, const char * name)
-	:	QListView(parent, name)
+EmpathFolderWidget::EmpathFolderWidget(
+	QWidget * parent, const char * name, bool wait)
+	:	QListView(parent, name),
+		waitForShown_(wait)
 {
 	empathDebug("ctor");
+	
+	setAcceptDrops(true);
 	
 	addColumn(i18n("Folder name"));
 	addColumn(i18n("Unread"));
@@ -178,8 +185,20 @@ EmpathFolderWidget::s_currentChanged(QListViewItem * item)
 	
 		empathDebug("folder " + i->url().folderPath() + " selected");
 
-		emit(showFolder(i->url()));
+		if (waitForShown_)
+		{
+			setEnabled(false);
+			setCursor(waitCursor);
+			emit(showFolder(i->url()));
+		}
 	}
+}
+
+	void
+EmpathFolderWidget::s_showing()
+{
+	setCursor(arrowCursor);
+	setEnabled(true);
 }
 
 	EmpathURL
@@ -305,6 +324,7 @@ EmpathFolderWidget::s_update()
 	void
 EmpathFolderWidget::s_newFolder()
 {
+	empathDebug("s_newFolder() called");
 	KLineEditDlg led(i18n("Folder name"), QString::null, this, false);
 	led.exec();
 
@@ -318,6 +338,9 @@ EmpathFolderWidget::s_newFolder()
 	EmpathURL newFolderURL(popupMenuOver->url().asString() + "/" + name + "/");
 
 	if (!m->addFolder(newFolderURL)) return;
+	
+	empathDebug("popupMenuOver == " + popupMenuOver->url().asString());
+	empathDebug("newFolderURL  == " + newFolderURL.asString());
 
 	EmpathFolderListItem * item =
 		new EmpathFolderListItem(popupMenuOver, newFolderURL);
@@ -341,5 +364,31 @@ EmpathFolderWidget::s_removeFolder()
 	void
 EmpathFolderWidget::s_setUpAccounts()
 {
+}
+
+	void
+EmpathFolderWidget::dragMoveEvent(QDragMoveEvent * e)
+{
+	if (itemAt(e->pos()) != 0) {
+		itemAt(e->pos())->setSelected(true);
+		if (QTextDrag::canDecode(e))
+			e->accept();
+	}
+}
+
+	void
+EmpathFolderWidget::dropEvent(QDropEvent * e)
+{
+	if (itemAt(e->pos()) == 0) {
+		empathDebug("Item was dropped on nothing");
+		return;
+	}
+	
+    QString str;
+    
+	if ( QTextDrag::decode( e, str ) ) {
+		itemAt(e->pos())->setText(0, str);
+		return;
+	}
 }
 

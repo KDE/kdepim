@@ -20,12 +20,7 @@
 
 // System includes
 #include <unistd.h>
-#include <signal.h>
 #include <iostream.h>
-
-// Qt includes
-#include <qmessagebox.h>
-#include <qobject.h>
 
 // KDE includes
 #include <kapp.h>
@@ -33,12 +28,7 @@
 
 // Local includes
 #include "lib/Empath.h"
-#include "lib/EmpathEnum.h"
 #include "ui/EmpathUI.h"
-
-class RMessage;
-
-void myMessageHandler(QtMsgType type, const char * msg);
 
 	int
 EmpathMain(int argc, char * argv[])
@@ -55,6 +45,11 @@ EmpathMain(int argc, char * argv[])
 	Empath		e;
 	EmpathUI	ui;
 
+	// Attempt to get the UI up and running quickly.
+	app.processEvents();
+
+	e.init();
+
 	cerr << "=========================================================" << endl;
 	cerr << "Entering event loop" << endl;
 	cerr << "=========================================================" << endl;
@@ -63,45 +58,5 @@ EmpathMain(int argc, char * argv[])
 
 main(int argc, char * argv[])
 {
-//	qInstallMsgHandler(myMessageHandler);
 	return EmpathMain(argc, argv);
 }
-
-	void
-myMessageHandler(QtMsgType type, const char * msg)
-{
-	switch (type) {
-		case QtDebugMsg:
-			cerr << "Qt Debug: " << msg << endl;
-			break;
-		case QtWarningMsg:
-			cerr << "Qt Warning: " << msg << endl;
-			break;
-		case QtFatalMsg:
-			cerr << "Qt FATAL ERROR: " << msg << endl;
-			QMessageBox::critical(0, "Empath",
-				QString("Fatal error in Qt toolkit:\n" + QString(msg) +
-					"\nPlease notify the program maintainer at\n" +
-					"rik@rikkus.demon.co.uk\n"));
-			abort();
-			break;
-		default:
-			cerr << "Unknown Qt Error: " << msg << endl;
-			break;	
-	}	
-}
-
-/*
-void handleSignal(int sig)
-{
-	if (sig == SIGINT) {
-		cerr << "Got SIGINT - dying" << endl;
-		if (Empath::EMPATH != 0) delete Empath::EMPATH;
-		exit(0);
-	}
-
-	cerr << "Caught signal " << sig << " - exiting" << endl;
-	
-	exit(1);
-}
-*/

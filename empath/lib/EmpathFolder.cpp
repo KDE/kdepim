@@ -109,7 +109,12 @@ EmpathFolder::writeMessage(RMessage & message)
 {
 	empathDebug("writeMessage() called")
 	EmpathMailbox * m = empath->mailbox(url_);
-	return (m != 0 && m->writeMessage(url_, message));
+	if (m == 0)
+		return false;
+	if (!m->writeMessage(url_, message))
+		return false;
+	emit(countUpdated(messageList_.countUnread(), messageList_.count()));
+	return true;
 }
 
 	EmpathFolder *

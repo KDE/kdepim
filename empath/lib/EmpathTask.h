@@ -38,6 +38,8 @@ class EmpathTask : public QObject
 		void doneOne();
 		void done();
 		
+		bool isDone() { return done_; }
+		
 		QString name() { return name_; }
 		
 	signals:
@@ -52,6 +54,7 @@ class EmpathTask : public QObject
 		QString name_;
 		int max_;
 		int pos_;
+		bool done_;
 };
 
 #endif

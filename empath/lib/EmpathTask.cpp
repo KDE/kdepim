@@ -18,12 +18,15 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <kapp.h>
+
 #include "EmpathTask.h"
 #include "EmpathDefines.h"
 
 EmpathTask::EmpathTask(const QString & name)
 	:	QObject(),
-		name_(name)
+		name_(name),
+		done_(false)
 {
 	empathDebug("ctor");
 }
@@ -31,29 +34,37 @@ EmpathTask::EmpathTask(const QString & name)
 EmpathTask::~EmpathTask()
 {
 	empathDebug("dtor");
+	emit(finished());
 }
 
 	void
 EmpathTask::setMax(int i)
 {
+	empathDebug("setMax() called");
 	emit(maxChanged(i));
 }
 
 	void
 EmpathTask::setPos(int i)
 {
+	empathDebug("setPos() called");
 	emit(posChanged(i));
+	kapp->processOneEvent();
 }
 
 	void
 EmpathTask::doneOne()
 {
-	emit(doneOne());
+	empathDebug("doneOne() called");
+	emit(addOne());
+	kapp->processEvents();
 }
 
 	void
 EmpathTask::done()
 {
+	empathDebug("done() called");
 	emit(finished());
+	done_ = true;
 }
 

@@ -41,7 +41,10 @@ class EmpathFolderWidget : public QListView
 
 	public:
 		
-		EmpathFolderWidget(QWidget * parent = 0, const char * name = 0);
+		EmpathFolderWidget(
+			QWidget * parent = 0,
+			const char * name = 0,
+			bool waitForShown = false);
 
 		~EmpathFolderWidget() { empathDebug("dtor"); }
 		
@@ -51,6 +54,7 @@ class EmpathFolderWidget : public QListView
 
 	protected slots:
 
+		void s_showing();
 		void s_currentChanged(QListViewItem *);
 		void s_rightButtonPressed(QListViewItem *, const QPoint &, int);
 		void s_folderProperties();
@@ -65,6 +69,11 @@ class EmpathFolderWidget : public QListView
 
 		void showFolder(const EmpathURL & url);
 
+	protected:
+	
+		void dragMoveEvent	(QDragMoveEvent *);
+		void dropEvent		(QDropEvent *);
+
 	private:
 
 		enum OverType { Folder, Mailbox };
@@ -78,6 +87,7 @@ class EmpathFolderWidget : public QListView
 		
 		EmpathFolderListItem	* popupMenuOver;
 		OverType				popupMenuOverType;
+		bool	waitForShown_;
 };
 
 #endif

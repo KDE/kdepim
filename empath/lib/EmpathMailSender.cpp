@@ -18,13 +18,20 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <kconfig.h>
+#include <kapp.h>
+
+#include "EmpathConfig.h"
 #include "EmpathMailSender.h"
+#include "EmpathFolder.h"
+#include "EmpathURL.h"
+#include "EmpathIndex.h"
+#include "Empath.h"
 
 EmpathMailSender::EmpathMailSender()
 	:	QObject()
 {
 	empathDebug("ctor");
-	pendingList_.setAutoDelete(true);
 }
 
 EmpathMailSender::~EmpathMailSender()
@@ -32,11 +39,38 @@ EmpathMailSender::~EmpathMailSender()
 	empathDebug("dtor");
 }
 
-	void
-EmpathMailSender::addPendingMessage(RMessage & message)
+	bool
+EmpathMailSender::sendQueued()
 {
-// FIXME: duh ? this will disappear. Copy it or something.
-	RMessage * m = new RMessage(message);
-	pendingList_.append(m);
+	KConfig * c(kapp->getConfig());
+	c->setGroup(EmpathConfig::GROUP_SENDING);
+	
+	EmpathURL queueURL(c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER));
+	
+	EmpathFolder *queueFolder(empath->folder(queueURL));
+	
+	if (queueFolder == 0) {
+		empathDebug("Couldn't send messages - couldn't find queue folder !");
+		return false;
+	}
+	
+	QList<EmpathURL> messageList;
+	
+	EmpathURL url;
+	
+	bool status = true;
+
+	EmpathIndexIterator it(queueFolder->messageList());
+	
+	for (; it.current(); ++it) {
+		url = queueFolder->url();
+		url.setMessageID(it.current()->id());
+		RMessage * m(empath->message(url));
+		if (m == 0) return false;
+		RMessage message(*m);
+		if (!sendOne(message)) status = false;
+	}
+	
+	return status;
 }
 

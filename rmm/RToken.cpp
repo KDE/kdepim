@@ -32,7 +32,7 @@ RTokenise(
 	const char * delim,
 	QStrList & l,
 	bool skipComments,
-	bool quotedTokens = true)
+	bool quotedTokens)
 {
 	// FIXME no stderr !
 	//cerr << "RTokenise (\"" << str << "\", \"" << delim << "\") called" << endl;
@@ -43,7 +43,7 @@ RTokenise(
 	char * len = (char *)(str + strlen(str));	// End of string.
 	
 	int rl = strlen(str);
-	char rstart[rl + 1];
+	char * rstart = new char[rl + 1];
 	char * r = rstart;
 	
 	
@@ -157,6 +157,8 @@ RTokenise(
 	}
 	
 	r = 0;
+	
+	delete [] rstart;
 
 	return l.count();
 }

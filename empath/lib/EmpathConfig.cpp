@@ -61,25 +61,16 @@ EmpathConfig::KEY_MAILBOX_LIST = "MailboxList";
 EmpathConfig::KEY_FOLDER_LIST = "FolderList";
 
 	const QString
-EmpathConfig::KEY_VARIABLE_FONT = "VariableWidthFont";
-
-	const QString
-EmpathConfig::KEY_FIXED_FONT = "FixedWidthFont";
-
-	const QString
-EmpathConfig::KEY_QUOTED_FONT = "QuotedFont";
+EmpathConfig::KEY_FIXED_FONT = "FixedFont";
 
 	const QString
 EmpathConfig::KEY_UNDERLINE_LINKS = "UnderlineLinks";
 
 	const QString
-EmpathConfig::KEY_FONT_STYLE = "FontStyle";
+EmpathConfig::KEY_QUOTE_COLOUR_ONE = "QuoteColourOne";
 
 	const QString
-EmpathConfig::KEY_BACKGROUND_COLOUR = "BackgroundColour";
-
-	const QString
-EmpathConfig::KEY_TEXT_COLOUR = "TextColour";
+EmpathConfig::KEY_QUOTE_COLOUR_TWO = "QuoteColourTwo";
 
 	const QString
 EmpathConfig::KEY_LINK_COLOUR = "LinkColour";
@@ -271,7 +262,7 @@ EmpathConfig::KEY_POP3_NOTIFY = "Notify";
 EmpathConfig::KEY_POP3_RETRIEVE_IF_HAVE = "RetrieveIfHave";
 
 	const QString
-EmpathConfig::KEY_NUMBER_OF_FILTERS = "NumberOfFilters";
+EmpathConfig::KEY_FILTER_LIST = "FilterList";
 
 	const QString
 EmpathConfig::KEY_NUM_MATCH_EXPRS_FOR_FILTER = "NumberOfMatchExpressions";
@@ -305,9 +296,6 @@ EmpathConfig::KEY_FILTER_PRIORITY = "FilterPriority";
 
 	const bool
 EmpathConfig::DEFAULT_UNDERLINE_LINKS = true;
-
-	const QString
-EmpathConfig::DEFAULT_FIXED_OR_VARIABLE = "fixed";
 
 	const QString
 EmpathConfig::DEFAULT_SIG_FILE = "~/.signature";
@@ -363,3 +351,39 @@ EmpathConfig::KEY_THREAD_MESSAGES = "ThreadMessages";
 	const QString
 EmpathConfig::KEY_SHOW_HEADERS = "ShowHeaders";
 
+	const QString
+EmpathConfig::KEY_MAIN_WINDOW_X_SIZE = "MainWindowXSize";
+
+	const QString
+EmpathConfig::KEY_MAIN_WINDOW_Y_SIZE = "MainWindowYSize";
+
+	const QString
+EmpathConfig::KEY_MAIN_WIDGET_V_SEP = "MainWidgetVerticalSeparatorPosition";
+
+	const QString
+EmpathConfig::KEY_MAIN_WIDGET_H_SEP = "MainWidgetHorizontalSeparatorPosition";
+	
+	const QString
+EmpathConfig::KEY_MESSAGE_SORT_COLUMN = "MessageListSortColumn";
+	
+	const QString
+EmpathConfig::KEY_MESSAGE_SORT_ASCENDING = "MessageListSortAscending";
+
+	const QString
+EmpathConfig::KEY_CONFIRM_DELIVERY = "ConfirmDelivery";
+
+	const QString
+EmpathConfig::KEY_CONFIRM_READ = "ConfirmReading";
+
+	const QString
+EmpathConfig::KEY_ENCRYPT = "Encrypt";
+
+	const QString
+EmpathConfig::KEY_QUEUE_FOLDER = "QueueFolder";
+
+	const QString
+EmpathConfig::KEY_MARK_AS_READ = "MarkMessagesAsRead";
+
+	const QString
+EmpathConfig::KEY_MARK_AS_READ_TIME = "MarkMessagesAsReadAfterTime";
+		

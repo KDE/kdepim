@@ -24,6 +24,7 @@
 // KDE includes
 #include <kmsgbox.h>
 #include <klocale.h>
+#include <kfiledialog.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -31,6 +32,7 @@
 #include "EmpathComposeWindow.h"
 #include "EmpathComposeWidget.h"
 #include "EmpathMessageWidget.h"
+#include "EmpathFolderChooserDialog.h"
 #include "EmpathMailSender.h"
 #include "EmpathMenuMaker.h"
 #include "EmpathAboutBox.h"
@@ -59,8 +61,7 @@ EmpathComposeWindow::EmpathComposeWindow(
 	setupToolBar();
 	setupStatusBar();
 	
-	QString title = i18n("Compose message");
-	setCaption(title);
+	setCaption(i18n("Compose Message - ") + kapp->getCaption());
 	
 	updateRects();
 	kapp->processEvents();
@@ -93,6 +94,62 @@ EmpathComposeWindow::setupToolBar()
 	
 	tb->insertButton(empathIcon("save.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_fileSaveAs()), true, i18n("Save"));
+	
+	tb->insertSeparator();
+		
+	id_confirmDelivery_		= 8;
+	id_confirmReading_		= 9;
+	id_addSignature_		= 10;
+	id_digitallySign_		= 11;
+	id_encrypt_				= 12;
+	
+	KConfig * c(kapp->getConfig());
+	c->setGroup(EmpathConfig::GROUP_COMPOSE);
+#if 0	
+	tb->insertButton(
+		empathIcon("confirm-delivery.png"),
+		id_confirmDelivery_, SIGNAL(toggled(bool)),
+		this, SLOT(s_confirmDelivery(bool)), true, i18n("Confirm Delivery"));
+	
+	tb->insertButton(
+		empathIcon("confirm-reading.png"),
+		id_confirmReading_, SIGNAL(toggled(bool)),
+		this, SLOT(s_confirmReading(bool)), true, i18n("Confirm Reading"));
+	
+	tb->insertButton(
+		empathIcon("encrypt.png"),
+		id_encrypt_, SIGNAL(toggled(bool)),
+		this, SLOT(s_encrypt(bool)), true, i18n("Encrypt"));
+	
+	tb->insertButton(
+		empathIcon("dig-sign.png"),
+		id_digitallySign_, SIGNAL(toggled(bool)),
+		this, SLOT(s_digSign(bool)), true, i18n("Digitally Sign"));
+#endif
+	tb->insertButton(
+		empathIcon("sign.png"),
+		id_addSignature_, SIGNAL(toggled(bool)),
+		this, SLOT(s_sign(bool)), true, i18n("Add Signature"));
+#if 0	
+	tb->setToggle(id_confirmDelivery_);
+	tb->setToggle(id_confirmReading_);
+	tb->setToggle(id_digitallySign_);
+	tb->setToggle(id_encrypt_);
+	
+	tb->setButton(id_confirmDelivery_,
+		c->readBoolEntry(EmpathConfig::KEY_CONFIRM_DELIVERY, false);
+	tb->setButton(id_confirmReading_,
+		c->readBoolEntry(EmpathConfig::KEY_CONFIRM_READ, false);
+	tb->setButton(id_digitallySign_,
+		c->readBoolEntry(EmpathConfig::KEY_ADD_DIG_SIG, false));
+	tb->setButton(id_encrypt_,
+		c->readBoolEntry(EmpathConfig::KEY_ENCRYPT, false));
+#endif
+	tb->setToggle(id_addSignature_);
+	empathDebug(QString("Add sig is: ") +
+		(c->readBoolEntry(EmpathConfig::KEY_ADD_SIG) ? "true" : "false"));
+	tb->setButton(id_addSignature_,
+		c->readBoolEntry(EmpathConfig::KEY_ADD_SIG, false));
 }
 
 	void
@@ -111,14 +168,7 @@ EmpathComposeWindow::s_fileSendMessage()
 
 	RMessage outMessage(composeWidget_->message());
 
-	empathDebug("Checking if message has attachments");
-	
-//	if (composeWidget_->messageHasAttachments())
-//		outMessage.addAttachmentList(composeWidget_->messageAttachments());
-
-	empathDebug("Sending message");
-
-	empath->mailSender().sendOne(outMessage);
+	empath->send(outMessage);
 }
 
 	void
@@ -135,31 +185,54 @@ EmpathComposeWindow::s_fileSendLater()
 
 	empathDebug("Sending message");
 
-	empath->mailSender().addPendingMessage(outMessage);
+	empath->addPendingMessage(outMessage);
 }
 
 	void
 EmpathComposeWindow::s_fileSaveAs()
 {
 	empathDebug("s_fileSaveAs called");
-}
 
-	void
-EmpathComposeWindow::s_fileAttachFile()
-{
-	empathDebug("s_fileAttachFile called");
+	RMessage message(composeWidget_->message());
+	
+	QString saveFilePath =
+		KFileDialog::getSaveFileName(
+			QString::null, QString::null, this,
+			i18n("Empath: Save Message").ascii());
+
+	empathDebug(saveFilePath);
+	
+	if (saveFilePath.isEmpty()) {
+		empathDebug("No filename given");
+		return;
+	}
+	
+	QFile f(saveFilePath);
+	if (!f.open(IO_WriteOnly)) {
+		// Warn user file cannot be opened.
+		empathDebug("Couldn't open file for writing");
+		KMsgBox(this, "Empath",
+			i18n("Sorry I can't write to that file. "
+				"Please try another filename."),
+			KMsgBox::EXCLAMATION, i18n("OK"));
+
+		return;
+	}
+
+	empathDebug("Opened " + saveFilePath + " OK");
+	
+	QDataStream d(&f);
+	
+	d << message.asString();
+
+	f.close();
+	
 }
 
 	void
 EmpathComposeWindow::s_filePrint()
 {
 	empathDebug("s_filePrint called");
-}
-
-	void
-EmpathComposeWindow::s_fileSettings()
-{
-	empathDebug("s_fileSettings called");
 }
 
 	void
@@ -238,7 +311,7 @@ EmpathComposeWindow::s_editFindAgain()
 EmpathComposeWindow::s_messageNew()
 {
 	empathDebug("s_messageNew called");
-
+	empath->s_compose();
 }
 
 	void
@@ -246,20 +319,63 @@ EmpathComposeWindow::s_messageSaveAs()
 {
 	empathDebug("s_messageSaveAs called");
 
+	RMessage message(composeWidget_->message());
+	
+	QString saveFilePath =
+		KFileDialog::getSaveFileName(
+			QString::null, QString::null, this,
+			i18n("Empath: Save Message").ascii());
+
+	empathDebug(saveFilePath);
+	
+	if (saveFilePath.isEmpty()) {
+		empathDebug("No filename given");
+		return;
+	}
+	
+	QFile f(saveFilePath);
+	if (!f.open(IO_WriteOnly)) {
+		// Warn user file cannot be opened.
+		empathDebug("Couldn't open file for writing");
+		KMsgBox(this, "Empath",
+			i18n("Sorry I can't write to that file. "
+				"Please try another filename."),
+			KMsgBox::EXCLAMATION, i18n("OK"));
+
+		return;
+	}
+
+	empathDebug("Opened " + saveFilePath + " OK");
+	
+	QDataStream d(&f);
+	
+	d << message.asString();
+
+	f.close();
+	
 }
 
 	void
 EmpathComposeWindow::s_messageCopyTo()
 {
 	empathDebug("s_messageCopyTo called");
+	
+	RMessage message(composeWidget_->message());
+	
+	EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
 
-}
+	if (fcd.exec() != QDialog::Accepted) {
+		empathDebug("copy cancelled");
+		return;
+	}
 
-	void
-EmpathComposeWindow::s_messageViewSource()
-{
-	empathDebug("s_messageViewSource called");
+	EmpathFolder * copyFolder = empath->folder(fcd.selected());
 
+	if (copyFolder != 0)
+		copyFolder->writeMessage(message);
+	else {
+		empathDebug("Couldn't get copy folder");
+	}
 }
 
 	void
@@ -278,6 +394,36 @@ EmpathComposeWindow::s_aboutEmpath()
 EmpathComposeWindow::s_aboutQt()
 {
 	QMessageBox::aboutQt(this, "aboutQt");
+}
+
+	void
+EmpathComposeWindow::s_confirmDelivery(bool)
+{
+	empathDebug("s_confirmDelivery() called");
+}
+	
+	void
+EmpathComposeWindow::s_confirmReading(bool)
+{
+	empathDebug("s_confirmReading() called");
+}
+	
+	void
+EmpathComposeWindow::s_addSignature(bool)
+{
+	empathDebug("s_addSignature() called");
+}
+	
+	void
+EmpathComposeWindow::s_digitallySign(bool)
+{
+	empathDebug("s_digitallySign() called");
+}
+
+	void
+EmpathComposeWindow::s_encrypt(bool)
+{
+	empathDebug("s_encrypt() called");
 }
 
 #include "EmpathComposeWindowMenus.cpp"

@@ -25,6 +25,7 @@
 
 // Local includes
 #include "EmpathServerTypeDialog.h"
+#include "EmpathUtilities.h"
 		
 EmpathServerTypeDialog::EmpathServerTypeDialog(
 		QWidget * parent,
@@ -161,13 +162,13 @@ EmpathServerTypeDialog::s_OK()
 	void
 EmpathServerTypeDialog::s_Cancel()
 {
-	done(-1);
+	done(Cancel);
 }
 
 	void
 EmpathServerTypeDialog::s_Help()
 {
-	// Help
+	empathInvokeHelp("","");
 }
 
 	AccountType

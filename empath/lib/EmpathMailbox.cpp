@@ -99,7 +99,7 @@ EmpathMailbox::unreadMessageCount() const
 	EmpathFolderListIterator it(folderList_);
 	
 	for (; it.current(); ++it)
-		c += it.current()->messageCount();
+		c += it.current()->unreadMessageCount();
 
 	return c;
 }
@@ -113,15 +113,13 @@ EmpathMailbox::s_countUpdated(int unread, int read)
 	EmpathFolder *
 EmpathMailbox::folder(const EmpathURL & url)
 {
-	empathDebug("folder(" + url.folderPath() + ") called");
-	EmpathFolderListIterator it(folderList_);
+	empathDebug("folder(" + url.asString() + ") called");
 	QString fp(url.folderPath());
 
-//	while (fp.find("//") != -1)
-//	fp.replace(QRegExp("//"), "/");
 	if (fp.at(0) == '/') fp.remove(0, 1);
 	if (fp.at(fp.length() - 1) == '/') fp.remove(fp.length() - 1, 1);
 	
+	EmpathFolderListIterator it(folderList_);
 	for (; it.current(); ++it) {
 		empathDebug("Comparing \"" + it.current()->url().folderPath() +
 			"\" to \"" + fp + "\"");

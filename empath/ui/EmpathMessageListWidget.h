@@ -27,6 +27,9 @@
 #include <qlistview.h>
 #include <qstring.h>
 #include <qpopupmenu.h>
+#include <qtimer.h>
+#include <qobject.h>
+#include <qdragobject.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -37,6 +40,30 @@
 class EmpathFolder;
 class EmpathMessageListWidget;
 class EmpathMainWindow;
+
+class EmpathMarkAsReadTimer : public QObject
+{
+	Q_OBJECT
+	
+	public:
+		
+		EmpathMarkAsReadTimer(EmpathMessageListWidget * parent);
+		~EmpathMarkAsReadTimer();
+		
+		void go(EmpathMessageListItem *);
+		void cancel();
+		
+	protected slots:
+
+		void s_timeout();
+		
+	private:
+		
+		QTimer timer_;
+		EmpathMessageListItem * item_;
+		
+		EmpathMessageListWidget * parent_;
+};
 
 /**
  * This is the widget that shows the threaded mail list.
@@ -60,6 +87,10 @@ class EmpathMessageListWidget : public QListView
 		
 		void setSignalUpdates(bool yn);
 		const EmpathURL & currentFolder() { return url_; }
+		
+	protected:
+		
+		void mousePressEvent(QMouseEvent *);
 		
 	protected slots:
 	
@@ -87,6 +118,7 @@ class EmpathMessageListWidget : public QListView
 	signals:
 		
 		void changeView(const EmpathURL &);
+		void showing();
 		
 	private:
 		
@@ -126,6 +158,14 @@ class EmpathMessageListWidget : public QListView
 		int messageMenuItemMark;
 		int messageMenuItemMarkRead;
 		int messageMenuItemMarkReplied;
+		int sortColumn_;
+		bool sortAscending_;
+		
+		friend class EmpathMarkAsReadTimer;
+		
+		EmpathMarkAsReadTimer * markAsReadTimer_;
+		
+		void markAsRead(EmpathMessageListItem *);
 };
 
 #endif

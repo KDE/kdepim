@@ -160,13 +160,14 @@ EmpathMailboxMaildir::saveConfig()
 	empathDebug("saveConfig() called - my name is " + url_.asString());
 	
 	KConfig * c = kapp->getConfig();
-	c->setGroup(url_.mailboxName());
+	c->setGroup(EmpathConfig::GROUP_MAILBOX + url_.mailboxName());
 	
 	c->writeEntry(EmpathConfig::KEY_MAILBOX_TYPE, type_);
 	c->writeEntry(EmpathConfig::KEY_LOCAL_MAILBOX_PATH, path_);
 	
 	c->writeEntry(EmpathConfig::KEY_CHECK_MAIL, checkMail_);
 	c->writeEntry(EmpathConfig::KEY_CHECK_MAIL_INTERVAL, checkMailInterval_);
+	c->sync();
 }
 
 	void
@@ -175,7 +176,7 @@ EmpathMailboxMaildir::readConfig()
 	empathDebug("readConfig() called");
 
 	KConfig * c = kapp->getConfig();
-	c->setGroup(url_.mailboxName());
+	c->setGroup(EmpathConfig::GROUP_MAILBOX + url_.mailboxName());
 	
 	checkMail_ = c->readUnsignedNumEntry(EmpathConfig::KEY_CHECK_MAIL);
 	checkMailInterval_ =
@@ -186,6 +187,8 @@ EmpathMailboxMaildir::readConfig()
 	
 	path_ = c->readEntry(EmpathConfig::KEY_LOCAL_MAILBOX_PATH);
 	_recursiveReadFolders(path_);
+	
+	emit(updateFolderLists());
 }
 
 	void
@@ -240,6 +243,7 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
 		
 		QString s(d.absPath());
 		s.remove(0, path_.length());
+		s.remove(0, 1);
 		empathDebug("Folder path is " + s);
 		
 		EmpathURL url(url_.mailboxName(), s, QString::null);

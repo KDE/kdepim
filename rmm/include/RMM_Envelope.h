@@ -57,10 +57,11 @@ class REnvelope : public RMessageComponent
 
 		REnvelope();
 		REnvelope(const REnvelope & envelope);
-		REnvelope(const QCString & s) : RMessageComponent(s) { }
+		REnvelope(const QCString & s);
 
 		virtual ~REnvelope();
-		REnvelope & operator = (const REnvelope & envelope);
+		REnvelope & operator = (const REnvelope &);
+		REnvelope & operator = (const QCString &);
 
 		void parse();
 		void assemble();
@@ -77,8 +78,7 @@ class REnvelope : public RMessageComponent
 		void set(const QCString & s)
 		{ RMessageComponent::set(s); }
 		
-		QCString asString()
-		{ return RMessageComponent::asString(); }
+		QCString asString();
 		
 		/**
 		 * Set the specified header to the string value.

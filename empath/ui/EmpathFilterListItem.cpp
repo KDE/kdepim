@@ -34,7 +34,7 @@ EmpathFilterListItem::EmpathFilterListItem(
 		QListView * parent,
 		EmpathFilter * _filter)
 	:
-		QListViewItem(parent, _filter->description()),
+		QListViewItem(parent, _filter->name()),
 		filter_(_filter)
 {
 	empathDebug("ctor");

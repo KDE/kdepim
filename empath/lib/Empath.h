@@ -140,9 +140,17 @@ class Empath : public QObject
 		
 		EmpathTask * addTask(const QString & name);
 		
+		void addPendingMessage(RMessage &);
+		void send(RMessage &);
+		void sendQueued();
+		
 		static Empath * EMPATH;
 		
+		void init();
+		
 	public slots:
+		
+		void s_newTask(EmpathTask *);
 
 		void s_newMailArrived();
 	

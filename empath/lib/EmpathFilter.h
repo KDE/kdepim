@@ -38,18 +38,19 @@ class EmpathFilter : public QObject
 
 	public:
 		
-		EmpathFilter();
+		EmpathFilter(const QString & name);
 
 		virtual ~EmpathFilter();
-		void load(Q_UINT32 id);
+		void load();
 		void save();
+		
+		void setName(const QString & name);
+		QString name() { return name_; }
 		
 		void filter(const EmpathURL & source);
 
 		void addMatchExpr(EmpathMatcher * matcher);
-		void setId(Q_UINT32 id);
 
-		Q_UINT32	id() const;
 		QString		description() const;
 		QString		actionDescription() const;
 		void		setEventHandler(EmpathFilterEventHandler *);
@@ -77,6 +78,8 @@ class EmpathFilter : public QObject
 		EmpathURL					url_;
 		QList<EmpathMatcher>		matchExprs_;
 		EmpathFilterEventHandler	* fEventHandler_;
+		
+		QString	name_;
 };
 
 #endif // EMPATHFILTER_H

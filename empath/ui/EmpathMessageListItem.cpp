@@ -88,7 +88,7 @@ EmpathMessageListItem::_init()
 		}
 	}
 	
-	setText(4, sizeStr);
+	setText(3, sizeStr);
 	
 	RMailbox sender_(m.sender());
 	
@@ -109,7 +109,6 @@ EmpathMessageListItem::_init()
 	}
 	
 	dateStr_.sprintf("%016x", m.date().asUnixTime());
-	setText(2, dateStr_);
 	
 	sizeStr_.sprintf("%016x", size_);
 }
@@ -145,11 +144,8 @@ EmpathMessageListItem::key(int column, bool b) const
 			break;
 			
 		case 3:
-			s = text(3);
-			break;
-		
-		case 4:
 			s = sizeStr_;
+			break;
 			
 		default:
 			break;

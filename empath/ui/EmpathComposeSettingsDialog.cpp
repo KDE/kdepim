@@ -441,8 +441,8 @@ EmpathComposeSettingsDialog::loadData()
 	void
 EmpathComposeSettingsDialog::s_OK()
 {
-	s_apply();
-	
+	if (!applied_)
+		s_apply();
 	kapp->getConfig()->sync();
 	delete this;
 }

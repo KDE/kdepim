@@ -68,7 +68,7 @@ RMailbox & RMailbox::operator = (const RMailbox & mailbox)
 
 RMailbox & RMailbox::operator = (const QCString & s)
 {
-	rmmDebug("operator =");
+	rmmDebug("operator = (" + s + ")");
 	
 	RAddress::operator = (s);
 	
@@ -84,7 +84,8 @@ operator >> (QDataStream & s, RMailbox & mailbox)
 		>> mailbox.route_
 		>> mailbox.localPart_
 		>> mailbox.domain_;
-	mailbox.assembled_ = false;
+	mailbox.parsed_		= true;
+	mailbox.assembled_	= false;
 	return s;
 }
 	

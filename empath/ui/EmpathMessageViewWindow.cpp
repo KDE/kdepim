@@ -21,6 +21,8 @@
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
+#include <kmsgbox.h>
+#include <kfiledialog.h>
 
 // Local includes
 #include <RMM_Message.h>
@@ -29,33 +31,30 @@
 #include "EmpathMessageViewWidget.h"
 #include "EmpathMessageViewWindow.h"
 #include "EmpathMenuMaker.h"
+#include "EmpathFolderChooserDialog.h"
+#include "EmpathMessageSourceView.h"
 
 EmpathMessageViewWindow::EmpathMessageViewWindow(
 		const EmpathURL & url, const char * name)
-	:	KTMainWindow(name)
+	:	KTMainWindow(name),
+		url_(url)
 {
 	empathDebug("ctor");
 	
-	messageView_ = new EmpathMessageViewWidget(url, this, "messageView");
+	messageView_ = new EmpathMessageViewWidget(url_, this, "messageView");
 	CHECK_PTR(messageView_);
+	messageView_->go();
+	
+	setView(messageView_, false);
 	
 	setupMenuBar();
 	setupToolBar();
 	
-	empathDebug("Finished setup");
-	
-	QString title = "Empath: Message View";
-	
-	setCaption(title);
-	
-	setView(messageView_, false);
+	setCaption(i18n("Message View - ") + kapp->getCaption());
 	
 	updateRects();
 	kapp->processEvents();
-	messageView_->go();
-	kapp->processEvents();
 	show();
-	empathDebug("ctor finished");
 }
 
 EmpathMessageViewWindow::~EmpathMessageViewWindow()
@@ -82,16 +81,6 @@ EmpathMessageViewWindow::setupMenuBar()
 
 	// File menu
 	empathDebug("setting up file menu");
-	
-	fileMenu_->insertItem(empathIcon("empath-save.png"), i18n("Save &As"),
-		this, SLOT(s_fileSaveAs()));
-	
-	fileMenu_->insertSeparator();
-
-	fileMenu_->insertItem(empathIcon("empath-print.png"), i18n("&Print"),
-		this, SLOT(s_filePrint()));
-	
-	fileMenu_->insertSeparator();
 	
 	fileMenu_->insertItem(i18n("&Close"),
 		this, SLOT(s_fileClose()));
@@ -126,9 +115,23 @@ EmpathMessageViewWindow::setupMenuBar()
 	messageMenu_->insertItem(empathIcon("editcopy.png"), i18n("&Copy to..."),
 		this, SLOT(s_messageCopyTo()));
 	
+	helpMenu_->insertItem(
+		i18n("&Contents"),
+		this, SLOT(s_help()));
 
-	setupHelpMenu(this, 0, helpMenu_);
+	helpMenu_->insertItem(i18n("&About Empath"),
+		this, SLOT(s_aboutEmpath()));
 
+	helpMenu_->insertSeparator();
+	
+	helpMenu_->insertItem(
+		i18n("About &Qt"),
+		this, SLOT(s_aboutQt()));
+	
+	helpMenu_->insertItem(
+		i18n("About &KDE"),
+		kapp, SLOT(aboutKDE()));
+	
 	menuBar()->insertItem(i18n("&File"), fileMenu_);
 	menuBar()->insertItem(i18n("&Edit"), editMenu_);
 	menuBar()->insertItem(i18n("&Message"), messageMenu_);
@@ -150,7 +153,7 @@ EmpathMessageViewWindow::setupToolBar()
 	this->addToolBar(tb, 0);
 
 	tb->insertButton(empathIcon("compose.png"), 0, SIGNAL(clicked()),
-			this, SLOT(s_fileNewMessage()), true, i18n("Compose"));
+			this, SLOT(s_messageNew()), true, i18n("Compose"));
 	
 	tb->insertButton(empathIcon("reply.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_messageReply()), true, i18n("Reply"));
@@ -172,34 +175,9 @@ EmpathMessageViewWindow::setupStatusBar()
 }
 
 	void
-EmpathMessageViewWindow::s_fileNewMessage()
-{
-	empathDebug("s_fileNewMessage called");
-}
-
-	void
-EmpathMessageViewWindow::s_fileSaveAs()
-{
-	empathDebug("s_fileSaveAs called");
-}
-
-	void
-EmpathMessageViewWindow::s_filePrint()
-{
-	empathDebug("s_filePrint called");
-}
-
-	void
-EmpathMessageViewWindow::s_fileSettings()
-{
-	empathDebug("s_fileSettings called");
-}
-
-	void
 EmpathMessageViewWindow::s_fileClose()
 {
 	empathDebug("s_fileClose called");
-	// FIXME: Check if the user wants to save changes
 	delete this;
 }
 
@@ -234,15 +212,47 @@ EmpathMessageViewWindow::s_editFindAgain()
 	void
 EmpathMessageViewWindow::s_messageNew()
 {
-	empathDebug("s_messageNew called");
-
+	empath->s_compose();
 }
 
 	void
 EmpathMessageViewWindow::s_messageSaveAs()
 {
 	empathDebug("s_messageSaveAs called");
+	
+	RMessage * m = empath->message(url_);
+	
+	if (m == 0) {
+		return;
+	}
+	
+	RMessage message(*m);
 
+	QString saveFilePath =
+		KFileDialog::getSaveFileName(
+			QString::null, QString::null, this, i18n("Empath: Save Message").ascii());
+	empathDebug(saveFilePath);
+	
+	if (saveFilePath.isEmpty()) {
+		empathDebug("No filename given");
+		return;
+	}
+	
+	QFile f(saveFilePath);
+	if (!f.open(IO_WriteOnly)) {
+		// Warn user file cannot be opened.
+		empathDebug("Couldn't open file for writing");
+		KMsgBox(this, "Empath", i18n("Sorry I can't write to that file. Please try another filename."), KMsgBox::EXCLAMATION, i18n("OK"));
+		return;
+	}
+	empathDebug("Opened " + saveFilePath + " OK");
+	
+	QDataStream d(&f);
+	
+	d << message.asString();
+
+	f.close();
+	
 }
 
 	void
@@ -250,6 +260,28 @@ EmpathMessageViewWindow::s_messageCopyTo()
 {
 	empathDebug("s_messageCopyTo called");
 
+	RMessage * m(empath->message(url_));
+	
+	if (m == 0) {
+		return;
+	}
+	
+	RMessage message(*m);
+	
+	EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
+
+	if (fcd.exec() != QDialog::Accepted) {
+		empathDebug("copy cancelled");
+		return;
+	}
+
+	EmpathFolder * copyFolder = empath->folder(fcd.selected());
+
+	if (copyFolder != 0)
+		copyFolder->writeMessage(message);
+	else {
+		empathDebug("Couldn't get copy folder");
+	}
 }
 
 	void
@@ -257,42 +289,61 @@ EmpathMessageViewWindow::s_messageViewSource()
 {
 	empathDebug("s_messageViewSource called");
 
+	EmpathMessageSourceView * sourceView =
+		new EmpathMessageSourceView(url_, 0);
+
+	CHECK_PTR(sourceView);
+
+	sourceView->show();
 }
 
 	void
 EmpathMessageViewWindow::s_messageForward()
 {
 	empathDebug("s_messageForward called");
+	empath->s_forward(url_);
 }
 
 	void
 EmpathMessageViewWindow::s_messageBounce()
 {
 	empathDebug("s_messageBounce called");
+	empath->s_bounce(url_);
 }
 
 	void
 EmpathMessageViewWindow::s_messageDelete()
 {
 	empathDebug("s_messageDelete called");
+	if (empath->remove(url_)) {
+		KMsgBox(this, "Empath",
+			i18n("Message Deleted"), KMsgBox::EXCLAMATION, i18n("OK"));
+	} else {
+		KMsgBox(this, "Empath",
+			i18n("Couldn't delete message"), KMsgBox::EXCLAMATION, i18n("OK"));
+	}
+	s_fileClose();
 }
 
 	void
 EmpathMessageViewWindow::s_messagePrint()
 {
 	empathDebug("s_messagePrint called");
+	messageView_->s_print();
 }
 
 	void
 EmpathMessageViewWindow::s_messageReply()
 {
 	empathDebug("s_messageReply called");
+	empath->s_reply(url_);
 }
 
 	void
 EmpathMessageViewWindow::s_messageReplyAll()
 {
 	empathDebug("s_messageReplyAll called");
+	empath->s_replyAll(url_);
 }
 
 

@@ -18,13 +18,13 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <iostream.h>
 #include <ctype.h>
 
 // Qt includes
 #include <qfile.h>
 #include <qtextstream.h>
 #include <qstring.h>
+#include <qpngio.h>
 
 // KDE includes
 #include <klocale.h>
@@ -38,26 +38,7 @@
 #include "EmpathConfig.h"
 #include "Empath.h"
 #include "EmpathUIUtils.h"
-
-static char * replaceTagsHeader[] = {
-	// Header fields
-	"Approved", "Bcc", "Cc", "Comments", "Content-Description",
-	"Content-Disposition", "Content-Id", "Content-Transfer-Encoding",
-	"Content-Type", "Control", "Cte", "Date", "Distribution", "Encrypted",
-	"Expires", "Followup-To", "From", "In-Reply-To", "Keywords", "Lines",
-	"Message-Id", "Mime-Version", "Newsgroups", "Organization", "Path",
-	"Received", "References", "Reply-To", "Resent-Bcc", "Resent-Cc",
-	"Resent-Date", "Resent-From", "Resent-MessageId", "Resent-ReplyTo",
-	"Resent-Sender", "Resent-To", "Return-Path", "Sender", "Subject",
-	"Summary", "To", "Xref"
-};
-
-static char * replaceTagsBody[] = {
-	"@_TT_",
-	"@_TTEND_",
-	"@_MESSAGE_BODY_",
-	"@_SIGNATURE_"
-};
+#include "EmpathUtilities.h"
 
 const int fsizes[7] = { 14, 14, 14, 14, 14, 14, 14 };
 
@@ -67,6 +48,7 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 	:	KHTMLWidget(_parent, _name)
 {
 	empathDebug("ctor");
+	qInitPngIO();
 	
 	setFontSizes(fsizes);
 	KConfig * c = kapp->getConfig();
@@ -79,12 +61,6 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 	write("<BODY BGCOLOR=\"#");
 	write(QColorToHTML(empathWindowColour()));
 	write("\">");
-	write(
-		"<IMG SRC=\"file:" +
-		QCString(empathDir().ascii()) +
-		"/pics/" +
-		iconSet.ascii() +
-		"/empath.png\">");
 	write("<TT><FONT COLOR=\"#");
 	write(QColorToHTML(empathTextColour()));
 	write("\">");
@@ -93,7 +69,6 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 	// End welcome message
 	parse();
 	end();
-	
 	QObject::connect(
 		this, SIGNAL(rightButtonPressed(const QPoint &)),
 		this, SLOT(s_rightButtonPressed(const QPoint &)));
@@ -114,12 +89,13 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool isHTML)
 	setCursor(waitCursor);
 	
 	if (isHTML) {
+		empathDebug("Using HTML message");
 		begin();
 		write(s);
 		setCursor(arrowCursor);
 		parse();
+		return;
 	}
-
 	// FIXME Remove ascii()
 	setStandardFont(empathGeneralFont().family().ascii());
 	setFixedFont(empathFixedFont().family().ascii());
@@ -130,264 +106,55 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool isHTML)
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	setDefaultTextColors(
-		c->readColorEntry(EmpathConfig::KEY_TEXT_COLOUR),
+		empathTextColour(),
 		c->readColorEntry(EmpathConfig::KEY_LINK_COLOUR),
 		c->readColorEntry(EmpathConfig::KEY_VISITED_LINK_COLOUR));
 	
 	setUnderlineLinks(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS));
-	
-	// Implementation Note:
-	// Get template to htmlTemplate
-	// Get message headers and body
-	// 
-	// Use message headers and body to fill in blanks in htmlTemplate.
-	// Use htmlTemplate (now filled in) to fill this widget.
-	
-	// FIXME: Read this from the config.
-	QString templateFilename = empathDir() + "/message.template.html";
-	
-	// Load the template.
-	if (!loadTemplate(templateFilename)) {
-		empathDebug("Couldn't open HTML message template");
-	}
 
-	// Markup the background colour in the template.
-	markupBackgroundColour(htmlTemplate);
-	markupTextColour(htmlTemplate);
-	
-	// Markup <TT> and </TT> in the template.
-	htmlTemplate.replace(QRegExp("@_TT_"), "<PRE>");
-	htmlTemplate.replace(QRegExp("@_TTEND_"), "</PRE>");
-	int bodyTagPos = htmlTemplate.find("@_MESSAGE_BODY_");
-	
-	replaceBodyTagsByData(s, htmlTemplate);
+	QCString html(s);
+	toHTML(html);
 	
 	begin();
-	write(htmlTemplate);
+	
+	write(
+		"<HTML><BODY BGCOLOR=" +
+		QColorToHTML(empathWindowColour()) +
+		"><PRE>" +
+		html +
+		"</PRE></BODY></HTML>");
+	
 	setCursor(arrowCursor);
 	parse();
 }
 
-	bool
-EmpathMessageHTMLWidget::loadTemplate(const QString & templateFilename)
-{
-	empathDebug("loadTemplate");
-	QFile f(templateFilename);
-	
-	htmlTemplate = "";
-	
-	if (!f.open(IO_ReadOnly)) {
-		
-		empathDebug("Couldn't open file");
-		htmlTemplate =
-			"<HTML>\n<H1>" +
-			QCString(i18n("Warning: Couldn't load the template for displaying this message").ascii()) +
-			"</H1>";
-		return false;
-	
-	} else {
-	
-		QTextStream t(&f);
-		
-		while (!t.eof())
-		   htmlTemplate	+= t.readLine().ascii();
-		
-		f.close();
-	
-		return true;
-	}
-}
-
-	void
-EmpathMessageHTMLWidget::markupBackgroundColour(QCString & html)
-{
-	empathDebug("markupBackgroundColour");
-	
-	QCString bgcol;
-	
-	KConfig * c = kapp->getConfig();
-	c->setGroup(EmpathConfig::GROUP_DISPLAY);
-	
-	bgcol = "BGCOLOR=\"#" +
-		QColorToHTML(c->readColorEntry(EmpathConfig::KEY_BACKGROUND_COLOUR)) +
-		"\"";
-	
-	html.replace(QRegExp("@_BODY_BACKGROUND_"), bgcol);
-	empathDebug("end markupBk");
-}
-
-	void
-EmpathMessageHTMLWidget::markupTextColour(QCString & html)
-{
-	empathDebug("markupTextColour");
-	
-	KConfig * c = kapp->getConfig();
-	c->setGroup(EmpathConfig::GROUP_DISPLAY);
-	
-	QCString textcol;
-
-	textcol = "\"#" +
-		QColorToHTML(c->readColorEntry(EmpathConfig::KEY_TEXT_COLOUR)) +
-		"\"";
-	
-	html.replace(QRegExp("@_NORMAL_TEXT_"), textcol);
-	empathDebug("end markupTcol");
-}
-
-	void
-EmpathMessageHTMLWidget::replaceHeaderTagsByData(
-	const QCString & body, QCString & html)
-{
-	empathDebug("replaceHeaderTagsByData");
-	markupHeaderNames(html);
-	markupHeaderBodies(body, html);
-}
-
-	void
-EmpathMessageHTMLWidget::replaceBodyTagsByData(
-	const QCString & body, QCString & html)
-{
-	empathDebug("replaceBodyTagsByData");
-
-	QRegExp sigSep("\n-- ?\n");
-	int i = sigSep.match(body);
-	
-	QCString bodyOnly;
-	QCString sigOnly;
-
-	// Handle condition where there's no sig.	
-	if (i != -1) {
-		
-		sigOnly		= body.right(body.length() - i - 4);
-		bodyOnly	= body.left(i);
-
-	} else {
-
-		sigOnly		= "";
-		bodyOnly	= body;
-	}
-	toHTML(bodyOnly);
-	toHTML(sigOnly);
-	
-	// Replace the body stuff with relevant data
-	html.replace(QRegExp("@_MESSAGE_BODY_"), bodyOnly);
-	
-	html.replace(QRegExp("@_SIGNATURE_"), sigOnly);
-}
-
-	void
-EmpathMessageHTMLWidget::markupHeaderNames(QCString & html)
-{
-	empathDebug("markupHeaderNames");
-	QCString replacementField;
-	QRegExp fieldToReplace;
-	fieldToReplace.setCaseSensitive(false);
-
-	// Replace all @_HEADER_* with appropriate header names
-	for (int i = 0 ; i < 42 ; i++) {
-		
-		replacementField = replaceTagsHeader[i];
-		fieldToReplace =
-			"@_HEADER_" +
-			replacementField +
-			"_";
-		
-		if (html.find(fieldToReplace, 0) == -1)
-			continue;
-		
-		empathDebug("Replacing all " + QString(fieldToReplace.pattern()) +
-				QString(" with ") + QString(replacementField) + QString(":"));
-
-		html.replace(fieldToReplace, replacementField + ":");
-	}
-}
-
-	void
-EmpathMessageHTMLWidget::markupHeaderBodies(
-		const QCString & body, QCString & html)
-{
-	empathDebug("markupHeaderBodies");
-	QCString replacementField;
-	QRegExp fieldToReplace;
-	fieldToReplace.setCaseSensitive(false);
-	
-	// Replace all header body elements with appropriate header bodies, if
-	// they exist. If not, use null string.
-	
-	for (int i = 0 ; i < 42 ; i++) {
-		
-		replacementField = QCString(replaceTagsHeader[i]).upper();
-		replacementField.replace(QRegExp("-"), "_");
-		fieldToReplace =
-			"@_BODY_" +
-			replacementField +
-			"_";
-		
-		// If we can't find the field, loop.
-		if (html.find(fieldToReplace, 0) == -1) continue;
-
-		empathDebug("fieldToReplace: " + fieldToReplace.pattern());
-		
-		// e.g. replacementRegExp = "Subject" + ":".
-	
-		QRegExp replacementRegExp(replaceTagsHeader[i] + QCString(":"));
-		
-		empathDebug("replacementRegExp: " +
-			replacementRegExp.pattern());
-		
-		// Try to find the header in the message header, not case sensitive.
-		int headerPos =
-			body.find(QRegExp(replacementRegExp.pattern()));
-		
-		// Didn't find the field in the message header ? Replace the tag in the
-		// html with nothing.
-		if (headerPos == -1) {
-			html.replace(QRegExp(fieldToReplace), "");
-			continue;
-		}
-
-		empathDebug("Found replacementRegExp");
-
-		// headerPosToEnd = everything from where we found it in the headers to
-		// the end of the headers.		
-		QCString headerPosToEnd =
-			body.right(body.length() - headerPos);
-		
-		// Now find the end of the header
-		QRegExp endOfHeaderBody("\n[^ ]");
-		
-		// Get all the header into a string.
-		QCString header =
-			headerPosToEnd.left(endOfHeaderBody.match(headerPosToEnd));
-		
-		// Remove the header of the header :) (leaves us with header body).
-		QCString headerBody =
-			header.right(
-				header.length() - header.find(":") - 1).stripWhiteSpace();
-		
-		empathDebug("header: " + headerBody); 
-		
-		toHTML(headerBody);
-		
-		empathDebug("header: " + headerBody); 
-		
-		empathDebug("Replacing all " + QString(fieldToReplace.pattern()) +
-				QString(" with ") + QString(headerBody));
-		html.replace(QRegExp(fieldToReplace.pattern()), headerBody);
-	}
-}
-	
-
 	void
 EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 {
+	KConfig * config(kapp->getConfig());
+	config->setGroup(EmpathConfig::GROUP_DISPLAY);
+
+	QColor quote1, quote2;
+	QColor color1(Qt::darkBlue);
+	QColor color2(Qt::darkGreen);
+
+	quote1 = config->readColorEntry(
+		EmpathConfig::KEY_QUOTE_COLOUR_ONE, &color1);
+
+	quote2 = config->readColorEntry(
+		EmpathConfig::KEY_QUOTE_COLOUR_TWO, &color2);
+
+	QCString quoteOne = QColorToHTML(quote1);
+	QCString quoteTwo = QColorToHTML(quote2);
+	
+	empathDebug("Quote colours: \"" + quoteOne + "\", \"" + quoteTwo + "\"");
 	
 	// Will this work with Qt-2.0's QString ?
 	register char * buf = new char[32768]; // 32k buffer. Will be reused.
 	QCString outStr;
 	
 	if (!buf) { 
-		cerr << "Couldn't allocate buffer" << endl;
+		empathDebug("Couldn't allocate buffer");
 		return;
 	}
 
@@ -434,10 +201,7 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 					bufpos += 8;
 					markDownQuotedLine = false;
 				
-				} else {
-				
-					*(bufpos++) = *pos;
-				}
+				} else *(bufpos++) = *pos;
 				
 				break;
 
@@ -446,6 +210,21 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 				bufpos += 4;
 				break;
 			
+			case '-':
+				// Markup sig.
+				// Ensure first char on line, and following char is '-'
+				if (pos != start && *(pos - 1) == '\n' &&
+					*(pos + 1) == '-' &&
+					*(pos + 2) == '\n')
+				{			
+					strcpy(bufpos, "<BR><HR><BR>");
+					bufpos += 12;
+					++pos;
+
+				} else *(bufpos++) = *pos;
+		
+				break;
+					
 			case '>':
 				// Markup quoted line if that's what we have.
 				if (pos != start && *(pos - 1) == '\n') { // First char on line?
@@ -456,9 +235,9 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 						if (*pos++ == '>') ++quoteDepth;
 
 					if (quoteDepth % 2 == 0)
-						strcpy(bufpos, "<FONT COLOR=\"#009900\">");
+						strcpy(bufpos, "<FONT COLOR=\"#" + quoteOne + "\">");
 					else
-						strcpy(bufpos, "<FONT COLOR=\"#000099\">");
+						strcpy(bufpos, "<FONT COLOR=\"#" + quoteTwo + "\">");
 						
 					bufpos += 22;
 					
@@ -594,7 +373,7 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 	
 				// First check to see if this is an address of the form
 				// "Rik Hemsley"@dev.null.
-				if (pos > start && *(pos - 1) == '"') {
+				if (pos != start && *(pos - 1) == '"') {
 					
 					while (
 						startAddress		>= start	&&
@@ -606,22 +385,30 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 				
 				} else { // It's a normal address ( if it is an address ).
 
-					for (
-						startAddress = pos - 1;
+					// Work backwards from one before '@' until we're sure
+					// that we're before the address start.
+					startAddress = pos - 1;
+
+					while (
 						startAddress 		>=	start	&&
 						pos - startAddress	<	128		&&
 						*startAddress		!=	'<'		&&
 						*startAddress		!=	'>'		&&
 						*startAddress		!=	'"'		&&
 						*startAddress		!=	','		&&
-						(
-							isalnum(*startAddress)	||
-							ispunct(*startAddress)
-						);
-						--startAddress);
+						*startAddress		!=	' '		&&
+						*startAddress		!=	'\t'	&&
+						*startAddress		!=	'\n'	&&
+						(isalnum(*startAddress)	|| ispunct(*startAddress)))
+					{
+						--startAddress;
+					}
 
 					++startAddress;
 				}
+				
+				// Now work forwards from one after '@' until we're sure
+				// that we're clear of the end of the address.
 				
 				endAddress = pos + 1;
 
@@ -686,8 +473,8 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 	}
 	
 	*bufpos = '\0';
-	cerr << buf << endl;
 	outStr += buf;
+	ASSERT(buf != 0);
 	delete [] buf;
 	buf = 0;
 	str = outStr.data();

@@ -30,9 +30,10 @@
 #include <qcheckbox.h>
 #include <qradiobutton.h>
 #include <qcombobox.h>
+#include <qspinbox.h>
+#include <qdialog.h>
 
 // KDE includes
-#include <kfontdialog.h>
 #include <kcolorbtn.h>
 #include <kbuttonbox.h>
 
@@ -60,7 +61,6 @@ class EmpathDisplaySettingsDialog : public QDialog
 	protected slots:
 		
 		void s_chooseFixedFont();
-		void s_chooseVariableFont();
 
 		void s_OK();
 		void s_cancel();
@@ -72,46 +72,43 @@ class EmpathDisplaySettingsDialog : public QDialog
 
 		EmpathDisplaySettingsDialog(QWidget * parent = 0, const char * name = 0);
 
-		KFontDialog		* fontDialog_;
-
 		QButtonGroup	* buttonGroup_;
 
 		QGridLayout		* topLevelLayout_;
-		QGridLayout		* fontGroupLayout_;
-		QGridLayout		* messageFontsGroupLayout_;
-		QGridLayout		* colourGroupLayout_;
+		QGridLayout		* viewGroupLayout_;
+		QGridLayout		* listGroupLayout_;
 
-		RikGroupBox		* rgb_font_;
-		RikGroupBox		* rgb_colour_;
-		RikGroupBox		* rgb_style_;
+		RikGroupBox		* rgb_list_;
+		RikGroupBox		* rgb_view_;
 
-		QWidget			* w_font_;
-		QWidget			* w_colour_;
-		QWidget			* w_style_;
+		QWidget			* w_list_;
+		QWidget			* w_view_;
 		
-		QLabel			* l_variableFont_;
 		QLabel			* l_fixedFont_;
-		
-		QLabel			* l_sampleVariable_;
 		QLabel			* l_sampleFixed_;
-		
-		QPushButton		* pb_chooseVariableFont_;
 		QPushButton		* pb_chooseFixedFont_;
 		
-		QLabel			* l_textColour_;
-		QLabel			* l_backgroundColour_;
+		QLabel			* l_quoteColourTwo_;
+		QLabel			* l_quoteColourOne_;
 		QLabel			* l_linkColour_;
 		QLabel			* l_visitedLinkColour_;
 		
-		KColorButton	* kcb_textColour_;
-		KColorButton	* kcb_backgroundColour_;
+		KColorButton	* kcb_quoteColourTwo_;
+		KColorButton	* kcb_quoteColourOne_;
 		KColorButton	* kcb_linkColour_;
 		KColorButton	* kcb_visitedLinkColour_;
 		
 		QCheckBox		* cb_underlineLinks_;
+		
+		QCheckBox		* cb_threadMessages_;
+		
+		QLabel			* l_displayHeaders_;
+		QLineEdit		* le_displayHeaders_;
 
-		QRadioButton	* rb_messageFontFixed_;
-		QRadioButton	* rb_messageFontVariable_;
+		QLabel			* l_sortColumn_;
+		QComboBox		* cb_sortColumn_;
+
+		QCheckBox		* cb_sortAscending_;
 		
 		QLabel			* l_iconSet_;
 		QComboBox		* cb_iconSet_;
@@ -122,6 +119,9 @@ class EmpathDisplaySettingsDialog : public QDialog
 		QPushButton		* pb_apply_;
 		QPushButton		* pb_OK_;
 		QPushButton		* pb_cancel_;
+		
+		QCheckBox		* cb_timer_;
+		QSpinBox		* sb_timer_;
 		
 		static bool		exists_;
 		bool			applied_;

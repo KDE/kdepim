@@ -30,8 +30,10 @@
 #include "EmpathConfig.h"
 #include "Empath.h"
 
-EmpathFilter::EmpathFilter()
-	:	fEventHandler_(0)
+EmpathFilter::EmpathFilter(const QString & name)
+	:	fEventHandler_(0),
+		name_(name),
+		priority_(0)
 {
 	empathDebug("ctor");
 }
@@ -41,25 +43,16 @@ EmpathFilter::~EmpathFilter()
 	empathDebug("dtor");
 }
 
-	Q_UINT32
-EmpathFilter::id() const
-{
-	return id_;
-}
-
-	void
-EmpathFilter::setId(Q_UINT32 _id)
-{
-	id_ = _id;
-}
-
 	void
 EmpathFilter::save()
 {
 	empathDebug("save() called");
 	
 	KConfig * config = kapp->getConfig();
-	config->setGroup(EmpathConfig::GROUP_FILTER + QString().setNum(id_));
+	config->setGroup(EmpathConfig::GROUP_FILTER + name_);
+	
+	config->writeEntry(EmpathConfig::KEY_NUM_MATCH_EXPRS_FOR_FILTER,
+		matchExprs_.count());
 	
 	empathDebug("Saving url name == \"" + url_.asString() + "\"");
 
@@ -67,31 +60,28 @@ EmpathFilter::save()
 	
 	empathDebug("Matchers to save: " + QString().setNum(matchExprs_.count()));
 	
+	empathDebug("Saving priority == " + QString().setNum(priority_));
+	config->writeEntry(EmpathConfig::KEY_FILTER_PRIORITY, priority_);
+	
 	EmpathMatcherListIterator it(matchExprs_);
 	
 	int c = 0;
 	
 	for (; it.current() ; ++it)
-		it.current()->save(id_, c++);
-	
-	config->writeEntry(EmpathConfig::KEY_NUM_MATCH_EXPRS_FOR_FILTER, c);
+		it.current()->save(name_, c++);
 
 	empathDebug("Saving event handler");
 	if (fEventHandler_ != 0)
-		fEventHandler_->save(id_);
+		fEventHandler_->save(name_);
 	
-	empathDebug("Saving priority == " + QString().setNum(priority_));
-	config->writeEntry(EmpathConfig::KEY_FILTER_PRIORITY, priority_);
+	config->sync();
 }
 
 	void
-EmpathFilter::load(Q_UINT32 id)
+EmpathFilter::load()
 {
-	empathDebug("load(" + QString().setNum(id) + ") called");
-	id_ = id;
-
 	KConfig * config = kapp->getConfig();
-	config->setGroup(EmpathConfig::GROUP_FILTER + QString().setNum(id_));
+	config->setGroup(EmpathConfig::GROUP_FILTER + name_);
 	
 	url_ = config->readEntry(EmpathConfig::KEY_FILTER_FOLDER);
 	empathDebug("My url is \"" + url_.asString() + "\"");
@@ -117,7 +107,7 @@ EmpathFilter::load(Q_UINT32 id)
 EmpathFilter::loadMatchExpr(Q_UINT32 matchExprID)
 {
 	EmpathMatcher * matcher = new EmpathMatcher;
-	matcher->load(id_, matchExprID);
+	matcher->load(name_, matchExprID);
 	matchExprs_.append(matcher);
 }
 
@@ -126,7 +116,7 @@ EmpathFilter::loadEventHandler()
 {
 	EmpathFilterEventHandler * handler = new EmpathFilterEventHandler;
 	
-	if (handler->load(id_)) {
+	if (handler->load(name_)) {
 		
 		fEventHandler_ = handler;
 	

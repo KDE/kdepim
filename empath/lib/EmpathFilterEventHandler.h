@@ -45,8 +45,8 @@ class EmpathFilterEventHandler : public QObject
 		void setForward(const QString & address);
 
 		void handleMessage(const EmpathURL & id);
-		bool load(Q_UINT32 filterID);
-		void save(Q_UINT32 filterID);
+		bool load(const QString & filterName);
+		void save(const QString & filterName);
 		QString description() const;
 		ActionType actionType() const;
 		EmpathURL moveOrCopyFolder() const;

@@ -52,6 +52,11 @@ RAddress::RAddress(const RAddress & addr)
 	
 		rmmDebug("group");
 		group_ = new RGroup(*(addr.group_));
+	
+	} else {
+		
+		strRep_ = addr.strRep_;
+		parsed_ = false;
 	}
 
 	rmmDebug("...");
@@ -87,13 +92,16 @@ RAddress::operator = (const RAddress & addr)
 	mailbox_	= 0;
 	delete group_;
 	group_		= 0;
+	
+	RHeaderBody::operator = (addr);
 
 	if (addr.mailbox_ != 0)
 		mailbox_ = new RMailbox(*(addr.mailbox_));
-	else
+	else if (addr.group_ != 0)
 		group_ = new RGroup(*(addr.group_));
-
-	RHeaderBody::operator = (addr);
+	else
+		parsed_ = false;
+	
 
 	assembled_	= false;
 	return *this;
@@ -102,7 +110,7 @@ RAddress::operator = (const RAddress & addr)
 	RAddress &
 RAddress::operator = (const QCString & s)
 {
-	rmmDebug("operator =");
+	rmmDebug("operator = QCString("  + s + ")");
 
 	delete mailbox_;
 	mailbox_	= 0;
@@ -186,6 +194,7 @@ RAddress::assemble()
 			strRep_ = "foo@bar";
 	}
 	
+	rmmDebug("Assembled to: \"" + strRep_ + "\"");
 	assembled_ = true;
 }
 
