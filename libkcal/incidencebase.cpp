@@ -337,7 +337,6 @@ void IncidenceBase::setSyncStatus(int stat)
 {
   if (mReadOnly) return;
   mSyncStatus = stat;
-  updated();
 }
 
 int IncidenceBase::syncStatus() const
