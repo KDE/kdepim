@@ -130,7 +130,6 @@ KPIM::DistributionList KPIM::DistributionList::findByName( KABC::AddressBook* bo
         return *abIt;
     }
   }
-  kdDebug() << k_funcinfo << "not found: " << name << kdBacktrace();
   return DistributionList();
 }
 
