@@ -192,6 +192,35 @@ bool CalendarResources::isSaving()
   return false;
 }
 
+bool CalendarResources::addIncidence( Incidence *incidence, ResourceCalendar *resource )
+{
+  // FIXME: Use proper locking via begin/endChange!
+  bool validRes = false;
+  CalendarResourceManager::ActiveIterator it;
+  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+    if ( (*it) == resource ) validRes = true;
+  }
+  ResourceCalendar *oldResource = 0;
+  if ( mResourceMap.contains(incidence) ) {
+    oldResource = mResourceMap[incidence];
+  }
+  mResourceMap[incidence] = resource;
+  if ( validRes && beginChange( incidence ) && 
+       resource->addIncidence( incidence ) ) {
+//    mResourceMap[incidence] = resource;
+    incidence->registerObserver( this );
+    notifyIncidenceAdded( incidence );
+    setModified( true );
+    endChange( incidence );
+    return true;
+  } else {
+    if ( oldResource ) mResourceMap[incidence] = oldResource;
+    else mResourceMap.remove( incidence );
+  }
+
+  return false;
+}
+
 bool CalendarResources::addIncidence( Incidence *incidence )
 {
   kdDebug(5800) << "CalendarResources::addIncidence" << this << endl;
@@ -199,14 +228,19 @@ bool CalendarResources::addIncidence( Incidence *incidence )
   ResourceCalendar *resource = mDestinationPolicy->destination( incidence );
 
   if ( resource ) {
-    if ( resource->addIncidence( incidence ) ) {
+    mResourceMap[ incidence ] = resource;
+    
+    if ( beginChange( incidence ) && resource->addIncidence( incidence ) ) {
       incidence->registerObserver( this );
       notifyIncidenceAdded( incidence );
       
 
       mResourceMap[ incidence ] = resource;
       setModified( true );
+      endChange( incidence );
       return true;
+    } else {
+      mResourceMap.remove( incidence );
     }
   } else
     kdDebug(5800) << "CalendarResources::addIncidence(): no resource" << endl;
@@ -221,20 +255,7 @@ bool CalendarResources::addEvent( Event *event )
 
 bool CalendarResources::addEvent( Event *anEvent, ResourceCalendar *resource )
 {
-  bool validRes = false;
-  CalendarResourceManager::ActiveIterator it;
-  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    if ( (*it) == resource ) validRes = true;
-  }
-  if ( validRes && resource->addEvent( anEvent ) ) {
-    mResourceMap[anEvent] = resource;
-    anEvent->registerObserver( this );
-    notifyIncidenceAdded( anEvent );
-    setModified( true );
-    return true;
-  }
-
-  return false;
+  return addIncidence( anEvent, resource );
 }
 
 void CalendarResources::deleteEvent( Event *event )
@@ -282,20 +303,7 @@ bool CalendarResources::addTodo( Todo *todo )
 
 bool CalendarResources::addTodo(Todo *todo, ResourceCalendar *resource)
 {
-  bool validRes = false;
-  CalendarResourceManager::ActiveIterator it;
-  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    if ( (*it) == resource ) validRes = true;
-  }
-  if ( validRes && resource->addTodo( todo ) ) {
-    mResourceMap[todo] = resource;
-    todo->registerObserver( this );
-    notifyIncidenceAdded( todo );
-    setModified( true );
-    return true;
-  }
-
-  return false;
+  return addIncidence( todo, resource );
 }
 
 void CalendarResources::deleteTodo( Todo *todo )
@@ -524,20 +532,7 @@ void CalendarResources::deleteJournal( Journal *journal )
 
 bool CalendarResources::addJournal(Journal *journal, ResourceCalendar *resource)
 {
-  bool validRes = false;
-  CalendarResourceManager::ActiveIterator it;
-  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    if ( (*it) == resource ) validRes = true;
-  }
-  if ( validRes && resource->addJournal( journal ) ) {
-    mResourceMap[journal] = resource;
-    journal->registerObserver( this );
-    notifyIncidenceAdded( journal );
-    setModified( true );
-    return true;
-  }
-
-  return false;
+  return addIncidence( journal, resource );
 }
 
 Journal *CalendarResources::journal(const QDate &date)

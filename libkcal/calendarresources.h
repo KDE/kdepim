@@ -166,13 +166,14 @@ class CalendarResources : public Calendar,
     bool isSaving();
 
     bool addIncidence( Incidence * );
+    bool addIncidence( Incidence *incidence, ResourceCalendar *resource );
 
     /** Add Event to calendar. */
-    bool addEvent(Event *anEvent);
+    bool addEvent(Event *anEvent) KDE_DEPRECATED;
     /** Add Event to a resource. */
-    bool addEvent(Event *anEvent, ResourceCalendar *resource);
+    bool addEvent(Event *anEvent, ResourceCalendar *resource) KDE_DEPRECATED;
     /** deletes an event from this calendar. */
-    void deleteEvent(Event *);
+    void deleteEvent(Event *) KDE_DEPRECATED;
 
     /**
       Retrieves an event on the basis of the unique string ID.
@@ -196,13 +197,13 @@ class CalendarResources : public Calendar,
     /**
       Add a todo to the todolist.
     */
-    bool addTodo( Todo *todo );
+    bool addTodo( Todo *todo ) KDE_DEPRECATED;
     /** Add Todo to a resource. */
-    bool addTodo(Todo *todo, ResourceCalendar *resource);
+    bool addTodo(Todo *todo, ResourceCalendar *resource) KDE_DEPRECATED;
     /**
       Remove a todo from the todolist.
     */
-    void deleteTodo( Todo * );
+    void deleteTodo( Todo * ) KDE_DEPRECATED;
     /**
       Searches todolist for an event with this unique string identifier,
       returns a pointer or null.
@@ -218,11 +219,11 @@ class CalendarResources : public Calendar,
     Todo::List rawTodosForDate( const QDate &date );
 
     /** Add a Journal entry to calendar */
-    bool addJournal(Journal *);
+    bool addJournal(Journal *) KDE_DEPRECATED;
     /** Remove journal entry. */
-    void deleteJournal( Journal * );
-    /** Add Event to a resource. */
-    bool addJournal(Journal *journal, ResourceCalendar *resource);
+    void deleteJournal( Journal * ) KDE_DEPRECATED;
+    /** Add Journal to a resource. */
+    bool addJournal(Journal *journal, ResourceCalendar *resource) KDE_DEPRECATED;
     /** Return Journal for given date */
     Journal *journal(const QDate &);
     /** Return Journal with given UID */

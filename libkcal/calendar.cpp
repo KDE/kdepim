@@ -236,8 +236,13 @@ bool Calendar::addIncidence(Incidence *i)
 
 bool Calendar::deleteIncidence( Incidence *i )
 {
-  Incidence::DeleteVisitor<Calendar> v( this );
-  return i->accept( v );
+  if ( beginChange( i ) ) {
+    Incidence::DeleteVisitor<Calendar> v( this );
+    bool result = i->accept( v );
+    endChange( i );
+    return result;
+  } else
+    return false;    
 }
 
 Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
