@@ -33,7 +33,6 @@
 
 // KDE includes
 #include <kapp.h>
-#include <kstartparams.h>
 
 // Local includes
 #include "KAddressBookInterface.h"

@@ -27,10 +27,22 @@
 
 // KDE includes
 #include <kapp.h>
-#include <kstartparams.h>
+#include <kcmdlineargs.h>
+#include <klocale.h>
+#include <kaboutdata.h>
 
 // Local includes
 #include "KAddressBookInterface.h"
+
+static const char *description=I18N_NOOP("Addressbook Server for KDE");
+static const char *version="2.0pre";
+static const KCmdLineOptions options[] =
+{
+        {"+server", I18N_NOOP("Name of addressbook server"), 0},
+	{"+path", I18N_NOOP("Addressbook server directory"), 0},
+	{0,0,0}
+};
+
 
   int
 main(int argc, char * argv[])
@@ -43,6 +55,17 @@ main(int argc, char * argv[])
 
   int prev_umask = umask(077);
 
+  KAboutData aboutData("kab_server", I18N_NOOP("KAB2 Server"),
+    version, description, KAboutData::License_GPL,
+    "(c) 1999, Rik Hemsley");
+  aboutData.addAuthor("Rik Hemsley",0, "rik@kde.org");
+  KCmdLineArgs::init( argc, argv, &aboutData );
+  KCmdLineArgs::addCmdLineOptions( options );
+  KApplication::addCmdLineOptions();
+
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+/*
   KStartParams args(argc, argv);
 
   QStringList::Iterator name_it;
@@ -58,13 +81,15 @@ main(int argc, char * argv[])
 
   ++name_it;
   ++path_it;
+*/
+  if (args->count() != 2) KCmdLineArgs::usage();
 
-  cerr << "Addressbook server `" << *name_it << "' started" << endl;
+  cerr << "Addressbook server `" << args->arg(0) << "' started" << endl;
   
   if (fork() == 0) {
     
     KApplication * app = new KApplication(argc, argv, "kab");
-    KAddressBook * ab = new KAddressBook((*name_it).utf8(), *path_it);
+    KAddressBook * ab = new KAddressBook(args->arg(0), args->arg(1));
     app->exec();
   }
   
