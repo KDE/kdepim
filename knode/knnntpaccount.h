@@ -28,33 +28,33 @@ class Identity;
 
 
 class KNNntpAccount : public KNCollection , public KNServerInfo {
-  
+
   public:
     KNNntpAccount();
     ~KNNntpAccount();
-    
-    collectionType type()             { return CTnntpAccount; }   
-                  
+
+    collectionType type()             { return CTnntpAccount; }
+
     /** trys to read information, returns false if it fails to do so */
     bool readInfo(const QString &confPath);
-    void saveInfo();    
+    void saveInfo();
     //void syncInfo();
     QString path();
     /** returns true when the user accepted */
     bool editProperties(QWidget *parent);
-    
+
     //get
-    bool fetchDescriptions()          { return f_etchDescriptions; }
-    QDate lastNewFetch()              { return l_astNewFetch; }
-    bool wasOpen()                    { return w_asOpen; }
-    bool useDiskCache()               { return u_seDiskCache; }
-    KNConfig::Identity* identity()    { return i_dentity; }
+    bool fetchDescriptions()const          { return f_etchDescriptions; }
+    QDate lastNewFetch()const              { return l_astNewFetch; }
+    bool wasOpen()const                    { return w_asOpen; }
+    bool useDiskCache()const               { return u_seDiskCache; }
+    KNConfig::Identity* identity() const   { return i_dentity; }
 
     //set
     void setFetchDescriptions(bool b) { f_etchDescriptions = b; }
     void setLastNewFetch(QDate date)  { l_astNewFetch = date; }
     void setUseDiskCache(bool b)      { u_seDiskCache=b; }
-  
+
   protected:
     /** server specific identity */
     KNConfig::Identity *i_dentity;

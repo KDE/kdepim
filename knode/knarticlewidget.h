@@ -94,10 +94,10 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     void showErrorMessage(const QString &s);
     void updateContents();
 
-    KNArticle* article()                { return a_rticle; }
+    KNArticle* article() const                { return a_rticle; }
 
-    KSelectAction* setCharsetAction()   { return a_ctSetCharset; }
-    KAction* setCharsetKeyboardAction() { return a_ctSetCharsetKeyb; }
+    KSelectAction* setCharsetAction()const   { return a_ctSetCharset; }
+    KAction* setCharsetKeyboardAction()const { return a_ctSetCharsetKeyb; }
     void setText( const QString& text ) { KTextBrowser::setText( text ); } // shadowed by the overridden one
 
   public slots:
@@ -129,7 +129,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     bool h_tmlDone, r_ot13;
     QTimer *t_imer;
     QCString o_verrideCS;
-    bool f_orceCS, emuKMail;    
+    bool f_orceCS, emuKMail;
 
     KPopupMenu *u_rlPopup, *a_ttPopup;
     QPopupMenu *b_odyPopup;
@@ -224,13 +224,13 @@ class KNDisplayedHeader {
     //name
     const QString& name()               { return n_ame; }
     void setName(const QString &s)      { n_ame = s; }
-    bool hasName()                      { return !n_ame.isEmpty(); }
+    bool hasName() const                     { return !n_ame.isEmpty(); }
 
     //translated name
     QString translatedName();                     // *trys* to translate the name
     void setTranslatedName(const QString &s);     // *trys* to retranslate the name to english
     void setTranslateName(bool b)       { t_ranslateName=b; }
-    bool translateName()                { return t_ranslateName; }
+    bool translateName() const                { return t_ranslateName; }
 
     //header
     const QString& header()             { return h_eader; }

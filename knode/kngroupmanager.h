@@ -80,7 +80,7 @@ class KNGroupListData : public KNJobItem {
 class KNGroupManager : public QObject , public KNJobConsumer {
 
   Q_OBJECT
-      
+
   public:
 
     KNGroupManager(KNArticleManager *a, QObject * parent=0, const char * name=0);
@@ -89,7 +89,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     // group access
     void loadGroups(KNNntpAccount *a);
     void getSubscribed(KNNntpAccount *a, QStringList &l);
-    void getGroupsOfAccount(KNNntpAccount *a, QPtrList<KNGroup> *l);   
+    void getGroupsOfAccount(KNNntpAccount *a, QPtrList<KNGroup> *l);
     void getAllGroups(QPtrList<KNGroup> *l);
 
     bool loadHeaders(KNGroup *g);
@@ -97,7 +97,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
 
     KNGroup* group(const QString &gName, const KNServerInfo *s);
     KNGroup* firstGroupOfAccount(const KNServerInfo *s);
-    KNGroup* currentGroup()               { return c_urrentGroup; }
+    KNGroup* currentGroup() const              { return c_urrentGroup; }
     bool hasCurrentGroup()                { return (c_urrentGroup!=0); }
     void setCurrentGroup(KNGroup *g);
 
@@ -114,7 +114,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
 
     void expireAll(KNCleanUp *cup);
     void expireAll(KNNntpAccount *a);
-    void syncGroups();    
+    void syncGroups();
 
   public slots:
     /** load group list from disk (if this fails: ask user if we should fetch the list) */
@@ -123,7 +123,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     void slotFetchGroupList(KNNntpAccount *a);
     /** check for new groups (created after the given date) */
     void slotCheckForNewGroups(KNNntpAccount *a, QDate date);
-    
+
   protected:
     /** reimplemented from @ref KNJobConsumer */
     void processJob(KNJobData *j);
@@ -133,7 +133,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
 
   signals:
     void newListReady(KNGroupListData* d);
-      
+
 };
 
 

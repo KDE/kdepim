@@ -52,7 +52,7 @@ class KNComposer : public KMainWindow  {
 
     //get result
     bool hasValidData();
-    composerResult result()               { return r_esult; }
+    composerResult result() const              { return r_esult; }
     KNLocalArticle* article()const             { return a_rticle; }
     bool applyChanges();
 
