@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Service
+
+[Misc]
+Encoding=UTF-8
+Name=Calendar on Exchange2000 server
+
+[Plugin]
+Type=exchange
+X-KDE-Library=resourcecalendarexchange

@@ -1,6 +1,6 @@
 # $Id$
 
-SUBDIRS=core calendar .
+SUBDIRS=core calendar . resources
 
 METASOURCES = AUTO
 
