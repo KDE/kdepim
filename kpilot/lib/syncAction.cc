@@ -212,7 +212,6 @@ int SyncAction::questionYesNo(const QString & text,
 	}
 
 	stopTickle();
-	KPILOT_DELETE(dialog);
 
 	if (!key.isEmpty() && checkboxReturn)
 	{
