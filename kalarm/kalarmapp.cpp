@@ -1,7 +1,7 @@
 /*
  *  kalarmapp.cpp  -  the KAlarm application object
  *  Program:  kalarm
- *  (C) 2001, 2002, 2003 by David Jarvie <software@astrojar.org.uk>
+ *  (C) 2001 - 2004 by David Jarvie <software@astrojar.org.uk>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -1692,14 +1692,20 @@ void KAlarmApp::undeleteEvent(KAlarmEvent& event, KAlarmMainWindow* win)
 	if (KAlarmEvent::uidStatus(event.id()) == KAlarmEvent::EXPIRED)
 	{
 		QString id = event.id();
-		mCalendar->addEvent(event);
-		calendarSave();
+		QDateTime now = QDateTime::currentDateTime();
+		if (event.occursAfter(now))
+		{
+			if (event.recurs())
+				event.setNextOccurrence(now);   // skip any recurrences in the past
+			mCalendar->addEvent(event);
+			calendarSave();
 
-		// Update the window lists
-		KAlarmMainWindow::undeleteEvent(id, event, win);
+			// Update the window lists
+			KAlarmMainWindow::undeleteEvent(id, event, win);
 
-		if (expiredCalendar(false))
-			mExpiredCalendar->deleteEvent(id, true);   // save calendar after deleting
+			if (expiredCalendar(false))
+				mExpiredCalendar->deleteEvent(id, true);   // save calendar after deleting
+		}
 	}
 }
 

@@ -1,7 +1,7 @@
 /*
  *  alarmevent.h  -  represents calendar alarms and events
  *  Program:  kalarm
- *  (C) 2001, 2002, 2003 by David Jarvie <software@astrojar.org.uk>
+ *  (C) 2001 - 2004 by David Jarvie <software@astrojar.org.uk>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -328,6 +328,7 @@ class KAlarmEvent : public KAAlarmEventBase
 		int                recurInterval() const;    // recurrence period in units of the recurrence period type (minutes, days, etc)
 		QString            recurrenceText(bool brief = false) const;
 		int                remainingRecurrences() const   { return mRemainingRecurrences; }
+		bool               occursAfter(const QDateTime& preDateTime) const;
 		OccurType          nextOccurrence(const QDateTime& preDateTime, DateTime& result) const;
 		OccurType          previousOccurrence(const QDateTime& afterDateTime, DateTime& result) const;
 		const KCal::DateList& exceptionDates() const      { return mExceptionDates; }

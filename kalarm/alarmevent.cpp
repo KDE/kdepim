@@ -1,7 +1,7 @@
 /*
  *  alarmevent.cpp  -  represents calendar alarms and events
  *  Program:  kalarm
- *  (C) 2001, 2002 2003 by David Jarvie <software@astrojar.org.uk>
+ *  (C) 2001 - 2004 by David Jarvie <software@astrojar.org.uk>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -1257,6 +1257,30 @@ void KAlarmEvent::reinstateFromDisplaying(const KAlarmEvent& dispEvent)
 		--mAlarmCount;
 		mUpdated = true;
 	}
+}
+
+/******************************************************************************
+ * Determine whether the event will occur after the specified date/time.
+ */
+bool KAlarmEvent::occursAfter(const QDateTime& preDateTime) const
+{
+	QDateTime dt;
+	if (checkRecur() != NO_RECUR)
+	{
+		if (mRecurrence->duration() < 0)
+			return true;    // infinite recurrence
+		dt = mRecurrence->endDateTime();
+	}
+	else
+		dt = mDateTime.dateTime();
+	if (mStartDateTime.isDateOnly())
+	{
+		QDate pre = preDateTime.date();
+		if (preDateTime.time() < Preferences::instance()->startOfDay())
+			pre = pre.addDays(-1);    // today's recurrence (if today recurs) is still to come
+		return pre < dt.date();
+	}
+	return preDateTime < dt;
 }
 
 /******************************************************************************

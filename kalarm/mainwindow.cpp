@@ -964,11 +964,16 @@ void KAlarmMainWindow::slotSelection()
 	QPtrList<AlarmListViewItem> items = listView->selectedItems();
 	int count = items.count();
 	AlarmListViewItem* item = (count == 1) ? items.first() : 0;
-	bool allExpired = true;
+	bool enableUndelete = true;
 	for (QPtrListIterator<AlarmListViewItem> it(items);  it.current();  ++it)
 	{
-		if (!listView->expired(it.current()))
-			allExpired = false;
+		if (enableUndelete)
+		{
+			const KAlarmEvent& event = it.current()->event();
+			if (!event.expired()
+			||  !event.occursAfter(QDateTime::currentDateTime()))
+				enableUndelete = false;
+		}
 	}
 
 	kdDebug(5950) << "KAlarmMainWindow::slotSelection(true)\n";
@@ -976,7 +981,7 @@ void KAlarmMainWindow::slotSelection()
 	actionModify->setEnabled(item && !listView->expired(item));
 	actionView->setEnabled(count == 1);
 	actionDelete->setEnabled(count);
-	actionUndelete->setEnabled(count && allExpired);
+	actionUndelete->setEnabled(count && enableUndelete);
 }
 
 /******************************************************************************
