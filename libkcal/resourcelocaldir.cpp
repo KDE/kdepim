@@ -148,6 +148,8 @@ bool ResourceLocalDir::load()
     if ( i ) mCalendar.addIncidence( i->clone() );
   }
 
+  emit resourceLoaded( this );
+
   return true;
 }
 
@@ -169,6 +171,8 @@ bool ResourceLocalDir::save()
     cal.addIncidence( i->clone() );
     cal.save( fileName );
   }
+
+  emit resourceSaved( this );
 
   return true;
 }

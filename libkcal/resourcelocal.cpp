@@ -156,6 +156,8 @@ bool ResourceLocal::load()
 
   d->mLastModified = readLastModified();
 
+  emit resourceLoaded( this );
+
   return success;
 }
 
@@ -166,6 +168,8 @@ bool ResourceLocal::save()
   bool success = mCalendar.save( mURL.path() );
 
   d->mLastModified = readLastModified();
+
+  emit resourceSaved( this );
 
   return success;
 }

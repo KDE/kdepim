@@ -265,6 +265,7 @@ bool ResourceKABC::load()
   }
 
   emit resourceChanged( this );
+  emit resourceLoaded( this );
 
   return true;
 }
@@ -291,6 +292,8 @@ int ResourceKABC::alarmDays()
 
 bool ResourceKABC::save()
 {
+  emit resourceSaved( this );
+
   // is always read only!
   return true;
 }
