@@ -112,6 +112,12 @@ void Filter::save(KConfig *config, QString baseGroup,
 {
   {
     KConfigGroupSaver s(config, baseGroup);
+
+    // remove the old filters
+    uint count = config->readNumEntry( "Count" );
+    for ( uint i = 0; i < count; ++i )
+      config->deleteGroup( QString("%1_%2").arg(baseGroup).arg(i) );
+
     config->writeEntry("Count", list.count());
   }
   
