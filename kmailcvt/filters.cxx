@@ -440,20 +440,20 @@ QStringList::Iterator e;
 //      info->log(*e);
 //   }
    if (e==l.end()) { char m[10];
-     sprintf(m,"%d",_T-1);T=m;      
-     l.append(T);l.append(E); 
+     sprintf(m,"%d",_T-1);T=m;
+     l.append(T);l.append(E);
    }
 }
 
 #define S(a,b)   b=b.stripWhiteSpace();if (b.length()!=0) { a=b; }
-#define L(a)     (a.length()!=0) 
+#define L(a)     (a.length()!=0)
 
 void kab::addIfNotExists(std::list<AddressBook::Entry::Address> & l,AddressBook::Entry::Address & A)
 {
 std::list<AddressBook::Entry::Address>::iterator it;
 
    A.headline=A.headline.stripWhiteSpace();
-   if (A.headline.length()==0) { 
+   if (A.headline.length()==0) {
      info->alert(cap,i18n("Unexpected: Headline of address is empty"));
      return;
    }
@@ -463,13 +463,13 @@ std::list<AddressBook::Entry::Address>::iterator it;
    if (it!=l.end()) {
      //info->alert(cap,(*it).headline);
      for(it=l.begin();
-         it!=l.end() && 
+         it!=l.end() &&
          strcasecmp((*it).headline.latin1(),A.headline.latin1())!=0;
        ++it
       );
    }
    if (it==l.end()) {AddressBook::Entry::Address & B=A;
-     if ( 
+     if (
           L(B.position) ||
           L(B.org) ||
           L(B.orgUnit) ||
@@ -479,7 +479,7 @@ std::list<AddressBook::Entry::Address>::iterator it;
           L(B.zip) ||
           L(B.town) ||
           L(B.country) ||
-          L(B.state) 
+          L(B.state)
         ) {
        l.insert(l.end(),A);
      }
@@ -496,7 +496,7 @@ std::list<AddressBook::Entry::Address>::iterator it;
      S(B.town,A.town);
      S(B.country,A.country);
      S(B.state,A.state);
-     if ( 
+     if (
           L(B.position) ||
           L(B.org) ||
           L(B.orgUnit) ||
@@ -506,7 +506,7 @@ std::list<AddressBook::Entry::Address>::iterator it;
           L(B.zip) ||
           L(B.town) ||
           L(B.country) ||
-          L(B.state) 
+          L(B.state)
         ) {
         *it=B;
      }
@@ -516,9 +516,9 @@ std::list<AddressBook::Entry::Address>::iterator it;
 #undef S
 
 
-#define _A(a,b)   if (b!=KAB_NIL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { a=s; } }
-#define _B(a,b)   if (b!=KAB_NIL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { addIfNotExists(a,s); } }
-#define _T(a,b,c) if (b!=KAB_NIL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { addIfNotExists(a,s,c); } }
+#define KDE_A(a,b)   if (b!=KAB_NIL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { a=s; } }
+#define KDE_B(a,b)   if (b!=KAB_NIL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { addIfNotExists(a,s); } }
+#define KDE_T(a,b,c) if (b!=KAB_NIL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { addIfNotExists(a,s,c); } }
 
 bool kab::kabAddress(filterInfo *_info,QString adrbookname,
                       QString givenname, QString email,
@@ -570,31 +570,31 @@ AddressBook::Entry::Address A;
 
   e.fn=givenname;
 
-  _B(e.emails,email)
+  KDE_B(e.emails,email)
 
-  _A(e.title,title);
-  _A(e.firstname,firstName);
-  _A(e.middlename,additionalName);
-  _A(e.lastname,lastName);
+  KDE_A(e.title,title);
+  KDE_A(e.firstname,firstName);
+  KDE_A(e.middlename,additionalName);
+  KDE_A(e.lastname,lastName);
 
-  _A(A.address,address);
-  _A(A.town,town);
-  _A(A.country,country);
-  _A(A.zip,zip);
-  _A(A.org,organization);
-  _A(A.orgUnit,department);
-  _A(A.orgSubUnit,subDep);
-  _A(A.position,job);
+  KDE_A(A.address,address);
+  KDE_A(A.town,town);
+  KDE_A(A.country,country);
+  KDE_A(A.zip,zip);
+  KDE_A(A.org,organization);
+  KDE_A(A.orgUnit,department);
+  KDE_A(A.orgSubUnit,subDep);
+  KDE_A(A.position,job);
 
-  _T(e.telephone,tel,AddressBook::Fixed);
-  _T(e.telephone,fax,AddressBook::Fax);
-  _T(e.telephone,mobile,AddressBook::Mobile);
-  _T(e.telephone,modem,AddressBook::Modem);
+  KDE_T(e.telephone,tel,AddressBook::Fixed);
+  KDE_T(e.telephone,fax,AddressBook::Fax);
+  KDE_T(e.telephone,mobile,AddressBook::Mobile);
+  KDE_T(e.telephone,modem,AddressBook::Modem);
 
-  _B(e.URLs,homepage);
-  _B(e.talk,talk);
+  KDE_B(e.URLs,homepage);
+  KDE_B(e.talk,talk);
 
-  _A(e.comment,comment);
+  KDE_A(e.comment,comment);
 
   // Change the entry at the key.
 
@@ -606,8 +606,8 @@ AddressBook::Entry::Address A;
 return true;
 }
 
-#undef _A
-#undef _B
-#undef _T
+#undef KDE_A
+#undef KDE_B
+#undef KDE_T
 
 
