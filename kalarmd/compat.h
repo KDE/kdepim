@@ -32,7 +32,7 @@
 	#define QPtrList         QList
 	#define QPtrListIterator QListIterator
 #endif
-#include <kapp.h>
+#include <kapplication.h>
 #if KDE_VERSION < 290
    #define Alarm KOAlarm
    #define uid   VUID

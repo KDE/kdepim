@@ -2,7 +2,7 @@
 #define KSYNC_H
 // $Id$ 
 
-#include <kapp.h>
+#include <kapplication.h>
 #include <kmainwindow.h>
 #include <kaccel.h>
 #include <kaction.h>

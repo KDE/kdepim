@@ -18,7 +18,7 @@
 #ifndef KONSOLEKALENDAR_H
 #define KONSOLEKALENDAR_H
 
-#include <kapp.h>
+#include <kapplication.h>
 #include <qdatetime.h>
 #include "konsolekalendar.h"
 #include "kalendarVariables.h"
