@@ -21,5 +21,5 @@ libmalconduit_la_SOURCES = \
 	mal-conduit.cc \
 	mal-setup_dialog.ui
 libmalconduit_la_LDFLAGS = $(KDE_RPATH) $(KDE_PLUGIN) $(all_libraries)
-libmalconduit_la_LIBADD = ../../lib/libkpilot.la $(MAL_LIB)
+libmalconduit_la_LIBADD = ../../lib/libkpilot.la $(MAL_LIB) $(LIB_KDEUI)
 
