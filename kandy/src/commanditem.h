@@ -1,5 +1,8 @@
 // $Id$
 
+#ifndef _COMMAND_ITEM_H_
+#define _COMMAND_ITEM_H_
+
 #include <qlistview.h>
 
 class ATCommand;
@@ -28,3 +31,5 @@ class CommandItem : public QListViewItem {
   private:
     ATCommand *mCommand;
 };
+
+#endif
