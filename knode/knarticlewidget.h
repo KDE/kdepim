@@ -49,6 +49,25 @@ class KNSourceViewWindow : public QVBox {
 
 };
 
+
+//=============================================================================================================
+
+
+class KNMimeSource : public QMimeSource {
+
+  public:
+    KNMimeSource(QByteArray data, QCString mimeType);
+    ~KNMimeSource();
+
+    const char* format(int n = 0) const;
+    QByteArray encodedData (const char *) const;
+
+  protected:
+    QByteArray d_ata;
+    QCString m_imeType;
+};
+
+
 //=============================================================================================================
 
 class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
@@ -103,6 +122,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
 
     KNArticle *a_rticle;
     QList<KNMimeContent> *a_tt;
+    QMimeSourceFactory *f_actory;
     bool h_tmlDone, f_ullHdrs, r_ot13;
     QTimer *t_imer;
     QCString o_verrideCS;

@@ -100,6 +100,30 @@ KNSourceViewWindow::~KNSourceViewWindow()
 //=============================================================================================================
 
 
+KNMimeSource::KNMimeSource(QByteArray data, QCString mimeType)
+ : d_ata(data), m_imeType(mimeType)
+{}
+
+
+KNMimeSource::~KNMimeSource()
+{}
+
+
+const char* KNMimeSource::format(int n) const
+{
+  return (n<1)? m_imeType.data() : 0;
+}
+
+
+QByteArray KNMimeSource::encodedData(const char *) const
+{
+  return d_ata;
+}
+
+
+//=============================================================================================================
+
+
 KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, const char *name )
     : KTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false), a_ctions(actColl)
 {
@@ -119,6 +143,9 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   style=new QStyleSheetItem(styleSheet(), "txt_attachment");
   style->setDisplayMode(QStyleSheetItem::DisplayBlock);
   style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpacePre);
+
+  f_actory = new QMimeSourceFactory();
+  setMimeSourceFactory(f_actory);
 
   setFocusPolicy(QWidget::WheelFocus);
 
@@ -194,6 +221,7 @@ KNArticleWidget::~KNArticleWidget()
   delete a_tt;
   delete a_ttPopup;
   delete u_rlPopup;
+  delete f_actory;
 }
 
 
@@ -600,7 +628,16 @@ bool KNArticleWidget::inlinePossible(KNMimeContent *c)
 void KNArticleWidget::showBlankPage()
 {
   kdDebug(5003) << "KNArticleWidget::showBlankPage()" << endl;
+
+  delete f_actory;                          // purge old image data
+  f_actory = new QMimeSourceFactory();
+  setMimeSourceFactory(f_actory);
+
   setText(QString::null);
+
+  delete f_actory;                          // purge old image data
+  f_actory = new QMimeSourceFactory();
+  setMimeSourceFactory(f_actory);
 
   a_rticle=0;
   delete a_tt;
@@ -628,6 +665,10 @@ void KNArticleWidget::showBlankPage()
 void KNArticleWidget::showErrorMessage(const QString &s)
 {
   setFont(knGlobals.cfgManager->appearance()->articleFont());  // switch back from possible obscure charsets
+
+  delete f_actory;                          // purge old image data
+  f_actory = new QMimeSourceFactory();
+  setMimeSourceFactory(f_actory);
 
   QString errMsg=s;
   errMsg.replace(QRegExp("\n"),QString("<br>"));  // error messages can contain html-links, but are plain text otherwise
@@ -767,6 +808,9 @@ void KNArticleWidget::createHtmlPage()
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
   KNConfig::ReadNewsViewer *rnv=knGlobals.cfgManager->readNewsViewer();
 
+//  delete f_actory;                          // purge old image data
+//  f_actory = new QMimeSourceFactory();
+//  setMimeSourceFactory(f_actory);
 
   //----------------------------------- <Header> ---------------------------------------
 
@@ -1000,10 +1044,8 @@ void KNArticleWidget::createHtmlPage()
         if(rnv->showAttachmentsInline() && inlinePossible(var)) {
           html+="<tr><td colspan=3>";
           if(ct->isImage()) { //image
-            path=knGlobals.artManager->saveContentToTemp(var);
-            if(!path.isEmpty()) {
-              html+=QString("<a href=\"internal:att=%1\"><img src=\"%2\"></a>").arg(attCnt).arg(path);
-            }
+            f_actory->setData(QString::number(attCnt),new KNMimeSource(var->decodedContent(),ct->mimeType()));
+            html+=QString("<a href=\"internal:att=%1\"><img src=\"%2\"></a>").arg(attCnt).arg(attCnt);
           }
           else { //text
             QString tmp;
