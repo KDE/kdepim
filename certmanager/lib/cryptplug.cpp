@@ -94,6 +94,7 @@
 #endif
 
 #include "cryptplug.h"
+#include <kdebug.h>
 
 SMIMECryptPlug::SMIMECryptPlug() : CryptPlug() {
   GPGMEPLUG_PROTOCOL = GPGME_PROTOCOL_CMS;
@@ -136,7 +137,7 @@ SMIMECryptPlug::SMIMECryptPlug() : CryptPlug() {
   GPGMEPLUG_DET_SIGN_FLAT_POSTFIX      = "";
   // 3. common definitions for opaque and detached signing
   __GPGMEPLUG_SIGNATURE_CODE_IS_BINARY = true;
-  
+
   /* definitions for encoding */
   GPGMEPLUG_ENC_INCLUDE_CLEARTEXT  = false;
   GPGMEPLUG_ENC_MAKE_MIME_OBJECT   = true;
@@ -198,7 +199,7 @@ OpenPGPCryptPlug::OpenPGPCryptPlug() : CryptPlug() {
   GPGMEPLUG_DET_SIGN_FLAT_POSTFIX      = "";
   // 3. common definitions for opaque and detached signing
   __GPGMEPLUG_SIGNATURE_CODE_IS_BINARY = false;
-  
+
   /* definitions for encoding */
   GPGMEPLUG_ENC_INCLUDE_CLEARTEXT  = false;
   GPGMEPLUG_ENC_MAKE_MIME_OBJECT   = true;
@@ -243,7 +244,7 @@ xmalloc (size_t n)
 {
   void *p = malloc (n);
   if (!p)
-    { 
+    {
       fputs ("\nfatal: out of core\n", stderr);
       exit (4);
     }
@@ -318,12 +319,12 @@ bool CryptPlug::hasFeature( Feature flag )
    user to check whether all required fucntions are available.  If
    MIN_VERSION is not NULL the lowest supported version of the
    interface is returned in addition. */
-int CryptPlug::interfaceVersion (int *min_version) 
+int CryptPlug::interfaceVersion (int *min_version)
 {
   if (min_version)
     *min_version = 0;
   return 1;
-} 
+}
 
 bool CryptPlug::isEmailInCertificate( const char* searchEmail, const char* fingerprint )
 {
@@ -341,7 +342,7 @@ bool CryptPlug::isEmailInCertificate( const char* searchEmail, const char* finge
       ++email;
       emailLen -= 2;
     }
-    
+
     fprintf( stderr, "gpgmeplug isEmailInCertificate looking address %s\nin certificate with fingerprint %s\n", email, fingerprint );
 
     gpgme_new( &ctx );
@@ -428,8 +429,8 @@ int CryptPlug::signatureCertificateDaysLeftToExpiry( const char* certificate )
     }
   }
   gpgme_release( ctx );
-    
-  /* 
+
+  /*
   fprintf( stderr, "gpgmeplug signatureCertificateDaysLeftToExpiry returned %d\n", daysLeft );
   */
 
@@ -455,6 +456,7 @@ int CryptPlug::caFirstLastChainCertDaysLeftToExpiry( bool bStopAtFirst,
     gpgme_op_keylist_end( ctx );
     if ( !err ) {
       // we found the key, now lets look for the CA key
+      int chainSize = 0;
       while ( rKey && rKey->chain_id ) {
 	sChainID = rKey->chain_id;
         // start new key list run
@@ -473,6 +475,12 @@ int CryptPlug::caFirstLastChainCertDaysLeftToExpiry( bool bStopAtFirst,
           daysLeft = getAttrExpireFormKey( &rKey );
           if( bStopAtFirst )
             break; // the first key was found, let us stop here
+        }
+        ++chainSize;
+        // safe guard against certificate loops (paranoia factor 8 out of 10)...
+        if ( chainSize > 100 ) {
+            kdWarning(5150) << "CertificateInfoWidgetImpl::startCertificateChainListing(): maximum chain length of 100 exceeded!" << endl;
+            break;
         }
       }
       my_gpgme_key_release( rKey );
@@ -526,7 +534,7 @@ int CryptPlug::receiverCertificateDaysLeftToExpiry( const char* certificate )
     }
   }
   gpgme_release( ctx );
-    
+
   /*
   fprintf( stderr, "gpgmeplug receiverCertificateDaysLeftToExpiry returned %d\n", daysLeft );
   */
@@ -545,7 +553,7 @@ int CryptPlug::certificateInChainDaysLeftToExpiry( const char* certificate )
   gpgme_set_protocol (ctx, GPGMEPLUG_PROTOCOL);
 
   do
-    {      
+    {
       gpgme_key_t rKey;
       int days;
 
@@ -1160,7 +1168,7 @@ bool CryptPlug::decryptMessage( const char* ciphertext,
 
   err = gpgme_new (&ctx);
   gpgme_set_protocol (ctx, GPGMEPLUG_PROTOCOL);
-  
+
   gpgme_set_armor (ctx, cipherIsBinary ? 0 : 1);
   /*  gpgme_set_textmode (ctx, cipherIsBinary ? 0 : 1); */
 
@@ -1188,7 +1196,7 @@ bool CryptPlug::decryptMessage( const char* ciphertext,
         strcpy(*errTxt, _errTxt );
     }
   }
-  
+
   gpgme_data_release( gCiphertext );
 
   rCiph = gpgme_data_release_and_get_mem( gPlaintext,  &rCLen );
@@ -1246,8 +1254,8 @@ parse_dn_part (CryptPlug::DnPair *array, const unsigned char *string)
   if (!n)
     return NULL; /* empty key */
   p = (char*)xmalloc (n+1);
-  
-  
+
+
   memcpy (p, string, n);
   p[n] = 0;
   trim_trailing_spaces ((char*)p);
@@ -1271,8 +1279,8 @@ parse_dn_part (CryptPlug::DnPair *array, const unsigned char *string)
         return NULL; /* empty or odd number of digits */
       n /= 2;
       array->value = p = (char*)xmalloc (n+1);
-      
-      
+
+
       for (s1=string; n; s1 += 2, n--)
         *p++ = xtoi_2 (s1);
       *p = 0;
@@ -1285,7 +1293,7 @@ parse_dn_part (CryptPlug::DnPair *array, const unsigned char *string)
             { /* pair */
               s++;
               if (*s == ',' || *s == '=' || *s == '+'
-                  || *s == '<' || *s == '>' || *s == '#' || *s == ';' 
+                  || *s == '<' || *s == '>' || *s == '#' || *s == ';'
                   || *s == '\\' || *s == '\"' || *s == ' ')
                 n++;
               else if (hexdigitp (s) && hexdigitp (s+1))
@@ -1300,18 +1308,18 @@ parse_dn_part (CryptPlug::DnPair *array, const unsigned char *string)
             return NULL; /* invalid encoding */
           else if (*s == ',' || *s == '=' || *s == '+'
                    || *s == '<' || *s == '>' || *s == '#' || *s == ';' )
-            break; 
+            break;
           else
             n++;
         }
 
       array->value = p = (char*)xmalloc (n+1);
-      
-      
+
+
       for (s=string; n; s++, n--)
         {
           if (*s == '\\')
-            { 
+            {
               s++;
               if (hexdigitp (s))
                 {
@@ -1345,8 +1353,8 @@ parse_dn (const unsigned char *string)
   arraysize = 7; /* C,ST,L,O,OU,CN,email */
   arrayidx = 0;
   array = (CryptPlug::DnPair*)xmalloc ((arraysize+1) * sizeof *array);
-  
-  
+
+
   while (*string)
     {
       while (*string == ' ')
@@ -1410,7 +1418,7 @@ add_dn_part( QCString& result, struct CryptPlug::DnPair& dnPair )
   result.append( dnPair.value );
 }
 
-static int 
+static int
 add_dn_parts( QCString& result, struct CryptPlug::DnPair* dn, const char* part )
 {
   int any = 0;
@@ -1434,7 +1442,7 @@ reorder_dn( struct CryptPlug::DnPair *dn,
             const char* unknownAttrsHandling = 0 )
 {
   struct CryptPlug::DnPair *dnOrg = dn;
-  
+
   /* note: The must parts are: CN, L, OU, O, C */
   const char* defaultpart[] = {
     "CN", "S", "SN", "GN", "T", "UID",
@@ -1449,7 +1457,7 @@ reorder_dn( struct CryptPlug::DnPair *dn,
   int any=0, any2=0, found_X_=0, i;
   QCString result;
   QCString resultUnknowns;
-  
+
   /* find and save the non-standard parts in their original order */
   if( dn ){
     for(; dn->key; ++dn ) {
@@ -1467,7 +1475,7 @@ reorder_dn( struct CryptPlug::DnPair *dn,
     }
     dn = dnOrg;
   }
-  
+
   /* prepend the unknown attrs if desired */
   if( unknownAttrsHandling &&
       !strcmp(unknownAttrsHandling, "PREFIX")
@@ -1477,7 +1485,7 @@ reorder_dn( struct CryptPlug::DnPair *dn,
   }else{
     any = 0;
   }
-  
+
   /* add standard parts */
   for( i = 0; stdpart[i]; ++i ) {
     dn = dnOrg;
@@ -1509,7 +1517,7 @@ reorder_dn( struct CryptPlug::DnPair *dn,
       result.append( resultUnknowns );
     }
   }
-  
+
   char* cResult = (char*)xmalloc( (result.length()+1)*sizeof(char) );
   if( result.isEmpty() )
     *cResult = 0;
@@ -1519,11 +1527,11 @@ reorder_dn( struct CryptPlug::DnPair *dn,
 }
 
 struct CryptPlug::CertIterator {
-  gpgme_ctx_t ctx;  
+  gpgme_ctx_t ctx;
   struct CertificateInfo info;
 };
 
-CryptPlug::CertIterator* 
+CryptPlug::CertIterator*
 CryptPlug::startListCertificates( const char* pattern, int remote )
 {
     gpgme_error_t err;
@@ -1541,7 +1549,7 @@ CryptPlug::startListCertificates( const char* pattern, int remote )
     }
 
     gpgme_set_protocol (it->ctx, GPGME_PROTOCOL_CMS);
-    if( remote ) gpgme_set_keylist_mode ( it->ctx, GPGME_KEYLIST_MODE_EXTERN ); 
+    if( remote ) gpgme_set_keylist_mode ( it->ctx, GPGME_KEYLIST_MODE_EXTERN );
     else gpgme_set_keylist_mode ( it->ctx, GPGME_KEYLIST_MODE_LOCAL );
     err =  gpgme_op_keylist_ext_start ( it->ctx, patterns, 0, 0);
     memset( &(it->info), 0, sizeof( struct CertificateInfo ) );
@@ -1554,7 +1562,7 @@ CryptPlug::startListCertificates( const char* pattern, int remote )
 }
 
 /* free() each string in a char*[] and the array itself */
-static void 
+static void
 freeStringArray( char** c )
 {
     char** _c = c;
@@ -1568,7 +1576,7 @@ freeStringArray( char** c )
 }
 
 /* free all malloc'ed data in a struct CertificateInfo */
-static void 
+static void
 freeInfo( struct CryptPlug::CertificateInfo* info )
 {
   struct CryptPlug::DnPair* a = info->dnarray;
@@ -1627,7 +1635,7 @@ capabilities_to_string (gpgme_subkey_t subkey)
                  | (!!subkey->can_certify)];
 }
 
-int 
+int
 CryptPlug::nextCertificate( CryptPlug::CertIterator* it,
                             CryptPlug::CertificateInfo** result,
                             char** attrOrder,
@@ -1639,7 +1647,7 @@ CryptPlug::nextCertificate( CryptPlug::CertIterator* it,
   assert( it );
   fprintf( stderr,  "nextCertificates( %p, %p )\n", it, result );
   err = gpgme_op_keylist_next ( it->ctx, &key);
-  if( !err ) {   
+  if( !err ) {
     int idx;
     const char* s = 0;
     unsigned long u;
@@ -1660,10 +1668,10 @@ CryptPlug::nextCertificate( CryptPlug::CertIterator* it,
     memset( it->info.userid, 0, sizeof( char* ) * (idx+1) );
     it->info.dnarray = 0;
     for( idx = 0; names[idx] != 0; ++idx ) {
-      
-      struct DnPair* a = parse_dn( (unsigned char*)names[idx] ); 
+
+      struct DnPair* a = parse_dn( (unsigned char*)names[idx] );
       it->info.userid[idx] = reorder_dn( a, attrOrder, unknownAttrsHandling );
-      
+
       if( idx == 0 ) {
         it->info.userid_0_org = names[idx];
         it->info.dnarray = a;
@@ -1804,7 +1812,7 @@ bool CryptPlug::findCertificates( const char* addressee,
   int siz = 0;
   char* DNs[MAXCERTS];
   char* FPRs[MAXCERTS];
-  
+
   if( ! certificates ){
     fprintf( stderr, "gpgme: findCertificates called with invalid *certificates pointer\n" );
     return false;
@@ -1817,7 +1825,7 @@ bool CryptPlug::findCertificates( const char* addressee,
 
   *certificates = 0;
   *newSize = 0;
-  
+
   /* calculate length of buffer needed for certs plus fingerprints */
   gpgme_new (&ctx);
   gpgme_set_protocol (ctx, GPGMEPLUG_PROTOCOL);
@@ -1834,13 +1842,13 @@ bool CryptPlug::findCertificates( const char* addressee,
             siz += strlen( delimiter );
 
           //fprintf( stderr, "gpgme: before reordering (%s)\n", dn );
-                    
+
           a = parse_dn( (unsigned char*)dn );
           free( dn );
           dn = reorder_dn( a, attrOrder, unknownAttrsHandling );
 
           //fprintf( stderr, "gpgme: after reordering  (%s)\n\n", dn );
-                    
+
           siz += strlen( dn );
           siz += strlen( openBracket );
           siz += strlen( s2 );
@@ -1856,14 +1864,14 @@ bool CryptPlug::findCertificates( const char* addressee,
             break;
           }
         }
-        free (dn); 
+        free (dn);
       }
     }
   }
   gpgme_op_keylist_end( ctx );
   gpgme_release (ctx);
-  
-  
+
+
   if( 0 < siz ) {
     /* add one for trailing ZERO char */
     ++siz;
@@ -1886,7 +1894,7 @@ bool CryptPlug::findCertificates( const char* addressee,
       free( FPRs[iFound ] );
     }
   }
-    
+
   return ( 0 < nFound );
 }
 
@@ -1978,7 +1986,7 @@ void obtain_signature_information( gpgme_ctx_t ctx,
 
   assert( ctx );
   assert( sigmeta );
-    
+
   sigmeta->extended_info = 0;
   gpgme_verify_result_t result = gpgme_op_verify_result( ctx );
   if ( !result )
@@ -2068,7 +2076,7 @@ void obtain_signature_information( gpgme_ctx_t ctx,
         a = parse_dn( (const unsigned char*)attr_string );
         this_info.userid = reorder_dn( a, attrOrder, unknownAttrsHandling );
       }
-        
+
       attr_ulong = 0;
       this_info.userid_num = attr_ulong;
 
@@ -2147,7 +2155,7 @@ bool CryptPlug::checkMessageSignature( char** cleartext,
   char* rClear = 0;
   size_t clearLen;
   bool isOpaqueSigned;
-  
+
   if( !cleartext ) {
     if( sigmeta )
       storeNewCharPtr( &sigmeta->status,
@@ -2198,7 +2206,7 @@ bool CryptPlug::checkMessageSignature( char** cleartext,
 
   obtain_signature_information( ctx, status, sigmeta,
                                 attrOrder, unknownAttrsHandling );
-  
+
   gpgme_release( ctx );
   return ( status == GPGME_SIG_STAT_GOOD );
 }
@@ -2229,7 +2237,7 @@ bool CryptPlug::decryptAndCheckMessage( const char*  ciphertext,
 
   err = gpgme_new (&ctx);
   gpgme_set_protocol (ctx, GPGMEPLUG_PROTOCOL);
-  
+
   gpgme_set_armor (ctx, cipherIsBinary ? 0 : 1);
   /*  gpgme_set_textmode (ctx, cipherIsBinary ? 0 : 1); */
 
@@ -2277,7 +2285,7 @@ bool CryptPlug::decryptAndCheckMessage( const char*  ciphertext,
   obtain_signature_information( ctx, sigstatus, sigmeta,
                                 attrOrder, unknownAttrsHandling,
                                 signatureFound );
-  
+
   gpgme_release( ctx );
   return bOk;
 }
