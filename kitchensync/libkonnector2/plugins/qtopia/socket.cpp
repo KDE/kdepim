@@ -275,7 +275,7 @@ void QtopiaSocket::write( SynceeList list )
     CalendarSyncee *evSyncee = list.calendarSyncee();
     if ( evSyncee ) writeDatebook( evSyncee );
 
-    TodoSyncee *toSyncee = list.todoSyncee();
+    CalendarSyncee *toSyncee = list.calendarSyncee();
     if ( toSyncee ) writeTodoList( toSyncee );
 
     /*
@@ -457,7 +457,7 @@ void QtopiaSocket::writeDatebook( CalendarSyncee* syncee )
     }
 }
 
-void QtopiaSocket::writeTodoList( TodoSyncee* syncee)
+void QtopiaSocket::writeTodoList( CalendarSyncee* syncee)
 {
     OpieHelper::ToDo toDB(d->edit, d->helper, d->tz, d->meta, d->device );
     KTempFile* file = toDB.fromKDE( syncee, d->extras );
@@ -519,26 +519,37 @@ void QtopiaSocket::readAddressbook()
         KIO::NetAccess::removeTempFile( tempfile );
 }
 
+CalendarSyncee *QtopiaSocket::defaultCalendarSyncee()
+{
+  CalendarSyncee* syncee = d->m_sync.calendarSyncee();
+  if ( syncee == 0 )
+    syncee = new KSync::CalendarSyncee( new KCal::CalendarLocal() );
+
+  return syncee;
+}
+
 void QtopiaSocket::readDatebook()
 {
-    KSync::CalendarSyncee* syncee = 0;
+    KSync::CalendarSyncee* syncee = defaultCalendarSyncee();
     emit prog( StdProgress::downloading(i18n("Datebook") ) );
     QString tempfile;
-    if (!downloadFile( "/Applications/datebook/datebook.xml", tempfile ) ) {
-        emit error( StdError::downloadError(i18n("Datebook") ) );
-        syncee = new KSync::CalendarSyncee( new KCal::CalendarLocal() );
-        tempfile = QString::null;
+
+    bool ok = downloadFile( "/Applications/datebook/datebook.xml", tempfile );
+    if ( !ok ) {
+      emit error( StdError::downloadError(i18n("Datebook") ) );
+      tempfile = QString::null;
     }
     emit prog( StdProgress::converting(i18n("Datebook") ) );
 
     /* the datebook.xml might not exist in this case we created an empty Entry
      * and there is no need to parse a non existint file
      */
-    if (!syncee ) {
-        OpieHelper::DateBook dateDB( d->edit, d->helper, d->tz, d->meta, d->device );
-        syncee = dateDB.toKDE( tempfile, d->extras );
+    if ( ok ) {
+      OpieHelper::DateBook dateDB( d->edit, d->helper, d->tz, d->meta, d->device );
+      ok = dateDB.toKDE( tempfile, d->extras, syncee );
     }
-    if (!syncee ) {
+
+    if ( !ok ) {
         KIO::NetAccess::removeTempFile( tempfile );
         emit error( i18n("Cannot read the datebook file. It is corrupted.") );
         return;
@@ -558,7 +569,9 @@ void QtopiaSocket::readDatebook()
         kdDebug(5229) << "Did Meta" << endl;
         outputIt(5229, syncee );
     }
-    d->m_sync.append( syncee );
+
+    if ( d->m_sync.find( syncee ) == d->m_sync.end() )
+      d->m_sync.append( syncee );
 
     if (!tempfile.isEmpty() )
         KIO::NetAccess::removeTempFile( tempfile );
@@ -566,23 +579,24 @@ void QtopiaSocket::readDatebook()
 
 void QtopiaSocket::readTodoList()
 {
-    KSync::TodoSyncee* syncee = 0;
+    KSync::CalendarSyncee* syncee = defaultCalendarSyncee();
     QString tempfile;
     emit prog( StdProgress::downloading(i18n("TodoList") ) );
-    if (!downloadFile( "/Applications/todolist/todolist.xml", tempfile ) ) {
-        emit error( StdError::downloadError(i18n("TodoList") ) );
-        syncee = new KSync::TodoSyncee();
-        tempfile = QString::null;
+
+    bool ok = downloadFile( "/Applications/todolist/todolist.xml", tempfile );
+    if ( !ok ) {
+      emit error( StdError::downloadError(i18n("TodoList") ) );
+      tempfile = QString::null;
     }
 
-    if (!syncee ) {
+    if ( ok ) {
         OpieHelper::ToDo toDB( d->edit, d->helper, d->tz, d->meta, d->device );
-        syncee = toDB.toKDE( tempfile, d->extras );
+        ok = toDB.toKDE( tempfile, d->extras, syncee );
     }
 
-    if (!syncee ) {
+    if ( !ok ) {
         KIO::NetAccess::removeTempFile( tempfile );
-         emit error( i18n("Cannot read the TodoList file. It is corrupted.") );
+        emit error( i18n("Cannot read the TodoList file. It is corrupted.") );
         return;
     }
 
@@ -598,7 +612,8 @@ void QtopiaSocket::readTodoList()
         outputIt(5227, syncee );
     }
 
-    d->m_sync.append( syncee );
+    if ( d->m_sync.find( syncee ) == d->m_sync.end() )
+      d->m_sync.append( syncee );
 
     if (!tempfile.isEmpty() )
         KIO::NetAccess::removeTempFile( tempfile );

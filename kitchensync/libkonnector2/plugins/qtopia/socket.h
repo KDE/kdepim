@@ -89,10 +89,12 @@ class QtopiaSocket : public QObject
     void writeCategory();
     void writeAddressbook( AddressBookSyncee * );
     void writeDatebook( CalendarSyncee * );
-    void writeTodoList( TodoSyncee * );
+    void writeTodoList( CalendarSyncee * );
     void readAddressbook();
     void readDatebook();
     void readTodoList();
+
+    CalendarSyncee* defaultCalendarSyncee();
 
     /* for processing the connection and authentication */
     void start(const QString & );

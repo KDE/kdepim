@@ -21,18 +21,19 @@
 #ifndef OPIE_META_TODO_H
 #define OPIE_META_TODO_H
 
+#include <calendarsyncee.h>
 #include <todosyncee.h>
 
 #include "md5metatemplate.h"
 
 namespace OpieHelper {
 
-class MetaTodo : public MD5Template<KSync::TodoSyncee, KSync::TodoSyncEntry> {
+class MetaTodo : public MD5Template<KSync::CalendarSyncee, KSync::CalendarSyncEntry> {
   public:
     MetaTodo();
     ~MetaTodo();
 
-    QString string( KSync::TodoSyncEntry* );
+    QString string( KSync::CalendarSyncEntry* );
 };
 
 }

@@ -27,7 +27,7 @@
 using namespace OpieHelper;
 
 MetaTodo::MetaTodo()
-  : MD5Template<KSync::TodoSyncee, KSync::TodoSyncEntry>()
+  : MD5Template<KSync::CalendarSyncee, KSync::CalendarSyncEntry>()
 {
 }
 
@@ -35,10 +35,12 @@ MetaTodo::~MetaTodo()
 {
 }
 
-QString MetaTodo::string( KSync::TodoSyncEntry* entry )
+QString MetaTodo::string( KSync::CalendarSyncEntry* entry )
 {
   QString str;
-  KCal::Todo* todo = entry->todo();
+  KCal::Todo* todo = dynamic_cast<KCal::Todo*>( entry->incidence() );
+  if ( !todo )
+    return str;
 
   str += todo->categories().join(";");
   str += QString::number( todo->isCompleted() );

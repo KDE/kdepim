@@ -23,7 +23,9 @@
 
 #include <kdebug.h>
 
+#include <calendarsyncee.h>
 #include <idhelper.h>
+#include <libkcal/calendarlocal.h>
 
 #include "device.h"
 #include "todo.h"
@@ -130,42 +132,47 @@ KCal::Todo* ToDo::dom2todo( QDomElement e, ExtraMap& extra,const QStringList& ls
 
     return todo;
 }
-KSync::TodoSyncee* ToDo::toKDE( const QString &fileName, ExtraMap& map )
-{
-    KSync::TodoSyncee* syncee = new KSync::TodoSyncee();
-    syncee->setSource( "Opie");
-    if( device() )
-	syncee->setSupports( device()->supports( Device::Todolist ) );
 
-    QFile file( fileName );
-    if ( !file.open( IO_ReadOnly ) ) {
-        return syncee;
+bool ToDo::toKDE( const QString &fileName, ExtraMap& map, KSync::CalendarSyncee *syncee )
+{
+  syncee->setSource( "OpieTodo" );
+  syncee->setIdentifier( "Opie" );
+
+  if ( device() )
+    syncee->setSupports( device()->supports( Device::Todolist ) );
+
+  QFile file( fileName );
+  if ( !file.open( IO_ReadOnly ) ) {
+    return false;
+  }
+
+  QDomDocument doc( "mydocument" );
+  if ( !doc.setContent( &file ) ) {
+    return false;
+  }
+
+  QStringList attr = attributes();
+  QDomElement docElem = doc.documentElement();
+  KCal::Todo *todo;
+  QDomNode n = docElem.firstChild();
+  while ( !n.isNull() ) {
+    QDomElement e = n.toElement();
+    if ( !e.isNull() ) {
+      if ( e.tagName() == "Task" ) {
+        todo = dom2todo( e, map,attr );
+        KSync::CalendarSyncEntry* entry;
+        entry = new KSync::CalendarSyncEntry( todo, syncee );
+        syncee->addEntry( entry );
+      }
     }
-    QDomDocument doc("mydocument");
-    if ( !doc.setContent( &file ) ){
-        delete syncee;
-        return 0;
-    }
-    QStringList attr = attributes();
-    QDomElement docElem = doc.documentElement();
-    KCal::Todo *todo;
-    QDomNode n = docElem.firstChild();
-    while (!n.isNull() ) {
-        QDomElement e = n.toElement();
-        if (!e.isNull() ) {
-            if ( e.tagName() == "Task" ) {
-                todo = dom2todo( e, map,attr );
-                KSync::TodoSyncEntry* entry;
-                entry = new KSync::TodoSyncEntry( todo, syncee );
-                syncee->addEntry( entry );
-            } // if name == "Task"
-        } // e.isNull
-        n = n.nextSibling();
-    } // n.isNull
-    return syncee;
+
+    n = n.nextSibling();
+  }
+
+  return true;
 }
 
-KTempFile* ToDo::fromKDE( KSync::TodoSyncee* syncee, ExtraMap& map )
+KTempFile* ToDo::fromKDE( KSync::CalendarSyncee* syncee, ExtraMap& map )
 {
     // KDE ID clear bit first
     m_kde2opie.clear();
@@ -177,19 +184,22 @@ KTempFile* ToDo::fromKDE( KSync::TodoSyncee* syncee, ExtraMap& map )
     KTempFile* tmpFile = file();
     if (tmpFile->textStream() ) {
         // clear list
-        KSync::TodoSyncEntry* entry;
+        KSync::CalendarSyncEntry* entry;
         QTextStream *stream = tmpFile->textStream();
         stream->setEncoding( QTextStream::UnicodeUTF8 );
         *stream << "<!DOCTYPE Tasks>" << endl;
         *stream << "<Tasks>" << endl;
-        for ( entry = (KSync::TodoSyncEntry*)syncee->firstEntry();
+        for ( entry = (KSync::CalendarSyncEntry*)syncee->firstEntry();
               entry != 0l;
-              entry = (KSync::TodoSyncEntry*)syncee->nextEntry() )
+              entry = (KSync::CalendarSyncEntry*)syncee->nextEntry() )
         {
             if ( entry->state() == KSync::SyncEntry::Removed )
                 continue;
 
-            KCal::Todo *todo = entry->todo();
+            KCal::Todo *todo = dynamic_cast<KCal::Todo*>( entry->incidence() );
+            if ( !todo )
+              continue;
+
             *stream << todo2String( todo, map ) << endl;
         }
         *stream << "</Tasks>" << endl;

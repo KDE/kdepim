@@ -199,10 +199,8 @@ KCal::Event* DateBook::toEvent( QDomElement e, ExtraMap& extraMap, const QString
     return event;
 }
 
-KSync::CalendarSyncee* DateBook::toKDE( const QString& fileName, ExtraMap& extraMap )
+bool DateBook::toKDE( const QString& fileName, ExtraMap& extraMap, KSync::CalendarSyncee *syncee )
 {
-//    kdDebug(5229) << "To KDE " << endl;
-    KSync::CalendarSyncee* syncee = new KSync::CalendarSyncee( new KCal::CalendarLocal() );
     syncee->setSource( "Opie");
     syncee->setIdentifier( "Opie" );
     if( device() )
@@ -210,12 +208,11 @@ KSync::CalendarSyncee* DateBook::toKDE( const QString& fileName, ExtraMap& extra
 
     QFile file( fileName );
     if ( !file.open( IO_ReadOnly ) ) {
-        return syncee;
+        return false;
     }
     QDomDocument doc("mydocument");
     if ( !doc.setContent( &file ) ) {
-        delete syncee;
-        return 0;
+        return false;
     }
 
     QDomElement docElem = doc.documentElement();
@@ -235,7 +232,6 @@ KSync::CalendarSyncee* DateBook::toKDE( const QString& fileName, ExtraMap& extra
                     if (!e.isNull() ) {
                         if (e.tagName() == "event") {
                             KCal::Event* event = toEvent( e, extraMap, attr );
-                            qDebug( ">>>>>>> loaded event %s", event->summary().latin1() );
                             if (event != 0 ) {
                                 KSync::CalendarSyncEntry* entry;
                                 entry = new KSync::CalendarSyncEntry( event, syncee );
@@ -249,7 +245,8 @@ KSync::CalendarSyncee* DateBook::toKDE( const QString& fileName, ExtraMap& extra
             n = n.nextSibling();
         }// n.isNULL
     }
-    return syncee;
+
+    return true;
 }
 
 KTempFile* DateBook::fromKDE( KSync::CalendarSyncee* syncee, ExtraMap& extraMap )
@@ -273,8 +270,6 @@ KTempFile* DateBook::fromKDE( KSync::CalendarSyncee* syncee, ExtraMap& extraMap 
               entry != 0;
               entry = (KSync::CalendarSyncEntry*) syncee->nextEntry() )
         {
-            if (entry->state() == KSync::SyncEntry::Removed )
-                continue;
             event = dynamic_cast<KCal::Event*>( entry->incidence() );
             if ( !event )
               continue;

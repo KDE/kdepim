@@ -49,8 +49,8 @@ namespace OpieHelper {
               bool meta = FALSE, Device* dev = 0);
         ~ToDo();
 
-        KSync::TodoSyncee* toKDE( const QString &fileName, ExtraMap& map );
-        KTempFile* fromKDE( KSync::TodoSyncee* entry, ExtraMap& map  );
+        bool toKDE( const QString &fileName, ExtraMap& map, KSync::CalendarSyncee* );
+        KTempFile* fromKDE( KSync::CalendarSyncee* entry, ExtraMap& map  );
     private:
         QStringList attributes()const;
         void setUid( KCal::Todo*,  const QString &uid );
