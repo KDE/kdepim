@@ -316,6 +316,7 @@ void AddressItem::makeText()
   setText( 3, mAddress.region() );
   setText( 4, mAddress.postalCode() );
   setText( 5, mAddress.country() );
+  setText( 6, mAddress.typeLabel() );
 }
 
 AddressEditWidget::AddressEditWidget(QWidget *parent, const char *name)
@@ -340,6 +341,7 @@ AddressEditWidget::AddressEditWidget(QWidget *parent, const char *name)
   mListView->addColumn( KABC::Address::regionLabel() );
   mListView->addColumn( KABC::Address::postalCodeLabel() );
   mListView->addColumn( KABC::Address::countryLabel() );
+  mListView->addColumn( i18n( "Type" ) );
 
   KButtonBox *buttonBox = new KButtonBox( this, Vertical );
 
@@ -432,6 +434,8 @@ void AddressEditWidget::slotTypeChanged( int pos )
 void AddressEditWidget::setAddresses(const KABC::Address::List &list)
 {
   mAddressList = list;
+
+  mListView->clear();
 
   KABC::Address::List::Iterator it;
   for ( it = mAddressList.begin(); it != mAddressList.end(); ++it ) {
@@ -538,10 +542,11 @@ void PhoneItem::makeText()
     setText( 0, mPhoneNumber.country() );
     setText( 1, mPhoneNumber.region() );
     setText( 2, mPhoneNumber.number() );
-
+    setText( 3, mPhoneNumber.typeLabel() );
    */
 
   setText( 0, mPhoneNumber.number() );
+  setText( 1, mPhoneNumber.typeLabel() );
 }
 
 PhoneEditWidget::PhoneEditWidget(QWidget *parent, const char *name)
@@ -561,6 +566,7 @@ PhoneEditWidget::PhoneEditWidget(QWidget *parent, const char *name)
   mListView = new KListView( this );
   mListView->setAllColumnsShowFocus( true );
   mListView->addColumn( i18n( "Number" ) );
+  mListView->addColumn( i18n( "Type" ) );
   
   KButtonBox *buttonBox = new KButtonBox( this, Vertical );
 
