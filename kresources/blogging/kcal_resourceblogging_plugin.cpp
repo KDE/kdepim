@@ -1,9 +1,7 @@
 /*
-    This file is part of libkcal.
+    This file is part of kdepim.
 
     Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-		Based on the remote resource:
-    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -21,24 +19,10 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include "kcal_resourcebloggingconfig.h"
 #include "kcal_resourceblogging.h"
-
-#include <kglobal.h>
-#include <klocale.h>
+#include "kcal_resourcebloggingconfig.h"
 
 using namespace KCal;
 
-typedef KRES::PluginFactory<ResourceBlogging,ResourceBloggingConfig> BloggingFactory;
-
-// FIXME: Use K_EXPORT_COMPONENT_FACTORY( kcal_blogging, BloggingFactory ); here
-// Problem: How do I insert the catalogue???
-extern "C"
-{
-  void *init_kcal_blogging()
-  {
-    KGlobal::locale()->insertCatalogue( "libkcal" );
-    KGlobal::locale()->insertCatalogue( "kcal_blogging" );
-    return new BloggingFactory;
-  }
-}
+typedef KRES::PluginFactory< ResourceBlogging, ResourceBloggingConfig > BloggingFactory;
+K_EXPORT_COMPONENT_FACTORY( kcal_blogging, BloggingFactory )

@@ -1,117 +1,133 @@
 /*
-    This file is part of libkcal.
+    This file is part of kdepim.
 
-    Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-    Based on the remote resource:
-    Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+    Based in part on the OGo resource:
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2004 Till Adam <adam@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
+    This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "kcal_resourcebloggingconfig.h"
+#include "folderlister.h"
+#include <folderconfig.h>
 
-#include "kcal_resourceblogging.h"
-#include "resourcebloggingsettings.h"
+#include <typeinfo>
 
+#include <qlabel.h>
+#include <qlayout.h>
+#include <qcheckbox.h>
+
+#include <klocale.h>
+#include <kdebug.h>
+#include <kstandarddirs.h>
+#include <klineedit.h>
+#include <kdialog.h>
 
 #include <libkcal/resourcecachedconfig.h>
 
-#include <kdialog.h>
-#include <kurl.h>
-#include <kurlrequester.h>
-#include <klineedit.h>
-#include <kcombobox.h>
+#include "kcal_resourceblogging.h"
+#include "kcal_groupwareprefs.h"
 
-#include <qlayout.h>
-
+#include "kcal_resourcebloggingconfig.h"
 
 using namespace KCal;
-using namespace KBlog;
 
 ResourceBloggingConfig::ResourceBloggingConfig( QWidget* parent,  const char* name )
     : KRES::ConfigWidget( parent, name )
 {
+  resize( 245, 115 );
+
   QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
   mainLayout->setSpacing( KDialog::spacingHint() );
 
-  mPage = new ResourceBloggingSettings( this );
-  mainLayout->addMultiCellWidget( mPage, 1, 1, 0, 1 );
+  QLabel *label = new QLabel( i18n("URL:"), this );
+  mainLayout->addWidget( label, 1, 0 );
+  mUrl = new KLineEdit( this );
+  mainLayout->addWidget( mUrl, 1, 1 );
+  
+  label = new QLabel( i18n("User:"), this );
+  mainLayout->addWidget( label, 2, 0 );
+  mUserEdit = new KLineEdit( this );
+  mainLayout->addWidget( mUserEdit, 2, 1 );
+  
+  label = new QLabel( i18n("Password:"), this );
+  mainLayout->addWidget( label, 3, 0 );
+  mPasswordEdit = new KLineEdit( this );
+  mainLayout->addWidget( mPasswordEdit, 3, 1 );
+  mPasswordEdit->setEchoMode( KLineEdit::Password );
 
-/*  mReloadConfig = new ResourceCachedReloadConfig( this );
-  mainLayout->addMultiCellWidget( mReloadConfig, 2, 2, 0, 1 );
+  mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
+  mainLayout->addMultiCellWidget( mReloadConfig, 1, 3, 2, 2 );
 
-  mSaveConfig = new ResourceCachedSaveConfig( this );
-  mainLayout->addMultiCellWidget( mSaveConfig, 3, 3, 0, 1 );*/
+  mSaveConfig = new KCal::ResourceCachedSaveConfig( this );
+  mainLayout->addMultiCellWidget( mSaveConfig, 4, 4, 2, 2 );
+
+  mFolderConfig = new KPIM::FolderConfig( this );
+  connect( mFolderConfig, SIGNAL( updateFoldersClicked() ),
+    SLOT( updateFolders() ) );
+  mainLayout->addMultiCellWidget( mFolderConfig, 4, 4, 0, 1 );
 }
 
 void ResourceBloggingConfig::loadSettings( KRES::Resource *resource )
 {
+  kdDebug(5800) << "KCal::ResourceBloggingConfig::loadSettings()" << endl;
+
   ResourceBlogging *res = static_cast<ResourceBlogging *>( resource );
-  if ( res && mPage ) {
-    KURL url( res->url() );
+  if ( res ) {
+    if ( !res->prefs() ) {
+      kdError() << "No PREF" << endl;
+      return;
+    }
+  
+    mUrl->setText( res->prefs()->url() );
+    mUserEdit->setText( res->prefs()->user() );
+    mPasswordEdit->setText( res->prefs()->password() );
+    mReloadConfig->loadSettings( res );
+    mSaveConfig->loadSettings( res );
     
-    mPage->mUser->setText( url.user() );
-    mPage->mPassword->setText( url.pass() );
-    
-    url.setUser( QString::null ) ;
-    url.setPass( QString::null );
-    mPage->mURL->setURL( url.url() );
-    
-    mPage->mServerAPI->setCurrentItem( res->serverAPI() );
-    
-    const KBlog::BlogTemplate templ( res->getTemplate() );
-    mPage->mOpenTitle->setText( templ.titleTagOpen() );
-    mPage->mCloseTitle->setText( templ.titleTagClose() );
-    mPage->mOpenCategory->setText( templ.categoryTagOpen() );
-    mPage->mCloseCategory->setText( templ.categoryTagClose() );
-    
-/*    mReloadConfig->loadSettings( res );
-    mSaveConfig->loadSettings( res );*/
+    mFolderConfig->setFolderLister( res->folderLister() );
+    mFolderConfig->updateFolderList();
   } else {
-    kdError(5700) << "ResourceBloggingConfig::loadSettings(): no ResourceBlogging, cast failed" << endl;
+    kdError(5800) << "KCalResourceBloggingConfig::loadSettings(): no KCalResourceBlogging, cast failed" << endl;
   }
 }
 
 void ResourceBloggingConfig::saveSettings( KRES::Resource *resource )
 {
-  ResourceBlogging* res = static_cast<ResourceBlogging*>( resource );
-  if ( res && mPage ) {
-    KURL url( mPage->mURL->url() );
-    QString user( mPage->mUser->text() );
-    if ( !user.isEmpty() ) url.setUser( user );
-    QString pw( mPage->mPassword->text() );
-    if ( !pw.isEmpty() ) url.setPass( pw );
-
-    res->setURL( url );
+  ResourceBlogging *res = static_cast<ResourceBlogging*>( resource );
+  if ( res ) {
+    res->prefs()->setUrl( mUrl->text() );
+    res->prefs()->setUser( mUserEdit->text() );
+    res->prefs()->setPassword( mPasswordEdit->text() );
+    mReloadConfig->saveSettings( res );
+    mSaveConfig->saveSettings( res );
     
-    res->setServerAPI( mPage->mServerAPI->currentItem() );
-    
-    BlogTemplate templ;
-    templ.setTitleTagOpen( mPage->mOpenTitle->text() );
-    templ.setTitleTagClose( mPage->mCloseTitle->text() );
-    templ.setCategoryTagOpen( mPage->mOpenCategory->text() );
-    templ.setCategoryTagClose( mPage->mCloseCategory->text() );
-    res->setTemplate( templ );
-
-/*    mReloadConfig->saveSettings( res );
-    mSaveConfig->saveSettings( res );*/
-
+    mFolderConfig->saveSettings();
   } else {
-    kdError(5700) << "ResourceBloggingConfig::saveSettings(): no ResourceBlogging, cast failed" << endl;
+    kdError(5700) << "KCalResourceBloggingConfig::saveSettings(): no KCalResourceBlogging, cast failed" << endl;
   }
+}
+
+void ResourceBloggingConfig::updateFolders()
+{
+  KURL url = mUrl->text();
+  url.setUser( mUserEdit->text() );
+  url.setPass( mPasswordEdit->text() );
+
+  mFolderConfig->retrieveFolderList( url );
 }
 
 #include "kcal_resourcebloggingconfig.moc"

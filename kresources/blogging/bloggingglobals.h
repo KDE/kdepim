@@ -1,7 +1,8 @@
  /*
     This file is part of kdepim.
 
-    Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2004 Till Adam <adam@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,35 +19,33 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KCAL_RESOURCEBLOGGING_H
-#define KCAL_RESOURCEBLOGGING_H
+#ifndef BLOGGINGGLOBALS_H
+#define BLOGGINGGLOBALS_H
 
-#include <kcal_resourcegroupwarebase.h>
+#include <qstring.h>
+#include <qvariant.h>
+#include <qvaluelist.h>
 
-namespace KCal {
-
-/**
-  This class provides a resource for accessing blogs on a blogging server as journals
-*/
-class ResourceBlogging : public ResourceGroupwareBase
+class BloggingGlobals
 {
-    Q_OBJECT
   public:
-    ResourceBlogging();
-    ResourceBlogging( const KConfig * );
-
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig *config );
+    BloggingGlobals() {}
     
-    bool addEvent( Event* ) { return false; }
-    bool addTodo( Todo * ) { return false; }
-    void deleteEvent( Event* ) {}
-    void deleteTodo( Todo * ) {}
-  
-  protected:
-    void init();
+    enum blogFunctions {
+      bloggerGetUserInfo,
+      bloggerGetUsersBlogs,
+      bloggerGetRecentPosts,
+      bloggerNewPost,
+      bloggerEditPost,
+      bloggerDeletePost,
+      bloggerGetPost,
+      bloggerGetTemplate,
+      bloggerSetTemplate
+    };
+    
+    static QString BloggingGlobals::getFunctionName( blogFunctions type );
+    static QValueList<QVariant> defaultArgs( const QString &user, const QString &pw, const QString &id = QString::null );
+    static QString mAppID;
 };
-
-}
 
 #endif

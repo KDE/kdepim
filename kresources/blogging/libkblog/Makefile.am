@@ -1,7 +1,7 @@
 INCLUDES = -I$(top_srcdir) -I$(top_builddir)/kresources/blogging/ $(all_includes)
 
 lib_LTLIBRARIES = libkblog.la
-libkblog_la_SOURCES = bloginterface.cpp xmlrpciface.cpp \
+libkblog_la_SOURCES = xmlrpcjob.cpp bloginterface.cpp xmlrpciface.cpp \
                       bloggerwrapper.cpp api_blogger.cpp api_metaweblog.cpp api_movabletype.cpp \
 											api_file.cpp api_drupal.cpp 
 libkblog_la_LDFLAGS = $(all_libraries) -no-undefined

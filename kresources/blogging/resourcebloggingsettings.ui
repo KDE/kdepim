@@ -156,6 +156,21 @@
                             <string>Blogger API</string>
                         </property>
                     </item>
+                    <item>
+                        <property name="text">
+                            <string>Drupal API</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>metaWeblog API</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>Moveable Type API</string>
+                        </property>
+                    </item>
                     <property name="name">
                         <cstring>mServerAPI</cstring>
                     </property>

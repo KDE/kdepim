@@ -1,33 +1,38 @@
 /*
-    This file is part of libkcal.
+    This file is part of kdepim.
 
-    Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-    Based on the remote resource:
-    Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
-    Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
+    Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+    Based in part on the OGo resource:
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2004 Till Adam <adam@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
+    This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifndef KCAL_RESOURCEBLOGGINGCONFIG_H
-#define KCAL_RESOURCEBLOGGINGCONFIG_H
+#ifndef KCALRESOURCEBLOGGINGCONFIG_H
+#define KCALRESOURCEBLOGGINGCONFIG_H
 
+#include "folderconfig.h"
+
+#include <kurlrequester.h>
+
+#include <kresources/resource.h>
 #include <kresources/configwidget.h>
+#include "kcal_groupwareprefs.h"
 
-class ResourceBloggingSettings;
+class QCheckBox;
+class KLineEdit;
 
 namespace KCal {
 
@@ -35,9 +40,9 @@ class ResourceCachedReloadConfig;
 class ResourceCachedSaveConfig;
 
 /**
-  Configuration widget for blogging resource.
+  Configuration widget for groupware kioslave resource.
   
-  @see ResourceBlogging
+  @see KCalOpenGroupware
 */
 class ResourceBloggingConfig : public KRES::ConfigWidget
 { 
@@ -49,14 +54,17 @@ class ResourceBloggingConfig : public KRES::ConfigWidget
     virtual void loadSettings( KRES::Resource *resource );
     virtual void saveSettings( KRES::Resource *resource );
 
+  protected slots:
+    void updateFolders();
+
   private:
-    ResourceBloggingSettings *mPage;
+    KLineEdit *mUrl;
+    KLineEdit *mUserEdit;
+    KLineEdit *mPasswordEdit;
 
     ResourceCachedReloadConfig *mReloadConfig;
     ResourceCachedSaveConfig *mSaveConfig;
-
-    class Private;
-    Private *d;
+    KPIM::FolderConfig *mFolderConfig;
 };
 
 }

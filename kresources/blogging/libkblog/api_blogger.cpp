@@ -168,7 +168,7 @@ kdDebug() << "  titleTagOpen = " << titleTagOpen << ", titleTagClose = " << titl
 bool bloggerAPI::readBlogInfoFromMap( KBlog::BlogListItem &blog, 
         const QMap<QString, QVariant> &postInfo )
 {
-kdDebug() << "BlogID=" << postInfo["blogid"].toString() << 
+kdDebug() << "BlogID=" << postInfo["blogid"].toString() <<
              ", blogName=" << postInfo["blogName"].toString() <<
              ", URL=" << postInfo[ "url" ].toString() << endl;
 kdDebug() << "bloggerAPI::readBlogInfoFromMap, keys = " << QStringList(postInfo.keys()).join(" - ") << endl;
@@ -384,7 +384,7 @@ void bloggerAPI::blogListFinished( const QValueList<QVariant> &message )
   for ( ; it != end; ++it ) {
     kdDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
     const QMap<QString, QVariant> postInfo = ( *it ).toMap();
-    
+
     KBlog::BlogListItem blog;
     if ( readBlogInfoFromMap( blog, postInfo ) ) {
       blogs.append( blog );
