@@ -581,8 +581,11 @@ address records in the address internal viewer can be set to match the
 </para></listitem>
 
 <listitem><para>
-<guilabel>Use key field</guilabel> : I have no idea what this means.
+<guilabel>Use key field</guilabel>Check this box to combine entries with the
+same last name.
 </para></listitem>
+<!-- TODO CW: last name as in the tooltip or key (first, last or company, last)?
+as in Adriaan e-mail? -->
 
 </itemizedlist>
 
