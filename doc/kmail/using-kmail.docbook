@@ -391,13 +391,13 @@ icon in the composer window instead.<!-- fixme 3.2: has this been 'fixed'? --></
 <varlistentry>
 <term><guilabel>sent-mail:</guilabel></term>
 <listitem>
-<para>Contains copies of all messages that you have sent.</para>
+<para>By default copies of all messages that you have sent are put into this folder.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>trash:</guilabel></term>
 <listitem>
-<para>Contains all messages that you have moved to trash.</para>
+<para>By default all messages that you have moved to trash are moved into this folder.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -424,10 +424,10 @@ want to move and press the <keycap>M</keycap> key or select
 <menuchoice><guimenu>Message</guimenu><guimenuitem>Move
 To</guimenuitem></menuchoice>. A list of folders will appear; select the folder
 from the list that you want to move the messages to.  Messages can also be moved
-by dragging them from the Headers pane into the Folders pane.</para>
+by dragging them from the Message list to a folder in the Folder list.</para>
 
 <para>If you want to clear all of the messages out of a folder choose
-<menuchoice><guimenu>Folder</guimenu><guimenuitem>Move All Message to
+<menuchoice><guimenu>Folder</guimenu><guimenuitem>Move All Messages to
 Trash</guimenuitem></menuchoice>. You can use 
 <menuchoice><guimenu>Folder</guimenu><guimenuitem>Delete Folder</guimenuitem></menuchoice>
 to remove a folder and all its messages and subfolders.</para>
@@ -441,7 +441,12 @@ are only available for your own folders and not for default folder like
 <guilabel>inbox</guilabel> &etc;. Default folders also cannot be moved
 or renamed.</para>
 
-<para>You can make a folder a subfolder if you choose a parent
+<sect3 id="folders-properties-general">
+<title><guilabel>General</guilabel> tab</title>
+
+<para>Rename a folder by changing the entry in the <guilabel>Name:</guilabel> field.</para>
+
+<para>You can make a folder a subfolder of another folder by choosing a new parent
 folder using the <guilabel>Belongs to</guilabel> selection. </para>
 
 <para>The <guilabel>Folder Icons</guilabel> section lets you choose
@@ -450,36 +455,102 @@ icons that are different from the default ones in the folder list.</para>
 <para>See the <link linkend="folders-format">Folder Format</link> section
 for information about the <guilabel>Mailbox format.</guilabel></para>
 
-<para>If you're going to use the folder for a mailing list you may want to add
-the mailing list address in the <guilabel>Associated Mailing List</guilabel> section.
-You will then be able to use
-the <menuchoice><guimenu>Message</guimenu><guimenuitem>Reply
-to Mailing-List...</guimenuitem></menuchoice> menu item; it will open a reply with the
-mailing list address in the <guilabel>To:</guilabel> field (&ie; it will ignore
-the <token>Reply-To</token> of the message). You can also click the
-<mousebutton>middle</mousebutton> mousebutton in the Folders pane to post to a
-mailing list that is associated with that folder.</para>
-<!-- TODO: "reply" in a folder that has a mailing list address
-always sends the reply the the mailing list, even if the mail
-was sent to one personally??? -->
-
-<para>The <guilabel>Old Message Expiry</guilabel> section lets you automatically
-delete old messages when you exit &kmail; (depending on your settings
-in &kmail;'s <guilabel>Misc</guilabel> configuration page) or
-via <menuchoice><guimenu>File</guimenu><guisubmenu>Expire
-All Folders</guisubmenu></menuchoice>.
-<warning><para>Messages that are expired are deleted. They are <emphasis>not</emphasis> moved
-to trash, so be careful with this setting.</para></warning>
-</para>
-
-<para>With the <guilabel>Identity</guilabel> section you can set your default
-identity for new messages. Replies to messages that were sent directly
+<para>With the <guilabel>Identity</guilabel> section you can set the default
+identity that should be used for new messages if this folder is selected.
+Replies to messages that were sent directly
 to you will still default to the message's <quote>To</quote> address if an
 according identity is found.</para>
 
 <para>With <guilabel>Show Sender/Receiver</guilabel> you can set the 
 visible columns in the header pane. This is useful if you use a
 folder to save your own sent messages.</para>
+
+<para>Check <guilabel>Ignore new mail in this folder</guilabel> if you do not
+want to be informed about new mail that arrives in this folder. This is for
+example useful for the folder where you move all detected spam messages to.</para>
+
+<para>Check <guilabel>Keep replies in this folder</guilabel> if you want
+replies to messages in this folder to be filed also into this folder rather 
+than into a special sent-mail folder.</para>
+
+</sect3>
+
+<sect3 id="folders-properties-expiry">
+<title><guilabel>Old Message Expiry</guilabel> tab</title>
+
+<para>Here you can select what should happen with old messages in this
+folder. If you enable <guilabel>Expire old messages in this folder</guilabel>
+then KMail will regularly, depending on your choice, either delete old 
+messages or move old messages to another folder. You can also start
+expiration of old messages manually via <menuchoice><guimenu>Folder</guimenu><guisubmenu>Expire</guisubmenu></menuchoice> and via
+<menuchoice><guimenu>File</guimenu><guisubmenu>Expire
+All Folders</guisubmenu></menuchoice></para>
+
+<warning><para>Messages that are deleted during expiration of old messages 
+cannot be restored, so be careful with this setting.</para></warning>
+
+</sect3>
+
+<sect3 id="folders-properties-mailinglist">
+<title><guilabel>Mailing List</guilabel> tab</title>
+
+<para>If you're going to use the folder for a mailing list then you should
+check <guilabel>Folder holds a mailing list</guilabel> to associate this folder
+with the mailing list. Next you should
+click on <guilabel>Detect Automatically</guilabel>. KMail will then try
+to guess some information about the mailing list from the currently selected
+message. If KMail could not determine some addresses then you can add
+the missing information manually. To do this first select the 
+<guilabel>Address type</guilabel> for which you want to add an address.
+You can choose between:</para>
+
+<itemizedlist>
+<listitem>
+<para><guilabel>Post to List</guilabel> - This address is used for sending messages
+to the mailing list. This is usually an email address.</para>
+</listitem>
+<listitem>
+<para><guilabel>Subscribe to List</guilabel> - This address is used for subscribing
+to the mailing list. This can be an email address or the address of a webpage.</para>
+</listitem>
+<listitem>
+<para><guilabel>Unsubscribe from List</guilabel> - This address is used for
+unsubscribing from the mailing list. This can be an email address or the
+address of a webpage.</para>
+</listitem>
+<listitem>
+<para><guilabel>List Archives</guilabel> - This is the address of the archive of
+the mailing list. This is usually the address of a webpage.</para>
+</listitem>
+<listitem>
+<para><guilabel>List Help</guilabel> - This address is used for requesting help
+for this mailing list. This is usually an email address.</para>
+</listitem>
+</itemizedlist>
+
+<para>After selecting the appropriate <guilabel>Address type</guilabel> you
+enter the email address or the address of the webpage and then click on
+<guilabel>Add</guilabel>. With <guilabel>Remove</guilabel> you can remove
+addresses.</para>
+
+<para>If all addresses have been added then you can execute an action, &eg;
+go to the list archives, by selecting the appropriate 
+<guilabel>Address type</guilabel> and then clicking on
+<guilabel>Invoke Handler</guilabel>. If there is an email address and an
+address of a webpage for the desired action then you will have to select
+the <guilabel>Preferred handler</guilabel> prior to clicking on 
+<guilabel>Invoke Handler</guilabel>. Select <guilabel>KMail</guilabel> if you
+want to send a message to the email address and select 
+<guilabel>Browser</guilabel> if you want to go to the webpage.</para>
+
+<para>Alternatively to invoking the handler for 
+<guilabel>Post to List</guilabel> you can send a new message to the
+mailing list via <menuchoice><guimenu>Message</guimenu><guimenuitem>New
+Message to Mailing-List...</guimenuitem></menuchoice> or by clicking with
+the <mousebutton>middle</mousebutton> mousebutton on the folder in the folder
+list.</para>
+
+</sect3>
 
 </sect2>
 
@@ -516,11 +587,11 @@ applied <emphasis>after</emphasis> the messages have been downloaded
 from your account -- if you want to filter messages on the server, see
 <link linkend="popfilters">Download Filters</link>.</para>
 
-<para>Filters consist of: a search pattern, whose rules are used as
+<para>Filters consist of: filter criteria, whose rules are used as
 criteria to determine whether this filter should be applied to a given
 message; and a list of filter actions, which describe what is to be
 done with, or to, the message if the search pattern matches. Read more
-about search patterns and filter actions in the following
+about filter criteria and filter actions in the following
 subsections.</para>
 
 <note><para>Filters are considered one after the other,
@@ -670,13 +741,6 @@ as long as the filter name starts with <quote>&lt;</quote>.
 <guibutton>OK</guibutton> or <guibutton>Apply</guibutton>, only valid
 filters are actually copied to the internal filter manager.</para>
 
-<para>A filter is considered invalid if</para>
-
-<orderedlist>
-<listitem><para>the search pattern contains only empty rules or</para></listitem>
-<listitem><para>the action list is empty.</para></listitem>
-</orderedlist>
-
 <para>Similarly, empty rules and actions are removed from the pattern
 and action list respectively, before the filter is saved.</para>
 </note>
@@ -704,7 +768,7 @@ if any);</para>
 <varlistentry>
 <term><guilabel>&lt;body&gt;</guilabel></term>
 <listitem>
-<para>Searches the body of the message;</para>
+<para>Searches the body of the message (&ie; the whole message except the headers);</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -732,13 +796,110 @@ if any);</para>
 </listitem>
 </varlistentry>
 <varlistentry>
+<term><guilabel>&lt;status&gt;</guilabel></term>
+<listitem>
+<para>Sets restrictions on the status of the message;</para>
+</listitem>
+</varlistentry>
+<varlistentry>
 <term>Any other name</term>
 <listitem>
 <para>Searches the header field that is given by that name.</para>
 </listitem>
-<!-- TODO: status -->
 </varlistentry>
 </variablelist>
+
+<para>The list of possible rules depends on what you selected in the first
+drop down box. The available rules are:</para>
+
+<informaltable>
+<tgroup cols="3">
+<thead>
+<row>
+<entry>Rule</entry>
+<entry>Available for</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry><guilabel>contains</guilabel>/<guilabel>does not contain</guilabel></entry>
+<entry>all textual search items</entry>
+<entry>Matches if the searched item contains (or doesn't contain) the given
+text.</entry>
+</row>
+<row>
+<entry><guilabel>equals</guilabel>/<guilabel>does not equal</guilabel></entry>
+<entry>most textual search items</entry>
+<entry>Matches if the searched item is equal to (or not equal to) the given
+text.</entry>
+</row>
+<row>
+<entry><guilabel>matches regular expr.</guilabel>/<guilabel>does not match reg. expr.</guilabel></entry>
+<entry>all textual search items</entry>
+<entry>Matches if a part of the searched item matches the given regular 
+expression (or does not match it). If the regular expression editor is 
+installed then you can edit the regular expression by clicking on the <guilabel>Edit...</guilabel> button.</entry>
+</row>
+<row>
+<entry><guilabel>has an attachment</guilabel>/<guilabel>has no attachment</guilabel></entry>
+<entry><guilabel>&lt;message&gt;</guilabel></entry>
+<entry>Matches if the message has an attachment (or doesn't have an attachment).</entry>
+</row>
+<row>
+<entry><guilabel>is in address book</guilabel>/<guilabel>is not in address book</guilabel></entry>
+<entry>most textual search items</entry>
+<entry>Matches if the searched item contains an address that is in your address
+book (or if the searched items contains only unknown addresses). Of course,
+this rule makes only sense for address fields like From or
+<guilabel>&lt;recipients&gt;</guilabel></entry>
+</row>
+<row>
+<entry><guilabel>is in category</guilabel>/<guilabel>is not in category</guilabel></entry>
+<entry>most textual search items</entry>
+<entry>Matches if the searched item contains an address that is in the
+specified category in your address book (or if the searched item contains
+no address that is in the specified category). Again, this rule makes only
+sense for address fields.</entry>
+</row>
+<row>
+<entry><guilabel>is equal to</guilabel>/<guilabel>is not equal to</guilabel></entry>
+<entry>numerical search items</entry>
+<entry>Matches if the value of the search item is equal to (or not equal to) 
+the specified value.</entry>
+</row>
+<row>
+<entry><guilabel>is less than</guilabel></entry>
+<entry>numerical search items</entry>
+<entry>Matches if the value of the search item is less than
+the specified value.</entry>
+</row>
+<row>
+<entry><guilabel>is greater than</guilabel></entry>
+<entry>numerical search items</entry>
+<entry>Matches if the value of the search item is greater than
+the specified value.</entry>
+</row>
+<row>
+<entry><guilabel>is less than or equal to</guilabel></entry>
+<entry>numerical search items</entry>
+<entry>Matches if the value of the search item is less than or equal to
+the specified value.</entry>
+</row>
+<row>
+<entry><guilabel>is greater than or equal to</guilabel></entry>
+<entry>numerical search items</entry>
+<entry>Matches if the value of the search item is greater than or equal to
+the specified value.</entry>
+</row>
+<row>
+<entry><guilabel>is</guilabel>/<guilabel>is not</guilabel></entry>
+<entry><guilabel>&lt;status&gt;</guilabel></entry>
+<entry>Matches if the message has (or doesn't have) the specified status.</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
 
 </sect2>
 
@@ -772,7 +933,7 @@ folders as a target.</para></note>
 <varlistentry>
 <term><guilabel>set identity to</guilabel></term>
 <listitem>
-<para>This will set <emphasis>your</emphasis> identity if you reply to this
+<para>This will set the identity that will be used if you reply to this
 message.</para>
 </listitem>
 </varlistentry>
@@ -783,37 +944,41 @@ message.</para>
 also as forwarded, replied, &etc;</para>
 </listitem>
 </varlistentry>
-<!-- TODO: send fake MDN? -->
+<varlistentry>
+<term><guilabel>send fake MDN</guilabel></term>
+<listitem>
+<para>This will send a faked message disposition notification (&ie; a read
+receipt) to the sender of the message.</para>
+</listitem>
+</varlistentry>
 <varlistentry>
 <term><guilabel>set transport to</guilabel></term>
 <listitem>
-<para>This will set the method of transport (&eg; <acronym>SMTP</acronym>) if
-you reply to the message.</para>
+<para>This will set the method of transport (&eg; <acronym>SMTP</acronym>) 
+that will be used if you reply to the message.</para>
 </listitem>
 </varlistentry> 
 <varlistentry>
 <term><guilabel>set Reply-To to</guilabel></term>
-<listitem><para>Will modify the <guilabel>Reply-To</guilabel> field of this
+<listitem><para>This will modify the <guilabel>Reply-To</guilabel> field of this
 message. This can be useful for mailing lists that automatically set a Reply-To
 which you do not like.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>forward to</guilabel></term>
-<listitem><para>Will forward the message to another email address.</para>
+<listitem><para>This will forward the message inline (&ie; as if you selected <menuchoice><guimenu>Message</guimenu><guimenuitem>Forward</guimenuitem><guimenuitem>Inline...</guimenuitem></menuchoice>) to another email address.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>redirect to</guilabel></term>
-<!-- TODO: what's the difference to forward? -->
-<listitem><para>Will redirect the message to another email address.</para>
+<listitem><para>This will redirect the message as is to another email address.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>bounce</guilabel></term> <listitem><para>Will try to
-return the message to the sender as undeliverable.</para>
-
-<warning><para>This will only work if the senders email address is
+<term><guilabel>bounce</guilabel></term>
+<listitem><para>Will try to return the message to the sender as undeliverable.</para>
+<warning><para>This will only work if the sender's email address is
 valid, which is <emphasis>not</emphasis> the case for most
 spam messages.</para></warning>
 </listitem>
@@ -835,12 +1000,14 @@ makes tracking of spam messages, for example, very easy for the sender.</para>
 <listitem>
 <para>This will execute a program, but will not modify the
 message. Specify the full path to the program you want to
-execute; &kmail; will then block until the program returns. You can feed
+execute; &kmail; will then block until the program returns.
+If you don't want &kmail; to block then append '&amp;' to the command.
+You can feed
 the program with the parts of the mail: <symbol>&percnt;0</symbol>,
 <symbol>&percnt;1</symbol>, &etc; stand for files representing
 the message parts; for common messages <symbol>&percnt;0</symbol> is the
 text, <symbol>&percnt;1</symbol> the first attachment and so
-on. Additionally: the whole message is fed into the program's
+on. Additionally, the whole message is fed into the program's
 <acronym>stdin</acronym>; and every occurrence of
 <symbol>&percnt;{foo}</symbol> is replaced by the content of the foo
 header.</para>
@@ -888,7 +1055,7 @@ given name from the message. This is useful mainly for removing bogus
 <term><guilabel>add header</guilabel></term>
 <listitem>
 <para>If no such field is already present this will add a new header field
-with the given name and value to the message: if there already is a
+with the given name and value to the message; if there already is a
 header field with that name, it is overwritten with the 
 given value; if there are already multiple headers with the given
 name (&eg; <quote>Received:</quote> headers), an arbitrary one of them is
@@ -913,7 +1080,12 @@ in the search string.</para><para>Analogous restrictions as in the
 <guilabel>add header</guilabel> action apply here, too.</para>
 </listitem>
 </varlistentry>
-<!-- TODO: play sound -->
+<varlistentry>
+<term><guilabel>play sound</guilabel></term>
+<listitem>
+<para>Will play the specified sound.</para>
+</listitem>
+</varlistentry>
 </variablelist>
 
 </sect2>
@@ -926,7 +1098,7 @@ folder for the list (I will call it
 <replaceable>KDE-General</replaceable>) and use a filter to
 automatically transfer new messages from my inbox to my
 <replaceable>KDE-General</replaceable> folder if they are from the
-&kde; List? Here is how to create this filter:</para>
+&kde; List. Here is how to create this filter:</para>
 
 <procedure>
 <title>Filtering a mailing list</title>
@@ -936,8 +1108,8 @@ filter</guisubmenu><guimenuitem>Filter on
 Mailing-List...</guimenuitem></menuchoice> can identify the mailing
 list (the name of the list should then appear in the menu item); in
 this case, this works and I am presented a filter that has
-<quote>X-Mailing-List <guilabel>equals</guilabel>
-&lt;kde@mail.kde.org&gt;</quote> preset. You select the
+<quote>List-Id<guilabel>contains</guilabel>
+&lt;kde.mail.kde.org&gt;</quote> preset. You select the
 desired destination folder from the folder pull-down menu in the
 <guilabel>Filter Action</guilabel> group and that's it!</para>
 
@@ -958,17 +1130,17 @@ filter. It will appear as <guilabel>&lt;unknown&gt;</guilabel>.</para>
 </step>
 <step>
 <para>In the <guilabel> Filter Criteria</guilabel> area, select
-<guilabel>&lt;recipients&gt;</guilabel> from the first pull-down menu,
-<guilabel>contains</guilabel> from the second pull-down menu, and type
+<guilabel>&lt;recipients&gt;</guilabel> from the first drop-down box,
+<guilabel>contains</guilabel> from the second drop-down box, and type
 <userinput>kde@mail.kde.org</userinput> in the text
 field.</para>
 </step>
 <step>
 <para>Skip down to the <guilabel>Filter Actions</guilabel> section. Select <guilabel>file into
-folder</guilabel> from the first pull-down menu. A new pull-down menu
+folder</guilabel> from the first drop-down box. A new drop-down box
 containing a list of folders will appear. Select the folder that you
 want the filtered messages to be transferred to. For this example, you would select
-<guilabel>KDE-General</guilabel> from the pull-down menu.</para>
+<guilabel>KDE-General</guilabel> from the drop-down box.</para>
 </step>
 </procedure>
 
