@@ -2,17 +2,9 @@ Done:
 
 In Progress:
 
--	Add something to Calendar
-	* konsolekalendaradd.cpp
-
--	Actually make add working
-
+*  Exports
+   - text ezport
 
 ToDo:
-
--	Change something in Calendar
-	* konsolekalendarchange.cpp
-	
--	Delete Something from calendar
-	* konsolekalendardelete.cpp
-	
+*  HTML export
+*  CSV export
