@@ -127,14 +127,12 @@ QStringList ViewManager::selectedEmails() const
 KABC::Addressee::List ViewManager::selectedAddressees() const
 {
   KABC::Addressee::List list;
-  if ( mActiveView ) {
-    QStringList uids = mActiveView->selectedUids();
-    QStringList::Iterator it;
-    for ( it = uids.begin(); it != uids.end(); ++it ) {
-      KABC::Addressee addr = mCore->addressBook()->findByUid( *it );
-      if ( !addr.isEmpty() )
-        list.append( addr );
-    }
+  QStringList uids = selectedUids();
+  QStringList::Iterator it;
+  for ( it = uids.begin(); it != uids.end(); ++it ) {
+    KABC::Addressee addr = mCore->addressBook()->findByUid( *it );
+    if ( !addr.isEmpty() )
+      list.append( addr );
   }
 
   return list;
