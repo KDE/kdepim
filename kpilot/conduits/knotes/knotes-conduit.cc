@@ -151,7 +151,10 @@ NotesSettings::NotesSettings(const QString &configPath,
 	c.setGroup("Data");
 	nN = c.readEntry("name");
 
-	QString notedata = notesdir + "/." +  nN + "_data";
+	QString notedata(notesdir);
+	notedata.append("/.");
+	notedata.append(nN);
+	notedata.append("_data");
 	if (QFile::exists(notedata))
 	{
 		DEBUGCONDUIT << fname 
@@ -164,6 +167,8 @@ NotesSettings::NotesSettings(const QString &configPath,
 	{
 		kdWarning() << __FUNCTION__
 			<< ": No data file for note?"
+			<< " (tried "
+			<< notedata << ")"
 			<< endl;
 	}
 }
@@ -848,6 +853,9 @@ KNotesConduit::doTest()
 }
 
 // $Log$
+// Revision 1.17  2001/05/25 16:06:52  adridg
+// DEBUG breakage
+//
 // Revision 1.16  2001/03/27 11:10:38  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.
