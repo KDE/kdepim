@@ -8,7 +8,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>453</width>
+            <width>465</width>
             <height>353</height>
         </rect>
     </property>
@@ -116,7 +116,7 @@
                         <cstring>fReadOnly</cstring>
                     </property>
                     <property name="text">
-                        <string>Read-&amp;only</string>
+                        <string>Rea&amp;d-only</string>
                     </property>
                 </widget>
                 <widget class="QCheckBox" row="2" column="0">
@@ -132,7 +132,7 @@
                         <cstring>fCopyProtect</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Copy protected</string>
+                        <string>Copy &amp;protected</string>
                     </property>
                 </widget>
                 <spacer row="4" column="0">
@@ -187,7 +187,7 @@
                         <cstring>fReset</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Reset after installation</string>
+                        <string>Reset after &amp;installation</string>
                     </property>
                 </widget>
                 <widget class="QCheckBox" row="1" column="0">
@@ -224,7 +224,7 @@
                         </sizepolicy>
                     </property>
                     <property name="text">
-                        <string>C&amp;reation time:</string>
+                        <string>Cr&amp;eation time:</string>
                     </property>
                     <property name="buddy" stdset="0">
                         <cstring>fCreationDate</cstring>
@@ -246,7 +246,7 @@
                         <cstring>fBackupLabel</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Backup time:</string>
+                        <string>Back&amp;up time:</string>
                     </property>
                     <property name="buddy" stdset="0">
                         <cstring>fBackupDate</cstring>
@@ -264,15 +264,24 @@
                             <verstretch>0</verstretch>
                         </sizepolicy>
                     </property>
+                    <property name="focusPolicy">
+                        <enum>StrongFocus</enum>
+                    </property>
                 </widget>
                 <widget class="KTimeWidget" row="1" column="2">
                     <property name="name">
                         <cstring>fModificationTime</cstring>
                     </property>
+                    <property name="focusPolicy">
+                        <enum>StrongFocus</enum>
+                    </property>
                 </widget>
                 <widget class="KTimeWidget" row="2" column="2">
                     <property name="name">
                         <cstring>fBackupTime</cstring>
+                    </property>
+                    <property name="focusPolicy">
+                        <enum>StrongFocus</enum>
                     </property>
                 </widget>
                 <widget class="KDateWidget" row="2" column="1">
@@ -345,6 +354,23 @@
         </spacer>
     </grid>
 </widget>
+<tabstops>
+    <tabstop>fDBName</tabstop>
+    <tabstop>fType</tabstop>
+    <tabstop>fCreator</tabstop>
+    <tabstop>fRessourceDB</tabstop>
+    <tabstop>fReadOnly</tabstop>
+    <tabstop>fBackupDB</tabstop>
+    <tabstop>fCopyProtect</tabstop>
+    <tabstop>fReset</tabstop>
+    <tabstop>fExcludeDB</tabstop>
+    <tabstop>fCreationDate</tabstop>
+    <tabstop>fCreationTime</tabstop>
+    <tabstop>fModificationDate</tabstop>
+    <tabstop>fModificationTime</tabstop>
+    <tabstop>fBackupDate</tabstop>
+    <tabstop>fBackupTime</tabstop>
+</tabstops>
 <includes>
     <include location="local" impldecl="in implementation">dbFlagsEditor_base.ui.h</include>
 </includes>

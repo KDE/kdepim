@@ -104,8 +104,8 @@ void DBRecordEditor::languageChange()
     fRecordID->setText( tr2i18n( "1" ) );
     fFlagsGroup->setTitle( tr2i18n( "Flags" ) );
     fDirty->setText( tr2i18n( "&Dirty" ) );
-    fDeleted->setText( tr2i18n( "&Deleted" ) );
-    fBusy->setText( tr2i18n( "Busy" ) );
+    fDeleted->setText( tr2i18n( "De&leted" ) );
+    fBusy->setText( tr2i18n( "&Busy" ) );
     fSecret->setText( tr2i18n( "&Secret" ) );
     fArchived->setText( tr2i18n( "&Archived" ) );
 }
@@ -114,7 +114,7 @@ void DBRecordEditor::initWidgets()
 {
 	// FUNCTIONSETUP
 
-    DBRecordEditorBaseLayout = new QGridLayout( fWidget, 1, 1, 11, 6, "DBRecordEditorBaseLayout"); 
+    DBRecordEditorBaseLayout = new QGridLayout( fWidget, 1, 1, 11, 6, "DBRecordEditorBaseLayout");
 
     fRecordIndexLabel = new QLabel( fWidget, "fRecordIndexLabel" );
 
