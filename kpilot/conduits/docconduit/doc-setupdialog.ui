@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>596</width>
-            <height>404</height>
+            <width>476</width>
+            <height>310</height>
         </rect>
     </property>
     <property name="caption">
@@ -104,7 +104,7 @@
                             <cstring>fSyncDirection</cstring>
                         </property>
                         <property name="title">
-                            <string>Synchronization Direction</string>
+                            <string>Synchronization Mode:</string>
                         </property>
                         <grid>
                             <property name="name">
