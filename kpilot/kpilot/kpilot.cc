@@ -243,7 +243,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 #endif
 		))
 	{
-		kdError() << k_funcinfo << ": Can't start daemon." << endl;
+		kdError() << k_funcinfo << ": Can't start daemon : " << daemonError << endl;
 	}
 }
 
@@ -856,6 +856,12 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.72  2002/01/31 15:36:33  hollomon
+//
+// KPilotInstaller::startDaemonIfNeeded was trying to start the daemon
+// even if it found it running. Calculated fDaemonWasRunning then ignored
+// it.
+//
 // Revision 1.71  2002/01/26 15:00:01  adridg
 // An icon for the address viewer
 //
