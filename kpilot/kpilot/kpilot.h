@@ -105,8 +105,12 @@ class KPilotInstaller : public KMainWindow
       void initStatusLink(); // Seperate so the components can be initialized
       KPilotLink* getPilotLink() { return fPilotLink; }
       void destroyPilotLink() { if (fPilotLink) {delete fPilotLink; fPilotLink = 0L; /* delete fLinkProcess; fLinkProcess = 0L; */ } }
-      void doRestore();
-      void doBackup();
+
+public slots:
+	void slotRestoreRequested();
+	void slotBackupRequested();
+	void slotHotSyncRequested();
+	void slotFastSyncRequested();
 
 protected:
 	int testSocket(KSocket *);
@@ -114,19 +118,12 @@ protected:
 	void readConfig(KConfig&);
 
 
+	/**
+	* Run all the internal conduits' presync functions.
+	* Expects the link command to be empty if @p b is true.
+	*/
+	void componentPreSync(bool b=true);
 	void setupSync(int kind,const QString& msg);
-	void doHotSync() 
-	{ 
-		setupSync(KPilotLink::HotSync,
-			i18n("Hot-Syncing. ")+
-			i18n("Please press the hot-sync button."));
-	}
-	void doFastSync()
-	{ 
-		setupSync(KPilotLink::FastSync,
-			i18n("Fast-Syncing. ")+
-			i18n("Please press the hot-sync button."));
-	}
 
 private:
       void initIcons();
@@ -217,6 +214,9 @@ private:
 
 
 // $Log$
+// Revision 1.19  2001/03/01 01:02:48  adridg
+// Started changing to KAction
+//
 // Revision 1.18  2001/02/25 12:39:35  adridg
 // Fixed component names (src incompatible)
 //

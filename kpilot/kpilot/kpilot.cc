@@ -167,9 +167,9 @@ KPilotInstaller::setupWidget()
     setMinimumSize(500,405);
     // setMaximumSize(500,405);
     initIcons();
+    initToolBar();
     initMenu();
     initStatusBar();
-    initToolBar();
     fManagingWidget = new QWidget(this);
     fManagingWidget->setMinimumSize(500,330);
     fManagingWidget->show();
@@ -219,99 +219,21 @@ KPilotInstaller::initStatusBar()
 	fStatusBar->show();
 }
 
-// These are XPM files disguised as .h files
-// 
-//
-#include "hotsync.h"
-#include "toolbar_backup.xpm"
-#include "toolbar_restore.xpm"
-#include "fastsync.xpm"
 
 void KPilotInstaller::initIcons()
 {
 	FUNCTIONSETUP;
 
-#if 0
-	KIconLoader *il = KGlobal::iconLoader();
-
-	icon_quit = il->loadIcon("exit",
-		KIcon::Toolbar,0,KIcon::DefaultState,0,true);
-
-	if (icon_quit.isNull())
-	{
-		kdWarning() << __FUNCTION__ << ": Quit icon not found." << endl;
-	}
-
-	icon_fastsync = QPixmap((const char **)fastsync_xpm);
-	icon_hotsync = QPixmap((const char **)hotsync_icon);
-	icon_backup = QPixmap((const char **)toolbar_backup);
-	icon_restore = QPixmap((const char **)toolbar_restore);
-#endif
 }
 
 
 void
 KPilotInstaller::initToolBar()
-  {
+{
 	FUNCTIONSETUP;
 
 	fToolBar = new KToolBar(this, "toolbar");
 
-	KConfig& c = KPilotConfig::getConfig();
-	QStringList s = c.readListEntry("ToolbarIcons");
-
-
-#if 0
-	// We allow some kind of toolbar customisation,
-	// and we should switch to the real KDE2 configurable
-	// toolbars soon (after KDE 2.1 / KPilot 4.0.0)
-	//
-	//
-	if (s.isEmpty() || s.contains("HotSync"))
-	{
-		fToolBar->insertButton(icon_hotsync, ID_FILE_HOTSYNC,
-			SIGNAL(clicked(int)), this, SLOT(menuCallback(int)),
-			TRUE, i18n("Hot-Sync"));
-	}
-
-	if (s.contains("FastSync"))
-	{
-		fToolBar->insertButton(icon_fastsync, ID_FILE_FASTSYNC,
-			SIGNAL(clicked(int)),this,SLOT(menuCallback(int)),
-			TRUE,i18n("Fast-Sync"));
-	}
-
-	if (s.isEmpty() || s.contains("Backup"))
-	{
-		// This next button exactly mirrors
-		// the functionality of the menu back
-		// "backup" choice.
-		//
-		//
-		fToolBar->insertButton(icon_backup,ID_FILE_BACKUP,
-			SIGNAL(clicked(int)),this,SLOT(menuCallback(int)),
-			TRUE, i18n("Full Backup"));
-	}
-
-	if (s.contains("Restore"))
-	{
-		fToolBar->insertButton(icon_restore,ID_FILE_RESTORE,
-			SIGNAL(clicked(int)),this,SLOT(menuCallback(int)),
-			TRUE, i18n("Full Restore"));
-	}
-
-
-
-
-	// KDE2 style guide says "No quit toolbar button"
-	//
-	//
-	// icon.load(kapp->kde_toolbardir() + "/exit.xpm");
-	// 
-	// fToolBar->insertButton( icon, 0, 
-	//	SIGNAL(clicked()), this, SLOT(quit()),
-	//	TRUE, i18n("Quit"));
-#endif
 
 	conduitCombo=new QComboBox(fToolBar,"conduitCombo");
 	conduitCombo->insertItem(version(0));
@@ -319,9 +241,9 @@ KPilotInstaller::initToolBar()
 	connect(conduitCombo,SIGNAL(activated(int)),
 		this,SLOT(slotModeSelected(int)));
 
-  fToolBar->alignItemRight(KPilotInstaller::ID_COMBO);
-  addToolBar(fToolBar);
-  }
+	fToolBar->alignItemRight(KPilotInstaller::ID_COMBO);
+	addToolBar(fToolBar);
+}
 
 
 void
@@ -749,14 +671,14 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
 			if (c.readBoolEntry("PreferFastSync",false))
 			{
 				getPilotLink()->setFastSyncRequired(true);
-				doFastSync();
+				componentPreSync();
 				fStatusBar->changeItem(
 					i18n("FastSync in progress..."), 0);
 			}
 			else
 			{
 				getPilotLink()->setFastSyncRequired(false);
-				doHotSync();
+				componentPreSync();
 				fStatusBar->changeItem(
 					i18n("HotSync in progress..."), 0);
 			}
@@ -799,24 +721,70 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
 }
 
 void
-KPilotInstaller::doBackup()
+KPilotInstaller::slotBackupRequested()
 {
 	FUNCTIONSETUP;
-
+	showTitlePage();
 	fStatusBar->changeItem(
-		i18n("Backing up pilot. Please press the hot-sync button."), 
+		i18n("Backing up pilot. ")+
+		i18n("Please press the hot-sync button."), 
 		0);
 
 	sprintf(fLinkCommand, "%d\n", KPilotLink::Backup);
 }
 
 void
-KPilotInstaller::doRestore()
+KPilotInstaller::slotRestoreRequested()
 {
 	FUNCTIONSETUP;
 
-  fStatusBar->changeItem(i18n("Restoring pilot. Please press the hot-sync button."), 0);
-  sprintf(fLinkCommand, "%d\n", KPilotLink::Restore);
+	showTitlePage();
+
+	fStatusBar->changeItem(
+		i18n("Restoring pilot. ")+
+		i18n("Please press the hot-sync button."), 0);
+	sprintf(fLinkCommand, "%d\n", KPilotLink::Restore);
+}
+
+void KPilotInstaller::slotHotSyncRequested() 
+{ 
+	setupSync(KPilotLink::HotSync,
+		i18n("Hot-Syncing. ")+
+		i18n("Please press the hot-sync button."));
+}
+
+void KPilotInstaller::slotFastSyncRequested()
+{ 
+	setupSync(KPilotLink::FastSync,
+		i18n("Fast-Syncing. ")+
+		i18n("Please press the hot-sync button."));
+}
+
+void KPilotInstaller::componentPreSync(bool expectEmptyLinkCommand)
+{
+	FUNCTIONSETUP;
+
+	if (fLinkCommand[0] && expectEmptyLinkCommand)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": LinkCommand not empty!"
+			<< endl;
+	}
+
+
+	for(fPilotComponentList.first(); 
+		fPilotComponentList.current(); 
+		fPilotComponentList.next())
+	{
+#ifdef DEBUG
+		if (debug_level & SYNC_MINOR)
+		{
+			kdDebug() << fname << ": Pre-sync for builtins."
+				<< endl;
+		}
+#endif
+		fPilotComponentList.current()->preHotSync(fLinkCommand);
+	}
 }
  
 void KPilotInstaller::setupSync(int kind,const QString& message)
@@ -828,19 +796,7 @@ void KPilotInstaller::setupSync(int kind,const QString& message)
 	if (fLinkCommand[0] == 0)
 	{
 		sprintf(fLinkCommand, "%d\n",kind);
-		for(fPilotComponentList.first(); 
-			fPilotComponentList.current(); 
-			fPilotComponentList.next())
-		{
-#ifdef DEBUG
-			if (debug_level & SYNC_MINOR)
-			{
-				kdDebug() << fname << ": Pre-sync for builtins."
-					<< endl;
-			}
-#endif
-			fPilotComponentList.current()->preHotSync(fLinkCommand);
-		}
+		componentPreSync(false);
 	}
 }
 
@@ -860,51 +816,59 @@ KPilotInstaller::initMenu()
 	FUNCTIONSETUP;
 
 	QPopupMenu* fileMenu = new QPopupMenu;
-	fileMenu->insertItem(i18n("&Settings"), 
-		KPilotInstaller::ID_FILE_SETTINGS);
-	fileMenu->insertSeparator(-1);
-	fileMenu->insertItem(// icon_hotsync,
-		i18n("&Hot-Sync"),KPilotInstaller::ID_FILE_HOTSYNC);
-	fileMenu->insertItem(// icon_fastsync,
-		i18n("&Fast-Sync"),KPilotInstaller::ID_FILE_FASTSYNC);
-	fileMenu->insertItem(// icon_backup,
-		i18n("&Backup"), KPilotInstaller::ID_FILE_BACKUP);
-	fileMenu->insertItem(// icon_restore,
-		i18n("&Restore"), KPilotInstaller::ID_FILE_RESTORE);
-	fileMenu->insertSeparator(-1);
 
 	KAction *p;
 
 	p = KStdAction::preferences(this,
 		SLOT(slotConfigureKPilot()));
 	p->plug(fileMenu);
-	p = new KAction(i18n("Configure Conduits..."),
+	p = new KAction(i18n("C&onfigure Conduits..."),
 		"configure",
 		0,
 		this,
 		SLOT(slotConfigureConduits()),
 		this);
 	p->plug(fileMenu);
+	fileMenu->insertSeparator(-1);
+	p = new KAction(i18n("&HotSync"),
+		"hotsync",
+		0,
+		this,
+		SLOT(slotHotSyncRequested()),
+		this);
+	p->plug(fileMenu);
+	if (fToolBar) p->plug(fToolBar);
+	p = new KAction(i18n("&FastSync"),
+		"fastsync",
+		0,
+		this,
+		SLOT(slotHotSyncRequested()),
+		this);
+	p->plug(fileMenu);
+	p = new KAction(i18n("&Backup"),
+		"backup",
+		0,
+		this,
+		SLOT(slotBackupRequested()),
+		this);
+	if (fToolBar) p->plug(fToolBar);
+	p->plug(fileMenu);
+	p = new KAction(i18n("&Restore"),
+		"restore",
+		0,
+		this,
+		SLOT(slotRestoreRequested()),
+		this);
+	p->plug(fileMenu);
+	fileMenu->insertSeparator(-1);
 	p = KStdAction::quit(this,SLOT(quit()));
 	p->plug(fileMenu);
-#if 0
-	fileMenu->insertItem(icon_quit,
-		i18n("&Quit"), KPilotInstaller::ID_FILE_QUIT);
-#endif
-	connect(fileMenu, SIGNAL (activated(int)), SLOT (menuCallback(int)));
 
-	conduitMenu = new QPopupMenu;
-	conduitMenu->insertItem(i18n("&External"), 
-	KPilotInstaller::ID_CONDUITS_SETUP);
-	conduitMenu->insertSeparator(-1);
-	connect(conduitMenu, SIGNAL(activated(int)),
-	SLOT(menuCallback(int)));
 
 	KPopupMenu *theHelpMenu = helpMenu();
 
 	fMenuBar = menuBar();
 	fMenuBar->insertItem(i18n("&File"), fileMenu);
-	fMenuBar->insertItem(i18n("&Conduits"), conduitMenu);
 	fMenuBar->insertSeparator();
 	fMenuBar->insertItem(i18n("&Help"), theHelpMenu);
 	fMenuBar->show();
@@ -975,8 +939,6 @@ KPilotInstaller::addComponentPage(PilotComponent *p, const QString &name)
 	fPilotComponentList.append(p);
 
 	conduitCombo->insertItem(name,fVisibleWidgetList.count());
-	conduitMenu->insertItem(name,
-		KPilotInstaller::ID_COMBO+fVisibleWidgetList.count());
 	fVisibleWidgetList.append(p);
 }
 
@@ -1021,20 +983,16 @@ void KPilotInstaller::menuCallback(int item)
 		break;
 
 	case KPilotInstaller::ID_FILE_BACKUP:
-		showTitlePage();
-		doBackup();
+		slotBackupRequested();
 		break;
 	case KPilotInstaller::ID_FILE_RESTORE:
-		showTitlePage();
-		doRestore();
+		slotRestoreRequested();
 		break;
 	case KPilotInstaller::ID_FILE_HOTSYNC :
-		showTitlePage();
-		doHotSync();
+		slotHotSyncRequested();
 		break;
 	case KPilotInstaller::ID_FILE_FASTSYNC :
-		showTitlePage();
-		doFastSync();
+		slotFastSyncRequested();
 		break;
 	case KPilotInstaller::ID_CONDUITS_SETUP:
 		slotConfigureConduits();
@@ -1320,6 +1278,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.40  2001/03/01 01:02:48  adridg
+// Started changing to KAction
+//
 // Revision 1.39  2001/02/26 22:11:40  adridg
 // Removed useless getopt.h; fixes compile prob on Solaris
 //
