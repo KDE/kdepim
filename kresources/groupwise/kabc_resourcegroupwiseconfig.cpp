@@ -124,15 +124,22 @@ void ResourceGroupwiseConfig::saveSettings( KRES::Resource *res )
     return;
   }
 
-  resource->prefs()->setUrl( mURL->url() );
-  resource->prefs()->setUser( mUser->text() );
-  resource->prefs()->setPassword( mPassword->text() );
+  saveServerSettings( resource );
 
   saveAddressBookSettings();
 }
 
+void ResourceGroupwiseConfig::saveServerSettings( ResourceGroupwise *resource )
+{
+  resource->prefs()->setUrl( mURL->url() );
+  resource->prefs()->setUser( mUser->text() );
+  resource->prefs()->setPassword( mPassword->text() );  
+}
+
 void ResourceGroupwiseConfig::updateAddressBookList()
 {
+  saveServerSettings( mResource );
+
   GroupwiseServer server( mResource->prefs()->url(),
                           mResource->prefs()->user(),
                           mResource->prefs()->password(), this );

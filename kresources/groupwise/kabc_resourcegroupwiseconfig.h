@@ -50,6 +50,7 @@ class ResourceGroupwiseConfig : public KRES::ConfigWidget
   private:
     void updateAddressBookView();
     void saveAddressBookSettings();
+    void saveServerSettings( ResourceGroupwise *resource );
 
     KURLRequester *mURL;
     KLineEdit *mUser;
