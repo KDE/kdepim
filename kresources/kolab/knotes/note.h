@@ -44,16 +44,26 @@ namespace KCal {
 
 namespace Kolab {
 
+/**
+ * This class represents a note, and knows how to load/save it
+ * from/to XML, and from/to a KCal::Journal.
+ * The instances of this class are temporary, only used to convert
+ * one to the other.
+ */
 class Note : public KolabBase {
 public:
   /// Use this to parse an xml string to a journal entry
-  static KCal::Journal* xmlToJournal( const QString xml );
+  /// The caller is responsible for deleting the returned journal
+  static KCal::Journal* xmlToJournal( const QString& xml );
 
   /// Use this to get an xml string describing this journal entry
   static QString journalToXML( KCal::Journal* );
 
+  /// Create a note object and
   explicit Note( KCal::Journal* journal = 0 );
   virtual ~Note();
+
+  void saveTo( KCal::Journal* journal );
 
   virtual QString type() const { return "Note"; }
 
@@ -73,14 +83,17 @@ public:
   virtual bool saveAttributes( QDomElement& ) const;
 
   // Load this note by reading the XML file
-  virtual bool load( const QDomDocument& xml );
+  virtual bool loadXML( const QDomDocument& xml );
 
   // Serialize this note to an XML string
-  virtual QString save() const;
+  virtual QString saveXML() const;
 
 protected:
-  /// Read all known fields from this ical incidence
-  void setFields( KCal::Journal* );
+  // Read all known fields from this ical incidence
+  void setFields( const KCal::Journal* );
+
+  // Save all known fields into this ical incidence
+  void saveTo( KCal::Incidence* ) const;
 
   QString mSummary;
   QColor mBackgroundColor;

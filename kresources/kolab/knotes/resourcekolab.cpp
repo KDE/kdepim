@@ -128,7 +128,9 @@ bool ResourceKolab::loadSubResource( const QString& resource )
   mSilent = true;
   QMap<Q_UINT32, QString>::Iterator it;
   for ( it = lst.begin(); it != lst.end(); ++it ) {
-    addNote( it.data(), resource, it.key() );
+    bool ret = addNote( it.data(), resource, it.key() );
+    if ( !ret )
+      kdDebug(5500) << "loading note " << it.key() << " failed" << endl;
   }
   mSilent = silent;
 
@@ -166,10 +168,12 @@ bool ResourceKolab::addNote( KCal::Journal* journal )
   return addNote( journal, QString::null, 0 );
 }
 
-bool ResourceKolab::addNote( const QString xml, const QString& subresource,
+bool ResourceKolab::addNote( const QString& xml, const QString& subresource,
                              Q_UINT32 sernum )
 {
   KCal::Journal* journal = Note::xmlToJournal( xml );
+  Q_ASSERT( journal );
+  Q_ASSERT( !mUidMap.contains( journal->uid() ) );
   if( journal && !mUidMap.contains( journal->uid() ) )
     return addNote( journal, subresource, sernum );
   return false;
@@ -180,7 +184,6 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
 {
   kdDebug(5500) << "ResourceKolab::addNote( KCal::Journal*, '" << subresource << "', " << sernum << " )\n";
 
-  manager()->registerNote( this, journal );
   journal->registerObserver( this );
 
   // Find out if this note was previously stored in KMail
@@ -274,6 +277,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
   // kdDebug(5500) << "ResourceKolab::deleteIncidence( " << type << ", " << uid
   //               << " )" << endl;
 
+  // ### this is just to load the uid - make it faster by parsing it here?
   KCal::Journal* journal = Note::xmlToJournal( note );
   if ( !journal )
     return;

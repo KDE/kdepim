@@ -37,21 +37,25 @@
 using namespace Kolab;
 
 
-KCal::Journal* Note::xmlToJournal( const QString xml )
+KCal::Journal* Note::xmlToJournal( const QString& xml )
 {
-  // TODO: Well...
-  return 0;
+  Note note;
+  note.load( xml );
+  KCal::Journal* journal = new KCal::Journal();
+  note.saveTo( journal );
+  return journal;
 }
 
 QString Note::journalToXML( KCal::Journal* journal )
 {
   Note note( journal );
-  return note.save();
+  return note.saveXML();
 }
 
 Note::Note( KCal::Journal* journal )
 {
-  setFields( journal );
+  if ( journal )
+    setFields( journal );
 }
 
 Note::~Note()
@@ -124,7 +128,7 @@ bool Note::saveAttributes( QDomElement& element ) const
 }
 
 
-bool Note::load( const QDomDocument& document )
+bool Note::loadXML( const QDomDocument& document )
 {
   QDomElement top = document.documentElement();
 
@@ -149,7 +153,7 @@ bool Note::load( const QDomDocument& document )
   return true;
 }
 
-QString Note::save() const
+QString Note::saveXML() const
 {
   QDomDocument document = domTree();
   QDomElement element = document.createElement( "note" );
@@ -159,10 +163,18 @@ QString Note::save() const
   return document.toString();
 }
 
-void Note::setFields( KCal::Journal* journal )
+void Note::setFields( const KCal::Journal* journal )
 {
   KolabBase::setFields( journal );
 
   // TODO: background and foreground
   setSummary( journal->summary() );
+}
+
+void Note::saveTo( KCal::Journal* journal )
+{
+  KolabBase::saveTo( journal );
+
+  // TODO: background and foreground
+  journal->setSummary( summary() );
 }

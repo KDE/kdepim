@@ -49,7 +49,7 @@ KolabBase::~KolabBase()
 {
 }
 
-void KolabBase::setFields( KCal::Incidence* incidence )
+void KolabBase::setFields( const KCal::Incidence* incidence )
 {
   setUid( incidence->uid() );
   setBody( incidence->description() );
@@ -60,10 +60,16 @@ void KolabBase::setFields( KCal::Incidence* incidence )
   // TODO: Attachments
 }
 
-/*void KolabBase::setFields( KABC::Address* address, bool modified )
+void KolabBase::saveTo( KCal::Incidence* incidence ) const
 {
-
-}*/
+  incidence->setUid( uid() );
+  incidence->setDescription( body() );
+  incidence->setCategories( categories() );
+  incidence->setCreated( creationDate() );
+  incidence->setLastModified( lastModified() );
+  incidence->setSecrecy( sensitivity() );
+  // TODO: Attachments
+}
 
 void KolabBase::setUid( const QString& uid )
 {
@@ -129,7 +135,9 @@ bool KolabBase::loadAttribute( QDomElement& element )
 {
   QString tagName = element.tagName();
 
-  if ( tagName == "body" )
+  if ( tagName == "uid" )
+    setUid( element.text() );
+  else if ( tagName == "body" )
     setBody( element.text() );
   else if ( tagName == "categories" )
     setCategories( element.text() );
@@ -173,7 +181,7 @@ bool KolabBase::load( const QString& xml )
   }
 
   // XML file loaded into tree. Now parse it
-  return load( document );
+  return loadXML( document );
 }
 
 bool KolabBase::load( QFile& xml )
@@ -190,7 +198,7 @@ bool KolabBase::load( QFile& xml )
   }
 
   // XML file loaded into tree. Now parse it
-  return load( document );
+  return loadXML( document );
 }
 
 QDomDocument KolabBase::domTree()

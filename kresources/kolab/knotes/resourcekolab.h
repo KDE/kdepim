@@ -101,7 +101,7 @@ signals:
 private:
   bool addNote( KCal::Journal* journal, const QString& resource,
                 Q_UINT32 sernum );
-  bool addNote( const QString xml, const QString& subresource,
+  bool addNote( const QString& xml, const QString& subresource,
                 Q_UINT32 sernum );
 
   bool loadSubResource( const QString& resource );

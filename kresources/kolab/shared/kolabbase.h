@@ -89,18 +89,21 @@ public:
   static QColor stringToColor( const QString& );
 
   // Load this object by reading the XML file
-  virtual bool load( const QString& xml );
-  virtual bool load( QFile& xml );
+  bool load( const QString& xml );
+  bool load( QFile& xml );
 
   // Load this QDomDocument
-  virtual bool load( const QDomDocument& xml ) = 0;
+  virtual bool loadXML( const QDomDocument& xml ) = 0;
 
   // Serialize this object to an XML string
-  virtual QString save() const = 0;
+  virtual QString saveXML() const = 0;
 
 protected:
   // Read all known fields from this ical incidence
-  void setFields( KCal::Incidence* );
+  void setFields( const KCal::Incidence* );
+
+  // Save all known fields into this ical incidence
+  void saveTo( KCal::Incidence* ) const;
 
   // This just makes the initial dom tree with version and doctype
   static QDomDocument domTree();
