@@ -12,7 +12,7 @@ Attributes* Attributes::attributes_ = 0;
 Attributes* Attributes::instance()
 {
   if (!attributes_) {
-    debug( "eneter" );
+    debug( "enter" );
     attributes_ = new Attributes();
     debug( "exit" );
   }
@@ -44,7 +44,7 @@ bool Attributes::nameFieldList( int index,
 				QStringList *pnames, 
 				QStringList *pfields )
 {
-  if ((index >= 0) && ((unsigned int)index < nameList_.count())) {
+  if ((index >= 0) && (index < nameList_.count())) {
     QStringList newpfields;
     QStringList::Iterator it;
 
@@ -285,26 +285,13 @@ Attributes::Attributes()
 
 QString Attributes::fieldListName( int index )
 {
-  // Rikkus: Don't need to be const as we copy our retval, and we avoid
-  // segfaults by using QStringList over a C array.
-  static QStringList sFieldsList;
-  
-  sFieldsList << i18n( "All Contact fields" )
-              << i18n( "Frequently-used fields" ) 
-              << i18n( "Address fields" )
-              << i18n( "E-mail fields" ) 
-              << i18n( "Fax/Other number fields" )
-              << i18n( "Miscellanous fields" )
-              << i18n( "Name fields" )
-              << i18n( "Personal fields" )
-              << i18n( "Phone number fields" )
-              << QString::null;
-  
-  if ((unsigned int)index > sFieldsList.count()) {
-   debug("Attributes::fieldListName() : index out of range");
-   return QString::null;
-  }
-  QString s = *(sFieldsList.at(index));
-  debug(QString("Attributes::fieldListName() : returning \"" + s + "\""));
-  return s;
+  const QString sFieldsList[] = { 
+    i18n( "All Contact fields" ), i18n( "Frequently-used fields" ), 
+    i18n( "Address fields" ), i18n( "E-mail fields" ), 
+    i18n( "Fax/Other number fields" ), i18n( "Miscellanous fields" ),
+    i18n( "Name fields" ), i18n( "Personal fields" ), 
+    i18n( "Phone number fields" ),
+    ""
+  };
+  return sFieldsList[index];
 }

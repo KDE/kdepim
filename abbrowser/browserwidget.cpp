@@ -3,6 +3,7 @@
 #include "viewoptions.h"
 #include "selectfields.h"
 #include "attributes.h"
+#include "entry.h"
 #include "browserentryeditor.h"
 
 #include <qtabwidget.h>
@@ -44,8 +45,8 @@
 
 PwDeleteCommand::PwDeleteCommand( PabWidget *pw, 
 				  QString entryKey, 
-          Entity *ce )
-  : pw( pw ), entryKey( entryKey ), ce( new Entity( *ce ))
+				  ContactEntry *ce )
+  : pw( pw ), entryKey( entryKey ), ce( new ContactEntry( *ce ))
 {
   redo();
 }
@@ -62,8 +63,8 @@ QString PwDeleteCommand::name()
 
 void PwDeleteCommand::undo()
 {
-  QString cel = pw->contactEntryList();
-// Rikkus: FIXME  cel->unremove( entryKey, new Entity( *ce ));
+  ContactEntryList* cel = pw->contactEntryList();
+  cel->unremove( entryKey, new ContactEntry( *ce ));
   PabListViewItem *plvi;
   plvi = new PabListViewItem( entryKey, pw->pabListView(), pw->fields() );
   plvi->refresh();
@@ -73,8 +74,8 @@ void PwDeleteCommand::undo()
 
 void PwDeleteCommand::redo()
 {
-  QString cel = pw->contactEntryList();
-//Rikkus:FIXME  cel->remove( entryKey );
+  ContactEntryList *cel = pw->contactEntryList();
+  cel->remove( entryKey );
   delete pw->pabListView()->getItem( entryKey );
 }
 
@@ -87,14 +88,13 @@ PwPasteCommand::PwPasteCommand( PabWidget *pw, QString clipboard )
   this->clipboard = clipboard;
 
   QTextIStream clipStream( &clipboard );
-  QString cel = pw->contactEntryList();
+  ContactEntryList* cel = pw->contactEntryList();
   while (!clipStream.eof()) {
-// Rikkus: FIXME
-//    Entity *newEntry = new Entity( clipStream );
-//    QString key = cel->insert( newEntry );
-//    keyList.append( key );
-//    PabListViewItem* plvi = pw->addEntry( key );
-//    pw->pabListView()->setSelected( plvi, true );
+    ContactEntry *newEntry = new ContactEntry( clipStream );
+    QString key = cel->insert( newEntry );
+    keyList.append( key );
+    PabListViewItem* plvi = pw->addEntry( key );
+    pw->pabListView()->setSelected( plvi, true );
   }
 }
 
@@ -105,11 +105,11 @@ QString PwPasteCommand::name()
 
 void PwPasteCommand::undo()
 {
-//  PabListViewItem* plvi; Rikkus: unused ?
-//  QString cel = pw->contactEntryList();
+  PabListViewItem* plvi;
+  ContactEntryList* cel = pw->contactEntryList();
   QStringList::Iterator it;
   for( it = keyList.begin(); it != keyList.end(); ++it ) {
-//Rikkus:FIXME    cel->remove( *it );
+    cel->remove( *it );
     delete pw->pabListView()->getItem( *it );
   }
 }
@@ -117,18 +117,15 @@ void PwPasteCommand::undo()
 void PwPasteCommand::redo()
 {
   QTextIStream clipStream( &clipboard );
-  QString cel = pw->contactEntryList();
+  ContactEntryList* cel = pw->contactEntryList();
   QStringList::Iterator it;
   for( it = keyList.begin(); it != keyList.end(); ++it ) {
-    // Rikkus: FIXME
-#if 0
     if (clipStream.eof())
       break;
-    Entity *newEntry = new Entity( clipStream );
+    ContactEntry *newEntry = new ContactEntry( clipStream );
     cel->unremove( *it, newEntry );
     PabListViewItem* plvi = pw->addEntry( *it );
     pw->pabListView()->setSelected( plvi, true );
-#endif
   }
   pw->pabListView()->resort();
 }
@@ -136,12 +133,11 @@ void PwPasteCommand::redo()
 /////////////////////////////////
 // PwNew Methods
 
-PwNewCommand::PwNewCommand( PabWidget *pw, Entity *ce )
+PwNewCommand::PwNewCommand( PabWidget *pw, ContactEntry *ce )
   : pw( pw ), ce( ce )
 {
-  QString cel = pw->contactEntryList();
-  entryKey = ce->id();
-//Rikkus:FIXME  bool wroteOK = cel->write(ce);
+  ContactEntryList* cel = pw->contactEntryList();
+  entryKey = cel->insert( new ContactEntry( *ce ));
   PabListViewItem *plvi;
   plvi = new PabListViewItem( entryKey, pw->pabListView(), pw->fields() );
   plvi->refresh();
@@ -155,33 +151,30 @@ QString PwNewCommand::name()
 
 void PwNewCommand::undo()
 {
-  QString cel = pw->contactEntryList();
-  Entity tempce;// = cel->entity( entryKey );
-  if (tempce.isNull()) { // Another process deleted it already(!)
-    debug( "PwNewCommand::undo() Associated Entity not found." );
+  ContactEntryList *cel = pw->contactEntryList();
+  ContactEntry *tempce = cel->find( entryKey );
+  if (!tempce) { // Another process deleted it already(!)
+    debug( "PwNewCommand::undo() Associated ContactEntry not found." );
     debug( "Unable to undo insert" );
   }
   else
-    ce = new Entity(tempce);
+    ce = new ContactEntry( *tempce );
   PabListViewItem *plvi = pw->pabListView()->getItem( entryKey );
   if (plvi)
     delete plvi;
   else // Should never happen
     debug( "PwNewCommand::undo() missing PabListViewItem." );
-//Rikkus:FIXME  cel->remove( entryKey );
+  cel->remove( entryKey );
 }
 
 void PwNewCommand::redo()
 {
-  QString cel = pw->contactEntryList();
-  // Rikkus: FIXME
-#if 0
-  cel->unremove( entryKey, new Entity( *ce ));
+  ContactEntryList* cel = pw->contactEntryList();
+  cel->unremove( entryKey, new ContactEntry( *ce ));
   PabListViewItem *plvi;
   plvi = new PabListViewItem( entryKey, pw->pabListView(), pw->fields() );
   plvi->refresh();
   pw->pabListView()->resort();
-#endif
 }
 
 /////////////////////////////////
@@ -189,13 +182,13 @@ void PwNewCommand::redo()
 
 PwEditCommand::PwEditCommand( PabWidget *pw, 
 			      QString entryKey,
-            Entity *oldCe, 
-            Entity *newCe )
+			      ContactEntry *oldCe, 
+			      ContactEntry *newCe )
 {
   this->pw = pw;
   this->entryKey = entryKey;
-  this->oldCe = new Entity( *oldCe );
-  this->newCe = new Entity( *newCe );
+  this->oldCe = new ContactEntry( *oldCe );
+  this->newCe = new ContactEntry( *newCe );
   redo();
 }
 
@@ -212,23 +205,20 @@ QString PwEditCommand::name()
 
 void PwEditCommand::undo()
 {
-  QString cel = pw->contactEntryList();
-  // Rikkus: FIXME
-#if 0
-  cel->replace( entryKey, new Entity( *oldCe ));
+  ContactEntryList *cel = pw->contactEntryList();
+  cel->replace( entryKey, new ContactEntry( *oldCe ));
 
   PabListViewItem *plvi = pw->pabListView()->getItem( entryKey );
   if (plvi)
     plvi->refresh();
   delete new QListViewItem( plvi->parent() ); //force resort
   pw->pabListView()->resort();  //grossly inefficient?
-#endif
 }
 
 void PwEditCommand::redo()
 {
-  QString cel = pw->contactEntryList();
-//Rikkus:FIXME  cel->update(newCe);
+  ContactEntryList *cel = pw->contactEntryList();
+  cel->replace( entryKey, new ContactEntry( *newCe ));
 
   PabListViewItem *plvi = pw->pabListView()->getItem( entryKey );
   if (plvi)
@@ -246,7 +236,7 @@ PwCutCommand::PwCutCommand( PabWidget *pw )
   QTextOStream clipStream( &clipText );
   PabListView *listView = pw->pabListView();
   QListViewItem *item;
-  QString cel = pw->contactEntryList();
+  ContactEntryList *cel = pw->contactEntryList();
   for(item = listView->firstChild(); item; item = item->itemBelow()) {
     if (!listView->isSelected( item ))
       continue;
@@ -254,11 +244,11 @@ PwCutCommand::PwCutCommand( PabWidget *pw )
     if (!plvi)
       continue;
     QString entryKey = plvi->entryKey();
-    Entity ce = plvi->getEntry();
-    if (ce.isNull())
+    ContactEntry *ce = plvi->getEntry();
+    if (!ce)
       continue;
-// Rikkus: FIXME    ce->save( clipStream );
-//    cel->remove( entryKey );
+    ce->save( clipStream );
+    cel->remove( entryKey );
     delete plvi;
     keyList.append( entryKey );
   }
@@ -275,13 +265,13 @@ QString PwCutCommand::name()
 void PwCutCommand::undo()
 {
   QTextIStream clipStream( &clipText );
-  QString cel = pw->contactEntryList();
+  ContactEntryList* cel = pw->contactEntryList();
   QStringList::Iterator it;
   for( it = keyList.begin(); it != keyList.end(); ++it ) {
     if (clipStream.eof())
       break;
-// Rikkus: FIXME    Entity *newEntry = new Entity( clipStream );
-//  cel->unremove( *it, newEntry );
+    ContactEntry *newEntry = new ContactEntry( clipStream );
+    cel->unremove( *it, newEntry );
     PabListViewItem* plvi = pw->addEntry( *it );
     pw->pabListView()->setSelected( plvi, true );
   }
@@ -293,11 +283,11 @@ void PwCutCommand::undo()
 void PwCutCommand::redo()
 {
   PabListViewItem* plvi;
-  QString cel = pw->contactEntryList();
+  ContactEntryList* cel = pw->contactEntryList();
   QStringList::Iterator it;
   for( it = keyList.begin(); it != keyList.end(); ++it ) {
     delete pw->pabListView()->getItem( *it );
-//Rikkus:FIXME    cel->remove( *it );
+    cel->remove( *it );
   }
   QClipboard *cb = QApplication::clipboard();
   cb->setText( clipText );
@@ -327,27 +317,20 @@ void DynamicTip::maybeTip( const QPoint &pos )
     PabListViewItem *plvi = dynamic_cast< PabListViewItem* >(lvi);
     if (!plvi)
       return;
-    QString cel = plvi->parent()->getPabWidget()->contactEntryList();
-    Entity ce;// = cel->entity( plvi->entryKey() );
-    if (ce.isNull())
+    ContactEntryList *cel = plvi->parent()->getPabWidget()->contactEntryList();
+    ContactEntry *ce = cel->find( plvi->entryKey() );
+    if (!ce)
       return;
     QString s;
     QRect r = plv->itemRect( lvi );
     r.moveBy( posVp.x(), posVp.y() );
-    
-    Field f = ce.field("N");
-    if (!f.isNull())
-      s += i18n( "Name" ) + ": " + QString(f.value()) + "\n";
-    
-    f = ce.field("ORG");
-    if (!f.isNull())
-      s += i18n( "Company" ) + ": " + QString(f.value()) + "\n";
-    
-    f = ce.field("X-Notes");
-    if (!f.isNull())
-      s += i18n( "Notes:" ) + "\n" +
-        QString(f.value()).stripWhiteSpace() + "\n";
-    
+    if (ce->find( "N" ))
+      s += i18n( "Name" ) + ": " + *ce->find( "N" ) + "\n";
+    if (ce->find( "ORG" ))
+      s += i18n( "Company" ) + ": " + *ce->find( "ORG" ) + "\n";
+    if (ce->find( "X-Notes" ))
+      s += i18n( "Notes:" ) + "\n" + 
+	(*ce->find( "X-Notes" )).stripWhiteSpace() + "\n";
     tip( r, s );
 }
 
@@ -368,12 +351,12 @@ QString PabListViewItem::entryKey()
   return entryKey_;
 }
 
-Entity PabListViewItem::getEntry()
+ContactEntry *PabListViewItem::getEntry()
 {
-  QString cel = parent()->getPabWidget()->contactEntryList();
-  Entity ce;// = cel->entity( entryKey_ );
-  if (ce.isNull())  // can only happen to shared address book
-    debug( "PabListViewItem::getEntry() Associated Entity not found" );
+  ContactEntryList *cel = parent()->getPabWidget()->contactEntryList();
+  ContactEntry *ce = cel->find( entryKey_ );
+  if (!ce)  // can only happen to shared address book
+    debug( "PabListViewItem::getEntry() Associated ContactEntry not found" );
   return ce;
 }
 
@@ -449,21 +432,19 @@ PabListView *PabListViewItem::parent()
 
 void PabListViewItem::refresh()
 {
-  Entity ce = getEntry();
-  if (ce.isNull())
+  ContactEntry *ce = getEntry();
+  if (!ce)
     return;
   for ( uint i = 0; i < field->count(); i++ ) {
-    if ((*field)[i] == "X-FileAs") {
-      Field f = ce.field("X-Notes");
-      if (!f.isNull())
-	      setPixmap( i, BarIcon( "abentry" ));
-      else
-	      setPixmap( i, BarIcon( "group" ));
-    }
-      
-    Field f = ce.field((*field)[i]);
-    if (!f.isNull())
-      setText( i, QString(f.value()));
+    if ((*field)[i] == "X-FileAs")
+      if (ce->find( "X-Notes" ))
+	setPixmap( i, QPixmap( "abentry" ));
+      else {
+  debug( "xx" );
+	setPixmap( i, QPixmap( "group" ));
+      }
+    if (ce->find( (*field)[i] ))
+      setText( i, *(ce->find( (*field)[i] )));
     else
       setText( i, "" );
   }
@@ -496,7 +477,7 @@ void PabWidget::selectNames( QStringList newFields )
   }
 }
 
-QString PabWidget::contactEntryList()
+ContactEntryList *PabWidget::contactEntryList()
 {
   return cel;
 }
@@ -559,13 +540,11 @@ void PabWidget::reconstructListView()
   listView->show();
 }
 
-PabWidget::PabWidget( QString cel,
+PabWidget::PabWidget( ContactEntryList *cel,
 		      QWidget *parent, 
 		      const char *name )
   : QWidget( parent, name ), cel( cel )
 {
-//  qInitImageIO();
-
   readConfig();
   mainLayout = new QVBoxLayout( this, 2 );
 
@@ -609,7 +588,7 @@ PabWidget::~PabWidget()
 void PabWidget::setupListView()
 {
   listView = new PabListView( this );
-  listView->setMultiSelection( TRUE );
+  //xxxx  listView->setSelection( Extended );
   QObject::connect( listView, SIGNAL( selectionChanged() ), 
 		    this, SLOT( selectionChanged() ) );
   QObject::connect( listView, SIGNAL( doubleClicked( QListViewItem* ) ), 
@@ -624,11 +603,11 @@ void PabWidget::repopulate()
     listView->addColumn( Attributes::instance()->fieldToName( field[i] ), 
 			 fieldWidth[i] );
 
-  QStrList keyList;// = cel->allKeys();
-
-  QStrListIterator it(keyList);
-  for (; it.current() ; ++it)
-    addEntry(it.current());
+  QDictIterator<ContactEntry> it(*cel);
+  while (it.current()) {
+    addEntry( it.currentKey() );
+    ++it;
+  }
 }
 
 PabListViewItem* PabWidget::addEntry( QString entryKey )
@@ -639,7 +618,7 @@ PabListViewItem* PabWidget::addEntry( QString entryKey )
 }
 
 // Will have to insert into cel and save key
-void PabWidget::addNewEntry( Entity *ce )
+void PabWidget::addNewEntry( ContactEntry *ce )
 {
   PwNewCommand *command = new PwNewCommand( this, ce );
   UndoStack::instance()->push( command );
@@ -668,27 +647,27 @@ void PabWidget::itemSelected( QListViewItem *item )
   if (plvi) {
     QString title = i18n( "Address Book Entry Editor" );
     QString entryKey = plvi->entryKey();
-    Entity ce;// = cel->entity( entryKey );
-    if (ce.isNull()) { // Another process deleted it(!)
+    ContactEntry *ce = cel->find( entryKey );
+    if (!ce) { // Another process deleted it(!)
       debug( "PabWidget::itemSelected Associated entry not found" );
       return;
     }
-//    PabContactDialog *cd = new PabContactDialog( this, title, entryKey, ce );
-//    QObject::connect( cd, SIGNAL( change( QString, Entity* ) ), 
-//		      this, SLOT( change( QString, Entity* ) ));
-//    cd->show();
+    PabContactDialog *cd = new PabContactDialog( this, title, entryKey, ce );
+    QObject::connect( cd, SIGNAL( change( QString, ContactEntry* ) ), 
+		      this, SLOT( change( QString, ContactEntry* ) ));
+    cd->show();
   }
   item->setSelected( TRUE );
   item->repaint();
 }
 
-void PabWidget::change( QString entryKey, Entity *ce )
+void PabWidget::change( QString entryKey, ContactEntry *ce )
 {
   PabListViewItem *plvi = listView->getItem( entryKey );
-  Entity oldce;// = cel->entity( entryKey );
-  if (plvi && (!oldce.isNull())) {    
-//    PwEditCommand *command = new PwEditCommand( this, entryKey, oldce, ce );
-//    UndoStack::instance()->push( command );
+  ContactEntry *oldce = cel->find( entryKey );
+  if (plvi && oldce) {    
+    PwEditCommand *command = new PwEditCommand( this, entryKey, oldce, ce );
+    UndoStack::instance()->push( command );
     RedoStack::instance()->clear();
   }
   else {
@@ -715,10 +694,9 @@ void PabWidget::copy()
       continue;
     PabListViewItem *lvi = dynamic_cast< PabListViewItem* >(item);
     if (lvi) {
-      Entity ce = lvi->getEntry();
-      if (!ce.isNull()) {
-        //ce.save( clipStream );
-      }
+      ContactEntry *ce = lvi->getEntry();
+      if (ce)
+	ce->save( clipStream );
     }
   }  
   QClipboard *cb = QApplication::clipboard();
@@ -739,17 +717,17 @@ void PabWidget::clear()
   QListViewItem *item = listView->currentItem();
   PabListViewItem *lvi = dynamic_cast< PabListViewItem* >(item);
   QString entryKey = lvi->entryKey();
-  Entity ce = lvi->getEntry();
-  if (!ce.isNull()) {
-//    PwDeleteCommand *command = new PwDeleteCommand( this, entryKey, ce );
-//    UndoStack::instance()->push( command );
+  ContactEntry *ce = lvi->getEntry();
+  if (lvi) {
+    PwDeleteCommand *command = new PwDeleteCommand( this, entryKey, ce );
+    UndoStack::instance()->push( command );
     RedoStack::instance()->clear();
   }
 }
 
 void PabWidget::saveConfig()
 {
-  KConfig *config = KGlobal::config();
+  KConfig *config = kapp->config();
 
   listView->saveConfig();
 
@@ -770,7 +748,7 @@ void PabWidget::saveConfig()
 
 void PabWidget::readConfig()
 {
-  KConfig *config = KGlobal::config();
+  KConfig *config = kapp->config();
 
   config->setGroup("Browser");
   field = config->readListEntry("fields" );
@@ -779,7 +757,7 @@ void PabWidget::readConfig()
   fieldWidth.clear();
   QStringList::Iterator it;
   for(it = fieldWidthStr.begin(); it != fieldWidthStr.end(); ++it)
-    fieldWidth += (*it).toInt();
+    fieldWidth += atoi( *it );
   while (fieldWidth.count() < field.count())
     fieldWidth += 120;
 }
@@ -819,8 +797,9 @@ PabListView::PabListView( PabWidget *parent, const char *name )
     oldColumn( 0 )
 {
   setAllColumnsShowFocus( true );
-  up = new QIconSet( BarIcon("up" ), QIconSet::Small );
-  down = new QIconSet( BarIcon("down" ), QIconSet::Small );
+  setSelectionMode( Extended );
+  up = new QIconSet( BarIcon("abup" ), QIconSet::Small );
+  down = new QIconSet( BarIcon("abdown" ), QIconSet::Small );
   new DynamicTip( this );
   readConfig();
   loadBackground();
@@ -833,7 +812,7 @@ PabWidget* PabListView::getPabWidget()
 
 PabListViewItem *PabListView::getItem( QString entryKey )
 {
-  QString cel = pabWidget->contactEntryList();
+  ContactEntryList *cel = pabWidget->contactEntryList();
   QListViewItem *item = firstChild();
   PabListViewItem *plvi;
   while (item) {
@@ -879,7 +858,7 @@ void PabListView::loadBackground()
 
 void PabListView::saveConfig()
 {
-  KConfig *config = KGlobal::config();
+  KConfig *config = kapp->config();
 
   config->setGroup("ListView");
   config->writeEntry( "sortColumn", header()->mapToActual( column )); 
@@ -897,7 +876,7 @@ void PabListView::saveConfig()
 
 void PabListView::readConfig()
 {
-  KConfig *config = KGlobal::config();
+  KConfig *config = kapp->config();
 
   config->setGroup("ListView");
   column = config->readNumEntry( "sortColumn", 0 ); 

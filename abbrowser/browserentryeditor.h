@@ -1,9 +1,13 @@
 #ifndef PABCONTACT_H 
 #define PABCONTACT_H 
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif 
+
 #include "entryeditorwidget.h"
 
-class Entity;
+class ContactEntry;
 class QWidget;
 
 class PabContactDialog : public ContactDialog
@@ -14,12 +18,12 @@ public:
   PabContactDialog::PabContactDialog( QWidget *parent, 
 				      const char *name,
 				      QString entryKey,
-              Entity* entry,
+				      ContactEntry* entry,
 				      bool modal = FALSE );
   virtual ~PabContactDialog();
  
 signals:
-  virtual void change( QString entryKey , Entity *ce );
+  virtual void change( QString entryKey , ContactEntry *ce );
 
 protected slots:
   virtual void accept();
@@ -39,7 +43,7 @@ public:
   virtual ~PabNewContactDialog();
 
 signals:
-  virtual void add( Entity* ce );
+  virtual void add( ContactEntry* ce );
 
 protected slots:
   virtual void accept();

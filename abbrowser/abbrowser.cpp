@@ -3,16 +3,12 @@
  *
  * Copyright (C) 1999 Don Sanders <dsanders@kde.org>
  */
-
-#include <KAddressBookInterface.h>
-#include <Entity.h>
-#include <Field.h>
-
 #include "abbrowser.h"
 #include "browserentryeditor.h"
 
 #include <qkeycode.h>
 
+//#include <kfm.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kglobal.h>
@@ -21,12 +17,13 @@
 
 #include "undo.h"
 #include "browserwidget.h"
+#include "entry.h"
 
 Pab::Pab()
-  : KTMainWindow()
 {
   setCaption( i18n( "Address Book Browser" ));
-  view = new PabWidget( "kab", this, "Kontact" );
+  document = new ContactEntryList( "entries.txt" );
+  view = new PabWidget( document, this, "Kontact" );
 
   // tell the KTMainWindow that this is indeed the main widget
   setView(view);
@@ -72,11 +69,10 @@ Pab::Pab()
   menuBar()->insertSeparator();
 
   // KDE will generate a short help menu automagically
-//  p = kapp->helpMenu(true, 
-//			i18n("Kab --- KDE Address Book\n\n"
-//			     "(c) 1999 The KDE PIM Team \n"
-//			     "Long Description"));
-//  menuBar()->insertItem(i18n("&Help"), p);
+  p = helpMenu( i18n("Kab --- KDE Address Book\n\n"
+		     "(c) 1999 The KDE PIM Team \n"
+		     "Long Description"));
+  menuBar()->insertItem(i18n("&Help"), p);
   
   // insert a quit button.  the icon is the standard one in KDE
   toolBar()->insertButton(BarIcon("exit"),   // icon
@@ -122,14 +118,14 @@ Pab::Pab()
 void Pab::newContact()
 {
  ContactDialog *test = new PabNewContactDialog( this, i18n( "Address Book Entry Editor" ));
- connect( test, SIGNAL( add( Entity* ) ), 
-	  view, SLOT( addNewEntry( Entity* ) ));
+ connect( test, SIGNAL( add( ContactEntry* ) ), 
+	  view, SLOT( addNewEntry( ContactEntry* ) ));
  test->show();
 }
 
 void Pab::save()
 {
-  //document->save( "entries.txt" );
+  document->save( "entries.txt" );
 }
 
 void Pab::readConfig()
@@ -140,7 +136,7 @@ void Pab::saveConfig()
 {
   debug( "saveConfig" );
   view->saveConfig();
-  KConfig *config = KGlobal::config();
+  KConfig *config = kapp->config();
 
   config->setGroup("Geometry");
   config->writeEntry("MainWin", "abc");
@@ -154,27 +150,7 @@ Pab::~Pab()
 
 void Pab::saveCe() {
   debug( "saveCe()" );
-}
-
-void Pab::slotDropEvent(/*KDNDDropZone *zone*/)
-{
-  /*	// the user dropped something on our window.
-	QString url, temp_file;
-
-	// get the URL pointing to the dropped file
-	//	url = zone->getURLList().first();
-
-	// let KFM grab the file
-	if (KFM::download(url, temp_file))
-	{
-		// 'temp_file' now contains the absolute path to a temp file
-		// with the contents of the the dropped file.  You would presumably
-		// handle it right now.
-
-		// after you are done handling it, let KFM delete the temp file
-		KFM::removeTempFile(temp_file);
-	}
-  */
+  ce->save( "entry.txt" );
 }
 
 void Pab::saveProperties(KConfig *config)

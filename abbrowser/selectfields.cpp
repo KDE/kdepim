@@ -1,5 +1,6 @@
 #include "selectfields.h"
 #include "attributes.h"
+#include "entry.h"
 
 #include <qlistbox.h>
 #include <qlineedit.h>
@@ -29,9 +30,9 @@ SelectFields::SelectFields( QStringList oldFields,
   QString tmp;
 
   for (int i = 0; 
-       tmp = i18n(Attributes::instance()->fieldListName( i )), tmp != "";
+       tmp = Attributes::instance()->fieldListName( i ), tmp != "";
        ++i )
-    cbUnselected->insertItem( tmp );
+    cbUnselected->insertItem( i18n(tmp) );
   cbUnselected->setCurrentItem( 1 );
   
   gl->addWidget( cbUnselected, 0, 0 );

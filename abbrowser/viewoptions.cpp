@@ -103,20 +103,13 @@ ViewOptions::ViewOptions( bool backPixmapOn,
 
 void ViewOptions::pickPixmap()
 {
-// Replaced getOpenFileName by getOpenUrl to make abbrowser compile again.
-// Don't know if this is useful, but it seems that the result is currently not
-// used anyway.
-
-//  QString fileName = KFileDialog::getOpenFileName( leBackPixmap->text(), //QDir::currentDirPath(),
-//                                                   QString::null,
-//					             this );
-  KURL u = KFileDialog::getOpenURL( leBackPixmap->text(), //QDir::currentDirPath(),
-                                    QString::null,this );
-  if (u.isEmpty() || !u.isLocalFile())
+  QString fileName = KFileDialog::getOpenFileName( leBackPixmap->text(), //QDir::currentDirPath(),
+						   QString::null,
+						   this );
+  if (fileName.isEmpty())
     return;
-  QString fileName = u.path();
   leBackPixmap->setText( fileName );
-}
+}  
 
 void ViewOptions::pixmapOn()
 {

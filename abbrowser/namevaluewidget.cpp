@@ -8,17 +8,19 @@
 #include <qlayout.h>
 #include <qstringlist.h>
 #include <qcombobox.h>
+#include "entry.h"
 #include <klocale.h>
 
 NameValueSheet::NameValueSheet( QWidget *parent, 
 				int rows, 
 				QStringList name, 
 				QStringList entryField, 
-        Entity *ce )
+				ContactEntry *ce )
  : QFrame( parent ), lCell( 0 ), rows( rows )
 {
   temp = new QLabel( i18n( "Name" ) + i18n ( "Name" ), 0, "temp" );
   minNameWidth = temp->sizeHint().width();
+  minNameWidth = fontMetrics().width( i18n( "Name" ) + i18n ( "Name" ) ) + 8;
   minNameHeight = temp->sizeHint().height();
   int minWidth;
   int positiveRows;
@@ -33,10 +35,13 @@ NameValueSheet::NameValueSheet( QWidget *parent,
   for( int i = 0; i < rows; ++i ) {
     lCell = new QLabel( name[i], this );
     lCell->setFrameStyle( QFrame::Box | QFrame::Plain );
-    minWidth = lCell->sizeHint().width();
-    if (minWidth < minNameWidth)
-      minWidth = minNameWidth;
-    lCell->setMinimumWidth( minWidth );
+    lCell->updateGeometry();
+    minWidth = fontMetrics().width( name[i] ) + 8;
+    debug( QString( "minWidth %1" ).arg( minWidth ));
+    //    minWidth = lCell->sizeHint().width();
+    if (minWidth > minNameWidth)
+      minNameWidth = minWidth;
+    lCell->setMinimumWidth( minNameWidth );
 
     lay2->addWidget( lCell, i, 0 );
 
@@ -55,6 +60,7 @@ NameValueSheet::NameValueSheet( QWidget *parent,
     lay2->addWidget( filler, 0, 1 );
   }
   setMaximumHeight( (lCell->height() - verticalTrim*2) * rows );
+  debug( QString( "minNameWidth %1" ).arg( minNameWidth ));
 }
 
 NameValueSheet::~NameValueSheet()
@@ -64,9 +70,11 @@ NameValueSheet::~NameValueSheet()
 
 QSize NameValueSheet::cellSize()
 {
+  debug( QString( "cellSize %1 ").arg( minNameWidth ) );
   if (rows == 0)
     return QSize( minNameWidth, minNameHeight - verticalTrim );
-  return QSize( lCell->size().width(), lCell->size().height() - verticalTrim );
+  //  return QSize( lCell->size().width(), lCell->size().height() - verticalTrim );
+  return QSize( minNameWidth, lCell->size().height() - verticalTrim );
 }
 
 NameValueFrame::NameValueFrame( QWidget *parent, NameValueSheet* vs ) 
@@ -88,24 +96,33 @@ NameValueFrame::NameValueFrame( QWidget *parent, NameValueSheet* vs )
   viewport()->setBackgroundColor( vs->backgroundColor() );
 }
   
+#include <kapp.h>
 void NameValueFrame::setSheet( NameValueSheet* vs )
 {
   this->vs = vs;
   vs->setMinimumSize( vs->sizeHint() );
   addChild( vs );
   showChild( vs, true );
+  kapp->processEvents(1);
+  debug( QString( "XvisibleWidth %1" ).arg( visibleWidth() ));
+  debug( QString( "XvisibleWidth %1" ).arg( visibleWidth() ));
   resizeContents( vs->width(), vs->height() );
   lName->setMinimumSize( vs->cellSize().width(), lName->height() );
   lName->resize( vs->cellSize().width(), lName->height() );
+  lName->updateGeometry();
   lValue->setMinimumSize( visibleWidth() - lName->width(), lName->height() );
   lValue->resize( visibleWidth() - lName->width(), lName->height() );
   lName->move( 2, 2 );
   lValue->move( lName->width() + 2, 2 );
   vs->resize( visibleWidth(), vs->height() );
+  
+  debug( QString( "cellWidth %1" ).arg( vs->cellSize().width() ));
+  debug( QString( "visibleWidth %1" ).arg( visibleWidth() ));
 }
 
 void NameValueFrame::resizeEvent(QResizeEvent* e) 
 { 
+  debug ( "hit meeeeee" );
   QScrollView::resizeEvent( e ); 
   vs->resize( visibleWidth(), vs->height() );
   lName->resize( vs->cellSize() );
@@ -116,18 +133,17 @@ void NameValueFrame::resizeEvent(QResizeEvent* e)
 
 ContactLineEdit::ContactLineEdit( QWidget * parent, 
 				  const char * name, 
-          Entity *ce )
+				  ContactEntry *ce )
  : QLineEdit( parent, name ), ce( ce )
 {
-  Field f = ce->field(name);
-  if (!f.isNull())
-    setText(f.value());
-//XXX  connect( ce, SIGNAL( changed() ), this, SLOT( sync() ));
+  if (ce->find( name ))
+    setText( *ce->find( name ));
+  connect( ce, SIGNAL( changed() ), this, SLOT( sync() ));
 }
 
 void ContactLineEdit::focusOutEvent ( QFocusEvent * )
 {	
-//  ce->replace(name(),  text()); XXX
+  ce->replace( QString( name()), new QString( text()) );
 }
 
 void ContactLineEdit::setName( const char *name )
@@ -139,24 +155,22 @@ void ContactLineEdit::setName( const char *name )
 
 void ContactLineEdit::sync()
 {
-  Field f = ce->field(name());
-  if (f.isNull()) return;
-  QString value = f.value();
-  if ((!value.isEmpty()) && (value != text()))
-    setText(value);
+  const QString *value = ce->find( name() );
+  if ((value) && (*value != text()))
+    setText( *value );
 }
 
 ContactMultiLineEdit::ContactMultiLineEdit( QWidget * parent, 
 					    const char * name, 
-              Entity *ce )
+					    ContactEntry *ce )
  : QMultiLineEdit( parent, name ), ce( ce )
 {
-//XXX  connect( ce, SIGNAL( changed() ), this, SLOT( sync() ));
+  connect( ce, SIGNAL( changed() ), this, SLOT( sync() ));
 }
 
 void ContactMultiLineEdit::focusOutEvent( QFocusEvent * )
 {	
-//  ce->replace( QString( name()), text()); XXX
+  ce->replace( QString( name()), new QString( text()) );
 }
 
 void ContactMultiLineEdit::setName( const char *name )
@@ -168,27 +182,24 @@ void ContactMultiLineEdit::setName( const char *name )
 
 void ContactMultiLineEdit::sync()
 {
-  Field f = ce->field(name());
-  if (f.isNull())
-    return;
-  QString value = f.value();
-  if ((!value.isEmpty()) && (value != text()))
-    setText( value );
+  const QString *value = ce->find( name() );
+  if ((value) && (*value != text()))
+    setText( *value );
 }
 
 FileAsComboBox::FileAsComboBox( QWidget * parent, 
 				const char * name, 
-        Entity *ce )
+				ContactEntry *ce )
  : QComboBox( true, parent, name ), ce( ce )
 {
-//XXX  connect( ce, SIGNAL( changed() ), this, SLOT( sync() ));
+  connect( ce, SIGNAL( changed() ), this, SLOT( sync() ));
 }
 
 void FileAsComboBox::updateContact()
 {	
   debug( "FileAsComboBox::focusOutEvent" );
   debug( currentText() );
-//  ce->replace( QString( name()), currentText()); // XXX
+  ce->replace( QString( name()), new QString( currentText()) );
 }
 
 void FileAsComboBox::setName( const char *name )
@@ -200,13 +211,9 @@ void FileAsComboBox::setName( const char *name )
 
 void FileAsComboBox::sync()
 {
-  Field f = ce->field(name());
-  if (f.isNull())
-    return;
-  
-  QString value = f.value();
-  if ((!value.isEmpty()) && (value != currentText()))
-    setEditText( value );
+  const QString *value = ce->find( name() );
+  if ((value) && (*value != currentText()))
+    setEditText( *value );
 }
 
 ContactComboBox::ContactComboBox( QWidget *parent )

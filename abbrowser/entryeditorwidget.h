@@ -7,9 +7,6 @@
 #ifndef CONTACT_H 
 #define CONTACT_H 
 
-#include <Entity.h>
-#include <Field.h>
-
 #include <qstring.h>
 #include <qdialog.h>
 #include <qstringlist.h>
@@ -17,6 +14,7 @@
 class NameValueSheet;
 class NameValueFrame;
 class ContactComboBox;
+class ContactEntry;
 class QMultiLineEdit;
 class QLineEdit;
 class QComboBox;
@@ -34,16 +32,16 @@ class ContactDialog : public QDialog
 
 public:
 /**
- * Creates a ContactDialog. If a pointer to an Entity object is given 
- * then that Entity object will be updated otherwise a new 
- * Entity object will be created
+ * Creates a ContactDialog. If a pointer to a ContactEntry object is given 
+ * then that ContactEntry object will be updated otherwise a new 
+ * ContactEntry object will be created
  */
-    ContactDialog( QWidget *parent, const char *name, Entity* ce = 0, bool modal = false );
+    ContactDialog( QWidget *parent, const char *name, ContactEntry* ce = 0, bool modal = false );
 
 /**
- * Returns the Entity associated with this dialog.
+ * Returns the ContactEntry associated with this dialog.
  */
-    Entity* entry();
+    ContactEntry* entry();
 
 protected:
     void setupTab1();
@@ -56,7 +54,7 @@ protected:
     QStringList names;
     QStringList values;
     QStringList entryNames;
-    Entity* ce;
+    ContactEntry* ce;
     QMultiLineEdit *mleAddress;
     ContactComboBox *cbAddress;
     FileAsComboBox *cbFileAs;
@@ -96,19 +94,19 @@ public:
  * Arguments:
  *
  * @param entryField Specifies the category of address (Business, Home, Other) to update.
- * @param ce The Entity to update.
+ * @param ce The ContactEntry to update.
  */
-    AddressDialog( QWidget *parent, QString entryField, Entity *ce, bool modal = false );
+    AddressDialog( QWidget *parent, QString entryField, ContactEntry *ce, bool modal = false );
 
 private:
     QString entryField;
-    Entity *ce;
+    ContactEntry *ce;
     QMultiLineEdit *mleStreet;
     QLineEdit *leCity;
     QLineEdit *leState;
     QLineEdit *lePostal;
     QComboBox *cbCountry;
-    
+
 private slots:
     void AddressOk();
 };
@@ -126,12 +124,12 @@ public:
  *
  * Arguments:
  *
- * @param ce The Entity to update.
+ * @param ce The ContactEntry to update.
  */
-    NameDialog( QWidget *parent, Entity *ce, bool modal = false );
+    NameDialog( QWidget *parent, ContactEntry *ce, bool modal = false );
 
 private:
-    Entity *ce;
+    ContactEntry *ce;
     QComboBox *cbTitle;
     QLineEdit *leFirst;
     QLineEdit *leMiddle;
@@ -147,7 +145,7 @@ private slots:
 
 /*
  * A dialog for specifying a new name/value pair for insertion into
- * a Entity object.
+ * a ContactEntry object.
  */
 class NewFieldDialog : public QDialog
 {

@@ -1,13 +1,15 @@
 #ifndef PAB_H 
 #define PAB_H 
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif 
+
 #include <kapp.h>
 #include <ktmainwindow.h>
  
-#include <Entity.h>
-#include <Field.h>
-#include <KAddressBookInterface.h>
-
+class ContactEntry;
+class ContactEntryList;
 class PabWidget;
 
 /**
@@ -31,14 +33,14 @@ public:
 	 * Default Destructor
 	 */
 	virtual ~Pab();
+	ContactEntry *ce;
 
 public slots:
 	/**
 	 * This is called whenever the user Drag n' Drops something into our
 	 * window
 	 */
-	void slotDropEvent(/*KDNDDropZone **/);
-  void newContact();
+        void newContact();
 	void saveCe();
 	void save();
 	void readConfig();
@@ -66,6 +68,7 @@ protected:
 
 private:
 	PabWidget *view;
+	ContactEntryList *document;
 };
 
 #endif // PAB_H 

@@ -1,5 +1,5 @@
-#include <Entity.h>
 #include "browserentryeditor.h"
+#include "entry.h"
 
 ////////////////////////////
 // PabContactDialog Methods
@@ -7,9 +7,9 @@
 PabContactDialog::PabContactDialog( QWidget *parent, 
 				    const char *name, 
 				    QString entryKey,
-            Entity *entry,
+				    ContactEntry *entry,
 				    bool modal )
-  : ContactDialog( parent, name, new Entity( *entry ) , modal ),
+  : ContactDialog( parent, name, new ContactEntry( *entry ) , modal ),
     entryKey_( entryKey )
 {
 }
@@ -31,7 +31,7 @@ void PabContactDialog::accept()
 PabNewContactDialog::PabNewContactDialog( QWidget *parent, 
 					  const char *name, 
 					  bool modal )
-  : ContactDialog( parent, name, new Entity, modal )
+  : ContactDialog( parent, name, new ContactEntry(), modal )
 {}
 
 PabNewContactDialog::~PabNewContactDialog()
