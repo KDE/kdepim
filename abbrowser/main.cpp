@@ -11,7 +11,7 @@ static const char* VERSION="0.0.1";
 int main(int argc, char *argv[])
 {
 	KAboutData aboutData( "abbrowser", I18N_NOOP("abBrowser"),
-		VERSION, description, KAboutData::License_GPL,
+		VERSION, description, KAboutData::GPL,
 		"(c) 1999, Don Sanders");
 	aboutData.addAuthor("Don Sanders",0, "dsanders@kde.org");
 	KCmdLineArgs::init( argc, argv, &aboutData );
