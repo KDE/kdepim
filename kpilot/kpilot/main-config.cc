@@ -51,8 +51,6 @@ static const char *config_id =
 static KCmdLineOptions kpilotoptions[] = {
 	{ "c",0,0 },
 	{ "conduits", I18N_NOOP("Configure conduits instead."), 0},
-	{ "n",0,0 },
-	{ "new-style", I18N_NOOP("Use new-style config dialogs (unused)."), 0},
 	{ 0,0,0 }
 } ;
 
@@ -119,6 +117,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.7  2001/10/17 08:46:08  adridg
+// Minor cleanups
+//
 // Revision 1.6  2001/10/02 17:49:03  adridg
 // Use new-style conduit config
 //

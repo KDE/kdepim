@@ -45,34 +45,83 @@ static const char *test_id =
 #include <kservice.h>
 #include <kservicetype.h>
 #include <kuserprofile.h>
-#include <klibloader.h>
+// #include <klibloader.h>
 
 #include "logWidget.h"
 #include "kpilotConfig.h"
 
-#include "hotSync.h"
-#include "interactiveSync.h"
-#include "plugin.h"
-
+//#include "hotSync.h"
+//#include "interactiveSync.h"
+//#include "plugin.h"
+#include "syncStack.h"
 
 static KCmdLineOptions kpilotoptions[] = {
 	{"port <device>",
 		I18N_NOOP("Path to Pilot device node"),
 		"/dev/pilot"},
+	{"l",0,0},
 	{"list", I18N_NOOP("List DBs (default)"), 0},
+	{"b",0,0},
 	{"backup", I18N_NOOP("Backup instead of list DBs"), 0},
+	{"r",0,0},
 	{"restore", I18N_NOOP("Restore Pilot from backup"), 0},
-	{ "list-conduits", I18N_NOOP("List available conduits"), 0},
-	{ "exec-conduit <filename>",
+	{"L",0,0},
+	{ "conduit-list", I18N_NOOP("List available conduits"), 0},
+	{"E",0,0},
+	{ "conduit-exec <filename>",
 		I18N_NOOP("Run conduit from desktop file <filename>"),
 		0 },
+	{ "T",0,0},
 	{ "notest",
 		I18N_NOOP("*Really* run the conduit, not in test mode."),
 		0 } ,
 	{0, 0, 0}
 };
 
-int syncTest(KCmdLineArgs *p)
+
+static LogWidget *logWidget = 0L;
+
+void createLogWidget()
+{
+	LogWidget *w = new LogWidget(0L);
+
+	w->resize(300, 300);
+	w->show();
+	w->setShowTime(true);
+	kapp->setMainWidget(w);
+	logWidget = w;
+}
+
+static KPilotDeviceLink *link = 0L;
+
+void createLink()
+{
+	FUNCTIONSETUP;
+
+	link = KPilotDeviceLink::init(0, "deviceLink");
+}
+
+static SyncStack *syncStack = 0L;
+
+void connectStack()
+{
+	FUNCTIONSETUP;
+
+	QObject::connect(syncStack, SIGNAL(logError(const QString &)),
+		logWidget, SLOT(addError(const QString &)));
+	QObject::connect(syncStack, SIGNAL(logMessage(const QString &)),
+		logWidget, SLOT(addMessage(const QString &)));
+	QObject::connect(syncStack,SIGNAL(logProgress(const QString &,int)),
+		logWidget, SLOT(addProgress(const QString &,int)));
+
+	QObject::connect(link, SIGNAL(deviceReady()), syncStack, SLOT(exec()));
+	QObject::connect(syncStack, SIGNAL(syncDone(SyncAction *)),
+		logWidget, SLOT(syncDone()));
+	QObject::connect(syncStack, SIGNAL(syncDone(SyncAction *)),
+		link, SLOT(close()));
+}
+
+void createConnection(KCmdLineArgs *p)
 {
 	FUNCTIONSETUP;
 
@@ -86,60 +135,58 @@ int syncTest(KCmdLineArgs *p)
 	KPilotDeviceLink::DeviceType deviceType =
 		KPilotDeviceLink::OldStyleUSB;
 
-	LogWidget *w = new LogWidget(0L);
+	link->reset(deviceType, devicePath);
+}
 
-	w->resize(300, 300);
-	w->show();
-	w->setShowTime(true);
-	kapp->setMainWidget(w);
+int syncTest(KCmdLineArgs *p)
+{
+	FUNCTIONSETUP;
 
-	KPilotDeviceLink *t = KPilotDeviceLink::init(0, "deviceLink");
-	SyncAction *head = 0L;
-	SyncAction *tail = 0L;
+	createLogWidget();
+	createLink();
+
+	syncStack = new SyncStack(link,&KPilotConfig::getConfig());
 
 	if (p->isSet("backup"))
 	{
-		head = tail = new BackupAction(t);
+		syncStack->prepare(SyncStack::Backup | SyncStack::WithUserCheck);
 	}
 	else if (p->isSet("restore"))
 	{
-		head = new CheckUser(t, w);
-		SyncAction *l = new RestoreAction(t, w);
-
-		tail = new CleanupAction(t);
-
-		QObject::connect(head, SIGNAL(syncDone(SyncAction *)),
-			l, SLOT(exec()));
-		QObject::connect(l, SIGNAL(syncDone(SyncAction *)),
-			tail, SLOT(exec()));
+		syncStack->prepareRestore();
 	}
 	else
 	{
-		head = tail = new TestLink(t);
-
-		QObject::connect(head, SIGNAL(logError(const QString &)),
-			w, SLOT(addError(const QString &)));
-		QObject::connect(head, SIGNAL(logMessage(const QString &)),
-			w, SLOT(addMessage(const QString &)));
+		syncStack->prepare(SyncStack::Test);
 	}
 
-	QObject::connect(t, SIGNAL(logError(const QString &)),
-		w, SLOT(addError(const QString &)));
-	QObject::connect(t, SIGNAL(logMessage(const QString &)),
-		w, SLOT(addMessage(const QString &)));
-	QObject::connect(t, SIGNAL(deviceReady()), head, SLOT(exec()));
-	QObject::connect(tail, SIGNAL(syncDone(SyncAction *)),
-		w, SLOT(syncDone()));
-	QObject::connect(tail, SIGNAL(syncDone(SyncAction *)),
-		t, SLOT(close()));
+	connectStack();
+	createConnection(p);
+	return kapp->exec();
+}
 
-	t->reset(deviceType, devicePath);
+int execConduit(KCmdLineArgs *p)
+{
+	FUNCTIONSETUP;
+
+	// get --exec-conduit value
+	QString s = p->getOption("conduit-exec");
+	if (s.isEmpty()) return 1;
+	QStringList l;
+	l.append(s);
+
+	createLogWidget();
+	createLink();
+
+	syncStack = new SyncStack(link,&KPilotConfig::getConfig(),l);
+	syncStack->prepareSync();
+	
+	connectStack();
+	createConnection(p);
 
 	return kapp->exec();
-
-	/* NOTREACHED */
-	(void) test_id;
 }
+
 
 int listConduits(KCmdLineArgs *p)
 {
@@ -148,7 +195,7 @@ int listConduits(KCmdLineArgs *p)
 	KServiceTypeProfile::OfferList offers =
 		KServiceTypeProfile::offers("KPilotConduit");
 
-	// Now actually fill the two list boxes, just make 
+	// Now actually fill the two list boxes, just make
 	// sure that nothing gets listed in both.
 	//
 	//
@@ -170,99 +217,6 @@ int listConduits(KCmdLineArgs *p)
 	}
 
 	return 0;
-}
-
-int execConduit(KCmdLineArgs *p)
-{
-	FUNCTIONSETUP;
-
-	// get --exec-conduit value
-	QString s = p->getOption("exec-conduit");
-	if (s.isEmpty()) return 1;
-
-	// query that service
-	KSharedPtr < KService > o = KService::serviceByDesktopName(s);
-	if (!o) return 1;
-
-	// load the lib
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Loading desktop "
-		<< s
-		<< " with lib "
-		<< o->library()
-		<< endl;
-#endif
-
-	KLibFactory *f = KLibLoader::self()->factory(o->library());
-	if (!f)
-	{
-		kdWarning() << k_funcinfo
-			<< ": Can't load library "
-			<< o->library()
-			<< endl;
-		return 1;
-	}
-
-	QString devicePath = p->getOption("port");
-
-	if (devicePath.isEmpty())
-	{
-		devicePath = "/dev/pilot";
-	}
-
-	KPilotDeviceLink::DeviceType deviceType =
-		KPilotDeviceLink::OldStyleUSB;
-
-	LogWidget *w = new LogWidget(0L);
-
-	w->resize(300, 300);
-	w->show();
-	w->setShowTime(true);
-	kapp->setMainWidget(w);
-
-	KPilotDeviceLink *t = KPilotDeviceLink::init(0, "deviceLink");
-	ConduitAction *head = 0L;
-
-	QStringList l;
-	if (p->isSet("test"))
-	{
-		l.append("test");
-	}
-	QObject *object = f->create(t,0L,"SyncAction",l);
-
-	if (!object)
-	{
-		kdWarning() << k_funcinfo
-			<< ": Can't create SyncAction."
-			<< endl;
-		return 1;
-	}
-
-	head = dynamic_cast<ConduitAction *>(object);
-
-	if (!head)
-	{
-		kdWarning() << k_funcinfo
-			<< ": Can't cast to ConduitAction."
-			<< endl;
-		return 1;
-	}
-	head->setConfig(&KPilotConfig::getConfig());
-
-	QObject::connect(t, SIGNAL(logError(const QString &)),
-		w, SLOT(addError(const QString &)));
-	QObject::connect(t, SIGNAL(logMessage(const QString &)),
-		w, SLOT(addMessage(const QString &)));
-	QObject::connect(t, SIGNAL(deviceReady()), head, SLOT(exec()));
-	QObject::connect(head, SIGNAL(syncDone(SyncAction *)),
-		w, SLOT(syncDone()));
-	QObject::connect(head, SIGNAL(syncDone(SyncAction *)),
-		t, SLOT(close()));
-
-	t->reset(deviceType, devicePath);
-
-	return kapp->exec();
 }
 
 int main(int argc, char **argv)
@@ -290,28 +244,33 @@ int main(int argc, char **argv)
 
 	KApplication a;
 
-	KPilotConfig::getDebugLevel(p);
-
+	debug_level = -1;
+	
 	if (p->isSet("backup") || p->isSet("restore") || p->isSet("list"))
 	{
 		return syncTest(p);
 	}
 
-	if (p->isSet("list-conduits"))
+	if (p->isSet("conduit-list"))
 	{
 		return listConduits(p);
 	}
 
-	if (p->isSet("exec-conduit"))
+	if (p->isSet("conduit-exec"))
 	{
 		return execConduit(p);
 	}
 
 	return 0;
+	/* NOTREACHED */
+	(void) test_id;
 }
 
 
 // $Log$
+// Revision 1.11  2001/12/02 22:05:46  adridg
+// Minor tweaks for conduit exec()
+//
 // Revision 1.10  2001/10/10 22:20:52  adridg
 // Added --notest, --exec-conduit
 //
