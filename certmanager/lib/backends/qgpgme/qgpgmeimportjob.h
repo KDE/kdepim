@@ -61,6 +61,9 @@ namespace Kleo {
     /*! \reimp from ImportJob */
     GpgME::Error start( const QByteArray & keyData );
 
+    /*! \reimp from ImportJob */
+    GpgME::ImportResult exec( const QByteArray & keyData );
+
   private slots:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
     /*! \reimp from Job */
@@ -69,6 +72,7 @@ namespace Kleo {
   private:
     /*! \reimp from GpgME::ProgressProvider */
     void showProgress( const char * what, int type, int current, int total );
+    void setup( const QByteArray & );
 
   private:
     GpgME::Context * mCtx;

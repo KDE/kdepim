@@ -60,6 +60,10 @@ namespace Kleo {
     /*! \reimp from DecryptJob */
     GpgME::Error start( const QByteArray & cipherText );
 
+    /*! \reimp from DecryptJob */
+    GpgME::DecryptionResult exec( const QByteArray & cipherText,
+				  QByteArray & plainText );
+
   private slots:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
     /*! \reimp from Job */
@@ -68,6 +72,7 @@ namespace Kleo {
   private:
     /*! \reimp from GpgME::ProgressProvider */
     void showProgress( const char * what, int type, int current, int total );
+    void setup( const QByteArray & cipherText );
 
   private:
     GpgME::Context * mCtx;

@@ -63,13 +63,17 @@ Kleo::QGpgMEImportJob::~QGpgMEImportJob() {
   delete mKeyDataDataProvider; mKeyDataDataProvider = 0;
 }
 
-GpgME::Error Kleo::QGpgMEImportJob::start( const QByteArray & keyData ) {
+void Kleo::QGpgMEImportJob::setup( const QByteArray & keyData ) {
   assert( !mKeyData );
 
   // set up data object for keyData
   mKeyDataDataProvider = new QGpgME::QByteArrayDataProvider( keyData );
   mKeyData = new GpgME::Data( mKeyDataDataProvider );
   assert( !mKeyData->isNull() );
+}
+
+GpgME::Error Kleo::QGpgMEImportJob::start( const QByteArray & keyData ) {
+  setup( keyData );
 
   // hook up the context to the eventloopinteractor:
   mCtx->setManagedByEventLoopInteractor( true );
@@ -83,6 +87,11 @@ GpgME::Error Kleo::QGpgMEImportJob::start( const QByteArray & keyData ) {
   if ( err )
     deleteLater();
   return err;
+}
+
+GpgME::ImportResult Kleo::QGpgMEImportJob::exec( const QByteArray & keyData ) {
+  setup( keyData );
+  return mCtx->importKeys( *mKeyData );
 }
 
 void Kleo::QGpgMEImportJob::slotCancel() {

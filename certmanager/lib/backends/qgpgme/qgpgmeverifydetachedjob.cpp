@@ -67,8 +67,7 @@ Kleo::QGpgMEVerifyDetachedJob::~QGpgMEVerifyDetachedJob() {
   delete mSignedDataDataProvider; mSignedDataDataProvider = 0;
 }
 
-GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start( const QByteArray & signature,
-						   const QByteArray & signedData ) {
+void Kleo::QGpgMEVerifyDetachedJob::setup( const QByteArray & signature, const QByteArray & signedData ) {
   assert( !mSignature );
   assert( !mSignedData );
 
@@ -81,7 +80,11 @@ GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start( const QByteArray & signature,
   mSignedDataDataProvider = new QGpgME::QByteArrayDataProvider( signedData );
   mSignedData = new GpgME::Data( mSignedDataDataProvider );
   assert( !mSignedData->isNull() );
+}
 
+GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start( const QByteArray & signature,
+						   const QByteArray & signedData ) {
+  setup( signature, signedData );
   // hook up the context to the eventloopinteractor:
   mCtx->setManagedByEventLoopInteractor( true );
   connect( QGpgME::EventLoopInteractor::instance(),
@@ -94,6 +97,12 @@ GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start( const QByteArray & signature,
   if ( err )
     deleteLater();
   return err;
+}
+
+GpgME::VerificationResult Kleo::QGpgMEVerifyDetachedJob::exec( const QByteArray & signature,
+							       const QByteArray & signedData ) {
+  setup( signature, signedData );
+  return mCtx->verifyDetachedSignature( *mSignature, *mSignedData );
 }
 
 void Kleo::QGpgMEVerifyDetachedJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {
