@@ -29,13 +29,29 @@ template<class T>
 class ListBase : public QValueList<T *>
 {
   public:
-    ListBase() : QValueList<T *>(), mAutoDelete( false ) {}
+    ListBase()
+      : QValueList<T *>(), mAutoDelete( false )
+    {
+    }
+
+    ListBase( const ListBase &l )
+      : QValueList<T *>( l ), mAutoDelete( false )
+    {
+    }
+
     ~ListBase()
     {
       if ( mAutoDelete ) {
         QValueListIterator<T *> it;
         for( it = begin(); it != end(); ++it ) delete *it;
       }
+    }
+
+    ListBase &operator=( const ListBase &l )
+    {
+      if ( this == &l ) return *this;
+      QValueList<T *>::operator=( l );
+      return *this;
     }
 
     void setAutoDelete( bool autoDelete )
