@@ -701,7 +701,7 @@ QString MobileGui::stripWhiteSpaces( const QString &theString )
   if ( len == 0 )
     return "";
 
-  for ( unsigned int i = theString.length() - 1; i >= 0; i-- )
+  for ( int i = theString.length() - 1; i >= 0; i-- )
     if ( theString[ i ].latin1() == ' ' )
       len--;
     else
@@ -733,13 +733,13 @@ void MobileGui::writeKabc()
     if ( kabEntry->mToBeUpdated ) {
       // Find the entry in the KAB which has to be updated
       KABC::AddressBook::Iterator it = addressBook->begin();
-      for ( unsigned int KABindex = 0; KABindex != kabEntry->mKABindex;
+      for ( int KABindex = 0; KABindex != kabEntry->mKABindex;
             it++, KABindex++ ) ;
 	
       // Find the correct phonenumber of the phonebook entry
       KABC::PhoneNumber::List phoneNumbers = (*it).phoneNumbers();
       KABC::PhoneNumber::List::Iterator it2 = phoneNumbers.begin();
-      for ( unsigned int phoneNumberIndex = 0;
+      for ( int phoneNumberIndex = 0;
             phoneNumberIndex != kabEntry->mPhoneNumberIndex;
 	    it2++, phoneNumberIndex++ ) ;
       
@@ -1220,9 +1220,7 @@ void MobileGui::savePhonebook()
 
 void MobileGui::deleteMobPhonebook()
 {
-  unsigned int i;
-  
-  
+
   //
   // Process all elements selected in the GUI
   //
