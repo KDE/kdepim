@@ -1,0 +1,7 @@
+-KCalendarSystem proposal for KDE 3
+-Almost every modified line has a // CALSYS advise and there's a lot of debugging output
+-Different calendar systems (except gregorian) must be implemented as plugins
+
+Best Regards
+
+Carlos Moro
