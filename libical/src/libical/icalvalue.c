@@ -357,7 +357,9 @@ icalvalue* icalvalue_new_from_string_with_error(icalvalue_kind kind,const char* 
 	{
 	    struct icalrecurrencetype rt;
 	    rt = icalrecurrencetype_from_string(str);
-	    value = icalvalue_new_recur(rt);
+            if(rt.freq != ICAL_NO_RECURRENCE){
+                value = icalvalue_new_recur(rt);
+            }
 	    break;
 	}
         
@@ -419,14 +421,18 @@ icalvalue* icalvalue_new_from_string_with_error(icalvalue_kind kind,const char* 
     case ICAL_TRIGGER_VALUE:
 	{
 	    struct icaltriggertype tr = icaltriggertype_from_string(str);
-	    value = icalvalue_new_trigger(tr);
+            if (!icaltriggertype_is_null_trigger(tr)){
+                value = icalvalue_new_trigger(tr);
+            }
 	    break;
 	}
         
     case ICAL_REQUESTSTATUS_VALUE:
         {
             struct icalreqstattype rst = icalreqstattype_from_string(str);
-            value = icalvalue_new_requeststatus(rst);
+            if(rst.code != ICAL_UNKNOWN_STATUS){
+                value = icalvalue_new_requeststatus(rst);
+            }
             break;
 
         }
@@ -672,15 +678,10 @@ char* icalvalue_text_as_ical_string(icalvalue* value) {
 		break;
 	    }
 
+	    case '"':
+	    case '\'':
 	    case ';':
 	    case ',':{
-		icalmemory_append_char(&str,&str_p,&buf_sz,'\\');
-		icalmemory_append_char(&str,&str_p,&buf_sz,*p);
-		line_length+=3;
-		break;
-	    }
-
-	    case '"':{
 		icalmemory_append_char(&str,&str_p,&buf_sz,'\\');
 		icalmemory_append_char(&str,&str_p,&buf_sz,*p);
 		line_length+=3;
