@@ -104,9 +104,9 @@ protected:
 	virtual int resolveConflict(KCal::Incidence*e, PilotAppCategory*de);
 
 	// add, change or delete events from the calendar
-	virtual void addRecord(PilotRecord *);
-	virtual void changeRecord(PilotRecord *,PilotRecord *);
-	virtual void deleteRecord(PilotRecord *,PilotRecord *);
+	virtual KCal::Incidence* addRecord(PilotRecord *);
+	virtual KCal::Incidence* changeRecord(PilotRecord *,PilotRecord *);
+	virtual KCal::Incidence* deleteRecord(PilotRecord *,PilotRecord *);
 
 	// add, change or delete records from the palm
 	virtual void addPalmRecord(KCal::Incidence*e);
@@ -150,6 +150,9 @@ protected:
 
 
 // $Log$
+// Revision 1.4  2002/05/14 23:07:49  kainhofe
+// Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
+//
 // Revision 1.3  2002/05/01 21:18:23  kainhofe
 // Reworked the settings dialog, added various different sync options
 //

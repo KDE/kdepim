@@ -49,6 +49,7 @@ static const char *vcalconduitbase_id = "$Id$";
 #include <ksimpleconfig.h>
 
 
+
 /*
 ** KDE 2.2 uses class KORecurrence in a different header file.
 */
@@ -234,6 +235,7 @@ there are two special cases: a full and a first sync.
 		emit syncDone(this);
 		return;
 	}
+	
 
 	fConfig->setGroup(configGroup());
 
@@ -405,7 +407,10 @@ void VCalConduitBase::syncRecord()
 #endif
 		if (!r->isDeleted() || (archive && archiveRecord))
 		{
-			addRecord(r);
+			KCal::Incidence*e=addRecord(r);
+			if (archive)  {
+				e->setSyncStatus(KCal::Incidence::SYNCDEL);
+			}
 		}
 	}
 	else
@@ -520,6 +525,8 @@ void VCalConduitBase::cleanup()
 {
 	FUNCTIONSETUP;
 
+	fCurrentDatabase->resetSyncFlags();
+	fBackupDatabase->resetSyncFlags();
 	KPILOT_DELETE(fCurrentDatabase);
 	KPILOT_DELETE(fBackupDatabase);
 
@@ -531,7 +538,7 @@ void VCalConduitBase::cleanup()
 }
 
 
-void VCalConduitBase::addRecord(PilotRecord *r)
+KCal::Incidence* VCalConduitBase::addRecord(PilotRecord *r)
 {
 	FUNCTIONSETUP;
 
@@ -550,6 +557,7 @@ void VCalConduitBase::addRecord(PilotRecord *r)
 		fP->addIncidence(e);
 	}
 	KPILOT_DELETE(de);
+	return e;
 }
 
 // return how to resolve conflicts. for now PalmOverrides=0=false, PCOverrides=1=true, Ask=2-> ask the user using a messagebox
@@ -557,15 +565,15 @@ int VCalConduitBase::resolveConflict(KCal::Incidence*e, PilotAppCategory*de) {
 	if (conflictResolution==RES_ASK)
 	{
 		return KMessageBox::warningYesNo(NULL, 
-			i18n("The following item was modified both on the Pilot and on your PC:\nPC entry:\n\t")+e->description()+i18n("\nPilot entry:\n\t")+getTitle(de)+
+			i18n("The following item was modified both on the Pilot and on your PC:\nPC entry:\n\t")+e->summary()+i18n("\nPilot entry:\n\t")+getTitle(de)+
 				i18n("\n\nShould the Pilot entry overwrite the PC entry? If you select \"No\", the PC entry will overwrite the Pilot entry."),
 			i18n("Conflicting Entries")
-		)==KMessageBox::Yes;
+		)==KMessageBox::No;
 	}
 	return conflictResolution;
 }
 
-void VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
+KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 {
 	FUNCTIONSETUP;
 
@@ -582,7 +590,7 @@ void VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 			{
 				// PC record takes precedence:
 				KPILOT_DELETE(de);
-				return;
+				return e;
 			}
 		}
 		// no conflict or conflict resolution says, Palm overwrites, so do it:
@@ -595,10 +603,11 @@ void VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 		addRecord(r);
 	}
 	KPILOT_DELETE(de);
+	return e;
 }
 
 
-void VCalConduitBase::deleteRecord(PilotRecord *r, PilotRecord *)
+KCal::Incidence*VCalConduitBase::deleteRecord(PilotRecord *r, PilotRecord *)
 {
 	FUNCTIONSETUP;
 
@@ -609,6 +618,7 @@ void VCalConduitBase::deleteRecord(PilotRecord *r, PilotRecord *)
 		fP->removeIncidence(e);
 	}
 	fBackupDatabase->writeRecord(r);
+	return NULL;
 }
 
 
@@ -681,6 +691,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.7  2002/05/16 13:06:48  mhunter
+// Corrected typographical errors and Palm -> Pilot for consistency
+//
 // Revision 1.6  2002/05/15 22:57:39  kainhofe
 // if the backup db does not exist, it is now correctly retrieved correctly from the palm
 //

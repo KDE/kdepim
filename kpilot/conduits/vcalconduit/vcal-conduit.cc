@@ -103,7 +103,7 @@ KCal::Incidence *VCalConduitPrivate::findIncidence(recordid_t id)
 	KCal::Event *event = fAllEvents.first();
 	while (event!=0)
 	{
-		if (event->pilotId() == id) return event;
+		if ((recordid_t)event->pilotId() == id) return event;
 		event = fAllEvents.next();
 	}
 	return 0L;
@@ -687,6 +687,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.66  2002/05/14 23:07:49  kainhofe
+// Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
+//
 // Revision 1.65  2002/05/01 21:18:23  kainhofe
 // Reworked the settings dialog, added various different sync options
 //
