@@ -619,7 +619,7 @@ bool KNComposer::applyChanges()
                         "in the account properties or in the "
                         "group properties!\n"
                         "The article will be sent unsigned." ),
-                   QString::null, i18n( "Send unsigned" ),
+                   QString::null, i18n( "Send Unsigned" ),
                    "sendUnsignedDialog" ) 
                == KMessageBox::Cancel )
 	      return false;

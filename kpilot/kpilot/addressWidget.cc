@@ -483,7 +483,7 @@ void AddressWidget::slotCreateNewRecord()
 			i18n("You can't add addresses to the address book "
 				"until you have done a HotSync at least once "
 				"to retrieve the database layout from your Palm."),
-			i18n("Can't add new address"));
+			i18n("Can't Add New Address"));
 
 		if (myDB)
 			delete myDB;
@@ -763,6 +763,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.48  2002/02/11 13:14:40  adridg
+// Compile fix for change to QString createTitle()
+//
 // Revision 1.47  2002/02/10 22:21:33  adridg
 // Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
 //
