@@ -384,8 +384,10 @@ QColor KolabBase::stringToColor( const QString& s )
 void KolabBase::writeString( QDomElement& element, const QString& tag,
                              const QString& tagString )
 {
-  QDomElement e = element.ownerDocument().createElement( tag );
-  QDomText t = element.ownerDocument().createTextNode( tagString );
-  e.appendChild( t );
-  element.appendChild( e );
+  if ( !tagString.isEmpty() ) {
+    QDomElement e = element.ownerDocument().createElement( tag );
+    QDomText t = element.ownerDocument().createTextNode( tagString );
+    e.appendChild( t );
+    element.appendChild( e );
+  }
 }
