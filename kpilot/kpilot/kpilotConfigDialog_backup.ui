@@ -11,7 +11,7 @@
             <x>0</x>
             <y>0</y>
             <width>593</width>
-            <height>324</height>
+            <height>326</height>
         </rect>
     </property>
     <property name="caption">
@@ -62,7 +62,7 @@
                         <cstring>fBackupOnly</cstring>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Databases listed here are only backed up, not synced.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Databases listed here are not backed up. Use this setting if backing up some databases crash the handheld, or if you don't want a backup of some databases (like AvantGo pages).&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QLineEdit" row="1" column="1">
@@ -70,7 +70,7 @@
                         <cstring>fSkipDB</cstring>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Databases listed here are neither backed up, nor synced.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Databases listed here are never restored to the handheld, even if they exist in the set of backup dabases on the handheld. If you still want to install an ignored database to the handheld, you can always manually install it to the handheld.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QPushButton" row="0" column="2">
@@ -118,7 +118,5 @@
         </spacer>
     </grid>
 </widget>
-<tabstops>
-</tabstops>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>
