@@ -455,26 +455,6 @@ void ViewManager::initGUI()
     topRowLayout->setMargin(3);
     layout->addLayout(topRowLayout);
     layout->setStretchFactor(topRowLayout, 0);
-   // Add the incremental search fields
-    mIncrementalSearchWidget = new QWidget(this, "mIncrementalSearchWidget");
-    QHBoxLayout *incLayout = new QHBoxLayout(mIncrementalSearchWidget);
-    incLayout->setMargin( 2 );
-    incLayout->setSpacing( 3 );
-
-    QLabel *label = new QLabel(i18n("&Incremental search:"),
-                               mIncrementalSearchWidget);
-    incLayout->addWidget(label);
-
-    mIncrementalSearchEdit = new QLineEdit(mIncrementalSearchWidget,
-                                           "mIncrementalSearchEdit");
-    label->setBuddy(mIncrementalSearchEdit);
-    incLayout->addWidget(mIncrementalSearchEdit);
-
-    mIncrementalSearchCombo = new QComboBox(mIncrementalSearchWidget,
-                                            "mIncrementalSearchCombo");
-    incLayout->addWidget(mIncrementalSearchCombo);
-    topRowLayout->addWidget(mIncrementalSearchWidget);
-
     // Filter selector
     mFilterSelector = new FilterSelectionWidget(this, "mFilterSelector");
     topRowLayout->addWidget(mFilterSelector);
@@ -495,12 +475,6 @@ void ViewManager::initGUI()
     layout->addWidget(mQuickEdit);
 
     // Connect the slots and signals
-    connect(mIncrementalSearchEdit, SIGNAL(textChanged(const QString &)),
-            this, SLOT(incrementalSearchTextChanged(const QString &)));
-    connect(mIncrementalSearchEdit, SIGNAL(returnPressed()),
-            this, SLOT(incrementalSearchReturnPressed()));
-    connect(mIncrementalSearchCombo, SIGNAL(activated(const QString &)),
-            this, SLOT(incrementalSearchComboActivated(const QString &)));
     connect(mJumpButtonBar, SIGNAL(jumpToLetter(const QChar &)),
             this, SLOT(jumpToLetter(const QChar &)));
     connect(mFilterSelector, SIGNAL(filterActivated(int)),
@@ -510,8 +484,7 @@ void ViewManager::initGUI()
 
 void ViewManager::refreshIncrementalSearchCombo()
 {
-    // Clear the combo
-    mIncrementalSearchCombo->clear();
+    QStringList items;
 
     // Insert all the items
     // Note: There is currently a problem with i18n here. If we translate each
@@ -525,47 +498,28 @@ void ViewManager::refreshIncrementalSearchCombo()
     KABC::Field::List::ConstIterator it;
     int i = 0;
     for( it = fields.begin(); it != fields.end(); ++it ) {
-      mIncrementalSearchCombo->insertItem( (*it)->label(), i );
-      mIncrementalSearchFields.append( *it );
-      ++i;
+        items.append((*it)->label());
+        mIncrementalSearchFields.append( *it );
+        ++i;
     }
+    mCurrentIncSearchField=mIncrementalSearchFields.first(); // we assume there are always columns?
+    emit(setIncSearchFields(items));
 }
 
-void ViewManager::incrementalSearchTextChanged(const QString &)
+void ViewManager::incSearch(const QString& text, int field)
 {
-    // run the incremental search
-    incrementalSearchReturnPressed();
-}
-
-void ViewManager::incrementalSearchReturnPressed()
-{
-    // Get the values from the widgets and run the search
-    mActiveView->incrementalSearch( mIncrementalSearchEdit->text(),
-        mIncrementalSearchFields[ mIncrementalSearchCombo->currentItem() ] );
-}
-
-void ViewManager::incrementalSearchComboActivated(const QString &)
-{
-    // run the incremental search
-    incrementalSearchReturnPressed();
+    // run the search
+    kdDebug() << "ViewManager::incSearch: looking up "
+              << text << " in " << field << endl;
+    mCurrentIncSearchField=mIncrementalSearchFields[field];
+    mActiveView->incrementalSearch(text, mCurrentIncSearchField);
 }
 
 void ViewManager::jumpToLetter(const QChar &ch)
 {
   // Jumping always works based on the first field
-  mActiveView->incrementalSearch(QString(ch),
-        mIncrementalSearchFields[ mIncrementalSearchCombo->currentItem() ] );
+    mActiveView->incrementalSearch(QString(ch), mCurrentIncSearchField);
 }
-
-
-void ViewManager::setIncrementalSearchVisible(bool visible)
-{
-    if (visible)
-      mIncrementalSearchWidget->show();
-    else
-      mIncrementalSearchWidget->hide();
-}
-
 
 void ViewManager::setJumpButtonBarVisible(bool visible)
 {

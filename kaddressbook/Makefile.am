@@ -34,7 +34,8 @@ libkaddressbookpart_la_SOURCES = kaddressbook.cpp kaddressbookiface.skel \
   addresseeeditorsupportwidgets.cpp kaddressbookprinter.cpp \
   filtereditdialog.cpp filtereditwidget.cpp filter.cpp \
   filterselectionwidget.cpp configureviewfilterpage.cpp \
-  actionmanager.cpp
+  actionmanager.cpp \
+  incsearchwidget_base.ui incsearchwidget.cpp 
 
 kaddressbook_METASOURCES = AUTO
 

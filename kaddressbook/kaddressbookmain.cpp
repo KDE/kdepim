@@ -25,6 +25,7 @@
 
 #include "kaddressbook.h"
 #include "actionmanager.h"
+#include "incsearchwidget.h"
 #include "kaddressbookmain.h"
 #include "kaddressbookmain.moc"
 
@@ -34,24 +35,33 @@ KAddressBookMain::KAddressBookMain()
     setCaption( i18n( "Address Book Browser" ));
 
     mWidget = new KAddressBook( this, "KAddressBook" );
-   
+
     mActionManager = new ActionManager(this, mWidget, true, this);
-    
+
     initActions();
-    
+
     // tell the KMainWindow that this is indeed the main widget
     setCentralWidget(mWidget);
 
     // we do want a status bar
     statusBar()->show();
-            
+
     // Tell the central widget to read its config
     mWidget->readConfig();
-    
+
     // Finally create the GUI
     createGUI( "kaddressbookui.rc", false );
+    // <HACK reason="there is no line edit action">
+    // create the incremental search line edit manually:
+    const int IncSearch=1; //the ID of the widget - just to be clear :-)
+    KToolBar *isToolBar=toolBar("incSearchToolBar");
+    IncSearchWidget *incSearchWidget=new IncSearchWidget(isToolBar);
+    isToolBar->insertWidget(IncSearch, 0,  incSearchWidget, 0);
+    isToolBar->setItemAutoSized(IncSearch);
+    mWidget->setIncSearchWidget(incSearchWidget);
+    // </HACK>
     mActionManager->initActionViewList();
-    
+
     setAutoSaveSettings();
 }
 
@@ -88,7 +98,7 @@ void KAddressBookMain::readProperties(KConfig *)
 void KAddressBookMain::initActions()
 {
   KStdAction::quit(this, SLOT(close()), actionCollection());
-  
+
   KStdAction::preferences( mWidget, SLOT( configure() ), actionCollection());
   KStdAction::configureToolbars( this, SLOT( configureToolbars() ),
                                  actionCollection() );

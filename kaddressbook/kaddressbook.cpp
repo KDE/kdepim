@@ -39,6 +39,7 @@
 // #include "kaddressbookprinter.h"
 #include "printing/printingwizard.h"
 #include "filter.h"
+#include "incsearchwidget.h"
 
 KAddressBook::KAddressBook( QWidget *parent, const char *name )
   : QWidget( parent, name )
@@ -558,6 +559,15 @@ void KAddressBook::configureFilters()
   mFilterEditDialog->setFilters(mViewManager->filters());
   mFilterEditDialog->show();
   mFilterEditDialog->raise();
+}
+
+void KAddressBook::setIncSearchWidget(IncSearchWidget *w)
+{
+    mIncSearchWidget=w;
+    connect(w, SIGNAL(incSearch(const QString&, int)),
+            mViewManager, SLOT(incSearch(const QString&, int)));
+    connect(mViewManager, SIGNAL(setIncSearchFields(const QStringList&)),
+            w, SLOT(setFields(const QStringList&)));
 }
 
 #include "kaddressbook.moc"

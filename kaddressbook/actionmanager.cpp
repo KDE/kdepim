@@ -68,7 +68,7 @@ ActionManager::ActionManager(KXMLGUIClient *client, KAddressBook *widget,
     mActiveViewName = config->readEntry("Active");
     config->setGroup("MainWindow");
     mActionJumpBar->setChecked(config->readBoolEntry("JumpBar", false));
-    mActionIncSearch->setChecked(config->readBoolEntry("IncSearch", true));
+//    mActionIncSearch->setChecked(config->readBoolEntry("IncSearch", true));
     mActionQuickEdit->setChecked(config->readBoolEntry("QuickEdit", false));
     mActionFilter->setChecked(config->readBoolEntry("FilterSelector", true));
 
@@ -95,7 +95,7 @@ ActionManager::~ActionManager()
 
     config->setGroup("MainWindow");
     config->writeEntry("JumpBar", mActionJumpBar->isChecked());
-    config->writeEntry("IncSearch", mActionIncSearch->isChecked());
+//    config->writeEntry("IncSearch", mActionIncSearch->isChecked());
     config->writeEntry("QuickEdit", mActionQuickEdit->isChecked());
     config->writeEntry("FilterSelector", mActionFilter->isChecked());
 }
@@ -197,10 +197,10 @@ void ActionManager::initReadOnlyActions()
                                        this, SLOT(quickToolsAction()),
                                        mACollection,
                                        "options_show_jump_bar");
-    mActionIncSearch = new KToggleAction(i18n("Show Incremental Search"), "find",
-                                         0, this, SLOT(quickToolsAction()),
-                                         mACollection,
-                                         "options_show_inc_search");
+//     mActionIncSearch = new KToggleAction(i18n("Show Incremental Search"), "find",
+//                                          0, this, SLOT(quickToolsAction()),
+//                                          mACollection,
+//                                          "options_show_inc_search");
     mActionFilter = new KToggleAction(i18n("Show Filter Selector"), "filter",
                                       0, this, SLOT(quickToolsAction()),
                                       mACollection,
@@ -353,7 +353,7 @@ void ActionManager::selectViewAction()
 void ActionManager::quickToolsAction()
 {
     mViewManager->setJumpButtonBarVisible(mActionJumpBar->isChecked());
-    mViewManager->setIncrementalSearchVisible(mActionIncSearch->isChecked());
+//    mViewManager->setIncrementalSearchVisible(mActionIncSearch->isChecked());
     mViewManager->setQuickEditVisible(mActionQuickEdit->isChecked());
     mViewManager->setFilterSelectorVisible(mActionFilter->isChecked());
 }
