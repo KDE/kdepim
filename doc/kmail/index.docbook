@@ -16,6 +16,10 @@ $Id$
  -->
 
 <!-- TODO: 
+
+* better/longer headlines (e.g.. for PGP section)
+* add section for drag'n'drop?
+
 * document "check what the server supports"
 * document "pipelining..."
 * more about the "create folder" dialog (e.g. Sender/Receiver)
@@ -57,7 +61,7 @@ $Id$
 
 </authorgroup>
 
-<date>2002-02-09</date>
+<date>2002-02-20</date>
 <releaseinfo>1.04.00</releaseinfo>
 
 <copyright>
@@ -156,12 +160,12 @@ messages.</para>
 
 <para>To begin sending and receiving messages you will only have to
 change the settings in the <guilabel>Identity</guilabel> and
-<guilabel>Network</guilabel> tabs.</para>
+<guilabel>Network</guilabel> pages.</para>
 
 <sect1 id="setting-your-identity">
 <title>Setting your Identity</title>
 
-<para>The settings in the <guilabel>Identity</guilabel> tab are fairly
+<para>The settings in the <guilabel>Identity</guilabel> page are fairly
 straightforward. Fill in the <guilabel>Name</guilabel> field with your
 full name (&eg; <userinput>John Doe</userinput>) and the
 <guilabel>Organization</guilabel> field (optional) with the appropriate
@@ -178,7 +182,7 @@ enter your signature.</para>
 <sect1 id="setting-up-your-account">
 <title>Setting up your Account</title>
 
-<para>The <guilabel>Network</guilabel> tab contains the settings that
+<para>The <guilabel>Network</guilabel> page contains the settings that
 tell &kmail; how to send and receive your email messages. Many of these settings
 can vary greatly depending on the setup of your system and on the kind
 of network that your mail server is located. If you do not know what
@@ -1315,9 +1319,9 @@ have matched messages, but at least one got tagged for
 <para>Multiple accounts are used to check for messages from more than one email address
 and/or mail server. Select <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kmail;...</guimenuitem></menuchoice> and click on the
-<guilabel>Network</guilabel> tab to add or change your account settings. See the
+<guilabel>Network</guilabel> page to add or change your account settings. See the
 <link linkend="getting-started">Getting started</link> section for more
-information on the settings in the <guilabel>Network</guilabel> tab.</para>
+information on the settings in the <guilabel>Network</guilabel> page.</para>
 
 <para>To check for messages from a particular account, use the
 <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail
@@ -1523,7 +1527,7 @@ trusted key for each recipient.</para>
 
 <para>As mentioned above, you won't be able to read your own encrypted sent
 messages if you don't check <guilabel>Always encrypt to self</guilabel> in the
-setting's <guilabel>Security</guilabel> tab. However, note that your
+setting's <guilabel>Security</guilabel> page. However, note that your
 own key is not listed in the <guilabel>Encryption Key Approval</guilabel> dialog 
 even if that option is set.</para>
 
@@ -1971,7 +1975,7 @@ is activated for at least one account:</para>
 </sect1>
 
 <sect1 id="configure-appearance">
-<title>Appearance Tab</title>
+<title>Appearance Page</title>
 
 <sect2 id="configure-appearance-fonts">
 <title>Fonts</title>
@@ -2061,14 +2065,14 @@ a dialog when you enter a folder with a matching message.</para>
 </sect1>
 
 <sect1 id="configure-composer">
-<title>Composer Tab</title>
+<title>Composer Page</title>
 
 <sect2 id="configure-composer-general">
 <title>General</title>
 
 <para><guilabel>Automatically append signature</guilabel> lets you toggle
 whether to automatically include your signature as defined in the 
-<link linkend="setting-your-identity">identity tab</link>.</para>
+<link linkend="setting-your-identity">identity page</link>.</para>
 
 <para><guilabel>Use smart quoting</guilabel> will break long lines but will try
 to keep the correct quoting (&eg; the <quote>&gt; </quote> will always be at the
@@ -2168,7 +2172,7 @@ is only useful for advanced users.</para>
 </sect1>
 
 <sect1 id="configure-security">
-<title>Security Tab</title>
+<title>Security Page</title>
 
 <sect2 id="configure-security-general">
 <title>General</title>
@@ -2213,7 +2217,7 @@ section</link>.</para>
 </sect1>
 
 <sect1 id="configure-misc">
-<title>Miscellaneous Tab</title>
+<title>Miscellaneous Page</title>
 
 <sect2 id="configure-misc-folders">
 <title>Folders</title>
@@ -4240,7 +4244,7 @@ which often change between different versions.</para>
 </listitem>
 <listitem>
 <para>&kmail; will not encrypt messages with an untrusted (unsigned) public key.
-In fact, it will not even display untrusted keys. If you want to encrypt to such a 
+If you want to encrypt to such a 
 key you should check the identity of the key owner and only then sign the key
 with your secret key. If you don't want to or can't check the identity
 of the key owner but nevertheless want to encrypt the message then
@@ -4357,7 +4361,7 @@ used.</para>
 <answer><para>See the <link linkend="popfilters">Download filters</link> chapter.
 If you want to leave all messages on the server: open up the
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem>
-</menuchoice> window. Click on the <guilabel>Network</guilabel> tab. Select your
+</menuchoice> window. Click on the <guilabel>Network</guilabel> page. Select your
 account from the account list and click the <guilabel>Modify...</guilabel>
 button. This dialog contains the <guilabel>Delete mail from server</guilabel>
 setting which you must not select.</para></answer>
@@ -4369,7 +4373,7 @@ messages?</para></question>
 <answer><para>The text footer is called a signature file. Select
 <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kmail;...</guimenuitem></menuchoice>
-Look in the <guilabel>Identity</guilabel> tab for the <guilabel>Signature</guilabel>
+Look in the <guilabel>Identity</guilabel> page for the <guilabel>Signature</guilabel>
 tab and add your signature there.</para></answer> 
 </qandaentry>
 
@@ -4378,9 +4382,9 @@ tab and add your signature there.</para></answer>
 file?</para></question>
 <answer><para>&kmail; will ask you for the location of your signature file if you
 have checked the option <guilabel>Automatically append signature</guilabel> in the
-<guilabel>Composer</guilabel> tab of the <guilabel>Configure &kmail;...</guilabel> dialog,
-but you have not specified a signature file in the <guilabel>Identity</guilabel>
-tab. You should either specify a signature file
+<guilabel>Composer</guilabel> page of the <guilabel>Configure &kmail;...</guilabel> dialog,
+but you have not specified a valid signature file in the <guilabel>Identity</guilabel>
+page. You should either specify a signature file that really exists
 or deselect <guilabel>Automatically append signature</guilabel>.</para></answer>
 </qandaentry>
 
