@@ -55,11 +55,19 @@ AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core *core,
   layout->addWidget( mEditorWidget );
 
   enableButton( KDialogBase::Apply, false );
+
+  KConfig config( "kaddressbookrc" );
+  config.setGroup( "AddresseeEditor" );
+  resize( config.readSizeEntry( "Size" ) );
 }
 
 AddresseeEditorDialog::~AddresseeEditorDialog()
 {
   kdDebug(5720) << "~AddresseeEditorDialog()" << endl;
+
+  KConfig config( "kaddressbookrc" );
+  config.setGroup( "AddresseeEditor" );
+  config.writeEntry( "Size", size() );
 
   emit editorDestroyed( mEditorWidget->addressee().uid() );
 }
