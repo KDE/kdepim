@@ -79,6 +79,7 @@ class KConfig;
 //
 //
 void listConfig(kdbgstream&,KConfig&);
+void listStrList(kdbgstream&,const QStringList&);
 #endif
 
 

@@ -55,4 +55,17 @@ void listConfig(kdbgstream& s,KConfig &c)
 	(void) id;
 #endif
 }
+
+void listStrList(kdbgstream& s,const QStringList& l)
+{
+	FUNCTIONSETUP;
+
+	QStringList::ConstIterator i;
+	s << fname << ": Elements of string list:" << endl;
+
+	for (i=l.begin(); i!=l.end(); ++i)
+	{
+		s << fname << ": " << *i << endl;
+	}
+}
 #endif
