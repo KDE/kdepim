@@ -170,6 +170,7 @@ QByteArray AddressBook::fromKDE( KAddressbookSyncEntry *entry )
         KABC::AddressBook *addressbook = entry->addressbook();
         KABC::AddressBook::Iterator it;
         for ( it = addressbook->begin(); it != addressbook->end(); ++it ) {
+            stream << "<Contact ";
             stream << "FirstName=\"" << (*it).givenName() << "\" ";
             stream << "MiddleName=\"" << (*it).additionalName() << "\" ";
             stream << "LastName=\"" << (*it).familyName() << "\" ";
@@ -230,6 +231,7 @@ QByteArray AddressBook::fromKDE( KAddressbookSyncEntry *entry )
             stream << "Notes=\"" << (*it).note() << "\" ";
             stream << "Categories=\"" << categoriesToNumber( (*it).categories(),  "Contacts") << "\" ";
             stream << "Uid=\"" << konnectorId( "addressbook", (*it).uid() ) << "\" ";
+            stream << " />" << endl;
         } // off for
         stream << "</Contacts>" << endl;
         stream << "</AddressBook>" << endl;

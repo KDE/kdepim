@@ -267,7 +267,7 @@ void OpieSocket::write(QPtrList<KSyncEntry> lis)
             QFile *fi  = file.file();
             fi->writeBlock( book );
             file.close();
-            url.setPath(d->path + "/Applications/addressbook/adressbook.xml");
+            url.setPath(d->path + "/Applications/addressbook/addressbook.xml");
             KIO::NetAccess::upload(file.name(), url);
             file.unlink();
             if ( d->meta ) {
@@ -293,6 +293,7 @@ void OpieSocket::write(QPtrList<KSyncEntry> lis)
     }
     // OpieHelper::CategoryEdit write back
     writeCategory();
+    d->helper->save();
     QTextStream stream( d->socket );
     stream << "call QPE/System stopSync()" << endl;
     d->isSyncing = false; // do it in the write back later on
@@ -601,11 +602,19 @@ KSyncEntry* retrEntry( const QString& )
 }
 void OpieSocket::writeCategory()
 {
-    KURL url;
-    url.setProtocol("ftp" );
-    url.setUser( d->user );
-    url.setPass( d->pass );
-    url.setHost( d->dest );
-    url.setPort( 4242 );
-    url.setPath( d->path + "/Settings/Categories.xml" );
+    QString fileName = QDir::homeDirPath() + "/.kitchensync/meta/" +d->partnerId;
+    QFile file( fileName + "/categories.xml");
+    if ( file.open(IO_WriteOnly ) ) {
+        QByteArray array = d->edit->file();
+        file.writeBlock( array );
+        file.close();
+        KURL url;
+        url.setProtocol("ftp" );
+        url.setUser( d->user );
+        url.setPass( d->pass );
+        url.setHost( d->dest );
+        url.setPort( 4242 );
+        url.setPath( d->path + "/Settings/Categories.xml" );
+        KIO::NetAccess::upload( fileName + "/categories.xml",  url );
+    }
 }
